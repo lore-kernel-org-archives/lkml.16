@@ -1,42 +1,42 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FC6F20E318
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:37:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5ED820E335
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:37:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742301436; cv=none; b=ewjSPpdV92M7jGWBBUSUnrxsinaIPdSTlGf1AaqR5rEK5yVg8Pp+WjBeuekD+U63FNJIK/4dZDgrxRfl/uanWtw7phwg88SpX3GuNrpplwKUQiNteHSGWtZV0jA9gXuwwQjoeEAZmQ2/0Otj5nKHkZ4Y05TlwnNldNSeY0cqhPI=
+	t=1742301436; cv=none; b=b/4y4XIJyKKaTY68FnYE0N1NVPM7mDWNWSdDTKFgaalqfTK1gX7pscXXpJgTJ4J+giAxIu4qAD6daEFxvAnsoaUG4z36xRR0DOa4NCiTtqKXAj+Lnh1vu2Nf1R1sgTViYu1JvfwI67EWD5GPkr11FofdakNQDIsj3OakeU1dyOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742301436; c=relaxed/simple;
-	bh=McNeaXrm4EsMnZWOXEDFXBNpHgJWMUFQS+VAPDQUEm0=;
+	bh=VOuKK5+hZ0fQfSXAh7JI1QFVO+uVpyFrh+6nCIcBxpY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b8Db2A4e/2PEjDCM+y3Bz0N1yDiFLAJIGgacOXY+39/SeajZr2qTYXN+n/2CAItwys320P1F6+h69IZHyXaawwyStI6f9EQNdQegdBj5fQEYKYfn3pObFMpIsQSeHnHtshX+wehLmYH7kjSS7i/zZtjDK24SpxDr6XdTtnLY/o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Quh4J8Mp; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=a2LZKkO6dagmbaUX2wWxj6mDIgFqpGOQh25HAyOVOEN5tbu6dk+KvY7sd+hW2KHuwjgjP4H2r6+T+7uw8b6LwLGYExWZN7bUeUGbhhKv9Pl+C60MeXX2qfe4eYqFsRJX6rAPSZG3bnBkjrHDSq2OYTsmL6Lo0Qxemj+oh8OlkqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EUNzSZos; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Quh4J8Mp"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EUNzSZos"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1742301433;
-	bh=McNeaXrm4EsMnZWOXEDFXBNpHgJWMUFQS+VAPDQUEm0=;
+	s=mail; t=1742301432;
+	bh=VOuKK5+hZ0fQfSXAh7JI1QFVO+uVpyFrh+6nCIcBxpY=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Quh4J8MpdzTsZAEdZd9cxG3/78tUDy5C5nGvMqa2FIplkJfeE1wGhHLZttZhtqNpY
-	 TeOZZjme5F6GFSkAnnNEmbMZa6erIC0lsH2sxH+GpAQdYDxIwVKa2cC0icJOtPT06f
-	 7qsO2w0n0o1/jJMCtR70rlly42OolBGiNiqsSXjC+mmq57DLIp/AOQz4QsoyTJac+o
-	 5uNyvEuZv/TE9ly9089ZWjlfRJ2P/wPjSJ6v3RUyF/tLINoL36c13Up4HYuIDUUKJa
-	 rjycxvqa9nqEReA1Tcjc5rug22p6NWCghwre6nU0N9CVnfRpJtNdZkQf0hS2A2Yt2g
-	 OiD+cdasZ9oMw==
+	b=EUNzSZosixopc8esuhIUZjCsrB56pa2clpNycG56btuBOr8ppGW71rugopimaOTcA
+	 U8tNdglyDtGODZaYCWuOdF+gWE45fYENSEpXoehJ4dMiWjolizaLKJtbdG3YIAchgp
+	 xkyhf0brVx2muE2BU2hpai6QL9P8vheeQr4S2g7wjjN6kcFZfQpYXRADSSEQO9rK2C
+	 lnCK3h9xLCW4bs+pNjCsbiugx7iRvP4+2BprFSrUtylCBKRi9pqK8X/j1cosmW7q3y
+	 IMKJD1K7a3+TwvqsCDQAV4sjbT//yz0bdIdUMvCrVuSL8wELScH4Qt1jCbouy+BrPR
+	 qYeVI1zks+SlQ==
 Received: from localhost (unknown [84.232.140.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id CB80617E1581;
+	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 08F8017E157A;
 	Tue, 18 Mar 2025 13:37:12 +0100 (CET)
 From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Tue, 18 Mar 2025 14:35:48 +0200
-Subject: [PATCH v6 14/14] phy: rockchip: samsung-hdptx: Add high color
- depth management
+Date: Tue, 18 Mar 2025 14:35:47 +0200
+Subject: [PATCH v6 13/14] phy: rockchip: samsung-hdptx: Optimize internal
+ rate handling
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,7 +45,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-phy-sam-hdptx-bpc-v6-14-8cb1678e7663@collabora.com>
+Message-Id: <20250318-phy-sam-hdptx-bpc-v6-13-8cb1678e7663@collabora.com>
 References: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
 In-Reply-To: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
 To: Vinod Koul <vkoul@kernel.org>, 
@@ -59,76 +59,147 @@ Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>,
  Dmitry Baryshkov <lumag@kernel.org>
 X-Mailer: b4 0.14.2
 
-Add support for 8-bit, 10-bit, 12-bit and 16-bit color depth setup.
+Drop the rate parameter from a bunch of internal helpers and, instead,
+make better use of the newly introduced ->hdmi_cfg.tmds_char_rate driver
+data.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
 ---
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 23 ++++++++++++++++++++++-
- 1 file changed, 22 insertions(+), 1 deletion(-)
+ drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 47 +++++++++++------------
+ 1 file changed, 23 insertions(+), 24 deletions(-)
 
 diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index d09e1f7b25ec131d3c40fb52564cad27dce3b2d4..fc289ed8d915d84916870329101655cd956898e3 100644
+index a19a89233d808e2b38f6e7e58a1dc38ddd7cadd3..d09e1f7b25ec131d3c40fb52564cad27dce3b2d4 100644
 --- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
 +++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -1028,6 +1028,9 @@ static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx)
- 	regmap_update_bits(hdptx->regmap, CMN_REG(0086), PLL_PCG_POSTDIV_SEL_MASK,
- 			   FIELD_PREP(PLL_PCG_POSTDIV_SEL_MASK, cfg->pms_sdiv));
- 
-+	regmap_update_bits(hdptx->regmap, CMN_REG(0086), PLL_PCG_CLK_SEL_MASK,
-+			   FIELD_PREP(PLL_PCG_CLK_SEL_MASK, (hdptx->hdmi_cfg.bpc - 8) >> 1));
-+
- 	regmap_update_bits(hdptx->regmap, CMN_REG(0086), PLL_PCG_CLK_EN_MASK,
- 			   FIELD_PREP(PLL_PCG_CLK_EN_MASK, 0x1));
- 
-@@ -1427,7 +1430,8 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
- 			hdptx->hdmi_cfg.tmds_char_rate *= 100;
- 		}
- 
--		dev_dbg(hdptx->dev, "%s rate=%llu\n", __func__, hdptx->hdmi_cfg.tmds_char_rate);
-+		dev_dbg(hdptx->dev, "%s rate=%llu bpc=%u\n", __func__,
-+			hdptx->hdmi_cfg.tmds_char_rate, hdptx->hdmi_cfg.bpc);
- 	}
- 
- 	ret = rk_hdptx_phy_consumer_get(hdptx);
-@@ -1492,6 +1496,19 @@ static int rk_hdptx_phy_verify_hdmi_config(struct rk_hdptx_phy *hdptx,
- 	    !rk_hdptx_phy_clk_pll_calc(hdmi->tmds_char_rate, NULL))
- 		return -EINVAL;
- 
-+	if (!hdmi->bpc)
-+		hdmi->bpc = 8;
-+
-+	switch (hdmi->bpc) {
-+	case 8:
-+	case 10:
-+	case 12:
-+	case 16:
-+		break;
-+	default:
-+		return -EINVAL;
-+	};
-+
- 	return 0;
+@@ -968,31 +968,34 @@ static bool rk_hdptx_phy_clk_pll_calc(unsigned long long rate,
+ 	return true;
  }
  
-@@ -1764,6 +1781,9 @@ static int rk_hdptx_phy_configure(struct phy *phy, union phy_configure_opts *opt
- 			hdptx->hdmi_cfg = opts->hdmi;
- 			hdptx->restrict_rate_change = true;
+-static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx,
+-					  unsigned long long rate)
++static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx)
+ {
+ 	const struct ropll_config *cfg = NULL;
+ 	struct ropll_config rc = {0};
+ 	int ret, i;
+ 
++	if (!hdptx->hdmi_cfg.tmds_char_rate)
++		return 0;
++
+ 	for (i = 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
+-		if (rate == ropll_tmds_cfg[i].rate) {
++		if (hdptx->hdmi_cfg.tmds_char_rate == ropll_tmds_cfg[i].rate) {
+ 			cfg = &ropll_tmds_cfg[i];
+ 			break;
+ 		}
+ 
+ 	if (!cfg) {
+-		if (rk_hdptx_phy_clk_pll_calc(rate, &rc)) {
+-			cfg = &rc;
+-		} else {
+-			dev_err(hdptx->dev, "%s cannot find pll cfg\n", __func__);
++		if (!rk_hdptx_phy_clk_pll_calc(hdptx->hdmi_cfg.tmds_char_rate, &rc)) {
++			dev_err(hdptx->dev, "%s cannot find pll cfg for rate=%llu\n",
++				__func__, hdptx->hdmi_cfg.tmds_char_rate);
+ 			return -EINVAL;
  		}
 +
-+		dev_dbg(hdptx->dev, "%s rate=%llu bpc=%u\n", __func__,
-+			hdptx->hdmi_cfg.tmds_char_rate, hdptx->hdmi_cfg.bpc);
- 		return ret;
++		cfg = &rc;
  	}
  
-@@ -1972,6 +1992,7 @@ static int rk_hdptx_phy_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+ 	dev_dbg(hdptx->dev, "%s rate=%llu mdiv=%u sdiv=%u sdm_en=%u k_sign=%u k=%u lc=%u\n",
+-		__func__, rate, cfg->pms_mdiv, cfg->pms_sdiv + 1, cfg->sdm_en,
+-		cfg->sdm_num_sign, cfg->sdm_num, cfg->sdm_deno);
++		__func__, hdptx->hdmi_cfg.tmds_char_rate, cfg->pms_mdiv, cfg->pms_sdiv + 1,
++		cfg->sdm_en, cfg->sdm_num_sign, cfg->sdm_num, cfg->sdm_deno);
  
- 	hdptx->dev = dev;
-+	hdptx->hdmi_cfg.bpc = 8;
+ 	rk_hdptx_pre_power_up(hdptx);
  
- 	regs = devm_platform_get_and_ioremap_resource(pdev, 0, &res);
- 	if (IS_ERR(regs))
+@@ -1030,19 +1033,18 @@ static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx,
+ 
+ 	ret = rk_hdptx_post_enable_pll(hdptx);
+ 	if (!ret)
+-		hdptx->hw_rate = rate;
++		hdptx->hw_rate = hdptx->hdmi_cfg.tmds_char_rate;
+ 
+ 	return ret;
+ }
+ 
+-static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx,
+-					   unsigned long long rate)
++static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx)
+ {
+ 	rk_hdptx_multi_reg_write(hdptx, rk_hdtpx_common_sb_init_seq);
+ 
+ 	regmap_write(hdptx->regmap, LNTOP_REG(0200), 0x06);
+ 
+-	if (rate > HDMI14_MAX_RATE) {
++	if (hdptx->hdmi_cfg.tmds_char_rate > HDMI14_MAX_RATE) {
+ 		/* For 1/40 bitrate clk */
+ 		rk_hdptx_multi_reg_write(hdptx, rk_hdtpx_tmds_lntop_highbr_seq);
+ 	} else {
+@@ -1094,8 +1096,7 @@ static void rk_hdptx_dp_reset(struct rk_hdptx_phy *hdptx)
+ 		     HDPTX_I_BGR_EN << 16 | FIELD_PREP(HDPTX_I_BGR_EN, 0x0));
+ }
+ 
+-static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
+-				     unsigned long long rate)
++static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx)
+ {
+ 	enum phy_mode mode = phy_get_mode(hdptx->phy);
+ 	u32 status;
+@@ -1114,11 +1115,9 @@ static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
+ 	if (mode == PHY_MODE_DP) {
+ 		rk_hdptx_dp_reset(hdptx);
+ 	} else {
+-		if (rate) {
+-			ret = rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
+-			if (ret)
+-				goto dec_usage;
+-		}
++		ret = rk_hdptx_ropll_tmds_cmn_config(hdptx);
++		if (ret)
++			goto dec_usage;
+ 	}
+ 
+ 	return 0;
+@@ -1431,7 +1430,7 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
+ 		dev_dbg(hdptx->dev, "%s rate=%llu\n", __func__, hdptx->hdmi_cfg.tmds_char_rate);
+ 	}
+ 
+-	ret = rk_hdptx_phy_consumer_get(hdptx, hdptx->hdmi_cfg.tmds_char_rate);
++	ret = rk_hdptx_phy_consumer_get(hdptx);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -1462,7 +1461,7 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
+ 		regmap_write(hdptx->grf, GRF_HDPTX_CON0,
+ 			     HDPTX_MODE_SEL << 16 | FIELD_PREP(HDPTX_MODE_SEL, 0x0));
+ 
+-		ret = rk_hdptx_ropll_tmds_mode_config(hdptx, hdptx->hdmi_cfg.tmds_char_rate);
++		ret = rk_hdptx_ropll_tmds_mode_config(hdptx);
+ 		if (ret)
+ 			rk_hdptx_phy_consumer_put(hdptx, true);
+ 	}
+@@ -1830,7 +1829,7 @@ static int rk_hdptx_phy_clk_prepare(struct clk_hw *hw)
+ {
+ 	struct rk_hdptx_phy *hdptx = to_rk_hdptx_phy(hw);
+ 
+-	return rk_hdptx_phy_consumer_get(hdptx, hdptx->hw_rate);
++	return rk_hdptx_phy_consumer_get(hdptx);
+ }
+ 
+ static void rk_hdptx_phy_clk_unprepare(struct clk_hw *hw)
+@@ -1897,7 +1896,7 @@ static int rk_hdptx_phy_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	 * while the latter being executed only once, i.e. when clock remains
+ 	 * in the prepared state during rate changes.
+ 	 */
+-	return rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
++	return rk_hdptx_ropll_tmds_cmn_config(hdptx);
+ }
+ 
+ static const struct clk_ops hdptx_phy_clk_ops = {
 
 -- 
 2.48.1
