@@ -1,168 +1,133 @@
-Received: from p00-icloudmta-asmtp-us-central-1k-100-percent-10.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (p-east1-cluster6-host12-snip4-10.eps.apple.com [57.103.90.251])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AE76210F5A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.90.251
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6942317A303
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:54:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742327482; cv=none; b=OvaSZ3dzFfPW20zXhuSp7LbeXkxXuXP49e3juJd+7u/o4Bq7Fm1DO5woTPB8F5wdRKD/rmkRUp5Nby+/pldrtBLvbVPKCcas654xPC3kNEfP+pFDzZRcrtH8kUEIwiF2qwBffV5U7u/2a3vUR69vDznnekqObhQQnj5vK0wvcEg=
+	t=1742327675; cv=none; b=kGVNDs+nQH5CFeI5t4DQwICi4v4eAjzsSGCy/Guvl8eIgd28E7kyiKAghW4X3q7K8IyBs4hBx04RQAkmT2NFI87LIYWPgrjb3Wjfytk5NMQ16nNA6B6GZ1CrVIJzCN6XLFXEkrJ3CHsVm0Q7mAcomBR0KNW/bi8y6F7m+7MjaoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742327482; c=relaxed/simple;
-	bh=piAebpfHUgpZreSe00cHDN4fuYNqfovsnGGr55TVFfQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AV/6Y3TRkxJz07AuI4oMuPvBxcJkyU7CqIXZN9zYwNWbcaVo0e6ys3oF8uk3gpw6oXSBivV97ZqpalbZl1GEJpMbXdoLjxM653lqghxXV1ckXLX8ku2DQLiL4z+bCDj3ujC9h84S3ax01FxBf9XDXjYwzB/J49iJOxvb3FJX/uU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es; spf=pass smtp.mailfrom=pereznus.es; dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b=LIq175dW; arc=none smtp.client-ip=57.103.90.251
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pereznus.es
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b="LIq175dW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pereznus.es; s=sig1;
-	bh=6IAXkIqRwylnS10Eetdm58moBb5/qqlwz9Ii+q7zpls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
-	b=LIq175dWvC27mUZNWwJcfB3r4qjm6T+x4MmJdAKDvqwCmKMASXeI7vTsET4ANMKgL
-	 g+n6zRLq8fGUE8ktWHrI8j6d89MQ/Xkxrsw/ST/jMGF342Ha3n6p5/QQ9Kp7tVFThv
-	 6ZLhC2c59BJO0qedXfYyIkvpCtE5RFjtf09q6o/LuJvvMERGiHGsJr+UtvPrPNhOZy
-	 ZM6K239R6ptv3MGBjW/PAmpmNFoFIKw+WsSwg1lX6vCJpRRt9JLpyAy/KZuHYyvb2P
-	 u0sLm6+7kBW2s4r85K+bW1+1+N1oI9a26h1SZiS0VSZVqejCoa4H1wgo2kEB3TAY9c
-	 UI0eqHqXWTzhg==
-Received: from [192.168.1.28] (ci-asmtp-me-k8s.p00.prod.me.com [17.57.156.36])
-	by p00-icloudmta-asmtp-us-central-1k-100-percent-10.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (Postfix) with ESMTPSA id 9E1B418000BA;
-	Tue, 18 Mar 2025 19:51:16 +0000 (UTC)
-Message-ID: <22b70f84-0918-43e7-92f5-c8bdb4a68363@pereznus.es>
-Date: Tue, 18 Mar 2025 20:51:14 +0100
+	s=arc-20240116; t=1742327675; c=relaxed/simple;
+	bh=UvqG0s3chd5r2FwnnTYZMdcOq0cu81JNXGo56buL5oE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=MjoUXa/egBFsk32joODNxiSpC9Tjc/Y93ZkZd4vQkUWJ40/E3zYaiaEBD0EPpmVsP9NlNanwchig4m9mfKe9Y4HS0Xr+JCNfHQNJxfi6vih9Tvw/VXgOOu+K4vyTXURi5rax+cSPcT42bBB7a8bSfKkfAP6rASQYBmIvwgJYjA0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3d060cfe752so56341965ab.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:54:33 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742327672; x=1742932472;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9KnkuTP7eug4W7I6Rhre+Qbp1jyOhKw2a5x1q7jB9uw=;
+        b=pqWzIbpXWyHfHfHmhNHr9IC8gTzfzlIer2S3UTHUdqaVIhm2sXre8v0Ey0ECgHa0mE
+         hrhzh8+JvYPU47GbRLuVR94FOvqXD/2HTT4EsPkrd0oGyUpDyj/9Q0NI8YrTbyGXanSY
+         AF2+P84pSFgyLf2F0TT4Ny5stQ/JMx6T89u7hXECvmBzbgL5fgEDj8qAP6ALBqXRTULR
+         sem3omRbP6N3EQGhXRyZG4PfnNHn6lgiNb7uSOYlGcFmmQ4DwAeTSeUqra6DKbaZdDoj
+         fnaU70akzi61/kso0/spQTCWfGVQPQ7aOxlIo5grbs5LlexFvXxed7/ubjkCzhhxIX4Z
+         0l8A==
+X-Forwarded-Encrypted: i=1; AJvYcCVgMZXbrYK46mn4zbsVebPKWYC7tupGqcibEiKHTqQNlDlasVlI9C6lcjJXrj5u/cTvrakKUZsywRKuuG4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQp8FJrhZUzLfwlzXuV0DIcn/TwlEtHCudoA/bx/yWMdps5AvB
+	5VWpVgrPIMjyqfifyCP4A4SDGa3xSt9MVEjm2NlussiERCn2TqKzDCp4ngIcHCDMHm50X2G5ydO
+	m635ZTYT3FDp0erwCoin7K7DODDp/Jta+O5SvwEEabJLiOMRCJSVNz8c=
+X-Google-Smtp-Source: AGHT+IHQJWl+30V3m4/2dI0PQSnP1yYA9I1btbc1XRCHdLXioiL+h9NAIYA1xB75vyiElV0fCcEs8VmKKXMrOp2j4gJLoeEX0Tbk
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] iio: light: bh1750: Add hardware reset support via GPIO
-To: Krzysztof Kozlowski <krzk@kernel.org>, linux-iio@vger.kernel.org
-Cc: tduszyns@gmail.com, jic23@kernel.org, lars@metafoo.de, robh@kernel.org,
- conor+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-References: <20250316145514.627-1-sergio@pereznus.es>
- <01f48f6d-55a4-4dbe-b1ae-ef8c54dcc1ff@kernel.org>
- <f0536d74-5433-4086-9dfc-1ce6aeeebe00@pereznus.es>
- <8992a79d-0859-4d7f-9b47-52e20b11260a@kernel.org>
- <144b5c43-f8c6-44d1-bcff-83158ac29781@pereznus.es>
- <202b4446-0ce4-4288-8588-6edfc32125d1@kernel.org>
- <bde38364-5c20-4030-ad7d-9ae38971b260@kernel.org>
- <bf16371c-189c-4e51-91e5-129f1dcad317@pereznus.es>
- <ac008fb8-7c82-4b9c-9d24-52ea38b920e5@kernel.org>
-Content-Language: es-ES, en-US, ca
-From: =?UTF-8?Q?Sergio_P=C3=A9rez?= <sergio@pereznus.es>
-In-Reply-To: <ac008fb8-7c82-4b9c-9d24-52ea38b920e5@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-ORIG-GUID: TlpjAaSb_haVx-e86dPkVYKTN84pQ3sC
-X-Proofpoint-GUID: TlpjAaSb_haVx-e86dPkVYKTN84pQ3sC
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_09,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxscore=0 spamscore=0
- mlxlogscore=999 malwarescore=0 clxscore=1030 adultscore=0 phishscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2308100000 definitions=main-2503180143
+X-Received: by 2002:a05:6e02:1a8d:b0:3d4:3ab3:daf5 with SMTP id
+ e9e14a558f8ab-3d586b3d37amr887195ab.6.1742327672466; Tue, 18 Mar 2025
+ 12:54:32 -0700 (PDT)
+Date: Tue, 18 Mar 2025 12:54:32 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67d9cf78.050a0220.3657bb.000f.GAE@google.com>
+Subject: [syzbot] [jfs?] UBSAN: array-index-out-of-bounds in dtDelete
+From: syzbot <syzbot+4f9c823a6f63d87491ba@syzkaller.appspotmail.com>
+To: jfs-discussion@lists.sourceforge.net, linux-kernel@vger.kernel.org, 
+	shaggy@kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    e3a854b577cb Merge tag 'clk-fixes-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=111b1fa8580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=eb44f62cb82f8a0a
+dashboard link: https://syzkaller.appspot.com/bug?extid=4f9c823a6f63d87491ba
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1484dc78580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=151b1fa8580000
+
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-e3a854b5.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/80a4e52e75a6/vmlinux-e3a854b5.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/e261756ed740/bzImage-e3a854b5.xz
+mounted in repro: https://storage.googleapis.com/syzbot-assets/7fd9c181a987/mount_0.gz
+  fsck result: failed (log: https://syzkaller.appspot.com/x/fsck.log?x=135a419b980000)
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+4f9c823a6f63d87491ba@syzkaller.appspotmail.com
+
+loop0: detected capacity change from 0 to 32768
+------------[ cut here ]------------
+UBSAN: array-index-out-of-bounds in fs/jfs/jfs_dtree.c:2132:32
+index 240 is out of range for type 'struct dtslot[128]'
+CPU: 0 UID: 0 PID: 5303 Comm: syz-executor483 Not tainted 6.14.0-rc6-syzkaller-00115-ge3a854b577cb #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x241/0x360 lib/dump_stack.c:120
+ ubsan_epilogue lib/ubsan.c:231 [inline]
+ __ubsan_handle_out_of_bounds+0x121/0x150 lib/ubsan.c:429
+ dtDelete+0x2d67/0x2db0 fs/jfs/jfs_dtree.c:2132
+ jfs_rename+0xf91/0x1bf0 fs/jfs/namei.c:1239
+ vfs_rename+0xbdb/0xf00 fs/namei.c:5069
+ do_renameat2+0xd94/0x13f0 fs/namei.c:5226
+ __do_sys_rename fs/namei.c:5273 [inline]
+ __se_sys_rename fs/namei.c:5271 [inline]
+ __x64_sys_rename+0x82/0x90 fs/namei.c:5271
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fc873bc9bb9
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 61 17 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff24dc46e8 EFLAGS: 00000246 ORIG_RAX: 0000000000000052
+RAX: ffffffffffffffda RBX: 0000400000000e00 RCX: 00007fc873bc9bb9
+RDX: 00007fc873bc9bb9 RSI: 0000400000000f40 RDI: 0000400000000300
+RBP: 00007fc873c42610 R08: 00007fff24dc48b8 R09: 00007fff24dc48b8
+R10: 00007fff24dc48b8 R11: 0000000000000246 R12: 0000000000000001
+R13: 00007fff24dc48a8 R14: 0000000000000001 R15: 0000000000000001
+ </TASK>
+---[ end trace ]---
 
 
-El 18/03/2025 a las 18:37, Krzysztof Kozlowski escribió:
-> On 18/03/2025 18:26, Sergio Pérez wrote:
->> El 18/03/2025 a las 17:23, Krzysztof Kozlowski escribió:
->>> On 18/03/2025 17:21, Krzysztof Kozlowski wrote:
->>>> On 18/03/2025 17:06, Sergio Pérez wrote:
->>>>> El 18/03/2025 a las 16:16, Krzysztof Kozlowski escribió:
->>>>>> On 18/03/2025 15:16, Sergio Pérez wrote:
->>>>>>> Hello,
->>>>>>>
->>>>>>> El 17/03/2025 a las 8:24, Krzysztof Kozlowski escribió:
->>>>>>>> On 16/03/2025 15:55, Sergio Perez wrote:
->>>>>>>>> Some BH1750 sensors require a hardware reset before they can be
->>>>>>>>> detected on the I2C bus. This patch adds support for an optional
->>>>>>>>> reset GPIO that can be specified in the device tree.
->>>>>>>>>
->>>>>>>>> The reset sequence pulls the GPIO low and then high before
->>>>>>>>> initializing the sensor, which enables proper detection with
->>>>>>>>> tools like i2cdetect.
->>>>>>>>>
->>>>>>>>> Update the devicetree binding documentation to include the new
->>>>>>>>> reset-gpios property with examples.
->>>>>>>>>
->>>>>>>>> Signed-off-by: Sergio Perez <sergio@pereznus.es>
->>>>>>>> Please run scripts/checkpatch.pl and fix reported warnings. After that,
->>>>>>>> run also `scripts/checkpatch.pl --strict` and (probably) fix more
->>>>>>>> warnings. Some warnings can be ignored, especially from --strict run,
->>>>>>>> but the code here looks like it needs a fix. Feel free to get in touch
->>>>>>>> if the warning is not clear.
->>>>>> You keep ignoring paragraphs. Did you read this?
->>>>> I pass this check several times and every time I do any step to make
->>>>> sure I am well.
->>>>>
->>>>> scripts/checkpatch.pl -f drivers/iio/light/bh1750.c
->>>>> total: 0 errors, 0 warnings, 354 lines checked
->>>> That's not how you run checkpatch. Read the submitting patches. Just
->>>> like the name tells you, check the patch, you run it on the patch.
->>> BTW, I wonder which guideline told you to run it on the file? Because
->>> checkpatch description and submitting patches tell about running it on
->>> the patches, so I wonder where did you get suggestion to run it like that?
->> You're absolutely right. I misunderstood how to use checkpatch.pl and
->> was incorrectly running it on the source files instead of the patch
->> file. Thank you for pointing this out.
->>
->> $ scripts/checkpatch.pl --strict -f
-> No '-f'. Don't use such argument. Almost never. Read the help:
->
-> " -f
-> Treat FILE as a regular source file. This option must be used when
-> running checkpatch on source files in the kernel."
->
-> so why do you want a patch file to be a regular source file? How would
-> it ever work?
->
->> 0001-iio-light-bh1750-Add-hardware-reset-support-via-GPIO.patch
->> total: 0 errors, 0 warnings, 0 checks, 102 lines checked
->>
->> 0001-iio-light-bh1750-Add-hardware-reset-support-via-GPIO.patch has no
->> obvious style problems and is ready for submission.
-> You have clear examples how to run it inside:
->
-> https://docs.kernel.org/dev-tools/checkpatch.html
->
-> "./scripts/checkpatch.pl mypatch.patch --types EMAIL_SUBJECT,BRACES"
->
-> So:
-> checkpatch.pl mypatch
->
->> I've now run the tool correctly on my patch file and have fixed the
->> identified issues:
->> - Removed trailing whitespace
->> - Fixed lines exceeding 79 characters
->> - Fixed the inconsistency between the description and example for
->> reset-gpios
->> - Modified the existing example instead of adding a new one
->> - Ensured proper line endings and formatting
->> - Used proper get_maintainers.pl to include all recipients
->>
-> Please read the guides carefully. The process is extremely simple as:
->
-> git add ...
-> git commit --signed-off
-> git format-patch -v3 -2
-> scripts/chekpatch.pl v3*
-> scripts/get_maintainers.pl --no-git-fallback v3*
-> git send-email *
-> (or just use my git_send_email for last two)
-> (or just use b4 for last four)
->
-> The burden of reading the contributing guides is on you. We documented
-> all this on purpose, so we will not have to repeat this on every email.
-Thank you very much, I have followed the instructions with total 
-precision and carefully read all the documentation. I have submitted 
-both patches as v4 version.
-Apologies for the inconvenience.
->
-> [1]
-> https://github.com/search?q=repo%3Akrzk%2Ftools%20git_send_email&type=code
->
-> Best regards,
-> Krzysztof
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
