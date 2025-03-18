@@ -1,116 +1,154 @@
-Received: from mail.crpt.ru (mail1.crpt.ru [91.236.205.1])
+Received: from out-183.mta1.migadu.com (out-183.mta1.migadu.com [95.215.58.183])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9558520D508
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.236.205.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B083520B21A
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 13:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.183
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742305361; cv=none; b=pJHRQ/DnDNipU2OSmoEDgtM6UaFGyWAXkhCbQo/VHjMfDFOx8wT99hUNBv0jWW6ctHeZQDVoXrkkc1ed/hC4pAd7bJ2Q9AdHXBHGpumTus5Gsa6hZo/DK7w49Jhp58+NZy20nHfvIJL+psA9vhrA6Fb6BfeZMEYj6miw7f8NCog=
+	t=1742305384; cv=none; b=lJEyh1Sx2/kAwIBf4596EHP3CLMQQ1hCLUeArTexze+O7OXyH5NerXeNi95I9OM2Wp+9UG9MIVF6POV1F/mW1S9hjnWsyXQGJGcqb9h2pBIIEzdmEOI4DZ2AsLPd64kH0ndiJ/62yYDmpiJMXlILQbWv5+6k8yQWkNaE23KKzhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742305361; c=relaxed/simple;
-	bh=zHBz2NzGYeN8kH4fiaKRZfcg7nVFrjGejjkp7DglSnM=;
-	h=From:To:CC:Subject:Date:Message-ID:Content-Type:MIME-Version; b=IVTSl9y9jNuAXbFLBsezb3F+pp1A9kdwxkKoLkZGO3rabPcKQehq0nD9wemvaWlqc58w4TCNuTMlaIlhnga3ao7Ce8z4nROsEOyrxK+Sy+och7SKiUqUuzE5hxVaESdS9AAiNr/6LUjgViy9aslwDjyQi/LE/X6UGBGP2S8bwS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru; spf=pass smtp.mailfrom=crpt.ru; dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b=jAGSr8Kf; arc=none smtp.client-ip=91.236.205.1
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=crpt.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crpt.ru
+	s=arc-20240116; t=1742305384; c=relaxed/simple;
+	bh=96EcuZt4MIHAxeJfmcJ4wYHhcXcT6PTkpLM6tgpLsOk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VcLZY9HMKqjlSlRXws2QEKrwDvbu7k0FnvOWL9hxyCpRk7wGQMAp8AUDsuBJJjpxh92mAOiXy6qMxVRgiemMp+65BNMKNKo+f2/et17O+V8mERwKBVA1ChUhPmM7Q423TsMSggdQeVpVsYa+Ek+P6YJ5leDo8oiSQpWdS0AYANM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LKXGyLxi; arc=none smtp.client-ip=95.215.58.183
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=crpt.ru header.i=@crpt.ru header.b="jAGSr8Kf"
-Received: from mail.crpt.ru ([192.168.60.4])
-	by mail.crpt.ru  with ESMTP id 52IDgI81019229-52IDgI83019229
-	(version=TLSv1.2 cipher=AES256-SHA256 bits=256 verify=OK);
-	Tue, 18 Mar 2025 16:42:18 +0300
-Received: from EX2.crpt.local (192.168.60.4) by ex2.crpt.local (192.168.60.4)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 18 Mar
- 2025 16:42:18 +0300
-Received: from EX2.crpt.local ([192.168.60.4]) by EX2.crpt.local
- ([192.168.60.4]) with mapi id 15.01.2507.044; Tue, 18 Mar 2025 16:42:18 +0300
-From: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>
-To: Konstantin Komarov <almaz.alexandrovich@paragon-software.com>
-CC: =?koi8-r?B?98HUz9LP0MnOIOHOxNLFyg==?= <a.vatoropin@crpt.ru>,
-	"ntfs3@lists.linux.dev" <ntfs3@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"lvc-project@linuxtesting.org" <lvc-project@linuxtesting.org>
-Subject: [PATCH v2] fs/ntfs3: handle hdr_first_de() return value
-Thread-Topic: [PATCH v2] fs/ntfs3: handle hdr_first_de() return value
-Thread-Index: AQHbmAuQAyfNJudJa0SRheQB6mnCWA==
-Date: Tue, 18 Mar 2025 13:42:18 +0000
-Message-ID: <20250318134211.149170-1-a.vatoropin@crpt.ru>
-Accept-Language: ru-RU, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-kse-serverinfo: EX2.crpt.local, 9
-x-kse-antivirus-interceptor-info: scan successful
-x-kse-antivirus-info: Clean, bases: 3/18/2025 10:14:00 AM
-x-kse-attachment-filter-triggered-rules: Clean
-x-kse-attachment-filter-triggered-filters: Clean
-x-kse-bulkmessagesfiltering-scan-result: protection disabled
-Content-Type: text/plain; charset="koi8-r"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LKXGyLxi"
+Date: Tue, 18 Mar 2025 14:42:53 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742305376;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1u8zuWQmhavTCoewNJRxADhgvsvtVKNNIBc6g6OIDiQ=;
+	b=LKXGyLxiN3iPOTJ0n7JrdMpF3KtiQJfT+wwx/2omLBsc6Tc6gE3WW5+fGODGCUfNE6pmvl
+	GRevzcz+P+GCnaO/cdkAyZNlMFQVg66Od7Nujlk859XKyWHH0YZ449/iW+scxZR4Hhe5fy
+	eDMJXmhzLfdwIXcbiaU8WD21IuBUM+Y=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Richard Leitner <richard.leitner@linux.dev>
+To: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+	Mauro Carvalho Chehab <mchehab@kernel.org>, Lee Jones <lee@kernel.org>, Pavel Machek <pavel@kernel.org>, 
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-leds@vger.kernel.org
+Subject: Re: [PATCH v2 1/8] media: v4l: ctrls: add a control for flash/strobe
+ duration
+Message-ID: <myyn53owptzx3dm3qmudtm4pmnon7axmjks2u5adno6ywktd3t@qriiifsitqoh>
+References: <20250314-ov9282-flash-strobe-v2-0-14d7a281342d@linux.dev>
+ <20250314-ov9282-flash-strobe-v2-1-14d7a281342d@linux.dev>
+ <Z9P01zU_Kg0U62wa@kekkonen.localdomain>
+ <bx4p2hycva2rqywgglqluus6o7jbmfa2jjbc4k5d6aw6wsfkxd@zrtckmwtphuq>
+ <Z9QwT7n7D09BEfqa@kekkonen.localdomain>
+ <3dkwhfqxjhu3w4hpcl4gfsi22kwauo6s5urxrorezaw323yygq@nujmlkie5rpd>
+ <Z9l04b5ZGy877j32@kekkonen.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-FEAS-Client-IP: 192.168.60.4
-X-FE-Policy-ID: 2:4:0:SYSTEM
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; d=crpt.ru; s=crpt.ru; c=relaxed/relaxed;
- h=from:to:cc:subject:date:message-id:content-type:mime-version;
- bh=VrN5ggXU+9ieg/XF+YNQbzdFaG3OPBPHUDO8pb+HC5g=;
- b=jAGSr8KfziJ4q7X3/WbDcNYYlVIG95qByWIysHPzrIB1lIDZomy2SvhnT1QX6aj0QDoFy6v/PKhD
-	xtGc8/cJIgwmetqlMmDHIArgd3oLX3BVrl4EqeY5NHvY+GkPLa2BaPlT3QXtiLbcdbmy49/pK851
-	iYfPikJKaOg2Vux6OpruOMwsXnuFJjm+4DLppLbPHUsqmpMaGn7nynLAyskdjiFOIoA5Z6eGBWRF
-	QrR5Bt7R3dlwGIXrftzaKMs49igm8QTcl/79eJepV6We3MK6DXKjjEH8lR7ihfqLYU//wjgFMGge
-	oZE4PVWc6KmyuDS3jyncoOTxDqdswSjlNfGyNQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9l04b5ZGy877j32@kekkonen.localdomain>
+X-Migadu-Flow: FLOW_OUT
 
-From: Andrey Vatoropin <a.vatoropin@crpt.ru>
+On Tue, Mar 18, 2025 at 01:28:01PM +0000, Sakari Ailus wrote:
+> Hi Richard,
+> 
+> On Fri, Mar 14, 2025 at 05:08:16PM +0100, Richard Leitner wrote:
+> > Hi Sakari,
+> > 
+> > On Fri, Mar 14, 2025 at 01:34:07PM +0000, Sakari Ailus wrote:
+> > > Hi Richard,
+> > > 
+> > > On Fri, Mar 14, 2025 at 11:25:09AM +0100, Richard Leitner wrote:
+> > > > On Fri, Mar 14, 2025 at 09:20:23AM +0000, Sakari Ailus wrote:
+> > [...]
+> > > > > On Fri, Mar 14, 2025 at 09:49:55AM +0100, Richard Leitner wrote:
+> > > > > > Add a control V4L2_CID_FLASH_DURATION to set the duration of a
+> > > > > > flash/strobe pulse. This is different to the V4L2_CID_FLASH_TIMEOUT
+> > > > > > control, as the timeout defines a limit after which the flash is
+> > > > > > "forcefully" turned off again.
+> > > > > > 
+> > > > > > On the other hand the new V4L2_CID_FLASH_DURATION is the desired length
+> > > > > > of the flash/strobe pulse
+> > > > > 
+> > > > > What's the actual difference between the two? To me they appear the same,
+> > > > > just expressed in a different way.
+> > > > 
+> > > > According to FLASH_TIMEOUT documentation:
+> > > > 
+> > > > 	Hardware timeout for flash. The flash strobe is stopped after this
+> > > > 	period of time has passed from the start of the strobe. [1]
+> > > > 
+> > > > This is a little bit unspecific, but as also discussed with Dave [2]
+> > > > according to the documentation of V4L2_FLASH_FAULT_TIMEOUT it seems to
+> > > > be targeted at providing a "real timeout" control, not settings the
+> > > > desired duration:
+> > > > 
+> > > > 	The flash strobe was still on when the timeout set by the user
+> > > > 	--- V4L2_CID_FLASH_TIMEOUT control --- has expired. Not all flash
+> > > > 	controllers may set this in all such conditions. [1]
+> > > > 
+> > > > If I understood that wrong, I'm also happy to use FLASH_TIMEOUT for this
+> > > > use-case. But tbh I think FLASH_DURATION would be more specific.
+> > > > 
+> > > > As this still seems unclear: Should the documentation be
+> > > > changed/rewritten if we stick with the FLASH_DURATION approach?
+> > > > 
+> > > > [1] https://www.kernel.org/doc/html/latest/userspace-api/media/v4l/ext-ctrls-flash.html
+> > > > [2] https://lore.kernel.org/lkml/CAPY8ntB8i4OyUWAL8k899yUd5QsRifJXiOfWXKceGQ7TNZ4OUw@mail.gmail.com/
+> > > 
+> > > Right, I think I can see what you're after.
+> > > 
+> > > How does the sensor determine when to start the strobe, i.e. on which frame
+> > > and which part of the exposure of that frame?
+> > 
+> > In general I think it's not part of V4L2_CID_FLASH_DURATION to take any
+> > assumptions on that, as that's sensor/flash specific IMHO.
+> > 
+> > In case of the ov9282 sensor driver (which is also part of this series)
+> > the strobe is started synchronously with the exposure on each frame
+> > start.
+> > Being even more specific on the ov9292, the sensor also offers the
+> > possibility to shift that strobe start in in either direction using a
+> > register. Implementing this "flash shift" (as it's called in the sensors
+> > datasheet) is currently under test on my side. I will likely send a
+> > series for that in the coming weeks.
+> 
+> Ok, so you get a single frame exposed with a flash when you start
+> streaming, is that correct?
 
-The hdr_first_de() function returns a pointer to a struct NTFS_DE. This
-pointer may be NULL. To handle the NULL error effectively, it is important
-to implement an error handler. This will help manage potential errors
-consistently.
+Correct. The flash is switched on for the configured duration at every
+frame exposure (the sensor has a global shutter) as long as the camera is
+streaming.
 
-Additionally, error handling for the return value already exists at other=20
-points where this function is called.
+Maybe to following visualization of configured flash and exposure times help:
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE.
+             _________        _________        _________
+exposure: __|         |______|         |______|         |__
 
-Fixes: 82cae269cfa9 ("fs/ntfs3: Add initialization of super block")
-Signed-off-by: Andrey Vatoropin <a.vatoropin@crpt.ru>
----
-v1->v2: Fixed memory leak.
- fs/ntfs3/index.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+             __               __               __
+flash:    __|  |_____________|  |_____________|  |_________
+            ^^^^
+      strobe_duration
 
-diff --git a/fs/ntfs3/index.c b/fs/ntfs3/index.c
-index 7eb9fae22f8d..12bea99da3dc 100644
---- a/fs/ntfs3/index.c
-+++ b/fs/ntfs3/index.c
-@@ -2182,6 +2182,10 @@ static int indx_get_entry_to_replace(struct ntfs_ind=
-ex *indx,
-=20
- 		e =3D hdr_first_de(&n->index->ihdr);
- 		fnd_push(fnd, n, e);
-+		if (!e) {
-+			err =3D -EINVAL;
-+			goto out;
-+		}
-=20
- 		if (!de_is_last(e)) {
- 			/*
-@@ -2203,6 +2207,10 @@ static int indx_get_entry_to_replace(struct ntfs_ind=
-ex *indx,
-=20
- 	n =3D fnd->nodes[level];
- 	te =3D hdr_first_de(&n->index->ihdr);
-+	if (!te) {
-+		err =3D -EINVAL;
-+		goto out;
-+	}
- 	/* Copy the candidate entry into the replacement entry buffer. */
- 	re =3D kmalloc(le16_to_cpu(te->size) + sizeof(u64), GFP_NOFS);
- 	if (!re) {
---=20
-2.43.0
+
+regards;rl
+
+> 
+> > 
+> > > > > > Signed-off-by: Richard Leitner <richard.leitner@linux.dev>
+> > > > > > ---
+> > > > > >  drivers/media/v4l2-core/v4l2-ctrls-defs.c | 1 +
+> > > > > >  include/uapi/linux/v4l2-controls.h        | 1 +
+> > > > > >  2 files changed, 2 insertions(+)
+> > [...]
+> > > 
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
