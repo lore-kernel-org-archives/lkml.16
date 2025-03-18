@@ -1,103 +1,60 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7B1C207657
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11FB20B7E2
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:43:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742298102; cv=none; b=hR23fXMuZhwgZIYyYYBmcIjVrDqGcxUfNXgXZsYGiFWnWWIeWFe0ayp8c6z35hi4vxz3bKcl98T1XRueAGFw7BB0ssHjWESIHuYmNRxO0MAp5X9F3yMjBabSBZd8W2WCkLjRmt286xEtgvmFIYsVosJOndj40vFWYKCPaM9ta+k=
+	t=1742298209; cv=none; b=HbgaU5qt1o8eWorQGX2JAyMhJ4vQaXzc/hNEiTWfshKHeMxxNq2pxwCwGENk3kT0eMAwfJagv12fWOydZapY90rzuz2WUiCngE9wOIQ/KipDYR2M6xw0ojcvjFANpy74Ilccgk17bIrOcCiwhfCPJf1G0SYgn2sBj9WTMCPOujk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742298102; c=relaxed/simple;
-	bh=SxofddRPRlI1qKjXLI11P02gLGiwluXO+SH0e0hs77A=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QSqJMSn3zUXfyS2Lrc1udG0z4rC8vZ/y2yg4nqWf0c4GCwwwZsfo18G4GSIJ+RDacuga7/7SravZnZEZbcmDZTsAdHK4OyYowWIwiTHZUBVZ2OGHU6ayoPlTKD3e1g2J4jexthhPV9F+pR0unt4c30KzE0E7nwshI111t2jcveg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fWS7BQ4U; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742298209; c=relaxed/simple;
+	bh=Vlsxlh1AOW/QiXTampQxQJe/BaKBoGTXudbRio4oViU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KroN6GA+qLQ4aD6PWGt/FrwlgNHdCXCBkFio9ThezoCTkGEeXA+KUyav3b7/Nr/EeAdub/OsGNCphRJZylCLRWQfJ3tr/E3ungYCXeAwSBYbNnUr+DiDSYdmMte1gN1Zmn/JMuZHk6UjM5s2r/l/aejReUM1B/mEe9zZz4VfYWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LvanpjKY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fWS7BQ4U"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742298101; x=1773834101;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=SxofddRPRlI1qKjXLI11P02gLGiwluXO+SH0e0hs77A=;
-  b=fWS7BQ4U402WHsXLBKoPMbq6inCdS00AR0rLqPYNFG3pZpXUUGZLxfk4
-   VI1AjLVSrymtBvuFJfnuHBAoqjvVpM8aIupy6eMz8fm4Anhm9UTuzQXve
-   yOLH6afLCeMLmHP8UKlcKjXIUe1pHeFJ5Se8TeBlugxzyGNmRe6QGeEXx
-   AfiH3QvECHPWw+unxF0EaitF+7KKVsregDkSCfnRWD5RzeEBBIim+Q1Bu
-   NM9h36WTl2kdImnEEpDnh2VXdsxCOttQRKc6Yhzs765Anl/ELI/SoQ+sU
-   lNSq+XpxWuwvo6f1Njx+lHz205MlG/Ps+LjfnnwjO7UBnMw11zD6RH17I
-   A==;
-X-CSE-ConnectionGUID: exZtfnkvTBy8ScamrS5NQg==
-X-CSE-MsgGUID: Si4151ZgSg6j0s2ztciDpg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="43623251"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="43623251"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 04:41:40 -0700
-X-CSE-ConnectionGUID: uAQTZNV2SjW5oaeLAZiD0g==
-X-CSE-MsgGUID: cwY0FLX8SGaA+ID/hkywLg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="127275742"
-Received: from jraag-z790m-itx-wifi.iind.intel.com ([10.190.239.23])
-  by orviesa004.jf.intel.com with ESMTP; 18 Mar 2025 04:41:38 -0700
-From: Raag Jadav <raag.jadav@intel.com>
-To: giometti@enneenne.com,
-	gregkh@linuxfoundation.org,
-	andriy.shevchenko@linux.intel.com
-Cc: linux-kernel@vger.kernel.org,
-	Raag Jadav <raag.jadav@intel.com>
-Subject: [PATCH v3] pps: generators: tio: fix platform_set_drvdata()
-Date: Tue, 18 Mar 2025 17:10:38 +0530
-Message-Id: <20250318114038.2058677-1-raag.jadav@intel.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LvanpjKY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0E17C4CEDD;
+	Tue, 18 Mar 2025 11:43:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742298209;
+	bh=Vlsxlh1AOW/QiXTampQxQJe/BaKBoGTXudbRio4oViU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LvanpjKYLeX/AGVBpSR82hErBd5QXy8bzpNon4qzZ9e1PL1Ov61ah66m194iTnKe0
+	 tt7Ug8izLxjHxMt0e5D3S8AN4p+3nniVafLKVX7T80TtLc+nV4v84EgIaj/3Ftklaj
+	 t3o2Zwj3fe5szCpmEIcXTwCTMfQ5NBgt8uiYlUHTC8atyWfEHGcoViw77eGUnFeXvX
+	 6m2i5uUYY3xeE9OQRlO4r6Smr0zyolJsCYjoHNNjaI6jrBAa4B3dPaS/N0RbZBfPhT
+	 8DMLReM/yMnsjebI2Fa58W3P+tfBSd6T+gmldXPnrAb8VDjTMMhpgnXmjJsSqfMuxb
+	 MPlc9sX80YY6w==
+Date: Tue, 18 Mar 2025 11:43:24 +0000
+From: Will Deacon <will@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: catalin.marinas@arm.com, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, kernel-team@android.com,
+	maz@kernel.org, rananta@google.com
+Subject: Re: [GIT PULL] arm64 fixes for -rc7
+Message-ID: <20250318114323.GA13641@willie-the-truck>
+References: <20250314160458.GA9438@willie-the-truck>
+ <CAHk-=wgiX0q0WCL+SFwVCYtG7JR3=2Rshse-5J3AO2Y4AgT7Jw@mail.gmail.com>
+ <20250317160034.GA12267@willie-the-truck>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317160034.GA12267@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-platform_set_drvdata() is setting a double pointer to struct pps_tio as
-driver_data, which will point to the local stack of probe function instead
-of intended data. Set driver_data correctly and fix illegal memory access
-by its user.
+On Mon, Mar 17, 2025 at 04:00:35PM +0000, Will Deacon wrote:
+> I'll have a crack at reworking things to take a 'const char *' instead,
+> but it won't be for 6.14 as it'll be reasonably invasive.
 
- BUG: unable to handle page fault for address: ffffc9000117b738
- RIP: 0010:hrtimer_active+0x2b/0x60
- Call Trace:
-  ? hrtimer_active+0x2b/0x60
-  hrtimer_cancel+0x19/0x50
-  pps_gen_tio_remove+0x1e/0x80 [pps_gen_tio]
+Bah, that doesn't work at all because we need a string literal for the
+asm and I can't spot any constraints that allow you to pass in a string.
 
-Fixes: c89755d1111f ("pps: generators: Add PPS Generator TIO Driver")
-Signed-off-by: Raag Jadav <raag.jadav@intel.com>
-Acked-by: Rodolfo Giometti <giometti@enneenne.com>
----
+So a different flavour of surgery is required...
 
-v2: Add crash details in commit message (Greg, Andy)
-v3: Shorten the call trace, rephrase commit message (Andy)
-
- drivers/pps/generators/pps_gen_tio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pps/generators/pps_gen_tio.c b/drivers/pps/generators/pps_gen_tio.c
-index 6c46b46c66cd..6e4a383957d9 100644
---- a/drivers/pps/generators/pps_gen_tio.c
-+++ b/drivers/pps/generators/pps_gen_tio.c
-@@ -230,7 +230,7 @@ static int pps_gen_tio_probe(struct platform_device *pdev)
- 	hrtimer_init(&tio->timer, CLOCK_REALTIME, HRTIMER_MODE_ABS);
- 	tio->timer.function = hrtimer_callback;
- 	spin_lock_init(&tio->lock);
--	platform_set_drvdata(pdev, &tio);
-+	platform_set_drvdata(pdev, tio);
- 
- 	return 0;
- }
-
-base-commit: a24b18aa4fd619cc7961dae3395473c355bb5b6a
--- 
-2.34.1
-
+Will
