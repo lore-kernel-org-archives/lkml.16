@@ -1,81 +1,81 @@
 Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03911DE4E7
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:06:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3EE72080DB
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742296021; cv=none; b=BrkOi1ynUoZ2qtJ5CzVqRFHcFmMwU38XIa7uKsUUxxVL45Aif2c68tkqd2UK+uP7CW4DJLMh1IaoJbLtG8SD/Fsa7sJvkLm620+d+vwIlb8P75Pn/YwhYTu+GDb1je5gYoSlwQ0jOwiuLPAOqkPJFxnA0yOyXngJRh6/Mi6o65A=
+	t=1742296071; cv=none; b=j3mcEAqtasPKDVvCgVAOi0aJrlDDWy84xkluD0pVOqri4v7hlgC+GofCIO3tXtUcX74nTMgW6lxbEPM4cZK7YOsq05J21J03gxTyotiNX2hLAmcp2uLqAZYI83y3PEbdrxTXpY0gnLfua/yMKLoMyKqi+TSLYq+WvtO5/1TQUe0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742296021; c=relaxed/simple;
-	bh=s7ylQF5Ys9iFektCJs9596H4bZ66v9QutLBC4iC6u1c=;
+	s=arc-20240116; t=1742296071; c=relaxed/simple;
+	bh=qurSG2wtoT0SuIpw7x1lmKgxChkikWXIT1mXE8ZLYLQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JL3hxNxn7sfvM7T3rh7ZIKysYapCOhnBVurTMvQ61vp/0Nz3GKC2YRdzdcFAWayYBAHbIZdVlvOVEiLPieVJdDimMqPiIVC8LWEXdZmAf8sDNSN1B44H3wiEGxpei1PIzMBDgilJI8ArS/DN9Urq8H2c29rxTJ8KCkfXDZ11Omw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BpqEAS66; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sypVbuX6; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=BpqEAS66; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=sypVbuX6; arc=none smtp.client-ip=195.135.223.131
+	 In-Reply-To:Content-Type; b=qiNKFlOpBXGqFldrLYHU6ZFaCaxMNrJuj0BUGRHIxGqe382z02OPzECSKIFSN9jrRURZdsnvWLvMSFBs6/5DeXLNf48hqI7XMSydCweVqqbVGmrXiTonyQlS/TtgTeuRssYnwB8DQmPKBFoUk0q9xlqdC7SdAHrIOOpsO3Q1/iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=m40Xapsn; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=68Du1+8E; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=ifrQOdj2; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=RB8Ytt3e; arc=none smtp.client-ip=195.135.223.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BpqEAS66";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sypVbuX6";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="BpqEAS66";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="sypVbuX6"
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="m40Xapsn";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="68Du1+8E";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="ifrQOdj2";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="RB8Ytt3e"
 Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id CD5331F770;
-	Tue, 18 Mar 2025 11:06:54 +0000 (UTC)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id E188E1F770;
+	Tue, 18 Mar 2025 11:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742296014; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1742296068; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+PuMTPonpPJmHV1v2fDSmSVJP5xTGkBAfXbpqqvSQF4=;
-	b=BpqEAS66T+gKxvDD18aT3JEsiM6kA4Gu1Wl4YSJLcE7O5YsDmwRnhsOgL3StDMyFtBP0LG
-	qfCD+DI6WjJSB/IdmQ6qggd2ByGtu7Ea9+Fm1/jqd7b7+qvw+VD0WT5JrWy8yVFHwBEah8
-	pPGzvwrhCMmRiniaSc+3kj1MWD/802w=
+	bh=/WpjUHUtGdaDqbnmCpkWrWmAJhxJemIw0zzHySCAVxk=;
+	b=m40XapsnikFlOpmcZd1nDvPnTaNVcn6Or81ILt5UvXWQOh+kOVsziu1tPE7owvkVfskAYS
+	3216+OHXlcWIpcuJf18QViCAXzJkWmCVoQGanqPOUQV8PkRaalT+3cFD3m5OXfn5m2sHmf
+	oGqlHmKMXrn3bCi1UsK6PEP4J6AwD24=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742296014;
+	s=susede2_ed25519; t=1742296068;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+PuMTPonpPJmHV1v2fDSmSVJP5xTGkBAfXbpqqvSQF4=;
-	b=sypVbuX6vD7Kp7khMdlBom+vkPrePeopjlZR7LxktteCDcj5OPZuUdM8Jzy5gwdpLbWXts
-	L6dA69p9z7oBb1Dg==
+	bh=/WpjUHUtGdaDqbnmCpkWrWmAJhxJemIw0zzHySCAVxk=;
+	b=68Du1+8ECHI9kHYmAQHBci5PBIRwxFPoq5W8rm1iZmq9WRW2kOKXvbdsUz+7V6z3ANntg1
+	O4MvBR1BApWpyeBQ==
 Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=BpqEAS66;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=sypVbuX6
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=ifrQOdj2;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=RB8Ytt3e
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742296014; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	t=1742296067; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+PuMTPonpPJmHV1v2fDSmSVJP5xTGkBAfXbpqqvSQF4=;
-	b=BpqEAS66T+gKxvDD18aT3JEsiM6kA4Gu1Wl4YSJLcE7O5YsDmwRnhsOgL3StDMyFtBP0LG
-	qfCD+DI6WjJSB/IdmQ6qggd2ByGtu7Ea9+Fm1/jqd7b7+qvw+VD0WT5JrWy8yVFHwBEah8
-	pPGzvwrhCMmRiniaSc+3kj1MWD/802w=
+	bh=/WpjUHUtGdaDqbnmCpkWrWmAJhxJemIw0zzHySCAVxk=;
+	b=ifrQOdj2bz6QW+/4WJ9l0MjEXf5LRAcBx5/vMR11F0aN6vjb6+EsTOfsuagi1ZskZARWlW
+	cildu01vpICOu3AZGf/rJ5kxO7769bjEAABLdtI74f/t0+gB21u5csxmjE5WIko2gipKR4
+	n15oBsj+kRI9cnLIOzzUWD1+jVKryQg=
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742296014;
+	s=susede2_ed25519; t=1742296067;
 	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
 	 mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+PuMTPonpPJmHV1v2fDSmSVJP5xTGkBAfXbpqqvSQF4=;
-	b=sypVbuX6vD7Kp7khMdlBom+vkPrePeopjlZR7LxktteCDcj5OPZuUdM8Jzy5gwdpLbWXts
-	L6dA69p9z7oBb1Dg==
+	bh=/WpjUHUtGdaDqbnmCpkWrWmAJhxJemIw0zzHySCAVxk=;
+	b=RB8Ytt3eHePj/YQTrU1QXK0FENQF+GGzdiZ/eQf4VxYdmK40VREH9OQ7qs0HPBUwlucaBA
+	RgOklbMXqxQFuGBw==
 Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id ABE55139D2;
-	Tue, 18 Mar 2025 11:06:54 +0000 (UTC)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id C8E5C139D2;
+	Tue, 18 Mar 2025 11:07:47 +0000 (UTC)
 Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
 	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id N2f3KM5T2WcdRAAAD6G6ig
-	(envelope-from <hare@suse.de>); Tue, 18 Mar 2025 11:06:54 +0000
-Message-ID: <181c5e4c-f25c-46aa-9be0-06e515f14543@suse.de>
-Date: Tue, 18 Mar 2025 12:06:54 +0100
+	id mReKMANU2WdeRAAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 18 Mar 2025 11:07:47 +0000
+Message-ID: <f1083a89-44af-4bce-ab09-4260f727a551@suse.de>
+Date: Tue, 18 Mar 2025 12:07:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -83,22 +83,21 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 05/18] nvmet-fcloop: track ref counts for nports
+Subject: Re: [PATCH v3 06/18] nvmet-fcloop: sync targetport removal
 To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
  Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
  Chaitanya Kulkarni <kch@nvidia.com>
 Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
  linux-kernel@vger.kernel.org
 References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
- <20250318-nvmet-fcloop-v3-5-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-6-05fec0fc02f6@kernel.org>
 Content-Language: en-US
 From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250318-nvmet-fcloop-v3-5-05fec0fc02f6@kernel.org>
+In-Reply-To: <20250318-nvmet-fcloop-v3-6-05fec0fc02f6@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: CD5331F770
-X-Spam-Score: -4.51
-X-Rspamd-Action: no action
+X-Rspamd-Queue-Id: E188E1F770
+X-Spam-Level: 
 X-Spamd-Result: default: False [-4.51 / 50.00];
 	BAYES_HAM(-3.00)[100.00%];
 	NEURAL_HAM_LONG(-1.00)[-1.000];
@@ -121,49 +120,68 @@ X-Spamd-Result: default: False [-4.51 / 50.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_COUNT_TWO(0.00)[2];
 	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:dkim,suse.de:mid,suse.de:email,imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid];
 	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
 	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
 X-Spam-Flag: NO
-X-Spam-Level: 
 
-On 3/18/25 11:39, Daniel Wagner wrote:
-> A nport object is always used in association with targerport,
-> remoteport, tport and rport objects. Add explicit references for any of
-> the associated object. This ensures that nport is not removed too early
-> on shutdown sequences.
+On 3/18/25 11:40, Daniel Wagner wrote:
+> The nvmet-fc uses references on the targetport to ensure no UAFs
+> happens. The consequence is that when the targetport is unregistered,
+> not all resources are freed immediately. Ensure that all activities from
+> the unregister call have been submitted (deassocication) before
+> continuing with the shutdown sequence.
 > 
 > Signed-off-by: Daniel Wagner <wagi@kernel.org>
 > ---
->   drivers/nvme/target/fcloop.c | 106 +++++++++++++++++++++++++------------------
->   1 file changed, 63 insertions(+), 43 deletions(-)
+>   drivers/nvme/target/fcloop.c | 15 ++++++++++++++-
+>   1 file changed, 14 insertions(+), 1 deletion(-)
 > 
 > diff --git a/drivers/nvme/target/fcloop.c b/drivers/nvme/target/fcloop.c
-> index 245bfe08d91ec81f1979251e8c757a0d46fd09e9..69121a5f0f280936d1b720e9e994d6e5eb9186ff 100644
+> index 69121a5f0f280936d1b720e9e994d6e5eb9186ff..cddaa424bb3ff62156cef14c787fdcb33c15d76e 100644
 > --- a/drivers/nvme/target/fcloop.c
 > +++ b/drivers/nvme/target/fcloop.c
-> @@ -1054,8 +1054,15 @@ static void
->   fcloop_remoteport_delete(struct nvme_fc_remote_port *remoteport)
->   {
->   	struct fcloop_rport *rport = remoteport->private;
-> +	unsigned long flags;
+> @@ -239,6 +239,7 @@ struct fcloop_nport {
+>   	struct fcloop_rport *rport;
+>   	struct fcloop_tport *tport;
+>   	struct fcloop_lport *lport;
+> +	struct completion tport_unreg_done;
+>   	struct list_head nport_list;
+>   	refcount_t ref;
+>   	u64 node_name;
+> @@ -1078,6 +1079,8 @@ fcloop_targetport_delete(struct nvmet_fc_target_port *targetport)
+>   	tport->nport->tport = NULL;
+>   	spin_unlock_irqrestore(&fcloop_lock, flags);
 >   
->   	flush_work(&rport->ls_work);
+> +	complete(&tport->nport->tport_unreg_done);
 > +
-> +	spin_lock_irqsave(&fcloop_lock, flags);
-> +	rport->nport->rport = NULL;
-> +	spin_unlock_irqrestore(&fcloop_lock, flags);
+>   	/* nport ref put: tport */
+>   	fcloop_nport_put(tport->nport);
+>   }
+> @@ -1507,7 +1510,17 @@ __unlink_target_port(struct fcloop_nport *nport)
+>   static int
+>   __targetport_unreg(struct fcloop_nport *nport, struct fcloop_tport *tport)
+>   {
+> -	return nvmet_fc_unregister_targetport(tport->targetport);
+> +	int ret;
 > +
-> +	/* nport ref put: rport */
->   	fcloop_nport_put(rport->nport);
+> +	init_completion(&nport->tport_unreg_done);
+> +
+> +	ret = nvmet_fc_unregister_targetport(tport->targetport);
+> +	if (ret)
+> +		return ret;
+> +
+> +	wait_for_completion(&nport->tport_unreg_done);
+> +
+> +	return 0;
 >   }
 >   
-The comment is a bit odd; obviously fcloop_nport_put() puts the nport 
-reference for the rport.
-Maybe just remove them?
-
-Otherwise looks good.
+>   static ssize_t
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
 Cheers,
 
