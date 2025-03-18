@@ -1,135 +1,117 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52C161A83FB
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:42:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBE9D203716;
+	Tue, 18 Mar 2025 09:43:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742290956; cv=none; b=YMybqTRzQ+SqL/LtCQ7F8q+VnqR5lsrwSSCaDJ+qaqw/eVlIkpCTJ2YDyG+N9owpccvsTpM5OrLMBy5rfarz9WelR113yr1RUtJhnph2GwDTmXR47hvT0zLS7rSwsPkchvM20KD5kLqDO+Mok8fdh809/EljTNfXDOPFupKu+IA=
+	t=1742291036; cv=none; b=ScCg6idAEmatNJ95z4ON1YewoLF0QtCMk//Fe6TF4McVACSpQ3thvTVCBjGmkfPOg3x2Z+Ki1TQwdNYaE6fe+NEbzkc5VfTamTiIoHWc5HKP8SUGE96GQZGHpnZtdRDXZ6HcBxTz3+Ga8OAHCrIrtxPWw6r2fpiVdIIv26GpyA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742290956; c=relaxed/simple;
-	bh=y8jL4qekQfiGukKg+ROrGvBhtZJLqKiazo6PakAQMcE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HNm7Z+K/z/J8j0h/KQC2bvpxmnGXAf7CdgosFkBHIoBn20I6RB9f/Nw48XRGK2RF295NMmec78GnHluRD7skTY4207D01qbsElzcmex0yeliHts2q1y0KeBflh523zrD+k8GVA0BjkomevK3az1fZgJtka1K2Qi89+Lb95KjC44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tuTSp-0007k8-Sr; Tue, 18 Mar 2025 10:42:23 +0100
-Received: from moin.white.stw.pengutronix.de ([2a0a:edc0:0:b01:1d::7b] helo=bjornoya.blackshift.org)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <mkl@pengutronix.de>)
-	id 1tuTSp-000P5E-0c;
-	Tue, 18 Mar 2025 10:42:23 +0100
-Received: from pengutronix.de (p5b1645f7.dip0.t-ipconnect.de [91.22.69.247])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange secp256r1 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	(Authenticated sender: mkl-all@blackshift.org)
-	by smtp.blackshift.org (Postfix) with ESMTPSA id 321633DF4DB;
-	Tue, 18 Mar 2025 09:42:23 +0000 (UTC)
-Date: Tue, 18 Mar 2025 10:42:22 +0100
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Woojung Huh <woojung.huh@microchip.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Russell King <rmk+kernel@armlinux.org.uk>, 
-	Thangaraj Samynathan <Thangaraj.S@microchip.com>, Rengarajan Sundararajan <Rengarajan.S@microchip.com>, 
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, 
-	linux-kernel@vger.kernel.org, UNGLinuxDriver@microchip.com, kernel@pengutronix.de, 
-	Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: Re: [PATCH net-next v4 04/10] net: usb: lan78xx: improve error
- reporting on PHY attach failure
-Message-ID: <20250318-belligerent-emu-of-authority-0beddf-mkl@pengutronix.de>
-References: <20250318093410.3047828-1-o.rempel@pengutronix.de>
- <20250318093410.3047828-5-o.rempel@pengutronix.de>
+	s=arc-20240116; t=1742291036; c=relaxed/simple;
+	bh=XaCMPcxZPpx3RjmzjLh33LTCkrAMEaVOGoAlykO+ERk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=hxLnoiv86PnCpXrkvQ3lTkC0cw1RM1psvz7G+8F6FkrSx7rJRPEDxPNCXD86SYWLBblZu12IY2KQO76seeQmoMY95GX3dTYT7YaXs3EXM6M1NFGW2IzChHx8Ma89MVAxgA0NQUGiMy0Kj+dzEGSV07V+FYaMyyd0rIx21+HLk+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=livyB0fx; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="livyB0fx"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-22403cbb47fso98240885ad.0;
+        Tue, 18 Mar 2025 02:43:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742291034; x=1742895834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hJbWkSZND/K3t/quPIPTfxuwMu7Us16mwzx5pshvALk=;
+        b=livyB0fxNLh4TV7fDAuXqNYD4fRpMU+Xbtpt4eMCDmExKEvtI4G6RnyYNhY8VPPjsw
+         BnE2dxfZ9b1KPaWqiFtXijS7vrudJ6OTazW8G3fiLB8jtapuxZkhqaLmcpYGumVR0puf
+         j/7BUjJfvaAIvylfsHo+qy1XzPa22bmY3lYaYTFAAwZeRMjiGMePRvMvKB5XJ8gHy9cX
+         k0rUU2jpCR1cGdq6bboO/0C1MVqToaN97ntSqSGNGjGZhC/MZoOi2psfZ0xSG4Pa1JSx
+         uPYdeAps7k7/vTt/A6Sc8hbuE3qWeX3MBRqlsPb+Pu9V4kkyEr6yv7Co1hdx6gRhd3km
+         /ytQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742291034; x=1742895834;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hJbWkSZND/K3t/quPIPTfxuwMu7Us16mwzx5pshvALk=;
+        b=TumfS9QAW2uYTzTGgyA4IRDchqtRSbsH2C1NOlZ2Ro6vVc8ICZIoAuBrQgB9SH+xQx
+         4cW08sMN1y+XwCGTr/zMkhKsF8jt81eRtPvsWj6e3o5/t2NI4gQ7xvb7TJK/4hyj5IQq
+         7/95DsYpjxKAEpwWCbgy5PSU8OXn4zcO+j6HvtFOKA9XKVh5Lzi9HfS+lMqj1OujCVgA
+         q/nnb/Ke4ubs9KG6kwU/Ytut6UcFTzazrA0jl43a9q1n4WyTl6GBH9aIkX2psi4PVLVF
+         I99ehItzyLiePGgZWzl0nV1JAVvzKRrkrE+HPgqt+X0GPnuz9eHuDMLYxZoVC1p6EftY
+         hElQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVypRh6iJIf3tl4z7fa1/pRup6+lliDGTP1Bas3ZtOe0v+tS7Mck9ouvC8ZjpAzF2eGjTOyHE0fh8lwfD0=@vger.kernel.org, AJvYcCWDfWmuRBg49oap8pQ2ahuUuFELeELbPEZajT5KQC2kCeHqd3kMwM41RDu0p/L25wGUIAUiWTCWuzVAuA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxFxHIAG90dnzBskBgvpAyZTuo1wXly8TGYBWSjjMFWUgMoacSY
+	JEx0wwBPQ+UflVwMqHQSiK621RXTRAwIPJAYp/jYooNzGplzHl01
+X-Gm-Gg: ASbGncsTZOEgsZ/RQ8/WApH9LPZ2m0S+ltd7goNvIWVgGHYt4+ngMaIAzrhurH2E6k8
+	uzwTV90KIOTQ67m2kXoyivVYrnEwBA4uvBufebydnhg4hj6lO2beJ99NSFA8uVFHZUCruLye7hc
+	zZ68s4Gv4oi7wBNpmcXMUU/UZ2Xt+4XV3mP4MsyFuaGdXOZWUHTrQYoTu5VTzJjlW7I+rXI+sVz
+	yi6+ZxWf5T+b/RNwsHmCZMbMAXlQvlIf7ViKYfjcprrvojkTQv9ldlnusue3I1iNDSQBZ5v2wh0
+	W7Kh9mw5GyZW0QGpQJvxY2ug6ZL3NNM1WG35s/EajikXxLkwXxylyMQwjPJM8l5QgUS2jd/dyUW
+	B7XY=
+X-Google-Smtp-Source: AGHT+IH2ALjYAcNZFxFSk+UFw+JaT6R9liUb9JM6KsyABh3Uh+bIRYXRzCmoq6U09VGIyXm4x+WI+Q==
+X-Received: by 2002:a17:903:18e:b0:223:325c:89de with SMTP id d9443c01a7336-225e0a5282bmr189640685ad.1.1742291033856;
+        Tue, 18 Mar 2025 02:43:53 -0700 (PDT)
+Received: from localhost.localdomain ([114.246.238.36])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-225c6bd3c59sm89848815ad.218.2025.03.18.02.43.49
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 18 Mar 2025 02:43:53 -0700 (PDT)
+From: linmq006@gmail.com
+To: Lee Duncan <lduncan@suse.com>,
+	Chris Leech <cleech@redhat.com>,
+	Mike Christie <michael.christie@oracle.com>,
+	"James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Lin Ma <linma@zju.edu.cn>,
+	open-iscsi@googlegroups.com,
+	linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: linmq006@gmail.com
+Subject: [PATCH] scsi: iscsi: Fix missing scsi_host_put in error path
+Date: Tue, 18 Mar 2025 17:43:43 +0800
+Message-Id: <20250318094344.91776-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="35643vawmk6esmbi"
-Content-Disposition: inline
-In-Reply-To: <20250318093410.3047828-5-o.rempel@pengutronix.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: mkl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+From: Miaoqian Lin <linmq006@gmail.com>
 
---35643vawmk6esmbi
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH net-next v4 04/10] net: usb: lan78xx: improve error
- reporting on PHY attach failure
-MIME-Version: 1.0
+Add goto to ensure scsi_host_put is called in all error paths of
+iscsi_set_host_param function. This fixes a potential memory leak when
+strlen check fails.
 
-On 18.03.2025 10:34:04, Oleksij Rempel wrote:
-> Include error code in the log message when PHY attachment fails,
-> providing better debugging information.
->=20
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v3:
-> - update commit message
-> ---
->  drivers/net/usb/lan78xx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-> index e54b1ac2c4fc..d2bc6cbdbb66 100644
-> --- a/drivers/net/usb/lan78xx.c
-> +++ b/drivers/net/usb/lan78xx.c
-> @@ -2693,8 +2693,8 @@ static int lan78xx_phy_init(struct lan78xx_net *dev)
-> =20
->  	ret =3D phylink_connect_phy(dev->phylink, phydev);
->  	if (ret) {
-> -		netdev_err(dev->net, "can't attach PHY to %s\n",
-> -			   dev->mdiobus->id);
-> +		netdev_err(dev->net, "can't attach PHY to %s, error %pe\n",
-> +			   dev->mdiobus->id, ERR_PTR(ret));
->  		return -EIO;
+Fixes: ce51c8170084 ("scsi: iscsi: Add strlen() check in iscsi_if_set{_host}_param()")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+---
+ drivers/scsi/scsi_transport_iscsi.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Probably unrelated to this patch, but what about propagating the error
-value?
+diff --git a/drivers/scsi/scsi_transport_iscsi.c b/drivers/scsi/scsi_transport_iscsi.c
+index 9c347c64c315..0b8c91bf793f 100644
+--- a/drivers/scsi/scsi_transport_iscsi.c
++++ b/drivers/scsi/scsi_transport_iscsi.c
+@@ -3182,11 +3182,14 @@ iscsi_set_host_param(struct iscsi_transport *transport,
+ 	}
+ 
+ 	/* see similar check in iscsi_if_set_param() */
+-	if (strlen(data) > ev->u.set_host_param.len)
+-		return -EINVAL;
++	if (strlen(data) > ev->u.set_host_param.len) {
++		err = -EINVAL;
++		goto out;
++	}
+ 
+ 	err = transport->set_host_param(shost, ev->u.set_host_param.param,
+ 					data, ev->u.set_host_param.len);
++out:
+ 	scsi_host_put(shost);
+ 	return err;
+ }
+-- 
+2.39.5 (Apple Git-154)
 
-Marc
-
->  	}
-> =20
-> --=20
-> 2.39.5
->=20
->=20
->=20
-
---=20
-Pengutronix e.K.                 | Marc Kleine-Budde          |
-Embedded Linux                   | https://www.pengutronix.de |
-Vertretung N=C3=BCrnberg              | Phone: +49-5121-206917-129 |
-Amtsgericht Hildesheim, HRA 2686 | Fax:   +49-5121-206917-9   |
-
---35643vawmk6esmbi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEn/sM2K9nqF/8FWzzDHRl3/mQkZwFAmfZP/wACgkQDHRl3/mQ
-kZysRgf/ZK7iXPm8CUv1sZbinwkHKzA8Tw6N6ZzYr6SN42E0NJiLzlfojaBXtSON
-u3GbRQM8pU0pr24x/uLJqgQX1jh6MqN9gJD/Bsdqr8IjueJpEvu7Dsxn1RX+31Re
-KlKY83uF5H63tKtJduhqCoFYekU4hQsfyS6TI2T/aotOv/KB7t4Svr/BrUJ0Wv6Y
-kWil/63ZOAl0AjVZkXikg71g4VLl6pvs2Wdtsvp8nkRg2y+NTLBULGc4DRj53r5f
-nOabsASMgYTa8ThMcwYMILevAPUSGXelWA7dMCBydM5YmwNnwf5Ig89Ow073qEj6
-U3tX+JS1ncOwl9TxGRtvX/omGny6eQ==
-=s1r8
------END PGP SIGNATURE-----
-
---35643vawmk6esmbi--
