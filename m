@@ -1,80 +1,69 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70DE1EFFA8;
-	Tue, 18 Mar 2025 07:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A78C1F4CBD
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:58:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742284727; cv=none; b=SBSAs7RgcsdJbT93f1CtplMBEMyrwy7tAbJe8bBoCb0OmfxqLsjnv1pulNx+odLTOZUv7N2jKsySPNe6YuPYa6g4gGuLzUXm5eY8xsa0mfhiTXxC/EruJN1mRbeT0h7H/uYPAWoSCkO5l60lRMGApUYy68J0nKrLmVw+Kbq9LZY=
+	t=1742284729; cv=none; b=un20a0SOr2Dj8LSiryqPCNRSnsgu2lWgjSOG7qLCro/RUkER7Ij151vIQKk4z+UnAMHbsdxTTtBuXjcpa5q1UJKcINXriRb6ujdM9CMCzdPpapilIgoAr2r3aB/quaABmhhH5HxAkW52L9/32PSxRvep6/g8SDJxSILLW71fCiE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742284727; c=relaxed/simple;
-	bh=PCzm1Uv6dvQihuvSi9Y7zt9Fyzb7GOfU0TdWTSqR4CU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JHCKiLXWScbyrfl07WYq6C5sQFwIv7cKoDtkB2ELJuPcYEmUWoUYWDqoKTytnY559ciTFgQRyjNH+LQdQmtjWSytqq9hk7I+4E60iNBGwv/8pLlwd3HFhseYiPs9H8COzKwYeAFGsFKsggvqzeMy70+Z4qLX7Ic+KzLnEc/B9lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BuXKBEqO; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742284729; c=relaxed/simple;
+	bh=TvNcs0lI/B1Jf/RtrDkX2aU0sX7LqAQqY73Vs4a3g+4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
+	 References; b=BoCBrP326R3fcONwn13HaVkEc4PX+PHDN6MGN5g83OFZQ8nYGvdr6i1QhN4Ltp+LrFaZOqi9oxI3QCSPdHTbtgO1vUgpHBmPoMzXtTHie+3eLnlxxdpiBEJpi01DYBzQVgnQcIjppUX0qCGfIXwBjaGBAQVGZ/wzEzfPA+yla1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BlIrfa7s; arc=none smtp.client-ip=203.254.224.24
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuXKBEqO"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2241053582dso464165ad.1;
-        Tue, 18 Mar 2025 00:58:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742284725; x=1742889525; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Cmi/upa2sTtbXf6Q7CoVFmlat4h2nyC9ICZjWOCUZzw=;
-        b=BuXKBEqOhKJ5IecUSXuO1d8eZhJpPDJd51dQA1lnvBBFbGQ1mpJyPWc32bXnx8R+b5
-         B4OPH3cbj0Z0/56ee3RvDqr9Ai8kVkMYX6NwaHoHhCkD4NKaYUSF76SbzEuYxrvihQ+x
-         TxQJcoh79i7RVlM9BIJ4Apnvf7fu4wejSXfwVYekR1ZHSm7TVJwtiSFMKKLcRHbrmVRe
-         GlgdYRqKSkw7r1wsnb92hqASpbIc8GQOzWWLhKWv4561vqx9omvAgwch15zOEtLis8xB
-         +HdenjTJ/keQ5RqWWjxGWaxnQyNiMaL5HVVzGDX72OpccEzwbf1k4SBjtETCRxnqICgw
-         mtsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742284725; x=1742889525;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Cmi/upa2sTtbXf6Q7CoVFmlat4h2nyC9ICZjWOCUZzw=;
-        b=b/PgR+9FEmMTdq9R2IcC18xwiMuDs/Ha55M3JlbihD5jz+H9o71SFglVceerKuCw5N
-         Svnlt9YpMXkrPDWfAKAjN9uDZFJsWqUzP0+nQOqV8kOgHQhE0qh/ngjrfrSCIIz0m5yQ
-         EvwVlaqPOU2poMazO5DOvsIAb/6rEF7tfMgarGV9AReqvXzleJyENgwgFxEukAYmDCvN
-         CohK9rGXHTcbdUFtx0/t1ts1X9lTIXb7pjPR9+WZKn5nF0CjMcToSU2tCXW6fVRlLT3f
-         zc6shPZyPhpKiOKjIRLHt3crSIgCzKD8ikTtZx3+E4D1UsrkCx+xv25mOzEa44AcbREb
-         uFgA==
-X-Forwarded-Encrypted: i=1; AJvYcCUuGm4KLR73q/Wf5pDD+FkRj9FozVyLUVx6Jc28XP8AgKLfbmt0GjUoXcP5qrKMfA1HMlSAcRZxUlw=@vger.kernel.org, AJvYcCVoWPQ+KMA5iAvyD1EZSagelFfArhqXv42ecPYMO2hhvQ2k2Ad4KL2BQIDYA7LFnIyvZ+4jr3N1Jiy+9RYt@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywq8KYXgveEH9QW9yTNMvVQgsPHkRfohJWtAyP0hErxnvW8UMHi
-	i6YvjSittbMPyfELvPAy79UENcA+2VP8xwWu6QojgvKYJK8DhtW7
-X-Gm-Gg: ASbGnctt4ZtPg/S0xsyxMWJ833PVHMhVaISDp2HPGvdkZIXVw0PASUAtEP3RUtmwy+b
-	kQjXS0U2qqIqu5eiHQ8Jl8B10D1Y/d+qRbmNLM15RP9CkCncHJU/TBHtU+tbrjhIHwa/AGmYuH6
-	VLhNC7GD9CDcBZ1JBU9kvx4xu7mDkvPwUnp8agr3KsZQBT58ILaVbGl75BgUbiJqck3Kx45XIMs
-	kMoBDCjgkWIloCDYp/J3PHvHnfR2vexTqHXEISsaXDqGxhW20mqUPE8yZ9CL5nPpuXqCMxcGw5R
-	6IHheRT5Nb4pkm0DThA2nHD4L17LVVlHoelFtaEIDogYGGDST2QygzxV90O5RZxhqj5FsF7meg=
-	=
-X-Google-Smtp-Source: AGHT+IFUKsoujjlo/WHI6q9sp0EJXaYl5Lu3bIObvFl6VcEXwX8wPmmirb00eK1bvkP8CYfzr23N/Q==
-X-Received: by 2002:a17:903:11cf:b0:223:37ec:63d5 with SMTP id d9443c01a7336-225e0ac37d3mr222554505ad.28.1742284724947;
-        Tue, 18 Mar 2025 00:58:44 -0700 (PDT)
-Received: from localhost.localdomain ([103.165.80.178])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbfdfesm88149865ad.203.2025.03.18.00.58.39
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 18 Mar 2025 00:58:44 -0700 (PDT)
-From: Hao Jia <jiahao.kernel@gmail.com>
-To: hannes@cmpxchg.org,
-	akpm@linux-foundation.org,
-	tj@kernel.org,
-	corbet@lwn.net,
-	mhocko@kernel.org,
-	roman.gushchin@linux.dev,
-	shakeel.butt@linux.dev,
-	muchun.song@linux.dev,
-	mkoutny@suse.com
-Cc: cgroups@vger.kernel.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	Hao Jia <jiahao1@lixiang.com>
-Subject: [PATCH 0/2] Adding Proactive Memory Reclaim Statistics
-Date: Tue, 18 Mar 2025 15:58:31 +0800
-Message-Id: <20250318075833.90615-1-jiahao.kernel@gmail.com>
-X-Mailer: git-send-email 2.39.2 (Apple Git-143)
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BlIrfa7s"
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250318075838epoutp0157f8ba3c6ed7792b977face99244fadd~t1riBM2_Z1739717397epoutp01H
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:58:38 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250318075838epoutp0157f8ba3c6ed7792b977face99244fadd~t1riBM2_Z1739717397epoutp01H
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1742284718;
+	bh=7qwcPFV5Rg7MF4eQvNKqLddBiXG0kcSHlrA2IAxvWJQ=;
+	h=From:To:Cc:Subject:Date:References:From;
+	b=BlIrfa7sYaPS0RfovEJIshF/PZf7+xgURZBSZWHJLUV0NT5A+t8fAZSOXvxSGjZWS
+	 3kSpMtFMFRS0WavEM9w7gFYRtCo51p7qtg+CDYdrw6PgWRZgdbYFKa39UxLZASYkR5
+	 v3PVnyowwcZAwxY04xTRA3e6NRd5s3YEeLmTEHmA=
+Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20250318075838epcas5p36fe5adef46c96a5f9daafb7b9f8d8ec0~t1rhYSm720066600666epcas5p3S;
+	Tue, 18 Mar 2025 07:58:38 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.182]) by
+	epsnrtp4.localdomain (Postfix) with ESMTP id 4ZH43H4xgJz4x9Pv; Tue, 18 Mar
+	2025 07:58:35 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	7E.02.19956.BA729D76; Tue, 18 Mar 2025 16:58:35 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+	20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80~t1iQCjjUP2608126081epcas5p3e;
+	Tue, 18 Mar 2025 07:48:01 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20250318074800epsmtrp1968f3aa34a196424b3f4fd93dc54e200~t1iQBQwfm0331403314epsmtrp1W;
+	Tue, 18 Mar 2025 07:48:00 +0000 (GMT)
+X-AuditID: b6c32a4b-fd1f170000004df4-8a-67d927ab63cd
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	F0.D7.23488.03529D76; Tue, 18 Mar 2025 16:48:00 +0900 (KST)
+Received: from bose.samsungds.net (unknown [107.108.83.9]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250318074758epsmtip1df55d9652c82ee578c5f04a45a1691ad~t1iOGE7Nb2807028070epsmtip1F;
+	Tue, 18 Mar 2025 07:47:58 +0000 (GMT)
+From: Faraz Ata <faraz.ata@samsung.com>
+To: alim.akhtar@samsung.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	faraz.ata@samsung.com, rosa.pila@samsung.com, dev.tailor@samsung.com,
+	suyash.bitti@samsung.com
+Subject: [PATCH v2] arm64: dts: exynos: Add DT node for all UART ports
+Date: Tue, 18 Mar 2025 13:26:35 +0530
+Message-Id: <20250318075635.3372599-1-faraz.ata@samsung.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,30 +71,565 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprKJsWRmVeSWpSXmKPExsWy7bCmpu5q9ZvpBs8Wqls8mLeNzWLN3nNM
+	Fvd2LGO3mH/kHKvFtRsL2S1ezrrHZrHp8TVWi8u75rBZzDi/j8ni/54d7BZffj5gtpg9v8aB
+	x2PTqk42j81L6j36tqxi9Pi8SS6AJSrbJiM1MSW1SCE1Lzk/JTMv3VbJOzjeOd7UzMBQ19DS
+	wlxJIS8xN9VWycUnQNctMwfoMCWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJrVJqQUpOgUmB
+	XnFibnFpXrpeXmqJlaGBgZEpUGFCdkZj5wLWgv9tjBUbz85hb2CckdnFyMkhIWAi0X9vO3sX
+	IxeHkMBuRol/vW+ZIJxPjBI3LjZDOd8YJZ6e2c0K0zJt6i9GiMReRomZ0y6yQDjvgarmzGAG
+	qWITUJeYeeMIUIKDQ0QgXOLsYnGQGmaB14wSn+9vYAKpERZwk7jXcJ4dpIZFQFXi5xsXkDCv
+	gI3E+TsHoZbJS+w/eJYZIi4ocXLmExYQmxko3rx1NjPITAmBt+wSa7b+Y4ZocJFYOfsRE4Qt
+	LPHq+BZ2CFtK4mV/G5TtIzH56DdGkL0SAhkSd9aKQITtJVYvOMMKEmYW0JRYv0sfIiwrMfXU
+	OiaItXwSvb+fQE3nldgxD8ZWlji5Zw/UyZISh26/gLI9JG6+2Q+2VUggVmJvZwv7BEb5WUi+
+	mYXkm1kImxcwMq9ilEwtKM5NTy02LTDOSy2HR2xyfu4mRnD61PLewfjowQe9Q4xMHIyHGCU4
+	mJVEeN2fXE8X4k1JrKxKLcqPLyrNSS0+xGgKDOGJzFKiyfnABJ5XEm9oYmlgYmZmZmJpbGao
+	JM7bvLMlXUggPbEkNTs1tSC1CKaPiYNTqoGpf130v3jbB6o/GTS1XHcFvex+sux1w/y9XYLy
+	G1tW7mBaaLXsZvnJk+L7p/x1+uUgbNYnmTFpzuL0P/UsPkrvHzO67FkhPPdYhTDPXx6rg9//
+	bth4zPvcS8fYMP0MPuYPjD9iWBitslXWBE6RYNESTNymvoYz/BK/bM17Z8+UqqMbd7RuTn/y
+	IvkYM9+0+QIL+m9WeaQGJ615MIeR+aVsc6gfR+3pD247lPxX5026NY136W4rD31z48qah3I3
+	PoQleKbEdd5lbs3Rnrerd13q9dMeuZftqlpex0ZN+CPB0L+sxJ5T27Dpxy63o1KtH2JWMi54
+	0ZNccNxlssNSP5vWr5G/tLMDig47hSkoyCqxFGckGmoxFxUnAgAQSfO9KAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrELMWRmVeSWpSXmKPExsWy7bCSnK6B6s10g+nfzC0ezNvGZrFm7zkm
+	i3s7lrFbzD9yjtXi2o2F7BYvZ91js9j0+BqrxeVdc9gsZpzfx2Txf88OdosvPx8wW8yeX+PA
+	47FpVSebx+Yl9R59W1YxenzeJBfAEsVlk5Kak1mWWqRvl8CV0di5gLXgfxtjxcazc9gbGGdk
+	djFyckgImEhMm/qLsYuRi0NIYDejxOv5jUwQCUmJw0/vskLYwhIr/z1nhyh6yyhx89QDsASb
+	gLrEzBtHWEBsEYFoia8vzoNNYhb4zCixs+8YG0hCWMBN4l7DeaBuDg4WAVWJn29cQMK8AjYS
+	5+8chFogL7H/4FlmiLigxMmZT8BmMgPFm7fOZp7AyDcLSWoWktQCRqZVjJKpBcW56bnJhgWG
+	eanlesWJucWleel6yfm5mxjBwaylsYPx3bcm/UOMTByMhxglOJiVRHjdn1xPF+JNSaysSi3K
+	jy8qzUktPsQozcGiJM670jAiXUggPbEkNTs1tSC1CCbLxMEp1cA02emL5X7FE98ieYuUnKXU
+	GHsn3n1yd/2paYs0pNLNtgasuvxp4vorydsk8n9JGb/YfzNTi3HB1mvslv8L+/8Vmm4285Cq
+	FuefXrotflnR056GbrsLi0Uanj/+z36jZALX5tJpF1aXnhNrq/0aZPDOR3lD3t/TZrtc91f9
+	ZWMS4L90xdWl1OhwxNGT11OvLk9SPnWx18ty5hG2g50vvAO2Scp1nw4PP8741LotVuirUfP0
+	c4bXZPJ53+d8ifJ955Sc8qL4/enGmp/zNNY2RqdbRDqv2acmtUfp6sP68v55JofWneBXmfh5
+	oYPxp5w5edycTOtq3A33ZIYf8zSO3hhs81t1Raek8o8+zQ1f9ZYosRRnJBpqMRcVJwIAdKSa
+	MtUCAAA=
+X-CMS-MailID: 20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: REQ_APPROVE
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80
+References: <CGME20250318074801epcas5p3de68627a3e64ebc2a95ed33a3f485e80@epcas5p3.samsung.com>
 
-From: Hao Jia <jiahao1@lixiang.com>
+Universal Serial Interface (USI) supports three serial protocol
+like uart, i2c and spi. ExynosAutov920 has 18 instances of USI.
+Add all the USI DT node and subsequent uart nodes for all the instances.
 
-These two patches are related to proactive memory reclaim.
+Signed-off-by: Faraz Ata <faraz.ata@samsung.com>
+---
+Changes in v2:
+- Fixed review comments from Krzysztof
+- Link to v1: https://patchwork.kernel.org/project/linux-samsung-soc/patch/20250312061932.1797993-2-faraz.ata@samsung.com/
+---
+ .../arm64/boot/dts/exynos/exynosautov920.dtsi | 493 ++++++++++++++++++
+ 1 file changed, 493 insertions(+)
 
-Patch 1 Split proactive reclaim statistics from direct reclaim counters
-and introduces new counters: pgsteal_proactive, pgdemote_proactive,
-and pgscan_proactive.
-
-Patch 2 Adds pswpin and pswpout items to the cgroup-v2 documentation.
-
-Hao Jia (2):
-  mm: vmscan: Split proactive reclaim statistics from direct reclaim
-    statistics
-  cgroup, docs: Add pswpin and pswpout items in cgroup v2 doc
-
- Documentation/admin-guide/cgroup-v2.rst | 15 +++++++++++
- include/linux/mmzone.h                  |  1 +
- include/linux/vm_event_item.h           |  2 ++
- mm/memcontrol.c                         |  7 +++++
- mm/vmscan.c                             | 35 ++++++++++++++-----------
- mm/vmstat.c                             |  3 +++
- 6 files changed, 48 insertions(+), 15 deletions(-)
-
+diff --git a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+index eb446cdc4ab6..9e2887fa51a7 100644
+--- a/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
++++ b/arch/arm64/boot/dts/exynos/exynosautov920.dtsi
+@@ -330,6 +330,499 @@ serial_0: serial@10880000 {
+ 			};
+ 		};
+ 
++		usi_1: usi@108a00c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x108a00c0 0x20>;
++			samsung,sysreg = <&syscon_peric0 0x1008>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI01_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_1: serial@108a0000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x108a0000 0xc0>;
++				interrupts = <GIC_SPI 766 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart1_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI01_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <256>;
++				status = "disabled";
++			};
++		};
++
++		usi_2: usi@108c00c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x108c00c0 0x20>;
++			samsung,sysreg = <&syscon_peric0 0x1010>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI02_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_2: serial@108c0000 {
++			compatible = "samsung,exynosautov920-uart",
++				     "samsung,exynos850-uart";
++				reg = <0x108c0000 0xc0>;
++				interrupts = <GIC_SPI 768 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart2_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI02_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_3: usi@108e00c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x108e00c0 0x20>;
++			samsung,sysreg = <&syscon_peric0 0x1018>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI03_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_3: serial@108e0000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x108e0000 0xc0>;
++				interrupts = <GIC_SPI 770 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart3_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI03_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_4: usi@109000c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x109000c0 0x20>;
++			samsung,sysreg = <&syscon_peric0 0x1020>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI04_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_4: serial@10900000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10900000 0xc0>;
++				interrupts = <GIC_SPI 772 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart4_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI04_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_5: usi@109200c0 {
++				compatible = "samsung,exynosautov920-usi",
++					     "samsung,exynos850-usi";
++				reg = <0x109200c0 0x20>;
++				samsung,sysreg = <&syscon_peric0 0x1028>;
++				samsung,mode = <USI_V2_UART>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI05_USI>;
++				clock-names = "pclk", "ipclk";
++				status = "disabled";
++
++			serial_5: serial@10920000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10920000 0xc0>;
++				interrupts = <GIC_SPI 774 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart5_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI05_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_6: usi@109400c0 {
++				compatible = "samsung,exynosautov920-usi",
++					     "samsung,exynos850-usi";
++			reg = <0x109400c0 0x20>;
++			samsung,sysreg = <&syscon_peric0 0x1030>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI06_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_6: serial@10940000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10940000 0xc0>;
++				interrupts = <GIC_SPI 776 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart6_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI06_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_7: usi@109600c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x109600c0 0x20>;
++			samsung,sysreg = <&syscon_peric0 0x1038>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI07_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_7: serial@10960000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10960000 0xc0>;
++				interrupts = <GIC_SPI 778 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart7_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI07_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_8: usi@109800c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x109800c0 0x20>;
++			samsung,sysreg = <&syscon_peric0 0x1040>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++				 <&cmu_peric0 CLK_DOUT_PERIC0_USI08_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_8: serial@10980000 {
++			compatible = "samsung,exynosautov920-uart",
++				     "samsung,exynos850-uart";
++				reg = <0x10980000 0xc0>;
++				interrupts = <GIC_SPI 780 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart8_bus>;
++				clocks = <&cmu_peric0 CLK_MOUT_PERIC0_NOC_USER>,
++					 <&cmu_peric0 CLK_DOUT_PERIC0_USI08_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_9: usi@10c800c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10c800c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1000>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI09_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_9: serial@10c8000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10c80000 0xc0>;
++				interrupts = <GIC_SPI 787 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart9_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI09_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <256>;
++				status = "disabled";
++			};
++		};
++
++		usi_10: usi@10ca00c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10ca00c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1008>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI10_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_10: serial@10ca0000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10ca0000 0xc0>;
++				interrupts = <GIC_SPI 789 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart10_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI10_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_11: usi@10cc00c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10cc00c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1010>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI11_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_11: serial@10cc0000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10cc0000 0xc0>;
++				interrupts = <GIC_SPI 791 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart11_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI11_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_12: usi@10ce00c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10ce00c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1018>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI12_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_12: serial@10ce0000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10ce0000 0xc0>;
++				interrupts = <GIC_SPI 793 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart12_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI12_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_13: usi@10d000c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10d000c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1020>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI13_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_13: serial@10d00000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10d00000 0xc0>;
++				interrupts = <GIC_SPI 795 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart13_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI13_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_14: usi@10d200c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10d200c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1028>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI14_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_14: serial@10d20000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10d20000 0xc0>;
++				interrupts = <GIC_SPI 797 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart14_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI14_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_15: usi@10d400c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10d400c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1030>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI15_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_15: serial@10d40000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10d40000 0xc0>;
++				interrupts = <GIC_SPI 799 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart15_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI15_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_16: usi@10d600c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10d600c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1038>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI16_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_16: serial@10d60000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10d60000 0xc0>;
++				interrupts = <GIC_SPI 801 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart16_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI16_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
++		usi_17: usi@10d800c0 {
++			compatible = "samsung,exynosautov920-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10d800c0 0x20>;
++			samsung,sysreg = <&syscon_peric1 0x1040>;
++			samsung,mode = <USI_V2_UART>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++				 <&cmu_peric1 CLK_DOUT_PERIC1_USI17_USI>;
++			clock-names = "pclk", "ipclk";
++			status = "disabled";
++
++			serial_17: serial@10d80000 {
++				compatible = "samsung,exynosautov920-uart",
++					     "samsung,exynos850-uart";
++				reg = <0x10d80000 0xc0>;
++				interrupts = <GIC_SPI 803 IRQ_TYPE_LEVEL_HIGH>;
++				pinctrl-names = "default";
++				pinctrl-0 = <&uart17_bus>;
++				clocks = <&cmu_peric1 CLK_MOUT_PERIC1_NOC_USER>,
++					 <&cmu_peric1 CLK_DOUT_PERIC1_USI17_USI>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <64>;
++				status = "disabled";
++			};
++		};
++
+ 		pwm: pwm@109b0000 {
+ 			compatible = "samsung,exynosautov920-pwm",
+ 				     "samsung,exynos4210-pwm";
 -- 
 2.34.1
 
