@@ -1,108 +1,69 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F329246B8
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 05:47:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5465046B8;
+	Tue, 18 Mar 2025 05:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742276829; cv=none; b=fjwYx4Q7rmYqxucONbH1z6fngVf29zJvMxaRX+5rND2I+amf+PEIJdbk0X1uQt8DjlOQreOBofyodajxvFtM+0aw1gNm32SZ8pcyT/l7TNjbrEChQ0sJ8g8lorqkhw9ppuPEkPkuBfMth0QQjpIJmozBITU15iK7HrKDzxA4va4=
+	t=1742276844; cv=none; b=dZisKRaWJHqSK2o2O7NvjKm8JyYyCb3IJud6+L7FAwZMvPPYsVlZYRqGYruEDo7I2SHmqR1D31IUrK4Q61f85sr0q1Xxuuw/EdvqlRvwyAo+Yvh0TyXdGv3aUz+fkOYTe/viKZXk9dzRA4EOHHrY8JdXXZpL/lU5+YNx+ul9H8c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742276829; c=relaxed/simple;
-	bh=mLdYU/w9X+D2bG54VucsG4sh/kvVaOg0fmem/5R5XgM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Zxpo0j3mqwxIAzrc1arTntB9wWwu00TG/EGRUyV87+n22gEUvQptgzoRtEI970sFVvRWw/uKr9yTAiba8OP5Gre4EJxfXS1F0KcGZMNpBrHXlUft4mPnV9C4hjaBSvdrgqPxDOejI/74UX43ixaUGdvy3yk5XDXlRQU+GgMcKt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VOuswNmL; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOuswNmL"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22438c356c8so90090385ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 22:47:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742276827; x=1742881627; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=TpCgJnRkoeuUTlrXYvZ7NafdeDfj/AUprgdRQoatxjU=;
-        b=VOuswNmLkFlAdEFpd/kO7CgjDo/U6RNnAxt562GORj7n2T8UW2ldgu0xQo98GbUsKf
-         60WVkEpE1zPdsRbDjrmutIb4RrTrSpSTO95Yut1FABCvfnxEzs/sc78vYKCbYMo2qfvm
-         Q1gexg+552pCyyMLXAn1JfHjUjnXwmrWYa4qWtwxpr1RHSU7ka6FqXVZCPWDd0UQlLyX
-         wku5U7ZljuniIb5oMO8KVgFqLMdlxztV6fiei48o6ztabX/2SZDAwP6Qs8nRSPomalLq
-         x6jnYmJ0sAJ63B/Qs8EhSiNMQzK9NJ/zeFgi3rpLfodbDNhrbN5uzrMjT+wrkSWpvPzR
-         LjpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742276827; x=1742881627;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=TpCgJnRkoeuUTlrXYvZ7NafdeDfj/AUprgdRQoatxjU=;
-        b=Mfa9gUnUmWBjmc/4AD1vhIyyKSabPT0Sfsej1BkL6m/gpplzkJga1jLaFDuq6MZyYE
-         AsJo+iP7w/x+MRxnmi3AgxbVbq1s2LxVQZi5qx3iHTZ3FhUdcXcyPOAwPiLNRN1R43fx
-         Qwuxq6x+G47lOzW78urUqadtOigm9e9PsTWdMX8w89hU66aqQo9LNh7CK+gevXkcvDYd
-         Ug0R7/kJkaa7n2sJ+7QoaqlCPJkVmX+dUEWxVjIcZXMgVOrfkA7CWAs9MMRtbIz9NVwr
-         rFMpdJywh28mm53TTJRG892hwQSJXn4frgHcxzZM6p+buDlYJuwc8/7gwd2flsc9csmP
-         53Tg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLQVjxIjXNW9qSpeZGqNfIDiBNB+FdZxc1XukRsIZuSoMS5DPSASksUJlBAzgrrSMrcK1zDJ/1x5WAbog=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyggQ4B5gEprPM2vt6c68LQSG6Jf1nEttPcDDV5kMeVdSYMI1Em
-	DvD+ZlbVYu2534Yx14vMcRTH1CVLrSzXUYnhu8U7oyjSdF1KZhb5
-X-Gm-Gg: ASbGnctEJl7lRko4AYLMcaWizfrN/S9YktSfjMNbbl9E1c+C3JTmcZ6Mi2Nv/o/ozkw
-	xuuHEWMduphUpI1Lb2qgAXBJzMzTg+qQcbp1omtsfSwFQ4AZBwQP1RjIp5PlwAxGS6A1lIOWZ9J
-	7B2UI1r0zMXR8HHqvJ97FucvVh7HsLIaX6y28hcoGqfKJCF2joRE9jCwMQlVLzFT0v5MhLVDzA8
-	iN2HU7/WBAQIabkBi7dx1owI8KoqWRIr5aVX/zPyeSgaz/GvPufPX8gB4mvlzvKCOqNTSOIOcJt
-	YOp9wFYjtLvd1jN5chUWEmSGJE4eoLf9d+jeoLOHTU2jLwM=
-X-Google-Smtp-Source: AGHT+IFHgr1s55Po4V8qDYywMUiJEQrSF1gWIK4sZAf5sm1nhoSpNClgPqFDYCcEN3MVgQ4e+FUFmQ==
-X-Received: by 2002:a05:6a00:1911:b0:736:3979:369e with SMTP id d2e1a72fcca58-7372235450bmr17422019b3a.9.1742276827127;
-        Mon, 17 Mar 2025 22:47:07 -0700 (PDT)
-Received: from HP-Note-Host.. ([222.234.91.137])
-        by smtp.googlemail.com with ESMTPSA id d2e1a72fcca58-73711550fe1sm8903613b3a.53.2025.03.17.22.47.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 22:47:06 -0700 (PDT)
-From: JaeJoon Jung <rgbi3307@gmail.com>
-To: David Airlie <airlied@gmail.com>,
-	Jesse Barnes <jesse.barnes@intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Daniel Vetter <daniel@ffwll.ch>,
-	Bob Beckett <bob.beckett@collabora.com>
-Cc: JaeJoon Jung <rgbi3307@gmail.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm_fb_helper: Reduce duplicated execution of the drm_fb_helper_hotplug_event()
-Date: Tue, 18 Mar 2025 14:46:38 +0900
-Message-ID: <20250318054640.249840-1-rgbi3307@gmail.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1742276844; c=relaxed/simple;
+	bh=zrI6UuHwmKiy6F5ujQ/ndIu6Y0yHbxRqunrh5r7VlB8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CHNv/KwehJ2p1yX+MF+G39k1FpNt9iaF/nBi184qafjkcNnuU8GiyTs6Q3/ziCcPku5NviTgHShnzDhu6RXaOfEeq7gKUtywPzwlJ5GEGLmxUrYdoF9ItKoxWCbyVUEPvLXWHlEgbuOKo9XK4f5tFdwR71r3Uo5wKIXUDiprH8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 778EB68B05; Tue, 18 Mar 2025 06:47:18 +0100 (CET)
+Date: Tue, 18 Mar 2025 06:47:18 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, djwong@kernel.org, cem@kernel.org,
+	dchinner@redhat.com, linux-xfs@vger.kernel.org,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org, Carlos Maiolino <cmaiolino@redhat.com>
+Subject: Re: [PATCH v6 13/13] xfs: update atomic write max size
+Message-ID: <20250318054718.GA14895@lst.de>
+References: <20250313171310.1886394-1-john.g.garry@oracle.com> <20250313171310.1886394-14-john.g.garry@oracle.com> <Z9fOcFB5dhpK4Lsw@infradead.org> <b85c1818-e5bf-470c-ae0c-6dd2e1525a2f@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b85c1818-e5bf-470c-ae0c-6dd2e1525a2f@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-If drm_fb_helper->fb_info is already set,
-Add an if condition as below to execute the hotplug event
-only when the system_state is SYSTEM_RUNNING.
-This will reduce duplicate execution.
-In particular, It can prevent drm_fb_helper_hotplug_event()
-from being executed repeatedly at booting time.
+On Mon, Mar 17, 2025 at 09:57:45AM +0000, John Garry wrote:
+>> And handle the case where there
+>> is no hardware support at all.
+>
+> So xfs_get_atomic_write_max_attr() -> xfs_inode_can_atomicwrite() covers no 
+> HW support.
+>
+> The point of this function is just to calc atomic write limits according to 
+> mount point geometry and features.
+>
+> Do you think that it is necessary to call xfs_inode_can_atomicwrite() here 
+> also? [And remove the xfs_get_atomic_write_max_attr() -> 
+> xfs_inode_can_atomicwrite()?]
 
-Signed-off-by: JaeJoon Jung <rgbi3307@gmail.com>
----
- drivers/gpu/drm/drm_fb_helper.c | 3 +++
- 1 file changed, 3 insertions(+)
+At least document what it does..
 
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index fb3614a7ba44..c042e5a2e046 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -1939,6 +1939,9 @@ int drm_fb_helper_hotplug_event(struct drm_fb_helper *fb_helper)
- 	if (!drm_fbdev_emulation || !fb_helper)
- 		return 0;
- 
-+	if (fb_helper->info && system_state != SYSTEM_RUNNING)
-+		return 0;
-+
- 	mutex_lock(&fb_helper->lock);
- 	if (fb_helper->deferred_setup) {
- 		err = __drm_fb_helper_initial_config_and_unlock(fb_helper);
--- 
-2.43.0
+>>> +static inline void
+>>> +xfs_compute_awu_max(
+>>
+>> And use a more descriptive name than AWU, wich really just is a
+>> nvme field name.
+>
+> I am just trying to be concise to limit spilling lines.
+>
+> Maybe atomicwrite_unit_max is preferred
 
+I guess if we ant to stick to the unit encoded in awu and used by the
+block layer, yes.
