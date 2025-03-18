@@ -1,33 +1,33 @@
-Received: from smtp-42ad.mail.infomaniak.ch (smtp-42ad.mail.infomaniak.ch [84.16.66.173])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6A6220E033
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 16:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F4C21147A;
+	Tue, 18 Mar 2025 16:20:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742314818; cv=none; b=nWtq0OkKiuhKbmIkkUTcZhUqTmMTIYa2y6Lizu0ipjERd+9yQHhnn/vGD/WycfSNDC1kRmy8DBi2Awhs65paCSOvZZZnO6IjdbNYjFcY6H2Set1x017xPS2Zmqa48khlCvnU21ue9WNuL2RYk5QtVOUO/Hppk99pqKps73SeLsM=
+	t=1742314821; cv=none; b=UxlggKWjHLUUs06NwKlHfJsP6E7bov/IAdN6hn2X5HqBVwS5L0IoVSPwwppqynqvItjjag2rp9x1H3HvyAjQIkNjPvlvYKSzDwPXvXX1kDbYhae/JVXvhbF1yFfQJR/tLS5SGqSJ0/XT0ff6AlOatDkcNVXHgOy8K490o/8ETlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742314818; c=relaxed/simple;
-	bh=+jsbZE09sFbnqsbp9iUkpYGeJQyb0fNC/hr1RqK0xOU=;
+	s=arc-20240116; t=1742314821; c=relaxed/simple;
+	bh=xZaWexEDQ0Q2wevcBVlIoz1JKXTpd5HEmCRzQZwf9kI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kSmJZfk/T8VN4jQ1w5GqmIbz3+lWhDnf6lFx/0n9a3Jen0JAeBILfYVT22lGc1xSmqeNUOtYQHgiBs/Jf47MR9F81Bxdzke3ZQddXS//lydQpRI5xiC5CO6j4ZSPM9qkFd2sJr7vpit6zewht2vYdUBxNW5TvxG+63VzcyW+FCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=bkG1iSRV; arc=none smtp.client-ip=84.16.66.173
+	 MIME-Version:Content-Type; b=aV3hZzbvVyhp+KBiCd8z6EOIFlt9OJTrFN5PXZowSm+Ls5upWOmeU8HDxvwOQuksyNrvHjKfUCO4y7iX8m6pWVUoUvb+2g+fyUw6sYOjb2u4yam215fMVCZ0SIH5ayk0rD+w/NyUqIs3JBAk20Fbx1JEJorzStJj5iZPCPTnn7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=G00vL180; arc=none smtp.client-ip=83.166.143.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="bkG1iSRV"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZHH4001wyzMg7;
-	Tue, 18 Mar 2025 17:14:56 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="G00vL180"
+Received: from smtp-3-0000.mail.infomaniak.ch (smtp-3-0000.mail.infomaniak.ch [10.4.36.107])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZHH3w01gWzH5m;
+	Tue, 18 Mar 2025 17:14:52 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1742314495;
-	bh=eVR89nHy+SMCXHmKZ7A2eqpWJRHyf58wP1OCT4R3BfI=;
+	s=20191114; t=1742314491;
+	bh=4Ty/PA3beqWO8MWsel8drwatVfnYdf1jE7VZ1AhJNG8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bkG1iSRVl/52MgwNDm13ctUztFsadboorHOU9JffPO3c40dbfLOhvS+X9b9c8ym3h
-	 d6AAlZl33DcTcg5F8iPbGRiJfrCCyaFKJwLeNkhXxoapjI8b/0plf/Yah57V3tgm6y
-	 H5ANSTcMtJvWZkv6fl5KeQKV0KVtiSF36s0teAaY=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZHH3z2KYPzXHC;
-	Tue, 18 Mar 2025 17:14:55 +0100 (CET)
+	b=G00vL180SUrGBAkP6sWfDo1AB0CMk7bkeCr10+9B+4kndaDxa3y90PvyXUAvKz7Ra
+	 j+W/o73fGq04/1K+pUtKEgHELraCtkqw+jq54rJCtVTnpZTSc91TxxK/cpXIJVfnJY
+	 TcUa0kQyc5Uh8DVEVfqdUqeI48deGOVWEVt+rP2w=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZHH3v2mcYzGLQ;
+	Tue, 18 Mar 2025 17:14:51 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Dan Carpenter <dan.carpenter@linaro.org>,
 	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
@@ -44,9 +44,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org,
 	stable@vger.kernel.org
-Subject: [PATCH v2 4/8] landlock: Prepare to add second errata
-Date: Tue, 18 Mar 2025 17:14:39 +0100
-Message-ID: <20250318161443.279194-5-mic@digikod.net>
+Subject: [PATCH v2 1/8] landlock: Move code to ease future backports
+Date: Tue, 18 Mar 2025 17:14:36 +0100
+Message-ID: <20250318161443.279194-2-mic@digikod.net>
 In-Reply-To: <20250318161443.279194-1-mic@digikod.net>
 References: <20250318161443.279194-1-mic@digikod.net>
 Precedence: bulk
@@ -59,50 +59,54 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Potentially include errata for Landlock ABI v5 (Linux 6.10) and v6
-(Linux 6.12).  That will be useful for the following signal scoping
-erratum.
+To ease backports in setup.c, let's group changes from
+__lsm_ro_after_init to __ro_after_init with commit f22f9aaf6c3d
+("selinux: remove the runtime disable functionality"), and the
+landlock_lsmid addition with commit f3b8788cde61 ("LSM: Identify modules
+by more than name").
 
-As explained in errata.h, this commit should be backportable without
-conflict down to ABI v5.  It must then not include the errata/abi-6.h
-file.
+That will help to backport the following errata.
 
-Fixes: 54a6e6bbf3be ("landlock: Add signal scoping")
 Cc: Günther Noack <gnoack@google.com>
 Cc: stable@vger.kernel.org
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
-Link: https://lore.kernel.org/r/20250318161443.279194-5-mic@digikod.net
+Link: https://lore.kernel.org/r/20250318161443.279194-2-mic@digikod.net
 ---
 
 Changes since v1:
 - New patch.
 ---
- security/landlock/errata.h | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ security/landlock/setup.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/security/landlock/errata.h b/security/landlock/errata.h
-index f26b28b9873d..8e626accac10 100644
---- a/security/landlock/errata.h
-+++ b/security/landlock/errata.h
-@@ -63,6 +63,18 @@ static const struct landlock_erratum landlock_errata_init[] __initconst = {
- #endif
- #undef LANDLOCK_ERRATA_ABI
+diff --git a/security/landlock/setup.c b/security/landlock/setup.c
+index 28519a45b11f..c71832a8e369 100644
+--- a/security/landlock/setup.c
++++ b/security/landlock/setup.c
+@@ -19,6 +19,11 @@
  
-+#define LANDLOCK_ERRATA_ABI 5
-+#if __has_include("errata/abi-5.h")
-+#include "errata/abi-5.h"
-+#endif
-+#undef LANDLOCK_ERRATA_ABI
+ bool landlock_initialized __ro_after_init = false;
+ 
++const struct lsm_id landlock_lsmid = {
++	.name = LANDLOCK_NAME,
++	.id = LSM_ID_LANDLOCK,
++};
 +
-+#define LANDLOCK_ERRATA_ABI 6
-+#if __has_include("errata/abi-6.h")
-+#include "errata/abi-6.h"
-+#endif
-+#undef LANDLOCK_ERRATA_ABI
-+
- /*
-  * For each new erratum, we need to include all the ABI files up to the impacted
-  * ABI to make all potential future intermediate errata easy to backport.
+ struct lsm_blob_sizes landlock_blob_sizes __ro_after_init = {
+ 	.lbs_cred = sizeof(struct landlock_cred_security),
+ 	.lbs_file = sizeof(struct landlock_file_security),
+@@ -26,11 +31,6 @@ struct lsm_blob_sizes landlock_blob_sizes __ro_after_init = {
+ 	.lbs_superblock = sizeof(struct landlock_superblock_security),
+ };
+ 
+-const struct lsm_id landlock_lsmid = {
+-	.name = LANDLOCK_NAME,
+-	.id = LSM_ID_LANDLOCK,
+-};
+-
+ static int __init landlock_init(void)
+ {
+ 	landlock_add_cred_hooks();
 -- 
 2.48.1
 
