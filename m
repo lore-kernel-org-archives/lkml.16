@@ -1,237 +1,82 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4D21DF742
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:46:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9985C1DF742;
+	Tue, 18 Mar 2025 07:47:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742283987; cv=none; b=IuYPXezvRjbfq4XNv4ljClmd90PHuztD4asy17LeKNzmsLI5pH7QS/dxv2WZKqUvEZYyrqs6ZCd9NH5D3THln9TKk9hubF0A35oDnLAJMvrEbnyQZOSSQq9NmprwNUJ4ogE1PJQa96EMB/FNIuUGsAvS/JGLHfyubfA10XTqXkc=
+	t=1742284034; cv=none; b=rYvABsA2Cg5+mBjNcNxaReu59QY3mTUuH+PqD34GzuHxcbLMcOVyk6S9znIQHDZdyceNqz1g60P1t6tImLsabQXx6n+V5iL0S8YrLwZFwB0h1iig6v9vu6o5Vsl++3cbJoMtIGfhd86nGRN3/C77Tkg2gge5au6W7CLgt0+oQdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742283987; c=relaxed/simple;
-	bh=LvywzN1RBsv3mdA4STwvBcFAP/jhi6wX7UwEJ79LVdE=;
+	s=arc-20240116; t=1742284034; c=relaxed/simple;
+	bh=q5gyFvbl6bkYEOehFIWAJ1zNNVQ1iTslUk/DCfO4Rq4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=agIFHS/+aRnnxnYM8wUgGJkxDlSONIEoXC8Y1sZ2jSiGjiO/MmPxy65c7zGvgtyLG78mCF2urd/+LLodaTnF+NvKv+2nakMpPpu5hLQ4Hu9j9LtQLm7pR0LUlXlCT6OaVV615mr5g2t1zeg5s+N1HYJv4wI/46ScqQkkShGyblM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GKqK1dU7; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=SWRcT2ctHCduzXv2adIeQVEQAVIoWzIBI085qjbg9QOEtwd0v7TaLvigmjvCq46DMuGd2GrxtqUsT4MquhqfcnH1ONWEF2FMiX87ZnzLpbee3ORgP0PyjqwEsSgmvNSCFSDkmnDYnKN+00NMeClcDWS/3UGXhZDvQJywmhCPwpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mBsga6EI; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GKqK1dU7"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-22580c9ee0aso91046225ad.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:46:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742283984; x=1742888784; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=/5KVGOst+i3EqYlF+Sx7sAtMWBsKlTUEKDgYGkLY1j4=;
-        b=GKqK1dU7X3dkWLgRrNObHATUGX/K3vSyw0fjqLWL5TmdobHQJ4wDYuUIkKjdeQBIz7
-         cnNyXy/i0jkH7OaJvd9NvZmYzlz+k25HaiRVM6hxL29FqcDSKZVca5Cc0d/LksSpJ05k
-         FWt6CWtqJdMG0YxjoCYRqqx7Zu2yH3xj9/70FX979wmMIMt+zeHOKheEZBQ28jweTck6
-         uHDq06s6+q8fsIESdD/9+MnDb/MKlziXHG/7rKSNxKmahxpMchfDB2IOK52X6Qakx5c9
-         XdcSg6MJelmtbI+knx+qY33TzEOXm50OKQ+5/NWCxemmbjYl65Kt83IuL9Me2SifS5Hg
-         OPpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742283984; x=1742888784;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/5KVGOst+i3EqYlF+Sx7sAtMWBsKlTUEKDgYGkLY1j4=;
-        b=xAwHs9pO/inkfYF21I9ubAmGvIPFdTDb3re/3zK8s/GZdR/IsfpPB4sD/FLekK3MdD
-         TcmPub9qfJWDc7fN0dHGckglt89n/BvCbLhw+odKHWQ85uhkOpjGFaN57KH4J55zDT6F
-         wPUJxYZ4VOMVkP03m4nUGbjcdcPIZndWxu3d5VQvhKruGChZ8m4ZNOfXNxuvCH4EEXLk
-         gFEoP1dO0TVLPrzk5hY7+zdM55C+viV5O5+v3wkSRhJ6VbrHLZ99u8w4nkea6J2oUSzU
-         XnfDEgTtvc/E3LzJuPKUC5BI5rlSzgSw7FyQCkpkuKDHDghJ8B1cH6IfxibSSUyoebfG
-         a4aA==
-X-Forwarded-Encrypted: i=1; AJvYcCUHE4lnE/DHcbaWv28IgzZaosPcteBccT89JVVACzERo/AVrFvpJo6S0DgVDNf5ZbWzfMWL5lF9MK3lq9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx49VPPQpebZ/sU1O2AzmfPq8+5xq+tHvG7hcA36Zip2buMmq+f
-	CFwq1saPz01OsFiZGkon3xadYqY+5zYt+3Qtd2dlnUrmHZCnNZuwxWSj+lCzdw==
-X-Gm-Gg: ASbGncs3b9vOLeSBz+VNYFciNAyhgDGUxNp9GPeFjUCbaLmdd3mMdJwfjl1F4qzyTwQ
-	z7rGK0dTIJZ1wq49YlBJX8cZ8P2lxjO2mWdUF8ZcWawHGfurET5zNadXti/n9fuOPmTtSmVyVJ8
-	g2aYXf7nKXRFwb4jtGMMnbP3xvTVRTuL/ynwSMeCKiwkla5cdUobSCiIrTKaq7Go9x9o2Qck3Zf
-	kn93hWNGn2yJnBkDF9aB+YNjLJcaFL9I4zfSRq91fOB87ufsbRm1Mve7qMc/mKIStgdbXwse1FB
-	91J2qOgqcQ/38PA3Uf9te878oYn0lSreKTVOCuZmmRBXqhN7ggvOCy57FawpI1kAN9g=
-X-Google-Smtp-Source: AGHT+IGk7Wbvv+p+ljwVovByJjOFoHfppHTP1+cVpoZmuorSMChPEuewTXvxnqB++I9G1ZambQYJAA==
-X-Received: by 2002:a05:6a00:2309:b0:736:41ec:aaad with SMTP id d2e1a72fcca58-73722382f9bmr19932531b3a.14.1742283984406;
-        Tue, 18 Mar 2025 00:46:24 -0700 (PDT)
-Received: from thinkpad ([120.56.195.170])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737116b3de4sm9153147b3a.179.2025.03.18.00.46.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 00:46:23 -0700 (PDT)
-Date: Tue, 18 Mar 2025 13:16:18 +0530
-From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Lucas Stach <l.stach@pengutronix.de>, Frank Li <Frank.li@nxp.com>,
-	Hongxing Zhu <hongxing.zhu@nxp.com>,
-	"robh@kernel.org" <robh@kernel.org>,
-	"krzk+dt@kernel.org" <krzk+dt@kernel.org>,
-	"conor+dt@kernel.org" <conor+dt@kernel.org>,
-	"shawnguo@kernel.org" <shawnguo@kernel.org>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"kw@linux.com" <kw@linux.com>,
-	"bhelgaas@google.com" <bhelgaas@google.com>,
-	"s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-	"festevam@gmail.com" <festevam@gmail.com>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-	"imx@lists.linux.dev" <imx@lists.linux.dev>,
-	"kernel@pengutronix.de" <kernel@pengutronix.de>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the hardcodes
-Message-ID: <20250318074618.tqbnr7nv665fk25n@thinkpad>
-References: <b425a7c7a7d6508daf23fe7046864a498029a7ac.camel@pengutronix.de>
- <20250313160648.GA736867@bhelgaas>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mBsga6EI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742284033; x=1773820033;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=q5gyFvbl6bkYEOehFIWAJ1zNNVQ1iTslUk/DCfO4Rq4=;
+  b=mBsga6EIGtOTVf/NYvzjMtIOscge6tXLBz9QOmUT1k3H1WXjY8+7VeLy
+   YzOmyhcmfIymtfOa7WEqvFqWkKIbbcqip032horJrfWCn5mN8/PoG99oh
+   AlT2eHeR/UWziEgBU8psncDioNxPq2Q8oqH0QF2K9ttSYrhwJpEoJVwJq
+   WXRKeM8r+g4h9+3cEN70K278YjodfZjnLIcFfvoEnKwx4YsSaSScrMfqR
+   PQmhkq/KD4hYUKjaXaO0YiM+yt0Yz0CQdG+39muN37L5eLF2YI3DPmxSB
+   U/boTyn/Se+lS0LIhmF3J4hRuk1k1TT8CNdyNmNdHH/OgosiDY2RZtgGG
+   Q==;
+X-CSE-ConnectionGUID: 25reoVTdSASkBNXpqglEpw==
+X-CSE-MsgGUID: 1DMXB/VlRCSZGSys0nB5uQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="30991861"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="30991861"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 00:47:12 -0700
+X-CSE-ConnectionGUID: 3VtcVOfoQgyR2trRmJu9Zw==
+X-CSE-MsgGUID: 5KlqKzSiQtuXt3IwL/ft+w==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="122198631"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmviesa007.fm.intel.com with ESMTP; 18 Mar 2025 00:47:09 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 9E39217B; Tue, 18 Mar 2025 09:47:07 +0200 (EET)
+Date: Tue, 18 Mar 2025 09:47:07 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Nico Pache <npache@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, corbet@lwn.net, akpm@linux-foundation.org, surenb@google.com, 
+	pasha.tatashin@soleen.com, catalin.marinas@arm.com, david@redhat.com, jeffxu@chromium.org, 
+	andrii@kernel.org, xu.xin16@zte.com.cn
+Subject: Re: [PATCH] Documentation: Add "Unaccepted" meminfo entry
+Message-ID: <6lh47q4gsgrmt2bajjngwfyjxs6dn7zmkuhnfftsrazp5ivs5j@pr4q6fpb2ulx>
+References: <20250317230403.79632-1-npache@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313160648.GA736867@bhelgaas>
+In-Reply-To: <20250317230403.79632-1-npache@redhat.com>
 
-On Thu, Mar 13, 2025 at 11:06:48AM -0500, Bjorn Helgaas wrote:
-> On Thu, Mar 13, 2025 at 09:54:25AM +0100, Lucas Stach wrote:
-> > Am Mittwoch, dem 12.03.2025 um 10:22 -0400 schrieb Frank Li:
-> > > On Wed, Mar 12, 2025 at 09:28:02AM +0100, Lucas Stach wrote:
-> > > > Am Mittwoch, dem 12.03.2025 um 04:05 +0000 schrieb Hongxing Zhu:
-> > > > > > -----Original Message-----
-> > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > > Sent: 2025年3月11日 23:55
-> > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > > > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.org;
-> > > > > > kw@linux.com; manivannan.sadhasivam@linaro.org; bhelgaas@google.com;
-> > > > > > s.hauer@pengutronix.de; festevam@gmail.com; devicetree@vger.kernel.org;
-> > > > > > linux-pci@vger.kernel.org; imx@lists.linux.dev; kernel@pengutronix.de;
-> > > > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the
-> > > > > > hardcodes
-> > > > > > 
-> > > > > > On Tue, Mar 11, 2025 at 01:11:04AM +0000, Hongxing Zhu wrote:
-> > > > > > > > -----Original Message-----
-> > > > > > > > From: Bjorn Helgaas <helgaas@kernel.org>
-> > > > > > > > Sent: 2025年3月10日 23:11
-> > > > > > > > To: Hongxing Zhu <hongxing.zhu@nxp.com>
-> > > > > > > > Cc: robh@kernel.org; krzk+dt@kernel.org; conor+dt@kernel.org;
-> > > > > > > > shawnguo@kernel.org; l.stach@pengutronix.de; lpieralisi@kernel.org;
-> > > > > > > > kw@linux.com; manivannan.sadhasivam@linaro.org;
-> > > > > > bhelgaas@google.com;
-> > > > > > > > s.hauer@pengutronix.de; festevam@gmail.com;
-> > > > > > > > devicetree@vger.kernel.org; linux-pci@vger.kernel.org;
-> > > > > > > > imx@lists.linux.dev; kernel@pengutronix.de;
-> > > > > > > > linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org
-> > > > > > > > Subject: Re: [PATCH v1 2/2] PCI: imx6: Use domain number replace the
-> > > > > > > > hardcodes
-> > > > > > > > 
-> > > > > > > > On Wed, Feb 26, 2025 at 10:42:56AM +0800, Richard Zhu wrote:
-> > > > > > > > > Use the domain number replace the hardcodes to uniquely identify
-> > > > > > > > > different controller on i.MX8MQ platforms. No function changes.
-> > > > > > > > > 
-> > > > > > > > > Signed-off-by: Richard Zhu <hongxing.zhu@nxp.com>
-> > > > > > > > > ---
-> > > > > > > > >  drivers/pci/controller/dwc/pci-imx6.c | 14 ++++++--------
-> > > > > > > > >  1 file changed, 6 insertions(+), 8 deletions(-)
-> > > > > > > > > 
-> > > > > > > > > diff --git a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > > > b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > > > index 90ace941090f..ab9ebb783593 100644
-> > > > > > > > > --- a/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > > > +++ b/drivers/pci/controller/dwc/pci-imx6.c
-> > > > > > > > > @@ -41,7 +41,6 @@
-> > > > > > > > >  #define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
-> > > > > > > > >  #define IMX8MQ_GPR_PCIE_VREG_BYPASS		BIT(12)
-> > > > > > > > >  #define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11,
-> > > > > > 8)
-> > > > > > > > > -#define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
-> > > > > > > > > 
-> > > > > > > > >  #define IMX95_PCIE_PHY_GEN_CTRL			0x0
-> > > > > > > > >  #define IMX95_PCIE_REF_USE_PAD			BIT(17)
-> > > > > > > > > @@ -1474,7 +1473,6 @@ static int imx_pcie_probe(struct
-> > > > > > > > > platform_device
-> > > > > > > > *pdev)
-> > > > > > > > >  	struct dw_pcie *pci;
-> > > > > > > > >  	struct imx_pcie *imx_pcie;
-> > > > > > > > >  	struct device_node *np;
-> > > > > > > > > -	struct resource *dbi_base;
-> > > > > > > > >  	struct device_node *node = dev->of_node;
-> > > > > > > > >  	int i, ret, req_cnt;
-> > > > > > > > >  	u16 val;
-> > > > > > > > > @@ -1515,10 +1513,6 @@ static int imx_pcie_probe(struct
-> > > > > > > > platform_device *pdev)
-> > > > > > > > >  			return PTR_ERR(imx_pcie->phy_base);
-> > > > > > > > >  	}
-> > > > > > > > > 
-> > > > > > > > > -	pci->dbi_base = devm_platform_get_and_ioremap_resource(pdev,
-> > > > > > 0,
-> > > > > > > > &dbi_base);
-> > > > > > > > > -	if (IS_ERR(pci->dbi_base))
-> > > > > > > > > -		return PTR_ERR(pci->dbi_base);
-> > > > > > > > 
-> > > > > > > > This makes me wonder.
-> > > > > > > > 
-> > > > > > > > IIUC this means that previously we set controller_id to
-> > > > > > > > 1 if the first item in devicetree "reg" was 0x33c00000,
-> > > > > > > > and now we will set controller_id to 1 if the devicetree
-> > > > > > > > "linux,pci-domain" property is 1.  This is good, but I
-> > > > > > > > think this new dependency on the correct
-> > > > > > > > "linux,pci-domain" in devicetree should be mentioned in
-> > > > > > > > the commit log.
-> > > > > > > > 
-> > > > > > > > My bigger worry is that we no longer set pci->dbi_base
-> > > > > > > > at all.  I see that the only use of pci->dbi_base in
-> > > > > > > > pci-imx6.c was to determine the controller_id, but this
-> > > > > > > > is a DWC-based driver, and the DWC core certainly uses
-> > > > > > > > pci->dbi_base.  Are we sure that none of those DWC core
-> > > > > > > > paths are important to pci-imx6.c?
-> > > > > > >
-> > > > > > > Thanks for your concerns.  Don't worry about the
-> > > > > > > assignment of pci->dbi_base.  If pci-imx6.c driver doesn't
-> > > > > > > set it. DWC core driver would set it when
-> > > > > > >  dw_pcie_get_resources() is invoked.
-> > > > > > 
-> > > > > > Great, thanks!  Maybe we can amend the commit log to mention
-> > > > > > that and the new "linux,pci-domain" dependency.
-> > > > >
-> > > > > How about the following updates of the commit log?
-> > > > > 
-> > > > > Use the domain number replace the hardcodes to uniquely
-> > > > > identify different controller on i.MX8MQ platforms. No
-> > > > > function changes.  Please make sure the " linux,pci-domain" is
-> > > > > set for i.MX8MQ correctly, since  the controller id is relied
-> > > > > on it totally.
-> > > > > 
-> > > > This breaks running a new kernel on an old DT without the
-> > > > linux,pci-domain property, which I'm absolutely no fan of. We
-> > > > tried really hard to keep this way around working in the i.MX
-> > > > world.
-> > > 
-> > > 8MQ already add linux,pci-domain since Jan, 2021
-> > > 
-> > > commit c0b70f05c87f3b09b391027c6f056d0facf331ef
-> > > Author: Peng Fan <peng.fan@nxp.com>
-> > > Date:   Fri Jan 15 11:26:57 2021 +0800
-> > > 
-> > > Only missed is pcie-ep side, which have not been used at all boards dts
-> > > file in upstream.
-> > 
-> > I wasn't aware of this. 2021 is quite a while ago, so I suspect that
-> > nobody is going to run a new kernel with a DT this old. I retract my
-> > objection.
+On Mon, Mar 17, 2025 at 05:04:03PM -0600, Nico Pache wrote:
+> Commit dcdfdd40fa82 ("mm: Add support for unaccepted memory") added a
+> entry to meminfo but did not document it in the proc.rst file.
 > 
-> Sounds good, thanks, Lucas.  We really do want to avoid breaking old
-> DTs, so I appreciate your highlighting of it.  Even if we believe none
-> of them will break, I think it's worth mentioning the
-> 'linux,pci-domain' dependency and the commit that added it to the
-> .dtsi in the commit log.
+> This counter tracks the amount of "Unaccepted" guest memory for some
+> Virtual Machine platforms, such as Intel TDX or AMD SEV-SNP.
 > 
+> Add the missing entry in the documentation.
+> 
+> Signed-off-by: Nico Pache <npache@redhat.com>
 
-If there is a dependency, then it should be added to the binding. Only that will
-ensure that the DTs will have the dependent property present.
-
-- Mani
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
-மணிவண்ணன் சதாசிவம்
+  Kiryl Shutsemau / Kirill A. Shutemov
