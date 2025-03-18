@@ -1,206 +1,153 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5ED820E335
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:37:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C6220CCCD;
+	Tue, 18 Mar 2025 12:37:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742301436; cv=none; b=b/4y4XIJyKKaTY68FnYE0N1NVPM7mDWNWSdDTKFgaalqfTK1gX7pscXXpJgTJ4J+giAxIu4qAD6daEFxvAnsoaUG4z36xRR0DOa4NCiTtqKXAj+Lnh1vu2Nf1R1sgTViYu1JvfwI67EWD5GPkr11FofdakNQDIsj3OakeU1dyOg=
+	t=1742301455; cv=none; b=aqdd5Q4KUajBDf98yysz5UjPju9TvizHZ8ulXmOYF3vLwg/nUG5F6fb7qDrhi/JbWt5r1aAKnpAC2wFQdvtnNQMA6vVXleBqSb8r5DoA8DplevrwU2Q02R0AQjOEJ/+rC/Wac385S3CoaC2T32IdojwLkBpQN90cizlG2ufziII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742301436; c=relaxed/simple;
-	bh=VOuKK5+hZ0fQfSXAh7JI1QFVO+uVpyFrh+6nCIcBxpY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a2LZKkO6dagmbaUX2wWxj6mDIgFqpGOQh25HAyOVOEN5tbu6dk+KvY7sd+hW2KHuwjgjP4H2r6+T+7uw8b6LwLGYExWZN7bUeUGbhhKv9Pl+C60MeXX2qfe4eYqFsRJX6rAPSZG3bnBkjrHDSq2OYTsmL6Lo0Qxemj+oh8OlkqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=EUNzSZos; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1742301455; c=relaxed/simple;
+	bh=yLn+TNXVMhehXRKYhEHda1j3Z6SP3WHyEcxrp/VZbRE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fBv2M8EJTWWQ8EksDgIVsydNDLLHopd8qM5lKDDVz0B6fUSxoGBDHhDjrm+Gyj6o6lOsUSxJppo3QsBX4Bf+S8jZDMYPlb+J9baHoYIRJcLbnVDnkOzcMRZDFLNW9+GKxj5GFKnlHObHCY0Xs9/EUfwyFdPrbHfI2gYYSVsw+xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OAye3SLa; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="EUNzSZos"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1742301432;
-	bh=VOuKK5+hZ0fQfSXAh7JI1QFVO+uVpyFrh+6nCIcBxpY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=EUNzSZosixopc8esuhIUZjCsrB56pa2clpNycG56btuBOr8ppGW71rugopimaOTcA
-	 U8tNdglyDtGODZaYCWuOdF+gWE45fYENSEpXoehJ4dMiWjolizaLKJtbdG3YIAchgp
-	 xkyhf0brVx2muE2BU2hpai6QL9P8vheeQr4S2g7wjjN6kcFZfQpYXRADSSEQO9rK2C
-	 lnCK3h9xLCW4bs+pNjCsbiugx7iRvP4+2BprFSrUtylCBKRi9pqK8X/j1cosmW7q3y
-	 IMKJD1K7a3+TwvqsCDQAV4sjbT//yz0bdIdUMvCrVuSL8wELScH4Qt1jCbouy+BrPR
-	 qYeVI1zks+SlQ==
-Received: from localhost (unknown [84.232.140.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (prime256v1) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: cristicc)
-	by bali.collaboradmins.com (Postfix) with UTF8SMTPSA id 08F8017E157A;
-	Tue, 18 Mar 2025 13:37:12 +0100 (CET)
-From: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
-Date: Tue, 18 Mar 2025 14:35:47 +0200
-Subject: [PATCH v6 13/14] phy: rockchip: samsung-hdptx: Optimize internal
- rate handling
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OAye3SLa"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742301450; x=1773837450;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=yLn+TNXVMhehXRKYhEHda1j3Z6SP3WHyEcxrp/VZbRE=;
+  b=OAye3SLaV59gw0IZzPW9EO/c1c9kratSsueTsvk6Jmpk0Ywup5CoJ77b
+   PygiyTkWVR1HmB3cXBJkrMeGrxHR1YeX8iapV2qVcJoPLxXNUZJWJghDM
+   C/V6i9TzMf6zAxT8XZK467XVU3voDDrY0odRKjNnMxEForZOutlAGOoCc
+   QoFRj0sEo2MUoWZIAUZoc4fOGYqpM0T4KG1N23ozjfdD0A5TJg6qVz44T
+   tK8XT4tMgNhxTMvQ2pWmL1tzGqlr24KChv8tYm4h4Awhk/UJi6mlg1cjl
+   tAulFP+O1vQjm8JcaXTv07gO4vtu+IcrHPHY5T0LQ9ow/T0vHe2+wj9IY
+   g==;
+X-CSE-ConnectionGUID: Z8EAfZH6S2SVWDlkoxoOPA==
+X-CSE-MsgGUID: 2xBMOCnDQR+xhVRYr9s09Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="54824292"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="54824292"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 05:37:19 -0700
+X-CSE-ConnectionGUID: 02u19VQZTfKCfwVwJfzsFw==
+X-CSE-MsgGUID: cDJM3aYtQSuaD9d6HinG7g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="121979427"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa009.jf.intel.com with ESMTP; 18 Mar 2025 05:37:15 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuWC1-000Dkl-0C;
+	Tue, 18 Mar 2025 12:37:13 +0000
+Date: Tue, 18 Mar 2025 20:36:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Oleksij Rempel <o.rempel@pengutronix.de>,
+	Sebastian Reichel <sre@kernel.org>,
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: oe-kbuild-all@lists.linux.dev, Oleksij Rempel <o.rempel@pengutronix.de>,
+	Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
+	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
+	linux-pm@vger.kernel.org,
+	=?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+Subject: Re: [PATCH v5 6/7] regulator: set Power State Change Reason before
+ hw_protection_shutdown()
+Message-ID: <202503182046.kOuLXxTn-lkp@intel.com>
+References: <20250310103732.423542-7-o.rempel@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-phy-sam-hdptx-bpc-v6-13-8cb1678e7663@collabora.com>
-References: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
-In-Reply-To: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Heiko Stuebner <heiko@sntech.de>
-Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
- Maxime Ripard <mripard@kernel.org>, kernel@collabora.com, 
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, 
- Dmitry Baryshkov <lumag@kernel.org>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250310103732.423542-7-o.rempel@pengutronix.de>
 
-Drop the rate parameter from a bunch of internal helpers and, instead,
-make better use of the newly introduced ->hdmi_cfg.tmds_char_rate driver
-data.
+Hi Oleksij,
 
-Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
----
- drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 47 +++++++++++------------
- 1 file changed, 23 insertions(+), 24 deletions(-)
+kernel test robot noticed the following build errors:
 
-diff --git a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-index a19a89233d808e2b38f6e7e58a1dc38ddd7cadd3..d09e1f7b25ec131d3c40fb52564cad27dce3b2d4 100644
---- a/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-+++ b/drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c
-@@ -968,31 +968,34 @@ static bool rk_hdptx_phy_clk_pll_calc(unsigned long long rate,
- 	return true;
- }
- 
--static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx,
--					  unsigned long long rate)
-+static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx)
- {
- 	const struct ropll_config *cfg = NULL;
- 	struct ropll_config rc = {0};
- 	int ret, i;
- 
-+	if (!hdptx->hdmi_cfg.tmds_char_rate)
-+		return 0;
-+
- 	for (i = 0; i < ARRAY_SIZE(ropll_tmds_cfg); i++)
--		if (rate == ropll_tmds_cfg[i].rate) {
-+		if (hdptx->hdmi_cfg.tmds_char_rate == ropll_tmds_cfg[i].rate) {
- 			cfg = &ropll_tmds_cfg[i];
- 			break;
- 		}
- 
- 	if (!cfg) {
--		if (rk_hdptx_phy_clk_pll_calc(rate, &rc)) {
--			cfg = &rc;
--		} else {
--			dev_err(hdptx->dev, "%s cannot find pll cfg\n", __func__);
-+		if (!rk_hdptx_phy_clk_pll_calc(hdptx->hdmi_cfg.tmds_char_rate, &rc)) {
-+			dev_err(hdptx->dev, "%s cannot find pll cfg for rate=%llu\n",
-+				__func__, hdptx->hdmi_cfg.tmds_char_rate);
- 			return -EINVAL;
- 		}
-+
-+		cfg = &rc;
- 	}
- 
- 	dev_dbg(hdptx->dev, "%s rate=%llu mdiv=%u sdiv=%u sdm_en=%u k_sign=%u k=%u lc=%u\n",
--		__func__, rate, cfg->pms_mdiv, cfg->pms_sdiv + 1, cfg->sdm_en,
--		cfg->sdm_num_sign, cfg->sdm_num, cfg->sdm_deno);
-+		__func__, hdptx->hdmi_cfg.tmds_char_rate, cfg->pms_mdiv, cfg->pms_sdiv + 1,
-+		cfg->sdm_en, cfg->sdm_num_sign, cfg->sdm_num, cfg->sdm_deno);
- 
- 	rk_hdptx_pre_power_up(hdptx);
- 
-@@ -1030,19 +1033,18 @@ static int rk_hdptx_ropll_tmds_cmn_config(struct rk_hdptx_phy *hdptx,
- 
- 	ret = rk_hdptx_post_enable_pll(hdptx);
- 	if (!ret)
--		hdptx->hw_rate = rate;
-+		hdptx->hw_rate = hdptx->hdmi_cfg.tmds_char_rate;
- 
- 	return ret;
- }
- 
--static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx,
--					   unsigned long long rate)
-+static int rk_hdptx_ropll_tmds_mode_config(struct rk_hdptx_phy *hdptx)
- {
- 	rk_hdptx_multi_reg_write(hdptx, rk_hdtpx_common_sb_init_seq);
- 
- 	regmap_write(hdptx->regmap, LNTOP_REG(0200), 0x06);
- 
--	if (rate > HDMI14_MAX_RATE) {
-+	if (hdptx->hdmi_cfg.tmds_char_rate > HDMI14_MAX_RATE) {
- 		/* For 1/40 bitrate clk */
- 		rk_hdptx_multi_reg_write(hdptx, rk_hdtpx_tmds_lntop_highbr_seq);
- 	} else {
-@@ -1094,8 +1096,7 @@ static void rk_hdptx_dp_reset(struct rk_hdptx_phy *hdptx)
- 		     HDPTX_I_BGR_EN << 16 | FIELD_PREP(HDPTX_I_BGR_EN, 0x0));
- }
- 
--static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
--				     unsigned long long rate)
-+static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx)
- {
- 	enum phy_mode mode = phy_get_mode(hdptx->phy);
- 	u32 status;
-@@ -1114,11 +1115,9 @@ static int rk_hdptx_phy_consumer_get(struct rk_hdptx_phy *hdptx,
- 	if (mode == PHY_MODE_DP) {
- 		rk_hdptx_dp_reset(hdptx);
- 	} else {
--		if (rate) {
--			ret = rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
--			if (ret)
--				goto dec_usage;
--		}
-+		ret = rk_hdptx_ropll_tmds_cmn_config(hdptx);
-+		if (ret)
-+			goto dec_usage;
- 	}
- 
- 	return 0;
-@@ -1431,7 +1430,7 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
- 		dev_dbg(hdptx->dev, "%s rate=%llu\n", __func__, hdptx->hdmi_cfg.tmds_char_rate);
- 	}
- 
--	ret = rk_hdptx_phy_consumer_get(hdptx, hdptx->hdmi_cfg.tmds_char_rate);
-+	ret = rk_hdptx_phy_consumer_get(hdptx);
- 	if (ret)
- 		return ret;
- 
-@@ -1462,7 +1461,7 @@ static int rk_hdptx_phy_power_on(struct phy *phy)
- 		regmap_write(hdptx->grf, GRF_HDPTX_CON0,
- 			     HDPTX_MODE_SEL << 16 | FIELD_PREP(HDPTX_MODE_SEL, 0x0));
- 
--		ret = rk_hdptx_ropll_tmds_mode_config(hdptx, hdptx->hdmi_cfg.tmds_char_rate);
-+		ret = rk_hdptx_ropll_tmds_mode_config(hdptx);
- 		if (ret)
- 			rk_hdptx_phy_consumer_put(hdptx, true);
- 	}
-@@ -1830,7 +1829,7 @@ static int rk_hdptx_phy_clk_prepare(struct clk_hw *hw)
- {
- 	struct rk_hdptx_phy *hdptx = to_rk_hdptx_phy(hw);
- 
--	return rk_hdptx_phy_consumer_get(hdptx, hdptx->hw_rate);
-+	return rk_hdptx_phy_consumer_get(hdptx);
- }
- 
- static void rk_hdptx_phy_clk_unprepare(struct clk_hw *hw)
-@@ -1897,7 +1896,7 @@ static int rk_hdptx_phy_clk_set_rate(struct clk_hw *hw, unsigned long rate,
- 	 * while the latter being executed only once, i.e. when clock remains
- 	 * in the prepared state during rate changes.
- 	 */
--	return rk_hdptx_ropll_tmds_cmn_config(hdptx, rate);
-+	return rk_hdptx_ropll_tmds_cmn_config(hdptx);
- }
- 
- static const struct clk_ops hdptx_phy_clk_ops = {
+[auto build test ERROR on sre-power-supply/for-next]
+[also build test ERROR on broonie-regulator/for-next rafael-pm/thermal linus/master v6.14-rc7]
+[cannot apply to next-20250317]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Oleksij-Rempel/power-Extend-power_on_reason-h-for-upcoming-PSCRR-framework/20250310-184319
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
+patch link:    https://lore.kernel.org/r/20250310103732.423542-7-o.rempel%40pengutronix.de
+patch subject: [PATCH v5 6/7] regulator: set Power State Change Reason before hw_protection_shutdown()
+config: m68k-randconfig-r073-20250314 (https://download.01.org/0day-ci/archive/20250318/202503182046.kOuLXxTn-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250318/202503182046.kOuLXxTn-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503182046.kOuLXxTn-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   m68k-linux-ld: drivers/regulator/core.o: in function `regulator_handle_critical':
+>> drivers/regulator/core.c:5270:(.text+0x20c6): undefined reference to `set_power_state_change_reason'
+
+
+vim +5270 drivers/regulator/core.c
+
+  5234	
+  5235	/**
+  5236	 * regulator_handle_critical - Handle events for system-critical regulators.
+  5237	 * @rdev: The regulator device.
+  5238	 * @event: The event being handled.
+  5239	 *
+  5240	 * This function handles critical events such as under-voltage, over-current,
+  5241	 * and unknown errors for regulators deemed system-critical. On detecting such
+  5242	 * events, it triggers a hardware protection shutdown with a defined timeout.
+  5243	 */
+  5244	static void regulator_handle_critical(struct regulator_dev *rdev,
+  5245					      unsigned long event)
+  5246	{
+  5247		enum pscr_reason pscr;
+  5248		const char *reason = NULL;
+  5249	
+  5250		if (!rdev->constraints->system_critical)
+  5251			return;
+  5252	
+  5253		switch (event) {
+  5254		case REGULATOR_EVENT_UNDER_VOLTAGE:
+  5255			reason = "System critical regulator: voltage drop detected";
+  5256			pscr = PSCR_UNDER_VOLTAGE;
+  5257			break;
+  5258		case REGULATOR_EVENT_OVER_CURRENT:
+  5259			reason = "System critical regulator: over-current detected";
+  5260			pscr = PSCR_OVER_CURRENT;
+  5261			break;
+  5262		case REGULATOR_EVENT_FAIL:
+  5263			reason = "System critical regulator: unknown error";
+  5264			pscr = PSCR_REGULATOR_FAILURE;
+  5265		}
+  5266	
+  5267		if (!reason)
+  5268			return;
+  5269	
+> 5270		set_power_state_change_reason(pscr);
+  5271		hw_protection_shutdown(reason,
+  5272				       rdev->constraints->uv_less_critical_window_ms);
+  5273	}
+  5274	
 
 -- 
-2.48.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
