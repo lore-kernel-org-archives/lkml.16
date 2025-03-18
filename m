@@ -1,57 +1,57 @@
-Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22B492135BD
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:03:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5835211A33
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742320997; cv=none; b=p9WEGG+ecKSUNOEt67s83AGTnWO37O9waLD0fkDY9ZkapCMSK3kljzg//w9cypCDcB+emroWGCAzLZcKGuYcLRwwLqDJXm1+N0McVBz9owBPPnXUy8KGJXH/vJWFVJIeXXwDVXktO4VnTMk6H4Hgnjv1jBEqeyfNoRt+gqJktDo=
+	t=1742320997; cv=none; b=Ksxceo/PxErPx1bPV54Dx2le3HiU9aWB/DpcUOHya/KjTRwA58wux+T/6AGsy3MnYk6aYKEYPk3rGKmfZxTTYC7+Pn6Y05CmrnyFVYf8ga+4laA71GQVOoY4rRik2Mq7pKGqmTvw/GPK+FpZtczYAHiLP4Y7E9LqbPGkAPafefs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742320997; c=relaxed/simple;
-	bh=UEZ0ztEUB+LxJ0UwDmSI/Udync8+AbF2c47ImLXJgt4=;
+	bh=GK/Jq82TjnTyp0ZDk6HXhisugMDOk6munK5wzO9dtw0=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=rO1tSsaDk/M/74piSnBY77JZr/yBBdHr54RfljjeACBJI6754Vu4fYy4FsPlIRVedLsf+eGPdzsC63CQfVuiL403Oy3X5GjIZFTd7y1/F1DQLNS7qgil0YYVJGQKqiEGdDD+BDY3t5zq58nURuRU0YS47+cLSpDIChD8RYhe/H0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Mf1SzFW3; arc=none smtp.client-ip=209.85.214.202
+	 To:Cc:Content-Type; b=aPDIXjOeAld1YC4SEjIfrJc3KCBUElWgtjT7RJAlAddbOUo7AH6xQepxSapmaVCwUPOUI4TCPdwbcW07C2OKItErDvcbywqvPbWtI7zOQgI57vPGWrcbeZXUPswSRs5apWiz15BZJSclD8Ji+YPOVH5leCqOOoEAXHBHciyY8RM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jFWwKe1d; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mf1SzFW3"
-Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2242f3fd213so88497235ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:03:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jFWwKe1d"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-3011cfa31f6so5799187a91.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:03:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742320994; x=1742925794; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742320991; x=1742925791; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=KEyP1LOrk3ivrX2K+h6VXZSJpoDzKzqBoFjkCI1tbG4=;
-        b=Mf1SzFW3UXl4IZZY1GHESkHo0ghHpUuCPZDDY8482Ii4i7RG7iTB5RlA22ON4eLRNB
-         hHOThjDAH6FtdcZXD7mPJdSvTB04yslY6bRM5VgaV+mah2rsOOTUcCR3y8xKwOLexB2T
-         TgNKeQeaq4TxY13gk5O8ImYIgFX6AZMTMzMegggr3EQrZLb3dhHLZvweefpvsAY37g7J
-         UD+0CCXbdm/dVshmCvB3/LsRyk9X/lZoJ2Jp7M3CEHv7Z99K5nciUWsUaUa/4zJR7dUN
-         SSWwD+A0uG8i2KKqNjRl4ukNQAL4zJx/3fHmhPvrY4s2FIMXrVsG0v2ZJQw8+wkYQ/GZ
-         bw6A==
+        bh=hfhGZI1wf8iWTOyCG90KTDrGIGyW4OXH3t2Rrrzll5M=;
+        b=jFWwKe1dpVcKYWoU47VE6U6OUBHV1lISjuVw0bvBc5VEZ0aE4KruXhzS3ktjeyxb4q
+         jakVj6yXiAwp6yIkmrg390dj6LH73011eFT8vQgIxr50QQj3Z5dEJ45KTFXZWSEN8i8x
+         eNrffB2ksQzIc6Uc9qCzrlItOvVKQCPJazAL37AoAPDp+Ec6gPCgSbamzpJoo7G8Yfh+
+         +1mkznkTk7HLwCm0jnYRga3kaww5ce75b9t7Dh5r6zeKe+wPCwuBDwbuOo9L6X4gbQxx
+         Rf6dNt1F/zHU20L93hyKajB0xbwXNtw3CjWixV8Kq15+xr6PKPYjKXPAiTz8pSZzZXn7
+         dwZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742320994; x=1742925794;
+        d=1e100.net; s=20230601; t=1742320991; x=1742925791;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=KEyP1LOrk3ivrX2K+h6VXZSJpoDzKzqBoFjkCI1tbG4=;
-        b=E0BRmQRc9RzF2P2ZtNSPmyGLq4+7BlocF+cfiTr+ZHCwJIsGVH5WFvNTiTS3ABZyRW
-         eHCcNYee60Yf/vkL+cbTZ57mHJglr0JdJfKOrLIybrXsmgWFP1QNd3BWl1+9uFx0MKDO
-         b6Lqt3qFmtvveT0uj+OAcDwZ1uo2Tyq/rXB5Gxep4xE1NqxInEBYynUe+nKT8yKONMA8
-         xXSEFZ1mEFDG895JdzTX4874CgpWuayOWD5AE9Y/4IQwN+G6Iw4jO+mCWmwPcP1b4Pwb
-         utK606++RuyeatVQQgAg16P9x9vRdOF5+ijOK+FFFeJVMBr8d7A7uNUXg7476ggT/ggx
-         iXZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8UbO/nUXA1EafKdVjWyAf6rEVOiP/EcuHVvlRAARaRvZcqdtI7u1eEz7Ym7bbZUOFPwSq9eEV6DRgG4g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBnPUScCpiIGuhUMmPUg/5PwPuVdk1h4GUWygev2FCqqmyOHJ9
-	f04gXAFO6DzIw/N4DpK6NmIvEwq4sjgFduXeckATnIZxRrCYAiGVx4/qTaF5AydB1ag8z51eexB
-	YGA==
-X-Google-Smtp-Source: AGHT+IGsVYnsWSeyUIF3BRzWcbGtpN1OvknxIEHRgwDafozo1ifTgLT0e20SWQIY5ucyx7yoCwEdDWlCG5k=
-X-Received: from pfbcb11.prod.google.com ([2002:a05:6a00:430b:b0:730:96d1:c213])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4fca:b0:736:a682:deb8
- with SMTP id d2e1a72fcca58-7376c11de11mr150667b3a.8.1742320994339; Tue, 18
- Mar 2025 11:03:14 -0700 (PDT)
+        bh=hfhGZI1wf8iWTOyCG90KTDrGIGyW4OXH3t2Rrrzll5M=;
+        b=dYRN+W2d1sj5SgVAh1rnSZKn2DhocEs//lry+ZY2FH6lDnaKYFKXRrlmgD7qdf3xzA
+         7bBfocvID/poCiO+G8z3by94GcaSyiT9RmHiyDhIrAX833ZDbLMMXJNROipRwaxNP5ko
+         k53+PF+t7hoXsRTuR9pOxsVvmGjb17DyGP31X14MnLdLVOGCTeIzN1qLH8PaNZGJkxXh
+         7WeZ4oc+YjHYowRFEhHcbjdm8IkW8CZFHoZwnV16y1tQd48Rc04udPiQ1rqoc+Bm/ms1
+         pfh73N9HL97N6uTM03QgKGFxhWGWg9xnNj10E7MaNUxWgK3hdJK+ndAVoABrR0lEtb/F
+         INOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUglRTxkIdTrqCNogi4+gCQOEfBEHAMa/kJKsgktLlavG5nFKCZyuFPndQc85eibAxfQbsMZXh1yAmuZmY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwzAncGatqZmo1qTgOVK3XRP1F5vkgospHFoBK49d4zCioVXOAK
+	f5gaTnZrMbN4B8PMAcWKIt6j4tLQkb3IObbhP3KPaZKubT4Ax/iw19s/QAXj1D2Dw/oz7qOhKOi
+	7Dw==
+X-Google-Smtp-Source: AGHT+IHZyJniuUGJb80kY6TBDAKitKRZc4VUdJYUBBNt6eCyhq66AFnESWyFZkAGJ3I6GiaAO5I1FnvE9Zs=
+X-Received: from pfpk14.prod.google.com ([2002:aa7:9d0e:0:b0:734:f775:648f])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:431e:b0:1f5:6f61:a0c2
+ with SMTP id adf61e73a8af0-1f5c12ec629mr28938766637.34.1742320991112; Tue, 18
+ Mar 2025 11:03:11 -0700 (PDT)
 Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Tue, 18 Mar 2025 11:02:59 -0700
+Date: Tue, 18 Mar 2025 11:02:57 -0700
 In-Reply-To: <20250318180303.283401-1-seanjc@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -61,15 +61,16 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250318180303.283401-1-seanjc@google.com>
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Message-ID: <20250318180303.283401-5-seanjc@google.com>
-Subject: [GIT PULL] KVM: Selftests changes for 6.15, part 2
+Message-ID: <20250318180303.283401-3-seanjc@google.com>
+Subject: [GIT PULL] KVM: x86: MMU changes for 6.15
 From: Sean Christopherson <seanjc@google.com>
 To: Paolo Bonzini <pbonzini@redhat.com>
 Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Sean Christopherson <seanjc@google.com>
 Content-Type: text/plain; charset="UTF-8"
 
-Second selftests pull requests, i.e. the "real" 6.15 selftest pull request :-)
+Except for a minor cleanup, the MMU changes for 6.15 are all about adding
+support for aging SPTEs without holding mmu_lock.  Details in the tag.
 
 The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
@@ -77,74 +78,68 @@ The following changes since commit a64dcfb451e254085a7daee5fe51bf22959d52d3:
 
 are available in the Git repository at:
 
-  https://github.com/kvm-x86/linux.git tags/kvm-x86-selftests-6.15
+  https://github.com/kvm-x86/linux.git tags/kvm-x86-mmu-6.15
 
-for you to fetch changes up to 62838fa5eade1b23d546e81e7aab6d4c92ec12f2:
+for you to fetch changes up to 0dab791f05ce2c9f0215f50cb46ed0c3126fe211:
 
-  KVM: selftests: Relax assertion on HLT exits if CPU supports Idle HLT (2025-02-28 15:42:28 -0800)
-
-----------------------------------------------------------------
-KVM selftests changes for 6.15, part 2
-
- - Fix a variety of flaws, bugs, and false failures/passes dirty_log_test, and
-   improve its coverage by collecting all dirty entries on each iteration.
-
- - Fix a few minor bugs related to handling of stats FDs.
-
- - Add infrastructure to make vCPU and VM stats FDs available to tests by
-   default (open the FDs during VM/vCPU creation).
-
- - Relax an assertion on the number of HLT exits in the xAPIC IPI test when
-   running on a CPU that supports AMD's Idle HLT (which elides interception of
-   HLT if a virtual IRQ is pending and unmasked).
-
- - Misc cleanups and fixes.
+  KVM: x86/tdp_mmu: Remove tdp_mmu_for_each_pte() (2025-02-28 09:14:20 -0800)
 
 ----------------------------------------------------------------
-Colin Ian King (1):
-      KVM: selftests: Fix spelling mistake "UFFDIO_CONINUE" -> "UFFDIO_CONTINUE"
+KVM x86/mmu changes for 6.15
 
-Maxim Levitsky (2):
-      KVM: selftests: Support multiple write retires in dirty_log_test
-      KVM: selftests: Limit dirty_log_test's s390x workaround to s390x
+Add support for "fast" aging of SPTEs in both the TDP MMU and Shadow MMU, where
+"fast" means "without holding mmu_lock".  Not taking mmu_lock allows multiple
+aging actions to run in parallel, and more importantly avoids stalling vCPUs,
+e.g. due to holding mmu_lock for an extended duration while a vCPU is faulting
+in memory.
 
-Sean Christopherson (28):
-      KVM: selftests: Actually emit forced emulation prefix for kvm_asm_safe_fep()
-      KVM: selftests: Sync dirty_log_test iteration to guest *before* resuming
-      KVM: selftests: Drop signal/kick from dirty ring testcase
-      KVM: selftests: Drop stale srandom() initialization from dirty_log_test
-      KVM: selftests: Precisely track number of dirty/clear pages for each iteration
-      KVM: selftests: Read per-page value into local var when verifying dirty_log_test
-      KVM: selftests: Continuously reap dirty ring while vCPU is running
-      KVM: selftests: Honor "stop" request in dirty ring test
-      KVM: selftests: Keep dirty_log_test vCPU in guest until it needs to stop
-      KVM: selftests: Post to sem_vcpu_stop if and only if vcpu_stop is true
-      KVM: selftests: Use continue to handle all "pass" scenarios in dirty_log_test
-      KVM: selftests: Print (previous) last_page on dirty page value mismatch
-      KVM: selftests: Collect *all* dirty entries in each dirty_log_test iteration
-      KVM: sefltests: Verify value of dirty_log_test last page isn't bogus
-      KVM: selftests: Ensure guest writes min number of pages in dirty_log_test
-      KVM: selftests: Tighten checks around prev iter's last dirty page in ring
-      KVM: selftests: Set per-iteration variables at the start of each iteration
-      KVM: selftests: Fix an off-by-one in the number of dirty_log_test iterations
-      KVM: selftests: Allow running a single iteration of dirty_log_test
-      KVM: selftests: Fix mostly theoretical leak of VM's binary stats FD
-      KVM: selftests: Close VM's binary stats FD when releasing VM
-      KVM: selftests: Assert that __vm_get_stat() actually finds a stat
-      KVM: selftests: Macrofy vm_get_stat() to auto-generate stat name string
-      KVM: selftests: Add struct and helpers to wrap binary stats cache
-      KVM: selftests: Get VM's binary stats FD when opening VM
-      KVM: selftests: Adjust number of files rlimit for all "standard" VMs
-      KVM: selftests: Add infrastructure for getting vCPU binary stats
-      KVM: selftests: Relax assertion on HLT exits if CPU supports Idle HLT
+For the TDP MMU, protect aging via RCU; the page tables are RCU-protected and
+KVM doesn't need to access any metadata to age SPTEs.
 
- tools/testing/selftests/kvm/dirty_log_test.c       | 521 ++++++++++-----------
- tools/testing/selftests/kvm/include/kvm_util.h     |  33 +-
- .../testing/selftests/kvm/include/x86/processor.h  |   3 +-
- tools/testing/selftests/kvm/kvm_create_max_vcpus.c |  28 +-
- tools/testing/selftests/kvm/lib/kvm_util.c         | 114 +++--
- tools/testing/selftests/kvm/lib/userfaultfd_util.c |   2 +-
- .../kvm/x86/dirty_log_page_splitting_test.c        |   6 +-
- .../testing/selftests/kvm/x86/nx_huge_pages_test.c |   4 +-
- tools/testing/selftests/kvm/x86/xapic_ipi_test.c   |  13 +
- 9 files changed, 369 insertions(+), 355 deletions(-)
+For the Shadow MMU, use bit 1 of rmap pointers (bit 0 is used to terminate a
+list of rmaps) to implement a per-rmap single-bit spinlock.  When aging a gfn,
+acquire the rmap's spinlock with read-only permissions, which allows hardening
+and optimizing the locking and aging, e.g. locking an rmap for write requires
+mmu_lock to also be held.  The lock is NOT a true R/W spinlock, i.e. multiple
+concurrent readers aren't supported.
+
+To avoid forcing all SPTE updates to use atomic operations (clearing the
+Accessed bit out of mmu_lock makes it inherently volatile), rework and rename
+spte_has_volatile_bits() to spte_needs_atomic_update() and deliberately exclude
+the Accessed bit.  KVM (and mm/) already tolerates false positives/negatives
+for Accessed information, and all testing has shown that reducing the latency
+of aging is far more beneficial to overall system performance than providing
+"perfect" young/old information.
+
+----------------------------------------------------------------
+James Houghton (6):
+      KVM: Rename kvm_handle_hva_range()
+      KVM: Allow lockless walk of SPTEs when handing aging mmu_notifier event
+      KVM: x86/mmu: Factor out spte atomic bit clearing routine
+      KVM: x86/mmu: Don't force atomic update if only the Accessed bit is volatile
+      KVM: x86/mmu: Skip shadow MMU test_young if TDP MMU reports page as young
+      KVM: x86/mmu: Only check gfn age in shadow MMU if indirect_shadow_pages > 0
+
+Nikolay Borisov (1):
+      KVM: x86/tdp_mmu: Remove tdp_mmu_for_each_pte()
+
+Sean Christopherson (6):
+      KVM: x86/mmu: Always update A/D-disabled SPTEs atomically
+      KVM: x86/mmu: Age TDP MMU SPTEs without holding mmu_lock
+      KVM: x86/mmu: Refactor low level rmap helpers to prep for walking w/o mmu_lock
+      KVM: x86/mmu: Add infrastructure to allow walking rmaps outside of mmu_lock
+      KVM: x86/mmu: Add support for lockless walks of rmap SPTEs
+      KVM: x86/mmu: Walk rmaps (shadow MMU) without holding mmu_lock when aging gfns
+
+ Documentation/virt/kvm/locking.rst |   4 +-
+ arch/x86/include/asm/kvm_host.h    |   4 +-
+ arch/x86/kvm/Kconfig               |   1 +
+ arch/x86/kvm/mmu/mmu.c             | 363 +++++++++++++++++++++++++++----------
+ arch/x86/kvm/mmu/spte.c            |  31 ++--
+ arch/x86/kvm/mmu/spte.h            |   2 +-
+ arch/x86/kvm/mmu/tdp_iter.h        |  34 ++--
+ arch/x86/kvm/mmu/tdp_mmu.c         |  45 +++--
+ include/linux/kvm_host.h           |   1 +
+ virt/kvm/Kconfig                   |   4 +
+ virt/kvm/kvm_main.c                |  53 +++---
+ 11 files changed, 373 insertions(+), 169 deletions(-)
