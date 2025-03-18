@@ -1,174 +1,146 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47F1320C463;
-	Tue, 18 Mar 2025 11:22:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CF5D20AF80
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742296967; cv=none; b=FZf8xf0EMxIxiJcdqXvICSDS5ODu4HgCSEizDlq2w2kThCMzIaBEhU+cT+nEF2SlT1J2jZhdwqwrt+p7T7rU3FhlH9Ty0QsEd5wzHuiadWvCSC5ol7s0lgbNALr8axIRT7g4hT44uR0aK6zkjQ7aIk+u72rWUAKuBEj02yCZBUQ=
+	t=1742297011; cv=none; b=ptJF7jkxSnGyFcLbSBvMCtipydFkoj5t7/S6bzRhzEY5IIdwHstWoMxk8vQqkf2+3MDRIP5xBK5ov3iAjI6wcFA2wjK9Q/9/soYivRPrC+1kfKvRh8wwBI3gsiLhwrSXscEXMmGbDhj4OEXWaZeTqurftXY7i+we74fheMGQo+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742296967; c=relaxed/simple;
-	bh=8/dwMhavIR3LpRaxSdSscjLVSo4SziV3FqCQRkRdRq4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MfbjZDx60IV0mftBaT+I4IZNZl5h8/MSMqRAAxdYSkS+zToFcoff9ot0V13/mFMoQicRRef4lHTZxmg3dNOUWQg9PcLeKOZC0zM55/ZXDBD/zHMQWVyjmHwr4EF6UfIWXEYPZtzgtryvyeO0M/LITojC9UvSFU0JZOPo9ZB3i0M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=wCWD3SHk; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1742297011; c=relaxed/simple;
+	bh=VxFX0H8vuYnSuP8FRJMEaC4dRosxfxvyzCo8piVLDiU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YEjmQFuQv3x0hoJhkqHtUFBEwfmgtONzeafr3O1oE/lRilQMsdYe6jiUDi1vkHoaUaDKbR1IqBpPRj+OHVIjt33vKESyFkUM4Sz3fvXsNEiZYREdGR73kaR+NjKbUBq8pe4KbUzcg0Zre8vltWLTkBLBiZjWSVA5zG2cItmXkHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HRydY8Lj; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="wCWD3SHk"
-Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id A92A017D8;
-	Tue, 18 Mar 2025 12:20:41 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1742296842;
-	bh=8/dwMhavIR3LpRaxSdSscjLVSo4SziV3FqCQRkRdRq4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=wCWD3SHk4YkzJqqEmx2VJjb76FxkdysjZHxEovTROnbSIx+5LwyIhVw1GNn5Bt4OG
-	 PdAsbcUvtHkil/FBs4fbYTy2upd8YIB0dDekBriJJH/NlvmlOz4efG6nKI/Pn8N0PG
-	 KOelg1puzzPkyrp06gIZFohH3EgnEzJ+X65uvi/A=
-From: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
-Date: Tue, 18 Mar 2025 12:21:26 +0100
-Subject: [PATCH v4 7/7] media: vsp1: pipe: Add RAW Bayer formats mapping
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HRydY8Lj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742297008;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ybo+VOHVENueC841pTRRg4PdhPKxnG8rDNBPvItst7w=;
+	b=HRydY8LjERck0N2yVGfLwtyO4ybP9aYQ7goWZ2F2Kl/diirJ5KKIyFJTR3nT78tICD6/62
+	IEklAmzXQ8Sg7hroS2GoR52YY8+qKTkYU2gEp0fsvC3j2kBZUfOcB04k1pFXu80mQG9TuK
+	mcyef7b+dO4jSlI9jQkW70TDoQ1hvhE=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-374-OS6Qmz25P1KEqEQ641Rh1A-1; Tue,
+ 18 Mar 2025 07:23:25 -0400
+X-MC-Unique: OS6Qmz25P1KEqEQ641Rh1A-1
+X-Mimecast-MFC-AGG-ID: OS6Qmz25P1KEqEQ641Rh1A_1742297003
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 971AF1800266;
+	Tue, 18 Mar 2025 11:23:23 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.32.255])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 90BDB180175C;
+	Tue, 18 Mar 2025 11:23:19 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Tue, 18 Mar 2025 12:22:51 +0100 (CET)
+Date: Tue, 18 Mar 2025 12:22:46 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Howells <dhowells@redhat.com>
+Cc: Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <kees@kernel.org>,
+	Greg KH <gregkh@linuxfoundation.org>,
+	Josh Drake <josh@delphoslabs.com>,
+	Suraj Sonawane <surajsonawane0215@gmail.com>,
+	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+	security@kernel.org, stable@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] keys: Fix UAF in key_put()
+Message-ID: <20250318112245.GA14792@redhat.com>
+References: <2477454.1742292885@warthog.procyon.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250318-v4h-iif-v4-7-10ed4c41c195@ideasonboard.com>
-References: <20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com>
-In-Reply-To: <20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, 
- Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, 
- =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
-X-Mailer: b4 0.15-dev-1b0d6
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4724;
- i=jacopo.mondi+renesas@ideasonboard.com; h=from:subject:message-id;
- bh=8/dwMhavIR3LpRaxSdSscjLVSo4SziV3FqCQRkRdRq4=;
- b=owEBbQKS/ZANAwAIAXI0Bo8WoVY8AcsmYgBn2VdqJ3PHqxkB83ZEhvYJMZfWDGAoB9EGFjytu
- Wozp4BqH8WJAjMEAAEIAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCZ9lXagAKCRByNAaPFqFW
- PBegEACDVy82f4QU82I8Ci+eRN/kbVNaM/cVaUl8h9JCMfPb1ts9Zh9w/d+7WpGTeAipwxFiym/
- +SXWfZMPgPWpEJcK3I3ZEinsNztxzRyJdi5Pa6j8ncjC8kXqKZ1MblLUjk3uqZ4ffonkDsjf40g
- 2RzA7fWQDpxMT7uhtu10Emle92PWByFBb7lMZCUcD4wAZcPd2ke9Hl2YEigexDoK43w7xSz8tQo
- WifBHcOT02JBL1KXSnEEkiKSOQdkF7FvvwMRyzKHSgX/lyyZ8kJz7xGiFLvCx+dm2xhweJZLsdO
- xnQ6CA56JxJu1QVgSSe1K3kR/B+hpFTH6VmnYcKHSRmKE2gdXquUwTd3ckqwI8fp4WKMzzAn6/j
- OUYSQdqop18YzpvZ21YGM7vEnNHACFAJ+donJSFRzrfS4HLe6SWPrtMLYKiVO/z87lMR7iwnnwL
- dduDYB2yoR6pE372002XjlmR02tVevW7aLLJnmMqjOP1sJ4Uyf2l9F1td2p60CDttfg9hp1u4WD
- NThpyD4PplPBaQtB0urGwdH5s5Ef6XKz5ONH18p3zbbuqQHofCYM9jhJYH+lLMgTsYYNq3oVkUg
- Jjuk7FkNK9s8Ruh7sReJLA7PiQahOjAGFOhXYZrtjG+unoEs+OpctWgfj4ze3rQe+sIAPG00Yx2
- G1A4ICSteRSfJPw==
-X-Developer-Key: i=jacopo.mondi+renesas@ideasonboard.com; a=openpgp;
- fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2477454.1742292885@warthog.procyon.org.uk>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-Add formats definition for RAW Bayer formats in vsp1_pipe.c.
+On 03/18, David Howells wrote:
+>
+> --- a/security/keys/key.c
+> +++ b/security/keys/key.c
+> @@ -645,21 +645,30 @@ EXPORT_SYMBOL(key_reject_and_link);
+>   */
+>  void key_put(struct key *key)
+>  {
+> +	int quota_flag;
+> +	unsigned short len;
+> +	struct key_user *user;
+> +
+>  	if (key) {
+>  		key_check(key);
+>  
+> +		quota_flag = test_bit(KEY_FLAG_IN_QUOTA, &key->flags);
+> +		len = key->quotalen;
+> +		user = key->user;
+> +		refcount_inc(&user->usage);
+>  		if (refcount_dec_and_test(&key->usage)) {
+>  			unsigned long flags;
+>  
+>  			/* deal with the user's key tracking and quota */
+> -			if (test_bit(KEY_FLAG_IN_QUOTA, &key->flags)) {
+> -				spin_lock_irqsave(&key->user->lock, flags);
+> -				key->user->qnkeys--;
+> -				key->user->qnbytes -= key->quotalen;
+> -				spin_unlock_irqrestore(&key->user->lock, flags);
+> +			if (quota_flag) {
+> +				spin_lock_irqsave(&user->lock, flags);
+> +				user->qnkeys--;
+> +				user->qnbytes -= len;
+> +				spin_unlock_irqrestore(&user->lock, flags);
+>  			}
+>  			schedule_work(&key_gc_work);
+>  		}
+> +		key_user_put(user);
 
-8-bits RAW Bayer pixel formats map on VSP format RGB332.
-10, 12 and 16 bits RAW Bayer pixel formats map on RGB565 insted.
+Do we really need the unconditional refcount_inc / key_user_put ?
 
-Reviewed-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Tested-by: Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+	void key_put(struct key *key)
+	{
+		if (key) {
+			struct key_user *user = NULL;
+			unsigned short len;
 
----
-v3->v4:
-- Fix SWAP bits for RAW 10, 12 and 16
----
- drivers/media/platform/renesas/vsp1/vsp1_pipe.c | 72 ++++++++++++++++++++++++-
- 1 file changed, 71 insertions(+), 1 deletion(-)
+			key_check(key);
 
-diff --git a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-index 8e9be3ec1b4dbdad1cbe35ae3a88952f46e41343..a51061738edce566079d72bd027391d24a065e72 100644
---- a/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-+++ b/drivers/media/platform/renesas/vsp1/vsp1_pipe.c
-@@ -30,10 +30,80 @@
-  */
- 
- static const struct vsp1_format_info vsp1_video_formats[] = {
--	{ V4L2_PIX_FMT_RGB332, MEDIA_BUS_FMT_ARGB8888_1X32,
-+	/* Raw Bayer 8-bit: Maps on RGB332 */
-+	{ V4L2_PIX_FMT_SBGGR8, MEDIA_BUS_FMT_Y8_1X8,
-+	  VI6_FMT_RGB_332, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS | VI6_RPF_DSWAP_P_BTS,
-+	  1, { 8, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGBRG8, MEDIA_BUS_FMT_Y8_1X8,
-+	  VI6_FMT_RGB_332, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS | VI6_RPF_DSWAP_P_BTS,
-+	  1, { 8, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGRBG8, MEDIA_BUS_FMT_Y8_1X8,
-+	  VI6_FMT_RGB_332, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS | VI6_RPF_DSWAP_P_BTS,
-+	  1, { 8, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SRGGB8, MEDIA_BUS_FMT_Y8_1X8,
- 	  VI6_FMT_RGB_332, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
- 	  VI6_RPF_DSWAP_P_WDS | VI6_RPF_DSWAP_P_BTS,
- 	  1, { 8, 0, 0 }, false, false, 1, 1, false },
-+
-+	/* Raw Bayer 10/12/16-bit: Maps on RGB565 */
-+	{ V4L2_PIX_FMT_SBGGR10, MEDIA_BUS_FMT_Y10_1X10,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 10, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGBRG10, MEDIA_BUS_FMT_Y10_1X10,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 10, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGRBG10, MEDIA_BUS_FMT_Y10_1X10,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 10, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SRGGB10, MEDIA_BUS_FMT_Y10_1X10,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 10, 0, 0 }, false, false, 1, 1, false },
-+
-+	{ V4L2_PIX_FMT_SBGGR12, MEDIA_BUS_FMT_Y12_1X12,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 12, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGBRG12, MEDIA_BUS_FMT_Y12_1X12,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 12, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGRBG12, MEDIA_BUS_FMT_Y12_1X12,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 12, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SRGGB12, MEDIA_BUS_FMT_Y12_1X12,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 12, 0, 0 }, false, false, 1, 1, false },
-+
-+	{ V4L2_PIX_FMT_SBGGR16, MEDIA_BUS_FMT_Y16_1X16,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 16, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGBRG16, MEDIA_BUS_FMT_Y16_1X16,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 16, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SGRBG16, MEDIA_BUS_FMT_Y16_1X16,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 16, 0, 0 }, false, false, 1, 1, false },
-+	{ V4L2_PIX_FMT_SRGGB16, MEDIA_BUS_FMT_Y16_1X16,
-+	  VI6_FMT_RGB_565, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS,
-+	  1, { 16, 0, 0 }, false, false, 1, 1, false },
-+
-+	{ V4L2_PIX_FMT_RGB332, MEDIA_BUS_FMT_ARGB8888_1X32,
-+	  VI6_FMT_RGB_332, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
-+	  VI6_RPF_DSWAP_P_WDS | VI6_RPF_DSWAP_P_BTS,
-+	  1, { 10, 0, 0 }, false, false, 1, 1, false },
- 	{ V4L2_PIX_FMT_ARGB444, MEDIA_BUS_FMT_ARGB8888_1X32,
- 	  VI6_FMT_ARGB_4444, VI6_RPF_DSWAP_P_LLS | VI6_RPF_DSWAP_P_LWS |
- 	  VI6_RPF_DSWAP_P_WDS,
+			if (test_bit(KEY_FLAG_IN_QUOTA, &key->flags)) {
+				len = key->quotalen;
+				user = key->user;
+				refcount_inc(&user->usage);
+			}
 
--- 
-2.48.1
+			if (refcount_dec_and_test(&key->usage)) {
+				unsigned long flags;
+
+				/* deal with the user's key tracking and quota */
+				if (user) {
+					spin_lock_irqsave(&user->lock, flags);
+					user->qnkeys--;
+					user->qnbytes -= len;
+					spin_unlock_irqrestore(&user->lock, flags);
+				}
+				schedule_work(&key_gc_work);
+			}
+
+			if (user)
+				key_user_put(user);
+		}
+	}
+
+looks a bit more clear/simple to me...
+
+Oleg.
 
