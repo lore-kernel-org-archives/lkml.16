@@ -1,63 +1,66 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF941531E1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788DE1898FB;
 	Tue, 18 Mar 2025 19:02:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324536; cv=none; b=AykzTq3DyLZHodRWFLJEgGdmt5MzKNz/U/qjP9SBueS5JF2i94oS5Ng7yvePAsM4DmkTEjRWQ9NHgx6x2iD65qqWwYdicu8XwzKSsC1VDG2/WUVpclVB5EKYPdqJZwh/j3Hus4ZSlDknDrWS3A4yQcP+I3QXD1IdZ11dJOlbwYA=
+	t=1742324537; cv=none; b=T7eEd2PNvbeegYgOxTyugsxuHUsFINmNTHfX6Cu/qbwKcaiqRptPEGsvzz6iu3r1rUcRT3iUwpB4z6qZmhaehyRQpLDEm8MTHndNIhtyUzlU+6q05gXa/BI+FDBfVXmywE+W61iLFkzeicML4FBvx4q60kWrINCC6IlFfrXh9Cc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324536; c=relaxed/simple;
-	bh=RyWg6GZs0HG2H7ets4XXpl2bZzpVCBzMcD2/5l9R9rI=;
+	s=arc-20240116; t=1742324537; c=relaxed/simple;
+	bh=T175AQCXpVLRWh0pnxrkYNlK5LXTZtj+QBFR1YkSnlk=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=IJKYTCF9rJbcen/j+JqgRCpwgoKnLjBSbf8OpwES938Vc1TwTwfyi1eBruRqGUOsWC5kTB08QuO2wpX6bL3doRXmjt/KUVcAu1+ic2ps5QmtAhE5INyAlphvoRBuoouC29TXOaGPL996CDZQcEukFfgGOSjwH+/BFqR5MN69rUk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jYVAL6YY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KfSvS74i; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=LsorH0xC5+gR+7fWhf8CFaJ6hZpUjpdx6LQvrsBjbJ/aROUg5PrN41vj5gxh98oCM5eD/DIK/8TlMO1B/nwEvsckYuI+R/V6bkRlx0URYzzcvyzLNiNrPm41tGPQhnS/Pp5AJpiNQ7BnzhBrUUOBhTNNbLxBYkfY5gvmqjypn6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jRuG9FSE; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6P6YR+3I; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jYVAL6YY";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KfSvS74i"
-Date: Tue, 18 Mar 2025 18:54:28 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jRuG9FSE";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6P6YR+3I"
+Date: Tue, 18 Mar 2025 18:54:26 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742324069;
+	s=2020; t=1742324067;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KS+GnC5EU0IrAwhTdlBCk6x+4ASqVIeBDSKo3ThWbF4=;
-	b=jYVAL6YYK+2PJlMsvwV5hWwZYnwahLEZUs5KoR31AM8rx9iHyNawkGKoN0pbxp2Q3ehsqR
-	LPcEaPvSu7jcRkJ0X+b6qNBFSc5watluNTbOAWs2MhGKAfZflruPUv9way1qslzQBdybk4
-	7QK6nr2ejLWmxH0dPIARDpHOBCIPn5OttYuMNXQN5VdRdYpgwH0UmmsVFsHoN/HD1J/t73
-	9hxKNMfzM3CT6aQLYf3xo0R+jv9W7iaZRqSuLON+KmxOEJtjfhyJkH1WYRHjY6T+Hg5cCV
-	0VV5AuxBWp0MuJqu5nPkHrdvRLYWYpy0c0If2nT9OlOOtrUhbBXPYdqVqxjWJg==
+	bh=1QisBsWn0f7Jz8sIf8HYMqaE1Xiro/I8V9ghKdXk5dE=;
+	b=jRuG9FSENlx4HMObVaXO7b6SwFr1QLRf6xKh4mKG470KE2tdsGGb5JHrWX5eV9JbGXx2Gc
+	n5iwM3bLNSpsnukOnuTGYmYhYeodxW2C48AHmGsYXNedQSl8W5aiONiB3SNwch4tOJRbpw
+	RtNE974G5miKkkK4cJ5MjqC9Ps6JIFbhW9FwJzDzoUzCNi7z1h5zlK4iIhmUNJTvC7IfFQ
+	recXOc5zC1U3uvdaYKjQyPSx0TJfGmjvp2iD37R6II/ARLoy3c6jMEnDNlvu+yKbGhnYY7
+	0/cFHv8FzRzqbYNBmjAgplwkM6LB4wJ6CbfKRYOUGd5OF9+bvyNpN0B/0MBYcA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742324069;
+	s=2020e; t=1742324067;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KS+GnC5EU0IrAwhTdlBCk6x+4ASqVIeBDSKo3ThWbF4=;
-	b=KfSvS74iizZa9PguypxD8vxVEosz0AhEd0H/wkPMizSNgodurCBze50Pc21giLrQyH+ZVF
-	ZfH6J5C70C9d65Aw==
+	bh=1QisBsWn0f7Jz8sIf8HYMqaE1Xiro/I8V9ghKdXk5dE=;
+	b=6P6YR+3Iu5dAu5gYZXzA5gaDA93ttujcBiGRzjAyv8Os8j6Di+v5xmED4gzhT0h+plIz4L
+	qAzan6k4kqmFkgAg==
 From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/smpboot: Fix INIT delay assignment for extended
- Intel Families
+Subject:
+ [tip: x86/cpu] x86/mm/pat: Replace Intel x86_model checks with VFM ones
 Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250219184133.816753-11-sohil.mehta@intel.com>
-References: <20250219184133.816753-11-sohil.mehta@intel.com>
+ Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+ Rik van Riel <riel@surriel.com>, Borislav Petkov <bp@alien8.de>,
+ "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250219184133.816753-13-sohil.mehta@intel.com>
+References: <20250219184133.816753-13-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174232406840.14745.2671058347475165801.tip-bot2@tip-bot2>
+Message-ID: <174232406675.14745.16839508278274331287.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,49 +70,67 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     17b1dd60e367795b0b4f44c9a477185f8444e8b9
-Gitweb:        https://git.kernel.org/tip/17b1dd60e367795b0b4f44c9a477185f8444e8b9
+Commit-ID:     aa3e8239d8a2aa4dce2750968964afb5cdd424f8
+Gitweb:        https://git.kernel.org/tip/aa3e8239d8a2aa4dce2750968964afb5cdd424f8
 Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Wed, 19 Feb 2025 18:41:28 
+AuthorDate:    Wed, 19 Feb 2025 18:41:30 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 18 Mar 2025 19:33:46 +01:00
+CommitterDate: Tue, 18 Mar 2025 19:33:47 +01:00
 
-x86/smpboot: Fix INIT delay assignment for extended Intel Families
+x86/mm/pat: Replace Intel x86_model checks with VFM ones
 
-Some old crusty CPUs need an extra delay that slows down booting. See
-the comment above 'init_udelay' for details. Newer CPUs don't need the
-delay.
+Introduce markers and names for some Family 6 and Family 15 models and
+replace x86_model checks with VFM ones.
 
-Right now, for Intel, Family 6 and only Family 6 skips the delay. That
-leaves out both the Family 15 (Pentium 4s) and brand new Family 18/19
-models.
-
-The omission of Family 15 (Pentium 4s) seems like an oversight and 18/19
-do not need the delay.
-
-Skip the delay on all Intel processors Family 6 and beyond.
+Since the VFM checks are closed ended and only applicable to Intel, get
+rid of the explicit Intel vendor check as well.
 
 Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250219184133.816753-11-sohil.mehta@intel.com
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://lore.kernel.org/r/20250219184133.816753-13-sohil.mehta@intel.com
 ---
- arch/x86/kernel/smpboot.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/intel-family.h | 1 +
+ arch/x86/mm/pat/memtype.c           | 6 +++---
+ 2 files changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 7dccc44..b68216f 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -655,9 +655,9 @@ static void __init smp_set_init_udelay(void)
- 		return;
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 51ea366..6cd08da 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -193,6 +193,7 @@
+ /* Family 15 - NetBurst */
+ #define INTEL_P4_WILLAMETTE		IFM(15, 0x01) /* Also Xeon Foster */
+ #define INTEL_P4_PRESCOTT		IFM(15, 0x03)
++#define INTEL_P4_CEDARMILL		IFM(15, 0x06) /* Also Xeon Dempsey */
  
- 	/* if modern processor, use no delay */
--	if (((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) && (boot_cpu_data.x86 == 6)) ||
--	    ((boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) && (boot_cpu_data.x86 >= 0x18)) ||
--	    ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD) && (boot_cpu_data.x86 >= 0xF))) {
-+	if ((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && boot_cpu_data.x86_vfm >= INTEL_PENTIUM_PRO) ||
-+	    (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON && boot_cpu_data.x86 >= 0x18) ||
-+	    (boot_cpu_data.x86_vendor == X86_VENDOR_AMD   && boot_cpu_data.x86 >= 0xF)) {
- 		init_udelay = 0;
+ /* Family 19 */
+ #define INTEL_PANTHERCOVE_X		IFM(19, 0x01) /* Diamond Rapids */
+diff --git a/arch/x86/mm/pat/memtype.c b/arch/x86/mm/pat/memtype.c
+index 3a9e6dd..fff9617 100644
+--- a/arch/x86/mm/pat/memtype.c
++++ b/arch/x86/mm/pat/memtype.c
+@@ -43,6 +43,7 @@
+ #include <linux/fs.h>
+ #include <linux/rbtree.h>
+ 
++#include <asm/cpu_device_id.h>
+ #include <asm/cacheflush.h>
+ #include <asm/cacheinfo.h>
+ #include <asm/processor.h>
+@@ -290,9 +291,8 @@ void __init pat_bp_init(void)
  		return;
  	}
+ 
+-	if ((c->x86_vendor == X86_VENDOR_INTEL) &&
+-	    (((c->x86 == 0x6) && (c->x86_model <= 0xd)) ||
+-	     ((c->x86 == 0xf) && (c->x86_model <= 0x6)))) {
++	if ((c->x86_vfm >= INTEL_PENTIUM_PRO   && c->x86_vfm <= INTEL_PENTIUM_M_DOTHAN) ||
++	    (c->x86_vfm >= INTEL_P4_WILLAMETTE && c->x86_vfm <= INTEL_P4_CEDARMILL)) {
+ 		/*
+ 		 * PAT support with the lower four entries. Intel Pentium 2,
+ 		 * 3, M, and 4 are affected by PAT errata, which makes the
