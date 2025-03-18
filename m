@@ -1,71 +1,99 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8182040849;
-	Tue, 18 Mar 2025 00:58:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2126378F59
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742259515; cv=none; b=dJukKaE7fDAlw1WSvs5nQIrP7M2nw2UXwxn7VCunYQBB3T9eMRp18Mu1/LyjzCiZOdVPgDfe+JCHuyPvlEJgvJewBJ/AJtHWZebs4aav6IjUKQ1RHaiFBbc6JtNnFRX67IMTnyoi5MA0Pv74Hl9ayt+3dlnM0E9w1vrE4h9qtwU=
+	t=1742259524; cv=none; b=hO3elgGr5U2ZHzSfdOyYsfXLi4N/KMLattytOSffbvbryEPcejZAnYOFylizOpe8qC/8Ns4B+UU3x883vBQfCS4XV4TfX8s+L7mjfW/yK38jQz9IJ9K+tuQMolM55oypM3J5akl36X6LhkmPC0TB4i1BjtlmM9zavt6ll81Wp3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742259515; c=relaxed/simple;
-	bh=8nsBNvnH54hqAh3jvOcKxLcm0lF5Rm/1ukltzQEWli8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dyXCbYOdgoncf5cVEaTirB7/3H0A9bdEWdNjTrPGOjoL1D4CZi9AJerFOUVVYkU+4Ps5gNHPcQapmB2Ew1G2ZKnEyVOK9xQiO6GcbBEkQa6MMmbbbekiBcSMz6wZ0FohLvyc2mMjZdaopUbaurNQ+C6QGPOaLuQiNm/ykIkvuus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=jc8BN7Rd; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1742259524; c=relaxed/simple;
+	bh=+LA0Pxbp+49RwYsU6oTKqhnfhU+aXclP/UDJchls5Nk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I55ombQXWIqdpiFDFAlDnkEs+Sb5a1o7SSB4HXV3Mx/cudIIb6JvFhdO2UgOrG75hkEg9oqrkgKSGRdEDudqRdJaCi8GgCa3cJhILYa1668PuJ41RFB0U/GxuwSZ+BeD06arwV2awIyFeNzc0OHDuJemyjydQztfBAtDWsh6vEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R9V8cBJw; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="jc8BN7Rd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1742259511;
-	bh=8nsBNvnH54hqAh3jvOcKxLcm0lF5Rm/1ukltzQEWli8=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=jc8BN7Rd17gp2gtEEmn7TWB7s4bL/KU9WzIoZXxwN0EXE71k/IBhjJ+q389jhLkFh
-	 IdxPT9Z6TJhLCxxAIGaPi/VyQKog/r3YqcPEFnPtF+U6OeS4BHFLDsU1cQgkR8l9fC
-	 jaD1J2NKmGr8roMHDZPf6TDA3s9WwqZTw30pOurMTzahUISzqlD+tF4+7MNqrWElPk
-	 IQjOSwm2zi669uXJEub8r3Cz9A+EPj/LvtmNuaNPKOJ/XPO6H3Li0oKxcKVnKTSEN4
-	 +hR0JWntitto6WeNRxUqnDmKb4vmL0CunRRtl+XT776blnwKyTi9dENlyucXHxDtN9
-	 LK1os6FdOJemg==
-Received: from [192.168.68.112] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id AF2C277BB4;
-	Tue, 18 Mar 2025 08:58:28 +0800 (AWST)
-Message-ID: <3e6a356cf1e6f293a2218e1c006f0222c9e01fa6.camel@codeconstruct.com.au>
-Subject: Re: [PATCH 03/18] rtc: aspeed: drop needless struct
- aspeed_rtc::rtc_dev member
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>, Chanwoo
- Choi <cw00.choi@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>, Joel Stanley
- <joel@jms.id.au>, Hans Ulli Kroll <ulli.kroll@googlemail.com>, Linus
- Walleij <linus.walleij@linaro.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Jerome
- Brunet <jbrunet@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>,  =?ISO-8859-1?Q?T=F3th_J=E1nos?=
- <gomba007@gmail.com>, Dianlong Li <long17.cool@163.com>
-Cc: linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, 
-	linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-amlogic@lists.infradead.org
-Date: Tue, 18 Mar 2025 11:28:28 +1030
-In-Reply-To: <20250228-rtc-cleanups-v1-3-b44cec078481@linaro.org>
-References: <20250228-rtc-cleanups-v1-0-b44cec078481@linaro.org>
-	 <20250228-rtc-cleanups-v1-3-b44cec078481@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R9V8cBJw"
+Date: Tue, 18 Mar 2025 00:58:36 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742259520;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cP0s4VETbk8t0bBy6Octd+t99xFNYIjMSoL8GoR+Dok=;
+	b=R9V8cBJwgDwVeOohEDJts4r7UTTfSFY5leoQ5bxE0kKt+0VAIZi5jhZnm8DQ8z4aoYgrw8
+	OvmiGMSDV9FWurOe6F9T/1NRxnEeIaIhXFn7vuDKGZgOziWCzjLZM+f7aDuVh8EJOXxXMf
+	2pKYnc0v/9XqK+Nusf9BRDY/h0XgdjM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Shakeel Butt <shakeel.butt@linux.dev>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Johannes Weiner <hannes@cmpxchg.org>,
+	Michal Hocko <mhocko@kernel.org>,
+	Muchun Song <muchun.song@linux.dev>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	linux-mm@kvack.org, cgroups@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Meta kernel team <kernel-team@meta.com>
+Subject: Re: [PATCH 4/9] memcg: manually inline __refill_stock
+Message-ID: <Z9jFPP7HsTzs_aW0@google.com>
+References: <20250315174930.1769599-1-shakeel.butt@linux.dev>
+ <20250315174930.1769599-5-shakeel.butt@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250315174930.1769599-5-shakeel.butt@linux.dev>
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, 2025-02-28 at 14:07 +0000, Andr=C3=A9 Draszik wrote:
-> The memory pointed to by the ::rtc_dev member is managed via devres,
-> and no code in this driver uses it past _probe().
->=20
-> We can drop it from the structure and just use a local temporary
-> variable, reducing runtime memory consumption by a few bytes.
->=20
-> Signed-off-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+On Sat, Mar 15, 2025 at 10:49:25AM -0700, Shakeel Butt wrote:
+> There are no more multiple callers of __refill_stock(), so simply inline
+> it to refill_stock().
+> 
+> Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
+> Acked-by: Vlastimil Babka <vbabka@suse.cz>
+> ---
+>  mm/memcontrol.c | 32 ++++++++++++--------------------
+>  1 file changed, 12 insertions(+), 20 deletions(-)
+> 
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index b54e3a1d23bd..7054b0ebd207 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1865,14 +1865,21 @@ static void drain_local_stock(struct work_struct *dummy)
+>  	obj_cgroup_put(old);
+>  }
+>  
+> -/*
+> - * Cache charges(val) to local per_cpu area.
+> - * This will be consumed by consume_stock() function, later.
+> - */
+> -static void __refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+> +/* Should never be called with root_mem_cgroup. */
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+How about adding something like this?
+
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index 768d6b15dbfa..5c26002f2168 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -1881,6 +1881,8 @@ static void refill_stock(struct mem_cgroup *memcg, unsigned int nr_pages)
+ {
+        unsigned long flags;
+
++       VM_WARN_ON_ONCE(mem_cgroup_is_root(memcg));
++
+        local_lock_irqsave(&memcg_stock.stock_lock, flags);
+        __refill_stock(memcg, nr_pages);
+        local_unlock_irqrestore(&memcg_stock.stock_lock, flags);
+
+
+Other than that,
+Reviewed-by: Roman Gushchin <roman.gushchin@linux.dev>
