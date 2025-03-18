@@ -1,64 +1,33 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16C7B1B85D1
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:12:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D271B43151;
+	Tue, 18 Mar 2025 07:16:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742281957; cv=none; b=PtK6wHicH477xJl+QJRpAwwMzw67xqrB+MT1rVwO4HxW1Ka46BGK6yaXE6HnokzyQi608iqpW0TnZixJtatizD5akICzuy3cNx/sXXb51EPa64Es4ab2h9YaR3XsBTrsWKcLOQpBSCKaX8a5gcgZOnmQmJu+LBbIbvXLnUzK3so=
+	t=1742282182; cv=none; b=UAFaZzh3FFx0dKDAqya80NwVI8cylnaj0cl7PrcUDRiDb2CWSNOzRrpvduA0u82KG5EO83l5Bvi+jqcQsQ/CFyJ+hdaqJrVsodxZ5Au2BPE0bBONWDKUGfxf6TIMODKjLqKIoEMT2Z32akL4fQlLZWXwBj2LZLWgpd6r9nrC950=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742281957; c=relaxed/simple;
-	bh=9aPkWt15kdE0cstq+uoRNw2VwO5y2gHFLSM304k0pNo=;
+	s=arc-20240116; t=1742282182; c=relaxed/simple;
+	bh=LU6JclCBLUaoQuSonflokixNYds3pgNH+xAd19ZpkQo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FKGuNo6JA0nLIWqlmQiHBAUcyFI8chZpIx/tUXzhG8J9yrhbzuw7L0PxEvQwMnElhgU4VMmAnQ6f7S2B75FN29aJVY4xrd0GPMRvNJU84JDBNLv77S+izESv0o/hQSYrnGfaT3mx84UIuqgBCix6TQkugdA1ZpCyRLx090SnJ3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lrFqSaHQ; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 In-Reply-To:Content-Type; b=hrx20p962rsgIT1JeBEEG71WapN4WrTh0vfLiunecLYX5eHcxHrLCHM826sqFXOtvrhyyhoUZFH54lJC4WjxdoWOf8ARLJfSiWDG10+htG3xrju3MApSVlEKw0/lZXqUIUm2ouzECkeb2USdAHOBbw3MaXcjzYcxd6JLFK3xMos=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=un2cPy5t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lrFqSaHQ"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so29135175e9.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:12:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742281954; x=1742886754; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9aPkWt15kdE0cstq+uoRNw2VwO5y2gHFLSM304k0pNo=;
-        b=lrFqSaHQvAw2bWzVZmNtNZvyFrrmj/QWJ0GotFkuN1cllhxAob8jF7UFCCsjRCkp/9
-         E5bQJm27Cngoekgxqdbn0Fwn8Xqu1fe0761JwJezJSmP2+M+t9uQR3KKRmE/3F3jLzPc
-         A793+Oc3qKdlve/fZgx0zmtyzyiNJI0vnUNwPdRC5K5C47KQ8FXg40KPkzatu5iOR5lZ
-         Dx4RW75aoVImxaO1fVMeeFbIfTu6Xj14eR7kuAUklD1fZCxH2b2QCgcJ+L4GdUY33bMG
-         tp+oogser7A/ijgjqLsOuW/yNsNFynQ5U4dAmsSTRd659yGjtJkpGHvv59KDFObZGymX
-         S+mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742281954; x=1742886754;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9aPkWt15kdE0cstq+uoRNw2VwO5y2gHFLSM304k0pNo=;
-        b=EzGwLpZk50o/NefPJEe/PhuZ+I8d4axifqkjSYHcUD9jzrQnlaNbpyLH3L6QiS2D7x
-         pztXGuvZjdbbS36p3ThavwxNsiOzPX3rHNukixZs2DGCOTS2FJYHiePwKOWGxk21Rx6u
-         LSPU5s/RqB7V5dalvXnoT8zVVYPOUR6JIKV6k85NXZXCfc2D6dH7EAzMmAFK8nYHeCg3
-         pDMFmMOr5RktaKD0Q0qgDulT6awOExPbqcurNQ8fvjzpNgtWCZUNfZqu3Ztt8Ucpqk87
-         GqUDwfFue3fGjthoLF4UtdtCGRDalFW2dVb0EmpBY3UIWUINMoU/hpXE3W1fyp93oiGy
-         CmYA==
-X-Forwarded-Encrypted: i=1; AJvYcCWrvGLblKMUXkPSacy7OVdZ85Ra3mnQR7ekvNthgPGzaQN1LB/h3oD90iPz0qM/xknc80CBiFnDIp1z+kk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw73+lqoBstqNSC62pXvZ2WQtGZVUPJv5N5HHqONAZZUAiuRK7J
-	glFv4DCz1j5Q6mdSOkbfOShHaJjvPO3OxMK9Xpt4BXKITYXcY9ttoakjrievOnc=
-X-Gm-Gg: ASbGnctZJFRURmp7gReIYWxic938A9NzNeZcLJQaRWvGnCrwpbXLniOvPR2yT+5qzRj
-	0y0kOtCp/srrStnhCBI+2ZGqatBdnh9Jq1ilqWterHpZqWE2sc2Gu7yf2NPb7WMKKeHJAmMB82/
-	Oy233Tx+0Tt18d6yjLFY6CLOATffOVI+eJ5IksoP9dqtq3QjH4MSsXzlm6mujvTK4xiv40Q1aO7
-	zBE5JSxXplOpb9uNFyZQIYO88jOotyljuSDLixOFLKkSE8BQI2O7UjRRzxn9HIRdd8aSIudsvyC
-	G/aXdR+Tzk5p1VUhRVHPItojWo2Z8C2czCZA7RnObrL03b23HGpTDg==
-X-Google-Smtp-Source: AGHT+IGRzgw0td7tUQ8o6QejSgw5whaNPyJevgCIAzLbJrIbqfpv0Ac/GK08yGIn1kKOLzsYXV2gpg==
-X-Received: by 2002:a05:600c:63d1:b0:43c:ec28:d310 with SMTP id 5b1f17b1804b1-43d3e14fa7dmr4229575e9.10.1742281954415;
-        Tue, 18 Mar 2025 00:12:34 -0700 (PDT)
-Received: from [192.168.0.62] ([79.115.63.206])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1fdda30esm128241455e9.5.2025.03.18.00.12.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Mar 2025 00:12:34 -0700 (PDT)
-Message-ID: <47905b67-c0b5-45c9-98e2-0dc4dcf9651e@linaro.org>
-Date: Tue, 18 Mar 2025 09:12:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="un2cPy5t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB8DEC4CEDD;
+	Tue, 18 Mar 2025 07:16:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742282181;
+	bh=LU6JclCBLUaoQuSonflokixNYds3pgNH+xAd19ZpkQo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=un2cPy5tA8UXpJPlo9ZW9Cl8TG4/P5SD9Ez8PghonDabkYBau6EBhmH0RdEwxa7CS
+	 7qBMvOGmly3ZcFJqA7ewEzr2V8cHex29IcLVN4DkMMInU7om33QkDt215gfCZaA1+V
+	 v1u8gRYTGlLtvfIAwPe3lugbtf2ZWc/6+4u8ry/g1idim3IXbvtPl1H3JP7LJCvg6y
+	 dN4A7oZWnRmV19CpVsG4Nr4uniLxpclrT3TFt3KSOBuHtx8kGbBnaERtAn0r3oyn/H
+	 oMa9fEdkLrur/Q0KP11GE1T0nJN0Nt+wLMudHuEgnQSSreGNrb2rahCKjE3LxD6joq
+	 3NF0P7W/bNhiA==
+Message-ID: <f2899540-f9ac-4013-a703-25800429f97d@kernel.org>
+Date: Tue, 18 Mar 2025 08:16:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,31 +35,95 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mtd: spi-nor: eon: fix lock and non-SFDP flags
-To: Jakub Czapiga <czapiga@google.com>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
- linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20250317181856.2059536-1-czapiga@google.com>
-From: Tudor Ambarus <tudor.ambarus@linaro.org>
+Subject: Re: [PATCH v1 1/2] media: dt-bindings: Add qcom,qcs8300-camss
+To: Vikram Sharma <quic_vikramsa@quicinc.com>
+Cc: rfoss@kernel.org, todor.too@gmail.com, bryan.odonoghue@linaro.org,
+ mchehab@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, andersson@kernel.org, konradybcio@kernel.org,
+ hverkuil-cisco@xs4all.nl, cros-qcom-dts-watchers@chromium.org,
+ catalin.marinas@arm.com, will@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250214094747.2483058-1-quic_vikramsa@quicinc.com>
+ <20250214094747.2483058-2-quic_vikramsa@quicinc.com>
+ <20250223-observant-auspicious-basilisk-d78ba9@krzk-bin>
+ <66c35bce-c657-4c12-ad02-58c995ae385a@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-In-Reply-To: <20250317181856.2059536-1-czapiga@google.com>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <66c35bce-c657-4c12-ad02-58c995ae385a@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+On 18/03/2025 06:52, Vikram Sharma wrote:
+> 
+> On 2/23/2025 5:03 PM, Krzysztof Kozlowski wrote:
+>> On Fri, Feb 14, 2025 at 03:17:46PM +0530, Vikram Sharma wrote:
+>>> +properties:
+>>> +  compatible:
+>>> +    const: qcom,qcs8300-camss
+>>> +
+>>> +  reg:
+>>> +    maxItems: 21
+>>> +
+>>> +  reg-names:
+>>> +    items:
+>>> +      - const: csid_wrapper
+>> Why different order of entries than sm8550?
+> 
+> Hi Krzysztof,
+> 
+> Thanks for your review.
+> I did this change to address a comment from Bryan on another series.
+> https://lore.kernel.org/linux-arm-msm/e152ff78-caa5-493a-88da-96a6670eb2a2@linaro.org/
+> 
+> Please suggest if I should keep the order same as sm8550?
+If you chosen the same order as x1e80100 then it is fine, but that file
+is not merged so it is your responsibility to track any differences and
+be sure whatever you send is always in sync with x1e.
 
-
-On 17.03.2025 20:18, Jakub Czapiga wrote:
-> Set appropriate FLASH lock feature flags for chips that support it.
-> Set top-bottom protection bit flag for chips that support it.
-> Add no-SFDP flags for chips with missing SFDP or without clear
-> SFDP description regarding 4K sectors, dual and quad read support.
-> Remove no-SFDP flags for chips which documentation states that this
-> information can be extracted from SFDP.
-
-Patches per flash please. Then dedicated patch for each logical change.
-With testing.
-
-Thanks,
-ta
+Best regards,
+Krzysztof
