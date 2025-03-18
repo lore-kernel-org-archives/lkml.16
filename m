@@ -1,116 +1,102 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B05320B7ED;
-	Tue, 18 Mar 2025 11:35:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A83F20B7E9;
+	Tue, 18 Mar 2025 11:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297748; cv=none; b=BTI7j/42oF5NDkifalMWIdPs7oonYWVKyARgMCvpOuwFeDz+wS+vK3ERyWpTi73fmBwlrYx+zWzkbH4wMKOHpEdG9o0+g/ArIXWc2BDO9OXG6N1dcmLAaSBuhRFT+MiGH39fok0etdPnWSO3kL92jn2kbESRK+3BlhU/Uzlgh8U=
+	t=1742297752; cv=none; b=HKyBYQa3iFW8pqpGrpzA2ssAe4preHK3mBmBX4yeS+tqWOwscd0GmXvYmlxlmSW0CrZr7K0ZUeeZLsshbUM6cJGCQipu5u/FfBUvkf5FGORlFAxnqnM4LLTzhD9icfZVM71HBhJfB2d7m0FUecbk8f1oKWYwT0SGDXDZovGIw5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297748; c=relaxed/simple;
-	bh=Oo5Rb8+Ng9GPmuJ70nHR1J7BG8YZnuFUuDLGpMRu5Ls=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L1wsjQKuIWYnz+yEHK087PpkHb9+KJe3H0lWZZ2vlkxWmx76QNWteTmE02oVy5QAcWQei5LBhWtiJ4iy4WjzZjpnO64EZd+iy1CNuXSGxps9Lfy6ntp7LRW56UuVpox/gEm1eyqVs5YxrhQwL+M1zF4P+vqL5JPo7O44VqzN9CE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iX0YmYwN; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742297752; c=relaxed/simple;
+	bh=/6CF2wMzbpy7fKpS53DJ5LlhZBb3PsXTEdnWg8I9YkY=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RjgMGQDYn2VdQPh3+9dFT8fL6Iu5NyOiGw92Odf0Keaf6u28c0yeEowxp5vANn7WukxdI+eG3FhvyFVW7rR79ITQEpOye9/2IHqplTFp7f7Fw+HJgFpz+LQbQ/W2d5pDih3jw1V4dJD7qWCK9j/LDnFpV+hVPpV60iM3x9PqzRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JjoaLZnt; arc=none smtp.client-ip=198.47.19.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iX0YmYwN"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff80290debso4704597a91.3;
-        Tue, 18 Mar 2025 04:35:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742297747; x=1742902547; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lt93u+3xE/W+Cmzf7bmN03zxBQ/l7okUOSYfUSihUhQ=;
-        b=iX0YmYwN1WU7Vkj9ZpNTNxx0gEp6c4IMHldeyCJFC6RiUM3POYaLBlWnRHJ/mPuXvd
-         Crt3Ba1DB/Qg08l700PtUuhsIqEkLsaMv1O1MYG99n5nL7QHiPbaW3y5njeGaNK4/+za
-         P/npgveTgPStStEwMXV309fG/5mxspGMfZPCmfd8Uywr7qwAl+B2d6SIKg96Czqx1jQM
-         /rLGPMtm3cXdyz15HvBflqxpCtwMmabBuEol6FoEstzK3aDJaeDmh8CFM8cijgRHnuPZ
-         A9QSC9qCAi4Zf4415lFg0eQa26UOilJh87UqvtMXJq0rzMOflC0boLsZ2cFBO7wSG1dU
-         0ORA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742297747; x=1742902547;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lt93u+3xE/W+Cmzf7bmN03zxBQ/l7okUOSYfUSihUhQ=;
-        b=vdE7ey0jg2dPzcyQrDmfWttXq10GbaP1KawI045S5i5uRhKkvDRHMz4gqoOxL/iDfz
-         dd0nazbhlHy2KNkT5Uin4pRP0j3I/2o4UzE1nlhW+rh6Rn68lnB5dX+L2TCi9CnhGgdM
-         I7DIaz4Hxit4SMomlfEliHsWq09vYuDeWB8iQKpQn/a5c7DVbDKB1igxrI7+lIPNYf43
-         KRIe6ZqfoPQ+pDTLFlBhe8yne085h8B9tJXzvFud3OJWIiYQsJuUXFeiw9x/5XgwDP98
-         UnOrM4OgIGInq9nQcLWGyuq0BnggXbmo61iayn0r/7DD+N5Ylnr3O1SEczABC5GINTmK
-         +WiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUD07Iu0w58mITKlNYUfo1V/vrS06+GBVixJg1Y00xSpR27gopXW/srrD3Gp+7Z6Pnu3ILzm4TApZ3AMyZtjPHT3Guc@vger.kernel.org, AJvYcCVsQqvNLOmt0+CX4V8tO5nGETEftWhtLlJpFGizziOf9n+ekPiGuAIxqZPX+sTVkBuM5gR8IQXLMeu1BGDv@vger.kernel.org, AJvYcCWQRIGCm3Yje/biRNlAdAcntJ6cgdeFLHHnwO04OBK8Kde/ThZhqKHQHEUPkPu3GhnR7yqwI/A6lLk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyTzh4v6RCObbTrn2hJszO+O2ImKylBRFSK6ZdHXogjCGwfF5uR
-	4wOHPwX2Sa/ZuMa0nihByJe5Pf6ULkNA2yyQ+kTC2wyWa/tGti7A
-X-Gm-Gg: ASbGncuaPzOIrtvanXEB2a9FO1NxgR0s3mhX6lhcF8FNwqqxRXVBMBs5mynLt7WNomo
-	sW086GlIPvPA33MKBFJ4OIsj2UBMW3MnifuIBjOx2kMv3Wo8ieF5q5Od+H9V+fUP0T8LXhA7DU7
-	NPLKxzitDYS/3w14zaWqs7dUs3kIOW9UQpIgm4RfRkwMNLGv3chq64iuoc6hgoenRd2BEzDaPzj
-	wBEo9cQPd+vbYfk1r3xOI9kEGuoMXMQvIgtIF8MYCQDAp9u8fdzETJAGEIo2bOajzOXN+FjakzU
-	w6mTDUbjwkGcPOMMKvecLjZJtrfvnCd/+kRdc35gBae7SFstA42O4A==
-X-Google-Smtp-Source: AGHT+IFVaY96rQ1MIKrGux34tD4f7j0/KybkBdC4jQu1kYtIggPHmETgmVeeIdlXlbNhYJBdy9z39A==
-X-Received: by 2002:a17:90b:3d06:b0:2ff:7cb8:6eca with SMTP id 98e67ed59e1d1-301a5b8a043mr3242659a91.24.1742297746631;
-        Tue, 18 Mar 2025 04:35:46 -0700 (PDT)
-Received: from [192.168.0.125] ([14.139.108.62])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3015364ebe0sm7910944a91.43.2025.03.18.04.35.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Mar 2025 04:35:46 -0700 (PDT)
-Message-ID: <23f1706f-e12e-4a4a-9919-6e654df8cc31@gmail.com>
-Date: Tue, 18 Mar 2025 17:05:39 +0530
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JjoaLZnt"
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52IBZQeT3053345
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Tue, 18 Mar 2025 06:35:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1742297726;
+	bh=DsN1ncMlJ5zo/5NafwL+81jdetyHrIDDsHNQZGF7/6o=;
+	h=From:To:CC:Subject:Date;
+	b=JjoaLZntQRZ0LeHi/40id75IAoZZpZYaPjmx5gcAXlhhNYnRGWOivteR+mjihfXdQ
+	 PDOnhg09I5XAvrjLzmNqrCNrpoODyk11jAfVwBibAS6SQMt+mWRfB/Jy9e6rmz2cxK
+	 Ok9vU98qSxEbgD31N+w/y5/SlLwwRco6+8cASdeU=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52IBZQLb007471
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 18 Mar 2025 06:35:26 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
+ Mar 2025 06:35:25 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Tue, 18 Mar 2025 06:35:25 -0500
+Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.98])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52IBZOxL104649;
+	Tue, 18 Mar 2025 06:35:25 -0500
+From: Jayesh Choudhary <j-choudhary@ti.com>
+To: <peter.ujfalusi@gmail.com>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <linux-kernel@vger.kernel.org>
+CC: <perex@perex.cz>, <tiwai@suse.com>, <linux-sound@vger.kernel.org>,
+        <j-choudhary@ti.com>
+Subject: [PATCH] ASoC: ti: j721e-evm: Fix clock configuration for ti,j7200-cpb-audio compatible
+Date: Tue, 18 Mar 2025 17:05:24 +0530
+Message-ID: <20250318113524.57100-1-j-choudhary@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] docs: tracing: Reduce maxdepth in index
- documentation
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Bagas Sanjaya <bagasdotme@gmail.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-References: <20250312124717.7208-1-purvayeshi550@gmail.com>
- <20250312134907.06d27d78@batman.local.home> <Z9JKqVvG1iw0bFXR@archie.me>
- <20250313070457.647c8c57@batman.local.home>
- <4cc0a072-3eaf-4fbf-a334-012aacf9039f@gmail.com>
- <b1882a1f-3ed0-4307-8a34-3236bdfb79a6@gmail.com>
- <20250314084155.20c3e662@batman.local.home>
-Content-Language: en-US
-From: Purva Yeshi <purvayeshi550@gmail.com>
-In-Reply-To: <20250314084155.20c3e662@batman.local.home>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-On 14/03/25 18:11, Steven Rostedt wrote:
-> On Fri, 14 Mar 2025 14:26:37 +0530
-> Purva Yeshi <purvayeshi550@gmail.com> wrote:
-> 
->> Thanks for the reference. I will keep this in mind for future patch
->> series and include a cover letter.
-> 
-> Note, a cover letter isn't really necessary here. Why? because these
-> are pretty much two agnostic patches. One fixes the maxdepth, the other
-> is changing the layout for readability.
-> 
-> Cover letters are best when there's a bigger picture being had. That
-> is, the patch series is set out to accomplish a single goal that is
-> broken up into little steps. A cover letter explains what the goal is
-> and why and how. Each patch after that explains what that patch is
-> doing (why and how), but from the focus of that particular change.
-> 
-> As these patches could theoretically be sent as two separate patches
-> and not as a series as they don't really share the same goal, a cover
-> letter's only purpose here would be to make the email thread look a 
-> little nicer ;-)  But that's about it.
-> 
-> -- Steve
+For 'ti,j7200-cpb-audio' compatible, there is support for only one PLL for
+48k. For 11025, 22050, 44100 and 88200 sampling rates, due to absence of
+J721E_CLK_PARENT_44100, we get EINVAL while running any audio application.
+Add support for these rates by using the 48k parent clock and adjusting
+the clock for these rates later in j721e_configure_refclk.
 
-Got it! Thanks for the clarification Steve.
+Fixes: 6748d0559059 ("ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)")
+Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
+---
 
-Best Regards,
-Purva Yeshi
+Error log for J784S4-EVM platform which uses this compatible:
+<https://gist.github.com/Jayesh2000/22784d790f493ca182bb78c8d5015c9b>
+
+After this fix, test log for 44100 rate:
+<https://gist.github.com/Jayesh2000/13ab5852109f899fa2ceb466f8c130d9>
+
+For rates 8k, 16k, 24k, 32k, 48k, 96k the scki used is the default
+value i.e. 24576000 Hz. When any application request sampling rate from
+11025, 22050, 44100 or 88200, the clk_set_rate calls are invoked in
+j721e_configure_refclk and the scki is modified to 22579200 Hz.
+
+ sound/soc/ti/j721e-evm.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
+index 2057d46ad884..0e7e4ff950b5 100644
+--- a/sound/soc/ti/j721e-evm.c
++++ b/sound/soc/ti/j721e-evm.c
+@@ -182,6 +182,8 @@ static int j721e_configure_refclk(struct j721e_priv *priv,
+ 		clk_id = J721E_CLK_PARENT_48000;
+ 	else if (!(rate % 11025) && priv->pll_rates[J721E_CLK_PARENT_44100])
+ 		clk_id = J721E_CLK_PARENT_44100;
++	else if (!(rate % 11025) && priv->pll_rates[J721E_CLK_PARENT_48000])
++		clk_id = J721E_CLK_PARENT_48000;
+ 	else
+ 		return ret;
+ 
+-- 
+2.34.1
+
