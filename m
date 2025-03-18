@@ -1,63 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7B021323E;
-	Tue, 18 Mar 2025 18:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F6A0213E83;
+	Tue, 18 Mar 2025 18:54:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324079; cv=none; b=MfyYyh+GsNP51k+xl9dXAD0jYAuVzreirOdYcZ56M2KLft7aVqjCFNexgxFAFMtIaRF4Y/OAJGZNehYPYZcjSUxSkE1oJzzIBuvVgNCo95qu82GbK+/x8+KQ5BObx01jcexm8OGQ3RPSa6y3ndts0YZ/xMn986qiErYl++/x3n4=
+	t=1742324080; cv=none; b=iWQPF8tGPTsKz68zKGyZJTlaILdQ5J0zz7X9GKWnSnVesFqSCRxUBo+CeKLLeCw+y6/d7PQNULxz2aToUYuAuWslzNHCFIDDoN/7rqOp2DcDQ4xj7IN3vHiato+nrRIW/ws+84vpS3HwEd34HLBk6hnJuSC/C1IUx0yuAl6mRzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324079; c=relaxed/simple;
-	bh=nwZu10HEnXVOj9O7Ex5HtyLl1U+PWZlLRZt86GzHDAo=;
+	s=arc-20240116; t=1742324080; c=relaxed/simple;
+	bh=RKfpRifPgZaVq7lU1uFVi5IVcVVtuoyAGQj7hLQIUIU=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=CMHRscburjsu0UUnLJE+DNUtaOW3vAoqEuhqIDfMJa+baWqwzaxEHpm53oeZL+GcNjoM2RghhL/EC51oWQsJAKFxTax4N30FC9m6zzB+hXXwVc20WeuX8/HH3RETO9PidQFO3+1y9Su/uFfWyYlu391sBRdkDGbhPt6Q5BRAIoQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=hGz4Ioua; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZpMODOLQ; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=YRQSL3Pet471yAzSpkf4aXYGiKNuXZ8F4A0kJr9oGOIjMMEw2cFBDCj3CfMQ7/ICvxXH+01Vtm/Obp1XSmv5ZtrSRIdzuXRY+Gsdj+W+Loub0OZClNbxOxdfZxuTXFAHQaI+kjhZam9QHpcA+XyMj66o6b7mHGWTeDfFo3V0KBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=iF3ym/J0; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kMHBY3/V; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="hGz4Ioua";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZpMODOLQ"
-Date: Tue, 18 Mar 2025 18:54:31 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="iF3ym/J0";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kMHBY3/V"
+Date: Tue, 18 Mar 2025 18:54:36 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742324072;
+	s=2020; t=1742324076;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U7dJ/a3cb89pwNBuriFzAVmfduMi2XOoBfR6jSWZW0k=;
-	b=hGz4IouagjrgClxmD34icrSSEN3KHMm5vn4QbPE1tybYkCyBsx1lA7Sj+myO7hRwpy4qIj
-	C5KHrobgBuQ+la3Mwo+B5Q3wsJBva1rFpFR3vwMud2h1MFvzbL2xhXzJUcgNCWBcN1QoQn
-	+3pAATCaBLqapuyOcU8WWHOZ53EqULCJdKvvNYzCw5Jhrr3trAvMc8e5V3UCwEh4NuK1IP
-	W1h6Hk9RjLw2VwrYvwL7OlJzgkbvtovwBndP1rSAGBMt6HXmeqoCSTvyEfNcxd5wXgkbar
-	yZkTjf7LfuaxHJ90Jrwg5SUxj22Z/6jC7mvAujI1sZ+RE2T+qAmPw3Oikp6KJA==
+	bh=ydlw+V5tJ/DFT28B3UEoeiIuPT3DG7hIWV6mRfeV8T8=;
+	b=iF3ym/J0yhf1TsORWXnIT+ufwIml872QVM1wp3M1pt9w/K0KfzxjuYz4T8u1zbkUnh2ZE5
+	MjRohJ1phzU3JcxhuWGjbM6N3k/YNlyfTyaPNMduNiPZf6H5RzgKhpDHz3njc5RrGSSZKa
+	M5rto9acEu0WDGS5P1jeXOvrXSDXDCcH1Zxyqk+vjhYPm8FyZqyjMiYp1hO1f1eKPdWM7N
+	wBgW09bBEQxwWosjiV9uNFEhzCVMVynC7WRu9RlKx5vNkgVuPiykvjBHdD5Qk2L59slt+s
+	+BbZwzcSzGj5ihmvh+2p4fHYD+EFLX0F04tiZlc7fMrYNjEaT+lMkkLZxhPAgw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742324072;
+	s=2020e; t=1742324076;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=U7dJ/a3cb89pwNBuriFzAVmfduMi2XOoBfR6jSWZW0k=;
-	b=ZpMODOLQLZ5/6fKM0I3Qs4zrvTTy2SXXt95k+PgzHHVOrXsT8xuPWFq+gze1Ek9BO0yh8g
-	VA1GziyQZplMrVBg==
+	bh=ydlw+V5tJ/DFT28B3UEoeiIuPT3DG7hIWV6mRfeV8T8=;
+	b=kMHBY3/VFSpVKzmCBb0B+HKeCKgySOP/KvsEITR7jumANo67t1m25s5CrxUw0QPx6CLx1Y
+	iYmdUB97B1iwLpCw==
 From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu/intel: Replace Family 15 checks with VFM ones
+Subject: [tip: x86/cpu] x86/apic: Fix 32-bit APIC initialization for extended
+ Intel Families
 Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
  Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250219184133.816753-7-sohil.mehta@intel.com>
-References: <20250219184133.816753-7-sohil.mehta@intel.com>
+In-Reply-To: <20250219184133.816753-2-sohil.mehta@intel.com>
+References: <20250219184133.816753-2-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174232407152.14745.14252134648730135071.tip-bot2@tip-bot2>
+Message-ID: <174232407614.14745.9291363878961520475.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -67,63 +68,41 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/cpu branch of tip:
 
-Commit-ID:     93a1337433ab6ae596d9c8a3e4d6fbcbe128afad
-Gitweb:        https://git.kernel.org/tip/93a1337433ab6ae596d9c8a3e4d6fbcbe128afad
+Commit-ID:     3447a2e710494fea44ba76a949b3d3afe17a7a23
+Gitweb:        https://git.kernel.org/tip/3447a2e710494fea44ba76a949b3d3afe17a7a23
 Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Wed, 19 Feb 2025 18:41:24 
+AuthorDate:    Wed, 19 Feb 2025 18:41:19 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 18 Mar 2025 19:33:45 +01:00
+CommitterDate: Tue, 18 Mar 2025 19:33:44 +01:00
 
-x86/cpu/intel: Replace Family 15 checks with VFM ones
+x86/apic: Fix 32-bit APIC initialization for extended Intel Families
 
-Introduce names for some old pentium 4 models and replace the x86_model
-checks with VFM ones.
+APIC detection is currently limited to a few specific Families and will
+not match the upcoming Families >=18.
+
+Extend the check to include all Families 6 or greater. Also convert it
+to a VFM check to make it simpler.
 
 Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/r/20250219184133.816753-7-sohil.mehta@intel.com
+Link: https://lore.kernel.org/r/20250219184133.816753-2-sohil.mehta@intel.com
 ---
- arch/x86/include/asm/intel-family.h | 4 ++++
- arch/x86/kernel/cpu/intel.c         | 6 +++---
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/kernel/apic/apic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 58735bc..0108695 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -184,6 +184,10 @@
- /* Family 5 */
- #define INTEL_QUARK_X1000		IFM(5, 0x09) /* Quark X1000 SoC */
- 
-+/* Family 15 - NetBurst */
-+#define INTEL_P4_WILLAMETTE		IFM(15, 0x01) /* Also Xeon Foster */
-+#define INTEL_P4_PRESCOTT		IFM(15, 0x03)
-+
- /* Family 19 */
- #define INTEL_PANTHERCOVE_X		IFM(19, 0x01) /* Diamond Rapids */
- 
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index a49615f..42cebca 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -247,8 +247,8 @@ static void early_init_intel(struct cpuinfo_x86 *c)
- #endif
- 
- 	/* CPUID workaround for 0F33/0F34 CPU */
--	if (c->x86 == 0xF && c->x86_model == 0x3
--	    && (c->x86_stepping == 0x3 || c->x86_stepping == 0x4))
-+	if (c->x86_vfm == INTEL_P4_PRESCOTT &&
-+	    (c->x86_stepping == 0x3 || c->x86_stepping == 0x4))
- 		c->x86_phys_bits = 36;
- 
- 	/*
-@@ -421,7 +421,7 @@ static void intel_workarounds(struct cpuinfo_x86 *c)
- 	 * P4 Xeon erratum 037 workaround.
- 	 * Hardware prefetcher may cause stale data to be loaded into the cache.
- 	 */
--	if ((c->x86 == 15) && (c->x86_model == 1) && (c->x86_stepping == 1)) {
-+	if (c->x86_vfm == INTEL_P4_WILLAMETTE && c->x86_stepping == 1) {
- 		if (msr_set_bit(MSR_IA32_MISC_ENABLE,
- 				MSR_IA32_MISC_ENABLE_PREFETCH_DISABLE_BIT) > 0) {
- 			pr_info("CPU: C0 stepping P4 Xeon detected.\n");
+diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
+index ddca8da..62584a3 100644
+--- a/arch/x86/kernel/apic/apic.c
++++ b/arch/x86/kernel/apic/apic.c
+@@ -2011,8 +2011,8 @@ static bool __init detect_init_APIC(void)
+ 	case X86_VENDOR_HYGON:
+ 		break;
+ 	case X86_VENDOR_INTEL:
+-		if (boot_cpu_data.x86 == 6 || boot_cpu_data.x86 == 15 ||
+-		    (boot_cpu_data.x86 == 5 && boot_cpu_has(X86_FEATURE_APIC)))
++		if ((boot_cpu_data.x86 == 5 && boot_cpu_has(X86_FEATURE_APIC)) ||
++		    boot_cpu_data.x86_vfm >= INTEL_PENTIUM_PRO)
+ 			break;
+ 		goto no_apic;
+ 	default:
