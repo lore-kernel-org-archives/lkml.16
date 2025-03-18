@@ -1,205 +1,151 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EB120D502;
-	Tue, 18 Mar 2025 13:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D0862054F2;
+	Tue, 18 Mar 2025 13:28:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742304492; cv=none; b=rXknN7yxFRqmN5gHNQf1qFv3bZunnbA3Mae05bSRTM7y2ggdyp5aBV9iUPljGjbTb4/uETI75rEJ8lcKMA0D9D2Qu+t0fugHsVdWR/cMimUTsldm25/FqSdwAkwUIpaicBrGq0+x/be3TX0glfFQOvcafcAfIE58ei10YaFdFzM=
+	t=1742304539; cv=none; b=PPlbauvf9hJ+bedk7YhzF3n1wCZAklDsTPnV2KFL2F+5CcwIXNG4WTn68OrpavITt1n49p1FTvB/EoLKlwiu4lJV7GfEP8+D+LrGhH8noRhGLIN/P9HwELqWvUuY+QL4bndZQVJbeGkse6dniL+7Fz0t553B9vZetCqWke91t1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742304492; c=relaxed/simple;
-	bh=Y19lGFqI1feFU+EfLxPKy0E333YJeT3tALgbehX6FA4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=AvbNKMxBO5tdySy78RcMRPNP/8PBYifJ9cIUb95LOm9dTESUR66Bsd1E8Msu07MvxUwA0j4jpPu9jGpAWLjLY+soNIE8XfbJo7D5O/IjpvUmZWFUnGHY3HmVv6P5N5wq2ai0ZhaT9pEtgmIIiYqifqH5nFkC09PffsxAHYYffkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YdbmWyaB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742304539; c=relaxed/simple;
+	bh=zkloTWqSwQluyT+su4wyVRo8WPOd3qdFyiz4CAykb8I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VVE95XoQ60jKIcPS7jn3JS075s724NX+ASGFEEINU/zrT0k6t3vGPLMWZcsB//ch9UdaOq02P8VmbUO8mn7jirAS8NqA7EBBMHA3sxSjT7UCf/pZbb2t/kf73cIgBwlg4J/Rs/C7skBJ5CKfEcS4Nf993kKVxzL5X6mVgdIF2A0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pkZ/327W; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YdbmWyaB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C160EC4CEE3;
-	Tue, 18 Mar 2025 13:28:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pkZ/327W"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06BDAC4CEDD;
+	Tue, 18 Mar 2025 13:28:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742304491;
-	bh=Y19lGFqI1feFU+EfLxPKy0E333YJeT3tALgbehX6FA4=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=YdbmWyaBKCX17M+dS+mJYXo2PtJQ84WswFCHk287ISI1T5wivztkiz0IyOk1mKpO8
-	 xBu5F0YzmLqgo3NtunoLNjDek/U1U/HhZIbg+F8PhYQHABQdDKILDLurbOyjsjkc2G
-	 SI5UfY4l2J/3irW5H+AH0YUU+y4rZRJTcHa66aIU147XKqYAyTNn7JNr21P/46VQgL
-	 TMOUBRYU6sZvFP0mJHW3SMulP/vaBjgwpWtvXBPa9+M6PRyPC9HalEh/kSEuNWJsJm
-	 UCoO3vN+s5G5kluVW84ChfxnvWGadnBb/PmTRiJAY0MxkcjF5gURdN4/OViyXF7fN0
-	 WdN/txXRNX0Fw==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-Cc: rust-for-linux@vger.kernel.org,  daniel.almeida@collabora.com,
-  dakr@kernel.org,  robin.murphy@arm.com,  aliceryhl@google.com,  Miguel
- Ojeda <ojeda@kernel.org>,  Alex Gaynor <alex.gaynor@gmail.com>,  Boqun
- Feng <boqun.feng@gmail.com>,  Gary Guo <gary@garyguo.net>,  =?utf-8?Q?Bj?=
- =?utf-8?Q?=C3=B6rn?= Roy
- Baron <bjorn3_gh@protonmail.com>,  Benno Lossin <benno.lossin@proton.me>,
-  Trevor Gross <tmgross@umich.edu>,  Valentin Obst
- <kernel@valentinobst.de>,  linux-kernel@vger.kernel.org (open list),
-  Christoph Hellwig <hch@lst.de>,  Marek Szyprowski
- <m.szyprowski@samsung.com>,  airlied@redhat.com,  iommu@lists.linux.dev
- (open list:DMA MAPPING HELPERS)
-Subject: Re: [PATCH v14 03/11] samples: rust: add Rust dma test sample driver
-In-Reply-To: <20250311174930.2348813-4-abdiel.janulgue@gmail.com> (Abdiel
-	Janulgue's message of "Tue, 11 Mar 2025 19:47:59 +0200")
-References: <20250311174930.2348813-1-abdiel.janulgue@gmail.com>
-	<20250311174930.2348813-4-abdiel.janulgue@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 18 Mar 2025 14:26:45 +0100
-Message-ID: <87frjajwq2.fsf@kernel.org>
+	s=k20201202; t=1742304538;
+	bh=zkloTWqSwQluyT+su4wyVRo8WPOd3qdFyiz4CAykb8I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pkZ/327WMlXWLGPqy1g2zn1K1X3FoeakUThWo0l65uMdmoESAdlvD1xTki+NDOFrZ
+	 gDXBj0fo5WavcaLqPBibqfJ2nKqFDfzq7Jx0kKO2Cc+NRJTzVK5qZbIir+Cw1hH2M2
+	 QYOaGiHbyZVSZ9SiXavK4cncCI8FW1IrHKNVjx97keT2Xu8w+TEVSBsAoaFA1DO6A2
+	 lNxjbbzTj1nCDCs4IK6x7LZAbL6yiKJ9UyBMDe2htktJO9EOz6+E5MJRlj3D1hOhyM
+	 ttHBxBii5PYOh9I9Z6lUMeLLBR1JpiaxZEaIWiPPUh4jNGFIwZEudeu6vgtNu2rlvf
+	 WlzUEbFu8Rp1Q==
+Message-ID: <c9fb19c4-aa7a-4114-ace4-764d15a2d795@kernel.org>
+Date: Tue, 18 Mar 2025 14:28:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: light: bh1750: Add hardware reset support via GPIO
+To: Sergio Perez Alegre <sergio@pereznus.es>
+Cc: tduszyns@gmail.com, jic23@kernel.org, lars@metafoo.de, robh@kernel.org,
+ conor+dt@kernel.org, linux-iio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250316145514.627-1-sergio@pereznus.es>
+ <01f48f6d-55a4-4dbe-b1ae-ef8c54dcc1ff@kernel.org>
+ <64182937-29e9-45dc-aa2f-5f2b739056a1@me.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <64182937-29e9-45dc-aa2f-5f2b739056a1@me.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Abdiel Janulgue <abdiel.janulgue@gmail.com> writes:
+On 18/03/2025 14:16, Sergio Perez Alegre wrote:
+> El 17 mar. 2025, a las 8:24, Krzysztof Kozlowski <krzk@kernel.org> escr=
+ibieron: On 16/03/2025 15:55, Sergio Perez wrote: Some BH1750 sensors req=
+uire a hardware reset before they can be detected on the I2C bus. This pa=
+tch adds support for an optional reset GPIO that can be specified in the =
+device tree. The reset sequence pulls the GPIO low and then high before i=
+nitializing the sensor, which enables proper detection with tools like i2=
+cdetect. Update the devicetree binding documentation to include the new r=
+eset-gpios property with examples. Signed-off-by: Sergio Perez <sergio@pe=
+reznus.es> Please run scripts/checkpatch.pl and fix reported warnings. Af=
+ter that, run also `scripts/checkpatch.pl --strict` and (probably) fix mo=
+re warnings. Some warnings can be ignored, especially from --strict run, =
+but the code here looks like it needs a fix. Feel free to get in touch if=
+ the warning is not clear. <form letter> Please use scripts/get_maintaine=
+rs.pl to get a list of necessary people and lists to CC. It might happen,=
+ that command when run on an older kernel, gives you outdated entries. Th=
+erefore please be sure you base your patches on recent Linux kernel. Tool=
+s like b4 or scripts/get_maintainer.pl provide you proper list of people,=
+ so fix your workflow. Tools might also fail if you work on some ancient =
+tree (don't, instead use mainline) or work on fork of kernel (don't, inst=
+ead use mainline). Just use b4 and everything should be fine, although re=
+member about `b4 prep --auto-to-cc` if you added new patches to the patch=
+set. You missed at least devicetree list (maybe more), so this won't be t=
+ested by automated tooling. Performing review on untested code might be a=
+ waste of time. Please kindly resend and include all necessary To/Cc entr=
+ies. </form letter> Sorry, I had run the scripts/get_maintainer.pl tool a=
+nd got fewer recipients than necessary. I have redone everything in a cle=
+an installation and now I have obtained more recipients. Any fixes I make=
+ in the patch I send to this same thread or should I send it with git sen=
+d-mail? I say this because perhaps I have done it incorrectly and possibl=
+y created 3 versions, I apologize. My latest version (v3) includes all th=
+e suggestions mentioned but due to my ignorance of the procedure I though=
+t they should be sent to the list again as before. --- .../devicetree/bin=
+dings/iio/light/bh1750.yaml | 20 +++- drivers/iio/light/bh1750.c | 113 ++=
+++++++++++------ ... and please go through your patch and see what happen=
+ed there. 2 files changed, 95 insertions(+), 38 deletions(-) diff --git a=
+/Documentation/devicetree/bindings/iio/light/bh1750.yaml b/Documentation/=
+devicetree/bindings/iio/light/bh1750.yaml index 1a88b3c253d5..d53b221eb84=
+b 100644 --- a/Documentation/devicetree/bindings/iio/light/bh1750.yaml ++=
++ b/Documentation/devicetree/bindings/iio/light/bh1750.yaml @@ -11,6 +11,=
+9 @@ maintainers: description: | Ambient light sensor with an i2c interfa=
+ce. + + Some BH1750 sensors require a hardware reset before being properl=
+y detected + on the I2C bus. This can be done using the optional reset-gp=
+ios property. properties: compatible: @@ -23,6 +26,10 @@ properties: reg:=
+ maxItems: 1 + + reset-gpios: + description: GPIO connected to the sensor=
+'s reset line (active low) + maxItems: 1 required: - compatible @@ -41,5 =
++48,16 @@ examples: reg =3D <0x23>; }; }; + - | + i2c { + #address-cells =
+=3D <1>; + #size-cells =3D <0>; + + light-sensor@23 { + compatible =3D "r=
+ohm,bh1750"; + reg =3D <0x23>; + reset-gpios =3D <&gpio2 17 GPIO_ACTIVE_H=
+IGH>; + }; + }; -... +... \ No newline at end of file You have unrelated =
+changed all over the place. Best regards, Krzysztof
 
-> Add a simple driver to excercise the basics of the Rust DMA
-> coherent allocator bindings.
->
-> Suggested-by: Danilo Krummrich <dakr@kernel.org>
-> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
-> ---
->  samples/rust/Kconfig     | 11 +++++
->  samples/rust/Makefile    |  1 +
->  samples/rust/rust_dma.rs | 97 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 109 insertions(+)
->  create mode 100644 samples/rust/rust_dma.rs
->
-> diff --git a/samples/rust/Kconfig b/samples/rust/Kconfig
-> index 3b6eae84b297..e2d14aa6beec 100644
-> --- a/samples/rust/Kconfig
-> +++ b/samples/rust/Kconfig
-> @@ -78,4 +78,15 @@ config SAMPLE_RUST_HOSTPROGS
->  
->  	  If unsure, say N.
->  
-> +config SAMPLE_RUST_DRIVER_DMA
-> +	tristate "DMA Test Driver"
-> +	depends on PCI
-> +	help
-> +	  This option builds the Rust dma test driver sample.
-> +
-> +	  To compile this as a module, choose M here:
-> +	  the module will be called dma.
-> +
-> +	  If unsure, say N.
-> +
->  endif # SAMPLES_RUST
-> diff --git a/samples/rust/Makefile b/samples/rust/Makefile
-> index 0dbc6d90f1ef..1a9aff6e8d6a 100644
-> --- a/samples/rust/Makefile
-> +++ b/samples/rust/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_SAMPLE_RUST_PRINT)			+= rust_print.o
->  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PCI)		+= rust_driver_pci.o
->  obj-$(CONFIG_SAMPLE_RUST_DRIVER_PLATFORM)	+= rust_driver_platform.o
->  obj-$(CONFIG_SAMPLE_RUST_DRIVER_FAUX)		+= rust_driver_faux.o
-> +obj-$(CONFIG_SAMPLE_RUST_DRIVER_DMA)		+= rust_dma.o
->  
->  rust_print-y := rust_print_main.o rust_print_events.o
->  
-> diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
-> new file mode 100644
-> index 000000000000..1740140faba6
-> --- /dev/null
-> +++ b/samples/rust/rust_dma.rs
-> @@ -0,0 +1,97 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +
-> +//! Rust DMA api test (based on QEMU's `pci-testdev`).
-> +//!
-> +//! To make this driver probe, QEMU must be run with `-device pci-testdev`.
-> +
-> +use kernel::{bindings, dma::CoherentAllocation, pci, prelude::*};
-> +
-> +struct DmaSampleDriver {
-> +    pdev: pci::Device,
-> +    ca: CoherentAllocation<MyStruct>,
-> +}
-> +
-> +const TEST_VALUES: [(u32, u32); 5] = [
-> +    (0xa, 0xb),
-> +    (0xc, 0xd),
-> +    (0xe, 0xf),
-> +    (0xab, 0xba),
-> +    (0xcd, 0xef),
-> +];
-> +
-> +struct MyStruct {
-> +    h: u32,
-> +    b: u32,
-> +}
-> +
-> +impl MyStruct {
-> +    fn new(h: u32, b: u32) -> Self {
-> +        Self { h, b }
-> +    }
-> +}
-> +// SAFETY: All bit patterns are acceptable values for `MyStruct`.
-> +unsafe impl kernel::transmute::AsBytes for MyStruct {}
-> +// SAFETY: Instances of `MyStruct` have no uninitialized portions.
-> +unsafe impl kernel::transmute::FromBytes for MyStruct {}
-> +
-> +kernel::pci_device_table!(
-> +    PCI_TABLE,
-> +    MODULE_PCI_TABLE,
-> +    <DmaSampleDriver as pci::Driver>::IdInfo,
-> +    [(
-> +        pci::DeviceId::from_id(bindings::PCI_VENDOR_ID_REDHAT, 0x5),
-> +        ()
-> +    )]
-> +);
-> +
-> +impl pci::Driver for DmaSampleDriver {
-> +    type IdInfo = ();
-> +    const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
-> +
-> +    fn probe(pdev: &mut pci::Device, _info: &Self::IdInfo) -> Result<Pin<KBox<Self>>> {
-> +        dev_info!(pdev.as_ref(), "Probe DMA test driver.\n");
-> +
-> +        let ca: CoherentAllocation<MyStruct> =
-> +            CoherentAllocation::alloc_coherent(pdev.as_ref(), TEST_VALUES.len(), GFP_KERNEL)?;
-> +
-> +        || -> Result {
-> +            for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> +                kernel::dma_write!(ca[i] = MyStruct::new(value.0, value.1));
-> +            }
-> +
-> +            Ok(())
-> +        }()?;
 
-Why is this placed in a closure? Left over from deferred error for pin-init?
-
-> +
-> +        let drvdata = KBox::new(
-> +            Self {
-> +                pdev: pdev.clone(),
-> +                ca,
-> +            },
-> +            GFP_KERNEL,
-> +        )?;
-> +
-> +        Ok(drvdata.into())
-> +    }
-> +}
-> +
-> +impl Drop for DmaSampleDriver {
-> +    fn drop(&mut self) {
-> +        dev_info!(self.pdev.as_ref(), "Unload DMA test driver.\n");
-> +
-> +        let _ = || -> Result {
-> +            for (i, value) in TEST_VALUES.into_iter().enumerate() {
-> +                assert_eq!(kernel::dma_read!(self.ca[i].h), value.0);
-> +                assert_eq!(kernel::dma_read!(self.ca[i].b), value.1);
-
-We should probably change `dma_read!`/`dma_write!` to return `Result`,
-so that we don't have to wrap these calls in a closure for obscure reasons.
-
+Hm? No clue what this means, sorry, unreadable.
 
 Best regards,
-Andreas Hindborg
-
-
+Krzysztof
