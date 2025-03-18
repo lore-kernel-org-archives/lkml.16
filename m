@@ -1,137 +1,97 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F405213E81;
-	Tue, 18 Mar 2025 18:54:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CC3C211A33
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:55:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324081; cv=none; b=DtWD7ym3mnwD/kWGfpdmeDZ40Wo2E6e35FCxM+7IP6LM1JSEc4kjB0cRAXyTl3JotfFZPm0EUJBKrVsqBkdkAIZOwvCX9qtlQp7/Tw17tIBwFEF47zYBrxQNcSH5LvBBZ8cj8ygKGQwkYZuV9RZ3AQHFaUSZEqyhxP+DGmgOgOA=
+	t=1742324155; cv=none; b=irNumPzmuZhT/6ztqJ2+6M+lXSq80VXQQViWmqH7L6VEGvmJ9UN9eA4jRJetib2C/9vSk8ANMas0EFnlolhih2NWCbK4Cmqg3rdzyRy9K0Wd7qw3adOKhLWl9fe53+qgbL86/jggaF3m8LAGU86FilwcGWJQsIPJl2YOImaF3Rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324081; c=relaxed/simple;
-	bh=6upam8jR+tXsU9YBuSittZUeNhA1nAZGXdZ7/dC2sy8=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=V4EZCKqMPp+ldGg8r2453q10ZVbl+EWVJedCbuXMKzL1Jtw6FOU0arypzMXJr44lX4j/DfxeXVzRFAcF6QnlfkdsuURukakAknz8qU416bXAbYHty8H+M7kMk39KVxx7WnDFBbxY1khdtb5MnYgAMjL37UHsTISxYVse8QVftHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=mNNQl77S; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=qGDdWTkz; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742324155; c=relaxed/simple;
+	bh=TMyo8gbuXK0lIV1lDMeUJzqGDwGr5REmhccLiuoeuWs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GuQzwTzzHXTMjvuQ8szGmfUhXmGEjF9CnzRf4iwleQRoNBatOAnQxzx2W/AKuLnwvdNdREitfOlkk28BTG4oW+tW/wcMShnk6dkmp04zCY3IMmVc5RocIsW7PSxGUVkl6NNa/8F9yw7oLfGqVkKg95Xy8MQ8PosgIx2doxH3hfk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Hw0Pjc9L; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="mNNQl77S";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qGDdWTkz"
-Date: Tue, 18 Mar 2025 18:54:35 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742324076;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EqOUG9LGURxe8JbEqYO0k08dUAuBZiIcOEKIs7/TpEg=;
-	b=mNNQl77SbD6KMgfMilo2MgBXcnqtXwfOraI/VO1FFju2/jdzlLOjySktpbjNiou++vtu0A
-	aj7Lo2bdrSwpGY5E1ro+GPFocSRfiGc7E7cvZ7hNWr/uVylOPMPlKxjVLwWVrByQe7YeNr
-	9NUmTc/UDLdQ/TKt7MuB6RCaE37/j+pzhizwrr87vzPAqUgocR2MOarAAR8wRw4G9prQsO
-	8EECeu5FhT0/ALhgIVHPB4Rl11JH1BFYF8UvwkthcEeHbWlzry8H+moodHAG/X7XNpCTaB
-	b3iquzrFqYTwjACeiBncGd11z7cLYxtM4pE3DXNNA9csMgi6QdDRKtqpMyOZow==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742324076;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EqOUG9LGURxe8JbEqYO0k08dUAuBZiIcOEKIs7/TpEg=;
-	b=qGDdWTkzJctVgVEdKX3XH1BOATZy4UFEkZIOAYW6Z8HKGmT/PrIdDZxXmY11ZnMPTC4LeT
-	QweuTeSGT+K0KUAQ==
-From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/cpu] x86/cpu/intel: Fix the MOVSL alignment preference for
- extended Families
-Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
- Brian Gerst <brgerst@gmail.com>, Juergen Gross <jgross@suse.com>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250219184133.816753-3-sohil.mehta@intel.com>
-References: <20250219184133.816753-3-sohil.mehta@intel.com>
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Hw0Pjc9L"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 9952440E021E;
+	Tue, 18 Mar 2025 18:55:49 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id dMRoGKY10yrW; Tue, 18 Mar 2025 18:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1742324138; bh=bVU12d8vc0ThIR9ofnvoWSzWZ5BjfILHSyzp4KSMSvg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Hw0Pjc9LIOtW4EWitT8tFCn/70CUvCRZAsGpbSQMxCudRATATvqhnCjy2DvVdo4mb
+	 YaaX3Kq1ioqrLRnBkHQZEr+cQk+KvUb4GmZnxa0gBwvmX+fGHlzFIFKO9icIId4BbQ
+	 wxOS4Onzv2NWWSbHdQKh6HprZst/2gWQhUah7msinlR5NuXC8iCkI/Taeta+UoxJzP
+	 K//zj+F1Z6DkP/FWSP+sLje6wVXLBbNgS+BqsqjonujqZJoUx7nol9fytX+Cgph9ZM
+	 Ya/qNid0PEDRxlfpNZ8nPzqfCFjMQsYNLg/SybXAQkiHcKXD8ZzV3Ubt1LJJm61ooR
+	 RXogW2MdUwMQ02Zb4mcUMdbbMfHLET/ZAuu4tChSPzsmb6KMnyq9Ov3vJnjnkU3SiM
+	 LwBbwo0fRIi2KL/5Nx/NMeO9L1k74whhvozPdruhTpZ6KH0kHtBXsVXzgleOWt7z6X
+	 hv5qX4IaFSRiyyJ4zaAlFC8ZwN5Yx3xW6Ik/hZ0yLb/TCRHasyPcaJ6crSJoW6XBdX
+	 w2SxO0BPlGV5eBNJBPJONf9x1Y03NZwc1U//HM65TzAtQKtOxpxPkx9IA5kMFuJ7k3
+	 KNr91a9uMJntmSpnGDwKhGNa/WVQz08pamKztKDaGR3T2Dd9vRqsOUWMCY3Mkvm2I+
+	 eKenW0ej1EMD0hZinoC3ElGU=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A4CAB40E01AC;
+	Tue, 18 Mar 2025 18:55:26 +0000 (UTC)
+Date: Tue, 18 Mar 2025 19:55:19 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: David Kaplan <david.kaplan@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
+	Brendan Jackman <jackmanb@google.com>,
+	Derek Manwaring <derekmn@amazon.com>
+Subject: Re: MMIO and VERW
+Message-ID: <20250318185519.GGZ9nBl2VUP4ysb-tZ@fat_crate.local>
+References: <20250310164023.779191-1-david.kaplan@amd.com>
+ <20250310164023.779191-4-david.kaplan@amd.com>
+ <20250313093617.GHZ9KnEXpdM4dwLYFz@fat_crate.local>
+ <20250313192606.iijythngqtpx4tyy@desk>
+ <20250318141659.GDZ9mAWwa3dkQDHkCk@fat_crate.local>
+ <20250318162505.3ptnegnjz46hchep@desk>
+ <20250318163451.GEZ9mgq7XsE1kIyiSy@fat_crate.local>
+ <20250318165645.lnutevfmtld3vu4d@desk>
+ <20250318173708.GFZ9mvROyNagmhawEV@fat_crate.local>
+ <20250318181515.42jf2p5onoueeg3v@desk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174232407525.14745.17170068204585207370.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250318181515.42jf2p5onoueeg3v@desk>
 
-The following commit has been merged into the x86/cpu branch of tip:
+On Tue, Mar 18, 2025 at 11:15:15AM -0700, Pawan Gupta wrote:
+> :D Totally agree. A machine readable format is here:
+> https://github.com/intel/Intel-affected-processor-list/blob/main/Intel_affected_processor_list.csv
 
-Commit-ID:     d3c20b8ceadbe561033f51cb220859e3f1bcb44f
-Gitweb:        https://git.kernel.org/tip/d3c20b8ceadbe561033f51cb220859e3f1bcb44f
-Author:        Sohil Mehta <sohil.mehta@intel.com>
-AuthorDate:    Wed, 19 Feb 2025 18:41:20 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Tue, 18 Mar 2025 19:33:44 +01:00
+Nice.
 
-x86/cpu/intel: Fix the MOVSL alignment preference for extended Families
+> Likely yes, I will give this a shot and see how it compares with the
+> currrent implementation. Thanks for the suggestion.
 
-The alignment preference for 32-bit MOVSL based bulk memory move has
-been 8-byte for a long time. However this preference is only set for
-Family 6 and 15 processors.
+Thanks!
 
-Use the same preference for upcoming Family numbers 18 and 19. Also, use
-a simpler VFM based check instead of switching based on Family numbers.
-Refresh the comment to reflect the new check.
+-- 
+Regards/Gruss,
+    Boris.
 
-Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250219184133.816753-3-sohil.mehta@intel.com
----
- arch/x86/kernel/cpu/intel.c | 19 ++++++-------------
- 1 file changed, 6 insertions(+), 13 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 291c828..99b4c40 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -440,23 +440,16 @@ static void intel_workarounds(struct cpuinfo_x86 *c)
- 	    (c->x86_stepping < 0x6 || c->x86_stepping == 0xb))
- 		set_cpu_bug(c, X86_BUG_11AP);
- 
--
- #ifdef CONFIG_X86_INTEL_USERCOPY
- 	/*
--	 * Set up the preferred alignment for movsl bulk memory moves
-+	 * MOVSL bulk memory moves can be slow when source and dest are not
-+	 * both 8-byte aligned. PII/PIII only like MOVSL with 8-byte alignment.
-+	 *
-+	 * Set the preferred alignment for Pentium Pro and newer processors, as
-+	 * it has only been tested on these.
- 	 */
--	switch (c->x86) {
--	case 4:		/* 486: untested */
--		break;
--	case 5:		/* Old Pentia: untested */
--		break;
--	case 6:		/* PII/PIII only like movsl with 8-byte alignment */
-+	if (c->x86_vfm >= INTEL_PENTIUM_PRO)
- 		movsl_mask.mask = 7;
--		break;
--	case 15:	/* P4 is OK down to 8-byte alignment */
--		movsl_mask.mask = 7;
--		break;
--	}
- #endif
- 
- 	intel_smp_check(c);
+https://people.kernel.org/tglx/notes-about-netiquette
