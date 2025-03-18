@@ -1,143 +1,103 @@
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7459154BF0;
-	Tue, 18 Mar 2025 18:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BE3183098
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742322636; cv=none; b=BlZ6cIDC3q+9Pmd1/XTh6mW/gOWkDz1Y4UTs3LWNGClKkmdA1iefkqlCt+YOUaFDa6eqEnpF5iSONbVx7bj2vWuEs4VmaG1jIBLEk3F8vSKeT6pwPyY6fjEEjG31iquE4GY1uJ/d655q548S2FNKf4SN0CDYiKaOGiVFqKGRYoc=
+	t=1742322748; cv=none; b=fncyevfMjEr3BIBfORhSnynMcP9wzx/UliGJxCuzj38jp0G29VH0nOTY8qk6oBw0XncM4VQNWcMBR3SDXfVzUnSlWsMCpGew7zZTbqe44Rbv/QpfNXTIQxwi7EZiF3Yf1hCwNtvGXWRA1xZLYA7MvzRwbCbtw9iogCCvXPuLieY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742322636; c=relaxed/simple;
-	bh=8UmMrEbwosQ3I7rVgmJ3k1gmLZhsQSeAtpCKw7acIy8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lcCchQkunXTsSSRPRjAS4Fp2qnedNm386Fjxv3NT+RRSOpY1VOjLHOTcrhK68/rmEx1Xk/tJ3axjFKkXnrcZm5r7RVVZepL1YGbzLPpMg50f1A9DWoEcfeB5Wi00etuCu6k8QSWGLnQj8+3llaunSIU2OxUe+Vz9w6fZvArHA4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R4HiO9rb; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742322748; c=relaxed/simple;
+	bh=qrv+DU81gmi1ENITv/uf+Y+QCljkGvrsvRaZ1EA/ctg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=sQUGVvKW4AfW0lAfVsFwpRuk27KgMn+J3ATQNCrnmp25LUA+NqAy9zImHDtggAj/yBjiTZL+hdqSq7Es609PBxeas4udl3POclzcI5EtCjsLX+H7ayn0vVwDJie7fTfpjaVAgJd0PJ8ZrjbyG2bJEMd9PxitkDpJaQktkJ6+ldw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=rzaXjIVc; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R4HiO9rb"
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6fead317874so49240087b3.0;
-        Tue, 18 Mar 2025 11:30:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="rzaXjIVc"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3d03d2bd7d2so69966265ab.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:32:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742322631; x=1742927431; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742322745; x=1742927545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Bz8uuhNno3q6sJ6pl27PZsjnFKz8/XRS+VHqCZ7l+k4=;
-        b=R4HiO9rbnDKG6npK1MwCxerP9BIagRiTZSct5xZNgN6KyikA5weicMqODtyWHCWFIY
-         nh9PmU+NimvlOSa2zxzCXNJjQIrI63JneNoCRD5nObuP1UOcp6zjv0LKxfeAJLPr+nbA
-         O+RnTMLGhEG9ng2jLkUSn2S+PXCkAE8ovufm41ekVPPfZSUWwaHR4uiGN3WujqHfsUrJ
-         Acn1JoM+B/nB2WOTv3oYhizV7S3mX7ePHla1Pev1TdgAOXNlkLHi776TPHa+Odt4VQ1M
-         WUT3NYeNCxttvNLrnosISD5P2q3Qh07GzUBoMrIZI+kYxcWfizbF2m0v7uHLGX/Ycr7X
-         imGg==
+        bh=Vn8c/8xY9hsur5GaIQZhhu6nfpmRkGa6zZ/5hcfFcwg=;
+        b=rzaXjIVcQHYIjeJ3Xdgtk1GmciRjSBQ39CYSKJoazF5y19GOwh5x8hzUgCUKwc3wNz
+         3tk666LGtdCTmIULCw6wuLliIJw9T6sWNc6uj3kFjohjvhTjLz1TI66V1BnNeLu6xwtc
+         p6vXU8PVkUV1YV+C2JoUb/mpDixF/CaJgkWpTGXbspsRtxu2OclllK1TWWNxQdQbk9SM
+         xUIrBEKNXqnYvxyxAneYdvucWbmkxP63w/aJUS3nQwz9O/UGPzmD9h2TMtezHmTw815K
+         UUORKyNiWThlfskW/AK0SoY8YMyf48cFMjMFw8JvHTbMGwAamuZUpXacbn5NHGZ+rOn6
+         XM0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742322631; x=1742927431;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742322745; x=1742927545;
+        h=content-transfer-encoding:mime-version:date:message-id:subject
+         :references:in-reply-to:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Bz8uuhNno3q6sJ6pl27PZsjnFKz8/XRS+VHqCZ7l+k4=;
-        b=sVyWrWU8ZfRKLY37g+623OTVvuZuRxcDKTLtoCZ6BKTixl/eGvrDbuALLA+SWapIIC
-         P9RnGBn7x91TIt79ukAcjZm36XKChMTQ/ag/OKKuUfM60hc0p1KoyeCdTn6cvQfnqwdR
-         aaofDcF6Ywm9cuJ+bgjkkjiZAlLA66RQj5hewLLSyB4KyQDCs97OQAWWc7r6RCqQbAFH
-         vQyXNrY62V8BQPqakr1D4T7b629N14AKJ/VhQCXsaXHGpQh7PgjiDr1ySx0R6LK+weVB
-         LJVFBEe6ACy4j9CJ4fK4ry9nhcLzR6dLtzDPKT77sBm844QW1oKb3icLyIyLTsr8PHCm
-         m2oA==
-X-Forwarded-Encrypted: i=1; AJvYcCVlLeT/2okY/uYpQfoIKTpEWw+j6kuPQgMqVsspVCheNwj5e4jC5PPt28gQfhydydyYmJEDSbdlPfU=@vger.kernel.org, AJvYcCXUBKAwRfvnsDKZ/+H/HAApQ4syUUCYC1FNmtuBmbNSceWuj0cMkOKliZ2Tj/BI6OrexUSqXi3wkxVbtZxa@vger.kernel.org
-X-Gm-Message-State: AOJu0YxjgW8SdNOp7+1qfqZeMZ1itpY1FKl/Trf8Wdz8loCJ2CoCB6vN
-	9LBtzDPjAdveWGz0Ruh06HzghcCReb/fmvPxcY+EttOcpJmsIqbU
-X-Gm-Gg: ASbGncu4Bj8suC3yWSj9zVGw07xUPdKSIUxOHR8TwYWsjwlpSkIDl6T2m4Uj4atTZX8
-	WwEWeCPgmIz0/FBE3naRQqxJ7jDFofGcWQCLgKvDA5mMpJPzDM28kp73546mJx5WEExGZXErBlQ
-	Chqga6cxqbMRcs91SyooI5BGtR/MR1X3Ip+nwPIwrbGACs3fJkrfapP46WWcn1cKwIvgg1Dcc59
-	vYlVXkNwBlp9LdZXkzzUXHZPlXnM512jD1sDvka0Gba8MyNoy+TOA0//5z0cThSijbBxLDjNURb
-	tF2QwvHPW0P0Wa7iOXXE6kF28rU0VbQUajhGlRnTDOX72w==
-X-Google-Smtp-Source: AGHT+IGYgBrUer7kW3bh3Q7uDDRkpmEW94MY1wds50m2vry9jn+b2LRjGPiGem3A0ZsXjlrEpDiQ7Q==
-X-Received: by 2002:a05:690c:6f04:b0:6fd:4521:f9d7 with SMTP id 00721157ae682-6ff45ff5be5mr220687117b3.24.1742322630662;
-        Tue, 18 Mar 2025 11:30:30 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:7::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6ff32894c7csm27161417b3.65.2025.03.18.11.30.30
+        bh=Vn8c/8xY9hsur5GaIQZhhu6nfpmRkGa6zZ/5hcfFcwg=;
+        b=HGSLgepvHaw70ZCTJ0RvD61uBck2rpGdp5Rhr3yUz0+8bvF2Iiq8jSMh7qglaTqSWg
+         QH3Ld7I1NmnhE0SPp1GSHBcBqUUcFJImyHRzkEVq+EmRlnpSGipbN2clDwD/GllRH6dr
+         2AkfGUNCinp3hirSbsHtVBF1000NVxDUDz6UGEeZbr5KVCK5Om1PG0yrVsST8Bj0GNCj
+         iWDp+swGfQ8qLjiYhrIW4MD2IB0oUntjPTIOpJXVR5eGor/95nQSl0ps5DlNF8hvs70P
+         OFT6FRGeWK6yhXzeL9zjZ+Icl1vn3t36fqQoB5AJ6e7Zf+1FJbtJexnIU0BuXjfclPXu
+         7k4A==
+X-Forwarded-Encrypted: i=1; AJvYcCV08Zg12WouE140+GU/EX5xVbsybzlmAzUJzKXtvRVaOF+ruTlDgU75hTSfRD1SIA431iibLd8KJRZS0cs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqaHBYm+DsFXuhSYtsJ5BljsVXHft7ytTrtfr1fmQpsA1F4GN9
+	ugu9KJkbvz0tTF3Ivw27LQOU0fvcCyMU8xTdFl8BW4TJ+zgRopUhXj8Bc2jhwiw=
+X-Gm-Gg: ASbGnct09EpJM8hyhsvHxoshSW5br313frv3G1X9fgz5/HI6KwIT88C90lbmCq5Caxk
+	Kn7cyooixwfPtKOdHibF51Yj7/jyirMEBBFTFK1ScoTMrKLtfOfdHpVdpXyA6OqPBiW0KXUZNmr
+	12vWUZ/HrnzwAP+LkXIfADQ3HonGrSmUGlwZgc3cO4C9QKgSFL7Cjuvws+9qZYPI/ewwGY0o4wu
+	4Wilz+p2aeeqcHE9J5WfGtqiYmwQrih43WmkoYysPNBOU5Ik/Lea5NLzIPzbf8LeyUnLbFZXAew
+	wDWwlCgIvfw5hBST4L3cCtUc7gF/uDyAGoPJ
+X-Google-Smtp-Source: AGHT+IHgYCKrD3peKrbdSEm1B+JO8dbCq7dov1VEXaRpVsSj3E7NIaJGpVqJEmXprxOB8OJUpmk3kQ==
+X-Received: by 2002:a05:6e02:1d8e:b0:3cf:bb6e:3065 with SMTP id e9e14a558f8ab-3d48397f585mr168752655ab.0.1742322745570;
+        Tue, 18 Mar 2025 11:32:25 -0700 (PDT)
+Received: from [127.0.0.1] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d47a67e5besm33337665ab.31.2025.03.18.11.32.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 11:30:30 -0700 (PDT)
-From: Nhat Pham <nphamcs@gmail.com>
-To: akpm@linux-foundation.org
-Cc: sj@kernel.org,
-	corbet@lwn.net,
-	linux-mm@kvack.org,
-	kernel-team@meta.com,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	damon@lists.linux.dev
-Subject: [PATCH 1/2] mm/damon: implement a new DAMOS filter type for active pages
-Date: Tue, 18 Mar 2025 11:30:28 -0700
-Message-ID: <20250318183029.2062917-2-nphamcs@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250318183029.2062917-1-nphamcs@gmail.com>
-References: <20250318183029.2062917-1-nphamcs@gmail.com>
+        Tue, 18 Mar 2025 11:32:24 -0700 (PDT)
+From: Jens Axboe <axboe@kernel.dk>
+To: Tejun Heo <tj@kernel.org>, Josef Bacik <josef@toxicpanda.com>, 
+ Chen Linxuan <chenlinxuan@uniontech.com>
+Cc: Wen Tao <wentao@uniontech.com>, cgroups@vger.kernel.org, 
+ linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <3E333A73B6B6DFC0+20250317022924.150907-1-chenlinxuan@uniontech.com>
+References: <3E333A73B6B6DFC0+20250317022924.150907-1-chenlinxuan@uniontech.com>
+Subject: Re: [PATCH RESEND v2] blk-cgroup: improve policy registration
+ error handling
+Message-Id: <174232274456.158569.739528900664075776.b4-ty@kernel.dk>
+Date: Tue, 18 Mar 2025 12:32:24 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.14.3-dev-7b9b9
 
-Implement a DAMOS filter type for active pages on DAMON kernel API,
-and add support of it from the physical address space DAMON operations
-set (paddr).
 
-Suggested-by: SeongJae Park <sj@kernel.org>
-Signed-off-by: Nhat Pham <nphamcs@gmail.com>
----
- include/linux/damon.h    | 2 ++
- mm/damon/paddr.c         | 3 +++
- mm/damon/sysfs-schemes.c | 1 +
- 3 files changed, 6 insertions(+)
+On Mon, 17 Mar 2025 10:29:24 +0800, Chen Linxuan wrote:
+> This patch improve the returned error code of blkcg_policy_register().
+> 
+> 1. Move the validation check for cpd/pd_alloc_fn and cpd/pd_free_fn
+>    function pairs to the start of blkcg_policy_register(). This ensures
+>    we immediately return -EINVAL if the function pairs are not correctly
+>    provided, rather than returning -ENOSPC after locking and unlocking
+>    mutexes unnecessarily.
+> 
+> [...]
 
-diff --git a/include/linux/damon.h b/include/linux/damon.h
-index 3db4f77261f5..47e36e6ea203 100644
---- a/include/linux/damon.h
-+++ b/include/linux/damon.h
-@@ -334,6 +334,7 @@ struct damos_stat {
- /**
-  * enum damos_filter_type - Type of memory for &struct damos_filter
-  * @DAMOS_FILTER_TYPE_ANON:	Anonymous pages.
-+ * @DAMOS_FILTER_TYPE_ACTIVE:	Active pages.
-  * @DAMOS_FILTER_TYPE_MEMCG:	Specific memcg's pages.
-  * @DAMOS_FILTER_TYPE_YOUNG:	Recently accessed pages.
-  * @DAMOS_FILTER_TYPE_HUGEPAGE_SIZE:	Page is part of a hugepage.
-@@ -355,6 +356,7 @@ struct damos_stat {
-  */
- enum damos_filter_type {
- 	DAMOS_FILTER_TYPE_ANON,
-+	DAMOS_FILTER_TYPE_ACTIVE,
- 	DAMOS_FILTER_TYPE_MEMCG,
- 	DAMOS_FILTER_TYPE_YOUNG,
- 	DAMOS_FILTER_TYPE_HUGEPAGE_SIZE,
-diff --git a/mm/damon/paddr.c b/mm/damon/paddr.c
-index b08847ef9b81..1b70d3f36046 100644
---- a/mm/damon/paddr.c
-+++ b/mm/damon/paddr.c
-@@ -217,6 +217,9 @@ static bool damos_pa_filter_match(struct damos_filter *filter,
- 	case DAMOS_FILTER_TYPE_ANON:
- 		matched = folio_test_anon(folio);
- 		break;
-+	case DAMOS_FILTER_TYPE_ACTIVE:
-+		matched = folio_test_active(folio);
-+		break;
- 	case DAMOS_FILTER_TYPE_MEMCG:
- 		rcu_read_lock();
- 		memcg = folio_memcg_check(folio);
-diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
-index 5023f2b690d6..23b562df0839 100644
---- a/mm/damon/sysfs-schemes.c
-+++ b/mm/damon/sysfs-schemes.c
-@@ -344,6 +344,7 @@ static struct damon_sysfs_scheme_filter *damon_sysfs_scheme_filter_alloc(
- /* Should match with enum damos_filter_type */
- static const char * const damon_sysfs_scheme_filter_type_strs[] = {
- 	"anon",
-+	"active",
- 	"memcg",
- 	"young",
- 	"hugepage_size",
+Applied, thanks!
+
+[1/1] blk-cgroup: improve policy registration error handling
+      commit: e1a0202c6bfda24002a3ae2115154fa90104c649
+
+Best regards,
 -- 
-2.47.1
+Jens Axboe
+
+
 
