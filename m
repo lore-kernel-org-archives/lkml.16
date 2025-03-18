@@ -1,181 +1,181 @@
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9038920FA91;
-	Tue, 18 Mar 2025 15:31:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9D820E6F6;
+	Tue, 18 Mar 2025 15:31:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742311905; cv=none; b=fE29ocDitBrVHuTOe0Zfl4GY0M8UNMeHfagBgaZ2vmTkXcONTuYn/H3Z0FHCXafRihMzFWKARW0noKHqZKD2JmAek0dQ18pHuo6YbGbXTOJCvPRPwdL97Mja7XxmVgsdiyecb6uY5yIcs5FTf1cin5B849VD8d7pelHkkAHhizw=
+	t=1742311910; cv=none; b=XUCsKIQY1CZAFa7JxU4v+fFiMiLCBBkAUeSvmfjupo7hLLFNe2TTeFLMJE2Q4iu3Y/nTtkhR0W9XnICE/Upgg2W5Bvd2PnEmHiiV51HetRof9b5TBkRgrV3i7ol/tUJa9i7osDatj3jj0GwP7fsLzuWQFM2dxXecGFDHexuXbSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742311905; c=relaxed/simple;
-	bh=XoyQyut0B0I09grFpiG22mcD2dPJKh7wdni3ku4Ykks=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ws46JEVlgitw/ZGJaZ8GkCJCSgkaaxad/8nejCpiQXeEvc9a4Lz30MMsG32i9doWFn9CwW9nGLtfvu/ZIAhI31tS1Gx2FWZloaSr73CdKaoSqVezH/C5ht+vAjh2TJ0O+Kwf8QJhVILBPyj4Cx9mV4+OojA5RZAoylGzEkotEaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l9NHJEZW; arc=none smtp.client-ip=209.85.216.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742311910; c=relaxed/simple;
+	bh=xfVP5X6JUhbI8KG9gpiy9o/m49qsXUbi7Lo3C+GZ7vY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=ArdthW8tPrw0AADhvEfac1VVZVtanQgUwssxpv1/tE0GJ899lifqfCqOwScotL8RQmZ/+weqFPdpr/YOsPv7vd6ut/IrO+x0zibyaJwgooXAvhog6SgDegIoJLuszBuJK3RT8o7xEwz6IZWqmGDbMsj7TRCnqA0tYL+Ni/+BFr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qs+29R09; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l9NHJEZW"
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff6a98c638so6473967a91.0;
-        Tue, 18 Mar 2025 08:31:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742311900; x=1742916700; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GTo+P4IDj/egBTC39do6b+maTrxFfajRm+lC64dJAgc=;
-        b=l9NHJEZWfL+lu2uGwppIHjdociNfYxjtlF6WPBmjQi/hVyry9O1jIbLxml5OdHTaEV
-         09G98V9uOO04Lfh24xYx77DGBeFhgkhVhjRLpv4UNhEgvvSpWZq9tTTnxiPLqIcZZ1MY
-         IDAgrLdRih2H/aY+pVJze/H5LQi3/D+BWPfMngCrkNU02wK50GmpXO9dX446srEWSc01
-         NlLin3j9oX1WZcOJCWPAX99CsmWNqu48YOs+kgJyM5tKG7jpGzXPqbcRq/0Eziy5Clro
-         yWEM8/grZZQJPFrnfPORGFjwAE7sqE+EzcEojXqjjzKJa5Ld5rc6FznkrdA7g7fPTCr8
-         EEVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742311900; x=1742916700;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GTo+P4IDj/egBTC39do6b+maTrxFfajRm+lC64dJAgc=;
-        b=C4PWvhGGvzGsHUQW+MHn/npCUo/FkBswI0Ab3tHso/pWJ4vgSP+I7aKWhIxomhd3RD
-         9P6dXnh5L6uPPBXNqCn3K98fTV+YfKIFGeWsWxy3c41yKLkyDQwXwOIgFqbvguGZvSJ2
-         e3L45vJHQQo3vlWC6CcG/Gs0Co0/RWWV2V9Xxe+HYYIFpOa8R+1Y1yny/ayJZAA5rcPS
-         xIXB5guHJjqZLvI3AZR8C3P/qwBWBp68xe6fJBPGx1d+cwaX+keAZWqNO0ArkH5soJ+/
-         rwCZrMCBw6IPoQEWbscq+NzdkrpDI7xyRmPxSrWVJX5E9SxlL1l8XP8uAUbEOxaZgsw+
-         epWg==
-X-Forwarded-Encrypted: i=1; AJvYcCW2igniwEURY8Ic8TcI0mppBRMeczwxiKhn4+iqzgY5p2hIFcaiSJfP9Vz+JDlnx0RP5dQdK/PHa0LOfoTr@vger.kernel.org, AJvYcCWRjtbyOsdCU+h0APnSARf4FbxqjInKtljKt6AvtEmg9euiJtHwTZmoy2BxotRHByNZ5ji5uKAiByYj3w0=@vger.kernel.org, AJvYcCXgZpDJvAudKULDPaaRyKN1IEfoQAmDEsxXCGmUuNGYpxk0MGkHLT7QAUT62aObuFEklZhqU+FV1tuv@vger.kernel.org
-X-Gm-Message-State: AOJu0YzPIccBnZd51er6P72hqcL2FDsuK+kKLAoiqZ9CKIAEDIuKgbzH
-	z2Qm6s6l1gEc0oxwAPWRvlkPF5y87JYuxqCo3uJL7rdenFCwYdJR4MvJZqbpm7crzp2HZYy2vLv
-	buBo0O2V4/VVBlfNV4wNasQKBowY=
-X-Gm-Gg: ASbGnctRrZvTUJHE2qdUHMyitDGYy1DvIpD8kuRcOr+RqizDqU0eIAxr8Ug8yRZOpN9
-	LOc2WsEn96NnOK0dEfRlQQ6j7AqA689MxW/KFdURNJHwqgAftDrAMbB5mb7eAp86zPCC3+JlnFX
-	ge82ttamXPbLwR08KghzhVWmM=
-X-Google-Smtp-Source: AGHT+IGev3FhJjE3AIdupTysEnxLQqIhHB0aNv4HFA4FSPqyJjajPwHMn95jdK7N+OLjNP3hIRsGSfPOM63dkEDBTf0=
-X-Received: by 2002:a17:90b:3d86:b0:2ff:5ed8:83d1 with SMTP id
- 98e67ed59e1d1-301a5b22c44mr3891136a91.19.1742311899758; Tue, 18 Mar 2025
- 08:31:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qs+29R09"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84D57C4CEDD;
+	Tue, 18 Mar 2025 15:31:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742311909;
+	bh=xfVP5X6JUhbI8KG9gpiy9o/m49qsXUbi7Lo3C+GZ7vY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=Qs+29R09M/HjOvbEO9IttVjrc2c7gUuI2msCv+/OQoRlHDeU037m8qOF2+baNjxjx
+	 ckPCjPUDjqkT4EZAdSzhjb1OeFFedsNLEB9S64U+XnxuCBovC0Z7OkloLNjMUClMfp
+	 TSb8WkMOF3ak7mjsSz5ybjEuUUTZBy9GCWYBeBIoqbnRv3HhdsF81JlXKfKisJevuP
+	 03P/jP+g2o8GhXiq1wMl8+6WkeVC4tkkdTfXIRrPclVf93FiSUdgvz+hLYuZH/IVxP
+	 sFuHGwYyqLYRQS+8xhKIgSq54DDAz77Q08p39dYJZjv1XHNI+jP3x7Fy/MEeCkFa7d
+	 q8IpALC1sbbAA==
+Date: Tue, 18 Mar 2025 10:31:48 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Lei Chuan Hua <lchuanhua@maxlinear.com>
+Cc: Frank Li <Frank.Li@nxp.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use use_parent_dt_ranges
+ and clean up intel_pcie_cpu_addr_fixup()
+Message-ID: <20250318153148.GA1000275@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318085444.3459380-1-florin.leotescu@oss.nxp.com>
- <20250318085444.3459380-2-florin.leotescu@oss.nxp.com> <7afcd224-1154-4e2f-b383-10f6a89fdae0@roeck-us.net>
-In-Reply-To: <7afcd224-1154-4e2f-b383-10f6a89fdae0@roeck-us.net>
-From: Daniel Baluta <daniel.baluta@gmail.com>
-Date: Tue, 18 Mar 2025 17:33:12 +0200
-X-Gm-Features: AQ5f1JrGT6OkXhZLmAGbs6dhzXtsxvJYdhcQucC_VGy8G_11v7e7DfbTPZDv1rM
-Message-ID: <CAEnQRZBmYdLh29ha1FKz8=CbxjFBFFTgDkjrEmwTxW2WcxodfA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: hwmon: Add Microchip emc2305 support
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: florin.leotescu@oss.nxp.com, Jean Delvare <jdelvare@suse.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Shych <michaelsh@nvidia.com>, linux-hwmon@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	viorel.suman@nxp.com, carlos.song@nxp.com, 
-	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, festevam@gmail.com, 
-	Florin Leotescu <florin.leotescu@nxp.com>, Frank Li <Frank.Li@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <BY3PR19MB5076A8D664FAA83E7C168300BDDE2@BY3PR19MB5076.namprd19.prod.outlook.com>
 
-On Tue, Mar 18, 2025 at 5:22=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
-wrote:
->
-> On 3/18/25 01:54, florin.leotescu@oss.nxp.com wrote:
-> > From: Florin Leotescu <florin.leotescu@nxp.com>
+On Tue, Mar 18, 2025 at 01:49:46AM +0000, Lei Chuan Hua wrote:
+> Hi Bjorn,
+> 
+> I did a quick test with necessary change in dts. It worked, please move on.
+
+What does this mean?  By "move on", do you mean that I should merge
+the patch below (the removal of intel_pcie_cpu_addr())?
+
+I do not want to merge a change that will break any existing intel-gw
+platform.  When you say "with necessary change in dts", it makes me
+think the removal of intel_pcie_cpu_addr() forces a change to dts,
+which would not be acceptable.  We can't force users to upgrade the
+dts just to run a newer kernel.
+
+I assume 250318 linux-next, which includes Frank's v12 series, should
+work with no change to dts required.  (It would be awesome if you can
+verify that.)
+
+If you apply this patch to remove intel_pcie_cpu_addr() on top of
+250318 linux-next, does it still work with no changes to dts?
+
+If you have to make a dts change for it to work after removing
+intel_pcie_cpu_addr(), then we have a problem.
+
+I do not see a .dts file in the upstream tree that contains
+"intel,lgm-pcie", so I don't know what the .dts contains or how it is
+distributed.
+
+I do see the binding at
+Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml,
+but the example there does not include anything about address
+translation between the CPU and the PCI controller, so my guess is
+that there are .dts files in the field that will not work if we remove
+intel_pcie_cpu_addr().
+
+> ________________________________________
+> From: Bjorn Helgaas <helgaas@kernel.org>
+> Sent: Tuesday, March 18, 2025 1:59 AM
+> To: Frank Li <Frank.Li@nxp.com>
+> Cc: Lei Chuan Hua <lchuanhua@maxlinear.com>; Lorenzo Pieralisi <lpieralisi@kernel.org>; Krzysztof Wilczyński <kw@linux.com>; Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>; Rob Herring <robh@kernel.org>; Bjorn Helgaas <bhelgaas@google.com>; linux-pci@vger.kernel.org <linux-pci@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH RFC NOT TESTED] PCI: intel-gw: Use use_parent_dt_ranges and clean up intel_pcie_cpu_addr_fixup()
+> 
+> 
+> 
+> On Wed, Mar 05, 2025 at 12:07:54PM -0500, Frank Li wrote:
+> > Remove intel_pcie_cpu_addr_fixup() as the DT bus fabric should provide correct
+> > address translation. Set use_parent_dt_ranges to allow the DWC core driver to
+> > fetch address translation from the device tree.
 > >
-> > Introduce yaml schema for Microchip emc2305 pwm fan controller.
-> >
-> > Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
-> > Reviewed-by: Frank Li <Frank.Li@nxp.com>
+> > Signed-off-by: Frank Li <Frank.Li@nxp.com>
+> 
+> Any update on this, Chuanhua?
+> 
+> I plan to merge v12 of Frank's series [1] for v6.15.  We need to know
+> ASAP if that would break intel-gw.
+> 
+> If we knew that it was safe to also apply this patch to remove
+> intel_pcie_cpu_addr(), that would be even better.
+> 
+> I will plan to apply the patch below on top of Frank's series [1] for
+> v6.15 unless I hear that it would break something.
+> 
+> Bjorn
+> 
+> [1] https://lore.kernel.org/r/20250315201548.858189-1-helgaas@kernel.org
+> 
 > > ---
-> >   .../bindings/hwmon/microchip,emc2305.yaml     | 113 +++++++++++++++++=
-+
-> >   1 file changed, 113 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/hwmon/microchip,=
-emc2305.yaml
+> > This patches basic on
+> > https://lore.kernel.org/imx/20250128-pci_fixup_addr-v9-0-3c4bb506f665@nxp.com/
 > >
-> > diff --git a/Documentation/devicetree/bindings/hwmon/microchip,emc2305.=
-yaml b/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
-> > new file mode 100644
-> > index 000000000000..e61ef97e63af
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/hwmon/microchip,emc2305.yaml
-> > @@ -0,0 +1,113 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +
-> > +$id: http://devicetree.org/schemas/hwmon/microchip,emc2305.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Microchip EMC2305 SMBus compliant PWM fan controller
-> > +
-> > +maintainers:
-> > +  - Michael Shych <michaelsh@nvidia.com>
-> > +
-> > +description:
-> > +  Microchip EMC2301/2/3/5 pwm controller which supports
-> > +  up to five programmable fan control circuits.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - enum:
-> > +          - microchip,emc2305
-> > +      - items:
-> > +          - enum:
-> > +              - microchip,emc2303
-> > +              - microchip,emc2302
-> > +              - microchip,emc2301
-> > +          - const: microchip,emc2305
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +  '#pwm-cells':
-> > +    const: 3
-> > +    description: |
-> > +      Number of cells in a PWM specifier.
-> > +      - cell 0: The PWM frequency
-> > +      - cell 1: The PWM polarity: 0 or PWM_POLARITY_INVERTED
-> > +      - cell 2: The PWM output config:
-> > +           - 0 (Open-Drain)
-> > +           - 1 (Push-Pull)
-> > +
-> > +
-> > +patternProperties:
-> > +  '^fan@[0-4]$':
-> > +    $ref: fan-common.yaml#
-> > +    unevaluatedProperties: false
-> > +    properties:
-> > +      reg:
-> > +        description:
-> > +          The fan number used to determine the associated PWM channel.
-> > +
-> > +    required:
-> > +      - reg
-> > +      - pwms
->
-> Is it necessary to make 'pwms' mandatory ? The current code works
-> just fine with defaults.
-
-The code adding OF support is added just in the next patch, so the
-current code isn't event
-probed when trying to use dts.
-
-Or am I missing something?
-
-+static const struct of_device_id of_emc2305_match_table[] =3D {
-+       { .compatible =3D "microchip,emc2305", },
-+       {},
-+};
-+MODULE_DEVICE_TABLE(of, of_emc2305_match_table);
-
-I have no strong opinion on this we could make pwms optional.
+> > I have not hardware to test and there are not intel,lgm-pcie in kernel
+> > tree.
+> >
+> > Your dts should correct reflect hardware behavor, ref:
+> > https://lore.kernel.org/linux-pci/Z8huvkENIBxyPKJv@axis.com/T/#mb7ae78c3a22324b37567d24ecc1c810c1b3f55c5
+> >
+> > According to your intel_pcie_cpu_addr_fixup()
+> >
+> > Basically, config space/io/mem space need minus SZ_256. parent bus range
+> > convert it to original value.
+> >
+> > Look for driver owner, who help test this and start move forward to remove
+> > cpu_addr_fixup() work.
+> > ---
+> > Frank Li <Frank.Li@nxp.com>
+> > ---
+> >  drivers/pci/controller/dwc/pcie-intel-gw.c | 8 +-------
+> >  1 file changed, 1 insertion(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/pci/controller/dwc/pcie-intel-gw.c b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> > index 9b53b8f6f268e..c21906eced618 100644
+> > --- a/drivers/pci/controller/dwc/pcie-intel-gw.c
+> > +++ b/drivers/pci/controller/dwc/pcie-intel-gw.c
+> > @@ -57,7 +57,6 @@
+> >       PCIE_APP_IRN_INTA | PCIE_APP_IRN_INTB | \
+> >       PCIE_APP_IRN_INTC | PCIE_APP_IRN_INTD)
+> >
+> > -#define BUS_IATU_OFFSET                      SZ_256M
+> >  #define RESET_INTERVAL_MS            100
+> >
+> >  struct intel_pcie {
+> > @@ -381,13 +380,7 @@ static int intel_pcie_rc_init(struct dw_pcie_rp *pp)
+> >       return intel_pcie_host_setup(pcie);
+> >  }
+> >
+> > -static u64 intel_pcie_cpu_addr(struct dw_pcie *pcie, u64 cpu_addr)
+> > -{
+> > -     return cpu_addr + BUS_IATU_OFFSET;
+> > -}
+> > -
+> >  static const struct dw_pcie_ops intel_pcie_ops = {
+> > -     .cpu_addr_fixup = intel_pcie_cpu_addr,
+> >  };
+> >
+> >  static const struct dw_pcie_host_ops intel_pcie_dw_ops = {
+> > @@ -409,6 +402,7 @@ static int intel_pcie_probe(struct platform_device *pdev)
+> >       platform_set_drvdata(pdev, pcie);
+> >       pci = &pcie->pci;
+> >       pci->dev = dev;
+> > +     pci->use_parent_dt_ranges = true;
+> >       pp = &pci->pp;
+> >
+> >       ret = intel_pcie_get_resources(pdev);
+> >
+> > ---
+> > base-commit: 1552be4855dacca5ea39b15b1ef0b96c91dbea0d
+> > change-id: 20250305-intel-7c25bfb498b1
+> >
+> > Best regards,
+> >
