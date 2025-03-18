@@ -1,151 +1,121 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 072AA19F120
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960161422AB;
+	Tue, 18 Mar 2025 09:34:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742290296; cv=none; b=IAh31faoFY06g/Yz4WfZ+2ZlCz6EPThK9qK7SNL1o9niyR/D0T8ojtPkhemD/R9bFMdECsJsveGaU91W1RF/pjqmQFR5R78i6HgPNKgE34jWVr9jvgY5D6VDq7bGoZqxtGgCSPa4WYvFk3ffWGXI2d9sHokRZsn+gXHSVy2T+dI=
+	t=1742290453; cv=none; b=owiTUpGcmU64rveise+ZwCmM/1fFNG8x5aAC/x1H5LrXUtZk9uJrjw6nkfjPUJdkn4d3ZgcZbIad0JL493bZHZh6tDi7Sx0C5Us5uPEDY9/pRWNb1sDevol35C/pKFs8gzAd89supjypsFkdcLrHE60tyG4PBHaN5OzYEYrzsfA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742290296; c=relaxed/simple;
-	bh=gZErNhjR48vAPXebyx0gKSDzIAiHsdtJLMeu9qfxX3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cLc2bfAeDJy4sf5hvDotrhi5nZg4IGJhDngv6yM9qXvyQsEdkziTYCoSb17u4y7bJNU+lD7XZndEsczycycTVk5QECEYtpLYZzj7JhFYB3wRdboYkzCfcohDz/94J3VOZol5oDn+pEZxEkn5DZupW25y1FBuP3r9OT7k1z8L0RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=c5n9uka0; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742290453; c=relaxed/simple;
+	bh=1wD3J7esroRluKtnKjXWiItC3L58xph0zOjc+DwQ8Js=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nuGLrhPJjpTK/qF488Q8rx4E7xY+8PY4VfblTnZxhZ6cvywowKul1NIa/xbH73WEmEcSNJ3xLY9Np+qYkXCJKbSgBNXFw+aVv5nMYY7kIixjBF9+R99JbWBJjGD0CTnysLREtfZsbia8lXqUFCYPWaRDVVAnPioY/WXMyFwhLe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DOGNZmEj; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c5n9uka0"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742290291; x=1773826291;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=gZErNhjR48vAPXebyx0gKSDzIAiHsdtJLMeu9qfxX3U=;
-  b=c5n9uka0SnaxxdCjYnM9PjAtSHi90aMRtPEZ1e9xy4Vxzsz9AZ5CBG7O
-   TZs75NT+wupMAxj5GecWV2YFt3eejyGbTMXbz6CXjDJ1aoKH9GT54AP1z
-   c7K8F78XqFRfHSm1I78Q8Fm3Erxm7ihcLU0z1Sy2IT6PRJ6AZhL0Q08np
-   uxBLCfZqj3x3+xHnLnN6DOb8fU1kjoDPF2R7UJIK8mpFirj+4CRS2/oFm
-   rJFJBymPSnanwKcjZMd3MHX1nmBcNQ02SToNJ2xoY4xeISgrSh1eijQO3
-   jXDNO6ENm+uVvh2iUt0G3bbfyGm1Wu6WCcGJlwF1rQyUeHuW7to/BHPCh
-   A==;
-X-CSE-ConnectionGUID: Spl03sCKRoyOpFVAH9q81A==
-X-CSE-MsgGUID: AWICIKL5SY6zevKzSx9vBg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="47069396"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="47069396"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 02:30:51 -0700
-X-CSE-ConnectionGUID: t6a5cyIcQaefTQk12nHkzQ==
-X-CSE-MsgGUID: b4hPRYFDS12xSZguFhxkBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="123154267"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa008.jf.intel.com with ESMTP; 18 Mar 2025 02:30:48 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1000)
-	id 70130214; Tue, 18 Mar 2025 11:30:46 +0200 (EET)
-Date: Tue, 18 Mar 2025 11:30:46 +0200
-From: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, 
-	Joerg Roedel <jroedel@suse.de>
-Cc: Alexey Gladkov <legion@kernel.org>, x86@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-coco@lists.linux.dev, 
-	Alexey Gladkov <alexey.gladkov@intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Juergen Gross <jgross@suse.com>, Larry.Dewey@amd.com, Nikunj A Dadhania <nikunj@amd.com>, 
-	Tom Lendacky <thomas.lendacky@amd.com>
-Subject: Re: [RFC PATCH v1 1/3] x86/tdx: Make TDX metadata available via SYSFS
-Message-ID: <iiqa3m57jrqlyy7qmydf7klkub7bqbn7gqjh2te2fyp6un3dk3@qik6uuao7dlb>
-References: <cover.1741952958.git.legion@kernel.org>
- <ddbf49381eb5d1779e218e022ffc144db5da003e.1741952958.git.legion@kernel.org>
- <67d4bee77313a_12e31294c7@dwillia2-xfh.jf.intel.com.notmuch>
- <nvnjhx235xbsrnq3t6zbkgogsdizbigrlgqyx6muyj6k2g34gq@zzn6bqvoha45>
- <67d8cde71e75b_201f0294a@dwillia2-xfh.jf.intel.com.notmuch>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DOGNZmEj"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I191xX027058;
+	Tue, 18 Mar 2025 09:34:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=eEcVtt7Xa6qPl/GlIsYd3T
+	j0OVoRYqkyZbk7/1Z7gmk=; b=DOGNZmEjo6hSIONcBbb3nmH0asQG7zEpPsGUlU
+	TsmL8ZddMu4c8Ad2hqRqCtXbGuK/t4+uWHZljKLYVrro3alWVIX0DDVPkzVlThc2
+	og/EMLX88iB7jboYxF2K23H+inAfvXDcF7+4/r6wpNcAx/7In40Pjdne2reK5Yw+
+	Y1tyRrdxDBiFI+OGub0p0lY6+4MaVYHn4l2cuwfPqE/ghxHyb58V0n4Rhto0Qqm/
+	DePhfIlBALqaJrrl0TTd0vOtBWYyWJiUopjYzZBfHFpQZIpRZKLHElSiY6WbZuja
+	8h4nnGN6MQ4gcQMheNY4Em0wy8IEnqwkUgNOCgVGsG14LbMw==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45exwth8gp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 09:34:08 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52I9Y8At011265
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 09:34:08 GMT
+Received: from localhost.localdomain (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 18 Mar 2025 02:34:04 -0700
+From: Stone Zhang <quic_stonez@quicinc.com>
+To: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio
+	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski
+	<krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <quic_miaoqing@quicinc.com>,
+        <quic_zhichen@quicinc.com>, <quic_yuzha@quicinc.com>,
+        Stone Zhang
+	<quic_stonez@quicinc.com>
+Subject: [PATCH v3 0/2] Enable WLAN for qcs8300-ride
+Date: Tue, 18 Mar 2025 17:33:48 +0800
+Message-ID: <20250318093350.2682132-1-quic_stonez@quicinc.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <67d8cde71e75b_201f0294a@dwillia2-xfh.jf.intel.com.notmuch>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: pobyfLMT59GkGunOBwFx9yPEZTLBhogH
+X-Proofpoint-ORIG-GUID: pobyfLMT59GkGunOBwFx9yPEZTLBhogH
+X-Authority-Analysis: v=2.4 cv=UoJjN/wB c=1 sm=1 tr=0 ts=67d93e10 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=sDV3JdNYQ8fJcOoojrYA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-18_04,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=783
+ phishscore=0 adultscore=0 clxscore=1015 spamscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503180069
 
-On Mon, Mar 17, 2025 at 06:35:35PM -0700, Dan Williams wrote:
-> Kirill A . Shutemov wrote:
-> > On Fri, Mar 14, 2025 at 04:42:31PM -0700, Dan Williams wrote:
-> > > Alexey Gladkov wrote:
-> > > > From: "Alexey Gladkov (Intel)" <legion@kernel.org>
-> > > > 
-> > > > Expose the TDX module information to userspace. The version information
-> > > > is valuable for debugging, as knowing the exact module version can help
-> > > > reproduce TDX-related issues.
-> > > > 
-> > > > Signed-off-by: Alexey Gladkov (Intel) <legion@kernel.org>
-> > > > ---
-> > > >  arch/x86/Kconfig                  |  1 +
-> > > >  arch/x86/include/asm/shared/tdx.h |  2 +
-> > > >  arch/x86/include/asm/tdx.h        | 12 +++++
-> > > >  arch/x86/virt/vmx/tdx/tdx.c       | 74 +++++++++++++++++++++++++++++++
-> > > >  4 files changed, 89 insertions(+)
-> > > > 
-> [..]
-> > > > +__init static int tdh_sysfs_init(void)
-> > > > +{
-> > > > +	struct kobject *tdx_kobj;
-> > > > +	int ret;
-> > > > +
-> > > > +	if (!hypervisor_kobj)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	tdx_kobj = kobject_create_and_add("tdx", hypervisor_kobj);
-> > > 
-> > > So this "/sys/hypervisor" proposal is clearly unaware of some other
-> > > discussions that have been happening around sysfs ABI for TEE Security
-> > > Managers like the PSP or TDX Module [1]. That PCI/TSM series discusses
-> > > the motivation for a bus/class + device model, not just raw hand-crafted
-> > > kobjects.
-> > > 
-> > > My other concern for hand-crafted kobjects is that it also destroys the
-> > > relationship with other existing objects. A /sys/hypervisor/$technology
-> > > is awkward when ABI like Documentation/ABI/testing/sysfs-driver-ccp
-> > > already exists.
-> > > 
-> > > So, no, I am not on board with this proposal. There are already patches
-> > > in flight to have TDX create a 'struct device' object that plays a
-> > > similar role as the PSP device object. For any potential common
-> > > attributes across vendors the proposal is that be handled via a typical
-> > > sysfs class device construction that links back to the $technology
-> > > device. That "tsm" class device is present in the PCI/TSM series [1].
-> > > 
-> > > [1]: http://lore.kernel.org/174107245357.1288555.10863541957822891561.stgit@dwillia2-xfh.jf.intel.com
-> > 
-> > Dan, could you elaborate on what is actual proposal? I am not sure I
-> > understand what 'struct device' can have info on TDX module version be
-> > attached to it.
-> 
-> Confused, you do not understand that devices can have sysfs attributes?
+Enable the WLAN subsystem of the qcs8300 ride board. The WCN6855 wireless
+chip is attached to PCIe interface 0.
 
-I didn't understand what device it would be in TDX case.
+This patch series depends on:
+- PCIe
+https://lore.kernel.org/all/20250310063103.3924525-1-quic_ziyuzhan@quicinc.com/
+- PCIe SMMU
+https://lore.kernel.org/all/20250206-qcs8300-pcie-smmu-v1-1-8eee0e3585bc@quicinc.com/
 
-> Documentation/ABI/testing/sysfs-driver-ccp describes a device object and
-> sysfs attributes for SEV-SNP firmware status.
-> 
-> For TDX, the proposal is to create virtual device to stand in for the
-> lack of a PCI device that fills the same role as AMD PSP.
+Changes in v3:
+- Complete the nodes property definitions according to DTS binding requirements (Bjorn)
+- Link to v2: https://lore.kernel.org/all/20250227065439.1407230-1-quic_stonez@quicinc.com/
 
-Okay, I got it.
+Changes in v2:
+- Rename the nodes name according to DTS coding style (Konrad & Krzysztof)
+- Provide regulator-min/max-microvolt to the regulators (Konrad)
+- Link to v1: https://lore.kernel.org/all/20250210062910.3618336-1-quic_stonez@quicinc.com/
 
-Do you see a problem having the same interface for both host and guest?
-We obviously need indication what level we are running on.
+Stone Zhang (2):
+  arm64: dts: qcom: qcs8300: add a PCIe port for WLAN
+  arm64: dts: qcom: qcs8300-ride: enable WLAN on qcs8300-ride
 
-> With the expectation that all TSM technolgies (SEV-SNP, TDX, CCA, etc)
-> register a device, udev rules can trigger off a common class device
-> uevent. That proposal is detailed here [1]:
-> 
-> [1]: http://lore.kernel.org/174107247268.1288555.9365605713564715054.stgit@dwillia2-xfh.jf.intel.com
+ arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 108 ++++++++++++++++++++++
+ arch/arm64/boot/dts/qcom/qcs8300.dtsi     |   9 ++
+ 2 files changed, 117 insertions(+)
 
-Joerg, what do you think? How does it fit your ideas for SEV-SNP?
 
+base-commit: da920b7df701770e006928053672147075587fb2
+prerequisite-patch-id: c87e5f1cb29568c24566e8a960d6c8dd0be5969d
+prerequisite-patch-id: f80a486c6e34dfb62f09faf0eb3fae586cda85ec
+prerequisite-patch-id: 0e2cb7a4d8779539a58261111deea6bd6b750f6f
+prerequisite-patch-id: 8b9034fca96bd8edb5c4eca5b88811df7206120c
+prerequisite-patch-id: bb6ec99692ade9d7c89f91b5507cc0ee248e43dd
+prerequisite-patch-id: 32c051e9f77de6b53a4f4539ce49dde9859002ea
+prerequisite-patch-id: ccfa56b7d00a1139fbbdccdc13496bfc98440d5e
 -- 
-  Kiryl Shutsemau / Kirill A. Shutemov
+2.34.1
+
