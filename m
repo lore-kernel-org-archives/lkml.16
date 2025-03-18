@@ -1,117 +1,123 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F8B41E51F9;
-	Tue, 18 Mar 2025 10:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 545D91E51F9
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 10:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742293054; cv=none; b=c8i3UA/ThZo+kUCk90qcjP0ilb3jhSizcT0UzwlEQi5Ui6tiAemRtdNeeMNUXTnh6cx4ZxiybKhSG7uWeY8GNCnnU+Fm90o1UAYevBiWw1CwoRqR5TjWQtXFIvi+zPLW1eldfH0aNSPwkc0EWeFnkPmKRES6CoWQzRjltVjY0fw=
+	t=1742293074; cv=none; b=snUrsIJFdfP/vMKz+qd9mM2Iob5Ucll0BtS9fg9eSlNMaZLAxy53/mmxjXJsdNuAeNc5XDmthXosUwoCYW2idwzRWG10gHPUAQd9yqyqlyu6lZd0omXy5RQ9XFbRLRleB6dOWQSRjFC+OYaSp0MKgQ858mWWfqZErzAFK5kX7j0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742293054; c=relaxed/simple;
-	bh=v8ZgNuyaGMugV+F8ZVKn5a8JZk8CKi/1tSd5iT2jCoo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=gZtW1xd2ZtO8BZi1HMgOL/HSvYLFc1DH8dmnGSu0Mw3g959iN3dQaLeiKq1RjyMQ7FcaK0DO0JtITZD6fI6N8g+j7iWxG1LXNAa31Byg9k97QbzNCz30QInFpaoKRDptiPdGGkXrngcKhdV143qQ7pAgzVx6wSf1m0E6z5mWAmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Yyjv6L96; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742293074; c=relaxed/simple;
+	bh=IFBxPeTjHI7TeObAp8XDFRUhMTnCq+H7JfaB8yzIjPY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QDijLBbdaTR7HqcbFVJSd6U6RqIza2yyeeUvq2NqrOqiP+y0o5F5GxvxB7KJDc+stGg6Hb1YAWtOqWmPyLpOBXDlPdZgr9Q1HBIyPQeaGKw/55yXoGacUKipVphAOu0Vp42CYZSu5nfEV9sIe5pNT9svjcVeChHpm+VUYVn/+rQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=N24W0y4B; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yyjv6L96"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-22548a28d0cso146908665ad.3;
-        Tue, 18 Mar 2025 03:17:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="N24W0y4B"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4394a0c65fcso28938355e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 03:17:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742293048; x=1742897848; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2FgtaU11zF0pRhnrSxlGHFWtRYpu795XLnDbFY7Zyq8=;
-        b=Yyjv6L96/UclVaj+in1iVAt7VjK2CToFt0Bj4ItyXb/SGEQiKPZ0fzT1oCWrUeSmhv
-         qCIyC0whR6HesEgNrhUb+s/fYh3nR6qXX+TdwmwBoaGuNdAHqgKY0RTZ5RVAAa/mXaKl
-         6OxInzMdn2/2EbhgYreAoCZbvyAny/aYRtC1E9nTAtJJAHzmptxKmTT6JutoB44twf1/
-         +OGJKS778qvz2PzgFOXqNnqjg9E4gytnUl5gahili7dsav0xFMP0qSNhVXuXTMMTxGtI
-         dmFgExiS2EH/C5PgZjnxh+pGQ/2qnaXaZTnXGzEwJjhsE/9mzUlWDKXfpv/KEBYnTtlE
-         wCRQ==
+        d=suse.com; s=google; t=1742293067; x=1742897867; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IFBxPeTjHI7TeObAp8XDFRUhMTnCq+H7JfaB8yzIjPY=;
+        b=N24W0y4BUC65V80kMsbWm+saRH/9kqOigHaw0N7gKMLK4/Z8bHLxGcvvTFjcJqmlHR
+         Cltzu5pAuTFtIwiRsmdoUwUagW7n/z7mzZZHdZAASYow/PwV5AXuSNW1hdSxynX+86FJ
+         b4NTbSrYdTFVinW2q9U6btF3WDPAz40oWc4vDpQb5HBizFKPP/c4AWC2daD+i2AhhlN9
+         nuM/YpU1F1jsnMUjrEkDT/HnV3Ol8cwbkk57W+pmX6Xbh7XXyx0gUOa/5O2R9BMAGegM
+         yi3qGLGehthcW2agJjFhLhWgmH02BdQuvQqdjzqCaiZFWGtPP71CcAofAI5U+D7kBYfI
+         hpCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742293048; x=1742897848;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2FgtaU11zF0pRhnrSxlGHFWtRYpu795XLnDbFY7Zyq8=;
-        b=A4hF+GDfGtjWjyBToD5r0HIGVhvJgFPciz4sYWEUgyR//Lw39TKHvKwRrP45bYdxKw
-         CfZMbwHPdPfL6hYGdLL3VOrSnP/kZGcDH0mC+WMc9rEwVN7/NyjC6HLCZqDXTNS/St5F
-         lplsqY6/B1DitnIJQ/PJt2a5ic9BLKAq5ftLAtOgPFi0iiGzpdTPNif9B8JL7en+nkyZ
-         YE1RoJqmn28Ecd/VHzbNLz2SHymt4wxRiUd3rxE+vGC4g5dWxBLxsUCiKLQom5oCN1tg
-         TVyUes4ZX3AzKyCsBFwsd6sgmGwWOPy23frjdhW6q5MFIaFL5/T7u0SMKLoRQEhVeKo8
-         8ckg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUeh3nD2cZbA7LyCarugO8RV8qXxWNyr3F5cBMkgQ1vOFs3CkQI2m3yfUwwd3NMOIZojPXcCN/64YuHQ==@vger.kernel.org, AJvYcCXxlp3LSA8seo3fcPNO3hnB2HvjhFmD9kQo628aYnwRzTqvLqLKmm7r+yNGRAj2mbc4yOUTyyylKIWcwEI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzsdxJQIp1O0a+ADzb0OZBGgSx7iO/BiTyeNsD+FJgKlVfULEOG
-	rBnfnCcOhQAclqnjicwjSQ8WQSXL+aj44tK1GlQNhEcrDQyy59/x
-X-Gm-Gg: ASbGncur5/HZv4Px1cAtX72/Zh5yY5R7dIgIdfRACIrTMy1tDUAUFXu8Rc/CFCf8Qfm
-	od+6vyhYjNlEN9FOnrBzQMrm47C996ioPpRmpKTYpTPafIzb3YziZfwgFBb6oTEfzQvXj+G8sg5
-	Oyo/wda7gZWyJlretila28Q6WmjW4GVfuzplHzXeRk1AXWy7MGfI8BSHPaGTqTUvNm5ayCYJKPr
-	tPcwiaFuTjxKvmFapoAGJR1uvC/XfZLKQpZ/xiXNfrZC1yXYHx3Vl5S/NN0cnq655kElLnwygcp
-	/hgXhoWVhxmrJJUFHmeSiSbIjEk4FTajQBoZLERwLXt+F2gqYMHEcs9m6jUu/KhJ2SM9
-X-Google-Smtp-Source: AGHT+IGNpKVhF1MmjriDdQeiRkhRxstftLV1dEUJfkWqqAoBXpzEMIzh8Q/RdGeRtk63yqBNxbzoWA==
-X-Received: by 2002:a17:903:3c48:b0:223:f408:c3f7 with SMTP id d9443c01a7336-225e0a363cemr215795695ad.16.1742293048229;
-        Tue, 18 Mar 2025 03:17:28 -0700 (PDT)
-Received: from localhost.localdomain ([114.246.238.36])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-225c68883c3sm90548725ad.20.2025.03.18.03.17.21
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 18 Mar 2025 03:17:26 -0700 (PDT)
-From: Miaoqian Lin <linmq006@gmail.com>
-To: Sathya Prakash <sathya.prakash@broadcom.com>,
-	Sreekanth Reddy <sreekanth.reddy@broadcom.com>,
-	Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>,
-	"Kashyap, Desai" <kashyap.desai@lsi.com>,
-	James Bottomley <James.Bottomley@suse.de>,
-	MPT-FusionLinux.pdl@broadcom.com,
-	linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: linmq006@gmail.com
-Subject: [PATCH] scsi: mptspi: Fix reference count leak in mptspi_write_spi_device_pg1
-Date: Tue, 18 Mar 2025 18:17:15 +0800
-Message-Id: <20250318101715.96586-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+        d=1e100.net; s=20230601; t=1742293067; x=1742897867;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IFBxPeTjHI7TeObAp8XDFRUhMTnCq+H7JfaB8yzIjPY=;
+        b=k/UsKIfWpofHlhO0Lcp3Z1DOevnHuMrBJuNtfiSA0KUpSxxinuhHwL7JqDI3R3Ngwf
+         7dfB3cg8t7YK/z4kwIAqLT2Dkk0ouQjmOxapwpQZlezgjCIXIk8Y6jxvwcNAAUtdgM8Y
+         Yc1XGlDQM6yLS2P2cMKR/9atsNSOHE5/0uIWsj/1XA+ld3ZQuLtP1bSS71rPmk3CM+N9
+         Dr53OuHotgXnZ5XuxPGBMOOxLChfXn8Gl3kY0QXEIVfT3cr2T0ZlU4Ave22fAQDsKeWm
+         C+t55bNADxNXPuv7br2FwEL+EZ3k827prQ9shdyTyZNa9xC045w6XSEMNGZ8SyuNSOc1
+         wXgg==
+X-Forwarded-Encrypted: i=1; AJvYcCXHhgi+5e0PGGMQYbV/JvS26g3lp0crZ/Urhu+M1P8NzueAxQ/y+e/U2PJ7rdIsYd7URHcugvpeqCj7yz0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2/AFM1WbszQL+YyBaMzDzBtIQ7uU49ue/k2GYfQGXMUSLaF7r
+	1RyJBBbMBTXS/3FHPOQnaZ8gHvEwFAZ0XKo5ANbKc/yR33g4pkgcm4TRypOwxf6VY+9A892G3xE
+	QlbQ=
+X-Gm-Gg: ASbGncv87ej1CceY7bpyFREbgAn5xaLMnlNR+Q2kQxeZK2a5zecNvss82dQL6WFarAV
+	QVUBWhnbTy6iW3KAF2gtRBfPHjgZ96wQiKl9qHd1Rz4VQXEcMh8fWuqEWlmgVbmS8Avg2nviw6B
+	r/w236PZ1RbbHti3/vltsIpNRgbxupC1VzacLeqaFDx+cnM7//y+wh4fUNRO2lxBgX6DUEhKubt
+	/VmujlmuxFmH/HxItSvXRcueyqgaQZeDf180fM2mrqdIYuTHLBzRWTdgAQVmNzLKc6suR8e6SPp
+	3LaiyGN2HU3fl8nSL5hs3703IHFt1321EsVt877VwdqRi6o=
+X-Google-Smtp-Source: AGHT+IGDLa5UPBGfrRVOOm3XvQnMemu2Schtcck+5EYcWBJ65baV+gaiWnBiXGOVUyqS4P0tACKxdg==
+X-Received: by 2002:a05:600c:4e8b:b0:43c:fa52:7d2d with SMTP id 5b1f17b1804b1-43d3b9dc596mr11587965e9.20.1742293066628;
+        Tue, 18 Mar 2025 03:17:46 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d3ae040f9sm13194615e9.0.2025.03.18.03.17.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 03:17:46 -0700 (PDT)
+Date: Tue, 18 Mar 2025 11:17:44 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Hao Jia <jiahao.kernel@gmail.com>
+Cc: hannes@cmpxchg.org, akpm@linux-foundation.org, tj@kernel.org, 
+	corbet@lwn.net, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	shakeel.butt@linux.dev, muchun.song@linux.dev, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, 
+	Hao Jia <jiahao1@lixiang.com>
+Subject: Re: [PATCH 1/2] mm: vmscan: Split proactive reclaim statistics from
+ direct reclaim statistics
+Message-ID: <qt73bnzu5k7ac4hnom7jwhsd3qsr7otwidu3ptalm66mbnw2kb@2uunju6q2ltn>
+References: <20250318075833.90615-1-jiahao.kernel@gmail.com>
+ <20250318075833.90615-2-jiahao.kernel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m6wfz6q3cfwefzqq"
+Content-Disposition: inline
+In-Reply-To: <20250318075833.90615-2-jiahao.kernel@gmail.com>
 
-scsi_device_lookup_by_target() returns a reference that needs to be
-released with scsi_device_put(). Add missing scsi_device_put() before
-continue.
 
-Fixes: 19fff154e7ee ("[SCSI] mptfusion: Adding inline data padding support for TAPE drive.")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- drivers/message/fusion/mptspi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+--m6wfz6q3cfwefzqq
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/2] mm: vmscan: Split proactive reclaim statistics from
+ direct reclaim statistics
+MIME-Version: 1.0
 
-diff --git a/drivers/message/fusion/mptspi.c b/drivers/message/fusion/mptspi.c
-index a3901fbfac4f..14b7c1d841a4 100644
---- a/drivers/message/fusion/mptspi.c
-+++ b/drivers/message/fusion/mptspi.c
-@@ -908,14 +908,19 @@ static int mptspi_write_spi_device_pg1(struct scsi_target *starget,
- 		/* Turn on inline data padding for TAPE when running U320 */
- 		for (i = 0 ; i < 16; i++) {
- 			sdev = scsi_device_lookup_by_target(starget, i);
--			if (sdev && sdev->type == TYPE_TAPE) {
-+			if (!sdev)
-+				continue;
-+
-+			if (sdev->type == TYPE_TAPE) {
- 				sdev_printk(KERN_DEBUG, sdev, MYIOC_s_FMT
- 					    "IDP:ON\n", ioc->name);
- 				nego_parms |= MPI_SCSIDEVPAGE1_RP_IDP;
- 				pg1->RequestedParameters =
- 				    cpu_to_le32(nego_parms);
-+				scsi_device_put(sdev);
- 				break;
- 			}
-+			scsi_device_put(sdev);
- 		}
- 	}
- 
--- 
-2.39.5 (Apple Git-154)
+Hello.
 
+On Tue, Mar 18, 2025 at 03:58:32PM +0800, Hao Jia <jiahao.kernel@gmail.com>=
+ wrote:
+> From: Hao Jia <jiahao1@lixiang.com>
+>=20
+> In proactive memory reclaim scenarios, it is necessary to
+> accurately track proactive reclaim statistics to dynamically
+> adjust the frequency and amount of memory being reclaimed
+> proactively. Currently, proactive reclaim is included in
+> direct reclaim statistics, which can make these
+> direct reclaim statistics misleading.
+
+How silly is it to have multiple memory.reclaim writers?
+Would it make sense to bind those statistics to each such a write(r)
+instead of the aggregated totals?
+
+Michal
+
+--m6wfz6q3cfwefzqq
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ9lIRgAKCRAt3Wney77B
+SRN9AQCIE/qNRp6gU2k+xnK3FHJnFxAelfP/oIqk3z71MjMSZgD/cizNdVftiC2U
+CSpV9isE71qsCu5oCAFzbKznXsbF4Q8=
+=Bloy
+-----END PGP SIGNATURE-----
+
+--m6wfz6q3cfwefzqq--
