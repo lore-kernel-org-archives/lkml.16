@@ -1,137 +1,111 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92E461DFE04;
-	Tue, 18 Mar 2025 07:58:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B70DE1EFFA8;
+	Tue, 18 Mar 2025 07:58:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742284724; cv=none; b=UwSQ9d+6LGtr/3/YreAdnUXvm5EO0epwVJB+h2O2DVRF2gn5H60pIFULpn6m4UqOnAZ/xAJI3ivAP7DtNsxD0H49Kqi41sIcgYK6Zu1d3ZKDUUCdBT8e4CCeRoZEZ3wKkGC+zTaTbkQUkYd+VKzj4YgTQUc9zS/pb2mpbCjjsmI=
+	t=1742284727; cv=none; b=SBSAs7RgcsdJbT93f1CtplMBEMyrwy7tAbJe8bBoCb0OmfxqLsjnv1pulNx+odLTOZUv7N2jKsySPNe6YuPYa6g4gGuLzUXm5eY8xsa0mfhiTXxC/EruJN1mRbeT0h7H/uYPAWoSCkO5l60lRMGApUYy68J0nKrLmVw+Kbq9LZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742284724; c=relaxed/simple;
-	bh=/DhwVu8DKF/R610pyPOmLKSv2pleUHx+A2HvVxAwuJs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gWGF6L5Dmy5ZVhpzamVX46hO/AjhFpAwhxIyctIjp+K/e2A1s26yjnZiUoUXaQS8lQT/ThAbrMK90JOvYAeUrbupeTedBVVd0Id261jYjVgP+SYVz4JbqtlZ3C9S9I06f78jhysnHuumvqam6GYXZiawWG3ok7aQWqafwpeehfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [192.168.0.2] (ip5f5af679.dynamic.kabel-deutschland.de [95.90.246.121])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id B1EB361E6479F;
-	Tue, 18 Mar 2025 08:58:22 +0100 (CET)
-Message-ID: <9a533395-f991-469d-a916-c1ee39d8bc5d@molgen.mpg.de>
-Date: Tue, 18 Mar 2025 08:58:21 +0100
+	s=arc-20240116; t=1742284727; c=relaxed/simple;
+	bh=PCzm1Uv6dvQihuvSi9Y7zt9Fyzb7GOfU0TdWTSqR4CU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JHCKiLXWScbyrfl07WYq6C5sQFwIv7cKoDtkB2ELJuPcYEmUWoUYWDqoKTytnY559ciTFgQRyjNH+LQdQmtjWSytqq9hk7I+4E60iNBGwv/8pLlwd3HFhseYiPs9H8COzKwYeAFGsFKsggvqzeMy70+Z4qLX7Ic+KzLnEc/B9lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BuXKBEqO; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuXKBEqO"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2241053582dso464165ad.1;
+        Tue, 18 Mar 2025 00:58:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742284725; x=1742889525; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Cmi/upa2sTtbXf6Q7CoVFmlat4h2nyC9ICZjWOCUZzw=;
+        b=BuXKBEqOhKJ5IecUSXuO1d8eZhJpPDJd51dQA1lnvBBFbGQ1mpJyPWc32bXnx8R+b5
+         B4OPH3cbj0Z0/56ee3RvDqr9Ai8kVkMYX6NwaHoHhCkD4NKaYUSF76SbzEuYxrvihQ+x
+         TxQJcoh79i7RVlM9BIJ4Apnvf7fu4wejSXfwVYekR1ZHSm7TVJwtiSFMKKLcRHbrmVRe
+         GlgdYRqKSkw7r1wsnb92hqASpbIc8GQOzWWLhKWv4561vqx9omvAgwch15zOEtLis8xB
+         +HdenjTJ/keQ5RqWWjxGWaxnQyNiMaL5HVVzGDX72OpccEzwbf1k4SBjtETCRxnqICgw
+         mtsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742284725; x=1742889525;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Cmi/upa2sTtbXf6Q7CoVFmlat4h2nyC9ICZjWOCUZzw=;
+        b=b/PgR+9FEmMTdq9R2IcC18xwiMuDs/Ha55M3JlbihD5jz+H9o71SFglVceerKuCw5N
+         Svnlt9YpMXkrPDWfAKAjN9uDZFJsWqUzP0+nQOqV8kOgHQhE0qh/ngjrfrSCIIz0m5yQ
+         EvwVlaqPOU2poMazO5DOvsIAb/6rEF7tfMgarGV9AReqvXzleJyENgwgFxEukAYmDCvN
+         CohK9rGXHTcbdUFtx0/t1ts1X9lTIXb7pjPR9+WZKn5nF0CjMcToSU2tCXW6fVRlLT3f
+         zc6shPZyPhpKiOKjIRLHt3crSIgCzKD8ikTtZx3+E4D1UsrkCx+xv25mOzEa44AcbREb
+         uFgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUuGm4KLR73q/Wf5pDD+FkRj9FozVyLUVx6Jc28XP8AgKLfbmt0GjUoXcP5qrKMfA1HMlSAcRZxUlw=@vger.kernel.org, AJvYcCVoWPQ+KMA5iAvyD1EZSagelFfArhqXv42ecPYMO2hhvQ2k2Ad4KL2BQIDYA7LFnIyvZ+4jr3N1Jiy+9RYt@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq8KYXgveEH9QW9yTNMvVQgsPHkRfohJWtAyP0hErxnvW8UMHi
+	i6YvjSittbMPyfELvPAy79UENcA+2VP8xwWu6QojgvKYJK8DhtW7
+X-Gm-Gg: ASbGnctt4ZtPg/S0xsyxMWJ833PVHMhVaISDp2HPGvdkZIXVw0PASUAtEP3RUtmwy+b
+	kQjXS0U2qqIqu5eiHQ8Jl8B10D1Y/d+qRbmNLM15RP9CkCncHJU/TBHtU+tbrjhIHwa/AGmYuH6
+	VLhNC7GD9CDcBZ1JBU9kvx4xu7mDkvPwUnp8agr3KsZQBT58ILaVbGl75BgUbiJqck3Kx45XIMs
+	kMoBDCjgkWIloCDYp/J3PHvHnfR2vexTqHXEISsaXDqGxhW20mqUPE8yZ9CL5nPpuXqCMxcGw5R
+	6IHheRT5Nb4pkm0DThA2nHD4L17LVVlHoelFtaEIDogYGGDST2QygzxV90O5RZxhqj5FsF7meg=
+	=
+X-Google-Smtp-Source: AGHT+IFUKsoujjlo/WHI6q9sp0EJXaYl5Lu3bIObvFl6VcEXwX8wPmmirb00eK1bvkP8CYfzr23N/Q==
+X-Received: by 2002:a17:903:11cf:b0:223:37ec:63d5 with SMTP id d9443c01a7336-225e0ac37d3mr222554505ad.28.1742284724947;
+        Tue, 18 Mar 2025 00:58:44 -0700 (PDT)
+Received: from localhost.localdomain ([103.165.80.178])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbfdfesm88149865ad.203.2025.03.18.00.58.39
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 18 Mar 2025 00:58:44 -0700 (PDT)
+From: Hao Jia <jiahao.kernel@gmail.com>
+To: hannes@cmpxchg.org,
+	akpm@linux-foundation.org,
+	tj@kernel.org,
+	corbet@lwn.net,
+	mhocko@kernel.org,
+	roman.gushchin@linux.dev,
+	shakeel.butt@linux.dev,
+	muchun.song@linux.dev,
+	mkoutny@suse.com
+Cc: cgroups@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Hao Jia <jiahao1@lixiang.com>
+Subject: [PATCH 0/2] Adding Proactive Memory Reclaim Statistics
+Date: Tue, 18 Mar 2025 15:58:31 +0800
+Message-Id: <20250318075833.90615-1-jiahao.kernel@gmail.com>
+X-Mailer: git-send-email 2.39.2 (Apple Git-143)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 02/19] cpufreq/amd-pstate: Show a warning when a CPU
- fails to setup
-To: Mario Limonciello <superm1@kernel.org>
-Cc: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
- Perry Yuan <perry.yuan@amd.com>,
- Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>, linux-kernel@vger.kernel.org,
- linux-pm@vger.kernel.org, Mario Limonciello <mario.limonciello@amd.com>
-References: <20250226074934.1667721-1-superm1@kernel.org>
- <20250226074934.1667721-3-superm1@kernel.org>
-Content-Language: en-US
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20250226074934.1667721-3-superm1@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Dear Mario,
+From: Hao Jia <jiahao1@lixiang.com>
 
+These two patches are related to proactive memory reclaim.
 
-Thank you for the patch.
+Patch 1 Split proactive reclaim statistics from direct reclaim counters
+and introduces new counters: pgsteal_proactive, pgdemote_proactive,
+and pgscan_proactive.
 
-Am 26.02.25 um 08:49 schrieb Mario Limonciello:
-> From: Mario Limonciello <mario.limonciello@amd.com>
-> 
-> I came across a system that MSR_AMD_CPPC_CAP1 for some CPUs isn't
-> populated.  This is an unexpected behavior that is most likely a
-> BIOS bug. In the event it happens I'd like users to report bugs
-> to properly root cause and get this fixed.
-> 
-> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
-> Reviewed-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-> ---
->   drivers/cpufreq/amd-pstate.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-> index a093389a8fe3e..1b98f5d76894d 100644
-> --- a/drivers/cpufreq/amd-pstate.c
-> +++ b/drivers/cpufreq/amd-pstate.c
-> @@ -1034,6 +1034,7 @@ static int amd_pstate_cpu_init(struct cpufreq_policy *policy)
->   free_cpudata2:
->   	freq_qos_remove_request(&cpudata->req[0]);
->   free_cpudata1:
-> +	pr_warn("Failed to initialize CPU %d: %d\n", policy->cpu, ret);
+Patch 2 Adds pswpin and pswpout items to the cgroup-v2 documentation.
 
- From a user/operator point of view, having a recommended action in the 
-log message would help a lot, as I am not able to judge the 
-consequences, and where to go to. So, I’d propose:
+Hao Jia (2):
+  mm: vmscan: Split proactive reclaim statistics from direct reclaim
+    statistics
+  cgroup, docs: Add pswpin and pswpout items in cgroup v2 doc
 
-Failed to initialize CPU %d: %d. This is likely a firmware error, and 
-should be reported to the vendor.
+ Documentation/admin-guide/cgroup-v2.rst | 15 +++++++++++
+ include/linux/mmzone.h                  |  1 +
+ include/linux/vm_event_item.h           |  2 ++
+ mm/memcontrol.c                         |  7 +++++
+ mm/vmscan.c                             | 35 ++++++++++++++-----------
+ mm/vmstat.c                             |  3 +++
+ 6 files changed, 48 insertions(+), 15 deletions(-)
 
-The Linux kernel also has some macros. From `include/linux/printk.h`:
+-- 
+2.34.1
 
-```
-/*
-  * FW_BUG
-  * Add this to a message where you are sure the firmware is buggy or 
-behaves
-  * really stupid or out of spec. Be aware that the responsible BIOS 
-developer
-  * should be able to fix this issue or at least get a concrete idea of the
-  * problem by reading your message without the need of looking at the 
-kernel
-  * code.
-  *
-  * Use it for definite and high priority BIOS bugs.
-  *
-  * FW_WARN
-  * Use it for not that clear (e.g. could the kernel messed up things 
-already?)
-  * and medium priority BIOS bugs.
-  *
-  * FW_INFO
-  * Use this one if you want to tell the user or vendor about something
-  * suspicious, but generally harmless related to the firmware.
-  *
-  * Use it for information or very low priority BIOS bugs.
-  */
-#define FW_BUG          "[Firmware Bug]: "
-#define FW_WARN         "[Firmware Warn]: "
-#define FW_INFO         "[Firmware Info]: "
-```
-
-For ACPI:
-
-     drivers/acpi/acpica/acutils.h:#define ACPI_MSG_BIOS_ERROR 
-"Firmware Error (ACPI): "
-
->   	kfree(cpudata);
->   	return ret;
->   }
-> @@ -1527,6 +1528,7 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
->   	return 0;
->   
->   free_cpudata1:
-> +	pr_warn("Failed to initialize CPU %d: %d\n", policy->cpu, ret);
->   	kfree(cpudata);
->   	return ret;
->   }
-
-
-Kind regards,
-
-Paul
