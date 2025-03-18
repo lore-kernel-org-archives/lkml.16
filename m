@@ -1,153 +1,206 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from AM0PR83CU005.outbound.protection.outlook.com (unknown [40.93.65.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C6220CCCD;
-	Tue, 18 Mar 2025 12:37:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742301455; cv=none; b=aqdd5Q4KUajBDf98yysz5UjPju9TvizHZ8ulXmOYF3vLwg/nUG5F6fb7qDrhi/JbWt5r1aAKnpAC2wFQdvtnNQMA6vVXleBqSb8r5DoA8DplevrwU2Q02R0AQjOEJ/+rC/Wac385S3CoaC2T32IdojwLkBpQN90cizlG2ufziII=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742301455; c=relaxed/simple;
-	bh=yLn+TNXVMhehXRKYhEHda1j3Z6SP3WHyEcxrp/VZbRE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fBv2M8EJTWWQ8EksDgIVsydNDLLHopd8qM5lKDDVz0B6fUSxoGBDHhDjrm+Gyj6o6lOsUSxJppo3QsBX4Bf+S8jZDMYPlb+J9baHoYIRJcLbnVDnkOzcMRZDFLNW9+GKxj5GFKnlHObHCY0Xs9/EUfwyFdPrbHfI2gYYSVsw+xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OAye3SLa; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E652620C46B;
+	Tue, 18 Mar 2025 12:38:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.65.8
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742301501; cv=fail; b=PLPMcbocRTf0baDhbeW39a8yawTYav+fC3aR7zYV3USdCghCUeY8pniiXR4EjEZH4e7tfNViyp/Tl2IFuH6gBHHyb74StqWolEsC7wAGNsviRiKdf9E7gHCxL4vW2uw7R8CgSAuZExnu6SJgBhFos1I7QJtpZWynxqmzrVIrYWo=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742301501; c=relaxed/simple;
+	bh=OY6DuL6eOO7eZn4f/kBRjW4wLqrwqh3nR/2LQ/8gpkQ=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=XDIwhGirHeZRqR+eX8Jamt3aaLnE901PNYVggpyrEWTB8HeH5x+ccA5XJw9H48vCPXC8cjKTT7ypdBSap+RU4inBb+uO0Y13zNsa6dMhaDIIdUio6eVUGI0jif56LuUF3hHX0apWl2LAuNk1FD3waB7Hi1glLoTjCX1Uyfn33vc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=jPSDI6/l; arc=fail smtp.client-ip=40.93.65.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OAye3SLa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742301450; x=1773837450;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=yLn+TNXVMhehXRKYhEHda1j3Z6SP3WHyEcxrp/VZbRE=;
-  b=OAye3SLaV59gw0IZzPW9EO/c1c9kratSsueTsvk6Jmpk0Ywup5CoJ77b
-   PygiyTkWVR1HmB3cXBJkrMeGrxHR1YeX8iapV2qVcJoPLxXNUZJWJghDM
-   C/V6i9TzMf6zAxT8XZK467XVU3voDDrY0odRKjNnMxEForZOutlAGOoCc
-   QoFRj0sEo2MUoWZIAUZoc4fOGYqpM0T4KG1N23ozjfdD0A5TJg6qVz44T
-   tK8XT4tMgNhxTMvQ2pWmL1tzGqlr24KChv8tYm4h4Awhk/UJi6mlg1cjl
-   tAulFP+O1vQjm8JcaXTv07gO4vtu+IcrHPHY5T0LQ9ow/T0vHe2+wj9IY
-   g==;
-X-CSE-ConnectionGUID: Z8EAfZH6S2SVWDlkoxoOPA==
-X-CSE-MsgGUID: 2xBMOCnDQR+xhVRYr9s09Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="54824292"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="54824292"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 05:37:19 -0700
-X-CSE-ConnectionGUID: 02u19VQZTfKCfwVwJfzsFw==
-X-CSE-MsgGUID: cDJM3aYtQSuaD9d6HinG7g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="121979427"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa009.jf.intel.com with ESMTP; 18 Mar 2025 05:37:15 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tuWC1-000Dkl-0C;
-	Tue, 18 Mar 2025 12:37:13 +0000
-Date: Tue, 18 Mar 2025 20:36:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Sebastian Reichel <sre@kernel.org>,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, Oleksij Rempel <o.rempel@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>, kernel@pengutronix.de,
-	linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Zhang Rui <rui.zhang@intel.com>, Lukasz Luba <lukasz.luba@arm.com>,
-	linux-pm@vger.kernel.org,
-	=?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
-Subject: Re: [PATCH v5 6/7] regulator: set Power State Change Reason before
- hw_protection_shutdown()
-Message-ID: <202503182046.kOuLXxTn-lkp@intel.com>
-References: <20250310103732.423542-7-o.rempel@pengutronix.de>
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="jPSDI6/l"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=KNV7X1chliQWFYFPR+IHUi4VaDj1hgDZGF27Xufk96ERkSFfBM2K9T4QBb+p/nD5cHOvBCvz7QYH425LzxBenfKUNsWWa4/zt8FCcumcPuE7qXW7ZhB8Wx0v9VLUabCWX9orQOUI51bunT/BwLFugkoMcf5aF7jX17JU+Cv1XIV4evyK+mXiVXHGkKlHiepqJCuAntUP8qnEj0hi7bJLbH+EGCpciwBBo30LkiYwY+9xMEFDsvYVdwLlcIur0/us/5bl3eJ9URk+5+7ATFJnqrqJ03g6rnBfcfm1SjvO6XUhqvJpUBsCuFFdMqQWyhZoTaRSm4yGNg/pzNWwMCTx6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=KcwGUAOTTRcTaQa9YWI6M7ix+hqqQ9PXOut7XJGKFqs=;
+ b=hwT3pPDkmy7fqpkPmz3xl/MjSx92RCw3gjtGzBKgRddCdzTl0CQmf/J9w3qXhVMxDmlT/7nBFS+37bMqRSF9joR9Z9GMZ672fLxsKfe3rC47WE3tYguRsoSL+cl44saSgtFSr8PE+u1IrdH8qhyMj86hY6gH/MdmRBn0tEg09QGAd731UEE/VHz0rN1Zpc86W4flgD6E8CpXnlB1q3eAd7p5YTRkXdyDmalP+n705h62j8q1CdEGc7bz7bbYAsAofpevKJ3eWBQW6Hzlomgu/dqnXSeB4lpuPzJHuVSb1sH601KEv8at+fGyHdDhfOHEmhUxFk62bITKzmGyE3eKxg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=KcwGUAOTTRcTaQa9YWI6M7ix+hqqQ9PXOut7XJGKFqs=;
+ b=jPSDI6/lA+WabRs/fEWhchvfUkRvrfmA12MuOuLKMW597XY2KV1Sk9coH4kPmsdglF3G2mNp0Mjahgz3jy10rWIDYifO0EXRk5pyootGJ0RxSbp82dqByiR/7KJu1ByZ0Ol0wmUtOh3j5jFQvSuLJue/iGD0FoHVdM72XnGAG4CvHlNUb5Ak9/iMv0oS01SgAXvE+vTYACsDxWuuz7SsTl19RgK+ZNERypnzbgT7MC6fjqJZLHvgigPEkTprbnEWfmNxMJItep+3WSgsXhSZR8iktlowy+5C96SD6dWslYplK7Qm9F3QnPA+HeOkSvTeLSbAJzo6fN5sXlpRGMrqLw==
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by AM9PR04MB8195.eurprd04.prod.outlook.com (2603:10a6:20b:3b7::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
+ 2025 12:38:16 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%4]) with mapi id 15.20.8534.031; Tue, 18 Mar 2025
+ 12:38:15 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, "Peng Fan (OSS)"
+	<peng.fan@oss.nxp.com>
+CC: "krzk@kernel.org" <krzk@kernel.org>, "lgirdwood@gmail.com"
+	<lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>, "brgl@bgdev.pl"
+	<brgl@bgdev.pl>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org"
+	<linux-samsung-soc@vger.kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>
+Subject: RE: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
+Thread-Topic: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
+Thread-Index: AQHbl8aNtQhQNM9MgkKKKzIX+U7Uq7N4r1yAgAAjdTA=
+Date: Tue, 18 Mar 2025 12:38:15 +0000
+Message-ID:
+ <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+References: <20250318052709.1731747-1-peng.fan@oss.nxp.com>
+ <Z9lJETLh2y27934q@black.fi.intel.com>
+In-Reply-To: <Z9lJETLh2y27934q@black.fi.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: PAXPR04MB8459:EE_|AM9PR04MB8195:EE_
+x-ms-office365-filtering-correlation-id: 04485906-9432-4fa7-3522-08dd6619c131
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?OsXyRh80swJidBizcGkodnHt3IfScGzmI5EFJ9koyuiXorzFyQuZRS219ddl?=
+ =?us-ascii?Q?tudpl9z/ivmnk+FpC5bz/PcLtuRzCO+rGWdFByH1kXTwvgZLls8vY0kx/vd9?=
+ =?us-ascii?Q?JGyff7eHrgySaOXODsk+WAw+2WokW5mVqFYQL/rUX+rR4oEr+WJGsOrlxc4Q?=
+ =?us-ascii?Q?cl/BWHP+YmyB8NJeo0Mcbod98eGnZX4dtmqyE4lKdPjwJvFvqKdGQHn/xQKx?=
+ =?us-ascii?Q?6WjcQz/3lq9f4D6X2FSxHekq/j4OHNOHvfOkE2SDjjkMNcMVif9zoQnZAK5e?=
+ =?us-ascii?Q?LNWceRIwLh5W57EhuqEhlCyjT/mZXgjg4KYPY6IUuEvvxa1xkz+DtUqQeiP2?=
+ =?us-ascii?Q?/OZxA0FVoXHYQLW71SSHEGEt0nnw5b9pYTWBWf1Vy4x56v3TJ3qzGkMdAXQK?=
+ =?us-ascii?Q?kXaJhrYDtmbeCM2nNkqPrrpUZZQCMz/mXHr865QQZO3Os5+dKajU4IM8qEom?=
+ =?us-ascii?Q?QgQMlG4fSkksMLvpdUQoYHGmx3DOc+d5mqd9FJDlWQQ8mLmQHhlp2UpAuZs8?=
+ =?us-ascii?Q?/I1kcWse3DTESNFUb07YiYKwK9uzlK9brYQCrI81rRBQva3kiiQwBQZjdhCa?=
+ =?us-ascii?Q?fJIwYpGBtg6pOq50a5bbQXn0QX7qznHtxCy+mSTchRiYMFGWWYFZjcMCOf98?=
+ =?us-ascii?Q?Su5xzRlQWItHcrQoqtctl55qjJSDeZx4PRcxVqhQ/0LzIbvsRzkmIcq/1r5u?=
+ =?us-ascii?Q?9GKDRro42BQBpy3UtWzh5aHwN8t1uZ149a9Z4+WiREc1PzcAGiWC2+V3y7qp?=
+ =?us-ascii?Q?W6ZSbprsXuJPdLJDiK2QcCw7hkrPo/AR+78cKVV23QBUZ9x1NZd0HVbF0ZoI?=
+ =?us-ascii?Q?RsPzmbD/vs4Hjbva8PSLfeTEeN3lcAKbYR8TFXdV/BZWc9rI3oQiPn6NvxaB?=
+ =?us-ascii?Q?ZFukW+ayPiW5bIK3DP77U6SQm90JxUn4QGIjBeWco6npnRZDnS9LM+Da2v4f?=
+ =?us-ascii?Q?Nw8A5ydD+9A33+yYja2Mgreg9D3U6IcCpf5XCUVH9VkZEC3Awk3imayfVJq4?=
+ =?us-ascii?Q?oHz1FvFnZ1+h2udbVPZY09bkfuJHylQudQjj+Da0CPH3lrmt8nN889EtV3fE?=
+ =?us-ascii?Q?hLpb9BUxGPk1JcPzDmSWt41hBbtVQdT98l3pl/BwA+yNzE86K0kQgEK5NDkK?=
+ =?us-ascii?Q?FRloqhyUV3ypgloxSoTPbLZRwyJuB7wrwrXUP7GCf/HULjjEoft1s9CKN4YA?=
+ =?us-ascii?Q?clP/sKht/O2oG8PE5dEuTe3d9KdgIeFOPk2wYKWIWJbz7CkxDG1q5SKAhiPS?=
+ =?us-ascii?Q?nVcfVB+kRU7BU0S7ipfMSPWtDq5A63JWcAoTlw4vfQkfpyF2IhuMjReuDkmR?=
+ =?us-ascii?Q?gZ4XkIVw1PRnh1X/qCWabt7Ch0Io+bABsG44LdrJuncdWDXuSM5ShbB03PL2?=
+ =?us-ascii?Q?f8XaEZF6vBTS982UCXGP7P2+TN1B5clYIg2iI8Jw32/ier2qrZvEiDQtsYEi?=
+ =?us-ascii?Q?euSnjf6sU4OAi7tUT53s4BDSRpfd1OCv?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?Kmysx404uKNvY/tt9NP1Q4UqUkKt/2TDC+90k6/phuoB2pZrjfqz/hikc6Xz?=
+ =?us-ascii?Q?LOi7S3uW7YseTU6/xNZ8SjG/QV3xlymOPhuLQLNd+sEZAlF5aV+MsqXsEhbl?=
+ =?us-ascii?Q?PUmOeOLl6g5WkK21uloCGVBxLWJWKYhcfXEZtKkHoISxjy+WkHxmnvMnc4Ox?=
+ =?us-ascii?Q?PyTX44sLMEWzXbylHeNOBNCKkW7LqsHRWRMVzz+4lHeB3i/GCc2HRJRq8f1t?=
+ =?us-ascii?Q?TNU8Tpme8gqbSpdxMNwFPVAnoigt7UVgtBUS0Qqq/4HJvuoFzUWjYR/GxBj/?=
+ =?us-ascii?Q?Ah0UDgIiPlq74FIlilQS14jjwUWJnIdZOhGU4KjqwV1rhiBgmi8CdYrjoaep?=
+ =?us-ascii?Q?SurzAKnFdldo8PgRgxgqU7S32YE8CSBE8RLCQkJnrwU+bHxHxiEs6qy1XEpO?=
+ =?us-ascii?Q?gHph4wNzLdklBw102KoLzD7QIA1Xbjh2b+pGOSHrOVa7RzDouaMnstLxVdbe?=
+ =?us-ascii?Q?KYeOhHjvk+h+plvZkNQYxFFtbQcJysSschgDhk8ooOGn1yfQTpXLvgg9vTBI?=
+ =?us-ascii?Q?WCSQ8yUlgfdvZf0UTvjupiME1OTJZ60H7+yZwyH2KCtPOweMEfZc26SgEHUv?=
+ =?us-ascii?Q?uUqlBSckmOkjtxwYR24gHuSGYZPHCwp6drFn96uoKdRTw8dh66q1mH8PoUWK?=
+ =?us-ascii?Q?jFVmY61e9h3SYXbKjrSf2z9bq769CuP32XireQW3wbo+a7UYhI9K0xPaBmyw?=
+ =?us-ascii?Q?2HOzcEuogBSbNUEA7GBObpR7YuXbnQ3P67ujxNWvRUufxNZ/afhXKRCF21ia?=
+ =?us-ascii?Q?wXlyhpz81LPw04d1eZUvCjpRhZyvmHjnxK00zt8jOm15ZMu2w25Uhw/JRBH5?=
+ =?us-ascii?Q?cUsMCXJpoFxDXczAFqCDE0Qtsi6sYbesBf6SIgSUBSFO2a6rDjo4+Uiqim4C?=
+ =?us-ascii?Q?3ABfXQroFAgXPCsAvgMnlBew7nF4Dv7wPMbu2ZwMD46vip4HMVc7XYkWNRUH?=
+ =?us-ascii?Q?WRAgOyP8XZGY35UoUx7Du7pF2ymH/3gWehZcr4gHNfWcpebNK+2kigs2gHRn?=
+ =?us-ascii?Q?+yp/0byPGiRmXiLIGoCIKYsZOWZGTOsA0vuByXhkJU14XwVZJo/ggsMYqxXQ?=
+ =?us-ascii?Q?KwGILSbguBY+KfXY0YgIHkXMffv8KhQKe2vcua15ntFvJ83C0L9dkhaHbC81?=
+ =?us-ascii?Q?gf18AkhfV+N/1vOJWdNzvhjLuMujanTAOK+QZN9H3ARQx3nWca+NRScnDlCN?=
+ =?us-ascii?Q?dnDcNBcWCh+bm5hKfUrYXTbyz6nyNfrv+cPDMVqDoLgOdEM8wiC8jRVHGmtG?=
+ =?us-ascii?Q?yCZM1lzEWgGO6g4LRJ1DFsvU8SmxvmIXBUql1OikxfFdmvDnnDafPmryUnoN?=
+ =?us-ascii?Q?IpgKW5/UU/2BIb2wcSg9N5j/CH41LY48/MwmIRM8Iad6wjsXg3XZeFlNAG+V?=
+ =?us-ascii?Q?8eYH0YHOAALnUlBedsxfdTs7fxGxASr/WgZNcOgfCDqA0geAqYue2bq1rtOm?=
+ =?us-ascii?Q?u94F0zVoq8AxNzYD0GjgWEDZnLgP7HqDW6cuLGZJjiphycYncBmCrZHjz5v8?=
+ =?us-ascii?Q?oPArqOqeN388EiAVtZ13XR9p5sMMPQyhd/TFMTwWTJnrwOoiddP0a64sEIzq?=
+ =?us-ascii?Q?aQgRjNpYWRfqsMyOgVI=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250310103732.423542-7-o.rempel@pengutronix.de>
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 04485906-9432-4fa7-3522-08dd6619c131
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2025 12:38:15.7324
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JWmubZ5IB9CB7AIY8zc6JjWf2yB6gtjS1rmgcWmzL4mzSiHPw1hf6xZFm/cGCshYOF8zSNUYeKB1PLk1JDyRxA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM9PR04MB8195
 
-Hi Oleksij,
+Hi Andy,
 
-kernel test robot noticed the following build errors:
+> Subject: Re: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
+>=20
+...
 
-[auto build test ERROR on sre-power-supply/for-next]
-[also build test ERROR on broonie-regulator/for-next rafael-pm/thermal linus/master v6.14-rc7]
-[cannot apply to next-20250317]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+> > +	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2)
+> & 0x1);
+>=20
+> Can be simply done as !!(temp_index & BIT(2)).
+>=20
+> > +	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1)
+> & 0x1);
+> > +	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
+>=20
+> Ditto.
+>=20
+> ...
+>=20
+> > +	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
+> > +	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1)
+> & 0x1);
+> > +	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2)
+> & 0x1);
+>=20
+> As per above.
+>=20
+> ...
+>=20
+> Also the commit message doesn't tell anything about the existing DTS
+> files.
+> Do we have this device described in any in the kernel? Do we have any
+> googled examples? Why I'm asking because often the issue is the
+> incorrect setting of the polarity, which needs to be carefully checked,
+> esp. for the voltage regulators case.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Oleksij-Rempel/power-Extend-power_on_reason-h-for-upcoming-PSCRR-framework/20250310-184319
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git for-next
-patch link:    https://lore.kernel.org/r/20250310103732.423542-7-o.rempel%40pengutronix.de
-patch subject: [PATCH v5 6/7] regulator: set Power State Change Reason before hw_protection_shutdown()
-config: m68k-randconfig-r073-20250314 (https://download.01.org/0day-ci/archive/20250318/202503182046.kOuLXxTn-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250318/202503182046.kOuLXxTn-lkp@intel.com/reproduce)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503182046.kOuLXxTn-lkp@intel.com/
+Under arch/arm/boot/dts/samsung/, a few dtsi files have the property=20
+with results from output of
+`grep "s5m8767" ./arch/arm/boot/dts/samsung/ -rn | grep gpios`
 
-All errors (new ones prefixed by >>):
+Exynos5250-spring.dts uses GPIO_ACTIVE_LOW.
+Others use GPIO_ACTIVE_HIGH.
 
-   m68k-linux-ld: drivers/regulator/core.o: in function `regulator_handle_critical':
->> drivers/regulator/core.c:5270:(.text+0x20c6): undefined reference to `set_power_state_change_reason'
+The current changing to using GPIO descriptors should be ok per
+my understanding.
 
+Not able to find any public datasheet for this pmic (:
 
-vim +5270 drivers/regulator/core.c
+>=20
+> ...
+>=20
+>=20
+Other non-replied comments are accepted, I will address them in v2.
 
-  5234	
-  5235	/**
-  5236	 * regulator_handle_critical - Handle events for system-critical regulators.
-  5237	 * @rdev: The regulator device.
-  5238	 * @event: The event being handled.
-  5239	 *
-  5240	 * This function handles critical events such as under-voltage, over-current,
-  5241	 * and unknown errors for regulators deemed system-critical. On detecting such
-  5242	 * events, it triggers a hardware protection shutdown with a defined timeout.
-  5243	 */
-  5244	static void regulator_handle_critical(struct regulator_dev *rdev,
-  5245					      unsigned long event)
-  5246	{
-  5247		enum pscr_reason pscr;
-  5248		const char *reason = NULL;
-  5249	
-  5250		if (!rdev->constraints->system_critical)
-  5251			return;
-  5252	
-  5253		switch (event) {
-  5254		case REGULATOR_EVENT_UNDER_VOLTAGE:
-  5255			reason = "System critical regulator: voltage drop detected";
-  5256			pscr = PSCR_UNDER_VOLTAGE;
-  5257			break;
-  5258		case REGULATOR_EVENT_OVER_CURRENT:
-  5259			reason = "System critical regulator: over-current detected";
-  5260			pscr = PSCR_OVER_CURRENT;
-  5261			break;
-  5262		case REGULATOR_EVENT_FAIL:
-  5263			reason = "System critical regulator: unknown error";
-  5264			pscr = PSCR_REGULATOR_FAILURE;
-  5265		}
-  5266	
-  5267		if (!reason)
-  5268			return;
-  5269	
-> 5270		set_power_state_change_reason(pscr);
-  5271		hw_protection_shutdown(reason,
-  5272				       rdev->constraints->uv_less_critical_window_ms);
-  5273	}
-  5274	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Peng.
