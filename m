@@ -1,72 +1,153 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B7AA204C2A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:51:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72438206F38
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:51:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742291469; cv=none; b=JP8+K6NacrwLHcNj7xxYpmh1YZdHPsqYyuKGbiyVbuQhzzPLuFQBZrsyWcFyJiF3wb2RWyqaMfAlcjnv+CJ3hI7SiZKQ1dvBzULYQitzznnru0RtJnwvvwwIl5qdFoP63GGgSifK5TIqrafmWaxLQx20dZbuwFiku6P+WqfkWtw=
+	t=1742291517; cv=none; b=hf7MBF6BSeqG8eUPQqwNRVq5D4gMYohH3F9Tv7X62r0djTQeEcYZgKY1GEk1G0uPhm39xcfLeRCQixJf2wxuU8pt7H+jOchLz69sNrP6LkwJkfXvi21q9gjb4hBXO3EVUHVNkgudKi+IuOHp/ooK4hRl2fc2/67bHVtuH2rbzpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742291469; c=relaxed/simple;
-	bh=NjDeiUFkUdLnYKBjXu9i7Iq+VQqvTIy/xfEHD7UxqOg=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=pX/lJLY2OXRw0KTrF4tQckXLBRpie2t0cOYJPy2JjPYnSKaVR4uA+q2r040m4ySfP1xTsZBGD+Gg1iY4/qUkaAncCh1hT7NfQSeCxDDt/e+7Ms/lBiDTWRdG8lJdurPVrz6QA9jetopLB0JLmrVwceCOwMeYIOgLSBkBV94SN6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d44b221f0dso105468465ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:51:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742291463; x=1742896263;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Hc6rJ5rZqC0CfnAdWBjB60YGqaOUyEo9rxFas/xm5vw=;
-        b=UHE678AnVl8tP/BrCMynPqEamjMX/nw8KUe1xmTW3WSp3nBZ/wWA+IJ1ux34oakQzb
-         oESGoM607d9WXeTiozvvN+2tAKCd+lx5tQxheVWLskp5X5F/ic0RmVw/ZZBX9gserXKW
-         cLUQAHInnwVok0tp8NwesBOmz2ebo4l08C1oCaN0vmwg5w9+Hv94/nNMIM3H6tQoSWPw
-         27mu2KqGpLgWF6BfZrGfyGuucJoPaiREw/qEgoNCVAOq/bOqjFplU5RSZsO263u0mlSC
-         udxfIQnQtfs1coLovjuJ9PzJ/APi3sGQHyduQbkm2Dbg/sMAJAh7kR0BhFyVbULSnybz
-         zyGA==
-X-Forwarded-Encrypted: i=1; AJvYcCXc/j8qr9sePSuorVcs5cIXYP+Jwy9lKf73BTlguhCld9OKEtK5hmXrAJwW0cfYiBv5BEJ8DjjyeTsktk4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxm2h+kB5pQH7LmFjPvNiu67Fwhwbeutt6ujiLYCVxBrIwhQQJt
-	wB4XCWgnOr8Y63gb+1j+ywg8zY+9WaSQG4Z+zgJ8AS/z5yecdaEHsop42zprOE4E+2UtrnspRKE
-	LNdWZYgJgVN5lxKyNrXy99lgKptPU1QCB0IVobs6S8e+EDj+4kXbjt3A=
-X-Google-Smtp-Source: AGHT+IGJQoXReMe2kujDe9yYeMt7pksQigj8HMvUj0V/wuWwWxAPLARxPQRds2keze5ScvaMtdVd4z2W5mZSiNgvW2aGwAlRKf4R
+	s=arc-20240116; t=1742291517; c=relaxed/simple;
+	bh=tMqDMi4z/Af/1nBj06gC748vZT9/ks5A8LiXVhbqv4g=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=mtIB+z7zVkIW8ragjmZA+zSdI7W8B0kIURYERTrfq+s5ZgUj/R/UhTCtXUHEbqWSe5mYePXgEZ4mhVdfDXi4h4y+HtqSH5NVMZvclnvUyPKpvnDgQehTrPlxv6qr25JYITAUNpl2T6CRtgUTZvcXWYwz6i7KzWHzbtCrh8t45zE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yg0JkUeD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ac2tg3Hg; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yg0JkUeD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=ac2tg3Hg; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yg0JkUeD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ac2tg3Hg";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yg0JkUeD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="ac2tg3Hg"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 938C51F7C7;
+	Tue, 18 Mar 2025 09:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742291510; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5QMRWmFfPW970c52ux+nGJ79iDYhzbXP95zIUATY3vc=;
+	b=yg0JkUeDmL/bEPZxG65TSJIKkNAsjdz9whjvVQKCi2s14EFkG6AIfHo7Ovs+hquPBqic46
+	Uq/IBPzIMeA/KYYyZBvE5zuQPu8hlmXY9UvaXV0tf7gCmu4sWX++PSrGV9jry6zx+1xBof
+	Rr63qv6qO/iN6qdGFa+B47pQuEizoPg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742291510;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5QMRWmFfPW970c52ux+nGJ79iDYhzbXP95zIUATY3vc=;
+	b=ac2tg3HgF8sNvVWtjHZ5THXA3LVdTKFTF01U91HgqjvidH1Ol4wOlgUGqTLErmnoMyB1Vh
+	obmE4MQMuanlPlCw==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yg0JkUeD;
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=ac2tg3Hg
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742291510; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5QMRWmFfPW970c52ux+nGJ79iDYhzbXP95zIUATY3vc=;
+	b=yg0JkUeDmL/bEPZxG65TSJIKkNAsjdz9whjvVQKCi2s14EFkG6AIfHo7Ovs+hquPBqic46
+	Uq/IBPzIMeA/KYYyZBvE5zuQPu8hlmXY9UvaXV0tf7gCmu4sWX++PSrGV9jry6zx+1xBof
+	Rr63qv6qO/iN6qdGFa+B47pQuEizoPg=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742291510;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5QMRWmFfPW970c52ux+nGJ79iDYhzbXP95zIUATY3vc=;
+	b=ac2tg3HgF8sNvVWtjHZ5THXA3LVdTKFTF01U91HgqjvidH1Ol4wOlgUGqTLErmnoMyB1Vh
+	obmE4MQMuanlPlCw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 9B7C41379A;
+	Tue, 18 Mar 2025 09:51:47 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id kk1yFDNC2WdiKgAAD6G6ig
+	(envelope-from <ddiss@suse.de>); Tue, 18 Mar 2025 09:51:47 +0000
+Date: Tue, 18 Mar 2025 20:51:39 +1100
+From: David Disseldorp <ddiss@suse.de>
+To: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>
+Cc: "jsperbeck@google.com" <jsperbeck@google.com>,
+ "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "lukas@wunner.de" <lukas@wunner.de>, "wufan@linux.microsoft.com"
+ <wufan@linux.microsoft.com>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-fsdevel@vger.kernel.org"
+ <linux-fsdevel@vger.kernel.org>
+Subject: Re: [RFC PATCH] initramfs: Add size validation to prevent tmpfs
+ exhaustion
+Message-ID: <20250318205139.71fe0c02.ddiss@suse.de>
+In-Reply-To: <BYAPR12MB320590A9238C334D68717C34D5DE2@BYAPR12MB3205.namprd12.prod.outlook.com>
+References: <BYAPR12MB3205F96E780AA2F00EAD16E8D5D22@BYAPR12MB3205.namprd12.prod.outlook.com>
+	<20250317182157.7adbc168.ddiss@suse.de>
+	<BYAPR12MB3205A7903D8EF06EFF8F575AD5DF2@BYAPR12MB3205.namprd12.prod.outlook.com>
+	<20250318121424.614148e1.ddiss@suse.de>
+	<BYAPR12MB320590A9238C334D68717C34D5DE2@BYAPR12MB3205.namprd12.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1b0f:b0:3d4:3ef4:d4d9 with SMTP id
- e9e14a558f8ab-3d483a70a1bmr148606935ab.14.1742291463781; Tue, 18 Mar 2025
- 02:51:03 -0700 (PDT)
-Date: Tue, 18 Mar 2025 02:51:03 -0700
-In-Reply-To: <tencent_DE79B66C942EF56F989538EA7EEC32CD3C0A@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67d94207.050a0220.2ca2c6.016f.GAE@google.com>
-Subject: Re: [syzbot] [afs?] general protection fault in afs_atcell_get_link
-From: syzbot <syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 938C51F7C7
+X-Spam-Score: -3.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.51 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	MID_CONTAINS_FROM(1.00)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FREEMAIL_ENVRCPT(0.00)[outlook.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	DKIM_TRACE(0.00)[suse.de:+];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:mid,suse.de:dkim]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-Hello,
+On Tue, 18 Mar 2025 06:28:53 +0000, Stephen Eta Zhou wrote:
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+> > There's room for improvement WRT how out-of-memory failures are reported  
+> 
+> I am currently trying to find a good optimization solution for this. Since initramfs is decompressed in the early stage of the kernel, if the decompression fails, it will call panic to put the kernel into a panic state.
 
-Reported-by: syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com
-Tested-by: syzbot+76a6f18e3af82e84f264@syzkaller.appspotmail.com
+Not always. The *built-in* initramfs unpack_to_rootfs() error path
+panics, but external initramfs unpack_to_rootfs() failure won't panic
+immediately...
 
-Tested on:
+> There is a contradiction: at this time, the console and serial port have not been initialized yet, which will cause the error message to fail to be output, resulting in a suspended state, and no valid output can be seen.
 
-commit:         76b6905c Merge tag 'mm-hotfixes-stable-2025-03-17-20-0..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1188f278580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2e330e9768b5b8ff
-dashboard link: https://syzkaller.appspot.com/bug?extid=76a6f18e3af82e84f264
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=173145e4580000
-
-Note: testing is done by a robot and is best-effort only.
+Are your console/serial drivers loaded as external modules? That sounds
+like a configuration problem.
