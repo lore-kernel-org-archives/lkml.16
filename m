@@ -1,202 +1,161 @@
-Received: from YT6PR01CU002.outbound.protection.outlook.com (mail-canadacentralazon11022086.outbound.protection.outlook.com [40.107.193.86])
+Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0305C20E715;
-	Tue, 18 Mar 2025 14:51:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.193.86
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742309468; cv=fail; b=bwEfClSg0cbpw3OCiJ2ptAy1E2z9N0jNcRbKZ1KuOeJdGFIRgi4XpU4dYV1s6RUmSd8J/oFSKOHYmFNFPFYVCK6lpAleWn/JPpCifhR8TWFlD+Jf3RvLSn5+yQWOl3lNNKecsfqNdmRF3r55gkLjlWvomIQ6+toA214IgcvZSUU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742309468; c=relaxed/simple;
-	bh=bS3nsS1QrGReBXLQxKBiDyOpc61soiLMSztlVxIpcEg=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=Q9eO066ri8hHIR8R9IFGzXj5VHWAmZ8AK4nFx6jv5zmnwnxYzZg1gON8YcSEit5d4w5KtRUafbT3IJlWjiDACM6ZBoutE7yrg70poDuQbJb1U4GeLljIUu8jWEkHJJH3yisb/PsDYZMXFf2tyQCDClnO7bYZr+4IJReDJs7xKqU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=eYfXbwmI; arc=fail smtp.client-ip=40.107.193.86
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A4820E6FC
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:51:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742309511; cv=none; b=Nu9kujOon+HgEx8cuJc81Ce/FoybYbxIWuKeuo2ddA332yt/tD/30uREsiYi+/8QN5e7LCaKqIZjKJwhsnjenn3Ec0ZMTwTBbOoiGylvdc/B2nHThgAGAI+uEc+0PLBQxrV072+ZqAkqNwS8kySp2MXmdpnZwQvlK8OmkvmcF/0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742309511; c=relaxed/simple;
+	bh=PTwboqiO2Ryf/kIoVPpizaXYYtdcV4ShPS7w7yx8kbU=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Of9wKBrUApFQS+tNYdOkRKBcTv9vLIXahmwUnBKcCQbg9h9bZqCCTpjTgrT/fK7eoDnX/5fsKyr1SeYuRFb/l6pyCSZDCcO7HWqgE6huPf+ihwCaKPtYqwDiflN4+RbJvTvbTeAz0OANfXZNHb8M2qwpr5qbfYFfRQtPSuBUGzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=YuF7dT2E; arc=none smtp.client-ip=178.154.239.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="eYfXbwmI"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=yWaVPoiuuAiwrUH0fgVeUkdlw7FIW0VTTkFzatp2djZ6kh1nFzTKw3qplv0wnMo7FStWHyhF3txr+f27tgDP+s5HLlbBKsQZAGtvWh0b4Wnr68kuRCPvCvzHalZey8oyLiUEuV/FZZOYlz+R+mPJNYlj2oUC69V7J6SEjdSHeXBlMKUv9g4eem2/1+tW7yyzeD7vcsZekzFbF1NWkVchK4x009hvkqBZvmM1sMtpnEhk2RhzVzAznoQcz33Sl7L6bcQtIhpiloomrmlXTtqRyhIPSRdVVZkkdND1oAiJc2lrUXhQH3l5k2jDizbPBo1sbSD1In1ce3uxJUvh2eF9Fg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=37jUfpkAhlKx/ryOWmEP7mSMo1pHvFzGdrPN+EiAsq0=;
- b=aUvxD4nD9h+spEkg9wkpBskYOuVwjaI1BtVtwC2lpOhfHUoyPu36bNRef0enatmq7IPN3fwbzu/jk7xPBQ2Kd8mC3Di/tlnHYilFVo8dF1xGHzg8ZvJ2Kge/472WWwS0JIJGGLItZa2QXTE5EbRR9R7ISVz9nzAns9SlqJKgTnapb0edxsx9azRURsGnKeDs7h30rCph+O002mAPQwkHyndykl7Vec4vzqgroomrq17+l/CTwq4pZvYdU805COKTvj+N6cpP2vVapL8DM6ry6C5alZNYC4QzjDFBqVEv61XrsYyY4y537tPUwxVcUZuDNVxFe3ZyzvqL5SJ6RgLZnQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=efficios.com; dmarc=pass action=none header.from=efficios.com;
- dkim=pass header.d=efficios.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=37jUfpkAhlKx/ryOWmEP7mSMo1pHvFzGdrPN+EiAsq0=;
- b=eYfXbwmIDEH6oApG++TrNKf5fUwKl4iWJSDU7obXPmAbbb1WQh2NDkckx/DjFX249msfaJPepz1U8RZZuO/BWV3NELNPupp6igiG2I5UPUP72M0lkF1H7wc/l9FFU+ArN0bdf+DuEo5ekDWSR93TnWStSwRTY/6TYXH5hC/0YcFh3CsGGldTY1HPgQhrxk0UoKDVXrHhpasb1XZAxz3UJFL9DyvJPzETiZBlC6Er9Lf3fQaTin+z/6R3ifAccVGZdboUiUKFFRwVqJwGygZEUCDW5NPj6XccqlKuRdK+EJlt4BUMQ5cgCcvk7/yDMMd7W4UcInPDafFX5atFVMlbGg==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=efficios.com;
-Received: from YQBPR0101MB5080.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:c01:24::5)
- by YT2PR01MB10604.CANPRD01.PROD.OUTLOOK.COM (2603:10b6:b01:f5::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
- 2025 14:51:00 +0000
-Received: from YQBPR0101MB5080.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::be09:e1b:b343:7f9]) by YQBPR0101MB5080.CANPRD01.PROD.OUTLOOK.COM
- ([fe80::be09:e1b:b343:7f9%4]) with mapi id 15.20.8534.034; Tue, 18 Mar 2025
- 14:51:00 +0000
-Message-ID: <f61ded41-b1b8-4d0b-aff0-df7e0f5bab0d@efficios.com>
-Date: Tue, 18 Mar 2025 10:50:58 -0400
-User-Agent: Betterbird (Linux)
-Subject: Re: [PATCH] rseq/selftests: ensure the rseq abi TLS is actually 1024
- bytes
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- Peter Zijlstra <peterz@infradead.org>, "Paul E. McKenney"
- <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Shuah Khan <shuah@kernel.org>, linux-kselftest@vger.kernel.org,
- Aishwarya.TCV@arm.com, Paolo Bonzini <pbonzini@redhat.com>,
- kvm@vger.kernel.org
-References: <20250311192222.323453-1-mjeanson@efficios.com>
- <78518446-083c-4db1-8c96-61fd49eddd8e@sirena.org.uk>
-From: Michael Jeanson <mjeanson@efficios.com>
-Content-Language: fr
-In-Reply-To: <78518446-083c-4db1-8c96-61fd49eddd8e@sirena.org.uk>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: QB1P288CA0036.CANP288.PROD.OUTLOOK.COM
- (2603:10b6:c00:2d::49) To YQBPR0101MB5080.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:c01:24::5)
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="YuF7dT2E"
+Received: from mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:a19b:0:640:7c13:0])
+	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id ABFD4610F4;
+	Tue, 18 Mar 2025 17:49:28 +0300 (MSK)
+Received: from davydov-max-lin.yandex-team.ru (unknown [2a02:6b8:b081:b407::1:6])
+	by mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id DnJ6t73FTOs0-DwITw8pz;
+	Tue, 18 Mar 2025 17:49:28 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
+	s=default; t=1742309368;
+	bh=1st08C0MmAzmZ5dxXArk0+G2EPIbpRvV5Pu4I7LVrg0=;
+	h=Message-Id:Date:Cc:Subject:To:From;
+	b=YuF7dT2EUUIxMGm670ao59TEoqxc2g++Nxf1ai9R72KK2ZnAFhs2G8nxJKY9/1kXx
+	 +FeN/t78zwQR5FmMkJn4mwppvX0Cg59l+572kAJ3L4TcmzKaZDkbrm0W8lS7NlvyNR
+	 G0lpnFlJbx7eqZ3Tdgwe14TQaNaLBhNZH1PZeRwk=
+Authentication-Results: mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
+From: Maksim Davydov <davydov-max@yandex-team.ru>
+To: x86@kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: davydov-max@yandex-team.ru,
+	den-plotnikov@yandex-team.ru,
+	gpiccoli@igalia.com,
+	mingo@redhat.com,
+	bp@alien8.de,
+	dave.hansen@linux.intel.com,
+	tglx@linutronix.de,
+	hpa@zytor.com
+Subject: [PATCH v5] x86/split_lock: fix delayed detection enabling
+Date: Tue, 18 Mar 2025 17:49:11 +0300
+Message-Id: <20250318144911.10455-1-davydov-max@yandex-team.ru>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: YQBPR0101MB5080:EE_|YT2PR01MB10604:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6f7b5dad-854d-4179-cb6c-08dd662c4c2f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?RGRFL3FneHpFNW8ydG1TOENtRzZIdy85dkFhaXBoVGVjeFhOM1RaVVgxbXRZ?=
- =?utf-8?B?T1oxUWNuSGpVd3VsK0Z3cElvOFJ0OGZ5MWdSQStad3FIZ0RjMUFrL3hlblNt?=
- =?utf-8?B?bXlhQWJQcmZpczZYNnUzMTcreHMyVWk5K0VvaHFKVHMyemtnYzBvQTFUU09r?=
- =?utf-8?B?SUIxY0lsMWV1RFRFb2M4M25mUVBqaEVmeGxWTE9ldjg2Q2JoMHVrdkplUjl3?=
- =?utf-8?B?Nzh0eWMxUDhMeTVpNHp4R0VRQTBYazRUK1l5MEo1cmlSM2ZLU2NyU0wwYm1R?=
- =?utf-8?B?alRFSTZDYlo2UjQ0NTZyMTF5TVBIVlp5aWxGVSt1RnNVTWhLM0ZDa1lTSm83?=
- =?utf-8?B?Tm5uVmU5VGFTWmpoeGt5d2greE80T1BYemwwUFlCSkgrRFJ1NldaQ0hKdEVx?=
- =?utf-8?B?UU1LTTVET2hMV0VKOFRwYkk0NzM0d3RrM0Y1UW1BZWtLaGxWWDRSZFR2VXJo?=
- =?utf-8?B?U0F2c0tjTkhzb05ZY3czaUJ4am9YMm9wbHVOZWNtUFhEMjRDa0g2dG43VTFH?=
- =?utf-8?B?aERJUm1xbFJBZ0lnb1MzNmtSVkJEL1lHM1dHWElnRmc3WXoyRmFBUmhIZnBY?=
- =?utf-8?B?czljWTZybGU2NGJvTlRlUVo1ZnVVZ21vZlZJQ2Z6R0FEeVZrbVFKNlJvMHM0?=
- =?utf-8?B?OEV4N1VadVpGbHJpZ0hrcXhDOHM3WHNWc1laS1pjR3AzUDhocVFRUk5FbFl6?=
- =?utf-8?B?ZnM5Wk9WL0RkdUo2Z1RlbUdEQVpuMkZ5QUZGZFBZODFrNElNU0VtM2hMakxu?=
- =?utf-8?B?NlhRaHJjQWt4TU5EWWxnaVJiaUN0SjcvcVZwOGVFRXJSUWFLOFdyV2QvQS96?=
- =?utf-8?B?aldEemNNOWdBNURFL2tLRXprWktYSm9RUGNZcENyc1RJa2JkNFB6WTQ4cUV3?=
- =?utf-8?B?MUZpN1JUbUJBTU1iQmQxZUZnWmtYampPZ2tudjFDd3dvRm42WDRwV0UxbWhT?=
- =?utf-8?B?Q2d4K05hbzRTWkhWMFZObXYyeUpVcWczdm1PNzd2QmpRWktYR25iT2tIbXRY?=
- =?utf-8?B?ZllPbnVsQjU0NEJrVmJlcVhXcHZ0U2hqK25nSXVEb2YvZ1NOTUNFQ3ZId2U3?=
- =?utf-8?B?bFVpTEtBWFhhd29jZlptbnBrWWJ3b29veXVWRG1Ia1BValBRUGV4c0UzRGlw?=
- =?utf-8?B?SEYzc0xJTXdlc1NEd09KSG1kK250aC8zNWs4MThzeTZJd0tQdmF4SHYybnFv?=
- =?utf-8?B?REd4czk4eGI0c2c1SEtQVFN1VUNEZFhrVzhtRXU3akRtMmM0VktpVXZkRjdT?=
- =?utf-8?B?VWwvTVErRS85clhWZEpmTTI1cWFlSmpZOU9JNlRMSmdob1F4WW1Pam1ZR0xC?=
- =?utf-8?B?V0FZM1gzRUZseXJYRG9mRmc5eVlXVkx2bFlTYVphb2FMZ3JyNEFXRHIwTDBq?=
- =?utf-8?B?SS9FNVE3SFZJNUozdklHYXFTeVd0T09pTURFUzgvdTVkb09UQnpuSnRLSEtJ?=
- =?utf-8?B?eXdNNW5qekFmTkxMMVVVcnBjdjkzaTlPV1RnODJIMmVxd0sxTEgzSWpWUFBT?=
- =?utf-8?B?aW9LeWc3d21vNnpZYVZ3cnZnR3ZNbTlyVG15MWtNMGF0Ukg1RDRVcXB5bDlV?=
- =?utf-8?B?dFJrK3Ara3JpWFdjWlEzZU96S2NmSEkwUWhNTW14cFl3akVEdU5kYjE0V25z?=
- =?utf-8?B?ejZhY3VRUDJ5TGJ2dDVCK2JERmdSN2ZGcWdJVCtNQldhMjl2UVFCSTlWdFBh?=
- =?utf-8?B?ZXAzM0pkTmNYQ2VmZHBYNG9xT056MEMwKzhFRXBrakNieEU0dzJ1eDhzUlM0?=
- =?utf-8?B?L2VYdkxSZ21BaHh3dVBIZGt4VkIzUHBPSVVEVC9tZU1ib1BobDdsNXlNajFP?=
- =?utf-8?B?L0liVlZQSTdQakdldVNFSDJ5OFNCN2xuMVdvSU1QaTRMWWRQT08zTGVEWHNU?=
- =?utf-8?Q?Tiys2Jufo2I27?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:YQBPR0101MB5080.CANPRD01.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?L2paSWh3all3NHRKN3ZxYmxtTWdudXhtTVRKdzhWTTZyRHUyK0FGK3FIck1O?=
- =?utf-8?B?MjMzSmp1Nk1XcXJrekpTZXRZQU9oY2VMTjI3TTVZb29CWUI1NXY1YlVGNG1H?=
- =?utf-8?B?cVdPYUdyd2JPZ2lSR0MyMTN5MzhKZitOVllKaUZucHRHMjFpU29UQ2hTMko5?=
- =?utf-8?B?RFNYVGdoeStUV0NPZGZrUjJIRVlNVmYvYlFFSmlvUWlLMTB2R2FHMENFU3Y4?=
- =?utf-8?B?dTh2dGNJdUpoMEo3dWF3aEdEaVBOeFNNNHI2Tk92NStHTk84dEdSUXdZUDhB?=
- =?utf-8?B?TlRLWW94MkZyQndUSituUlZFTk1RWEluNTcweWlIVzFZOXlTNElhQWcrd1FB?=
- =?utf-8?B?ODJ2ZlRFSWhXVXFwYnRGVUtQZ1BjWnZBazVrbXM5ZkVWenFSVDVsVXAzcDVy?=
- =?utf-8?B?eVg0a0c3ai9pUDc4TkZrbHJTcm5yUXdSR0RUdThYVDhrZUhVaTJScEFTalJH?=
- =?utf-8?B?WEFrVExCalI1Q3lCYWVWRWhMeHczeU1GY1htRmlKejR6SWRKUko4SXRWVk8x?=
- =?utf-8?B?anJ0V2FRQXVvZXZNblMwT3RtQ09lOUdocGJKZDZ4NXZKME5pazIrY2JwYTNN?=
- =?utf-8?B?Ri9sT28rRERFV0UwMVRPK0NHdkxaZVFMSnl2ZDdEajhCRzl6L2dqTWFjRUZw?=
- =?utf-8?B?VXZOTFp5ZWRNcXlPOE90akE0QXlKTjVxUHFNTVFkd1FwbFB4UUFkaG5uL2s3?=
- =?utf-8?B?dWdSYk81Z3BSSm9LNWg0d1Z0eUFTNGhtUUcrQ3czSWR2N0xRempvVDIyM0M5?=
- =?utf-8?B?TVI4YmhNMmhkbWV3YjFYSTM0S0xQc0g5eks5MUlQUEp6SzhKVlo1T2RNcE1w?=
- =?utf-8?B?R2tvbkFzZ244cGJaZENxM1FYbFNpTWhYZkxoRjhORVpuZldIQ1RnT0FvVFoy?=
- =?utf-8?B?RFgwZzdUU0t0ZXA0OTQ4SFlmQmd3c3ZsZ3dCSFcvUmZxaGswcFUwaFlmRVY0?=
- =?utf-8?B?QU5wbmx0QUpicGQ0anVPczVxMGJudTZ3ZWFUbkE5T1hxUWxEUjNCV1M0UjZV?=
- =?utf-8?B?d3I0WEI3cG1oU09BdnhLdW1yQ3dqVnZ4RzFLZGJON3NTN0k3UjRTRVVVbGdm?=
- =?utf-8?B?Y3pxYkNoMzdzUGNHbmJqcmtQRWQyVjhPL3BvUXE1Zk1WZmFESExNdmJianhZ?=
- =?utf-8?B?ci93ZVpqdFJYNEIrZmFCVWQvT2t1M1c3WVhRbkIwd1RyRHBVRXB4ZWF0djJY?=
- =?utf-8?B?SnY5RURXR1REZjJhQUw2YmpEbDNzakViKy9YOStyK01ISkxVY0NBMFRtNzJy?=
- =?utf-8?B?WG1zYVg3R0kvdHE5RUNKYjBLNEQzd2dYMmZzMHJleUZqMGMyUnN0bGpvRXBN?=
- =?utf-8?B?VEpuTDE5ZzYvQVhDWFdNdVU0ZFIxUkdWWDFNd3ovM0pVWGhyMUQvY3RTbVFX?=
- =?utf-8?B?dEhlSTkya2hBbG9qQW9pMUQrZzE2YzM5YTg1cHNIalN5Q3ZwSEhnbzJQR21h?=
- =?utf-8?B?MXFsUmlEbERFYUJIblhqMWoyT1l4Ni9tcUc5eC9xQ3hoT2s0VWZJclg1ZDNV?=
- =?utf-8?B?MlNDRGZBME9kVTB5VzdHekVOSHU1T0FmRXArY2xodDZ3bFZFSDZrL3paL0Jr?=
- =?utf-8?B?N29aTnVqbzZLYzF5YU9TM2FuQnhyenJhcFFUWXpzQytwUjhVN1NLRy80ZDBY?=
- =?utf-8?B?bnlJVEdCZ3RBYnpFcmwzMmZMTGNmVzEwc25wL09rY3JLcEtFVVUzKzZIVGpE?=
- =?utf-8?B?OEtuSHUwRkdCQ3FqWS9hZ1hWYlZaRmpNSU5jdTFrNVJZRDA2WW8ra3ZuZTQx?=
- =?utf-8?B?UFNPbTlERVY0YzI4L2ZVQ2pieElRS0lEN003VE9jZG41cGRzdUhJWmptYU9n?=
- =?utf-8?B?YW9qOExWcU00UXM1a3piNG5tQng4MWMzblJ0dFQ2dzhzeVNnK3BHZXJnUHVa?=
- =?utf-8?B?K3NjTitFK1JnL2Q0YW1vUnlOcy9JZjF1MDdmbC9lNTArS1YxclUwdHFEYVIv?=
- =?utf-8?B?bTdSWDZzK3hzWGJ1QTJUTU96WE5rNEhydnNBNnhhYldQTEd4czdOdENLNmo2?=
- =?utf-8?B?ZEZ3WVF2V0pjZG44NHBKa2xZK0dSUGhWRTlNQnB3M252KzVSc1k3L1kwaW9O?=
- =?utf-8?B?ODBXaDU1OExwYXlSSTBYT3k5aGM4Qm94LzNiR2pSeW5XWUtpTmlDS1F5TVBJ?=
- =?utf-8?Q?1jQHreBNcSgau72JyWX41IB7W?=
-X-OriginatorOrg: efficios.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6f7b5dad-854d-4179-cb6c-08dd662c4c2f
-X-MS-Exchange-CrossTenant-AuthSource: YQBPR0101MB5080.CANPRD01.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 14:51:00.1573
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4f278736-4ab6-415c-957e-1f55336bd31e
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: rSHCHaJOzEZJ5+mQOC1/eABUskWmPOx0YZmuA4tcvGwo0KD4BqgYu977NZfgncFHXraYucXMPpsxXsQKm5VH1g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: YT2PR01MB10604
+Content-Transfer-Encoding: 8bit
 
-On 2025-03-18 10:01, Mark Brown wrote:
-> On Tue, Mar 11, 2025 at 03:21:45PM -0400, Michael Jeanson wrote:
-> 
->> Adding the aligned(1024) attribute to the definition of __rseq_abi did
->> not increase its size to 1024, for this attribute to impact the size of
->> __rseq_abi it would need to be added to the declaration of 'struct
->> rseq_abi'. We only want to increase the size of the TLS allocation to
->> ensure registration will succeed with future extended ABI. Use a union
->> with a dummy member to ensure we allocate 1024 bytes.
-> 
-> This is in today's -next and breaks the build of the KVM selftests:
-> 
-> In file included from rseq_test.c:24:
-> /home/broonie/git/bisect/usr/include/linux/rseq.h:62:1: error: use of 'rseq' with tag type that does not match previous declaration
->     62 | struct rseq {
->        | ^
-> ./../rseq/rseq.c:78:7: note: previous use is here
->     78 | union rseq {
->        |       ^
-> In file included from rseq_test.c:24:
-> /home/broonie/git/bisect/usr/include/linux/rseq.h:62:8: error: redefinition of 'rseq'
->     62 | struct rseq {
->        |        ^
-> ./../rseq/rseq.c:78:7: note: previous definition is here
->     78 | union rseq {
->        |       ^
-> 
-> since unlike the rseq tests the KVM rseq test includes the UAPI header
-> for rseq which the padded union conflicts with.
+If the warn mode with disabled mitigation mode is used, then on each
+CPU where the split lock occurred detection will be disabled in order to
+make progress and delayed work will be scheduled, which then will enable
+detection back. Now it turns out that all CPUs use one global delayed
+work structure. This leads to the fact that if a split lock occurs on
+several CPUs at the same time (within 2 jiffies), only one CPU will
+schedule delayed work, but the rest will not. The return value of
+schedule_delayed_work_on() would have shown this, but it is not checked
+in the code.
 
-Oh, I missed that, we need a more unique name for the union.
+A diagram that can help to understand the bug reproduction:
+https://lore.kernel.org/all/2cd54041-253b-4e78-b8ea-dbe9b884ff9b@yandex-team.ru/
 
-I'm unfamiliar with the workflow of linux-next, should I send a V2 of 
-the current patch, or a new one that applies on top?
+In order to fix the warn mode with disabled mitigation mode, delayed work
+has to be a per-CPU.
 
-Thanks,
+v5 -> v4:
+* using pure_initcall for per-CPU structure initialization instead of
+  deferred initialization
 
-Michael
+v4 -> v3:
+* rebased the patch onto the latest master
+
+v3 -> v2:
+* place and time of the per-CPU structure initialization were changed.
+  initcall doesn't seem to be a good place for it, so deferred
+  initialization is used.
+
+Fixes: 727209376f49 ("x86/split_lock: Add sysctl to control the misery mode")
+Signed-off-by: Maksim Davydov <davydov-max@yandex-team.ru>
+---
+ arch/x86/kernel/cpu/bus_lock.c | 35 +++++++++++++++++++++++++++++-----
+ 1 file changed, 30 insertions(+), 5 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
+index 6cba85c79d42..1a8112dba37a 100644
+--- a/arch/x86/kernel/cpu/bus_lock.c
++++ b/arch/x86/kernel/cpu/bus_lock.c
+@@ -192,7 +192,32 @@ static void __split_lock_reenable(struct work_struct *work)
+ {
+ 	sld_update_msr(true);
+ }
+-static DECLARE_DELAYED_WORK(sl_reenable, __split_lock_reenable);
++/*
++ * In order for each CPU to schedule itself delayed work independently of the
++ * others, delayed work struct should be per-CPU. This is not required when
++ * sysctl_sld_mitigate is enabled because of the semaphore, that limits
++ * the number of simultaneously scheduled delayed works to 1.
++ */
++static DEFINE_PER_CPU(struct delayed_work, sl_reenable);
++
++/*
++ * Per-CPU delayed_work can't be statically initialized properly because
++ * the struct address is unknown. Thus per-CPU delayed_work structures
++ * have to be initialized during kernel initialization.
++ */
++static int __init setup_split_lock_delayed_work(void)
++{
++	unsigned int cpu;
++
++	for_each_possible_cpu(cpu) {
++		struct delayed_work *work = per_cpu_ptr(&sl_reenable, cpu);
++
++		INIT_DELAYED_WORK(work, __split_lock_reenable);
++	}
++
++	return 0;
++}
++pure_initcall(setup_split_lock_delayed_work);
+ 
+ /*
+  * If a CPU goes offline with pending delayed work to re-enable split lock
+@@ -215,13 +240,14 @@ static void split_lock_warn(unsigned long ip)
+ {
+ 	struct delayed_work *work;
+ 	int cpu;
++	unsigned int saved_sld_mitigate = READ_ONCE(sysctl_sld_mitigate);
+ 
+ 	if (!current->reported_split_lock)
+ 		pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
+ 				    current->comm, current->pid, ip);
+ 	current->reported_split_lock = 1;
+ 
+-	if (sysctl_sld_mitigate) {
++	if (saved_sld_mitigate) {
+ 		/*
+ 		 * misery factor #1:
+ 		 * sleep 10ms before trying to execute split lock.
+@@ -234,12 +260,11 @@ static void split_lock_warn(unsigned long ip)
+ 		 */
+ 		if (down_interruptible(&buslock_sem) == -EINTR)
+ 			return;
+-		work = &sl_reenable_unlock;
+-	} else {
+-		work = &sl_reenable;
+ 	}
+ 
+ 	cpu = get_cpu();
++	work = (saved_sld_mitigate ?
++		&sl_reenable_unlock : per_cpu_ptr(&sl_reenable, cpu));
+ 	schedule_delayed_work_on(cpu, work, 2);
+ 
+ 	/* Disable split lock detection on this CPU to make progress */
+-- 
+2.34.1
+
