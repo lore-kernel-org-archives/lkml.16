@@ -1,143 +1,126 @@
-Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD8B1F584C;
-	Tue, 18 Mar 2025 10:21:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66AB0207E0D;
+	Tue, 18 Mar 2025 10:21:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742293288; cv=none; b=cdbhg1tOpJNa/KErafazGmrULEOdLrS/dZJmM+JWb4uHN6J5nwrGgtnlRxQ0SIYWONlKcnv7Z2mineNwHjoxxjcXv0Anaj5DpvrjNQ1vBCaKundIxAcAG8gma5L+lyCqnJYPrQZiEJyvTfNqilI2pSIgVHwNwj31P8Et+xB0tvA=
+	t=1742293292; cv=none; b=MdgM/2G71AX16hpqnkJh5XaYabc78AWLLG8jtFw8u3UcxXK6aQi7hA6K2o5K1qRz1wkYBQw9WHWCb8g2TxF7UcALESU9VluWk0w+I9iDRWczbad2BrBAYtzCK0IEgn7b7Q1MSRGGd/f3hOfGBNkuokgAK+hUhPj2fcUi6AJSUmU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742293288; c=relaxed/simple;
-	bh=i9Cu+e09/ItgwbYnNEIqjTndSwM//DZAgokVgpiR0XA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kYL9Mc1MFA47DHjpl+EyEmQiWxq2zhfmGGYeObE59Ae0Sk+2mGYBzHA1mpTMRQHeZm9hQzDfbg0uGg5Ps3lBbLYQfxzz0/7sYJv5ggjoa8gkIYNbYdSeO9dpKzM7Y2hXXPTNnvBGG4gwT0TQUiPqwMzX6hCTBepxdIx8jYWVGd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=FvvA7N7j; arc=none smtp.client-ip=157.90.84.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="FvvA7N7j"
-Received: from [192.168.42.116] (p5b164989.dip0.t-ipconnect.de [91.22.73.137])
-	(Authenticated sender: wse@tuxedocomputers.com)
-	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id D9D062FC0191;
-	Tue, 18 Mar 2025 11:21:23 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
-	s=default; t=1742293284;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4TMDdN5thIAZQtC4HDADAYwgh1v90pYj/gKsOILt/Lo=;
-	b=FvvA7N7jUNoINZbZp1WQqPL57lhOMDt54pKVoV8uWc/o29ZFNfQAqaIqRWBTFzCz2v/Rh4
-	NwQW8YZ7UOnSmZv+wo4OLMSIkrMfDrLOgwJUuySod+7azXKI3qJVmreaumIRMIAtTfuXcD
-	HnrlLhcLH/vKxQOqthvYcyyLQTF8Q0s=
-Authentication-Results: mail.tuxedocomputers.com;
-	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
-Message-ID: <5880f34b-0fc7-451a-ba2d-8a5d5c7900e5@tuxedocomputers.com>
-Date: Tue, 18 Mar 2025 11:21:23 +0100
+	s=arc-20240116; t=1742293292; c=relaxed/simple;
+	bh=7mox+rQP13cKtgejtr8ZU+eh1fVDo3WnCxArWV3DXRc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WDzypAzGioiIBBVx0qlTvrib4NTG/EwdvB1XpBsuAgxe5U1YH4yieVpUSBbQES0r56xbFWybtiHqhFzDANbtubxuck7/pJPpUwljcOCpfLjpuf34WQ4d3PmIQtDCiuBkN2LtTCcME2S9w0i5fI5m9GCNl9myJyzHQlrnfrkfxoY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-523effaf7ecso2554298e0c.3;
+        Tue, 18 Mar 2025 03:21:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742293288; x=1742898088;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=QoDmWe/UGb3lnwkGClfcGSqUWh6tLGvw+A6qxymrSxM=;
+        b=cOT/nasUuV8QJnY1dOW58u2tHZ9zsaLPqD7zFmYQgDapPCveRl1xtOYHrq/SZ8TtAs
+         BhPYzbJKnqanls3N3PeaZJ24fbrkMxBFLTk9D3MmponrnWX0y3+qg7dSi2AjMYRgWgr6
+         ZltxO9e86OU9GIgzM5tg4kWBg2abouQfk2fiW2CveggwBql7hdqCvKcTne0DDHzXAtCY
+         mjalzhfLzqjj2/9pSbojR5bst8ABC5aibbvrviG0sA5xCdV6LxbV7Ak9fKgZ8VTkNOyn
+         EGws0zkItbNdeJ943JcWv/43G/wba8sCy5C85pNgPtew3Dz9Yphv/kpkgGR7DU0yRNeX
+         crEA==
+X-Forwarded-Encrypted: i=1; AJvYcCU7P8nwKPf7rjr6+fXdRDEzoy1Nl/o0NlOfKLGYGXIZ1NPM3S3OPS6XVdtVTjO6UFpv/R/PhqFz1uiJGWzK@vger.kernel.org, AJvYcCVzqoE0ub7PDa4Lx7HRH/VK/cD7HwwS0lar8J8E1/OPGGeNK93xXORXHz8LzAtOm8ZCr6RPLn3V9vpZ@vger.kernel.org, AJvYcCX49Q2yvcMd26I73EJyxJ4GthS8V2ML4uu1XRxHae0IdM6bcT0oHMMNrS3BLtamQqH6lh1Nsy9JGN0M@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9dkDtyedZaQetV2cd9nr+Dn2kFFMkknYxL+wQMssJ8CaeWQgP
+	/MvHWh9NdKmjNSi6hVM3MC9roR0O40myy/Nup2gq5SJ6d1ppNq7oOL9L4Oa4
+X-Gm-Gg: ASbGncu/3c7KBuXYHu/7kaRUEHEfwshrFr6NJnSZFuvQo4o40DsIPyzIg80nJLwtjiH
+	xY3ZOJIMUjtmY4zgsusYlQZUneXRlq3j7CnAF+S7sj3UOJ/Vk8F4Mboi5p1xURIvB+xYS5ay9w/
+	BKEHJhNXe6rWmoG0wTsdXEuT/d1r25AU57Mq6a1HRp189nqnu9GCGeCKDwE4RafiTcJwFgmTPJR
+	uTI5CO9eiwM1b97W5zAUpUDP8okZwU6nmi+JcJGqJyo+yoU+XEUwJNrnS0q0ppC+5XB4gyRRlY8
+	rueVllE/HgXABp7HjFNB69Pou6FMdrzYiVoi+MK+9sa0pnXZoC2Kmk009dpkxuCGhsfPDTt4V3v
+	/gxLB6bFwVAo=
+X-Google-Smtp-Source: AGHT+IG15bLsJHlNASDftZy3Ras1S6N5mgYYQYbL1tH6/FBmsXn1RAA94zUq4dQ2yNmksMWX3/PW5w==
+X-Received: by 2002:a05:6122:1797:b0:523:763b:3649 with SMTP id 71dfb90a1353d-524499e6376mr9098898e0c.6.1742293288577;
+        Tue, 18 Mar 2025 03:21:28 -0700 (PDT)
+Received: from mail-vk1-f179.google.com (mail-vk1-f179.google.com. [209.85.221.179])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-5243a71e866sm1943059e0c.48.2025.03.18.03.21.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 03:21:28 -0700 (PDT)
+Received: by mail-vk1-f179.google.com with SMTP id 71dfb90a1353d-5241abb9761so2388218e0c.1;
+        Tue, 18 Mar 2025 03:21:27 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCUb+Idi/iIotZR8kTvWyVFH5wd8aYoh43iekEdeUcqV5GQWJnGNPcZGXE3I70jfolKmYgWNgItXOwLNWCuN@vger.kernel.org, AJvYcCWo1tw/PvTrNxkmGGy9nkFgMYeYYgsjxU/a6nf9OjJVvv6naRFEnrPiBRcnx74P1s0o8b2FGnvJAYWW@vger.kernel.org, AJvYcCXdbFL/+/KAXAYEoKU5Y6mcXogSbZRSJVDJozBp6/qXV+Ynv5YDmxFL3hmY783HXJmXaj+yseBuydNK@vger.kernel.org
+X-Received: by 2002:a05:6102:3912:b0:4c2:ffc8:93d9 with SMTP id
+ ada2fe7eead31-4c38313e0b2mr11168666137.9.1742293287761; Tue, 18 Mar 2025
+ 03:21:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
-To: Hans de Goede <hdegoede@redhat.com>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250311180643.1107430-1-wse@tuxedocomputers.com>
- <20250311180643.1107430-2-wse@tuxedocomputers.com>
- <76c57b22-04d3-4331-a10c-b210db5f9055@redhat.com>
- <9da24c58-25ab-4b21-b0ed-f777970affe7@tuxedocomputers.com>
- <de3969b9-7134-4bfd-bc65-9d5b7e53a31c@redhat.com>
-Content-Language: en-US
-From: Werner Sembach <wse@tuxedocomputers.com>
-In-Reply-To: <de3969b9-7134-4bfd-bc65-9d5b7e53a31c@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20250228093351.923615-1-thippeswamy.havalige@amd.com> <20250228093351.923615-4-thippeswamy.havalige@amd.com>
+In-Reply-To: <20250228093351.923615-4-thippeswamy.havalige@amd.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 18 Mar 2025 11:21:15 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUQ+pPg_bsPq_MXOe_Q8QkEVy6amZdXvsn3BK4+2NOFBA@mail.gmail.com>
+X-Gm-Features: AQ5f1JqmIotS6ImEBxMg6HmFpsq89vT0syujgjflVP7WgI6KVWcnVzr7cYeS4Kg
+Message-ID: <CAMuHMdUQ+pPg_bsPq_MXOe_Q8QkEVy6amZdXvsn3BK4+2NOFBA@mail.gmail.com>
+Subject: Re: [PATCH v15 3/3] PCI: amd-mdb: Add AMD MDB Root Port driver
+To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, michal.simek@amd.com, 
+	bharat.kumar.gogada@amd.com, jingoohan1@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi,
+Hi Thippeswamy,
 
-Am 17.03.25 um 23:23 schrieb Hans de Goede:
-> Hi Werner,
+On Fri, 28 Feb 2025 at 10:35, Thippeswamy Havalige
+<thippeswamy.havalige@amd.com> wrote:
+> Add support for AMD MDB (Multimedia DMA Bridge) IP core as Root Port.
 >
-> On 17-Mar-25 6:00 PM, Werner Sembach wrote:
->> Hi,
->>
->> Am 17.03.25 um 12:58 schrieb Hans de Goede:
->>> Hi Werner,
->>>
->>> On 11-Mar-25 19:06, Werner Sembach wrote:
->>>> Currently only F23 is correctly mapped for PS/2 keyboards.
->>>>
->>>> Following to this table:
->>>> https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/translate.pdf
->>> That is a very interesting document, good find!
->>>
->>>> - F24 and Zenkaku/Hankaku share the same scancode, but since in real world
->>>> Zenkaku/Hankaku keys seem to just use the tilde scancode, this patch binds the
->>>> scancode to F24. Note that on userspace side the KEY_ZENKAKUHANKAKU keycode is
->>>> currently not bound in xkeyboard-config, so it is (mostly*) unused anyway.
->>>>
->>>> * Qt on Wayland and therefore KDE on Wayland can see the keypress anyway for
->>>> some reason and it is actually used in a touchpad toggle shortcut, but this is
->>>> currently being fixed in both KDE and xkeyboard-config to make this less weird,
->>>> so it could directly be fixed to correctly handle the F24 keypress instead.
->>>>
->>>> - The scancodes for F13-F22 are currently unmapped so there will probably be no
->>>> harm in mapping them. This would also fix the issue that some of these keys
->>>> can't be mapped as the target from userspace using the `setkeycodes` command.
->>>>
->>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
->>> Thanks, patch looks good to me:
->>>
->>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->> Thanks for reviewing.
->>
->> Should I resend the patch standalone because the first of this Patchset will likely be rejected?
-> I think this one will apply cleanly without applying patch 1/2
-> first, so no reason for a resend / v3 AFAICT.
+> The Versal2 devices include MDB Module. The integrated block for MDB along
+> with the integrated bridge can function as PCIe Root Port controller at
+> Gen5 32-GT/s operation per lane.
 >
-> Let's wait and see what feedback Dmitry have once he can make
-> some time to take a look at this.
+> Bridge supports error and INTx interrupts and are handled using platform
+> specific interrupt line in Versal2.
+>
+> Signed-off-by: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
 
-Ack
+Thanks for your patch, which is now commit e229f853f5b277a5
+("PCI: amd-mdb: Add AMD MDB Root Port driver") in pci/next.
 
-Best regards,
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -27,6 +27,17 @@ config PCIE_AL
+>           required only for DT-based platforms. ACPI platforms with the
+>           Annapurna Labs PCIe controller don't need to enable this.
+>
+> +config PCIE_AMD_MDB
+> +       bool "AMD MDB Versal2 PCIe Host controller"
+> +       depends on OF || COMPILE_TEST
 
-Werner
+AFAIK, AMD Versal2 is an ARM64 SoC, so this should depend on (at least)
+ARM64 || COMPILE_TEST, too.  If there's ever gonna be an ARCH_VERSAL
+symbol, it could be used as a dependency instead.
 
->
-> Regards,
->
-> Hans
->
->
->
->
->>>> ---
->>>>    drivers/input/keyboard/atkbd.c | 12 ++++++------
->>>>    1 file changed, 6 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
->>>> index 3598a21d9d014..4bd6e6ef0715e 100644
->>>> --- a/drivers/input/keyboard/atkbd.c
->>>> +++ b/drivers/input/keyboard/atkbd.c
->>>> @@ -84,12 +84,12 @@ static const unsigned short atkbd_set2_keycode[ATKBD_KEYMAP_SIZE] = {
->>>>    #include "hpps2atkbd.h"    /* include the keyboard scancodes */
->>>>      #else
->>>> -      0, 67, 65, 63, 61, 59, 60, 88,  0, 68, 66, 64, 62, 15, 41,117,
->>>> -      0, 56, 42, 93, 29, 16,  2,  0,  0,  0, 44, 31, 30, 17,  3,  0,
->>>> -      0, 46, 45, 32, 18,  5,  4, 95,  0, 57, 47, 33, 20, 19,  6,183,
->>>> -      0, 49, 48, 35, 34, 21,  7,184,  0,  0, 50, 36, 22,  8,  9,185,
->>>> -      0, 51, 37, 23, 24, 11, 10,  0,  0, 52, 53, 38, 39, 25, 12,  0,
->>>> -      0, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0, 85,
->>>> +      0, 67, 65, 63, 61, 59, 60, 88,183, 68, 66, 64, 62, 15, 41,117,
->>>> +    184, 56, 42, 93, 29, 16,  2,  0,185,  0, 44, 31, 30, 17,  3,  0,
->>>> +    186, 46, 45, 32, 18,  5,  4, 95,187, 57, 47, 33, 20, 19,  6,183,
->>>> +    188, 49, 48, 35, 34, 21,  7,184,189,  0, 50, 36, 22,  8,  9,185,
->>>> +    190, 51, 37, 23, 24, 11, 10,  0,191, 52, 53, 38, 39, 25, 12,  0,
->>>> +    192, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0,194,
->>>>          0, 86, 91, 90, 92,  0, 14, 94,  0, 79,124, 75, 71,121,  0,  0,
->>>>         82, 83, 80, 76, 77, 72,  1, 69, 87, 78, 81, 74, 55, 73, 70, 99,
->>>>    
+> +       depends on PCI && PCI_MSI
+> +       select PCIE_DW_HOST
+> +       help
+> +         Say Y here if you want to enable PCIe controller support on AMD
+> +         Versal2 SoCs. The AMD MDB Versal2 PCIe controller is based on
+> +         DesignWare IP and therefore the driver re-uses the DesignWare core
+> +         functions to implement the driver.
+> +
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
