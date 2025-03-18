@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5BB720AF7C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:17:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF9520E018
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:17:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742307462; cv=none; b=dy6o+cgEBEcYR+n2akn8Nd8C77gOvHQsCOo+wjxY6GYgjSs88xWcuDh2Go0+RrsA6kj+5dHtNeErQJfFurw7TOX57KlMHF7IlyMP1tnL6DTtcGE3Bjrwk7va8nxr+ICf9eflEGmiDsEt3z6zO4us7oDGa8NT1lCRHAbuXZCoUbQ=
+	t=1742307467; cv=none; b=s2Bl1uVrifGFrJm65NH7xlLksW5cmR2ZU74d03sgy10vMqxWUNtKIBCp6W/xxp9PRM0PX1R5swapcsOga5N+aVgKLCvh3NMpcoNRIHFvUX9RgyJ97jH1y9Y1dfhpAgbGy+sdCizqwnMJR9uFyUe5fxfrUf0Ak2r/e/Z83jsEcRA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742307462; c=relaxed/simple;
-	bh=9GhsrLULgaBmV5CiLPjez8oF/aN0WlSsAJSDEcI+Qb0=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HRuhRN7h1KEmnhhWvHjyPwcjgpM54BartzzFRGy6eb9Sw4diRqtwQvAmdulnz/7XqriSx3wX/iDZPMZPLfmsvK7nkGZU9SOJ2LZktgStTyfSQh0jMgeKm+o3KmrkS/UXpBkpeRwR8aIbR2lcrDK2bwTgQKGm3JMQOzDaygDI29U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ifRv6Di8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742307467; c=relaxed/simple;
+	bh=oLlD/CohJAeZ7/DwzuOA47geT3BKc+DVQr/5GRHd5pY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Ne6WIhCBD6gMH6wrhNQ4Ta5NrfRa3sBJJjIkvDF2zjhriOyKZnUDaWXh/hybAnKIHZDHRyRjyGcoilDQYidz26MjSJNGX8txm6GMBq3UmrORb46UsiWnd01cRH8o+4f+GjjvXMSUyboydItx1Dz5wkjcE4y6lzEk9IxzKVxuS44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R+mSoWHx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ifRv6Di8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D22CC4CEDD;
-	Tue, 18 Mar 2025 14:17:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R+mSoWHx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5AFCFC4CEEE;
+	Tue, 18 Mar 2025 14:17:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742307462;
-	bh=9GhsrLULgaBmV5CiLPjez8oF/aN0WlSsAJSDEcI+Qb0=;
-	h=From:Subject:Date:To:Cc:From;
-	b=ifRv6Di8nFchAv5fgaTdDdZ4iUL5/v+aUlnZIuwRFUD4Kgk5SW8Up1fLwG5/e25jW
-	 fQROWA3attN9A3xpL1kxMJeLdurh/begJoVzEx2jR+3Qvykx5JMfUzc+cQLT9/uIQ0
-	 WDzYZMHG3tbdlLuACkjUZnUuooj8yuNg7S8hRrHiXygOzFAjT1UpnFnmuKX8V8coii
-	 uAoIFnfA1k8QvoiERmxvzkP+2er3HazJV7DlHz0VNMmHrXKcfd3dge+5I332tYsieb
-	 tvQIC8MF00pf1ne1/yPVNTcqb+6TKraLkPNFOunV5RPtpyKGpi16T4R7Uk5Wl6RNp5
-	 C7PjTgCddWhHA==
+	s=k20201202; t=1742307465;
+	bh=oLlD/CohJAeZ7/DwzuOA47geT3BKc+DVQr/5GRHd5pY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=R+mSoWHxO+jVje18cTg9V/eN2SExL8ZuuXAGCO/bt2+3zz65JWyvL/CrC/HyTyw/E
+	 23qMvclArnrRPtM18Nt5eD+DKptVZAg186EsJC7C+bu6N4TyMqoMyhd95ipfpOsmMW
+	 q0/7ahbPh1/b47C/8qSTOOAmsXLdE1jhLEPZDZcg5R9o0MQwQNvtV0MOPanaBsKbaW
+	 OmpXCHYeK2M4Bia5DtGQ4LsizpVGoaceg6/uPxVp9uQDzDFMHq3pUUZScvbiMluCxR
+	 WsO5knW12HpZmGcIEGLwCAGiig7y70ZbyT/OcAOLsAOFWTdA4H5UhrgGubIbBI/vro
+	 /17IijKhF0W3g==
 From: Maxime Ripard <mripard@kernel.org>
-Subject: [PATCH 0/4] drm/vc4: tests: Fix locking failures
-Date: Tue, 18 Mar 2025 15:17:36 +0100
-Message-Id: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
+Date: Tue, 18 Mar 2025 15:17:37 +0100
+Subject: [PATCH 1/4] drm/vc4: tests: Use return instead of assert
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,10 +37,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAICA2WcC/x3MQQ5AMBBA0avIrE2iWiGuIhZVgwlKpohE3F1j+
- Rb/PxBImALUyQNCFwfefIRKE3CT9SMh99GQZ3mRaVVhLytezuB8ej5wsLycQgG10p0py8IZXUG
- Md6GB73/ctO/7Ad/d6ENoAAAA
-X-Change-ID: 20250318-drm-vc4-kunit-failures-313b4775c438
+Message-Id: <20250318-drm-vc4-kunit-failures-v1-1-779864d9ab37@kernel.org>
+References: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
+In-Reply-To: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
 To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
  =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
  Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
@@ -50,41 +49,117 @@ To: Dave Stevenson <dave.stevenson@raspberrypi.com>,
 Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
  Maxime Ripard <mripard@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=865; i=mripard@kernel.org;
- h=from:subject:message-id; bh=9GhsrLULgaBmV5CiLPjez8oF/aN0WlSsAJSDEcI+Qb0=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOk3GxpLOz7dK7aNv72Nvb/71QvZb6+8U70uZ8lPMWiMP
- LN+ZcS7jqksDMKcDLJiiixPZMJOL29fXOVgv/IHzBxWJpAhDFycAjAR462MDXN2Lp95f/45rjml
- PS/4nv89c/x74ItrTwo5wt2i+gp+OzOdbP6XpNnC9padp/gve3GaJmOd3YXzwfPfMVmvfVgrJOA
- fdz98q9TBHTwbEo52yE5X9lnV0hq22f/6/f6THSLeFqZCTxYAAA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3316; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=oLlD/CohJAeZ7/DwzuOA47geT3BKc+DVQr/5GRHd5pY=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOk3G5q2Wq9l8tjd8LeI5/+pH28bPyzyfPtVsyHOXODi6
+ k/On26ad0xlYRDmZJAVU2R5IhN2enn74ioH+5U/YOawMoEMYeDiFICJPJNnrJVxvpr5a1FHSH1n
+ gunZiXfabHveHfVyk05uEBY4aLlY//0B02f5CzJ96kqPisbX/Z+ZwVhnVneo5M9n3V9WESbHEhm
+ 0BKWmO2+UPvyHO7XHw4H1kbfl3E2XC34eqnnzJSd+hb7Nns0A
 X-Developer-Key: i=mripard@kernel.org; a=openpgp;
  fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-Hi,
+The vc4_mock_atomic_add_output() and vc4_mock_atomic_del_output() assert
+that the functions they are calling didn't fail. Since some of them can
+return EDEADLK, we can't properly deal with it.
 
-This series deals with (lack of) EDEADLK handling in vc4 PV muxing
-tests.
+Since both functions are expected to return an int, and all caller check
+the return value, let's just properly propagate the errors when they
+occur.
 
-This was leading to failures with CONFIG_DEBUG_WW_MUTEX_SLOWPATH
-enabled.
-
-Maxime
-
+Fixes: f759f5b53f1c ("drm/vc4: tests: Introduce a mocking infrastructure")
+Fixes: 76ec18dc5afa ("drm/vc4: tests: Add unit test suite for the PV muxing")
 Signed-off-by: Maxime Ripard <mripard@kernel.org>
 ---
-Maxime Ripard (4):
-      drm/vc4: tests: Use return instead of assert
-      drm/vc4: tests: Document output handling functions
-      drm/vc4: tests: Stop allocating the state in test init
-      drm/vc4: tests: Retry pv-muxing tests when EDEADLK
+ drivers/gpu/drm/vc4/tests/vc4_mock_output.c | 36 +++++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 12 deletions(-)
 
- drivers/gpu/drm/vc4/tests/vc4_mock_output.c    | 62 +++++++++++++++----
- drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 85 +++++++++++++++++++++-----
- 2 files changed, 121 insertions(+), 26 deletions(-)
----
-base-commit: c0988d693eb10e115d95747f8a0cccc83babb3fc
-change-id: 20250318-drm-vc4-kunit-failures-313b4775c438
+diff --git a/drivers/gpu/drm/vc4/tests/vc4_mock_output.c b/drivers/gpu/drm/vc4/tests/vc4_mock_output.c
+index e70d7c3076acf168782c48301f3b3dfb9be21f22..f0ddc223c1f839e8a14f37fdcbb72e7b2c836aa1 100644
+--- a/drivers/gpu/drm/vc4/tests/vc4_mock_output.c
++++ b/drivers/gpu/drm/vc4/tests/vc4_mock_output.c
+@@ -73,28 +73,34 @@ int vc4_mock_atomic_add_output(struct kunit *test,
+ 	struct drm_encoder *encoder;
+ 	struct drm_crtc *crtc;
+ 	int ret;
+ 
+ 	encoder = vc4_find_encoder_by_type(drm, type);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, encoder);
++	if (!encoder)
++		return -ENODEV;
+ 
+ 	crtc = vc4_find_crtc_for_encoder(test, drm, encoder);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc);
++	if (!crtc)
++		return -ENODEV;
+ 
+ 	output = encoder_to_vc4_dummy_output(encoder);
+ 	conn = &output->connector;
+ 	conn_state = drm_atomic_get_connector_state(state, conn);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, conn_state);
++	if (IS_ERR(conn_state))
++		return PTR_ERR(conn_state);
+ 
+ 	ret = drm_atomic_set_crtc_for_connector(conn_state, crtc);
+-	KUNIT_EXPECT_EQ(test, ret, 0);
++	if (ret)
++		return ret;
+ 
+ 	crtc_state = drm_atomic_get_crtc_state(state, crtc);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_state);
++	if (IS_ERR(crtc_state))
++		return PTR_ERR(crtc_state);
+ 
+ 	ret = drm_atomic_set_mode_for_crtc(crtc_state, &default_mode);
+-	KUNIT_EXPECT_EQ(test, ret, 0);
++	if (ret)
++		return ret;
+ 
+ 	crtc_state->active = true;
+ 
+ 	return 0;
+ }
+@@ -111,28 +117,34 @@ int vc4_mock_atomic_del_output(struct kunit *test,
+ 	struct drm_encoder *encoder;
+ 	struct drm_crtc *crtc;
+ 	int ret;
+ 
+ 	encoder = vc4_find_encoder_by_type(drm, type);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, encoder);
++	if (!encoder)
++		return -ENODEV;
+ 
+ 	crtc = vc4_find_crtc_for_encoder(test, drm, encoder);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc);
++	if (!crtc)
++		return -ENODEV;
+ 
+ 	crtc_state = drm_atomic_get_crtc_state(state, crtc);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, crtc_state);
++	if (IS_ERR(crtc_state))
++		return PTR_ERR(crtc_state);
+ 
+ 	crtc_state->active = false;
+ 
+ 	ret = drm_atomic_set_mode_for_crtc(crtc_state, NULL);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
++	if (ret)
++		return ret;
+ 
+ 	output = encoder_to_vc4_dummy_output(encoder);
+ 	conn = &output->connector;
+ 	conn_state = drm_atomic_get_connector_state(state, conn);
+-	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, conn_state);
++	if (IS_ERR(conn_state))
++		return PTR_ERR(conn_state);
+ 
+ 	ret = drm_atomic_set_crtc_for_connector(conn_state, NULL);
+-	KUNIT_ASSERT_EQ(test, ret, 0);
++	if (ret)
++		return ret;
+ 
+ 	return 0;
+ }
 
-Best regards,
 -- 
-Maxime Ripard <mripard@kernel.org>
+2.48.1
 
