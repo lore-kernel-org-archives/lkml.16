@@ -1,73 +1,74 @@
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55C0D225D7
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:05:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3076D212FBD
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324714; cv=none; b=o8w4BPBg0IKGWs2LbIBV7jpCMD4AMObYVX5a45atASeos4lYD5jw8IagyyhdJJUy5i3uj+vvd+7rJHyG9Ueqq+byS959HqzDbO1K3TaNbe6EpKQBE88MuV6w7XET40yLPE+k/hHtT/kzfcyYhtZP2R9v+GNVx03iPr6HLR5Zq8Q=
+	t=1742324718; cv=none; b=gqva0ZMbn8nFPjcQ1pcgDdDjjNWQlVTg8p0ymJACryfA7axg7AsIwMleq6hEZAnChrkYWPO5hOvJg/rgx6pUngn7deJRcMwSH5vm1LEps71tVcKBQiZC8fflodh6bVQzy0jHHp8SOtHAtzuf/+iL+qhiTjlFAkN9v5SS9yAeHSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324714; c=relaxed/simple;
-	bh=39ko3FHgK43gR5x5+uuTD00YhId32iFfsMqRNw2Ajzs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QkyRQNfJon8oULzk0tyc6R7T9b7jStrOj8bIFWDorQ1QRt0hXGLbE3FfAMQBiDnEc1+pnxaJ+PC6Gh30aJjfSGD84JALQL0TBWvNoxp35IBmwDBwiQXTRC3qL56f11ydBE3aQ+6Uf5P4b5zC0xgEQEFdjCdAGkne2AgtGBXGJrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=hux90460; arc=none smtp.client-ip=205.220.180.131
+	s=arc-20240116; t=1742324718; c=relaxed/simple;
+	bh=wAWUM3ffucxW+1g6lHY+OoHFAYGy2yWiORLWyxjTwt4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LTz4+bKvSUP1WcStW7wwO0lPt7qHhmK2CdYklYK2Et780bKbldavUyouVWE5T1isFrs/tbPt3OlWKH1WHv853GNSllzue0HnZH5CTAMYNqixJZzM0VjLuKgFaeU3HqjOHxKBKoy5qyx3V3l6sWLgOE10y5FeflIfodgoKSUG31g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=eIza6hXQ; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="hux90460"
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52IIBFpO003439
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:05:11 GMT
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="eIza6hXQ"
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52IIDHPU003310
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:05:15 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=/tiaFq11cKI50dbFhs7Frd
-	fEknq2p1U8wbLG28nhelg=; b=hux90460WF2jJ6YxAuyhRPl5SZZuTi03XLJxq7
-	qi1PxszNa+1O1C93zQqkrb7tZtix9IIkzkUepcPbSULFMz3AO0ZEJzEjDHeOCmA9
-	/IZVXoBtgo2/RSud82bQ4PS6cn3Hkx5HMuffPqumRTyF1C4ohTPA1511yjisaAhe
-	ueYo3Fjni3Alizu3XnoySP1Pd8+YQk6/R1mXql6rhGjEVA0eJY+IXlr3QrRpQim3
-	YGGC+rw68bpdhNuJ27A+j75UVuHVhVCmLchssrN8yjVoWimGYBeqQeVjL1XGsQEh
-	U3SYMyZEMnFxXd+rgkwCTkSskcyuJ0vcG5KSg3E+/lxI4g4A==
-Received: from mail-oi1-f198.google.com (mail-oi1-f198.google.com [209.85.167.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45fdvxg44y-1
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	HMZC9VkGCoUU7Q/SeMHW2tCY+RJpQ+s8b+qSPkLUVkA=; b=eIza6hXQ0PWfNukR
+	zrVS+RJmSoA3Ka0+oIhPUMHaqCOJQozyTWzXJshqH3Efy1z90pMsUuxX4gOwtVIw
+	Z+udJn9rFsUb7sYMPx6Mz5nrFsLA8C5IL6hEwn/w1gK6dHf6fle4vdv5Pgq48G8X
+	CISUJLOIXkHfvpZpNlAIj+jqfRQS0Gg6k2gPxITXrpqqkuOgHBIRtg/7rBZPk8Wh
+	ptOLK5+YAur0t9TZ8q1aL0GF+5Hy5dYyRlu3fY4vG6THSnTvzyJnSYuCqRhJR8uc
+	ii2eQ0i/pRCis6azmA1i3uADEwOhzLYBbFHRDoPNrA/FBPkqQhXM7Km+OuMMhBW2
+	juG2zg==
+Received: from mail-oi1-f197.google.com (mail-oi1-f197.google.com [209.85.167.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1uu194r-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:05:10 +0000 (GMT)
-Received: by mail-oi1-f198.google.com with SMTP id 5614622812f47-3f3a3c8eb5cso1429593b6e.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:05:10 -0700 (PDT)
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 19:05:14 +0000 (GMT)
+Received: by mail-oi1-f197.google.com with SMTP id 5614622812f47-3f3a3c8eb5cso1429622b6e.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:05:14 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742324710; x=1742929510;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/tiaFq11cKI50dbFhs7FrdfEknq2p1U8wbLG28nhelg=;
-        b=EJKfgnxVAoAZQ+murOvwJxJeP+tgnHZEqB2FDB4XWnkXGEH8jmMA3cCCqxWP5lTPhG
-         vhdvHXeXZeKnmhmDEFjsLYs5VobMemmpQDpn4qS46GJ7eZNDwNYvrtWdLMdksnMGl7Dn
-         gA4MTPKIzDiPRxeeyxfuQ899yEQNCVb4B904EAiVXGi7eIMgCsPKPWw+fnw7RbRX4yaa
-         HBM8g+PT/QOIdG3f8fpXTzZ0FOW89iAHvte+7j95izkPrlU8yHSw56BBGPr84BmAP6wo
-         0NF8QnbA0/ALFBdVaP3H4fdWY04OeVuy5x53kCgNdGZA6wDrfuiZnumDpGT9NS9eoRnj
-         lzdw==
-X-Forwarded-Encrypted: i=1; AJvYcCWt+UFzAUASdZMzFndzx1g6EXyrQTfDRvyEEolAPWn9pftbzJpNqF+SASIa0626XcsWxWRBabO2n/L7PGw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwzZ+f44a8/WRrjhRJDfoGiXV+77mpK0bPb41BRmKMXHVsvk7xw
-	JYgMhWqlJ79Dp+dsFDUl5CeN4Jcrmu2aPyt/J8mtdJT2yhkSckNy+fzFkQY3u1ww/lo3UJMLoFy
-	NRhQJ02pIvY231pMD5nX7r4QqCUxt60PXJp9343KqaoBNb7GYQxjCcz9nsfeFgK4=
-X-Gm-Gg: ASbGncu9s6N5Uc2LkF9XOC4rjxr+DvQs4yFx9Y8dN3p1wDSgD7pGE64PrMAbON3O1TT
-	jh/wLGrtiNmA2kOZFwQhmwp78BmFPPeTdZXZgCJpvJR4qOv6CTcMlm4jDMLLRmPs6hvmrWC8Zvd
-	WMfu88TRLC8OQp8kLCraxMENescTaxu0C8UkpxDez3iDF7z90kNtZyWP0n0wG6TWKolStWZZE1c
-	zzbR4ni2tI4v63+a9RiIUQ/wPicb2vnTPLOWpN/vIDmPSRC2K8yN25A6F21BEBCcQvgnjNJAzBx
-	0/alSG28cmz0r3e5ebWb/6tXAPf7/OxT8Wi882E56IWxUdXvSvbIK9L3cu9g2i55xXHTeR50fNW
-	/Wp+kNjXpA7qTqTs=
-X-Received: by 2002:a05:6808:4443:b0:3f9:4f55:a002 with SMTP id 5614622812f47-3feac2a31f8mr144557b6e.12.1742324710065;
-        Tue, 18 Mar 2025 12:05:10 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHBeTnqcsngZ8qOyAPY0xLnV4j0KNTcW2cjrNpBB3y01HgwUx2Z+p2qto1cwhI+bvEfVQhgPQ==
-X-Received: by 2002:a05:6808:4443:b0:3f9:4f55:a002 with SMTP id 5614622812f47-3feac2a31f8mr144527b6e.12.1742324709595;
-        Tue, 18 Mar 2025 12:05:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742324714; x=1742929514;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HMZC9VkGCoUU7Q/SeMHW2tCY+RJpQ+s8b+qSPkLUVkA=;
+        b=fFF7vm0rE5EcrU3tvJRrOyRRt4ebtsvGnegQBxzC90saxcRgAsIuyB1HOfVBfkBLKN
+         Vozk/aH4fdlqdy4BGSrod4Vu6v2icTttcEu530zy5XpWedB9ITy/zfw42Anx98lG8top
+         CuMPleUqXHZ0xLIwvGAq63Lv0LSu8VwWSajVWiejM706oG6vnaLMylnPOG/5ObNuz4Q9
+         siZrxTmkM+32mgyI8NO5yQxUWITtHyR9c62xkiILyR/buI/cRPckWSJkscQnfqcKNeiO
+         S9/mbNntmLE4UNXAUbPXWHZ4pMFWI+rHqRQdoJWMgZbCIhWEAUO4ltZWtral9rkfa5mt
+         +B9w==
+X-Forwarded-Encrypted: i=1; AJvYcCWqo0WPyiYRHJ8YprclearTmaYfl6HrWVCFgRJty+KNeD71iGwmuIzcu4qizRkXKuSkIaE7te/ENqeLd18=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxaxp+GwtLuUVG0iOzJ4dqnn5hctsSXcl+xlsBC6+Qc8h3H5TSa
+	8G42hSLiamQlns28YcJ+bYBf1GhA+39alaFT2pyO+VYWoCJgN+GZBi0Pp4PTacP3MOIknEy6vXm
+	h/4ZrFeZndE511MtcXRmVq8Z1Jwh25MlXSZjcgVPNpoYSHN/wEOsrs28CQqmop2w=
+X-Gm-Gg: ASbGncvU+crc9lcfqW9sdsVDvhCaZPDM/QNVdB2mQFvM1htMeAdKZouM3ky96FdabIb
+	89ffZSnLZXnDbouxkDFIv++aSCcCrRuRqLS4sCYNlwKMF20iZ517dMBnENud+nhf5MHa6ToiHL+
+	ehTtWqjZdMkc0fVdbg164cc3JZALYKtGu3NaVeEc5t+b9e8NpAjG8lPD74B0NlO2ypwDc6M9bIf
+	h6M3Cwmf6240vdtNuHk5KJoOZUTZoKsqV3nwmTaJemzybXJ4eyI2ngwBvWt9iHnZRd6jtIJplZd
+	oJumlwXmXrvAZ4ftXmo0IX1nKfM+UZmmEp/Dv8z7DG/siFyDUYXPE6H5HpKFVSZLRMfVWED8A2O
+	2FPm4c7bcstb8SEQ=
+X-Received: by 2002:a05:6808:1801:b0:3fa:1d22:6d2c with SMTP id 5614622812f47-3feac2a3786mr131254b6e.15.1742324713851;
+        Tue, 18 Mar 2025 12:05:13 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGvXyY2S5sGQHTlkQZEMYhM770zfAZyAg2bYMmMZTua9oAMTCBz5g5U/8JKmUdCYUo6ZH7cAA==
+X-Received: by 2002:a05:6808:1801:b0:3fa:1d22:6d2c with SMTP id 5614622812f47-3feac2a3786mr131240b6e.15.1742324713465;
+        Tue, 18 Mar 2025 12:05:13 -0700 (PDT)
 Received: from [192.168.86.65] (104-57-184-186.lightspeed.austtx.sbcglobal.net. [104.57.184.186])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3fcd403b065sm2264273b6e.4.2025.03.18.12.05.08
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-3fcd403b065sm2264273b6e.4.2025.03.18.12.05.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 12:05:09 -0700 (PDT)
+        Tue, 18 Mar 2025 12:05:12 -0700 (PDT)
 From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Subject: [PATCH v5 0/7] usb: dwc3: qcom: Flatten dwc3 structure
-Date: Tue, 18 Mar 2025 14:05:00 -0500
-Message-Id: <20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com>
+Date: Tue, 18 Mar 2025 14:05:03 -0500
+Subject: [PATCH v5 3/7] usb: dwc3: core: Expose core driver as library
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -76,12 +77,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANzD2WcC/22Py2rDMBBFfyVoXQXNSI7srPIfpQu9XAscOZFit
- SX43zsOhIDJ8l7mnMvcWQk5hsKOuzvLocYSp0Sh+dgxN5j0HXj0lBkKlCDgwP2PkzyH3rjblHk
- nIUgrWtPajhFjTQncZpPcQFSax5HKC53H38fI5xflIRZi/x6bFdd21SvRAmz0FbngHfRSC38A4
- /F0naOLye3ddGarq8on3wgAueUl8R40otCN77U9TaXsr7MZiT+/JOolQdz+WBVJlIImaAAIqns
- jWZblH/CvPB1LAQAA
-X-Change-ID: 20231016-dwc3-refactor-931e3b08a8b9
+Message-Id: <20250318-dwc3-refactor-v5-3-90ea6e5b3ba4@oss.qualcomm.com>
+References: <20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com>
+In-Reply-To: <20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Rob Herring <robh@kernel.org>,
         Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -94,154 +92,384 @@ To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.li@nxp.com>
 Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
-        Frank Li <Frank.Li@nxp.com>,
-        Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+        Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5851;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=10136;
  i=bjorn.andersson@oss.qualcomm.com; h=from:subject:message-id;
- bh=39ko3FHgK43gR5x5+uuTD00YhId32iFfsMqRNw2Ajzs=;
- b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBn2cPeIn2YeWKN5s+wMP7MDrAngcmEx8hWa5SMa
- NCXfVPTBWGJAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZ9nD3hUcYW5kZXJzc29u
- QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcV3TQ/+OMX5HNu+X6YAo2Xhlf9bw9OoHr5dmwM1EoHZLpd
- EAGxpip38tHMaqSFuX7J52v4zWilZJGD9561kOBxNFivDHgYMlKBbfaVpteHQuCjqUwr1NG7TIm
- /A8rAo1uiMOwsm7GheSKmOVozObHIzmno1aK0XGGX4VhCwV+5KyMwoCLcuc3T7E7+T6m4v7mZjx
- AxJMKY/TTUrD0U7nWDQgIjn0KZzxLaalUZvFcrxHxNDUZqJzpNQgPc3pjgHrgyNov/3o+GqYjT5
- FX8VbYYO/86wWzlhPjEoagS5QC95/pPgPfdKFbGU5v5uU+R37/xVfynliq09WA6kjVDpgJAF+1C
- XGHh5NBz6glG9O/BXWRSoxV9513HjGTFY5Ozbuh3bKQ2xE4M4XH4wyYXX0A1+XS/78RvGakWAqs
- aHFDGXtHb+JhcZSAK0WsQnf9DeaUH1vRjYwrxeJ2LmPv7eryzG85NWy5/QNjQ1XuIbzbAxoNYUv
- maOt/NgyS1eb6/rpuoZgYsoa2jo6vhucjdneAaGlobBlB3QyGXQAp+4ewTpHdwfC1rJL/K70/0m
- BaGOKf7EXmVA4rqFgwmsf7XBCUtcRew0iZJwigcxYfKkjZpi9QyywE9lEuIg5D2A/yJ/coSr6gY
- 7p+xvs6JiZb4TRwALvyBpaz9IIMhnIZdv2wKCDnEOhGM=
+ bh=wAWUM3ffucxW+1g6lHY+OoHFAYGy2yWiORLWyxjTwt4=;
+ b=owEBgwJ8/ZANAwAIAQsfOT8Nma3FAcsmYgBn2cPjSJPDlDww96zN6653/MWcszDD3Ic5NpH1/
+ 1zAAvo3+T+JAkkEAAEIADMWIQQF3gPMXzXqTwlm1SULHzk/DZmtxQUCZ9nD4xUcYW5kZXJzc29u
+ QGtlcm5lbC5vcmcACgkQCx85Pw2ZrcWgwRAAiyAVa0WXvVjJ8Bh1bb10NmIubWgXCVppAZGAO5b
+ BGgJ/04dnqpCK72+1157yGxIG4OKUtfqrtZYgWPTdcS+LCDTLuu30fNwK9DDb+AnrCC1Tf/Pvld
+ /SDxqU5bOutmmP68X0wspgerAcMigaMsx8soKdeWr1QHWChNwGr5qkpDxJBqkqOCavHAsJ3RyjG
+ LzzIk4qJ6dk7XsgnsQROvLkBh4LiTXHuH2oEBB3hI0Q6+p7M/xfM/zsapIF7uBxiL048I0AmG/s
+ SRxSXSsg7vt2r99KqGOBpYDu20HTZso7ngarfVmVbtG7mDUQwfqco5kwb+A4xuzWmd7PxLKAAPZ
+ h/TlwPFj70GlrDW2zqO6tjebud4gToUtRHRCDha7gRDuHbZSLU7X/cvUzWD65J3W4lVKfsRbhkK
+ 9CU0A0raxjn8nPK7+FJ7oReymYRJgewImKc69pvjcliDgP32mmeVgIeXOfvePYfZKMZedDMF5Og
+ MZpNeTf5Pu/ANbJZq0oJxYtMQjjIVOrkxmCw3O/3JOkRJ3uYznTJlk0bN/2WqWDA1GamqfZGgg6
+ wMSqoNXKEjV6ovWd+9S7K7LrJQHCxjUjQM5Vpf1CtJgCFmzKY0KGo8dQf2LKqW8ypwS+7sq2pV4
+ //O3xQh51CMPJy+4R8hzIhZNinDOTsGaNnrPq+6cKbSI=
 X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=openpgp;
  fpr=05DE03CC5F35EA4F0966D5250B1F393F0D99ADC5
-X-Authority-Analysis: v=2.4 cv=SKhCVPvH c=1 sm=1 tr=0 ts=67d9c3e7 cx=c_pps a=4ztaESFFfuz8Af0l9swBwA==:117 a=DaeiM5VmU20ml6RIjrOvYw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=COk6AnOGAAAA:8 a=PRPaYdtWR3OSq7m5HH0A:9
- a=QEXdDO2ut3YA:10 a=TPnrazJqx2CeVZ-ItzZ-:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-ORIG-GUID: 5hAbWu7mykNLPHZpjnaKc0O7ySWVcL14
-X-Proofpoint-GUID: 5hAbWu7mykNLPHZpjnaKc0O7ySWVcL14
+X-Authority-Analysis: v=2.4 cv=H8Pbw/Yi c=1 sm=1 tr=0 ts=67d9c3ea cx=c_pps a=WJcna6AvsNCxL/DJwPP1KA==:117 a=DaeiM5VmU20ml6RIjrOvYw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=bGkOf_LmPnIWPiKmcZAA:9 a=QEXdDO2ut3YA:10
+ a=_Y9Zt4tPzoBS9L09Snn2:22
+X-Proofpoint-GUID: bdxMXxDZGmBFBlYNY2kQXeR_mBGIo05R
+X-Proofpoint-ORIG-GUID: bdxMXxDZGmBFBlYNY2kQXeR_mBGIo05R
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
  definitions=2025-03-18_08,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=999 spamscore=0 lowpriorityscore=0 priorityscore=1501
- clxscore=1015 bulkscore=0 mlxscore=0 suspectscore=0 phishscore=0
- impostorscore=0 adultscore=0 classifier=spam authscore=0 authtc=n/a
- authcc= route=outbound adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503180137
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 priorityscore=1501
+ mlxscore=0 suspectscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503180137
 
-The USB IP-block found in most Qualcomm platforms is modelled in the
-Linux kernel as 3 different independent device drivers, but as shown by
-the already existing layering violations in the Qualcomm glue driver
-they can not be operated independently.
+The DWC3 IP block is handled by three distinct device drivers: XHCI,
+DWC3 core and a platform specific (optional) DWC3 glue driver.
 
-With the current implementation, the glue driver registers the core and
-has no way to know when this is done. As a result, e.g. the suspend
-callbacks needs to guard against NULL pointer dereferences when trying
-to peek into the struct dwc3 found in the drvdata of the child.
+This has resulted in, at least in the case of the Qualcomm glue, the
+presence of a number of layering violations, where the glue code either
+can't handle, or has to work around, the fact that core might not probe
+deterministically.
 
-Missing from the upstream Qualcomm USB support is proper handling of
-role switching, in which the glue needs to be notified upon DRD mode
-changes. Several attempts has been made through the years to register
-callbacks etc, but they always fall short when it comes to handling of
-the core's probe deferral on resources etc.
+An example of this is that the suspend path should operate slightly
+different depending on the device operating in host or peripheral mode,
+and the only way to determine the operating state is to peek into the
+core's drvdata.
 
-Furhtermore, the DeviceTree binding is a direct representation of the
-Linux driver model, and doesn't necessarily describe "the USB IP-block".
+The Qualcomm glue driver is expected to make updates in the qscratch
+register region (the "glue" region) during role switch events, but with
+the glue and core split using the driver model, there is no reasonable
+way to introduce listeners for mode changes.
 
-This series therefor attempts to flatten the driver split, and operate
-the glue and core out of the same platform_device instance. And in order
-to do this, the DeviceTree representation of the IP block is flattened.
+Split the dwc3 core platform_driver callbacks and their implementation
+and export the implementation, to make it possible to deterministically
+instantiate the dwc3 core as part of the dwc3 glue drivers and to
+allow flattening of the DeviceTree representation.
 
-Departing from previous versions' attempts at runtime-convert the
-Devicetree representation is swapped out and instead a snapshot of the
-current dwc3-qcom driver is proposed to be carried for a limited time.
-
-A patch to convert a single platform - sc8280xp - is included in the
-series. The broader conversion will be submitted in a follow up series.
-
+Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 ---
-Changes in v5:
-- Moved the snapshot commit first, to get a clean copy
-- Add missing kernel-doc in glue.h
-- Used a local "struct device" variable in PM functions to reduce the
-  patch size
-- Replaced initialization with default values with zero-initalizing the
-  dwc3_probe_data in dwc3_probe()
-- Add TODO about extcon, as a role-switch callback needs to be
-  implemented
-- Corrected &usb_2 mmio region length
-- Changes the timeline expressed in the commit message to suggest the
-  legacy driver to be dropped after next LTS
-- Integrated qcom,dwc3.yaml changes since v4
-- Link to v4: https://lore.kernel.org/r/20250226-dwc3-refactor-v4-0-4415e7111e49@oss.qualcomm.com
+ drivers/usb/dwc3/core.c | 142 +++++++++++++++++++++++++++++++++---------------
+ drivers/usb/dwc3/glue.h |  32 +++++++++++
+ 2 files changed, 129 insertions(+), 45 deletions(-)
 
-Changes in v4:
-- dwc3_{init,uninit}() renamed to dwc3_core_probe() and dwc3_core_remove()
-- dwc3_{suspend, resume, complete}() changed to dwc3_pm_*()
-- Arguments to dwc3_core_probe() are wrapped in a struct to better
-  handle the expected growing list of parameters.
-- Add the lost call to dwc3_core_remove() from the Qualcomm glue driver
-- Removed now unused cleanup.h, of_address.h, and of_irq.h includes from
-  dwc3-qcom.c
-- Link to v3: https://lore.kernel.org/r/20250113-dwc3-refactor-v3-0-d1722075df7b@oss.qualcomm.com
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 66a08b5271653abd458f9ec85ca730afd7779d71..b428b6fc3d0a55811e2f75d33d79df4b0c67dcac 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -36,6 +36,7 @@
+ 
+ #include "core.h"
+ #include "gadget.h"
++#include "glue.h"
+ #include "io.h"
+ 
+ #include "debug.h"
+@@ -2148,27 +2149,16 @@ static struct power_supply *dwc3_get_usb_power_supply(struct dwc3 *dwc)
+ 	return usb_psy;
+ }
+ 
+-static int dwc3_probe(struct platform_device *pdev)
++int dwc3_core_probe(const struct dwc3_probe_data *data)
+ {
+-	struct device		*dev = &pdev->dev;
+-	struct resource		*res, dwc_res;
++	struct dwc3		*dwc = data->dwc;
++	struct device		*dev = dwc->dev;
++	struct resource		dwc_res;
+ 	unsigned int		hw_mode;
+ 	void __iomem		*regs;
+-	struct dwc3		*dwc;
++	struct resource		*res = data->res;
+ 	int			ret;
+ 
+-	dwc = devm_kzalloc(dev, sizeof(*dwc), GFP_KERNEL);
+-	if (!dwc)
+-		return -ENOMEM;
+-
+-	dwc->dev = dev;
+-
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	if (!res) {
+-		dev_err(dev, "missing memory resource\n");
+-		return -ENODEV;
+-	}
+-
+ 	dwc->xhci_resources[0].start = res->start;
+ 	dwc->xhci_resources[0].end = dwc->xhci_resources[0].start +
+ 					DWC3_XHCI_REGS_END;
+@@ -2232,7 +2222,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		goto err_disable_clks;
+ 	}
+ 
+-	platform_set_drvdata(pdev, dwc);
++	dev_set_drvdata(dev, dwc);
+ 	dwc3_cache_hwparams(dwc);
+ 
+ 	if (!dwc->sysdev_is_parent &&
+@@ -2327,12 +2317,35 @@ static int dwc3_probe(struct platform_device *pdev)
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(dwc3_core_probe);
+ 
+-static void dwc3_remove(struct platform_device *pdev)
++static int dwc3_probe(struct platform_device *pdev)
+ {
+-	struct dwc3	*dwc = platform_get_drvdata(pdev);
++	struct dwc3_probe_data probe_data;
++	struct resource *res;
++	struct dwc3 *dwc;
+ 
+-	pm_runtime_get_sync(&pdev->dev);
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "missing memory resource\n");
++		return -ENODEV;
++	}
++
++	dwc = devm_kzalloc(&pdev->dev, sizeof(*dwc), GFP_KERNEL);
++	if (!dwc)
++		return -ENOMEM;
++
++	dwc->dev = &pdev->dev;
++
++	probe_data.dwc = dwc;
++	probe_data.res = res;
++
++	return dwc3_core_probe(&probe_data);
++}
++
++void dwc3_core_remove(struct dwc3 *dwc)
++{
++	pm_runtime_get_sync(dwc->dev);
+ 
+ 	dwc3_core_exit_mode(dwc);
+ 	dwc3_debugfs_exit(dwc);
+@@ -2340,22 +2353,28 @@ static void dwc3_remove(struct platform_device *pdev)
+ 	dwc3_core_exit(dwc);
+ 	dwc3_ulpi_exit(dwc);
+ 
+-	pm_runtime_allow(&pdev->dev);
+-	pm_runtime_disable(&pdev->dev);
+-	pm_runtime_dont_use_autosuspend(&pdev->dev);
+-	pm_runtime_put_noidle(&pdev->dev);
++	pm_runtime_allow(dwc->dev);
++	pm_runtime_disable(dwc->dev);
++	pm_runtime_dont_use_autosuspend(dwc->dev);
++	pm_runtime_put_noidle(dwc->dev);
+ 	/*
+ 	 * HACK: Clear the driver data, which is currently accessed by parent
+ 	 * glue drivers, before allowing the parent to suspend.
+ 	 */
+-	platform_set_drvdata(pdev, NULL);
+-	pm_runtime_set_suspended(&pdev->dev);
++	dev_set_drvdata(dwc->dev, NULL);
++	pm_runtime_set_suspended(dwc->dev);
+ 
+ 	dwc3_free_event_buffers(dwc);
+ 
+ 	if (dwc->usb_psy)
+ 		power_supply_put(dwc->usb_psy);
+ }
++EXPORT_SYMBOL_GPL(dwc3_core_remove);
++
++static void dwc3_remove(struct platform_device *pdev)
++{
++	dwc3_core_remove(platform_get_drvdata(pdev));
++}
+ 
+ #ifdef CONFIG_PM
+ static int dwc3_core_init_for_resume(struct dwc3 *dwc)
+@@ -2544,9 +2563,8 @@ static int dwc3_runtime_checks(struct dwc3 *dwc)
+ 	return 0;
+ }
+ 
+-static int dwc3_runtime_suspend(struct device *dev)
++int dwc3_runtime_suspend(struct dwc3 *dwc)
+ {
+-	struct dwc3     *dwc = dev_get_drvdata(dev);
+ 	int		ret;
+ 
+ 	if (dwc3_runtime_checks(dwc))
+@@ -2558,10 +2576,11 @@ static int dwc3_runtime_suspend(struct device *dev)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dwc3_runtime_suspend);
+ 
+-static int dwc3_runtime_resume(struct device *dev)
++int dwc3_runtime_resume(struct dwc3 *dwc)
+ {
+-	struct dwc3     *dwc = dev_get_drvdata(dev);
++	struct device *dev = dwc->dev;
+ 	int		ret;
+ 
+ 	ret = dwc3_resume_common(dwc, PMSG_AUTO_RESUME);
+@@ -2571,7 +2590,7 @@ static int dwc3_runtime_resume(struct device *dev)
+ 	switch (dwc->current_dr_role) {
+ 	case DWC3_GCTL_PRTCAP_DEVICE:
+ 		if (dwc->pending_events) {
+-			pm_runtime_put(dwc->dev);
++			pm_runtime_put(dev);
+ 			dwc->pending_events = false;
+ 			enable_irq(dwc->irq_gadget);
+ 		}
+@@ -2586,10 +2605,11 @@ static int dwc3_runtime_resume(struct device *dev)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dwc3_runtime_resume);
+ 
+-static int dwc3_runtime_idle(struct device *dev)
++int dwc3_runtime_idle(struct dwc3 *dwc)
+ {
+-	struct dwc3     *dwc = dev_get_drvdata(dev);
++	struct device *dev = dwc->dev;
+ 
+ 	switch (dwc->current_dr_role) {
+ 	case DWC3_GCTL_PRTCAP_DEVICE:
+@@ -2607,12 +2627,28 @@ static int dwc3_runtime_idle(struct device *dev)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dwc3_runtime_idle);
++
++static int dwc3_plat_runtime_suspend(struct device *dev)
++{
++	return dwc3_runtime_suspend(dev_get_drvdata(dev));
++}
++
++static int dwc3_plat_runtime_resume(struct device *dev)
++{
++	return dwc3_runtime_resume(dev_get_drvdata(dev));
++}
++
++static int dwc3_plat_runtime_idle(struct device *dev)
++{
++	return dwc3_runtime_idle(dev_get_drvdata(dev));
++}
+ #endif /* CONFIG_PM */
+ 
+ #ifdef CONFIG_PM_SLEEP
+-static int dwc3_suspend(struct device *dev)
++int dwc3_pm_suspend(struct dwc3 *dwc)
+ {
+-	struct dwc3	*dwc = dev_get_drvdata(dev);
++	struct device *dev = dwc->dev;
+ 	int		ret;
+ 
+ 	ret = dwc3_suspend_common(dwc, PMSG_SUSPEND);
+@@ -2623,10 +2659,11 @@ static int dwc3_suspend(struct device *dev)
+ 
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(dwc3_pm_suspend);
+ 
+-static int dwc3_resume(struct device *dev)
++int dwc3_pm_resume(struct dwc3 *dwc)
+ {
+-	struct dwc3	*dwc = dev_get_drvdata(dev);
++	struct device *dev = dwc->dev;
+ 	int		ret = 0;
+ 
+ 	pinctrl_pm_select_default_state(dev);
+@@ -2645,10 +2682,10 @@ static int dwc3_resume(struct device *dev)
+ 
+ 	return ret;
+ }
++EXPORT_SYMBOL_GPL(dwc3_pm_resume);
+ 
+-static void dwc3_complete(struct device *dev)
++void dwc3_pm_complete(struct dwc3 *dwc)
+ {
+-	struct dwc3	*dwc = dev_get_drvdata(dev);
+ 	u32		reg;
+ 
+ 	if (dwc->current_dr_role == DWC3_GCTL_PRTCAP_HOST &&
+@@ -2658,21 +2695,36 @@ static void dwc3_complete(struct device *dev)
+ 		dwc3_writel(dwc->regs, DWC3_GUCTL3, reg);
+ 	}
+ }
++EXPORT_SYMBOL_GPL(dwc3_pm_complete);
++
++static int dwc3_plat_suspend(struct device *dev)
++{
++	return dwc3_pm_suspend(dev_get_drvdata(dev));
++}
++
++static int dwc3_plat_resume(struct device *dev)
++{
++	return dwc3_pm_resume(dev_get_drvdata(dev));
++}
++
++static void dwc3_plat_complete(struct device *dev)
++{
++	dwc3_pm_complete(dev_get_drvdata(dev));
++}
+ #else
+-#define dwc3_complete NULL
++#define dwc3_plat_complete NULL
+ #endif /* CONFIG_PM_SLEEP */
+ 
+ static const struct dev_pm_ops dwc3_dev_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(dwc3_suspend, dwc3_resume)
+-	.complete = dwc3_complete,
+-
++	SET_SYSTEM_SLEEP_PM_OPS(dwc3_plat_suspend, dwc3_plat_resume)
++	.complete = dwc3_plat_complete,
+ 	/*
+ 	 * Runtime suspend halts the controller on disconnection. It relies on
+ 	 * platforms with custom connection notification to start the controller
+ 	 * again.
+ 	 */
+-	SET_RUNTIME_PM_OPS(dwc3_runtime_suspend, dwc3_runtime_resume,
+-			dwc3_runtime_idle)
++	SET_RUNTIME_PM_OPS(dwc3_plat_runtime_suspend, dwc3_plat_runtime_resume,
++			   dwc3_plat_runtime_idle)
+ };
+ 
+ #ifdef CONFIG_OF
+diff --git a/drivers/usb/dwc3/glue.h b/drivers/usb/dwc3/glue.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..e73cfc466012f07214291abe56454934ab014013
+--- /dev/null
++++ b/drivers/usb/dwc3/glue.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * glue.h - DesignWare USB3 DRD glue header
++ */
++
++#ifndef __DRIVERS_USB_DWC3_GLUE_H
++#define __DRIVERS_USB_DWC3_GLUE_H
++
++#include <linux/types.h>
++#include "core.h"
++
++/**
++ * dwc3_probe_data: Initialization parameters passed to dwc3_core_probe()
++ * @dwc: Reference to dwc3 context structure
++ * @res: resource for the DWC3 core mmio region
++ */
++struct dwc3_probe_data {
++	struct dwc3 *dwc;
++	struct resource *res;
++};
++
++int dwc3_core_probe(const struct dwc3_probe_data *data);
++void dwc3_core_remove(struct dwc3 *dwc);
++
++int dwc3_runtime_suspend(struct dwc3 *dwc);
++int dwc3_runtime_resume(struct dwc3 *dwc);
++int dwc3_runtime_idle(struct dwc3 *dwc);
++int dwc3_pm_suspend(struct dwc3 *dwc);
++int dwc3_pm_resume(struct dwc3 *dwc);
++void dwc3_pm_complete(struct dwc3 *dwc);
++
++#endif
 
-Changes in v3:
-- Replaced the handcoded migration logic of compatible, reg, interrupts,
-  phys with overlays.
-- Move the migration logic (and overlays) to a new drivers/of/overlays
-  directory and apply this at postcore, so that it takes effect prior to
-  the relevant platform_devices are created
-- struct dwc3 is embedded in the glue context, rather than having a
-  separate object allocated
-- The hack of using of_address_to_resource() to avoid platform_resource
-  being stale is removed (thanks to applying migration at postcore)
-- Link to v2: https://lore.kernel.org/r/20240811-dwc3-refactor-v2-0-91f370d61ad2@quicinc.com
-
-Changes in v2:
-- Rewrite after ACPI removal, multiport support and interrupt fixes
-- Completely changed strategy for DeviceTree binding, as previous idea
-  of using snps,dwc3 as a generic fallback required unreasonable changes
-  to that binding.
-- Abandoned idea of supporting both flattened and unflattened device
-  model in the one driver. As Johan pointed out, it will leave the race
-  condition holes and will make the code harder to understand.
-  Furthermore, the role switching logic that we intend to introduce
-  following this would have depended on the user updating their
-  DeviceTree blobs.
-- Per above, introduced the dynamic DeviceTree rewrite
-- Link to v1: https://lore.kernel.org/all/20231016-dwc3-refactor-v1-0-ab4a84165470@quicinc.com/
-
----
-Bjorn Andersson (7):
-      usb: dwc3: qcom: Snapshot driver for backwards compatibilty
-      dt-bindings: usb: Introduce qcom,snps-dwc3
-      usb: dwc3: core: Expose core driver as library
-      usb: dwc3: core: Don't touch resets and clocks
-      usb: dwc3: qcom: Don't rely on drvdata during probe
-      usb: dwc3: qcom: Transition to flattened model
-      arm64: dts: qcom: sc8280x: Flatten the USB nodes
-
- .../devicetree/bindings/usb/qcom,dwc3.yaml         |  13 +-
- .../devicetree/bindings/usb/qcom,snps-dwc3.yaml    | 620 ++++++++++++++
- arch/arm64/boot/dts/qcom/sa8295p-adp.dts           |  12 +-
- arch/arm64/boot/dts/qcom/sa8540p-ride.dts          |   5 +-
- arch/arm64/boot/dts/qcom/sc8280xp-crd.dts          |  12 +-
- .../boot/dts/qcom/sc8280xp-huawei-gaokun3.dts      |  10 +-
- .../dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dts     |  11 +-
- .../boot/dts/qcom/sc8280xp-microsoft-arcata.dts    |  10 +-
- .../boot/dts/qcom/sc8280xp-microsoft-blackrock.dts |  18 +-
- arch/arm64/boot/dts/qcom/sc8280xp.dtsi             | 157 ++--
- drivers/usb/dwc3/Makefile                          |   1 +
- drivers/usb/dwc3/core.c                            | 160 ++--
- drivers/usb/dwc3/dwc3-qcom-legacy.c                | 935 +++++++++++++++++++++
- drivers/usb/dwc3/dwc3-qcom.c                       | 157 ++--
- drivers/usb/dwc3/glue.h                            |  35 +
- 15 files changed, 1885 insertions(+), 271 deletions(-)
----
-base-commit: c4d4884b67802c41fd67399747165d65c770621a
-change-id: 20231016-dwc3-refactor-931e3b08a8b9
-
-Best regards,
 -- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+2.48.1
 
