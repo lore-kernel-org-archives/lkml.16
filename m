@@ -1,133 +1,216 @@
-Received: from mail-il1-f169.google.com (mail-il1-f169.google.com [209.85.166.169])
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FEDE202997
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 10:32:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFE641F4E38;
+	Tue, 18 Mar 2025 10:33:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742293956; cv=none; b=Pd8UboCEv2CxiNVkD2vT7UQ3CsYfavH1AkgOF+8Oy1Y1GJkd+A/f4Ob0vcE9ETyXvPV8nuZFHwKo2EdC9PMZClDPnpWqwmHF9gx35hbCD0klCkXutnuigWThOuiIrdgJ2bJB0LCEE9ftamFNH+A9jaAYes8YBuKaNAIO09rAaDQ=
+	t=1742294013; cv=none; b=YNLMvRFat/dUeuG8o4BefAfKL1+ATnWxST7oD6faaFWDRr9l+yxYjah33vgfSXOf42iYpWsAu62V/nttn5r/S2HPSIU5dWjjqV4sHHrj/H9zewPQ1q1tW/q8ZZo4RoD66Ybh0khJEUJvgXFLI4eqFmBQtTO0pb/qkX3zrs3Sg/M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742293956; c=relaxed/simple;
-	bh=D3LhLhbqPVRITeMp5L3e0L9ixREsZnDi/JKUCXWtP4g=;
+	s=arc-20240116; t=1742294013; c=relaxed/simple;
+	bh=G4i4sTE8q4SvedSzBTT1esCwnEQReq/hMn67xuypJO8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S35b9UvfRVhyg6yBGt5VJBZDvd1EjRqvaq2MfPme9StsbBhuKXOwKnUsilWtVQEQRfAB8hEHciqbIw+SpTFsO/0ooVpf0wcg1DBHxaVnq22QfAXornFklDbrWFxCauEI0fEJZyI3ZMSK7fpPVIAykkxJkJF7o9+rj3tSp3yEEwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=toVeIjO2; arc=none smtp.client-ip=209.85.166.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=SII1PGJe4wNl/iWD4cuJdRTIdEXZPqsgqsBs2PpAmvW48wuA61dmUQY1WK6bZeQdOJduxidQPOqOJQvxUkFlfzxlnvSGDkW2HjbKcg5lkFDKjyUOkWOqcBImSpuyuJ82J+SyXzeJdw1U857pv2wRSPxXPNofvnE3SzkzHbArZ5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xh865Mg7; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="toVeIjO2"
-Received: by mail-il1-f169.google.com with SMTP id e9e14a558f8ab-3d450ac4910so138715ab.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 03:32:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xh865Mg7"
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-e636630da89so672798276.3;
+        Tue, 18 Mar 2025 03:33:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742293954; x=1742898754; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742294011; x=1742898811; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=k/0XDSB1vld5cUtxsFXUAzOtrX9mHriAbs+ANUXBrrQ=;
-        b=toVeIjO2zyywGywxuHipBQdsJmVcZzib4lQJpPEu2GeSRb3YFDULxOY8AFBEhOx1qv
-         Py8fBHYYYl8PZEBhWsjtx5Hs2kdsB3n1dLzZimzz4Kdxp2vLTclYIjmDnLzp0ssD9PEA
-         BX99itoTYe7qMsNFn7Cuo11QEiYEiheszIS58pUQuk3cPGDd1scCG48e+Qso2/QZQprW
-         B9QrRYy4eIt1ReOhtSPB4Kk+nyU/nvG8RNjYBA2UE/xCj87zZeVfM0KHlVxc5U6n+P5K
-         66bnlosZ1y4VcpLz3GwIFtN0ZldzfMHxDIVkgGbo6h6AjGBpsNMcL1r0La7QS/5g5Im5
-         mt+A==
+        bh=cA1LUYYfbqtQP1h//DZ6W5809Oh0Z1YBlg0tTf/X5N0=;
+        b=Xh865Mg7+vIYYjL8nR9yhjPERiA24BGJyxHAPjhe19MZZgImKtYvBvDkHhifrWJnQV
+         g1lut7QdWh4qsDp5uXew3Yoz4nBTPK7O0ADeGvJUI0Z/Fijzb9AwFjMNv51/5CSXTQlk
+         AcNiLOBsfWWj5HXbIPsPCjgUUUcqjd7DlXLT7fc57BJyi/OqtHRMDZGWRszyS8q9S7fG
+         XtYD+0GOC9PC1NCDEUqliQnhplOFZOIX0wgkW7l5Vr5uV2B9FE7NelaRGaqZq/BE4VOL
+         gqFoWzD79Z7NU/NN4ZFkaxHcTf4dotm9AR2HFkRh2mvqlUY4NBMWH3nceJLwG/UpPMZA
+         WVmg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742293954; x=1742898754;
+        d=1e100.net; s=20230601; t=1742294011; x=1742898811;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=k/0XDSB1vld5cUtxsFXUAzOtrX9mHriAbs+ANUXBrrQ=;
-        b=muSBLHDCtJbnZAkKsA5VtpUGvTmndKVBGYKW80i6kgHpN1cu2QiwVov8M03DIJGZ6J
-         1bpVfw1ZczruqBONMtPgebTplLBg+MqtqXWeTVi63ZWKleDyiiQ2hBnPftBqxrAgP6CZ
-         7WNqD2+lXJ7fWi0PMv8+0aq223txoe9x7oP1DqrZ8PnTrzSChQm8vHtcSmsJFzXK7F9Y
-         Wzj0iIsvrYZZ/ZPffNcLDCdEHL7TcPucs+DUzX2RgdKp5ighAewqA7CjbaGt8lLSqvkk
-         Bt8o31oGJ8nWW7gUzn7crwbWqAq206BdHRTL5q2fY491vlW7N/0UjupRdkP2/ntC6r1d
-         L54A==
-X-Forwarded-Encrypted: i=1; AJvYcCVt+1u2tcHfMtcS8TnO178OEeRxOU3dXTmHMMVIbV5K8JsPqGM8LtpcAJZxAvRcanuTXRBRwRyQoZK14Ik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXnaZBUbx1XAfU832KrM7B0cwThqff43Oa32OSlPxdHbVJ2Egm
-	I6GbULWzALVk9sx2rhvVrsnJF7/SU8huQ8xuFFSdC4ZBZTWIuL6B0CxTQrbhg0MX9PBrKVeNTjF
-	R9h0p58IYSM6yILtTEDTDFIcAOYuFdUlb10GL
-X-Gm-Gg: ASbGnctnM3iy5vn4gb2YoMcoQ6HRrxRrtdltLSnWaCX+I62MoxgwlD8tFl0LRCxE++C
-	3q5qL/hFul9UUAQNcAyhGGOkVf6IpEZXNj2zdizKV5DksRyxdspn9UqYMzSDuvFeefMD+YhXMA+
-	tPsxlZwhnlJGtpzaSbDL08fCcctrhmsWGo1MryysmdnbWs53mnOK/NJC0=
-X-Google-Smtp-Source: AGHT+IHP+a2pA9w8C/gg7jD1p61petdMjrcurDDNP2YU9EJK/gdyOq8j+Pl9PL8xSCm2IXOP61bNRt55YIBl/tb8zQY=
-X-Received: by 2002:a05:6e02:a:b0:3d2:afa0:9ee9 with SMTP id
- e9e14a558f8ab-3d57f0b7dd6mr2003895ab.7.1742293954173; Tue, 18 Mar 2025
- 03:32:34 -0700 (PDT)
+        bh=cA1LUYYfbqtQP1h//DZ6W5809Oh0Z1YBlg0tTf/X5N0=;
+        b=UfQiI2B5eBcup5oM6BcakM1K1kRv+wXjsKAdyhUxfy6capWE7LUfd8frmrXUZ99CNg
+         QMsqr7uquKhlABCfPZZLbYAmSytB+Ee/e1BZwQxXlaO1PMUb6xdp6AymveGK/2xjzHSF
+         YhJQ5AkG2HNUrK2S/z1mJjnnsP/v1XF9zPKR2+g9H53bu1cvW6v0o7SXgJSrfekX3Znt
+         TDSoA8ZpVHT5qi1rVsuBlYUcGMDabexzChzTJS72VMxmyBgXZie7xNUe1nA5hlw3R1NX
+         NNSwxkxZlYC/iJ7vCDTg+84ULeX7O8OZIS/J3GqJLOy26nQMvlGD4vqx1q/aYVtSA97n
+         HL9w==
+X-Forwarded-Encrypted: i=1; AJvYcCU4NB0d2gAJL/0kzTi9IDRybt9v0FjgcrOAl192eefzcWEJsASYsru6Hcf3g7efCJM8BGnz4wd8tmM=@vger.kernel.org, AJvYcCX3pOhXRuBeKMeHged0iC8kpzNK+hPmBXSR2o5j9qaPR9iKNrRRdZPYE5Il+hqW5FhmbG0jRN+qZyLZODqB@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz+elNOXcAwX7tvmfBCuN9lEuvcDQd1gOlb+DfvYczZ0xnee/pA
+	w3+CGpwqGct/Ui85YW4ptphRlBu2TY44F3oL7JQ+jdhr9YRG+5Wnji+OpXCww9mWcRSrCq5JtzW
+	0GG4C9iF36EC9Hy7OKwCsQKFNYPw=
+X-Gm-Gg: ASbGncv7YhFfuE/vWmyWsVyQVbxUdHJlI+yasffcpFC1bN4vrvtpCfnlJPyFO2DwhSW
+	wOQN6DlP5FzTOFTrO26dYIE3vodE8TUT0jS7genpEm5L0zk4lmL8Df9fipDFbFLjQEaCwZ2oMPR
+	c2B0hfNMlA5s6PuewZf/CT9TVD8g==
+X-Google-Smtp-Source: AGHT+IEvaz4NhkxwobgEK8ikUT7Kc2lcnhfuwErioQfLWAfaExY/f4zpCEYtArnNWu7S/0bhR+zRXl+Rq0uyvLmPxjY=
+X-Received: by 2002:a05:6902:114a:b0:e5d:f9bc:1ba5 with SMTP id
+ 3f1490d57ef6-e63f64c3622mr9409312276.2.1742294010644; Tue, 18 Mar 2025
+ 03:33:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317182047.2060036-1-czapiga@google.com> <4be8afd5-65a9-4cfa-89b5-42caea3a9f93@linaro.org>
-In-Reply-To: <4be8afd5-65a9-4cfa-89b5-42caea3a9f93@linaro.org>
-From: "Jakub \"Kuba\" Czapiga" <czapiga@google.com>
-Date: Tue, 18 Mar 2025 11:31:58 +0100
-X-Gm-Features: AQ5f1JoRlAxWJkOjOQ9rqrZ1147ioWBczbnF4Th0_2s0QUnncrTMv7_k1ksyQ20
-Message-ID: <CABkukdrc59rViGg9DmJU3AVZ537310xkNKhuTwjyRwpKAEuWbA@mail.gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: gigadevice: add lock flags for GD25Q128/256
- and GD25LQ128D
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
+References: <20250313165049.48305-1-l.rubusch@gmail.com> <20250313165049.48305-6-l.rubusch@gmail.com>
+ <20250316112057.638626bd@jic23-huawei>
+In-Reply-To: <20250316112057.638626bd@jic23-huawei>
+From: Lothar Rubusch <l.rubusch@gmail.com>
+Date: Tue, 18 Mar 2025 11:32:54 +0100
+X-Gm-Features: AQ5f1Jo4eKAgjvIEDD3ILFzPQBVX8P2XpLVDC75bSivh78-5Dcfeb5OxTpkhtFk
+Message-ID: <CAFXKEHbxbjzNunauPFCFUwhn3k5F1Ki2sgVFu2y2HxxPot2MfA@mail.gmail.com>
+Subject: Re: [PATCH v4 05/14] iio: accel: adxl345: add single tap feature
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: lars@metafoo.de, Michael.Hennerich@analog.com, linux-iio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, eraretuya@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 8:09=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
-.org> wrote:
+On Sun, Mar 16, 2025 at 12:22=E2=80=AFPM Jonathan Cameron <jic23@kernel.org=
+> wrote:
 >
+> On Thu, 13 Mar 2025 16:50:40 +0000
+> Lothar Rubusch <l.rubusch@gmail.com> wrote:
 >
->
-> On 17.03.2025 20:20, Jakub Czapiga wrote:
-> > Set appropriate FLASH lock feature flags.
-> > Set top-bottom protection configuration bit flags.
+> > Add the single tap feature with a threshold in 62.5mg/LSB points and a
+> > scaled duration in us. Keep singletap threshold in regmap cache but
+> > the scaled value of duration in us as member variable.
 > >
-> > Modified chips:
-> > - GD25Q128 (+lock, +tb)
-> > - GD25Q256 (+lock)
-> > - GD25Q256D, GD25Q256E (+tb)
-> > - GD25LQ128D (+lock, +tb)
+> > Both use IIO channels for individual enable of the x/y/z axis. Initiali=
+zes
+> > threshold and duration with reasonable content. When an interrupt is
+> > caught it will be pushed to the according IIO channel.
 > >
-> > Signed-off-by: Jakub Czapiga <czapiga@google.com>
-> > ---
-> >  drivers/mtd/spi-nor/gigadevice.c | 9 ++++++---
-> >  1 file changed, 6 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/mtd/spi-nor/gigadevice.c b/drivers/mtd/spi-nor/gig=
-adevice.c
-> > index ef1edd0add70..8eec6557b036 100644
-> > --- a/drivers/mtd/spi-nor/gigadevice.c
-> > +++ b/drivers/mtd/spi-nor/gigadevice.c
-> > @@ -16,6 +16,7 @@ gd25q256_post_bfpt(struct spi_nor *nor,
-> >       /*
-> >        * GD25Q256C supports the first version of JESD216 which does not=
- define
-> >        * the Quad Enable methods. Overwrite the default Quad Enable met=
-hod.
-> > +      * Otherwise set TB to SR(6).
-> >        *
-> >        * GD25Q256 GENERATION | SFDP MAJOR VERSION | SFDP MINOR VERSION
-> >        *      GD25Q256C      | SFDP_JESD216_MAJOR | SFDP_JESD216_MINOR
-> > @@ -25,6 +26,8 @@ gd25q256_post_bfpt(struct spi_nor *nor,
-> >       if (bfpt_header->major =3D=3D SFDP_JESD216_MAJOR &&
-> >           bfpt_header->minor =3D=3D SFDP_JESD216_MINOR)
-> >               nor->params->quad_enable =3D spi_nor_sr1_bit6_quad_enable=
-;
-> > +     else
-> > +             nor->flags |=3D SNOR_F_HAS_SR_TB | SNOR_F_HAS_SR_TB_BIT6;
 >
-> why do you tie locking by SFDP absence?
+> > Signed-off-by: Lothar Rubusch <l.rubusch@gmail.com>
+>
+> Hi Lothar,
+>
+> A few things in here are from the discussion that was continuing
+> on v3 so I may have said more replying to that.
+>
+> Anyhow, for now I'll hold off on applying from this point on as
+> a few more things to respond to inline.
+>
+> Jonathan
+>
+> >
+> >  #include "adxl345.h"
+> > @@ -31,6 +33,33 @@
+> >  #define ADXL345_INT1                 0
+> >  #define ADXL345_INT2                 1
+> >
+> > +#define ADXL345_REG_TAP_AXIS_MSK     GENMASK(2, 0)
+> > +
+> > +enum adxl345_axis {
+> > +     ADXL345_Z_EN =3D BIT(0),
+> > +     ADXL345_Y_EN =3D BIT(1),
+> > +     ADXL345_X_EN =3D BIT(2),
+> > +     /* Suppress double tap detection if value > tap threshold */
+> > +     ADXL345_TAP_SUPPRESS =3D BIT(3),
+> > +};
+> As per feedback (after you sent this!) on v3, I'd drop
+> the last value out of the enum, or just use defines and a u8 for
+> the one place this is used for local variable storage.
+>
+>
+> > @@ -198,6 +387,132 @@ static int adxl345_write_raw(struct iio_dev *indi=
+o_dev,
+> >       return -EINVAL;
+> >  }
+> >
+> > +static int adxl345_read_event_config(struct iio_dev *indio_dev,
+> > +                                  const struct iio_chan_spec *chan,
+> > +                                  enum iio_event_type type,
+> > +                                  enum iio_event_direction dir)
+> > +{
+> > +     struct adxl345_state *st =3D iio_priv(indio_dev);
+> > +     bool int_en;
+> > +     int ret =3D -EFAULT;
+> Not used?
+>
+> > +
+> > +     switch (type) {
+> > +     case IIO_EV_TYPE_GESTURE:
+> > +             switch (dir) {
+> > +             case IIO_EV_DIR_SINGLETAP:
+> > +                     ret =3D adxl345_is_tap_en(st, chan->channel2,
+> > +                                             ADXL345_SINGLE_TAP, &int_=
+en);
+> > +                     if (ret)
+> > +                             return ret;
+> > +                     return int_en;
+> > +             default:
+> > +                     return -EINVAL;
+> > +             }
+> > +     default:
+> > +             return -EINVAL;
+> > +     }
+> > +}
+>
+> > +static int adxl345_write_event_value(struct iio_dev *indio_dev,
+> > +                                  const struct iio_chan_spec *chan,
+> > +                                  enum iio_event_type type,
+> > +                                  enum iio_event_direction dir,
+> > +                                  enum iio_event_info info,
+> > +                                  int val, int val2)
+> > +{
+> > +     struct adxl345_state *st =3D iio_priv(indio_dev);
+> > +     int ret;
+> > +
+> > +     ret =3D adxl345_set_measure_en(st, false);
+> > +     if (ret)
+> > +             return ret;
+> > +
+> So in my brief reply to the v3 discussion I suggested perhaps
+> factoring out everything from here...
+> > +     switch (type) {
+> > +     case IIO_EV_TYPE_GESTURE:
+> > +             switch (info) {
+> > +             case IIO_EV_INFO_VALUE:
+> > +                     ret =3D regmap_write(st->regmap, ADXL345_REG_THRE=
+SH_TAP,
+> > +                                        min(val, 0xFF));
+> > +                     break;
+> > +             case IIO_EV_INFO_TIMEOUT:
+> > +                     ret =3D adxl345_set_tap_duration(st, val, val2);
+> > +                     break;
+> > +             default:
+> > +                     ret =3D -EINVAL;
+> > +                     break;
+> > +             }
+> > +             break;
+> > +     default:
+> > +             ret =3D -EINVAL;
+> > +             break;
+> > +     }
+> to here, so as to allow simple direct returns.
+>
+> I think that will make the code more readable given the need to reenable
+> measurements and that you want to leave it off on error.
+>
+> > +
+> > +     if (ret)
+> > +             return ret; /* measurement stays off */
+> > +
+> > +     return adxl345_set_measure_en(st, true);
+> > +}
+>
 
-GD25Q256C has a different Status Registers layout compared to GD25Q256D/E:
-GD25Q256C has QE (Quad Enable) bit on SR1(6)/S6. GD25Q256D/E has it on
-SR2(1)/S9.
-GD25Q256C has TB (Top-Bottom) on SR2(3)/S11. GD25Q256D/E has it on SR1(6)/S=
-6.
-The default TB value is zero, so "top", which is also the default
-route in the swp.c if TB is not present. Moreover current API and
-implementation do not allow to configure TB in place other than
-SR1(5)/S5 or SR1(6)/S6. I figured that it's better to leave TB unset
-for the older chip variant and allow the driver to only access BP/Lock
-bits in this case.
+Hi Jonathan, my reason to leave this part unchanged was the following:
+As you can see above, 'return adxl345_set_measure_en(st, true);' - I'm
+actually need to turn off measurement before changing values, then to
+turn it on again after. In case of error, doing a simple "return ret"
+would keep measurement generally off. I think I should generally try
+to turn it on again after.
+
+Alternatively I could do something with goto/label to turn measurement
+on, but then return ret. My choice here was to use this ret approach
+together with break, at cost of readability. Any advice?
