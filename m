@@ -1,127 +1,122 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A2BC1FC0E3
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 10:23:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972C0207E0D;
+	Tue, 18 Mar 2025 10:23:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742293412; cv=none; b=fvGeItFTJ6bHANKLXD8McI0m3srrNkl0mWynnICBFgADvsz7C/V3IUra3ohphVVti204WheuNFvhS86C+XZipEYb/ELTVsScFjcEP1lFfAnB1TBXiZk+ne9C8CRSJdVwP+eccuW6mHZtC/smoMgetQd60T2+28Tzes2atpgC3mY=
+	t=1742293415; cv=none; b=FTEFD8m2n8yy/sKH92oPyXp7cpC+SLbhO4wWihZu35BUuD5m/m4f06vldV8t8JMA2HG3v3ydGbjovHECx1Wi1W0FZs196A1Y1dFaYRy4lmLlbMFXotLMF5tVgm4Lb48VXwqUkR0QuZcLU4uSq9A44C6ung407NU/L1Fk7gCuPko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742293412; c=relaxed/simple;
-	bh=yu/miwHG/5DBOWrVzesxZsGrjR/i09ERA/Qp7bJIj1s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OlQsSCp68fOkJt1fYHRHY3ar3TGAfxDRB37yktibqnOygJEDm43NsV2uhDkHNMJ0JCzykAiJ6EELcN7KQKzIPdxfmichrmPHdQc5yR/U4uUSCAEICPmEarkqh+OEsPeIXTp9bfDP4hmImk6RDZwOLNlP40vlhZIh80JLYWtfLgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ib3c9nwE; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742293415; c=relaxed/simple;
+	bh=MXp/aYEgJIRz1h77NEm+oyEhJoefXLGLbsCnRTPjoSw=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=HGUFHEX+eSS8lPnskQ3H1iGEIEcjefvcFCCgAz1xAogJkecDPIJ7MOp9K1wWT26/F4yn8gipB2QQ7Od59W3OYj+4Lzkc0zAfygIzKOVm4+/0s2LKd0D9kyRLgiA/pg6wx0QH4mHPJo1nZ9gshuocP+mCiYaZoDNtVjsRXg5xyYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=ZgirUvtv; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ib3c9nwE"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742293409;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yu/miwHG/5DBOWrVzesxZsGrjR/i09ERA/Qp7bJIj1s=;
-	b=ib3c9nwELDYrrI292ukohrF9jF8bTR9WFSKpH0hTtv6pkapFYQGXvGr9QOv8dB13rQyGam
-	B4pFiRlrzcKLzFbfhAYqhYF4vqqsCxAAjrrav7rgAN7Gu8khCSwj3c5RQUzE+OnAq+HMtL
-	VDycQFxW9t3TV34ZJNi+873DxVmQXR4=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-694-nX17et1qPYaw5k9KumX30A-1; Tue, 18 Mar 2025 06:23:28 -0400
-X-MC-Unique: nX17et1qPYaw5k9KumX30A-1
-X-Mimecast-MFC-AGG-ID: nX17et1qPYaw5k9KumX30A_1742293407
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e83e38d218so6050501a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 03:23:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742293407; x=1742898207;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=yu/miwHG/5DBOWrVzesxZsGrjR/i09ERA/Qp7bJIj1s=;
-        b=GWANQwOh6toIsgqyyi87jpkeAoJ28wOwa52Go3Goi/TPMTMoRK+L+5i09bcdaPGBqH
-         7wDdvHJnblGZugseQGGn3KrSVd5PIHqKk8btOx7QPVwacsLtoyS8xMLKtUdpuS8wugqd
-         zxQjFcka6u8tR/WTyHIjHCQTi2FeRD//OmPX4iygeOx7YoQeZg548ivOlT2cVA7AHGL3
-         MNDqYiCUnCGoRt5SIRElkwN9sJTnqdlHu/HBilZNxWJwVYZCoQ0u9Vq/QYPY0HsVdUVI
-         574nKFvWfvrxseNBZljg6rnilZi64yv7x4u4VfmfTbqMpiKxBvG8hXCEsvO4EMibmoTT
-         smSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVCchH4G3RtMsCfiCJKH01n0K3R6s8IBT3wX3L8bxzlOI4EFLJTb8vqewxsGvdpzZVo/bbacgtiXRrhlXU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmcVem9FEBz4Hht7FwkKBXsdmxYchNSKKdBjprii7q6Bi8zfCz
-	YJ7NGgFTtIrlNJErF5sw0cVtRire/Axc+GBujkXxdO/Tz5+knSPPe8ek9cwezfef89dQ8Tz6Fl1
-	V4RNiJHsDC86r0pmxtTuptZK99HjcY6kZGhMDHgzIrMWpY+iLSqXDwi7rSHSYA6HuHi1BP2ft+S
-	Pzky46vX0surEdyB8Eh9oNp0oZYOjfYfVWue7J
-X-Gm-Gg: ASbGncuFJ9Ddw5/znrAHTwDJnqqpg9aln8LguUMz1Fx4D5Zr949gy/qoXD5dxkv30vf
-	K4NOvytT5I5wHUZwVjUJ1XzhTg0bRfIoF5SdoJ74JL1dP8a8gcbrKkIVzP9486YwmCVrSbvzqWw
-	==
-X-Received: by 2002:a05:6402:2746:b0:5e0:4c25:1491 with SMTP id 4fb4d7f45d1cf-5eb1f0003a8mr2755907a12.7.1742293407115;
-        Tue, 18 Mar 2025 03:23:27 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGjyrDRk1usiBEXrUhkwIqs03+nWpkGjuY57aQwx3IT25kzIUISqmC8GAQ0nzFy+hG1pV9t2z5H2wCr9D8rn8k=
-X-Received: by 2002:a05:6402:2746:b0:5e0:4c25:1491 with SMTP id
- 4fb4d7f45d1cf-5eb1f0003a8mr2755871a12.7.1742293406690; Tue, 18 Mar 2025
- 03:23:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="ZgirUvtv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1742293405;
+	bh=MXp/aYEgJIRz1h77NEm+oyEhJoefXLGLbsCnRTPjoSw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZgirUvtvTJlzz8+DjhuOddBdW2GY6kD/5YNW/T2N9njNVVEfkdvf6BgIXKhnNG/8m
+	 Bsuw7tbiBkcG9Ah7XL2rsIzs9mBlSSzGK4/1bLbRD/Twlzo6xOO6u06m0cX776sU4N
+	 f3Tmt9Va+AzoJtTcOZZVRCaSGiXdTKH7+mZmI+cg4W/SPhnZmniHUQCYnh13DiNVKl
+	 pAhOTXgUTwn7iAV+mUKa4qevGHg2WxV5aVPfbvuewmPSC3EJntNk0XOlEKIidrFrNl
+	 aJ5lzp5REDeSAKqS9rzXVbAIp09TS2q1M2bL8CZa0y0WLrBW8DwxwQPs6RBTl69RnK
+	 Y8uyxymn+WuWw==
+Received: from laura.lan (unknown [IPv6:2001:b07:646b:e2:79a1:e959:3816:993])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: laura.nao)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 073CC17E0B25;
+	Tue, 18 Mar 2025 11:23:24 +0100 (CET)
+From: Laura Nao <laura.nao@collabora.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	bleung@chromium.org,
+	tzungbi@kernel.org
+Cc: devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	chrome-platform@lists.linux.dev,
+	nfraprado@collabora.com,
+	kernel@collabora.com,
+	Laura Nao <laura.nao@collabora.com>
+Subject: [PATCH 2/2] arm64: dts: mediatek: mt8192-asurada-spherion: Mark trackpads as fail-needs-probe
+Date: Tue, 18 Mar 2025 11:22:59 +0100
+Message-Id: <20250318102259.189289-3-laura.nao@collabora.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250318102259.189289-1-laura.nao@collabora.com>
+References: <20250318102259.189289-1-laura.nao@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313173707.1492-1-quic_philber@quicinc.com>
- <CAPpAL=we6VkyBXBO2cBiszpGUP5f7QSioQbp6x3YoCqa9qUPRQ@mail.gmail.com> <xogief67mb2wonb7angoypj4ddvvecyrcsnncqitggpij6ssim@fo3psnqqhovp>
-In-Reply-To: <xogief67mb2wonb7angoypj4ddvvecyrcsnncqitggpij6ssim@fo3psnqqhovp>
-From: Lei Yang <leiyang@redhat.com>
-Date: Tue, 18 Mar 2025 18:22:49 +0800
-X-Gm-Features: AQ5f1JrBFyW8xkFgMxVk6GGg-rvzIxamknFWt0oP1OOTPXdljbsO7bXLrfDxGHk
-Message-ID: <CAPpAL=xiQ0x7Vk55of1=-Hm0ijsVQkeLixv65WJc-J0sL9Fnww@mail.gmail.com>
-Subject: Re: [PATCH v6 0/4] Add virtio_rtc module
-To: Peter Hilber <quic_philber@quicinc.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Richard Cochran <richardcochran@gmail.com>, Marc Zyngier <maz@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Trilok Soni <quic_tsoni@quicinc.com>, 
-	=?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org, virtualization@lists.linux.dev, 
-	David Woodhouse <dwmw2@infradead.org>, "Ridoux, Julien" <ridouxj@amazon.com>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Parav Pandit <parav@nvidia.com>, 
-	Matias Ezequiel Vara Larsen <mvaralar@redhat.com>, Cornelia Huck <cohuck@redhat.com>, Simon Horman <horms@kernel.org>, 
-	virtio-dev@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-rtc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 18, 2025 at 6:14=E2=80=AFPM Peter Hilber <quic_philber@quicinc.=
-com> wrote:
->
-> On Tue, Mar 18, 2025 at 10:04:07AM +0800, Lei Yang wrote:
-> > QE tested this series of patches v6 with virtio-net regression tests,
-> > everything works fine.
-> >
-> > Tested-by: Lei Yang <leiyang@redhat.com>
-> >
->
-> Hi Lei,
->
-Hi Peter
+Different Spherion variants use different trackpads on the same I2C2
+bus. Instead of enabling all of them by default, mark them as
+"fail-needs-probe" and let the implementation determine which one is
+actually present.
 
-> thanks for the reply! However, I am not sure which virtio-net regression
-> tests you are referring to, and how these tests would be relevant to
-> virtio_rtc. The virtio_rtc driver does not have any relation to
-> virtio-net ATM. Reusing virtio_rtc within virtio-net has been discussed
-> in the past, but not done yet.
+Additionally, move the trackpad pinctrl entry back to the individual
+trackpad nodes.
 
-First let me introduce the virtio-net tests which include
-ping,hotplug/unplug nic device, live migration under stress etc
-scenarios. This test was triggered because some of the monitoring
-conditions of the CI tool are general. I will change the code later to
-avoid similar things happening in the future. Please ignore the last
-comment from my side, and sorry for bothering everyone.
+Signed-off-by: Laura Nao <laura.nao@collabora.com>
+---
+ .../arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts | 7 +++++++
+ arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi           | 6 ++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-Best Regards
-Lei
->
-> Best regards,
->
-> Peter
->
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts b/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts
+index 8c485c3ced2c..163960f58db5 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts
++++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada-spherion-r0.dts
+@@ -85,8 +85,15 @@ &i2c2 {
+ 	trackpad@2c {
+ 		compatible = "hid-over-i2c";
+ 		reg = <0x2c>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&trackpad_pins>;
+ 		hid-descr-addr = <0x20>;
+ 		interrupts-extended = <&pio 15 IRQ_TYPE_LEVEL_LOW>;
+ 		wakeup-source;
++		status = "fail-needs-probe";
+ 	};
+ };
++
++&trackpad {
++	status = "fail-needs-probe";
++};
+diff --git a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+index dd0d07fbe61a..b11b32a63bbc 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8192-asurada.dtsi
+@@ -335,11 +335,13 @@ &i2c2 {
+ 	clock-frequency = <400000>;
+ 	clock-stretch-ns = <12600>;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&i2c2_pins>, <&trackpad_pins>;
++	pinctrl-0 = <&i2c2_pins>;
+ 
+-	trackpad@15 {
++	trackpad: trackpad@15 {
+ 		compatible = "elan,ekth3000";
+ 		reg = <0x15>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&trackpad_pins>;
+ 		interrupts-extended = <&pio 15 IRQ_TYPE_LEVEL_LOW>;
+ 		vcc-supply = <&pp3300_u>;
+ 		wakeup-source;
+-- 
+2.39.5
 
