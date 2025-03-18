@@ -1,161 +1,119 @@
-Received: from forwardcorp1d.mail.yandex.net (forwardcorp1d.mail.yandex.net [178.154.239.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21A4820E6FC
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A88420E6FC
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:52:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742309511; cv=none; b=Nu9kujOon+HgEx8cuJc81Ce/FoybYbxIWuKeuo2ddA332yt/tD/30uREsiYi+/8QN5e7LCaKqIZjKJwhsnjenn3Ec0ZMTwTBbOoiGylvdc/B2nHThgAGAI+uEc+0PLBQxrV072+ZqAkqNwS8kySp2MXmdpnZwQvlK8OmkvmcF/0=
+	t=1742309522; cv=none; b=BMPdNrebAXS4gN8w867PyT44dGAazPgFoQZjEBV1GR68pKcQ/jJc7t5UcMigT44AWHFbSjec0WGsBZzAjgfo9HUKvOCc3cIdR8kxu7u92qbD53zbZqp6sQ4ERzsXiZ1eAorfLmxtXLFh3xkEslojPTmma4JSCQRPEREx01kLAto=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742309511; c=relaxed/simple;
-	bh=PTwboqiO2Ryf/kIoVPpizaXYYtdcV4ShPS7w7yx8kbU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Of9wKBrUApFQS+tNYdOkRKBcTv9vLIXahmwUnBKcCQbg9h9bZqCCTpjTgrT/fK7eoDnX/5fsKyr1SeYuRFb/l6pyCSZDCcO7HWqgE6huPf+ihwCaKPtYqwDiflN4+RbJvTvbTeAz0OANfXZNHb8M2qwpr5qbfYFfRQtPSuBUGzU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru; spf=pass smtp.mailfrom=yandex-team.ru; dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b=YuF7dT2E; arc=none smtp.client-ip=178.154.239.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex-team.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex-team.ru
+	s=arc-20240116; t=1742309522; c=relaxed/simple;
+	bh=93t4KyxAcUwbpTxvRYd/L3yrVfyxbH9hPjYa6eD1Myw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QyFbj6AG0OgLirwFBRcyBgzPOxmeIWCDsAln6msgRqfXx/9BSsMSx73cD86Tfu/vKhb5KLJzsXtErvgBGrDz+YgxCOEG4zKaKqlB7ro5IKIrJrJjJrdqu6llcrQMh9KIY2dpY6RfBlk0jQfnEQ6PdtpWQvFIxf2BNDjUwZq+vUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bXjVjP3R; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="YuF7dT2E"
-Received: from mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net [IPv6:2a02:6b8:c0c:a19b:0:640:7c13:0])
-	by forwardcorp1d.mail.yandex.net (Yandex) with ESMTPS id ABFD4610F4;
-	Tue, 18 Mar 2025 17:49:28 +0300 (MSK)
-Received: from davydov-max-lin.yandex-team.ru (unknown [2a02:6b8:b081:b407::1:6])
-	by mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id DnJ6t73FTOs0-DwITw8pz;
-	Tue, 18 Mar 2025 17:49:28 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru;
-	s=default; t=1742309368;
-	bh=1st08C0MmAzmZ5dxXArk0+G2EPIbpRvV5Pu4I7LVrg0=;
-	h=Message-Id:Date:Cc:Subject:To:From;
-	b=YuF7dT2EUUIxMGm670ao59TEoqxc2g++Nxf1ai9R72KK2ZnAFhs2G8nxJKY9/1kXx
-	 +FeN/t78zwQR5FmMkJn4mwppvX0Cg59l+572kAJ3L4TcmzKaZDkbrm0W8lS7NlvyNR
-	 G0lpnFlJbx7eqZ3Tdgwe14TQaNaLBhNZH1PZeRwk=
-Authentication-Results: mail-nwsmtp-smtp-corp-main-66.iva.yp-c.yandex.net; dkim=pass header.i=@yandex-team.ru
-From: Maksim Davydov <davydov-max@yandex-team.ru>
-To: x86@kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: davydov-max@yandex-team.ru,
-	den-plotnikov@yandex-team.ru,
-	gpiccoli@igalia.com,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	tglx@linutronix.de,
-	hpa@zytor.com
-Subject: [PATCH v5] x86/split_lock: fix delayed detection enabling
-Date: Tue, 18 Mar 2025 17:49:11 +0300
-Message-Id: <20250318144911.10455-1-davydov-max@yandex-team.ru>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXjVjP3R"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so16583175e9.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:52:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742309519; x=1742914319; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kmZFMU52ggHv/uxQXlUIKSkNor6eZqTTV/Z26Ntqf5U=;
+        b=bXjVjP3RrDFQws7d3+6ogoGwKndKVKvfLjJCdEm5EHlPscWf7VP+IPU+NIEqmU0JQB
+         8aBtQzhZrzpKU/TA8M1ljeHs+dn+UPvpCXFIPc3DxiNNuKftNYxWSCWRPLxAZGVtgsrn
+         knxvtSjyPVet3yiM1R0PCH7Xhfm9nV+G0dsszTgr/7HMXupIMG+kwBG33tVhcWTkVFJL
+         2QCGAZVcDyJ5E837mFv62kga8BwzwrJ6Cd00Gc0+I77uRt0W65OcCaHDCg7gSpT3CtEE
+         O7gIUzBJ5P1uf/UcpuKrzNgeQnY8aOCgTjIUytY6Wn07x5JYgLkwTc+jM3B0LIJLSDXA
+         oQjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742309519; x=1742914319;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kmZFMU52ggHv/uxQXlUIKSkNor6eZqTTV/Z26Ntqf5U=;
+        b=KjKsMVZCMUe5n8cf88SWuY2mm0GawosxIdzOirYa047b6vjQzd5ZyShFVLsUIf+Cyr
+         NKVwEbWXQDuqBCvYsKiRgXDOCX2+7qfYm/RGeShW3YLDPlrtt62zWRrGrHc6pXIsDCY+
+         K2a6dU2Hsku9u9f0NIBFoINQnGawaRY6NJWQqed63L+gZv6hm5m/MDkhcj+EmHcbmL7+
+         2uuU+E+p3UPO19Djwq9/ls9TZ4Kwd3CDDgE0oIp0JEVPZ9FFKfaU3M2B/QvfZq/RA0vn
+         K+lVnPIxZXvUE8MjreuzGkjWYHs/3c+KnPmBIz1bEdJyfLmSDK/Pah/oY7vZJoWp8gS+
+         a/Qw==
+X-Forwarded-Encrypted: i=1; AJvYcCXOKPpjTlMdKQhs0ZFkyawxTcox5SuOy7HGKnyu2nlKq2DEP7C2uRojP0IfB/SOfEAXzpIMRZrEeC3Tcl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4ZYDMxAEhfBpCdWcFAN4Jc4ID7G1bl2I0ULNKHEB2zmin9ngW
+	hvVCokSB8w4KxhwnyUr0H12W63Cnom/+/BQ2/QjGVsXSpnkOMwza
+X-Gm-Gg: ASbGncum9m0QAPMDpoGlHmBvyR9iI2zzk+6kxpfURtLKOsXPPHMuHcwT8QGJ6iWiANT
+	FazK9OLKFdSOaeJBiLn4xBiMW6RDQ3I81+nSswlgJ792yOMhJIyonL8JavvkC9x/W7w2ZxtuSo9
+	Gw+ReAXEfleNUtn4dzZwR3OMBfq5WlA0PR2EDSSVkrchiGW3syIdxSwA0JZvnLYQWwdbE4d/xxv
+	lOKO1d/m5XQlWLXZWsU3V4lUG9RJDvhsYIHDGpof+1mnHUA8Y9VVbm7ex7RWlRTUxrzBW1E9+kA
+	ugEW0EYu+THgjumvUxzNsurbb2BYFcuvpl2SaAP1OobTULc=
+X-Google-Smtp-Source: AGHT+IGxWW2bln7EbsKSCI2v/veWnprS2ogGfQvgu/+i0PWPhdsfLcc2mml+LBsDf+xF/aKKiMurmQ==
+X-Received: by 2002:a05:600c:6dcc:b0:43d:a90:9f1 with SMTP id 5b1f17b1804b1-43d3b9502d5mr18784485e9.6.1742309518667;
+        Tue, 18 Mar 2025 07:51:58 -0700 (PDT)
+Received: from qasdev.system ([2a02:c7c:6696:8300:c99:9d6f:1130:510f])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d200fac7asm138937955e9.28.2025.03.18.07.51.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 07:51:58 -0700 (PDT)
+Date: Tue, 18 Mar 2025 14:51:49 +0000
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: miquel.raynal@bootlin.com, Frank.Li@nxp.com,
+	alexandre.belloni@bootlin.com, linux-i3c@lists.infradead.org,
+	imx@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] i3c: master: svc: Fix i3c_master_get_free_addr
+ return check
+Message-ID: <Z9mIUc6Ln59umJtT@qasdev.system>
+References: <20250310023304.2335792-1-yschu@nuvoton.com>
+ <174225158210.1593610.10018812780731849409.b4-ty@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <174225158210.1593610.10018812780731849409.b4-ty@bootlin.com>
 
-If the warn mode with disabled mitigation mode is used, then on each
-CPU where the split lock occurred detection will be disabled in order to
-make progress and delayed work will be scheduled, which then will enable
-detection back. Now it turns out that all CPUs use one global delayed
-work structure. This leads to the fact that if a split lock occurs on
-several CPUs at the same time (within 2 jiffies), only one CPU will
-schedule delayed work, but the rest will not. The return value of
-schedule_delayed_work_on() would have shown this, but it is not checked
-in the code.
+On Mon, Mar 17, 2025 at 11:46:29PM +0100, Alexandre Belloni wrote:
+> On Mon, 10 Mar 2025 10:33:04 +0800, Stanley Chu wrote:
+> > The return value of i3c_master_get_free_addr is assigned to a variable
+> > with wrong type, so it can't be negative. Use a signed integer for the
+> > return value. If the value is negative, break the process and propagate
+> > the error code.
+> > 
+> > This commit also fixes the uninitialized symbol 'dyn_addr', reported
+> > by Smatch static checker.
+> > 
+> > [...]
+> 
+> Applied, thanks!
+> 
+> [1/1] i3c: master: svc: Fix i3c_master_get_free_addr return check
+>       https://git.kernel.org/abelloni/c/d6cb667b8e15
+> 
+> Best regards,
+> 
+> -- 
+> Alexandre Belloni, co-owner and COO, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
 
-A diagram that can help to understand the bug reproduction:
-https://lore.kernel.org/all/2cd54041-253b-4e78-b8ea-dbe9b884ff9b@yandex-team.ru/
+Hi Alexandre,
 
-In order to fix the warn mode with disabled mitigation mode, delayed work
-has to be a per-CPU.
+I sent a fix for this issue on the 9th March, which is before the patch
+Stanley sent which was sent on the 10th March.
 
-v5 -> v4:
-* using pure_initcall for per-CPU structure initialization instead of
-  deferred initialization
+You can view my orignal patch here:
 
-v4 -> v3:
-* rebased the patch onto the latest master
+https://lore.kernel.org/all/20250309164314.15039-1-qasdev00@gmail.com/
 
-v3 -> v2:
-* place and time of the per-CPU structure initialization were changed.
-  initcall doesn't seem to be a good place for it, so deferred
-  initialization is used.
-
-Fixes: 727209376f49 ("x86/split_lock: Add sysctl to control the misery mode")
-Signed-off-by: Maksim Davydov <davydov-max@yandex-team.ru>
----
- arch/x86/kernel/cpu/bus_lock.c | 35 +++++++++++++++++++++++++++++-----
- 1 file changed, 30 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/bus_lock.c b/arch/x86/kernel/cpu/bus_lock.c
-index 6cba85c79d42..1a8112dba37a 100644
---- a/arch/x86/kernel/cpu/bus_lock.c
-+++ b/arch/x86/kernel/cpu/bus_lock.c
-@@ -192,7 +192,32 @@ static void __split_lock_reenable(struct work_struct *work)
- {
- 	sld_update_msr(true);
- }
--static DECLARE_DELAYED_WORK(sl_reenable, __split_lock_reenable);
-+/*
-+ * In order for each CPU to schedule itself delayed work independently of the
-+ * others, delayed work struct should be per-CPU. This is not required when
-+ * sysctl_sld_mitigate is enabled because of the semaphore, that limits
-+ * the number of simultaneously scheduled delayed works to 1.
-+ */
-+static DEFINE_PER_CPU(struct delayed_work, sl_reenable);
-+
-+/*
-+ * Per-CPU delayed_work can't be statically initialized properly because
-+ * the struct address is unknown. Thus per-CPU delayed_work structures
-+ * have to be initialized during kernel initialization.
-+ */
-+static int __init setup_split_lock_delayed_work(void)
-+{
-+	unsigned int cpu;
-+
-+	for_each_possible_cpu(cpu) {
-+		struct delayed_work *work = per_cpu_ptr(&sl_reenable, cpu);
-+
-+		INIT_DELAYED_WORK(work, __split_lock_reenable);
-+	}
-+
-+	return 0;
-+}
-+pure_initcall(setup_split_lock_delayed_work);
- 
- /*
-  * If a CPU goes offline with pending delayed work to re-enable split lock
-@@ -215,13 +240,14 @@ static void split_lock_warn(unsigned long ip)
- {
- 	struct delayed_work *work;
- 	int cpu;
-+	unsigned int saved_sld_mitigate = READ_ONCE(sysctl_sld_mitigate);
- 
- 	if (!current->reported_split_lock)
- 		pr_warn_ratelimited("#AC: %s/%d took a split_lock trap at address: 0x%lx\n",
- 				    current->comm, current->pid, ip);
- 	current->reported_split_lock = 1;
- 
--	if (sysctl_sld_mitigate) {
-+	if (saved_sld_mitigate) {
- 		/*
- 		 * misery factor #1:
- 		 * sleep 10ms before trying to execute split lock.
-@@ -234,12 +260,11 @@ static void split_lock_warn(unsigned long ip)
- 		 */
- 		if (down_interruptible(&buslock_sem) == -EINTR)
- 			return;
--		work = &sl_reenable_unlock;
--	} else {
--		work = &sl_reenable;
- 	}
- 
- 	cpu = get_cpu();
-+	work = (saved_sld_mitigate ?
-+		&sl_reenable_unlock : per_cpu_ptr(&sl_reenable, cpu));
- 	schedule_delayed_work_on(cpu, work, 2);
- 
- 	/* Disable split lock detection on this CPU to make progress */
--- 
-2.34.1
-
+Thanks
+Qasim
+> 
+> -- 
+> linux-i3c mailing list
+> linux-i3c@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-i3c
