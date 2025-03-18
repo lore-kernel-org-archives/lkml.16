@@ -1,244 +1,315 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2061.outbound.protection.outlook.com [40.107.93.61])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4116207675;
-	Tue, 18 Mar 2025 09:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4624207640;
+	Tue, 18 Mar 2025 09:27:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.61
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742290033; cv=fail; b=OCt13AiKaQkzqRH6XCeIlY6/kZeQsV1iMTBt6U0G1VDHN/AYpX0GhAVisxHeK8+J8YQIjHkQ9sxcPW2dZFJVirQ+c616c9ONi+OBEPxfhyNqj7WLxrfRIlOr6owkEIAFvXYE5A4gZXpv75P9m31IrdsWmsWlHQTl9uHyoMHAHDo=
+	t=1742290034; cv=fail; b=jXdxPQ6GI1NhEKYtgLYYVTEQ5yj6GrOF09rzEcVQVVY3iXg7cjyf1CffLIpwRTsnd3nJqGkvRQnVjPwHw4g5LNED/dwlsPHgGFRm4xYZGh8s8SuiViXLzD3k3DXfsV0CbQwhqyeGgKpPLeooPyc2BwsurqczKOyF0qk7Vu+Agh4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742290033; c=relaxed/simple;
-	bh=y8GV6c7arKFfr9ztSjXepNUBUZI5sa+TOnsDLBg0tOI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=evUxWsFx1EVYIuY4X7ie6QJKzmk3MTWGw/SDAq6+QZUowWFuopw51vh8dT+ixMyBZeSuP9KhKR/c8kdbfK1IdVkL/NqXbyrdZZfGGOXmT6XDQnxNzlJdHGUs2oWWuCZD7sDSJ/5cXMF/D1UWynG/mckohDu/FwixsMbNZpF4eL4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LaeV1xNf; arc=fail smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742290034; c=relaxed/simple;
+	bh=v+9gYVh8vXd9GSQAeBhv/zXKGQiFD9tBchWyBPNyE+c=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=oVR3Wj0Ity8p5gyUxJ3qAXcIFSwx1G6021eDWZW0IhZZudWj/xGuq+b+siGoH5zWpaSW+BIHfC280QV5yiCbGU09LdeN1ncXFFKpA0cNamOJd6UuDBgq8IMrVPwJ+7dypSwmQeFhiX5oj/+zy8sNUWUv/wAB3RUJSeBvUhT0S1M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=J3xA8RTR; arc=fail smtp.client-ip=40.107.93.61
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LaeV1xNf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742290028; x=1773826028;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=y8GV6c7arKFfr9ztSjXepNUBUZI5sa+TOnsDLBg0tOI=;
-  b=LaeV1xNfy2MWGCWGmqG0nYpKIRGjJ9O25quzPnCFaaNgfnzYjMFFRWpM
-   qHYu9qZtMo2NBJ0LlmdzCpzveixVl3gwCmicXPYnUPXaT2LVczOVX0bzQ
-   QgjosTAsBUJln5WgLthZgEVVkk5a/X36JClZ2YNceHCCapvPPROP9SOwM
-   ETzDeb+DrIw0qKVAYzT9jX/EbF/ABLl1dsJGWS0VuM8TG6g/qOWkuSLY+
-   CQoDnpY+/gm7tlnF8tTRjV4tdhFM50PvwHD1U16opAg9dTPEKtRFvEUHT
-   GE27LoY9pyN8V8Yg+8YWxreLMv94M9qEU1AVzxc+zc8a3CWtYkGe9S5wF
-   g==;
-X-CSE-ConnectionGUID: sZrYyL6WSh+dzGvE4lAxZg==
-X-CSE-MsgGUID: oOaIW5H2TnSCgbdcPHYxNQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="60950368"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="60950368"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 02:27:06 -0700
-X-CSE-ConnectionGUID: h8tvJDIBQH2SsiPiXs1Kew==
-X-CSE-MsgGUID: T2u96EJASNG9u7F+uqlL2A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="127044888"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa003.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 18 Mar 2025 02:27:05 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Tue, 18 Mar 2025 02:27:04 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Tue, 18 Mar 2025 02:27:04 -0700
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (104.47.57.177)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Tue, 18 Mar 2025 02:27:04 -0700
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J3xA8RTR"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JqsLTiSYqCCxKZWxbNpOVDS2SsEvLwHrJk9K5JU+X6rQxab6/1YZVug26CMjf78YUCnP47X1wZy4M0Ij6koHCeHeiXhDCTnLoc+9RSJMuDVw94MyD6wsyFX5GXtNh7nLIij8z/jxhOm6jzV8rHMScxKQxoXllPSo8XnUSCWzZyTlhL72Hkv8ZaooSBRaQ5H2Dj9woFH/DdpL013nzDbfWzylOAhy5/BQkYOMhav82GYAWNQJpgZRRwoI1A0M7IEXWssH8V6q4T5HP3A7i7ibjfFonWxvNQb4oAUCiInZxsBB3vJdgiLkq33Mswilwl5W4t0/IZ97pPxD0TOr4YCWgw==
+ b=UMyKVVaZ3ipVEZJVdrKdfNg3pVur0q6xzeWb0t29JXuHTogP49VdtUsx+327YNSk1DOjSkvs/ZuOh3GSntT2uz6sNBCbW35ZTkU1w0T3ho9rucvpFLhOZtbmmSi8KZpQFudxIb4ODrzvlAb/uEx3UEZUezvjtlhGraUvPz3BzoaF6oXeNsOzyKVQ8X0uhrvSai9YHqa3KTorO6zxvFp16BHXyjsFoKRnsHVyKKKIsEN0P9SKg2qAIm9ck4p6OBhSyNxON4Xre93fb1C8hI7E/NknpP9Ulg4kmpwIPbA/dnBq7jh6/wrYcjMg0tuVcrEondSDoUkcvvptaTgHZjFYTg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=fDVSh2DkE2dAoB92/SlSj+bwGsn0NIiNYDp4tkPQ/Z0=;
- b=rICh/zyLgDD4Oe2cJqWK3jyq8F0+aBM2WwZf0nq569eDIwpZwxVWXlQ1Uzk1HmqV8b/nYapit4+284l/vJpSXWNtM1Oxi1SHwdoQbHIy05vmsjhCvmu9zZ/TvYBJGY3X8Bbejv6KVzu7fuTketaRhUux218cMAeGAXld3DfArj6TzYzEE9mez88WqurS9HDQ5IhPuDQrM6qHr9XegDAO27o3bQe/O390/sPv084b1DKbsSkfQ1ANU5876cFe03PAJry9KFti/nHGjI+XriSccfXILrzvGTtlIqs85LFgnYk51/arJvtlqpzsIwiu6Yk7VChBcoUT0LwzT1sgyxnRbg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DS0PR11MB8665.namprd11.prod.outlook.com (2603:10b6:8:1b8::6) by
- PH0PR11MB4776.namprd11.prod.outlook.com (2603:10b6:510:30::14) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.33; Tue, 18 Mar 2025 09:26:36 +0000
-Received: from DS0PR11MB8665.namprd11.prod.outlook.com
- ([fe80::8e7e:4f8:f7e4:3955]) by DS0PR11MB8665.namprd11.prod.outlook.com
- ([fe80::8e7e:4f8:f7e4:3955%4]) with mapi id 15.20.8534.034; Tue, 18 Mar 2025
- 09:26:36 +0000
-Date: Tue, 18 Mar 2025 10:26:30 +0100
-From: Michal Kubiak <michal.kubiak@intel.com>
-To: Simon Horman <horms@kernel.org>
-CC: Chen Ni <nichen@iscas.ac.cn>, <manishc@marvell.com>,
-	<andrew+netdev@lunn.ch>, <davem@davemloft.net>, <edumazet@google.com>,
-	<kuba@kernel.org>, <pabeni@redhat.com>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next] qed: remove cast to pointers passed to kfree
-Message-ID: <Z9k8RmOkKm2hQSi1@localhost.localdomain>
-References: <20250311070624.1037787-1-nichen@iscas.ac.cn>
- <Z9BuCIqxg5CRzD8w@localhost.localdomain>
- <Z9Bv+cjkxlVHsKAd@localhost.localdomain>
- <20250317185622.GK688833@kernel.org>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250317185622.GK688833@kernel.org>
-X-ClientProxiedBy: MI2P293CA0013.ITAP293.PROD.OUTLOOK.COM
- (2603:10a6:290:45::8) To DS0PR11MB8665.namprd11.prod.outlook.com
- (2603:10b6:8:1b8::6)
+ bh=otLVHMriqRbGqqmmVijqKbXc4/dh3Hd31ulhlqKDtC8=;
+ b=Ajag8+CfNQCrsI12TVtY1eLhSQVNpmfmvfAjRpCSaNKlneH7i5+/AH0mzG+N+fiSsS1DYV3R4pPG8c0lM55q+pnNKiFBw3hs1uESvz0rgIksDL9mBzLQtbAiG+uWUwwzygGgn3V1TjCnszZpmgfLW0WruA4I/tIlnCFSE0QC8EKra0N/xc/t9qg0ecP/XxGaDWUDL6kftBW/0L3TSnL7XG7l7e1I2ZGHAwODUWuOzIDqh3Br/Qaym04TKigQlmXtIAVN7SWEVI81mmoDtKyTnb/IACei4cPcve03xIOxY33snk0enPBcnEkmXjh7aOIn3GWhq7jX0/K3YFso5b8YxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=otLVHMriqRbGqqmmVijqKbXc4/dh3Hd31ulhlqKDtC8=;
+ b=J3xA8RTRVnboqY8x3maS4KJ1KLhljhzTRqgZO6+dhkq33c5/vcvHie0303Iqcp3l7KgIKEgRzRwJFIrjmsxaODtkoc1+xxiOy4zGajNKcQE8+BQF7gmUxJ/A4TbIH8DX3WqrDsUpYgc00atRNncec+9TVFBtn4t3jwHWz1No8TA=
+Received: from BN0PR07CA0024.namprd07.prod.outlook.com (2603:10b6:408:141::33)
+ by PH8PR12MB7183.namprd12.prod.outlook.com (2603:10b6:510:228::20) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
+ 2025 09:27:08 +0000
+Received: from BN3PEPF0000B36D.namprd21.prod.outlook.com
+ (2603:10b6:408:141:cafe::7d) by BN0PR07CA0024.outlook.office365.com
+ (2603:10b6:408:141::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Tue,
+ 18 Mar 2025 09:27:07 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ BN3PEPF0000B36D.mail.protection.outlook.com (10.167.243.164) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8583.3 via Frontend Transport; Tue, 18 Mar 2025 09:27:07 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Tue, 18 Mar
+ 2025 04:27:07 -0500
+Received: from xhdlc210324.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
+ Transport; Tue, 18 Mar 2025 04:27:04 -0500
+From: Sai Krishna Musham <sai.krishna.musham@amd.com>
+To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
+	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
+	<conor+dt@kernel.org>, <cassel@kernel.org>
+CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
+	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
+	<sai.krishna.musham@amd.com>
+Subject: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
+Date: Tue, 18 Mar 2025 14:56:48 +0530
+Message-ID: <20250318092648.2298280-3-sai.krishna.musham@amd.com>
+X-Mailer: git-send-email 2.44.1
+In-Reply-To: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
+References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+Received-SPF: None (SATLEXMB04.amd.com: sai.krishna.musham@amd.com does not
+ designate permitted sender hosts)
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR11MB8665:EE_|PH0PR11MB4776:EE_
-X-MS-Office365-Filtering-Correlation-Id: 19b5faed-a931-458e-ef90-08dd65fefb06
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-TrafficTypeDiagnostic: BN3PEPF0000B36D:EE_|PH8PR12MB7183:EE_
+X-MS-Office365-Filtering-Correlation-Id: 1e1abe08-1c0b-4ced-d852-08dd65ff0dd5
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|376014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?4d/muZq8Z8vRbAx60hpeYrmD5Oe0o95hgL6QK3OnQh5DC0Z3T1SjuQojDQJz?=
- =?us-ascii?Q?ttmFqomG4RofoPMxCGYAaX5ENRq2V0DMBPUN9PqiK7raxM9fWEIOcy+tZ7Yj?=
- =?us-ascii?Q?vNu3fFKmxHnlw7jD5nlJkvMzq1uiokPDUsu4npVAmKAD374S1wh0HTWEZGUW?=
- =?us-ascii?Q?3aB9tdrI/TQje5SgEgZ+JdsHzoy2DGR+3YmPTL5oLE9I3mAGRcXrVfdxtZMC?=
- =?us-ascii?Q?2kRjJDNDwg9WJErq/UC+0NdSRw/ujXwoC4gjPUcD+jYZtewWnUl0YlIHPTOA?=
- =?us-ascii?Q?jGEUa3rv8bNvGuMtqCWv5LxLjDBPB88lDH5fMD1gzFtnruaYw1bMpyLlGe4q?=
- =?us-ascii?Q?eqg4K9OK8abdnjGmBi2SM3V5Ivo4OKuLcjvyezGQvwdHpS/GB3Sipz23RZwZ?=
- =?us-ascii?Q?ddzbGbS0o9ApUpos+M/yHV/eap3XJlwEqmGiiopqcx/DdeGi36NFX7Uau3K3?=
- =?us-ascii?Q?kNSFAyFBB+vmiylAmTLdrzdtjhXd7RichckPTWILwk0q37OQGVxsxGmIe13b?=
- =?us-ascii?Q?kpK319HoEaG6MIwJWj1njU2bgHfVZKvMt1AY3WgDG+4KkYrwUqaW6OvB13q7?=
- =?us-ascii?Q?D7hvdQDRJZrvCYHwfxM52BeCcM6CTkbax/ZbfsDAsIODH2QrKTo1GCcplhbI?=
- =?us-ascii?Q?HOaho+xVJKn7qYaG5Tnevm2ghJHg867KLNbU+TqBTRlJ0ViE6Yuv3fFPFf+h?=
- =?us-ascii?Q?pRMSum4fSA5+Uk2PusTStUauImP9KocXP8DGxO37PxkBs9lx5TxTNbkcZysD?=
- =?us-ascii?Q?T7Nh2op5+g0kPlP4uyBPi0h5ySFJ1PjKim49jjzLr9qK3Oi7Nmd8zivqMjbi?=
- =?us-ascii?Q?sR+H9jSDtU4Jx+oKnaT/iczSpbSgbiLCKCndi1qLpZ4RkAy+Fk7ZISwNzNK4?=
- =?us-ascii?Q?BSYbCJGag7a3JU+v+A+FgqXHdfKZFHlcrN8sD44rs0Jn3879ebP7Rm1csbB0?=
- =?us-ascii?Q?2m04KPxxHc6xmtoKh822UQKNN8l081dmUXPWVjUtrJq0gFiZMg/IEH1987Rl?=
- =?us-ascii?Q?3BoHC3n4tznHpKCw1JYBKoZs9O4gt4ceOY4MGM/UKmxp8lT01AKb48M1uRcO?=
- =?us-ascii?Q?y4aF4lqt5heezBPc2zP9xcHKHuQFKY9NQZRwuI+nQRS+Z47opfUjhqlNdPM+?=
- =?us-ascii?Q?2+62EeAwalkpUhw0qhZ5zbWtnk16EOWNB9dg6/Vd+AFnWPud/zIFGturbT0t?=
- =?us-ascii?Q?WI2GgtdNWq62oVBDBFvCGnKqjgfAkIHusBNpqfHDV5Dktc5c/dG5EJa0jWBe?=
- =?us-ascii?Q?0LFBX+feUjXGJsVg6zeVXpTJi8xH7u/5n05isSl2FHuk2+N47TnKTWeO/aYJ?=
- =?us-ascii?Q?i0s2C1YBQRQtHm7ULXZmQbl6oj8pbRveW+NhVFF6d9tJooV4JAQ+p9tnq7aT?=
- =?us-ascii?Q?Y33nDm2E8JdO9bw/xjdPxvv/120N?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB8665.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?k9t4NzxUgoNsBSYSGTksk6WLyzqB3N4T2JZLdNOAFXTMU27VGEXgPgCJ/w/0?=
- =?us-ascii?Q?MckblmDgHVLPdRQ0B6zLSi0bXeIQE9I9TC53r0DTgWABE+5HQHNKcDyzW1Ns?=
- =?us-ascii?Q?2Lkw96EG1ZmkppX0hOvuexsLBuCo7q7Sr3i31V61sLHVjvKVyUXvKTF5jaKf?=
- =?us-ascii?Q?/fVbxBTvfZUv9CEE+Pnr2xFBpITLk/71w7Gt1YFzUVxDRsoXL3Jr0l4OsOaJ?=
- =?us-ascii?Q?1sWgsslgJz7mF46gHASI49K/nquRBRDb2hs9SrXmkMTdsMPayHqfEpcK2ZPG?=
- =?us-ascii?Q?dlUau+2zpCGLXnYbta0udyrPr3YRkoL5zlcHM1xYwRYg0kkEFDwx/ZAEe1Am?=
- =?us-ascii?Q?mTXnd/+K2SDapJ2nLTDMTrXvKfCoNIH3k2UHs5DO812poLeKJq7z8CoXaki8?=
- =?us-ascii?Q?k7SJv53a8j53cba6/yJvVqbnbFublYgOjTMD4u5zmF7xVek4IK1Rdmuq8MgJ?=
- =?us-ascii?Q?e8VWHczc8OvpHxDRBGsUHylpjlUedxYhXR+J7vCZxLQQ0PD1v3MlB7LQNIcR?=
- =?us-ascii?Q?mkv+St4Ka8262gopenpIRjlBGKy4mBwiZANHW2zMrqa0Cf3qb1KfF0bF4BTg?=
- =?us-ascii?Q?dUXST5xRjaaU5HOlvhu9Fv4ImqI0NNQ58i7G0r5eHDMjXdhG2XIhRKyM+UHN?=
- =?us-ascii?Q?rC+MHnjXVJpbLksx+Lu5CxZ7EcEf1XZgfLTsVf031RSMPz1B9CL6NgFnNUKH?=
- =?us-ascii?Q?WRfWVIAEA1O5ZZ3GH6LEmboA7BdNlZi5SmkaKmPcJ0jJ/zakkZYCdIBFqq5H?=
- =?us-ascii?Q?iHy2kkU9nC1gKsAiMQdzFnMZfCvjLb9cl8JSelbvOUoVMx3/ePLif7HUn9BU?=
- =?us-ascii?Q?nx59FI3hDclsyKwyBwAcj4L8y6YpAy3JkVMlp5Kt4VdVhMoqFIumG8Y6o/ec?=
- =?us-ascii?Q?ImiQi5i+BMn/YKJodP5jIA07uHMVDteGIBG+cU9RmqJDFXN2LCfs1OU+r2l9?=
- =?us-ascii?Q?hxW5IUyqZ6OTeGS3Pd89H8CezG37tvqThHmi/FmFcKfzclUpBUaGwBoxBMTb?=
- =?us-ascii?Q?o6Zu+cmgKkW4V/qEzMMKBjZyLHQV0DNkm5rg7BpP5Rc3Mdoc4Vf3LS3DpE7d?=
- =?us-ascii?Q?hDDOYwIKKjjpj5uP/yNuvBsk4n1d/V59bU3IY/d+f04hD2e8pWSBQka8whlM?=
- =?us-ascii?Q?k0NcfsbmeOsUmRIMRPRpVXEs0DDl3kvZssdEHSVeEYOuMKUWQyi4oC3mQUOy?=
- =?us-ascii?Q?Nv3AspuS8aJC8JQzCp8500DuOyTo8SO2TBNUgcda9DaTZPWYO+bKSBWQU9uB?=
- =?us-ascii?Q?/w8h1VMbJvUw9knQi7hdVpfvFEUOjQTm7naJECVVswQobPi92+Rm+2tEsPtd?=
- =?us-ascii?Q?4W3EfqMrwsZIJukOcrdj19hR3TfB+Se0u6Azy2jbr+8JbXIlwcNvrISos8+z?=
- =?us-ascii?Q?v+MKTCMBQTjgWFf60frW2Ueo9MO6mZYPJWrIXQEn6WN/YzAqL5gbPcOkUmVT?=
- =?us-ascii?Q?Th9JX8eiJPIVbusBvibKPMGjEr/76ZDvc+S+m5Aop4iEuuNO8PHyrzrPcIV0?=
- =?us-ascii?Q?WNVm5dVF/P2FOwyptY7q0P0V1b3eAy4me/fm7JF+nUbBnHs/4dpYqOFtXkCp?=
- =?us-ascii?Q?uZVcSKrfPFV24NdtnU3J7k9f/rpu1Yf+R0uQjqW+Vsd1MrbPJJrAWPl56kr5?=
- =?us-ascii?Q?6Q=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 19b5faed-a931-458e-ef90-08dd65fefb06
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB8665.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 09:26:36.5381
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|376014|1800799024|7416014|82310400026;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?pFRp1E+LQBBgmdXTFXjAwybtB36S+Odzysmwo/edTOrH9RZ+4okArim6wCrh?=
+ =?us-ascii?Q?8jDtugI6nDHiWrYpJ8+VGY4vsmJRcwIQnYDPyzAkJ58Enc+87lsj2B6sIUK/?=
+ =?us-ascii?Q?Twgjf3j4iNFAmqiiYCU0R0Y63P6GI4uw9fD/oXlTJk00+azZ8rFmXU/wg9qg?=
+ =?us-ascii?Q?1PYWIb8naRzBh87iL/ielSK81pVDjbp0RhC0qN9p4jfd0G3AxODdC0Flerjb?=
+ =?us-ascii?Q?uu046EXG+Okz9QTHym69JhLi2FPvb12YrLEQJPhIiS7vq+o8B/cWKqBx5GYD?=
+ =?us-ascii?Q?kWw5y4qktduVasybMvzLvFJWoIFZpf1CU4wwgzthSYEe8JniCuPGgxiU0pKS?=
+ =?us-ascii?Q?UaITpkYnL8bYYQ2Jd2DGQV98wQQNANG63NAGcNNdHaxb7USt4fRi2PAuZb2K?=
+ =?us-ascii?Q?bwxI6e8BpkXImdW82Q+L3QYL9QUsrTdSQCa93cl1j5lSVuanmlBtBLqT8ORd?=
+ =?us-ascii?Q?p46NneU73is/n72OJgg3tBkIHe7SkjZzWlwZkBhbV54feKWTo1uqxqm0Sl9p?=
+ =?us-ascii?Q?BpqHB81o1lySccnkB+E1S/Welhk6QF7WxnLXjBBHkP/ocGKC0aUAl28GWSg5?=
+ =?us-ascii?Q?cpVHOd7Mgh2hhXdfDNxQgrkUypOykfF++K9FbJJk+tx3DRA34P+cVDkdYHLQ?=
+ =?us-ascii?Q?+uO5MZl35sGIYvsc69+TmHZL6YySNt7Qazd5HCUIjnWcy0lJWFJkWp8ZQLaC?=
+ =?us-ascii?Q?ta3J58Lqt2o5wlYUS9K+d47UmqUJKhI4TsgzvcjhxY+Xa+1fxGVF92GlHwh0?=
+ =?us-ascii?Q?f5uvfC8gxcTrjt5CoMtpkKjQceUo+ARBpgtP5jWcTxZt7Uj6gXbGD5I7O0be?=
+ =?us-ascii?Q?wrCgIFeOyzjFGACu9K51qaASD7p3m8I+pBz7ZfcfGhaGFCSmfKA/Jy3S8C4q?=
+ =?us-ascii?Q?mHPqG2U3Wz0Pf6jozdSfPsur4hKRxm3ROHULCi0KrSsVnKlGdtBdNPaz/rkJ?=
+ =?us-ascii?Q?d5x7VoEiq1hyxIN8+zvE8xL4Qyq0RlodS2NwSo0ZtDxPtNrLYwkwTOLma43a?=
+ =?us-ascii?Q?ND2Du5+eascvX7exq+bngbHkEBGHNRVhXNqlInW4P0J9Z+75JoVoeWhrDBwJ?=
+ =?us-ascii?Q?ZjAQB36wufRT2UsHlwLx6DjPaxVuk8k1bSfdnjEDb1t2TptvJafVrA69aUWk?=
+ =?us-ascii?Q?EPDe1NSQIgPOOObRV729azLOSBPZ4tMjE6HN+Fuw2X6q6rg+32Z1XWN7gaIF?=
+ =?us-ascii?Q?oUqHxFzoioD9OvaAFvpiYGsHq2MgojM1uiZYkN+LGGBx5Xu9lcxbRdK6ir4Y?=
+ =?us-ascii?Q?U7+OQ7ZfyyDJ6rRX6EaDNksMpRG60dLinCvH9lWoQisdV12Bqh7FxOAH9ROX?=
+ =?us-ascii?Q?QhdyPjvuhLlrEsVOE/TT4GWiC3V5SSngErskmvG2vgYGlyOFqSdY7RhWswX6?=
+ =?us-ascii?Q?1czyjNgnf0XT/6axBFJdMs6jJRozwBTZ/fAsG5TzKrhRNVVXESbRA3756AtM?=
+ =?us-ascii?Q?l4X8v1kWCTrqlqAVTk1TRT82MsaAaLkv9Pk4efYY5OecPeoIwFdmaKlJFU9p?=
+ =?us-ascii?Q?F+XqwhARQlly6q8=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(376014)(1800799024)(7416014)(82310400026);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 09:27:07.9193
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 1NGhFiqWSeDiTTeA+g+kZX4kld2mD5TM+y0CZKKmIKpFEwccx5Kxv4yUKZYWzAlP8F1ANrnv8UxcoDzEzQ2q1Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR11MB4776
-X-OriginatorOrg: intel.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1e1abe08-1c0b-4ced-d852-08dd65ff0dd5
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BN3PEPF0000B36D.namprd21.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR12MB7183
 
-On Mon, Mar 17, 2025 at 06:56:22PM +0000, Simon Horman wrote:
-> On Tue, Mar 11, 2025 at 06:16:41PM +0100, Michal Kubiak wrote:
-> > On Tue, Mar 11, 2025 at 06:08:24PM +0100, Michal Kubiak wrote:
-> > > On Tue, Mar 11, 2025 at 03:06:24PM +0800, Chen Ni wrote:
-> > > > Remove unnecessary casts to pointer types passed to kfree.
-> > > > Issue detected by coccinelle:
-> > > > @@
-> > > > type t1;
-> > > > expression *e;
-> > > > @@
-> > > > 
-> > > > -kfree((t1 *)e);
-> > > > +kfree(e);
-> > > > 
-> > > > Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
-> > > > ---
-> > > >  drivers/net/ethernet/qlogic/qed/qed_main.c | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/net/ethernet/qlogic/qed/qed_main.c b/drivers/net/ethernet/qlogic/qed/qed_main.c
-> > > > index f915c423fe70..886061d7351a 100644
-> > > > --- a/drivers/net/ethernet/qlogic/qed/qed_main.c
-> > > > +++ b/drivers/net/ethernet/qlogic/qed/qed_main.c
-> > > > @@ -454,7 +454,7 @@ int qed_fill_dev_info(struct qed_dev *cdev,
-> > > >  
-> > > >  static void qed_free_cdev(struct qed_dev *cdev)
-> > > >  {
-> > > > -	kfree((void *)cdev);
-> > > > +	kfree(cdev);
-> > > >  }
-> > > >  
-> > > >  static struct qed_dev *qed_alloc_cdev(struct pci_dev *pdev)
-> > > > -- 
-> > > > 2.25.1
-> > > > 
-> > > > 
-> > > 
-> > > 
-> > > LGTM.
-> > > 
-> > > Thanks,
-> > > Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
-> > > 
-> > 
-> > I'm sorry I missed that the patch is addressed to "net-next".
-> > It rather looks like as a candidate for the "net" tree.
-> > 
-> > Please resend it to the "net" tree with an appropriate "Fixes" tag.
-> > 
-> > My apologies for the noise.
-> 
-> Hi Michal,
-> 
-> I'm unclear what bug this fixes.
-> 
-> It seems to me that this is a clean-up.
-> That as such it should only be considered in the context
-> of more material changes to this driver.
+Add PCIe IP reset along with GPIO-based control for the PCIe Root
+Port PERST# signal. Synchronizing the PCIe IP reset with the PERST#
+signal's assertion and deassertion avoids Link Training failures.
 
-Hi Simon,
+Add clear firewall after Link reset for CPM5NC.
 
-I may have gone too far in stating from the commit message that "the issue
-was detected by coccinelle", so I considered it as a fix for the issue.
-I agree that it can be also considered as a clean-up, so if you don't
-see any problem I have no objection to sending it to "net-next".
+Adapt to use GPIO framework and make reset optional to maintain
+backward compatibility with existing DTBs.
 
-Thanks,
-Reviewed-by: Michal Kubiak <michal.kubiak@intel.com>
+Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+---
+Changes for v4:
+- Add PCIe PERST# support for CPM5NC.
+- Add PCIe IP reset along with PERST# to avoid Link Training Errors.
+- Remove PCIE_T_PVPERL_MS define and PCIE_T_RRS_READY_MS after
+  PERST# deassert.
+- Move PCIe PERST# assert and deassert logic to
+  xilinx_cpm_pcie_init_port() before cpm_pcie_link_up(), since
+  Interrupts enable and PCIe RP bridge enable should be done after
+  Link up.
+- Update commit message.
+
+Changes for v3:
+- Use PCIE_T_PVPERL_MS define.
+
+Changes for v2:
+- Make the request GPIO optional.
+- Correct the reset sequence as per PERST#
+- Update commit message
+---
+ drivers/pci/controller/pcie-xilinx-cpm.c | 66 +++++++++++++++++++++++-
+ 1 file changed, 65 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
+index d0ab187d917f..fd1fee2f614b 100644
+--- a/drivers/pci/controller/pcie-xilinx-cpm.c
++++ b/drivers/pci/controller/pcie-xilinx-cpm.c
+@@ -6,6 +6,8 @@
+  */
+ 
+ #include <linux/bitfield.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqchip.h>
+@@ -21,6 +23,13 @@
+ #include "pcie-xilinx-common.h"
+ 
+ /* Register definitions */
++#define XILINX_CPM_PCIE0_RST		0x00000308
++#define XILINX_CPM5_PCIE0_RST		0x00000318
++#define XILINX_CPM5_PCIE1_RST		0x0000031C
++#define XILINX_CPM5NC_PCIE0_RST		0x00000324
++
++#define XILINX_CPM5NC_PCIE0_FW		0x00001140
++
+ #define XILINX_CPM_PCIE_REG_IDR		0x00000E10
+ #define XILINX_CPM_PCIE_REG_IMR		0x00000E14
+ #define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
+@@ -99,6 +108,7 @@ struct xilinx_cpm_variant {
+ 	u32 ir_status;
+ 	u32 ir_enable;
+ 	u32 ir_misc_value;
++	u32 cpm_pcie_rst;
+ };
+ 
+ /**
+@@ -106,6 +116,8 @@ struct xilinx_cpm_variant {
+  * @dev: Device pointer
+  * @reg_base: Bridge Register Base
+  * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
++ * @crx_base: CPM Clock and Reset Control Registers Base
++ * @cpm5nc_base: CPM5NC Control and Status Registers Base
+  * @intx_domain: Legacy IRQ domain pointer
+  * @cpm_domain: CPM IRQ domain pointer
+  * @cfg: Holds mappings of config space window
+@@ -118,6 +130,8 @@ struct xilinx_cpm_pcie {
+ 	struct device			*dev;
+ 	void __iomem			*reg_base;
+ 	void __iomem			*cpm_base;
++	void __iomem			*crx_base;
++	void __iomem			*cpm5nc_base;
+ 	struct irq_domain		*intx_domain;
+ 	struct irq_domain		*cpm_domain;
+ 	struct pci_config_window	*cfg;
+@@ -478,9 +492,42 @@ static int xilinx_cpm_setup_irq(struct xilinx_cpm_pcie *port)
+ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
+ {
+ 	const struct xilinx_cpm_variant *variant = port->variant;
++	struct device *dev = port->dev;
++	struct gpio_desc *reset_gpio;
++
++	/* Request the GPIO for PCIe reset signal */
++	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(reset_gpio)) {
++		dev_err(dev, "Failed to request reset GPIO\n");
++		return;
++	}
++
++	/* Assert the reset signal */
++	gpiod_set_value(reset_gpio, 1);
+ 
+-	if (variant->version == CPM5NC_HOST)
++	/* Assert the PCIe IP reset */
++	writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
++
++	/* Controller specific delay */
++	udelay(50);
++
++	/* Deassert the PCIe IP reset */
++	writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
++
++	/* Deassert the reset signal */
++	gpiod_set_value(reset_gpio, 0);
++	mdelay(PCIE_T_RRS_READY_MS);
++
++	if (variant->version == CPM5NC_HOST) {
++		/* Clear Firewall */
++		writel_relaxed(0x00, port->cpm5nc_base +
++			       XILINX_CPM5NC_PCIE0_FW);
++		writel_relaxed(0x01, port->cpm5nc_base +
++			       XILINX_CPM5NC_PCIE0_FW);
++		writel_relaxed(0x00, port->cpm5nc_base +
++			       XILINX_CPM5NC_PCIE0_FW);
+ 		return;
++	}
+ 
+ 	if (cpm_pcie_link_up(port))
+ 		dev_info(port->dev, "PCIe Link is UP\n");
+@@ -551,6 +598,19 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
+ 		port->reg_base = port->cfg->win;
+ 	}
+ 
++	port->crx_base = devm_platform_ioremap_resource_byname(pdev,
++							       "cpm_crx");
++	if (IS_ERR(port->crx_base))
++		return PTR_ERR(port->crx_base);
++
++	if (port->variant->version == CPM5NC_HOST) {
++		port->cpm5nc_base =
++			devm_platform_ioremap_resource_byname(pdev,
++							      "cpm5nc_csr");
++		if (IS_ERR(port->cpm5nc_base))
++			return PTR_ERR(port->cpm5nc_base);
++	}
++
+ 	return 0;
+ }
+ 
+@@ -635,6 +695,7 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
+ static const struct xilinx_cpm_variant cpm_host = {
+ 	.version = CPM,
+ 	.ir_misc_value = XILINX_CPM_PCIE0_MISC_IR_LOCAL,
++	.cpm_pcie_rst = XILINX_CPM_PCIE0_RST,
+ };
+ 
+ static const struct xilinx_cpm_variant cpm5_host = {
+@@ -642,6 +703,7 @@ static const struct xilinx_cpm_variant cpm5_host = {
+ 	.ir_misc_value = XILINX_CPM_PCIE0_MISC_IR_LOCAL,
+ 	.ir_status = XILINX_CPM_PCIE0_IR_STATUS,
+ 	.ir_enable = XILINX_CPM_PCIE0_IR_ENABLE,
++	.cpm_pcie_rst = XILINX_CPM5_PCIE0_RST,
+ };
+ 
+ static const struct xilinx_cpm_variant cpm5_host1 = {
+@@ -649,10 +711,12 @@ static const struct xilinx_cpm_variant cpm5_host1 = {
+ 	.ir_misc_value = XILINX_CPM_PCIE1_MISC_IR_LOCAL,
+ 	.ir_status = XILINX_CPM_PCIE1_IR_STATUS,
+ 	.ir_enable = XILINX_CPM_PCIE1_IR_ENABLE,
++	.cpm_pcie_rst = XILINX_CPM5_PCIE1_RST,
+ };
+ 
+ static const struct xilinx_cpm_variant cpm5n_host = {
+ 	.version = CPM5NC_HOST,
++	.cpm_pcie_rst = XILINX_CPM5NC_PCIE0_RST,
+ };
+ 
+ static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
+-- 
+2.44.1
 
