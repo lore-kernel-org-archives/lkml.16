@@ -1,236 +1,255 @@
-Received: from OS0P286CU011.outbound.protection.outlook.com (mail-japanwestazon11010064.outbound.protection.outlook.com [52.101.228.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE9702576;
-	Tue, 18 Mar 2025 12:31:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.228.64
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742301123; cv=fail; b=pO1/jdRaFa1bHvovEbVVM9Pi/j4zMJncwTB54RfDDWIZzHQAQVxSIXeihMQLiZuLCbVIbWQ7kOasIrJRN2DBrSrcXYk7WdzsjfuMiWgr4HN/s8dIPu1F2KyKa+DSMF/2zHc6utGl4D8nS18YKj03j5C6R8vlFZZcMc/O5HRTjOE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742301123; c=relaxed/simple;
-	bh=7gCdOMj5BAVxY7y+doW8Yvw+UDqW4c1jFa+XdIADbjA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XlbwZmoI1d2GiMtlTLFC+QwtPAbgjrHFjGD7RfeG9HVz6hzu5WPJBBD4t1WjAJds+VVQ1sXb6CJMCAkBY6D8WTQ7XsSC+UMr6eVGzIlVzUyGUYbt6YUljtLyhf4oN1Uhj7tT8t8xIrOPlvFAjlogTZbWBXFLaNvC7h+gEXFtJi8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=OcQB5ZUx; arc=fail smtp.client-ip=52.101.228.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A82CC1714B2
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 12:35:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742301344; cv=none; b=TQkz97JxqX3iGT/v7Bg37wCPlVhZNuBwgbIPO2e607cXqNM52Px/yOK+gYonaGw9JsObEScq+awNmexCr45WoEY01Egkx4gQrQ9JHCTkb9RWxqtjfa52JHdMp6u9+HzI/7WTVIB8SwEX/PgCErw/Bz7qpQBVdG+K90Mrstq7pe8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742301344; c=relaxed/simple;
+	bh=usWzQaO8PHBkm1OdlB45bKfs+k8hRXYyxwXZNa9AzKg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZviwIfxQemIkH2SUZRIxZS9OAYuI18887b0y116Q7PXdnvSLlcvA5R7lMXzahZgSpsLTSjfpBXvmQ0Ebjmj/OGl4Lpy6aLrLWSsLY9yWf9iBzCPkMNmzl0hs/a7pAkAMkoEZZ1AW6WRqpBN1SGJAMmdslytsYKFXoOf5DTp/vUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aISYJlYF; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="OcQB5ZUx"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Yd0ZwCIoaRiHMtOJZ5duu5iplzaItxzjW1mRE2b3fFRG8n4VKOf/QA84tf4oy68AvjpkNoAqDZEFfnzLbUQnf+jf1RyW9CGsgpdWL66yXSC4z4mkCklDLtyWFvCrjr6A/uyCGZ0VwTOEO5eB+rGiGHQpsPqP2zYmqu9jBvBENFqmTyClqmBAlNNp13Blt7rc8iNH9Xjm+hphZtJ4Xij3fxgsJnFYK74Vvm4je64QfFGBbbg5OjSJCaTBkQujbHa159zkW4EnY7FNtwXLAnubsBQFlNSWbiAWO9qzr6Mom7XkRdH2uGUFTfOQ8zDwFkvRxRBiNklHqMZTDSxmd90J8Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7gCdOMj5BAVxY7y+doW8Yvw+UDqW4c1jFa+XdIADbjA=;
- b=MNDKs+HR2qU4+Zw/IfQLLCzHav+j430zZp5f2isG7+Rgp8n04I9R3ndrHKIcmjiv5xMYUGVdJNJ19K+rsFVJ9tvpU5N1wx158lNxZuqPxsgUz2U7AeAX20URhodqthrsyKvg5NzccbFZReUY3VMJgCtoZR4jsIU+E7D/VbDGyBE//vX4TDeRwzKK9yXb7WkNWx/0bkn+HujPsAqLYvCdA930VOd26Io10JAOoL57cES3K9mZb2h2DTN4Zh78+xfBzT+hDSN8b+1Pw443eO1XqMrl11qL+XUCUviIP9pnfrHw73UhqFkpJvu6PSv5PcRTNZZwwg3LLXA4haHIHc15Iw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
- dkim=pass header.d=renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7gCdOMj5BAVxY7y+doW8Yvw+UDqW4c1jFa+XdIADbjA=;
- b=OcQB5ZUxnitLSnuuTFoMqJqJtL6Wvk/sEuLQzED35k6U0YvG/i2/YzRdv6eR5fRP3Q9NEGzAN8ZoD3yJYLj0pUDbQ7Fqa9Rf+832XnrWhNh2cjq5r+APvlIc50J9NOUMynl9aX/Ft8uKAhTvRc3Wl5lgDWO4QfS43QCJ3d4x99s=
-Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com (2603:1096:400:448::7)
- by OS3PR01MB9481.jpnprd01.prod.outlook.com (2603:1096:604:1ca::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Tue, 18 Mar
- 2025 12:31:52 +0000
-Received: from TYCPR01MB12093.jpnprd01.prod.outlook.com
- ([fe80::439:42dd:2bf:a430]) by TYCPR01MB12093.jpnprd01.prod.outlook.com
- ([fe80::439:42dd:2bf:a430%7]) with mapi id 15.20.8534.031; Tue, 18 Mar 2025
- 12:31:52 +0000
-From: Fabrizio Castro <fabrizio.castro.jz@renesas.com>
-To: Philipp Zabel <p.zabel@pengutronix.de>, Prabhakar
-	<prabhakar.csengg@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>
-CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, Biju
- Das <biju.das.jz@bp.renesas.com>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>, Chris Paterson
-	<Chris.Paterson2@renesas.com>
-Subject: RE: [PATCH v2 2/2] reset: Add USB2PHY control driver for Renesas
- RZ/V2H(P)
-Thread-Topic: [PATCH v2 2/2] reset: Add USB2PHY control driver for Renesas
- RZ/V2H(P)
-Thread-Index: AQHbjcumAKkaq95VEEiIxX0Tw+LMrrNwypcAgAAaTMCAADDqgIAHvOcQ
-Date: Tue, 18 Mar 2025 12:31:52 +0000
-Message-ID:
- <TYCPR01MB12093DB963348A8FD58409E5AC2DE2@TYCPR01MB12093.jpnprd01.prod.outlook.com>
-References: <20250305123915.341589-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-	 <20250305123915.341589-3-prabhakar.mahadev-lad.rj@bp.renesas.com>
-	 <30b6841b3ce199488698ab272f103a0364adb000.camel@pengutronix.de>
-	 <TY3PR01MB12089B78E1DE163B740A51134C2D32@TY3PR01MB12089.jpnprd01.prod.outlook.com>
- <c27ab4ca4563d20a73ffc8a577f960fe59ffa88f.camel@pengutronix.de>
-In-Reply-To: <c27ab4ca4563d20a73ffc8a577f960fe59ffa88f.camel@pengutronix.de>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TYCPR01MB12093:EE_|OS3PR01MB9481:EE_
-x-ms-office365-filtering-correlation-id: 00afb083-ab7c-4378-115b-08dd6618dcd2
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|7416014|376014|38070700018;
-x-microsoft-antispam-message-info:
- =?utf-8?B?d1U0ZUxOQ1RQejhoOWVES1lJSnJtc3l3YUJ2WGc3N2R1K1pBNmVYZ011SVJW?=
- =?utf-8?B?eCswZUVpQndLdmhUM0MrTDlnYkxTRVM1MUVscnRHa084enlZOERkS2ZFdEk4?=
- =?utf-8?B?Z3I5dUVyVGJmaVFBblBwRUFDZWFHaW1sOFROemwwaHlZWE9OREtGdEFVS0gz?=
- =?utf-8?B?NFIyME1YQnB5UXJPbjVmTng1RkR4TFJrTTl0S3AveDBPY2t5amEzMkFsMENi?=
- =?utf-8?B?RlVDekQ3QjZ0NjB3bU5tTDY5bHdNbXovTmY3ODdjd2hnRmxKU3NLb1E3WEhM?=
- =?utf-8?B?RDZ5bS92MzB6SXVwaEtGY3RLeFMvQ3VIR0ZYd2o1R3JJZXNYTlk5MVZwREN4?=
- =?utf-8?B?dVNET2F6QVgwaVF3NllzZUZzWXNmakV2K282ZU9zMU5vK1BMRzJWSDVqMGNI?=
- =?utf-8?B?dyt6Z2lVbEJVQ3Z0WWZscjcvTWNhM2h6TXliY0VGRGJCcEw2cTRNYlkxeHRy?=
- =?utf-8?B?cW5Cdm8wdzJPU21kWHpUOXQvQmVwdEl5R2Y5REdHMGlXL3F6TU82Y1pNSnNX?=
- =?utf-8?B?Q0tDeVY0aU83emFBaE5tVGtjd3FVelJxaXk1b0xjVWx3MTRSWVdvUmpUYXA2?=
- =?utf-8?B?Tm5OOEN5dEJIOWFGVElGQmxGZm82amF2Zm9HTnFyeDNEZjEwSG51WXFlek9v?=
- =?utf-8?B?Q2VkNmxueGY4MThnREVNL2FXbDk0emxXZUNjbUNmRE5aM2JOWXhjUGxnT2JR?=
- =?utf-8?B?dkZMNzFLNzVLdm54QUxFOTI4WEFzdGVyNGpzQzlEOEI5VWlEZ1VQYWU4cnZw?=
- =?utf-8?B?b08xaW5wdGRPczhhWGtlVHZIRzFGemtyK2wweTZkdGg0T2ZxNEI4SnZiVXZq?=
- =?utf-8?B?ZENYRmVpREtVa3pHeC9ackJuRXN3TEFpanRoa1ZrK1huQng4WThOczBET2Iz?=
- =?utf-8?B?TzhybjFiQS90U29hZ0FCZ0xrMi9OTEppS21VcmZVSjhaS0NBOVlySlNEanla?=
- =?utf-8?B?UWdtVmp5S0FKa2hNMWxSV3hEYmYydWNTRmxlbm1XN3puWmplWGx2SmdVR21B?=
- =?utf-8?B?YlN2T1VuYXU4d1lxNm1SMkhyQ0dqUnluNVU4UkV2SjRpU0pnOGk2emNrenc1?=
- =?utf-8?B?TU0wUWFCZjJFNG0zQUpHazAyT1A0c0N2Wm5TSnJDRURXbVVzWWpSU29tUGxM?=
- =?utf-8?B?QWpJQ1k3L3IrT3Y5cTJYbU5JdlppS1VIV3VaNWFnaHdQQk1WQllTeFNGSEov?=
- =?utf-8?B?djdod2ZkMkJzbzhnMjl4Q2l4dTNhTTlxSnlUc0pURjlZcmd3QlgrdjlFNmJ0?=
- =?utf-8?B?b3MzRHNsL2VqM0s1UTlPcFpaUUdsNS9RckJjOWtWWTZhWStCUU1yZGd4Vnhz?=
- =?utf-8?B?WlJQUkpqeGYrNFF1VkRkN2hMRVB2SkdIMExLbDNoQ1p0TVNKZ2doMlFpTnpw?=
- =?utf-8?B?UDFrSjBXbm9rcFpPaG5kWitJMTJMbFBIRndET3RpMGIrUVR2NU44a3lyVVRz?=
- =?utf-8?B?N1g4ZW4vWmlTTTFHdHNIUnJ5bWludEs3ZDVnS044ZFhweGtJZTBFT1grS3VD?=
- =?utf-8?B?VVBHaU4rOTNmRVpzRDFyN1pydm5QNkRBZ1JPZDNKUlJuTDZ6V3RCRmM1VEZx?=
- =?utf-8?B?cGdYeHd2ejRzN21yUm9jelg4RmtRcVpZYy9KN1hYbjcyNGZhUUNJbkFrSDdE?=
- =?utf-8?B?c0tCVnpHWk8yMzNabXFLY2dFTXRvbWVPYVdxSlNJdklxSVpPU053TTU3aUp5?=
- =?utf-8?B?b0dMbng4NjJkcEpsQlAvQTI1QWN2djdYWm5KaGhTbnJIV2wvMFIweHRrZlIy?=
- =?utf-8?B?RElFdzMxbFczOXBTYkRab1d1YWk3WGtxKzk3c1h4UXNmQWRqcXhRMGNHVFV5?=
- =?utf-8?B?blV1bXdiQmhkZEF6dFhGZDhrN3R3T0JPNHVWVDJveExyaHEvSUgyd0lkT0FG?=
- =?utf-8?B?MUJMc1pwMG5EMjJMNFZTdkFyUEJ0RDUvL0FSdE5aV29FMThQZHZKejQzbDR0?=
- =?utf-8?Q?215rXHNQtc0lGtxEes444OsrJVXd1FtB?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYCPR01MB12093.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(7416014)(376014)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?TlhFT1ZZM0RiZmZTVnFkMXhSOGxHekZpaWZiM2hZV2NSZUJKQldwQkVoNGdn?=
- =?utf-8?B?TDFHbHBFZHFUT0F1b25XazkzSFpCSjJkUTgvejgwdUhWSytOcE53ZnZDeGZG?=
- =?utf-8?B?QzhXQ3hWbjVNOFVhTENsUU8xaVhrZ0pDS0N5WEdodk4xM1lHZzJ5VWVRMFdD?=
- =?utf-8?B?ZS9KclhrckRldFRSWHlxYmU5OUIrSGdOUDBCUlJSVDgwOW9Yc1Radll0QmJm?=
- =?utf-8?B?OEZHYXlUcEJzQmMvbE1rOXRRbm1rWTRBdFFtN2k2QXpyYXJzaXF5cS9heHdr?=
- =?utf-8?B?ODVRTzB5N1dpRTUxbTAwUHdZNU41MHNiSHVjSW1NYXpnVVRYVUUxOXhnZXFk?=
- =?utf-8?B?bnJZUHVJVzFBbnJUVGdTYWtKSjdvUXFtOVBwdEpIZFNodGxDR3d6aS90N1pP?=
- =?utf-8?B?RG9WV3ExcjJSK0hPbmlBbmZaZ0wra3ZITzljVWlVRkM4UURjd2Z0aHZNV1FD?=
- =?utf-8?B?WGZ3VUtwSEZWUEdDcFVwaWZNaWtlczY5Y0RCcnpBc3p3L2pRSURKcmRTbmRk?=
- =?utf-8?B?UFRYL0p4amdiQ1BXclZtRGF5emF3NFo4SWlpZ0dUTkxHSmpJcWpOUGVBVG83?=
- =?utf-8?B?THMyS2Q3blc5Nm8weWZBTGJjM212dE1YeEtZd1FJZUZqN2xoVUxjbGxiWFpY?=
- =?utf-8?B?cTFDU2kydTNaTGUvTEd2NFBwOW00ZGhPamZCZVU0dTVoOGtwZzVqL3VwbGpk?=
- =?utf-8?B?WktrNzVTamJDVDd4SmtIV2VTR0tjVkt3VjB3eUU3aU5iZXpUMEZQaWdWeVla?=
- =?utf-8?B?UFZhMUoycnU2QzR6TVVPMFB1eEh6WmJiZldXRDFVem4yQnN6Y0xBc0t3OVBC?=
- =?utf-8?B?Sm1MQm50ek8rd2REUEFZb1hFY1dVUCtzV291cGZ2NWNPclhQQytsQWVlOGxY?=
- =?utf-8?B?L2Y5SGhHU2dFQWRPT0J2cTY1bUVhemdGblVXMG9IcmxRbzBSK3VOSFdXbElv?=
- =?utf-8?B?WG5ZV2g4cVE2VTI4eXZIamw4SkVIZEYwdlE3OWphNFU3WU1VVnNCL0c0M0Nh?=
- =?utf-8?B?b1JGbDEyby9IVXBIRTZ2MG8xUjhwRFdrVmJMellDNVdvSVNBNFFkd096ajdY?=
- =?utf-8?B?KzdrcUNuQTdBMG0zQ0hzK0xOTDRQSTdnZkJjbWwzdlAyQU03QXY1NXRnMHN2?=
- =?utf-8?B?enpYNWRXU2dtU3ZvdEUwQzB4UG1TQTZ1Y01KdXJ3bkdqUElFcDlwa1l4QzNM?=
- =?utf-8?B?WUkybEQ1MlhEK2NBS1RKVDZkQlRqUXB2OThyeG9CWVBXa3VOSUwrWWZ0K01B?=
- =?utf-8?B?TEk3a3NrM2R6d3Y1ZmNjK2ZpNjdUOUduamZVaHBtTWR6cDYwYXlMRzNmTGNS?=
- =?utf-8?B?cTZnejk4Y2pwZndURk52a1o1NHVLMENwdXlvb3d5Y0twdnZFSStaU3Q5QVdV?=
- =?utf-8?B?SExOUVpqSytQbzYwWE84QnVjbXZZSGgwNnQvZ2lpWHpCRXRMN1AvRUh1Q0Vl?=
- =?utf-8?B?UVREYWRtL1d3ZXY3aFFtYmhTZWxYeUpDenBMUGxidDErSHlzZ2p1MEdVUzBN?=
- =?utf-8?B?K1U0QzV0RGQ2VFI0TzdTSkZPbVBvZUJ0bVZMU1pUQ3ZnTmJTMENYVXdEakdp?=
- =?utf-8?B?QWJ3SFg2RlNsbU5GczVWTEZRWXhPMXBoNndpREowQzZPSC9yZkJtWEZsT0x6?=
- =?utf-8?B?bkJHLy95YjZtSFVBZEpFQTJmRTl4UHAzK3hvMnRGUWwrWThBNkk2VGZRTjJT?=
- =?utf-8?B?cHowWitHUDAxdWZZbEEzU2JFb1ozNGlMTU00NjRVa3RxRGYzOHNuWnR6VnUy?=
- =?utf-8?B?QmNlQ2lZSjAvOWhqdzNGYWZxRERNZWJVWW91UVlKMi9hTFF3RFE3bUNFbDM5?=
- =?utf-8?B?cXNLcEZ6RXZCZ2U0WmhFZE1KOWErNkhhNlc1dEZWbE9LenF4dXVKVVZmWS9j?=
- =?utf-8?B?L2pXSnd2c0lqS0M5Q1didXV2UERMM2dtZlpING9PbzZqWUNYOGJmcFZNeTV4?=
- =?utf-8?B?NDVaZVBUZFg3Y0JScEtXeE9UMmdaN0thM25wTWNOUzgxWFQrbDlVSFRDOVd6?=
- =?utf-8?B?TFVCejM0ZW9DVWNmQ3ROUFQwMnFGQ3VYTFZVOFdmSEJ0WGdvOU9oaGFEbW01?=
- =?utf-8?B?ZkR4c3NxUEtiUlFvSXcxSnVJS3d3NEtGaWRsdCs0WkpWaGIvU0JaeW9ERm03?=
- =?utf-8?B?MWZRZmQrM2luWGNqM25wd0pOREk3SnppWGxpT1FkV1lkSzJGMVlRN1Q3UnIr?=
- =?utf-8?B?aGc9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aISYJlYF"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-307c13298eeso63521851fa.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 05:35:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742301340; x=1742906140; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HPKxNwVUlphbHZXCf6BNgjXG5yYtdP5VAcLw9XeCJSc=;
+        b=aISYJlYFioSfOyAoQl78AiH5axRF3KXrBOS88HEwX+uZT4kkv/ERrNCed1xNPmX2BH
+         I1ALTueF1EKL7Ape7Ki0k3TkcSAJFaukq+VjmlMR38gxUe/Q2n8NSrDohi3WIsLa/x1x
+         mBUN+DrI7Fv88UsU7ssZvzOUldjF37krcBo6bu5m5Nk43I0kMe2TT17tRvGFuSFjK/Ki
+         euXQfHfyyQy9FFF0Zg1tIHQwS0qTuJ4bh/24RHZqC2JBM9mpzf3CMeDSrGnb9h2qdSth
+         gfvdLqcEjZV+duPdcCDOGBH5IIFYjUO7rOhvfps7nCaEm7rF+3GOFIqoDZjRzXWi9CXn
+         iPRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742301340; x=1742906140;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HPKxNwVUlphbHZXCf6BNgjXG5yYtdP5VAcLw9XeCJSc=;
+        b=NtgIgY4ueiUc4IjCFJ9gs/OPOhOo8quboYDLJr5eIKf/oGOQjF1b+PJ26CJH+pqsys
+         51YlUWgwN0oeqmK2jYncJ+4O9hXrEFZm7T9phNdmOGC6yoCsVmLCvZtTjCu1orAShca0
+         eP4WOY8Ccwqa09xnBw3KI6BYVl+bSkH9UFGz4pkeyIX/N1fByqJpUq1Lw1p/7wr6q2it
+         C/xul1EKU4FjjWe8nu0nq53BifZPIpBNq0sjWDPT8gAHF9OlqO7rUfQBlr2C1rkkJ2eY
+         5624ZR2cOBphjLhxCEAZm9o3ovsXIZnfrzeKeFh6QiKJjsqvXj4IZYWA0G05xApU/YSz
+         APNg==
+X-Forwarded-Encrypted: i=1; AJvYcCW7v72ULb60Uoh/tZ7Geo6lrjXkdQTD0iO+xIpRCgMmk7v6Blhc/UmS+dUX8CLhHrHFMWFkwjM8kIm2UGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzwClw+QUOCbdJl9dmRUN96SeVQ4HdiHF968P0gQvxvpxLYzFOD
+	Ug6dANG7zwT0A17rxKtKqACTuA0VcVkYz/uOCSQ+cR6H2rqlirh16umSqCMyTmPqpyXv23rCBg2
+	fVGwSfREJoUNh2UKbbL0vS/gTL7yFwWJsRrM=
+X-Gm-Gg: ASbGnctTbhqnCEKPoQrYlUPznC/46ebS3oeXyC1lxDPjszE4r5qimgT9fy8//Plgsx9
+	Cvw3ynXdOjnzwkM/Kl6YPPgxzTOZs2j+CnpsOYukm2beirFbs27RahLXw6mJAt0OlTxiNvBiXso
+	S7yvUQWeLwbR3pGYkSKbMJ9SYGHg==
+X-Google-Smtp-Source: AGHT+IG/IW/n8isTqqAEbQzbEezSkE9pwOPGSiRX4Z+NIpxExPNrigafYV8dc7Pi0eyzuig0lNBP42YSz0Vy9P33S20=
+X-Received: by 2002:a2e:9495:0:b0:30b:fc16:d482 with SMTP id
+ 38308e7fff4ca-30cd95874bemr25794451fa.3.1742301339346; Tue, 18 Mar 2025
+ 05:35:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TYCPR01MB12093.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00afb083-ab7c-4378-115b-08dd6618dcd2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Mar 2025 12:31:52.6268
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: WCdgPcbMt3kKxvs8dTLtOJJvT6ITO3qZDhyYLt9xpcegTqNTVQeOjf44gTAHzXibKRYNDkiCiHIo96IfP0lGa+f7iOb/izlty1jqlwjnQLQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS3PR01MB9481
+References: <20250317113013.182359-1-ubizjak@gmail.com> <Z9iuYk-3YNKLAJip@gmail.com>
+In-Reply-To: <Z9iuYk-3YNKLAJip@gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Tue, 18 Mar 2025 13:35:28 +0100
+X-Gm-Features: AQ5f1JrXN4NXCuW4pCCh45LUztUkrBOTZE7ieJUbmO7afPOe2vlyGtN3vjNLp5c
+Message-ID: <CAFULd4ZvQkHzvaa_cpbt1x_RAj_7FHb1FyPJxacVOrsK_55=xw@mail.gmail.com>
+Subject: Re: [PATCH v2] x86/asm: Use asm_inline() instead of asm() in __untagged_addr()
+To: Ingo Molnar <mingo@kernel.org>
+Cc: x86@kernel.org, linux-kernel@vger.kernel.org, 
+	Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgUGhpbGlwcCwNCg0KVGhhbmtzIGZvciB5b3VyIGZlZWRiYWNrIQ0KDQo+IEZyb206IFBoaWxp
-cHAgWmFiZWwgPHAuemFiZWxAcGVuZ3V0cm9uaXguZGU+DQo+IFNlbnQ6IDEzIE1hcmNoIDIwMjUg
-MTM6MDYNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAyLzJdIHJlc2V0OiBBZGQgVVNCMlBIWSBj
-b250cm9sIGRyaXZlciBmb3IgUmVuZXNhcyBSWi9WMkgoUCkNCj4gDQo+IEhpIEZhYnJpemlvLA0K
-PiANCj4gT24gRG8sIDIwMjUtMDMtMTMgYXQgMTA6MTQgKzAwMDAsIEZhYnJpemlvIENhc3RybyB3
-cm90ZToNCj4gPiBIaSBQaGlsaXBwLA0KPiA+DQo+ID4gVGhhbmtzIGZvciB5b3VyIGZlZWRiYWNr
-IQ0KPiA+DQo+ID4gPiBGcm9tOiBQaGlsaXBwIFphYmVsIDxwLnphYmVsQHBlbmd1dHJvbml4LmRl
-Pg0KPiA+ID4gU2VudDogMTMgTWFyY2ggMjAyNSAwODozNw0KPiA+ID4gU3ViamVjdDogUmU6IFtQ
-QVRDSCB2MiAyLzJdIHJlc2V0OiBBZGQgVVNCMlBIWSBjb250cm9sIGRyaXZlciBmb3IgUmVuZXNh
-cyBSWi9WMkgoUCkNCj4gPiA+DQo+ID4gPiBPbiBNaSwgMjAyNS0wMy0wNSBhdCAxMjozOSArMDAw
-MCwgUHJhYmhha2FyIHdyb3RlOg0KPiA+ID4gPiBGcm9tOiBMYWQgUHJhYmhha2FyIDxwcmFiaGFr
-YXIubWFoYWRldi1sYWQucmpAYnAucmVuZXNhcy5jb20+DQo+ID4gPiA+DQo+ID4gPiA+IEFkZCBz
-dXBwb3J0IGZvciB0aGUgVVNCMlBIWSBjb250cm9sIGRyaXZlciBvbiB0aGUgUmVuZXNhcyBSWi9W
-MkgoUCkgU29DLg0KPiA+ID4gPiBNYWtlIHRoZSBkcml2ZXIgaGFuZGxlIHJlc2V0IGFuZCBwb3dl
-ci1kb3duIG9wZXJhdGlvbnMgZm9yIHRoZSBVU0IyUEhZLg0KPiA+ID4gPg0KPiA+ID4gPiBQYXNz
-IE9GIGRhdGEgdG8gc3VwcG9ydCBmdXR1cmUgU29DcyB3aXRoIHNpbWlsYXIgVVNCMlBIWSBoYXJk
-d2FyZSBidXQNCj4gPiA+ID4gZGlmZmVyZW50IHJlZ2lzdGVyIGNvbmZpZ3VyYXRpb25zLiBEZWZp
-bmUgZGV2aWNlLXNwZWNpZmljIGluaXRpYWxpemF0aW9uDQo+ID4gPiA+IHZhbHVlcyBhbmQgY29u
-dHJvbCByZWdpc3RlciBzZXR0aW5ncyBpbiBPRiBkYXRhIHRvIGVuc3VyZSBmbGV4aWJpbGl0eQ0K
-PiA+ID4gPiBmb3IgdXBjb21pbmcgU29Dcy4NCj4gPiA+ID4NCj4gPiA+ID4gU2lnbmVkLW9mZi1i
-eTogTGFkIFByYWJoYWthciA8cHJhYmhha2FyLm1haGFkZXYtbGFkLnJqQGJwLnJlbmVzYXMuY29t
-Pg0KPiA+ID4gPiAtLS0NCj4gPiA+ID4gIGRyaXZlcnMvcmVzZXQvS2NvbmZpZyAgICAgICAgICAg
-ICAgICAgICAgfCAgIDcgKw0KPiA+ID4gPiAgZHJpdmVycy9yZXNldC9NYWtlZmlsZSAgICAgICAg
-ICAgICAgICAgICB8ICAgMSArDQo+ID4gPiA+ICBkcml2ZXJzL3Jlc2V0L3Jlc2V0LXJ6djJoLXVz
-YjJwaHktY3RybC5jIHwgMjIzICsrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gPiA+ICAzIGZp
-bGVzIGNoYW5nZWQsIDIzMSBpbnNlcnRpb25zKCspDQo+ID4gPiA+ICBjcmVhdGUgbW9kZSAxMDA2
-NDQgZHJpdmVycy9yZXNldC9yZXNldC1yenYyaC11c2IycGh5LWN0cmwuYw0KPiA+ID4gPg0KPiBb
-Li4uXQ0KPiA+ID4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9yZXNldC9yZXNldC1yenYyaC11c2Iy
-cGh5LWN0cmwuYyBiL2RyaXZlcnMvcmVzZXQvcmVzZXQtcnp2MmgtdXNiMnBoeS1jdHJsLmMNCj4g
-PiA+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4gPiA+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5h
-NmRhZWFmMzdlMWMNCj4gPiA+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ID4gPiArKysgYi9kcml2ZXJz
-L3Jlc2V0L3Jlc2V0LXJ6djJoLXVzYjJwaHktY3RybC5jDQo+ID4gPiA+IEBAIC0wLDAgKzEsMjIz
-IEBADQo+IFsuLi5dDQo+ID4gPiA+ICtzdGF0aWMgY29uc3Qgc3RydWN0IHJ6djJoX3VzYjJwaHlf
-cmVndmFsIHJ6djJoX2luaXRfdmFsc1tdID0gew0KPiA+ID4gPiArCXsgLnJlZyA9IDB4YzEwLCAu
-dmFsID0gMHg2N2MgfSwNCj4gPiA+ID4gKwl7IC5yZWcgPSAweGMxNCwgLnZhbCA9IDB4MWYgfSwN
-Cj4gPiA+ID4gKwl7IC5yZWcgPSAweDYwMCwgLnZhbCA9IDB4OTA5IH0sDQo+ID4gPg0KPiA+ID4g
-V2hhdCBhcmUgdGhlc2UgcmVnaXN0ZXJzIGFuZCB3aGF0IGFyZSB0aG9zZSB2YWx1ZXMgZG9pbmc/
-DQo+ID4NCj4gPiBVbmZvcnR1bmF0ZWx5LCB0aGVyZSBhcmUgc29tZSBsaWNlbnNpbmcgcmVzdHJp
-Y3Rpb25zIG9uIHRoaXMgSVAsIHRoaXMgaXMNCj4gPiB0aGUgYmVzdCB0aGF0IHdlIGNhbiBkbywg
-YXMgcGVyIHRoZSBsaWNlbnNlIGFncmVlbWVudC4NCj4gDQo+IEhvdyBhbSBJIGV4cGVjdGVkIHRv
-IHJldmlldyB0aGlzPw0KPiANCj4gRm9yIG5vdywgSSdsbCBhc3N1bWUgdGhhdCB0aGVzZSByZWdp
-c3RlcnMgYXJlIG5vdCByZWxhdGVkIHRvIHJlc2V0DQo+IGZ1bmN0aW9uYWxpdHkgYXQgYWxsLCBh
-bmQgdGhhdCB0aGlzIGRyaXZlciBzaG91bGQgYmUgYSBwaHkgY29udHJvbGxlcg0KPiBkcml2ZXIg
-aW5zdGVhZCBvZiBhIHJlc2V0IGNvbnRyb2xsZXIgZHJpdmVyLg0KPiANCj4gQ2FuIHlvdSBjb252
-aW5jZSBtZSBvdGhlcndpc2Ugd2l0aG91dCBicmVha2luZyBsaWNlbnNlIGFncmVlbWVudHM/DQoN
-ClNvcnJ5IGFib3V0IHRoZSBkZWxheSwgYXMgeW91IG1heSBoYXZlIGZpZ3VyZWQgb3V0LCB3ZSBo
-YWQgdG8gZG91YmxlIGNoZWNrIHdpdGgNCnRoZSBMU0kgdGVhbSBiZWZvcmUgbWFraW5nIGFueSBz
-dGF0ZW1lbnQuDQoNCldlIGNhbiBjb25maXJtIHRoYXQgYHJ6djJoX2luaXRfdmFsc2AgY29udGFp
-bnMgdGhlIHJlZ2lzdGVycyBhbmQgY29ycmVzcG9uZGluZw0KaW5pdGlhbGl6YXRpb24gdmFsdWVz
-IHJlcXVpcmVkIHRvIHByZXBhcmUgdGhlIFBIWSB0byByZWNlaXZlIGFzc2VydCBhbmQgZGVhc3Nl
-cnQNCnJlcXVlc3RzLiBUaGlzIGlzIGEgb25lIHRpbWUgb25seSB0aGluZywgZG9uZSBhdCBwcm9i
-ZS4NCg0KQWZ0ZXIgbG9va2luZyBpbnRvIHRoaW5ncyBhZ2FpbiwgSSBoYXZlIG5vdGljZWQgdGhh
-dCB0aGUgcHJvYmUgZnVuY3Rpb24gaXMgbWlzc2luZw0KY2FsbGluZyBpbnRvIHRoZSBhc3NlcnQg
-c2VxdWVuY2UsIGFuZCB0aGUgc3RhdHVzIG9mIHRoZSByZXNldCBpcyB1bmRlZmluZWQsIHNvDQp0
-aGF0J3Mgc29tZXRoaW5nIHRvIGZpeCBmb3IgdjMgdG8gbWFrZSBpdCBpbml0aWFsaXplIGluIGFz
-c2VydGVkIHN0YXRlLg0KDQpUaGUgYXNzZXJ0LCBkZWFzc2VydCwgYW5kIHN0YXR1cyBvcGVyYXRp
-b25zIGFyZSBvbmx5IHRvdWNoaW5nIHJlc2V0IHJlbGF0ZWQgcmVnaXN0ZXJzLg0KTm90aGluZyBl
-bHNlLg0KDQpUaGVyZWZvcmUgd2UgYmVsaWV2ZSB0aGlzIHNob3VsZCBiZSBhIHBvcnQgcmVzZXQg
-ZHJpdmVyLg0KDQpUaGFua3MgZm9yIHlvdXIgcGF0aWVuY2Ugc28gZmFyLCBhbmQgc29ycnkgZm9y
-IGJlaW5nIGNyeXB0aWMuDQoNCkNoZWVycywNCkZhYg0KDQo+IA0KPiByZWdhcmRzDQo+IFBoaWxp
-cHANCg==
+On Tue, Mar 18, 2025 at 12:21=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wro=
+te:
+>
+>
+> * Uros Bizjak <ubizjak@gmail.com> wrote:
+>
+> > Use asm_inline() to instruct the compiler that the size of asm()
+> > is the minimum size of one instruction, ignoring how many instructions
+> > the compiler thinks it is. ALTERNATIVE macro that expands to several
+> > pseudo directives causes instruction length estimate to count
+> > more than 20 instructions.
+> >
+> > bloat-o-meter reports minimal code size increase
+> > (x86_64 defconfig with CONFIG_ADDRESS_MASKING, gcc-14.2.1):
+> >
+> >   add/remove: 2/2 grow/shrink: 5/1 up/down: 2365/-1995 (370)
+> >
+> >       Function                          old     new   delta
+> >       -----------------------------------------------------
+> >       do_get_mempolicy                    -    1449   +1449
+> >       copy_nodes_to_user                  -     226    +226
+> >       __x64_sys_get_mempolicy            35     213    +178
+> >       syscall_user_dispatch_set_config  157     332    +175
+> >       __ia32_sys_get_mempolicy           31     206    +175
+> >       set_syscall_user_dispatch          29     181    +152
+> >       __do_sys_mremap                  2073    2083     +10
+> >       sp_insert                         133     117     -16
+> >       task_set_syscall_user_dispatch    172       -    -172
+> >       kernel_get_mempolicy             1807       -   -1807
+> >
+> >   Total: Before=3D21423151, After=3D21423521, chg +0.00%
+> >
+> > The code size increase is due to the compiler inlining
+> > more functions that inline untagged_addr(), e.g:
+> >
+> > task_set_syscall_user_dispatch() is now fully inlined in
+> > set_syscall_user_dispatch():
+> >
+> >       000000000010b7e0 <set_syscall_user_dispatch>:
+> >         10b7e0:       f3 0f 1e fa             endbr64
+> >         10b7e4:       49 89 c8                mov    %rcx,%r8
+> >         10b7e7:       48 89 d1                mov    %rdx,%rcx
+> >         10b7ea:       48 89 f2                mov    %rsi,%rdx
+> >         10b7ed:       48 89 fe                mov    %rdi,%rsi
+> >         10b7f0:       65 48 8b 3d 00 00 00    mov    %gs:0x0(%rip),%rdi
+> >         10b7f7:       00
+> >         10b7f8:       e9 03 fe ff ff          jmp    10b600 <task_set_s=
+yscall_user_dispatch>
+>
+> So this was a tail-call optimization that jumped to a standalone
+> <task_set_syscall_user_dispatch>, right? So now we'll avoid the
+> tail-jump and maybe a bit of the register parameter shuffling? Which
+> would explain the bloatometer delta of -172 for
+> task_set_syscall_user_dispatch?
+
+Yes, this is correct. Register shuffling is part of the call setup
+(because parameters have to be passed to the called function in
+certain registers according to the ps-ABI). Inlining avoids this
+because parameters can now be freely allocated to any register of the
+required class.
+
+> Could you also cite the first relevant bits of <task_set_syscall_user_dis=
+patch>?
+
+000000000010b600 <task_set_syscall_user_dispatch>:
+  10b600:    48 89 f8                 mov    %rdi,%rax
+  10b603:    48 85 f6                 test   %rsi,%rsi
+  10b606:    74 54                    je     10b65c
+<task_set_syscall_user_dispatch+0x5c>
+  10b608:    48 83 fe 01              cmp    $0x1,%rsi
+  10b60c:    74 06                    je     10b614
+<task_set_syscall_user_dispatch+0x14>
+  10b60e:    b8 ea ff ff ff           mov    $0xffffffea,%eax
+  10b613:    c3                       ret
+  10b614:    48 85 d2                 test   %rdx,%rdx
+  10b617:    75 7b                    jne    10b694
+<task_set_syscall_user_dispatch+0x94>
+  10b619:    4d 85 c0                 test   %r8,%r8
+  10b61c:    74 1a                    je     10b638
+<task_set_syscall_user_dispatch+0x38>
+  10b61e:    4c 89 c6                 mov    %r8,%rsi
+  10b621:    48 bf ef cd ab 89 67     movabs $0x123456789abcdef,%rdi
+  10b628:    45 23 01
+  10b62b:    90                       nop
+  10b62c:    90                       nop
+  10b62d:    90                       nop
+  10b62e:    90                       nop
+  10b62f:    90                       nop
+  10b630:    90                       nop
+  10b631:    90                       nop
+  10b632:    90                       nop
+  10b633:    48 39 f7                 cmp    %rsi,%rdi
+  10b636:    72 6e                    jb     10b6a6
+<task_set_syscall_user_dispatch+0xa6>
+  10b638:    4c 89 80 48 08 00 00     mov    %r8,0x848(%rax)
+  10b63f:    48 89 90 50 08 00 00     mov    %rdx,0x850(%rax)
+  10b646:    48 89 88 58 08 00 00     mov    %rcx,0x858(%rax)
+  10b64d:    c6 80 60 08 00 00 00     movb   $0x0,0x860(%rax)
+  10b654:    f0 80 48 08 20           lock orb $0x20,0x8(%rax)
+  10b659:    31 c0                    xor    %eax,%eax
+  10b65b:    c3                       ret
+  10b65c:    49 09 c8                 or     %rcx,%r8
+  10b65f:    49 09 d0                 or     %rdx,%r8
+  10b662:    75 aa                    jne    10b60e
+<task_set_syscall_user_dispatch+0xe>
+  10b664:    48 c7 87 48 08 00 00     movq   $0x0,0x848(%rdi)
+  10b66b:    00 00 00 00
+  10b66f:    48 c7 87 50 08 00 00     movq   $0x0,0x850(%rdi)
+  10b676:    00 00 00 00
+  10b67a:    48 c7 87 58 08 00 00     movq   $0x0,0x858(%rdi)
+  10b681:    00 00 00 00
+  10b685:    c6 87 60 08 00 00 00     movb   $0x0,0x860(%rdi)
+  10b68c:    f0 80 67 08 df           lock andb $0xdf,0x8(%rdi)
+  10b691:    31 c0                    xor    %eax,%eax
+  10b693:    c3                       ret
+  10b694:    48 8d 34 0a              lea    (%rdx,%rcx,1),%rsi
+  10b698:    48 39 f2                 cmp    %rsi,%rdx
+  10b69b:    0f 82 78 ff ff ff        jb     10b619
+<task_set_syscall_user_dispatch+0x19>
+  10b6a1:    e9 68 ff ff ff           jmp    10b60e
+<task_set_syscall_user_dispatch+0xe>
+  10b6a6:    b8 f2 ff ff ff           mov    $0xfffffff2,%eax
+  10b6ab:    c3                       ret
+
+> I don't seem to be able to reproduce this inlining decision, my version
+> of GCC is:
+>
+>   gcc version 14.2.0 (Ubuntu 14.2.0-4ubuntu2)
+>
+> which is one patch version older than your 14.2.1.
+>
+> I tried GCC 11, 12, 13 as well, but none did this tail optimization,
+> all appear to be inlining <task_set_syscall_user_dispatch> into
+> <set_syscall_user_dispatch>. What am I missing?
+
+CONFIG_ADDRESS_MASKING in current -tip depends on:
+
+  Depends on: X86_64 [=3Dy] && (COMPILE_TEST [=3Dn] || !CPU_MITIGATIONS [=
+=3Dy])
+
+and I chose to disable CPU_MITIGATIONS (this is the reason no __pfx
+functions are reported and the compiler is able to do sibling call
+optimization).
+
+BTW: I found the cited functions a representation of how the compiler
+inlines bigger functions into smaller ones (one would expect the
+opposite) depending on and respecting the code size growth factor
+criteria for combined function.
+
+> Another question, where do the size increases in these functions come
+> from:
+>
+> >       __x64_sys_get_mempolicy            35     213    +178
+
+This one now inlines kernel_get_mempolicy().
+
+> >       syscall_user_dispatch_set_config  157     332    +175
+
+This one now inlines task_set_syscall_user_dispatch().
+
+> >       __ia32_sys_get_mempolicy           31     206    +175
+
+This one now inlines kernel_get_mempolicy().
+
+> >       set_syscall_user_dispatch          29     181    +152
+
+This one now inlines task_set_syscall_user_dispatch().
+
+> (I have to ask, because I have trouble reproducing with my toolchain so
+> I cannot look at this myself.)
+
+BTW: the indication of inline changes w.r.t. __untagged_addr() is the
+number of references to the tlbstate_untag_mask variable in the
+.altinstr_replacement section. If these go up, more inlining happens.
+Also, bloat-o-meter indicates which function changes, and looking for
+a string of 8 NOPs in the function will show where the AND instruction
+is to be patched in.
+
+Uros.
