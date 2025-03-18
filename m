@@ -1,441 +1,145 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2050.outbound.protection.outlook.com [40.107.243.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F0920E6F6;
-	Tue, 18 Mar 2025 16:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742315213; cv=none; b=qeiSAkAdSb37O/agnARYcvh0xpnpHFNe+AbfZdogBhcD1tq91sl7fXe+UIE7Mvo2IM1gJzM7blhrnKwUONQoLhLhcxTM1tuGDrA7PLOhk8ua2ic+xIpx1Oqw4Rtxk5kPMOoEWN/ns5XHuEaZBJj7NfP9G71ixV2sBXa2Yd5Bwn4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742315213; c=relaxed/simple;
-	bh=he+PVcRbtrd9ivisr/vSaZiknrXD1J3KoEWLgMvRNu8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=m/MSPPwO4w6Yt/Z9o7gxInMmWS0U8ELgyThmvZrzPg5q86eJyEOC7GegAhckIFz5eWDaOxzC8d5f0JvVfvkqdL6Ap1VYM/6K3FK4YchL0gYYdRjaaqEwom/ywtnIsIL6TVs83MaLkkv3HsHPno7LtZxJuPgWB8w84KhEhHM1toY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=klM4iPxj; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B8620DD7B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 16:26:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.50
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742315214; cv=fail; b=D936SX90uftdH93CjNjOwAWQMYnALi5hvV+sLJ0jh0PUlOElpmRXfwrwoYrFfmsk9PyDiTGFgDc8GWEPWS2G8UDmzAJsVPMlRjdkJ5irgdY4d332lCO4OmdKahoQgOdzPT7eKSLChpHu+DKTqVQj1gM+N30dsyL7XG+uCKJK7tQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742315214; c=relaxed/simple;
+	bh=ZE8Yp9w5yUJxMpfrKIBgmo5hjxDg53bJFqlLC2ChbkU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AQCrmAbuLF8LzkNnIteUiBPX8KjnWCFUR4/nBPdqVZ9WOaQZSb77Ngzc420EDNoFfp8g2B9X0yKPK7+WkZTrI7cwoo9IY5Al/TgFn5fDE20QEPINZIb492wOVteuHskp4hrF6fQkZbmAn+7OipSYRCI5I8T7v4k4QaltJ6W9X38=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NVKle5np; arc=fail smtp.client-ip=40.107.243.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="klM4iPxj"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 443BB442B1;
-	Tue, 18 Mar 2025 16:26:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742315208;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ETOej89oyz4MBl77cSzgh9EF+TLCdU4OTzNROIWikSo=;
-	b=klM4iPxji9df7RIWv72mzYmEjJw2f39YWQY9J8fRShVNSdfCYf+vXUq3qA+bc3Eu9Lmwor
-	fpdrbc16LQsjdXGtgh/QtIWSRg6Tzn5ExdOc9lww/zhaERh4fjvfmXFbuvNOpRHa/gGvXI
-	UYEbv1EewvP/W1WldAWcDwZSbfGPxkx7lU1+DER6z15xTHCym+61nwM6DBAbUrJXT2YdW+
-	zuZCaRKT9IHUA3cGGZapvdopuVnT15RIcK9iuc16zqCxwl8BMZmDYcljexwlUjEKN37teN
-	6EXe0Dze6qN1Ft/7Njkgmrwp5txom1ahOcVdUeruWtbEcRjGjqjIXYUu8RCKxg==
-From: mathieu.dubois-briand@bootlin.com
-Date: Tue, 18 Mar 2025 17:26:18 +0100
-Subject: [PATCH v5 02/11] mfd: Add max7360 support
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NVKle5np"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=XWgAll/ivgJLNHGk68ZJaMmeGkMGxErzjz1n8NEsoHtO2F6iqGdtB2sPer8BkFomlUoj4i5yxhXZuM+mQ8DJVpax6mID7cJgunv8K49hgIPBDOGW7wkWNbYcW/8wtNXkZzI2rA9D0opc0hNICreEGJgXVCaVjgMsbdf6Zu1JoByJa2LhoI50a4AuKW+JuoUIHi89+U9BOXzp8RlQ9sztrLKWfNdN29QbkJASgct1MWd6dSBnZnbJdnJUWSu0n9mWIUc+5tPtO3nX07r+rV8gc0bS95U8mVQtKgITnWOhQONOAxg+2CaFONd1vYOjVsX9TWUI9DqwU7zkUnCnm4kp8w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=H3R1KlK+WiEGrYixRXIRS95vqVxuXyIITDGcXEsDdGU=;
+ b=arK8QI81zMPu2plqW4KL/ngwviJnKr6PDmbQWQrgN2KRn/FsL7fVSCfiQJ1Iw2ns6VysYmiVDm0X2MaGoiiPttVmQwRw3sDAW5yTATvhi/EyW5LblO4yMg2vI8kX3FqYvIeJ+O6zAwI5K0Jo7sx0uo/xwrI3FtqhcW1iHWfYLxBvZBH5c/Plznwd2mp12KcFWlg7pHUDUar/Bc7tsMjMV1Jb+rnQfAhUz/EwUNjT0vfbMOQjIqA/xjFZjUdebKchI6JKlb7HE8Puax6d89O+bFzAmEzpmysOmTSG5xbcnyL9gCYY0sja2bHNzPkv+4IWiFW527DcvfkJiPvDcYpdNQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=ziepe.ca smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=H3R1KlK+WiEGrYixRXIRS95vqVxuXyIITDGcXEsDdGU=;
+ b=NVKle5npHnbCejdzPboiSbjiNcX1ROQMbR5lfYoF8BV8A8sYraxtHMbQPkqRmHc/oMfgjFUpBbYA9xcXgzCARD59LfFRIq6wZcvNFDPApP/O7ZQ1ASVTKdWmyA/FajmzkpjZIzXBdMIBawueBOhR/ubaKSwQwEY4gdi1K1goVpfPrXHDIwzYotFI/C+/Zi8hgPRX+g/xThKv/BowoITvn2eq6ylBwRsh2PBhFZaZRijQZmh42xRDtBFoUNcGEqMjAOKy3i/zqBtw5HF4hTvn3DvwZSDTYWoNJZAAukrKyGJBccIBdQBj4SDkhHloeB2zdd4849KJbeghjUrGg5F2pA==
+Received: from SJ0PR05CA0118.namprd05.prod.outlook.com (2603:10b6:a03:334::33)
+ by DS7PR12MB8345.namprd12.prod.outlook.com (2603:10b6:8:d8::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Tue, 18 Mar
+ 2025 16:26:42 +0000
+Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
+ (2603:10b6:a03:334:cafe::60) by SJ0PR05CA0118.outlook.office365.com
+ (2603:10b6:a03:334::33) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Tue,
+ 18 Mar 2025 16:26:41 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.10) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Tue, 18 Mar 2025 16:26:41 +0000
+Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 18 Mar
+ 2025 09:26:28 -0700
+Received: from drhqmail201.nvidia.com (10.126.190.180) by
+ drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 18 Mar 2025 09:26:28 -0700
+Received: from Asurada-Nvidia (10.127.8.13) by mail.nvidia.com
+ (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Tue, 18 Mar 2025 09:26:27 -0700
+Date: Tue, 18 Mar 2025 09:26:26 -0700
+From: Nicolin Chen <nicolinc@nvidia.com>
+To: <jgg@ziepe.ca>
+CC: <kevin.tian@intel.com>, <iommu@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] iommufd: Fix IOMMU_VEVENTQ_FLAG_LOST_EVENTS kdoc
+Message-ID: <Z9mesnGdSWjfLaY4@Asurada-Nvidia>
+References: <20250318162017.709212-1-nicolinc@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-mdb-max7360-support-v5-2-fb20baf97da0@bootlin.com>
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
-In-Reply-To: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
-To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Kamel Bouhara <kamel.bouhara@bootlin.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, 
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742315204; l=10429;
- i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=GYd6eFLgV15H/Q0Oe8/PbDvuKXTB3NDQOVrx8sctEhQ=;
- b=eGMIzai/HpiBgP7HGjtk0FunJOmOY5DnLKS9GbgoC/B+wrLYfpp8i68q9Lie4iXl3GjAFzPz3
- U4hEzV5OcseALNKxUda2pDHphumuiGacUTfh4HgGu/19AdhtGJjgpWi
-X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
- pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedvledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhenucggtffrrghtthgvrhhnpeevheffteettefffeetvdelledttddthfevhffgleehfedvveduudfhhedugfelgeenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrthhhihgvu
- hdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhg
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20250318162017.709212-1-nicolinc@nvidia.com>
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|DS7PR12MB8345:EE_
+X-MS-Office365-Filtering-Correlation-Id: 178ae6c4-339c-49aa-5781-08dd6639aa9f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?Ko9XmeUdHRxlxyNEuGC8lOwgXfvRA01N5uuPkxWXJvzQRgR04V5e4lzVy6EE?=
+ =?us-ascii?Q?hwAjP3CXcxgheiMRTzoUxaoFUF1NKi4G3wZuaPdolQJj0/rdP5Z7dd916b+k?=
+ =?us-ascii?Q?jJyMG4pZDWX5ULIVJcVnvoGTwdDwi9EMddiPbYrGrX1jNeLdCq4kS/KEXKTp?=
+ =?us-ascii?Q?6DB+YHgMk7qfogU6UGQ89Uwh6C1DzSzbBBMauqtqk0nHsnOCrb8Ee07yFEHf?=
+ =?us-ascii?Q?XHcB3XnX613AthwoKbjNRa9ON412NLaRzIVMwYG3dmdmvBXxBu+Gyha8IWQd?=
+ =?us-ascii?Q?nQpUZF8F35FsqgGJ6Ilq3ZoLFTxJP7iMHdjhodXxe47w0UBQJGm47c7vPUzE?=
+ =?us-ascii?Q?diQzm7MtQowF1yqd2dvGZW5bkpiAjRadkKXRxW5hI0ajNWl85mOP3aLR7YZU?=
+ =?us-ascii?Q?DBkA/2ydnfpuTvGY8pgftGaU3dHfkYnXXPFWY3vHrMuNF+dETf8fTgE+4NTq?=
+ =?us-ascii?Q?Z9/tHbS+1U2/QhvcL0fOoXByS53/l022iaCaCpbtp686fhXQ7zGIevDGY0gC?=
+ =?us-ascii?Q?+BIfvZ8DNcYbrMfN52OPeGpZ9hZ6UYQVKmLuAv46BKj5u6pGsxhKm942gHMk?=
+ =?us-ascii?Q?wQFx/lFIuvUOLan7BBZvoLuTG0eqkOOOHI7k1uzB8AGXuY8cvhxa9cRuRVid?=
+ =?us-ascii?Q?biWHfFZ+a4aByXGHCQkBZqgJJO6ZHyYUtfWCe2hv9JEIPF8nH6w/669pTrRB?=
+ =?us-ascii?Q?HuFhjI2i8ue6fr92DRtDzaiCcW1M/9WNgvST73euQajCq8C2+k3JPbh51sUt?=
+ =?us-ascii?Q?3Mrw8SGK0ArUkgg+NfS6bpbyFJlPjVDglttRyCpFzTxbs6BpIPBSQeC7tAeo?=
+ =?us-ascii?Q?HKb5Ww4cJXCa/RyCo5ZgNYMReeKZeiyga+E4s4PieIzCoTxMlRltJNHnApDE?=
+ =?us-ascii?Q?Mi9BimkDpyi+1mo4Acxt9QMcYymczbJuo8xGAP1X4fgsHUjZLpgwB/9nNMNn?=
+ =?us-ascii?Q?yaaS+8cNbC1LsUfnTsPpdvm6iWIOOKAXDfqobfwnPyKw4ADP4xPO/VbvAx9u?=
+ =?us-ascii?Q?c+h9ntaXqPV6phaKmD5uvIs8d1wg18Bqw++RByNjopFLov1Ha7bcWgV7fzzw?=
+ =?us-ascii?Q?vlTCrsPt3kedztsYQ/4igKa8RQ+xANqqw40fQI2CDW3IBjxr/nThhNBuiBCk?=
+ =?us-ascii?Q?2rqqha82bX6rTyPkfA8ugBbP9LCu6trtjYPnFEtDynMyT+wIGUxh/hgtOHwI?=
+ =?us-ascii?Q?H5X4hbPo55CpOL8sDOsHFlzXOquRWzzGL8LsI6zpwDYHVrv+Joo0gnjgAxvS?=
+ =?us-ascii?Q?dv64vWqZglz9qngkHM61Lx9jr28++qHBobovGaMRPemfoCgtfqtxVqyoGtPr?=
+ =?us-ascii?Q?FR7DdNQgyOJexzujr8gra6e3z8cvDhbEzbpZBFenK8eEv4aM5KnhYIp7qbmp?=
+ =?us-ascii?Q?Hqn9029Y4dJDSK3lZUM8DpFRb2q0FzYBX99gVMWiM+r8Qvk0V1yCW0AV9OeU?=
+ =?us-ascii?Q?2ZY1szueTGR3/vnpGMy8ljFFOIJ41IKWRpcIUF+3/5Mc3DdTmsACggTH6Sf7?=
+ =?us-ascii?Q?ny1LI6bHU4vg6bI=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 16:26:41.7279
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 178ae6c4-339c-49aa-5781-08dd6639aa9f
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000EE38.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8345
 
-From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+On Tue, Mar 18, 2025 at 09:20:17AM -0700, Nicolin Chen wrote:
+> The kdoc update wasn't fully saved. Fix it.
+> 
+> Fixes: 50c842dd6cd3 ("iommufd: Add IOMMUFD_OBJ_VEVENTQ and IOMMUFD_CMD_VEVENTQ_ALLOC")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Closes: https://lore.kernel.org/linux-next/20250318213359.5dc56fd1@canb.auug.org.au/
 
-Add core driver to support MAX7360 i2c chip, multi function device
-with keypad, GPIO, PWM, GPO and rotary encoder submodules.
+Oops. Looks like I should fix another warning together.
 
-Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
-Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
----
- drivers/mfd/Kconfig         |  14 ++++
- drivers/mfd/Makefile        |   1 +
- drivers/mfd/max7360.c       | 185 ++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mfd/max7360.h | 112 +++++++++++++++++++++++++++
- 4 files changed, 312 insertions(+)
+And the link isn't the clearer one. I will respin the patch.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 6b0682af6e32..ef02a1c4322c 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -2439,5 +2439,19 @@ config MFD_UPBOARD_FPGA
- 	  To compile this driver as a module, choose M here: the module will be
- 	  called upboard-fpga.
- 
-+config MFD_MAX7360
-+	tristate "Maxim MAX7360 I2C IO Expander"
-+	depends on I2C
-+	select MFD_CORE
-+	select REGMAP_I2C
-+	select REGMAP_IRQ
-+	help
-+	  Say yes here to add support for Maxim MAX7360 device, embedding
-+	  keypad, rotary encoder, PWM and GPIO features.
-+
-+	  This driver provides common support for accessing the device;
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
-+
- endmenu
- endif
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 9220eaf7cf12..db2bd232c150 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -163,6 +163,7 @@ obj-$(CONFIG_MFD_DA9063)	+= da9063.o
- obj-$(CONFIG_MFD_DA9150)	+= da9150-core.o
- 
- obj-$(CONFIG_MFD_MAX14577)	+= max14577.o
-+obj-$(CONFIG_MFD_MAX7360)	+= max7360.o
- obj-$(CONFIG_MFD_MAX77541)	+= max77541.o
- obj-$(CONFIG_MFD_MAX77620)	+= max77620.o
- obj-$(CONFIG_MFD_MAX77650)	+= max77650.o
-diff --git a/drivers/mfd/max7360.c b/drivers/mfd/max7360.c
-new file mode 100644
-index 000000000000..9f489a798f94
---- /dev/null
-+++ b/drivers/mfd/max7360.c
-@@ -0,0 +1,185 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Maxim MAX7360 Core Driver
-+ *
-+ * Copyright 2025 Bootlin
-+ *
-+ * Author: Kamel Bouhara <kamel.bouhara@bootlin.com>
-+ * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+ */
-+
-+#include <linux/bits.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/core.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/module.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+static const struct mfd_cell max7360_cells[] = {
-+	{
-+		.name           = "max7360-pinctrl",
-+	},
-+	{
-+		.name           = "max7360-pwm",
-+	},
-+	{
-+		.name           = "max7360-gpo",
-+		.of_compatible	= "maxim,max7360-gpo",
-+	},
-+	{
-+		.name           = "max7360-gpio",
-+		.of_compatible	= "maxim,max7360-gpio",
-+	},
-+	{
-+		.name           = "max7360-keypad",
-+	},
-+	{
-+		.name           = "max7360-rotary",
-+	},
-+};
-+
-+static const struct regmap_range max7360_volatile_ranges[] = {
-+	{
-+		.range_min = MAX7360_REG_KEYFIFO,
-+		.range_max = MAX7360_REG_KEYFIFO,
-+	}, {
-+		.range_min = MAX7360_REG_I2C_TIMEOUT,
-+		.range_max = MAX7360_REG_RTR_CNT,
-+	},
-+};
-+
-+static const struct regmap_access_table max7360_volatile_table = {
-+	.yes_ranges = max7360_volatile_ranges,
-+	.n_yes_ranges = ARRAY_SIZE(max7360_volatile_ranges),
-+};
-+
-+static const struct regmap_config max7360_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = MAX7360_REG_PWMCFG(MAX7360_PORT_PWM_COUNT - 1),
-+	.volatile_table = &max7360_volatile_table,
-+	.cache_type = REGCACHE_MAPLE,
-+};
-+
-+static int max7360_mask_irqs(struct regmap *regmap)
-+{
-+	struct device *dev = regmap_get_device(regmap);
-+	unsigned int val;
-+	int ret;
-+
-+	/*
-+	 * GPIO/PWM interrupts are not masked on reset: mask the during probe,
-+	 * avoiding repeated spurious interrupts if the corresponding drivers
-+	 * are not present.
-+	 */
-+	for (unsigned int i = 0; i < MAX7360_PORT_PWM_COUNT; i++) {
-+		ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(i),
-+					MAX7360_PORT_CFG_INTERRUPT_MASK,
-+					MAX7360_PORT_CFG_INTERRUPT_MASK);
-+		if (ret) {
-+			dev_err(dev, "Failed to write max7360 port configuration");
-+			return ret;
-+		}
-+	}
-+
-+	/* Read GPIO in register, to ACK any pending IRQ. */
-+	ret = regmap_read(regmap, MAX7360_REG_GPIOIN, &val);
-+	if (ret)
-+		dev_err(dev, "Failed to read gpio values: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static int max7360_reset(struct regmap *regmap)
-+{
-+	struct device *dev = regmap_get_device(regmap);
-+	int ret;
-+
-+	ret = regmap_write(regmap, MAX7360_REG_GPIOCFG,
-+			   MAX7360_GPIO_CFG_GPIO_RST);
-+	if (ret) {
-+		dev_err(dev, "Failed to reset GPIO configuration: %x\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regcache_drop_region(regmap, MAX7360_REG_GPIOCFG,
-+				   MAX7360_REG_GPIO_LAST);
-+	if (ret) {
-+		dev_err(dev, "Failed to drop regmap cache: %x\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_write(regmap, MAX7360_REG_SLEEP, 0);
-+	if (ret) {
-+		dev_err(dev, "Failed to reset autosleep configuration: %x\n", ret);
-+		return ret;
-+	}
-+
-+	ret = regmap_write(regmap, MAX7360_REG_DEBOUNCE, 0);
-+	if (ret) {
-+		dev_err(dev, "Failed to reset GPO port count: %x\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max7360_probe(struct i2c_client *client)
-+{
-+	struct device *dev = &client->dev;
-+	struct regmap *regmap;
-+	int ret;
-+
-+	regmap = devm_regmap_init_i2c(client, &max7360_regmap_config);
-+	if (IS_ERR(regmap))
-+		return dev_err_probe(dev, PTR_ERR(regmap),
-+				     "Failed to initialise regmap\n");
-+
-+	i2c_set_clientdata(client, regmap);
-+
-+	ret = max7360_reset(regmap);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to reset device\n");
-+
-+	/* Get the device out of shutdown mode. */
-+	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCFG,
-+				MAX7360_GPIO_CFG_GPIO_EN,
-+				MAX7360_GPIO_CFG_GPIO_EN);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to enable GPIO and PWM module\n");
-+
-+	ret = max7360_mask_irqs(regmap);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Could not mask interrupts\n");
-+
-+	ret =  devm_mfd_add_devices(dev, PLATFORM_DEVID_NONE,
-+				    max7360_cells, ARRAY_SIZE(max7360_cells),
-+				    NULL, 0, NULL);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to register child devices\n");
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id max7360_dt_match[] = {
-+	{ .compatible = "maxim,max7360" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, max7360_dt_match);
-+
-+static struct i2c_driver max7360_driver = {
-+	.driver = {
-+		.name = "max7360",
-+		.of_match_table = max7360_dt_match,
-+	},
-+	.probe = max7360_probe,
-+};
-+module_i2c_driver(max7360_driver);
-+
-+MODULE_DESCRIPTION("Maxim MAX7360 I2C IO Expander core driver");
-+MODULE_AUTHOR("Kamel Bouhara <kamel.bouhara@bootlin.com>");
-+MODULE_LICENSE("GPL");
-diff --git a/include/linux/mfd/max7360.h b/include/linux/mfd/max7360.h
-new file mode 100644
-index 000000000000..c5a90fa5b76b
---- /dev/null
-+++ b/include/linux/mfd/max7360.h
-@@ -0,0 +1,112 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+#ifndef __LINUX_MFD_MAX7360_H
-+#define __LINUX_MFD_MAX7360_H
-+
-+#include <linux/bits.h>
-+#include <linux/types.h>
-+
-+struct device;
-+
-+#define MAX7360_MAX_KEY_ROWS		8
-+#define MAX7360_MAX_KEY_COLS		8
-+#define MAX7360_MAX_KEY_NUM		(MAX7360_MAX_KEY_ROWS * MAX7360_MAX_KEY_COLS)
-+#define MAX7360_ROW_SHIFT		3
-+
-+#define MAX7360_MAX_GPIO		8
-+#define MAX7360_MAX_GPO			6
-+#define MAX7360_PORT_PWM_COUNT		8
-+#define MAX7360_PORT_RTR_PIN		(MAX7360_PORT_PWM_COUNT - 1)
-+
-+/*
-+ * MAX7360 registers
-+ */
-+#define MAX7360_REG_KEYFIFO		0x00
-+#define MAX7360_REG_CONFIG		0x01
-+#define MAX7360_REG_DEBOUNCE		0x02
-+#define MAX7360_REG_INTERRUPT		0x03
-+#define MAX7360_REG_PORTS		0x04
-+#define MAX7360_REG_KEYREP		0x05
-+#define MAX7360_REG_SLEEP		0x06
-+
-+/*
-+ * MAX7360 GPIO registers
-+ *
-+ * All these registers are reset together when writing bit 3 of
-+ * MAX7360_REG_GPIOCFG.
-+ */
-+#define MAX7360_REG_GPIOCFG		0x40
-+#define MAX7360_REG_GPIOCTRL		0x41
-+#define MAX7360_REG_GPIODEB		0x42
-+#define MAX7360_REG_GPIOCURR		0x43
-+#define MAX7360_REG_GPIOOUTM		0x44
-+#define MAX7360_REG_PWMCOM		0x45
-+#define MAX7360_REG_RTRCFG		0x46
-+#define MAX7360_REG_I2C_TIMEOUT		0x48
-+#define MAX7360_REG_GPIOIN		0x49
-+#define MAX7360_REG_RTR_CNT		0x4A
-+#define MAX7360_REG_PWMBASE		0x50
-+#define MAX7360_REG_PWMCFGBASE		0x58
-+
-+#define MAX7360_REG_GPIO_LAST		0x5F
-+
-+#define MAX7360_REG_PWM(x)		(MAX7360_REG_PWMBASE + (x))
-+#define MAX7360_REG_PWMCFG(x)		(MAX7360_REG_PWMCFGBASE + (x))
-+
-+/*
-+ * Configuration register bits
-+ */
-+#define MAX7360_FIFO_EMPTY		0x3f
-+#define MAX7360_FIFO_OVERFLOW		0x7f
-+#define MAX7360_FIFO_RELEASE		BIT(6)
-+#define MAX7360_FIFO_COL		GENMASK(5, 3)
-+#define MAX7360_FIFO_ROW		GENMASK(2, 0)
-+
-+#define MAX7360_CFG_SLEEP		BIT(7)
-+#define MAX7360_CFG_INTERRUPT		BIT(5)
-+#define MAX7360_CFG_KEY_RELEASE		BIT(3)
-+#define MAX7360_CFG_WAKEUP		BIT(1)
-+#define MAX7360_CFG_TIMEOUT		BIT(0)
-+
-+#define MAX7360_DEBOUNCE		GENMASK(4, 0)
-+#define MAX7360_DEBOUNCE_MIN		9
-+#define MAX7360_DEBOUNCE_MAX		40
-+#define MAX7360_PORTS			GENMASK(8, 5)
-+
-+#define MAX7360_INTERRUPT_TIME_MASK	GENMASK(4, 0)
-+#define MAX7360_INTERRUPT_FIFO_MASK	GENMASK(7, 5)
-+
-+#define MAX7360_PORT_CFG_INTERRUPT_MASK		BIT(7)
-+#define MAX7360_PORT_CFG_INTERRUPT_EDGES	BIT(6)
-+#define MAX7360_PORT_CFG_COMMON_PWM		BIT(5)
-+
-+/*
-+ * Autosleep register values
-+ */
-+#define MAX7360_AUTOSLEEP_8192MS	0x01
-+#define MAX7360_AUTOSLEEP_4096MS	0x02
-+#define MAX7360_AUTOSLEEP_2048MS	0x03
-+#define MAX7360_AUTOSLEEP_1024MS	0x04
-+#define MAX7360_AUTOSLEEP_512MS		0x05
-+#define MAX7360_AUTOSLEEP_256MS		0x06
-+
-+#define MAX7360_GPIO_CFG_RTR_EN		BIT(7)
-+#define MAX7360_GPIO_CFG_GPIO_EN	BIT(4)
-+#define MAX7360_GPIO_CFG_GPIO_RST	BIT(3)
-+
-+#define MAX7360_ROT_DEBOUNCE		GENMASK(3, 0)
-+#define MAX7360_ROT_DEBOUNCE_MIN	0
-+#define MAX7360_ROT_DEBOUNCE_MAX	15
-+#define MAX7360_ROT_INTCNT		GENMASK(6, 4)
-+#define MAX7360_ROT_INTCNT_DLY		BIT(7)
-+
-+#define MAX7360_INT_INTI		0
-+#define MAX7360_INT_INTK		1
-+
-+#define MAX7360_INT_GPIO		0
-+#define MAX7360_INT_KEYPAD		1
-+#define MAX7360_INT_ROTARY		2
-+
-+#define MAX7360_NR_INTERNAL_IRQS	3
-+
-+#endif
-
--- 
-2.39.5
-
+Nicolin
