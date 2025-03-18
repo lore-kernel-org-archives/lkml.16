@@ -1,232 +1,138 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8981820FAAB;
-	Tue, 18 Mar 2025 23:00:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742338839; cv=fail; b=SdP3NH9FpsyHBy0uEwNtkmTNs+orK/fMeCZaUXBo+RNtG4kLuHYMHFSESMuSXNXrwW8Chf5ooO5/me8KJAkyatkxwjQFRLoz1zZo1T/OHgHFuHtAXPaQnWOguJi+KPRR3tC2Zy0wzjCXP7Yw3nC2h9BwNUuu81jPMq0XzI+sGYE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742338839; c=relaxed/simple;
-	bh=zRXNcd17Pnm4+cfw15+fEarxIuDaCuyi+S8LtfI9wYI=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=d0kehCTFNXFJWYPk6mCgObUIU0mR2BuxCxZrKSAX3aR8lY4iK5PW+7/uJNuUe/oi+MmLYLMm+4oHTZJ+NAiUbzFZNF3+/8p+vSrv3RKfKY40XmZt2DgduhEgIx6hHeZZACumLwWAzIv1lUjiCNj+hfw+SU2YU1MWsoi73mr1ktw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=SeVPR8Nl; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=Q5IjUHDT; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB8920FAAB
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 23:00:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742338851; cv=none; b=ZamixllQr27wfyOJL55XPHvNi7kA4QSCQzeu0VAzGWwrV9X4gf+y5whEtJURlrrOcLwlkC3ob0wSSW72p/pLY66vXUD9MQ2dWwLr/no6isHSJ5+tNGYXjb4OuT4SDB+O3Z0VaQC7ik46uwOaTXKqFwyrUdgx0SY/R3JbImcxsWw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742338851; c=relaxed/simple;
+	bh=Ya379Ijr2ofj10+RRG61gqv1ZJJPtyVebxeOMcaN51U=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aaJamqrdqiCCaYlSwU17uMimVDMJO3SW+bIuNoxEwuzCXRRRU/6BWV8n1VwMVapueScOlBzXzIDwg9CiFoN7qvfhncOaOT72Ev13whFgI3ZAvXPBLwEdWRLIj3oWN4Taa7axTNMsf+BmQzCq0lFn9F/hAavRDrkVNoHGlmKlBJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tXJB/EAw; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SeVPR8Nl";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="Q5IjUHDT"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52ILTvcN014659;
-	Tue, 18 Mar 2025 23:00:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=corp-2023-11-20; bh=tg5mLE11rFxCWArU
-	f6zddHW1pVyYsWAdjWfY9EgRFCU=; b=SeVPR8Nl5VV+VVeWsjwL8BEpMAhoh5y0
-	UTf2IcdW3X4p1Nf1f+i523BNyKxaIj3q7ClkJRqVz38fcCQMPZTwarqZZxHFk2jm
-	OBqTlh8kx/bPdxLx+cT21e116DOuKJwLo+j1jE1BN2JiM1NWpB2PECkWUolctkht
-	0WYMZ6gCIiXqOw0wrwArktEI/txVxhm2xVSC0nw2oC3E5caTYz+KULaYaxxzChM+
-	iBkJkeU+HcwBSHcfr0C4jC5xHZv7GQ/3KQaZ/UPgD8LGK6nBumMocmto3F7NYl1K
-	etEwTLM8kTLbiv6CUInh+qVSMMHvDWfs9chUQn0HTAsIQ+Vkex499Q==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45d1k9xngm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Mar 2025 23:00:18 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52IKv64I023771;
-	Tue, 18 Mar 2025 23:00:18 GMT
-Received: from nam12-mw2-obe.outbound.protection.outlook.com (mail-mw2nam12lp2048.outbound.protection.outlook.com [104.47.66.48])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45dxeg1899-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Mar 2025 23:00:18 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=qZCNWn/GG5l3wtF+Eu6xk0LHVQu2FwmZs7WeyYkG1/iD08UXFR7ajA9rzdshPwVJn4gJhqpURdgH1E1UKs4ZDy8J8LeTNfCzql5vozza1M9Vj57FllfnTyLjuQFoKZzVYXodrY7sxLvJOZ4nsl45ZpFVxN/tZys/AVV+sb00ADBplWVd7cXWbBz5uy6AK+LkpSMKD3S2b9dhxk8Rz3mk07WOquLpw6yzWJA/q4535oED9+VMuYNGIvxzZahSbsh7AX/SNqvMvJI7H9UVDfT2R12FGhBqDB1VN8CuOS1Xsx1Lnx6P0IMvnFdSxAW6MIg8TOXYInazJJBzA4jJ0KdEnQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=tg5mLE11rFxCWArUf6zddHW1pVyYsWAdjWfY9EgRFCU=;
- b=NaOWhz5TlOMW1JNjP6cv2PYLIOGkmEcek6WYd4p80NL93tz4ef6S1n/qnJggFQji+ES7mC7rjYi2R6IW/h5CzqypZm5Jm1vBJiuH2Q0VVz/49yMXzlkCgsbzwNopCc+k4bbbDLVoceRW89EZPKtCEzZ1cQMmcBTtAH2poQ4AJd3lIUXVOunB+8cx7cwOXIDyI6493dqJ5lSX2PTbGfRtIsu02sbRNuksZSfFGY53c2CaiwKr5EeREq4GHOj9dT9tMOoIQA2XFiXc6anVkki1q69C54/RwkF+n64nHFaY8w37WbpRyZ48gj2vBLJURgOYFnQGEUVQ6zusnYXsruhw+A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tXJB/EAw"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-22403cbb47fso117390135ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 16:00:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tg5mLE11rFxCWArUf6zddHW1pVyYsWAdjWfY9EgRFCU=;
- b=Q5IjUHDTUoHW4cGNdg0XsOMIqtoKCst7icAQaDECp5NesSWlfL4e0OAi2l86XhPxmADLUUv+H0STCnMQ6OnnLYHxxrD28HNp5GF+yAdQL98fuK3QTNnLY+9Hk3hHDVppFQPWRtYrOM814JBc1zirVjuTRbMOZeZCtcFXRt79G1o=
-Received: from PH8PR10MB6597.namprd10.prod.outlook.com (2603:10b6:510:226::20)
- by PH0PR10MB5684.namprd10.prod.outlook.com (2603:10b6:510:149::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Tue, 18 Mar
- 2025 23:00:15 +0000
-Received: from PH8PR10MB6597.namprd10.prod.outlook.com
- ([fe80::6874:4af6:bf0a:6ca]) by PH8PR10MB6597.namprd10.prod.outlook.com
- ([fe80::6874:4af6:bf0a:6ca%6]) with mapi id 15.20.8534.031; Tue, 18 Mar 2025
- 23:00:15 +0000
-From: Stephen Brennan <stephen.s.brennan@oracle.com>
-To: Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>
-Cc: linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>,
-        Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
-        Chaitanya S Prakash <chaitanyas.prakash@arm.com>,
-        Stephen Brennan <stephen.s.brennan@oracle.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: [PATCH] perf dso: fix dso__is_kallsyms() check
-Date: Tue, 18 Mar 2025 16:00:11 -0700
-Message-ID: <20250318230012.2038790-1-stephen.s.brennan@oracle.com>
-X-Mailer: git-send-email 2.43.5
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: MN0PR04CA0004.namprd04.prod.outlook.com
- (2603:10b6:208:52d::6) To PH8PR10MB6597.namprd10.prod.outlook.com
- (2603:10b6:510:226::20)
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1742338848; x=1742943648; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FYFuZAXLZfyhQ6Ofp04NHjTY3u72Upe1i27dNGQ4bgY=;
+        b=tXJB/EAwlLWnvEMZ0+wcOO3OQ0yjxiGe1FiILgTu0OlX3ceTueTlTVfOifrYI7wASA
+         K6tLlsOjZRn/Hx7/r13U7a1Ibm5gQbJQ0mvL54sG5X8U62CYpYS0eAX+/AwTPqBywKpr
+         bKS6YixmG9xxObsnhQzNEU2zwesBpNbPnOm0GLge0uRleYGl5dRTBFJkvim7UvE5CVLC
+         6EG63NvRnZ6eKBVtDgdf6Sa+uiHtN9ix4lZqOWxl3iP3jYjheNoQ3WvQDNLaTpp9gJq+
+         WTik6WkiFvnvRRGTc+ikLeCK3Pbduv25FJ/81NgghjZlvD1NalrcY/OgFAkDNEE7/EcZ
+         frJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742338848; x=1742943648;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FYFuZAXLZfyhQ6Ofp04NHjTY3u72Upe1i27dNGQ4bgY=;
+        b=qOxTfRSqVODXHwy+XiyKJzT7TLMiVqOaXBAd6C0RUQMZeMemxIDh21aZ0Zof3QPnbJ
+         VMKfEVrHSpTkWbLPTx75T7GwQGYLLrQ5au/8Rvx/6KFXXI1z4Iq6fjFOUDK3HDO3azSf
+         DQmQnXfFbM4AFpGDmbKFkSim4GoeIkf7R6FVU/KspbUhbPGobmlOw5/DS2SrARqFRRvr
+         CZMNxyUhC20eDIrrXbFrmK9Vd1vWOb/Aq94Y0oKhKPI/X9uSY+D+7BUfM3sgbaTIWzS9
+         9FGbNwXNooa6fIjFLKnzGHmL10w79+KkToB0WzuamwhDL5oxn9DaoRIszT6djntcqMZZ
+         yYOw==
+X-Forwarded-Encrypted: i=1; AJvYcCXCd/RdM6hA4sKCiDFv/5tOAUZbXOh34O4VEag/nv4uGd4/Zlgkj8Qm71uw7sF0HCwUuURihb/ygUXrvIk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxN5wX1fxs9kDMEBPa4Nim3naecqdtbdh635ZPSh9eMUs68/g2G
+	NmuX9Wfrm+Q4gIsPbAzDxQSRcCHII91f/aimbjGBEUZtim73XPqkc3z4BkWfLU4=
+X-Gm-Gg: ASbGncvds2SVzsWYc/8j1Vuf6qcsQFPemVi1rlzo5M1Uo8xX/W2BAZTCBNC6eUlxCfc
+	lO7dnJTghdLiUukrEL2+E0xirdbujB3fenYfKQIWPcAy+62/gk90E3RFekuUFsZh0ICpNL0XvpL
+	QRSxkiEOxj80P65u8RIKhXuBUMbQa1FxkQuLC7HOO50Fq7ykMM35aP4gRQervSfEg6D+y/2I2U4
+	nbAohF7cY+eqncQxdTW1iFPmdbnNCP187sOTeBJeR8uPMZFxYBCWiH+mNLTms+RB/om2ZCDX/LN
+	KvhlZj0sI0OmjQGC/umLR0lgp5A5NYx7pDugZCyHEZekBmsI1x8k6OID/uLjJTYJA083UDwteqV
+	ja89FdFk=
+X-Google-Smtp-Source: AGHT+IFTfJJcr07mnjzLqCop80WxhC5Pssj38zY+A8XR2rKWIc2cYcEXx8f4iEqqmQsjWdqm+Dpo5Q==
+X-Received: by 2002:a17:902:d2c6:b0:215:acb3:3786 with SMTP id d9443c01a7336-2264993661fmr6691435ad.19.1742338847956;
+        Tue, 18 Mar 2025 16:00:47 -0700 (PDT)
+Received: from dev-linux.. (syn-076-088-115-008.res.spectrum.com. [76.88.115.8])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6f14sm100739465ad.111.2025.03.18.16.00.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 16:00:47 -0700 (PDT)
+From: Sukrut Bellary <sbellary@baylibre.com>
+To: Kevin Hilman <khilman@baylibre.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Rob Herring <robh@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Nishanth Menon <nm@ti.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Sukrut Bellary <sbellary@baylibre.com>,
+	Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Andreas Kemnade <andreas@kemnade.info>,
+	Roger Quadros <rogerq@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Bajjuri Praneeth <praneeth@ti.com>,
+	Raghavendra Vignesh <vigneshr@ti.com>,
+	Bin Liu <b-liu@ti.com>,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH 0/4] PM: TI: AM335x: PM STANDBY fixes
+Date: Tue, 18 Mar 2025 16:00:38 -0700
+Message-Id: <20250318230042.3138542-1-sbellary@baylibre.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR10MB6597:EE_|PH0PR10MB5684:EE_
-X-MS-Office365-Filtering-Correlation-Id: 1a5aea0d-6d6a-4db1-bee5-08dd6670a50d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?jttJS1pRTf/KROTI0W+O8saQBH5ZceFykjGFjiwpVq6riEDu40xyruDBvqNN?=
- =?us-ascii?Q?l4L0pmL7AicFVNq3UPX+yM5d6/DgQZRdRJZrRjSXaeL+JvGRX8mASfPscWq2?=
- =?us-ascii?Q?k0fjQBelleUGFZs6F8sb4ccJeRAXlmuZjXeeLscduvG/NUPD//ZeHK11+DIW?=
- =?us-ascii?Q?ehM22kIUc+X12pmrFlSlGIy0EixMEe+D3hJhD+HGw1lVvuHLBL01okY6Tgo1?=
- =?us-ascii?Q?oO502Dh/rvnHK6KndTIUIE5R0uZ+F2N0yP0HN563GmF6llXLtjlnxAq1/UNr?=
- =?us-ascii?Q?UkYFEIVhPzAWoj3STsuZrm5AMg3BSxbJ8Vhc0gELLcWlj5mUa8XWyfz19TBz?=
- =?us-ascii?Q?MTYRNaDxmmgp4HTv8M4QCjXEjiFR0EShElGtAH38SNYSBoIJzh4zLzVMd7o0?=
- =?us-ascii?Q?CbPhn4A3XBClZY8zlemU5dzp7vGfE/11iFrdhTrILiOfqbHX71hkJbVGhWyn?=
- =?us-ascii?Q?dsLlorosqVC5mBCv4NhISxQkdC7bAj+aJgirCJACCy6oFgBmRSjcB7slhnLu?=
- =?us-ascii?Q?x52hbJ3ZrRjLTIbLEtkm4Rxe7oXsZOJh2NkyNTftgCmOuunsNI6Clr3kDph/?=
- =?us-ascii?Q?DwWEKzvt+GSF/Rgrg0x1i6Ri/SysRmf/E51rK48tf0nF/cZrBIvkzDvrT5o6?=
- =?us-ascii?Q?QfPsIb0FImru5R6jiKfwvvCymxJhgXRLA5suzFau8pvCAB2OUMDY28RrYMDz?=
- =?us-ascii?Q?+jqb1fN0WBeuqSzGDL0RngLnv9YCMJ13Ylwm8mj/VER2pwn3a8Ab1FOaP92C?=
- =?us-ascii?Q?NjMhQxBe6KWSsN36Jff9k9m3vOSPL49bS6bnpazYbIRtr6JQou4Hmljch0RB?=
- =?us-ascii?Q?ZedWTwZANkCU5eJ8jx0aofe5tlDGTENUsftQc48STZnnX+2MKFRsB0HuLDTO?=
- =?us-ascii?Q?XUmPlOwkKb8wTrNzcdkpfC2m5uzw665QjX49ylFLQ3+OxbZHInpLi6yQ10yx?=
- =?us-ascii?Q?35yeZpyRZxxEzpEF0RGBVEAaaZwk7grEj4Bjv65f/hxFBGyIRlXmUsSwv/y2?=
- =?us-ascii?Q?8hrva1HDF7tgHE1uTckNzAbUO6JCyjTv823OFRd8E5RTzX6npZL+Qkinpgzz?=
- =?us-ascii?Q?G32YnVPRvyg6vhLcUQfTO2w0J/ZXMQow8jc0kmFljhuUr3NXB2umcZATmQVR?=
- =?us-ascii?Q?YFoMyTj7G7DTc8J9gm+Fwb5hwWJ4q/N/KRFc/iHAloKDDprz4IzMJMg1m9IN?=
- =?us-ascii?Q?xW2deOOOTd0CKjItYsLdGr4AEhmiT4ZXP7m+1udtTaujCuPSDjNnCGTiibuV?=
- =?us-ascii?Q?qSVHPhMRa+dDJy5e6rrG9eWqvDvzA5vgLCazaxH+Q4+VidWObNRpIAfOnLDU?=
- =?us-ascii?Q?2mW6WZUEqCW4gC4q8zSL2FQkcGSPC1UfVd09yNzNbIhWuJ+BoD2EabsICzYM?=
- =?us-ascii?Q?XrzTWCrrZXDcy3gmJgmMxcRGyJmi?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR10MB6597.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?xRkpifzrKtCcFCiY4iG+AMuV9Lg1I9qWzlSdhNqut1J26THCqBMhxXQ5zKpL?=
- =?us-ascii?Q?y1T3arVWCm9sr5UQwYD8YnJZYnVv+LirQTqESH+eHBDU4dJjHclc3Ombu8pZ?=
- =?us-ascii?Q?R0Z1HQ5SP+kW9AYKE9+Pr/b6zFwpI+O6wtOzKrfvWy9lc/W9wtmbQ+0EEgec?=
- =?us-ascii?Q?h8klApXjtMQxQ1l97UJ7t23FydxDP1yz/Bt6e4qoJr3jgJp7pXbtvnrYT8Tr?=
- =?us-ascii?Q?nzroAqbl1f0vhoQ9eU0H4bfekpXIu8HBvll5s1JGuhm1uLrfyhQv3VQY43Xk?=
- =?us-ascii?Q?9KJItIHSbUZ02DJEtoHf4k5O5FWJTDd0Z8bHFA7eIj2gImLWp6yCfwRb2D55?=
- =?us-ascii?Q?POH58HvS/H2tqK7xebS2KvENn98IYsa1lciHkJXlbtbLDXWEUA8bn7ZUkewk?=
- =?us-ascii?Q?duU0JZ8H9sSRSEnRuamVS6AtYMHiz/aAGFKPGYYiSns9HvdrUUVYdA+anJ2c?=
- =?us-ascii?Q?FMDmZWJZ/ZEOBCVe9eUIqiWJy00mSVS855VwWzqJW+2ykRKA5oq/Yx6/MO3u?=
- =?us-ascii?Q?DKpbyoT5gq9CUJIUlMrL3+USVAUJm7YZsEsR0M6OEg0Ub9xCNySpZ/O3jhXv?=
- =?us-ascii?Q?lmfQfDMZUl5NzMYDjlz2cQ7J8U+8YCzCOoqymCqiEIer3GV57/85oRLCqar3?=
- =?us-ascii?Q?Abi19T3hB8z8r8SonKcLjmH4lIWh+vi2xRwqnFiUBrqhO9IeW0Z6KFp4TsyY?=
- =?us-ascii?Q?4GhGWRiQ/3FzU0fYjvJWurG3f/miyQInhohBmWbdptj/WW3+4qZ8YdggD2NF?=
- =?us-ascii?Q?WZONEuWRbcUtAEZsucgJcpmK1+D1jsM5ZHYAKycFI5Zf1WmhCHYIwhgFhE3/?=
- =?us-ascii?Q?+7KfodZOYAOwxBBRmUltue59rPjDQ1wB3f/iUGg5O9t+nhy4E2B+Krg7GF2M?=
- =?us-ascii?Q?KDG70DLHZfEw85wqf9wA9b4WfhR53Qi48mYwGf8aViGzHGFgwawCo1YMHl08?=
- =?us-ascii?Q?3qDN30s29SgJGOlWwyypE9NW18EAbZzrvinDmCxLh6frNfC/JBLmsRQ5oIjy?=
- =?us-ascii?Q?lzjFCbP2/AMt+K1yfzDwE6+JFCGNY09n7sZkJMo013ykvwXl80/ZpPeA4bEV?=
- =?us-ascii?Q?qOx6ITXwC6ksm7EGJ1wYMHCE7S7fsF0EY7vdP1h1kl2wkmQA7lxn6Q+cLaok?=
- =?us-ascii?Q?35/rycrSEr2mTmLAOvoK6CR7Hdam13kaEOKa7qgzSLAU2iiUpFM3Pf4ago9m?=
- =?us-ascii?Q?eBjSqyI5KBpHDGJPx9nPElViHe5Abse8Z8IkenXXFk118Rr2YVovaJsg1J63?=
- =?us-ascii?Q?FBvIIyi1Y/ZhE74J/N9+qeuh8AUM71NJHKkMksry/D+zIsUeATsECvwCJiTn?=
- =?us-ascii?Q?bBQLnvt4BabxUYWGGzwZ3ysj1T/lXQHtcweN8kzx7zVYW+irgyS44wcGel+x?=
- =?us-ascii?Q?4so8OuIOXfRy0IctdTGyoIh5fq47fDodwdxbawo/Mc9yjdN2Lagc6YDy+bX5?=
- =?us-ascii?Q?mryFpHQUUKU5pgUoae1OL9D+AkWq6fIH/h9+ikvyiTOd7vOWIsXx9e6Z2rmu?=
- =?us-ascii?Q?DufLIP/Mo3VdhVQKYHzICKT8Jf2JNjrYdX+UsmhS407iZ5od/p0bYclpFbT4?=
- =?us-ascii?Q?uzdFQWT6uPr60sCCKU+e674ATwOQV2oKLqTbV5TBvlpyi0bCxPFZf3lrWrRg?=
- =?us-ascii?Q?mg=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	4YchL3zB2j+/CzE6eDIdZYgzPtxVabnrpG84iKQsLCcydYE2huD+j7+E+fNxDA19azua88MGnleKvWgrZZJzANG1LZVa8z8mdRIeCDdVDyMjlbUVugAeMELJqOK+jzxq1C3ONmw8h8MZLy163lgC6nlR1l3YOrnGZjlHywfm8TJFlj8e0l5xynYNKW6TnZJo0EChQhQSUMSqEhqS5Qv1R8eZK4gPJj3t+KkRmCUsFJfGdmKKmZKv0R5LarCi7jU2IuzNKG9pfPqSmNgmv/roPJB/mNYSphULOBR+80M74VYCqeK1GUPa/K4A0VECFlkfn8LzO0+eynENdEGV9v9Dj1lq2euN950tt/uAe8z3NwqeH86fOrTc4ktgcsfu03KOIUfOu7I6a/nMmm5zulvF1IYy/a0jdyEWYuy92bD0TwVCN1dt0CzoJzLy37wVHU8MFFhOYZZZ0KKFL5DGJEpU8aKsK6Rb8y0rNFiS1EV3eRNFAhHavQhUlQvPAqw/GclG3rPgZFKugR1g6Vd3SlWWY1r/rAwoWUsb2zIpr1yWeR/EW37NOz+Yn7l8DX2BzRJ0uCD2Vh+6SpBjiay6ceIjB5JDM3mVDH3SvsYmLKinXU0=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1a5aea0d-6d6a-4db1-bee5-08dd6670a50d
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR10MB6597.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 23:00:15.0177
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wkX8WiMPKhheCt0V8kdz5J84ZpXCwsWEIcr+Okyr9NSju77c3qny3RX5OSK9XG2B/RVioL0foczofqjb+67IcvQcqWrxAjEJnnBYksj11NI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR10MB5684
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_10,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0 mlxscore=0
- adultscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503180166
-X-Proofpoint-GUID: V9FfmKIsYyGC5R68La7ZxOb2THObfpKv
-X-Proofpoint-ORIG-GUID: V9FfmKIsYyGC5R68La7ZxOb2THObfpKv
+Content-Transfer-Encoding: 8bit
 
-Kernel modules for which we cannot find a file on-disk will have a
-dso->long_name that looks like "[module_name]". Prior to the commit
-listed in the fixes, the dso->kernel field would be zero (for user
-space), so dso__is_kallsyms() would return false. After the commit,
-kernel module DSOs are correctly labeled, but the result is that
-dso__is_kallsyms() erroneously returns true for those modules without a
-filesystem path.
+This patch series fixes the Power management issues on TI's am335x soc.
 
-Later, build_id_cache__add() consults this value of is_kallsyms, and
-when true, it copies /proc/kallsyms into the cache. Users with many
-kernel modules without a filesystem path (e.g. ksplice or possibly
-kernel live patch modules) have reported excessive disk space usage in
-the build ID cache directory due to this behavior.
+on AM335x, the wakeup doesn't work in the case of STANDBY.
 
-To reproduce the issue, it's enough to build a trivial out-of-tree hello
-world kernel module, load it using insmod, and then use:
+1. Since CM3 PM FW [1](ti-v4.1.y) doesn't enable l4ls clockdomain upon
+wakeup, it fails to wakeup the MPU.
+To fix this, don't turn off the l4ls clk domain in the STANDBY transition
+in MPU.
 
-   perf record -ag -- sleep 1
+2. Also Per AM335x TRM [2](section 8.1.4.3 Power mode), in case of STANDBY,
+PER domain should be ON. So fix PER power domain handling for 
+standby. l4ls is a part of the PER domain.
 
-In the build ID directory, there will be a directory for your module
-name containing a kallsyms file.
+Since we are not turning off the l4ls clockdomain on STANDBY in MPU,
+PER power domain would remain ON. But still, explicitly handle this
+to be in sync with the STANDBY requirement.
 
-Fix this up by changing dso__is_kallsyms() to consult the
-dso_binary_type enumeration, which is also symmetric to the above checks
-for dso__is_vmlinux() and dso__is_kcore(). With this change, kallsyms is
-not cached in the build-id cache for out-of-tree modules.
+3. On am335x evm[1], UART0 - (UART1-HW) has a wakeup capability.
+Set the wakeup-source property in DT for AM335x.
 
-Fixes: 02213cec64bbe ("perf maps: Mark module DSOs with kernel type")
+4. Enable PM configs for AM335x.
 
-Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
----
- tools/perf/util/dso.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+[1] https://git.ti.com/cgit/processor-firmware/ti-amx3-cm3-pm-firmware/
+[2] https://www.ti.com/lit/ug/spruh73q/spruh73q.pdf
+[3] https://www.ti.com/tool/TMDXEVM3358
 
-diff --git a/tools/perf/util/dso.h b/tools/perf/util/dso.h
-index bb8e8f444054d..c0472a41147c3 100644
---- a/tools/perf/util/dso.h
-+++ b/tools/perf/util/dso.h
-@@ -808,7 +808,9 @@ static inline bool dso__is_kcore(const struct dso *dso)
- 
- static inline bool dso__is_kallsyms(const struct dso *dso)
- {
--	return RC_CHK_ACCESS(dso)->kernel && RC_CHK_ACCESS(dso)->long_name[0] != '/';
-+	enum dso_binary_type bt = dso__binary_type(dso);
-+
-+	return bt == DSO_BINARY_TYPE__KALLSYMS || bt == DSO_BINARY_TYPE__GUEST_KALLSYMS;
- }
- 
- bool dso__is_object_file(const struct dso *dso);
+Test log:
+https://gist.github.com/sukrutb/bdbfd1220fe8578a9decf87d0bac6796
+
+Sukrut Bellary (4):
+  ARM: OMAP2+: Fix l4ls clk domain handling in STANDBY
+  pmdomain: ti: Fix STANDBY handling of PER power domain
+  ARM: dts: am335x: Set wakeup-source for UART0
+  ARM: multi_v7_defconfig: Enable am335x PM configs
+
+ arch/arm/boot/dts/ti/omap/am335x-evm.dts    |  2 +-
+ arch/arm/configs/multi_v7_defconfig         |  5 +++++
+ arch/arm/mach-omap2/clockdomain.h           |  1 +
+ arch/arm/mach-omap2/clockdomains33xx_data.c |  2 +-
+ arch/arm/mach-omap2/cm33xx.c                | 14 +++++++++++++-
+ drivers/pmdomain/ti/omap_prm.c              |  8 ++++++--
+ 6 files changed, 27 insertions(+), 5 deletions(-)
+
 -- 
-2.43.5
+2.34.1
 
