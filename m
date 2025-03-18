@@ -1,68 +1,97 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5540885626;
-	Tue, 18 Mar 2025 01:33:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8B3F256D;
+	Tue, 18 Mar 2025 01:34:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742261636; cv=none; b=IuY9XxDNlJbTFiTu5NGPEGakJQ6tZpdHm9zdBKWp5wM04gLI+aKHax1MOjCw6na3LLX65bbhLiq03hwvWO2D8ZFgabt1a7I7R0wH5+OGuTkOehttyghAWs8dWE+7KxSqullv10EDMDBODNVScWWzmMMQpVJP0kxJ0TyJ1kz82nY=
+	t=1742261648; cv=none; b=hClhk/GBNX/4AkkdQ5WpfcwDQiaXwg1rb/nTzgkfzHPWuyyL168FCdq9B3MJAcIFhUaeO3O4q1RZ1+rBymM5ni1xL7LslJwNGQsiAjptM/8yegLQoqrfNf+wMnsAczVMuYhHBzGIbtc++rHkT03wh4zDmM4Z/fOiwFNv45lXt9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742261636; c=relaxed/simple;
-	bh=PoRoAAkPPBuR69LGmDgJzLuMGmZ8psP041boRYo8zvU=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Bmvn4PrcqE/bvphsSk63mgtqC4EPbXJIjXHIRx66lslJiHKuqMgLy0OkkZ9b2qma5U+sJTuwy7eUAzVXITt5sDDzMkaBfqHO5zL90w+QfQ+WEOj9qiudd2r0WddXbu836jmqWxq5uwWcmWgU8L/Xjm213h0aiv5SRil8OQLazMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=RgpdrTVA; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+	s=arc-20240116; t=1742261648; c=relaxed/simple;
+	bh=3h/tBuBGetcnoP/gV+1yhxo0Nigtzof+XWtMFsLQMSU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=k58whTHOicDCTWG5f2bShwK0sbzasQ34fI2DSaXCcEaJWJwUnC0Ptiw98oKBqpGKA5IwTrsfjoD6yArcPxZJiLmUCJezv9lVQXSwInBB58d+8bW0wORkee2ZrSu8kX7wNqxvpMi+Ea6M5yvh5hl1ImcUBpQq0tdSJCTQLGL+4YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=k60ijP0P; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="RgpdrTVA"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1742261633;
-	bh=PoRoAAkPPBuR69LGmDgJzLuMGmZ8psP041boRYo8zvU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=RgpdrTVAI0X/Bp7kAD0o3uQI+apgWXfXXglB+hBR8dgCNRQIG6CdgyvUrhjOjEnjg
-	 9GdgnsQjosBOqJXz71WW3TgrVmdWnOIL48yhskDwK6idlAH/Y7IddHuo2smrcbVndQ
-	 5kYYjX5+fZ3Js/lGbtH+LEHjGFeC6im5tuF7N6OSxvwS2ziPZkRe++0I4HW/Jiut6v
-	 jOn3do/4O5CrQbkAfJlOnz2osaT0Ydh2EuWACE1uC2rTdLan8nrTpLG4oOiYfFkCsU
-	 ZyqNxihU56U4b+PxXCThwfFDNON3zegoknyvxpj00jQwtQRBIr/clfN3MVcSpf/OvJ
-	 GqqvwjTghX33w==
-Received: from [192.168.68.112] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id D6A6777BB4;
-	Tue, 18 Mar 2025 09:33:51 +0800 (AWST)
-Message-ID: <57f42b7d08b816bc1a2e25d7f5932c3b2166c074.camel@codeconstruct.com.au>
-Subject: Re: [PATCH] usb: gadget: aspeed: Add NULL pointer check in
- ast_vhub_init_dev()
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Chenyuan Yang <chenyuan0y@gmail.com>, gregkh@linuxfoundation.org, 
-	joel@jms.id.au
-Cc: linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
-	netdev@vger.kernel.org
-Date: Tue, 18 Mar 2025 12:03:51 +1030
-In-Reply-To: <20250311012705.1233829-1-chenyuan0y@gmail.com>
-References: <20250311012705.1233829-1-chenyuan0y@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="k60ijP0P"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742261647; x=1773797647;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=3h/tBuBGetcnoP/gV+1yhxo0Nigtzof+XWtMFsLQMSU=;
+  b=k60ijP0Pl+OZbwM6M7bF+y8WPlsSus0fB3dedEZpCf6KyNDlwOk29aTD
+   MJfnWu6brbdEJknaszkfFfBD0N6FS53xSIGMT84PTeHSR28q8A/4uOSsY
+   Hje+/mL4PLcx4xpArkchZ4lxLmRWB/2pTlbOYKWadEAPBOV+Dy1r+Oimm
+   wkjYG0TU2/SwiI+mZJf2eke6PyiuMmu0ATQ0J4aMRM1B4IlTO8U0YAMA4
+   54VaLd/zot+dadQ6ZlFDzfUvIgrohClLzhz1WoSc5IfL07nSRQNHKXasg
+   jpSedmzT7gHYY9q0CNaBHNd02q1SacN78XqB5QTsYdLv6oitKvtu1j11v
+   A==;
+X-CSE-ConnectionGUID: 1wiQHBadQrG5pdWhUyGiGg==
+X-CSE-MsgGUID: kwft7VtvTq6hq0Whrk3TDw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="54009451"
+X-IronPort-AV: E=Sophos;i="6.14,255,1736841600"; 
+   d="scan'208";a="54009451"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 18:34:05 -0700
+X-CSE-ConnectionGUID: 55Wb8WbjQXusR/PcHCAi0Q==
+X-CSE-MsgGUID: m9oVNe38RomUnnrlFYFT0g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,255,1736841600"; 
+   d="scan'208";a="127283965"
+Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
+  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 18:34:04 -0700
+From: Yan Zhao <yan.y.zhao@intel.com>
+To: pbonzini@redhat.com,
+	seanjc@google.com
+Cc: linux-kernel@vger.kernel.org,
+	kvm@vger.kernel.org,
+	Yan Zhao <yan.y.zhao@intel.com>
+Subject: [PATCH v2 3/5] KVM: x86/tdp_mmu: WARN if PFN changes for spurious faults
+Date: Tue, 18 Mar 2025 09:32:38 +0800
+Message-ID: <20250318013238.5732-1-yan.y.zhao@intel.com>
+X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20250318013038.5628-1-yan.y.zhao@intel.com>
+References: <20250318013038.5628-1-yan.y.zhao@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2025-03-10 at 20:27 -0500, Chenyuan Yang wrote:
-> The variable d->name, returned by devm_kasprintf(), could be NULL.
-> A pointer check is added to prevent potential NULL pointer
-> dereference.
-> This is similar to the fix in commit 3027e7b15b02
-> ("ice: Fix some null pointer dereference issues in ice_ptp.c").
->=20
-> This issue is found by our static analysis tool
+Add a WARN() to assert that KVM does _not_ change the PFN of a
+shadow-present SPTE during spurious fault handling.
 
-Which tool is this? Can it be run by others (me)?
+KVM should _never_ change the PFN of a shadow-present SPTE and TDP MMU
+already BUG()s on this. However, spurious faults just return early before
+the existing BUG() could be hit.
 
->=20
-> Signed-off-by: Chenyuan Yang <chenyuan0y@gmail.com>
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Yan Zhao <yan.y.zhao@intel.com>
+---
+ arch/x86/kvm/mmu/tdp_mmu.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-Reviewed-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+diff --git a/arch/x86/kvm/mmu/tdp_mmu.c b/arch/x86/kvm/mmu/tdp_mmu.c
+index 6365eb6c1390..d219ecd4ac5b 100644
+--- a/arch/x86/kvm/mmu/tdp_mmu.c
++++ b/arch/x86/kvm/mmu/tdp_mmu.c
+@@ -1139,8 +1139,10 @@ static int tdp_mmu_map_handle_target_level(struct kvm_vcpu *vcpu,
+ 
+ 	if (is_shadow_present_pte(iter->old_spte) &&
+ 	    (fault->prefetch || is_access_allowed(fault, iter->old_spte)) &&
+-	    is_last_spte(iter->old_spte, iter->level))
++	    is_last_spte(iter->old_spte, iter->level)) {
++		WARN_ON_ONCE(fault->pfn != spte_to_pfn(iter->old_spte));
+ 		return RET_PF_SPURIOUS;
++	}
+ 
+ 	if (unlikely(!fault->slot))
+ 		new_spte = make_mmio_spte(vcpu, iter->gfn, ACC_ALL);
+-- 
+2.43.2
+
