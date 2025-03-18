@@ -1,66 +1,67 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA431AA1E4
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B34981C7018
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742262077; cv=none; b=mbRGHa75SCbTbgf9205kjcVdWLFNJMc+32Fgo4lrBVZD0EDM5qubuTqJLhxIVNu4RNF5Yvn+41APwW6GRpMFJ9r3dbDyKDtqCHu1Qs/6YRemW8gb5QQ9eQQXEppcBLy/F6aW6D3qz8m/ee4H8VfRzi7wqEI5HOqaKZKa0q0toyo=
+	t=1742262082; cv=none; b=VUuKbIkYYNTA0k+IWKxIEMPWZ4qcGL7MSFixMIpnCnrO5/wKeaPh9G2PmjBeLunCf7/LncYNvF/fLsjz2WohscmTjYuJXu4nzyc7w9O+KC1NJDM6cKEROTgSb0DFaOmrrOpBsBl/Hu6v8rw3/xIGYLydDFnRSVH0r00DC1bIcNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742262077; c=relaxed/simple;
-	bh=eDHwV1T8ko4Bl8N+OwpTeX4TSaNEO2pfS54f5B9PMFY=;
+	s=arc-20240116; t=1742262082; c=relaxed/simple;
+	bh=Oh2mEmgHQDDqY5dgblelGUbUuKbQFp4SWFQf+RUcx98=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=epVXM0R8X7V/c2nE2J/drhJF1eygyXv4QeQTwdxPdJOSLnL6IybOFVYzeA+awpdc2B+3s8Et5MerOjlp0w/7ImYPfY+vwOJD4O7xyLRAIax0M+kwsAwcQMu9MChPYtyn/yOA1Zg8yXe/L5QR5foSKASMAyCRHPEmpUqBTOXi3cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=RFLGgKE8; arc=none smtp.client-ip=209.85.221.49
+	 In-Reply-To:To:Cc; b=Gefjov0YGRgImtMh6Sy7+ylrw6fxlk5C2aRvwcyTd+vaCRPMJ6hDsT6UjbEQ+uIT0QUcF50oEhgXMLYu3xHvN9tDmimhg2knXAcak7C3unVyIVnBaFJjASDeXP4vieDU0Ul43QugzYe6O2f03/+0ne6zEv4vZcxonz746PqCYR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=aXDi0cEq; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="RFLGgKE8"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3912baafc58so4356399f8f.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:41:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="aXDi0cEq"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso12198215e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 18:41:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=openvpn.net; s=google; t=1742262072; x=1742866872; darn=vger.kernel.org;
+        d=openvpn.net; s=google; t=1742262075; x=1742866875; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=1cRkEYDtzM8Kgs+vgjekU59p2w/LIeCrFy4Osnr7dpI=;
-        b=RFLGgKE8gPKYA0n+uuN7gzLylpYQReKBwILII9CijohVzY2143E8PSBXRWR99LYO0I
-         DqpSzsWBAmGtrOokztSEic9z5Z8PUEyxPIYR0LV7M9+OSuDTgq4OWsYa7JxX3BaQldOr
-         mOvfdAOc15eL2uVBH0OXRi0KOVGroUVO0iRiKIShjDDCWUrnxsj4+1xesL0DasSe4kYY
-         g6Gq4DJ4Ms3N+Kl8GwpDU+BLeAK0DzS2tH6ETd5YxbylU1USkRgFDKp4rGeZwubjweYK
-         OEfKvflpA+AJB1tBsS2j4XVB27kAQ/mcoc2zFdml72HRKIuzB3sIdZdO89Z71VbHQ5FF
-         sOdg==
+        bh=kURLIbnSivguxWg5ML91nymkzfyzsfJwPR62gK5nyAo=;
+        b=aXDi0cEq8KZB4B3CjF/9qaYN7VPmr/QNwng/A6XuTRlXMhaco76r/KqMpz43WGPkgb
+         +w2rFJEczM+rWHluV/mP/RC1ZeDvLo77mgsdA9VaOQHm2wAFeFkkYVpAN+Q+NOy5CNqx
+         ePF5jBewxbd4+b9tgRbxKXdrlkk2tN2K42J9vshBI+OedOl+MRKP0Kw/smfqE6jpUHFn
+         J5H1DyNXtJvw6wZJHbVSVLmaAGDezLTmBmZXvcE7zXy0d2/w2AHDyaG5arE7KeUkq7IK
+         2/dgV0+7kl/r8yyZohPe33oACxuxAIr54OAe4Q9TQ6zx4MyfI9z/gKuyaJ+QIbd1Rl7w
+         5pjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742262072; x=1742866872;
+        d=1e100.net; s=20230601; t=1742262075; x=1742866875;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=1cRkEYDtzM8Kgs+vgjekU59p2w/LIeCrFy4Osnr7dpI=;
-        b=NX2WY/W6Q7fcKBkTDpsdxxTCdF5r4J5RNMeMeRZLcLUFCNgcSMHm9P5k2jmQtn9HQy
-         ACzxmAsRtP0qWSSoPCy2/LecuIIKgjWuzF3uZvFSDQfZJmE6wXdPiEV4656CZ108AT2U
-         jfJh66kSYEmdT9qFn50uvF+Y1lnGLE4mhYOoIdnIOMFPXsngJOxhOAmHrV0k60P144N0
-         PmgFNmoaxcpgnYmSz+7I8z+Zkvvob+/5yfssj9r87l7k8eFtDV/6+s5N0BoLb1vX3rZV
-         7tSKpJqd/kqnY9DQcKVpn5HXJ2/zknE+nosZKHORzfsvI7fpGsuGcNxIdgAXcKrHaKIx
-         AM+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUHMrBqcTbcmSPlN1plfig/Wua0lWV/F2/8NNGewd2NzU9jZNTVUChKC1t+d5VuJZDFjNW1GBLawDitcUE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzk7mA+w2CRSkrcZ+tuIbMuHJKr4sPz8hewTUDep6Bq+fBedgyE
-	Vo5MvUVZgyzu6un2O3YxDLHpefuzU0NV2tOXF3/dLody6FZlcZHnjSHLmYK9swK5bcal69oOdAu
-	z5nbjnXHU1XsUjfhZzCSIbDc5mzNwhRNeP425QahuoxLA1qX+gFGV81o=
-X-Gm-Gg: ASbGncvh9vFYHqdZGn9wJlLJKXVzP6SbYt/qBSBCwDf62wWQNTV2bJgmgJW0owmDU18
-	CtFbHDZkQgQcSwUaxFFtruHzk0Ln/hICialBH8CCp9/qX1ke37YzI1ryw6/QZN9h+vd7sGBrXOt
-	BN/nXhijk2ZIjKRDR8YBRlesLnzZU10LO52IjRwtH+W0O48s1WN2GFtY0aw8br3AXcN3aJBucd7
-	C0tFPJs736+RLb0ZrEyns2HZRXiR5K6yk/Szp09p9r3F226NVqlL155SblkINg/clKhjn3KiOFb
-	YMV3fTyZmKqAPJXZjQx7FbZzM4cQkiR0EaZr1FylmQ==
-X-Google-Smtp-Source: AGHT+IEF4DKhJwzo+qRZZTgvgslPYFtUgJMjAa82sebwSEzDNM2HFXZe4Egi5wmZ/cQS7UvkH2y4Sg==
-X-Received: by 2002:a05:6000:188e:b0:391:3aaf:1d3c with SMTP id ffacd0b85a97d-3971f9e3fe8mr12147303f8f.45.1742262072140;
-        Mon, 17 Mar 2025 18:41:12 -0700 (PDT)
+        bh=kURLIbnSivguxWg5ML91nymkzfyzsfJwPR62gK5nyAo=;
+        b=cJlv9OZ5JFYM8C+2z2RZsqwnuwjozSsW6lEmCjJyGjK7NzJ1CMXIxtZ8UeI7BnLAHW
+         73Wg+3/FQVjWA4JISdXNRihITvDNchmFVulBjxxij7gU5n9gw6zjaOnBDtpFTy24+6OF
+         V246iY6KaGO673CnCcJStxb4O7DV5IuwWBVtKBnMtw036EdJUS1gzuyCLwly6QHYQMUV
+         9TQnd2MPHkEc0K+opqD7fFPZp0ziDzhzolbDbnI0Dt9V/a1s/JHlgszBsuUrAm3SpfsR
+         xZPl44rjKs9up+ElVlQPfbRdJa6IzjJ1GoKf1ibOcV4Q4Xkb30SbU9PD3+AvOFXOmBDb
+         8AWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVZVv6Lj41QAH7Dve+mBfA+qpos7RtLp9/q0NlGw97CGUkRyXWNMG1+L2DHDY3b2rwA4OF5Cv2otdCkGfg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJmpzFRyVVVzcO5kmEolkRsJxhua+nku/RgbiRSyAb9j9v3x7b
+	w6j+klnHWjOVg+eJNlhzo1/cHz8UvmksLN3JMlxkWZC0hopAP/ZzTmOIQnnYWj56LxGC4Nr3Nzu
+	R31F/PBrD7Z4Md5h/DxBNfu0z69uhtApcikgoouj4vum2NSTv/TnWxSxWczshGU+c84oz
+X-Gm-Gg: ASbGncuG4kJm7XEGJhodq2PXNM+lGfQFkx3mW89udImrZ1bfqkVnqUOIK3DcMDqgU0e
+	wACWZbi5m19sTiMfFB1eDmcr3J2lmAxuuY9ZodHTnXmqvuM0MIA6R6Vd3EQnYJYUHZqDghCipS8
+	GZIfOj0ZPEnbBR+vCAxOlOcdgsfqS6Jxh94PL36I9zCDwnBYt6TRMbKgbuJhNR27yQVNxZHkMLs
+	ash75OFYRYI+qRBYbr/WeU6QU0fab+GA/uattXoDTNIlC4kVuQCSp0UxNn+Mba9yCeo46BfOkUi
+	Bg9LywWwsv3JJeeN8zL2SfMUGSizySm7BU3UU8spDg==
+X-Google-Smtp-Source: AGHT+IHgXFM1LD08u+gksAEzw/2vzGPLWfTRyUCCQ0yMVyVNcnakQY1MAxaaAqcLMJpdPcqVnT44tg==
+X-Received: by 2002:a5d:5f54:0:b0:391:2fe3:24ec with SMTP id ffacd0b85a97d-3971e3a2fb4mr12654169f8f.14.1742262074687;
+        Mon, 17 Mar 2025 18:41:14 -0700 (PDT)
 Received: from [127.0.0.1] ([2001:67c:2fbc:1:3577:c57d:1329:9a15])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6b2bsm16230838f8f.26.2025.03.17.18.41.10
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6b2bsm16230838f8f.26.2025.03.17.18.41.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 18:41:10 -0700 (PDT)
+        Mon, 17 Mar 2025 18:41:14 -0700 (PDT)
 From: Antonio Quartulli <antonio@openvpn.net>
-Date: Tue, 18 Mar 2025 02:40:43 +0100
-Subject: [PATCH net-next v24 08/23] ovpn: implement basic RX path (UDP)
+Date: Tue, 18 Mar 2025 02:40:45 +0100
+Subject: [PATCH net-next v24 10/23] ovpn: store tunnel and transport
+ statistics
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-b4-ovpn-v24-8-3ec4ab5c4a77@openvpn.net>
+Message-Id: <20250318-b4-ovpn-v24-10-3ec4ab5c4a77@openvpn.net>
 References: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
 In-Reply-To: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
 To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>, 
@@ -81,519 +82,233 @@ To: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
 Cc: Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org, 
  linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=15778; i=antonio@openvpn.net;
- h=from:subject:message-id; bh=eDHwV1T8ko4Bl8N+OwpTeX4TSaNEO2pfS54f5B9PMFY=;
- b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBn2M8qDKvOPIKFlEb4cAosIiN/q8qt/Oukmysjd
- S9Gmii0jayJATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ9jPKgAKCRALcOU6oDjV
- h4V2B/4pG3NBbZnluDnVq+NetBj+04fLHY77o/znyYRO2Yn71/KRez6KimcDTPVF+GK3+yVx6rL
- xRMW2DSzjD9aYM1X+1WWtHP24y8O1n89q3cnIzfvyEGrXXnjTWyWUPlIt/9GJa4HVvN2GPvJ934
- yiFNIxd7NMqi0jBkVXgrQdJC6NkfFBzFWou3g6OIAeXUhu1eWEKHp328sgDE73qxwbj16hid/ny
- aSVUsfqO765Ry6LNOhFs4ZUYXMe07TTuwT/zowjTZBq73PLTyLszBp+AF9Rm0fA/blZaDlDv6yW
- LlTQebZqShEa+3q6E2l/Gt6h0o1/05JAm2ifekXx7FjkQ6Gx
+X-Developer-Signature: v=1; a=openpgp-sha256; l=7109; i=antonio@openvpn.net;
+ h=from:subject:message-id; bh=Oh2mEmgHQDDqY5dgblelGUbUuKbQFp4SWFQf+RUcx98=;
+ b=owEBbQGS/pANAwAIAQtw5TqgONWHAcsmYgBn2M8qYQ+CmbINS+1zjWNNqyR6RNZp6BTZWEggc
+ pC30HSsAGeJATMEAAEIAB0WIQSZq9xs+NQS5N5fwPwLcOU6oDjVhwUCZ9jPKgAKCRALcOU6oDjV
+ h2zcCACIrYI0W82I8juq5f94GGMSO8iFAd8mhO/DJcwy2xbGcyOfOMY7RxRNbu+Z9mSj+fWCRtQ
+ LtvO+K5/WlIyhE4Ag8rnLRqrwL6FFBbJ0dw13FMgTO58+7yWJeEE91PSv8F3AWF6h53rdx93y6E
+ rCNQXG+XCthEkljPz/dy1a7jLw4+xrSaHWpSALB2Cq4Ve3mIxYw+4+sbiBN4ngSVTcJqFvNXlQ3
+ mCLVPtFMWemJqtFZsUbZ84TyyCUzfBJDZYy3gXC05tiQ3vuLuuMQrtiYp1hnjUrDfjvvzg9Px+I
+ Q24KdK5hjgyT+G2S1d9ftDEJ86rSWCe9Eyii5P4li/kniSlu
 X-Developer-Key: i=antonio@openvpn.net; a=openpgp;
  fpr=CABDA1282017C267219885C748F0CCB68F59D14C
 
-Packets received over the socket are forwarded to the user device.
+Byte/packet counters for in-tunnel and transport streams
+are now initialized and updated as needed.
 
-Implementation is UDP only. TCP will be added by a later patch.
-
-Note: no decryption/decapsulation exists yet, packets are forwarded as
-they arrive without much processing.
+To be exported via netlink.
 
 Signed-off-by: Antonio Quartulli <antonio@openvpn.net>
 ---
- drivers/net/ovpn/io.c       |  64 ++++++++++++++++++++-
- drivers/net/ovpn/io.h       |   2 +
- drivers/net/ovpn/main.c     |  14 ++++-
- drivers/net/ovpn/ovpnpriv.h |   3 +
- drivers/net/ovpn/proto.h    |  50 +++++++++++++++-
- drivers/net/ovpn/socket.c   |  13 ++++-
- drivers/net/ovpn/socket.h   |   9 ++-
- drivers/net/ovpn/udp.c      | 135 ++++++++++++++++++++++++++++++++++++++++++++
- net/ipv6/udp.c              |   1 +
- 9 files changed, 286 insertions(+), 5 deletions(-)
+ drivers/net/ovpn/Makefile |  1 +
+ drivers/net/ovpn/io.c     | 12 +++++++++++-
+ drivers/net/ovpn/peer.c   |  2 ++
+ drivers/net/ovpn/peer.h   |  5 +++++
+ drivers/net/ovpn/stats.c  | 21 +++++++++++++++++++++
+ drivers/net/ovpn/stats.h  | 47 +++++++++++++++++++++++++++++++++++++++++++++++
+ 6 files changed, 87 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/net/ovpn/Makefile b/drivers/net/ovpn/Makefile
+index 38c9fdca0e2e8e4af3c369ceb3971b58ab52d77b..04c3345807c5d759daf65cc80a290f784dbf5588 100644
+--- a/drivers/net/ovpn/Makefile
++++ b/drivers/net/ovpn/Makefile
+@@ -17,4 +17,5 @@ ovpn-y += netlink-gen.o
+ ovpn-y += peer.o
+ ovpn-y += pktid.o
+ ovpn-y += socket.o
++ovpn-y += stats.o
+ ovpn-y += udp.o
 diff --git a/drivers/net/ovpn/io.c b/drivers/net/ovpn/io.c
-index 94b466bf2ef70d60d3e60d9820b64877c44f2e51..46ad27e8eb8425f810c7d2b6c63984ea008d90fa 100644
+index f8113f160148c5953c40f69a87a3ed7ce62abacb..a5bd21fb824f650094bd113485520be9a3cbb121 100644
 --- a/drivers/net/ovpn/io.c
 +++ b/drivers/net/ovpn/io.c
-@@ -9,15 +9,77 @@
- 
- #include <linux/netdevice.h>
+@@ -12,6 +12,7 @@
  #include <linux/skbuff.h>
-+#include <net/gro_cells.h>
+ #include <net/gro_cells.h>
  #include <net/gso.h>
++#include <net/ip.h>
  
--#include "io.h"
  #include "ovpnpriv.h"
  #include "peer.h"
-+#include "io.h"
-+#include "netlink.h"
-+#include "proto.h"
- #include "udp.h"
- #include "skb.h"
- #include "socket.h"
- 
-+/* Called after decrypt to write the IP packet to the device.
-+ * This method is expected to manage/free the skb.
-+ */
-+static void ovpn_netdev_write(struct ovpn_peer *peer, struct sk_buff *skb)
-+{
-+	unsigned int pkt_len;
-+	int ret;
-+
-+	/* we can't guarantee the packet wasn't corrupted before entering the
-+	 * VPN, therefore we give other layers a chance to check that
-+	 */
-+	skb->ip_summed = CHECKSUM_NONE;
-+
-+	/* skb hash for transport packet no longer valid after decapsulation */
-+	skb_clear_hash(skb);
-+
-+	/* post-decrypt scrub -- prepare to inject encapsulated packet onto the
-+	 * interface, based on __skb_tunnel_rx() in dst.h
-+	 */
-+	skb->dev = peer->ovpn->dev;
-+	skb_set_queue_mapping(skb, 0);
-+	skb_scrub_packet(skb, true);
-+
-+	skb_reset_network_header(skb);
-+	skb_reset_transport_header(skb);
-+	skb_reset_inner_headers(skb);
-+
-+	/* cause packet to be "received" by the interface */
-+	pkt_len = skb->len;
-+	ret = gro_cells_receive(&peer->ovpn->gro_cells, skb);
-+	if (likely(ret == NET_RX_SUCCESS))
-+		/* update RX stats with the size of decrypted packet */
-+		dev_sw_netstats_rx_add(peer->ovpn->dev, pkt_len);
-+}
-+
-+static void ovpn_decrypt_post(struct sk_buff *skb, int ret)
-+{
-+	struct ovpn_peer *peer = ovpn_skb_cb(skb)->peer;
-+
-+	if (unlikely(ret < 0))
-+		goto drop;
-+
-+	ovpn_netdev_write(peer, skb);
-+	/* skb is passed to upper layer - don't free it */
-+	skb = NULL;
-+drop:
-+	if (unlikely(skb))
-+		dev_core_stats_rx_dropped_inc(peer->ovpn->dev);
-+	ovpn_peer_put(peer);
-+	kfree_skb(skb);
-+}
-+
-+/* RX path entry point: decrypt packet and forward it to the device */
-+void ovpn_recv(struct ovpn_peer *peer, struct sk_buff *skb)
-+{
-+	ovpn_skb_cb(skb)->peer = peer;
-+	ovpn_decrypt_post(skb, 0);
-+}
-+
- static void ovpn_encrypt_post(struct sk_buff *skb, int ret)
- {
- 	struct ovpn_peer *peer = ovpn_skb_cb(skb)->peer;
-diff --git a/drivers/net/ovpn/io.h b/drivers/net/ovpn/io.h
-index afea5f81f5628dcb9afda9a78974bbf6f2101c13..1cfa66873a2d4840ce57e337f8b4e8143e8b8e79 100644
---- a/drivers/net/ovpn/io.h
-+++ b/drivers/net/ovpn/io.h
-@@ -21,4 +21,6 @@
- 
- netdev_tx_t ovpn_net_xmit(struct sk_buff *skb, struct net_device *dev);
- 
-+void ovpn_recv(struct ovpn_peer *peer, struct sk_buff *skb);
-+
- #endif /* _NET_OVPN_OVPN_H_ */
-diff --git a/drivers/net/ovpn/main.c b/drivers/net/ovpn/main.c
-index 6f3f649bdf2d8da352bdea94a368ea95f153af68..f6219b05485f03c3b2309db8661e38700f6b8b1c 100644
---- a/drivers/net/ovpn/main.c
-+++ b/drivers/net/ovpn/main.c
-@@ -11,6 +11,7 @@
- #include <linux/module.h>
- #include <linux/netdevice.h>
- #include <linux/inetdevice.h>
-+#include <net/gro_cells.h>
- #include <net/ip.h>
- #include <net/rtnetlink.h>
- #include <uapi/linux/if_arp.h>
-@@ -21,10 +22,20 @@
- #include "io.h"
- #include "peer.h"
- #include "proto.h"
-+#include "udp.h"
- 
- static int ovpn_net_init(struct net_device *dev)
- {
--	return 0;
-+	struct ovpn_priv *ovpn = netdev_priv(dev);
-+
-+	return gro_cells_init(&ovpn->gro_cells, dev);
-+}
-+
-+static void ovpn_net_uninit(struct net_device *dev)
-+{
-+	struct ovpn_priv *ovpn = netdev_priv(dev);
-+
-+	gro_cells_destroy(&ovpn->gro_cells);
- }
- 
- static int ovpn_net_open(struct net_device *dev)
-@@ -43,6 +54,7 @@ static int ovpn_net_open(struct net_device *dev)
- 
- static const struct net_device_ops ovpn_netdev_ops = {
- 	.ndo_init		= ovpn_net_init,
-+	.ndo_uninit		= ovpn_net_uninit,
- 	.ndo_open		= ovpn_net_open,
- 	.ndo_start_xmit		= ovpn_net_xmit,
- };
-diff --git a/drivers/net/ovpn/ovpnpriv.h b/drivers/net/ovpn/ovpnpriv.h
-index fae2682b424b03222a5ce881a4a1b4518a7ff311..9d0640e9c71e7fd494e3d9df155732bd5d82463e 100644
---- a/drivers/net/ovpn/ovpnpriv.h
-+++ b/drivers/net/ovpn/ovpnpriv.h
-@@ -10,6 +10,7 @@
- #ifndef _NET_OVPN_OVPNSTRUCT_H_
- #define _NET_OVPN_OVPNSTRUCT_H_
- 
-+#include <net/gro_cells.h>
- #include <uapi/linux/if_link.h>
- #include <uapi/linux/ovpn.h>
- 
-@@ -20,6 +21,7 @@
-  * @mode: device operation mode (i.e. p2p, mp, ..)
-  * @lock: protect this object
-  * @peer: in P2P mode, this is the only remote peer
-+ * @gro_cells: pointer to the Generic Receive Offload cell
-  */
- struct ovpn_priv {
- 	struct net_device *dev;
-@@ -27,6 +29,7 @@ struct ovpn_priv {
- 	enum ovpn_mode mode;
- 	spinlock_t lock; /* protect writing to the ovpn_priv object */
- 	struct ovpn_peer __rcu *peer;
-+	struct gro_cells gro_cells;
- };
- 
- #endif /* _NET_OVPN_OVPNSTRUCT_H_ */
-diff --git a/drivers/net/ovpn/proto.h b/drivers/net/ovpn/proto.h
-index 5f95a78bebd3702868ffeeab3ea4938e957d568c..591b97a9925fd9b91f996d6d591fac41b1aa6148 100644
---- a/drivers/net/ovpn/proto.h
-+++ b/drivers/net/ovpn/proto.h
-@@ -10,6 +10,11 @@
- #ifndef _NET_OVPN_PROTO_H_
- #define _NET_OVPN_PROTO_H_
- 
-+#include "main.h"
-+
-+#include <linux/bitfield.h>
-+#include <linux/skbuff.h>
-+
- /* When the OpenVPN protocol is ran in AEAD mode, use
-  * the OpenVPN packet ID as the AEAD nonce:
-  *
-@@ -34,5 +39,48 @@
- #define OVPN_NONCE_WIRE_SIZE (OVPN_NONCE_SIZE - OVPN_NONCE_TAIL_SIZE)
- 
- #define OVPN_OPCODE_SIZE		4 /* DATA_V2 opcode size */
-+#define OVPN_OPCODE_KEYID_MASK		0x07000000
-+#define OVPN_OPCODE_PKTTYPE_MASK	0xF8000000
-+#define OVPN_OPCODE_PEERID_MASK		0x00FFFFFF
-+
-+/* packet opcodes of interest to us */
-+#define OVPN_DATA_V1			6 /* data channel v1 packet */
-+#define OVPN_DATA_V2			9 /* data channel v2 packet */
-+
-+#define OVPN_PEER_ID_UNDEF		0x00FFFFFF
-+
-+/**
-+ * ovpn_opcode_from_skb - extract OP code from skb at specified offset
-+ * @skb: the packet to extract the OP code from
-+ * @offset: the offset in the data buffer where the OP code is located
-+ *
-+ * Note: this function assumes that the skb head was pulled enough
-+ * to access the first 4 bytes.
-+ *
-+ * Return: the OP code
-+ */
-+static inline u8 ovpn_opcode_from_skb(const struct sk_buff *skb, u16 offset)
-+{
-+	u32 opcode = be32_to_cpu(*(__be32 *)(skb->data + offset));
-+
-+	return FIELD_GET(OVPN_OPCODE_PKTTYPE_MASK, opcode);
-+}
-+
-+/**
-+ * ovpn_peer_id_from_skb - extract peer ID from skb at specified offset
-+ * @skb: the packet to extract the OP code from
-+ * @offset: the offset in the data buffer where the OP code is located
-+ *
-+ * Note: this function assumes that the skb head was pulled enough
-+ * to access the first 4 bytes.
-+ *
-+ * Return: the peer ID
-+ */
-+static inline u32 ovpn_peer_id_from_skb(const struct sk_buff *skb, u16 offset)
-+{
-+	u32 opcode = be32_to_cpu(*(__be32 *)(skb->data + offset));
-+
-+	return FIELD_GET(OVPN_OPCODE_PEERID_MASK, opcode);
-+}
- 
--#endif /* _NET_OVPN_PROTO_H_ */
-+#endif /* _NET_OVPN_OVPNPROTO_H_ */
-diff --git a/drivers/net/ovpn/socket.c b/drivers/net/ovpn/socket.c
-index a4a8686f2e2995dca163d5b96c6c897b86434967..6de1e8c85a3d35a5d4f179d595d2409aa34cdc01 100644
---- a/drivers/net/ovpn/socket.c
-+++ b/drivers/net/ovpn/socket.c
-@@ -23,8 +23,10 @@ static void ovpn_socket_release_kref(struct kref *kref)
- 	struct ovpn_socket *sock = container_of(kref, struct ovpn_socket,
- 						refcount);
- 
--	if (sock->sock->sk->sk_protocol == IPPROTO_UDP)
-+	if (sock->sock->sk->sk_protocol == IPPROTO_UDP) {
- 		ovpn_udp_socket_detach(sock);
-+		netdev_put(sock->ovpn->dev, &sock->dev_tracker);
+@@ -55,9 +56,11 @@ static void ovpn_netdev_write(struct ovpn_peer *peer, struct sk_buff *skb)
+ 	/* cause packet to be "received" by the interface */
+ 	pkt_len = skb->len;
+ 	ret = gro_cells_receive(&peer->ovpn->gro_cells, skb);
+-	if (likely(ret == NET_RX_SUCCESS))
++	if (likely(ret == NET_RX_SUCCESS)) {
+ 		/* update RX stats with the size of decrypted packet */
++		ovpn_peer_stats_increment_rx(&peer->vpn_stats, pkt_len);
+ 		dev_sw_netstats_rx_add(peer->ovpn->dev, pkt_len);
 +	}
- 
- 	kfree_rcu(sock, rcu);
  }
-@@ -200,6 +202,15 @@ struct ovpn_socket *ovpn_socket_new(struct socket *sock, struct ovpn_peer *peer)
- 		goto sock_release;
+ 
+ void ovpn_decrypt_post(void *data, int ret)
+@@ -158,6 +161,8 @@ void ovpn_recv(struct ovpn_peer *peer, struct sk_buff *skb)
+ 	struct ovpn_crypto_key_slot *ks;
+ 	u8 key_id;
+ 
++	ovpn_peer_stats_increment_rx(&peer->link_stats, skb->len);
++
+ 	/* get the key slot matching the key ID in the received packet */
+ 	key_id = ovpn_key_id_from_skb(skb);
+ 	ks = ovpn_crypto_key_id_to_slot(&peer->crypto, key_id);
+@@ -181,6 +186,7 @@ void ovpn_encrypt_post(void *data, int ret)
+ 	struct sk_buff *skb = data;
+ 	struct ovpn_socket *sock;
+ 	struct ovpn_peer *peer;
++	unsigned int orig_len;
+ 
+ 	/* encryption is happening asynchronously. This function will be
+ 	 * called later by the crypto callback with a proper return value
+@@ -206,6 +212,7 @@ void ovpn_encrypt_post(void *data, int ret)
+ 		goto err;
+ 
+ 	skb_mark_not_on_list(skb);
++	orig_len = skb->len;
+ 
+ 	rcu_read_lock();
+ 	sock = rcu_dereference(peer->sock);
+@@ -220,6 +227,8 @@ void ovpn_encrypt_post(void *data, int ret)
+ 		/* no transport configured yet */
+ 		goto err_unlock;
+ 	}
++
++	ovpn_peer_stats_increment_tx(&peer->link_stats, orig_len);
+ 	/* skb passed down the stack - don't free it */
+ 	skb = NULL;
+ err_unlock:
+@@ -334,6 +343,7 @@ netdev_tx_t ovpn_net_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		goto drop;
  	}
  
-+	if (sock->sk->sk_protocol == IPPROTO_UDP) {
-+		/* in UDP we only link the ovpn instance since the socket is
-+		 * shared among multiple peers
-+		 */
-+		ovpn_sock->ovpn = peer->ovpn;
-+		netdev_hold(peer->ovpn->dev, &ovpn_sock->dev_tracker,
-+			    GFP_KERNEL);
-+	}
-+
- 	rcu_assign_sk_user_data(sock->sk, ovpn_sock);
- sock_release:
- 	release_sock(sock->sk);
-diff --git a/drivers/net/ovpn/socket.h b/drivers/net/ovpn/socket.h
-index ade8c94619d7b2f905b5284373dc73f590188399..c1697f4616d470f143cba77bb1db34de0398a37a 100644
---- a/drivers/net/ovpn/socket.h
-+++ b/drivers/net/ovpn/socket.h
-@@ -20,12 +20,19 @@ struct ovpn_peer;
++	ovpn_peer_stats_increment_tx(&peer->vpn_stats, skb->len);
+ 	ovpn_send(ovpn, skb_list.next, peer);
+ 
+ 	return NETDEV_TX_OK;
+diff --git a/drivers/net/ovpn/peer.c b/drivers/net/ovpn/peer.c
+index 23eaab1b465b8b88a84cf9f1039621923b640b47..0fe5333c6b8104913526dacc4d7d2260b97f62aa 100644
+--- a/drivers/net/ovpn/peer.c
++++ b/drivers/net/ovpn/peer.c
+@@ -61,6 +61,8 @@ struct ovpn_peer *ovpn_peer_new(struct ovpn_priv *ovpn, u32 id)
+ 	ovpn_crypto_state_init(&peer->crypto);
+ 	spin_lock_init(&peer->lock);
+ 	kref_init(&peer->refcount);
++	ovpn_peer_stats_init(&peer->vpn_stats);
++	ovpn_peer_stats_init(&peer->link_stats);
+ 
+ 	ret = dst_cache_init(&peer->dst_cache, GFP_KERNEL);
+ 	if (ret < 0) {
+diff --git a/drivers/net/ovpn/peer.h b/drivers/net/ovpn/peer.h
+index a9113a969f94d66fa17208d563d0bbd255c23fa9..2453d39ce327c6d174cfb35fe5430865b32c2efe 100644
+--- a/drivers/net/ovpn/peer.h
++++ b/drivers/net/ovpn/peer.h
+@@ -14,6 +14,7 @@
+ 
+ #include "crypto.h"
+ #include "socket.h"
++#include "stats.h"
+ 
  /**
-  * struct ovpn_socket - a kernel socket referenced in the ovpn code
-  * @ovpn: ovpn instance owning this socket (UDP only)
-+ * @dev_tracker: reference tracker for associated dev (UDP only)
-  * @sock: the low level sock object
-  * @refcount: amount of contexts currently referencing this object
-  * @rcu: member used to schedule RCU destructor callback
-  */
- struct ovpn_socket {
--	struct ovpn_priv *ovpn;
-+	union {
-+		struct {
-+			struct ovpn_priv *ovpn;
-+			netdevice_tracker dev_tracker;
-+		};
-+	};
-+
- 	struct socket *sock;
+  * struct ovpn_peer - the main remote peer object
+@@ -27,6 +28,8 @@
+  * @crypto: the crypto configuration (ciphers, keys, etc..)
+  * @dst_cache: cache for dst_entry used to send to peer
+  * @bind: remote peer binding
++ * @vpn_stats: per-peer in-VPN TX/RX stats
++ * @link_stats: per-peer link/transport TX/RX stats
+  * @delete_reason: why peer was deleted (i.e. timeout, transport error, ..)
+  * @lock: protects binding to peer (bind)
+  * @refcount: reference counter
+@@ -45,6 +48,8 @@ struct ovpn_peer {
+ 	struct ovpn_crypto_state crypto;
+ 	struct dst_cache dst_cache;
+ 	struct ovpn_bind __rcu *bind;
++	struct ovpn_peer_stats vpn_stats;
++	struct ovpn_peer_stats link_stats;
+ 	enum ovpn_del_peer_reason delete_reason;
+ 	spinlock_t lock; /* protects bind */
  	struct kref refcount;
- 	struct rcu_head rcu;
-diff --git a/drivers/net/ovpn/udp.c b/drivers/net/ovpn/udp.c
-index ae76ae6d372f565715a39ee24e3fba14f1c1370e..6f4b51089033a8d806eede0a63f62b239197af0b 100644
---- a/drivers/net/ovpn/udp.c
-+++ b/drivers/net/ovpn/udp.c
-@@ -15,6 +15,7 @@
- #include <net/dst_cache.h>
- #include <net/route.h>
- #include <net/ipv6_stubs.h>
-+#include <net/transp_v6.h>
- #include <net/udp.h>
- #include <net/udp_tunnel.h>
- 
-@@ -23,9 +24,114 @@
- #include "bind.h"
- #include "io.h"
- #include "peer.h"
-+#include "proto.h"
- #include "socket.h"
- #include "udp.h"
- 
-+/* Retrieve the corresponding ovpn object from a UDP socket
-+ * rcu_read_lock must be held on entry
-+ */
-+static struct ovpn_socket *ovpn_socket_from_udp_sock(struct sock *sk)
-+{
-+	struct ovpn_socket *ovpn_sock;
-+
-+	if (unlikely(READ_ONCE(udp_sk(sk)->encap_type) != UDP_ENCAP_OVPNINUDP))
-+		return NULL;
-+
-+	ovpn_sock = rcu_dereference_sk_user_data(sk);
-+	if (unlikely(!ovpn_sock))
-+		return NULL;
-+
-+	/* make sure that sk matches our stored transport socket */
-+	if (unlikely(!ovpn_sock->sock || sk != ovpn_sock->sock->sk))
-+		return NULL;
-+
-+	return ovpn_sock;
-+}
-+
-+/**
-+ * ovpn_udp_encap_recv - Start processing a received UDP packet.
-+ * @sk: socket over which the packet was received
-+ * @skb: the received packet
+diff --git a/drivers/net/ovpn/stats.c b/drivers/net/ovpn/stats.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..d637143473bb913647c79832fd9eb3ebfd9efb59
+--- /dev/null
++++ b/drivers/net/ovpn/stats.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0
++/*  OpenVPN data channel offload
 + *
-+ * If the first byte of the payload is:
-+ * - DATA_V2 the packet is accepted for further processing,
-+ * - DATA_V1 the packet is dropped as not supported,
-+ * - anything else the packet is forwarded to the UDP stack for
-+ *   delivery to user space.
++ *  Copyright (C) 2020-2025 OpenVPN, Inc.
 + *
-+ * Return:
-+ *  0 if skb was consumed or dropped
-+ * >0 if skb should be passed up to userspace as UDP (packet not consumed)
-+ * <0 if skb should be resubmitted as proto -N (packet not consumed)
++ *  Author:	James Yonan <james@openvpn.net>
++ *		Antonio Quartulli <antonio@openvpn.net>
 + */
-+static int ovpn_udp_encap_recv(struct sock *sk, struct sk_buff *skb)
++
++#include <linux/atomic.h>
++
++#include "stats.h"
++
++void ovpn_peer_stats_init(struct ovpn_peer_stats *ps)
 +{
-+	struct ovpn_socket *ovpn_sock;
-+	struct ovpn_priv *ovpn;
-+	struct ovpn_peer *peer;
-+	u32 peer_id;
-+	u8 opcode;
++	atomic64_set(&ps->rx.bytes, 0);
++	atomic64_set(&ps->rx.packets, 0);
 +
-+	ovpn_sock = ovpn_socket_from_udp_sock(sk);
-+	if (unlikely(!ovpn_sock)) {
-+		net_err_ratelimited("ovpn: %s invoked on non ovpn socket\n",
-+				    __func__);
-+		goto drop_noovpn;
-+	}
++	atomic64_set(&ps->tx.bytes, 0);
++	atomic64_set(&ps->tx.packets, 0);
++}
+diff --git a/drivers/net/ovpn/stats.h b/drivers/net/ovpn/stats.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..53433d8b6c33160845de2ae1ca38e85cf31950b7
+--- /dev/null
++++ b/drivers/net/ovpn/stats.h
+@@ -0,0 +1,47 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*  OpenVPN data channel offload
++ *
++ *  Copyright (C) 2020-2025 OpenVPN, Inc.
++ *
++ *  Author:	James Yonan <james@openvpn.net>
++ *		Antonio Quartulli <antonio@openvpn.net>
++ *		Lev Stipakov <lev@openvpn.net>
++ */
 +
-+	ovpn = ovpn_sock->ovpn;
-+	if (unlikely(!ovpn)) {
-+		net_err_ratelimited("ovpn: cannot obtain ovpn object from UDP socket\n");
-+		goto drop_noovpn;
-+	}
++#ifndef _NET_OVPN_OVPNSTATS_H_
++#define _NET_OVPN_OVPNSTATS_H_
 +
-+	/* Make sure the first 4 bytes of the skb data buffer after the UDP
-+	 * header are accessible.
-+	 * They are required to fetch the OP code, the key ID and the peer ID.
-+	 */
-+	if (unlikely(!pskb_may_pull(skb, sizeof(struct udphdr) +
-+				    OVPN_OPCODE_SIZE))) {
-+		net_dbg_ratelimited("%s: packet too small from UDP socket\n",
-+				    netdev_name(ovpn->dev));
-+		goto drop;
-+	}
++/* one stat */
++struct ovpn_peer_stat {
++	atomic64_t bytes;
++	atomic64_t packets;
++};
 +
-+	opcode = ovpn_opcode_from_skb(skb, sizeof(struct udphdr));
-+	if (unlikely(opcode != OVPN_DATA_V2)) {
-+		/* DATA_V1 is not supported */
-+		if (opcode == OVPN_DATA_V1)
-+			goto drop;
++/* rx and tx stats combined */
++struct ovpn_peer_stats {
++	struct ovpn_peer_stat rx;
++	struct ovpn_peer_stat tx;
++};
 +
-+		/* unknown or control packet: let it bubble up to userspace */
-+		return 1;
-+	}
++void ovpn_peer_stats_init(struct ovpn_peer_stats *ps);
 +
-+	peer_id = ovpn_peer_id_from_skb(skb, sizeof(struct udphdr));
-+	/* some OpenVPN server implementations send data packets with the
-+	 * peer-id set to UNDEF. In this case we skip the peer lookup by peer-id
-+	 * and we try with the transport address
-+	 */
-+	if (peer_id == OVPN_PEER_ID_UNDEF)
-+		peer = ovpn_peer_get_by_transp_addr(ovpn, skb);
-+	else
-+		peer = ovpn_peer_get_by_id(ovpn, peer_id);
-+
-+	if (unlikely(!peer))
-+		goto drop;
-+
-+	/* pop off outer UDP header */
-+	__skb_pull(skb, sizeof(struct udphdr));
-+	ovpn_recv(peer, skb);
-+	return 0;
-+
-+drop:
-+	dev_core_stats_rx_dropped_inc(ovpn->dev);
-+drop_noovpn:
-+	kfree_skb(skb);
-+	return 0;
++static inline void ovpn_peer_stats_increment(struct ovpn_peer_stat *stat,
++					     const unsigned int n)
++{
++	atomic64_add(n, &stat->bytes);
++	atomic64_inc(&stat->packets);
 +}
 +
- /**
-  * ovpn_udp4_output - send IPv4 packet over udp socket
-  * @peer: the destination peer
-@@ -250,6 +356,25 @@ void ovpn_udp_send_skb(struct ovpn_peer *peer, struct socket *sock,
- 	}
- }
- 
-+static void ovpn_udp_encap_destroy(struct sock *sk)
++static inline void ovpn_peer_stats_increment_rx(struct ovpn_peer_stats *stats,
++						const unsigned int n)
 +{
-+	struct ovpn_socket *sock;
-+	struct ovpn_priv *ovpn;
-+
-+	rcu_read_lock();
-+	sock = rcu_dereference_sk_user_data(sk);
-+	if (!sock || !sock->ovpn) {
-+		rcu_read_unlock();
-+		return;
-+	}
-+	ovpn = sock->ovpn;
-+	rcu_read_unlock();
-+
-+	if (ovpn->mode == OVPN_MODE_P2P)
-+		ovpn_peer_release_p2p(ovpn, sk,
-+				      OVPN_DEL_PEER_REASON_TRANSPORT_DISCONNECT);
++	ovpn_peer_stats_increment(&stats->rx, n);
 +}
 +
- /**
-  * ovpn_udp_socket_attach - set udp-tunnel CBs on socket and link it to ovpn
-  * @ovpn_sock: socket to configure
-@@ -263,6 +388,11 @@ void ovpn_udp_send_skb(struct ovpn_peer *peer, struct socket *sock,
- int ovpn_udp_socket_attach(struct ovpn_socket *ovpn_sock,
- 			   struct ovpn_priv *ovpn)
- {
-+	struct udp_tunnel_sock_cfg cfg = {
-+		.encap_type = UDP_ENCAP_OVPNINUDP,
-+		.encap_rcv = ovpn_udp_encap_recv,
-+		.encap_destroy = ovpn_udp_encap_destroy,
-+	};
- 	struct socket *sock = ovpn_sock->sock;
- 	struct ovpn_socket *old_data;
- 	int ret;
-@@ -273,6 +403,7 @@ int ovpn_udp_socket_attach(struct ovpn_socket *ovpn_sock,
- 	if (!old_data) {
- 		/* socket is currently unused - we can take it */
- 		rcu_read_unlock();
-+		setup_udp_tunnel_sock(sock_net(sock->sk), sock, &cfg);
- 		return 0;
- 	}
- 
-@@ -306,4 +437,8 @@ int ovpn_udp_socket_attach(struct ovpn_socket *ovpn_sock,
-  */
- void ovpn_udp_socket_detach(struct ovpn_socket *ovpn_sock)
- {
-+	struct udp_tunnel_sock_cfg cfg = { };
++static inline void ovpn_peer_stats_increment_tx(struct ovpn_peer_stats *stats,
++						const unsigned int n)
++{
++	ovpn_peer_stats_increment(&stats->tx, n);
++}
 +
-+	setup_udp_tunnel_sock(sock_net(ovpn_sock->sock->sk), ovpn_sock->sock,
-+			      &cfg);
- }
-diff --git a/net/ipv6/udp.c b/net/ipv6/udp.c
-index 024458ef163c9e24dfb37aea2690b2030f6a0fbc..b30175e34230d3dbf5d253838df894f0625c705c 100644
---- a/net/ipv6/udp.c
-+++ b/net/ipv6/udp.c
-@@ -1933,6 +1933,7 @@ struct proto udpv6_prot = {
- 	.h.udp_table		= NULL,
- 	.diag_destroy		= udp_abort,
- };
-+EXPORT_SYMBOL_GPL(udpv6_prot);
- 
- static struct inet_protosw udpv6_protosw = {
- 	.type =      SOCK_DGRAM,
++#endif /* _NET_OVPN_OVPNSTATS_H_ */
 
 -- 
 2.48.1
