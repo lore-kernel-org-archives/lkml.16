@@ -1,33 +1,65 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5E37E1;
-	Tue, 18 Mar 2025 07:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53E81E98F8;
+	Tue, 18 Mar 2025 07:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742282385; cv=none; b=NByH/tCruaAL+dz8yUFZUoyOVlTad5/xXFgsnst6eiK5e88TY4rqzPZkTkCES0FKmhtfCQ8wt4DzdOYCJhrWC+7BqzwWfOtBFc2VdxZsafUTE/2WNWNFyGy6qYUuYYUj4+N+gVIuqjgOeLzpvAqbMeu7Sw4m6fJG1Nf3x0KaSfk=
+	t=1742282407; cv=none; b=imtipma0YDN1MEHJWaaNIOec8FLcSbKRYjAIdTQEtJOvgNmHYuuXLXOuiBL+tdz0JdC2GiFprVo3sXk7eDnP0Wjtnn80jFt7E/40ccHSo9gKLPt5thChbxsXEJ/D6SYXbV4bfj0D3U5Ybk2QyY8vSCbIBpyeoB8mGISne5YLZ7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742282385; c=relaxed/simple;
-	bh=1XSF49bWXlA7q+fO9byqRvsu3JfBmcFWtJOPNETfSCg=;
+	s=arc-20240116; t=1742282407; c=relaxed/simple;
+	bh=/LXv9pdnd7fkRKmq695RDAHG14ww5Sa2dHTbmSsXSf8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iL5kuy4AhWkyoZjzT53B96Xdc2chsHIJJLDTppRp/kfJ9CA4Oa/Db0oBrlGM6r1vA94Vw4gUfNy9iDDu/5lWako6trhJaVdvZzf44R6u2oeUari3Dc2RFlEg9ZCyFc2liGZ1MisfBnaLQi4XDOQKaHsmv/HWSPdy4GryNN1Xqcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=neBeT5pa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ov7x4ceQ3wDSjXtqdfffmog0d+hNJanWj4asypweIjBCh3+vrRcAR4VH4RHSA4z+ByjtYs3xiGdhDf7BT19rYOMEOsvYzl3nZPfoiiqazH4jOgeIvQUotvqWSVs+Q1qQeLTl7COJBRMuDUK502ip8gCf5/tlG+WqqbYb9kddCLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OYusHWAg; arc=none smtp.client-ip=209.85.221.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="neBeT5pa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACE75C4CEDD;
-	Tue, 18 Mar 2025 07:19:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742282385;
-	bh=1XSF49bWXlA7q+fO9byqRvsu3JfBmcFWtJOPNETfSCg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=neBeT5paGNkLh1r/l/+1+SLHjjCpSLUdy7a8YIRGK3FgPOMEtGlx5WYTuoKsyGUGK
-	 77JBtNsKm0Sgx9V38qHl/OzFHFvG2RBpgqABbeol5XBkDriICXvc57UwBqOplm1Fve
-	 /hvVXuEtt1OUjhKi+WzbXT9M4h2JgsWrYl0vaE6BisFvYrFgE4r02jDDrKsS8a26yb
-	 B7g04DTZ3TOxy99oFn9KCnIxuySfT3yJG7ryLPCUn9gW7aQMrhAJ/Bjjf8CKPQTZ9+
-	 CeknKf3dkqRLDNR9SM4hqPkG6fb78v3UHW+A1qJnnFBJZx8OQelrmdFuK8LQNOApbM
-	 9i/3VXuqiDkBg==
-Message-ID: <658c00e2-e8ef-4997-bb91-9620e97bafae@kernel.org>
-Date: Tue, 18 Mar 2025 08:19:39 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OYusHWAg"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-390fdaf2897so4880687f8f.0;
+        Tue, 18 Mar 2025 00:20:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742282404; x=1742887204; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XubnwXg9oRuAD+ZcoKjTcthnYvYFSBjX2054cK7Xw+M=;
+        b=OYusHWAg0NIYzVnBnXIVFJiqRtE61/Hp7Lxwvc6H78lA8nLhD7kzOkUzwBN409uwD1
+         kTh1UUrMPU61QARnP8tY6E+fUaKWS/6TNnV5nkeIF+a777CGZpCK04+eWJgoQ1g9nOnc
+         6q0BB/PVL2x7ePJRqJFdPbc93vg/mhJ2C773fRTOS3FrDuwkelQ/mDcESzLUuGg4K83k
+         tdcCqc7po3tsFn7bkebZ2oq00oKZmzljx97+7fI7IM1WeIAQ+1Zyb7kdH/pKRZ8GbwMK
+         I07jvGf9mxLCefi8rHyKr0JXIiEAgKK/JKg5+NTuuDH0BtGwrYGvH0h9kCnNqplmHLC4
+         XMLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742282404; x=1742887204;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XubnwXg9oRuAD+ZcoKjTcthnYvYFSBjX2054cK7Xw+M=;
+        b=Nf5M4YiHCRSNCg55k12lM1yLm5yRNsaXXYWlBsGPq/9G9CjOpR0sLkudYT2uUm8qkl
+         vLcMiwuvjsMVOHauxX0E1wWRfAWeA3Cz+n2wqa+xL5u/xwzAXsQ0OA8ZnuMhMEp2UdCx
+         z25gD2npxTjbVly9MPb1OHcAoefcA25pYk0DzCKaVGcACJZkethfF5Oso2i13cwclda6
+         4uQ0Qy7LAEyGOK5vpFkBEw62r2o2bxSbZGxv/K3VG5Xag7OsMmGQ58Jp3oLzw04+Zhp2
+         K9DfqXFNYYCj1scBOXGvbPj6OGDzTJIybTeNOK4CFAVa8zbN5ioRre8cR433moo4P6+/
+         uLfg==
+X-Forwarded-Encrypted: i=1; AJvYcCVAqH4OIWNQUcHXdMUa/jrx423Pb+KbRZZo5tM8zUdsEJh151jddFQxXr6iEw06Su8s4BFZuiEtkg==@vger.kernel.org, AJvYcCWxsSS+jSZQGBOT4U353HUjZI0xplc8DeSXbqYHxHv67nEMIKR4evAjsxU0/1mdKYIweAXNNHZz2Oo4mQ8B@vger.kernel.org
+X-Gm-Message-State: AOJu0YzUKjMS38XtkTgeaU7xZ32sEAjUboOqZu/klhJRQddEom4WW97L
+	4v7akCmmmQu1AIjLeOOCuj7QeEAFlvabbo7l2GF16eF9BQCWDIpj
+X-Gm-Gg: ASbGnctm+TRooOttCUAW34bfjzBvXoCG7EKC9XY8gT5ma4fQXcBLp2jAa7VIAilWiQf
+	UWADvLXDbbuiJVIMj4Fmif8a3M1c+bbXHY8PevXyPgIDRjyejMTKeJMoiEQVa+b4fMW4zQPKEyq
+	nPqPsiOwuyHZindPxMcDM8Yt1PyQ2wwZBaFvOaa3mlRrZ6jRd8Dk76TvZ1UzZ01qzvVYmT9GXvG
+	2H89zUyFDRyWzBggnDZR9mo7rdojSSzyuEzk6HN0xqG0mRE3UGGWtGHRA/srj6mRZgWUX8+oi3g
+	yu+0mfuh3BNFfI6LSNzDZCI0GdjiD6xolBEtXnb4Li0+CBMNCtYRCOM+gImBmHSsakVP5H6FVQ=
+	=
+X-Google-Smtp-Source: AGHT+IHGiFWEAOgf9TJoZBrkofxAEIYgBpfiWN7VsO9dIj4d7h/UmVwrPdgP+onuolUUPTI++sg76Q==
+X-Received: by 2002:a05:6000:1563:b0:391:298c:d673 with SMTP id ffacd0b85a97d-3972029eb48mr19912766f8f.40.1742282403770;
+        Tue, 18 Mar 2025 00:20:03 -0700 (PDT)
+Received: from [172.17.3.89] (philhot.static.otenet.gr. [79.129.48.248])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6a1csm16923529f8f.28.2025.03.18.00.20.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 00:20:03 -0700 (PDT)
+Message-ID: <849ce82d-d87a-428a-be79-abdeb53a1a99@gmail.com>
+Date: Tue, 18 Mar 2025 07:21:00 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,89 +67,51 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] watchdog: s3c2410_wdt: Fix PMU register bits for
- ExynosAutoV920 SoC
-To: Sangwook Shin <sw617.shin@samsung.com>, alim.akhtar@samsung.com,
- wim@linux-watchdog.org, linux@roeck-us.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
- Kyunghwan Seo <khwan.seo@samsung.com>
-References: <9c94a771-b3e6-4ba4-9b7f-dcd93b53f924@kernel.org>
- <CGME20250318005143epcas2p40ebb1954bed8890aaf8d0a641f710423@epcas2p4.samsung.com>
- <20250318004411.695786-1-sw617.shin@samsung.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [RFC PATCH v4 5/5] btrfs: ioctl: don't free iov when -EAGAIN in
+ uring encoded read
+To: Sidong Yang <sidong.yang@furiosa.ai>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, Jens Axboe <axboe@kernel.dk>
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ io-uring@vger.kernel.org, Mark Harmstone <maharmstone@meta.com>
+References: <20250317135742.4331-1-sidong.yang@furiosa.ai>
+ <20250317135742.4331-6-sidong.yang@furiosa.ai>
 Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250318004411.695786-1-sw617.shin@samsung.com>
-Content-Type: text/plain; charset=UTF-8
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250317135742.4331-6-sidong.yang@furiosa.ai>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 18/03/2025 01:44, Sangwook Shin wrote:
-> From: Kyunghwan Seo <khwan.seo@samsung.com>
-> 
-> Fix the PMU register bits for the ExynosAutoV920 SoC.
-> This SoC has different bit information compared to its previous
-> version, ExynosAutoV9, and we have made the necessary adjustments.
-> 
-> rst_stat_bit:
->     - ExynosAutoV920 cl0 : 0
->     - ExynosAutoV920 cl1 : 1
-> 
-> cnt_en_bit:
->     - ExynosAutoV920 cl0 : 8
->     - ExynosAutoV920 cl1 : 8
-> 
-> Signed-off-by: Kyunghwan Seo <khwan.seo@samsung.com>
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Signed-off-by: Sangwook Shin <sw617.shin@samsung.com>
+On 3/17/25 13:57, Sidong Yang wrote:
+> This patch fixes a bug on encoded_read. In btrfs_uring_encoded_read(),
+> btrfs_encoded_read could return -EAGAIN when receiving requests concurrently.
+> And data->iov goes to out_free and it freed and return -EAGAIN. io-uring
+> subsystem would call it again and it doesn't reset data. And data->iov
+> freed and iov_iter reference it. iov_iter would be used in
+> btrfs_uring_read_finished() and could be raise memory bug.
+
+Fixes should go first. Please send it separately, and CC Mark.
+A "Fixes" tag would also be good to have.
+
+> Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
 > ---
-> v1 -> v2: Restore previous email history and tags.
+>   fs/btrfs/ioctl.c | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
+> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> index a7b52fd99059..02fa8dd1a3ce 100644
+> --- a/fs/btrfs/ioctl.c
+> +++ b/fs/btrfs/ioctl.c
+> @@ -4922,6 +4922,9 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
+>   
+>   	ret = btrfs_encoded_read(&kiocb, &data->iter, &data->args, &cached_state,
+>   				 &disk_bytenr, &disk_io_size);
+> +
+> +	if (ret == -EAGAIN)
+> +		goto out_acct;
+>   	if (ret < 0 && ret != -EIOCBQUEUED)
+>   		goto out_free;
+>   
 
-Why do you send patches which were applied?
+-- 
+Pavel Begunkov
 
-Best regards,
-Krzysztof
