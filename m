@@ -1,79 +1,88 @@
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11DE51B960;
-	Tue, 18 Mar 2025 08:16:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B32E1EF39D;
+	Tue, 18 Mar 2025 08:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742285820; cv=none; b=Bt4qgrYjt070bQWwlxba4pagpVLTLpkSjAyYiUVJVOKygLq22x+kBbl0ISYTR868Dfg10hUB5dj00tJcgTFcmcHyi967qTAGmZ6u9Yn+vB3DJ2jzsNt+k8UYY0F71iZdkfR22Oljv3maKbPTNaUhrFVSw+WGrHlKhga9dDV8S3w=
+	t=1742285825; cv=none; b=O15XUAFjuBEWtzqwrvZT1kTXFaBsYFYZupg3vJZS8uR1v38zFF3lX60uRtq0ca/IF/p72xW215WFgLZLr5oxddmenRYyn15UpRXbbaEp6NcOKDB+GNrpQS9HCQngXfLHjE8/JF+2e6OAQhAa310+42+ZiF2P6xIEIqUw/HcxdpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742285820; c=relaxed/simple;
-	bh=2DD+JG9gVcOW6aiW20AtH8kf2TbO3I3cuS+5cdzsQ2U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cChVYhPdFqi3b2CwL1BPgp+3oss1ctNrOWAkXxxJLCiCL0ndU5JZhJrTpPTqboyH6jIfBci8HW4uU5GbkNGol+1qM9YqLYwYdQI0BZtvrDI5UE0HkPv5erF9up8EHBPwM/zCay1gS8qOzzEeJLHTLuXf6tqDRhhS+d8tFjr3dMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowABHsMmVKtlnqrPqFQ--.37723S2;
-	Tue, 18 Mar 2025 16:11:02 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: lgirdwood@gmail.com,
-	broonie@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	ivprusov@salutedevices.com,
-	u.kleine-koenig@baylibre.com
-Cc: linux-sound@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] ASoC: codecs: ntp8918: Remove duplicate clk.h header
-Date: Tue, 18 Mar 2025 16:10:43 +0800
-Message-Id: <20250318081043.2870229-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742285825; c=relaxed/simple;
+	bh=SyPRS1VQKcQGW7s/oBLq1ciCntHpRx8mww8jsVEAmhA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=g9j41eLYc/MbYRUv8c2eeQKc1Yffixa4YRi05E6r1mFDkNiwKeUIpQTaeO7wkDeN9keVOw3BInO4Pdrkwla/8HXcGkFI9GON3KnFKbpM0kv7BAjTjG+zqD98iKZD5Ga8E/mFOjLA1ZJL13y7L1xJGuL5MbqfKcvlobd5Q8RbSI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CTSZQsWJ; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CTSZQsWJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40285C4CEDD;
+	Tue, 18 Mar 2025 08:17:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742285824;
+	bh=SyPRS1VQKcQGW7s/oBLq1ciCntHpRx8mww8jsVEAmhA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=CTSZQsWJ+c3bx2DH4kww7FY3HWFKyDFBv1hZIhX+a+Hf2BPz/OnVT2fW5fPhbxMUJ
+	 RLucUrR98l3QJyT5Mlqbl6UyRnvAKpm2DcA59sC+oKEHQDsI29XXDd3MXn3O9cWiZK
+	 pLpd2nc7bnqvlOCmSPQCkVfm6+/5JUBLUgmmd74jzXdJ8Svg7P1zJZ73OywUu4aOqy
+	 ywUWBkk0tlIRpnLFEuxXiZhtTcjDnrHQ8UYasWg+zdGf0pnHCQ0JhtGz/xGvC+zKjK
+	 5hKxZ4eT1uClQjY4lfxU5MpQZ5U3WotU6h3OqQDHcR8I3kUTdRRedwPpqlrrLZRIss
+	 f5wgrV2YIe+0g==
+From: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	bpf@vger.kernel.org
+Cc: =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn@rivosinc.com>,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH bpf-next] selftests/bpf: Sanitize pointer prior fclose()
+Date: Tue, 18 Mar 2025 09:16:47 +0100
+Message-ID: <20250318081648.122523-1-bjorn@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowABHsMmVKtlnqrPqFQ--.37723S2
-X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYA7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E
-	6xAIw20EY4v20xvaj40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28Cjx
-	kF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW5JVW7JwA2z4x0Y4vE2Ix0cI8I
-	cVCY1x0267AKxVWxJVW8Jr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2js
-	IEc7CjxVAFwI0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE
-	5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JF0_Jw1lYx0Ex4A2jsIE14v26r4UJVWxJr1lOx
-	8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIF
-	xwCY02Avz4vE14v_GFyl42xK82IYc2Ij64vIr41l4c8EcI0En4kS14v26r1Y6r17MxAqzx
-	v26xkF7I0En4kS14v26r1q6r43MxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAF
-	wI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc4
-	0Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AK
-	xVW8JVWxJwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr
-	1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbrcTPUU
-	UUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Remove duplicate header which is included twice.
+From: Björn Töpel <bjorn@rivosinc.com>
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+There are scenarios where env.{sub,}test_state->stdout_saved, can be
+NULL, e.g. sometimes when the watchdog timeout kicks in, or if the
+open_memstream syscall is not available.
+
+Avoid crashing test_progs by adding an explicit NULL check prior the
+fclose() call.
+
+Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
 ---
- sound/soc/codecs/ntp8918.c | 1 -
- 1 file changed, 1 deletion(-)
+ tools/testing/selftests/bpf/test_progs.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/sound/soc/codecs/ntp8918.c b/sound/soc/codecs/ntp8918.c
-index a332893fc51d..5593d48ef696 100644
---- a/sound/soc/codecs/ntp8918.c
-+++ b/sound/soc/codecs/ntp8918.c
-@@ -8,7 +8,6 @@
-  */
+diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+index d4ec9586b98c..309d9d4a8ace 100644
+--- a/tools/testing/selftests/bpf/test_progs.c
++++ b/tools/testing/selftests/bpf/test_progs.c
+@@ -103,12 +103,14 @@ static void stdio_restore(void)
+ 	pthread_mutex_lock(&stdout_lock);
  
- #include <linux/kernel.h>
--#include <linux/clk.h>
- #include <linux/reset.h>
- #include <linux/i2c.h>
- #include <linux/regmap.h>
+ 	if (env.subtest_state) {
+-		fclose(env.subtest_state->stdout_saved);
++		if (env.subtest_state->stdout_saved)
++			fclose(env.subtest_state->stdout_saved);
+ 		env.subtest_state->stdout_saved = NULL;
+ 		stdout = env.test_state->stdout_saved;
+ 		stderr = env.test_state->stdout_saved;
+ 	} else {
+-		fclose(env.test_state->stdout_saved);
++		if (env.test_state->stdout_saved)
++			fclose(env.test_state->stdout_saved);
+ 		env.test_state->stdout_saved = NULL;
+ 		stdout = env.stdout_saved;
+ 		stderr = env.stderr_saved;
+
+base-commit: f3f8649585a445414521a6d5b76f41b51205086d
 -- 
-2.25.1
+2.45.2
 
