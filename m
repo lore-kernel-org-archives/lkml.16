@@ -1,94 +1,77 @@
-Received: from mail.mixaill.net (mail.mixaill.net [144.76.234.135])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190E71DE4FE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 21:40:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.234.135
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF740202C5C;
+	Tue, 18 Mar 2025 21:41:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742334045; cv=none; b=Z4e5gLeo/ow/QRf2BwsApD2lgIZ77iRiDye24AiZ0K4OmPmJy9ZR+OipxRQhnSYNhkjdsNmsSjTTnIQCFBb44fqxjrRs7nQeaEH5IKnA6l+x5aiQHuBdrIS44AId7ZY4o/MZJk16X6J5Elpr8A7ku7ytIsmYEFvOjCKU8NRgJA0=
+	t=1742334077; cv=none; b=Zeg6lifYNurxzyxyfmrUA+b26jremXa+1jUG+tfxJ0mgt9j38SEXKW9NS+XAwwK9MTSc/woFm/kLD91raGT2iuKBQCg+ybusf7WbONQdVbNHJhAYXEkKR/pPa/ZwvYWgo61Thbzza5wkTgEcBocoPSkqMIUIaSe26OD5IHJimDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742334045; c=relaxed/simple;
-	bh=K7ab2a/K3NfL+x9Bfn8GCsSpy9aAASBCpiP6IqCjW1w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VXB4CbNkNMEllSLbixxsa+1TLe1s86DuNcwCLH/rMLcdMZGKhnQzkAIxuGE5Lt6ps1StZMOGskAJL1ZZNSjjUeHT9ypzf9gZujo+0uXoGDBvaa2bbV6S8Uwqx2C57ZWdOO+1hAHYuuQy144zWTnNHOgdC+kUkia3FztHuZv8pCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net; spf=pass smtp.mailfrom=mixaill.net; dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b=j5pm5ULW; arc=none smtp.client-ip=144.76.234.135
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mixaill.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mixaill.net
+	s=arc-20240116; t=1742334077; c=relaxed/simple;
+	bh=BEXxbDACahqR6NIWAUeOiMICou1IfERSdqow0dpWsxQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HcObVgDMaXlWqWMYut4FUVKyX/UuWQJycHoCRit2lU8EKM3Bzesr5My6iUX7wdMNd1XLWvdlSiI49NhXWdUUiRpjVe9e0gz0VUkxuVoKgBYC8roLO2O/OU0qxaoEA+JCvcRQMuQjt+hqcT9JDezlSrJ0A/oE7Y6ZEOngvyNbiVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhGpH2I1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mixaill.net header.i=@mixaill.net header.b="j5pm5ULW"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5163267D23;
-	Tue, 18 Mar 2025 21:40:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mixaill.net; s=dkim;
-	t=1742334035; h=from:subject:date:message-id:to:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=s/CMtGUKiwFiq6qWBR0zKkGljH1gIOOZu3YPRc+pJDI=;
-	b=j5pm5ULWQH640UX0RR/5+5B9SC7I6CnQ284KJ3PBDg5oAimpJbH/rTN8IvWnUSqsEwzZAF
-	jOau0LC1itv4GdMD5w6d+3qkPHUpx1NfqpiAcXnXHIQjdly131B6IqUYt13dYgaLLqlqkX
-	AL6nDY954oaVaR+MopfvCXFezBD42jVxZU2tt9Mdko1uqrh2J8kME8fsHkx8tdL3KSMqLG
-	p3o+5wXt+pGv4Xz+tUmliHlMWLMAM0AgSOQCrybZp88HTPVdXbEoZgTLGsXuhSp0LlFAtV
-	AFzovOfUdg/EOomsU+6u73WuzdQs50lS4p40eQghSvGS1wFHtfJwSzRBiCxzIA==
-Message-ID: <aa6b15c8-45e9-47b7-8280-84cbacd9aa4c@mixaill.net>
-Date: Wed, 19 Mar 2025 00:40:31 +0300
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhGpH2I1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 868E1C4CEDD;
+	Tue, 18 Mar 2025 21:41:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742334076;
+	bh=BEXxbDACahqR6NIWAUeOiMICou1IfERSdqow0dpWsxQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=fhGpH2I1ueS9/GTixrWDP38+d0Hx2m1vLtecLXyqlvMmZ1TbxwTGgilNBv94gBEUd
+	 nUvjB8hoqrISm3V37ui8Dwjx1L8VGwWGhQz4M9CrP5WfkGSj11uO5DrtVWizHnqKvW
+	 tBArcC+K+Uru3mSPpcWyF+3rm8tDofMbnTDqFkjPfIRKWgrLr+aKyMQHHlVLHwFPTF
+	 2g2UZNRHIflzb7WaMcsRtZxraIDvE5ABhFS/hxWkZxS5Lk6sVm3ldg4mUwZczdu/jn
+	 gZ6Adoear+N0OB9HGDfn5E0bWPDVq3SVsmiHwzPGVAJ5cgtGZ8WXDjObIr69DM7SYc
+	 v5w6lwSzIag+g==
+Date: Tue, 18 Mar 2025 22:41:11 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Alex Elder <elder@riscstar.com>
+Cc: Troy Mitchell <troymitchell988@gmail.com>, Alex Elder <elder@ieee.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Yixun Lan <dlan@gentoo.org>, linux-riscv@lists.infradead.org, 
+	linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	spacemit@lists.linux.dev
+Subject: Re: [PATCH v7 2/2] i2c: spacemit: add support for SpacemiT K1 SoC
+Message-ID: <lvwiyxitkuzi57cbbcvuanqpvhaihafarwqhkflxbctzs6j4o7@ev45pe3yuzj3>
+References: <20250316-k1-i2c-master-v7-0-f2d5c43e2f40@gmail.com>
+ <20250316-k1-i2c-master-v7-2-f2d5c43e2f40@gmail.com>
+ <401059d0-6b2c-4c40-8c4d-51749dca27f3@ieee.org>
+ <c7dc26a0-7cbc-4909-b2ac-582d108fc5e7@gmail.com>
+ <a7862a8b-4d81-4b1b-90d9-3cedde0699a5@riscstar.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] x86/rdrand: implement sanity check for RDSEED
-To: Mario Limonciello <mario.limonciello@amd.com>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-References: <20250312123130.8290-1-me@mixaill.net>
- <980f8828-1cf8-4ff2-a0d2-f6c9739a7dcc@amd.com>
-Content-Language: en-US
-From: Mikhail Paulyshka <me@mixaill.net>
-In-Reply-To: <980f8828-1cf8-4ff2-a0d2-f6c9739a7dcc@amd.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-15
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+In-Reply-To: <a7862a8b-4d81-4b1b-90d9-3cedde0699a5@riscstar.com>
 
-On 3/18/25 11:50 PM, Mario Limonciello wrote:
-> On 3/12/2025 07:31, Mikhail Paulyshka wrote:
->> On the AMD Cyan Skillfish (Family 0x17 Model 0x47 Stepping 0x0), which
->> is a Zen2-based APU found on the AMD BC-250 board, there is a situation
->> where RDRAND works fine, but RDSEED generates FF. This leads to some
->> applications that use RDSEED to generate random numbers (such as
->> Qt and KDE) into a nearly unusable state.
->>
->> Although AMD has fixed the Zen2 RDRAND issues in 2019 with a 
->> microcode update,
->> no such update has been released for the Family 0x17 Model 0x47 core.
->>
->> This patchset introduces an separate sanity check for RDSEED and 
->> hides the
->> RDSEED and RDRAND from CPUID on AMD platforms in the case of a 
->> malfunction.
->>
->> Mikhail Paulyshka (2):
->>    x86/rdrand: implement sanity check for RDSEED
->>    x86/rdrand: hide RDRAND and RDSEED from CPUID in case of a 
->> malfunction
->>
->>   arch/x86/include/asm/archrandom.h      |  1 +
->>   arch/x86/include/asm/msr-index.h       |  1 +
->>   arch/x86/kernel/cpu/common.c           |  1 +
->>   arch/x86/kernel/cpu/rdrand.c           | 48 ++++++++++++++++++++++++--
->>   tools/arch/x86/include/asm/msr-index.h |  1 +
->>   5 files changed, 49 insertions(+), 3 deletions(-)
->>
->
-> Can you please share more about the BIOS firmware version on your device?
->
-> /sys/class/dmi/id/bios_version
->
-> Thanks,
+On Tue, Mar 18, 2025 at 07:04:19AM -0500, Alex Elder wrote:
+> On 3/18/25 12:44 AM, Troy Mitchell wrote:
+> > > I'll leave it up to the maintainer to decide whether these
+> > > comments can just be ignored--my Reviewed-by is fine, even
+> > > if you don't change these.
+> > > 
+> > >  ������������������� -Alex
+> > I know it's right what you said.
+> > But I don't know if it's worth to send v8?
+> > Maybe I can fix it when I add FIFO function?
+> > If I'm wrong, let me know.
+> 
+> Unless the maintainer wants you do do v8, please just
+> address these suggestions later.  Thank you.
 
-#cat /sys/class/dmi/id/bios_version
-P5.00
+it's easier to just send it rather than asking for a v8 :-).
 
-I have tried P4.00G and P5.00, both have the same microcode and behavior.
+What I care more is if you would give an r-b if your last
+comment was addressed. If so Troy still has time to send a v8 to
+get the series in this cycle, otherwise I can change things
+myself before merging.
 
-
+Andi
