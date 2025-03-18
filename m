@@ -1,127 +1,191 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1E14A1E;
-	Tue, 18 Mar 2025 01:32:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABB124C7C;
+	Tue, 18 Mar 2025 01:32:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742261537; cv=none; b=BHu5B9UBvrJnZ6Pra0uhpIhrK6tweQWvvkgTTX/P4Id0HgvLG+6hoiOvvvXVxELqZ7PA5+wVyPwmxhiSJpuffi2nge0wZDGvr07D+gvI8i81bkogCbDrVVvTGd2cp1gImnMiMpsTymG0WCfEpP5tQ6aWTK/cP7UXN4bZcqAqxIg=
+	t=1742261566; cv=none; b=LSRaMM3hCyOJCLTzmPDvmTwQIYZ1zII4FWWzTeg9TtmSLCPdhwKiXprefF5V/CxwoMALI9Ci8Y5C4iIzo9pwPTKD5zBksdGG5dPtazPJ8Q/uFywS77RfejAmxQnediwsuzfwjKRkR+E8lUJhIh6/Rt9SIq0y5LknojJTr1huHOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742261537; c=relaxed/simple;
-	bh=JqoOq8Gr37++ZkptHw5jlUSyMIDAfo5oUptOSpaWASc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cz1RvTAVnKp42YzBKEKhrkJvojwhMbiCE95dCeVA6bW6xxvqH3XOwhWBbzBSRJGUUDDlxPJewTTmEeDj3aryDp+9BzdUjbNJaKuR8OiMc7Qqji2naJxxi2tq+ZhIuurwZpuFd1HD1BAh91wrzSfYor22kmClB92pkF7E4RMjp+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mVEGsyI7; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742261566; c=relaxed/simple;
+	bh=I4iPKp8yRcIiMxB58gWCtiaL8IYeA1sBlvQ8GEEr2ro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mBTl6kJO4Hc//7IQD6N5pcxVVfDrhBz2bQo0WF9Uo4AFQF0oMWMWYCSRVdJaIauMmVszjn59ISG2gTTkiv1USSpxfM9U/TQkXfXT/UV5bu1PiLwtVSiWwGivwZ203e1XwebUjfroCokK0PxYP19FL5a0/cqr6YiE5TEdphT460g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bz+WNGpy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mVEGsyI7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742261536; x=1773797536;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=JqoOq8Gr37++ZkptHw5jlUSyMIDAfo5oUptOSpaWASc=;
-  b=mVEGsyI7MVUTCx22LxqGJxOEi0Fy+YFqIaXojHkk2xy4ZeXLQjZ59nCp
-   e03+tiraZC5CeB/q4+73k9GKUIvTA7tdI012n2J8VCWAwhaUeJKceK7ah
-   2Z0Fztzs9c9rFsmiixuRMXvfymUDXeDOUePExiOG6UmCLJQdPS+wNRcA4
-   5+udzTb0LNONuAY0Ikm3NPltQk9iAu1T73g1wX4UBeDjEukuAMbBx/FmN
-   h9c939f5VM7/pM4hrq1RvTopoXgAoh2xwBKRtKh4Bo0Ewhj6pDZ9/DBfJ
-   CWwtggEUrdj/otqDUkpJ6lb/E2r4Y3gw9cQkSEUMJNH4hlaUliYg4r8jO
-   A==;
-X-CSE-ConnectionGUID: Hml0xSutRpq9+LCMGdM0DQ==
-X-CSE-MsgGUID: 4fCmZeCFQRGGpbT4jqszHg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="42627954"
-X-IronPort-AV: E=Sophos;i="6.14,255,1736841600"; 
-   d="scan'208";a="42627954"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 18:32:15 -0700
-X-CSE-ConnectionGUID: 9QX0+Jz6STe4sAjFd6Jwjg==
-X-CSE-MsgGUID: FK3WfwW2T8ajngI1rtXR3w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,255,1736841600"; 
-   d="scan'208";a="122052992"
-Received: from yzhao56-desk.sh.intel.com ([10.239.159.62])
-  by orviesa010-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 18:32:14 -0700
-From: Yan Zhao <yan.y.zhao@intel.com>
-To: pbonzini@redhat.com,
-	seanjc@google.com
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org,
-	Yan Zhao <yan.y.zhao@intel.com>
-Subject: [PATCH v2 0/5] Small changes related to prefetch and spurious faults
-Date: Tue, 18 Mar 2025 09:30:37 +0800
-Message-ID: <20250318013038.5628-1-yan.y.zhao@intel.com>
-X-Mailer: git-send-email 2.43.2
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bz+WNGpy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 627C7C4CEE3;
+	Tue, 18 Mar 2025 01:32:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742261565;
+	bh=I4iPKp8yRcIiMxB58gWCtiaL8IYeA1sBlvQ8GEEr2ro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Bz+WNGpy3DiqOcNSNNKSA8b38dxVYc3AKHHXKeGHvmFuRzrqfemSycGz7KKUSarTu
+	 u/yEXl5UzRCGGcEZjurrDvFelS2yZHF0eGW1mjjPO61Pi39MW7RAruySMk4E95xlA+
+	 fvMaJ9ZTWMeVjN2dJs9OZ0EcStk5etqcreSsdrL1CE/ff+lnK4k70cY2T/MwxZnU0B
+	 ysNJlm+C1Xu91XE/hAQjiVNBQlKLMF26+SMreJsmd0gkwHC0LSVSCB9LDiv8a5zpqC
+	 fSy5qnQ+yagTYcbh4n/WUdcxNg03iFQrumm6gfExut7KVL6YxkcIwcPhEBZq2NraBr
+	 5lnxwxvYIX0hQ==
+Date: Mon, 17 Mar 2025 18:32:42 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Li Huafei <lihuafei1@huawei.com>
+Cc: acme@kernel.org, leo.yan@linux.dev, james.clark@linaro.org,
+	mark.rutland@arm.com, john.g.garry@oracle.com, will@kernel.org,
+	irogers@google.com, mike.leach@linaro.org, peterz@infradead.org,
+	mingo@redhat.com, alexander.shishkin@linux.intel.com,
+	jolsa@kernel.org, kjain@linux.ibm.com, mhiramat@kernel.org,
+	atrajeev@linux.vnet.ibm.com, sesse@google.com,
+	adrian.hunter@intel.com, kan.liang@linux.intel.com,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-perf-users@vger.kernel.org
+Subject: Re: [PATCH 1/7] perf annotate: Handle arm64 load and store
+ instructions
+Message-ID: <Z9jNOgbZj_ZCx-9-@google.com>
+References: <20250314162137.528204-1-lihuafei1@huawei.com>
+ <20250314162137.528204-2-lihuafei1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250314162137.528204-2-lihuafei1@huawei.com>
 
-Hi
+On Sat, Mar 15, 2025 at 12:21:31AM +0800, Li Huafei wrote:
+> Add ldst_ops to handle load and store instructions in order to parse
+> the data types and offsets associated with PMU events for memory access
+> instructions. There are many variants of load and store instructions in
+> ARM64, making it difficult to match all of these instruction names
+> completely. Therefore, only the instruction prefixes are matched. The
+> prefix 'ld|st' covers most of the memory access instructions, 'cas|swp'
+> matches atomic instructions, and 'prf' matches memory prefetch
+> instructions.
+> 
+> Signed-off-by: Li Huafei <lihuafei1@huawei.com>
+> ---
+>  tools/perf/arch/arm64/annotate/instructions.c | 67 ++++++++++++++++++-
+>  1 file changed, 66 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/arm64/annotate/instructions.c b/tools/perf/arch/arm64/annotate/instructions.c
+> index d465d093e7eb..c212eb7341bd 100644
+> --- a/tools/perf/arch/arm64/annotate/instructions.c
+> +++ b/tools/perf/arch/arm64/annotate/instructions.c
+> @@ -6,7 +6,8 @@
+>  
+>  struct arm64_annotate {
+>  	regex_t call_insn,
+> -		jump_insn;
+> +		jump_insn,
+> +		ldst_insn; /* load and store instruction */
+>  };
+>  
+>  static int arm64_mov__parse(struct arch *arch __maybe_unused,
+> @@ -67,6 +68,57 @@ static struct ins_ops arm64_mov_ops = {
+>  	.scnprintf = mov__scnprintf,
+>  };
+>  
+> +static int arm64_ldst__parse(struct arch *arch __maybe_unused,
+> +			     struct ins_operands *ops,
+> +			     struct map_symbol *ms __maybe_unused,
+> +			     struct disasm_line *dl __maybe_unused)
+> +{
+> +	char *s, *target;
+> +
+> +	/*
+> +	 * The part starting from the memory access annotation '[' is parsed
+> +	 * as 'target', while the part before it is parsed as 'source'.
+> +	 */
+> +	target = s = strchr(ops->raw, '[');
+> +	if (!s)
+> +		return -1;
+> +
+> +	while (s > ops->raw && *s != ',')
+> +		--s;
+> +
+> +	if (s == ops->raw)
+> +		return -1;
+> +
+> +	*s = '\0';
+> +	ops->source.raw = strdup(ops->raw);
+> +
+> +	*s = ',';
+> +	if (!ops->source.raw)
+> +		return -1;
+> +
+> +	ops->target.raw = strdup(target);
+> +	if (!ops->target.raw) {
+> +		zfree(ops->source.raw);
 
-This is v2 of the series for some small changes related to
-prefetch/prefault and spurious faults.
+I think you need 'zfree(&ops->source.raw)' instead.
 
-Patch 1: Checks if a shadow-present old SPTE is leaf to determine a
-         prefetch fault is spurious.
 
-Patch 2: Merges the checks for prefetch and is_access_allowed() for
-         spurious faults into a common path.
+> +		return -1;
+> +	}
+> +	ops->target.mem_ref = true;
+> +
+> +	return 0;
+> +}
+> +
+> +static int ldst__scnprintf(struct ins *ins, char *bf, size_t size,
+> +			   struct ins_operands *ops, int max_ins_name)
+> +{
+> +	return scnprintf(bf, size, "%-*s %s,%s", max_ins_name, ins->name,
+> +			 ops->source.name ?: ops->source.raw,
+> +			 ops->target.name ?: ops->target.raw);
+> +}
+> +
+> +static struct ins_ops arm64_ldst_ops = {
+> +	.parse	   = arm64_ldst__parse,
+> +	.scnprintf = ldst__scnprintf,
+> +};
+> +
+>  static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const char *name)
+>  {
+>  	struct arm64_annotate *arm = arch->priv;
+> @@ -77,6 +129,8 @@ static struct ins_ops *arm64__associate_instruction_ops(struct arch *arch, const
+>  		ops = &jump_ops;
+>  	else if (!regexec(&arm->call_insn, name, 2, match, 0))
+>  		ops = &call_ops;
+> +	else if (!regexec(&arm->ldst_insn, name, 2, match, 0))
+> +		ops = &arm64_ldst_ops;
+>  	else if (!strcmp(name, "ret"))
+>  		ops = &ret_ops;
+>  	else
+> @@ -107,6 +161,15 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+>  		      REG_EXTENDED);
+>  	if (err)
+>  		goto out_free_call;
+> +	/*
+> +	 * The ARM64 architecture has many variants of load/store instructions.
+> +	 * It is quite challenging to match all of them completely. Here, we
+> +	 * only match the prefixes of these instructions.
+> +	 */
+> +	err = regcomp(&arm->ldst_insn, "^(ld|st|cas|prf|swp)",
+> +		      REG_EXTENDED);
+> +	if (err)
+> +		goto out_free_jump;
+>  
+>  	arch->initialized = true;
+>  	arch->priv	  = arm;
+> @@ -117,6 +180,8 @@ static int arm64__annotate_init(struct arch *arch, char *cpuid __maybe_unused)
+>  	arch->e_flags = 0;
+>  	return 0;
+>  
+> +out_free_jump:
+> +	regfree(&arm->jump_insn);
+>  out_free_call:
+>  	regfree(&arm->call_insn);
 
-Patch 3: Adds a warning when the PFN changes on a spurious fault in the TDP
-         MMU
+It seems we leak these on the success path.  Probably we need arch
+annotate_exit() to free the resources.
 
-Patch 4: Adds a warning when the PFN changes on a shadow-present SPTE in
-         the shadow MMU. This implementation differs from the v1
-         discussion. Upon reconsideration, I realized that WARN_ON_ONCE()
-         in mmu_spte_update() cannot warn when the PFN changes on a
-         shadow-present SPTE. Add the warning in mmu_set_spte() and have 
-         the prefetch fault to leverage the warning.
+Thanks,
+Namhyung
 
-Patch 5: Checks req and frees obsolete roots in each MMU reload.
 
-With below scenario
-1. add a memslot with size 4K
-2. prefault GPA A in the memslot
-3. delete the memslot
-4. re-add the memslot with size 2M
-5. prefault GPA A again.
-
-Patch 1 is required if zap all quirk is disabled in step 3.
-Patch 5 is required if zap all is performed in step 3 and if step 2/5 are
-        executed before any vcpu_run().
-
-Change log:
-v2:
-- Check both fault->prefetch and is_access_allowed() in patch 2. (Sean)
-- Split patch 3 in v1 into patches 3 and 4.
-- Only warn on PFN changes in case of spurious fault in TDP MMU in patch 3.
-  (Sean).
-- Add patch 4 to warn on PFN changes on shadow-present SPTE in shadow MMU.
-- Move kvm_mmu_free_obsolete_roots() from kvm_arch_vcpu_pre_fault_memory()
-  to kvm_mmu_reload() in patch 5. (Sean)
-
-Thanks
-Yan
-
-v1: https://lore.kernel.org/all/20250207030640.1585-1-yan.y.zhao@intel.com
-
-Yan Zhao (5):
-  KVM: x86/mmu: Further check old SPTE is leaf for spurious prefetch
-    fault
-  KVM: x86/tdp_mmu: Merge prefetch and access checks for spurious faults
-  KVM: x86/tdp_mmu: WARN if PFN changes for spurious faults
-  KVM: x86/mmu: Warn if PFN changes on shadow-present SPTE in shadow MMU
-  KVM: x86/mmu: Check and free obsolete roots in kvm_mmu_reload()
-
- arch/x86/kvm/mmu.h         | 3 +++
- arch/x86/kvm/mmu/mmu.c     | 6 ++++--
- arch/x86/kvm/mmu/tdp_mmu.c | 9 ++++-----
- 3 files changed, 11 insertions(+), 7 deletions(-)
-
-base-commit: c9ea48bb6ee6b28bbc956c1e8af98044618fed5e
--- 
-2.43.2
+>  out_free_arm:
+> -- 
+> 2.25.1
+> 
