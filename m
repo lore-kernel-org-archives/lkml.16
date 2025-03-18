@@ -1,360 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 804C4210F58
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 15:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A09D720F07A;
+	Tue, 18 Mar 2025 15:51:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742313082; cv=none; b=iwxFo0PsUdsMhMwhoXW0Wj99fqIIhgo+PS43p2hZcbloyjILZzou5DXMrQ4Zc/znunWBSh+0xjR26R7leYa2I/S0xNeR4o2Y+vbi2VakyT43SKSK16jaoSw4Uislptx+zMG0VnPK3T22U47D+tEIMOYa5ntNbNxswo7ORIEuTOo=
+	t=1742313108; cv=none; b=BSlBiI4V+iPI7wUkqXhk69nEzgyS4CrOfZ2XZSXx8UvblUuyZJYDQ5vUU8JHzDeJFEGhN6Ev8ACQkeHjVvsE1JhImaKvf1O8b8Wc/k+ZIgL1gixJ1EUtnsOAwFNQfM+raZdae4R9uNZ8wwLSApzAdeuzVkUCyXFHpA3j+TtsBrI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742313082; c=relaxed/simple;
-	bh=rA6X8gR2QWzooRehB87OVUrpPlXRC7dTuJLXwIFQGTc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JG8yr884yLisLK3LXP5Ry2WUlAYXGsbSl4NbiokXl4gAKryjrnAuwUJgL+vbFvJ21SNDuxgZlu7fdX3sS6q9aoA145HWE8okyoOI3UPCDjPhxEvns6eg4UH83fHkTl/vpTPiXqFw8h2MsEVZd9BviLFgOQPocTDKRo883L3RAjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oiWGA7ev; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742313108; c=relaxed/simple;
+	bh=3IUzgW0tqmvBtDPQEnXyodqPaV1/XSemXMh7OodnVNw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KaNHPceErXBV/EoLshhVZHBXOYMzqRYreQ7iTNe4B77Arw93gLfe8QXsiWogSJ0nzFgTcaOGectoJVlgdXKt6P7Jji+7Lu3gIr//RwAWK4Dma31+HNw+V/HxO3CnQsbYR3BXOxyw3cKGP/amx8auqkHPVZFF+QtuSX6RxPTh/r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E9gwtEEl; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oiWGA7ev"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1FFDC4CEEE;
-	Tue, 18 Mar 2025 15:51:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742313082;
-	bh=rA6X8gR2QWzooRehB87OVUrpPlXRC7dTuJLXwIFQGTc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oiWGA7evIPXaw1y1N8SboJEcNvWwjuHCjtwtBEXOQi5jXWDzDFGOPgtznPH3JRYzI
-	 rt+2mamChUwh/wrVdmol81InNQdGW33mxQ+PerbHoRsyRmkzXbBs9kxDvu4iwsGOIS
-	 t3xrXzp5q7+bKesKptlZFwq9g8Do7rzGRuNuzkqnHoBWq8HuVT3s0sNN1/INQdgGer
-	 xGFr+ozI/3GBi3ZCpMQUDdS7DNkFpaoEUpj3TiVe0AV3j+M3lb9PU27b1lTd1YdAvC
-	 cwQJ3qneNHi1viB+A1KKIfc0rkzCBTJKpLwYKUp76b+IGOScSCtnNNOcvcT+71nSoh
-	 ce8vJpJHu1/pg==
-Date: Tue, 18 Mar 2025 16:51:19 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Andy Yan <andyshrk@163.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Robert Foss <rfoss@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
-	Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
-	Douglas Anderson <dianders@chromium.org>, Herve Codina <herve.codina@bootlin.com>, 
-	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
-	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Simona Vetter <simona.vetter@ffwll.ch>, lumag@kernel.org
-Subject: Re: [PATCH v5 04/16] drm/atomic: Introduce helper to lookup
- connector by encoder
-Message-ID: <20250318-active-giraffe-of-memory-e0c66d@houat>
-References: <20250304-bridge-connector-v5-4-aacf461d2157@kernel.org>
- <5180089f.a640.19566290538.Coremail.andyshrk@163.com>
- <608c01c.7716.1958e8d879f.Coremail.andyshrk@163.com>
- <20250313-dazzling-deer-of-ampleness-21db67@houat>
- <6ae1c567.8c6.195922195d6.Coremail.andyshrk@163.com>
- <k2md4q2tgwsdynaeljieqlzjdds677wqqduimfyrgmvyfi732a@vh3dbg7kdaop>
- <20250314-courageous-bison-of-prestige-8b884b@houat>
- <lf4wu5v3wym3foqgimuulyzz2dmd2jezkj3otn7xm7xp77nast@azqmajrn45lw>
- <20250314-hissing-spirited-armadillo-dc9d3a@houat>
- <2tfryn5plcqysdobavbjljnd3rq5ar2n2qmeyyryk6wqbx2zpk@qvqpkxe5ffjl>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9gwtEEl"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac2ab99e16eso219275766b.0;
+        Tue, 18 Mar 2025 08:51:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742313100; x=1742917900; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OQsfpXrf/4c4YQpb8eNn6gMWmckTaNQ66mxt9z5Ef4E=;
+        b=E9gwtEElyso6PZ/HIK0pKB6sfZISNou8ITo7h5uRZZh64tHLnJvXJe4JGYG4J/fWvo
+         zB7pfudsVDW5FqrEhXDZu9Qzw0j81MbpV9FQs/SNC1gM15vmoOSm3a9Yos+JnG5z5Ok1
+         yesHNPVv90+2QK7HhmGOPAw0YyCr0RPGprz46iHQf6oTa9p2Qbco4W+vASKDSoPEbxLH
+         7oHvxQAOD7N9aqdO9+zGsiY7neR3Zrembw1DsA1/nNinKJw2RFjAMk2arpOXyPEZ822b
+         9dxDqY7uDKEGPg0eCVxp6JGMC8e7wvdr51CfxDABKS/f1dMlfJAB4VLRImGVyxgLBqe/
+         8Lbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742313100; x=1742917900;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OQsfpXrf/4c4YQpb8eNn6gMWmckTaNQ66mxt9z5Ef4E=;
+        b=cNrS5qfTrJcrshGgH32pvJm/3rukLYe6VItRVK+FIztLgHiLE6gXHeP1QPkcz8QPNf
+         YbUDZ6HLRYJmp4iddcO6oatfTmU2wH/tXOnWGpkwxdDouL2lwEGAcSLj1gUMJ1EnbVU7
+         LSZ9/SbJjSTaiM2mTjOVf8YdBr7M0r4flMCXkAnbu+XFNfXeugeR1VGfFIhXRJl2xUEr
+         z0xDTYMTiEqXq/HZ8tFb70N91fSVWKzigzydhwlU199qmZIwmH9yfb1fuCHGKOMpy1iq
+         Y3Q17BowXT4DfbNtoYnWT7jAcJbh/28/6T0i1fWVMBlIXAwLRjxYdRSz6WeWOTTDkBl+
+         ZZJg==
+X-Forwarded-Encrypted: i=1; AJvYcCUqLPxM8bT72/nVjV/6S9UVz+Rx5WHTdWhokpgz6HJdkxMeCvr5kxAyUoj0gywQja3arKsode7irfo3Qvq1@vger.kernel.org, AJvYcCXNizgZymjGEdomWbL7WzKNMzLZ+Nr5MZv7GqO7poEfuDq9Pi3ClGA6N0pyvSZn7FdVITiPscNCdtRYt9UQ@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6EHeD2L3RnKBJuA+LHZ9WN1qW6TdNTAbKjopkZRbcFHtye5Vz
+	5aGduC4NoLOZZW+MXk86nnw/ut8BiLxlfnBYw0V79g7OiV43Y93n2IhsjdKCQyKzqd6ilPCebQt
+	soCdobsNoR52KAh861l5gOcO5Lyw=
+X-Gm-Gg: ASbGncump5gXjfyl74pisdrZiVrFUSg5fIpCuk7/nV246/emK8mKmcsp29p21Joe5+7
+	0/ef9BX0/LQTs2nm+4lR5WsNmwZsa+n1tL5ym/atXOmf6qVF11kVjC9sj1Zbxvo+P6WCLLa2tJQ
+	TkxbSfunopd6Lt7LlXc0hMNx0dVg==
+X-Google-Smtp-Source: AGHT+IFjG8edwwuf2mEVeTcyHLZb3BYe7dhVljkptYUqPN1fOMiWWxKawFj8Wyt+UhG++lSQFRDFKNY1P6+HUcVXn7o=
+X-Received: by 2002:a17:907:d92:b0:ac1:da09:5d32 with SMTP id
+ a640c23a62f3a-ac3301d979bmr1912910866b.6.1742313099481; Tue, 18 Mar 2025
+ 08:51:39 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="hp2fhvas6ltodzrt"
-Content-Disposition: inline
-In-Reply-To: <2tfryn5plcqysdobavbjljnd3rq5ar2n2qmeyyryk6wqbx2zpk@qvqpkxe5ffjl>
-
-
---hp2fhvas6ltodzrt
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
+References: <20250115094702.504610-1-hch@lst.de> <20250115094702.504610-4-hch@lst.de>
+ <ptwb6urnzbov545jsndxa4d324ezvor5vutbcev64dwauibwaj@kammuj4pbi45>
+In-Reply-To: <ptwb6urnzbov545jsndxa4d324ezvor5vutbcev64dwauibwaj@kammuj4pbi45>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Tue, 18 Mar 2025 16:51:27 +0100
+X-Gm-Features: AQ5f1JoIV3Ekgoa3AyaPQZviu6xh4y3D7_TilsaK7QfN_pG3EjUXa6A87nuBb0M
+Message-ID: <CAGudoHEW=MmNLQSnvZ3MJy0KAnGuKKNGevOccd2LdiuUWcb0Yg@mail.gmail.com>
+Subject: Re: [PATCH 3/8] lockref: use bool for false/true returns
+To: Christoph Hellwig <hch@lst.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Al Viro <viro@zeniv.linux.org.uk>, 
+	Christian Brauner <brauner@kernel.org>, Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>, 
+	Andreas Gruenbacher <agruenba@redhat.com>, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org, 
+	gfs2@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 04/16] drm/atomic: Introduce helper to lookup
- connector by encoder
-MIME-Version: 1.0
 
-On Fri, Mar 14, 2025 at 08:28:22PM +0200, Dmitry Baryshkov wrote:
-> On Fri, Mar 14, 2025 at 06:40:24PM +0100, Maxime Ripard wrote:
-> > On Fri, Mar 14, 2025 at 09:59:36AM +0200, Dmitry Baryshkov wrote:
-> > > On Fri, Mar 14, 2025 at 08:45:17AM +0100, Maxime Ripard wrote:
-> > > > On Fri, Mar 14, 2025 at 07:52:35AM +0200, Dmitry Baryshkov wrote:
-> > > > > On Fri, Mar 14, 2025 at 08:50:29AM +0800, Andy Yan wrote:
-> > > > > > At 2025-03-13 19:55:33, "Maxime Ripard" <mripard@kernel.org> wr=
-ote:
-> > > > > > >Hi,
-> > > > > > >
-> > > > > > >On Thu, Mar 13, 2025 at 04:09:54PM +0800, Andy Yan wrote:
-> > > > > > >> At 2025-03-05 19:55:19, "Andy Yan" <andyshrk@163.com> wrote:
-> > > > > > >> >At 2025-03-04 19:10:47, "Maxime Ripard" <mripard@kernel.org=
-> wrote:
-> > > > > > >> >>With the bridges switching over to drm_bridge_connector, t=
-he direct
-> > > > > > >> >>association between a bridge driver and its connector was =
-lost.
-> > > > > > >> >>
-> > > > > > >> >>This is mitigated for atomic bridge drivers by the fact yo=
-u can access
-> > > > > > >> >>the encoder, and then call drm_atomic_get_old_connector_fo=
-r_encoder() or
-> > > > > > >> >>drm_atomic_get_new_connector_for_encoder() with drm_atomic=
-_state.
-> > > > > > >> >>
-> > > > > > >> >>This was also made easier by providing drm_atomic_state di=
-rectly to all
-> > > > > > >> >>atomic hooks bridges can implement.
-> > > > > > >> >>
-> > > > > > >> >>However, bridge drivers don't have a way to access drm_ato=
-mic_state
-> > > > > > >> >>outside of the modeset path, like from the hotplug interru=
-pt path or any
-> > > > > > >> >>interrupt handler.
-> > > > > > >> >>
-> > > > > > >> >>Let's introduce a function to retrieve the connector curre=
-ntly assigned
-> > > > > > >> >>to an encoder, without using drm_atomic_state, to make the=
-se drivers'
-> > > > > > >> >>life easier.
-> > > > > > >> >>
-> > > > > > >> >>Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-> > > > > > >> >>Co-developed-by: Simona Vetter <simona.vetter@ffwll.ch>
-> > > > > > >> >>Signed-off-by: Maxime Ripard <mripard@kernel.org>
-> > > > > > >> >>---
-> > > > > > >> >> drivers/gpu/drm/drm_atomic.c | 45 +++++++++++++++++++++++=
-+++++++++++++++++++++
-> > > > > > >> >> include/drm/drm_atomic.h     |  3 +++
-> > > > > > >> >> 2 files changed, 48 insertions(+)
-> > > > > > >> >>
-> > > > > > >> >>diff --git a/drivers/gpu/drm/drm_atomic.c b/drivers/gpu/dr=
-m/drm_atomic.c
-> > > > > > >> >>index 9ea2611770f43ce7ccba410406d5f2c528aab022..b926b13259=
-0e78f8d41d48eb4da4bccf170ee236 100644
-> > > > > > >> >>--- a/drivers/gpu/drm/drm_atomic.c
-> > > > > > >> >>+++ b/drivers/gpu/drm/drm_atomic.c
-> > > > > > >> >>@@ -985,10 +985,55 @@ drm_atomic_get_new_connector_for_enc=
-oder(const struct drm_atomic_state *state,
-> > > > > > >> >>=20
-> > > > > > >> >> 	return NULL;
-> > > > > > >> >> }
-> > > > > > >> >> EXPORT_SYMBOL(drm_atomic_get_new_connector_for_encoder);
-> > > > > > >> >>=20
-> > > > > > >> >>+/**
-> > > > > > >> >>+ * drm_atomic_get_connector_for_encoder - Get connector c=
-urrently assigned to an encoder
-> > > > > > >> >>+ * @encoder: The encoder to find the connector of
-> > > > > > >> >>+ * @ctx: Modeset locking context
-> > > > > > >> >>+ *
-> > > > > > >> >>+ * This function finds and returns the connector currentl=
-y assigned to
-> > > > > > >> >>+ * an @encoder.
-> > > > > > >> >>+ *
-> > > > > > >> >>+ * Returns:
-> > > > > > >> >>+ * The connector connected to @encoder, or an error point=
-er otherwise.
-> > > > > > >> >>+ * When the error is EDEADLK, a deadlock has been detecte=
-d and the
-> > > > > > >> >>+ * sequence must be restarted.
-> > > > > > >> >>+ */
-> > > > > > >> >>+struct drm_connector *
-> > > > > > >> >>+drm_atomic_get_connector_for_encoder(const struct drm_enc=
-oder *encoder,
-> > > > > > >> >>+				     struct drm_modeset_acquire_ctx *ctx)
-> > > > > > >> >>+{
-> > > > > > >> >>+	struct drm_connector_list_iter conn_iter;
-> > > > > > >> >>+	struct drm_connector *out_connector =3D ERR_PTR(-EINVAL);
-> > > > > > >> >>+	struct drm_connector *connector;
-> > > > > > >> >>+	struct drm_device *dev =3D encoder->dev;
-> > > > > > >> >>+	int ret;
-> > > > > > >> >>+
-> > > > > > >> >>+	ret =3D drm_modeset_lock(&dev->mode_config.connection_mu=
-tex, ctx);
-> > > > > > >> >>+	if (ret)
-> > > > > > >> >>+		return ERR_PTR(ret);
-> > > > > > >> >
-> > > > > > >> >It seems that this will cause a deadlock when called from a=
-  hotplug handling path,
-> > > > > > >> >I have a WIP DP diver[0],  which suggested by Dmitry to use=
- this API from a=20
-> > > > > > >> >&drm_bridge_funcs.detect callback to get the connector,  as=
- detect is called by drm_helper_probe_detect,
-> > > > > > >> >which will hold connection_mutex first, so the deaklock hap=
-pens:
-> > > > > > >> >
-> > > > > > >> >
-> > > > > > >> >drm_helper_probe_detect(struct drm_connector *connector,
-> > > > > > >> >                        struct drm_modeset_acquire_ctx *ctx,
-> > > > > > >> >                        bool force)
-> > > > > > >> >{
-> > > > > > >> >        const struct drm_connector_helper_funcs *funcs =3D =
-connector->helper_private;
-> > > > > > >> >        struct drm_device *dev =3D connector->dev;
-> > > > > > >> >        int ret;
-> > > > > > >> >
-> > > > > > >> >        if (!ctx)
-> > > > > > >> >                return drm_helper_probe_detect_ctx(connecto=
-r, force);
-> > > > > > >> >
-> > > > > > >> >        ret =3D drm_modeset_lock(&dev->mode_config.connecti=
-on_mutex, ctx);
-> > > > > > >> >        if (ret)
-> > > > > > >> >                return ret;
-> > > > > > >> >
-> > > > > > >> >        if (funcs->detect_ctx)
-> > > > > > >> >                ret =3D funcs->detect_ctx(connector, ctx, f=
-orce);
-> > > > > > >> >        else if (connector->funcs->detect)
-> > > > > > >> >                ret =3D connector->funcs->detect(connector,=
- force);
-> > > > > > >> >        else
-> > > > > > >> >                ret =3D connector_status_connected;
-> > > > > > >> >
-> > > > > > >> >        if (ret !=3D connector->status)
-> > > > > > >> >                connector->epoch_counter +=3D 1;
-> > > > > > >> >
-> > > > > > >> >So I wonder can we let drm_bridge_funcs.detect pass a conne=
-ctor for this case ?
-> > > > > > >> >
-> > > > > > >> >
-> > > > > > >> >
-> > > > > > >> >[0]https://lore.kernel.org/linux-rockchip/047EECFC-7E55-44E=
-C-896F-13FE04333E4D@gmail.com/T/#m25bc53b79f5cc7bddfcb7aae5656f68df396f094
-> > > > > > >> >>+
-> > > > > > >> >>+	drm_connector_list_iter_begin(dev, &conn_iter);
-> > > > > > >> >>+	drm_for_each_connector_iter(connector, &conn_iter) {
-> > > > > > >> >>+		if (!connector->state)
-> > > > > > >> >>+			continue;
-> > > > > > >> >>+
-> > > > > > >> >>+		if (encoder =3D=3D connector->state->best_encoder) {
-> > > > > > >> >>+			out_connector =3D connector;
-> > > > > > >>=20
-> > > > > > >>=20
-> > > > > > >> When try to use this patch in my bridge driver,  I found tha=
-t the connector->state->best_encoder=20
-> > > > > > >>  maybe NULL when   drm_bridge_funcs.detect or drm_bridge_fun=
-cs.detect_ctx is  called:
-> > > > > > >>=20
-> > > > > > >> [   52.713030] Invalid return value -22 for connector detect=
-ion
-> > > > > > >> [   52.713539] WARNING: CPU: 7 PID: 288 at drivers/gpu/drm/d=
-rm_probe_helper.c:602 drm_helper_probe_single_connector_modes+0x5e0/
-> > > > > > >> 0x63c
-> > > > > > >> [   52.714568] Modules linked in:
-> > > > > > >>=20
-> > > > > > >> [   52.724546] Call trace:
-> > > > > > >> [   52.724762]  drm_helper_probe_single_connector_modes+0x5e=
-0/0x63c (P)
-> > > > > > >> [   52.725319]  drm_mode_getconnector+0x2a4/0x488
-> > > > > > >> [   52.725711]  drm_ioctl_kernel+0xb4/0x11c
-> > > > > > >> [   52.726057]  drm_ioctl+0x22c/0x544
-> > > > > > >> [   52.726358]  __arm64_sys_ioctl+0xac/0xe0
-> > > > > > >> [   52.726706]  invoke_syscall+0x44/0x100
-> > > > > > >> [   52.727039]  el0_svc_common.constprop.0+0x3c/0xd4
-> > > > > > >>=20
-> > > > > > >> This is because  best_encoder is set by set_best_encoder, wh=
-ich is called from
-> > > > > > >> drm_atomic_helper_check_modeset. When we call drm_mode_getco=
-nnector=20
-> > > > > > >> for the first time, the functions mentioned above have not b=
-een called yet,
-> > > > > > >> then we can't match the encoder from connector->state->best_=
-encoder for this case.
-> > > > > > >
-> > > > > > >As far as I'm concerned, it's by design. Encoders and connecto=
-rs have
-> > > > > > >1:N relationship, and only once a connector has been enabled i=
-t has an
-> > > > > > >encoder.
-> > > > > > >
-> > > > > > >If the connector is disabled, there's no associated encoder.
-> > > > > >=20
-> > > > > > Does this prove that this API is not suitable for my applicatio=
-n scenario:=20
-> > > > > > Get the connector in the bridge's .detect callback, so this mea=
-ns that I may
-> > > > > > still need to modify the bridge's connector callback so that it=
- can pass the connector ?
-> > > > >=20
-> > > > > I'd say, yes, please.
-> > > >=20
-> > > > And I'd say no :)
-> > >=20
-> > > Fair enough :-)
-> > >=20
-> > > > There's no reason to deviate from the API other entities have here.=
- It's
-> > > > just that the switch to DRM_BRIDGE_ATTACH_NO_CONNECTOR hasn't been
-> > > > completely thought through and it's one of the part where it shows.
-> > > >=20
-> > > > We have two alternative solutions: Either the driver creates the
-> > > > connector itself, since it doesn't seem to use any downstream bridge
-> > > > anyway, or we need a new bridge helper to find the connector on a b=
-ridge
-> > > > chain.
-> > > >=20
-> > > > We have the iterator already, we just need a new accessor to retrie=
-ve
-> > > > the (optional) connector of a bridge, and if there's none, go to the
-> > > > next bridge and try again.
-> > >=20
-> > > The problem is that there is no guarantee that the the created connec=
-tor
-> > > is created for or linked to any bridge. For example, for msm driver I=
-'m
-> > > waiting for several series to go in, but after that I plan to work on
-> > > moving connector creation to the generic code within the msm driver.
-> > >=20
-> > > In other words, with DRM_BRIDGE_ATTACH_NO_CONNECTOR in place it is
-> > > perfectly legit not to have a bridge which has "connector of a bridge=
-".
-> > > It is possible to create drm_bridge_connector on the drm_encoder's si=
-de
-> > > after the drm_bridge_attach() succeeds.
-> >=20
-> > Sure, but then I'd expect detect and get_modes to only be called *after*
-> > that connector has been created, right?
->=20
-> Yes. But you can not get the connector by following bridge chain. Well,
-> unless you include encoder into the chain. If that's what you have had
-> in mind, then please excuse me, I didn't understand that from the
-> beginning.
+On Tue, Mar 18, 2025 at 4:25=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
+rote:
+>
+> On Wed, Jan 15, 2025 at 10:46:39AM +0100, Christoph Hellwig wrote:
+> > Replace int used as bool with the actual bool type for return values th=
+at
+> > can only be true or false.
+> >
+> [snip]
+>
+> > -int lockref_get_not_zero(struct lockref *lockref)
+> > +bool lockref_get_not_zero(struct lockref *lockref)
+> >  {
+> > -     int retval;
+> > +     bool retval =3D false;
+> >
+> >       CMPXCHG_LOOP(
+> >               new.count++;
+> >               if (old.count <=3D 0)
+> > -                     return 0;
+> > +                     return false;
+> >       ,
+> > -             return 1;
+> > +             return true;
+> >       );
+> >
+> >       spin_lock(&lockref->lock);
+> > -     retval =3D 0;
+> >       if (lockref->count > 0) {
+> >               lockref->count++;
+> > -             retval =3D 1;
+> > +             retval =3D true;
+> >       }
+> >       spin_unlock(&lockref->lock);
+> >       return retval;
+>
+> While this looks perfectly sane, it worsens codegen around the atomic
+> on x86-64 at least with gcc 13.3.0. It bisected to this commit and
+> confirmed top of next-20250318 with this reverted undoes it.
+>
+> The expected state looks like this:
+>        f0 48 0f b1 13          lock cmpxchg %rdx,(%rbx)
+>        75 0e                   jne    ffffffff81b33626 <lockref_get_not_d=
+ead+0x46>
+>
+> However, with the above patch I see:
+>        f0 48 0f b1 13          lock cmpxchg %rdx,(%rbx)
+>        40 0f 94 c5             sete   %bpl
+>        40 84 ed                test   %bpl,%bpl
+>        74 09                   je     ffffffff81b33636 <lockref_get_not_d=
+ead+0x46>
+>
+> This is not the end of the world, but also really does not need to be
+> there.
+>
+> Given that the patch is merely a cosmetic change, I would suggest I gets
+> dropped.
 
-You can't include the encoder either, because the encoder doesn't have a
-connector assigned yet at that time.
+fwiw I confirmed clang does *not* have the problem, I don't know about gcc =
+14.
 
-However, you can:
+Maybe I'll get around to testing it, but first I'm gonna need to carve
+out the custom asm into a standalone testcase.
 
-  - Store the bridge attach flags in drm_bridge
+Regardless, 13 suffering the problem is imo a good enough reason to
+whack the change.
 
-  - Create a hook that returns the connector a bridge creates, depending
-    on the attach flags.
-
-  - Create a helper that iterates over the next bridges until the
-    previous hook returns !NULL. If it doesn't find anything, return
-    NULL.
-
-AFAIK, it solves all the problems being discussed here, while dealing
-with legacy and new-style bridge drivers.
-
-> But frankly speaking, I think it might be easier to pass down the
-> connector to the detect callback (as drm_connector_funcs.detect already
-> gets the connecor) rather than making bridge drivers go through the
-> chain to get the value that is already present in the caller function.
->=20
-> (For some other usecases I'd totally agree with you, especially if the
-> connector isn't already available on the caller side).
-
-Still, we've tried to converge to the same API for all entities, it
-feels like a step backward to me.
-
-Maxime
-
---hp2fhvas6ltodzrt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ9mWcwAKCRAnX84Zoj2+
-dgpyAX9NW/gNmxEUdpBFsQ1QGH8CotncgbbRSnTTIIVtY9kXy+ZuDOFFDYhNejYh
-gf4JZhgBgKrVCDP3qGQO1jJ9s6oamM/AZO62PWV93aNMGrZiDv1aJnsqRt8Rg4ch
-GIH/HEJq0w==
-=TdpK
------END PGP SIGNATURE-----
-
---hp2fhvas6ltodzrt--
+--=20
+Mateusz Guzik <mjguzik gmail.com>
