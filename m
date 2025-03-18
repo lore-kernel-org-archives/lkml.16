@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48F120766A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC56F1ACEB7
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742290461; cv=none; b=fzl0M0CzmGpJxBlsgKK5WcF7oO0HIoAu84tW///q4wJ3blfHni4p1TnYqH4go7DsUFjPpdHXNeueyJn5okEJWi+fydtILVkcEv0K5GRrnyeFBGpVsAHP8NdhhZklkjIMqOldqdaVx7TdiZj6L720vU4IOmmHfaRcPwMfGAsSlQ0=
+	t=1742290464; cv=none; b=B3kvK2R8pGoioEHu5wXoKXM6Z6LnjOdHn9ApsSyMB3dSeccZW1mqxx7kdkKL7hERM2++UFmJ3ZucqkhA0Qvd40m3I2AS3Ec0D0f6fjSeT+7NTdaBVYOUqH5xiqeYwWwJ7Eo9Zj0cPPJ9arQNJf0vkNxRsEIDrDEOG5MGp8zkUF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742290461; c=relaxed/simple;
-	bh=L0sPs3TF+5cPjtBfdNIxBBrsxI6S/48gBgo9LG/xxbk=;
+	s=arc-20240116; t=1742290464; c=relaxed/simple;
+	bh=BJegvgLYBuqQm4LiiNCgEaFOuPXVFVF/RWIi/veSSYk=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=bdbCOFa+rwesYYJW9iWMq6RNNCal5OO9Q/Mq8A49GIqnqmqxiNCR8USuJ6jaZobU/vHVIPwqPAKISGsYgLr4ETLIEmEt2WlWUxNcIpQkZT71mgUiTT018+JvZPrSzIw4L1tL7Oa7/+D4YbfkZms3BYxqo1J2gY+fQM/dis+9uy0=
+	 MIME-Version; b=G3s0aK+Un4lphBQt6pzttTWlpx0IyDZ+Ev29qt657KkDTMyOgEX78MzkxxyfemtXXclbtMCh4csxFktdWxsGmMKpMuBYO+dVJGWCxpATR+H8nD2rx3ncAVudi7akTD0XR0uSkVH5++iQAMdn+WGh0WKC9tRrnZcJZ/PjsFn3kJ0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tuTKu-0005yI-LY; Tue, 18 Mar 2025 10:34:12 +0100
+	id 1tuTKu-0005yD-LY; Tue, 18 Mar 2025 10:34:12 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tuTKt-000OyU-0B;
+	id 1tuTKs-000OyN-2p;
 	Tue, 18 Mar 2025 10:34:11 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tuTKt-00Cmv4-13;
+	id 1tuTKt-00CmuG-0i;
 	Tue, 18 Mar 2025 10:34:11 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -40,16 +40,16 @@ To: "David S. Miller" <davem@davemloft.net>,
 	Thangaraj Samynathan <Thangaraj.S@microchip.com>,
 	Rengarajan Sundararajan <Rengarajan.S@microchip.com>
 Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
-	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	kernel@pengutronix.de,
 	linux-kernel@vger.kernel.org,
 	netdev@vger.kernel.org,
 	UNGLinuxDriver@microchip.com,
 	Phil Elwell <phil@raspberrypi.org>,
+	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v4 06/10] net: usb: lan78xx: Use ethtool_op_get_link to reflect current link status
-Date: Tue, 18 Mar 2025 10:34:06 +0100
-Message-Id: <20250318093410.3047828-7-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v4 01/10] net: usb: lan78xx: handle errors in lan7801 PHY initialization
+Date: Tue, 18 Mar 2025 10:34:01 +0100
+Message-Id: <20250318093410.3047828-2-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250318093410.3047828-1-o.rempel@pengutronix.de>
 References: <20250318093410.3047828-1-o.rempel@pengutronix.de>
@@ -65,48 +65,43 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Replace the custom lan78xx_get_link implementation with the standard
-ethtool_op_get_link helper, which uses netif_carrier_ok to reflect
-the current link status accurately.
+Add error handling for `lan78xx_write_reg()` and `lan78xx_read_reg()`
+in `lan7801_phy_init()`. If any register operation fails, return
+an appropriate error using `ERR_PTR(ret)` to prevent further execution
+with invalid configurations.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-Reviewed-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/net/usb/lan78xx.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+ drivers/net/usb/lan78xx.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 190c063f8eb9..18fd90dd9916 100644
+index 137adf6d5b08..d03668c2c1c9 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -1835,18 +1835,6 @@ static int lan78xx_set_eee(struct net_device *net, struct ethtool_keee *edata)
- 	return ret;
- }
- 
--static u32 lan78xx_get_link(struct net_device *net)
--{
--	u32 link;
--
--	mutex_lock(&net->phydev->lock);
--	phy_read_status(net->phydev);
--	link = net->phydev->link;
--	mutex_unlock(&net->phydev->lock);
--
--	return link;
--}
--
- static void lan78xx_get_drvinfo(struct net_device *net,
- 				struct ethtool_drvinfo *info)
- {
-@@ -2013,7 +2001,7 @@ lan78xx_get_regs(struct net_device *netdev, struct ethtool_regs *regs,
- }
- 
- static const struct ethtool_ops lan78xx_ethtool_ops = {
--	.get_link	= lan78xx_get_link,
-+	.get_link	= ethtool_op_get_link,
- 	.nway_reset	= phy_ethtool_nway_reset,
- 	.get_drvinfo	= lan78xx_get_drvinfo,
- 	.get_msglevel	= lan78xx_get_msglevel,
+@@ -2531,11 +2531,22 @@ static struct phy_device *lan7801_phy_init(struct lan78xx_net *dev)
+ 		dev->interface = PHY_INTERFACE_MODE_RGMII;
+ 		ret = lan78xx_write_reg(dev, MAC_RGMII_ID,
+ 					MAC_RGMII_ID_TXC_DELAY_EN_);
++		if (ret < 0)
++			return ERR_PTR(ret);
++
+ 		ret = lan78xx_write_reg(dev, RGMII_TX_BYP_DLL, 0x3D00);
++		if (ret < 0)
++			return ERR_PTR(ret);
++
+ 		ret = lan78xx_read_reg(dev, HW_CFG, &buf);
++		if (ret < 0)
++			return ERR_PTR(ret);
++
+ 		buf |= HW_CFG_CLK125_EN_;
+ 		buf |= HW_CFG_REFCLK25_EN_;
+ 		ret = lan78xx_write_reg(dev, HW_CFG, buf);
++		if (ret < 0)
++			return ERR_PTR(ret);
+ 	} else {
+ 		if (!phydev->drv) {
+ 			netdev_err(dev->net, "no PHY driver found\n");
 -- 
 2.39.5
 
