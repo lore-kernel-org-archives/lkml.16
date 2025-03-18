@@ -1,85 +1,145 @@
-Received: from out162-62-57-87.mail.qq.com (out162-62-57-87.mail.qq.com [162.62.57.87])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EEFB15573A
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22197158DAC
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742263832; cv=none; b=AIaYSuzk4ILfXtKt+2WP5Ve2H7yl5zJByq9qeaC4q+7DKwJIj1Tsg0ABC81QZqVPcD+T6zvJivkBy410aUZDM2x0abrmRVNjxwxTa3BcyPOlULZ/QDulMDjMmSUSZlR3XKTo3MNb9Q0FG5M9SKKLyUU/IhpCt02jdJT+WhQICIo=
+	t=1742263834; cv=none; b=s8ydyOq26Syjd9vq5WLzabuq/sLONetC+ehllufKnP5SLgckEUslBddnlX9OMNHM2Zvq76mK7iBrsjWCJfcyOxscSoSecQENeYNWgUFe6KFoyDzr7HvD61+tElSOLAmMFcGtz+AnevxmDVmWk6WRx3qKQyaJrL3nXYB+jHegpm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742263832; c=relaxed/simple;
-	bh=90DBI5YNp4rJum24NkptVTueHbYngQW0QPFQ4qoBBv0=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=qQ36sjQTUKwz+RJJwey3gvZlY/aQzNQhwab5byXvePgVGhpAnjpXCzKm+W8k0wPN02NfHKbe6JiSRUa77d3fQ7JEHIlbhsVgr4N2mzGU6hO253+QpbwpxFwXcLMCrJZhTemz0MwvtT/162f+jdloOpj/nh9n8uEOxr6PYhDCkNA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=Dq0RF1xa; arc=none smtp.client-ip=162.62.57.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1742263834; c=relaxed/simple;
+	bh=QR2+CQhFtF3wiXNVfMMn04N/Zgc7E9vWUP/WZyEzsE4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N7qguRyJwIQTsVYazebzglkyVY9HNKmRFZQGzoSBgtAhMuHC/ZzHo0MLiTi/u2T1laHFJHOttl5gi25bVYIHkIrbxIoP//wC5PYywwTYzwpDl7zfUWtqt3XAM0+kv8Ihy3LB69UkXgUUGD0BFj79TyQ+1sIwe3Vo4qymmLJsM64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L0k64aBK; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="Dq0RF1xa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1742263811; bh=PWAg6wqR4aDaunrenpIwbqBjEpt1Xb0TgbEUFi9Zb+Q=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=Dq0RF1xarjpFo8AeS/VVg+fhqaMqVuT/YRiOAf1Hh1qEED5hVLQ/9xaxA4EwRWjas
-	 uKRjXPcPaBL51mYm1n/fVP7oZKjOoSWBjyjVVg0eGezpJdTlX/48XwpC0f854o9/7F
-	 8KSJqSwuHwMWSoEitubkPU8nV7YeM3DQv8g6q+M0=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
-	id 75B28D4; Tue, 18 Mar 2025 10:01:53 +0800
-X-QQ-mid: xmsmtpt1742263313t13o6kae3
-Message-ID: <tencent_4C2A333C9EDB1B264B0E1B0425E2BACBBB08@qq.com>
-X-QQ-XMAILINFO: MAcVqULX7QQ1SDpNTn6Eo0n9SFs52VrR+m6f1NwBJjtKusl13a4eD4GHwJg1zX
-	 Jhv9YgzU0xSOxDcxDg6BK/wRW56AuKJBwNMep+h/fMAHTZLN4965Dx6o9AEc6XRwaTky8kJJXfsX
-	 XdBNsj2EChUAMCvbVuTmipGi2RdCY31cehenyscMFfxK+x5iTbWhFikP19lWaFQ+gmIv/UFuxxAK
-	 XlrJ8okgze9WC/h5pwc6js+xe5SGoeSaIWgQClvTXbYZz5UtGGqcRaENxpPKz2nrkjxi3xn+qvy1
-	 wPD3/8PjQAd/GflAZGdWAeO92if5Fi2pta5pSSp+VHs6OoGwcGffkq3bhilxhfrwQN9tHQwNdMLU
-	 otMrTETk95ILzoke0p+Ed8CRXYzkP4F1EpdBxVEgm8o5NqPqZ4OoAyyCn2bvaYPhjUpD4edRV6gJ
-	 c4tRpxjDXtPn8zOZzjJpns9YqjO7j6AhDUmsi7K7+gJvREo3h7cVSg847gbHTvddfUcnDQu7KwSM
-	 xK74hrtSQNKxkrWNhDVH9HjmwaRzekM01v3TuMlknO13X4lmyhV2IKG7qhvv/fscP3CCy1Q67+qi
-	 51UhziqAXr9xRFs9TIf+q0yyKPSTtsL+iq09ZqCPwXWek+0Vuc0hgva3zceXNmemGqiBEU/nObUm
-	 56l2RmxyCr7G+NVwkTrG2ryYDTFRo142hsdcL2AEUEKAeJfI03/oVZiG9XDRsjFNWDoHCJaAfcUA
-	 YTLQk9sg9ti1nS8SW4Ey0SJINlRbMFpPb/nVM9XrVh8aZUitkLfoQmDXiLiHCUcQmYCIlxdSZuNj
-	 KrulKUEnu2qrlUl4fR9SwJ37BI4+MyY8tyWQNV9xezaESs7PpKv0sZOswQLBN6s9kTuynI/ZxUkN
-	 hIDtyCD9TwMmK4quvf/aIWNp3xllkSa0flE7kzmZXC
-X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+aaf0488c83d1d5f4f029@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [wireless?] INFO: trying to register non-static key in cfg80211_dev_free
-Date: Tue, 18 Mar 2025 10:01:54 +0800
-X-OQ-MSGID: <20250318020153.3042145-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <67d8804b.050a0220.2ca2c6.006b.GAE@google.com>
-References: <67d8804b.050a0220.2ca2c6.006b.GAE@google.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L0k64aBK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742263830;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bocJ4xY+cvLvF8Z2x24tl3LRmmXAsvkZEGxfx5yQFuM=;
+	b=L0k64aBKhp6EbDzupLaFCy+aPU5PrxFhExHhz/+PM1VwUpxn0oFPKX+3zTvabHatSTYEvL
+	eczio3BysO3SeOPgC5KWjqCSVJz2U6IwRwx4GVa+vCs/EguTBT0WbQ6mOx5mr3y/vdxd0y
+	nyGMqBmL4vikhmDdUUOhj5OJZDwCL1g=
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com
+ [209.85.208.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-376-UF3K3VpvNQWShhDmfwlneA-1; Mon, 17 Mar 2025 22:10:28 -0400
+X-MC-Unique: UF3K3VpvNQWShhDmfwlneA-1
+X-Mimecast-MFC-AGG-ID: UF3K3VpvNQWShhDmfwlneA_1742263827
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5e5c76fd898so4359522a12.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 19:10:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742263827; x=1742868627;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bocJ4xY+cvLvF8Z2x24tl3LRmmXAsvkZEGxfx5yQFuM=;
+        b=xP7e0ERwE4K6gpgF+3AYtl18cnf8MslACWLILejjS5mXvQZPvjezSMR+NBfjlC0Up8
+         qXfdberfbpRbXXbCOvw53IbOGV3pBDWS+pMyOCqaXt7uVGrnozM8vzXmhsj/bmDCw0uH
+         /D/t0M6Kh48lq5+ecAysftw46SqpDMiLwGUSReCy1UavBrfj0+VPJersTsW3sXuM3dm9
+         NW10BqFbmcvE89IMZBqxg8ds5a/aA9ZPo7CVyweKOBRaFHo09n3AHDW2GpOzY1i5AXB0
+         kwQYgnwPTxZClTQGUUIBBHJxGMrBbInqvOlYVexioSbXHtrYCd1OCF+s3MzlGbo/04OR
+         zTbg==
+X-Forwarded-Encrypted: i=1; AJvYcCXh5fD5a07dQu5g5IERkug4h30w5Sh59JvEAHigvshZD2U3tZFz0mqE2uUHzrXj/iEl1IKNyekcL/3EZsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy/H7iht8ZxwXo2C+Tm4Ylvq4uw70UA2E5UheJDeTU4gnsxejQH
+	8TtGMMex3350FLZ9IofDkptAnt+DTeBgt4fc709GV+aZYXs2kzESn2am9+mT2sInrcerZTmLAEF
+	MdHG+a5ahZCcAzSDzKBHbw7p6Rb+pJNwAa2oFN6xVy6gaq98C1OWi934oV+GEXQlI8bIdeRF4J/
+	lkU3LHdT8Ghf+zVS7CoCacFdWcAo1bJXHkTGaa
+X-Gm-Gg: ASbGncuAIf/B03L3J2dcTJNeJCwM1nHzcsk2jwFU8QCstuqhAKYHHn51sLNSOVsfQBF
+	oyczd6b+UXm4zJ8LcRzEqKuqr21uCLRXDDyKVnRFtKqLlPfP/yzSvNyniJjbeNfrjt6rYtZ1jGQ
+	==
+X-Received: by 2002:a05:6402:348d:b0:5de:cbed:c955 with SMTP id 4fb4d7f45d1cf-5e89fa5252bmr15904548a12.17.1742263827514;
+        Mon, 17 Mar 2025 19:10:27 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHCvFJRxiUrK3Hl8RQJ4gACrb1PAEIxR0Zqht6rIjp/tdZBCVDepPjzyLxDhCMISfCanvYlkZjNzb4UQTjWFWQ=
+X-Received: by 2002:a05:6402:348d:b0:5de:cbed:c955 with SMTP id
+ 4fb4d7f45d1cf-5e89fa5252bmr15904525a12.17.1742263827103; Mon, 17 Mar 2025
+ 19:10:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250317-rss-v11-0-4cacca92f31f@daynix.com> <CACGkMEu=pPTd-QHKRDw7noRCTu-18c7JLJNKZCEu5=BHAE0aJQ@mail.gmail.com>
+In-Reply-To: <CACGkMEu=pPTd-QHKRDw7noRCTu-18c7JLJNKZCEu5=BHAE0aJQ@mail.gmail.com>
+From: Lei Yang <leiyang@redhat.com>
+Date: Tue, 18 Mar 2025 10:09:50 +0800
+X-Gm-Features: AQ5f1Jpjunc8xib_cyTewZlm6iAFgRKVvfy1UVZQ0lyOQH2XWEffoxUQGNr9u5c
+Message-ID: <CAPpAL=yfgiuFA-SyrCe0Ud8Wm9tJMcMm9L4Q-AnnuRzN+Q9M=A@mail.gmail.com>
+Subject: Re: [PATCH net-next v11 00/10] tun: Introduce virtio-net hashing feature
+To: Akihiko Odaki <akihiko.odaki@daynix.com>
+Cc: Jonathan Corbet <corbet@lwn.net>, Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Shuah Khan <shuah@kernel.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux-foundation.org, linux-kselftest@vger.kernel.org, 
+	Yuri Benditovich <yuri.benditovich@daynix.com>, Andrew Melnychenko <andrew@daynix.com>, 
+	Stephen Hemminger <stephen@networkplumber.org>, gur.stavi@huawei.com, 
+	Simon Horman <horms@kernel.org>, Jason Wang <jasowang@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-#syz test
+QE tested this series of patches v11 under linux-next repo with
+virtio-net regression tests, everything works fine.
 
-diff --git a/net/wireless/core.c b/net/wireless/core.c
-index 828e29872633..df3ea9ee3ee9 100644
---- a/net/wireless/core.c
-+++ b/net/wireless/core.c
-@@ -1193,10 +1193,12 @@ void cfg80211_dev_free(struct cfg80211_registered_device *rdev)
- 	struct cfg80211_beacon_registration *reg, *treg;
- 	unsigned long flags;
- 
--	spin_lock_irqsave(&rdev->wiphy_work_lock, flags);
--	WARN_ON(!list_empty(&rdev->wiphy_work_list));
--	spin_unlock_irqrestore(&rdev->wiphy_work_lock, flags);
--	cancel_work_sync(&rdev->wiphy_work);
-+	if (!rdev->wiphy.rfkill) {
-+		spin_lock_irqsave(&rdev->wiphy_work_lock, flags);
-+		WARN_ON(!list_empty(&rdev->wiphy_work_list));
-+		spin_unlock_irqrestore(&rdev->wiphy_work_lock, flags);
-+		cancel_work_sync(&rdev->wiphy_work);
-+	}
- 
- 	rfkill_destroy(rdev->wiphy.rfkill);
- 	list_for_each_entry_safe(reg, treg, &rdev->beacon_registrations, list) {
+Tested-by: Lei Yang <leiyang@redhat.com>
+
+On Tue, Mar 18, 2025 at 8:29=E2=80=AFAM Jason Wang <jasowang@redhat.com> wr=
+ote:
+>
+> On Mon, Mar 17, 2025 at 6:58=E2=80=AFPM Akihiko Odaki <akihiko.odaki@dayn=
+ix.com> wrote:
+> >
+> > virtio-net have two usage of hashes: one is RSS and another is hash
+> > reporting. Conventionally the hash calculation was done by the VMM.
+> > However, computing the hash after the queue was chosen defeats the
+> > purpose of RSS.
+> >
+> > Another approach is to use eBPF steering program. This approach has
+> > another downside: it cannot report the calculated hash due to the
+> > restrictive nature of eBPF.
+> >
+> > Introduce the code to compute hashes to the kernel in order to overcome
+> > thse challenges.
+> >
+> > An alternative solution is to extend the eBPF steering program so that =
+it
+> > will be able to report to the userspace, but it is based on context
+> > rewrites, which is in feature freeze. We can adopt kfuncs, but they wil=
+l
+> > not be UAPIs. We opt to ioctl to align with other relevant UAPIs (KVM
+> > and vhost_net).
+> >
+> > The patches for QEMU to use this new feature was submitted as RFC and
+> > is available at:
+> > https://patchew.org/QEMU/20250313-hash-v4-0-c75c494b495e@daynix.com/
+> >
+> > This work was presented at LPC 2024:
+> > https://lpc.events/event/18/contributions/1963/
+> >
+> > V1 -> V2:
+> >   Changed to introduce a new BPF program type.
+> >
+> > Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
+> > ---
+> > Changes in v11:
+> > - Added the missing code to free vnet_hash in patch
+> >   "tap: Introduce virtio-net hash feature".
+> > - Link to v10: https://lore.kernel.org/r/20250313-rss-v10-0-3185d73a9af=
+0@daynix.com
+> >
+>
+> We only have 2 or 3 points that need to be sorted out. Let's hold on
+> to the iteration until we had an agreement.
+>
+> Thanks
+>
 
