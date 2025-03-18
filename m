@@ -1,73 +1,96 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20EAA20E317;
-	Tue, 18 Mar 2025 14:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB12F20DD7D
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742307548; cv=none; b=ZRGZWOyRaoVBfSTmLhOa403mMO3Dco7+mSxEWpvHcfvmDmBJMqpOpHXAb9geMlCKDhHsGZnWJl8ZCH/tzWeZeZVePpym7Z9qL656wxttq+NM0cOCMelzv3YlaQk8LkjuheBTUsnBhjlyvJu1TuTj1tIT/7TMkNBkc2GIEHdFduk=
+	t=1742307610; cv=none; b=P59t6BeaA/MGmD9RZJW6HITFJ04ow0NIDnUvtZIiroD8xzbrZPHvXlAUpXEqpCaThk7Jah0ms/ZqTPA5d5S1TXik3DZwBwloV/166ztQDJ6BvzYuNxNaJmOZztlsSN7bHTIsUAdP2mwGNZIHYUiSFoJJvmY9vsiubmXYmQGE2x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742307548; c=relaxed/simple;
-	bh=DLBSdfjhrcTO18lXkihNamSUSA2kNdGMQBdw1Ge2tAM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=rHsMNKSLj4jC5t6el25tL3SJjn1roiOKEWgNiSZlV3nXnDExJ41jkD4jMbGRejcEPAdBv5pUHCCXjhzRGw/67xc3MBw2//V+Glm9WBiLBKLgZtkfwvj9S4VzDe9IJU03KbUMsCU7yyorb0eOuQwPINmRVzllbVrzU5ys57ZgMPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fKZyiF8w; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fKZyiF8w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECD35C4CEDD;
-	Tue, 18 Mar 2025 14:19:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742307547;
-	bh=DLBSdfjhrcTO18lXkihNamSUSA2kNdGMQBdw1Ge2tAM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=fKZyiF8wbU2gEBgW6+z+JLzRHPBN8EAUXikYDFjAXN0BWYLGXyKszi4p1ncD67WXw
-	 0gsO9bb7p0/IdHYKWQhE7Ea4FMRsUvQqM3F7Af1OGbBuGOFZyJdiGmkwYcHr5LFXhb
-	 6mF9KjgKBR0+DkNlb+Yu5qlZZ8GFzEdRS34oIJLj4eYze0bBbbiQJP3xOoBFtqZj+w
-	 WgJrLcgNpYeB+v1pFuigIo0IV9UkjTgeF9aXTyVoVFAL0/8s2hHVlenUsAx77vex7V
-	 YMY9VMl7Ijxc55DJduVdSYLy8DQI9+VfL7CdQmscTTbVqb7PdhOchIutpjqvJmS3SH
-	 04TQmmtraZmFA==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>
-Cc: <rust-for-linux@vger.kernel.org>,  <daniel.almeida@collabora.com>,
-  <dakr@kernel.org>,  <robin.murphy@arm.com>,  <aliceryhl@google.com>,
-  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
- <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
- <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
- <bjorn3_gh@protonmail.com>,  "Benno
- Lossin" <benno.lossin@proton.me>,  "Trevor Gross" <tmgross@umich.edu>,
-  "Valentin Obst" <kernel@valentinobst.de>,
-  <linux-kernel@vger.kernel.org>,  "Christoph Hellwig" <hch@lst.de>,
-  "Marek Szyprowski" <m.szyprowski@samsung.com>,  <airlied@redhat.com>,
-  <iommu@lists.linux.dev>
-Subject: Re: [PATCH v15 11/11] rust: dma: add as_slice/write functions for
- CoherentAllocation
-In-Reply-To: <20250317185345.2608976-12-abdiel.janulgue@gmail.com> (Abdiel
-	Janulgue's message of "Mon, 17 Mar 2025 20:52:18 +0200")
-References: <20250317185345.2608976-1-abdiel.janulgue@gmail.com>
-	<1vuR_eOzfIz1yigvLbgiW9YYnm45qzIRwfjp-7reCYpDDiRI3zrmkDbA6XtHpMipLTm10-tUwMZixJsjvf6T9A==@protonmail.internalid>
-	<20250317185345.2608976-12-abdiel.janulgue@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Tue, 18 Mar 2025 15:09:27 +0100
-Message-ID: <87senaig6g.fsf@kernel.org>
+	s=arc-20240116; t=1742307610; c=relaxed/simple;
+	bh=vUloTrOUCIcf40SnnfQPQKJzMerY7bSFQFXtQepiPtQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=agW59Lidzm8NOmDlyvE6R2Fy3uzP+dm7T1rlN3B/CGQaysRCJm6kI3gXqBCZ2eijWgW+fg+RTAMLxGM/B87D9jS/L4VkFo3bduZlArGntSvh3qB9lsDt+hBysf0voJYw+bK9HDfJBj/xWVDENoIKcNl7wix4o/3QrT+GoxRq4oI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZHCnD3VgPz9sT8;
+	Tue, 18 Mar 2025 14:46:56 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 13JVH6dmrxGs; Tue, 18 Mar 2025 14:46:56 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZHCnD2cQvz9sSq;
+	Tue, 18 Mar 2025 14:46:56 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 47E9D8B78F;
+	Tue, 18 Mar 2025 14:46:56 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id cGsNLrlU5MWU; Tue, 18 Mar 2025 14:46:56 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E0EE68B763;
+	Tue, 18 Mar 2025 14:46:55 +0100 (CET)
+Message-ID: <1d822960-85a7-42b3-88cf-9d3dbc75a831@csgroup.eu>
+Date: Tue, 18 Mar 2025 14:46:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: Maintenance path for the fsl-mc bus
+To: Ioana Ciornei <ioana.ciornei@nxp.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Stuart Yoder <stuyoder@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@vger.kernel.org,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <2xzljdzktgpsyag5jhfwbxc2sroaacljecsq36hlxefu6jnz6g@zlorxu7niqnq>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <2xzljdzktgpsyag5jhfwbxc2sroaacljecsq36hlxefu6jnz6g@zlorxu7niqnq>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-"Abdiel Janulgue" <abdiel.janulgue@gmail.com> writes:
+Hi Ioana,
 
-> Add unsafe accessors for the region for reading or writing large
-> blocks of data.
->
-> Signed-off-by: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Le 18/03/2025 à 11:40, Ioana Ciornei a écrit :
+> [Vous ne recevez pas souvent de courriers de ioana.ciornei@nxp.com. D?couvrez pourquoi ceci est important ? https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> Hi,
+> 
+> As highlighted by the discussion in the following thread, the
+> maintenance path for the fsl-mc bus is not clear.
+> 
+> https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore.kernel.org%2Flinux-arm-kernel%2FZ9Lj9_yM1EK5pKee%40gallifrey&data=05%7C02%7Cchristophe.leroy%40csgroup.eu%7C00bf096aa0fe40f9d8e908dd66094d7d%7C8b87af7d86474dc78df45f69a2011bb5%7C0%7C0%7C638778912314503921%7CUnknown%7CTWFpbGZsb3d8eyJFbXB0eU1hcGkiOnRydWUsIlYiOiIwLjAuMDAwMCIsIlAiOiJXaW4zMiIsIkFOIjoiTWFpbCIsIldUIjoyfQ%3D%3D%7C0%7C%7C%7C&sdata=%2F%2B%2FXzSQ9VUY81xPbjB8%2F0vIIF9ChaTRXupWd59%2Fvfco%3D&reserved=0
+> 
+> The fsl-mc bus driver was first added to drivers/staging and because of
+> that, Greg was to one to pick up patches through his tree. Once it was
+> moved to drivers/bus/fsl-mc, patches on this driver were picked either
+> by Greg or by the Freescale SOC maintainer at that time - Li Yang.
+> 
+> Conceptually speaking, the fsl-mc bus driver is contributing to the same
+> infrastructure level as the SoC drivers maintained now by Christophe.
+> 
+> Christophe, would you be open to pick up patches for this bus driver
+> through your tree?
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+Yes its fine for me to take it via my soc fsl subtree unless Arnd tells 
+different. But be aware that it will be purely administrative. I will 
+have no mean to check whether any changes are actually working properly.
+
+In that case please add the following entry in MAINTAINERS:
+
+L:	linuxppc-dev@lists.ozlabs.org
 
 
-Best regards,
-Andreas Hindborg
-
+> 
+> As a side note, I know that the MAINTAINERS entry for this driver is not
+> up to date - Laurentiu's email bounces. I will send a patch updating it
+> after it's clear to whom I should send it.
+> 
+> Thanks,
+> Ioana
 
