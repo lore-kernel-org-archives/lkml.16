@@ -1,204 +1,151 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0725209F23
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:17:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F53207656
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:18:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742296667; cv=none; b=iuE1vU+ffbO6x3UWDKK71CrcCU9MwByTP4ZCipEQhXNjBZ8ypzGqr1Zgbe/k78Iv//8awgggFudXa0bKt1yiKY2gAblnnNzgQytsnm9ovzy3XHJ8Wvw7Pbz8L+Ye5dQCkWBPo58UGAUtA8Uxih8QnTGTozmqUvivC/8WC7qgCqs=
+	t=1742296715; cv=none; b=axhThsdVx2iraKvRIGfS4e/MuMFOLPaefRxbnVXYmU/Ce0rmKe9O1VEqDaBycN/5xdGGIVT4+7uKYycxqcemQOl13D+XCm5ov2QweDcKhBQE+/R4MLbrT79g5KokYfpubCQlqguES+HSW9DlaXIaGuPpse9PX/iXC0bsRbRpgl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742296667; c=relaxed/simple;
-	bh=Fafo4CwRHV95e7IPe3BLZZs4ddv0PwO+JqTuBNF1VxI=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=iCGgKvjKt64p8Wo9mi5CK3g595dNKumtDpH44/9zYb4yEfuXcVfXyVAEH7aHhV9xRBJBGPLvkQwvw5Cps69kLG9eGm6DFISJTHBfwo+pLaA8JxVKbKvip0xiXXuZpMTUOPb9laqxw5AxHrPDA7HRPQsJKda6Mq1AXlg7fr9VrUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XjRsca0Q; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742296715; c=relaxed/simple;
+	bh=9+PrmrUjfFAWCW/HPllIyFpklnzaITx4qiWJpoMwG7U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l1DnGdwD1s1IaehmAbNWH1Id/+rCqAcE8fo5qBPSwuH0YdfOIzF+JeVzT9zJBHku8zFJvOCV74gjZ5zr3SLhXrAZddnhfKqo4yCpzU7S/2i6IlPMDRGIlOWllK0P2co2wpnHi/MUBwldrGLrX333M30mZ0qSxMMn2fwTeaCQeCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f/p23EQD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5QEjgjp+; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=f/p23EQD; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5QEjgjp+; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjRsca0Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742296666; x=1773832666;
-  h=date:from:to:cc:subject:message-id;
-  bh=Fafo4CwRHV95e7IPe3BLZZs4ddv0PwO+JqTuBNF1VxI=;
-  b=XjRsca0Q39o3yGCoS27EybvDTCy4ivpilWz6Z2EarEwboQ1WVoLU/CdO
-   YwJ5rz05BNpZzFcaivLAzz+fF1jRItPfunwvZRM89A9vxhzhZYri4d8EY
-   8Y4aX231Y3ek5Z27z1eg8XUlO/j5P26QERXEE/i+EP5dOsUATi59X/wkt
-   E4835AADrabmOgp5SunMpL3ls0ZtkiSkVgzn1W+0CXZX9r3sb+uTxDzEb
-   ECjIgCEo3bOd4+hyG6DV+p9pzg0TulfNirQFbi8Q3tX0ZgNYdVM0cE2gK
-   Bri33O1GKHAFw9dx35vNIDKrY+ZwFHxVew46sHzINSmzlwWPjqQ0b8vbC
-   Q==;
-X-CSE-ConnectionGUID: ArwkbRhtTdyGM9Q+OCQIiA==
-X-CSE-MsgGUID: IWLVydNlR9SRJG4K4FobkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="60823873"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="60823873"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 04:17:45 -0700
-X-CSE-ConnectionGUID: 7/vN4yYIQXimRhuoavMbiA==
-X-CSE-MsgGUID: ghtcZaboTwmaSRN5ZzdCtA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="127265428"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 18 Mar 2025 04:17:43 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tuUx4-000Dhj-0k;
-	Tue, 18 Mar 2025 11:17:42 +0000
-Date: Tue, 18 Mar 2025 19:17:07 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:sched/core] BUILD SUCCESS
- 34929a070b7fd06c386080c926b61ee844e6ad34
-Message-ID: <202503181952.HENZUrN1-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f/p23EQD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5QEjgjp+";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="f/p23EQD";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5QEjgjp+"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 5DAB621CDB;
+	Tue, 18 Mar 2025 11:18:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742296708; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vYSHjYrlGD5MyoKBWExXGbVVVeHGXdjCPlKheBUw2IM=;
+	b=f/p23EQDZKFHwMf6yQXvLyqOkoOELCd87EU3qwYleOMJGpLQM1zbUPncxgja9XCeM3iDDW
+	SFLTXcUfaIMfvBWxIxg7rWH1OZ0q8jRC+znsZwkEsCzyLQSIITmAb6vKc2xmftss4eklaz
+	g06BbCINDOsuxpiWk/i3nqmdjsiVep4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742296708;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vYSHjYrlGD5MyoKBWExXGbVVVeHGXdjCPlKheBUw2IM=;
+	b=5QEjgjp+DKYf09zXt+RHehaDpNACADQVrp+15I03+L0T0MUhijDkgoK7cRdioopfh1Lr+x
+	sKA0w2l77E1SndCA==
+Authentication-Results: smtp-out1.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="f/p23EQD";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5QEjgjp+
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742296708; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vYSHjYrlGD5MyoKBWExXGbVVVeHGXdjCPlKheBUw2IM=;
+	b=f/p23EQDZKFHwMf6yQXvLyqOkoOELCd87EU3qwYleOMJGpLQM1zbUPncxgja9XCeM3iDDW
+	SFLTXcUfaIMfvBWxIxg7rWH1OZ0q8jRC+znsZwkEsCzyLQSIITmAb6vKc2xmftss4eklaz
+	g06BbCINDOsuxpiWk/i3nqmdjsiVep4=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742296708;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vYSHjYrlGD5MyoKBWExXGbVVVeHGXdjCPlKheBUw2IM=;
+	b=5QEjgjp+DKYf09zXt+RHehaDpNACADQVrp+15I03+L0T0MUhijDkgoK7cRdioopfh1Lr+x
+	sKA0w2l77E1SndCA==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 461AC139D2;
+	Tue, 18 Mar 2025 11:18:28 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id XvmwEIRW2WfoRwAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 18 Mar 2025 11:18:28 +0000
+Message-ID: <ae7c7745-179f-476c-9c93-e6ad04656dc9@suse.de>
+Date: Tue, 18 Mar 2025 12:18:28 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 14/18] nvmet-fc: take tgtport reference only once
+To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-14-05fec0fc02f6@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250318-nvmet-fcloop-v3-14-05fec0fc02f6@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 5DAB621CDB
+X-Spam-Score: -4.51
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	ARC_NA(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	RCVD_TLS_ALL(0.00)[];
+	DKIM_TRACE(0.00)[suse.de:+];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo,suse.de:dkim,suse.de:mid,suse.de:email]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
-branch HEAD: 34929a070b7fd06c386080c926b61ee844e6ad34  include/{topology,cpuset}: Move dl_rebuild_rd_accounting to cpuset.h
+On 3/18/25 11:40, Daniel Wagner wrote:
+> The reference counting code can be simplified. Instead taking a tgtport
+> refrerence at the beginning of nvmet_fc_alloc_hostport and put it back
+> if not a new hostport object is allocated, only take it when a new
+> hostport object is allocated.
+> 
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   drivers/nvme/target/fc.c | 24 +++++++++---------------
+>   1 file changed, 9 insertions(+), 15 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-elapsed time: 1464m
+Cheers,
 
-configs tested: 127
-configs skipped: 4
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-14.2.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-13.2.0
-arc                               allnoconfig    gcc-13.2.0
-arc                              allyesconfig    gcc-13.2.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250317    gcc-13.2.0
-arc                   randconfig-002-20250317    gcc-13.2.0
-arm                              allmodconfig    gcc-14.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                      footbridge_defconfig    clang-17
-arm                        multi_v7_defconfig    gcc-11.5.0
-arm                   randconfig-001-20250317    gcc-14.2.0
-arm                   randconfig-002-20250317    gcc-14.2.0
-arm                   randconfig-003-20250317    gcc-14.2.0
-arm                   randconfig-004-20250317    clang-21
-arm                        spear6xx_defconfig    clang-15
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-14.2.0
-arm64                               defconfig    gcc-6.5.0
-arm64                 randconfig-001-20250317    gcc-14.2.0
-arm64                 randconfig-002-20250317    gcc-14.2.0
-arm64                 randconfig-003-20250317    gcc-14.2.0
-arm64                 randconfig-004-20250317    gcc-14.2.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250317    gcc-14.2.0
-csky                  randconfig-002-20250317    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon                             defconfig    clang-21
-hexagon               randconfig-001-20250317    clang-21
-hexagon               randconfig-002-20250317    clang-21
-i386                             allmodconfig    gcc-12
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250317    gcc-12
-i386        buildonly-randconfig-002-20250317    clang-20
-i386        buildonly-randconfig-003-20250317    clang-20
-i386        buildonly-randconfig-004-20250317    clang-20
-i386        buildonly-randconfig-005-20250317    gcc-12
-i386        buildonly-randconfig-006-20250317    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250317    gcc-14.2.0
-loongarch             randconfig-002-20250317    gcc-14.2.0
-m68k                             allmodconfig    gcc-14.2.0
-m68k                              allnoconfig    gcc-14.2.0
-m68k                             allyesconfig    gcc-14.2.0
-m68k                            mac_defconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-14.2.0
-microblaze                        allnoconfig    gcc-14.2.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-mips                       rbtx49xx_defconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250317    gcc-14.2.0
-nios2                 randconfig-002-20250317    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-openrisc                 simple_smp_defconfig    gcc-10.5.0
-parisc                           allmodconfig    gcc-14.2.0
-parisc                            allnoconfig    gcc-14.2.0
-parisc                           allyesconfig    gcc-14.2.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250317    gcc-14.2.0
-parisc                randconfig-002-20250317    gcc-14.2.0
-powerpc                          allmodconfig    gcc-14.2.0
-powerpc                           allnoconfig    gcc-14.2.0
-powerpc                          allyesconfig    clang-21
-powerpc                      arches_defconfig    gcc-11.5.0
-powerpc                     mpc83xx_defconfig    clang-21
-powerpc               randconfig-001-20250317    clang-15
-powerpc               randconfig-002-20250317    clang-21
-powerpc               randconfig-003-20250317    gcc-14.2.0
-powerpc                     redwood_defconfig    clang-21
-powerpc64             randconfig-001-20250317    gcc-14.2.0
-powerpc64             randconfig-002-20250317    gcc-14.2.0
-powerpc64             randconfig-003-20250317    clang-21
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-14.2.0
-riscv                            allyesconfig    clang-16
-riscv                 randconfig-001-20250317    gcc-14.2.0
-riscv                 randconfig-002-20250317    gcc-14.2.0
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-14.2.0
-s390                  randconfig-001-20250317    clang-15
-s390                  randconfig-002-20250317    clang-15
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-14.2.0
-sh                               allyesconfig    gcc-14.2.0
-sh                    randconfig-001-20250317    gcc-14.2.0
-sh                    randconfig-002-20250317    gcc-14.2.0
-sh                          rsk7264_defconfig    gcc-12.4.0
-sh                   rts7751r2dplus_defconfig    gcc-14.2.0
-sh                     sh7710voipgw_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-14.2.0
-sparc                             allnoconfig    gcc-14.2.0
-sparc                 randconfig-001-20250317    gcc-14.2.0
-sparc                 randconfig-002-20250317    gcc-14.2.0
-sparc64               randconfig-001-20250317    gcc-14.2.0
-sparc64               randconfig-002-20250317    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250317    gcc-12
-um                    randconfig-002-20250317    clang-21
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250317    gcc-12
-x86_64      buildonly-randconfig-002-20250317    clang-20
-x86_64      buildonly-randconfig-003-20250317    gcc-12
-x86_64      buildonly-randconfig-004-20250317    gcc-12
-x86_64      buildonly-randconfig-005-20250317    gcc-12
-x86_64      buildonly-randconfig-006-20250317    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                       common_defconfig    gcc-14.2.0
-xtensa                randconfig-001-20250317    gcc-14.2.0
-xtensa                randconfig-002-20250317    gcc-14.2.0
-
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
