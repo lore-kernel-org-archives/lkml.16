@@ -1,184 +1,143 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.tuxedocomputers.com (mail.tuxedocomputers.com [157.90.84.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03926206F18;
-	Tue, 18 Mar 2025 10:21:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD8B1F584C;
+	Tue, 18 Mar 2025 10:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=157.90.84.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742293275; cv=none; b=hUiw55ounf8E3KiklVQ2UMelqCc+OSyt5WmMIYeovCrRFCDiM28iqZsLoTDXvx7avyfmjXJlJ9lVzn/+APGhfWdOD3KRvxptOvme4rpEE1v2VhO1rqCcyx40XYj+p787WBS4QMJSbocEvAQWTDdLmoPGERSpXmUssLLxUz3Sl6c=
+	t=1742293288; cv=none; b=cdbhg1tOpJNa/KErafazGmrULEOdLrS/dZJmM+JWb4uHN6J5nwrGgtnlRxQ0SIYWONlKcnv7Z2mineNwHjoxxjcXv0Anaj5DpvrjNQ1vBCaKundIxAcAG8gma5L+lyCqnJYPrQZiEJyvTfNqilI2pSIgVHwNwj31P8Et+xB0tvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742293275; c=relaxed/simple;
-	bh=1gPhGppPtEU1UQcFojFgftE6iivSmorJZxJbxThHDHA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J+65c5nOprfCQNz5zuUD0cg/prIB8RWj03GdeP5GkBljV8kc0o1/dl0c/bihdSnn4+6iW/ejc4GY8TUyA2B41SIDA3X+fQIMUyZHo8JvxY6UCwTYacsd+mC7z5iGb0NJtXFuvQ2baSGU9fEO+Y9mYU7ZaHoLsbFxGozEJYQi66w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FI2zPbc1; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742293288; c=relaxed/simple;
+	bh=i9Cu+e09/ItgwbYnNEIqjTndSwM//DZAgokVgpiR0XA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kYL9Mc1MFA47DHjpl+EyEmQiWxq2zhfmGGYeObE59Ae0Sk+2mGYBzHA1mpTMRQHeZm9hQzDfbg0uGg5Ps3lBbLYQfxzz0/7sYJv5ggjoa8gkIYNbYdSeO9dpKzM7Y2hXXPTNnvBGG4gwT0TQUiPqwMzX6hCTBepxdIx8jYWVGd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com; spf=pass smtp.mailfrom=tuxedocomputers.com; dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b=FvvA7N7j; arc=none smtp.client-ip=157.90.84.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tuxedocomputers.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxedocomputers.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FI2zPbc1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742293270; x=1773829270;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1gPhGppPtEU1UQcFojFgftE6iivSmorJZxJbxThHDHA=;
-  b=FI2zPbc1dbBUeWC7GwsY0jGqDDcZN7ZflzDrENI/l0Rz489TqX5Mcp+h
-   xdcNASrQH6WnrZKt6X4O97FLhc+btKEJVlSkaIMqxRoE8R3hqMPtnOE1h
-   aY2U0/0r2Daxdhxf/Pv+tptkM/cGQJLtA8sdKKl2E+5chym/H2z+MpAMI
-   fo7B6bvgg8JoQf8vk5I8qf3BD8vMSLUtmIFDrhPTy1NAW/7ZLlqysa+ad
-   nXJ4zJETUk97d48ra2mN5PRT9OoramSwDE6qDn4DesMYvTq4oblTIdAJR
-   fbI7EGKtYdUf8rBMh5M9weSb+VMauqTsPzH4c+ZTSUc/756WpGHp22v7v
-   g==;
-X-CSE-ConnectionGUID: fmiK3fNrRlWK4+kjdwF7Og==
-X-CSE-MsgGUID: U5HMXTtqSwWLdxZEfP6TjA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="54054880"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="54054880"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 03:21:09 -0700
-X-CSE-ConnectionGUID: mZ2ne34kQa+pJONi9B0N6A==
-X-CSE-MsgGUID: UuTlPGtySMWV9KA/Icg2Nw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="122382913"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa008.fm.intel.com with ESMTP; 18 Mar 2025 03:21:07 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id C1E7A17B; Tue, 18 Mar 2025 12:21:05 +0200 (EET)
-Date: Tue, 18 Mar 2025 12:21:05 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: krzk@kernel.org, lgirdwood@gmail.com, broonie@kernel.org,
-	linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
-Message-ID: <Z9lJETLh2y27934q@black.fi.intel.com>
-References: <20250318052709.1731747-1-peng.fan@oss.nxp.com>
+	dkim=pass (1024-bit key) header.d=tuxedocomputers.com header.i=@tuxedocomputers.com header.b="FvvA7N7j"
+Received: from [192.168.42.116] (p5b164989.dip0.t-ipconnect.de [91.22.73.137])
+	(Authenticated sender: wse@tuxedocomputers.com)
+	by mail.tuxedocomputers.com (Postfix) with ESMTPSA id D9D062FC0191;
+	Tue, 18 Mar 2025 11:21:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tuxedocomputers.com;
+	s=default; t=1742293284;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=4TMDdN5thIAZQtC4HDADAYwgh1v90pYj/gKsOILt/Lo=;
+	b=FvvA7N7jUNoINZbZp1WQqPL57lhOMDt54pKVoV8uWc/o29ZFNfQAqaIqRWBTFzCz2v/Rh4
+	NwQW8YZ7UOnSmZv+wo4OLMSIkrMfDrLOgwJUuySod+7azXKI3qJVmreaumIRMIAtTfuXcD
+	HnrlLhcLH/vKxQOqthvYcyyLQTF8Q0s=
+Authentication-Results: mail.tuxedocomputers.com;
+	auth=pass smtp.auth=wse@tuxedocomputers.com smtp.mailfrom=wse@tuxedocomputers.com
+Message-ID: <5880f34b-0fc7-451a-ba2d-8a5d5c7900e5@tuxedocomputers.com>
+Date: Tue, 18 Mar 2025 11:21:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318052709.1731747-1-peng.fan@oss.nxp.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] Input: atkbd - Correctly map F13 - F24
+To: Hans de Goede <hdegoede@redhat.com>,
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250311180643.1107430-1-wse@tuxedocomputers.com>
+ <20250311180643.1107430-2-wse@tuxedocomputers.com>
+ <76c57b22-04d3-4331-a10c-b210db5f9055@redhat.com>
+ <9da24c58-25ab-4b21-b0ed-f777970affe7@tuxedocomputers.com>
+ <de3969b9-7134-4bfd-bc65-9d5b7e53a31c@redhat.com>
+Content-Language: en-US
+From: Werner Sembach <wse@tuxedocomputers.com>
+In-Reply-To: <de3969b9-7134-4bfd-bc65-9d5b7e53a31c@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 18, 2025 at 01:27:09PM +0800, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> Update the driver to fetch buck_gpio and buck_ds as gpio descriptors.
+Hi,
 
-GPIO
+Am 17.03.25 um 23:23 schrieb Hans de Goede:
+> Hi Werner,
+>
+> On 17-Mar-25 6:00 PM, Werner Sembach wrote:
+>> Hi,
+>>
+>> Am 17.03.25 um 12:58 schrieb Hans de Goede:
+>>> Hi Werner,
+>>>
+>>> On 11-Mar-25 19:06, Werner Sembach wrote:
+>>>> Currently only F23 is correctly mapped for PS/2 keyboards.
+>>>>
+>>>> Following to this table:
+>>>> https://download.microsoft.com/download/1/6/1/161ba512-40e2-4cc9-843a-923143f3456c/translate.pdf
+>>> That is a very interesting document, good find!
+>>>
+>>>> - F24 and Zenkaku/Hankaku share the same scancode, but since in real world
+>>>> Zenkaku/Hankaku keys seem to just use the tilde scancode, this patch binds the
+>>>> scancode to F24. Note that on userspace side the KEY_ZENKAKUHANKAKU keycode is
+>>>> currently not bound in xkeyboard-config, so it is (mostly*) unused anyway.
+>>>>
+>>>> * Qt on Wayland and therefore KDE on Wayland can see the keypress anyway for
+>>>> some reason and it is actually used in a touchpad toggle shortcut, but this is
+>>>> currently being fixed in both KDE and xkeyboard-config to make this less weird,
+>>>> so it could directly be fixed to correctly handle the F24 keypress instead.
+>>>>
+>>>> - The scancodes for F13-F22 are currently unmapped so there will probably be no
+>>>> harm in mapping them. This would also fix the issue that some of these keys
+>>>> can't be mapped as the target from userspace using the `setkeycodes` command.
+>>>>
+>>>> Signed-off-by: Werner Sembach <wse@tuxedocomputers.com>
+>>> Thanks, patch looks good to me:
+>>>
+>>> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+>> Thanks for reviewing.
+>>
+>> Should I resend the patch standalone because the first of this Patchset will likely be rejected?
+> I think this one will apply cleanly without applying patch 1/2
+> first, so no reason for a resend / v3 AFAICT.
+>
+> Let's wait and see what feedback Dmitry have once he can make
+> some time to take a look at this.
 
-> Then drop the usage of 'of_gpio.h' which should be deprecated.
+Ack
 
-s/should/is/
+Best regards,
 
-> Take commit 84618d5e31cf ("regulator: max8997:
+Werner
 
-s/Take/Based on/
-
-> Convert to GPIO descriptors") as a reference to make the changes.
-
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-
-Can be done via --to parameter to git-send-email.
-
-...
-
-> +	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
-
-Can be simply done as !!(temp_index & BIT(2)).
-
-> +	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
-
-Ditto.
-
-...
-
-> +	gpiod_set_value(s5m8767->buck_gpios[2], temp_index & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[1], (temp_index >> 1) & 0x1);
-> +	gpiod_set_value(s5m8767->buck_gpios[0], (temp_index >> 2) & 0x1);
-
-As per above.
-
-...
-
-Also the commit message doesn't tell anything about the existing DTS files.
-Do we have this device described in any in the kernel? Do we have any googled
-examples? Why I'm asking because often the issue is the incorrect setting of
-the polarity, which needs to be carefully checked, esp. for the voltage regulators
-case.
-
-...
-
-> +	const char *gpiods_names[3] = {"S5M8767 DS2", "S5M8767 DS3", "S5M8767 DS4"};
-> +	const char *gpiodvs_names[3] = {"S5M8767 SET1", "S5M8767 SET2", "S5M8767 SET3"};
-
-Add spaces after { and before }.
-
-...
-
-> +		for (i = 0; i < 3; i++) {
-> +			enum gpiod_flags flags;
->  
-> +			if (s5m8767->buck_gpioindex & BIT(2 - i))
-> +				flags = GPIOD_OUT_HIGH;
-> +			else
-> +				flags = GPIOD_OUT_LOW;
-> +
-> +			s5m8767->buck_gpios[i] = devm_gpiod_get_index(iodev->dev,
-> +								      "s5m8767,pmic-buck-dvs",
-> +								      i,
-> +								      flags);
-
-i and flags can be located on the same line, or I would rather move i to
-the line with the con_id.
-
-			s5m8767->buck_gpios[i] = devm_gpiod_get_index(iodev->dev,
-								      "s5m8767,pmic-buck-dvs", i,
-								      flags);
-
-> +			if (IS_ERR(s5m8767->buck_gpios[i])) {
-> +				ret = PTR_ERR(s5m8767->buck_gpios[i]);
-> +				return dev_err_probe(iodev->dev, ret, "invalid gpio[%d]: %d\n",
-> +						     i, ret);
-
-ret will be printed twice. This should be as simple as
-
-			if (IS_ERR(s5m8767->buck_gpios[i]))
-				return dev_err_probe(iodev->dev, PTR_ERR(s5m8767->buck_gpios[i]),
-						     "invalid gpio[%d]\n", i);
-
-> +			}
->  
-> +			gpiod_set_consumer_name(s5m8767->buck_gpios[i], gpiodvs_names[i]);
-> +		}
-
-...
-
-> +	for (i = 0; i < 3; i++) {
-
-Both comments as per above apply here, in this for-loop.
-
-> +		s5m8767->buck_ds[i] = devm_gpiod_get_index(iodev->dev,
-> +							   "s5m8767,pmic-buck-ds",
-> +							   i, GPIOD_OUT_LOW);
-> +		if (IS_ERR(s5m8767->buck_ds[i])) {
-> +			ret = PTR_ERR(s5m8767->buck_ds[i]);
-> +			return dev_err_probe(iodev->dev, ret, "can't get GPIO %d (%d)\n",
-> +					     i, ret);
-> +		}
-> +		gpiod_set_consumer_name(s5m8767->buck_ds[i], gpiods_names[i]);
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>
+>>>> ---
+>>>>    drivers/input/keyboard/atkbd.c | 12 ++++++------
+>>>>    1 file changed, 6 insertions(+), 6 deletions(-)
+>>>>
+>>>> diff --git a/drivers/input/keyboard/atkbd.c b/drivers/input/keyboard/atkbd.c
+>>>> index 3598a21d9d014..4bd6e6ef0715e 100644
+>>>> --- a/drivers/input/keyboard/atkbd.c
+>>>> +++ b/drivers/input/keyboard/atkbd.c
+>>>> @@ -84,12 +84,12 @@ static const unsigned short atkbd_set2_keycode[ATKBD_KEYMAP_SIZE] = {
+>>>>    #include "hpps2atkbd.h"    /* include the keyboard scancodes */
+>>>>      #else
+>>>> -      0, 67, 65, 63, 61, 59, 60, 88,  0, 68, 66, 64, 62, 15, 41,117,
+>>>> -      0, 56, 42, 93, 29, 16,  2,  0,  0,  0, 44, 31, 30, 17,  3,  0,
+>>>> -      0, 46, 45, 32, 18,  5,  4, 95,  0, 57, 47, 33, 20, 19,  6,183,
+>>>> -      0, 49, 48, 35, 34, 21,  7,184,  0,  0, 50, 36, 22,  8,  9,185,
+>>>> -      0, 51, 37, 23, 24, 11, 10,  0,  0, 52, 53, 38, 39, 25, 12,  0,
+>>>> -      0, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0, 85,
+>>>> +      0, 67, 65, 63, 61, 59, 60, 88,183, 68, 66, 64, 62, 15, 41,117,
+>>>> +    184, 56, 42, 93, 29, 16,  2,  0,185,  0, 44, 31, 30, 17,  3,  0,
+>>>> +    186, 46, 45, 32, 18,  5,  4, 95,187, 57, 47, 33, 20, 19,  6,183,
+>>>> +    188, 49, 48, 35, 34, 21,  7,184,189,  0, 50, 36, 22,  8,  9,185,
+>>>> +    190, 51, 37, 23, 24, 11, 10,  0,191, 52, 53, 38, 39, 25, 12,  0,
+>>>> +    192, 89, 40,  0, 26, 13,  0,193, 58, 54, 28, 27,  0, 43,  0,194,
+>>>>          0, 86, 91, 90, 92,  0, 14, 94,  0, 79,124, 75, 71,121,  0,  0,
+>>>>         82, 83, 80, 76, 77, 72,  1, 69, 87, 78, 81, 74, 55, 73, 70, 99,
+>>>>    
