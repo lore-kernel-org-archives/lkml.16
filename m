@@ -1,225 +1,204 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D551AA1E0;
-	Tue, 18 Mar 2025 11:17:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0725209F23
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742296664; cv=none; b=KUXYGfJEVUkeSqNSQgnFz+QiQlVx0zs4iyvIJzMQhFv/ItYTRU6CAFMikEXUPHqAvn0sgdRj8E80/2OqZHjFIFCXMzk+WFDJXClVR9xYZIuoQikTBblQhnU2vW2dsNdIvdxF/cHoCbSdyGtkqRsE4R8/5S1ch9Tgwtxwf5palJM=
+	t=1742296667; cv=none; b=iuE1vU+ffbO6x3UWDKK71CrcCU9MwByTP4ZCipEQhXNjBZ8ypzGqr1Zgbe/k78Iv//8awgggFudXa0bKt1yiKY2gAblnnNzgQytsnm9ovzy3XHJ8Wvw7Pbz8L+Ye5dQCkWBPo58UGAUtA8Uxih8QnTGTozmqUvivC/8WC7qgCqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742296664; c=relaxed/simple;
-	bh=2Ec7Z1ZyLJXW2zP9y6qMMcTSwNBqwQ7NVjLvy+7iE8Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OCvtXH/fmaX0puSO1p0VQyKQF4q5kX2B8cQvDwix58KY0hH0WlFKsDmsBoUmGisb+gqZwB3Gib0AWmj0zBu2/vqy+nC21NgCC/kfGPJTjYk//HGFfxHnIP9lzAGTN022nsNHoJcoMdIXGqoQ0wsTTBSTv/I4fqyd9uczbTd3UMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TE9sb8UL; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742296667; c=relaxed/simple;
+	bh=Fafo4CwRHV95e7IPe3BLZZs4ddv0PwO+JqTuBNF1VxI=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=iCGgKvjKt64p8Wo9mi5CK3g595dNKumtDpH44/9zYb4yEfuXcVfXyVAEH7aHhV9xRBJBGPLvkQwvw5Cps69kLG9eGm6DFISJTHBfwo+pLaA8JxVKbKvip0xiXXuZpMTUOPb9laqxw5AxHrPDA7HRPQsJKda6Mq1AXlg7fr9VrUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XjRsca0Q; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TE9sb8UL"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5497e7bf2e0so6302327e87.3;
-        Tue, 18 Mar 2025 04:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742296660; x=1742901460; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=mOlZvPQ7plTaQIDmVp+CNwq3xUPH59xTsSW9rNTGInQ=;
-        b=TE9sb8ULiGxVjvgZeuPas3bYAye5lP6DLvBL9gHQmWmc+D+tVu4f4rRpSUb9BmrS/V
-         cl5HxH4miK8KAOW+5nMkgAhZxaKDbB/F2GR7HRt+23nPjKYpao2uQa95dV0ecSfL/0kD
-         ba5mVeAwJAjyT6Z5E8SBCz8V1CAGb5+5teMNRDRcbHldgyPo0mIhZp9ghgGCYyQWTqRO
-         7NYYnstV/wlzmLTTyVdMHTB/e2zoiDUQJweHcGDsYTp7qeIiDnhR9/cx+FOZd0/0p7+K
-         B4J6VhK3/A0AqQCI/qgK4iTeYtPPsZ3zLFGSEOa5DLosqUZMf4zIU8HQ8dB0a0+rIUFM
-         e7bQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742296660; x=1742901460;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=mOlZvPQ7plTaQIDmVp+CNwq3xUPH59xTsSW9rNTGInQ=;
-        b=LqEmD9eXwJOVx/qvpfmfq+L1o6gtMrgISJv8XJcpJYqLiuvAPWYE68lSEQ9pVS3mWJ
-         8BQlbCYibhfbtEUo0jmqreJLpfeBz8QrUYsuwgsFVAus8P9MW3PZFWe1U2yxSm9F/diJ
-         c0Iy4ClDytK3EwTVrZO7/eq+/hHE6JMKt49UD24xwXrndrZySPXZI7oQ+oHoIxtmXNdY
-         +72ARUCoZMvdCRiv3JNEop34QfcnWcrciuzu86jjHltw2Q4Fqoj7nJzXIq+3D0naZbFY
-         5iaL1NbOS3gP4jcvmndoo7JpwLO3MLZ96McY1VQcf8HyKnWPxItuws0jVDUgPwv3bcv6
-         JlKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXrI0sTOiE7bV6+q3ePohU8BXmYChtR4j5X/JW4oBW7923EgDFyu7hQmoldcbUfDv0HiSdY4vfohE=@vger.kernel.org, AJvYcCXIpKMUxCoGSvwzjYfxT+Re8G6JHknCMqCAWzeDf4nE07v/lKMBUQuxVD6VJD1UDhiGgWgy0ewjVhQ5hRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8a/9PMkCV0Rf9K4e+urKc+YWHBuwTy09ZQglnZwYQg/heJ0eH
-	5llk+Lqm9Rg+1ltW/dWjCh3XpkL3kpqfkCOup/mW5WxNmAXOwUOG
-X-Gm-Gg: ASbGncsGPOYLKy7acU1POCFIl4xFHbu6mU8TrRdyo2j+ngRtbgJ2GRZgnG9GqTGLKWS
-	RxFG6K5PD+wMlWXBgsCAWCJM1WYQHvFpOQ3Lp70NarpFQ5rzZzOIctO9oCYP6eaXCnU7q+RqT3s
-	E2+Tzx+gouoXg0UuERp7LHdUUquEgagECmNpZqhZwALYJ6ppOKUkmme3NV8pMaSLQg6vFG4nzw6
-	xDarTX5WiNScXcBo5ntvOKElV5b5gWSmwu0u104LN/WiWxjvdfNBA67YsboTqFVg5mhHGyigG8T
-	76jJu209XTsawUSNF9kRsftyImF5NY7pUoUO9FG9yJKB9etVib+fzB1NkPjs0NP0m0Gc
-X-Google-Smtp-Source: AGHT+IHp+pjQHewdxhxdhXjAb7AHr19mAfFloImy7dF2DkvFzyLcoPPgreehc44oS0N8uADZE3CHGQ==
-X-Received: by 2002:a05:6512:308f:b0:549:86c8:113a with SMTP id 2adb3069b0e04-54a03b8d777mr2826078e87.15.1742296659689;
-        Tue, 18 Mar 2025 04:17:39 -0700 (PDT)
-Received: from [172.16.183.207] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba864de4sm1621258e87.139.2025.03.18.04.17.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Mar 2025 04:17:39 -0700 (PDT)
-Message-ID: <cda899c6-4330-465c-80b2-63c9da73505b@gmail.com>
-Date: Tue, 18 Mar 2025 13:17:38 +0200
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XjRsca0Q"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742296666; x=1773832666;
+  h=date:from:to:cc:subject:message-id;
+  bh=Fafo4CwRHV95e7IPe3BLZZs4ddv0PwO+JqTuBNF1VxI=;
+  b=XjRsca0Q39o3yGCoS27EybvDTCy4ivpilWz6Z2EarEwboQ1WVoLU/CdO
+   YwJ5rz05BNpZzFcaivLAzz+fF1jRItPfunwvZRM89A9vxhzhZYri4d8EY
+   8Y4aX231Y3ek5Z27z1eg8XUlO/j5P26QERXEE/i+EP5dOsUATi59X/wkt
+   E4835AADrabmOgp5SunMpL3ls0ZtkiSkVgzn1W+0CXZX9r3sb+uTxDzEb
+   ECjIgCEo3bOd4+hyG6DV+p9pzg0TulfNirQFbi8Q3tX0ZgNYdVM0cE2gK
+   Bri33O1GKHAFw9dx35vNIDKrY+ZwFHxVew46sHzINSmzlwWPjqQ0b8vbC
+   Q==;
+X-CSE-ConnectionGUID: ArwkbRhtTdyGM9Q+OCQIiA==
+X-CSE-MsgGUID: IWLVydNlR9SRJG4K4FobkQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="60823873"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="60823873"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 04:17:45 -0700
+X-CSE-ConnectionGUID: 7/vN4yYIQXimRhuoavMbiA==
+X-CSE-MsgGUID: ghtcZaboTwmaSRN5ZzdCtA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="127265428"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 18 Mar 2025 04:17:43 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuUx4-000Dhj-0k;
+	Tue, 18 Mar 2025 11:17:42 +0000
+Date: Tue, 18 Mar 2025 19:17:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: "x86-ml" <x86@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Subject: [tip:sched/core] BUILD SUCCESS
+ 34929a070b7fd06c386080c926b61ee844e6ad34
+Message-ID: <202503181952.HENZUrN1-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 7/7] Documentation: Add sysfs documentation for PSCRR
- reboot reason tracking
-To: Oleksij Rempel <o.rempel@pengutronix.de>,
- Sebastian Reichel <sre@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
- =?UTF-8?Q?S=C3=B8ren_Andersen?= <san@skov.dk>,
- Guenter Roeck <groeck@chromium.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>, chrome-platform@lists.linux.dev
-References: <20250318094716.3053546-1-o.rempel@pengutronix.de>
- <20250318094716.3053546-8-o.rempel@pengutronix.de>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250318094716.3053546-8-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
 
-On 18/03/2025 11:47, Oleksij Rempel wrote:
-> Add documentation for the Power State Change Reason Recorder (PSCRR)
-> sysfs interface, which allows tracking of system shutdown and reboot
-> reasons. The documentation provides details on available sysfs entries
-> under `/sys/kernel/pscrr/`, explaining their functionality, example usage,
-> and how they interact with different backend storage options (e.g., NVMEM).
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
-> changes v7:
-> - document expected values
-> ---
->   .../ABI/testing/sysfs-kernel-reboot-pscrr     | 79 +++++++++++++++++++
->   1 file changed, 79 insertions(+)
->   create mode 100644 Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr b/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
-> new file mode 100644
-> index 000000000000..9aa3df8f2fc7
-> --- /dev/null
-> +++ b/Documentation/ABI/testing/sysfs-kernel-reboot-pscrr
-> @@ -0,0 +1,79 @@
-> +What:		/sys/kernel/pscrr/reason
-> +Date:		April 2025
-> +KernelVersion:  6.15
-> +Contact:	Oleksij Rempel <o.rempel@pengutronix.de>
-> +Description:
-> +		This file provides access to the last recorded power state
-> +		change reason. The storage backend is configurable and, if
-> +		supported, the reason may be stored persistently in an
-> +		NVMEM cell or another backend.
-> +
-> +		Reading this file returns an integer representing the last
-> +		recorded shutdown or reboot cause.
-> +
-> +		Writing an integer value to this file sets the reason to be
-> +		stored and recorded for system analysis.
-> +
-> +		Example usage (values are for illustration and may not reflect
-> +		actual reasons used in a given system):
-> +		  Read:
-> +			$ cat /sys/kernel/pscrr/reason
-> +			3   # (Example: Power loss event, may differ per system)
-> +
-> +		  Write:
-> +			$ echo 5 > /sys/kernel/pscrr/reason
-> +			# Sets the reason to 5 (Example: User-triggered reboot,
-> +			# this may not be a real value in your system)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git sched/core
+branch HEAD: 34929a070b7fd06c386080c926b61ee844e6ad34  include/{topology,cpuset}: Move dl_rebuild_rd_accounting to cpuset.h
 
-nit:
-Now that the 'number' <=> 'reason' relation is fixed, we might drop the 
-"may differ" etc. Perhaps just:
+elapsed time: 1464m
 
-		Example usage:
-		  Read:
-			$ cat /sys/kernel/pscrr/reason
-			3   # (Example: Power loss event)
+configs tested: 127
+configs skipped: 4
 
-		  Write:
-			$ echo 5 > /sys/kernel/pscrr/reason
-			# Sets the reason to 5 (Example: User-triggered reboot)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Maybe adding a note that not all values are supported on all systems.
+tested configs:
+alpha                             allnoconfig    gcc-14.2.0
+alpha                            allyesconfig    gcc-14.2.0
+alpha                               defconfig    gcc-14.2.0
+arc                              allmodconfig    gcc-13.2.0
+arc                               allnoconfig    gcc-13.2.0
+arc                              allyesconfig    gcc-13.2.0
+arc                                 defconfig    gcc-14.2.0
+arc                   randconfig-001-20250317    gcc-13.2.0
+arc                   randconfig-002-20250317    gcc-13.2.0
+arm                              allmodconfig    gcc-14.2.0
+arm                               allnoconfig    clang-21
+arm                              allyesconfig    gcc-14.2.0
+arm                      footbridge_defconfig    clang-17
+arm                        multi_v7_defconfig    gcc-11.5.0
+arm                   randconfig-001-20250317    gcc-14.2.0
+arm                   randconfig-002-20250317    gcc-14.2.0
+arm                   randconfig-003-20250317    gcc-14.2.0
+arm                   randconfig-004-20250317    clang-21
+arm                        spear6xx_defconfig    clang-15
+arm64                            allmodconfig    clang-19
+arm64                             allnoconfig    gcc-14.2.0
+arm64                               defconfig    gcc-6.5.0
+arm64                 randconfig-001-20250317    gcc-14.2.0
+arm64                 randconfig-002-20250317    gcc-14.2.0
+arm64                 randconfig-003-20250317    gcc-14.2.0
+arm64                 randconfig-004-20250317    gcc-14.2.0
+csky                              allnoconfig    gcc-14.2.0
+csky                                defconfig    gcc-14.2.0
+csky                  randconfig-001-20250317    gcc-14.2.0
+csky                  randconfig-002-20250317    gcc-14.2.0
+hexagon                          allmodconfig    clang-17
+hexagon                           allnoconfig    clang-21
+hexagon                          allyesconfig    clang-21
+hexagon                             defconfig    clang-21
+hexagon               randconfig-001-20250317    clang-21
+hexagon               randconfig-002-20250317    clang-21
+i386                             allmodconfig    gcc-12
+i386                              allnoconfig    gcc-12
+i386                             allyesconfig    gcc-12
+i386        buildonly-randconfig-001-20250317    gcc-12
+i386        buildonly-randconfig-002-20250317    clang-20
+i386        buildonly-randconfig-003-20250317    clang-20
+i386        buildonly-randconfig-004-20250317    clang-20
+i386        buildonly-randconfig-005-20250317    gcc-12
+i386        buildonly-randconfig-006-20250317    clang-20
+i386                                defconfig    clang-20
+loongarch                        allmodconfig    gcc-14.2.0
+loongarch                         allnoconfig    gcc-14.2.0
+loongarch             randconfig-001-20250317    gcc-14.2.0
+loongarch             randconfig-002-20250317    gcc-14.2.0
+m68k                             allmodconfig    gcc-14.2.0
+m68k                              allnoconfig    gcc-14.2.0
+m68k                             allyesconfig    gcc-14.2.0
+m68k                            mac_defconfig    gcc-14.2.0
+microblaze                       allmodconfig    gcc-14.2.0
+microblaze                        allnoconfig    gcc-14.2.0
+microblaze                       allyesconfig    gcc-14.2.0
+mips                              allnoconfig    gcc-14.2.0
+mips                       rbtx49xx_defconfig    gcc-14.2.0
+nios2                             allnoconfig    gcc-14.2.0
+nios2                 randconfig-001-20250317    gcc-14.2.0
+nios2                 randconfig-002-20250317    gcc-14.2.0
+openrisc                          allnoconfig    gcc-14.2.0
+openrisc                         allyesconfig    gcc-14.2.0
+openrisc                            defconfig    gcc-14.2.0
+openrisc                 simple_smp_defconfig    gcc-10.5.0
+parisc                           allmodconfig    gcc-14.2.0
+parisc                            allnoconfig    gcc-14.2.0
+parisc                           allyesconfig    gcc-14.2.0
+parisc                              defconfig    gcc-14.2.0
+parisc                randconfig-001-20250317    gcc-14.2.0
+parisc                randconfig-002-20250317    gcc-14.2.0
+powerpc                          allmodconfig    gcc-14.2.0
+powerpc                           allnoconfig    gcc-14.2.0
+powerpc                          allyesconfig    clang-21
+powerpc                      arches_defconfig    gcc-11.5.0
+powerpc                     mpc83xx_defconfig    clang-21
+powerpc               randconfig-001-20250317    clang-15
+powerpc               randconfig-002-20250317    clang-21
+powerpc               randconfig-003-20250317    gcc-14.2.0
+powerpc                     redwood_defconfig    clang-21
+powerpc64             randconfig-001-20250317    gcc-14.2.0
+powerpc64             randconfig-002-20250317    gcc-14.2.0
+powerpc64             randconfig-003-20250317    clang-21
+riscv                            allmodconfig    clang-21
+riscv                             allnoconfig    gcc-14.2.0
+riscv                            allyesconfig    clang-16
+riscv                 randconfig-001-20250317    gcc-14.2.0
+riscv                 randconfig-002-20250317    gcc-14.2.0
+s390                             allmodconfig    clang-18
+s390                              allnoconfig    clang-15
+s390                             allyesconfig    gcc-14.2.0
+s390                  randconfig-001-20250317    clang-15
+s390                  randconfig-002-20250317    clang-15
+sh                               allmodconfig    gcc-14.2.0
+sh                                allnoconfig    gcc-14.2.0
+sh                               allyesconfig    gcc-14.2.0
+sh                    randconfig-001-20250317    gcc-14.2.0
+sh                    randconfig-002-20250317    gcc-14.2.0
+sh                          rsk7264_defconfig    gcc-12.4.0
+sh                   rts7751r2dplus_defconfig    gcc-14.2.0
+sh                     sh7710voipgw_defconfig    gcc-14.2.0
+sparc                            allmodconfig    gcc-14.2.0
+sparc                             allnoconfig    gcc-14.2.0
+sparc                 randconfig-001-20250317    gcc-14.2.0
+sparc                 randconfig-002-20250317    gcc-14.2.0
+sparc64               randconfig-001-20250317    gcc-14.2.0
+sparc64               randconfig-002-20250317    gcc-14.2.0
+um                               allmodconfig    clang-19
+um                                allnoconfig    clang-21
+um                               allyesconfig    gcc-12
+um                             i386_defconfig    gcc-12
+um                    randconfig-001-20250317    gcc-12
+um                    randconfig-002-20250317    clang-21
+x86_64                            allnoconfig    clang-20
+x86_64                           allyesconfig    clang-20
+x86_64      buildonly-randconfig-001-20250317    gcc-12
+x86_64      buildonly-randconfig-002-20250317    clang-20
+x86_64      buildonly-randconfig-003-20250317    gcc-12
+x86_64      buildonly-randconfig-004-20250317    gcc-12
+x86_64      buildonly-randconfig-005-20250317    gcc-12
+x86_64      buildonly-randconfig-006-20250317    gcc-12
+x86_64                              defconfig    gcc-11
+xtensa                            allnoconfig    gcc-14.2.0
+xtensa                       common_defconfig    gcc-14.2.0
+xtensa                randconfig-001-20250317    gcc-14.2.0
+xtensa                randconfig-002-20250317    gcc-14.2.0
 
-
-> +
-> +		Values are defined in:
-> +		  - `include/linux/reboot.h` (enum psc_reason)
-> +
-> +		Supported Values:
-> +		Defined in `include/linux/reboot.h` (enum psc_reason):
-> +
-> +		+-------+---------------------------+--------------------------+
-> +		| Value | Symbol                    | Description              |
-> +		+-------+---------------------------+--------------------------+
-> +		| 0     | PSCR_UNKNOWN              | Unknown or unspecified   |
-> +		|       |                           | power state change reason|
-> +		+-------+---------------------------+--------------------------+
-> +		| 1     | PSCR_UNDER_VOLTAGE        | Supply voltage drop below|
-> +		|       |                           | safe threshold.          |
-> +		+-------+---------------------------+--------------------------+
-> +		| 2     | PSCR_OVER_CURRENT         | Excessive current draw,  |
-> +		|       |                           | potential short circuit. |
-> +		+-------+---------------------------+--------------------------+
-> +		| 3     | PSCR_REGULATOR_FAILURE    | Failure in voltage       |
-> +		|       |                           | regulator, preventing    |
-> +		|       |                           | stable power delivery.   |
-> +		+-------+---------------------------+--------------------------+
-> +		| 4     | PSCR_OVER_TEMPERATURE     | Unsafe system temperature|
-> +		|       |                           | detected by sensors.     |
-> +		+-------+---------------------------+--------------------------+
-> +		| 5     | PSCR_EC_PANIC             | Shutdown/reboot triggered|
-> +		|       |                           | by Embedded Controller   |
-> +		|       |                           | (EC) panic.              |
-> +		+-------+---------------------------+--------------------------+
-> +
-> +		(Note: The actual reason codes used on a specific system depend
-> +		on hardware capabilities and configuration.)
-
-I like this. Nice and clean.
-
-A side note which you can consider if you feel like:
-This, as far as I understand, will also make the ABI out of this. So, 
-perhaps there should be comments in enum psc_reason and the defines in 
-Defined in 'include/linux/reboot.h' that they are part of an ABI, and 
-must not be changed? I suppose user-space tools may get unhappy if these 
-values change between the kernel versions.
-
-> +
-> +What:		/sys/kernel/pscrr/reason_boot
-> +Date:		April 2025
-> +KernelVersion:  6.15
-> +Contact:	Oleksij Rempel <o.rempel@pengutronix.de>
-> +Description:
-> +		This file provides the last recorded power state change reason
-> +		from before the current system boot. If a supported backend
-> +		(e.g., NVMEM) is configured, this value is retained across
-> +		reboots.
-> +
-> +		Example usage (values are for illustration and may not reflect
-> +		actual reasons used in a given system):
-> +		  Read:
-> +			$ cat /sys/kernel/pscrr/reason_boot
-> +			2   # (Example: Over-temperature shutdown, may differ per system)
-> +
-> +		Supported Values:
-> +		Same as `/sys/kernel/pscrr/reason` (see above).
-> +
-
-All in all, this looks very good to me.
-
-Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
-
-Yours,
-	-- Matti
+--
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
