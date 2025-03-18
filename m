@@ -1,32 +1,50 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5B2749C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:33:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAA2749C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:34:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742286816; cv=none; b=lM3ii4+RnkKykcND1xIizzpVQoBHmy+lPlH7TOEDJVIQmPKP7kcwZ5yLgYIipbCo0/apmSpJm0Jmr6d4/CQs++I//lKZXF9vLjmDleMUe11mVNrg09h4kSF3JDVZSiWA30O5OUegYq19reCdzdeSuv9akC4wxA6Ci6ukhBwZdMA=
+	t=1742286887; cv=none; b=LtoVNVn9xMuD8VtNKddCh/nekc2AzkK+o227GKD08xhRIxNn0UddIVJje9JjCxpYqATKQNO+qTvxtk6tAHpw6axtGzpjHeQcuH7ADtrYGE6Xc3r1gWZXY9AzcH+3lgYbW96Kf5Smfsqc0rg+XDV/t5Yg/lOs1pPaZFWHXgwDJRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742286816; c=relaxed/simple;
-	bh=k+jhoDGf0CtbnXKWHyWGrWpKW7UFfmRs59cee1LMCEg=;
+	s=arc-20240116; t=1742286887; c=relaxed/simple;
+	bh=DjN+afDglTdHkoGMwUPO7LH68Pieph+l4aJYL2cdGvI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BfDnfEQ8Az3pSG8NGq4IiEpdefulJRVEvMYZeN4CLAh6tbwwBYjZ6YUJG77Wq4JwvzzF6ASJLO/zE+hKxuDakHBWvvDmvPBxsRjGEgMZG+ogy6sqdO4yueTmnmnpEhNFoBb4hDlAb3Rsu1q2hjq2c3jbh9lCKItV5fvpoavdK1M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id C08A968AFE; Tue, 18 Mar 2025 09:33:30 +0100 (CET)
-Date: Tue, 18 Mar 2025 09:33:30 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: Huan Yang <link@vivo.com>
-Cc: Christoph Hellwig <hch@lst.de>, akpm@linux-foundation.org,
-	bingbu.cao@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-mm@kvack.org, lorenzo.stoakes@oracle.com,
-	opensource.kernel@vivo.com, rppt@kernel.org, ryan.roberts@arm.com,
-	urezki@gmail.com, ziy@nvidia.com, vivek.kasireddy@intel.com
-Subject: Re: [PATCH] mm/vmalloc: fix mischeck pfn valid in vmap_pfns
-Message-ID: <20250318083330.GB18902@lst.de>
-References: <20250317055304.GB26662@lst.de> <5a12454c-16a1-4400-a764-f49293d8dece@vivo.com> <20250318064805.GA16121@lst.de> <5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUg6EzE77HIkBFCUdzzwQQZjIDNnnsHcm0U2YHDRHWg+qngIUyxFhQmpWtJQIsh/RuS3JLFVl0hvvmC880YhkCJokB/xJKNauALw3QII+FV2Tq4d40cvtGtB2LX/RVkfkCAU5bbcD1hAGoAIpdHN3mfCtVZ19HyJ1MUTU2o8NPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNzKZ/6e; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNzKZ/6e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4CDCC4CEDD;
+	Tue, 18 Mar 2025 08:34:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742286886;
+	bh=DjN+afDglTdHkoGMwUPO7LH68Pieph+l4aJYL2cdGvI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lNzKZ/6eqnj9SlR5UDUbqR5KFkr5+Rngrj5iQ4sMylzc64xejPnOVpiBCITP/LQqO
+	 slzJGUuiQ0M4d/qgH+JRYRaVsAINTx2jrBdB5GY4j8vAuw/470YiyOKvo+boDffA7W
+	 /8OuEDwukp2sjeS/9yz2dleZ364dfXSIYQ73dB/p3c/Xinm4Y8oXurtptEL2jwHFrp
+	 VHixFinNtv0S2AE4eM2FB/zte3fHlOC9XXfhNnG3qJ5E6zm6vtR+OO4tTLSlrHlReG
+	 vBqlpknfiycRP65XwnpjP660N1TIBMh44yukhCLgXaVxvzNFSmoG/Plu1lo8vMB5uU
+	 MS4isP6d76rfA==
+Date: Tue, 18 Mar 2025 09:34:41 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Xin Li <xin@zytor.com>
+Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	"Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/5] x86/cpuid: Use u32 in instead of uint32_t in
+ <asm/cpuid/api.h>
+Message-ID: <Z9kwIYrOwO8nOpAE@gmail.com>
+References: <20250317221824.3738853-1-mingo@kernel.org>
+ <20250317221824.3738853-6-mingo@kernel.org>
+ <b7920c2c-1051-4674-994c-d1b681cf7988@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,28 +53,50 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <b7920c2c-1051-4674-994c-d1b681cf7988@zytor.com>
 
-On Tue, Mar 18, 2025 at 04:20:17PM +0800, Huan Yang wrote:
-> This prevents us from properly invoking vmap, which is why we have turned to using vmap_pfn instead.
->
-> Even if a folio-based vmap is implemented, it still cannot handle mapping multiple folio ranges of physical
->
-> memory to vmalloc regions. A range of folio is important, it maybe an offset in memfd, no need entire folio.
->
-> So, I still consider vmap_pfn to be the optimal solution for this specific scenario. :)
 
-No, vmap_pfn is entirely for memory not backed by pages or folios,
-i.e. PCIe BARs and similar memory.  This must not be mixed with proper
-folio backed memory.
+* Xin Li <xin@zytor.com> wrote:
 
-So you'll need a vmap for folios to support this use case.
+> On 3/17/2025 3:18 PM, Ingo Molnar wrote:
+> > Use u32 instead of uint32_t in hypervisor_cpuid_base().
+> > 
+> > Yes, I realize uint32_t is used in Xen code et al, but this is
+> > a core x86 architecture header and we should standardize on the
+> 
+> no "we", right?
 
->
->> historically backed by pages and now folios.
->
-> So by HVO, it also not backed by pages, only contains folio head, each tail pfn's page struct go away.
+That's a stupid rule, I don't know where it came from, and I never 
+enforced it. It's not in Documentation/process/coding-style.rst.
 
-And a fully folios based vmap solves that problem.
+Linus doesn't use this pointless rule of 'pronoun avoidance' in 
+changelogs either:
 
+  00a7d39898c8 ("fs/pipe: add simpler helpers for common cases")
+
+  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=00a7d39898c8010bfd5ff62af31ca5db34421b38  
+
+    It turns out that we don't have _that_ many places that access these
+                      ^^
+    fields directly and were affected, but we have more than we strictly
+                                           ^^                ^^
+    should have, because our low-level helper functions have been designed
+    to have intimate knowledge of how the pipes work.
+    
+    And as a result, that random noise of direct 'pipe->head' and
+    'pipe->tail' accesses makes it harder to pinpoint any actual potential
+    problem spots remaining.
+    
+    For example, we didn't have a "is the pipe full" helper function, but
+                 ^^
+    instead had a "given these pipe buffer indexes and this pipe size, is
+    the pipe full".  That's because some low-level pipe code does actually
+    want that much more complicated interface.
+
+In changelogs 'we' when used as a generic personal pronoun means the 
+kernel and the kernel community in general. It's a perfectly fine 
+grammatical construct.
+
+Thanks,
+
+	Ingo
