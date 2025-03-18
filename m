@@ -1,138 +1,150 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE324C6D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 06:35:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EA5E46426;
+	Tue, 18 Mar 2025 06:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742279715; cv=none; b=uQZlwzZKPH1AwEt/qkLzRDM9PJ3zxDc2EoyQW8UGRsy84Bm1JH8OtqY5qomC1Iz3jTzDGHKH9hQ/BzazxnsR4zXwTIeaxtkNAb4ZQ6wEGzlKNb3SM9dtldM3Te6PScXUTFqoSdMe0eCY8i4x+KO1NS6XP77lBpc1HOrq+23mc98=
+	t=1742279751; cv=none; b=mqy835bngdJVwjhCw13Ml1gGkKQwAwOHFPrj5rH0fjO4wSXcoa6Uk6NceysMN9ox+KKEzwRgN0eX1zNzoiu01YWfxcIQrVB3FfuekSfCNDigHv5GC67Bp0aw+hYs0qwwI/4yqftVoBRvokN7KoRlocxsBrZB4KrL1WYVu1aCsbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742279715; c=relaxed/simple;
-	bh=PryEXhcXzXzoSLQ+jG9MOOOhQkkDY7IE0CkRSj18qSo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=chk898RpBvdJr8iOyLf6xSc+v1EjNDRFQAeRMElbGWgbjwFXpHnp7/NvHccD/CTdmtHT6WMmkGPW5AQxLllZL2lws3z9IL07O/qLq+G02vTtB3KPnIxzSCx8BWJtBnKDI/0yvixPJ9RK6oxQ0RltmDvuDbhR3eftOBpLH/h7E64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=vbFoi6uv; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742279751; c=relaxed/simple;
+	bh=rOHbCLNwUuQ0MCHqcCbere0AhcqH/e8hZR21LTzO8A0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=WYzXSZ/hTL/pUyaQzjS9qOwKRYsYwlFp/AQ/Lim4SXxT3Gz0Ut5aOX1oCtvWPKcdUCnL/SXXH7IzYSHlOEf4CslJqPW4JhB+BViDIJKXW2XKQmoXW604GHlWkQS0A9r9obCR+J1t4POMfJMjmv+NlQhw7DO2/mHy0ksSLM2toTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XmAUG3f0; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vbFoi6uv"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223fb0f619dso86443225ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 23:35:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742279713; x=1742884513; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=U6F27MGkl6WcOKIJ4ECnYu/HOFV7Uz3She2p4aXiUWw=;
-        b=vbFoi6uvanuqNU+e3irnqgpyWhyo4pngagj0m938yePxHWczYQAcJYYKxVxGFDdaBs
-         7ca0mvYX17QhnMLNeWFEGsyp9zxoW8tbHIubjEIlJ5tcm2R53/KRZu8czaZcr0huLDWq
-         nUwTe4kmrEk86cU2knNLzHHqW3cDLTv3VwLzmh2DS2To/zky61+/kQoy+wZOAEXk/cFF
-         psM9p7ZywQypam7o3lAGIdx6RCzdtlqsGeWT1OiavYUe9pgxBKjHfpf9O6H20zHqYCnJ
-         Bde7bTMSPM2WsWNpUw7DEqfT0efduEkOLp44Co6mOzcnjo5FtHI70uunFCWzCuG37KEA
-         tljg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742279713; x=1742884513;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=U6F27MGkl6WcOKIJ4ECnYu/HOFV7Uz3She2p4aXiUWw=;
-        b=wrE9kfuHS5FXC8Y5+DjEvpD1T3UbCQ+h3XCEEqcwLQ8ukGQFi8Ml6EySKmGmmnXHB/
-         ZoE1l4Jv/EsgSHGBsCATbdEovZJmeggo2GQpnM7c2qmh7D+3H/4m/b6RRSPHvzf7ypES
-         wHr+hcDvNvR+6OMNTGAgafk3vVoRBqqArfS5f7QO7NRoBz654ymoPYbpngCt1a5Bc5R0
-         2/rUyi+UaP9pUorE7BhXlzqnywAG3rG/RsKLAzJaZE8xwBskEawPfMhx28uNjcfRhlTX
-         EJXD3If8wFIA3tw8/JTXyF4OlYg6qIR8ZcFrncnG6cXvHYTKP6ErC0bvIDsUawYqnsPD
-         PV/g==
-X-Forwarded-Encrypted: i=1; AJvYcCXiwJUem3iTxh/jw/hkDJLR53z1XC6OyDom8GQbFlfVp8v4uXSydehS4clkcNbEkxFJXgxHa7FWNstOn6U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcaddpKpyWjZo6adINFWDphfE7AoUlOdz9Ff0iH6gBr3LzdnB6
-	ICRJLrMusroT2v2hoOOeWiWOS1+yXaKkvQJO1iVgDMe/QOjaBtxta7Rpb9zc+w==
-X-Gm-Gg: ASbGncuJmX6bcPGTwaXCIOvM7ZxiLDtNBzwQiQ6EmOpcAhcRuNUegz3aUPKHzVQCOa+
-	bXwvsVUbsOVgjKibAiP0DNq2UztIfr6grFJnaEMEptyBoM3dwUPsRrsm4g+S167y9jpX9WGobmS
-	2esCBTK71hZtqViH+nRW4Ikb++7oSEbb2YDgjrdstE181/owEKFsouVFDLwdk4BoI7juj40BV5b
-	GVPAABC/Ip2bvoutW55uDCWGt5CKj08hv43hH9XOfbhXfFhQBe+tDLbKIM2udTkAIKlgVKb+vnk
-	1Qy+OiqGgjSlPrh2cHWYes58pILRQcgpLnIAxPTuHKMyzw0YI/1XjieW
-X-Google-Smtp-Source: AGHT+IHCqFm9csE2qkE4bmWGh9NkZBAUBiZ2j02yr8s8ij2xHhs7et8fWqAp4EPwKF4QP8r/SzWwdQ==
-X-Received: by 2002:a05:6a21:918c:b0:1f5:6a1a:329b with SMTP id adf61e73a8af0-1f5c12cd543mr23504218637.32.1742279712736;
-        Mon, 17 Mar 2025 23:35:12 -0700 (PDT)
-Received: from thinkpad ([120.56.195.170])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737113d71fbsm8711029b3a.0.2025.03.17.23.35.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 17 Mar 2025 23:35:12 -0700 (PDT)
-Date: Tue, 18 Mar 2025 12:05:08 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Manish Pandey <quic_mapa@quicinc.com>
-Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_nitirawa@quicinc.com,
-	quic_cang@quicinc.com, quic_nguyenb@quicinc.com
-Subject: Re: [PATCH V3 1/3] scsi: ufs-qcom: Add support for dumping HW and SW
- hibern8 count
-Message-ID: <20250318063508.4iz4olthqq2rhjce@thinkpad>
-References: <20250313051635.22073-1-quic_mapa@quicinc.com>
- <20250313051635.22073-2-quic_mapa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XmAUG3f0"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742279750; x=1773815750;
+  h=from:subject:date:message-id:mime-version:
+   content-transfer-encoding:to:cc;
+  bh=rOHbCLNwUuQ0MCHqcCbere0AhcqH/e8hZR21LTzO8A0=;
+  b=XmAUG3f0vcISBCVMSirEIp/FYaxKEryvtSex0VR1kJ8QJtLKSIsGVpsR
+   NlMutFFw5JZsSTcXMhqTRJzUGhbfLdBKGSmWeINdTT70vbPBPvJLJD+ew
+   JjcQNfBhC7KjJ8HvTkokPfjaL06jcAGJtY9ZidVvhHlk9f/5NfDDK0psY
+   qjDrcHpAEaebpn4c8tqKx9/Hn1OJYwc9Ypt4Gh+5WtLJQ0V2bkMTYf7X9
+   6ZSSmoEZC3+xQY4X5DM9XjNK57sxYjiLHWwabv0uThIma+kvrBs0sHfUn
+   wJvv0DWKnl4Spvwx77dQv2kFRZVQu7cuJ9aI9f90gW4glfpp1YpNJyZxK
+   g==;
+X-CSE-ConnectionGUID: yNSKG1e/RDGpErUcYbPnyw==
+X-CSE-MsgGUID: z54N1lnIR3OUyOgc1Msm1Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="53613407"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="53613407"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 23:35:49 -0700
+X-CSE-ConnectionGUID: PYYJ/dY/T1OFBLqUorXGGg==
+X-CSE-MsgGUID: ENPWH/G0SvKEh5EGg2Rb5Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="153147525"
+Received: from vverma7-desk1.amr.corp.intel.com (HELO [192.168.1.200]) ([10.125.109.119])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 23:35:47 -0700
+From: Vishal Verma <vishal.l.verma@intel.com>
+Subject: [PATCH v2 0/4] KVM: TDX: Cleanup the kvm_x86_ops structure for
+ vmx/tdx
+Date: Tue, 18 Mar 2025 00:35:05 -0600
+Message-Id: <20250318-vverma7-cleanup_x86_ops-v2-0-701e82d6b779@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313051635.22073-2-quic_mapa@quicinc.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABkU2WcC/4WNQQ6CMBQFr0K6tqa/QEFW3sMQUstHmkBLWmwwh
+ LtbiAtXupyXzLyVeHQaPamSlTgM2mtrIvBTQlQvzQOpbiMTznjOUgAaArpRFlQNKM1zapZSNHb
+ yVAmOOcOsAC5ItCeHnV6O8q2O3Gs/W/c6jgLs6/9mAMrohd8RuxJEK7qrNjMOZ2XH/eLjp799l
+ mZClRxAMvXl19u2vQHGs+GJ/gAAAA==
+X-Change-ID: 20250311-vverma7-cleanup_x86_ops-c62e50e47126
+To: Sean Christopherson <seanjc@google.com>, 
+ Paolo Bonzini <pbonzini@redhat.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Binbin Wu <binbin.wu@linxu.intel.com>, 
+ Rick Edgecombe <rick.p.edgecombe@intel.com>, 
+ Vishal Verma <vishal.l.verma@intel.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2999;
+ i=vishal.l.verma@intel.com; h=from:subject:message-id;
+ bh=rOHbCLNwUuQ0MCHqcCbere0AhcqH/e8hZR21LTzO8A0=;
+ b=owGbwMvMwCXGf25diOft7jLG02pJDOk3RcxsZddvSPTw+tnjZnqy3KRuVlqK1kWBgiUPV750P
+ rlI7dmKjlIWBjEuBlkxRZa/ez4yHpPbns8TmOAIM4eVCWQIAxenAEzE34Dhf+Zp5ddbvC4G8Sau
+ 0fz4/npMeqfpB51r3y9qPWeYevzTZR+GP9xhnN+Xz3gwc36oySK1WreH99KK179Yqd8ZHHtBbyL
+ HL1YA
+X-Developer-Key: i=vishal.l.verma@intel.com; a=openpgp;
+ fpr=F8682BE134C67A12332A2ED07AFA61BEA3B84DFF
 
-On Thu, Mar 13, 2025 at 10:46:33AM +0530, Manish Pandey wrote:
-> This patch adds functionality to dump both hardware and software
+This is a cleanup that should follow the initial TDX base support (i.e.
+not an immediate fix needed for kvm-coco-queue).
 
-No 'patch' in description. Once the patch is merged, it will become as 'commit'.
+Patch 1 is a precursory fix for a build warning/error found when
+manually testing the CONFIG_INTEL_TDX_HOST=n case.
 
-Also, please use imperative mood to describe the change. I don't know why this
-is not followed since I believe, I've given this comment before also (if you
-didn't read the process documentation).
+For Patches 2-4:
 
-> hibern8 enter counts. This enhancement will aid in monitoring and
-> debugging hibern8 state transitions by providing detailed count
-> information.
-> 
-> Signed-off-by: Manish Pandey <quic_mapa@quicinc.com>
-> ---
->  drivers/ufs/host/ufs-qcom.c | 9 +++++++++
->  drivers/ufs/host/ufs-qcom.h | 9 +++++++++
->  2 files changed, 18 insertions(+)
-> 
-> diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-> index 1b37449fbffc..f5181773c0e5 100644
-> --- a/drivers/ufs/host/ufs-qcom.c
-> +++ b/drivers/ufs/host/ufs-qcom.c
-> @@ -1573,6 +1573,15 @@ static void ufs_qcom_dump_dbg_regs(struct ufs_hba *hba)
->  
->  	host = ufshcd_get_variant(hba);
->  
-> +	dev_err(hba->dev, "HW_H8_ENTER_CNT=%d\n", ufshcd_readl(hba, REG_UFS_HW_H8_ENTER_CNT));
-> +	dev_err(hba->dev, "HW_H8_EXIT_CNT=%d\n", ufshcd_readl(hba, REG_UFS_HW_H8_EXIT_CNT));
-> +
-> +	dev_err(hba->dev, "SW_H8_ENTER_CNT=%d\n", ufshcd_readl(hba, REG_UFS_SW_H8_ENTER_CNT));
-> +	dev_err(hba->dev, "SW_H8_EXIT_CNT=%d\n", ufshcd_readl(hba, REG_UFS_SW_H8_EXIT_CNT));
-> +
-> +	dev_err(hba->dev, "SW_AFTER_HW_H8_ENTER_CNT=%d\n",
-> +			ufshcd_readl(hba, REG_UFS_SW_AFTER_HW_H8_ENTER_CNT));
-> +
->  	ufshcd_dump_regs(hba, REG_UFS_SYS1CLK_1US, 16 * 4,
->  			 "HCI Vendor Specific Registers ");
->  
-> diff --git a/drivers/ufs/host/ufs-qcom.h b/drivers/ufs/host/ufs-qcom.h
-> index d0e6ec9128e7..a41db017009f 100644
-> --- a/drivers/ufs/host/ufs-qcom.h
-> +++ b/drivers/ufs/host/ufs-qcom.h
-> @@ -75,6 +75,15 @@ enum {
->  	UFS_UFS_DBG_RD_EDTL_RAM			= 0x1900,
->  };
->  
-> +/* Vendor-specific Hibern8 count registers for the QCOM UFS host controller. */
+In [1], Sean points out that the kvm_x86_ops structure and its
+associated helpers and wrappers can be cleaned up a lot by -
 
-Get rid of 'for the QCOM UFS host controller'.
+1. Putting the wrappers under CONFIG_KVM_INTEL_TDX, and
+2. Defining the helpers with macros that switch between the tdx and
+   non-tdx case, as well as NULL out the TDX-only stubs when needed.
 
-- Mani
+This cleans up the generated code by completely removing trampolines
+that would otherwise be left behind in the CONFIG_KVM_INTEL_TDX=n case.
 
+[1]: https://lore.kernel.org/kvm/Z6v9yjWLNTU6X90d@google.com/
+
+For example, looking at vt_refresh_apicv_exec_ctrl(), before this cleanup,
+when CONFIG_KVM_INTEL_TDX=n, the following asm is generated:
+
+0000000000036490 <vt_refresh_apicv_exec_ctrl>:
+   36490:       f3 0f 1e fa             endbr64
+   36494:       e8 00 00 00 00          call   36499 <vt_refresh_apicv_exec_ctrl+0x9>
+                        36495: R_X86_64_PLT32   __fentry__-0x4
+   36499:       e9 00 00 00 00          jmp    3649e <vt_refresh_apicv_exec_ctrl+0xe>
+                        3649a: R_X86_64_PLT32   vmx_refresh_apicv_exec_ctrl-0x4
+   3649e:       66 90                   xchg   %ax,%ax
+
+But with these patches, it goes away completely.
+
+These patches have been tested with TDX kvm-unit-tests, booting a Linux
+TD, TDX enhanced KVM selftests, and building and examining the generated
+assembly (or lack thereof) with both CONFIG_KVM_INTEL_TDX=y and
+CONFIG_KVM_INTEL_TDX=n
+
+Based on a patch by Sean Christopherson <seanjc@google.com>
+
+Signed-off-by: Vishal Verma <vishal.l.verma@intel.com>
+---
+Changes in v2:
+- Collect review tags (Binbin)
+- Add a new patch (patch 1) as a precursor that fixes a build problem
+- Squash the config change into patch 4 that converts ops to macros to
+avoid breaking the build when CONFIG_KVM_INTEL_TDX=n (Binbin)
+- Link to v1: https://lore.kernel.org/r/20250313-vverma7-cleanup_x86_ops-v1-0-0346c8211a0c@intel.com
+
+---
+Vishal Verma (4):
+      KVM: TDX: Fix definition of tdx_guest_nr_guest_keyids()
+      KVM: VMX: Move apicv_pre_state_restore to posted_intr.c
+      KVM: VMX: Make naming consistent for kvm_complete_insn_gp via define
+      KVM: VMX: Clean up and macrofy x86_ops
+
+ arch/x86/include/asm/tdx.h     |   2 +-
+ arch/x86/kvm/vmx/posted_intr.h |   1 +
+ arch/x86/kvm/vmx/tdx.h         |   2 +-
+ arch/x86/kvm/vmx/x86_ops.h     |  68 +-------------
+ arch/x86/kvm/vmx/main.c        | 204 ++++++++++++++++++++---------------------
+ arch/x86/kvm/vmx/posted_intr.c |   8 ++
+ 6 files changed, 114 insertions(+), 171 deletions(-)
+---
+base-commit: 85c9490bbed74b006a614e542da404a55ff5938f
+change-id: 20250311-vverma7-cleanup_x86_ops-c62e50e47126
+
+Best regards,
 -- 
-மணிவண்ணன் சதாசிவம்
+Vishal Verma <vishal.l.verma@intel.com>
+
