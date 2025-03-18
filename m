@@ -1,121 +1,124 @@
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D69420F060
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 15:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE2D920F078;
+	Tue, 18 Mar 2025 15:51:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742313054; cv=none; b=QUBxjlLHc5aqhtLPjs3hv1wFpqKP8orI6tpkyNk7jwwxt4h5XG9NDrHbnA44OX7mW9sy1LChfEpl/9vEcmIMSOAgytugXTbZQOvRTmyiX137ETifjEHO28cB8pDBGGBPET95hyxZekrdRRY6q+MD7mGVTAn06AIvYy2QuHxi3X4=
+	t=1742313078; cv=none; b=WzIjMIZyA9lP/t/6fZuhNwSpNKS7spUwj7fkttLfzlbKFL2CMglE+9WGJbudXegYcxDqjGlyzU/OCBTJ7pRuVDcNcurMcGKntZ6xhGjqJa7GhV24AI6ubHhZ96zcCOhnv0Vp5Zy6cjpFm5UWqH+qa+AELCPbay/zDGm+yNUZlsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742313054; c=relaxed/simple;
-	bh=jTH2WrbnBbQ+egDlbRSrLxqBvblOJqGCERFwMmJWqDU=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=u8YjwyJ9tF5rb+6+0tSVvNVKLjFNkdD4DA0IFKN58epRylg/tynstexKlEsjNgXOvg1CuJB0BfuGxkZbSNzBkXnO3Y25qe2J0F6N6Jtw3r8mvK0sR1fCjnNSUK+Pw79dXcnDE/uLQd2zStD73da6D+tqhUfxAplgGkVRqwQCHc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YIKctc1B; arc=none smtp.client-ip=209.85.208.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742313078; c=relaxed/simple;
+	bh=cUwvZQQ+NjakBpbZKcTfx3t1d3Z+pAZHSuUAZGVxDxE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ou+ioyszzn2Kb2W/lVZwlSbzdjAljXqKGjkdOtVSvyiQQ0gfupmIZhTMsHmd0MjYUJ4KZAi+lWzAS7h+YwlLHb9tK1g2ou8nCpmWznn/rqDRl0TgWtT9J2TBdE25tuT374nXdhwZQ6MwMOMva3uasKIVK5ZE+DYq5jL/eLCFPJg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZDRtp2xu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YIKctc1B"
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5e535e6739bso8591398a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:50:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742313047; x=1742917847; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IfvWKJMde9o+IkABs0RI8lpum1QExrCI9eSnJDVH1fE=;
-        b=YIKctc1B2YdB2PjZi5CR4YStZfXLUOw2RBCyfShjp8L+8hhDSwZrmlkdA9Sketqcm8
-         EC6+4phfJqWrJDuWZwnafmuA33CxAbFrQPyikHNrILm0xkaumu/ZXB3qM9U1SLCB4pH2
-         cskOo9HK887f1SF86iJq+52Jqui43AaEP9M3KprlOEb4zd6sf41h/ys4gpObP9Aur01T
-         LnoTrv5GrdxyuK597wzV9PqxoVQd0309FvyqyzHErGdwNxb9Sm3BC2SaDkn0wAAtQC7W
-         wHJiapNyQaeExkC7H+n3cWHLoJDT6uAHENbXi2l1BzlUudXqXWYp8ubtzH6sPUU1/NwE
-         aKZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742313047; x=1742917847;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IfvWKJMde9o+IkABs0RI8lpum1QExrCI9eSnJDVH1fE=;
-        b=o8vUCGXQ6F+zEqqfuc6FgMIE4cwqYzUiH4zW6rrDosW0KZWmzTh+eMjbrxvdbMgN4w
-         2mmp89vonJQcpWh1r7zRW/eWo+l3FkmGf7TJo4BQXrYFjmaZF9s7qdZSC1ugNU3ZI/5u
-         bqYF/CJKmliELVRuF11qFNfHUyENp0m5SbLrqjJfG//SQj2jPiS0TTNqVZFC+0TrGQ/c
-         AZQhPS6DdRjAHvOyUI4c2Mi/OHwiSTp61udOpRsuNn05EaKsTJEOotqA3Jgo1DrYBghN
-         zpFtjkaruDV7FhWTqlArnmGtElMEkR7ygDJY7b2iPOtJ1IA62a9EyRT6DVlgP1VK646G
-         s+sQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWwtMMDLTSlH41q56pwZuuGuBy/pn9MhIi01wsgyuuJk3EiZqxxuasYXCjNnjFbmO1++oBjLT8JKW6GVKY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwFz3dHFhyjk2vJ56nMCLWDmNBQ0P7FQXAjdBeiTtlo+2OlJi7V
-	wWq01U1KZd4KVQcIPflmVRqqpey/+KPHElblx1D0icZT3l/I/9ZYl7CnbDpqInc=
-X-Gm-Gg: ASbGnctBZEECgAW/XRBS549BDhvDOI/Dgf/cHJ5WU9wMqrLmPYbM5eNi1Dek3gaBLT4
-	0Ta9yXHgyPb7O9kInBrFAXSOqaVIyHEoEpE1AYRWD17w/wekOBa9sCh2e2BqYTQQUU/+1k0LLqP
-	2KJeO0o+S9JsfVPLceW4JcnCNlQHzLTHyFqx6XKwRqs5HdfbNegCPCWSy1ZfM7wmMEOS4Qu971e
-	3eFdAd+z/2sm0fSpxEz3xz+ItLnTewcKR1XQWfi4nRrk+2oKsaU68Kh/UyoAkk2ywvewPjJy8hs
-	aN9vWBDYBkWReBimwKcdSshjLhMaM3RqCX22AVWhACA=
-X-Google-Smtp-Source: AGHT+IGoiGaMMvLdvCNbl4oN1jAZOiN+aUxBKf5IrKehClPIdc/Fl8fuM7g07f1BaR9y5WCLJoRqyg==
-X-Received: by 2002:a17:907:d7c8:b0:ac3:8987:5ca9 with SMTP id a640c23a62f3a-ac389875d4dmr495893766b.19.1742313047366;
-        Tue, 18 Mar 2025 08:50:47 -0700 (PDT)
-Received: from [127.0.1.1] ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149d0077sm875615566b.93.2025.03.18.08.50.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 08:50:46 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Subject: [PATCH 0/2] arm64: dts: x1e001de-devkit: USB retimers related
- fixes
-Date: Tue, 18 Mar 2025 17:50:33 +0200
-Message-Id: <20250318-x1e001de-devkit-dts-fix-retimer-gpios-v1-0-1c092f630b0c@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZDRtp2xu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FB81C4CEDD;
+	Tue, 18 Mar 2025 15:51:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742313078;
+	bh=cUwvZQQ+NjakBpbZKcTfx3t1d3Z+pAZHSuUAZGVxDxE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZDRtp2xuLYROQzbQK0ZXRpd/eWbvAUBk+xosqGBpv4QyNuXbt5tWpBrOCCdXzKHRh
+	 dgnAXbktka2ZLS25yb09k+fyai7woE9wmk4uPzhKSYeDWFLAB2Du05CZBd0ujHnXOP
+	 GfRPFvWNYW0M+LiXAnL1PbpMA1haUl885t/s2xrFPKWfq6ns/MwHOuOMPmuQXZ0SwE
+	 x9RrEmMNgy4p6j5tyYwkvRHYyPj+T8oF68TqrXf5wNnDIgsKpLMCrmn4AiW7NgeitG
+	 IdNBoBHj/ri2USwpaTRwW2SaQ6fKw+AHJpm8PvrDfg9cWgqYq079CIUcfjUM8Uc3fr
+	 xW9pmgpkWQPOQ==
+Date: Tue, 18 Mar 2025 08:51:14 -0700
+From: Kees Cook <kees@kernel.org>
+To: Bhupesh Sharma <bhsharma@igalia.com>
+Cc: Andres Rodriguez <andresx7@gmail.com>, Bhupesh <bhupesh@igalia.com>,
+	akpm@linux-foundation.org, kernel-dev@igalia.com,
+	linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
+	linux-perf-users@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	linux-mm@kvack.org, oliver.sang@intel.com, lkp@intel.com,
+	laoar.shao@gmail.com, pmladek@suse.com, rostedt@goodmis.org,
+	mathieu.desnoyers@efficios.com, arnaldo.melo@gmail.com,
+	alexei.starovoitov@gmail.com, andrii.nakryiko@gmail.com,
+	mirq-linux@rere.qmqm.pl, peterz@infradead.org, willy@infradead.org,
+	david@redhat.com, viro@zeniv.linux.org.uk, ebiederm@xmission.com,
+	brauner@kernel.org, jack@suse.cz, mingo@redhat.com,
+	juri.lelli@redhat.com, bsegall@google.com, mgorman@suse.de,
+	vschneid@redhat.com
+Subject: Re: [PATCH RFC 0/2] Dynamically allocate memory to store task's full
+ name
+Message-ID: <202503180846.EAB79290D@keescook>
+References: <20250314052715.610377-1-bhupesh@igalia.com>
+ <202503141420.37D605B2@keescook>
+ <a73ea646-0a24-474a-9e14-d59ea5eaa662@gmail.com>
+ <8b11d5f6-bb16-7af6-8377-bb0951fcfb60@igalia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAEmW2WcC/x2N0QqCUBAFf0X2uYVdtbB+JXoo92RLpHL3IoL47
- 118HBhmNgokR9Ct2ihh8fBpLKCnivrPcxzAboWplvosjXa8KkTUwIbl65ktB7995YTsPyQeZp+
- CX7Cu0cu1Fe2ptOaEIh2f+2Pf/+tJH+x3AAAA
-X-Change-ID: 20250318-x1e001de-devkit-dts-fix-retimer-gpios-bed83169401c
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Sibi Sankar <quic_sibis@quicinc.com>
-Cc: Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=747; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=jTH2WrbnBbQ+egDlbRSrLxqBvblOJqGCERFwMmJWqDU=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBn2ZZNfKSUqAC8rhDFUbrmlhH+B9Oczz7Xs/ce+
- v+0PuG1ubeJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ9mWTQAKCRAbX0TJAJUV
- VmN2D/99jgLljP/op0bui+kS83hAOi89P4Q32M7a6y+Vh3PqkHIG6ASRNbiZ3pEAhB+foJBBFg5
- 8UKI5BEZ7fs3N9RIQKvObMH+/km4kHlFg2A01boUF4pTweeanPcuQBxHP4mUSp2mFFqhu0RWrM0
- eU5T/IC1IIIlVVMrvqJOFkOv9Rzdx+nfC4DWpDAUA8aESw5bDbWlaS6bIjBzwDQZudAUcZfi/u3
- 0u0AmPyzz64aO324/laUnYWBB65LHl/2ZzOEwa0VZov/JZ2Tj3ykHdRhUlYVL1UggiBVA3LIj0m
- s29MnNO9Qa/UmQk63C8H9Lhx/zsQge7MJHmLiuNr+bJEDZX4Xn9CILf7uEIRl3MDzGjlV+UoT4V
- 8GhUNOwXnA+Eqe5t0V1vvZTgifxxp5foQgEM8rfwIMVt05zRpR75CWNcxQYxO1TInY/lfMaouNi
- 7SrjBiurceN1yiyPIvLnJzakahtnWIVWdKVQDMPxTNVS3Y0lkxoLvAolUcPpqMAAKKnZdKq4eTh
- DMNSzsVBHZw2RfuMUj2JaVjawBzVRv8+RtP8QZHSJZB3eMJ4/z9p0Mq7hGK+/0ttnPFPTR33q1n
- MrQkt0bOBsceyT0hE+8NVKBQbh32ul692bCGuvBG+EZ1vXcIbelWa1c5sKf2IcjWtAvKP3YzH1K
- qqN6zR6BtFx5/mw==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <8b11d5f6-bb16-7af6-8377-bb0951fcfb60@igalia.com>
 
-These fixes align all the USB retimer related nodes on the Devkit with the
-CRD and T14s.
+On Tue, Mar 18, 2025 at 04:49:28PM +0530, Bhupesh Sharma wrote:
+> On 3/15/25 1:13 PM, Andres Rodriguez wrote:
+> > On 3/14/25 14:25, Kees Cook wrote:
+> > > On Fri, Mar 14, 2025 at 10:57:13AM +0530, Bhupesh wrote:
+> > > > While working with user-space debugging tools which work especially
+> > > > on linux gaming platforms, I found that the task name is truncated due
+> > > > to the limitation of TASK_COMM_LEN.
+> > > > 
+> > > > For example, currently running 'ps', the task->comm value of a long
+> > > > task name is truncated due to the limitation of TASK_COMM_LEN.
+> > > >      create_very_lon
+> > > > 
+> > > > This leads to the names passed from userland via pthread_setname_np()
+> > > > being truncated.
+> > > 
+> > > So there have been long discussions about "comm", and it mainly boils
+> > > down to "leave it alone". For the /proc-scraping tools like "ps" and
+> > > "top", they check both "comm" and "cmdline", depending on mode. The more
+> > > useful (and already untruncated) stuff is in "cmdline", so I suspect it
+> > > may make more sense to have pthread_setname_np() interact with that
+> > > instead. Also TASK_COMM_LEN is basically considered userspace ABI at
+> > > this point and we can't sanely change its length without breaking the
+> > > world.
+> > > 
+> > 
+> > Completely agree that comm is best left untouched. TASK_COMM_LEN is
+> > embedded into the kernel and the pthread ABI changes here should be
+> > avoided.
+> > 
+> 
+> So, basically my approach _does not_ touch TASK_COMM_LEN at all. The normal
+> 'TASK_COMM_LEN' 16byte design remains untouched.
+> Which means that all the legacy / existing ABi which uses 'task->comm' and
+> hence are designed / written to handle 'TASK_COMM_LEN' 16-byte name,
+> continue to work as before using '/proc/$pid/task/$tid/comm'.
+> 
+> This change-set only adds a _parallel_ dynamically allocated
+> 'task->full_name' which can be used by interested users via
+> '/proc/$pid/task/$tid/full_name'.
 
-This patchset is based on Johan's:
-https://lore.kernel.org/all/20250318074907.13903-1-johan+linaro@kernel.org/
+I don't want to add this to all processes at exec time as the existing
+solution works for those processes: read /proc/$pid/cmdline.
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
-Abel Vesa (2):
-      arm64: dts: qcom: x1e001de-devkit: Describe USB retimers resets pin configs
-      arm64: dts: qcom: x1e001de-devkit: Fix pin config for USB0 retimer vregs
+That said, adding another pointer to task_struct isn't to bad I guess,
+and it could be updated by later calls. Maybe by default it just points
+to "comm".
 
- arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 44 ++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
----
-base-commit: 571801ee930e6061456a14ded670006f738d05bc
-change-id: 20250318-x1e001de-devkit-dts-fix-retimer-gpios-bed83169401c
+> I am fine with adding either '/proc/$pid/task/$tid/full_name' or
+> '/proc/$pid/task/$tid/debug_name' (actually both of these achieve the same).
+> The new / modified users (especially the debug applications you listed
+> above) can switch easily to using '/proc/$pid/task/$tid/full_name' instead
+> of ''/proc/$pid/task/$tid/comm'
+> 
+> AFAIK we already achieved for the kthreads using d6986ce24fc00 ("kthread:
+> dynamically allocate memory to store kthread's full name"), which adds
+> 'full_name' in parallel to 'comm' for kthread names.
 
-Best regards,
+If we do this for task_struct, we should remove "full_name" from kthread
+and generalize it for all processes.
+
 -- 
-Abel Vesa <abel.vesa@linaro.org>
-
+Kees Cook
