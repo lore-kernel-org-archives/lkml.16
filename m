@@ -1,167 +1,188 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtpbgbr2.qq.com (smtpbgbr2.qq.com [54.207.22.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE37746B8
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 05:49:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E391581EE;
+	Tue, 18 Mar 2025 05:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.207.22.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742276972; cv=none; b=bT22/JJinlrYxH9+uYh5zTFgL1KCTOloQF+HTgZ5ZRqINvsQvpXiSV+IsXOwBA23+/uoWSF+1V8MNM3XR8PFBuHYZww2dsZ5aq00EOhpmJEXmooQsqQIU0rvUrfe1xRCTfvnxPwT2x+wsUEB+TdsoncHGdo8lvTG9qwq1Mmdsjo=
+	t=1742277018; cv=none; b=DmdjFN12pe63YtY4Hu86rxQ+aiMn+/xyLBniXN9bA8uMxHzlg5NFdlz9AxvlBYYQpzR9b8DJCkgcwnbOrSrzuNqrMRUESnLn58ePZh1n2HRVAgLBmhGOTsTqQ5NoEA1fqhqQ3YzfP3xF3/aEEMxiug9XWX4k+GVDyONEnTP0Qcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742276972; c=relaxed/simple;
-	bh=cPyLsAymAQCqZAyUD8hKdcXbKrQyYUAdZc6QzZPlsTI=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=N1PsbuaPGkvnjzlKZRgY3VCHQgA8zK0Q/9d+SuHs/5gYricqM3uNzLI+mF1NO6p8WTtbWst8CBZha2qHMyxCg05QQy8KLcxu70g8iDG9XYcqd9ZYP8NtppGVtzeDiZysAIqhQQPiB6dCcRrreFoao823Ij+MW0hq7EufWitvv20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N4pHdhZR; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742277018; c=relaxed/simple;
+	bh=pvu8Dy/VXpfCbsU1wxKIDJov4xBbmkpNoQHZ+cN+CpQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=U9EvBASdV2/vn5Nj9/IcqSkob1MUjbWD80dElLwxGDGWB78WPXAwJFW2HIu/sX0pfHv4Ub6feZtJA4aDxDjPyia6t+gdVC0p2GCqXAIe4bZh83Q3hMusllhFOngnaRHfAIMvL9dGaee4VUE7FEm5tKN0pps5ENHDO/x16DEQv+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=bGWJTMML; arc=none smtp.client-ip=54.207.22.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N4pHdhZR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742276970; x=1773812970;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cPyLsAymAQCqZAyUD8hKdcXbKrQyYUAdZc6QzZPlsTI=;
-  b=N4pHdhZR/5jal+cWpDYyL3j2P+rPdd6pMNU6Swrm3p1dmp0Cy/TGyKoF
-   ELwBB5fnv2kSNuufOLNxq64ycNYroO61JrxUbytdSCJsVH5aY9PB7YBmu
-   JXeFGgAUqRiguv41RCIV/RTDy8vT70czgVHlnRZ/v1M772fKmpE7GxEtk
-   3s5d3ndK/S328LHHVqYmAKaROhxqG+JgwH7kXxvQ+YPYFHjoaAfI1IuUR
-   pnSmAvl2txmLcEXUoVjdTZo/QCEMbOhd+YUycpNavq3RzvgnNZg9npLKN
-   ei2KbgWZ8daTAe8vHqCSPTEWuTeodUW/xWGnLqbhuSITS7srumP0Jxhea
-   A==;
-X-CSE-ConnectionGUID: NOJ7/qN7TB2HC6ArAUmNhA==
-X-CSE-MsgGUID: ODLR6iw4SBmekM9H0Dd+qg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="60790232"
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="60790232"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 22:49:30 -0700
-X-CSE-ConnectionGUID: ghMZ/yHAQVGgCX0yybpEEw==
-X-CSE-MsgGUID: 0NV8rLOwQ3y0dkmI10VoGw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
-   d="scan'208";a="127001758"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 17 Mar 2025 22:49:27 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tuPp3-000DRD-1p;
-	Tue, 18 Mar 2025 05:49:25 +0000
-Date: Tue, 18 Mar 2025 13:47:15 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mike Snitzer <snitzer@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Anna Schumaker <anna.schumaker@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>
-Subject: include/linux/rcupdate.h:538:9: error: dereferencing pointer to
- incomplete type 'struct nfsd_file'
-Message-ID: <202503181317.eiDzfsM0-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="bGWJTMML"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1742276905;
+	bh=gnxCvj2Q4txIQOV5P4Py/Ax9TpGa8Qqrm59V7rorQes=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=bGWJTMMLo1vPiblbg8wA/YzaBkh1qg/4v9XjtUjF8i2JbvM0xXwVB7GOZJE+ACXmu
+	 mKKfTtq492sSMuWqdQ+KW7Mq0sXO91kXW/V4aQbK7wyvqMZ+WHtsMqZwvv+b1JScIv
+	 y7KGeyCJc2me9ZFNT5p/5iJ5aFdQeBlXYo+qvyh8=
+X-QQ-mid: bizesmtpip2t1742276892tccjh2r
+X-QQ-Originating-IP: nU1X2tnth8q/r2x9zmTdbfutXO0tdYJJftZxAw3Ni3k=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Tue, 18 Mar 2025 13:48:10 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 4937968447994938010
+From: WangYuli <wangyuli@uniontech.com>
+To: idosch@nvidia.com,
+	petrm@nvidia.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	czj2441@163.com,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	guanwentao@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>
+Subject: [PATCH net v2] mlxsw: spectrum_acl_bloom_filter: Workaround for some LLVM versions
+Date: Tue, 18 Mar 2025 13:48:03 +0800
+Message-ID: <CBD5806B120ADEEE+20250318054803.462085-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: MDqtQ4jGWXAGGkXhdGOheQd0DQb8GmA4pV+NZKf2C0W+B7whEvAuecxh
+	Ubc5P5Uaiguc+F72RWQYas6HsJq+/7WZPGamkXvZpv8nWptiwBEz9VFWdPLgqfY32iwgVES
+	GDahTSNRl7LryVYgTanaGdbbOcPtHQEt6Gr+2HHcLHG7+73fSxe7dP8aNIbsn7kVjdNr3S/
+	gV7UvLuDyxzQUtnhypi1mjd1auJmRlIcKZBblwsDpxhkt9aDrDjIM1VzNj+elLIQ3ThLvLB
+	22akizcolK0pM/0eY4+2Nh2v+hGV6ISffuojtjU/5UtpdHOb+byF9i68LNL4XOo3tNf5AF1
+	9nzS/f/VqQ/Yff8ucL5iqZkkl8ABy2aCiYz6m0nIHhANDHvqQlRHLDXGVa+whATMTHPmh3L
+	uVS/dZ3RH1UBbhwUg2X8c962/JUTJ3tb94O0TBYgIkWXK156LTU2ZFgJyGQlwc7Nznc7cPJ
+	kKU/m4vYcz8nd9hIkdbtqLLBgtUCpN0JqtUk2kAB7VSrZ5Bsul9gBS9bne3DD0AVtKhxORu
+	TztH7KtJ02zxCmqPG9UvF58lwpvgZIWQD1SqmE/Otu2aaJLf8U3HbcsUCMRGgb7g8eZNMPT
+	A6JOV7veqywL3nqcJhWSYcW1EY1rv5KHNe7OWKly9QRDQvTRKbDGZgkqOJmKRbgmb0tUO++
+	IAB7uo4McQCnYiCz9G1fXAe7ph45UcpjZSsQNPK5W5BL1m00VxEVSqpXUnhRNPXpVHO29ul
+	dzZ24Kiej3RSf2NcGUpN95euDZrlXC5KzkvYcsHPZ/nuIGN9HjZbg2lTSs0oy6sNl9B6UjZ
+	Wbns06zI1nWCV/hCqzqQuIPmgwjJHJG6mei05hxPxyNDo2oa/5HUfXd3darjyEnE8fQbI+O
+	6POH7DqMT3p3DByKaVDhKRbpsqJVMKItrJ7erlJ3wdMQlwDASpWoGcBkudh+x2bP/zSI0OV
+	z1Ajfqd5HpHiLO5MAjYDK345Vsp+0YzYF8EL/yqJ4hHIelK3hq/LdWbdfT0gjRYjgPA4=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   fc444ada131001812c5d10b380837238c9cf7c8c
-commit: 86e00412254a717ffd5d38dc5ec0ee1cce6281b3 nfs: cache all open LOCALIO nfsd_file(s) in client
-date:   9 weeks ago
-config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250318/202503181317.eiDzfsM0-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250318/202503181317.eiDzfsM0-lkp@intel.com/reproduce)
+This is a workaround to mitigate a compiler anomaly.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503181317.eiDzfsM0-lkp@intel.com/
+During LLVM toolchain compilation of this driver on s390x architecture, an
+unreasonable __write_overflow_field warning occurs.
 
-All errors (new ones prefixed by >>):
+Contextually, chunk_index is restricted to 0, 1 or 2. By expanding these
+possibilities, the compile warning is suppressed.
 
-   In file included from include/linux/rbtree.h:24,
-                    from include/linux/mm_types.h:11,
-                    from include/linux/mmzone.h:22,
-                    from include/linux/gfp.h:7,
-                    from include/linux/umh.h:4,
-                    from include/linux/kmod.h:9,
-                    from include/linux/module.h:17,
-                    from fs/nfs/localio.c:11:
-   fs/nfs/localio.c: In function 'nfs_local_open_fh':
->> include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type 'struct nfsd_file'
-     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-            ^
-   include/linux/rcupdate.h:686:2: note: in expansion of macro '__rcu_dereference_check'
-     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-     ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/rcupdate.h:758:28: note: in expansion of macro 'rcu_dereference_check'
-    #define rcu_dereference(p) rcu_dereference_check(p, 0)
-                               ^~~~~~~~~~~~~~~~~~~~~
-   fs/nfs/localio.c:279:7: note: in expansion of macro 'rcu_dereference'
-     nf = rcu_dereference(*pnf);
-          ^~~~~~~~~~~~~~~
---
-   In file included from include/linux/rbtree.h:24,
-                    from include/linux/mm_types.h:11,
-                    from include/linux/mmzone.h:22,
-                    from include/linux/gfp.h:7,
-                    from include/linux/umh.h:4,
-                    from include/linux/kmod.h:9,
-                    from include/linux/module.h:17,
-                    from localio.c:11:
-   localio.c: In function 'nfs_local_open_fh':
->> include/linux/rcupdate.h:538:9: error: dereferencing pointer to incomplete type 'struct nfsd_file'
-     typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-            ^
-   include/linux/rcupdate.h:686:2: note: in expansion of macro '__rcu_dereference_check'
-     __rcu_dereference_check((p), __UNIQUE_ID(rcu), \
-     ^~~~~~~~~~~~~~~~~~~~~~~
-   include/linux/rcupdate.h:758:28: note: in expansion of macro 'rcu_dereference_check'
-    #define rcu_dereference(p) rcu_dereference_check(p, 0)
-                               ^~~~~~~~~~~~~~~~~~~~~
-   localio.c:279:7: note: in expansion of macro 'rcu_dereference'
-     nf = rcu_dereference(*pnf);
-          ^~~~~~~~~~~~~~~
+Fix follow error with clang-19 when -Werror:
+  In file included from drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c:5:
+  In file included from ./include/linux/gfp.h:7:
+  In file included from ./include/linux/mmzone.h:8:
+  In file included from ./include/linux/spinlock.h:63:
+  In file included from ./include/linux/lockdep.h:14:
+  In file included from ./include/linux/smp.h:13:
+  In file included from ./include/linux/cpumask.h:12:
+  In file included from ./include/linux/bitmap.h:13:
+  In file included from ./include/linux/string.h:392:
+  ./include/linux/fortify-string.h:571:4: error: call to '__write_overflow_field' declared with 'warning' attribute: detected write beyond size of field (1st parameter); maybe use struct_group()? [-Werror,-Wattribute-warning]
+    571 |                         __write_overflow_field(p_size_field, size);
+        |                         ^
+  1 error generated.
 
+According to the testing, we can be fairly certain that this is a clang
+compiler bug, impacting only clang-19 and below. Clang versions 20 and
+21 do not exhibit this behavior.
 
-vim +538 include/linux/rcupdate.h
+Link: https://lore.kernel.org/all/484364B641C901CD+20250311141025.1624528-1-wangyuli@uniontech.com/
+Fixes: 7585cacdb978 ("mlxsw: spectrum_acl: Add Bloom filter handling")
+Co-developed-by: Zijian Chen <czj2441@163.com>
+Signed-off-by: Zijian Chen <czj2441@163.com>
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Co-developed-by: Ido Schimmel <idosch@nvidia.com>
+Signed-off-by: Ido Schimmel <idosch@nvidia.com>
+Tested-by: Ido Schimmel <idosch@nvidia.com>
+Tested-by: WangYuli <wangyuli@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+Changelog:
+ *v1->v2:
+    1. Combine patch #1 and #2 from v1.
+    2. Take the more simplified change by Ido Schimmel.
+    3. Append more Co-developed-by, Signed-off-by, Tested-by,
+Suggested-by and Fixes tags.
+    4. Retain reverse Christmas tree order for variables.
+---
+ .../mlxsw/spectrum_acl_bloom_filter.c         | 26 +++++++++++++++----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-76c8eaafe4f061 Paul E. McKenney        2021-04-21  528  
-24ba53017e188e Chun-Hung Tseng         2021-09-15  529  #define __rcu_access_pointer(p, local, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  530  ({ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  531  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  532) 	rcu_check_sparse(p, space); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  533  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  534  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  535  #define __rcu_dereference_check(p, local, c, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  536  ({ \
-ac59853c06993a Pranith Kumar           2014-11-13  537  	/* Dependency order vs. p above. */ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15 @538  	typeof(*p) *local = (typeof(*p) *__force)READ_ONCE(p); \
-f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  539  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_check() usage"); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  540) 	rcu_check_sparse(p, space); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  541  	((typeof(*p) __force __kernel *)(local)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  542  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  543  #define __rcu_dereference_protected(p, local, c, space) \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  544  ({ \
-f78f5b90c4ffa5 Paul E. McKenney        2015-06-18  545  	RCU_LOCKDEP_WARN(!(c), "suspicious rcu_dereference_protected() usage"); \
-423a86a610cad1 Joel Fernandes (Google  2018-12-12  546) 	rcu_check_sparse(p, space); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  547  	((typeof(*p) __force __kernel *)(p)); \
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  548  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  549  #define __rcu_dereference_raw(p, local) \
-995f1405610bd8 Paul E. McKenney        2016-07-01  550  ({ \
-995f1405610bd8 Paul E. McKenney        2016-07-01  551  	/* Dependency order vs. p above. */ \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  552  	typeof(p) local = READ_ONCE(p); \
-24ba53017e188e Chun-Hung Tseng         2021-09-15  553  	((typeof(*p) __force __kernel *)(local)); \
-995f1405610bd8 Paul E. McKenney        2016-07-01  554  })
-24ba53017e188e Chun-Hung Tseng         2021-09-15  555  #define rcu_dereference_raw(p) __rcu_dereference_raw(p, __UNIQUE_ID(rcu))
-ca5ecddfa8fcbd Paul E. McKenney        2010-04-28  556  
-
-:::::: The code at line 538 was first introduced by commit
-:::::: 24ba53017e188e031f9cb8b290286fad52d2af00 rcu: Replace ________p1 and _________p1 with __UNIQUE_ID(rcu)
-
-:::::: TO: Chun-Hung Tseng <henrybear327@gmail.com>
-:::::: CC: Paul E. McKenney <paulmck@kernel.org>
-
+diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
+index a54eedb69a3f..fc8a8cf64ec8 100644
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_acl_bloom_filter.c
+@@ -212,7 +212,22 @@ static const u8 mlxsw_sp4_acl_bf_crc6_tab[256] = {
+  * This array defines key offsets for easy access when copying key blocks from
+  * entry key to Bloom filter chunk.
+  */
+-static const u8 chunk_key_offsets[MLXSW_BLOOM_KEY_CHUNKS] = {2, 20, 38};
++static char *
++mlxsw_sp_acl_bf_enc_key_get(struct mlxsw_sp_acl_atcam_entry *aentry,
++			    u8 chunk_index)
++{
++		switch (chunk_index) {
++		case 0:
++			return &aentry->ht_key.enc_key[2];
++		case 1:
++			return &aentry->ht_key.enc_key[20];
++		case 2:
++			return &aentry->ht_key.enc_key[38];
++		default:
++			WARN_ON_ONCE(1);
++			return &aentry->ht_key.enc_key[0];
++		}
++}
+ 
+ static u16 mlxsw_sp2_acl_bf_crc16_byte(u16 crc, u8 c)
+ {
+@@ -235,9 +250,10 @@ __mlxsw_sp_acl_bf_key_encode(struct mlxsw_sp_acl_atcam_region *aregion,
+ 			     u8 key_offset, u8 chunk_key_len, u8 chunk_len)
+ {
+ 	struct mlxsw_afk_key_info *key_info = aregion->region->key_info;
+-	u8 chunk_index, chunk_count, block_count;
++	u8 chunk_index, chunk_count;
+ 	char *chunk = output;
+ 	__be16 erp_region_id;
++	u32 block_count;
+ 
+ 	block_count = mlxsw_afk_key_info_blocks_count_get(key_info);
+ 	chunk_count = 1 + ((block_count - 1) >> 2);
+@@ -245,12 +261,12 @@ __mlxsw_sp_acl_bf_key_encode(struct mlxsw_sp_acl_atcam_region *aregion,
+ 				   (aregion->region->id << 4));
+ 	for (chunk_index = max_chunks - chunk_count; chunk_index < max_chunks;
+ 	     chunk_index++) {
++		char *enc_key;
+ 		memset(chunk, 0, pad_bytes);
+ 		memcpy(chunk + pad_bytes, &erp_region_id,
+ 		       sizeof(erp_region_id));
+-		memcpy(chunk + key_offset,
+-		       &aentry->ht_key.enc_key[chunk_key_offsets[chunk_index]],
+-		       chunk_key_len);
++		enc_key = mlxsw_sp_acl_bf_enc_key_get(aentry, chunk_index);
++		memcpy(chunk + key_offset, enc_key, chunk_key_len);
+ 		chunk += chunk_len;
+ 	}
+ 	*len = chunk_count * chunk_len;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.49.0
+
