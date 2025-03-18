@@ -1,103 +1,97 @@
-Received: from gloria.sntech.de (gloria.sntech.de [185.11.138.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E14C31E5B60;
-	Tue, 18 Mar 2025 09:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.11.138.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AB5B148857;
+	Tue, 18 Mar 2025 09:18:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742289331; cv=none; b=Db55S4n3b2VSCK0QssUtP21l5SF0XMdXR0tnZkRpUxbsM4EuaIQhZsoWNi8FyoqQSyiQRHX6/IiRbs1YE0fIkRJ0fJ5c0jFNeYdVUC8fLBdbBP60uQHMBR+EE1tEoCQnN+RSG1QJu4Iso+ZIVpQbrabi5e37lZ1e6VActOsj0K4=
+	t=1742289520; cv=none; b=DNUKAcLHuiXoT3Hwr/3Jp3A3cJ6X+dw3sfPdT0wVdj3y93bS6+TbB6khsNcaSi9ZSNR4mDBaZRR4yqNcf7uvDQdQDINPezoRGbEmEMZ4QZF2y2Ot6emOatRsE7qWUIQWHsADGaBQdnG85L61stodk46ruzPWjT21SrWsHciIF0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742289331; c=relaxed/simple;
-	bh=wj9vhvcZ7Q6rRxe8IKV57WE45iTK8IXT/ogUqM9IbaA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EA8L6DzyJX4f0dTXDtR5yBkIyLPgjv/zRjtDX8Yb7pulp5E3Sa02HxDaRKCpokWz2JJW39uE6gRtPyRBdsY6G7UuBfo0UGEmlfhR3hSywHxKFKzPce+nU4mDTbvjeJVruzRrgcAVyvW9TrAH9Em/RNkyxIdzzJ4ix6XEA8Ruaxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de; spf=pass smtp.mailfrom=sntech.de; dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b=KAen0TNk; arc=none smtp.client-ip=185.11.138.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sntech.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sntech.de
+	s=arc-20240116; t=1742289520; c=relaxed/simple;
+	bh=oyoXlL9IzzSXFl5qWJg2CSmmwr34k4pqXRJBoD9ptT8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ibm5f5KM5/WRP0bMjHqf593d6rLaBw10GCEpHQ6FkvnAHWdeOhBo4fUjQ/5AjXTQqTwcpuKvlgeE94o2YuxyY+dL6z8l6A09p/URLMWYArtb24+c7KLZMBl6QmIhjUqof6z9zzuvN4hyNzI9If79yalbPAuWl2cvONUoisjnmnI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kpkjVPfA; arc=none smtp.client-ip=209.85.167.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sntech.de header.i=@sntech.de header.b="KAen0TNk"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=sntech.de;
-	s=gloria202408; h=Content-Type:Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID;
-	bh=kCpda69+4YOXyPlxXr4rhlyiXJ6ySWZXtY4yz6bQvNk=; b=KAen0TNk1/Ch9gRLVmwOAqN7ww
-	i8CBoeBw5RGn57F5AZuWcWu4MPWtC4wrXn/F4nN08gu77G9JPuXmghozKSX5eA8iUxvCI2kqsw/WX
-	s/nsdo/5GeQmU8wlXqQ5la71KnKow0xmY49Kwtwl1eHisQm+g8fQBciWbRbeUK0CIZ+Wi9Nf0x6kA
-	qS/TpBmnwOF0UGe+ysJBYblLf1YHh+jcACbf/M8S+NuD6H28+bC9kzYB7Rbv5D6m9Fpqx0xzYCmlv
-	l7ojCYq4k5hXsxJDEO5LyP4RA0MsjazWJCuIL3WeL9/CQlbrHwX4+++XMpL62qGg+klNt/1nRHKNR
-	lbHZMGtA==;
-Received: from i53875bc6.versanet.de ([83.135.91.198] helo=diego.localnet)
-	by gloria.sntech.de with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <heiko@sntech.de>)
-	id 1tuT2g-00054Z-JC; Tue, 18 Mar 2025 10:15:22 +0100
-From: Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, detlev.casanova@collabora.com,
- sebastian.reichel@collabora.com
-Subject: Re: (subset) [PATCH RESEND v2 0/6] RK3576 OTP support
-Date: Tue, 18 Mar 2025 10:15:21 +0100
-Message-ID: <2364081.ElGaqSPkdT@diego>
-In-Reply-To: <173978599692.25901.15315285566342669137.b4-ty@linaro.org>
-References:
- <20250210224510.1194963-1-heiko@sntech.de>
- <173978599692.25901.15315285566342669137.b4-ty@linaro.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kpkjVPfA"
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5499659e669so5889442e87.3;
+        Tue, 18 Mar 2025 02:18:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742289516; x=1742894316; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=iUTzmIuRjC2JAfNwka8eNB59m5yfPsonXucEEZCt/jc=;
+        b=kpkjVPfAq8NV5J28ayEgJHPFLFKK0OE264IZWmEN62Euf7uDR8DqIJlzEYV0raxGYU
+         USbsOcsNv6egFTAfvNEnpWVY32s+XIgpVjC6A2yq8yQKgA+r+qf3m4bI5rSvqgKt/NKl
+         N/zQTjGuynqkrA70usqW+9GrH6PhejW3frMdUsNkAwmULZqeTmRPjlBV4cIpGj1usxwC
+         6Xky4EseEz5uSQP4P8toORAXGqwcRnQngok/pbqHmksca5+M9K5EkfGZQogZADqX/FkH
+         i4BiDrzjBBFnn0ByxPtSibx+Zgm9pG09omYxsP3rtFUGT4u0LHSnEDzwhgfBFC6GChu7
+         gZVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742289516; x=1742894316;
+        h=content-transfer-encoding:mime-version:message-id:subject:cc:to
+         :from:date:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iUTzmIuRjC2JAfNwka8eNB59m5yfPsonXucEEZCt/jc=;
+        b=vHSdoiY3ROiwEphk3VSkPAveND5gBHSoetFWCm7CwYKTySrxh5gLMXPH4wgQiSEH5J
+         6TM7fDxI383vCkCzih8fspW8hhpwYZRgT0VO6XGizYpVEdMzC61NxhJfOIfMojG7SR/Z
+         L9KW4PExTQaxWK+Wdw2m5SpJx8qCUykZPlGBHVgRKd6C3iJ8jCLpyX+6aPnE1c2AG/qT
+         Z2llLcNx6ErnM/zBmx2ofW4uPKmGVnQmvTCmkReFfNpBledkuq7zVrOPVU6G07zcKF0E
+         wL4nvqcGl9wamqi8zYEA4Ns2pd5XhuJkogqiem/WqtLg+zUqgU/BA6vE3qIMSFK+CbdB
+         9xQw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZap+2VRis1P31LmYQlEPVxIfrlq8o5WEQDwIOnmWPHKoKpP7ClhZchtrqzj9DfgYaNWOgZykmXBoC2Tc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7+R1YP+JpfAp/bFQQF9yCJNmZA6l0H1lKME3BZfgfGjmVWWnS
+	nVh/YoLi5A19IR2ImOl//Ouhpd+2HEyi46l/glAlzeexqlwiv8el
+X-Gm-Gg: ASbGnctPtGs1fp8qp7V2M3xkNT5Penjzt3U1LmMLbHjQk/jpApw6bswSDUxEqCrFCZa
+	EgJ0QZUXyPPEwji7NCD+VPZVvmi92MlTrZ6aGeZvflHmYAZpxMXtAzVZJVGfTxbXdiAN6FhNmlk
+	u9s2v+otoqPxNhBYmC3uQ34MXpd+KV1ozwsgGqBqfQGqhBRKSujTQWSFbqogeteKTEZuvIvF5bn
+	TsRYZVPT/GexkMN4tlewiG8oowhkupuHMN88BfImPxqyX7ImX93ab+QfR/NeENY3Het8n98hTDd
+	POpneoGtHB/JoiSw1AXFveiFswm1kMhT1bTu/3Y1bDu5TaFE0d2Nj4wJgF8=
+X-Google-Smtp-Source: AGHT+IGHwBr3z+X5KybLHAm4VLxQ6zBuSIuEK+aXOsN7Kzieot+b02V/4BG29JCWDwYNaB7fV6VFbw==
+X-Received: by 2002:a05:6512:3da8:b0:549:490e:240d with SMTP id 2adb3069b0e04-549c391a8c8mr10131590e87.28.1742289516250;
+        Tue, 18 Mar 2025 02:18:36 -0700 (PDT)
+Received: from foxbook (adqh54.neoplus.adsl.tpnet.pl. [79.185.141.54])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7ce823sm1602244e87.105.2025.03.18.02.18.33
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Tue, 18 Mar 2025 02:18:34 -0700 (PDT)
+Date: Tue, 18 Mar 2025 10:18:30 +0100
+From: Michal Pecio <michal.pecio@gmail.com>
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman
+ <gregkh@linuxfoundation.org>
+Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: xhci: Fix double newline in a debug message
+Message-ID: <20250318101830.49e7a37a@foxbook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi,
+xhci_dbg_trace() appends a newline to the format string,
+don't call it with a newline terminated string - it only
+adds a blank line to the log.
 
-Am Montag, 17. Februar 2025, 10:53:16 MEZ schrieb Srinivas Kandagatla:
-> 
-> On Mon, 10 Feb 2025 23:45:04 +0100, Heiko Stuebner wrote:
-> > This enables OTP support in the nvmem driver for rk3576.
-> > 
-> > I expect to pick the clock patch (patch1) and the arm64-dts patch (patch6)
-> > myself, after the nvmem-driver and -binding patches have been applied
-> > (patches 2-5).
-> > 
-> > But kept them together for people wanting to try this series.
-> > 
-> > [...]
-> 
-> Applied, thanks!
-> 
-> [1/6] clk: rockchip: rk3576: define clk_otp_phy_g
->       commit: 3e081aa132bbefe31ac95dd6dfc8d787ffa83d0b
+Signed-off-by: Michal Pecio <michal.pecio@gmail.com>
+---
+ drivers/usb/host/xhci-ring.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-the applied message says you picked the clock patch, but it's not in your
-tree - probably because you realized that it's a clock patch? :-)
-
-So just to make sure it doesn't land in two trees, I should probably pick
-up the patch for the Rockchip clock driver, right?
-
-
-Thanks a lot
-Heiko
-
-
-> [2/6] nvmem: rockchip-otp: Move read-offset into variant-data
->       commit: 024e21343f3cbcde0343473fcaf094d2c19cc7bf
-> [3/6] dt-bindings: nvmem: rockchip,otp: add missing limits for clock-names
->       commit: a1bf00100d06ad69286154a63e548ae6f6ce8539
-> [4/6] dt-bindings: nvmem: rockchip,otp: Add compatible for RK3576
->       commit: 8c94337ebbfb840944574f82df0cbe35930d8df8
-> [5/6] nvmem: rockchip-otp: add rk3576 variant data
->       commit: c5ebefe4e20d9fd99ae49cbfd1c18632cf338fa5
-> 
-> Best regards,
-> 
-
-
-
-
+diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
+index dc674bc24a89..b565c9f7e036 100644
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -789,7 +789,7 @@ static int xhci_move_dequeue_past_td(struct xhci_hcd *xhci,
+ 	ep->queued_deq_ptr = new_deq;
+ 
+ 	xhci_dbg_trace(xhci, trace_xhci_dbg_cancel_urb,
+-		       "Set TR Deq ptr 0x%llx, cycle %u\n", addr, new_cycle);
++		       "Set TR Deq ptr 0x%llx, cycle %u", addr, new_cycle);
+ 
+ 	/* Stop the TD queueing code from ringing the doorbell until
+ 	 * this command completes.  The HC won't set the dequeue pointer
+-- 
+2.48.1
