@@ -1,90 +1,221 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4AAC1991C9
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 17:14:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B814D20F091;
+	Tue, 18 Mar 2025 17:15:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742318072; cv=none; b=O9t5y5UF++jdWQJPL42+aYHTLgjK4dN5ql/Z1h9kPuTKsm5MDqJG4J3PkbMNG+GTbsqXQCwvYZ72sU/KBlFcA9OkaIajn6Nt+UDf+LVjpip4wtwsA/3k+SOd3mwk7wyB8Ro2Ofg7zZeag1E489VWgU4l/IUgGMCaniooryHRrfg=
+	t=1742318108; cv=none; b=DMu815pGnshbiNNuRGvhykV8bWEGJCwjLx75L00YW+eTPK5tFU1uweAf2POIA8vhMZ6e5/06/QOzx2IwbgoIgQCD73NtNEWJNkzO+sdB8bDXZMU4JQnyBoqsv+NYTp4vCvhBfIwrjmu6Bcw+DHVCwgTsbpIt46GJtwwk5VvdGe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742318072; c=relaxed/simple;
-	bh=FdmeE5UpNTG7ZD9/uFOLcJYqB/eNRc5dbBERnws9X0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ha/Pw4akS5a4CByTna9Ae1ypLz8ErmgYfcGhQgin0an7f96HYQCHAG1eLFiCsrhLp5LPBCdi3Z1AhaHggf5eCVA61pMYFNcc+0y8yflgMKo+bIseruYyM9VcBdBt2y+7dpUgMfU2e58hWCxcsWVC7kUQpU0+Pn0j4pKoKx2zWPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KZy1bBNE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742318108; c=relaxed/simple;
+	bh=oPe4Kq1bj9UBrWcKG8s2HHDATru23tP2EvUetFiYkYg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=QW2gwHDPHg5nALFTciq7/j6A2ojyJ7YkbYEJx0uArWoyXDccJZ/aHtt1+WaZlUbnAUu6kg52qdSmO8ojU2AW8C1AoqLglm4Et1nazAxwzgxUJ/uVLBsPGf+aVuIIU3dt4j71xMrLnyqQIZ/PKqRgZJNTDZhy7LD0mXiUE9vIhu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=YQwhXjo0; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KZy1bBNE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C8E9C4CEE3;
-	Tue, 18 Mar 2025 17:14:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742318072;
-	bh=FdmeE5UpNTG7ZD9/uFOLcJYqB/eNRc5dbBERnws9X0I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KZy1bBNEehY+76p+JpVHAWgQfv6e31/k/jm8FqzUbSiA5prxPX0aTI02U1HVmU5iW
-	 rXuRDwcXhLhmj3JvhJzuIze4DAixbJOzn0AMYE3G0JivOmqST+bYtjeRpKpd5CEUjT
-	 4thVUCZz2Jxdd+Pyhil2NuExioXt1zAC7MYgxMLj8Q9oMHoI4BjvpauUhWPL51EotK
-	 +uwzBR1M7Ntn/FbaRAMreXrkscnUsFc5rMlFYrQPEqmLyp38ZCi/8mtZx0HbJ1ngma
-	 FWZHvCX3UYLZcJk33r+qLYm64LsLGDdtB66OASQJ0wAkv8lhPLe9ck0G8XYhBvh+2g
-	 VezSPuCoxwsiw==
-Date: Tue, 18 Mar 2025 10:14:29 -0700
-From: Josh Poimboeuf <jpoimboe@kernel.org>
-To: David Woodhouse <dwmw2@infradead.org>
-Cc: kexec@lists.infradead.org, Thomas Gleixner <tglx@linutronix.de>, 
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, 
-	"Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Kai Huang <kai.huang@intel.com>, 
-	Nikolay Borisov <nik.borisov@suse.com>, linux-kernel@vger.kernel.org, Simon Horman <horms@kernel.org>, 
-	Dave Young <dyoung@redhat.com>, Peter Zijlstra <peterz@infradead.org>, bsz@amazon.de
-Subject: Re: [PATCH v7 8/8] [DO NOT MERGE] x86/kexec: Add CFI type
- information to relocate_kernel()
-Message-ID: <awucsfjn475mvwg7xhihexln2hfbtvrie2uv333u7awtkz4mrf@t57pi7jibytc>
-References: <20250312144257.2348250-1-dwmw2@infradead.org>
- <20250312144257.2348250-9-dwmw2@infradead.org>
- <ra6zlx2iz7eks3y4ymoi6mn7o6rvnjc3lnjoaadf3szaocbkae@yg2lyjzlnqdn>
- <c2471b0a81ebd183d32e76f995a70b7912c1d4a1.camel@infradead.org>
- <7tq4tti5pv7fjboiapuglkcsodl4nsk53rj36skg4xb2bkysei@ncoz2ztiddm7>
- <970a4932cb95bc8934dc2ad15e8e84a2a51d2232.camel@infradead.org>
- <wzc2owczflbhfho6xcgnl3mnrutdvmqz46xgo54g2ahorhpo5l@rykdsdkjw4fd>
- <6swzz4732x5kfeg3qsif2r5s5ado3nbweznm6alsxvniy4xq6a@z6foorhlhelj>
- <9c41ab61efc573e3ab5a75b6e4031f81db84a846.camel@infradead.org>
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="YQwhXjo0"
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I5qiuC018522;
+	Tue, 18 Mar 2025 12:15:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=
+	PODMain02222019; bh=ptvfhQxzX1FHtfnjtqDwf2qwBEyJBpTeqaAAHPr8Cs4=; b=
+	YQwhXjo0xqvvRD2BKEhy1NlZbEy6n7Pt0oBhU+PcMMG8wCwkRycl8N3FN2NV535P
+	4NujW5zkTvfiV8x3uJR12+NTSijckh1NOwZlpJv/BR5Ef8H3qgQZT5mtGZ0hA9As
+	9ev4aE8Lpv9H66X8TEjYFi+TL1HGO8hh3Av5v1+A3br189FQPlNFdL3g13EBjVOE
+	8a3F238Zlxer5i4aBP49RhbPVWP0ZwhHb8iDrhZjQSZuMFBdVp0y263OazlDvN9H
+	t8EI3dFdQGckDVszssGagpmGBYGrHMK1RYkZy9cp+Fzxl8Jnwxtb+Fk3jICxFmoL
+	Vnl6iHFAgNrMtZC1Ikpq+Q==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 45d5yh879v-2
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 12:15:01 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Tue, 18 Mar
+ 2025 17:14:59 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.14 via Frontend Transport; Tue, 18 Mar 2025 17:14:59 +0000
+Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 8804182255F;
+	Tue, 18 Mar 2025 17:14:59 +0000 (UTC)
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: <broonie@kernel.org>
+CC: <lgirdwood@gmail.com>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
+        <baojun.xu@ti.com>, <linux-sound@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: [PATCH 04/15] ASoC: ops: Update mask generation to use GENMASK
+Date: Tue, 18 Mar 2025 17:14:48 +0000
+Message-ID: <20250318171459.3203730-5-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250318171459.3203730-1-ckeepax@opensource.cirrus.com>
+References: <20250318171459.3203730-1-ckeepax@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <9c41ab61efc573e3ab5a75b6e4031f81db84a846.camel@infradead.org>
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=GrhC+l1C c=1 sm=1 tr=0 ts=67d9aa15 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=Vs1iUdzkB0EA:10 a=w1d2syhTAAAA:8 a=NjVXIjOy9wLvg5dM6DQA:9
+X-Proofpoint-GUID: 0pF1iPF4tAqPD8ohdUNodFyXzJLCjOiC
+X-Proofpoint-ORIG-GUID: 0pF1iPF4tAqPD8ohdUNodFyXzJLCjOiC
+X-Proofpoint-Spam-Reason: safe
 
-On Tue, Mar 18, 2025 at 03:56:36PM +0000, David Woodhouse wrote:
-> But on the whole, I'm not sure the CFI check is worth it.
-> 
-> CFI checks that the caller and callee agree about the prototype of the
-> function being called. There are two main benefits of this:
-> 
->  • to protect against attacks where function pointers are substituted
->    for gadgets.
-> 
->  • to protect against genuine bugs, where the caller and the callee
->    disagree about the function arguments.
+Use GENMASK to make the masks for the various control helper functions.
+Also factor out a shared helper function for the volsw and volsw_range
+controls since the same code is appropriate for each. Note this does add
+support for sign_bit into the volsw_range callbacks.
 
-AFAIK the first one is the main point of CFI.
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+---
+ sound/soc/soc-ops.c | 46 +++++++++++++++++++++++++--------------------
+ 1 file changed, 26 insertions(+), 20 deletions(-)
 
-> For the relocate_kernel() case I don't think we care much about the
-> first. Without a CFI prologue, no *other* code can be tricked into
-> calling relocate_kernel()
-
-But for FineIBT the hash is checked on the callee side.  So it loses
-FineIBT protection.
-
-> — and besides, it's in the kernel's data
-> section and isn't executable anyway until the kexec code copies it to a
-> page that *is*.
-
-Does the code get copied immediately before getting called, or can it be
-initialized earlier during boot when kdump does its initial setup?
-
+diff --git a/sound/soc/soc-ops.c b/sound/soc/soc-ops.c
+index dac55138210d5..54945017e1f1e 100644
+--- a/sound/soc/soc-ops.c
++++ b/sound/soc/soc-ops.c
+@@ -158,6 +158,20 @@ static void snd_soc_read_signed(struct snd_soc_component *component,
+ 	*signed_val = ret;
+ }
+ 
++static int soc_mixer_mask(struct soc_mixer_control *mc)
++{
++	if (mc->sign_bit)
++		return GENMASK(mc->sign_bit, 0);
++	else
++		return GENMASK(fls(mc->max) - 1, 0);
++}
++
++static int soc_mixer_sx_mask(struct soc_mixer_control *mc)
++{
++	// min + max will take us 1-bit over the size of the mask
++	return GENMASK(fls(mc->min + mc->max) - 2, 0);
++}
++
+ /**
+  * snd_soc_info_volsw - single mixer info callback
+  * @kcontrol: mixer control
+@@ -260,13 +274,10 @@ int snd_soc_get_volsw(struct snd_kcontrol *kcontrol,
+ 	int max = mc->max;
+ 	int min = mc->min;
+ 	int sign_bit = mc->sign_bit;
+-	unsigned int mask = (1ULL << fls(max)) - 1;
++	unsigned int mask = soc_mixer_mask(mc);
+ 	unsigned int invert = mc->invert;
+ 	int val;
+ 
+-	if (sign_bit)
+-		mask = BIT(sign_bit + 1) - 1;
+-
+ 	snd_soc_read_signed(component, reg, mask, shift, sign_bit, &val);
+ 
+ 	ucontrol->value.integer.value[0] = val - min;
+@@ -312,17 +323,13 @@ int snd_soc_put_volsw(struct snd_kcontrol *kcontrol,
+ 	unsigned int rshift = mc->rshift;
+ 	int max = mc->max;
+ 	int min = mc->min;
+-	unsigned int sign_bit = mc->sign_bit;
+-	unsigned int mask = (1 << fls(max)) - 1;
++	unsigned int mask = soc_mixer_mask(mc);
+ 	unsigned int invert = mc->invert;
+ 	int err, ret;
+ 	bool type_2r = false;
+ 	unsigned int val2 = 0;
+ 	unsigned int val, val_mask;
+ 
+-	if (sign_bit)
+-		mask = BIT(sign_bit + 1) - 1;
+-
+ 	if (ucontrol->value.integer.value[0] < 0)
+ 		return -EINVAL;
+ 	val = ucontrol->value.integer.value[0];
+@@ -391,9 +398,8 @@ int snd_soc_get_volsw_sx(struct snd_kcontrol *kcontrol,
+ 	unsigned int reg2 = mc->rreg;
+ 	unsigned int shift = mc->shift;
+ 	unsigned int rshift = mc->rshift;
+-	int max = mc->max;
+ 	int min = mc->min;
+-	unsigned int mask = (1U << (fls(min + max) - 1)) - 1;
++	unsigned int mask = soc_mixer_sx_mask(mc);
+ 	unsigned int val;
+ 
+ 	val = snd_soc_component_read(component, reg);
+@@ -431,7 +437,7 @@ int snd_soc_put_volsw_sx(struct snd_kcontrol *kcontrol,
+ 	unsigned int val, val_mask;
+ 	int max = mc->max;
+ 	int min = mc->min;
+-	unsigned int mask = (1U << (fls(min + max) - 1)) - 1;
++	unsigned int mask = soc_mixer_sx_mask(mc);
+ 	int err = 0;
+ 	int ret;
+ 
+@@ -525,7 +531,7 @@ int snd_soc_put_volsw_range(struct snd_kcontrol *kcontrol,
+ 	unsigned int shift = mc->shift;
+ 	int min = mc->min;
+ 	int max = mc->max;
+-	unsigned int mask = (1 << fls(max)) - 1;
++	unsigned int mask = soc_mixer_mask(mc);
+ 	unsigned int invert = mc->invert;
+ 	unsigned int val, val_mask;
+ 	int err, ret, tmp;
+@@ -597,7 +603,7 @@ int snd_soc_get_volsw_range(struct snd_kcontrol *kcontrol,
+ 	unsigned int shift = mc->shift;
+ 	int min = mc->min;
+ 	int max = mc->max;
+-	unsigned int mask = (1 << fls(max)) - 1;
++	unsigned int mask = soc_mixer_mask(mc);
+ 	unsigned int invert = mc->invert;
+ 	unsigned int val;
+ 
+@@ -891,9 +897,9 @@ int snd_soc_get_xr_sx(struct snd_kcontrol *kcontrol,
+ 	unsigned int regbase = mc->regbase;
+ 	unsigned int regcount = mc->regcount;
+ 	unsigned int regwshift = component->val_bytes * BITS_PER_BYTE;
+-	unsigned int regwmask = (1UL << regwshift) - 1;
++	unsigned int regwmask = GENMASK(regwshift - 1, 0);
++	unsigned long mask = GENMASK(mc->nbits - 1, 0);
+ 	unsigned int invert = mc->invert;
+-	unsigned long mask = (1UL << mc->nbits) - 1;
+ 	long min = mc->min;
+ 	long max = mc->max;
+ 	long val = 0;
+@@ -938,9 +944,9 @@ int snd_soc_put_xr_sx(struct snd_kcontrol *kcontrol,
+ 	unsigned int regbase = mc->regbase;
+ 	unsigned int regcount = mc->regcount;
+ 	unsigned int regwshift = component->val_bytes * BITS_PER_BYTE;
+-	unsigned int regwmask = (1UL << regwshift) - 1;
++	unsigned int regwmask = GENMASK(regwshift - 1, 0);
++	unsigned long mask = GENMASK(mc->nbits - 1, 0);
+ 	unsigned int invert = mc->invert;
+-	unsigned long mask = (1UL << mc->nbits) - 1;
+ 	long max = mc->max;
+ 	long val = ucontrol->value.integer.value[0];
+ 	int ret = 0;
+@@ -986,7 +992,7 @@ int snd_soc_get_strobe(struct snd_kcontrol *kcontrol,
+ 		(struct soc_mixer_control *)kcontrol->private_value;
+ 	unsigned int reg = mc->reg;
+ 	unsigned int shift = mc->shift;
+-	unsigned int mask = 1 << shift;
++	unsigned int mask = BIT(shift);
+ 	unsigned int invert = mc->invert != 0;
+ 	unsigned int val;
+ 
+@@ -1019,7 +1025,7 @@ int snd_soc_put_strobe(struct snd_kcontrol *kcontrol,
+ 		(struct soc_mixer_control *)kcontrol->private_value;
+ 	unsigned int reg = mc->reg;
+ 	unsigned int shift = mc->shift;
+-	unsigned int mask = 1 << shift;
++	unsigned int mask = BIT(shift);
+ 	unsigned int invert = mc->invert != 0;
+ 	unsigned int strobe = ucontrol->value.enumerated.item[0] != 0;
+ 	unsigned int val1 = (strobe ^ invert) ? mask : 0;
 -- 
-Josh
+2.39.5
+
