@@ -1,221 +1,468 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2039B1D47A2
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 05:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4122B1C9B97
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 05:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742276351; cv=none; b=Yo8b7tTA+1bIdlhzm09xsmmDPfA3/ntdQeGj0FQ5kBBlMO0WXTDBjQf89xoCJ3PCOOV9B687Rzw79rq7osTq+Rpc9TFQ0ZSzsc7aS4OFKmlnxm+EMUrpInpanJCg9h0yC7Sy4nkL0NcAw0LVE2yjfHReN4wlXJpEn8s1edQe/s4=
+	t=1742276410; cv=none; b=W/aKf5ATjACc2AAzMiGkhndvnwym6cizsaYiCUYOHuLL7VWnJ6sQrhvIiRs/Iz4RtfWvVDN68AvFvh6+8T+VJTVjlefWMSL8BW3rWl6ZzuFZsIjRQkTL5pUTbGnbCs08enQGeT9ijJheRkIi47EAlFyZSfk3wmf6fLBSQzbg/a0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742276351; c=relaxed/simple;
-	bh=WjvFSIhYFitQox4zk+tviAIfJhO2IjpA3FfV9Z+vy+c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f2UtwIOH9OuCEMe1KDbkWvYAiTblaILBwCmrs8g0VlUqLfFWYAiC+BZFd8qkAEimxIwjZzjPVn1cyPRjJ+9KgwTuRLZldh5c9DDAbySdktrTnqNtb4hNflaaln7Epc573szVhbw2Ge5qhnBUl05mskzSCS65o9915pYirg0eI4o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=A/MKBvxg; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742276410; c=relaxed/simple;
+	bh=HFrmONqkVemhA81XFnDlbnbFAvrPsvYETccZw5Mt8Wg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=gQrnaQOCRdbG2nli/HqVFzhHfh3WdlB/YBKKfAlE5xTPD2nPZGOPGr4IFPzFdSg43CSJmOl5NVRwITJ7lPYxDKi07UjyGw2GpkEnoaVYfmaWidT46fWU2qZ1BVWVufBUnq+3N/9OpF1Cm4NdxkATxc79Dv+jjRTeehN8ssHN/YA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Huljf++6; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="A/MKBvxg"
-Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HKpnst011320;
-	Tue, 18 Mar 2025 05:38:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=DioCaq
-	Qk0CryK0PbM4g67zBKbEP75bAXPCKEk2n/rJE=; b=A/MKBvxgMO+AjzBPdR4piH
-	owaMe0gV3nyCYKcmUF4Yj+5e6/Bdeu9UXzwC6Gw1dYD58EjPhnMs7chyToN+bM+b
-	pQQpOJJ/XTt5fTzyw6LhxwN1TLrFThrThelJlrFntLVcfKeKpKOErV429PFpC1Rm
-	4UR9pH9AUK9h15sDrQff0CdGqUqvJiCxUEp88Yf6QPiRDIRuXp3c3DL7/m7BQLVl
-	JrrbQRFTtH7gKZ5Wz6m9DW6rRxJTnp5R4LPv87yqr9oCNm3EN8MnNbdUOIpJyNng
-	1C9PH0F0/lFG91tesMaz1oETViSSodDKGOrLfuy9vllD8j1MJw4PQu+7mqT/H9kw
-	==
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45eu55sphd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 05:38:54 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52I4BjAD001076;
-	Tue, 18 Mar 2025 05:38:54 GMT
-Received: from smtprelay04.wdc07v.mail.ibm.com ([172.16.1.71])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45dp3khxqp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 05:38:54 +0000
-Received: from smtpav01.dal12v.mail.ibm.com (smtpav01.dal12v.mail.ibm.com [10.241.53.100])
-	by smtprelay04.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52I5crwj33358338
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Mar 2025 05:38:53 GMT
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 19E955805D;
-	Tue, 18 Mar 2025 05:38:53 +0000 (GMT)
-Received: from smtpav01.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id D726F58057;
-	Tue, 18 Mar 2025 05:38:47 +0000 (GMT)
-Received: from [9.66.75.14] (unknown [9.66.75.14])
-	by smtpav01.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Tue, 18 Mar 2025 05:38:47 +0000 (GMT)
-Message-ID: <67bff00d-eca7-41bd-ad9c-7ee6d5dac040@linux.ibm.com>
-Date: Tue, 18 Mar 2025 11:08:45 +0530
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Huljf++6"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742276407; x=1773812407;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=HFrmONqkVemhA81XFnDlbnbFAvrPsvYETccZw5Mt8Wg=;
+  b=Huljf++6z69dfrWx3Xmq74sH1xkbU9jTX5MWStHG/2Fab0zxL29u5Y+g
+   mSTBtVprIJrP4ijbYACHuebNjo0ptwXL01JTF7XuhRGBMTG+VTRJBjmDL
+   OGCZLQxdLi+YWcKwH7+kzFveRLXC5ZhBQ0xjHpc4bNhC9m8naFgfuVGIo
+   LfuHfSXqjri06nE7QbuCTvs8FIEaE0BbpB44A5sN5pGIMnHp8m41Yh67v
+   fxXe2tR1rjQ8eR6VeRIqRPH1CLUlaO8vXIfUkJGtMSeV9EG0/ZKumxbF+
+   mHgU7Y8KpfvPgjxAIaVNjNrRQz59QqIcaBASLjOfopAYL1iYwR1JyMX9D
+   g==;
+X-CSE-ConnectionGUID: ybj4NXHWRa2M0QrbhBdYnQ==
+X-CSE-MsgGUID: lpGpEHsEQjO5EYiomCfk7Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11376"; a="42573833"
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="42573833"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Mar 2025 22:37:35 -0700
+X-CSE-ConnectionGUID: xiwzGKI/SQ2kG2HmKVAE6Q==
+X-CSE-MsgGUID: tkgtoQs3RziekJvll6YR3Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,256,1736841600"; 
+   d="scan'208";a="122655392"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 17 Mar 2025 22:37:34 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuPdT-000DQy-0p;
+	Tue, 18 Mar 2025 05:37:15 +0000
+Date: Tue, 18 Mar 2025 13:36:14 +0800
+From: kernel test robot <lkp@intel.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: include/linux/mtd/spinand.h:70:6: error: implicit declaration of
+ function '__VA_OPT__'; did you mean '__SSP__'?
+Message-ID: <202503181330.YcDXGy7F-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 00/11] Support page table check on PowerPC
-To: Andrew Donnellan <ajd@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: x86@kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        pasha.tatashin@soleen.com, sweettea-kernel@dorminy.me
-References: <20250211161404.850215-1-ajd@linux.ibm.com>
-Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <20250211161404.850215-1-ajd@linux.ibm.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 9pxqW5-JFDH7ipa2HtNalmErx99yR2nv
-X-Proofpoint-GUID: 9pxqW5-JFDH7ipa2HtNalmErx99yR2nv
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_02,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- mlxlogscore=999 priorityscore=1501 adultscore=0 suspectscore=0
- impostorscore=0 mlxscore=0 lowpriorityscore=0 clxscore=1011 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503180037
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   fc444ada131001812c5d10b380837238c9cf7c8c
+commit: 7ce0d16d5802bfde4209e52ee8ad644ca1eab423 mtd: spinand: Add an optional frequency to read from cache macros
+date:   9 weeks ago
+config: xtensa-randconfig-002-20250318 (https://download.01.org/0day-ci/archive/20250318/202503181330.YcDXGy7F-lkp@intel.com/config)
+compiler: xtensa-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250318/202503181330.YcDXGy7F-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503181330.YcDXGy7F-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/mtd/nand/spi/xtx.c:10:0:
+>> include/linux/mtd/spinand.h:70:6: error: implicit declaration of function '__VA_OPT__'; did you mean '__SSP__'? [-Werror=implicit-function-declaration]
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+         ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   drivers/mtd/nand/spi/xtx.c:31:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/spi/spi-mem.h:113:2: error: expected expression before '.' token
+     .max_freq = __freq
+     ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:70:17: note: in expansion of macro 'SPI_MEM_OP_MAX_FREQ'
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+                    ^~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/xtx.c:31:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+--
+   In file included from drivers/mtd/nand/spi/alliancememory.c:8:0:
+>> include/linux/mtd/spinand.h:70:6: error: implicit declaration of function '__VA_OPT__'; did you mean '__SSP__'? [-Werror=implicit-function-declaration]
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+         ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   drivers/mtd/nand/spi/alliancememory.c:25:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/spi/spi-mem.h:113:2: error: expected expression before '.' token
+     .max_freq = __freq
+     ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:70:17: note: in expansion of macro 'SPI_MEM_OP_MAX_FREQ'
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+                    ^~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/alliancememory.c:25:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+--
+   In file included from drivers/mtd/nand/spi/esmt.c:10:0:
+>> include/linux/mtd/spinand.h:70:6: error: implicit declaration of function '__VA_OPT__'; did you mean '__SSP__'? [-Werror=implicit-function-declaration]
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+         ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   drivers/mtd/nand/spi/esmt.c:19:7: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+          SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/spi/spi-mem.h:113:2: error: expected expression before '.' token
+     .max_freq = __freq
+     ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:70:17: note: in expansion of macro 'SPI_MEM_OP_MAX_FREQ'
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+                    ^~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/esmt.c:19:7: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+          SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+--
+   In file included from drivers/mtd/nand/spi/skyhigh.c:11:0:
+   include/linux/stddef.h:8:14: warning: initialization makes integer from pointer without a cast [-Wint-conversion]
+    #define NULL ((void *)0)
+                 ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:47: note: in expansion of macro 'NULL'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                                  ^~~~
+   include/linux/stddef.h:8:14: note: (near initialization for '(anonymous)[4].data.nbytes')
+    #define NULL ((void *)0)
+                 ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:47: note: in expansion of macro 'NULL'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                                  ^~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:44: warning: initialization makes pointer from integer without a cast [-Wint-conversion]
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                               ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:44: note: (near initialization for '(anonymous)[4].data.buf.in')
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                               ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/mtd/spinand.h:70:6: error: implicit declaration of function '__VA_OPT__'; did you mean '__SSP__'? [-Werror=implicit-function-declaration]
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+         ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/spi/spi-mem.h:113:2: error: expected expression before '.' token
+     .max_freq = __freq
+     ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:70:17: note: in expansion of macro 'SPI_MEM_OP_MAX_FREQ'
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+                    ^~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   include/linux/stddef.h:8:14: warning: initialization makes integer from pointer without a cast [-Wint-conversion]
+    #define NULL ((void *)0)
+                 ^
+   include/linux/mtd/spinand.h:308:41: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .nops = sizeof((struct spi_mem_op[]){ __VA_ARGS__ }) / \
+                                            ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:47: note: in expansion of macro 'NULL'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                                  ^~~~
+   include/linux/stddef.h:8:14: note: (near initialization for '(anonymous)[4].data.nbytes')
+    #define NULL ((void *)0)
+                 ^
+   include/linux/mtd/spinand.h:308:41: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .nops = sizeof((struct spi_mem_op[]){ __VA_ARGS__ }) / \
+                                            ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:47: note: in expansion of macro 'NULL'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                                  ^~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:44: warning: initialization makes pointer from integer without a cast [-Wint-conversion]
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                               ^
+   include/linux/mtd/spinand.h:308:41: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .nops = sizeof((struct spi_mem_op[]){ __VA_ARGS__ }) / \
+                                            ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:44: note: (near initialization for '(anonymous)[4].data.buf.in')
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+                                               ^
+   include/linux/mtd/spinand.h:308:41: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .nops = sizeof((struct spi_mem_op[]){ __VA_ARGS__ }) / \
+                                            ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:69:6: note: in expansion of macro 'SPI_MEM_OP_DATA_IN'
+         SPI_MEM_OP_DATA_IN(len, buf, 1),   \
+         ^~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/spi/spi-mem.h:113:2: error: expected expression before '.' token
+     .max_freq = __freq
+     ^
+   include/linux/mtd/spinand.h:308:41: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .nops = sizeof((struct spi_mem_op[]){ __VA_ARGS__ }) / \
+                                            ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:70:17: note: in expansion of macro 'SPI_MEM_OP_MAX_FREQ'
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+                    ^~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/skyhigh.c:24:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+--
+   In file included from drivers/mtd/nand/spi/foresee.c:10:0:
+>> include/linux/mtd/spinand.h:70:6: error: implicit declaration of function '__VA_OPT__'; did you mean '__SSP__'? [-Werror=implicit-function-declaration]
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+         ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   drivers/mtd/nand/spi/foresee.c:18:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/spi/spi-mem.h:113:2: error: expected expression before '.' token
+     .max_freq = __freq
+     ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:70:17: note: in expansion of macro 'SPI_MEM_OP_MAX_FREQ'
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+                    ^~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/foresee.c:18:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+--
+   In file included from drivers/mtd/nand/spi/winbond.c:12:0:
+>> include/linux/mtd/spinand.h:70:6: error: implicit declaration of function '__VA_OPT__'; did you mean '__SSP__'? [-Werror=implicit-function-declaration]
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+         ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   drivers/mtd/nand/spi/winbond.c:26:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> include/linux/spi/spi-mem.h:113:2: error: expected expression before '.' token
+     .max_freq = __freq
+     ^
+   include/linux/mtd/spinand.h:307:34: note: in definition of macro 'SPINAND_OP_VARIANTS'
+      .ops = (struct spi_mem_op[]) { __VA_ARGS__ },  \
+                                     ^~~~~~~~~~~
+   include/linux/mtd/spinand.h:66:2: note: in expansion of macro 'SPI_MEM_OP'
+     SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),    \
+     ^~~~~~~~~~
+   include/linux/mtd/spinand.h:70:17: note: in expansion of macro 'SPI_MEM_OP_MAX_FREQ'
+         __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+                    ^~~~~~~~~~~~~~~~~~~
+   drivers/mtd/nand/spi/winbond.c:26:3: note: in expansion of macro 'SPINAND_PAGE_READ_FROM_CACHE_OP'
+      SPINAND_PAGE_READ_FROM_CACHE_OP(0, 1, NULL, 0));
+      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
+..
 
 
+vim +70 include/linux/mtd/spinand.h
 
-On 2/11/25 9:43 PM, Andrew Donnellan wrote:
-> Support page table check on all PowerPC platforms. This works by
-> serialising assignments, reassignments and clears of page table
-> entries at each level in order to ensure that anonymous mappings
-> have at most one writable consumer, and likewise that file-backed
-> mappings are not simultaneously also anonymous mappings.
-> 
-> In order to support this infrastructure, a number of stubs must be
-> defined for all powerpc platforms. Additionally, seperate set_pte_at()
-> and set_pte_at_unchecked(), to allow for internal, uninstrumented mappings.
-> 
-> (This series was written by Rohan McLure, who has left IBM and is no longer
-> working on powerpc - I've taken far too long to pick this up and finally
-> send it.)
-> 
+    18	
+    19	/**
+    20	 * Standard SPI NAND flash operations
+    21	 */
+    22	
+    23	#define SPINAND_RESET_OP						\
+    24		SPI_MEM_OP(SPI_MEM_OP_CMD(0xff, 1),				\
+    25			   SPI_MEM_OP_NO_ADDR,					\
+    26			   SPI_MEM_OP_NO_DUMMY,					\
+    27			   SPI_MEM_OP_NO_DATA)
+    28	
+    29	#define SPINAND_WR_EN_DIS_OP(enable)					\
+    30		SPI_MEM_OP(SPI_MEM_OP_CMD((enable) ? 0x06 : 0x04, 1),		\
+    31			   SPI_MEM_OP_NO_ADDR,					\
+    32			   SPI_MEM_OP_NO_DUMMY,					\
+    33			   SPI_MEM_OP_NO_DATA)
+    34	
+    35	#define SPINAND_READID_OP(naddr, ndummy, buf, len)			\
+    36		SPI_MEM_OP(SPI_MEM_OP_CMD(0x9f, 1),				\
+    37			   SPI_MEM_OP_ADDR(naddr, 0, 1),			\
+    38			   SPI_MEM_OP_DUMMY(ndummy, 1),				\
+    39			   SPI_MEM_OP_DATA_IN(len, buf, 1))
+    40	
+    41	#define SPINAND_SET_FEATURE_OP(reg, valptr)				\
+    42		SPI_MEM_OP(SPI_MEM_OP_CMD(0x1f, 1),				\
+    43			   SPI_MEM_OP_ADDR(1, reg, 1),				\
+    44			   SPI_MEM_OP_NO_DUMMY,					\
+    45			   SPI_MEM_OP_DATA_OUT(1, valptr, 1))
+    46	
+    47	#define SPINAND_GET_FEATURE_OP(reg, valptr)				\
+    48		SPI_MEM_OP(SPI_MEM_OP_CMD(0x0f, 1),				\
+    49			   SPI_MEM_OP_ADDR(1, reg, 1),				\
+    50			   SPI_MEM_OP_NO_DUMMY,					\
+    51			   SPI_MEM_OP_DATA_IN(1, valptr, 1))
+    52	
+    53	#define SPINAND_BLK_ERASE_OP(addr)					\
+    54		SPI_MEM_OP(SPI_MEM_OP_CMD(0xd8, 1),				\
+    55			   SPI_MEM_OP_ADDR(3, addr, 1),				\
+    56			   SPI_MEM_OP_NO_DUMMY,					\
+    57			   SPI_MEM_OP_NO_DATA)
+    58	
+    59	#define SPINAND_PAGE_READ_OP(addr)					\
+    60		SPI_MEM_OP(SPI_MEM_OP_CMD(0x13, 1),				\
+    61			   SPI_MEM_OP_ADDR(3, addr, 1),				\
+    62			   SPI_MEM_OP_NO_DUMMY,					\
+    63			   SPI_MEM_OP_NO_DATA)
+    64	
+    65	#define SPINAND_PAGE_READ_FROM_CACHE_OP(addr, ndummy, buf, len, ...) \
+    66		SPI_MEM_OP(SPI_MEM_OP_CMD(0x03, 1),				\
+    67			   SPI_MEM_OP_ADDR(2, addr, 1),				\
+    68			   SPI_MEM_OP_DUMMY(ndummy, 1),				\
+    69			   SPI_MEM_OP_DATA_IN(len, buf, 1),			\
+  > 70			   __VA_OPT__(SPI_MEM_OP_MAX_FREQ(__VA_ARGS__)))
+    71	
 
-For powerpc changes
-Acked-by: Madhavan Srinivasan <maddy@linux.ibm.com>
-
-> v13:
->  * Rebase on mainline
->  * Don't use set_pte_at_unchecked() for early boot purposes (Pasha)
-> 
-> v12:
->  * Rename commits that revert changes to instead reflect that we are
->    reinstating old behaviour due to it providing more flexibility
->  * Add return line to pud_pfn() stub
->  * Instrument ptep_get_and_clear() for nohash
-> Link: https://lore.kernel.org/linuxppc-dev/20240402051154.476244-1-rmclure@linux.ibm.com/
-> 
-> v11:
->  * The pud_pfn() stub, which previously had no legitimate users on any
->    powerpc platform, now has users in Book3s64 with transparent pages.
->    Include a stub of the same name for each platform that does not
->    define their own.
->  * Drop patch that standardised use of p*d_leaf(), as already included
->    upstream in v6.9.
->  * Provide fallback definitions of p{m,u}d_user_accessible_page() that
->    do not reference p*d_leaf(), p*d_pte(), as they are defined after
->    powerpc/mm headers by linux/mm headers.
->  * Ensure that set_pte_at_unchecked() has the same checks as
->    set_pte_at().
-> Link: https://lore.kernel.org/linuxppc-dev/20240328045535.194800-14-rmclure@linux.ibm.com/ 
-> 
-> v10:
->  * Revert patches that removed address and mm parameters from page table
->    check routines, including consuming code from arm64, x86_64 and
->    riscv.
->  * Implement *_user_accessible_page() routines in terms of pte_user()
->    where available (64-bit, book3s) but otherwise by checking the
->    address (on platforms where the pte does not imply whether the
->    mapping is for user or kernel)
->  * Internal set_pte_at() calls replaced with set_pte_at_unchecked(), which
->    is identical, but prevents double instrumentation.
-> Link: https://lore.kernel.org/linuxppc-dev/20240313042118.230397-9-rmclure@linux.ibm.com/T/
-> 
-> v9:
->  * Adapt to using the set_ptes() API, using __set_pte_at() where we need
->    must avoid instrumentation.
->  * Use the logic of *_access_permitted() for implementing
->    *_user_accessible_page(), which are required routines for page table
->    check.
->  * Even though we no longer need p{m,u,4}d_leaf(), still default
->    implement these to assist in refactoring out extant
->    p{m,u,4}_is_leaf().
->  * Add p{m,u}_pte() stubs where asm-generic does not provide them, as
->    page table check wants all *user_accessible_page() variants, and we
->    would like to default implement the variants in terms of
->    pte_user_accessible_page().
->  * Avoid the ugly pmdp_collapse_flush() macro nonsense! Just instrument
->    its constituent calls instead for radix and hash.
-> Link: https://lore.kernel.org/linuxppc-dev/20231130025404.37179-2-rmclure@linux.ibm.com/
-> 
-> v8:
->  * Fix linux/page_table_check.h include in asm/pgtable.h breaking
->    32-bit.
-> Link: https://lore.kernel.org/linuxppc-dev/20230215231153.2147454-1-rmclure@linux.ibm.com/
-> 
-> v7:
->  * Remove use of extern in set_pte prototypes
->  * Clean up pmdp_collapse_flush macro
->  * Replace set_pte_at with static inline function
->  * Fix commit message for patch 7
-> Link: https://lore.kernel.org/linuxppc-dev/20230215020155.1969194-1-rmclure@linux.ibm.com/
-> 
-> v6:
->  * Support huge pages and p{m,u}d accounting.
->  * Remove instrumentation from set_pte from kernel internal pages.
->  * 64s: Implement pmdp_collapse_flush in terms of __pmdp_collapse_flush
->    as access to the mm_struct * is required.
-> Link: https://lore.kernel.org/linuxppc-dev/20230214015939.1853438-1-rmclure@linux.ibm.com/
-> 
-> v5:
-> Link: https://lore.kernel.org/linuxppc-dev/20221118002146.25979-1-rmclure@linux.ibm.com/
-> 
-> Rohan McLure (11):
->   mm/page_table_check: Reinstate address parameter in
->     [__]page_table_check_pud_set()
->   mm/page_table_check: Reinstate address parameter in
->     [__]page_table_check_pmd_set()
->   mm/page_table_check: Provide addr parameter to
->     page_table_check_pte_set()
->   mm/page_table_check: Reinstate address parameter in
->     [__]page_table_check_pud_clear()
->   mm/page_table_check: Reinstate address parameter in
->     [__]page_table_check_pmd_clear()
->   mm/page_table_check: Reinstate address parameter in
->     [__]page_table_check_pte_clear()
->   mm: Provide address parameter to p{te,md,ud}_user_accessible_page()
->   powerpc: mm: Add pud_pfn() stub
->   powerpc: mm: Implement *_user_accessible_page() for ptes
->   powerpc: mm: Use set_pte_at_unchecked() for internal usages
->   powerpc: mm: Support page table check
-> 
->  arch/arm64/include/asm/pgtable.h             | 18 +++---
->  arch/powerpc/Kconfig                         |  1 +
->  arch/powerpc/include/asm/book3s/32/pgtable.h | 12 +++-
->  arch/powerpc/include/asm/book3s/64/pgtable.h | 62 +++++++++++++++---
->  arch/powerpc/include/asm/nohash/pgtable.h    | 13 +++-
->  arch/powerpc/include/asm/pgtable.h           | 19 ++++++
->  arch/powerpc/mm/book3s64/hash_pgtable.c      |  4 ++
->  arch/powerpc/mm/book3s64/pgtable.c           | 17 +++--
->  arch/powerpc/mm/book3s64/radix_pgtable.c     |  9 ++-
->  arch/powerpc/mm/pgtable.c                    | 12 ++++
->  arch/riscv/include/asm/pgtable.h             | 18 +++---
->  arch/x86/include/asm/pgtable.h               | 20 +++---
->  include/linux/page_table_check.h             | 67 ++++++++++++--------
->  include/linux/pgtable.h                      | 10 +--
->  mm/page_table_check.c                        | 39 +++++++-----
->  15 files changed, 225 insertions(+), 96 deletions(-)
-> 
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
