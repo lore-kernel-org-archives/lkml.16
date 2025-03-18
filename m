@@ -1,160 +1,195 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6397A1E51FE;
-	Tue, 18 Mar 2025 06:50:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789B81A2643;
+	Tue, 18 Mar 2025 06:53:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742280626; cv=none; b=pmhnec0hLCz7ZZf3QRBHd9NmHFY1U6R2kwcB/edgHBi0isAmGTEigkFUZhv95ErlQSlSTumH4XO5ZK3WcGrbKqpXHwSZRHApf+26wfHUhGuKq3hy5vS6fM7BuOLS7jNp77YSun9ljilAmwJ7nws4AoR0B1GExMeRumo6+pHYLn8=
+	t=1742280817; cv=none; b=uVSs6d3ICtoc0ho6/NlKGd0rA79p2BCi+ptMLHsGlDrln5j+cn2aFwqA9DHbVHvDQvXRnDTyB4NCSyXctVtyjrmOzXh6yih9jUND1OZGtBwWukRhgvfCJ2t4FZfMpVKbqbFeSgsSSlVl0P67iohbsvKtaGYte09wOXWFHxd/ZmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742280626; c=relaxed/simple;
-	bh=YBWTCJsyjRVvr+Y7JsfSHvxVmVgi5aTJlg5IF6SL9oc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=nBUicn+PshyxGCgUjzkjneQUuOb9ovh33LICODkat3PamQbYtRNVtDxgPbx38dLG+45lA6uM8IKrjkqBTmpR+WugXpexcp7FiUptj/+iGnoFATYhHqXlDCwoz5Yw+SOgmdjXhbdj3O0H7Oby04+XPINrT7S8JhQgqz13G5R3D8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aJAbdy20; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742280817; c=relaxed/simple;
+	bh=FRAcuRcyfjK2vsi/p7eiYS7Mv5TYPG4QdBuhO0/m2/0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fizMyZdW5JyW6VWKeKTYxuPSyRRt3RjM2MhhQc/Svd/onJZwQN0sl1CBZj9y//YEZd7VShoSNDLJuXv8+xy2gf2keAmP0J4uXgMzdVYspvEqp/x15ZhiLoqldZKySYp25sV3b8Rhcl4DaYPVpkkoKOJn+3u3k0dgLR5M+AvukxM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D/yu8Tz7; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aJAbdy20"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HLkxW2026060;
-	Tue, 18 Mar 2025 06:50:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=qcppdkim1; bh=TJCCnvRUJBx/FcWEdpLFuA
-	1pGnh3q199UpcalaSQzt0=; b=aJAbdy20mgXVTWIEWlwrVAWNFu8RicKmRDm8UD
-	S3DOwOX6bXkfEj/YvxBaJzvpBRAPYH9798R9kQBWKGtJCHAtCOlP6/D+5S0XwAQG
-	mmcqJhug52NtpvwqofrY8ZC4ej8ha27+9Jl6e4vkRqp2yhnSgtLes1wjI4bUwtKv
-	Mg1BHFDm2W6oCZu24NM2Dc9SYQZ0Wbbv19OEIFdvjjVlHtAg7HbiFED8Ssgj+CXw
-	YGNVDjfYiPTcNTnZsYaodKWKq6EjjDKtiiak3OyHFdVPo/lo5BBf+Kq2AdOAV3Z9
-	WSHwC8RwyyZRWgZeMFEXM2AeNk2KsLKobfVmUr78BGObaHTw==
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1sxy5ux-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 06:50:21 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52I6oKVp012176
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 06:50:20 GMT
-Received: from hu-mmanikan-blr.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Mon, 17 Mar 2025 23:50:16 -0700
-From: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
-To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
-        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
-        <quic_srichara@quicinc.com>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: <quic_varada@quicinc.com>
-Subject: [PATCH v2] arm64: dts: qcom: ipq5424: fix and relocate uart1 gpio configurations
-Date: Tue, 18 Mar 2025 12:19:39 +0530
-Message-ID: <20250318064939.3638381-1-quic_mmanikan@quicinc.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D/yu8Tz7"
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-86d36e41070so2220021241.3;
+        Mon, 17 Mar 2025 23:53:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742280814; x=1742885614; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BR7STtbjDPO6lmSbp4QD6SK3P/KeQf8lIol2C5kgJAI=;
+        b=D/yu8Tz7k6amxc+2QGzv9TVjYSC9kuJWCgW4/lGtO4OKMK1ysoJiCgLMMsuZOLlGzN
+         hamNpCiY4Y87IVC69+jeVRdynfNdLB/rQ1qX3+jgihDp7yNJHz+qyfrgLIDK3uClpbu3
+         dSkytCU8i6Uic2VOxByfmIJUKLtXG6L6iBR1a4T5goBC69vwdsDEutxweQUbBLagEeMK
+         /P1BvvSRlY+eW5NnR/5D0QPwIuf5XQgG6xZcoeI9yypOdV8ojy9UKFBjyPERhAHq4NWN
+         dVg5jQAqNF/KW+wcUgSQcJ3LEFbb9QgyjYNsENRqfoijC/MajEwiJifC5lpeKxyD3j31
+         P7aA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742280814; x=1742885614;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BR7STtbjDPO6lmSbp4QD6SK3P/KeQf8lIol2C5kgJAI=;
+        b=bL/DNF9J+HPL+w5AfXA8hcDKVUsd2cVPuut5TCD3U6w09qXVhRsCdfsHarLFt82Her
+         T+4yC1e+VK1G/+qZdfKw5O8gGv9yNurbw9rolmTui5gR1B4kdIJTJTTR8wb9uE/WfjfV
+         JWWMtMf0LEjAbtmGRYkFUB/tbjbfGWFvCPLuaCA1LXDXzs0gOCjXJU74cMOrJbv1QfxF
+         pc16xbGl75BnDaJeW8wLjBfoYiBzqy4GTpyVoCLJMIU1JZuso2tUpuXRv4XEw+V6SGCq
+         8SmRDEbfbUHL7KFEsEvfmC7HIYUhq7zSeUbyDdF7bxUTqlNZCgM6rjZAxXV2cFUihOPK
+         fpOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUvdLh8+9xaXmqPDe3eBvrQMa9w4jbbdFT7CQxloTQtHptttpRNUGyxPXsrB25+H2oABGaaMiNKQ24=@vger.kernel.org, AJvYcCVOgKUZcXL7pgpuDiY4EIfHPD4PXv+M7WO42XW9E1V4UQTrB/+8hceR8Q8hcmGa96i20/JkkoRLrSF1xSn/@vger.kernel.org, AJvYcCWQuLGjmXmRTfgAB6gJxknF2FKwmramS97TO1vzMYBvnhQIKJ+F74ShqB8v4pK7SpVC/MD5scI6+z2gk4YMHA8=@vger.kernel.org, AJvYcCWuJpfc6tgOgtuHZfBUbg56+NSmIx+tDoeCcQynv7fI/9YZjVGELvmhVK28hK26xFJgGycfB2a5MmBN@vger.kernel.org
+X-Gm-Message-State: AOJu0YzSpT5BbH4YKZZ4DUD0FiapbUHvxXyf7BH1MiNjKEkfefVLA/rH
+	4cVfhZUDOIsEo0RVZ+6O1IcF2cF89LQzrxrHrQ0yaFJHhSicIu9iMa8dk6VHMyvsYVE7yWq7Ft2
+	BRG+eU77eHX/E7h5Irx45WantSSD7xQ==
+X-Gm-Gg: ASbGncuLQBXQbaVwAV71KgalB14zECehV/RbX4VV30g25lPhYUpYvoNL+LnDahVvvIe
+	Goh46gUrD0Da/Tbv7k1PeHF6vg5Eb6C2QVAKySXu570tcm4ZQF8VTgznkX3wy4QmYnX9/Cw0Uwb
+	xRQeRouVE2P1jv7GBBym8M1mhGYPrDiDAw7iOCpXn7IErFImlRbXJ/+Eg=
+X-Google-Smtp-Source: AGHT+IGE7hhWr4lBUp2iXX61mOHrHkLHcdsZ+lfSmDPcbezM6eWo2r4cHmhD0lVawhY5flsil/9O0ciB1HTJ1THSObY=
+X-Received: by 2002:a05:6102:3908:b0:4bb:eb4a:f9ec with SMTP id
+ ada2fe7eead31-4c4d91601c2mr2350382137.16.1742280814182; Mon, 17 Mar 2025
+ 23:53:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: gW1C8LM_Hk8RNw4ekJeumjz8fZWFv5FJ
-X-Proofpoint-ORIG-GUID: gW1C8LM_Hk8RNw4ekJeumjz8fZWFv5FJ
-X-Authority-Analysis: v=2.4 cv=XKcwSRhE c=1 sm=1 tr=0 ts=67d917ad cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EwbgSTejZl1M597PQjwA:9 a=HVqvvCGUhjtjaAmPp66E:22
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_03,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=561 priorityscore=1501 clxscore=1015 phishscore=0
- impostorscore=0 adultscore=0 mlxscore=0 malwarescore=0 suspectscore=0
- spamscore=0 bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503180046
+References: <PsAMnW6hScU1fLV8ucb6wOkHECGXCrwXeSEfeVs3Hc-zbwrML674jGT8H_XNvWiF6EdymYJZSusanBrtAsZjAg==@protonmail.internalid>
+ <20250107035058.818539-1-alistair@alistair23.me> <878qrm6e2p.fsf@kernel.org> <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com>
+In-Reply-To: <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com>
+From: Alistair Francis <alistair23@gmail.com>
+Date: Tue, 18 Mar 2025 16:53:08 +1000
+X-Gm-Features: AQ5f1Joy-EDdMlhXi465AXJ7d9QJ1VvxVVGStzCd-Shl2lbZ3RxltcRyszgw8bw
+Message-ID: <CAKmqyKMFAUp0=FzNfhs+r+RfLK0n_Fp7YhUhjY2m=p7wSgFONg@mail.gmail.com>
+Subject: Re: [PATCH v5 00/11] rust: bindings: Auto-generate inline static functions
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Alistair Francis <alistair@alistair23.me>, bhelgaas@google.com, 
+	rust-for-linux@vger.kernel.org, lukas@wunner.de, gary@garyguo.net, 
+	akpm@linux-foundation.org, tmgross@umich.edu, boqun.feng@gmail.com, 
+	ojeda@kernel.org, linux-cxl@vger.kernel.org, bjorn3_gh@protonmail.com, 
+	me@kloenk.dev, linux-kernel@vger.kernel.org, aliceryhl@google.com, 
+	alistair.francis@wdc.com, linux-pci@vger.kernel.org, benno.lossin@proton.me, 
+	alex.gaynor@gmail.com, Jonathan.Cameron@huawei.com, wilfred.mallawa@wdc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Update the bias configuration for UART1 TX and RX pins to ensure correct
-settings for RDP466.
+On Tue, Jan 14, 2025 at 4:02=E2=80=AFPM Alistair Francis <alistair23@gmail.=
+com> wrote:
+>
+> On Tue, Jan 7, 2025 at 9:48=E2=80=AFPM Andreas Hindborg <a.hindborg@kerne=
+l.org> wrote:
+> >
+> > "Alistair Francis" <alistair@alistair23.me> writes:
+> >
+> > > The kernel includes a large number of static inline functions that ar=
+e
+> > > defined in header files. One example is the crypto_shash_descsize()
+> > > function which is defined in hash.h as
+> > >
+> > > ```
+> > > static inline unsigned int crypto_shash_descsize(struct crypto_shash =
+*tfm)
+> > > {
+> > >         return tfm->descsize;
+> > > }
+> > > ```
+> > >
+> > > bindgen is currently unable to generate bindings to these functions a=
+s
+> > > they are not publically exposed (they are static after all).
+> > >
+> > > The Rust code currently uses rust_helper_* functions, such as
+> > > rust_helper_alloc_pages() for example to call the static inline
+> > > functions. But this is a hassle as someone needs to write a C helper
+> > > function.
+> > >
+> > > Instead we can use the bindgen wrap-static-fns feature. The feature
+> > > is marked as experimental, but has recently been promoted to
+> > > non-experimental (depending on your version of bindgen).
+> > >
+> > > By supporting wrap-static-fns we automatically generate a C file call=
+ed
+> > > extern.c that exposes the static inline functions, for example like t=
+his
+> > >
+> > > ```
+> > > unsigned int crypto_shash_descsize__extern(struct crypto_shash *tfm) =
+{ return crypto_shash_descsize(tfm); }
+> > > ```
+> > >
+> > > The nice part is that this is auto-generated.
+> > >
+> > > We then also get a bindings_generate_static.rs file with the Rust
+> > > binding, like this
+> > >
+> > > ```
+> > > extern "C" {
+> > >     #[link_name =3D "crypto_shash_descsize__extern"]
+> > >     pub fn crypto_shash_descsize(tfm: *mut crypto_shash) -> core::ffi=
+::c_uint;
+> > > }
+> > > ```
+> > >
+> > > So now we can use the static inline functions just like normal
+> > > functions.
+> > >
+> > > There are a bunch of static inline functions that don't work though, =
+because
+> > > the C compiler fails to build extern.c:
+> > >  * functions with inline asm generate "operand probably does not matc=
+h constraints"
+> > >    errors (rip_rel_ptr() for example)
+> > >  * functions with bit masks (u32_encode_bits() and friends) result in
+> > >    "call to =E2=80=98__bad_mask=E2=80=99 declared with attribute erro=
+r: bad bitfield mask"
+> > >    errors
+> > >
+> > > As well as that any static inline function that calls a function that=
+ has been
+> > > kconfig-ed out will fail to link as the function being called isn't b=
+uilt
+> > > (mdio45_ethtool_gset_npage for example)
+> > >
+> > > Due to these failures we use a allow-list system (where functions mus=
+t
+> > > be manually enabled).
+> > >
+> > > This series adds support for bindgen generating wrappers for inline s=
+tatics and
+> > > then converts the existing helper functions to this new method. This =
+doesn't
+> > > work for C macros, so we can't reamove all of the helper functions, b=
+ut we
+> > > can remove most.
+> > >
+> > > v5:
+> > >  - Rebase on latest rust-next on top of v6.13-rc6
+> > >  - Allow support for LTO inlining (not in this series, see
+> > >    https://github.com/alistair23/linux/commit/e6b847324b4f5e904e007c0=
+e288c88d2483928a8)
+> >
+> > Thanks! Since Gary just sent v2 of the LTO patch [1], could you rebase
+> > on that and list it as a dependency? If you are using b4 there is a nic=
+e
+>
+> I can't get Gary's series to apply on rust-next (it does apply on
+> master though).
+>
+> I might just wait until Gary's series gets picked up to rust-next as
+> there is already a lot of manual rebasing going on and my series
+> currently applies on rust-next.
+>
+> Unfortunately there are just constant conflicts as the number of
+> manual C helpers are continually growing.
+>
+> Obviously when/if this series is approved I can do a final rebase, I
+> would just like to avoid unnecessary churn in the meantime
 
-Additionally, move the UART1 GPIO configurations from the common .dtsi
-file to the RDP-specific .dts files to account for differing bias
-configurations across RDPs of IPQ5424.
+Any more thoughts on this?
 
-Fixes: 1a91d2a6021e ("arm64: dts: qcom: add IPQ5424 SoC and rdp466 board support")
-Signed-off-by: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>
----
-Changes in V2:
-	- Consolidated uart1_tx_state and uart1_rx_state nodes into a
-	  single qup_uart1_default_state node, which includes the
-	  configuration for both UART1 TX and RX pins.
-	- Inserted a blank line before the status property in the UART1
-	  node.
-	- Fixed review comments from Kathiravan Thirumoorthy.
-
- arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts | 19 ++++++++++++++++++-
- arch/arm64/boot/dts/qcom/ipq5424.dtsi       |  7 -------
- 2 files changed, 18 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-index b9752e8d579e..f0cba6b2be70 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-+++ b/arch/arm64/boot/dts/qcom/ipq5424-rdp466.dts
-@@ -102,6 +102,22 @@ &ssphy_0 {
- };
- 
- &tlmm {
-+	qup_uart1_default_state: qup-uart1-default-state {
-+		uart1-tx-pins {
-+			pins = "gpio44";
-+			function = "uart1";
-+			drive-strength = <8>;
-+			bias-pull-down;
-+		};
-+
-+		uart1-rx-pins {
-+			pins = "gpio43";
-+			function = "uart1";
-+			drive-strength = <8>;
-+			bias-pull-up;
-+		};
-+	};
-+
- 	spi0_default_state: spi0-default-state {
- 		clk-pins {
- 			pins = "gpio6";
-@@ -157,8 +173,9 @@ data-pins {
- };
- 
- &uart1 {
--	pinctrl-0 = <&uart1_pins>;
-+	pinctrl-0 = <&qup_uart1_default_state>;
- 	pinctrl-names = "default";
-+
- 	status = "okay";
- };
- 
-diff --git a/arch/arm64/boot/dts/qcom/ipq5424.dtsi b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-index 402d0a2c7bcc..0117f6422347 100644
---- a/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-+++ b/arch/arm64/boot/dts/qcom/ipq5424.dtsi
-@@ -262,13 +262,6 @@ tlmm: pinctrl@1000000 {
- 			gpio-ranges = <&tlmm 0 0 50>;
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
--
--			uart1_pins: uart1-state {
--				pins = "gpio43", "gpio44";
--				function = "uart1";
--				drive-strength = <8>;
--				bias-pull-up;
--			};
- 		};
- 
- 		gcc: clock-controller@1800000 {
-
-base-commit: da920b7df701770e006928053672147075587fb2
--- 
-2.34.1
-
+Alistair
