@@ -1,109 +1,358 @@
-Received: from mailgw1.hygon.cn (mailgw.hygon.cn [110.188.70.11])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DEF5171658
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:35:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=110.188.70.11
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2562720B7E6
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297764; cv=none; b=YgNfssJAvfKaD+9QWyVjc1DJO8CrGPXy+ZEoOoDNM31dlCrE8dKF91iFlyCJG62iFJLrrgAeYSQz9w1LbB64BV/KN6NojmcwZwax9zRwGdxTQtlb7QaOR3nnpg5D8DiefIUfPmgYs23nuzqdfsB9JJm1ZHZcRZosfBmAbrupJWQ=
+	t=1742297773; cv=none; b=nhy1Ba1F+43mw0ZC3f1v3DbQKq2E8x/9USgAJm2DtRpEZFDZJ16sTG92TFhWKBk+snHT2tmqP0PLQzVZszh7OUD79Kr6UfjF4TRGHvfObzFtlSGFYFqRO4OUy+9lcCP301cxUVVCuGw9npem+U2jezUvj9qiIVTYQFstr0kR0iQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297764; c=relaxed/simple;
-	bh=A9z+0riGGgw2t4zNCs7S2YiHkDIkBJ6j9rLDEGeB3iw=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=J9QKij25Hj7F4SCMxmmbL8xfW53JX5Pwwa2wtaKU4aXZAOQDP3zAMS2nZiiUzqDMihsj0v09KUEgxelZi6VcxT2DY5AX2f3/FaQh0bIB+O7spL51Caaj1NCT3eVF2FkX1XNwbzxxcLjxhnheUwYUeZTncyOOYSZLQUmXwxUng6w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=110.188.70.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
-Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
-	by mailgw1.hygon.cn (Postfix) with ESMTP id D7062F999;
-	Tue, 18 Mar 2025 19:35:36 +0800 (CST)
-Received: from cncheex03.Hygon.cn (unknown [172.23.18.113])
-	by maildlp1.hygon.cn (Postfix) with ESMTPS id BFFC416EC;
-	Tue, 18 Mar 2025 19:35:36 +0800 (CST)
-Received: from cncheex04.Hygon.cn (172.23.18.114) by cncheex03.Hygon.cn
- (172.23.18.113) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 18 Mar
- 2025 19:35:40 +0800
-Received: from cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d]) by
- cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d%6]) with mapi id
- 15.02.1544.011; Tue, 18 Mar 2025 19:35:40 +0800
-From: Jianyong Wu <wujianyong@hygon.cn>
-To: Peter Zijlstra <peterz@infradead.org>
-CC: "mingo@redhat.com" <mingo@redhat.com>, "vincent.guittot@linaro.org"
-	<vincent.guittot@linaro.org>, "jianyong.wu@outlook.com"
-	<jianyong.wu@outlook.com>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] SCHED: scatter nohz idle balance target cpus
-Thread-Topic: [PATCH] SCHED: scatter nohz idle balance target cpus
-Thread-Index: AQHbl61OpENeMFSo9kSeuaXOI4AsgbN361aAgADT7pA=
-Date: Tue, 18 Mar 2025 11:35:40 +0000
-Message-ID: <5cb53e48ade14fbaab3e2940df7ed0d5@hygon.cn>
-References: <20250318022358.195154-1-wujianyong@hygon.cn>
- <20250318063847.GA25930@noisy.programming.kicks-ass.net>
-In-Reply-To: <20250318063847.GA25930@noisy.programming.kicks-ass.net>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1742297773; c=relaxed/simple;
+	bh=MooOZBjnKa3eOXJRAkG1TbbXmGn7z1BSAcJjhp0XE6w=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=WedRxMHcKnCWDSJEbKHDy3+ySRSTMWgrShecFyYaobw3QxjgROGe8/EULXyI6JC8GeQDcNo4EnxF5UDanfnlaOd/kEZNVADXBPN0rRhQ+/ReBZ7J4sEe+21gQzfii3MnYHG6uUOwTb3ABoYr6CfPm7me0NEiZh6RYhVXuOPi2yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bszd/Xx9; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bszd/Xx9"
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5e5c7d6b96fso998396a12.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 04:36:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742297769; x=1742902569; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ThlJbEalfK2xtbJtUuT/lT5PVoKxTwbse0vzB0NBORs=;
+        b=bszd/Xx9ZaVjqEAqkoUrTZqCGej+PY1HPbDTx5gY2gRfCm1G7vdnS9iTyf5XiO1V/z
+         2qh7blI+HV4qdc4f5Yn//aT/yOUw2mgQA0XPcGbOJQ1tNWiklLjvVKGcN8NmWqlOiThP
+         w3b6ZM66xA9az0Yd4mHxpI/BJEBFV1r7oOdU/LRPWGGwW3cwFOSV4NQB6MrkzhD5fD1Q
+         dOVAFEWADQBqRE6mhea1alBKwi5ehIYhD5s8VH9pg14bOSN9Y11IWUCy2ZpKiuk0jEi/
+         xJVNt3MZtehTPQ1M7+6dHGj2ah0Qx+AeBtxLj28eI2rT4NFeU2I26vZGA3l1zjiiC/15
+         nsHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742297769; x=1742902569;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ThlJbEalfK2xtbJtUuT/lT5PVoKxTwbse0vzB0NBORs=;
+        b=XQQVb7eD0oId7jqq8p8T/e5Ygh1Hq8KcKl9XY+dWzvYOE5cUtcVpfp73CqNTuV3XOL
+         X7nr2fa8wnOCa3W7Z+LyxzCcE2Fc+uqRyJyPWGXn6nLqvc311dQq0KZBCzXssroDdS33
+         mAcgkQKERw4AQOmrJPmFZHpiL1NR6wORNuIY5qWUZylpsi9ssOzZgbmaLoyOnRx8ZaeE
+         s8y0Dyj4wSx2KV4pOwl9Cx3ipvDti8/3Q6DmIq9MwnseM/0CWOIekP5VS2l1hyVHgoR2
+         3lgu/u7Q4dMJT1SGkUgYCh8d7Srgd46n8i2vCi80W2Av3XWJnnmBfNBRvtHDkgQ6EX7s
+         cYCg==
+X-Forwarded-Encrypted: i=1; AJvYcCVC43pfVGGUT3MnzWz8+WCn/71qqcyX3QrcmWYXPkc3owxlixsQ5kqx36zDKgFoynb78eAqw/pbpQ3lBQM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwO4pWuJzz/x89u9EkGv3rLUxgFEkfSvzBlhEXXfSg79VytpuUg
+	dgOjbb0iQhGesWqb2zOUEEHCc7R5Q17G4I4puoEL5vy7rqPeWl6HqJFKSFJ47t184JyQ/E0mgyq
+	Mcu/GHmAqb9h/C3fqtqphU3ts0Fk=
+X-Gm-Gg: ASbGnctcDURw/ODibFmu2oAJ3Lu+EOYDmLeNMsjIVy62cDZwHy9XEos4vROwTzxZVDK
+	lTUbqYFBJccKzSSLRGsnG3KDwG5zf8fOu/C04QZSK39xAMCYgOw4AbYeEd22bQ3YDdRlJkvD+Gw
+	BuKsY+ASa9zHGthoLjLx0wfhkR0R2stTWRLNXK9QQ=
+X-Google-Smtp-Source: AGHT+IGSeFj/f/d85J+o4uPGPgxXJdKvNNRpMArXOFVpwl1HxboJ8oRGWf1HN2ucAV+UE9W3Drgxeq5I09xGDtzIOis=
+X-Received: by 2002:a05:6402:3550:b0:5e5:dea5:3eb0 with SMTP id
+ 4fb4d7f45d1cf-5e89e6afcf8mr16072700a12.7.1742297768996; Tue, 18 Mar 2025
+ 04:36:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250314144300.32542-1-ioworker0@gmail.com> <20250314144300.32542-2-ioworker0@gmail.com>
+ <20250318184158.e6c1b2d28e2fee311bcd2c30@kernel.org>
+In-Reply-To: <20250318184158.e6c1b2d28e2fee311bcd2c30@kernel.org>
+From: Lance Yang <ioworker0@gmail.com>
+Date: Tue, 18 Mar 2025 19:35:32 +0800
+X-Gm-Features: AQ5f1JpN94WMX5lx9VRssOBEsnKGWsKjE6hfOamcFJV-Rgi06l7tdTJPWesqZBQ
+Message-ID: <CAK1f24k7hRD5SZD92tv+DgSakhA8vRjtLibGTymd9AsHizTBAg@mail.gmail.com>
+Subject: Re: [PATCH RESEND v2 1/3] hung_task: replace blocker_mutex with
+ encoded blocker
+To: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: akpm@linux-foundation.org, will@kernel.org, peterz@infradead.org, 
+	mingo@redhat.com, longman@redhat.com, anna.schumaker@oracle.com, 
+	boqun.feng@gmail.com, joel.granados@kernel.org, kent.overstreet@linux.dev, 
+	leonylgao@tencent.com, linux-kernel@vger.kernel.org, rostedt@goodmis.org, 
+	senozhatsky@chromium.org, tfiga@chromium.org, amaindex@outlook.com, 
+	Mingzhe Yang <mingzhe.yang@ly.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Peter,
-
-Thanks for replay.
-
-> -----Original Message-----
-> From: Peter Zijlstra <peterz@infradead.org>
-> Sent: Tuesday, March 18, 2025 2:39 PM
-> To: Jianyong Wu <wujianyong@hygon.cn>
-> Cc: mingo@redhat.com; vincent.guittot@linaro.org; jianyong.wu@outlook.com=
-;
-> linux-kernel@vger.kernel.org
-> Subject: Re: [PATCH] SCHED: scatter nohz idle balance target cpus
->=20
-> On Tue, Mar 18, 2025 at 02:23:58AM +0000, Jianyong Wu wrote:
->=20
-> Re subject; if you look at other patches for sched, you'll note that we d=
-o not
-> capitalize it.
-[Jianyong Wu]=20
-OK, will correct it.
-
-> Also, what you're doing is not scatter, it is rotation.
-[Jianyong Wu]=20
-It seems. However, as nohz idle balance occurs quite frequently, in proport=
-ion to the value of "HZ" and CPUs number, the selected CPU will spread to t=
-he whole system soon. Compared with current situation where mostly only cpu=
-0 is selected, the change in this patch is more like a "scattering" effect.=
- But it doesn't matter, "rotation" is fine. I can change it according your =
-wish.
-
->=20
-> > Currently, cpu selection logic for nohz idle balance lacks history
-> > info that leads to cpu0 is always chosen if it's in nohz cpu mask.
-> > It's not fair fot the tasks reside in numa node0. It's worse in the
-> > machine with large cpu number, nohz idle balance may be very heavy.
->=20
-> Since you seem to care about ilb and numa; there is this _very_ old patch=
- set
-> that never got finished:
->=20
-> 	https://lore.kernel.org/all/20091211013056.305998000@intel.com/
->=20
-[Jianyong Wu]=20
-Thanks for this. I'll look into it (may take some time)
-
-> IIRC there was a problem where it would simply stop running the per-node =
-ilb
-> when the node went idle, leading to node level imbalances. This should be
-> curable by picking one such idle node and keeping its ILB active or somes=
-uch.
-[Jianyong Wu]=20
-I think this patch is simple enough to achieve the "fairness". WDYT?
+On Tue, Mar 18, 2025 at 5:42=E2=80=AFPM Masami Hiramatsu <mhiramat@kernel.o=
+rg> wrote:
 >
-> Something to poke at if you're interested..
->=20
+> On Fri, 14 Mar 2025 22:42:58 +0800
+> Lance Yang <ioworker0@gmail.com> wrote:
+>
+> > This patch replaces 'struct mutex *blocker_mutex' with 'unsigned long
+> > blocker', as only one blocker is active at a time.
+> >
+> > The blocker filed can store both the lock addrees and the lock type, wi=
+th
+> > LSB used to encode the type as Masami suggested, making it easier to ex=
+tend
+> > the feature to cover other types of locks.
+> >
+> > Also, once the lock type is determined, we can directly extract the add=
+ress
+> > and cast it to a lock pointer ;)
+>
+> Hi Lance,
+>
+> Thanks for update. I added some comments.
+
+Thanks for taking time to review!
+
+>
+> >
+> > Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
+> > Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
+> > Signed-off-by: Lance Yang <ioworker0@gmail.com>
+> > ---
+> >  include/linux/hung_task.h | 94 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/sched.h     |  2 +-
+> >  kernel/hung_task.c        | 15 ++++---
+> >  kernel/locking/mutex.c    |  8 +++-
+> >  4 files changed, 111 insertions(+), 8 deletions(-)
+> >  create mode 100644 include/linux/hung_task.h
+> >
+> > diff --git a/include/linux/hung_task.h b/include/linux/hung_task.h
+> > new file mode 100644
+> > index 000000000000..64ced33b0d1f
+> > --- /dev/null
+> > +++ b/include/linux/hung_task.h
+> > @@ -0,0 +1,94 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-only */
+> > +/*
+> > + * Detect Hung Task: detecting tasks stuck in D state
+> > + *
+> > + * Copyright (C) 2025 Tongcheng Travel (www.ly.com)
+> > + * Author: Lance Yang <mingzhe.yang@ly.com>
+> > + */
+> > +#ifndef __LINUX_HUNG_TASK_H
+> > +#define __LINUX_HUNG_TASK_H
+> > +
+> > +#include <linux/bug.h>
+> > +#include <linux/sched.h>
+> > +#include <linux/compiler.h>
+> > +
+> > +/*
+> > + * @blocker: Combines lock address and blocking type.
+> > + *
+> > + * Since lock pointers are at least 4-byte aligned(32-bit) or 8-byte
+> > + * aligned(64-bit). This leaves the 2 least bits (LSBs) of the pointer
+> > + * always zero. So we can use these bits to encode the specific blocki=
+ng
+> > + * type.
+> > + *
+> > + * Type encoding:
+> > + * 00 - Blocked on mutex        (BLOCKER_TYPE_MUTEX)
+> > + * 01 - Blocked on semaphore    (BLOCKER_TYPE_SEM)
+> > + * 10 - Blocked on rt-mutex     (BLOCKER_TYPE_RTMUTEX)
+> > + * 11 - Blocked on rw-semaphore (BLOCKER_TYPE_RWSEM)
+> > + */
+> > +#define BLOCKER_TYPE_MUTEX      0x00UL
+> > +#define BLOCKER_TYPE_SEM        0x01UL
+> > +#define BLOCKER_TYPE_RTMUTEX    0x02UL
+> > +#define BLOCKER_TYPE_RWSEM      0x03UL
+> > +
+> > +#define BLOCKER_TYPE_MASK       0x03UL
+> > +
+> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> > +static inline void hung_task_set_blocker(void *lock, unsigned long typ=
+e)
+> > +{
+> > +     unsigned long lock_ptr =3D (unsigned long)lock;
+> > +
+> > +     WARN_ON_ONCE(!lock_ptr);
+> > +     WARN_ON_ONCE(lock_ptr & BLOCKER_TYPE_MASK);
+> > +     WARN_ON_ONCE(READ_ONCE(current->blocker));
+>
+> The last one needs a comment why it is problem.
+>
+> WARN_ON_ONCE(READ_ONCE(current->blocker),
+>         "Task blocker is not cleared. Maybe forgot to clear it somewhere?=
+ Type: %d\n",
+>         current->blocker);
+>
+> But I don't think this isn't needed to be checked usually.
+
+Hmm... Looking back, adding it was probably overkill. So let's drop it in
+the next version ;)
+
+>
+> > +
+> > +     /*
+> > +      * If the lock pointer matches the BLOCKER_TYPE_MASK, return
+> > +      * without writing anything.
+> > +      */
+> > +     if (lock_ptr & BLOCKER_TYPE_MASK)
+> > +             return;
+>
+> You can use WARN_ON_ONCE for 'if' condition.
+>
+>   if (WARN_ON_ONCE(lock_ptr & BLOCKER_TYPE_MASK))
+>         return;
+
+Ah, I didn't realize we could do it that way before. That's nice to know!
+
+>
+> > +
+> > +     WRITE_ONCE(current->blocker, lock_ptr | type);
+> > +}
+> > +
+> > +static inline void hung_task_clear_blocker(void)
+> > +{
+> > +     WARN_ON_ONCE(!READ_ONCE(current->blocker));
+> > +
+> > +     WRITE_ONCE(current->blocker, 0UL);
+> > +}
+> > +
+> > +static inline bool hung_task_blocker_is_type(unsigned long blocker,
+> > +                                       unsigned long type)
+> > +{
+> > +     WARN_ON_ONCE(!blocker);
+> > +
+> > +     return (blocker & BLOCKER_TYPE_MASK) =3D=3D type;
+> > +}
+> > +
+> > +static inline void *hung_task_blocker_to_lock(unsigned long blocker)
+> > +{
+> > +     WARN_ON_ONCE(!blocker);
+> > +
+> > +     return (void *)(blocker & ~BLOCKER_TYPE_MASK);
+> > +}
+> > +#else
+> > +static inline void hung_task_set_blocker(void *lock, unsigned long typ=
+e)
+> > +{
+> > +}
+> > +static inline void hung_task_clear_blocker(void)
+> > +{
+> > +}
+> > +static inline bool hung_task_blocker_is_type(unsigned long blocker,
+> > +                                          unsigned long type)
+> > +{
+> > +     return false;
+> > +}
+> > +static inline void *hung_task_blocker_to_lock(unsigned long blocker)
+> > +{
+> > +     return NULL;
+> > +}
+> > +#endif
+> > +
+> > +#endif /* __LINUX_HUNG_TASK_H */
+> > diff --git a/include/linux/sched.h b/include/linux/sched.h
+> > index 1419d94c8e87..f27060dac499 100644
+> > --- a/include/linux/sched.h
+> > +++ b/include/linux/sched.h
+> > @@ -1218,7 +1218,7 @@ struct task_struct {
+> >  #endif
+> >
+> >  #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> > -     struct mutex                    *blocker_mutex;
+> > +     unsigned long                   blocker;
+> >  #endif
+> >
+> >  #ifdef CONFIG_DEBUG_ATOMIC_SLEEP
+> > diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+> > index dc898ec93463..46eb6717564d 100644
+> > --- a/kernel/hung_task.c
+> > +++ b/kernel/hung_task.c
+> > @@ -25,6 +25,10 @@
+> >
+> >  #include <trace/events/sched.h>
+> >
+> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> > +#include <linux/hung_task.h>
+> > +#endif
+>
+> We don't need this #ifdef, since it is already checked in the
+> header file.
+
+Good catch! I completely missed it ;(
+
+>
+> > +
+> >  /*
+> >   * The number of tasks checked:
+> >   */
+> > @@ -98,16 +102,17 @@ static struct notifier_block panic_block =3D {
+> >  static void debug_show_blocker(struct task_struct *task)
+> >  {
+> >       struct task_struct *g, *t;
+> > -     unsigned long owner;
+> > -     struct mutex *lock;
+> > +     unsigned long owner, blocker;
+> >
+> >       RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
+> >
+> > -     lock =3D READ_ONCE(task->blocker_mutex);
+> > -     if (!lock)
+> > +     blocker =3D READ_ONCE(task->blocker);
+> > +     if (!blocker || !hung_task_blocker_is_type(blocker, BLOCKER_TYPE_=
+MUTEX))
+> >               return;
+> >
+> > -     owner =3D mutex_get_owner(lock);
+> > +     owner =3D mutex_get_owner(
+> > +             (struct mutex *)hung_task_blocker_to_lock(blocker));
+> > +
+> >       if (unlikely(!owner)) {
+> >               pr_err("INFO: task %s:%d is blocked on a mutex, but the o=
+wner is not found.\n",
+> >                       task->comm, task->pid);
+> > diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
+> > index 6a543c204a14..642d6398e0dd 100644
+> > --- a/kernel/locking/mutex.c
+> > +++ b/kernel/locking/mutex.c
+> > @@ -42,6 +42,10 @@
+> >  # define MUTEX_WARN_ON(cond)
+> >  #endif
+> >
+> > +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> > +#include <linux/hung_task.h>
+> > +#endif
+>
+> Ditto.
+
+Yes, you're right. Will remove that as you suggested.
+
+Thanks,
+Lance
+
+>
+> > +
+> >  void
+> >  __mutex_init(struct mutex *lock, const char *name, struct lock_class_k=
+ey *key)
+> >  {
+> > @@ -189,7 +193,7 @@ __mutex_add_waiter(struct mutex *lock, struct mutex=
+_waiter *waiter,
+> >                  struct list_head *list)
+> >  {
+> >  #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> > -     WRITE_ONCE(current->blocker_mutex, lock);
+> > +     hung_task_set_blocker(lock, BLOCKER_TYPE_MUTEX);
+> >  #endif
+> >       debug_mutex_add_waiter(lock, waiter, current);
+> >
+> > @@ -207,7 +211,7 @@ __mutex_remove_waiter(struct mutex *lock, struct mu=
+tex_waiter *waiter)
+> >
+> >       debug_mutex_remove_waiter(lock, waiter, current);
+> >  #ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
+> > -     WRITE_ONCE(current->blocker_mutex, NULL);
+> > +     hung_task_clear_blocker();
+> >  #endif
+> >  }
+> >
+> > --
+> > 2.45.2
+> >
+>
+> Thank you,
+>
+>
+> --
+> Masami Hiramatsu (Google) <mhiramat@kernel.org>
