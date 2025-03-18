@@ -1,166 +1,222 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90A420F075;
-	Tue, 18 Mar 2025 15:52:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323277464;
+	Tue, 18 Mar 2025 15:53:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742313135; cv=none; b=Hpm68C25CnR3McicNPIkPfXujHRp3TLsNMjRvxjVPe7CKYVolexQJ5W7HN5ZtBcRXbLL3CrRDWah4UPfHlnmZfgepZFybxk82dx+DRuXuL+339HS7dkmF8+bSMCX+CyqKMXLsL1SnG7rxQmliwNxGsJssjcm7fUQF+6SfqweB7g=
+	t=1742313203; cv=none; b=nOHFPVUNFscOfzLGdLexHtRlKsrUMFSKxUwVsBFcTC9y+CO1Abnyh2q9iDfbH6eISOtlj1tDj0Akh4CJtZlsLR3EMSiTPKhFZq+sEt1keqy16k4QsHMipSY9aaSdEF5ycTYvgjdduWmQ+KuQNyf8TNvUaet5Mio7Smxb+faMDBk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742313135; c=relaxed/simple;
-	bh=ahM6Pswqga/PvNT1jwi6X90X517zBLJ9yV9xfbdvdkA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Y7ECwe95Mf6nIpIYdB38cGjCe+1mmTdogQGAGzk7AKhtd52ZAanHVywds98zXeQ4HyRQ5cyU+5LAbquHISdqTA4darXdyp54x1sgd/w3cTdrCFPDuwbNQMiw8OUqett3Vifa1an6Ra+EDUPCK2nxN4nmHhURtaRTX84md2zy5V4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h79dQqYw; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742313203; c=relaxed/simple;
+	bh=/L/vb59tMICXkWyQfLdayIVVHIj+CbXfwoPWYrJWspg=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=hRXtpSrIFSyEgmHydegZOZHPFS8shSveJRun3EUGeiTiT4QgvncX6h/UI3puKAPuaiaXKn5aQEnbYQRqlk3Us5OnXYa7fpq+adrtdUyvmDMhtfSl5C/KYgkEfk8vJ7xxWtSLfDdjBhfKJCiHE39ttrug68W/i4V0QyalOqcQimI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bWEYhkwg; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h79dQqYw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742313134; x=1773849134;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=ahM6Pswqga/PvNT1jwi6X90X517zBLJ9yV9xfbdvdkA=;
-  b=h79dQqYwwhj0l2fuNxX8jWyN+K/XPW9NNnOtUGqISxMt7Z5h1chCeiDw
-   IG27m+GAJO+7+f3HLSl2+8OXdM3R4uN98VCseXiqoOrIWURtUE4ZWJJXb
-   waTozHBTJ1BCl8pQO8oU/JwkdqsgjlxMvriuDhFWcomgaZET3L6+RRbGT
-   /ZvZoSws53RheYvDOn7abaiAsD6KpoOO9igQf1iPNBmw8HroyPxoSJUKx
-   e7O2Y0FyuImEC3pwZ8proKE039I2CnVd/wXl+X3OXrjgq8XBQuuzb8nko
-   LIMRgG/ef758NdNMJrw/eDuAbSRSuOrwXY7dhjd21+Dcbuy6/IX9DbzUc
-   w==;
-X-CSE-ConnectionGUID: Cz/TEJtnRQWR7lHosSS0LA==
-X-CSE-MsgGUID: nJAN+aQ9SjGO4aOg7B1Zbg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="53675315"
-X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
-   d="scan'208";a="53675315"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 08:51:29 -0700
-X-CSE-ConnectionGUID: sQGXQl98T627HwtSDI9gkQ==
-X-CSE-MsgGUID: +dz2gRIARCig5lexBMS7Yw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
-   d="scan'208";a="122784884"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmviesa010.fm.intel.com with ESMTP; 18 Mar 2025 08:51:28 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E6C081D7; Tue, 18 Mar 2025 17:51:26 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Lee Jones <lee@kernel.org>,
-	linux-leds@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Pavel Machek <pavel@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] leds: core: Bail out when composed name can't fit the buffer
-Date: Tue, 18 Mar 2025 17:51:25 +0200
-Message-ID: <20250318155126.2974905-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bWEYhkwg"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 779D7443FC;
+	Tue, 18 Mar 2025 15:53:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742313195;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iAWNBG+PNBdOBSynjb6NA8R0b0TjTIkaOpMrZv7LLCU=;
+	b=bWEYhkwgJbIncuTobP8+YhQR2CafKyxtki7qRzVUWrDvZ5JAQBMsAmoIvg21Watx/9DXk3
+	T1ubG2RlF2Pr9srzxvUB2oH484qP/OsB0ijj2JACGS0lPnoV1+sGXuwP0f5DfyzPn6Uxob
+	Biz8Q9Kd/6VPKSIz8WnzzrouA9d+KUHmZGllzzmTOEN3axjeV+9KAM3qgNoAvZ8gm2Nde5
+	49ge5xqZkkn8JkaWCpa2gKnP/nUvQrihs91E9F3qx/K994G8WcUDTopho/SyvrPXNhWYPz
+	y+wleBNzR/JC6VuyFunE1fVOUiPzkH45O0fcA5H28pG/xDLh8BuZj1OIXZiG3Q==
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+To: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+Cc: <richard@nod.at>,  <vigneshr@ti.com>,  <robh@kernel.org>,
+  <krzk+dt@kernel.org>,  <conor+dt@kernel.org>,
+  <linux-mtd@lists.infradead.org>,  <devicetree@vger.kernel.org>,
+  <linux-kernel@vger.kernel.org>,  <git@amd.com>,
+  <amitrkcian2002@gmail.com>,  Bernhard Frauendienst
+ <kernel@nospam.obeliks.de>
+Subject: Re: [PATCH v12 3/3] mtd: Add driver for concatenating devices
+In-Reply-To: <20250205133730.273985-4-amit.kumar-mahapatra@amd.com> (Amit
+	Kumar Mahapatra's message of "Wed, 5 Feb 2025 19:07:30 +0530")
+References: <20250205133730.273985-1-amit.kumar-mahapatra@amd.com>
+	<20250205133730.273985-4-amit.kumar-mahapatra@amd.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 18 Mar 2025 16:53:14 +0100
+Message-ID: <8734fa8hed.fsf@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedvkeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtgfesthhqredttderjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeffgefhjedtfeeigeduudekudejkedtiefhleelueeiueevheekvdeludehiedvfeenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeduvddprhgtphhtthhopegrmhhithdrkhhumhgrrhdqmhgrhhgrphgrthhrrgesrghmugdrtghomhdprhgtphhtthhopehrihgthhgrrhgusehnohgurdgrthdprhgtphhtthhopehvihhgnhgvshhhrhesthhirdgtohhmpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvr
+ hhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqmhhtugeslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopeguvghvihgtvghtrhgvvgesvhhgvghrrdhkvghrnhgvlhdrohhrgh
+X-GND-Sasl: miquel.raynal@bootlin.com
 
-GCC compiler complains about snprintf() calls that may potentially cut
-the output:
+On 05/02/2025 at 19:07:30 +0530, Amit Kumar Mahapatra <amit.kumar-mahapatra=
+@amd.com> wrote:
 
- drivers/leds/led-core.c:551:78: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
- drivers/leds/led-core.c:554:78: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
- ...
+> Introducing CONFIG_VIRT_CONCAT to separate the legacy flow from the
+> new
 
-Fix these by checking for the potential overflow. This requires
-to align all the branches to use the same callee, i.e. snprintf(),
-otherwise the code will be blown up and return different error codes
-for the different branches.
+CONFIG_MTD_VIRT_CONCAT
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/leds/led-core.c | 44 ++++++++++++++++++++++-------------------
- 1 file changed, 24 insertions(+), 20 deletions(-)
+> approach, where individual partitions within a concatenated partition are
+> not registered, as they are likely not needed by the user.
 
-diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
-index f6c46d2e5276..0eaa19edd6a2 100644
---- a/drivers/leds/led-core.c
-+++ b/drivers/leds/led-core.c
-@@ -515,6 +515,7 @@ int led_compose_name(struct device *dev, struct led_init_data *init_data,
- 	struct led_properties props = {};
- 	struct fwnode_handle *fwnode = init_data->fwnode;
- 	const char *devicename = init_data->devicename;
-+	int n;
- 
- 	if (!led_classdev_name)
- 		return -EINVAL;
-@@ -528,45 +529,48 @@ int led_compose_name(struct device *dev, struct led_init_data *init_data,
- 		 * Otherwise the label is prepended with devicename to compose
- 		 * the final LED class device name.
- 		 */
--		if (!devicename) {
--			strscpy(led_classdev_name, props.label,
--				LED_MAX_NAME_SIZE);
-+		if (devicename) {
-+			n = snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-+				     devicename, props.label);
- 		} else {
--			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
--				 devicename, props.label);
-+			n = snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s", props.label);
- 		}
- 	} else if (props.function || props.color_present) {
- 		char tmp_buf[LED_MAX_NAME_SIZE];
- 
- 		if (props.func_enum_present) {
--			snprintf(tmp_buf, LED_MAX_NAME_SIZE, "%s:%s-%d",
--				 props.color_present ? led_colors[props.color] : "",
--				 props.function ?: "", props.func_enum);
-+			n = snprintf(tmp_buf, LED_MAX_NAME_SIZE, "%s:%s-%d",
-+				     props.color_present ? led_colors[props.color] : "",
-+				     props.function ?: "", props.func_enum);
- 		} else {
--			snprintf(tmp_buf, LED_MAX_NAME_SIZE, "%s:%s",
--				 props.color_present ? led_colors[props.color] : "",
--				 props.function ?: "");
-+			n = snprintf(tmp_buf, LED_MAX_NAME_SIZE, "%s:%s",
-+				     props.color_present ? led_colors[props.color] : "",
-+				     props.function ?: "");
- 		}
--		if (init_data->devname_mandatory) {
--			snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
--				 devicename, tmp_buf);
--		} else {
--			strscpy(led_classdev_name, tmp_buf, LED_MAX_NAME_SIZE);
-+		if (n >= LED_MAX_NAME_SIZE)
-+			return -E2BIG;
- 
-+		if (init_data->devname_mandatory) {
-+			n = snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-+				     devicename, tmp_buf);
-+		} else {
-+			n = snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s", tmp_buf);
- 		}
- 	} else if (init_data->default_label) {
- 		if (!devicename) {
- 			dev_err(dev, "Legacy LED naming requires devicename segment");
- 			return -EINVAL;
- 		}
--		snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
--			 devicename, init_data->default_label);
-+		n = snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%s:%s",
-+			     devicename, init_data->default_label);
- 	} else if (is_of_node(fwnode)) {
--		strscpy(led_classdev_name, to_of_node(fwnode)->name,
--			LED_MAX_NAME_SIZE);
-+		n = snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%pfw", fwnode);
- 	} else
- 		return -EINVAL;
- 
-+	if (n >= LED_MAX_NAME_SIZE)
-+		return -E2BIG;
-+
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(led_compose_name);
--- 
-2.47.2
+I am not a big fan of this choice. We had issues with hiding things to
+the user in the first place. Could we find a way to expose both the
+original mtd devices as well as the virtually concatenated partitions?
 
+> Solution is focusing on fixed-partitions description only because it
+> depends on device boundaries.
+>
+> Suggested-by: Bernhard Frauendienst <kernel@nospam.obeliks.de>
+> Suggested-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Signed-off-by: Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>
+> ---
+>  drivers/mtd/Kconfig           |   8 ++
+>  drivers/mtd/Makefile          |   1 +
+>  drivers/mtd/mtd_virt_concat.c | 254 ++++++++++++++++++++++++++++++++++
+>  drivers/mtd/mtdcore.c         |   7 +
+>  drivers/mtd/mtdpart.c         |   6 +
+>  include/linux/mtd/concat.h    |  24 ++++
+>  6 files changed, 300 insertions(+)
+>  create mode 100644 drivers/mtd/mtd_virt_concat.c
+>
+> diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+> index 796a2eccbef0..3dade7c469df 100644
+> --- a/drivers/mtd/Kconfig
+> +++ b/drivers/mtd/Kconfig
+> @@ -206,6 +206,14 @@ config MTD_PARTITIONED_MASTER
+>  	  the parent of the partition device be the master device, rather than
+>  	  what lies behind the master.
+>=20=20
+> +config MTD_VIRT_CONCAT
+> +	tristate "Virtual concatenated MTD devices"
+> +	help
+> +	  The driver enables the creation of a virtual MTD device
+
+                                          of virtual MTD devices
+
+> +	  by concatenating multiple physical MTD devices into a single
+> +	  entity. This allows for the creation of partitions larger than
+> +	  the individual physical chips, extending across chip boundaries.
+> +
+
+...
+
+> +static int __init mtd_virt_concat_create_join(void)
+> +{
+> +	struct mtd_virt_concat_node *item;
+> +	struct mtd_concat *concat;
+> +	struct mtd_info *mtd;
+> +	ssize_t name_sz;
+> +	char *name;
+> +	int ret;
+> +
+> +	list_for_each_entry(item, &concat_node_list, head) {
+> +		concat =3D item->concat;
+> +		mtd =3D &concat->mtd;
+> +		/* Create the virtual device */
+> +		name_sz =3D snprintf(NULL, 0, "%s-%s%s-concat",
+> +				   concat->subdev[0]->name,
+> +				   concat->subdev[1]->name,
+> +				   concat->num_subdev > MIN_DEV_PER_CONCAT ?
+> +				   "-+" : "");
+> +		name =3D kmalloc(name_sz + 1, GFP_KERNEL);
+> +		if (!name) {
+> +			mtd_virt_concat_put_mtd_devices(concat);
+> +			return -ENOMEM;
+> +		}
+> +
+> +		sprintf(name, "%s-%s%s-concat",
+> +			concat->subdev[0]->name,
+> +			concat->subdev[1]->name,
+> +			concat->num_subdev > MIN_DEV_PER_CONCAT ?
+> +			"-+" : "");
+> +
+> +		mtd =3D mtd_concat_create(concat->subdev, concat->num_subdev, name);
+> +		if (!mtd) {
+> +			kfree(name);
+> +			return -ENXIO;
+> +		}
+> +
+> +		/* Arbitrary set the first device as parent */
+
+Here we may face runtime PM issues. At some point the device model
+expects a single parent per struct device, but here we have two. I do
+not have any hints at the moment on how we could solve that.
+
+> +		mtd->dev.parent =3D concat->subdev[0]->dev.parent;
+> +		mtd->dev =3D concat->subdev[0]->dev;
+> +
+> +		/* Register the platform device */
+> +		ret =3D mtd_device_register(mtd, NULL, 0);
+> +		if (ret)
+> +			goto destroy_concat;
+> +	}
+> +
+> +	return 0;
+> +
+> +destroy_concat:
+> +	mtd_concat_destroy(mtd);
+> +
+> +	return ret;
+> +}
+> +
+> +late_initcall(mtd_virt_concat_create_join);
+
+The current implementation does not support probe deferrals, I believe
+it should be handled.
+
+> +static void __exit mtd_virt_concat_exit(void)
+> +{
+> +	mtd_virt_concat_destroy_joins();
+> +	mtd_virt_concat_destroy_items();
+> +}
+> +module_exit(mtd_virt_concat_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Bernhard Frauendienst <kernel@nospam.obeliks.de>");
+> +MODULE_AUTHOR("Amit Kumar Mahapatra <amit.kumar-mahapatra@amd.com>");
+> +MODULE_DESCRIPTION("Virtual concat MTD device driver");
+> diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
+> index 724f917f91ba..2264fe81810f 100644
+> --- a/drivers/mtd/mtdcore.c
+> +++ b/drivers/mtd/mtdcore.c
+> @@ -34,6 +34,7 @@
+>=20=20
+>  #include <linux/mtd/mtd.h>
+>  #include <linux/mtd/partitions.h>
+> +#include <linux/mtd/concat.h>
+>=20=20
+>  #include "mtdcore.h"
+>=20=20
+> @@ -1067,6 +1068,12 @@ int mtd_device_parse_register(struct mtd_info *mtd=
+, const char * const *types,
+>  			goto out;
+>  	}
+>=20=20
+> +	if (IS_ENABLED(CONFIG_MTD_VIRT_CONCAT)) {
+
+Maybe IS_REACHABLE() is more relevant?
+
+> +		ret =3D mtd_virt_concat_node_create();
+> +		if (ret < 0)
+> +			goto out;
+> +	}
+> +
+>  	/* Prefer parsed partitions over driver-provided fallback */
+>  	ret =3D parse_mtd_partitions(mtd, types, parser_data);
+>  	if (ret =3D=3D -EPROBE_DEFER)
+
+Thanks,
+Miqu=C3=A8l
