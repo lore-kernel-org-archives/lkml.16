@@ -1,232 +1,222 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f66.google.com (mail-wr1-f66.google.com [209.85.221.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CDA7E1;
-	Tue, 18 Mar 2025 07:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16AA01DE4DC
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:24:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742282507; cv=none; b=N/DERHf96m4N479dXJ0+Vyz0Ig4OYwsS3ssvsItCXw6ejIpKI3I5bG0bzGmPGhXgObVZn9PDrX3NCt8ePgT/N5STVpFLebdPKrJryvqs9F5zfu7TbIob6AEYwPpKz7DJFKInQZ1F2OQwAgffgPQB+JbR+bNnqDM0RB4HjIPu6Is=
+	t=1742282665; cv=none; b=m1xekItCDcrDn10YMld4LAcR1vVp2OcQyDQ2LTL5U0ilPV0Norgbze+CNaIPk2KGNhLgWHzv+8ZaKreu/YLEiOfOWKe+GGIZQ1isJ5OAW8sh+VzWMIk0KP2Id3lA2CLCRm7C8cmS36hZk3bWvE9aaSZayl21Z2pm87aKUxGCbqM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742282507; c=relaxed/simple;
-	bh=nLiUrkSEAtV4YFJNW+wAuqzsKoD6bIiGGwewymLXb4A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=cJTtDyK3EL1ExYZ3h3uQC5/V02+xEbq7ZBOZeiPXXjoQpZleBctEGJRpB0zL8ZeBajMMeTQ2yDpJtQte6288U2g8ES3easGobiQC/M44LsXXdFua1ZnKXpNn7AF8buprSp4kt2q4RtTPOLEOLyn9rKtzxW6LPXIbWqA7o1UEB1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=HfTMyk4a; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742282665; c=relaxed/simple;
+	bh=drpyluEzjWz42VaTKx+3ZxJh27QPmaPVfN7uNvXTtms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=C+XEcXUCdXRL+5aHZQKPM7XEVhIwDibemF3JTJbxVa1XpsEaGSiUrIFbr6nr1S98Cl5e6FeiMtHoF4mj9/UrrgxV5z6c6AY6XQBSvPTTCuYZ/CsWoh/Nbu4I0jPjmf6TuRz+EoVqvMmNfQXoGS0yjYzrAlcK9d9aTQzpygK17k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=MymperzF; arc=none smtp.client-ip=209.85.221.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HfTMyk4a"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52HLpQsp026106;
-	Tue, 18 Mar 2025 07:21:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Li0MNn7ZrEOOD0vThX+KqWitMZLUv/ZYpvkQwGchqQE=; b=HfTMyk4aNUMqCD3Z
-	wGqkrBsuw0DMj/7/zUZgN0FHZvJb6JH+ZFCPHH3BkyVpK8k2lhCzcL9yCFIVL4Cp
-	ds0od3pkVgpc8GzYeeSphAJV6YmB20lhRXO2hx7OvImqH1GeVDJ1gdEcIOu0QajO
-	PsnAhA5Zlw9Umk759dbzEWQBM0N+UD6SanqPD4r2dNX+myybIPbMO5RzazeXDhoW
-	tMoWSb+7Hq/CGxhNkVN6VqUSutIefenkdxEM8mmI2TToYxGk8689PljMD4PYZITy
-	IoBL4G+muf4APhFg4ZFdjSUROCfMKjbmjTDPyfWWPaC9r9nmit9BnQn3LMyozs+L
-	NcCeZA==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1x7y8wf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 07:21:40 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52I7Ldh9025028
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 07:21:39 GMT
-Received: from [10.204.100.69] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Mar
- 2025 00:21:36 -0700
-Message-ID: <120b4f09-9145-b9c5-14b9-927086d44e71@quicinc.com>
-Date: Tue, 18 Mar 2025 12:51:33 +0530
+	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="MymperzF"
+Received: by mail-wr1-f66.google.com with SMTP id ffacd0b85a97d-3912baafc58so4501984f8f.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:24:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1742282660; x=1742887460; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Wghak4RRDdu/qxRqHBoCmrXEPsW6IMGly6ZO5meoK24=;
+        b=MymperzFYo9mxTFAWtTodg64ZNrCrMRxhgHHPPErDp32zbjIOWZ4aE8sEFZEuEXqCo
+         cZY1ltlmT3mhGbi2g8wMJX7p1ugn6XsxbGA4OT0g+yuP70L/AuBPPYcvsPpMYIMfvaxx
+         KtMsPzPgoSHOvNbo0YDXp/ScAy+Y2GkHu92RPyfc8kUvVVx1UDDLJ5MBxPD8aDIWZ7QF
+         znF6hspvPxPPf/qH7jHP/KDy629UM3de1h6bvbGfVPkcyVJH4uQoBn9SpZbDpvfLmHlH
+         g05Myqn4fCSpE18sZ/vtmBpfqBE4Gkr4BJqJTBqqoQ/0ayx4CKKVL/lo+VhQewbmYvD6
+         sriA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742282660; x=1742887460;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Wghak4RRDdu/qxRqHBoCmrXEPsW6IMGly6ZO5meoK24=;
+        b=A8DKApN0aTdcIsRf0DQbOJOjSxxpda3fQCVlbgzd9Mvcb7oWBa4eM38+9fg9ji0MEO
+         ddYAfkxd99r5hSy1Yvga8D1Uw4BLA/qSfv23tu/Fy0wUtnbUz0WF3D9ERj5OG7HBRwj5
+         pL7k/8gVWI0ddFlsSFKkxgzNzMoBeIBw7TEHFxNjEnxAs33aZU/vj5uWM0v/4oBLvaah
+         3shuvBBQ9jh4RSTxYIbHmg5IV81/wDgjEj+fXff2121+JEJZTMcTcaOqN7D9iUZk/vt6
+         wOvEr9xeUa+CWNDAyeE609hbwzp/foeaABDUHHSN/LiYH1KyHEUSH0pVF0zqjt3im6Ah
+         3awg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUR4nYxaiGpJOgKjwfqYYIDKIDb6P+fYmMmpwG6k2iRo/9GKCVtlvB6L/M7+WAgnsMrB9fmmjv7jLGKHg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXjQgpypCMmDXZfSAitfO/nQgpgHNzumDLfo9ZKwPdhHGxcfkv
+	Dn0D8OYuwl6UsWuT3g3WLEih7PgZcD4cCGd3hMU/5qmwjlApOqHxtcho22NLBjo=
+X-Gm-Gg: ASbGnctB9FRj5sUEKuWdFBsCboiMRI+scjs231+VM21BlhdwkZxzNCPi9aoVMlwxIAh
+	Rs6vuvhg5Ay3Ha3ASm6E0q9urkC9ZhsUQ/Un3IDGtNoiT6LPniZFufjalvxUjXQAEn3VW9sI8Xo
+	YFDXmAdhKDGgEfPt3JN/eUtSEr3876i5z5uN9W+RNFS14/mLd5zFSS11+pBm/qKyovqTv+2U7jx
+	tsD5fDaGgl24SPz5MrIY+p5EVxCFW/1zesdGhBOV43yb4ZgxvmhlKg3PmQC0QZL9mJuW35wVhu7
+	cu4mRpsq4zuhHV4r2MY5HBQFfHgw8l/s9Wmyf43YVV/6K1wfdVFzUTLFH4UmBiqkrCCrt2+ETiB
+	B
+X-Google-Smtp-Source: AGHT+IHctrH0qtMWgGd5Q0VhrY29/j/KjrtA1DRu6LW50dPQTmIMJjN+BJrIvSAloTQfv3becstuDQ==
+X-Received: by 2002:a05:6000:184b:b0:391:3291:e416 with SMTP id ffacd0b85a97d-3971d617e54mr16883464f8f.19.1742282660131;
+        Tue, 18 Mar 2025 00:24:20 -0700 (PDT)
+Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-397f2837e61sm11895876f8f.97.2025.03.18.00.24.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 00:24:19 -0700 (PDT)
+Message-ID: <490eac5e-d429-427e-823f-556504428f9d@blackwall.org>
+Date: Tue, 18 Mar 2025 09:24:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 1/2] venus: pm_helpers: add compatibility for
- dev_pm_genpd_set_hwmode on V4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] bonding: check xdp prog when set bond mode
+To: Wang Liang <wangliang74@huawei.com>,
+ =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+ jv@jvosburgh.net, andrew+netdev@lunn.ch, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, ast@kernel.org,
+ daniel@iogearbox.net, hawk@kernel.org, john.fastabend@gmail.com,
+ joamaki@gmail.com
+Cc: yuehaibing@huawei.com, zhangchangzhong@huawei.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+References: <20250314073549.1030998-1-wangliang74@huawei.com>
+ <87y0x7rkck.fsf@toke.dk> <21d52659-622a-4b2a-b091-787bf0f5d67f@blackwall.org>
+ <96a4043b-fdac-4ca1-a7b9-a6352b1d7dfe@blackwall.org>
+ <fad4cb08-be38-4f43-ba61-db147e4d26d0@huawei.com>
+ <6ea34ad0-8456-4e49-8eb1-372cf571d91b@blackwall.org>
+ <ef48d387-fb22-4059-a887-c9438c6e33b1@huawei.com>
 Content-Language: en-US
-To: Renjiang Han <quic_renjiang@quicinc.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        "Stephen
- Boyd" <sboyd@kernel.org>,
-        Stanimir Varbanov <stanimir.k.varbanov@gmail.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Mauro Carvalho Chehab
-	<mchehab@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-media@vger.kernel.org>
-References: <20250218-switch_gdsc_mode-v4-0-546f6c925ae0@quicinc.com>
- <20250218-switch_gdsc_mode-v4-1-546f6c925ae0@quicinc.com>
-From: Vikash Garodia <quic_vgarodia@quicinc.com>
-In-Reply-To: <20250218-switch_gdsc_mode-v4-1-546f6c925ae0@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: eyVkrTMd7AIUWpOyAyRF4wfzcW2przSd
-X-Proofpoint-ORIG-GUID: eyVkrTMd7AIUWpOyAyRF4wfzcW2przSd
-X-Authority-Analysis: v=2.4 cv=Jem8rVKV c=1 sm=1 tr=0 ts=67d91f04 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=gF5d3Xu8TQ-Je0CE9tcA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_03,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 malwarescore=0 adultscore=0
- phishscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503180051
+From: Nikolay Aleksandrov <razor@blackwall.org>
+In-Reply-To: <ef48d387-fb22-4059-a887-c9438c6e33b1@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+On 3/18/25 08:50, Wang Liang wrote:
+> 
+> 在 2025/3/17 15:39, Nikolay Aleksandrov 写道:
+>> On 3/17/25 06:07, Wang Liang wrote:
+>>> 在 2025/3/14 18:44, Nikolay Aleksandrov 写道:
+>>>> On 3/14/25 12:22 PM, Nikolay Aleksandrov wrote:
+>>>>> On 3/14/25 12:13 PM, Toke Høiland-Jørgensen wrote:
+>>>>>> Wang Liang <wangliang74@huawei.com> writes:
+>>>>>>
+>>>>>>> Following operations can trigger a warning[1]:
+>>>>>>>
+>>>>>>>       ip netns add ns1
+>>>>>>>       ip netns exec ns1 ip link add bond0 type bond mode balance-rr
+>>>>>>>       ip netns exec ns1 ip link set dev bond0 xdp obj af_xdp_kern.o sec xdp
+>>>>>>>       ip netns exec ns1 ip link set bond0 type bond mode broadcast
+>>>>>>>       ip netns del ns1
+>>>>>>>
+>>>>>>> When delete the namespace, dev_xdp_uninstall() is called to remove xdp
+>>>>>>> program on bond dev, and bond_xdp_set() will check the bond mode. If bond
+>>>>>>> mode is changed after attaching xdp program, the warning may occur.
+>>>>>>>
+>>>>>>> Some bond modes (broadcast, etc.) do not support native xdp. Set bond mode
+>>>>>>> with xdp program attached is not good. Add check for xdp program when set
+>>>>>>> bond mode.
+>>>>>>>
+>>>>>>>       [1]
+>>>>>>>       ------------[ cut here ]------------
+>>>>>>>       WARNING: CPU: 0 PID: 11 at net/core/dev.c:9912 unregister_netdevice_many_notify+0x8d9/0x930
+>>>>>>>       Modules linked in:
+>>>>>>>       CPU: 0 UID: 0 PID: 11 Comm: kworker/u4:0 Not tainted 6.14.0-rc4 #107
+>>>>>>>       Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.15.0-0-g2dd4b9b3f840-prebuilt.qemu.org 04/01/2014
+>>>>>>>       Workqueue: netns cleanup_net
+>>>>>>>       RIP: 0010:unregister_netdevice_many_notify+0x8d9/0x930
+>>>>>>>       Code: 00 00 48 c7 c6 6f e3 a2 82 48 c7 c7 d0 b3 96 82 e8 9c 10 3e ...
+>>>>>>>       RSP: 0018:ffffc90000063d80 EFLAGS: 00000282
+>>>>>>>       RAX: 00000000ffffffa1 RBX: ffff888004959000 RCX: 00000000ffffdfff
+>>>>>>>       RDX: 0000000000000000 RSI: 00000000ffffffea RDI: ffffc90000063b48
+>>>>>>>       RBP: ffffc90000063e28 R08: ffffffff82d39b28 R09: 0000000000009ffb
+>>>>>>>       R10: 0000000000000175 R11: ffffffff82d09b40 R12: ffff8880049598e8
+>>>>>>>       R13: 0000000000000001 R14: dead000000000100 R15: ffffc90000045000
+>>>>>>>       FS:  0000000000000000(0000) GS:ffff888007a00000(0000) knlGS:0000000000000000
+>>>>>>>       CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>>>>>>>       CR2: 000000000d406b60 CR3: 000000000483e000 CR4: 00000000000006f0
+>>>>>>>       Call Trace:
+>>>>>>>        <TASK>
+>>>>>>>        ? __warn+0x83/0x130
+>>>>>>>        ? unregister_netdevice_many_notify+0x8d9/0x930
+>>>>>>>        ? report_bug+0x18e/0x1a0
+>>>>>>>        ? handle_bug+0x54/0x90
+>>>>>>>        ? exc_invalid_op+0x18/0x70
+>>>>>>>        ? asm_exc_invalid_op+0x1a/0x20
+>>>>>>>        ? unregister_netdevice_many_notify+0x8d9/0x930
+>>>>>>>        ? bond_net_exit_batch_rtnl+0x5c/0x90
+>>>>>>>        cleanup_net+0x237/0x3d0
+>>>>>>>        process_one_work+0x163/0x390
+>>>>>>>        worker_thread+0x293/0x3b0
+>>>>>>>        ? __pfx_worker_thread+0x10/0x10
+>>>>>>>        kthread+0xec/0x1e0
+>>>>>>>        ? __pfx_kthread+0x10/0x10
+>>>>>>>        ? __pfx_kthread+0x10/0x10
+>>>>>>>        ret_from_fork+0x2f/0x50
+>>>>>>>        ? __pfx_kthread+0x10/0x10
+>>>>>>>        ret_from_fork_asm+0x1a/0x30
+>>>>>>>        </TASK>
+>>>>>>>       ---[ end trace 0000000000000000 ]---
+>>>>>>>
+>>>>>>> Fixes: 9e2ee5c7e7c3 ("net, bonding: Add XDP support to the bonding driver")
+>>>>>>> Signed-off-by: Wang Liang <wangliang74@huawei.com>
+>>>>>>> ---
+>>>>>>>    drivers/net/bonding/bond_options.c | 3 +++
+>>>>>>>    1 file changed, 3 insertions(+)
+>>>>>>>
+>>>>>>> diff --git a/drivers/net/bonding/bond_options.c b/drivers/net/bonding/bond_options.c
+>>>>>>> index 327b6ecdc77e..127181866829 100644
+>>>>>>> --- a/drivers/net/bonding/bond_options.c
+>>>>>>> +++ b/drivers/net/bonding/bond_options.c
+>>>>>>> @@ -868,6 +868,9 @@ static bool bond_set_xfrm_features(struct bonding *bond)
+>>>>>>>    static int bond_option_mode_set(struct bonding *bond,
+>>>>>>>                    const struct bond_opt_value *newval)
+>>>>>>>    {
+>>>>>>> +    if (bond->xdp_prog)
+>>>>>>> +        return -EOPNOTSUPP;
+>>>>>>> +
+>>>>>> Should we allow changing as long as the new mode also supports XDP?
+>>>>>>
+>>>>>> -Toke
+>>>>>>
+>>>>>>
+>>>>> +1
+>>>>> I think we should allow it, the best way probably is to add a new option
+>>>>> BOND_VALFLAG_XDP_UNSUPP (for example) as a bond option flag and to set
+>>>>> it in bond_options.c for each mode that doesn't support XDP, then you
+>>>>> can do the check in a generic way (for any option) in
+>>>>> bond_opt_check_deps. Any bond option that can't be changed with XDP prog
+>>>> err, I meant any bond option's value that isn't supported with XDP, for
+>>>> a whole option it would be a bit different
+>>> Thanks for your suggestions!
+>>>
+>>> When install xdp prog, bond_xdp_set() use bond_xdp_check() to check whether the bond mode support xdp.
+>>>
+>>> When uninstall xdp prog, the paramter prog of bond_xdp_set() is NULL. How about not call bond_xdp_check() to avoid the warning when the prog is NULL, like:
+>>>
+>>> static int bond_xdp_set(struct net_device *dev, struct bpf_prog *prog,
+>>>              struct netlink_ext_ack *extack)
+>>>      ...
+>>>      if (prog && !bond_xdp_check(bond))
+>> No, this could cause other problems. Actually, for -net I think the best would be to stick to
+>> a simpler fix and just do bond_xdp_check() if there's a XDP program attached when changing
+>> the mode so it can be backported easier. The option value flag can be done in the future
+>> if more option values (or options) need to be disabled for XDP.
+>>
+>> Cheers,
+>>   Nik
+> Excuse me again. I hope that I haven't misunderstood your suggestions.
+> 
+> When I try to do bond_xdp_check() if there's a XDP program attached when
+> changing the mode in function bond_option_mode_set(). bond_xdp_check()
+> visit bond->params.mode and bond->params.xmit_policy, should I create a
+> new function, whose paramter is int mode?
+> 
+> Looking forward to getting more replies. Thanks.
 
-On 2/18/2025 4:03 PM, Renjiang Han wrote:
-> There are two ways to switch GDSC mode. One is to write the POWER_CONTROL
-> register and the other is to use dev_pm_genpd_set_hwmode(). However, they
-> rely on different clock driver flags. dev_pm_genpd_set_hwmode() depends on
-> the HW_CTRL_TRIGGER flag and POWER_CONTROL register depends on the HW_CTRL
-> flag.
-> 
-> By default, the dev_pm_genpd_set_hwmode() is used to switch the GDSC mode.
-> If it fails and dev_pm_genpd_set_hwmode() returns -EOPNOTSUPP, it means
-> that the clock driver uses the HW_CTRL flag. At this time, the GDSC mode
-> is switched to write the POWER_CONTROL register.
-> 
-> Clock driver is using HW_CTRL_TRIGGER flag with V6. So hwmode_dev is
-> always true on using V6 platform. Conversely, if hwmode_dev is false, this
-> platform must be not using V6. Therefore, replace IS_V6 in poweroff_coreid
-> with hwmode_dev. Also, with HW_CTRL_TRIGGER flag, the vcodec gdsc gets
-> enabled in SW mode by default. Therefore, before disabling the GDSC, GDSC
-> should be switched to SW mode so that GDSC gets enabled in SW mode in the
-> next enable.
-> 
-> Signed-off-by: Renjiang Han <quic_renjiang@quicinc.com>
-> ---
->  drivers/media/platform/qcom/venus/core.h       |  2 ++
->  drivers/media/platform/qcom/venus/pm_helpers.c | 38 ++++++++++++++------------
->  2 files changed, 23 insertions(+), 17 deletions(-)
-> 
-> diff --git a/drivers/media/platform/qcom/venus/core.h b/drivers/media/platform/qcom/venus/core.h
-> index 43532543292280be15adf688fc0c30f44e207c7f..0ccce89d3f54cf685ecce5b339a51e44f6ea3704 100644
-> --- a/drivers/media/platform/qcom/venus/core.h
-> +++ b/drivers/media/platform/qcom/venus/core.h
-> @@ -168,6 +168,7 @@ struct venus_format {
->   * @root:	debugfs root directory
->   * @venus_ver:	the venus firmware version
->   * @dump_core:	a flag indicating that a core dump is required
-> + * @hwmode_dev:	a flag indicating that HW_CTRL_TRIGGER is used in clock driver
->   */
->  struct venus_core {
->  	void __iomem *base;
-> @@ -230,6 +231,7 @@ struct venus_core {
->  		u32 rev;
->  	} venus_ver;
->  	unsigned long dump_core;
-> +	bool hwmode_dev;
->  };
->  
->  struct vdec_controls {
-> diff --git a/drivers/media/platform/qcom/venus/pm_helpers.c b/drivers/media/platform/qcom/venus/pm_helpers.c
-> index 33a5a659c0ada0ca97eebb5522c5f349f95c49c7..409aa9bd0b5d099c993eedb03177ec5ed918b4a0 100644
-> --- a/drivers/media/platform/qcom/venus/pm_helpers.c
-> +++ b/drivers/media/platform/qcom/venus/pm_helpers.c
-> @@ -412,9 +412,17 @@ static int vcodec_control_v4(struct venus_core *core, u32 coreid, bool enable)
->  	u32 val;
->  	int ret;
->  
-> -	if (IS_V6(core))
-> -		return dev_pm_genpd_set_hwmode(core->pmdomains->pd_devs[coreid], !enable);
-> -	else if (coreid == VIDC_CORE_ID_1) {
-> +	ret = dev_pm_genpd_set_hwmode(core->pmdomains->pd_devs[coreid], !enable);
-> +	if (ret == -EOPNOTSUPP) {
-> +		core->hwmode_dev = false;
-> +		goto legacy;
-> +	}
-> +
-> +	core->hwmode_dev = true;
-> +	return ret;
-> +
-> +legacy:
-> +	if (coreid == VIDC_CORE_ID_1) {
->  		ctrl = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_CONTROL;
->  		stat = core->wrapper_base + WRAPPER_VCODEC0_MMCC_POWER_STATUS;
->  	} else {
-> @@ -450,7 +458,7 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
->  
->  		vcodec_clks_disable(core, core->vcodec0_clks);
->  
-> -		if (!IS_V6(core)) {
-> +		if (!core->hwmode_dev) {
->  			ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
->  			if (ret)
->  				return ret;
-> @@ -468,7 +476,7 @@ static int poweroff_coreid(struct venus_core *core, unsigned int coreid_mask)
->  
->  		vcodec_clks_disable(core, core->vcodec1_clks);
->  
-> -		if (!IS_V6(core)) {
-> +		if (!core->hwmode_dev) {
->  			ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
->  			if (ret)
->  				return ret;
-> @@ -491,11 +499,9 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
->  		if (ret < 0)
->  			return ret;
->  
-> -		if (!IS_V6(core)) {
-> -			ret = vcodec_control_v4(core, VIDC_CORE_ID_1, true);
-> -			if (ret)
-> -				return ret;
-> -		}
-> +		ret = vcodec_control_v4(core, VIDC_CORE_ID_1, true);
-> +		if (ret)
-> +			return ret;
->  
->  		ret = vcodec_clks_enable(core, core->vcodec0_clks);
->  		if (ret)
-> @@ -511,11 +517,9 @@ static int poweron_coreid(struct venus_core *core, unsigned int coreid_mask)
->  		if (ret < 0)
->  			return ret;
->  
-> -		if (!IS_V6(core)) {
-> -			ret = vcodec_control_v4(core, VIDC_CORE_ID_2, true);
-> -			if (ret)
-> -				return ret;
-> -		}
-> +		ret = vcodec_control_v4(core, VIDC_CORE_ID_2, true);
-> +		if (ret)
-> +			return ret;
->  
->  		ret = vcodec_clks_enable(core, core->vcodec1_clks);
->  		if (ret)
-> @@ -811,7 +815,7 @@ static int vdec_power_v4(struct device *dev, int on)
->  	else
->  		vcodec_clks_disable(core, core->vcodec0_clks);
->  
-> -	vcodec_control_v4(core, VIDC_CORE_ID_1, false);
-> +	ret = vcodec_control_v4(core, VIDC_CORE_ID_1, false);
->  
->  	return ret;
->  }
-> @@ -856,7 +860,7 @@ static int venc_power_v4(struct device *dev, int on)
->  	else
->  		vcodec_clks_disable(core, core->vcodec1_clks);
->  
-> -	vcodec_control_v4(core, VIDC_CORE_ID_2, false);
-> +	ret = vcodec_control_v4(core, VIDC_CORE_ID_2, false);
->  
->  	return ret;
->  }
+No need to create a new function, you can modify the existing and pass
+mode as an argument, then use it to do this check when changing the mode.
 
-Reviewed-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+>>>>> should have that flag set.
+>>>>>
+>>>>> Cheers,
+>>>>>    Nik
+>>>>>
+>>
+
