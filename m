@@ -1,162 +1,164 @@
-Received: from frasgout12.his.huawei.com (frasgout12.his.huawei.com [14.137.139.154])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33EB1FCF47;
-	Tue, 18 Mar 2025 11:19:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.137.139.154
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2635F1FCF47
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:20:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742296804; cv=none; b=OURlnRNohtRwZpvhKCP+fYAhH9yz775A0XabMXtmNG4/13tncZI0+365wqXfk4TJ6zjd3RBH3tiOGtV+dABnYY4bVDLEpRctVhmuLxikNUdTsj+yeIP3O4nsDFHtB1PBsfZejQxeheo11sosoU1cEsRxvW9x6qDN4PpXTqj+nYw=
+	t=1742296810; cv=none; b=SM+Irf26qqagBA4X3PUGpOL5oOXn4t1x73jFdQg6984BJNGY4t6WliPLMSndLESiD9c3ZeXzXp1wf41Ym2dwAUqCnr+zDBnZLn/1TUwj6XZRRo3MTvYaw9IG1lfwYLC7AHFobC1P/19AbZuJ7keEbAaYFuWaJznhk57LK7YRP5k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742296804; c=relaxed/simple;
-	bh=E4bvhLucTAO1dUIzTjxHKYt4vtYiDxItZT2Baea8gno=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=PycksySdOnli1WtbUr1/ye4IcyY5Yb5yFIg8mm2b3wOs7OCb4WgiAtPFomAFdrToGhsigFcdV0ixtM931+7uEl6hie/2MDpbnNY8J07Efmn8iGA0017r8PtDluwTGWHgeWS+wqpbph4Vk4dACXYkbyaBhm2gF/NFlDzfuIXD3Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=14.137.139.154
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.18.186.51])
-	by frasgout12.his.huawei.com (SkyGuard) with ESMTPS id 4ZH85X6PVlzsR5W;
-	Tue, 18 Mar 2025 19:00:48 +0800 (CST)
-Received: from mail02.huawei.com (unknown [7.182.16.47])
-	by mail.maildlp.com (Postfix) with ESMTP id 651F81404A6;
-	Tue, 18 Mar 2025 19:01:08 +0800 (CST)
-Received: from [127.0.0.1] (unknown [10.204.63.22])
-	by APP1 (Coremail) with SMTP id LxC2BwDHmUhpUtlndFRpBA--.29145S2;
-	Tue, 18 Mar 2025 12:01:07 +0100 (CET)
-Message-ID: <d01f5ae9654ca07aa93cb061b21b79ff5c83aa79.camel@huaweicloud.com>
-Subject: Re: [RFC PATCH v1 0/7] ima: get rid of hard dependency on SHA-1
-From: Roberto Sassu <roberto.sassu@huaweicloud.com>
-To: Nicolai Stange <nstange@suse.de>, Mimi Zohar <zohar@linux.ibm.com>, 
- Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin
- <dmitry.kasatkin@gmail.com>, Jarkko Sakkinen <jarkko@kernel.org>
-Cc: Eric Snowberg <eric.snowberg@oracle.com>,
- linux-integrity@vger.kernel.org,  linux-security-module@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Date: Tue, 18 Mar 2025 12:00:54 +0100
-In-Reply-To: <20250313173339.3815589-1-nstange@suse.de>
-References: <20250313173339.3815589-1-nstange@suse.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.44.4-0ubuntu2 
+	s=arc-20240116; t=1742296810; c=relaxed/simple;
+	bh=6wpY+XDOn6KsOXqrYw1f8Gq4QpQhhshPGEthKg6Z9dQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LC3hRAplFSzKkzJy/5bABcaBJdmze4fLiUleQNfojvV51WCzQPH938VoIpr8/X5JNomDJ+PkcfucSP+PcBfIcuvOEEP+4Z8S6OfuUXOlkzUU8XDbdq0ZtNUX24G25dnf9totyXD4FjSQ2m6br5Epw0E1+ylRMW1q1tQWBYMfGSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sOeD/N6K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5mt6eYlr; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=sOeD/N6K; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=5mt6eYlr; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sOeD/N6K";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5mt6eYlr";
+	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="sOeD/N6K";
+	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="5mt6eYlr"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 2E78E1F770;
+	Tue, 18 Mar 2025 11:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742296806; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MkpWcV8vjw1AxUR4xh5y235IjxQ4E0Apreu9leHckp4=;
+	b=sOeD/N6Kz9hSpx20SOy5JjfJdm2/krmFkfDpsQsm9qdnJQB8voNOeXhBdu86l/Ud7DUu3X
+	3R+gDSdUlWi3eEoKWXj3RrwePsZc02FWhnmmv15MNWyoOliyxOjulc5ujKqjUNNF7WhI0p
+	AWXsGG/mQGJZhtlWzQBtRu5+kRtCTCY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742296806;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MkpWcV8vjw1AxUR4xh5y235IjxQ4E0Apreu9leHckp4=;
+	b=5mt6eYlrmlShuWhqr9+sGQwa0BA4jJVWDuMSYjDKDkFhHs0nwPL70JAXIQJNUxn8NcI7KU
+	oOMKkYzneNr2J3AQ==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.de header.s=susede2_rsa header.b="sOeD/N6K";
+	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=5mt6eYlr
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1742296806; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MkpWcV8vjw1AxUR4xh5y235IjxQ4E0Apreu9leHckp4=;
+	b=sOeD/N6Kz9hSpx20SOy5JjfJdm2/krmFkfDpsQsm9qdnJQB8voNOeXhBdu86l/Ud7DUu3X
+	3R+gDSdUlWi3eEoKWXj3RrwePsZc02FWhnmmv15MNWyoOliyxOjulc5ujKqjUNNF7WhI0p
+	AWXsGG/mQGJZhtlWzQBtRu5+kRtCTCY=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1742296806;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=MkpWcV8vjw1AxUR4xh5y235IjxQ4E0Apreu9leHckp4=;
+	b=5mt6eYlrmlShuWhqr9+sGQwa0BA4jJVWDuMSYjDKDkFhHs0nwPL70JAXIQJNUxn8NcI7KU
+	oOMKkYzneNr2J3AQ==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 16823139D2;
+	Tue, 18 Mar 2025 11:20:06 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id gpUaBeZW2WdsSAAAD6G6ig
+	(envelope-from <hare@suse.de>); Tue, 18 Mar 2025 11:20:06 +0000
+Message-ID: <7c3f8b96-2629-4bac-b089-96437355ac91@suse.de>
+Date: Tue, 18 Mar 2025 12:20:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-CM-TRANSID:LxC2BwDHmUhpUtlndFRpBA--.29145S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxAF43GF1DKFyDAF1rGFWkCrg_yoWrGFyfpF
-	Z2gF4Ykr18ZFyxGwnrAa129FWSg3y8CFy5Grn3Jw10vwnIva42gr48tF109FyfWryfX347
-	tFn2y3s8Ca1UZFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUymb4IE77IF4wAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4
-	vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xIIjxv20xvEc7Cj
-	xVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxV
-	AFwI0_Gr0_Gr1UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40E
-	x7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x
-	0Yz7v_Jr0_Gr1lF7xvr2IY64vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vI
-	r41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
-	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
-	cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r1j6r4UMIIF0xvE42xK8V
-	AvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E
-	14v26r1j6r4UYxBIdaVFxhVjvjDU0xZFpf9x07UAwIDUUUUU=
-X-CM-SenderInfo: purev21wro2thvvxqx5xdzvxpfor3voofrz/1tbiAQALBGfZG1wDYAACsW
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 17/18] nvmet-fc: put ref when assoc->del_work is
+ already scheduled
+To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
+ Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+ Chaitanya Kulkarni <kch@nvidia.com>
+Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
+ <20250318-nvmet-fcloop-v3-17-05fec0fc02f6@kernel.org>
+Content-Language: en-US
+From: Hannes Reinecke <hare@suse.de>
+In-Reply-To: <20250318-nvmet-fcloop-v3-17-05fec0fc02f6@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 2E78E1F770
+X-Spam-Level: 
+X-Spamd-Result: default: False [-4.51 / 50.00];
+	BAYES_HAM(-3.00)[100.00%];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	ARC_NA(0.00)[];
+	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns,suse.de:email,suse.de:dkim,suse.de:mid];
+	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
+	DKIM_TRACE(0.00)[suse.de:+]
+X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
+X-Rspamd-Action: no action
+X-Spam-Score: -4.51
+X-Spam-Flag: NO
 
-On Thu, 2025-03-13 at 18:33 +0100, Nicolai Stange wrote:
-> Hi all,
->=20
-> if no SHA-1 implementation was available to the kernel, IMA init would
-> currently fail, rendering the whole subsystem unusable.
->=20
-> This patch series is an attempt to make SHA-1 availability non-mandatory
-> for IMA. The main motivation is that NIST announced to sunset SHA-1 by
-> 2030 ([1]), whereby any attempt to instantiate it when booted in FIPS mod=
-e
-> would have to be made to fail with -ENOENT. As this does potentially have
-> an impact on lifetimes for FIPS certifications issued today, distros migh=
-t
-> be interested in disabling SHA-1 downstream soon already.
->=20
-> Anyway, making IMA to work without a SHA-1 implementation available is no=
-t
-> so straightforward, mainly due to that established scheme to substitute
-> padded SHA-1 template hashes for PCR banks with unmapped/unavailable algo=
-s.
-> There is some userspace around expecting that existing behavior, e.g. the
-> ima_measurement command from ([2]), and breaking that in certain scenario=
-s
-> is inevitable.
->=20
-> I tried to make it the least painful possible, and I think I arrived at
-> a not completely unreasonable solution in the end, but wouldn't be too
-> surprised if you had a different stance on that. So I would be curious
-> about your feedback on whether this is a route worth pursuing any further=
-.
-> FWIW, the most controversial parts are probably
->  - [1/7] ima: don't expose runtime_measurements for unsupported hashes
->  - [6/7] ima: invalidate unsupported PCR banks once at first use
->=20
-> Note that I haven't tested this series thoroughly yet -- for the time bei=
-ng
-> I only ran a couple of brief smoke tests in a VM w/o a TPM  (w/ and w/o
-> SHA-1 disabled of course).
+On 3/18/25 11:40, Daniel Wagner wrote:
+> Do not leak the tgtport reference when the work is already scheduled.
+> 
+> Signed-off-by: Daniel Wagner <wagi@kernel.org>
+> ---
+>   drivers/nvme/target/fc.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/target/fc.c b/drivers/nvme/target/fc.c
+> index 649afce908bbade0a843efc4b8b76105c164b035..e027986e35098acbe5f97dcbcc845b9d46b88923 100644
+> --- a/drivers/nvme/target/fc.c
+> +++ b/drivers/nvme/target/fc.c
+> @@ -1087,7 +1087,8 @@ static void
+>   nvmet_fc_schedule_delete_assoc(struct nvmet_fc_tgt_assoc *assoc)
+>   {
+>   	nvmet_fc_tgtport_get(assoc->tgtport);
+> -	queue_work(nvmet_wq, &assoc->del_work);
+> +	if (!queue_work(nvmet_wq, &assoc->del_work))
+> +		nvmet_fc_tgtport_put(assoc->tgtport);
+>   }
+>   
+>   static bool
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
-+ Jarkko
+cheers,
 
-Hi Nicolai
-
-thanks a lot for the patches. Still didn't go through them, but if I
-understood correctly you assume that the SHA1 PCR bank would be still
-seen by IMA.
-
-In light of deprecation of SHA1, is this assumption correct?
-
-I would expect that TPM manufacturers or even the TPM driver would
-change to fullfill that.
-
-I guess the first stage would be making sure that the SHA1 PCR bank is
-unusable at the TPM driver level. A first thought would be to extend
-the SHA1 PCR bank with a random value at boot (or earlier), so that the
-remote attestation would never work on that PCR bank. At that point, I
-would probably go further and not expose the SHA1 PCR bank at all, so
-you would have less problems on IMA side.
-
-The second stage would probably be that the TPM firmware would be
-updated, not allowing the SHA1 PCR bank to be allocated.
-
-Other than that, sure, also actions need to be done to remove SHA1
-support in IMA (will look at your patches).
-
-Roberto
-
-> Many thanks!
->=20
-> Nicolai
->=20
-> [1] https://www.nist.gov/news-events/news/2022/12/nist-retires-sha-1-cryp=
-tographic-algorithm
-> [2] https://github.com/linux-integrity/ima-evm-utils.git
->=20
-> Nicolai Stange (7):
->   ima: don't expose runtime_measurements for unsupported hashes
->   ima: always create runtime_measurements sysfs file for ima_hash
->   ima: move INVALID_PCR() to ima.h
->   ima: track the set of PCRs ever extended
->   tpm: enable bank selection for PCR extend
->   ima: invalidate unsupported PCR banks once at first use
->   ima: make SHA1 non-mandatory
->=20
->  drivers/char/tpm/tpm-interface.c      | 29 +++++++++-
->  drivers/char/tpm/tpm.h                |  3 +-
->  drivers/char/tpm/tpm2-cmd.c           | 29 +++++++++-
->  include/linux/tpm.h                   |  3 +
->  security/integrity/ima/Kconfig        | 14 +++++
->  security/integrity/ima/ima.h          |  9 +++
->  security/integrity/ima/ima_crypto.c   | 83 ++++++++++++++++-----------
->  security/integrity/ima/ima_fs.c       | 41 +++++++------
->  security/integrity/ima/ima_policy.c   |  5 +-
->  security/integrity/ima/ima_queue.c    | 26 ++++++++-
->  security/integrity/ima/ima_template.c |  7 +++
->  11 files changed, 190 insertions(+), 59 deletions(-)
->=20
-
+Hannes
+-- 
+Dr. Hannes Reinecke                  Kernel Storage Architect
+hare@suse.de                                +49 911 74053 688
+SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
+HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
