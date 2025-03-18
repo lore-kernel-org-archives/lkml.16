@@ -1,271 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C64E20E70B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:17:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4BA20D502;
+	Tue, 18 Mar 2025 14:19:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742307474; cv=none; b=TZRd6vy4nOwALvaQhsF21Vaf+OspVdm5C3OIcR48l1ztYuW/kh2glW0xx2P8RwRoxiLlYyhmHABk+JtMJ4E+shSkyy6Vsa88LyUn9vah3jd0mXhiLvZQPbUOcIYsqnSmaYTNc7Xkuk8D//NCPniQTJFsyk3FHqbqpcieSpEfVqI=
+	t=1742307544; cv=none; b=gfEUt+hPbB9ReDzYpHep+iMWybybE/wQqvIDnO3u3HmsekxbboKryTMUWM9qbx8of92Jt3+Fe83Xm5ngPzsNbs50U2V6YuzeAriIqTf08AD8jxexJb7DFBwUz5JdrereBeBX9U2Fo7TBayi6Qsn+velnyCY/yR8Ak9qqxGu7BII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742307474; c=relaxed/simple;
-	bh=Qse+YpYm1YMkR9UE3SKy6BavWvSqQlpvnDsgaxildas=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=O9jf2HkOaZgZJTxRB+TFaQNHyWMdN56euLkkoTDgJU57w/Y6uZ01fYgjCP/Rq2BRwF598sgZ087m03hAP27AUscrNkNujriBcAt2F5kN1dNI2fb6IapXDNlTug73TaBZsraNk7tNVNQSPbMp1SOoqaJhqsKMklnIoWbAHckT5cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOcIvueU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742307544; c=relaxed/simple;
+	bh=epxV7GtHxcvtkAeq8eZfhijBk8m+5xzi3EFgfO0RqKs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=NNhcCpwXoL31IRfihxH0vkr03FE+3R5OFFPQcqTlWfbHHqJTpfEYNDai3AUCDXaHgp/k3t6nMrooruIw0Y+wjAK+77kPL82rf8tuoFrDoaVYx0vr24gN5kUA1Y1miB6ghyEpmYQYcLCu0gb/VQiwVQMlFqNDsiwRBfCytyVvmUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rQYEYPoN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOcIvueU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDAF5C4CEEE;
-	Tue, 18 Mar 2025 14:17:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQYEYPoN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9F03BC4CEE3;
+	Tue, 18 Mar 2025 14:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742307474;
-	bh=Qse+YpYm1YMkR9UE3SKy6BavWvSqQlpvnDsgaxildas=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=tOcIvueUgOEJxFr9+nGMRNUA7zNlNutA1Dh32HyaZQRSl8v0BpwARLovQmDZqU/EW
-	 N7z5vxkxESfQocNDRjqBQo90m0A8GBjOaArI1S2Oib4ISCI6iHOoGBRREmzPtI3/xU
-	 FjLUwW8TQqHEBAsuspQV7L37XjPGau7/yzO3tLG8SgGosAfhnnGg4PKWTzDbAUabOG
-	 rJV7ZcBjZRyxcMUdRkCEwjeZQjXt5cuXodUcPEVjjWdwbGWynFExDM0Y19+iMqePl3
-	 1UlehcexXnMXfjUgm3xXamVQtbE5ZUiZb9mer+u+MVMRuK+kyluGD2lruspIkyo/3e
-	 DH9+banXXoDOA==
-From: Maxime Ripard <mripard@kernel.org>
-Date: Tue, 18 Mar 2025 15:17:40 +0100
-Subject: [PATCH 4/4] drm/vc4: tests: Retry pv-muxing tests when EDEADLK
+	s=k20201202; t=1742307543;
+	bh=epxV7GtHxcvtkAeq8eZfhijBk8m+5xzi3EFgfO0RqKs=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=rQYEYPoNW+oXRPd5s5lR1acZ8VzzZ8cr05MRwjURtoMeWvVHoUPnE+KP/0WRnAIF2
+	 dtGNeC4cX4ASjay7e2Q8iIYIJksc7zUv+ZGF4T7EnJKl9Z0AJJOju7MA4vBZNuJWV7
+	 70JfMPkP1efS1ZBuukfLV02EERQOPmCdQCvL+F/ryadIcq3BHzsHznyZqkAVhhkCJL
+	 ljyBvnYNv0Xma3n+QK4/w82zNbEiJmzQoQkGzGRGkVFvS349PhHCkoGsjTwt+ZoLms
+	 6uT9MRPXdTr2b82hcmpBcrIU8D1idvEQqiT2Wv3L+e3ZD41dq6/GnCXZd/g8A85v29
+	 PSL/E07XNqQHw==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Abdiel Janulgue" <abdiel.janulgue@gmail.com>
+Cc: <rust-for-linux@vger.kernel.org>,  <daniel.almeida@collabora.com>,
+  <dakr@kernel.org>,  <robin.murphy@arm.com>,  <aliceryhl@google.com>,
+  "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Benno
+ Lossin" <benno.lossin@proton.me>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Valentin Obst" <kernel@valentinobst.de>,
+  <linux-kernel@vger.kernel.org>,  "Christoph Hellwig" <hch@lst.de>,
+  "Marek Szyprowski" <m.szyprowski@samsung.com>,  <airlied@redhat.com>,
+  <iommu@lists.linux.dev>
+Subject: Re: [PATCH v15 00/11] rust: add dma coherent allocator abstraction
+In-Reply-To: <20250317185345.2608976-1-abdiel.janulgue@gmail.com> (Abdiel
+	Janulgue's message of "Mon, 17 Mar 2025 20:52:07 +0200")
+References: <rTVBNBYxl4bn6nnkXBjTN8d-dpiCOR32i2Fpe5-wuhzcGjijW1iXnKaA4pbok32ockodVqTYGEfEA_JVpOC3ZQ==@protonmail.internalid>
+	<20250317185345.2608976-1-abdiel.janulgue@gmail.com>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 18 Mar 2025 15:11:49 +0100
+Message-ID: <87msdiig2i.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-drm-vc4-kunit-failures-v1-4-779864d9ab37@kernel.org>
-References: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
-In-Reply-To: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
-To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
- =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- Maxime Ripard <mripard@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6791; i=mripard@kernel.org;
- h=from:subject:message-id; bh=Qse+YpYm1YMkR9UE3SKy6BavWvSqQlpvnDsgaxildas=;
- b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOk3G5q/2ngGhdZ+u2l560t2WsaM7d5h0Wa/7Jdtl/X6s
- DZ++ZJLHVNZGIQ5GWTFFFmeyISdXt6+uMrBfuUPmDmsTCBDGLg4BWAiRy8yNtzoWOv2J0B4jUyz
- ZmQxs6VMf/Jkz5fmEk1XIo8Krcu5lxARcOvcLr2JYtZc0ded90kvZmz42CfLm/b/Y9+/r+smfJG
- 7/2hx8fUHT7QOxW+9af5+Ul6v14rWLK+qnxN4pjBfa+c7enAWAA==
-X-Developer-Key: i=mripard@kernel.org; a=openpgp;
- fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
+Content-Type: text/plain
 
-Some functions used by the HVS->PV muxing tests can return with EDEADLK,
-meaning the entire sequence should be restarted. It's not a fatal error
-and we should treat it as a recoverable error, and recover, instead of
-failing the test like we currently do.
+Hi Abdiel,
 
-Fixes: 76ec18dc5afa ("drm/vc4: tests: Add unit test suite for the PV muxing")
-Signed-off-by: Maxime Ripard <mripard@kernel.org>
----
- drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 44 ++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+"Abdiel Janulgue" <abdiel.janulgue@gmail.com> writes:
 
-diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-index 52c04ef33206bf4f9e21e3c8b7cea932824a67fa..94e05bddb630a79aab189d9bc16f09a9d84ce396 100644
---- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-+++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-@@ -685,20 +685,26 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	vc4 = priv->vc4;
- 	drm = &vc4->base;
-+
-+retry:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 	for (i = 0; i < params->nencoders; i++) {
- 		enum vc4_encoder_type enc_type = params->encoders[i];
- 
- 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
-+		if (ret == -EDEADLK)
-+			goto retry;
- 		KUNIT_ASSERT_EQ(test, ret, 0);
- 	}
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry;
- 	KUNIT_EXPECT_EQ(test, ret, 0);
- 
- 	KUNIT_EXPECT_TRUE(test,
- 			  check_fifo_conflict(test, state));
- 
-@@ -726,21 +732,27 @@ static void drm_vc4_test_pv_muxing_invalid(struct kunit *test)
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	vc4 = priv->vc4;
- 	drm = &vc4->base;
-+
-+retry:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	for (i = 0; i < params->nencoders; i++) {
- 		enum vc4_encoder_type enc_type = params->encoders[i];
- 
- 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
-+		if (ret == -EDEADLK)
-+			goto retry;
- 		KUNIT_ASSERT_EQ(test, ret, 0);
- 	}
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry;
- 	KUNIT_EXPECT_LT(test, ret, 0);
- 
- 	drm_modeset_drop_locks(&ctx);
- 	drm_modeset_acquire_fini(&ctx);
- }
-@@ -811,17 +823,22 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	drm = &vc4->base;
-+retry_first:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK)
-+		goto retry_first;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry_first;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -834,17 +851,22 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
- 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[hdmi0_channel].in_use);
- 
- 	ret = drm_atomic_helper_swap_state(state, false);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
-+retry_second:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-+	if (ret == -EDEADLK)
-+		goto retry_second;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry_second;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -885,20 +907,27 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	drm = &vc4->base;
-+retry_first:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK)
-+		goto retry_first;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-+	if (ret == -EDEADLK)
-+		goto retry_first;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry_first;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -919,17 +948,22 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
- 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[old_hdmi1_channel].in_use);
- 
- 	ret = drm_atomic_helper_swap_state(state, false);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
-+retry_second:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_del_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK)
-+		goto retry_second;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry_second;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_hvs_state = vc4_hvs_get_new_global_state(state);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
- 
-@@ -979,29 +1013,39 @@ drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable_too_many_crtc_state(struct ku
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
- 
- 	drm_modeset_acquire_init(&ctx, 0);
- 
- 	drm = &vc4->base;
-+retry_first:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
-+	if (ret == -EDEADLK)
-+		goto retry_first;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry_first;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_helper_swap_state(state, false);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
-+retry_second:
- 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
- 
- 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
-+	if (ret == -EDEADLK)
-+		goto retry_second;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	ret = drm_atomic_check_only(state);
-+	if (ret == -EDEADLK)
-+		goto retry_second;
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 
- 	new_vc4_crtc_state = get_vc4_crtc_state_for_encoder(test, state,
- 							    VC4_ENCODER_TYPE_HDMI0);
- 	KUNIT_EXPECT_NULL(test, new_vc4_crtc_state);
+> This series adds the rust bindings for the dma coherent allocator which
+> is needed for nova-core[0].
+>
+> For v15, document safety comments on the exception of usage on
+> read_volatile and write_volatile as suggested by Boqun Feng.
+>
+> This is tested on a Nvidia GA104 GPU device using PoC code which parses
+> and loads the GSP firmware via DMA.
+>
 
--- 
-2.48.1
+I messed up and replied to v14 of the series for patch 3, 6 (x2) and 9.
+Comments still apply to v15.
+
+
+Best regards,
+Andreas Hindborg
+
 
