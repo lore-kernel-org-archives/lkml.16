@@ -1,172 +1,136 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12C028F3;
-	Tue, 18 Mar 2025 07:31:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82BCB1DFE23
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 07:33:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742283106; cv=none; b=FMKo4XDum+88met3smlUyNC9KkmsijMURgZHyba9bvBQ+rp5YBKHo2Y4wANiCsSE2N+eDHz1kwtdwXdNt26QnHVFrgjxSMGNav+BGClcigOKHFsLG/0/liXGvFp3aEVxrY4mtnRX2I6v9GYwc7uBUrxP0+H6egXwj1lqdQRLmYM=
+	t=1742283219; cv=none; b=qA2aRnZ2k0PHlbB2LTx+qojkC2h1sP/OqaHfsyDJSVL5nJY+t8OOrm5iBVhNjZkx0XewLgcprtVcQSjEb9DSBLe2hD0aaIRk0VhYeVRx8F/evEvcH+ey2ACxpJlKs8N0Ycm7p2QJvXiOzfum8nbLHvHs61n5KpMBflc16okK8q4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742283106; c=relaxed/simple;
-	bh=Sk1a5Oy8HLiP2ms3VTLUQbUCiRdGdpnjUvo7jpbYXJY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mgs/AEt2OEClASJpk2WsSyWVKoyALzaL4o7lWZVlqxX7yMs2xf/htgLAFSnHFLWw/goabB8frd1o0SLiRMlbo4DrBZ79c2stCNRmHvVj7YhufWFAMUCHFPEeO4Iaf/OHvKRLGLVcwISzfztM5p8ZcHzy1Cs6EhqsWuU8mSUa0c0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.216])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZH3Rm4ZJ0z4f3khW;
-	Tue, 18 Mar 2025 15:31:16 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.128])
-	by mail.maildlp.com (Postfix) with ESMTP id 387571A1ABC;
-	Tue, 18 Mar 2025 15:31:39 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.112.188])
-	by APP4 (Coremail) with SMTP id gCh0CgCnC2BTIdln3gNYGw--.59040S4;
-	Tue, 18 Mar 2025 15:31:38 +0800 (CST)
-From: Zhang Yi <yi.zhang@huaweicloud.com>
-To: linux-fsdevel@vger.kernel.org,
-	linux-ext4@vger.kernel.org,
-	linux-block@vger.kernel.org,
-	dm-devel@lists.linux.dev,
-	linux-nvme@lists.infradead.org,
-	linux-scsi@vger.kernel.org
-Cc: linux-xfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	hch@lst.de,
-	tytso@mit.edu,
-	djwong@kernel.org,
-	john.g.garry@oracle.com,
-	bmarzins@redhat.com,
-	chaitanyak@nvidia.com,
-	shinichiro.kawasaki@wdc.com,
-	yi.zhang@huawei.com,
-	yi.zhang@huaweicloud.com,
-	chengzhihao1@huawei.com,
-	yukuai3@huawei.com,
-	yangerkun@huawei.com
-Subject: [PATCH xfsprogs] xfs_io: add FALLOC_FL_WRITE_ZEROES support
-Date: Tue, 18 Mar 2025 15:23:18 +0800
-Message-ID: <20250318072318.3502037-1-yi.zhang@huaweicloud.com>
-X-Mailer: git-send-email 2.46.1
+	s=arc-20240116; t=1742283219; c=relaxed/simple;
+	bh=8wzE6JQOqeICaxML7C018pHl5X7ishDt9mrfTLXYJyM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=soGN+YZkevlHfE4nZF5F7gaIqe1+QTKg8DoTtTxjS6FE+GGANeer90gdRkXwo0pgOHyfMvfPySjx/H7A1dRNT3YD3RFPWEkE1zMoGxnDAzpK8jv3+qlYmRSPcJku37YXaHpOAJZ1fC/MzQgWw3umM5vDyU/2wC+MfRPoZyrRLj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nVKN73q4; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nVKN73q4"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2254e0b4b79so124947775ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:33:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742283217; x=1742888017; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=oOISki8dnLdBinmyN5Fhhwr/b+hOKzHW4IWqOj6LscA=;
+        b=nVKN73q4CCjo2AgKYwkfE9EqfswVwo92wiI39Dr2osL8XntAGgJLYllldQ90JiiAmc
+         bEjbmZWi1K5mfXoGOep3PVz1sa2fYlVJKbZqEfAiUw5I2az2jdV4iXyUNbD273f2a1D8
+         uJPJabu3MP/sS9dazEYVf/HJs9q8HF8/nB/AA7MABg55eOBefLdfI7abuMQHs6aw1bHo
+         WUgaQVt4I4UCeY0jbk1qK7MzQyGPeeJwr8NISWBcPF6cmR2MEtBUTuT9fnT8dJl6N9FW
+         dec6YwQPsfEeJZuFhDMSB0t0ailAYEs7ANHXYXBcy7s8ZLr0gViI/met6cHkp1ryZWqD
+         t41Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742283217; x=1742888017;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oOISki8dnLdBinmyN5Fhhwr/b+hOKzHW4IWqOj6LscA=;
+        b=N0umJMbsaqWWW9RWokRFlvOIhpwdo84Ub4KJ3PYYtoxKHreqYqJ3fM4FG9AC8q5qxQ
+         fyD+pRmvEPwPtPeYY9gb0i8LXmvujZ1gZyYNo2H6vY7BvTNiG/Td4nG81qgOsADcl1w7
+         0+f2Syd+Ly2v2kAQDrUtSqt2h7x1vMESvYXSA1RwTh+s5EDT/o5tICUeEkbk4kca/MuV
+         3V4SWl9BPSwv9B+ul/tZlIfnf0d+9vaiPQXoEiPEtwAfH+ngLCKUQwYh/5gcX10e05Xz
+         7HU/9JRaESv4pRsfpYebPvZBmNjhwK3ktqebEXHzzCKNI7ZOZd9e2hNpGIvilpZdodgv
+         gOqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUK6ioTCmzBXVj3VkuV/dVvRu9N1m+I8cCATbmOJzsRBvHhknlpVl37ZHNdmQvXWQSKc8lYlonWdOl5yrs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxS7Q5Jk0d3QNUpNXhVkAOMapddMNYHLv+oImS+mxnaA7baLy/w
+	D/sWlfe5o0g0JI5daIf40/yDYaazZsOdL6sz3OTzB7isWhyehAZ9gj2ZsUWS/A==
+X-Gm-Gg: ASbGncsIfh9ZPZzvA2oOdn2fOnV15Vpslhyzwb+tmXlHSwenPSzqzkIC7ohfm5myc4v
+	J0mXhzvWLnVlMqmABTj0xhIYOrCeyU6FwL1f/FJlsPWjbwZ1xjoP4shrhrnD+kFeMAGhoJ7iY8i
+	I4hOEZXIHBsB6F9n6p6XWNNFxFZ3Z1yBUxcDZRd9HJqINeYsPP2kEcq1/Fs1Xjqfnzhnc5nsTQY
+	7CU+Oh4a2uCPzV4g0/TCvzkPVlHsXEw/4cA4TB6Li3URGHFHyQWuLBg9oWru7JTE0L79UUbkcwe
+	7fN0TwTw6xSUmvP3qKUEMB+7MqQbj9ZKhtv9tHriSxr7oxTfv2jpNS7iUN7CoRJ9bGw=
+X-Google-Smtp-Source: AGHT+IHFVJZtu55P6A5DXRQBgEp/mTXhH/XT9ESOfze6ksB+o7qEeCG3zUQ7NMUJih+FIIspGKyTcQ==
+X-Received: by 2002:a05:6a00:3cc8:b0:736:5b85:a911 with SMTP id d2e1a72fcca58-7372239a441mr22267474b3a.8.1742283216714;
+        Tue, 18 Mar 2025 00:33:36 -0700 (PDT)
+Received: from thinkpad ([120.56.195.170])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73760713875sm260507b3a.33.2025.03.18.00.33.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 00:33:36 -0700 (PDT)
+Date: Tue, 18 Mar 2025 13:03:32 +0530
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Md Sadre Alam <quic_mdalam@quicinc.com>
+Cc: miquel.raynal@bootlin.com, richard@nod.at, vigneshr@ti.com,
+	broonie@kernel.org, bbrezillon@kernel.org,
+	linux-mtd@lists.infradead.org, linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
+Subject: Re: [PATCH v3 1/4] mtd: rawnand: qcom: Pass 18 bit offset from QPIC
+ base address to BAM
+Message-ID: <20250318073332.guylcyqjmfq5nyyr@thinkpad>
+References: <20250310120906.1577292-1-quic_mdalam@quicinc.com>
+ <20250310120906.1577292-2-quic_mdalam@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:gCh0CgCnC2BTIdln3gNYGw--.59040S4
-X-Coremail-Antispam: 1UD129KBjvJXoW7Kw17Zr4DCr4kGrW5uw1kuFg_yoW5Jr18p3
-	srXF15Ka45Xry7WFWfGws7Wrn8Xw4fKF1fJr4xWw1jv3W5AFyxKF1DG3ZYv3s7WFW8Ga18
-	JFnIgFy5G3WSyw7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUU9Y14x267AKxVW5JVWrJwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
-	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
-	Y2ka0xkIwI1lc7CjxVAaw2AFwI0_GFv_Wryl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x
-	0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2
-	zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF
-	4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWU
-	CwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCT
-	nIWIevJa73UjIFyTuYvjTRRBT5DUUUU
-X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
+In-Reply-To: <20250310120906.1577292-2-quic_mdalam@quicinc.com>
 
-From: Zhang Yi <yi.zhang@huawei.com>
+On Mon, Mar 10, 2025 at 05:39:03PM +0530, Md Sadre Alam wrote:
+> Currently we are configuring lower 24 bits of address in descriptor
+> whereas QPIC design expects 18 bit register offset from QPIC base
+> address to be configured in cmd descriptors. This is leading to a
+> different address actually being used in HW, leading to wrong value
+> read.
+> 
+> the actual issue is that the NANDc base address is different from the
+> QPIC base address. But the driver doesn't take it into account and just
+> used the QPIC base as the NANDc base. This used to work as the NANDc IP
+> only considers the lower 18 bits of the address passed by the driver to
+> derive the register offset. Since the base address of QPIC used to contain
+> all 0 for lower 18 bits (like 0x07980000), the driver ended up passing the
 
-The Linux kernel is planning to support FALLOC_FL_WRITE_ZEROES in
-fallocate(2). Add FALLOC_FL_ZERO_RANGE support to fallocate utility by
-introducing a new 'fwzero' command to xfs_io.
+What is this address? Is it coming from DT?
 
-Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
----
- io/prealloc.c     | 36 ++++++++++++++++++++++++++++++++++++
- man/man8/xfs_io.8 |  5 +++++
- 2 files changed, 41 insertions(+)
+> actual register offset in it and NANDc worked properly. But on newer SoCs
+> like SDX75, the QPIC base address doesn't contain all 0 for lower 18 bits
+> (like 0x01C98000). So NANDc sees wrong offset as per the current logic
+> 
+> The address should be passed to BAM 0x30000 + offset. In older targets
 
-diff --git a/io/prealloc.c b/io/prealloc.c
-index 8e968c9f..9d126229 100644
---- a/io/prealloc.c
-+++ b/io/prealloc.c
-@@ -30,6 +30,10 @@
- #define FALLOC_FL_UNSHARE_RANGE 0x40
- #endif
- 
-+#ifndef FALLOC_FL_WRITE_ZEROES
-+#define FALLOC_FL_WRITE_ZEROES 0x80
-+#endif
-+
- static cmdinfo_t allocsp_cmd;
- static cmdinfo_t freesp_cmd;
- static cmdinfo_t resvsp_cmd;
-@@ -41,6 +45,7 @@ static cmdinfo_t fcollapse_cmd;
- static cmdinfo_t finsert_cmd;
- static cmdinfo_t fzero_cmd;
- static cmdinfo_t funshare_cmd;
-+static cmdinfo_t fwzero_cmd;
- 
- static int
- offset_length(
-@@ -377,6 +382,27 @@ funshare_f(
- 	return 0;
- }
- 
-+static int
-+fwzero_f(
-+	int		argc,
-+	char		**argv)
-+{
-+	xfs_flock64_t	segment;
-+	int		mode = FALLOC_FL_WRITE_ZEROES;
-+
-+	if (!offset_length(argv[1], argv[2], &segment)) {
-+		exitcode = 1;
-+		return 0;
-+	}
-+
-+	if (fallocate(file->fd, mode, segment.l_start, segment.l_len)) {
-+		perror("fallocate");
-+		exitcode = 1;
-+		return 0;
-+	}
-+	return 0;
-+}
-+
- void
- prealloc_init(void)
- {
-@@ -489,4 +515,14 @@ prealloc_init(void)
- 	funshare_cmd.oneline =
- 	_("unshares shared blocks within the range");
- 	add_command(&funshare_cmd);
-+
-+	fwzero_cmd.name = "fwzero";
-+	fwzero_cmd.cfunc = fwzero_f;
-+	fwzero_cmd.argmin = 2;
-+	fwzero_cmd.argmax = 2;
-+	fwzero_cmd.flags = CMD_NOMAP_OK | CMD_FOREIGN_OK;
-+	fwzero_cmd.args = _("off len");
-+	fwzero_cmd.oneline =
-+	_("zeroes space and eliminates holes by allocating and writing zeroes");
-+	add_command(&fwzero_cmd);
- }
-diff --git a/man/man8/xfs_io.8 b/man/man8/xfs_io.8
-index 59d5ddc5..718f018c 100644
---- a/man/man8/xfs_io.8
-+++ b/man/man8/xfs_io.8
-@@ -538,6 +538,11 @@ With the
- .B -k
- option, use the FALLOC_FL_KEEP_SIZE flag as well.
- .TP
-+.BI fwzero " offset length"
-+Call fallocate with FALLOC_FL_WRITE_ZEROES flag as described in the
-+.BR fallocate (2)
-+manual page to allocate and zero blocks within the range by writing zeroes.
-+.TP
- .BI zero " offset length"
- Call xfsctl with
- .B XFS_IOC_ZERO_RANGE
+You gave no explanation on how this 0x30000 offset came into picture. I gave the
+reasoning in v2:
+
+"SDX55's NANDc base is 0x01b30000 and it has bits 17 and 18 set corresponding to
+0x30000. So it is correct that the IP only considers lower 18 bits and it used
+to work as the driver ended up passing 0x3000 + register offset."
+
+Then you replied:
+
+"This address 0x30000 is the address from QPIC_BASE to QPIC_EBI2NAND
+e.g for SDX55 and SDX65 the QPIC_BASE is 0x01B00000. So here lower 18-bits
+are zero only."
+
+No one outside Qcom knows what QPIC_BASE and QPIC_EBI2NAND are. We just know the
+NANDc address mentioned in DT, which corresponds to 0x01b30000 for SDX55.
+
+Please reword the commit message to present the full picture and not half baked
+info. This is v3, I see no improvement in the commit message, sorry.
+
+> the lower 18-bits are zero so that correct address being paased. But
+> in newer targets the lower 18-bits are non-zero in QPIC base so that
+> 0x300000 + offset giving the wrong value.
+> 
+> SDX75 : QPIC_QPIC | 0x01C98000 (Lower 18 bits are non zero)
+> SDX55 : QPIC_QPIC | 0x1B00000 (Lower 18 bits are zero) Same for
+
+There is no address as '0x1B00000' in DT.
+
+- Mani
+
 -- 
-2.46.1
-
+மணிவண்ணன் சதாசிவம்
