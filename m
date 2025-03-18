@@ -1,161 +1,188 @@
-Received: from mail-il1-f175.google.com (mail-il1-f175.google.com [209.85.166.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1EAD209F4D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.175
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7416E1DE4E7;
+	Tue, 18 Mar 2025 11:02:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742295721; cv=none; b=jDRGNdwnGCaWKYAqBEcCn1TcBe/BuPhyLuT9WGDGXfFXFlF8PcF4eP6t0OXtx/eu9hxqXMijkLka2L9BjaG5L0IUvVQff/HzevjvuVX9weVtWc7/ktO6xrrjaaeMJqGTd8Cs1QbiBOCcaAN3xLktcKCywxSrmVFCfI+p63ATqvw=
+	t=1742295736; cv=none; b=Ms0mtN7mjnhjAsqxteqPk0ud0Xg5ACSNzOnIvDkjapK967Eaodr7AMUryBsXsHNLmmWMys5Ei2owtDc2c72iFkE8W7IGbDg+jrJCWTgAqh6LHPS6xxZXbXqTmwGXx7Pfmb7uv9vyGJidEJnpiqhE5kJlonrDTjdZ+P4rD+i2RRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742295721; c=relaxed/simple;
-	bh=GVX9slFJMODz4a8wem080O/vqUfxzkd3EO7gX3oSxtQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=W8XAIl8/YzzHWy+cfau+hZTbMC61NgUmvQw2aglq8P+aOpH1uQB1zDGW+UsUuFLrF89a7CcSkLOod6ZWwbMe8qnOSJ4Ec/yHlE46mlEY7q8/TI+kT/uyoneKbhL56n4gICULEkq4uhi0cxHkNgrMdVk365PszhRTCeUxEKCw8B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=uUIpqbiP; arc=none smtp.client-ip=209.85.166.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uUIpqbiP"
-Received: by mail-il1-f175.google.com with SMTP id e9e14a558f8ab-3d43b3b4c32so169565ab.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 04:01:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742295715; x=1742900515; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EyOTlkMLLq1XbPf3HPBV8cNbeM65vB0jFdFuOYLkhJY=;
-        b=uUIpqbiPgmmR0pKzekj/pz/GqtGq6xjazYrSkWBuiMvoGBlU4nYElTuZ3SI+VjQOAt
-         oUFDSaaiH3rud3mgwb6msNEga0R3GEvGbeEgc+qsTnniCn66J+myoDBXnNme6kKbhV+G
-         I/6TBb5QLv/I0VQvFOJuVcOSxtkmUHuUF0oe1G31rssB6DcRHJs/I5N/V08FWuIO8HFL
-         DhpX68vL21INhx+QVCR1YClLW8A/nSdqBghjz3lEgPG7wd7nfyVuUtsR3dH5L/OnmVrt
-         iMC48na3lWmNBNS7I93uYzhKiPQxlBtxpEinzsxuKTePCKOEkPtv0QRcApzbyoos9nHt
-         Utvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742295715; x=1742900515;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=EyOTlkMLLq1XbPf3HPBV8cNbeM65vB0jFdFuOYLkhJY=;
-        b=fQHNv02Mxhas1v/aM2HUpTWYl3XjSzIFFCWr+9qGn5nG9Hf8JrFFbj4vX092pye1Hu
-         onbVk3FWRyfOFjS6gPQjTSLeMX/f6AoQvpu/fGQ3LJv9PtrrvVKQ9GXZAMnMSgfNtlHR
-         2/DJ22IXDAsymY8zvbaHG1zN4LG9LiMW0ORaMbxjfTBxFJpunld3AIZ5+YC9Bv+vViSZ
-         1e9xMvUVhxikIp9dDHBDeFMh9EltmLsAfQtv4CkaBTB7bMYPe5Xn8/MP5pUxgLQ7Qdms
-         odwk1pTQr40HTD4/aHi5Grdb6jUhrSkwQU49ALNS86yowt1cptpAnWXjwUtmUPLdld1C
-         3lmQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX5J6a/fbI01npNW5GAJn0uL48BHyTzibs7gSctrQJ9z5lPfpZTuLwTesqXMgMmWQMK0SjFquPxq9/QURQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcKSR2plO4feyGCzTc5DhZs27zXJiI1XqYYqcCPSXDll3j3QiX
-	XvHk/Pvv2ad1MpCfXjP68BnAsZt2EqfWcYRIRx1qUcPZ1dULicMcpZ/UlCv2JGJoxhWI0svPQ3+
-	jxtKRtOa8YudG8l/UTP3h7GkXHy2RhzSthtTL
-X-Gm-Gg: ASbGnctDcsxuWXL7dP0VVoaYPQqzmIBMHxuPt5kgUOrL8499Dv+Vpf4+wFaXSMY4TTe
-	53zvRO53vbgLMDHkTDCSsQxQCY1w3m7uWcAsWSC+hMTrCEkj51HdZ04ZFseNvAA20f/1HNOueaH
-	kWS8w/h45WSEFk15AmTC3+6w0gjRYQLxdIlYhdumNU54jmp1t6poGgHA==
-X-Google-Smtp-Source: AGHT+IEhQurkZUOjDCLCR6aX/svMLP/x01GJxn3vHhsxdJO5NhP/IMZvSX69zNS2XwIqEYqsLONLtYI2WX1kf/PROI8=
-X-Received: by 2002:a92:c26d:0:b0:3d4:70cf:f380 with SMTP id
- e9e14a558f8ab-3d57f07db2emr1550895ab.5.1742295714506; Tue, 18 Mar 2025
- 04:01:54 -0700 (PDT)
+	s=arc-20240116; t=1742295736; c=relaxed/simple;
+	bh=7ybQb+1fYQ9nDV2w2AqFUb1y78jzKoQw4hSaMH4Zke0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A6XQZDXSfZtkssI36FqeETsw2rX5ZfVOhJewj3cj2MhX+1Xwqcze2W9nIVG861SHUF5sFWnvTEv63jHAFkyMp7LHRanxvArQhgkbRyjid3upIJBB/w6Yn/5Q00g4vT2HF5xRrsq5/dSIRTKN+89OyS5VGu3Gd8sV+o0DuH9Ca50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [223.64.68.198])
+	by gateway (Coremail) with SMTP id _____8Axjmu0Utln7oqbAA--.366S3;
+	Tue, 18 Mar 2025 19:02:12 +0800 (CST)
+Received: from localhost.localdomain (unknown [223.64.68.198])
+	by front1 (Coremail) with SMTP id qMiowMDxDceOUtlnb6FRAA--.22930S4;
+	Tue, 18 Mar 2025 19:02:11 +0800 (CST)
+From: Huacai Chen <chenhuacai@loongson.cn>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Huacai Chen <chenhuacai@kernel.org>
+Cc: Xuerui Wang <kernel@xen0n.name>,
+	stable@vger.kernel.org,
+	David Howells <dhowells@redhat.com>,
+	David Woodhouse <dwmw2@infradead.org>,
+	Jan Stancek <jstancek@redhat.com>,
+	Jarkko Sakkinen <jarkko@kernel.org>,
+	keyrings@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	loongarch@lists.linux.dev,
+	R Nageswara Sastry <rnsastry@linux.ibm.com>,
+	Neal Gompa <neal@gompa.dev>,
+	Huacai Chen <chenhuacai@loongson.cn>
+Subject: [PATCH 6.1&6.6 V2 2/3] sign-file,extract-cert: avoid using deprecated ERR_get_error_line()
+Date: Tue, 18 Mar 2025 19:01:23 +0800
+Message-ID: <20250318110124.2160941-3-chenhuacai@loongson.cn>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <20250318110124.2160941-1-chenhuacai@loongson.cn>
+References: <20250318110124.2160941-1-chenhuacai@loongson.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317182107.2060739-1-czapiga@google.com> <e2e890a9-ebc4-45fb-92eb-502be027e807@linaro.org>
-In-Reply-To: <e2e890a9-ebc4-45fb-92eb-502be027e807@linaro.org>
-From: "Jakub \"Kuba\" Czapiga" <czapiga@google.com>
-Date: Tue, 18 Mar 2025 12:01:18 +0100
-X-Gm-Features: AQ5f1JqsbLmaJK8yqtKzEwiNea28ZEfKsiKImtRDuIAnjxzqfuvHz_ePZ6SiEHs
-Message-ID: <CABkukdq_d0YrdUz_+3dkn3BymDMzRfXk1s58ZTMCuUwO3mbvJw@mail.gmail.com>
-Subject: Re: [PATCH] mtd: spi-nor: xmc: add support for XM25QH128C and XM25QH256C
-To: Tudor Ambarus <tudor.ambarus@linaro.org>
-Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, linux-mtd@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:qMiowMDxDceOUtlnb6FRAA--.22930S4
+X-CM-SenderInfo: hfkh0x5xdftxo6or00hjvr0hdfq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxGFyDGFW3Ar1kCr15Jw18JFc_yoW5KrWkpa
+	1xXwn7trykXFZ8Gr9rAFy0g3Wj9F4vkr4jvFnrG39xZF1DX3yIgw1Sq3Wa9348ZF95J3W3
+	AFn8X340kr48C3gCm3ZEXasCq-sJn29KB7ZKAUJUUUUf529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUUBab4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AK
+	xVW0oVCq3wAaw2AFwI0_JF0_Jw1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqjxCEc2xF0c
+	Ia020Ex4CE44I27wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_Wrv_
+	ZF1lYx0Ex4A2jsIE14v26F4j6r4UJwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64
+	vIr41lc7CjxVAaw2AFwI0_Jw0_GFyl42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_
+	Jr0_Gr1l4IxYO2xFxVAFwI0_JF0_Jw1lx2IqxVAqx4xG67AKxVWUJVWUGwC20s026x8Gjc
+	xK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r1q6r43MIIYrxkI7VAKI48JMIIF0xvE2Ix0
+	cI8IcVAFwI0_Ar0_tr1lIxAIcVC0I7IYx2IY6xkF7I0E14v26F4j6r4UJwCI42IY6xAIw2
+	0EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Cr0_Gr1UMIIF0xvEx4A2jsIEc7Cj
+	xVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x07j2XdUUUUUU=
 
-On Tue, Mar 18, 2025 at 7:27=E2=80=AFAM Tudor Ambarus <tudor.ambarus@linaro=
-.org> wrote:
->
-> Hi, Jakub,
->
-> Do you have access to these flashes? Can you test them?
+From: Jan Stancek <jstancek@redhat.com>
 
-Hi Tudor,
-I've checked our inventory and it seems that all our devices use
-either Winbond or Macronix compatibles, so I'm not able to directly
-test these chips. Looks like ODMs default to Winbond chips and all
-other variants are a viable second source. I got a list of chips from
-our factory team so I assumed we have some devices I can actually test
-these changes on, but unfortunately that's not the case. However I
-could use EM100 to emulate these chips if needed, but I think I'll
-have to put these changes on hold until we actually get some devices
-with these chips. Datasheets should be good enough of a reason, but
-unfortunately in reality chips might function slightly differently
-than described in the documentation.
+commit 467d60eddf55588add232feda325da7215ddaf30 upstream.
 
-> We have a minimum testing requirement before updating or adding new
-> flashes, here it is:
-> https://docs.kernel.org/driver-api/mtd/spi-nor.html#minimum-testing-requi=
-rements
+ERR_get_error_line() is deprecated since OpenSSL 3.0.
 
-Thank you, I'll perform necessary tests on all chips I have access to,
-including other patches I submitted alongside this one.
+Use ERR_peek_error_line() instead, and combine display_openssl_errors()
+and drain_openssl_errors() to a single function where parameter decides
+if it should consume errors silently.
 
-> It's true that we don't have yet locking tests described, but
-> contributions to the documentation is welcomed!
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
+Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
+Reviewed-by: Neal Gompa <neal@gompa.dev>
+Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
+Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+---
+ certs/extract-cert.c |  4 ++--
+ scripts/sign-file.c  |  6 +++---
+ scripts/ssl-common.h | 23 ++++++++---------------
+ 3 files changed, 13 insertions(+), 20 deletions(-)
 
-I'll see what I can do about this. We need locking to work correctly,
-so having a good testing scenario will benefit everyone.
+diff --git a/certs/extract-cert.c b/certs/extract-cert.c
+index 8e7ba9974a1f..61bbe0085671 100644
+--- a/certs/extract-cert.c
++++ b/certs/extract-cert.c
+@@ -99,11 +99,11 @@ int main(int argc, char **argv)
+ 		parms.cert = NULL;
+ 
+ 		ENGINE_load_builtin_engines();
+-		drain_openssl_errors();
++		drain_openssl_errors(__LINE__, 1);
+ 		e = ENGINE_by_id("pkcs11");
+ 		ERR(!e, "Load PKCS#11 ENGINE");
+ 		if (ENGINE_init(e))
+-			drain_openssl_errors();
++			drain_openssl_errors(__LINE__, 1);
+ 		else
+ 			ERR(1, "ENGINE_init");
+ 		if (key_pass)
+diff --git a/scripts/sign-file.c b/scripts/sign-file.c
+index 39ba58db5d4e..bb3fdf1a617c 100644
+--- a/scripts/sign-file.c
++++ b/scripts/sign-file.c
+@@ -114,11 +114,11 @@ static EVP_PKEY *read_private_key(const char *private_key_name)
+ 		ENGINE *e;
+ 
+ 		ENGINE_load_builtin_engines();
+-		drain_openssl_errors();
++		drain_openssl_errors(__LINE__, 1);
+ 		e = ENGINE_by_id("pkcs11");
+ 		ERR(!e, "Load PKCS#11 ENGINE");
+ 		if (ENGINE_init(e))
+-			drain_openssl_errors();
++			drain_openssl_errors(__LINE__, 1);
+ 		else
+ 			ERR(1, "ENGINE_init");
+ 		if (key_pass)
+@@ -273,7 +273,7 @@ int main(int argc, char **argv)
+ 
+ 		/* Digest the module data. */
+ 		OpenSSL_add_all_digests();
+-		display_openssl_errors(__LINE__);
++		drain_openssl_errors(__LINE__, 0);
+ 		digest_algo = EVP_get_digestbyname(hash_algo);
+ 		ERR(!digest_algo, "EVP_get_digestbyname");
+ 
+diff --git a/scripts/ssl-common.h b/scripts/ssl-common.h
+index e6711c75ed91..2db0e181143c 100644
+--- a/scripts/ssl-common.h
++++ b/scripts/ssl-common.h
+@@ -3,7 +3,7 @@
+  * SSL helper functions shared by sign-file and extract-cert.
+  */
+ 
+-static void display_openssl_errors(int l)
++static void drain_openssl_errors(int l, int silent)
+ {
+ 	const char *file;
+ 	char buf[120];
+@@ -11,28 +11,21 @@ static void display_openssl_errors(int l)
+ 
+ 	if (ERR_peek_error() == 0)
+ 		return;
+-	fprintf(stderr, "At main.c:%d:\n", l);
++	if (!silent)
++		fprintf(stderr, "At main.c:%d:\n", l);
+ 
+-	while ((e = ERR_get_error_line(&file, &line))) {
++	while ((e = ERR_peek_error_line(&file, &line))) {
+ 		ERR_error_string(e, buf);
+-		fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
++		if (!silent)
++			fprintf(stderr, "- SSL %s: %s:%d\n", buf, file, line);
++		ERR_get_error();
+ 	}
+ }
+ 
+-static void drain_openssl_errors(void)
+-{
+-	const char *file;
+-	int line;
+-
+-	if (ERR_peek_error() == 0)
+-		return;
+-	while (ERR_get_error_line(&file, &line)) {}
+-}
+-
+ #define ERR(cond, fmt, ...)				\
+ 	do {						\
+ 		bool __cond = (cond);			\
+-		display_openssl_errors(__LINE__);	\
++		drain_openssl_errors(__LINE__, 0);	\
+ 		if (__cond) {				\
+ 			errx(1, fmt, ## __VA_ARGS__);	\
+ 		}					\
+-- 
+2.47.1
 
-> On 17.03.2025 20:21, Jakub Czapiga wrote:
-> > Both chips support SFDP (JESD216).
-> > XM25QH128C only supports 3-bit Block-Protection with Top-Bottom
-> > configuration bit.
-> > XM25QH256C supports 4-bit Block-Protection with Top-Bottom configuratio=
-n
-> > bit on SR(6).
-> >
-> > Signed-off-by: Jakub Czapiga <czapiga@google.com>
-> > ---
-> >  drivers/mtd/spi-nor/xmc.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/mtd/spi-nor/xmc.c b/drivers/mtd/spi-nor/xmc.c
-> > index d5a06054b0dd..963a44c3909a 100644
-> > --- a/drivers/mtd/spi-nor/xmc.c
-> > +++ b/drivers/mtd/spi-nor/xmc.c
-> > @@ -19,7 +19,17 @@ static const struct flash_info xmc_nor_parts[] =3D {
-> >               .name =3D "XM25QH128A",
-> >               .size =3D SZ_16M,
-> >               .no_sfdp_flags =3D SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_=
-QUAD_READ,
-> > -     },
-> > +     }, {
-> > +             .id =3D SNOR_ID(0x20, 0x40, 0x18),
-> > +             .name =3D "XM25QH128C",
->
-> for the next version, drop the name and add it just as a comment above
-> the flash entry definition
->
-> > +             .size =3D SZ_16M,
->
-> if flash supports SFDP, drop the size parameter, it will trigger SFDP
-> parsing.
->
-> > +             .flags =3D SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB,
-> > +     }, {
-> > +             .id =3D SNOR_ID(0x20, 0x40, 0x19),
-> > +             .name =3D "XM25QH256C",
-> > +             .size =3D SZ_32M,
-> > +             .flags =3D SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB | SPI_NOR_4B=
-IT_BP | SPI_NOR_TB_SR_BIT6,
->
-> same here. After switching to flash init based on SFDP, please do the
-> tests mentioned above.
->
-> Cheers,
-> ta
-
-Best regards,
-Jakub
