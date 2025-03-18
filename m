@@ -1,132 +1,63 @@
-Received: from mail-oo1-f73.google.com (mail-oo1-f73.google.com [209.85.161.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outgoing.mit.edu (outgoing-auth-1.mit.edu [18.9.28.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E9461C8615
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 04:14:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2B93FC3
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 04:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.9.28.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742271300; cv=none; b=T2Y74d8XrXI9WlbAeGeX20RflNhrLmZRaQFuIpVApAqqduKB12weLw2otY9E64nHu1iNyhf0I1/ReW+LLY67Il6iZtrL0/qSi2nANpPoQ63qU/rg9NLgOiJZyepOHPPkIlXOU24tJFGcLyFzVBpyWyNu1QE8XsSOtuzFeq0uVF8=
+	t=1742271573; cv=none; b=u8/wawy62fTdrwLSbVi5Orfm1QyDzPzMYvYRGXZrb0VIWLW6XpxQDbXxFuvUgyNngf2kDoURoBh3haomfaT0vVL83qnioiAr5alKuBasjnx/VfKqLggrrIqB7r4GhwMKPq/kBq063FaumV/698fsp3A6MO4j91d6bIzckirYTX8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742271300; c=relaxed/simple;
-	bh=nM7VLv/vcPJb8IP1hkBb7xTP6rJT9gjNNb4KuBio9Y4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=C7Z1aSO2D2zN5cSBsu+i7Ynxt1KjMyfedDgDoONw9rxR/jhg84KXp6bARzzXifsw5ikHIRYALWV0SQw1wpYl7mDDIs5fGuuGkbBlkrrVvBb1fknBq/UcUWB1+MnKlqzPV1iDtwKCLOBmumQcJlZbtzwV+kU6o/Jz+sidWA9MZSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=eV5dO8Sv; arc=none smtp.client-ip=209.85.161.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eV5dO8Sv"
-Received: by mail-oo1-f73.google.com with SMTP id 006d021491bc7-601e0f09262so1032792eaf.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 21:14:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742271298; x=1742876098; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IcTDVc7sWc+BX5SOaqTWz06HZw+0rggI949f/hqkkSw=;
-        b=eV5dO8Svo2y5cx6scAbegntfkkIeovgL7zY+a8uboV0Ftt5ma7eC0YFUS8R/6EsS9N
-         LdTj8VRvqIkz0VLFNwe4F8+7eCFeovD3enCkGwLkYHT4ZI6q4gDxcZmJY/Otz+91WqMh
-         O/wtBSoXAhqFbnhCEathU/RfRNk6OWFIBIYMAZ9rSnVC0DGX8XPndu/oCZdSYWfbRdmf
-         DoO442o5m0IaL0I81MM+QbqV3m25HBrXq4o3+JD+57ZMQyddj3h3OoeGuoV8GBYAOPEO
-         hjJ7q0DxobxGPWSgU4kIwYwQzUFR2ZyhtOnMMTkaBnoxTyt4/ZC8B7/asIQNH2gS1Xuu
-         Vqkg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742271298; x=1742876098;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IcTDVc7sWc+BX5SOaqTWz06HZw+0rggI949f/hqkkSw=;
-        b=qnsvIsZVjcAV5Do+N9OWOVh4NvjXvGP3llVhMmgBgBvKzpWMDYkPk434NWLGL8UYA7
-         ildCKGbqo6QMeEHjhYgB3lm8nor6sRGJ1IxIm6lj8iUyoBN4uiPZje9WzJTm2usN4YIH
-         7Ek0JLgG1i7QIdT81Woe3OHDIVRHsLF7xB2NV22KlIVzTwmYt4y1jOHPNwFl0vsWrDJI
-         moeEdEH3Pq1eEfzdHh49hn8vd+kTeLnDIqvdei/+GYlwdO5/aG7Ym67nzKh0f1nEWN1z
-         dqpgucZIrGLSD96ZCX42IO8j1cqhfI8o121OZ3iXxsNUunJ+8lnbs/2uTYZNB7zU7Tlu
-         4hlg==
-X-Forwarded-Encrypted: i=1; AJvYcCUH5UQlpUJL8tA+ajKRldifpbNgo3kP2Pi2alXNa3ULSoo2qcO25hc79LDOkVQKKQubayGrFJVLuDISSIg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwA+eHTWzhlVTtv7vNcCMjNCVBKJfSF2no6GodovfWy+DwaM+a6
-	bwCVOa9dcIlvtp4jzlgETdRyll6BjXp1x52c3Z4fqsUEI0fy7nPNf6KYaKYbbjfSzVE6aXZsqaF
-	fz4+xgw==
-X-Google-Smtp-Source: AGHT+IHbiPc7HGDa8UDDNXiyyyNYm3dPD9ip4rcffjkWbCIt+vvE/ogOPNPgJ48eQYU33l1n9NXH5ew2ke34
-X-Received: from oabhq15.prod.google.com ([2002:a05:6870:9b0f:b0:2c2:67a4:62b1])
- (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6870:d614:b0:2c2:d2b8:e1ab
- with SMTP id 586e51a60fabf-2c690feb31dmr7568764fac.18.1742271298202; Mon, 17
- Mar 2025 21:14:58 -0700 (PDT)
-Date: Mon, 17 Mar 2025 21:14:42 -0700
-In-Reply-To: <20250318041442.321230-1-irogers@google.com>
+	s=arc-20240116; t=1742271573; c=relaxed/simple;
+	bh=pII1N7bc9duBPXP5BmZ6emkSB47E/v26S7V9abX9bDw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KTaV9TJYY7D156f/Ajlvx2O6YnT3flzTM+crq+6Ip3j08lBa07YFSGzoVzAQD11ee4zC0j+VaWBtjEL6y+lPvsSj3dLRSgomNbOk4pVh/7tiMn3QvZ9nlGZHTDemQkmwQigzYQ/lh+9KPDvn2vWeRlx9HyuoDgqZS5/40SIzN+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu; spf=pass smtp.mailfrom=mit.edu; arc=none smtp.client-ip=18.9.28.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=mit.edu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mit.edu
+Received: from trampoline.thunk.org (pool-173-48-111-34.bstnma.fios.verizon.net [173.48.111.34])
+	(authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+	by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 52I4JJfk020785
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 00:19:21 -0400
+Received: by trampoline.thunk.org (Postfix, from userid 15806)
+	id 69AA22E010B; Tue, 18 Mar 2025 00:19:19 -0400 (EDT)
+Date: Tue, 18 Mar 2025 00:19:19 -0400
+From: "Theodore Ts'o" <tytso@mit.edu>
+To: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: Signed-off-by missing for commit in the ext4 tree
+Message-ID: <20250318041919.GD787758@mit.edu>
+References: <20250318000658.29a791b4@canb.auug.org.au>
+ <20250318080951.71772135@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250318041442.321230-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Message-ID: <20250318041442.321230-6-irogers@google.com>
-Subject: [PATCH v1 5/5] perf parse-events: Add debug dump of evlist if reordered
-From: Ian Rogers <irogers@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Kan Liang <kan.liang@linux.intel.com>, Howard Chu <howardchu95@gmail.com>, 
-	Weilin Wang <weilin.wang@intel.com>, Levi Yun <yeoreum.yun@arm.com>, 
-	"Dr. David Alan Gilbert" <linux@treblig.org>, Andi Kleen <ak@linux.intel.com>, 
-	James Clark <james.clark@linaro.org>, Dominique Martinet <asmadeus@codewreck.org>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318080951.71772135@canb.auug.org.au>
 
-Add debug verbose output to show how evsels were reordered by
-parse_events__sort_events_and_fix_groups. For example:
-```
-$ perf record -v -e '{instructions,cycles}' true
-Using CPUID GenuineIntel-6-B7-1
-WARNING: events were regrouped to match PMUs
-evlist after sorting/fixing: '{cpu_atom/instructions/,cpu_atom/cycles/},{cpu_core/instructions/,cpu_core/cycles/}'
-```
+On Tue, Mar 18, 2025 at 08:09:51AM +1100, Stephen Rothwell wrote:
+> Hi all,
+> 
+> On Tue, 18 Mar 2025 00:06:58 +1100 Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> >
+> > Commits
+> > 
+> >   400bb71a00da ("ext4: fix out-of-bound read in ext4_xattr_inode_dec_ref_all()")
+> >   4d6eb75d2364 ("ext4: introduce ITAIL helper")
+> > 
+> > are missing a Signed-off-by from their committer.
+> 
+> These are now commits
+> 
+>   850d8d9ff97a ("ext4: fix out-of-bound read in ext4_xattr_inode_dec_ref_all()")
+>   8bffe40e9e9c ("ext4: introduce ITAIL helper")
 
-Signed-off-by: Ian Rogers <irogers@google.com>
----
- tools/perf/util/parse-events.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+Thanks for pointing that out.  Fixed now.
 
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5152fd5a6ead..cb76796bc5c7 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -28,6 +28,7 @@
- #include "util/evsel_config.h"
- #include "util/event.h"
- #include "util/bpf-filter.h"
-+#include "util/stat.h"
- #include "util/util.h"
- #include "tracepoint.h"
- 
-@@ -2196,14 +2197,23 @@ int __parse_events(struct evlist *evlist, const char *str, const char *pmu_filte
- 	if (ret2 < 0)
- 		return ret;
- 
--	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus)
--		pr_warning("WARNING: events were regrouped to match PMUs\n");
--
- 	/*
- 	 * Add list to the evlist even with errors to allow callers to clean up.
- 	 */
- 	evlist__splice_list_tail(evlist, &parse_state.list);
- 
-+	if (ret2 && warn_if_reordered && !parse_state.wild_card_pmus) {
-+		pr_warning("WARNING: events were regrouped to match PMUs\n");
-+
-+		if (verbose > 0) {
-+			struct strbuf sb = STRBUF_INIT;
-+
-+			evlist__uniquify_name(evlist);
-+			evlist__format_evsels(evlist, &sb);
-+			pr_debug("evlist after sorting/fixing: '%s'\n", sb.buf);
-+			strbuf_release(&sb);
-+		}
-+	}
- 	if (!ret) {
- 		struct evsel *last;
- 
--- 
-2.49.0.rc1.451.g8f38331e32-goog
-
+       	     	 	       	     	 - Ted
