@@ -1,120 +1,105 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F0FDC13D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 15:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B367F191F92
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 15:44:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742312590; cv=none; b=WwvLLftljEug2lHglcs7fscYQ8jc+wVU5PF1g0O1z8WOtb2IgSBTXNq1PKD8hIstG1WZ8+WvqowI3uqTEdsqf/aW8/vk+TBJ/sLEnDVvF2aN35iDm6qF5dZdDiNaMIclhQ0fk9QWY7c+RE/8N7fzX1Abex+Dk7syfaxGP1xMIqc=
+	t=1742312683; cv=none; b=kuWenJVAlZfmwAJKpH+/a4xiVkLTWQk/w0cCb6MajAmDrxJTkfjOjnyfHwE6nEALKXHWtHkuq7sxzLWpTMeIm8UaHfBKofZ3ic4OwDoNc8sg2BCxgm12zzoiEO/d5K17jK0uKvTjSTf/BK2AWaLuJvb9F+7bOG+NXa+hHVz/V+8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742312590; c=relaxed/simple;
-	bh=d435AHZtuTLEGL1nqnjHLieFtvDf9lop14Ye+nMsIDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cDcQO5r9S+qIcMZynqBQCzIlu85IU6kSQz3i1GZ6kuMY0XtVei8kiB5m+roIfZZ9QFL71/F7LHWep38TTlHhYm13Rs43tSYCrAegTf19c39TAMsxmtb1DP7jqirMOM+cHtPo0kbNePMSSTQrYSYKU/95joIfh2/lE41N0PH+Ir4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us; spf=none smtp.mailfrom=resnulli.us; dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b=y4eREmwl; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=resnulli.us
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=resnulli.us
+	s=arc-20240116; t=1742312683; c=relaxed/simple;
+	bh=0Ly72ZYq7RIo8KXKjul9y58c5p/oa2pQnjcQhtbDLZU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KcAZRpKARePMC6h2rkRPhjLInIj8pUMcK4kqF57SaP6T4UcbN0LTjZYw8ijCAi+LAbTgmigHLVr3sIeFaWcK3tX9s/XUWrDRqgrpqvw3dLzbF0K0mre9CgqyxiVRhdTMCS0zbqCW2qAZWXKaOaQbRp8QL850/BBo25RZ33sIwbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=P63Ka1Zv; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=resnulli-us.20230601.gappssmtp.com header.i=@resnulli-us.20230601.gappssmtp.com header.b="y4eREmwl"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfba466b2so35859505e9.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:43:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="P63Ka1Zv"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2240aad70f2so241095ad.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:44:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=resnulli-us.20230601.gappssmtp.com; s=20230601; t=1742312587; x=1742917387; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T2msgjxCz2DcPYQE12074YoE2WnARoI0a5JesfxOEjE=;
-        b=y4eREmwlk1oO8/rsvaQM2yPukGtp6mqy+H4rANURxdOLqr7TlqCAb6P+VsPHyws8vi
-         qadOFNbty1bvhT+OQIlpASQAMZpYPS2+zg7QxRwF+0/TwpMgOays+sDopwAu4z85WzPZ
-         TX8aoB/4b95A3GUzGxP8dZYmM3yGCUOfva6M4abTviw2mtcgpNoWiSW5fo2wnsZgox/z
-         3Ldk26Z+62KItJIElqte2w0H+Dd0UKajZfwD5u4WgcJ7o74Rmb/4T2SSFOGGES7d389H
-         D3y48yAQ2ZmdKwNc+vrNoYLlMjfRqiIOc9TYCxXyJDidZKAvVNHjdg8a1tWWKXl6bR9C
-         45Zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742312587; x=1742917387;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1742312681; x=1742917481; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T2msgjxCz2DcPYQE12074YoE2WnARoI0a5JesfxOEjE=;
-        b=tNPSubJ7WPdS1iYVnnL2Jq+0W5CAZGEZG+9RYvxgL+hWKM6vMFaA/1gArpxVQfp8uH
-         Csjmfh8dso+w0/YQbhBEuoqb4GcbpcPQbKWqDDc5U1ROaOhRznHCtILFtcZ0fNwonLpw
-         uBo745SQ4MFtHzItqaOR3XblVzOueESSyK/KFlF7dGW42UYsFxtgq9J43fjkXD0G5PYP
-         EB43vfEkKX8+X9S7bSyQ8ck5UJx+qF2tJRWXhj8Iwtk8t3AyJN0BOwmtDEgZYov52251
-         HKq70ggst5hkKL7NAUReJP7Y+ovN495zn9q1pEm3Lk0s7xKRcszulQx4HPdFmrsLPaPH
-         NCwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXfeEMnAfX45yxcID9up6okESDQTJooXcm5X4EHxUGC4So9+W4eCYm530sgvpdMBkp6oJ3TYBFKY6bQOOY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaHdeT81j6k7eurAokLDSw+opSolPYcy0uwV/fRCGtWkJ+sXhz
-	3iVzjQoIPXFMKnGCdfxMgMQQku84y5VyXQGhdTt1E03ECgxsmMIB2M8BB9kRJkM=
-X-Gm-Gg: ASbGnctDgknJmU3he5vn51fB6Il4kc4+NagauMCp9Mx+6tycNaURVae4gNOJIAXs9OI
-	wzKvcjYRT3twMeb/yWRF0xcJdhjiGZA8LrgM2k/aUVkW+qSVBbM8BQ+v5qpAcabMOkR5G9AFIPs
-	VuwiYzajnQmc1a2ZUB9XvM/CKSXMMK3Csl+sJ/GhM0Uduyxt+IMSoqH5vF6nw/3KvWG+8QMHVrz
-	7M3zGH3H1EPTSAPP3PH/gTaPJA/BTgvs5bL+N0Vfg+VIpnde7Fzk7+6E1s+e9CM/Mw/3b8P2c1S
-	zOgN/JDcYXHeRkpDUyc8IbfnmKmQRT9oLIsBVv5+2PidnPDZvjD2KBg6vpZ5x3Jq7uRpATXZNNT
-	c
-X-Google-Smtp-Source: AGHT+IFYgyumGr+fp7DYJkr3lnZZ0Wg+ROxQga4Jqlf85DUT7rg0dECXHPfzOdbnhe950EIsNaSwng==
-X-Received: by 2002:a05:600c:46c5:b0:43c:fb95:c752 with SMTP id 5b1f17b1804b1-43d3b9620ddmr27754325e9.3.1742312587310;
-        Tue, 18 Mar 2025 08:43:07 -0700 (PDT)
-Received: from jiri-mlt.client.nvidia.com ([193.47.165.251])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d1ffbf901sm136872725e9.15.2025.03.18.08.43.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 08:43:06 -0700 (PDT)
-Date: Tue, 18 Mar 2025 16:42:57 +0100
-From: Jiri Pirko <jiri@resnulli.us>
-To: Przemek Kitszel <przemyslaw.kitszel@intel.com>
-Cc: intel-wired-lan@lists.osuosl.org, 
-	Tony Nguyen <anthony.l.nguyen@intel.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Cosmin Ratiu <cratiu@nvidia.com>, Tariq Toukan <tariqt@nvidia.com>, netdev@vger.kernel.org, 
-	Konrad Knitter <konrad.knitter@intel.com>, Jacob Keller <jacob.e.keller@intel.com>, davem@davemloft.net, 
-	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, 
-	linux-kernel@vger.kernel.org, ITP Upstream <nxne.cnse.osdt.itp.upstreaming@intel.com>, 
-	Carolina Jubran <cjubran@nvidia.com>
-Subject: Re: [RFC net-next v2 1/2] devlink: add whole device devlink instance
-Message-ID: <olhqg2npoigaebjnwp5ddqoaegnafizk7jrtshs44v7ytrai7x@6yhpydbawdwn>
-References: <20250219164410.35665-1-przemyslaw.kitszel@intel.com>
- <20250219164410.35665-2-przemyslaw.kitszel@intel.com>
+        bh=0Ly72ZYq7RIo8KXKjul9y58c5p/oa2pQnjcQhtbDLZU=;
+        b=P63Ka1ZvL3jn1K/Xb1CwGuil4qQe8uYtny/8i/bQc4VuCv76w/K4I9+qzZiHqh+9rz
+         oTMkBcztHJKlRuzJy+yVUts41vg05uzJXy+dxVCw86FzaG8RmEEZcv1Ph7t02RdAaQam
+         S8xVvQrMkQePQdWGOT/IqG3sKxq3aka4p9INxaY6Zp1lYbUrGaGg4dqGzYbJuEh/QTGu
+         Y3Fl/jVjs2V1FcgZaPZ9TECAwBp8NdIS6Tx49HDDhKg2HLH+yrTDbtqxwpTUYObvcEwS
+         flI5tuvVFdcWtD10Yl6CtjQ2eJyxP1Q+M9tKmOmbkpuWBSWmTv0t/nGvTvKHJnuF+DO9
+         wmpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742312681; x=1742917481;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0Ly72ZYq7RIo8KXKjul9y58c5p/oa2pQnjcQhtbDLZU=;
+        b=pVl0OYkNi7L9dN0hQgbXhKueKpS2PR2l/5GWRI1bk3MemkZ5e2R3ucpt4Vpv+qwAak
+         scCkHxwNsfBAQIjiypyQrmVmfghxT1/AN8PRsIO0BMeRQQi1kTi5cJfa7amGqwjBfqS+
+         7LopB+MSH41sJ0FNqdPOjqf7pp7ngr2+Yh51E66BySsIZGEfnQv/y1eQCfUYM3U9mwwb
+         QjZBmRtcf2VdyiPIQkJrSgfDVU3cZDi4YqJR1Kr2aWSabnwKAudwiLiBvQ9BXLBQuae1
+         TpmibQjTVRJyT+wUhFhZtbgJ3VePilUVFoRQFzufMwHbZpJAAvT4eweFQnSEwNPQN6d8
+         tYOA==
+X-Forwarded-Encrypted: i=1; AJvYcCUwK6b57Pbft6801NUts+ZW+ECDHTYKtghmG7lF8oXRxeGjmQyZ3Haa0FhbxtFv3TC4HqFdrsdLTGDjyr4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YywMHGDBCzybB7eG0FV/K6ALLbJhqpkzRORUhHKHdZ28oB+gChL
+	mj/C4lkFkjTb/Sa4Qg8WmqEfmgjBokh72waamqxXwd9SUO+Ms9vsvunwkcJtCSHYvES1oRP/U88
+	gO43p5rlEEaAB/SlAPVxqS6H5CoLSXCYRIWWm
+X-Gm-Gg: ASbGncsleZRvLjNIOnGA8ywrtyfjn1pT8lzz1nSL+otZCwrHAJyDS6IKYL6HYy+PhWf
+	pyJp2qgeiPnetCv2739lcJ2p9WNzhribOZbTt0PpAmi+0CfWKS8iBtd1+OUDN7VxaTiDBlos5NR
+	PBc3aUTo/ig0SEcZjolgmY1cWjVvxasvfoBJMAcOXDsOaK7g/jU6KNgHQ=
+X-Google-Smtp-Source: AGHT+IGh+2xZ8Ms2gVdUDlDHetxkQkzf082zJP7mKnLMc3K5OnEeuJwvj28gipqOgwHRgL1ljn+HQg5UkkyHg9KmHxU=
+X-Received: by 2002:a17:902:f605:b0:215:7ced:9d66 with SMTP id
+ d9443c01a7336-22631018e82mr2453915ad.10.1742312680721; Tue, 18 Mar 2025
+ 08:44:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250219164410.35665-2-przemyslaw.kitszel@intel.com>
+References: <CAP-5=fUPz9R60Lay=k-0k5Q8C9AdStAMycOgsKqA5MJ_o7Ag3Q@mail.gmail.com>
+ <20250318021703.78297-1-yangfeng59949@163.com>
+In-Reply-To: <20250318021703.78297-1-yangfeng59949@163.com>
+From: Ian Rogers <irogers@google.com>
+Date: Tue, 18 Mar 2025 08:44:29 -0700
+X-Gm-Features: AQ5f1JpJbsNyitrKe8-u7csMc8VsRaKxiXcnfy9KlhRdj6oGLdKKOKioQE3_iLo
+Message-ID: <CAP-5=fWuavNZv-x-t=f5-suLZHAyU-1y6PFj7WYNf6O_-RW1Ng@mail.gmail.com>
+Subject: Re: [PATCH] perf kwork: Remove unreachable judgments
+To: Feng Yang <yangfeng59949@163.com>
+Cc: acme@kernel.org, adrian.hunter@intel.com, 
+	alexander.shishkin@linux.intel.com, jolsa@kernel.org, 
+	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	namhyung@kernel.org, peterz@infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Wed, Feb 19, 2025 at 05:32:54PM +0100, przemyslaw.kitszel@intel.com wrote:
->Add a support for whole device devlink instance. Intented as a entity
->over all PF devices on given physical device.
+On Mon, Mar 17, 2025 at 7:17=E2=80=AFPM Feng Yang <yangfeng59949@163.com> w=
+rote:
 >
->In case of ice driver we have multiple PF devices (with their devlink
->dev representation), that have separate drivers loaded. However those
->still do share lots of resources due to being the on same HW. Examples
->include PTP clock and RSS LUT. Historically such stuff was assigned to
->PF0, but that was both not clear and not working well. Now such stuff
->is moved to be covered into struct ice_adapter, there is just one instance
->of such per HW.
+> On Mon, 17 Mar 2025 08:44:45 -0700 Ian Rogers <irogers@google.com> wrote:
+> >
+> > On Thu, Mar 13, 2025 at 8:10 PM Feng Yang <yangfeng59949@163.com> wrote=
+:
+> > >
+> > > From: Feng Yang <yangfeng@kylinos.cn>
+> > >
+> > > When s2[i] =3D '\0', if s1[i] !=3D '\0', it will be judged by ret,
+> > > and if s1[i] =3D '\0', it will be judegd by !s1[i].
+> > > So in reality, s2 [i] will never make a judgment
+> >
+> > Sgtm. Out of curiosity, was this tripping a compiler warning? If so,
+> > could you provide the details?
+> >
+> > Thanks,
+> > Ian
 >
->This patch adds a devlink instance that corresponds to that ice_adapter,
->to allow arbitrage over resources (as RSS LUT) via it (further in the
->series (RFC NOTE: stripped out so far)).
->
->Thanks to Wojciech Drewek for very nice naming of the devlink instance:
->PF0:		pci/0000:00:18.0
->whole-dev:	pci/0000:00:18
->But I made this a param for now (driver is free to pass just "whole-dev").
->
->$ devlink dev # (Interesting part of output only)
->pci/0000:af:00:
->  nested_devlink:
->    pci/0000:af:00.0
->    pci/0000:af:00.1
->    pci/0000:af:00.2
->    pci/0000:af:00.3
->    pci/0000:af:00.4
->    pci/0000:af:00.5
->    pci/0000:af:00.6
->    pci/0000:af:00.7
+> There was no warning during compilation,
+> I just accidentally discovered it while testing and analyzing this code.
 
-Please check my RFC attempt to solve this for mlx5:
-https://lore.kernel.org/all/20250318124706.94156-1-jiri@resnulli.us/
+Thanks!
+Reviewed-by: Ian Rogers <irogers@google.com>
 
-I believe that the same could work for you too.
+Ian
