@@ -1,89 +1,46 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2607212B17
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 17:16:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5346619F489;
+	Tue, 18 Mar 2025 17:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742318178; cv=none; b=XL+e6+bBD3xBPSqS0vsiUl9zoImzbuovnjoyNt8YmfX+/9QFHf7LZoan+rjBmGilly1vTsXBIsM4vAT8Snqf4rsKeiE3bhqbrTiE37ZaJKC+KPU82g64k5glc6bf+itCA2X7TBQTHdGIzAEoT9IwjtTqUJGAWTsSiUS8X0RBVK4=
+	t=1742318237; cv=none; b=EIqYI5P2I2yEe7YpH8z5acM7z1NDamUbv7Npj/zyYlxsRm2293uveuLn4IvyzIXzwmWbsHzao9IkIGGJKyXbXK+0v8u90lrmYkWRYyD771tYu929GPnwP1NVia44l52ra+g7LxoPQdgYIJK33ofkf+qL1ZHPcj12ipqfmHYfD8A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742318178; c=relaxed/simple;
-	bh=rvupHrSmd8ZFrAnxNh3osQQ01Qb/YlbOTSfnBMmhPdA=;
+	s=arc-20240116; t=1742318237; c=relaxed/simple;
+	bh=MvFWPBpBcvoirqV2ig5cxuhteo2WBHtMkJIUUkx+Ve8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CyyIDIe57Sjg9JyDn6ByBy1eQID1rnda/T9w49tIdIbpa9y20fzOX8nY7KoJOWmK6FHGLxiE41DOifuExojb8kq1FBQOiZA0C6wSXvSj9J0XjAZOCra1IYPnMH+xTjvvISJPkNgeR1ND9iRVIS+o0Zvkr6vOmh3M5Pf3H8+t+6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2hrJPqJ5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sq5nHMJS; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=2hrJPqJ5; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=sq5nHMJS; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	 Content-Type:Content-Disposition:In-Reply-To; b=uI+dtY2h1++NpEH2JbVMk/9kwAdrRRXFCdxVXUWkHGd2aAB74lRIf3MwHmEaJ6QmLvXuyMtuJBK6S8HLp6UFX8AOHjbgYttQnGwfS8JZWt2fMUG1gHIRmaHIjDwahKhRbAEG/FJd44reW4CHJFkRTRhGRaN0CoCne3KhiCFQrs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Urg9B0WC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2hrJPqJ5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sq5nHMJS";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="2hrJPqJ5";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="sq5nHMJS"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id B338C1F792;
-	Tue, 18 Mar 2025 17:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742318170;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yl1wj28j2uniBMX6YXjydr7sQzV7EWIM7YtceHrKzvs=;
-	b=2hrJPqJ5FWHjPEpRD7XO+xRjLnY2eT+aTaPuPIlNVKeXD5h00jHAi+z3KYS4EeFE9ml6b1
-	RCBSg8VNXSoxOQQoNC31Srus6Mn6npj1Du/L2adbmb3AIcywoxOVDCOo2AlZ8UbOqn/wcS
-	poSib1iK2PLKXb9teH7r55Ey9kG/WT0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742318170;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yl1wj28j2uniBMX6YXjydr7sQzV7EWIM7YtceHrKzvs=;
-	b=sq5nHMJSYi1WVUIgtokIukvZitHRT4THl+UBaKjTkFfhDei+mTCU0wtdzffdGgDO5TJmkk
-	3JTNSDabdBXveNDw==
-Authentication-Results: smtp-out2.suse.de;
-	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=2hrJPqJ5;
-	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=sq5nHMJS
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742318170;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yl1wj28j2uniBMX6YXjydr7sQzV7EWIM7YtceHrKzvs=;
-	b=2hrJPqJ5FWHjPEpRD7XO+xRjLnY2eT+aTaPuPIlNVKeXD5h00jHAi+z3KYS4EeFE9ml6b1
-	RCBSg8VNXSoxOQQoNC31Srus6Mn6npj1Du/L2adbmb3AIcywoxOVDCOo2AlZ8UbOqn/wcS
-	poSib1iK2PLKXb9teH7r55Ey9kG/WT0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742318170;
-	h=from:from:reply-to:reply-to:date:date:message-id:message-id:to:to:
-	 cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=yl1wj28j2uniBMX6YXjydr7sQzV7EWIM7YtceHrKzvs=;
-	b=sq5nHMJSYi1WVUIgtokIukvZitHRT4THl+UBaKjTkFfhDei+mTCU0wtdzffdGgDO5TJmkk
-	3JTNSDabdBXveNDw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 988A4139D2;
-	Tue, 18 Mar 2025 17:16:10 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id MicFJVqq2WdRRgAAD6G6ig
-	(envelope-from <dsterba@suse.cz>); Tue, 18 Mar 2025 17:16:10 +0000
-Date: Tue, 18 Mar 2025 18:16:05 +0100
-From: David Sterba <dsterba@suse.cz>
-To: Daniel Vacek <neelx@suse.com>
-Cc: Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] btrfs: remove EXTENT_BUFFER_IN_TREE flag
-Message-ID: <20250318171605.GJ32661@suse.cz>
-Reply-To: dsterba@suse.cz
-References: <20250318095440.436685-1-neelx@suse.com>
- <20250318154552.GE32661@twin.jikos.cz>
- <CAPjX3FdLp-niyvQX5vkrPtqwJcRB+hcax=0wRbKdQvJS4T+-PA@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Urg9B0WC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AE9EC4CEDD;
+	Tue, 18 Mar 2025 17:17:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742318236;
+	bh=MvFWPBpBcvoirqV2ig5cxuhteo2WBHtMkJIUUkx+Ve8=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Urg9B0WCcEKNvvuBTJeneX1U0jG4ezBMKPWF4TCxyunvbq+kEu+OojtIlgq3SVXNU
+	 KQOYmkzGxJEV05IG8qE7yeJ9ewq+0MsaMoWgRvBU8JS8zXPIIGKbP4stMAfhE1TzjD
+	 OTwi0PakDAlqix57/SgsSo8h3F53ZX6TyTPgBLtCBqqheKqUtjUuyJQ0TSOHgznElt
+	 1bU+LGMix3gk2nKhobHMlftRuZsVSNRjxBv9S1J/WV5HeW6hwSt5BvgCpTlbYdC/YU
+	 +wyv219BaihK+fqJWQLiPD7vfNZhdLgQ+5n0pji5BwSiiR/sKczoaRgpbkEz2USQbT
+	 FQng4LRFugZIQ==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 3EC8DCE0843; Tue, 18 Mar 2025 10:17:16 -0700 (PDT)
+Date: Tue, 18 Mar 2025 10:17:16 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
+Subject: Re: [PATCH 1/5] rcu/exp: Protect against early QS report
+Message-ID: <2f9c13de-1e32-4cfb-8cfa-badb26a15bb6@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250314143642.72554-1-frederic@kernel.org>
+ <20250314143642.72554-2-frederic@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -92,63 +49,82 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPjX3FdLp-niyvQX5vkrPtqwJcRB+hcax=0wRbKdQvJS4T+-PA@mail.gmail.com>
-User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
-X-Rspamd-Queue-Id: B338C1F792
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.21 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	HAS_REPLYTO(0.30)[dsterba@suse.cz];
-	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	TO_DN_SOME(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_TRACE(0.00)[suse.cz:+];
-	RCVD_COUNT_TWO(0.00)[2];
-	REPLYTO_ADDR_EQ_FROM(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -4.21
-X-Spam-Flag: NO
+In-Reply-To: <20250314143642.72554-2-frederic@kernel.org>
 
-On Tue, Mar 18, 2025 at 06:07:20PM +0100, Daniel Vacek wrote:
-> On Tue, 18 Mar 2025 at 16:45, David Sterba <dsterba@suse.cz> wrote:
-> >
-> > On Tue, Mar 18, 2025 at 10:54:38AM +0100, Daniel Vacek wrote:
-> > > This flag is set after inserting the eb to the buffer tree and cleared on
-> > > it's removal. But it does not bring any added value. Just kill it for good.
-> >
-> > Would be good to add the reference to commit that added the bit,
-> > 34b41acec1ccc0 ("Btrfs: use a bit to track if we're in the radix tree")
-> > and wanted to make use of it, faa2dbf004e89e ("Btrfs: add sanity tests
-> > for new qgroup accounting code"). And both are 10+ years old.
+On Fri, Mar 14, 2025 at 03:36:38PM +0100, Frederic Weisbecker wrote:
+> When a grace period is started, the ->expmask of each node is set up
+> from sync_exp_reset_tree(). Then later on each leaf node also initialize
+> its ->exp_tasks pointer.
 > 
-> Right, I could have checked the history.
+> This means that the initialization of the quiescent state of a node and
+> the initialization of its blocking tasks happen with an unlocked node
+> gap in-between.
 > 
-> Though honestly from the diff of these two commits I don't see any
-> valid usage of this flag either. Must have been somewhere in the
-> context or I'm missing something.
+> It happens to be fine because nothing is expected to report an exp
+> quiescent state within this gap, since no IPI have been issued yet and
+> every rdp's ->cpu_no_qs.b.exp should be false.
+> 
+> However if it were to happen by accident, the quiescent state could be
+> reported and propagated while ignoring tasks that blocked _before_ the
+> start of the grace period.
+> 
+> Prevent such trouble to happen in the future and initialize both the
+> quiescent states mask to report and the blocked tasks head from the same
+> node locked block.
+> 
+> If a task blocks within an RCU read side critical section before
+> sync_exp_reset_tree() is called and is then unblocked between
+> sync_exp_reset_tree() and __sync_rcu_exp_select_node_cpus(), the QS
+> won't be reported because no RCU exp IPI had been issued to request it
+> through the setting of srdp->cpu_no_qs.b.exp.
+> 
+> Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
 
-Yeah, from the diff it can be seen if the code has any effects. It's
-recommended to analyze the code also from the historical context because
-it can be a leftover from a cleanup (and most of the time it is), but
-there's still a chance the initial intentions of the code are still
-valid and it was the cleanup that broke it.
+OK, and because ->expmaskinit has all bits set for all CPUs that have
+ever been online, the ends of any corresponding readers will give up at
+the beginning of the first pass of the loop in __rcu_report_exp_rnp().
+This is because the ->expmask is guaranteed to be non-zero.  (Which is
+kind of what you are saying in the last paragraph of your commit log,
+just digging down another layer.)
+
+Reviewed-by: Paul E. McKenney <paulmck@kernel.org>
+
+> ---
+>  kernel/rcu/tree_exp.h | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/rcu/tree_exp.h b/kernel/rcu/tree_exp.h
+> index c36c7d5575ca..2fa7aa9155bd 100644
+> --- a/kernel/rcu/tree_exp.h
+> +++ b/kernel/rcu/tree_exp.h
+> @@ -141,6 +141,13 @@ static void __maybe_unused sync_exp_reset_tree(void)
+>  		raw_spin_lock_irqsave_rcu_node(rnp, flags);
+>  		WARN_ON_ONCE(rnp->expmask);
+>  		WRITE_ONCE(rnp->expmask, rnp->expmaskinit);
+> +		/*
+> +		 * Need to wait for any blocked tasks as well.	Note that
+> +		 * additional blocking tasks will also block the expedited GP
+> +		 * until such time as the ->expmask bits are cleared.
+> +		 */
+> +		if (rcu_is_leaf_node(rnp) && rcu_preempt_has_tasks(rnp))
+> +			WRITE_ONCE(rnp->exp_tasks, rnp->blkd_tasks.next);
+>  		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>  	}
+>  }
+> @@ -393,13 +400,6 @@ static void __sync_rcu_exp_select_node_cpus(struct rcu_exp_work *rewp)
+>  	}
+>  	mask_ofl_ipi = rnp->expmask & ~mask_ofl_test;
+>  
+> -	/*
+> -	 * Need to wait for any blocked tasks as well.	Note that
+> -	 * additional blocking tasks will also block the expedited GP
+> -	 * until such time as the ->expmask bits are cleared.
+> -	 */
+> -	if (rcu_preempt_has_tasks(rnp))
+> -		WRITE_ONCE(rnp->exp_tasks, rnp->blkd_tasks.next);
+>  	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
+>  
+>  	/* IPI the remaining CPUs for expedited quiescent state. */
+> -- 
+> 2.48.1
+> 
