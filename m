@@ -1,169 +1,144 @@
-Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1178D205ACB
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:57:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6285F205E1C;
+	Tue, 18 Mar 2025 08:57:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742288258; cv=none; b=uKfyEPRtmkZXpJuER8iVdq1pPrUOH99u03l0KvnnnrTGlg8D+yP1cQPV95//FdrxSOJlYF4eT46mZLmreN7CLA1Jd4tgy0KWgRDJiOOu6zzMMUrKjCD/d72uQw6xaMiSmk5p7f/W1J00wdu5Rqtk1Nt1DMiccOBO23UmORzJn1U=
+	t=1742288265; cv=none; b=s1bNFekWyGs1nxOvpA4qs4NuRFdxODndb513/Ndb+E9PZSxxguUcelPYREJqt5Hh9cDq1FLA1MbdTdgMJWzh2pgK23o19AtTfYQCUOG9rmLPuhWJQfgprYoWlmvSGQ5IGLXJ+FaAAIWNBjvExj9XSmslBIlGdu34aFZzbBEWxPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742288258; c=relaxed/simple;
-	bh=L4ipmjPvkxp1Cv27fEnm2byaxBOYYkeas0niOYJt8aI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=jaMRVgzRtRGUFueGFYnhh2ASGk8H8ZejN9EreUZdmqiDOfbORyEBBmxlqmAJridEgi5a9guuCv2cMZ+ub39PUO7XiMGR5iEfHA6vIexnk/CD4PIbCpU1QUy47Q6NT0+FvD/7GTbK4NV9lhw7vQAq9nf+z+SAeGhKUHO4eLbSzNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=XwDvRBkh; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+	s=arc-20240116; t=1742288265; c=relaxed/simple;
+	bh=2f1C8R0hIz6n+6W0nH3Z+GVlBTjFR1v8fu0TPpXUMTQ=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OfqwuszN9ZmFnNPVIXrkpvxk6togrsjIY/a+uXd6QrpfYpW7PeLkmyQOtlcK0aQq5tAG1LYGhMj3XQe8eMdXueejVa+tCaMYVPncn7tCW0ri9H6FsKroNEtMYd/UVQZPt/gnfpo6Yx+FIaJxPCuRsVzAGjVxxS4a4yakiI2vfaA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QgpjOeyi; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="XwDvRBkh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=from:to:cc:subject:date:message-id
-	:mime-version:content-transfer-encoding; s=k1; bh=Lmd699ehV1Rp2n
-	uPHJpTcKwu6PpAaHMhWiN7Bp+Zft0=; b=XwDvRBkhmsIoCWX5NX13yvhp924zRt
-	vW01EWsDaXEW/WB4M4deM8A5s80jRJ1f0gljNU+nc5bwweHpA2YOyoIoPZlZBP8X
-	1tqwY4YVCAMCKs7gagHk5JZeqg9WH9fPNTnWUlfgAlqsXLyCnF2UJUFw/jyEAsg+
-	FkHvq3haJXvqjQVYBsD1S3NqiV0fy/JjJWg2+XLFk27vNb2D64HZfdU6elisEcjn
-	6dU9bV6PkOspK1RHFR14qb701f1ZsQBIIm5Swsm/AzjkztRfBzhDLltXHeb6cXxA
-	JaTO4JQhoePYNtNr2oju+k/c00DDD7l/U0igXe6qgRU7ixHs6nkU01aw==
-Received: (qmail 3652369 invoked from network); 18 Mar 2025 09:57:34 +0100
-Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 18 Mar 2025 09:57:34 +0100
-X-UD-Smtp-Session: l3s3148p1@Rft0GJow3MggAwDPXyTHAJp038nK7dx+
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: linux-renesas-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH] misc: eeprom/idt_89hpesx: use per-client debugfs directory
-Date: Tue, 18 Mar 2025 09:57:28 +0100
-Message-ID: <20250318085727.20748-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QgpjOeyi"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I191si027058;
+	Tue, 18 Mar 2025 08:57:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=Lzyz/arj6w1l3DX59ZpBFxii
+	X+gCYcK7Sb4orDZoWsY=; b=QgpjOeyiKtLNxe5Hr2tbRajqpXMEE5xRciNl0AKW
+	irOM8Wi/Ekrhy4lNGiFf1CXiW/CIFyonuqCCcN/7EJ79l89yQ47woup2TjHr2/8d
+	341ebLG0kiAN1kwBACtPxO6V+hzJMLOjCF4KYzNSUHxVs39DIlspyaKgSsSS4apR
+	pTI9vunHTlWkDxs01ocgp8v0UqRIOTzXWI+eUmK+tQ4H51Bxnt/9od4wP+kwoRxe
+	dteVL8abw4ANnHWvAgwAGwCWRdMxFTCSrX8ogXTdRuAszsMgeY5TcScvQpjdM48l
+	ZvsQnpbjcqSWvBmePOsv8t219WZGTaH1/q7G0709wUU7gQ==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45exwth4w9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 08:57:33 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52I8vIkw013115
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 18 Mar 2025 08:57:18 GMT
+Received: from hu-arakshit-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Tue, 18 Mar 2025 01:57:14 -0700
+Date: Tue, 18 Mar 2025 14:27:10 +0530
+From: Abhinaba Rakshit <quic_arakshit@quicinc.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+CC: Thara Gopinath <thara.gopinath@gmail.com>,
+        Herbert Xu
+	<herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Konrad Dybcio" <konradybcio@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: qcs615: add QCrypto nodes
+Message-ID: <20250318085710.zna6wbawbhb7kf44@hu-arakshit-hyd.qualcomm.com>
+References: <20250224-enable-qce-for-qcs615-v1-0-e7c665347eef@quicinc.com>
+ <20250224-enable-qce-for-qcs615-v1-2-e7c665347eef@quicinc.com>
+ <ac161039-af36-4e6c-90ea-ef858ea31e86@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <ac161039-af36-4e6c-90ea-ef858ea31e86@oss.qualcomm.com>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 81D6mkMdXjmJwurUdxsoO0UK4yiQJS4a
+X-Proofpoint-ORIG-GUID: 81D6mkMdXjmJwurUdxsoO0UK4yiQJS4a
+X-Authority-Analysis: v=2.4 cv=UoJjN/wB c=1 sm=1 tr=0 ts=67d9357d cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=j5hbVoT8eKfuacexB9YA:9 a=CjuIK1q_8ugA:10
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-18_04,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=553
+ phishscore=0 adultscore=0 clxscore=1015 spamscore=0 suspectscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503180064
 
-The I2C core now provides a debugfs entry for each client. Let this
-driver use it instead of the custom directory.
+On Tue, Feb 25, 2025 at 02:52:36PM +0100, Konrad Dybcio wrote:
+> On 24.02.2025 11:04 AM, Abhinaba Rakshit wrote:
+> > Add the QCE and Crypto BAM DMA nodes.
+> > 
+> > Signed-off-by: Abhinaba Rakshit <quic_arakshit@quicinc.com>
+> > ---
+> >  arch/arm64/boot/dts/qcom/qcs615.dtsi | 25 +++++++++++++++++++++++++
+> >  1 file changed, 25 insertions(+)
+> > 
+> > diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> > index f4abfad474ea62dea13d05eb874530947e1e8d3e..25e98d20ec1d941f0b45cc3d94f298065c9a5566 100644
+> > --- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
+> > @@ -1114,6 +1114,31 @@ ufs_mem_phy: phy@1d87000 {
+> >  			status = "disabled";
+> >  		};
+> >  
+> > +		cryptobam: dma-controller@1dc4000 {
+> > +			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
+> > +			reg = <0x0 0x01dc4000 0x0 0x24000>;
+> > +			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
+> > +			#dma-cells = <1>;
+> > +			qcom,ee = <0>;
+> > +			qcom,controlled-remotely;
+> > +			num-channels = <16>;
+> > +			qcom,num-ees = <4>;
+> > +			iommus = <&apps_smmu 0x0104 0x0011>,
+> > +				 <&apps_smmu 0x0114 0x0011>;
+> 
+> (0x0114 & ~ 0x0011) == (0x0104 & ~0x0011), try dropping the second entry
+> here and below and see if things still work
+> 
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- drivers/misc/eeprom/idt_89hpesx.c | 75 +------------------------------
- 1 file changed, 2 insertions(+), 73 deletions(-)
+With dropping the second entry, as well qcrypto is still functional,
+Will update in the patch v2
 
-diff --git a/drivers/misc/eeprom/idt_89hpesx.c b/drivers/misc/eeprom/idt_89hpesx.c
-index 1fc632ebf22f..60c42170d147 100644
---- a/drivers/misc/eeprom/idt_89hpesx.c
-+++ b/drivers/misc/eeprom/idt_89hpesx.c
-@@ -60,11 +60,6 @@ MODULE_VERSION(IDT_89HPESX_VER);
- MODULE_LICENSE("GPL v2");
- MODULE_AUTHOR("T-platforms");
- 
--/*
-- * csr_dbgdir - CSR read/write operations Debugfs directory
-- */
--static struct dentry *csr_dbgdir;
--
- /*
-  * struct idt_89hpesx_dev - IDT 89HPESx device data structure
-  * @eesize:	Size of EEPROM in bytes (calculated from "idt,eecompatible")
-@@ -1324,35 +1319,6 @@ static void idt_remove_sysfs_files(struct idt_89hpesx_dev *pdev)
- 	sysfs_remove_bin_file(&dev->kobj, pdev->ee_file);
- }
- 
--/*
-- * idt_create_dbgfs_files() - create debugfs files
-- * @pdev:	Pointer to the driver data
-- */
--#define CSRNAME_LEN	((size_t)32)
--static void idt_create_dbgfs_files(struct idt_89hpesx_dev *pdev)
--{
--	struct i2c_client *cli = pdev->client;
--	char fname[CSRNAME_LEN];
--
--	/* Create Debugfs directory for CSR file */
--	snprintf(fname, CSRNAME_LEN, "%d-%04hx", cli->adapter->nr, cli->addr);
--	pdev->csr_dir = debugfs_create_dir(fname, csr_dbgdir);
--
--	/* Create Debugfs file for CSR read/write operations */
--	debugfs_create_file(cli->name, 0600, pdev->csr_dir, pdev,
--			    &csr_dbgfs_ops);
--}
--
--/*
-- * idt_remove_dbgfs_files() - remove debugfs files
-- * @pdev:	Pointer to the driver data
-- */
--static void idt_remove_dbgfs_files(struct idt_89hpesx_dev *pdev)
--{
--	/* Remove CSR directory and it sysfs-node */
--	debugfs_remove_recursive(pdev->csr_dir);
--}
--
- /*
-  * idt_probe() - IDT 89HPESx driver probe() callback method
-  */
-@@ -1382,7 +1348,7 @@ static int idt_probe(struct i2c_client *client)
- 		goto err_free_pdev;
- 
- 	/* Create debugfs files */
--	idt_create_dbgfs_files(pdev);
-+	debugfs_create_file(pdev->client->name, 0600, client->debugfs, pdev, &csr_dbgfs_ops);
- 
- 	return 0;
- 
-@@ -1399,9 +1365,6 @@ static void idt_remove(struct i2c_client *client)
- {
- 	struct idt_89hpesx_dev *pdev = i2c_get_clientdata(client);
- 
--	/* Remove debugfs files first */
--	idt_remove_dbgfs_files(pdev);
--
- 	/* Remove sysfs files */
- 	idt_remove_sysfs_files(pdev);
- 
-@@ -1550,38 +1513,4 @@ static struct i2c_driver idt_driver = {
- 	.remove = idt_remove,
- 	.id_table = idt_ids,
- };
--
--/*
-- * idt_init() - IDT 89HPESx driver init() callback method
-- */
--static int __init idt_init(void)
--{
--	int ret;
--
--	/* Create Debugfs directory first */
--	if (debugfs_initialized())
--		csr_dbgdir = debugfs_create_dir("idt_csr", NULL);
--
--	/* Add new i2c-device driver */
--	ret = i2c_add_driver(&idt_driver);
--	if (ret) {
--		debugfs_remove_recursive(csr_dbgdir);
--		return ret;
--	}
--
--	return 0;
--}
--module_init(idt_init);
--
--/*
-- * idt_exit() - IDT 89HPESx driver exit() callback method
-- */
--static void __exit idt_exit(void)
--{
--	/* Discard debugfs directory and all files if any */
--	debugfs_remove_recursive(csr_dbgdir);
--
--	/* Unregister i2c-device driver */
--	i2c_del_driver(&idt_driver);
--}
--module_exit(idt_exit);
-+module_i2c_driver(idt_driver);
--- 
-2.47.2
+> > +		};
+> > +
+> > +		crypto: crypto@1dfa000 {
+> > +			compatible = "qcom,qcs615-qce", "qcom,sm8150-qce", "qcom,qce";
+> > +			reg = <0x0 0x01dfa000 0x0 0x6000>;
+> > +			dmas = <&cryptobam 4>, <&cryptobam 5>;
+> > +			dma-names = "rx", "tx";
+> > +			iommus = <&apps_smmu 0x0104 0x0011>,
+> > +				 <&apps_smmu 0x0114 0x0011>;
+> > +			interconnects = <&aggre1_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
+> > +					&mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
+> 
+> Please align the '&'s
 
+Will update in patch v2
+
+> 
+> Konrad
