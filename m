@@ -1,192 +1,168 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA463209
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:50:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA37776410
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 00:51:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742259023; cv=none; b=d8UOVyYgT9M1jKSscFlX4hfcoZxFwuvqD51wTkRk9B1CKqnodhkx12KEE8ma7z+9xr51FBAnzLvIzkzM/5/QO0UOEA7VB5G+ucV+23XGSO30mumB5LkdJc6dewyRssqBPCfdBPFkS9jOivszeyeMwD9pzh8g5+o3hfPCimbnid0=
+	t=1742259073; cv=none; b=Ws4C6SGp9is69SbbIIaLxJGY9JTUPOwuMCwy1bKzMj8YblvJa1mng/cbhgw0vM+rql5/CdhWC89GqCDMngBPsI3DwExYFSFh/Dawh4LbTvFdHB1QB0be8AL8DUQ79bcX0v4LySnkUknGsVT+p1baKwibZgvu9XpL78Nc8I6lQ/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742259023; c=relaxed/simple;
-	bh=1bC4AZNde0+5vTIjrxOxW8rZtXb6vrr9ApjJTDktajw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XJAMv5qoRUVjXadzpQCqVi+an94BRlRuCaWb3/nQgH+z/CxjZzI5zf4ahpH78C+kOwt/K+UZ8arZ2l1Jdf0ssNqq1rvA2ee2yY7HUmsO2Nkhr5bc1JoZoJwdQk4a/mFTJ5rlyQLQrigfRjMutYab+s0xgxmfCa/Ui7fy5goeK2g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yyrlscdI; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742259073; c=relaxed/simple;
+	bh=FhDT6Ht4uOnAjRnAHtxZUZhftn3nLJ2mhdwA/rIdKqs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NKCLW1fCMpG/kA60zLU4BFyDUgWO3RhnsER9AUxA4dPCQVrBf4Gwwwn31Aq3+Xi5BwXQ+GgxdVOq4/KzWz+BbGF7h3B1lLIzdR2C/b3rtNLrMzSzn3EBYzpIEZsSYbBMzbN0Wyq4+HinUKkDkfYhIl/yz/DW4d80Z1Gcsr9M2pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b=XQvplfzX; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yyrlscdI"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2242ac37caeso34365ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:50:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b="XQvplfzX"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-224191d92e4so96113475ad.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 17:51:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742259021; x=1742863821; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jyS5rCxr8EQqFWu2KoBKo/0nF0NkexL7fmn9bWW5ufc=;
-        b=yyrlscdIWiZSKMq3QXS409sQMBjsz84n9zwd6+4u1CBlg/RQZfK8Ur4vnCb3ijGnBg
-         sAAapMVQ3FLztb5XLx4Lql6Goz5tjlsshZHJJQUHSKOQkPuPN+K6++GCOzXMbt6RhyEs
-         e6yiPmSKAs7NNifhwqiaq36nTm1/3WPBcGijBWpeGh3qM12YucOw2MsBlHj+roGUTX4H
-         URsisSADh89YBCagz+ttJ+jT5U7sXCjMOw/AXHu34540k6xf5PcIyvc9K1ROGIsHXpGM
-         cKDHthiT5Q8dEV153aGc8opkA5A0mB3LZYp812GtTNgGwFW1IlVDPVvOKZnw1oXxidWO
-         Ah3g==
+        d=furiosa.ai; s=google; t=1742259070; x=1742863870; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=U/GqRqFocBuzF9Eb/f/joYEbo/0mtodFRieL+22DCbs=;
+        b=XQvplfzXSdtr34ongeYiAJ/wo4zOYZOAmw7kYFk2wZUyODDHhkUo9bA+UNzqbJcOSF
+         7tgRZEcuteivw0ehMX6iZ7xSkEffqJ45Dcrr7bHkvaBtClmg31hfVSu0niLZHhLSp0AC
+         WtCVUH6kL98Kj9VbvQfrs0eA5sFrKZenvo72s=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742259021; x=1742863821;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1742259070; x=1742863870;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jyS5rCxr8EQqFWu2KoBKo/0nF0NkexL7fmn9bWW5ufc=;
-        b=ZekwmD+xHd1Ck/Xyl4n4HMRg+udIQxWpXBAKU4vgFKojkZCy1YdHHHc8HlerGhN0Mg
-         hjELcgoa/3da3cIwniEmtEVoWZPV6/2JX6UbaHfSqyixVmtuGYGJCR5WMhyyu+BBN/oU
-         cj7dZ/Glf/v1vj0RBWkcB27m2qBKJOppj+0yKfCyHt3S+6QS6ZJ7HiwEM4vPCMGAI+Nh
-         zYbL/SOHWCntd/J7+KR9xSJxgmO1cNgD2sNU1VkneT2zAXFPruRdxarpYfzW8D+0Prm2
-         DgNqeDwMY9261tpHD8RXbO+/hQpV6AMfHc5wdAIgcPwOvlBp9H8cJe7cca4Y+aKDS2wP
-         yRQg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2+g5EGp6GRhWtGC0ikgqG4klfpuDn0ejKDWobEwgplwWUmJxQtzj60murcJtwVULthkybrhwCLNVhouU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPQWISUoGuo+krUmnoUJmsEETWkhSWZHTuzvqp8x5yKg16UCPp
-	c9YlcmGenzKD/dDf4nXODg5dt3HmD1cLZwezstoNyHbU1BcmpsSO0GC0k/wSdMP6DfPWycKFrXN
-	mc5/6
-X-Gm-Gg: ASbGncsj+UYf8QPQR+IE3u0tXIVTkJP+1g/KZBiohzmiLbQW+s0dlTiv6YD0XqrbIm3
-	0oHHKaA8oZhjpWMJX076penH58Vx/UUCNGsf8b5mUAsnjsW5DGetdv5PYoeOAmj30XjZUH2ftJa
-	Tc31+LXQClav8Y7JB65EcwD9c6NSX65VENlV/fGuuKGrVgIRNzv1t84M1MsIu9KPU0SPr4cyLde
-	u7eCTEHjJPXG38Me5sYfKApBxw3242lIwOmG7JUQzIPSJ8CimjNWqLd++WhuQLej0tqOKL7wvTk
-	sppFcVsHt2pwvSniQaIJcetiZhQc23wL/NC4uTbVwKPkWGuimES/CWfiVyXmVUfXHnXi1zFTI0m
-	S/eS0bDHAfvBzLmYjaA==
-X-Google-Smtp-Source: AGHT+IHphGAwUXfXr7Mrrbm3vJ5pDrNsyjOLR/aaUMGpU3EUMn5PRxeescEk16cYhxEl8m70XssWNA==
-X-Received: by 2002:a17:903:8c4:b0:216:21cb:2e14 with SMTP id d9443c01a7336-226357e0c41mr127135ad.21.1742259021211;
-        Mon, 17 Mar 2025 17:50:21 -0700 (PDT)
-Received: from ?IPV6:2600:1700:38d4:55d0:4268:be3e:41c6:d4b4? ([2600:1700:38d4:55d0:4268:be3e:41c6:d4b4])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301539d3f4bsm6814559a91.5.2025.03.17.17.50.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 17 Mar 2025 17:50:20 -0700 (PDT)
-Message-ID: <4ce0b11c-d2fd-4dff-b9db-30e50500ee83@google.com>
-Date: Mon, 17 Mar 2025 17:50:19 -0700
+        bh=U/GqRqFocBuzF9Eb/f/joYEbo/0mtodFRieL+22DCbs=;
+        b=aXW9e7yAsgScyKl3cNPecic5q1Cv3wID/G3KdciPAxVDozVlEMe6EkPcIvyvZ6LdJQ
+         EnHvqJE/xz/sy1FVjRcv5acDZRgY0DwgfL884MEzLGt8zSG0NNC5Pix6c4P0TtP5o4AL
+         JYglmvOH9QzXrkrVPS6DKZ7xPvOE9NCNy1CiwXm8QtwWNPz87eOdpLxrA4sPcOsfEWSj
+         2smDWaOiWPF/ehHe/C3qmwEmEEbaKMNTG2aK94I+fqg6T2aMHfJwgCmfYcNq/iuN61GO
+         WZ4NB5DtnkHJex1MiVTyh62pJYMljBVeaN1XLRMGYmQEi5Mvpibh7M/2T5C6OCcFf/Be
+         gXiw==
+X-Forwarded-Encrypted: i=1; AJvYcCXfVeofBMWU07NIDgM1c36TlnJWGIqPOPB19cyg6YWJf6gbAnN+WUozOEMj6GTx+62+ykJKpmgoQSfEgEE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxg3sX4bRCUWtkmeGb/fin7hXe6rv8UKJdIerZX+yJzc6ntHMoS
+	fvyQkbEztCnjlCXw7Fw+osdbq2wV442MIMVJAINaw1wK8zw2iUB0diEAzvIUYxg=
+X-Gm-Gg: ASbGncvO4t5HVhg6/BpEGX0cr5qZeXIFIWisHvupeFk+p/hokqd0CkwbvGWYaDe0TWf
+	0DsHjJVl859Q7PY0F/zxV4qlX9nN/dyhm9lUWz/kfMbGF0vpWTdBRqYons3FB2wVx78qnT5oKge
+	gJLKZ68ywQWOdOPcLCdk2pxQdCycznWSOHcYLQ8dPfNOQDro80v6dHFfbARN/SRyyPwfiVuddFS
+	oa4sUBxEfheVBLd24kF/LHBljo5hLrlXHBRMJHEHhPPF1LWdX3ADVSpnyD7x1VC5HZLiW5Jc4CG
+	+YbZoO6S9dKGAbRMUivP693/21GcUYN+HFBJt3C2OU2mU0K3mv94oLtMEuNMm0T9Zq9W7AZnMTB
+	t
+X-Google-Smtp-Source: AGHT+IFCTe5n82yUGpowrbpfL0mcn1Bw7/SjhqpalmHXGc+c3b40e/vG3uqcukMNwusAsrCQ70GyTw==
+X-Received: by 2002:a17:902:d54f:b0:215:9bc2:42ec with SMTP id d9443c01a7336-225e0b14fb5mr171079355ad.47.1742259070107;
+        Mon, 17 Mar 2025 17:51:10 -0700 (PDT)
+Received: from sidongui-MacBookPro.local ([221.148.76.1])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6ca3sm82072255ad.134.2025.03.17.17.51.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 17 Mar 2025 17:51:09 -0700 (PDT)
+Date: Tue, 18 Mar 2025 09:51:05 +0900
+From: Sidong Yang <sidong.yang@furiosa.ai>
+To: Caleb Sander Mateos <csander@purestorage.com>
+Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+	Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	io-uring@vger.kernel.org
+Subject: Re: [RFC PATCH v4 4/5] btrfs: ioctl: introduce
+ btrfs_uring_import_iovec()
+Message-ID: <Z9jDeU8flCI3SWgZ@sidongui-MacBookPro.local>
+References: <20250317135742.4331-1-sidong.yang@furiosa.ai>
+ <20250317135742.4331-5-sidong.yang@furiosa.ai>
+ <CADUfDZoR+L8za5h6-Q=EL-7bRekBt03CeARE48EjMr18S6gvww@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC v2 03/29] mm: asi: Introduce ASI core API
-To: Brendan Jackman <jackmanb@google.com>, Borislav Petkov <bp@alien8.de>
-Cc: akpm@linux-foundation.org, dave.hansen@linux.intel.com,
- yosryahmed@google.com, kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-mm@kvack.org, peterz@infradead.org, seanjc@google.com,
- tglx@linutronix.de, x86@kernel.org
-References: <20250227120607.GPZ8BVL2762we1j3uE@fat_crate.local>
- <20250228084355.2061899-1-jackmanb@google.com>
- <20250314131419.GJZ9Qrq8scAtDyBUcg@fat_crate.local>
- <5aa114f7-3efb-4dab-8579-cb9af4abd3c0@google.com>
- <20250315123621.GCZ9V0RWGFapbQNL1w@fat_crate.local>
- <Z9gKLdNm9p6qGACS@google.com>
-Content-Language: en-US
-From: Junaid Shahid <junaids@google.com>
-In-Reply-To: <Z9gKLdNm9p6qGACS@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CADUfDZoR+L8za5h6-Q=EL-7bRekBt03CeARE48EjMr18S6gvww@mail.gmail.com>
 
-On 3/17/25 4:40 AM, Brendan Jackman wrote:
+On Mon, Mar 17, 2025 at 08:37:04AM -0700, Caleb Sander Mateos wrote:
+> On Mon, Mar 17, 2025 at 7:00 AM Sidong Yang <sidong.yang@furiosa.ai> wrote:
+> >
+> > This patch introduces btrfs_uring_import_iovec(). In encoded read/write
+> > with uring cmd, it uses import_iovec without supporting fixed buffer.
+> > btrfs_using_import_iovec() could use fixed buffer if cmd flags has
+> > IORING_URING_CMD_FIXED.
+> >
+> > Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
+> > ---
+> >  fs/btrfs/ioctl.c | 32 ++++++++++++++++++++++++--------
+> >  1 file changed, 24 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> > index 6c18bad53cd3..a7b52fd99059 100644
+> > --- a/fs/btrfs/ioctl.c
+> > +++ b/fs/btrfs/ioctl.c
+> > @@ -4802,6 +4802,28 @@ struct btrfs_uring_encoded_data {
+> >         struct iov_iter iter;
+> >  };
+> >
+> > +static int btrfs_uring_import_iovec(struct io_uring_cmd *cmd,
+> > +                                   unsigned int issue_flags, int rw)
+> > +{
+> > +       struct btrfs_uring_encoded_data *data =
+> > +               io_uring_cmd_get_async_data(cmd)->op_data;
+> > +       int ret;
+> > +
+> > +       if (cmd && (cmd->flags & IORING_URING_CMD_FIXED)) {
+> > +               data->iov = NULL;
+> > +               ret = io_uring_cmd_import_fixed_vec(cmd, data->args.iov,
+> > +                                                   data->args.iovcnt,
+> > +                                                   ITER_DEST, issue_flags,
 > 
-> I don't understand having both asi_[un]lock() _and_
-> asi_{start,enter}_critical_region(). The only reason we need the
-> critical section concept is for the purposes of the NMI glue code you
-> mentioned in part 1, and that setup must happen before the switch into
-> the restricted address space.
-> 
-> Also, I don't think we want part 5 inside the asi_lock()->asi_unlock()
-> region. That seems like the region betwen part 5 and 6, we are in the
-> unrestricted address space, but the NMI entry code is still set up to
-> return to the restricted address space on exception return. I think
-> that would actually be harmless, but it doesn't achieve anything.
-> 
-> The more I talk about it, the more convinced I am that the proper API
-> should only have two elements, one that says "I'm about to run
-> untrusted code" and one that says "I've finished running untrusted
-> code". But...
-> 
->> 1. you can do empty calls to keep the interface balanced and easy to use
->>
->> 2. once you can remove asi_exit(), you should be able to replace all in-tree
->>     users in one atomic change so that they're all switched to the new,
->>     simplified interface
-> 
-> Then what about if we did this:
-> 
-> /*
->   * Begin a region where ASI restricted address spaces _may_ be used.
->   *
->   * Preemption must be off throughout this region.
->   */
-> static inline void asi_start(void)
-> {
-> 	/*
-> 	 * Cannot currently context switch in the restricted adddress
-> 	 * space.
-> 	 */
-> 	lockdep_assert_preemption_disabled();
+> Why ITER_DEST instead of rw?
 
-I assume that this limitation is just for the initial version in this RFC, 
-right? But even in that case, I think this should be in asi_start_critical() 
-below, not asi_start(), since IIRC the KVM run loop does contain preemptible 
-code as well. And we would need an explicit asi_exit() in the context switch 
-code like we had in an earlier RFC.
-
-> 
-> 	/*
-> 	 * (Actually, this doesn't do anything besides assert, it's
-> 	 * just to help the API make sense).
-> 	 */
-> }
-> 
-> /*
->   * End a region begun by asi_start(). After this, the CPU cannot be in
->   * the restricted address space until the next asi_start().
->   */
-> static inline void asi_end(void)
-> {
-> 	/* Leave the restricted address space if we're in it. */
-> 	...
-> }
-> 
-> /*
->   * About to run untrusted code, begin a region that _must_ run in the
->   * restricted address space.
->   */
-> void asi_start_critical(void);
-> 
-> /* End a region begun by asi_start_critical(). */
-> void asi_end_critical(void);
-> 
-> ioctl(KVM_RUN) {
->      enter_from_user_mode()
->      asi_start()
->      while !need_userspace_handling()
->          asi_start_critical();
->          vmenter();
->          asi_end_critical();
->      }
->      asi_end()
->      exit_to_user_mode()
-> }
-> 
-> Then the API is balanced, and we have a clear migration path towards
-> the two-element API, i.e. we need to just remove asi_start() and
-> asi_end(). It also better captures the point about the temporary
-> simplification: basically the reason why the API is currently
-> overcomplicated is: if totally arbitrary parts of the kernel can find
-> themselves in the restricted address space, we have more work to do.
-> (It's totally possible, but we don't wanna block initial submission on
-> that work). The simplification is about demarcating what code is and
-> isn't affected by ASI, so having this "region" kinda helps with that.
-> Although, because NMIs can also be affected it's a bit of a fuzzy
-> demarcation...
-
-Not just NMIs, but other IRQs can also be in the restricted address space even 
-in this initial version. But that is of course still significantly less in scope 
-than the general case, so the demarcation of process-context code via 
-asi_start()/asi_end() does indeed seem useful.
+Oh, it's a mistake. It should be rw.
 
 Thanks,
-Junaid
+Sidong
 
+> 
+> Best,
+> Caleb
+> 
+> > +                                                   &data->iter);
+> > +       } else {
+> > +               data->iov = data->iovstack;
+> > +               ret = import_iovec(rw, data->args.iov, data->args.iovcnt,
+> > +                                  ARRAY_SIZE(data->iovstack), &data->iov,
+> > +                                  &data->iter);
+> > +       }
+> > +       return ret;
+> > +}
+> > +
+> >  static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue_flags)
+> >  {
+> >         size_t copy_end_kernel = offsetofend(struct btrfs_ioctl_encoded_io_args, flags);
+> > @@ -4874,10 +4896,7 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
+> >                         goto out_acct;
+> >                 }
+> >
+> > -               data->iov = data->iovstack;
+> > -               ret = import_iovec(ITER_DEST, data->args.iov, data->args.iovcnt,
+> > -                                  ARRAY_SIZE(data->iovstack), &data->iov,
+> > -                                  &data->iter);
+> > +               ret = btrfs_uring_import_iovec(cmd, issue_flags, ITER_DEST);
+> >                 if (ret < 0)
+> >                         goto out_acct;
+> >
+> > @@ -5022,10 +5041,7 @@ static int btrfs_uring_encoded_write(struct io_uring_cmd *cmd, unsigned int issu
+> >                 if (data->args.len > data->args.unencoded_len - data->args.unencoded_offset)
+> >                         goto out_acct;
+> >
+> > -               data->iov = data->iovstack;
+> > -               ret = import_iovec(ITER_SOURCE, data->args.iov, data->args.iovcnt,
+> > -                                  ARRAY_SIZE(data->iovstack), &data->iov,
+> > -                                  &data->iter);
+> > +               ret = btrfs_uring_import_iovec(cmd, issue_flags, ITER_SOURCE);
+> >                 if (ret < 0)
+> >                         goto out_acct;
+> >
+> > --
+> > 2.43.0
+> >
+> >
