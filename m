@@ -1,176 +1,110 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8DA620B1FE;
-	Tue, 18 Mar 2025 11:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBF191598F4;
+	Tue, 18 Mar 2025 11:32:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297469; cv=none; b=dCzi95LZHSLqWG28/KJhy7qjwD4PKu4M7KOKelvPq0myjGFO0QD0QWsegA1DexCB3T6N2Lc4dJDOvrKXApMRwL+b8hPSaLdoglkwY0xulp5MwHgvKAqzJLPTIkW1id+RKtiR/boKetKb4xk4eFuQy4iGQkUgsG63rIklemBdUes=
+	t=1742297575; cv=none; b=qC5TgPzkGkcWhs3C3sreaLOtFp4xr+w8T4kPJu9WUuup2utZ4ZzwfeFuFWytZkr7XKN5aYxtm4VrEtTJV0BfhockASmyLLkyGEmOkv/epLfPGcU6rQLrucVr/9IyhuqB5BYpfe8IKI4tbTzwi5Zl5w2YfQPZ3CeZNYKXNtjwqSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297469; c=relaxed/simple;
-	bh=kxndd+gmt8x5LRoL0YBDmYnHkE5/msuSYIUck6xVs8w=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HBVOe/A+rMnZOigEFOq/PXyWADg1LC8XyZJmtVJk/97OT2rZEVUKZKAAiHmsPF6dT1Rf6D1U83zg8L+naUYpV1hplu4SuiO1XvsEL+3c9SV3OML/tysClWeWwQ4k4cY6PaLNvOZhfBZnWntE28aKqB7rt0mIOXrqf1PO6OcSkEA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Dxctdvia; arc=none smtp.client-ip=209.85.128.45
+	s=arc-20240116; t=1742297575; c=relaxed/simple;
+	bh=DOLg4qCV36A7TvJtJdyAix1jKsHX7JjPHQ2ArcXagQ4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Jvc6zWiHbJeX90vS0O3V1wXRTvXH+IMiWmizTMu59zbNYtjSMgfFRJYcFLrQRE+e1LAj7EXqHcDaNLDbh66Z3+OE7SKNH22O7ihmHuZXy22iCe72coHj2JdjOcHOymvAVTZm9rrStufI/+iQiXBcKR0iAk2xOjZgPoWcuHIhHCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wro0Y2o6; arc=none smtp.client-ip=209.85.216.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Dxctdvia"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cf3192f3bso33685215e9.1;
-        Tue, 18 Mar 2025 04:31:07 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wro0Y2o6"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2f9d3d0f55dso5471192a91.1;
+        Tue, 18 Mar 2025 04:32:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742297466; x=1742902266; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=oeWK8KnE02poaU2apmgZYe7NYIk2mK6ZRM9x7EecA0A=;
-        b=DxctdviapLtKOOdP9WKNGbFyejFU8zj4Sn0zxgIJindQ5N+5RbpTfcrAs/IXlHbQGU
-         Zg1Nh59UzIQUG6j7L8WGeHm7AqDbCcFT3nzyk2csme1De8Hqvw5Lujd4cX8Rc0GUOflC
-         xatTKIto9ZNMU96haoolJ6QWAr0u4tqWRwG4+2eBMEv5+y3Q9KolfXn9tFZ8qA5KZytp
-         q3+GoYdBxG5FklDUI2eY/lULKvgoazNri5nCtYOScrjxDQXRGblNv/0MTo4KjOHoNzFC
-         pJOby53NmJTPqJtANBjGAltyEMlxchczOJSv1m4smjdsAxhzydHw/rk8YRKd+WwUM4zC
-         eP+Q==
+        d=gmail.com; s=20230601; t=1742297569; x=1742902369; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=llCyBpyuPyimvCR5J3EoIvDpQdWHHcfEhpAsJ9dqxHU=;
+        b=Wro0Y2o60lKu2t8BsWuAzV8bMqztZtSKcDTZbJxEiyYYLZqOfjpVwfTK6yMpHBjz/s
+         cWUL41Yu3eh2DJoYRZjC2yjwKC3ACRadVZ6ZlEVztaqa+GgP5aBgvqgDN0h+6VZu3S4f
+         v1iNMjXpYZeMpIXSX6GQQpDfF/UDezXZPER0QrK108omi+axxJDHOov2BSZLAqEEWRrC
+         mAYmNESoN2ix6dbyAZBRCOMyqk3d7PpfOwDZnY9wlce2YYJWzHQuKHeIFuxxXL58E9RO
+         PLiC9kyAe8oIS6eRLMn8VBj3Xvg2nxadxa0MJ4YdivtXyxwl3GvpoO97oJQAp4S2b8Hb
+         71JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742297466; x=1742902266;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oeWK8KnE02poaU2apmgZYe7NYIk2mK6ZRM9x7EecA0A=;
-        b=TuiMaxQmoupfnxJQTugCC5D3+V7ieKOQDmh3umhZuij4sxBnRfYArWe6+tl9jPASNB
-         kAUP5Cm757qJ30XWl3k/o5qqlkBNKOy90/chEZQds0y45jpy+1ibZ/WMCz6Z61XU1vPh
-         SeqOcdKsl/wjAXHpcuswGqWPeIyA//yBmHLS828K3tIbXusyrasrJEPlCB+GHGiAy9Ab
-         uj0r0TAiC96w23lOssB6KuBsPCPp529g+ILlo0RXaeuBQTFpQ9hSXua7RMwGlBLXO8AM
-         /Qer6cnAb7+xzw5wLZJWO3hppN4xmkraKrLY0TdO4QrpQkp0fej1FQS29tdr0AJsm/eA
-         OsPg==
-X-Forwarded-Encrypted: i=1; AJvYcCVen/nmAXAUhdW+t53y9HFYcaL0j+t7CdLGRp166OSS9UofAUZQSsvK14Hwe/sAIbDWH0pd6UnXP3tJ@vger.kernel.org, AJvYcCVl8dahB6SG02KE4HO5lrPdsFdcPLrazbx2Dkn9FYer1T/8zDpEzuU/7ZVp7Zk8LY45wnXUpNMsm4jvkxTu@vger.kernel.org, AJvYcCWZjje2qsmBLCh1Z8SSuEZqilwBIiTwV/49NZMAEOBMbQDg6VYoiZvjxkdh5PPz6+qGI36CKYZbRr4X@vger.kernel.org, AJvYcCXV/cBr9F4KYPCDDeizW294PJPElCtHwB/Gic9iFqsQWj3z9RTYBkkd6Hkbfh26RfMcmFJr+tmhH2/+@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw87Iemf0/PUvUT+W5si0RZrsDtLzZtoif59MRYVg32KuvbFLOP
-	PnX3nA/HWZYOK4AVDiRxwdtctgZ4ZQlJhmKWRL5LESZFJVxWebD9
-X-Gm-Gg: ASbGncv6ozNEVyRgSKxtGtt8SrdsPRo+r0dCy3q8u17E4je7YfLXwUb6wSU5Ym9I9hs
-	QwevAeATG286EpUST12tMVjOy5BMzOYVL9UeVuvXbauGkeAcKdS3n1IqpZYrcknew/ORSNow7bu
-	ftL43spUiPpScEcoE8tJE3a2nGe/EPZOLE/5bik2cdk1v0RiqtUoBB8TgU9Z1wiA7ZP9l9eRUG8
-	BHwhjBYWkgJYq1inyJJcuw4KIHEO1FF7U6tuCktTB2WU6vcT1oJxGXWke4BrqCistaxC80y7W7+
-	uDUPPkcqk8D/iqkqCFKO6v0IqrW6BwakoZWgvdpiIcKFONkf4E2066spgg//WZRC3wC+hj9hymF
-	h
-X-Google-Smtp-Source: AGHT+IFpi+zFuJ8XXOnGn4TOSQKOE+/3yFEH37sz6LbTqTOZGYuC+54cInlqBrHl+fxwxahe/rNImA==
-X-Received: by 2002:a5d:47c9:0:b0:390:e311:a8c7 with SMTP id ffacd0b85a97d-3971cd57eb0mr15913025f8f.5.1742297465853;
-        Tue, 18 Mar 2025 04:31:05 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8881187sm17594872f8f.41.2025.03.18.04.31.04
+        d=1e100.net; s=20230601; t=1742297569; x=1742902369;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=llCyBpyuPyimvCR5J3EoIvDpQdWHHcfEhpAsJ9dqxHU=;
+        b=TqeIEqOKdYX1vbHarTBNh539waSfZh4+dxY/E6sbFuvLNLqQpd/BwHY3ECY0lsMGrM
+         IxNDC5rbyMZVf5TZtrVV6uelAZ2XK5fAd3b8p3y/cIZePLIbST9KU9ZpOnaCC/RhSwEL
+         ryp4MAbJRX9KDFoE2PheuqrJWe0lOSpfMH3Zf4y54Tgx+WCMaff72gxTeC4DOO4KXrnB
+         i+5r2DjSK6CKWf1jpk6wU6zz6sHCI9bvL6uGXr8U08cbMHXwf/RnDAej2juPMs3Z4viA
+         j/+v/5J+qpcH0QirHZpdJwj/eOBQEJ1j2hHCcRCsYiszQauFuOohciDOIHqG2EE0S/M4
+         Oo0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVBbTdoaGPjiQqHdW1qfQwmLG0PTradRigVDY4OUb6llhSwfkxRPiHGVdo0mgaMhQBW2GSxpTiNDMI=@vger.kernel.org, AJvYcCXMK66+zFSx4R4pU6gLsZAwSITkI16fzwNxtWvnTxv9Y2MHkMAFZc/GiMi8VNP6QN+dUrmaTknFMj8hKjkz+wOalgMN@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw3QRvv54sG9YFbtbNG/94BH0YqyPofpmEDNF3Q+MQpS67VhfEp
+	ttuIiweM+W2RuaY9iWyjStWcwt0xvM6/ELbIck3eRObl5fP2SjLa
+X-Gm-Gg: ASbGnctfNOvUkQJGAk8tWL6M5ukJD7Acm+aUuH3iJFFFFu63rxIQDiVD7FpJYC6mY4L
+	7WzTOEm+JO+jdQl1AkenJjhOMTb4CZQZUUHKYgjrkslv//LYZ1PeSAbaPvkQ/YwYfiVly192/iZ
+	cU/BsgjNzCEemwA3s0KQVpH9tzpOOtqW46QzTxY4kf2qN5ReixThNzKFcc57xSllxCtXr3SRtcb
+	iG7m/Xtl0lw+SpuvrgFFotJOAZ7cUCbPM1AvGmt4kHWYVaYDdtS+CUwrMOifH8kzv3reYjSUY3e
+	iX+0D/OGwvzwjzJDHl6OtwEBzViT4gTE1tXCt+Ui1l4VDRdgyeXzBbMRYBtLSJtWqf16cU9+ffg
+	=
+X-Google-Smtp-Source: AGHT+IFC4kGCuKFADzEYkuZqmtcTWDGH6kHXcC7o1xX775e+lgRcF41Lg5LZn6d0S5J2XICWin9wNg==
+X-Received: by 2002:a17:90b:4a11:b0:2ef:31a9:95c6 with SMTP id 98e67ed59e1d1-301a5b13817mr3095801a91.14.1742297568976;
+        Tue, 18 Mar 2025 04:32:48 -0700 (PDT)
+Received: from purva-IdeaPad-Gaming-3-15IHU6.. ([14.139.108.62])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbec04sm91832555ad.191.2025.03.18.04.32.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 04:31:05 -0700 (PDT)
-Message-ID: <67d95979.050a0220.166852.25e6@mx.google.com>
-X-Google-Original-Message-ID: <Z9lZdFMUpqWwpsA2@Ansuel-XPS.>
-Date: Tue, 18 Mar 2025 12:31:00 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Daniel Danzberger <dd@embedd.com>, Arnd Bergmann <arnd@arndb.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Nikita Shubin <nikita.shubin@maquefel.me>,
-	Guo Ren <guoren@kernel.org>, Yangyu Chen <cyy@cyyself.name>,
-	Ben Hutchings <ben@decadent.org.uk>, Felix Fietkau <nbd@nbd.name>,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-phy@lists.infradead.org, linux-mediatek@lists.infradead.org,
-	linux-usb@vger.kernel.org, upstream@airoha.com
-Subject: Re: [PATCH 09/13] dt-bindings: phy: Add documentation for Airoha
- AN7581 USB PHY
-References: <20250309132959.19045-1-ansuelsmth@gmail.com>
- <20250309132959.19045-10-ansuelsmth@gmail.com>
- <4f16d239-f540-45d5-b67a-767b09f1c70c@kernel.org>
- <67d0862f.df0a0220.375bd.6b15@mx.google.com>
- <4a9ac302-dfbe-4d76-a634-a445957c313c@kernel.org>
+        Tue, 18 Mar 2025 04:32:48 -0700 (PDT)
+From: Purva Yeshi <purvayeshi550@gmail.com>
+To: rostedt@goodmis.org,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	corbet@lwn.net
+Cc: linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	Purva Yeshi <purvayeshi550@gmail.com>
+Subject: [PATCH v4 1/2] docs: tracing: Reduce maxdepth in index.rst for clarity
+Date: Tue, 18 Mar 2025 17:02:29 +0530
+Message-Id: <20250318113230.24950-1-purvayeshi550@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4a9ac302-dfbe-4d76-a634-a445957c313c@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 16, 2025 at 06:01:02PM +0100, Krzysztof Kozlowski wrote:
-> On 11/03/2025 19:51, Christian Marangi wrote:
-> >>
-> >>> +    $ref: /schemas/types.yaml#/definitions/uint32
-> >>> +    enum: [0, 1]
-> >>
-> >> I don't understand why do you need index property here (which are
-> >> usually not allowed).
-> >>
-> > 
-> > Eh... As said in the description this is really to differentiate the 2
-> > different physical port...
-> > 
-> > Each port have a dedicated oscillator for calibration and these
-> > calibration are identified by an offset (all placed one after another in
-> > a separate register space).
-> 
-> So different oscillators? Then describe the oscillator and its differences.
-> 
-> Different programing model? Different compatible.
-> 
-> Other difference? Depending what is the difference.
-> 
-> But there is no such thing as "different port ID" based on your
-> description above. You just claimed that they are different, but you do
-> not put that difference to hardware description. Instead you encode that
-> difference in the drivers and it should be opposite. The DTS, so the
-> hardware description, should tell you the difference. And I am sorry,
-> but in 99% of cases "I am the first phy" and "I am the second" is not
-> the actual difference we are interested in.
->
+Reduce :maxdepth: from 2 to 1 in index.rst to simplify the table of
+contents, showing only top-level document titles for better readability.
 
-Ok to make it as clear as possible. (hope I don't contraddict with the
-previous statement) (actually yes the "separate register space statement
-was wrong and sorry for the confusion")
+Signed-off-by: Purva Yeshi <purvayeshi550@gmail.com>
+---
+V1 - https://lore.kernel.org/all/20250204133616.27694-1-purvayeshi550@gmail.com/
+V2 - https://lore.kernel.org/lkml/20250206141453.139613-1-purvayeshi550@gmail.com/
+V3 - https://lore.kernel.org/all/20250312124717.7208-1-purvayeshi550@gmail.com/
+V4 - Reorder patches to apply the 'maxdepth' change first, then refactor
+the index documentation to avoid introducing maxdepth: 2 only to modify
+it in the next patch.
 
-- 2 USB port
-- USB 2.0 needs to be calibrated with an oscillator
-- Each USB port have his own dedicated oscillator somewhere in the HW
-- Each USB port have at the same offset a register to SELECT the
-  oscillator. This register refer to the same oscillator selection in
-  the HW.
-  
-  Example:
-  reg 0x1fac0100 MASK 27:26 can be set to source out of oscillator 0,1,2
-  reg 0x1fae0100 MASK 27:26 can be set to source out of oscillator 0,1,2
+ Documentation/trace/index.rst | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  Both register refer to the same oscillators in hardware (hence each
-  port should select the correct one)
-  Selecting oscillator 0 for both USB port is problematic.
-
-With this in mind is it ok if I describe this with something like
-
-airoha,usb2-monitor-clk-sel = <AIROHA_USB2_MONCLK_SEL0>;
-
-and some dt-bindings include
-
-#define AIROHA_USB2_MONCLK_SEL0 0
-#define AIROHA_USB2_MONCLK_SEL1 1
-#define AIROHA_USB2_MONCLK_SEL2 2
-#define AIROHA_USB2_MONCLK_SEL3 3
-
-Or an enum of string like "osc0", "osc1", "osc2"...?
-
-> > 
-> > Oscillator 0 for physical port 0
-> > Oscillator 1 for physcial port 1
-> > 
-> > And model this is a bit problematic without an additional property, any
-> > hint for this?
-> > 
-> Best regards,
-> Krzysztof
-
+diff --git a/Documentation/trace/index.rst b/Documentation/trace/index.rst
+index 2c991dc96..fecc4adf7 100644
+--- a/Documentation/trace/index.rst
++++ b/Documentation/trace/index.rst
+@@ -3,7 +3,7 @@ Linux Tracing Technologies
+ ==========================
+ 
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
+ 
+    ftrace-design
+    tracepoint-analysis
 -- 
-	Ansuel
+2.34.1
+
