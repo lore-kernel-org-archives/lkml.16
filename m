@@ -1,91 +1,94 @@
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79DBF1E8334;
-	Tue, 18 Mar 2025 16:09:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37451586C8
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 16:11:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742314171; cv=none; b=poDOpKs6eWLGDEoiMk9kcxaAr4AsUl8k4U9dSqNTKVzQh8CerUFeUDeFSzl9uuStMSJwzISu3WfECbjczHHId0wvo04hKZMnCpiB/Sl8JDQnJCh2drnc2GewLyRwu99j6heN8mzsgNptK7OZL/WjzTQn8ALsiEuMbRGlpGa4hRk=
+	t=1742314275; cv=none; b=qxdHVYNC+MY5mb9nn5vXxVqee8boc2sjhZjoWnyMELZOPSDG9FGE4Jo746dicRVkhNfNYrUd+8ysZmNzJCJWhyMlBMAnBCOWGIE76n2T582H3tuK/SAO5lf/2Dso0j0UfqZjJ3vxVxjl6BzW+gpbFDwDIvTu6PRkebTjzb1rYIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742314171; c=relaxed/simple;
-	bh=xyy1nidpm2NckiLYGWHxIMTkjl1fascaNCIbAZgR9NI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=BukvHcSqTOG6gSKSnbA+DpcKfB2v48KqefB+3aKK7ILKtMFYRrKYil1WGadDychX30WyA/vDTVH3bkgqWgK5inMMGFOUGjmo6FYqHMbuGoKHNCDRzKYh1Aqlvc58BTZM27d2V75pG94pBI1Q/I12s19c6lSY0254FBokJDdvTLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from abreu.molgen.mpg.de (g43.guest.molgen.mpg.de [141.14.220.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 55D0A61CCD8A3;
-	Tue, 18 Mar 2025 17:09:13 +0100 (CET)
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-To: "Rafael J. Wysocki" <rafael@kernel.org>,
-	Len Brown <lenb@kernel.org>
-Cc: Paul Menzel <pmenzel@molgen.mpg.de>,
-	Anton Shyndin <mrcold.il@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
-	All applicable <stable@vger.kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] ACPI: resource: Skip IRQ override on ASUS Vivobook 14 X1404VAP
-Date: Tue, 18 Mar 2025 17:09:02 +0100
-Message-ID: <20250318160903.77107-1-pmenzel@molgen.mpg.de>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1742314275; c=relaxed/simple;
+	bh=DJznTK9wfd62bjKGxd9NXjtY5194EOGALbaCxEQznmw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gJOLYmYNhLcylU2Y3QK2gljjWOIqWephJzkFfsXDuV9K7IWLtKNMduE50415y9igndjcwmncSjiExm6z2DAGCxYytsbOkklQH/W4jkoH9qmFlSGQhXkQ2C/83xfd6tYDxwXCNTW7B6obe1yVEbFFnj4v24lovtpHMQ/73ZwjtQY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3SK5kFP; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3SK5kFP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 498B4C4CEDD;
+	Tue, 18 Mar 2025 16:11:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742314275;
+	bh=DJznTK9wfd62bjKGxd9NXjtY5194EOGALbaCxEQznmw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=U3SK5kFPf+I1n2yaBNQdeHZ7nbDK4HwSYUCTPIp6e1WnEbAAQyeQdxTVYHTiDIIq+
+	 0mFupGyj9oN152XWl+pezZkAf+PC72c3CYsqn79vYsl0NAnork4vLYM5qVG0NppMFN
+	 2OpkeMfFUEOUyUmGaMBej8SzUgvyBVWvtQ+RnzIHecHyCNyrZbFB5n4s+nhCj1JkwS
+	 mByYoLxpL83jpG/ANwdEMmpX/4vxhWzlOu4LT8cln0o7aUOi2DK3KAdbReDmBouHum
+	 XXAz8daETMwGL4GJiiuFAJn1QHE9ghY3+3xCSEf2/neesNhTITmM3A1RUrPthElo7E
+	 7a+EOJ62O+hwQ==
+Date: Tue, 18 Mar 2025 16:11:11 +0000
+From: Will Deacon <will@kernel.org>
+To: Thomas =?iso-8859-1?Q?Wei=DFschuh?= <thomas.weissschuh@linutronix.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: mm: Don't use %pK through printk
+Message-ID: <20250318161109.GA13981@willie-the-truck>
+References: <20250217-restricted-pointers-arm64-v1-1-14bb1f516b01@linutronix.de>
+ <20250221145513.GA20567@willie-the-truck>
+ <20250224150920-87b1bf56-9520-4cd1-ab51-93da2eece162@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250224150920-87b1bf56-9520-4cd1-ab51-93da2eece162@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-Like the ASUS Vivobook X1504VAP and Vivobook X1704VAP, the ASUS Vivobook 14
-X1404VAP has its keyboard IRQ (1) described as ActiveLow in the DSDT, which
-the kernel overrides to EdgeHigh breaking the keyboard.
+On Mon, Feb 24, 2025 at 03:12:54PM +0100, Thomas Weiﬂschuh wrote:
+> On Fri, Feb 21, 2025 at 02:55:14PM +0000, Will Deacon wrote:
+> > On Mon, Feb 17, 2025 at 08:39:06AM +0100, Thomas Weiﬂschuh wrote:
+> > > Restricted pointers ("%pK") are not meant to be used through printk().
+> > > It can unintentionally expose security sensitive, raw pointer values.
+> > > 
+> > > Use regular pointer formatting instead.
+> > > 
+> > > Link: https://lore.kernel.org/lkml/20250113171731-dc10e3c1-da64-4af0-b767-7c7070468023@linutronix.de/
+> > > Signed-off-by: Thomas Weiﬂschuh <thomas.weissschuh@linutronix.de>
+> > > ---
+> > >  arch/arm64/mm/physaddr.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/arm64/mm/physaddr.c b/arch/arm64/mm/physaddr.c
+> > > index cde44c13dda1bc0924d2d50369ad87f544a0a802..7d94e09b01b35094e883875a46b979666549095c 100644
+> > > --- a/arch/arm64/mm/physaddr.c
+> > > +++ b/arch/arm64/mm/physaddr.c
+> > > @@ -10,7 +10,7 @@
+> > >  phys_addr_t __virt_to_phys(unsigned long x)
+> > >  {
+> > >  	WARN(!__is_lm_address(__tag_reset(x)),
+> > > -	     "virt_to_phys used for non-linear address: %pK (%pS)\n",
+> > > +	     "virt_to_phys used for non-linear address: %p (%pS)\n",
+> > >  	      (void *)x,
+> > >  	      (void *)x);
+> > 
+> > This is part of a WARN() and knowing the actual address may well be
+> > useful in debugging. I suspect it also ends up being dumped as part of
+> > the register dump _anyway_.
+> 
+> That makes sense, especially the value being part of the register dump.
+> OTOH in the default kernel configuration (kptr_restrict==0), %pK is an alias to
+> %p and also hashing the pointers. And so far nobody seems to have cared.
+> 
+> If you prefer I can also change it to %px, to specifically show the value.
+> My main goal is to remove %pK, as it's prone to misuse.
 
-    $ sudo dmidecode
-    [‚Ä¶]
-    System Information
-            Manufacturer: ASUSTeK COMPUTER INC.
-            Product Name: ASUS Vivobook 14 X1404VAP_X1404VA
-    [‚Ä¶]
-    $ grep -A 30 PS2K dsdt.dsl | grep IRQ -A 1
-                 IRQ (Level, ActiveLow, Exclusive, )
-                     {1}
+Probably best to ignore me, then, and keep the existing behaviour with
+your change (as your patch is doing).
 
-Add the X1404VAP to the irq1_level_low_skip_override[] quirk table to fix
-this.
+Thanks,
 
-Closes: https://bugzilla.kernel.org/show_bug.cgi?id=219224
-Cc: Anton Shyndin <mrcold.il@gmail.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
----
- drivers/acpi/resource.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/drivers/acpi/resource.c b/drivers/acpi/resource.c
-index b4cd14e7fa76..14c7bac4100b 100644
---- a/drivers/acpi/resource.c
-+++ b/drivers/acpi/resource.c
-@@ -440,6 +440,13 @@ static const struct dmi_system_id irq1_level_low_skip_override[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "S5602ZA"),
- 		},
- 	},
-+	{
-+		/* Asus Vivobook X1404VAP */
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "ASUSTeK COMPUTER INC."),
-+			DMI_MATCH(DMI_BOARD_NAME, "X1404VAP"),
-+		},
-+	},
- 	{
- 		/* Asus Vivobook X1504VAP */
- 		.matches = {
--- 
-2.49.0
-
+Will
