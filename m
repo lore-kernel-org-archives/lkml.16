@@ -1,16 +1,16 @@
 Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC56F1ACEB7
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:34:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9740E207A3B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:34:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742290464; cv=none; b=B3kvK2R8pGoioEHu5wXoKXM6Z6LnjOdHn9ApsSyMB3dSeccZW1mqxx7kdkKL7hERM2++UFmJ3ZucqkhA0Qvd40m3I2AS3Ec0D0f6fjSeT+7NTdaBVYOUqH5xiqeYwWwJ7Eo9Zj0cPPJ9arQNJf0vkNxRsEIDrDEOG5MGp8zkUF8=
+	t=1742290464; cv=none; b=GotEUrvWHnzy5A5B0R2YCO/Ded0F9zVeRxp/eSvk8UZSfhh2R5rnPWyKOdf9XL9RKqEteaz1N+1rSFaJdl6Inu7InAcJuxJuhkyZONi/XgsHtiOVcckRQvfwY/XBPj4f7IEaxs318KXwVAoOeecec3BAIHtyRFWp/RtsmrWyV5s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742290464; c=relaxed/simple;
-	bh=BJegvgLYBuqQm4LiiNCgEaFOuPXVFVF/RWIi/veSSYk=;
+	bh=6qTmpxzY5XiSLS9uZSsgkl9whAiztvWriA/vj74C6xg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G3s0aK+Un4lphBQt6pzttTWlpx0IyDZ+Ev29qt657KkDTMyOgEX78MzkxxyfemtXXclbtMCh4csxFktdWxsGmMKpMuBYO+dVJGWCxpATR+H8nD2rx3ncAVudi7akTD0XR0uSkVH5++iQAMdn+WGh0WKC9tRrnZcJZ/PjsFn3kJ0=
+	 MIME-Version; b=lAj9ONz0MARdYU3L7onWbRYDPzEUTvnD46u83JhelsRftF7QSRqxgwKq3CtjJnpJNg5ibp4rn93fySp8HmTFh7boWeEaD60fBDQbI40bZMOVtt9JUf//I2nnIsWU2Pztj98TC1RILNLwvW1OUAlxrQ06NS1m7sZeKQ9PK1/Wt6I=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
@@ -18,16 +18,16 @@ Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tuTKu-0005yD-LY; Tue, 18 Mar 2025 10:34:12 +0100
+	id 1tuTKy-0005yJ-RM; Tue, 18 Mar 2025 10:34:16 +0100
 Received: from dude04.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::ac])
 	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tuTKs-000OyN-2p;
+	id 1tuTKt-000OyY-0C;
 	Tue, 18 Mar 2025 10:34:11 +0100
 Received: from ore by dude04.red.stw.pengutronix.de with local (Exim 4.96)
 	(envelope-from <ore@pengutronix.de>)
-	id 1tuTKt-00CmuG-0i;
+	id 1tuTKt-00CmvQ-1A;
 	Tue, 18 Mar 2025 10:34:11 +0100
 From: Oleksij Rempel <o.rempel@pengutronix.de>
 To: "David S. Miller" <davem@davemloft.net>,
@@ -47,9 +47,9 @@ Cc: Oleksij Rempel <o.rempel@pengutronix.de>,
 	Phil Elwell <phil@raspberrypi.org>,
 	Maxime Chevallier <maxime.chevallier@bootlin.com>,
 	Simon Horman <horms@kernel.org>
-Subject: [PATCH net-next v4 01/10] net: usb: lan78xx: handle errors in lan7801 PHY initialization
-Date: Tue, 18 Mar 2025 10:34:01 +0100
-Message-Id: <20250318093410.3047828-2-o.rempel@pengutronix.de>
+Subject: [PATCH net-next v4 08/10] net: usb: lan78xx: Transition get/set_pause to phylink
+Date: Tue, 18 Mar 2025 10:34:08 +0100
+Message-Id: <20250318093410.3047828-9-o.rempel@pengutronix.de>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250318093410.3047828-1-o.rempel@pengutronix.de>
 References: <20250318093410.3047828-1-o.rempel@pengutronix.de>
@@ -65,43 +65,86 @@ X-SA-Exim-Mail-From: ore@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Add error handling for `lan78xx_write_reg()` and `lan78xx_read_reg()`
-in `lan7801_phy_init()`. If any register operation fails, return
-an appropriate error using `ERR_PTR(ret)` to prevent further execution
-with invalid configurations.
+Replace lan78xx_get_pause and lan78xx_set_pause implementations with
+phylink-based functions. This transition aligns pause parameter handling
+with the phylink API, simplifying the code and improving
+maintainability.
 
 Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
 ---
- drivers/net/usb/lan78xx.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/net/usb/lan78xx.c | 51 ++-------------------------------------
+ 1 file changed, 2 insertions(+), 49 deletions(-)
 
 diff --git a/drivers/net/usb/lan78xx.c b/drivers/net/usb/lan78xx.c
-index 137adf6d5b08..d03668c2c1c9 100644
+index b8d86b4aca57..58fc16d15a6f 100644
 --- a/drivers/net/usb/lan78xx.c
 +++ b/drivers/net/usb/lan78xx.c
-@@ -2531,11 +2531,22 @@ static struct phy_device *lan7801_phy_init(struct lan78xx_net *dev)
- 		dev->interface = PHY_INTERFACE_MODE_RGMII;
- 		ret = lan78xx_write_reg(dev, MAC_RGMII_ID,
- 					MAC_RGMII_ID_TXC_DELAY_EN_);
-+		if (ret < 0)
-+			return ERR_PTR(ret);
-+
- 		ret = lan78xx_write_reg(dev, RGMII_TX_BYP_DLL, 0x3D00);
-+		if (ret < 0)
-+			return ERR_PTR(ret);
-+
- 		ret = lan78xx_read_reg(dev, HW_CFG, &buf);
-+		if (ret < 0)
-+			return ERR_PTR(ret);
-+
- 		buf |= HW_CFG_CLK125_EN_;
- 		buf |= HW_CFG_REFCLK25_EN_;
- 		ret = lan78xx_write_reg(dev, HW_CFG, buf);
-+		if (ret < 0)
-+			return ERR_PTR(ret);
- 	} else {
- 		if (!phydev->drv) {
- 			netdev_err(dev->net, "no PHY driver found\n");
+@@ -1878,63 +1878,16 @@ static void lan78xx_get_pause(struct net_device *net,
+ 			      struct ethtool_pauseparam *pause)
+ {
+ 	struct lan78xx_net *dev = netdev_priv(net);
+-	struct phy_device *phydev = net->phydev;
+-	struct ethtool_link_ksettings ecmd;
+-
+-	phy_ethtool_ksettings_get(phydev, &ecmd);
+-
+-	pause->autoneg = dev->fc_autoneg;
+ 
+-	if (dev->fc_request_control & FLOW_CTRL_TX)
+-		pause->tx_pause = 1;
+-
+-	if (dev->fc_request_control & FLOW_CTRL_RX)
+-		pause->rx_pause = 1;
++	phylink_ethtool_get_pauseparam(dev->phylink, pause);
+ }
+ 
+ static int lan78xx_set_pause(struct net_device *net,
+ 			     struct ethtool_pauseparam *pause)
+ {
+ 	struct lan78xx_net *dev = netdev_priv(net);
+-	struct phy_device *phydev = net->phydev;
+-	struct ethtool_link_ksettings ecmd;
+-	int ret;
+-
+-	phy_ethtool_ksettings_get(phydev, &ecmd);
+-
+-	if (pause->autoneg && !ecmd.base.autoneg) {
+-		ret = -EINVAL;
+-		goto exit;
+-	}
+ 
+-	dev->fc_request_control = 0;
+-	if (pause->rx_pause)
+-		dev->fc_request_control |= FLOW_CTRL_RX;
+-
+-	if (pause->tx_pause)
+-		dev->fc_request_control |= FLOW_CTRL_TX;
+-
+-	if (ecmd.base.autoneg) {
+-		__ETHTOOL_DECLARE_LINK_MODE_MASK(fc) = { 0, };
+-		u32 mii_adv;
+-
+-		linkmode_clear_bit(ETHTOOL_LINK_MODE_Pause_BIT,
+-				   ecmd.link_modes.advertising);
+-		linkmode_clear_bit(ETHTOOL_LINK_MODE_Asym_Pause_BIT,
+-				   ecmd.link_modes.advertising);
+-		mii_adv = (u32)mii_advertise_flowctrl(dev->fc_request_control);
+-		mii_adv_to_linkmode_adv_t(fc, mii_adv);
+-		linkmode_or(ecmd.link_modes.advertising, fc,
+-			    ecmd.link_modes.advertising);
+-
+-		phy_ethtool_ksettings_set(phydev, &ecmd);
+-	}
+-
+-	dev->fc_autoneg = pause->autoneg;
+-
+-	ret = 0;
+-exit:
+-	return ret;
++	return phylink_ethtool_set_pauseparam(dev->phylink, pause);
+ }
+ 
+ static int lan78xx_get_regs_len(struct net_device *netdev)
 -- 
 2.39.5
 
