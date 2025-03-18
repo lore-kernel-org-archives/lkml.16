@@ -1,133 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from r-passerv.ralfj.de (r-passerv.ralfj.de [109.230.236.95])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A32820C47B;
-	Tue, 18 Mar 2025 14:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5E3B20C47B;
+	Tue, 18 Mar 2025 14:53:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.230.236.95
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742309604; cv=none; b=oTMbs5eDcxCwU8U/i5/JdLQ/jv4aHRFnsDP/WmtrZGLHOx2eDRxjGzbkz0eiCsqdiS8BNcgoqb6RiMZpXLM9/akjFSISUQ6nN4A6aFH+KUbpWy6ZGn4+YIrQ2inVEosmsnSKU3i4bjwa2jOM9F+xkEjYOME2+z3fNzFH3GowP9s=
+	t=1742309612; cv=none; b=d3iVpOMiKHON/SCPnfjbAjoIJLi/skgkPMoWJ1L4NtTO4MYm0GIhi4lnKEGB5UQkQu4Y44pj00fO4jC88DNraDjPMwd/oMV3lXtx1txm84OgzdPx54R3ufwncQ7fICOaIRXvQAMw2XgzKQ8FsoZWoSXhVG6YPDS50mE06oR/kvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742309604; c=relaxed/simple;
-	bh=XbWyEc8aFSTdcfHVMp23HWE4gemGI9Wz95sUOB11emE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=rfnVqlyW8CsXvv1eEWSmtTCbzhXnlxb6urIUBja4Wy5ylDoK1LaQTjNdbtto7k8h8JjRJN9QOIAXPFUe5204Mmeuwa+WJsodkX8DW3bAKBF0xsC2CSZuyAGaIq6PNxbA7ASM00G+pxyNPzWtPF4SODvhD2EhSHvSJC8iAnigNS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CPEaa/wL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742309612; c=relaxed/simple;
+	bh=RP0WI5+Yi2SwFLtN1Vk6krhjctaFYiPoqve8wlV+RcM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X07F2VIndecExa06Xc/dsIcoE6PYd24iXzwbOyYFYcGgC35J4xBiTEQz44w370H/xhnnhcyKcFDyn5RXQ7/lMB4fEmszF/7AOpadK0WiulRTHnymm9/QvKUTNOvnUswzIItF/n6tFTk4r2DksVVpmlRaHqge7ilvOFRwyhtcXJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de; spf=pass smtp.mailfrom=ralfj.de; dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b=skVI2dgR; arc=none smtp.client-ip=109.230.236.95
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ralfj.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ralfj.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CPEaa/wL"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0437BC4CEDD;
-	Tue, 18 Mar 2025 14:53:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742309604;
-	bh=XbWyEc8aFSTdcfHVMp23HWE4gemGI9Wz95sUOB11emE=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=CPEaa/wLD8sXr2iETAc/pFi3cn7npRmvZI+2za3hWuahLgpUfzNEFoqyJ2LZsuYBK
-	 p7WA5JRikarv2iBN7YcfRlOMUuW+3VtwmCIeT50Soa6zYSk7r7PJ7tTnfdzIJrL617
-	 z8SG4IolFx3+KN9LQyEE1RD7RWk/2gFoVyLX2myy1Y/PU6SDNbxea4Q39eqtGW7X4E
-	 uVkkPfOE1kgXYovUqUyniYLm6Q81V4rA37CFE9Z8MCyoI5Sh9uxg/yGKnncpY1zXNu
-	 RY/pDxHZGIRTb/eT2t3r7FzOeuoMxYQiRAfCqfaWtWJ3cBEqkocgJ2MBHbINB/axf5
-	 C4ENi2mF5fPqw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB599C282EC;
-	Tue, 18 Mar 2025 14:53:23 +0000 (UTC)
-From: Brendan King via B4 Relay <devnull+Brendan.King.imgtec.com@kernel.org>
-Date: Tue, 18 Mar 2025 14:53:13 +0000
-Subject: [PATCH] drm/imagination: take paired job reference
+	dkim=pass (1024-bit key) header.d=ralfj.de header.i=@ralfj.de header.b="skVI2dgR"
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=ralfj.de; s=mail;
+	t=1742309098; bh=RP0WI5+Yi2SwFLtN1Vk6krhjctaFYiPoqve8wlV+RcM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=skVI2dgR9zzo4J1h32yXTXSrdvAg1jk3jdE9srQ3+900YGoP68HEN0uktDwryUu8K
+	 tidX0H/1bwqtLUo80blJN/zW2iCWAssWDq6hAqWkbcExsDrLrwkjLMiMNrdVTHqEBo
+	 MxibUl/eDvl/adEPPd2m1F9apyn7aXuYEtVY8rXA=
+Received: from [IPV6:2001:67c:10ec:5784:8000::87] (2001-67c-10ec-5784-8000--87.net6.ethz.ch [IPv6:2001:67c:10ec:5784:8000::87])
+	by r-passerv.ralfj.de (Postfix) with ESMTPSA id 90C472052AB0;
+	Tue, 18 Mar 2025 15:44:58 +0100 (CET)
+Message-ID: <ab8fd525-9a63-46e2-a443-b9d94eed6004@ralfj.de>
+Date: Tue, 18 Mar 2025 15:44:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: Allow data races on some read/write operations
+To: Andreas Hindborg <a.hindborg@kernel.org>
+Cc: Alice Ryhl <aliceryhl@google.com>, Boqun Feng <boqun.feng@gmail.com>,
+ comex <comexk@gmail.com>, Daniel Almeida <daniel.almeida@collabora.com>,
+ Benno Lossin <benno.lossin@proton.me>,
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>, dakr@kernel.org,
+ robin.murphy@arm.com, rust-for-linux@vger.kernel.org,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+ Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, Trevor Gross <tmgross@umich.edu>,
+ Valentin Obst <kernel@valentinobst.de>, linux-kernel@vger.kernel.org,
+ Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>,
+ airlied@redhat.com, iommu@lists.linux.dev, lkmm@lists.linux.dev
+References: <87bjuil15w.fsf@kernel.org> <87mse2hrd8.fsf@kernel.org>
+ <Z8YMTiKS4T9wC4t_@boqun-archlinux>
+ <ae8ac31f-c6ad-46ae-80dd-10ec081a16d1@ralfj.de>
+ <88456D33-C5CA-4F4F-990E-8C5F2AF7EAF9@gmail.com>
+ <hkhgihg4fjkg7zleqnumuj65dfvmxa5rzawkiafrf4kn5ss6nw@o7kc6xe2bmuj>
+ <25e7e425-ae72-4370-ae95-958882a07df9@ralfj.de>
+ <CAH5fLgidPHQzdUORNpNhtRFsKPU1T-0xdn5OSwYYZh3BgOVRQA@mail.gmail.com>
+ <18cmxblLU2QAa4YP25RWCKEnxuonOwWXavYmSsS4C5D40o8RaCkIXo0UDZ2SPnksk5nWYB29Y4zHkjQeOgd4ng==@protonmail.internalid>
+ <3aabca39-4658-454a-b0e3-e946e72977e1@ralfj.de> <87eczb71xs.fsf@kernel.org>
+ <M_YejDCAOZ7AX0l8ZZ7Z5EesJicUgsjYJUTm0SzLkhYTAYyXRJFTr4QYZMagG4KX6YdHoT-IPhf8ygjircrs0A==@protonmail.internalid>
+ <915eacce-cfd8-4bed-a407-32513e43978f@ralfj.de> <87tt875fu8.fsf@kernel.org>
+ <-_bKVxONywzmy2K6TPj5TT6swM4PhCN6ulfel4V8yTlJi3MzAGbIiKIVQ0TQzoVJ7wRfM8Ie5Jh5MSv9yf-sKg==@protonmail.internalid>
+ <580cfb1a-3619-410f-8b03-61ee984c1b1f@ralfj.de> <87frjp5iyn.fsf@kernel.org>
+Content-Language: en-US, de-DE
+From: Ralf Jung <post@ralfj.de>
+In-Reply-To: <87frjp5iyn.fsf@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-ddkopsrc-1337-use-after-free-in-pvr_queue_prepare_job-v1-1-80fb30d044a6@imgtec.com>
-X-B4-Tracking: v=1; b=H4sIANiI2WcC/x2N2wrCMBAFf6Xsswu5qBV/RSTkstEoJOnGFKH03
- w0+Dmc4s0EjTtTgOm3AtKaWSh4gDxP4p80PwhQGgxLqJLS8YAjvUht7lFrP2BuhjR9ijEzDzVh
- XNkunTqYyVctkXsWhPEfn56MTXgkY32OL6fvv3u77/gOewIWDhwAAAA==
-X-Change-ID: 20250318-ddkopsrc-1337-use-after-free-in-pvr_queue_prepare_job-16fbc74b0c20
-To: Frank Binns <frank.binns@imgtec.com>, 
- Matt Coster <matt.coster@imgtec.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Boris Brezillon <boris.brezillon@collabora.com>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Brendan King <brendan.king@imgtec.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742309603; l=2606;
- i=Brendan.King@imgtec.com; s=20250203; h=from:subject:message-id;
- bh=iRO8TwqpOWn8X5jFM/tEN7yZ9E4/c1t772uWrRZbV/s=;
- b=6U0jpX6Ay9Wdn4uPme1Lovgv3I7RKQNnlFylAxRR64RsGqneC6U92TnG6vnE11fCuimMPMq/2
- lGiXF8TO8xmAGhsqXIJIL204XFaee2fLAqQRPg5/R2StCJjyjKGC7v3
-X-Developer-Key: i=Brendan.King@imgtec.com; a=ed25519;
- pk=i3JvC3unEBLW+4r5s/aEWQZFsRCWaCBrWdFbMXIXCqg=
-X-Endpoint-Received: by B4 Relay for Brendan.King@imgtec.com/20250203 with
- auth_id=335
-X-Original-From: Brendan King <Brendan.King@imgtec.com>
-Reply-To: Brendan.King@imgtec.com
 
-From: Brendan King <Brendan.King@imgtec.com>
+Hi all,
 
-For paired jobs, have the fragment job take a reference on the
-geometry job, so that the geometry job cannot be freed until
-the fragment job has finished with it.
+>>> I
+>>> may even later copy the data at place B to place C where C might have
+>>> concurrent reads and/or writes, and the kernel will not experience UB
+>>> because of this. The data may be garbage, but that is fine. I am not
+>>> interpreting the data, or making control flow decisions based on it. I
+>>> am just moving the data.
+>>>
+>>> My understand is: In Rust, this program would be illegal and might
+>>> experience UB in unpredictable ways, not limited to just the data that
+>>> is being moved.
+>>
+>> That is correct. C and Rust behave the same here.
+> 
+> Is there a difference between formal models of the languages and
+> practical implementations of the languages here? I'm asking this because
+> C kernel developers seem to be writing these programs that are illegal
+> under the formal spec of the C language, but work well in practice.
+> Could it be the same in Rust?
+> 
+> That is, can I do this copy and get away with it in practice under the
+> circumstances outlined earlier?
 
-The geometry job structure is accessed when the fragment job is being
-prepared by the GPU scheduler. Taking the reference prevents the
-geometry job being freed until the fragment job no longer requires it.
+As with off-label drug usage, things can of course go well even if you 
+deliberately leave the range of well-defined usage defined by the manufacturer.
+However, answering your question conclusively requires intimate knowledge of the 
+entire compilation chain. I'm not even sure if there's a single person that has 
+everything from front-end transformations to back-end lowering in their head...
+At the scale that compilers have reached, I think we have to compartmentalize by 
+establishing abstractions (such as the Rust / C language specs, and the LLVM IR 
+language spec). This enables each part of the compiler to locally ensure their 
+consistency with the spec (hopefully that one part still fits in one person's 
+head), and as long as everyone uses the same spec and interprets it the same 
+way, we achieve a consistent end-to-end result from many individually consistent 
+pieces.
 
-Fixes a use after free bug detected by KASAN:
+Personally my goal has always been to identify the cases where programmers 
+deliberately reach for such off-label usage, figure out the missing parts in the 
+language that motivate them to do this, and add them, so that we can move on 
+having everything on solid footing. :)   I did not realize that atomic memcpy is 
+so crucial for the kernel, but it makes sense in hindsight. So IMO that is where 
+we should spend our effort, rather than digging through the entire compilation 
+pipeline to determine some works-in-practice off-label alternative.
 
-[  124.256386] BUG: KASAN: slab-use-after-free in pvr_queue_prepare_job+0x108/0x868 [powervr]
-[  124.264893] Read of size 1 at addr ffff0000084cb960 by task kworker/u16:4/63
+>>> One option I have explored is just calling C memcpy directly, but
+>>> because of LTO, that is no different than doing the operation in Rust.
+>>>
+>>> I don't think I need atomic memcpy, I just need my program not to
+>>> explode if I move some data to or from a place that is experiencing
+>>> concurrent writes without synchronization. Not in general, but for some
+>>> special cases where I promise not to look at the data outside of moving
+>>> it.
+>>
+>> I'm afraid I do not know of a language, other than assembly, that can provide this.
+>>
+>> Atomic memcpy, however, should be able to cover your use-case, so it seems like
+>> a reasonable solution to me? Marking things as atomic is literally how you tell
+>> the compiler "don't blow up if there are concurrent accesses".
+> 
+> If atomic memcpy is what we really need to write these kinds of programs in
+> Rust, what would be the next steps to get this in the language?
 
-Cc: stable@vger.kernel.org
-Fixes: eaf01ee5ba28 ("drm/imagination: Implement job submission and scheduling")
-Signed-off-by: Brendan King <brendan.king@imgtec.com>
----
- drivers/gpu/drm/imagination/pvr_job.c   | 7 +++++++
- drivers/gpu/drm/imagination/pvr_queue.c | 4 ++++
- 2 files changed, 11 insertions(+)
+There is an RFC, but it has been stalled for a while: 
+<https://github.com/rust-lang/rfcs/pull/3301>. I do not know its exact status. 
+It might be blocked on having this in the C++ model, though at least unstable 
+experimentation should be possible before C++ has fully standardized the way 
+this will look. (We'll want to ensure consistency of the C++ and Rust models 
+here to ensure that C, C++, and Rust can interop on shared memory in a coherent 
+way.)
+On the C++ side (where the atomic memcpy would likely be added to the 
+concurrency memory model, to be then adopted by C and Rust), I heard there was a 
+lot of non-technical trouble due to ISO changing their procedural rules for how 
+they wanted changes to the standard to look like. I don't know any further 
+details here as I am not directly involved.
 
-diff --git a/drivers/gpu/drm/imagination/pvr_job.c b/drivers/gpu/drm/imagination/pvr_job.c
-index 1cdb3cfd058d7db573337a2b4f6895ee4922f9a9..59b334d094fa826f26668d98561e956ec9c51428 100644
---- a/drivers/gpu/drm/imagination/pvr_job.c
-+++ b/drivers/gpu/drm/imagination/pvr_job.c
-@@ -671,6 +671,13 @@ pvr_jobs_link_geom_frag(struct pvr_job_data *job_data, u32 *job_count)
- 		geom_job->paired_job = frag_job;
- 		frag_job->paired_job = geom_job;
- 
-+		/* The geometry job pvr_job structure is used when the fragment
-+		 * job is being prepared by the GPU scheduler. Have the fragment
-+		 * job hold a reference on the geometry job to prevent it being
-+		 * freed until the fragment job has finished with it.
-+		 */
-+		pvr_job_get(geom_job);
-+
- 		/* Skip the fragment job we just paired to the geometry job. */
- 		i++;
- 	}
-diff --git a/drivers/gpu/drm/imagination/pvr_queue.c b/drivers/gpu/drm/imagination/pvr_queue.c
-index 21c185d18bb2e0569bd6e12832a74e38137bd48a..6431f6b654a2e60b86a46bd8571eb9f8133c4b53 100644
---- a/drivers/gpu/drm/imagination/pvr_queue.c
-+++ b/drivers/gpu/drm/imagination/pvr_queue.c
-@@ -856,6 +856,10 @@ static void pvr_queue_free_job(struct drm_sched_job *sched_job)
- 	struct pvr_job *job = container_of(sched_job, struct pvr_job, base);
- 
- 	drm_sched_job_cleanup(sched_job);
-+
-+	if (job->type == DRM_PVR_JOB_TYPE_FRAGMENT && job->paired_job)
-+		pvr_job_put(job->paired_job);
-+
- 	job->paired_job = NULL;
- 	pvr_job_put(job);
- }
+> Also, would there be a performance price to pay for this?
 
----
-base-commit: 96c85e428ebaeacd2c640eba075479ab92072ccd
-change-id: 20250318-ddkopsrc-1337-use-after-free-in-pvr_queue_prepare_job-16fbc74b0c20
+I know little about evaluating performance at the low-level architectural or 
+even microarchitectural level. However I would think in the end the memcpy 
+itself (when using the "relaxed" atomic ordering) would be the same existing 
+operation, the same assembly, it is just treated differently by optimizations 
+before reaching the assembly stage.
 
-Best regards,
--- 
-Brendan King <Brendan.King@imgtec.com>
+Kind regards,
+Ralf
 
+> 
+> 
+> Best regards,
+> Andreas Hindborg
+> 
+> 
+> 
 
