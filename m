@@ -1,145 +1,327 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2050.outbound.protection.outlook.com [40.107.243.50])
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8B8620DD7B
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 16:26:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.50
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742315214; cv=fail; b=D936SX90uftdH93CjNjOwAWQMYnALi5hvV+sLJ0jh0PUlOElpmRXfwrwoYrFfmsk9PyDiTGFgDc8GWEPWS2G8UDmzAJsVPMlRjdkJ5irgdY4d332lCO4OmdKahoQgOdzPT7eKSLChpHu+DKTqVQj1gM+N30dsyL7XG+uCKJK7tQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742315214; c=relaxed/simple;
-	bh=ZE8Yp9w5yUJxMpfrKIBgmo5hjxDg53bJFqlLC2ChbkU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AQCrmAbuLF8LzkNnIteUiBPX8KjnWCFUR4/nBPdqVZ9WOaQZSb77Ngzc420EDNoFfp8g2B9X0yKPK7+WkZTrI7cwoo9IY5Al/TgFn5fDE20QEPINZIb492wOVteuHskp4hrF6fQkZbmAn+7OipSYRCI5I8T7v4k4QaltJ6W9X38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=NVKle5np; arc=fail smtp.client-ip=40.107.243.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 154862101B7;
+	Tue, 18 Mar 2025 16:26:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742315215; cv=none; b=mIClhC3ESRbTxgrP4ZQ7btMnAF63fDsvN0vkugMQ2sujkN5rTEIh2WCCwhkIiojKBkXGrNnwBXbJPTfOP67KHPs+0F8zLQt+W+j78wNauNK7Pdzxfb0jiRosAhnXoDAs2Hqa6YMEr/dV7afOttBk98/HemR1VFF1evavWEDaoMU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742315215; c=relaxed/simple;
+	bh=1aZ5SeL9dmlcV83w3pXE14jysIrgWamw7qIHSqoiucY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=hfJKeC4XNHHCfLRQyDS4xrlFnkhMWuWv6gWU+dhmyE5EtBMKd9gIdzoMBr1PjP+78d3PKk3QT6l5IeDPrq8YHqDVd8tPGgisBdBdG1xjy3uVIBYLRsa6HYWB20Loq4uLA2NEyZYGW/jX/X6zoG7/xnnQwv7NjT+Ut84pAP6aUuA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L+Qjx/Re; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="NVKle5np"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XWgAll/ivgJLNHGk68ZJaMmeGkMGxErzjz1n8NEsoHtO2F6iqGdtB2sPer8BkFomlUoj4i5yxhXZuM+mQ8DJVpax6mID7cJgunv8K49hgIPBDOGW7wkWNbYcW/8wtNXkZzI2rA9D0opc0hNICreEGJgXVCaVjgMsbdf6Zu1JoByJa2LhoI50a4AuKW+JuoUIHi89+U9BOXzp8RlQ9sztrLKWfNdN29QbkJASgct1MWd6dSBnZnbJdnJUWSu0n9mWIUc+5tPtO3nX07r+rV8gc0bS95U8mVQtKgITnWOhQONOAxg+2CaFONd1vYOjVsX9TWUI9DqwU7zkUnCnm4kp8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=H3R1KlK+WiEGrYixRXIRS95vqVxuXyIITDGcXEsDdGU=;
- b=arK8QI81zMPu2plqW4KL/ngwviJnKr6PDmbQWQrgN2KRn/FsL7fVSCfiQJ1Iw2ns6VysYmiVDm0X2MaGoiiPttVmQwRw3sDAW5yTATvhi/EyW5LblO4yMg2vI8kX3FqYvIeJ+O6zAwI5K0Jo7sx0uo/xwrI3FtqhcW1iHWfYLxBvZBH5c/Plznwd2mp12KcFWlg7pHUDUar/Bc7tsMjMV1Jb+rnQfAhUz/EwUNjT0vfbMOQjIqA/xjFZjUdebKchI6JKlb7HE8Puax6d89O+bFzAmEzpmysOmTSG5xbcnyL9gCYY0sja2bHNzPkv+4IWiFW527DcvfkJiPvDcYpdNQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.233) smtp.rcpttodomain=ziepe.ca smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H3R1KlK+WiEGrYixRXIRS95vqVxuXyIITDGcXEsDdGU=;
- b=NVKle5npHnbCejdzPboiSbjiNcX1ROQMbR5lfYoF8BV8A8sYraxtHMbQPkqRmHc/oMfgjFUpBbYA9xcXgzCARD59LfFRIq6wZcvNFDPApP/O7ZQ1ASVTKdWmyA/FajmzkpjZIzXBdMIBawueBOhR/ubaKSwQwEY4gdi1K1goVpfPrXHDIwzYotFI/C+/Zi8hgPRX+g/xThKv/BowoITvn2eq6ylBwRsh2PBhFZaZRijQZmh42xRDtBFoUNcGEqMjAOKy3i/zqBtw5HF4hTvn3DvwZSDTYWoNJZAAukrKyGJBccIBdQBj4SDkhHloeB2zdd4849KJbeghjUrGg5F2pA==
-Received: from SJ0PR05CA0118.namprd05.prod.outlook.com (2603:10b6:a03:334::33)
- by DS7PR12MB8345.namprd12.prod.outlook.com (2603:10b6:8:d8::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.28; Tue, 18 Mar
- 2025 16:26:42 +0000
-Received: from CY4PEPF0000EE38.namprd03.prod.outlook.com
- (2603:10b6:a03:334:cafe::60) by SJ0PR05CA0118.outlook.office365.com
- (2603:10b6:a03:334::33) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Tue,
- 18 Mar 2025 16:26:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.233) by
- CY4PEPF0000EE38.mail.protection.outlook.com (10.167.242.10) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Tue, 18 Mar 2025 16:26:41 +0000
-Received: from drhqmail202.nvidia.com (10.126.190.181) by mail.nvidia.com
- (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 18 Mar
- 2025 09:26:28 -0700
-Received: from drhqmail201.nvidia.com (10.126.190.180) by
- drhqmail202.nvidia.com (10.126.190.181) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 18 Mar 2025 09:26:28 -0700
-Received: from Asurada-Nvidia (10.127.8.13) by mail.nvidia.com
- (10.126.190.180) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
- Transport; Tue, 18 Mar 2025 09:26:27 -0700
-Date: Tue, 18 Mar 2025 09:26:26 -0700
-From: Nicolin Chen <nicolinc@nvidia.com>
-To: <jgg@ziepe.ca>
-CC: <kevin.tian@intel.com>, <iommu@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <sfr@canb.auug.org.au>
-Subject: Re: [PATCH] iommufd: Fix IOMMU_VEVENTQ_FLAG_LOST_EVENTS kdoc
-Message-ID: <Z9mesnGdSWjfLaY4@Asurada-Nvidia>
-References: <20250318162017.709212-1-nicolinc@nvidia.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L+Qjx/Re"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 6DE80442A0;
+	Tue, 18 Mar 2025 16:26:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742315210;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=br4WDuBqbSkQwrK6ODtn1sR/0+hHrz4k1ltJdUKep70=;
+	b=L+Qjx/RefoM5SIh9BqdwB7u6wf3KRIxIpt8Wzmwg1rqU+Q0A4USnQp+p+YHgxySBAD1Ynq
+	WKyoWrF/HSG/erqeSqPeXA+jmLpUZ2P8vYNKFRYr7hObdfUUcnNvdXqYD89FtqM2OR6QYd
+	bT3rXE86S+1XXXiGtDSLs+ekBVI/eSdNsJ08mvAIFRGeKjZCgkjpdMlrRJ8IPwFZQ/a5ql
+	CBdrIJ6Y8LaQWmJEB9TSy0exdqHygEF0IsCgvt79Jfd0VhU4XSzHaXFY4sz8O40nDhHjOX
+	0KE3qUr4+T8MMthKMe7Qeib1V20Zp/aWKi7En4dc+bFn4HDBFG7VqNwrumFYxg==
+From: mathieu.dubois-briand@bootlin.com
+Date: Tue, 18 Mar 2025 17:26:20 +0100
+Subject: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250318162017.709212-1-nicolinc@nvidia.com>
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE38:EE_|DS7PR12MB8345:EE_
-X-MS-Office365-Filtering-Correlation-Id: 178ae6c4-339c-49aa-5781-08dd6639aa9f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|376014|1800799024|13003099007;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?Ko9XmeUdHRxlxyNEuGC8lOwgXfvRA01N5uuPkxWXJvzQRgR04V5e4lzVy6EE?=
- =?us-ascii?Q?hwAjP3CXcxgheiMRTzoUxaoFUF1NKi4G3wZuaPdolQJj0/rdP5Z7dd916b+k?=
- =?us-ascii?Q?jJyMG4pZDWX5ULIVJcVnvoGTwdDwi9EMddiPbYrGrX1jNeLdCq4kS/KEXKTp?=
- =?us-ascii?Q?6DB+YHgMk7qfogU6UGQ89Uwh6C1DzSzbBBMauqtqk0nHsnOCrb8Ee07yFEHf?=
- =?us-ascii?Q?XHcB3XnX613AthwoKbjNRa9ON412NLaRzIVMwYG3dmdmvBXxBu+Gyha8IWQd?=
- =?us-ascii?Q?nQpUZF8F35FsqgGJ6Ilq3ZoLFTxJP7iMHdjhodXxe47w0UBQJGm47c7vPUzE?=
- =?us-ascii?Q?diQzm7MtQowF1yqd2dvGZW5bkpiAjRadkKXRxW5hI0ajNWl85mOP3aLR7YZU?=
- =?us-ascii?Q?DBkA/2ydnfpuTvGY8pgftGaU3dHfkYnXXPFWY3vHrMuNF+dETf8fTgE+4NTq?=
- =?us-ascii?Q?Z9/tHbS+1U2/QhvcL0fOoXByS53/l022iaCaCpbtp686fhXQ7zGIevDGY0gC?=
- =?us-ascii?Q?+BIfvZ8DNcYbrMfN52OPeGpZ9hZ6UYQVKmLuAv46BKj5u6pGsxhKm942gHMk?=
- =?us-ascii?Q?wQFx/lFIuvUOLan7BBZvoLuTG0eqkOOOHI7k1uzB8AGXuY8cvhxa9cRuRVid?=
- =?us-ascii?Q?biWHfFZ+a4aByXGHCQkBZqgJJO6ZHyYUtfWCe2hv9JEIPF8nH6w/669pTrRB?=
- =?us-ascii?Q?HuFhjI2i8ue6fr92DRtDzaiCcW1M/9WNgvST73euQajCq8C2+k3JPbh51sUt?=
- =?us-ascii?Q?3Mrw8SGK0ArUkgg+NfS6bpbyFJlPjVDglttRyCpFzTxbs6BpIPBSQeC7tAeo?=
- =?us-ascii?Q?HKb5Ww4cJXCa/RyCo5ZgNYMReeKZeiyga+E4s4PieIzCoTxMlRltJNHnApDE?=
- =?us-ascii?Q?Mi9BimkDpyi+1mo4Acxt9QMcYymczbJuo8xGAP1X4fgsHUjZLpgwB/9nNMNn?=
- =?us-ascii?Q?yaaS+8cNbC1LsUfnTsPpdvm6iWIOOKAXDfqobfwnPyKw4ADP4xPO/VbvAx9u?=
- =?us-ascii?Q?c+h9ntaXqPV6phaKmD5uvIs8d1wg18Bqw++RByNjopFLov1Ha7bcWgV7fzzw?=
- =?us-ascii?Q?vlTCrsPt3kedztsYQ/4igKa8RQ+xANqqw40fQI2CDW3IBjxr/nThhNBuiBCk?=
- =?us-ascii?Q?2rqqha82bX6rTyPkfA8ugBbP9LCu6trtjYPnFEtDynMyT+wIGUxh/hgtOHwI?=
- =?us-ascii?Q?H5X4hbPo55CpOL8sDOsHFlzXOquRWzzGL8LsI6zpwDYHVrv+Joo0gnjgAxvS?=
- =?us-ascii?Q?dv64vWqZglz9qngkHM61Lx9jr28++qHBobovGaMRPemfoCgtfqtxVqyoGtPr?=
- =?us-ascii?Q?FR7DdNQgyOJexzujr8gra6e3z8cvDhbEzbpZBFenK8eEv4aM5KnhYIp7qbmp?=
- =?us-ascii?Q?Hqn9029Y4dJDSK3lZUM8DpFRb2q0FzYBX99gVMWiM+r8Qvk0V1yCW0AV9OeU?=
- =?us-ascii?Q?2ZY1szueTGR3/vnpGMy8ljFFOIJ41IKWRpcIUF+3/5Mc3DdTmsACggTH6Sf7?=
- =?us-ascii?Q?ny1LI6bHU4vg6bI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(376014)(1800799024)(13003099007);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2025 16:26:41.7279
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 178ae6c4-339c-49aa-5781-08dd6639aa9f
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE38.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB8345
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+In-Reply-To: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
+To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Kamel Bouhara <kamel.bouhara@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Danilo Krummrich <dakr@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, andriy.shevchenko@intel.com, 
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742315204; l=7349;
+ i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
+ bh=3RTRIQmYtvDWRlHfagCEXEb+TegKR8ZL/FprwHOKB0M=;
+ b=JJnUyl/fcO0OpvZ8JupJ/okKobhjgjqQ2AT9qi2OktiTpSWjl125m5E4R3B4SawvYlEsdqMZ5
+ rNMDqNchGk+A4k23P93fHDdayNLFEn+NWaFHceCbdn+rWV6BYxUsy/D
+X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
+ pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugedvledvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhenucggtffrrghtthgvrhhnpeevheffteettefffeetvdelledttddthfevhffgleehfedvveduudfhhedugfelgeenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehlihhnuhigqdhinhhpuhhtsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepuggrkhhrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepmhgrthhhihgvu
+ hdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhg
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-On Tue, Mar 18, 2025 at 09:20:17AM -0700, Nicolin Chen wrote:
-> The kdoc update wasn't fully saved. Fix it.
-> 
-> Fixes: 50c842dd6cd3 ("iommufd: Add IOMMUFD_OBJ_VEVENTQ and IOMMUFD_CMD_VEVENTQ_ALLOC")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Closes: https://lore.kernel.org/linux-next/20250318213359.5dc56fd1@canb.auug.org.au/
+From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 
-Oops. Looks like I should fix another warning together.
+Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+8 independent PWM outputs.
 
-And the link isn't the clearer one. I will respin the patch.
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+---
+ drivers/pwm/Kconfig       |  11 +++
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-max7360.c | 194 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 206 insertions(+)
 
-Nicolin
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 0915c1e7df16..930cc7c61b82 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -745,4 +745,15 @@ config PWM_XILINX
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-xilinx.
+ 
++config PWM_MAX7360
++	tristate "MAX7360 PWMs"
++	depends on MFD_MAX7360
++	select PINCTRL_MAX7360
++	help
++	  PWM driver for Maxim Integrated MAX7360 multifunction device, with
++	  support for up to 8 PWM outputs.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-max7360.
++
+ endif
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 9081e0c0e9e0..ae8908ffc892 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -36,6 +36,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
+ obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
+ obj-$(CONFIG_PWM_LPSS_PCI)	+= pwm-lpss-pci.o
+ obj-$(CONFIG_PWM_LPSS_PLATFORM)	+= pwm-lpss-platform.o
++obj-$(CONFIG_PWM_MAX7360)	+= pwm-max7360.o
+ obj-$(CONFIG_PWM_MESON)		+= pwm-meson.o
+ obj-$(CONFIG_PWM_MEDIATEK)	+= pwm-mediatek.o
+ obj-$(CONFIG_PWM_MICROCHIP_CORE)	+= pwm-microchip-core.o
+diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+new file mode 100644
+index 000000000000..059b39df791d
+--- /dev/null
++++ b/drivers/pwm/pwm-max7360.c
+@@ -0,0 +1,194 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright 2025 Bootlin
++ *
++ * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
++ * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
++ *
++ * Limitations:
++ * - Only supports normal polarity.
++ * - The period is fixed to 2 ms.
++ * - Only the duty cycle can be changed, new values are applied at the beginning
++ *   of the next cycle.
++ * - When disabled, the output is put in Hi-Z.
++ */
++#include <linux/bits.h>
++#include <linux/dev_printk.h>
++#include <linux/err.h>
++#include <linux/math64.h>
++#include <linux/mfd/max7360.h>
++#include <linux/minmax.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/regmap.h>
++#include <linux/time.h>
++#include <linux/types.h>
++
++#define MAX7360_NUM_PWMS			8
++#define MAX7360_PWM_MAX_RES			255
++#define MAX7360_PWM_PERIOD_NS			(2 * NSEC_PER_MSEC)
++
++struct max7360_pwm_waveform {
++	u8 duty_steps;
++	bool enabled;
++};
++
++static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct regmap *regmap;
++	struct device *dev;
++	int ret;
++
++	regmap = pwmchip_get_drvdata(chip);
++	dev = regmap_get_device(regmap);
++
++	ret = regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
++				MAX7360_PORT_CFG_COMMON_PWM, 0);
++	if (ret)
++		return ret;
++
++	return regmap_write_bits(regmap, MAX7360_REG_PORTS, BIT(pwm->hwpwm), BIT(pwm->hwpwm));
++}
++
++static void max7360_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
++{
++	struct regmap *regmap;
++	struct device *dev;
++
++	regmap = pwmchip_get_drvdata(chip);
++	dev = regmap_get_device(regmap);
++}
++
++static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
++					   struct pwm_device *pwm,
++					   const struct pwm_waveform *wf,
++					   void *_wfhw)
++{
++	struct max7360_pwm_waveform *wfhw = _wfhw;
++	u64 duty_steps;
++
++	/*
++	 * Ignore user provided values for period_length_ns and duty_offset_ns:
++	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of 0.
++	 */
++	duty_steps = mul_u64_u64_div_u64(wf->duty_length_ns, MAX7360_PWM_MAX_RES,
++					 MAX7360_PWM_PERIOD_NS);
++
++	wfhw->duty_steps = min(MAX7360_PWM_MAX_RES, duty_steps);
++	wfhw->enabled = (wf->duty_length_ns != 0);
++
++	return 0;
++}
++
++static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
++					     const void *_wfhw, struct pwm_waveform *wf)
++{
++	const struct max7360_pwm_waveform *wfhw = _wfhw;
++
++	wf->period_length_ns = wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
++	wf->duty_offset_ns = 0;
++	wf->duty_length_ns = DIV64_U64_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS,
++						MAX7360_PWM_MAX_RES);
++
++	return 0;
++}
++
++static int max7360_pwm_write_waveform(struct pwm_chip *chip,
++				      struct pwm_device *pwm,
++				      const void *_wfhw)
++{
++	const struct max7360_pwm_waveform *wfhw = _wfhw;
++	struct regmap *regmap;
++	unsigned int val;
++	int ret;
++
++	regmap = pwmchip_get_drvdata(chip);
++	val = (wfhw->enabled) ? BIT(pwm->hwpwm) : 0;
++	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCTRL, BIT(pwm->hwpwm), val);
++	if (ret)
++		return ret;
++
++	if (wfhw->duty_steps)
++		return regmap_write(regmap, MAX7360_REG_PWM(pwm->hwpwm), wfhw->duty_steps);
++
++	return 0;
++}
++
++static int max7360_pwm_read_waveform(struct pwm_chip *chip,
++				     struct pwm_device *pwm,
++				     void *_wfhw)
++{
++	struct max7360_pwm_waveform *wfhw = _wfhw;
++	struct regmap *regmap;
++	unsigned int val;
++	int ret;
++
++	regmap = pwmchip_get_drvdata(chip);
++
++	ret = regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
++	if (ret)
++		return ret;
++
++	if (val & BIT(pwm->hwpwm)) {
++		wfhw->enabled = true;
++		ret = regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
++		wfhw->duty_steps = val;
++	} else {
++		wfhw->enabled = false;
++		wfhw->duty_steps = 0;
++	}
++
++	return ret;
++}
++
++static const struct pwm_ops max7360_pwm_ops = {
++	.request = max7360_pwm_request,
++	.free = max7360_pwm_free,
++	.round_waveform_tohw = max7360_pwm_round_waveform_tohw,
++	.round_waveform_fromhw = max7360_pwm_round_waveform_fromhw,
++	.read_waveform = max7360_pwm_read_waveform,
++	.write_waveform = max7360_pwm_write_waveform,
++};
++
++static int max7360_pwm_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct pwm_chip *chip;
++	struct regmap *regmap;
++	int ret;
++
++	if (!dev->parent)
++		return dev_err_probe(dev, -ENODEV, "no parent device\n");
++
++	chip = devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	chip->ops = &max7360_pwm_ops;
++
++	regmap = dev_get_regmap(dev->parent, NULL);
++	if (!regmap)
++		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
++
++	pwmchip_set_drvdata(chip, regmap);
++
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
++
++	return 0;
++}
++
++static struct platform_driver max7360_pwm_driver = {
++	.driver = {
++		.name = "max7360-pwm",
++	},
++	.probe = max7360_pwm_probe,
++};
++module_platform_driver(max7360_pwm_driver);
++
++MODULE_DESCRIPTION("MAX7360 PWM driver");
++MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
++MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
++MODULE_LICENSE("GPL");
+
+-- 
+2.39.5
+
