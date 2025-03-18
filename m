@@ -1,316 +1,271 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 128CE20DD7D
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:17:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C64E20E70B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:17:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742307472; cv=none; b=WB23Om7odSmMinC6ZvtINjTlzR+cSAqSWhbLXOCA6BHtdNI4+frSpIbP9ky1kyD0pd7R9QXRIMxbuYqEynJj2TDa/tt8ECAIb9aQxa4kgj3LKYPtNj9B6JTOHCxvu3pFKvLCe6wAkO/i3ph4b11xbkXXNNJuNa2SvWhJ5bbfqY8=
+	t=1742307474; cv=none; b=TZRd6vy4nOwALvaQhsF21Vaf+OspVdm5C3OIcR48l1ztYuW/kh2glW0xx2P8RwRoxiLlYyhmHABk+JtMJ4E+shSkyy6Vsa88LyUn9vah3jd0mXhiLvZQPbUOcIYsqnSmaYTNc7Xkuk8D//NCPniQTJFsyk3FHqbqpcieSpEfVqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742307472; c=relaxed/simple;
-	bh=6Zkz5X5RSaFXuDLrUqSkPi4rNgiaOaB6ukSeQf8vTHY=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EVOj1F+MbBGN0NPqXAXzG209w/jGf7l1hEfoSmr42HjCtx4EDS1R8m6La3u/WJ4TxWcTty2l4nYsRghudXG7LeKdqTTrbD1in82KgmiQYEHqLlD2fKF6L+zKiyeT6o+shbzFG58Po5CULWTMyfYPhiJPVA8e5cTRCzmrRTGKebM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZHDM85fmQz6H7lw;
-	Tue, 18 Mar 2025 22:12:52 +0800 (CST)
-Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
-	by mail.maildlp.com (Postfix) with ESMTPS id 6DFBD140953;
-	Tue, 18 Mar 2025 22:17:40 +0800 (CST)
-Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
- (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Tue, 18 Mar
- 2025 15:17:38 +0100
-Date: Tue, 18 Mar 2025 14:17:37 +0000
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-To: Bharata B Rao <bharata@amd.com>
-CC: <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-	<AneeshKumar.KizhakeVeetil@arm.com>, <Hasan.Maruf@amd.com>,
-	<Michael.Day@amd.com>, <akpm@linux-foundation.org>, <dave.hansen@intel.com>,
-	<david@redhat.com>, <feng.tang@intel.com>, <gourry@gourry.net>,
-	<hannes@cmpxchg.org>, <honggyu.kim@sk.com>, <hughd@google.com>,
-	<jhubbard@nvidia.com>, <k.shutemov@gmail.com>, <kbusch@meta.com>,
-	<kmanaouil.dev@gmail.com>, <leesuyeon0506@gmail.com>, <leillc@google.com>,
-	<liam.howlett@oracle.com>, <mgorman@techsingularity.net>, <mingo@redhat.com>,
-	<nadav.amit@gmail.com>, <nphamcs@gmail.com>, <peterz@infradead.org>,
-	<raghavendra.kt@amd.com>, <riel@surriel.com>, <rientjes@google.com>,
-	<rppt@kernel.org>, <shivankg@amd.com>, <shy828301@gmail.com>,
-	<sj@kernel.org>, <vbabka@suse.cz>, <weixugc@google.com>,
-	<willy@infradead.org>, <ying.huang@linux.alibaba.com>, <ziy@nvidia.com>,
-	<dave@stgolabs.net>, <yuanchu@google.com>, <hyeonggon.yoo@sk.com>
-Subject: Re: [RFC PATCH 2/4] mm: kpromoted: Hot page info collection and
- promotion daemon
-Message-ID: <20250318141737.00007495@huawei.com>
-In-Reply-To: <65bd664f-efcb-4bec-bf6f-218bc992e6de@amd.com>
-References: <20250306054532.221138-1-bharata@amd.com>
-	<20250306054532.221138-3-bharata@amd.com>
-	<20250314152850.00003112@huawei.com>
-	<65bd664f-efcb-4bec-bf6f-218bc992e6de@amd.com>
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
+	s=arc-20240116; t=1742307474; c=relaxed/simple;
+	bh=Qse+YpYm1YMkR9UE3SKy6BavWvSqQlpvnDsgaxildas=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=O9jf2HkOaZgZJTxRB+TFaQNHyWMdN56euLkkoTDgJU57w/Y6uZ01fYgjCP/Rq2BRwF598sgZ087m03hAP27AUscrNkNujriBcAt2F5kN1dNI2fb6IapXDNlTug73TaBZsraNk7tNVNQSPbMp1SOoqaJhqsKMklnIoWbAHckT5cQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOcIvueU; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOcIvueU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDAF5C4CEEE;
+	Tue, 18 Mar 2025 14:17:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742307474;
+	bh=Qse+YpYm1YMkR9UE3SKy6BavWvSqQlpvnDsgaxildas=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=tOcIvueUgOEJxFr9+nGMRNUA7zNlNutA1Dh32HyaZQRSl8v0BpwARLovQmDZqU/EW
+	 N7z5vxkxESfQocNDRjqBQo90m0A8GBjOaArI1S2Oib4ISCI6iHOoGBRREmzPtI3/xU
+	 FjLUwW8TQqHEBAsuspQV7L37XjPGau7/yzO3tLG8SgGosAfhnnGg4PKWTzDbAUabOG
+	 rJV7ZcBjZRyxcMUdRkCEwjeZQjXt5cuXodUcPEVjjWdwbGWynFExDM0Y19+iMqePl3
+	 1UlehcexXnMXfjUgm3xXamVQtbE5ZUiZb9mer+u+MVMRuK+kyluGD2lruspIkyo/3e
+	 DH9+banXXoDOA==
+From: Maxime Ripard <mripard@kernel.org>
+Date: Tue, 18 Mar 2025 15:17:40 +0100
+Subject: [PATCH 4/4] drm/vc4: tests: Retry pv-muxing tests when EDEADLK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500004.china.huawei.com (7.191.163.9) To
- frapeml500008.china.huawei.com (7.182.85.71)
+Message-Id: <20250318-drm-vc4-kunit-failures-v1-4-779864d9ab37@kernel.org>
+References: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
+In-Reply-To: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>, 
+ =?utf-8?q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>, 
+ Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ Maxime Ripard <mripard@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6791; i=mripard@kernel.org;
+ h=from:subject:message-id; bh=Qse+YpYm1YMkR9UE3SKy6BavWvSqQlpvnDsgaxildas=;
+ b=owGbwMvMwCmsHn9OcpHtvjLG02pJDOk3G5q/2ngGhdZ+u2l560t2WsaM7d5h0Wa/7Jdtl/X6s
+ DZ++ZJLHVNZGIQ5GWTFFFmeyISdXt6+uMrBfuUPmDmsTCBDGLg4BWAiRy8yNtzoWOv2J0B4jUyz
+ ZmQxs6VMf/Jkz5fmEk1XIo8Krcu5lxARcOvcLr2JYtZc0ded90kvZmz42CfLm/b/Y9+/r+smfJG
+ 7/2hx8fUHT7QOxW+9af5+Ul6v14rWLK+qnxN4pjBfa+c7enAWAA==
+X-Developer-Key: i=mripard@kernel.org; a=openpgp;
+ fpr=BE5675C37E818C8B5764241C254BCFC56BF6CE8D
 
-On Tue, 18 Mar 2025 09:39:17 +0530
-Bharata B Rao <bharata@amd.com> wrote:
+Some functions used by the HVS->PV muxing tests can return with EDEADLK,
+meaning the entire sequence should be restarted. It's not a fatal error
+and we should treat it as a recoverable error, and recover, instead of
+failing the test like we currently do.
 
-> On 14-Mar-25 8:58 PM, Jonathan Cameron wrote:
-> > On Thu, 6 Mar 2025 11:15:30 +0530
-> > Bharata B Rao <bharata@amd.com> wrote:
-> >   
-> >> Subsystems that generate hot page access info can report that
-> >> to kpromoted via this API:
-> >>
-> >> int kpromoted_record_access(u64 pfn, int nid, int src,
-> >> 			    unsigned long time)  
-> > 
-> > This perhaps works as an interface for aggregating methods
-> > that produce per access events.  Any hardware counter solution
-> > is going to give you data that is closer to what you used for
-> > the promotion decision.  
-> 
-> Right.
-> 
-> > 
-> > We might need to aggregate at different levels.  So access
-> > counting promotes to a hot list and we can inject other events
-> > at that level.  The data I have from the CXL HMU is typically
-> > after an epoch (period of time) these N pages were accessed more
-> > than M times.  I can sort of map that to the internal storage
-> > you have.  
-> 
-> Even for IBS source, I am aggregating data in per-cpu buffers before 
-> presenting them one by one to kpromoted. Guess CXL HMU aggregated data 
-> could be presented in a similar manner.
+Fixes: 76ec18dc5afa ("drm/vc4: tests: Add unit test suite for the PV muxing")
+Signed-off-by: Maxime Ripard <mripard@kernel.org>
+---
+ drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 44 ++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-The nature of the data maybe a bit different but certainly should be
-able to find somewhere in the stack!
+diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+index 52c04ef33206bf4f9e21e3c8b7cea932824a67fa..94e05bddb630a79aab189d9bc16f09a9d84ce396 100644
+--- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
++++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
+@@ -685,20 +685,26 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	vc4 = priv->vc4;
+ 	drm = &vc4->base;
++
++retry:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 	for (i = 0; i < params->nencoders; i++) {
+ 		enum vc4_encoder_type enc_type = params->encoders[i];
+ 
+ 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
++		if (ret == -EDEADLK)
++			goto retry;
+ 		KUNIT_ASSERT_EQ(test, ret, 0);
+ 	}
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry;
+ 	KUNIT_EXPECT_EQ(test, ret, 0);
+ 
+ 	KUNIT_EXPECT_TRUE(test,
+ 			  check_fifo_conflict(test, state));
+ 
+@@ -726,21 +732,27 @@ static void drm_vc4_test_pv_muxing_invalid(struct kunit *test)
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	vc4 = priv->vc4;
+ 	drm = &vc4->base;
++
++retry:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	for (i = 0; i < params->nencoders; i++) {
+ 		enum vc4_encoder_type enc_type = params->encoders[i];
+ 
+ 		ret = vc4_mock_atomic_add_output(test, state, enc_type);
++		if (ret == -EDEADLK)
++			goto retry;
+ 		KUNIT_ASSERT_EQ(test, ret, 0);
+ 	}
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry;
+ 	KUNIT_EXPECT_LT(test, ret, 0);
+ 
+ 	drm_modeset_drop_locks(&ctx);
+ 	drm_modeset_acquire_fini(&ctx);
+ }
+@@ -811,17 +823,22 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	drm = &vc4->base;
++retry_first:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK)
++		goto retry_first;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry_first;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -834,17 +851,22 @@ static void drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable(struct kunit *tes
+ 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[hdmi0_channel].in_use);
+ 
+ 	ret = drm_atomic_helper_swap_state(state, false);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
++retry_second:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
++	if (ret == -EDEADLK)
++		goto retry_second;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry_second;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -885,20 +907,27 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	drm = &vc4->base;
++retry_first:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK)
++		goto retry_first;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
++	if (ret == -EDEADLK)
++		goto retry_first;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry_first;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -919,17 +948,22 @@ static void drm_test_vc5_pv_muxing_bugs_stable_fifo(struct kunit *test)
+ 	KUNIT_ASSERT_TRUE(test, new_hvs_state->fifo_state[old_hdmi1_channel].in_use);
+ 
+ 	ret = drm_atomic_helper_swap_state(state, false);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
++retry_second:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_del_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK)
++		goto retry_second;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry_second;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_hvs_state = vc4_hvs_get_new_global_state(state);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, new_hvs_state);
+ 
+@@ -979,29 +1013,39 @@ drm_test_vc5_pv_muxing_bugs_subsequent_crtc_enable_too_many_crtc_state(struct ku
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, vc4);
+ 
+ 	drm_modeset_acquire_init(&ctx, 0);
+ 
+ 	drm = &vc4->base;
++retry_first:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI0);
++	if (ret == -EDEADLK)
++		goto retry_first;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry_first;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_helper_swap_state(state, false);
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
++retry_second:
+ 	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
+ 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
+ 
+ 	ret = vc4_mock_atomic_add_output(test, state, VC4_ENCODER_TYPE_HDMI1);
++	if (ret == -EDEADLK)
++		goto retry_second;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	ret = drm_atomic_check_only(state);
++	if (ret == -EDEADLK)
++		goto retry_second;
+ 	KUNIT_ASSERT_EQ(test, ret, 0);
+ 
+ 	new_vc4_crtc_state = get_vc4_crtc_state_for_encoder(test, state,
+ 							    VC4_ENCODER_TYPE_HDMI0);
+ 	KUNIT_EXPECT_NULL(test, new_vc4_crtc_state);
 
-> 
-> > 
-> > Would be good to evaluate approximate trackers on top of access
-> > counts. I've no idea if sketches or similar would be efficient
-> > enough (they have a bit of a write amplification problem) but
-> > they may give good answers with much lower storage cost at the
-> > risk of occasionally saying something is hot when it's not.  
-> 
-> Could me point me to some information about sketches??
-
-https://en.wikipedia.org/wiki/Count%E2%80%93min_sketch
-Is a good starting point but there are lots of related techniques
-that trade off good statistical properties against complexity etc.
-
-Roughly speaking you combine a sorted list of the very hottest
-with a small number of different hash tables (the sketch) that let you
-get an estimate of how hot things are that have dropped off your
-hottest list (or not yet gotten hot enough to get into it). 
-
-Looking for literature for top-k algorithms will find you
-more references though not all are light weight enough to be
-of interest here.
-
-> 
-> >   
-> >>
-> >> @pfn: The PFN of the memory accessed
-> >> @nid: The accessing NUMA node ID
-> >> @src: The temperature source (subsystem) that generated the
-> >>        access info
-> >> @time: The access time in jiffies
-> >>
-> >> Some temperature sources may not provide the nid from which
-> >> the page was accessed. This is true for sources that use
-> >> page table scanning for PTE Accessed bit. Currently the toptier
-> >> node to which such pages should be promoted to is hard coded.  
-> > 
-> > For those cases (CXL HMU included) maybe we need to
-> > consider how to fill in missing node info with at least a vague chance
-> > of getting a reasonable target for migration.  We can always fall
-> > back to random top tier node, or nearest one to where we are coming
-> > from (on basis we maybe landed in this node based on a fallback
-> > list when the top tier was under memory pressure).  
-> 
-> Yes. For A-bit scanners, Raghu has devised a scheme to obtain the best 
-> possible list of target nodes for promotion. He should be sharing more 
-> about it soon.
-
-Excellent - look forward to seeing that.  Can think of a few possibilities
-on how to get that data efficiently so I'm curious what Raghu has chosen.
-
-> 
-> > 
-> >  From an interface point of view is that a problem for this layer,
-> > or for the underlying tracking mechanism? (maybe with some helpers)  
-> 
-> It is not a problem from this interface point of view as this interface 
-> expects a nid(or default value) and would use that for promotion. It is 
-> up to the underlying tracking mechanism to provide the most appropriate 
-> target nid.
-
-I was wondering if there is some sharing to do, so whether we push Raghu's
-means of getting a target node down into the tracker implementation or use
-it to fill in messing info at this layer.  Will depend a bit on how
-that technique works perhaps.
-
-> 
-> > Also, see later discussion of consistency of hotness tracking and
-> > that the best solution for that differs from that to get
-> > potential targets.  The answer to Is this page consistently hot?" can be
-> > approximated with "Was this page once hot and is it not now cold?"
-> > 
-> > Access time is something some measurement techniques will only
-> > give you wrt to a measurement was in a window (potentially a long
-> > one if you are looking for consistent hotness over minutes).
-> >   
-> >>
-> >> Also, the access time provided some sources may at best be
-> >> considered approximate. This is especially true for hot pages
-> >> detected by PTE A bit scanning.
-> >>
-> >> kpromoted currently maintains the hot PFN records in hash lists
-> >> hashed by PFN value. Each record stores the following info:
-> >>
-> >> struct page_hotness_info {
-> >> 	unsigned long pfn;
-> >>
-> >> 	/* Time when this record was updated last */
-> >> 	unsigned long last_update;
-> >>
-> >> 	/*
-> >> 	 * Number of times this page was accessed in the
-> >> 	 * current window  
-> > I'd express here how that window was defined (I read on
-> > to answer the question I had here at first!)  
-> 
-> Currently the number of accesses that occur within an observation window 
-> of 5s are considered for hotness calculation and access count is reset 
-> when the window elapses. This needs to factor in history etc.
-
-Just add that to the comment here perhaps.
-
-
-> 
-> >   
-> >>
-> >> 	/* Most recent access from this node */
-> >> 	int hot_node;  
-> > 
-> > Probably want to relax the most recent part.  I'd guess
-> > the ideal here would be if this is the node accessing it the most
-> > 'recently'.  
-> 
-> You mean the node that did most number of accesses in the given 
-> observation window and not necessarily the last (or most recent) 
-> accessed node.
-
-yes. Though maybe weighted in some fashion for recency?  Something
-cheap to do that approximates that such as small saturating counters
-with aging..
-
-> 
-> >   
-> >>
-> >> 	struct hlist_node hnode;
-> >> };
-> >>
-> >> The way in which a page is categorized as hot enough to be
-> >> promoted is pretty primitive now.  
-> > 
-> > That bit is very hard even if we solve everything else and heavily dependent
-> > on workload access pattern stability and migration impact.  Maybe for
-> > 'very hot' pages a fairly short consistency of hotness period is
-> > good enough, but it gets much messier if we care about warm pages.
-> > I guess we solve the 'very hot' first though and maybe avoid the phase
-> > transition from an application starting to when it is at steady state
-> > by considering a wait time for any new userspace process before we
-> > consider moving anything?
-> > 
-> > Also worth noting that the mechanism that makes sense to check if a
-> > detected hot page is 'stable hot' might use entirely different tracking
-> > approach to that used to find it as a candidate.
-> > 
-> > Whether that requires passing data between hotness trackers is an
-> > interesting question, or whether there is a natural ordering to trackers.  
-> 
-> I was envisioning that different hotness trackers would reinforce the 
-> page hotness by reporting the same to kpromoted and there would be no 
-> need to again pass data between hotness trackers.
-
-What makes me wonder about that is the question of stability of hotness.
-It is a really bad idea to move data based on a short sample - cost is huge
-and quite a bit of data is only briefly hot - moving it to fast memory too
-early just results in bouncing.  There are probably heuristics we can apply
-on process age etc that will help, but generally we can't assume programs
-don't have multiple phases with very different access characteristics.
-
-The different tracking approaches have different sweet spots for short vs long
-tracking. So it might be a case of one method, e.g. a hotness tracker
-is only suitable for monitoring a short time period
-(in the simplest sense, counters saturate if you run too long).
-Don't read that to generally though as it's not a universal characteristic
-and depends on the implementation used, but it is definitely true of
-some potential implementations.
-
-Having gotten a list of 1000+ candidate pages that might be worth moving,
-we could use access bits to check it's still accessed reasonsably frequently
-over the next minute. That can be much lower cost than an access tracker
-that is looking for 'hottest'.
-
-Where all these trade offs with timing occur is tricky and workload
-dependent.  So figuring out how to autotune will be a challenging.
-
-> 
-> > 
-> > 
-> >   
-> >> diff --git a/mm/kpromoted.c b/mm/kpromoted.c
-> >> new file mode 100644
-> >> index 000000000000..2a8b8495b6b3
-> >> --- /dev/null
-> >> +++ b/mm/kpromoted.c  
-
-
-> >> +	bkt = hash_min(pfn, KPROMOTED_HASH_ORDER);
-> >> +	mutex_lock(&page_hotness_lock[bkt]);
-> >> +	phi = kpromoted_lookup(pfn, bkt, now);
-> >> +	if (!phi) {
-> >> +		ret = PTR_ERR(phi);
-> >> +		goto out;
-> >> +	}
-> >> +
-> >> +	if ((phi->last_update - now) > msecs_to_jiffies(KPROMOTED_FREQ_WINDOW)) {
-> >> +		/* New window */
-> >> +		phi->frequency = 1; /* TODO: Factor in the history */
-> >> +		phi->last_update = now;
-> >> +	} else {
-> >> +		phi->frequency++;
-> >> +	}
-> >> +	phi->recency = now;
-> >> +
-> >> +	/*
-> >> +	 * TODOs:
-> >> +	 * 1. Source nid is hard-coded for some temperature sources  
-> > 
-> > Hard coded rather than unknown? I'm curious, what source has that issue?  
-> 
-> I meant that source didn't provide a nid and hence kpromoted ended up 
-> promoting to a fixed (hard-coded for now) toptier node.
-
-Sure. Unknown nid makes sense here.
-
-
-Thanks,
-
-Jonathan
-
+-- 
+2.48.1
 
