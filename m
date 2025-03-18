@@ -1,140 +1,137 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E091207E12;
-	Tue, 18 Mar 2025 11:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39A56208989
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:04:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742295779; cv=none; b=pt6FUP0pDae+A2q3v+0s9B3fp9EZa9rHsSNj7g2YA9HK2sZUdAzpdd7A4sewqgIyy8D9zGpxzR2gS937JnUsxKD5JFdcS+2+fW2SWZcBPKInmo+seF6ujzzkibUFm5ySDYLE2kOpjFw2vqD6/tvz+m7WiRlfdzm1QY9uQyNZ9R4=
+	t=1742295844; cv=none; b=aqbgeRVsv+dOCClV6EYkkf7H29Vx5xvDPiNYdxxmLM9bUXORFR08u8um3NZ3/L4lglZ6dJa84+zKJA50maNnNwO4Jf0ciwAS7FwL3m/uJL3Bd7ifiMt8e1277bvUdVwrbPydqhyHLlnb7OLjklhhLfl3p1ql5OC6828qPCd2lTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742295779; c=relaxed/simple;
-	bh=inmzikSgrjwt3qEL77+9M42DOxNLbkjK8lnwd+z0YJ0=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=WH5EvCSztRjBxlwwu9FVpHyy2JloopT2NffCvR1ksUgQCipl5Z24AGe0A4tsHjS+QxS+5E99WbyOrmjf0RA1HcbLr7DlXxPV9nRoWiYfNnYIO/chVl8EE6jDNCz6qasUEjKzE92AAY6maIqMg3y/QscADHqT/johIdM8n441t14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-e1-67d952d63e8c
-Message-ID: <ed0004ea-c8d6-4ba9-ba40-0c9a97d98db6@sk.com>
-Date: Tue, 18 Mar 2025 20:02:46 +0900
+	s=arc-20240116; t=1742295844; c=relaxed/simple;
+	bh=4v+Fsi08Fwv3zu1k13Ka+W1n8gTUPuWDc5vnbr4NK+k=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=n3oWMGlFvw4JnDIn/e9ZWlSTitnnAIWaPCtod07TpksASmXp6JIvRM6D/gxQJ8s+3Is6tKEore3ZTvJZVWB9NhxafWeSZjS4uRT22Tfl96ZAwyAUo7QRTMaH8zCtbT6hwPIKjnTmr+8UbAyzcv2jNI5tuPrs7jweOaI0fct1jjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=KCHl1uMi; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="KCHl1uMi"
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac298c8fa50so1021269766b.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 04:04:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1742295840; x=1742900640; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=is8WhR9m8WQE+4k9i/DT+FdMHQKk7RaZk/UQmejRp3g=;
+        b=KCHl1uMi40c8cwKLuGWZ5TZVwXh8ppfgC3SmGQWDrjap53sf3ZBnVC7f9rd8KPckIC
+         VXg/JL7lXs/3ABH+E+t5ZkN9vwCq/lAmp7CJnRfLWws2n9Ud49DkDEmn/tghKpc2pEc4
+         WFdgcMO1JBzddJVqsFNKpmvNhqpY1YmzN3gbs76ZujwSGV6/4E9omSKS0/svpJhjygxd
+         t/YUmPNytteNxWUN9GPBg5nzRkL+xemTGfjUvR/lUgMMnwCHpVciN6xSmNJOApA5FGp3
+         CzykRdcrEFeBMsPjjsGlYwLC3/KjJgQ/ho+hYdT86w/CWynWved48KD0lrsXDibYWvu4
+         9siQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742295840; x=1742900640;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=is8WhR9m8WQE+4k9i/DT+FdMHQKk7RaZk/UQmejRp3g=;
+        b=wGjAbS1fB/vP18EYeVaUhYhZGA4KTTY4pjrjQ1VaKFLkpKuNguGLw48Xxoj3GjhyPH
+         g27i7qXiiZ4XkY3gnAL8WH7twxS8mK67B8jzaWqUu2BwB1OPKkRqtih/yavAH/2/x7HE
+         DRTse8h/twvm4d+Av32zbfvm7e4zyzNs2tqPmmt1qpVYsjB/zqyWeYDs3W0C/F7Mat9k
+         pOtKzRigNiEjW7GH1Hmj6FYtmHYTXDrzb2uWyt3kXuL3UL1avKldv6UsoFn5fd1HCRBs
+         oXLD2Fkp9Xeli9b/Pf9guHaZk49jw7niW7ySIlf+0wA+qKNxdWG/BSg3o3Soq06Wk6IX
+         gjAg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2hXz8r0gdNAZG2coyUgoqMWp3WhcgPzqjXwkCi4FR1cxYUtTsD4immwD5LzUaVDCDJiNY7cKcKDYRDk0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKVdnG+lrSjkrVXBmx9EU0sqIuhwqTAkwasLRej01bS0/eKWbM
+	3m4w3/7j/CsaO9Tnr2lHDeaBthvbRBlw/ve0+aoxZkbuVr7Qv2vZGfBYyOUm9AY=
+X-Gm-Gg: ASbGnctoWbicZ960j7KMmg2a4O9oLBl6axc3BrTTBruZjUcu+DlEWFxcbOZWkbH6BC0
+	XfOhONWrWxKcel2wt2Ikv27Z0VTIYMXQVPA22c9Vt68L27ejhCcf5/GuvpTFd0vtT6RPCEWs4pn
+	GApRnoiPz4bBQKwRQijcuR3E42iurDyJukHpufVENxYLbrQCjT408/PUfgFdJi4OMNgeLjBUR8P
+	f58cTDLGE8TN2F9ScxlnSD/DEpSTnOOIXgyRJl9FeohGMWXV47MszF10Nh2Q7Va/IbvRi3iIh7s
+	TYtGgt9cj5yTwzB+LYDuebTGAdZrSSpCzcUl8P8bNLpQ1xH+pjei0VY++L9UUmJ3XBT9ADJbweD
+	Us148cN82+/wA8Ro=
+X-Google-Smtp-Source: AGHT+IHSFIas9nSr0GTvP8XDNoyPypRdkL0u01Zf6bNvQk2jQCXUoByUBqIy6f605R78yLU5u1JN+Q==
+X-Received: by 2002:a17:907:3e0d:b0:ac1:de84:dec0 with SMTP id a640c23a62f3a-ac3302d3694mr1426644966b.26.1742295840401;
+        Tue, 18 Mar 2025 04:04:00 -0700 (PDT)
+Received: from localhost (host-80-117-53-131.retail.telecomitalia.it. [80.117.53.131])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aea4csm828388566b.33.2025.03.18.04.03.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 04:03:59 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 18 Mar 2025 12:05:12 +0100
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Stefan Wahren <wahrenst@gmx.net>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof Wilczynski <kw@linux.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <Z9lTaKsbLND4i3Ir@apocalypse>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <d1362766e3e966f78591129de918046a4b892c18.1738963156.git.andrea.porta@suse.com>
+ <87525350-b432-40b3-927c-60cd74228ea4@gmx.net>
+ <Z7dnnW4npJmfOVE0@apocalypse>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: kernel_team@skhynix.com, Joshua Hahn <joshua.hahnjy@gmail.com>,
- harry.yoo@oracle.com, ying.huang@linux.alibaba.com,
- gregkh@linuxfoundation.org, rakie.kim@sk.com, akpm@linux-foundation.org,
- rafael@kernel.org, lenb@kernel.org, dan.j.williams@intel.com,
- Jonathan.Cameron@huawei.com, dave.jiang@intel.com, horen.chuang@linux.dev,
- hannes@cmpxchg.org, linux-kernel@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-mm@kvack.org, kernel-team@meta.com
-Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for
- memoryless nodes
-Content-Language: ko
-To: Yunjeong Mun <yunjeong.mun@sk.com>, Gregory Price <gourry@gourry.net>
-References: <20250318080246.1058-1-yunjeong.mun@sk.com>
-From: Honggyu Kim <honggyu.kim@sk.com>
-In-Reply-To: <20250318080246.1058-1-yunjeong.mun@sk.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrDIsWRmVeSWpSXmKPExsXC9ZZnke71oJvpBgueM1rMWb+GzWL61AuM
-	FiduNrJZ/Lx7nN2iefF6NovVm3wt7i97xmJxu/8cq8WqhdfYLI5vncduse8iUMPOh2/ZLJbv
-	62e0uLxrDpvFvTX/WS3mfpnKbLF6TYaDoMfhN++ZPXbOusvu0d12md2j5chbVo/Fe14yeWxa
-	1cnmsenTJHaPEzN+s3jsfGjpsbBhKrPH/rlr2D3OXazw+Pj0FovH501yAXxRXDYpqTmZZalF
-	+nYJXBkTX79iKVggXrFpzhT2BsYvgl2MnBwSAiYS/e+b2WDsy3t7GUFsXgFLiQ+n17CC2CwC
-	qhL/H65nhYgLSpyc+YQFxBYVkJe4f2sGexcjFwezwBlmid2tX8CahQWiJHa++ssEYjMLiEjM
-	7mxjBrFFBDwlDh/8C9YsJGAucfF5AzuIzSagJnHl5SSwek4BC4klR++zQvSaSXRt7WKEsOUl
-	mrfOZgZZJiFwjV2i5d92qKslJQ6uuMEygVFwFpIDZyHZPQvJrFlIZi1gZFnFKJSZV5abmJlj
-	opdRmZdZoZecn7uJERjHy2r/RO9g/HQh+BCjAAejEg+vATC+hVgTy4orcw8xSnAwK4nwuj+5
-	ni7Em5JYWZValB9fVJqTWnyIUZqDRUmc1+hbeYqQQHpiSWp2ampBahFMlomDU6qBUe96f0z5
-	jBNrL5U03f8263Tpjvj7Rn9Xur6c97DfN3Cv+6Rtz3b+Ttrf9MXDwzSI6ZWzc/3uTQc4wjZa
-	nghWLfX/suRa3/XGkGdnzhl/EL2/4OhbkdrI8zzhf92KN1dE75gzoUZo9g6H9sgXMnvm1Iva
-	bd3y/kfVrRPiGfbWsp3y8odiwr9blimxFGckGmoxFxUnAgBFxw0b3wIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIIsWRmVeSWpSXmKPExsXCNUNLT/da0M10g+WnjC3mrF/DZjF96gVG
-	ixM3G9ksft49zm7RvHg9m8XqTb4W95c9Y7G43X+O1WLVwmtsFse3zmO32HcRqOHw3JOsFjsf
-	vmWzWL6vn9Hi8q45bBb31vxntZj7ZSqzxaFrz1ktVq/JsPi9bQWbg4jH4TfvmT12zrrL7tHd
-	dpndo+XIW1aPxXteMnlsWtXJ5rHp0yR2jxMzfrN47Hxo6bGwYSqzx/65a9g9zl2s8Pj49BaL
-	x7fbHh6LX3xg8vi8SS5AIIrLJiU1J7MstUjfLoErY+LrVywFC8QrNs2Zwt7A+EWwi5GTQ0LA
-	ROLy3l5GEJtXwFLiw+k1rCA2i4CqxP+H61kh4oISJ2c+YQGxRQXkJe7fmsHexcjFwSxwhlli
-	d+sXsGZhgSiJna/+MoHYzAIiErM725hBbBEBT4nDB/+CNQsJmEtcfN7ADmKzCahJXHk5Caye
-	U8BCYsnR+6wQvWYSXVu7GCFseYnmrbOZJzDyzUJyxywkK2YhaZmFpGUBI8sqRpHMvLLcxMwc
-	U73i7IzKvMwKveT83E2MwIhdVvtn4g7GL5fdDzEKcDAq8fAaACNZiDWxrLgy9xCjBAezkgiv
-	+5Pr6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5vcJTE4QE0hNLUrNTUwtSi2CyTBycUg2Mfquv
-	Jskb12hlVDY/OszEN8dVcvq0f20cczJCl509cWH7x7iu2DfzQzY5zt/x143p7qJ1d40nF899
-	cYvv1LwjVhmZDltt7c59uOJ381aB6I55KZXS1g/vrHs8Of30G+Xgus6wp4EtzwTzv3GEqFsW
-	rCxL6DgkdbR7gsEboUKv4GUO0RPE/dZpKLEUZyQaajEXFScCAHLK5+nUAgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z7dnnW4npJmfOVE0@apocalypse>
 
+Hi Stefan,
 
-
-On 3/18/2025 5:02 PM, Yunjeong Mun wrote:
-> Hi Gregory, I have one more question below.
+On 18:34 Thu 20 Feb     , Andrea della Porta wrote:
+> Hi Stefan,
 > 
-> On Tue, 11 Mar 2025 00:42:49 -0400 Gregory Price <gourry@gourry.net> wrote:
->> On Tue, Mar 11, 2025 at 01:02:07PM +0900, Yunjeong Mun wrote:
->>
->> forenote - Hi Andrew, please hold off on the auto-configuration patch
->> for now, the sk group has identified a hotplug issue we need to work out
->> and we'll likely need to merge these two patch set together.  I really
->> appreciate your patience with this feature.
->>
->>> Hi Gregory,
->>>
->>> In my understanding, the reason we are seeing 12 NUMA node is because
->>> it loops through node_states[N_POSSIBLE] and its value is 4095 (twelves ones)
->>> in the code [1]  below:
->>>
->> ... snip ...
->>
->> Appreciated, so yes this confirms what i thought was going on.  There's
->> 4 host bridges, 2 devices on each host bridge, and an extra CFMWS per
->> socket that is intended to interleave across the host bridges.
->>
+> On 15:21 Sat 08 Feb     , Stefan Wahren wrote:
+> > Hi Andrea,
+> > 
+> > Am 07.02.25 um 22:31 schrieb Andrea della Porta:
+> > > +		msix_cfg_set(rp1, hwirq, MSIX_CFG_IACK_EN);
+> > > +		rp1->level_triggered_irq[hwirq] = true;
+> > > +	break;
+> > > +	case IRQ_TYPE_EDGE_RISING:
+> > > +		msix_cfg_clr(rp1, hwirq, MSIX_CFG_IACK_EN);
+> > > +		rp1->level_triggered_irq[hwirq] = false;
+> > > +		break;
+> > > +	default:
+> > > +		return -EINVAL;
+> > It would be nice to document why only IRQ_TYPE_LEVEL_HIGH and
+> > IRQ_TYPE_EDGE_RISING are supported. In case it's a software limitation,
+> > this function would be a good place. In case this is a hardware
+> > limitation this should be in the binding.
 > 
-> Thanks for confirm. Honggyu represented it as a tree sturcture:
-> rootport/
-> ├── socket0
-> │   ├── cross-host-bridge0 -> SRAT && CEDT (interleave on) --> NODE 2
-> │   │   ├── host-bridge0 -> CEDT
-> │   │   │   ├── cxl0 -> CEDT
-> │   │   │   └── cxl1-> CEDT
-> │   │   └── host-bridge1 -> CEDT
-> │   │       ├── cxl2 -> CEDT
-> │   │       └── cxl3 -> CEDT
-> │   └── dram0 -> SRAT ---------------------------------------> NODE 0
-> └── socket1
->      ├── cross-host-bridge1 -> SRAT && CEDT (interleave on)---> NODE 3
->      │   ├── host-bridge2 -> CEDT
->      │   │   ├── cxl4 -> CEDT
->      │   │   └── cxl5 -> CEDT
->      │   └── host-bridge3 -> CEDT
->      │       ├── cxl6 -> CEDT
->      │       └── cxl7 -> CEDT
->      └── dram1 -> SRAT ---------------------------------------> NODE 1
+> All ints are level-triggered. I guess I should add a short comment in
+> the bindings.
+> 
 
-Some simple corrections here.  host-bridge{0-3} above aren't detected from CEDT.
-The corrected structure is as follows.
-
-rootport/
-├── socket0
-│   ├── cross-host-bridge0 -> SRAT && CEDT (interleave on) --> NODE 2
-│   │   ├── host-bridge0
-│   │   │   ├── cxl0 -> CEDT
-│   │   │   └── cxl1-> CEDT
-│   │   └── host-bridge1
-│   │       ├── cxl2 -> CEDT
-│   │       └── cxl3 -> CEDT
-│   └── dram0 -> SRAT ---------------------------------------> NODE 0
-└── socket1
-      ├── cross-host-bridge1 -> SRAT && CEDT (interleave on)---> NODE 3
-      │   ├── host-bridge2
-      │   │   ├── cxl4 -> CEDT
-      │   │   └── cxl5 -> CEDT
-      │   └── host-bridge3
-      │       ├── cxl6 -> CEDT
-      │       └── cxl7 -> CEDT
-      └── dram1 -> SRAT ---------------------------------------> NODE 1
+Quick errata: s/level-triggered/active high/
 
 Thanks,
-Honggyu
+Andrea
