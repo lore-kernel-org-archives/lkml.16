@@ -1,127 +1,115 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F9361531E1;
-	Tue, 18 Mar 2025 19:01:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF941531E1;
+	Tue, 18 Mar 2025 19:02:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742324493; cv=none; b=rMCUU9sbQuOl4yqvPqLWNkXbwa9RiJTRUIs5cbAXAuE1lul41z/kW2A1Pe1sWhoGNPC7/+Rz06JkVEBnJYy//B2uO/6zOFLdSqpctN10lMt4DDvrPLZeBmfqryOPmFM6sE1BvYke7ws2HG8LS20uUF7surPjvNTAYOW2pH30Wz0=
+	t=1742324536; cv=none; b=AykzTq3DyLZHodRWFLJEgGdmt5MzKNz/U/qjP9SBueS5JF2i94oS5Ng7yvePAsM4DmkTEjRWQ9NHgx6x2iD65qqWwYdicu8XwzKSsC1VDG2/WUVpclVB5EKYPdqJZwh/j3Hus4ZSlDknDrWS3A4yQcP+I3QXD1IdZ11dJOlbwYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742324493; c=relaxed/simple;
-	bh=OMs5aVL4NRSgKrZLoPZm/15L2U76ZKU/MNbrAGOy48U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r8hFtyqpcmrWSTj0Tbjzpe6o0b96uiE8POqPI0FAsbPEXUIkXCZt+jFTQN3RO/KyOMlbpEkY+W/8gewXw0E4NrlbqGm6OJoygZA+LgXtC786k2qHnsJONfc8v47PmBWhVoTT0WkU0RuDX3oCpP+8mykqLqWMEJwtiadbHD+cLEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TLR9knhl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742324536; c=relaxed/simple;
+	bh=RyWg6GZs0HG2H7ets4XXpl2bZzpVCBzMcD2/5l9R9rI=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=IJKYTCF9rJbcen/j+JqgRCpwgoKnLjBSbf8OpwES938Vc1TwTwfyi1eBruRqGUOsWC5kTB08QuO2wpX6bL3doRXmjt/KUVcAu1+ic2ps5QmtAhE5INyAlphvoRBuoouC29TXOaGPL996CDZQcEukFfgGOSjwH+/BFqR5MN69rUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jYVAL6YY; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=KfSvS74i; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TLR9knhl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82242C4CEDD;
-	Tue, 18 Mar 2025 19:01:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742324492;
-	bh=OMs5aVL4NRSgKrZLoPZm/15L2U76ZKU/MNbrAGOy48U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TLR9knhlXaKWd9luXt/2WM7Q7XTjrQBUJ5wWA9Ej5P10+0fo9UplOwk7NJmnw4QXo
-	 a2gvS0v58NzaAqIK1aNoE/wDecHLHP8l+nMC/a2ys1FZVOM6WW0dBJxx6nRYelY930
-	 WS+6XWHhk8CO0s6KU3zooM5YFNUCqtgBeAM3rsdtfREUvNZ2rqI7MpEJFSQDz5MJOO
-	 FVWVjUGbWdXA0G8xosl0i30HJzIlWpdM5ILep16gi6kARzZEDQnj9m3Sr6LOlH4Jfw
-	 nV4w7FwFpFzCBUHJO0s4uDKeVxu9a3R+lXXlfasUNglFHoQ8PUXiP8xlT0YHYn2dWF
-	 NBqKkygpm4jFQ==
-Message-ID: <ebba0044-053c-4d72-8ea1-e8c1f2bf0a96@kernel.org>
-Date: Tue, 18 Mar 2025 20:01:24 +0100
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jYVAL6YY";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="KfSvS74i"
+Date: Tue, 18 Mar 2025 18:54:28 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742324069;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KS+GnC5EU0IrAwhTdlBCk6x+4ASqVIeBDSKo3ThWbF4=;
+	b=jYVAL6YYK+2PJlMsvwV5hWwZYnwahLEZUs5KoR31AM8rx9iHyNawkGKoN0pbxp2Q3ehsqR
+	LPcEaPvSu7jcRkJ0X+b6qNBFSc5watluNTbOAWs2MhGKAfZflruPUv9way1qslzQBdybk4
+	7QK6nr2ejLWmxH0dPIARDpHOBCIPn5OttYuMNXQN5VdRdYpgwH0UmmsVFsHoN/HD1J/t73
+	9hxKNMfzM3CT6aQLYf3xo0R+jv9W7iaZRqSuLON+KmxOEJtjfhyJkH1WYRHjY6T+Hg5cCV
+	0VV5AuxBWp0MuJqu5nPkHrdvRLYWYpy0c0If2nT9OlOOtrUhbBXPYdqVqxjWJg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742324069;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=KS+GnC5EU0IrAwhTdlBCk6x+4ASqVIeBDSKo3ThWbF4=;
+	b=KfSvS74iizZa9PguypxD8vxVEosz0AhEd0H/wkPMizSNgodurCBze50Pc21giLrQyH+ZVF
+	ZfH6J5C70C9d65Aw==
+From: "tip-bot2 for Sohil Mehta" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/cpu] x86/smpboot: Fix INIT delay assignment for extended
+ Intel Families
+Cc: Sohil Mehta <sohil.mehta@intel.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250219184133.816753-11-sohil.mehta@intel.com>
+References: <20250219184133.816753-11-sohil.mehta@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] initramfs: Add size validation to prevent tmpfs
- exhaustion
-To: Stephen Eta Zhou <stephen.eta.zhou@outlook.com>,
- David Disseldorp <ddiss@suse.de>
-Cc: "jsperbeck@google.com" <jsperbeck@google.com>,
- "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "lukas@wunner.de" <lukas@wunner.de>,
- "wufan@linux.microsoft.com" <wufan@linux.microsoft.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-References: <BYAPR12MB3205F96E780AA2F00EAD16E8D5D22@BYAPR12MB3205.namprd12.prod.outlook.com>
- <20250317182157.7adbc168.ddiss@suse.de>
- <872d008e-8412-4351-a954-29ee7c7c8315@kernel.org>
- <BYAPR12MB320544939A73966CC84D5020D5DE2@BYAPR12MB3205.namprd12.prod.outlook.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <BYAPR12MB320544939A73966CC84D5020D5DE2@BYAPR12MB3205.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Message-ID: <174232406840.14745.2671058347475165801.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On 18/03/2025 13:46, Stephen Eta Zhou wrote:
-> Hi Krzysztof
-> 
->> Just in case before anyone tries to actually apply it: the entire patch
->> has both corrupted header and actual patch is corrupted - all
->> indentation messed.
-> 
-> Sorry, this is my oversight.....
-> I checked it locally using checkpatch.pl and it was fine, but I just used it to import and found that there is a problem. Sorry for wasting your time. I will regenerate this patch and resend it in the correct format.
-> 
-> Krzysztof, thanks for pointing this out.
-> 
-> Thanks,
-> Stephen
-> ________________________________________
-> From: Krzysztof Kozlowski <krzk@kernel.org>
-> Sent: Tuesday, March 18, 2025 19:55
-> To: David Disseldorp <ddiss@suse.de>; Stephen Eta Zhou <stephen.eta.zhou@outlook.com>
-> Cc: jsperbeck@google.com <jsperbeck@google.com>; akpm@linux-foundation.org <akpm@linux-foundation.org>; gregkh@linuxfoundation.org <gregkh@linuxfoundation.org>; lukas@wunner.de <lukas@wunner.de>; wufan@linux.microsoft.com <wufan@linux.microsoft.com>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>; linux-fsdevel@vger.kernel.org <linux-fsdevel@vger.kernel.org>
-> Subject: Re: [RFC PATCH] initramfs: Add size validation to prevent tmpfs exhaustion
->  
-What is this header doing this? Use standard mailing list response
-style, not some copy-paste and then quote entire irrelevant context.
+The following commit has been merged into the x86/cpu branch of tip:
 
-Best regards,
-Krzysztof
+Commit-ID:     17b1dd60e367795b0b4f44c9a477185f8444e8b9
+Gitweb:        https://git.kernel.org/tip/17b1dd60e367795b0b4f44c9a477185f8444e8b9
+Author:        Sohil Mehta <sohil.mehta@intel.com>
+AuthorDate:    Wed, 19 Feb 2025 18:41:28 
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Tue, 18 Mar 2025 19:33:46 +01:00
+
+x86/smpboot: Fix INIT delay assignment for extended Intel Families
+
+Some old crusty CPUs need an extra delay that slows down booting. See
+the comment above 'init_udelay' for details. Newer CPUs don't need the
+delay.
+
+Right now, for Intel, Family 6 and only Family 6 skips the delay. That
+leaves out both the Family 15 (Pentium 4s) and brand new Family 18/19
+models.
+
+The omission of Family 15 (Pentium 4s) seems like an oversight and 18/19
+do not need the delay.
+
+Skip the delay on all Intel processors Family 6 and beyond.
+
+Signed-off-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/20250219184133.816753-11-sohil.mehta@intel.com
+---
+ arch/x86/kernel/smpboot.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
+index 7dccc44..b68216f 100644
+--- a/arch/x86/kernel/smpboot.c
++++ b/arch/x86/kernel/smpboot.c
+@@ -655,9 +655,9 @@ static void __init smp_set_init_udelay(void)
+ 		return;
+ 
+ 	/* if modern processor, use no delay */
+-	if (((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL) && (boot_cpu_data.x86 == 6)) ||
+-	    ((boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) && (boot_cpu_data.x86 >= 0x18)) ||
+-	    ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD) && (boot_cpu_data.x86 >= 0xF))) {
++	if ((boot_cpu_data.x86_vendor == X86_VENDOR_INTEL && boot_cpu_data.x86_vfm >= INTEL_PENTIUM_PRO) ||
++	    (boot_cpu_data.x86_vendor == X86_VENDOR_HYGON && boot_cpu_data.x86 >= 0x18) ||
++	    (boot_cpu_data.x86_vendor == X86_VENDOR_AMD   && boot_cpu_data.x86 >= 0xF)) {
+ 		init_udelay = 0;
+ 		return;
+ 	}
