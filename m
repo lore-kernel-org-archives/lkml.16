@@ -1,89 +1,80 @@
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92F4D204F80;
-	Tue, 18 Mar 2025 11:46:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F0C7204C16;
+	Tue, 18 Mar 2025 11:48:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742298402; cv=none; b=o0zayZRSnU81Ggg2a+RhQ4Fq/4/8U5b8V07tWVGhRNVSVLScmrD8RcsnBh/kKp/4twW4pm78GAR6Cli62vz8LZPCQ8EhaeWoI45nqKv8FG2WBkt1sqXJSdkop+kFv+hOfWTuJzyX0HOtlXcjh01ir44dV2JELGDFO3WDa94+ywU=
+	t=1742298499; cv=none; b=rb1J91hh1EqUN+yD1DllNZKk/fvJ4B/s7lYtjt0NIZ6BXWSqVlMOoFXZ825uuzcNSRBYXS2FsrD7SoGbjvKu//36KgV76LNN3WjRyMa32ICh0pNQB+obKS1T3ijl3oekHPb9eRfm+9FEeCMmVkqttZOyLdqhG4977V+6Ad/oTZk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742298402; c=relaxed/simple;
-	bh=KL8E0gCwzmRt1EMqDOC1510GTWQzlUEOunkYkhW2oDg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VAJPoyI1gKaPemjY45dbUicfvnO0uLw5Rdsa4mbGb2oR6FsviDNGeTLvVwU5y3wFW/FvUb3hDG9V7NqCoO1KK/A42ZaWQbyj0zMtfzMwSespgMy28XiGfXVGqyIUd5LZBn4Tme99mvB7ymnmFTngIb+rAXPH34XkBM3fi2VXty0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MAs4ja6a; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742298499; c=relaxed/simple;
+	bh=Pk0YeZsqFpV5qbswaCfZFCWsRkM+y5cOrF5i5TWk0Kc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=VwB9KnIaP5ZJZ/Vho3xNQFO3KFy9e+RKPs1+8dcObshpgTC8iMzo0kGRiInKTJDps0TlTyk81A/jXgnTMMWFymD6rQictgBPguuJ4pNbPeBOZp+mE0Ne/IB6ZIz/yfjPmtrL1C+fFQSC0egclw9+hzVbTp6VuLS/2x0ft8+zdXs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cDvIOwaJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAs4ja6a"
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so1233079266b.1;
-        Tue, 18 Mar 2025 04:46:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742298399; x=1742903199; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KL8E0gCwzmRt1EMqDOC1510GTWQzlUEOunkYkhW2oDg=;
-        b=MAs4ja6a6s4CtMTYwxF8fI0JON5CEW+2CZSMtiXj2u0nhwh3fU3jbjzeeHlRFmAbg8
-         0RrbpVEd35kkxEHQoP0uDuZLhMKjqEQYAE5gP2f/IcsZNA/BPwxSvp487LtcdMPcXDa7
-         xB/u7uUzhxXxhkStpDHhpqfobZqYOU8MSdhJxCQJWHff5/RMcs98aQftzsQk4oqUaOso
-         /4OgSLDZu/X4yoZlamw1e8BgjoZqyNk48MQ0LwSG/kWgRSHMlt5K7T4YhHWdlZsYtEuC
-         5ktr7txukYj5f+3r56O0tkLdDvoJqJbicK7Fnfzt40uxSjc40jfSBwMQ9Kx2HpST22Yw
-         i6IA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742298399; x=1742903199;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KL8E0gCwzmRt1EMqDOC1510GTWQzlUEOunkYkhW2oDg=;
-        b=ZpoEWMRFiGHJGB2ZhctLn5d1TK8jwXJ5YatKaAR+I/V6C6q3BrP6TEsa3SbuO56uH8
-         U3iHI1zHek0x7iHqVkKYkphmlgy7DNS8tDnfI2Vjv/T9Sx8zX1JQogjaC0Kkz99OXHEr
-         0eXVVkjuay6bg3SiqEyEt8PezgzIJiCc9R9CHJzBQXgdSHernoFkhr8RUc2jIFxZf5ow
-         DncGsN1eS0RFN/WAzJyEAKh773Ytm5OSC/65+s7yqCaHk7JgJckUIcKqtcBkjdp5xlk3
-         rk2RfQBwhVidTSXxz2I0HDg8bhA1BeMXRmIIKTwMUg3Q67o1+sE+KyBtjoABm3oqLhne
-         g++w==
-X-Forwarded-Encrypted: i=1; AJvYcCU0xuPHbEe/c3tq+ms1zgSgqlFOhHGw8sFuBPwcRfKfoGAr29VOHNoYtNPpPJKLyQGFeC3GmKc8AhULjk1b@vger.kernel.org, AJvYcCWryrc3XYak3CBBetaftpH4NLJZBRc5oqryNoXb5PGUyt/n/ZqV9p9o5yAM2i8kaGidFvH3Bp1051E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwRNEuASWxfGAzv/OhhKGaEaIBKl5LlL876U1LhSo4UXF5GArv0
-	SA+5au0B64ahfmLJO07US/47j7x7m9cZVlG8TlYfAZJHIik0OHR+HRpN/5PG3orO5nOniFtC4I0
-	YrfQjEi5tRuJrBf6bJx4udc/soQw=
-X-Gm-Gg: ASbGncuO/5PSSlZ8crASYoKNIq2pASMBlUUeyR0LpbDLO6T3COft0YKVfePFMl4+QKx
-	MtackOhyF+9PezkBAAbavCnSC+yXoHso65PfI4nxvjjzdSjwzdJARfC1gOUpRTks4SFe/AgQIv+
-	bugEBiHrvvBXaAzU6EDMSoXwr52U2j
-X-Google-Smtp-Source: AGHT+IHZVKieU2SHdGbuI3lDvrLFMVr2onCO6I6NWrfsdRduvwawWi0FI7ocrrZODI2sxNgOK6VJR4GOddr0MsTc2Mc=
-X-Received: by 2002:a17:907:d9f:b0:abf:749f:f719 with SMTP id
- a640c23a62f3a-ac38d3894afmr301647066b.7.1742298398454; Tue, 18 Mar 2025
- 04:46:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cDvIOwaJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 917D1C4CEE3;
+	Tue, 18 Mar 2025 11:48:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742298497;
+	bh=Pk0YeZsqFpV5qbswaCfZFCWsRkM+y5cOrF5i5TWk0Kc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=cDvIOwaJq5u43XqTtJ59GXyVfRvN0Nj1MfcFp0k6TtkYlHSLoiVU/6EGKX1eByNv8
+	 +3ujACTopuh8XXuiK4gbVJriFBL2FqJB5mvaZJtHTNM5Vq6O3uH1/A2Nk7OwwHgRpK
+	 5Y5TTqhzHJtPwo2qear9veMLBrIDgpxadPAXUjO/gKBgcF5IaBESZTZQg0weEhmRCl
+	 smVy8nnhav5gfnFYAsEVexrRtIuFUbf29xTH3iiRuHHRpusl5T8j33eNxZXEO80m2Z
+	 0oQ4c62E0naW5tENIwyveledh+9rhBWw45hVYEdVMAtE9it2V7TVeKrmIaNgIsUWBc
+	 g4BkzasrP0PkQ==
+From: Andreas Hindborg <a.hindborg@kernel.org>
+To: "Benno Lossin" <benno.lossin@proton.me>
+Cc: "Miguel Ojeda" <ojeda@kernel.org>,  "Alex Gaynor"
+ <alex.gaynor@gmail.com>,  "Boqun Feng" <boqun.feng@gmail.com>,  "Gary Guo"
+ <gary@garyguo.net>,  =?utf-8?Q?Bj=C3=B6rn?= Roy Baron
+ <bjorn3_gh@protonmail.com>,  "Alice
+ Ryhl" <aliceryhl@google.com>,  "Trevor Gross" <tmgross@umich.edu>,
+  "Danilo Krummrich" <dakr@kernel.org>,  "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>,  "Rafael J. Wysocki" <rafael@kernel.org>,
+  "Peter Zijlstra" <peterz@infradead.org>,  "Ingo Molnar"
+ <mingo@redhat.com>,  "Will Deacon" <will@kernel.org>,  "Waiman Long"
+ <longman@redhat.com>,  "Fiona Behrens" <me@kloenk.dev>,
+  <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
+  <linux-block@vger.kernel.org>
+Subject: Re: [PATCH v2 15/22] rust: make pin-init its own crate
+In-Reply-To: <20250308110339.2997091-16-benno.lossin@proton.me> (Benno
+	Lossin's message of "Sat, 08 Mar 2025 11:05:09 +0000")
+References: <20250308110339.2997091-1-benno.lossin@proton.me>
+	<XuLpVmtP3s3Sv1qUY358XwtAOwMy1jwIsoRC1Q8Jj2MEE3Y75gCD4DQ7OOz1NQrZuick63mOMJ9uh6ynDjaYKw==@protonmail.internalid>
+	<20250308110339.2997091-16-benno.lossin@proton.me>
+User-Agent: mu4e 1.12.7; emacs 29.4
+Date: Tue, 18 Mar 2025 12:40:31 +0100
+Message-ID: <871puulg7k.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318021632.2710792-1-aryan.srivastava@alliedtelesis.co.nz> <20250318021632.2710792-2-aryan.srivastava@alliedtelesis.co.nz>
-In-Reply-To: <20250318021632.2710792-2-aryan.srivastava@alliedtelesis.co.nz>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 18 Mar 2025 13:46:02 +0200
-X-Gm-Features: AQ5f1Jp1pwMTyen9jMEAQrIJywQNkvClXMRxJ_eQeF94oGzWxGi_MEHILfj9Hbw
-Message-ID: <CAHp75VfHgY1VUVkO6p8OJ=4=Omrxs5fih_DjWzB52KYCX8joDg@mail.gmail.com>
-Subject: Re: [PATCH v13 1/3] i2c: octeon: fix return commenting
-To: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>
-Cc: Andi Shyti <andi.shyti@kernel.org>, Markus Elfring <Markus.Elfring@web.de>, 
-	linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Robert Richter <rric@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Tue, Mar 18, 2025 at 4:16=E2=80=AFAM Aryan Srivastava
-<aryan.srivastava@alliedtelesis.co.nz> wrote:
+"Benno Lossin" <benno.lossin@proton.me> writes:
+
+> Rename relative paths inside of the crate to still refer to the same
+> items, also rename paths inside of the kernel crate and adjust the build
+> system to build the crate.
 >
-> Kernel-docs require a ':' to signify the return behaviour of a function
-> with within the comment. Many functions in this file were missing ':'
-> after the "Returns" line, resulting in kernel-doc warnings.
+> Enable the `lint_reasons` feature for the `macros` crate in order to be
+> able to use `expect`. The feature is stable since Rust 1.81.0, so we
+> only need to enable the feature for older compiler versions.
 >
-> Add the ':' to satisfy kernel-doc requirements.
+> Signed-off-by: Benno Lossin <benno.lossin@proton.me>
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Tested-by: Andreas Hindborg <a.hindborg@kernel.org>
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
 
---=20
-With Best Regards,
-Andy Shevchenko
+
+Best regards,
+Andreas Hindborg
+
+
