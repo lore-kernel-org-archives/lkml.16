@@ -1,72 +1,89 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out203-205-221-190.mail.qq.com (out203-205-221-190.mail.qq.com [203.205.221.190])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CAA4A1C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7EA4A1C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:38:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742265364; cv=none; b=qryqjpMUiaRJH0CEP1a3GijXO8Q2S33jBJl58CDcr0LYK0Tk7bZuhleUQeLXVyOx/0UZCYe8HLVemXH3xHiR2IB+g9ocu0xBnVoqkDKArkhfKqvJ1CrNke3iEZQLAO50kEmq71qUwDQV7B5aJAN7BS8xYjl11bmNnVstwEVsTSI=
+	t=1742265545; cv=none; b=m+k046477aKEArHInrgg5sd1L2xH/2DsfAoQRivdxR3i6wQbhzccRJEWavA/Vne0v2vD97YkV8b3nrdZ6lPoLnj+sqQ/yduC95ZxYsNkpAUhN31xjc7z/iBYgfqXkNWrSMFgjPQqSeY9DA+ISzwSDhYgThiyPOL4O3hQ2HgUwME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742265364; c=relaxed/simple;
-	bh=yLbPsJpX5l9l1vukAvQwRO1EBI4s6UqXU2+Dt6fB/Jw=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=JPWf4i2QEk7lHd7VFjjlrzI4ewlF8tTGzYEtPq+ShhQMZkBrN7Vis0qrjPO4jvDMN3krOgjEJo+fz0a//ckze0VzIJpp5yXIf7Bvq+Vw+mxj3l6wKXoVKOyU4OI7yDvMza92bqkrbwx8UiQm5QNGAsOLgTb+tFTwQOb7+FqJMYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d44ba1c2b5so50475705ab.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Mar 2025 19:36:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742265362; x=1742870162;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4nJdCh6Gf11OxlXB1CSQBT59U7RCoF8rS55tQXuNdHc=;
-        b=thlSvPL7gxQoR5T6EQ4HXa2njXTODVIYKUDu4QLDtOPa4NrI0b5gAvKlpEeX5TkgZ8
-         C/eFZDMqhVJXtn7WXrl9X2yza6pBKxh9IA+PX9+8p12OsA/TAXniGXs+HeCcRW3DRl+t
-         LLIUUwZnHXF+mx/7NV6MqplPFfwSLy07jnUXe/VLe18YNXKg30HwarxfJ9BZPl1QoCRe
-         ycq6UXgIN1LWcj3heXupW9bfaS5hbfKAx4rRf8uN+ThV/HrsA5KbMmUyIRcySGj5IGP6
-         juElxuQbdegS3Q6v5uG/IFgAuVh5YPI+y1OsY53ybrYlp903hmRnRuTlDqJlnIfaZ0UB
-         5Etw==
-X-Forwarded-Encrypted: i=1; AJvYcCVhOG/1sIdxM61XzmPbMqhIetQR0cY0hidXvlEEgbEOPNoEF7KDNxS3afUXCxLaQCCo7Bg31E3aL2GySS0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywdu4rsWpkPVC/sHFO8IaW2sw93iUtheIwjvy4/F7pNxKfFy/3t
-	cqmYSbiHb9XQ3I0WJmWsl5K2cp/rB+YF5DcBGWG5XVFVhKjrG2Z3u1sOEkVdDh3iQS5Y8ajmQ8C
-	kJAgTtS4G41vzvSboMQF7b1Uih92GUZltT0l4wXgKeYzkCA72Sw6ogBc=
-X-Google-Smtp-Source: AGHT+IGF6ZsC0jKqmx4rTUr4PpbPlwXT39yKkqaQlKGsWDDoPfiRExlruciy2COoRaiVkNksork3Ii6G2TGn1X7epUD+PuOBWm4q
+	s=arc-20240116; t=1742265545; c=relaxed/simple;
+	bh=7EOmIwerDRmveeBbz9ATHBP2PnwksMcJRl9Cq+hpL+4=;
+	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
+	 MIME-Version; b=bE1UXGH5oyJjyHobeiKyH/wFp/fBK6ODVaXunvJ0V3BqHD2LGr9WNZa5XDCmXb+A9qbvDr3/49Ho7oV6basgCycRlZ+1ztQ0+XnY5ZIDHqj0PP8lLA2QLXySovetTDaKqZGtO6otL3+I44zgEhwsDFuTCqbkQc+YQbmY/SRLHfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=kjirrNrI; arc=none smtp.client-ip=203.205.221.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="kjirrNrI"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1742265529; bh=50aLX1zq5ZHgm8H+oBWXhj21BKnvV4DBPtVvxTgCZcc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=kjirrNrICwB2UlgCCGSd/ucyMSchelqj31X3+Rb2zKxmFWWlyc/0rFuBye5HIhaEr
+	 YvOhUmS4lpS5XUfN1KVwFh7luIOX0Szzx3PjOYV8ymh6Ny/lzkN/d2FJIX6jJ5iJRn
+	 jNJxtvXKZn5CTZ2lZ/Z4ieYlokKUdDPx8avb8HfQ=
+Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
+	by newxmesmtplogicsvrszc16-0.qq.com (NewEsmtp) with SMTP
+	id 694AB6A9; Tue, 18 Mar 2025 10:26:20 +0800
+X-QQ-mid: xmsmtpt1742264780telvdxbzz
+Message-ID: <tencent_F403B22448977EF77586CAF362E375A96D05@qq.com>
+X-QQ-XMAILINFO: MD2XmhJtctJJ2/xjT2I/ddW/h0aTIVwq01DF/nzLkoYwkgOvkjb8rFraCiMuhE
+	 AMHSDzti1e4f49hbtgUnoJbG9RBowuHGI8SrVSIiCuO3njEgL2pHAguVU7Wdb2mTWbrxsyHUjMpK
+	 DHjiZG6bAtXVkZZo9WwW3yMnkAYYw+FJHPM7/x9NL89hzobql4+EH96PKBv5IwoF4JTG7LYEKfiY
+	 p3HpwawYycgm02BZIfyodutoMlhj0VH03weIAdH+jLtB/egwOf6aFFll1iJdbbtUGK1SGmw5CBBj
+	 jR1TBWuZgkQ7QPgdlet4VZ6mYSyVmpSHxXUFQitkVhkv3BY/cF65aQPW/navKZofAQYEk7RmTyiY
+	 l2vTQMyNjCtipNZr8oEX1Y5uwBo+AbRx1c57YOyp1FjzAwwUPmiF7v5vwT4pm4hFGFmPAwmimRIf
+	 c1fQqFLDuGs5KDNUIIA2SWMyub9OS/Q0f3WZRVOnPUMHhrKcer3mzfgo+rKq1pgincW7HeKQT7Bx
+	 xcZnjK+q2QynRkiEuQSyqvPHUiunwNJvv1b3mjTQsKs2wR3GyN/Thil/D5O1d+N5YSTZP+6tdh3P
+	 w5ejyJqDUQtG4WbuIjfEZvp/JNw+PQKgooWdKoAZIyFLvImQKRHMM6zaVtkny/UMgGDXscmn1qqg
+	 /EVDcsV4jbKML13xDBNLy7EiNTY0c6DeHzm+/9YYZj3hKcheawHekWJxWEZnMH53TmbXoi9xJRAz
+	 9iZwbyfqFckl4s8pcILxjVLjf1cldmDa+7W6J3nXCU2Ctcs4FknhZwDxHubJK6iZLdFQUV/MDnmN
+	 1ykKuDmqvL3BLe4ZFHi505DwcF3PM+izMyutJgxFie/Exdp1TC87d/Ec6StMRhnNbwgEOBP0NIEg
+	 46OuoyY5cDhb6j97wsFHYlcVbdpTM8Oekxj4kO+ofD9nuHC3EQ7LQLjP+edMpCUq9mRP9IlO1zTa
+	 pWMAdFxrYWD3UVZgpwSInYfdSBMrES
+X-QQ-XMRINFO: OD9hHCdaPRBwq3WW+NvGbIU=
+From: Edward Adam Davis <eadavis@qq.com>
+To: syzbot+aaf0488c83d1d5f4f029@syzkaller.appspotmail.com
+Cc: linux-kernel@vger.kernel.org,
+	syzkaller-bugs@googlegroups.com
+Subject: Re: [syzbot] [wireless?] INFO: trying to register non-static key in cfg80211_dev_free
+Date: Tue, 18 Mar 2025 10:26:21 +0800
+X-OQ-MSGID: <20250318022620.3061237-2-eadavis@qq.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <67d8804b.050a0220.2ca2c6.006b.GAE@google.com>
+References: <67d8804b.050a0220.2ca2c6.006b.GAE@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:4615:b0:3d4:2306:6d0 with SMTP id
- e9e14a558f8ab-3d483a7a825mr104836385ab.14.1742265362655; Mon, 17 Mar 2025
- 19:36:02 -0700 (PDT)
-Date: Mon, 17 Mar 2025 19:36:02 -0700
-In-Reply-To: <tencent_DEB361637AE96D43A8C447D77D577626C705@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67d8dc12.050a0220.3657bb.0009.GAE@google.com>
-Subject: Re: [syzbot] [wireless?] INFO: trying to register non-static key in cfg80211_dev_free
-From: syzbot <syzbot+aaf0488c83d1d5f4f029@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+#syz test
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+diff --git a/net/wireless/core.c b/net/wireless/core.c
+index 828e29872633..ceb768925b85 100644
+--- a/net/wireless/core.c
++++ b/net/wireless/core.c
+@@ -546,6 +546,9 @@ struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int sizeof_priv,
+ 	INIT_WORK(&rdev->mgmt_registrations_update_wk,
+ 		  cfg80211_mgmt_registrations_update_wk);
+ 	spin_lock_init(&rdev->mgmt_registrations_lock);
++	INIT_WORK(&rdev->wiphy_work, cfg80211_wiphy_work);
++	INIT_LIST_HEAD(&rdev->wiphy_work_list);
++	spin_lock_init(&rdev->wiphy_work_lock);
+ 
+ #ifdef CONFIG_CFG80211_DEFAULT_PS
+ 	rdev->wiphy.flags |= WIPHY_FLAG_PS_ON_BY_DEFAULT;
+@@ -563,9 +566,6 @@ struct wiphy *wiphy_new_nm(const struct cfg80211_ops *ops, int sizeof_priv,
+ 		return NULL;
+ 	}
+ 
+-	INIT_WORK(&rdev->wiphy_work, cfg80211_wiphy_work);
+-	INIT_LIST_HEAD(&rdev->wiphy_work_list);
+-	spin_lock_init(&rdev->wiphy_work_lock);
+ 	INIT_WORK(&rdev->rfkill_block, cfg80211_rfkill_block_work);
+ 	INIT_WORK(&rdev->conn_work, cfg80211_conn_work);
+ 	INIT_WORK(&rdev->event_work, cfg80211_event_work);
 
-Reported-by: syzbot+aaf0488c83d1d5f4f029@syzkaller.appspotmail.com
-Tested-by: syzbot+aaf0488c83d1d5f4f029@syzkaller.appspotmail.com
-
-Tested on:
-
-commit:         4701f33a Linux 6.14-rc7
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16a3d278580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=2e330e9768b5b8ff
-dashboard link: https://syzkaller.appspot.com/bug?extid=aaf0488c83d1d5f4f029
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=10c4c44c580000
-
-Note: testing is done by a robot and is best-effort only.
