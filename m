@@ -1,183 +1,113 @@
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5C3C208983;
-	Tue, 18 Mar 2025 11:26:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83C51207656;
+	Tue, 18 Mar 2025 11:27:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297174; cv=none; b=OEL8BvXefViHtIUBSxayyRTzwFgDHORaNCFcE4RzhmOAayMXBDXTMNWFQPrUEN4JaomVZjYKDgVzU8CFxtUBH8+H17WZbr4JAfYlBVAYF7TTWPMNHnnzxMOWR10xTtBsbLsPaRcaLuGUjIHwr/48aO7uehQEVrouYQbYgIG2ZX4=
+	t=1742297267; cv=none; b=pIr/dEHndp1IAZC+U0bvXFydOalMnfF5APY0y41IcpUmga3nva+s69PgOUZ064HoCcsNr6d0CbdDzbm2nC0d1u0qwa+B7z5GOOA/dsjgzGU+c6h1BRVjHPKKZvNwRYQJFr2B/Pr98epxrFKnWcsx/+sOzRf7InD21bhYLKB3eFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297174; c=relaxed/simple;
-	bh=V0jgOiffCLkxm0OMAOIqhoH49dNtMd4X/16OaH5jjwM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UyFEVI4kl/fqFGFatVVfbPAbtMj2uTnh1aB4Sd7IQXWLhAbbVoyAujd056tT6e3af9FF2elrEkes2LZ6hPZGs84jMuQcWy6N1qQpelrBYv9JvONxil2Xcxqx0GP3wX5p6YT4nMFHxj+aU2b5WFTCBsYTPPDWa5g82TA4K1yMbNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fwc619uM; arc=none smtp.client-ip=209.85.208.170
+	s=arc-20240116; t=1742297267; c=relaxed/simple;
+	bh=7grknlphHpAkNnmLwLYUSBqyQUugIdELO0U72gMOS/w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=WJrGnp2ykySECnvpX4fhwoWRmioNj2PGOxpRKKf7UPW0pNkxSG/HrSZW4G+CBhmIGKTrOGQ8SV503tv7UW/qUz+USN9GgLt1VQlcpFQ0z9Cahsqjon30Wb1BplQ5zOqgMNYdu4CXxI9wq/lBndKZBlJAAjivmg5gR+CskMHWzrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iqpOCCaT; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fwc619uM"
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-30bf8f5dde5so49816211fa.2;
-        Tue, 18 Mar 2025 04:26:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iqpOCCaT"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-300f92661fcso4927565a91.3;
+        Tue, 18 Mar 2025 04:27:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742297171; x=1742901971; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=btQLCq7XpQDCc3ShAJyVvb50nNp5mbjOUHKo263Hklw=;
-        b=Fwc619uMrsu3Jipz5SvwUQwnB5NL29rjeOYjkGMjdhF1YclFhqcsuVRgMkcJNyJDce
-         Lxbrr0WUrtooOvyiJLIhBu+uGe8RNSEP38Ffn6oT4/HqP9uCn0K1fYA8H64n9WZLr2u2
-         WziM+SI8X/Gungp3ssqW/g/KHe6LDxJuysXmVW5m9tZIf7KkVkH9i0zDIjCYqyC/Fj/M
-         BfYqJ8765kGAVc7HSOvAoSPy2s3uDJVrrlrnOh5vdtT8xZ7/kgowHSou9IRpggWqEawh
-         Os+7heNDtSzKoF5tGLx6pLbTy7TMoxkMb14KmWT0rcZz2B4tgtTMmSHUAEut4uZ7R2qR
-         +t7Q==
+        d=gmail.com; s=20230601; t=1742297266; x=1742902066; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=IcvcsPCsb52a0zF8mgEmM6gyp48rWfVJrSpx8wGcdyI=;
+        b=iqpOCCaTZxS7pdt6yQLsENCjJ+XH8Nhqq/HTH1kvD1/Y0jXxgPxYLhBRw+OQNA9B9P
+         OG23Be7oOu6sOT5Ng08fuS7pytstzr3xD4/sI74EOaU4ihEVeUQDOCT1aNx5N4Hhe7hJ
+         9Uj1GL2HIr/dO4LxonOELveM5OwjvGihRzDXV7p01n93LK7ADOS/s4jvtKJS0g7bYxFf
+         8UMEng3QMUCCKzvpsF6ScY9PRkkebv5TO9BYt61HUiyLHnjg7ATqpdJgTvHRRaQsRQXN
+         BjraNHmOufqROAh5HSTkNzGqx+4AFvKfHNRwaEz8sbVa4xRg/8HzBJo6+R9EjGQqGs/m
+         lgAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742297171; x=1742901971;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=btQLCq7XpQDCc3ShAJyVvb50nNp5mbjOUHKo263Hklw=;
-        b=VdjGzQIlGr5RiEuYCWLSBT0ccTmAOQ5Qapb8oiCdq86LBha30irN2ss+5pV/+O9a60
-         VucL57j0E5jVuR1R4+t4BNlV4SYqQBY/SRgZ+KwtFJS+CygQ2miYfWdNjK+d+CEibn3T
-         jbm93AzrPGqwk/TK6Ge3mGZm4oCQzKWGpjXsC/Xgxw4s82CSv4YciYRSpeS8fMeLbfAK
-         y+gb2OadxNJB/pFpx1vfix8wvSWnxCi9C6ASR/GZQGs4VF1n5OIbseCOIyULp2bVndW5
-         pNQ2R3KsdvRX9Uqt25hnLcMGCDYLo43FbPFs10ltF72rTKXHCY5lINTDA2d8dsEM3KpT
-         4Daw==
-X-Forwarded-Encrypted: i=1; AJvYcCWmGeWNg+50hHchegDwsXodnTfYsJAOVhxFg7scX5+vUyCicTgjlN+F6XWA3JfeIC0g3xV1jL1jf6UURcg=@vger.kernel.org, AJvYcCXvtiL4HfROvJIlH/cLXmKJPvlaNaPmWzbG7Gml6NEZHi1GTr/2s1iJcxk4nfuAUZEn1f4Sxvpcgqo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YweM5m0FYm5ULxW1gkke/28lKpt3C/vn5NqE/mxScpL7rv/z5Ja
-	umBggMiqKwznrD447NaM+ZXMEzvbIXAMM4Jjv2pLH4uh1v/5P9ye
-X-Gm-Gg: ASbGncu112zwzH/Uu6wX5ju+OT0XyMEQX+4vDL9/Os7DHy7ODL3U2Mr6uVdcF/HGBre
-	M4i9M9kCoaYszv/DGuaz2MhvGrwGariAnB+hgIOwxxjuFxYudCfr1osYtLVAgBlA2e+o6NXU4mQ
-	4RgDd1o2U73UMlUEiZryYc0W4WBl6hQx2R/phPtHxjs8aoI6EovO4buu+IR69NOMIcD51Ge90FK
-	tSY5tBoHzlQqMDpPBXazJTwOkEAzeoEBIfRx+8sJap84xK+9cV2Ae0NpfEFCErVZ0koCKzZc/gA
-	08fjWpOlRKFlw98tkFeJ2sYkeAN8YvpgbNGtmRl67xFrEHQq8KsZdfmEaA==
-X-Google-Smtp-Source: AGHT+IHzlAWaDOts8D3ujQUd5J6woXe3kP3cM1wyrozycFymsmVYWCH0d8Z8sZUCZAPAcv22hhV2VQ==
-X-Received: by 2002:a2e:8844:0:b0:30c:514d:92ed with SMTP id 38308e7fff4ca-30c514d9327mr82647391fa.14.1742297170547;
-        Tue, 18 Mar 2025 04:26:10 -0700 (PDT)
-Received: from [172.16.183.207] ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f1c306esm19038491fa.72.2025.03.18.04.26.09
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 18 Mar 2025 04:26:10 -0700 (PDT)
-Message-ID: <e87c1389-c173-47ee-8b01-cb0764a55afc@gmail.com>
-Date: Tue, 18 Mar 2025 13:26:09 +0200
+        d=1e100.net; s=20230601; t=1742297266; x=1742902066;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=IcvcsPCsb52a0zF8mgEmM6gyp48rWfVJrSpx8wGcdyI=;
+        b=ZZTeGYMWDPuTJ3yOcFJPawfE5VGedwv9U9aVXl7AHyER3HHupzaSXHUX2Z0FXgpfja
+         MhzVlLqQz4m8Ht9yoYpM5BFIUPcg79tKKKp5M0VKxdiTcIcnJQN2Aeg9PJ97c+g1F577
+         pPNN8/NNcyhfQYi4buJKdiM3VkFLX1D6q0ep7z6EPaIpGS+fzu3o/DqQic++lr/2h6nq
+         WuH5hl2XkRZDqq65BM+uYWkEN7ZN6W9fhI28KaRxLhntv7tbR1oQhSEHuK0kPX4p1ZHv
+         bcfrEbmKzNnPKJMJiaNCxK2mEle1cw3udplpdA1lYdxNjhSV6YrRT/SHDAR75KJKuvUx
+         LvgQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVPKC0SGmsX/tteITsivH2efitIMP8RQC/APwhug0jwlv909HGSqu4f4Wua48pnZYb+epe6Ye/bYoZSUJ6CDYzGMmTW@vger.kernel.org, AJvYcCWMxTszBbeOYfrC6QLDXGN/T3cQTnP+yXL+2tSTlcpJ6fSlFb8XSIP4mvndEb/5mDRMWTl430JOPYhq540=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoYok6f5xR3BNu+OAvKMgEL593sW/8U6PdfTbwqVOY3TSiVOU2
+	rqY52zqopU7uAemxG1gF13DfnXYeFNIcIpwpyMYlP9Fw1KG4+S1odnVRJdjNeWPKPg==
+X-Gm-Gg: ASbGncsmKx0+jl7GFBx4Y4NsKYb35pANzxY6+RO7tV0BS8ZFT2Srb7yPfAryuIPShoZ
+	q2pGD5R6Phhh9IC/pYXc2W+5770bayCg67r7pV/7YkG7l0/T/h4XORQfWVN3Deuqrm6sZdvfuAa
+	5HdY32EEblv77CpFLruINp9EnijnuMNQ+IQ4naVBXFPBYm3rT5hGYg8PULFEkhHjIF2y/lmvH64
+	YwX1AS4bPb1pz2Q7LWD2LSHZIQNl2VzYp+p4uVIKyW5S1xzqkvhQyCOy0FEF1yjCfbqJfBPAN9v
+	ZbAi5JtGGu33vb7wUpSwYMlXbqfTsJD+IWR9YKczqB/dM5DT9GoU30/EvIdttOdovxNM
+X-Google-Smtp-Source: AGHT+IE++RFcy6kw6hUjKVp1ZoCBUNo8R8FXnlvnWyV9smNvJP8u/r5hHiAs8ThA5ytPoND6N4rDHg==
+X-Received: by 2002:a17:90a:e7ce:b0:2ea:5dea:eb0a with SMTP id 98e67ed59e1d1-301a5b0065dmr2577387a91.4.1742297265271;
+        Tue, 18 Mar 2025 04:27:45 -0700 (PDT)
+Received: from localhost.localdomain ([183.242.254.176])
+        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-3015353462asm7885564a91.27.2025.03.18.04.27.41
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 18 Mar 2025 04:27:44 -0700 (PDT)
+From: Miaoqian Lin <linmq006@gmail.com>
+To: Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+	Tom Zanussi <zanussi@kernel.org>,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org
+Cc: linmq006@gmail.com
+Subject: [PATCH] tracing: Fix error handling in event_trigger_parse
+Date: Tue, 18 Mar 2025 19:27:37 +0800
+Message-Id: <20250318112737.4174-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 2/7] reboot: hw_protection_trigger: use standardized
- numeric shutdown/reboot reasons instead of strings
-To: Oleksij Rempel <o.rempel@pengutronix.de>,
- Sebastian Reichel <sre@kernel.org>,
- Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
- Benson Leung <bleung@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: kernel@pengutronix.de, linux-kernel@vger.kernel.org,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>, Zhang Rui <rui.zhang@intel.com>,
- Lukasz Luba <lukasz.luba@arm.com>, linux-pm@vger.kernel.org,
- =?UTF-8?Q?S=C3=B8ren_Andersen?= <san@skov.dk>,
- Guenter Roeck <groeck@chromium.org>, Ahmad Fatoum <a.fatoum@pengutronix.de>,
- Andrew Morton <akpm@linux-foundation.org>, chrome-platform@lists.linux.dev
-References: <20250318094716.3053546-1-o.rempel@pengutronix.de>
- <20250318094716.3053546-3-o.rempel@pengutronix.de>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <20250318094716.3053546-3-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 18/03/2025 11:47, Oleksij Rempel wrote:
-> Prepares the kernel for the Power State Change Reason (PSCR) recorder,
-> which will store shutdown and reboot reasons in persistent storage.
-> 
-> Instead of using string-based reason descriptions, which are often too
-> large to fit within limited storage spaces (e.g., RTC clocks with only 8
-> bits of battery-backed storage), we introduce `enum psc_reason`. This
-> enumerates predefined reasons for power state changes, making it
-> efficient to store and retrieve shutdown causes.
-> 
-> Key changes:
-> - Introduced `enum psc_reason`, defining structured reasons for power state
->    changes.
-> - Replaced string-based shutdown reasons with `psc_reason` identifiers.
-> - Implemented `get_psc_reason()` and `set_psc_reason()` for tracking the
->    last shutdown cause.
-> - Added `psc_reason_to_str()` to map enum values to human-readable strings.
-> - Updated `hw_protection_trigger()` to use `psc_reason` instead of string
->    parameters.
-> - Updated all consumers of `hw_protection_trigger()` to pass an appropriate
->    `psc_reason` value instead
->    of a string.
-> 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
+According to event_trigger_alloc() doc, event_trigger_free() should be
+used to free an event_trigger_data object. This fixes a mismatch introduced
+when kzalloc was replaced with event_trigger_alloc without updating
+the corresponding deallocation calls.
 
-Reviewed-by: Matti Vaittinen <mazziesaccount@gmail.com>
+Fixes: e1f187d09e11 ("tracing: Have existing event_command.parse() implementations use helpers")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+---
+ kernel/trace/trace_events_trigger.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +
-> +/**
-> + * enum psc_reason - Enumerates reasons for power state changes.
-> + *
-> + * This enum defines various reasons why a system might transition into a
-> + * shutdown, reboot, or kexec state. While originally intended for hardware
-> + * protection events, `psc_reason` can be extended to track other system
-> + * transitions, such as controlled reboots triggered by software or
-> + * maintenance operations.
-> + *
-> + * The values in this enumeration provide structured and standardized
-> + * identifiers that replace free-form string descriptions. They are designed
-> + * to be stored efficiently, making them suitable for use in environments
-> + * with limited storage, such as battery-backed RTC registers, non-volatile
-> + * memory, or bootloader communication mechanisms.
-> + *
-> + * Importantly, the order of these values **must remain stable**, as
-> + * bootloaders, user-space tools, or post-mortem investigation utilities
-> + * may rely on their numerical representation for consistent behavior.
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index d45448947094..8389314b8c2d 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -995,7 +995,7 @@ event_trigger_parse(struct event_command *cmd_ops,
+ 
+ 	if (remove) {
+ 		event_trigger_unregister(cmd_ops, file, glob+1, trigger_data);
+-		kfree(trigger_data);
++		event_trigger_free(trigger_data);
+ 		ret = 0;
+ 		goto out;
+ 	}
+@@ -1022,7 +1022,7 @@ event_trigger_parse(struct event_command *cmd_ops,
+ 
+  out_free:
+ 	event_trigger_reset_filter(cmd_ops, trigger_data);
+-	kfree(trigger_data);
++	event_trigger_free(trigger_data);
+ 	goto out;
+ }
+ 
+-- 
+2.39.5 (Apple Git-154)
 
-Oh, here is the comment I was asking for in the other patch. So, this is 
-all fine - please ignore my comment in the other patch.
-
-> + *
-> + * @PSCR_UNKNOWN: Unknown or unspecified reason for the power state change.
-> + *	This value serves as a default when no explicit cause is recorded.
-> + *
-> + * @PSCR_UNDER_VOLTAGE: Shutdown or reboot triggered due to supply voltage
-> + *      dropping below a safe threshold. This helps prevent instability or
-> + *      corruption caused by insufficient power.
-> + *
-> + * @PSCR_OVER_CURRENT: System shutdown or reboot due to excessive current draw,
-> + *      which may indicate a short circuit, an overloaded power rail, or other
-> + *      hardware faults requiring immediate action.
-> + *
-> + * @PSCR_REGULATOR_FAILURE: A critical failure in a voltage regulator, causing
-> + *      improper power delivery. This may be due to internal component failure,
-> + *      transient conditions, or external load issues requiring mitigation.
-> + *
-> + * @PSCR_OVER_TEMPERATURE: System shutdown or reboot due to excessive thermal
-> + *	conditions. This attempts to prevent hardware damage when temperature
-> + *	sensors detect unsafe levels, often impacting CPUs, GPUs, or power
-> + *	components.
-> + *
-> + * @PSCR_EC_PANIC: Shutdown or reboot triggered by an Embedded Controller (EC)
-> + *	panic. The EC is a microcontroller responsible for low-level system
-> + *	management, including power sequencing, thermal control, and battery
-> + *	management. An EC panic may indicate critical firmware issues, power
-> + *	management errors, or an unrecoverable hardware fault requiring
-> + *	immediate response.
-> + *
-> + * @PSCR_REASON_COUNT: Number of defined power state change reasons. This
-> + *	value is useful for range checking and potential future extensions
-> + *	while maintaining compatibility.
-> + */
-> +enum psc_reason {
-> +	PSCR_UNKNOWN,
-> +	PSCR_UNDER_VOLTAGE,
-> +	PSCR_OVER_CURRENT,
-> +	PSCR_REGULATOR_FAILURE,
-> +	PSCR_OVER_TEMPERATURE,
-> +	PSCR_EC_PANIC,
-> +
-> +	/* Number of reasons */
-> +	PSCR_REASON_COUNT,
-> +};
