@@ -1,102 +1,80 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from server02.seltendoof.de (server02.seltendoof.de [168.119.48.163])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CAA2749C
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 08:34:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C968C1FF7DD;
+	Tue, 18 Mar 2025 08:34:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.48.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742286887; cv=none; b=LtoVNVn9xMuD8VtNKddCh/nekc2AzkK+o227GKD08xhRIxNn0UddIVJje9JjCxpYqATKQNO+qTvxtk6tAHpw6axtGzpjHeQcuH7ADtrYGE6Xc3r1gWZXY9AzcH+3lgYbW96Kf5Smfsqc0rg+XDV/t5Yg/lOs1pPaZFWHXgwDJRU=
+	t=1742286895; cv=none; b=VINUMPqnG02YICA60QLzlqenEA3WhC5u7zn1Z4iXbwsgZl39/cqJZY+723lEGbZ+bnIVXsJoTTIdROtQGwSHrWB4YlC9fHglJVNkWHZ5SyzbzL5FuYTCjexuaj0CW17pZAPT5AhSzP7D2KQYv028pe5epPN0WhSqUE53c1B5Syg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742286887; c=relaxed/simple;
-	bh=DjN+afDglTdHkoGMwUPO7LH68Pieph+l4aJYL2cdGvI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bUg6EzE77HIkBFCUdzzwQQZjIDNnnsHcm0U2YHDRHWg+qngIUyxFhQmpWtJQIsh/RuS3JLFVl0hvvmC880YhkCJokB/xJKNauALw3QII+FV2Tq4d40cvtGtB2LX/RVkfkCAU5bbcD1hAGoAIpdHN3mfCtVZ19HyJ1MUTU2o8NPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lNzKZ/6e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742286895; c=relaxed/simple;
+	bh=MFUs8+IYFyBcBjCYHLgZ+RXxXndtSbbFTM4vbc5mgd0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Yi74XlZRpZW9g3m+yzSwLHN3hB+0OmY5bqhs0tYSeDn6V+QQC9aK0RHbL3ZHODIIwh7f8MFu6Ee2a99x8uQj5Hj3lmuxZZzFnoei63QDBs/tbCYUwgNBzKbEVkohivDZqEhniEmacQKE8GlfzE8oN4+U8/hExU+VpOegM3wHBok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de; spf=pass smtp.mailfrom=seltendoof.de; dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b=QvzLlDFv; arc=none smtp.client-ip=168.119.48.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=seltendoof.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=seltendoof.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lNzKZ/6e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4CDCC4CEDD;
-	Tue, 18 Mar 2025 08:34:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742286886;
-	bh=DjN+afDglTdHkoGMwUPO7LH68Pieph+l4aJYL2cdGvI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lNzKZ/6eqnj9SlR5UDUbqR5KFkr5+Rngrj5iQ4sMylzc64xejPnOVpiBCITP/LQqO
-	 slzJGUuiQ0M4d/qgH+JRYRaVsAINTx2jrBdB5GY4j8vAuw/470YiyOKvo+boDffA7W
-	 /8OuEDwukp2sjeS/9yz2dleZ364dfXSIYQ73dB/p3c/Xinm4Y8oXurtptEL2jwHFrp
-	 VHixFinNtv0S2AE4eM2FB/zte3fHlOC9XXfhNnG3qJ5E6zm6vtR+OO4tTLSlrHlReG
-	 vBqlpknfiycRP65XwnpjP660N1TIBMh44yukhCLgXaVxvzNFSmoG/Plu1lo8vMB5uU
-	 MS4isP6d76rfA==
-Date: Tue, 18 Mar 2025 09:34:41 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Xin Li <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	"Ahmed S . Darwish" <darwi@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 5/5] x86/cpuid: Use u32 in instead of uint32_t in
- <asm/cpuid/api.h>
-Message-ID: <Z9kwIYrOwO8nOpAE@gmail.com>
-References: <20250317221824.3738853-1-mingo@kernel.org>
- <20250317221824.3738853-6-mingo@kernel.org>
- <b7920c2c-1051-4674-994c-d1b681cf7988@zytor.com>
+	dkim=pass (2048-bit key) header.d=seltendoof.de header.i=@seltendoof.de header.b="QvzLlDFv"
+From: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgoettsche@seltendoof.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=seltendoof.de;
+	s=2023072701; t=1742286884;
+	h=from:from:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=s93yBV3BSJn5LVCBfGTaijGihV02lgcOIXQOv8jiEm0=;
+	b=QvzLlDFvjUNhOblVyNU2GNE6XTdgPxGtByz9JlLBT7ltEaVccGsVEViX4Yfr8VcRg1cCvN
+	eUD7Ap0/SGqBAfnwnzaNxzDkeCHl+VZtcdHeww6lgF6+vDM1mPa9tYrRC3qKmIFOM/k7ta
+	W2o3cu/GsKe8xWPSs/nhZaz2sB5yjDFzZ2ipdOy6oOsoxvjxyiZsThPq0WFybGRts2gJKY
+	2g2LaNoZSHwHr6AmwcDzQVLml6G0bWX1CUh4KBqQmRi+KLPPjnfaW3PfqLHvdjTvv/QdCt
+	bY+bxkRgt/kssI+zp2aUYCnGowKDZQhKJZhENI1JugD9VwKm698Cpba5EIxl2Q==
+To: 
+Cc: =?UTF-8?q?Christian=20G=C3=B6ttsche?= <cgzones@googlemail.com>,
+	Paul Moore <paul@paul-moore.com>,
+	Stephen Smalley <stephen.smalley.work@gmail.com>,
+	Ondrej Mosnacek <omosnace@redhat.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	John Johansen <john.johansen@canonical.com>,
+	=?UTF-8?q?Thi=C3=A9baud=20Weksteen?= <tweek@google.com>,
+	=?UTF-8?q?Bram=20Bonn=C3=A9?= <brambonne@google.com>,
+	Canfeng Guo <guocanfeng@uniontech.com>,
+	GUO Zihua <guozihua@huawei.com>,
+	selinux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 2/6] selinux: contify network namespace pointer
+Date: Tue, 18 Mar 2025 09:33:29 +0100
+Message-ID: <20250318083422.21489-1-cgoettsche@seltendoof.de>
+Reply-To: cgzones@googlemail.com
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b7920c2c-1051-4674-994c-d1b681cf7988@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+From: Christian Göttsche <cgzones@googlemail.com>
 
-* Xin Li <xin@zytor.com> wrote:
+The network namespace is not modified.
 
-> On 3/17/2025 3:18 PM, Ingo Molnar wrote:
-> > Use u32 instead of uint32_t in hypervisor_cpuid_base().
-> > 
-> > Yes, I realize uint32_t is used in Xen code et al, but this is
-> > a core x86 architecture header and we should standardize on the
-> 
-> no "we", right?
+Signed-off-by: Christian Göttsche <cgzones@googlemail.com>
+---
+ security/selinux/include/objsec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-That's a stupid rule, I don't know where it came from, and I never 
-enforced it. It's not in Documentation/process/coding-style.rst.
+diff --git a/security/selinux/include/objsec.h b/security/selinux/include/objsec.h
+index c88cae81ee4c..b11c97c9feed 100644
+--- a/security/selinux/include/objsec.h
++++ b/security/selinux/include/objsec.h
+@@ -82,7 +82,7 @@ struct ipc_security_struct {
+ };
+ 
+ struct netif_security_struct {
+-	struct net *ns; /* network namespace */
++	const struct net *ns; /* network namespace */
+ 	int ifindex; /* device index */
+ 	u32 sid; /* SID for this interface */
+ };
+-- 
+2.49.0
 
-Linus doesn't use this pointless rule of 'pronoun avoidance' in 
-changelogs either:
-
-  00a7d39898c8 ("fs/pipe: add simpler helpers for common cases")
-
-  https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=00a7d39898c8010bfd5ff62af31ca5db34421b38  
-
-    It turns out that we don't have _that_ many places that access these
-                      ^^
-    fields directly and were affected, but we have more than we strictly
-                                           ^^                ^^
-    should have, because our low-level helper functions have been designed
-    to have intimate knowledge of how the pipes work.
-    
-    And as a result, that random noise of direct 'pipe->head' and
-    'pipe->tail' accesses makes it harder to pinpoint any actual potential
-    problem spots remaining.
-    
-    For example, we didn't have a "is the pipe full" helper function, but
-                 ^^
-    instead had a "given these pipe buffer indexes and this pipe size, is
-    the pipe full".  That's because some low-level pipe code does actually
-    want that much more complicated interface.
-
-In changelogs 'we' when used as a generic personal pronoun means the 
-kernel and the kernel community in general. It's a perfectly fine 
-grammatical construct.
-
-Thanks,
-
-	Ingo
