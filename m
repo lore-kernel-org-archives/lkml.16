@@ -1,102 +1,109 @@
-Received: from fllvem-ot04.ext.ti.com (fllvem-ot04.ext.ti.com [198.47.19.246])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A83F20B7E9;
-	Tue, 18 Mar 2025 11:35:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.246
+Received: from mailgw1.hygon.cn (mailgw.hygon.cn [110.188.70.11])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DEF5171658
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 11:35:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=110.188.70.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742297752; cv=none; b=HKyBYQa3iFW8pqpGrpzA2ssAe4preHK3mBmBX4yeS+tqWOwscd0GmXvYmlxlmSW0CrZr7K0ZUeeZLsshbUM6cJGCQipu5u/FfBUvkf5FGORlFAxnqnM4LLTzhD9icfZVM71HBhJfB2d7m0FUecbk8f1oKWYwT0SGDXDZovGIw5Q=
+	t=1742297764; cv=none; b=YgNfssJAvfKaD+9QWyVjc1DJO8CrGPXy+ZEoOoDNM31dlCrE8dKF91iFlyCJG62iFJLrrgAeYSQz9w1LbB64BV/KN6NojmcwZwax9zRwGdxTQtlb7QaOR3nnpg5D8DiefIUfPmgYs23nuzqdfsB9JJm1ZHZcRZosfBmAbrupJWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742297752; c=relaxed/simple;
-	bh=/6CF2wMzbpy7fKpS53DJ5LlhZBb3PsXTEdnWg8I9YkY=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=RjgMGQDYn2VdQPh3+9dFT8fL6Iu5NyOiGw92Odf0Keaf6u28c0yeEowxp5vANn7WukxdI+eG3FhvyFVW7rR79ITQEpOye9/2IHqplTFp7f7Fw+HJgFpz+LQbQ/W2d5pDih3jw1V4dJD7qWCK9j/LDnFpV+hVPpV60iM3x9PqzRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=JjoaLZnt; arc=none smtp.client-ip=198.47.19.246
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JjoaLZnt"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot04.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52IBZQeT3053345
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 18 Mar 2025 06:35:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1742297726;
-	bh=DsN1ncMlJ5zo/5NafwL+81jdetyHrIDDsHNQZGF7/6o=;
-	h=From:To:CC:Subject:Date;
-	b=JjoaLZntQRZ0LeHi/40id75IAoZZpZYaPjmx5gcAXlhhNYnRGWOivteR+mjihfXdQ
-	 PDOnhg09I5XAvrjLzmNqrCNrpoODyk11jAfVwBibAS6SQMt+mWRfB/Jy9e6rmz2cxK
-	 Ok9vU98qSxEbgD31N+w/y5/SlLwwRco6+8cASdeU=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52IBZQLb007471
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Tue, 18 Mar 2025 06:35:26 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Tue, 18
- Mar 2025 06:35:25 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Tue, 18 Mar 2025 06:35:25 -0500
-Received: from localhost (jayesh-hp-z2-tower-g5-workstation.dhcp.ti.com [10.24.68.98])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52IBZOxL104649;
-	Tue, 18 Mar 2025 06:35:25 -0500
-From: Jayesh Choudhary <j-choudhary@ti.com>
-To: <peter.ujfalusi@gmail.com>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: <perex@perex.cz>, <tiwai@suse.com>, <linux-sound@vger.kernel.org>,
-        <j-choudhary@ti.com>
-Subject: [PATCH] ASoC: ti: j721e-evm: Fix clock configuration for ti,j7200-cpb-audio compatible
-Date: Tue, 18 Mar 2025 17:05:24 +0530
-Message-ID: <20250318113524.57100-1-j-choudhary@ti.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1742297764; c=relaxed/simple;
+	bh=A9z+0riGGgw2t4zNCs7S2YiHkDIkBJ6j9rLDEGeB3iw=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=J9QKij25Hj7F4SCMxmmbL8xfW53JX5Pwwa2wtaKU4aXZAOQDP3zAMS2nZiiUzqDMihsj0v09KUEgxelZi6VcxT2DY5AX2f3/FaQh0bIB+O7spL51Caaj1NCT3eVF2FkX1XNwbzxxcLjxhnheUwYUeZTncyOOYSZLQUmXwxUng6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn; spf=pass smtp.mailfrom=hygon.cn; arc=none smtp.client-ip=110.188.70.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=hygon.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hygon.cn
+Received: from maildlp1.hygon.cn (unknown [172.23.18.60])
+	by mailgw1.hygon.cn (Postfix) with ESMTP id D7062F999;
+	Tue, 18 Mar 2025 19:35:36 +0800 (CST)
+Received: from cncheex03.Hygon.cn (unknown [172.23.18.113])
+	by maildlp1.hygon.cn (Postfix) with ESMTPS id BFFC416EC;
+	Tue, 18 Mar 2025 19:35:36 +0800 (CST)
+Received: from cncheex04.Hygon.cn (172.23.18.114) by cncheex03.Hygon.cn
+ (172.23.18.113) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 18 Mar
+ 2025 19:35:40 +0800
+Received: from cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d]) by
+ cncheex04.Hygon.cn ([fe80::1b6f:6c58:58a4:430d%6]) with mapi id
+ 15.02.1544.011; Tue, 18 Mar 2025 19:35:40 +0800
+From: Jianyong Wu <wujianyong@hygon.cn>
+To: Peter Zijlstra <peterz@infradead.org>
+CC: "mingo@redhat.com" <mingo@redhat.com>, "vincent.guittot@linaro.org"
+	<vincent.guittot@linaro.org>, "jianyong.wu@outlook.com"
+	<jianyong.wu@outlook.com>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] SCHED: scatter nohz idle balance target cpus
+Thread-Topic: [PATCH] SCHED: scatter nohz idle balance target cpus
+Thread-Index: AQHbl61OpENeMFSo9kSeuaXOI4AsgbN361aAgADT7pA=
+Date: Tue, 18 Mar 2025 11:35:40 +0000
+Message-ID: <5cb53e48ade14fbaab3e2940df7ed0d5@hygon.cn>
+References: <20250318022358.195154-1-wujianyong@hygon.cn>
+ <20250318063847.GA25930@noisy.programming.kicks-ass.net>
+In-Reply-To: <20250318063847.GA25930@noisy.programming.kicks-ass.net>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-For 'ti,j7200-cpb-audio' compatible, there is support for only one PLL for
-48k. For 11025, 22050, 44100 and 88200 sampling rates, due to absence of
-J721E_CLK_PARENT_44100, we get EINVAL while running any audio application.
-Add support for these rates by using the 48k parent clock and adjusting
-the clock for these rates later in j721e_configure_refclk.
+Hi Peter,
 
-Fixes: 6748d0559059 ("ASoC: ti: Add custom machine driver for j721e EVM (CPB and IVI)")
-Signed-off-by: Jayesh Choudhary <j-choudhary@ti.com>
----
+Thanks for replay.
 
-Error log for J784S4-EVM platform which uses this compatible:
-<https://gist.github.com/Jayesh2000/22784d790f493ca182bb78c8d5015c9b>
+> -----Original Message-----
+> From: Peter Zijlstra <peterz@infradead.org>
+> Sent: Tuesday, March 18, 2025 2:39 PM
+> To: Jianyong Wu <wujianyong@hygon.cn>
+> Cc: mingo@redhat.com; vincent.guittot@linaro.org; jianyong.wu@outlook.com=
+;
+> linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH] SCHED: scatter nohz idle balance target cpus
+>=20
+> On Tue, Mar 18, 2025 at 02:23:58AM +0000, Jianyong Wu wrote:
+>=20
+> Re subject; if you look at other patches for sched, you'll note that we d=
+o not
+> capitalize it.
+[Jianyong Wu]=20
+OK, will correct it.
 
-After this fix, test log for 44100 rate:
-<https://gist.github.com/Jayesh2000/13ab5852109f899fa2ceb466f8c130d9>
+> Also, what you're doing is not scatter, it is rotation.
+[Jianyong Wu]=20
+It seems. However, as nohz idle balance occurs quite frequently, in proport=
+ion to the value of "HZ" and CPUs number, the selected CPU will spread to t=
+he whole system soon. Compared with current situation where mostly only cpu=
+0 is selected, the change in this patch is more like a "scattering" effect.=
+ But it doesn't matter, "rotation" is fine. I can change it according your =
+wish.
 
-For rates 8k, 16k, 24k, 32k, 48k, 96k the scki used is the default
-value i.e. 24576000 Hz. When any application request sampling rate from
-11025, 22050, 44100 or 88200, the clk_set_rate calls are invoked in
-j721e_configure_refclk and the scki is modified to 22579200 Hz.
+>=20
+> > Currently, cpu selection logic for nohz idle balance lacks history
+> > info that leads to cpu0 is always chosen if it's in nohz cpu mask.
+> > It's not fair fot the tasks reside in numa node0. It's worse in the
+> > machine with large cpu number, nohz idle balance may be very heavy.
+>=20
+> Since you seem to care about ilb and numa; there is this _very_ old patch=
+ set
+> that never got finished:
+>=20
+> 	https://lore.kernel.org/all/20091211013056.305998000@intel.com/
+>=20
+[Jianyong Wu]=20
+Thanks for this. I'll look into it (may take some time)
 
- sound/soc/ti/j721e-evm.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/sound/soc/ti/j721e-evm.c b/sound/soc/ti/j721e-evm.c
-index 2057d46ad884..0e7e4ff950b5 100644
---- a/sound/soc/ti/j721e-evm.c
-+++ b/sound/soc/ti/j721e-evm.c
-@@ -182,6 +182,8 @@ static int j721e_configure_refclk(struct j721e_priv *priv,
- 		clk_id = J721E_CLK_PARENT_48000;
- 	else if (!(rate % 11025) && priv->pll_rates[J721E_CLK_PARENT_44100])
- 		clk_id = J721E_CLK_PARENT_44100;
-+	else if (!(rate % 11025) && priv->pll_rates[J721E_CLK_PARENT_48000])
-+		clk_id = J721E_CLK_PARENT_48000;
- 	else
- 		return ret;
- 
--- 
-2.34.1
-
+> IIRC there was a problem where it would simply stop running the per-node =
+ilb
+> when the node went idle, leading to node level imbalances. This should be
+> curable by picking one such idle node and keeping its ILB active or somes=
+uch.
+[Jianyong Wu]=20
+I think this patch is simple enough to achieve the "fairness". WDYT?
+>
+> Something to poke at if you're interested..
+>=20
