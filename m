@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA61F9FE
-	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:18:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24163219FC
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 01:18:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742260700; cv=none; b=JlUf33Cqbg3mBID6844aJ2Mxj3CYEtuX5U7afbTO/dKTmH2N0vIbTxZNVT1O2EGTIQu7SIQlfWKhvGfs/aNouqnqIKHD3SQJRzDtf40ds2BDuCFCBTV7DwtWuALLQ+RTjZh1SWgrJbosc86kD7cpaUTG0bImYVRMIcsMGfjbP7M=
+	t=1742260725; cv=none; b=ZyOM79UAPKBD1nFrqRyELGTiqURNhbR5jag7TSX3So2EdXR8ttO6OyggqRG5M8HFnYmXbqoz5mhOtPjclrqv4Po/DvnVZHMCC22lDjaBH38rnS5si/LwXX8CiMkGqcZcGkfQNQqYU7mrYLAhfG4bC+yvN8WeupsSAXKOx4bREiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742260700; c=relaxed/simple;
-	bh=fMFPVorHOCpjg8ERi+zcOuznXgzdX23/BT/u3O+grH8=;
+	s=arc-20240116; t=1742260725; c=relaxed/simple;
+	bh=YSMbJQm0dtkQCgXKxD1IBYJdlWjjJpfSyCN7la2UKg8=;
 	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aZVXaoVOQmnzoLXc29NzPObA7sqL/LfZSzLE4DfP/k5gq96K1F6GpdoRAov/nNw2n+4MYmcSQR2C9TlZux0kXBLIlwHxtwNd0B/y1kMq23nz9msFkB5XlLuqmRtiNNcQAhpQS1rfz7wqQ7c+9xYo0y3Wc4AsuS5mumiWi608T24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMdkQrR9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=vEouM6TlxrPwl2x7TB0EgEnTwDWTAXBJuQbVNo20zznnGhvCx71NR6vclAcFuFZrvsSAgKgTPuLIkUB70Cgdx2VFXu8X/15daB0AG4OG87tMxDd7NK/9sYxQIoIhCt6CMJWv0+KCVQyW7e2d0IRT7B9T7RF+VgURktS//yRfLXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NbQtkQ8s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMdkQrR9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D54A5C4CEE3;
-	Tue, 18 Mar 2025 01:18:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NbQtkQ8s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7AD1C4CEE3;
+	Tue, 18 Mar 2025 01:18:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742260699;
-	bh=fMFPVorHOCpjg8ERi+zcOuznXgzdX23/BT/u3O+grH8=;
+	s=k20201202; t=1742260723;
+	bh=YSMbJQm0dtkQCgXKxD1IBYJdlWjjJpfSyCN7la2UKg8=;
 	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=OMdkQrR98Qcpvubm+QWe38fF8n7fs9ZDTIHcBVb9ta7m1xM+Lpue5wvUnuw5OshEf
-	 Dhl8qeKhUkaPSAA2EjFgIL3XO+NOBlEZxLIv5wX1+IZ4pP9LwQ1Y3jeC6g3u+CmIlN
-	 d2FoVgpnjdsjiFr4qtjbtyKfR1m4Ngyoj67Tgu02OMkTwGSpqWP5IS7E1EejEjuH0r
-	 5KZbtRTiBcZQ++q5QPGnrj3ItAJbRMWkjkKVrfp3FkxhvLj4VmcB/bJoAUPNJADqIg
-	 sE+eNf15l077oD0PV9GhSRDxzF+ZKCGURXfqQ71RLDy+VhourbkipyoLNY+dTYkMir
-	 jHjTZ3RIEkRIg==
-Message-ID: <5562d492-2ac3-4bd2-b61b-70fea4e1c330@kernel.org>
-Date: Tue, 18 Mar 2025 09:18:16 +0800
+	b=NbQtkQ8sdbI2EhaGjfAO8JcdK/s5hZsL/zi0FGzYsodq27nzkUlP+cVHPWxqnt/dr
+	 4ZbbTMlB/Ce/7GAo65RwTnz4P71hcrileui7yCA/NZSsn+uMPUKPZ5QcCZ0mMOdUg+
+	 M1pA7DjA58/4fH6DJZCPX7yQUJfF4wcLe5cM5Sm7GPb+8kSf2dRzisdiOcz8NE8hom
+	 K8QWHzOPt9CZo1i628dvt1KosDWVUGo0O3tjwTx2/n2J7+6OrFmF23KEysFGhlz2am
+	 PwYLxJNnQeyJyWuw8HRvVPMVVT4gFxdi74tUNnBSsj1RkbO1oNHSHuGyFfgX4zU4E7
+	 3qZxCtQIv80Ow==
+Message-ID: <0cbe2a82-6e1c-425d-a967-85e4de44067d@kernel.org>
+Date: Tue, 18 Mar 2025 09:18:41 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,22 +36,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Cc: chao@kernel.org, linux-f2fs-devel@lists.sourceforge.net,
- linux-kernel@vger.kernel.org, Yohan Joung <yohan.joung@sk.com>
-Subject: Re: [PATCH v2] f2fs: optimize f2fs DIO overwrites
-To: Yohan Joung <jyh429@gmail.com>, jaegeuk@kernel.org, daeho43@gmail.com
-References: <20250317133611.457-1-yohan.joung@sk.com>
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] f2fs: fix missing discard for active segments
+To: Chunhai Guo <guochunhai@vivo.com>, jaegeuk@kernel.org
+References: <20250317101624.3223575-1-guochunhai@vivo.com>
 Content-Language: en-US
 From: Chao Yu <chao@kernel.org>
-In-Reply-To: <20250317133611.457-1-yohan.joung@sk.com>
+In-Reply-To: <20250317101624.3223575-1-guochunhai@vivo.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/17/25 21:36, Yohan Joung wrote:
-> this is unnecessary when we know we are overwriting already allocated
-> blocks and the overhead of starting a transaction can be significant
-> especially for multithreaded workloads doing small writes.
+On 3/17/25 18:16, Chunhai Guo wrote:
+> During a checkpoint, the current active segment X may not be handled
+> properly. This occurs when segment X has 0 valid blocks and a non-zero
+> number of discard blocks, for the following reasons:
 > 
-> Signed-off-by: Yohan Joung <yohan.joung@sk.com>
+> locate_dirty_segment() does not mark any active segment as a prefree
+> segment. As a result, segment X is not included in dirty_segmap[PRE], and
+> f2fs_clear_prefree_segments() skips it when handling prefree segments.
+> 
+> add_discard_addrs() skips any segment with 0 valid blocks, so segment X is
+> also skipped.
+> 
+> Consequently, no `struct discard_cmd` is actually created for segment X.
+> However, the ckpt_valid_map and cur_valid_map of segment X are synced by
+> seg_info_to_raw_sit() during the current checkpoint process. As a result,
+> it cannot find the missing discard bits even in subsequent checkpoints.
+> Consequently, the value of sbi->discard_blks remains non-zero. Thus, when
+> f2fs is umounted, CP_TRIMMED_FLAG will not be set due to the non-zero
+> sbi->discard_blks.
+> 
+> Relevant code process:
+> 
+> f2fs_write_checkpoint()
+>     f2fs_flush_sit_entries()
+>          list_for_each_entry_safe(ses, tmp, head, set_list) {
+>              for_each_set_bit_from(segno, bitmap, end) {
+>                  ...
+>                  add_discard_addrs(sbi, cpc, false); // skip segment X due to its 0 valid blocks
+>                  ...
+>                  seg_info_to_raw_sit(); // sync ckpt_valid_map with cur_valid_map for segment X
+>                  ...
+>              }
+>          }
+>     f2fs_clear_prefree_segments(); // segment X is not included in dirty_segmap[PRE] and is skipped
+> 
+> This issue is easy to reproduce with the following operations:
+> 
+> root # mkfs.f2fs -f /dev/f2fs_dev
+> root # mount -t f2fs /dev/f2fs_dev /mnt_point
+> root # dd if=/dev/blk_dev of=/mnt_point/1.bin bs=4k count=256
+> root # sync
+> root # rm /mnt_point/1.bin
+> root # umount /mnt_point
+> root # dump.f2fs /dev/f2fs_dev | grep "checkpoint state"
+> Info: checkpoint state = 45 :  crc compacted_summary unmount ---- 'trimmed' flag is missing
+> 
+> Since add_discard_addrs() can handle active segments with non-zero valid
+> blocks, it is reasonable to fix this issue by allowing it to also handle
+> active segments with 0 valid blocks.
+> 
+> Fixes: b29555505d81 ("f2fs: add key functions for small discards")
+> Signed-off-by: Chunhai Guo <guochunhai@vivo.com>
 
 Reviewed-by: Chao Yu <chao@kernel.org>
 
