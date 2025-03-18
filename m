@@ -1,142 +1,112 @@
-Received: from mout.web.de (mout.web.de [212.227.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E9CB20B21A;
-	Tue, 18 Mar 2025 13:41:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A555020B21A;
+	Tue, 18 Mar 2025 13:42:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742305274; cv=none; b=u6gPSGBo+1tLCkB7OfPWUJXch0cIwE2xHFkvXPpfoVXYjFZ141tsquqJOiimGHI7ypdCRbgVY6QuiBAEjsz0bnX/oFijkY0tXmOvZT1cM1Fk3r17fxI2k0L5clna3OiGtjxZuZ6cO447lwUHBvbrXogT7KYR+lAPBd/nvDsYGFU=
+	t=1742305352; cv=none; b=eePKmM2WR6kz8sRDNIp0rnyZ4QVBRs/eH0j2l0ShiVIpwIoxaCYTs+RdV/xuhgrLVMSM18n2Tve8LFvx/kJAOI3/bUMH88QltI62qai5IIv8kj91ULtN7jII/TbI9yYjzU/4HQeVoB/cadRV8oU8DmsJGYAfhs3zoGf4A1+oH3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742305274; c=relaxed/simple;
-	bh=OjvPta/n5oLTELCWfeZVH8po1jhn6l56saTNYMpV6DU=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:Content-Type; b=Pa7m4h7cSA4QjcvClQXpy6/BLq3nbkxcSecQANv37Wkw6N/U6ilX/xqEGDKwP6tbMcwmE8bf75Onmdu0L5CzcVlumsq2XQY1I8rEOgx2tkVxNu25Q2PGNXzz1qZBWRkQe9gC8kKvZJSUR7cSsomKG14C6BBLVEwgubGJ+HITupA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=ExDJ3ppc; arc=none smtp.client-ip=212.227.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1742305352; c=relaxed/simple;
+	bh=y3YYBQxE6Pi8b1Gs2Cz7fhOvcqgaZix7CEOA616y3t4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I1KtlmkvtoHf/OK3c2lPndnVCsQYHTviLLY7oDe2ke5PMeTNPD0BlqGq0DT5VyxvAUOWP/EBCGigbxA1zhf3xb3RTOCm8n+G+5OrHVetwlz4o37MwQO27MCC+xaBabIOieHcKVARID3fu20KeK/kzSMfSmoZBHBtiIk3vTrSgjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WYjgZU31; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="ExDJ3ppc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742305249; x=1742910049; i=frank.scheiner@web.de;
-	bh=gqWULTPXZo+EbXess34u0Qq7PeblGT8U0aZybYGNlaw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:From:Subject:To:
-	 Cc:Content-Type:Content-Transfer-Encoding:cc:
-	 content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=ExDJ3ppcV7dekWkbHx5OG91qa/Nua3xNiqVzzieIRPb2lI8PFxYyCVsNpNc9RxTk
-	 c6Mt2SXxYz2uWVxzlfwf55lXWUBT+iWcvLo4P+FaDpznzJNeMLcmy5QKQ1mq4S/8T
-	 +5/jLqSKfWDWIC+EvGqmdVKvZBayZrmXV/SwaNh66Pmv3nLczaAUvsk5XF4gZXATA
-	 NTCU6BL6VOkS5i9hStEnPBpeL64GmIx5B5AXp1+Aq9/QrWI7iYmIorZ/U2/U9kjl9
-	 XwVGXc2zrbN+VXtlmGCJ+CkAxcIKfQiEB4pnJ7fdXo0+LK5dZ0mvPrmLnNE/6ixtG
-	 ZfWFY7fQPMGplObz+g==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.22] ([87.155.230.83]) by smtp.web.de (mrweb105
- [213.165.67.124]) with ESMTPSA (Nemesis) id 1M8T7K-1tq7LF25w0-00CY4Q; Tue, 18
- Mar 2025 14:40:49 +0100
-Message-ID: <8c6125d7-363c-42b3-bdbb-f802cb8b4408@web.de>
-Date: Tue, 18 Mar 2025 14:40:48 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WYjgZU31"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742305350; x=1773841350;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=y3YYBQxE6Pi8b1Gs2Cz7fhOvcqgaZix7CEOA616y3t4=;
+  b=WYjgZU31gvMUrrJfTkRefc694uQEJSq2jN5g0IVXk5zYrbYPQJjV40Ql
+   +UZrkUhYknotEXS0U/DKHIkCkCzS5b+T6tnZkFpBHT0AdCncjMjAtd4Z0
+   LhAS2eX2qNxmL/aGUyTHPWrHHn2mh74C00G3bxX03Fro6HRDKrh/6A6ZB
+   4obIW/IevTGfhl/Ws7HEAAjq1YHPwPeBbYsVbsvQul2fow5IcqSxoJsEi
+   PaN7XRI0OrDdxA70F6SqzfvpomLVLUw20T14j4VKnLNFyHj0CXAqJ70g6
+   T9CA60mZwh8ZFGtyeknt4y1d/VRWZU8idB5SakiET4Yt86ZM/WmDhWqwD
+   Q==;
+X-CSE-ConnectionGUID: Rzm2rj51QBSx9mD/dai94w==
+X-CSE-MsgGUID: 4h8Jz5UtRpKsDRFQajVOCw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43583214"
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="43583214"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 06:42:30 -0700
+X-CSE-ConnectionGUID: 3HJ57cDLSzeglBHIN89uNw==
+X-CSE-MsgGUID: M7wA4lfnTFS8UnrypWJmdQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="126934731"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 06:42:28 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1tuXD6-00000003dNM-3I7m;
+	Tue, 18 Mar 2025 15:42:24 +0200
+Date: Tue, 18 Mar 2025 15:42:24 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"krzk@kernel.org" <krzk@kernel.org>,
+	"lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+	"broonie@kernel.org" <broonie@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
+Message-ID: <Z9l4QBJQkOaMxw73@smile.fi.intel.com>
+References: <20250318052709.1731747-1-peng.fan@oss.nxp.com>
+ <Z9lJETLh2y27934q@black.fi.intel.com>
+ <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Frank Scheiner <frank.scheiner@web.de>
-Subject: 6.1.132-rc1 build regression on ia64 (and possibly other
- architectures)
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: dchinner@redhat.com, djwong@kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:1rbs+WAu+iOyWLiRMJplyoHPy0zQccEFh4SqiFKqm6+YCqWlZkQ
- wNARKrFRlMY7/jG4i9kbgoxqy1QVXKxIW7CG9KghilCWIYb2isgd5ojbqdKgGu3OvNjuSZD
- f8qrM++ShNRj2yxYstZzEngkJXqxy/mNz6MnuA5/nK0LnLQPTtDV37J56hXkppGcX/7xX9U
- ur+kW9I6H/tNdVXYhIokg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:f+e/6AIskPk=;a6/fn4ZHxIiPyJI5CYG1ou265kH
- pzTpKf+s5R+mpuWuRbrJ/WmX/l3L1AavPgfNLfyKyceYQMQWbFkwUwDFe6ZO5tbiVXxFs8hjD
- UqlqQafRlLweaqw9s4AEtYqwvDMlnB9TXVyq3VnEvbH6rT6KVa7GPb0dGHUCuMYQS14toqgQ6
- +DeHjfvk3BNtvLHJAoAS34GXB2xt9gVqJKcrsOvUCLMpTKemLpuBNNYkUFQTO7JsOnOBBPzwn
- LKOgeIL7AYyLOD3lDS111AYVwDFR/DsuDiCBKIDuHEvHL8pMFedawQu/Ngrq35l/p9uwfR4uQ
- lxTH0jQykXQUd4N2prdGPnrRkWKQz13IFuAR6Vfzu+qdwqIsCaHDWVujpB+t+wsgFwqhkn6Hg
- S7OjHXpgiSsmaJy4/HW8N4B8vqBqe8eMxwQV6hqm9iwOMwnyAVuowU7sCflc3HZJyXuEjKy/c
- CHaXmMomFKvRfnXqO5PnzPEGBWUPXDwdXoCtmsxsa7LZIHdhQs8mN1XclmLA0H0VTtVqrqLe1
- J5JGEIT3Q3M7S3/hh5MMX2UDWWO5n1tASzonHIDWXjETlR2JN7gUBOTsd/nvkK3qVuC7p7dyu
- 6aVbqkx49AEh6pFyTcPc0plCycp94dzW42EmT7leMHxBqyorIutY6ehY/TfMZTITGTsDHDRLC
- CegOR03vBvXWyfAmUB7QwYRgbveNH5J3LQdlXKQJzQOu/i3MgRWJSGgG0ZVX11ys7d+PsOO63
- Bt2DmQCfI5tiFqlBw7yD/cn08WaqW96C5hVDrGXy7oPCzAaKcbXAYrs0b7NrUcwhRM08GMbS3
- bpS8ReLg+PKCxyhCRgS2G24sMsnXiD1jRKA0X5Qxb3Y+atd1OvqF9hJbImBnAUl1tZnpZKvE0
- 9whE4T/jS4kTdt2aAnvPIUAVB0t6lVnm+pfxTUY6lvDLxUbmCve24gIC/Gr3WnQcH9Outnbb2
- IbmJ+vsZ1YOdZLc8cue8RxxWYNsRtJGhAv2A8jMQNnSh5dyNUBlcrw+1O7JVSrRrpF0gVPevb
- Je48aTs1oKrIjZ35pUoFa8Kh5qvaEuijVH1eo246EmUhLDjiPRsAVn+QKhGwo9GQQHO/HMv5E
- NU4z4jhkv//ANd3qVMQKwFwfgpfdy0aG//FLc4hbs9vO1/9s4jViOj/yB+PIU+5RJbhqjPUP1
- 3HWQE84QJmp5u8mBk8a0T0eKxtoVtdJhY58+Cp0h48UWsyBP5x5ld1/BvJg6vD/yDrGjP0DkY
- hkl8Wjaw2xj7u/AVA4jufS1pjlBjxske2dWzymqG0beneuJtoCexhUQA1vYsHESAcW/mMnOWW
- MeSMqspy4lP4lAS42yvYpKZP6gYGuymN/LONlVE5ovth+sruV4JeAFvzLolNQMTIouLiWAwMk
- xvYw2a6S7bKfD7mH84p56rOEBn2FLMyeCtwAUBmaHmEaTuocadhRqFGtdVB1FzYAwS+hFV9K3
- hT7vBllcHZ6Nwve8DgJjkX09pV8svdrH08WxHmw/VUXcJMTGHXp6gCkLH9+rKlOKxDiVKxA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi again,
+On Tue, Mar 18, 2025 at 12:38:15PM +0000, Peng Fan wrote:
 
-also for 6.1.132-rc1 the review hasn't started yet, but as it was
-already available on [1], our CI has also tried to built it for ia64
-in the morning. Unfortunately that failed, too - I assume due to the
-following **missing** upstream commit:
+...
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=f6b384631e1e3482c24e35b53adbd3da50e47e8f
+> > Also the commit message doesn't tell anything about the existing DTS
+> > files.
+> > Do we have this device described in any in the kernel? Do we have any
+> > googled examples? Why I'm asking because often the issue is the
+> > incorrect setting of the polarity, which needs to be carefully checked,
+> > esp. for the voltage regulators case.
+> 
+> Under arch/arm/boot/dts/samsung/, a few dtsi files have the property 
+> with results from output of
+> `grep "s5m8767" ./arch/arm/boot/dts/samsung/ -rn | grep gpios`
 
-[1]: https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.1.y
+Side note: `git grep -n s5m8767` is a better command. You can just look for the
+exact GPIOs, usually not so bit amount of them, or do it recursively with
 
-Build failure (see [2]):
+`git grep -n 'gpios' -- $(git grep -lw s5m8767 -- Documentation/devicetree/bindings)`
 
-```
-[...]
-In file included from ./include/linux/string.h:5,
-                 from ./include/linux/uuid.h:12,
-                 from ./fs/xfs/xfs_linux.h:10,
-                 from ./fs/xfs/xfs.h:22,
-                 from fs/xfs/libxfs/xfs_alloc.c:6:
-fs/xfs/libxfs/xfs_alloc.c: In function '__xfs_free_extent_later':
-fs/xfs/libxfs/xfs_alloc.c:2551:51: error: 'mp' undeclared (first use in this function); did you mean 'tp'?
- 2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
-      |                                                   ^~
-./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
-   78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
-      |                                             ^
-fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CORRUPT'
- 2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
-      |             ^~~~~~~~~~~~~~
-fs/xfs/libxfs/xfs_alloc.c:2551:51: note: each undeclared identifier is reported only once for each function it appears in
- 2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
-      |                                                   ^~
-./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
-   78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
-      |                                             ^
-fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CORRUPT'
- 2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
-      |             ^~~~~~~~~~~~~~
-./fs/xfs/xfs_linux.h:225:63: warning: left-hand operand of comma expression has no effect [-Wunused-value]
-  225 |                                                __this_address), \
-      |                                                               ^
-fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CORRUPT'
- 2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
-      |             ^~~~~~~~~~~~~~
-make[5]: *** [scripts/Makefile.build:250: fs/xfs/libxfs/xfs_alloc.o] Error 1
-[...]
-```
+> Exynos5250-spring.dts uses GPIO_ACTIVE_LOW.
+> Others use GPIO_ACTIVE_HIGH.
 
-[2]: https://github.com/linux-ia64/linux-stable-rc/actions/runs/13914712427/job/38935973489#step:8:1292
+So, one of this needs to be fixed.
 
-[3] (7dfee17b13e5024c5c0ab1911859ded4182de3e5 upstream) introduced
-the XFS_IS_CORRUPT macro call now in `fs/xfs/libxfs/xfs_alloc.c:2551`,
-but the struct "mp" is only there when DEBUG is defined in 6.1.132-rc1.
-The above upstream commit (f6b3846) moves "mp" out of that guard and
-hence should fix that specific build regression IIUC. Again not
-build-tested yet, though.
+> The current changing to using GPIO descriptors should be ok per
+> my understanding.
+> 
+> Not able to find any public datasheet for this pmic (:
 
-[3]: https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.1.y&id=4fc6b15f590bc7a15cb94af58668d9c938015d79
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Cheers,
-Frank
+
