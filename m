@@ -1,60 +1,80 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from riemann.telenet-ops.be (riemann.telenet-ops.be [195.130.137.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD6A914A8B;
-	Tue, 18 Mar 2025 14:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B82620DD5C
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 14:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.80
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742306918; cv=none; b=jyQDJn0e7f5Z+Rvh7CnwxGxflYmGu2RepROKxHcv2s0BeVDz+TphB7C2PYoixM4ExHVo+pzPYLiwHkv686L1nq5dDZhvLY+Hs15e1++LgTo6LRMJmER+Q39uW0JBapEu35uWf306UwRLauf4hy9uGq3zInjCUAtPmkUMHrHHS90=
+	t=1742306953; cv=none; b=erjanIfXQE2qxpOlQMUaipXT+ZL+bn9V5gRhL4BKP5xEAN9bdufwxpQtrbRPsfd4H/XWYhjcQ1BPoXHh4jPH7bytp571pwaBLvhDo3BtvJ2HNuB/UBwNBnaSEwse2K9aP67lipB77x3mItME26vTH50OowDeOJxxvtf5K9Zj0MI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742306918; c=relaxed/simple;
-	bh=b3BwaNDcKCUP/7KouSzxpXIt9WfVHezzFGaH/a198q8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nT5kxxrmB1ylUjBcr0WyBx41qAt2ojnxFmpSZeKFLXm2XOp2H1EtCfFjPWGN60HN9ox4i9A/NGXNmBqnSQopbXqyWlaMM8+JH6/Jfhter9AI8kj3KJXYgDCdSextqurL6eEDMAXLBl2B+8b8RfKr4hcvTEbC0BsF05jRG+eYNkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=f3xxU78P; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="f3xxU78P"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=6WvnC7tPRCiTGfBn03Ur3Jt4abVexUVYYSSyZJJAuRc=; b=f3xxU78PYsEzV8e2vE0hjY8cZv
-	QKGKQ4yxcn4g3xNicVzFoSWgnFFV1ZoBWr+f9vM5TNqt4pQD2Po6rMn/LPNl7SVnV2FE2uuvFlOpN
-	cyDov92u2+PhX35F580TxmzowUuc1mQq4S10h/4A14p6+6NOKebs6wvL+/R0eW9a6K+I=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tuXcG-006GhC-8b; Tue, 18 Mar 2025 15:08:24 +0100
-Date: Tue, 18 Mar 2025 15:08:24 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Rajaganesh Rathinasabapathi <Rajaganesh.Rathinasabapathi@amd.com>
-Cc: devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au,
-	andrew@codeconstruct.com.au, robh+dt@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	Supreeth Venkatesh <supreeth.venkatesh@amd.com>
-Subject: Re: [PATCH v3 2/2] ARM:dts:aspeed: Initial device tree for AMD Onyx
- Platform
-Message-ID: <fdd969cb-aa2d-4d55-949e-e2631757221e@lunn.ch>
-References: <20250318041224.1693323-1-Rajaganesh.Rathinasabapathi@amd.com>
- <20250318041224.1693323-2-Rajaganesh.Rathinasabapathi@amd.com>
+	s=arc-20240116; t=1742306953; c=relaxed/simple;
+	bh=e7IPWI1faT8i1sKWFHAnQOxsaLiXsXYbWQX2x5FjKTI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rRaibZ9w4BJkZHxHbqDaqe5M+cxNyhPkYC6Wr3SoWrge60bNmBGuto057oHxF78faahXLkf5JvVHuAbLJ6Bh3fvFH79T4SNw9pbmL6epxeEZxwxcthx1mv/rwGFU/yIYoiod/G44jKlNkxq9Bz+OuSu8ZAHGyY/cU2FN2cRBqlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [IPv6:2a02:1800:120:4::f00:14])
+	by riemann.telenet-ops.be (Postfix) with ESMTPS id 4ZHD8c3xmfz4x3wQ
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 15:03:44 +0100 (CET)
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:2568:e3d1:1e11:17f3])
+	by xavier.telenet-ops.be with cmsmtp
+	id SE3b2E0011Mz0fJ01E3bzP; Tue, 18 Mar 2025 15:03:36 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tuXX4-0000000Eeni-1Zsa;
+	Tue, 18 Mar 2025 15:03:29 +0100
+Received: from geert by rox.of.borg with local (Exim 4.97)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1tuXXV-0000000AOnB-1Nhv;
+	Tue, 18 Mar 2025 15:03:29 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Shreeya Patel <shreeya.patel@collabora.com>,
+	Dingxian Wen <shawn.wen@rock-chips.com>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>,
+	Hans Verkuil <hverkuil@xs4all.nl>,
+	Mauro Carvalho Chehab <mchehab@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>
+Cc: linux-media@vger.kernel.org,
+	kernel@collabora.com,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] media: platform: synopsys: VIDEO_SYNOPSYS_HDMIRX should depend on ARCH_ROCKCHIP
+Date: Tue, 18 Mar 2025 15:03:27 +0100
+Message-ID: <fa5622428f071a20ca5df96218aedc84fb7edc1a.1742306464.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318041224.1693323-2-Rajaganesh.Rathinasabapathi@amd.com>
+Content-Transfer-Encoding: 8bit
 
-> +&mac3 {
-> +	status = "okay";
-> +	phy-mode = "rgmii";
+For now, the Synopsys HDMI HDMI RX Controller is only supported on
+Rockchip RK3588 SoCs.  Hence add a dependency on ARCH_ROCKCHIP, to
+prevent asking the user about this driver when configuring a kernel
+without Rockchip SoC support.
 
-Does the PCB have extra long clock lines to insert the 2ns RGMII
-delay? Or are you another victim of aspeeds broken MAC/SCU driver?
+Fixes: 7b59b132ad4398f9 ("media: platform: synopsys: Add support for HDMI input driver")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ drivers/media/platform/synopsys/hdmirx/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-       Andrew
+diff --git a/drivers/media/platform/synopsys/hdmirx/Kconfig b/drivers/media/platform/synopsys/hdmirx/Kconfig
+index 27e6706f84a37375..4321f985f6320611 100644
+--- a/drivers/media/platform/synopsys/hdmirx/Kconfig
++++ b/drivers/media/platform/synopsys/hdmirx/Kconfig
+@@ -2,6 +2,7 @@
+ 
+ config VIDEO_SYNOPSYS_HDMIRX
+ 	tristate "Synopsys DesignWare HDMI Receiver driver"
++	depends on ARCH_ROCKCHIP || COMPILE_TEST
+ 	depends on VIDEO_DEV
+ 	select MEDIA_CONTROLLER
+ 	select VIDEO_V4L2_SUBDEV_API
+-- 
+2.43.0
+
