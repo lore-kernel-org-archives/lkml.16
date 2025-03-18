@@ -1,76 +1,117 @@
-Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98AF1F4E37;
-	Tue, 18 Mar 2025 11:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81888207E04;
+	Tue, 18 Mar 2025 11:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742295989; cv=none; b=NWwfHXcW6ZDS1JgO01kRmE/HyGHMLOVt62xG4QtAyq5NTqBv7vj0O3exDZlr0BIdprga93vlEBuX21dNfxf45HPTGIxRV23RvWkqCthZH3FAJnD3K4oJqux3l7DOQm9VYqCxNMm0MXqhdlV09I2A0hP0eP6DV3tBGsp1Ba7lu5g=
+	t=1742295995; cv=none; b=bzfjqhNZ0EdZhcKGzhxhinN4T+rXbIA/NXEoaYSq+nMChUFgAxkHoLGe8wWJWZSuUMxIsXPZ3PFB28udPNLxB6gf1kpPIzN957VupciYl8uXEEg4Wf64kRiV+B7rGzTJipB0xVtC2A6YXWMwmb1+XTCfHzU7MvVzpIRs/ylQ3F8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742295989; c=relaxed/simple;
-	bh=2NMZetfY8vWQs9ixhV/e0oE98Uu0W2HkAtBlSw1Q4Vk=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=gK/tCf+Lokal0a4swEXkejV5ZalEX9peEQD9rlwN33ZS3YnVJlngVxjZcAOF8QMKj38RYZJPnwVYbR3JL9DZDRvRHx10lELahdCbS8nFb2v4MD7Hon1/92mgm95i/ssn340p8EmglwEKWdkEf72sjGCra+TMKkDQN1d7/lP0y20=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=0hkQupLN; arc=none smtp.client-ip=220.130.44.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+	s=arc-20240116; t=1742295995; c=relaxed/simple;
+	bh=hMVUaEEnjSIJIhvmV0ga9X3gFvreLO6e2cCWdaEsuuI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CuvO7ktJOj5gCoZQ+SwZLX2TSDB+tC65L7e3t3g5cmVAu+8wV2PLq4TirNrCc73MiPOTZBlArXNrIi21M00nFoIQmXZjvkUUWD70EaSDY2KsDDpwRuMiltlPdk8u4Uw71OGRohGjFPgMzN/ZSiAbgOGlRVdtW4/83p7l1quwwoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=a+VXabAO; arc=none smtp.client-ip=178.60.130.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="0hkQupLN"
-X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
-	s=richtek; t=1742295978;
-	bh=f37X57Ygtgqdd8yKUdsVaQaLmb/UNUhziIon4nhIh30=; l=578;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=0hkQupLNOOOTKeraiISXpyLpsotdW1BF0Bc5wz9mC2d8WmP5XahZ5USJN/kplR7z+
-	 LQg2xAvq8+DfqP14TKX3L9l33DRZLMsiRUQnuHR0s4QOfrtkOeB5mVKohPldcpkb1T
-	 KBnkJrU7E7bPjdXUrWRCkBEAm9f/dlUGHRLIi8+ZXmAiy+S5AmOgRyePaq+bh2JCXW
-	 bEssSQhaxJJ6tsrOyLYPmf6bq9gq+BfuwGPW3pRgAFxZdsuVJCC+tHBocGhwlFktQe
-	 fGL2WQIH+0FCmRkOKey0pPX2bvxBftBe+DUOMK1S1zaK5tZagsqaOhBhtdvKjE0Pd7
-	 1E4qs5nMQTKEg==
-Received: from 192.168.10.47
-	by mg.richtek.com with MailGates ESMTPS Server V6.0(3810286:0:AUTH_RELAY)
-	(envelope-from <cy_huang@richtek.com>)
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Tue, 18 Mar 2025 19:06:00 +0800 (CST)
-Received: from ex4.rt.l (192.168.10.47) by ex4.rt.l (192.168.10.47) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Tue, 18 Mar
- 2025 19:06:00 +0800
-Received: from git-send.richtek.com (192.168.10.154) by ex4.rt.l
- (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
- Transport; Tue, 18 Mar 2025 19:06:00 +0800
-From: <cy_huang@richtek.com>
-To: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-CC: ChiYuan Huang <cy_huang@richtek.com>, Rob Herring <robh@kernel.org>,
-	<linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-Subject: [PATCH v3 0/2] regulator: rtq2208: Fix incorrect code section
-Date: Tue, 18 Mar 2025 19:07:03 +0800
-Message-ID: <cover.1742295647.git.cy_huang@richtek.com>
-X-Mailer: git-send-email 2.43.5
+	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="a+VXabAO"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
+	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=oIUPjoMpLh1mrSgGOcxlYJiX3bOq+XLNrKaY6AZKFpA=; b=a+VXabAOj3lUHkzW0kr0/rTb0P
+	ROjDUDUCtdEt/zBN0GP/UwvsAxteCF7khY8P3aJLmIPH4zS0HgQQ7EqwLt6yIK8ZIbnSJ2YvKkFUh
+	wmvp+mxYSpbQ0tKVAYxU3GsbMmhgV3iCt6n0qPfalZ0F02BtiS8rWt/U/Jn2bib3IEaijG1GcjO+0
+	RlOeYg595g2kFsbOcGX37I4cwzYXFq7WKQKgzaio0O482eze2wSxv2W1Yg+33wPbwhgxnxc4UMw6m
+	PpExXnSgQV6UBVT8QdUQTd6eYzhE8EKORF0rKJbL5eIQvfQukuhEuV2IzEv0gwCakkX3356r4aSLM
+	HhJ0A9jA==;
+Received: from [223.233.71.8] (helo=[192.168.1.12])
+	by fanzine2.igalia.com with esmtpsa 
+	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
+	id 1tuUm9-002fjZ-FQ; Tue, 18 Mar 2025 12:06:25 +0100
+Message-ID: <61221d19-a8df-4ee0-6123-2abde5eaaadd@igalia.com>
+Date: Tue, 18 Mar 2025 16:36:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+ Thunderbird/102.5.0
+Subject: Re: [PATCH v2 2/2] fs/ext4/xattr: Check for 'xattr_sem' inside
+ 'ext4_xattr_delete_inode'
+Content-Language: en-US
+To: Theodore Ts'o <tytso@mit.edu>, Bhupesh <bhupesh@igalia.com>
+Cc: linux-ext4@vger.kernel.org, kernel-dev@igalia.com,
+ linux-kernel@vger.kernel.org, revest@google.com, adilger.kernel@dilger.ca,
+ cascardo@igalia.com
+References: <20250128082751.124948-1-bhupesh@igalia.com>
+ <20250128082751.124948-3-bhupesh@igalia.com>
+ <20250317151728.GC954365@mit.edu>
+From: Bhupesh Sharma <bhsharma@igalia.com>
+In-Reply-To: <20250317151728.GC954365@mit.edu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: ChiYuan Huang <cy_huang@richtek.com>
+Hi Ted,
 
-The old v1 series are here for the reference
-https://lore.kernel.org/lkml/cover.1742204502.git.cy_huang@richtek.com/
+On 3/17/25 8:47 PM, Theodore Ts'o wrote:
+> On Tue, Jan 28, 2025 at 01:57:51PM +0530, Bhupesh wrote:
+>> Once we are inside the 'ext4_xattr_delete_inode' function and trying
+>> to delete the inode, the 'xattr_sem' should be unlocked.
+>>
+>> We need trylock here to avoid false-positive warning from lockdep
+>> about reclaim circular dependency.
+>>
+>> This makes the 'ext4_xattr_delete_inode' implementation mimic the
+>> existing 'ext2_xattr_delete_inode' implementation and thus avoid
+>> similar lockdep issues while deleting inodes.
+>>
+>> Signed-off-by: Bhupesh <bhupesh@igalia.com>
+> This patch is causing a failure of test ext4/026, and also exposed a
+> bug in e2fsprogs[1].  With the e2fsprogs bug fixed, the file system
+> corruption which is induced by ext4/026 is (when running e2fsck -fn on
+> SCRATCH_DEV):
+>
+> Pass 1: Checking inodes, blocks, and sizes
+> Pass 2: Checking directory structure
+> Pass 3: Checking directory connectivity
+> Pass 4: Checking reference counts
+> Regular filesystem inode 14 has EA_INODE flag set. Clear? no
+>
+> Unattached inode 14
+> Connect to /lost+found? no
+>
+> Pass 5: Checking group summary information
+>
+> /tmp/kvm-xfstests-tytso/vdc.img: ********** WARNING: Filesystem still has errors **********
+>
+> [1] https://lore.kernel.org/20250317144526.990271-1-tytso@mit.edu
+>
+> So what appears to be happening is this patch is resulting in ext4/026
+> failing to clean up a no-longer-used EA inode, which is unfortunate.
+>
+> Without the e2fsorigs bug fix, ext4/026 will fail but the error
+> message will be much less edifying:
+>
+> e2fsck 1.47.2 (1-Jan-2025)
+> Pass 1: Checking inodes, blocks, and sizes
+> Pass 2: Checking directory structure
+> Pass 3: Checking directory connectivity
+> Pass 4: Checking reference counts
+> ext2fs_write_inode: Attempt to write to filesystem opened read-only while writing inode 14 in pass4
+> e2fsck: aborted
+>
+> So I'm going to drop this patch (2/2) from the ext4 tree, but I'm
+> going to keep patch 1/2 from this series, since it is fixing a real
+> bug.  I presume that without this patch, the syzbot reproducer will
+> trigger a false lockdep warning, but we can fix that later.
 
-Since the subset of v1 patch series are accepted, there's only one
-document change are left and still need to be reviewed.
+Sure, many thanks for your help.
 
-ChiYuan Huang (2):
-  regulator: dt-bindings: rtq2208: Mark fixed LDO VOUT property as
-    deprecated
-  regulator: dt-bindings: rtq2208: Cleanup whitespace
-
- .../devicetree/bindings/regulator/richtek,rtq2208.yaml         | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
--- 
-2.34.1
-
+Regards,
+Bhupesh
