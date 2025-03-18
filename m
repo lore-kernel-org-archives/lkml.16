@@ -1,130 +1,115 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E0F149DF0;
-	Tue, 18 Mar 2025 18:20:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7252E211A26
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 18:20:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742322032; cv=none; b=X09cwxbwS2ajVCV5lM2pMfMnnDl2P9RVdDOgwuk/x0k3Rns2ushVTzgmXU/Okt6njKUa5Tbl1B+VTRPv1OiwTjiyX6XmKVtIWDirtSkaqNzSXmJKSc+RFOTkWj4Zbf2j58ewt+ST2SZeCH/yzZr5oVwznZonp5+fpSaRtMNW3VE=
+	t=1742322044; cv=none; b=QgTxoaYmMG7gcaNaltLR63T5LMCrLLARazMHrkjAJo/RzN7TKOhasZ8L9NrBT0WeXjtKYx6hElHk5s7SjyA1H/Lk30JSNszyi62QyU6ydG8BfJqSeJZ3+4N7kMiztbbd8ZD3f4s66y4BoasKwQdg25tbOxTkyZz+r/bCkOCPlyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742322032; c=relaxed/simple;
-	bh=pGTw6WoeMWp6FVrMCftSryGjWpcdWINfLX4QGHiXHp0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qQKEt9iwExkEwV0zrUq4niOGFb9Rlm+RSHW3UqxY+JRcpu60ZWaxN5tE8YXBvoa85K/hDDjbuqf+G8YJSQ7TqjLF5ToHndfrm193nT+/RYSRCiCtamCRYEk67tofQ659bZ8x6LY0aVszZz9brBk+dssldC8y786k+FliTyHoOWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RRN+8ljS; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742322044; c=relaxed/simple;
+	bh=D4ROG5ncFDjfENJ+SXuTnZme3q1QZimDk3kNy9GmZro=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dh0ko6ew3PJG2HwrA+9h3Qg4JCCkdFiIvl6mKmAr9c9M+tfYOn37Ivtk23qe234gB/NkoNdbzAIEEox+Ke8VcwX0U1wjbep+JZ4f61gsWccJTnbNylYVS7ORnoclLlZy5VWH0+jl6s70HFMtn9AshAduBdwBqYyNj4wSgr3Hs1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Un1C3XNB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRN+8ljS"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30bef9b04adso64463541fa.1;
-        Tue, 18 Mar 2025 11:20:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742322025; x=1742926825; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FBan4wol6XPgP+/yLu6aCRZmWKzav4I2GXdbdcPbMJQ=;
-        b=RRN+8ljSedzyG8gb2DcVBFOBGv5tuOFuiCjA5zq0/IWi4/lCKd3hUXPuJ2ZfB9k/Gu
-         aH8TgqaFOMS8DBytKulaufzEhmlB0G4x2uBjaYD40VULSBBvuhIvjCgpENhLm2h+1gg6
-         bo4XV5MwfnE0W+lWfbJQ2dUMq0Qn5kuNKRO0Jm5LtltFMPjVkflv0PuTbTI5cxXQ/Hr6
-         nxugDHWkf3Q+gaBPOvDTYhlr8Z6Umk3NAEnvf878wJCXz3WQLXuUWJ685MxJT3Qn97gG
-         YpVG1VVUvAz+TdW49ckV+KjOJ/9xx/D6weWSgpWCutseux3d3HOnNxBwEY2yP6GJ9Pf1
-         QbyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742322025; x=1742926825;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FBan4wol6XPgP+/yLu6aCRZmWKzav4I2GXdbdcPbMJQ=;
-        b=cL8dGvZwEscWH4H5LFY1p7OsA06Y+5+wisG1Gam+RDgKqIP3Kg2qoLqQCA8GUL1Ui5
-         FPV2e9MmZ9kr/OEmeqRefvv2zO0rlIA/SoSqJoNTqUEB4jXq0pRqtY7aYz3hqCWQ7U3j
-         y+NbCqc40VBDMjCqO0j24uI2kOxyj/uGpXS3IVyzsy+VQcIVprEGykTQvsLHJHS0vrFi
-         B19KC63SLsfPiX0M1Fg0MclcqH2R33bGzoInCcSEpb5103meorOqsrWpFBDVtlGoivOt
-         SgmjYaBxB2tdGE7KLZfDOpbrm1E1jlmnQFI2vyzmum2v28WLxQNakLBNwZz5+/XrnEX4
-         n3ow==
-X-Forwarded-Encrypted: i=1; AJvYcCUnvcB9bi8rBO3lpSDQC3vibmZjOzL++RYeo/DzxmqkpXIY3P8gQ7vJ2frp8WvG1Ja+e52hPcuadVmrsePB@vger.kernel.org, AJvYcCVs9GnLaZCkBUrZBBPrZlLbyAzoSxUQPxHL/SRz/U/IljvM03h8CFD45jMGrEep8e2pjnLA7Ka9A52VcQ==@vger.kernel.org, AJvYcCWPmZNA8K1V0oeuB3ublIsEgKkYN0ABiXpHqKulAxy3rTH4eclFYRLpNGC1ZMZ8R0HUiE5/45Yssd0CxA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YypCj2+zaXLTLzYHTtyY/Qh9ySg5PJLb+wc6oeDbTQZWDF4Wy4u
-	erZhMpQddELym8u/hKVi7g367F9QI7BSeB0KG2y492pY/GQSY7dC
-X-Gm-Gg: ASbGncuiLmiHeaXXBBkLvUro+8jBhhzmLB6hb0p08Su0ebzBkS9z3v/vqeH0Ca9icIp
-	BNuaT+aZlKABbmL1wBSApPS3lLxB6sg48W0bMdEYVpQ2k/wxhSnchhfM/6UyZz/ozrxTWKW9DOb
-	ImjAtJ7yVdr+Jv+IGx2WrouUAZUrXLemX5ncJhyxZLJxx14nlEkY7xuG7sHpWe3w8T1IKaYVcwj
-	MKsFdby01UJrYX5zGETjsUCJDpldgKWmMWLoTDd/OKZv/p+HjIIQnaLFAZE7r323QBNHD/0LmnU
-	9sPg8DI4oGyMOgBmFvQCbvO2wfrwdreznf6kelkzM1FegQ==
-X-Google-Smtp-Source: AGHT+IEp41sTRtQHleO8s17cTcBz/WRGvYLMOBfDJzuipfBrbh5s+omLIFbsikMDaTnozZf+tG9gXg==
-X-Received: by 2002:a05:6512:308f:b0:549:86c8:113a with SMTP id 2adb3069b0e04-54a03b8d777mr3549627e87.15.1742322024618;
-        Tue, 18 Mar 2025 11:20:24 -0700 (PDT)
-Received: from leo-laptop.. ([85.89.126.105])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7a84desm1780577e87.46.2025.03.18.11.20.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 11:20:24 -0700 (PDT)
-From: Leonid Arapov <arapovl839@gmail.com>
-To: Helge Deller <deller@gmx.de>
-Cc: Leonid Arapov <arapovl839@gmail.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	"Dr. David Alan Gilbert" <linux@treblig.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	linux-omap@vger.kernel.org,
-	linux-fbdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org
-Subject: [PATCH 29/29] fbdev: omapfb: Add 'plane' value check
-Date: Tue, 18 Mar 2025 21:19:52 +0000
-Message-ID: <20250318211959.8557-2-arapovl839@gmail.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250318211959.8557-1-arapovl839@gmail.com>
-References: <20250318211959.8557-1-arapovl839@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Un1C3XNB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02605C4CEDD;
+	Tue, 18 Mar 2025 18:20:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742322043;
+	bh=D4ROG5ncFDjfENJ+SXuTnZme3q1QZimDk3kNy9GmZro=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Un1C3XNBEq5lxejNLuYJyab7vL/YyNj1oCJaC79qqPDxquB2IYFOH6tQerjsSejMd
+	 h/apdcGhNb/EcuF+lkzZtZgE+ePIiiSpM8tEU48sTP+F9NsI/3CzXPWdhdkHOZw7bo
+	 tPlNzYxO8FBUZ/69iJABi0CrEbI/pGcTGvKjQmuN2SXxdgMVTjR8VpVQI/RoyD+pIh
+	 ofhsxfHptiOLlgI4GNy8cVekwCypUNFkzts1igjhHHHc1v/Q+JPO0WLERiNHhSwrEF
+	 v23ji+d+aUhVdg9QdyR7uIM6JNJVJGxdFhC7rN0ohh741J5cbV9GTZs1of93Czxopp
+	 mmBgnHLyriuHw==
+Date: Tue, 18 Mar 2025 19:20:38 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Xin Li <xin@zytor.com>, linux-kernel@vger.kernel.org,
+	Juergen Gross <jgross@suse.com>,
+	Stefano Stabellini <sstabellini@kernel.org>,
+	"Ahmed S . Darwish" <darwi@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 5/5] x86/cpuid: Use u32 in instead of uint32_t in
+ <asm/cpuid/api.h>
+Message-ID: <Z9m5doW6IBVth-Kz@gmail.com>
+References: <20250317221824.3738853-1-mingo@kernel.org>
+ <20250317221824.3738853-6-mingo@kernel.org>
+ <b7920c2c-1051-4674-994c-d1b681cf7988@zytor.com>
+ <Z9kwIYrOwO8nOpAE@gmail.com>
+ <20250318093736.GBZ9k-4Fu_CqwhgYt1@fat_crate.local>
+ <Z9leoRHkbu8Kgoed@gmail.com>
+ <20250318121557.GCZ9lj_UyOqr9Mkaag@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318121557.GCZ9lj_UyOqr9Mkaag@fat_crate.local>
 
-Function dispc_ovl_setup is not intended to work with the value OMAP_DSS_WB
-of the enum parameter plane.
 
-The value of this parameter is initialized in dss_init_overlays and in the
-current state of the code it cannot take this value so it's not a real
-problem.
+* Borislav Petkov <bp@alien8.de> wrote:
 
-For the purposes of defensive coding it wouldn't be superfluous to check
-the parameter value, because some functions down the call stack process
-this value correctly and some not.
+> On Tue, Mar 18, 2025 at 12:53:05PM +0100, Ingo Molnar wrote:
+> > How is one more word and saying the same thing in a more circumspect 
+> > fashion a liguistic improvement?
+> 
+> Because it removes the "we" out of the equation. I don't have to 
+> wonder who's the "we" the author is talking about: his employer, his 
+> private interests in Linux or "we" is actually "us" - the community 
+> as a whole.
 
-For example, in dispc_ovl_setup_global_alpha it may lead to buffer
-overflow.
+In practice this is almost never ambiguous - and when it is, it can be 
+fixed up.
 
-Add check for this value.
+> I can't give a more honking example about the ambiguity here.
 
-Found by Linux Verification Center (linuxtesting.org) with SVACE static
-analysis tool.
+It's a red herring fallacy really. Let's go over the first example 
+given in Documentation/process/maintainer-tip.rst:
 
-Signed-off-by: Leonid Arapov <arapovl839@gmail.com>
----
- drivers/video/fbdev/omap2/omapfb/dss/dispc.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+    x86/intel_rdt/mbm: Fix MBM overflow handler during hot cpu
 
-diff --git a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-index 8db074862824..1dc70c96d813 100644
---- a/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-+++ b/drivers/video/fbdev/omap2/omapfb/dss/dispc.c
-@@ -2733,9 +2733,13 @@ int dispc_ovl_setup(enum omap_plane plane, const struct omap_overlay_info *oi,
- 		bool mem_to_mem)
- {
- 	int r;
--	enum omap_overlay_caps caps = dss_feat_get_overlay_caps(plane);
-+	enum omap_overlay_caps caps;
- 	enum omap_channel channel;
- 
-+	if (plane == OMAP_DSS_WB)
-+		return -EINVAL;
-+
-+	caps = dss_feat_get_overlay_caps(plane);
- 	channel = dispc_ovl_get_channel_out(plane);
- 
- 	DSSDBG("dispc_ovl_setup %d, pa %pad, pa_uv %pad, sw %d, %d,%d, %dx%d ->"
--- 
-2.45.2
+    When a CPU is dying, we cancel the worker and schedule a new worker on a
+    different CPU on the same domain. But if the timer is already about to
+    expire (say 0.99s) then we essentially double the interval.
 
+You'd have to be a bumbling idiot to think that the 'we' means an 
+employer or the person themselves ...
+
+Put differently: *the very first example given* uses 'we' functionally 
+unambiguously so that everyone who can read kernel changelogs will 
+understand what it says. Ie. the whole policy is based on a false 
+statement...
+
+Very few of the 'we' general pronouns used in kernel changelogs are 
+actually ambiguous. This means that any crusade to eliminate 'we' from 
+changelogs is not just pointless, but also a waste of resources - it's 
+a net negative. At least IMHO. ;-)
+
+> >   The second sentence, "When a CPU is dying, we cancel the worker 
+> >   and schedule a new worker on a different CPU on the same domain," 
+> >   is easier to understand. It uses simpler language and a more 
+> >   direct structure, making it clearer for the reader.
+> 
+> I disagree with the LLM - it is yet another proof that AI won't 
+> replace humans - if anything it'll make them *think* more. Which is 
+> good! :-)
+
+Yeah, and in any case, tastes differ, so no strong feelings from me 
+either! :-)
+
+Thanks,
+
+	Ingo
