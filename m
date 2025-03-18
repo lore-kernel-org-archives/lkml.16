@@ -1,229 +1,142 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42B7621018A;
-	Tue, 18 Mar 2025 14:50:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F4520C47B;
+	Tue, 18 Mar 2025 14:50:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742309408; cv=none; b=hIFOgDBWqL3rAI7gNS5xeCgXJnqmaR0IR3P+85feLeeBinw6K1rEEVCMQuDVHS9f3e5tUne3oF4dxE7JJiFHCWGd+V1RG2EB88zZgxNq2i+UPLjp0+gLOM+NfbFJgqR0GN3he4jM/TFTkLcH9iD9+gREPd3D63iZG9e5swDmiuQ=
+	t=1742309460; cv=none; b=ONqKOHSg6g/6SLLUlU+eAp3dXyys11vaTYAcazGmoygRZw6OnW2x5rOoi3N82+Ihhu3JjqBEa3sOAO5S6qGCx8W6Gblpc8G4h89WXs4MLzpYzr7XvoL9IQT+XwKd1SAVn8DM11GyxUxddsRvdyQcIPUhkrKDmFf6qZFTZLDTFS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742309408; c=relaxed/simple;
-	bh=jhCaO9YMV23oEWsJK6n59kEeKrc9zPYEVuoTbh0oOLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=b8YfPjiKU+yi5hfXWPuoCLIT4npJetJgesNuyeCqKgziDERnCR34culicKWLIVCU95pNZX9Yk6kjfKxmGLVDnhBvt3SS2fjiginftq56wvPI/RJD5IPs1HhRFr8jKZY0FlRmJ+L79Coc59Nbj/xLJPDDB3Xv5geIo1kgqNRr36I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=qualcomm.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=DnmF+cOR; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qualcomm.com
+	s=arc-20240116; t=1742309460; c=relaxed/simple;
+	bh=AV1Nxik7JBkOIVEYVNlGI3SIY7/qAIdx7hP6IDQ9sHw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=SRl+OVte8SUGGPwHWkXPDlpKeb2iWjvrUE4DoaOkxTeXjjFjTezXgajuD2H/PMagzETa5qoA3pzhPZUjRUbknORw2dHT5TYa25NCxwZXM2PJZP9fo707RQljZpiWHgR0baqr9KYIqHoszbFQdD37ioYe2mUsuqYsKz/iIjE9SsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4oxc0Pv; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="DnmF+cOR"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I9RDAa001749;
-	Tue, 18 Mar 2025 14:49:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:date:from:in-reply-to:message-id
-	:mime-version:references:subject:to; s=qcppdkim1; bh=gOleFGyQgsf
-	puCg30QL8T3cvvRGzQrC6LQuAy4DHe2Q=; b=DnmF+cORTcdV5duDqO2xHudGik1
-	wtXGxQ/RAvrRkHr18eqItyxF7uU279y4uKTUVmXMmH3b7dM8jydD/BMKnODdG3B+
-	unNTiPYojO64eHEsqwygEzwHqOGAW9gnJ7VTCJjSaJ5dZYrpJj14NZ1wUWAYH8B7
-	fFgUbHchaLnBP1hVX6Rn+BY/b6q+S6n1M3aJWhTMQ45GK9TNPFhFu9CN7z+0L4ex
-	+KAih1m2pSeo0L9B/5oYeoG7roeHZ0KWZVawJk+BWDOB9gFKEc0xOVXwFkklNdox
-	TYCVAUPSESUlUKhqTTufoL8np9NwBgfv/Xunp3a2BkxcAsC+Vjb/7iRxJjg==
-Received: from apblrppmta02.qualcomm.com (blr-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.18.19])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1x80pbp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 14:49:53 +0000 (GMT)
-Received: from pps.filterd (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTP id 52IEnmCV004303;
-	Tue, 18 Mar 2025 14:49:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 45dkgmfv97-1;
-	Tue, 18 Mar 2025 14:49:50 +0000
-Received: from APBLRPPMTA02.qualcomm.com (APBLRPPMTA02.qualcomm.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52IEnmWU004296;
-	Tue, 18 Mar 2025 14:49:50 GMT
-Received: from hu-maiyas-hyd.qualcomm.com (hu-nitirawa-hyd.qualcomm.com [10.213.109.152])
-	by APBLRPPMTA02.qualcomm.com (PPS) with ESMTP id 52IEnmLa004293;
-	Tue, 18 Mar 2025 14:49:50 +0000
-Received: by hu-maiyas-hyd.qualcomm.com (Postfix, from userid 2342877)
-	id 94536501583; Tue, 18 Mar 2025 20:19:49 +0530 (+0530)
-From: Nitin Rawat <quic_nitirawa@quicinc.com>
-To: vkoul@kernel.org, kishon@kernel.org, manivannan.sadhasivam@linaro.org,
-        James.Bottomley@HansenPartnership.com, martin.petersen@oracle.com,
-        konrad.dybcio@oss.qualcomm.com
-Cc: quic_rdwivedi@quicinc.com, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-scsi@vger.kernel.org, Nitin Rawat <quic_nitirawa@quicinc.com>,
-        Can Guo <quic_cang@quicinc.com>
-Subject: [PATCH V2 5/6] scsi: ufs: qcom : Refactor phy_power_on/off calls
-Date: Tue, 18 Mar 2025 20:19:43 +0530
-Message-ID: <20250318144944.19749-6-quic_nitirawa@quicinc.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250318144944.19749-1-quic_nitirawa@quicinc.com>
-References: <20250318144944.19749-1-quic_nitirawa@quicinc.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4oxc0Pv"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30bf3f3539dso57204491fa.1;
+        Tue, 18 Mar 2025 07:50:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742309453; x=1742914253; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AV1Nxik7JBkOIVEYVNlGI3SIY7/qAIdx7hP6IDQ9sHw=;
+        b=H4oxc0PvCeDDPsJArDnxVmZV9LI/er2Ez4zQlfQ+13cnk0XCAq6B5b7Usw1GoNraT/
+         GoFSGsMEVCME632Cus2a4lW42GDMNbqqHCX0QHdsZpPJtxoE8qjUYA4HhvenrVzRB0mY
+         AcgcSlNhPkCBpmfpPZmnMPPn24FeBzlFPkOZVMWpbNI4VHrkmxcm19PCbXrjG9/pZS2G
+         I6KX7ifVLYFi0+AaAeVjl8m19ALMKRcat7BVa8G+YByo7nb9psRgvJbrywSd4s2uNKat
+         XLEpmNyJyvgVOGoT6BqHZDmDSfqKZ3xzyliK/Pp6BAO8GnESgwC7C+H/KO9RnAMxfJZ3
+         OMdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742309453; x=1742914253;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AV1Nxik7JBkOIVEYVNlGI3SIY7/qAIdx7hP6IDQ9sHw=;
+        b=uQGl49eggbc4ry7wa/IGCGHqIsgFTQWHm8kUjHtP0ocAhBiy3/UmLRVsFv6260/Ls6
+         tYel5DCPZyuIfbTdypWRh6ZXW/QGruMp90MndYwnmMGBJKjgssvAePhVeCsj8eMiwlZo
+         WNm8V7Gz0rnaEXc2GUEawuL7q+nIM9j/5JlXIBTRN0Fvluh8isFPhcNRG7mspYJlUq97
+         KOuWQUru6fi1RdGquQOmgUmXNO2Jjli/W6Vm5p8cBoTR4TFJCftUWgpqnOnlvoL8BANg
+         0XnkdZxxGqVtk/+qK9iGwGbohJr0AYjXa7jnTMKP9yHTU4gxSMk+0hPwm0x3xDVQGFVl
+         IK0w==
+X-Forwarded-Encrypted: i=1; AJvYcCVMCz1XFXQjmAlTIYeXxMnTY5XsGQJ/0kgvUcO/hN3YDxPSztMafEc7Qlg2RT7TW/D85/ZoVbWnmBJs78IOVAM=@vger.kernel.org, AJvYcCW0cpqSAkeI6OlNpYaLKxGgWLlxSFeIHoq3Zf/u67Sj/gE0HIry3AZ3RCs1YtjpFIe74pxW7hJzXlj5@vger.kernel.org, AJvYcCWZUyQQTMyq3YXKrTqcUUPPf2/Cz4yqamok4EavW42WZ8ywSNV857sXpyey3VtkQTZ+gfEKnuD7LR4=@vger.kernel.org, AJvYcCWbwe/FZqsJKw66wqhBpkNpvr3/OGFJ+vHHmtGyC7NKrVTi1Oj5lHzlF/VAo/LDrISGUd/vp/IGxFHK488K@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw0OH0Swj/gS6Bf3lT++KBhVGjiwvYfia6ehKSoZn7vVbz9zZgr
+	62RWeWaqYkOjNpqPInOLFCjCISHrPoEaUFAehQ2FZ7d0MZKtqmRoqZYw6IZFIxrT0OGektSj7NR
+	Qb3EoSfZfMUsEcl6JmESOVAYi/kI=
+X-Gm-Gg: ASbGnctdZE6+EX8fakrifKDZNZpgISbDoKdfvHDSaEwN85875rS5vmpngab+LkDouYH
+	jx5eUv/LOcnkJUj7GbUtrLlK6bXRA9WeM9yzJoNl2IFslj4nAgaUy4+YUjvw/621Gu605ZPaz78
+	SnUmuPawb4DXIr8eeUJIZLXpDojIlhpuspTv5fM5qvBQ==
+X-Google-Smtp-Source: AGHT+IHoYcofaDV167At8gyTlcxgahoKqecaiJRiqZIsUp3WL1jI7jHwfGXN+eAotV8neRNb+frmdsSnmpBQRfzAEi4=
+X-Received: by 2002:a2e:a781:0:b0:30c:12b8:fb97 with SMTP id
+ 38308e7fff4ca-30cd95cdfb0mr22215931fa.11.1742309452463; Tue, 18 Mar 2025
+ 07:50:52 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-QCInternal: smtphost
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 22gcK7MD6rPyO5oBHuloKAN1Ib_Rp7sz
-X-Proofpoint-ORIG-GUID: 22gcK7MD6rPyO5oBHuloKAN1Ib_Rp7sz
-X-Authority-Analysis: v=2.4 cv=Jem8rVKV c=1 sm=1 tr=0 ts=67d98812 cx=c_pps a=Ou0eQOY4+eZoSc0qltEV5Q==:117 a=Ou0eQOY4+eZoSc0qltEV5Q==:17 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=ylzO3PbLlNu0Q4qtwUgA:9 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_07,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 spamscore=0 mlxscore=0 malwarescore=0 adultscore=0
- phishscore=0 impostorscore=0 priorityscore=1501 lowpriorityscore=0
- bulkscore=0 clxscore=1015 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503180107
+References: <PsAMnW6hScU1fLV8ucb6wOkHECGXCrwXeSEfeVs3Hc-zbwrML674jGT8H_XNvWiF6EdymYJZSusanBrtAsZjAg==@protonmail.internalid>
+ <20250107035058.818539-1-alistair@alistair23.me> <878qrm6e2p.fsf@kernel.org>
+ <CAKmqyKO+O6H8+Y2ybz+qiAtgGbLeHMzswo9weWbg0Wc--gEiMA@mail.gmail.com> <CAKmqyKMFAUp0=FzNfhs+r+RfLK0n_Fp7YhUhjY2m=p7wSgFONg@mail.gmail.com>
+In-Reply-To: <CAKmqyKMFAUp0=FzNfhs+r+RfLK0n_Fp7YhUhjY2m=p7wSgFONg@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Tue, 18 Mar 2025 10:50:15 -0400
+X-Gm-Features: AQ5f1Jpsgdw9M0V8e3T4BspLDyv9RIhRJmXxkp78APBJs9vA4fZG8z3nwGNCckY
+Message-ID: <CAJ-ks9mtG+QcGNpSgZ2Wh-wgXtFiJ-7Xrr4-07xe9hxxdRuTSA@mail.gmail.com>
+Subject: Re: [PATCH v5 00/11] rust: bindings: Auto-generate inline static functions
+To: Alistair Francis <alistair23@gmail.com>
+Cc: Andreas Hindborg <a.hindborg@kernel.org>, Alistair Francis <alistair@alistair23.me>, bhelgaas@google.com, 
+	rust-for-linux@vger.kernel.org, lukas@wunner.de, gary@garyguo.net, 
+	akpm@linux-foundation.org, tmgross@umich.edu, boqun.feng@gmail.com, 
+	ojeda@kernel.org, linux-cxl@vger.kernel.org, bjorn3_gh@protonmail.com, 
+	me@kloenk.dev, linux-kernel@vger.kernel.org, aliceryhl@google.com, 
+	alistair.francis@wdc.com, linux-pci@vger.kernel.org, benno.lossin@proton.me, 
+	alex.gaynor@gmail.com, Jonathan.Cameron@huawei.com, wilfred.mallawa@wdc.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Commit 3f6d1767b1a0 ("phy: ufs-qcom: Refactor all init steps into
-phy_poweron") removes the phy_power_on/off from ufs_qcom_setup_clocks
-to suspend/resume func.
+On Tue, Mar 18, 2025 at 2:53=E2=80=AFAM Alistair Francis <alistair23@gmail.=
+com> wrote:
+>
+> On Tue, Jan 14, 2025 at 4:02=E2=80=AFPM Alistair Francis <alistair23@gmai=
+l.com> wrote:
+> >
+> > On Tue, Jan 7, 2025 at 9:48=E2=80=AFPM Andreas Hindborg <a.hindborg@ker=
+nel.org> wrote:
+> > >
+> > > Thanks! Since Gary just sent v2 of the LTO patch [1], could you rebas=
+e
+> > > on that and list it as a dependency? If you are using b4 there is a n=
+ice
+> >
+> > I can't get Gary's series to apply on rust-next (it does apply on
+> > master though).
+> >
+> > I might just wait until Gary's series gets picked up to rust-next as
+> > there is already a lot of manual rebasing going on and my series
+> > currently applies on rust-next.
+> >
+> > Unfortunately there are just constant conflicts as the number of
+> > manual C helpers are continually growing.
+> >
+> > Obviously when/if this series is approved I can do a final rebase, I
+> > would just like to avoid unnecessary churn in the meantime
+>
+> Any more thoughts on this?
 
-To have a better power saving, remove the phy_power_on/off calls from
-resume/suspend path and put them back to ufs_qcom_setup_clocks, so that
-PHY regulators & clks can be turned on/off along with UFS's clocks.
+Hi Alistair,
 
-Since phy phy_power_on is separated out from phy calibrate, make
-separate calls to phy_power_on and phy_calibrate calls from ufs qcom
-driver.
+I can't speak for Gary as I don't know what his plans are for that LTO
+series, but I did review that series and this one, and at first glance
+the two seem orthogonal. The goal of Gary's series is to LTO C helpers
+into Rust, while the goal of this series is to machine-generate those
+helpers. Do I have that right?
 
-Co-developed-by: Can Guo <quic_cang@quicinc.com>
-Signed-off-by: Can Guo <quic_cang@quicinc.com>
-Co-developed-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-Signed-off-by: Ram Kumar Dwivedi <quic_rdwivedi@quicinc.com>
-Signed-off-by: Nitin Rawat <quic_nitirawa@quicinc.com>
----
- drivers/ufs/host/ufs-qcom.c | 58 +++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 32 deletions(-)
+If yes, I think it's important to think about how the two fit
+together, at least conceptually. Mechanically I think there's an issue
+with this trick:
 
-diff --git a/drivers/ufs/host/ufs-qcom.c b/drivers/ufs/host/ufs-qcom.c
-index 1b37449fbffc..5c7b6c75d669 100644
---- a/drivers/ufs/host/ufs-qcom.c
-+++ b/drivers/ufs/host/ufs-qcom.c
-@@ -473,6 +473,11 @@ static int ufs_qcom_power_up_sequence(struct ufs_hba *hba)
- 		goto out_disable_phy;
- 	}
+#ifdef __BINDGEN__
+#define __rust_helper
+#else
+#define __rust_helper inline
+#endif
 
-+	ret = phy_calibrate(phy);
-+	if (ret) {
-+		dev_err(hba->dev, "Failed to calibrate PHY %d\n", ret);
-+		goto out_disable_phy;
-+	}
- 	ufs_qcom_select_unipro_mode(host);
+which the LTO series uses to generate Rust stubs for these functions
+while also keeping them marked inline in LLVM IR/bitcode.
 
- 	return 0;
-@@ -633,26 +638,17 @@ static int ufs_qcom_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op,
- 	enum ufs_notify_change_status status)
- {
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	struct phy *phy = host->generic_phy;
+That said, I see some discussion of cross-language LTO in "How to
+handle static inline functions" [1], so maybe there's another way that
+makes more sense in light of this series.
 
- 	if (status == PRE_CHANGE)
- 		return 0;
+Updating the cover letter to elucidate these details is where I'd
+suggest you start.
 
--	if (ufs_qcom_is_link_off(hba)) {
--		/*
--		 * Disable the tx/rx lane symbol clocks before PHY is
--		 * powered down as the PLL source should be disabled
--		 * after downstream clocks are disabled.
--		 */
-+	if (!ufs_qcom_is_link_active(hba))
- 		ufs_qcom_disable_lane_clks(host);
--		phy_power_off(phy);
+Cheers.
+Tamir
 
--		/* reset the connected UFS device during power down */
--		ufs_qcom_device_reset_ctrl(hba, true);
-
--	} else if (!ufs_qcom_is_link_active(hba)) {
--		ufs_qcom_disable_lane_clks(host);
--	}
-+	/* reset the connected UFS device during power down */
-+	if (ufs_qcom_is_link_off(hba) && host->device_reset)
-+		ufs_qcom_device_reset_ctrl(hba, true);
-
- 	return ufs_qcom_ice_suspend(host);
- }
-@@ -660,26 +656,11 @@ static int ufs_qcom_suspend(struct ufs_hba *hba, enum ufs_pm_op pm_op,
- static int ufs_qcom_resume(struct ufs_hba *hba, enum ufs_pm_op pm_op)
- {
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
--	struct phy *phy = host->generic_phy;
- 	int err;
-
--	if (ufs_qcom_is_link_off(hba)) {
--		err = phy_power_on(phy);
--		if (err) {
--			dev_err(hba->dev, "%s: failed PHY power on: %d\n",
--				__func__, err);
--			return err;
--		}
--
--		err = ufs_qcom_enable_lane_clks(host);
--		if (err)
--			return err;
--
--	} else if (!ufs_qcom_is_link_active(hba)) {
--		err = ufs_qcom_enable_lane_clks(host);
--		if (err)
--			return err;
--	}
-+	err = ufs_qcom_enable_lane_clks(host);
-+	if (err)
-+		return err;
-
- 	return ufs_qcom_ice_resume(host);
- }
-@@ -1036,6 +1017,8 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
- 				 enum ufs_notify_change_status status)
- {
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-+	struct phy *phy = host->generic_phy;
-+	int err;
-
- 	/*
- 	 * In case ufs_qcom_init() is not yet done, simply ignore.
-@@ -1054,10 +1037,20 @@ static int ufs_qcom_setup_clocks(struct ufs_hba *hba, bool on,
- 				/* disable device ref_clk */
- 				ufs_qcom_dev_ref_clk_ctrl(host, false);
- 			}
-+			err = phy_power_off(phy);
-+			if (err) {
-+				dev_err(hba->dev, "phy power off failed, ret=%d\n", err);
-+					return err;
-+			}
- 		}
- 		break;
- 	case POST_CHANGE:
- 		if (on) {
-+			err = phy_power_on(phy);
-+			if (err) {
-+				dev_err(hba->dev, "phy power on failed, ret = %d\n", err);
-+				return err;
-+			}
- 			/* enable the device ref clock for HS mode*/
- 			if (ufshcd_is_hs_mode(&hba->pwr_info))
- 				ufs_qcom_dev_ref_clk_ctrl(host, true);
-@@ -1240,9 +1233,10 @@ static int ufs_qcom_init(struct ufs_hba *hba)
- static void ufs_qcom_exit(struct ufs_hba *hba)
- {
- 	struct ufs_qcom_host *host = ufshcd_get_variant(hba);
-+	struct phy *phy = host->generic_phy;
-
- 	ufs_qcom_disable_lane_clks(host);
--	phy_power_off(host->generic_phy);
-+	phy_power_off(phy);
- 	phy_exit(host->generic_phy);
- }
-
---
-2.48.1
-
+[1] https://github.com/rust-lang/rust-bindgen/discussions/2405
