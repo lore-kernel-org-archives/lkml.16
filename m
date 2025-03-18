@@ -1,132 +1,249 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF47202C2B;
-	Tue, 18 Mar 2025 09:44:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB44207A2B
+	for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 09:44:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742291093; cv=none; b=Q62zZWjORwF3wUyw//O7iAadYL43XEDQZhtqFY1fVr9C4PjjVdDB+TdSgo/sTeVK0MmEL+Dq0IlxKtQv94P8Fhl4chGZEws/dGPCZM5d1GXV3SJPXVqLgSF9nM6QAxJevc3R3Fog3yD08MeiTR4ZwKUa/iirA2gegtyN3FUAi04=
+	t=1742291102; cv=none; b=aRQkbakPkNPyjaJAC2UmWHTkpvxMIQiXyf6aEFXcNmWEDDeXPU5RuXB1XdlWPpjzNnmNQdIb67ZApJ56PTMfh/WCBh11l+/w4MDh4EV9nulW0hE39u0PTgZOEQ/T+qqFCB7QWz40myzYAc4cdDuDL8+M3gCcH5M4MLtD1cktIoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742291093; c=relaxed/simple;
-	bh=9dseCUgfawFHDhoNUQBKZC9vwAGc9hCxkFUNPU0iZpg=;
+	s=arc-20240116; t=1742291102; c=relaxed/simple;
+	bh=raGUllWJomob8pRySrj7Qf7XmWKdYOqMKi7Hn0TQG+c=;
 	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UDgu6RcwcaKQPVAsl8K4x4W92IFEiENAUkn9aYlA2BdWwDoquvjz63yo4ENCJUe3y6hSz6xga17lACMOSo2PfRI5gGGAelWcljsMZ7COU/K1qcBK+K8MilRRONqQNHCW4CCCWvBMVjbdHhkxWpzCjCCjmFdtoJwBXk9HL/QVSGs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRJ+VON8; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=Bx3ecuQSXcjCQTtatNtiPNcrwu0ssLeaf9cOBS0FBDD5PgKf/l5iLx7POu4nExA436Zj3WrNfU38xrH36xhjhWnG4akrbf8i1KTeFBaLT3VrvX9MeIEfntgUTwMgLn55dTQq1wXEMeihsYj28PVMtN4boqQ7fa1IJzlf78cSqCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=ZMO59ay9; arc=none smtp.client-ip=209.85.208.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRJ+VON8"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac34257295dso142731966b.2;
-        Tue, 18 Mar 2025 02:44:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="ZMO59ay9"
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e56b229d60so11865716a12.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 02:44:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742291090; x=1742895890; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=s04vWbS/+IELd1isfxtGM2wXxsUsxWYm6LzkaytObnU=;
-        b=nRJ+VON8lZNs5yFAAWd+pWzT6b5WFj9XU6tdQ3WVlSPPSb1ap027ojzWoXvACtJpgg
-         O5C55mzEbzFPY+HlqMNppFNHQ1ymGtRsiAHXD0GSJ+7+IC7EVYrIu5Kfnq8sxtvPJA5q
-         Moe4XNA+BUGMWYUgzNiLxRnsPOPWGTJwbFx+mKqQA5G5x/8b+Z8E6fOa/fFyCX9j4PP9
-         QH0nV8uKtdZZG7dnzsLiApfnJUdbFeG1x7ZNdXoKKhqIU4a+2KB2seF090YK5Y8Qorgy
-         rJUj9yb12TryfrF+f8cS2FoaamBZIuIdkVyGLcG4oNZx6WVzd54paToybK6FXrad1k/3
-         Rw3g==
+        d=suse.com; s=google; t=1742291095; x=1742895895; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=4eInU4xGBu0Mt8Lm17X6zPVhTvmNik5PGbnkQOxA+YU=;
+        b=ZMO59ay9fHfT96rInwKCEFW4JQm/ORR0iYosd/bJf9B50nRRSVn2nAWtctgPxWH44J
+         06TJT4+3Bd0BZ8vRURy5KhTkv5nCTBYgdDakZI9ZaDOJ+vYhpIpIcdnSh82cryEbpFaG
+         MCe0Pj2ZZxOK6GGxk5MZWfKmIKYFNz7ui8fVynMOB0z4zZVMQlQMRvAGEGOYaEkxjKbl
+         2iWp4r0grH4J7gVzIPAhZa6gfy+cSsK7cURSC5mivNmgOas8EWvF4qYog2vAx35EF3aF
+         Z/hUxzPO3AuBb224graHCQNSxcypA0Db+ALdEsqHf6FzVfus9071ar58oks8O4pGS2pE
+         9VWQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742291090; x=1742895890;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=s04vWbS/+IELd1isfxtGM2wXxsUsxWYm6LzkaytObnU=;
-        b=wKNwnftCKB6lHf805pcHS1gxEU2/+P7JF/YoVMQnyLyFMLJIXLOPrZFwPRhFdYLfhV
-         rZiVUxqpJdAqPSDXtIkL3EKgK8malpUNfeS1FUhmcpM5zajibzIYwh6esiQebH9oURPZ
-         yqcjDQOV+DtWu4i/2fdI4/s1+GmOFbavGfTaeA4agNv40N+Tt4NpgQX0QuByWgJ4+FoB
-         8vtaMYJho0vkAav6wPpwD6KeaIOpTAvyE5TFlKHA3PvJb1sG9BcZjEtJOA7Rxu/gERCs
-         vEEAYNX/Bj4W3LimTEQBzdPmlEu5s809bzIfw7XhAjKSWpoKju0vCk6xlsnUqhZ5E6/4
-         xzqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV4y4mDURpl4cvxxQljRx3H10GK1RISZ8obCViSzlapXe5XYmeIcKxtbRUwrkHZz7AjJe4PTO3H7Mr40Glv@vger.kernel.org, AJvYcCWWLZ+tLgtl+XKuYiXOACtbqXIQHPZXQQW0o89A7KEjo2NsB+jtdzgMouwG5vG/zotaJRk=@vger.kernel.org, AJvYcCX8bNe8dXNqQojNt+zfWOc0skp2og6lWYJT+rgUsRSf5w7QSqAsyI72jfO3ZuflHirzu/i8iRuHt8VYV6gxKE61@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy9ceGVqlJoSK/XnHL1PPE+72Bm901r5sihPXZQACxYXb/mDb+b
-	Lu8ZkknvuPjeBYPeAqomqrtqgNRiJstiZAef+7lgrFwlhcwHXXvf
-X-Gm-Gg: ASbGncui8Ymzw6PAjp2YhYIJOdA0V7Dv5fGzJ78xys9KNjMZRo6mmbRLm/1p8Urye8a
-	H7LWxZpKDwi7RNIQzBLp7mmwgtMq9+043l+lDfLH83UIomK0KnJjo4z4CLAMETqJksJ02PR4b2J
-	AiYyKxBeMsTFjSwIc2pzV0Gq5IEc9hHU0U2mYzz9YCcJfjzBP4bGdMl4P9sZWJJ4bjZlXCDdBZa
-	w0FzgCBv4XyGG0msb+Zi5OLb+9IpNbLQ6gyzjbAFazOsZcZJRhY5doWecY2HGcs1qCK1zVKsNLA
-	Z5xW5mOa3eiKDeakEiOPIaeGnjDQ0gs=
-X-Google-Smtp-Source: AGHT+IFepVwFcfXs2vuS35E7cRvymbh0mZHbilkMAE6IL4hvEQz4oLQRWeCIgwZ3GbrhCKcxaRLFHg==
-X-Received: by 2002:a17:907:c27:b0:ac3:4370:f6d2 with SMTP id a640c23a62f3a-ac34370f77bmr1085273166b.4.1742291089794;
-        Tue, 18 Mar 2025 02:44:49 -0700 (PDT)
-Received: from krava ([173.38.220.48])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149cdec8sm816734266b.112.2025.03.18.02.44.49
+        d=1e100.net; s=20230601; t=1742291095; x=1742895895;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=4eInU4xGBu0Mt8Lm17X6zPVhTvmNik5PGbnkQOxA+YU=;
+        b=j47eu2yE/TQPQvS1HLMkth+4R/XAx/nAYdTrAUUHe7glZ9v4mPB8tuFjW7FPF7kJgD
+         E5aMbttmIxKXut7tDzLmIdzDbd7e84nHSDpAYIpjxHOs+3jXti7pdCg/T7gtW+vGQImF
+         STGLKPu5NsIQPH+YrRa2RMnAZXBK0PCR7s0JrOHPbkb9gruklwXOFTgOCoKuQcnvuMcB
+         v1/iV3dXWlJ3KJLSgMB6ZHGuw/dCROQtlZpSRv/cKuNhlFqtd/bcSGZf5ZtFovGppuGr
+         oX8p01fBF1ta9Qz1noZqj4vnOZHoiXD3BLIlsrKrkXXsA8Bxf2kOANh5YUGzj41vrXPi
+         Wjlw==
+X-Forwarded-Encrypted: i=1; AJvYcCUiYFVTJyI7eoNMeizHVI98TOx7gdK7Y3HdM5+4Xa5wLteyRi6B6/SDbenvEgOEWhf3EgEC9BJtAReacDI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtRJFFjfHxpzJkzfTldlsJZFTbY6uOQ7nfxayHThoHNnDKijnH
+	2evKqOanm0+tUxdr7mhdODuA7ca9VIED2pz/nGXmmGMLTXCxPzYv7bIGpZAGIg8=
+X-Gm-Gg: ASbGnctv6vh4YTz8piHAAln1a8avHnsdafR+X73xH8JxH9hYZlu1Wr5ZzPgWzcAp1JE
+	YybWpkK1pBxEGRslThPiFgRPeO2wjfAZD9UD33IAx/l/Acxb4PvZ2yYnX5GXRvoEEpwKQ/+Rsmo
+	/UpxWdZkq179QcOXu6xwFLtOx/wjvu+6LCtaDzHXKHWqg+PmsOX4DjWr4rgxoLxGPG+4Kdskm7N
+	caXnPW9AyiEatdkEZYddwGMHWuwNl7P+eMaVswa9XsBUSx9DZzWoupZPkcyP22+Cn1J+G7HcuQt
+	zqgINWwhdISW4/FntaxWprRdvCRHqSVZvNEs1P1K+C1mUaQlkTrygoShvtiWkm0Qpmr1Ky+Py1q
+	LTO5ClXhfgPcRU/8=
+X-Google-Smtp-Source: AGHT+IF5nVWbdkGdXhT8Rbx0xwnOfVzY2zNtg2VYzomJ4pLfS9zkgHWMH1EzA7usUUR4N2OG/B9QfA==
+X-Received: by 2002:a05:6402:3491:b0:5e6:102a:c30 with SMTP id 4fb4d7f45d1cf-5eb1efcbee0mr3044112a12.2.1742291094785;
+        Tue, 18 Mar 2025 02:44:54 -0700 (PDT)
+Received: from localhost (host-80-117-53-131.retail.telecomitalia.it. [80.117.53.131])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e8169bca53sm7562109a12.46.2025.03.18.02.44.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 02:44:49 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Tue, 18 Mar 2025 10:44:47 +0100
-To: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>, bpf@vger.kernel.org,
-	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
-	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH bpf-next] selftests/bpf: Sanitize pointer prior fclose()
-Message-ID: <Z9lAj-1COhR82P_O@krava>
-References: <20250318081648.122523-1-bjorn@kernel.org>
+        Tue, 18 Mar 2025 02:44:54 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 18 Mar 2025 10:46:07 +0100
+To: Krzysztof Wilczynski <kw@linux.com>
+Cc: Andrea della Porta <andrea.porta@suse.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+	Derek Kiernan <derek.kiernan@amd.com>,
+	Dragan Cvetic <dragan.cvetic@amd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-pci@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	Herve Codina <herve.codina@bootlin.com>,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v7 08/11] misc: rp1: RaspberryPi RP1 misc driver
+Message-ID: <Z9lA31gBjpIRHm6y@apocalypse>
+References: <cover.1738963156.git.andrea.porta@suse.com>
+ <d1362766e3e966f78591129de918046a4b892c18.1738963156.git.andrea.porta@suse.com>
+ <20250314083730.GC234496@rocinante>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250318081648.122523-1-bjorn@kernel.org>
+In-Reply-To: <20250314083730.GC234496@rocinante>
 
-On Tue, Mar 18, 2025 at 09:16:47AM +0100, Björn Töpel wrote:
-> From: Björn Töpel <bjorn@rivosinc.com>
-> 
-> There are scenarios where env.{sub,}test_state->stdout_saved, can be
-> NULL, e.g. sometimes when the watchdog timeout kicks in, or if the
-> open_memstream syscall is not available.
-> 
-> Avoid crashing test_progs by adding an explicit NULL check prior the
-> fclose() call.
-> 
-> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
+Hi Krzysztof,
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
-
-jirka
-
-> ---
->  tools/testing/selftests/bpf/test_progs.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+On 17:37 Fri 14 Mar     , Krzysztof Wilczynski wrote:
+> Hello,
 > 
-> diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
-> index d4ec9586b98c..309d9d4a8ace 100644
-> --- a/tools/testing/selftests/bpf/test_progs.c
-> +++ b/tools/testing/selftests/bpf/test_progs.c
-> @@ -103,12 +103,14 @@ static void stdio_restore(void)
->  	pthread_mutex_lock(&stdout_lock);
->  
->  	if (env.subtest_state) {
-> -		fclose(env.subtest_state->stdout_saved);
-> +		if (env.subtest_state->stdout_saved)
-> +			fclose(env.subtest_state->stdout_saved);
->  		env.subtest_state->stdout_saved = NULL;
+> Even though this is not for the PCI sub-system directly, I had a very brief
+> look over the code.  I hope you don't mind.
 
-nit, setting to NULL could be inside the condition
+Highly appreciated, thanks!
 
->  		stdout = env.test_state->stdout_saved;
->  		stderr = env.test_state->stdout_saved;
->  	} else {
-> -		fclose(env.test_state->stdout_saved);
-> +		if (env.test_state->stdout_saved)
-> +			fclose(env.test_state->stdout_saved);
->  		env.test_state->stdout_saved = NULL;
->  		stdout = env.stdout_saved;
->  		stderr = env.stderr_saved;
 > 
-> base-commit: f3f8649585a445414521a6d5b76f41b51205086d
-> -- 
-> 2.45.2
+> As such, a few nit picks, nothing blocking.
 > 
+> > +# RaspberryPi RP1 misc device
 > 
+> Would this be better if it matched the "tristate" description below?
+
+Ack.
+
+> 
+> > +config MISC_RP1
+> > +	tristate "RaspberryPi RP1 PCIe support"
+> > +	depends on OF_IRQ && OF_OVERLAY && PCI_MSI && PCI_QUIRKS
+> > +	select PCI_DYNAMIC_OF_NODES
+> > +	help
+> > +	  Support the RP1 peripheral chip found on Raspberry Pi 5 board.
+> > +
+> > +	  This device supports several sub-devices including e.g. Ethernet
+> > +	  controller, USB controller, I2C, SPI and UART.
+> > +
+> > +	  The driver is responsible for enabling the DT node once the PCIe
+> > +	  endpoint has been configured, and handling interrupts.
+> > +
+> > +	  This driver uses an overlay to load other drivers to support for
+> > +	  RP1 internal sub-devices.
+> 
+> > +/* the dts overlay is included from the dts directory so
+> 
+>   /*
+>    * The dts overlay is included from the dts directory so
+> 
+> To make the code comment match rest of the style.
+
+Ack.
+
+> 
+> > +/*
+> > + * Copyright (c) 2018-24 Raspberry Pi Ltd.
+> > + * All rights reserved.
+> 
+>   Copyright (c) 2018-2025 Raspberry Pi Ltd.
+> 
+> To spell the current year fully, plus update it to 2025 already.
+> 
+> I would also add an extra newline here to split the two apart a bit.
+
+Ack.
+
+> 
+> > +	if (pci_resource_len(pdev, 1) <= 0x10000) {
+> > +		dev_err(&pdev->dev,
+> > +			"Not initialised - is the firmware running?\n");
+> > +		return -EINVAL;
+> > +	}
+> 
+> The American spelling in the above might be better.  But I don't have
+> strong opinions here.  It seems more popular in error messages.
+
+I agree.
+
+> 
+> > +	err = pci_alloc_irq_vectors(pdev, RP1_INT_END, RP1_INT_END,
+> > +				    PCI_IRQ_MSIX);
+> > +	if (err < 0) {
+> > +		return dev_err_probe(&pdev->dev, err,
+> > +				     "pci_alloc_irq_vectors failed");
+> 
+> Missing a new line at the end, but also...
+> 
+>   return dev_err_probe(&pdev->dev, err,
+> 		       "Failed to allocate MSI-X vectors\n");
+
+Ack.
+
+> 
+> Or, something like this over this the function name.  Perhaps exposing
+> error code could be useful to the end user? If so then something like this:
+> 
+>   return dev_err_probe(&pdev->dev, err,
+> 		       "Failed to allocate MSI-X vectors, err=%d\n", err);
+
+dev_err_probe() should already print the err code, no need to add it.
+
+> 
+> Here and other errors where appropriate.
+
+I've changed dev_err() to dev_err_probe() in cases where the error code
+is not evident (i.e. hardcoded) from the source.
+
+> 
+> > +	for (i = 0; i < RP1_INT_END; i++) {
+> > +		unsigned int irq = irq_create_mapping(rp1->domain, i);
+> > +
+> > +		if (!irq) {
+> > +			dev_err(&pdev->dev, "failed to create irq mapping\n");
+> 
+>   dev_err(&pdev->dev, "Failed to create IRQ mapping\n");
+> 
+> To make the error message capitalisation consistent.
+
+Ack.
+
+> 
+> > +static const struct pci_device_id dev_id_table[] = {
+> > +	{ PCI_DEVICE(PCI_VENDOR_ID_RPI, PCI_DEVICE_ID_RPI_RP1_C0), },
+> > +	{ 0, }
+> 
+>   { }
+> 
+> Would probably be sufficient.
+
+Ack.
+
+> 
+> > +MODULE_AUTHOR("Phil Elwell <phil@raspberrypi.com>");
+> > +MODULE_AUTHOR("Andrea della Porta <andrea.porta@suse.com>");
+> > +MODULE_DESCRIPTION("RP1 wrapper");
+> 
+>   RaspberryPi RP1 misc device
+> 
+> To match the Kconfig comment in the above description or the one from the
+> "tristate" also in Kconfig.
+
+Ack.
+
+> 
+> Thank you for all the work here!
+
+Thank you so much for your review!
+
+Andrea
+
+> 
+> 	Krzysztof
