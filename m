@@ -1,149 +1,99 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E0620D4FA;
-	Tue, 18 Mar 2025 16:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1C6E1E8334;
+	Tue, 18 Mar 2025 16:02:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742313625; cv=none; b=KHmCGhrLOSY3wCQye0xNcW2qHzLPy/9AYKkbNmIoJ/71mLJ/o3ZjSlLT/M/6brPQjJK7luiVw8CXiDzPr3ywj8c7UcPyjPIi/r6sRzQtdH8JdqnDWb+FO4F/7LcVgQy/zQSyO7+5DYXlnr1qUWyBFwT8p+fc2rzQwHxm5oNRtCc=
+	t=1742313756; cv=none; b=jDW2Uf0X1VO5cD8+PCMAIDDeQAI4zBItxiYMRIQHKhH/3AqP9SzDM7IShOZzSoT/+k6vQgb0TUvviuCCJzIYC5XuoVOcK9GXQzgQxRsyt1xriyLV1hg5FJ7sQprpthb/KrLjKugrZcUPbCe5lB8anZF2gEjr9RgxrV0DI56bTPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742313625; c=relaxed/simple;
-	bh=CsBRsOBkzU2yYfdWSAZB+dFm6eFy6LVMP5KMyFLCPec=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VwcJWmLPynflHseLj1LbM8/VrQVGVSQLsKckN4nm/VKoPWff3Sv0AK64dSIl/JbCp1z8ZPN6djbKZeXZGaYXt2JIrrm7jNkmcr0klxamZ+5NoC1gXFU9w8LWVOqLDrDJr8dKG2Spzqsd5FSu3oONiBF4pG+StmlXJVzPgL9/IDI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=S9BjHKMc; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1742313756; c=relaxed/simple;
+	bh=dfmo9ocKclAv0Jn97DtWPWsXzMUgahYEcZ+x+X4fqtg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZN+7m+VIEjNtWP5pc/4O7/YlhOOKmNrDrztXSacL5ViWJGEkj/e1ReDoaz+CFjkxZvlit4bzmhGj90AcEcyzRhZxmJtsbOf+DGq1ks8pgEaxifj2gHzBPNwi5wqd28DxuvhO70lW7YaKGNNmxp/g8z29im9VbcoKYAbcgn4pP68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bW2uinO2; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="S9BjHKMc"
-Received: from [192.168.2.71] (office.icewarp.com [82.113.48.146])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 17763166AD0;
-	Tue, 18 Mar 2025 17:00:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1742313609;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=nK/0NX5v7ACG7qj29ZEb66OVpLy9H8Ro6/gG3O+cTNg=;
-	b=S9BjHKMcZUYKFOR0pmbFtqMiKhcZtR7lM61gMN2q7PqsqZCRD4XltMkmBWhgjPdsEZtIyg
-	85qQI6bmmrgFXm0NmC7ZgkxBw1Gf2qX4h5sYEIbnLDxrwv67s/lWxWPtMId9JVEPREF8W4
-	rQqfuDRYqjyDQxKk+NbiNB6UKldWkf0=
-Message-ID: <d59b1d8b-1297-40f1-9458-661cd9da847d@ixit.cz>
-Date: Tue, 18 Mar 2025 17:00:08 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bW2uinO2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742313755; x=1773849755;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=dfmo9ocKclAv0Jn97DtWPWsXzMUgahYEcZ+x+X4fqtg=;
+  b=bW2uinO2oKF80P6SpduElYfO4ZXKT6sj5NmhWUYwR0D+8iM0sXQ6MAyx
+   jN+B1j3mwDp6362f4ydpxs10ndY8vsNFcTTj7xkOb/wXC8cFf2dDgJoGq
+   9YIg/NBUkLqrvFYSpnzfjAFy3EKA05kQpg+Trnigx09ELOpSrkPI3cbAq
+   im8bszBWiwddUlOc5U6jzrTUe604jV3q6U2KpyhkX2OrIA25SON7WPSUj
+   3Mt8d7R3n+0TffyjJs5r3DDmtymi0o1acyJxxelw/XAntUyKbvbIO1ebT
+   dshyuLWYb2+mzgP8YW27KomebllEVEeIsi44kF1QUSyU/rRSHyNhqq1m7
+   A==;
+X-CSE-ConnectionGUID: sUcQ1uNaTbumjhoipeJhbg==
+X-CSE-MsgGUID: CjTOxOL2TaOJ7mwB8zdqSw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="60995972"
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="60995972"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 09:02:34 -0700
+X-CSE-ConnectionGUID: jeXy0aHYQ5S89K9HbwcyRQ==
+X-CSE-MsgGUID: nWX83bvXTlCRSt6WrHow5A==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,257,1736841600"; 
+   d="scan'208";a="127123864"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 09:02:33 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tuZOg-00000003fki-29VA;
+	Tue, 18 Mar 2025 18:02:30 +0200
+Date: Tue, 18 Mar 2025 18:02:30 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Lee Jones <lee@kernel.org>, linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Pavel Machek <pavel@kernel.org>
+Subject: Re: [PATCH v1 1/1] leds: core: Bail out when composed name can't fit
+ the buffer
+Message-ID: <Z9mZFlDN9CegMVmH@smile.fi.intel.com>
+References: <20250318155126.2974905-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: soc: qcom,wcnss: Document local-mac-address
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Andy Gross <agross@kernel.org>,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250317-wcnss-local-mac-v1-1-c7c60d4427be@ixit.cz>
- <20250318-benevolent-bat-of-politeness-119c9a@krzk-bin>
- <11435166-28bc-432b-9b2b-d6bff586c882@ixit.cz>
- <20250318142627.GA2735725-robh@kernel.org>
-Content-Language: en-US
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- xsFNBF5v1x4BEADS3EddwsNsvVAI1XF8uQKbdYPY/GhjaSLziwVnbwv5BGwqB1tfXoHnccoA
- 9kTgKAbiXG/CiZFhD6l4WCIskQDKzyQN3JhCUIxh16Xyw0lECI7iqoW9LmMoN1dNKcUmCO9g
- lZxQaOl+1bY/7ttd7DapLh9rmBXJ2lKiMEaIpUwb/Nw0d7Enp4Jy2TpkhPywIpUn8CoJCv3/
- 61qbvI9y5utB/UhfMAUXsaAgwEJyGPAqHlC0YZjaTwOu+YQUE3AFzhCbksq95CwDz4U4gdls
- dmv9tkATfu2OmzERZQ6vJTehK0Pu4l5KmCAzYg42I9Dy4E6b17x6NncKbcByQFOXMtG0qVUk
- F1yeeOQUHwu+8t3ZDMBUhCkRL/juuoqLmyDWKMc0hKNNeZ9BNXgB8fXkRLWEUfgDXsFyEkKp
- NxUy5bDRlivf6XfExnikk5kj9l2gGlNQwqROti/46bfbmlmc/a2GM4k8ZyalHNEAdwtXYSpP
- 8JJmlbQ7hNTLkc3HQLRsIocN5th/ur7pPMz1Beyp0gbE9GcOceqmdZQB80vJ01XDyCAihf6l
- AMnzwpXZsjqIqH9r7T7tM6tVEVbPSwPt4eZYXSoJijEBC/43TBbmxDX+5+3txRaSCRQrG9dY
- k3mMGM3xJLCps2KnaqMcgUnvb1KdTgEFUZQaItw7HyRd6RppewARAQABzSBEYXZpZCBIZWlk
- ZWxiZXJnIDxkYXZpZEBpeGl0LmN6PsLBlAQTAQgAPgIbAwULCQgHAgYVCgkICwIEFgIDAQIe
- AQIXgBYhBNd6Cc/u3Cu9U6cEdGACP8TTSSByBQJl+KksBQkPDaAOAAoJEGACP8TTSSBy6IAQ
- AMqFqVi9LLxCEcUWBn82ssQGiVSDniKpFE/tp7lMXflwhjD5xoftoWOmMYkiWE86t5x5Fsp7
- afALx7SEDz599F1K1bLnaga+budu55JEAYGudD2WwpLJ0kPzRhqBwGFIx8k6F+goZJzxPDsf
- loAtXQE62UvEKa4KRRcZmF0GGoRsgA7vE7OnV8LMeocdD3eb2CuXLzauHAfdvqF50IfPH/sE
- jbzROiAZU+WgrwU946aOzrN8jVU+Cy8XAccGAZxsmPBfhTY5f2VN1IqvfaRdkKKlmWVJWGw+
- ycFpAEJKFRdfcc5PSjUJcALn5C+hxzL2hBpIZJdfdfStn+DWHXNgBeRDiZj1x6vvyaC43RAb
- VXvRzOQfG4EaMVMIOvBjBA/FtIpb1gtXA42ewhvPnd5RVCqD9YYUxsVpJ9d+XsAy7uib3BsV
- W2idAEsPtoqhVhq8bCUs/G4sC2DdyGZK8MRFDJqciJSUbqA+5z1ZCuE8UOPDpZKiW6H/OuOM
- zDcjh0lOzr4p+/1TSg1PbUh7fQ+nbMuiT044sC1lLtJK0+Zyn0GwhR82oNM4fldNsaHRW42w
- QGD35+eNo5Pvb3We5XRMlBdhFnj7Siggp4J8/PJ6MJvRyC+RIJPGtbdMB2/RxWunFLn87e5w
- UgwR9jPMHAstuTR1yR23c4SIYoQ2fzkrRzuazsFNBF5v1x4BEADnlrbta2WL87BlEOotZUh0
- zXANMrNV15WxexsirLetfqbs0AGCaTRNj+uWlTUDJRXOVIwzmF76Us3I2796+Od2ocNpLheZ
- 7EIkq8budtLVd1c06qJ+GMraz51zfgSIazVInNMPk9T6fz0lembji5yEcNPNNBA4sHiFmXfo
- IhepHFOBApjS0CiOPqowYxSTPe/DLcJ/LDwWpTi37doKPhBwlHev1BwVCbrLEIFjY0MLM0aT
- jiBBlyLJaTqvE48gblonu2SGaNmGtkC3VoQUQFcVYDXtlL9CVbNo7BAt5gwPcNqEqkUL60Jh
- FtvVSKyQh6gn7HHsyMtgltjZ3NKjv8S3yQd7zxvCn79tCKwoeNevsvoMq/bzlKxc9QiKaRPO
- aDj3FtW7R/3XoKJBY8Hckyug6uc2qYWRpnuXc0as6S0wfek6gauExUttBKrtSbPPHiuTeNHt
- NsT4+dyvaJtQKPBTbPHkXpTO8e1+YAg7kPj3aKFToE/dakIh8iqUHLNxywDAamRVn8Ha67WO
- AEAA3iklJ49QQk2ZyS1RJ2Ul28ePFDZ3QSr9LoJiOBZv9XkbhXS164iRB7rBZk6ZRVgCz3V6
- hhhjkipYvpJ/fpjXNsVL8jvel1mYNf0a46T4QQDQx4KQj0zXJbC2fFikAtu1AULktF4iEXEI
- rSjFoqhd4euZ+QARAQABwsF8BBgBCAAmAhsMFiEE13oJz+7cK71TpwR0YAI/xNNJIHIFAmX4
- qVAFCQ8NoDIACgkQYAI/xNNJIHKN4A/+Ine2Ii7JiuGITjJkcV6pgKlfwYdEs4eFD1pTRb/K
- 5dprUz3QSLP41u9OJQ23HnESMvn31UENk9ffebNoW7WxZ/8cTQY0JY/cgTTrlNXtyAlGbR3/
- 3Q/VBJptf04Er7I6TaKAmqWzdVeKTw33LljpkHp02vrbOdylb4JQG/SginLV9purGAFptYRO
- 8JNa2J4FAQtQTrfOUjulOWMxy7XRkqK3QqLcPW79/CFn7q1yxamPkpoXUJq9/fVjlhk7P+da
- NYQpe4WQQnktBY29SkFnvfIAwqIVU8ix5Oz8rghuCcAdR7lEJ7hCX9bR0EE05FOXdZy5FWL9
- GHvFa/Opkq3DPmFl/0nt4HJqq1Nwrr+WR6d0414oo1n2hPEllge/6iD3ZYwptTvOFKEw/v0A
- yqOoYSiKX9F7Ko7QO+VnYeVDsDDevKic2T/4GDpcSVd9ipiKxCQvUAzKUH7RUpqDTa+rYurm
- zRKcgRumz2Tc1ouHj6qINlzEe3a5ldctIn/dvR1l2Ko7GBTG+VGp9U5NOAEkGpxHG9yg6eeY
- fFYnMme51H/HKiyUlFiE3yd5LSmv8Dhbf+vsI4x6BOOOq4Iyop/Exavj1owGxW0hpdUGcCl1
- ovlwVPO/6l/XLAmSGwdnGqok5eGZQzSst0tj9RC9O0dXO1TZocOsf0tJ8dR2egX4kxM=
-In-Reply-To: <20250318142627.GA2735725-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250318155126.2974905-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Sure, I'll respin it.
+On Tue, Mar 18, 2025 at 05:51:25PM +0200, Andy Shevchenko wrote:
+> GCC compiler complains about snprintf() calls that may potentially cut
+> the output:
+> 
+>  drivers/leds/led-core.c:551:78: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
+>  drivers/leds/led-core.c:554:78: error: ‘snprintf’ output may be truncated before the last format character [-Werror=format-truncation=]
+>  ...
+> 
+> Fix these by checking for the potential overflow. This requires
+> to align all the branches to use the same callee, i.e. snprintf(),
+> otherwise the code will be blown up and return different error codes
+> for the different branches.
 
-Thanks!
+...
 
-On 18/03/2025 15:26, Rob Herring wrote:
-> On Tue, Mar 18, 2025 at 10:07:22AM +0100, David Heidelberg wrote:
->> On 18/03/2025 09:49, Krzysztof Kozlowski wrote:
->>> On Mon, Mar 17, 2025 at 09:26:05PM +0100, David Heidelberg wrote:
->>>> The device and driver do support setting a custom MAC address.
->>>>
->>>> Fixes: c49e9e95f4d1 ("dt: binding: Add Qualcomm WCNSS control binding")
->>>> Signed-off-by: David Heidelberg <david@ixit.cz>
->>>> ---
->>>>    Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml | 2 ++
->>>>    1 file changed, 2 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml
->>>> index fd6db0ca98eb7e56d7399f55c408844d5e782805..6938dc4ccc2175a65f6f53c6d073fb72cf498b2c 100644
->>>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml
->>>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,wcnss.yaml
->>>> @@ -68,6 +68,8 @@ properties:
->>>>              - const: tx
->>>>              - const: rx
->>>> +      local-mac-address: true
->>>
->>> Which referenced binding provides the definition of this property (its
->>> type)? AFAIK, that's not a property of Wifi nodes.
->>
->> Good catch!
->>
->> Would you find reasonable to add the property to  wireless/ieee80211.yaml ?
->>
->> I feel like this could be "shared" between ethernet and ieee80211, but have
->> it twice in these two sounds acceptable to me.
-> 
-> Can you pick up and finish this series[1].
-> 
-> Rob
-> 
-> [1] https://lore.kernel.org/all/20230220140201.20450889@kernel.org/#r
+> -		strscpy(led_classdev_name, to_of_node(fwnode)->name,
+> -			LED_MAX_NAME_SIZE);
+> +		n = snprintf(led_classdev_name, LED_MAX_NAME_SIZE, "%pfw", fwnode);
+
+Actually this is not an equivalent, should still have that ugly
+to_of_node()->name...
+
+I'll fix it in v2.
 
 -- 
-David Heidelberg
+With Best Regards,
+Andy Shevchenko
+
 
