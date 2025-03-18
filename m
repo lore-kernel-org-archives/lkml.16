@@ -1,136 +1,132 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4468E207DFA;
-	Tue, 18 Mar 2025 09:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CF47202C2B;
+	Tue, 18 Mar 2025 09:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742291052; cv=none; b=YTzcRx1ZQYp8dlnq82KkI7IJ8MySVpJ8x0PEhbeAj35XBGTThcJ2JXWmYDG5kdBH/KjgCOBnIJT5DUuUInwpTZF75MWZmXKjd7UWTsTySyomwnYS9pIYs+OfmW/Ypf+LTErIpSERS/2WmOtkaErvoVemmvNXw2X+StITS3T9aYc=
+	t=1742291093; cv=none; b=Q62zZWjORwF3wUyw//O7iAadYL43XEDQZhtqFY1fVr9C4PjjVdDB+TdSgo/sTeVK0MmEL+Dq0IlxKtQv94P8Fhl4chGZEws/dGPCZM5d1GXV3SJPXVqLgSF9nM6QAxJevc3R3Fog3yD08MeiTR4ZwKUa/iirA2gegtyN3FUAi04=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742291052; c=relaxed/simple;
-	bh=+sIGm7SiHYfk56urSAvw5hE5y62jrH6xv9wH7xwrn4s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=YAX02QF4DiqEyp37ztOTZAhF1k4p5rnEM5ZScYbv84dsWv4ScR9bkCXMhvP6BRwzOSJNZ0sN6o1hMrwAA1nlzRjj7QmNrrMETdIWkdil6bo9c5eOAfgcmG5RuYeOJ+9+LXzu1dgS4k+ErNVwpjmtfbFbGbw09VNe7S/uUiZome4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=okBGhs4m; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742291093; c=relaxed/simple;
+	bh=9dseCUgfawFHDhoNUQBKZC9vwAGc9hCxkFUNPU0iZpg=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UDgu6RcwcaKQPVAsl8K4x4W92IFEiENAUkn9aYlA2BdWwDoquvjz63yo4ENCJUe3y6hSz6xga17lACMOSo2PfRI5gGGAelWcljsMZ7COU/K1qcBK+K8MilRRONqQNHCW4CCCWvBMVjbdHhkxWpzCjCCjmFdtoJwBXk9HL/QVSGs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nRJ+VON8; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="okBGhs4m"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52I19MWP027513;
-	Tue, 18 Mar 2025 09:44:02 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ec7mSUzuCpU2xSIyFsw66IeCPuvXHL53OlAzuGrHofc=; b=okBGhs4my4naPQmF
-	uH+0/WSCaUH29ZRDjNfp49opKOkOSR+q7boXefF/uFMZ9YBm+FusJPiwuU+OQRcL
-	/tfXaQgwPg8T74Y9r+/uEA1fnj4jv0j/C63NZp+adO6PNnfe6C/EKz+fVU5yVMZy
-	rrjm80L2IbFNPI1fEpUbpiL0Ibv0sUx9XFXPYXFAcw7g56Jw9e1P5VcpnaLLuBVO
-	Ffh68wZTyidP/h4HHpkVxn8Gd4ggpJvfyY2eOZc0M7lcCfM023Vfv2AAokX7GZge
-	a/DAQO+bNUvUyjrNQekmKvkhTBkPf1qf4DCQ8Eh4ZUYnQm7uWijqtQQ1LgqM4Dcp
-	qZ+FLw==
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45exwth9j0-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 09:44:01 +0000 (GMT)
-Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
-	by NALASPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52I9i1ot021941
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 18 Mar 2025 09:44:01 GMT
-Received: from hu-arakshit-hyd.qualcomm.com (10.80.80.8) by
- nalasex01c.na.qualcomm.com (10.47.97.35) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.9; Tue, 18 Mar 2025 02:43:57 -0700
-From: Abhinaba Rakshit <quic_arakshit@quicinc.com>
-Date: Tue, 18 Mar 2025 15:13:24 +0530
-Subject: [PATCH v2 2/2] arm64: dts: qcom: qcs615: add QCrypto nodes
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nRJ+VON8"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac34257295dso142731966b.2;
+        Tue, 18 Mar 2025 02:44:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742291090; x=1742895890; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=s04vWbS/+IELd1isfxtGM2wXxsUsxWYm6LzkaytObnU=;
+        b=nRJ+VON8lZNs5yFAAWd+pWzT6b5WFj9XU6tdQ3WVlSPPSb1ap027ojzWoXvACtJpgg
+         O5C55mzEbzFPY+HlqMNppFNHQ1ymGtRsiAHXD0GSJ+7+IC7EVYrIu5Kfnq8sxtvPJA5q
+         Moe4XNA+BUGMWYUgzNiLxRnsPOPWGTJwbFx+mKqQA5G5x/8b+Z8E6fOa/fFyCX9j4PP9
+         QH0nV8uKtdZZG7dnzsLiApfnJUdbFeG1x7ZNdXoKKhqIU4a+2KB2seF090YK5Y8Qorgy
+         rJUj9yb12TryfrF+f8cS2FoaamBZIuIdkVyGLcG4oNZx6WVzd54paToybK6FXrad1k/3
+         Rw3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742291090; x=1742895890;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=s04vWbS/+IELd1isfxtGM2wXxsUsxWYm6LzkaytObnU=;
+        b=wKNwnftCKB6lHf805pcHS1gxEU2/+P7JF/YoVMQnyLyFMLJIXLOPrZFwPRhFdYLfhV
+         rZiVUxqpJdAqPSDXtIkL3EKgK8malpUNfeS1FUhmcpM5zajibzIYwh6esiQebH9oURPZ
+         yqcjDQOV+DtWu4i/2fdI4/s1+GmOFbavGfTaeA4agNv40N+Tt4NpgQX0QuByWgJ4+FoB
+         8vtaMYJho0vkAav6wPpwD6KeaIOpTAvyE5TFlKHA3PvJb1sG9BcZjEtJOA7Rxu/gERCs
+         vEEAYNX/Bj4W3LimTEQBzdPmlEu5s809bzIfw7XhAjKSWpoKju0vCk6xlsnUqhZ5E6/4
+         xzqQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV4y4mDURpl4cvxxQljRx3H10GK1RISZ8obCViSzlapXe5XYmeIcKxtbRUwrkHZz7AjJe4PTO3H7Mr40Glv@vger.kernel.org, AJvYcCWWLZ+tLgtl+XKuYiXOACtbqXIQHPZXQQW0o89A7KEjo2NsB+jtdzgMouwG5vG/zotaJRk=@vger.kernel.org, AJvYcCX8bNe8dXNqQojNt+zfWOc0skp2og6lWYJT+rgUsRSf5w7QSqAsyI72jfO3ZuflHirzu/i8iRuHt8VYV6gxKE61@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy9ceGVqlJoSK/XnHL1PPE+72Bm901r5sihPXZQACxYXb/mDb+b
+	Lu8ZkknvuPjeBYPeAqomqrtqgNRiJstiZAef+7lgrFwlhcwHXXvf
+X-Gm-Gg: ASbGncui8Ymzw6PAjp2YhYIJOdA0V7Dv5fGzJ78xys9KNjMZRo6mmbRLm/1p8Urye8a
+	H7LWxZpKDwi7RNIQzBLp7mmwgtMq9+043l+lDfLH83UIomK0KnJjo4z4CLAMETqJksJ02PR4b2J
+	AiYyKxBeMsTFjSwIc2pzV0Gq5IEc9hHU0U2mYzz9YCcJfjzBP4bGdMl4P9sZWJJ4bjZlXCDdBZa
+	w0FzgCBv4XyGG0msb+Zi5OLb+9IpNbLQ6gyzjbAFazOsZcZJRhY5doWecY2HGcs1qCK1zVKsNLA
+	Z5xW5mOa3eiKDeakEiOPIaeGnjDQ0gs=
+X-Google-Smtp-Source: AGHT+IFepVwFcfXs2vuS35E7cRvymbh0mZHbilkMAE6IL4hvEQz4oLQRWeCIgwZ3GbrhCKcxaRLFHg==
+X-Received: by 2002:a17:907:c27:b0:ac3:4370:f6d2 with SMTP id a640c23a62f3a-ac34370f77bmr1085273166b.4.1742291089794;
+        Tue, 18 Mar 2025 02:44:49 -0700 (PDT)
+Received: from krava ([173.38.220.48])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3149cdec8sm816734266b.112.2025.03.18.02.44.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 02:44:49 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Tue, 18 Mar 2025 10:44:47 +0100
+To: =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>, bpf@vger.kernel.org,
+	=?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn@rivosinc.com>,
+	linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf-next] selftests/bpf: Sanitize pointer prior fclose()
+Message-ID: <Z9lAj-1COhR82P_O@krava>
+References: <20250318081648.122523-1-bjorn@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250318-enable-qce-for-qcs615-v2-2-c5e05fe22572@quicinc.com>
-References: <20250318-enable-qce-for-qcs615-v2-0-c5e05fe22572@quicinc.com>
-In-Reply-To: <20250318-enable-qce-for-qcs615-v2-0-c5e05fe22572@quicinc.com>
-To: Thara Gopinath <thara.gopinath@gmail.com>,
-        Herbert Xu
-	<herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Rob
- Herring" <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        "Conor
- Dooley" <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        "Konrad Dybcio" <konradybcio@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-crypto@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Abhinaba
- Rakshit" <quic_arakshit@quicinc.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01c.na.qualcomm.com (10.47.97.35)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: buhvS6__BJgVwwhMvSUEI6qXxy76nM1C
-X-Proofpoint-ORIG-GUID: buhvS6__BJgVwwhMvSUEI6qXxy76nM1C
-X-Authority-Analysis: v=2.4 cv=UoJjN/wB c=1 sm=1 tr=0 ts=67d94061 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=vPGRc2FByOJ6E0OUo5QA:9 a=QEXdDO2ut3YA:10
- a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_04,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- impostorscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=702
- phishscore=0 adultscore=0 clxscore=1015 spamscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503180070
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250318081648.122523-1-bjorn@kernel.org>
 
-Add the QCE and Crypto BAM DMA nodes.
+On Tue, Mar 18, 2025 at 09:16:47AM +0100, Björn Töpel wrote:
+> From: Björn Töpel <bjorn@rivosinc.com>
+> 
+> There are scenarios where env.{sub,}test_state->stdout_saved, can be
+> NULL, e.g. sometimes when the watchdog timeout kicks in, or if the
+> open_memstream syscall is not available.
+> 
+> Avoid crashing test_progs by adding an explicit NULL check prior the
+> fclose() call.
+> 
+> Signed-off-by: Björn Töpel <bjorn@rivosinc.com>
 
-Signed-off-by: Abhinaba Rakshit <quic_arakshit@quicinc.com>
----
- arch/arm64/boot/dts/qcom/qcs615.dtsi | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs615.dtsi b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-index f4abfad474ea62dea13d05eb874530947e1e8d3e..156084182318dc251c6ef06bac7128808609d3ec 100644
---- a/arch/arm64/boot/dts/qcom/qcs615.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs615.dtsi
-@@ -1114,6 +1114,29 @@ ufs_mem_phy: phy@1d87000 {
- 			status = "disabled";
- 		};
- 
-+		cryptobam: dma-controller@1dc4000 {
-+			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
-+			reg = <0x0 0x01dc4000 0x0 0x24000>;
-+			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
-+			#dma-cells = <1>;
-+			qcom,ee = <0>;
-+			qcom,controlled-remotely;
-+			num-channels = <16>;
-+			qcom,num-ees = <4>;
-+			iommus = <&apps_smmu 0x0104 0x0011>;
-+		};
-+
-+		crypto: crypto@1dfa000 {
-+			compatible = "qcom,qcs615-qce", "qcom,sm8150-qce", "qcom,qce";
-+			reg = <0x0 0x01dfa000 0x0 0x6000>;
-+			dmas = <&cryptobam 4>, <&cryptobam 5>;
-+			dma-names = "rx", "tx";
-+			iommus = <&apps_smmu 0x0104 0x0011>;
-+			interconnects = <&aggre1_noc MASTER_CRYPTO QCOM_ICC_TAG_ALWAYS
-+					 &mc_virt SLAVE_EBI1 QCOM_ICC_TAG_ALWAYS>;
-+			interconnect-names = "memory";
-+		};
-+
- 		tcsr_mutex: hwlock@1f40000 {
- 			compatible = "qcom,tcsr-mutex";
- 			reg = <0x0 0x01f40000 0x0 0x20000>;
+jirka
 
--- 
-2.34.1
+> ---
+>  tools/testing/selftests/bpf/test_progs.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/test_progs.c b/tools/testing/selftests/bpf/test_progs.c
+> index d4ec9586b98c..309d9d4a8ace 100644
+> --- a/tools/testing/selftests/bpf/test_progs.c
+> +++ b/tools/testing/selftests/bpf/test_progs.c
+> @@ -103,12 +103,14 @@ static void stdio_restore(void)
+>  	pthread_mutex_lock(&stdout_lock);
+>  
+>  	if (env.subtest_state) {
+> -		fclose(env.subtest_state->stdout_saved);
+> +		if (env.subtest_state->stdout_saved)
+> +			fclose(env.subtest_state->stdout_saved);
+>  		env.subtest_state->stdout_saved = NULL;
 
+nit, setting to NULL could be inside the condition
+
+>  		stdout = env.test_state->stdout_saved;
+>  		stderr = env.test_state->stdout_saved;
+>  	} else {
+> -		fclose(env.test_state->stdout_saved);
+> +		if (env.test_state->stdout_saved)
+> +			fclose(env.test_state->stdout_saved);
+>  		env.test_state->stdout_saved = NULL;
+>  		stdout = env.stdout_saved;
+>  		stderr = env.stderr_saved;
+> 
+> base-commit: f3f8649585a445414521a6d5b76f41b51205086d
+> -- 
+> 2.45.2
+> 
+> 
