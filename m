@@ -1,138 +1,107 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from smtp.forwardemail.net (smtp.forwardemail.net [121.127.44.73])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE5AC222582
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 23:51:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A15221F38
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 23:52:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=121.127.44.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742428297; cv=none; b=o2HM5nvOjaTjn7fzIUlHHdM5axVsMb8cN1PkPdNokJgYA/CFhE+gHB7yyV3gKmIi+cBECouGtN8suVUhLH0C9wBgYJpOCl+YskhripH/H7G37Ei6bvKz0kafUyKjgSLsfvfzf7skomzj+Wf1hIrQS92EiiEt4tYbTrN2qXQJrB8=
+	t=1742428368; cv=none; b=cjRSArgZKtBPPsjJpkse/0llsD2Dww7gkN2Z3vKaU9cT3BwBsTZod22Jo0vye2cAf5c3hDBItShN6FH1Huyvdb4Ru9FivajaLmPYM4vD9P5rXvTPZ1m6TLLfJhWpVAxYyySDHit2EJf0jRywiceWAEYXhILmTgPgrIAZf+BDwss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742428297; c=relaxed/simple;
-	bh=Zd6lPK24wICTCeAGm9ShBQ7c4Bz82eP2PlBh96sLX4E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tpobTgbchNfFBzuv82nng88ml1Gu7rlfuNwkgZJgf4eYfgNBzhDeFavIGvlZ9BJXjauPsLJH0LVwS6yhE/8THzdDnL3qiAbgyDAhFp+X04e6J7yWdNwazNHMDOTt1KLWJLKXZIdx1zccFI3cWIqrFR1kNuugTRk4IcKlyg0t67k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=bI7viNFc; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742428368; c=relaxed/simple;
+	bh=WUwIjAkiA+omSA3F0/XBGiF/j+1/a3MoCaaxdVmX9WI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hi/z2Zujef1aBQvM16Te7x+J8isyhKItQoCd7NSwuLh1612xlGvvAhY+Vbxo9SBFvIVikZYU35CEW8So+IDkZv4S6a1VrORyTJpBcRclugOgAFvZACjKGoTC3ACFVJfoNLtDRo3q+0Rtr53lJ5L3zx1YVY2GQ+/JfGFuJAkVhAY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=o+ujyX3Z; arc=none smtp.client-ip=121.127.44.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bI7viNFc"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-47681dba807so58451cf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742428295; x=1743033095; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KXB37kE8g9zrW5XJLWVxY6X8l7gXuU/+PvbrOsHuw48=;
-        b=bI7viNFccr80lvINnFA57b/1fLBpZNi6fBxlP0iYB6yL6r6VOg4n5D3rZXs3KiP2hH
-         RkJ2FSkpiZc+t+Ha1JmoazZYPKbB7J1JaucsWPPC0yuaGeNMJI2bFK3yL6LYxBGKjt7I
-         iA+IMDGbYd2X9yfkh5sO5BIp56cl9vpv0ERE+evHoncc2Rgn//GbY9M/DsYXEpYvRaE4
-         s+tmteXDXa7SrnhMbmB8OEfRXqJNAxjueVQiNnjMiH0hcrLxcS0OE8CQHdVwMIz+KpJW
-         AWrDjap3FS/E/+5HPlF34lwb+SVUWPpFqiC5e40GWeTU2yrkKqfleZOB4HOORZ0xL1ex
-         6Yzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742428295; x=1743033095;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=KXB37kE8g9zrW5XJLWVxY6X8l7gXuU/+PvbrOsHuw48=;
-        b=FkFk5OWBrGzcSgZofx9kG1UyxlXZnGuRyHYq4gOkTsi0NiFeUJgw/p2sXJZjGAkEb0
-         Q9ggE7VAvjjM5XQP1rFlHRa8IdzbbszTjk+n3K0d2qR5PbRQhEe1uxmNJvvm6H86P4tM
-         hionta4n1ErFD2X9Jnt8+ImDQLYU+eF3aN8LSWb4KArTKaswcgjVNT+t30qG4aT5MBbo
-         QIJT92lb7fCBf1VlcEOryhGPMO82YP1Mf9pqfjsbcsuEvxMx+27IXI8YbZSqxfSxDKNW
-         ltEnj0ORHWFSOmigH8mxe7O2JeNbMu0HWb4s9gi97eVuZBTZDlX0ESprd+r6+HTgn6Fh
-         YZiw==
-X-Forwarded-Encrypted: i=1; AJvYcCWXKIfxNwiUrqild1+/E6z3gKcO8FxEs2tSJ/mgvdGyZqcmRP97wMcReq2PvIZJqL/5MQRix8DblZCycyo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwcxJC6ch/TFbwJZn05NFN8UMGkjvPA1Vs5wPprqy2/goCOuHDJ
-	wqyIj+Xo63fnTGNYa5hQ/uG47WT16k9x7lde3iOQYuSeDPclFj0tmQ9rCFo3243FpFpq4Iuuhqj
-	Gp6aNz3KMQIIQHrxBqVaCaq2ZtOZj5zSBGQVT
-X-Gm-Gg: ASbGnctOFDl5ykOXkNxwn9yUvWGM4PamVr3sNW2/QIs54wjoB2MrCq2QHwQpuGisCQR
-	RtfW7keySN1gVKNEC9I3GNukg9pvoCMExAT6dIyNC8q6lPFfsaYMYxiWA7i7rPTkg7l0ds+cHyi
-	eRZpwdyHwwwugdsqDsQJQVe5c5rbGkWKaphLkDyL0wTBKfPVQsniMKHno=
-X-Google-Smtp-Source: AGHT+IEPb3uycvbOzcrIXbuE2SeXFLKRLR9STk2vGI4AoY5lvO/hG0DbL3JlrOkTypHb1Rzp+bExnT/t4sAo5oc+yD0=
-X-Received: by 2002:a05:622a:1b10:b0:475:1754:e044 with SMTP id
- d75a77b69052e-47712aff3a1mr703701cf.3.1742428294486; Wed, 19 Mar 2025
- 16:51:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="o+ujyX3Z"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
+ h=Content-Transfer-Encoding: Content-Type: In-Reply-To: From: References:
+ Cc: To: Subject: MIME-Version: Date: Message-ID; q=dns/txt;
+ s=fe-e1b5cab7be; t=1742428366;
+ bh=v2ctdz7uayF07UCPNi//R/x3v+JmE0rED8OH/LNmzM8=;
+ b=o+ujyX3ZkBJjZrwxuK2D3/jnytXNKlSfKPQkKP6535IT4WPtLyKUbFsbiHcRppWlqii2O5k0u
+ XPQDbkaX5gUH4BpCyfJ0Ov9nVYA42cKeXKPL0VYaTWoKdxy26Dv0vK8EIsKMUsXdhf4U7lhS2CZ
+ 2C2yohko+t9ao9Y+iv3L4LCD17mwOdN1q5h+nt/hko6HpTd85iy/+jswZvSV2+uZHRrOErpnS2E
+ M7nCvaSPT5dBUDyJY4BIizv4sDZM7iEgM00N5lWJsSzijjP//jvX1SDYKR436Si68ycVNZvQv1K
+ RoQFgbYfKQ7gBQhcIg7v1UAFzGes6GIy351X3/58jhbg==
+X-Forward-Email-ID: 67db58c827ee59b783a8734c
+X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
+ 121.127.44.73
+X-Forward-Email-Version: 0.4.40
+X-Forward-Email-Website: https://forwardemail.net
+X-Complaints-To: abuse@forwardemail.net
+X-Report-Abuse: abuse@forwardemail.net
+X-Report-Abuse-To: abuse@forwardemail.net
+Message-ID: <eabc0fb8-10cc-465c-9434-b0804418dcb6@kwiboo.se>
+Date: Thu, 20 Mar 2025 00:52:34 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <8c6125d7-363c-42b3-bdbb-f802cb8b4408@web.de> <1742423150-5185-1-git-send-email-hargar@linux.microsoft.com>
-In-Reply-To: <1742423150-5185-1-git-send-email-hargar@linux.microsoft.com>
-From: Leah Rumancik <lrumancik@google.com>
-Date: Wed, 19 Mar 2025 16:50:58 -0700
-X-Gm-Features: AQ5f1JpZCyj-YkaVlD8zo6zTR3YKxhHUYbw5UzdQJbh3ulRs6jc22xADpXMq0M4
-Message-ID: <CAMxqPXXrfMs4zHuOOmTtDp2T5uTbJYnnXQ0E04gFRr62W3SJjw@mail.gmail.com>
-Subject: Re: 6.1.132-rc1 build regression on Azure x86 and arm64 VM
-To: Hardik Garg <hargar@linux.microsoft.com>
-Cc: frank.scheiner@web.de, dchinner@redhat.com, djwong@kernel.org, 
-	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v3 5/5] net: stmmac: dwmac-rk: Add initial
+ support for RK3528 integrated PHY
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Heiko Stuebner <heiko@sntech.de>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Maxime Coquelin
+ <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, David Wu <david.wu@rock-chips.com>,
+ Yao Zi <ziyao@disroot.org>, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-stm32@st-md-mailman.stormreply.com
+References: <20250319214415.3086027-1-jonas@kwiboo.se>
+ <20250319214415.3086027-6-jonas@kwiboo.se>
+ <d53a2119-2650-4a87-af94-1b9c2297cf72@lunn.ch>
+Content-Language: en-US
+From: Jonas Karlman <jonas@kwiboo.se>
+In-Reply-To: <d53a2119-2650-4a87-af94-1b9c2297cf72@lunn.ch>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hey this is my bad, I cherry picked the fix to my local 6.1.y, running
-tests now, should be out for review tomo or friday.
+Hi Andrew,
 
-Thanks Frank for finding the missing commit!
-(https://lore.kernel.org/stable/8c6125d7-363c-42b3-bdbb-f802cb8b4408@web.de=
-/)
+On 2025-03-20 00:27, Andrew Lunn wrote:
+> On Wed, Mar 19, 2025 at 09:44:09PM +0000, Jonas Karlman wrote:
+>> Rockchip RK3528 (and RV1106) has a different integrated PHY compared to
+>> the integrated PHY on RK3228/RK3328.
+> 
+> What ID does this PHY have? Is it just the reset which is different,
+> or is it actually a different PHY, and the rockchip PHY driver needs
+> additions?
 
-- leah
+Sorry, look like I missed to include the phy-id reported in this patch
+and only included that detail in the related device tree patch [1].
 
-On Wed, Mar 19, 2025 at 3:25=E2=80=AFPM Hardik Garg <hargar@linux.microsoft=
-.com> wrote:
->
-> v6.1.132-rc1 build fails on Azure x86 and arm64 VM:
->
-> fs/xfs/libxfs/xfs_alloc.c: In function '__xfs_free_extent_later':
-> fs/xfs/libxfs/xfs_alloc.c:2551:51: error: 'mp' undeclared (first use in t=
-his function); did you mean 'tp'?
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |                                                   ^~
-> ./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
->    78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
->       |                                             ^
-> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CO=
-RRUPT'
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |             ^~~~~~~~~~~~~~
-> fs/xfs/libxfs/xfs_alloc.c:2551:51: note: each undeclared identifier is re=
-ported only once for each function it appears in
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |                                                   ^~
-> ./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
->    78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
->       |                                             ^
-> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CO=
-RRUPT'
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |             ^~~~~~~~~~~~~~
-> In file included from ./fs/xfs/xfs.h:22,
->                  from fs/xfs/libxfs/xfs_alloc.c:6:
-> ./fs/xfs/xfs_linux.h:225:63: warning: left-hand operand of comma expressi=
-on has no effect [-Wunused-value]
->   225 |                                                __this_address), \
->       |                                                               ^
-> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CO=
-RRUPT'
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |             ^~~~~~~~~~~~~~
->   CC [M]  net/ipv4/netfilter/arpt_mangle.o
->   CC      net/unix/scm.o
-> make[3]: *** [scripts/Makefile.build:250: fs/xfs/libxfs/xfs_alloc.o] Erro=
-r 1
-> make[2]: *** [scripts/Makefile.build:503: fs/xfs] Error 2
->
->
->
-> Tested-by: Hardik Garg <hargar@linux.microsoft.com>
->
->
->
-> Thanks,
-> Hardik
->
->
+This PHY seem to be different compared to the PHY used in older SoCs.
+
+The PHY identified on addr 0x2 as 0044.1400 and in vendor kernel this
+relate to the Rockchip RK630 PHY [2].
+
+  #define RK630_PHY_ID				0x00441400
+
+  /*
+   * Fixed address:
+   * Addr: 1 --- RK630@S40
+   *       2 --- RV1106@T22
+   */
+  #define PHY_ADDR_S40				1
+  #define PHY_ADDR_T22				2
+
+[1] https://lore.kernel.org/all/20250310001254.1516138-2-jonas@kwiboo.se/
+[2] https://github.com/armbian/linux-rockchip/blob/rk-6.1-rkr5/drivers/net/phy/rk630phy.c
+
+Regards,
+Jonas
+
+> 
+> 	Andrew
+
