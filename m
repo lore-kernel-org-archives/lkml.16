@@ -1,208 +1,135 @@
-Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A45171AF0D7
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:17:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C1C01DED58
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742411878; cv=none; b=TUVpbBoBSYkJ1NP7uCM+dIqaHKe3xGKWft0o3GYmnO/JvKIcU+2CFp0oZLBhxgEz90M6xrkAGJPRdFjA8FTbITvfzgVwpks5F2d38h2ztlBtdPZe4P5ehW/6mBbEpjzeJKGBavvuNamoO0o3ak71xdMV7OtaO8FqzwB/UjKqe0E=
+	t=1742411908; cv=none; b=uWpTVY3x0FU+pYT9ER8XjiYRz3sKuAATBYIq2lunzYNJ+VbH5WKHbubXhfyuGXQnGagl7eD2jA7xo1PCVt2k+E8ZczueYe0LDryF+kvtN+x1KMJrTx40sC9Z7TN6d7p/b+9W964CJXCGNo+DMRRRhSdm0yFwKw2JHeG6xoCguzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742411878; c=relaxed/simple;
-	bh=QCEtEkxA27z7lYY4jDZ6Bdte4bA9wKiYDFGDFNSAhkg=;
+	s=arc-20240116; t=1742411908; c=relaxed/simple;
+	bh=JM4K2AdLeA/tZujIOKEWMcFPBaUHhRPzg4Vj8efT2og=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eC9UAr+zR3PfPQ7X72QGXGeprB6t1v7C12R3gEOq3Oblijni18X81t4gw0wkPNeMHYUIQUEqAEyjzb6UzvAGY+igStVexwopW5u8nJOnYYz8LTd3cYlTkKhCNoFSWxTklMC5QXYbtbhvMsQftSyT7EJCczIg51XL96iKw+EFPE0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Iv2O6cZS; arc=none smtp.client-ip=209.85.167.54
+	 To:Cc:Content-Type; b=PKmmjKl+reg6M9g1xf6mDioQqWHcqnXAjh9INwdBlshfVaG9vMmofbPlgmUOszRu6MefCvuCR681qYnJf9NBMapw1y6kZjt0QGVw7cgfu7eMd0WWdcPet1XU8XpmfUjIhS9DIw/HRNC4hwb+yPjAmnRIejQAn7AfIP3gLO9FHjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBIH2avP; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Iv2O6cZS"
-Received: by mail-lf1-f54.google.com with SMTP id 2adb3069b0e04-5439a6179a7so8367e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:17:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBIH2avP"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5e5e1a38c1aso11022a12.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:18:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742411875; x=1743016675; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742411905; x=1743016705; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cNGUyzT3o52qSNwsF8gyV6fHX+GCEdD9CGDz1M8FRjQ=;
-        b=Iv2O6cZSPlq7r+xgrcLeUyh0uyJL8V52OV3xRCSEEM3n2eMZLrrLlvIJBLl05ZuTQ4
-         juQua3FEwujfbJ9gVM6kXL8blZfNoHFKPLdikD0naFt4sSctuKDwuG7UmFGIt0YaJPgl
-         1vn2Px1RS/dpHL6Uq8IYVy2uYDghSVDQ4su50IOBzqkcg97o/ophIlZx+Lz9w01ik86y
-         Ex45VSH1Qo5jjnRpbYzsfQvG87r+nWrzl6A99O4v/BCXMSLfieAVaw2xnnDaCSxaQ9W0
-         yA85BMEMUh145Ot+3mWIk4zDUqsXL5il825MqYx+pApj8nhlO7MQVSPJX9qTTDeeY+hO
-         VuTQ==
+        bh=OtA1WJ3VEbM+4+rYSUti+wTKZv3AmrDUfBGPjqhAiH0=;
+        b=HBIH2avP11ymVslgIm4oL/W30h8sm6tY42c53FbMsbw7vJMG9UMIrxcyxNCL09Nj4b
+         DLNLwbpd6h3vEXU5NdKkZo7InvsBrIwcFnHSClZLTm1w/tkCzZi9tzu7LMEDGMOczJXv
+         J7o+nv2az9AtvMlbN8pdjWFsL0pZR5Wn8JN1McFetIRzwHgPWReel6Nj9tHcaXSZmHl1
+         x3yQh88FuAqNU89DYnFmhrgVZN/O2NToXXzM30zzouclm3yaMZpCJzjVAQ4+r9K4pweB
+         b4bU6PpUnZfWcgITZAAiDQS4kaIKgbki38YWvvIzOT+1mkZ1Q62/jcLcX6SNd96ZbJXF
+         pPgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742411875; x=1743016675;
+        d=1e100.net; s=20230601; t=1742411905; x=1743016705;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cNGUyzT3o52qSNwsF8gyV6fHX+GCEdD9CGDz1M8FRjQ=;
-        b=kCr+H52cwUHby5SM9In92Pta4Oe36VKY5p8OijrwwzFOBNPERo70dZioLaHZnlqxcO
-         iGYLuimFLH7V6DNQYPL+xJAlOxw3FqDPmNisl6EMUPPueZ8Hbfkb50qNIcXlIFEeg54j
-         FmKlIqGMc7+NhftbcyPu6JlTtC3d49lRtbWNDMx++oYBwlcExaqUiEt8QYarA64ujYFt
-         w5exwxnTD7wQolRWqv23AfUvzVI0iEpBxYLygT1hvRVOvCeXYRjbOG9pr26t5ksiY2gf
-         iWQ67ojGfHllpVgNOynjZvQJn96YXksVebP5ym70n+r+y4Erpvm6eLQNJV2sWU6v5ErC
-         4AkQ==
-X-Gm-Message-State: AOJu0YzwPH3dWy0w/jsA6ETfMXIRu9od9dBrULMwOHmK0smH8kYR2axk
-	3PJrl98/35KZCHXByo7DuV8gJ8G7rlMyGQP04eNz5yRZHQu+Ff6EaPQM9Qb1NpA+VPf9pPoMHHI
-	RJ9xXLYng1nKpVTDitJmrzMLSSA==
-X-Gm-Gg: ASbGnctfjftSS6OqBuhYo/FLCFs16JwSGerX64eDesS5bcgogHrkQ5PM7N7vHNKA/BT
-	bpRt8upUhiWopy9HbAR/3CvBfzDExRI1oLLrbU/Y57b73J/zpXCzgT8DHL59JIsEc01YNoC1dJ4
-	yRleeNFVdwk2tfIbKSt4Ji0T6pXvkOobV0I3xXKrtZ
-X-Google-Smtp-Source: AGHT+IHZjjsXNcoPK/FxB8xDIl5NJ+av//2zIcBGVE4ZsLzZk7SuaIjh26A5LRa3Qqgh335l2ipGgC9wnQVti9zON6c=
-X-Received: by 2002:a05:6512:6cf:b0:549:68a7:177c with SMTP id
- 2adb3069b0e04-54acfa85f7cmr260116e87.7.1742411874453; Wed, 19 Mar 2025
- 12:17:54 -0700 (PDT)
+        bh=OtA1WJ3VEbM+4+rYSUti+wTKZv3AmrDUfBGPjqhAiH0=;
+        b=P3C7UwSadS/uQgtLL+1Ab+DxpXZVRmyW4X1xbrXhJPUrpKicxgcG+HTu17lohagjk3
+         EdWm9xfPqNxGGKqNyTvLa6dcURQtxyae7tnJxwezIsISa0FRJtEOZIIHT7t3/yHfjpi3
+         /bOX0ssaq19QelYOqw7jdzUV8aPFwXMMjBja8eCghaiXOBo3eZQ135qNq7KTvWuQWS64
+         6q9ECSQ5zvSBrkxUW6ozYIsT4i40LfE35oSbp/XcLHhx0g9Lc7S1UyRbwde1iSVtjvx1
+         T7t63x3v+zeZtodShM7TDl1tRIhKxD0PsRoX7KPvZlFYAETd8EmggcCMyANHOoeojbFy
+         ndrw==
+X-Forwarded-Encrypted: i=1; AJvYcCUa69Q/5Gy6UuIn2WuiB4iY7qFs1hfiQij5oFFiYWZCspbbqVli7PFjcx3WDCcGEMCvMUePXZlkst1QXHY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWGQSJWiuyMB8g+wV0IeSkX/R7JG9psSR2u/NVoZ5uun4C5ldz
+	r7x+NZPxxqdGgiRDxvlFAOkZmtqeSmTquTk3cL9scK4PUXMP09wf/Lo3Q41MJgLQLyWAN5PnKr/
+	E7hkgOpzCVS/MRq0FDJjMYP+mKCVLKuRi
+X-Gm-Gg: ASbGncsTyDd8HuTb90LnyBSleuLfreZdJTEtEclppbVfNt6YjkSJblt2Y1FCeQmPHLO
+	V5iuescp9mHZqIk2LAXgv16Y7PdPzYFUu0vcufUgnkUQs9TGR04bf61sAsBqs68XlgNV1lS4k+l
+	Ri0nytnZGbo/rRqVPROf5D2QdbSA==
+X-Google-Smtp-Source: AGHT+IEqiSO7u0PDEcFETsBJ55H3LO6ODeD6FmdJzYK/yWT3nCGDR2PGq2kxfKJ5grNSsYFqvkWBzACs0Ag8A8bfPDo=
+X-Received: by 2002:a05:6402:5210:b0:5e4:92ca:34d0 with SMTP id
+ 4fb4d7f45d1cf-5eb80f89fd7mr3765797a12.20.1742411904512; Wed, 19 Mar 2025
+ 12:18:24 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319071009.1390984-1-xin@zytor.com> <20250319071009.1390984-4-xin@zytor.com>
-In-Reply-To: <20250319071009.1390984-4-xin@zytor.com>
-From: Brian Gerst <brgerst@gmail.com>
-Date: Wed, 19 Mar 2025 15:17:42 -0400
-X-Gm-Features: AQ5f1JrTxZ8q8Skhwgka_P0U7eSx5SOpLrK_pPYJcS3d8bulLd_9KEIrFGZMiJ8
-Message-ID: <CAMzpN2jFv8KE97ymEWAX1setxdgXy0jZGn_7JVp9fFEBfZ2ynA@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] x86: Zap TOP_OF_KERNEL_STACK_PADDING on x86_64
-To: "Xin Li (Intel)" <xin@zytor.com>
-Cc: linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de, 
-	mingo@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, 
-	hpa@zytor.com, peterz@infradead.org
+References: <20250319185433.1859030-1-mjguzik@gmail.com> <20250319190950.GF26879@redhat.com>
+In-Reply-To: <20250319190950.GF26879@redhat.com>
+From: Mateusz Guzik <mjguzik@gmail.com>
+Date: Wed, 19 Mar 2025 20:18:12 +0100
+X-Gm-Features: AQ5f1Jp4Tnice6Rpb4cXilJ1AvnOJFnsu7JdAp3T4I0KP1inFhCWz_1pG546hyc
+Message-ID: <CAGudoHEg3k96oNSK-kOe+3StBv3z86iMVQjPd1pn1=SjtPQUVA@mail.gmail.com>
+Subject: Re: [PATCH v2] exit: combine work under lock in synchronize_group_exit()
+ and coredump_task_exit()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 3:10=E2=80=AFAM Xin Li (Intel) <xin@zytor.com> wrot=
-e:
+On Wed, Mar 19, 2025 at 8:10=E2=80=AFPM Oleg Nesterov <oleg@redhat.com> wro=
+te:
 >
-> Because task_pt_regs() is now just an alias of thread_info.user_pt_regs,
-> and no matter whether FRED is enabled or not a user level event frame on
-> x86_64 is always pushed from top of current task kernel stack, i.e.,
-> '(unsigned long)task_stack_page(task) + THREAD_SIZE', there is no meaning
-> to keep TOP_OF_KERNEL_STACK_PADDING on x86_64, thus remove it.
+> On 03/19, Mateusz Guzik wrote:
+> >
+> > +     spin_lock_irq(&sighand->siglock);
+> > +     synchronize_group_exit(tsk, code);
+> > +     core_state =3D coredump_task_exit_prep(tsk);
+> > +     spin_unlock_irq(&sighand->siglock);
 >
-> Signed-off-by: Xin Li (Intel) <xin@zytor.com>
-> ---
->
-> Change in v2:
-> * Rebase on latest tip/master.
-> ---
->  arch/x86/include/asm/fred.h        |  2 +-
->  arch/x86/include/asm/processor.h   |  6 ++++--
->  arch/x86/include/asm/thread_info.h | 10 ----------
->  arch/x86/kernel/process.c          |  3 +--
->  4 files changed, 6 insertions(+), 15 deletions(-)
->
-> diff --git a/arch/x86/include/asm/fred.h b/arch/x86/include/asm/fred.h
-> index 2a29e5216881..f9cca8c2c73e 100644
-> --- a/arch/x86/include/asm/fred.h
-> +++ b/arch/x86/include/asm/fred.h
-> @@ -97,7 +97,7 @@ static __always_inline void fred_sync_rsp0(unsigned lon=
-g rsp0)
->
->  static __always_inline void fred_update_rsp0(void)
->  {
-> -       unsigned long rsp0 =3D (unsigned long) task_stack_page(current) +=
- THREAD_SIZE;
-> +       unsigned long rsp0 =3D task_top_of_stack(current);
->
->         if (cpu_feature_enabled(X86_FEATURE_FRED) && (__this_cpu_read(fre=
-d_rsp0) !=3D rsp0)) {
->                 wrmsrns(MSR_IA32_FRED_RSP0, rsp0);
-> diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/proc=
-essor.h
-> index a88ddf5614f2..3b7adefe05ab 100644
-> --- a/arch/x86/include/asm/processor.h
-> +++ b/arch/x86/include/asm/processor.h
-> @@ -656,8 +656,6 @@ extern unsigned long __end_init_stack[];
->   */
->  #define TOP_OF_INIT_STACK ((unsigned long)&__end_init_stack)
->
-> -#define task_top_of_stack(task) ((unsigned long)(task_pt_regs(task) + 1)=
-)
-> -
->  /*
->   * Note, this can't be converted to an inline function as this header
->   * file defines 'struct thread_struct' which is used in the task_struct
-> @@ -666,6 +664,9 @@ extern unsigned long __end_init_stack[];
->  #define task_pt_regs(task) ((task)->thread_info.user_pt_regs)
->
->  #ifdef CONFIG_X86_32
-> +#define task_top_of_stack(task) ((unsigned long)task_stack_page(task) + =
-THREAD_SIZE    \
-> +                                - TOP_OF_KERNEL_STACK_PADDING)
-> +
->  #define INIT_THREAD  {                                                  =
- \
->         .sp0                    =3D TOP_OF_INIT_STACK,                   =
-   \
->         .sysenter_cs            =3D __KERNEL_CS,                         =
-   \
-> @@ -673,6 +674,7 @@ extern unsigned long __end_init_stack[];
->
->  #else
->  extern unsigned long __top_init_kernel_stack[];
-> +#define task_top_of_stack(task) ((unsigned long)task_stack_page(task) + =
-THREAD_SIZE)
->
->  #define INIT_THREAD {                                                  \
->         .sp     =3D (unsigned long)&__top_init_kernel_stack,             =
- \
-> diff --git a/arch/x86/include/asm/thread_info.h b/arch/x86/include/asm/th=
-read_info.h
-> index 915a6839bd61..d8ccca04b4d9 100644
-> --- a/arch/x86/include/asm/thread_info.h
-> +++ b/arch/x86/include/asm/thread_info.h
-> @@ -30,10 +30,6 @@
->   *
->   * In vm86 mode, the hardware frame is much longer still, so add 16
->   * bytes to make room for the real-mode segments.
-> - *
-> - * x86-64 has a fixed-length stack frame, but it depends on whether
-> - * or not FRED is enabled. Future versions of FRED might make this
-> - * dynamic, but for now it is always 2 words longer.
->   */
->  #ifdef CONFIG_X86_32
->  # ifdef CONFIG_VM86
-> @@ -41,12 +37,6 @@
->  # else
->  #  define TOP_OF_KERNEL_STACK_PADDING 8
->  # endif
-> -#else /* x86-64 */
-> -# ifdef CONFIG_X86_FRED
-> -#  define TOP_OF_KERNEL_STACK_PADDING (2 * 8)
-> -# else
-> -#  define TOP_OF_KERNEL_STACK_PADDING 0
-> -# endif
->  #endif
->
->  /*
-> diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-> index 58c1cd4ca60a..51020caac332 100644
-> --- a/arch/x86/kernel/process.c
-> +++ b/arch/x86/kernel/process.c
-> @@ -124,9 +124,8 @@ int arch_dup_task_struct(struct task_struct *dst, str=
-uct task_struct *src)
->   */
->  void arch_init_user_pt_regs(struct task_struct *tsk)
->  {
-> -       unsigned long top_of_stack =3D (unsigned long)task_stack_page(tsk=
-) + THREAD_SIZE;
-> +       unsigned long top_of_stack =3D task_top_of_stack(tsk);
->
-> -       top_of_stack -=3D TOP_OF_KERNEL_STACK_PADDING;
->         tsk->thread_info.user_pt_regs =3D (struct pt_regs *)top_of_stack =
-- 1;
->  }
->
-> --
-> 2.48.1
+> Well, but why do we need the new (and trivial) coredump_task_exit_prep?
 >
 
-I'm not sure it's worth fully removing TOP_OF_KERNEL_STACK_PADDING for
-64-bit if it results in needing separate definitions of
-task_top_of_stack().  Leaving it at zero is fine.  The other changes
-are fine though.
+it's not *needed*, i claim it is cleaner
+
+but i'm not going to argue about this, i'll submit and updated patch
+later this evening or tomorrow
+
+> Can't synchronize_group_exit() be
+>
+>         static struct core_state *synchronize_group_exit(struct task_stru=
+ct *tsk, long code)
+>         {
+>                 struct sighand_struct *sighand =3D tsk->sighand;
+>                 struct signal_struct *signal =3D tsk->signal;
+>                 struct core_state *core_state =3D NULL;
+>
+>                 spin_lock_irq(&sighand->siglock);
+>                 signal->quick_threads--;
+>                 if ((signal->quick_threads =3D=3D 0) &&
+>                     !(signal->flags & SIGNAL_GROUP_EXIT)) {
+>                         signal->flags =3D SIGNAL_GROUP_EXIT;
+>                         signal->group_exit_code =3D code;
+>                         signal->group_stop_count =3D 0;
+>                 }
+>                 /*
+>                  * Serialize with any possible pending coredump.
+>                  * We must hold siglock around checking core_state
+>                  * and setting PF_POSTCOREDUMP.  The core-inducing thread
+>                  * will increment ->nr_threads for each thread in the
+>                  * group without PF_POSTCOREDUMP set.
+>                  */
+>                 tsk->flags |=3D PF_POSTCOREDUMP;
+>                 core_state =3D tsk->signal->core_state;
+>                 spin_unlock_irq(&sighand->siglock);
+>
+>                 return core_state;
+>         }
+>
+> ?
+>
+> No need to shift spin_lock_irq(siglock) from synchronize_group_exit() to =
+do_exit(),
+> no need to rename coredump_task_exit...
+>
+> Oleg.
+>
 
 
-Brian Gerst
+--=20
+Mateusz Guzik <mjguzik gmail.com>
