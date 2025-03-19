@@ -1,69 +1,57 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from lelvem-ot02.ext.ti.com (lelvem-ot02.ext.ti.com [198.47.23.235])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7477920C480
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E8AE251788
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:24:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.235
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383457; cv=none; b=KGwiWZVO3PyQuAb9weBlOJIow2BHdPxVOS5y1uNLud/TPK37Njj7Vvzqcl4SyHZ+Hkjhhff8tSaGL/u+g5AWgGHdQEbh1DukmobCDx42QOI8BySLGUgA4D2k6PbNEu6akatRI+kkN6dzjjnGJ9AaSg9ZFWoi0b9QoKhd7C/cYP0=
+	t=1742383473; cv=none; b=B7buIVvQBCGJms/KkJHrDKbdS3WhzdFWIdXtU2FxQt31+TQtkqr7IrIVuf6apjmAwHx2oyQsyOWMaDmEcRnxowjr8ztp3JAD6bWZjBzLkECteKEevGpmKJzOi1aBG0zOBoU0OVWdZwcu6Kx7lvyaMsgAfItRo8hTnxTQf/aM/HA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383457; c=relaxed/simple;
-	bh=vKkl9RE5EwEBFLtLPUlfSUx26PfPlZrX+Blb5dbT/C0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ig5f9d6DJ3CVbwlMj+0fahNV2NEUynurbvS1sMcDO8BWtt5s/76tPwUqMDIDDZO8MBMhbUh8Y4bYzKjuFFdCDTUB0HWlafTZTONkBzFWKeJx5gAI9TyXpADZNXKOhRrYQf1J3VkV1Yqq40E5ACsabASszI8jmh4409kkKov2v2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b=aUBE+dtp; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
+	s=arc-20240116; t=1742383473; c=relaxed/simple;
+	bh=QTqailsonrpbQzmjwOzDl5cAf0C4+SMDAnXr0siyRN8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=DZvPJFpOfpzImeYviqTmjkWLWBEGtvNJDeRalQjIIaMZ8q8IIJMUJzsB1S/sc4u1+uyYAINrD/4ZsjPhjcNn0jo+5axYghGfmy0xVYxmF0fvAEwMK1nIhyP4whMdb6r2gcI4rkogvkh3nZvnEf+gbhZ6y4gzgNU/jhD4xjk204w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FAnZR4OS; arc=none smtp.client-ip=198.47.23.235
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b="aUBE+dtp"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2241053582dso33286295ad.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:24:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=furiosa.ai; s=google; t=1742383455; x=1742988255; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=XZvnuJrKt9TGuvAge2fzG7AvTvxdXtsSJqic522bGGA=;
-        b=aUBE+dtpGvUlRQwt4d8VdA5uptO68I5pFyPKrCfXoY6NbDN70a0Op9CjuMrWhOtUN6
-         inEY1+976vbuLP3lM1XPKSr7jtVopyungZJ86CQKyM3o+OmGuYMMCGWYe9qMnFAR3OBb
-         MSda/TSodFJzqsC+8m3KvrJodWq2tKHA94Cbw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742383455; x=1742988255;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=XZvnuJrKt9TGuvAge2fzG7AvTvxdXtsSJqic522bGGA=;
-        b=DvHXHQe5XEV2thguHEbfJq1o3ecLFJq7i6WE3YG6SS+OiYRzutEkL1kDG43Q1e4USQ
-         /39JL8hUF+Hz/GmWIpbTsEg6fWgqsLLuki8VOkkxDACDtdGwy8okoK9/e7GCE8I/2a59
-         +Qlu1jZhghFon0BaDY0oXDivhR6JW1DegVgENftDsgx6DA+YzinapV+fjS4FA7oZCNjB
-         mzRVGfxvO/YnUGEGYZePIJto86ZBePsvcZ5dZxXttCSzRVn1zBnBTHjQHM29Px6i5i6i
-         /+IjIj6NOyzwskPgagrUFTOw0AZTILYYe1PZ5sii8FHRIcTGKCQY+eu/pdss7ClJ7BLh
-         PSow==
-X-Forwarded-Encrypted: i=1; AJvYcCU7n0lJ3FpwbPjPav66cLzS8AvHQa0M4UDVmifCydk9se/WENHz4iIthqZLVhyCa/TDMw68KZPQDxFumf0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeMX7qwbvOsZDIK7IcI70YuFdRyC5/7CrfqI7fTiUBU2TeI6Ng
-	hehblF9ovdu1kNcj3JQH5oimntFAUHP1eI3VziirxeSgZhWhUcOplwyyVV7v6pA=
-X-Gm-Gg: ASbGncuWsWf7yBTGeIqCPomZYQc5oiIDZGsgJoInJDeNrBnhsaMJ3MXfS+VUSDyhWTm
-	uQubB5sJA4DVVUzbfHDzgudpy6FlXekDuEo6ui168icNxntw8fRpmw+burGqChCPvGcL9m/JmkC
-	aO5yTyGRP/dpeEVZ7oUVMoOeklZJUSZKLlLbtdJwiGsn9DEZHwmDiJ0DXKGp6WwKJo+MBwQSm3r
-	tsAFexXyttzaPDrxrLkCAJFHARbYjXk+RveFziME1g204pL3eSaIGPYquRwJQ3K+LAhF4x/O8qY
-	dV6VL5D0j/8ypgLvUdD7M9TREes7H1TEfZfkStew/pWWP43CEkptE6OKqmhFVfvqlF4x9tAAv1e
-	fB25glcUa+o2b4mg=
-X-Google-Smtp-Source: AGHT+IHhLaPon9yGAlr+vvdISzeAeLbAmh8UYYNWjbtERsSGvsF20JUu0H7aaQVQFG458JsbhtpC6Q==
-X-Received: by 2002:a17:902:eb81:b0:224:1781:a947 with SMTP id d9443c01a7336-226499280d0mr43847995ad.21.1742383454604;
-        Wed, 19 Mar 2025 04:24:14 -0700 (PDT)
-Received: from sidong.sidong.yang.office.furiosa.vpn ([61.83.209.48])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6d5dsm111605955ad.153.2025.03.19.04.24.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 04:24:14 -0700 (PDT)
-From: Sidong Yang <sidong.yang@furiosa.ai>
-To: Josef Bacik <josef@toxicpanda.com>,
-	David Sterba <dsterba@suse.com>
-Cc: Mark Harmstone <maharmstone@meta.com>,
-	linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Sidong Yang <sidong.yang@furiosa.ai>
-Subject: [PATCH 1/1] btrfs: ioctl: don't free iov when -EAGAIN in uring encoded read
-Date: Wed, 19 Mar 2025 11:24:01 +0000
-Message-ID: <20250319112401.22316-1-sidong.yang@furiosa.ai>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FAnZR4OS"
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelvem-ot02.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52JBOPVF315729
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Mar 2025 06:24:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1742383465;
+	bh=a0uS0DVRPkHnzbGHlaFhbIr9q0UKNRRLssP4z1+6RRI=;
+	h=From:To:CC:Subject:Date;
+	b=FAnZR4OSqTw3jH2jEdcdFNryRaRnIAU1BvhGpwMIhtVxcEOhrEXajMXzsZXZ0V0yI
+	 UtZSExvCkl/T0PDI/bGQDC+GyaYYlu93yyxNDf3MAtKhsYnlbct3Y/b0xlwweVwEIH
+	 +Q1oJMkvRbziSYw3rM7+KFmeY2CXmStPoBWu9GTc=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52JBOPhj114206
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 19 Mar 2025 06:24:25 -0500
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
+ Mar 2025 06:24:25 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 19 Mar 2025 06:24:25 -0500
+Received: from pratham-Workstation-PC (pratham-workstation-pc.dhcp.ti.com [172.24.227.40])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52JBONLH106746;
+	Wed, 19 Mar 2025 06:24:24 -0500
+From: T Pratham <t-pratham@ti.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Jens Axboe <axboe@kernel.dk>,
+        Robert Jarzmik <robert.jarzmik@free.fr>
+CC: T Pratham <t-pratham@ti.com>, Kamlesh Gurudasani <kamlesh@ti.com>,
+        Vignesh
+ Raghavendra <vigneshr@ti.com>,
+        Praneeth Bajjuri <praneeth@ti.com>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] lib: scatterlist: Fix sg_split_phys to preserve original scatterlist offsets
+Date: Wed, 19 Mar 2025 16:44:38 +0530
+Message-ID: <20250319111437.1969903-1-t-pratham@ti.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,33 +59,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-This patch fixes a bug on encoded_read. In btrfs_uring_encoded_read(),
-btrfs_encoded_read could return -EAGAIN when receiving requests concurrently.
-And data->iov goes to out_free and it freed and return -EAGAIN. io-uring
-subsystem would call it again and it doesn't reset data. And data->iov
-freed and iov_iter reference it. iov_iter would be used in
-btrfs_uring_read_finished() and could be raise memory bug.
+The split_sg_phys function was incorrectly setting the offsets of all
+scatterlist entries (except the first) to 0. Only the first scatterlist
+entry's offset and length needs to be modified to account for the skip.
+Setting the rest entries' offsets to 0 could lead to incorrect data
+access.
 
-Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
+This patch removes the offending code, ensuring that the page offsets
+in the input scatterlist are preserved in the output scatterlist.
+
+Fixes: f8bcbe62acd0 ("lib: scatterlist: add sg splitting function")
+Signed-off-by: T Pratham <t-pratham@ti.com>
 ---
- fs/btrfs/ioctl.c | 3 +++
- 1 file changed, 3 insertions(+)
+ lib/sg_split.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-index c44e6ce6e5f5..b556db9e7cc4 100644
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -4924,6 +4924,9 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
- 
- 	ret = btrfs_encoded_read(&kiocb, &data->iter, &data->args, &cached_state,
- 				 &disk_bytenr, &disk_io_size);
-+
-+	if (ret == -EAGAIN)
-+		goto out_acct;
- 	if (ret < 0 && ret != -EIOCBQUEUED)
- 		goto out_free;
- 
+diff --git a/lib/sg_split.c b/lib/sg_split.c
+index 60a0babebf2e..0f89aab5c671 100644
+--- a/lib/sg_split.c
++++ b/lib/sg_split.c
+@@ -88,8 +88,6 @@ static void sg_split_phys(struct sg_splitter *splitters, const int nb_splits)
+ 			if (!j) {
+ 				out_sg->offset += split->skip_sg0;
+ 				out_sg->length -= split->skip_sg0;
+-			} else {
+-				out_sg->offset = 0;
+ 			}
+ 			sg_dma_address(out_sg) = 0;
+ 			sg_dma_len(out_sg) = 0;
 -- 
-2.43.0
+2.34.1
 
