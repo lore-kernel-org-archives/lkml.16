@@ -1,71 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3010134BD;
-	Wed, 19 Mar 2025 14:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221E5158538
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742393848; cv=none; b=lG/NmeGLLudXGR3fRkqAV1ZyVgLlj6DlJmiUVEEmt1tT+kwoOFcRyASj8+TyaaecinCb0tpNJL29dx7BaVD6u2Wl64O1gbaCVCH+4Ihwf4oDhWdd55hoFKQuZR3M63d6HWT9U86N4qWE2YtNxfQo52WeXHfePzeqk2EMhlEp9q0=
+	t=1742393940; cv=none; b=COtbOnWF59ptKBYpz2Y2z1W7IYU9IN8LaGsMxia4ffR9I3Gvsvup1uzv+ZrYDFTuaOYUKsDXWN8GDcGqD9BuqNyC2p9Mnqy+O+CS5fmM0GmMyjObCrjeAuiWgRNQn2mARha6XfL6CDvvB4BL+gMKwMbdzp2gYNshMIjlyxH/4fQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742393848; c=relaxed/simple;
-	bh=mDtA3gGdRl8PPc41t++JV1w8XqYO37gXYMhQwSj/Rzs=;
+	s=arc-20240116; t=1742393940; c=relaxed/simple;
+	bh=dAoUWEgPhk2QRdXLCT44t/EDS3tWNjL6kBs1ZsCscdQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rf21W4uE43NACKmyJPBCC6W2qLrzm59BMEWemLBiwOIbSV1niaadD4KIciKWljBdNgUbiFTpx1GImIeEj40Dq6Drizlspq7S6AgjX4BfeRLWfoSNBmUZ5lQ4ydp+UEFjbD0ETAgKeuCFL2JfPajpoPuZNdKgGmEB3xflRrJfmTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwyeT2z4; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=tfav4OKocDz7bgTktuSmaMsuQfO+wjpqgjK427yILWmbeSbFm2g0yjEmJYpH29CvzZkB6fM+VhWJiMnpK2kR3x37Dahq/whfNYqCc9WMMH964rClMIh1ccwPxLG3y3H5RV/23b7z7NFHeCQzKJT7vEvUwZPqzf3xduPuu5dLQKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r08pHwKe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwyeT2z4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDA70C4CEE4;
-	Wed, 19 Mar 2025 14:17:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r08pHwKe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FE96C4CEE4;
+	Wed, 19 Mar 2025 14:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742393848;
-	bh=mDtA3gGdRl8PPc41t++JV1w8XqYO37gXYMhQwSj/Rzs=;
+	s=k20201202; t=1742393939;
+	bh=dAoUWEgPhk2QRdXLCT44t/EDS3tWNjL6kBs1ZsCscdQ=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iwyeT2z4i3KYR/l9yujACoL3VqGZUN5Ypf0q9UAV2eg9jabiSUrxF2uwMVM/jXhU3
-	 RFZJgpYHLh2GDc21/I4ZjkJNd6eFa3DcSJpEHzFrU37KDzayAgwL4zgp9o/xn+bRAy
-	 2//QgkWIizaKKs/wNxrJzQBkbgWKkLtxcJEidxivOSugXhA5t2l127kM51TKYEInlc
-	 TwEfE3GdHEz2hXtounEK4jW9W7nm5drcGFFVQrpwwocbflQDJ4zSUR0gRoMW1ZV3cL
-	 ApogGo9Hic0RM3Zxcxzo+b+X8u6Mo0QeXJBjjmbskwkFVhsbVqiBOi1Zz6A4h+LpTB
-	 w5RzEVxB9jsoA==
-Date: Wed, 19 Mar 2025 09:17:25 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
-	devicetree@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>, linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, linux-usb@vger.kernel.org, Frank Li <Frank.li@nxp.com>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Saravana Kannan <saravanak@google.com>, 
-	linux-arm-msm@vger.kernel.org, Felipe Balbi <balbi@kernel.org>, 
-	Wesley Cheng <quic_wcheng@quicinc.com>, Konrad Dybcio <konradybcio@kernel.org>
-Subject: Re: [PATCH v5 0/7] usb: dwc3: qcom: Flatten dwc3 structure
-Message-ID: <ovcwe4r4bb7cubpvqgbh7kiqoomu4qpfnoqi5dkhfojwx6ng32@f2ezf22gtld6>
-References: <20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com>
- <174233664011.4094337.15532864486999752175.robh@kernel.org>
+	b=r08pHwKevnU20iS6Nz3unBUAHjit7HMdvHvZZXs95dpRqCUEKGb6iixPZj1MlEjEF
+	 FZjHaHFu35sDnIaw/QelxEnpNYizzXEizUZJjyonscG3AIPI/OTJEtV9C5UWUms/Kq
+	 qpBQzaw1k1oWaUtEpHMT1ZbI26zbNx4L6Gli5wotj+Y5G/GKHJR1vntbCRWeNkGPVs
+	 DVOLAAgHrm8CrfdVBZDX7PaJBpv4r1Car13XYcVJOrTP95zQOkmMtrCR6FqLXLGE04
+	 WxfBfeUIL2Wk9Gm7yBEDEVxUrrsDhUyJVfQoTzVf1rvQbTHP18kOSEBIx+7gDtqdh9
+	 lY/A2OOztp0oQ==
+Date: Wed, 19 Mar 2025 15:18:54 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Cc: Chris Bainbridge <chris.bainbridge@gmail.com>,
+	nouveau@lists.freedesktop.org, maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+	simona@ffwll.ch, lyude@redhat.com, sumit.semwal@linaro.org,
+	dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/nouveau: prime: fix ttm_bo_delayed_delete oops
+Message-ID: <Z9rSTkXlub-JZAz0@cassiopeiae>
+References: <Z9GHj-edWJmyzpdY@debian.local>
+ <00e4d9c4-ecfc-4784-b603-12db04cda806@amd.com>
+ <Z9q-ggKKgTsvW-Rz@debian.local>
+ <Z9rA0G2urlVHFOSx@cassiopeiae>
+ <1f4a534f-8883-4793-b191-60c2773f6217@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <174233664011.4094337.15532864486999752175.robh@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1f4a534f-8883-4793-b191-60c2773f6217@amd.com>
 
-On Tue, Mar 18, 2025 at 05:26:02PM -0500, Rob Herring (Arm) wrote:
-> New warnings running 'make CHECK_DTBS=y for arch/arm64/boot/dts/qcom/' for 20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com:
+On Wed, Mar 19, 2025 at 03:06:52PM +0100, Christian König wrote:
+> Am 19.03.25 um 14:04 schrieb Danilo Krummrich:
 > 
-> arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a800000: #address-cells: 1 was expected
-> 	from schema $id: http://devicetree.org/schemas/usb/qcom,snps-dwc3.yaml#
-> arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a800000: #size-cells: 0 was expected
-> 	from schema $id: http://devicetree.org/schemas/usb/qcom,snps-dwc3.yaml#
-> arch/arm64/boot/dts/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb: usb@a800000: Unevaluated properties are not allowed ('#address-cells', '#size-cells', 'dr_mode', 'phy-names', 'phys', 'ports', 'ranges', 'snps,dis-u1-entry-quirk', 'snps,dis-u2-entry-quirk' were unexpected)
-> 	from schema $id: http://devicetree.org/schemas/usb/qcom,snps-dwc3.yaml#
+> >> Signed-off-by: Chris Bainbridge <chris.bainbridge@gmail.com>
+> >> Co-Developed-by: Christian König <christian.koenig@amd.com>
+> > Then also Christian's SoB is required.
+> 
+> I only pointed out which two lines in nouveau need to move to fix this.
+> 
+> All the credit to figuring out what's wrong go to Chris, but feel free to add my SoB if required.
 
-I lost the hunk that removes #address-cells, #size-cells, and ranges
-from &usb_1 in patch 7. So, this error report is correct, but does not
-affect the implementation.
+Then maybe Suggested-by: is the tags that fits best. :)
 
-Thanks for catching this, Rob.
+> 
+> >
+> >> Fixes: https://gitlab.freedesktop.org/drm/amd/-/issues/3937
+> > This is a bug report from amdgpu, but I understand that the same issue applies
+> > for nouveau.
+> 
+> The crash in amdgpu was caused by nouveau incorrectly dropping a DMA-buf reference while it was still needed.
 
-Regards,
-Bjorn
+Oh, I see.
+
+> 
+> Took us a while to figure that out, we could update the tags in the bug report but I think at this point it's unnecessary.
+
+Agreed.
+
+> 
+> >
+> > If at all, this needs to be
+> >
+> > 	Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/3937
+> >
+> > Maybe you can add a brief comment that this report applies for nouveau as well.
+> >
+> > Please also add a Fixes: tag that indicates the commit in nouveau that
+> > introduced the problem and Cc stable.
+> 
+> As far as I can see it was always there and was added >10years ago with the very first DMA-buf support.
+> 
+> But adding CC stable is a really good idea.
+
+Sounds good.
