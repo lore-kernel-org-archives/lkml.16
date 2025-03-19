@@ -1,292 +1,150 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE1F1B0F1E;
-	Wed, 19 Mar 2025 19:13:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.165.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742411596; cv=fail; b=aK2j5MVUSDrglljZiRdPWoK7RDgFJlYp+Ng76ft3JXwqIq3er2Np5i8TW1mXqfVZQzE3b+knOn9RNVjQK4k2QvBHQz/jBq073tSGFEkz0fU6oUN6KJSem9/bmaIHlCUBzSbpy4DzWpQq9bsplqgsbOR/JfrtN1N67dg1Pj1c8gY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742411596; c=relaxed/simple;
-	bh=kWUn+F+ZUJHzqFZ1IfaIxXcAlH1zowzxpnl+tfewGG4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=itJbU+vJcJ5Vvc2X/jS8NIsad38nmi5P7AGmT7suHJjidZznu+TLhe7cfXWopAU8Qe9hP5H01x+OmsUrK82Kddz7IM68AFV9NbSviKeMigt3Mg3HnbzXPmimSbvrAQN3XAOUV8XvSDETZKAZsefMCo0X0vNuu5VdjP2zgaanmxc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=m5vdCV+G; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=xX48XyDN; arc=fail smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093F0211715;
+	Wed, 19 Mar 2025 19:13:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742411609; cv=none; b=MtLb0TE9XwDtktu8q8H3TF1djJelJzjAIbGwOCP4DEuEtbOj1ogbzeWo4uxLbf54lsDEmrCuIqrTlH9ZPaM+aT7iJ1olEynK/InedBPv5PKRICznd7zmmHW3jyM74Zt77Ta0Pmdtdr6fJpWTyIK8zxY8aXkNaUWMA/rlkCrqtY0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742411609; c=relaxed/simple;
+	bh=vSvZxZ0NwBGmwepE94KBT72M3Ac8sdqVeI1o403IOgY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qOYvfuqJWWIy9mcEMxxJ1QtSH9XqDafuJDSySxxto4iciBAcyXM/CjqEFoIz4giGp5hl4gIL6/F27OgfGXy2HrBwdrf6tqqW9Hl7m4wEo9Hdta0AmU2gBVzKHK2fxzSRnTHWCTeTYzv8aHnojEBMxOcu11/L/YdYKa5/XrrqUc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=NJoS2zjn; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="m5vdCV+G";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="xX48XyDN"
-Received: from pps.filterd (m0246617.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JH0sBs012161;
-	Wed, 19 Mar 2025 19:12:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	corp-2023-11-20; bh=h6OzWPmsi6tg30rdXGdMzkQ8YDnuGC/WhwLMDZ5wgOA=; b=
-	m5vdCV+GUBe8gYUMYV47McGjynFu22vFq8Fo79XqV38mk/WvumUNpDC826jkXEC7
-	gDk8lFoiR4otVZxQeY85OlabHvjkErfm7I43vc7SrrfrbGHw6gc5xFhu9/0KsdXz
-	CNX2CUVW7v6SH3uWehFFCmvQPpl5lGflkicA5txOfCWcXVtoavqeS1Y0t6aIpxSs
-	F6Si53T/5Eoi7/gNWInycJ+eaMNWGD2MaNZBilaeOGP4vIZ1+xWxtEy/7qPZ1JB9
-	zzGmJX2+3t3Nq6+H/jUDryKRzS/2gmUUsP/rje0VqK+cfn8td6CHeA2LucwwHSwi
-	5AfeRy8fVGR/uRhWjB9Mww==
-Received: from phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta01.appoci.oracle.com [138.1.114.2])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45d23s47ge-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 19:12:53 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52JHgSCY022502;
-	Wed, 19 Mar 2025 19:12:52 GMT
-Received: from nam10-mw2-obe.outbound.protection.outlook.com (mail-mw2nam10lp2044.outbound.protection.outlook.com [104.47.55.44])
-	by phxpaimrmta01.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45dxc7hrb7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 19:12:52 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=zFhY14Kwy/Ob/HrBceZJBKTtaSPee1+9MlGfv8JynU0UPVKZW4JxL1VNu3Z/XHt0GChkUTGqzpJDID1VRA4wQmc9LsCIH3B1UxLTOOkhgB3Z6Ib1xCSE3jgHFWQn/s3gOiV2cz+cF9dnxuvzApSsN4WcDiC/0DwlchZHgoA21L0hEWEpzXsxMmQnsM+RFHdh0VvQGw0JbXkfYqh6lRs2raHyLTtCm1B2pz0dPCp/694bXVb+knbDoqwgLulMJlJCMjp9MR9RBaTwc1BnaXrjUnfbIY1RbIRatpr3sS8VKi5Eds1xklM6qB1oCB1ru+GZAG5YYxi23+LKmqTYYbepdQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=h6OzWPmsi6tg30rdXGdMzkQ8YDnuGC/WhwLMDZ5wgOA=;
- b=yf1lCCsfr5Jlzi1oGzHkey1mtbZQguzcsnxOcvoYgc502nODhEsoTQ1VCFUlnC1nQ6GIcWpstlsNUQOQv2lkzL9WK+Pr/Wlyig+U4O8tnUSY0h/FHjpUTR8oi/1RZzv0lnhYU4cstxrCWMn/hxtsc+hmyucqAlpHbNk0rdHGq3h5QnBlkx5jFeshTJy7vTNkrtD0bRcb8+f5dokmOPWzCC+r5++yBGAd69YZ42CTMRQe1icZ3K+hBZHOfWeSMKlvLNcOjelIAcMd4tXAK2um56FdASVG2NyjEKwVXugNYXSXCXjXwHuChMObn3YX+z9PZgDzTcNhO9ixp/zBM6jx+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=h6OzWPmsi6tg30rdXGdMzkQ8YDnuGC/WhwLMDZ5wgOA=;
- b=xX48XyDNWX+x7cxx7kxS68DxGYDc0zsbDFEgjkLYFYmA4fpizaeneBEYr2+/H48bQYlRwDsdRZgrkJPliiIgIApuhi0r+tLhIE2Mg5NjFmcNkHWpP61zZNVUCms44ZKspPtUisBeuDDEmVI0rZ6bGWOqIvGVZbr+Ipsfmy72Qrk=
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com (2603:10b6:8:1cc::16)
- by CH3PR10MB7211.namprd10.prod.outlook.com (2603:10b6:610:125::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
- 2025 19:12:48 +0000
-Received: from DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2]) by DM4PR10MB8218.namprd10.prod.outlook.com
- ([fe80::2650:55cf:2816:5f2%7]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
- 19:12:47 +0000
-Date: Wed, 19 Mar 2025 19:12:45 +0000
-From: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-To: Andrei Vagin <avagin@gmail.com>
-Cc: David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Kalesh Singh <kaleshsingh@google.com>,
-        "Liam R . Howlett" <Liam.Howlett@oracle.com>,
-        Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>,
-        "Paul E . McKenney" <paulmck@kernel.org>, Jann Horn <jannh@google.com>,
-        Juan Yescas <jyescas@google.com>, linux-mm@kvack.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-api@vger.kernel.org, criu@lists.linux.dev,
-        Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
-        Pavel Tikhomirov <snorcht@gmail.com>,
-        Mike Rapoport <mike.rapoport@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 1/2] fs/proc/task_mmu: add guard region bit to pagemap
-Message-ID: <10c3e304-1a6d-45ac-a3ad-7c0c8d00e03f@lucifer.local>
-References: <cover.1740139449.git.lorenzo.stoakes@oracle.com>
- <521d99c08b975fb06a1e7201e971cc24d68196d1.1740139449.git.lorenzo.stoakes@oracle.com>
- <857b2c3f-7be7-44e8-a825-82a7353665fb@redhat.com>
- <cd57ed04-c6b1-4df3-a5cb-a33078a08e74@lucifer.local>
- <09d7ca19-e6cc-4aa9-8474-8975373bdebd@redhat.com>
- <CANaxB-yMBSFeYcTr-PaevooSeHUkCN9GWTUkLZUNW2vxKzm0sg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CANaxB-yMBSFeYcTr-PaevooSeHUkCN9GWTUkLZUNW2vxKzm0sg@mail.gmail.com>
-X-ClientProxiedBy: LO4P123CA0545.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:319::13) To DM4PR10MB8218.namprd10.prod.outlook.com
- (2603:10b6:8:1cc::16)
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="NJoS2zjn"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 442D42E029B7;
+	Wed, 19 Mar 2025 21:13:22 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1742411603;
+	bh=ZCfvDS6gXGAxsTeXHoTWtoXKbmrBvPEnxWQeAGaa6is=; h=From:To:Subject;
+	b=NJoS2zjnObAFoTSqMo9oJDAbnM9VBMuOQsoToOBh+EiDViY2Tu56dm9goK7ZakUhF
+	 3SeOcaY9gnGSWR0FECZ4nMr5ewuEBBChVfKDHURvY1FF0gSXSHjPfTzt6eHNgKi6b6
+	 UdV59TQaeqPb7hB6LPjBnlSIHGW9fWbmHpoDhPcw=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH 00/11] HID: asus: hid-asus and asus-wmi backlight unification,
+ Z13 QOL improvements
+Date: Wed, 19 Mar 2025 20:13:08 +0100
+Message-ID: <20250319191320.10092-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR10MB8218:EE_|CH3PR10MB7211:EE_
-X-MS-Office365-Filtering-Correlation-Id: def4bcf9-17c2-4b66-6563-08dd671a0914
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?eWVTNzJxNXk0cTl6ZXhERVRNU0hKb2tsaWhhWG5CaUhHdE9OTWdnT2k0OWZN?=
- =?utf-8?B?SWFZQzIyR09VR1dzTGxheS9oYm11N1hlK2U4UHZYMFltTVdnY0pXV0hXSld6?=
- =?utf-8?B?a0hYcE1oWENzZ3hsUzVCVkREZkpBNldKSDJmSHdpbmRHdVlCVU9jZHRjNGxI?=
- =?utf-8?B?NEhYaWpKL3ZXRzJKbG5wcU1WVDIvTzgzR0w4V3l1V0plUXFIRmNVQ1dkK3hw?=
- =?utf-8?B?OFo2S2E5aEREalhTaUdIM2hwK0pPN2lnMDE0UUpJbmwwZ0pKc1Zod1dqSjhK?=
- =?utf-8?B?ZzBEdHlveURUOGdMaWEyazFxditMOVNSdi9CMWR1KzcySmRQRjlrMWhHcThu?=
- =?utf-8?B?YmhReklXV21NV2lVeCs1VEwyVWVrbTBqTUlFYkd0aXVScUNMcllLRE53b1lh?=
- =?utf-8?B?dkpmc1IyeS9TdW9IN1hjaVBaaU94NThnU0hKdVJYaUVMdmRCQy9SMDhabGwv?=
- =?utf-8?B?RFFmb1AyaGNWb3JzK0Qvby8rVExyTnhtc2VFcjc5NXhjVzl0Y2k5dUhkaGU3?=
- =?utf-8?B?aWY2b3J0WVRYTk5RUmJNVS92Sk1WQzFHUlNnanRTSU5LU0RraEVaeHFydlVn?=
- =?utf-8?B?cHU1MFFlMDJkZzRqd1Q3Rm9MSDZTQW4yN0RFME44MndiN2U4Y1dkQ2E3a1dO?=
- =?utf-8?B?YkloMFdENmJtakdhZkNZTWlKQWlHVlBDaFIvaXJVUUFha2QydzUwWGQ2czZr?=
- =?utf-8?B?T3FJUytGVTVVU0ZxcUh5YzJkUjIyRmdVMFZYbjh0ZytoaEFQaDYrS1c2VUNE?=
- =?utf-8?B?WlhwQ0l4bjJQNnY3aFdZbG9HS3A4VXRqMnlHU1E2ZzZBRHZ3dTcvUUhud251?=
- =?utf-8?B?ZmIzM0cxSU1XYlpYYWtlOXZTZVhsS3hGbGU0ZVpkeG13Z3FKQjc0SWt5Qm04?=
- =?utf-8?B?MjZ2ekp3ZEdWUW9jRWV4MFphRlBPWEdkSU85Q09TY0Zqc2pBRXBuN3VrNDQ1?=
- =?utf-8?B?OE5KQ25jVFp2U0dZOVE2eDV6cU9zam5XZ3NIS3JwWERpeC91SHVNVldGd3dJ?=
- =?utf-8?B?bGxzQjRtQSt1Q0twYVZMaDB5UExVMEJiQlMxOXVDZnNZbkJRZzRFWmkxZzVt?=
- =?utf-8?B?NGczb0Q5bEJXaDMvREZsT0xMMTFabFZ3d2lzRmZmK2JOME1BcWtRWENpajNp?=
- =?utf-8?B?RlRmeUJYRWdadHFNRm0zS29WR2FhWVRxcWduY0xscXhvUkNMOXlMZ2ZDWU9t?=
- =?utf-8?B?dVNLdVFmd2tlTDZxNXhIRmU3UnIzSk44QjlYU2ZxZ2RCNjJDajhNUWtiUjVy?=
- =?utf-8?B?cVJZVmR4aVd5WUJFa0w5aXNoLzhCLzczNFFyUDhaYmFqbHJudXh6WnN1SXVQ?=
- =?utf-8?B?MDhhUGhYSWZ6Z2ZKc2JaR0hwbkwzRzVmRXV1dHBtNlVJQlorSGhwQ2ZmZTlS?=
- =?utf-8?B?TGdYbnQwb080YmxxQVhDWXdzaE5KTm1wODhtTmdXbXFpMGl3bGFjUzd3YXBk?=
- =?utf-8?B?UmlnalE0N29xWWttYVpMdTQ4eVF1ZXNROTNhbFB5Y0d2SUxNUVVEVlBRSE5h?=
- =?utf-8?B?MHdQRTh5K3RYaWtEcjlvc1VnRVhJN1dmcWU4LzJaZVp6MXZMTXk0cHkxeXFl?=
- =?utf-8?B?L2h1OXZyd0Zhems3ZzJ3NmwvU2ZXVHBIQkIyYlA2WldyOU01YjY1N214cU5t?=
- =?utf-8?B?NFdKNVVhOURmZUZpNDdSa0VqMUV2QzVJRURPNDM1SkgrZ3FteG9qQnkvUXVx?=
- =?utf-8?B?SjRoeWpyMzQycWJ2MGtlSS94QkRIT0FYYjZOQjJyMnpBNmxnb2Jacy8zdjdU?=
- =?utf-8?B?aWJuY3A1NGRkNEJ0UWQrSzdxOS8wZC9SUkhCYTYvNHg5ODBuZkpvd3VwVkw4?=
- =?utf-8?B?dGRZeTJGWENtanJvVEdnQT09?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR10MB8218.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VU83SG5XUFFBbSs4UU9kRy9DR2FtN1NZMHNCY1BTdzh2ZXhud1B1c3MrVjlN?=
- =?utf-8?B?djE0akhJdkxSZFd5Z0NrODljUTBFa3ljTFBGbWxkR1FnSFo5R3FUNTNHS1J6?=
- =?utf-8?B?MWUwRkFVNXhMOHB5RzNzL0VONHk4blpDRFVEWVhxb1NrQkErU1pEL1NtU003?=
- =?utf-8?B?d3JTOVdKbGJkaHNPZnB3RGNaNW1HTnZhSTVHc0NicmdVL0wxWUV0bTFWVjhO?=
- =?utf-8?B?KzJFT0N0eUttc0V5am00c1cwVGVSUFVTSUFLRFV6aXRzVUVIKy92dndrdGRU?=
- =?utf-8?B?dytJSS84WWRDVk9qVGJHdEluaFR3UnJWdWk1NU9Cd0NDTXdnWHUrWmdGZDJI?=
- =?utf-8?B?KzlrL0taMjhpNW54RWM4T3JaUXFpWmluVHc2ZG8wODJjbWg4YjBMYVBKZi9m?=
- =?utf-8?B?MThzdW9BMUVKeHg3TVRxRjB1R0RVLy94MXhQRFpMUDVLTzhSektmUGJFT2hJ?=
- =?utf-8?B?clZZbUpOUXVEcTdnSlpMYjJYTWxCSENqRkRsVlJaYTlsVFBpdUZueFJxenRm?=
- =?utf-8?B?bXZIUFhybHlXaUJ3MnpVekhHOGdxK1RycW5YdHRhNG81TWlGZStDOHlCdUtN?=
- =?utf-8?B?dGIraFhMOU0yTkxlVWFPdWlxQjN0ZVVvZlRBT2IrRDErT2FKU0FTcE96UkFC?=
- =?utf-8?B?bGJyeVB4Q3VBSW9wYThDTHJuaFpIWUFsRThuQmpCM0pqWlA3VEJEaXpaY2Zx?=
- =?utf-8?B?ZXVDaGI2VTcvZEJOR2dJMDNZN08zR2RUZU05eEpOWUhITG1wU3pNbFlINjZZ?=
- =?utf-8?B?Q0hZQU5vdXdjRkQyTExxV2lhUmJ5UWo3WlRlR2hOY0JBNm9iYWlOSU9ZYnNv?=
- =?utf-8?B?YmhuVmpNSDZobGw3NVhEUWROek11K0JjNVV3OFgxUkIwVWhUTnpIc1FZZFVI?=
- =?utf-8?B?b2FrdkxYQmorRDQvUGNxR3c0Vmd6Y3VLOHhua0NKdEJNNWNXZ1owaXVrbHhT?=
- =?utf-8?B?QVJVbytwV1dEMjdHc2hYNlVnb2NmdnAyRGVKWFVERzhwZ2k4Z3dQSC9MZ0dF?=
- =?utf-8?B?L05ielJEbDlac21rbGRXSml4U3BTNHlIMHJHRis0ODJaQ2MrRmpkU2NjQzVK?=
- =?utf-8?B?TXAveGRJRG1WdXlHUUhIcVc5QXlHakxNYS9aNFlNUjJuTWhuWEtzV1cxT1Nv?=
- =?utf-8?B?M2xmOERia0o2dDVDNUMrTWhlY0tHTnJUdGZiM1FQTjRDRFJHTnFtZWFqMVJx?=
- =?utf-8?B?b3lzTTRIT0Rrc0MyZFRwOEtPbGxPbHFVZEVBL2xpZGF2ZjJGTFp4bTFVZTlP?=
- =?utf-8?B?L1hJQTgweTlKMUxURlAvL2xuS0VtYVV1NkNkWVlibHdQSFdoNlpZUHpaNDM5?=
- =?utf-8?B?SkRYR0RSenpvamFyd0ZnY0ZxWkFra3E5SFBkVHFOVU1GblVMSkZFYnRBT2k0?=
- =?utf-8?B?VEZTMjFpSDUxOTlMNVNaY1M0RjFzaEVpTnltVHgvQkRBc0o4ZDZWRFp4YjFa?=
- =?utf-8?B?VGIyeFNnRlcxZGh1MFM1MW5rUkxXNjBqZ05WNG5BYjFhZTBmVlZYa1lzQzhB?=
- =?utf-8?B?N2xWdmxGZGpTTmI3QjVBNWx5YTdZUkhpMnNLOVlxWk1aTjU0WXJrR3VBb1hw?=
- =?utf-8?B?dkxJUHFWcGlnVHVVSVJ3NmZ6VFdHaExWMlZLYVlaMS9BaVQwN0tkVWJ3K24w?=
- =?utf-8?B?QjUzakRYTTA0TzVIQndaRDQrN0JmcjFMSXZ3WE02eEZKZzB2RThQQWZuUW1q?=
- =?utf-8?B?YmxVcXpCWmtpZEMrZXQxOG9BelBDZ0l4L2ZIMEpUTGF0SE8zMWpYK2VYS2wv?=
- =?utf-8?B?VVVQR25PR1NySUZWVDJFVy84MCtpQUIyRkQyYXJJZk9vUkpUTFBST1VhU3B4?=
- =?utf-8?B?VFhzM2E1VytiNENFNkxsb2c1T0JzSkN1bFJGL1V0L3dUUHJQSnZucTdWUElk?=
- =?utf-8?B?VEgzQlVOWnpUYk96KzkwSk5LbVJNaGM5Tm8zUmpQSUNCTGRJTW56MHFqTncy?=
- =?utf-8?B?SFVkN293TGJ5TFJzNU5FbUxVUng2dFBsQ2lGTFMzbkhJMXZaZGY5OXBUUmk2?=
- =?utf-8?B?RnhYRnBvRGJEci8wYlN2K2hib09xOWM3L3E3V2tBaGswTHRQYXlDK2c0R2hC?=
- =?utf-8?B?WEp1Z2NXUzk5YWNDb2F4YStESk1pa2VGbDZESVlSYmFaQWpxS1RQRUZMQ0JY?=
- =?utf-8?B?emFpOEJvZUZURk1WY1Y5ZXZkU2pqNGh6SGtBamtzSWNpcS9rZ1NhY1FhWGVp?=
- =?utf-8?B?cnc9PQ==?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0:
-	VQfuSQyVgxkbmrh9jB2Slp3Tu5TaL5y0xnr6FaaJX0xlDiScYmlhvCOoBHGRJDlxv+17IZb4ElF0TXeoTRZNyodQZscfdjxvQkr15SZye9muIyS/l9vbun8cXIwEvCLGOSJf25FxA8RsMb8aXgX8RZZPVj+qDlcaNH/NiRI1JyOhsx7u6NWKyAyBoUQzE8GcicM5LrjzPwQxrRIXOmk/D7CGK4x53WQByJLKHEn1x+wGncB/7N59p5Lvij5aiMI3vwuNugwYNcrA9zM6BSxrcTGRdkEznWsidJ20MPieXHUsqjBON8+OW/qMnUY2umwTCrD68rSq+XTQ2yrABUI2P1HB5AhbgohGAgY0lDShC0l+Y5yV6wZbwuz6Gbq5KRSyZIFu4wnzYmjF9vtOhKpJXevtjOTanVT84qy2JSIOdKtU5rsE3bD8NYZ+cyuisuOFs2I2ZEvGiEork5C+UvrHozBHHhpCzWf/6w8y8hYJJ3CkVG0MAkZLvNS6qLNT2kKoGqVuPlgM3DVNLTb2s/T8Q34ryREAK0T8yQ9w8nF4IqVKmXzBPjOt7nmj2SWXJd5X54zZ4bZztl9N9R55m5Yn6LUMHTEuJCpvS9yAjwUEnr8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: def4bcf9-17c2-4b66-6563-08dd671a0914
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR10MB8218.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 19:12:47.6528
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: A7Yzc2jzEzwblicBran11f7WPlvX+R6xoHFLizjkg7uDXIq03oCnN1LQvLQjUD00cWfBdxW966qfzSeZ2YSkf5fntEq1iQRWS+zGPh8Ru6I=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR10MB7211
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_06,2025-03-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 phishscore=0 bulkscore=0
- malwarescore=0 adultscore=0 mlxscore=0 spamscore=0 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503190128
-X-Proofpoint-GUID: PETW3lGC2LqfcR2YqkalJfG19aIAX2Mr
-X-Proofpoint-ORIG-GUID: PETW3lGC2LqfcR2YqkalJfG19aIAX2Mr
+Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174241160339.7553.16834624348433775118@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-+cc Greg for stable question
+This is a three part series that does the following: first, it cleans up
+the hid-asus driver initialization, preventing excess renames and dmesg
+errors on ROG devices. Then, it adds support for the Z13 2025 keyboard,
+by fixing its keyboard to not be stuck in BIOS mode and enabling its fan
+key. Finally, the bigger piece of this series is the unification of the
+backlight controls between hid-asus and asus-wmi.
 
-On Wed, Mar 19, 2025 at 11:22:40AM -0700, Andrei Vagin wrote:
-> On Mon, Feb 24, 2025 at 2:39 AM David Hildenbrand <david@redhat.com> wrote:
-> >
-> > On 24.02.25 11:18, Lorenzo Stoakes wrote:
+This requires some context. First, some ROG devices expose both WMI and
+HID controls for RGB. In addition, some ROG devices (such as the Z13)
+have two AURA devices where both have backlight controls (lightbar and
+keyboard). Under Windows, Armoury Crate exposes a single brightness control
+for all Aura devices.
 
-[snip]
-> > >>
-> > >> Acked-by: David Hildenbrand <david@redhat.com>
-> > >
-> > > Thanks! :)
-> > >>
-> > >> Something that might be interesting is also extending the PAGEMAP_SCAN
-> > >> ioctl.
-> > >
-> > > Yeah, funny you should mention that, I did see that, but on reading the man
-> > > page it struck me that it requires the region to be uffd afaict? All the
-> > > tests seem to establish uffd, and the man page implies it:
-> > >
-> > >         To start tracking the written state (flag) of a page or range of
-> > >         memory, the UFFD_FEATURE_WP_ASYNC must be enabled by UFFDIO_API
-> > >         ioctl(2) on userfaultfd and memory range must be registered with
-> > >         UFFDIO_REGISTER ioctl(2) in UFFDIO_REGISTER_MODE_WP mode.
-> > >
-> > > It would be a bit of a weird edge case to add support there. I was excited
-> > > when I first saw this ioctl, then disappointed afterwards... but maybe I
-> > > got it wrong?
->
-> > >
-> >
-> > I never managed to review that fully, but I thing that
-> > UFFD_FEATURE_WP_ASYNC thingy is only required for PM_SCAN_CHECK_WPASYNC
-> > and PM_SCAN_WP_MATCHING.
-> >
-> > See pagemap_scan_test_walk().
-> >
-> > I do recall that it works on any VMA.
-> >
-> > Ah yes, tools/testing/selftests/mm/vm_util.c ends up using it for
-> > pagemap_is_swapped() and friends via page_entry_is() to sanity check
-> > that what pagemap gives us is consistent with what pagemap_scan gives us.
-> >
-> > So it should work independent of the uffd magic.
-> > I might be wrong, though ...
->
->
-> PAGEMAP_SCAN can work without the UFFD magic. CRIU utilizes PAGEMAP_SCAN
-> as a more efficient alternative to /proc/pid/pagemap:
-> https://github.com/checkpoint-restore/criu/blob/d18912fc88f3dc7bde5fdfa3575691977eb21753/criu/pagemap-cache.c#L178
->
+However, currently in the linux kernel this is not the case, with asus-wmi
+and hid-asus relying on a quirk system to figure out which should control
+the backlight. But what about the other one? There might be silent
+regressions such as part of the RGB of the device not responding properly.
 
-Yeah we ascertained that - is on my list, LSF coming up next week means we
-aren't great on timing here, but I'll prioritise this. When I'm back.
+In the Z13, this is the case, with a race condition causing the lightbar
+to control the asus::kbd_backlight device most of the time, with the
+keyboard being renamed to asus::kbd_backlight_1 and not doing anything
+under KDE controls.
 
-> For CRIU, obtaining information about guard regions is critical.
-> Without this functionality in the kernel, CRIU is broken. We probably should
-> consider backporting these changes to the 6.13 and 6.14 stable branches.
->
+Here, we should note that most backlight handlers are hardcoded to check
+for backlight once, and for one backlight, during boot, so any other
+solution would require a large rewrite of userspace.
 
-I'm not sure on precedent for backporting a feature like this - Greg? Am
-happy to do it though.
+Even when brightness controls are fixed, we still have the problem of the
+backlight key being on/off when controlled by KDE and 0/33/66/100 when
+the device has a WMI keyboard. Ideally, we would like the 0/33/66/100 to
+be done under hid as well, regardless of whether the backlight of the
+device is controlled by WMI or HID.
 
-As a stop gap we can backport the pagemap feature if Greg feels this is
-appropriate?
+Therefore, this is what the third part of this series does. It sets up
+asus-wmi to expose accepting listeners for the asus::kbd_backlight device
+and being the one that sets it up. Then, it makes hid-asus devices
+register a listener there, so that all of them are controlled by
+asus::kbd_backlight. Finally, it adds an event handler for keyboard keys,
+so that HID led controls are handled by the kernel instead of userspace.
+This way, even when userspace is not active the key works, and we get the
+desired behavior of 0/33/66/100 across all Aura devices (currently, that
+is keyboards, and embedded devices such as lightbars). This results
+removing the quirk system as well, eliminating a point of failure.
 
-[snip]
+I tested this on an Asus Z13 2025, and testing by other devices would be
+appreciated for sure. This series is designed to be transparent to
+userspace behavior-wise compared previous kernels, with all existing
+laptops either having the same behavior or being better.
 
-> > My thinking was, that if you have a large VMA, with ordinary pagemap you
-> > have to copy 8byte per entry (and have room for that somewhere in user
-> > space). In theory, with the scanning feature, you can leave that ...
-> > scanning to the kernel and don't have to do any copying/allocate space
-> > for it in user space etc.
->
-> PAGEMAP_SCAN doesn't have this issue and it was one of the reasons to
-> implement it.
+The Z13 keyboard folio RGB controls work beautifully, with KDE led
+notifications working and doing 0/33/66/100 as expected. This also happens
+with hotplugging, as the lightbar is always available and keeps the
+endpoint alive from boot, even if the folio is not connected (a quirk
+can be added later if there is a device where this is not the case).
 
-Ack.
+The first two parts of the series can also be merged independently of the
+third part, so we can iterate on that more. Perhaps there is a better way
+to handle this cohesion,
 
->
-> Thanks,
-> Andrei
+Oh, by the way Luke, I developed this series with a variant of
+your Armoury series merged, and only switched to 6.14-v7 for this
+submission. You will be happy to know that there are no conflicts :)
+(at least with that version from ~January). Also, please factcheck
+my initialization sequence is correct in the 0x5d and 0x5e devices
+you added when you made that refactor last year. Are those handshakes
+needed?
+
+Antheas Kapenekakis (11):
+  HID: asus: refactor init sequence per spec
+  HID: asus: cleanup keyboard backlight check
+  HID: asus: prevent binding to all HID devices on ROG
+  HID: asus: rename keyboard3 to Z13_FOLIO
+  HID: asus: add Asus Z13 2025 Fan key
+  HID: asus: introduce small delay on Asus Z13 RGB init
+  platform/x86: asus-wmi: Add support for multiple kbd RGB handlers
+  HID: asus: listen to the asus-wmi brightness device instead of
+    creating one
+  platform/x86: asus-wmi: remove unused keyboard backlight quirk
+  platform/x86: asus-wmi: add keyboard brightness event handler
+  HID: asus: add support for the asus-wmi brightness handler
+
+ drivers/hid/hid-asus.c                     | 220 ++++++++++++---------
+ drivers/hid/hid-ids.h                      |   2 +-
+ drivers/platform/x86/asus-wmi.c            | 137 +++++++++++--
+ include/linux/platform_data/x86/asus-wmi.h |  66 +++----
+ 4 files changed, 279 insertions(+), 146 deletions(-)
+
+
+base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+-- 
+2.48.1
+
