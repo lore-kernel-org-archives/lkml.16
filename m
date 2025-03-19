@@ -1,224 +1,201 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6A1212B3B
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3495250F8
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:53:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742388653; cv=none; b=E3mEh4Bwx0j8gnobNtDPlH+F9qyo/IKaPerGC3Kh9/kTwgL6Di5pxY5MgpScY8bXBaW3KWqCK+S4HyzJbJBTv9sxb8NjgGSP0tWsTXPWB9IPg1/8VHoYKF/9tNxDniOv6/3OixfM8+SLCCs0jvJcpwAqccsuZdGIywVpJqeXf2w=
+	t=1742388814; cv=none; b=TblsdeyLeZFe9P7J6PRuo8xaGAUoPzHzWpqhzlmpHGil0FswEKcJpW/EjO8PCgJ9/xUuJ7ucqEhGVUezotRgB8082efc3wg5fol1OA6vf/1lCvEHJuhVCbz0vQohBUyIwhb12m0APXQSJu6Uaho5sqj2vMXn7suqlQkID52ECSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742388653; c=relaxed/simple;
-	bh=Vgu9QpLQ8NzMteKcw39Ik0lHKvd7kXEza/zrlY12YHo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JOIIHPKTe7zA5uqcgm8kJbSOC4ESOaOzy3yy2wsqI0HYeBcHoD0kRSgKcNzK9pUTYIlVF1nY8tVNFocWMdLk2ntvkJgd7HxGYAdd2G4qk9+N6Q+XwQD8ElYfG4cDuyp9EHutcGqFJoXCc+bdp4ssEw5g3c2iKJ0AiRbGzKOO09A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org; spf=pass smtp.mailfrom=jookia.org; dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b=RIvRaYIT; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=jookia.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jookia.org
+	s=arc-20240116; t=1742388814; c=relaxed/simple;
+	bh=338OaKNj90+BaNz516Hf5a5MWt0OXgFPbuybfHomPDw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=QcyqNPBUoZKY/BxKmtTIRink0pCfySzVMqU4+W4OPyVlpjJqVBDopJEwoajzG9BGUdC9YbIvVmtLBGPwpP+tVGC5T6ddXSWYj15b7VSQWS5+LWE1p8TdWSzuPpYQouywvAOazVpfRC+G6RN+QIL7eC7Zwe5GpW6cd/5s1nGr87o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=kvPCDVX4; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=jookia.org header.i=@jookia.org header.b="RIvRaYIT"
-Date: Wed, 19 Mar 2025 23:50:04 +1100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jookia.org; s=key1;
-	t=1742388644;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ZQUJuu8RR3480H+KUDZsaepfSJB1QqD/N+g3TCs245U=;
-	b=RIvRaYITSHqAnUwm2pI83P1Gp0Mo4KjsiJq7hq4+E6mFDS34mM8Jqppr5FGugruST0Bgkq
-	2227YIq1TyUavT4FSCCUklUzfunP/aTz3wwNiBTANEH0G7XrL9WpA/eRmWPSyxy1nV6Ji7
-	U7Abh6PTWacCKv3qOjIqTLGJIbig0I23NBlpqMfGYsyVuS4lYLtLegsOPmIipyrsLIf+LV
-	2x1OqqDBBD3eceTyF1aPxBoxK1TPpOu7MJtrRGGJhE6HM17imnUfqTwvdb/u6hO7Geiozw
-	+fCEhwmxb9Gjo1ST/7u2xxmtfKSKfREtdHQ+jDZh+Z72jWuAVPjh3eLPBLyXkg==
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: John Watts <contact@jookia.org>
-To: Johan Hovold <johan@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] USB: serial: ch341: Clear interrupt register after each
- interrupt
-Message-ID: <Z9q9fD0Gi4WxjFkT@titan>
-References: <20250319-ch341-v1-1-9f33f051fc6a@jookia.org>
+	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="kvPCDVX4"
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-307bc125e2eso76064781fa.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:53:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance.com; s=google; t=1742388810; x=1742993610; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gdbbRT580Qu8som9Q+94gaoUxidIl9ZdI8AmdFOecEw=;
+        b=kvPCDVX4MhjIqwQf85LeHXbV5IJUTtFYdKC+y2O73wW9koP6dbtYtzPttC43tNXldb
+         Va4X8mFfMk5r+RWNHLM/mYTOuXZlr0FtS1LmnLeqpDyfI1jpg17AYoQ8oDn/hxroaUC4
+         SZTP8rPhiy+hki58QdVuLR3d9ZbKowfvB81om4DYiNpOXEmb2uOFARaAEwYKnIKOqU+W
+         wnIzjRwVraAmk+PGZIQY7BL5nV+qJhA6abHRglWQViR9Mr82jujbwBHRm1GQe3oTCB1c
+         r/4y6UtYAF4g5VFArvtTo2GJ0fodIIskwDl+NqHm/mFSA7FE6wBOBkxj0yxafMm3RHCM
+         qzFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742388810; x=1742993610;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gdbbRT580Qu8som9Q+94gaoUxidIl9ZdI8AmdFOecEw=;
+        b=it3jf+HRA/fGowtC8Dk8qTQRK7yrsY9OOjiT5BKfmR2zWlQREy06n/WBiqq1XB+XGv
+         Ldjo73NuB3YwsNX29qabLML87FXnqKK7VBYau9S8CmIoSLBEJQSt76BRPH00km7Aj8h0
+         HdquonNSPyyup7L5Jew7+/NjVhzjJe6GzfxmlTmjXegypPurnlU4mPGiuhdvosyGrEFR
+         gfzyBeNsAAHBKMmGWf4sln/P7PtxrgNww5S6cWpRW3tqQFSjUJDJKPsnmG2UHIh/EQ7y
+         VQTfQ4kNrqd2moZgKiJV9ku4mB3XdsJIabX2eIVvuHg2QvfhvMfvaI/ZcJL4n9YCpuJh
+         UjHA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOc+z9MONcQAIxr72Q1tyeIgMcvpBCU5YAExvqOBPkujUclz1twil1ulnOBowqiZUBM8npY+IM1bTHSCI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz7DEzIkJk42kAyg4PiWvS8Z+VVlGrbCeScnJM5n+5aE0JT+5PX
+	i0/FE/FKzydZaNhX3i5tDgaJJpZ1sawjZHOqY2hnS13vEC+0MuC3KtV2MJ5V9vtGgadFgxLXefs
+	avsLD1ulxBOCEKB7ahQWaYNa8VzPi33z0f8hBHQ==
+X-Gm-Gg: ASbGncs/ix5EiVKabUaLmnHPkmL8xZfFwCH1Uj3pqlAT+anxbyu15oncQfaaeomslL2
+	dIKWp81C9LZuG1h0TYd5ne3OhCsBZ8mbAS8Kav3Oz4pgCltE9ciX4Dz+AhkORf2ksFQtLjiTIxp
+	uId4yXRQfFUCt/1SdkH/s76jOKshwrqFYvgxcGBtlY
+X-Google-Smtp-Source: AGHT+IEue5MPU3PrM7P5n1w/XUtEMRe9CztvHOb/x9ccIXDa/TEpEX6z/VLk/2ZMWMshfhUTw5KhlQFlX9J29bAdIZA=
+X-Received: by 2002:a05:6512:1090:b0:545:5a5:b69d with SMTP id
+ 2adb3069b0e04-54acb1d5c3emr1019159e87.31.1742388809845; Wed, 19 Mar 2025
+ 05:53:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319-ch341-v1-1-9f33f051fc6a@jookia.org>
-X-Migadu-Flow: FLOW_OUT
+References: <20250318135330.3358345-1-hezhongkun.hzk@bytedance.com>
+ <Z9l-x-b9W32vE8Qn@google.com> <CACSyD1PZVVep7Do6WWOMTFr_qhzskxZtXEaqpCtk9JcR3X1L-A@mail.gmail.com>
+ <Z9pWFBSdfg4lGg85@google.com>
+In-Reply-To: <Z9pWFBSdfg4lGg85@google.com>
+From: Zhongkun He <hezhongkun.hzk@bytedance.com>
+Date: Wed, 19 Mar 2025 20:52:52 +0800
+X-Gm-Features: AQ5f1JrCfe0A7QX7Ogw-Wxu_Uv7MELXV8NyoE_mruM1hLG8-Q0_vn2WF4cDoa64
+Message-ID: <CACSyD1OSFiRA91UVDOkKBF0_c6y2OZWPYkmwuizjG1FnUUHdvw@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] mm: add swappiness=max arg to
+ memory.reclaim for only anon reclaim
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: akpm@linux-foundation.org, hannes@cmpxchg.org, yuzhao@google.com, 
+	mhocko@suse.com, muchun.song@linux.dev, linux-mm@kvack.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 01:52:20AM +1100, John Watts wrote:
-> The CH340 adapter I have won't send interrupts unless you clear the
-> 0x2727 register after each interrupt. The Windows driver does this but
-> neither the mainline Linux or OEM Linux driver do this.
-> 
-> Without this fix the device status flags for hardware flow control are
-> never updated.
-> 
-> As far as I can tell there is not a register to configure this
-> behaviour, this seems to be a hardware quirk. The chip reports an
-> identical version, vendor and product to a working chip. It's possible
-> this is a clone chip only tested against Windows.
-> 
-> Signed-off-by: John Watts <contact@jookia.org>
-> ---
-> This fixes hardware flow control flags like RTS and CTS not updating on
-> a specific (fake?) CH340 chip I have.
-> 
-> John Paul Morrison reported an issue that sounds similar to this one in
-> 2022:
-> https://lore.kernel.org/all/YlP1poVgy0bAP3MN@hovoldconsulting.com/T/
+On Wed, Mar 19, 2025 at 1:29=E2=80=AFPM Yosry Ahmed <yosry.ahmed@linux.dev>=
+ wrote:
+>
+> On Wed, Mar 19, 2025 at 10:34:54AM +0800, Zhongkun He wrote:
+> > On Tue, Mar 18, 2025 at 10:10=E2=80=AFPM Yosry Ahmed <yosry.ahmed@linux=
+.dev> wrote:
+> > >
+> > > On Tue, Mar 18, 2025 at 09:53:30PM +0800, Zhongkun He wrote:
+> > > > With this patch 'commit <68cd9050d871> ("mm: add swappiness=3D arg =
+to
+> > > > memory.reclaim")', we can submit an additional swappiness=3D<val> a=
+rgument
+> > > > to memory.reclaim. It is very useful because we can dynamically adj=
+ust
+> > > > the reclamation ratio based on the anonymous folios and file folios=
+ of
+> > > > each cgroup. For example,when swappiness is set to 0, we only recla=
+im
+> > > > from file folios.
+> > > >
+> > > > However,we have also encountered a new issue: when swappiness is se=
+t to
+> > > > the MAX_SWAPPINESS, it may still only reclaim file folios.
+> > > >
+> > > > So, we hope to add a new arg 'swappiness=3Dmax' in memory.reclaim w=
+here
+> > > > proactive memory reclaim only reclaims from anonymous folios when
+> > > > swappiness is set to max. The swappiness semantics from a user
+> > > > perspective remain unchanged.
+> > > >
+> > > > For example, something like this:
+> > > >
+> > > > echo "2M swappiness=3Dmax" > /sys/fs/cgroup/memory.reclaim
+> > > >
+> > > > will perform reclaim on the rootcg with a swappiness setting of 'ma=
+x' (a
+> > > > new mode) regardless of the file folios. Users have a more comprehe=
+nsive
+> > > > view of the application's memory distribution because there are man=
+y
+> > > > metrics available. For example, if we find that a certain cgroup ha=
+s a
+> > > > large number of inactive anon folios, we can reclaim only those and=
+ skip
+> > > > file folios, because with the zram/zswap, the IO tradeoff that
+> > > > cache_trim_mode or other file first logic is making doesn't hold -
+> > > > file refaults will cause IO, whereas anon decompression will not.
+> > > >
+> > > > With this patch, the swappiness argument of memory.reclaim has a ne=
+w
+> > > > mode 'max', means reclaiming just from anonymous folios both in tra=
+ditional
+> > > > LRU and MGLRU.
+> > >
+> > > Is MGLRU handled in this patch?
+> >
+> > Yes, The value of ONLY_ANON_RECLAIM_MODE is 201, and the MGLRU select t=
+he
+> > evictable type like this:
+> >
+> > #define evictable_min_seq(min_seq, swappiness)              \
+> >     min((min_seq)[!(swappiness)], (min_seq)[(swappiness) <=3D MAX_SWAPP=
+INESS])
+> >
+> > #define for_each_evictable_type(type, swappiness)           \
+> >     for ((type) =3D !(swappiness); (type) <=3D ((swappiness) <=3D
+> > MAX_SWAPPINESS); (type)++)
+> >
+> > if the swappiness=3D0, the type is LRU_GEN_FILE(1);
+> >
+> > if the swappiness=3D201 (>MAX_SWAPPINESS),
+> >   for ((type) =3D 0; (type) <=3D 0); (type)++)
+> > The type is always LRU_GEN_ANON(0).
+>
+> Zhongkun, I see that you already sent a new version. Please wait until
+> discussions on a patch are resolved before sending out newer versions,
+> and allow more time for reviews in general.
 
-After a lot more testing it looks like this isn't the correct way to fix
-this issue: Status changes will still be dropped if they trigger two
-interrupts in quick succession as I don't poll the status. This is
-something that can happen fairly easily with a null modem cable that
-connects DTR to DSR+DCD.
+Got it, thanks.
 
-The only proper fix here is to put modem status updates in to its own
-worker that is triggered when we suspect the modem status is out of
-date. It would clear interrupts then read the status properly.
+>
+> I think this is too subtle, and it's easy to miss. Looking at the MGLRU
+> code it seems like there's a lot of swappiness <=3D MAX_SWAPPINESS checks=
+,
+> and I am not sure why these already exist given that swappiness should
+> never exceed MAX_SWAPPINESS before this change.
+>
+> Are there other parts of the MGLRU code that are already using
+> swappiness values > MAX_SWAPPINESS?
 
-John.
+IIUC, The MGLRU can already use the value of MAX_SWAPPINESS + 1 to
+reclaim only anonymous folios. Please have a look:
+ lru_gen_seq_write()->run_cmd():
+    else if (swappiness > MAX_SWAPPINESS + 1)
+        goto done;  /*so MAX_SWAPPINESS + 1 is OK */
 
-> ---
->  drivers/usb/serial/ch341.c | 51 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/drivers/usb/serial/ch341.c b/drivers/usb/serial/ch341.c
-> index d10e4c4848a0ab9073c4c93638a8796ab61ce3a6..8edbac18146cebd0ff7b9cfaca6853a2c5f047df 100644
-> --- a/drivers/usb/serial/ch341.c
-> +++ b/drivers/usb/serial/ch341.c
-> @@ -63,6 +63,7 @@
->  #define CH341_REG_DIVISOR      0x13
->  #define CH341_REG_LCR          0x18
->  #define CH341_REG_LCR2         0x25
-> +#define CH341_REG_INTERRUPT    0x2727
->  
->  #define CH341_NBREAK_BITS      0x01
->  
-> @@ -102,6 +103,9 @@ struct ch341_private {
->  	u8 version;
->  
->  	unsigned long break_end;
-> +
-> +	struct work_struct interrupt_work;
-> +	struct usb_serial_port *port;
->  };
->  
->  static void ch341_set_termios(struct tty_struct *tty,
-> @@ -306,6 +310,32 @@ static int ch341_get_status(struct usb_device *dev, struct ch341_private *priv)
->  	return 0;
->  }
->  
-> +static int ch341_clear_interrupt(struct usb_device *dev)
-> +{
-> +	int r;
-> +
-> +	r = ch341_control_out(dev, CH341_REQ_WRITE_REG,
-> +			CH341_REG_INTERRUPT, 0);
-> +	if (r)
-> +		return r;
-> +
-> +	return 0;
-> +}
-> +
-> +static void ch341_interrupt_work(struct work_struct *work)
-> +{
-> +	struct ch341_private *priv =
-> +		container_of(work, struct ch341_private, interrupt_work);
-> +	struct usb_serial_port *port = priv->port;
-> +	int ret;
-> +
-> +	ret = ch341_clear_interrupt(port->serial->dev);
-> +	if (ret < 0) {
-> +		dev_err_once(&port->dev, "failed to clear interrupt: %d\n",
-> +			ret);
-> +	}
-> +}
-> +
->  /* -------------------------------------------------------------------------- */
->  
->  static int ch341_configure(struct usb_device *dev, struct ch341_private *priv)
-> @@ -399,6 +429,9 @@ static int ch341_port_probe(struct usb_serial_port *port)
->  	if (r < 0)
->  		goto error;
->  
-> +	INIT_WORK(&priv->interrupt_work, ch341_interrupt_work);
-> +	priv->port = port;
-> +
->  	return 0;
->  
->  error:	kfree(priv);
-> @@ -438,8 +471,10 @@ static void ch341_dtr_rts(struct usb_serial_port *port, int on)
->  
->  static void ch341_close(struct usb_serial_port *port)
->  {
-> +	struct ch341_private *priv = usb_get_serial_port_data(port);
->  	usb_serial_generic_close(port);
->  	usb_kill_urb(port->interrupt_in_urb);
-> +	flush_work(&priv->interrupt_work);
->  }
->  
->  
-> @@ -466,6 +501,12 @@ static int ch341_open(struct tty_struct *tty, struct usb_serial_port *port)
->  		goto err_kill_interrupt_urb;
->  	}
->  
-> +	r = ch341_clear_interrupt(port->serial->dev);
-> +	if (r < 0) {
-> +		dev_err(&port->dev, "failed to clear interrupt: %d\n", r);
-> +		goto err_kill_interrupt_urb;
-> +	}
-> +
->  	r = usb_serial_generic_open(tty, port);
->  	if (r)
->  		goto err_kill_interrupt_urb;
-> @@ -474,6 +515,7 @@ static int ch341_open(struct tty_struct *tty, struct usb_serial_port *port)
->  
->  err_kill_interrupt_urb:
->  	usb_kill_urb(port->interrupt_in_urb);
-> +	flush_work(&priv->interrupt_work);
->  
->  	return r;
->  }
-> @@ -747,6 +789,7 @@ static void ch341_update_status(struct usb_serial_port *port,
->  static void ch341_read_int_callback(struct urb *urb)
->  {
->  	struct usb_serial_port *port = urb->context;
-> +	struct ch341_private *priv = usb_get_serial_port_data(port);
->  	unsigned char *data = urb->transfer_buffer;
->  	unsigned int len = urb->actual_length;
->  	int status;
-> @@ -770,6 +813,8 @@ static void ch341_read_int_callback(struct urb *urb)
->  
->  	usb_serial_debug_data(&port->dev, __func__, len, data);
->  	ch341_update_status(port, data, len);
-> +	schedule_work(&priv->interrupt_work);
-> +
->  exit:
->  	status = usb_submit_urb(urb, GFP_ATOMIC);
->  	if (status) {
-> @@ -830,6 +875,12 @@ static int ch341_reset_resume(struct usb_serial *serial)
->  			dev_err(&port->dev, "failed to read modem status: %d\n",
->  				ret);
->  		}
-> +
-> +		ret = ch341_clear_interrupt(port->serial->dev);
-> +		if (ret < 0) {
-> +			dev_err(&port->dev, "failed to clear interrupt: %d\n",
-> +				ret);
-> +		}
->  	}
->  
->  	return usb_serial_generic_resume(serial);
-> 
-> ---
-> base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
-> change-id: 20250319-ch341-aab9934f1c72
-> 
-> Best regards,
-> -- 
-> John Watts <contact@jookia.org>
-> 
+in inc_min_seq():
+  if (type ? swappiness > MAX_SWAPPINESS : !swappiness)
+        goto done;  //skip LRU_GEN_FILE when swappiness is
+                           //MAX_SWAPPINESS + 1
+
+//Skip  LRU_GEN_FILE when swappiness is MAX_SWAPPINESS + 1.
+ #define for_each_evictable_type(type, swappiness)           \
+     for ((type) =3D !(swappiness); (type) <=3D ((swappiness) <=3D
+    MAX_SWAPPINESS); (type)++)
+
+So the /sys/kernel/debug/lru_gen can accept the value of swappiness + 1
+for proactive reclamation, meaning it only reclaims anonymous pages.
+
+But the above statement is just my guess. It would be great if Yu could cla=
+rify.
+If my description is incorrect, please correct me.
+
+>
+> Yu, could you help us making things clearer here? I would like to avoid
+> relying on current implementation details that could easily be missed
+> when making changes. Ideally we'd explicitly check for
+> SWAPPINESS_ANON_ONLY.
+>
+
+Looking forward to Yu's reply.
+
+Thanks.
