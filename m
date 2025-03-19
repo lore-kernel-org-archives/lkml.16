@@ -1,124 +1,93 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21B142A93
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 08:18:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06292500CE;
+	Wed, 19 Mar 2025 08:20:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742372290; cv=none; b=Bw5J3dSWtWsylP/t16B2umJQYzFf4zsr7ZGmOe1iOzQZUT5kZfLVO8BI3Q8YRvQiZqCqTvIfmwZUdFi9zX8S311ba310z0xzQbLSyWnMbhciTT4bJL3sA9EEn927FIj2oJB3lVWdkJZq/QWC94B9I7rC6Pk+fIAy5XwYTGxYMWc=
+	t=1742372403; cv=none; b=SzOxjrdoqR+hKK/K9l3GrPx8gBIfDluse/KaCYkBprIYCXktJvv4N4HvD6ai5JDH3JT0k9tMYu0gDyF9PnlcQu8mYpRKyZSVZRUdj25LLcOC/MR5ms4B+7Sc57oNoZ45i8hoeIXSCy+1r/SiT75mjM1LVLbEfeNX2dKIHYGCJPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742372290; c=relaxed/simple;
-	bh=zKCGYClygELnOz5kUrSj+2y/YlS9cO2lSdiPcMiRq64=;
+	s=arc-20240116; t=1742372403; c=relaxed/simple;
+	bh=nw2JHhewuwOb3AnEtFuyX6WKAPTojvjERpuELnO2jWI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u7DQd5eI+gA+CWos4/tGz+ZuTcuBz+1eQB9qvGI2r7tS6sHRRcyJnooP/AwYZqLweh35A0OgcqTtL6dElPEM9Sk8z9gRoLTNw4K7/rwWkbLJzP7x30x9T3ZmVtH0TTDmAU61OJ1pzIBxXGgivFTfn37POU4d3KTKRMVEGFe/ykw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UqgBrrFM; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UqgBrrFM"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742372287;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u4weFtyR8Vv/0WRgvwevHnBmwuMVQABx5dwojXYaS1A=;
-	b=UqgBrrFMCR7ZBlynjLSSLIFF3ZfrXMxtDq3PEplMwj7J/yNRPKYMTiAtT6E2VwNJwQgreh
-	rXXXpsjbDmZc2YK9RHPgkKYjEkJ0f9tMcJzt78h1b/TxSltQKhcHhf10mrrqwxt7GOeJQ6
-	sWs9ViRBpzraZzeo1Y7Wf8m5GVlgS44=
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-668-8hQphmrpM8moX69iPpp6vQ-1; Wed, 19 Mar 2025 04:18:06 -0400
-X-MC-Unique: 8hQphmrpM8moX69iPpp6vQ-1
-X-Mimecast-MFC-AGG-ID: 8hQphmrpM8moX69iPpp6vQ_1742372285
-Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e5d9682f6eso5938957a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 01:18:06 -0700 (PDT)
+	 To:Cc:Content-Type; b=GwrPt4p+q9h024ROlTlw6RdlKchyC5UmwofXK1THVmDQQRC1QsSSocQKysf6F7At8PRWfTdW9zl3VDGhF5nlrJtX4+S3t2jctI140zP+aqjzbn+pjgW77R1yBhqqZsR/axMN0lpvdR5NtT1igaNjTfdYYoTwF4Bb7lQ3iNTQ184=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86b9d9b02cbso2934875241.1;
+        Wed, 19 Mar 2025 01:20:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742372285; x=1742977085;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=u4weFtyR8Vv/0WRgvwevHnBmwuMVQABx5dwojXYaS1A=;
-        b=IGgEpWeAt62gx2gCuDlaIFHDSYqQ4zyhM4r3NFzIDpxfveEwAREtd6Vxq5ql+wshlf
-         2uFqVFUh/cz8EqT7f7E2GbR0RF8E1KRmYitLVUCy1qiObjVSZkY78EJzVtvo7zMlB6Ii
-         1P8RPS7LCUmyCipQjrLsLL9pljpSHWMjRgAmm4e7Wyoz+nEVolVmZjWOItL9PIMl2AEc
-         layPVOGSpwPYzkxm76NE+0ik95Mri2UeVgElnYlpztcEjlrI9qaL4RYAjO/af4TbCmNh
-         2/tQNU+uwkShCwM7KWq5H8U4wdBNV32O9UUOKVCAelu6Br7CjnHW8v/HqINlZfEJcdnr
-         PlPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWOq2PZ7cRjVIuO1ijJAXZKKs9uz1rLrYyB4tDQIV85OTiHjXsp+WN+3Cy4A6VYiVol3YlTayKdREcTtrw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyzJGEfZhmxrKaZf+GLeLV7k6jdwggdlu7BvMSBMYXVo3GwnGdf
-	qb0+nyyuHJWn5fjvRR3wnz5xTm2vn+FDe/3YSzi5BnGQwLeVzG+Hd3KMFL4k+DoaMez5U+N8LrV
-	aa210dybrLmAeCZNc8GE6F02VvhWr3EOYRhaqfQUjqNb9TUxjy9qJdvU92BH4mTEDdPleC8t+oT
-	Hu6qzTe9TvxEgQpXw6ddDwVGoyExBv9Bh8bUYK
-X-Gm-Gg: ASbGnctSGrxsSM6SrRMF7MRw5NCaHTznTHKCNCxVOelpfGojTFMwg1dd5GGmvxRzm7a
-	/NT7bOu1g6RrzEmdMz3icGqM2vFYP7T607ar3YLoAJVjEDeW9zpKgougfO1/CHzjOHkQyfrnfuw
-	==
-X-Received: by 2002:a05:6402:84e:b0:5e6:13a0:2321 with SMTP id 4fb4d7f45d1cf-5eb80f98226mr1528279a12.32.1742372285015;
-        Wed, 19 Mar 2025 01:18:05 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEX9nz4PdJIYgHPcBf3jCqH7Zjv1u+6eHEgELtuPU+YClK9V5WOHBjYADD5j90Xk8f2xxcCVZPPvbntyja6ch4=
-X-Received: by 2002:a05:6402:84e:b0:5e6:13a0:2321 with SMTP id
- 4fb4d7f45d1cf-5eb80f98226mr1528262a12.32.1742372284630; Wed, 19 Mar 2025
- 01:18:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742372399; x=1742977199;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Str15wCmbKqnizOYQnR2RTvVjukUzPyRH6iLv6/AuGY=;
+        b=fF3zXJn+fvxAcJDwqUsTv/5NLcwEAu7ze4Mc6DqgOtnlbjpyuLmmVK/jMF7SWVki7/
+         YrXvb4UfIMqInZO7wS2u9X8qQtS1a/DdatinoF8qla5gPb8GP5SPeH+y0jhH8GseCgJL
+         oExLN/BsLXN5aUGzA6r6VKsYRiQHHaRsHUGUn00GMpFBFJ8/UwN44OAxd76fjZtwEUcY
+         jUal8RHvN3JTvHTTzkZOZWn0fzFWeAZUUjC3VqFA9GT97oUPVTS9stahe3NPVzIlW2ZB
+         MMnGWIZFI0oMTaAzDMBKIIHt28sC+8YZXhvItZq9cRt6pAmiefZEgleCDoAzlokfS7CZ
+         FVlQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUKh+ZV20HIHegOSaZgxFAsUPcmiJrxLWDmFmx0AHWmONhRdEho7SVnzPOnZSc0O1kWkvXRxNgzdxQx@vger.kernel.org, AJvYcCWiWC77WO+FeCnkx7z6J1nfJQkFTlESXbEf36Bt3QnWSQL3IrvwoP8M2/SbI/c2JeH0+IxMFEIikaLQ1RA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YycPCoFkQFLKmejgUadTnlhqil3u9qX77K3LCU7yIkYzhK6P8H8
+	Q8vwbMT5RX8frUspTyQWnrVLX/0UGpnSOF/V7KXbONHhnCEQLnb+ucBpbzxg
+X-Gm-Gg: ASbGncsjZwPpN4O2gTvUWjtj3VLp70X5Xz8m46YLvPS/omajgTyRKnfyiPlJenpG55o
+	qnLinwjcVdOvxNIig+vo39Vnb4/Ny2knTzMccLgoSi1wNsWiEqDcRQWstarvsm7/Jx1O5cqJHcw
+	C1sl2ulpGtFHd0FCa5L43G0uUcTMH+nEU/K5cBUXpYBgOUt36Qa80zqHVdoqi5T039Km0CHp2BZ
+	fQjNCYatXTtoqgoiAOvMQrpwZ+HLCdT/L16ZAn/YvbIIJjOJVX6u3Fx8YXcqUFyygExKQNdGUN/
+	RkAbbgi7/v7ppbkAWyJDFpvgoPvvVWxQfimG4vbqNyH+JdQDOgSC45WgLciAfoWRtuiJ/kFssJr
+	ZZKfgVkkqMDoVpYVNpA==
+X-Google-Smtp-Source: AGHT+IHIdGSXihKToCdd6Eb93AlOR7EgGSeFF5d2xsyB1lTYya7nEDQ+q2pnAcmZCI2pCCGP2rrASA==
+X-Received: by 2002:a05:6102:cce:b0:4c4:e3c7:cc8e with SMTP id ada2fe7eead31-4c4ec846eb1mr918844137.24.1742372399088;
+        Wed, 19 Mar 2025 01:19:59 -0700 (PDT)
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
+        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c374f1eefdsm2401484137.7.2025.03.19.01.19.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 01:19:57 -0700 (PDT)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86d5a786c7cso2787230241.2;
+        Wed, 19 Mar 2025 01:19:57 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVwLIURZJqRTvOkBRu7W1O4ZmW5WbrBtwIoDv2G+tX52y8dUzDUXgG6yJoinPqOSWLXhCkE0NNs2/x8caw=@vger.kernel.org, AJvYcCW0yRw8jL0MNXND1z3TE3TjWfzxxu2AvbpOsC68mHY71u7JnEVRLtcK9SCk3RhBW/zlJLz5qSa09gAv@vger.kernel.org
+X-Received: by 2002:a05:6102:3590:b0:4c4:e518:e73b with SMTP id
+ ada2fe7eead31-4c4ec813330mr853862137.19.1742372397512; Wed, 19 Mar 2025
+ 01:19:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318-virtio-v1-0-344caf336ddd@daynix.com>
-In-Reply-To: <20250318-virtio-v1-0-344caf336ddd@daynix.com>
-From: Lei Yang <leiyang@redhat.com>
-Date: Wed, 19 Mar 2025 16:17:27 +0800
-X-Gm-Features: AQ5f1JqtDok_bmysxOd31u7DWf9rtwBh16X9cCFBc9Txej8fP9FvAHet7aatDRA
-Message-ID: <CAPpAL=w6bNxmsqpK7TGKM_YkQOLPe_w=D8_rCA6NsQCJCbHktw@mail.gmail.com>
-Subject: Re: [PATCH net-next 0/4] virtio_net: Fixes and improvements
-To: Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Andrew Melnychenko <andrew@daynix.com>, Joe Damato <jdamato@fastly.com>, 
-	Philo Lu <lulie@linux.alibaba.com>, virtualization@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devel@daynix.com
+References: <20250319032305.70340-1-linmq006@gmail.com>
+In-Reply-To: <20250319032305.70340-1-linmq006@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 19 Mar 2025 09:19:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWLpV3129akyZ_fY3xZ04m9PWE9O4nM7UwzxZOSBfz3Lg@mail.gmail.com>
+X-Gm-Features: AQ5f1JoM4oTnWTCI5waqkrsBM7hUt9YIa99RsCf_Y1uj4DwnMxcm-Pbh5P0JeFw
+Message-ID: <CAMuHMdWLpV3129akyZ_fY3xZ04m9PWE9O4nM7UwzxZOSBfz3Lg@mail.gmail.com>
+Subject: Re: [PATCH] spi: Fix reference count leak in slave_show()
+To: Miaoqian Lin <linmq006@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-spi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-QE tested this series of patches with virtio_net regression tests,
-everything works fine.
+On Wed, 19 Mar 2025 at 04:23, Miaoqian Lin <linmq006@gmail.com> wrote:
+> Fix a reference count leak in slave_show() by properly putting the device
+> reference obtained from device_find_any_child().
+>
+> Fixes: 6c364062bfed ("spi: core: Add support for registering SPI slave controllers")
+> Fixes: c21b0837983d ("spi: Use device_find_any_child() instead of custom approach")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 
-Tested-by: Lei Yang <leiyang@redhat.com>
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Tue, Mar 18, 2025 at 5:57=E2=80=AFPM Akihiko Odaki <akihiko.odaki@daynix=
-.com> wrote:
->
-> Jason Wang recently proposed an improvement to struct
-> virtio_net_rss_config:
-> https://lore.kernel.org/r/CACGkMEud0Ki8p=3Dz299Q7b4qEDONpYDzbVqhHxCNVk_vo=
--KdP9A@mail.gmail.com
->
-> This patch series implements it and also fixes a few minor bugs I found
-> when writing patches.
->
-> Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
-> ---
-> Akihiko Odaki (4):
->       virtio_net: Split struct virtio_net_rss_config
->       virtio_net: Fix endian with virtio_net_ctrl_rss
->       virtio_net: Use new RSS config structs
->       virtio_net: Allocate rss_hdr with devres
->
->  drivers/net/virtio_net.c        | 119 +++++++++++++++-------------------=
-------
->  include/uapi/linux/virtio_net.h |  13 +++++
->  2 files changed, 56 insertions(+), 76 deletions(-)
-> ---
-> base-commit: d082ecbc71e9e0bf49883ee4afd435a77a5101b6
-> change-id: 20250318-virtio-6559d69187db
->
-> Best regards,
-> --
-> Akihiko Odaki <akihiko.odaki@daynix.com>
->
->
+Gr{oetje,eeting}s,
 
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
