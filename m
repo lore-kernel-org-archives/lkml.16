@@ -1,61 +1,77 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5479118FC74
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:31:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F094F1C726D;
+	Wed, 19 Mar 2025 16:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742401889; cv=none; b=KvalXZyyTmHA+l02nkQL+CiTIs13uQ6wJXAKg7hOthbJd5DOl1INsa68m1Jb6te21Ev4PdKmfMDkRXlmDcwFfivhpLLjxiLYN+knRuFs/X5MuaiW0Lqxa1JhgsOybHIlzrBakw/KZNiYiz9yFmtVm+V4zo86SEJttk0a8XPZ94g=
+	t=1742401905; cv=none; b=NFxHGZKUtMN0bbSQgn8+bXJlX9Dw770GDB4+PejaLRQ+GAF62ykDmuOzmxTw5e+O0fk66ZVI5MLacE6AFmsDRdlaUGm57e6TL5E4gn3jxyKzhsWcqPoMVN4RGjBljorgNsH19weDVD/72ZeKK6ezCxI4hqRZQQxBb0UPjMeC2b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742401889; c=relaxed/simple;
-	bh=t5HTl/1sN+/sdSktoUHTbciuxtU3lbC7SvM0xor5DjM=;
+	s=arc-20240116; t=1742401905; c=relaxed/simple;
+	bh=5TJ0rtcSY5de4do08OX/lkAVedG/eYjSVbj4z4U3TjU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mH112dN4YyKC84qdx6XrD+s20IebI9p1E77y9Joyr4RBpB7CeOfqyIjZM+YAHOMKaJE0n7RkgTuGobLzL96ZWzxFZaQgSGi1xekrMGxC6H5adgtXNAXTsT7QHuMctSrxmqmxoqY2GhZz7q5XuBvk3vFSbYUHA0Sr/ctCwLXGDkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=XWZxgAzi; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fUIj3pnI8gnf0kfDTkuvVXcme9XMQZqYwUe1kx6p8lAC8U0E8JNhgfW6Ajr5Vnsbpb4nfmgfV2kxltKco4bpOGp9R/zCMowecUlnUz0c+deyQJ2L7uPPUApHZ15L37GMRVkEnJboTZgyOu9LSLI+4N4z1LYKWcPQf92nFesUE8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BRHYq0R9; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XWZxgAzi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742401886;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=kEuAVN1LlysmY3w8d4Fl+/NM3c03ETBt86dyGKQMHmE=;
-	b=XWZxgAzirsUKxAFnPTrinVIDvYGiplSWvGlFqSKIZQP+y4qHQn6eHDbF7/JKNMxku6rnMG
-	6625LR6A/pWH/pYG5VqdkUds2buUfipttbWdo6fWgBmmbfKr5o7aoOJNJNT1KcUmshJAuV
-	PyiLbpeKvym+++KsmWaULQJSBIzy0TM=
-Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-85-1Tcnj-kcMDO0qR63P9N4DQ-1; Wed,
- 19 Mar 2025 12:31:19 -0400
-X-MC-Unique: 1Tcnj-kcMDO0qR63P9N4DQ-1
-X-Mimecast-MFC-AGG-ID: 1Tcnj-kcMDO0qR63P9N4DQ_1742401877
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 072F11955E90;
-	Wed, 19 Mar 2025 16:31:17 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 01EC31955DCD;
-	Wed, 19 Mar 2025 16:31:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Mar 2025 17:30:44 +0100 (CET)
-Date: Wed, 19 Mar 2025 17:30:39 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: David Howells <dhowells@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <kees@kernel.org>,
-	Greg KH <gregkh@linuxfoundation.org>,
-	Josh Drake <josh@delphoslabs.com>,
-	Suraj Sonawane <surajsonawane0215@gmail.com>,
-	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-	security@kernel.org, stable@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] keys: Fix UAF in key_put()
-Message-ID: <20250319163038.GD26879@redhat.com>
-References: <2874581.1742399866@warthog.procyon.org.uk>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BRHYq0R9"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742401905; x=1773937905;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=5TJ0rtcSY5de4do08OX/lkAVedG/eYjSVbj4z4U3TjU=;
+  b=BRHYq0R96w7UOiqRohwGFOTQcpybRUebNoq4MljFhQToaBNe2RYlFuSv
+   y4JtD8Z1KCjhxPHxpDQJ+YnntN4UZBR7JsGrrc6VykZsmbtqiYbSUkgbC
+   EMs6c7syjKJb05HYqug5d3UEkAG8k47w8OEfUHKeKHKwmz9D+XtG6/20C
+   qrRfmbbE7iou2UNzY/KP1zN7H7FbaNdk4mDKBvOhcGrht0uRWjarim5QV
+   QvhdaiGbGP3wPhScNKnDfEsTBWRYnqiqCyXXMU5uCe1QJw+sKue5/9iuD
+   unzvY94p3AJVN88YyeKsBlVzDUZWf3855SdTlLWDpMq4cDUPRtfOuloDw
+   Q==;
+X-CSE-ConnectionGUID: MdEmPuusTl+m5WSIneVFdg==
+X-CSE-MsgGUID: AsUf4cPDT7ObulZBQpGZww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43522556"
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="43522556"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 09:31:44 -0700
+X-CSE-ConnectionGUID: pJHe7nX9Qwe7Wi4H8O6+gA==
+X-CSE-MsgGUID: 6VOIypOxRoms1ZnQK1Q4qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="123204650"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 19 Mar 2025 09:31:38 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuwKN-000FWY-1w;
+	Wed, 19 Mar 2025 16:31:35 +0000
+Date: Thu, 20 Mar 2025 00:31:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH v5 10/11] input: misc: Add support for MAX7360 rotary
+Message-ID: <202503192326.KOCnEkdj-lkp@intel.com>
+References: <20250318-mdb-max7360-support-v5-10-fb20baf97da0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,43 +80,58 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2874581.1742399866@warthog.procyon.org.uk>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20250318-mdb-max7360-support-v5-10-fb20baf97da0@bootlin.com>
 
-On 03/19, David Howells wrote:
->
-> --- a/security/keys/gc.c
-> +++ b/security/keys/gc.c
-> @@ -218,8 +218,10 @@ static void key_garbage_collector(struct work_struct *work)
->  		key = rb_entry(cursor, struct key, serial_node);
->  		cursor = rb_next(cursor);
->  
-> -		if (refcount_read(&key->usage) == 0)
-> +		if (test_bit(KEY_FLAG_FINAL_PUT, &key->flags)) {
-> +			smp_mb(); /* Clobber key->user after FINAL_PUT seen. */
->  			goto found_unreferenced_key;
-> +		}
->  
->  		if (unlikely(gc_state & KEY_GC_REAPING_DEAD_1)) {
->  			if (key->type == key_gc_dead_keytype) {
-> diff --git a/security/keys/key.c b/security/keys/key.c
-> index 3d7d185019d3..7198cd2ac3a3 100644
-> --- a/security/keys/key.c
-> +++ b/security/keys/key.c
-> @@ -658,6 +658,8 @@ void key_put(struct key *key)
->  				key->user->qnbytes -= key->quotalen;
->  				spin_unlock_irqrestore(&key->user->lock, flags);
->  			}
-> +			smp_mb(); /* key->user before FINAL_PUT set. */
+Hi Mathieu,
 
-Can't resist, smp_mb__before_atomic() should equally work,
-but this doesn't really matter, please forget.
+kernel test robot noticed the following build errors:
 
-> +			set_bit(KEY_FLAG_FINAL_PUT, &key->flags);
->  			schedule_work(&key_gc_work);
+[auto build test ERROR on a64dcfb451e254085a7daee5fe51bf22959d52d3]
 
-I believe this patch is correct,
+url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250319-003750
+base:   a64dcfb451e254085a7daee5fe51bf22959d52d3
+patch link:    https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-10-fb20baf97da0%40bootlin.com
+patch subject: [PATCH v5 10/11] input: misc: Add support for MAX7360 rotary
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250319/202503192326.KOCnEkdj-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503192326.KOCnEkdj-lkp@intel.com/reproduce)
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503192326.KOCnEkdj-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
+
+   drivers/input/misc/max7360-rotary.c: In function 'max7360_rotary_hw_init':
+>> drivers/input/misc/max7360-rotary.c:58:8: error: implicit declaration of function 'FIELD_PREP'; did you mean 'EV_REP'? [-Werror=implicit-function-declaration]
+     val = FIELD_PREP(MAX7360_ROT_DEBOUNCE, max7360_rotary->debounce_ms) |
+           ^~~~~~~~~~
+           EV_REP
+   cc1: some warnings being treated as errors
+
+
+vim +58 drivers/input/misc/max7360-rotary.c
+
+    52	
+    53	static int max7360_rotary_hw_init(struct max7360_rotary *max7360_rotary)
+    54	{
+    55		int val;
+    56		int ret;
+    57	
+  > 58		val = FIELD_PREP(MAX7360_ROT_DEBOUNCE, max7360_rotary->debounce_ms) |
+    59			FIELD_PREP(MAX7360_ROT_INTCNT, 1) | MAX7360_ROT_INTCNT_DLY;
+    60		ret = regmap_write(max7360_rotary->regmap, MAX7360_REG_RTRCFG, val);
+    61		if (ret) {
+    62			dev_err(&max7360_rotary->input->dev,
+    63				"Failed to set max7360 rotary encoder configuration\n");
+    64			return ret;
+    65		}
+    66	
+    67		return 0;
+    68	}
+    69	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
