@@ -1,127 +1,145 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425DB211711
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8728B24EF7D;
+	Wed, 19 Mar 2025 07:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742367997; cv=none; b=bU6VUti8gTNvVw9Q6oDiOTZobGV7GHscT2EJZwgOMpvSCk1HCBOtTo5nnjWJcRZj038JWv5qsg38D/kjS7yWGJ2sIi5xTSrWBWugdPyKm1m4t271whL9zRt8LzB/pYFwrxz3KJVJ/RPUw67DVhqofMCOqzyPFVM5/Mq6Wtse/a4=
+	t=1742368000; cv=none; b=u7CNaxq9boIDlXuRHui2RSHbEVflzTEym9dsvnxmwxWalRofa7SCrpT4g0lC2CBGLu9zf3Ly0pvMUkin+3Dg+s8/eIyd0O1K7HyUEywjfPIXSmLZIp26EEIm90V+XsNxS18UFkZ6Pyaab2P5GI7phOMGNEjQekqRPEZUH9leYXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742367997; c=relaxed/simple;
-	bh=nQq/HfwhbxFMClvYRJ+B1HeOFHIj8bJ2yd+p/lUMno0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=j6Or5Wo7PV5kL5E+RqETxqOQ8zwmBwwVC9Oo+5QVUt9zCWQkseIQevKZkBpK/7v4COv1mrNZgBBe/HYiSCyrsLgYRF1qYidyVZbIo2v1ZxZOaxxjrUZ4m2nx6mycwniUTpvZBBNrot6sp/nJ8PPS/GHHH8xH94KXgC8x6gylAUI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sCDmltXY; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742368000; c=relaxed/simple;
+	bh=tvgPwCRWbi/ALkXQMLlct6LyeXt6Qqe+tJZSRrxXF0I=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=l3kJnJ7RsMPAKn4V33p2t+KWQRM5wlL+LJZbMHbH5fwpDPhK8KQ2yh3CMMf5pk4ZG+IbLyx3sE7Vx0q8958Z2nA9lzQYHz3BneCs1Zg8ZTh3+9H+L/YvELNZjHMPRuHlmBkXqJPWxQKxsNBgzm4iz01s/LPf9/eSVqg3ILCjx7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8JXI4ps; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sCDmltXY"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43690d4605dso28366245e9.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 00:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742367993; x=1742972793; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7b6xgdmoV1Iom089HH2CF+DeQzDZvROFfj09QmtCOhw=;
-        b=sCDmltXYBvSxXjj/f9PzXElP96/+basLSgi6VNtybPQPUCCeKdC7woYipb/N/qZwBd
-         7dMwlXgEAJ9B6UrcdZdppu7lfZj1VdcmG5ly/6gWK4L5p+FOX5os90TPb5bVOZLgOXQU
-         9btbIVCHqltpdxPv7vvZSujfixvzlj3ykr0KD48+nMYJrzWZQ2IN2jkto5nNlnQsBXW/
-         txEZPtYEBHbSOkyzrRoXtnw+tdDjR6EpcSdspHG4Vg8lPqzE5gyW0Fpon7k6nvaasxoN
-         llKCsNsGWxa4LSPg18vSrM0bFvaXlvSPm9eNJdRNEQpRVewm2teB7wsxr6yTqTO+rNgb
-         Kw9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742367993; x=1742972793;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7b6xgdmoV1Iom089HH2CF+DeQzDZvROFfj09QmtCOhw=;
-        b=fQCZBaKZaTdAbKxKrYfuCFfSwtIjYOAstJH4+QJcm5f/keKvo1jAA0Uuy3fb5M8i2+
-         yV5EYU/EqESR3+wPeZfrr24eu5e6ymIN/4ufxCnyRhmfi/AvvY3/xRkJXKRovjJF2eRS
-         lvPXUuwj3+97uFoy4w+7wVOm742R5XPnrTVEAWZRvMMAc5yL/tERfh0UCimHxiZGqA00
-         FyRvleEUPcJaMsHPSbSZKslHPtwHifrkz6bCTCD8ZltFkq9la4p/nAIgUL9nTOVYJxMh
-         cyx8wUNH6+aN3ljPH17YkGI1puGG65QwqDEnCiyUHxl51ZLdIHdUEIkHqKB4hjBYkHIs
-         12hA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIA9R+C2apQ3mp/dNiHJp74uWaJe+lSEHAuoV+rorM7HYq8E79Zb/Rs5CMPXIL5qoFDgKwOeU8VpcoTrE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzjMbJxx74nLeAXgMDmT9CtJ2nNscVHLdX+heMs84ey/xM7+z4q
-	AU1RGeNjHs0fBH5waUycFvW+gDYGZOXUzf+7BhoNYoHXL/5VQrXVyOGYjgo9u64gvbsSVc6oWJw
-	S
-X-Gm-Gg: ASbGncsb2cbWmacHgHd+/5gnP89oBL1qMvS1taGAhEX1CRJWgYispbJMGNoDLXTSiT1
-	YcibjQfgx6IXf5BlUrutwJnl3d+rgtM2QiGIBdL9zFmHCC/XqXa90FSnnGLPEAwjqgVClCXEpUx
-	poemKLUJWXKgRZ3PiillmujvwM9UsqiZfujBHWCQTHkRqNr3oj0QMKUYO3KGdooxFd/q2rnQdrn
-	wLa6Qnssyijfa4szn7j0+acrz26npb/2GjnmcxQk7Pp2NxB1NmtfVx2TIYL/zjkAA4aih4VqDZv
-	h9s6zLISsZrDsM9Jc6iBQXum2IT3rsAH18LuRWG3pTw4J7m4nA==
-X-Google-Smtp-Source: AGHT+IGHvK3obNd7t+NiTomb5dTMS67ej/nVFhpk+PbB11o3bsjXScaBpVaZHw/Msfo4YN+kqmNl8Q==
-X-Received: by 2002:a5d:6dad:0:b0:399:6dc0:f15b with SMTP id ffacd0b85a97d-39973b0487bmr1262415f8f.48.1742367993471;
-        Wed, 19 Mar 2025 00:06:33 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d43f4542dsm9787965e9.15.2025.03.19.00.06.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 00:06:33 -0700 (PDT)
-Date: Wed, 19 Mar 2025 10:06:29 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Brett Creeley <brett.creeley@amd.com>
-Cc: Shannon Nelson <shannon.nelson@amd.com>,
-	Dave Jiang <dave.jiang@intel.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-	Saeed Mahameed <saeedm@nvidia.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	Leon Romanovsky <leon@kernel.org>, linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org
-Subject: [PATCH next] pds_fwctl: Fix a NULL vs IS_ERR() check in
- pdsfc_validate_rpc()
-Message-ID: <925355aa-c98b-4fa7-8e49-b97f6d551a86@stanley.mountain>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8JXI4ps"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 17C15C4CEEA;
+	Wed, 19 Mar 2025 07:06:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742368000;
+	bh=tvgPwCRWbi/ALkXQMLlct6LyeXt6Qqe+tJZSRrxXF0I=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=W8JXI4ps/GpodZ9fu7N4s22fdmV9+leBQrvBov4qjUUvvZ7JzgZIEMcPGcLSxUavI
+	 bhO8Z05FLZAzpMKLWq9tazy0NcrsHvb5dA0C41XggqZWbV2TdlKyAOy9nDYzD4Ltw9
+	 LUVXlxbDnaz9aKjZDLStMOcsHL8T6c8pvwqBsIQ7YXYX79cIQRywWiDFBGXqA1r80w
+	 vJ3Xuzlwq9Y0RAXrS0PtE7RTLPJPCMaz6nvdH02L5I9n50ooRcHrNUJtvmIk2RpoUy
+	 jHYJ+3YXxotJafv9eVK/Z7AsZ2oNd22AhtvM283Y5IYM5uY0g2qQV+Wd+GvPanE410
+	 GTquB86c6Sueg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0E8C35FFC;
+	Wed, 19 Mar 2025 07:06:39 +0000 (UTC)
+From: jiebing chen via B4 Relay <devnull+jiebing.chen.amlogic.com@kernel.org>
+Date: Wed, 19 Mar 2025 15:04:44 +0800
+Subject: [PATCH v4 1/6] dt-bindings: clock: meson: Add audio power domain
+ for s4 soc
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250319-audio_drvier-v4-1-686867fad719@amlogic.com>
+References: <20250319-audio_drvier-v4-0-686867fad719@amlogic.com>
+In-Reply-To: <20250319-audio_drvier-v4-0-686867fad719@amlogic.com>
+To: Jerome Brunet <jbrunet@baylibre.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>
+Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, 
+ jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com, 
+ jiebing chen <jiebing.chen@amlogic.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742367997; l=1779;
+ i=jiebing.chen@amlogic.com; s=20250110; h=from:subject:message-id;
+ bh=LILue2hV/0RBI1wyR/+9esvdXN1gHROx+an1AXnFBQ0=;
+ b=5p4uPDUvvHQ9UwyB7WW54kKulEkuralm/Z3oOIisosXjHg1ryW9BuqvlnKrqjlbFOTuCyxTtp
+ ZB7idtOCV1MAQgWuF9mAAU56S+UpnvWu8ImxLz9HLy4nvtUq8rlKrrr
+X-Developer-Key: i=jiebing.chen@amlogic.com; a=ed25519;
+ pk=6rFvvF45A84pLNRy03hfUHeROxHCnZ+1KAGw/DoqKic=
+X-Endpoint-Received: by B4 Relay for jiebing.chen@amlogic.com/20250110 with
+ auth_id=316
+X-Original-From: jiebing chen <jiebing.chen@amlogic.com>
+Reply-To: jiebing.chen@amlogic.com
 
-The pdsfc_get_operations() function returns error pointers, it doesn't
-return NULL.  However, the "ep_info->operations" pointer should be set
-to either a valid pointer or NULL because the rest of the driver checks
-for that.
+From: jiebing chen <jiebing.chen@amlogic.com>
 
-Fixes: 804294d75ac5 ("pds_fwctl: add rpc and query support")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+Audio power domain found on S4 device.it need to enable before audio work.
+
+Signed-off-by: jiebing chen <jiebing.chen@amlogic.com>
 ---
----
- drivers/fwctl/pds/main.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ .../bindings/clock/amlogic,axg-audio-clkc.yaml       | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/fwctl/pds/main.c b/drivers/fwctl/pds/main.c
-index c0266fc76797..a097fdde0b55 100644
---- a/drivers/fwctl/pds/main.c
-+++ b/drivers/fwctl/pds/main.c
-@@ -255,6 +255,7 @@ static int pdsfc_validate_rpc(struct pdsfc_dev *pdsfc,
- {
- 	struct pds_fwctl_query_data_operation *op_entry;
- 	struct pdsfc_rpc_endpoint_info *ep_info = NULL;
-+	struct pds_fwctl_query_data *operations;
- 	struct device *dev = &pdsfc->fwctl.dev;
- 	int i;
+diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+index fd7982dd4ceab82389167079c2258a9acff51a76..50a5cbb6eb64873dd5aa55f6f1a63e9e97542760 100644
+--- a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
++++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
+@@ -21,6 +21,7 @@ properties:
+       - amlogic,axg-audio-clkc
+       - amlogic,g12a-audio-clkc
+       - amlogic,sm1-audio-clkc
++      - amlogic,s4-audio-clkc
  
-@@ -287,13 +288,14 @@ static int pdsfc_validate_rpc(struct pdsfc_dev *pdsfc,
- 	/* query and cache this endpoint's operations */
- 	mutex_lock(&ep_info->lock);
- 	if (!ep_info->operations) {
--		ep_info->operations = pdsfc_get_operations(pdsfc,
--							   &ep_info->operations_pa,
--							   rpc->in.ep);
--		if (!ep_info->operations) {
-+		operations = pdsfc_get_operations(pdsfc,
-+						  &ep_info->operations_pa,
-+						  rpc->in.ep);
-+		if (IS_ERR(operations)) {
- 			mutex_unlock(&ep_info->lock);
--			return -ENOMEM;
-+			return PTR_ERR(operations);
- 		}
-+		ep_info->operations = operations;
- 	}
- 	mutex_unlock(&ep_info->lock);
+   '#clock-cells':
+     const: 1
+@@ -29,7 +30,7 @@ properties:
+     const: 1
  
+   reg:
+-    maxItems: 1
++    maxItems: 2
+ 
+   clocks:
+     minItems: 1
+@@ -100,6 +101,9 @@ properties:
+   resets:
+     description: internal reset line
+ 
++  power-domains:
++      maxItems: 1
++
+ required:
+   - compatible
+   - '#clock-cells'
+@@ -116,12 +120,26 @@ allOf:
+             enum:
+               - amlogic,g12a-audio-clkc
+               - amlogic,sm1-audio-clkc
++              - amlogic,s4-audio-clkc
+     then:
+       required:
+         - '#reset-cells'
+     else:
+       properties:
+         '#reset-cells': false
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - amlogic,s4-audio-clkc
++    then:
++      required:
++        - power-domains
++
++    else:
++      properties:
++        power-domains: false
+ 
+ additionalProperties: false
+ 
+
 -- 
-2.47.2
+2.43.0
+
 
