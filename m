@@ -1,113 +1,122 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2B5A1E1DE6;
-	Wed, 19 Mar 2025 10:08:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B950F204C18;
+	Wed, 19 Mar 2025 10:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.18.0.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742378891; cv=none; b=bkI0ddvVte0X6kvdJ064QMITYSEm4hwz4ghpzPf23OG0S19ZYWEqFYqm4DBIqfW0w1TrkbudlhuzdtmRmj8bNqvQxt5oXD2vil+wo0rgRalA6ILptRjdpJpGYPkXct7xJ1Fxl9KFta8D9/6QrFqhTPSCrEW9a7CTy1HWyfbMijU=
+	t=1742378903; cv=none; b=gQZO/yFIAeAtSjhEt+v7yKj6NyBvODMPdejDT5XuuOsZgOa9vgw3vjUYy91WBDSWm3Ot/BhkHmCSUXT4l5ZgOqJpiAPT4vPgbtgQf69T8twfnS9CZkkkjDL/Ju1MUwHXxBT9JsAYAgdwpoJ3POTSo4680k6X0/R6ZK6jsQnkKsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742378891; c=relaxed/simple;
-	bh=653Xw5WDdZi5f9zRy+VDblToAdC0Pc4DFptOhWOAkUo=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=DqS/i/IxHZoWsQ5ffrmQ37p+fMTWSk3jnEeZWi9+NqoMwo73DjZwOlpMfVK6ssfM5f3CK3vYRNGADDusNB/mEOPoouixSGomqRe39kwCCBm10gS/jdMG+4n/4E3xrilPJsVTljL4RNQaZFOEAjA6ulw46dZsdCFZ2OEPz5MS98c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=GcmL+8oN; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=ll+tX74h; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="GcmL+8oN";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ll+tX74h"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfout.stl.internal (Postfix) with ESMTP id BF0561140140;
-	Wed, 19 Mar 2025 06:08:07 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Wed, 19 Mar 2025 06:08:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742378887;
-	 x=1742465287; bh=S9YVuKHlnv1ZyMUq4TEDd3H0YO9uZ/3hlqbRc9H1EUE=; b=
-	GcmL+8oNGkykR82Zip4Htvd2172Sylh+hfVtPxSIIUAoP9JidFD7WSKqs0j9HcWS
-	LFYrvueLLiBPhUhvZLk7QfpO8tK2wvAS+FjF+B5p4pcAPc38ueuTHYKwqAVtRe4T
-	aK7NxG4U14EPRVnyiL3NF8wOucxQ58/mrxB7/kDPJX7awQv1NNs/axaIg9mgL7vi
-	MtkA/I3Z72lkE5bJrt73S4I5zGIt9cCxq/JOIYvZNrk8YpMRe8nwBylVTdXqT8wc
-	zn2DYSwriW2KI0Bck+8HbJfJhtnKDkEtUo+Hm/a89iCdVoETwJa4sAL0/VYnCXao
-	ZlEWssKtWiGagyocKFoTIA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742378887; x=
-	1742465287; bh=S9YVuKHlnv1ZyMUq4TEDd3H0YO9uZ/3hlqbRc9H1EUE=; b=l
-	l+tX74hEx9NGa1MAnSIcA5hx/vDNthfcjEwicGFNJEw4uuah1iCN1PCHQb59mxpB
-	9G+KnSJbeHv3ub5JhzlePnsi5ZcZFmlPb+sfO2mFp28mnkfE3ONCbI8IhjDU1fVW
-	Z51majWUVA7MBd4K8gxMdijgpdhm1BnJkB4IS9jz0nrUdHmwZLmZiQ3ccsmoloBp
-	hL2u09l1u0P1jyjHfH6bRncCvChn1HVPO9XrwEbW/QRrZP/SL1OWT4O8ZWEFuhD9
-	D0UJd0SGWwiHJuUaU/zkPYGSFr0/Om8uz9FskOPe0u6pxR2Ns8pMt23E+MUYnhBB
-	pJYWEPGhRmEFJJE4o9piA==
-X-ME-Sender: <xms:h5faZ5CL_Yy4Sb2ykvqxjpGRyoZGPcEZC7O4k3jNdmOXqCLSy49HlA>
-    <xme:h5faZ3joDaRdnC_x2oPETSrlbmU_g7-elhh_ENt9QSOpGj7m1ZAGxNWZyvcP5ypgd
-    dsBL7HZmE9jA55VTAk>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeehtdehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
-    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedv
-    vdegjedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    jedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphh
-    grrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehjihgrgihunhdrhigrnhhgsehflhih
-    ghhorghtrdgtohhmpdhrtghpthhtohepshgvrhhgihhordhprghrrggtuhgvlhhlohhsse
-    hgmhgrihhlrdgtohhmpdhrtghpthhtoheprghrnhgusehkvghrnhgvlhdrohhrghdprhgt
-    phhtthhopegthhgvnhhhuhgrtggriheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplh
-    hinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohep
-    lhhinhhugidqmhhiphhssehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:h5faZ0kjyK5Pi42Mavfr6j3k5ADXPix9POl-13XRjQfo7204FKnGJQ>
-    <xmx:h5faZzwIGlWYtw7xOy0XiPquXkczSUHkktu66t1LsjyorEXkxapCYQ>
-    <xmx:h5faZ-QtD3uPfilv-HsJNYKO0lQwtlaMWkARaz1bzwTrg8DbKC0LHg>
-    <xmx:h5faZ2b-x4-gVcdLPR8mwNeL9Bal78FdHEBhY_mweHnbfcdGyKsUMQ>
-    <xmx:h5faZ9H0JLC5rA71SnHa-GzQUZv8rRo3eli3vUW2LYozGzw6T4HQE2ad>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 39F432220072; Wed, 19 Mar 2025 06:08:07 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	s=arc-20240116; t=1742378903; c=relaxed/simple;
+	bh=G/m8WkDUAHeIw005GTwrGMwEGiDo+qkupaHi6YgIVdk=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fA0E3uQ0QA5WwucnkMqrtrYCfudSSC567jpdd3tZ1FsG5ywJUqRjqKoDaoLzh33dtx7Wuc4be9vewZFa8HQz/3rlVOrSIX/yJY1hMqSEku1Ew7/tPITPNAWhxKCe1G7aKjtD94nkxFS/sMgaJsu7fKZ9FndmjxKheu+TdTGbZzg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=212.18.0.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+	by mail-out.m-online.net (Postfix) with ESMTP id 4ZHkhK48YRz1sGWy;
+	Wed, 19 Mar 2025 10:59:29 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
+	by mail.m-online.net (Postfix) with ESMTP id 4ZHkhK2Rhdz1qqm8;
+	Wed, 19 Mar 2025 10:59:29 +0100 (CET)
+X-Virus-Scanned: amavis at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+ by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavis, port 10024)
+ with ESMTP id a9x4igNfRpZB; Wed, 19 Mar 2025 10:59:19 +0100 (CET)
+X-Auth-Info: BtvBspTpARlf2pa1FYP5d/CgtfauwNSx4rPu46lT4z5VRogUyqMzVSh2riPgGubG
+Received: from hawking (unknown [81.95.8.245])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.mnet-online.de (Postfix) with ESMTPSA;
+	Wed, 19 Mar 2025 10:59:18 +0100 (CET)
+From: Andreas Schwab <schwab@linux-m68k.org>
+To: Finn Thain <fthain@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+  linux-m68k@lists.linux-m68k.org,  stable@vger.kernel.org,
+  linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/3] m68k: Fix lost column on framebuffer debug console
+In-Reply-To: <0fa5e203bb2f811e36e9711dfd461a8f760a1ed6.1742376675.git.fthain@linux-m68k.org>
+	(Finn Thain's message of "Wed, 19 Mar 2025 20:31:15 +1100")
+References: <cover.1742376675.git.fthain@linux-m68k.org>
+	<0fa5e203bb2f811e36e9711dfd461a8f760a1ed6.1742376675.git.fthain@linux-m68k.org>
+Date: Wed, 19 Mar 2025 10:59:16 +0100
+Message-ID: <mvm1putgx3f.fsf@linux-m68k.org>
+User-Agent: Gnus/5.13 (Gnus v5.13)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Ta8684b9f4c2ca420
-Date: Wed, 19 Mar 2025 11:07:46 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Sergio Paracuellos" <sergio.paracuellos@gmail.com>,
- "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Huacai Chen" <chenhuacai@kernel.org>,
- "Jiaxun Yang" <jiaxun.yang@flygoat.com>, linux-mips@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-Id: <9066761b-e222-4855-b97f-17c36b1440e1@app.fastmail.com>
-In-Reply-To: 
- <CAMhs-H_3WTMvd0kitT6Bp3a5ijjwhwEYhWbFTQ2uUQpmis12cQ@mail.gmail.com>
-References: <20250318214406.874733-1-arnd@kernel.org>
- <CAMhs-H_3WTMvd0kitT6Bp3a5ijjwhwEYhWbFTQ2uUQpmis12cQ@mail.gmail.com>
-Subject: Re: [PATCH] mips: fix PCI_IOBASE definition
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 19, 2025, at 10:43, Sergio Paracuellos wrote:
-> Hi Arnd,
->
-> On Tue, Mar 18, 2025 at 10:44=E2=80=AFPM Arnd Bergmann <arnd@kernel.or=
-g> wrote:
->
-> It looks like nothing got broken regarding PCI enumeration on boot
-> trace. I don't have real PCI cards with IO resources to test, but FWIW
-> the enumeration is the same as from my stable 6.12 kernel boot.
->
+On Mär 19 2025, Finn Thain wrote:
 
-Thanks a lot for testing!
+> diff --git a/arch/m68k/kernel/head.S b/arch/m68k/kernel/head.S
+> index 852255cf60de..d0d77b1adbde 100644
+> --- a/arch/m68k/kernel/head.S
+> +++ b/arch/m68k/kernel/head.S
+> @@ -3400,6 +3400,7 @@ L(console_clear_loop):
+>  
+>  	movel	%d4,%d1				/* screen height in pixels */
+>  	divul	%a0@(FONT_DESC_HEIGHT),%d1	/* d1 = max num rows */
+> +	subil	#1,%d1				/* row range is 0 to num - 1 */
 
-     Arnd
+s/subil/subql/
+
+> @@ -3546,15 +3547,14 @@ func_start	console_putc,%a0/%a1/%d0-%d7
+>  	cmpib	#10,%d7
+>  	jne	L(console_not_lf)
+>  	movel	%a0@(Lconsole_struct_cur_row),%d0
+> -	addil	#1,%d0
+> -	movel	%d0,%a0@(Lconsole_struct_cur_row)
+>  	movel	%a0@(Lconsole_struct_num_rows),%d1
+>  	cmpl	%d1,%d0
+>  	jcs	1f
+> -	subil	#1,%d0
+> -	movel	%d0,%a0@(Lconsole_struct_cur_row)
+>  	console_scroll
+> +	jra	L(console_exit)
+>  1:
+> +	addil	#1,%d0
+
+s/addil/addql/
+
+> @@ -3581,12 +3581,6 @@ L(console_not_cr):
+>   */
+>  L(console_not_home):
+>  	movel	%a0@(Lconsole_struct_cur_column),%d0
+> -	addql	#1,%a0@(Lconsole_struct_cur_column)
+> -	movel	%a0@(Lconsole_struct_num_columns),%d1
+> -	cmpl	%d1,%d0
+> -	jcs	1f
+> -	console_putc	#'\n'	/* recursion is OK! */
+> -1:
+>  	movel	%a0@(Lconsole_struct_cur_row),%d1
+>  
+>  	/*
+> @@ -3633,6 +3627,23 @@ L(console_do_font_scanline):
+>  	addq	#1,%d1
+>  	dbra	%d7,L(console_read_char_scanline)
+>  
+> +	/*
+> +	 *	Register usage in the code below:
+> +	 *	a0 = pointer to console globals
+> +	 *	d0 = cursor column
+> +	 *	d1 = cursor column limit
+> +	 */
+> +
+> +	lea	%pc@(L(console_globals)),%a0
+> +
+> +	movel	%a0@(Lconsole_struct_cur_column),%d0
+> +	addil	#1,%d0
+
+s/addil/addql/
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
