@@ -1,174 +1,121 @@
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515FF2566CC;
-	Wed, 19 Mar 2025 09:47:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3091C8637;
+	Wed, 19 Mar 2025 09:47:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742377666; cv=none; b=b8ZxWM4dgHgNUnoTvpT6b2u9iNJiuitpUCLNsBbuIp2Lj7QvTv2i5qPCHfZbbsdxH6OpHldZAyMc+Nn3SPkfYoXS4CM1t3mhi/nZdTOnmSHuR0L1zqCOn62HJvxVQIvT6KbB42aiDTn9MPDY02jSyziNwuWPYtP6+MzGWzLQSIE=
+	t=1742377681; cv=none; b=H8df3lLRQDCz7yAQdR5RML/2AVjGCbe9ncRJhcg/mJ6y2AH5A5z6kO88HWk43Z+ccGilzuvYIEaRfyTg8sn7yQxro4cl067qCJnRPOKqVDcDraFjz6PNpa5ey8wbyYPMR7uwcvZg/qgBMENlY6VO9bC9bp5t8OnXL2RzBA6E97Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742377666; c=relaxed/simple;
-	bh=GEjYP46691TzJJ8gbfyakXZjQK5z9OmyqU3rVbxsGmw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Vu16uhX5ft8qEgk7h6rx2MhPu6zcBCvxwD+jX/TqLUk9/XSUZ7GE3llwjgoz4PlBTs4YHVnfVcOv0Zi0zQQEdjcQVxMaT64MAWXEQq4VLJBLzWuO7wwTph1evL8GOK9w7NMpeL7jFJyIlm3kbsPXH5t2UPKrXG4XLkRDOBGndIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOkLejXc; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1742377681; c=relaxed/simple;
+	bh=PMk0c7uKIxAn+T63Z5jwhxs6lh/HmsfYncTnpawUELs=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=dVJPGvIFTFLm1yPXxi8Qq33G9Glk4iZ8NPCHaXyHnHEWjIuBPWpTmmqMz/LEAfctkzuqCws7VyxMLMWvxIUpD4hFA6GrBOVY2Kt47r25wvIL11YOJoDwBFtr/LH2NFTzjmzYoOQ3nhrnEinviz6C9Hm6HiRa3EI5aEBUfTZR990=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mEYYUjGH; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOkLejXc"
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso31105465e9.0;
-        Wed, 19 Mar 2025 02:47:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mEYYUjGH"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2254e0b4b79so28311555ad.2;
+        Wed, 19 Mar 2025 02:47:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742377662; x=1742982462; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
-        b=QOkLejXcWe01/J0I8RRG/trYJlGKf8FBe86lNHGxfOpKau/CdkSGWZtVgs8BPN25/Y
-         6C1KaIw2GtIrDzOx8KQfQ5vpJfLNkgVxeCaPJlXwE7enRem2pbUxQHXWHHL+h+395QRE
-         djK+8BeHfgz+C8w3QozzdBaey9CvIyDl7SlMeP4InCsPFmNEG+6fiaJSpkBFq4B5YGmG
-         Amx6+r7lzi2hL+B4lBmI0Iukkm+/pb168UVzqq+thV3ExyC4uNXFX6+gA3vyad/sPRoP
-         86mjEJc88sK/y7O0rsaZJHXA4KoWwF08BB43CAmDIV1n3TuoHKJKVpaSQu5Adqt6aGVg
-         ioGQ==
+        d=gmail.com; s=20230601; t=1742377679; x=1742982479; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=sbZ47FHRO8GhpAC9R2csVeiqmhI0azn0pBpxkZV5e70=;
+        b=mEYYUjGHrkrDDKR7SMLZOylulB1wu44sWquLErkmHZn3cb/vomW61F1rtx/3Q2uzoi
+         L3+7AqAF+xMvUAr1ATxQpq0oUj9HQYsSQNr6ri9k3Blk3rwKuGdwLqzREWI24Sxor5BT
+         ARWtwaoMBPMWlOzzPQbx3Jj8YWeysAQyAO9XAbIB9Q2oqvQbr8tocY7p4/cE1C5oIf9P
+         joAH1vqbeTaUj13oKxXvNwhyUAKL7uWiY8dS3c1WeaHNa9ZpTCa3lHRDmcN34fn+Rhh4
+         ZEZ/05Rc3fbcaycbEn/5rwUGkiP7PEnvxtZvfMQ/inbPffE9hiEN3Uj+DBzeIErlOCx3
+         gHNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742377662; x=1742982462;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:date:from
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
-        b=AdrueQLVJH+0V1BefNeEhHO7W/yq21KvkS+XzPg8ntG+JMePb+yWWWtAAo216IsXMe
-         ign4i6z7qAGG9eq7TpnWScfxycv81lvP3tial0A8yTaAHirU6XlHCy3ZL1t3/oaPU8o9
-         eS3ghjCLBRQELvaSEZq55MRbCTiH2mjIDrkiSm/cFlrpNp836v/DxOWrnDBHYOmiDbUJ
-         MnxqK6U5w/p46t2OKO5dGlkAEoZm3bcHDtfJsLTCQFRcuIe0+0JKfedmy+N9qEoLJ7St
-         dgjicMBctsUojGG7fZGg/MIrQNSmNKEfOjgf+sfKoJQPfhVMT4/1RT+nRboATHljP7+n
-         1pWw==
-X-Forwarded-Encrypted: i=1; AJvYcCUoWCJZsTzYRHLW+ByOiqGnvZa2yuWH0ZCl/lZiLGo83nwWqENKyJlKiR0HOaq5hgwW1Fk=@vger.kernel.org, AJvYcCVEcEcvoPx0wiZHej4qC1tE27+RiIw9+4BQ6K+RbAMYfZHlWlvmvhuVTy4yKXeBjcFZCPE07XtCmzcL47hYh4nhDsM=@vger.kernel.org, AJvYcCVPEqLj7kSVhziFP1phmpa93p9lgs9HklOjKph1sHZEnWEScLUj9CeuGn4imZWj5S4C3phVu03l3PA3QvUH@vger.kernel.org, AJvYcCVg7JwYX78eaOO1zVDS8gc2nc8t6j8VcL0ZaVBEt7bHDRhw+GtcAxTo7dXSFa8ehYnfj2FL+WJ1fP4MsuS0fXLEGA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzotYN2Niwm0UDdwih3D8yqaWkyTqwId+BKR6uSNs2QKp0z8gPz
-	7iQozPuYVporF9bL7WDan2P8fA4hMYTTTwlnYEyM/cIk3kjEfrNu
-X-Gm-Gg: ASbGncsJghSC+Gpbo5PbdOnvXjPKms1Zo1DG3NTNao7ZzYXwe2uWH4ufRn9cvxOeAV6
-	iGEl9+zl+cceS2pbU6g+T08nzWbc9p5YNVBABsuUBSMeqgu3GcewqceDWmzUY8ZzySsshFWRh/i
-	N62Tp43KTIrqdhtM2mae1eQHif65/vm0n21nBHs+ZYFmMid6n3MkSP8uMYAnJcoqnwNNyxR5g01
-	uxCuj/U4BY1IPUmVv6FvpbpulzruaM9CV2+HeXNhS2EN4o/5aHQYn+0HDyf0yh5ETV+O7bEYBHG
-	9krxSHFvE/3GwESPyJJDK1I8OKDsLus=
-X-Google-Smtp-Source: AGHT+IF4OvZGanUh1jWZlL5uEktGdGZ5zMVRYf9shgP8va0gBvYxVKRQVQGxiDCBfvtWURNFZmoTug==
-X-Received: by 2002:a05:6000:2c7:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39973af9236mr1303964f8f.36.1742377662183;
-        Wed, 19 Mar 2025 02:47:42 -0700 (PDT)
-Received: from krava ([173.38.220.35])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975b09sm20832843f8f.57.2025.03.19.02.47.41
+        d=1e100.net; s=20230601; t=1742377679; x=1742982479;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=sbZ47FHRO8GhpAC9R2csVeiqmhI0azn0pBpxkZV5e70=;
+        b=qLP2o4GH9qQx3QxVCsr8qTFs3j7xaVM1+MeRqZFdUQZG/ERbD8mMh+M2yQp0zllfWu
+         veZlKd1Q1unJDMwbitvIcvUv7OYQj2dvv3YA4FWLkGOQ4ziXsXaiKLXIXqoJj4d333H3
+         RO92VGJVWQenV49i9+A8IUlUYktaprsCZZmAiYMk8PoB8ptEBCFysMyVs0Lv4mzjde4w
+         ORnamLLwbu+1RZ5AUm9NS310+BOOeHibtvNeMUUzrReJYxLVbV6xfUgtN7bILdb5Lc5j
+         aqnrT8gJccAXRXCfzEREUJYqhmflXLbEZYBzvt1VZ68d/iWggXA89mVx0vlzEAIg8B1E
+         TMXA==
+X-Forwarded-Encrypted: i=1; AJvYcCV67vRdZfaFQtF4Zksueeg60q5mWgNwktzHmBZDU1X8qbgqbZl8pmmjiSzHKrvXvaSRuM9cSjUoZ4vwqt2D@vger.kernel.org, AJvYcCVkUUzbM8YB056AIw9PC9KAwubvoQNKjmHf5ohJ68d2Qgk/3+6Wqk+3ckUXods1WoXl605wrVDthVCn@vger.kernel.org
+X-Gm-Message-State: AOJu0YytO4WZWv1uxuW6/pgF1QppH04Z96uF3G3t91ibllR+eX2JNo73
+	Rf8WLSOSb1bPS/JeWANtGvDLZVJWvW4khA4rI/HvSmNSiyjyMU0Lz0Iw5g==
+X-Gm-Gg: ASbGncsOvUK94dBOr0hUFeoB6xvlzDxkZMieADZn0Gfk3es/Usq00/Ykf7hsRhSmpdX
+	aHbryjshmzLAajx1B4KIHqlqwo2boDjKJf6C6fcwzs7Jh+bX7TNN1HSdgdb2bYMajsP4QpMybIh
+	GWvlpYiiyFQye2Jg9+Ia7HGtBZWKSpVhT7y9M9veXpAr+9T3/hpcpCnDdizsP8xw7ox7NlB9WbV
+	JAu0qjHMHhYZTlYy9bBZxHp//08397VZEZ3UogBKUev+qM5fivLfYQk1Ow/rvtSgzZNEIp3V7PY
+	pSqyIe6w/IEfQepZS/bxsjoThdVFX8hPeUc9eHX+Wguo+nQz5aDpIdwkcKRizBAlD1bVZ/rU2WG
+	t/JePkvryneQxpEniLtkS9pz1dsz6Y349AK7GPA==
+X-Google-Smtp-Source: AGHT+IHTmxf8tW2M1KZtfHI15upvypUupgDK1VnTqwzKkg65HgVFiFFIiQv7mkavRYVjgTTd8SaQag==
+X-Received: by 2002:a17:90b:3d05:b0:2fe:6942:3710 with SMTP id 98e67ed59e1d1-301bde445a4mr3574609a91.3.1742377679003;
+        Wed, 19 Mar 2025 02:47:59 -0700 (PDT)
+Received: from ISCN5CG2520RPD.infineon.com (KD106168128197.ppp-bb.dion.ne.jp. [106.168.128.197])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf589bccsm1103483a91.11.2025.03.19.02.47.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 02:47:41 -0700 (PDT)
-From: Jiri Olsa <olsajiri@gmail.com>
-X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
-Date: Wed, 19 Mar 2025 10:47:40 +0100
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Quentin Monnet <qmo@kernel.org>, Ian Rogers <irogers@google.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	James Clark <james.clark@linaro.org>,
-	Kan Liang <kan.liang@linux.intel.com>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
-	linux-trace-devel@vger.kernel.org,
-	Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
- from the ones detected when test-all.o builds
-Message-ID: <Z9qSvGTlMCzktlZJ@krava>
-References: <Z1mzpfAUi8zeiFOp@x1>
- <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
- <Z9hWqwvNQO0GqH09@google.com>
- <CAP-5=fWCWD5Rq5RR7NSMxrxmc1SUkK=8gg+D-JxGOgaHA7_WBA@mail.gmail.com>
- <c4f4a1d0-aed8-4b09-a3d2-067fdd04bed3@kernel.org>
- <Z9oHGfAffX2Bfl7a@google.com>
+        Wed, 19 Mar 2025 02:47:58 -0700 (PDT)
+From: Takahiro Kuwano <tkuw584924@gmail.com>
+X-Google-Original-From: Takahiro Kuwano <Takahiro.Kuwano@infineon.com>
+Subject: [PATCH 0/3] mtd: spi-nor: introduce optional rdid-dummy-ncycles DT
+ property
+Date: Wed, 19 Mar 2025 18:47:42 +0900
+Message-Id: <20250319-snor-rdid-dummy-ncycles-v1-0-fbf64e4c226a@infineon.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9oHGfAffX2Bfl7a@google.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL6S2mcC/x3MQQqDQAxA0atI1gZ02mHEq4iLNknbQB0lwdJBv
+ HuHLt/i/wNcTMVhbA4w+ajrmiv6tgF63fJTULkaQhdiF/orel4NjZWR92UpmKnQWxzTJaYoROk
+ +MNR6M3no93+e5vP8AZ9ra9VpAAAA
+X-Change-ID: 20250214-snor-rdid-dummy-ncycles-73575ecc7b8d
+To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Pratyush Yadav <pratyush@kernel.org>, Michael Walle <mwalle@kernel.org>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, 
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Bacem Daassi <Bacem.Daassi@infineon.com>, 
+ Takahiro Kuwano <Takahiro.Kuwano@infineon.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742377674; l=1201;
+ i=Takahiro.Kuwano@infineon.com; s=20250227; h=from:subject:message-id;
+ bh=PMk0c7uKIxAn+T63Z5jwhxs6lh/HmsfYncTnpawUELs=;
+ b=Z7wgIOhMU7hQ/wL7cFqCkBQZM5QVjjiylMBcS6ZIm2nx6iFnh+p2AprMpA2RcDa7eRDWaQxQH
+ 3bFr85fDBDODFUIOplpDU8Jo4015PZ8B+7QSQXzdvUgV0leJNVLgVhf
+X-Developer-Key: i=Takahiro.Kuwano@infineon.com; a=ed25519;
+ pk=aS8V9WLuMUkl0vmgD0xJU19ZajdJmuyFBnBfVj0dfDs=
 
-On Tue, Mar 18, 2025 at 04:51:53PM -0700, Namhyung Kim wrote:
-> Hello,
-> 
-> On Mon, Mar 17, 2025 at 09:19:22PM +0000, Quentin Monnet wrote:
-> > 2025-03-17 10:16 UTC-0700 ~ Ian Rogers <irogers@google.com>
-> > > On Mon, Mar 17, 2025 at 10:06 AM Namhyung Kim <namhyung@kernel.org> wrote:
-> > >>
-> > >> Hello,
-> > >>
-> > >> On Mon, Mar 17, 2025 at 09:10:29AM -0700, Ian Rogers wrote:
-> > >>> On Wed, Dec 11, 2024 at 7:45 AM Arnaldo Carvalho de Melo
-> > >>> <acme@kernel.org> wrote:
-> > >>>>
-> > >>>> We have a tools/build/feature/test-all.c that has the most common set of
-> > >>>> features that perf uses and are expected to have its development files
-> > >>>> available when building perf.
-> > >>>>
-> > >>>> When we made libwunwind opt-in we forgot to remove them from the list of
-> > >>>> features that are assumed to be available when test-all.c builds, remove
-> > >>>> them.
-> > >>>>
-> > >>>> Before this patch:
-> > >>>>
-> > >>>>   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=/tmp/b feature-dump ; grep feature-libunwind-aarch64= /tmp/b/FEATURE-DUMP
-> > >>>>   feature-libunwind-aarch64=1
-> > >>>>   $
-> > >>>>
-> > >>>> Even tho this not being test built and those header files being
-> > >>>> available:
-> > >>>>
-> > >>>>   $ head -5 tools/build/feature/test-libunwind-aarch64.c
-> > >>>>   // SPDX-License-Identifier: GPL-2.0
-> > >>>>   #include <libunwind-aarch64.h>
-> > >>>>   #include <stdlib.h>
-> > >>>>
-> > >>>>   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
-> > >>>>   $
-> > >>>>
-> > >>>> After this patch:
-> > >>>>
-> > >>>>   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
-> > >>>>   $
-> > >>>>
-> > >>>> Now an audit on what is being enabled when test-all.c builds will be
-> > >>>> performed.
-> > >>>>
-> > >>>> Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind devel files by default")
-> > >>>> Cc: Adrian Hunter <adrian.hunter@intel.com>
-> > >>>> Cc: Ian Rogers <irogers@google.com>
-> > >>>> Cc: James Clark <james.clark@linaro.org>
-> > >>>> Cc: Jiri Olsa <jolsa@kernel.org>
-> > >>>> Cc: Kan Liang <kan.liang@linux.intel.com>
-> > >>>> Cc: Namhyung Kim <namhyung@kernel.org>
-> > >>>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > >>>
-> > >>> Sorry for the delay on this.
-> > >>>
-> > >>> Reviewed-by: Ian Rogers <irogers@google.com>
-> > >>
-> > >> Thanks for the review, but I think this part is used by other tools like
-> > >> BPF and tracing.  It'd be nice to get reviews from them.
-> > > 
-> > > Sgtm. The patch hasn't had attention for 3 months. A quick grep for
-> > > "unwind" and "UNW_" shows only use in perf and the feature tests.
-> > > 
-> > > Thanks,
-> > > Ian
-> > 
-> > 
-> > Indeed, bpftool does not rely on libunwind, and I don't remember other
-> > BPF components doing so, either.
-> 
-> Right, but my concern was about the feature test itself and the related
-> changes in the build files.
-> 
-> Can I get your Acked-by then?
+There are infineon flashes [1] that require 8 dummy cycles for the
+1-1-1 Read ID command. Since the command is not covered by JESD216
+or any other standard, introduce an optional "rdid-dummy-ncycles"
+DT property to allow flashes to be correctly identified.
+Add support for CYRS17B512.
 
-hi,
-I might be missing something, but I see following commit in git already:
-  b40fbeb0b1cd tools build: Remove the libunwind feature tests from the ones detected when test-all.o builds
+Link: https://www.infineon.com/dgdl/Infineon-CYRS17B512_512_MB_64_MB_SERIAL_NOR_FLASH_SPI_QSPI_3-DataSheet-v07_00-EN.pdf?fileId=8ac78c8c8fc2dd9c01900eee733d45f3 [1]
 
-jirka
+Signed-off-by: Takahiro Kuwano <Takahiro.Kuwano@infineon.com>
+---
+Takahiro Kuwano (3):
+      dt-bindings: mtd: jedec,spi-nor: add optional rdid-dummy-ncycles
+      mtd: spi-nor: use rdid-dummy-ncycles DT property
+      mtd: spi-nor: spansion: add support for CYRS17B512
+
+ .../devicetree/bindings/mtd/jedec,spi-nor.yaml          |  6 ++++++
+ drivers/mtd/spi-nor/core.c                              |  9 ++++++++-
+ drivers/mtd/spi-nor/spansion.c                          | 17 +++++++++++++++++
+ 3 files changed, 31 insertions(+), 1 deletion(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250214-snor-rdid-dummy-ncycles-73575ecc7b8d
+
+Best regards,
+-- 
+Takahiro Kuwano <Takahiro.Kuwano@infineon.com>
+
