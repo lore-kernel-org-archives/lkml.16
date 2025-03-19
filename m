@@ -1,119 +1,113 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1371B4140;
-	Wed, 19 Mar 2025 17:02:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B07131B4140;
+	Wed, 19 Mar 2025 17:02:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742403767; cv=none; b=QO985K/4w7xF4wUqPXQJTle0pVuH35cGAm80fmp2DC4RnD5JMriQQJwqNRWab1pcDfFFJGSB680Rvpjng6O3aSAinDRk8QyHIxHTrUdrziuVDd9RknsBG17vX5yqNNCUpZlWcl1UeoL+80zF23F2CqxgEzL+iWjWYzpWgFc75F0=
+	t=1742403780; cv=none; b=ohMdaEE9A34Z0MVYnPIEMJNvg8AIbTXNRP01eOIL0LoN6EGYATf6my4ItNzb7FFGOsnop5/0vn8vjmxVrslLj3S7bjrLQSwyXq62e6jDfVczuf8KZ9UEwOZ3WiuSH8CNkuoOXp5tP1vaponjxCme0dayiI6r6/si44v1zmmEjqU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742403767; c=relaxed/simple;
-	bh=GLuo+U2x55gQyUdk6YrmiE4u1WnOL4qCb3BnZbIW31U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X8/Gha04HFwMTq6T01GivBGLXTOh3AWNMAkJHuAwGgOShRcNADggnMc8ZlDqnlEF0yHvkzzEcsq9ZvJxc8cm4MAkhvxIcaBiqNVMw9QPazB8S9jWId57u87LfbA8Ya6uJqyYErhTAGagbJdw205/bC0uQ8kQRAG77gllFFQtsCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=FnstrJYj; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="FnstrJYj"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac2a81e41e3so160533666b.1;
-        Wed, 19 Mar 2025 10:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20230601; t=1742403763; x=1743008563; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=2BbuJseVPxwQi7Obc3hDJCXXvtVI/HaIv75L/ZC8hdI=;
-        b=FnstrJYjgz0OpTuZJFHt81MG8EHWK+qOwpB7I30/p8bpkBcJ6kk0rj1gMfVQoKrTD5
-         juLUSaLCJTT/AofSvUjfhe+45MFomBi05zHCW88OEx19eIeLyY0vWKSh6VvPrP39/bDe
-         YYm0KF+VzqqJSBfe50AFAstsmeXPC7EqpikUahlfrJZ2Z9Mvd9FLh8pLiMYBl2vMie6J
-         DQWq5IEf5dlknvHj5T71vVTE01hOsZ2vZEvMplk0ux7zSPXbA/ypJlvExwWUwe0ccXrB
-         V8MV1dOZMP0YAG6uWuN31qeodnXSApA9ieoT7KULM1N6JWM7yIL99HWOy5Os7PW9TIbu
-         W7/g==
+	s=arc-20240116; t=1742403780; c=relaxed/simple;
+	bh=QQEhEFjq9wfqNSHOh65dEw6Lr7M4kDIxuqMqTzNOoGM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=GAQ9j5aFH5ZHGNwfxYAZ95Wds95SgwBdNWmpaT1osV3HX9LJPXVr2I59DrkxtiObsXhProuHowcwvLW903oclPZ+uXdQusDVnR42+Yu2KmtJ5OMRg14E9E+tN0FKMbCZUgdOBI2r10UG9ypSeoIN7nxuRLM1eRQBTReDYulWhr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac2c663a3daso734895866b.2;
+        Wed, 19 Mar 2025 10:02:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742403763; x=1743008563;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1742403777; x=1743008577;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2BbuJseVPxwQi7Obc3hDJCXXvtVI/HaIv75L/ZC8hdI=;
-        b=nisgiFdcdn9RVdDHL6aDB1mbFnBeyaUvVMCRxMXGj5OCUmLuEbJdNvThJ8nK9y3yyc
-         m2hBviadObHfYjAVPGeyBc7SZoC81328obqHX+6YHNBINosulOoeoUZnnM9j39y0S8Aa
-         LcVByuuNrmkvKuGMitw7nsbjBKsct36OmvHx9x0fIfaUD4Lhe6hWHKdvwwUmXi5SWCPF
-         KLJKxrJGS20OLQ3slwM++KayxiGRIWurJvohQAQXuYTtEkDNJoiiMUFuNZM/lQDlcaLz
-         I2b/obtQre0K6hyPehRXwPt4Zr8BE4mx+e97KazYzxomoEI6JXdfqlyUo+14Opro0xSG
-         5R+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU8a+goToNgSRaImrwFZPXY0ZNs1Cz3PpFdTzzIefEXzrZoUo+cKDe9HjiZj2AsfxRFH6BtYDF3r4J7@vger.kernel.org, AJvYcCUcagQg5piG9pN5iUcoFQf4L/Q8DaG3QadkiiFYbugC1ICiZr1/zT2ncZYmPauP5l+WI/9th8myXrvXpRo=@vger.kernel.org, AJvYcCUo9KJhim1drVGnwIm6VjTuW3SbCMfea7GHbuBgDjLUU7qPsgne2cQ9QblJ98ptouJ2YB9SkLlLMwWVvkEQ@vger.kernel.org, AJvYcCX2iDoF6BbQO6hYOYMMId26UualjcJGm8o3qv1JHL9tK/aHfAvnoxP+EI2EvoFEQAZIIwtHzi5HljYo@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx6Tco2P9yYLvNeAZK7xeSaJdFtj5DFK6xXBOCxfSJ7a7XuPeGF
-	gp97ojUfLiItd8dlsRsjDAj6WZVdHq/oI+lIAbtTTeMv40uEXMVB
-X-Gm-Gg: ASbGncui+FPBplgJ2LWduCjmVLxzywic1WlNwWQMvU7uPDxc69Je6mCTuBVf0h81Xa6
-	I6gLXusXAkhbjyWbMU/sXadVlWg9mPVCs5RWVW95ymkl6NvvJbnb60S4hVhUqguiFgeYhr6Bs3f
-	BACDvxSN/cIGmukkjBcSJGQg79hgfHEmSXXa8/usaP26hsALMdlhpL1x5eM1kNeCWCnooMBy4yy
-	goMS3KZZmA1dhO78L2Bj+IIIJEoYdK/Oa1pxOOJH7n5lSyDZCN723ZO0WtSg+q10N2qdphkAqvu
-	kEGL4uAj/mql5AZfebdyNIwW/kRqOWAJEWpg5ilp5j7Y7dOZi41O6Bb4DiGC
-X-Google-Smtp-Source: AGHT+IH5Z1KGEoI3eiCEX0Cg4+cgyl5EMRCB30vRsGgsY4BEhk3ajxrP6vH2Xxan2xP/QubzaS9ICg==
-X-Received: by 2002:a17:907:d1f:b0:ac2:9d15:2ec0 with SMTP id a640c23a62f3a-ac3b7dd75d7mr425026466b.27.1742403762322;
-        Wed, 19 Mar 2025 10:02:42 -0700 (PDT)
-Received: from flaviu-Aspire-E5-572G.. ([5.15.67.29])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3143653a7sm1034235866b.0.2025.03.19.10.02.40
+        bh=4emXJwNKSYYRU1ppTj5t1hQiQWF9TYLKaQBYefea5/o=;
+        b=Wnn91x44EetNg8Acwl09S85MUi+xv0NWn44Ju4vRniYVSiuUShhikN9VjMO7su3p6k
+         kxw9bEa3tosc0/7pgIW5Nsuyj/7m237xSyxwHh7eIBlleXal6e8ktbqgZjkQzRjGXrKJ
+         OBizOZBYb5+xMgiNprpvhAeWhJAZzaNMMyxr5LwkzkSLfXeymqUSv72mZ3UzRSzUjcJy
+         nIqPi/FBanNbkfzh2OXJ6cwGwAYsPQAfp72xaSmHIZUBXK6s6LXX1HxBk3qCxWYkJTUq
+         0axmIY2PCbrkNkz5j05+4GDF2ExXeyYA4s/wZqkBaxXOz4lfZbCL3Us1LRduqeXjbh1c
+         tY/Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXwrh3GCCR0smrt/DPIw+Zkv9yEuIwKe/qUcEG5Kz/T3X7O09DObWzYF3/CIsH4VqOAuNCI3ygBq1iCaO8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxdl2neQ2dh0AeLldWu0CUBR2Q3TdULkNXC2XQKzvHiTcC1OaZ6
+	n5h4Zy3vsBGXi/gy8dMe3t1yP3Ua1fWQEyfQGpisXgA0vAaB4FHW
+X-Gm-Gg: ASbGnct/7iYlUN+KYtJGbnLcfNPyyzCVHTHS8aLuoXe2BRPjyiuHcV4SNRkuYeSAoRD
+	S+YNOQdn2+hUiT0l8LpMPhuxMoUOkjUpvjm3ro/fUCt3JVjQ9WUYzvA5A8Zl6DstDYhVgQxl5Q9
+	v9jo5B4oDXdx7jNwjo/uGxC/KjyxE8CnnwkrNLNLX7XGNFkJcNwoV8z163LVW1M3nSHe8NVdv3c
+	GhzPpr1RR4KrPmolLJGRbxaCe/WWIlp//QqP4oNvjX9XNVyRC6gTJnYwgCubbWbyLWN/Rn3tROV
+	h3AWczPDGQ84Y5ZNq6eEXrRky326LM2LjXcn
+X-Google-Smtp-Source: AGHT+IEZLBoorOK0i/CAV4CmsJ+tQcdBO8kzpdre61WTzVJ+OCVuetyxxb0YvTAMHnHVKZy7YFqmhg==
+X-Received: by 2002:a17:907:60ca:b0:abf:5266:6542 with SMTP id a640c23a62f3a-ac3b7fc05c1mr351075866b.55.1742403773151;
+        Wed, 19 Mar 2025 10:02:53 -0700 (PDT)
+Received: from localhost ([2a03:2880:30ff:74::])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aeaa1sm1029706066b.2.2025.03.19.10.02.51
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 10:02:41 -0700 (PDT)
-From: Flaviu Nistor <flaviu.nistor@googlemail.com>
-X-Google-Original-From: Flaviu Nistor <flaviu.nistor@gmail.com>
-To: 
-Cc: Flaviu Nistor <flaviu.nistor@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jonathan Corbet <corbet@lwn.net>,
-	linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-doc@vger.kernel.org
-Subject: [PATCH 0/2] hwmon: Add support for TI TPS389008
-Date: Wed, 19 Mar 2025 19:02:27 +0200
-Message-ID: <20250319170234.63723-1-flaviu.nistor@gmail.com>
-X-Mailer: git-send-email 2.43.0
+        Wed, 19 Mar 2025 10:02:52 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+Date: Wed, 19 Mar 2025 10:02:44 -0700
+Subject: [PATCH net-next] netpoll: Eliminate redundant assignment
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250319-netpoll_nit-v1-1-a7faac5cbd92@debian.org>
+X-B4-Tracking: v=1; b=H4sIALP42mcC/x3MWQqEMBAFwKs079tANLjlKjKIS6sN0koSBkG8u
+ 2AdoG5EDsIRnm4E/kuUQ+EpzwjTNujKRmZ4QmGL0rq8NcrpPPa9V0mmcq2tS1fbZpyQEc7Ai1z
+ f1kE5GeUr4fc8L5XBoFhnAAAA
+X-Change-ID: 20250319-netpoll_nit-6390753708bc
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Breno Leitao <leitao@debian.org>
+X-Mailer: b4 0.15-dev-42535
+X-Developer-Signature: v=1; a=openpgp-sha256; l=859; i=leitao@debian.org;
+ h=from:subject:message-id; bh=QQEhEFjq9wfqNSHOh65dEw6Lr7M4kDIxuqMqTzNOoGM=;
+ b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn2vi7csTf8sOFP820VIfSbD0Nb52LCyLoxcWhT
+ Ghu1gQhGtmJAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ9r4uwAKCRA1o5Of/Hh3
+ bTtSEACKlhCZ64vfCh0guBHi0j0RFZBrHSPsYdJV5ZaCfjptsM6MRYTXxB8jfiRbqv2/y6oUlbp
+ PkRoRiUScjI/yAt2e7NaMMfk+pL8LnFScVeAfRhGP8UDhnzQviQI+TpF3aoiRYx3MEFXQZLlft0
+ KWVWcso3EtUSgJzTJH7KSElJGHExxWmc8/S5r6pxc/EDXpS1aowwRideyXVR/vU6PPQiP9D4cxN
+ WoQYZR+SPh/9hQpc9McyZsaI0BqfMl51st7ouvJ8/Ein1Cj+8/V7KtLf90/iMybE6az7+I3v+Py
+ yGxtSNQO0iNveIVNGCxEJ6B1wPK6qeVyVeDaZtMkl3hy04ySbCyGC3perYsszWdOEwWueVTHGfs
+ Xv+m9RIhC2TXicF5UFCOUrifQALJQaW+ixB9kFSDVlJAINtTLMX8lr7gfwtRtfnaEB4j5mxA2i1
+ v4vbB2D03p89ecukZ9/4Ys/6O4+SkQ2KJJaoJfqwaJOECfY8a7NK8QOCVcJYwAeLGMI+uPFNbZf
+ BgdePNS+/WVzDx1OnXIjPVolxR4v2bX6DvsxqGfr2F1mOBrTg8DN5c31PYO4yDLO9y8OQCj11q2
+ h/FWD7r4odEdkXIGr7EmflxUKqoMGmQRIiAAG/Gcd7LM5C5hYuLbq3fIlybZE2ZcAB7clkTj9Bf
+ gTj5XEP8wBZRL5Q==
+X-Developer-Key: i=leitao@debian.org; a=openpgp;
+ fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
 
-This series adds support and documentation for the TI TPS389008,
-TPS389006 and TPS389004 voltage monitor IC's.
+The assignment of zero to udph->check is unnecessary as it is
+immediately overwritten in the subsequent line. Remove the redundant
+assignment.
 
-This I2C device provides 8 bit ADC conversion result for all
-input channels.
+Signed-off-by: Breno Leitao <leitao@debian.org>
+---
+ net/core/netpoll.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-The proposed driver implements the logic to perform the ADC read.
+diff --git a/net/core/netpoll.c b/net/core/netpoll.c
+index 3cc3eae9def30..4e1dba572f5ac 100644
+--- a/net/core/netpoll.c
++++ b/net/core/netpoll.c
+@@ -433,7 +433,6 @@ int netpoll_send_udp(struct netpoll *np, const char *msg, int len)
+ 	udph->len = htons(udp_len);
+ 
+ 	if (np->ipv6) {
+-		udph->check = 0;
+ 		udph->check = csum_ipv6_magic(&np->local_ip.in6,
+ 					      &np->remote_ip.in6,
+ 					      udp_len, IPPROTO_UDP,
 
-The features this driver does not support (alarms and thresholds
-for the alarms) have been documented in the "Known Issues" section.
+---
+base-commit: 23c9ff659140f97d44bf6fb59f89526a168f2b86
+change-id: 20250319-netpoll_nit-6390753708bc
 
-The complete supported functionality has been tested with a TPS389008
-and TPS389006 voltage monitors connected to a Raspberry Pi 4.
-Different device tree node definitions have been tested with success.
-
-Signed-off-by: Flaviu Nistor <flaviu.nistor@gmail.com>
-
-Flaviu Nistor (2):
-  hwmon: Add support for TI TPS389008
-  dt-bindings: hwmon: Add TI TPS389008
-
- .../bindings/hwmon/ti,tps389008.yaml          | 140 ++++++
- Documentation/hwmon/index.rst                 |   1 +
- Documentation/hwmon/tps389008.rst             |  56 +++
- MAINTAINERS                                   |   8 +
- drivers/hwmon/Kconfig                         |  10 +
- drivers/hwmon/Makefile                        |   1 +
- drivers/hwmon/tps389008.c                     | 466 ++++++++++++++++++
- 7 files changed, 682 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/ti,tps389008.yaml
- create mode 100644 Documentation/hwmon/tps389008.rst
- create mode 100644 drivers/hwmon/tps389008.c
-
+Best regards,
 -- 
-2.43.0
+Breno Leitao <leitao@debian.org>
 
