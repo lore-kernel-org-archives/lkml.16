@@ -1,138 +1,159 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7E61361;
-	Wed, 19 Mar 2025 16:23:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F461DE899
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:23:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742401381; cv=none; b=C1KwuCC/8IPcie+rbIWjfVuUAcZFuIJ6RRySPQZyDP1L/jlrlttqvB8rl6cCDOhQxhzu0h/q1caL/+q9JpqUixfLfv6laQkrwjWjUE+Y4pLWxdMvmXaE1g+h2lAmex9/QecXNCC8gZv/4wi1gF0L8GaIvq2CAUhghfVGF4LUlLA=
+	t=1742401393; cv=none; b=gvBFVXOZyQeJHJ/TWYFfNNGdA6isCzlhkZHPpCC0gzf8U6rLetNm3QeFtopFKcz5NNx1g/97D9yVKPwhGLAqvoiqgGPtzmieBA4Q398xvmVGxdCe4/tIos7Uld0jWVGTC5nqu7pvhe92RaU4Ag/7VADnDML37gde9qmZtBQDFNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742401381; c=relaxed/simple;
-	bh=iHIqJYLkK9BQSabqoYL+rnhGusscRAiHOJAuHss1rpw=;
+	s=arc-20240116; t=1742401393; c=relaxed/simple;
+	bh=SFwRnGrXO5KGgMQycikweYX/ll3TkCBZ9K24iTTaav4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hE2CkWMIEPIhkBfuJ7001/TuLNUrrlUksYh79ZwWbFlZuwtuC47ygDpfUqZBo64eluzSd9h4MyDWDo4waoYoYsytT+Sb5ohYh2PiLrOKZGLD8JHSG5x8BJLuYnqUb5nd8SHT1v11ac0rgSBlH1i/o+a1N+UvacfxRA0r1Ju5MzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Q3RvGWYs; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=jTxmVZbyh7inUA6x6yDnp0i3R7dbQEuxcmKzdDRbPTHFBxiEX5EHY3+L1lp/ep6Q+NEbrd/LwHXgUjGYuB12HyRWbtw3ybeIlJsbe6n7q1quLTh16M9BcXeKyVomhC93OT7ma26+sQP6DD8Xi98I95FFHUU0eX3HJxy+50Stgpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=M/RWn2nT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Cy2K5V8A; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=L6dQW+WE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XWsEXVVg; arc=none smtp.client-ip=195.135.223.130
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q3RvGWYs"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742401380; x=1773937380;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=iHIqJYLkK9BQSabqoYL+rnhGusscRAiHOJAuHss1rpw=;
-  b=Q3RvGWYs5dyEMmbWkEhz7VB+ekngt+pyaXt6lB0ajJnKiNyDFsdQ7DPD
-   e8n3JMatyvp00do8n5KzYyAKufuYSWzi7gdwVadQxa5Jj81o1xvY1gGcU
-   4Osa9Mln2GryE5OiU7XKNkE/o/VHK657ilJQftQt6xN+KfH70MwuJe7Sj
-   QuNbtJPC9JMcn3nRn1lMmcWdIilotLFs+OGuKt1fU2Dh3AjVSO40oT7/b
-   tkhkZaCJaeMm2ncbZQ0NbytGg501dEqQjLaLY6gjWav53dJ3lGW0rL3+W
-   w7zu7xtDXZfDkcW8arFyCpyjnpgx4K7SB+Woo/HO07TU++saMAyCgnHlb
-   g==;
-X-CSE-ConnectionGUID: DzaUMRsTS7KizNck39E/wA==
-X-CSE-MsgGUID: DSFERfr8ThGUztdES/562g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43706740"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="43706740"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 09:22:59 -0700
-X-CSE-ConnectionGUID: f6Se1N2cSmGnWOKmbjot4g==
-X-CSE-MsgGUID: YOUeaOX4RA6fuvBBn2aMTg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="123174041"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa010.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 09:22:57 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tuwBy-00000003zXS-1rOo;
-	Wed, 19 Mar 2025 18:22:54 +0200
-Date: Wed, 19 Mar 2025 18:22:54 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net v2 2/2] net: usb: asix: ax88772: Increase phy_name
- size
-Message-ID: <Z9rvXilnPCblbfIv@smile.fi.intel.com>
-References: <20250319105813.3102076-1-andriy.shevchenko@linux.intel.com>
- <20250319105813.3102076-3-andriy.shevchenko@linux.intel.com>
- <Z9rYHDL3dNbaK9jZ@shell.armlinux.org.uk>
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="M/RWn2nT";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Cy2K5V8A";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="L6dQW+WE";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XWsEXVVg"
+Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out1.suse.de (Postfix) with ESMTPS id 3FFE721C8A;
+	Wed, 19 Mar 2025 16:23:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742401390; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
+	b=M/RWn2nTT3NUwwjDt7NsEdewu7k2XXz+IkEa60bFFpjq0gDwYW9PmtoSRh22Fn+pY5G7/7
+	tWYrtDAjuit3vGYPxZz4TUeyL6zwzTRyRMGmBwB7CW3qA5qoG9vOL+7NAZQXE9gcG10YQN
+	Bf2no+RiVgjxYsE2pVFuABn+QM5GJhs=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742401390;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
+	b=Cy2K5V8Adi6q4EIc7S8AWir3R+uEzU/roFqxkH76WBcn47ydmpjoSew+oW9W42jK8w3l3R
+	LF00Ei+0B/yu3hDQ==
+Authentication-Results: smtp-out1.suse.de;
+	none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742401389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
+	b=L6dQW+WEaDkDbxs9I54eXReQ1/mtJskkRKHOpxvUosqhFiTqUl/SZb7JWCt4vRbjQEbBIr
+	3xpOPgpXjv2xNm4Ib5mJ+FFGOf4BfKq3MiCQ6rVEbDOxcXYI2Invv2pJD3BGJf2XnJ4pAp
+	n0yHeWfk29UQsr8FyF92PTlVjczrT9Q=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742401389;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
+	b=XWsEXVVgHQml7A4UbbuYpyhMJkgdVjBaNEsffH8T8jk9TAywyErjyzL2IaqlUzvT8kE/X7
+	yuKto5sLxOyLG7Dw==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 30DB413A2C;
+	Wed, 19 Mar 2025 16:23:09 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id AxOgC23v2mdAWwAAD6G6ig
+	(envelope-from <jack@suse.cz>); Wed, 19 Mar 2025 16:23:09 +0000
+Received: by quack3.suse.cz (Postfix, from userid 1000)
+	id D2C2BA08D2; Wed, 19 Mar 2025 17:23:08 +0100 (CET)
+Date: Wed, 19 Mar 2025 17:23:08 +0100
+From: Jan Kara <jack@suse.cz>
+To: Mateusz Guzik <mjguzik@gmail.com>
+Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
+	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] fs: predict not reaching the limit in alloc_empty_file()
+Message-ID: <5d6wy7gdbsk5tvusuwx3kkoc3474gjxpwq4hoc2c25jihuvlup@zb5mwj2rhnjd>
+References: <20250319124923.1838719-1-mjguzik@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9rYHDL3dNbaK9jZ@shell.armlinux.org.uk>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250319124923.1838719-1-mjguzik@gmail.com>
+X-Spam-Score: -3.80
+X-Spamd-Result: default: False [-3.80 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	NEURAL_HAM_LONG(-1.00)[-0.998];
+	MID_RHS_NOT_FQDN(0.50)[];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	ARC_NA(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_THREE(0.00)[3];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	RCVD_TLS_LAST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Mar 19, 2025 at 02:43:40PM +0000, Russell King (Oracle) wrote:
-> On Wed, Mar 19, 2025 at 12:54:34PM +0200, Andy Shevchenko wrote:
-
-> > GCC compiler (Debian 14.2.0-17) is not happy about printing
-> > into a short buffer (when build with `make W=1`):
-> > 
-> >  drivers/net/usb/ax88172a.c: In function ‘ax88172a_reset’:
-> >  include/linux/phy.h:312:20: error: ‘%s’ directive output may be truncated writing up to 60 bytes into a region of size 20 [-Werror=format-truncation=]
+On Wed 19-03-25 13:49:23, Mateusz Guzik wrote:
+> Eliminates a jump over a call to capable() in the common case.
 > 
-> GCC reckons this can be up to 60 bytes...
-
-It has two complains, but they a bit differ, first one was about %s, as you see
-above, the other one which I missed to add here is about %02x:
-
-drivers/net/usb/ax88172a.c:311:9: note: ‘snprintf’ output between 4 and 66 bytes into a destination of size 20
-
-...
-
-> > -	char phy_name[20];
-> > +	char phy_name[MII_BUS_ID_SIZE + 3];
+> By default the limit is not even set, in which case the check can't even
+> fail to begin with. It remains unset at least on Debian and Ubuntu.
+> For this cases this can probably become a static branch instead.
 > 
-> MII_BUS_ID_SIZE is sized to 61, and is what is used in struct
-> mii_bus::id. Why there a +3 here, which seems like a random constant to
-> make it 64-bit aligned in size. If we have need to increase
-> MII_BUS_ID_SIZE in the future, this kind of alignment then goes
-> wrong...
+> In the meantime tidy it up.
 > 
-> If the intention is to align it to 64-bit then there's surely a better
-> and future-proof ways to do that.
-
-Nope, intention is to cover the rest after %s.
-
-...
-
-> I'm also surprised that the +3 randomness wasn't described in the
-> commit message.
-
-It was referred in the cover letter and previous discussion, but I agree that
-it has to be clarified here, it's ':%02x', the %s case, i.e. MII_BUS_ID_SIZE
-covers 60 characters + NUL.
-
-...
-
-> > +	if (ret >= PHY_MAX_ADDR) {
-> > +		netdev_err(dev->net, "Invalid PHY ID %x\n", ret);
+> I note the check separate from the bump makes the entire thing racy.
 > 
-> An address is not a "PHY ID". "Invalid PHY address %d\n" probably makes
-> more sense, but if you want to keep the hex, then it really should be
-> %#x or 0x%x to make it clear that e.g. "20" is hex and not decimal.
+> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
 
-Sure, I fix it locally, but we need to understand how to go with the
-+3/+whatever fix, so format specifier won't hit us back.
+Looks good. Feel free to add:
 
-...
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Thank you for the review!
+								Honza
 
+> ---
+>  fs/file_table.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/file_table.c b/fs/file_table.c
+> index 5b4cc9da1344..c04ed94cdc4b 100644
+> --- a/fs/file_table.c
+> +++ b/fs/file_table.c
+> @@ -221,7 +221,8 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
+>  	/*
+>  	 * Privileged users can go above max_files
+>  	 */
+> -	if (get_nr_files() >= files_stat.max_files && !capable(CAP_SYS_ADMIN)) {
+> +	if (unlikely(get_nr_files() >= files_stat.max_files) &&
+> +	    !capable(CAP_SYS_ADMIN)) {
+>  		/*
+>  		 * percpu_counters are inaccurate.  Do an expensive check before
+>  		 * we go and fail.
+> -- 
+> 2.43.0
+> 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
