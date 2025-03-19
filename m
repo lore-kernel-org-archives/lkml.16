@@ -1,89 +1,135 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6E851D63CD
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:39:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C87620D4F6
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:40:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742384369; cv=none; b=Fg/DyEXvAzxXsD02x7xnQVayZYivmep7TxglhuAULWCZKbnxg2/C8xeU6/0/4jbOLYLFVYu2qX3gGF1/sctY3y5XZv+fzW1G0ulmY9XeYBGl2GmbealFwy5cldUnc0jcqB5BmkdNTvxH7FI9AW4wIKfl+8Xd4JJ6TO4IU/2BGH0=
+	t=1742384430; cv=none; b=B06f82Ou7OrhSbtf7xmE6O5l9+bOs6p4SeDL3C8wp8CMk6mlNm8RQpNS38VS49ABXU45uRGxSso6NPffyW0aDpW3m55XT0I//gW0una5+45+NrjgOJ3rQibnsZJRHZXyINoozUOx4ABshfPwEaZwjfiujtIytUez1CkEiVaJ01Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742384369; c=relaxed/simple;
-	bh=F0pFZ9igkUZ+KSEqHj+9N5X7cF/VPtyb0skN2IwYkyI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=c+TXTMPHQul0LHtgs4XCGy6gbUgSylvGu+QVo3b8LwhX7hlckjKb50egPLjGqeFS2NH6iKi/Z67Sua+ShjG3Ht/ka4haNBJc/CzsUmr9+wzXEyo5E9RAWobYRlY0DA7pEI1XdJQvrt9v+CD+wCQQ+2vwfGKj0Wi4n22C0HV3kWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CC4E113E;
-	Wed, 19 Mar 2025 04:39:35 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8329F3F673;
-	Wed, 19 Mar 2025 04:39:25 -0700 (PDT)
-Date: Wed, 19 Mar 2025 11:39:22 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Miaoqian Lin <linmq006@gmail.com>, Gavin Shan <gshan@redhat.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Will Deacon <will@kernel.org>, Hanjun Guo <guohanjun@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	<linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] firmware: psci: Fix refcount leak in psci_dt_init
-Message-ID: <Z9qs6r_eaQ0qLx9B@bogus>
-References: <20250318151712.28763-1-linmq006@gmail.com>
- <28cb8360-7fb0-46f0-b05f-5114f1974cf3@redhat.com>
- <Z9qgmTbeLh0cCULw@bogus>
- <Z9qmglbXw0xILaet@J2N7QTR9R3>
+	s=arc-20240116; t=1742384430; c=relaxed/simple;
+	bh=Z7OKUwlor6Y9CPPSkGccOzDohs/lbs3P6mrHMhcYAUM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=thzd6aS66ev3FkcHtMU/pSzqO0gJuuR5wBxewD1Xkl+WSNaDIoglLj3fmDwpYmM+DdzvKX5qKoKuo144wASBEjNLd2m6OFMSiT9tlQOi5PQJ3oZFNpbufEeQPVd2HVhQrSpdbf+zu1TnB8iwp/ApupRskpMegnqwv+9X2hi30vU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WT8nvTEn; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WT8nvTEn"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf257158fso29751445e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:40:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742384425; x=1742989225; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=iEGmhoMrp6tKSJUS9RACSKaL0Pf/gr6G5NruMelMYn4=;
+        b=WT8nvTEnMDF9DrH2snseexcEhWibpZJoIDjVVpVTUG6SkYotLedk41by5WfmF/Q5b3
+         immeZAi6epe0b0FJVxEZ7oIwvs6ekaSYFk8oqqfDxVQ2SFEQTUKvlLm4YfVPHaBQMh10
+         rR/Bf81mnQjlB46Po0oqmD+hkBPF68XpNaZo16zPMtVlZvpwlkoevsPnRsUH5T2VKgAR
+         0v1+ToM4+Zo58iTFULN97AWoLD9P2f3KsN+bc6bI139HHw/Pc4ttsxK/YoeMlIEUnJ2W
+         WlLs/iwpAtdNgMbq+bW3xZZSPbkOJW6R4p6BxEHIjBsIF5Lssm0qK0uptQaCNbJGOy1K
+         /MPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742384425; x=1742989225;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=iEGmhoMrp6tKSJUS9RACSKaL0Pf/gr6G5NruMelMYn4=;
+        b=rPZ9zyAIr7dwo7wqTfsOhoL3rTBkGQqKpZLPePKDgaZogeX6vRTMHkpZ6Mv1M7iHu3
+         iM08dRqgXQwKdn2wh039m6iA4nN3PINNXilHq5kyPahFRQ6VxA3UAOTK4UvlRHcTsgjq
+         UOI2xxVDmttCBKgfK0+dq5f8rNAl17MZzUd2XABGbA31zK9wCXgmWkx0LsbpVnUqiH3y
+         oYO6H3+IHl/423XzvmlvfDM+K4vTwjyTFz54VmeDrMd5wPhG2dOV/QSDryl6gn4Ho3FL
+         hZISKhNGnq5lYgFPs0pCqj42rblmLglFz5e/eTKCwJn33O4a4MysbLwSJabmztpZhB4a
+         xjkg==
+X-Forwarded-Encrypted: i=1; AJvYcCW3lo3I8AfwVoIV8eemgWi5GrGwL5miY3lgz9dBnc2KbgnXliporw076CqF5IiGxY4jb5lC6lPx5+vTmr4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxXw9yC+ZN5KMKmIOl5pDmUjrAa0/d4BA8D5rqcqR+Qacdem3Bk
+	mfyr7gBNeRH02skO1sX/yZxETCOqiYPf/cnQadhp1jzrn33ddJ5BXxgnOmnJQ2k=
+X-Gm-Gg: ASbGncvRhAhh/NlDtwxsiqZhTTQhV84d9oGLYYxXUUBFaK/7H+xQ6j2ulyRVsWm3T06
+	Bbc82eFZtSE2eGMRLgzs4pF+Pc5aKd6SDfWWMyqeDWHBL8xPOcAhuJr4tguo9NMzqmKMk9sxivw
+	qMeSVxWdQiYHaGdywL6w/jbbSwXyelCY7Znq1rYcDBgZE/HWYenhMddp5oRsf1pYFUAAYP+4sAq
+	12p0yeOKl+wu0/B5pEz9IGpq67BIzMmtFvUDHJSmtBijFSuyAW8ew5wAkAKgN9qQZdQGVQ/48n2
+	0wXNBkdezXPWzOSrI+T0jHSTv6QS37WYn4gZhnBcwuW5npA=
+X-Google-Smtp-Source: AGHT+IHErJqbLloSDBbOuIMsGZc52pXdp8yVfNacWZgluboER0gYnZa1nw5E4AGXF/1lLUTa3d8FAw==
+X-Received: by 2002:a05:600c:358c:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-43d437c1a31mr21789045e9.14.1742384425235;
+        Wed, 19 Mar 2025 04:40:25 -0700 (PDT)
+Received: from pop-os.lan ([145.224.67.123])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f58aa0sm16163745e9.21.2025.03.19.04.40.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 04:40:24 -0700 (PDT)
+From: James Clark <james.clark@linaro.org>
+To: linux-perf-users@vger.kernel.org
+Cc: James Clark <james.clark@linaro.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] libperf: Don't remove -g when EXTRA_CFLAGS are used
+Date: Wed, 19 Mar 2025 11:40:09 +0000
+Message-Id: <20250319114009.417865-1-james.clark@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9qmglbXw0xILaet@J2N7QTR9R3>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 19, 2025 at 11:12:02AM +0000, Mark Rutland wrote:
-> On Wed, Mar 19, 2025 at 10:46:49AM +0000, Sudeep Holla wrote:
-> > On Wed, Mar 19, 2025 at 08:28:38PM +1000, Gavin Shan wrote:
-> 
-> > Any reason why we can't move to the new scoped usage like below?
-> 
-> > diff --git i/drivers/firmware/psci/psci.c w/drivers/firmware/psci/psci.c
-> > index a1ebbe9b73b1..a4269078b2a2 100644
-> > --- i/drivers/firmware/psci/psci.c
-> > +++ w/drivers/firmware/psci/psci.c
-> > @@ -797,12 +797,11 @@ static const struct of_device_id psci_of_match[] __initconst = {
-> > 
-> >  int __init psci_dt_init(void)
-> >  {
-> > -       struct device_node *np;
-> >         const struct of_device_id *matched_np;
-> >         psci_initcall_t init_fn;
-> >         int ret;
-> > -
-> > -       np = of_find_matching_node_and_match(NULL, psci_of_match, &matched_np);
-> > +       struct device_node *np __free(device_node) =
-> > +               of_find_matching_node_and_match(NULL, psci_of_match, &matched_np);
-> > 
-> >         if (!np || !of_device_is_available(np))
-> >                 return -ENODEV;
-> > @@ -810,7 +809,6 @@ int __init psci_dt_init(void)
-> >         init_fn = (psci_initcall_t)matched_np->data;
-> >         ret = init_fn(np);
-> > 
-> > -       of_node_put(np);
-> >         return ret;
-> >  }
-> 
-> IIUC the bug has existed since before the scoped helpers were
-> introduced, so for the sake of keeping the backport simple I reckon we
-> should take Miaoqian Lin's patch as-is, and we can consider moving to
-> the scoped helpers as a later cleanup.
-> 
+When using EXTRA_CFLAGS, for example "EXTRA_CFLAGS=-DREFCNT_CHECKING=1",
+this construct stops setting -g which you'd expect would not be affected
+by adding extra flags. Additionally, EXTRA_CFLAGS should be the last
+thing to be appended so that it can be used to undo any defaults. And no
+condition is required, just += appends to any existing CFLAGS and also
+appends or doesn't append EXTRA_CFLAGS if they are or aren't set.
 
-Agreed.
+It's not clear why DEBUG=1 is required for -g in Perf when in libperf
+it's always on, but I don't think we need to change that behavior now
+because someone may be depending on it.
 
+Signed-off-by: James Clark <james.clark@linaro.org>
+---
+ tools/lib/perf/Makefile | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
+index 3a9b2140aa04..478fe57bf8ce 100644
+--- a/tools/lib/perf/Makefile
++++ b/tools/lib/perf/Makefile
+@@ -54,13 +54,6 @@ endif
+ 
+ TEST_ARGS := $(if $(V),-v)
+ 
+-# Set compile option CFLAGS
+-ifdef EXTRA_CFLAGS
+-  CFLAGS := $(EXTRA_CFLAGS)
+-else
+-  CFLAGS := -g -Wall
+-endif
+-
+ INCLUDES = \
+ -I$(srctree)/tools/lib/perf/include \
+ -I$(srctree)/tools/lib/ \
+@@ -70,11 +63,12 @@ INCLUDES = \
+ -I$(srctree)/tools/include/uapi
+ 
+ # Append required CFLAGS
+-override CFLAGS += $(EXTRA_WARNINGS)
+-override CFLAGS += -Werror -Wall
++override CFLAGS += -g -Werror -Wall
+ override CFLAGS += -fPIC
+ override CFLAGS += $(INCLUDES)
+ override CFLAGS += -fvisibility=hidden
++override CFLAGS += $(EXTRA_WARNINGS)
++override CFLAGS += $(EXTRA_CFLAGS)
+ 
+ all:
+ 
 -- 
-Regards,
-Sudeep
+2.34.1
+
