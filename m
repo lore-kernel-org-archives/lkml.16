@@ -1,124 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC09D253352;
-	Wed, 19 Mar 2025 10:35:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7632512F5;
+	Wed, 19 Mar 2025 10:35:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742380528; cv=none; b=SJ7Kvm5I1OfeZFcd2mSLt+tQ/rU1Eg5ZJQAdm9DniWSIJKTuyjp3WG/TMw1XnLVsYr4VcsrEQAs9WBRZUSodnazRcvOzbssYfY+sXOBJx1mv6M3uu2dFs4JsLdDyJqr0s5TO61HtYJFcA5Cice4EmvMV+7drpfD+YuU+CxoZs/k=
+	t=1742380549; cv=none; b=o+BjsiZdDuVnDNxVDqW3QLmXvRWNWZvkx2Sl8UIldLA4Fqm8oafzJplne4TDPtzICtqEPBb/9Jx3FYjm1BPUSSKKlkAibbZkbanvw0NLZOkfsB6G9Mh0prvDDaWNyl0GTgYec3TtIaiFBK45Z552ZLeg0kyGPf850qrrdj+hNXQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742380528; c=relaxed/simple;
-	bh=bkb2aj+ND5fVbPnCKkskLmtkIcJtDAREoubFFIC7OjM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AhOE71uoc05ItHB4iLTdRM665Vz0AjLELOOVQGhhmKnRPnxFAwgFBnud70OYfXfnqwHqXC6LnfAZBdbp3z/imeBlQySmvzKYDX6iaNB5zIm9L0p6WVQLpUIboLgT5cq2VvThLXBszdrOUXpOFaAGKXFIJBYfVdeUM/t8sFvO/lU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=NRFr29Lh; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742380549; c=relaxed/simple;
+	bh=RqFuZz63Z0ImK/Xp33t4bPUN4JwD2jEIzeGx3AgsiHM=;
+	h=Message-ID:Subject:From:To:CC:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=IUs9qIhKAPfoIdtM5NiA8tTRlvslr4Gr1B9I2o9j/hjcVmNavAAzfcyjbYk3TcC0lZ/khxg7AYadZ73i99wN4KMU/G9G/Mlfw+5xlkyniYK2UfMQ5cCKMXUQGuNtcbEBi58wKN0sM71jIqT08KhVNxwTLR5gc14FCLWPCOQfFS0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=5aReOAGq; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NRFr29Lh"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742380527; x=1773916527;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bkb2aj+ND5fVbPnCKkskLmtkIcJtDAREoubFFIC7OjM=;
-  b=NRFr29LhLkiVrsJmm5UP0jTuNzmuYl0BgDE5WnplT+6zZMsWw+Zgq9Si
-   cbtMsFADx03KJuRVf3BTckmH8Txf4eLtt5cTdyx3SrckXhpm9JrwxgXYc
-   B/NRWXqTi7uLabfE8n/CQK5rDQJqGzgbq6X9my4qdz44L+MC+Xu8EsmyI
-   X2Sj53M7imvJq0XMirlyKcHc7k/cLD+m82sKsj/YuzmFmNn6fXokjeINk
-   lcw02t11ynQLubXzP0fo91HD8vd6CHIhY4xxeKGjmJ0weQRHTFb4Ksl/y
-   ARkpKA7gtUz2xXvUqsSmkPCSWxnr3G87z5rRh8dDMU4AHhgXkYmR8ihj7
-   w==;
-X-CSE-ConnectionGUID: wyC+1B9uSby7zZ2mxwvZew==
-X-CSE-MsgGUID: YOBV8RoZTF25jy6rFJkYjg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="54232793"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="54232793"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 03:35:26 -0700
-X-CSE-ConnectionGUID: d0W5vS45RIOvYcKW4YxbiQ==
-X-CSE-MsgGUID: oPJRO9ezR1KCXX9CLxG3rA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="126770318"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 03:35:24 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tuqld-00000003tIn-0VmX;
-	Wed, 19 Mar 2025 12:35:21 +0200
-Date: Wed, 19 Mar 2025 12:35:20 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH net v1 1/1] net: usb: asix: ax88772: Increase phy_name
- size
-Message-ID: <Z9qd6HfmfE18Clxv@smile.fi.intel.com>
-References: <20250318161702.2982063-1-andriy.shevchenko@linux.intel.com>
- <481268aa-c8e9-4475-bd5c-8d0f82a6652a@lunn.ch>
- <Z9mlWNdvWXohc6aM@smile.fi.intel.com>
- <f9640312-3641-4f32-9803-a76b2b010d7d@lunn.ch>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="5aReOAGq"
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J9SO6l032495;
+	Wed, 19 Mar 2025 11:34:42 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	RqFuZz63Z0ImK/Xp33t4bPUN4JwD2jEIzeGx3AgsiHM=; b=5aReOAGqEuu0So7V
+	SAQzjUOWvtgN07YbhV4I9rLlny5ac/TtdSBkjJViXoWFM4Xvm2910RucXUqBWhZk
+	y0VyK6eV0mf04Z1NXvxLMPKvAxcs7O1yhwPZqZvMq8x92ZH9VVDo+AgEHqcXrFb1
+	uVGlqleuj4OETGz5lP4qt76Cr/iVvd+aHseLrDiVmRTfyTL7ZVdiTlpo8p5Xiefr
+	VGloWHc74hbhblyU2dvkdyUE9t2sCMj52XHIANWQxWs7x0R1b00yx8M071qlacwU
+	EtsLIM7e/npVQvCgpG5vjz7sh7KcAPj/1jPwx8OQKjBu49e7Zxfal8Yhok/6Yt4e
+	c3MeLg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45fuaw0ccb-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 11:34:42 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id E486440048;
+	Wed, 19 Mar 2025 11:31:37 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 068276C8A18;
+	Wed, 19 Mar 2025 11:29:14 +0100 (CET)
+Received: from [192.168.8.15] (10.48.86.14) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Mar
+ 2025 11:29:12 +0100
+Message-ID: <45d5baa5a93fec388a75e91653439f7678d000ee.camel@foss.st.com>
+Subject: Re: [Linux-stm32] [PATCH v2 06/57] irqdomain: irqchip: Switch to
+ of_fwnode_handle()
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, <tglx@linutronix.de>
+CC: Nishanth Menon <nm@ti.com>, Andrew Lunn <andrew@lunn.ch>,
+        Herve Codina
+	<herve.codina@bootlin.com>,
+        Kunihiko Hayashi
+	<hayashi.kunihiko@socionext.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>, <linux-mips@vger.kernel.org>,
+        "WANG
+ Xuerui" <kernel@xen0n.name>, <linux-riscv@lists.infradead.org>,
+        "Alyssa
+ Rosenzweig" <alyssa@rosenzweig.io>,
+        Jerome Brunet <jbrunet@baylibre.com>, Alexandre Ghiti <alex@ghiti.fr>,
+        <asahi@lists.linux.dev>, <maz@kernel.org>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Huacai Chen
+	<chenhuacai@kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "Janne
+ Grunau" <j@jannau.net>, Kevin Hilman <khilman@baylibre.com>,
+        "Sebastian
+ Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+        Albert Ou
+	<aou@eecs.berkeley.edu>, Sven Peter <sven@svenpeter.dev>,
+        "Martin
+ Blumenstingl" <martin.blumenstingl@googlemail.com>,
+        <loongarch@lists.linux.dev>, Paul Walmsley <paul.walmsley@sifive.com>,
+        <linux-amlogic@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        Neil Armstrong <neil.armstrong@linaro.org>,
+        Tero Kristo <kristo@kernel.org>, Linus Walleij <linusw@kernel.org>,
+        <linux-kernel@vger.kernel.org>, Palmer
+ Dabbelt <palmer@dabbelt.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Anup Patel
+	<anup@brainfault.org>, Imre Kaloz <kaloz@openwrt.org>,
+        Antoine Tenart
+	<atenart@kernel.org>
+Date: Wed, 19 Mar 2025 11:29:10 +0100
+In-Reply-To: <20250319092951.37667-7-jirislaby@kernel.org>
+References: <20250319092951.37667-1-jirislaby@kernel.org>
+	 <20250319092951.37667-7-jirislaby@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9640312-3641-4f32-9803-a76b2b010d7d@lunn.ch>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_03,2025-03-19_01,2024-11-22_01
 
-On Tue, Mar 18, 2025 at 06:09:12PM +0100, Andrew Lunn wrote:
-> On Tue, Mar 18, 2025 at 06:54:48PM +0200, Andy Shevchenko wrote:
-> > On Tue, Mar 18, 2025 at 05:49:05PM +0100, Andrew Lunn wrote:
+On Wed, 2025-03-19 at 10:28 +0100, Jiri Slaby (SUSE) wrote:
+> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+> defined of_fwnode_handle(). The former is in the process of being
+> removed, so use the latter instead.
+>=20
 
-...
+... snip ...
 
-> > > > -	char phy_name[20];
-> > > > +	char phy_name[MII_BUS_ID_SIZE + 5];
-> > > 
-> > > Could you explain the + 5?
-> > > 
-> > > https://elixir.bootlin.com/linux/v6.13.7/source/drivers/net/ethernet/davicom/dm9051.c#L1156
-> > > https://elixir.bootlin.com/linux/v6.13.7/source/drivers/net/ethernet/freescale/fec_main.c#L2454
-> > > https://elixir.bootlin.com/linux/v6.13.7/source/drivers/net/ethernet/xilinx/ll_temac.h#L348
-> > > 
-> > > The consensus seems to be + 3.
+> diff --git a/drivers/irqchip/irq-stm32mp-exti.c b/drivers/irqchip/irq-stm=
+32mp-exti.c
+> index cb83d6cc6113..649b84f12efc 100644
+> --- a/drivers/irqchip/irq-stm32mp-exti.c
+> +++ b/drivers/irqchip/irq-stm32mp-exti.c
+> @@ -531,7 +531,7 @@ static int stm32mp_exti_domain_alloc(struct irq_domai=
+n *dm,
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret=
+urn ret;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0/* we only support one parent, so far */
+> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0if (of_node_to_fwnode(out_irq.np) !=3D dm->parent->fwnode=
+)
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0if (of_fwnode_handle(out_irq.np) !=3D dm->parent->fwnode)
+>=20
 
-And shouldn't it be 4 actually? %s [MII_BUS_ID_SIZE] + ':' + '%02x' + nul
-
-> > u16, gcc can't proove the range, it assumes 65536 is the maximum.
-> > 
-> > include/linux/phy.h:312:20: note: directive argument in the range [0, 65535]
-> 
-> How about after
-> 
->         ret = asix_read_phy_addr(dev, priv->use_embdphy);
-> 	if (ret < 0)
-> 		goto free;
-> 
-> add
-> 
->         if (ret > 31) {
-> 	        netdev_err(dev->net, "Invalid PHY ID %d\n", ret);
-> 	        return -ENODEV;
-> 	}
-> 
-> and see if GCC can follow that?
-
-No, with + 3 it doesn't work, need + 4.
-
-Another possibility to change the _FMT to have %02hhx instead of %02x.
-
-Tell me which one should I take?
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+For drivers/irqchip/irq-stm32mp-exti.c
+Reviewed-by: Antonio Borneo <antonio.borneo@foss.st.com>
