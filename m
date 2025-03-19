@@ -1,56 +1,56 @@
-Received: from fout-b4-smtp.messagingengine.com (fout-b4-smtp.messagingengine.com [202.12.124.147])
+Received: from fhigh-b4-smtp.messagingengine.com (fhigh-b4-smtp.messagingengine.com [202.12.124.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24F1424EF77;
-	Wed, 19 Mar 2025 06:58:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.147
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06C32500AA;
+	Wed, 19 Mar 2025 06:58:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742367527; cv=none; b=gPOaCidwbKbztfasfMhXmmrYYCuBzQRAf7JdWMTTkn6GykqRLEAC6ukABOfmnK2kK7nIeQOP//0O8F1I05iS7FpSd2S7ISuiWLnZiaITf+ntyZ8jXQTdTKVe+mhZVNdSiwjpAH5G5k6/63a6QkJaB3TY51aYn+Y/MdkCjzbx/yU=
+	t=1742367536; cv=none; b=IKbl91C/lq+G4G2sIt0tyHNWMDOq1Kv+GjOfBek13C9ngGv/cjdrPhZH7qcWoZlWNe6M/ymYDRo3hkybLnEVOXntFPqGoL5eKZPZBmoPsKbPjLZ8e0S3DYfOkrnQYaFRGu8T1wiCoYTAmystyHBAyqpt7WdeNxVOmhzW6rg6OTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742367527; c=relaxed/simple;
-	bh=t3hdt5uXEx9dxL3lKnsKjczVJtdf7kTGQr3g0tIWQOo=;
+	s=arc-20240116; t=1742367536; c=relaxed/simple;
+	bh=aR2zYvaQXqpxOnyLEiuwxLAn413F0ZcUMOaeSNcsDWI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ngXE+i/j/atJKzWmZS+iNLysH7rToLdSZJyz5iK8K8Ysouf7D2hejT/Z0fi7+UYMFlchByaCKEXL0Y9ZKp08WMyoBy4zmJ2335TasjjcxBWQABAfG0LHYL953JmzWIja8wwXLspHhcfd/QH1YyCPN99XaVXI6LoziKAst33KPqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=iKb5qD+q; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=WxRzi32D; arc=none smtp.client-ip=202.12.124.147
+	 MIME-Version; b=jPIOwrl+1WuHbkk0rxjrTXx2/6jykJ8EnvRxTodGzz+T0dxdp1IcqmtJC0yX70Gpw6jAhP0BqhkViME0GmEv7Uk+k9+VhszLSEOCnxj0u4yyHv7STqSA0LChX/HA/aljSm9MjxRYTXlUCXfTbGu7SfRYiENt9BTKs2PaEkUUD2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=ZQfwHiqo; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=LK6anj9w; arc=none smtp.client-ip=202.12.124.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="iKb5qD+q";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="WxRzi32D"
-Received: from phl-compute-12.internal (phl-compute-12.phl.internal [10.202.2.52])
-	by mailfout.stl.internal (Postfix) with ESMTP id B4FAB11400BF;
-	Wed, 19 Mar 2025 02:58:43 -0400 (EDT)
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="ZQfwHiqo";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="LK6anj9w"
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5448225401E0;
+	Wed, 19 Mar 2025 02:58:53 -0400 (EDT)
 Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-12.internal (MEProxy); Wed, 19 Mar 2025 02:58:43 -0400
+  by phl-compute-09.internal (MEProxy); Wed, 19 Mar 2025 02:58:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
 	:cc:content-transfer-encoding:content-type:date:date:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
-	:reply-to:subject:subject:to:to; s=fm3; t=1742367523; x=
-	1742453923; bh=Rtjh6ZRlRVNYPddesNT8V4uwDysytInj1MX69Xl/58A=; b=i
-	Kb5qD+qIlbnDhCwO6zQJoYk8hLoUQ1qp2UFmjawWujtQIoV+jnX6eARwghmkG7r/
-	W4TZKSH8csTQEsmRh6SUaGgX3iLcf2bkdgDsUvRSkk/sfuuExe/qQj1+YVtG3Wn0
-	lhC02ZMlUxjgIj5ClbC9PRXYNSMWx81zTGRnIC6VTm1sGuSTpo5/FBzqKDlWmlwB
-	0sEQqLtSGe4s0UgvhPUc0R0R+1nQ0uIZXccVjTvvHE1B1fEkyggaUREVwiXU1hgC
-	dqFdUKaiZ3qRmneqeox5juYUb0mGCYgPuSGAE0Ihl4MUgP+LquL4/REoiADj3wes
-	62sv9lcbccbfuwBXvuq7g==
+	:reply-to:subject:subject:to:to; s=fm3; t=1742367533; x=
+	1742453933; bh=abevE0WblE7j91jRDtOReuTE06tVsYogaN7+ZpuJnzE=; b=Z
+	QfwHiqoDTDKICiiFRsHih9wjE8nnxQZ20RJytQxse5pJmt+3sdFysygD6evfCVIF
+	PksNQ51Zfg6hOVEC89eSRQ7Bz+p2vuNJ/MWqzANkxN0uty5CV41hHV1BgpkEiOlX
+	qq4cMLLLxJWmmt9YlXqtB87kd9UHk9ij3rzzEeyu3ujFsXywngZ2I8oegMhMrfL1
+	AUHRnjI8C6Fg4ONwYaryrJoAtHsM92RCs5brVWtVCoqIt91qTs9yFR+WvOzKggJk
+	qJmqYFj8znxD5KtrXylzD9e5yvd3KKYas8e6KQ6AetTgFhH4Xqwc3+YIgYCwnm95
+	o2azF2QxvQxnGXf8nXQLg==
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
 	messagingengine.com; h=cc:cc:content-transfer-encoding
 	:content-type:date:date:feedback-id:feedback-id:from:from
 	:in-reply-to:in-reply-to:message-id:mime-version:references
 	:reply-to:subject:subject:to:to:x-me-proxy:x-me-sender
-	:x-me-sender:x-sasl-enc; s=fm1; t=1742367523; x=1742453923; bh=R
-	tjh6ZRlRVNYPddesNT8V4uwDysytInj1MX69Xl/58A=; b=WxRzi32DkDJPX4trp
-	mU8FQwy/ziPZN+9f5xJXzQCwgimq1ARGvnJ2PoORp9ne9PQZgJII7j9Oxj51XCE7
-	rm9z2wnVQzY1/1xOah4Js8r06MbABRX4MSGAUER5sfN+A07cZpVsULV+7KvSu3/U
-	zg1zRYRsafFt1W44Z7MQFPqjnZroGP0zw/wb8WzXao9dFqJ0hiYfOLqMhkQVWklg
-	ps1h+7ptWUHN4bx1yaowABKzRfz4wPNuEg44ycIANCsIAhamWOpyFjkP+nlh6/C+
-	GD45q3XnAdC2hbzheWlNd9YFLMeXjMApecFsjFlmmm//c4NMGSBuR9b9aE7mSAVn
-	VUdbw==
-X-ME-Sender: <xms:ImvaZ2ol4VQ1BceljSmvUGAlOUo9dmnaB3Q8j1EOui1dwmcyM-9TxQ>
-    <xme:ImvaZ0pGKB0aQ10dxQ-MnyyqWxtYEMiXCwE77CqbdBfmZI3v9WlMgWIwLiHylT5E1
-    ZxR0XK5Iv5qtgxnz88>
-X-ME-Received: <xmr:ImvaZ7PB5Ijsn-zUdK0zMwpfdf3BCtCt__PUiQdWE9oTbfTqN4Gs0zQHO17WcdJ3K6bM5vz83Ylo-XCkzA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeegieejucetufdoteggodetrf
+	:x-me-sender:x-sasl-enc; s=fm1; t=1742367533; x=1742453933; bh=a
+	bevE0WblE7j91jRDtOReuTE06tVsYogaN7+ZpuJnzE=; b=LK6anj9wAHCZ4IwfO
+	9KgpTS8EBGtIGCkrQqz+wdg1NlTubTqE3B6MLOy4VNPffsws2BEQGK1KuyfC86XN
+	RP6z3FjClBNtUAoQL7Zwqn7NbL8d7J9ChIFOQS7KMlbjrMhjG5a6GON1ma2Tw7OS
+	Vvq/tne+jFusP0rp+hg5ts6KGD7Zn69z8hfbGapXQRsACmBfnrroJi2Ra3gMCoLV
+	7tQg/tk4VfvhRBouSLyfMWRHFxuZ6MmmZCOiWlCYaAfGmRmabr1cm5Gbt3CfuHKx
+	0E/XqdLvifvzdOaomJoHPTX9Uv4wpBsZJjfEE0OMUjidHBE1lssHELVdcdBUeRDG
+	1NuHg==
+X-ME-Sender: <xms:LWvaZ3rqUnCoSOmxN4_w5NObYcD_85xFxMcJrLHg61rU5cpGD8wqDw>
+    <xme:LWvaZxqOZY7-_5yZuoF_v9KV-1Q870oVbRoVit4DmaDyAPnUgvJalRCSxdTHSrkrb
+    QQFuSPWP8j9wdm-96Y>
+X-ME-Received: <xmr:LWvaZ0M1QWI9cVDpp9SiF0yVt3Zc5ucr6_aRjULD_JwqLO4NVVUvHEwPaWmuJV-Pwjjzo08MPff3JPXf9w>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeegieekucetufdoteggodetrf
     dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
     pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
     gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgjfhgggfestdekredtredt
@@ -65,14 +65,14 @@ X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeegieejucetufdote
     vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmohhntg
     hivghllhhosegrmhgurdgtohhmpdhrtghpthhtoheplhhukhgvsehljhhonhgvshdruggv
     vh
-X-ME-Proxy: <xmx:ImvaZ163VN-9Cqi-JP3BXdmMrz20fRVBd9oXuZdoROPX2dRcFAodNw>
-    <xmx:ImvaZ15LvP7XxLMPqiKhdTZjuzb7ITmeboR5G0F11ztuTFdXTxgp2Q>
-    <xmx:ImvaZ1gncSGCM97zxPlBSU8b32WYMM34fJi0FIsxOGPfK3TDaV1lBg>
-    <xmx:ImvaZ_5hRO5p4YqT-nxpZg8GgZdZq_oAHWRxmZ6i5ZOujVNxC3aiQA>
-    <xmx:I2vaZzTqWjo7RBO8cLzcONIvwixAc6UD1qwR-5myGd34hRefceK-tooW>
+X-ME-Proxy: <xmx:LWvaZ65LReS3T5xx3eKsQZDHglul2o7GX93vTjJNK58C617BPIpnMQ>
+    <xmx:LWvaZ25RK1hZ3OwfDmfSWqCeB6UTY6c_gYG5a69aIxixFfznqsnKlw>
+    <xmx:LWvaZygc6WuBQA2kGVZECNieEdgOR7OWAXYWu1yrSc7KSflRcT8FEQ>
+    <xmx:LWvaZ45-CnmPorK9NeGnxMWMzh9k205V9gWBLu3_luG7YHfcadyySg>
+    <xmx:LWvaZ4RNaJbNwRSMYAHm6uqf_RJn-kKZrfqN6xHhLzCpLu33tYO8k6Iu>
 Feedback-ID: i5ec1447f:Fastmail
 Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 19 Mar 2025 02:58:39 -0400 (EDT)
+ 19 Mar 2025 02:58:49 -0400 (EDT)
 From: Luke Jones <luke@ljones.dev>
 To: linux-kernel@vger.kernel.org
 Cc: hdegoede@redhat.com,
@@ -80,9 +80,9 @@ Cc: hdegoede@redhat.com,
 	platform-driver-x86@vger.kernel.org,
 	mario.limonciello@amd.com,
 	"Luke D. Jones" <luke@ljones.dev>
-Subject: [PATCH v8 1/8] platform/x86: asus-wmi: export symbols used for read/write WMI
-Date: Wed, 19 Mar 2025 19:58:20 +1300
-Message-ID: <20250319065827.53478-2-luke@ljones.dev>
+Subject: [PATCH v8 3/8] platform/x86: asus-armoury: add panel_hd_mode attribute
+Date: Wed, 19 Mar 2025 19:58:22 +1300
+Message-ID: <20250319065827.53478-4-luke@ljones.dev>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250319065827.53478-1-luke@ljones.dev>
 References: <20250319065827.53478-1-luke@ljones.dev>
@@ -96,117 +96,59 @@ Content-Transfer-Encoding: 8bit
 
 From: "Luke D. Jones" <luke@ljones.dev>
 
-Export symbols for read/write WMI symbols using a namespace.
-Existing functions:
-- asus_wmi_evaluate_method
-- asus_wmi_set_devstate
-New function:
-- asus_wmi_get_devstate_dsts
-
-The new function is inteded for use with DSTS WMI method only and
-avoids requiring the asus_wmi driver data to select the WMI method.
+Add panel_hd_mode to toggle the panel mode between single and high
+definition modes.
 
 Signed-off-by: Luke D. Jones <luke@ljones.dev>
 Reviewed-by: Mario Limonciello <mario.limonciello@amd.com>
 ---
- drivers/platform/x86/asus-wmi.c            | 45 ++++++++++++++++++++--
- include/linux/platform_data/x86/asus-wmi.h |  9 +++++
- 2 files changed, 51 insertions(+), 3 deletions(-)
+ drivers/platform/x86/asus-armoury.c        | 6 +++++-
+ include/linux/platform_data/x86/asus-wmi.h | 1 +
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
-index cbc64d3a22ad..2784b8e6514e 100644
---- a/drivers/platform/x86/asus-wmi.c
-+++ b/drivers/platform/x86/asus-wmi.c
-@@ -389,7 +389,7 @@ int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval)
+diff --git a/drivers/platform/x86/asus-armoury.c b/drivers/platform/x86/asus-armoury.c
+index 12acd851e6b2..a299471d78d5 100644
+--- a/drivers/platform/x86/asus-armoury.c
++++ b/drivers/platform/x86/asus-armoury.c
+@@ -86,7 +86,8 @@ static struct kobj_attribute pending_reboot = __ATTR_RO(pending_reboot);
+ 
+ static bool asus_bios_requires_reboot(struct kobj_attribute *attr)
  {
- 	return asus_wmi_evaluate_method3(method_id, arg0, arg1, 0, retval);
- }
--EXPORT_SYMBOL_GPL(asus_wmi_evaluate_method);
-+EXPORT_SYMBOL_NS_GPL(asus_wmi_evaluate_method, "ASUS_WMI");
- 
- static int asus_wmi_evaluate_method5(u32 method_id,
- 		u32 arg0, u32 arg1, u32 arg2, u32 arg3, u32 arg4, u32 *retval)
-@@ -553,12 +553,51 @@ static int asus_wmi_get_devstate(struct asus_wmi *asus, u32 dev_id, u32 *retval)
- 	return 0;
+-	return !strcmp(attr->attr.name, "gpu_mux_mode");
++	return !strcmp(attr->attr.name, "gpu_mux_mode") ||
++	       !strcmp(attr->attr.name, "panel_hd_mode");
  }
  
--int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param,
--				 u32 *retval)
-+
-+/**
-+ * asus_wmi_get_devstate_dsts() - Get the WMI function state.
-+ * @dev_id: The WMI method ID to call.
-+ * @retval: A pointer to where to store the value returned from WMI.
-+ *
-+ * On success the return value is 0, and the retval is a valid value returned
-+ * by the successful WMI function call otherwise an error is returned if the
-+ * call failed, or if the WMI method ID is unsupported.
-+ */
-+int asus_wmi_get_devstate_dsts(u32 dev_id, u32 *retval)
-+{
-+	int err;
-+
-+	err = asus_wmi_evaluate_method(ASUS_WMI_METHODID_DSTS, dev_id, 0, retval);
-+	if (err)
-+		return err;
-+
-+	if (*retval == ASUS_WMI_UNSUPPORTED_METHOD)
-+		return -ENODEV;
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_NS_GPL(asus_wmi_get_devstate_dsts, "ASUS_WMI");
-+
-+/**
-+ * asus_wmi_set_devstate() - Set the WMI function state.
-+ * @dev_id: The WMI function to call.
-+ * @ctrl_param: The argument to be used for this WMI function.
-+ * @retval: A pointer to where to store the value returned from WMI.
-+ *
-+ * The returned WMI function state if not checked here for error as
-+ * asus_wmi_set_devstate() is not called unless first paired with a call to
-+ * asus_wmi_get_devstate_dsts() to check that the WMI function is supported.
-+ *
-+ * On success the return value is 0, and the retval is a valid value returned
-+ * by the successful WMI function call. An error value is returned only if the
-+ * WMI function failed.
-+ */
-+int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval)
- {
- 	return asus_wmi_evaluate_method(ASUS_WMI_METHODID_DEVS, dev_id,
- 					ctrl_param, retval);
- }
-+EXPORT_SYMBOL_NS_GPL(asus_wmi_set_devstate, "ASUS_WMI");
+ static int armoury_wmi_set_devstate(struct kobj_attribute *attr, u32 value, u32 wmi_dev)
+@@ -397,6 +398,8 @@ ATTR_GROUP_BOOL_RW(mcu_powersave, "mcu_powersave", ASUS_WMI_DEVID_MCU_POWERSAVE,
+ 		   "Set MCU powersaving mode");
+ ATTR_GROUP_BOOL_RW(panel_od, "panel_overdrive", ASUS_WMI_DEVID_PANEL_OD,
+ 		   "Set the panel refresh overdrive");
++ATTR_GROUP_BOOL_RW(panel_hd_mode, "panel_hd_mode", ASUS_WMI_DEVID_PANEL_HD,
++		   "Set the panel HD mode to UHD<0> or FHD<1>");
+ ATTR_GROUP_BOOL_RO(egpu_connected, "egpu_connected", ASUS_WMI_DEVID_EGPU_CONNECTED,
+ 		   "Show the eGPU connection status");
  
- /* Helper for special devices with magic return codes */
- static int asus_wmi_get_devstate_bits(struct asus_wmi *asus,
+@@ -410,6 +413,7 @@ static const struct asus_attr_group armoury_attr_groups[] = {
+ 	{ &boot_sound_attr_group, ASUS_WMI_DEVID_BOOT_SOUND },
+ 	{ &mcu_powersave_attr_group, ASUS_WMI_DEVID_MCU_POWERSAVE },
+ 	{ &panel_od_attr_group, ASUS_WMI_DEVID_PANEL_OD },
++	{ &panel_hd_mode_attr_group, ASUS_WMI_DEVID_PANEL_HD },
+ };
+ 
+ static int asus_fw_attr_add(void)
 diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
-index a32cb8865b2f..96ff25b2b51b 100644
+index 4574e30c53fc..62a9adb1af2f 100644
 --- a/include/linux/platform_data/x86/asus-wmi.h
 +++ b/include/linux/platform_data/x86/asus-wmi.h
-@@ -160,6 +160,7 @@
- #if IS_REACHABLE(CONFIG_ASUS_WMI)
- void set_ally_mcu_hack(bool enabled);
- void set_ally_mcu_powersave(bool enabled);
-+int asus_wmi_get_devstate_dsts(u32 dev_id, u32 *retval);
- int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval);
- int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
- #else
-@@ -175,6 +176,14 @@ static inline int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval)
- {
- 	return -ENODEV;
- }
-+static inline int asus_wmi_get_devstate_dsts(u32 dev_id, u32 *retval)
-+{
-+	return -ENODEV;
-+}
-+static inline int asus_wmi_set_devstate(u32 dev_id, u32 ctrl_param, u32 *retval)
-+{
-+	return -ENODEV;
-+}
- static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
- 					   u32 *retval)
- {
+@@ -76,6 +76,7 @@
+ #define ASUS_WMI_DEVID_THROTTLE_THERMAL_POLICY_VIVO 0x00110019
+ 
+ /* Misc */
++#define ASUS_WMI_DEVID_PANEL_HD		0x0005001C
+ #define ASUS_WMI_DEVID_PANEL_OD		0x00050019
+ #define ASUS_WMI_DEVID_CAMERA		0x00060013
+ #define ASUS_WMI_DEVID_LID_FLIP		0x00060062
 -- 
 2.49.0
 
