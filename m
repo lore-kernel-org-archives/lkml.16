@@ -1,42 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 884BA25486D;
-	Wed, 19 Mar 2025 09:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB559254AF0;
+	Wed, 19 Mar 2025 09:31:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376717; cv=none; b=Ji6fmtOUEw8duLzH2s8eVwGCj0FxH0i5cTROTso2dtB1b2rM59TfE/bKhQaDbDQTjo2s1MU/K0YuwriVi12lxXTxuiLwu1iRShILnydZQKvTgFvlgcxeJgtc2vEEHZlwCSrxSR91jvdsYMLVah57H0mfQBgaNBbFSl0M4RUhk/Y=
+	t=1742376720; cv=none; b=LwVuKhjdr/X9DFPu9FJ8yF58Wt5rXyptyj5vg8VvKtqaeZv2aMLFt7bh+OggmzWUlig22VE2AvibrpbFZUsVK/qxCcJKmIwPzelHMdY1naGauCYZCkcuyjW5lU2NMbcAmUyFKwyakNJN0O07NgrHnTE7AjKGCnkdIw0jTAD4JU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376717; c=relaxed/simple;
-	bh=P6sjrUHXsoaSHeq3CPkjoBE3d6J1juF5K3BefowhNh8=;
+	s=arc-20240116; t=1742376720; c=relaxed/simple;
+	bh=pamQx90P4JddVSDYgi5dG5r3b51ayH5Zzm7osNypMq0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FuFJLOw5qgESGIu4Rcz1tlLj5N8CoYouneIueDjZ+Si7mnKTyn7x+xA9FQTrJmeH8AU06SMYIle3sum73kGMRNsKCze3fMYCfe10A659OE1N2HOEQbtxs5nCLWBznX6S4LHkmFWVz7vzB0MZpTSpoNO4AeWKHX6Gk5KXc1LHI3w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfXLsQ3Z; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gN4FMCn8jYmPN1ys4WaJD2nwPi4aB7Z2Xdoqb12F5ImTlzKiybyhdpivHrr8dFfifGomh3GYejlyHsFlXApTmMDX0Sn0+peoAh1i9lLLpYaXVtIJk5sLVdkw26wurou1cGHL5pk9RDDvqQTsYMJ/ezLf/t7hYUzzLrTX3Lmdhqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t9O7b8oc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfXLsQ3Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D3C3C4CEF2;
-	Wed, 19 Mar 2025 09:31:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t9O7b8oc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C114C4CEE9;
+	Wed, 19 Mar 2025 09:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742376717;
-	bh=P6sjrUHXsoaSHeq3CPkjoBE3d6J1juF5K3BefowhNh8=;
+	s=k20201202; t=1742376719;
+	bh=pamQx90P4JddVSDYgi5dG5r3b51ayH5Zzm7osNypMq0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=cfXLsQ3ZnczG0sKBKJ+DvST6vAjMbjKz8guv23LSY6x6jwTzi5wjMZYwSAQvDdT6p
-	 oxQ39/hBr84fSvuzqc08/LV44EgDOD9ir1nQCIoK3sHqwqoHSfAKh9K3CAwgBPlcUk
-	 fIQjCoD0E3QLa3yyketenltkK/TRjJ1kfizyNUsMG7TM5k/gbhZy2SG+LAV9Yct/ao
-	 oH7mX2uKZ5H6GUDCIgFbMlAUJjFO3+wV6e1fEdPmWPdPR5fvI7Hr3QZ33eQnidNNha
-	 Zunf+dgnfKa3u7ZHazwkkocGVa6Eg7TIjMovXfqDPNvbKLIcCvJVnYNBHnd11Xs2cr
-	 GBtT4E2YmfGfA==
+	b=t9O7b8ocFw8kA+vzq8XMGOcyEJq/e5s0gsWqqhllYzh9jPwE3ylw9RNcN8WljA0RN
+	 Jk7kma1tOdMEPMdvJCNcnsRYXGaq9R0Rbrde5cEUe9b6Pz6grJvY4jcA9Fy3htSSdh
+	 3+6VGdYfz7s67VW+g3bQqlFV5rV3Ksq8WU7qynBlJ1Yoa5/ETqw1KgIwPJAeb+Eefe
+	 SGMYPJqhEjDD5O5CQkjX21vdGIY2bbqOiAjOvqys5SqAeDXB6akQCNkBxZLATsohBH
+	 CGWc6/1+tqu/StrcmECZ2ZWbLt2rA42dfw9QxbnAqOqCQrW4LuDzh90GFT43AQ6370
+	 NVr1JhdtCO3xA==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: tglx@linutronix.de
 Cc: maz@kernel.org,
 	linux-kernel@vger.kernel.org,
 	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 22/57] irqdomain: mailbox: Switch to irq_domain_create_tree()
-Date: Wed, 19 Mar 2025 10:29:15 +0100
-Message-ID: <20250319092951.37667-23-jirislaby@kernel.org>
+	Roger Quadros <rogerq@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	linux-omap@vger.kernel.org
+Subject: [PATCH v2 23/57] irqdomain: memory: Switch to irq_domain_create_linear()
+Date: Wed, 19 Mar 2025 10:29:16 +0100
+Message-ID: <20250319092951.37667-24-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
 References: <20250319092951.37667-1-jirislaby@kernel.org>
@@ -48,8 +49,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-irq_domain_add_tree() is going away as being obsolete now. Switch to
-the preferred irq_domain_create_tree(). That differs in the first
+irq_domain_add_linear() is going away as being obsolete now. Switch to
+the preferred irq_domain_create_linear(). That differs in the first
 parameter: It takes more generic struct fwnode_handle instead of struct
 device_node. Therefore, of_fwnode_handle() is added around the
 parameter.
@@ -60,28 +61,31 @@ guaranteed to be set for all, so this has to be investigated on case to
 case basis (by people who can actually test with the HW).
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org
+Cc: Roger Quadros <rogerq@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-omap@vger.kernel.org
 ---
- drivers/mailbox/qcom-ipcc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/memory/omap-gpmc.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/mailbox/qcom-ipcc.c b/drivers/mailbox/qcom-ipcc.c
-index 0b17a38ea6bf..ea44ffb5ce1a 100644
---- a/drivers/mailbox/qcom-ipcc.c
-+++ b/drivers/mailbox/qcom-ipcc.c
-@@ -312,8 +312,8 @@ static int qcom_ipcc_probe(struct platform_device *pdev)
- 	if (!name)
- 		return -ENOMEM;
+diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
+index 53f1888cc84f..d5bf3243fe78 100644
+--- a/drivers/memory/omap-gpmc.c
++++ b/drivers/memory/omap-gpmc.c
+@@ -1455,10 +1455,8 @@ static int gpmc_setup_irq(struct gpmc_device *gpmc)
+ 	gpmc->irq_chip.irq_unmask = gpmc_irq_unmask;
+ 	gpmc->irq_chip.irq_set_type = gpmc_irq_set_type;
  
--	ipcc->irq_domain = irq_domain_add_tree(pdev->dev.of_node,
--					       &qcom_ipcc_irq_ops, ipcc);
-+	ipcc->irq_domain = irq_domain_create_tree(of_fwnode_handle(pdev->dev.of_node),
-+						  &qcom_ipcc_irq_ops, ipcc);
- 	if (!ipcc->irq_domain)
- 		return -ENOMEM;
- 
+-	gpmc_irq_domain = irq_domain_add_linear(gpmc->dev->of_node,
+-						gpmc->nirqs,
+-						&gpmc_irq_domain_ops,
+-						gpmc);
++	gpmc_irq_domain = irq_domain_create_linear(of_fwnode_handle(gpmc->dev->of_node),
++						   gpmc->nirqs, &gpmc_irq_domain_ops, gpmc);
+ 	if (!gpmc_irq_domain) {
+ 		dev_err(gpmc->dev, "IRQ domain add failed\n");
+ 		return -ENODEV;
 -- 
 2.49.0
 
