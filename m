@@ -1,99 +1,152 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4069A1EB5CC
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 08:16:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6314250BF5;
+	Wed, 19 Mar 2025 08:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742372186; cv=none; b=aHw2MMZKTe0RHWrzPK5FZFz+OA4EZIDrUZNumbaIDsBstHozWtCRx+ZS0kqVVBHXoRR8EdIRHrfDGsppvA9HwTy9Y9HI7KrBa2dQ72hn8arJkD1I54tivSWMcjE3v8O3qrIH79EMuQGLXsybynFMt+KFjiginr5LjJ+4yAzLM64=
+	t=1742372283; cv=none; b=hNkO3e27xVGw1WecCj/R2lQ38vxHtT7Jm2y+BQQAWjZ3PnyzjG2m1EVhNtj0nTsb+KmYTLptwqOs9Op/9QEO33J0ZRIg1WxlL8joXBxVJW/bty9B7FTBbpSLCzz/QU9a61jLMsZJWIWUw0yveEhQG25gqMPxj+UdRNoKiVEAqx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742372186; c=relaxed/simple;
-	bh=Pbb9BiHnxDGEIgYBADMDYqNBuyKNR/9/tEk3ALFWiKw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DcRNZlMmbaoD7CT/3VpLL/DwznaXiEPLOwTUpXCxSlgmKu3GrQrKJ/AMmGiPtKW7Zvvqhiv+o5rS/3XSpVQ9BWoNAP4cdvJwzrwwEfq+ybTwugFAq8f+ousF25rL7jZCzPVyN8Ur2ude3oszLgVNEjWMxtc3CgrUlv1RW9HyfSk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=C5F2QAPm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5DcDYoHB; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742372283; c=relaxed/simple;
+	bh=suWOblxJjCIlwK+ohLsUpw6o4M+ZDDgLuq+5b/MsH0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Avz0/h48Na2YuHVAuP8Cej6NSHARfkurYw0P0uKwdbC/qY5TSDlS7J9WuIAtmlXYwDOkClfXLvgF/U7WrGQesK7H4SMgvYKYE8/XXjPTXy4gm5D5YvLcC9xBXJ+ivbawa+NFz9LhV3UZBFvk+C23mqstjnaWaQVLYuSqROlc0qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=9lBr+Fot; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C5F2QAPm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5DcDYoHB"
-Date: Wed, 19 Mar 2025 09:16:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742372183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WO9m2LGJJUZOdGnuX3+SlQrVPHHc7n0EMu6Pdu4vqmo=;
-	b=C5F2QAPm8kSdNwrIdGak7FuM/LxBNYj0if1a3nDSZCWxOnQomWHVtE17Mfjwj58mzU4IxU
-	79j/hlUByTnovUxBA/GvmFzNypL1WWvhRZIFxCnlMShREpjqsFeAgBaY2vGo2D+a/UbiGR
-	U1mVICaF2wNHQfaYQ6IYvsmCca277WOJQaMg0I/o/I0puxk9rjOnhU4FiIMn0N0eZvLbVq
-	xkLLjxSbqi7sVSfW2aD/YCXBkjYii2x7zIbS/SD9KG6QsozfzBPheKCqFLdjzTo6NICGvY
-	7w/ZWIJLYu9fP/KUbsfQy8+Qv54R6mTUho5Y74GvrVyBf2ze3qD+vHbg9iyEbw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742372183;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WO9m2LGJJUZOdGnuX3+SlQrVPHHc7n0EMu6Pdu4vqmo=;
-	b=5DcDYoHB/mLasE11ZGWadfLimLhg7nyYQtTrbLJbkASW7Elf/H79MGYg3nsX3Y2EuWjKjG
-	qOoUQLU+dW0J4iCw==
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-To: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>, mingo@kernel.org,
-	linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-	Stefano Stabellini <sstabellini@kernel.org>,
-	John Ogness <john.ogness@linutronix.de>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Borislav Petkov <bp@alien8.de>,
-	Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 4/5] x86/cpuid: Standardize on u32 in <asm/cpuid/api.h>
-Message-ID: <Z9p9VcQ3CO7Mrubl@lx-t490>
-References: <20250317223039.3741082-1-mingo@kernel.org>
- <20250317223039.3741082-5-mingo@kernel.org>
- <5D7935C3-8CAE-4821-8E31-A43169B8CB83@zytor.com>
- <bb1d6eb7-7dc8-49be-a4b5-aa461e85ac0b@citrix.com>
- <57505261-45EA-48B6-824E-49AF2203C094@zytor.com>
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="9lBr+Fot"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=7XeYcVS9FVFm02GFEdHde5eybyDZf9/feRSyPmVWNz0=; b=9lBr+FotJncvMTAk/A7MVTDyis
+	7WvNiBGampXQO4CmiifG2P08yz0XlJGmhCY4u+EOs9NppfhXoUyEGvulLgaW0xxSHVl0S0ud5M/jN
+	Y8KIfEUveHtB2YCe8L/vj5562tSArQAmOUTgY2Rq/4mo9W14M9sxyH7/GVRc2xOftPgrBdf9DOgCW
+	pW7yHWN3MBnSYR9XiXeBwEwaoqdrjoky/m/shepafIFt/+M/WJKKF9hX882fyOm1SpiFVrb2Hem8S
+	6HgVMyludaLwYK+RJdVD3gCkiqebUhc9xQdIVVuoQRjhQdnGJpUcDarJeRldE+vd9WekxMvoXwrG6
+	vhKw0Nyw==;
+Date: Wed, 19 Mar 2025 09:17:41 +0100
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Tony Lindgren <tony@atomide.com>
+Cc: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>,
+ "rogerq@kernel.org" <rogerq@kernel.org>, "aaro.koskinen@iki.fi"
+ <aaro.koskinen@iki.fi>, "linux-kernel@vger.kernel.org"
+ <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org"
+ <linux-omap@vger.kernel.org>, "khilman@baylibre.com" <khilman@baylibre.com>
+Subject: Re: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
+ interconnect devices first"
+Message-ID: <20250319091741.5488592b@akair>
+In-Reply-To: <20250319035606.GA4957@atomide.com>
+References: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
+	<20250313202129.0dcfc44e@akair>
+	<6348326299702a12ed4faa6ea25ee8bbe5e232aa.camel@siemens.com>
+	<20250313230148.792f224b@akair>
+	<20250319035606.GA4957@atomide.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <57505261-45EA-48B6-824E-49AF2203C094@zytor.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 18 Mar 2025, H. Peter Anvin wrote:
+Am Wed, 19 Mar 2025 05:56:06 +0200
+schrieb Tony Lindgren <tony@atomide.com>:
+
+> * Andreas Kemnade <andreas@kemnade.info> [250313 22:01]:
+> > Am Thu, 13 Mar 2025 20:42:23 +0000
+> > schrieb "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>:
+> >  =20
+> > > Hi Andreas!
+> > >=20
+> > > On Thu, 2025-03-13 at 20:21 +0100, Andreas Kemnade wrote: =20
+> > > > > This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
+> > > > >=20
+> > > > > It brakes target-module@2b300050 ("ti,sysc-omap2") probe on AM62x=
+ in a case
+> > > > > when minimally-configured system tries to network-boot:
+> > > > >    =20
+> > > > brakes or breaks? To unterstand the severity of the issue...   =20
+> > >=20
+> > > Thanks for the correction, it should have been "breaks"...
+> > >  =20
+> > > > > [=C2=A0=C2=A0=C2=A0 6.888776] probe of 2b300050.target-module ret=
+urned 517 after 258 usecs
+> > > > > [=C2=A0=C2=A0 17.129637] probe of 2b300050.target-module returned=
+ 517 after 708 usecs
+> > > > > [=C2=A0=C2=A0 17.137397] platform 2b300050.target-module: deferre=
+d probe pending: (reason unknown)
+> > > > > [=C2=A0=C2=A0 26.878471] Waiting up to 100 more seconds for netwo=
+rk.
+> > > > >=20
+> > > > > Arbitrary 10 deferrals is really not a solution to any problem.  =
+ =20
+> > > >=20
+> > > > So there is a point where no more probe of anything pending are
+> > > > triggered and therefore things are not probed?   =20
+> > >=20
+> > > Because there is a point indeed (if we configure quite minimal set of=
+ drivers just
+> > > enough to mount NFS) when deferred probes are not triggered any longe=
+r.
+> > >  =20
+> > > > > Stable mmc enumeration can be achiever by filling /aliases node p=
+roperly
+> > > > > (4700a00755fb commit's rationale).
+> > > > >    =20
+> > > > yes, it does not look like a clean solution. And we have the
+> > > > proper aliases node in many places. What I am a bit wondering about=
+ is
+> > > > what kind of sleeping dogs we are going to wake up by this revert. =
+So I
+> > > > think this should be tested a lot esp. about possible pm issues.
+> > > >=20
+> > > > Not every dependency in the sysc probe area is properly defined.   =
+=20
+> > >=20
+> > > But the patch I propose to revert is really not a solution for missing
+> > > dependencies on syscons. I'm fine with not propagating this to stable,
+> > > but reverting in master should give enough time for older SoCs to tes=
+t,
+> > > WDYT?
+> > > =20
+> > I am not against your revert proposal and not against propagating it
+> > to stable, I would just like to see some Tested-Bys before it gets
+> > applied to anything. If anything nasty pops up, it should be solved in a
+> > cleaner way then with the offending patch. =20
+>=20
+> Sounds like for the AM62x problem there is simply some resource missing
+> that needs to be configured. Did you track down which resource is causing
+> the deferred probe without the revert?
+>=20
+I think you have not understand the real problem here. I guess, that
+problem can be provoked on other systems, too, if you just limit the
+devices to the absolute minimum required.
+The problem is as far as I understand a bit different. The problem is
+not a resource is missing totally, it is just the artificial deferral
+here. If there are just a minimum devices configured, you can come to a
+point where there is nothing to trigger a loop through all the deferred
+devices causing them to never probe.
+An arbitary, unrelated device with a driver popping up would unstall
+that deferral.=20
+
+I will just play around with the systems I have access to and if nothing
+pops up, I will add a Tested-By/Reviewed-By. If more serious problems
+pops up (I do not think so), another clean fix should get in before
+getting this reverted.
+
+> Reverting the commit does not really fix the root cause. It just ignores
+> the problem of the hierarchy of the interconnect instances. Some of the
+> interconnect instances are always-on, and contain devices providing
+> resources for the other interconnect devices. So I would not consider
+> patching MMC aliases all over the place as an alternative to fixing the
+> real problem :)
 >
-> tglx has suggested that we should cache or even preload the cpuid data
-> (the latter would have the potential advantage of making the memory
-> data structures a little easier to manage, given the very large
->  potential space.)
->
+So what is the real problem you wanted to fix? MMC aliases are there at
+many places already. So is there anything besides MMC order?
 
-This is indeed in the patch queue that I plan to send after this leaf
-cleanups one gets merged.  We have a data model and CPUIDs are cached on
-early boot.  The cache is also refreshed during machine state changes
-where the CPUIDs can change; e.g. a microcode update, PSN disable, etc.
-
-Call sites then just do:
-
-    a = cpudata_cpuid(c, 0x0)->max_std_leaf;
-    b = cpudata_cpuid(c, 0x80000000)->max_ext_leaf;
-
-    struct leaf_0x1_0 *l1 = cpudata_cpuid(c, 0x1);
-    x = l0->cpu_vendorid_0;
-    y = l0->cpu_vendorid_1;
-    z = l0->cpu_vendorid_2;
-
-and all the data is retrieved auto-magically from the cached tables.
-
-The struct leaf_0xM_N C99 bitfield listings are auto generated by
-x86-cpuid-db of course, just like in tools/arch/x86/kcpuid/cpuid.csv.
-
-Thanks,
-
---
-Ahmed S. Darwish
-Linutronix GmbH
+Regards,
+Andreas
