@@ -1,184 +1,120 @@
-Received: from smtp.forwardemail.net (smtp.forwardemail.net [149.28.215.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b5-smtp.messagingengine.com (fhigh-b5-smtp.messagingengine.com [202.12.124.156])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4238F21ABA2
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:45:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=149.28.215.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BD8F14AD29
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:46:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.156
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742420701; cv=none; b=noIWTElTVtEUdTa9ediHm+yfYbHfhW6EcvcP2ml16z60CdIMKeeaBT1gb67EDyvCk2xdgkRssyC+gXEiuRmYqNw4ptIkGMgP84JCeJH3s5laTJUbnzLBAQ3kPRI6vYTGbczaU+EimWdpDK6phrIzhNlmi8jPwzTqwEXdAsNcH6g=
+	t=1742420781; cv=none; b=WP3psfyA+Ik6rv/0WeQv4PoWuoSMXS7zmgzmC0qSrWscoAtw8X1hzT5YIfhdSSBCaCwrg3oMvB32+XAOqsdoZ9UQjL0x/Y0eLkSjyWg2EN9V/S96Y7dnfXdfhbNyL6ea+SVlHSAp8ShKlrjWsQ0wTlu99O6IddEeepJwMR7KSuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742420701; c=relaxed/simple;
-	bh=LXpHn3TdtsfnEHxi6iNJpiDVg89ttNCNCcLW0QdofyQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MGjppnAqZCudbKl+Zyhx1A0AwHsmOCbo5gVxYekAEIOStpXfUjnrhSA1dHvKstuSW2Lf8iulwkpuupDbeat6e/WsQa7B+Nh6+u0Rs96NovYORBzT/l302rCFsDeJ0hAAnLmQKHvanUdouXbo+He+wu9ei1M3ZI4zJylPPAqEW6Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se; dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b=lB/SSJjW; arc=none smtp.client-ip=149.28.215.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kwiboo.se
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fe-bounces.kwiboo.se
+	s=arc-20240116; t=1742420781; c=relaxed/simple;
+	bh=S6dPOjstlHnUUS0SzulTlassAEAlYfK0ehyTno+oZMU=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=RFhePawrtfE3yCPPWLlTBlBD2YvzpKvQhnrMWETZZ4P37S9bb7DzhWDjyg/6V8/zK7k+5zGZY8h0bnRGqMJbUegQb5PuK5JStEcC2xuQuiwBGf8MHgt0eqkaDBIZQMfU/VG5j8bnkJXY5ePPjMfFPNl+87mBxm+Xvnayh0Oh7pg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eAKQXDzt; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=yyGiBfHm; arc=none smtp.client-ip=202.12.124.156
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kwiboo.se header.i=@kwiboo.se header.b="lB/SSJjW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kwiboo.se;
- h=Content-Transfer-Encoding: MIME-Version: References: In-Reply-To:
- Message-ID: Date: Subject: Cc: To: From; q=dns/txt; s=fe-e1b5cab7be;
- t=1742420694; bh=9X1F/xfetnSLnkEq2u6eu/eFYJz8Nx38UqeZ/11Mabw=;
- b=lB/SSJjW21kNo2esZOL9KZQabetGtjVd0DrRJZw+O+4irfCaELd7VBXJFA2Lg06RcX7Tfhkg2
- HvbadssJSy53Z1mUQHssfi8ePvzEgrxeAfB6ecK8KBssrtn3eJ874vQQbe0BWOfcihbcIcGSazl
- WETPHmnIL8zdC6Jo7GAG3qjSj0Sgot3Ki6qgDJBEmrF1mbiSJhOzdpS2+nPPQZnnvJS5EVIZQYk
- 2zpc7H0PAiQkvg1I7+eYDjlLIGvVM+7TK69ibMydO/gwEnnLmt7gsoLHl1jwMCm8G4tWYmOCzZm
- Np9qciP2adAiVqSRP77FfB3p2bvvglsT0kYc6ntXucyg==
-X-Forward-Email-ID: 67db3ac9cf4d592372b9942d
-X-Forward-Email-Sender: rfc822; jonas@kwiboo.se, smtp.forwardemail.net,
- 149.28.215.223
-X-Forward-Email-Version: 0.4.40
-X-Forward-Email-Website: https://forwardemail.net
-X-Complaints-To: abuse@forwardemail.net
-X-Report-Abuse: abuse@forwardemail.net
-X-Report-Abuse-To: abuse@forwardemail.net
-From: Jonas Karlman <jonas@kwiboo.se>
-To: Heiko Stuebner <heiko@sntech.de>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	David Wu <david.wu@rock-chips.com>,
-	Yao Zi <ziyao@disroot.org>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Jonas Karlman <jonas@kwiboo.se>,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH net-next v3 4/5] net: stmmac: dwmac-rk: Add integrated_phy_powerdown operation
-Date: Wed, 19 Mar 2025 21:44:08 +0000
-Message-ID: <20250319214415.3086027-5-jonas@kwiboo.se>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250319214415.3086027-1-jonas@kwiboo.se>
-References: <20250319214415.3086027-1-jonas@kwiboo.se>
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eAKQXDzt";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="yyGiBfHm"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id 5824925401B2;
+	Wed, 19 Mar 2025 17:46:18 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Wed, 19 Mar 2025 17:46:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1742420778;
+	 x=1742507178; bh=NIV1jl6V2fZlix63bFp4nlCTMLgC0hAJC1UlPpspvig=; b=
+	eAKQXDztmvO28zcR3zDMxe9omF5+kZdnh93neULpzO3AOzG2tkCkjMc9fsTMWfDs
+	4qRxP17m9ImvKjz+4bDDLnHeh2cVuNev80WAr1y8TGNedm4BJ10w59tgbVf0YC3k
+	ZyGCOPjEHGv7o93B1v87wkYSoXULyKy4qHf6lnIMPC6i9HjEILdE7el4ubUZgXSG
+	3xN/VpEM1MT15my+nwJprokD6Fk8B/fUIqBWSQDusZBp6xEZCw1mOmGItAGGHbmP
+	3Tpx/5Bp8HHOoifKhzk+DOrWubK7MxNdpOCZNbUsXPihehy3/Y7cSf6MpTGDfpVG
+	YNuFgzeijoqkZ21+XWl6Mw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742420778; x=
+	1742507178; bh=NIV1jl6V2fZlix63bFp4nlCTMLgC0hAJC1UlPpspvig=; b=y
+	yGiBfHms1axUwQxMcMRsZYFpYxCvenPcokpYVW5oOV0yvA73QmKaC8BuurTy4e9a
+	5TRxA2kQ3dSPAWDy3wLb/hh7w4d5/sQLm8d3Wq3UwmxLIJQ/00Apd4ptdzwrXvCV
+	ZxUcPENBezQRn6xy7FihnmHz8841B8D4POG8kh9s4idXyUG6zB4QhCegGBwpz2vU
+	Sxkb//wwEYf9E6ZyEW1li+ntKNxM6RqBWxzFNGxUJ1avyshVdqu3Ogy/V1vrvecF
+	nhxkbFWLIqkl5+CYEJmOb6UaIl2/Y5hExN3bVZe3b6YKkxuRKaA15oDqAdPqpDD2
+	3LzZDBYxTlr6yuY5BvMkQ==
+X-ME-Sender: <xms:KTvbZ_FP79bCtSPAr5O0UKHiysXybUM1bmwMjjMOgPAIJPgVj86Xzw>
+    <xme:KTvbZ8Wr2X0hYkerR8U2xHYOYyJdJjJvVO-bXfIQyv524RvJUAkIdo790-HrfZlE3
+    zp9jemQvxkik3Fnt8U>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeeigeegucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
+    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
+    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    iedpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtohepghhlrghrohhquhgvsegsrgihlh
+    hisghrvgdrtghomhdprhgtphhtthhopehkrhhishhtoheskhgvrhhnvghlrdhorhhgpdhr
+    tghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgrug
+    gvrggurdhorhhgpdhrtghpthhtoheprghfugesthhirdgtohhmpdhrtghpthhtohepnhhm
+    sehtihdrtghomhdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvg
+    hrnhgvlhdrohhrgh
+X-ME-Proxy: <xmx:KTvbZxJ5_UxHkfnazQSQz6Im7JqvN3lyZjge0OIHfn5R0pgqqxCQow>
+    <xmx:KTvbZ9EkLgDyA7IG31TjHc-KqiNUgFu77yb4bH8Poc_2yVEM6hjSCg>
+    <xmx:KTvbZ1U3qfMhl4t4LYzBiQkX6oL19nVdQ_pfuFtsl77iK9wfaQzGUQ>
+    <xmx:KTvbZ4OJBQDTW_q8jEgr8trulU3oqVsvIE_AgWUUZJkdiiaCk84u-w>
+    <xmx:KjvbZzdNDkZpcl3g21IIa6UX_Sz61HSXPFaqrTe7R6PShid2Y1QcFxgF>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id CFC152220073; Wed, 19 Mar 2025 17:46:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-ThreadId: Te367c4c16dcaf1bf
+Date: Wed, 19 Mar 2025 22:45:57 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Guillaume La Roque" <glaroque@baylibre.com>,
+ "Nishanth Menon" <nm@ti.com>, "Tero Kristo" <kristo@kernel.org>
+Cc: "Andrew Davis" <afd@ti.com>, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+Message-Id: <c506a805-9221-4afe-8d98-af0ca97a1fd2@app.fastmail.com>
+In-Reply-To: <20250220-ti-firmware-v2-1-ff26883c6ce9@baylibre.com>
+References: <20250220-ti-firmware-v2-1-ff26883c6ce9@baylibre.com>
+Subject: Re: [PATCH v2] firmware: config: ti-sci: Default set to ARCH_K3 for the ti sci
+ driver
+Content-Type: text/plain
+Content-Transfer-Encoding: 7bit
 
-Rockchip RK3528 (and RV1106) has a different integrated PHY compared to
-the integrated PHY on RK3228/RK3328. Current powerup/down operation is
-not compatible with the integrated PHY found in these newer SoCs.
+On Thu, Feb 20, 2025, at 14:31, Guillaume La Roque wrote:
+> With ARCH_K3=y we cannot enable TI_SCI_PROTOCOL=m because
+> ARCH_K3 selects TI_SCI_PROTOCOL.
+>
+> Modify the logic to enable TI_SCI_PROTOCOL by default when ARCH_K3=y
+> allowing us to submit a future patch to remove select on ARCH_K3 without
+> breaking existing users.
+>
+> Signed-off-by: Guillaume La Roque <glaroque@baylibre.com>
+> ---
+> Link to comment done on last serie [1] we come back on first version of
+> series[2] to not use imply but set deps on ARCH_K3 in driver directly.
+> An other patch will be sent to update Kconfig.platform when this patch
+> is merged.
 
-Add a new integrated_phy_powerdown operation and change the call chain
-for integrated_phy_powerup to prepare support for the integrated PHY
-found in these newer SoCs.
+I just merged the patch and hadn't seen the earlier discussion,
+just two small notes from me:
 
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
----
-Changes in v3:
-- No change
-Changes in v2:
-- New patch
----
- .../net/ethernet/stmicro/stmmac/dwmac-rk.c    | 26 +++++++++++--------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+- thanks for doing it this way instead of the backwards 'imply'
+- there is really no need to split it into two steps, since the
+  change to the Kconfig.platforms file logically goes with this
+  one and I would merge both through the SoC tree, having it
+  as a single patch would make sense.
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-index 0321befed0d3..3673abd65302 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-rk.c
-@@ -33,6 +33,7 @@ struct rk_gmac_ops {
- 	void (*set_clock_selection)(struct rk_priv_data *bsp_priv, bool input,
- 				    bool enable);
- 	void (*integrated_phy_powerup)(struct rk_priv_data *bsp_priv);
-+	void (*integrated_phy_powerdown)(struct rk_priv_data *bsp_priv);
- 	bool php_grf_required;
- 	bool regs_valid;
- 	u32 regs[];
-@@ -104,11 +105,8 @@ struct rk_priv_data {
- #define RK_GRF_CON2_MACPHY_ID		HIWORD_UPDATE(0x1234, 0xffff, 0)
- #define RK_GRF_CON3_MACPHY_ID		HIWORD_UPDATE(0x35, 0x3f, 0)
- 
--static void rk_gmac_integrated_phy_powerup(struct rk_priv_data *priv)
-+static void rk_gmac_integrated_ephy_powerup(struct rk_priv_data *priv)
- {
--	if (priv->ops->integrated_phy_powerup)
--		priv->ops->integrated_phy_powerup(priv);
--
- 	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_CFG_CLK_50M);
- 	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_GMAC2PHY_RMII_MODE);
- 
-@@ -129,7 +127,7 @@ static void rk_gmac_integrated_phy_powerup(struct rk_priv_data *priv)
- 	}
- }
- 
--static void rk_gmac_integrated_phy_powerdown(struct rk_priv_data *priv)
-+static void rk_gmac_integrated_ephy_powerdown(struct rk_priv_data *priv)
- {
- 	regmap_write(priv->grf, RK_GRF_MACPHY_CON0, RK_MACPHY_DISABLE);
- 	if (priv->phy_reset)
-@@ -368,6 +366,8 @@ static void rk3228_integrated_phy_powerup(struct rk_priv_data *priv)
- {
- 	regmap_write(priv->grf, RK3228_GRF_CON_MUX,
- 		     RK3228_GRF_CON_MUX_GMAC_INTEGRATED_PHY);
-+
-+	rk_gmac_integrated_ephy_powerup(priv);
- }
- 
- static const struct rk_gmac_ops rk3228_ops = {
-@@ -375,7 +375,8 @@ static const struct rk_gmac_ops rk3228_ops = {
- 	.set_to_rmii = rk3228_set_to_rmii,
- 	.set_rgmii_speed = rk3228_set_rgmii_speed,
- 	.set_rmii_speed = rk3228_set_rmii_speed,
--	.integrated_phy_powerup =  rk3228_integrated_phy_powerup,
-+	.integrated_phy_powerup = rk3228_integrated_phy_powerup,
-+	.integrated_phy_powerdown = rk_gmac_integrated_ephy_powerdown,
- };
- 
- #define RK3288_GRF_SOC_CON1	0x0248
-@@ -601,6 +602,8 @@ static void rk3328_integrated_phy_powerup(struct rk_priv_data *priv)
- {
- 	regmap_write(priv->grf, RK3328_GRF_MACPHY_CON1,
- 		     RK3328_MACPHY_RMII_MODE);
-+
-+	rk_gmac_integrated_ephy_powerup(priv);
- }
- 
- static const struct rk_gmac_ops rk3328_ops = {
-@@ -608,7 +611,8 @@ static const struct rk_gmac_ops rk3328_ops = {
- 	.set_to_rmii = rk3328_set_to_rmii,
- 	.set_rgmii_speed = rk3328_set_rgmii_speed,
- 	.set_rmii_speed = rk3328_set_rmii_speed,
--	.integrated_phy_powerup =  rk3328_integrated_phy_powerup,
-+	.integrated_phy_powerup = rk3328_integrated_phy_powerup,
-+	.integrated_phy_powerdown = rk_gmac_integrated_ephy_powerdown,
- };
- 
- #define RK3366_GRF_SOC_CON6	0x0418
-@@ -1802,16 +1806,16 @@ static int rk_gmac_powerup(struct rk_priv_data *bsp_priv)
- 
- 	pm_runtime_get_sync(dev);
- 
--	if (bsp_priv->integrated_phy)
--		rk_gmac_integrated_phy_powerup(bsp_priv);
-+	if (bsp_priv->integrated_phy && bsp_priv->ops->integrated_phy_powerup)
-+		bsp_priv->ops->integrated_phy_powerup(bsp_priv);
- 
- 	return 0;
- }
- 
- static void rk_gmac_powerdown(struct rk_priv_data *gmac)
- {
--	if (gmac->integrated_phy)
--		rk_gmac_integrated_phy_powerdown(gmac);
-+	if (gmac->integrated_phy && gmac->ops->integrated_phy_powerdown)
-+		gmac->ops->integrated_phy_powerdown(gmac);
- 
- 	pm_runtime_put_sync(&gmac->pdev->dev);
- 
--- 
-2.49.0
-
+        Arnd
