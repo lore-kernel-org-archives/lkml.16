@@ -1,110 +1,100 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4DA524F;
-	Wed, 19 Mar 2025 03:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3E83208;
+	Wed, 19 Mar 2025 03:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742354594; cv=none; b=A2Z5TS2VO6wOjsZf6lVDSiUpD8v/RZlX942ShwkBWeYkdT+p3SU7tIT7ECniAHi6ocBxPcejS/OL/IuZlYVlFKh/l2pgLHP4ESlFQ8lNTDttOjoR65RW6n+9XDJQdSyhSoj65oeTirHzTakXyKzcSURbdQ6r/ynUxCLTyGxKMYY=
+	t=1742354800; cv=none; b=dbXyztZzriaFomitCJ7RIqbNor5Tzw7ocGY4bNWa2tG4oqUdHdYsF7i0pmGjh2EAq2cJbMxjfGyFD/27xZ8ggKIYCVg6Uf6bNstHJbLBxrpcYyl++NXx0abnCPJwvLsc/g5g+OkgBoVyWx1IIA2KjcJ4KJcAggN9egbzuOCE3ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742354594; c=relaxed/simple;
-	bh=kKjAvj/AN5gYTkbsbr9Dtg3vdgdIpD2AgBSDbtGlOmk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T0N1kIFC9vooGh7MkIxOycxsPXl5RqI+mfYSQVacmomV4u23zZ3oeSbbam7kcTEdANItKkUI6qpngHwHfngJTR5zIfr4XGjmA5L91S4P5dn9TJ0XuKqLGEKEuetV3calhjfAcAVqP+f8v34vwW7P2nqsB9IULRVne8sqY9HGE9M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+1ErBMo; arc=none smtp.client-ip=209.85.214.181
+	s=arc-20240116; t=1742354800; c=relaxed/simple;
+	bh=P/ehgbpk+5vA88XB2CClLC1viuSC34YTkdQTnDE5P2Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IsjJsmGRBRZFqxoj3PGGYeJTlszTImjLZkqmAVRFGXQDlSGKesVHwCIjn4QfO6NAmWtwEtlzaOrHPXi83N5QxxYbKr8TyQcHF/S25BYjLucSzSS4xVQhHXn5ChPS7KBplJC638jnR6k6Okrbq61/hpV+r1H9cN0BNfkaS5y30o0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AY9kafSk; arc=none smtp.client-ip=209.85.216.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+1ErBMo"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22398e09e39so136672335ad.3;
-        Tue, 18 Mar 2025 20:23:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AY9kafSk"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-3018e2d042bso3716262a91.2;
+        Tue, 18 Mar 2025 20:26:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742354592; x=1742959392; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=FeTfA5EvYDZdhGTqIyHcGqcsQRwK5RGXcRhBZWZJHcs=;
-        b=a+1ErBMoscIi1XI5N5b0W6JrVMN08uCWxoxk0oCTxH4K/f9Tado3uAfTBVYNzBaF1a
-         KDeHkiCBSEQzJ/hoX65E8n0jQjNBgxr9dBpdkRzFcAoMU1ylWS+frm40nMguRQQcNcim
-         M13/iPwo2mhLLl5MeUXEMB9/R/tu0Ws0LAi4YK+aja7872LOj1tZi0KWJBuwleexQTPZ
-         1RxxA79sRYDpQwdK/fC2sPreQ//fbh4hWTM6CQmCOE/PudPs0gJ6s+hWBvPLzDpXSMV0
-         DP9TVKMU9P/b0g/BKA8OL/cMFCJy3h+u9i5p6IspLYMkQaJ/ZPxSsOgWgex4C4ynvs6j
-         CATQ==
+        d=gmail.com; s=20230601; t=1742354798; x=1742959598; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ONc2NKKA9rxhBuj8Dk0LD4YRO1Z4JZeeX+A7dNlQ7iU=;
+        b=AY9kafSksyNzOMNr5R4uxgZoBqu+dOlRsBj7JZXxmy46gI1q7qm15GXU4INY3hRdOo
+         bnHObEOEy8+SaiJnpKvAbTv3XRPtAUWFAmdcNDEURH4wvQ8AzoYHN9RVw/ZdqiUG//eG
+         l6o4vGLZfCNmUrQbYKMSYgYSMsFU3Gbluw+os7//70A0/2R4DC90NSh0lgHu4PtujPsc
+         PzAxnokbllAdvxpoiHLdYNmxtqjwW2SDpsvbcVQOaSePSUGD+WHi3yxAB4FLBtju9UX1
+         86hm1+d4ExVs1xDdB2WPgblNOjQCyICcoGdxVZwx343Dc3ZKgtjfE40I0xt/1HRwCNDf
+         ocAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742354592; x=1742959392;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1742354798; x=1742959598;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=FeTfA5EvYDZdhGTqIyHcGqcsQRwK5RGXcRhBZWZJHcs=;
-        b=OQvydOzjpVd0P2iBlLTwhWDETiT2oFr5jta/6UBOZj+J7JarAa1Ut5DHWE5xDVV6az
-         xYF+cKItUTkqdLiyMsauAFBLFMEdYw1DHWq0+qtxXScFNRLcyD66gkWSkeaS1vbnTimQ
-         yd+ySB+Xbp/6GZPT/flVHtD8IxVo5nGFC2GnEfXH5d/Vew543cbVUZT8/5aRq/qDkiJS
-         nE6fu6U8QZEPOWBsfoIohu2/39/uUNwQ8GBoHlv7hMyKhr39g3aGNkwsfeAiA6uC5Qfu
-         jMjPn2ovV8ZVu1t0JbjMo9X6zIebiF9ZHirYo4OnXLki/qnViPhPhiVWD0tZicMvke/D
-         PP1w==
-X-Forwarded-Encrypted: i=1; AJvYcCVDjHR/axM+Ij12RdWi9FS43hqKd41RZs3SZH8xfPcgXz2V6EhJ+0a8UMnGJ2wFajxAg7q11Asyjx1w@vger.kernel.org, AJvYcCXaKnoN+8inXKcP0WXC9lbS7hZmf6wijzeINI/SkVjioQYuCvashSIFkjsTiiMVzaNxGxm62BzLYWTu/MA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxbYx5csXnve+pDd1bovOqCuRS/VftXiO6aSvpfUiuc/3c1+R5h
-	BaC6tyT4nrNmIky49NarIfvH0J+nOw3D38VafxQBKZzJy+yqIFKS
-X-Gm-Gg: ASbGncu/WxC8NdtiY5OXuCLob8GHmcyrWFm3GIbuiYJnmPLQbXdooSOBW6I2zMzZjZF
-	NqnnMFtGty4FTFginEcwH+oXdVDIs52zDA7jF4nqXVw+m0l+cDPPrvekn+64C80QrFO7hUGP8uz
-	uWfJlIvMKIf0XkOQU5sT1c/8/PS/X8NTrTiBRWrZwo8c42eXDu23NDIWZzZT8V6GRQU+K40VM4V
-	6dpuSao5Y/Q+GTo9iX6lAuCE8tB2WqB4zRRoH5A+XoX5xQmxoUt6N2ywLQlh6FKah0VbChQadQA
-	i0+0eAIjJcFOYqJIYMYB0hjrlARPUDPcKJ8pz+6hmH0kyKkIbuQsbWELcNC9HpenSA==
-X-Google-Smtp-Source: AGHT+IF2HGClT2t/YkULY9YGPj3N+zFEFj0PL3eDhpw9zJ/zZ1YETqaRj2KCXx2TkxDFDpecXKOS9Q==
-X-Received: by 2002:a17:903:2310:b0:224:256e:5e4e with SMTP id d9443c01a7336-226498228b4mr18231035ad.16.1742354592020;
-        Tue, 18 Mar 2025 20:23:12 -0700 (PDT)
-Received: from localhost.localdomain ([114.254.9.37])
-        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-225c68bedd4sm103109595ad.105.2025.03.18.20.23.09
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Tue, 18 Mar 2025 20:23:11 -0700 (PDT)
-From: Miaoqian Lin <linmq006@gmail.com>
-To: Mark Brown <broonie@kernel.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	linux-spi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: linmq006@gmail.com
-Subject: [PATCH] spi: Fix reference count leak in slave_show()
-Date: Wed, 19 Mar 2025 11:23:04 +0800
-Message-Id: <20250319032305.70340-1-linmq006@gmail.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+        bh=ONc2NKKA9rxhBuj8Dk0LD4YRO1Z4JZeeX+A7dNlQ7iU=;
+        b=AgYQ9Ssp8l8hOC7qjbnXUFYaDTkklTvWKmjO1bB/sWIp49Frm0RnNMALvZM5FGhl5T
+         fzyisv+Pw3MfBjDbirN/l5jEwyLYohpEKnSokFY0HjHgoLd9I8aSWRKLLpBSANdvC1yu
+         7jhPdHQb8v3XAM1ArSjqgj/2k7gWeZIwU+lccX6sCRMyjcB7qizNlUrby95q1TFNhE11
+         KjbHfpkpbSUj00IpClollPLiX+64gIjpKHWqFo2c3l6miHi0hpGCwPB5JeYT/xQtxUT1
+         QbXVxH67hknPa3VzBwk5UvRMIcbI062w77B7MTxZe1JmCNGTkUi1xuSsDA7kR67iauZ7
+         DOjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUiiD8AjW5u2tON+cjnNmZrjfNm0kXR7ngrV6sER5HsBBbluccdYT897mJZIlfn7Jt4TQEXCBxp@vger.kernel.org, AJvYcCVZt7s9M99n9APzZKLwUrBRX2Ju7aGNrwISK9AaugstMY6eGMUT+ipAmbBB8ISjGVh4QaT/QDJBwj6t45f99qOj@vger.kernel.org, AJvYcCVgji7N6oTutv4ENkHncZTfBRWHpRCxaPQ+Gj8tBTnjCjO+uhPl5PsjzRMRCRUnvsXtDpqduC6nmkYkslY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM2j+cb0NEpt3iSE06IAilKRf2pl/+NwwRMlt4SPIlQ8t2C1v3
+	fdXdCuAAfSKbqlJR8b/aVIrPTdHPFcs1rhSBGEj3xFsdteT46mCZE9tlNltJyB/kSWmtyupA/0b
+	7dZSnlYr0IGcFtEh155+dwLtH28A=
+X-Gm-Gg: ASbGncuXxmZPJZmoITSU4DHNTjCWTn6rV3KE5as6XpDP3X2zNzhdYYKtffawH8hvdtz
+	uaIQRHugDZzkab75qlgPGTJeG822LWT/B6bnHIWdCHI6nW4nfLdYwoe8ExOCwiXrFCT98Jtvjat
+	88Gqk+AlnwXfFVxa8eH89AQakhwA==
+X-Google-Smtp-Source: AGHT+IEhh9je53mlU+YNfo/E+s5+DZiahqCtS/UeM+2c5VO6wETPeDDOp5McEZW/rZaZIbcob8g2Isw+8odAftssVBU=
+X-Received: by 2002:a17:90b:4fc5:b0:2f6:d266:f462 with SMTP id
+ 98e67ed59e1d1-301be20750dmr1899287a91.35.1742354798394; Tue, 18 Mar 2025
+ 20:26:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250312-tcp-ao-selftests-polling-v1-0-72a642b855d5@gmail.com> <CAJwJo6bkdeGh0j1ABfrMQ3dRD7frEsNnJERWP8-jJs8dSYFwYA@mail.gmail.com>
+In-Reply-To: <CAJwJo6bkdeGh0j1ABfrMQ3dRD7frEsNnJERWP8-jJs8dSYFwYA@mail.gmail.com>
+From: Dmitry Safonov <0x7f454c46@gmail.com>
+Date: Wed, 19 Mar 2025 03:26:27 +0000
+X-Gm-Features: AQ5f1JqMFkj02AZydIrEhT-StmOCueqFdL_RVZCS15cegHVwZB6ib4jq5FwdKqA
+Message-ID: <CAJwJo6Y9g0JYiLY-taxtj7bo=Jy+U7bqTFsQjhgu2Re7BgaLsA@mail.gmail.com>
+Subject: Re: [PATCH net 0/7] selftests/net: Mixed select()+polling mode for
+ TCP-AO tests
+To: 0x7f454c46@gmail.com
+Cc: "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Fix a reference count leak in slave_show() by properly putting the device
-reference obtained from device_find_any_child().
+On Wed, 19 Mar 2025 at 03:20, Dmitry Safonov <0x7f454c46@gmail.com> wrote:
+>
+> On Wed, 12 Mar 2025 at 09:11, Dmitry Safonov via B4 Relay
+> <devnull+0x7f454c46.gmail.com@kernel.org> wrote:
+> >
+> > Should fix flaky tcp-ao/connect-deny-ipv6 test.
+> > Begging pardon for the delay since the report and for sending it this
+> > late in the release cycle.
+> >
+> > Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+>
+> I think patchwork can't detect v2 to be the same series, so doing it
+> manually here:
+> pw-bot: changes-requested
 
-Fixes: 6c364062bfed ("spi: core: Add support for registering SPI slave controllers")
-Fixes: c21b0837983d ("spi: Use device_find_any_child() instead of custom approach")
-Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
----
- drivers/spi/spi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+* potentially because of the -net vs -net-next subject.
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index a7a4647717d4..ff07c87dbadc 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2954,9 +2954,13 @@ static ssize_t slave_show(struct device *dev, struct device_attribute *attr,
- 	struct spi_controller *ctlr = container_of(dev, struct spi_controller,
- 						   dev);
- 	struct device *child;
-+	int ret;
- 
- 	child = device_find_any_child(&ctlr->dev);
--	return sysfs_emit(buf, "%s\n", child ? to_spi_device(child)->modalias : NULL);
-+	ret = sysfs_emit(buf, "%s\n", child ? to_spi_device(child)->modalias : NULL);
-+	put_device(child);
-+
-+	return ret;
- }
- 
- static ssize_t slave_store(struct device *dev, struct device_attribute *attr,
+However, as I sent the patches with b4 relay, it seems patchwork is
+unable to authorise me as the author of the series. Ugh :(
+
+> Just in case, v2 link:
+> https://lore.kernel.org/netdev/20250319-tcp-ao-selftests-polling-v2-0-da48040153d1@gmail.com/
+
 -- 
-2.39.5 (Apple Git-154)
-
+             Dmitry
