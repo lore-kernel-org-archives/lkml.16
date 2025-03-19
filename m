@@ -1,134 +1,350 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 404701A841C
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:48:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0850D1DE881
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:50:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742395712; cv=none; b=LCYDJm5ccx1urQ1UwUN1Q8R7NYKA2vNGrHUNC4WNoFNmByLZ0cg8SZGSb/afCyXAl4nmrRQmQmKnHSWElIMYwgVUPZCPQ2xJVMv/9cxl87BWDvXmJPayH1JxuHgYlqR9WsIzyJdYdvSMWIt6KFFc/yOymMQLU384kT4hdpjZ1S8=
+	t=1742395837; cv=none; b=H55FVniAFoFAwM4SVzkluOh4o6n5fM7UQrqWQItDwPK12Gfovsgp5E6W5rBT3kqBerCIcK3wnb+xaz4wTbumrxn0IqbsCLFniwVTWkHPA1r0H/M5TWWb+PiK51skChqXG4w3zpN5SPZ0UQEmYRjx/UeojsVmMA1ZV0u/fI6OKE0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742395712; c=relaxed/simple;
-	bh=c7v3mxoqWdwT0k/m2IYcuau8vrujmXPRETjgPMXJ9T0=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=ajesh+875fVn/Bk75CmvWiqw1egrTDc9FJXym5Kr8cokdINZ0OD98sYV+TV84o5YHGykoyxsgGI3++nuolZf4HL1h+Atpwu7+hgLSGH6lc/PJMojOfq1vfVgxnv9Zk8rw8wWiy779fjch5M9+bwhvNscgCyi9d9V7e/k6u0eP8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=bxZ340Ct; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	s=arc-20240116; t=1742395837; c=relaxed/simple;
+	bh=VRmXls2VmwWW6MToh9ANlZpv2+BLd8nU5uI/yqd4x+Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PBJUaVVNqiQsQbybHRmWWOKowYGQI1+dvXNcf0k96kEc4kS8/bMvh4ZTUYNFm5A2OteHJJEF7KORmPfbSInySWfosjmyKM0MSNGUmDxaKzIhuJ9SThJ3muRfmej2unqZScn8Q+lSUW85WQQ5zNQ5pCq5qJIHtb1lgcDl4Lt5wJs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=O7l0n0to; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bxZ340Ct"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52JElqhh1575716
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Wed, 19 Mar 2025 07:47:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52JElqhh1575716
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1742395673;
-	bh=hzGATQF/l9ODdjCNYOMijC4R1djYt0XFE3qrA8/SXj4=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=bxZ340CtsdcOXXpxaAdodT2jBIwfiDdh1P4SeBgFjd7Am9sj9sYUvdO3hIrhqMijX
-	 H4rq30KRZiCnfUgNPl3MM1jcQ2jLwEulAoQHkhH5xzQ6jaB4i9tOw7TV7fS+K4SnYO
-	 hKGRXaVstAR+11XZciOSEVI4xUQQMV9oSt3OSsIgjy8MeE0gQsPGmoodIv53BbZEfQ
-	 c3rmR46lwXBQmh6/sbl9LvwA90cEeBaWN7UQB3lvPDZLU7jHkfbI6Imu555am49sSh
-	 hB0kXioUE1OaH3vaaJfF6lDVlBanp0G06U8qad2r+iJvL4hZfoaId7ONJpQKhkI3lT
-	 AX3DH65MKAimg==
-Date: Wed, 19 Mar 2025 07:47:51 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: "Ahmed S. Darwish" <darwi@linutronix.de>, Borislav Petkov <bp@alien8.de>
-CC: Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
-        x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v2_01/29=5D_x86=3A_treewide=3A?=
- =?US-ASCII?Q?_Introduce_x86=5Fvendor=5Famd=5For=5Fhygon=28=29?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z9lUB2t0eZ8bz4vW@lx-t490>
-References: <20250317164745.4754-1-darwi@linutronix.de> <20250317164745.4754-2-darwi@linutronix.de> <20250317173216.GGZ9hcoDICYl1fBtBG@fat_crate.local> <Z9lUB2t0eZ8bz4vW@lx-t490>
-Message-ID: <14F10A4B-A274-40B2-9609-669E09981812@zytor.com>
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="O7l0n0to"
+Received: from mail-ed1-f71.google.com (mail-ed1-f71.google.com [209.85.208.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 222563F637
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:50:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1742395825;
+	bh=SMXuj2xQPevxWoO0QPAu/DjqgHg0soeU6S5kJSD3kNQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=O7l0n0toUcUb0pxMyNRVgnVLftB8gURg+4/+2J7PiI1rUpo5W5cn0z/pLLdhuYhN9
+	 xrmdHzjINriJ/5jrb/b/E4ZgQ9PiPGYszY9v0GRlGXrxLdc+YSB8aJfZ0xKZPW8CWt
+	 HKWu4w9+tueAUyvRt+T3GcoF9JrMbbO/ppbMnbRAW3XeVlfkl2FuGA35ze1CHKbAtS
+	 5ozvn8bSLjTfCVSDD99HyhX3TFr0aSqKkEx9EvrZmKUSh+INAwDeioGg1r1ZLXg3D8
+	 hNUjQNuHTsRsVEg1ZGri8fSMc2LejdVr5lb/ekzQ6ZPtk2niPESQ3RS1ovnfuUS+de
+	 kUHtrazdkdnZQ==
+Received: by mail-ed1-f71.google.com with SMTP id 4fb4d7f45d1cf-5e5c76fd898so6064661a12.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:50:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742395824; x=1743000624;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SMXuj2xQPevxWoO0QPAu/DjqgHg0soeU6S5kJSD3kNQ=;
+        b=kWdd31EOXrMN7cnGpd+xCXbGIXUzN5aPD3jSnpB8dP8PKT48aszl0aDCzQ1SuRfOvI
+         kHejXH3FJ9g4GtMYvceuRcShvVagrnXn/0aw5EHjeVIE4HQyMvbIz397+Sp9Ga29Mi9d
+         Bya9zbm5B8ZdiavQ+2aEvd18RR1dFJswROemHD8T/n1VDNB9YDL7d5ajhFPHzLQJttLv
+         U7O3Ocoq/ghoEOa1dXLdYwxoGgxc1Gniabrn7CqGEJoi+qrCwMmqC1YPrDwvEyau/705
+         eWpUCnpdN9mKULHNS8JS4VOCHkoAcwrYWLNRtzPBoaB/zl0tUxtMB4Iyf1PB8U+ZCTK/
+         Y5vQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUTuD5ZLCnP3F5NBA2E8cgIxiA0EiM44ahA7vVsPl3QjZqULHbvdws9So0WLwDpc7ILZhP+ll8dPEg/gr8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyGBijGu9/NXn5/OnsZ8KwgEKrrFm27ctraMcsBE3jq9h+fQulJ
+	CtyHKt/kH79lH8miypfnbdgBxi+ESQ8k0YCQEX87Zp2gJniuAndxw2d72LMxa3D6VaiO8M1iAqf
+	Al3kEddqrnOWjbm16Xpmbf7U+3Gpn2mtVQow2cAeG1sjQ8rtdtPYdNJGWtHHbF45G/5HmdZeur/
+	Xniw==
+X-Gm-Gg: ASbGncvwEhA7pE2Q/BmHJKo0rtWkiI5uIyEBYCD+FkiZNY+MvAPWtOMiE28cznWr8Ns
+	zbU0rsQZMeMWfqXjz2VsO9zUupK7xa1KdhaJBLmM5cCusWFfQzPhxHpp7glKIMhjwRL5q19mn2R
+	x96pEEqRqDP4BH4USamn/rmvIV2eG/NLgpJTh7z5YjV0N2lGSYC43XzlbR+34VwgsnxUPgv6Riz
+	FGtsUMpI9nq0NonVqJPQ2NT+l+CVh7wZopWMCC6e+QqfMf+fILSxW+oJ4Xvgz9pVLa9pl1VGSQf
+	BnuoEhhoSbc8dInSJqV6vQS6UV2C8MMUHnjPJA==
+X-Received: by 2002:a17:906:6a1e:b0:ac3:1364:2d15 with SMTP id a640c23a62f3a-ac3b7ddffa6mr284154666b.24.1742395824044;
+        Wed, 19 Mar 2025 07:50:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHZOIeVTPsdDlRt0H8qhCX7tF05joMtRcj2LbCy2HXABmRQxWZibWCD6ViL8rm2Ti4D18xvfQ==
+X-Received: by 2002:a17:906:6a1e:b0:ac3:1364:2d15 with SMTP id a640c23a62f3a-ac3b7ddffa6mr284150466b.24.1742395823363;
+        Wed, 19 Mar 2025 07:50:23 -0700 (PDT)
+Received: from amikhalitsyn ([188.192.113.77])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aed4fsm1014490066b.26.2025.03.19.07.50.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 07:50:22 -0700 (PDT)
+Date: Wed, 19 Mar 2025 15:50:20 +0100
+From: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
+To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: James.Bottomley@hansenpartnership.com, Liam.Howlett@oracle.com, 
+	akpm@linux-foundation.org, arnd@kernel.org, brauner@kernel.org, chris@zankel.net, 
+	david@redhat.com, deller@gmx.de, hch@infradead.org, jannh@google.com, 
+	jcmvbkbc@gmail.com, jeffxu@chromium.org, jhubbard@nvidia.com, 
+	linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	mattst88@gmail.com, muchun.song@linux.dev, paulmck@kernel.org, 
+	richard.henderson@linaro.org, shuah@kernel.org, sidhartha.kumar@oracle.com, surenb@google.com, 
+	tsbogend@alpha.franken.de, vbabka@suse.cz, willy@infradead.org, criu@lists.linux.dev, 
+	Andrei Vagin <avagin@gmail.com>, Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+Subject: Re: [PATCH v4 0/5] implement lightweight guard pages
+Message-ID: <zihwmp67m2lpuxbfktmztvjdyap7suzd75dowlw4eamu6bhjf3@6euydiqowc7h>
+References: <cover.1730123433.git.lorenzo.stoakes@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1730123433.git.lorenzo.stoakes@oracle.com>
 
-On March 18, 2025 4:07:51 AM PDT, "Ahmed S=2E Darwish" <darwi@linutronix=2E=
-de> wrote:
->Hi,
->
->On Mon, 17 Mar 2025, Borislav Petkov wrote:
->>
->> On Mon, Mar 17, 2025, Ahmed S=2E Darwish wrote:
->> > The pattern to check if an x86 vendor is AMD or HYGON (or not both) i=
-s
->> > pretty common=2E  Introduce x86_vendor_amd_or_hygon() at <asm/process=
-or=2Eh>
->>
->> So if we need to check "intel too", we do
->>
->> x86_vendor_amd_or_hygon_or_intel?
->>
->> Nah, this is silly=2E
->>
->
->I needed this while refactoring the cacheinfo=2Ec leaf 0x8000001d code at
->patch 11/29 ("x86/cacheinfo: Consolidate AMD/Hygon leaf 0x8000001d
->calls") as the combined check was done multiple times=2E
->
->Then I found that there are 28 other cases in the x86 tree where the
->AMD/Hygon CPU vendor check is also combined=2E  So I did that macro and i=
-t
->also made a number the affected sites more succinct; e=2Eg=2E:
->
->|  diff --git a/arch/x86/xen/enlighten=2Ec b/arch/x86/xen/enlighten=2Ec
->|  index 43dcd8c7badc=2E=2E13df4917d7d8 100644
->|  --- a/arch/x86/xen/enlighten=2Ec
->|  +++ b/arch/x86/xen/enlighten=2Ec
->|  @@ -82,11 +82,9 @@ void xen_hypercall_setfunc(void)
->|   	if (static_call_query(xen_hypercall) !=3D xen_hypercall_hvm)
->|   		return;
->|
->|  -	if ((boot_cpu_data=2Ex86_vendor =3D=3D X86_VENDOR_AMD ||
->|  -	     boot_cpu_data=2Ex86_vendor =3D=3D X86_VENDOR_HYGON))
->|  -		static_call_update(xen_hypercall, xen_hypercall_amd);
->|  -	else
->|  -		static_call_update(xen_hypercall, xen_hypercall_intel);
->|  +	static_call_update(xen_hypercall,
->|  +			   x86_vendor_amd_or_hygon(boot_cpu_data=2Ex86_vendor) ?
->|  +			   xen_hypercall_amd : xen_hypercall_intel);
->|   }
->|
->|   /*
->|  @@ -118,11 +116,8 @@ noinstr void *__xen_hypercall_setfunc(void)
->|   	if (!boot_cpu_has(X86_FEATURE_CPUID))
->|   		xen_get_vendor();
->|
->|  -	if ((boot_cpu_data=2Ex86_vendor =3D=3D X86_VENDOR_AMD ||
->|  -	     boot_cpu_data=2Ex86_vendor =3D=3D X86_VENDOR_HYGON))
->|  -		func =3D xen_hypercall_amd;
->|  -	else
->|  -		func =3D xen_hypercall_intel;
->|  +	func =3D x86_vendor_amd_or_hygon(boot_cpu_data=2Ex86_vendor) ?
->|  +		xen_hypercall_amd : xen_hypercall_intel;
->|
->|   	static_call_update_early(xen_hypercall, func);
->
->Nonetheless, I've seen your other emails in the thread, and I'll drop the
->patch=2E
->
->Thanks!
->
->--
->Ahmed S=2E Darwish
->Linutronix GmbH
+On Mon, Oct 28, 2024 at 02:13:26PM +0000, Lorenzo Stoakes wrote:
+> Userland library functions such as allocators and threading implementations
+> often require regions of memory to act as 'guard pages' - mappings which,
+> when accessed, result in a fatal signal being sent to the accessing
+> process.
+> 
+> The current means by which these are implemented is via a PROT_NONE mmap()
+> mapping, which provides the required semantics however incur an overhead of
+> a VMA for each such region.
+> 
+> With a great many processes and threads, this can rapidly add up and incur
+> a significant memory penalty. It also has the added problem of preventing
+> merges that might otherwise be permitted.
+> 
+> This series takes a different approach - an idea suggested by Vlasimil
+> Babka (and before him David Hildenbrand and Jann Horn - perhaps more - the
+> provenance becomes a little tricky to ascertain after this - please forgive
+> any omissions!)  - rather than locating the guard pages at the VMA layer,
+> instead placing them in page tables mapping the required ranges.
+> 
+> Early testing of the prototype version of this code suggests a 5 times
+> speed up in memory mapping invocations (in conjunction with use of
+> process_madvise()) and a 13% reduction in VMAs on an entirely idle android
+> system and unoptimised code.
+> 
+> We expect with optimisation and a loaded system with a larger number of
+> guard pages this could significantly increase, but in any case these
+> numbers are encouraging.
+> 
+> This way, rather than having separate VMAs specifying which parts of a
+> range are guard pages, instead we have a VMA spanning the entire range of
+> memory a user is permitted to access and including ranges which are to be
+> 'guarded'.
+> 
+> After mapping this, a user can specify which parts of the range should
+> result in a fatal signal when accessed.
+> 
+> By restricting the ability to specify guard pages to memory mapped by
+> existing VMAs, we can rely on the mappings being torn down when the
+> mappings are ultimately unmapped and everything works simply as if the
+> memory were not faulted in, from the point of view of the containing VMAs.
+> 
+> This mechanism in effect poisons memory ranges similar to hardware memory
+> poisoning, only it is an entirely software-controlled form of poisoning.
+> 
+> The mechanism is implemented via madvise() behaviour - MADV_GUARD_INSTALL
+> which installs page table-level guard page markers - and
+> MADV_GUARD_REMOVE - which clears them.
+> 
+> Guard markers can be installed across multiple VMAs and any existing
+> mappings will be cleared, that is zapped, before installing the guard page
+> markers in the page tables.
+> 
+> There is no concept of 'nested' guard markers, multiple attempts to install
+> guard markers in a range will, after the first attempt, have no effect.
+> 
+> Importantly, removing guard markers over a range that contains both guard
+> markers and ordinary backed memory has no effect on anything but the guard
+> markers (including leaving huge pages un-split), so a user can safely
+> remove guard markers over a range of memory leaving the rest intact.
+> 
+> The actual mechanism by which the page table entries are specified makes
+> use of existing logic - PTE markers, which are used for the userfaultfd
+> UFFDIO_POISON mechanism.
+> 
+> Unfortunately PTE_MARKER_POISONED is not suited for the guard page
+> mechanism as it results in VM_FAULT_HWPOISON semantics in the fault
+> handler, so we add our own specific PTE_MARKER_GUARD and adapt existing
+> logic to handle it.
+> 
+> We also extend the generic page walk mechanism to allow for installation of
+> PTEs (carefully restricted to memory management logic only to prevent
+> unwanted abuse).
+> 
+> We ensure that zapping performed by MADV_DONTNEED and MADV_FREE do not
+> remove guard markers, nor does forking (except when VM_WIPEONFORK is
+> specified for a VMA which implies a total removal of memory
+> characteristics).
+> 
+> It's important to note that the guard page implementation is emphatically
+> NOT a security feature, so a user can remove the markers if they wish. We
+> simply implement it in such a way as to provide the least surprising
+> behaviour.
+> 
+> An extensive set of self-tests are provided which ensure behaviour is as
+> expected and additionally self-documents expected behaviour of guard
+> ranges.
 
-I would agree that abstracting this into something higher level makes sens=
-e, but have you considered whether or not it is actually necessary to do th=
-is in the first place? In the case of level 0x8000001d for example, that sh=
-ould be handled by the end bracket from leaf 0x80000000=2E
+Dear Lorenzo,
+Dear colleagues,
 
-In general, VFMS checks are not a good thing=2E
+sorry about raising an old thread.
+
+It looks like this feature is now used in glibc [1]. And we noticed failures in CRIU [2]
+CI on Fedora Rawhide userspace. Now a question is how we can properly detect such 
+"guarded" pages from user space. As I can see from MADV_GUARD_INSTALL implementation,
+it does not modify VMA flags anyhow, but only page tables. It means that /proc/<pid>/maps
+and /proc/<pid>/smaps interfaces are useless in this case. (Please, correct me if I'm missing
+anything here.)
+
+I wonder if you have any ideas / suggestions regarding Checkpoint/Restore here. We (CRIU devs) are happy
+to develop some patches to bring some uAPI to expose MADV_GUARDs, but before going into this we decided
+to raise this question in LKML.
+
++CC criu@lists.linux.dev
++CC Andrei Vagin <avagin@gmail.com>
++CC Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+
+Kind regards,
+Alex
+
+[1] https://github.com/bminor/glibc/commit/a6fbe36b7f31292981422692236465ab56670ea9
+[2] https://github.com/checkpoint-restore/criu/pull/2625
+
+> 
+> Suggested-by: Vlastimil Babka <vbabka@suse.cz>
+> Suggested-by: Jann Horn <jannh@google.com>
+> Suggested-by: David Hildenbrand <david@redhat.com>
+> 
+> v4
+> * Use restart_syscall() to implement -ERESTARTNOINTR to ensure correctly
+>   handled by kernel - tested this code path and confirmed it works
+>   correctly. Thanks to Vlastimil for pointing this issue out!
+> * Updated the vector_madvise() handler to not unnecessarily invoke
+>   cond_resched() as suggested by Vlastimil.
+> * Updated guard page tests to add a test for a vector operation which
+>   overwrites existing mappings. Tested this against the -ERESTARTNOINTR
+>   case and confirmed working.
+> * Improved page walk logic further, refactoring handling logic as suggested
+>   by Vlastimil.
+> * Moved MAX_MADVISE_GUARD_RETRIES to mm/madvise.c as suggested by Vlastimil.
+> 
+> v3
+> * Cleaned up mm/pagewalk.c logic a bit to make things clearer, as suggested
+>   by Vlastiml.
+> * Explicitly avoid splitting THP on PTE installation, as suggested by
+>   Vlastimil. Note this has no impact on the guard pages logic, which has
+>   page table entry handlers at PUD, PMD and PTE level.
+> * Added WARN_ON_ONCE() to mm/hugetlb.c path where we don't expect a guard
+>   marker, as suggested by Vlastimil.
+> * Reverted change to is_poisoned_swp_entry() to exclude guard pages which
+>   has the effect of MADV_FREE _not_ clearing guard pages. After discussion
+>   with Vlastimil, it became apparent that the ability to 'cancel' the
+>   freeing operation by writing to the mapping after having issued an
+>   MADV_FREE would mean that we would risk unexpected behaviour should the
+>   guard pages be removed, so we now do not remove markers here at all.
+> * Added comment to PTE_MARKER_GUARD to highlight that memory tagged with
+>   the marker behaves as if it were a region mapped PROT_NONE, as
+>   highlighted by David.
+> * Rename poison -> install, unpoison -> remove (i.e. MADV_GUARD_INSTALL /
+>   MADV_GUARD_REMOVE over MADV_GUARD_POISON / MADV_GUARD_REMOVE) at the
+>   request of David and John who both find the poison analogy
+>   confusing/overloaded.
+> * After a lot of discussion, replace the looping behaviour should page
+>   faults race with guard page installation with a modest reattempt followed
+>   by returning -ERESTARTNOINTR to have the operation abort and re-enter,
+>   relieving lock contention and avoiding the possibility of allowing a
+>   malicious sandboxed process to impact the mmap lock or stall the overall
+>   process more than necessary, as suggested by Jann and Vlastimil having
+>   raised the issue.
+> * Adjusted the page table walker so a populated huge PUD or PMD is
+>   correctly treated as being populated, necessitating a zap. In v2 we
+>   incorrectly skipped over these, which would cause the logic to wrongly
+>   proceed as if nothing were populated and the install succeeded.
+>   Instead, explicitly check to see if a huge page - if so, do not split but
+>   rather abort the operation and let zap take care of things.
+> * Updated the guard remove logic to not unnecessarily split huge pages
+>   either.
+> * Added a debug check to assert that the number of installed PTEs matches
+>   expectation, accounting for any existing guard pages.
+> * Adapted vector_madvise() used by the process_madvise() system call to
+>   handle -ERESTARTNOINTR correctly.
+> https://lore.kernel.org/all/cover.1729699916.git.lorenzo.stoakes@oracle.com/
+> 
+> v2
+> * The macros in kselftest_harness.h seem to be broken - __EXPECT() is
+>   terminated by '} while (0); OPTIONAL_HANDLER(_assert)' meaning it is not
+>   safe in single line if / else or for /which blocks, however working
+>   around this results in checkpatch producing invalid warnings, as reported
+>   by Shuah.
+> * Fixing these macros is out of scope for this series, so compromise and
+>   instead rewrite test blocks so as to use multiple lines by separating out
+>   a decl in most cases. This has the side effect of, for the most part,
+>   making things more readable.
+> * Heavily document the use of the volatile keyword - we can't avoid
+>   checkpatch complaining about this, so we explain it, as reported by
+>   Shuah.
+> * Updated commit message to highlight that we skip tests we lack
+>   permissions for, as reported by Shuah.
+> * Replaced a perror() with ksft_exit_fail_perror(), as reported by Shuah.
+> * Added user friendly messages to cases where tests are skipped due to lack
+>   of permissions, as reported by Shuah.
+> * Update the tool header to include the new MADV_GUARD_POISON/UNPOISON
+>   defines and directly include asm-generic/mman.h to get the
+>   platform-neutral versions to ensure we import them.
+> * Finally fixed Vlastimil's email address in Suggested-by tags from suze to
+>   suse, as reported by Vlastimil.
+> * Added linux-api to cc list, as reported by Vlastimil.
+> https://lore.kernel.org/all/cover.1729440856.git.lorenzo.stoakes@oracle.com/
+> 
+> v1
+> * Un-RFC'd as appears no major objections to approach but rather debate on
+>   implementation.
+> * Fixed issue with arches which need mmu_context.h and
+>   tlbfush.h. header imports in pagewalker logic to be able to use
+>   update_mmu_cache() as reported by the kernel test bot.
+> * Added comments in page walker logic to clarify who can use
+>   ops->install_pte and why as well as adding a check_ops_valid() helper
+>   function, as suggested by Christoph.
+> * Pass false in full parameter in pte_clear_not_present_full() as suggested
+>   by Jann.
+> * Stopped erroneously requiring a write lock for the poison operation as
+>   suggested by Jann and Suren.
+> * Moved anon_vma_prepare() to the start of madvise_guard_poison() to be
+>   consistent with how this is used elsewhere in the kernel as suggested by
+>   Jann.
+> * Avoid returning -EAGAIN if we are raced on page faults, just keep looping
+>   and duck out if a fatal signal is pending or a conditional reschedule is
+>   needed, as suggested by Jann.
+> * Avoid needlessly splitting huge PUDs and PMDs by specifying
+>   ACTION_CONTINUE, as suggested by Jann.
+> https://lore.kernel.org/all/cover.1729196871.git.lorenzo.stoakes@oracle.com/
+> 
+> RFC
+> https://lore.kernel.org/all/cover.1727440966.git.lorenzo.stoakes@oracle.com/
+> 
+> Lorenzo Stoakes (5):
+>   mm: pagewalk: add the ability to install PTEs
+>   mm: add PTE_MARKER_GUARD PTE marker
+>   mm: madvise: implement lightweight guard page mechanism
+>   tools: testing: update tools UAPI header for mman-common.h
+>   selftests/mm: add self tests for guard page feature
+> 
+>  arch/alpha/include/uapi/asm/mman.h           |    3 +
+>  arch/mips/include/uapi/asm/mman.h            |    3 +
+>  arch/parisc/include/uapi/asm/mman.h          |    3 +
+>  arch/xtensa/include/uapi/asm/mman.h          |    3 +
+>  include/linux/mm_inline.h                    |    2 +-
+>  include/linux/pagewalk.h                     |   18 +-
+>  include/linux/swapops.h                      |   24 +-
+>  include/uapi/asm-generic/mman-common.h       |    3 +
+>  mm/hugetlb.c                                 |    4 +
+>  mm/internal.h                                |    6 +
+>  mm/madvise.c                                 |  239 ++++
+>  mm/memory.c                                  |   18 +-
+>  mm/mprotect.c                                |    6 +-
+>  mm/mseal.c                                   |    1 +
+>  mm/pagewalk.c                                |  246 +++-
+>  tools/include/uapi/asm-generic/mman-common.h |    3 +
+>  tools/testing/selftests/mm/.gitignore        |    1 +
+>  tools/testing/selftests/mm/Makefile          |    1 +
+>  tools/testing/selftests/mm/guard-pages.c     | 1243 ++++++++++++++++++
+>  19 files changed, 1751 insertions(+), 76 deletions(-)
+>  create mode 100644 tools/testing/selftests/mm/guard-pages.c
+> 
+> --
+> 2.47.0
