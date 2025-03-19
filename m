@@ -1,126 +1,162 @@
-Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014A3206F14;
-	Wed, 19 Mar 2025 16:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B49AA1E5B84;
+	Wed, 19 Mar 2025 16:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742403014; cv=none; b=JX1xbypvIl9G+H/0R3FI7z8n0ZrPZQ0vcWAYtGawStK2vu8KGEjNJOw6HFJrmEiI8ju+ZIhIffUMRGIjdA+7TCszYPnHIJv/EVFaBzrwXWKv5spDcOuk2hr98oFkAmK3tbaQBklCZXINqujOI3MM+0R4Jcewc0UToYveyucpJFw=
+	t=1742403019; cv=none; b=OdGYILnpAEidhRK2ERAt29CDCm+vyDi19vXjX1q1TPzzQytZYq3hhUaxxvZ7nkDHFfu25pL0f9paysO+0D9i98WTDWzSqfmLJdWzdsLDp9EB4bkJ8sY1/842nNfR2gRXyQr6La0U5AG/JOhQs+yLi3lvGsYGgdFzeDZ60msrJLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742403014; c=relaxed/simple;
-	bh=jtqICxpttL+081MeVsrW0PF8g0r+obZJAZMWsooXIQ0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=vAOzfBS6QyWuvakuqtC7DUzrR4j0MziVciSeDdTrTld0OuID/TS991J+3oaQmfU53l+xUALtaD9+I1A6EbEYk++OK+kH1yFAdpejI7AdXB+JzKvV48qGzo8FVT4SRfXNiA6UqJ2aacZn9+LZz+yQwl3sGJbhklsvAz1JtgjJUuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=efJgxnSB; arc=none smtp.client-ip=209.85.216.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742403019; c=relaxed/simple;
+	bh=w0W+Vhmg4HTW7H48JXQ0/qnZxJb4KW9yQ3M+Ys4N2eg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WEHJRLmaZv91wVT6foJsPX9q0M94XImijDPPSrqm/XBpik7wI/p/IKLbYtOMEjuoPqMhHFuucXBZ6lpFAr1FSTBfqcH2mNtoVsm0fGkTH1OOVBr2Bve+fuzEOMoBU+9VKiB/rcK8aMltp9z7QSsvgYpDqHvqGiprMDfkk7mTMt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sfx8+PGK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="efJgxnSB"
-Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-301302a328bso8461377a91.2;
-        Wed, 19 Mar 2025 09:50:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742403012; x=1743007812; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ktd5HnARwuJ13vsAdMCAO/qEm+OczuyUS4W9n3wx7eI=;
-        b=efJgxnSB1K46oPqv4mV1zE/gdakXdU2TZH+haKwc0RnB9bambJVgDAZqbGn7JFc376
-         RHDGZZbx9pQMD4JDb6kg7tGbgoN1iL5u3RNaJIN5WZajV4dzw3LDe3Q69KArnx7W5SE1
-         meijlHe0oli7o4eVew3qHj62iVtjM4EXYB79dG204QCNM4gRB2EznmcqsXWIHiSejA6D
-         FBYIIuNsKfHTSZVPUvstzRLUeOb+JLDKk+Y0ijOHVXA/ti+cdPSavN2hyFJhTNhMBehi
-         aZPc4r78HvxLn9XRLesNEW2yTbTEmvdIsiBLCB7P5pZN30fXL2e5Fpw/26huuJjYiPnj
-         pv1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742403012; x=1743007812;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ktd5HnARwuJ13vsAdMCAO/qEm+OczuyUS4W9n3wx7eI=;
-        b=k5pQ41y4ItWK7ZGztRqCr0cSGEIes40AI6HVAIJ01Z65eWFMT3LWPsrpDdtVZh4mj1
-         X6yLy6PN4nrBoFsq5+Lno4bJhc1EZABPqg9MHBkuV2O65tWXI8rW0j/8x4tAdFi5gmRK
-         pM8R32nDet2OAlJkBHUEp8LNpaZ7Zh3Ts7SjrpHfcAlXzvz5F95EIyXuhBOSCJVk7Od5
-         TsECClIxgaDVfQNOGxY8j7MbB6+KKdPTUqThHHecENumOChV/Jp7ugjdxMuJIE1WCp5h
-         x7LELt0gx/2NvQqC6bHW+gKVcHbqjPIIwWP7PorDNcAo+Gr5fKSk2/aWr3r4bSpKT+9C
-         nBxw==
-X-Forwarded-Encrypted: i=1; AJvYcCXedfAEgAqurDEm5NFtr3mz45YMYomvRyJPZ16QBSb9cyApMMaK2uGb3lYAkGBfUsa1LikRrxTK+UYkIaM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwSQ7kb+1E4RaetfxG5W3D8mh2J313PvYnyvR8MDeBa8BrKjic1
-	3XY2iB3U+xPSpPhpAp4wVvZBE3oDKrFnuu2yyoEIGMhRgskB3LrP
-X-Gm-Gg: ASbGnctRSq1N4wEwRLOtzJhvhP12S3qDaQX64TvfVpLMJ+QMS1G3YSBfI3GlwOACwv2
-	v5zxAVW4KtTX7E6AYq1tYxjG9maGsoz1Ci6bFAFaKPe1YCIK8LRZN3yaWuoTHDJzvLOMFmx63Ok
-	dRl+EWH6wEyjnrD0HGnh7JI/3My/9gp4QqWKguomIJJUGcrpXdtscvcES4fmLBueG6sCERXMyyh
-	GgwHBHxI85bI0hBEhz2ByfCkmoVaNxOa6S8FT+VbTD+a6uGd3GRrpUWC/5qugzxrcw8Efq/uw7J
-	SECP8OffVCNdMVufRUCkF6UrLwuy8WsICbTB1F8a0CrHsyxXNhaPPYJ0cqFGfxTKd2EQSZDk/aO
-	q4xCrUsXfZgW54tNB9sidFQ==
-X-Google-Smtp-Source: AGHT+IGxXevDtQdSFbDZHtjF2RHmeqCAKr0zaFPCSHEdfmgNst33MgVmH/JXly1hqvsrRFBXTDuyMw==
-X-Received: by 2002:a17:90b:2647:b0:2fc:b40:339a with SMTP id 98e67ed59e1d1-301bde60960mr5555739a91.10.1742403012272;
-        Wed, 19 Mar 2025 09:50:12 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf576bc2sm1863641a91.5.2025.03.19.09.50.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 09:50:11 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-Date: Thu, 20 Mar 2025 00:47:29 +0800
-Subject: [PATCH v4 8/8] ARM: dts: aspeed: catalina: Enable multi-master on
- additional I2C buses
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sfx8+PGK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B43FCC4CEE4;
+	Wed, 19 Mar 2025 16:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742403018;
+	bh=w0W+Vhmg4HTW7H48JXQ0/qnZxJb4KW9yQ3M+Ys4N2eg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sfx8+PGKRlmsa/iCCAg9PvHSjDpWNGaWLkSw18m1d20Z0Od4ZpAYptWYutoyKPfJg
+	 1CY5RN6XSrvUgcjVIsN1/q8AkBANTsUV7X0+qFmbv52QiVg/okRuhZ+beJDEGeKF86
+	 CHTM5rCNBzx4kUEUVwUAHXJ6jm5+xjrS46JDysvfAAPpLy9XYLiyoQDmMaMkgMy4ri
+	 esP5BT5B2zxY3aBeYZ7RYSpj6gfqNQZFCMnJP+5ECEvOSzrl1dhtWDT3zzMkLuclmX
+	 +GTV5PEk0cGiACmga+rcwgzn8mGTRylZD6+txlffGyf6GTHQrEf6xQoM+S7AgSx/Ro
+	 mxUWjng7selBQ==
+Message-ID: <59a20c51-aa1a-414d-97a6-610a82947472@kernel.org>
+Date: Wed, 19 Mar 2025 11:50:16 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250320-potin-catalina-dts-update-20250102-v4-8-7c34b8139014@gmail.com>
-References: <20250320-potin-catalina-dts-update-20250102-v4-0-7c34b8139014@gmail.com>
-In-Reply-To: <20250320-potin-catalina-dts-update-20250102-v4-0-7c34b8139014@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Patrick Williams <patrick@stwcx.xyz>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
- Potin Lai <potin.lai.pt@gmail.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742402988; l=1008;
- i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
- bh=jtqICxpttL+081MeVsrW0PF8g0r+obZJAZMWsooXIQ0=;
- b=x6Gzmnb1MJYvPzx8ZwKN1PgPtzH5ZXo5LlnNEMXuS0IyPsgHR2WVwVGglPj2osLT16/A3QCp2
- K9s+FG9+ciTAQDpvzrXkOqQ9lzlBFMDWvik3mUz8hcRRxrN+hXsLbaH
-X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
- pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/5] cpufreq/amd-pstate: Add dynamic energy performance
+ preference
+To: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
+ "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>
+Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250304152327.1561017-1-superm1@kernel.org>
+ <20250304152327.1561017-2-superm1@kernel.org>
+ <8e87fa8c-5254-46d5-a853-46e8c31cbe0e@amd.com>
+ <4e0ab8ce-908e-49a1-8445-14129a41afda@kernel.org>
+ <5eb7d32e-d251-4536-a4e8-61670aa34869@amd.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <5eb7d32e-d251-4536-a4e8-61670aa34869@amd.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Update the device tree to enable `multi-master` mode on I2C buses shared
-between the host BMC and the NV module with HMC. This ensures proper bus
-arbitration and coordination in multi-master environments, preventing
-communication conflicts and improving reliability.
+On 3/18/2025 22:43, Dhananjay Ugwekar wrote:
+> On 3/19/2025 1:06 AM, Mario Limonciello wrote:
+>> On 3/12/2025 07:16, Dhananjay Ugwekar wrote:
+>>> On 3/4/2025 8:53 PM, Mario Limonciello wrote:
+>>>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>>>
+>>>> Dynamic energy performance preference will change the EPP profile
+>>>> based on whether the machine is running on AC or DC power.
+>>>>
+>>>> A notification chain from the power supply core is used to adjust
+>>>> EPP values on plug in or plug out events.
+>>>>
+>>>> For non-server systems:
+>>>>       * the default EPP for AC mode is `performance`.
+>>>>       * the default EPP for DC mode is `balance_performance`.
+>>>>
+>>>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>>>> ---
+>>>> v1->v2:
+>>>>    * Change defaults to performance (AC) and balance_performance (DC)
+>>>>    * Default Kconfig to disabled for now
+>>>>    * Rebase on latest branch
+>>>> ---
+>>>>    Documentation/admin-guide/pm/amd-pstate.rst |  18 ++-
+>>>>    drivers/cpufreq/Kconfig.x86                 |  12 ++
+>>>>    drivers/cpufreq/amd-pstate.c                | 129 ++++++++++++++++++--
+>>>>    drivers/cpufreq/amd-pstate.h                |   5 +-
+>>>>    4 files changed, 155 insertions(+), 9 deletions(-)
+>>>>
+>>> [Snip]
+>>>> @@ -1556,6 +1667,10 @@ static int amd_pstate_epp_set_policy(struct cpufreq_policy *policy)
+>>>>        if (!policy->cpuinfo.max_freq)
+>>>>            return -ENODEV;
+>>>>    +    /* policy can't be changed to performance policy while dynamic epp is enabled */
+>>>> +    if (policy->policy == CPUFREQ_POLICY_PERFORMANCE && cpudata->dynamic_epp)
+>>>> +        return -EBUSY;
+>>>
+>>> We might need to tweak this condition, because if we enable "CONFIG_X86_AMD_PSTATE_DYNAMIC_EPP" in config
+>>> and boot with "amd_pstate=active" it lands here (cpufreq_online()->amd_pstate_epp_set_policy()) driver init fails
+>>> as the default governor is performance.
+>>>
+>>
+>> The check is important to make sure that you can't go to performance mode after init.
+>>
+>> I think this is the way I would want to solve it.
+>> Set policy to powersave before enabling dynamic epp for amd_pstate_epp_cpu_init().
+>>
+>> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+>> index 824756ac0010e..4a0f561d0e2d1 100644
+>> --- a/drivers/cpufreq/amd-pstate.c
+>> +++ b/drivers/cpufreq/amd-pstate.c
+>> @@ -1729,8 +1729,10 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>>                  WRITE_ONCE(cpudata->cppc_req_cached, value);
+>>          }
+>>
+>> -       if (dynamic_epp)
+>> +       if (dynamic_epp) {
+>> +               policy->policy = CPUFREQ_POLICY_POWERSAVE;
+>>                  ret = amd_pstate_set_dynamic_epp(policy);
+>> +       }
+>>          else
+>>                  ret = amd_pstate_set_epp(policy, amd_pstate_get_balanced_epp(policy));
+> 			^^^^^^^^^^^^ (mentioned below)
+>>          if (ret)
+>>
+>> Thoughts?
+> 
+> Yes, this looks good, because anyway there is no point in having performance governor and dynamic
+> epp set at the same time.
+> 
+> I found one related quirk though, we are setting performance governor for server platforms in
+> amd_pstate_epp_cpu_init() and then setting epp at the line highlighted above. We dont have a
+> check in *_set_epp() functions for performance governor. This could alter the performance governor
+> behavior if we set a "balanced" epp for it. I haven't tested this part yet.
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
----
- arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts | 2 ++
- 1 file changed, 2 insertions(+)
+In that case we probably want the "default" ACPI platform profile to be 
+"performance" when on a server instead of balanced.
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-index 573701bb7fee..c11de5a61912 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-@@ -800,6 +800,7 @@ ssif-bmc@10 {
- 
- &i2c12 {
- 	status = "okay";
-+	multi-master;
- 
- 	// Module 1 FRU EEPROM
- 	eeprom@50 {
-@@ -810,6 +811,7 @@ eeprom@50 {
- 
- &i2c13 {
- 	status = "okay";
-+	multi-master;
- 
- 	// Module 0 FRU EEPROM
- 	eeprom@50 {
-
--- 
-2.31.1
+> 
+> Thanks,
+> Dhananjay
+> 
+>>
+>>>> +
+>>>>        cpudata->policy = policy->policy;
+>>>>          ret = amd_pstate_epp_update_limit(policy);
+>>>> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
+>>>> index fbe1c08d3f061..6882876f895de 100644
+>>>> --- a/drivers/cpufreq/amd-pstate.h
+>>>> +++ b/drivers/cpufreq/amd-pstate.h
+>>>> @@ -104,7 +104,10 @@ struct amd_cpudata {
+>>>>        /* EPP feature related attributes*/
+>>>>        u32    policy;
+>>>>        bool    suspended;
+>>>> -    u8    epp_default;
+>>>> +    u8    epp_default_ac;
+>>>> +    u8    epp_default_dc;
+>>>> +    bool    dynamic_epp;
+>>>> +    struct notifier_block power_nb;
+>>>>    };
+>>>>      /*
+>>>
+>>
+> 
 
