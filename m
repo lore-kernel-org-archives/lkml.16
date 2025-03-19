@@ -1,122 +1,94 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E891C4A0F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:43:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3284324E4B3;
+	Wed, 19 Mar 2025 02:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742352225; cv=none; b=jmM2EqTbWSxs7NT7ogkM+/XIguH9e77mUdOTKwfjy0g8pKAZOFabU/wDJTYCo3nVawBdBw7h4Y1IXFJIcZAPi61H61cf678iZYTXy8ieeeGZELqjLaDk709JI3ywadCcH9Pys5qWpdGOb1rjzwiCgcWVEeibbmGu6LVCQ297Mgo=
+	t=1742352268; cv=none; b=ejGtN4zTBn2lqLx7vzoWkBXYMa5BblQ+7E7+OQd0qGbY1xRooe8ukdvQNLIPW3B9nVF/kYB/tOskWI/r57mO2U4mFv6crJHe6YsIxs/WuGR8KG8zOWPVugV56gKwLdmrU3fSh6RJlIA3qOxPb3CylQvt4ktS9qDsdZP0/d6pqmg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742352225; c=relaxed/simple;
-	bh=ZQTUjePxm5TGZCk9G/ywjE3xKzudTs5M9ElXEf27t+g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KvRwlPdHOAjM9GJX4z0/mJFjrxWlokXXSaw6EQTjUvllX788WZFk+0RluG7QKtV5tKqBu/Nke/URJihlYstBdj1G9x+w3ENM+APTg+ig9cactprruz6wJEkphhh637MjDoNwYUonr4XSDpFq12ga42Zda7NEYcbctK0Oq6ZZCxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=AL8cmmpU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AL8cmmpU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742352221;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pppH5gnOqQCyGbRm+GFbQIGngpP8DhwB6Ev0UDCWREA=;
-	b=AL8cmmpUWZ9WUomc5mGA32cjb9AIaIrFAPAdEEdCPA9aSRk/D+rQz5h3AwVg1wqxVASZcb
-	7oQNs6q72r962p2IPuSIdXOXwOs+vQqtqTMbC7MaMIMp6Hder2+iWJ1GGm4RasMMea3I2H
-	GGdL9j6/FpBcYyy7gdmnqIxgXuzZO58=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-475-aJgyg-HUOCybde04zKe6yw-1; Tue,
- 18 Mar 2025 22:43:38 -0400
-X-MC-Unique: aJgyg-HUOCybde04zKe6yw-1
-X-Mimecast-MFC-AGG-ID: aJgyg-HUOCybde04zKe6yw_1742352216
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B294218001DE;
-	Wed, 19 Mar 2025 02:43:35 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.30])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 13EA13001D0E;
-	Wed, 19 Mar 2025 02:43:32 +0000 (UTC)
-Date: Wed, 19 Mar 2025 10:43:27 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: steven chen <chenste@linux.microsoft.com>, zohar@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v10 1/8] ima: rename variable the ser_file "file" to
- "ima_kexec_file"
-Message-ID: <Z9ovT3CnxBqN+cKI@MiWiFi-R3L-srv>
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
- <20250318010448.954-2-chenste@linux.microsoft.com>
- <d85bad29-2391-41cc-868f-73119a5fffba@linux.ibm.com>
+	s=arc-20240116; t=1742352268; c=relaxed/simple;
+	bh=L4ulcOS7GCKn+YrYuDMf8QtN622G6UZFpbIe2jeJhRs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h+EL5Yzs0cuSPBVNTcGMtZfpiqw3+ox8rtTqyGsqGmWXfVe8i2EuxLhcrfpYguA264WB08ZfPBvH2Cbff84GCnKllEMObmXhdtDyTUntFQkwgJustXpd/J3fBAk+hDOyg+kJaJtpu6qGTPmihZUJczXwXuls9uPLeuSDCOw7hk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZHY1p5XMpz4f3khl;
+	Wed, 19 Mar 2025 10:43:58 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.128])
+	by mail.maildlp.com (Postfix) with ESMTP id 661281A0EC1;
+	Wed, 19 Mar 2025 10:44:21 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.112.188])
+	by APP4 (Coremail) with SMTP id gCh0CgBXu198L9pnG5ymGw--.11145S4;
+	Wed, 19 Mar 2025 10:44:21 +0800 (CST)
+From: Zhang Yi <yi.zhang@huaweicloud.com>
+To: linux-ext4@vger.kernel.org
+Cc: linux-fsdevel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	tytso@mit.edu,
+	adilger.kernel@dilger.ca,
+	jack@suse.cz,
+	yi.zhang@huawei.com,
+	yi.zhang@huaweicloud.com,
+	libaokun1@huawei.com,
+	yukuai3@huawei.com,
+	yangerkun@huawei.com
+Subject: [PATCH -next] ext4: correct the error handle in ext4_fallocate()
+Date: Wed, 19 Mar 2025 10:35:57 +0800
+Message-ID: <20250319023557.2785018-1-yi.zhang@huaweicloud.com>
+X-Mailer: git-send-email 2.46.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d85bad29-2391-41cc-868f-73119a5fffba@linux.ibm.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:gCh0CgBXu198L9pnG5ymGw--.11145S4
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFykZr45Gw4xKFyDJryrJFb_yoWfJrg_Ca
+	yUur4kWrWftFs293yrur1SyF12kw1kGr4rWFs3Xrs3ZF1UJ3yvka4vyr17ZFZ8Wr47Grsx
+	CFn2qF18AF1IqjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUb3kFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7x
+	kEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E
+	67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCw
+	CI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1x
+	MIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIda
+	VFxhVjvjDU0xZFpf9x0JUZYFZUUUUU=
+X-CM-SenderInfo: d1lo6xhdqjqx5xdzvxpfor3voofrz/
 
-On 03/18/25 at 11:10am, Stefan Berger wrote:
-> 
-> 
-> On 3/17/25 9:04 PM, steven chen wrote:
-> > The name of the local variable "file" of type seq_file defined in the
-> > ima_dump_measurement_list function is too generic. To better reflect the
-> > purpose of the variable, rename it to "ima_kexec_file". This change will
-> > help improve code readability and maintainability by making the variable's
-> > role more explicit.
-> > 
-> > The variable ima_kexec_file is indeed the memory allocated for copying IMA
-> > measurement records. The ima_dump_measurement_list function calculates the
-> > actual memory occupied by the IMA logs and compares it with the allocated
-> > memory. If there is enough memory, it copies all IMA measurement records;
-> > otherwise, it does not copy any records, which would result in a failure
-> > of remote attestation.
-> > 
-> > Suggested-by: Mimi Zohar <zohar@linux.ibm.com>
-> > Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> 
-> 
-> > ---
-> >   security/integrity/ima/ima_kexec.c | 39 ++++++++++++++++++------------
-> >   1 file changed, 24 insertions(+), 15 deletions(-)
-> > 
-> > diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> > index 9d45f4d26f73..8567619889d1 100644
-> > --- a/security/integrity/ima/ima_kexec.c
-> > +++ b/security/integrity/ima/ima_kexec.c
-> > @@ -15,33 +15,41 @@
-> >   #include "ima.h"
-> >   #ifdef CONFIG_IMA_KEXEC
-> > +/*
-> > + * Copy the measurement list to the allocated memory
-> > + * compare the size of IMA measurement list with the size of the allocated memory
-> 
-> Compare the size of the IMA ... memory.
-> 
-> 
-> > + *    if the size of the allocated memory is not less than the size of IMA measurement list
-> > + *        copy the measurement list to the allocated memory.
-> > + *    else
-> > + *        return error
-> 
-> If the size of the allocated memory is not less than the size of IMA
-> measurement list, copy the measurement list to the allocated memory, return
-> an error otherwise.
+From: Zhang Yi <yi.zhang@huawei.com>
 
-Ack the suggested change.
+The error out label of file_modified() should be out_inode_lock in
+ext4_fallocate().
+
+Fixes: 2890e5e0f49e ("ext4: move out common parts into ext4_fallocate()")
+Reported-by: Baokun Li <libaokun1@huawei.com>
+Signed-off-by: Zhang Yi <yi.zhang@huawei.com>
+---
+ fs/ext4/extents.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/ext4/extents.c b/fs/ext4/extents.c
+index 1b028be19193..dcc49df190ed 100644
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -4744,7 +4744,7 @@ long ext4_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+ 
+ 	ret = file_modified(file);
+ 	if (ret)
+-		return ret;
++		goto out_inode_lock;
+ 
+ 	if ((mode & FALLOC_FL_MODE_MASK) == FALLOC_FL_ALLOCATE_RANGE) {
+ 		ret = ext4_do_fallocate(file, offset, len, mode);
+-- 
+2.46.1
 
