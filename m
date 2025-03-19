@@ -1,115 +1,83 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5819518DF93;
-	Wed, 19 Mar 2025 17:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08ED1207A2A;
+	Wed, 19 Mar 2025 17:30:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742405394; cv=none; b=Pna0/tzkNJaVUQADO8iPx0NcP7aYcZb+t/zuf+KvYHy8ZHDkpn0eELERkK+fKkMBO2azv3hthv8QqArWe4Wj0YYvx5OsJ+l1+bjqqB2oQmUjjyYwLpWvmwVaM+BMYxhSacjlX6np3mM1iuyD161EpdlgmaApikr+BWHBI2IL7sY=
+	t=1742405403; cv=none; b=cx4dSrUDxu4x5izvTKLrPSKwwgV+ehvXvVUpjZcqqN87rg1R2JNEIi03iOWRkwO42MqLEcnedEWHQOg5nOHyyw6hm0vYjzDGKXAYh67+nc+wdMjMJxqFOhnRCpCnmAkODbxI7eRWPFjx+wFchkcjrkRzdxakJoax7esEHvOSL7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742405394; c=relaxed/simple;
-	bh=cJdNszfi8jKyO7HEhBYy4WL9G/cRmATBwdqs6YNMLnM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJf93TrsZaPT1pkVm6OJAs7VZelzVx+WZHVPovFpe2qDzj7Q/AIy84Roo6XrbYktBLOe+f9U7rndMh+LJWPY8PIuobLzwdoCImBDQXg12uxEVs1fzcL9uAtpvVpesO9gXRTUJq/HaG3k/sm5dLiHXiM19HgS95EO4s0FJxY2Bt0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=cmM8z85B; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1742405403; c=relaxed/simple;
+	bh=t+CillHKE7HGhniDsHyI1yEiCWnxfgZ07vdfTmwzvRg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=aQYaE3Unu5cDEFbTCR7MpDHToXpMvtyTBJLg/XfL3FhuWFJmG0debKrVx4v6T2Eism2HfbxVecNKGwoBr2Y6s0l54bYYiksHw9cNsZJWwK/xAA0NrvKOtoXGNblPxp/FWTJhwwYK454BYV0XUY+O1zCgS4ZT2O5C6oaHnwANW3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTUB2Byd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="cmM8z85B"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=yInekPkxEUZsGfvDOWG71rvNP9uywGTAsEy8aGf6gdQ=; b=cmM8z85B4knh1pafVsU4rkB+VE
-	Q3GjgAv1mc4VqTd70IwPntzRiy/krdOToksZGwtBKN0eni/PRMa5AsXbBONc2wk2mvY5u2ne2eHcb
-	WpreaSOKVUIyB0SSW4dS6VYkZ8TkEm5wEZL8U/k1+T/375W1pbXthB7M19S+WIE/WJZRAGLDzjdye
-	fy3KwaLYPqUtWexETxKWPatIj8uXxKdXt/s8CBxDKO+ShmNGrqxuCeYiAkgI4s97Yt775o5S+dO3A
-	kdiuvRtCDZzGIf8TuEwBX7NqhHLVdkLSRrcbzKOydnErm3ynSkqdiggryfxX3p2gQrfcZkZchM1SU
-	3+wmdCBA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:54242)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tuxEZ-0006jZ-24;
-	Wed, 19 Mar 2025 17:29:39 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tuxEU-0005nV-2N;
-	Wed, 19 Mar 2025 17:29:34 +0000
-Date: Wed, 19 Mar 2025 17:29:34 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [net-next PATCH 0/6] net: pcs: Introduce support for PCS OF
-Message-ID: <Z9r-_joQ13YdJeyZ@shell.armlinux.org.uk>
-References: <20250318235850.6411-1-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTUB2Byd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEC96C4CEE4;
+	Wed, 19 Mar 2025 17:30:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742405402;
+	bh=t+CillHKE7HGhniDsHyI1yEiCWnxfgZ07vdfTmwzvRg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YTUB2BydQnZLwmztqELVEZAQjhOkGS7optwHDyzpxsxZHHstP5YjkYfyTblp4LJHN
+	 PPb5jksp+UUopAJVAlFYu08/scVdB9gvpKa5FZUesJ8e99QdlnicjP5nvwI90bbj0g
+	 96MMaIZVMh+6xc3Zn0UOH14/nep8j1KQ9Bgx1Ozyn3H8cP3ZrNAckaXeXULEKNaxbG
+	 g0XnZwdk/MwfuL2UKoEfr0UeqBndHocUL2i34auwXeLc1YMooLehICZsRw6TFg/xqC
+	 vKOZvGVqAGIOQ1uV2jBCMTJu2ziH52V9Q4gksYda3Jb/YLUJmTF3DZVYMGXIakoJgr
+	 HOfQVu7TYMuxg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE176380CFFE;
+	Wed, 19 Mar 2025 17:30:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318235850.6411-1-ansuelsmth@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/3] net/mlx5: HW Steering cleanups
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174240543853.1125754.1009178782663226932.git-patchwork-notify@kernel.org>
+Date: Wed, 19 Mar 2025 17:30:38 +0000
+References: <1741780194-137519-1-git-send-email-tariqt@nvidia.com>
+In-Reply-To: <1741780194-137519-1-git-send-email-tariqt@nvidia.com>
+To: Tariq Toukan <tariqt@nvidia.com>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, gal@nvidia.com, mbloch@nvidia.com,
+ moshe@nvidia.com, saeedm@nvidia.com, leon@kernel.org, netdev@vger.kernel.org,
+ linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On Wed, Mar 19, 2025 at 12:58:36AM +0100, Christian Marangi wrote:
-> A PCS provider have to implement and call of_pcs_add_provider() in
-> probe function and define an xlate function to define how the PCS
-> should be provided based on the requested interface and phandle spec
-> defined in DT (based on the #pcs-cells)
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Wed, 12 Mar 2025 13:49:51 +0200 you wrote:
+> This short series by Yevgeny contains several small HW Steering cleanups:
 > 
-> of_pcs_get() is provided to provide a specific PCS declared in DT
-> an index.
+> - Patch 1: removing unused FW commands
+> - Patch 2: using list_move() instead of list_del/add
+> - Patch 3: printing the unsupported combination of match fields
 > 
-> A simple xlate function is provided for simple single PCS
-> implementation, of_pcs_simple_get.
+> Regards,
+> Tariq
 > 
-> A PCS provider on driver removal should first call
-> phylink_pcs_release() to release the PCS from phylink and then
-> delete itself as a provider with of_pcs_del_provider() helper.
+> [...]
 
-This is inherently racy.
+Here is the summary with links:
+  - [net-next,1/3] net/mlx5: HWS, remove unused code for alias flow tables
+    https://git.kernel.org/netdev/net-next/c/eae1389ab2f5
+  - [net-next,2/3] net/mlx5: HWS, use list_move() instead of del/add
+    https://git.kernel.org/netdev/net-next/c/1a403ad383ab
+  - [net-next,3/3] net/mlx5: HWS, log the unsupported mask in definer
+    https://git.kernel.org/netdev/net-next/c/8389f2de903c
 
-phylink_pcs_release() may release the PCS from phylink, but there is a
-window between calling this and of_pcs_del_provider() where it could
-still be "got".
-
-The sequence always has to be:
-
-First, unpublish to prevent new uses.
-Then remove from current uses.
-Then disable hardware/remove resources.
-
-It makes me exceedingly sad that we make keep implementing the same
-mistakes time and time again - it was brought up at one of the OLS
-conferences back in the 2000s, probably around the time that the
-driver model was just becoming "a thing". At least I can pass on
-this knowledge when I spot it and help others to improve!
-
-Note that networking's unregister_netdev() recognises this pattern,
-and unregister_netdev() will first unpublish the interface thereby
-making it inaccessible to be brought up, then take the interface down
-if it were up before returning - thus guaranteeing that when the
-function returns, it is safe to dispose of any and all resources that
-the driver was using.
-
-Sorry as I seem to be labouring this point.
-
+You are awesome, thank you!
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
