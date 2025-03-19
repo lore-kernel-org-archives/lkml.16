@@ -1,165 +1,460 @@
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F7FE1C8602
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 15:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2BD916F8F5;
+	Wed, 19 Mar 2025 15:37:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742398637; cv=none; b=nZbrWTBfF0FLLXOaTUbyWncoMQZfW9dxRkzdWFvd22UZjWnIH4LW/6POgrWVwGSrpmC6O4WUwn6XK0JCBA5/lJYr9O735kCr5AUNKHfjWVnur7T42mWX37vTaUPahah8Mxoz8zq27QjAxFtDPnxp0DOw3iAXSjDqlfsl19ouzeE=
+	t=1742398666; cv=none; b=eM+7Kr4NtiX0ojuqJ+DOorIWdwXB4UCIDreJ3fOCK9szrUFoAyv0ufP6Y6Jg7hkwXObc392e3cdETuGmwTXR93H8O1qOtXMrE0AQkquECpOo+AXWf+5N85L4+lX8mCyfn5zMZ0inwPtXfyTM7oObZDwWqrxD8vXvQOtVXdHVfT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742398637; c=relaxed/simple;
-	bh=LNeEKTAKRRfrsuQtB3hF3PqGyblx8LqEqm7/ZGuJSX4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iDfwRqtRQv4ijwCOyDtponWObuA8Ls8R8FcofvtEve4Qgwg1CrRgD+56REYsXOP16PBC6xSbTzJfEG7j+TdNd3ZRC9omSTWBJXUTW0tpuKsWMxLiL9g+keugck16ZRBVS0xBQbNd+VMa5vCWJbxymlAA5rkrxmwkhfB85n/J1jA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=ZsBhBdZN; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1742398666; c=relaxed/simple;
+	bh=iSccAdrbMdSYTVoJGCyl+oR6D67tBx4631b4F9IOrl8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YvGm7m5f0KuQO5DQlhKMMExJdCOt/OzuhqB4vhSJHMbhiSxsNZJGqmdJ9qhJImCdHve0mRKnBMAsdRlNOXuU68NN+c1WzyQyqBksysSz4NaspK8IDWJEEoV8PxDR/2iO/OGeH2TqimPHbC12WzGlQZwpJBJlUmbEXwSY6JMYlVk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tw7aGefd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="ZsBhBdZN"
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-5439a6179a7so965391e87.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 08:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1742398634; x=1743003434; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5kYpJ+YWIm5kyww839SjAlRO2YxcNKECluRgtWLf4Uk=;
-        b=ZsBhBdZNNW0JOTdJISnavg2/8Qyhx8vTuU/H5MI5ExYfR18He5s6jaHaQcQNdbbXlO
-         ewuxAFJZpGgLNHZALJ4kVEwdsZrDL9rBPGpjySvYG86pa+HhBshEQHFGxA87XPTcoZrP
-         4eCcEg43blrt0l2jL+dbmD362CAEFD5SfN3FltU8RPKkMBn0gT5w10eBJc2GYYQXvfv3
-         SDpwOm0tB5nZKQn63a1/8gIjEjV+4NaqUSUuVxWo/Sle6DQck7+1yRCU4CjTh0gNZwbf
-         cKUkW/ph4gqaR9ozj5LUAtGGcxIbK8YFzXPxFrbBumzd/PmJM41afVvfu42hsqJeJHkf
-         0rqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742398634; x=1743003434;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5kYpJ+YWIm5kyww839SjAlRO2YxcNKECluRgtWLf4Uk=;
-        b=BtoN1AbQOdZzRvhR6IGDiYW4/uifvrjf7N8BY9tspLldT53ih35ZxUOBz02R+HquEy
-         5UR24D6AQWAj32B4iwJK0608ZpDwkSbpaZVRfuvI1a1fMTX6iFp8FMyMFcqBbzVE4qsV
-         Sp9Yo4UgIn22pbm8HVJ7COoLuSw8H3gzOcP24Xttf0Jm5UKThbIWTpuTk1HKDki2lNsg
-         yGCZrgWeOkUk3F9xNwF7rwa4FkK6zCshjG39qtCtBTsUXNzmQR/0hVo2eHLvL6zDPyHu
-         PZ83KqBlcJdSGwLTjb9OMeBjY4xMzJlR6n1UtAVlWvGmgWdqgWGcK4EQwuQMeUorIALr
-         345g==
-X-Forwarded-Encrypted: i=1; AJvYcCUts4TN1PnuGeGt2X0lxPqx653hrFwCKMmaoTSYeDAvj8kUTAaa30Yg79T6OZXimSa+UPrA+XzX0DKW2DA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy6Nm0xP4jLbLU3arWQyLD2so88IWU1hDfSG5i20ETNZUpz2XqT
-	gqI30c5+b3eYoThiwdH4nTt0xzbgzMJYVJAHG5g5xkxZDC1YwblVA17swEhdQ/icPXz8oZG/ILV
-	taStEGpzi6GQwOrPN0tBoeD9xxmWB25Dat72WuA==
-X-Gm-Gg: ASbGncvZD3cbis6gcbQz3CLxnLRVnnLfaDkU0sd8NiYNqnNsRVbTiqqo/NOjUYcob0y
-	hlxagXu8nJ9sCcqD3AXkThG2maMW6Tihx1WCZtm/1r0+SXYTg9c3leDYAGX90yVVtNrIIjTFqNi
-	RnLY3Hv0MZkRV5QblHYHB7zcfK6xQ=
-X-Google-Smtp-Source: AGHT+IFCptMnikEraAGR3+R+hzqsR4hELpmCfLcM8ATnaG6QWGGUrAiiIW6drO0CCaxdf/r2HggliQzJYjThBHJXzdk=
-X-Received: by 2002:a05:6512:10d6:b0:549:74a7:12ce with SMTP id
- 2adb3069b0e04-54a30486a73mr4191860e87.14.1742398633481; Wed, 19 Mar 2025
- 08:37:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tw7aGefd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5992C4CEE4;
+	Wed, 19 Mar 2025 15:37:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742398666;
+	bh=iSccAdrbMdSYTVoJGCyl+oR6D67tBx4631b4F9IOrl8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tw7aGefd99U0Zye6b11gwjcvrU98QnWwsPTb1qdriFt8GaGN6oIlK++TRBAvdmygL
+	 RDPmQZwYkOQsyvTx9pQfk1Kf0EqAQM6/CcN6DJBJVXSFqVxdqkLJeTKLSX8HROEGdG
+	 20H11yXrYbQ7VK/rsNCEzoptvBdBTb0yBXVmozjie0NmunmaDKkFPQ2qp71m8+RDsz
+	 j4PofWlNvyJexTTNzf9Cb/nqEPFMfHDWF101lZ32O0HoXxLP3bbKv+B2U2D2KAY8n+
+	 J9e48F1GXFEvZMvpRMqAL7pn+rOQTpmPceIxSUCLs4dNHf3tnbeik+5i6vMS5aNPdH
+	 dFlEdu6PPp7rA==
+Date: Wed, 19 Mar 2025 16:37:43 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Dimitri Fedrau <dima.fedrau@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/2] pwm: add support for NXPs high-side switch
+ MC33XS2410
+Message-ID: <lzmsvwzidng7f6ybbfkusauohjya2rlyqrpprjc63y6pczo774@hklfplsgb3un>
+References: <20250110073755.29541-1-dima.fedrau@gmail.com>
+ <20250110073755.29541-3-dima.fedrau@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317-kvm_exit_fix-v1-1-aa5240c5dbd2@rivosinc.com>
-In-Reply-To: <20250317-kvm_exit_fix-v1-1-aa5240c5dbd2@rivosinc.com>
-From: Anup Patel <apatel@ventanamicro.com>
-Date: Wed, 19 Mar 2025 21:07:01 +0530
-X-Gm-Features: AQ5f1Jr9D_EWjJlaE139cU_qW55S55FYO9cnnZl-zgNXH-UdMwd_lNid37mPFXQ
-Message-ID: <CAK9=C2WKuqmTtNYmhN2bnpb9PEE+mGJem_obvWsPVU4QrJm4eQ@mail.gmail.com>
-Subject: Re: [PATCH] RISC-V: KVM: Teardown riscv specific bits after kvm_exit
-To: Atish Patra <atishp@rivosinc.com>
-Cc: Anup Patel <anup@brainfault.org>, Atish Patra <atishp@atishpatra.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Andrew Jones <ajones@ventanamicro.com>, kvm@vger.kernel.org, 
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="rvlbwstdatw47xlj"
+Content-Disposition: inline
+In-Reply-To: <20250110073755.29541-3-dima.fedrau@gmail.com>
+
+
+--rvlbwstdatw47xlj
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v8 2/2] pwm: add support for NXPs high-side switch
+ MC33XS2410
+MIME-Version: 1.0
 
-On Mon, Mar 17, 2025 at 1:11=E2=80=AFPM Atish Patra <atishp@rivosinc.com> w=
-rote:
->
-> During a module removal, kvm_exit invokes arch specific disable
-> call which disables AIA. However, we invoke aia_exit before kvm_exit
-> resulting in the following warning. KVM kernel module can't be inserted
-> afterwards due to inconsistent state of IRQ.
->
-> [25469.031389] percpu IRQ 31 still enabled on CPU0!
-> [25469.031732] WARNING: CPU: 3 PID: 943 at kernel/irq/manage.c:2476 __fre=
-e_percpu_irq+0xa2/0x150
-> [25469.031804] Modules linked in: kvm(-)
-> [25469.031848] CPU: 3 UID: 0 PID: 943 Comm: rmmod Not tainted 6.14.0-rc5-=
-06947-g91c763118f47-dirty #2
-> [25469.031905] Hardware name: riscv-virtio,qemu (DT)
-> [25469.031928] epc : __free_percpu_irq+0xa2/0x150
-> [25469.031976]  ra : __free_percpu_irq+0xa2/0x150
-> [25469.032197] epc : ffffffff8007db1e ra : ffffffff8007db1e sp : ff200000=
-0088bd50
-> [25469.032241]  gp : ffffffff8131cef8 tp : ff60000080b96400 t0 : ff200000=
-0088baf8
-> [25469.032285]  t1 : fffffffffffffffc t2 : 5249207570637265 s0 : ff200000=
-0088bd90
-> [25469.032329]  s1 : ff60000098b21080 a0 : 037d527a15eb4f00 a1 : 037d527a=
-15eb4f00
-> [25469.032372]  a2 : 0000000000000023 a3 : 0000000000000001 a4 : ffffffff=
-8122dbf8
-> [25469.032410]  a5 : 0000000000000fff a6 : 0000000000000000 a7 : ffffffff=
-8122dc10
-> [25469.032448]  s2 : ff60000080c22eb0 s3 : 0000000200000022 s4 : 00000000=
-0000001f
-> [25469.032488]  s5 : ff60000080c22e00 s6 : ffffffff80c351c0 s7 : 00000000=
-00000000
-> [25469.032582]  s8 : 0000000000000003 s9 : 000055556b7fb490 s10: 00007fff=
-f0e12fa0
-> [25469.032621]  s11: 00007ffff0e13e9a t3 : ffffffff81354ac7 t4 : ffffffff=
-81354ac7
-> [25469.032664]  t5 : ffffffff81354ac8 t6 : ffffffff81354ac7
-> [25469.032698] status: 0000000200000100 badaddr: ffffffff8007db1e cause: =
-0000000000000003
-> [25469.032738] [<ffffffff8007db1e>] __free_percpu_irq+0xa2/0x150
-> [25469.032797] [<ffffffff8007dbfc>] free_percpu_irq+0x30/0x5e
-> [25469.032856] [<ffffffff013a57dc>] kvm_riscv_aia_exit+0x40/0x42 [kvm]
-> [25469.033947] [<ffffffff013b4e82>] cleanup_module+0x10/0x32 [kvm]
-> [25469.035300] [<ffffffff8009b150>] __riscv_sys_delete_module+0x18e/0x1fc
-> [25469.035374] [<ffffffff8000c1ca>] syscall_handler+0x3a/0x46
-> [25469.035456] [<ffffffff809ec9a4>] do_trap_ecall_u+0x72/0x134
-> [25469.035536] [<ffffffff809f5e18>] handle_exception+0x148/0x156
->
-> Invoke aia_exit and other arch specific cleanup functions after kvm_exit
-> so that disable gets a chance to be called first before exit.
->
-> Fixes: 54e43320c2ba ("RISC-V: KVM: Initial skeletal support for AIA")
->
-> Signed-off-by: Atish Patra <atishp@rivosinc.com>
+Hello Dimitri,
 
-Queued this patch for Linux-6.15 since the merge window is near.
-
-Thanks,
-Anup
-
+On Fri, Jan 10, 2025 at 08:37:55AM +0100, Dimitri Fedrau wrote:
+> The MC33XS2410 is a four channel high-side switch. Featuring advanced
+> monitoring and control function, the device is operational from 3.0 V to
+> 60 V. The device is controlled by SPI port for configuration.
+>=20
+> Signed-off-by: Dimitri Fedrau <dima.fedrau@gmail.com>
 > ---
->  arch/riscv/kvm/main.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/riscv/kvm/main.c b/arch/riscv/kvm/main.c
-> index 1fa8be5ee509..4b24705dc63a 100644
-> --- a/arch/riscv/kvm/main.c
-> +++ b/arch/riscv/kvm/main.c
-> @@ -172,8 +172,8 @@ module_init(riscv_kvm_init);
->
->  static void __exit riscv_kvm_exit(void)
->  {
-> -       kvm_riscv_teardown();
-> -
->         kvm_exit();
+>  drivers/pwm/Kconfig          |  12 ++
+>  drivers/pwm/Makefile         |   1 +
+>  drivers/pwm/pwm-mc33xs2410.c | 378 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 391 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-mc33xs2410.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 0915c1e7df16..f513513f9b2f 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -411,6 +411,18 @@ config PWM_LPSS_PLATFORM
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-lpss-platform.
+> =20
+> +config PWM_MC33XS2410
+> +	tristate "MC33XS2410 PWM support"
+> +	depends on OF
+> +	depends on SPI
+> +	help
+> +	  NXP MC33XS2410 high-side switch driver. The MC33XS2410 is a four
+> +	  channel high-side switch. The device is operational from 3.0 V
+> +	  to 60 V. The device is controlled by SPI port for configuration.
 > +
-> +       kvm_riscv_teardown();
->  }
->  module_exit(riscv_kvm_exit);
->
-> ---
-> base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
-> change-id: 20250316-kvm_exit_fix-77cd0632d740
-> --
-> Regards,
-> Atish patra
->
+> +	  To compile this driver as a module, choose M here: the module
+> +	  will be called pwm-mc33xs2410.
+> +
+>  config PWM_MESON
+>  	tristate "Amlogic Meson PWM driver"
+>  	depends on ARCH_MESON || COMPILE_TEST
+> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> index 9081e0c0e9e0..c75deeeace40 100644
+> --- a/drivers/pwm/Makefile
+> +++ b/drivers/pwm/Makefile
+> @@ -36,6 +36,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+=3D pwm-lpc32xx.o
+>  obj-$(CONFIG_PWM_LPSS)		+=3D pwm-lpss.o
+>  obj-$(CONFIG_PWM_LPSS_PCI)	+=3D pwm-lpss-pci.o
+>  obj-$(CONFIG_PWM_LPSS_PLATFORM)	+=3D pwm-lpss-platform.o
+> +obj-$(CONFIG_PWM_MC33XS2410)	+=3D pwm-mc33xs2410.o
+>  obj-$(CONFIG_PWM_MESON)		+=3D pwm-meson.o
+>  obj-$(CONFIG_PWM_MEDIATEK)	+=3D pwm-mediatek.o
+>  obj-$(CONFIG_PWM_MICROCHIP_CORE)	+=3D pwm-microchip-core.o
+> diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
+> new file mode 100644
+> index 000000000000..432693b4f8eb
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-mc33xs2410.c
+> @@ -0,0 +1,378 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2024 Liebherr-Electronics and Drives GmbH
+> + *
+> + * Reference Manual : https://www.nxp.com/docs/en/data-sheet/MC33XS2410.=
+pdf
+> + *
+> + * Limitations:
+> + * - Supports frequencies between 0.5Hz and 2048Hz with following steps:
+> + *   - 0.5 Hz steps from 0.5 Hz to 32 Hz
+> + *   - 2 Hz steps from 2 Hz to 128 Hz
+> + *   - 8 Hz steps from 8 Hz to 512 Hz
+> + *   - 32 Hz steps from 32 Hz to 2048 Hz
+> + * - Cannot generate a 0 % duty cycle.
+> + * - Always produces low output if disabled.
+> + * - Configuration isn't atomic. When changing polarity, duty cycle or p=
+eriod
+> + *   the data is taken immediately, counters not being affected, resulti=
+ng in a
+> + *   behavior of the output pin that is neither the old nor the new stat=
+e,
+> + *   rather something in between.
+> + */
+> +
+> +#include <linux/bitfield.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/math64.h>
+> +#include <linux/minmax.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/pwm.h>
+> +
+> +#include <linux/spi/spi.h>
+> +
+> +#define MC33XS2410_GLB_CTRL			0x00
+> +#define MC33XS2410_GLB_CTRL_MODE		GENMASK(7, 6)
+> +#define MC33XS2410_GLB_CTRL_MODE_NORMAL		FIELD_PREP(MC33XS2410_GLB_CTRL_=
+MODE, 1)
+> +
+> +#define MC33XS2410_PWM_CTRL1			0x05
+> +/* x in { 1 ... 4 } */
+
+s/x/chan/
+
+> +#define MC33XS2410_PWM_CTRL1_POL_INV(chan)	BIT((chan) + 1)
+> +
+> +#define MC33XS2410_PWM_CTRL3			0x07
+> +/* x in { 1 ... 4 } */
+> +#define MC33XS2410_PWM_CTRL3_EN(chan)		BIT(4 + (chan) - 1)
+> +
+> +/* x in { 1 ... 4 } */
+> +#define MC33XS2410_PWM_FREQ(chan)		(0x08 + (chan) - 1)
+> +#define MC33XS2410_PWM_FREQ_STEP		GENMASK(7, 6)
+> +#define MC33XS2410_PWM_FREQ_COUNT		GENMASK(5, 0)
+> +
+> +/* x in { 1 ... 4 } */
+> +#define MC33XS2410_PWM_DC(chan)			(0x0c + (chan) - 1)
+> +
+> +#define MC33XS2410_WDT				0x14
+> +
+> +#define MC33XS2410_PWM_MIN_PERIOD		488282
+> +/* x in { 0 ... 3 } */
+
+s/x/step/
+
+> +#define MC33XS2410_PWM_MAX_PERIOD(step)		(2000000000 >> (2 * (step)))
+> +
+> +#define MC33XS2410_FRAME_IN_ADDR		GENMASK(15, 8)
+> +#define MC33XS2410_FRAME_IN_DATA		GENMASK(7, 0)
+> +#define MC33XS2410_FRAME_IN_ADDR_WR		BIT(7)
+> +#define MC33XS2410_FRAME_IN_DATA_RD		BIT(7)
+> +#define MC33XS2410_FRAME_OUT_DATA		GENMASK(13, 0)
+> +
+> +#define MC33XS2410_MAX_TRANSFERS		5
+> +
+> +static int mc33xs2410_write_regs(struct spi_device *spi, u8 *reg, u8 *va=
+l,
+> +				 unsigned int len)
+> +{
+> +	u16 tx[MC33XS2410_MAX_TRANSFERS];
+> +	int i;
+> +
+> +	if (len > MC33XS2410_MAX_TRANSFERS)
+> +		return -EINVAL;
+> +
+> +	for (i =3D 0; i < len; i++)
+> +		tx[i] =3D FIELD_PREP(MC33XS2410_FRAME_IN_DATA, val[i]) |
+> +			FIELD_PREP(MC33XS2410_FRAME_IN_ADDR,
+> +				   MC33XS2410_FRAME_IN_ADDR_WR | reg[i]);
+> +
+> +	return spi_write(spi, tx, len * 2);
+> +}
+> +
+> +static int mc33xs2410_read_regs(struct spi_device *spi, u8 *reg, u8 flag,
+> +				u16 *val, unsigned int len)
+> +{
+> +	u16 tx[MC33XS2410_MAX_TRANSFERS];
+> +	u16 rx[MC33XS2410_MAX_TRANSFERS];
+> +	struct spi_transfer t =3D {
+> +		.tx_buf =3D tx,
+> +		.rx_buf =3D rx,
+> +	};
+> +	int i, ret;
+> +
+> +	len++;
+> +	if (len > MC33XS2410_MAX_TRANSFERS)
+> +		return -EINVAL;
+> +
+> +	t.len =3D len * 2;
+> +	for (i =3D 0; i < len - 1; i++)
+> +		tx[i] =3D FIELD_PREP(MC33XS2410_FRAME_IN_DATA, flag) |
+> +			FIELD_PREP(MC33XS2410_FRAME_IN_ADDR, reg[i]);
+> +
+> +	ret =3D spi_sync_transfer(spi, &t, 1);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	for (i =3D 1; i < len; i++)
+> +		val[i - 1] =3D FIELD_GET(MC33XS2410_FRAME_OUT_DATA, rx[i]);
+> +
+> +	return 0;
+> +}
+> +
+> +static int mc33xs2410_write_reg(struct spi_device *spi, u8 reg, u8 val)
+> +{
+> +	return mc33xs2410_write_regs(spi, &reg, &val, 1);
+> +}
+> +
+> +static int mc33xs2410_read_reg(struct spi_device *spi, u8 reg, u16 *val,=
+ u8 flag)
+> +{
+> +	return mc33xs2410_read_regs(spi, &reg, flag, val, 1);
+> +}
+> +
+> +static int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 =
+*val)
+> +{
+> +	return mc33xs2410_read_reg(spi, reg, val, MC33XS2410_FRAME_IN_DATA_RD);
+> +}
+> +
+> +static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask=
+, u8 val)
+> +{
+> +	u16 tmp;
+> +	int ret;
+> +
+> +	ret =3D mc33xs2410_read_reg_ctrl(spi, reg, &tmp);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	tmp &=3D ~mask;
+> +	tmp |=3D val & mask;
+> +
+> +	return mc33xs2410_write_reg(spi, reg, tmp);
+> +}
+> +
+> +static u8 mc33xs2410_pwm_get_freq(u64 period)
+> +{
+> +	u8 step, count;
+> +
+> +	/*
+> +	 * Check which step is appropriate for the given period, starting with
+> +	 * the highest frequency(lowest period). Higher frequencies are
+> +	 * represented with better resolution by the device. Therefore favor
+> +	 * frequency range with the better resolution to minimize error
+> +	 * introduced by the frequency steps.
+
+This is hard to understand as the argument is presented in several
+steps:
+	algo starts with high step values (that's not in the comment,
+		you have to take that from the switch statement)
+	high step represents high freq =3D low period
+	high freq yield better resolution
+	better resolution is what is favoured.
+
+After investing some time to reunderstand the rational here
+I suggest:
+
+	/*
+	 * Check which step [0 .. 3] is appropriate for the given
+	 * period. The period ranges for the different step values
+	 * overlap. Prefer big step values as these allow more
+	 * finegrained duty cycle selection.
+	 */
+
+> +	 */
+> +
+> +	switch (period) {
+> +	case MC33XS2410_PWM_MIN_PERIOD ... MC33XS2410_PWM_MAX_PERIOD(3):
+> +		step =3D 3;
+> +		break;
+> +	case MC33XS2410_PWM_MAX_PERIOD(3) + 1 ... MC33XS2410_PWM_MAX_PERIOD(2):
+> +		step =3D 2;
+> +		break;
+> +	case MC33XS2410_PWM_MAX_PERIOD(2) + 1 ... MC33XS2410_PWM_MAX_PERIOD(1):
+> +		step =3D 1;
+> +		break;
+> +	case MC33XS2410_PWM_MAX_PERIOD(1) + 1 ... MC33XS2410_PWM_MAX_PERIOD(0):
+> +		step =3D 0;
+> +		break;
+> +	}
+> +
+> +	/*
+> +	 * Round up here because a higher count results in a higher frequency
+> +	 * and so a smaller period.
+> +	 */
+> +	count =3D DIV_ROUND_UP((u32)MC33XS2410_PWM_MAX_PERIOD(step), (u32)perio=
+d);
+> +	return FIELD_PREP(MC33XS2410_PWM_FREQ_STEP, step) |
+> +	       FIELD_PREP(MC33XS2410_PWM_FREQ_COUNT, count - 1);
+> +}
+> +
+> +static u64 mc33xs2410_pwm_get_period(u8 reg)
+> +{
+> +	u32 freq, code, doubled_steps;
+> +
+> +	/*
+> +	 * steps:
+> +	 *   - 0 =3D 0.5Hz
+> +	 *   - 1 =3D 2Hz
+> +	 *   - 2 =3D 8Hz
+> +	 *   - 3 =3D 32Hz
+> +	 * frequency =3D (code + 1) x steps.
+> +	 *
+> +	 * To avoid losing precision in case steps value is zero, scale the
+> +	 * steps value for now by two and keep it in mind when calculating the
+> +	 * period that the frequency had been doubled.
+> +	 */
+> +	doubled_steps =3D 1 << (FIELD_GET(MC33XS2410_PWM_FREQ_STEP, reg) * 2);
+> +	code =3D FIELD_GET(MC33XS2410_PWM_FREQ_COUNT, reg);
+> +	freq =3D (code + 1) * doubled_steps;
+
+doubled_freq?
+
+> +	/* Convert frequency to period, considering the doubled frequency. */
+> +	return DIV_ROUND_UP(2 * NSEC_PER_SEC, freq);
+> +}
+> +
+> +static int mc33xs2410_pwm_apply(struct pwm_chip *chip, struct pwm_device=
+ *pwm,
+> +				const struct pwm_state *state)
+> +{
+> +	struct spi_device *spi =3D pwmchip_get_drvdata(chip);
+> +	u8 reg[4] =3D {
+> +			MC33XS2410_PWM_FREQ(pwm->hwpwm + 1),
+> +			MC33XS2410_PWM_DC(pwm->hwpwm + 1),
+> +			MC33XS2410_PWM_CTRL1,
+> +			MC33XS2410_PWM_CTRL3
+> +		    };
+> +	u64 period, duty_cycle;
+> +	int ret, rel_dc;
+> +	u16 rd_val[2];
+> +	u8 wr_val[4];
+> +	u8 mask;
+> +
+> +	period =3D min(state->period, MC33XS2410_PWM_MAX_PERIOD(0));
+> +	if (period < MC33XS2410_PWM_MIN_PERIOD)
+> +		return -EINVAL;
+> +
+> +	ret =3D mc33xs2410_read_regs(spi, &reg[2], MC33XS2410_FRAME_IN_DATA_RD,=
+ rd_val, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* frequency */
+> +	wr_val[0] =3D mc33xs2410_pwm_get_freq(period);
+> +	/* Continue calculations with the possibly truncated period */
+> +	period =3D mc33xs2410_pwm_get_period(wr_val[0]);
+> +
+> +	/* duty cycle */
+> +	duty_cycle =3D min(period, state->duty_cycle);
+> +	rel_dc =3D div64_u64(duty_cycle * 256, period) - 1;
+> +	if (rel_dc < 0)
+> +		wr_val[1] =3D 0;
+> +	else
+> +		wr_val[1] =3D rel_dc;
+> +
+> +	/* polarity */
+> +	mask =3D MC33XS2410_PWM_CTRL1_POL_INV(pwm->hwpwm + 1);
+> +	wr_val[2] =3D (state->polarity =3D=3D PWM_POLARITY_INVERSED) ?
+> +		    (rd_val[0] | mask) : (rd_val[0] & ~mask);
+> +
+> +	/*
+> +	 * As the hardware cannot generate a 0% relative duty cycle but emits a
+> +	 * constant low signal when disabled, also disable in the duty_cycle =
+=3D 0
+> +	 * case.
+> +	 */
+> +	mask =3D MC33XS2410_PWM_CTRL3_EN(pwm->hwpwm + 1);
+> +	wr_val[3] =3D (state->enabled && rel_dc >=3D 0) ? (rd_val[1] | mask) :
+> +						      (rd_val[1] & ~mask);
+
+This is wrong for inversed polarity I think.
+
+> +	return mc33xs2410_write_regs(spi, reg, wr_val, 4);
+> +}
+> +
+> [..]
+> +static int mc33xs2410_probe(struct spi_device *spi)
+> +{
+> +	struct device *dev =3D &spi->dev;
+> +	struct pwm_chip *chip;
+> +	int ret;
+> +
+> +	chip =3D devm_pwmchip_alloc(dev, 4, 0);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +
+> +	spi->bits_per_word =3D 16;
+> +	spi->mode |=3D SPI_CS_WORD;
+> +	ret =3D spi_setup(spi);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	pwmchip_set_drvdata(chip, spi);
+> +	chip->ops =3D &mc33xs2410_pwm_ops;
+> +	ret =3D mc33xs2410_reset(dev);
+
+What does this reset? Does it change the output signal if the bootloader
+already setup the hardware? The answer to that has to go into a comment.
+(And if it interupts the output, better skip the reset part.)
+
+> +	if (ret)
+> +		return ret;
+
+Best regards
+Uwe
+
+--rvlbwstdatw47xlj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmfa5MUACgkQj4D7WH0S
+/k4kXwgAp6os1qo1UO9Vfw8zQFjDTpw+qxSb5nssObJkzAmlM2jYxcKPQ96ojEx3
+74hYuFP77E5HKJ254QAR4m//0havY8YrkQX21UnSAWTIxTIxNIAnGsK/zq0qjEev
++TZBHpRoFTwcXwoKWBNfm1NhZvxHmudTTiInu06rk5QYNlPT3vcbMI9+1aLcKMn4
+rVTurindRrULMF8qnIorUrblsAfWgWMMD7oukwbubqeM4fBBcAVlJEeAzIw0OC5+
+n4hQ9kwIDLS16wqcJcq+J9RFfC8Z955j4S4hy1owyy26qQEiODxwl0+PRmICcVb7
+QXpyJ8WVyYTf9OjOp5UzMnxZly5d/A==
+=uDxk
+-----END PGP SIGNATURE-----
+
+--rvlbwstdatw47xlj--
