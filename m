@@ -1,134 +1,136 @@
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450F542048;
-	Wed, 19 Mar 2025 15:58:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A04D81C3BE0
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 15:59:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742399910; cv=none; b=AlDv9FE2GGTk418gpcxlQs0EoIRax9w8WYzeTAy5hespVae9rtA7VaWMeRN5E8urKQa5OUkIfF/1gueMzoTBNGzAGSP+GQ5b7ldjr9yVhU3EO164BvVpQOCd0hS7W4vSlH9A/8Pqf3lCqpvRgFBnoUfeEOjnMU99oM9xK6xRWQo=
+	t=1742399969; cv=none; b=Kgilz93qfhmp2gQRcA31CTeG0WMDZ6ikDIhxXkMdHjBsvjMoIXZQLGOXgVYg963GqCOGI/OXrPjQSE2YV7VCnSJFCZeLR5AVDBrf9sNyjBeafYGAqrTqv2TzhJ6Kf6Y/prYcPrl+ri3DWeoGSlYarvUQspYd7shn8A98A6g2f20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742399910; c=relaxed/simple;
-	bh=gHPpYtCLpFpzgI6lWlHYyKI4j6MciQKQyMXmkFGAFpY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FBmMPlTfOYYxd758ftXG1fS0cYw9VfgYToIf0uLTZxYEISmzBSL36yHOT3Dtg7mvue8aNZhJDKqYsoaPt5PLR6k6SDfT6KWYNkp/B5Q50oYOSFUjmgmkFPy66FoS6FdnkwPnGTp+TeGnQXX1JGJDLss4/siDuHWI5l5vzbke/Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=KiLpgID4; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
+	s=arc-20240116; t=1742399969; c=relaxed/simple;
+	bh=ILRmyU4myaO9C/neNMKWw4w0x2c4drxeRcZb2f8Rva4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hLJREOP4/lm3HBSxcID0ljGsWJZAHNzIxBAIs9fv1siQzYOSBPkUXipx/uWaLP9bhr/pEcVRCGrKo+mFkNBVEvXuMM/Vv3Aj/4PzfVwMc0aqKXjcOt/Mhw7xH8dtL1U9ZwI7no4GqQRH+12tGlxsGudxLZQAsoOh5D61XK+sQlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CHN+vrmg; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="KiLpgID4"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=Np/nX4RQYl76B3DOF+lcwAiFuD7qauib8soLH9wPPWM=; b=KiLpgID4bAWzCDTTHLQy5DyOFx
-	e9YZhVFbbCNPHk9Y+K7iv5Ba8sALmIR+fnXAyMCo+Z2Y/QwP8w5Zpl7GwHQsikQoreFDMBD0vPg5X
-	WKJhkazKbQD/2Gmc0kZ+tPcCJdtyKPEh1Dp0TpBmBgtpT27xLZApYWOlvB7vBcz7TpI1BGtg3L/4V
-	OEHcGNTtT+rOc98PsJjN/r8qYbSBlKbFaM3iYqX1Bg2zaQkAawe3uyhI5ugBnyeV3cdwZzJhbYNKB
-	xMfm7SES+tpphE/JcM3KEvV7a3fPfnaTK5e+nf5nHGliLSo2JpS10W0yxf2UgAzSCtAbe02eQ8PgK
-	XZxG9nHw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:33446)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1tuvo9-0006dc-20;
-	Wed, 19 Mar 2025 15:58:17 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.96)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1tuvo6-0005jc-0l;
-	Wed, 19 Mar 2025 15:58:14 +0000
-Date: Wed, 19 Mar 2025 15:58:14 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [net-next PATCH 3/6] net: phylink: Correctly handle PCS probe
- defer from PCS provider
-Message-ID: <Z9rplhTelXb-oZdC@shell.armlinux.org.uk>
-References: <20250318235850.6411-1-ansuelsmth@gmail.com>
- <20250318235850.6411-4-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CHN+vrmg"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cfb6e9031so41931005e9.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 08:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742399965; x=1743004765; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=wtY2N2Z3hL6nDVea2tco/rHxiZy4oFusiROnhy6gmTA=;
+        b=CHN+vrmgMkGPvbQAT593RxBshrs2ccP7MfNzizhLORjvlBAPNJTy71I7Y4Tl4cza0M
+         2w8YTmKhIE94AerAISn9RUPkSmH79q6RZsxGuikcA8b7yfDavyHs/iwvpOvZh6g2Mqd8
+         bEPi9+1FWy605vqJDtmDFoLe/izRBO9V5RwVAXDR559gFfRSjGYrDUWjguO1OpnVoHjn
+         9i4lwg3S1z2DaUpPejoSQrKWZzSkVBSS8F3/jzIfjJRD4OSWkGuj4ZjonLti6hbX6c8B
+         75Zw7Lyyg3HsNJrMdbSZzyYVyx+3lzuUfg3D3jeaXG2YVnXG20sPGxXgahqKQO7lPxuQ
+         lxDA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742399965; x=1743004765;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=wtY2N2Z3hL6nDVea2tco/rHxiZy4oFusiROnhy6gmTA=;
+        b=fuXfmblW4hg+SE3hmHqCM29T+ZEUkaESBmF/RTB+cX11+fp/Z0dBI8bV3NzgymRRX+
+         HLhSgFW8TXMWoDysKXE9Q5uO86igCbBK7IeIOSDVMBhq4QRkQnxObCAEuun9B670dJGe
+         7vao4dR9B7fnFievBKI7Qna5UJrYuVm4DFZ1+hdSPBrB813T/2USLJJb+K/Kl7GbN78T
+         Cp0e17GdUlPHtQ/NoVEr/gbD5U89trLbF5CUOWwkJ33VZOT9+L7ukV3KHvd8yY2Yk2AV
+         pWZJzMgC+TkwF7T5ZgD//zcbXeSV8rcQb9jzTbtGeLWUvVYBH91EQxLZGBbRGVtb9cE5
+         pmrg==
+X-Forwarded-Encrypted: i=1; AJvYcCVc0aUQUqCVikl8UvprHjcYOcelrzJet9KAfTR6sY6iRvRJOE+H83D9g9yb9sRQHrMfrh/pRMBgx/bPlhc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywj0gz0xwcfhb4apsUc9hqLEqjpdyTfBBKEV+zQj+V0CJzrfak2
+	I7/heG0ane4WBx7igdpfhQv9YMGwKpwG1MQ2wAkwtCzpz55jCASc3s26qWHVnuM=
+X-Gm-Gg: ASbGnctlGXBry6KRpboghqgGH7OoOogIIubTCsu/7FkqxZWAykJtdeWKlirYM+aOdqB
+	UVVKRlKWSOhcNSINeBWf1Rp24EnIuuYgfvxrazLnQQUvfj0N3KDt5W/QTlnagl6O3qkc1h1yVmf
+	NddFMeK7NsYSCSZSUkWA/Qmx0jdlBk5aAi7wBvdAE/Cc2fJzBlx2h9+6tFpO+AeUbxKIRDtYJxD
+	lTX3BcRVagRjmEsunrPCP42k7jOkJ31SY2Dym6II/af0MWHZ+k7LgyZ5l39h+TQcCq+jY4J2VsR
+	zhKS8nvB/SLrWVPjQ1AN4Ni05Pi/QIW8EuZtoS0uS92Dh02L/J+xsqNG9V6VHxrUfj2/xA4ckA=
+	=
+X-Google-Smtp-Source: AGHT+IFT1fxNfAkvCwKqbkyK9yZU0uyEQjN6KyVSpQ/fVLar6fXo6SrJ0IJJdrOVJ+naJH1oUUHhzw==
+X-Received: by 2002:a05:600c:1e07:b0:43d:b85:1831 with SMTP id 5b1f17b1804b1-43d436c7be6mr33579945e9.0.1742399964859;
+        Wed, 19 Mar 2025 08:59:24 -0700 (PDT)
+Received: from [192.168.68.117] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d440ed5e0sm22136525e9.37.2025.03.19.08.59.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 08:59:24 -0700 (PDT)
+Message-ID: <660115f1-d1fb-4fd7-a453-e8c177be9eed@linaro.org>
+Date: Wed, 19 Mar 2025 15:59:23 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318235850.6411-4-ansuelsmth@gmail.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/3] ASoC: dt-bindings: wcd93xx: add bindings for audio
+ switch controlling hp
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: broonie@kernel.org, andersson@kernel.org, lgirdwood@gmail.com,
+ robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ konradybcio@kernel.org, perex@perex.cz, tiwai@suse.com,
+ dmitry.baryshkov@linaro.org, linux-sound@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, johan+linaro@kernel.org
+References: <20250319091637.4505-1-srinivas.kandagatla@linaro.org>
+ <20250319091637.4505-2-srinivas.kandagatla@linaro.org>
+ <4ie22uuz5tpg77jto3c3hec6lhonr44hrjda7jk655axlaxvba@u3atd4gcyghn>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <4ie22uuz5tpg77jto3c3hec6lhonr44hrjda7jk655axlaxvba@u3atd4gcyghn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 19, 2025 at 12:58:39AM +0100, Christian Marangi wrote:
-> diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
-> index 7f71547e89fe..c6d9e4efed13 100644
-> --- a/drivers/net/phy/phylink.c
-> +++ b/drivers/net/phy/phylink.c
-> @@ -1395,6 +1395,15 @@ static void phylink_major_config(struct phylink *pl, bool restart,
->  	if (pl->mac_ops->mac_select_pcs) {
->  		pcs = pl->mac_ops->mac_select_pcs(pl->config, state->interface);
->  		if (IS_ERR(pcs)) {
-> +			/* PCS can be removed unexpectedly and not available
-> +			 * anymore.
-> +			 * PCS provider will return probe defer as the PCS
-> +			 * can't be found in the global provider list.
-> +			 * In such case, return -ENOENT as a more symbolic name
-> +			 * for the error message.
-> +			 */
-> +			if (PTR_ERR(pcs) == -EPROBE_DEFER)
-> +				pcs = ERR_PTR(-ENOENT);
 
-I don't particularly like the idea of returning -EPROBE_DEFER from
-mac_select_pcs()... there is no way *ever* that such an error code
-could be handled.
 
->  	linkmode_fill(pl->supported);
->  	linkmode_copy(pl->link_config.advertising, pl->supported);
-> -	phylink_validate(pl, pl->supported, &pl->link_config);
-> +	ret = phylink_validate(pl, pl->supported, &pl->link_config);
-> +	/* The PCS might not available at the time phylink_create
-> +	 * is called. Check this and communicate to the MAC driver
-> +	 * that probe should be retried later.
-> +	 *
-> +	 * Notice that this can only happen in probe stage and PCS
-> +	 * is expected to be avaialble in phylink_major_config.
-> +	 */
-> +	if (ret == -EPROBE_DEFER) {
-> +		kfree(pl);
-> +		return ERR_PTR(ret);
-> +	}
+On 19/03/2025 10:01, Dmitry Baryshkov wrote:
+> On Wed, Mar 19, 2025 at 09:16:35AM +0000, srinivas.kandagatla@linaro.org wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> On some platforms to minimise pop and click during switching between
+>> CTIA and OMTP headset an additional HiFi Switch is used. Most common
+>> case is that this switch is switched on by default, but on some
+>> platforms this needs a regulator enable.
+> 
+> Is this regulator supplying the codec or some external component? In the
+> latter case it's likely that it should not be a part of WCD bindings.
 
-This does not solve the problem - what if the interface mode is
-currently not one that requires a PCS that may not yet be probed?
+This is regulator powering a mux that is driven by gpio which is part of 
+codec binding. So I would assume this will fall into the codec.
 
-I don't like the idea that mac_select_pcs() might be doing a complex
-lookup - that could make scanning the interface modes (as
-phylink_validate_mask() does) quite slow and unreliable, and phylink
-currently assumes that a PCS that is validated as present will remain
-present.
+Where would we fit this if not part of codec?
 
-If it goes away by the time phylink_major_config() is called, then we
-leave the phylink state no longer reflecting how the hardware is
-programmed, but we still continue to call mac_link_up() - which should
-probably be fixed.
+Unless we mark this regulator as always on.
 
-Given that netdev is severely backlogged, I'm not inclined to add to
-the netdev maintainers workloads by trying to fix this until after
-the merge window - it looks like they're at least one week behind.
-Consequently, I'm expecting that most patches that have been
-submitted during this week will be dropped from patchwork, which
-means submitting patches this week is likely not useful.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+--srini
+> 
+>> This patch adds required bindings to add such regulator.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   .../devicetree/bindings/sound/qcom,wcd93xx-common.yaml        | 4 ++++
+>>   1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd93xx-common.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd93xx-common.yaml
+>> index f78ba148ad25..fa00570caf24 100644
+>> --- a/Documentation/devicetree/bindings/sound/qcom,wcd93xx-common.yaml
+>> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd93xx-common.yaml
+>> @@ -26,6 +26,10 @@ properties:
+>>     vdd-mic-bias-supply:
+>>       description: A reference to the 3.8V mic bias supply
+>>   
+>> +  vdd-hp-switch-supply:
+>> +    description: A reference to the audio switch supply
+>> +      for switching CTIA/OMTP Headset
+>> +
+>>     qcom,tx-device:
+>>       $ref: /schemas/types.yaml#/definitions/phandle-array
+>>       description: A reference to Soundwire tx device phandle
+>> -- 
+>> 2.39.5
+>>
+> 
