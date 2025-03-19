@@ -1,144 +1,227 @@
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C7B325743D;
-	Wed, 19 Mar 2025 13:41:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7E9257452;
+	Wed, 19 Mar 2025 13:41:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742391692; cv=none; b=FTfUunzk8VHa8MB6gGFiOTiOUkvuTEQv8LDmAbTOyQ/PA5w/BCktkSKYd9njtWgOo8kgNDbEFoD8lRp/5yXejpvNEHUGUwOguciQyDqe6hjcYbLj+cRx+q3WZkd6KPFZcc37GL3ftFxy0y/9FwhR15orM/5+VxH13ytuOvWuYoE=
+	t=1742391694; cv=none; b=ioK8mOb/nQAnRDYDgmanza/wcqM2cXOBBfcN4eK6AZmGMr+r2LxnOF3N7eVsNzm0tD3+weqzV2gJx/BhkPsT3G6OW96QUigFdhJNM/Gx+Z0gEiXtj8K4BTzC0y3ocb9wdZg5TnExUBhH8bNETI48WJlndII1ThOGMHL40+m4arQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742391692; c=relaxed/simple;
-	bh=BSFGkwzdrGwntku3dBxvuDqydmKp+4+nwXzeHvX1anQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LYtT7WhwekTeagPYvhPdIO0iuIcHSjS11Er1Hp0eQiFU2kaGztBXXwQSKzsGhRt2mIs0OOSc7YvHI+kkklncvFSm466vVDVLah5GPUZyOqc6c7IJBUN4yq6MEz3c4ICZBEUIbrmm2Atmu2an+8VsisRUoXK2KfyN4a+B+yY1XZc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RqM16Og1; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742391694; c=relaxed/simple;
+	bh=lS3SPHMge0mKx7Qg3gL6pFMXs3xH5zb8zMmcnPbXLBI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=D23snnKi0AezPKRJhE0/I3Nr8rjR1hvQMfM0C4xOaIYzVJC5OB39RfJycXQngF0jT2v3Opsej6y8h/BmzgTJFfkgdkTEQH3hJHC8b5W2cUS9KcLjWe0MR33F6d96kX70iK1nGbIwMbnoSjHoMv89sGzkBUNXnt7ClWcSrvCSnOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jMU3/0DI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RqM16Og1"
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-30bae572157so68686731fa.3;
-        Wed, 19 Mar 2025 06:41:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742391688; x=1742996488; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=H5Ow/IYgNbSJc31zI95VCPqBlotLe/Wijm75VBDSERI=;
-        b=RqM16Og1Hpi6/m+IvhPSuarKA9pRQcb57+KBSZgEomxH0dze0KfUAmr1ckD5CUGXQY
-         eI3NE/R1jqFut5TlHfypaALtScubbOE2Qz3pKRWYvhnrkMjHQSRs1cA//XAoMQ8xnMp2
-         rMQ0JjdWi7ALwRAiU+jUUgHvX1XtwCa9y5+Z2l6t23tsiuaBwRlKWNgdqLp6BVMUjPMT
-         PtoJKpECEwf8LYd16jp5wjXr/pmFE83UyS6VZrFWXO759xubmMqND7F6yblUYwcCL3yl
-         sq5WCIMiFUsdkdqWRkyozaSVcHAhV9UHjao86j+vp1FT69SwXVJWNHX28hAafmdZarix
-         /FuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742391688; x=1742996488;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=H5Ow/IYgNbSJc31zI95VCPqBlotLe/Wijm75VBDSERI=;
-        b=rWz/KgSD6yrM9jZHR0W4tvlDCspBKGJOA90L9hSBOyPETIsFuqlacvOog1GX8LzX4p
-         6QsqXTdpSI+xxsYEkk3ZOg18if3kH0J9mTa8TpKyqdi3Dg4DqwLGTQZeWXrEOqhakeoB
-         SzpNShjQCoEFnQIB7jYDpjnzhqdJSF0aGSutJpboIz8bR56DX5jeWgxMsmotmqF6+P8R
-         iqCt0qCYiiSJDMVCfxefY4Co33wgE+XQVyOe9Qo893Am+5US8ON8367xzG9cp3+vsI5/
-         B3T0+/1v5SOi3IaPq3d9RKFnZ3U6ddyC3Sp1DXFeI9BCAxsOgUEzHJnuGa9eyOZ0kLPS
-         vXPw==
-X-Forwarded-Encrypted: i=1; AJvYcCUSrr+NwvFso/+Nn3448oGw2PSto19IiZCTLC9rKKgWrjdCcK2Jf3u4aQqTxp3jh3fqdjQYgWhEtTwyy/Y=@vger.kernel.org, AJvYcCV4nvB2HBy650JyYo6/8AmG48HxdQqjtq+HfNb4XB++nBAtLPuIDTDDvnPbcGCmiOx3VZp85Z6HKHlTnCuV1Jc=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw+8DkaAE+dUWiB5txuvPQS3DgPRapofFciSLgmCCC/NMddgdBF
-	qb4FTP7kZmG3PDuPZ3gHWD2k7gaScsPu8qRyil8SASxvJ91bpyt5WgzNCdmVON4ZEHg948Ipt7n
-	stYsUQ97DBfAFjnlczq6ViRIi3zE=
-X-Gm-Gg: ASbGnctGYIjrCyxfTA9HjF+RfBOIrLRiRShIN13OhauZ86rZlzpKn/bQAqEFyuyuWS8
-	IrzHbe4nCfROpcnZD6H59YiyLLxjDC86n9+HSp32F3pFjyDt0bzr0i/SPgFXPjiun2BpKT45777
-	X+JTMFPtPMjPFv9LxHx73M0LZzsKjNE/bRFHSE+v2KQQ==
-X-Google-Smtp-Source: AGHT+IHd+c/L0WNa8hU9BaG2rfDjISirj1WkOf8TCQcdO1hD+HO4W9tJZCYYrFJacfgJc9KdnVkG1+/XsZcTn8Nq8mE=
-X-Received: by 2002:a2e:bc09:0:b0:2ff:d0c4:5ffe with SMTP id
- 38308e7fff4ca-30d6a3e18a1mr11713931fa.16.1742391688068; Wed, 19 Mar 2025
- 06:41:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jMU3/0DI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1BE3C4CEEC;
+	Wed, 19 Mar 2025 13:41:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742391693;
+	bh=lS3SPHMge0mKx7Qg3gL6pFMXs3xH5zb8zMmcnPbXLBI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=jMU3/0DIeBZ70P4rLWuJVeYm7v0ZNXcs9zMbWLSXFvxjAMfGujLyUuMbCGG4mMjav
+	 43QaLVRiAUJfe+0xaTTi3WpFKiiDVNKJEGPLcNYf20zBSsXlktVY8a5QNbqdZh2hn+
+	 +S91+/IcHijowDo0uBKH3sd8nh7M7HsMhr+6V+Aig8Sou23sVF+WhYoYOMExeb/HQv
+	 VKfksIUYKDoh+YqZU4z1io5mcu8CUKBJZ728ZJXPgWRp6pX77j9Jt1nwpNq9q4ZME2
+	 blGY9sk6Dz0uK6ajBJKOjEK8UADu6V1AC+dRfA9BhpnxPnM8QxRDP+56w5M01y/oLi
+	 4zS1V3GJ9UBVQ==
+From: Roger Quadros <rogerq@kernel.org>
+Date: Wed, 19 Mar 2025 15:38:33 +0200
+Subject: [PATCH net-next 7/9] net: ethernet: ti: cpsw_ale: add policer save
+ restore for PM sleep
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318-vec-set-len-v2-0-293d55f82d18@gmail.com>
- <20250318-vec-set-len-v2-3-293d55f82d18@gmail.com> <Z9qUBe_8SM4c-9UI@google.com>
-In-Reply-To: <Z9qUBe_8SM4c-9UI@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Wed, 19 Mar 2025 09:40:51 -0400
-X-Gm-Features: AQ5f1JoA7wFy_KoTfU5Ep1Lg3TnD_iDU6J8Xk2ethLlxfUg9yanq0t1x893Jjac
-Message-ID: <CAJ-ks9n-wGg70+dRj3x4ETYqjTfnnKoPqv9RncHzX_UKAPFHzw@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] rust: alloc: refactor `Vec::truncate` using `dec_len`
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Andrew Ballance <andrewjballance@gmail.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250319-am65-cpsw-rx-class-v1-7-2bfded07490e@kernel.org>
+References: <20250319-am65-cpsw-rx-class-v1-0-2bfded07490e@kernel.org>
+In-Reply-To: <20250319-am65-cpsw-rx-class-v1-0-2bfded07490e@kernel.org>
+To: Siddharth Vadapalli <s-vadapalli@ti.com>, 
+ Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Russell King <linux@armlinux.org.uk>, danishanwar@ti.com
+Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Roger Quadros <rogerq@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5534; i=rogerq@kernel.org;
+ h=from:subject:message-id; bh=lS3SPHMge0mKx7Qg3gL6pFMXs3xH5zb8zMmcnPbXLBI=;
+ b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBn2slyjj6w3g9erkBvy01mwPvcE1+i/eQ2f2sh2
+ lWz7lR55maJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZ9rJcgAKCRDSWmvTvnYw
+ k/1ED/42+Uhw0BBPRFfp1A2knSP29nIVd970/VVbu3Uzb5BtDXlGms7iSfaH+X+rGprQHms7gcF
+ HmCSMtqGBdQX2ryUutH35t+XaEpYoK5oceusEC/mb4qxPHTSMqdDBgueS7CdrmHR2P5CIn15OqU
+ 1BFhJk1mCtqIZ1YLNzdVjQJFjVlD82bQPt4CFDu8duGYr8IXakh9CkcKQXpJB3EYjHiW+ztnhlT
+ eOu51/z+a7TqcAsihIFvhaQOMOtMmp7+L4R2jfICmybpmx7IQo/ZqxfOUMPavTxMWQTfk26IJWT
+ KtPRGcpPpWKu+UUs8ZjzIjw0DKuBfBUBsjpqydEg+qdoZ26IiycuDOxLEescx+gd9/nlEe95GDn
+ 41UBRtN4aoGlBBQjkttmKJWmggK72q4NHZQeWyUOrI6K46j1ih313Jq+Jtk9E8mgEdOgVLgKDBd
+ nLbtL4lLi8AYdkk6lCfmE7w6HnyytdkOKEg2oPIaJ0lICnAQyiNqnfnmvFBLfvnHimXMSXeYbI0
+ 9UYpPnNMHORw6rmCwHdeAWcukFF3OyS98kkEcDacI/LiAcIMKl+r/h96X7/ywaaJLuXk+bs4Y32
+ r2NCGLHP8y2zMIw8HImViHOft5ClRZfPzWQD0Pp0VDBDC6Ol5Vt/KRjwh9BrVChYxdP7K86FBRB
+ tO9YeeAUfcCMI6g==
+X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
+ fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
 
-On Wed, Mar 19, 2025 at 5:53=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> On Tue, Mar 18, 2025 at 04:13:55PM -0400, Tamir Duberstein wrote:
-> > Use `checked_sub` to satisfy the safety requirements of `dec_len` and
-> > replace nearly the whole body of `truncate` with a call to `dec_len`.
-> >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  rust/kernel/alloc/kvec.rs | 29 +++++++++++------------------
-> >  1 file changed, 11 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> > index 97cc5ab11e2a..6f4dc89ef7f8 100644
-> > --- a/rust/kernel/alloc/kvec.rs
-> > +++ b/rust/kernel/alloc/kvec.rs
-> > @@ -489,25 +489,18 @@ pub fn reserve(&mut self, additional: usize, flag=
-s: Flags) -> Result<(), AllocEr
-> >      /// # Ok::<(), Error>(())
-> >      /// ```
-> >      pub fn truncate(&mut self, len: usize) {
-> > -        if len >=3D self.len() {
-> > -            return;
-> > +        match self.len().checked_sub(len) {
-> > +            None =3D> {}
-> > +            Some(count) =3D> {
->
-> This could be simplified as:
-> if let Some(count) =3D self.len().checked_sub(len) {
->     // logic here
-> }
->
-> or
-> let Some(count) =3D self.len().checked_sub(len) else {
->     return;
-> }
-> // logic here
+On some K3 platforms CPSW context is lost during PM sleep.
 
-=F0=9F=91=8D
+Add cpsw_ale_policer_save() and cpsw_ale_policer_restore() helpers.
 
->
-> > +                // SAFETY: `count` is `self.len() - len` so it is guar=
-anteed to be less than or
-> > +                // equal to `self.len()`.
-> > +                let tail =3D unsafe { self.dec_len(count) };
-> > +
-> > +                // SAFETY: the contract of `dec_len` guarantees that t=
-he elements in `tail` are
-> > +                // valid elements whose ownership has been transferred=
- to the caller.
-> > +                unsafe { ptr::drop_in_place(ptr) };
->
-> We have a mutable reference to these elements until after the
-> `drop_in_place` call, but the elements are invalidated by that call.
-> This means that we have a mutable reference to invalid values, which
-> violates the invariants for mutable references.
->
-> Consider converting to a raw pointer when creating `tail` instead to
-> avoid that:
->
-> let tail: *mut [T] =3D unsafe { self.dec_len(count) };
-> unsafe { ptr::drop_in_place(ptr) };
+In am65-cpsw driver, save the policer context during PM suspend and
+restore it during PM resume.
 
-=F0=9F=91=8D
+Signed-off-by: Roger Quadros <rogerq@kernel.org>
+---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.c | 23 ++++++++++++++---
+ drivers/net/ethernet/ti/am65-cpsw-nuss.h |  1 +
+ drivers/net/ethernet/ti/cpsw_ale.c       | 42 ++++++++++++++++++++++++++++++++
+ drivers/net/ethernet/ti/cpsw_ale.h       |  4 +++
+ 4 files changed, 67 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+index 1c0eedf884ce..405944013521 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
+@@ -3487,7 +3487,7 @@ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
+ 	struct device_node *node;
+ 	struct resource *res;
+ 	struct clk *clk;
+-	int ale_entries;
++	int tbl_entries;
+ 	__be64 id_temp;
+ 	int ret, i;
+ 
+@@ -3590,10 +3590,25 @@ static int am65_cpsw_nuss_probe(struct platform_device *pdev)
+ 		goto err_of_clear;
+ 	}
+ 
+-	ale_entries = common->ale->params.ale_entries;
++	tbl_entries = common->ale->params.ale_entries;
+ 	common->ale_context = devm_kzalloc(dev,
+-					   ale_entries * ALE_ENTRY_WORDS * sizeof(u32),
++					   tbl_entries * ALE_ENTRY_WORDS * sizeof(u32),
+ 					   GFP_KERNEL);
++	if (!common->ale_context) {
++		ret = -ENOMEM;
++		goto err_of_clear;
++	}
++
++	tbl_entries = common->ale->params.num_policers;
++	i = CPSW_ALE_POLICER_ENTRY_WORDS + 1;	/* 8 CFG + 1 Thread_val */
++	i *= tbl_entries;	/* for all policers */
++	i += 1;			/* thread_def register */
++	common->policer_context = devm_kzalloc(dev, i * sizeof(u32), GFP_KERNEL);
++	if (!common->policer_context) {
++		ret = -ENOMEM;
++		goto err_of_clear;
++	}
++
+ 	ret = am65_cpsw_init_cpts(common);
+ 	if (ret)
+ 		goto err_of_clear;
+@@ -3677,6 +3692,7 @@ static int am65_cpsw_nuss_suspend(struct device *dev)
+ 	int i, ret;
+ 
+ 	cpsw_ale_dump(common->ale, common->ale_context);
++	cpsw_ale_policer_save(common->ale, common->policer_context);
+ 	host_p->vid_context = readl(host_p->port_base + AM65_CPSW_PORT_VLAN_REG_OFFSET);
+ 	for (i = 0; i < common->port_num; i++) {
+ 		port = &common->ports[i];
+@@ -3754,6 +3770,7 @@ static int am65_cpsw_nuss_resume(struct device *dev)
+ 
+ 	writel(host_p->vid_context, host_p->port_base + AM65_CPSW_PORT_VLAN_REG_OFFSET);
+ 	cpsw_ale_restore(common->ale, common->ale_context);
++	cpsw_ale_policer_restore(common->ale, common->policer_context);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.h b/drivers/net/ethernet/ti/am65-cpsw-nuss.h
+index 917c37e4e89b..61daa5db12e6 100644
+--- a/drivers/net/ethernet/ti/am65-cpsw-nuss.h
++++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.h
+@@ -190,6 +190,7 @@ struct am65_cpsw_common {
+ 	unsigned char switch_id[MAX_PHYS_ITEM_ID_LEN];
+ 	/* only for suspend/resume context restore */
+ 	u32			*ale_context;
++	u32			*policer_context;
+ };
+ 
+ struct am65_cpsw_ndev_priv {
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
+index f5ca18d4ea6a..48592441085a 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.c
++++ b/drivers/net/ethernet/ti/cpsw_ale.c
+@@ -1830,3 +1830,45 @@ int cpsw_ale_policer_set_entry(struct cpsw_ale *ale, u32 policer_idx,
+ 
+ 	return 0;
+ }
++
++void cpsw_ale_policer_save(struct cpsw_ale *ale, u32 *data)
++{
++	int i, idx;
++
++	for (idx = 0; idx < ale->params.num_policers; idx++) {
++		cpsw_ale_policer_read_idx(ale, idx);
++
++		for (i = 0; i < CPSW_ALE_POLICER_ENTRY_WORDS; i++)
++			data[i] = readl_relaxed(ale->params.ale_regs +
++						ALE_POLICER_PORT_OUI + 4 * i);
++
++		regmap_field_write(ale->fields[ALE_THREAD_CLASS_INDEX], idx);
++		data[i++] = readl_relaxed(ale->params.ale_regs +
++					ALE_THREAD_VAL);
++		data += i * 4;
++	}
++
++	data[0] = readl_relaxed(ale->params.ale_regs + ALE_THREAD_DEF);
++}
++
++void cpsw_ale_policer_restore(struct cpsw_ale *ale, u32 *data)
++{
++	int i, idx;
++
++	for (idx = 0; idx < ale->params.num_policers; idx++) {
++		cpsw_ale_policer_read_idx(ale, idx);
++
++		for (i = 0; i < CPSW_ALE_POLICER_ENTRY_WORDS; i++)
++			writel_relaxed(data[i], ale->params.ale_regs +
++				       ALE_POLICER_PORT_OUI + 4 * i);
++
++		cpsw_ale_policer_write_idx(ale, idx);
++
++		regmap_field_write(ale->fields[ALE_THREAD_CLASS_INDEX], idx);
++		writel_relaxed(data[i++], ale->params.ale_regs +
++						 ALE_THREAD_VAL);
++		data += i * 4;
++	}
++
++	writel_relaxed(data[0], ale->params.ale_regs + ALE_THREAD_DEF);
++}
+diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
+index 11d333bf5a52..dbc095397389 100644
+--- a/drivers/net/ethernet/ti/cpsw_ale.h
++++ b/drivers/net/ethernet/ti/cpsw_ale.h
+@@ -171,6 +171,8 @@ enum cpsw_ale_port_state {
+ #define CPSW_ALE_POLICER_MATCH_IPSRC	BIT(8)
+ #define CPSW_ALE_POLICER_MATCH_IPDST	BIT(9)
+ 
++#define CPSW_ALE_POLICER_ENTRY_WORDS	8
++
+ struct cpsw_ale_policer_cfg {
+ 	u32 match_flags;
+ 	u16 ether_type;
+@@ -227,5 +229,7 @@ int cpsw_ale_policer_set_entry(struct cpsw_ale *ale, u32 policer_idx,
+ 			       struct cpsw_ale_policer_cfg *cfg);
+ void cpsw_ale_policer_clr_entry(struct cpsw_ale *ale, u32 policer_idx,
+ 				struct cpsw_ale_policer_cfg *cfg);
++void cpsw_ale_policer_save(struct cpsw_ale *ale, u32 *data);
++void cpsw_ale_policer_restore(struct cpsw_ale *ale, u32 *data);
+ 
+ #endif
+
+-- 
+2.34.1
+
