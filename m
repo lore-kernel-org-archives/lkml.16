@@ -1,120 +1,126 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6797525291F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6D2A29;
+	Wed, 19 Mar 2025 05:10:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742360901; cv=none; b=s/DrYPCQv55BU+hlJRIIAkXt4dMis+sTE+dvm7v+VvhWD72ZZBrATBQ45S8wJczbAizee157Ixrx8W+QeIAb5m5C4RMX4uB4T+Wybk5+0cVg+diyUM5jAYLEbr1dh5MCyujBm30U9pEZFfMGzbw8aE0G5w3EmkzTxFlQ3rHciWg=
+	t=1742361052; cv=none; b=SJytOdlCZKQmU6zHCmqeejLnaYIaLbwuKA/5Iel+7UPlMIjsUAckV/rfhsRu337TFC9BZw5lB79LRTODzbWwW3ts+diODCJEK5nBcBSzdm8tSW8qfTdocxvj+OPOQVV765cEC7H/Xu/VZIbWeozJ25M+mqtWC8R0Wd1oLW6ebQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742360901; c=relaxed/simple;
-	bh=FwwCUQYWW0iPLjUpMdjojzAG65ocZ3jEUzcBFQsWjIY=;
-	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=a2QcaTiq+5SoW/REj5mu8f+uFrcq+xhW8X/kqwvsmEFqbWMsRcMt+4azHRIFjiHu9RhsKknFEQG5pKidHu4yDhyBGLrqElkF/N6pSsiNDb+ttVNHRVYe0gXyJTPC1tTIh4v8XOW0a/wlOPBzpXMdvPJz0L87CtHyv+lFweQbqIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=mTs64ygf; arc=none smtp.client-ip=209.85.128.202
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
+	s=arc-20240116; t=1742361052; c=relaxed/simple;
+	bh=9K6WGiNyXLEWMf+pKTpq+vrMLUXATUFTZFZdLOxv080=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YpTmF+0TeWVYQues8VCMVIs+JMG6DdnLJIPQTBiXqYir7SI4CXF4cLlRdUK+51D9Zt49A3Ifil7aJlFJfqQw3D5ycQ8jm7dJVy6/2FUiN8h0nJViWRaf7nxvR1gIKjQLbOf1kCdibGfkggtOGFJNBq+XecnXDjKHmiTEBk1gJqw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uan0LUyJ; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="mTs64ygf"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6fed889e353so102182587b3.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 22:08:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uan0LUyJ"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-224341bbc1dso122690145ad.3;
+        Tue, 18 Mar 2025 22:10:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742360899; x=1742965699; darn=vger.kernel.org;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jGnh5R7F2nGjibuMN1IiOugHr5YAQ01+XconQh81ims=;
-        b=mTs64ygfkHOpOUAgupDi4Vjty844ukF4nAIVX11Ymk/TgNL93v9sOI72KOUy3ovoFx
-         6lC2l8B2Mxg6ifGjYF2tRHE3BKppM8pYNlP8b/wvRHDP3FiHEL5V64M0vtW1NkOU7SWL
-         vLtT28jgPlWb7M8PtjWtR2rJmuQIN1K3QNYTrZ8MMev9tg6ex6KeyTCb3vR8yXcz0uTj
-         jnfOWCjNQZyvzgCP2mVuwKpWA8NpwRTj8puDdMIGPLZsekKpN1TBWnSwW9pb6Oa3nPBt
-         Eq0UGGlD8h0K6c9Aesc4mLJqFL3X94OUGmiJhJ3C+1XWy2eHjwVMU6lf3LRWk7iHGJss
-         ccbQ==
+        d=gmail.com; s=20230601; t=1742361050; x=1742965850; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wXTO+0tQ4++St4DdogFMVrtMcS1fXva0YCFwwmEEQwg=;
+        b=Uan0LUyJvp5kUvbmGDhi2Ho71X6s06kRX7tmGjhPtGzSJsGkpK80GgYl6ZX+tkzjBu
+         q56Q9L5WzpasIJAHO/7AfP2WQMHOWcrULpn4l6KAfNfypOhEnRAZ2UCExkOahFOwyVkl
+         5/55Prj7kCRD46BdJZPdh4duHzzqDSSyqw4ooOxvsZoG0TOkGehGEH7kHbDft+LDGvZG
+         AyClNES5SoEyshCbTaLtjc5KfWTPuG4EHWc1itkrpF76s/V6+GtQ2T7jJ15bgP++8e1O
+         tbdJUWRaxiV4gagz5VTAZCDIq+ulVuPFiUFv+eacfaOQ3c8Kp/RbZkShjWs9IwZj1GHb
+         BQPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742360899; x=1742965699;
-        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jGnh5R7F2nGjibuMN1IiOugHr5YAQ01+XconQh81ims=;
-        b=rKKKNC6eBriFEZrvDQDLC84bqu7gGeMwoP34dDOdFO2LrxjFiGIS30AQDYFKYc5hjH
-         9YYZxDQwPQ3Ade2iQIeVh3NsANNuiRw+H1+wmtUG9KsxJeqKWpwiK82g0L5vqa2/T9KM
-         iq5qSdau79yF3j6it3BiD354pURQ3wDTNhP7ENjEFZV9df5FiTTpVlTPZADKl53EBBsa
-         0FAsa9+Z5fEF7k75Evd0W2JpOMs7XQMm0eWcohcHm7vXf11Pve+1jNTas6C9kxPQ8xc9
-         EjIqRZGxE7LWZMR5dgKSmSnGmQhgyxIlZywSNzXVVfBJ2jEHNcvhdFXX5q5MtHw4l8Hv
-         vx8Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWnW1yk32fMd0VbaY/aAj/npOvS1eeapyrxyqk/DZVBculQTASzI1/2O0xISKF12X2x8CDkcYhlt7ILoDE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwREIpGxTcX1EhenzrOxFqmJChlDs5TgygTrhSwoIf1KEwn27O4
-	nF+qrk3LHo69a4Ph34cvSe/vDHshl2nOFnIfL3C/D2cI1+55SaA/Gqb6ZCtrtBXIkySvq2Ydgg8
-	1dvdZlQ==
-X-Google-Smtp-Source: AGHT+IHv1nfcfv3Ye5fOTqwhfAPWbuVvzkQzn8h4pmksBhQF9eFLTiSxCvjG8QByREOpkefDEY1DbG6A3hXY
-X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:8a11:10b5:af90:6031])
- (user=irogers job=sendgmr) by 2002:a25:dc03:0:b0:e63:699a:4e6b with SMTP id
- 3f1490d57ef6-e667b41463bmr514276.4.1742360898600; Tue, 18 Mar 2025 22:08:18
- -0700 (PDT)
-Date: Tue, 18 Mar 2025 22:07:41 -0700
-In-Reply-To: <20250319050741.269828-1-irogers@google.com>
-Message-Id: <20250319050741.269828-15-irogers@google.com>
+        d=1e100.net; s=20230601; t=1742361050; x=1742965850;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wXTO+0tQ4++St4DdogFMVrtMcS1fXva0YCFwwmEEQwg=;
+        b=RmPU8YJJvgi3qQBNrIe+xzEYWgB6TAmxWC8tcpVVSFmRyuoPeo3m9kTZ1RpeqpslVs
+         YC+Osla+9X9zk8zWVs/G5Z7CQL4Khc9m2G4eBhsamFPLNtWSsVtafETdH/i1XESzKiNd
+         ro0YXT6Q/rmtdk/DWob6So2z7BF9QFNXQ+I6XVjp7gV49ZllDgQRkl1HX3fNhvYO5Z/O
+         f/1kZ59yMkWChMgN0/xSynfIYAhlzs1FbR/YgRKXjkfageGcdvooBZGF03rUFRSCskXq
+         oKHQtcGm3Ryp7cNHJleGEcYeIftLoW14CYA3DCBiKW6znOw9i3LRnSdxYgj4gxZASWAH
+         N6Jg==
+X-Forwarded-Encrypted: i=1; AJvYcCUIVi9QseBNsJcNAgm1FIevMKV3YFjJ+HBqAKcaO8Ps4xoRH/OR4ORmXjwdvA0e5db1oQyHXIOAGNkO@vger.kernel.org, AJvYcCXRdL09q9kZvHKVsPiY8FJe6zU+mZpbGE7zJa1hFwysxe+KTRZS79sSdxU1tDT9aBlnePBr/YdqRFWp7s5A@vger.kernel.org
+X-Gm-Message-State: AOJu0YyTf+2kYOm72kkuguC3vtPBmVXbMRYkB+YD24trY5NpNc/JJYho
+	KXhDaiHmYGkMSP7sp3UwzSqUICV3tYMzDJ6+dMKkzB3gOdE64SkM
+X-Gm-Gg: ASbGncucpmvMXyjo4uDbdliLaFReM4dbG4BvC68iLcTALalTV/3ae0In/Qof4fWMrnj
+	44xk/MukLk8w0jRSIhmlB8GFPvjyTYL1qiZHZRkQR1BjsEzRvuqje7HTWTCz5lfZW1sCHhda/pV
+	LkRx/9v9ZzW2R1Hw6Q0z5LDTtF+KuWBEBI24D4wU0P7OHp/wkgxkW+2phFD1+qQ8Eaz6vC5cD3V
+	MTry03+Xgqo3l4Riloa67aPDYa8AeUAcbbJdf3VV/SzMGuwFjRns2FiR1gjwSG535w4NIiNSgZq
+	Qec5iU8S7pLEjwIrReIkhtkr/G1/mLI+apOb1slSAidlTS/sBrI0CwSN
+X-Google-Smtp-Source: AGHT+IFTXoznq4fx5P6CPA89QSOAflxCU5yvg1s0ajp9P3YZ7yIgXjNFD8ZSqqeIfJxVBlzub+qshg==
+X-Received: by 2002:a17:902:d542:b0:224:6a7:a5b0 with SMTP id d9443c01a7336-226497ffafdmr21169865ad.2.1742361049976;
+        Tue, 18 Mar 2025 22:10:49 -0700 (PDT)
+Received: from [127.0.1.1] ([2601:644:8501:1640:50a3:6f80:2290:6f18])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd4af3sm104875715ad.236.2025.03.18.22.10.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 22:10:49 -0700 (PDT)
+From: Rudraksha Gupta <guptarud@gmail.com>
+Date: Tue, 18 Mar 2025 22:10:47 -0700
+Subject: [PATCH] ARM: dts: qcom-msm8960: add missing clocks to the timer
+ node
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250319050741.269828-1-irogers@google.com>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Subject: [PATCH v7 14/14] perf trace: Fix evlist memory leak
-From: Ian Rogers <irogers@google.com>
-To: Ian Rogers <irogers@google.com>, Peter Zijlstra <peterz@infradead.org>, 
-	Ingo Molnar <mingo@redhat.com>, Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Adrian Hunter <adrian.hunter@intel.com>, Kan Liang <kan.liang@linux.intel.com>, 
-	John Garry <john.g.garry@oracle.com>, Will Deacon <will@kernel.org>, 
-	James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>, 
-	Leo Yan <leo.yan@linux.dev>, guoren <guoren@kernel.org>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Albert Ou <aou@eecs.berkeley.edu>, Charlie Jenkins <charlie@rivosinc.com>, 
-	Bibo Mao <maobibo@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, 
-	Catalin Marinas <catalin.marinas@arm.com>, Jiri Slaby <jirislaby@kernel.org>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?=" <bjorn@rivosinc.com>, Howard Chu <howardchu95@gmail.com>, linux-kernel@vger.kernel.org, 
-	linux-perf-users@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	"linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, linux-riscv@lists.infradead.org, 
-	Arnd Bergmann <arnd@arndb.de>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250318-expressatt-solve-dts-errors-v1-1-14012a4bc315@gmail.com>
+X-B4-Tracking: v=1; b=H4sIANZR2mcC/x3MQQqAMAwAwa9IzgasorR+RTxIm2pArCRFBPHvF
+ o8Dyz6gJEwKY/WA0MXK6SgwdQV+W46VkEMxtE3bN52xSPcppLrkjJr2izBkRRJJotj1LrrgjLe
+ Dh3IoZeT7v0/z+34sNfB2bQAAAA==
+X-Change-ID: 20250318-expressatt-solve-dts-errors-359f9d91c86c
+To: Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Rudraksha Gupta <guptarud@gmail.com>
+X-Mailer: b4 0.15-dev-8865a
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742361048; l=1226;
+ i=guptarud@gmail.com; s=20250208; h=from:subject:message-id;
+ bh=9K6WGiNyXLEWMf+pKTpq+vrMLUXATUFTZFZdLOxv080=;
+ b=p8A5nK0/sXen7GL7s5HAwito2uNahUCx2fiGdVzczqj6Glh75RylsoP03ocoRAugv/441fS0x
+ tZ2f1yOTa8nAsJh2/DT/GXT/TajbUBocF62lWcyUKsl6IxpeuDYNMjM
+X-Developer-Key: i=guptarud@gmail.com; a=ed25519;
+ pk=5lJNaiR/Bu7edToWFLriO5zXOrVqSQWrBKbAKwuEw04=
 
-Leak sanitizer was reporting a memory leak in the "perf record and
-replay" test. Add evlist__delete to trace__exit, also ensure
-trace__exit is called after trace__record.
+In order to fix DT schema warning and describe hardware properly, add
+missing sleep clock to the timer node.
 
-Signed-off-by: Ian Rogers <irogers@google.com>
+Solved by Dmitry Baryshkov on the APQ8064 SoC
+Link: https://lore.kernel.org/all/20250318-fix-nexus-4-v2-6-bcedd1406790@oss.qualcomm.com/
+
+Signed-off-by: Rudraksha Gupta <guptarud@gmail.com>
 ---
- tools/perf/builtin-trace.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+Running the following no longer returns any errors:
+make ARCH=arm CHECK_DTBS=y qcom/qcom-msm8960-cdp.dtb
+make ARCH=arm CHECK_DTBS=y qcom/qcom-msm8960-samsung-expressatt.dtb
+---
+ arch/arm/boot/dts/qcom/qcom-msm8960.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1d4ad5d19b10..a102748bd0c9 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -5339,6 +5339,8 @@ static void trace__exit(struct trace *trace)
- 		zfree(&trace->syscalls.table);
- 	}
- 	zfree(&trace->perfconfig_events);
-+	evlist__delete(trace->evlist);
-+	trace->evlist = NULL;
- #ifdef HAVE_LIBBPF_SUPPORT
- 	btf__free(trace->btf);
- 	trace->btf = NULL;
-@@ -5719,8 +5721,10 @@ int cmd_trace(int argc, const char **argv)
- 		}
- 	}
+diff --git a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+index 865fe7cc3951..06b3fa5e1acf 100644
+--- a/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
++++ b/arch/arm/boot/dts/qcom/qcom-msm8960.dtsi
+@@ -112,6 +112,8 @@ timer@200a000 {
+ 				     <GIC_PPI 3 0x301>;
+ 			reg = <0x0200a000 0x100>;
+ 			clock-frequency = <27000000>;
++			clocks = <&sleep_clk>;
++			clock-names = "sleep";
+ 			cpu-offset = <0x80000>;
+ 		};
  
--	if ((argc >= 1) && (strcmp(argv[0], "record") == 0))
--		return trace__record(&trace, argc-1, &argv[1]);
-+	if ((argc >= 1) && (strcmp(argv[0], "record") == 0)) {
-+		err = trace__record(&trace, argc-1, &argv[1]);
-+		goto out;
-+	}
- 
- 	/* Using just --errno-summary will trigger --summary */
- 	if (trace.errno_summary && !trace.summary && !trace.summary_only)
+
+---
+base-commit: ffd294d346d185b70e28b1a28abe367bbfe53c04
+change-id: 20250318-expressatt-solve-dts-errors-359f9d91c86c
+
+Best regards,
 -- 
-2.49.0.rc1.451.g8f38331e32-goog
+Rudraksha Gupta <guptarud@gmail.com>
 
