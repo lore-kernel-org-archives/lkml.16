@@ -1,248 +1,327 @@
-Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11021117.outbound.protection.outlook.com [52.101.70.117])
+Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFAD1EF36A;
-	Wed, 19 Mar 2025 07:52:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.117
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742370769; cv=fail; b=CpY9nLvrEED4U3KJ6svTsza8fEOtpMBDgLg0bPu88663zIq41bUoM8L9ofxRsVDW22yRjqH7cau29n6+z7IiISnzyHtDIzKY6KC3WT8C6y0sFYzogpH2HlPh4RWIHH6CbQ8vxYGOitlOEomn1pWHUcoiIBJtF7wgYwfPM4zyb+M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742370769; c=relaxed/simple;
-	bh=pJx0BQ5DMNsrHkXL1bWl1caombs2/d79b5bo9KXm5fw=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=kAerejYzjOu4Z4aHA8fPZ5mnCsloIT75o+p7E0CNgy/cHgNWFlVIFbKd2wVYuGwBj5ZfjjV2f4ELdnn5UN289yE2unIKYneJV1M6BayGcLrKTNKBP7IUH+y0xcSpyh5azzvJ5A7vygpOxm2QBDgQReKlJjyu3gSUE4j2/XFnZeg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kontron.de; spf=pass smtp.mailfrom=kontron.de; dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b=kPYyRtH1; arc=fail smtp.client-ip=52.101.70.117
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kontron.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kontron.de
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mysnt.onmicrosoft.com header.i=@mysnt.onmicrosoft.com header.b="kPYyRtH1"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=E/5WZLSax/VzQmKOjXH6qUBbaHmNvHwrwyFbJLdheRSj5KnYczNLPVZGU3oj4Hwb0d5hdb+C3AILH/CTH7eV19nI2lmJbCXWtL7nuD2wxT1xN8N/KCDjKcr/iFXaE8zH3qnhTdySwYq3deleU2S6pxAZ1hLjCpxadHj+07FiL868fOz9FeHRe4oXbJCIw2eJ7Loy8/+sKtuqONTrxZ7UK2MgrBM/txy15a4AFheit7+obUJAb/3j8QZCtCeFisDpB9wtwEVGq/uqE0+4ERQWCQERJh6S3pWdivSlnKJuhzsRr52pyARtBGu1j/p4TTBWEiVdIvrBeZ/RycvgdYCFtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=iPESzy1K3lUPYi4FWormCWCnOZcrfT7AR8cTem0xXjI=;
- b=tsS4eT6g2ZMQdwWNo+9AA11Q1HWG9+hBpTDckH7tPg5BysiXDTE10GxsMnQXTLohUJjVzfaDOh5q/gBDBr/rQ/EAZ51BbCc8m0n6zBgGbPagx8nXJT1ox/dxNw+7+/Ka4FzCvDGgQnmaaBk1R18g9+BoPxeGp+t8zA1RKDxeoPWqLQ1R8nhLI0mEiyRqPrVJobTR1aMz01upuSIeNB0wolbQK+RXGZBBsIe9zKOCkN3FyiMMn8Gg6O0/z1JqgY+X+GgiZB0NyhTuxHb4RQBY22JK1D0+4XafuBdZHGMT/bNC55hNEOUgqL/Il/oU8LHOIFHBLpkMPaTgzIgG9yjbug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=kontron.de; dmarc=pass action=none header.from=kontron.de;
- dkim=pass header.d=kontron.de; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mysnt.onmicrosoft.com;
- s=selector2-mysnt-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=iPESzy1K3lUPYi4FWormCWCnOZcrfT7AR8cTem0xXjI=;
- b=kPYyRtH1jyTUOq1VFiD8F4CN8TzAOf05etqiMf9Qbxo33jMmDZ9jNK5DTpDIDk9Lu/uV0Q3PnW1Jew0UA1gDyiCXpcQ/ygBlJcvsK2r89vwG0EQ29KbpEC7PDpDcJ0JAnl0ScssAqszaCjwAx5J5/OvpwhPzTROiOHHnt3DkDS8=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=kontron.de;
-Received: from PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:263::10)
- by DB4PR10MB6288.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:380::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
- 2025 07:52:41 +0000
-Received: from PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::b854:7611:1533:2a19]) by PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::b854:7611:1533:2a19%4]) with mapi id 15.20.8534.031; Wed, 19 Mar 2025
- 07:52:41 +0000
-Message-ID: <15acbb84-efa1-4ca6-bbfd-a4c3f17a7d19@kontron.de>
-Date: Wed, 19 Mar 2025 08:52:39 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: imx8mp: HDMI display blank/black problems
-To: Saravana Kannan <saravanak@google.com>, Adam Ford <aford173@gmail.com>,
- l.stach@pengutronix.de, marex@denx.de
-Cc: mailinglist1@johanneskirchmair.de, johannes.kirchmair@skidata.com,
- Laurent.pinchart@ideasonboard.com, airlied@gmail.com,
- alexander.stein@ew.tq-group.com, andrzej.hajda@intel.com,
- catalin.marinas@arm.com, conor+dt@kernel.org, daniel@ffwll.ch,
- devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
- festevam@gmail.com, jernej.skrabec@gmail.com, jonas@kwiboo.se,
- kernel@pengutronix.de, kishon@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
- linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pm@vger.kernel.org, maarten.lankhorst@linux.intel.com,
- mripard@kernel.org, neil.armstrong@linaro.org, p.zabel@pengutronix.de,
- rfoss@kernel.org, robh+dt@kernel.org, s.hauer@pengutronix.de,
- shawnguo@kernel.org, tzimmermann@suse.de, ulf.hansson@linaro.org,
- victor.liu@nxp.com, vkoul@kernel.org, will@kernel.org
-References: <20240203165307.7806-1-aford173@gmail.com>
- <20241025080544.136280-1-mailinglist1@johanneskirchmair.de>
- <6d039ecf-0e48-415a-afd8-6bfce60081ae@kontron.de>
- <CAHCN7xKevGWipBSch6gKVeJRT9Zb8QTchhxg3c=96XhnAvnjZw@mail.gmail.com>
- <CAGETcx-LGZ1k-seh4LkvCobsxUk67QK40swiQvH6Wrzs0Log0A@mail.gmail.com>
-Content-Language: en-US, de-DE
-From: Frieder Schrempf <frieder.schrempf@kontron.de>
-In-Reply-To: <CAGETcx-LGZ1k-seh4LkvCobsxUk67QK40swiQvH6Wrzs0Log0A@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: FR3P281CA0181.DEUP281.PROD.OUTLOOK.COM
- (2603:10a6:d10:a4::14) To PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:102:263::10)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D97F250BEC;
+	Wed, 19 Mar 2025 07:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742370775; cv=none; b=S8XlSIcOhvKUJcgFv0uZhpPSxmshLTlh/TGyqmzAyL7qvTvOHLH5XnIlXo5TB3aZ4ffP42+yxhDUhaO9aBTHqsorXXf6kRDDyP8njyLvJ1kTmk+rIXYZ5gJ82VvyJ229DTrRUuLBFyebrJtkFtetD3bHJVWifB+/MtajJaIK1JE=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742370775; c=relaxed/simple;
+	bh=ozzUR4yJDuSKScmxAJq9V792aMP3kk80oM2zQNKMtpM=;
+	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=dvfKu/fhhgBC//u8U9f2/GvNVmwerBptMYLhy9nzaMWSBPLvk+KrB+iPkkO0HUYWILqJBuCIlMYjT1O66DQmQTuuSvI3nHWhBmvibIDzF9yOtQMpZ0KLa9io1JVU0/oiwX1EdkQJWJfGobVQI2pmQucVXD5ysj2iKEgg7krj/+8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
+Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZHgt45Nzbz5B1Ks;
+	Wed, 19 Mar 2025 15:52:44 +0800 (CST)
+Received: from njy2app02.zte.com.cn ([10.40.13.116])
+	by mse-fl2.zte.com.cn with SMTP id 52J7qZ0q041896;
+	Wed, 19 Mar 2025 15:52:35 +0800 (+08)
+	(envelope-from jiang.kun2@zte.com.cn)
+Received: from mapi (njb2app05[null])
+	by mapi (Zmail) with MAPI id mid204;
+	Wed, 19 Mar 2025 15:52:37 +0800 (CST)
+Date: Wed, 19 Mar 2025 15:52:37 +0800 (CST)
+X-Zmail-TransId: 2afd67da77c5ffffffffffd-c31b1
+X-Mailer: Zmail v1.0
+Message-ID: <20250319155237978a-_o_XXMLszvXPDlyRsb4@zte.com.cn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PA4PR10MB5681:EE_|DB4PR10MB6288:EE_
-X-MS-Office365-Filtering-Correlation-Id: 68c18fe7-8968-4bba-263d-08dd66bb0682
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014|7416014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?dUo0L3BnaHVvTGNRQ0FJODdXd3ZSdk1vbng0elRkdDZ1elpLd3FNcWJObzBY?=
- =?utf-8?B?bHp2d2IxR3lCYjNmempWaGI5K1lDZkl2blNYcHdtNmdLYWM3ZldRUUFPQmtm?=
- =?utf-8?B?clRYMmNMZGN3TzhpUWNJV0FEdWd5Q2dhRG5iNWIxZ0tQbGw3c2E0a2NTUkp4?=
- =?utf-8?B?NVVnZzVNMVhhVWlrWnpjL08zUDhGdFlPQmt2UHQ3SlQ1cTJSNlVPTk95ZmRK?=
- =?utf-8?B?eHJKcW5ENVd4eHBtMitGZnRKUXBsNWNVd29zU2pTNVR5WjRkSjdoYUQ1REda?=
- =?utf-8?B?M1VJYkd4cnJLYWpyVWZGNUd6ZHVOWlhXR3hudTZXQWt0UWw4dFdPcEVEN2ZR?=
- =?utf-8?B?MjgvUzcvMW5VQ2RxUlovOHg5aVFkN0cxVDVLYmZ0K1c1UCt5ME00bGFEYVJ3?=
- =?utf-8?B?VFJFMDM5cFI4L0o2cTNJU1pXMWtqRk41Y3NvdFRGL2ZSU2lDY1YyVWZhM1J3?=
- =?utf-8?B?aE8wTnF3NGJOYkpuV3hQaXBjMzkwOW9sRlZQT0R2dGJBRDRPTWxvQlFzcUts?=
- =?utf-8?B?NkhET2RYNzduOEdBc1UzajR4ZkozS1ZqVEFJbUQvOUVOUWhsZEdIZkhoTFpT?=
- =?utf-8?B?Rk51WnkwSkROTG5JTGZrV29mTEt2bTZxZVpYbm0rQmdTRGc1aG5aODIzTEZB?=
- =?utf-8?B?alFBYWxMWkJuazdhTXdxRHhMT3lHNFM2K0FjMkN6Q25xMVNMR0Fkbkl1d1BI?=
- =?utf-8?B?UTV3TzB0bVZLWUVqZWxpVjZlOS9JengxcURDR0w2Sjg4OWgwVDJRMitzSnRY?=
- =?utf-8?B?WWtQRzNNYkxYazJ5MUpLN2FrY05PK1h4YkcvM1pxV2NqOWRFaUsyckZmdXJF?=
- =?utf-8?B?ZU81SnZqRDEwK2ZobzZRTnJMNDNpbHlXS28vSU44VUU2UHBGV1k2L2krSWpL?=
- =?utf-8?B?cUgzMzQ3dUFEdm5vRVFnbkxuTG10K253dWNaUTlZRkZvV2ZybmhLVXdMRVBT?=
- =?utf-8?B?NnBKZldPY0xrN0c5Qy8yS3ZzYmR1UFg1L0lid3FoajJEcHZQb3pieFdVRG02?=
- =?utf-8?B?aG9HVUp6bU9nOFB1UkN4a0puUHB6TG5sZmJBSmlsdEhEamc2aDNNKzJyTmFE?=
- =?utf-8?B?VnIvZnNnYWpZcDV3dmljKzFIOCtXdDlsUCtsNWRsdy9UejlaUWkrMXNTbmZE?=
- =?utf-8?B?UHlHMXZlRDJ3eEg4ME1tam52STU0b0ZwYy9TWHo3S1FqelZzV01Ud0U4Z0tY?=
- =?utf-8?B?U01oVzdTMTFFU3lmRkJjbEhQOHE1VStEQlplZXhQQnlsSTV6QzFZQjNqQkZD?=
- =?utf-8?B?N0h0MlVCSXBtYXJCL2tGTUZZYzBrNjRnck1VajFtQUpwUjlSYjcvdUJibS9m?=
- =?utf-8?B?MzRTVnBFUXA4a3NBTmcweHdlZnRYb0EwWUFDS2xMUTBDMXZScGRqRGRLZnZa?=
- =?utf-8?B?N3gvWG1NWUlqYnNnR3NNcm9QYWRGVE4wbVZPbm9QMHl1LzA4TVlqaFVNemtY?=
- =?utf-8?B?WHB0cDI0M293WWEreE9hUlpOakw1bjNUVjRvV0RjSlhkbzJTdFBRM1lXbldu?=
- =?utf-8?B?bVo2QThaWSt2NFlNOExFNnMrZld5dTF4K1pRTTN1UGVRV2d5NmVhalEwYUlB?=
- =?utf-8?B?SmM3dVFuSEtsdU5HZHVqaW10dEVZd2JSVEdsVHRTOFYxTmNHdXR0ZjNEQWs5?=
- =?utf-8?B?V3FGNHN5eWdRclRGMDc1YkdFQmpJY0hBdjRnbFNsK3ZjMWxhUnNsQkY0ODNx?=
- =?utf-8?B?aWVoZXBGZmN0czBJU0FkS3d3NU9hRCtDQWovZTdXU201MFQ3VllrVzM0OXFV?=
- =?utf-8?B?ZkRxU3IvTXcyRUZLMXZOTVJGY1VVUzM5ZUJnWUtkVzl2SjNMR21IanhPRnpr?=
- =?utf-8?B?dXg3MGY2R0Z3Q29JampybDQ3b0plUVNKSmtKN0N5NzJ6MUNaLzBoK3p6WGRw?=
- =?utf-8?Q?7F8FLaCl4JZNe?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(7416014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?cVVTN29kci9FZVlMM05Jdi9xRytyY2RFcWpuOElLMTVYd1lQMEVFaXpkSERW?=
- =?utf-8?B?L0lHb1hQZlJIUkFwWWdIeFhWRUhJbU1yYmJaWERNWHdtc2xXM2cxT2hjZE9N?=
- =?utf-8?B?Qm92VExVZTMzNzVSak1wN3M4NURFSU95Q2lLNTh2SkZ5R2xsZWx5M0NYVTlN?=
- =?utf-8?B?NHI4L3NSRUtPVU9Sd0VRL2hSektHVTJjK3prZlJRVGtHbUdCQ0xEL0VtKzJh?=
- =?utf-8?B?VlppM29rNEtOTnl6dW9Ua1FWTkhJS1RKOW90T3RmVmpDd0djdTErb2JIenl4?=
- =?utf-8?B?OERyODJUTSt4ZEpVV1VRYzNRZWZEZzdwNktTRmFQMG9DNnNFcWp3SStTTjAr?=
- =?utf-8?B?eGh6OXB3QzN6dmlPZ3J0YWJ0SGRPL3YzcGswSjlHSEJJendOQnZNUnFMRUw4?=
- =?utf-8?B?Q29uUGNzRmNlNk85UzZmdytMd2JFVmZlY3FyWGMraGw5OEJiQWk0VGl3OWh5?=
- =?utf-8?B?OTlia2hwS3ZHMEVJeHNEYUJVeXhVa0JOSjNyQUtDaTZETkkxbDFGdk5XMzdx?=
- =?utf-8?B?eXNMZVJIT0ZrSXM1V2dTNHMyRnB3c1g3TlN5M2VRY1dDRGlSL0pQS3E1K21n?=
- =?utf-8?B?VTN5Y0FPUzhyWXM5SkV4VmYvUmU0YjY5RTFxRXFMYy9ON0prMWpOZmNIVWhr?=
- =?utf-8?B?Mit6ZytFVkxDMEgveGgyOGxQL2tsZ1VOTFVlTDVSRGZ4MHBtYm5UWEFLUldu?=
- =?utf-8?B?b0poa01CV3U1STB3Q1FnVWR2OU01QjJ1VGFxYkNTYkhvYXNYMjZ1eTczamd3?=
- =?utf-8?B?MDlzZGRaM3k4VnNWWnJ0UU9CR3hwaUI3TlJENzE4SXQwTHBBb1R0bVEzTVRt?=
- =?utf-8?B?SGo3VU1idGZ4WEFlT0ZNd2FmaGY1U2YzMFVEOWNTV1lkdlhLVGZjWUxjZ0ho?=
- =?utf-8?B?N1VyWW1YMnlvRDEzU1FqUkFWeFIvYW8vcGh1bVdwZmVqaFJ2NXBkU3VzWlUw?=
- =?utf-8?B?elBSMm1JSXFXVFRGbTVGOVBEZjlQaE82UnREWkNvTWFsZVlvS3dSd0pSS1lF?=
- =?utf-8?B?dE5zdEZwZkdkY2tudnE0SDVJK1BNOXNoaFIyMmtST0xCb2g3c1JCN0VWOVpG?=
- =?utf-8?B?KzRHL2lYQ0pGSXd2R3NhVUNGME1hdE96eFAwNUswWFRtUVJMK1d5Y3dmSVpn?=
- =?utf-8?B?K0E0bjI4ZUVpaUhYRmthWjNOL0ttR1RzTnBISThMNG5WUHBJMU5JT1c2cGNu?=
- =?utf-8?B?RXBqdUIxZ3REelJlVHBZMUtYMWpIWEtjeHgrdnAxcER4cGVmdVBURmVjU0Vo?=
- =?utf-8?B?dTBjUjNuWTRCQzFIYzg2TmpyUVZIa1F4STRnY25FNk1FSE8wUDdaNDhnSXBR?=
- =?utf-8?B?K3B6eGgyTVZuaVgvS0pKSFR4YjVON0NEOVRkZkJtWTBuWGNZaW5uNk94cUhB?=
- =?utf-8?B?NENtTGc5WnNOVTUySHNUT2ZsNUg5YUQwQkZuL2s0TFlFYm9na2ZOTWZlRjlo?=
- =?utf-8?B?bmppVzJIbE1seFZzbWhObisrdEFXTUttazhpZWtFbDZoZUtKV1NHWmc3WFB2?=
- =?utf-8?B?dGtrSlU1TEVSYklONmFZN2ZBMUN1d285TXQzZEliWXZXTjRPWUVDc3dIRUtN?=
- =?utf-8?B?MGdraWJzdUJGRmc0N1p2aTBxQXFjbkJOQVh6YS9ybE5OcTVCTTViSSs2STRQ?=
- =?utf-8?B?cEdHU0dTYndLS24xcXlTcUgxYU00akZDTjE5T1VKdlVhSy94VG5tQzIwNVNp?=
- =?utf-8?B?MWRWNm9zK2Y3WHhIeFREeGRoNWV5cGlnTmdtYWhOVEpyd2tFMndGcjZ3NlY0?=
- =?utf-8?B?MC9Hb28wQnQ4MGF1VUdUNnVIdTJOeDcwdGVTcDdPRnJxVXVtb1FBSS93TU5J?=
- =?utf-8?B?WllrTWYrN1p0TVJqdEhpcXZHZ1ZCY01CTkV0blMxbEN1RnlwSWZNQW1CVXR2?=
- =?utf-8?B?RnRDSFdKSUduaEpIOHRmelgzVFpNYzJJbGtaaTVkbnhiam9wWEtncGhrZSta?=
- =?utf-8?B?dlpDOEs5NVcraGsyNmxNeWJnRGpiTlhJSUwxQVM3Zm9zTUJBYXg1d3NKUXBm?=
- =?utf-8?B?NElDa3p5ZTQ5UTR0ZmR4dlN6bXBPK0lzMlRENnhOa0pTYmRwcElPSVpiQk1S?=
- =?utf-8?B?R1UxckthK25oM0htTlhNTWZjbUR0ejkxcVhqd1Q3eTVhcUtaVTF3eUFIT0dN?=
- =?utf-8?B?ZWZTbCtza1c2NWh5SjJYc1k0akpFTldNci9GS1RubUZ6ZVljR2hXMk9uWVJG?=
- =?utf-8?B?N2c9PQ==?=
-X-OriginatorOrg: kontron.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 68c18fe7-8968-4bba-263d-08dd66bb0682
-X-MS-Exchange-CrossTenant-AuthSource: PA4PR10MB5681.EURPRD10.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 07:52:41.3083
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 8c9d3c97-3fd9-41c8-a2b1-646f3942daf1
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 9DftqVdmch4m7BE0XZPpLvNfNT3XTIrcptXdyzl2FA30OoU740hdmogXLy5BTTHYYy6+NNHpJQOGnYifzwTqASpgTSyb7ULfSf6lhUW0cJI=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB4PR10MB6288
+Mime-Version: 1.0
+From: <jiang.kun2@zte.com.cn>
+To: <alexs@kernel.org>, <si.yanteng@linux.dev>, <corbet@lwn.net>,
+        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
+        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
+        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
+        <ye.xingchen@zte.com.cn>
+Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHQgMi8yIHY1XSBEb2NzL3poX0NOOiBUcmFuc2xhdGUgbXNnX3plcm9jb3B5LnJzdAogdG8gU2ltcGxpZmllZCBDaGluZXNl?=
+Content-Type: text/plain;
+	charset="UTF-8"
+X-MAIL:mse-fl2.zte.com.cn 52J7qZ0q041896
+X-Fangmail-Anti-Spam-Filtered: true
+X-Fangmail-MID-QID: 67DA77CC.001/4ZHgt45Nzbz5B1Ks
 
-Am 30.10.24 um 9:20 PM schrieb Saravana Kannan:
-> On Wed, Oct 30, 2024 at 10:28 AM Adam Ford <aford173@gmail.com> wrote:
->>
->> On Wed, Oct 30, 2024 at 4:01 AM Frieder Schrempf
->> <frieder.schrempf@kontron.de> wrote:
->>>
->>> Hi Johannes,
->>>
->>> On 25.10.24 10:05 AM, mailinglist1@johanneskirchmair.de wrote:
->>>> [Sie erhalten nicht häufig E-Mails von mailinglist1@johanneskirchmair.de. Weitere Informationen, warum dies wichtig ist, finden Sie unter https://aka.ms/LearnAboutSenderIdentification ]
->>>>
->>>> Hey,
->>>> We had some problems with the hdmi on the imx8mp and wanted to leave, what we found out about it, somewhere for others to find it.
->>>>
->>>> The problem was that our hdmi display sometimes stayed blank after hot plugging and sometimes at startup. On older kernel versions 6.6 we did not have the problem with the not mainlined hdmi patches.
->>>> We tracked the commit down that introduced the problem for us. It was the following “driver core: Enable fw_devlink=rpm by default”  https://lore.kernel.org/lkml/20231113220948.80089-1-saravanak@google.com/
->>>> So we switched back to FW_DEVLINK_FLAGS_ON via kernel parameter. Don’t really understand what the problem with RPM is.
->>>>
->>>> So, this information is just for reference. Maybe someone has an idea what is going on here. And how to fix the problem in a more proper way.
->>>
->>> Thanks for investigating and sharing your results!
->>>
->>> I'm seeing the same symptoms and previously found out that this is
->>> related to LCDIF underrun errors. See [1] for more information.
->>>
->>> Adam has also started this thread: [2].
->>>
->>> Anyway, knowing that this is related to fw_devlink=rpm is really
->>> helpful. I just tried with fw_devlink=on and wasn't able to see any
->>> issues anymore. So this confirms your findings.
->>
->> I was off in the weeds thinking there was something wrong in timing
->> and/or a race condition around the PLL or something.  This is good
->> news.
->> Please forgive my ignorance, what does fw_devlink do?  Is there
->> something we can do in the driver itself to force its behavior?
-> 
-> fw_devlink figures out supplier/consumer dependencies between devices
-> and creates device links between them. This ensures proper
-> probe/suspend/resume/shutdown/runtime PM ordering.
-> 
-> fw_devlink=rpm vs on means "enforce all of these" vs "enforce all of
-> these except runtime PM".
-> 
->> adam
->>>
->>> I hope that some of the driver framework and runtime PM experts can help
->>> to find out what is actually wrong and how the correct fix might look like.
->>>
->>> I'm also CC-ing Saravana who authored the change from fw_devlink=on to
->>> fw_devlink=rpm to see if they have anything to add.
-> 
-> When fw_devlink=rpm, you'll have device links created between
-> consumers and suppliers with the DL_FLAG_PM_RUNTIME flag set. So
-> before your device is runtime resumed, it'll make sure all your
-> suppliers are resumed first.
-> 
-> My guess is that there is some issue in the runtime PM handling in
-> these drivers. I don't have enough context to provide further insight.
+From: Wang Yaxin <wang.yaxin@zte.com.cn>
 
-I bet you are right. I tried to have a closer look but unfortunately I
-didn't make any progress.
+translate the "msg_zerocopy.rst" into Simplified Chinese.
 
-The drivers involved are lcdif_drv.c, imx8mp-hdmi-tx.c and
-phy-fsl-samsung-hdmi.c.
+Update to commit bac2cac12c26("docs: net: description of
+MSG_ZEROCOPY for AF_VSOCK")
 
-As we see a "LCDIF Underrun Error" with fw_devlink=rpm my first guess
-would be that the suppliers of LCDIF are maybe turned on in the wrong order.
+Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
+Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
+Signed-off-by: xu xin <xu.xin16@zte.com.cn>
+Signed-off-by: He Peilin <he.peilin@zte.com.cn>
+Reviewed-by: Yanteng Si <si.yanteng@linux.dev>
+---
+v4->v5:
+https://lore.kernel.org/all/CAD-N9QUZ5qZ0gGPc2+4hb3G2YY_-gwGYSOcB5KwAmfswPE3d+Q@mail.gmail.com/
+1. translate index.rst and update index of msg_zerocopy.rst
 
-Lucas, Marek: As the main authors of these drivers, do you think you
-could help a little with further debugging? Any ideas?
+ .../translations/zh_CN/networking/index.rst   |   5 +-
+ .../zh_CN/networking/msg_zerocopy.rst         | 223 ++++++++++++++++++
+ 2 files changed, 226 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/translations/zh_CN/networking/msg_zerocopy.rst
 
-Thanks!
+diff --git a/Documentation/translations/zh_CN/networking/index.rst b/Documentation/translations/zh_CN/networking/index.rst
+index 5c7d01cf3fc0..79fa22a8b2a8 100644
+--- a/Documentation/translations/zh_CN/networking/index.rst
++++ b/Documentation/translations/zh_CN/networking/index.rst
+@@ -18,7 +18,9 @@
+ 目录：
+
+ .. toctree::
+-   :maxdepth: 2
++   :maxdepth: 1
++
++   msg_zerocopy
+
+ Todolist:
+
+@@ -37,7 +39,6 @@ Todolist:
+ *   iso15765-2
+ *   j1939
+ *   kapi
+-*   msg_zerocopy
+ *   failover
+ *   net_dim
+ *   net_failover
+diff --git a/Documentation/translations/zh_CN/networking/msg_zerocopy.rst b/Documentation/translations/zh_CN/networking/msg_zerocopy.rst
+new file mode 100644
+index 000000000000..7362b8514e70
+--- /dev/null
++++ b/Documentation/translations/zh_CN/networking/msg_zerocopy.rst
+@@ -0,0 +1,223 @@
++.. SPDX-License-Identifier: GPL-2.0
++
++.. include:: ../disclaimer-zh_CN.rst
++
++:Original: Documentation/networking/msg_zerocopy.rst
++
++:翻译:
++
++   王亚鑫 Wang Yaxin <wang.yaxin@zte.com.cn>
++
++:校译:
++
++   - 徐鑫 xu xin <xu.xin16@zte.com.cn>
++   - 何配林 He Peilin <he.peilin@zte.com.cn>
++
++============
++MSG_ZEROCOPY
++============
++
++简介
++====
++
++MSG_ZEROCOPY 标志用于启用套接字发送调用的免拷贝功能。该功能目前适用于 TCP、UDP 和 VSOCK
++（使用 virtio 传输）套接字。
++
++机遇与注意事项
++--------------
++
++在用户进程与内核之间拷贝大型缓冲区可能会消耗大量资源。Linux 支持多种免拷贝的接口，如sendfile
++和 splice。MSG_ZEROCOPY 标志将底层的拷贝避免机制扩展到了常见的套接字发送调用中。
++
++免拷贝并非毫无代价。在实现上，它通过页面固定（page pinning）将按字节拷贝的成本替换为页面统计
++（page accounting）和完成通知的开销。因此，MSG_ZEROCOPY 通常仅在写入量超过大约 10 KB 时
++才有效。
++
++页面固定还会改变系统调用的语义。它会暂时在进程和网络堆栈之间共享缓冲区。与拷贝不同，进程在系统
++调用返回后不能立即覆盖缓冲区，否则可能会修改正在传输中的数据。内核的完整性不会受到影响，但有缺
++陷的程序可能会破坏自己的数据流。
++
++当内核返回数据可以安全修改的通知时，进程才可以修改数据。因此，将现有应用程序转换为使用
++MSG_ZEROCOPY 并非总是像简单地传递该标志那样容易。
++
++更多信息
++--------
++
++本文档的大部分内容是来自于 netdev 2.1 上发表的一篇长篇论文。如需更深入的信息，请参阅该论文和
++演讲，或者浏览 LWN.net 上的精彩报道，也可以直接阅读源码。
++
++  论文、幻灯片、视频：
++    https://netdevconf.org/2.1/session.html?debruijn
++
++  LWN 文章：
++    https://lwn.net/Articles/726917/
++
++  补丁集：
++    [PATCH net-next v4 0/9] socket sendmsg MSG_ZEROCOPY
++    https://lore.kernel.org/netdev/20170803202945.70750-1-willemdebruijn.kernel@gmail.com
++
++接口
++====
++
++传递 MSG_ZEROCOPY 标志是启用免拷贝功能的最明显步骤，但并非唯一的步骤。
++
++套接字设置
++----------
++
++当应用程序向 send 系统调用传递未定义的标志时，内核通常会宽容对待。默认情况下，它会简单地忽略
++这些标志。为了避免为那些偶然传递此标志的遗留进程启用免拷贝模式，进程必须首先通过设置套接字选项
++来表明意图：
++
++::
++
++    if (setsockopt(fd, SOL_SOCKET, SO_ZEROCOPY, &one, sizeof(one)))
++        error(1, errno, "setsockopt zerocopy");
++
++传输
++----
++
++对 send（或 sendto、sendmsg、sendmmsg）本身的改动非常简单。只需传递新的标志即可。
++
++::
++
++    ret = send(fd, buf, sizeof(buf), MSG_ZEROCOPY);
++
++如果零拷贝操作失败，将返回 -1，并设置 errno 为 ENOBUFS。这种情况可能发生在套接字超出其
++optmem 限制，或者用户超出其锁定页面的 ulimit 时。
++
++混合使用免拷贝和拷贝
++~~~~~~~~~~~~~~~~~~~~
++
++许多工作负载同时包含大型和小型缓冲区。由于对于小数据包来说，免拷贝的成本高于拷贝，因此该
++功能是通过标志实现的。带有标志的调用和没有标志的调用可以安全地混合使用。
++
++通知
++----
++
++当内核认为可以安全地重用之前传递的缓冲区时，它必须通知进程。完成通知在套接字的错误队列上
++排队，类似于传输时间戳接口。
++
++通知本身是一个简单的标量值。每个套接字都维护一个内部的无符号 32 位计数器。每次带有
++MSG_ZEROCOPY 标志的 send 调用成功发送数据时，计数器都会增加。如果调用失败或长度为零，
++则计数器不会增加。该计数器统计系统调用的调用次数，而不是字节数。在 UINT_MAX 次调用后，
++计数器会循环。
++
++通知接收
++~~~~~~~~
++
++下面的代码片段展示了 API 的使用。在最简单的情况下，每次 send 系统调用后，都会对错误队列
++进行轮询和 recvmsg 调用。
++
++从错误队列读取始终是一个非阻塞操作。poll 调用用于阻塞，直到出现错误。它会在其输出标志中
++设置 POLLERR。该标志不需要在 events 字段中设置。错误会无条件地发出信号。
++
++::
++
++    pfd.fd = fd;
++    pfd.events = 0;
++    if (poll(&pfd, 1, -1) != 1 || pfd.revents & POLLERR == 0)
++        error(1, errno, "poll");
++
++    ret = recvmsg(fd, &msg, MSG_ERRQUEUE);
++    if (ret == -1)
++        error(1, errno, "recvmsg");
++
++    read_notification(msg);
++
++
++这个示例仅用于演示目的。在实际应用中，不等待通知，而是每隔几次 send 调用就进行一次非阻塞
++读取会更高效。
++
++零拷贝通知可以与其他套接字操作乱序处理。通常，拥有错误队列套接字会阻塞其他操作，直到错误
++被读取。然而，零拷贝通知具有零错误代码，因此不会阻塞 send 和 recv 调用。
++
++通知批处理
++~~~~~~~~~~~~
++
++可以使用 recvmmsg 调用来一次性读取多个未决的数据包。这通常不是必需的。在每条消息中，内核
++返回的不是一个单一的值，而是一个范围。当错误队列上有一个通知正在等待接收时，它会将连续的通
++知合并起来。
++
++当一个新的通知即将被排队时，它会检查队列尾部的通知的范围是否可以扩展以包含新的值。如果是这
++样，它会丢弃新的通知数据包，并增大未处理通知的范围上限值。
++
++对于按顺序确认数据的协议（如 TCP），每个通知都可以合并到前一个通知中，因此在任何时候在等待
++的通知都不会超过一个。
++
++有序交付是常见的情况，但不能保证。在重传和套接字拆除时，通知可能会乱序到达。
++
++通知解析
++~~~~~~~~
++
++下面的代码片段演示了如何解析控制消息：前面代码片段中的 read_notification() 调用。通知
++以标准错误格式 sock_extended_err 编码。
++
++控制数据中的级别和类型字段是协议族特定的，对于 TCP 或 UDP 套接字，分别为 IP_RECVERR 或
++IPV6_RECVERR。对于 VSOCK 套接字，cmsg_level 为 SOL_VSOCK，cmsg_type 为 VSOCK_RECVERR。
++
++错误来源是新的类型 SO_EE_ORIGIN_ZEROCOPY。如前所述，ee_errno 为零，以避免在套接字上
++阻塞地读取和写入系统调用。
++
++32 位通知范围编码为 [ee_info, ee_data]。这个范围是包含边界值的。除了下面讨论的 ee_code
++字段外，结构中的其他字段应被视为未定义的。
++
++::
++
++    struct sock_extended_err *serr;
++    struct cmsghdr *cm;
++
++    cm = CMSG_FIRSTHDR(msg);
++    if (cm->cmsg_level != SOL_IP &&
++        cm->cmsg_type != IP_RECVERR)
++        error(1, 0, "cmsg");
++
++    serr = (void *) CMSG_DATA(cm);
++    if (serr->ee_errno != 0 ||
++        serr->ee_origin != SO_EE_ORIGIN_ZEROCOPY)
++        error(1, 0, "serr");
++
++    printf("completed: %u..%u\n", serr->ee_info, serr->ee_data);
++
++
++延迟拷贝
++~~~~~~~~
++
++传递标志 MSG_ZEROCOPY 是向内核发出的一个提示，让内核采用免拷贝的策略，同时也是一种约
++定，即内核会对完成通知进行排队处理。但这并不保证拷贝操作一定会被省略。
++
++拷贝避免不总是适用的。不支持分散/聚集 I/O 的设备无法发送由内核生成的协议头加上零拷贝用户
++数据组成的数据包。数据包可能需要在协议栈底层转换为一份私有数据副本，例如用于计算校验和。
++
++在所有这些情况下，当内核释放对共享页面的持有权时，它会返回一个完成通知。该通知可能在（已
++拷贝）数据完全传输之前到达。因此。零拷贝完成通知并不是传输完成通知。
++
++如果数据不在缓存中，延迟拷贝可能会比立即在系统调用中拷贝开销更大。进程还会因通知处理而产
++生成本，但却没有带来任何好处。因此，内核会在返回时通过在 ee_code 字段中设置标志
++SO_EE_CODE_ZEROCOPY_COPIED 来指示数据是否以拷贝的方式完成。进程可以利用这个信号，在
++同一套接字上后续的请求中停止传递 MSG_ZEROCOPY 标志。
++
++实现
++====
++
++环回
++----
++
++对于 TCP 和 UDP：
++如果接收进程不读取其套接字，发送到本地套接字的数据可能会无限期排队。无限期的通知延迟是不
++可接受的。因此，所有使用 MSG_ZEROCOPY 生成并环回到本地套接字的数据包都将产生延迟拷贝。
++这包括环回到数据包套接字（例如，tcpdump）和 tun 设备。
++
++对于 VSOCK：
++发送到本地套接字的数据路径与非本地套接字相同。
++
++测试
++====
++
++更具体的示例代码可以在内核源码的 tools/testing/selftests/net/msg_zerocopy.c 中找到。
++
++要留意环回约束问题。该测试可以在一对主机之间进行。但如果是在本地的一对进程之间运行，例如当使用
++msg_zerocopy.sh 脚本在跨命名空间的虚拟以太网（veth）对之间运行时，测试将不会显示出任何性能
++提升。为了便于测试，可以通过让 skb_orphan_frags_rx 与 skb_orphan_frags 相同，来暂时放宽
++环回限制。
++
++对于 VSOCK 类型套接字的示例可以在 tools/testing/vsock/vsock_test_zerocopy.c 中找到。
+-- 
+2.25.1
