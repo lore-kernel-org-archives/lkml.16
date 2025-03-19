@@ -1,387 +1,135 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DBDB2505D6
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:55:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3AAD2505D6
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:56:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742385317; cv=none; b=f2wMbXlTZD+z2MFE/jA/psMSWgwIWUDoD5LhahruvWzzPYVejoC7t/KWhufakTrov8n9MA/U0MnY0PqQeuoBiX1IX+ITWKPe2/gsXq/XgzKf3d4Ubea81m1XK+Pxpy9xQInJUA14DadaWwnK5A1t6Qog83NNa90/6xWR56L9zlk=
+	t=1742385363; cv=none; b=RESkKNU40Xgmlq7lJ88fDb39WfBFym/Z5MOsN16zokxf3miJlkVQLig/oWaCCE1faTL2dIpKc4srPVmdZociD29GKrCFTRqO9DUs34nwEpLwzvcT+hvJqsXa0lcwdhRO4+DEiYFJ+czgxJUMihawz8haq0gjeJb9/ERw6ZoNwoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742385317; c=relaxed/simple;
-	bh=DHdIkHpwtMgqoPz5PBvDOUNhmNwNKYYAt5hRRoH2SVg=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=VUnPplyzl4vK4N1jwzXuagHUvdyI1f4D8nzDv4HTQbSkBzDJf83yTkf/0IYyq0gExaE0PDZlS21vQqyVm4rBoILc7i5NNARzMoIugAvnW+f3NLUXf+IH2YIW7btQE4Ndcg6BNnLkZ32QkTsMhBxcHQysqXy9BHBUJHLBUyYFh9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nkEC5Iep; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742385363; c=relaxed/simple;
+	bh=lv2MfAR9HZn4fy4zrfRFlhXqTdXIHgXiipgCHy9AgRg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QfUPJiCgCUZ7eGVYAvMjaW2v5NU3E2g4u60nkMbl6RCtbZyrDfPYm2xSYyZ1WDklGerWghHkC1jADZLD/EQTZKszd6/fAb9PodbiIPk1NEwjihvKZ3Ab0wuZagGFJnbgypWSGKKUPQoLX0XhKqcKguk3q32fonxuYR12bCWKXig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TDueyK15; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UMxeURAM; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nkEC5Iep"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D37AC4CEE9;
-	Wed, 19 Mar 2025 11:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742385316;
-	bh=DHdIkHpwtMgqoPz5PBvDOUNhmNwNKYYAt5hRRoH2SVg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=nkEC5IepI/YiO7czktepaSlSXQ8ptVFlkh/NFT1M78k3iPF3H/qCljgt3WTmfS2aq
-	 IYGGlnlSqQZo6/iMQ3oj3WOT/RO4mtBsdPskkal7Bx2nFQWd9F03qIDa5m3M/bp/H1
-	 GcpQ5Lm+kaLwMMnfvvDquWNuVnObwh86vrHUxULxhJLijX/xjRLvIFriGMPSHDdBYe
-	 TwhCLuqvbR4wqluZpFVhpQFDT5xBP24GcPN/SCfnF3eezMkV1BJD3dJ5dbpyOS796T
-	 EMKTA5/twDoZa1A1kAaMQ99HgJsmfryZ5D5cgWMKvfvEJwUmtdJHL0qAPe3Ozxu5+4
-	 Q4yt48O5Rv1oQ==
-Date: Wed, 19 Mar 2025 20:55:10 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Lance Yang <ioworker0@gmail.com>
-Cc: akpm@linux-foundation.org, will@kernel.org, peterz@infradead.org,
- mingo@redhat.com, longman@redhat.com, mhiramat@kernel.org,
- anna.schumaker@oracle.com, boqun.feng@gmail.com, joel.granados@kernel.org,
- kent.overstreet@linux.dev, leonylgao@tencent.com,
- linux-kernel@vger.kernel.org, rostedt@goodmis.org,
- senozhatsky@chromium.org, tfiga@chromium.org, amaindex@outlook.com, Mingzhe
- Yang <mingzhe.yang@ly.com>
-Subject: Re: [PATCH RESEND v2 2/3] hung_task: show the blocker task if the
- task is hung on semaphore
-Message-Id: <20250319205510.4bbb026df166c3f6056060f1@kernel.org>
-In-Reply-To: <20250314144300.32542-3-ioworker0@gmail.com>
-References: <20250314144300.32542-1-ioworker0@gmail.com>
-	<20250314144300.32542-3-ioworker0@gmail.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TDueyK15";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UMxeURAM"
+Date: Wed, 19 Mar 2025 12:55:57 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742385359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qBrv6isD1kzVwdaIkYxJz7iYTDLyraxYX9p69kZLT04=;
+	b=TDueyK15wwN7JSEF+djYbFuRdKm7rdK3whxR40vchZc8V/mzvGdORvInd+Z7dVaKwiwa4r
+	yU0vQh1zbV4KMDpzW5Uz/CpNjV9G56KqYKpqy7ISS7AQPQ1CdaX4fndgQ7cu+p9LNIZUEM
+	1oC57orMA09krH8AcdYbTkhfY9R5xUBuq2ndvnUMLrfKeFhfR1Ky7fowJ0prZ+3/IvzDta
+	aGf7x2mQbFOKjGpstupvJET9HqGW8nSByAGmqncttDA+giamKlhrAcSObegVS6XVdJtlyx
+	sWcFhuH5BQ4U3OSPN31yiyFvoOoZP4siaDwwXglVLPOkeJLLpW39pHhl8i6nxw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742385359;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qBrv6isD1kzVwdaIkYxJz7iYTDLyraxYX9p69kZLT04=;
+	b=UMxeURAM/9/AiwetEmATS24aP9ZIwMrq8Tfdg6oLBI9q7WCaijLaoQACpnLTUa3Zmd5CkT
+	zXGoWbtffbBvUMCg==
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+To: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 19/20] tools/x86/kcpuid: Update bitfields to
+ x86-cpuid-db v2.3
+Message-ID: <Z9qwzVuvV1p6MjRw@lx-t490>
+References: <20250312143738.458507-1-darwi@linutronix.de>
+ <20250312143738.458507-20-darwi@linutronix.de>
+ <4BCBA481-AC3A-4A65-B791-235E580286CC@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4BCBA481-AC3A-4A65-B791-235E580286CC@zytor.com>
 
-On Fri, 14 Mar 2025 22:42:59 +0800
-Lance Yang <ioworker0@gmail.com> wrote:
+Hi,
 
-> Inspired by mutex blocker tracking[1], this patch makes a trade-off to
-> balance the overhead and utility of the hung task detector.
-> 
-> Unlike mutexes, semaphores lack explicit ownership tracking, making it
-> challenging to identify the root cause of hangs. To address this, we
-> introduce a last_holder field to the semaphore structure, which is
-> updated when a task successfully calls down() and cleared during up().
-> 
-> The assumption is that if a task is blocked on a semaphore, the holders
-> must not have released it. While this does not guarantee that the last
-> holder is one of the current blockers, it likely provides a practical hint
-> for diagnosing semaphore-related stalls.
-> 
-> With this change, the hung task detector can now show blocker task's info
-> like below:
-> 
-> [Thu Mar 13 15:18:38 2025] INFO: task cat:1803 blocked for more than 122 seconds.
-> [Thu Mar 13 15:18:38 2025]       Tainted: G           OE      6.14.0-rc3+ #14
-> [Thu Mar 13 15:18:38 2025] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-> [Thu Mar 13 15:18:38 2025] task:cat             state:D stack:0     pid:1803  tgid:1803  ppid:1057   task_flags:0x400000 flags:0x00000004
-> [Thu Mar 13 15:18:38 2025] Call trace:
-> [Thu Mar 13 15:18:38 2025]  __switch_to+0x1ec/0x380 (T)
-> [Thu Mar 13 15:18:38 2025]  __schedule+0xc30/0x44f8
-> [Thu Mar 13 15:18:38 2025]  schedule+0xb8/0x3b0
-> [Thu Mar 13 15:18:38 2025]  schedule_timeout+0x1d0/0x208
-> [Thu Mar 13 15:18:38 2025]  __down_common+0x2d4/0x6f8
-> [Thu Mar 13 15:18:38 2025]  __down+0x24/0x50
-> [Thu Mar 13 15:18:38 2025]  down+0xd0/0x140
-> [Thu Mar 13 15:18:38 2025]  read_dummy+0x3c/0xa0 [hung_task_sem]
-> [Thu Mar 13 15:18:38 2025]  full_proxy_read+0xfc/0x1d0
-> [Thu Mar 13 15:18:38 2025]  vfs_read+0x1a0/0x858
-> [Thu Mar 13 15:18:38 2025]  ksys_read+0x100/0x220
-> [Thu Mar 13 15:18:38 2025]  __arm64_sys_read+0x78/0xc8
-> [Thu Mar 13 15:18:38 2025]  invoke_syscall+0xd8/0x278
-> [Thu Mar 13 15:18:38 2025]  el0_svc_common.constprop.0+0xb8/0x298
-> [Thu Mar 13 15:18:38 2025]  do_el0_svc+0x4c/0x88
-> [Thu Mar 13 15:18:38 2025]  el0_svc+0x44/0x108
-> [Thu Mar 13 15:18:38 2025]  el0t_64_sync_handler+0x134/0x160
-> [Thu Mar 13 15:18:38 2025]  el0t_64_sync+0x1b8/0x1c0
-> [Thu Mar 13 15:18:38 2025] INFO: task cat:1803 blocked on a semaphore likely last held by task cat:1802
-> [Thu Mar 13 15:18:38 2025] task:cat             state:S stack:0     pid:1802  tgid:1802  ppid:1057   task_flags:0x400000 flags:0x00000004
-> [Thu Mar 13 15:18:38 2025] Call trace:
-> [Thu Mar 13 15:18:38 2025]  __switch_to+0x1ec/0x380 (T)
-> [Thu Mar 13 15:18:38 2025]  __schedule+0xc30/0x44f8
-> [Thu Mar 13 15:18:38 2025]  schedule+0xb8/0x3b0
-> [Thu Mar 13 15:18:38 2025]  schedule_timeout+0xf4/0x208
-> [Thu Mar 13 15:18:38 2025]  msleep_interruptible+0x70/0x130
-> [Thu Mar 13 15:18:38 2025]  read_dummy+0x48/0xa0 [hung_task_sem]
-> [Thu Mar 13 15:18:38 2025]  full_proxy_read+0xfc/0x1d0
-> [Thu Mar 13 15:18:38 2025]  vfs_read+0x1a0/0x858
-> [Thu Mar 13 15:18:38 2025]  ksys_read+0x100/0x220
-> [Thu Mar 13 15:18:38 2025]  __arm64_sys_read+0x78/0xc8
-> [Thu Mar 13 15:18:38 2025]  invoke_syscall+0xd8/0x278
-> [Thu Mar 13 15:18:38 2025]  el0_svc_common.constprop.0+0xb8/0x298
-> [Thu Mar 13 15:18:38 2025]  do_el0_svc+0x4c/0x88
-> [Thu Mar 13 15:18:38 2025]  el0_svc+0x44/0x108
-> [Thu Mar 13 15:18:38 2025]  el0t_64_sync_handler+0x134/0x160
-> [Thu Mar 13 15:18:38 2025]  el0t_64_sync+0x1b8/0x1c0
-> 
-> [1] https://lore.kernel.org/all/174046694331.2194069.15472952050240807469.stgit@mhiramat.tok.corp.google.com
-> 
-> Suggested-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-> Signed-off-by: Mingzhe Yang <mingzhe.yang@ly.com>
-> Signed-off-by: Lance Yang <ioworker0@gmail.com>
-> ---
->  include/linux/semaphore.h  | 15 ++++++++++-
->  kernel/hung_task.c         | 45 ++++++++++++++++++++++++-------
->  kernel/locking/semaphore.c | 55 +++++++++++++++++++++++++++++++++-----
->  3 files changed, 98 insertions(+), 17 deletions(-)
-> 
-> diff --git a/include/linux/semaphore.h b/include/linux/semaphore.h
-> index 04655faadc2d..89706157e622 100644
-> --- a/include/linux/semaphore.h
-> +++ b/include/linux/semaphore.h
-> @@ -16,13 +16,25 @@ struct semaphore {
->  	raw_spinlock_t		lock;
->  	unsigned int		count;
->  	struct list_head	wait_list;
-> +
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +	unsigned long		last_holder;
-> +#endif
->  };
->  
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +#define __LAST_HOLDER_SEMAPHORE_INITIALIZER				\
-> +	, .last_holder = 0UL
-> +#else
-> +#define __LAST_HOLDER_SEMAPHORE_INITIALIZER
-> +#endif
-> +
->  #define __SEMAPHORE_INITIALIZER(name, n)				\
->  {									\
->  	.lock		= __RAW_SPIN_LOCK_UNLOCKED((name).lock),	\
->  	.count		= n,						\
-> -	.wait_list	= LIST_HEAD_INIT((name).wait_list),		\
-> +	.wait_list	= LIST_HEAD_INIT((name).wait_list)		\
-> +	__LAST_HOLDER_SEMAPHORE_INITIALIZER				\
->  }
->  
->  /*
-> @@ -47,5 +59,6 @@ extern int __must_check down_killable(struct semaphore *sem);
->  extern int __must_check down_trylock(struct semaphore *sem);
->  extern int __must_check down_timeout(struct semaphore *sem, long jiffies);
->  extern void up(struct semaphore *sem);
-> +extern unsigned long sem_last_holder(struct semaphore *sem);
->  
->  #endif /* __LINUX_SEMAPHORE_H */
-> diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-> index 46eb6717564d..f8cb5a0e14f7 100644
-> --- a/kernel/hung_task.c
-> +++ b/kernel/hung_task.c
-> @@ -102,31 +102,56 @@ static struct notifier_block panic_block = {
->  static void debug_show_blocker(struct task_struct *task)
->  {
->  	struct task_struct *g, *t;
-> -	unsigned long owner, blocker;
-> +	unsigned long owner, blocker, blocker_lock_type;
->  
->  	RCU_LOCKDEP_WARN(!rcu_read_lock_held(), "No rcu lock held");
->  
->  	blocker = READ_ONCE(task->blocker);
-> -	if (!blocker || !hung_task_blocker_is_type(blocker, BLOCKER_TYPE_MUTEX))
-> +	if (!blocker)
->  		return;
->  
-> -	owner = mutex_get_owner(
-> -		(struct mutex *)hung_task_blocker_to_lock(blocker));
-> +	if (hung_task_blocker_is_type(blocker, BLOCKER_TYPE_MUTEX)) {
-> +		owner = mutex_get_owner(
-> +			(struct mutex *)hung_task_blocker_to_lock(blocker));
-> +		blocker_lock_type = BLOCKER_TYPE_MUTEX;
-> +	} else if (hung_task_blocker_is_type(blocker, BLOCKER_TYPE_SEM)) {
-> +		owner = sem_last_holder(
-> +			(struct semaphore *)hung_task_blocker_to_lock(blocker));
-> +		blocker_lock_type = BLOCKER_TYPE_SEM;
-> +	} else
+On Wed, 12 Mar 2025, H. Peter Anvin wrote:
+>
+> On Wed, 12 Mar 2025, "Ahmed S. Darwish" wrote:
+> >
+> > Update kcpuid's CSV file to version 2.3, as generated by x86-cpuid-db.
+> >
+> > Summary of the v2.3 changes:
+> >
+> > * Per H. Peter Anvin's feedback, leaf 0x3 is not unique to Transmeta as
+> >   the CSV file earlier claimed.  Since leaf 0x3's format differs between
+> >   Intel and Transmeta, and the project does not yet support having the
+> >   same CPUID bitfield with varying interpretations across vendors, leaf
+> >   0x3 is removed for now.  Given that Intel discontinued support for PSN
+> >   from Pentium 4 onward, and Linux force disables it on early boot for
+> >   privacy concerns, this should have minimal impact.
+> >
+> > * Leaf 0x80000021: Make bitfield IDs and descriptions coherent with each
+> >   other.  Remove "_support" from bitfield IDs, as no other leaf has such
+> >   convention.
+> >
+> > Reported-by: "H. Peter Anvin" <hpa@zytor.com>
+> > Closes: https://lkml.kernel.org/r/C7684E03-36E0-4D58-B6F0-78F4DB82D737@zytor.com
+> > Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+> > Link: https://gitlab.com/x86-cpuid.org/x86-cpuid-db/-/blob/v2.3/CHANGELOG.rst
+> > ---
+>
+> As I said, you can simply treat leaf 3 as raw 128-bit hexadecimal
+> number; there really isn't a need to "interpret" it since the only
+> meaningful use of it is as a unique identifier combined with
+> vendor-FMS.
 
-Can't we extract the type from blocker? I think we can just mask it.
-(then, we can use switch-case above)
+Yes, but this would introduce special-case leaf handing in kcpuid.
+So far, the kcpuid code is "dumb".  It just parses the CPUID bitfields
+according to what's in the CSV file, with no intrinsic knowledge of any
+certain leaf by the C code.
 
-Others looks good to me.
+This is why, for example, kcpuid does not print CPU vendor strings in
+human readable form.  It just dumps whatever is there in the various
+leaves bitfields:
 
-Thanks,
+    $ kcpuid --all -l 0
+        max_std_leaf        	: 0x16
+        cpu_vendorid_0      	: 0x756e6547
+        cpu_vendorid_2      	: 0x6c65746e
+        cpu_vendorid_1      	: 0x49656e69
 
-> +		return;
->  
->  	if (unlikely(!owner)) {
-> -		pr_err("INFO: task %s:%d is blocked on a mutex, but the owner is not found.\n",
-> -			task->comm, task->pid);
-> +		switch (blocker_lock_type) {
-> +		case BLOCKER_TYPE_MUTEX:
-> +			pr_err("INFO: task %s:%d is blocked on a mutex, but the owner is not found.\n",
-> +			       task->comm, task->pid);
-> +			break;
-> +		case BLOCKER_TYPE_SEM:
-> +			pr_err("INFO: task %s:%d is blocked on a semaphore, but the last holder is not found.\n",
-> +			       task->comm, task->pid);
-> +			break;
-> +		}
->  		return;
->  	}
->  
->  	/* Ensure the owner information is correct. */
->  	for_each_process_thread(g, t) {
-> -		if ((unsigned long)t == owner) {
-> +		if ((unsigned long)t != owner)
-> +			continue;
-> +
-> +		switch (blocker_lock_type) {
-> +		case BLOCKER_TYPE_MUTEX:
->  			pr_err("INFO: task %s:%d is blocked on a mutex likely owned by task %s:%d.\n",
-> -				task->comm, task->pid, t->comm, t->pid);
-> -			sched_show_task(t);
-> -			return;
-> +			       task->comm, task->pid, t->comm, t->pid);
-> +			break;
-> +		case BLOCKER_TYPE_SEM:
-> +			pr_err("INFO: task %s:%d blocked on a semaphore likely last held by task %s:%d\n",
-> +			       task->comm, task->pid, t->comm, t->pid);
-> +			break;
->  		}
-> +		sched_show_task(t);
-> +		return;
->  	}
->  }
->  #else
-> diff --git a/kernel/locking/semaphore.c b/kernel/locking/semaphore.c
-> index 34bfae72f295..87dfb93a812d 100644
-> --- a/kernel/locking/semaphore.c
-> +++ b/kernel/locking/semaphore.c
-> @@ -34,11 +34,16 @@
->  #include <linux/ftrace.h>
->  #include <trace/events/lock.h>
->  
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +#include <linux/hung_task.h>
-> +#endif
-> +
->  static noinline void __down(struct semaphore *sem);
->  static noinline int __down_interruptible(struct semaphore *sem);
->  static noinline int __down_killable(struct semaphore *sem);
->  static noinline int __down_timeout(struct semaphore *sem, long timeout);
->  static noinline void __up(struct semaphore *sem);
-> +static inline void __sem_acquire(struct semaphore *sem);
->  
->  /**
->   * down - acquire the semaphore
-> @@ -58,7 +63,7 @@ void __sched down(struct semaphore *sem)
->  	might_sleep();
->  	raw_spin_lock_irqsave(&sem->lock, flags);
->  	if (likely(sem->count > 0))
-> -		sem->count--;
-> +		__sem_acquire(sem);
->  	else
->  		__down(sem);
->  	raw_spin_unlock_irqrestore(&sem->lock, flags);
-> @@ -82,7 +87,7 @@ int __sched down_interruptible(struct semaphore *sem)
->  	might_sleep();
->  	raw_spin_lock_irqsave(&sem->lock, flags);
->  	if (likely(sem->count > 0))
-> -		sem->count--;
-> +		__sem_acquire(sem);
->  	else
->  		result = __down_interruptible(sem);
->  	raw_spin_unlock_irqrestore(&sem->lock, flags);
-> @@ -109,7 +114,7 @@ int __sched down_killable(struct semaphore *sem)
->  	might_sleep();
->  	raw_spin_lock_irqsave(&sem->lock, flags);
->  	if (likely(sem->count > 0))
-> -		sem->count--;
-> +		__sem_acquire(sem);
->  	else
->  		result = __down_killable(sem);
->  	raw_spin_unlock_irqrestore(&sem->lock, flags);
-> @@ -139,7 +144,7 @@ int __sched down_trylock(struct semaphore *sem)
->  	raw_spin_lock_irqsave(&sem->lock, flags);
->  	count = sem->count - 1;
->  	if (likely(count >= 0))
-> -		sem->count = count;
-> +		__sem_acquire(sem);
->  	raw_spin_unlock_irqrestore(&sem->lock, flags);
->  
->  	return (count < 0);
-> @@ -164,7 +169,7 @@ int __sched down_timeout(struct semaphore *sem, long timeout)
->  	might_sleep();
->  	raw_spin_lock_irqsave(&sem->lock, flags);
->  	if (likely(sem->count > 0))
-> -		sem->count--;
-> +		__sem_acquire(sem);
->  	else
->  		result = __down_timeout(sem, timeout);
->  	raw_spin_unlock_irqrestore(&sem->lock, flags);
-> @@ -185,6 +190,12 @@ void __sched up(struct semaphore *sem)
->  	unsigned long flags;
->  
->  	raw_spin_lock_irqsave(&sem->lock, flags);
-> +
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +	if (READ_ONCE(sem->last_holder) == (unsigned long)current)
-> +		WRITE_ONCE(sem->last_holder, 0UL);
-> +#endif
-> +
->  	if (likely(list_empty(&sem->wait_list)))
->  		sem->count++;
->  	else
-> @@ -224,8 +235,12 @@ static inline int __sched ___down_common(struct semaphore *sem, long state,
->  		raw_spin_unlock_irq(&sem->lock);
->  		timeout = schedule_timeout(timeout);
->  		raw_spin_lock_irq(&sem->lock);
-> -		if (waiter.up)
-> +		if (waiter.up) {
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +			WRITE_ONCE(sem->last_holder, (unsigned long)current);
-> +#endif
->  			return 0;
-> +		}
->  	}
->  
->   timed_out:
-> @@ -242,10 +257,18 @@ static inline int __sched __down_common(struct semaphore *sem, long state,
->  {
->  	int ret;
->  
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +	hung_task_set_blocker(sem, BLOCKER_TYPE_SEM);
-> +#endif
-> +
->  	trace_contention_begin(sem, 0);
->  	ret = ___down_common(sem, state, timeout);
->  	trace_contention_end(sem, ret);
->  
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +	hung_task_clear_blocker();
-> +#endif
-> +
->  	return ret;
->  }
->  
-> @@ -277,3 +300,23 @@ static noinline void __sched __up(struct semaphore *sem)
->  	waiter->up = true;
->  	wake_up_process(waiter->task);
->  }
-> +
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +unsigned long sem_last_holder(struct semaphore *sem)
-> +{
-> +	return READ_ONCE(sem->last_holder);
-> +}
-> +#else
-> +unsigned long sem_last_holder(struct semaphore *sem)
-> +{
-> +	return 0UL;
-> +}
-> +#endif
-> +
-> +static inline void __sem_acquire(struct semaphore *sem)
-> +{
-> +	sem->count--;
-> +#ifdef CONFIG_DETECT_HUNG_TASK_BLOCKER
-> +	WRITE_ONCE(sem->last_holder, (unsigned long)current);
-> +#endif
-> +}
-> -- 
-> 2.45.2
-> 
+    $ kcpuid --all --detail -l 0
+    CPUID_0x0_EAX[0x0]:
+	max_std_leaf        	: 0x16      	- Highest standard CPUID leaf supported
+    CPUID_0x0_EBX[0x0]:
+	cpu_vendorid_0      	: 0x756e6547	- CPU vendor ID string bytes 0 - 3
+    CPUID_0x0_ECX[0x0]:
+	cpu_vendorid_2      	: 0x6c65746e	- CPU vendor ID string bytes 8 - 11
+    CPUID_0x0_EDX[0x0]:
+	cpu_vendorid_1      	: 0x49656e69	- CPU vendor ID string bytes 4 - 7
 
+We can extend kcpuid to handle a special case for the PSN, but if we
+gonna do that, then it would be much better to start that with CPUID
+leaves that actually matter: CPU vendor strings, leaf 0x2 1-byte
+descriptor semantics, etc., etc.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+Given all that, can we please move on regarding this leaf 0x3PSN thing?
+IMHO, there's no reason to block the series because of that :(
+
+Thanks!
+
+--
+Ahmed S. Darwish
+Linutronix GmbH
