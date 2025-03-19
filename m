@@ -1,66 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2718E25525D;
-	Wed, 19 Mar 2025 11:03:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78AEA25C709;
+	Wed, 19 Mar 2025 11:03:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382234; cv=none; b=Mz+GiL2Lqs/Uq54rgg1ASm1UUN+UQO23iRwNWn66xGwyWmY+ITTh2V9LpnJq2i9OB1O415By+crIChtzOfN+jAMiZW/E7RqoA4xy2LjMeQDsWFRLd7n6a7doK0Soya2y/0L9AUckzxmpAfb1//da0kCFEwlBPAh+oTzVbHyyGfs=
+	t=1742382235; cv=none; b=iiU957tMVP8Z6U5SEggipXWpisKdkEW4IHpYYOQPD7JrsIu/DMzQOe3oHndR5vWzp/Z1hce8uXLDfXXE/pBzPwbMiGXxV+auXpaCe+Qt+tRDYh0/izXGIGoZ2ldXVjW1CS1LtvUDhbYlGrsx1sj2WnZiktOmSaXDHL+yKVF5jiA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382234; c=relaxed/simple;
-	bh=UOi+ESBR6Dtom4AroO6OM3aEqepTVporXvwLO9GeBiQ=;
+	s=arc-20240116; t=1742382235; c=relaxed/simple;
+	bh=pJM5tUAf8v9Zih5cSzMO4qOEcmBXVZ7x/FhELxbisdw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=M7O1l+W4M4zhHbfAbxwGmU2AJQGkOAKbXv5RhSm6j+GWF5drhfQvwrzdrv4DemBIZQzMV5Tgew+e/cY4VbE9PthTsR5Qk7ImqIXf96eJH+ORjv/WAQ0DwSP1+BOp2RezqYXsbV9pa8mAk6NOio42bpP0e9nq0g9CDQp9JtTKyuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jZKc8PPB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SHQvqKMK; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=QXN8beXYmh+rXs5BfKpSG+n9ZNOkkOxvlLWVOsvhBV3gmFDssk8jqWIHtLzDvcE+23NHSvn0ZPNt5/6D/pFqIhk3XxZC/+NyQSmt2K5y+FXwpJHtl7HtVRTV5Zqgxs8FRbDTmQjRxLSu8eCapfMFJSikoUmH0YXUT3tAp4iea38=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AA2gJjxv; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=niLVAmoJ; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jZKc8PPB";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SHQvqKMK"
-Date: Wed, 19 Mar 2025 11:03:48 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AA2gJjxv";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="niLVAmoJ"
+Date: Wed, 19 Mar 2025 11:03:51 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382228;
+	s=2020; t=1742382232;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XXZZGPDlBYlKRsIFkgLf+nfzFt2s/T2lfOH0xtRxF8A=;
-	b=jZKc8PPBnz5sX8mK/j5urdXkEZVMLGUjTWEAB4lRQcHSGU4+kgBkez0DnQY2tD8kbJQkZO
-	sjo8vux0l0iWV1LkAZhT+lDxeXeJU6XXs6LSWb/QJuUQUwi25qFQl5eP/lwWcD42bZ1VG+
-	ozIgKU+OhvH7cvATjNva3Jr657O9bKKTfhSHS/wlHrIG3nOU/rAR35FSzdjrqiMQjkBf/Q
-	5/xoeUctAZFsLR2c75Rrx2G1t9PpXzNoDK5/MtLLsZP8FkBZCrgJ/uJc8k1it3vyqdBPtu
-	m40EvdyLIM2ucECYAMZxXKi1YDGyRSxPi8jqvmqdiowEmZOtD3AyuIwOKO2TnA==
+	bh=/swzNqiTZg5KCpvmommcwcXVLChrk0HVGZmM7os4Km0=;
+	b=AA2gJjxv5+U6eelznPEhukz4+CLuH7v8KWinCDwNX9lV2+sj6AU8nOPOhqnGzAUpnRimk1
+	J7xE6cvj0cgbKF+5OwMZmzzchiuW2DdjLhWQb1GJWcWLSm36p9QeRKTKuGPsfBLA4jwxTj
+	T6N7C8mlyyRPyNz7Et1cD2AiArwhBlwbH3QaKcR2bLpR/Lm/02oAbtbxBoW/56PjC1laRj
+	l/5Xkq12lbNwCkCqHz4ADq+IvgfaSUDAY0jIkqnc03Ndh5AX/RKCOS/ytmmIjSRqqNj0g2
+	fWJ/FbiK5UHldsZImsmAVGMaNeWVir/UpEFBwW50LvrAvIDnIWbHSX/Cg2PGVQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382228;
+	s=2020e; t=1742382232;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=XXZZGPDlBYlKRsIFkgLf+nfzFt2s/T2lfOH0xtRxF8A=;
-	b=SHQvqKMKctabOd9qCXu9e7qxOH6aASFpCxtqR34ukA+D/Mt4RNVGP/CefNIFavAnUhixlZ
-	9QyYk+6WB4lvy8BA==
-From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
+	bh=/swzNqiTZg5KCpvmommcwcXVLChrk0HVGZmM7os4Km0=;
+	b=niLVAmoJnJdGtVLNIwicpjTuMcy+gwkzdLuXjLCpFbRPEJswGKxufpDkdzUGfT4b3reRvH
+	gkE4gtd+gvPtv1AA==
+From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/syscall: Remove stray semicolons
-Cc: Sohil Mehta <sohil.mehta@intel.com>, Brian Gerst <brgerst@gmail.com>,
- Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
- "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250314151220.862768-7-brgerst@gmail.com>
-References: <20250314151220.862768-7-brgerst@gmail.com>
+Subject: [tip: x86/core] x86/amd_node: Add a smn_read_register() helper
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250217231747.1656228-2-superm1@kernel.org>
+References: <20250217231747.1656228-2-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238222810.14745.14332700247939149457.tip-bot2@tip-bot2>
+Message-ID: <174238223147.14745.1185713088833075540.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,63 +67,46 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     604939552231730c52b823b178e9080877b20851
-Gitweb:        https://git.kernel.org/tip/604939552231730c52b823b178e9080877b20851
-Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Fri, 14 Mar 2025 11:12:19 -04:00
+Commit-ID:     4476e7f81467b2c1b0aea7383e657181a3f9e652
+Gitweb:        https://git.kernel.org/tip/4476e7f81467b2c1b0aea7383e657181a3f9e652
+Author:        Mario Limonciello <mario.limonciello@amd.com>
+AuthorDate:    Mon, 17 Feb 2025 17:17:41 -06:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:19:18 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:18:48 +01:00
 
-x86/syscall: Remove stray semicolons
+x86/amd_node: Add a smn_read_register() helper
 
-No functional change.
+Some of the ACP drivers will poll registers through SMN using
+read_poll_timeout() which requires returning the result of the register read
+as the argument.
 
-Suggested-by: Sohil Mehta <sohil.mehta@intel.com>
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Add a helper to do just that.
+
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lore.kernel.org/r/20250314151220.862768-7-brgerst@gmail.com
+Link: https://lore.kernel.org/r/20250217231747.1656228-2-superm1@kernel.org
 ---
- arch/x86/entry/syscall_32.c | 2 +-
- arch/x86/entry/syscall_64.c | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/amd_node.h | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
-index 06b9df1..993d725 100644
---- a/arch/x86/entry/syscall_32.c
-+++ b/arch/x86/entry/syscall_32.c
-@@ -47,7 +47,7 @@ long ia32_sys_call(const struct pt_regs *regs, unsigned int nr)
- 	#include <asm/syscalls_32.h>
- 	default: return __ia32_sys_ni_syscall(regs);
- 	}
--};
-+}
+diff --git a/arch/x86/include/asm/amd_node.h b/arch/x86/include/asm/amd_node.h
+index 002c3af..23fe617 100644
+--- a/arch/x86/include/asm/amd_node.h
++++ b/arch/x86/include/asm/amd_node.h
+@@ -46,4 +46,15 @@ static inline int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *val
+ }
+ #endif /* CONFIG_AMD_NODE */
  
- static __always_inline int syscall_32_enter(struct pt_regs *regs)
- {
-diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
-index a05f7be..b6e68ea 100644
---- a/arch/x86/entry/syscall_64.c
-+++ b/arch/x86/entry/syscall_64.c
-@@ -38,7 +38,7 @@ long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
- 	#include <asm/syscalls_64.h>
- 	default: return __x64_sys_ni_syscall(regs);
- 	}
--};
++/* helper for use with read_poll_timeout */
++static inline int smn_read_register(u32 reg)
++{
++	int data, rc;
++
++	rc = amd_smn_read(0, reg, &data);
++	if (rc)
++		return rc;
++
++	return data;
 +}
- 
- #ifdef CONFIG_X86_X32_ABI
- long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
-@@ -47,7 +47,7 @@ long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
- 	#include <asm/syscalls_x32.h>
- 	default: return __x64_sys_ni_syscall(regs);
- 	}
--};
-+}
- #endif
- 
- static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
+ #endif /*_ASM_X86_AMD_NODE_H_*/
