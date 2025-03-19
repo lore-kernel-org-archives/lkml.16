@@ -1,249 +1,232 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE99F1F4E37
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4993C209F32
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:17:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742375848; cv=none; b=W33zxy0t9W5yulqm0dVMhsnJ/MWXH9o/TxdMG4aEfvwqo/z/kQQpPy1mIz7ZLR/jImL/rA2XD0dY6gunPc7gyqzQA8dAbmWYfYTtXLXvz6WU7RVSbO0UJSDKicNLMfTIsAXQXcXn4mbUE5ebsOdoGTSOA808Hp6JKJLkoIIpIQ4=
+	t=1742375870; cv=none; b=LYQ/+4eOblxc7hjBXF6/Uj9SLNe9YO3Rg9D4gyOkQ01hnifEu0u4naQ8lX+GrmnbzuymBOawkcFwcdsGtXi2A8VQkEEhfJ6dEfePODXIemL6/wY9oBHI9Dz6vXF9l7HVJHi9h1WVo89FNUHzK3123uP+aIwD2orCV8QlF8zBNO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742375848; c=relaxed/simple;
-	bh=NzMd+cZZ4AuMOKsWgqjQ2wWoCskTOv5VZM4sRUzG9xY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rlHGRpB5q6dpG3waDeyI6KtuIhiAx038rnSDAyMOpGK36UM0Dzm4HLcnKC/QGXK4wob6cNBXRFOe5up9Qo9554+SXuC0HfyLGVhSR8/aZ4Fy14vFDUGY9Fd1cFZUKN1yPSfexYcngb2PX78c0Rjfm3O7FBIg1qqcwhUaeeGCYgQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZoyM8FRV; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742375870; c=relaxed/simple;
+	bh=HrC8ju/VSr8hXeh7bw/tAfpc+VLowroiTe811siUkOg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FPWEILehEvjjE/K1uogF5H54yGociVh4v4qU1ngnHABLzKB1uZCIHfY+MsN5QAjcQ82LwJczdkaU8uM9LSxx0515iZxdlFbZzYs35wA41RnO4kHhwiE8yldosO+mHMAFXRyKeN3txlfSMoiETMUeIX3Tmx9OaBqvLlGG2oFRljs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XdzmIHxC; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZoyM8FRV"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742375845;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=GpuGE8jwydSTtf5vqaCaaq5V296av9hmHXy0jgwtvI0=;
-	b=ZoyM8FRVYuajEwEGxqEzAjZaodUVX/2ZT2baz2aTlp/DGwwjo4/B12SJUcXYevXjFOsFl+
-	ih9FJCsGhWXvMh/+WN/qjAGs7nkjgTPFYOcxF6A6MBKtOlwvnfk6pLd9VAmXaxyR/Nr9Fz
-	08VoNZtw9Qc8Nusq7m6kiJ88f+d20cs=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-47-5e8ziNR7OZO_0Qy0tRHSLA-1; Wed, 19 Mar 2025 05:17:24 -0400
-X-MC-Unique: 5e8ziNR7OZO_0Qy0tRHSLA-1
-X-Mimecast-MFC-AGG-ID: 5e8ziNR7OZO_0Qy0tRHSLA_1742375843
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43bd0586a73so26040675e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:17:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XdzmIHxC"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-abec8b750ebso1169135566b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:17:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742375866; x=1742980666; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=EAilgT1KgQMYmhcNiJG3/TnV+1OOZFzLQklJJVL3nqI=;
+        b=XdzmIHxC4FYl+4Fc784L3jt6scUNVusQ1rVHGW3qZPKc0WS3FE998y/ExaER8OId6L
+         adbrBCwdLEdvGTKx2NGrthg91B/r/ZGTJ8dPkw6vfLv8ANaUvI9DYkvvFdi2zPrx8aI2
+         thOXoDpLO2Towic7oi6aj30HrZXYMmUpr8hTvefWn0FrujQx5h3ZAUz9FDQ96qw24wGt
+         4BPsyk9Koo0hXVeqiC7o00rV775lhnmPslxguugwV0LAmaJ+yEp1g0jWOaJfxnn2YY5Y
+         jQavfwDnulnckMJ5ifIW6lOQVP7LAv3HWeDyA6F6QCgp5yH0n4vNuDTBShWl5GG4E1Ml
+         0H8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742375843; x=1742980643;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GpuGE8jwydSTtf5vqaCaaq5V296av9hmHXy0jgwtvI0=;
-        b=c9tpbRMI3+3RZxasi0PA81YdLyvlrANrOzmYscj5SoVuS8B5srGKyFQVmBmsZWlXFF
-         xKLBw3rNa0HPFGdX5s2YZByQBXc4GSGuWMwZ+dW0FEhCh1Hd6KP6YHW58Fj+uAdAPkuc
-         ID4yCzvGArEWcuWr3a7BdqD/t5tNG5XN6j2AFF16J7xiZ4+bFNcgt/jbRFZqTczU8mFn
-         lgnlvSQ8faVjeSxITbDW83X/HXlMnNLRd6TY/Pkt0VHBSh0mvk+mK+P+llp8x1g/cIjD
-         jc5pjr5i23jR8pZuXUhglajzBYUyFgIz35y7d4h/ukhdCTXqoJfwxyTaopw5MBtUJxQr
-         HOmg==
-X-Forwarded-Encrypted: i=1; AJvYcCUBTOWEpeXaWruQciOtP55VnArU2dAbJde4UOnhx7q2uKs2+UbcfW05/eIetZbROUYnQFUimIre+hhiSAM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIvLjydbJsZEgf54ovY0SVivRRGOGKCRMverf5hfaWvkUJqGVp
-	EUA4gsu+m0OWSuCKk3fnAnLaFLoaT8DwO2iqa4YSuaMdEcu8+SSR9A77ETWiFb0uDne3/xCVXD8
-	9wc5ZzxIOmIOIJL4Va9YjfcGOTJd232d0klIDTY0aRpeMyBaUC0tjFwQx6Co27g==
-X-Gm-Gg: ASbGncudMK+RG9Bp6xfJZaZ4XBcIS/RCrfGvywOI2ysw2TxtDFvFjcBMBJLCpIm+WCz
-	uHnfS/FtjlN2fn4jnH5Kg5RKKwLRubo1qqmeXC0wNATnXHBPn4/VNopr6UbYui2TUMYxwP1I2uQ
-	0YXAGhEOXs3g7JgcD7FQY6IpPHFT+dxFrfpeTczDjqgssi3+MljRTJARPym2f170fmcmHuUbesN
-	f/O4bSEtDAyEcqzVrgQFTC+ElIBqPEiFFNTD8Co3D3oYmDPamJMHy4JiMiDMenJc9KML6Sg4xta
-	3gBB5vuqnMcF1J07614ZkU6YGv3zAG+p4u4VD+z74D8wxAY6ycMAwLSSCVLedA==
-X-Received: by 2002:a05:600c:3845:b0:43c:f969:13c0 with SMTP id 5b1f17b1804b1-43d438a66afmr15766585e9.29.1742375843186;
-        Wed, 19 Mar 2025 02:17:23 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF4AK1/6C4o6ihOcsyzkBG0ZkSaNoGqJBe8vr/NeUglQARpjCQ9rSgLBRWhjQdmkOJ/XhVmJg==
-X-Received: by 2002:a05:600c:3845:b0:43c:f969:13c0 with SMTP id 5b1f17b1804b1-43d438a66afmr15766005e9.29.1742375842419;
-        Wed, 19 Mar 2025 02:17:22 -0700 (PDT)
-Received: from sgarzare-redhat (host-79-53-30-53.retail.telecomitalia.it. [79.53.30.53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4743dd13sm2275855e9.1.2025.03.19.02.17.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 02:17:21 -0700 (PDT)
-Date: Wed, 19 Mar 2025 10:17:18 +0100
-From: Stefano Garzarella <sgarzare@redhat.com>
-To: Michal Luczaj <mhal@rbox.co>
-Cc: "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Bobby Eshleman <bobby.eshleman@bytedance.com>, 
-	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
-	Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
-	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
-	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
-	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, bpf@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH net v4 2/3] selftest/bpf: Add test for AF_VSOCK connect()
- racing sockmap update
-Message-ID: <hlfjllms6ih53rdw45apgajek6fp4ljnfxlwkr2efyqcuf6fqo@rj6yjmj4fjem>
-References: <20250317-vsock-trans-signal-race-v4-0-fc8837f3f1d4@rbox.co>
- <20250317-vsock-trans-signal-race-v4-2-fc8837f3f1d4@rbox.co>
+        d=1e100.net; s=20230601; t=1742375866; x=1742980666;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=EAilgT1KgQMYmhcNiJG3/TnV+1OOZFzLQklJJVL3nqI=;
+        b=H++KgAzyuz74xHunwrRLmZC213p7rXDsKemoPb0hSt7LwrBz2TFG4SRNCE6/JiRxk5
+         1Zh+e7admzytJW3Zym8UKE1pjhiJjKn5PTf0f723C6qxDBndAAencB8TrMfVTcOcHq5g
+         UUS0fTYWsv8K45ixi4siYXiShNE0Cu5PpfpFfkLx/uNWHiCvm7TnJLdMNbMEnlaXPTdd
+         V/bbAF2S6c6Hax9bvOM6IMcnX9CITPQSN/8OffAEny8M5bnwsabdHLuQ7baAcZzcb/q7
+         3yzP9P/UOHoyPOGas7JxAIak7r/JaKPKHk3HQkkKxnQlQO1Pf+awDx8/vEIogUHVEDuF
+         YFGg==
+X-Forwarded-Encrypted: i=1; AJvYcCXdWuPa7Jr69cpsOOZdvF/U3iMgd04Xm7N/y+563p9Suj6tv5i+Pcbw5nBu3GkgIz4Fr6C2wj9PWeddsOQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUsCeg0rqAYk2CfehWsvcUEhZlPyW8ePofOkgYf9d0lM3hAn7p
+	b//7hfgWVmi46R0DT5O6oydOpwiVGDNyojzEVJXVppRAf5hx2egEWYvsZ9nTaBwTjWrdv4+DdTO
+	OG5DKYoH2aAaUHZz9ftxs1FGFWe7FSPu53evGSA==
+X-Gm-Gg: ASbGncunBoSjDthUD1cs6ARtAiNVLLuvhODL5SCA12jYlOV3wyyfGsmfyFmFayUdiPF
+	kMpAWp+D9MI0YGHU+Zydo8FacQ6gcOkocjsqMueFDAsC5RbPnk9isfCI3+jqqLyR/HL5l3UDzDc
+	RWZoUPe2P6n42+5KOO4m+JvMgM
+X-Google-Smtp-Source: AGHT+IFoMI511QjObNEJslP2mj2XeOTieGGozDekB+Ve7u+ChaLvdLTeMUPcksERvLHrGigZoOkDNhHXQP44X1D9wbg=
+X-Received: by 2002:a17:906:6a0d:b0:ac3:aaa0:64 with SMTP id
+ a640c23a62f3a-ac3b7dd60dbmr161204466b.26.1742375866381; Wed, 19 Mar 2025
+ 02:17:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250317-vsock-trans-signal-race-v4-2-fc8837f3f1d4@rbox.co>
+References: <20250310074044.3656-1-wuyun.abel@bytedance.com>
+ <20250310074044.3656-2-wuyun.abel@bytedance.com> <CAKfTPtA3k7oXqKjX6bNsjG1BCjq4TB6fWvTH1RV425iK01xA2A@mail.gmail.com>
+ <e4ad9841-5ba2-4704-95f2-3d8affee9afa@bytedance.com>
+In-Reply-To: <e4ad9841-5ba2-4704-95f2-3d8affee9afa@bytedance.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Wed, 19 Mar 2025 10:17:34 +0100
+X-Gm-Features: AQ5f1Jq9nt5BDv5HJiNfBpxPepJ-RSZVttoCJKK3Vtb-Sl5Bf0sYucqgmhv1MrM
+Message-ID: <CAKfTPtAqBgCAoTaMv3_7Xguo+jtpBgg5EXOeUBWfMyPY8YDkJw@mail.gmail.com>
+Subject: Re: Re: [RFC PATCH 1/2] Revert "sched/fair: Make sched-idle CPU
+ selection consistent throughout"
+To: Abel Wu <wuyun.abel@bytedance.com>
+Cc: K Prateek Nayak <kprateek.nayak@amd.com>, Ingo Molnar <mingo@redhat.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt <rostedt@goodmis.org>, 
+	Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>, 
+	Valentin Schneider <vschneid@redhat.com>, Josh Don <joshdon@google.com>, 
+	Tianchen Ding <dtcccc@linux.alibaba.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	"open list:SCHEDULER" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Mar 17, 2025 at 10:52:24AM +0100, Michal Luczaj wrote:
->Racing signal-interrupted connect() and sockmap update may result in an
->unconnected (and missing vsock transport) socket in a sockmap.
+On Thu, 13 Mar 2025 at 08:18, Abel Wu <wuyun.abel@bytedance.com> wrote:
 >
->Test spends 2 seconds attempting to reach WARN_ON_ONCE().
+> Hi Vincent,
 >
->connect
->  / state = SS_CONNECTED /
->                                sock_map_update_elem
->  if signal_pending
->    state = SS_UNCONNECTED
+> On 3/12/25 12:58 AM, Vincent Guittot wrote:
+> > On Mon, 10 Mar 2025 at 08:41, Abel Wu <wuyun.abel@bytedance.com> wrote:
+> >>
+> >> This reverts commit 17346452b25b98acfb395d2a82ec2e4ad0cb7a01.
+> >>
+> >> The above commit tried to unify selection policy between idle cpus
+> >> and SCHED_IDLE ones in fast- and slow-path of select_task_rq_fair()
+> >> by treating them equally (although the SCHED_IDLE cpus are turned
+> >> to be given more preference in slowpath). The test results seemed
+> >> solid, but the setup didn't take cgroup hierarchy into account,
+> >> which actually made some of our important services get affected.
+> >>
+> >> The cgroup hierarchy in our production environment looks like below,
+> >> which might be common in modern containerized setup:
+> >>
+> >>                            root
+> >>                          /       \
+> >>                  kubepods        system.slice
+> >>                  /       \\              \
+> >>          guaranteed      besteffort      containerd
+> >>
+> >>          (where 'X=A' means A is SCHED_IDLE cgroup)
+> >>
+> >> The cpu is treated as SCHED_IDLE if only besteffort is running, which
+> >> is given at least equal preference as the idle cpus when deciding where
+> >> to run a newly woken task. But the SCHED_IDLE cpus do not necessarily
+> >> mean they can be preempted soon enough to start serving the wakee, and
+> >
+> > Could you give us more details why the SCHED_IDLE cpu which runs only
+> > besteffort can't be preempted soon enough ?
+> >
+> > because kubepods vs system.slice is not sched_idle when comparing the
 >
->connect
->  transport = NULL
->                                vsock_bpf_recvmsg
->                                  WARN_ON_ONCE(!vsk->transport)
+> Yes, exactly. What's worse is that kubepods.weight is the sum of all its
+> children and can easily reach ~3000, while system.weight is default to
+> 100. The weight configuration can be optimized, but it's another topic.
 >
->Signed-off-by: Michal Luczaj <mhal@rbox.co>
->---
-> .../selftests/bpf/prog_tests/sockmap_basic.c       | 99 ++++++++++++++++++++++
-> 1 file changed, 99 insertions(+)
+> > entities ? some maybe the definition of sched_idle_cpu should be fixed
+> > instead
+>
+> Yes, there are at least two ways to fix it:
+>
+>   1) Let sched_idle_cpu() depends on a specific task, just like Josh
+>      mentioned in the reply of 2nd patch. So if sched_idle_cpu(cpu, p)
+>      returns true, then
+>
+>         a) this rq only contains hierarchical idle tasks, and
+>         b) p can preempt current immediately
+>
+>      Please see my reply to Josh to check the details.
 
-LGTM for the vsock part!
+yeah, that should be the solution which covers all cases but at the
+cost of walking cgroup hierarchy which is far from being ideal
 
-Acked-by: Stefano Garzarella <sgarzare@redhat.com>
+Could we change h_nr_idle to only track fully sched idle tasks; I mean
+tasks with a full sched_idle cgroup hierarchy ? so we would be sure to
+preempt those sched idle cpus
+
+Then, for other case of sched idle task or sched idle group childs of
+a non sched idle group then we don't consider those cpu as sched idle
+cpu
+
 
 >
->diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
->index 1e3e4392dcca0e1722c1982ecc649a80c27443b2..2f8bba27866354848f1e30b5473cedb6a85244ff 100644
->--- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
->+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
->@@ -3,6 +3,7 @@
-> #include <error.h>
-> #include <netinet/tcp.h>
-> #include <sys/epoll.h>
->+#include <linux/time64.h>
+>   2) Or get rid of sched_idle_cpu() entirely. This needs some careful
+>      rework. Now the users of cfs_rq::h_nr_idle are two parts:
 >
-> #include "test_progs.h"
-> #include "test_skmsg_load_helpers.skel.h"
->@@ -1042,6 +1043,102 @@ static void test_sockmap_vsock_unconnected(void)
-> 	xclose(map);
-> }
+>         a) select_task_rq, including sched_balance_find_dst_group_cpu()
+>            and select_idle_*(). The former is handled by this series by
+>            simply ignoring sched_idle_cpus, which should be safe since
+>            sched_idle_cpus do not always follow the goal of the slowpath
+>            to find a least loaded cpu to help load balancing. While the
+>            latter is roughly designed as following:
 >
->+#define CONNECT_SIGNAL_RACE_TIMEOUT 2 /* seconds */
->+
->+static void sig_handler(int signum)
->+{
->+	/* nop */
->+}
->+
->+static void connect_signal_racer_cleanup(void *map)
->+{
->+	xclose(*(int *)map);
->+}
->+
->+static void *connect_signal_racer(void *arg)
->+{
->+	pid_t pid;
->+	int map;
->+
->+	map = bpf_map_create(BPF_MAP_TYPE_SOCKMAP, NULL, sizeof(int),
->+			     sizeof(int), 1, NULL);
->+	if (!ASSERT_OK_FD(map, "bpf_map_create"))
->+		return NULL;
->+
->+	pthread_cleanup_push(connect_signal_racer_cleanup, &map);
->+	pid = getpid();
->+
->+	for (;;) {
->+		int c = *(int *)arg;
->+		int zero = 0;
->+
->+		(void)bpf_map_update_elem(map, &zero, &c, BPF_ANY);
->+
->+		if (kill(pid, SIGUSR1)) {
->+			FAIL_ERRNO("kill");
->+			break;
->+		}
->+
->+		if ((recv(c, NULL, 0, MSG_DONTWAIT) < 0) && errno == ENODEV) {
->+			FAIL_ERRNO("recv");
->+			break;
->+		}
->+	}
->+
->+	pthread_cleanup_pop(1);
->+
->+	return NULL;
->+}
->+
->+static void test_sockmap_vsock_connect_signal_race(void)
->+{
->+	struct sockaddr_vm addr, bad_addr;
->+	socklen_t alen = sizeof(addr);
->+	sighandler_t orig_handler;
->+	pthread_t thread;
->+	int s, c, p;
->+	__u64 tout;
->+
->+	orig_handler = signal(SIGUSR1, sig_handler);
->+	if (!ASSERT_NEQ(orig_handler, SIG_ERR, "signal handler setup"))
->+		return;
->+
->+	s = socket_loopback(AF_VSOCK, SOCK_SEQPACKET | SOCK_NONBLOCK);
->+	if (s < 0)
->+		goto restore;
->+
->+	if (xgetsockname(s, (struct sockaddr *)&addr, &alen))
->+		goto close;
->+
->+	bad_addr = addr;
->+	bad_addr.svm_cid = 0x42424242; /* non-existing */
->+
->+	if (xpthread_create(&thread, 0, connect_signal_racer, &c))
->+		goto close;
->+
->+	tout = get_time_ns() + CONNECT_SIGNAL_RACE_TIMEOUT * NSEC_PER_SEC;
->+	do {
->+		c = xsocket(AF_VSOCK, SOCK_SEQPACKET, 0);
->+		if (c < 0)
->+			break;
->+
->+		if (connect(c, (struct sockaddr *)&addr, alen) && errno == EINTR)
->+			(void)connect(c, (struct sockaddr *)&bad_addr, alen);
->+
->+		xclose(c);
->+		p = accept(s, NULL, NULL);
->+		if (p >= 0)
->+			xclose(p);
->+	} while (get_time_ns() < tout);
->+
->+	ASSERT_OK(pthread_cancel(thread), "pthread_cancel");
->+	xpthread_join(thread, NULL);
->+close:
->+	xclose(s);
->+restore:
->+	ASSERT_NEQ(signal(SIGUSR1, orig_handler), SIG_ERR, "handler restore");
->+}
->+
-> void test_sockmap_basic(void)
-> {
-> 	if (test__start_subtest("sockmap create_update_free"))
->@@ -1108,4 +1205,6 @@ void test_sockmap_basic(void)
-> 		test_sockmap_skb_verdict_vsock_poll();
-> 	if (test__start_subtest("sockmap vsock unconnected"))
-> 		test_sockmap_vsock_unconnected();
->+	if (test__start_subtest("sockmap vsock connect signal race"))
->+		test_sockmap_vsock_connect_signal_race();
-> }
+>            - Must search within target LLC domain, since L3$ miss is
+>              much more costly than L1/L2$
+>            - To use cache more wisely, start searching from the L1/L2$
+>              cache hot cpus like prev/recent_used/..
+>            - Cheers if found an idle cpu that can preempt immediately.
+>              This helps maximize using cpu bandwidth, hence improving
+>              total throughput
+>            - (?)
+>            - Return target anyway, at least it might be cache hot
 >
->-- 
->2.48.1
+>            It could be less optimal if simply remove sched_idle_cpu and
+>            return @target if no idle cpu available, because @target can
+>            be heavy loaded and the cache may not hot any longer when the
+>            wakee finally hit cpu. So in order not to fight with the load
+>            balancing, shall we tiebreak on cpu_load() for the non-idle
+>            cpus?
 >
+>         b) load balance: sched_balance_domains() and dequeue_entities().
+>            We could leave this as-is, but I would propose using h_idle
+>            instead: if the on_cpu task is hierarchically idle when
+>            triggering normal load balancing, then we guess it's a less
+>            loaded cpu and can reduce balance interval. The rationale
+>            behind is that the idle entities usually get very limited
+>            bandwidth if any hierarchically non-idle tasks available.
+>            The heuristics may have false positives which can generally
+>            be divided into 3 cases:
+>
+>                 (The numbers represents hierarchical shares%)
+>
+>                                                    C
+>                    A               B              / \
+>                  /  \\           /  \\           80  20
+>                 99    1         50   50         // \
+>                                               100  (X)
 
+
+How the sched_idle group in B can have the same share/weight as the
+not sched idle one in case B ?
+
+
+>
+>            - Case A) The hierarchical share of h_idle tasks is indeed
+>              small. So in this case they are just get scheduled to take
+>              some breath, and the possibility of false positive is low
+>              enough to be safely ignored.
+>
+>            - Case B) The h_idle & !h_idle tasks equally share bandwidth
+>              which usually means the !h_idle part becomes less loaded
+>              and pulling some load might be preferred.
+>
+>            - Case C) The hierarchical share of h_idle tasks dominates
+>              which usually means their !h_idle parents are allowed to
+>              use a big portion of bandwidth. In this case speedup the
+>              balance is still fine because we could pull some !h_idle
+>              tasks for the most 'important' cgroup.
+>
+>            So the heuristics of using rq->curr's h_idle to judge the need
+>            of pulling (load balancing) seems fine.
+>
+>      And as a result cfs_rq::h_nr_idle can be removed and its maintenance
+>      cost in hotpath can be saved.
+>
+> Which way do you prefer? It would be much appreciated if you can shed some
+> light on this.
+>
+> >
+> > a sched_idle_cpu should be preempted immediately otherwise it's not a
+> > sched idle cpu and the definition is meaningless
+>
+> Agree.
+>
+> Thanks!
+>         Abel
+>
