@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E092B258CDE
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:22:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 089832561BE
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:22:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742386944; cv=none; b=l797nViHtr+ZyCZYITIw8EIeIIOuRD8CATjbMcIxQSOwC1ep77N2iyMlZcuU8mm3pmr3MkS3C/hkpb7vBnv9NeeldZPydqe5Nh9Hd/weM1bhZUBgIc8JgYwLbegGyQDl29UxwvFU0eX9VIKcVo/OpDbPCqGO2KNEZrbeL6U/XZM=
+	t=1742386950; cv=none; b=ilMnsHQfbGLUu0F6RN0QtAw8xT6+af1Z4OdCtFpb/9gliShtaGry+kDJ+VaCd0sK7z8+HVthjcGMLYJMsV+ud4zFXiOt9M9vjIFP/41nXpBuFfDHbAlEAjE362ph9aeqH69v7flW+Gj9pjWcBPzBHAg0xw74ziTdrGjtus73RrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742386944; c=relaxed/simple;
-	bh=Te/nCPJoiBNbyUTWshkZ1ebwFT8DMgtFuf2HdtXmP9o=;
+	s=arc-20240116; t=1742386950; c=relaxed/simple;
+	bh=wEw51A1Z/Kflsa07gSPSJJT92gdgpGM02PW8kbXEZCQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EYbS1sSlyL/mWW9cz94n9f8QWm4MxP2SIlsIE9DDEaPMolMic75yNeqylKiCb19tE3kdIaPqnE38gcLrIPk3tTiiMu5PQiHNc/9etyUNBpb0yxyqwywBoem0MMHDoZR11y1SpMgdD5nkmIYTV4gGhs9Mdrc9ALiUgHSTNdD5B5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=v4GLQU7J; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=gz7m0NhP; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=YksMcjmeRpDjkklhPTzP8Um4BgkSeLVb1I2TMKsoMp2kvkZ6UPOs3RkppnMNp45E9G26Mz3VLi44Eb2cSeIXpNelYq6OYFP8ZweSMcOVU+EWLdSTqArvRvPUZkTuSSDjp5JxBLCr0MVVmShnW/hAkzzTcHROE1ig2vS+rnTgWCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1AqllIAc; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=L/4D+FMV; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="v4GLQU7J";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="gz7m0NhP"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1AqllIAc";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="L/4D+FMV"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742386941;
+	s=2020; t=1742386947;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fDtSqRQzgAIZaXyH6tzIadWLbO0ybWRSQG6EjY6QOvI=;
-	b=v4GLQU7JjvueTNheYF9jW39rbGfj6tApgEN9enkWa3LAVOBTY1avkWH5bNSJm4hXia12OO
-	Bfzu08p3rhhzP7QiVSHnavZhmQvC9NX5/KL23xG8kqaX8l080sUl+uJh/gwh01XbZJgceO
-	a4sjf3QNJfbOqOjZllDam2yjSdfDrHuP1S2dFmHyEobWSJmmF2d94GvqSK6LgcyFKA8SjQ
-	qAthc7W9JPQRdn4zUjUQ3JmtOMYj39wjO0e0zptrtmaHvpyPvBtT6Lg/IoO4eRi6el67yA
-	FuPs2j0+7VUF48UPnpFzrzhEb6qm4mW3QnM0H1MQYbr9rlvMnmZqAH4hdqATFw==
+	bh=wIM1/UO/olTqtQhk58W5MQceA/7wLYg5WiO97m4eSsc=;
+	b=1AqllIAcsCbesq3Wd/wJHiUQkqUbWtWRP90jFfFD4T2Ggt6G7PDtzdqEhnsOm8bnk4ABpU
+	J2X+xYWSqwpTU22fPk3jqYxx8puo9cxZ1OO3/1wRwrOpzD+8LAaA8kjkDS/HCL5QxpqilV
+	G3g7d+DfPvdxUGq+Y0JkCa2oODsRRyBHyrzOIM1E54g1f1O/rbsqcInbTpUJCiSULtVy3W
+	l2Ua9xr6waVgmzLRvZtEQka29sUymH0olp7KtNl95lrYHXDooKmpoxQFFE9sWR0afFSmJN
+	rwa5OW7WVubsF3nnJpIWgisCRdyo9PDiAT5Q9irjj01zANqdPTzlXZojES6SUQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742386941;
+	s=2020e; t=1742386947;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=fDtSqRQzgAIZaXyH6tzIadWLbO0ybWRSQG6EjY6QOvI=;
-	b=gz7m0NhP51cmkKftabjBc01Dqm7sr24giKdiEyavFRG+XCn88Cnd90JSxvT7/7GOLYdFEc
-	s40EwAW+ETrkTACg==
+	bh=wIM1/UO/olTqtQhk58W5MQceA/7wLYg5WiO97m4eSsc=;
+	b=L/4D+FMV/qTZF1E7vlWMHcEmL9Uc4jAQXmVb3YRRY6ym0M3fOQkqksee0t7lCp/EiDt/0K
+	al3E4xu2KWLEltAg==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 12/29] x86/cacheinfo: Separate amd_northbridge from _cpuid4_info_regs
-Date: Wed, 19 Mar 2025 13:21:20 +0100
-Message-ID: <20250319122137.4004-13-darwi@linutronix.de>
+Subject: [PATCH v3 14/29] x86/cacheinfo: Use sysfs_emit() for sysfs attributes show()
+Date: Wed, 19 Mar 2025 13:21:22 +0100
+Message-ID: <20250319122137.4004-15-darwi@linutronix.de>
 In-Reply-To: <20250319122137.4004-1-darwi@linutronix.de>
 References: <20250319122137.4004-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,140 +63,43 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The _cpuid4_info_regs structure is meant to hold the CPUID leaf 0x4
-output registers (EAX, EBX, and ECX), as well as derived information
-such as the cache node ID and size.
+Per Documentation/filesystems/sysfs.rst, a sysfs attribute's show()
+method should only use sysfs_emit() or sysfs_emit_at() when returning
+values to user space.
 
-It also contains a reference to amd_northbridge, which is there only to
-be "parked" until ci_info_init() can store it in the priv pointer of the
-<linux/cacheinfo.h> API.  That priv pointer is then used by AMD-specific
-L3 cache_disable_0/1 sysfs attributes.
-
-Decouple amd_northbridge from _cpuid4_info_regs and pass it explicitly
-through the functions at x86/cacheinfo.  Doing so clarifies when
-amd_northbridge is actually needed (AMD-only code) and when it is
-not (Intel-specific code).  It also prepares for moving the AMD-specific
-L3 cache_disable_0/1 sysfs code into its own file in next commit.
+Use sysfs_emit() for the AMD L3 cache sysfs attributes cache_disable_0,
+cache_disable_1, and subcaches.
 
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 45 +++++++++++++++++++++------------
- 1 file changed, 29 insertions(+), 16 deletions(-)
+ arch/x86/kernel/cpu/amd_cache_disable.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index f1055e806c9f..8c2b51bb032a 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -168,7 +168,6 @@ struct _cpuid4_info_regs {
- 	union _cpuid4_leaf_ecx ecx;
- 	unsigned int id;
- 	unsigned long size;
--	struct amd_northbridge *nb;
- };
+diff --git a/arch/x86/kernel/cpu/amd_cache_disable.c b/arch/x86/kernel/cpu/amd_cache_disable.c
+index 6d53aee0d869..d860ad3f8a5a 100644
+--- a/arch/x86/kernel/cpu/amd_cache_disable.c
++++ b/arch/x86/kernel/cpu/amd_cache_disable.c
+@@ -66,9 +66,9 @@ static ssize_t show_cache_disable(struct cacheinfo *ci, char *buf, unsigned int
  
- /* AMD doesn't have CPUID4. Emulate it here to report the same
-@@ -573,25 +572,36 @@ cache_get_priv_group(struct cacheinfo *ci)
- 	return &cache_private_group;
+ 	index = amd_get_l3_disable_slot(nb, slot);
+ 	if (index >= 0)
+-		return sprintf(buf, "%d\n", index);
++		return sysfs_emit(buf, "%d\n", index);
+ 
+-	return sprintf(buf, "FREE\n");
++	return sysfs_emit(buf, "FREE\n");
  }
  
--static void amd_init_l3_cache(struct _cpuid4_info_regs *id4, int index)
-+static struct amd_northbridge *amd_init_l3_cache(int index)
- {
-+	struct amd_northbridge *nb;
- 	int node;
+ #define SHOW_CACHE_DISABLE(slot)					\
+@@ -189,7 +189,7 @@ static ssize_t subcaches_show(struct device *dev, struct device_attribute *attr,
+ 	struct cacheinfo *ci = dev_get_drvdata(dev);
+ 	int cpu = cpumask_first(&ci->shared_cpu_map);
  
- 	/* only for L3, and not in virtualized environments */
- 	if (index < 3)
--		return;
-+		return NULL;
- 
- 	node = topology_amd_node_id(smp_processor_id());
--	id4->nb = node_to_amd_nb(node);
--	if (id4->nb && !id4->nb->l3_cache.indices)
--		amd_calc_l3_indices(id4->nb);
-+	nb = node_to_amd_nb(node);
-+	if (nb && !nb->l3_cache.indices)
-+		amd_calc_l3_indices(nb);
-+
-+	return nb;
- }
- #else
--#define amd_init_l3_cache(x, y)
-+static struct amd_northbridge *amd_init_l3_cache(int index)
-+{
-+	return NULL;
-+}
- #endif  /* CONFIG_AMD_NB && CONFIG_SYSFS */
- 
--static int
--cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *id4)
-+/*
-+ * Fill passed _cpuid4_info_regs structure.
-+ * Intel-only code paths should pass NULL for the amd_northbridge
-+ * return pointer.
-+ */
-+static int cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *id4,
-+				    struct amd_northbridge **nb)
- {
- 	u8 cpu_vendor = boot_cpu_data.x86_vendor;
- 	union _cpuid4_leaf_eax eax;
-@@ -607,7 +617,9 @@ cpuid4_cache_lookup_regs(int index, struct _cpuid4_info_regs *id4)
- 			/* Legacy AMD fallback */
- 			amd_cpuid4(index, &eax, &ebx, &ecx);
- 		}
--		amd_init_l3_cache(id4, index);
-+
-+		if (nb)
-+			*nb = amd_init_l3_cache(index);
- 	} else {
- 		/* Intel */
- 		cpuid_count(4, index, &eax.full, &ebx.full, &ecx.full, &edx);
-@@ -758,7 +770,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- 			struct _cpuid4_info_regs id4 = {};
- 			int retval;
- 
--			retval = cpuid4_cache_lookup_regs(i, &id4);
-+			retval = cpuid4_cache_lookup_regs(i, &id4, NULL);
- 			if (retval < 0)
- 				continue;
- 
-@@ -934,8 +946,8 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 		}
+-	return sprintf(buf, "%x\n", amd_get_subcaches(cpu));
++	return sysfs_emit(buf, "%x\n", amd_get_subcaches(cpu));
  }
  
--static void ci_info_init(struct cacheinfo *ci,
--			 const struct _cpuid4_info_regs *id4)
-+static void ci_info_init(struct cacheinfo *ci, const struct _cpuid4_info_regs *id4,
-+			 struct amd_northbridge *nb)
- {
- 	ci->id				= id4->id;
- 	ci->attributes			= CACHE_ID;
-@@ -946,7 +958,7 @@ static void ci_info_init(struct cacheinfo *ci,
- 	ci->size			= id4->size;
- 	ci->number_of_sets		= id4->ecx.split.number_of_sets + 1;
- 	ci->physical_line_partition	= id4->ebx.split.physical_line_partition + 1;
--	ci->priv			= id4->nb;
-+	ci->priv			= nb;
- }
- 
- int init_cache_level(unsigned int cpu)
-@@ -982,13 +994,14 @@ int populate_cache_leaves(unsigned int cpu)
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
- 	struct cacheinfo *ci = this_cpu_ci->info_list;
- 	struct _cpuid4_info_regs id4 = {};
-+	struct amd_northbridge *nb;
- 
- 	for (idx = 0; idx < this_cpu_ci->num_leaves; idx++) {
--		ret = cpuid4_cache_lookup_regs(idx, &id4);
-+		ret = cpuid4_cache_lookup_regs(idx, &id4, &nb);
- 		if (ret)
- 			return ret;
- 		get_cache_id(cpu, &id4);
--		ci_info_init(ci++, &id4);
-+		ci_info_init(ci++, &id4, nb);
- 		__cache_cpumap_setup(cpu, idx, &id4);
- 	}
- 	this_cpu_ci->cpu_map_populated = true;
+ static ssize_t subcaches_store(struct device *dev,
 -- 
 2.48.1
 
