@@ -1,123 +1,152 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83470213232
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:11:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 703C3801;
+	Wed, 19 Mar 2025 21:11:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742418679; cv=none; b=HJOQ5sAo+sbPNZSXhlQLo/f/mpa7YfZIm0mCPe2nqI/jkxwbJbaeVxJdwBhYCtfN5O3GWaN/TiRbUWBKH7BziInhBzvn0ky8qExdtVzNehmsEdVanq8WJmGVSX4MhQGMrIA8uiRzamkidDmN42nOR8Lpnrc7uKBk5vOJk6o4JN4=
+	t=1742418718; cv=none; b=EULYLlAy8rVWM3kO//P8DvvEiBI1qozbvHN2QNSayFcCbZdxd1OUUHS7kD2FvTKGFc+WxdFqihz95kUuWPI3PNMzdv8DkU52XdeK00Dv3sWfgojHB/fTgdDyjRtk7yGRA1MLaJqmt3ZR/t2GuXs0qkn2B+CPVAZ5tIPj6BffsGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742418679; c=relaxed/simple;
-	bh=K1xeiOzI5QDbeqXJEQSjyj9DLXrpjvjxHFutWxirMvw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kfdyk12K/HrQcMOvUMhfMQN4AFdUdNIDqF+fikVNXRGyEAQjD+I4hXFhQKszJK2F5RORIqAOr/bry4D3PdVN5lGTKDJ/58G2Xo8cQ/JYIjp9hnj2hYoblk2J6CYYePqNaQQrTCoUwa/NGcPwNgXFqUrKiqjFEtQmRiZo6qU7xVM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=skQHvquQ; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742418718; c=relaxed/simple;
+	bh=A6RTyasNAkV2fMXFUYUBGDOoJnv5eMzBGz/wFjqEaIM=;
+	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
+	 Message-ID:Content-Type; b=aIbnbX6RHnhoo4aJROHTgHJ82d+xDVJF/i699nnrHCupD6JlCmeygpPkwMviyjYfOc2enpxzxkB+ZXUNwlO3DBLXG+mhsRCYDDZrAdGx5csIXc/zMG3u6cFYgiQM/Kw/HessZBTTLKC5eDlqEAJRGNZ4VIZgLAPum8u6sTPpwp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ueX4DND5; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lz0Lqe/T; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skQHvquQ"
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-868da0af0fcso24650241.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:11:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742418676; x=1743023476; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pvlkhTWhAzJ84g1RHdy0S3etQzJbxZ8GWKau6gHnWHg=;
-        b=skQHvquQHIljqZhXAeJn6vQoR4AFIaIL5RLITvYeJakG68hafFhapjcYpFSeEWcxT+
-         YUwPdhUlc9pIhnhOYKDZWqEcKwqUI8wjMs+WQBIyQYHp/dwa9FOP1zmYnoS9CbsxNAhS
-         HIQGm3WWEuHRV6Eq7NF9ko18QnjOK75KVz4OXnvqAc+BldB7ic/kuzSHIvSCdOAhB1up
-         95QCnq/ZQcMKXwjdblnLIRFSgXivNZCs/dLbhY7MElUXTx5FFNftW4FVy7Te1MPBowZJ
-         hJlK/QS0cP6GDVjgJ4osKMX47KUefc3+uAX5eUP1LgEUgUpXd7LpSdVA4dT+S8Akc52r
-         PElQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742418676; x=1743023476;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pvlkhTWhAzJ84g1RHdy0S3etQzJbxZ8GWKau6gHnWHg=;
-        b=rL5fjTNlVMtB0pWFKe6w9XtM825YZ4bwIkuiYgp3qm7bQTaDrivsZF0PKbRJC8SauM
-         s8e5tDQC1NI4IlkBbHqHhXLcG9pJ1dN6A6XE/a9yqW1ni0JCw3Q0xurkMCLNRpTG566E
-         UjliVP5MY0MtPBiV4qDAg6++cVFh1kxCadAetVg1WQ9VLBIcaxkHu9PQkur0fDzkWFVY
-         oXspo2XaiTZ4pFmLE7uEq9IcBkgKWBZOSuAL3yOn0dGm+6+n4/sCTpaOt2K8GFNyxtp9
-         +x2MsbgPT5d+G67Ov8jOeH/E3mpup9/38T4c8GmGviHgjEHnx6o/K8iS9Zur4WvYJZN0
-         30HA==
-X-Forwarded-Encrypted: i=1; AJvYcCWWvuXvGrPXAQ10ebi4+1UPnx4nATnBOsoAZxGtYkk33bpqccvX/FLnCQzjCRnP8KRuOZkgJ5qO19HcIZQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyPeVZOirqkViGf9GLook62LpG1RGvFmtHfqlxvd3/aZzILq7tu
-	4WogCi8HNj3WCPvsYvie8bbNqoXkEr47akI4lvnq0v85MtjeKDHIihVt6k0bXXq4Tp/w9ZMmtft
-	58TlAP6rmu/+cIkDEo26EhA7kHPr3b2P1tfDf
-X-Gm-Gg: ASbGncv2MxT0lCNqAQpECsiFrgbJNdcVWRyN6b1hbANUhD4tWkwXl84PRRP63u+HHx0
-	FvzOC+Qj9X71fUN1cyQQA2MAcpXDIxuADQolkONFh0UOFeETpop9YJv74IvJ7P39USnGhQS9/mj
-	sTUnsTZ7SWyWA7SBXo58kMADB2ztzsQUxBVgJT4iVEEXk/rdISL6MvPKA=
-X-Google-Smtp-Source: AGHT+IG2d+8g4IUkmFtoj3fmX44ifjbLGO5wXGctt+Jqz4ODulKjbhb9daWIwSytvDrBuPXKFP8u73NR9yD8Vp49HwE=
-X-Received: by 2002:a05:6102:5488:b0:4b2:c391:7d16 with SMTP id
- ada2fe7eead31-4c4fcd4b4e4mr773647137.7.1742418676277; Wed, 19 Mar 2025
- 14:11:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ueX4DND5";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lz0Lqe/T"
+Date: Wed, 19 Mar 2025 21:11:50 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742418714;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E/L9kH7aEtoTEzooZPUsLL8PoE5Ip40F4+tUcrST9Pk=;
+	b=ueX4DND5SZfQrB6DjyXLhq8uv9N1uv9yLZwPeC3cmQ9NtOSjGsIBWnrZPK7p3NBzLob5Bf
+	PdGbu6A91wYDeAlfgCu2KODInPjj+ewxK/MhMkeoENkyV1rozoxPZemGsMg2vdPYmap2J2
+	fmJ0OJbyANG4on3vHMwm9ugLZZh0DyxPT84GreVtVJvDJVSa8VFHVLqBcSERg1z6VYH3Ic
+	1DJcz3oLHP5qbeCpWx7nGD2Wa3bCaR5JWpEk2wKwFhS3eSoZmE8Rg7MWpqxu5oE3bQaJMb
+	SFxqegx8a19hn3Y6D4MGo3DDPTqUhPb8f3TsxqAKzLvg7vWavGY9okzIX4Sm+g==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742418714;
+	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E/L9kH7aEtoTEzooZPUsLL8PoE5Ip40F4+tUcrST9Pk=;
+	b=lz0Lqe/T0lf5xcS0lkp2kWeCwhSDCRfZ39Wv9I+Sb4+pgLedM0OiirGBb1gYsSEVzv3wGu
+	YkFPPABSd5cVGlCg==
+From: "tip-bot2 for Rik van Riel" <tip-bot2@linutronix.de>
+Sender: tip-bot2@linutronix.de
+Reply-to: linux-kernel@vger.kernel.org
+To: linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/core] x86/mm: Only do broadcast flush from reclaim if pages
+ were unmapped
+Cc: Rik van Riel <riel@surriel.com>, Ingo Molnar <mingo@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>,
+ Peter Zijlstra <peterz@infradead.org>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250319132520.6b10ad90@fangorn>
+References: <20250319132520.6b10ad90@fangorn>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319163341.2123-2-thorsten.blum@linux.dev>
-In-Reply-To: <20250319163341.2123-2-thorsten.blum@linux.dev>
-From: Justin Stitt <justinstitt@google.com>
-Date: Wed, 19 Mar 2025 14:11:04 -0700
-X-Gm-Features: AQ5f1JoN2uPsFw29iHN393K75wq6oD6Cg3O8Y2bxqAO1B28vC7GlbD6DEjlXh8k
-Message-ID: <CAFhGd8rH1PcjjRyKzaC9CgvFgA4_uEwvsCq-4v98bmVbqi=o2A@mail.gmail.com>
-Subject: Re: [PATCH] kdb: Remove optional size arguments from strscpy() calls
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
-	Douglas Anderson <dianders@chromium.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Daniel Thompson <daniel.thompson@linaro.org>, kgdb-bugreport@lists.sourceforge.net, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Message-ID: <174241871098.14745.5835208191022684505.tip-bot2@tip-bot2>
+Robot-ID: <tip-bot2@linutronix.de>
+Robot-Unsubscribe:
+ Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Precedence: bulk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 19, 2025 at 9:35=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
-dev> wrote:
->
-> If the destination buffer has a fixed length, strscpy() automatically
-> determines the size of the destination buffer using sizeof() if the
-> argument is omitted. This makes the explicit sizeof() unnecessary.
->
-> Furthermore, CMD_BUFLEN is equal to sizeof(kdb_prompt_str) and can also
-> be removed. Remove them to shorten and simplify the code.
->
-> No functional changes intended.
->
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  kernel/debug/kdb/kdb_io.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
-> index 6a77f1c779c4..9b11b10b120c 100644
-> --- a/kernel/debug/kdb/kdb_io.c
-> +++ b/kernel/debug/kdb/kdb_io.c
-> @@ -334,7 +334,7 @@ static char *kdb_read(char *buffer, size_t bufsize)
->                 *cp =3D '\0';
->                 p_tmp =3D strrchr(buffer, ' ');
->                 p_tmp =3D (p_tmp ? p_tmp + 1 : buffer);
-> -               strscpy(tmpbuffer, p_tmp, sizeof(tmpbuffer));
-> +               strscpy(tmpbuffer, p_tmp);
->                 *cp =3D tmp;
->
->                 len =3D strlen(tmpbuffer);
-> @@ -452,7 +452,7 @@ static char *kdb_read(char *buffer, size_t bufsize)
->  char *kdb_getstr(char *buffer, size_t bufsize, const char *prompt)
->  {
->         if (prompt && kdb_prompt_str !=3D prompt)
-> -               strscpy(kdb_prompt_str, prompt, CMD_BUFLEN);
-> +               strscpy(kdb_prompt_str, prompt);
->         kdb_printf("%s", kdb_prompt_str);
->         kdb_nextline =3D 1;       /* Prompt and input resets line number =
-*/
->         return kdb_read(buffer, bufsize);
+The following commit has been merged into the x86/core branch of tip:
 
-This matches the pattern of replacements I've done in the past, all looks g=
-ood.
+Commit-ID:     0b7eb55cb706e92d6073e4ab63ccd4d219cf2cda
+Gitweb:        https://git.kernel.org/tip/0b7eb55cb706e92d6073e4ab63ccd4d219cf2cda
+Author:        Rik van Riel <riel@surriel.com>
+AuthorDate:    Wed, 19 Mar 2025 13:25:20 -04:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Wed, 19 Mar 2025 21:56:42 +01:00
 
-Reviewed-by: Justin Stitt <justinstitt@google.com>
+x86/mm: Only do broadcast flush from reclaim if pages were unmapped
 
-Justin
+Track whether pages were unmapped from any MM (even ones with a currently
+empty mm_cpumask) by the reclaim code, to figure out whether or not
+broadcast TLB flush should be done when reclaim finishes.
+
+The reason any MM must be tracked, and not only ones contributing to the
+tlbbatch cpumask, is that broadcast ASIDs are expected to be kept up to
+date even on CPUs where the MM is not currently active.
+
+This change allows reclaim to avoid doing TLB flushes when only clean page
+cache pages and/or slab memory were reclaimed, which is fairly common.
+
+( This is a simpler alternative to the code that was in my INVLPGB series
+  before, and it seems to capture most of the benefit due to how common
+  it is to reclaim only page cache. )
+
+Signed-off-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250319132520.6b10ad90@fangorn
+---
+ arch/x86/include/asm/tlbbatch.h | 5 +++++
+ arch/x86/include/asm/tlbflush.h | 1 +
+ arch/x86/mm/tlb.c               | 3 ++-
+ 3 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/tlbbatch.h b/arch/x86/include/asm/tlbbatch.h
+index 1ad56eb..80aaf64 100644
+--- a/arch/x86/include/asm/tlbbatch.h
++++ b/arch/x86/include/asm/tlbbatch.h
+@@ -10,6 +10,11 @@ struct arch_tlbflush_unmap_batch {
+ 	 * the PFNs being flushed..
+ 	 */
+ 	struct cpumask cpumask;
++	/*
++	 * Set if pages were unmapped from any MM, even one that does not
++	 * have active CPUs in its cpumask.
++	 */
++	bool unmapped_pages;
+ };
+ 
+ #endif /* _ARCH_X86_TLBBATCH_H */
+diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+index 7cad283..a9af875 100644
+--- a/arch/x86/include/asm/tlbflush.h
++++ b/arch/x86/include/asm/tlbflush.h
+@@ -353,6 +353,7 @@ static inline void arch_tlbbatch_add_pending(struct arch_tlbflush_unmap_batch *b
+ {
+ 	inc_mm_tlb_gen(mm);
+ 	cpumask_or(&batch->cpumask, &batch->cpumask, mm_cpumask(mm));
++	batch->unmapped_pages = true;
+ 	mmu_notifier_arch_invalidate_secondary_tlbs(mm, 0, -1UL);
+ }
+ 
+diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
+index 0efd990..0925768 100644
+--- a/arch/x86/mm/tlb.c
++++ b/arch/x86/mm/tlb.c
+@@ -1633,8 +1633,9 @@ void arch_tlbbatch_flush(struct arch_tlbflush_unmap_batch *batch)
+ 	 * a local TLB flush is needed. Optimize this use-case by calling
+ 	 * flush_tlb_func_local() directly in this case.
+ 	 */
+-	if (cpu_feature_enabled(X86_FEATURE_INVLPGB)) {
++	if (cpu_feature_enabled(X86_FEATURE_INVLPGB) && batch->unmapped_pages) {
+ 		invlpgb_flush_all_nonglobals();
++		batch->unmapped_pages = false;
+ 	} else if (cpumask_any_but(&batch->cpumask, cpu) < nr_cpu_ids) {
+ 		flush_tlb_multi(&batch->cpumask, info);
+ 	} else if (cpumask_test_cpu(cpu, &batch->cpumask)) {
