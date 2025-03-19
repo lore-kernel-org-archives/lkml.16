@@ -1,179 +1,365 @@
-Received: from mx07-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23B01C862A;
-	Wed, 19 Mar 2025 12:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92972134BD
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742388254; cv=none; b=q3vvDJvhGC5i0LuihT/GMAkxsX3oGMC5XBz6JzKUErI0tjL96TNRE0axQGAUDuM/KDFj0lDiOTt1OiseA6A+9pX8QZynG7oAulUFcs+K4kifQ9PPHsFQghK8FAhkP3N3fHR/zsiufuPByEj7zui0Gk2bDRlVvlaUHld7+7D1lZA=
+	t=1742388334; cv=none; b=s2btkz5dnD659An6kLMhR5dMqb7EFmNGl3vWwI3jAlcrUWZSdH5FaAA4tm7P8vWqVMxWLCXfLVsUNEV1iAdirgUpCu97DP9o6Fh6VMoQwAogDTdmLD+UcCeuM66Rl2dykpM5rcKmbgtZwMjLApI77g/4hBKJIyWhJCd/1J8Z7c0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742388254; c=relaxed/simple;
-	bh=1kWB5fq001V/KaqQZY+FH9ign0/3Tensqh+3o5Vjhi4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=hkZ3YQtgyuFgz7mFhL2d/qVgIwzTPf4WGmeza3PTkXMPTQVFarYhbsm/oS0vokmbHVdHPaH4SrReUDwArMH3LpcKSvrozxxL5v3M+LjcRu7kS+silhuUGk/HTG/boSJ5f6McIsThLD5ier4T3ixqyiBnC6tgSs8ReR3E9cU7szA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=6nzifC5a; arc=none smtp.client-ip=91.207.212.93
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1742388334; c=relaxed/simple;
+	bh=XvuniB+iVUzkCbMLm7ghu8hnqhsPWvb2plB8VFGVLY8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=rUQCj7flLRz4shADUhhtHhaAQmcuE7uDgKAn4XzNBRxnE0la/JjwseJg8JLcdBuVE0x1Yxuqh8POM2sUAxgeUL5YuaH2NIr15sVDqQhSDXyKTjODrq2wWEB5/X7Mvs/wST2bi4vdMmD0nXZbL4TIWQNw39MYMk6VLV+2+TiVzME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AjO/mCES; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="6nzifC5a"
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J9SPAI032517;
-	Wed, 19 Mar 2025 13:44:02 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	sOjFPbQ5zVqpuAx1SW4609SW73aMEvixS4SM3D5EQlA=; b=6nzifC5aMAQV5k93
-	XYVirVNw8xuT2NBBMX/m70KLWJxcnrObZzlvoEHnzQd8npB4bRiyCE1GG+hvIBkY
-	Xq7QjwYmiuHp8TnDdjSwAMFNiiiai02h137mvXV+oRzCITb5g8A038RZhQDDH2qS
-	sF15hK6G5dieXcJuTrFbPRkg2CKDiLIB58Mi8ZNHuSFdqR3MBxdZC9qGnHThOOVI
-	wnCiBpkwNzxxMaoYUpD6lCxki6u0AescJJsYv69gzMblhAlwhG30wrcB74RbnXuD
-	rgP9jgg0qz/Z+Vc/NumefhLEF0KS2izFcQCwHSpXPAHadeTihyCFcTpLUedTQOZr
-	GCtxEA==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45fuaw0xa9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 13:44:02 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4A61040065;
-	Wed, 19 Mar 2025 13:43:02 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node5.st.com [10.75.129.134])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 330DC7CAD96;
-	Wed, 19 Mar 2025 13:42:16 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE5.st.com
- (10.75.129.134) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Mar
- 2025 13:42:16 +0100
-Received: from [10.48.86.121] (10.48.86.121) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Mar
- 2025 13:42:15 +0100
-Message-ID: <f64d13b1-60ad-4871-a59c-bc768f092091@foss.st.com>
-Date: Wed, 19 Mar 2025 13:42:14 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AjO/mCES"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742388332; x=1773924332;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=XvuniB+iVUzkCbMLm7ghu8hnqhsPWvb2plB8VFGVLY8=;
+  b=AjO/mCES/9VwwXMZNclLdYu1w+gE/u2rK/fZuaR+uhBLytI4o+gsXYg+
+   ElZB8UPCDfIUcfTzQpi00NkOVvkBYg/dU7/InQ1r0egtqRAksAkiMoo2w
+   e3pyAcKBMIBel6XO+iFBlDFUwbrtIQUqhhB48pYrh7pS6PPI5jyeWyPvO
+   5V5fYWOYviK8/0dbNThIUlbGSORkcQhzZpnhXfqQ6wFWCdyhHwNSXzqAI
+   a+sTjP3PrvceTHiP5z0tcf42D5EcaEklA6W5BBS6aGzaK4aANkD7WcEci
+   V4guNlEmqclxvoqldpMtWDEHDUBS62rLkPRVR/CAYEIVMaUb3aIa1vfKT
+   w==;
+X-CSE-ConnectionGUID: qmYdEdMoRrmehyUKP23Wsw==
+X-CSE-MsgGUID: L/4WNgoNRAO9mokvv5iYMQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43744164"
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="43744164"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 05:45:32 -0700
+X-CSE-ConnectionGUID: rK39OvyZT16gMlowZLicyw==
+X-CSE-MsgGUID: bnTSMVFlSwCSeMMV6ZNdyA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="127680582"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by orviesa004.jf.intel.com with ESMTP; 19 Mar 2025 05:45:31 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tusnY-000Efu-03;
+	Wed, 19 Mar 2025 12:45:28 +0000
+Date: Wed, 19 Mar 2025 20:45:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [tip:WIP.x86/core 1/1]
+ arch/riscv/include/asm/vdso/gettimeofday.h:24:43: error: meaningless
+ 'inline' on asm outside function
+Message-ID: <202503192004.mvMWNurt-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] remoteproc: core: Clear table_sz when rproc_shutdown
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Arnaud
- Pouliquen" <arnaud.pouliquen@st.com>,
-        "open list:REMOTE PROCESSOR
- (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>,
-        open list
-	<linux-kernel@vger.kernel.org>
-CC: <ping.bai@nxp.com>, Peng Fan <peng.fan@nxp.com>
-References: <20250319100106.3622619-1-peng.fan@oss.nxp.com>
-Content-Language: en-US
-From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Organization: STMicroelectronics
-In-Reply-To: <20250319100106.3622619-1-peng.fan@oss.nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SHFCAS1NODE2.st.com (10.75.129.73) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_04,2025-03-19_01,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hello Peng,
+Hi Ingo,
+
+FYI, the error/warning was bisected to this commit, please ignore it if it's irrelevant.
+
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/core
+head:   9262ee6499954dd387e4507e03b84512ab100706
+commit: 9262ee6499954dd387e4507e03b84512ab100706 [1/1] compiler/gcc: Make asm() templates asm __inline__() by default
+config: riscv-randconfig-001-20250319 (https://download.01.org/0day-ci/archive/20250319/202503192004.mvMWNurt-lkp@intel.com/config)
+compiler: clang version 20.1.0 (https://github.com/llvm/llvm-project 24a30daaa559829ad079f2ff7f73eb4e18095f88)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503192004.mvMWNurt-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503192004.mvMWNurt-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+>> arch/riscv/include/asm/vdso/gettimeofday.h:24:43: error: meaningless 'inline' on asm outside function
+      24 |         register struct __kernel_old_timeval *tv asm("a0") = _tv;
+         |                                                  ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:25:31: error: meaningless 'inline' on asm outside function
+      25 |         register struct timezone *tz asm("a1") = _tz;
+         |                                      ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:26:20: error: meaningless 'inline' on asm outside function
+      26 |         register long ret asm("a0");
+         |                           ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:27:19: error: meaningless 'inline' on asm outside function
+      27 |         register long nr asm("a7") = __NR_gettimeofday;
+         |                          ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:40:27: error: meaningless 'inline' on asm outside function
+      40 |         register clockid_t clkid asm("a0") = _clkid;
+         |                                  ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:41:40: error: meaningless 'inline' on asm outside function
+      41 |         register struct __kernel_timespec *ts asm("a1") = _ts;
+         |                                               ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:42:20: error: meaningless 'inline' on asm outside function
+      42 |         register long ret asm("a0");
+         |                           ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:43:19: error: meaningless 'inline' on asm outside function
+      43 |         register long nr asm("a7") = __NR_clock_gettime;
+         |                          ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:56:27: error: meaningless 'inline' on asm outside function
+      56 |         register clockid_t clkid asm("a0") = _clkid;
+         |                                  ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:57:40: error: meaningless 'inline' on asm outside function
+      57 |         register struct __kernel_timespec *ts asm("a1") = _ts;
+         |                                               ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:58:20: error: meaningless 'inline' on asm outside function
+      58 |         register long ret asm("a0");
+         |                           ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from <built-in>:4:
+   In file included from lib/vdso/gettimeofday.c:5:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:59:19: error: meaningless 'inline' on asm outside function
+      59 |         register long nr asm("a7") = __NR_clock_getres;
+         |                          ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   12 errors generated.
+   make[3]: *** [scripts/Makefile.build:207: arch/riscv/kernel/vdso/vgettimeofday.o] Error 1 shuffle=889927436
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+>> arch/riscv/include/asm/vdso/gettimeofday.h:24:43: error: meaningless 'inline' on asm outside function
+      24 |         register struct __kernel_old_timeval *tv asm("a0") = _tv;
+         |                                                  ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:25:31: error: meaningless 'inline' on asm outside function
+      25 |         register struct timezone *tz asm("a1") = _tz;
+         |                                      ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:26:20: error: meaningless 'inline' on asm outside function
+      26 |         register long ret asm("a0");
+         |                           ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:27:19: error: meaningless 'inline' on asm outside function
+      27 |         register long nr asm("a7") = __NR_gettimeofday;
+         |                          ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:40:27: error: meaningless 'inline' on asm outside function
+      40 |         register clockid_t clkid asm("a0") = _clkid;
+         |                                  ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:41:40: error: meaningless 'inline' on asm outside function
+      41 |         register struct __kernel_timespec *ts asm("a1") = _ts;
+         |                                               ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:42:20: error: meaningless 'inline' on asm outside function
+      42 |         register long ret asm("a0");
+         |                           ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:43:19: error: meaningless 'inline' on asm outside function
+      43 |         register long nr asm("a7") = __NR_clock_gettime;
+         |                          ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:56:27: error: meaningless 'inline' on asm outside function
+      56 |         register clockid_t clkid asm("a0") = _clkid;
+         |                                  ^
+   include/linux/compiler_types.h:480:19: note: expanded from macro 'asm'
+     480 | # define asm(...) asm_inline(__VA_ARGS__)
+         |                   ^
+   include/linux/compiler_types.h:479:29: note: expanded from macro 'asm_inline'
+     479 | # define asm_inline __asm__ __inline
+         |                             ^
+   In file included from arch/riscv/kernel/vdso/hwprobe.c:8:
+   In file included from include/vdso/datapage.h:164:
+   arch/riscv/include/asm/vdso/gettimeofday.h:57:40: error: meaningless 'inline' on asm outside function
+      57 |         register struct __kernel_timespec *ts asm("a1") = _ts;
 
 
-On 3/19/25 11:01, Peng Fan (OSS) wrote:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> There is case as below could trigger kernel dump:
-> Use U-Boot to start remote processor(rproc) with resource table
-> published to a fixed address by rproc. After Kernel boots up,
-> stop the rproc, load a new firmware which doesn't have resource table
-> ,and start rproc.
-> 
-> When starting rproc with a firmware not have resource table,
-> `memcpy(loaded_table, rproc->cached_table, rproc->table_sz)` will
-> trigger dump, because rproc->cache_table is set to NULL during the last
-> stop operation, but rproc->table_sz is still valid.
-> 
-> This issue is found on i.MX8MP and i.MX9.
-> 
-> Dump as below:
-> Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
-> Mem abort info:
->   ESR = 0x0000000096000004
->   EC = 0x25: DABT (current EL), IL = 32 bits
->   SET = 0, FnV = 0
->   EA = 0, S1PTW = 0
->   FSC = 0x04: level 0 translation fault
-> Data abort info:
->   ISV = 0, ISS = 0x00000004, ISS2 = 0x00000000
->   CM = 0, WnR = 0, TnD = 0, TagAccess = 0
->   GCS = 0, Overlay = 0, DirtyBit = 0, Xs = 0
-> user pgtable: 4k pages, 48-bit VAs, pgdp=000000010af63000
-> [0000000000000000] pgd=0000000000000000, p4d=0000000000000000
-> Internal error: Oops: 0000000096000004 [#1] PREEMPT SMP
-> Modules linked in:
-> CPU: 2 UID: 0 PID: 1060 Comm: sh Not tainted 6.14.0-rc7-next-20250317-dirty #38
-> Hardware name: NXP i.MX8MPlus EVK board (DT)
-> pstate: a0000005 (NzCv daif -PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-> pc : __pi_memcpy_generic+0x110/0x22c
-> lr : rproc_start+0x88/0x1e0
-> Call trace:
->  __pi_memcpy_generic+0x110/0x22c (P)
->  rproc_boot+0x198/0x57c
->  state_store+0x40/0x104
->  dev_attr_store+0x18/0x2c
->  sysfs_kf_write+0x7c/0x94
->  kernfs_fop_write_iter+0x120/0x1cc
->  vfs_write+0x240/0x378
->  ksys_write+0x70/0x108
->  __arm64_sys_write+0x1c/0x28
->  invoke_syscall+0x48/0x10c
->  el0_svc_common.constprop.0+0xc0/0xe0
->  do_el0_svc+0x1c/0x28
->  el0_svc+0x30/0xcc
->  el0t_64_sync_handler+0x10c/0x138
->  el0t_64_sync+0x198/0x19c
-> 
-> Clear rproc->table_sz to address the issue.
-> 
-> Fixes: 9dc9507f1880 ("remoteproc: Properly deal with the resource table when detaching")
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
-> 
-> V1:
->  There is the other fix that I could do is to clear rproc->table_sz
->  in imx_rproc_parse_fw, but I think this issue should be common to others.
->  So do this change in rproc_shutdown. Since it is in rproc_shutdown,
->  clearing table_sz should not incur new issues.
-> 
->  The kernel dump is found by Jacky Bai in NXP internal test, so not add
->  tag in public list here. Jacky, feel free to send a Reported-by in community.
-> 
->  drivers/remoteproc/remoteproc_core.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index c2cf0d277729..b21eedefff87 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -2025,6 +2025,7 @@ int rproc_shutdown(struct rproc *rproc)
->  	kfree(rproc->cached_table);
->  	rproc->cached_table = NULL;
->  	rproc->table_ptr = NULL;
-> +	rproc->table_sz = 0;
+vim +/inline +24 arch/riscv/include/asm/vdso/gettimeofday.h
 
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  19  
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  20  static __always_inline
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  21  int gettimeofday_fallback(struct __kernel_old_timeval *_tv,
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  22  			  struct timezone *_tz)
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  23  {
+ad5d1122b82fbd6 Vincent Chen 2020-06-09 @24  	register struct __kernel_old_timeval *tv asm("a0") = _tv;
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  25  	register struct timezone *tz asm("a1") = _tz;
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  26  	register long ret asm("a0");
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  27  	register long nr asm("a7") = __NR_gettimeofday;
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  28  
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  29  	asm volatile ("ecall\n"
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  30  		      : "=r" (ret)
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  31  		      : "r"(tv), "r"(tz), "r"(nr)
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  32  		      : "memory");
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  33  
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  34  	return ret;
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  35  }
+ad5d1122b82fbd6 Vincent Chen 2020-06-09  36  
 
-Your fix makes sense from my point of view.
+:::::: The code at line 24 was first introduced by commit
+:::::: ad5d1122b82fbd6a816d1b9d26ee01a6dbc2d757 riscv: use vDSO common flow to reduce the latency of the time-related functions
 
-It seems that you should also apply this fix in rproc_detach() and rproc_fw_boot().
-Regards,
-Arnaud
+:::::: TO: Vincent Chen <vincent.chen@sifive.com>
+:::::: CC: Palmer Dabbelt <palmerdabbelt@google.com>
 
-
->  out:
->  	mutex_unlock(&rproc->lock);
->  	return ret;
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
