@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C567D25F963;
-	Wed, 19 Mar 2025 09:33:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7E0F26136A;
+	Wed, 19 Mar 2025 09:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376803; cv=none; b=gg6hTajHcX66YU6TVBqNLbNnIIX2vBxACOJfOr2zdwlUrO5YZ9s/R9X0cxOAKfBRuQ/Hg6zG8Qp/LhBhreeIDsEIYZrKk7VpyTng5WeJKN5v8i2bp5vnMRk9YeECiNACpXjbcqFKz7+B6mJT0Feb4gijRn5XZ/S5Za46P9dZCc4=
+	t=1742376808; cv=none; b=ECMctZi2UN0dqURZhSozsHjiec+P5DnlEvj/7jVirfqPZqDevEw/D+95Tg26cCLdTWEDhFELO/ctSY5GklTrfP/lPMLe42dwQKTJsUYVN1wQXuxzD0ZXkZJ6slVx1dor0FnCFUD+EIVuh6hC0FaMASF9yPsqBKhP8T2SOEsfP80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376803; c=relaxed/simple;
-	bh=UFLfqYAPRyP0zMZMJni7dgt7MkfzfaxNTSDWCN3V7Ag=;
+	s=arc-20240116; t=1742376808; c=relaxed/simple;
+	bh=1ZnDtwr26F+gadypjJWqlvEkauGfR8o1OEkvjNk+RzQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fMDCSp2fysW/67RdKjhCt71aetmxaWSjSiqrWTZtQYP3b1dJGZSIveolsC8z1eWiwxUo04CpHzQpkX6HuWVwUOYazxGQmb+yJOI3Rwja0uSibF8/ud6ZNx91DrtXhJibuGTOrN0aZCw6ULRD9w0ZRcOEZdron9KDYCHpOedO5LI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JVQw6HEW; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qvmtjfd/cH+xMdjSj7XqQ/swk7nvcnrqqxHhpMwKdTQ1aNMNaqAHjbXhA3PF64C3ngNOJlsznuSgr8dPvbbw32VR/htKL6/2wHf/OaZerP64RHSH0Ss/P02hzhc6YUMs8/5ybcci0CDJUd4FxJNAStZQIg8IQ9jkFVmFa8EXkgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mtELG2Xf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JVQw6HEW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16957C4CEEA;
-	Wed, 19 Mar 2025 09:33:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mtELG2Xf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3632AC4CEE9;
+	Wed, 19 Mar 2025 09:33:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742376803;
-	bh=UFLfqYAPRyP0zMZMJni7dgt7MkfzfaxNTSDWCN3V7Ag=;
+	s=k20201202; t=1742376807;
+	bh=1ZnDtwr26F+gadypjJWqlvEkauGfR8o1OEkvjNk+RzQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JVQw6HEWw/rNx703pdxYurP52goB6uxBLpnpc5pizQMLD4cFfgGh4VTW3MwkHPaeE
-	 tRgDw+2X9d2y6C6XBO0pR0a8uRrT6nDSTeSXLhHNz1gVTy+J78/2T3xHyzVXiYF/nb
-	 7F6LXUB1shDH1FdcBk13Df8wW1zvQ1RtGriE9KiMod2xEXC47L+gco+ht3Sqh0s4gS
-	 bR/tzuFzxzG+foF+eMGm3ptEtyd3Tjoeg45VNYR7nuFYKSZfZ8ToF/yUGz09j+tuVL
-	 83C2LQT8hshQ2QM13QmfoWBrlffWCrbWSE5RZBYG9uBRdtbIX8ElC4jNZHJiXvhRnN
-	 a7H19bndOizHA==
+	b=mtELG2XfRg/8Dwmk1xW4IS+e3e9tF9e3vgYax8DZEkyyHanh4+IN6MGWv/5A6OddR
+	 nhmJtuFCfZID8d5BU1NvTlgdf51bshK9RklQEav4eOE88xQOeU7P9D15wzhOqB1vip
+	 F7t3YX1fUsI8XmOFvqmp+YLb24Z8WHJXhgZtOlhWlm0ZCv+3wp3wtpED2sD0qVHrab
+	 rzsRObcCkpKJfISXbKR227Lfo5v/JcVHHPUPdeRn8/NiUW/9/jdAjaTSAGEzscfyts
+	 ILXzqKRz4lw/YXspB7FDEQ4f1sGcwieEH4EibOz+RxdHSK/u00u76z4sHAwgEIH57l
+	 WjQEjia3/p3PQ==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: tglx@linutronix.de
 Cc: maz@kernel.org,
@@ -34,9 +34,9 @@ Cc: maz@kernel.org,
 	Jonathan Corbet <corbet@lwn.net>,
 	linux-doc@vger.kernel.org,
 	Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH v2 55/57] docs: irq-domain.rst: Simple improvements
-Date: Wed, 19 Mar 2025 10:29:48 +0100
-Message-ID: <20250319092951.37667-56-jirislaby@kernel.org>
+Subject: [PATCH v2 57/57] irqdomain.c: Fix kernel-doc and add it to Documentation
+Date: Wed, 19 Mar 2025 10:29:50 +0100
+Message-ID: <20250319092951.37667-58-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
 References: <20250319092951.37667-1-jirislaby@kernel.org>
@@ -48,106 +48,98 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The improvements include:
-* Capitals in headlines.
-* Added commas: for easier reading, it is always desired to add commas
-  at some places in text. Like before adverbs or after fronted
-  sentences.
-* 3rd person -> add 's' to verbs.
-* End some sentences with period and start a new one. Avoid thus heavy
-  sentences.
+irqdomain.c's kernel-doc exists in that file, but is not plugged into
+Documentation/ yet.
+
+Before plugging it in, fix it first: irq_domain_get_irq_data() and
+irq_domain_set_info() were documented twice. Identically, by both
+definitions for CONFIG_IRQ_DOMAIN_HIERARCHY and
+!CONFIG_IRQ_DOMAIN_HIERARCHY. Therefore, switch the second kernel-doc
+into an ordinary comment -- change "/**" to simple "/*". This avoids
+sphinx's:
+  WARNING: Duplicate C declaration
+
+Next, in commit b7b377332b96 ("irqdomain: Fix the kernel-doc and plug it
+into Documentation"), I added irqdomain.h's (header) kernel-doc into
+core-api/genericirq.rst. But given the amount of irqdomain functions and
+structures, move all these to core-api/irq/irq-domain.rst now.
+
+Finally, add these newly fixed irqdomain.c's (source) docs there as
+well.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
 Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: linux-doc@vger.kernel.org
 Cc: Randy Dunlap <rdunlap@infradead.org>
 ---
- Documentation/core-api/irq/irq-domain.rst | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ Documentation/core-api/genericirq.rst     |  2 --
+ Documentation/core-api/irq/irq-domain.rst | 20 ++++++++++++++++++++
+ kernel/irq/irqdomain.c                    |  4 ++--
+ 3 files changed, 22 insertions(+), 4 deletions(-)
 
+diff --git a/Documentation/core-api/genericirq.rst b/Documentation/core-api/genericirq.rst
+index 25f94dfd66fa..582bde9bf5a9 100644
+--- a/Documentation/core-api/genericirq.rst
++++ b/Documentation/core-api/genericirq.rst
+@@ -410,8 +410,6 @@ which are used in the generic IRQ layer.
+ .. kernel-doc:: include/linux/interrupt.h
+    :internal:
+ 
+-.. kernel-doc:: include/linux/irqdomain.h
+-
+ Public Functions Provided
+ =========================
+ 
 diff --git a/Documentation/core-api/irq/irq-domain.rst b/Documentation/core-api/irq/irq-domain.rst
-index 775dd43b3340..c2f2728b1a35 100644
+index 7a418b3135de..4226e0bac4f0 100644
 --- a/Documentation/core-api/irq/irq-domain.rst
 +++ b/Documentation/core-api/irq/irq-domain.rst
-@@ -1,19 +1,19 @@
- ===============================================
--The irq_domain interrupt number mapping library
-+The irq_domain Interrupt Number Mapping Library
- ===============================================
+@@ -299,3 +299,23 @@ Debugging
  
- The current design of the Linux kernel uses a single large number
- space where each separate IRQ source is assigned a different number.
- This is simple when there is only one interrupt controller, but in
--systems with multiple interrupt controllers the kernel must ensure
-+systems with multiple interrupt controllers, the kernel must ensure
- that each one gets assigned non-overlapping allocations of Linux
- IRQ numbers.
+ Most of the internals of the IRQ subsystem are exposed in debugfs by
+ turning CONFIG_GENERIC_IRQ_DEBUGFS on.
++
++Structures and Public Functions Provided
++========================================
++
++This chapter contains the autogenerated documentation of the structures
++and exported kernel API functions which are used for IRQ domains.
++
++.. kernel-doc:: include/linux/irqdomain.h
++
++.. kernel-doc:: kernel/irq/irqdomain.c
++   :export:
++
++Internal Functions Provided
++===========================
++
++This chapter contains the autogenerated documentation of the internal
++functions.
++
++.. kernel-doc:: kernel/irq/irqdomain.c
++   :internal:
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 5bb3d2bbe229..5b21b568155b 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1940,7 +1940,7 @@ static void irq_domain_check_hierarchy(struct irq_domain *domain)
+ 		domain->flags |= IRQ_DOMAIN_FLAG_HIERARCHY;
+ }
+ #else	/* CONFIG_IRQ_DOMAIN_HIERARCHY */
+-/**
++/*
+  * irq_domain_get_irq_data - Get irq_data associated with @virq and @domain
+  * @domain:	domain to match
+  * @virq:	IRQ number to get irq_data
+@@ -1954,7 +1954,7 @@ struct irq_data *irq_domain_get_irq_data(struct irq_domain *domain,
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_get_irq_data);
  
- The number of interrupt controllers registered as unique irqchips
--show a rising tendency: for example subdrivers of different kinds
-+shows a rising tendency. For example, subdrivers of different kinds
- such as GPIO controllers avoid reimplementing identical callback
- mechanisms as the IRQ core system by modelling their interrupt
--handlers as irqchips, i.e. in effect cascading interrupt controllers.
-+handlers as irqchips. I.e. in effect cascading interrupt controllers.
- 
- Here the interrupt number loose all kind of correspondence to
- hardware interrupt numbers: whereas in the past, IRQ numbers could
-@@ -21,15 +21,15 @@ be chosen so they matched the hardware IRQ line into the root
- interrupt controller (i.e. the component actually fireing the
- interrupt line to the CPU) nowadays this number is just a number.
- 
--For this reason we need a mechanism to separate controller-local
--interrupt numbers, called hardware irq's, from Linux IRQ numbers.
-+For this reason, we need a mechanism to separate controller-local
-+interrupt numbers, called hardware IRQs, from Linux IRQ numbers.
- 
- The irq_alloc_desc*() and irq_free_desc*() APIs provide allocation of
- irq numbers, but they don't provide any support for reverse mapping of
- the controller-local IRQ (hwirq) number into the Linux IRQ number
- space.
- 
--The irq_domain library adds mapping between hwirq and IRQ numbers on
-+The irq_domain library adds a mapping between hwirq and IRQ numbers on
- top of the irq_alloc_desc*() API.  An irq_domain to manage mapping is
- preferred over interrupt controller drivers open coding their own
- reverse mapping scheme.
-@@ -38,7 +38,7 @@ irq_domain also implements translation from an abstract irq_fwspec
- structure to hwirq numbers (Device Tree and ACPI GSI so far), and can
- be easily extended to support other IRQ topology data sources.
- 
--irq_domain usage
-+irq_domain Usage
- ================
- 
- An interrupt controller driver creates and registers an irq_domain by
-@@ -77,7 +77,7 @@ If the driver has the Linux IRQ number or the irq_data pointer, and
- needs to know the associated hwirq number (such as in the irq_chip
- callbacks) then it can be directly obtained from irq_data->hwirq.
- 
--Types of irq_domain mappings
-+Types of irq_domain Mappings
- ============================
- 
- There are several mechanisms available for reverse mapping from hwirq
-@@ -102,7 +102,7 @@ map are fixed time lookup for IRQ numbers, and irq_descs are only
- allocated for in-use IRQs.  The disadvantage is that the table must be
- as large as the largest possible hwirq number.
- 
--The majority of drivers should use the linear map.
-+The majority of drivers should use the Linear map.
- 
- Tree
- ----
-@@ -190,7 +190,7 @@ that the driver using the simple domain call irq_create_mapping()
- before any irq_find_mapping() since the latter will actually work
- for the static IRQ assignment case.
- 
--Hierarchy IRQ domain
-+Hierarchy IRQ Domain
- --------------------
- 
- On some architectures, there may be multiple interrupt controllers
+-/**
++/*
+  * irq_domain_set_info - Set the complete data for a @virq in @domain
+  * @domain:		Interrupt domain to match
+  * @virq:		IRQ number
 -- 
 2.49.0
 
