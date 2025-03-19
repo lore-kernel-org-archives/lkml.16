@@ -1,116 +1,85 @@
-Received: from mx01.omp.ru (mx01.omp.ru [90.154.21.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9A741C3BE1;
-	Wed, 19 Mar 2025 15:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=90.154.21.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 017D61D5CF9;
+	Wed, 19 Mar 2025 15:37:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742398573; cv=none; b=UvGPLIup5TKkApw971jP39G4WAQ6inF8E+BVnNhL3uMb0hnc865mOVZ2TRNLceIyreLaPclFp63ckDb/ij3zDEhsOVstLVPiHv9UJ45oidjE4Ei82GGcVFPnja3hdeQFlHpm28wpjwe/pu8vce3lSQVph6tZiwvbS19Qc+0dRrw=
+	t=1742398634; cv=none; b=txji9lxuPvk4kHBsQoTIlbwcDOOpbuxc2xyMQERmQUCT5sgTazjbUYoVEHuyPSNwVz+eU3nK0qm8dg99UUYFGvAEzWx1o5OlxsKJQWheRrdwn4CwQ0gRyh4vL5hyeC8A0632m6daqY1Q2F+mal2HKPQtEtZkLcnk8gUGkMxqH+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742398573; c=relaxed/simple;
-	bh=xdtm+471F3kzqqSki+lmuRp7EwkY5QYi6eOUgWf+UNQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EOL2ZtSz0218xyXnEYf7bhUwXvGAu7jmr6oenx5f2YycVpmWlSXZVhxxdCiAETg/Y8FgwIS6C+Vxb8oveJBkz0YB57VMxBkjfSxOeOYAs16owtMqG2NVNGdK/0ZqWA5A/kTp/Mbj/oBjCw4bGmSfOfT/2uqe/2zItTpSMkza2qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru; spf=pass smtp.mailfrom=omp.ru; arc=none smtp.client-ip=90.154.21.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=omp.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=omp.ru
-Received: from [192.168.2.102] (213.87.131.243) by msexch01.omp.ru
- (10.188.4.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.2.1258.12; Wed, 19 Mar
- 2025 18:35:48 +0300
-Message-ID: <5691f9a6-07f0-4295-a25d-cb5bc572e824@omp.ru>
-Date: Wed, 19 Mar 2025 18:35:47 +0300
+	s=arc-20240116; t=1742398634; c=relaxed/simple;
+	bh=83bujgNrQMKv2tBRheguoh8xgosbiV/jEvNTMO/lef8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RBGGEJHGq+uwXhyoFnK3Iw1g8GYlNDfIPbLRadIy+IfMb8GJmXizl+aHjVUMxs6Cn1apEqrHbY64qeJPocgto1yivbFkiQkHMoy5KlhuHYi5kThbvpjOYy1sokzCkL8CqHJbxT9ac4o4sXWaHfX0S+w/+rpj/7+3DfO0zhQVDSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WS9tYJEx; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WS9tYJEx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3347DC4CEEA;
+	Wed, 19 Mar 2025 15:37:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742398633;
+	bh=83bujgNrQMKv2tBRheguoh8xgosbiV/jEvNTMO/lef8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WS9tYJExgn75ZVlX3FwX7jiNdk569mkWlRGYUoJgUkjb1AX/WFjOPPvINruexgBKz
+	 M8XCNgSBUJNPDLGRoC24uFdfIW46An81dsD3p/N4rJNaXo+6ftN190gbB99EqGA0ep
+	 D0qNSgF/Tfxrvzx0AJj8s5Nb8rR7D16VOm4lC+buvA1QIXFi7gxTqLamZuzYzmzPrl
+	 blNQliVD2qaiB5rlIVMPKqimYoZlbkxrE62aVk1Unl9X+uVX/RLNUI6B9ouTtANOkE
+	 Z/PmZsXrtOZa64Ln7YWiAOq1x9O76X4gnZzLtkImtLHWntK3GowD3UUkZULLjNRhvl
+	 dZGAUn1u3wVdg==
+Date: Wed, 19 Mar 2025 15:37:05 +0000
+From: Simon Horman <horms@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Arthur Mongodin <amongodin@randorisec.fr>, stable@vger.kernel.org
+Subject: Re: [PATCH net 1/3] mptcp: Fix data stream corruption in the address
+ announcement
+Message-ID: <20250319153705.GB768132@kernel.org>
+References: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
+ <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-1-122dbb249db3@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] phy: can-transceiver: Re-instate "mux-states" property
- presence check
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring
-	<robh@kernel.org>, Marc Kleine-Budde <mkl@pengutronix.de>, Vincent Mailhol
-	<mailhol.vincent@wanadoo.fr>, Vinod Koul <vkoul@kernel.org>, Kishon Vijay
- Abraham I <kishon@kernel.org>, Peter Rosin <peda@axentia.se>, Aswath
- Govindraju <a-govindraju@ti.com>
-CC: <linux-can@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-	<linux-renesas-soc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <6bcfde63b3a6b25640a56be2e24a357e41f8400f.1742390569.git.geert+renesas@glider.be>
-Content-Language: en-US
-From: Sergey Shtylyov <s.shtylyov@omp.ru>
-Organization: Open Mobile Platform
-In-Reply-To: <6bcfde63b3a6b25640a56be2e24a357e41f8400f.1742390569.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: msexch01.omp.ru (10.188.4.12) To msexch01.omp.ru
- (10.188.4.12)
-X-KSE-ServerInfo: msexch01.omp.ru, 9
-X-KSE-AntiSpam-Interceptor-Info: scan successful
-X-KSE-AntiSpam-Version: 6.1.1, Database issued on: 03/19/2025 15:24:30
-X-KSE-AntiSpam-Status: KAS_STATUS_NOT_DETECTED
-X-KSE-AntiSpam-Method: none
-X-KSE-AntiSpam-Rate: 19
-X-KSE-AntiSpam-Info: Lua profiles 191947 [Mar 19 2025]
-X-KSE-AntiSpam-Info: Version: 6.1.1.11
-X-KSE-AntiSpam-Info: Envelope from: s.shtylyov@omp.ru
-X-KSE-AntiSpam-Info: LuaCore: 51 0.3.51
- 68896fb0083a027476849bf400a331a2d5d94398
-X-KSE-AntiSpam-Info: {rep_avail}
-X-KSE-AntiSpam-Info: {Tracking_from_domain_doesnt_match_to}
-X-KSE-AntiSpam-Info: {SMTP from is not routable}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.131.243 in (user)
- b.barracudacentral.org}
-X-KSE-AntiSpam-Info: {Found in DNSBL: 213.87.131.243 in (user)
- dbl.spamhaus.org}
-X-KSE-AntiSpam-Info:
-	127.0.0.199:7.1.2;omp.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1
-X-KSE-AntiSpam-Info: {Tracking_ip_hunter}
-X-KSE-AntiSpam-Info: FromAlignment: s
-X-KSE-AntiSpam-Info: ApMailHostAddress: 213.87.131.243
-X-KSE-AntiSpam-Info: {DNS response errors}
-X-KSE-AntiSpam-Info: Rate: 19
-X-KSE-AntiSpam-Info: Status: not_detected
-X-KSE-AntiSpam-Info: Method: none
-X-KSE-AntiSpam-Info: Auth:dmarc=temperror header.from=omp.ru;spf=temperror
- smtp.mailfrom=omp.ru;dkim=none
-X-KSE-Antiphishing-Info: Clean
-X-KSE-Antiphishing-ScanningType: Heuristic
-X-KSE-Antiphishing-Method: None
-X-KSE-Antiphishing-Bases: 03/19/2025 15:27:00
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 3/19/2025 12:11:00 PM
-X-KSE-Attachment-Filter-Triggered-Rules: Clean
-X-KSE-Attachment-Filter-Triggered-Filters: Clean
-X-KSE-BulkMessagesFiltering-Scan-Result: InTheLimit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-1-122dbb249db3@kernel.org>
 
-On 3/19/25 4:27 PM, Geert Uytterhoeven wrote:
+On Fri, Mar 14, 2025 at 09:11:31PM +0100, Matthieu Baerts (NGI0) wrote:
+> From: Arthur Mongodin <amongodin@randorisec.fr>
+> 
+> Because of the size restriction in the TCP options space, the MPTCP
+> ADD_ADDR option is exclusive and cannot be sent with other MPTCP ones.
+> For this reason, in the linked mptcp_out_options structure, group of
+> fields linked to different options are part of the same union.
+> 
+> There is a case where the mptcp_pm_add_addr_signal() function can modify
+> opts->addr, but not ended up sending an ADD_ADDR. Later on, back in
+> mptcp_established_options, other options will be sent, but with
+> unexpected data written in other fields due to the union, e.g. in
+> opts->ext_copy. This could lead to a data stream corruption in the next
+> packet.
+> 
+> Using an intermediate variable, prevents from corrupting previously
+> established DSS option. The assignment of the ADD_ADDR option
+> parameters is now done once we are sure this ADD_ADDR option can be set
+> in the packet, e.g. after having dropped other suboptions.
+> 
+> Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
+> Cc: stable@vger.kernel.org
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Arthur Mongodin <amongodin@randorisec.fr>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> [ Matt: the commit message has been updated: long lines splits and some
+>   clarifications. ]
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-> On the Renesas Gray Hawk Single development board:
-> 
->     can-transceiver-phy can-phy0: /can-phy0: failed to get mux-state (0)
-> 
-> "mux-states" is an optional property for CAN transceivers.  However,
-> mux_get() always prints an error message in case of an error, including
-> when the property is not present, confusing the user.
-> 
-> Fix this by re-instating the property presence check.
-> 
-> This is bascially a revert of commit d02dfd4ceb2e9f34 ("phy:
-
-   Basically. :-)
-
-> can-transceiver: Drop unnecessary "mux-states" property presence
-> check"), with two changes:
->   1. Use the proper API for checking whether a property is present,
->   2. Do not print an error message, as the mux core already takes care
->      of that.
-> 
-> Fixes: d02dfd4ceb2e9f34 ("phy: can-transceiver: Drop unnecessary "mux-states" property presence check")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Alternatively, the multiplexer subsystem needs to gain support for
-> getting an optional mux...
-[...]
-MBR, Sergey
+Reviewed-by: Simon Horman <horms@kernel.org>
 
