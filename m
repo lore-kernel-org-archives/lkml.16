@@ -1,162 +1,98 @@
-Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f52.google.com (mail-pj1-f52.google.com [209.85.216.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72EC18F6D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:01:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735F3849C;
+	Wed, 19 Mar 2025 07:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742367709; cv=none; b=Lw29ClpPK1s4uoyeKNADIpwus0gZ1DhDGjdgnIRBlQcBIqCEIowetUn30Oajx8osy460reh/CvElzTfnxT+TonOJ5vqxK3I+zcF5sT+MRJTS3aVK43Y0fcNRy5XqJnd843kz4YgM+s6rbVBsK2LOP+pcCChGq/G6UUAiK0GRyT0=
+	t=1742367886; cv=none; b=ZsGznRnaULEinHhEVbKopQ4dK7iZYPW7NnowYZ6XNFEjVwf3eA84NEJi9Tb567Lc2kg0Li58H9ioov3mSbPMMEikhfN5H7H9mTzJXNmnVTHrTzCA4ZqmcD14RErfcnTM/D6okj5WDgc9QlZvn61TRaR+PNn7Hpk/hXKHNKXQScw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742367709; c=relaxed/simple;
-	bh=qPYSIU5vvI0BfbWH2DZWEusZccmrKGaY5g/XdjxCxbk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z9fFtk+zPY6/3KcYrbtlZDj8Nxy10tWtrsifVHlSO0rzCg2HkPS2vcWsuzLg8hShX7ctGuk7upQQ+X5bgmV+5G+FduLv82qy4ZdO6i2slARYj3hi24XeZyJbIOsiAAWzd43pwPCfn53RzQRJsUCQ0DUuBhxygoEblLJpBIfRXLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=OcPcgCft; arc=none smtp.client-ip=91.218.175.184
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742367886; c=relaxed/simple;
+	bh=jiAfj4IElgBqEg5+PLChSU4IpIj1nxRfVkLGRm2D6Bk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kWXtT0NlLwitLQ5aTIahhbgS6acfTC8U94j9D/jRwBPeOefXN/LOp3RHAZQs3wjse6c4xawVTTiNjmqIx4nbwYVbYmc+dJ/yT+/GxNNzkuKVY6YGNtOZTr3312WGvPi+/Mb7BllDrr5xB6IR152L+4RQ5XM5z54Z+P+MrJv85Fw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RlEmjcmB; arc=none smtp.client-ip=209.85.216.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="OcPcgCft"
-Date: Wed, 19 Mar 2025 00:01:29 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742367703;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=xpzhMPP4+wAcr/1ayDu21ECN7kPl3XYHDwtky8EYnxc=;
-	b=OcPcgCftbfrf3MAtuJ9yqeGyaxJLEAaieLSg1kFV5cbjph59KwejwaNLXjnQ7JMjdl1Upk
-	W5msd0+6R3mPihXlOvRQE/0Hj07vRrfghJnIm24YG6kPfyXuRd4/F3pw4YSw71A+qRF7Bf
-	5b6kDJeHQJKBTUA/ZVfpSw7+iz7c9QY=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: Marc Zyngier <maz@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Ankit Agrawal <ankita@nvidia.com>,
-	"joey.gouly@arm.com" <joey.gouly@arm.com>,
-	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
-	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
-	"will@kernel.org" <will@kernel.org>,
-	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
-	"shahuang@redhat.com" <shahuang@redhat.com>,
-	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
-	"david@redhat.com" <david@redhat.com>,
-	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
-	Kirti Wankhede <kwankhede@nvidia.com>,
-	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
-	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
-	Alistair Popple <apopple@nvidia.com>,
-	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
-	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
-	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
-	Krishnakant Jaju <kjaju@nvidia.com>,
-	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-	"sebastianene@google.com" <sebastianene@google.com>,
-	"coltonlewis@google.com" <coltonlewis@google.com>,
-	"kevin.tian@intel.com" <kevin.tian@intel.com>,
-	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
-	"ardb@kernel.org" <ardb@kernel.org>,
-	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-	"gshan@redhat.com" <gshan@redhat.com>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>,
-	"ddutile@redhat.com" <ddutile@redhat.com>,
-	"tabba@google.com" <tabba@google.com>,
-	"qperret@google.com" <qperret@google.com>,
-	"seanjc@google.com" <seanjc@google.com>,
-	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
- VMA flags
-Message-ID: <Z9pryQwy2iwa2bpJ@linux.dev>
-References: <86r033olwv.wl-maz@kernel.org>
- <SA1PR12MB7199500A3683B15A64B663D6B0D12@SA1PR12MB7199.namprd12.prod.outlook.com>
- <87tt7y7j6r.wl-maz@kernel.org>
- <SA1PR12MB7199B320DAE42A8D7038A78EB0D32@SA1PR12MB7199.namprd12.prod.outlook.com>
- <8634fcnh0n.wl-maz@kernel.org>
- <Z9h98RhunemcFhhz@arm.com>
- <86wmcmn0dp.wl-maz@kernel.org>
- <20250318125527.GP9311@nvidia.com>
- <Z9nJ42PllG8a7AY7@linux.dev>
- <20250318230909.GD9311@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RlEmjcmB"
+Received: by mail-pj1-f52.google.com with SMTP id 98e67ed59e1d1-301918a4e3bso5435486a91.3;
+        Wed, 19 Mar 2025 00:04:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742367885; x=1742972685; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=jiAfj4IElgBqEg5+PLChSU4IpIj1nxRfVkLGRm2D6Bk=;
+        b=RlEmjcmBMO3Yjf7BSxkhA3YIH23Wvne0HmCRlvT4JSJQg09CHKkozt/IaJd854qWsI
+         OCyJ+YEM8EnM/JwfF61HY+VTTrcfPjC3Sz2S4S6wkdiB25+4CYNUKwtvHsoB4EIkr+nn
+         rRHGoXa1Ga3Ene+E/wRtF/eJex/KbgDgA0j+bk817tFW3IupOHE2Uyk2nXohpHvqy2hg
+         NLL1lyzw2UK60qZERRn9bCISUNyOgUtFoCXdGa0yQLEg2+vU+vzmu84TXQTOdcf4kqwK
+         H8fmqKRFnQCUVXf4XvN68OdySoYTR+UfSrkpCwzBzabHgrQKJQkGCaD0ctV+lfVtMEyN
+         0rbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742367885; x=1742972685;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jiAfj4IElgBqEg5+PLChSU4IpIj1nxRfVkLGRm2D6Bk=;
+        b=pHaVltXP0OZNNql0k9ykq9ccFuWYUb6W+bXQqP68YHCZe/7G1QEb1UPuqTWd/guI69
+         JkSPRmY9Y/WE8irWnf62W6/1Y/5tMMqXPaFAsmzQZ2R4zxIJO54NN2VhyvfRFA/GU6rM
+         jIZP1agkXaTvMhffj/roFxlHf+Vpc4iPI4iKQEvDzfUpCxZ26qpygQFZ/YPdK/JLLHSV
+         ninpURcIQTlNAhHzMj0CslydAAlgZ9Mxr/VACDtADtjTe9lfCsZJHWUk7pkKePoQPg1p
+         lxbV0IVNR7tPo5v+OFbukN5tgIVyAIwip8qGz29l5+z45PmJlBeqoXlqTQMidEtXnzIP
+         8opg==
+X-Forwarded-Encrypted: i=1; AJvYcCUMUpW0yluVHfTxd4r5Y3IWCLdd3LgHDy0dsa/t5puDKytD1zSSutW6EHBgmrVAi4QhkAJYnBpUWfQJD962@vger.kernel.org, AJvYcCVjnnoF2oNPhB3MT2N4K5zSAJesG8iQaxeIgAnCOJdxi8n1r4Mw4ITztUAeYiv6viraqCshZ2naPpkM@vger.kernel.org, AJvYcCXXYWtU6rWnS8wJo82heq7FQ/vv3rTFfItwb1GfK/nKGAwNgNG70d16SgeekFp512VX/b1OZ1Eq5hm/JNA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAxMWX43dmLP2RL3lnN4fB442EONN6KjXVoNNQg5e45reJhrxi
+	yb65MpsiAHqIbJ1pPpz7kprn3BT704HfB/8rACQLrP9SDLasqcGDJTURHOdgvkVagKaspVqLKDn
+	4bi4IbSm0ewW0fEvyY3F93ZE1pHM=
+X-Gm-Gg: ASbGnctIaurPL/aQQrOECHQoywHrOft0gnhLrDI6//Xh/RLWOMhSnhe7XZfW9hqRoXI
+	E1rVUvIUpS0DwortKEmUHJ878e1jVPwO3OTxpIiMQ8BKhSUe1XuPSxzK+eSiSeQdKJnwReracxs
+	C1yTuYHrTcyp/d+K73b/FFJ3U=
+X-Google-Smtp-Source: AGHT+IF7sF+rEHN+McOd/gdhxtrQC1m+FhYZvpf4dWKwkOdb9hKSjw3U2gTtL2CCTwVJ/KBH2mS5pciMbrLsv3G0xEU=
+X-Received: by 2002:a17:90b:4c4e:b0:2ee:d193:f3d5 with SMTP id
+ 98e67ed59e1d1-301bde41b97mr2645278a91.7.1742367884632; Wed, 19 Mar 2025
+ 00:04:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318230909.GD9311@nvidia.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250318085444.3459380-1-florin.leotescu@oss.nxp.com>
+ <20250318085444.3459380-2-florin.leotescu@oss.nxp.com> <7afcd224-1154-4e2f-b383-10f6a89fdae0@roeck-us.net>
+ <CAEnQRZBmYdLh29ha1FKz8=CbxjFBFFTgDkjrEmwTxW2WcxodfA@mail.gmail.com> <ca734f66-593f-4e7c-bc76-e343a7eb88d7@roeck-us.net>
+In-Reply-To: <ca734f66-593f-4e7c-bc76-e343a7eb88d7@roeck-us.net>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Wed, 19 Mar 2025 09:06:17 +0200
+X-Gm-Features: AQ5f1JqTh1OKvsFHXWbBK7NlMP4RU0DewPez1R29Ybz774cJu_EpcSsA7szRxbU
+Message-ID: <CAEnQRZDf_ko2p50EwR6q=dfkwdqE=c7fZe0jO2JdSmbaDa=j3Q@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] dt-bindings: hwmon: Add Microchip emc2305 support
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: florin.leotescu@oss.nxp.com, Jean Delvare <jdelvare@suse.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Shych <michaelsh@nvidia.com>, linux-hwmon@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	viorel.suman@nxp.com, carlos.song@nxp.com, 
+	linux-arm-kernel@lists.infradead.org, imx@lists.linux.dev, festevam@gmail.com, 
+	Florin Leotescu <florin.leotescu@nxp.com>, Frank Li <Frank.Li@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Mar 18, 2025 at 08:09:09PM -0300, Jason Gunthorpe wrote:
-> > It's far more problematic the other way around, e.g. the host knows that
-> > something needs a Device-* attribute and the VM has done something
-> > cacheable. The endpoint for that PA could, for example, fall over when
-> > lines pulled in by the guest are written back, which of course can't
-> > always be traced back to the offending VM.
-> > 
-> > OTOH, if the host knows that a PA is cacheable and the guest does
-> > something non-cacheable, you 'just' have to deal with the usual
-> > mismatched attributes problem as laid out in the ARM ARM.
-> 
-> I think the issue is that KVM doesn't do that usual stuff (ie cache
-> flushing) for memory that doesn't have a struct page backing.
+> >> Is it necessary to make 'pwms' mandatory ? The current code works
+> >> just fine with defaults.
+> >
+> > The code adding OF support is added just in the next patch, so the
+> > current code isn't event
+> > probed when trying to use dts.
+> >
+> > Or am I missing something?
+> >
+>
+> The patch introducing devicetree support to the driver doesn't evaluate
+> the pwm property. That makes it quite obvious that, from driver perspective,
+> it isn't needed. I don't immediately see why it would add value to _force_
+> users to provide pwm frequency, polarity, and the output configuration
+> if the defaults work just fine.
+>
 
-Indeed, I clearly paged that out. What I said is how we arrived at the
-Device-* v. Normal-NC distinction.
 
-> So nothing in the hypervisor does any cache flushing and I belive you
-> end up with a situation where the VMM could have zero'd this cachable
-> memory using cachable stores to sanitize it across VMs and then KVM
-> can put that memory into the VM as uncached and the VM could then
-> access stale non-zeroed data from a prior VM. Yes? This is a security
-> problem.
-
-Pedantic, but KVM only cares about cache maintenance in response to the
-primary MM, not the VMM. After a stage-2 mapping has been established
-userspace cannot expect KVM to do cache maintenance on its behalf.
-
-You have a very good point that KVM is broken for cacheable PFNMAP'd
-crap since we demote to something non-cacheable, and maybe that
-deserves fixing first. Hopefully nobody notices that we've taken away
-the toys...
-
-> So I think the logic we want here in the fault handler is to:
->   Get the mm's PTE
->   If it is cachable:
->     Check if it has a struct page:
->        Yes - KVM flushes it and can use a non-FWB path
->        No - KVM either fails to install it, or installs it using FWB
->            to force cachability. KVM never allows degrading cachable
-> 	   to non-cachable when it can't do flushing.
->   Not cachable:
->     Install it with Normal-NC as was previously discussed and merged
-
-We still need to test the VMA flag here to select Normal-NC v. Device.
-
-> > Userspace should be stating intentions on the memslot with the sort of
-> > mapping that it wants to create, and a memslot flag to say "I allow
-> > cacheable mappings" seems to fit the bill.
-> 
-> I'm not sure about this, I don't see that the userspace has any
-> choice. As above, KVM has to follow whatever is in the PTEs, the
-> userspace can't ask for something different here. At best you could
-> make non-struct page cachable memory always fail unless the flag is
-> given - but why?
-> 
-> It seems sufficient for fast fail to check if the VMA has PFNMAP and
-> pgprot cachable then !FEAT_FWB fails the memslot. There is no real
-> recovery from this, the VMM is doing something that cannot be
-> supported.
-
-I'm less worried about recovery and more focused on userspace being
-able to understand what happened. Otherwise we may get folks complaining
-about the ioctl failing "randomly" on certain machines.
-
-But we might need to just expose the FWB-ness of the MMU to userspace
-since it can already encounter mismatched attributes when poking struct
-page-backed guest memory.
-
-Thanks,
-Oliver
+Got your point now! Thanks.
