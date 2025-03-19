@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8728B24EF7D;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 912E124EF9D;
 	Wed, 19 Mar 2025 07:06:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742368000; cv=none; b=u7CNaxq9boIDlXuRHui2RSHbEVflzTEym9dsvnxmwxWalRofa7SCrpT4g0lC2CBGLu9zf3Ly0pvMUkin+3Dg+s8/eIyd0O1K7HyUEywjfPIXSmLZIp26EEIm90V+XsNxS18UFkZ6Pyaab2P5GI7phOMGNEjQekqRPEZUH9leYXU=
+	t=1742368000; cv=none; b=PPIWMhAUXcYmrUdvupMjAa3FI5+GznEnQxofuaU+XPo8pruteTcNYQgEGMn/ln2/8wtr3KVslkb8TZZ056NAomzCwnpUSgpUzGxLUFndBoaYlT6FRAGUPWSJK3xXdNmcJqqKH5/JJDjMYrF4ZY7PjjfXXoK95MrHQv+yaKdIZkM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742368000; c=relaxed/simple;
-	bh=tvgPwCRWbi/ALkXQMLlct6LyeXt6Qqe+tJZSRrxXF0I=;
+	bh=Ql7EGFG/PFq+6KXj+pWudx+1SnRRrD+fDH+0tiFHkvI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=l3kJnJ7RsMPAKn4V33p2t+KWQRM5wlL+LJZbMHbH5fwpDPhK8KQ2yh3CMMf5pk4ZG+IbLyx3sE7Vx0q8958Z2nA9lzQYHz3BneCs1Zg8ZTh3+9H+L/YvELNZjHMPRuHlmBkXqJPWxQKxsNBgzm4iz01s/LPf9/eSVqg3ILCjx7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8JXI4ps; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=LltvObqsTE9qihwcSMUWcSlVfM7rdkduftsOiIW8YCKi3533/rrHhkQVshqyYjBP5PHQrpEgy18+sYhdiDuk8Hwqq07/vOWnJdlg1e2vN3bjbWPfa4RbggF9uEdC+E7XTvrlt+sUZb3z4yOiQKIaELiDKyDnfUIN2H+Cn5fKPdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T9VlyrM6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8JXI4ps"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 17C15C4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T9VlyrM6"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 377F0C4CEF4;
 	Wed, 19 Mar 2025 07:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742368000;
-	bh=tvgPwCRWbi/ALkXQMLlct6LyeXt6Qqe+tJZSRrxXF0I=;
+	bh=Ql7EGFG/PFq+6KXj+pWudx+1SnRRrD+fDH+0tiFHkvI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=W8JXI4ps/GpodZ9fu7N4s22fdmV9+leBQrvBov4qjUUvvZ7JzgZIEMcPGcLSxUavI
-	 bhO8Z05FLZAzpMKLWq9tazy0NcrsHvb5dA0C41XggqZWbV2TdlKyAOy9nDYzD4Ltw9
-	 LUVXlxbDnaz9aKjZDLStMOcsHL8T6c8pvwqBsIQ7YXYX79cIQRywWiDFBGXqA1r80w
-	 vJ3Xuzlwq9Y0RAXrS0PtE7RTLPJPCMaz6nvdH02L5I9n50ooRcHrNUJtvmIk2RpoUy
-	 jHYJ+3YXxotJafv9eVK/Z7AsZ2oNd22AhtvM283Y5IYM5uY0g2qQV+Wd+GvPanE410
-	 GTquB86c6Sueg==
+	b=T9VlyrM6zrC89fBozqu6SZhSM+3S7h/yvFu8sdWdgeRPNHAZOfI59PTEx2IGswF97
+	 gZvDwdynE7L++XgWJPWRtRGf5tDsDE9WxIdTP83lLusnVRNVwnmSoMaM61B2iUeNcq
+	 OkqtJF4wJhqh0Mh/C0RiZNotl0Rlz7JxNHz+MCAW8LSHmr9+nyXSMOLe2YvnPqsU2V
+	 jH7S0Bm2PfXM0eLf3iwA3BuRE+iuQkA2Cxyiw6nuIEalsYL5PEjmobNQwsTQsxB9VZ
+	 wdXJ1O4dBmZT/LN3hv/zixroxrr3zOLLCEclIfij3+U7ZT3c1fM3gkQNb0Lh8KPepH
+	 Xb5lMHdXT+a9Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0E8C35FFC;
-	Wed, 19 Mar 2025 07:06:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26306C35FFF;
+	Wed, 19 Mar 2025 07:06:40 +0000 (UTC)
 From: jiebing chen via B4 Relay <devnull+jiebing.chen.amlogic.com@kernel.org>
-Date: Wed, 19 Mar 2025 15:04:44 +0800
-Subject: [PATCH v4 1/6] dt-bindings: clock: meson: Add audio power domain
- for s4 soc
+Date: Wed, 19 Mar 2025 15:04:46 +0800
+Subject: [PATCH v4 3/6] dt-bindings: Asoc: axg-audio: Add s4 audio tocodec
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +40,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-audio_drvier-v4-1-686867fad719@amlogic.com>
+Message-Id: <20250319-audio_drvier-v4-3-686867fad719@amlogic.com>
 References: <20250319-audio_drvier-v4-0-686867fad719@amlogic.com>
 In-Reply-To: <20250319-audio_drvier-v4-0-686867fad719@amlogic.com>
 To: Jerome Brunet <jbrunet@baylibre.com>, 
@@ -59,11 +58,11 @@ Cc: linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
  jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com, 
  jiebing chen <jiebing.chen@amlogic.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742367997; l=1779;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742367998; l=814;
  i=jiebing.chen@amlogic.com; s=20250110; h=from:subject:message-id;
- bh=LILue2hV/0RBI1wyR/+9esvdXN1gHROx+an1AXnFBQ0=;
- b=5p4uPDUvvHQ9UwyB7WW54kKulEkuralm/Z3oOIisosXjHg1ryW9BuqvlnKrqjlbFOTuCyxTtp
- ZB7idtOCV1MAQgWuF9mAAU56S+UpnvWu8ImxLz9HLy4nvtUq8rlKrrr
+ bh=yLn4ez8IBN5cqEFPit7mp5UgBhrhZLIZZw6YIL6gw/A=;
+ b=e6gBxP0yd9AcDHNIKk7MOMdffmCK5QQs+DzwAku9qiIQVEPren5nNifcqcL8KAOYuZoFfCxfr
+ DSwBjFkHmj7C1mqPF+kGAAiDJJsSkwZ6pb+2/Q9WHMPc8q1BcDw45d4
 X-Developer-Key: i=jiebing.chen@amlogic.com; a=ed25519;
  pk=6rFvvF45A84pLNRy03hfUHeROxHCnZ+1KAGw/DoqKic=
 X-Endpoint-Received: by B4 Relay for jiebing.chen@amlogic.com/20250110 with
@@ -73,71 +72,25 @@ Reply-To: jiebing.chen@amlogic.com
 
 From: jiebing chen <jiebing.chen@amlogic.com>
 
-Audio power domain found on S4 device.it need to enable before audio work.
+Add the s4 tocodec compatible
 
 Signed-off-by: jiebing chen <jiebing.chen@amlogic.com>
 ---
- .../bindings/clock/amlogic,axg-audio-clkc.yaml       | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
-index fd7982dd4ceab82389167079c2258a9acff51a76..50a5cbb6eb64873dd5aa55f6f1a63e9e97542760 100644
---- a/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
-+++ b/Documentation/devicetree/bindings/clock/amlogic,axg-audio-clkc.yaml
-@@ -21,6 +21,7 @@ properties:
-       - amlogic,axg-audio-clkc
-       - amlogic,g12a-audio-clkc
-       - amlogic,sm1-audio-clkc
-+      - amlogic,s4-audio-clkc
- 
-   '#clock-cells':
-     const: 1
-@@ -29,7 +30,7 @@ properties:
-     const: 1
+diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
+index 23f82bb89750898d20c866015bc2e1a4b0554846..ea669f4359bc81b0f45bc2105c832fc2b11d8441 100644
+--- a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
++++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
+@@ -26,6 +26,7 @@ properties:
+       - items:
+           - enum:
+               - amlogic,sm1-toacodec
++              - amlogic,s4-toacodec
+           - const: amlogic,g12a-toacodec
  
    reg:
--    maxItems: 1
-+    maxItems: 2
- 
-   clocks:
-     minItems: 1
-@@ -100,6 +101,9 @@ properties:
-   resets:
-     description: internal reset line
- 
-+  power-domains:
-+      maxItems: 1
-+
- required:
-   - compatible
-   - '#clock-cells'
-@@ -116,12 +120,26 @@ allOf:
-             enum:
-               - amlogic,g12a-audio-clkc
-               - amlogic,sm1-audio-clkc
-+              - amlogic,s4-audio-clkc
-     then:
-       required:
-         - '#reset-cells'
-     else:
-       properties:
-         '#reset-cells': false
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - amlogic,s4-audio-clkc
-+    then:
-+      required:
-+        - power-domains
-+
-+    else:
-+      properties:
-+        power-domains: false
- 
- additionalProperties: false
- 
 
 -- 
 2.43.0
