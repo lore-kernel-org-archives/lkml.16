@@ -1,122 +1,102 @@
-Received: from mail-out.m-online.net (mail-out.m-online.net [212.18.0.10])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B950F204C18;
-	Wed, 19 Mar 2025 10:08:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.18.0.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D37411F866A
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:08:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742378903; cv=none; b=gQZO/yFIAeAtSjhEt+v7yKj6NyBvODMPdejDT5XuuOsZgOa9vgw3vjUYy91WBDSWm3Ot/BhkHmCSUXT4l5ZgOqJpiAPT4vPgbtgQf69T8twfnS9CZkkkjDL/Ju1MUwHXxBT9JsAYAgdwpoJ3POTSo4680k6X0/R6ZK6jsQnkKsI=
+	t=1742378923; cv=none; b=IJpaXFU9hobystiyvquRCQ639HvT/+ibFLaOiiW431WZGFoz5JhGfCg0VZh0tyTdK2WEeHNSFDhhI0yeHM2h148e4n7lhGgIHSHLg2+E+2t5c2wFdkvvp5Hdi8Ev+5ac/zuxst4OanbWh47M8zbo0KtPisyKQImcnh/i9I3QwmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742378903; c=relaxed/simple;
-	bh=G/m8WkDUAHeIw005GTwrGMwEGiDo+qkupaHi6YgIVdk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=fA0E3uQ0QA5WwucnkMqrtrYCfudSSC567jpdd3tZ1FsG5ywJUqRjqKoDaoLzh33dtx7Wuc4be9vewZFa8HQz/3rlVOrSIX/yJY1hMqSEku1Ew7/tPITPNAWhxKCe1G7aKjtD94nkxFS/sMgaJsu7fKZ9FndmjxKheu+TdTGbZzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=212.18.0.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-	by mail-out.m-online.net (Postfix) with ESMTP id 4ZHkhK48YRz1sGWy;
-	Wed, 19 Mar 2025 10:59:29 +0100 (CET)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.68])
-	by mail.m-online.net (Postfix) with ESMTP id 4ZHkhK2Rhdz1qqm8;
-	Wed, 19 Mar 2025 10:59:29 +0100 (CET)
-X-Virus-Scanned: amavis at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
- by localhost (dynscan1.mail.m-online.net [192.168.6.68]) (amavis, port 10024)
- with ESMTP id a9x4igNfRpZB; Wed, 19 Mar 2025 10:59:19 +0100 (CET)
-X-Auth-Info: BtvBspTpARlf2pa1FYP5d/CgtfauwNSx4rPu46lT4z5VRogUyqMzVSh2riPgGubG
-Received: from hawking (unknown [81.95.8.245])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.mnet-online.de (Postfix) with ESMTPSA;
-	Wed, 19 Mar 2025 10:59:18 +0100 (CET)
-From: Andreas Schwab <schwab@linux-m68k.org>
-To: Finn Thain <fthain@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
-  linux-m68k@lists.linux-m68k.org,  stable@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] m68k: Fix lost column on framebuffer debug console
-In-Reply-To: <0fa5e203bb2f811e36e9711dfd461a8f760a1ed6.1742376675.git.fthain@linux-m68k.org>
-	(Finn Thain's message of "Wed, 19 Mar 2025 20:31:15 +1100")
-References: <cover.1742376675.git.fthain@linux-m68k.org>
-	<0fa5e203bb2f811e36e9711dfd461a8f760a1ed6.1742376675.git.fthain@linux-m68k.org>
-Date: Wed, 19 Mar 2025 10:59:16 +0100
-Message-ID: <mvm1putgx3f.fsf@linux-m68k.org>
-User-Agent: Gnus/5.13 (Gnus v5.13)
+	s=arc-20240116; t=1742378923; c=relaxed/simple;
+	bh=veaHXAaVK+oY9gT0MUfr/PljSI8tnZbHPFMFTo3nA4c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsapupcTXGqP7BFg3rrNjog7JfABC6B8lXbkDsi0+omlVdz9Pe6YhKIabbMWLJe9XfSx/vZkVxGErCVtZk4RM3ymEvHEkhVMw9nW+JlsZHVemUxd58PIB6sArCLxM50pLY+1S6LASDGfTgAZEqlcqKlXaW9wBpwR/FBCQlX0X2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=Nje/Mz57; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="Nje/Mz57"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=FTJs
+	ZptodTGwQjLMd8a7sNkAuoEDn2dyuZqbvnvXjFM=; b=Nje/Mz57Gfb2xeLBm42z
+	Li5qS5vv5sPCtHSXLNIYye9/0P3qc5Cy1UqA5LydSotDUFbEu8GIcIRn7fni3JWw
+	xg7dQ6huQ0WcaRtgBEVadn5gcs3jPWBWxT0mjkuPy55r4+u+qxKQTsbOmgPqHaRW
+	7uB1UvoL9g5DprKGycwFUzVbMjTSGXGwsE8OAb+X2yn+IxYzzFrQlzd/9uHpo70E
+	UaWVXMJDwRzF1Qkyhp52nlbt9ZSQf2/URjTWcJR372HkAaLQ37HNyjxrHG4a2213
+	KmU2DGZObstTjOyM3OnSceNOmY3Mb02RnT9Y9hpgVQDk+0BmG9vdRG5pF8f8Fhdv
+	IQ==
+Received: (qmail 63456 invoked from network); 19 Mar 2025 11:08:36 +0100
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 19 Mar 2025 11:08:36 +0100
+X-UD-Smtp-Session: l3s3148p1@Kb9hNK8wUIsgAwDPXyTHAJp038nK7dx+
+Date: Wed, 19 Mar 2025 11:08:36 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Andi Shyti <andi.shyti@kernel.org>
+Cc: Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Markus Elfring <Markus.Elfring@web.de>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Robert Richter <rric@kernel.org>
+Subject: Re: [PATCH v13 2/3] i2c: octeon: remove 10-bit addressing support
+Message-ID: <Z9qXpH7G3vXdXCkq@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Aryan Srivastava <aryan.srivastava@alliedtelesis.co.nz>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Markus Elfring <Markus.Elfring@web.de>, linux-i2c@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Robert Richter <rric@kernel.org>
+References: <20250318021632.2710792-1-aryan.srivastava@alliedtelesis.co.nz>
+ <20250318021632.2710792-3-aryan.srivastava@alliedtelesis.co.nz>
+ <j2w45gphxir2hmzr6nhzyrlgj55lhsbkzczpf5bq72pzk26kwp@zncvv3hpfcoc>
+ <Z9pZBDbI2MD7ybEL@shikoro>
+ <beqo7xnbo3obxxkop6rq3awzsdcjb7sioeapqj3naekqes2bk4@3ojtbocdejca>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="e1G/KBj15gF2QYsx"
+Content-Disposition: inline
+In-Reply-To: <beqo7xnbo3obxxkop6rq3awzsdcjb7sioeapqj3naekqes2bk4@3ojtbocdejca>
 
-On Mär 19 2025, Finn Thain wrote:
 
-> diff --git a/arch/m68k/kernel/head.S b/arch/m68k/kernel/head.S
-> index 852255cf60de..d0d77b1adbde 100644
-> --- a/arch/m68k/kernel/head.S
-> +++ b/arch/m68k/kernel/head.S
-> @@ -3400,6 +3400,7 @@ L(console_clear_loop):
->  
->  	movel	%d4,%d1				/* screen height in pixels */
->  	divul	%a0@(FONT_DESC_HEIGHT),%d1	/* d1 = max num rows */
-> +	subil	#1,%d1				/* row range is 0 to num - 1 */
+--e1G/KBj15gF2QYsx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-s/subil/subql/
+Hi Andi,
 
-> @@ -3546,15 +3547,14 @@ func_start	console_putc,%a0/%a1/%d0-%d7
->  	cmpib	#10,%d7
->  	jne	L(console_not_lf)
->  	movel	%a0@(Lconsole_struct_cur_row),%d0
-> -	addil	#1,%d0
-> -	movel	%d0,%a0@(Lconsole_struct_cur_row)
->  	movel	%a0@(Lconsole_struct_num_rows),%d1
->  	cmpl	%d1,%d0
->  	jcs	1f
-> -	subil	#1,%d0
-> -	movel	%d0,%a0@(Lconsole_struct_cur_row)
->  	console_scroll
-> +	jra	L(console_exit)
->  1:
-> +	addil	#1,%d0
+> mmhhh... I have to work with my memory and dig into my
+> documentations, but I think I've seen some STM sensors supporting
+> also 10 bit addresses.
 
-s/addil/addql/
+I'd be super-super-interested if you can remember which devices had
+that!
 
-> @@ -3581,12 +3581,6 @@ L(console_not_cr):
->   */
->  L(console_not_home):
->  	movel	%a0@(Lconsole_struct_cur_column),%d0
-> -	addql	#1,%a0@(Lconsole_struct_cur_column)
-> -	movel	%a0@(Lconsole_struct_num_columns),%d1
-> -	cmpl	%d1,%d0
-> -	jcs	1f
-> -	console_putc	#'\n'	/* recursion is OK! */
-> -1:
->  	movel	%a0@(Lconsole_struct_cur_row),%d1
->  
->  	/*
-> @@ -3633,6 +3627,23 @@ L(console_do_font_scanline):
->  	addq	#1,%d1
->  	dbra	%d7,L(console_read_char_scanline)
->  
-> +	/*
-> +	 *	Register usage in the code below:
-> +	 *	a0 = pointer to console globals
-> +	 *	d0 = cursor column
-> +	 *	d1 = cursor column limit
-> +	 */
-> +
-> +	lea	%pc@(L(console_globals)),%a0
-> +
-> +	movel	%a0@(Lconsole_struct_cur_column),%d0
-> +	addil	#1,%d0
+All the best,
 
-s/addil/addql/
+   Wolfram
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+
+--e1G/KBj15gF2QYsx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmfal6AACgkQFA3kzBSg
+KbauwQ/6Ah8jxpiaxdqp0mhziaptbOa0qstR221r26mIgrlYfH66OssKuIy00oJp
+DKUJHHJC6xgHyEHMRviaXB9U+W4fuXIDvFul5FL6VNLFPWmYmcYoxvVvdYtmDUHU
+FHlgwOSIjG6UTxab2AyI2PDd1j3iZaN8l3vD7IycSVUoZIHlmNRukTel8hJqyNVn
+zv484wc+Aio0aa0XDfNNosrKChTFVPV1kuglt9anD5LAjNcJcVWtVlbDDK5Y3GzJ
+b2KVn7i9vLDPZ/5i03BzBHXNVMf69s0xWQXKjZt9dCybvOXs4YIDUzvHeC7ueFgC
+qq2G/kbxujrYMaxKuiW1elGYPQMPsrRFzUer7HV8m6TIMuI2ISGtmngYLIOzog+U
+q17DMuvKCd3LnacJ715izAFlAE763q9mA6XdqfIN8dzvk7hmw+B/CVBpfbQchqLs
+vL+3m5VRaEdsxtFRYKipHSpJo94iy+ZxEljJuVFO73ckfFAt3BlT4kWWb4l8Wz+n
+JftpYDrDykcSSFE9DKaajPWtx5WpnAbfq1BwWLummDiu55B1GQ87vncxHFHEBmkf
++WHFudGGlddDICVeaImZKW5+3PA4/2KX6ayGPGtSSV8lz3NSKagLQK/j2eqehili
+ek4xh2ic4AwAHBy97czPfBDe5ypRuqwATalMJyL1Dd7eeafIKHc=
+=/o8X
+-----END PGP SIGNATURE-----
+
+--e1G/KBj15gF2QYsx--
