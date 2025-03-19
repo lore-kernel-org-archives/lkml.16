@@ -1,113 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62552116ED;
-	Wed, 19 Mar 2025 09:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE0A2528F1;
+	Wed, 19 Mar 2025 09:11:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742375435; cv=none; b=CnKLUeq8T33m9+HhKeiTKA3O5BSEMinucTwGDrAAWAZtsQEYyJxZs4LI/eM3RcfL3n1eSG6TlunIam/XhtpG4lucJHO9hV7Ffnt5/NPm+f03MNNEhG9WwbxslF/jwLPvFSZSugrvbhM7nEpFbxGS5hnPiaX9YaDfzbvdThcAjGw=
+	t=1742375512; cv=none; b=F2SewwtshJdIuYcEwVd9xnh65ZHekohesfaDuPjCEYjVS4h4laCj3VnIo91H0QFuEZXybeVyGLLJJo92oA6cpHEkipum4QNz6ZgMhp48pDT8rrsxz6B0aGMoWBnQpzZ8ZLyPeOOwHFTNAXfpbQ4/H/18V0oT9COSgQlF+WD5ORs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742375435; c=relaxed/simple;
-	bh=5A4dbLDyV/nTRWUH8Ca3qmdXR5GKU+r9taWr3MHSIYY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZmCFa5hLkJPB4gxjuhgv2WJoAlExNJ/HM/tVpYA+bfQywrrRxIdC7kxBj1aG2UV0fZ3ezbwqR4dIH5sawjpE3pIDNA6i3gKRpeIT6GojqCJnvVyYE1JzN/9XPkCXhzjJbpb94T00S8/7ZeRfHJY9Xs3E7SZD+HEy0hdfmIgEI1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H+++vtEm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742375512; c=relaxed/simple;
+	bh=RuprYZJqwe4KDAJjtW9yEAvrmNFaNz9njuDT/tdH7A4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=acxW38FNFIB5NzUnrumE00wbxRVKqEcnZtXuuJIdBJSESAfbmcAORr2P1HTESRgy8leK7zfmf7u1MYPz71ls/1V+dbQXJ3A/a7D2ApQJ61FcpPd8WtLvVcAJMyWhK0JEWf6MrZwObFLb6qkILHFcMIEEuJ5aOG0vz9Yx7tCjnlg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aPWI+DsJ; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H+++vtEm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7A2FC4CEE9;
-	Wed, 19 Mar 2025 09:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742375435;
-	bh=5A4dbLDyV/nTRWUH8Ca3qmdXR5GKU+r9taWr3MHSIYY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H+++vtEmBuPYGgUbdW1qWKiJKlcvRuuuD/MQozqvIyAvUKwV5jumG/klNi86i/nwH
-	 GJQ8JYEG0P+fIVPC98fYuGmx3tcujYxE6a2FZZLOvP8zvh616R6MSF0ys2Dr2LGgB8
-	 qQDOnu8VX4DtkRfvWNqk1lXCrqIlwI1fxVeh5YGYn93L8lpVEFoGPghSgESrwC26bF
-	 K2LjNkO7WhTSgjB20TF1/bkAhsyCz6mAqSnKwbqHte0tVca/lDG8AJ2tDxWvNfGEFl
-	 7QXIcGKAUWMeJtkQRWO++bqrwcCfe6HrgLCXo4ipxFsic2cCfWXHjOnySOF+isDfNz
-	 UqspsmHjd/U2w==
-Date: Wed, 19 Mar 2025 10:10:26 +0100
-From: Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Manikanta Mylavarapu <quic_mmanikan@quicinc.com>, 
-	Marek =?utf-8?B?QmVow7pu?= <kabel@kernel.org>, andersson@kernel.org, mturquette@baylibre.com, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org, 
-	catalin.marinas@arm.com, will@kernel.org, p.zabel@pengutronix.de, 
-	richardcochran@gmail.com, geert+renesas@glider.be, lumag@kernel.org, heiko@sntech.de, 
-	biju.das.jz@bp.renesas.com, quic_tdas@quicinc.com, nfraprado@collabora.com, 
-	elinor.montmasson@savoirfairelinux.com, ross.burton@arm.com, javier.carrasco@wolfvision.net, 
-	ebiggers@google.com, quic_anusha@quicinc.com, linux-arm-msm@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, quic_varada@quicinc.com, 
-	quic_srichara@quicinc.com
-Subject: Re: [PATCH v12 4/6] clk: qcom: Add NSS clock Controller driver for
- IPQ9574
-Message-ID: <qf36kofpouii3m5bdihy5fizmsnnd7pzxltuhorynql57ivvey@uxplo7joejsd>
-References: <20250313110359.242491-1-quic_mmanikan@quicinc.com>
- <20250313110359.242491-5-quic_mmanikan@quicinc.com>
- <65gl7d6qd55xrdm3as3pnqevpmakin3k4jzyocehq7wq7565jj@x35t2inlykop>
- <ef86ccad056bc03af7f01d5696787766.sboyd@kernel.org>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aPWI+DsJ"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff85fec403so941905a91.1;
+        Wed, 19 Mar 2025 02:11:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742375510; x=1742980310; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RuprYZJqwe4KDAJjtW9yEAvrmNFaNz9njuDT/tdH7A4=;
+        b=aPWI+DsJUGZllbcDj2PMbHaim1LstxO5fTh5mW5WU1r8B9Gjt2p71u0YigezGxn4Yo
+         IeQ4hqmdwOHNAegtlYRyWbRExKyGANQBInUcTI8ZzWT2/W3X0L/a6QpQNSrz0H6IzgCZ
+         SpmK5zfl6fauWx2Ha8mf1tuq0+l0bS9970CBQVIb0ki6y49BRZlZVDl8p09Z4Cw3Zo96
+         FIbPZpmflbS/qMsMDMnV5VgExlRuMcsaYXWS+z5yhQ+VDkN4jCySBug6fJbSj8m+WaRz
+         1kKKaF1fsCXInYX90vPniRES7UuIbPuVzcXwhgnRH2Qc4z9hbEW6rgQBGzGoUJlkWQgU
+         F3eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742375510; x=1742980310;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RuprYZJqwe4KDAJjtW9yEAvrmNFaNz9njuDT/tdH7A4=;
+        b=YLZH+dx3kaU2ji8EZ1uw7OE2odAPqofPHflSYyIKPKgC5TkZxPO+veNbJpbHhttcn/
+         hq0u0FPE4j+1Elv12whCl2bAO6jR7suna6mQb5uJssZSx3jN8+BksAJ1f1KSrCcs3jV/
+         ZeYcqoRkuH5QLEFT+k+z89s1CwAf4wb3nWIsga/FlO6RG/F1JRSVd5ATy5u0fEU2y9uO
+         CiQ7Ukg4QHOqEyuerkGdAa3JyTbFFLx9R7iBUBD7S7+Xy5AgHMljZSIEqCLzDdCV//c+
+         E+tLbK9WqKfB+cDo5em6OQso8OGS31Pq2tKPFlXvMggcUDOXc+FYfUTABuxiYqilgJ+5
+         t5ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCVH9PH0q2JTLfoGKh8PT3O92ZcPPIsyBDIaifjXsrtNJLNYh3AUyW3GFhNWmmDaUkTsMBUnfcIL7Sto7hqv6p1iww==@vger.kernel.org, AJvYcCXUmEPfB+eonHEGIFDmvm1SqBoMFb4ekO16oak5oS3DWgS2gimqUBScwu1AzDJOXRkDDb1VHK2/rxv2udI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLDZeVeqxL8s+9KnkaTcHENUnoehew+l8B7Oz2x9Ki6Sp5Gfe0
+	kea40p9lX+L8stIldF4fkvd99koqe+nWnue/4dtQEHKBuXRyebviwibquCof5xs8eTS1cx8MqPy
+	HL9KSI01YBCIWzbhaPlEaksJz4gCBLdJFYLE95w==
+X-Gm-Gg: ASbGncvzcpluX9ieafwRVLBhjtHytwb35UaJ6Z9j8SVk8ifecVHA9na9kdSRKCapCWL
+	dS+CkMOFor7J6lK+5EBrJ/IewG7CD9fCHEtDaja737WPX9LHa/evE4na0Ep81YHXphYrNpB7xli
+	zfoIYNQEXavJl2eSbRfUCiOt8=
+X-Google-Smtp-Source: AGHT+IHulUmmhxYKpHLvuuCvhzTKveyDkVYVm3d6bzpsr+IdlsI0aty1tIfogVOy7fjTdFZHgdUItr+f8aeMDLV0DvU=
+X-Received: by 2002:a17:90b:3c47:b0:2ff:4a8d:74f9 with SMTP id
+ 98e67ed59e1d1-301bda60f37mr3574753a91.10.1742375510218; Wed, 19 Mar 2025
+ 02:11:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ef86ccad056bc03af7f01d5696787766.sboyd@kernel.org>
+References: <20250318215007.2109726-1-iuliana.prodan@oss.nxp.com>
+In-Reply-To: <20250318215007.2109726-1-iuliana.prodan@oss.nxp.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Date: Wed, 19 Mar 2025 11:13:22 +0200
+X-Gm-Features: AQ5f1JpoNZOhJi82lOgsg8paXpVn0pIptqVf5Y-45uL-Vvcne60Oe-MB2X2Chkk
+Message-ID: <CAEnQRZCk042G01vfypi6SY3mR53kchHLYpHs_cg=sZ9vVyZFdQ@mail.gmail.com>
+Subject: Re: [PATCH v2] remoteproc: imx_dsp_rproc: Add support for
+ DSP-specific features
+To: "Iuliana Prodan (OSS)" <iuliana.prodan@oss.nxp.com>
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	"S.J. Wang" <shengjiu.wang@nxp.com>, Fabio Estevam <festevam@gmail.com>, 
+	Daniel Baluta <daniel.baluta@nxp.com>, Mpuaudiosw <Mpuaudiosw@nxp.com>, 
+	Iuliana Prodan <iuliana.prodan@nxp.com>, imx@lists.linux.dev, 
+	linux-remoteproc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 18, 2025 at 03:50:31PM -0700, Stephen Boyd wrote:
-> Quoting Marek Behún (2025-03-17 07:08:16)
-> > On Thu, Mar 13, 2025 at 04:33:57PM +0530, Manikanta Mylavarapu wrote:
-> > 
-> > > +static struct clk_rcg2 nss_cc_clc_clk_src = {
-> > > +     .cmd_rcgr = 0x28604,
-> > > +     .mnd_width = 0,
-> > > +     .hid_width = 5,
-> > > +     .parent_map = nss_cc_parent_map_6,
-> > > +     .freq_tbl = ftbl_nss_cc_clc_clk_src,
-> > > +     .clkr.hw.init = &(const struct clk_init_data) {
-> > > +             .name = "nss_cc_clc_clk_src",
-> > > +             .parent_data = nss_cc_parent_data_6,
-> > > +             .num_parents = ARRAY_SIZE(nss_cc_parent_data_6),
-> > > +             .ops = &clk_rcg2_ops,
-> > > +     },
-> > > +};
-> > 
-> > This structure definition gets repeated many times in this driver,
-> > with only slight changes. (This also happens in other qualcomm clock
-> > drivers.)
-> > 
-> > Would it be possible to refactor it into a macro, to avoid the
-> > insane code repetition?
-> > 
-> 
-> We have this discussion every couple years or so. The short answer is
-> no. The long answer is that it makes it harder to read because we don't
-> know what argument to the macro corresponds to the struct members.
-> 
-> It could probably use the CLK_HW_INIT_PARENTS_DATA macro though.
-> 
-> static struct clk_rcg2 nss_cc_clc_clk_src = {
->      .cmd_rcgr = 0x28604,
->      .mnd_width = 0,
->      .hid_width = 5,
->      .parent_map = nss_cc_parent_map_6,
->      .freq_tbl = ftbl_nss_cc_clc_clk_src,
->      .clkr.hw.init = CLK_HW_INIT_PARENTS_DATA("nss_cc_clc_clk_src",
->                                               nss_cc_parent_data_6,
-> 					      &clk_rcg2_ops, 0),
->      },
-> };
-> 
-> but then we lose the const. Oh well.
-> 
-> The whole qcom clk driver probably needs an overhaul to just have
-> descriptors that populate a bunch of clks that are allocated at probe
-> time so that the memory footprint is smaller if you have multiple clk
-> drivers loaded and so that we can probe the driver again without
-> unloading the whole kernel module.
+On Tue, Mar 18, 2025 at 11:50=E2=80=AFPM Iuliana Prodan (OSS)
+<iuliana.prodan@oss.nxp.com> wrote:
+>
+> From: Iuliana Prodan <iuliana.prodan@nxp.com>
+>
+> Some DSP firmware requires a FW_READY signal before proceeding, while
+> others do not.
+> Therefore, add support to handle i.MX DSP-specific features.
+>
+> Implement handle_rsc callback to handle resource table parsing and to
+> process DSP-specific resource, to determine if waiting is needed.
+>
+> Update imx_dsp_rproc_start() to handle this condition accordingly.
+>
+> Signed-off-by: Iuliana Prodan <iuliana.prodan@nxp.com>
 
-Okay then, in that case just ignore me :)
+Reviewed-by: Daniel Baluta <daniel.baluta@nxp.com>
