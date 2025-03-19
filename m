@@ -1,209 +1,197 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1F359444
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 00:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCD318F6D
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 00:15:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742343247; cv=none; b=ZlDg8VTbGCjV8KXQ7yYQlAUsiNqPFwjQrb+iC9YB8sIESlQec0AbjqSeIqVONZ0dkOo7UmHOir3toYNX6yfgGumn6M+Zs8kUzh8oReTQAPHL661i5jVAmonl3ulS97W1b9uGPbBCp2RuPN8uPBtXta92sHoEV/yhiqnQRCnerKg=
+	t=1742343338; cv=none; b=H+Rso9TFW8wnvHT4XN9Jk+Bb9Ji6VXXIGA6Ori2gFxEHr5qivz5LKw8bW93Igl1VccNJGbdFHKRn/KmnSAhaMEpK3/ZHAXRNmSFnVRJPB6841SIDj8b3Fsx3DNnBzAxtdiaKCn0J8/YOe1axIzxigDjGwiTaWJOVFCyvKRN0LAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742343247; c=relaxed/simple;
-	bh=GkK/7duEozWa1ZCUzXpQUmhgAYHXwsqwyb5qQr7Qmtw=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=Cbxemmc2oxNk9QLptHV+U+Gzak2sBDerOyQTPIQkW5hWYo0K6FGVx3WRuTLtS6n0oK8GNVeLSnartVACm23SZUYpEFIOOVPuhpv7yN/tK5WbNwcddoJyxn7QZkkqf4T7iNrThblda3WYyMK8J+UQf74+gejUV7NJh7qfn6LQYT0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B7ZYETZf; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742343338; c=relaxed/simple;
+	bh=pHQtgKFyhe1UEM5H1CkXAkQ9ckxP7iar9/3rqYLA8vg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GQFNh92H9PwbzOIIzWTJ7QlBEDB1JKpn9JiubtGJGSSiBjrr/AWswa0VQmeYmPwXUPui2OMNlOHoN7/1A3Pzyusaaqrp2+z0TuPJwXaL15KeNV3JOcF8+6bPx6FYUSN1/zkE8zQoi+LugnRVIJUssHf0LSbfbOxUHPr+zAbxSvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=nk345Hev; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B7ZYETZf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742343245; x=1773879245;
-  h=date:from:to:cc:subject:message-id;
-  bh=GkK/7duEozWa1ZCUzXpQUmhgAYHXwsqwyb5qQr7Qmtw=;
-  b=B7ZYETZfomMb7AJV8dFa7AoeQMj9nb0Is278nZV7K0f4Az4nqG7TTsiX
-   7tilvb3IyopJE9tb6k7dPyhpWaKZEgd7oPlFYotOM98juShtSYmTZ7ZFA
-   2+ab5FVmz1zyz77USI33d300K/ZH8iG/9rxYQrZemIsJVl74tvtgXKsVN
-   OCU8GcMLxLp31EXpfp6lCM2DD8WawbV05IZ+NAXKyNIGu5eC5wDKPOHMj
-   roaoLHsk+uMowV24lnsfpiA5y2+knRwiwY8TimfwakQ4930C+N4TuM3Pc
-   SHOlMczBRJ/erf/kF4iW+xZr0Rbu7fIt6wANawnPIvrWL+dKMIO4nj5dE
-   Q==;
-X-CSE-ConnectionGUID: jfYhgEIHTG2vjOl0UbXXbg==
-X-CSE-MsgGUID: KYH+xwCaQcWKx03XgqXA8A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="46272523"
-X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="46272523"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 17:14:04 -0700
-X-CSE-ConnectionGUID: WaOU5gtyTLGKrXmimFzUjA==
-X-CSE-MsgGUID: inoQYN7LQSmuQCSsAtFkkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="127523565"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa004.fm.intel.com with ESMTP; 18 Mar 2025 17:14:03 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tuh4K-000EFG-29;
-	Wed, 19 Mar 2025 00:14:00 +0000
-Date: Wed, 19 Mar 2025 08:13:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: "x86-ml" <x86@kernel.org>
-Cc: linux-kernel@vger.kernel.org
-Subject: [tip:WIP.x86/cpu] BUILD SUCCESS
- 9d97c5718365bd7e12ece70ea7bb5f01cef934a1
-Message-ID: <202503190853.yNF1B6rD-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="nk345Hev"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22622ddcc35so7151705ad.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 17:15:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1742343336; x=1742948136; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=D+sBSgchPHWEySP2bfLrt8df0wwyowAu2mvbj20TByA=;
+        b=nk345HevUR7Q//BQX4OH2ApWTTxQWu7RzOO4UWTlq6Z+7yBat+zUay0hQOo3Xq9cUS
+         tr5tXyf2nFLDLxF3AWvhvuxljTtoNpPXFx5wJv+rdsQUjMXb9wlz/ap314zIRJTxT0wc
+         guhhaJT2dEcojI086aYopFnWAV51/HgX8zp+k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742343336; x=1742948136;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=D+sBSgchPHWEySP2bfLrt8df0wwyowAu2mvbj20TByA=;
+        b=GJD3Yn7U/u4QE/Sx53milT/v3V1lklkeRs/zwGnherQdYNtHsTkk//xwgALLHSk1ik
+         q2x0csRIbGmGHjZ7N7LszhpREmBnwupHLBG2z/y8gVy9FygE7Z4uMOBf4itE4eY9CxZV
+         ysmH14gx0cGtlQvUlgEWXH+V91+bYBi48zmweixgwNObg2coOIAyajoiOM5IQxptD7o+
+         PV7VqKCFv/2nTjKa6vTCq9govTO8y/boY18cjLi9y5l21nDx4vSeaRrPXqW4rAkw4DAq
+         vdq8NcES7T7kvz6r9RR0HA78bPnvbzxf+CFFl5MfVmSBhxXYi6SJGSaUrE1J05HKGa/g
+         Wwhw==
+X-Gm-Message-State: AOJu0Yz2AzTuwR6qpNIB/0GErKy0aw+LJ6WO7F0G0aSC0hyJOVUysSbL
+	GtIiOCkwtHWB4ue96Lr8n6hUKlQaRzyEj91Z7PwVVGYK+YevOL+sN7y7ekffli0=
+X-Gm-Gg: ASbGncvhsj1q4Yub5RyDg6zodgPK8dYwdVx/Kz8cZOus+MS3MSCZu2IewDP/RT3ZEK6
+	VefatljPL3+gUl3diAP1M02ns8FEiQ/N/1JK1bS4VJcd00V2c7oWkziNDByWzy04vojchJqzBvr
+	ZtgXdFxZK0XWInLfubRumtAVKLst4LgaAtjHkBwBL05uejkKNLxG0MtNzA6IlmNe1frZar7WMPV
+	Zqp1+0Cc92Psbgpqw7PqbAaZ8kP1aMiLXRif5tfa7s43h4UiQI0AxoiDtVj9wdGo1dYj2lApBq0
+	yHwBVcsdnGwTrIwuW/keRxz4/t0xtA3lTYIEEiLmfsdpqRKFeOXO
+X-Google-Smtp-Source: AGHT+IFUgmcp5ziiDMwrHetBewK21buOCfSn83hSdnwL6/awTXwLICTCoy55xovATS5hzbKk/tpnkQ==
+X-Received: by 2002:a17:902:f646:b0:223:90ec:80f0 with SMTP id d9443c01a7336-22649a3170emr9678415ad.22.1742343336040;
+        Tue, 18 Mar 2025 17:15:36 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68a4876sm101281375ad.70.2025.03.18.17.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 17:15:35 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	asml.silence@gmail.com,
+	linux-fsdevel@vger.kernel.org,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	linux-api@vger.kernel.org,
+	linux-arch@vger.kernel.org,
+	viro@zeniv.linux.org.uk,
+	jack@suse.cz,
+	kuba@kernel.org,
+	shuah@kernel.org,
+	sdf@fomichev.me,
+	mingo@redhat.com,
+	arnd@arndb.de,
+	brauner@kernel.org,
+	akpm@linux-foundation.org,
+	tglx@linutronix.de,
+	jolsa@kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Joe Damato <jdamato@fastly.com>
+Subject: [RFC -next 00/10] Add ZC notifications to splice and sendfile
+Date: Wed, 19 Mar 2025 00:15:11 +0000
+Message-ID: <20250319001521.53249-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/cpu
-branch HEAD: 9d97c5718365bd7e12ece70ea7bb5f01cef934a1  x86/cpuid: Use u32 in instead of uint32_t in <asm/cpuid/api.h>
+Greetings:
 
-elapsed time: 1451m
+Welcome to the RFC.
 
-configs tested: 132
-configs skipped: 4
+Currently, when a user app uses sendfile the user app has no way to know
+if the bytes were transmit; sendfile simply returns, but it is possible
+that a slow client on the other side may take time to receive and ACK
+the bytes. In the meantime, the user app which called sendfile has no
+way to know whether it can overwrite the data on disk that it just
+sendfile'd.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+One way to fix this is to add zerocopy notifications to sendfile similar
+to how MSG_ZEROCOPY works with sendmsg. This is possible thanks to the
+extensive work done by Pavel [1].
 
-tested configs:
-alpha                             allnoconfig    gcc-14.2.0
-alpha                            allyesconfig    gcc-9.3.0
-alpha                               defconfig    gcc-14.2.0
-arc                              allmodconfig    gcc-14.2.0
-arc                               allnoconfig    gcc-13.3.0
-arc                              allyesconfig    gcc-10.5.0
-arc                                 defconfig    gcc-14.2.0
-arc                   randconfig-001-20250318    gcc-13.2.0
-arc                   randconfig-002-20250318    gcc-13.2.0
-arm                               allnoconfig    clang-21
-arm                              allyesconfig    gcc-14.2.0
-arm                         at91_dt_defconfig    clang-21
-arm                       multi_v4t_defconfig    clang-16
-arm                       netwinder_defconfig    gcc-9.3.0
-arm                          pxa168_defconfig    clang-19
-arm                   randconfig-001-20250318    gcc-14.2.0
-arm                   randconfig-002-20250318    clang-21
-arm                   randconfig-003-20250318    gcc-14.2.0
-arm                   randconfig-004-20250318    clang-21
-arm                           stm32_defconfig    gcc-8.5.0
-arm64                            allmodconfig    clang-19
-arm64                             allnoconfig    gcc-8.5.0
-arm64                               defconfig    gcc-6.5.0
-arm64                 randconfig-001-20250318    clang-21
-arm64                 randconfig-002-20250318    clang-14
-arm64                 randconfig-003-20250318    gcc-13.3.0
-arm64                 randconfig-004-20250318    gcc-6.5.0
-csky                              allnoconfig    gcc-14.2.0
-csky                                defconfig    gcc-14.2.0
-csky                  randconfig-001-20250318    gcc-14.2.0
-csky                  randconfig-002-20250318    gcc-14.2.0
-hexagon                          allmodconfig    clang-17
-hexagon                           allnoconfig    clang-21
-hexagon                          allyesconfig    clang-21
-hexagon               randconfig-001-20250318    clang-21
-hexagon               randconfig-002-20250318    clang-17
-i386                              allnoconfig    gcc-12
-i386                             allyesconfig    gcc-12
-i386        buildonly-randconfig-001-20250318    clang-20
-i386        buildonly-randconfig-002-20250318    clang-20
-i386        buildonly-randconfig-003-20250318    clang-20
-i386        buildonly-randconfig-004-20250318    clang-20
-i386        buildonly-randconfig-005-20250318    clang-20
-i386        buildonly-randconfig-006-20250318    clang-20
-i386                                defconfig    clang-20
-loongarch                        allmodconfig    gcc-14.2.0
-loongarch                         allnoconfig    gcc-14.2.0
-loongarch             randconfig-001-20250318    gcc-14.2.0
-loongarch             randconfig-002-20250318    gcc-14.2.0
-m68k                             allmodconfig    gcc-8.5.0
-m68k                              allnoconfig    gcc-5.5.0
-m68k                             allyesconfig    gcc-6.5.0
-m68k                        m5272c3_defconfig    gcc-9.3.0
-m68k                          sun3x_defconfig    gcc-5.5.0
-microblaze                       alldefconfig    gcc-14.2.0
-microblaze                       allmodconfig    gcc-9.3.0
-microblaze                        allnoconfig    gcc-11.5.0
-microblaze                       allyesconfig    gcc-14.2.0
-mips                              allnoconfig    gcc-14.2.0
-nios2                             allnoconfig    gcc-14.2.0
-nios2                 randconfig-001-20250318    gcc-14.2.0
-nios2                 randconfig-002-20250318    gcc-14.2.0
-openrisc                          allnoconfig    gcc-14.2.0
-openrisc                         allyesconfig    gcc-14.2.0
-openrisc                            defconfig    gcc-14.2.0
-parisc                           allmodconfig    gcc-5.5.0
-parisc                            allnoconfig    gcc-5.5.0
-parisc                           allyesconfig    gcc-9.3.0
-parisc                              defconfig    gcc-14.2.0
-parisc                randconfig-001-20250318    gcc-8.5.0
-parisc                randconfig-002-20250318    gcc-14.2.0
-powerpc                          allmodconfig    gcc-10.5.0
-powerpc                           allnoconfig    gcc-8.5.0
-powerpc                          allyesconfig    clang-21
-powerpc                     ep8248e_defconfig    gcc-11.5.0
-powerpc                   lite5200b_defconfig    clang-21
-powerpc                   motionpro_defconfig    clang-15
-powerpc                 mpc832x_rdb_defconfig    gcc-9.3.0
-powerpc               randconfig-001-20250318    clang-21
-powerpc               randconfig-002-20250318    clang-21
-powerpc               randconfig-003-20250318    gcc-14.2.0
-powerpc                     tqm8540_defconfig    gcc-14.2.0
-powerpc64             randconfig-001-20250318    clang-21
-powerpc64             randconfig-002-20250318    gcc-14.2.0
-powerpc64             randconfig-003-20250318    gcc-8.5.0
-riscv                            allmodconfig    clang-21
-riscv                             allnoconfig    gcc-7.5.0
-riscv                            allyesconfig    clang-16
-riscv                               defconfig    clang-21
-riscv                 randconfig-001-20250318    clang-21
-riscv                 randconfig-002-20250318    clang-21
-s390                             allmodconfig    clang-18
-s390                              allnoconfig    clang-15
-s390                             allyesconfig    gcc-13.2.0
-s390                                defconfig    clang-15
-s390                  randconfig-001-20250318    clang-15
-s390                  randconfig-002-20250318    gcc-14.2.0
-sh                               allmodconfig    gcc-14.2.0
-sh                                allnoconfig    gcc-10.5.0
-sh                               allyesconfig    gcc-14.2.0
-sh                                  defconfig    gcc-11.5.0
-sh                          kfr2r09_defconfig    gcc-5.5.0
-sh                    randconfig-001-20250318    gcc-14.2.0
-sh                    randconfig-002-20250318    gcc-14.2.0
-sh                   sh7770_generic_defconfig    gcc-10.5.0
-sh                        sh7785lcr_defconfig    gcc-14.2.0
-sparc                            allmodconfig    gcc-6.5.0
-sparc                             allnoconfig    gcc-6.5.0
-sparc                 randconfig-001-20250318    gcc-14.2.0
-sparc                 randconfig-002-20250318    gcc-14.2.0
-sparc64                             defconfig    gcc-14.2.0
-sparc64               randconfig-001-20250318    gcc-14.2.0
-sparc64               randconfig-002-20250318    gcc-14.2.0
-um                               allmodconfig    clang-19
-um                                allnoconfig    clang-21
-um                               allyesconfig    gcc-12
-um                                  defconfig    clang-21
-um                             i386_defconfig    gcc-12
-um                    randconfig-001-20250318    clang-21
-um                    randconfig-002-20250318    gcc-12
-x86_64                            allnoconfig    clang-20
-x86_64                           allyesconfig    clang-20
-x86_64      buildonly-randconfig-001-20250318    clang-20
-x86_64      buildonly-randconfig-002-20250318    clang-20
-x86_64      buildonly-randconfig-003-20250318    clang-20
-x86_64      buildonly-randconfig-004-20250318    clang-20
-x86_64      buildonly-randconfig-005-20250318    gcc-12
-x86_64      buildonly-randconfig-006-20250318    gcc-12
-x86_64                              defconfig    gcc-11
-xtensa                            allnoconfig    gcc-14.2.0
-xtensa                randconfig-001-20250318    gcc-14.2.0
-xtensa                randconfig-002-20250318    gcc-7.5.0
+To support this, two important user ABI changes are proposed:
 
---
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+  - A new splice flag, SPLICE_F_ZC, which allows users to signal that
+    splice should generate zerocopy notifications if possible.
+
+  - A new system call, sendfile2, which is similar to sendfile64 except
+    that it takes an additional argument, flags, which allows the user
+    to specify either a "regular" sendfile or a sendfile with zerocopy
+    notifications enabled.
+
+In either case, user apps can read notifications from the error queue
+(like they would with MSG_ZEROCOPY) to determine when their call to
+sendfile has completed.
+
+I tested this RFC using the selftest modified in the last patch and also
+by using the selftest between two different physical hosts:
+
+# server
+./msg_zerocopy -4 -i eth0 -t 2 -v -r tcp
+
+# client (does the sendfiling)
+dd if=/dev/zero of=sendfile_data bs=1M count=8
+./msg_zerocopy -4 -i eth0 -D $SERVER_IP -v -l 1 -t 2 -z -f sendfile_data tcp
+
+I would love to get high level feedback from folks on a few things:
+
+  - Is this functionality, at a high level, something that would be
+    desirable / useful? I think so, but I'm of course I am biased ;)
+
+  - Is this approach generally headed in the right direction? Are the
+    proposed user ABI changes reasonable?
+
+If the above two points are generally agreed upon then I'd welcome
+feedback on the patches themselves :)
+
+This is kind of a net thing, but also kind of a splice thing so hope I
+am sending this to right places to get appropriate feedback. I based my
+code on the vfs/for-next tree, but am happy to rebase on another tree if
+desired. The cc-list got a little out of control, so I manually trimmed
+it down quite a bit; sorry if I missed anyone I should have CC'd in the
+process.
+
+Thanks,
+Joe
+
+[1]: https://lore.kernel.org/netdev/cover.1657643355.git.asml.silence@gmail.com/
+
+Joe Damato (10):
+  splice: Add ubuf_info to prepare for ZC
+  splice: Add helper that passes through splice_desc
+  splice: Factor splice_socket into a helper
+  splice: Add SPLICE_F_ZC and attach ubuf
+  fs: Add splice_write_sd to file operations
+  fs: Extend do_sendfile to take a flags argument
+  fs: Add sendfile2 which accepts a flags argument
+  fs: Add sendfile flags for sendfile2
+  fs: Add sendfile2 syscall
+  selftests: Add sendfile zerocopy notification test
+
+ arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+ arch/arm/tools/syscall.tbl                  |  1 +
+ arch/arm64/tools/syscall_32.tbl             |  1 +
+ arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+ arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+ arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+ arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+ arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+ arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+ arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+ arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+ arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+ arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+ arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+ arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+ fs/read_write.c                             | 40 +++++++---
+ fs/splice.c                                 | 87 +++++++++++++++++----
+ include/linux/fs.h                          |  2 +
+ include/linux/sendfile.h                    | 10 +++
+ include/linux/splice.h                      |  7 +-
+ include/linux/syscalls.h                    |  2 +
+ include/uapi/asm-generic/unistd.h           |  4 +-
+ net/socket.c                                |  1 +
+ scripts/syscall.tbl                         |  1 +
+ tools/testing/selftests/net/msg_zerocopy.c  | 54 ++++++++++++-
+ tools/testing/selftests/net/msg_zerocopy.sh |  5 ++
+ 27 files changed, 200 insertions(+), 29 deletions(-)
+ create mode 100644 include/linux/sendfile.h
+
+
+base-commit: 2e72b1e0aac24a12f3bf3eec620efaca7ab7d4de
+-- 
+2.43.0
+
