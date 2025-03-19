@@ -1,189 +1,159 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpbgeu2.qq.com (smtpbgeu2.qq.com [18.194.254.142])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF27820DD5E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 03:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F20088BE7;
+	Wed, 19 Mar 2025 03:36:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=18.194.254.142
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742355334; cv=none; b=TTqc1pBOwyutMPyn4wNPUaKKkW8HqZMrOzbgkZOfYRncsT3FegxENXm8UHXBg2Zil73x0dCb6mptjDbXSSGbIK2GsEnR6zqNZKH8SknPDTNSK6Qdtw6zj1R/2Ft0fFNgJDCAhmZgkAUVfVWb20SZ/BcqZoxvjVA9AMG3f+7vUHg=
+	t=1742355418; cv=none; b=NKS+mEoixZirJiCG+o00+hESAdaO4iUXhiM5dFt/rFBSrag5uY7/Rw5bPAkthb4FKXERZMZCTRwDrwMkSIuHXkLrzrhHEcw3zOJSuhTRN1wCat0W8Pgl5xt45bQw3E9dy5CH86O+dO36n8R3CrxSrABWWxp6ipyonnG1gC13IP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742355334; c=relaxed/simple;
-	bh=Hci/3CsZb65ypppDc73oxREkEn6yYwNHVBtLzmK0uos=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=s7+naQz/fAKWkIXsZ1suh4JS6PnJxy4PXbsuwVOjuBBmcZkAjF195pDT2EEDcMPIkQ/ymg1IW4MBkZfaBWKmjF3w+HeXWD1zLAfhbgdOSohZinwHFrK+Nburk+J7l5GAVXYpO0ZEP5o9LZNmiwCW4x+L4V8RO5H5rWtB8SErvVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=CmjlEsir; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742355418; c=relaxed/simple;
+	bh=pp1RgEz7+tlhRwSDDrL3qiowlEkFNLLCkbpWMHxeC2c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MmcA7+9ZpIdSI0Dy7J0WofAblYgbcJfC7EfpCWvkSmke3G0zZVClW6MBdzplXFzvbrxC6RI3J/P1oqKebT2ht3Ce+qxT5/w6EXqM1Q8/mwpNztb6CHWFopyhuyTm/BgafVZI9vOxwLyz0m7GnOKUh5QP51lg5oGYN7v/DcCYCgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=j/L84cUU; arc=none smtp.client-ip=18.194.254.142
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CmjlEsir"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-5e5cbd8b19bso3590a12.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 20:35:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742355331; x=1742960131; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v1eGmQWoQGN9Dkax1HXc1+f2DIdudnDU/1Bx3UVDXHM=;
-        b=CmjlEsiruGBUH0buOuZE+HHVLjNfmFwGKcesJcFXX5F38SzrRyBOgcOXwKqeESpkhh
-         HbBi7EJUDMpw02G59zaPqx6KpuZwrk1UwGoVeeuQ74uij79dVVpdZiCz4mWWhUmOF/fE
-         SZ/wN//oGkWLSSr1XXhIzeG+ppw7CPTPXuLCrR3U4hCx4keV828XnM06rqFhyKe72yIs
-         nAo4XUhZAk/0MYvpVpCCeIajc0CHBHYvYXtoMYydmwW4gut3qtKZ6nhDlmE2Sc+xbzls
-         r2PfMO9GOSWYuLkpfeeP33AOT+D6NC7mBWuu+XZ8481ljZBvNxqnfwUMEzN87TaBYHO7
-         aC9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742355331; x=1742960131;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v1eGmQWoQGN9Dkax1HXc1+f2DIdudnDU/1Bx3UVDXHM=;
-        b=Vjc83/uKWpQ0I1rhZDe/jWoPjZi7OJFc/LwlQKoRsIq6gk1cGWmMQmyYfNr+OrMlpe
-         QN/Z9IN9mR7VOc3YbvseF01ilCvIumHQss+Qz2m0hKojlo4qQonuYMhC4oakCTswOQPn
-         wa/u/GbXtBchKEW9fr3BS71uRlqAGqasoYLafB/7mH7A2FdBec5v5mrbPwIy1TnmPPLg
-         Z7VEPsAVjMAXpijSfiV88bComX/aToq7irbJmPwa2jc+rc5ByppwISsPUt/yCvmE4Ziw
-         x6EDD/iJCoyUs5WNqT85MD6/HNI1As1Dws/Ttg4DzsaWslCNvEHLTG+i/VYkF5A8LVmp
-         WIOw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWR2jHShVI5mFNm4wpz3hp5TOr4IfBd15RQyQ/NXVshsWXiTF3RB2GMVZAC2xFpYvoz8TDV21kMpZ0sGg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxBJvFp+1OMHtYS0lXLifz6pguNh3kqDvlv4vlg0502m9hIaAxf
-	iXk0Th+Ha4XrjeX7Z/LAdI8OYrWemMu+s3AD3PccH05rAaaN3IaftP8hgoPfts11eZjaygEW44n
-	fpyRXS0YVoy9uMzGcLffdd1FYK+HBcPFptZQF
-X-Gm-Gg: ASbGncsA3T9o5vxLCXfaNx7dNfXRjL+DGc3byVgXCb47DDXdoIPn1Ps8NwAMYncqkQW
-	0xQrHQBF4coVdscfAsgiGlrxlFoUXm8hO8e6YzAkQsJGfcMitZ1RIWE02wRBtKTymmnJAgmBoos
-	vu3j8rfXy9OHJ8LDLS+aSnUv1P1OSEB1VbZ6OWkGcLSd+CKNuFWtvkyy5BYy1FsmGgCw==
-X-Google-Smtp-Source: AGHT+IEt+19WG9IHzZ81Mv9euoAb/rztC5JqY4WZb1WW6DcgrlMezNBnKgRxYmL642WrrToMiGpcBZS+CqAISTXPMYI=
-X-Received: by 2002:aa7:c1da:0:b0:5e5:c024:ec29 with SMTP id
- 4fb4d7f45d1cf-5eb7e96330cmr62254a12.0.1742355330636; Tue, 18 Mar 2025
- 20:35:30 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="j/L84cUU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1742355399;
+	bh=fmRqY+JDZY5i3/fjqLE27xJ4JDCC12QtNnBz4AnHDpg=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=j/L84cUUyWGc6D3zBDR+vOXtzEPEKXN959iy1w3io6P1/snUD4F29ZYbELrU7cHLA
+	 vIXKtSpU3L3KFH05zVvNSTkl323iIbVh9z+4dCt+dvw2rQyMWyWCns+PiyiOxBASjN
+	 xDXdlZthTMg0obwKc37hlpaE+sr3FrdNUbHLta5w=
+X-QQ-mid: bizesmtpip4t1742355351tcmig4x
+X-QQ-Originating-IP: X9j/ZIBSIzwYhFiwIBBO/UOkuXEkV9sWk1tNamg6tvE=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Wed, 19 Mar 2025 11:35:49 +0800 (CST)
+X-QQ-SSF: 0000000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 17725562205952502162
+From: WangYuli <wangyuli@uniontech.com>
+To: pablo@netfilter.org,
+	kadlec@netfilter.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org
+Cc: netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	eric.dumazet@gmail.com,
+	fw@strlen.de,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com,
+	WangYuli <wangyuli@uniontech.com>,
+	Wentao Guan <guanwentao@uniontech.com>
+Subject: [PATCH net] netfilter: nf_tables: Only use nf_skip_indirect_calls() when MITIGATION_RETPOLINE
+Date: Wed, 19 Mar 2025 11:34:44 +0800
+Message-ID: <91A1F82B6B7D6AC2+20250319033444.1135201-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318214035.481950-1-pcc@google.com> <20250318214035.481950-2-pcc@google.com>
- <202503181957.55A0E0A@keescook>
-In-Reply-To: <202503181957.55A0E0A@keescook>
-From: Peter Collingbourne <pcc@google.com>
-Date: Tue, 18 Mar 2025 20:35:19 -0700
-X-Gm-Features: AQ5f1Jq3z05plokQ9oy7A8yZz95pSsT-oxsin3iEVaTMKIK56JFI_UIbnlyp_vI
-Message-ID: <CAMn1gO7TG0xXMFNFXTm9W8n4hdit9Yr40m4jvFCjdv9fGiU5iw@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] string: Add load_unaligned_zeropad() code path to sized_strscpy()
-To: Kees Cook <kees@kernel.org>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Andy Shevchenko <andy@kernel.org>, 
-	Andrey Konovalov <andreyknvl@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, linux-fsdevel@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: Mv+tyGIfil93X88bSXqjV4CVQrPFfvyx0qbbQdKtpXRIfY6Mc/IfpdeE
+	xrBf9XJ9A7vpNiYNBPIwHie4Y9HsukmxIf6uADEVC0xkmnGZbhvbpofBs1KVyeeQfUpn1Q2
+	/g3qhTKmNvhT1xQT/TK9rNsGr1Uv4NndOqMvsELK4TblVux2MJSQpYmEuPN6hIfJNKfcpg6
+	cXOl0zNoFJ3sYUCm3oz9AdhvSMHFephIrBiZQyL9a0rFGvpvswzAWDOi0RCmct1kxcWUAKN
+	cff21e/lM72Jyf9dvIE5yr+J2jgQpofiNWNQMiGjYUvfPuDYm4SBxJgW5dJhWrFy61pKbdi
+	2A5nGf0VT4mg5+cBWs4ejzV/UayON3RSIYA4LehV8QtFQf+fCAr2WL41DsPOZcY/0Cyr9SN
+	HYwCiI8US9nAjzLsHLYz872L+k532fZna7enOISjQ8Jf/S1TEzcpcQAETyPMHT7tFO4yV9P
+	inlojxhCjmIEy7/QF2g+CNury5CzX1DlxtwJTA70AEFEtri1Q92adtH3GoOcqS0RSE77Feh
+	nH2eJlCXEz7XL9H52/BL79XYTDdJ4SF1xqtrvPQ4nb7Xyyn+Ud+KqGRh5ooDv41cNz1yzWS
+	2uI+xq9yV2QlGLfK9tHAuEv+ROPx2GkmzVeCQoJLTm5J4e0klHVv5DEyFkm+wmPuhTefsZl
+	hctMqg/0CC52kkv29bUyhmcZZzaYxvw9Oy4SFZJrCU6J8V2L+IpwGmG51ODZDyjf7WLoFX0
+	XFbqu6VyNKPIvLfWVYdTx7ZiPNqCvoGbonTpZGiWZaenPRaBzJVnA5OdxHuUwK04/ztx3dJ
+	RcooLxSBBTxTvuC8SSPQ/+AgHADuvHTAA+BLofzs1gFmxU7yGB0N67ely/Ex27iLNwznYSU
+	GINhZUN+lfrMhq6V7AmfzB4T/RTpHok20apgXPeaKnazvYOmSnYaVrRvvG1VfJtQ5iOSXxL
+	t2BT7tH/y8vgcd+sCPZFaEyl3Wr4GbHCBTAkTSbxb+XVKKO/KIFvgzJ501Vv4Gmk8cWU=
+X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
+X-QQ-RECHKSPAM: 0
 
-On Tue, Mar 18, 2025 at 8:06=E2=80=AFPM Kees Cook <kees@kernel.org> wrote:
->
-> On Tue, Mar 18, 2025 at 02:40:32PM -0700, Peter Collingbourne wrote:
-> > The call to read_word_at_a_time() in sized_strscpy() is problematic
-> > with MTE because it may trigger a tag check fault when reading
-> > across a tag granule (16 bytes) boundary. To make this code
-> > MTE compatible, let's start using load_unaligned_zeropad()
-> > on architectures where it is available (i.e. architectures that
-> > define CONFIG_DCACHE_WORD_ACCESS). Because load_unaligned_zeropad()
-> > takes care of page boundaries as well as tag granule boundaries,
-> > also disable the code preventing crossing page boundaries when using
-> > load_unaligned_zeropad().
-> >
-> > Signed-off-by: Peter Collingbourne <pcc@google.com>
-> > Link: https://linux-review.googlesource.com/id/If4b22e43b5a4ca49726b4bf=
-98ada827fdf755548
-> > Fixes: 94ab5b61ee16 ("kasan, arm64: enable CONFIG_KASAN_HW_TAGS")
-> > Cc: stable@vger.kernel.org
-> > ---
-> > v2:
-> > - new approach
-> >
-> >  lib/string.c | 13 ++++++++++---
-> >  1 file changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/lib/string.c b/lib/string.c
-> > index eb4486ed40d25..b632c71df1a50 100644
-> > --- a/lib/string.c
-> > +++ b/lib/string.c
-> > @@ -119,6 +119,7 @@ ssize_t sized_strscpy(char *dest, const char *src, =
-size_t count)
-> >       if (count =3D=3D 0 || WARN_ON_ONCE(count > INT_MAX))
-> >               return -E2BIG;
-> >
-> > +#ifndef CONFIG_DCACHE_WORD_ACCESS
-> >  #ifdef CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
->
-> I would prefer this were written as:
->
-> #if !defined(CONFIG_DCACHE_WORD_ACCESS) && \
->     defined(CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS)
->
-> Having 2 #ifs makes me think there is some reason for having them
-> separable. But the logic here is for a single check.
+1. MITIGATION_RETPOLINE is x86-only (defined in arch/x86/Kconfig),
+so no need to AND with CONFIG_X86 when checking if enabled.
 
-There is indeed a reason for having two: there's an #else in the
-middle (which pertains to CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS
-only).
+2. Remove unused declaration of nf_skip_indirect_calls() when
+MITIGATION_RETPOLINE is disabled to avoid warnings.
 
->
-> >       /*
-> >        * If src is unaligned, don't cross a page boundary,
-> > @@ -133,12 +134,14 @@ ssize_t sized_strscpy(char *dest, const char *src=
-, size_t count)
-> >       /* If src or dest is unaligned, don't do word-at-a-time. */
-> >       if (((long) dest | (long) src) & (sizeof(long) - 1))
-> >               max =3D 0;
-> > +#endif
-> >  #endif
->
-> (Then no second #endif needed)
->
-> >
-> >       /*
-> > -      * read_word_at_a_time() below may read uninitialized bytes after=
- the
-> > -      * trailing zero and use them in comparisons. Disable this optimi=
-zation
-> > -      * under KMSAN to prevent false positive reports.
-> > +      * load_unaligned_zeropad() or read_word_at_a_time() below may re=
-ad
-> > +      * uninitialized bytes after the trailing zero and use them in
-> > +      * comparisons. Disable this optimization under KMSAN to prevent
-> > +      * false positive reports.
-> >        */
-> >       if (IS_ENABLED(CONFIG_KMSAN))
-> >               max =3D 0;
-> > @@ -146,7 +149,11 @@ ssize_t sized_strscpy(char *dest, const char *src,=
- size_t count)
-> >       while (max >=3D sizeof(unsigned long)) {
-> >               unsigned long c, data;
-> >
-> > +#ifdef CONFIG_DCACHE_WORD_ACCESS
-> > +             c =3D load_unaligned_zeropad(src+res);
-> > +#else
-> >               c =3D read_word_at_a_time(src+res);
-> > +#endif
-> >               if (has_zero(c, &data, &constants)) {
-> >                       data =3D prep_zero_mask(c, data, &constants);
-> >                       data =3D create_zero_mask(data);
->
-> The rest seems good. Though I do wonder: what happens on a page boundary
-> for read_word_at_a_time(), then? We get back zero-filled remainder? Will
-> that hide a missing NUL terminator? As in, it's not actually there
-> because of the end of the page/granule, but a zero was put in, so now
-> it looks like it's been terminated and the exception got eaten? And
-> doesn't this hide MTE faults since we can't differentiate "overran MTE
-> tag" from "overran granule while over-reading"?
+3. Declare nf_skip_indirect_calls() and nf_skip_indirect_calls_enable()
+as inline when MITIGATION_RETPOLINE is enabled, as they are called
+only once and have simple logic.
 
-Correct. The behavior I implemented seems good enough for now IMO (and
-at least good enough for backports). If we did want to detect this
-case, we would need an alternative to "load_unaligned_zeropad" that
-would do something other than fill the unreadable bytes with zeros in
-the fault handler. For example, it could fill them with all-ones. That
-would prevent the loop from being terminated by the tag check fault,
-and we would proceed to the next granule, take another tag check fault
-which would recur in the fault handler and cause the bug to be
-detected.
+4. Following that, there's no need to define an empty
+nf_skip_indirect_calls_enable function. Just simply add the same macro
+condition around its sole call site.
 
-Peter
+Fix follow error with clang-21 when W=1e:
+  net/netfilter/nf_tables_core.c:39:20: error: unused function 'nf_skip_indirect_calls' [-Werror,-Wunused-function]
+     39 | static inline bool nf_skip_indirect_calls(void) { return false; }
+        |                    ^~~~~~~~~~~~~~~~~~~~~~
+  1 error generated.
+  make[4]: *** [scripts/Makefile.build:207: net/netfilter/nf_tables_core.o] Error 1
+  make[3]: *** [scripts/Makefile.build:465: net/netfilter] Error 2
+  make[3]: *** Waiting for unfinished jobs....
+
+Fixes: d8d760627855 ("netfilter: nf_tables: add static key to skip retpoline workarounds")
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: WangYuli <wangyuli@uniontech.com>
+---
+ net/netfilter/nf_tables_core.c | 15 ++++++---------
+ 1 file changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/net/netfilter/nf_tables_core.c b/net/netfilter/nf_tables_core.c
+index 75598520b0fa..48b8d2406d4e 100644
+--- a/net/netfilter/nf_tables_core.c
++++ b/net/netfilter/nf_tables_core.c
+@@ -21,25 +21,20 @@
+ #include <net/netfilter/nf_log.h>
+ #include <net/netfilter/nft_meta.h>
+ 
+-#if defined(CONFIG_MITIGATION_RETPOLINE) && defined(CONFIG_X86)
+-
++#ifdef CONFIG_MITIGATION_RETPOLINE
+ static struct static_key_false nf_tables_skip_direct_calls;
+ 
+-static bool nf_skip_indirect_calls(void)
++static inline bool nf_skip_indirect_calls(void)
+ {
+ 	return static_branch_likely(&nf_tables_skip_direct_calls);
+ }
+ 
+-static void __init nf_skip_indirect_calls_enable(void)
++static inline void __init nf_skip_indirect_calls_enable(void)
+ {
+ 	if (!cpu_feature_enabled(X86_FEATURE_RETPOLINE))
+ 		static_branch_enable(&nf_tables_skip_direct_calls);
+ }
+-#else
+-static inline bool nf_skip_indirect_calls(void) { return false; }
+-
+-static inline void nf_skip_indirect_calls_enable(void) { }
+-#endif
++#endif /* CONFIG_MITIGATION_RETPOLINE */
+ 
+ static noinline void __nft_trace_packet(const struct nft_pktinfo *pkt,
+ 					const struct nft_verdict *verdict,
+@@ -393,7 +388,9 @@ int __init nf_tables_core_module_init(void)
+ 			goto err;
+ 	}
+ 
++#ifdef CONFIG_MITIGATION_RETPOLINE
+ 	nf_skip_indirect_calls_enable();
++#endif /* CONFIG_MITIGATION_RETPOLINE */
+ 
+ 	return 0;
+ 
+-- 
+2.49.0
+
