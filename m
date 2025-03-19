@@ -1,107 +1,138 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 525B720FA98;
-	Wed, 19 Mar 2025 11:26:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB351E1E11;
+	Wed, 19 Mar 2025 11:28:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383600; cv=none; b=HmU0b64LsE9WIHSp2+O2Nk2s7Bl9TojBzsWZiGtWHNN+wNHwhDJmg5bOLrXP4jtOsOu9OWNWednNA2BB5zsQXjdagTXiqrrBeMqMljw3JkpGb1W/LziQXKOMs8KLkZ9gp1UNa7SU0xYOMLfz3CGo6cNsi5YpR4s2+P6nbbE7vwg=
+	t=1742383707; cv=none; b=CUX9Eko6TcUsdOZ/Zs+fC+IpWJWkYB+phwVwLz0FX8egSqMHkCC0ttqU17jTYnfsg9fmZUiR14ZzS5J0/vh46BDzU4UW2YG/nKys+74XkZCfvz9T/nk1UZ/eKi1IKRpOqTK9pJo3YHmlR/RFCRjaR5NRdg9k/s69B56i1NGXbgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383600; c=relaxed/simple;
-	bh=dB9GCEMLNY6VMaee3n8EoNxVkjMyPXpZt6YLWfdnLQQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cFGbqBJu0vL8xaB7J11xnWQxwwGwZnFcGr9WzZxe6J1rzfQrTOsWdVQZg9I0pbAwp1qsnjIg8pOc4U0PTFbhFKeX6K46G0q6HhALw01x26ojjTJVpYO2l6+vIJw4V+KXDYQkEjlP2NZaBXZGEZWICQYjtaduAbCUto0rdOZ95RU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GN8/EY1V; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742383707; c=relaxed/simple;
+	bh=4l1nbqfl/Z9DhYcOlNvzUWzMTbQcHY2vNoLRdgdG+4s=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nPM0p8zVMGQgM/VzT9iM3TW0y6PGOrKK3AY9VgN5/unnLDcqW3oU5TtDnc/cpZ2kQsgeqgvnNoa5w6aVAf/+ta3uJSssN/amUQGWAJIhX8IzfX02jRazzNSXxyhEnwFkOY3eW4TOsuIiWYaVaLRKD40AztrwA+mAaoclh9eLU7w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=tOpfNvWp; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GN8/EY1V"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742383599; x=1773919599;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=dB9GCEMLNY6VMaee3n8EoNxVkjMyPXpZt6YLWfdnLQQ=;
-  b=GN8/EY1VFjhrmBcdbTpJAacEJMC6c8AxwgPSA6MnIycYaI7BLsrIQUC9
-   AmYAMSZhjlqdHUxPieydqnutrgaq1/lc3HB7jtKcdIVSXaidHdpOk5UXj
-   2NyhBMK77kOb0Rkh/AzSO6RWXQ8NX9BrbjbGpBLZLwCnFZu++TJ/3OQXv
-   hgJTtO5yrIAcUWXtHg9/ZQXYN1LUwGVVd/TE/IZl9rqJHvrfYQpNs8qcK
-   qjPgDIK6qUWhaqYBLUz5rbgvaJKPZwX031kea+kP6Lu47j4vVmcbyN9kb
-   6mHxwlWMRvtK7KVGstlbwOf0h5EOJQgPZ8w80j0/hAmHQJypBY7rNL3xg
-   A==;
-X-CSE-ConnectionGUID: DNmoPdL+ShuKA8eew5sN9w==
-X-CSE-MsgGUID: MIOMydv8RFCFctqx5gQEFQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="31147064"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="31147064"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 04:26:38 -0700
-X-CSE-ConnectionGUID: saX4j4ygQWaGvpXF2MKosw==
-X-CSE-MsgGUID: GfhqXt5gScmLU4psj6a7aA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="122313057"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 04:26:37 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1turZB-00000003u04-18HZ;
-	Wed, 19 Mar 2025 13:26:33 +0200
-Date: Wed, 19 Mar 2025 13:26:32 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH net v2 2/2] net: usb: asix: ax88772: Increase phy_name
- size
-Message-ID: <Z9qp6F26PbNczz9R@smile.fi.intel.com>
-References: <20250319105813.3102076-1-andriy.shevchenko@linux.intel.com>
- <20250319105813.3102076-3-andriy.shevchenko@linux.intel.com>
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="tOpfNvWp"
+Received: from [192.168.1.102] (93-61-96-190.ip145.fastwebnet.it [93.61.96.190])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 1AD3A22F;
+	Wed, 19 Mar 2025 12:26:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1742383601;
+	bh=4l1nbqfl/Z9DhYcOlNvzUWzMTbQcHY2vNoLRdgdG+4s=;
+	h=From:Subject:Date:To:Cc:From;
+	b=tOpfNvWpbzvgy+TkteDCJ5GVOpYC5YBwKRbbshC1e6Lq5KRZKocVo7e2CQuOQOcNe
+	 4P6Ztis5+b52TunXyYDadXPlgFMtcgrs4q1FHV4z+VLfp7D8/2yhZgk9Ssj3g4V7to
+	 Ifn1z7KFQMxCdGbEzvD0oh+awXWYTpOAQUvK0nkY=
+From: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+Subject: [PATCH v5 0/7] media: renesas: vsp1: Add support for IIF
+Date: Wed, 19 Mar 2025 12:28:13 +0100
+Message-Id: <20250319-v4h-iif-v5-0-0a10456d792c@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250319105813.3102076-3-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAE2q2mcC/3XMQY4CIRCF4asY1oOhCtDGlfcws6Ch2q7FNAYMc
+ WL67oNumERdvkp9/10UykxFHDZ3kaly4bS0Yb82Isx+OZPk2LZAhVYBalnNLJkn6SFGvzMqOBt
+ F+75kmvj2LJ2+2565XFP+fYYrPK6vjQpSyf1oyKJzTrvpyJF8ScuYfI7bkH7EI1Wxc0TTOTaut
+ LKkA0yE8QPXnWvYd64b32nvx8ENOFr1gZv/fOjcNA6KogkGAjj7hq/r+gefZRLDYgEAAA==
+X-Change-ID: 20250123-v4h-iif-a1dda640c95d
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
+ Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>
+Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-renesas-soc@vger.kernel.org, 
+ Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>, 
+ Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, 
+ =?utf-8?q?Niklas_S=C3=B6derlund?= <niklas.soderlund+renesas@ragnatech.se>
+X-Mailer: b4 0.15-dev-1b0d6
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2832;
+ i=jacopo.mondi+renesas@ideasonboard.com; h=from:subject:message-id;
+ bh=4l1nbqfl/Z9DhYcOlNvzUWzMTbQcHY2vNoLRdgdG+4s=;
+ b=owEBbQKS/ZANAwAIAXI0Bo8WoVY8AcsmYgBn2qpW1t1vB9zbqRF4InUzz1fOCeQRAg4QUd2G7
+ B/eYQUDP1CJAjMEAAEIAB0WIQS1xD1IgJogio9YOMByNAaPFqFWPAUCZ9qqVgAKCRByNAaPFqFW
+ PK6pD/9X0mgdk7XVGgK+Lw7Zo1AjtVYC5Yl1p31QOliNXnIZaoUwTSZglodoCR1BeDfX25hpKKT
+ ShDSdYo1NzfpVSkvU7c+zM58TC/jK/E/cQg7LUwpmMrJeK8zmIRVwbtNvu/m7o3CXjRENpnje3E
+ E9nNwlZxsqY93K1mizRKwujiCG8LwdoJzIo/+WWGRwDN/oHdlxoPCl2yoSdOk/F6bIiGV+wGfbp
+ UBtCLh5QuWgt0popXhpZn6B1GxSb+xdP43V/qKtg152mx2jFB3BtJg1qCUeRYucDwrloNESlspB
+ jOWNcj6A/ZiT+Z1knDDgsQxnARmDQvbGM4FpXi/qHZz4goUnXq/8whvsTatiGB3QT6nWdgRNxv6
+ NtYdr91ioxIVD8aAiTPGNF1mCxnLxp/4kMg19/TMrnBYkvKq17orWZctCHJnAH4o2cVOgQ6Seb8
+ u08NIjh56CAWL2G48lmxQ1s6oGcGh65GITE0qkZmCmZa2elgeo/EZxzTSujcC0CVHJTXYO81ywm
+ gQqwEt9wMzJuJgyje3Taoke57KGXlm19M1Unl0lszdOx4TBypVZp9pOGijwQ4KdjoAYPxO0F8Mf
+ bAGaTxKIv8kv6jhf6qi6O5ihipj8x70zvsIrv34Rda2bBn5e1rx0qZoREGtWxHV7+dcrGLmgBgD
+ RHiaLFWoFHhKxhA==
+X-Developer-Key: i=jacopo.mondi+renesas@ideasonboard.com; a=openpgp;
+ fpr=72392EDC88144A65C701EA9BA5826A2587AD026B
 
-On Wed, Mar 19, 2025 at 12:54:34PM +0200, Andy Shevchenko wrote:
-> GCC compiler (Debian 14.2.0-17) is not happy about printing
-> into a short buffer (when build with `make W=1`):
-> 
->  drivers/net/usb/ax88172a.c: In function ‘ax88172a_reset’:
->  include/linux/phy.h:312:20: error: ‘%s’ directive output may be truncated writing up to 60 bytes into a region of size 20 [-Werror=format-truncation=]
-> 
-> Indeed, the buffer size is chosen based on some assumptions, while
-> in general the assigned name might not fit. Increase the buffer to
-> cover maximum length of the parameters. With that, change snprintf()
-> to use sizeof() instead of hard coded number.
+The IIF (ISP InterFace) is a VSP2 function that reads data from
+external memory using two RPF instances and feed it to the ISP.
 
-...
+The IIF support is modeled in the vsp1 driver as a new, simple,
+entity type.
 
->  	if (ret < 0)
->  		goto free;
-> -
-> +	if (ret >= PHY_MAX_ADDR) {
-> +		netdev_err(dev->net, "Invalid PHY ID %x\n", ret);
-> +		return -ENODEV;
+IIF is part of VSPX, a version of the VSP2 IP specialized for ISP
+interfacing. To prepare to support VSPX, support IIF first by
+introducing a new entity and by adjusting the RPF/WPF drivers to
+operate correctly when an IIF is present.
 
-Oh, I was blindly put what had been suggested, needs a fix, but I will wait for
-other comments if any before issuing a v3.
+Signed-off-by: Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
+---
+Changes in v5:
+- Drop additional empty line 5/6
+- Link to v4: https://lore.kernel.org/r/20250318-v4h-iif-v4-0-10ed4c41c195@ideasonboard.com
 
-> +	}
+Changes in v4:
+- Fix SWAP bits for RAW10, RAW12 and RAW16
+- Link to v3: https://lore.kernel.org/r/20250317-v4h-iif-v3-0-63aab8982b50@ideasonboard.com
 
+Changes in v3:
+- Drop 2/6 from v2
+- Add 5/7 to prepare for a new implementation of 6/7
+- Individual changelog per patch
+- Add 7/7
+- Link to v2: https://lore.kernel.org/r/20250224-v4h-iif-v2-0-0305e3c1fe2d@ideasonboard.com
+
+Changes in v2:
+- Collect tags
+- Address review comments from Laurent, a lot of tiny changes here and
+  there but no major redesign worth an entry in the patchset changelog
+
+---
+Jacopo Mondi (7):
+      media: vsp1: Add support IIF ISP Interface
+      media: vsp1: dl: Use singleshot DL for VSPX
+      media: vsp1: rwpf: Break out format handling
+      media: vsp1: wpf: Propagate vsp1_rwpf_init_ctrls()
+      media: vsp1: rwpf: Initialize image formats
+      media: vsp1: rwpf: Support operations with IIF
+      media: vsp1: pipe: Add RAW Bayer formats mapping
+
+ drivers/media/platform/renesas/vsp1/Makefile      |   2 +-
+ drivers/media/platform/renesas/vsp1/vsp1.h        |   3 +
+ drivers/media/platform/renesas/vsp1/vsp1_dl.c     |   7 +-
+ drivers/media/platform/renesas/vsp1/vsp1_drv.c    |  11 ++
+ drivers/media/platform/renesas/vsp1/vsp1_entity.c |   8 ++
+ drivers/media/platform/renesas/vsp1/vsp1_entity.h |   1 +
+ drivers/media/platform/renesas/vsp1/vsp1_iif.c    | 121 ++++++++++++++++++++++
+ drivers/media/platform/renesas/vsp1/vsp1_iif.h    |  26 +++++
+ drivers/media/platform/renesas/vsp1/vsp1_pipe.c   |  73 ++++++++++++-
+ drivers/media/platform/renesas/vsp1/vsp1_pipe.h   |   1 +
+ drivers/media/platform/renesas/vsp1/vsp1_regs.h   |   8 ++
+ drivers/media/platform/renesas/vsp1/vsp1_rpf.c    |  18 +++-
+ drivers/media/platform/renesas/vsp1/vsp1_rwpf.c   |  91 ++++++++++++++--
+ drivers/media/platform/renesas/vsp1/vsp1_rwpf.h   |   4 +
+ drivers/media/platform/renesas/vsp1/vsp1_wpf.c    |  31 ++++--
+ 15 files changed, 380 insertions(+), 25 deletions(-)
+---
+base-commit: f2151613e040973c868d28c8b00885dfab69eb75
+change-id: 20250123-v4h-iif-a1dda640c95d
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Jacopo Mondi <jacopo.mondi+renesas@ideasonboard.com>
 
