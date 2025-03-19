@@ -1,110 +1,148 @@
-Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C5213DDB9;
-	Wed, 19 Mar 2025 02:38:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.178.238
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30815145A18;
+	Wed, 19 Mar 2025 02:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742351924; cv=none; b=TLwwGzFTwxey1iIJmHDE4ORBpLRfmsu+8kpp9F4fZivcmNrY/vtiV3Cyoi2+eJbjQ+5rTPZe2BOTdsV/JTS1PPayGUAfSciHez7rk0gYgEQz0ueCNM76xmzoOYwOIrvoTSKQWh90TVEuGQ1PHRtXIGFswXZqugqnE4nO1v0C7mI=
+	t=1742352059; cv=none; b=fJ7bEi3vi4zohT2C+R2w7HNEd5KkfbEFQFieSti808g7YuF+r0D5ba93EOFWkFooagSDU1zXwA1ioewV2+Wbj/8rVI1Nxcj3D52M7eeVA0wbpUyHmgnVfxe15OlqY9SWaBK6z+7nqe8DTnQnv72GhkU9NLkFu1oGfSErM3HubWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742351924; c=relaxed/simple;
-	bh=UK+DFx0zekguPPA1xLGOZkgkPBl0vVGvugn2cPZEb2s=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YQrddUDp66e63VYrjYw8RtedRgvPW0jE7uo6ZPTlMBvKqEJYiox4umV2b5PkmYOv2T7gK4fulY+EJ4ouQTEr56ZXPzsbQug/nyhqeBFaH8tAzR+bKVGVXlhq21D5J12fg1gajRMat15bDHPW8GmqoCpFUXwKn74zWPopg+i9ePg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.178.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250811.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J1S3fv015231;
-	Wed, 19 Mar 2025 02:37:46 GMT
-Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45cxs0v53g-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Wed, 19 Mar 2025 02:37:46 +0000 (GMT)
-Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Tue, 18 Mar 2025 19:37:45 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Tue, 18 Mar 2025 19:37:42 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <sfrench@samba.org>, <pc@cjr.nz>,
-        <lsahlber@redhat.com>, <sprasad@microsoft.com>, <tom@talpey.com>,
-        <linux-cifs@vger.kernel.org>, <samba-technical@lists.samba.org>,
-        <pc@manguebit.com>, <stfrench@microsoft.com>
-Subject: [PATCH 6.1.y] smb: client: fix potential UAF in cifs_dump_full_key()
-Date: Wed, 19 Mar 2025 10:37:41 +0800
-Message-ID: <20250319023741.922528-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742352059; c=relaxed/simple;
+	bh=E9i51D+sRDYe7TIlKQ1t9tMjTNjd9YGS/QutLm8JaFA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=NwXROgD42JDZ1kCIQ3lczysclvRSQaBaEfQT9ibxuPR3YjOS80K5pRi2bpRwri2ClpYG2u8DaiZ4+8bpe0Rz9BWa3GfxDDh5LVbHiRG23muE3jHpJ8GzE4+TkoOh+Jh0j92dJgTq+NaLPS8dRhkCIZJ9qN/sFTYyfIgXc7uhgq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A9fzD6cz; arc=none smtp.client-ip=209.85.221.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A9fzD6cz"
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3913cf69784so5327702f8f.1;
+        Tue, 18 Mar 2025 19:40:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742352056; x=1742956856; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WeqBB++rcOx94nz1IuSE0ME1aOopqq+egTiTenlENkM=;
+        b=A9fzD6czaWgqPHgPTJWQwI72INyjZfHnqrNa+m9vUmZatNGjffxiSLMTZKWMicWEWX
+         P/kJeDGR/rgK9ldg/iuMlLcMvel+AzHxKv55gdstRs/Gm+4MIt9DhNQEXlHumBsXKFyQ
+         mRutAoJjWBatoBByWsh8Yw9M1sfw7nnxRkpU6hJOEWehIAR4rn5K2x+zMRnZFvpnRm/P
+         y/AGN1kv5PloH1BoT7XT8d4FTXY+KKqpCkWHh4xsuKtX3MCi7jH30HU14cdIG4KYEs9s
+         UTxA2zVv2csM9BR2qsM3CODVplSRjTKcdO1NVyGh4Uak3j5DjXauuvt8FmY1wkZuNwET
+         ys4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742352056; x=1742956856;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WeqBB++rcOx94nz1IuSE0ME1aOopqq+egTiTenlENkM=;
+        b=UxINhRNIPrEt8y2m3yNhZnP2btyyr0OO8vhElK3uEmw+URqMbtf1aBAICQoh2BNuSs
+         9s7Wl8bSqgEjMMb7uaTYSiMXKdVFwB43JNuLhWuOtBLNq9HAtcN9PpWlZ19bAfxMrCKg
+         c0OiRp2HgILNu8AoEBVsa/RcwNqkOjnQay/zabpdce/CdVolggOySYvVJr+5a9kxah0T
+         YY5uAv5d4y+aGf6FF9g5dm3udrG8XcBNkDPtYqbGwUQTn2dMDOlndL74a/ABDSB2IgqN
+         aCbJR6LLStksxoxbq7fAOkulsVwAf4RpL0dGu9rznks4XeG9r8Vr8BdKmYk6R1lFJzD7
+         8oLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUNU9x+jqRGaaK63iTCyHSehllaj/qXRSkfSRMiNf8wcMo4FVF8wEWKA+iwzjA8qj/XyM=@vger.kernel.org, AJvYcCW/nGsQLxqpPVSuIs4fat3A/GtLB3UvHW9pTmk8qhTnwUHVdtD9MY2P47zjzh6h7dsbps029PhIPRzFUx67p/6T@vger.kernel.org, AJvYcCXJJe6yjH0l2GIVgBhIQ0km317og1sW3KHyziKe2KcCgTf0xdcSEMHVm3ebDcGtiSoH4AkusHWRbVI0t1zv@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNwss2TcWKYC7ly9rlRuOno6rhze2A+nGf1bu06Q0iFcGlC8RD
+	9vB6ssLW4I92aOUO8yNyyKUT9X7PFgayIb97WgkSXDH87+IKK9lqoU33QV4ur7dHP3DZrs88Cqu
+	Yi6tQ4FGIQflh7XExPqAxhuCok5o=
+X-Gm-Gg: ASbGncuuOYanJNza1o/Pdhc2d/HAZH/wvFhBRVUJcKAgK7TBEmP6zCOe2aFBqvA/y6Y
+	GUxummNs5knrskCgls8etuaVz3Z0rPLuWpxfps27rOEPHRofA21D87nfD9ZPANyNRkbfgD6C6pa
+	GYF/psRZ7E1tWuXZKUbqjAU9D5a9vrHAC/E4KDffwRHUwAFPAtlL1P
+X-Google-Smtp-Source: AGHT+IEq4Cvjw+V0zW8HacPzY7dpEsXkttELmIjzb3h1MDYt7G6p44IBkRudTjyMAKCZQZF68Vdm9Bd7RVSCNEeyHA4=
+X-Received: by 2002:a05:6000:2a6:b0:391:2c0c:1247 with SMTP id
+ ffacd0b85a97d-399739b7c7cmr810733f8f.1.1742352056133; Tue, 18 Mar 2025
+ 19:40:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: NdeE3YcFlthwkM3I29nemHpK4f04O29Y
-X-Proofpoint-GUID: NdeE3YcFlthwkM3I29nemHpK4f04O29Y
-X-Authority-Analysis: v=2.4 cv=NY/m13D4 c=1 sm=1 tr=0 ts=67da2dfa cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=Vs1iUdzkB0EA:10 a=Li1AiuEPAAAA:8 a=VwQbUJbxAAAA:8 a=yMhMjlubAAAA:8 a=t7CeM3EgAAAA:8 a=1_rInJw21EjIxf1COpsA:9
- a=qGKPP_lnpMOaqR3bcYHU:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-18_10,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- spamscore=0 mlxscore=0 phishscore=0 lowpriorityscore=0 suspectscore=0
- clxscore=1011 mlxlogscore=999 impostorscore=0 adultscore=0
- priorityscore=1501 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2503190017
+References: <20250313172127.1098195-1-luis.gerhorst@fau.de>
+ <20250313175312.1120183-1-luis.gerhorst@fau.de> <20250313175312.1120183-2-luis.gerhorst@fau.de>
+In-Reply-To: <20250313175312.1120183-2-luis.gerhorst@fau.de>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Tue, 18 Mar 2025 19:40:44 -0700
+X-Gm-Features: AQ5f1Jql7yFmS7_MWNSMia475Ma-4TwbNZCE_S5_030qdEibYwvwxGNs5a0zSMA
+Message-ID: <CAADnVQKL-NwxigMWM+U=n5ZXPG+xHYzSTEv0Rq8Y91m45eRJDw@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 11/11] bpf: Fall back to nospec for spec path verification
+To: Luis Gerhorst <luis.gerhorst@fau.de>
+Cc: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
+	Andrii Nakryiko <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Puranjay Mohan <puranjay@kernel.org>, 
+	Xu Kuohai <xukuohai@huaweicloud.com>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Hari Bathini <hbathini@linux.ibm.com>, 
+	Christophe Leroy <christophe.leroy@csgroup.eu>, Naveen N Rao <naveen@kernel.org>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Shuah Khan <shuah@kernel.org>, 
+	Henriette Herzog <henriette.herzog@rub.de>, Cupertino Miranda <cupertino.miranda@oracle.com>, 
+	Matan Shachnai <m.shachnai@gmail.com>, Dimitar Kanaliev <dimitar.kanaliev@siteground.com>, 
+	Shung-Hsi Yu <shung-hsi.yu@suse.com>, Daniel Xu <dxu@dxuuu.xyz>, bpf <bpf@vger.kernel.org>, 
+	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, 
+	ppc-dev <linuxppc-dev@lists.ozlabs.org>, 
+	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, George Guo <guodongtai@kylinos.cn>, 
+	WANG Xuerui <git@xen0n.name>, Tiezhu Yang <yangtiezhu@loongson.cn>, Maximilian Ott <ott@cs.fau.de>, 
+	Milan Stephan <milan.stephan@fau.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Paulo Alcantara <pc@manguebit.com>
+On Thu, Mar 13, 2025 at 10:57=E2=80=AFAM Luis Gerhorst <luis.gerhorst@fau.d=
+e> wrote:
+>
+> This trades verification complexity for runtime overheads due to the
+> nospec inserted because of the EINVAL.
+>
+> With increased limits this allows applying mitigations to large BPF
+> progs such as the Parca Continuous Profiler's prog. However, this
+> requires a jump-seq limit of 256k. In any case, the same principle
+> should apply to smaller programs therefore include it even if the limit
+> stays at 8k for now. Most programs in [1] only require a limit of 32k.
 
-[ Upstream commit 58acd1f497162e7d282077f816faa519487be045 ]
+Do you mean that without this change the verifier needs 256k
+jmp limit to load Parca's prog as unpriv due to speculative
+path exploration with push_stack ?
 
-Skip sessions that are being teared down (status == SES_EXITING) to
-avoid UAF.
+And this change uses 4k as a trade-off between prog runtime
+and verification time ?
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
----
-Verified the build test
----
- fs/smb/client/ioctl.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+But tracing progs use bpf_probe_read_kernel(), so they're never going
+to be unpriv.
 
-diff --git a/fs/smb/client/ioctl.c b/fs/smb/client/ioctl.c
-index ae9905e2b9d4..7402070b7a06 100644
---- a/fs/smb/client/ioctl.c
-+++ b/fs/smb/client/ioctl.c
-@@ -246,7 +246,9 @@ static int cifs_dump_full_key(struct cifs_tcon *tcon, struct smb3_full_key_debug
- 		spin_lock(&cifs_tcp_ses_lock);
- 		list_for_each_entry(server_it, &cifs_tcp_ses_list, tcp_ses_list) {
- 			list_for_each_entry(ses_it, &server_it->smb_ses_list, smb_ses_list) {
--				if (ses_it->Suid == out.session_id) {
-+				spin_lock(&ses_it->ses_lock);
-+				if (ses_it->ses_status != SES_EXITING &&
-+				    ses_it->Suid == out.session_id) {
- 					ses = ses_it;
- 					/*
- 					 * since we are using the session outside the crit
-@@ -254,9 +256,11 @@ static int cifs_dump_full_key(struct cifs_tcon *tcon, struct smb3_full_key_debug
- 					 * so increment its refcount
- 					 */
- 					ses->ses_count++;
-+					spin_unlock(&ses_it->ses_lock);
- 					found = true;
- 					goto search_end;
- 				}
-+				spin_unlock(&ses_it->ses_lock);
- 			}
- 		}
- search_end:
--- 
-2.25.1
+> @@ -2010,6 +2011,19 @@ static struct bpf_verifier_state *push_stack(struc=
+t bpf_verifier_env *env,
+>         struct bpf_verifier_stack_elem *elem;
+>         int err;
+>
+> +       if (!env->bypass_spec_v1 &&
+> +           cur->speculative &&
 
+Should this be
+(cur->speculative || speculative)
+?
+
+In general I'm not convinced that the approach is safe.
+
+This recoverable EINVAL means that exploration under speculation
+stops early, but there could be more branches and they won't be
+sanitized with extra lfence.
+So speculative execution can still happen at later insns.
+
+Similar concern in patch 7:
++ if (state->speculative && cur_aux(env)->nospec)
++   goto process_bpf_exit;
+
+One lfence at this insn doesn't stop speculation until the program end.
+Only at this insn. The rest of the code is free to speculate.
+
+The refactoring in patches 1-3 is nice.
+Patches 4-5 are tricky and somewhat questionable, but make sense.
+Patch 7 without early goto process_bpf_exit looks correct too,
+Patch 8 is borderline. Feels like it's opening the door for
+new vulnerabilities and space to explore for security researchers.
+We disabled unpriv bpf by default and have no intentions to enable it.
+Even if we land the whole thing the unpriv will stay disabled.
+So trade offs don't appear favorable.
