@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAE2215049;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B34B215F78;
 	Wed, 19 Mar 2025 20:59:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742417985; cv=none; b=SN14Oeg0aoMH1GDIMMqct1RMbvko7cCpoI3bThfO2naN0autFeLIMPwcAlDw1F4p6araVlMHHZD9Af2h6Vs33yWqbpA1g5YCPPIRQY7qeOoEwkz3iqO7CpfpPZAK8bENDyW9YryFuuEtPbtzvaP7Dqn1d2MGeR7ScNZuNPVmCTA=
+	t=1742417986; cv=none; b=Jq1kdDUqdD3XR4EESWejX5ft0sNQBN5iF+XdP7LUgMBjsZgJGniSqkdUUADIKmE8MXw40BdzlLFzzw0gMY/7/OMyoYAvgiw0IHmfTDKe9tmSIxny7TeJzYQNnHOFDJ3fhCCPGSZo5+dflcRKUVsmnZwf8b3ZOuUZQ2rG0Fl5dEY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742417985; c=relaxed/simple;
-	bh=I1QudRTcRzar5C3WjocpB9UgOXiwRUlIuiV6ZhxQUAk=;
+	s=arc-20240116; t=1742417986; c=relaxed/simple;
+	bh=dcbJNZwgOgHVewbA7jxz5V0OKX/waleHhfwZA91/I1A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WWlUn8ITFX4njqmY0jFn8yZXyY0NBY9H/2PCySLyHnGxXSVQ8mXfzlpc31s8wbiFkVYc35pWVSitznCl7qb5rVnkS5KYh5tzGcIDFe8Y+gtbMDWsp4wRYrBcDNEh4+HG59YHIFNQoBafJJpIURReykpAVLyk1kzNAXfxlqkZ1xE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQ+nMc4L; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=q7XfYIIjeYg53AENJnZBc1azAdfCMvhaAGNDxQvxFRduqtX1fF2K0ZhPMYaOGA22Ef9xh2eS9TKs9qP2AnsCJWfkWKDZiAgA1tGUvvWeTacRZ4xx1jLnoRk7mF/oMD21O0ttL9UlIqRU+Exfd742AW7I2A0QZG2yalUcsDXKVJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=McREUvBj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQ+nMc4L"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 58F87C4CEF2;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="McREUvBj"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 912C9C4CEFA;
 	Wed, 19 Mar 2025 20:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742417985;
-	bh=I1QudRTcRzar5C3WjocpB9UgOXiwRUlIuiV6ZhxQUAk=;
+	bh=dcbJNZwgOgHVewbA7jxz5V0OKX/waleHhfwZA91/I1A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=oQ+nMc4LxswyJpIkMWdMDaczauypeDn4xdtRsjlzcb1/ybGIR3ICsF/nMp06umn5r
-	 nCdPn5IaBmhTKKIi1Nf8rDJpR//HrdSkJg4O0jKNqLjrOIegYAfye6fig/8jCG4aBS
-	 mdUsEc2xyY8vAtP3HgjiL5kDOAiGbQ8gPgizcg4WIuj85JWAnz0qdKEJtf1NntCL8l
-	 7ZSYrdYDHmX2zb4iEExWOBljZBchphzl+8ayzVyID7Zpe2LraK9OmaChO7GcYAI2Dv
-	 gtUZu4jsPkGw2N48v8tvQVVxqBgBtDMKglXe5fJexqmKxLfIs/z/gtHtxLJQjwgrB3
-	 8kdRfpCELmCkg==
+	b=McREUvBj8O2I/I4KZXr0OS3FD/2sr/Nj0ax6EAOtd2TaDPgwkKRE6Nh+x29NmLbnP
+	 vjV8rdfY/nGkMTlRxRxJXUuJpUp8labbvd8CZ/I8kezM9+mKqTmNk8FQvpwTst3UAP
+	 vSyA/Rnw9lCvMBjEgOW9as8lQffU/Tc5K23R6YWWfZtMvF+7cfaaqN+J8urddJ3eyu
+	 G1WmV/ktzbD3HPeTbBnsoD96MQHOj6yLnN7VO8jwo7BM1vtYH/ZvYQ3LfU2YGD/s/F
+	 tPyWfIO6GzlC2Rs2/K5gsJaY96uIQiPVpojDQV/q8095IvUUS4hpCAlfu6gC8z5QQ0
+	 2RnAG0rLzP67w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51124C36001;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87649C36002;
 	Wed, 19 Mar 2025 20:59:45 +0000 (UTC)
 From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
-Date: Wed, 19 Mar 2025 21:59:45 +0100
-Subject: [PATCH v2 06/13] iio: light: al3320a: Abstract device reference in
- the probe function
+Date: Wed, 19 Mar 2025 21:59:49 +0100
+Subject: [PATCH v2 10/13] iio: light: al3010: Improve al3010_init error
+ handling with dev_err_probe
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-al3010-iio-regmap-v2-6-1310729d0543@ixit.cz>
+Message-Id: <20250319-al3010-iio-regmap-v2-10-1310729d0543@ixit.cz>
 References: <20250319-al3010-iio-regmap-v2-0-1310729d0543@ixit.cz>
 In-Reply-To: <20250319-al3010-iio-regmap-v2-0-1310729d0543@ixit.cz>
 To: Jonathan Cameron <jic23@kernel.org>, 
@@ -50,21 +50,21 @@ Cc: Svyatoslav Ryhel <clamor95@gmail.com>,
  Robert Eckelmann <longnoserob@gmail.com>, linux-iio@vger.kernel.org, 
  linux-kernel@vger.kernel.org, David Heidelberg <david@ixit.cz>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1532; i=david@ixit.cz;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=818; i=david@ixit.cz;
  h=from:subject:message-id;
- bh=Ct1gfcrjZUKbkM919cRcq2ZoAee3rgE77Wd7D0kN4IQ=;
- b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn2zA9d5MI7y5r0Kp+Il39GDvhw+GAXO+1U68D8
- cpoGkCO4B2JAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ9swPQAKCRBgAj/E00kg
- cgrED/0aXuYXLYx7Lx1WaDZQ9DPGyQQuMmWIU6B2lm3T7Wc+VGSAv1FN+d+t1eXoosMwqbSgztF
- ixW6pL4d4YJOsCaYg1FWaWPeNKAo4lxXkMrAinWNqCZck2RohshLweIkbQqG/q1C0vNJeswbo6p
- +6XsHms6myzLQpEZPPkkYKReWBgsOfA/bq38nWXjsAEMMq6hAw/7szTtMsug50DhhKXOeSch0fZ
- M9CIGIcDVlLAPb0wWjWYsmvSuGZ1nlwMLQC+l4j6jEkyzkTzlBP6ByzrlOgArYL/EixHBGgelEj
- 9WNbi10ESDReQnx43zVcfX9Auffypjg7Q9ZxZjhk/g2NzySAG/yNJnWRcQPVwqoF0YfgZ1Sd94W
- Flyl+sXMEBPrrOdcJI89H8Q3s+4HM68spBPQHy8B2au5ICMw5woSMgp5H61xN809rPVPXDNvH35
- DoPYHbd7epzP6g0qaaphNylFXVzYFFbHQ5tH0L0inYRbYSa9JIaXpyv9l4rXp+mb+nOF2WT+GK6
- heDYoDCpI3oluivR4XJnzGiFXIKVly6ygBUyBiyTA+iTngC9N3UfBF654wnpnjJUc7372iXLkDv
- NHdsGIvb02tAHf2/RAopJZ/dr5hi2zhVD7UKPXnRbfMtMfvlaXqEe4/Ft1nGpORJP+2jPh+l2ol
- kDa/bDqdbRBqOag==
+ bh=U+gyu2giS4hLLAaP3knPJNMAi2dd0lLS/xGNscKmGCc=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn2zA+6UW4pTZ7TSIE2lofczNz+g9UJ/qu6PDg5
+ aBmh+cDYR6JAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ9swPgAKCRBgAj/E00kg
+ co5NEACXcv0zPgnlpV8JIFGudofxcsi1tp9n1jUHFFlcZ9D7hvRgidJZqmmX6P1/XMYvaHW0PLM
+ 0kg8ZEFUy4YmewBfM/FUMIygQLM7HjiwyQ3VP/TOelKD37GA6CORJ7WLo7WifL5oRuNjWcAmS/X
+ 3Lz7/Lr3rCG1ohB8KCRIituClAVaJD2V/my1pxNmkqlmec0U2pFRo7fbeDn1tmlmPtyYrUw7M48
+ SlIsv1kQWukdo/zvIBadYuIzE4H415FlTKDv1mzcKzW5syFsrzMgbAeKOZCixZhMJyjToch5vmv
+ mdGAsXiuHIZjNYCVUrAksdSeOsJzFViBMBaUfgdW14fj2iFttJ811vIxFheMYiOggTGpeK/zZDP
+ wDZ3Q3269sLlwbP472fOl1RZ56G1lz4cKcQhB4pUN5vdWIH/ytWMoKzANcJb39lg7xffpJaHgoh
+ 0j3xSAtyoWofcYxToFYCtl6WZJfwO3rW+Pets6Dw+jHlHk3ZOGx8jK7QkFIvGpXDezprWWhKafD
+ +7WSUCET5aON3NPOpynrSp0YZw4eTCdQqkyNHiVE5iCGVRw9cGcCWGulO5rdnkKcINfbWQLKwZ2
+ JrcrL9CR7vQjTxqeOQkM+bcp1k/kJDe68r3TdLN4mejN+XORme3kA2gINXte9Z7HDBUEix7IRoP
+ AhMxf/nKn9vArUQ==
 X-Developer-Key: i=david@ixit.cz; a=openpgp;
  fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
 X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
@@ -73,53 +73,30 @@ Reply-To: david@ixit.cz
 
 From: David Heidelberg <david@ixit.cz>
 
-Introduce a local variable reducing redundancy and improving readability.
-
-No functional changes.
+Slight simplification of the code.
 
 Signed-off-by: David Heidelberg <david@ixit.cz>
 ---
- drivers/iio/light/al3320a.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ drivers/iio/light/al3010.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/light/al3320a.c b/drivers/iio/light/al3320a.c
-index 93416f3bd7fbb0a75bef17949725d0d40b9b93ea..9817cfe8ae18a8e27c82e7362481ebd32a41f8ec 100644
---- a/drivers/iio/light/al3320a.c
-+++ b/drivers/iio/light/al3320a.c
-@@ -188,10 +188,11 @@ static const struct iio_info al3320a_info = {
- static int al3320a_probe(struct i2c_client *client)
- {
- 	struct al3320a_data *data;
-+	struct device *dev = &client->dev;
- 	struct iio_dev *indio_dev;
- 	int ret;
+diff --git a/drivers/iio/light/al3010.c b/drivers/iio/light/al3010.c
+index 8098c92c9572befe92d00ef0785ded5e1a08d587..af7ed028259837f2232f30072b87cc0da7c77f37 100644
+--- a/drivers/iio/light/al3010.c
++++ b/drivers/iio/light/al3010.c
+@@ -184,10 +184,8 @@ static int al3010_probe(struct i2c_client *client)
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
  
--	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-+	indio_dev = devm_iio_device_alloc(dev, sizeof(*data));
- 	if (!indio_dev)
- 		return -ENOMEM;
+ 	ret = al3010_init(data);
+-	if (ret < 0) {
+-		dev_err(dev, "al3010 chip init failed\n");
+-		return ret;
+-	}
++	if (ret)
++		return dev_err_probe(dev, ret, "failed to init ALS\n");
  
-@@ -207,17 +208,15 @@ static int al3320a_probe(struct i2c_client *client)
- 
- 	ret = al3320a_init(data);
- 	if (ret < 0) {
--		dev_err(&client->dev, "al3320a chip init failed\n");
-+		dev_err(dev, "al3320a chip init failed\n");
- 		return ret;
- 	}
- 
--	ret = devm_add_action_or_reset(&client->dev,
--					al3320a_set_pwr_off,
--					data);
-+	ret = devm_add_action_or_reset(dev, al3320a_set_pwr_off, data);
- 	if (ret < 0)
- 		return ret;
- 
--	return devm_iio_device_register(&client->dev, indio_dev);
-+	return devm_iio_device_register(dev, indio_dev);
- }
- 
- static int al3320a_suspend(struct device *dev)
+ 	ret = devm_add_action_or_reset(dev, al3010_set_pwr_off, data);
+ 	if (ret)
 
 -- 
 2.49.0
