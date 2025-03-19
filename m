@@ -1,35 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6FC19006F;
-	Wed, 19 Mar 2025 18:29:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35711ACEAC
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742408998; cv=none; b=DM5W9lBjFxbhZRmEQ+GJQjXdV1h2jsvsv6+UVpKTnapNp+MMMct7LqU7Fq6fS6bWtyPFWLMsRyDam1/lCjTsXda59WhvuB39vlR1j89nqdJHLZbrzWFmbpLk02KoHj9b4wEuzcnMw4GNRsQXS260sotPMPHNoy5CK+GZzo/iCpQ=
+	t=1742409085; cv=none; b=JYPtAL4saMRLYVA/R/OdISNl0oEIVWTze6ZIa09jkY6ozOUlF8xX4UG6y4UFP56Og4ChgshSyvI6gE4bblHdieTtFSIwGGqi8OBeKmebwuACD1v7LIVcp4Dw/cpc1jvfR8ZoaWBE44GivOU2h1VbANYZdKVp3DamkmkVc66paLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742408998; c=relaxed/simple;
-	bh=rDEJilAYGA8Ecmyu39y36S9/93GbeW/ZKb/0a5sXCwg=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=VzJ/sbiazrVvVKYE6hEw8VqxnFWOgNCtFu4y0jwWq+IYw2FhHQWAH+l3mFxwAr9x9WRsE6s520PztF55rH01+jbmG+wv5WxG2BgK2tHTLmIPfUElTlOj0c+7h462EqSJbAeCHJGCWhOhWemP+wyUJu6motRn/td9U3Ae/jKMf7Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cX+941jw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742409085; c=relaxed/simple;
+	bh=dH0JG4CpLjwAZdV29UH5Pq7vsS7wQbo+IpgGVOW9e/Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=hwN+PN3hXZ2VTCeqW58OBunYffBdy66gHoDPqJgDctXr/+qplyD4oUWHxFVojpV5B7gTkKlf5GcFdBvYYJq7iRDySn6uOst4rKunDgzofM2ZpGelZyp14uZNVyIkOO7yXe0FLYTSQoNsn0f0SrP4ivUnkbzAgCLs5LObrIwEOkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HwRP76ys; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cX+941jw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C80BC4CEE4;
-	Wed, 19 Mar 2025 18:29:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742408998;
-	bh=rDEJilAYGA8Ecmyu39y36S9/93GbeW/ZKb/0a5sXCwg=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cX+941jwqXvuLuF6yUrjZQZJEg086+pcY5nlwE3jdJ/vv6mSXU1J2pA7qYMbJSFE9
-	 wdljIudrLLYIMs3Ri90BpWAv5q7iu+0Jb0viUurFXz2geIHxe00Gbr4eJCqSeiwWyr
-	 Wv4DUtSeBYweYvN3HG5cWFV0vGUpw1KZiMpmCFMJ0P2hpzu/a39wwUPkg15bR+KDY7
-	 PFdd+LPi5m6+aU+PUzMX3l30TJSG6+UByaPCQM/9arRBkFuVCMcN+doW2LgkSXh1n6
-	 FGup0bUa1ldcP++3Zy1Bv+bGOF8tITgp4v8Dez1MRG6q3MBrZIRq7CFEQwGtVNPnBy
-	 p/iHaOFkTVhBQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB2A9380CFFE;
-	Wed, 19 Mar 2025 18:30:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HwRP76ys"
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-3014cb646ecso5706137a91.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:31:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742409083; x=1743013883; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=8k6E0SBMJu3+sqsRyfC0ebK6LVVCZ5JuEe2gAlutts0=;
+        b=HwRP76ysaH4JRLPULLao/HtBP0FdSP5UDwli+U8GSpc8DlMLPII6520szPt5H97SDT
+         UWUv48XG88mGhgkVCv3FroKCidXvGtvNBypby0k1YbrqqotMudymO0DGK462UlskakJ8
+         UTVHAHAS+vOPJrjQt+VCXKajVcx9WB90pzwIj1uhIF9q3ig+eU19p434J+NfvJie6yLW
+         4f56Nwt6oFK64MZwV9dTilpBdhh3zJ1hHwdRb/oCsXLSpwestkEGS8kxZBFk+FSFGDNC
+         wPoUAr6xQ9fOsEFM4B2I0AOe9AbQxBaIvtRML3ynRvZJ/XAqM2rRS0sSuB63W7PsAik1
+         pjlA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742409083; x=1743013883;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=8k6E0SBMJu3+sqsRyfC0ebK6LVVCZ5JuEe2gAlutts0=;
+        b=m+VW+YNYnyRk+Q1EDA5g0u3TVpH6Qyi3aGTto5r1RivpJoW21+3vAnUzk3aIs2GVoO
+         lBBw1X3Mc6IN7QwXHURUGXE8a26Z39Gfke6MRd+hVEByZNFiHN0N/aTWG0gYPsXSRp91
+         K/O4cAtyFNTYM5TBDmhuJrBaSV8/TACUeG0OUqNvKXqDZxoomf2QTkei0TsUx/N76ivb
+         PdUyeuNdqeTRvn6PWHlHmLqK8FKt5arsQFZ4pWFmLbJ2LE+7w3XPy2wQOLXrRcooh08X
+         SjYxoUc4vBPVuNG0eG4TutaWUiKqpxSC9i9M0Rlq1zueu00pSsR1yoLSuNHuJhkplRBM
+         Rkxg==
+X-Forwarded-Encrypted: i=1; AJvYcCWmL0Ld+0RhA+S/Jlp+c8WU7C6hwVycO3Qhd4SXABqbXRWr35WyGdp3RXd1tCxxNbpmZLqIUJOddvGxtrY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySTRRA4KsIBJlJp1caiEHa/8ioZ9gpy4yVMjF1gxLaANVhIP3b
+	MeEf2ukkj08qwibEvLv15b7hEkq7BIjLS4Gvz63KNm/uYJDrZpdK
+X-Gm-Gg: ASbGncs7Sdk5J7FQ1y5SaqV91aJ+vDCkB3i5JnqiuTjMqss52JR/Jx8JkGDNsCyI2u4
+	J6+wnL/xf1y3TFrWrV0czjhxEfmZA+MJTRaRby4w2zIJqI66e8PiGzd15u1YPEyRqsfMq/NgX+s
+	+kKw2+Sq7epzBWybgPICIEA83p6M/qYFjXfBmKOfEVUDXg1VODH1JbNohdg5aF0RCEXRu+5r5vm
+	sx429WR6HYD5ztCq6Xrdq62aGDe1Me21ExcEYXt4a+JXVq2OsnaKtwPW7IQuGJC0VQnKeuW9lZS
+	l4FUjwOIbwTdHRMzHZmcr71uRXVVTadSfHa7bWJhQq4MKRN1rG1U8RPxk8ee+qPw
+X-Google-Smtp-Source: AGHT+IHYfTCmFqbs+qDm3BvqWkp57qcljfbUjjyj12xeCA0T3RI3cSHuRg+q+GC5f7TR/rYpyh5MoA==
+X-Received: by 2002:a17:90b:3d07:b0:2fa:15ab:4de7 with SMTP id 98e67ed59e1d1-301bde7397cmr7592138a91.12.1742409082762;
+        Wed, 19 Mar 2025 11:31:22 -0700 (PDT)
+Received: from distilledx.SRMIST.EDU.IN ([103.4.221.252])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61b525sm1978422a91.35.2025.03.19.11.31.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 11:31:22 -0700 (PDT)
+From: Tejas Vipin <tejasvipin76@gmail.com>
+To: neil.armstrong@linaro.org,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	aweber.kernel@gmail.com
+Cc: quic_jesszhan@quicinc.com,
+	dianders@chromium.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org,
+	asrivats@redhat.com,
+	Tejas Vipin <tejasvipin76@gmail.com>
+Subject: [PATCH v2] drm/panel: samsung-s6d7aa0: transition to mipi_dsi wrapped functions
+Date: Thu, 20 Mar 2025 00:01:06 +0530
+Message-ID: <20250319183106.12613-1-tejasvipin76@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -37,51 +80,366 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v6 0/2] netconsole: allow selection of egress
- interface via MAC address
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174240903376.1147083.9038887742867617656.git-patchwork-notify@kernel.org>
-Date: Wed, 19 Mar 2025 18:30:33 +0000
-References: <20250312-netconsole-v6-0-3437933e79b8@purestorage.com>
-In-Reply-To: <20250312-netconsole-v6-0-3437933e79b8@purestorage.com>
-To: Uday Shankar <ushankar@purestorage.com>
-Cc: leitao@debian.org, andrew+netdev@lunn.ch, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- srinivas.kandagatla@linaro.org, rafal@milecki.pl, horms@kernel.org,
- akpm@linux-foundation.org, johannes@sipsolutions.net, corbet@lwn.net,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-wireless@vger.kernel.org, linux-doc@vger.kernel.org,
- michal.swiatkowski@linux.intel.com, horms@verge.net.au
 
-Hello:
+Changes the samsung-s6d7aa0 panel to use multi style functions for
+improved error handling.
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+Signed-off-by: Tejas Vipin <tejasvipin76@gmail.com>
+---
+Changes in v2:
+    - Remove unnecessary early return in s6d7aa0_lock
+    - Remove redundant GPIO reset setting in s6d7aa0_on.
 
-On Wed, 12 Mar 2025 13:51:45 -0600 you wrote:
-> This series adds support for selecting a netconsole egress interface by
-> specifying the MAC address (in place of the interface name) in the
-> boot/module parameter.
-> 
-> Signed-off-by: Uday Shankar <ushankar@purestorage.com>
-> ---
-> Changes in v6:
-> - No changes, just rebase on net-next/main and repost for patchwork
->   automation
-> - Link to v5: https://lore.kernel.org/r/20250220-netconsole-v5-0-4aeafa71debf@purestorage.com
-> 
-> [...]
+Link to v1: https://lore.kernel.org/all/20250316045024.672167-1-tejasvipin76@gmail.com/
+---
+ drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c | 222 +++++-------------
+ 1 file changed, 65 insertions(+), 157 deletions(-)
 
-Here is the summary with links:
-  - [net-next,v6,1/2] net, treewide: define and use MAC_ADDR_STR_LEN
-    https://git.kernel.org/netdev/net-next/c/6d6c1ba78240
-  - [net-next,v6,2/2] netconsole: allow selection of egress interface via MAC address
-    https://git.kernel.org/netdev/net-next/c/f8a10bed32f5
-
-You are awesome, thank you!
+diff --git a/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c b/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c
+index f23d8832a1ad..9d219809ce38 100644
+--- a/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c
++++ b/drivers/gpu/drm/panel/panel-samsung-s6d7aa0.c
+@@ -34,8 +34,8 @@ struct s6d7aa0 {
+ 
+ struct s6d7aa0_panel_desc {
+ 	unsigned int panel_type;
+-	int (*init_func)(struct s6d7aa0 *ctx);
+-	int (*off_func)(struct s6d7aa0 *ctx);
++	void (*init_func)(struct s6d7aa0 *ctx, struct mipi_dsi_multi_context *dsi_ctx);
++	void (*off_func)(struct mipi_dsi_multi_context *dsi_ctx);
+ 	const struct drm_display_mode *drm_mode;
+ 	unsigned long mode_flags;
+ 	u32 bus_flags;
+@@ -62,93 +62,61 @@ static void s6d7aa0_reset(struct s6d7aa0 *ctx)
+ 	msleep(50);
+ }
+ 
+-static int s6d7aa0_lock(struct s6d7aa0 *ctx, bool lock)
++static void s6d7aa0_lock(struct s6d7aa0 *ctx, struct mipi_dsi_multi_context *dsi_ctx, bool lock)
+ {
+-	struct mipi_dsi_device *dsi = ctx->dsi;
+-
+ 	if (lock) {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0xa5, 0xa5);
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0xa5, 0xa5);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_PASSWD1, 0xa5, 0xa5);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_PASSWD2, 0xa5, 0xa5);
+ 		if (ctx->desc->use_passwd3)
+-			mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD3, 0x5a, 0x5a);
++			mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_PASSWD3, 0x5a, 0x5a);
+ 	} else {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD1, 0x5a, 0x5a);
+-		mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD2, 0x5a, 0x5a);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_PASSWD1, 0x5a, 0x5a);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_PASSWD2, 0x5a, 0x5a);
+ 		if (ctx->desc->use_passwd3)
+-			mipi_dsi_dcs_write_seq(dsi, MCS_PASSWD3, 0xa5, 0xa5);
++			mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_PASSWD3, 0xa5, 0xa5);
+ 	}
+-
+-	return 0;
+ }
+ 
+ static int s6d7aa0_on(struct s6d7aa0 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+-	ret = ctx->desc->init_func(ctx);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to initialize panel: %d\n", ret);
+-		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+-		return ret;
+-	}
++	ctx->desc->init_func(ctx, &dsi_ctx);
+ 
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display on: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_set_display_on_multi(&dsi_ctx);
+ 
+-	return 0;
++	return dsi_ctx.accum_err;
+ }
+ 
+-static int s6d7aa0_off(struct s6d7aa0 *ctx)
++static void s6d7aa0_off(struct s6d7aa0 *ctx)
+ {
+ 	struct mipi_dsi_device *dsi = ctx->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+-	ret = ctx->desc->off_func(ctx);
+-	if (ret < 0) {
+-		dev_err(dev, "Panel-specific off function failed: %d\n", ret);
+-		return ret;
+-	}
++	ctx->desc->off_func(&dsi_ctx);
+ 
+-	ret = mipi_dsi_dcs_set_display_off(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display off: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(64);
++	mipi_dsi_dcs_set_display_off_multi(&dsi_ctx);
++	mipi_dsi_msleep(&dsi_ctx, 64);
+ 
+-	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enter sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-	msleep(120);
++	mipi_dsi_dcs_enter_sleep_mode_multi(&dsi_ctx);
+ 
+-	return 0;
++	mipi_dsi_msleep(&dsi_ctx, 120);
+ }
+ 
+ static int s6d7aa0_prepare(struct drm_panel *panel)
+ {
+ 	struct s6d7aa0 *ctx = panel_to_s6d7aa0(panel);
+-	struct device *dev = &ctx->dsi->dev;
+ 	int ret;
+ 
+ 	ret = regulator_bulk_enable(ARRAY_SIZE(ctx->supplies), ctx->supplies);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to enable regulators: %d\n", ret);
++	if (ret < 0)
+ 		return ret;
+-	}
+ 
+ 	s6d7aa0_reset(ctx);
+ 
+ 	ret = s6d7aa0_on(ctx);
+ 	if (ret < 0) {
+-		dev_err(dev, "Failed to initialize panel: %d\n", ret);
+ 		gpiod_set_value_cansleep(ctx->reset_gpio, 1);
+ 		return ret;
+ 	}
+@@ -159,12 +127,8 @@ static int s6d7aa0_prepare(struct drm_panel *panel)
+ static int s6d7aa0_disable(struct drm_panel *panel)
+ {
+ 	struct s6d7aa0 *ctx = panel_to_s6d7aa0(panel);
+-	struct device *dev = &ctx->dsi->dev;
+-	int ret;
+ 
+-	ret = s6d7aa0_off(ctx);
+-	if (ret < 0)
+-		dev_err(dev, "Failed to un-initialize panel: %d\n", ret);
++	s6d7aa0_off(ctx);
+ 
+ 	return 0;
+ }
+@@ -185,13 +149,11 @@ static int s6d7aa0_bl_update_status(struct backlight_device *bl)
+ {
+ 	struct mipi_dsi_device *dsi = bl_get_data(bl);
+ 	u16 brightness = backlight_get_brightness(bl);
+-	int ret;
++	struct mipi_dsi_multi_context dsi_ctx = { .dsi = dsi };
+ 
+-	ret = mipi_dsi_dcs_set_display_brightness(dsi, brightness);
+-	if (ret < 0)
+-		return ret;
++	mipi_dsi_dcs_set_display_brightness_multi(&dsi_ctx, brightness);
+ 
+-	return 0;
++	return dsi_ctx.accum_err;
+ }
+ 
+ static int s6d7aa0_bl_get_brightness(struct backlight_device *bl)
+@@ -228,65 +190,39 @@ s6d7aa0_create_backlight(struct mipi_dsi_device *dsi)
+ 
+ /* Initialization code and structures for LSL080AL02 panel */
+ 
+-static int s6d7aa0_lsl080al02_init(struct s6d7aa0 *ctx)
++static void s6d7aa0_lsl080al02_init(struct s6d7aa0 *ctx, struct mipi_dsi_multi_context *dsi_ctx)
+ {
+-	struct mipi_dsi_device *dsi = ctx->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
++	mipi_dsi_usleep_range(dsi_ctx, 20000, 25000);
+ 
+-	usleep_range(20000, 25000);
++	s6d7aa0_lock(ctx, dsi_ctx, false);
+ 
+-	ret = s6d7aa0_lock(ctx, false);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to unlock registers: %d\n", ret);
+-		return ret;
+-	}
+-
+-	mipi_dsi_dcs_write_seq(dsi, MCS_OTP_RELOAD, 0x00, 0x10);
+-	usleep_range(1000, 1500);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_OTP_RELOAD, 0x00, 0x10);
++	mipi_dsi_usleep_range(dsi_ctx, 1000, 1500);
+ 
+ 	/* SEQ_B6_PARAM_8_R01 */
+-	mipi_dsi_dcs_write_seq(dsi, 0xb6, 0x10);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xb6, 0x10);
+ 
+ 	/* BL_CTL_ON */
+-	mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0x40, 0x00, 0x28);
+-
+-	usleep_range(5000, 6000);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_BL_CTL, 0x40, 0x00, 0x28);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x04);
++	mipi_dsi_usleep_range(dsi_ctx, 5000, 6000);
+ 
+-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, MIPI_DCS_SET_ADDRESS_MODE, 0x04);
+ 
+-	msleep(120);
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_SET_ADDRESS_MODE, 0x00);
++	mipi_dsi_dcs_exit_sleep_mode_multi(dsi_ctx);
+ 
+-	ret = s6d7aa0_lock(ctx, true);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to lock registers: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_msleep(dsi_ctx, 120);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, MIPI_DCS_SET_ADDRESS_MODE, 0x00);
+ 
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display on: %d\n", ret);
+-		return ret;
+-	}
++	s6d7aa0_lock(ctx, dsi_ctx, true);
+ 
+-	return 0;
++	mipi_dsi_dcs_set_display_on_multi(dsi_ctx);
+ }
+ 
+-static int s6d7aa0_lsl080al02_off(struct s6d7aa0 *ctx)
++static void s6d7aa0_lsl080al02_off(struct mipi_dsi_multi_context *dsi_ctx)
+ {
+-	struct mipi_dsi_device *dsi = ctx->dsi;
+-
+ 	/* BL_CTL_OFF */
+-	mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0x40, 0x00, 0x20);
+-
+-	return 0;
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_BL_CTL, 0x40, 0x00, 0x20);
+ }
+ 
+ static const struct drm_display_mode s6d7aa0_lsl080al02_mode = {
+@@ -317,79 +253,51 @@ static const struct s6d7aa0_panel_desc s6d7aa0_lsl080al02_desc = {
+ 
+ /* Initialization code and structures for LSL080AL03 panel */
+ 
+-static int s6d7aa0_lsl080al03_init(struct s6d7aa0 *ctx)
++static void s6d7aa0_lsl080al03_init(struct s6d7aa0 *ctx, struct mipi_dsi_multi_context *dsi_ctx)
+ {
+-	struct mipi_dsi_device *dsi = ctx->dsi;
+-	struct device *dev = &dsi->dev;
+-	int ret;
+-
+-	usleep_range(20000, 25000);
++	mipi_dsi_usleep_range(dsi_ctx, 20000, 25000);
+ 
+-	ret = s6d7aa0_lock(ctx, false);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to unlock registers: %d\n", ret);
+-		return ret;
+-	}
++	s6d7aa0_lock(ctx, dsi_ctx, false);
+ 
+ 	if (ctx->desc->panel_type == S6D7AA0_PANEL_LSL080AL03) {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0xc7, 0x00, 0x29);
+-		mipi_dsi_dcs_write_seq(dsi, 0xbc, 0x01, 0x4e, 0xa0);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfd, 0x16, 0x10, 0x11, 0x23,
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_BL_CTL, 0xc7, 0x00, 0x29);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xbc, 0x01, 0x4e, 0xa0);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xfd, 0x16, 0x10, 0x11, 0x23,
+ 				       0x09);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x00, 0x02, 0x03, 0x21,
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xfe, 0x00, 0x02, 0x03, 0x21,
+ 				       0x80, 0x78);
+ 	} else if (ctx->desc->panel_type == S6D7AA0_PANEL_LTL101AT01) {
+-		mipi_dsi_dcs_write_seq(dsi, MCS_BL_CTL, 0x40, 0x00, 0x08);
+-		mipi_dsi_dcs_write_seq(dsi, 0xbc, 0x01, 0x4e, 0x0b);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfd, 0x16, 0x10, 0x11, 0x23,
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, MCS_BL_CTL, 0x40, 0x00, 0x08);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xbc, 0x01, 0x4e, 0x0b);
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xfd, 0x16, 0x10, 0x11, 0x23,
+ 				       0x09);
+-		mipi_dsi_dcs_write_seq(dsi, 0xfe, 0x00, 0x02, 0x03, 0x21,
++		mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xfe, 0x00, 0x02, 0x03, 0x21,
+ 				       0x80, 0x68);
+ 	}
+ 
+-	mipi_dsi_dcs_write_seq(dsi, 0xb3, 0x51);
+-	mipi_dsi_dcs_write_seq(dsi, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x24);
+-	mipi_dsi_dcs_write_seq(dsi, 0xf2, 0x02, 0x08, 0x08);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xb3, 0x51);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, MIPI_DCS_WRITE_CONTROL_DISPLAY, 0x24);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xf2, 0x02, 0x08, 0x08);
+ 
+-	usleep_range(10000, 11000);
++	mipi_dsi_usleep_range(dsi_ctx, 10000, 11000);
+ 
+-	mipi_dsi_dcs_write_seq(dsi, 0xc0, 0x80, 0x80, 0x30);
+-	mipi_dsi_dcs_write_seq(dsi, 0xcd,
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xc0, 0x80, 0x80, 0x30);
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xcd,
+ 			       0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e, 0x2e,
+ 			       0x2e, 0x2e, 0x2e, 0x2e, 0x2e);
+-	mipi_dsi_dcs_write_seq(dsi, 0xce,
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xce,
+ 			       0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+ 			       0x00, 0x00, 0x00, 0x00, 0x00);
+-	mipi_dsi_dcs_write_seq(dsi, 0xc1, 0x03);
+-
+-	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to exit sleep mode: %d\n", ret);
+-		return ret;
+-	}
+-
+-	ret = s6d7aa0_lock(ctx, true);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to lock registers: %d\n", ret);
+-		return ret;
+-	}
+-
+-	ret = mipi_dsi_dcs_set_display_on(dsi);
+-	if (ret < 0) {
+-		dev_err(dev, "Failed to set display on: %d\n", ret);
+-		return ret;
+-	}
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0xc1, 0x03);
+ 
+-	return 0;
++	mipi_dsi_dcs_exit_sleep_mode_multi(dsi_ctx);
++	s6d7aa0_lock(ctx, dsi_ctx, true);
++	mipi_dsi_dcs_set_display_on_multi(dsi_ctx);
+ }
+ 
+-static int s6d7aa0_lsl080al03_off(struct s6d7aa0 *ctx)
++static void s6d7aa0_lsl080al03_off(struct mipi_dsi_multi_context *dsi_ctx)
+ {
+-	struct mipi_dsi_device *dsi = ctx->dsi;
+-
+-	mipi_dsi_dcs_write_seq(dsi, 0x22, 0x00);
+-
+-	return 0;
++	mipi_dsi_dcs_write_seq_multi(dsi_ctx, 0x22, 0x00);
+ }
+ 
+ static const struct drm_display_mode s6d7aa0_lsl080al03_mode = {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.48.1
 
