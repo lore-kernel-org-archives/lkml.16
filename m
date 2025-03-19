@@ -1,59 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7DB1134BD;
-	Wed, 19 Mar 2025 14:11:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76B44157A6B;
+	Wed, 19 Mar 2025 14:12:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742393494; cv=none; b=DatnLGoD7MW9kQKJXr1m6+0jXrFjmP/cdBNqSbetV3NmSUXL4M8+MJgnIsh7hFPuLAovlNmwrp7lAhkjB65IMg7d6+1IEDCaaidIUQ0jOsHPEgjjNI7aof8Kn1Z81A1VodWgCcXSO8RSWCSDwdchTqHHoxyg/WyEiNd5I0gaUF4=
+	t=1742393576; cv=none; b=iHrwzs2nW1M8zCM0axo9uEeK9RbqHTEapbgDFNul4+PgM3tFFDNbGKXnaXwwkUqMy9i/0jfpU5m+LYJELFAtGJlcg/iwgU5/6gRQPL0OScOoa/B3mayTB/C3yQjbTYkCEzsactXGRdKoNMLKZxM0CnF4xfTObAW3xV6SMy1sBXs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742393494; c=relaxed/simple;
-	bh=uDpWQNnyNWRntl18DJzcgXesN73xAgAP80C3z13HN/Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p93cZnRK4tWTRcCj93iSlulKTFkEkY7IFUoVQRc/EMhnPdHyIM4XdcFQWb9Zv0Y1LTly2GZ7p7RwJeTi3OfuM3n0wc3CFPIwKbLziUksJoZXO1Tt8qTxwWPJUy0Y3EVKLbhPIMTajox/+I3hCXyZv16QOCqfcEAJHjsSE3sYrV4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=swqQrZcs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742393576; c=relaxed/simple;
+	bh=7VJOMqWqh0wQcU1BFtXa6c0GzKjyuarAJOX4Wh2GmdU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=nIkXyeBBnWj/59N9S3gDHzSzPaPsyaex9N+rroWCPRcDwvr04ewPWmP7LvAFB9W3uaGwORUx6gLSbqtFtAsNWurvFGae0ZzwT9NSsOsYCC/BhbESlaV1xK5FxVcjeIkw3hsO/wdmHZ8JzAkNX8HmyDRJg9pipn/m5psEbf6OZpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WIi7XKWr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="swqQrZcs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C7FEC4CEE4;
-	Wed, 19 Mar 2025 14:11:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742393493;
-	bh=uDpWQNnyNWRntl18DJzcgXesN73xAgAP80C3z13HN/Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=swqQrZcsn24BgJAljEX96q9iaD2Djcieux4gV1PAhs+McM3mDbObyXYvdjB9XuJva
-	 qrI8wBFDCG5KgajIaoT3RjDMVyATo/XpqBNzGzJLNpvWXC8BfdniysMRSWzE714v45
-	 3AZTG9LOCyewCpSX2xE5wE52f3+oQX84WfahqwPI=
-Date: Wed, 19 Mar 2025 07:10:14 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Frank Scheiner <frank.scheiner@web.de>
-Cc: tzimmermann@suse.de, linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Subject: Re: 6.6.84-rc1 build regression on ia64 (and possibly other
- architectures)
-Message-ID: <2025031907-occupy-earthworm-9397@gregkh>
-References: <68e093fb-556d-4267-9430-ff9fddc1c3d1@web.de>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WIi7XKWr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4305AC4CEE4;
+	Wed, 19 Mar 2025 14:12:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742393575;
+	bh=7VJOMqWqh0wQcU1BFtXa6c0GzKjyuarAJOX4Wh2GmdU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=WIi7XKWru5EjClACAxW7fG7MrDi1oafmrSYWuXdM4al6SJMerCD644yysnaDZp1p3
+	 2LDcQEEXQMHEsUw1kWs1HQdpVEhZ+Rlh3cMQGDXUheT3jqRNpEf7RchuL1QIiE0VvV
+	 9nXul06F0lg22xYOWnH40PRctJ5PLPcuTvKhGTABAzObaKo4uGJDbY90fglQchMrPz
+	 zdnDS5wAHIzRd67LmF1G3JlvIXOdZYT6Fcj3yjWaUW/4/a8WWrduL730o5XA/58K0q
+	 UVQaOk/8wXhRASzknHY8/8DPszhi4/o8XNYLNxMGVdTOL7jrB3VRz/2M5WGrtt7k7p
+	 VKIjmLhc6/iag==
+From: Maxime Ripard <mripard@kernel.org>
+To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Documentation <linux-doc@vger.kernel.org>,
+	Linux DRI Development <dri-devel@lists.freedesktop.org>,
+	Bagas Sanjaya <bagasdotme@gmail.com>
+Cc: Maxime Ripard <mripard@kernel.org>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Pranav Tyagi <pranav.tyagi03@gmail.com>
+Subject: Re: [PATCH] Documentation: vgaarbiter: Fix grammar
+Date: Wed, 19 Mar 2025 15:12:50 +0100
+Message-ID: <174239356754.697925.8716284607359471588.b4-ty@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250318041249.20786-2-bagasdotme@gmail.com>
+References: <20250318041249.20786-2-bagasdotme@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <68e093fb-556d-4267-9430-ff9fddc1c3d1@web.de>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 18, 2025 at 01:47:44PM +0100, Frank Scheiner wrote:
-> Dear Greg,
+On Tue, 18 Mar 2025 11:12:50 +0700, Bagas Sanjaya wrote:
+> Correct grammar issues:
 > 
-> I see that the review for 6.6.84-rc1 hasn't started yet, but as it was
-> already available on [1], our CI has already tried to built it for ia64
-> in the morning. Unfortunately that failed - I assume due to the
-> following **missing** upstream commit:
+> - Fix "co-exist" subject-verb agreement
+> - Correct plural form of "server" in context of more than one legacy
+>   devices
+> - Use passive mood for intro sentence of libpciaccess section
 > 
-> https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=8887086ef2e0047ec321103a15e7d766be3a3874
-> 
-> [1]: https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git/commit/?h=linux-6.6.y
+> [...]
 
-Thanks, now fixed up.
+Applied to misc/kernel.git (drm-misc-next).
 
-greg k-h
+Thanks!
+Maxime
