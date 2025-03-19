@@ -1,72 +1,72 @@
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD1E4221DA0
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:59:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EB6C221572
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742421599; cv=none; b=M7ivIVyQAxEyE7qWVODMQqIkIh8Ps9NhNu4KgRVFcit0Qe5VH0WRZSOdBgYHePBZreO0/h6L9ws1dE5g22IVTFLztPAhplz7IAOzkuhhn0dj9DhRcESPo3Z88DLAqXxeZnUWknExggSJZqEo61tYW7fizl4Yk64XWmJBQdgcrAk=
+	t=1742421597; cv=none; b=cXg42at2toPfQaazSGtuzIoHyvXBrJcUeVIKd8O/xRLsddQB8SwQUNczOt4VID0e0AN2y7dY7KVDzasah/oDWwP8eqcE+ArSrn6BRRWReyctT/i9WIgA6B2rj4DhPY/GxNnKmu3KWuu3QmvCD9a6ft4++LSzsUyKuOga/TQhMx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742421599; c=relaxed/simple;
-	bh=e4dbAKaOnBk95nGbq3xaWlhEEnq7lytyehXJ34fFCcQ=;
+	s=arc-20240116; t=1742421597; c=relaxed/simple;
+	bh=PXFbG5O/nfvHW1QzJUbSW3+qHxjDhuJAY/1zhSCjGiA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ikXxTtFmmNUwz3TR7O7ZfSUcnI3npACvoUlOBNuWB2jBMkGIa1ZtWS7muS4UOwBfg3fi8sbl2qMzY2VUPtHM9FQOauzR4+nsMZ39jZowU4Swtn1QLMNSN1HQn8CAk5Nw5xouJL5SWyZ1bvFh5NBXcxzx+Oqf13Ots8xYKls1M/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=YkNKSKLs; arc=none smtp.client-ip=209.85.216.50
+	 MIME-Version; b=N4p8vVv+IE/W3HqzXTp2PzljdoblW8G2t+X3PJPagPTQrWltwlmEN3Na3ytO+W90c5yT413OdkIj1oZ0R0n6OVLYSF89V6ZWf7JNc0wGium/w8LZIWmfpG9m2yxdfGr3BjCAX0nxshn2gAdF/bC/qXNaTgXm6uACoBr6btniXuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org; spf=pass smtp.mailfrom=neverthere.org; dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b=ZPADH/pw; arc=none smtp.client-ip=209.85.214.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=neverthere.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="YkNKSKLs"
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-3015001f862so165205a91.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:59:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=neverthere.org header.i=@neverthere.org header.b="ZPADH/pw"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2241053582dso1176265ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:59:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=neverthere.org; s=google; t=1742421597; x=1743026397; darn=vger.kernel.org;
+        d=neverthere.org; s=google; t=1742421594; x=1743026394; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=DdrlZfOcjEPmyLhxrYOcoDg7rx+YwK3dt8M5HQJ7Vxc=;
-        b=YkNKSKLs/cSIZrM28f6j9g7Q7v5h5xrlRpIleaZYXD+432dIaxyPLuhe5tNOWPOI6p
-         4kYhrl9hFixLhYbJHMCrEHO8ulR/2aI5SNLzBH0Uzgdxm+PWPF58PzvyQuVKEfjspDHG
-         LqoEPtsrKhokA0U66pRwnyAp8S74msS+DY2YCzW954TYMiC8maKHnZ5jyYgjauiJdtpf
-         KrvhxTjDPvVj1sMJdmL/j5HC31H1wg414JPo5BsXDg4Vs3npxdq9x7nMdzDykqx5F25t
-         3VPL4VMm8/S/6ODCxaP+g8SGpmav0ChYAYpJoS85rrCczK7z5vPgEMNc0xQ/ENPrqGUT
-         /VnQ==
+        bh=oa+0Pt1V4+SqMSbsbweCkzQQ9zLDOIiBj8exlzrjjFY=;
+        b=ZPADH/pw9/qAIujrm3Mdth1RmEZB49JBywQ2560I1yXkzCe/x9Bu6TUjswZ+sUNCQr
+         +pK2KclSBA4Hz5dp3g9BTbcaRhhZ2bU4LtkqZBj43lGXnh1ScGCOIsqsxCwKvn9WwB1q
+         EhN8n0SDSqTgw5t9+n0PfnUUjwqiGGPheHhsAIe4qigkJzEkvauyqwBh3qChCnAi2FsQ
+         exX7WO5GeTqWr8wfJIx5gZvmMKUEzkzrFf3gluQaBXP3J4cmAOtFZDBnAqzAZ23p66c+
+         dobKAQCGhzDyomYRKFKpF1vI+QIQ4PRhs6gBoT17g+SqetdWP27cqMwgeI6j1rPltjoJ
+         4czg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742421597; x=1743026397;
+        d=1e100.net; s=20230601; t=1742421594; x=1743026394;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=DdrlZfOcjEPmyLhxrYOcoDg7rx+YwK3dt8M5HQJ7Vxc=;
-        b=AThdIHTNgEN2EMbuCoJORKvzqM842aTBL8hWY8+bq3l3ldbutvWztQHGt4xPOYWpS6
-         8YNHiWJ/M3i1Vq0TAWGnZQNMQHhiFO66+uIe/AhhQ6Sq1pfpOP7lXwowvx/+OugX66x/
-         cvjJRUA2w73tBeY6NXpK3Bj64vLQAAl0AtYTPIkPT8jUd/EB7nlFHm9To8uSAEkWudQI
-         0CFlx2IxKqIgEHzKGVuFa//R3N0Qe5GwSFnq2JYVj4zvHmqpCQCNJx/AiM1Q2fF0E5JV
-         VqpKeZlgBM0htfYrkZAZK9T/Y86SLyugDRvu8UCuX5UqlcL6JL1yq8EaAOP0Bu3kxmwj
-         lfpQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWphVN3YbRhJ2Y2bBXL5dlO/M53op6DsMlUKG0jm/2bg/BSxVKf/GnBm1NacQS/tgK9tD+V28AshOh6ocs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyAW2tETJWWJj09OlzdLdAwl618SWdPVeu21M015HjKqM3TiUSR
-	aGOdgytm3p446tGiQoX2lwvDMoZF52QxaQN0w7hotOLbghF4/Pqknsk7zub7YA==
-X-Gm-Gg: ASbGnctmVbjQbm/1i+QXy1VP1gGRCy9egp8hNmzMmN5tCNt5GaDk6ZgvNh9FI0zXQdT
-	i0sKD2EQZ6Lu9D+TsfHZLJN+0ke8Jk2p5YjEqPnMD9U30tMVqOlv1sPraPE5oQunHWZ+J9tl0Ch
-	R0oFz6OuSl5RvaA+9MDDIi6IoyiVYdIGlH4UTO+VJsiVtpWkyKzYmHfZ5hwF1zVM8Z+fPf8/eur
-	FZG2b/AeHy1OFUjNx/hgCm0iaKRJcbQ9TCV3qq4uJYeTJjyUK4ZMhD49VXr4cH+EEUHn8io105V
-	dl3oDWYZj1tmCk9jMxTXTfInbCEQitqJ00lLNrsIUuqziqOLZKCNI41Iny3cLPMb4kRmeIJGqHC
-	FN/E9RjyEcA==
-X-Google-Smtp-Source: AGHT+IFqtfzZcIJzqrMS8fVLbpZe4AfElC5e1G6eMy+1t8WREOI4FS/mYUqR+pMxpIN+BBHuiCJhVg==
-X-Received: by 2002:a17:90b:3c11:b0:2ff:5a9d:937f with SMTP id 98e67ed59e1d1-301be200718mr7480776a91.24.1742421596915;
-        Wed, 19 Mar 2025 14:59:56 -0700 (PDT)
+        bh=oa+0Pt1V4+SqMSbsbweCkzQQ9zLDOIiBj8exlzrjjFY=;
+        b=cuGZT1SWVNd0MhPLAlwN6w+Vb/BqMnJEGdzyoLRKQnj9j5gsym8D1MjdnXyA+zgfZd
+         AKl2xkKwEs+bz3jEsnYIuzQt1XOOMgYCKu1GnWMU3XEHaO3oTtNBRY9CvOTcPqZr359b
+         i0+oGvDImZgwxfY4EhevQnUpHl29erkZCSZor1+pvQUydlE0VEVQtQ5MCXSitD6+xj0a
+         W61nCUIEfqbIyAZeoXRIxJI7pseW88EJsAgw9ATf5gvvYtkvpOt+zE+dHsEwN9cQ0Zo/
+         NiMV9JFGe2LvGF0eYBLCZ4D+53pya2ujDRRkK5TQdWREr49jBZ4RxLpae4yDxLL57lzA
+         nlug==
+X-Forwarded-Encrypted: i=1; AJvYcCVAysK8aGp142UtCOvAklljElzti45Coz/KPNyLzT5vTJzSfkPbgnOdjYq6gwAhKRJJpq6Q2QqfJDUYPxI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNRQV7BtwDGhoP+JDLwR/i8nyPaf8bIPyAr9VDrXk4ZB2Mrk9l
+	6WPCgtHKW+ZwMEz1XaOb3hlXWKonXDAoWRbKrjPyxheeuJl4aZm++kJbVo1pDQ==
+X-Gm-Gg: ASbGncv4uQc1IK23lE6UdfcfdeegP5UVqPa6DH0HxIAm/xk7o9l4WpWVuO2/8aj7yGH
+	UMPO6hmgAthwCSGxj/gan1getscMDBf+1zyeCsrR0+Pbg5eRSrx+org7pQuEVxm7pYCQf76JeWb
+	WNI57w2XcBHZcXZ2y0ciUYo++1WN5NMSpaeqBKPG39AjgUFpC6K5XrQ88LwesY4s2RtyjhT1dgD
+	pT10dXscACu0azfFPBUp0k4Al5oYndHLcWrjMDjwYleL8JkfscSd9s1lY4QrCWbrLcd7K9LCDPd
+	brDF02vBPzCcvXS0+GP9gXL5iVXPMeuHisfSE8TJGRq/YxEJ3VIsl7l8fFyVonb8i8jzVjLreqh
+	6aqnlkqiM+w==
+X-Google-Smtp-Source: AGHT+IFr4kp9t3TFnrrNqlwiKDZtLS8gq+a1DwiAWOWfX/zxf6y66YjdjOLGxC55fcS/6b0iLtY1Uw==
+X-Received: by 2002:a17:903:228f:b0:216:3c36:69a7 with SMTP id d9443c01a7336-22649a803bcmr54470095ad.45.1742421594533;
+        Wed, 19 Mar 2025 14:59:54 -0700 (PDT)
 Received: from tiamat (c-69-181-214-135.hsd1.ca.comcast.net. [69.181.214.135])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf635929sm2426373a91.40.2025.03.19.14.59.56
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd5488sm120624775ad.245.2025.03.19.14.59.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 14:59:56 -0700 (PDT)
+        Wed, 19 Mar 2025 14:59:54 -0700 (PDT)
 From: Michael Rubin <matchstick@neverthere.org>
 To: Dave Penkler <dpenkler@gmail.com>,
 	Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: linux-staging@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Michael Rubin <matchstick@neverthere.org>
-Subject: [PATCH v1 16/20] staging: gpib: pc2: struct gpib_board
-Date: Wed, 19 Mar 2025 21:59:20 +0000
-Message-ID: <20250319215924.19387-17-matchstick@neverthere.org>
+Subject: [PATCH v1 14/20] staging: gpib: nec7210 struct gpib_board
+Date: Wed, 19 Mar 2025 21:59:18 +0000
+Message-ID: <20250319215924.19387-15-matchstick@neverthere.org>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250319215924.19387-1-matchstick@neverthere.org>
 References: <20250319215924.19387-1-matchstick@neverthere.org>
@@ -87,287 +87,432 @@ directly accessed should never be a typedef.
 
 Signed-off-by: Michael Rubin <matchstick@neverthere.org>
 ---
- drivers/staging/gpib/pc2/pc2_gpib.c | 68 ++++++++++++++---------------
- 1 file changed, 34 insertions(+), 34 deletions(-)
+ drivers/staging/gpib/include/nec7210.h | 58 ++++++++++----------
+ drivers/staging/gpib/nec7210/nec7210.c | 76 +++++++++++++-------------
+ 2 files changed, 68 insertions(+), 66 deletions(-)
 
-diff --git a/drivers/staging/gpib/pc2/pc2_gpib.c b/drivers/staging/gpib/pc2/pc2_gpib.c
-index 6711851301ec..d8e0733d8ab0 100644
---- a/drivers/staging/gpib/pc2/pc2_gpib.c
-+++ b/drivers/staging/gpib/pc2/pc2_gpib.c
-@@ -58,7 +58,7 @@ MODULE_DESCRIPTION("GPIB driver for PC2/PC2a and compatible devices");
+diff --git a/drivers/staging/gpib/include/nec7210.h b/drivers/staging/gpib/include/nec7210.h
+index ca998c4a84bf..6c49283bd139 100644
+--- a/drivers/staging/gpib/include/nec7210.h
++++ b/drivers/staging/gpib/include/nec7210.h
+@@ -1,4 +1,4 @@
+-/* SPDX-License-Identifier: GPL-2.0 */
++//* SPDX-License-Identifier: GPL-2.0 */
  
- irqreturn_t pc2_interrupt(int irq, void *arg)
+ /***************************************************************************
+  *    copyright            : (C) 2002 by Frank Mori Hess
+@@ -78,48 +78,48 @@ enum {
+ };
+ 
+ // interface functions
+-int nec7210_read(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++int nec7210_read(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 		 size_t length, int *end, size_t *bytes_read);
+-int nec7210_write(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++int nec7210_write(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 		  size_t length, int send_eoi, size_t *bytes_written);
+-int nec7210_command(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++int nec7210_command(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 		    size_t length, size_t *bytes_written);
+-int nec7210_take_control(gpib_board_t *board, struct nec7210_priv *priv, int syncronous);
+-int nec7210_go_to_standby(gpib_board_t *board, struct nec7210_priv *priv);
+-void nec7210_request_system_control(gpib_board_t *board,
++int nec7210_take_control(struct gpib_board *board, struct nec7210_priv *priv, int syncronous);
++int nec7210_go_to_standby(struct gpib_board *board, struct nec7210_priv *priv);
++void nec7210_request_system_control(struct gpib_board *board,
+ 				    struct nec7210_priv *priv, int request_control);
+-void nec7210_interface_clear(gpib_board_t *board, struct nec7210_priv *priv, int assert);
+-void nec7210_remote_enable(gpib_board_t *board, struct nec7210_priv *priv, int enable);
+-int nec7210_enable_eos(gpib_board_t *board, struct nec7210_priv *priv, uint8_t eos_bytes,
++void nec7210_interface_clear(struct gpib_board *board, struct nec7210_priv *priv, int assert);
++void nec7210_remote_enable(struct gpib_board *board, struct nec7210_priv *priv, int enable);
++int nec7210_enable_eos(struct gpib_board *board, struct nec7210_priv *priv, uint8_t eos_bytes,
+ 		       int compare_8_bits);
+-void nec7210_disable_eos(gpib_board_t *board, struct nec7210_priv *priv);
+-unsigned int nec7210_update_status(gpib_board_t *board, struct nec7210_priv *priv,
++void nec7210_disable_eos(struct gpib_board *board, struct nec7210_priv *priv);
++unsigned int nec7210_update_status(struct gpib_board *board, struct nec7210_priv *priv,
+ 				   unsigned int clear_mask);
+-unsigned int nec7210_update_status_nolock(gpib_board_t *board, struct nec7210_priv *priv);
+-int nec7210_primary_address(const gpib_board_t *board,
++unsigned int nec7210_update_status_nolock(struct gpib_board *board, struct nec7210_priv *priv);
++int nec7210_primary_address(const struct gpib_board *board,
+ 			    struct nec7210_priv *priv, unsigned int address);
+-int nec7210_secondary_address(const gpib_board_t *board, struct nec7210_priv *priv,
++int nec7210_secondary_address(const struct gpib_board *board, struct nec7210_priv *priv,
+ 			      unsigned int address, int enable);
+-int nec7210_parallel_poll(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *result);
+-void nec7210_serial_poll_response(gpib_board_t *board, struct nec7210_priv *priv, uint8_t status);
+-void nec7210_parallel_poll_configure(gpib_board_t *board,
++int nec7210_parallel_poll(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *result);
++void nec7210_serial_poll_response(struct gpib_board *board, struct nec7210_priv *priv, uint8_t status);
++void nec7210_parallel_poll_configure(struct gpib_board *board,
+ 				     struct nec7210_priv *priv, unsigned int configuration);
+-void nec7210_parallel_poll_response(gpib_board_t *board,
++void nec7210_parallel_poll_response(struct gpib_board *board,
+ 				    struct nec7210_priv *priv, int ist);
+-uint8_t nec7210_serial_poll_status(gpib_board_t *board,
++uint8_t nec7210_serial_poll_status(struct gpib_board *board,
+ 				   struct nec7210_priv *priv);
+-unsigned int nec7210_t1_delay(gpib_board_t *board,
++unsigned int nec7210_t1_delay(struct gpib_board *board,
+ 			      struct nec7210_priv *priv, unsigned int nano_sec);
+-void nec7210_return_to_local(const gpib_board_t *board, struct nec7210_priv *priv);
++void nec7210_return_to_local(const struct gpib_board *board, struct nec7210_priv *priv);
+ 
+ // utility functions
+-void nec7210_board_reset(struct nec7210_priv *priv, const gpib_board_t *board);
+-void nec7210_board_online(struct nec7210_priv *priv, const gpib_board_t *board);
++void nec7210_board_reset(struct nec7210_priv *priv, const struct gpib_board *board);
++void nec7210_board_online(struct nec7210_priv *priv, const struct gpib_board *board);
+ unsigned int nec7210_set_reg_bits(struct nec7210_priv *priv, unsigned int reg,
+ 				  unsigned int mask, unsigned int bits);
+-void nec7210_set_handshake_mode(gpib_board_t *board, struct nec7210_priv *priv, int mode);
+-void nec7210_release_rfd_holdoff(gpib_board_t *board, struct nec7210_priv *priv);
+-uint8_t nec7210_read_data_in(gpib_board_t *board, struct nec7210_priv *priv, int *end);
++void nec7210_set_handshake_mode(struct gpib_board *board, struct nec7210_priv *priv, int mode);
++void nec7210_release_rfd_holdoff(struct gpib_board *board, struct nec7210_priv *priv);
++uint8_t nec7210_read_data_in(struct gpib_board *board, struct nec7210_priv *priv, int *end);
+ 
+ // wrappers for io functions
+ uint8_t nec7210_ioport_read_byte(struct nec7210_priv *priv, unsigned int register_num);
+@@ -134,8 +134,8 @@ void nec7210_locking_iomem_write_byte(struct nec7210_priv *priv, uint8_t data,
+ 				      unsigned int register_num);
+ 
+ // interrupt service routine
+-irqreturn_t nec7210_interrupt(gpib_board_t *board, struct nec7210_priv *priv);
+-irqreturn_t nec7210_interrupt_have_status(gpib_board_t *board,
++irqreturn_t nec7210_interrupt(struct gpib_board *board, struct nec7210_priv *priv);
++irqreturn_t nec7210_interrupt_have_status(struct gpib_board *board,
+ 					  struct nec7210_priv *priv, int status1, int status2);
+ 
+ #endif	//_NEC7210_H
+diff --git a/drivers/staging/gpib/nec7210/nec7210.c b/drivers/staging/gpib/nec7210/nec7210.c
+index 85f1e79d658a..773495cde9d8 100644
+--- a/drivers/staging/gpib/nec7210/nec7210.c
++++ b/drivers/staging/gpib/nec7210/nec7210.c
+@@ -23,7 +23,7 @@
+ MODULE_LICENSE("GPL");
+ MODULE_DESCRIPTION("GPIB library code for NEC uPD7210");
+ 
+-int nec7210_enable_eos(gpib_board_t *board, struct nec7210_priv *priv, uint8_t eos_byte,
++int nec7210_enable_eos(struct gpib_board *board, struct nec7210_priv *priv, uint8_t eos_byte,
+ 		       int compare_8_bits)
  {
--	gpib_board_t *board = arg;
-+	struct gpib_board *board = arg;
- 	struct pc2_priv *priv = board->private_data;
+ 	write_byte(priv, eos_byte, EOSR);
+@@ -37,14 +37,14 @@ int nec7210_enable_eos(gpib_board_t *board, struct nec7210_priv *priv, uint8_t e
+ }
+ EXPORT_SYMBOL(nec7210_enable_eos);
+ 
+-void nec7210_disable_eos(gpib_board_t *board, struct nec7210_priv *priv)
++void nec7210_disable_eos(struct gpib_board *board, struct nec7210_priv *priv)
+ {
+ 	priv->auxa_bits &= ~HR_REOS;
+ 	write_byte(priv, priv->auxa_bits, AUXMR);
+ }
+ EXPORT_SYMBOL(nec7210_disable_eos);
+ 
+-int nec7210_parallel_poll(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *result)
++int nec7210_parallel_poll(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *result)
+ {
+ 	int ret;
+ 
+@@ -64,14 +64,14 @@ int nec7210_parallel_poll(gpib_board_t *board, struct nec7210_priv *priv, uint8_
+ }
+ EXPORT_SYMBOL(nec7210_parallel_poll);
+ 
+-void nec7210_parallel_poll_configure(gpib_board_t *board,
++void nec7210_parallel_poll_configure(struct gpib_board *board,
+ 				     struct nec7210_priv *priv, unsigned int configuration)
+ {
+ 	write_byte(priv, PPR | configuration, AUXMR);
+ }
+ EXPORT_SYMBOL(nec7210_parallel_poll_configure);
+ 
+-void nec7210_parallel_poll_response(gpib_board_t *board, struct nec7210_priv *priv, int ist)
++void nec7210_parallel_poll_response(struct gpib_board *board, struct nec7210_priv *priv, int ist)
+ {
+ 	if (ist)
+ 		write_byte(priv, AUX_SPPF, AUXMR);
+@@ -85,7 +85,8 @@ EXPORT_SYMBOL(nec7210_parallel_poll_response);
+  * the 488.2 capability (for example with NI chips), or we need to implement the
+  * 488.2 set srv state machine in the driver (if that is even viable).
+  */
+-void nec7210_serial_poll_response(gpib_board_t *board, struct nec7210_priv *priv, uint8_t status)
++void nec7210_serial_poll_response(struct gpib_board *board,
++				  struct nec7210_priv *priv, uint8_t status)
+ {
  	unsigned long flags;
- 	irqreturn_t retval;
-@@ -71,7 +71,7 @@ irqreturn_t pc2_interrupt(int irq, void *arg)
  
- irqreturn_t pc2a_interrupt(int irq, void *arg)
+@@ -102,13 +103,13 @@ void nec7210_serial_poll_response(gpib_board_t *board, struct nec7210_priv *priv
+ }
+ EXPORT_SYMBOL(nec7210_serial_poll_response);
+ 
+-uint8_t nec7210_serial_poll_status(gpib_board_t *board, struct nec7210_priv *priv)
++uint8_t nec7210_serial_poll_status(struct gpib_board *board, struct nec7210_priv *priv)
  {
--	gpib_board_t *board = arg;
-+	struct gpib_board *board = arg;
- 	struct pc2_priv *priv = board->private_data;
- 	int status1, status2;
+ 	return read_byte(priv, SPSR);
+ }
+ EXPORT_SYMBOL(nec7210_serial_poll_status);
+ 
+-int nec7210_primary_address(const gpib_board_t *board, struct nec7210_priv *priv,
++int nec7210_primary_address(const struct gpib_board *board, struct nec7210_priv *priv,
+ 			    unsigned int address)
+ {
+ 	// put primary address in address0
+@@ -117,7 +118,7 @@ int nec7210_primary_address(const gpib_board_t *board, struct nec7210_priv *priv
+ }
+ EXPORT_SYMBOL(nec7210_primary_address);
+ 
+-int nec7210_secondary_address(const gpib_board_t *board, struct nec7210_priv *priv,
++int nec7210_secondary_address(const struct gpib_board *board, struct nec7210_priv *priv,
+ 			      unsigned int address, int enable)
+ {
+ 	if (enable) {
+@@ -166,7 +167,7 @@ static void update_listener_state(struct nec7210_priv *priv, unsigned int addres
+ 	}
+ }
+ 
+-unsigned int nec7210_update_status_nolock(gpib_board_t *board, struct nec7210_priv *priv)
++unsigned int nec7210_update_status_nolock(struct gpib_board *board, struct nec7210_priv *priv)
+ {
+ 	int address_status_bits;
+ 	u8 spoll_status;
+@@ -209,7 +210,7 @@ unsigned int nec7210_update_status_nolock(gpib_board_t *board, struct nec7210_pr
+ }
+ EXPORT_SYMBOL(nec7210_update_status_nolock);
+ 
+-unsigned int nec7210_update_status(gpib_board_t *board, struct nec7210_priv *priv,
++unsigned int nec7210_update_status(struct gpib_board *board, struct nec7210_priv *priv,
+ 				   unsigned int clear_mask)
+ {
  	unsigned long flags;
-@@ -90,7 +90,7 @@ irqreturn_t pc2a_interrupt(int irq, void *arg)
+@@ -234,7 +235,7 @@ unsigned int nec7210_set_reg_bits(struct nec7210_priv *priv, unsigned int reg,
  }
+ EXPORT_SYMBOL(nec7210_set_reg_bits);
  
- // wrappers for interface functions
--static int pc2_read(gpib_board_t *board, uint8_t *buffer, size_t length, int *end,
-+static int pc2_read(struct gpib_board *board, uint8_t *buffer, size_t length, int *end,
- 		    size_t *bytes_read)
+-void nec7210_set_handshake_mode(gpib_board_t *board, struct nec7210_priv *priv, int mode)
++void nec7210_set_handshake_mode(struct gpib_board *board, struct nec7210_priv *priv, int mode)
  {
- 	struct pc2_priv *priv = board->private_data;
-@@ -98,7 +98,7 @@ static int pc2_read(gpib_board_t *board, uint8_t *buffer, size_t length, int *en
- 	return nec7210_read(board, &priv->nec7210_priv, buffer, length, end, bytes_read);
- }
+ 	unsigned long flags;
  
--static int pc2_write(gpib_board_t *board, uint8_t *buffer, size_t length, int send_eoi,
-+static int pc2_write(struct gpib_board *board, uint8_t *buffer, size_t length, int send_eoi,
- 		     size_t *bytes_written)
+@@ -250,7 +251,7 @@ void nec7210_set_handshake_mode(gpib_board_t *board, struct nec7210_priv *priv,
+ }
+ EXPORT_SYMBOL(nec7210_set_handshake_mode);
+ 
+-uint8_t nec7210_read_data_in(gpib_board_t *board, struct nec7210_priv *priv, int *end)
++uint8_t nec7210_read_data_in(struct gpib_board *board, struct nec7210_priv *priv, int *end)
  {
- 	struct pc2_priv *priv = board->private_data;
-@@ -106,133 +106,133 @@ static int pc2_write(gpib_board_t *board, uint8_t *buffer, size_t length, int se
- 	return nec7210_write(board, &priv->nec7210_priv, buffer, length, send_eoi, bytes_written);
+ 	unsigned long flags;
+ 	u8 data;
+@@ -268,7 +269,7 @@ uint8_t nec7210_read_data_in(gpib_board_t *board, struct nec7210_priv *priv, int
  }
+ EXPORT_SYMBOL(nec7210_read_data_in);
  
--static int pc2_command(gpib_board_t *board, uint8_t *buffer, size_t length, size_t *bytes_written)
-+static int pc2_command(struct gpib_board *board, uint8_t *buffer, size_t length, size_t *bytes_written)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_command(board, &priv->nec7210_priv, buffer, length, bytes_written);
- }
- 
--static int pc2_take_control(gpib_board_t *board, int synchronous)
-+static int pc2_take_control(struct gpib_board *board, int synchronous)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_take_control(board, &priv->nec7210_priv, synchronous);
- }
- 
--static int pc2_go_to_standby(gpib_board_t *board)
-+static int pc2_go_to_standby(struct gpib_board *board)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_go_to_standby(board, &priv->nec7210_priv);
- }
- 
--static void pc2_request_system_control(gpib_board_t *board, int request_control)
-+static void pc2_request_system_control(struct gpib_board *board, int request_control)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_request_system_control(board, &priv->nec7210_priv, request_control);
- }
- 
--static void pc2_interface_clear(gpib_board_t *board, int assert)
-+static void pc2_interface_clear(struct gpib_board *board, int assert)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_interface_clear(board, &priv->nec7210_priv, assert);
- }
- 
--static void pc2_remote_enable(gpib_board_t *board, int enable)
-+static void pc2_remote_enable(struct gpib_board *board, int enable)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_remote_enable(board, &priv->nec7210_priv, enable);
- }
- 
--static int pc2_enable_eos(gpib_board_t *board, uint8_t eos_byte, int compare_8_bits)
-+static int pc2_enable_eos(struct gpib_board *board, uint8_t eos_byte, int compare_8_bits)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_enable_eos(board, &priv->nec7210_priv, eos_byte, compare_8_bits);
- }
- 
--static void pc2_disable_eos(gpib_board_t *board)
-+static void pc2_disable_eos(struct gpib_board *board)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_disable_eos(board, &priv->nec7210_priv);
- }
- 
--static unsigned int pc2_update_status(gpib_board_t *board, unsigned int clear_mask)
-+static unsigned int pc2_update_status(struct gpib_board *board, unsigned int clear_mask)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_update_status(board, &priv->nec7210_priv, clear_mask);
- }
- 
--static int pc2_primary_address(gpib_board_t *board, unsigned int address)
-+static int pc2_primary_address(struct gpib_board *board, unsigned int address)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_primary_address(board, &priv->nec7210_priv, address);
- }
- 
--static int pc2_secondary_address(gpib_board_t *board, unsigned int address, int enable)
-+static int pc2_secondary_address(struct gpib_board *board, unsigned int address, int enable)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_secondary_address(board, &priv->nec7210_priv, address, enable);
- }
- 
--static int pc2_parallel_poll(gpib_board_t *board, uint8_t *result)
-+static int pc2_parallel_poll(struct gpib_board *board, uint8_t *result)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_parallel_poll(board, &priv->nec7210_priv, result);
- }
- 
--static void pc2_parallel_poll_configure(gpib_board_t *board, uint8_t config)
-+static void pc2_parallel_poll_configure(struct gpib_board *board, uint8_t config)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_parallel_poll_configure(board, &priv->nec7210_priv, config);
- }
- 
--static void pc2_parallel_poll_response(gpib_board_t *board, int ist)
-+static void pc2_parallel_poll_response(struct gpib_board *board, int ist)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_parallel_poll_response(board, &priv->nec7210_priv, ist);
- }
- 
--static void pc2_serial_poll_response(gpib_board_t *board, uint8_t status)
-+static void pc2_serial_poll_response(struct gpib_board *board, uint8_t status)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_serial_poll_response(board, &priv->nec7210_priv, status);
- }
- 
--static uint8_t pc2_serial_poll_status(gpib_board_t *board)
-+static uint8_t pc2_serial_poll_status(struct gpib_board *board)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_serial_poll_status(board, &priv->nec7210_priv);
- }
- 
--static unsigned int pc2_t1_delay(gpib_board_t *board, unsigned int nano_sec)
-+static unsigned int pc2_t1_delay(struct gpib_board *board, unsigned int nano_sec)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	return nec7210_t1_delay(board, &priv->nec7210_priv, nano_sec);
- }
- 
--static void pc2_return_to_local(gpib_board_t *board)
-+static void pc2_return_to_local(struct gpib_board *board)
- {
- 	struct pc2_priv *priv = board->private_data;
- 
- 	nec7210_return_to_local(board, &priv->nec7210_priv);
- }
- 
--static int allocate_private(gpib_board_t *board)
-+static int allocate_private(struct gpib_board *board)
- {
- 	struct pc2_priv *priv;
- 
-@@ -245,13 +245,13 @@ static int allocate_private(gpib_board_t *board)
- 	return 0;
- }
- 
--static void free_private(gpib_board_t *board)
-+static void free_private(struct gpib_board *board)
- {
- 	kfree(board->private_data);
- 	board->private_data = NULL;
- }
- 
--static int pc2_generic_attach(gpib_board_t *board, const gpib_board_config_t *config,
-+static int pc2_generic_attach(struct gpib_board *board, const gpib_board_config_t *config,
- 			      enum nec7210_chipset chipset)
- {
- 	struct pc2_priv *pc2_priv;
-@@ -294,7 +294,7 @@ static int pc2_generic_attach(gpib_board_t *board, const gpib_board_config_t *co
- 	return 0;
- }
- 
--static int pc2_attach(gpib_board_t *board, const gpib_board_config_t *config)
-+static int pc2_attach(struct gpib_board *board, const gpib_board_config_t *config)
- {
- 	int isr_flags = 0;
- 	struct pc2_priv *pc2_priv;
-@@ -338,7 +338,7 @@ static int pc2_attach(gpib_board_t *board, const gpib_board_config_t *config)
- 	return 0;
- }
- 
--static void pc2_detach(gpib_board_t *board)
-+static void pc2_detach(struct gpib_board *board)
- {
- 	struct pc2_priv *pc2_priv = board->private_data;
- 	struct nec7210_priv *nec_priv;
-@@ -365,7 +365,7 @@ static void pc2_detach(gpib_board_t *board)
- 	free_private(board);
- }
- 
--static int pc2a_common_attach(gpib_board_t *board, const gpib_board_config_t *config,
-+static int pc2a_common_attach(struct gpib_board *board, const gpib_board_config_t *config,
- 			      unsigned int num_registers, enum nec7210_chipset chipset)
- {
- 	unsigned int i, j;
-@@ -459,22 +459,22 @@ static int pc2a_common_attach(gpib_board_t *board, const gpib_board_config_t *co
- 	return 0;
- }
- 
--static int pc2a_attach(gpib_board_t *board, const gpib_board_config_t *config)
-+static int pc2a_attach(struct gpib_board *board, const gpib_board_config_t *config)
- {
- 	return pc2a_common_attach(board, config, pc2a_iosize, NEC7210);
- }
- 
--static int pc2a_cb7210_attach(gpib_board_t *board, const gpib_board_config_t *config)
-+static int pc2a_cb7210_attach(struct gpib_board *board, const gpib_board_config_t *config)
- {
- 	return pc2a_common_attach(board, config, pc2a_iosize, CB7210);
- }
- 
--static int pc2_2a_attach(gpib_board_t *board, const gpib_board_config_t *config)
-+static int pc2_2a_attach(struct gpib_board *board, const gpib_board_config_t *config)
- {
- 	return pc2a_common_attach(board, config, pc2_2a_iosize, NAT4882);
- }
- 
--static void pc2a_common_detach(gpib_board_t *board, unsigned int num_registers)
-+static void pc2a_common_detach(struct gpib_board *board, unsigned int num_registers)
+-int nec7210_take_control(gpib_board_t *board, struct nec7210_priv *priv, int syncronous)
++int nec7210_take_control(struct gpib_board *board, struct nec7210_priv *priv, int syncronous)
  {
  	int i;
- 	struct pc2_priv *pc2_priv = board->private_data;
-@@ -507,12 +507,12 @@ static void pc2a_common_detach(gpib_board_t *board, unsigned int num_registers)
- 	free_private(board);
+ 	const int timeout = 100;
+@@ -295,7 +296,7 @@ int nec7210_take_control(gpib_board_t *board, struct nec7210_priv *priv, int syn
+ }
+ EXPORT_SYMBOL(nec7210_take_control);
+ 
+-int nec7210_go_to_standby(gpib_board_t *board, struct nec7210_priv *priv)
++int nec7210_go_to_standby(struct gpib_board *board, struct nec7210_priv *priv)
+ {
+ 	int i;
+ 	const int timeout = 1000;
+@@ -329,7 +330,7 @@ int nec7210_go_to_standby(gpib_board_t *board, struct nec7210_priv *priv)
+ }
+ EXPORT_SYMBOL(nec7210_go_to_standby);
+ 
+-void nec7210_request_system_control(gpib_board_t *board, struct nec7210_priv *priv,
++void nec7210_request_system_control(struct gpib_board *board, struct nec7210_priv *priv,
+ 				    int request_control)
+ {
+ 	if (request_control == 0) {
+@@ -340,7 +341,7 @@ void nec7210_request_system_control(gpib_board_t *board, struct nec7210_priv *pr
+ }
+ EXPORT_SYMBOL(nec7210_request_system_control);
+ 
+-void nec7210_interface_clear(gpib_board_t *board, struct nec7210_priv *priv, int assert)
++void nec7210_interface_clear(struct gpib_board *board, struct nec7210_priv *priv, int assert)
+ {
+ 	if (assert)
+ 		write_byte(priv, AUX_SIFC, AUXMR);
+@@ -349,7 +350,7 @@ void nec7210_interface_clear(gpib_board_t *board, struct nec7210_priv *priv, int
+ }
+ EXPORT_SYMBOL(nec7210_interface_clear);
+ 
+-void nec7210_remote_enable(gpib_board_t *board, struct nec7210_priv *priv, int enable)
++void nec7210_remote_enable(struct gpib_board *board, struct nec7210_priv *priv, int enable)
+ {
+ 	if (enable)
+ 		write_byte(priv, AUX_SREN, AUXMR);
+@@ -358,7 +359,7 @@ void nec7210_remote_enable(gpib_board_t *board, struct nec7210_priv *priv, int e
+ }
+ EXPORT_SYMBOL(nec7210_remote_enable);
+ 
+-void nec7210_release_rfd_holdoff(gpib_board_t *board, struct nec7210_priv *priv)
++void nec7210_release_rfd_holdoff(struct gpib_board *board, struct nec7210_priv *priv)
+ {
+ 	unsigned long flags;
+ 
+@@ -372,7 +373,7 @@ void nec7210_release_rfd_holdoff(gpib_board_t *board, struct nec7210_priv *priv)
+ }
+ EXPORT_SYMBOL(nec7210_release_rfd_holdoff);
+ 
+-unsigned int nec7210_t1_delay(gpib_board_t *board, struct nec7210_priv *priv,
++unsigned int nec7210_t1_delay(struct gpib_board *board, struct nec7210_priv *priv,
+ 			      unsigned int nano_sec)
+ {
+ 	unsigned int retval;
+@@ -390,13 +391,13 @@ unsigned int nec7210_t1_delay(gpib_board_t *board, struct nec7210_priv *priv,
+ }
+ EXPORT_SYMBOL(nec7210_t1_delay);
+ 
+-void nec7210_return_to_local(const gpib_board_t *board, struct nec7210_priv *priv)
++void nec7210_return_to_local(const struct gpib_board *board, struct nec7210_priv *priv)
+ {
+ 	write_byte(priv, AUX_RTL, AUXMR);
+ }
+ EXPORT_SYMBOL(nec7210_return_to_local);
+ 
+-static inline short nec7210_atn_has_changed(gpib_board_t *board, struct nec7210_priv *priv)
++static inline short nec7210_atn_has_changed(struct gpib_board *board, struct nec7210_priv *priv)
+ {
+ 	short address_status_bits = read_byte(priv, ADSR);
+ 
+@@ -414,7 +415,7 @@ static inline short nec7210_atn_has_changed(gpib_board_t *board, struct nec7210_
+ 	return -1;
  }
  
--static void pc2a_detach(gpib_board_t *board)
-+static void pc2a_detach(struct gpib_board *board)
+-int nec7210_command(gpib_board_t *board, struct nec7210_priv *priv, uint8_t
++int nec7210_command(struct gpib_board *board, struct nec7210_priv *priv, uint8_t
+ 		    *buffer, size_t length, size_t *bytes_written)
  {
- 	pc2a_common_detach(board, pc2a_iosize);
+ 	int retval = 0;
+@@ -463,7 +464,7 @@ int nec7210_command(gpib_board_t *board, struct nec7210_priv *priv, uint8_t
+ }
+ EXPORT_SYMBOL(nec7210_command);
+ 
+-static int pio_read(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++static int pio_read(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 		    size_t length, int *end, size_t *bytes_read)
+ {
+ 	ssize_t retval = 0;
+@@ -512,7 +513,7 @@ static int pio_read(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buf
  }
  
--static void pc2_2a_detach(gpib_board_t *board)
-+static void pc2_2a_detach(struct gpib_board *board)
+ #ifdef NEC_DMA
+-static ssize_t __dma_read(gpib_board_t *board, struct nec7210_priv *priv, size_t length)
++static ssize_t __dma_read(struct gpib_board *board, struct nec7210_priv *priv, size_t length)
  {
- 	pc2a_common_detach(board, pc2_2a_iosize);
+ 	ssize_t retval = 0;
+ 	size_t count = 0;
+@@ -567,7 +568,7 @@ static ssize_t __dma_read(gpib_board_t *board, struct nec7210_priv *priv, size_t
+ 	return retval ? retval : count;
  }
+ 
+-static ssize_t dma_read(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++static ssize_t dma_read(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 			size_t length)
+ {
+ 	size_t remain = length;
+@@ -594,7 +595,7 @@ static ssize_t dma_read(gpib_board_t *board, struct nec7210_priv *priv, uint8_t
+ }
+ #endif
+ 
+-int nec7210_read(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++int nec7210_read(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 		 size_t length, int *end, size_t *bytes_read)
+ {
+ 	ssize_t retval = 0;
+@@ -615,7 +616,7 @@ int nec7210_read(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer
+ }
+ EXPORT_SYMBOL(nec7210_read);
+ 
+-static int pio_write_wait(gpib_board_t *board, struct nec7210_priv *priv,
++static int pio_write_wait(struct gpib_board *board, struct nec7210_priv *priv,
+ 			  short wake_on_lacs, short wake_on_atn, short wake_on_bus_error)
+ {
+ 	// wait until byte is ready to be sent
+@@ -641,7 +642,7 @@ static int pio_write_wait(gpib_board_t *board, struct nec7210_priv *priv,
+ 	return 0;
+ }
+ 
+-static int pio_write(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++static int pio_write(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 		     size_t length, size_t *bytes_written)
+ {
+ 	size_t last_count = 0;
+@@ -684,7 +685,7 @@ static int pio_write(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *bu
+ }
+ 
+ #ifdef NEC_DMA
+-static ssize_t __dma_write(gpib_board_t *board, struct nec7210_priv *priv, dma_addr_t address,
++static ssize_t __dma_write(struct gpib_board *board, struct nec7210_priv *priv, dma_addr_t address,
+ 			   size_t length)
+ {
+ 	unsigned long flags, dma_irq_flags;
+@@ -741,7 +742,7 @@ static ssize_t __dma_write(gpib_board_t *board, struct nec7210_priv *priv, dma_a
+ 	return retval ? retval : length;
+ }
+ 
+-static ssize_t dma_write(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer,
++static ssize_t dma_write(struct gpib_board *board, struct nec7210_priv *priv, uint8_t *buffer,
+ 			 size_t length)
+ {
+ 	size_t remain = length;
+@@ -765,8 +766,9 @@ static ssize_t dma_write(gpib_board_t *board, struct nec7210_priv *priv, uint8_t
+ 	return length - remain;
+ }
+ #endif
+-int nec7210_write(gpib_board_t *board, struct nec7210_priv *priv, uint8_t *buffer, size_t length,
+-		  int send_eoi, size_t *bytes_written)
++int nec7210_write(struct gpib_board *board, struct nec7210_priv *priv,
++		  uint8_t *buffer, size_t length, int send_eoi,
++		  size_t *bytes_written)
+ {
+ 	int retval = 0;
+ 
+@@ -827,7 +829,7 @@ EXPORT_SYMBOL(nec7210_write);
+ /*
+  *  interrupt service routine
+  */
+-irqreturn_t nec7210_interrupt(gpib_board_t *board, struct nec7210_priv *priv)
++irqreturn_t nec7210_interrupt(struct gpib_board *board, struct nec7210_priv *priv)
+ {
+ 	int status1, status2;
+ 
+@@ -839,7 +841,7 @@ irqreturn_t nec7210_interrupt(gpib_board_t *board, struct nec7210_priv *priv)
+ }
+ EXPORT_SYMBOL(nec7210_interrupt);
+ 
+-irqreturn_t nec7210_interrupt_have_status(gpib_board_t *board,
++irqreturn_t nec7210_interrupt_have_status(struct gpib_board *board,
+ 					  struct nec7210_priv *priv, int status1, int status2)
+ {
+ #ifdef NEC_DMA
+@@ -957,7 +959,7 @@ irqreturn_t nec7210_interrupt_have_status(gpib_board_t *board,
+ }
+ EXPORT_SYMBOL(nec7210_interrupt_have_status);
+ 
+-void nec7210_board_reset(struct nec7210_priv *priv, const gpib_board_t *board)
++void nec7210_board_reset(struct nec7210_priv *priv, const struct gpib_board *board)
+ {
+ 	/* 7210 chip reset */
+ 	write_byte(priv, AUX_CR, AUXMR);
+@@ -991,7 +993,7 @@ void nec7210_board_reset(struct nec7210_priv *priv, const gpib_board_t *board)
+ }
+ EXPORT_SYMBOL(nec7210_board_reset);
+ 
+-void nec7210_board_online(struct nec7210_priv *priv, const gpib_board_t *board)
++void nec7210_board_online(struct nec7210_priv *priv, const struct gpib_board *board)
+ {
+ 	/* set GPIB address */
+ 	nec7210_primary_address(board, priv, board->pad);
 -- 
 2.43.0
 
