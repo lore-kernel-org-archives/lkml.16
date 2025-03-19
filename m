@@ -1,124 +1,82 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914E01B393D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:45:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C43215746E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:47:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742409957; cv=none; b=TIZmsgzZEInSJx1o2gGo6hmtYdxvsYT/ioGbQnxDDJ/EqclzFOxbOvK3KqAS8k4+bulE2aQDeOvOGr2gWLETIokX+Qe2t7dHYYYQGQoamOaD7qz3ipa2AWL9KjRPjHe0FI4Zt5SpS7FX4lJ9j/n74bobnYh6ThXcc45oo/GUraQ=
+	t=1742410070; cv=none; b=Y+vn/KRhW/yMEDZ3S0DylAm316UBjqr29h/8LCeSJ7PevRwIexhmvlKbd7DFuUBYMeRMcFFB4Oy/ivkcFNbseMaV5x13zunbfR5MkZQNIBUk1Cw4k6CMFFk8Z3vBe+Ic8S6UVUpfLb8P2Zop7e6Vg0ZO6+YJc8kcmgD29neda7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742409957; c=relaxed/simple;
-	bh=UXiJSheHG32APdl3w7LPrJu9PqnU26FCXtZSCbxyCxE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EosWDEnNSxZi3+UkzZOHykHmekhUcyqo7vmbE7edKVhnw5dXBy9yYXLXBsMRjrwZW6bW6l5ZJk8LNg+JMs9DS49YoUtpsJFuIOs+XH3qLHTU2lewQTbe3peeAMj/PPPxrbhmwjOra4S0jFMXDC2ZzzGtrzJBfEut5nV8eFuMmL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M7C8YYTX; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742410070; c=relaxed/simple;
+	bh=kwgmMX+huATDceu/THZ1fprQ+eIPlF2PskD6dnyPypk=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=g11czEsBTln0+L9I8cW1UxKW7S38nEuRJlnIDtHJdOO59411Cb6UzC/jCVxI4YNafNJETsW4gMAvMp9zCD7L5vzC13Y1roQZAo7b3GKMHWo0CplIU8XFWypsU+WCVSNhCWmBH5jg4uUSlFtERG802S+DZUm+X7mRJQaYxGO2KwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FC+OjltS; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M7C8YYTX"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e789411187so2013a12.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:45:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742409954; x=1743014754; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3ecbEbpemCNUdOmyna3XYF3XUix1B1tTekXhoJuXd4A=;
-        b=M7C8YYTXU6a80eZH3U4gi0RE2DHczUUU66dSb+RvGkEFuOtkQ7xpg2zBZhu59Fmv5V
-         yfWRfXMlnBO14I3trOGw1y+24dK6TriCzOXgfB0nwPcsmmLa9IBFppS61xvmC93yeEGv
-         8xC1okaT6eITJE1HYXQHTupOK5NCN2D7ffm+azr0SDenCrSIaTxbhmvPhvqBl9XESg+f
-         zWSNWImJdwKrOHMjz1xYx2utg8SdksfJJAPVWXut/NOGxs0P7npexAfYhcvU56uWJ4sO
-         xoam1pavAGGSZ0S4itiCZnI0wFfzESsfFUkGuao+TJMRHRPp4BxuGdojAxuVVsj6IhZr
-         kbCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742409954; x=1743014754;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3ecbEbpemCNUdOmyna3XYF3XUix1B1tTekXhoJuXd4A=;
-        b=ClGH7Ey/LyAByFOaYc0V8CfFNW2J8jn/2EBWUWe1g2kvtzKITQdERVKtPc48PqBBfk
-         LSlLKs5k4dj9HGwNa/i6aWUkhq93E5Asf3N/pRX/wSMzUOgZozzUjN3CYX8m3gMICMcb
-         YcE2OFJwigBLFw5WZLO4eITOryOgjv5+XdX9HuEBYQ3e6yURWNeSQh+ksb7LOia8bkl3
-         c4UfVwDoB0bjIIw4/fnGfy471mXgroMOCLgWt9OUf9chwfYkle05qlrmqSVIBl6MHdbK
-         HGz88ePuyKuAIsfeEBcz3os2Y/BRsTfaIBn92DlJ4QDSCQGHEOGxaId/lubLdWzhF4p0
-         29mg==
-X-Forwarded-Encrypted: i=1; AJvYcCXELOaOleJOH2LawFEE9QamVhWUnFM6shdk7TLq7ZW3MljjTbWw82aneLjXiFOhNJf/dScXaC2h+yL+u60=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyOX0R951ZhKjfUIUFZ7HbHf1uppgETVwSl5NXwzP/4l8QGwXLv
-	vfqClMoYFP5xichFxupQgwoZ+mp5MhPJKGnPRHd7Znp/lE9Hd589xsE3iUQOuJAVy0Y5y/YW4Wi
-	I07e87iod9vvVgt171o2zh06EHrvMLEM60PEP
-X-Gm-Gg: ASbGncvlko7BJNuMr+5ESehRRRRnKUEx/JDA4+e78WXjB+Va0w9b+ywnvi+I4P1WING
-	eUVyeIgnwYkN8Rh/Wr4xUW/CD1CUovxQ4OIvDoaJOQUJa9LXePIF5em0CXiWfiAZMZHvSQI7+8z
-	PjOtBK83wrEiUQINqoaq9OvceUe8Jm85YeatUbHVkkMrbeqXtJCu7AMw==
-X-Google-Smtp-Source: AGHT+IFQVFvJoLLYYGEpCQCrcpmJcgAjvu9lMlPw1Apq+b9AsPYUrSsWWyw8j004BwTFyagC58jmJdwZkqIXOfbzzQ0=
-X-Received: by 2002:aa7:de95:0:b0:5eb:5d50:4fec with SMTP id
- 4fb4d7f45d1cf-5eba06cb25cmr14678a12.0.1742409953588; Wed, 19 Mar 2025
- 11:45:53 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FC+OjltS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742410067;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Tf3n/iYiR/NPTBH5XOmmISHt5xliwaRGurO52DuYDo8=;
+	b=FC+OjltSLkGU9qU850mDfQvG7S92x5vu2lB5smQJQ4s6zqUplTMuG45arTKalrL7Gn+8fR
+	Sm+XMUuXgu2B9sMy6CWA/xUlw7+BfZsx6mLbA3BbF/wbwb3eq6FRRlkN8jQiiypV77aHO2
+	xxmGakDRYkW/aMXkh5Atm01/wLQKTGk=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-453-63KoS6t8NDSvzbZgicvKdA-1; Wed,
+ 19 Mar 2025 14:47:42 -0400
+X-MC-Unique: 63KoS6t8NDSvzbZgicvKdA-1
+X-Mimecast-MFC-AGG-ID: 63KoS6t8NDSvzbZgicvKdA_1742410060
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 8D4B31955E9E;
+	Wed, 19 Mar 2025 18:47:39 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.61])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 2C09C1828AA2;
+	Wed, 19 Mar 2025 18:47:35 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <CAHk-=wgqidLD38wYUw-5Y6ztFdAvkX3P+Gv2=K+rpkFBG-bf7g@mail.gmail.com>
+References: <CAHk-=wgqidLD38wYUw-5Y6ztFdAvkX3P+Gv2=K+rpkFBG-bf7g@mail.gmail.com> <2874581.1742399866@warthog.procyon.org.uk> <20250319163038.GD26879@redhat.com>
+To: Linus Torvalds <torvalds@linuxfoundation.org>
+Cc: dhowells@redhat.com, Oleg Nesterov <oleg@redhat.com>,
+    Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <kees@kernel.org>,
+    Greg KH <gregkh@linuxfoundation.org>,
+    Josh Drake <josh@delphoslabs.com>,
+    Suraj Sonawane <surajsonawane0215@gmail.com>,
+    keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
+    security@kernel.org, stable@vger.kernel.org,
+    linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] keys: Fix UAF in key_put()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <67bab9f0.050a0220.bbfd1.000e.GAE@google.com> <CANp29Y6MOsEyXmR8Z_aA+3xQMQQFSWzsGfJUXohdeN6fG6EwRA@mail.gmail.com>
- <CAMj1kXH2JUWsxgd67+EHPgbo++OiGkx6TAu+8YcOcKjGR7ShRg@mail.gmail.com>
-In-Reply-To: <CAMj1kXH2JUWsxgd67+EHPgbo++OiGkx6TAu+8YcOcKjGR7ShRg@mail.gmail.com>
-From: Sami Tolvanen <samitolvanen@google.com>
-Date: Wed, 19 Mar 2025 18:45:16 +0000
-X-Gm-Features: AQ5f1JqU9r27v2sT_VaPIO6dFeriwVbCMWMTGjju9UQ4rRIs0sxTRsZw-3WZHqE
-Message-ID: <CABCJKuednNrveGz6tQqHj7bbnVzLJFgCLt0CuZLT2KOvt8aNrg@mail.gmail.com>
-Subject: Re: [syzbot] linux-next build error (20)
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Aleksandr Nogikh <nogikh@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
-	syzbot <syzbot+06fd1a3613c50d36129e@syzkaller.appspotmail.com>, brgerst@gmail.com, 
-	linux-kernel@vger.kernel.org, linux-next@vger.kernel.org, 
-	sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com, 
-	Dmitry Vyukov <dvyukov@google.com>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2883312.1742410054.1@warthog.procyon.org.uk>
+Date: Wed, 19 Mar 2025 18:47:34 +0000
+Message-ID: <2883313.1742410054@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-Hi Ard,
+Linus Torvalds <torvalds@linuxfoundation.org> wrote:
 
-On Wed, Mar 19, 2025 at 8:38=E2=80=AFAM Ard Biesheuvel <ardb@kernel.org> wr=
-ote:
->
-> The issue here is that we deliberately hide __ref_stack_chk_guard from
-> the compiler, because Clang will otherwise generate incorrect code.
-> [0]
->
-> I managed to work around this issue using the hack below, but I'm not
-> too familiar with the gendwarfksyms code, so I'll leave it up to Sami
-> and Masahiro to decide whether this is the right approach before
-> sending out a patch.
->
->
-> --- a/arch/x86/include/asm/asm-prototypes.h
-> +++ b/arch/x86/include/asm/asm-prototypes.h
-> @@ -20,6 +20,7 @@
->  extern void cmpxchg8b_emu(void);
->  #endif
->
-> -#if defined(__GENKSYMS__) && defined(CONFIG_STACKPROTECTOR)
-> +#if (defined(__GENKSYMS__) || defined(__GENDWARFKSYMS__)) \
-> +       && defined(CONFIG_STACKPROTECTOR)
->  extern unsigned long __ref_stack_chk_guard;
->  #endif
->
-> --- a/scripts/Makefile.build
-> +++ b/scripts/Makefile.build
-> @@ -311,7 +311,8 @@
->  ifdef CONFIG_GENDWARFKSYMS
->  cmd_gensymtypes_S =3D                                                   =
- \
->         $(getasmexports) |                                              \
-> -       $(CC) $(c_flags) -c -o $(@:.o=3D.gendwarfksyms.o) -xc -;         =
- \
-> +       $(CC) -D__GENDWARFKSYMS__                                       \
-> +               $(c_flags) -c -o $(@:.o=3D.gendwarfksyms.o) -xc -;       =
- \
->         $(call getexportsymbols,\1) |                                   \
->         $(gendwarfksyms) $(@:.o=3D.gendwarfksyms.o)
->  else
+> We really should have "test_bit_acquire()" and "set_bit_release()".
 
-The patch looks reasonable to me. Thanks for figuring this out!
+I considered using test_bit_acquire() but, as you say, there's no
+set_bit_release() as yet.  I could switch things to initialise the flag to set
+on key creation and clear the flag instead.
 
-Sami
+David
+
