@@ -1,109 +1,150 @@
-Received: from mx0b-002e3701.pphosted.com (mx0b-002e3701.pphosted.com [148.163.143.35])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38AE19259E;
-	Wed, 19 Mar 2025 21:20:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.143.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2431920C47B
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:21:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742419259; cv=none; b=tFIvwJxLcNITXykY453jhNrpBHUfaXvPdx2JIhqrkpk01TYxXR84QiafQu17aFRxdGG5BMHx5RHei0v2Mcx449tY3y76bl0QDHCCflW0UdIHZvcAzRDizXBIhoJkXQzx4vYs/KzEujDHEP5VdlCm58cVZxPl2eNOQgwrBRch30Y=
+	t=1742419275; cv=none; b=u90Ui70vDrnrq1cbnG/cHczeG2L5aLe3NiKmlASmURZ5H29eREMGIkA+VOr0b+VEPq83fdFDNqoboaIQ1rJ08tqnFfNTevXRwL+RmLiZQEAr6Z+hPwDCYUbzvfTKipOyiI+j3t5GtQKFBtDWRrSGjgZSczJ6/MYac6YR4iKZlWs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742419259; c=relaxed/simple;
-	bh=YsC2PH6HLyqCgb3DMrG1QZFnMFuZDxjMaNHci169mnc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GkJ7QhtdL9fXoMUnObZc4gtMiQ6vysPXUlaxQ2Jkw+tAFhYY8nNXd1I8sRIpysPZYO3QzaMOj0pZX29vBdDa1szDCFRH2VcgfhatrnA1LZSfRHz8SOX0zxMFmwgFH+758RvVDllPTgGdh1MFatheBoB70QmiLrt1YptLr1OySR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com; spf=pass smtp.mailfrom=hpe.com; dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b=ogrYwz8t; arc=none smtp.client-ip=148.163.143.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=hpe.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=hpe.com
+	s=arc-20240116; t=1742419275; c=relaxed/simple;
+	bh=HMbgGCsuKeJaEf/xCUb+Bjd7Q9sYLjr0dcO6CXChWvA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=WXTqcYymkgAuk/ixmzjbv1IgnPGY0+Vl3+gF0nFNyVssU0Qfb5CEK6r1p0Frz5HkOup4c+lkKcApyuG9iqgbStRTeUByYWw6VIRO2ZYcEMrdNus8Q6BvjuKNWiCjWRe88V/LOCJIvAMXv1grrpKWWzYmSFhPfevZg7EPGVQcdhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KHskQM3x; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hpe.com header.i=@hpe.com header.b="ogrYwz8t"
-Received: from pps.filterd (m0150244.ppops.net [127.0.0.1])
-	by mx0b-002e3701.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JHfhoX029966;
-	Wed, 19 Mar 2025 20:27:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hpe.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=pps0720; bh=XqJrfl7hvAFHoIlHnGXjypKYN2YSyNzDmZXQO
-	yzzboM=; b=ogrYwz8tOHjEDahsGnndq3XWgvs+WlK6FDYoAWAXjL4HXrTnJwg7O
-	XapABcMQuwVcUbYAfKw7JyeO2DlpOaZQ1X+YlCsimM3OSHUFryMlXIrvwb5p5oEU
-	mIMDbRr1YXmK1DuPde1S451arZcws7RbufRvpDhuehZj1J7qbbelcIWog5zYkSOO
-	hCfL5IEhfmNrTHZKzGjumEXkUySZJTXC/Ofl5YE+kSjyAZRN80X6B83Gvd6iQbCM
-	8ANWBkKbnviyRnysRy3Ep1pamr7wuaRnNAfdoHWWwx6uwic6hxVHztwk3ip1c1Z0
-	nJSjpJh9NWQmRQnPBfZ8OGgvxgn5Fxrkw==
-Received: from p1lg14880.it.hpe.com ([16.230.97.201])
-	by mx0b-002e3701.pphosted.com (PPS) with ESMTPS id 45f81b0mce-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 20:27:51 +0000 (GMT)
-Received: from p1lg14886.dc01.its.hpecorp.net (unknown [10.119.18.237])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by p1lg14880.it.hpe.com (Postfix) with ESMTPS id DFB09800EC1;
-	Wed, 19 Mar 2025 20:27:49 +0000 (UTC)
-Received: from dog.eag.rdlabs.hpecorp.net (unknown [16.231.227.36])
-	by p1lg14886.dc01.its.hpecorp.net (Postfix) with ESMTP id 8E113806B10;
-	Wed, 19 Mar 2025 20:27:49 +0000 (UTC)
-Received: by dog.eag.rdlabs.hpecorp.net (Postfix, from userid 605001)
-	id DEAD5300069F3; Wed, 19 Mar 2025 15:27:48 -0500 (CDT)
-From: Justin Ernst <justin.ernst@hpe.com>
-To: Len Brown <lenb@kernel.org>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Justin Ernst <justin.ernst@hpe.com>
-Subject: [PATCH] tools/power/turbostat: Increase CPU_SUBSET_MAXCPUS to 8192
-Date: Wed, 19 Mar 2025 15:27:31 -0500
-Message-Id: <20250319202731.258267-1-justin.ernst@hpe.com>
-X-Mailer: git-send-email 2.26.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KHskQM3x"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742419273;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Y2hxaIYTY0GjVflh8gcVmWThYCrbWSu8r9v+XAR6H2E=;
+	b=KHskQM3x7vgjsxsJOuFkW5WWLi4AW3w4ccbApPTazsTvzabtHglwH+wmGqXHaISQYrBcPa
+	6pKrjZoJxAa6Tb6Yl0gOSxjxlisgFfSvOzmXW9oChUItE+yLJEmVulrcFDqObT+A4vu17+
+	T45SC0X/Yr2C7y7qIsUjI/Vi+oqiDAs=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-117-UIlB57qmPSOCq9R0NdX11A-1; Wed, 19 Mar 2025 17:21:12 -0400
+X-MC-Unique: UIlB57qmPSOCq9R0NdX11A-1
+X-Mimecast-MFC-AGG-ID: UIlB57qmPSOCq9R0NdX11A_1742419271
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-39135d31ca4so50289f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:21:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742419270; x=1743024070;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Y2hxaIYTY0GjVflh8gcVmWThYCrbWSu8r9v+XAR6H2E=;
+        b=LGKKRDLJ3fdSRfiPiJm5QfkYtlECLdbL3DliqMjhkcqEa1cxyDwwLYChTxfOLzY5Oi
+         gVo5I7Plxb8+RLoq3VqJEdlr0y3HN0B3TALgTAAS0M7nHradBo5fJeb5TrKYnjBwJZHQ
+         MG//wFk6XUlscQKEOhmF59NzYhgkOaWZeXsm/BHUEEjiNbNb9603mLGdWIUN2/DjroFg
+         527pXjRAKl7ML/krb6rE2sL/dYmeBkzJkXXz18DhBroXCc/28N8SD1bFdnb83gmkXwq8
+         2bKvgjqB3jrNLyk2ZxNUQ7x5i5CtoioyzljGryWBPFt5rdWaZvuuocwzQQqkjDMikang
+         Nf0w==
+X-Forwarded-Encrypted: i=1; AJvYcCUeHADqdbww/w5HmTJzdeZdgFwp1O8RnXoi2po8yvi+4qj19IVyiUx/TNFVn+CojDqoesqHi/Fcs9HBEc4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySz7tpe0e42E0HJXwDGWaM2GYociXyxlmk/TRdXnxofe5uppLS
+	VxdbeUiVel47aVnzMWk5qr7snlTAmJlSMCGs2hO12GAIHuZ1Gftcbs6MFo2vS0IyWwqYIwVMJMi
+	p1qSDHlk4TIUTAd5X1dNnXksEW8V/RXYMuTR8XYeb15GFwdZrSSmLQ8Yj70Y8eSpV76PGow==
+X-Gm-Gg: ASbGnctQG3ZLQ5ksmjNC8bei/0BKjP2jImlje3Vbe3X9XMV2orhfy9s6UZYz/rN61Yd
+	eFQwRZqT1BWYqvk/us9Y0PbgVutZJsR7I1+35UPn1Neh0seuY1LLsiQafFTSpgeZuT7Dt4v29MP
+	StkVNwzUF+Lzik7HgmDq6LVDBELn5fLUyaIQmtFpLd7n+NL6c8OqYxLt6KzjjC03xT3XQRvoEFu
+	YHyeV+oyRwk/2Ej8Sw16knIVITYnB0px6GPOPRl6qOJhiQJbaeycT+iwx3yJTrm+1CsJQABHHF2
+	wVLfdhFl+g==
+X-Received: by 2002:a05:6000:18a6:b0:390:e9ee:f27a with SMTP id ffacd0b85a97d-39979584450mr995066f8f.28.1742419270407;
+        Wed, 19 Mar 2025 14:21:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IExhzW9zZnUN2tPz7Fqf6gRe+qwJOMLcgOp2MJcenPvh8K6lyAKT8Ns0f1qp/bUHCnlP61Hng==
+X-Received: by 2002:a05:6000:18a6:b0:390:e9ee:f27a with SMTP id ffacd0b85a97d-39979584450mr995050f8f.28.1742419269928;
+        Wed, 19 Mar 2025 14:21:09 -0700 (PDT)
+Received: from redhat.com ([2a0d:6fc0:1517:1000:ea83:8e5f:3302:3575])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb7ebe3csm22319800f8f.99.2025.03.19.14.21.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 14:21:09 -0700 (PDT)
+Date: Wed, 19 Mar 2025 17:21:06 -0400
+From: "Michael S. Tsirkin" <mst@redhat.com>
+To: Halil Pasic <pasic@linux.ibm.com>
+Cc: Maximilian Immanuel Brandtner <maxbr@linux.ibm.com>,
+	Amit Shah <amit@kernel.org>, linux-kernel@vger.kernel.org,
+	virtualization@lists.linux.dev, arnd@arndb.de,
+	gregkh@linuxfoundation.org, brueckner@linux.ibm.com,
+	schnelle@linux.ibm.com
+Subject: Re: [PATCH] virtio: console: Make resizing compliant with virtio spec
+Message-ID: <20250319172004-mutt-send-email-mst@kernel.org>
+References: <20250225092135.1200551-1-maxbr@linux.ibm.com>
+ <f5ab160dadc2219b9576e50588dce88f22e9bcb1.camel@kernel.org>
+ <649563cf1b8abd42401ed78d84bfd576d48bdbb8.camel@linux.ibm.com>
+ <f27debf87882df65574f21cfced31fecf1dd1da3.camel@kernel.org>
+ <dc3ff60fd16e5b5f94c12cf6a5a7893b94f705a8.camel@linux.ibm.com>
+ <20250319105852-mutt-send-email-mst@kernel.org>
+ <20250319181308.365ee0ea.pasic@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: WpV0UF3Rps3zgOYzr4dTkZ53y80dNKBg
-X-Proofpoint-ORIG-GUID: WpV0UF3Rps3zgOYzr4dTkZ53y80dNKBg
-X-HPE-SCL: -1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_07,2025-03-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
- phishscore=0 malwarescore=0 lowpriorityscore=0 mlxscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 bulkscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503190137
+In-Reply-To: <20250319181308.365ee0ea.pasic@linux.ibm.com>
 
-On systems with >= 1024 cpus (in my case 1152), turbostat fails with the error output:
-	"turbostat: /sys/fs/cgroup/cpuset.cpus.effective: cpu str malformat 0-1151"
+On Wed, Mar 19, 2025 at 06:13:08PM +0100, Halil Pasic wrote:
+> On Wed, 19 Mar 2025 11:00:06 -0400
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> 
+> > > > I was mistaken in my earlier reply - I had missed this
+> > > > virtio_console_resize definition in the spec.  So indeed there's a
+> > > > discrepancy in Linux kernel and the spec's ordering for the control
+> > > > message.
+> > > > 
+> > > > OK, that needs fixing someplace.  Perhaps in the kernel (like your
+> > > > orig. patch), but with an accurate commit message.  
+> > > 
+> > > So should I send a patch v2 or should the spec be changed instead? Or
+> > > would you like to first await the opinion of the spec maintainers?
+> > > 
+> > > The mail I initially sent to the virtio mailing list seems to have
+> > > fallen on deaf ears. I now added Michael Tsirkin to this thread so that
+> > > things might get going.  
+> > 
+> > 
+> > If we can fix the driver to fit the spec, that's best.
+> > We generally try to avoid changing the spec just because
+> > drivers are buggy.
+> 
+> I think the call if fixing the driver is possible needs to be made by
+> the maintainers of the driver. Fixing the driver IMHO implies that
+> if this is seeing any usage in the wild where it properly works a
+> fix on the driver side would imply a function regression. But any
+> implementers should have complained. So IMHO it is not unreasonable to
+> assume that this is not seeing any usage in the wild.
+> 
+> And people would still have the opportunity to catch the regression
+> during testing and complain about it.
+> 
+> I agree with Michael, changing the spec because of a buggy
+> implementation should rather be the exception than the rule. And AFAIK
+> it is not like we have declared something a reference implementation,
+> so in that sense the implementation in Linux is just one implementation.
+> 
+> I suppose making it runtime configurable via module parameter is an
+> overkill at this point.
+> 
+> So based no what we know I'm slightly in favor of let us just fix it
+> in Linux and see if anybody complains.
+> 
+> Another thing I noticed during looking at this. AFAICT Linux does not
+> seem to handle endiannes here. And AFAIU the message is supposed to hold
+> le16 that is little endian u16! Maximilian, is this in your opinion
+> something we need to fix as well? Or am I just missing the conversion?
+> 
+> Regards,
+> Halil
 
-A similar error appears with the use of turbostat --cpu when the inputted cpu
-range contains a cpu number >= 1024:
-	# turbostat -c 1100-1151
-	"--cpu 1100-1151" malformed
-	...
-
-Both errors are caused by parse_cpu_str() reaching its limit of CPU_SUBSET_MAXCPUS.
-
-It's a good idea to limit the maximum cpu number being parsed, but 1024 is too low.
-For a small increase in compute and allocated memory, increasing CPU_SUBSET_MAXCPUS
-brings support for parsing cpu numbers >= 1024.
-
-Increase CPU_SUBSET_MAXCPUS to 8192, a common setting for CONFIG_NR_CPUS on x86_64.
-
-Signed-off-by: Justin Ernst <justin.ernst@hpe.com>
----
- tools/power/x86/turbostat/turbostat.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
-index 8d5011a0bf60..f9f8df587b76 100644
---- a/tools/power/x86/turbostat/turbostat.c
-+++ b/tools/power/x86/turbostat/turbostat.c
-@@ -1121,7 +1121,7 @@ void probe_platform_features(unsigned int family, unsigned int model)
- int backwards_count;
- char *progname;
- 
--#define CPU_SUBSET_MAXCPUS	1024	/* need to use before probe... */
-+#define CPU_SUBSET_MAXCPUS	8192	/* need to use before probe... */
- cpu_set_t *cpu_present_set, *cpu_possible_set, *cpu_effective_set, *cpu_allowed_set, *cpu_affinity_set, *cpu_subset;
- size_t cpu_present_setsize, cpu_possible_setsize, cpu_effective_setsize, cpu_allowed_setsize, cpu_affinity_setsize, cpu_subset_size;
- #define MAX_ADDED_THREAD_COUNTERS 24
--- 
-2.35.3
+Agreed, still, please do a bit of research on open source hypervisors
+at least (rust-vmm?) and include the info which ones you checked.
 
