@@ -1,169 +1,128 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61643254B1D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:39:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 330B4253F21;
+	Wed, 19 Mar 2025 11:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742384346; cv=none; b=WHRZ0okhL6qz/ngnU86TFf9RihLKeHo8o0dmTjKgaXqI3si0U5QHK2TEpLl4MxlRDQRlGz2Meb9hk4BnrA710jB5JVv83ucYwtBH3nvlViLL4YDaGeS7SwGhO9p8iyQgtrdWcatF891BhYZU/T48FGJrw/vhBhjKlw1nsFpy9UE=
+	t=1742384347; cv=none; b=OsTafWZoRnZjVDoI955dJQ5SH2Uvy8PXPgocK1Sn12JeGdQuaWNc52K6zagCas6tKBCLQrPUOtXhGAKppmGzJGDYWqArBE8HsiiLv3Jtl3+loOEE9m09hB8fpaPfwKw+csbCnYm7ysAwhbA8X4lFa5YH9EIgURkH4wF/SzavNTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742384346; c=relaxed/simple;
-	bh=/ViqIW2rQ9pRcpWe1ja+iMw9gioppsGYG5b7wTCDJeo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T1+WRzZdOLkvMeekThQM2CkTEh789v0hyZmxiUB/P8YAKiY4Lk0+d+Gnphu19H4NCI+NR7WrBFnrG0T3SmjRRKxFI11lEOj+S38NatCLT1e1IO9PYC2dRgfTi8Hm5mernUPSmhT3HHZALiRZVzawA5jUs8EvSn6LoesEjGCcl8Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=zd9NL1P+; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
+	s=arc-20240116; t=1742384347; c=relaxed/simple;
+	bh=YgB8hf2iolWIUfIlPZLhZxKEx2ip6jdR/HD25QOJOYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q1if+N5452vIC1l4xzFKzQJtuxigi+9RIDXtEFoh6qygSqq2/kaelHAhhBGKlv6YbLAn+aU1L679+uPqc87caNfpi5UfaZ6b7FnPQQUqu+Nh/gIr+qW4rlgxV2+JL03md7AIJs5omAgCVDPqwawD4JO5V5pYd4/NHdrAoh+V4SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkm8xoUT; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="zd9NL1P+"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-224171d6826so37657875ad.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:39:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkm8xoUT"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43cf0d787eeso45738045e9.3;
+        Wed, 19 Mar 2025 04:39:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1742384344; x=1742989144; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Oc66l7/d0Jjz8FMmOmNrv+ltKHYwWToN6Hiwa3da7k0=;
-        b=zd9NL1P+4ywYlDJ63dfHRsO2AwDf8hX7nrwIKHAMEE5MfhNe4dSLPe84Is1/fucQoS
-         NsBXqfVC1AUdxfoz6flEoqftiqx43HVtH01JdbG80K1zAhA+elDqG2NUvon7cyPre0wa
-         vuTmOfP7TCV5eD7wPh/dWHoTuogKF3PZo3f/UzxEj2XhsQIGJeUnyhHd3Ze7jeWZROiA
-         1CzRU5XiZX5qph5UW6ughOlDsYYr/KF1XTJC73ORncAqL+Pymcj5VvHcMylXtHO/ueaX
-         BuMMoBNDJUXiggYu5VkKsI2SRlgx5ZZFRnyoBgt/x7fXaG3FlM9yTWLde56dZmI1Oka4
-         4s5w==
+        d=gmail.com; s=20230601; t=1742384343; x=1742989143; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=23Zzwx8dQ7ApD2OL+JFkf/rOuLI+b6JbK1FtVimJKeY=;
+        b=lkm8xoUTCbcBk9YdbWCMNsRFqAsfAisBUhAjleFTET+HsXkqPopCDUzeQYi7Jfnosp
+         VcxoWLGW5rljsYceH7DNaWpfh/QVl8MIEAy+08B1RIIUBGHe5gQmXbp8s6itW29cTyjA
+         fa9b5B219HWvdH1chNkDlCpw41pySYOMpnJlY/ypcrcDyD7Wvw3zeEe/+1JtdVUW6kV3
+         N7W1z0loHvlIT/irC3wmHVsHvmBZhVKAcOQgoZFNpbyfBMbNMf1zHl0VY8uUscDgoA9N
+         te+0ZOdbgceI7X0kXig6yEf53Oa4dBVlWL7dsGXmifkb6bjU+U6cqIbPj5CIQdnefZh6
+         e8Mw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742384344; x=1742989144;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oc66l7/d0Jjz8FMmOmNrv+ltKHYwWToN6Hiwa3da7k0=;
-        b=wAj8AyxL8OD95L/icQzWKprJmb3+xSm/KPCQoePDY883CipfK+EDunLVLKXV0H4Is6
-         WilV/ovNXvI9ZepBsUg5LhORKSkInu0S6QtSj6mD32jRO4EjZvvWAu4VjdZuZ//ov/p4
-         LSWwMnywYOTuBBR/oGLhOHXCDSKzQNfV5KlIWNsCsCyTPzIZx2WEevAPp9YrHGDa/Tky
-         R9TjG02OvCzWA68kkXTBmeXfkkkN28AazWlaARRtxOpqrzonyuR9Om9cNI+Kmo9q6rt2
-         rAFj+oVzBSKVmxb/cQDrWsB0bgjUpfFZUXZhJBbAfLGRi6zn9+z/83tm3vrXDUZOZJ4M
-         XEmw==
-X-Forwarded-Encrypted: i=1; AJvYcCVe4FrN8z3b93SdMAoBlMWcI+I8GtCP93Uyrrk7iyvfA3Ilxq1lWFDsVfbNCGsnaqDDJf+WwSG7kG0diJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwZbqfGKacz36UzXER3zp508zPu2Jn6MLLnjp7EVOGW5rv+IryY
-	qci0PKWNZSwbf2HUvyzBMWFHGHf9YXFvkW7H88qAQY4mWpoxoli1UoBOX3g+z1M=
-X-Gm-Gg: ASbGncsLQaB0xeQrVE8RWaAFcUOSVGDFK72ryXI1srTyhSiCWuwfsU/aSXgSFLEYF3l
-	R9uGEuEip/O7G/obXkudIRhk2s6akRVshccXZcpXPp7Xakp16LO/46FucPULOLW23GO3mmj1UNS
-	SkjYZHoSmdN4m0sNyL0wAo/yFcCzqBNflIICmADJBJHwzBccik8KmEUlchtv7Wstj4qT+FmwnIa
-	sZ9d0WpRocP6nzf5zywiQMtI2nw17NPs/WFg8rvE6xMFiHJ9QvIi8Zhfl2JjAkho1QkU+CSXn/H
-	R8M1qfFP758H4gmofWlziSMle/xV25uow7zAQjIoeXhVg2Qp
-X-Google-Smtp-Source: AGHT+IGSv0AJ8KwpE6fQl4DpNJB/7VkQwjj59TCcKQRqKU8wam5+t3NXf5mYBQBcpLosGuAKvIYqVA==
-X-Received: by 2002:a17:903:1790:b0:224:283f:a9ef with SMTP id d9443c01a7336-2264981d654mr33063775ad.6.1742384344597;
-        Wed, 19 Mar 2025 04:39:04 -0700 (PDT)
-Received: from localhost ([157.82.207.107])
-        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-225c6bd5ce5sm111657845ad.252.2025.03.19.04.39.02
+        d=1e100.net; s=20230601; t=1742384343; x=1742989143;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=23Zzwx8dQ7ApD2OL+JFkf/rOuLI+b6JbK1FtVimJKeY=;
+        b=kC/cCrgNycHKLby4Mh0poorVTLPVeD74lKy8ULvIn84vTEgzY7QV1xIXIf/fhlthLI
+         GzG6kB4fLKnEzyvg7cTIDZ1TshMVUhB72T5ik2f/Nf+WEdKw8VpPIjDuqjK4mPULqdLY
+         n2K5/gAwAWr8ZoYOBv2D42HejKyQhhbZlSMUUuuLL+79iCIavauszFSfIafEbu8H28eZ
+         zBEtWv8xR201RKO1YipLR1hOF2pqW+5tyx11CeqlmOXO4Vu1wkT7Y+Jr1GXH/hWwWsVw
+         rMu+UPWaXuPYACIubZBA6SaNLgYMrPfk+qEH+lr5QYbTU+f7i7aMoujVc5Zn90sTffRI
+         kZrg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlf7Nn5wSQD7H4FbT4rpy0V0mQt+AInSn3Qh+9D/sCJHgbjXxh9D4flSSkRas1wNx9POyx50hESECwFE7THw==@vger.kernel.org, AJvYcCUrLXleo00692tSmNfFL6w5TI2hA+9ptF2Z67O+gWPkFQGxcaSEYQe1YEbazIRBWi59UOR5wPc/OFccF524@vger.kernel.org, AJvYcCX5y/6BBaNuKg2+l+ywcHkQkYEU1J9DA/bppo/oxpkM0u03J9tL1RXSQeUquIdxJZ7U/s0LYjJfSoiE@vger.kernel.org, AJvYcCXUDCD0jqoEkyQxUJhOKMV/tZHS1WSOp7KqChoBRPviVP0fnxMi+GuzWHGitk4NrWK6/A7wB5TN/A4e4v27UuTxdQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4LIEWH8OWLT2bkSnDWgZhYpWmmkjtdKZH5AYfqJLJMrCXlEZv
+	cbIK5Jpt3OQEqfWc04xH56Zv/WVXXcXSzly1p14trwwUgIXj/vvy
+X-Gm-Gg: ASbGncumDz8norpbGubEBBJa57/SpXRnGv8ELFoIWAjVm5IEb/eTZyc1tFwj0SmbAXy
+	xiZtV7GHBz2G8/hqefy//AMKkQH1tQBKOour4I3a9dUu5T/mSaND+3BEf7+mNyNjwElbRtdpVFA
+	/Cg+WcrfRpj9PjCfob8OYA7vymd6Stcu6dOJlko/AIGRO4b+ePM5MyAQxiWtmAv6Q9kZLXiWB3o
+	ggCDaZJ/eXwU3YpMEeaZ0TQXKAgUDOy6jWeJpMXRYmjCSfzGkuGQLjyewrdwYLa1MPuv7ZWubVZ
+	FtYvNSQeOxreyRpaUFf8Q+rMzVHZPfG4CZBZUUcRgGQhzU4w4sQTPLnxHOj/S/5lVwt8XW/hBeL
+	70Jr++qS2fQovCoexIsnLW/w=
+X-Google-Smtp-Source: AGHT+IG/uReUa1PFDrYRs3h2HIwVSGTu7IcnjWIZm5iEXhoFmvhyCo2Cbk7y/wuCyXozf5+5PQwOzQ==
+X-Received: by 2002:a05:600c:a4c:b0:43c:f63c:babb with SMTP id 5b1f17b1804b1-43d4378163cmr13761135e9.1.1742384343101;
+        Wed, 19 Mar 2025 04:39:03 -0700 (PDT)
+Received: from [192.168.1.105] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d3ae04a94sm23904475e9.0.2025.03.19.04.39.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 04:39:04 -0700 (PDT)
-From: Akihiko Odaki <akihiko.odaki@daynix.com>
-Date: Wed, 19 Mar 2025 20:38:55 +0900
-Subject: [PATCH 1/2] KVM: arm64: Trace values with kvm_sys_access
+        Wed, 19 Mar 2025 04:39:02 -0700 (PDT)
+Message-ID: <8e8bbcde-8ed4-4239-ad96-6cffd8b9d65c@gmail.com>
+Date: Wed, 19 Mar 2025 13:39:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 5/8] phy: phy-snps-eusb2: make repeater optional
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Abel Vesa <abel.vesa@linaro.org>,
+ linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org, linux-phy@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250223122227.725233-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250223122227.725233-6-ivo.ivanov.ivanov1@gmail.com>
+ <sxrae5pmykx6ul2y7uc24fss2kdeezkkom7ev7mavt3fbc6ckv@tghyp3whuxnu>
+Content-Language: en-US
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <sxrae5pmykx6ul2y7uc24fss2kdeezkkom7ev7mavt3fbc6ckv@tghyp3whuxnu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-trace-v1-1-0fff03204efa@daynix.com>
-References: <20250319-trace-v1-0-0fff03204efa@daynix.com>
-In-Reply-To: <20250319-trace-v1-0-0fff03204efa@daynix.com>
-To: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- Joey Gouly <joey.gouly@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Zenghui Yu <yuzenghui@huawei.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
- linux-kernel@vger.kernel.org, devel@daynix.com, 
- Akihiko Odaki <akihiko.odaki@daynix.com>
-X-Mailer: b4 0.15-dev-edae6
 
-Tracing values written to or read from system registers.
+On 3/19/25 13:08, Dmitry Baryshkov wrote:
+> On Sun, Feb 23, 2025 at 02:22:24PM +0200, Ivaylo Ivanov wrote:
+>> Some platforms initialize their eUSB2 to USB repeater in the previous
+>> stage bootloader and leave it in a working state for linux. Make the
+>> repeater optional in order to allow for reusing that state until
+>> proper repeater drivers are introduced.
+> Generally "works as it is setup by the bootloader" is a very invalid
+> justification. Please don't do that. We should not be depending on the
+> way the bootlader sets up the devices, unless that _really_ makes sense.
 
-Signed-off-by: Akihiko Odaki <akihiko.odaki@daynix.com>
----
- arch/arm64/kvm/sys_regs.c          | 24 ++++++++++++++----------
- arch/arm64/kvm/trace_handle_exit.h |  6 ++++--
- 2 files changed, 18 insertions(+), 12 deletions(-)
+It does, doesn't it? We still don't even have i2c up on Exynos2200, so bringing up
+the repeater before this patchset gets merged is a no-go. Either way, we should
+follow what bindings say. I will change the commit description a bit.
 
-diff --git a/arch/arm64/kvm/sys_regs.c b/arch/arm64/kvm/sys_regs.c
-index 14f66c7a4545..362e2758d101 100644
---- a/arch/arm64/kvm/sys_regs.c
-+++ b/arch/arm64/kvm/sys_regs.c
-@@ -3994,23 +3994,27 @@ static void perform_access(struct kvm_vcpu *vcpu,
- 			   struct sys_reg_params *params,
- 			   const struct sys_reg_desc *r)
- {
--	trace_kvm_sys_access(*vcpu_pc(vcpu), params, r);
-+	bool skip;
- 
- 	/* Check for regs disabled by runtime config */
- 	if (sysreg_hidden(vcpu, r)) {
- 		kvm_inject_undefined(vcpu);
--		return;
-+		skip = false;
-+	} else {
-+		/*
-+		 * Not having an accessor means that we have configured a trap
-+		 * that we don't know how to handle. This certainly qualifies
-+		 * as a gross bug that should be fixed right away.
-+		 */
-+		BUG_ON(!r->access);
-+
-+		/* Skip instruction if instructed so */
-+		skip = r->access(vcpu, params, r);
- 	}
- 
--	/*
--	 * Not having an accessor means that we have configured a trap
--	 * that we don't know how to handle. This certainly qualifies
--	 * as a gross bug that should be fixed right away.
--	 */
--	BUG_ON(!r->access);
-+	trace_kvm_sys_access(*vcpu_pc(vcpu), params, r);
- 
--	/* Skip instruction if instructed so */
--	if (likely(r->access(vcpu, params, r)))
-+	if (likely(skip))
- 		kvm_incr_pc(vcpu);
- }
- 
-diff --git a/arch/arm64/kvm/trace_handle_exit.h b/arch/arm64/kvm/trace_handle_exit.h
-index f85415db7713..b0308d95304d 100644
---- a/arch/arm64/kvm/trace_handle_exit.h
-+++ b/arch/arm64/kvm/trace_handle_exit.h
-@@ -88,6 +88,7 @@ TRACE_EVENT(kvm_sys_access,
- 
- 	TP_STRUCT__entry(
- 		__field(unsigned long,			vcpu_pc)
-+		__field(u64,				regval)
- 		__field(bool,				is_write)
- 		__field(const char *,			name)
- 		__field(u8,				Op0)
-@@ -99,6 +100,7 @@ TRACE_EVENT(kvm_sys_access,
- 
- 	TP_fast_assign(
- 		__entry->vcpu_pc = vcpu_pc;
-+		__entry->regval = params->regval;
- 		__entry->is_write = params->is_write;
- 		__entry->name = reg->name;
- 		__entry->Op0 = reg->Op0;
-@@ -109,10 +111,10 @@ TRACE_EVENT(kvm_sys_access,
- 		__entry->Op2 = reg->Op2;
- 	),
- 
--	TP_printk("PC: %lx %s (%d,%d,%d,%d,%d) %s",
-+	TP_printk("PC: %lx %s (%d,%d,%d,%d,%d) %llx %s",
- 		  __entry->vcpu_pc, __entry->name ?: "UNKN",
- 		  __entry->Op0, __entry->Op1, __entry->CRn,
--		  __entry->CRm, __entry->Op2,
-+		  __entry->CRm, __entry->Op2, __entry->regval,
- 		  __entry->is_write ? "write" : "read")
- );
- 
+Best regards,
+Ivaylo
 
--- 
-2.48.1
+>
+>> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+>> ---
+>>  drivers/phy/phy-snps-eusb2.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
+>> index 4e5914a76..dcc69c00a 100644
+>> --- a/drivers/phy/phy-snps-eusb2.c
+>> +++ b/drivers/phy/phy-snps-eusb2.c
+>> @@ -461,7 +461,7 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
+>>  		return dev_err_probe(dev, ret,
+>>  				     "failed to get regulator supplies\n");
+>>  
+>> -	phy->repeater = devm_of_phy_get_by_index(dev, np, 0);
+>> +	phy->repeater = devm_of_phy_optional_get(dev, np, 0);
+>>  	if (IS_ERR(phy->repeater))
+>>  		return dev_err_probe(dev, PTR_ERR(phy->repeater),
+>>  				     "failed to get repeater\n");
+>> -- 
+>> 2.43.0
+>>
 
