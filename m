@@ -1,171 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5897D25A633;
-	Wed, 19 Mar 2025 13:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BCB1256C7C;
+	Wed, 19 Mar 2025 13:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742391700; cv=none; b=UvD8Xsw8qtCURtuBvBiLdQw08g/Tro3Nz6KoHUpqEk6mP1RYxlpFVKR2HDr0Zh0ctvXnsYXQd5WHGZIHAxiAafdHl6q9MiZ7XN7Yme67rcn/oLhTyK4piIYOUavqCUDRoptVR3vo5axYdqkif9nngCgYyosfObVuTHHwdN4/TY0=
+	t=1742391794; cv=none; b=lvTLG1BqNxJUqafU4mJzkBkWzv3zDtIJC6qBS8/w/BUJ0vS5m6WVpS5/cT+RIPh/DbfGTQ1R6+o2mKH+Dyu+kRD9eC9qkvUOqnhYpRYDfqPVrgZKDgIT4T1Tc0nzOW0dKe8+WsRBtPut3/T4WLLSzwuQqbLbfT2FQ2RBuFSwFY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742391700; c=relaxed/simple;
-	bh=Ara1eTRtgS9rlnEyA0OeNE3ZvBzOMbrRhAfO22PCfzs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=W0nRnQCrQ7b5KktMnw6DpfWR0w1KKIrA4qM2AZE/0LIK4c9N8ZZVLwclpC6QdPo2FHBEXbaJP5Ys03TLXhAXUv0p1r5dZCpIGUyam322eQ34HOhY55cd9SmaeS3/EjLLp1L1Ijj0iO6tUlURZAgUZEXpZyDk03JoYuxHgTsM2wQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QcdxIDB1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742391794; c=relaxed/simple;
+	bh=EW2+CjP+11PZnip+nDDx8uqTPNkbK1009G41iNbWFqw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rjKSx7J2qF2dsqxZcUlQE6ISlfaLkypsv1RDmOqVkX2uzhF92doPn5gYN97fqw0A23qeJ8eMuQVN5dYYRcRODYoQCAkDd3E+lG0Vz/kL4Eaz3FSBBBzSMr9DHyzKROjdX5MA3mWaViO26VbqE9ZYVx7FteGh+YayIcaBOWHo9ek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ve2JD+4y; arc=none smtp.client-ip=209.85.208.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QcdxIDB1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 573FDC4CEE9;
-	Wed, 19 Mar 2025 13:41:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742391700;
-	bh=Ara1eTRtgS9rlnEyA0OeNE3ZvBzOMbrRhAfO22PCfzs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=QcdxIDB1EZzlQrkp6rm95OG1wp3dvhHDhSPLc50Pzy2FYa5hIsBU2qFQRDlcp3KPx
-	 6hH4SuwUSD4+vB2IpgOF3y1/KHxFMmm5cJ52xss0IVATuSdLMxICwBBMuF9Pp5btB6
-	 yxLODdLFJwF72V4k/OCsmYmj0p1V69o9gLLHoWm7KUk/N2Iz5xMW/zV+ip4QYxzbYH
-	 uRcv0bgMLAMWC5uxbXf4m7UKTVMjuzTXs6tHJxQbGG6btWjSjaUZan9lZj+QuPqgUw
-	 vIW93w5kpAkbOkcZlME2lJ1nHE9L2wYUTfcLXnAv4FRvOaKQIXXpoZ2g1BgtgjUBZG
-	 TaE3y0SKmgG8g==
-From: Roger Quadros <rogerq@kernel.org>
-Date: Wed, 19 Mar 2025 15:38:35 +0200
-Subject: [PATCH net-next 9/9] net: ethernet: ti: am65-cpsw: remove
- cpsw_ale_classifier_setup_default()
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ve2JD+4y"
+Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30c44a87b9cso61078641fa.3;
+        Wed, 19 Mar 2025 06:43:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742391790; x=1742996590; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V2MSofc8cyvKVxUKPs8pE0XcoDtUlgqxF6FfrtYMUiE=;
+        b=Ve2JD+4yg6zfxSkP88AZp25F1EQ1zjLCqA1INid+tjVwqEgfe0s2FNzcR5TdQQJ+vI
+         tthcu5n5Z3jUC9PMHgYU1TCgd8DhLCUhI8uxzlxur37iis5v3faOuH8dbsbs69P6Wxfh
+         9cHkl51kADFybqZTDS0DFUzgdPZxkDM6X92AkGKv4Hp+mpoqcB8sjzWoh6x+6T71/OHA
+         nPh+gabi0xtDbzCuTuMEJVc5YcbqIHIQgA6yCpZ4TNBK6iwm5lt6e8sulasNuzfPQhYF
+         b4uYuUgAxXoQV8zOVksPjyVkecJift1TrijtpAzICxF4RRYCecj42BYRoY/odOURe2OK
+         NdXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742391790; x=1742996590;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V2MSofc8cyvKVxUKPs8pE0XcoDtUlgqxF6FfrtYMUiE=;
+        b=gsJlbKUMx5PGrY8XcFvjh8dW12JBW48v8LusaDDxE3NiVcyenlliywOMAuNfyGN+S8
+         37aDil59vOWoFsZoWznS5vKmDuCHRKUjnhaaCcnuqItNQ8pzx9/mVlLBOq6l2CkWFI23
+         xB+1tJJaMjigIIUe15MbNWaa6HVC6uQsenHYZ+2Ic9nugcoTNPT3utlcsEYuzijCL0iU
+         7L02d2MP2LCYsV5Psez7lmAF+I4lxjNSicd2jLKVQJJk7NJHmlzGVoKJxwHJP+uWQg78
+         u4QOYwLAjIGWL3MAsy8ZHY9h1HGMMOkVciuDQPeW6Eq02DhOKGe+KDWlhi3P5IsiHSVm
+         Y3Rw==
+X-Forwarded-Encrypted: i=1; AJvYcCV76ibGkQz6oJBx/DWp9+2UHc4GbZBxzVB8HmpnpR4tuYQMLLB1tNflmM27xJDLq/3e0R8ozwkwSNs=@vger.kernel.org, AJvYcCWSnKtM85iDQTazOcjunwM2w48TG6r1tFuAzmN2YVbpj9VW6Y4t6s+29bBeM+9tdVHzkdhBhAOGSd2bjumA@vger.kernel.org, AJvYcCXSAapBlOYtY1R7kM5n9efUUXu9WiHpCjvmidjslnqWcdddNE7g++fvgYC+y8OKFOoUF9KRCDqj63+fOXEQg+4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgdqcUN9u4PhlOnvpypiiHm/6P/2JiDZn0NEt2jJbLPKuFULr0
+	DYRxMbSRgs4u2/L6mdcwhKs5KNnRPgIIcYXwdJoq5wKhHoUP8dDkoOqm1v+euDy1GX4+sHTM/Mu
+	Xk5trTDVbZbPrAl8Yt+/z/hJoBjo=
+X-Gm-Gg: ASbGncvbXaoqtuM2pzTI1CH+AarFtLpXzwFPqVrz/sKYmQPB/wZkbNj8YDYFzRRV4Ki
+	biNKb4AYGy9pxw/wKVaKEzQtBEPIRXhtVQhVy0z4tJVKsIxpML0CRQaILMX7IpbbvgOzmoWKWta
+	uPc9sGB0ByY+G1a9JXySGN2xpeyBLN6OcovyU//8dimg==
+X-Google-Smtp-Source: AGHT+IF4UZnEdUSdxleThqoQmroEP7JDDLQW+0nYHiycAoFsWFqa8q5lYSIadDHk2oU9ljzuqsif8/Cf1eEeLepUQng=
+X-Received: by 2002:a05:651c:1541:b0:30c:f60:6c6 with SMTP id
+ 38308e7fff4ca-30d6a39d6demr10181131fa.6.1742391790128; Wed, 19 Mar 2025
+ 06:43:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-am65-cpsw-rx-class-v1-9-2bfded07490e@kernel.org>
-References: <20250319-am65-cpsw-rx-class-v1-0-2bfded07490e@kernel.org>
-In-Reply-To: <20250319-am65-cpsw-rx-class-v1-0-2bfded07490e@kernel.org>
-To: Siddharth Vadapalli <s-vadapalli@ti.com>, 
- Andrew Lunn <andrew+netdev@lunn.ch>, 
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Russell King <linux@armlinux.org.uk>, danishanwar@ti.com
-Cc: srk@ti.com, linux-omap@vger.kernel.org, netdev@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Roger Quadros <rogerq@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4099; i=rogerq@kernel.org;
- h=from:subject:message-id; bh=Ara1eTRtgS9rlnEyA0OeNE3ZvBzOMbrRhAfO22PCfzs=;
- b=owEBbQKS/ZANAwAIAdJaa9O+djCTAcsmYgBn2slyzkJ+yalp2OI63PxmaCvhjL2KqlB9qWnjv
- h+9iAGmpSyJAjMEAAEIAB0WIQRBIWXUTJ9SeA+rEFjSWmvTvnYwkwUCZ9rJcgAKCRDSWmvTvnYw
- k+b3EAC07QdtXXEsKpV99Jj3h4gQLrNvnMgOgP76JWCvTWVtGMk84TXtxnIzdxJnHbnRWTXKBQZ
- 2omXh9O4eyNC4HNmtoO1fw8indQdu41/pqxJMpd/RbGvQNp5Igvdv2Hi9ghtP8O33WubbXudvn2
- 7BZO4SQpBqRGN9/YgcHAKQ5kTbMwtxDjoFklU5850OW7rvj7loZVVm1SGSB1sLP+U7KxyNTfnIQ
- ihKY1WCsWHQ538vJ7F0R/Vj5wO3KsidprXBC8hp3iswsacGQclhtUe57EnqkTqD2kZWNnze3Hq9
- 3piSRPZ2hvdispTThRpTib6anuj8Yw/EfkC7LI2oRBn3uSpvlOX3oyYiq3hLaTbaoudblrXtvfK
- 6rFrJXFv6OXNopaF8APsHvO8kpUbTb52Aych3+GaLOKd/mctKDybo8j79Dmuhmkz15ot7lq4OPd
- ARF/AY1IgLDXb8c1vDI7vye/ciEcguIxoix8B5yo7EzAjP5ATuXO+clq3nQy8ljjiguuGWcxFum
- eYd3fVA6VTnCOima+g+dG6P6YoEUw+PrNRSa8wgT+qPH07J+ta/cund7Pwn07u+ZiCZ/72OqH6G
- Jzf103Z0sXdxBsehs2ukLFpVNzyMNTyDCypyewN/hrYUEYaETAwP4hftC8HojA7nmhutKrkLSVp
- hy4lLuCkRjgLsrg==
-X-Developer-Key: i=rogerq@kernel.org; a=openpgp;
- fpr=412165D44C9F52780FAB1058D25A6BD3BE763093
+References: <20250316111644.154602-1-andrewjballance@gmail.com>
+ <20250316111644.154602-3-andrewjballance@gmail.com> <CAJ-ks9kAROOfyPtxMe6LE4-UPsvXca2sQ2VDjhRchZp3HLddGg@mail.gmail.com>
+ <D8JTWL8JY7DM.3IVH6FZ4M49CB@proton.me>
+In-Reply-To: <D8JTWL8JY7DM.3IVH6FZ4M49CB@proton.me>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 19 Mar 2025 09:42:33 -0400
+X-Gm-Features: AQ5f1JrzlMF52hRTEnPnE3fmFFgkh9IFrPPTcapQYiPgOpAS7vBvzN1PK6u3ims
+Message-ID: <CAJ-ks9k+A1+0CWXZmD2m0+jRqTRTNFn-=d9VXqytiOqvn4BR0w@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] rust: alloc: add Vec::resize method
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Andrew Ballance <andrewjballance@gmail.com>, dakr@kernel.org, airlied@gmail.com, 
+	simona@ffwll.ch, maarten.lankhorst@linux.intel.com, mripard@kernel.org, 
+	tzimmermann@suse.de, corbet@lwn.net, ojeda@kernel.org, alex.gaynor@gmail.com, 
+	boqun.feng@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com, 
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu, 
+	acourbot@nvidia.com, nouveau@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The RX classifier can now be configured by user using ethtool -N.
-So drop cpsw_ale_classifier_setup_default().
+On Tue, Mar 18, 2025 at 8:50=E2=80=AFPM Benno Lossin <benno.lossin@proton.m=
+e> wrote:
+>
+> On Tue Mar 18, 2025 at 9:12 PM CET, Tamir Duberstein wrote:
+> > On Sun, Mar 16, 2025 at 7:17=E2=80=AFAM Andrew Ballance
+> > <andrewjballance@gmail.com> wrote:
+> >> +    pub fn resize(&mut self, new_len: usize, value: T, flags: Flags) =
+-> Result<(), AllocError> {
+> >> +        if new_len > self.len() {
+> >> +            self.extend_with(new_len - self.len(), value, flags)
+> >> +        } else {
+> >> +            self.truncate(new_len);
+> >> +            Ok(())
+> >> +        }
+> >> +    }
+> >
+> > You can avoid underflow checking in debug builds by using `checked_sub`=
+:
+>
+> `checked_sub` doesn't only avoid underflow in debug builds, but rather
+> in all builds. But the code below is a good suggestion.
 
-Signed-off-by: Roger Quadros <rogerq@kernel.org>
----
- drivers/net/ethernet/ti/am65-cpsw-nuss.c |  3 --
- drivers/net/ethernet/ti/cpsw_ale.c       | 52 --------------------------------
- drivers/net/ethernet/ti/cpsw_ale.h       |  1 -
- 3 files changed, 56 deletions(-)
+Yes, I know :)
 
-diff --git a/drivers/net/ethernet/ti/am65-cpsw-nuss.c b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-index 700eb42dd381..12edf2a3bea7 100644
---- a/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-+++ b/drivers/net/ethernet/ti/am65-cpsw-nuss.c
-@@ -2497,9 +2497,6 @@ static int am65_cpsw_nuss_init_rx_chns(struct am65_cpsw_common *common)
- 			       am65_cpsw_nuss_rx_poll);
- 	}
- 
--	/* setup classifier to route priorities to flows */
--	cpsw_ale_classifier_setup_default(common->ale, common->rx_ch_num_flows);
--
- 	return 0;
- 
- err_flow:
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.c b/drivers/net/ethernet/ti/cpsw_ale.c
-index 48592441085a..6058c0125af4 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.c
-+++ b/drivers/net/ethernet/ti/cpsw_ale.c
-@@ -1695,58 +1695,6 @@ void cpsw_ale_policer_reset(struct cpsw_ale *ale)
- 		cpsw_ale_policer_reset_entry(ale, i);
- }
- 
--/* Default classifier is to map 8 user priorities to N receive channels */
--void cpsw_ale_classifier_setup_default(struct cpsw_ale *ale, int num_rx_ch)
--{
--	int pri, idx;
--
--	/* Reference:
--	 * IEEE802.1Q-2014, Standard for Local and metropolitan area networks
--	 *    Table I-2 - Traffic type acronyms
--	 *    Table I-3 - Defining traffic types
--	 * Section I.4 Traffic types and priority values, states:
--	 * "0 is thus used both for default priority and for Best Effort, and
--	 *  Background is associated with a priority value of 1. This means
--	 * that the value 1 effectively communicates a lower priority than 0."
--	 *
--	 * In the table below, Priority Code Point (PCP) 0 is assigned
--	 * to a higher priority thread than PCP 1 wherever possible.
--	 * The table maps which thread the PCP traffic needs to be
--	 * sent to for a given number of threads (RX channels). Upper threads
--	 * have higher priority.
--	 * e.g. if number of threads is 8 then user priority 0 will map to
--	 * pri_thread_map[8-1][0] i.e. thread 1
--	 */
--
--	int pri_thread_map[8][8] = {   /* BK,BE,EE,CA,VI,VO,IC,NC */
--					{ 0, 0, 0, 0, 0, 0, 0, 0, },
--					{ 0, 0, 0, 0, 1, 1, 1, 1, },
--					{ 0, 0, 0, 0, 1, 1, 2, 2, },
--					{ 0, 0, 1, 1, 2, 2, 3, 3, },
--					{ 0, 0, 1, 1, 2, 2, 3, 4, },
--					{ 1, 0, 2, 2, 3, 3, 4, 5, },
--					{ 1, 0, 2, 3, 4, 4, 5, 6, },
--					{ 1, 0, 2, 3, 4, 5, 6, 7 } };
--
--	cpsw_ale_policer_reset(ale);
--
--	/* use first 8 classifiers to map 8 (DSCP/PCP) priorities to channels */
--	for (pri = 0; pri < 8; pri++) {
--		idx = pri;
--
--		/* Classifier 'idx' match on priority 'pri' */
--		cpsw_ale_policer_read_idx(ale, idx);
--		regmap_field_write(ale->fields[POL_PRI_VAL], pri);
--		regmap_field_write(ale->fields[POL_PRI_MEN], 1);
--		cpsw_ale_policer_write_idx(ale, idx);
--
--		/* Map Classifier 'idx' to thread provided by the map */
--		cpsw_ale_policer_thread_idx_enable(ale, idx,
--						   pri_thread_map[num_rx_ch - 1][pri],
--						   1);
--	}
--}
--
- #define HOST_PORT_NUM 0
- 
- /* Clear Policer and associated ALE table entries */
-diff --git a/drivers/net/ethernet/ti/cpsw_ale.h b/drivers/net/ethernet/ti/cpsw_ale.h
-index dbc095397389..5c9614730998 100644
---- a/drivers/net/ethernet/ti/cpsw_ale.h
-+++ b/drivers/net/ethernet/ti/cpsw_ale.h
-@@ -223,7 +223,6 @@ int cpsw_ale_vlan_add_modify(struct cpsw_ale *ale, u16 vid, int port_mask,
- int cpsw_ale_vlan_del_modify(struct cpsw_ale *ale, u16 vid, int port_mask);
- void cpsw_ale_set_unreg_mcast(struct cpsw_ale *ale, int unreg_mcast_mask,
- 			      bool add);
--void cpsw_ale_classifier_setup_default(struct cpsw_ale *ale, int num_rx_ch);
- void cpsw_ale_policer_reset(struct cpsw_ale *ale);
- int cpsw_ale_policer_set_entry(struct cpsw_ale *ale, u32 policer_idx,
- 			       struct cpsw_ale_policer_cfg *cfg);
+I included that language because the underflow check is likely
+optimized away in release builds.
 
--- 
-2.34.1
-
+Tamir
