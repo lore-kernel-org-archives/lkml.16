@@ -1,171 +1,177 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78852255224
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 13:31:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0112833985
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 13:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742391115; cv=none; b=kZYyoF8Zx2lKzBe/dCa+ztZ3JZzXR0MHH3y3C2a/H9dkdISo8wiULnMthH1foAXQJ141i/8+tBrQSdgCTPUaMEwm9zl31+HGp+LXpoMNNXRZvhA5Zf7cjAXC1dspu/2+47sIdsvVLumvv2WgHAeDK/dzjLClluMh0tuG/v3J788=
+	t=1742391123; cv=none; b=QxngQj1KnJTuooDT2KhbZPQ3rszgQA6uikX5I4msIp3HKVFtKoXuSmLOJASG0V7vNo7RJugW7GIHgHBbm5WT8RKvFzbeOIK1cM86gs7yYbFKXpmLV/LmrxXpQUH1hM362bWwvRmRNhBSn8PrVxsjTRUVsXpiVxBYvte4ElWp1js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742391115; c=relaxed/simple;
-	bh=9qiRCmD/XCESCMM/7dpS86HRNH+iD7bkRk00QdKM360=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cSeyhk4DFqY2IFNsaOxgMItyv17EqiJKnzJk1+Xzq0nZn5zPtZ4LC/4F/iYMX+OFAhnKXmIWQejbf7Rglal/pJ2rZLBuHKVrM0ABy+0RlrIGufLYYXpc0ubUtl319eYDw7DqndKp4W6zHxL6zjlz/hio5iMhoLPPxbIn3zqlk54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ap5GYuAl; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1742391123; c=relaxed/simple;
+	bh=tYLY5I7sy2ghLhGzyztCalSEQmcUStJVayjcVJGngVI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dx0u77viW9O7+F2bseVufPFUCrQizvmL8RvvZQTcEtKT0gV1UPxWuGV+Rtt8kkkhD+tQUT5SjiQWfN10VNn49Y5mTh17D3+jsFYzd0X9yjCYja0YTy1fRmJsVIMH3CWwKkG6c6jFtuo4w86qvluZnh/bvxwfp1H9uTsuYQYTfsk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTqYopc7; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ap5GYuAl"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so9651192a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 06:31:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTqYopc7"
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86e48652bd4so27022241.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 06:32:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1742391110; x=1742995910; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lzHbJ+a3kNpZ2LWVgT8v9kpI3XVTjp/CmEA/PKlMAZY=;
-        b=Ap5GYuAlf1HoCAibVNIeEgPFFnxujSvsDArGoO+kiHraN6k3j0FTgXLINOYaU5mHKN
-         ojVcdpb31TvNfqOCjpw/jewpYBABG8JeU8XvHjhFQUESFC2PUbUdOeLlyBTMsfRgqVeo
-         SEI785qO3wMkYj6Vf+2RZgHgLbUiBBSyzKM2JsnFZ8sE+/H+LMwHl9VPzNkkL3bBfOb0
-         UeALJDHksJxENIu0W8V0dnhkUERZUpk6dXTL2YCxFbfNbKEsvLCLnPHX/mcvYXSDTG6z
-         PCWSxX/sJrF+/COTyXhCOcgraoSMxxZNn4oHdqt9UcmPCsM7mfLgAZK2nIaH/+UEqEif
-         +AwA==
+        d=gmail.com; s=20230601; t=1742391120; x=1742995920; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rGkpKqMgjBiSjviBn3MT7rNUCwz3YjW35rqjdwx/eQE=;
+        b=KTqYopc7vZVfZ4xqBS5ScZt7wwwfPfqKZl1RFaDNEaQNcEezumdPO5ChH025k6cY55
+         z0g2LVqink44F+ryuNhsVJLQDL70DH0Jwa8MaqXXgqKodWb0ylqMlYm3/dk5U1CoQbUf
+         AZuISiml9uVNF6e5OJvIGHm4oQxEknS842pVwOcB/zz4D3BunhzqVF7EqgUbmqg5D9Iw
+         GoCV61/uuGAxFtIhL918eSl2UnjVLjdtwOwcwW0EYcjW321EhVfZNbWWiTOrk+OJdvku
+         YdMo1MHunNsMamqVisHgx26qwcsyceMLr1oMG5R9u2SZZ7hfyIu2OSd8caYzaplRLQCr
+         nRzg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742391110; x=1742995910;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lzHbJ+a3kNpZ2LWVgT8v9kpI3XVTjp/CmEA/PKlMAZY=;
-        b=p1NJzJKsFOCUV7K1asYSHrBVdwhbHsZLHlJpMWdQ6TRntI48ihT5yOxQ1n6VM45aSA
-         50EKFGt/Tco9VyKqoWvvOyZGBdZz0eOyDl+dpqhgbe0lJ7+UDQvdwwqZ/vmCZEAv5LHY
-         vknsNeZbvGDv3WWCJinOwxvTAtrapxVr8Sx47ROW77Tun3kfXNltAVHsJHm0xhBsW6dn
-         J2fNdFYY8bllH4q3wvFtfUCTJ19i7lw0LBckoBm+Fm+9zWxejuat/k5BkVUXqHr54ZhE
-         OYBmdzfPS+Th77ztJJJSPtCrIJ5yHH+NgGigI4BdNZWYcByze4ErNPEtOEBqGcWOc4ZG
-         QUHA==
-X-Forwarded-Encrypted: i=1; AJvYcCWwz+OlAE37Zg+Rnb5JzeGZegwcXtea4V3rkr0s5dqchiML91i8O8jRXuyXrxiAJrHtSCAwgFIavYoGSOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxG/o0zsoCybVSUVA0Co6EFPhL/19IDQ3ZohazZ/keb0+kwhVyG
-	vUHUgfj1PYW6vfGqnWevUFUG6zWGCqAYSQOP2iRU3mp5GIaZD9LeV8yaIUpdKdu77k0DuI+2Efr
-	1
-X-Gm-Gg: ASbGncsc1ZJWaJtEJ0utC0GbIWSa2fBLo5JzCV3Sj3CtEL9S3iHKlu29aswzoioFt2w
-	0nFs/7n9MzNiVG13HvWNaQEPwtHC24Og+jFDKaK02wSv80fzH6+sX+w3NoliXpGQF6Ngs5jp4pB
-	vP8QZTAlU5dHAfkPXRnaMot3vlC0aMighJLQErI2EW2zRb7yO5E9fJfK1VYiw9wsmH4YbK+Bl9x
-	jBRxXZCTMtf57jxc6dQIt975yBsBylNfOewg/EWuM10LlOYhAouhCx2U+Q49j3wU5b3wP8nTI9m
-	WCaT5SGKQR70X0flhYOSd1Zj5x6Zz4/TuV/FwhaQ6Y22wyfgG23SzTclfdVtLx1cyg6lVpzotxx
-	kHADFKHu4Tu2gZF1iSfk=
-X-Google-Smtp-Source: AGHT+IFt9KxbN3+sudW98Q6jzh3T9AtoL6/jWit3aUuDsut21tbFt7KtxucKbyyaJLaQkGlcyAWOWQ==
-X-Received: by 2002:a05:6402:3513:b0:5e5:c5f5:f82 with SMTP id 4fb4d7f45d1cf-5eb80ab52c8mr2712328a12.0.1742391106316;
-        Wed, 19 Mar 2025 06:31:46 -0700 (PDT)
-Received: from [127.0.1.1] (host-87-10-75-167.retail.telecomitalia.it. [87.10.75.167])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e816ad27c1sm9421159a12.59.2025.03.19.06.31.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 06:31:45 -0700 (PDT)
-From: Angelo Dureghello <adureghello@baylibre.com>
-X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
-Date: Wed, 19 Mar 2025 14:30:28 +0100
-Subject: [PATCH v2] iio: dac: ad3552r-hs: add debugfs reg access
+        d=1e100.net; s=20230601; t=1742391120; x=1742995920;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rGkpKqMgjBiSjviBn3MT7rNUCwz3YjW35rqjdwx/eQE=;
+        b=aiLODdKENI+MI6lroHfHTf6bb18y7M5VN0u2biv2r5VvXnhOVR3VsoCACf11sp7N5B
+         VGdXCnedqdNMrxUR+sM+zQqVyTgfmtcWjpJVCSBQ4jgtEfOsvaAxEUaQBXDvtuqpNiIT
+         QKthym4DlonXjbyPgkRmwMHxX084ioLGRz6hm9HWw+qTKlcNiK8WXFLHMX8gtE1qmbUK
+         alfZ0V/vTRIl6mRUB/ojiVuap8esJ+9pNKRMoA9YrjNZx//X9jZYt3WfNMITzHd+st39
+         I25pn0TbfKab3cnUevcJ2fSE3uYfNAIt2MelMxKrQ2t1NJuFsGgqqC1l6x0wk/7XlnSg
+         tSBw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKQ9rFEiAjSt8hPxZpjdL8VF3okfOE8DNKtrLpby7EcphBbbr3YVdXm3EkmYSykGJEq0JGAlMHi/KVaOY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy6/+CwWUBjR9+gcwxHMwgdXIcmmBNz+RNWeIRQyaFZ2f2bn99C
+	HcNTfNy+RGhtK9irvZltyk7U9Jiv5uS59A0P/nKEh97aO6QlhiLIqq/wycBHiQJLapKg5ElZsDz
+	2LkI7dalsCIFLEoU39hKcvtCXTq4=
+X-Gm-Gg: ASbGncv6mqWaFby4HSfLTRHBHP/9eT/hyg3mEdaB4qr/yxN4v97jevH14Aygt+2SJRE
+	a1PHL3zoOmOFPIBK3PELJaSeEThM2kGchvfx2iUnHomTvet2rQ3uQpaLauSpv/if/GYSNEP52Ce
+	cxD20VIq9uC68y6o4MO8D2seD5jA==
+X-Google-Smtp-Source: AGHT+IHgUH9cFzpBtBK9ey2+JGlYXkvPasHk/a/LBDDDziZJcfeOxGGk9HskojAVImQ7LiHzpzC9kHrE+Wtl3zLwucw=
+X-Received: by 2002:a05:6102:512c:b0:4bb:dba6:99d3 with SMTP id
+ ada2fe7eead31-4c4ef4d27cemr361182137.8.1742391119808; Wed, 19 Mar 2025
+ 06:31:59 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-wip-bl-ad3552r-fixes-v2-1-2656bdd6778e@baylibre.com>
-X-B4-Tracking: v=1; b=H4sIAPPG2mcC/4WNTQ6CMBCFr0Jm7Zi2WBNceQ/Coj9TmQSBtKZKS
- O9u5QIuv/fyvbdDosiU4NbsEClz4mWuoE4NuNHMD0L2lUEJpUUrO3zzinZC41utVcTAH0p4CdZ
- S5730ykJV10hHUc1+qDxyei1xO16y/KV/BrNEiS5I4a/BkFbmbs02sY10dssThlLKF3GGmo67A
- AAA
-X-Change-ID: 20250319-wip-bl-ad3552r-fixes-4fbbe9dd1d2b
-To: Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Angelo Dureghello <adureghello@baylibre.com>
-X-Mailer: b4 0.14.2
+References: <20250319092951.37667-1-jirislaby@kernel.org> <20250319092951.37667-19-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-19-jirislaby@kernel.org>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Wed, 19 Mar 2025 09:31:44 -0400
+X-Gm-Features: AQ5f1JpyJz7Ugj_Qtpizh3Phb0sD4bkNclDSrU4JuLu-9pUF1cvpfLaSOGRYtu4
+Message-ID: <CADnq5_P93d5TTPA36JB_RSGE8uRwoQQ5to7Wp9STD6xJrrMqdg@mail.gmail.com>
+Subject: Re: [PATCH v2 18/57] irqdomain: gpu: Switch to irq_domain_create_linear()
+To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org, 
+	Alex Deucher <alexander.deucher@amd.com>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, 
+	Abhinav Kumar <quic_abhinavk@quicinc.com>, Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, 
+	Sean Paul <sean@poorly.run>, Marijn Suijten <marijn.suijten@somainline.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, amd-gfx@lists.freedesktop.org, 
+	dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Angelo Dureghello <adureghello@baylibre.com>
+On Wed, Mar 19, 2025 at 5:44=E2=80=AFAM Jiri Slaby (SUSE) <jirislaby@kernel=
+.org> wrote:
+>
+> irq_domain_add_linear() is going away as being obsolete now. Switch to
+> the preferred irq_domain_create_linear(). That differs in the first
+> parameter: It takes more generic struct fwnode_handle instead of struct
+> device_node. Therefore, of_fwnode_handle() is added around the
+> parameter.
+>
+> Note some of the users can likely use dev->fwnode directly instead of
+> indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
+> guaranteed to be set for all, so this has to be investigated on case to
+> case basis (by people who can actually test with the HW).
+>
+> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Cc: "Christian K=C3=B6nig" <christian.koenig@amd.com>
+> Cc: David Airlie <airlied@gmail.com>
+> Cc: Simona Vetter <simona@ffwll.ch>
+> Cc: Rob Clark <robdclark@gmail.com>
+> Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
+> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Cc: Sean Paul <sean@poorly.run>
+> Cc: Marijn Suijten <marijn.suijten@somainline.org>
+> Cc: Philipp Zabel <p.zabel@pengutronix.de>
+> Cc: amd-gfx@lists.freedesktop.org
+> Cc: dri-devel@lists.freedesktop.org
+> ---
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 4 ++--
+>  drivers/gpu/drm/msm/msm_mdss.c          | 2 +-
+>  drivers/gpu/ipu-v3/ipu-common.c         | 4 ++--
 
-Add debugfs register access.
+I would suggest splitting this by driver.
 
-Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
----
-Changes in v2:
-- set reg size setup as inline.
-- Link to v1: https://lore.kernel.org/r/20250319-wip-bl-ad3552r-fixes-v1-1-cf10d6fae52a@baylibre.com
----
- drivers/iio/dac/ad3552r-hs.c | 26 ++++++++++++++++++++++++++
- drivers/iio/dac/ad3552r.h    |  2 ++
- 2 files changed, 28 insertions(+)
+Alex
 
-diff --git a/drivers/iio/dac/ad3552r-hs.c b/drivers/iio/dac/ad3552r-hs.c
-index cd8dabb60c5548780f0fce5d1b68c494cd71321d..fdea9984547ae338a51c4671024133be82ed854f 100644
---- a/drivers/iio/dac/ad3552r-hs.c
-+++ b/drivers/iio/dac/ad3552r-hs.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/bitfield.h>
-+#include <linux/debugfs.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
- #include <linux/iio/backend.h>
-@@ -464,6 +465,30 @@ static int ad3552r_hs_setup_custom_gain(struct ad3552r_hs_state *st,
- 				      gain, 1);
- }
- 
-+static int ad3552r_hs_reg_access(struct iio_dev *indio_dev, unsigned int reg,
-+				 unsigned int writeval, unsigned int *readval)
-+{
-+	struct ad3552r_hs_state *st = iio_priv(indio_dev);
-+	int size_xfer, max_reg_addr;
-+
-+	max_reg_addr = (st->model_data->num_hw_channels == 2) ?
-+			AD3552R_REG_ADDR_MAX : AD3551R_REG_ADDR_MAX;
-+
-+	if (reg > max_reg_addr)
-+		return -EINVAL;
-+
-+	/*
-+	 * There is no 3 or 4 bytes r/w len possible in HDL, so keeping 2
-+	 * also for the 24bit area.
-+	 */
-+	size_xfer = (reg > AD3552R_SECONDARY_REGION_START) ? 2 : 1;
-+
-+	if (readval)
-+		return ad3552r_hs_reg_read(st, reg, readval, size_xfer);
-+
-+	return st->data->bus_reg_write(st->back, reg, writeval, size_xfer);
-+}
-+
- static int ad3552r_hs_setup(struct ad3552r_hs_state *st)
- {
- 	u16 id;
-@@ -639,6 +664,7 @@ static const struct iio_chan_spec ad3552r_hs_channels[] = {
- static const struct iio_info ad3552r_hs_info = {
- 	.read_raw = &ad3552r_hs_read_raw,
- 	.write_raw = &ad3552r_hs_write_raw,
-+	.debugfs_reg_access = &ad3552r_hs_reg_access,
- };
- 
- static int ad3552r_hs_probe(struct platform_device *pdev)
-diff --git a/drivers/iio/dac/ad3552r.h b/drivers/iio/dac/ad3552r.h
-index 768fa264d39e9e6d517aeb4098382e072f153543..69ce96f132cdb353d2f140939c534586cb791aee 100644
---- a/drivers/iio/dac/ad3552r.h
-+++ b/drivers/iio/dac/ad3552r.h
-@@ -113,6 +113,8 @@
- #define AD3552R_REG_ADDR_INPUT_PAGE_MASK_24B		0x44
- #define AD3552R_REG_ADDR_SW_LDAC_24B			0x45
- #define AD3552R_REG_ADDR_CH_INPUT_24B(ch)		(0x4B - (1 - (ch)) * 3)
-+#define AD3551R_REG_ADDR_MAX				0x46
-+#define AD3552R_REG_ADDR_MAX				0x49
- 
- #define AD3552R_MAX_CH					2
- #define AD3552R_MASK_CH(ch)				BIT(ch)
 
----
-base-commit: 6f9141cdd726e82d209b5fc6d6b5ea32ace339f1
-change-id: 20250319-wip-bl-ad3552r-fixes-4fbbe9dd1d2b
-
-Best regards,
--- 
-Angelo Dureghello <adureghello@baylibre.com>
-
+>  3 files changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c b/drivers/gpu/drm/am=
+d/amdgpu/amdgpu_irq.c
+> index 19ce4da285e8..38e7043016e1 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c
+> @@ -725,8 +725,8 @@ static const struct irq_domain_ops amdgpu_hw_irqdomai=
+n_ops =3D {
+>   */
+>  int amdgpu_irq_add_domain(struct amdgpu_device *adev)
+>  {
+> -       adev->irq.domain =3D irq_domain_add_linear(NULL, AMDGPU_MAX_IRQ_S=
+RC_ID,
+> -                                                &amdgpu_hw_irqdomain_ops=
+, adev);
+> +       adev->irq.domain =3D irq_domain_create_linear(NULL, AMDGPU_MAX_IR=
+Q_SRC_ID,
+> +                                                   &amdgpu_hw_irqdomain_=
+ops, adev);
+>         if (!adev->irq.domain) {
+>                 DRM_ERROR("GPU irq add domain failed\n");
+>                 return -ENODEV;
+> diff --git a/drivers/gpu/drm/msm/msm_mdss.c b/drivers/gpu/drm/msm/msm_mds=
+s.c
+> index dcb49fd30402..9d006ee88a8a 100644
+> --- a/drivers/gpu/drm/msm/msm_mdss.c
+> +++ b/drivers/gpu/drm/msm/msm_mdss.c
+> @@ -150,7 +150,7 @@ static int _msm_mdss_irq_domain_add(struct msm_mdss *=
+msm_mdss)
+>
+>         dev =3D msm_mdss->dev;
+>
+> -       domain =3D irq_domain_add_linear(dev->of_node, 32,
+> +       domain =3D irq_domain_create_linear(of_fwnode_handle(dev->of_node=
+), 32,
+>                         &msm_mdss_irqdomain_ops, msm_mdss);
+>         if (!domain) {
+>                 dev_err(dev, "failed to add irq_domain\n");
+> diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-com=
+mon.c
+> index fa77e4e64f12..223e6d563a6b 100644
+> --- a/drivers/gpu/ipu-v3/ipu-common.c
+> +++ b/drivers/gpu/ipu-v3/ipu-common.c
+> @@ -1169,8 +1169,8 @@ static int ipu_irq_init(struct ipu_soc *ipu)
+>         };
+>         int ret, i;
+>
+> -       ipu->domain =3D irq_domain_add_linear(ipu->dev->of_node, IPU_NUM_=
+IRQS,
+> -                                           &irq_generic_chip_ops, ipu);
+> +       ipu->domain =3D irq_domain_create_linear(of_fwnode_handle(ipu->de=
+v->of_node), IPU_NUM_IRQS,
+> +                                              &irq_generic_chip_ops, ipu=
+);
+>         if (!ipu->domain) {
+>                 dev_err(ipu->dev, "failed to add irq domain\n");
+>                 return -ENODEV;
+> --
+> 2.49.0
+>
