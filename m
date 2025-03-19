@@ -1,303 +1,513 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+Received: from lx20.hoststar.hosting (lx20.hoststar.hosting [168.119.41.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626A01D54FA;
-	Wed, 19 Mar 2025 16:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.19
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742401441; cv=fail; b=RC3EISxT41R9dj3ImfJTbVKbKHoljbm9A10++Jje9/F6DjreUXxNx+ZjkuRYDpzXPRns8vID3xHNhCw5jNtEKXSM+anLzL4TzXLHN4zZT1+9hX227Z0W+R020yedHqjruXRJz0f8LN6uRBA40IXVOgcZndIs4nI8BoqIVX69sN4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742401441; c=relaxed/simple;
-	bh=rsLTneYi+xqrEgF8LxSCWswu9VpDYNLUqGzxDRT11gI=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=t1niarUK7Ihp+fANgXAKjG35/lST7qFtzxTPMNbb4ulyPpb2sybzA3fw//iPQOOc55upt99FBBptfy/KJSIV5U/DQllQR+U8HyLS0CP2XqK3/r69DCL/pv0cY0S9S3quKSRUsuLGpy7gMdizDdOIw5pmwLAe7HL3Tl01JBD7OlI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eCXxkJu3; arc=fail smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274B51DE89C;
+	Wed, 19 Mar 2025 16:25:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.41.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742401535; cv=none; b=Y0EnewU5+pCU18ppwiGKQwvci9sPXMinAdi8sHYMBQPWKpSsaBZjDJ9fslfeIFS3LjlqIq5/XEWnqZ6bC6NSrqpI/ZSCk4s5/T47YxHb8WFd8pstbRDtlDHfMJU1XkAI+Fkikn0bFqN66vlMGF63NTNSovPDNlsUjJ3TKMvEWNU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742401535; c=relaxed/simple;
+	bh=zKiobP2hmOBXYMn5j5zuAnZcQ7VT7oB3a67mgERxZ+4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EuNlAm1XVyWpyx3Ps/12mSAP0oolxS9m56ZlkypmDUGfDcrezCMtg5OMo437PHuS7xLQwUDZki+6CWwpbahaD/7Wq41qqY+BuCZsZrhDomHcwLt2dKNnsqBeWWS8yMlDkI8hgTSPGC8CvvmPtMjXDC+eWHu1rYzYMFKJvWjZr1A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at; spf=pass smtp.mailfrom=emfend.at; dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b=HHzhz4au; arc=none smtp.client-ip=168.119.41.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emfend.at
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emfend.at
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eCXxkJu3"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742401439; x=1773937439;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=rsLTneYi+xqrEgF8LxSCWswu9VpDYNLUqGzxDRT11gI=;
-  b=eCXxkJu3lcH6sX7d7stCFd1MF3FKj1CRnD3xoWPKXBDSjjKyPezKZygL
-   hasI1XybWsAAZuvna5eAj59VUqSke3grX3A0QY5wt19Vcg+cF144BOhys
-   LuAHKc/LpRxLeGvkTVTp2F8n11v93eRbSif6B2S3Wua0lL82x5CmWzWVW
-   6FgLgJCAUYJpoUSdTNis35kNMhU4EdjW2POKGjIkEpI47hDmPZLtgCvVl
-   WoI1ljF261EzgZIHsMKsikEAFMZ+0BPxtw/oSceAsuTVtn4zzfL5ZbCeX
-   rmUxSvo6h5w+CjfdbHrNEzNl/zwb5WYnM4szqvXzif/6X6uCWgdYtyqgG
-   g==;
-X-CSE-ConnectionGUID: ARqg/yuNTrGT0R3zjPW/0w==
-X-CSE-MsgGUID: XcqQL2ZhR1Sg/H8Fam8RRQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="42773221"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="42773221"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 09:23:58 -0700
-X-CSE-ConnectionGUID: Z8w15C9eRbaLc/sksEartg==
-X-CSE-MsgGUID: UWLiuMH2Q7GrqnWyQmc6+A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="122410996"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa009.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 19 Mar 2025 09:23:59 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Wed, 19 Mar 2025 09:23:58 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Wed, 19 Mar 2025 09:23:57 -0700
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (104.47.73.46) by
- edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Wed, 19 Mar 2025 09:23:57 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=g01xh3/VfQ8rk90bTfec1X58P9KWPBCDZXW9Pbez5s69f5rx4bpzyjA8jsQfb32BcXQ8xzpiu9XVGgbdYY+Q06WdUHKM4PlPueJMTwFtFARU8h6K8c7SzUy4NTKxy0JR92Okbzs6x9qTTwtZm3liXvlZFzvjMt9b6HKHoAELS09sejPCx+isHd9WaeCY5SN+OF6q0HKmpEFdXtLi60E5NlnQfwbyavUir+jtr8rbJRw9wW1WwUHANzpC02e5NntB9HuGNhkZX/HP83ZZGBD5loaYF8RAgEvwO6iNnOzOZ0pHqQNM5mSao05m31ozFLwnlNFpiTAm/JVUg04FWhrhsw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=jY6w1iq9o8oYp5wEuIV0lrjGpHcJvwxDPHbqoTZOIUI=;
- b=qL0Ewpjo7PHy0RGLcdxEqaHpmFWKmddVZubNFExPvVU5e4S7qQXlnWbWn/DE82MCkYiLu9FwLefrEwIY7cVEysX5awpyKhyScY5Uxg/IOxRz+2+NwYg8BvQ1rBazToLSiiQ8SmypfXCB3cUQRJF7zB9MwlXCd4mrXihztK4lHQBO0jpfo3Lktjl4ydUFbS6c++wHkhYww6N7PVdDvo9lAvbxiRugEsbTfQNBMtXFxA0Pk63+Y0AECKdagERozJWrpmvjgm3HdWBoiWqlG/vGgtrbS4jTb62AwZHmAjKCvl+wuJbCq2bSESyZUor4iiE4C3DNEGiSVZhw1n1nZsBsOg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com (2603:10b6:8:b3::19) by
- SA1PR11MB8573.namprd11.prod.outlook.com (2603:10b6:806:3ab::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.26; Wed, 19 Mar
- 2025 16:23:14 +0000
-Received: from DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca]) by DM4PR11MB6117.namprd11.prod.outlook.com
- ([fe80::d19:56fe:5841:77ca%3]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
- 16:23:13 +0000
-Date: Wed, 19 Mar 2025 17:23:05 +0100
-From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-To: Alexander Lobakin <aleksander.lobakin@intel.com>
-CC: <intel-wired-lan@lists.osuosl.org>, Michal Kubiak
-	<michal.kubiak@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, "Przemek
- Kitszel" <przemyslaw.kitszel@intel.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, "Alexei
- Starovoitov" <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
-	"Jesper Dangaard Brouer" <hawk@kernel.org>, John Fastabend
-	<john.fastabend@gmail.com>, Simon Horman <horms@kernel.org>,
-	<bpf@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH net-next 12/16] idpf: implement XDP_SETUP_PROG in ndo_bpf
- for splitq
-Message-ID: <Z9rvaVu460sZkUXD@boxer>
-References: <20250305162132.1106080-1-aleksander.lobakin@intel.com>
- <20250305162132.1106080-13-aleksander.lobakin@intel.com>
- <Z8r/0NOkovItGD1E@boxer>
- <428cc7b6-fc80-4028-a9bb-ce65646005f5@intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <428cc7b6-fc80-4028-a9bb-ce65646005f5@intel.com>
-X-ClientProxiedBy: ZR0P278CA0035.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:1c::22) To DM4PR11MB6117.namprd11.prod.outlook.com
- (2603:10b6:8:b3::19)
+	dkim=pass (1024-bit key) header.d=emfend.at header.i=@emfend.at header.b="HHzhz4au"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=emfend.at;
+	 s=mail; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:References
+	:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=lX8YsY5jRiFngBKXnH10duTwRpUJww1JCDeLMhQjXnY=; b=HHzhz4auCF6qEkDVePSWFB91mT
+	nnh8XO00s7i1d4IJJd1F7EgW1mbdtRlsY0TAp5i2+XJ8Em+z0apzdHBercJJ+6awhmgFsT9OPqsqS
+	S2kFRiNcTogwKOcNrroAefNMhjUKBFSf69uWPdSHloT/towfZgekG3brEE3oLgX6uAZA=;
+Received: from 194-208-208-245.tele.net ([194.208.208.245]:57302 helo=[192.168.0.218])
+	by lx20.hoststar.hosting with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305_SHA256
+	(Exim 4.93)
+	(envelope-from <matthias.fend@emfend.at>)
+	id 1tuwEL-00HYlk-DS; Wed, 19 Mar 2025 17:25:22 +0100
+Message-ID: <9a470dfd-8d7b-4529-b54b-289754b9eed6@emfend.at>
+Date: Wed, 19 Mar 2025 17:25:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DM4PR11MB6117:EE_|SA1PR11MB8573:EE_
-X-MS-Office365-Filtering-Correlation-Id: 123aec1c-d387-474b-b593-08dd67025877
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016;
-X-Microsoft-Antispam-Message-Info: =?utf-8?B?YzcyUWNxNUcwanJLdnJ3ZTM0d0dLVTRtVERiL01FU1B2dGdNNytQRldyK3pu?=
- =?utf-8?B?WW01YlJKMlRDQnRYMEFYa1NKZ0VYWGVDKzVtR04rZmxLMFFUQXo0NEs2STYz?=
- =?utf-8?B?Q0pFSU1yS2xudjkzUUNOWklBMVJnRzloSnBWK2E4YjF5TUpsSktaVVdlQWJr?=
- =?utf-8?B?MWprRlNYRy96Y003anJITHU2ZWdvd29kSUZHNlBEc0gzeXJFRHFMdkZid1Iy?=
- =?utf-8?B?ejh0NXpsNkJ5MUpQZ3BJcFA2bGZRV0s0MnBFczdUc2RyNGNoZkpvbVNvZDZM?=
- =?utf-8?B?V3BHT3N1cGU4TGtMZ0d0YnRIQVZ2ckJCdjdoa3RlQVRSTTNLUG5GcUtKY1hJ?=
- =?utf-8?B?TTQ0Y1B6eVB3M1NUNTBVMGhUcXYvTGZQcDcwTVdvTWJiKzBveGVZQzJkb0Ux?=
- =?utf-8?B?MXdCUHNBOFFrcjZzNnNobmJrQ3dQdlR6TkVON0drZmY3Q0NwNk5WbVMvTXNC?=
- =?utf-8?B?eDUxdlpaUkovRnRZc01VeGVwZUpETjA3dytKVFZrMGFrYjVpdXByNzk2Y2JO?=
- =?utf-8?B?Wmg0NzR2Z2NWbFV6VCsxM1pnUEdRVVVnMlFzTlhVbWVKMzJVUTF1dXZHa1Az?=
- =?utf-8?B?VFNVa2VZa29qUXV6UXpuamMzaHdMeVd4RFIxNGNMR0dMbVR6ekp0bUt1S2Vv?=
- =?utf-8?B?MWl1Nkxta25WMnhKZlpmWHBLSjRNVUlKSHd4U2dQNko2SXE5N1FKRWlCRkp2?=
- =?utf-8?B?Z0pCZnp6UEpWeHk1cUw5V01EZW1GN3hxYjh4ZjRsSnE1ZGFpOER0dmFzZ2Rt?=
- =?utf-8?B?UG1DUTNlSTB0cENKdENXNE0vaHdXQlFOdFVlWVQ0ZDhIbjJXcFRqU1kySll0?=
- =?utf-8?B?RTIrOTJ2cFhVTnlSb200MHI0SjFvWmhZYlJHbWZYVXNEVWFCZWF4Y0hGTjdh?=
- =?utf-8?B?K0hNY1N3VnQrSC9ud2J6NWlsbDlqRDBnL2RFZmRpVTZadnZDd3pwcUdnRlZv?=
- =?utf-8?B?T0tISzBEbmNUSi8vVGJQSVM5ckNGQVorM3VrUjM4U1RkWldWcWhud3FIZWQy?=
- =?utf-8?B?MVJzdmdDMlpEazZRUW1pNDg2UkJCbm5QK05yZVdoa2NLZG1EbUNXVm1SbmxT?=
- =?utf-8?B?NTNibXkyWWp5QU1BTXJQUDhxWGpoaHVyMkhSMlFCY1hydjNPK05aVi9YaVZh?=
- =?utf-8?B?UXZWaUd3aTRXaWNWK1NuTTA1USszTGZiZ3RobGFWNjN3ZXpROFZ6MnR3dldE?=
- =?utf-8?B?NmdGYmh2eU9GZ0x5WDNTaVQ4NjFBcDRxeEQ3MFF0S0NqNTFRVWV4SUpaa25V?=
- =?utf-8?B?UXR0QkVobHRBemI4UisxZmxvTmthZmJRV3FTSTg4aDcvZTBPcWkvdjlBS01P?=
- =?utf-8?B?MERWNVBaekRUMW1IcCtHNVVrMTFhOFBOZXczT1pBNXlCbzBCbUZhcWZxdDhC?=
- =?utf-8?B?RmM3c3g2ZGhQSXo1TG1rRW1aVUhXM00zb0dSNS9YZ0s3bmxIRXNBRmhqTjMz?=
- =?utf-8?B?U3hvckxJWUtUNnJkbGJmOEY2Zll4T25vd0lNOGU2bTFKcTBPRW10TytoaE45?=
- =?utf-8?B?QWdhRHAzM0FPRVR5Vys4ZFRsMWpuNmNaSzEwU2Q4b0VBN1ZQNGExZS9oeHJM?=
- =?utf-8?B?cThJUEhyY015TlZyWHVvZ0pGRlFqUk1ScEpzeXV2YlJBSjZ1YStoZ1A0Y2x0?=
- =?utf-8?B?VW54UlJCL2hlM1pzY3ZQeHB2SXdKcFN3eG1TeHhZd1owa0JKT2VQejZyb1Bz?=
- =?utf-8?B?QmVHMCtEM3hrL1dJS1ArVWx4QkpZQUVpelExa0dnU1kxWmNZYzR5WmY2aGd1?=
- =?utf-8?B?bHpvTlFOc0tZOTJ1RGM0c3ozZHdNbGZ1QkJ3Q0ZzcUE0ZExsWkU2QWVUS3F2?=
- =?utf-8?B?enhBWVNxdEwzT0RFQzRSMWdwcmd6YitpZHNrbytIUm1KbHozbEpyVnkxSkFq?=
- =?utf-8?Q?W9d+aIk2EQzFS?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM4PR11MB6117.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?NEYzTzJ0NjloN3pMVlZnYTM0cy8yRjFhY1dJQlpxRk12MVBjelpWczBLc3Ax?=
- =?utf-8?B?eW8yZGpkYUpKejVXRG5ldXo1cDkrSnladkhjam9aU2FNb2VTRHlQTHJlRDJV?=
- =?utf-8?B?dldaK3Q4QWdBT2hJekg0N1puWHNpZ0FZNmN2dlBBWDJWTFVFZVY4MXVRNWpC?=
- =?utf-8?B?aXBFa1pLeC9PdUdSQnFFcGhpUnJHSVdneGhROVFPVmx2cGVrY2hTTmNQSktX?=
- =?utf-8?B?VENqaUFmU2FwdCtHaVc4ckYzR2Q1MWFoWEpKR0h3S2NuVDFNK1JYNWFXK1NG?=
- =?utf-8?B?V2J1ZUFPandPMFhiTkpJbTVxYzIxN2Z3NFNPNURNeEpIQys0QkhIUXlqUHZC?=
- =?utf-8?B?KzBGdTRYZmpUR2VKbXZZY1M3UkQ0MkVqWkUzV0ZaOXdKS3Y2czNwcHFwUkxK?=
- =?utf-8?B?Y0RoRVlTZnZHYXR0ZGt1TWt4cmlZUUdBYmJzZnRnemNOT05VbU9sMGlXbnM0?=
- =?utf-8?B?NHdQWndNV0dvNW1QNEhtbEovR24xVFVFRzBTUEo2blIxUVNLenFORDIwd3RJ?=
- =?utf-8?B?Q1gydTVZbnNDN1Z1T29YSUxiMWNpd2lsYUdWcC9oQlZ1N0w4dVVSZURNa0gy?=
- =?utf-8?B?QnF1ZXJjU1FjNVhJWHlBS3cyTDFvN0l3WG1iRHJDRlpEcHJOdTdqRk52K0RC?=
- =?utf-8?B?bFBFaW45NlpkdWVGcWZzVzcrOU85RWE1bktqVDlrNUFnUDBqRyszaGdveWZY?=
- =?utf-8?B?V2Q1bFhEbnI3K2ZCSURocFVLUk8waVBBVjFsSThReEswZHhaME9jZ0pVUXJy?=
- =?utf-8?B?bEpYdnYwYU9QZmtvczhTSzE2WUU3bnNmakRKOWpheXF4M2ZyY2pvSnEwQ2hp?=
- =?utf-8?B?TnRDNDQwaDFFVlAwSTViYXRhNHl4VGw0L1d4VGFma1BNb3J1Zm5qTml3Q1JL?=
- =?utf-8?B?ZlcvdEprb1JvTHdoR1pibXZMUGhzUlBHWFpLV1RWa3FEUFcraWcxeFB4Tmk5?=
- =?utf-8?B?UXJFTU8ydjdYcHJqUFErcTYzd2IzdGVGTlVNRDFwYVEweHJ5WmZQMWxhcnFI?=
- =?utf-8?B?emdSRVBNZUR0NjJOL1VCVmY4akNiZHExT1B0ek5PSFYyRUhNMnNsa3RpSDVL?=
- =?utf-8?B?dWRIV1NQczdJZlNQMEVwcnpiaHFpMU9XVks2Y3JLMTJaVEIvS0s5eGdMaTFK?=
- =?utf-8?B?c2JuY2tBUHV5a1RpOENzenB0SE5TbUphTnNJQnFXL2dFeGJLb0ZDL0hSMUlm?=
- =?utf-8?B?dWNOU28xSnFrUU5neXFGbG1UbmV4SzBDTHlWamt6OHNNYTVZNVEvWkJVTlJX?=
- =?utf-8?B?eStwUTV5YTNvOTdLaFF0a3IyQ0NmczRjTTRjS0ZqVG1GeVNpZVRJUVkycllZ?=
- =?utf-8?B?Um5HZVJJQ3F4RVdoaVczSSt6RHFzUWpXL3Z5QUQ5elh0alI0YmJDZW1jTE1C?=
- =?utf-8?B?VEFEQS9Rc3FGVnRRS014WFk0WDRJdHlNVE0zSmVyNWNwNTNYN3BEMHNjcmV3?=
- =?utf-8?B?WlVpUmptS1NDVHlYeWg2N0hCOWRncFFGdzNxVVYyYW9TcWN3bjhkRlVwbWYw?=
- =?utf-8?B?eEY0TmdNQ3ltOGZKRlYvTVQyUDBWci9kTzgza1d2TUl4Z1IzY1JHSkdsMTJs?=
- =?utf-8?B?U2ZDOEVhSjJ5RVg5alJOaS96Rmw4ZGx3SUM0bm5pVUFYRnJnenpzc2tqYlQ5?=
- =?utf-8?B?N1h0L2szRVVxSzB2ZWMwWjhWcGRXRHJKNDZoTi9TVE9HTlVXVm9Ka0FXbXND?=
- =?utf-8?B?VmYzbWRZZldscXE5TTBHUEFHU0VON3hvamM0RXdmV1ZuWWNLRmU0UVFFMmlB?=
- =?utf-8?B?d2ttUkU5UHhVSm5QOVJHUWFGdWZ4WHNHbXZycENvWVZkQ1FMTWc3c2lXK2pS?=
- =?utf-8?B?ZnkvNEtQT0ROOUpkeWQyNjFEay80R0xuOWt5REdZZ01BTGRvZ0NxdXZxWW1R?=
- =?utf-8?B?TWloVTg5Rk5iSmpYc3hPQUgzVlN6WmJRcmNiK202WGFxcWNnd2VLcVpkOXh4?=
- =?utf-8?B?L214c3gwSDVEK3JkWEVaT3A3Z3ZuNzdNdHhTakRMV2krZ0crdWpqSUxOTVp3?=
- =?utf-8?B?eXpIVVcxd3NNRktrWlcyczBlMHgzb01NRjhma3EyOU5QVC9pOFUyd3B0MUdz?=
- =?utf-8?B?dlc3bEJrSWQ1b0Eza1FSSnlkZksyWHAxRmV0SXN1VkZUVUxMalJnNmgxbjVO?=
- =?utf-8?B?aFVMWTlTNFpqTFE4YjhxNUNjc2ZJK251M1JRY1hpdTRNT2w2YlJzZnR4YU1Q?=
- =?utf-8?B?MXc9PQ==?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 123aec1c-d387-474b-b593-08dd67025877
-X-MS-Exchange-CrossTenant-AuthSource: DM4PR11MB6117.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 16:23:12.9706
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 63QTXm5JqCBlr2q+0+PSnm0CQjL3ew3Dg4vkHLG7wNVoG0KfVTIh9pd4utK5Q8yqBhoH9j4K7yqrx/+eWm+sUew5Iyda35GkAZgl+GanLPE=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR11MB8573
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/2] leds: tps6131x: add support for Texas Instruments
+ TPS6131X flash LED driver
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-leds@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ bsp-development.geo@leica-geosystems.com
+References: <20250318-leds-tps6131x-v2-0-bc09c7a50b2e@emfend.at>
+ <20250318-leds-tps6131x-v2-2-bc09c7a50b2e@emfend.at>
+ <20250319-tall-ruddy-flamingo-a12fcc@krzk-bin>
+Content-Language: de-DE
+From: Matthias Fend <matthias.fend@emfend.at>
+In-Reply-To: <20250319-tall-ruddy-flamingo-a12fcc@krzk-bin>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Spam-Score: 
+X-Spam-Bar: 
+X-Spam-Report: 
 
-On Mon, Mar 17, 2025 at 03:58:12PM +0100, Alexander Lobakin wrote:
-> From: Maciej Fijalkowski <maciej.fijalkowski@intel.com>
-> Date: Fri, 7 Mar 2025 15:16:48 +0100
-> 
-> > On Wed, Mar 05, 2025 at 05:21:28PM +0100, Alexander Lobakin wrote:
-> >> From: Michal Kubiak <michal.kubiak@intel.com>
-> >>
-> >> Implement loading/removing XDP program using .ndo_bpf callback
-> >> in the split queue mode. Reconfigure and restart the queues if needed
-> >> (!!old_prog != !!new_prog), otherwise, just update the pointers.
-> >>
-> >> Signed-off-by: Michal Kubiak <michal.kubiak@intel.com>
-> >> Signed-off-by: Alexander Lobakin <aleksander.lobakin@intel.com>
-> >> ---
-> >>  drivers/net/ethernet/intel/idpf/idpf_txrx.h |   4 +-
-> >>  drivers/net/ethernet/intel/idpf/xdp.h       |   7 ++
-> >>  drivers/net/ethernet/intel/idpf/idpf_lib.c  |   1 +
-> >>  drivers/net/ethernet/intel/idpf/idpf_txrx.c |   4 +
-> >>  drivers/net/ethernet/intel/idpf/xdp.c       | 114 ++++++++++++++++++++
-> >>  5 files changed, 129 insertions(+), 1 deletion(-)
-> >>
-> > 
-> > (...)
-> > 
-> >> +
-> >> +/**
-> >> + * idpf_xdp_setup_prog - handle XDP program install/remove requests
-> >> + * @vport: vport to configure
-> >> + * @xdp: request data (program, extack)
-> >> + *
-> >> + * Return: 0 on success, -errno on failure.
-> >> + */
-> >> +static int
-> >> +idpf_xdp_setup_prog(struct idpf_vport *vport, const struct netdev_bpf *xdp)
-> >> +{
-> >> +	const struct idpf_netdev_priv *np = netdev_priv(vport->netdev);
-> >> +	struct bpf_prog *old, *prog = xdp->prog;
-> >> +	struct idpf_vport_config *cfg;
-> >> +	int ret;
-> >> +
-> >> +	cfg = vport->adapter->vport_config[vport->idx];
-> >> +	if (!vport->num_xdp_txq && vport->num_txq == cfg->max_q.max_txq) {
-> >> +		NL_SET_ERR_MSG_MOD(xdp->extack,
-> >> +				   "No Tx queues available for XDP, please decrease the number of regular SQs");
-> >> +		return -ENOSPC;
-> >> +	}
-> >> +
-> >> +	if (test_bit(IDPF_REMOVE_IN_PROG, vport->adapter->flags) ||
-> > 
-> > IN_PROG is a bit unfortunate here as it mixes with 'prog' :P
-> 
-> Authentic idpf dictionary ¯\_(ツ)_/¯
-> 
-> > 
-> >> +	    !!vport->xdp_prog == !!prog) {
-> >> +		if (np->state == __IDPF_VPORT_UP)
-> >> +			idpf_copy_xdp_prog_to_qs(vport, prog);
-> >> +
-> >> +		old = xchg(&vport->xdp_prog, prog);
-> >> +		if (old)
-> >> +			bpf_prog_put(old);
-> >> +
-> >> +		cfg->user_config.xdp_prog = prog;
-> >> +
-> >> +		return 0;
-> >> +	}
-> >> +
-> >> +	old = cfg->user_config.xdp_prog;
-> >> +	cfg->user_config.xdp_prog = prog;
-> >> +
-> >> +	ret = idpf_initiate_soft_reset(vport, IDPF_SR_Q_CHANGE);
-> >> +	if (ret) {
-> >> +		NL_SET_ERR_MSG_MOD(xdp->extack,
-> >> +				   "Could not reopen the vport after XDP setup");
-> >> +
-> >> +		if (prog)
-> >> +			bpf_prog_put(prog);
-> > 
-> > aren't you missing this for prog->NULL conversion? you have this for
-> > hot-swap case (prog->prog).
-> 
-> This path (soft_reset) handles NULL => prog and prog => NULL. This
-> branch in particular handles errors during the soft reset, when we need
-> to restore the original prog and put the new one.
-> 
-> What you probably meant is that I don't have bpf_prog_put(old) in case
-> everything went well below? Breh =\
+Hi Krzysztof,
 
-yes, best to check with bpftool if there are dangling bpf progs on system
-after using few xdp samples, for example.
+thank you very much for your review!
+
+Am 19.03.2025 um 10:03 schrieb Krzysztof Kozlowski:
+> On Tue, Mar 18, 2025 at 08:28:58AM +0100, Matthias Fend wrote:
+>> +
+>> +static int tps6131x_reset_chip(struct tps6131x *tps6131x)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (IS_ERR_OR_NULL(tps6131x->reset_gpio)) {
+> 
+> No, only check for non-null, see comment in probe().
+
+ACK
 
 > 
-> > 
-> >> +
-> >> +		cfg->user_config.xdp_prog = old;
-> >> +	}
-> >> +
-> >> +	return ret;
-> >> +}
+>> +		ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0, TPS6131X_REG_0_RESET,
+>> +					 TPS6131X_REG_0_RESET);
+>> +		if (ret)
+>> +			return ret;
+>> +
+>> +		fsleep(100);
+>> +
+>> +		ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0, TPS6131X_REG_0_RESET, 0);
+>> +		if (ret)
+>> +			return ret;
+>> +	} else {
+>> +		gpiod_set_value_cansleep(tps6131x->reset_gpio, 1);
+>> +		fsleep(10);
+>> +		gpiod_set_value_cansleep(tps6131x->reset_gpio, 0);
+>> +		fsleep(100);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_init_chip(struct tps6131x *tps6131x)
+>> +{
+>> +	u32 reg4, reg5, reg6;
+>> +	int ret;
+>> +
+>> +	reg4 = tps6131x->valley_current_limit ? TPS6131X_REG_4_ILIM : 0;
+>> +	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_4, reg4);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	reg5 = TPS6131X_REG_5_ENPSM | TPS6131X_REG_5_STSTRB1_DIR | TPS6131X_REG_5_GPIOTYPE;
+>> +	if (tps6131x->chan1_en)
+>> +		reg5 |= TPS6131X_REG_5_ENLED1;
+>> +
+>> +	if (tps6131x->chan2_en)
+>> +		reg5 |= TPS6131X_REG_5_ENLED2;
+>> +
+>> +	if (tps6131x->chan3_en)
+>> +		reg5 |= TPS6131X_REG_5_ENLED3;
+>> +	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_5, reg5);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	reg6 = TPS6131X_REG_6_ENTS;
+>> +	ret = regmap_write(tps6131x->regmap, TPS6131X_REG_6, reg6);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_set_mode(struct tps6131x *tps6131x, enum tps6131x_mode mode, bool force)
+>> +{
+>> +	u8 val;
+>> +
+>> +	val = mode << TPS6131X_REG_1_MODE_SHIFT;
+>> +
+>> +	return regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_1, TPS6131X_REG_1_MODE, val,
+>> +				       NULL, false, force);
+>> +}
+>> +
+>> +static void tps6131x_torch_refresh_handler(struct work_struct *work)
+>> +{
+>> +	struct tps6131x *tps6131x = container_of(work, struct tps6131x, torch_refresh_work.work);
+>> +
+>> +	guard(mutex)(&tps6131x->lock);
+>> +
+>> +	tps6131x_set_mode(tps6131x, TPS6131X_MODE_TORCH, true);
+>> +
+>> +	schedule_delayed_work(&tps6131x->torch_refresh_work,
+>> +			      TPS6131X_TORCH_REFRESH_INTERVAL_JIFFIES);
+>> +}
+>> +
+>> +static int tps6131x_brightness_set(struct led_classdev *cdev, enum led_brightness brightness)
+>> +{
+>> +	struct led_classdev_flash *fled_cdev = lcdev_to_flcdev(cdev);
+>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>> +	u32 num_chans;
+>> +	u32 steps_chan13, steps_chan2;
+>> +	u32 steps_remaining;
+>> +	u8 reg0;
+>> +	int ret;
+>> +
+>> +	cancel_delayed_work_sync(&tps6131x->torch_refresh_work);
+>> +
+>> +	guard(mutex)(&tps6131x->lock);
+>> +
+>> +	/*
+>> +	 * The brightness parameter uses the number of current steps as the unit (not the current
+>> +	 * value itself). Since the reported step size can vary depending on the configuration,
+>> +	 * this value must be converted into actual register steps.
+>> +	 */
+>> +	steps_remaining = (brightness * tps6131x->step_torch_current_ma) / TPS6131X_TORCH_STEP_I_MA;
+>> +
+>> +	num_chans = tps6131x->chan1_en + tps6131x->chan2_en + tps6131x->chan3_en;
+>> +
+>> +	/*
+>> +	 * The currents are distributed as evenly as possible across the activated channels.
+>> +	 * Since channels 1 and 3 share the same register setting, they always use the same current
+>> +	 * value. Channel 2 supports higher currents and thus takes over the remaining additional
+>> +	 * portion that cannot be covered by the other channels.
+>> +	 */
+>> +	steps_chan13 = min_t(u32, steps_remaining / num_chans,
+>> +			     TPS6131X_TORCH_MAX_I_CHAN13_MA / TPS6131X_TORCH_STEP_I_MA);
+>> +	if (tps6131x->chan1_en)
+>> +		steps_remaining -= steps_chan13;
+>> +	if (tps6131x->chan3_en)
+>> +		steps_remaining -= steps_chan13;
+>> +
+>> +	steps_chan2 = min_t(u32, steps_remaining,
+>> +			    TPS6131X_TORCH_MAX_I_CHAN2_MA / TPS6131X_TORCH_STEP_I_MA);
+>> +
+>> +	reg0 = (steps_chan13 << TPS6131X_REG_0_DCLC13_SHIFT) |
+>> +	       (steps_chan2 << TPS6131X_REG_0_DCLC2_SHIFT);
 > 
-> Thanks,
-> Olek
+> Looks like guard should start here... or you are not synchronizing
+> hardware access but more.
+
+I just found it clearer to have the lock at the beginning.
+But of course, I can easily move the lock to this position.
+
+> 
+>> +	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_0,
+>> +				 TPS6131X_REG_0_DCLC13 | TPS6131X_REG_0_DCLC2, reg0);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = tps6131x_set_mode(tps6131x, brightness ? TPS6131X_MODE_TORCH : TPS6131X_MODE_SHUTDOWN,
+>> +				true);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	/*
+>> +	 * In order to use both the flash and the video light functions purely via the I2C
+>> +	 * interface, STRB1 must be low. If STRB1 is low, then the video light watchdog timer
+>> +	 * is also active, which puts the device into the shutdown state after around 13 seconds.
+>> +	 * To prevent this, the mode must be refreshed within the watchdog timeout.
+>> +	 */
+>> +	if (brightness)
+>> +		schedule_delayed_work(&tps6131x->torch_refresh_work,
+>> +				      TPS6131X_TORCH_REFRESH_INTERVAL_JIFFIES);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_strobe_set(struct led_classdev_flash *fled_cdev, bool state)
+>> +{
+>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>> +	int ret;
+>> +
+>> +	guard(mutex)(&tps6131x->lock);
+>> +
+>> +	ret = tps6131x_set_mode(tps6131x, state ? TPS6131X_MODE_FLASH : TPS6131X_MODE_SHUTDOWN,
+>> +				true);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (state) {
+>> +		ret = regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_3, TPS6131X_REG_3_SFT,
+>> +					      TPS6131X_REG_3_SFT, NULL, false, true);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>> +	ret = regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_3, TPS6131X_REG_3_SFT, 0, NULL,
+>> +				      false, true);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_flash_brightness_set(struct led_classdev_flash *fled_cdev, u32 brightness)
+>> +{
+>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>> +	u32 num_chans;
+>> +	u32 steps_chan13, steps_chan2;
+>> +	u32 steps_remaining;
+>> +	int ret;
+>> +
+>> +	guard(mutex)(&tps6131x->lock);
+>> +
+>> +	steps_remaining = brightness / TPS6131X_FLASH_STEP_I_MA;
+>> +	num_chans = tps6131x->chan1_en + tps6131x->chan2_en + tps6131x->chan3_en;
+>> +	steps_chan13 = min_t(u32, steps_remaining / num_chans,
+>> +			     TPS6131X_FLASH_MAX_I_CHAN13_MA / TPS6131X_FLASH_STEP_I_MA);
+>> +	if (tps6131x->chan1_en)
+>> +		steps_remaining -= steps_chan13;
+>> +	if (tps6131x->chan3_en)
+>> +		steps_remaining -= steps_chan13;
+>> +	steps_chan2 = min_t(u32, steps_remaining,
+>> +			    TPS6131X_FLASH_MAX_I_CHAN2_MA / TPS6131X_FLASH_STEP_I_MA);
+>> +
+> 
+> Same here
+
+ACK
+
+> 
+>> +	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_2, TPS6131X_REG_2_FC13,
+>> +				 steps_chan13 << TPS6131X_REG_2_FC13_SHIFT);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_1, TPS6131X_REG_1_FC2,
+>> +				 steps_chan2 << TPS6131X_REG_1_FC2_SHIFT);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	fled_cdev->brightness.val = brightness;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_flash_timeout_set(struct led_classdev_flash *fled_cdev, u32 timeout_us)
+>> +{
+>> +	const struct tps6131x_timer_config *timer_config;
+>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>> +	u8 reg3;
+>> +	int ret;
+>> +
+>> +	guard(mutex)(&tps6131x->lock);
+>> +
+>> +	timer_config = tps6131x_find_closest_timer_config(timeout_us);
+>> +
+>> +	reg3 = timer_config->val << TPS6131X_REG_3_STIM_SHIFT;
+>> +	if (timer_config->range)
+>> +		reg3 |= TPS6131X_REG_3_SELSTIM_TO;
+>> +
+>> +	ret = regmap_update_bits(tps6131x->regmap, TPS6131X_REG_3,
+>> +				 TPS6131X_REG_3_STIM | TPS6131X_REG_3_SELSTIM_TO, reg3);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	fled_cdev->timeout.val = timer_config->time_us;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_strobe_get(struct led_classdev_flash *fled_cdev, bool *state)
+>> +{
+>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>> +	unsigned int reg3;
+>> +	int ret;
+>> +
+>> +	guard(mutex)(&tps6131x->lock);
+>> +
+>> +	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_3, &reg3);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	*state = !!(reg3 & TPS6131X_REG_3_SFT);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_flash_fault_get(struct led_classdev_flash *fled_cdev, u32 *fault)
+>> +{
+>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>> +	unsigned int reg3, reg4, reg6;
+>> +	int ret;
+>> +
+>> +	*fault = 0;
+>> +
+> 
+> Why no lock here?
+
+The individual regmap operations are already protected by the internal 
+lock. If reading from a register has no other problematic effects on the 
+overall function, then no additional lock is needed.
+
+I noticed that the lock in tps6131x_strobe_get() is no longer needed. 
+I'll removed that as well.
+
+> 
+>> +	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_3, &reg3);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_4, &reg4);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = regmap_read_bypassed(tps6131x->regmap, TPS6131X_REG_6, &reg6);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (reg3 & TPS6131X_REG_3_HPFL)
+>> +		*fault |= LED_FAULT_SHORT_CIRCUIT;
+>> +
+>> +	if (reg3 & TPS6131X_REG_3_SELSTIM_TO)
+>> +		*fault |= LED_FAULT_TIMEOUT;
+>> +
+>> +	if (reg4 & TPS6131X_REG_4_HOTDIE_HI)
+>> +		*fault |= LED_FAULT_OVER_TEMPERATURE;
+>> +
+>> +	if (reg6 & (TPS6131X_REG_6_LEDHOT | TPS6131X_REG_6_LEDWARN))
+>> +		*fault |= LED_FAULT_LED_OVER_TEMPERATURE;
+>> +
+>> +	if (!(reg6 & TPS6131X_REG_6_LEDHDR))
+>> +		*fault |= LED_FAULT_UNDER_VOLTAGE;
+>> +
+>> +	if (reg6 & TPS6131X_REG_6_LEDHOT) {
+>> +		ret = regmap_update_bits_base(tps6131x->regmap, TPS6131X_REG_6,
+>> +					      TPS6131X_REG_6_LEDHOT, 0, NULL, false, true);
+> 
+> And this is not locked?
+
+The read modify write operation is protected by regmap. Since this 
+operation does not interact with any other functions, no lock is needed 
+here.
+
+> 
+>> +		if (ret < 0)
+>> +			return ret;
+>> +	}
+>> +
+> 
+> ...
+> 
+>> +
+>> +static int tps6131x_flash_external_strobe_set(struct v4l2_flash *v4l2_flash, bool enable)
+>> +{
+>> +	struct led_classdev_flash *fled_cdev = v4l2_flash->fled_cdev;
+>> +	struct tps6131x *tps6131x = fled_cdev_to_tps6131x(fled_cdev);
+>> +
+>> +	guard(mutex)(&tps6131x->lock);
+>> +
+>> +	return tps6131x_set_mode(tps6131x, enable ? TPS6131X_MODE_FLASH : TPS6131X_MODE_SHUTDOWN,
+>> +				 false);
+>> +}
+>> +
+>> +static const struct v4l2_flash_ops tps6131x_v4l2_flash_ops = {
+>> +	.external_strobe_set = tps6131x_flash_external_strobe_set,
+>> +};
+>> +
+>> +static int tps6131x_v4l2_setup(struct tps6131x *tps6131x)
+>> +{
+>> +	struct v4l2_flash_config v4l2_cfg = { 0 };
+>> +	struct led_flash_setting *intensity = &v4l2_cfg.intensity;
+>> +
+>> +	if (!IS_BUILTIN(CONFIG_V4L2_FLASH_LED_CLASS))
+> 
+> Why builtin? That's a tristate, so I don't get why driver and v4l flash
+> cannot be modules. You wanted REACHABLE probably... but then it is
+> anyway discouraged practice leading to runtime debugging. So actually
+> you want CONFIG_V4L2_FLASH_LED_CLASS || !CONFIG_V4L2_FLASH_LED_CLASS
+> dependency.
+
+Okay, I'll add 'depends on V4L2_FLASH_LED_CLASS || 
+!V4L2_FLASH_LED_CLASS' to the Kconfig entry and do the check in the 
+driver like this:
+   if (!IS_ENABLED(CONFIG_V4L2_FLASH_LED_CLASS))
+     return 0;
+
+Is this solution okay for you?
+
+> 
+> See Kconfig description.
+> 
+>> +		return 0;
+>> +
+>> +	intensity->min = tps6131x->step_torch_current_ma;
+>> +	intensity->max = tps6131x->max_torch_current_ma;
+>> +	intensity->step = tps6131x->step_torch_current_ma;
+>> +	intensity->val = intensity->min;
+>> +
+>> +	strscpy(v4l2_cfg.dev_name, tps6131x->fled_cdev.led_cdev.dev->kobj.name,
+>> +		sizeof(v4l2_cfg.dev_name));
+>> +
+>> +	v4l2_cfg.has_external_strobe = true;
+>> +	v4l2_cfg.flash_faults = LED_FAULT_TIMEOUT | LED_FAULT_OVER_TEMPERATURE |
+>> +				LED_FAULT_SHORT_CIRCUIT | LED_FAULT_UNDER_VOLTAGE |
+>> +				LED_FAULT_LED_OVER_TEMPERATURE;
+>> +
+>> +	tps6131x->v4l2_flash = v4l2_flash_init(tps6131x->dev, tps6131x->led_node,
+>> +					       &tps6131x->fled_cdev, &tps6131x_v4l2_flash_ops,
+>> +					       &v4l2_cfg);
+>> +	if (IS_ERR(tps6131x->v4l2_flash)) {
+>> +		dev_err(tps6131x->dev, "Failed to initialize v4l2 flash LED\n");
+>> +		return PTR_ERR(tps6131x->v4l2_flash);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int tps6131x_probe(struct i2c_client *client)
+>> +{
+>> +	struct tps6131x *tps6131x;
+>> +	int ret;
+>> +
+>> +	tps6131x = devm_kzalloc(&client->dev, sizeof(*tps6131x), GFP_KERNEL);
+>> +	if (!tps6131x)
+>> +		return -ENOMEM;
+>> +
+>> +	tps6131x->dev = &client->dev;
+>> +	i2c_set_clientdata(client, tps6131x);
+>> +	mutex_init(&tps6131x->lock);
+>> +	INIT_DELAYED_WORK(&tps6131x->torch_refresh_work, tps6131x_torch_refresh_handler);
+>> +
+>> +	ret = tps6131x_parse_node(tps6131x);
+>> +	if (ret)
+>> +		return -ENODEV;
+>> +
+>> +	tps6131x->regmap = devm_regmap_init_i2c(client, &tps6131x_regmap);
+>> +	if (IS_ERR(tps6131x->regmap)) {
+>> +		ret = PTR_ERR(tps6131x->regmap);
+>> +		dev_err(&client->dev, "Failed to allocate register map\n");
+>> +		return ret;
+> 
+> Syntax is:
+> 
+> return dev_err_probe
+
+Of course. ACK
+
+> 
+>> +	}
+>> +
+>> +	tps6131x->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset", GPIOD_OUT_HIGH);
+> 
+> You should handle IS_ERR
+
+ACK
+
+Thanks!
+  ~Matthias
+
+> 
+> 
+> Best regards,
+> Krzysztof
+> 
+
