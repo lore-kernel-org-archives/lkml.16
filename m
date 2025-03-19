@@ -1,82 +1,90 @@
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D571DEFC5;
-	Wed, 19 Mar 2025 17:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E901EB5F0
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:45:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742406297; cv=none; b=jiVokRq6GOgMJ4o/jhpL1+wJ8ZM9MIoaLlIrqjzV1Ew5E5yJof7FX0Tey8Q5sbfGuRCPIYCbD1qEnXjPD+w9TmLtZ0yUCn6qXVgrVZaM2qkteJI2yg3Uf5mUdpGRAIdVo1IdqKPFSik8BIi7TbarK8W/HVhN/sXS6NCWX0pbkto=
+	t=1742406329; cv=none; b=BWS7L9AH8OInbrR7za68C4yKEcEFtvajzSjarI7NdboPTi0mhQHtBdis1LGKSBrWB6iKUVue5nDj1W11AVgLGl3Jr3mO7kU73CLB5TjKE4eDS122GHAWtkF2Jwc9onvK+l9GMu+m2zMHuTurnb2pdqbgVR8o006eBkJ8SQYx+ds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742406297; c=relaxed/simple;
-	bh=tNhQx6js1NXEoL6aB4Zm3AhBRWJuJKXfVaGnhQHZxNA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=orK22De9fiM2CdpQGUkYjjacuUcEhbVBx5j63M541RD7RSf20b07t1jltzHOiuITv1/QfCTIZ1ESvNMpkzAoHH4tHpz3t3WjoDisNrLno1mlglGXaLZXWiaHcHm/q4/UFXm2jn+qyCjxfV5un9klNbje/3+uky3f8AE16hQo5Qk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgQJwJyO; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742406329; c=relaxed/simple;
+	bh=Mja/DsqMC96aBenZikHbYJ7mmYRS4Gju4qJTnOUreFE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CcrwU/os7vFf6oaj04oQzZHWKcTgkq2gQWLt34i8B5nyUXZbdAOpt7gUVRFxu2ewL9HDpy8zFa6klAj8n5/ByM+A8NQZ7h8qpSK71sgMMUcsXeVbkEQLwI0xHFnuHlN04UY9W1++a3X+oTAdjrTC8aJWb7MbxI0GhnpOMxN8E2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=biyyC0Ci; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgQJwJyO"
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so23184135e9.1;
-        Wed, 19 Mar 2025 10:44:55 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="biyyC0Ci"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2241053582dso47070445ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:45:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742406294; x=1743011094; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=ryBh8q8OrvCyqXnG+GLkOFPKy3gBau4MAIyOyG75a5M=;
-        b=FgQJwJyOYvuQ82F3oxFDGlzD7R1fbC+yaAD4bRYMec0u1i+kHhb+udubIvHanZU4s3
-         ebPW6sFu5OGeCmZrdbZ83Ti7CzMPjAa/TNaFCivAMy/CyccJQhAUFzDX+bDxkudXu3Om
-         KhfBm3rG1b2LV0u+a/IEpaNhMT02RoQisiufdxulMbfSs787ofb3u7yNYxnwhmDuGCzT
-         EGj5R0m6DEJLxxW87ofh/IdfdZAI4t4wkAAwVQamsWgoXLYLRmXUbktukLMluScKktNS
-         r2K8V+2bsYkuNOilZfxWRXzDobcuX5F9eYYeOeySXmrsbovu7cumTcIum8cWVOPMypuK
-         Wpqg==
+        d=fastly.com; s=google; t=1742406327; x=1743011127; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=88yW33TrWIk/+/WaI5H9h1QmYyDkMe4Hu9deS8t+58M=;
+        b=biyyC0CidajeDa7Wg0pt7wfyYZZOZLbjQReMFZW/rVpEewIuWNO8Ax1CIz6Cw/iE8F
+         SutXvBmY8l5JfvXre1l+/hxuFPtHvxtQ+qUj+6vuz8fCrloLxxu7eFqzJyOoNJBmkkR2
+         K757qV5PZ9fzsIOXsHG1NnJom0T7GfETHUvy0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742406294; x=1743011094;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ryBh8q8OrvCyqXnG+GLkOFPKy3gBau4MAIyOyG75a5M=;
-        b=R2KPjpRxCZdzcqE3ln8fvepWhVFXoc0N3fegwnkqDBqDMwk5RhVOY//6Norjk6+0WN
-         i++hiDGE81LKkrQQV0l9SsLDS3gI7cSzKlgByKEWWyqqDIKkIdisfX5NAgWgVa+juUpP
-         a5K+yzq9Fdv0QfbwV7HEHtYmF3G0K0qmSVzFpsytZk34R2tSmDDDzsF/wuKQrv0PvKOw
-         PwcFN14Kb0Xv4MBNSlW7Bg/4QeJkOddNX3YoqX7yLCw8J5NLStIbnUTYQuCTwSAF++Dt
-         0gqqryRk+EU3Rww5VutxK66LVEidIDNqsZSW2htagi1qS4dWUCEr+KHhcUQYumLBAGpV
-         uhvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUXb5dNpBwzXp4Etn/joTrWkqj3dDZ1o4Afud0PrxsuKVCer80rIpe3CX8iW8XX5y2hkKER5IAlMBhC@vger.kernel.org, AJvYcCX09R4y2ybh6B1csivRgLpP4OhVXWRmLh8mJNF8WwILDGGwfYULM2PP5Sf8LWz5AOP7aINit76p@vger.kernel.org, AJvYcCXXBIVlnFU5WFBtLwWuAVPJoWzYYUZ96kqsUwqY8U/rfivoNu56bA/suVAJym+w/mGjH/ZuBmh6dkaYX6Bn@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzp8xZIQO+PozkaGQGdb0soG4Cgo0y2rizKLQ+eOz9+kqFqpAc4
-	KsD6xb0v9SEl3j+S33L6icZfBvjI0aA0afq18i4QuPhXfgFiz61i
-X-Gm-Gg: ASbGncub8EOPD3FltjYVFe17BI3JMIRzkiBZaneYy6p1FTPwxY/iP+ngy75mhfPBzQj
-	hTXJL3c9HVdkOgLpWYtu61/inmb8F+dWs5SlFih12jMV8dalIFw/fJvDGJSVhDuj7IgEVx0DED9
-	nPwmHjFSVu3rOgWnZcHhugj1PgTvlNzYBvH3Oqf82hmzT5eGdlHgk5y2Lb0kcdYMXk3/fU0zDwV
-	Npv6D7T8LWcN7T1vS3Jn9UhMbi+z7NSbK7Gf50jfysWGz8WaoWW0OdgI0SPqw17cP6YYIPTNTAd
-	/R44fLEx+Q8BINajgMttOc3cXCs0p5SdX1kYYlVocniEF7dqhM9pvYAcTdO5AjoKhDnDEiWRtIZ
-	w
-X-Google-Smtp-Source: AGHT+IEnFFFnx7cAsJMrMu7kkH7UnKHIBEdYX6TVoUlF8hg1k5y8nfj9LW9UHVLVVfHl7zYuamLFxQ==
-X-Received: by 2002:a05:600c:34d3:b0:43c:fae1:5151 with SMTP id 5b1f17b1804b1-43d4384301amr31691015e9.25.1742406293390;
-        Wed, 19 Mar 2025 10:44:53 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df344dsm22192793f8f.10.2025.03.19.10.44.52
+        d=1e100.net; s=20230601; t=1742406327; x=1743011127;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=88yW33TrWIk/+/WaI5H9h1QmYyDkMe4Hu9deS8t+58M=;
+        b=E9LM/GD9Zl1uwOjrj+6j1PrJ6qVYi/Mwx38NRSo4D+qzhy6SsrvNngRq9UkC+66DOR
+         nvEi0UcLo0Q6TWADqWPmUWUsVPruL98XP8/B8/bthfUMMPkPcG1Vpq2r/pigw/073W2A
+         nmUP3oTigqwxP3g+XYZBVwGbvbJmO6UAUO0v41COzXXZSTAlJ6bj6QPu9uhRZ5pkOaFS
+         4CyAnU44Tlz/QhF/AjA7f03+m26sM+VoeZMXgGdhGFV9dEQiJuTcw+vK0BkEs+4giAYE
+         3ZrUSXYyhoWICjoFHXvM8AF47I2sskHEUIrlYLZ1Y3DGX5d3Rd7rF3ljNjMoGAiNkb2n
+         V6qg==
+X-Forwarded-Encrypted: i=1; AJvYcCX2f54VGEID0EgyXjcQVBKvJ7WFe4VdDtvm/PiXczGsVGleiclh+Csa7Zpa+qfgwmMsWXiso4MA0O6JmQs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzC8Sd0RguoVIpsmMDvEheFVQS/SzAfIvFP0uxdRRbDlZmCQSYN
+	+6/kuvwZ3i5QZm9Evu8XN9S7hk28HIgH9jRpgl052Q8j25OgBZiKwzEWHhXIVUY=
+X-Gm-Gg: ASbGnctAsVEYu5Qnatf0BnM0WF650ofYaLURg0tb3ebcZrihjYM00H2+cRlLTInhDrY
+	utzvHD0O6WNcqHyokpBew3wh8wrP9J5YV6SoQmGirL7IhcZs5rQyxa86Q2n9YknfFRploh3w9io
+	sqi77MVCuRXYWpSVPRv83zBW/Hfm3WZ653EmpaN3u+2nbnGnMcXwfzBwYVxJw+9q9w+Jf9HYdBN
+	5+iSOical8teZj+7N+sPTPjrkd58Or+OWvaLwoc8W6fnXFuiI/LUsOlyo9VlKVtyked+gyHm1v/
+	4MNvDCx+anLuyKHRqmnItE1ZarTaX1OVJpVsykEqcvgqbOBkcQ2mTrPjjbUAYCHljhSO8FBh2K2
+	U7yGDZCmL/VHKHZRD
+X-Google-Smtp-Source: AGHT+IERFHHbx0A4wA9qJdQkKklw0ufeU3XYHswtvVKJOCpGkGhgwLEpUnI6jmKEfZkWMIg4V+8Kpw==
+X-Received: by 2002:a17:903:1790:b0:224:283f:a9ef with SMTP id d9443c01a7336-2264981d654mr49179945ad.6.1742406326748;
+        Wed, 19 Mar 2025 10:45:26 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22634aa7462sm36188005ad.224.2025.03.19.10.45.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 10:44:53 -0700 (PDT)
-Message-ID: <67db0295.050a0220.1d586b.0585@mx.google.com>
-X-Google-Original-Message-ID: <Z9sCkh2R9IkGoAjD@Ansuel-XPS.>
-Date: Wed, 19 Mar 2025 18:44:50 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: "Russell King (Oracle)" <linux@armlinux.org.uk>
-Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [net-next PATCH 0/6] net: pcs: Introduce support for PCS OF
-References: <20250318235850.6411-1-ansuelsmth@gmail.com>
- <Z9r-_joQ13YdJeyZ@shell.armlinux.org.uk>
+        Wed, 19 Mar 2025 10:45:26 -0700 (PDT)
+Date: Wed, 19 Mar 2025 10:45:22 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Jens Axboe <axboe@kernel.dk>
+Cc: Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, asml.silence@gmail.com,
+	linux-fsdevel@vger.kernel.org, edumazet@google.com,
+	pabeni@redhat.com, horms@kernel.org, linux-api@vger.kernel.org,
+	linux-arch@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	kuba@kernel.org, shuah@kernel.org, sdf@fomichev.me,
+	mingo@redhat.com, arnd@arndb.de, brauner@kernel.org,
+	akpm@linux-foundation.org, tglx@linutronix.de, jolsa@kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [RFC -next 00/10] Add ZC notifications to splice and sendfile
+Message-ID: <Z9sCsooW7OSTgyAk@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@infradead.org>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, kuba@kernel.org,
+	shuah@kernel.org, sdf@fomichev.me, mingo@redhat.com, arnd@arndb.de,
+	brauner@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
+	jolsa@kernel.org, linux-kselftest@vger.kernel.org
+References: <20250319001521.53249-1-jdamato@fastly.com>
+ <Z9p6oFlHxkYvUA8N@infradead.org>
+ <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
+ <2d68bc91-c22c-4b48-a06d-fa9ec06dfb25@kernel.dk>
+ <Z9r5JE3AJdnsXy_u@LQ3V64L9R2>
+ <19e3056c-2f7b-4f41-9c40-98955c4a9ed3@kernel.dk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -85,66 +93,142 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9r-_joQ13YdJeyZ@shell.armlinux.org.uk>
+In-Reply-To: <19e3056c-2f7b-4f41-9c40-98955c4a9ed3@kernel.dk>
 
-On Wed, Mar 19, 2025 at 05:29:34PM +0000, Russell King (Oracle) wrote:
-> On Wed, Mar 19, 2025 at 12:58:36AM +0100, Christian Marangi wrote:
-> > A PCS provider have to implement and call of_pcs_add_provider() in
-> > probe function and define an xlate function to define how the PCS
-> > should be provided based on the requested interface and phandle spec
-> > defined in DT (based on the #pcs-cells)
+On Wed, Mar 19, 2025 at 11:20:50AM -0600, Jens Axboe wrote:
+> On 3/19/25 11:04 AM, Joe Damato wrote:
+> > On Wed, Mar 19, 2025 at 10:07:27AM -0600, Jens Axboe wrote:
+> >> On 3/19/25 9:32 AM, Joe Damato wrote:
+> >>> On Wed, Mar 19, 2025 at 01:04:48AM -0700, Christoph Hellwig wrote:
+> >>>> On Wed, Mar 19, 2025 at 12:15:11AM +0000, Joe Damato wrote:
+> >>>>> One way to fix this is to add zerocopy notifications to sendfile similar
+> >>>>> to how MSG_ZEROCOPY works with sendmsg. This is possible thanks to the
+> >>>>> extensive work done by Pavel [1].
+> >>>>
+> >>>> What is a "zerocopy notification" 
+> >>>
+> >>> See the docs on MSG_ZEROCOPY [1], but in short when a user app calls
+> >>> sendmsg and passes MSG_ZEROCOPY a completion notification is added
+> >>> to the error queue. The user app can poll for these to find out when
+> >>> the TX has completed and the buffer it passed to the kernel can be
+> >>> overwritten.
+> >>>
+> >>> My series provides the same functionality via splice and sendfile2.
+> >>>
+> >>> [1]: https://www.kernel.org/doc/html/v6.13/networking/msg_zerocopy.html
+> >>>
+> >>>> and why aren't you simply plugging this into io_uring and generate
+> >>>> a CQE so that it works like all other asynchronous operations?
+> >>>
+> >>> I linked to the iouring work that Pavel did in the cover letter.
+> >>> Please take a look.
+> >>>
+> >>> That work refactored the internals of how zerocopy completion
+> >>> notifications are wired up, allowing other pieces of code to use the
+> >>> same infrastructure and extend it, if needed.
+> >>>
+> >>> My series is using the same internals that iouring (and others) use
+> >>> to generate zerocopy completion notifications. Unlike iouring,
+> >>> though, I don't need a fully customized implementation with a new
+> >>> user API for harvesting completion events; I can use the existing
+> >>> mechanism already in the kernel that user apps already use for
+> >>> sendmsg (the error queue, as explained above and in the
+> >>> MSG_ZEROCOPY documentation).
+> >>
+> >> The error queue is arguably a work-around for _not_ having a delivery
+> >> mechanism that works with a sync syscall in the first place. The main
+> >> question here imho would be "why add a whole new syscall etc when
+> >> there's already an existing way to do accomplish this, with
+> >> free-to-reuse notifications". If the answer is "because splice", then it
+> >> would seem saner to plumb up those bits only. Would be much simpler
+> >> too...
 > > 
-> > of_pcs_get() is provided to provide a specific PCS declared in DT
-> > an index.
+> > I may be misunderstanding your comment, but my response would be:
 > > 
-> > A simple xlate function is provided for simple single PCS
-> > implementation, of_pcs_simple_get.
+> >   There are existing apps which use sendfile today unsafely and
+> >   it would be very nice to have a safe sendfile equivalent. Converting
+> >   existing apps to using iouring (if I understood your suggestion?)
+> >   would be significantly more work compared to calling sendfile2 and
+> >   adding code to check the error queue.
+> 
+> It's really not, if you just want to use it as a sync kind of thing. If
+> you want to have multiple things in flight etc, yeah it could be more
+> work, you'd also get better performance that way. And you could use
+> things like registered buffers for either of them, which again would
+> likely make it more efficient.
+
+I haven't argued that performance would be better using sendfile2
+compared to iouring, just that existing apps which already use
+sendfile (but do so unsafely) would probably be more likely to use a
+safe alternative with existing examples of how to harvest completion
+notifications vs something more complex, like wrapping iouring.
+
+> If you just use it as a sync thing, it'd be pretty trivial to just wrap
+> a my_sendfile_foo() in a submit_and_wait operation, which issues and
+> waits on the completion in a single syscall. And if you want to wait on
+> the notification too, you could even do that in the same syscall and
+> wait on 2 CQEs. That'd be a downright trivial way to provide a sync way
+> of doing the same thing.
+
+I don't disagree; I just don't know if app developers:
+  a.) know that this is possible to do, and
+  b.) know how to do it
+
+In general: it does seem a bit odd to me that there isn't a safe
+sendfile syscall in Linux that uses existing completion notification
+mechanisms.
+
+> > I would also argue that there are likely user apps out there that
+> > use both sendmsg MSG_ZEROCOPY for certain writes (for data in
+> > memory) and also use sendfile (for data on disk). One example would
+> > be a reverse proxy that might write HTTP headers to clients via
+> > sendmsg but transmit the response body with sendfile.
 > > 
-> > A PCS provider on driver removal should first call
-> > phylink_pcs_release() to release the PCS from phylink and then
-> > delete itself as a provider with of_pcs_del_provider() helper.
+> > For those apps, the code to check the error queue already exists for
+> > sendmsg + MSG_ZEROCOPY, so swapping in sendfile2 seems like an easy
+> > way to ensure safe sendfile usage.
 > 
-> This is inherently racy.
-> 
-> phylink_pcs_release() may release the PCS from phylink, but there is a
-> window between calling this and of_pcs_del_provider() where it could
-> still be "got".
+> Sure that is certainly possible. I didn't say that wasn't the case,
+> rather that the error queue approach is a work-around in the first place
+> for not having some kind of async notification mechanism for when it's
+> free to reuse.
 
-Ah I hoped the rtnl lock would protect from this. I need to check if
-unpublish first cause any harm, in theory no as phylink should still
-have his pointer to the pcs struct and select_pcs should not be called
-on interface removal.
+Of course, I certainly agree that the error queue is a work around.
+But it works, app use it, and its fairly well known. I don't see any
+reason, other than historical context, why sendmsg can use this
+mechanism, splice can, but sendfile shouldn't?
 
-But this can also be handled by flagging a PCS as "to-be-removed" so
-that it gets ignored if in this window it gets parsed by the PCS
-provider API.
+> > As far as the bit about plumbing only the splice bits, sorry if I'm
+> > being dense here, do you mean plumbing the error queue through to
+> > splice only and dropping sendfile2?
+> > 
+> > That is an option. Then the apps currently using sendfile could use
+> > splice instead and get completion notifications on the error queue.
+> > That would probably work and be less work than rewriting to use
+> > iouring, but probably a bit more work than using a new syscall.
+> 
+> Yep
 
-> 
-> The sequence always has to be:
-> 
-> First, unpublish to prevent new uses.
-> Then remove from current uses.
-> Then disable hardware/remove resources.
-> 
-> It makes me exceedingly sad that we make keep implementing the same
-> mistakes time and time again - it was brought up at one of the OLS
-> conferences back in the 2000s, probably around the time that the
-> driver model was just becoming "a thing". At least I can pass on
-> this knowledge when I spot it and help others to improve!
-> 
-> Note that networking's unregister_netdev() recognises this pattern,
-> and unregister_netdev() will first unpublish the interface thereby
-> making it inaccessible to be brought up, then take the interface down
-> if it were up before returning - thus guaranteeing that when the
-> function returns, it is safe to dispose of any and all resources that
-> the driver was using.
-> 
-> Sorry as I seem to be labouring this point.
->
+I'm not opposed to dropping the sendfile2 part of the series for the
+official submission. I do think it is a bit odd to add the
+functionality to splice only, though, when probably many apps are
+using splice via calls to sendfile and there is no way to safely use
+sendfile.
 
-No problem, some subsystem are so complex that these info are pure gold
-and gets lots after years, especially with global lock in place where
-someone can think they are enough to handle everything.
+If you feel very strongly that this cannot be merged without
+dropping sendfile2 and only plumbing this through for splice, then
+I'll drop the sendfile2 syscall when I submit officially (probably
+next week?).
 
--- 
-	Ansuel
+I do feel pretty strongly that it's more likely apps would use
+sendfile2 and we'd have safer apps out in the wild. But, I could be
+wrong.
+
+That said: if the new syscsall is the blocker, I'll drop it and
+offer a change to the sendfile man page suggesting users swap it
+with calls to splice + error queue for safety.
+
+I greatly appreciate you taking a look and your feedback.
+
+Thanks,
+Joe
