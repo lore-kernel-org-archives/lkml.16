@@ -1,197 +1,164 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88781DFE8
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:30:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4175B1E492
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742387422; cv=none; b=PDPpmt896K+awlt4BJtPhabh++WSWMz6StgYBtI6FCM5/K3wkuq1c5yOMMY0ciLzAyGI7aq46VBahLDiNqkZnTkHHffKZmxXAtAX+Kxdc5ZvXf7D7h7R9GYzal2XdQYuRReyvB8MllYuJURE4o4wVrOuWsSmaDriWEuBqjrUWRA=
+	t=1742387423; cv=none; b=csbFPs+qVgQVW4bKa8XplXO2vZFbmorp+mpAUYDj+LEuABokeyTxyV+wRlTbl+9wGq1OXS3qDVYapYsJ1d03ni+WUXPI+NxVraYPAmB6FjTAs0ybaIzQU5anew+Y0os72YBkCO142BfFKVUn702Z5SbnTAdoMY+5YL1RLx+X0d8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742387422; c=relaxed/simple;
-	bh=lJ9C72km+zAZC98wH4+CqxmYmtUNyd7G86XboGlc/Og=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=KedYVfQ2gAofC0BLrKNBDrAtThl1yTyHCXClthtMjR5+vY4nXtDzdLytlZ2JR2jpJW9GFHDIbA+lgxsREgHOPZzD0y7i049B4nXQ2i+oEGzzIw4xk0x31KYhNbqxhQofxuYEtxquXmoFooi4RlpecaZJt97vXOBFJOcWdEk76Do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BXX1ARS5; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1742387423; c=relaxed/simple;
+	bh=rs3rFS2C2IcZ8+z4w3hBviDDluBdzYKVxKPYwl7P1b4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gcrHeWtmXfdmkhuTkyIJU9nJjojkGZqVwIMqzclVB1ikcRpUv7sBEu/dWgBfifMCzkVrzKNR73aqmvQn3f5yjRi3S0GqRsRxEJh9QI8Uo0TjYB9ZSNi33uja3MAdt4xKsC81i9gVOWSt8pVGUuRun1xK9P3eL3Q9CazxF7XRSzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bf9C6eBz; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BXX1ARS5"
-Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250319123017epoutp018880270d8fbb6f173bf83e4f8b87fe9a~uNB-1_m8H0215602156epoutp01_
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:30:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250319123017epoutp018880270d8fbb6f173bf83e4f8b87fe9a~uNB-1_m8H0215602156epoutp01_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742387417;
-	bh=X/6rPjwLul3osgT7ZsXp5aROIwC4aSL55c8eg4WdFWQ=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=BXX1ARS5Fjfmtd3WKIIHdMqHGGf8s9wqpN7y6SKD0yrcj2Ldnjr+PMJlNeKPana2K
-	 yhPro+nty3yrHaTSPMDPi++4IkBUahr8VzPnapLTRIJYhj3g4sX02axrmbxITe7jou
-	 yRm0WTk9zfKb7YUDwFH0bolPas6WVpATMSZ3I58A=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20250319123016epcas5p40ea580df37bea28cc4bdc2dba8697ff5~uNB-GZeWk0870008700epcas5p4Q;
-	Wed, 19 Mar 2025 12:30:16 +0000 (GMT)
-Received: from epsmges5p1new.samsung.com (unknown [182.195.38.175]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4ZHp2H0Q00z4x9Pt; Wed, 19 Mar
-	2025 12:30:15 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5A.12.20052.6D8BAD76; Wed, 19 Mar 2025 21:30:14 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250318105219epcas5p2658d27215c21f741a2ee59f52b178ecf~t4DLb_2VX2675626756epcas5p2F;
-	Tue, 18 Mar 2025 10:52:19 +0000 (GMT)
-Received: from epsmgmcp1.samsung.com (unknown [182.195.42.82]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250318105219epsmtrp1a6c0a52e389d36a36798596aa88752ed~t4DLbLLZc1465214652epsmtrp1S;
-	Tue, 18 Mar 2025 10:52:19 +0000 (GMT)
-X-AuditID: b6c32a49-3fffd70000004e54-ef-67dab8d650a4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmcp1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D6.77.33707.36059D76; Tue, 18 Mar 2025 19:52:19 +0900 (KST)
-Received: from FDSFTE596 (unknown [107.122.82.131]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250318105217epsmtip1e43ebe3edacda18457e4be315d4f00ea~t4DJU4dHv1181911819epsmtip1R;
-	Tue, 18 Mar 2025 10:52:17 +0000 (GMT)
-From: "Swathi K S" <swathi.ks@samsung.com>
-To: <krzk+dt@kernel.org>, <linux-fsd@tesla.com>, <robh@kernel.org>,
-	<conor+dt@kernel.org>, <richardcochran@gmail.com>, <alim.akhtar@samsung.com>
-Cc: <jayati.sahu@samsung.com>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-samsung-soc@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<pankaj.dubey@samsung.com>, <ravi.patel@samsung.com>, <gost.dev@samsung.com>
-In-Reply-To: <20250307044904.59077-1-swathi.ks@samsung.com>
-Subject: RE: [PATCH v8 0/2] arm64: dts: fsd: Add Ethernet support for FSD
- SoC
-Date: Tue, 18 Mar 2025 16:22:09 +0530
-Message-ID: <000401db97f3$d20f5970$762e0c50$@samsung.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bf9C6eBz"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-391342fc1f6so5500555f8f.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:30:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742387419; x=1742992219; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FR7LOBfgMjA2RsqEaQnFiGMYbwNkGFoaG0P7aHkHt7Y=;
+        b=bf9C6eBzxwIbr5L7BCnpY0xLbnbAz8EMZV1C2an0/LTbtPJdxnSakKfgA9QN1CXj6n
+         OH1PZVq4Oo6qtgh1/H2xt2+zSLOrEuSTo/gvJdUIARSsDZZs+JunTHG/arulZja9AM5F
+         0i2x2tddDSIImY26P14TkwzqqLOViHP/9QX/9FFPODKoHJeXD+M3uIBdgy9awL8QFXSJ
+         Y3ymotANkke2tHjzgig+eVL1Z4c1AmC3TEdLmAXCzd7Eci33Lnj4HI7b93/PYWqW6PuC
+         Os05Kn0NwBZoNyZTKqug+artpISqFGN2Qv0goPgM8L+NYsHAfivfCz27Cgn8PUkBHf2d
+         He7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742387419; x=1742992219;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FR7LOBfgMjA2RsqEaQnFiGMYbwNkGFoaG0P7aHkHt7Y=;
+        b=caI/QM1RU2chW9Q7mNH0XzIQoZopCdq3dT1/vERyPILCHSycrKqzjLJaV6kmqOrDXb
+         ZQgckkoMLvKE1fOTgomQmDBwPGEz002zleg8+2I4J4ig/wzJGYP57VSoS1GEdx5LiEHa
+         ipcif4OlhKdiOn6OiP9WaP+De4tA8ofxPeul6wXUF1EnL4W2XEkcjk3NCTTh2uLn5Ylv
+         lYBXMqt1LpucLJsQQllWNE1wbHYgw+mh1rbDti+CwsWwsAcRaxSCCqG2iK8ms2LZV99Y
+         hXrS2vO2Kr/HXgNFR9WtL8qG1p91bw9aEIAV8N1MdemwB1EPF3RxBpmPtw8Kfc9DTcLl
+         ZkoQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWagsHsNQbqns7mdIDBMaHkSvDSDUlokgB7CzHo6qjt3kP4awQU4/cl8enLsud/+5nXN1u1AaQ0xweI6pw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPIrdw9443W29dCaQ/rrsg6lfrDfmh8DeaPaVFZoteJTwIcM9U
+	vixPTD2R3uu3Qgk+z5iu2ArKCArpW6p2Rm4eERfYwYCTFSNxT8btXVPx5jkTrDI=
+X-Gm-Gg: ASbGncu6SfPqabkT7g872Tws16yRnOwdnOhlk9hn5MMTH9+2WtKbfpQgbUDLTlmYwFL
+	h46j9xZGL1oWfEGj/teAhl6qNCF42QOly6ShGp9uQ52S9glelTXrrV/9GSMxPeTV9lG1Rv7IUW8
+	f2rf+wdIrKQPIm00fiYi+GfIeCNERj4IyDjBv/WtK99DRgKkZFa3UyiAwafmzV5N2S5kpAnQauD
+	bpPbc6In5MHz6kPrnLvqNEXcKLZZWZNCEQIuN2CZ2cpa8BKQvl0diPmUVup2P2MK3l20uF0quiV
+	C2fQOLrbUIT5xVzzyvrjS0nGMa5cuHjEoW49Dnz+EiOCpN0cldWlMA==
+X-Google-Smtp-Source: AGHT+IElD83yXdXLURLXF/axbPrNrrCeSAlJQC+eF2bcCRNhZkvyLSVVQgbNardWtBxjxy/EPmxOCw==
+X-Received: by 2002:a05:6000:1847:b0:391:456b:6ac8 with SMTP id ffacd0b85a97d-399739ca1camr1959945f8f.24.1742387419344;
+        Wed, 19 Mar 2025 05:30:19 -0700 (PDT)
+Received: from [192.168.1.247] ([145.224.67.123])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-397f2837e61sm15560737f8f.97.2025.03.19.05.30.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 05:30:19 -0700 (PDT)
+Message-ID: <2700171e-dbaa-4218-9b46-5d181f5afee7@linaro.org>
+Date: Wed, 19 Mar 2025 12:30:17 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQJibHmgcfwlBy49J8TQvpLbjGcZ7QJasif0slg38iA=
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKJsWRmVeSWpSXmKPExsWy7bCmuu61HbfSDRZusbZ4MG8bm8WaveeY
-	LOYfOcdqcfPATiaLI6eWMFm8nHWPzWLT42usFg9fhVtc3jWHzWLG+X1MFscWiFks2vqF3eLh
-	hz3sFkfOvGC2+L9nB7sDv8fOWXfZPTat6mTz2Lyk3qNvyypGj39Nc9k9Pm+SC2CLyrbJSE1M
-	SS1SSM1Lzk/JzEu3VfIOjneONzUzMNQ1tLQwV1LIS8xNtVVy8QnQdcvMATpYSaEsMacUKBSQ
-	WFyspG9nU5RfWpKqkJFfXGKrlFqQklNgUqBXnJhbXJqXrpeXWmJlaGBgZApUmJCdse/sUZaC
-	tcIVK/ZOZ2tg/M/fxcjJISFgIvFt6hy2LkYuDiGB3YwSi6eeYIRwPjFK/GtoY4dz9q+9xg7T
-	0tkxhRkisZNR4vythywQzgtGidf37rOCVLEJaEks6tsH1i4iMIlR4sX5C2AOs8A0JokjM18z
-	gVRxClhLnNt3FyjBwSEs4C+x41o1iMkioCrxerk/SAWvgKXEk/8dTBC2oMTJmU9YQGxmAW2J
-	ZQtfM0NcpCDx8+kyVpBWEQEriTk/VCBKxCWO/uwBO1RC4AqHxLePp1kh6l0krl77AmULS7w6
-	vgXqMymJl/1tULaHxMz1vVA1KRKvV51jgbDtJQ5cmcMCsotZQFNi/S59iLCsxNRT65gg9vJJ
-	9P5+wgQR55XYMQ/GVpb4+/oa1BhJiW1L37NPYFSaheSzWUg+m4XkhVkI2xYwsqxilEwtKM5N
-	Ty02LTDMSy2HR3hyfu4mRnB61vLcwXj3wQe9Q4xMHIyHGCU4mJVEeN2fXE8X4k1JrKxKLcqP
-	LyrNSS0+xGgKDO2JzFKiyfnADJFXEm9oYmlgYmZmZmJpbGaoJM7bvLMlXUggPbEkNTs1tSC1
-	CKaPiYNTqoFp5hfxD9FXU6rjy+cfsj5QmSAVtTiQacYWI2nGlEenpmcHfemZe6apYEXmtt0W
-	HulPL+azrr+8lOHq0p1NotYTrP7w8wtcq3+ZsOxA0dcfOy59VZy4J5f15YLYpx/m9+WcvvMo
-	5Mhuo4Tusude13z+fv7y+tCKBF6jbzf7f9/ep3exQvJTxvKc+YzOXwTkZmubnDnrFcXax3Xy
-	Gm9Lleweu/NWTryz7f5x9k64G/JAb99KtrbTFd07xSbqL1yVsaaka5+eJus1z7PNDrzrLy/e
-	xni47BaLq4pbloh6TrnqLdVL3I9UDKR4Dd83rNjx+pmK43FF40ubnPa92Kr5q+n8me2fV2/I
-	jH5j+uf3GYXFt5VYijMSDbWYi4oTASQT4B5YBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFIsWRmVeSWpSXmKPExsWy7bCSnG5ywM10g4WTdC0ezNvGZrFm7zkm
-	i/lHzrFa3Dywk8niyKklTBYvZ91js9j0+BqrxcNX4RaXd81hs5hxfh+TxbEFYhaLtn5ht3j4
-	YQ+7xZEzL5gt/u/Zwe7A77Fz1l12j02rOtk8Ni+p9+jbsorR41/TXHaPz5vkAtiiuGxSUnMy
-	y1KL9O0SuDIeLHzIWNAuXHGl7wRbA+NV/i5GTg4JAROJzo4pzF2MXBxCAtsZJba1vGaBSEhK
-	fGqeygphC0us/PecHaLoGaPErZ697CAJNgEtiUV9+8ASIgKzGCWO/JzCAuIwCyxgkvjQ+5cN
-	oqWHUWLmrMNgszgFrCXO7bsL1i4s4CvxeuE/pi5GDg4WAVWJ18v9QcK8ApYST/53MEHYghIn
-	Zz4BO4lZQFui92ErI4y9bOFrZojzFCR+Pl3GCjJGRMBKYs4PFYgScYmjP3uYJzAKz0IyaRaS
-	SbOQTJqFpGUBI8sqRtHUguLc9NzkAkO94sTc4tK8dL3k/NxNjODo1Arawbhs/V+9Q4xMHIyH
-	GCU4mJVEeN2fXE8X4k1JrKxKLcqPLyrNSS0+xCjNwaIkzquc05kiJJCeWJKanZpakFoEk2Xi
-	4JRqYLLiywj9uuZXc86pMJ4kD+WOyO8ZyQwBag1bJVY3aIrH8bYqTC2T8Z7cM+2/xVRZ/TP7
-	i6eYth9mnZH7wfzlpt86y+oVj4h7r8tmz7tYYfpl2sHntn/VJ0r3bz187tdHmSf2R/NVdL9e
-	eJo+O/79gchthd8SpH3M9q2tW7zR8N36yvJ939iXn/i784X+iS+8+xbeza6v9LfNCisVXVj8
-	Uu1iksykOVz9J9/2V+1RiRFONYlf5KfFdvktw6dasZLj3zt+s3h1MN+ZpvqT+4rhxav73TIn
-	7/b5n3Uh7M7v0g9vwo/KS+gnKnAK/mG4mPNmhp1+n/1aicVzb81l7Xt8J+atUslxsZ83ape3
-	ahxZaqfEUpyRaKjFXFScCAC2KsLaPQMAAA==
-X-CMS-MailID: 20250318105219epcas5p2658d27215c21f741a2ee59f52b178ecf
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250307045516epcas5p3b4006a5e2005beda04170179dc92ad16
-References: <CGME20250307045516epcas5p3b4006a5e2005beda04170179dc92ad16@epcas5p3.samsung.com>
-	<20250307044904.59077-1-swathi.ks@samsung.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/8] coresight: Convert tag clear function to take a
+ struct cs_access
+To: Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ Mike Leach <mike.leach@linaro.org>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, leo.yan@arm.com
+References: <20250318-james-coresight-claim-tags-v2-0-e9c8a9cde84e@linaro.org>
+ <20250318-james-coresight-claim-tags-v2-2-e9c8a9cde84e@linaro.org>
+ <cc68d43f-4719-4f57-a38c-fb5afe8d29cc@arm.com>
+Content-Language: en-US
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <cc68d43f-4719-4f57-a38c-fb5afe8d29cc@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
 
-> -----Original Message-----
-> From: Swathi K S <swathi.ks=40samsung.com>
-> Sent: 07 March 2025 10:19
-> To: krzk+dt=40kernel.org; linux-fsd=40tesla.com; robh=40kernel.org;
-> conor+dt=40kernel.org; richardcochran=40gmail.com;
-> alim.akhtar=40samsung.com
-> Cc: jayati.sahu=40samsung.com; swathi.ks=40samsung.com; linux-arm-
-> kernel=40lists.infradead.org; linux-samsung-soc=40vger.kernel.org;
-> devicetree=40vger.kernel.org; linux-kernel=40vger.kernel.org;
-> netdev=40vger.kernel.org; pankaj.dubey=40samsung.com;
-> ravi.patel=40samsung.com; gost.dev=40samsung.com
-> Subject: =5BPATCH v8 0/2=5D arm64: dts: fsd: Add Ethernet support for FSD=
- SoC
->=20
-> FSD platform has two instances of EQoS IP, one is in FSYS0 block and anot=
-her
-> one is in PERIC block. This patch series add required DT file modificatio=
-ns for
-> the same.
->=20
-> Changes since v1:
-> 1. Addressed the format related corrections.
-> 2. Addressed the MAC address correction.
->=20
-> Changes since v2:
-> 1. Corrected intendation issues.
->=20
-> Changes since v3:
-> 1. Removed alias names of ethernet nodes
->=20
-> Changes since v4:
-> 1. Added more details to the commit message as per review comment.
->=20
-> Changes since v5:
-> 1. Avoided inserting node in the end and inserted it in between as per
-> address.
-> 2. Changed the node label.
-> 3. Separating DT patches from net patches and posting in different branch=
-es.
->=20
-> Changes since v6:
-> 1. Addressed Andrew's review comment and removed phy-mode from .dtsi
-> to .dts
->=20
-> Changes since v7:
-> 1. Addressed Russell's review comment-Implemented clock tree setup in DT
->=20
+On 19/03/2025 12:00 pm, Suzuki K Poulose wrote:
+> On 18/03/2025 16:21, James Clark wrote:
+>> The self hosted claim tag will be reset on device probe in a later
+>> commit. We'll want to do this before coresight_register() is called so
+>> won't have a coresight_device and have to use cs_access instead.
+>>
+>> Also make them public and create locked and unlocked versions for
+>> later use.
+>>
+>> Signed-off-by: James Clark <james.clark@linaro.org>
+> 
+> minor nit:
+> 
+> The restructuring looks a bit confusing. Could we start with :
+> 
+> coresight_{set,clear}_self_claim_tag_unlocked in Patch 1. Rather
+> than rename what we renamed in patch 1 again here.
+> 
+> 
 
-Hi,=20
-The DT binding and driver patches corresponding to this patch is now reflec=
-ting in linux-next
-https://web.git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/dif=
-f/Documentation/devicetree/bindings/net/tesla,fsd-ethqos.yaml?id=3Df654ead4=
-682a1d351d4d780b1b59ab02477b1185
+I considered collapsing these two actually, would you be ok with that?
 
-Could you consider these DT file patches for review/merge or do I need to r=
-esend these?
+>> ---
+>>   drivers/hwtracing/coresight/coresight-core.c | 17 +++++++++++++----
+>>   include/linux/coresight.h                    |  3 ++-
+>>   2 files changed, 15 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/ 
+>> hwtracing/coresight/coresight-core.c
+>> index 3f1c996d668a..9ff601e2415a 100644
+>> --- a/drivers/hwtracing/coresight/coresight-core.c
+>> +++ b/drivers/hwtracing/coresight/coresight-core.c
+>> @@ -151,12 +151,21 @@ static inline void 
+>> coresight_set_self_claim_tag(struct coresight_device *csdev)
+>>       isb();
+>>   }
+>> -static inline void coresight_clear_self_claim_tag(struct 
+>> coresight_device *csdev)
+>> +void coresight_clear_self_claim_tag(struct csdev_access *csa)
+>>   {
+>> -    csdev_access_relaxed_write32(&csdev->access, 
+>> CORESIGHT_CLAIM_SELF_HOSTED,
+>> +    CS_UNLOCK(csa->base);
+> 
+> This looks to be hard coding MMIO based access ? Should we abstract it 
+> based on the csdev_access_** ?
+> 
+> 
+> Suzuki
+> 
+> 
 
--Swathi
+I did something similar earlier but it ended up being huge to do it 
+properly and I wasn't sure of the benefits so I deleted it. By 
+'properly' I mean change all of the CS_UNLOCK() calls to be abstracted 
+and delete etm4_cs_unlock() because CS_UNLOCK() would handle both. It 
+ends adding in an if and indirection for every lock/unlock for devices 
+that are never sysreg access anyway.
 
-> Swathi K S (2):
->   arm64: dts: fsd: Add Ethernet support for FSYS0 Block of FSD SoC
->   arm64: dts: fsd: Add Ethernet support for PERIC Block of FSD SoC
->=20
->  arch/arm64/boot/dts/tesla/fsd-evb.dts      =7C  20 ++++
->  arch/arm64/boot/dts/tesla/fsd-pinctrl.dtsi =7C 112 +++++++++++++++++++++
->  arch/arm64/boot/dts/tesla/fsd.dtsi         =7C  50 +++++++++
->  3 files changed, 182 insertions(+)
->=20
-> --
-> 2.17.1
+Because there's already this:
+
+static void etm4_cs_unlock(struct etmv4_drvdata *drvdata,
+			   struct csdev_access *csa)
+{
+	if (csa->io_mem)
+		CS_UNLOCK(csa->base);
+
+But yeah I can add the if into coresight_clear_self_claim_tag(), 
+although it technically doesn't do anything now because it's never 
+called by any devices that aren't MMIO. And then it makes 
+etm4_cs_unlock() stand out a bit because its not a core function when it 
+could be. But that's probably fine.
+
+
 
 
