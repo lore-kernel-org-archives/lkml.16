@@ -1,127 +1,123 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from lelvem-ot01.ext.ti.com (lelvem-ot01.ext.ti.com [198.47.23.234])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB62136B
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 06:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0CEC36B;
+	Wed, 19 Mar 2025 06:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.234
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742365494; cv=none; b=m8mkiXfRbkRlvUQaZjRnkB64UFSrFp9joqjZ4Li12fJET9oQdu9EkfytT9aQRw4RmZMHzZDV7Ow1H5z47N5l05/YL3jHJol/bpoFtHwXD5vCt40o6fGNzE9lMlVfB+ZbEhCNP7F8KJkoNNqut8Do6cn4jtUCswTMxPWL3Vdsbsw=
+	t=1742365570; cv=none; b=SvaGK3BZm4bdT/wgG9ubivqG+ahZzYJCKWN1O6/RiqyTWaKb6wwf9KcMczFiLhpoakZi1xMjEOHyOTbqgosg4o9vRuI+aBdUB+J0653iqaAiXTCrvY/YwZ2KzjBXhJ5R/KUK0mKtsrIEK9kkT1GHVOJbSpweIgbbtiVFMgAUDeM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742365494; c=relaxed/simple;
-	bh=lFbERSPbSEnNh3+vDj9uildzNeCQkCxCabQjIZINSps=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=N9Bum5KgMdxraVyXQ3QjOVv39JL9xQXW8KIwnUy3D454rHs4hAjwn+Mjdax8VVST46eM2O/TIMYrUjbbn5fu+KmegrS6ya72GUp8pigbAQn2m8QPFvwnvS83IhGAb9yCIr5ohbc4C/b45zL6PUF+zxVsPx2mSPlPCpEgtPfJOTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=e/YP5vnN; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742365570; c=relaxed/simple;
+	bh=U6SArNBHWS1YYTHhdyr6Rup9vaUAqNexq3y6l+RSFV8=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FMYDJpWAipFWEg6rdRpd9kixnpipkl2kNTf3b5U6b6JzPX0D2wGbktVWUDR9n8mSUqi0Y4ZQCS2XL75SMLEukCloo2imMAQV5fExk+QT2ak3Ej8uhW8BHTS79tIFuf/qxz41zYicPmYDeIXibsd/gh1FkbnftOUPypxoz4bD7XY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=FECVW/wH; arc=none smtp.client-ip=198.47.23.234
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="e/YP5vnN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742365493; x=1773901493;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=lFbERSPbSEnNh3+vDj9uildzNeCQkCxCabQjIZINSps=;
-  b=e/YP5vnN4lHPPUz6kxbcXef/qeFcVmgxfpBVGojqLe0HsVcMIQRsOOQG
-   v9SUSPglahttoB7q/+uSozXTMzKvAkyMC9R0WY1bCJfM3DAEMeTBh4f5+
-   lBePJ0NJ46RfXU5e96PUrfqldkk+C8e0H/KMh/vYSOvQWE20ZeVDsolsz
-   xGeH4eGYG/I/7XoJT0KNq+RL9Af073cZn9L1sfh3/fpeaPj1RurMFjR8R
-   ETw/dljbFIUMgYi+4/bwIutVt81G31gF1C2wcqW4toEVxlo/ZWmO/6m1g
-   /bx1P+sPNbM7InAyy222O3vlkxKsGlyzRytumotNdVulLLPX+Fd50NiZX
-   g==;
-X-CSE-ConnectionGUID: tHfSRCoqT+O0R0Hy7lJXuA==
-X-CSE-MsgGUID: 99Bc4X6pSyGs82eUP3dPxg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43427787"
-X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="43427787"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 23:24:52 -0700
-X-CSE-ConnectionGUID: tL7e0yGFTuOZpRIEJNvNBA==
-X-CSE-MsgGUID: aYE253qiSlW0P5A7BxENrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="122413645"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by orviesa010.jf.intel.com with ESMTP; 18 Mar 2025 23:24:51 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tumrA-000ER0-0p;
-	Wed, 19 Mar 2025 06:24:48 +0000
-Date: Wed, 19 Mar 2025 14:23:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Shijith Thotton <sthotton@marvell.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Bjorn Helgaas <helgaas@kernel.org>,
-	Vamsi Attunuru <vattunuru@marvell.com>
-Subject: drivers/pci/hotplug/octep_hp.c:312:53: warning: '%d' directive
- output may be truncated writing between 1 and 10 bytes into a region of size
- 7
-Message-ID: <202503191406.iySrpFbN-lkp@intel.com>
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="FECVW/wH"
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+	by lelvem-ot01.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52J6PaLY2867113
+	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Mar 2025 01:25:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1742365536;
+	bh=wv/JMa59iPeha8ecw51y5UYHYXQ3yaH9RGx+mD3DOpc=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=FECVW/wHrZKI1FDW/kX1vkt0dr8LLLpKGdETf309/1kTHOrO4GqcSoKZGBnf6O5gw
+	 ozqbDvJ08pOS3xeoh8sJtJhMtqpRSm1fCwC3EDKPIZtXpFxRgk2b51Zb531APUBGBi
+	 E7axGjYlhdUY9fsgS3CxQGia9KMipVgWSETY4HHU=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52J6PaWK000874
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 19 Mar 2025 01:25:36 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
+ Mar 2025 01:25:35 -0500
+Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 19 Mar 2025 01:25:36 -0500
+Received: from localhost (uda0492258.dhcp.ti.com [10.24.72.113])
+	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52J6PZnl106908;
+	Wed, 19 Mar 2025 01:25:35 -0500
+Date: Wed, 19 Mar 2025 11:55:34 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Peter Chen <peter.chen@cixtech.com>
+CC: Siddharth Vadapalli <s-vadapalli@ti.com>, <lpieralisi@kernel.org>,
+        <kw@linux.com>, <manivannan.sadhasivam@linaro.org>, <robh@kernel.org>,
+        <bhelgaas@google.com>, <vigneshr@ti.com>, <kishon@kernel.org>,
+        <cassel@kernel.org>, <wojciech.jasko-EXT@continental-corporation.com>,
+        <thomas.richard@bootlin.com>, <bwawrzyn@cisco.com>,
+        <linux-pci@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+        <srk@ti.com>
+Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
+Message-ID: <20250319062534.ollh3s5t7znf5zqs@uda0492258>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <Z9pffxeXHVOsoi4O@nchen-desktop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
+In-Reply-To: <Z9pffxeXHVOsoi4O@nchen-desktop>
+X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   81e4f8d68c66da301bb881862735bd74c6241a19
-commit: e434e54d3ffcd17eeadfcf3cf434bc1dff36daff PCI: hotplug: Add OCTEON PCI hotplug controller driver
-date:   4 months ago
-config: arm-allmodconfig (https://download.01.org/0day-ci/archive/20250319/202503191406.iySrpFbN-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503191406.iySrpFbN-lkp@intel.com/reproduce)
+On Wed, Mar 19, 2025 at 02:09:03PM +0800, Peter Chen wrote:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503191406.iySrpFbN-lkp@intel.com/
+Hello Peter,
 
-All warnings (new ones prefixed by >>):
+> On 25-03-07 16:01:24, Siddharth Vadapalli wrote:
+> > EXTERNAL EMAIL
+> >
+> > Hello,
+> >
+> > This series enables support to build the PCIe Cadence Controller drivers
+> > and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
+> > Modules. The motivation for this series is that PCIe is not a necessity
+> > for booting the SoC, due to which it doesn't have to be a built-in
+> > module. Additionally, the defconfig doesn't enable the PCIe Cadence
+> > Controller drivers and the PCI J721E driver, due to which PCIe is not
+> > supported by default. Enabling the configs as of now (i.e. without this
+> > series) will result in built-in drivers i.e. a bloated Linux Image for
+> > everyone who doesn't have the PCIe Controller.
+> 
+> If the user doesn't enable PCIe controller device through DTS/ACPI,
+> that's doesn't matter.
 
-   drivers/pci/hotplug/octep_hp.c: In function 'octep_hp_pci_probe':
->> drivers/pci/hotplug/octep_hp.c:312:53: warning: '%d' directive output may be truncated writing between 1 and 10 bytes into a region of size 7 [-Wformat-truncation=]
-     snprintf(intr->name, sizeof(intr->name), "octep_hp_%d", type);
-                                                        ^~
-   drivers/pci/hotplug/octep_hp.c:312:43: note: directive argument in the range [0, 2147483646]
-     snprintf(intr->name, sizeof(intr->name), "octep_hp_%d", type);
-                                              ^~~~~~~~~~~~~
-   drivers/pci/hotplug/octep_hp.c:312:2: note: 'snprintf' output between 11 and 20 bytes into a destination of size 16
-     snprintf(intr->name, sizeof(intr->name), "octep_hp_%d", type);
-     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Linux Image for arm64 systems built using:
+arch/arm64/configs/defconfig
+will not have support for the Cadence PCIe Controller and the PCIe J721e
+driver, because these configs aren't enabled.
 
-Kconfig warnings: (for reference only)
-   WARNING: unmet direct dependencies detected for GET_FREE_REGION
-   Depends on [n]: SPARSEMEM [=n]
-   Selected by [m]:
-   - RESOURCE_KUNIT_TEST [=m] && RUNTIME_TESTING_MENU [=y] && KUNIT [=m]
+> 
+> > @@ -209,6 +209,12 @@ CONFIG_NFC=m
+> >  CONFIG_NFC_NCI=m
+> >  CONFIG_NFC_S3FWRN5_I2C=m
+> >  CONFIG_PCI=y
+> > +CONFIG_PCI_J721E=m
+> > +CONFIG_PCI_J721E_HOST=m
+> > +CONFIG_PCI_J721E_EP=m
+> > +CONFIG_PCIE_CADENCE=m
+> > +CONFIG_PCIE_CADENCE_HOST=m
+> > +CONFIG_PCIE_CADENCE_EP=m
+> 
+> The common Cadence configuration will be select if the glue layer's
+> configuration is select according to Kconfig.
+> 
+> Please do not set common configuration as module, some user may need
+> it as build-in like dw's. Considering the situation, the rootfs is at
+> NVMe.
 
+The common configuration at the moment is "DISABLED" i.e. no support for
+the Cadence Controller at all. Which "user" are you referring to? This
+series was introduced since having the drivers built-in was pushed back at:
+https://lore.kernel.org/linux-arm-kernel/20250122145822.4ewsmkk6ztbeejzf@slashing/
 
-vim +312 drivers/pci/hotplug/octep_hp.c
-
-   297	
-   298	static int octep_hp_request_irq(struct octep_hp_controller *hp_ctrl,
-   299					enum octep_hp_intr_type type)
-   300	{
-   301		struct pci_dev *pdev = hp_ctrl->pdev;
-   302		struct octep_hp_intr_info *intr;
-   303		int irq;
-   304	
-   305		irq = pci_irq_vector(pdev, OCTEP_HP_INTR_VECTOR(type));
-   306		if (irq < 0)
-   307			return irq;
-   308	
-   309		intr = &hp_ctrl->intr[type];
-   310		intr->number = irq;
-   311		intr->type = type;
- > 312		snprintf(intr->name, sizeof(intr->name), "octep_hp_%d", type);
-   313	
-   314		return devm_request_irq(&pdev->dev, irq, octep_hp_intr_handler,
-   315					IRQF_SHARED, intr->name, hp_ctrl);
-   316	}
-   317	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Regards,
+Siddharth.
