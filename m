@@ -1,64 +1,100 @@
-Received: from localhost.localdomain (unknown [210.12.148.147])
-	by smtp.subspace.kernel.org (Postfix) with SMTP id 4300C1AB50D;
-	Wed, 19 Mar 2025 10:51:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.12.148.147
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C9AA1AB50D;
+	Wed, 19 Mar 2025 10:52:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742381493; cv=none; b=PC2re5qzHsqrjK0LhKCfti83rlfzHVuxLWFZ9c1dq/2JsTOtk0KwZWsHeb9u1Pe3RvsOWs+YnUxSXkfPjv3jjqDmqje96x/4qJ0HR7BGz+KNvo/dSRQV++5C/KBWJmPszUQxuwQw/GK57Y3N0kia5HH3QEZ43vUl98jtSfRaaX4=
+	t=1742381554; cv=none; b=on8WxoteXQKqEoYTyHui8drkCqSo9HR70rNKDlJ7OKJVJ2cI6qCjOMqDCm+/HybCva9Vy3RnZMElJyN2cC5zmuolvX7F1YPy4ChV1V5ACuHJrM8/UdjXS9MoscPyeJHZl3W/W3/1LZyxeSYlmPKwMIzC/LGQd5gTYHmmBvstqyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742381493; c=relaxed/simple;
-	bh=gYSCdIi8TyNW1DwAcRwNxoVGP7/ycEQBkqAOmDQNm2Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=duQxkfSFi8tiydPPVp+on1/+6aLqQIPNHfgEfHAf3S1SVOBHbUhjQJjOBXRDxLdGZoT1d6ZYzDVHrhHVQuCDPURtdaIDOshapKRlNROwBPJz47elu9JNWyijxW1HKMaaEnyeSQz3UxC6gsozFLXwRRCklMVsIARRkgUf08MsgEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=didiglobal.com; spf=none smtp.mailfrom=localhost.localdomain; arc=none smtp.client-ip=210.12.148.147
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=didiglobal.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=localhost.localdomain
-Received: by localhost.localdomain (Postfix, from userid 601)
-	id 16D971C5914A; Wed, 19 Mar 2025 18:44:14 +0800 (CST)
-From: chentaotao <chentaotao@didiglobal.com>
-To: a.hindborg@kernel.org
-Cc: boqun.feng@gmail.com,
-	bjorn3_gh@protonmail.com,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	chentao325@qq.com,
-	chentaotao <chentaotao@didiglobal.com>
-Subject: [PATCH] rust: block: Remove unnecessary comma in introduction
-Date: Wed, 19 Mar 2025 18:44:12 +0800
-Message-Id: <20250319104412.50625-1-chentaotao@didiglobal.com>
-X-Mailer: git-send-email 2.39.3 (Apple Git-146)
+	s=arc-20240116; t=1742381554; c=relaxed/simple;
+	bh=+5eTk3CDk04yPhTVw10VH3x7l3f52TYJyRYILkkWgC8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IA9kwcJBeLww+6Lio/qt0IsMMtnWt13PFqYnMFiRGwzkqynhDIjNLz7vh+IhZ2onVhrwVOmZBC6+J9IHP6uMB4TlL5qt9Th0OhNPL7oWB9Xp3/UPcTzL6njkUet9m//zHCcfjKZfWD7jwRhBhk5lfQShtNZa8ZKrFz/huxv3Row=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cT+MkH9s; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT+MkH9s"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfdc2c8c9so25888515e9.2;
+        Wed, 19 Mar 2025 03:52:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742381552; x=1742986352; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=gkfEnVzrLtFpzAFUzBpVtGSfYkdoQzRCMy1gAhvRfu0=;
+        b=cT+MkH9sLhSDuyQGwBaAMQcry+YWAToe9ibchiZ/2S55PtdcsjIxpJUkN2tdCkfkAP
+         U1qq20lNbWjRDurGFAIJGpouhbXiPDNFtCQEsmH6MwsNmLd7Wu8qsfgOBaFnkrFFZH1G
+         nEr2ngpP66kHleFwXwkdZtNhInIYHQMs7rC1l9gQZCK+mtVgyjFBMpEWyiUjbCyErajM
+         cWgyLM3wGqsogK9/2xroLzYr9/fpWcg4ZticicVkExBStAqlGA+r+ZYQUGXrPYyhaCmL
+         NmWCbOl93ql8a0h48dQI8heaWlxZjs2UAiqPa19s1Up5GvtpK5nCpRFL9oM0OQmz6bBX
+         sU9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742381552; x=1742986352;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=gkfEnVzrLtFpzAFUzBpVtGSfYkdoQzRCMy1gAhvRfu0=;
+        b=hRo0QyFGu92Z6jIBNvjhQZox14DnvcybpMnUI9hm2nqndkl8TxUE5hsQJXZ7d/nof1
+         bdCv9YR7SWCE8i7cmcZ8FfSIqlQOko1sdyu7CvKCgHvzkJbX6sgwtMreATyY0kuEhRD1
+         PANe3/R7fi/DvUSWE7v7Q7n8RCi4JmhTTyuqpTatQmUs709DjNiczrN7yQEfRyFAe/UA
+         rNxS70qADRqRVFBNfp1YVFdrSEZP0tZIYpdD5IVpcu0l7QxDsKQtMoBW/Xk/3LjTx4gF
+         BdmUF1Fz+ZfXqx+hMgEgH54taiUp4+Ogy7FG+edR56JFynxq80GxQKjWC+0jjVLBBNDw
+         R60w==
+X-Forwarded-Encrypted: i=1; AJvYcCUuw/VBOqZzoI/9/w9+F0/thCWaJeBq9AepOWVLMXBCObcgEW7cCZYtdpGzxJq+LNPAXQThDEg0jpmnCP0=@vger.kernel.org, AJvYcCV4zl3TZ9JBkEGg9UEzOXjJwvf1Sc7gjDUDuTT5yG0GSFzgdnvyhw7JYC3TEzz/uhC5PQJ1n7eU+9E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEdn4iSBCDV6wZgLJ1ntjmmQa2ltQD+sY3Bi3+13QB0tvPkCi0
+	/yXhdN44mRD0JDsMut1cyW+KDymtRHkr5PpohW7qY2I7caa3mUU/VAJjDLNQ
+X-Gm-Gg: ASbGncuMBr5b6K0ciTev1vO0Mz2AG3Apne5CficaNFBieqc7+7tNH5IFdCSsLXsBh/Z
+	rqXaNvW4Ilr7hH20eDh6saNY98HzCM2B4u3qZg0/6DZkTqiZPneqaRGEd8p5hBiilWzjWOAS6Ty
+	kK8OG3znD21yGE+740HWxem2LlaVEOm25cfEWD909oKv9e9LjfM7lkwuhe23Th74Kb6dAFpAgyG
+	KXoKcPG+wqCQtJ9uC+8iPBSHKUu6gsacbYmLDu4WRTDxNeQX5ZPs7XdXH4shHsuL9Z/zsRtVjqH
+	WRWQsD6gHR1cZXcMitzpbzTWvuywaR0LCnHAelivRXmjPw==
+X-Google-Smtp-Source: AGHT+IEd9/0IBL8t/0Qgn7szi4bB58I7aKT97sS07YD26qyjHn0iSKVmrOiygpfZeBPPbAcam7oG7w==
+X-Received: by 2002:a05:600c:1d85:b0:43d:cc9:b09d with SMTP id 5b1f17b1804b1-43d4384218amr20157315e9.20.1742381551448;
+        Wed, 19 Mar 2025 03:52:31 -0700 (PDT)
+Received: from localhost ([194.120.133.58])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d43f43cbasm15017845e9.9.2025.03.19.03.52.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 03:52:31 -0700 (PDT)
+From: Colin Ian King <colin.i.king@gmail.com>
+To: Sebastian Reichel <sre@kernel.org>,
+	linux-pm@vger.kernel.org
+Cc: kernel-janitors@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH][next] power: supply: rk817: remove redundant null check on node
+Date: Wed, 19 Mar 2025 10:51:53 +0000
+Message-ID: <20250319105153.775155-1-colin.i.king@gmail.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 
-The comma after "methods" was not needed and has been removed for
-better readability and correctness.
+The pointer null is being null checked immediately after it has
+been assigned at the start of the function and not changed afterwards.
+The subsequent null check on node is redudant and can be removed.
 
-Signed-off-by: chentaotao <chentaotao@didiglobal.com>
+Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
 ---
- rust/kernel/block/mq.rs | 2 +-
+ drivers/power/supply/rk817_charger.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/rust/kernel/block/mq.rs b/rust/kernel/block/mq.rs
-index fb0f393c1..ee8f34f40 100644
---- a/rust/kernel/block/mq.rs
-+++ b/rust/kernel/block/mq.rs
-@@ -23,7 +23,7 @@
- //! IO requests are passed to the driver as [`kernel::types::ARef<Reques=
-t>`]
- //! instances. The `Request` type is a wrapper around the C `struct requ=
-est`.
- //! The driver must mark end of processing by calling one of the
--//! `Request::end`, methods. Failure to do so can lead to deadlock or ti=
-meout
-+//! `Request::end` methods. Failure to do so can lead to deadlock or tim=
-eout
- //! errors. Please note that the C function `blk_mq_start_request` is im=
-plicitly
- //! called when the request is queued with the driver.
- //!
---=20
-2.34.1
+diff --git a/drivers/power/supply/rk817_charger.c b/drivers/power/supply/rk817_charger.c
+index 945c7720c4ae..1251022eb052 100644
+--- a/drivers/power/supply/rk817_charger.c
++++ b/drivers/power/supply/rk817_charger.c
+@@ -1088,7 +1088,7 @@ static int rk817_charger_probe(struct platform_device *pdev)
+ 	rk817_bat_calib_vol(charger);
+ 
+ 	pscfg.drv_data = charger;
+-	pscfg.fwnode = node ? &node->fwnode : NULL;
++	pscfg.fwnode = &node->fwnode;
+ 
+ 	/*
+ 	 * Get sample resistor value. Note only values of 10000 or 20000
+-- 
+2.49.0
 
