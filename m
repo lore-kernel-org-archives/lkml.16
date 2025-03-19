@@ -1,135 +1,257 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C87620D4F6
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5182255226
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:40:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742384430; cv=none; b=B06f82Ou7OrhSbtf7xmE6O5l9+bOs6p4SeDL3C8wp8CMk6mlNm8RQpNS38VS49ABXU45uRGxSso6NPffyW0aDpW3m55XT0I//gW0una5+45+NrjgOJ3rQibnsZJRHZXyINoozUOx4ABshfPwEaZwjfiujtIytUez1CkEiVaJ01Q=
+	t=1742384434; cv=none; b=sA9DZWdPXvxKnEhL/GnrC/JV3mV+KD9JYKuttgiTYg6kzG9EgAjy4HJEjga0lDkM63na/9+AUYHlW+Zph9596N7hp+qHczsUH2/8Mtwb2Le4xuN+3t4NucS+EcyC+XpqEAnRvg4h5uNdSPbk0vBUh12KOEX1DZMZaINn9MxRW+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742384430; c=relaxed/simple;
-	bh=Z7OKUwlor6Y9CPPSkGccOzDohs/lbs3P6mrHMhcYAUM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=thzd6aS66ev3FkcHtMU/pSzqO0gJuuR5wBxewD1Xkl+WSNaDIoglLj3fmDwpYmM+DdzvKX5qKoKuo144wASBEjNLd2m6OFMSiT9tlQOi5PQJ3oZFNpbufEeQPVd2HVhQrSpdbf+zu1TnB8iwp/ApupRskpMegnqwv+9X2hi30vU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WT8nvTEn; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1742384434; c=relaxed/simple;
+	bh=GvQSOwF1xH0FZlOKPakW6KhIuzxRRubgM1HAP8GrOps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UxQ0x7qpXWJnkKfYoAHNS3m9ACdTS3qIj+RC/29latGtjXEoSUOFZfWKZXIxkDUTGBEDfn4SncyWHhrZ4Dm3r7RA2BB7SUS6ONKtzR9T3dX6nK9xDRsK605DJJYv8j8B23nSrw/iLFm0rFCjnoTaeDJAWZE420q1SOwerIzgsYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wIwkpfst; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WT8nvTEn"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cf257158fso29751445e9.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:40:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wIwkpfst"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2ed007aacso1319853166b.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:40:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742384425; x=1742989225; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iEGmhoMrp6tKSJUS9RACSKaL0Pf/gr6G5NruMelMYn4=;
-        b=WT8nvTEnMDF9DrH2snseexcEhWibpZJoIDjVVpVTUG6SkYotLedk41by5WfmF/Q5b3
-         immeZAi6epe0b0FJVxEZ7oIwvs6ekaSYFk8oqqfDxVQ2SFEQTUKvlLm4YfVPHaBQMh10
-         rR/Bf81mnQjlB46Po0oqmD+hkBPF68XpNaZo16zPMtVlZvpwlkoevsPnRsUH5T2VKgAR
-         0v1+ToM4+Zo58iTFULN97AWoLD9P2f3KsN+bc6bI139HHw/Pc4ttsxK/YoeMlIEUnJ2W
-         WlLs/iwpAtdNgMbq+bW3xZZSPbkOJW6R4p6BxEHIjBsIF5Lssm0qK0uptQaCNbJGOy1K
-         /MPw==
+        d=linaro.org; s=google; t=1742384431; x=1742989231; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZobRQyE82PrcfyAci98JM5F/Bf80o+9zGJoT1dqPqSU=;
+        b=wIwkpfst8xvsi0xwuml5lUSENs46QiU9//MB/rzqvsvjGQtH+Wk/m29V2voCwNvwhJ
+         M2QMZFJEoDxbbLdn96ebkitvTDSSp7XfSYSCHCUrmEg0dDfEL15Gtq8yn0q+1bn/4/IY
+         S5jt7vfB+O2R03HPml0U4iqLzPUpNsoUCkOSw8Iry6yM7uHhQ9qbhv/VMhPwlsNZUGc4
+         pdfmkZEv+6hayPuKo+SQ3TJm/oxKWE2R3rY5gQ3YKmMWqs+NYfy85BrNA9Nw0N04QuGX
+         kz0y7is+mKrUxD8eFvpZjgimUcV72JW8SJpnNGqqMSHuP/GPK8ZD8HeM9UJyyRTKvtt6
+         D4uw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742384425; x=1742989225;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1742384431; x=1742989231;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=iEGmhoMrp6tKSJUS9RACSKaL0Pf/gr6G5NruMelMYn4=;
-        b=rPZ9zyAIr7dwo7wqTfsOhoL3rTBkGQqKpZLPePKDgaZogeX6vRTMHkpZ6Mv1M7iHu3
-         iM08dRqgXQwKdn2wh039m6iA4nN3PINNXilHq5kyPahFRQ6VxA3UAOTK4UvlRHcTsgjq
-         UOI2xxVDmttCBKgfK0+dq5f8rNAl17MZzUd2XABGbA31zK9wCXgmWkx0LsbpVnUqiH3y
-         oYO6H3+IHl/423XzvmlvfDM+K4vTwjyTFz54VmeDrMd5wPhG2dOV/QSDryl6gn4Ho3FL
-         hZISKhNGnq5lYgFPs0pCqj42rblmLglFz5e/eTKCwJn33O4a4MysbLwSJabmztpZhB4a
-         xjkg==
-X-Forwarded-Encrypted: i=1; AJvYcCW3lo3I8AfwVoIV8eemgWi5GrGwL5miY3lgz9dBnc2KbgnXliporw076CqF5IiGxY4jb5lC6lPx5+vTmr4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxXw9yC+ZN5KMKmIOl5pDmUjrAa0/d4BA8D5rqcqR+Qacdem3Bk
-	mfyr7gBNeRH02skO1sX/yZxETCOqiYPf/cnQadhp1jzrn33ddJ5BXxgnOmnJQ2k=
-X-Gm-Gg: ASbGncvRhAhh/NlDtwxsiqZhTTQhV84d9oGLYYxXUUBFaK/7H+xQ6j2ulyRVsWm3T06
-	Bbc82eFZtSE2eGMRLgzs4pF+Pc5aKd6SDfWWMyqeDWHBL8xPOcAhuJr4tguo9NMzqmKMk9sxivw
-	qMeSVxWdQiYHaGdywL6w/jbbSwXyelCY7Znq1rYcDBgZE/HWYenhMddp5oRsf1pYFUAAYP+4sAq
-	12p0yeOKl+wu0/B5pEz9IGpq67BIzMmtFvUDHJSmtBijFSuyAW8ew5wAkAKgN9qQZdQGVQ/48n2
-	0wXNBkdezXPWzOSrI+T0jHSTv6QS37WYn4gZhnBcwuW5npA=
-X-Google-Smtp-Source: AGHT+IHErJqbLloSDBbOuIMsGZc52pXdp8yVfNacWZgluboER0gYnZa1nw5E4AGXF/1lLUTa3d8FAw==
-X-Received: by 2002:a05:600c:358c:b0:43c:f513:9591 with SMTP id 5b1f17b1804b1-43d437c1a31mr21789045e9.14.1742384425235;
-        Wed, 19 Mar 2025 04:40:25 -0700 (PDT)
-Received: from pop-os.lan ([145.224.67.123])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f58aa0sm16163745e9.21.2025.03.19.04.40.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 04:40:24 -0700 (PDT)
-From: James Clark <james.clark@linaro.org>
-To: linux-perf-users@vger.kernel.org
-Cc: James Clark <james.clark@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] libperf: Don't remove -g when EXTRA_CFLAGS are used
-Date: Wed, 19 Mar 2025 11:40:09 +0000
-Message-Id: <20250319114009.417865-1-james.clark@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        bh=ZobRQyE82PrcfyAci98JM5F/Bf80o+9zGJoT1dqPqSU=;
+        b=VUQGA0aSJOddnvspq4YStGbSO6N4uzE2rRpDYf05cEDwUF67RiQCkWF7L/9IbuqPnM
+         z3ue+vQ6a4PvABITIVVxPUxSzB/Xp7wdcLkD+yblmpmXBpNAynLlN9f656HO79NcB9w+
+         eePk3CjsdbTk9W9XBnZKTQb1T5PeztzwwT46ecfv/8WH6g+nkr4D/v1ovadXF+A4wOiq
+         uE/NyyUO2BygoM2EwlrLeVnperf0nDw4stJDHyUU+OFlwzbjOZvOVhKUqOUrukd52hvU
+         nP8Ke9RwsOHd7HYwmhdODGkdgIrh/Gs22uHu9oH3H+JZTvs91kBwodYAqdUSGHIFQwKw
+         k1Ug==
+X-Forwarded-Encrypted: i=1; AJvYcCVsb5vM7jqr2LhODkoGFoDD6NWMYLe8fidq04ZFByfj/X3qZWkMHlafJa6DqCUegRKM5vIVmizhr+LhP6I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcwRv4MPsU+6Bfnw0Lw+7m1/laW2VjYB4F06cYRU4Sm1dUmgw9
+	pMd6ucaIAgSYAYojbIygoYL7yDYgpvk8o5svHIAkdnO0qSfzdETQbEdQNOyqFHzyRpgfyJ9+u6R
+	AzNcrhm+qjNqSpJUYdtS2FQddv7S7ydrMfrWbng==
+X-Gm-Gg: ASbGncsRN9mZAT+hnHimyNUYXUGzM03ALHXJ61eHGqcxGnn5bxiRK7sBwl8qwT+t8ZB
+	sTmHtdFrsXSoAdk3WsSERiAFTqKjS9rDv+I2wRqz5/zO1RBcpsDW7Wo0JD36dwjrnpmn5vJlfoi
+	oFnoblt2tr/GM0Wi+8aBrm98xB9jI=
+X-Google-Smtp-Source: AGHT+IFS/PPGTdYtEdh2OXEgwTgKoJAR66wmbxIQaI6A3hPCkyHmNSnjXRFkqxtLCFGoBNAmk+plQIPi/A81gnmm/sY=
+X-Received: by 2002:a17:907:60c9:b0:abf:5fa3:cf96 with SMTP id
+ a640c23a62f3a-ac3b7c38f43mr238032566b.14.1742384430960; Wed, 19 Mar 2025
+ 04:40:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <4B7BC3E6E291E6F2+20250317101438.25650-1-luoqiu@kylinsec.com.cn>
+In-Reply-To: <4B7BC3E6E291E6F2+20250317101438.25650-1-luoqiu@kylinsec.com.cn>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Wed, 19 Mar 2025 12:39:52 +0100
+X-Gm-Features: AQ5f1JoTSBQDmnilXX4f2ulXbMJwEZU9MPFIEYIubx8tpTqEivhTG9yRp9CEfB8
+Message-ID: <CAPDyKFqxezZ0zXhKzRewLB4OdrXU0Sc9DFHJwJ=Jozbjmo9UWQ@mail.gmail.com>
+Subject: Re: [PATCH] memstick: rtsx_usb_ms: Fix slab-use-after-free in rtsx_usb_ms_drv_remove
+To: Luo Qiu <luoqiu@kylinsec.com.cn>
+Cc: Maxim Levitsky <maximlevitsky@gmail.com>, Alex Dubov <oakad@yahoo.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Al Viro <viro@zeniv.linux.org.uk>, linux-mmc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-When using EXTRA_CFLAGS, for example "EXTRA_CFLAGS=-DREFCNT_CHECKING=1",
-this construct stops setting -g which you'd expect would not be affected
-by adding extra flags. Additionally, EXTRA_CFLAGS should be the last
-thing to be appended so that it can be used to undo any defaults. And no
-condition is required, just += appends to any existing CFLAGS and also
-appends or doesn't append EXTRA_CFLAGS if they are or aren't set.
+On Mon, 17 Mar 2025 at 11:21, Luo Qiu <luoqiu@kylinsec.com.cn> wrote:
+>
+> This fixes the following crash:
+>
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in rtsx_usb_ms_poll_card+0x159/0x200 [rtsx_usb_ms]
+> Read of size 8 at addr ffff888136335380 by task kworker/6:0/140241
+>
+> CPU: 6 UID: 0 PID: 140241 Comm: kworker/6:0 Kdump: loaded Tainted: G            E      6.14.0-rc6+ #1
+> Tainted: [E]=UNSIGNED_MODULE
+> Hardware name: LENOVO 30FNA1V7CW/1057, BIOS S0EKT54A 07/01/2024
+> Workqueue: events rtsx_usb_ms_poll_card [rtsx_usb_ms]
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x51/0x70
+>  print_address_description.constprop.0+0x27/0x320
+>  ? rtsx_usb_ms_poll_card+0x159/0x200 [rtsx_usb_ms]
+>  print_report+0x3e/0x70
+>  kasan_report+0xab/0xe0
+>  ? rtsx_usb_ms_poll_card+0x159/0x200 [rtsx_usb_ms]
+>  rtsx_usb_ms_poll_card+0x159/0x200 [rtsx_usb_ms]
+>  ? __pfx_rtsx_usb_ms_poll_card+0x10/0x10 [rtsx_usb_ms]
+>  ? __pfx___schedule+0x10/0x10
+>  ? kick_pool+0x3b/0x270
+>  process_one_work+0x357/0x660
+>  worker_thread+0x390/0x4c0
+>  ? __pfx_worker_thread+0x10/0x10
+>  kthread+0x190/0x1d0
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork+0x2d/0x50
+>  ? __pfx_kthread+0x10/0x10
+>  ret_from_fork_asm+0x1a/0x30
+>  </TASK>
+>
+> Allocated by task 161446:
+>  kasan_save_stack+0x20/0x40
+>  kasan_save_track+0x10/0x30
+>  __kasan_kmalloc+0x7b/0x90
+>  __kmalloc_noprof+0x1a7/0x470
+>  memstick_alloc_host+0x1f/0xe0 [memstick]
+>  rtsx_usb_ms_drv_probe+0x47/0x320 [rtsx_usb_ms]
+>  platform_probe+0x60/0xe0
+>  call_driver_probe+0x35/0x120
+>  really_probe+0x123/0x410
+>  __driver_probe_device+0xc7/0x1e0
+>  driver_probe_device+0x49/0xf0
+>  __device_attach_driver+0xc6/0x160
+>  bus_for_each_drv+0xe4/0x160
+>  __device_attach+0x13a/0x2b0
+>  bus_probe_device+0xbd/0xd0
+>  device_add+0x4a5/0x760
+>  platform_device_add+0x189/0x370
+>  mfd_add_device+0x587/0x5e0
+>  mfd_add_devices+0xb1/0x130
+>  rtsx_usb_probe+0x28e/0x2e0 [rtsx_usb]
+>  usb_probe_interface+0x15c/0x460
+>  call_driver_probe+0x35/0x120
+>  really_probe+0x123/0x410
+>  __driver_probe_device+0xc7/0x1e0
+>  driver_probe_device+0x49/0xf0
+>  __device_attach_driver+0xc6/0x160
+>  bus_for_each_drv+0xe4/0x160
+>  __device_attach+0x13a/0x2b0
+>  rebind_marked_interfaces.isra.0+0xcc/0x110
+>  usb_reset_device+0x352/0x410
+>  usbdev_do_ioctl+0xe5c/0x1860
+>  usbdev_ioctl+0xa/0x20
+>  __x64_sys_ioctl+0xc5/0xf0
+>  do_syscall_64+0x59/0x170
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>
+> Freed by task 161506:
+>  kasan_save_stack+0x20/0x40
+>  kasan_save_track+0x10/0x30
+>  kasan_save_free_info+0x36/0x60
+>  __kasan_slab_free+0x34/0x50
+>  kfree+0x1fd/0x3b0
+>  device_release+0x56/0xf0
+>  kobject_cleanup+0x73/0x1c0
+>  rtsx_usb_ms_drv_remove+0x13d/0x220 [rtsx_usb_ms]
+>  platform_remove+0x2f/0x50
+>  device_release_driver_internal+0x24b/0x2e0
+>  bus_remove_device+0x124/0x1d0
+>  device_del+0x239/0x530
+>  platform_device_del.part.0+0x19/0xe0
+>  platform_device_unregister+0x1c/0x40
+>  mfd_remove_devices_fn+0x167/0x170
+>  device_for_each_child_reverse+0xc9/0x130
+>  mfd_remove_devices+0x6e/0xa0
+>  rtsx_usb_disconnect+0x2e/0xd0 [rtsx_usb]
+>  usb_unbind_interface+0xf3/0x3f0
+>  device_release_driver_internal+0x24b/0x2e0
+>  proc_disconnect_claim+0x13d/0x220
+>  usbdev_do_ioctl+0xb5e/0x1860
+>  usbdev_ioctl+0xa/0x20
+>  __x64_sys_ioctl+0xc5/0xf0
+>  do_syscall_64+0x59/0x170
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+>
+> Last potentially related work creation:
+>  kasan_save_stack+0x20/0x40
+>  kasan_record_aux_stack+0x85/0x90
+>  insert_work+0x29/0x100
+>  __queue_work+0x34a/0x540
+>  call_timer_fn+0x2a/0x160
+>  expire_timers+0x5f/0x1f0
+>  __run_timer_base.part.0+0x1b6/0x1e0
+>  run_timer_softirq+0x8b/0xe0
+>  handle_softirqs+0xf9/0x360
+>  __irq_exit_rcu+0x114/0x130
+>  sysvec_apic_timer_interrupt+0x72/0x90
+>  asm_sysvec_apic_timer_interrupt+0x16/0x20
+>
+> Second to last potentially related work creation:
+>  kasan_save_stack+0x20/0x40
+>  kasan_record_aux_stack+0x85/0x90
+>  insert_work+0x29/0x100
+>  __queue_work+0x34a/0x540
+>  call_timer_fn+0x2a/0x160
+>  expire_timers+0x5f/0x1f0
+>  __run_timer_base.part.0+0x1b6/0x1e0
+>  run_timer_softirq+0x8b/0xe0
+>  handle_softirqs+0xf9/0x360
+>  __irq_exit_rcu+0x114/0x130
+>  sysvec_apic_timer_interrupt+0x72/0x90
+>  asm_sysvec_apic_timer_interrupt+0x16/0x20
+>
+> The buggy address belongs to the object at ffff888136335000
+>  which belongs to the cache kmalloc-2k of size 2048
+> The buggy address is located 896 bytes inside of
+>  freed 2048-byte region [ffff888136335000, ffff888136335800)
+>
+> The buggy address belongs to the physical page:
+> page: refcount:0 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x136330
+> head: order:3 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+> flags: 0x17ffffc0000040(head|node=0|zone=2|lastcpupid=0x1fffff)
+> page_type: f5(slab)
+> raw: 0017ffffc0000040 ffff888100042f00 ffffea000417a000 dead000000000002
+> raw: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
+> head: 0017ffffc0000040 ffff888100042f00 ffffea000417a000 dead000000000002
+> head: 0000000000000000 0000000000080008 00000000f5000000 0000000000000000
+> head: 0017ffffc0000003 ffffea0004d8cc01 ffffffffffffffff 0000000000000000
+> head: 0000000000000008 0000000000000000 00000000ffffffff 0000000000000000
+> page dumped because: kasan: bad access detected
+>
+> Memory state around the buggy address:
+>  ffff888136335280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff888136335300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> >ffff888136335380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>                    ^
+>  ffff888136335400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>  ffff888136335480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ==================================================================
+>
+> Fixes: 6827ca573c03 ("memstick: rtsx_usb_ms: Support runtime power management")
+>
+> Signed-off-by: Luo Qiu <luoqiu@kylinsec.com.cn>
 
-It's not clear why DEBUG=1 is required for -g in Perf when in libperf
-it's always on, but I don't think we need to change that behavior now
-because someone may be depending on it.
+Applied for next and by adding a stable tag, thanks!
 
-Signed-off-by: James Clark <james.clark@linaro.org>
----
- tools/lib/perf/Makefile | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+Kind regards
+Uffe
 
-diff --git a/tools/lib/perf/Makefile b/tools/lib/perf/Makefile
-index 3a9b2140aa04..478fe57bf8ce 100644
---- a/tools/lib/perf/Makefile
-+++ b/tools/lib/perf/Makefile
-@@ -54,13 +54,6 @@ endif
- 
- TEST_ARGS := $(if $(V),-v)
- 
--# Set compile option CFLAGS
--ifdef EXTRA_CFLAGS
--  CFLAGS := $(EXTRA_CFLAGS)
--else
--  CFLAGS := -g -Wall
--endif
--
- INCLUDES = \
- -I$(srctree)/tools/lib/perf/include \
- -I$(srctree)/tools/lib/ \
-@@ -70,11 +63,12 @@ INCLUDES = \
- -I$(srctree)/tools/include/uapi
- 
- # Append required CFLAGS
--override CFLAGS += $(EXTRA_WARNINGS)
--override CFLAGS += -Werror -Wall
-+override CFLAGS += -g -Werror -Wall
- override CFLAGS += -fPIC
- override CFLAGS += $(INCLUDES)
- override CFLAGS += -fvisibility=hidden
-+override CFLAGS += $(EXTRA_WARNINGS)
-+override CFLAGS += $(EXTRA_CFLAGS)
- 
- all:
- 
--- 
-2.34.1
 
+> ---
+>  drivers/memstick/host/rtsx_usb_ms.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/memstick/host/rtsx_usb_ms.c b/drivers/memstick/host/rtsx_usb_ms.c
+> index 6eb892fd4d34..3878136227e4 100644
+> --- a/drivers/memstick/host/rtsx_usb_ms.c
+> +++ b/drivers/memstick/host/rtsx_usb_ms.c
+> @@ -813,6 +813,7 @@ static void rtsx_usb_ms_drv_remove(struct platform_device *pdev)
+>
+>         host->eject = true;
+>         cancel_work_sync(&host->handle_req);
+> +       cancel_delayed_work_sync(&host->poll_card);
+>
+>         mutex_lock(&host->host_mutex);
+>         if (host->req) {
+> --
+> 2.48.1
+>
