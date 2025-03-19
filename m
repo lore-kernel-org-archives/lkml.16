@@ -1,84 +1,89 @@
-Received: from mail.netfilter.org (mail.netfilter.org [217.70.190.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2572916F858;
-	Wed, 19 Mar 2025 23:44:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.190.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B9C290F;
+	Wed, 19 Mar 2025 23:46:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742427871; cv=none; b=aHxqJU3H2oQQSj05buOk/OSw5Qsn0U1ddAGN5+fMX5ee5R3hVsjqZ+EsO9f3DXplNXkfYYbYYGrHjyG/PiSpeAsU9e1MEPhMZVsm+fQY+oV5roV/QZ9B/rn0UykdHqg5fE75s200hObbSKjqUqKj/b62Rzj6PWnBmTAJ4JTZUyo=
+	t=1742428019; cv=none; b=PxkXQHXjLqwgLnV0zT848wI2eg2CWvCNcdTm4W6TLhk92IHRYySx+g9k30ipIf3bBKtkoSyb0whLTDnA2E4vAZ5yHheYr0scP3jAKLtcNq3ZkoA5cOhjyGwW26KHooLxacg3yN7Tqz5MPTvoktmm0eiTuZXEsVbJgjbEUX+yWR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742427871; c=relaxed/simple;
-	bh=8O4QrfRpB6IDq3ko+6A55O4k2nnuAuaY7R5+TSfdkmw=;
+	s=arc-20240116; t=1742428019; c=relaxed/simple;
+	bh=798Ih5yzvMQU6lYpe+ZBQ5F9xOjwj5zqAJyQfdmFkkw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dCIbRBP6/x5kfouybNoKw0F40AHL95dbywpf6ociu0n9h3Gk+6AQNXYgjzeI3LA3oPC83RX89E1Hfnzu/KlvymBZNfZoSTASnVwqnw1bsaq9FLfy/hOvvcucewCM1hyBWkxuaBka/o0vfmL+5pjcGMelkMQcgochzJnXz9t/RX0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org; spf=pass smtp.mailfrom=netfilter.org; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=ctVkYzJO; dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b=YG9j2QdD; arc=none smtp.client-ip=217.70.190.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=netfilter.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=netfilter.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=jkpY/LcSxqVLwIFQswOZ8SiMcXqDNlflDM/gc9X5sPi39SvYVaYLuMlIp+PQpoW7yfCANBz2qQv+76MXxs/86sdYljWd0H9iI7avRuZ9sFdbwS2S3o3HbIDfSLjUPTFPlwiJ2mOgkMEMrePGL6jERvHTBoMnbhO8naEKbOXNGcI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RXo2K4+1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="ctVkYzJO";
-	dkim=pass (2048-bit key) header.d=netfilter.org header.i=@netfilter.org header.b="YG9j2QdD"
-Received: by mail.netfilter.org (Postfix, from userid 109)
-	id 069AD603AB; Thu, 20 Mar 2025 00:44:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1742427851;
-	bh=GNBfAL5tBesE6D+Wz3Kjvd8+408rgskBVZfEyIzPa+s=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RXo2K4+1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8994C4CEE4;
+	Wed, 19 Mar 2025 23:46:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742428017;
+	bh=798Ih5yzvMQU6lYpe+ZBQ5F9xOjwj5zqAJyQfdmFkkw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ctVkYzJOo9GYyWmIgvXN4v3gYHJek32Gns8BuDnlM6bgtREngTvE2e0fNsNjQS8+d
-	 PVQaQLo0KHjU5N59siBqwmTYQSNSbtqvB4tp8E0tLFBRb3ci5H7GF0Ja4BH7RiZFLD
-	 0nWRhgkeJ9Rp1+iQ1qyLs0nuSmWV1H5tCdcTyP5zYyQZnk5yja+KJLQdmdZNRi3hdz
-	 JF/js3byxkRNREgBoGCXh65ETboQucvyLMaUv4705lTeVXjCYav/iVYY9ZjfZ9pvHL
-	 H0aE+UxHy2avJ4YJvTdK+5SFvcrG+aj8URxydmpv9e57V4WV1uxf9D9wuF3JBFZXEJ
-	 8wVxQA826KWnw==
-X-Spam-Level: 
-Received: from netfilter.org (mail-agni [217.70.190.124])
-	by mail.netfilter.org (Postfix) with ESMTPSA id D6D7A603AB;
-	Thu, 20 Mar 2025 00:44:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=netfilter.org;
-	s=2025; t=1742427849;
-	bh=GNBfAL5tBesE6D+Wz3Kjvd8+408rgskBVZfEyIzPa+s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=YG9j2QdDiW4VVFcqnNZ0P/sKJMImrtfoWq4inwhUv26jYyYMQpJdaguKvVZuUFLQc
-	 InzrOLE3peM+8sICbLzYBVkE7AsCk+DArG+fO1uc6n6LZ1GLMrBZFUPMVpo3BbE+0+
-	 ZNi0PevxgO8m0H1ChwQCwCfV5yFdEWlJem3pcNcg5UaNXx1kHj/ow4HBohlEWBWAxc
-	 uHwko22XM52Ufu5EUuMZSkTHzhU5NUja84dDHOt9vsLTyAjWCV6aiJr8J5Ylwqmcup
-	 I4ZtV94FVeH7MozjpHm3WLUiOK6od65baNH9fZhl9fHJetUy3q1sYcdUPnyY6Yn1l/
-	 THedQAJl+298A==
-Date: Thu, 20 Mar 2025 00:44:06 +0100
-From: Pablo Neira Ayuso <pablo@netfilter.org>
-To: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
-Cc: netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	"David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, cgroups@vger.kernel.org,
-	Jan Engelhardt <ej@inai.de>, Florian Westphal <fw@strlen.de>
-Subject: Re: [PATCH v2] netfilter: Make xt_cgroup independent from net_cls
-Message-ID: <Z9tWxkg4UQA-hQGi@calendula>
-References: <20250305170935.80558-1-mkoutny@suse.com>
- <xn76sakdk5zai3o4puz4x25eevw4jxhh7v5uqkbollnlbuh4ly@vziavmudqqlv>
+	b=RXo2K4+1q8pOnw93gz1wbyn2rt+YDESBMFwbGIAgzp4Brt8q/Ev4rrGM0FDqiz7uI
+	 Lo920Hegde800RPe2WKDD6PaZDgKn9RBRfnqClmFnKDt/5eG7/Z7ZZdebS08npa1vf
+	 UZbu5/MuNYbq9Q1RU1hkSNSC+pX2+a92NGZovSzMtu2xNsg3qqqriWfwj48uL18kST
+	 5O9M96ELoSAt/76B+q23BPobREeERb00zi67M9xh0DkcttFYpJc2iO72GDBB3fYpNb
+	 86FIoxeG7SyGQDitofKQhfq7TQMQUV3TKq74vuLkBx0IU2P9P6e34WGyHCGO4TBLJn
+	 5OUIKH6Zz1Hng==
+Date: Thu, 20 Mar 2025 00:46:53 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Romain Gantois <romain.gantois@bootlin.com>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>, 
+	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Derek Kiernan <derek.kiernan@amd.com>, 
+	Dragan Cvetic <dragan.cvetic@amd.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Kory Maincent <kory.maincent@bootlin.com>, 
+	Cosmin Tanislav <demonsingur@gmail.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-media@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>
+Subject: Re: [PATCH v9 0/9] misc: Support TI FPC202 dual-port controller
+Message-ID: <avat6oilygpkcngtpuyentyvjqifav4f3zzvrtnsdybfl6uqja@i2surd4ywu73>
+References: <20250306-fpc202-v9-0-2779af6780f6@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <xn76sakdk5zai3o4puz4x25eevw4jxhh7v5uqkbollnlbuh4ly@vziavmudqqlv>
+In-Reply-To: <20250306-fpc202-v9-0-2779af6780f6@bootlin.com>
 
-On Wed, Mar 19, 2025 at 06:35:47PM +0100, Michal Koutný wrote:
-> Hello.
-> 
-> On Wed, Mar 05, 2025 at 06:09:35PM +0100, Michal Koutný <mkoutny@suse.com> wrote:
-> ...
-> > Changes from v1 (https://lore.kernel.org/r/20250228165216.339407-1-mkoutny@suse.com)
-> > - terser guard (Jan)
-> > - verboser message (Florian)
-> > - better select !CGROUP_BPF (kernel test robot)
-> 
-> Are there any more remarks or should I resend this?
+Hi,
 
-No need to resend, thanks.
+> Romain Gantois (9):
+>       dt-bindings: misc: Describe TI FPC202 dual port controller
+>       media: i2c: ds90ub960: Replace aliased clients list with address list
+>       media: i2c: ds90ub960: Protect alias_use_mask with a mutex
+>       i2c: use client addresses directly in ATR interface
+>       i2c: move ATR alias pool to a separate struct
+>       i2c: rename field 'alias_list' of struct i2c_atr_chan to 'alias_pairs'
+>       i2c: support per-channel ATR alias pools
+>       i2c: Support dynamic address translation
+>       misc: add FPC202 dual port controller driver
+> 
+>  .../devicetree/bindings/misc/ti,fpc202.yaml        |  94 ++++
+>  MAINTAINERS                                        |   7 +
+>  drivers/i2c/i2c-atr.c                              | 483 ++++++++++++++-------
+>  drivers/media/i2c/ds90ub913.c                      |   9 +-
+>  drivers/media/i2c/ds90ub953.c                      |   9 +-
+>  drivers/media/i2c/ds90ub960.c                      |  49 ++-
+>  drivers/misc/Kconfig                               |  12 +
+>  drivers/misc/Makefile                              |   1 +
+>  drivers/misc/ti_fpc202.c                           | 438 +++++++++++++++++++
+>  include/linux/i2c-atr.h                            |  54 ++-
+>  10 files changed, 965 insertions(+), 191 deletions(-)
+
+how are we going to take this? I think we are at the last bits of
+reviews and it's time to plan merging this series.
+
+Do we need to wait for media and then take i2c? Or shall wee take
+everything via i2c.
+
+I had a look at the whole series and looks quite all right to me.
+
+Andi
