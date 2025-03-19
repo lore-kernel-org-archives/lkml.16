@@ -1,123 +1,107 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE7FC1D54D6;
-	Wed, 19 Mar 2025 18:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7321DF747;
+	Wed, 19 Mar 2025 18:11:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742407695; cv=none; b=obqMWd1Jg4Y6TtIOweTvTcBCMb2BQwkHVKAfCBBFgpsFI0mcb6bKuzfBpRbd0qgucEdc9Rkq4+RSUGrFPV0eyPjhpAemOBkZ4WgQrw9oqxBzsiuMJZwL4hreQUkqoxb9G8YOR29K3SSw+YDJCynzzbSOBnRD0SY/nSk+lkO+gwE=
+	t=1742407871; cv=none; b=hmBzFo/HsqyeIsz3tOC+hI87SJfdHcALVDUBGz6qYBp/l/E8LsCoUKSe9+gXKCLnSBn2jKxiZlN5QaCU6NXdtr+lIEA1YNcVgAbgUt6jAv5vumW9aqzncTeK40uQdXMBm4Hgg/uv2D+/C/t0+cRMRzefffY+L9tU39b/yzAvFV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742407695; c=relaxed/simple;
-	bh=zqnzsxiP89SgvtjiQFzuFFa7snDt35vKEJJvRGx0NfM=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ivEGgB1/6BUH7RqQM61ZgR8Y5l+wsL9NLajymHZY7AnV8I8/FgT4svFEZh3DJk/88bVZpnsHEDIxPyumJ+eLIq0PldDN9z2I+wPniPafN0ROW0tPrtoEPFNwCJEr4WUCdNemLOSDuYmaWh6KlaBCgmsYw6vLOV7pL5z3fI8/rJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dl4I27XB; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dl4I27XB"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 94D7644549;
-	Wed, 19 Mar 2025 18:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742407685;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=YZPIFVslvH9l06L8tnbNSF2qR6hGErPXH8fPWX2MidI=;
-	b=dl4I27XBcpPofhry0JbmcrWGxoLtOpTw8nB68wQqjPsZjOJzq6kON/ApeSqIo8db8178LJ
-	s38hr0Exy3OFWsHR3pOAeQryWaCIqF2ZDWcxpdF600XrKrdpbbetFk4zQSCBwJatepGd1k
-	wWJNwyBl8vl4OjBroZN9BiEmWuYLYDTGuq1NpCFdoDRazNL9tNoI/wZVzCKS+0Er1qidnW
-	z+cKIwqKybBt3d1s9XttfTzmjzSxtySNInLM4fV6yMIb13yDO14AEVFihhA6k+bhKtkmr9
-	a80p/rXc+Z5DjVYf5OS7WLHxHy7sX30Mt2NXmBwB3x5MItCsiYPmPHQ+RLw5Eg==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Petr Mladek <pmladek@suse.com>,  David Laight
- <david.laight.linux@gmail.com>,  Steven Rostedt <rostedt@goodmis.org>,
-  Rasmus Villemoes <linux@rasmusvillemoes.dk>,  Sergey Senozhatsky
- <senozhatsky@chromium.org>,  Jonathan Corbet <corbet@lwn.net>,  John
- Ogness <john.ogness@linutronix.de>,  Andrew Morton
- <akpm@linux-foundation.org>,  Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>,  linux-doc@vger.kernel.org,
-  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/3] hexdump: Allow skipping identical lines
-In-Reply-To: <Z9rzy9WQcy_MgH9v@smile.fi.intel.com> (Andy Shevchenko's message
-	of "Wed, 19 Mar 2025 18:41:47 +0200")
-References: <20250319-perso-hexdump-v3-0-a6ba3a9f3742@bootlin.com>
-	<20250319-perso-hexdump-v3-2-a6ba3a9f3742@bootlin.com>
-	<Z9rzy9WQcy_MgH9v@smile.fi.intel.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 19 Mar 2025 19:08:04 +0100
-Message-ID: <87tt7oyjuj.fsf@bootlin.com>
+	s=arc-20240116; t=1742407871; c=relaxed/simple;
+	bh=EM+vNe873hc7WJcks8qH/tKBrTh+jdJpimnSyJPkSTo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B7ynSoyXujo7G/6LAtBSbvxND2D+MgeDW5Bfzj3NSU72UJfEimEC2iC17j02Q2BzhX8NiJ2iakyMlY3+IRcaKdnTWP+A6l7CVNqKznF6TiY831rhthgJWuSZOHcMGHJAHCU1BTH8cn56Rl6mSh2X9bGU5zCevDdL61OHRZQ5PZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0305C4CEE4;
+	Wed, 19 Mar 2025 18:11:04 +0000 (UTC)
+Date: Wed, 19 Mar 2025 18:11:02 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Jason Gunthorpe <jgg@nvidia.com>
+Cc: Oliver Upton <oliver.upton@linux.dev>, Marc Zyngier <maz@kernel.org>,
+	Ankit Agrawal <ankita@nvidia.com>,
+	"joey.gouly@arm.com" <joey.gouly@arm.com>,
+	"suzuki.poulose@arm.com" <suzuki.poulose@arm.com>,
+	"yuzenghui@huawei.com" <yuzenghui@huawei.com>,
+	"will@kernel.org" <will@kernel.org>,
+	"ryan.roberts@arm.com" <ryan.roberts@arm.com>,
+	"shahuang@redhat.com" <shahuang@redhat.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"david@redhat.com" <david@redhat.com>,
+	Aniket Agashe <aniketa@nvidia.com>, Neo Jia <cjia@nvidia.com>,
+	Kirti Wankhede <kwankhede@nvidia.com>,
+	"Tarun Gupta (SW-GPU)" <targupta@nvidia.com>,
+	Vikram Sethi <vsethi@nvidia.com>, Andy Currid <acurrid@nvidia.com>,
+	Alistair Popple <apopple@nvidia.com>,
+	John Hubbard <jhubbard@nvidia.com>, Dan Williams <danw@nvidia.com>,
+	Zhi Wang <zhiw@nvidia.com>, Matt Ochs <mochs@nvidia.com>,
+	Uday Dhoke <udhoke@nvidia.com>, Dheeraj Nigam <dnigam@nvidia.com>,
+	Krishnakant Jaju <kjaju@nvidia.com>,
+	"alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+	"sebastianene@google.com" <sebastianene@google.com>,
+	"coltonlewis@google.com" <coltonlewis@google.com>,
+	"kevin.tian@intel.com" <kevin.tian@intel.com>,
+	"yi.l.liu@intel.com" <yi.l.liu@intel.com>,
+	"ardb@kernel.org" <ardb@kernel.org>,
+	"akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+	"gshan@redhat.com" <gshan@redhat.com>,
+	"linux-mm@kvack.org" <linux-mm@kvack.org>,
+	"ddutile@redhat.com" <ddutile@redhat.com>,
+	"tabba@google.com" <tabba@google.com>,
+	"qperret@google.com" <qperret@google.com>,
+	"seanjc@google.com" <seanjc@google.com>,
+	"kvmarm@lists.linux.dev" <kvmarm@lists.linux.dev>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH v3 1/1] KVM: arm64: Allow cacheable stage 2 mapping using
+ VMA flags
+Message-ID: <Z9sItt8BIgvbBY8M@arm.com>
+References: <87tt7y7j6r.wl-maz@kernel.org>
+ <SA1PR12MB7199B320DAE42A8D7038A78EB0D32@SA1PR12MB7199.namprd12.prod.outlook.com>
+ <8634fcnh0n.wl-maz@kernel.org>
+ <Z9h98RhunemcFhhz@arm.com>
+ <86wmcmn0dp.wl-maz@kernel.org>
+ <20250318125527.GP9311@nvidia.com>
+ <Z9nJ42PllG8a7AY7@linux.dev>
+ <20250318230909.GD9311@nvidia.com>
+ <Z9pryQwy2iwa2bpJ@linux.dev>
+ <20250319170429.GK9311@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeeitdduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufgjfhgffffkgggtsehttdertddtredtnecuhfhrohhmpefoihhquhgvlhcutfgrhihnrghluceomhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephfelkedvveffleeuhfeigfdvvefhgfejgffghfeiteegteeiudegfedtjeehkeefnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhepmhhiqhhuvghlrdhrrgihnhgrlhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepuddvpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkoheslhhinhhugidrihhnthgvlhdrtghomhdprhgtphhtthhopehpmhhlrgguvghksehsuhhsvgdrtghomhdprhgtphhtthhopegurghvihgurdhlrghighhhthdrlhhinhhugiesghhmrghilhdrtghomhdprhgtphhtthhopehrohhsthgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtoheplhhinhhugiesrhgrshhmuhhsvhhil
- hhlvghmohgvshdrughkpdhrtghpthhtohepshgvnhhoiihhrghtshhkhiestghhrhhomhhiuhhmrdhorhhgpdhrtghpthhtoheptghorhgsvghtsehlfihnrdhnvghtpdhrtghpthhtohepjhhohhhnrdhoghhnvghssheslhhinhhuthhrohhnihigrdguvg
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319170429.GK9311@nvidia.com>
 
+On Wed, Mar 19, 2025 at 02:04:29PM -0300, Jason Gunthorpe wrote:
+> On Wed, Mar 19, 2025 at 12:01:29AM -0700, Oliver Upton wrote:
+> > You have a very good point that KVM is broken for cacheable PFNMAP'd
+> > crap since we demote to something non-cacheable, and maybe that
+> > deserves fixing first. Hopefully nobody notices that we've taken away
+> > the toys...
+> 
+> Fixing it is either faulting all access attempts or mapping it
+> cachable to the S2 (as this series is trying to do)..
 
->>  For printing small buffers (up to 64 bytes long) as a hex string with a
->>  certain separator. For larger buffers consider using
->> -:c:func:`print_hex`.
->
-> Instead of fixing this (see also comment in previous patch), just add the text
-> like
->
-> :c:func:`print_hex` is  especially useful since duplicated lines can be skipped
-> automatically to reduce the overhead with the
-> ``DUMP_SKIP_IDENTICAL_LINES`` flag.
+As I replied earlier, it might be worth doing both - fault on !FWB
+hardware (or rather reject the memslot creation), cacheable S2
+otherwise.
 
-Why are you bothered here? I am sorry but this part of the review is
-absolutely pointless. I have no words to emphasize how high the
-nitpicking level is. Please refrain yourself.
+> > I'm less worried about recovery and more focused on userspace being
+> > able to understand what happened. Otherwise we may get folks complaining
+> > about the ioctl failing "randomly" on certain machines.
+> 
+> Even today something like qemu doesn't know that VFIO has created a
+> cachable mmap, so it would need a bunch more work to feed everything
+> through as proposed here.
 
->> +:c:func:`print_hex`, especially since duplicated lines can be
->> +skipped automatically to reduce the overhead with the
->> +``DUMP_SKIP_IDENTICAL_LINES`` flag.
->
-> Also, can  we also put a sub name spaces to the flags, like for HEX/ASCII
->
-> DUMP_DATA_HEX
-> DUMP_DATA_ASCII
+I came to the same conclusion, qemu wouldn't be able to pass any
+KVM_MEMORY_* flag to request cacheable since it doesn't know what
+attributes it got from VFIO. You need a side-channel communication
+between the host VFIO driver and KVM. With Ankit's proposal, that's the
+Stage 1 MMU attributes for the qemu mapping.
 
-They just refer to the way the data is dumped, so "data" is in the name,
-that's true. The fact that they share the same namespace is fortunate
-but not super relevant either. I am following the hints discussed in v2
-regarding the naming, I am not too attached to these, but they felt
-correct, so I use them.
-
-> This SKIP  will start a new sub name space.
-
-Yes. And?
-
-I would have probably chosen a common name space from day 1 if I was
-creating these now, but they are already two enums named
-"DUMP_PREFIX". I guess we all agree it would be stupid to prefix all
-enums "DUMP_PREFIX" anyway? And because you disgusted me from attempting
-brave tree-wide changes, I will not rename them.
-
->
-> ...
->
->>  #include <linux/errno.h>
->>  #include <linux/kernel.h>
->>  #include <linux/minmax.h>
->
->> +#include <linux/string.h>
->>  #include <linux/export.h>
->
-> It's more natural to put it here, with given context it makes more order
-> (speaking of alphabetical one).
-
-If I learned something on these mailing lists, it is that what is
-natural for me might not be for others. The alphabetical order is not
-respected. You already pointed that in your first review, so I chose
-another place which felt more relevant... to me.
-e, k, m, s, u. This is the alphabetical order. export.h is not at the
-correct place, I am very sorry.
+-- 
+Catalin
