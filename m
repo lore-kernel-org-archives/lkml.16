@@ -1,108 +1,121 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E65525525D;
-	Wed, 19 Mar 2025 11:03:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CA225486C;
+	Wed, 19 Mar 2025 11:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382218; cv=none; b=lFX/6ehQHezSBEMvoWdsRYJgrg7ZXC5VG3dguMRNIbncEDgPMXFeJI9GyX7fPW18K+R2dAF3njJEhBMoRnzwoF8Evy7/qRxyQ9EaPrVo157C7hik+UU+QfvSW3/NilzIrAyr/Ltx9S7O+O9z/pcRg4kyqPudwAD2eNY9qNbyc0I=
+	t=1742382218; cv=none; b=Bjgjf7OxmrQwPcgmt7OUcwrKWK+qvtFzB73zzC0aGK2scxjD3xB4W+VxkiOks7nhb83DGRWEAOYRobCeaEIY9BgEOIqDVrAcprik+pCDuX1i7lmvOFT6PcEKxnbBapGtTbpGYjZbq8eJXE81Zd530FH/+IsFC9EjgMjXlY5JB9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742382218; c=relaxed/simple;
-	bh=lKUf/h1VI2diDMSKRn5tNfzE9XWMaQ+GwoKqkPkh6e8=;
+	bh=frhnKgyXX0lt9hU1oPOza0xV+Ey6P5hV8wr2dhNQH0w=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=rkCR6S6X/IMj6DWObpYG6/C3agwLOQ1C9RUhinoNupVcYhf69PjAnSd5NnbmMBgIJY7f/5t7c+aULBLmqZqxud9Ct76ztE+J9ZJQ1zBhjIrDeMpas+MRU6GWJ6H/cmW1MhYG5CeYUYBEGITl0a6R9OpbG4EYOiYMiXA4jCCzblE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pKoXDmni; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=OVm4IELg; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=N5zQWgUtqg87PbcH9rq+Qw7qT52aFOuoIBRPOUao5zbQPgv4LDJM0kt9gZVIRRbFa3LWcAyvlUp6KeG9LsFORzLGByvIXihnq7DqcgGwsYxAwHvSqv+cbfVXjLlY9QHfje8p+fiy3XAbu9pKKIDdObxDdC1P8uRUm9+I6hvunmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=RxwsHMym; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=0k9qNsqt; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pKoXDmni";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="OVm4IELg"
-Date: Wed, 19 Mar 2025 11:03:34 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="RxwsHMym";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="0k9qNsqt"
+Date: Wed, 19 Mar 2025 11:03:33 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382215;
+	s=2020; t=1742382214;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s8fvicAPx4Fjx3mEITneEdKlHOqTmXEGQAk7KfajmHo=;
-	b=pKoXDmniczTPtjrEG1ROIgr+BXaa5RGml5srvw9oU4ibfCQORgqgOwSOpX8shLZARYA+d5
-	U/AczQ0Wiu5DkNRISN9ZsiTYyDFGcT/FbvkXjd/6XNgnyKn3zhC22flDx+KSSjbhwp7ECv
-	vT45YUtXtXXu8cXJkOfESMntvoDs6GHaLuhjdZkmElZWsAutvNkFu1tz105rKMsqd6zBSl
-	0s7GNjRPSRlGEylETmFN2kO8Lw7VbMHfvhPrOZD7VheKDrwC8ZmjsLQ573Bgmlhknr0ZIM
-	R1F6MWg72oj6yyXu4pCjhQUm045F0tVXsJq0pa6pvvHZoaAleb3CTRPuZn2Tcw==
+	bh=rRIQrW9JMzYoqAi67GhamZ7ctSU1A92Fr86SwjUUZ2g=;
+	b=RxwsHMymAvhAfnZYCz8ZAPr5yxhdATuoYZU9u5e7RREyIRdN1Awyunr5L/nX0taC5qzR6D
+	tbmIgL1eBlY+8Ab94Aa0EG5cipBZxPpY1/ItnId1DBCMRRk/LLIkcOqeuRpaT82k6oqyyu
+	P3XSpER+idwna2Le+UKkIAD11GHcDLVtJQHJUP85rfgcPOil8q+pH44KxnmWydBkWIUwEC
+	tAV6cNrX5C9Bm6eTnqAFTprhutaraX8jOv6LVUKulh+U2xT/upg+XvL44nbtkp87a/SPEb
+	2lbKJVbObBGwaczbjuKreAxxZJtPrOWWZeOx6bL0sW/qkNXlRRYtYLjAMhnsyQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382215;
+	s=2020e; t=1742382214;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s8fvicAPx4Fjx3mEITneEdKlHOqTmXEGQAk7KfajmHo=;
-	b=OVm4IELgpaHayGPWd9yyTvVT8EKcPcUdzHcw7bcGSJtXtTpUT4WpwMRDKleMJe0Q4wgLOg
-	QVT7PZSBcPoIiBBw==
-From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
+	bh=rRIQrW9JMzYoqAi67GhamZ7ctSU1A92Fr86SwjUUZ2g=;
+	b=0k9qNsqtg9lLr4S1sVGHw9xXsJldxj4JavPCKzrfZPx3czSquwVvQnZ7uvFF3XMsljTu3X
+	O3ochbJ5ecRaAbCQ==
+From: "tip-bot2 for Uros Bizjak" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/stackprotector/64: Only export
- __ref_stack_chk_guard on CONFIG_SMP
-Cc: Ingo Molnar <mingo@kernel.org>, Brian Gerst <brgerst@gmail.com>,
- Ard Biesheuvel <ardb@kernel.org>, Uros Bizjak <ubizjak@gmail.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250123190747.745588-8-brgerst@gmail.com>
-References: <20250123190747.745588-8-brgerst@gmail.com>
+Subject: [tip: x86/core] x86/hweight: Use ASM_CALL_CONSTRAINT in inline asm()
+Cc: Uros Bizjak <ubizjak@gmail.com>, Ingo Molnar <mingo@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>, Nathan Chancellor <nathan@kernel.org>,
+ Nick Desaulniers <ndesaulniers@google.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250312123905.149298-2-ubizjak@gmail.com>
+References: <20250312123905.149298-2-ubizjak@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238221499.14745.17308702689554900125.tip-bot2@tip-bot2>
+Message-ID: <174238221362.14745.9141293901413354657.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     91d5451d97ce35cbd510277fa3b7abf9caa4e34d
-Gitweb:        https://git.kernel.org/tip/91d5451d97ce35cbd510277fa3b7abf9caa=
-4e34d
-Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Wed, 12 Mar 2025 12:48:49 +01:00
+Commit-ID:     194a613088a8c9dae300dfb08433287cee803e8d
+Gitweb:        https://git.kernel.org/tip/194a613088a8c9dae300dfb08433287cee803e8d
+Author:        Uros Bizjak <ubizjak@gmail.com>
+AuthorDate:    Wed, 12 Mar 2025 13:38:44 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
 CommitterDate: Wed, 19 Mar 2025 11:26:58 +01:00
 
-x86/stackprotector/64: Only export __ref_stack_chk_guard on CONFIG_SMP
+x86/hweight: Use ASM_CALL_CONSTRAINT in inline asm()
 
-The __ref_stack_chk_guard symbol doesn't exist on UP:
+Use ASM_CALL_CONSTRAINT to prevent inline asm() that includes call
+instruction from being scheduled before the frame pointer gets set
+up by the containing function. This unconstrained scheduling might
+cause objtool to print a "call without frame pointer save/setup"
+warning. Current versions of compilers don't seem to trigger this
+condition, but without this constraint there's nothing to prevent
+the compiler from scheduling the insn in front of frame creation.
 
-  <stdin>:4:15: error: =E2=80=98__ref_stack_chk_guard=E2=80=99 undeclared her=
-e (not in a function)
-
-Fix the #ifdef around the entry.S export.
-
+Signed-off-by: Uros Bizjak <ubizjak@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Uros Bizjak <ubizjak@gmail.com>
-Link: https://lore.kernel.org/r/20250123190747.745588-8-brgerst@gmail.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Nathan Chancellor <nathan@kernel.org>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Link: https://lore.kernel.org/r/20250312123905.149298-2-ubizjak@gmail.com
 ---
- arch/x86/entry/entry.S | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/arch_hweight.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/entry/entry.S b/arch/x86/entry/entry.S
-index 088f91f..d3caa31 100644
---- a/arch/x86/entry/entry.S
-+++ b/arch/x86/entry/entry.S
-@@ -64,6 +64,6 @@ THUNK warn_thunk_thunk, __warn_thunk
-  * entirely in the C code, and use an alias emitted by the linker script
-  * instead.
-  */
--#ifdef CONFIG_STACKPROTECTOR
-+#if defined(CONFIG_STACKPROTECTOR) && defined(CONFIG_SMP)
- EXPORT_SYMBOL(__ref_stack_chk_guard);
- #endif
+diff --git a/arch/x86/include/asm/arch_hweight.h b/arch/x86/include/asm/arch_hweight.h
+index a11bb84..f233eb0 100644
+--- a/arch/x86/include/asm/arch_hweight.h
++++ b/arch/x86/include/asm/arch_hweight.h
+@@ -17,7 +17,7 @@ static __always_inline unsigned int __arch_hweight32(unsigned int w)
+ 	unsigned int res;
+ 
+ 	asm (ALTERNATIVE("call __sw_hweight32", "popcntl %[val], %[cnt]", X86_FEATURE_POPCNT)
+-			 : [cnt] "=" REG_OUT (res)
++			 : [cnt] "=" REG_OUT (res), ASM_CALL_CONSTRAINT
+ 			 : [val] REG_IN (w));
+ 
+ 	return res;
+@@ -45,7 +45,7 @@ static __always_inline unsigned long __arch_hweight64(__u64 w)
+ 	unsigned long res;
+ 
+ 	asm (ALTERNATIVE("call __sw_hweight64", "popcntq %[val], %[cnt]", X86_FEATURE_POPCNT)
+-			 : [cnt] "=" REG_OUT (res)
++			 : [cnt] "=" REG_OUT (res), ASM_CALL_CONSTRAINT
+ 			 : [val] REG_IN (w));
+ 
+ 	return res;
