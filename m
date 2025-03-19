@@ -1,216 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50FF6253F20
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D671C54758
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:01:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742385660; cv=none; b=uQ7bx46OvDtV3ECkm4jFpbcGBJvo+B38ImfviiWBwbqel0+Ux3ZhjDLCK3BY2X/OMNIdTJZGnIQbrQtti1S6y8uO52C8WYHPuOShclp2SMw2p+CnR+4qDdcLlvdp+aFykHqWW5YKPj1AM4I5l3TD0JcbZazBn+bxneEOxZ463GU=
+	t=1742385683; cv=none; b=QDeg6VXIH1ufzO2A+Fsh1+J/sniemSKh6KvqcePYlZThX9YdwIu1SFGUZpLdaBiEIsnXZS0P0bagUfrJ1dp7Ggx1m8aL5Qs5sICL3relXNahQAuc5U+P32lkc+cCtaK/6WCAPoOZgujpUkrDl1lusoj3VaNkr+7IMMbOUlaoGPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742385660; c=relaxed/simple;
-	bh=fPgqLUANp+Nr5qCtdvqNtFTZszKRagxD9sOHO6mod9c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rjY2xQvQ04CI+PqsiOj7+4S0Dleonv/Pwm9nRQAecFWM+8WifoTD5+VEu9+Gg1cGPBi2S826zFJpVXsTwZvgFTOQDUVgRXJ7o+TIBdWPBEYmKKN6CWyZq9RTpg1k4hxiCrMZFSMJqobHZr0mQ1QXyVXIriFp1BmiJ4XyNcQIfHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PQLm/Nv1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742385683; c=relaxed/simple;
+	bh=X0xBK3bLzDuZkB26jELnSzSPI6NgmsFq0dxeZWxGeIw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VNm7rch1gRzcf8tBnIa3k7C82VehcKlFHk/NQgGhpg7eGB8uK/FFtRaBGV/vghu7fLJv3nAInZ1WSLABB66zWLiqAkJqkR5No4IUDqrKmTo4AY++uFguYqlumHUZ+3wwq/1siflW75TT/SEgU3CMbMzTl+XfRxrQe5AIYf62jsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PlrpLxmF; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PQLm/Nv1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E07BEC4CEEE;
-	Wed, 19 Mar 2025 12:00:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742385659;
-	bh=fPgqLUANp+Nr5qCtdvqNtFTZszKRagxD9sOHO6mod9c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PQLm/Nv13b1X3IbtpI7zDSya420Hj7ZIfrO6mU4NF2U6GATrVWw0InRDD+ywAaiRV
-	 MF+fTvw+Qf2drJHidU7kS7mzbEWtLeFlTSHkEmnUZl5g78YFFYWtiAiviAMy2jt1vk
-	 hdPuXU066dnkXKZROWGqiEbQzFg1Ejs/cZOVvzajfooYuxyqDb0pzcbkHuHVl7ZtaX
-	 JCgH040HtQqppgOXwPMM76A0wB3pfCcDGkppwxyWq1hWmArRhb/XUy2z0cfpj7cD00
-	 sL2bHnsmlJbxGSeysWybUJ1cSSV7sNAiefBVM9DfI+oFrdoQSai4HqC27vk5FGgGX0
-	 v6qM71lbDC43Q==
-From: Chao Yu <chao@kernel.org>
-To: jaegeuk@kernel.org
-Cc: linux-f2fs-devel@lists.sourceforge.net,
-	linux-kernel@vger.kernel.org,
-	Chao Yu <chao@kernel.org>
-Subject: [PATCH 2/2] f2fs: fix to update injection attrs according to fault_option
-Date: Wed, 19 Mar 2025 20:00:46 +0800
-Message-ID: <20250319120046.1784103-2-chao@kernel.org>
-X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-In-Reply-To: <20250319120046.1784103-1-chao@kernel.org>
-References: <20250319120046.1784103-1-chao@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PlrpLxmF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742385680;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=YqwTqw0LkuMJVhI7nUbav86stM0t9airgBDOJOw1FA0=;
+	b=PlrpLxmFnPY4xRbCXoW1F+lGgpgRB5Now2GST7a6VTHqVcpaOXaQ+9UuICx08WVJPhXjDM
+	NXvmIhDx3Kx/d3hNoifuQoPQiFxriF2yOzNwQkFBlrsIuQiuczcRgeNzQd53F5is9L1OU8
+	kay1JUXPUzyB2iCUDwK0lT6wnMoPmzY=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-554-Ep91YsP_MAa5nA-2OQLbTA-1; Wed,
+ 19 Mar 2025 08:01:16 -0400
+X-MC-Unique: Ep91YsP_MAa5nA-2OQLbTA-1
+X-Mimecast-MFC-AGG-ID: Ep91YsP_MAa5nA-2OQLbTA_1742385673
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EC50F180AF69;
+	Wed, 19 Mar 2025 12:01:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 5D85E1801751;
+	Wed, 19 Mar 2025 12:01:02 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+	oleg@redhat.com; Wed, 19 Mar 2025 13:00:39 +0100 (CET)
+Date: Wed, 19 Mar 2025 13:00:29 +0100
+From: Oleg Nesterov <oleg@redhat.com>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-trace-kernel@vger.kernel.org,
+	linux-perf-users@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Russell King <linux@armlinux.org.uk>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	Tong Tiangen <tongtiangen@huawei.com>
+Subject: Re: [PATCH v2 3/3] kernel/events/uprobes: uprobe_write_opcode()
+ rewrite
+Message-ID: <20250319120028.GA26879@redhat.com>
+References: <20250318221457.3055598-1-david@redhat.com>
+ <20250318221457.3055598-4-david@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318221457.3055598-4-david@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
-When we update inject type via sysfs, it shows wrong rate value as
-below, there is a same problem when we update inject rate, fix it.
+On 03/18, David Hildenbrand wrote:
+>
+> +	if (unlikely(!folio_test_anon(folio))) {
+> +		VM_WARN_ON_ONCE(is_register);
+> +		goto out;
+> +	}
 
-Before:
-F2FS-fs (vdd): build fault injection attr: rate: 0, type: 0xffff
-F2FS-fs (vdd): build fault injection attr: rate: 1, type: 0x0
+Don't we need folio_put() before "goto out" ?
 
-After:
-F2FS-fs (vdd): build fault injection type: 0x1
-F2FS-fs (vdd): build fault injection rate: 1
+Other than that, for this series:
 
-Meanwhile, let's avoid turning on all fault type when we enable fault
-injection via fault_injection mount option, it will lead to shutdown
-filesystem or fail the mount() easily.
-
-mount -o fault_injection=4 /dev/vdd /mnt/f2fs
-F2FS-fs (vdd): build fault injection attr: rate: 4, type: 0x7fffff
-F2FS-fs (vdd): inject kmalloc in f2fs_kmalloc of f2fs_fill_super+0xbdf/0x27c0
-
-Signed-off-by: Chao Yu <chao@kernel.org>
----
- fs/f2fs/checkpoint.c |  2 +-
- fs/f2fs/f2fs.h       | 14 ++++++++++----
- fs/f2fs/super.c      | 26 +++++++++++++-------------
- fs/f2fs/sysfs.c      |  4 ++--
- 4 files changed, 26 insertions(+), 20 deletions(-)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index cf77987d0698..85b7141f0d89 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -29,7 +29,7 @@ struct kmem_cache *f2fs_inode_entry_slab;
- void f2fs_stop_checkpoint(struct f2fs_sb_info *sbi, bool end_io,
- 						unsigned char reason)
- {
--	f2fs_build_fault_attr(sbi, 0, 0);
-+	f2fs_build_fault_attr(sbi, 0, 0, FAULT_ALL);
- 	if (!end_io)
- 		f2fs_flush_merged_writes(sbi);
- 	f2fs_handle_critical_error(sbi, reason);
-diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
-index 986ee5b9326d..ca884e39a5ff 100644
---- a/fs/f2fs/f2fs.h
-+++ b/fs/f2fs/f2fs.h
-@@ -66,9 +66,14 @@ enum {
- 	FAULT_MAX,
- };
- 
--#ifdef CONFIG_F2FS_FAULT_INJECTION
--#define F2FS_ALL_FAULT_TYPE		(GENMASK(FAULT_MAX - 1, 0))
-+/* indicate which option to update */
-+enum fault_option {
-+	FAULT_RATE	= 1,	/* only update fault rate */
-+	FAULT_TYPE	= 2,	/* only update fault type */
-+	FAULT_ALL	= 4,	/* reset all fault injection options/stats */
-+};
- 
-+#ifdef CONFIG_F2FS_FAULT_INJECTION
- struct f2fs_fault_info {
- 	atomic_t inject_ops;
- 	int inject_rate;
-@@ -4765,10 +4770,11 @@ static inline bool f2fs_need_verity(const struct inode *inode, pgoff_t idx)
- 
- #ifdef CONFIG_F2FS_FAULT_INJECTION
- extern int f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned long rate,
--							unsigned long type);
-+					unsigned long type, enum fault_option fo);
- #else
- static inline int f2fs_build_fault_attr(struct f2fs_sb_info *sbi,
--					unsigned long rate, unsigned long type)
-+					unsigned long rate, unsigned long type,
-+					enum fault_option fo)
- {
- 	return 0;
- }
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index dfe0604ab558..011925ee54f8 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -68,29 +68,30 @@ const char *f2fs_fault_name[FAULT_MAX] = {
- };
- 
- int f2fs_build_fault_attr(struct f2fs_sb_info *sbi, unsigned long rate,
--							unsigned long type)
-+				unsigned long type, enum fault_option fo)
- {
- 	struct f2fs_fault_info *ffi = &F2FS_OPTION(sbi).fault_info;
- 
--	if (rate) {
-+	if (fo & FAULT_ALL) {
-+		memset(ffi, 0, sizeof(struct f2fs_fault_info));
-+		return 0;
-+	}
-+
-+	if (fo & FAULT_RATE) {
- 		if (rate > INT_MAX)
- 			return -EINVAL;
- 		atomic_set(&ffi->inject_ops, 0);
- 		ffi->inject_rate = (int)rate;
-+		f2fs_info(sbi, "build fault injection rate: %lu", rate);
- 	}
- 
--	if (type) {
-+	if (fo & FAULT_TYPE) {
- 		if (type >= BIT(FAULT_MAX))
- 			return -EINVAL;
- 		ffi->inject_type = (unsigned int)type;
-+		f2fs_info(sbi, "build fault injection type: 0x%lx", type);
- 	}
- 
--	if (!rate && !type)
--		memset(ffi, 0, sizeof(struct f2fs_fault_info));
--	else
--		f2fs_info(sbi,
--			"build fault injection attr: rate: %lu, type: 0x%lx",
--								rate, type);
- 	return 0;
- }
- #endif
-@@ -897,8 +898,7 @@ static int parse_options(struct f2fs_sb_info *sbi, char *options, bool is_remoun
- 		case Opt_fault_injection:
- 			if (args->from && match_int(args, &arg))
- 				return -EINVAL;
--			if (f2fs_build_fault_attr(sbi, arg,
--					F2FS_ALL_FAULT_TYPE))
-+			if (f2fs_build_fault_attr(sbi, arg, 0, FAULT_RATE))
- 				return -EINVAL;
- 			set_opt(sbi, FAULT_INJECTION);
- 			break;
-@@ -906,7 +906,7 @@ static int parse_options(struct f2fs_sb_info *sbi, char *options, bool is_remoun
- 		case Opt_fault_type:
- 			if (args->from && match_int(args, &arg))
- 				return -EINVAL;
--			if (f2fs_build_fault_attr(sbi, 0, arg))
-+			if (f2fs_build_fault_attr(sbi, 0, arg, FAULT_TYPE))
- 				return -EINVAL;
- 			set_opt(sbi, FAULT_INJECTION);
- 			break;
-@@ -2209,7 +2209,7 @@ static void default_options(struct f2fs_sb_info *sbi, bool remount)
- 	set_opt(sbi, POSIX_ACL);
- #endif
- 
--	f2fs_build_fault_attr(sbi, 0, 0);
-+	f2fs_build_fault_attr(sbi, 0, 0, FAULT_ALL);
- }
- 
- #ifdef CONFIG_QUOTA
-diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
-index e87e89d2c023..282e5c14a718 100644
---- a/fs/f2fs/sysfs.c
-+++ b/fs/f2fs/sysfs.c
-@@ -494,12 +494,12 @@ static ssize_t __sbi_store(struct f2fs_attr *a,
- 		return ret;
- #ifdef CONFIG_F2FS_FAULT_INJECTION
- 	if (a->struct_type == FAULT_INFO_TYPE) {
--		if (f2fs_build_fault_attr(sbi, 0, t))
-+		if (f2fs_build_fault_attr(sbi, 0, t, FAULT_TYPE))
- 			return -EINVAL;
- 		return count;
- 	}
- 	if (a->struct_type == FAULT_INFO_RATE) {
--		if (f2fs_build_fault_attr(sbi, t, 0))
-+		if (f2fs_build_fault_attr(sbi, t, 0, FAULT_RATE))
- 			return -EINVAL;
- 		return count;
- 	}
--- 
-2.48.1
+Acked-by: Oleg Nesterov <oleg@redhat.com>
 
