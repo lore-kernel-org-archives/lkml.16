@@ -1,151 +1,113 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A53C250BF6;
-	Wed, 19 Mar 2025 08:20:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mg.richtek.com (mg.richtek.com [220.130.44.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B92C2505C4;
+	Wed, 19 Mar 2025 08:20:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.130.44.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742372406; cv=none; b=ny9fw6RmHy/pgwviwLs9LDxYKL8YYHB2XvZzOllM4ipdXUSw1UQGb7HaOcSEAefNCJMbR5HS0eLpi4vb1jyGRmJiyJGdP1hv3pRlmn+kJutOyU3XnFZFnrmMhn6igENy5KeCLNSihus0YpP0igameG5Fx4E9qi0iKYCMH/YKwCU=
+	t=1742372416; cv=none; b=aAMszSkeJvCzBu4KxDqH2dYgGCRV94qwQP4+7SDJTaSr6brv0ZIeL7zEGt52naKTdnN/TEO20ewGNivuxxb4ZOteA4RC3IWQph9THV/Ie8+NsBXpU+1eCV9FvLRIapIuAdLvAGl/uusLGuC6gNY/clDVxzh+3wCm6yXr3uWMQEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742372406; c=relaxed/simple;
-	bh=9OlvM4XUWWvrHJOd2iYbZSXPoeKrvur3cTL1QmV2LNQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jGPJqRUmdTHdWfAUsr7ntxP/W8arq3G/Iffg08MrASUp/VinXPonljuAYzkK09NwFa5LW256RcQKiQlbpa3nO9gVg/akVdb+kbdE6zGg2iHxeMZU/vNdIWv3DZnmvfggYrbvm7+1mN8FpBwV1uXHo4CO0bx/W3CS98Eh0Msc7N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZHh8p3p47z9sSY;
-	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 5Pdv_1f5SWZW; Wed, 19 Mar 2025 09:05:30 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZHh8p2Mb8z9sSX;
-	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2617E8B78F;
-	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id K6S1MuFrSThd; Wed, 19 Mar 2025 09:05:30 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 585CB8B763;
-	Wed, 19 Mar 2025 09:05:28 +0100 (CET)
-Message-ID: <a64bf821-ea90-4fd9-92ec-13bf7b7a3067@csgroup.eu>
-Date: Wed, 19 Mar 2025 09:05:27 +0100
+	s=arc-20240116; t=1742372416; c=relaxed/simple;
+	bh=xhi0oQVwruDma9ETGq1OQ0/h+zHO90BLiI9EToiuAH0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=eTviWbTvKwTNfhG85fV32mtAH9IhSKwm/w+cHEeb8Q1Ke9EHkcpxXniW9MxzTApvOYR7JGRq0UuX2kuhuCGIIvfENbTa9ejUR06ROdBUxYl9aH9Xtb2n2nwtWfcYX85KQs8sUdekG9gtYPv7GF7jA5gZzy6qBnUwy/9YOty0ABM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com; spf=pass smtp.mailfrom=richtek.com; dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b=nRS3JJ6z; arc=none smtp.client-ip=220.130.44.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=richtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=richtek.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=richtek.com header.i=@richtek.com header.b="nRS3JJ6z"
+X-MailGates: (SIP:2,PASS,NONE)(compute_score:DELIVER,40,3)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=richtek.com;
+	s=richtek; t=1742372408;
+	bh=rLp3wvwBjciCI34SBDn2RKlhjxLGxJQVYVjsFoNJNCo=; l=2211;
+	h=Date:From:To:Subject:Message-ID:MIME-Version;
+	b=nRS3JJ6zJTuxcqfbO7qkmLFvIjijuZkGUdJsGpj7h1LiZmJ0Dxvt0DOLP0Blvvank
+	 AZIF2VyPujo3B3k2K/5ZkEIQdeGN/Svm60+x8UlTUAMo0+bdQLhD0pRmwP1XPFrB8s
+	 5/5xITT6hcAfcfOb8YjIIZcLI7u3TMt+PERhlLMj8CLRqKfXk31Z+LLuQgEHYp2zOz
+	 WnAU6LRELvXbRYZhoC12xhLLKH3oupEDOneKFwNEodye6eNSTPUWTDmfL1lgVufc9a
+	 5QpmiqcH0hP0zCBFAj7QYSZpV2fDT6iV4hl6qqDz2Fi3/ioaNWd6Aei+rRB5WoUos4
+	 L/bY+F3JSfzkQ==
+Received: from 192.168.10.47
+	by mg.richtek.com with MailGates ESMTPS Server V6.0(2814888:0:AUTH_RELAY)
+	(envelope-from <cy_huang@richtek.com>)
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256/256); Wed, 19 Mar 2025 16:19:58 +0800 (CST)
+Received: from ex3.rt.l (192.168.10.46) by ex4.rt.l (192.168.10.47) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 19 Mar
+ 2025 16:19:58 +0800
+Received: from git-send.richtek.com (192.168.10.154) by ex3.rt.l
+ (192.168.10.45) with Microsoft SMTP Server id 15.2.1544.11 via Frontend
+ Transport; Wed, 19 Mar 2025 16:19:58 +0800
+Date: Wed, 19 Mar 2025 16:21:09 +0800
+From: ChiYuan Huang <cy_huang@richtek.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Mark Brown <broonie@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Tzung-Bi Shih <tzungbi@kernel.org>, Liam
+ Girdwood <lgirdwood@gmail.com>, Otto Lin <otto_lin@richtek.com>, Allen Lin
+	<allen_lin@richtek.com>, <linux-sound@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ASoC: dt-bindings: maxim,max98357a: Add compatible with
+ richtek,rt9123
+Message-ID: <Z9p+dQaMh4EKqss2@git-send.richtek.com>
+References: <1884c3ce2d901ead5d742958889f5a742e168376.1742259040.git.cy_huang@richtek.com>
+ <20250318-mature-dogfish-of-ecstasy-3dcea5@krzk-bin>
+ <Z9lYVram80dbWWl0@git-send.richtek.com>
+ <68e4ce8b-68a9-47a4-88c6-a4a401f5196d@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 07/14] arm64: Add support for suppressing warning
- backtraces
-To: Will Deacon <will@kernel.org>, Alessandro Carminati <acarmina@redhat.com>
-Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
- Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
- <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>,
- Kees Cook <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>,
- David Gow <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>,
- Brendan Higgins <brendan.higgins@linux.dev>,
- Naresh Kamboju <naresh.kamboju@linaro.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard
- <mripard@kernel.org>, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
- <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>,
- Thomas Zimmermann <tzimmermann@suse.de>, Guenter Roeck <linux@roeck-us.net>,
- Alessandro Carminati <alessandro.carminati@gmail.com>,
- Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org,
- kunit-dev@googlegroups.com, linux-arch@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
- linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
- linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
- loongarch@lists.linux.dev, x86@kernel.org,
- Linux Kernel Functional Testing <lkft@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>
-References: <20250313114329.284104-1-acarmina@redhat.com>
- <20250313114329.284104-8-acarmina@redhat.com>
- <20250313122503.GA7438@willie-the-truck>
- <CAGegRW5r3V2-_44-X353vS-GZwDYG=SVwc6MzSGE8GdFQuFoKA@mail.gmail.com>
- <20250318155946.GC13829@willie-the-truck>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250318155946.GC13829@willie-the-truck>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <68e4ce8b-68a9-47a4-88c6-a4a401f5196d@kernel.org>
 
-
-
-Le 18/03/2025 à 16:59, Will Deacon a écrit :
-> On Thu, Mar 13, 2025 at 05:40:59PM +0100, Alessandro Carminati wrote:
->> On Thu, Mar 13, 2025 at 1:25 PM Will Deacon <will@kernel.org> wrote:
->>>
->>> On Thu, Mar 13, 2025 at 11:43:22AM +0000, Alessandro Carminati wrote:
->>>> diff --git a/arch/arm64/include/asm/bug.h b/arch/arm64/include/asm/bug.h
->>>> index 28be048db3f6..044c5e24a17d 100644
->>>> --- a/arch/arm64/include/asm/bug.h
->>>> +++ b/arch/arm64/include/asm/bug.h
->>>> @@ -11,8 +11,14 @@
->>>>
->>>>   #include <asm/asm-bug.h>
->>>>
->>>> +#ifdef HAVE_BUG_FUNCTION
->>>> +# define __BUG_FUNC  __func__
->>>> +#else
->>>> +# define __BUG_FUNC  NULL
->>>> +#endif
->>>> +
->>>>   #define __BUG_FLAGS(flags)                           \
->>>> -     asm volatile (__stringify(ASM_BUG_FLAGS(flags)));
->>>> +     asm volatile (__stringify(ASM_BUG_FLAGS(flags, %c0)) : : "i" (__BUG_FUNC));
->>>
->>> Why is 'i' the right asm constraint to use here? It seems a bit odd to
->>> use that for a pointer.
->>
->> I received this code as legacy from a previous version.
->> In my review, I considered the case when HAVE_BUG_FUNCTION is defined:
->> Here, __BUG_FUNC is defined as __func__, which is the name of the
->> current function as a string literal.
->> Using the constraint "i" seems appropriate to me in this case.
->>
->> However, when HAVE_BUG_FUNCTION is not defined:
->> __BUG_FUNC is defined as NULL. Initially, I considered it literal 0,
->> but after investigating your concern, I found:
->>
->> ```
->> $ echo -E "#include <stdio.h>\n#include <stddef.h>\nint main()
->> {\nreturn 0;\n}" | aarch64-linux-gnu-gcc -E -dM - | grep NULL
->> #define NULL ((void *)0)
->> ```
->>
->> I realized that NULL is actually a pointer that is not a link time
->> symbol, and using the "i" constraint with NULL may result in undefined
->> behavior.
->>
->> Would the following alternative definition for __BUG_FUNC be more convincing?
->>
->> ```
->> #ifdef HAVE_BUG_FUNCTION
->>      #define __BUG_FUNC __func__
->> #else
->>      #define __BUG_FUNC (uintptr_t)0
->> #endif
->> ```
->> Let me know your thoughts.
+On Wed, Mar 19, 2025 at 08:42:11AM +0100, Krzysztof Kozlowski wrote:
+> On 18/03/2025 12:26, ChiYuan Huang wrote:
+> > On Tue, Mar 18, 2025 at 09:55:48AM +0100, Krzysztof Kozlowski wrote:
+> >> On Tue, Mar 18, 2025 at 08:57:51AM +0800, cy_huang@richtek.com wrote:
+> >>> From: ChiYuan Huang <cy_huang@richtek.com>
+> >>>
+> >>> The hardware control and specification of 'richtek,rt9123' are similar
+> >>> with max98357 or max98360. It's no need to add the new source code. So
+> >>
+> >> Are you sure? I looked at datasheet and do not see anything about
+> >> SD_MODE in RT9123. Also you have two supplies, while max98360a has only
+> >> one. You have I2C but max98360a has no.
+> >>
+> > Sure, consider the I2C mode. Then it seems different. For the power
+> > supply, yes, we have one more supply and it's used for digital input
+> > output reference. It will always tiled to SoC digital power domain.
+> > It's no need to control, so I think DVDD can be ignored.
+> > 
+> > If not considering the I2C, and the DVDD power supply, for HW control
+> > mode, then it looks the same including sample rate. One pin to turn on
+> > the amplifier.
+> > 
+> > This IC is designed for 'easy to use'. For the normal condition, HW mode
+> > will always be suggested to the customer.
+> > 
+> > May I have your suggestion? If it can not be compatible, should I write
+> > two drivers, one platform driver for HW control mode, and another I2C driver
+> > for I2C SW control mode?
 > 
-> Thanks for the analysis; I hadn't noticed this specific issue, it just
-> smelled a bit fishy. Anyway, the diff above looks better, thanks.
+> 
+> We don't talk about drivers here. I only commented that they are not
+> compatible based on datasheets, so compatibility should not be expressed
+> in the DT. Considering I2C, this should be in its own binding with full
+> device description (so for both HW mode and I2C).
+> 
+Actually, These two mode cannot be coexixted. The HW or SW I2C mode is
+detected on POR by different external resistor.
 
-That propably deserves a comment.
+Just for the HW mode, all the controls, even sampling rate, supported
+bitrate are all similiar with max98357 driver.
 
-Doesn't sparse and/or checkpatch complain about 0 being used in lieu of 
-NULL ?
+That's why I'm trying to treat it to be compatible.
 
-By the way I had similar problem in the past with GCC not seeing NULL as 
-a __builtin_constant_p(), refer commit 1d8f739b07bd ("powerpc/kuap: Fix 
-set direction in allow/prevent_user_access()")
+For SW I2C, sure, I can write one for the dedicated usage. Under this
+mode, all onoff sequences need to be controlled by RG.
 
-Christophe
+> Best regards,
+> Krzysztof
