@@ -1,46 +1,42 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-180.mta0.migadu.com (out-180.mta0.migadu.com [91.218.175.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B95A214815;
-	Wed, 19 Mar 2025 19:50:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C05921420B
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742413850; cv=none; b=EIE6gD6inD5f4TL3L8Z3mTplWyZv/qDd969HHMeNW5ctc569okBn9TkEUfpXhkamotZ42S88U76v0XMSswYGRpQRFVCcS7I56cj3pY2rBTCvEtSmht8iQD7Jda9Ii3/DiUndCjsBqiMJbnFsFLm+kXRLtHbHacP7BX3AlV8RwnU=
+	t=1742413917; cv=none; b=twh6qGucd9EqsPdX7Y3tGHOY98NGf1o6hkWFauOKgLcPtgnVGPZ+srosO5is2fweJYMRHonutIT4tkBzJD1H6U0gj1dvwCcK2GpgWE9kQhBGj0RlJ9tGo+FFUXLKfWmFqEsRtFTW+uHdZnwToQF+ft5st7vP5hIzYlO5ErsLpPA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742413850; c=relaxed/simple;
-	bh=oHXR9R91Yn4c/ZsQE+sUV7KlNHhvMM6CsaoeWM+g31s=;
+	s=arc-20240116; t=1742413917; c=relaxed/simple;
+	bh=HN5eIXWdGopBCpBEbJ9mpWJ+ld+jJk0lkQLW90W9lUk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mA/rRiE+dWrnUOwUfASTT+U40eU/tj60ZmkXq/7A/1moZo9QzR84sA5QucFAZozRVrjRsiopKWAGMgHS8O1jDUzS6A2srHpi9abNCpMtzhcbE3l7vlRqI0WETuRtA7ZnAwtXC8WLLyhqmNb5b6t/UPnsF6HBZOWxrG0vQB98FuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yag1Smwp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=VaPKUpXaqtMhL1+DAcB047aZdtjzfcLyYEQPGk47EScInMQPN7ZGCmvQIuqAqJDQMUNnArFhnIj2/hnQOp2hZoGGJLXDnf/rMhNPuRHaBU2d/jRQJONDewXw56Y2nX5NKM85EYaSXuLH6BFoHT3hnj0EmpKgY97Rx4LxNXgb1PM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Lpgz7SGh; arc=none smtp.client-ip=91.218.175.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yag1Smwp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E6DC4CEE4;
-	Wed, 19 Mar 2025 19:50:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742413849;
-	bh=oHXR9R91Yn4c/ZsQE+sUV7KlNHhvMM6CsaoeWM+g31s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Yag1SmwpzXeOXRKFNmFzgUSB/IAuBM1uEKxvhbNklyhv3t/Ymo6qprDgN/821Z0YK
-	 W0cyzSbvVjMPT6ESsRjHD4yinlobhgeTL/+JjWkiDIOD6ZemoYDfxWth/hF/Z68Va/
-	 yQlUqkcrgf6a5D0u1v421G1X72MIv50Sr/IGX4DoppTy6eyiDv2Zo4vSYJnXksNqYw
-	 K+fqksngJG+ewJCFj8NjJBz9fyUUDC4JfX+Ii9pxB+p0ZLNDt6yDKyIh0j0yH6DDqI
-	 jntbuABJd3Y5WyOjSuFcvIGJm7x5AtTlaeyv18q1OPDhFaocKn9MlwY/nW3+mrApv/
-	 /auRlFVfABtrg==
-Date: Wed, 19 Mar 2025 20:50:44 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	"H. Peter Anvin" <hpa@zytor.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Heiko Carstens <hca@linux.ibm.com>,
-	Vasily Gorbik <gor@linux.ibm.com>,
-	Christian Borntraeger <borntraeger@de.ibm.com>,
-	Joel Granados <joel.granados@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the tip tree with the s390 tree
-Message-ID: <Z9sgFGya_MDbfSQ6@gmail.com>
-References: <20250319155410.3cdf01cb@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Lpgz7SGh"
+Date: Wed, 19 Mar 2025 12:51:48 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742413913;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aHgZcT1OHid9wj/QcT/hae8vjIoU8PnHq3r0EIbYZD4=;
+	b=Lpgz7SGhCMwypbwd8JKXXD5zkrPvifG4egMIHmtaMFUa8q0QzeszfeGuiKCFCJflpJruT3
+	rVNcVgU0sm0q7qcNSPpB0bVEG4CjuCxDZXnLUL0fQ+ACwtOHdFmjz0VyO3k1eCqzifiGD1
+	EEW1XPZllaW2p7yJHw5qH/8WNZUnIiM=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Shakeel Butt <shakeel.butt@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Jingxiang Zeng <jingxiangzeng.cas@gmail.com>, 
+	akpm@linux-foundation.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
+	muchun.song@linux.dev, kasong@tencent.com, Zeng Jingxiang <linuszeng@tencent.com>
+Subject: Re: [RFC 0/5] add option to restore swap account to cgroupv1 mode
+Message-ID: <vfy3aq3zzpjscku6mody34qhwhdnwmas5evxowfleuyl457ggq@cmvlcu5mk34v>
+References: <20250319064148.774406-1-jingxiangzeng.cas@gmail.com>
+ <20250319193838.GE1876369@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -49,34 +45,52 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250319155410.3cdf01cb@canb.auug.org.au>
+In-Reply-To: <20250319193838.GE1876369@cmpxchg.org>
+X-Migadu-Flow: FLOW_OUT
 
+On Wed, Mar 19, 2025 at 03:38:38PM -0400, Johannes Weiner wrote:
+> On Wed, Mar 19, 2025 at 02:41:43PM +0800, Jingxiang Zeng wrote:
+> > From: Zeng Jingxiang <linuszeng@tencent.com>
+> > 
+> > memsw account is a very useful knob for container memory
+> > overcommitting: It's a great abstraction of the "expected total
+> > memory usage" of a container, so containers can't allocate too
+> > much memory using SWAP, but still be able to SWAP out.
+> > 
+> > For a simple example, with memsw.limit == memory.limit, containers
+> > can't exceed their original memory limit, even with SWAP enabled, they
+> > get OOM killed as how they used to, but the host is now able to
+> > offload cold pages.
+> > 
+> > Similar ability seems absent with V2: With memory.swap.max == 0, the
+> > host can't use SWAP to reclaim container memory at all. But with a
+> > value larger than that, containers are able to overuse memory, causing
+> > delayed OOM kill, thrashing, CPU/Memory usage ratio could be heavily
+> > out of balance, especially with compress SWAP backends.
+> > 
+> > This patch set adds two interfaces to control the behavior of the
+> > memory.swap.max/current in cgroupv2:
+> > 
+> > CONFIG_MEMSW_ACCOUNT_ON_DFL
+> > cgroup.memsw_account_on_dfl={0, 1}
+> > 
+> > When one of the interfaces is enabled: memory.swap.current and
+> > memory.swap.max represents the usage/limit of swap.
+> > When neither is enabled (default behavior),memory.swap.current and
+> > memory.swap.max represents the usage/limit of memory+swap.
+> 
+> This should be new knobs, e.g. memory.memsw.current, memory.memsw.max.
+> 
+> Overloading the existing swap knobs is confusing.
+> 
+> And there doesn't seem to be a good reason to make the behavior
+> either-or anyway. If memory.swap.max=max (default), it won't interfere
+> with the memsw operation. And it's at least conceivable somebody might
+> want to set both, memsw.max > swap.max, to get some flexibility while
+> excluding the craziest edge cases.
 
-* Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+At the moment memsw and swap shares the underlying page_counter. This
+would require having explicit page_counter for memsw.
 
-> Hi all,
-> 
-> Today's linux-next merge of the tip tree got a conflict in:
-> 
->   kernel/sysctl.c
-> 
-> between commit:
-> 
->   20de8f8d3178 ("s390: Move s390 sysctls into their own file under arch/s390")
-> 
-> from the s390 tree and commit:
-> 
->   c305a4e98378 ("x86: Move sysctls into arch/x86")
-> 
-> from the tip tree.
-> 
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
-
-Thank you Stephen!
-
-	Ingo
+What's your take on memsw interfaces still behind
+CONFIG_MEMSW_ACCOUNT_ON_DFL?
