@@ -1,160 +1,401 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E129BAD2F;
-	Wed, 19 Mar 2025 02:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B60EE573
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742352426; cv=none; b=egoHkG4oZBWq0LpYzls4rs0y+GP/f+2+dBL6R1d5ZkvJ8M0fnmrKsGlridFNLac1UZMU4jJU0661fBfqnI683Tj9vSMepOH6set8OS/XWyG4ps7MVlM9WYDOAqwB3Huq0cHW36CjWjx3LCc7j3Z+xHGkD/jMxZer1u8/Mkn0nnk=
+	t=1742352429; cv=none; b=H4HkhPE83d1MxDjzQrsI5xh6AbjVNFwWOhLdquPaO7DzoW965ndIsoCyA+BFIeKC1PYbw2gXRv8ineGT0ORAPRME/A/XCF7ZrpI/pHrDGErRpk0AWyoHYdTXn2NoZSWwHEi4sDy+RgIuOE7DnYu0xkaBZafGUIuy7Zwc1mSzTDU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742352426; c=relaxed/simple;
-	bh=Dn3PWelJFddmp3s83Ht4bxxUTBHLl1iUXwTZRYpRWiI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=dk9ABRgKWxE54dXUV7psATLqTA/Sa5UAWshmuxz1GHVFOHl3SnYxzQNjLcDfVpmMfkync004OsG+SCj1Pyc2scN/b/oHPJqzR1MY3b1Ft3Xdne06eFRop6QeT9EuSUqNs8t9saxEonztibAYZrGeEQRcrWkQL+5gQ3TJ3HrOt7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M5VTP6pH; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M5VTP6pH"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso29143755e9.0;
-        Tue, 18 Mar 2025 19:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742352423; x=1742957223; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pNwRjgTV5vyjSkK1YIBebLoMJzNTyzSDJ2Cwgi8wBxA=;
-        b=M5VTP6pHbzhXijA6lBHfmeJ7unhrvniUrpOn5jEmbkGU5CpGY6B/c2/XX6zjysXQob
-         AtfQ/H/1UqGzVB7sqzwJY5znLKTTH7JMRFrYfVZOyzpanIu4qo3mBSuTiOVs1hBtfaZL
-         EUB+fSVYUkzuZJ+OkcVWOgyYkL0o83ymEnk7QED7lE31mICr5MXIpuqywALA6EjKuPlL
-         +YhP6Hi/UM7+Ulqjipqp/QtkZEjhNmivR1LAYgGeGcNewIakrxEoZWfQ6TRrrAo7Ey8s
-         SeL9D2IOPyoByL/tyWszsZcFlVvX0oeF7LAyqJt+A+B38zUbVhgYsLNg6JLXc0FWtG3Z
-         yOgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742352423; x=1742957223;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pNwRjgTV5vyjSkK1YIBebLoMJzNTyzSDJ2Cwgi8wBxA=;
-        b=Hv9WY1qkTv1z3RpzzLJvnyUaewWR4OmzcpCHVwrZJdFlOqGpttux1DWYZBT06p6Uu4
-         UI1ijJMeQQ1Kvxmhfpvfc1VZnMy2j9UrWD2An7DNMFrqkbIM2knqs2GRovjQe/lSqnCV
-         4oGkuWJTi3KGUqTODAOulOH30Wzz6b48B5a1cwYTY6lw93J+cHZppLlGr8o8vJQgdloO
-         tn4wGpFt9eLQBThktRm9oKmnFRAcd7fTzxu/atHyEryfpbQu2mCotnhyxtIdvvb+fBzD
-         X5kTK2vbpusxDumr49DJwTJD/+AzwemlPyIFQ9z8IPI3nqaZ6LrUn8yj+ZCn89V9LE77
-         /Lsw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlZ7Q2c8Xm9ZhdX4r/wtPXE04x3ds+m004MFOL0XUB62uLm1b7h7bSf6np0YPGRDLfxnM=@vger.kernel.org, AJvYcCVwQ0exN2p8IGVcoPhqLHsBNjPcNDjGyKhAklCo1OrzLT7P1JawLwKdMO/qcQPQHGdlTaA4cjBY@vger.kernel.org, AJvYcCXII6ztW8Jt7vTpSsZF8oNyQKynpgQ7KxRtCFulN7COtAIzomAoGpxmOGzUE6Wa+hSDptzTi2fCnu/C48iM@vger.kernel.org, AJvYcCXqUf6H7/4MyLgJz1NpNh9dL9hwHN+iTh7fSarOFf8JVH4V0Fk4Gqpg9ZTjRqctg7aeMmtsGcM5bYLghw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YzSEJR0AE2Qbt/shLNJLSAc/Yd1gxYTYCL/0RP+EQSbwnqOMl0b
-	yW4YyzFhU62V28NLGjv/M9Ou/+6gdrLFIvl/24qB/kUqNM8uDQs24v1z71NnpRyNV0xZCIDckiv
-	YcA7++G11KxELGfbtX9eNDgjdySUytO5z
-X-Gm-Gg: ASbGnctvbBUinsiC2jOQ4rCTS3WbDYfhZa9Xp5GD3VIrcxk7mMiE3SOtSRhTAGAQfSf
-	ijYZJLCKumLjT4gIiHGSi8DkwD+mptOE6oVgV4cvTSlRYLsqFXqmKyDn9vCHd9vgI1N2pQkx8iM
-	W8s4sZ1K9u0H1zsx13yv5Ds0WXwiIWRPy3gRmZ933QyMyuDTa9p9wH
-X-Google-Smtp-Source: AGHT+IE6MFlMuJtugrViJVg66D6og8DYJPY2VbtA0lQZ4r7b8uYfAxYuEvDGrs357PIC6nGVQardy/0Uda7JcMYyTAs=
-X-Received: by 2002:a5d:5982:0:b0:399:71d4:a2 with SMTP id ffacd0b85a97d-399739c1524mr816039f8f.14.1742352423079;
- Tue, 18 Mar 2025 19:47:03 -0700 (PDT)
+	s=arc-20240116; t=1742352429; c=relaxed/simple;
+	bh=3e8+u2Eaamk421uFexHmRGrS/LDnIM99ytBCP6Obc7M=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tlBO3OgAqFwfbZrb3TuQ5t+hMUBKEKFJzqEUjwMvD77xt6rL/Ra3jaUXZIXoaDxB4YDt6Vi/bTi3xCpU4wV384T42D9iNnS2r83UVDeF9p+sMOtAgtqLUF/X6uOVpokf4z7R6yQffD4gDaPqS7xt1EhObKapaNReWJEyZIA1PZg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZHY1B4sl5zCs9g;
+	Wed, 19 Mar 2025 10:43:26 +0800 (CST)
+Received: from kwepemg500010.china.huawei.com (unknown [7.202.181.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 6F9E91800C8;
+	Wed, 19 Mar 2025 10:47:02 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by kwepemg500010.china.huawei.com
+ (7.202.181.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Wed, 19 Mar
+ 2025 10:47:01 +0800
+From: Wang Zhaolong <wangzhaolong1@huawei.com>
+To: <dwmw2@infradead.org>, <richard@nod.at>
+CC: <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<wangzhaolong1@huawei.com>, <yi.zhang@huawei.com>
+Subject: [RFC 1/1] fs/jffs2: Avoid a possible deadlock in jffs2_wbuf_recover
+Date: Wed, 19 Mar 2025 10:47:00 +0800
+Message-ID: <20250319024700.10364-2-wangzhaolong1@huawei.com>
+X-Mailer: git-send-email 2.34.3
+In-Reply-To: <20250319024700.10364-1-wangzhaolong1@huawei.com>
+References: <20250319024700.10364-1-wangzhaolong1@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319133309.6fce6404@canb.auug.org.au>
-In-Reply-To: <20250319133309.6fce6404@canb.auug.org.au>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 18 Mar 2025 19:46:52 -0700
-X-Gm-Features: AQ5f1JqdE91XzIdfoDPQyyQUyj5uA6okIPHz4NL_DcBD8mOsI7c3nyOiy4dAGww
-Message-ID: <CAADnVQKotSrp8CkVpFw-y800NJ_R7An-iw-twrQZaOdYUeRtqQ@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, 
-	Uros Bizjak <ubizjak@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	Networking <netdev@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ kwepemg500010.china.huawei.com (7.202.181.71)
 
-On Tue, Mar 18, 2025 at 7:33=E2=80=AFPM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
->
-> Hi all,
->
-> After merging the bpf-next tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
->
-> In file included from include/asm-generic/percpu.h:7,
->                  from arch/x86/include/asm/percpu.h:630,
->                  from arch/x86/include/asm/preempt.h:6,
->                  from include/linux/preempt.h:79,
->                  from include/linux/smp.h:116,
->                  from kernel/locking/qspinlock.c:16:
-> kernel/locking/qspinlock.h: In function 'decode_tail':
-> include/linux/percpu-defs.h:219:45: error: initialization from pointer to=
- non-enclosed address space
->   219 |         const void __percpu *__vpp_verify =3D (typeof((ptr) + 0))=
-NULL;    \
->       |                                             ^
-> include/linux/percpu-defs.h:237:9: note: in expansion of macro '__verify_=
-pcpu_ptr'
->   237 |         __verify_pcpu_ptr(ptr);                                  =
-       \
->       |         ^~~~~~~~~~~~~~~~~
-> kernel/locking/qspinlock.h:67:16: note: in expansion of macro 'per_cpu_pt=
-r'
->    67 |         return per_cpu_ptr(&qnodes[idx].mcs, cpu);
->       |                ^~~~~~~~~~~
-> include/linux/percpu-defs.h:219:45: note: expected 'const __seg_gs void *=
-' but pointer is of type 'struct mcs_spinlock *'
->   219 |         const void __percpu *__vpp_verify =3D (typeof((ptr) + 0))=
-NULL;    \
->       |                                             ^
-> include/linux/percpu-defs.h:237:9: note: in expansion of macro '__verify_=
-pcpu_ptr'
->   237 |         __verify_pcpu_ptr(ptr);                                  =
-       \
->       |         ^~~~~~~~~~~~~~~~~
-> kernel/locking/qspinlock.h:67:16: note: in expansion of macro 'per_cpu_pt=
-r'
->    67 |         return per_cpu_ptr(&qnodes[idx].mcs, cpu);
->       |                ^~~~~~~~~~~
-> kernel/locking/qspinlock.c: In function 'native_queued_spin_lock_slowpath=
-':
-> kernel/locking/qspinlock.c:285:41: error: passing argument 2 of 'decode_t=
-ail' from pointer to non-enclosed address space
->   285 |                 prev =3D decode_tail(old, qnodes);
->       |                                         ^~~~~~
-> In file included from kernel/locking/qspinlock.c:30:
-> kernel/locking/qspinlock.h:62:79: note: expected 'struct qnode *' but arg=
-ument is of type '__seg_gs struct qnode *'
->    62 | static inline __pure struct mcs_spinlock *decode_tail(u32 tail, s=
-truct qnode *qnodes)
->       |                                                                 ~=
-~~~~~~~~~~~~~^~~~~~
-> In file included from kernel/locking/qspinlock.c:401:
-> kernel/locking/qspinlock.c: In function '__pv_queued_spin_lock_slowpath':
-> kernel/locking/qspinlock.c:285:41: error: passing argument 2 of 'decode_t=
-ail' from pointer to non-enclosed address space
->   285 |                 prev =3D decode_tail(old, qnodes);
->       |                                         ^~~~~~
-> kernel/locking/qspinlock.h:62:79: note: expected 'struct qnode *' but arg=
-ument is of type '__seg_gs struct qnode *'
->    62 | static inline __pure struct mcs_spinlock *decode_tail(u32 tail, s=
-truct qnode *qnodes)
->       |                                                                 ~=
-~~~~~~~~~~~~~^~~~~~
->
-> Caused by the resilient-queued-spin-lock branch of the bpf-next tree
-> interacting with the "Enable strict percpu address space checks" series
-> form the mm-stable tree.
+jffs2_wbuf_recover can deadlock when called from __jffs2_flush_wbuf
+error path, because both functions try to acquire c->wbuf_sem.
 
-Do you mean this set:
-https://lore.kernel.org/all/20250127160709.80604-1-ubizjak@gmail.com/
+ jffs2_write_end
+   jffs2_write_inode_range
+     jffs2_write_dnode
+       jffs2_flash_writev
+         down_write(&c->wbuf_sem)            # first hold lock
+         __jffs2_flush_wbuf
+           mtd_write()                       # return error
+           jffs2_wbuf_recover
+             jffs2_reserve_space_gc
+               jffs2_do_reserve_space
+                 jffs2_flush_wbuf_pad
+                   down_write(&c->wbuf_sem)  # AA deadlock
 
->
-> I don't know why this happens, but reverting that branch inf the bpf-next
-> tree makes the failure go away, so I have done that for today.
+Fix this by adding a wbuf_sem_held parameter to jffs2_reserve_space_gc
+and jffs2_do_reserve_space, which can be used to indicate that the caller
+already holds c->wbuf_sem. If this is the case, jffs2_do_reserve_space
+will directly call __jffs2_flush_wbuf instead of going through
+jffs2_flush_wbuf_pad, which would try to acquire the lock again.
 
-Kumar,
+Signed-off-by: Wang Zhaolong <wangzhaolong1@huawei.com>
+---
+ fs/jffs2/gc.c       | 12 ++++++------
+ fs/jffs2/nodelist.h | 12 +++++++++++-
+ fs/jffs2/nodemgmt.c | 16 ++++++++++------
+ fs/jffs2/os-linux.h |  1 +
+ fs/jffs2/wbuf.c     | 13 ++-----------
+ fs/jffs2/write.c    |  4 ++--
+ fs/jffs2/xattr.c    |  4 ++--
+ 7 files changed, 34 insertions(+), 28 deletions(-)
 
-pls take a look.
+diff --git a/fs/jffs2/gc.c b/fs/jffs2/gc.c
+index 1b833bbffcf5..d2c0b1a14294 100644
+--- a/fs/jffs2/gc.c
++++ b/fs/jffs2/gc.c
+@@ -608,11 +608,11 @@ static int jffs2_garbage_collect_pristine(struct jffs2_sb_info *c,
+ 	   don't want to force wastage of the end of a block if splitting would
+ 	   work. */
+ 	if (ic && alloclen > sizeof(struct jffs2_raw_inode) + JFFS2_MIN_DATA_LEN)
+ 		alloclen = sizeof(struct jffs2_raw_inode) + JFFS2_MIN_DATA_LEN;
+ 
+-	ret = jffs2_reserve_space_gc(c, alloclen, &alloclen, rawlen);
++	ret = jffs2_reserve_space_gc(c, alloclen, &alloclen, rawlen, 0);
+ 	/* 'rawlen' is not the exact summary size; it is only an upper estimation */
+ 
+ 	if (ret)
+ 		return ret;
+ 
+@@ -718,11 +718,11 @@ static int jffs2_garbage_collect_pristine(struct jffs2_sb_info *c,
+ 			jffs2_dbg(1, "Retrying failed write of REF_PRISTINE node.\n");
+ 
+ 			jffs2_dbg_acct_sanity_check(c,jeb);
+ 			jffs2_dbg_acct_paranoia_check(c, jeb);
+ 
+-			ret = jffs2_reserve_space_gc(c, rawlen, &dummy, rawlen);
++			ret = jffs2_reserve_space_gc(c, rawlen, &dummy, rawlen, 0);
+ 						/* this is not the exact summary size of it,
+ 							it is only an upper estimation */
+ 
+ 			if (!ret) {
+ 				jffs2_dbg(1, "Allocated space at 0x%08x to retry failed write.\n",
+@@ -792,11 +792,11 @@ static int jffs2_garbage_collect_metadata(struct jffs2_sb_info *c, struct jffs2_
+ 			  __func__, mdatalen);
+ 
+ 	}
+ 
+ 	ret = jffs2_reserve_space_gc(c, sizeof(ri) + mdatalen, &alloclen,
+-				JFFS2_SUMMARY_INODE_SIZE);
++				JFFS2_SUMMARY_INODE_SIZE, 0);
+ 	if (ret) {
+ 		pr_warn("jffs2_reserve_space_gc of %zd bytes for garbage_collect_metadata failed: %d\n",
+ 			sizeof(ri) + mdatalen, ret);
+ 		goto out;
+ 	}
+@@ -873,11 +873,11 @@ static int jffs2_garbage_collect_dirent(struct jffs2_sb_info *c, struct jffs2_er
+ 	rd.type = fd->type;
+ 	rd.node_crc = cpu_to_je32(crc32(0, &rd, sizeof(rd)-8));
+ 	rd.name_crc = cpu_to_je32(crc32(0, fd->name, rd.nsize));
+ 
+ 	ret = jffs2_reserve_space_gc(c, sizeof(rd)+rd.nsize, &alloclen,
+-				JFFS2_SUMMARY_DIRENT_SIZE(rd.nsize));
++				JFFS2_SUMMARY_DIRENT_SIZE(rd.nsize), 0);
+ 	if (ret) {
+ 		pr_warn("jffs2_reserve_space_gc of %zd bytes for garbage_collect_dirent failed: %d\n",
+ 			sizeof(rd)+rd.nsize, ret);
+ 		return ret;
+ 	}
+@@ -1097,11 +1097,11 @@ static int jffs2_garbage_collect_hole(struct jffs2_sb_info *c, struct jffs2_eras
+ 	ri.mtime = cpu_to_je32(JFFS2_F_I_MTIME(f));
+ 	ri.data_crc = cpu_to_je32(0);
+ 	ri.node_crc = cpu_to_je32(crc32(0, &ri, sizeof(ri)-8));
+ 
+ 	ret = jffs2_reserve_space_gc(c, sizeof(ri), &alloclen,
+-				     JFFS2_SUMMARY_INODE_SIZE);
++				     JFFS2_SUMMARY_INODE_SIZE, 0);
+ 	if (ret) {
+ 		pr_warn("jffs2_reserve_space_gc of %zd bytes for garbage_collect_hole failed: %d\n",
+ 			sizeof(ri), ret);
+ 		return ret;
+ 	}
+@@ -1343,11 +1343,11 @@ static int jffs2_garbage_collect_dnode(struct jffs2_sb_info *c, struct jffs2_era
+ 		uint32_t datalen;
+ 		uint32_t cdatalen;
+ 		uint16_t comprtype = JFFS2_COMPR_NONE;
+ 
+ 		ret = jffs2_reserve_space_gc(c, sizeof(ri) + JFFS2_MIN_DATA_LEN,
+-					&alloclen, JFFS2_SUMMARY_INODE_SIZE);
++					&alloclen, JFFS2_SUMMARY_INODE_SIZE, 0);
+ 
+ 		if (ret) {
+ 			pr_warn("jffs2_reserve_space_gc of %zd bytes for garbage_collect_dnode failed: %d\n",
+ 				sizeof(ri) + JFFS2_MIN_DATA_LEN, ret);
+ 			break;
+diff --git a/fs/jffs2/nodelist.h b/fs/jffs2/nodelist.h
+index 2e98fa277dab..f3c494901cf4 100644
+--- a/fs/jffs2/nodelist.h
++++ b/fs/jffs2/nodelist.h
+@@ -383,11 +383,11 @@ extern uint32_t __jffs2_ref_totlen(struct jffs2_sb_info *c,
+ /* nodemgmt.c */
+ int jffs2_thread_should_wake(struct jffs2_sb_info *c);
+ int jffs2_reserve_space(struct jffs2_sb_info *c, uint32_t minsize,
+ 			uint32_t *len, int prio, uint32_t sumsize);
+ int jffs2_reserve_space_gc(struct jffs2_sb_info *c, uint32_t minsize,
+-			uint32_t *len, uint32_t sumsize);
++			uint32_t *len, uint32_t sumsize, int wbuf_sem_held);
+ struct jffs2_raw_node_ref *jffs2_add_physical_node_ref(struct jffs2_sb_info *c, 
+ 						       uint32_t ofs, uint32_t len,
+ 						       struct jffs2_inode_cache *ic);
+ void jffs2_complete_reservation(struct jffs2_sb_info *c);
+ void jffs2_mark_node_obsolete(struct jffs2_sb_info *c, struct jffs2_raw_node_ref *raw);
+@@ -471,10 +471,20 @@ int jffs2_do_mount_fs(struct jffs2_sb_info *c);
+ int jffs2_erase_pending_blocks(struct jffs2_sb_info *c, int count);
+ void jffs2_free_jeb_node_refs(struct jffs2_sb_info *c, struct jffs2_eraseblock *jeb);
+ 
+ #ifdef CONFIG_JFFS2_FS_WRITEBUFFER
+ /* wbuf.c */
++/* Meaning of pad argument:
++   0: Do not pad. Probably pointless - we only ever use this when we can't pad anyway.
++   1: Pad, do not adjust nextblock free_size
++   2: Pad, adjust nextblock free_size
++*/
++#define NOPAD		0
++#define PAD_NOACCOUNT	1
++#define PAD_ACCOUNTING	2
++
++int __jffs2_flush_wbuf(struct jffs2_sb_info *c, int pad);
+ int jffs2_flush_wbuf_gc(struct jffs2_sb_info *c, uint32_t ino);
+ int jffs2_flush_wbuf_pad(struct jffs2_sb_info *c);
+ int jffs2_check_nand_cleanmarker(struct jffs2_sb_info *c, struct jffs2_eraseblock *jeb);
+ int jffs2_write_nand_cleanmarker(struct jffs2_sb_info *c, struct jffs2_eraseblock *jeb);
+ #endif
+diff --git a/fs/jffs2/nodemgmt.c b/fs/jffs2/nodemgmt.c
+index 3fb9f9807b66..0a1bf6947277 100644
+--- a/fs/jffs2/nodemgmt.c
++++ b/fs/jffs2/nodemgmt.c
+@@ -49,11 +49,11 @@ static int jffs2_rp_can_write(struct jffs2_sb_info *c)
+ 	jffs2_dbg(1, "forbid writing\n");
+ 	return 0;
+ }
+ 
+ static int jffs2_do_reserve_space(struct jffs2_sb_info *c,  uint32_t minsize,
+-				  uint32_t *len, uint32_t sumsize);
++				  uint32_t *len, uint32_t sumsizew, int buf_sem_held);
+ 
+ /**
+  *	jffs2_reserve_space - request physical space to write nodes to flash
+  *	@c: superblock info
+  *	@minsize: Minimum acceptable size of allocation
+@@ -196,11 +196,11 @@ int jffs2_reserve_space(struct jffs2_sb_info *c, uint32_t minsize,
+ 
+ 			mutex_lock(&c->alloc_sem);
+ 			spin_lock(&c->erase_completion_lock);
+ 		}
+ 
+-		ret = jffs2_do_reserve_space(c, minsize, len, sumsize);
++		ret = jffs2_do_reserve_space(c, minsize, len, sumsize, 0);
+ 		if (ret) {
+ 			jffs2_dbg(1, "%s(): ret is %d\n", __func__, ret);
+ 		}
+ 	}
+ 
+@@ -212,20 +212,20 @@ int jffs2_reserve_space(struct jffs2_sb_info *c, uint32_t minsize,
+ 		mutex_unlock(&c->alloc_sem);
+ 	return ret;
+ }
+ 
+ int jffs2_reserve_space_gc(struct jffs2_sb_info *c, uint32_t minsize,
+-			   uint32_t *len, uint32_t sumsize)
++			   uint32_t *len, uint32_t sumsize, int wbuf_sem_held)
+ {
+ 	int ret;
+ 	minsize = PAD(minsize);
+ 
+ 	jffs2_dbg(1, "%s(): Requested 0x%x bytes\n", __func__, minsize);
+ 
+ 	while (true) {
+ 		spin_lock(&c->erase_completion_lock);
+-		ret = jffs2_do_reserve_space(c, minsize, len, sumsize);
++		ret = jffs2_do_reserve_space(c, minsize, len, sumsize, wbuf_sem_held);
+ 		if (ret) {
+ 			jffs2_dbg(1, "%s(): looping, ret is %d\n",
+ 				  __func__, ret);
+ 		}
+ 		spin_unlock(&c->erase_completion_lock);
+@@ -354,11 +354,11 @@ static int jffs2_find_nextblock(struct jffs2_sb_info *c)
+ 	return 0;
+ }
+ 
+ /* Called with alloc sem _and_ erase_completion_lock */
+ static int jffs2_do_reserve_space(struct jffs2_sb_info *c, uint32_t minsize,
+-				  uint32_t *len, uint32_t sumsize)
++				  uint32_t *len, uint32_t sumsize, int wbuf_sem_held)
+ {
+ 	struct jffs2_eraseblock *jeb = c->nextblock;
+ 	uint32_t reserved_size;				/* for summary information at the end of the jeb */
+ 	int ret;
+ 
+@@ -416,11 +416,15 @@ static int jffs2_do_reserve_space(struct jffs2_sb_info *c, uint32_t minsize,
+ 
+ 			if (jffs2_wbuf_dirty(c)) {
+ 				spin_unlock(&c->erase_completion_lock);
+ 				jffs2_dbg(1, "%s(): Flushing write buffer\n",
+ 					  __func__);
+-				jffs2_flush_wbuf_pad(c);
++				if (wbuf_sem_held) {
++					__jffs2_flush_wbuf(c, PAD_NOACCOUNT);
++				} else {
++					jffs2_flush_wbuf_pad(c);
++				}
+ 				spin_lock(&c->erase_completion_lock);
+ 				jeb = c->nextblock;
+ 				goto restart;
+ 			}
+ 
+diff --git a/fs/jffs2/os-linux.h b/fs/jffs2/os-linux.h
+index 86ab014a349c..c9dda7126850 100644
+--- a/fs/jffs2/os-linux.h
++++ b/fs/jffs2/os-linux.h
+@@ -76,10 +76,11 @@ static inline void jffs2_init_inode_info(struct jffs2_inode_info *f)
+ #define jffs2_cleanmarker_oob(c) (0)
+ #define jffs2_write_nand_cleanmarker(c,jeb) (-EIO)
+ 
+ #define jffs2_flash_write(c, ofs, len, retlen, buf) jffs2_flash_direct_write(c, ofs, len, retlen, buf)
+ #define jffs2_flash_read(c, ofs, len, retlen, buf) (mtd_read((c)->mtd, ofs, len, retlen, buf))
++#define __jffs2_flush_wbuf(c, pad) ({ do{} while(0); (void)(c), 0; })
+ #define jffs2_flush_wbuf_pad(c) ({ do{} while(0); (void)(c), 0; })
+ #define jffs2_flush_wbuf_gc(c, i) ({ do{} while(0); (void)(c), (void) i, 0; })
+ #define jffs2_write_nand_badblock(c,jeb,bad_offset) (1)
+ #define jffs2_nand_flash_setup(c) (0)
+ #define jffs2_nand_flash_cleanup(c) do {} while(0)
+diff --git a/fs/jffs2/wbuf.c b/fs/jffs2/wbuf.c
+index 4061e0ba7010..799559760dc1 100644
+--- a/fs/jffs2/wbuf.c
++++ b/fs/jffs2/wbuf.c
+@@ -384,11 +384,11 @@ static void jffs2_wbuf_recover(struct jffs2_sb_info *c)
+ 	}
+ 	/* OK... we're to rewrite (end-start) bytes of data from first_raw onwards.
+ 	   Either 'buf' contains the data, or we find it in the wbuf */
+ 
+ 	/* ... and get an allocation of space from a shiny new block instead */
+-	ret = jffs2_reserve_space_gc(c, end-start, &len, JFFS2_SUMMARY_NOSUM_SIZE);
++	ret = jffs2_reserve_space_gc(c, end-start, &len, JFFS2_SUMMARY_NOSUM_SIZE, 1);
+ 	if (ret) {
+ 		pr_warn("Failed to allocate space for wbuf recovery. Data loss ensues.\n");
+ 		kfree(buf);
+ 		return;
+ 	}
+@@ -566,20 +566,11 @@ static void jffs2_wbuf_recover(struct jffs2_sb_info *c)
+ 	jffs2_dbg(1, "wbuf recovery completed OK. wbuf_ofs 0x%08x, len 0x%x\n",
+ 		  c->wbuf_ofs, c->wbuf_len);
+ 
+ }
+ 
+-/* Meaning of pad argument:
+-   0: Do not pad. Probably pointless - we only ever use this when we can't pad anyway.
+-   1: Pad, do not adjust nextblock free_size
+-   2: Pad, adjust nextblock free_size
+-*/
+-#define NOPAD		0
+-#define PAD_NOACCOUNT	1
+-#define PAD_ACCOUNTING	2
+-
+-static int __jffs2_flush_wbuf(struct jffs2_sb_info *c, int pad)
++int __jffs2_flush_wbuf(struct jffs2_sb_info *c, int pad)
+ {
+ 	struct jffs2_eraseblock *wbuf_jeb;
+ 	int ret;
+ 	size_t retlen;
+ 
+diff --git a/fs/jffs2/write.c b/fs/jffs2/write.c
+index cda9a361368e..1764cf0466fc 100644
+--- a/fs/jffs2/write.c
++++ b/fs/jffs2/write.c
+@@ -137,11 +137,11 @@ struct jffs2_full_dnode *jffs2_write_dnode(struct jffs2_sb_info *c, struct jffs2
+ 			jffs2_dbg_acct_sanity_check(c,jeb);
+ 			jffs2_dbg_acct_paranoia_check(c, jeb);
+ 
+ 			if (alloc_mode == ALLOC_GC) {
+ 				ret = jffs2_reserve_space_gc(c, sizeof(*ri) + datalen, &dummy,
+-							     JFFS2_SUMMARY_INODE_SIZE);
++							     JFFS2_SUMMARY_INODE_SIZE, 0);
+ 			} else {
+ 				/* Locking pain */
+ 				mutex_unlock(&f->sem);
+ 				jffs2_complete_reservation(c);
+ 
+@@ -289,11 +289,11 @@ struct jffs2_full_dirent *jffs2_write_dirent(struct jffs2_sb_info *c, struct jff
+ 			jffs2_dbg_acct_sanity_check(c,jeb);
+ 			jffs2_dbg_acct_paranoia_check(c, jeb);
+ 
+ 			if (alloc_mode == ALLOC_GC) {
+ 				ret = jffs2_reserve_space_gc(c, sizeof(*rd) + namelen, &dummy,
+-							     JFFS2_SUMMARY_DIRENT_SIZE(namelen));
++							     JFFS2_SUMMARY_DIRENT_SIZE(namelen), 0);
+ 			} else {
+ 				/* Locking pain */
+ 				mutex_unlock(&f->sem);
+ 				jffs2_complete_reservation(c);
+ 
+diff --git a/fs/jffs2/xattr.c b/fs/jffs2/xattr.c
+index defb4162c3d5..b7b1eb8f012c 100644
+--- a/fs/jffs2/xattr.c
++++ b/fs/jffs2/xattr.c
+@@ -1241,11 +1241,11 @@ int jffs2_garbage_collect_xattr_datum(struct jffs2_sb_info *c, struct jffs2_xatt
+ 		goto out;
+ 	}
+ 	old_ofs = ref_offset(xd->node);
+ 	totlen = PAD(sizeof(struct jffs2_raw_xattr)
+ 			+ xd->name_len + 1 + xd->value_len);
+-	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XATTR_SIZE);
++	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XATTR_SIZE, 0);
+ 	if (rc) {
+ 		JFFS2_WARNING("jffs2_reserve_space_gc()=%d, request=%u\n", rc, totlen);
+ 		goto out;
+ 	}
+ 	rc = save_xattr_datum(c, xd);
+@@ -1274,11 +1274,11 @@ int jffs2_garbage_collect_xattr_ref(struct jffs2_sb_info *c, struct jffs2_xattr_
+ 		goto out;
+ 
+ 	old_ofs = ref_offset(ref->node);
+ 	totlen = ref_totlen(c, c->gcblock, ref->node);
+ 
+-	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XREF_SIZE);
++	rc = jffs2_reserve_space_gc(c, totlen, &length, JFFS2_SUMMARY_XREF_SIZE, 0);
+ 	if (rc) {
+ 		JFFS2_WARNING("%s: jffs2_reserve_space_gc() = %d, request = %u\n",
+ 			      __func__, rc, totlen);
+ 		goto out;
+ 	}
+-- 
+2.34.3
+
