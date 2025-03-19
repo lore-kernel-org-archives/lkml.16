@@ -1,140 +1,151 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9DC01DE898
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1021C54758
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:00:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742385610; cv=none; b=EnXD4gmkvrH5j4EKf+HV2sNrlDEHO4yDj2np+cL3Ffx1TVpgVvpinC8co6y80CrY6oUTUI2DfRc3MKdkfmFvdTlk3K/4oSoHAtXcfN3VCuNL14zQCciQtOJQvoaNP6bhUf1jA+D2ucjCPNd3VU1LGLkJSCcukj5ENQEnzOKCXZI=
+	t=1742385659; cv=none; b=kC1Yf7cumK5UbTjP4H/jp1oJyghazxBCYf4pjmGStz+sTRx9qjzZQ/ISz+VDrTyMT8vuYH27QlVxRsVT5AubDtDJQRBfkn2ppaCm3GKedAp7DOcklcKq4o0flMcnaNRrgZjTkbqdJsyelmOjTPVH2yA85X+gNFzDmI+h30RYSF8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742385610; c=relaxed/simple;
-	bh=24lcW5zOfWDuG73b4qHfegpsI78oGlIAvqlsb5P2HrI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dhU2bDCV0J4gJfvQKZLSxgwBjdTdzwK1K9D8bh8QYmUlY1QkSzkDsiczdSpusnNiagSVBucK2mUAW4VC8854zyMVng8U3XtjWx6hUgAaqh5mmeZ6+GrKA47cwzbRIRIqEE+YhdYYW60gGDoSWbwdaQ4mNca8Nd7m5XZJPc/3cMI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1C7D5113E;
-	Wed, 19 Mar 2025 05:00:16 -0700 (PDT)
-Received: from [10.1.197.1] (ewhatever.cambridge.arm.com [10.1.197.1])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0F3B3F694;
-	Wed, 19 Mar 2025 05:00:06 -0700 (PDT)
-Message-ID: <cc68d43f-4719-4f57-a38c-fb5afe8d29cc@arm.com>
-Date: Wed, 19 Mar 2025 12:00:05 +0000
+	s=arc-20240116; t=1742385659; c=relaxed/simple;
+	bh=20gnGCX8dG0bt8mpa3KjSaH6bWueEUSFhGxeJ701lc8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cYy0OA1feXqc43rJG7lUu0V8a21/YhtcMLt7t+f9R9E/yiJAaNwLmqEE69Yty33UqpEWOhh8rF7469xUotoEu53M0f47RYtuTKHS/cp52zkV4BARSxIz0Xw8caDNyynhtVB3Ii33h3e0Vjd2JGTlGnDq6X46JSPzLOGRBlePW2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jRtogbAs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jRtogbAs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98028C4CEEC;
+	Wed, 19 Mar 2025 12:00:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742385658;
+	bh=20gnGCX8dG0bt8mpa3KjSaH6bWueEUSFhGxeJ701lc8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=jRtogbAsDVaQJfrBWWeY9T0Ypu+88TfteuC3nORLduU8HTAmjplGitKkKmQHb8KcY
+	 DXTNMetR2fDw+OfMrlk/HnqAIlmIw1LWUKInwxRvn+ly88qqDUqr25aMFJzcn359An
+	 O9XIvaDtDLpZwyOpe5KbZf/Hr48BdYt6dJ985qyu3GevpWcLEOPCP2p7kc3BuJQ402
+	 8tcsuEAIzTj2v4lSwpkLqeTlAIB33uls13+GCNBt1nV4tcYb+Ak90Rcs3cPbQPPvQ3
+	 +AZYCigJJodb2iNPAsyHCTxqxXiaeljNPMnO700bEC1l6u+lRbbQ6EdBj+HfrRQp2f
+	 ozTTqhEl56B1Q==
+From: Chao Yu <chao@kernel.org>
+To: jaegeuk@kernel.org
+Cc: linux-f2fs-devel@lists.sourceforge.net,
+	linux-kernel@vger.kernel.org,
+	Chao Yu <chao@kernel.org>
+Subject: [PATCH 1/2] f2fs: add a proc entry show inject stats
+Date: Wed, 19 Mar 2025 20:00:45 +0800
+Message-ID: <20250319120046.1784103-1-chao@kernel.org>
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/8] coresight: Convert tag clear function to take a
- struct cs_access
-To: James Clark <james.clark@linaro.org>, Mike Leach <mike.leach@linaro.org>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, leo.yan@arm.com
-Cc: coresight@lists.linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20250318-james-coresight-claim-tags-v2-0-e9c8a9cde84e@linaro.org>
- <20250318-james-coresight-claim-tags-v2-2-e9c8a9cde84e@linaro.org>
-Content-Language: en-US
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-In-Reply-To: <20250318-james-coresight-claim-tags-v2-2-e9c8a9cde84e@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 18/03/2025 16:21, James Clark wrote:
-> The self hosted claim tag will be reset on device probe in a later
-> commit. We'll want to do this before coresight_register() is called so
-> won't have a coresight_device and have to use cs_access instead.
-> 
-> Also make them public and create locked and unlocked versions for
-> later use.
-> 
-> Signed-off-by: James Clark <james.clark@linaro.org>
+This patch adds a proc entry named inject_stats to show total injected
+count for each fault type.
 
-minor nit:
+cat /proc/fs/f2fs/<dev>/inject_stats
+fault_type              injected_count
+kmalloc                 0
+kvmalloc                0
+page alloc              0
+page get                0
+alloc bio(obsolete)     0
+alloc nid               0
+orphan                  0
+no more block           0
+too big dir depth       0
+evict_inode fail        0
+truncate fail           0
+read IO error           0
+checkpoint error        0
+discard error           0
+write IO error          0
+slab alloc              0
+dquot initialize        0
+lock_op                 0
+invalid blkaddr         0
+inconsistent blkaddr    0
+no free segment         0
+inconsistent footer     0
 
-The restructuring looks a bit confusing. Could we start with :
+Signed-off-by: Chao Yu <chao@kernel.org>
+---
+ fs/f2fs/f2fs.h  |  3 +++
+ fs/f2fs/super.c |  1 +
+ fs/f2fs/sysfs.c | 18 ++++++++++++++++++
+ 3 files changed, 22 insertions(+)
 
-coresight_{set,clear}_self_claim_tag_unlocked in Patch 1. Rather
-than rename what we renamed in patch 1 again here.
-
-
-> ---
->   drivers/hwtracing/coresight/coresight-core.c | 17 +++++++++++++----
->   include/linux/coresight.h                    |  3 ++-
->   2 files changed, 15 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-core.c b/drivers/hwtracing/coresight/coresight-core.c
-> index 3f1c996d668a..9ff601e2415a 100644
-> --- a/drivers/hwtracing/coresight/coresight-core.c
-> +++ b/drivers/hwtracing/coresight/coresight-core.c
-> @@ -151,12 +151,21 @@ static inline void coresight_set_self_claim_tag(struct coresight_device *csdev)
->   	isb();
->   }
->   
-> -static inline void coresight_clear_self_claim_tag(struct coresight_device *csdev)
-> +void coresight_clear_self_claim_tag(struct csdev_access *csa)
->   {
-> -	csdev_access_relaxed_write32(&csdev->access, CORESIGHT_CLAIM_SELF_HOSTED,
-> +	CS_UNLOCK(csa->base);
-
-This looks to be hard coding MMIO based access ? Should we abstract it 
-based on the csdev_access_** ?
-
-
-Suzuki
-
-
-> +	coresight_clear_self_claim_tag_unlocked(csa);
-> +	CS_LOCK(csa->base);
-> +}
-> +EXPORT_SYMBOL_GPL(coresight_clear_self_claim_tag);
-> +
-> +void coresight_clear_self_claim_tag_unlocked(struct csdev_access *csa)
-> +{
-> +	csdev_access_relaxed_write32(csa, CORESIGHT_CLAIM_SELF_HOSTED,
->   				     CORESIGHT_CLAIMCLR);
->   	isb();
->   }
-> +EXPORT_SYMBOL_GPL(coresight_clear_self_claim_tag_unlocked);
->   
->   /*
->    * coresight_claim_device_unlocked : Claim the device for self-hosted usage
-> @@ -180,7 +189,7 @@ int coresight_claim_device_unlocked(struct coresight_device *csdev)
->   	if (coresight_is_claimed_self_hosted(csdev))
->   		return 0;
->   	/* There was a race setting the tag, clean up and fail */
-> -	coresight_clear_self_claim_tag(csdev);
-> +	coresight_clear_self_claim_tag_unlocked(&csdev->access);
->   	return -EBUSY;
->   }
->   EXPORT_SYMBOL_GPL(coresight_claim_device_unlocked);
-> @@ -211,7 +220,7 @@ void coresight_disclaim_device_unlocked(struct coresight_device *csdev)
->   		return;
->   
->   	if (coresight_is_claimed_self_hosted(csdev))
-> -		coresight_clear_self_claim_tag(csdev);
-> +		coresight_clear_self_claim_tag_unlocked(&csdev->access);
->   	else
->   		/*
->   		 * The external agent may have not honoured our claim
-> diff --git a/include/linux/coresight.h b/include/linux/coresight.h
-> index d79a242b271d..00134a80d358 100644
-> --- a/include/linux/coresight.h
-> +++ b/include/linux/coresight.h
-> @@ -685,7 +685,8 @@ extern int coresight_timeout_action(struct csdev_access *csa, u32 offset,
->   
->   extern int coresight_claim_device(struct coresight_device *csdev);
->   extern int coresight_claim_device_unlocked(struct coresight_device *csdev);
-> -
-> +void coresight_clear_self_claim_tag(struct csdev_access *csa);
-> +void coresight_clear_self_claim_tag_unlocked(struct csdev_access *csa);
->   extern void coresight_disclaim_device(struct coresight_device *csdev);
->   extern void coresight_disclaim_device_unlocked(struct coresight_device *csdev);
->   extern char *coresight_alloc_device_name(struct coresight_dev_list *devs,
-> 
-
-
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index f1576dc6ec67..986ee5b9326d 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -73,6 +73,8 @@ struct f2fs_fault_info {
+ 	atomic_t inject_ops;
+ 	int inject_rate;
+ 	unsigned int inject_type;
++	/* Used to account total count of injection for each type */
++	unsigned int inject_count[FAULT_MAX];
+ };
+ 
+ extern const char *f2fs_fault_name[FAULT_MAX];
+@@ -1902,6 +1904,7 @@ static inline bool __time_to_inject(struct f2fs_sb_info *sbi, int type,
+ 	atomic_inc(&ffi->inject_ops);
+ 	if (atomic_read(&ffi->inject_ops) >= ffi->inject_rate) {
+ 		atomic_set(&ffi->inject_ops, 0);
++		ffi->inject_count[type]++;
+ 		f2fs_info_ratelimited(sbi, "inject %s in %s of %pS",
+ 				f2fs_fault_name[type], func, parent_func);
+ 		return true;
+diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+index f087b2b71c89..dfe0604ab558 100644
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -47,6 +47,7 @@ const char *f2fs_fault_name[FAULT_MAX] = {
+ 	[FAULT_KVMALLOC]		= "kvmalloc",
+ 	[FAULT_PAGE_ALLOC]		= "page alloc",
+ 	[FAULT_PAGE_GET]		= "page get",
++	[FAULT_ALLOC_BIO]		= "alloc bio(obsolete)",
+ 	[FAULT_ALLOC_NID]		= "alloc nid",
+ 	[FAULT_ORPHAN]			= "orphan",
+ 	[FAULT_BLOCK]			= "no more block",
+diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+index c69161366467..e87e89d2c023 100644
+--- a/fs/f2fs/sysfs.c
++++ b/fs/f2fs/sysfs.c
+@@ -1679,6 +1679,22 @@ static int __maybe_unused disk_map_seq_show(struct seq_file *seq,
+ 	return 0;
+ }
+ 
++static int __maybe_unused inject_stats_seq_show(struct seq_file *seq,
++						void *offset)
++{
++	struct super_block *sb = seq->private;
++	struct f2fs_sb_info *sbi = F2FS_SB(sb);
++	struct f2fs_fault_info *ffi = &F2FS_OPTION(sbi).fault_info;
++	int i;
++
++	seq_puts(seq, "fault_type		injected_count\n");
++
++	for (i = 0; i < FAULT_MAX; i++)
++		seq_printf(seq, "%-24s%-10u\n", f2fs_fault_name[i],
++						ffi->inject_count[i]);
++	return 0;
++}
++
+ int __init f2fs_init_sysfs(void)
+ {
+ 	int ret;
+@@ -1770,6 +1786,8 @@ int f2fs_register_sysfs(struct f2fs_sb_info *sbi)
+ 				discard_plist_seq_show, sb);
+ 	proc_create_single_data("disk_map", 0444, sbi->s_proc,
+ 				disk_map_seq_show, sb);
++	proc_create_single_data("inject_stats", 0444, sbi->s_proc,
++				inject_stats_seq_show, sb);
+ 	return 0;
+ put_feature_list_kobj:
+ 	kobject_put(&sbi->s_feature_list_kobj);
+-- 
+2.48.1
 
