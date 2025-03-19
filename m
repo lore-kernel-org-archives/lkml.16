@@ -1,205 +1,209 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E49DA1DE3A3;
-	Wed, 19 Mar 2025 17:24:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D4235971
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:24:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742405052; cv=none; b=u4+OBG0KfweajR3w4w88yitcvsOBMSFtG90VDIt597J/NfvVc31UzvjM/feBRjZZfyDZX2wSE+CnA9dRWIWNXYO5bBFefDoJOsisHxCdv8pWQAVCMSnwG7lHtkvgoEgjIsZ0do/LwdSdqVD+JlPuC36ALWfS7M4AfGfqzrIPomA=
+	t=1742405088; cv=none; b=WF5FPedG0J9S2ROWLl7/1wiG3tDWSLMu3csGqohkz+ykoFnnG7iOYR5AmdbGRdiomugFvpFHUVTxbbMTxQbjFPIXxVhAnn7ZH0tlrSQdkZjpgSdoWzEciKskRNRaRZiNs66NVdVvnvIwmaTcPAG6jT/pK6gPvpJ3suX0TU+snz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742405052; c=relaxed/simple;
-	bh=ELadN9suy3cNwA0vlVcbLNaRM/0CFBqCRG2jr6J/Tew=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=EoYwQjO9AsAlst43LKuE1EPYpSg4+BOQOAf2kE3a4Pyg42mY1F6OuoAzuLDiIk9CTqxlVuWMwbu22O3TgBpEdqpLzXFg1iKXfNj2ZBayU+NvLyWxAexQGH8CfrtRMShi1Mid0o8G5s2a7qplIVdZLjWGcYDwqGApBwtdbpIqGAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=UN2Apf22; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742405088; c=relaxed/simple;
+	bh=gic5TJGgxxzRKjumPuv3tUCOhcLyMwuvkayfwcKIDGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OALDTkg/EfUgz0fHul7Ecj3aWA9oVgE73JOX7KfEjRFEbiSTSxfa7n7/1Sk3Wwp3ejdvW8ngD0YXyYFNV7wCVhu6Ulr9wOQNrXW2Qk1t7+oegcSybFHfPXfI+1KlYa5gULMUY/yfJXSD+c0wU3fWB4jvUHIWCLwt9pZyGskEIOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=u6WmUBDe; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="UN2Apf22"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JDOMK7020536;
-	Wed, 19 Mar 2025 17:23:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	IXWlm4JCY0DtIXW2D7Gz2sscoUFyjUlCOxapsFxmIPU=; b=UN2Apf22vL+mtkDt
-	yH9Jzj66XPBgn4esPyHI4dFcZFWukGRfWysDdYiCB0cOurjAIY9Omb+ZpAmyLlYG
-	nq+kbR0g7q/aDgK6XPX83KJ0cpk6QCzQU7mdiIh0dmMryeo27D03npcQRGTsM49I
-	blYVU7aWy3yFqk0nkcF83m4zAS3dG0Rw3UE2XZCCb8DS+Kr37+0MjX9h7GyDLT9b
-	k9PtRyDN5kkUViPld8WsNs13gF6TaUhLtMEbXigmGVAcsQ41ZJxcQa/iYuQT7x6F
-	a7XKZLVQaW/n3UKL3xddqw6J1CToTj8dLIb4tB1l6hcofdmCR1i2ROnUldPwflAX
-	eKcqAQ==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45fdmwug7t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 17:23:55 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52JHNsMc022551
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 17:23:54 GMT
-Received: from [10.216.38.67] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Mar
- 2025 10:23:48 -0700
-Message-ID: <83c71791-dc34-54a5-7d67-9765aa2886e5@quicinc.com>
-Date: Wed, 19 Mar 2025 22:53:43 +0530
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="u6WmUBDe"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so34798915ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:24:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742405085; x=1743009885; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5Ovtjsc/ngsMtbRru+3v3f/ts46HtxiqzAUDsNuQW/M=;
+        b=u6WmUBDe70oiYQsofHKtFLi3UVsV41tiYrqOKAlelc3ksn/v9SPPn75e90pPLOvK+B
+         ouJhKJ8AyWtRUAoGhJ8+HVeErEiWmYCYX1IpEtFov3GL7gdYgK7KPkRasr5twcCUtEwi
+         O/bRTzmceUmxQFvyqK0xXMu2cxoER8hvipPLBLnPAp6r1KmvIkxvE9Xyh/R7D6gZq7G6
+         6U+8WHOHbG8uqfjDss3BEMsfA/lpHwxaP3L+HWsePBf5p58fkYyiKOjbFmnLTHm9dPIU
+         oT4VrT3gBCS78T7x8d26Mo5VlLnqXXFl5Zf4mPZwiWQxvhf3Rwi5P5Fh+YWHNyLzLSUy
+         OYUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742405085; x=1743009885;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5Ovtjsc/ngsMtbRru+3v3f/ts46HtxiqzAUDsNuQW/M=;
+        b=DMoAOnEqF61dbqZKJ0VwbTPO+EEepPRk6ZX4P3bqQ4iy0tySlM1vh1td0q8+g9AuH8
+         m2n38Vi2dGk8KRal5XfXp9mOflRW+KOKWEHj1QIsGyOsEd9L+AU1vXlCfCcBEiFYry+5
+         ME1Me73zdy5S+wJG1wEHvMty/UASOuibkcCPKTnpxzL/NBxI5NX6mXcZf74D5kBB6zdN
+         v3H2M/SXKeE5DSGCNywaz4bA9k+X/xFGPdKrns04TJuxC9NyY2Xu7y4ryYA8p1Nyh2JI
+         1JYwyPzbkXzQsdq+HKOOEq2sS7whSlneTfzgF+ecZLMjKTmdGLJec4F/2QaTWn+anMuK
+         Uo5g==
+X-Forwarded-Encrypted: i=1; AJvYcCWc1335vCp3eoMnhbxVvN4gMCE7YIhep6GC9q1qb6reWEPLFwOjtyIQgNyDnp03bIPGdu8pccN+0CEIE+E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdzB8N+NQoVS04DPrspTPYMxIWS9/6CaR69bCLA3yWaMIdHetW
+	JdzIHGFVgEDPCV/DP5yJSU1RuHv3bPMcBd7Qvsp7u2taskL2+9rfoB8SaR8XQr0=
+X-Gm-Gg: ASbGncs1vuMcrQnNCekwjfO+XtPDT+Jwa+7gEeYfw4OLEv9sJzALNqHbic16Wa6x+OV
+	3u2yt/Ar+vN+AeXkcC/LLvOkp+fr50nRLg2l01pp1eXnnARarBlWfdicRI1AuHSPhd4h2a86GHQ
+	ET9kYwtP8+PtQuji02giAfVPKNkztD6rSXcYlgE3StMwOoG1mG+4bR53rVYAb517T7iIVSouqWE
+	1kFDRXrE1KA5Ys02tEHrKNsbHpqxE1lrKwVwRz0QK0TMfz9rgtM4xpgfDIsEeHsKRzH5PROgIg9
+	RDuWRlkPkpCQyd5LkCiBquqTkiKUxOVwW8GkfOTf
+X-Google-Smtp-Source: AGHT+IGGukMmGzrRkcCLcnDVIfPfEcGzaPbBFEMioj9IaaorGdbf4I/BJxhdPW8WI0glghzqTFGz+Q==
+X-Received: by 2002:a17:903:41ce:b0:224:1ec0:8a1a with SMTP id d9443c01a7336-22649caaa83mr46300995ad.51.1742405085227;
+        Wed, 19 Mar 2025 10:24:45 -0700 (PDT)
+Received: from ghost ([2601:647:6700:64d0:4763:97aa:9309:154a])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6888562sm117615825ad.2.2025.03.19.10.24.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 10:24:44 -0700 (PDT)
+Date: Wed, 19 Mar 2025 10:24:42 -0700
+From: Charlie Jenkins <charlie@rivosinc.com>
+To: Andrew Jones <ajones@ventanamicro.com>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Ben Dooks <ben.dooks@codethink.co.uk>,
+	Pasha Bouzarjomehri <pasha@rivosinc.com>,
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
+	Alexandre Ghiti <alexghiti@rivosinc.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Josh Poimboeuf <jpoimboe@kernel.org>,
+	Jason Baron <jbaron@akamai.com>, linux-riscv@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+Subject: Re: [PATCH v9 1/2] riscv: Move nop definition to insn-def.h
+Message-ID: <Z9r92tCdsjoJTQ88@ghost>
+References: <20250318-runtime_const_riscv-v9-0-ddd3534d3e8e@rivosinc.com>
+ <20250318-runtime_const_riscv-v9-1-ddd3534d3e8e@rivosinc.com>
+ <20250319-3bf29b05bf02bfdaa32b261c@orel>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH net] wifi: ath12k: properly set single_chip_mlo_supp to
- true in ath12k_core_alloc()
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>,
-        "Vasanthakumar
- Thiagarajan" <vasanthakumar.thiagarajan@oss.qualcomm.com>
-CC: Krzysztof Kozlowski <krzk@kernel.org>, <neil.armstrong@linaro.org>,
-        "Jeff
- Johnson" <jeff.johnson@oss.qualcomm.com>,
-        Johannes Berg
-	<johannes@sipsolutions.net>,
-        Jeff Johnson <jjohnson@kernel.org>,
-        "Aditya
- Kumar Singh" <quic_adisi@quicinc.com>,
-        <linux-wireless@vger.kernel.org>, <ath12k@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <20250303-topic-ath12k-fix-crash-v1-1-f871d4e4d968@linaro.org>
- <24b2f1f8-97bd-423a-acbd-9a5cd45e4a40@oss.qualcomm.com>
- <7901d7f0-d6d0-4bf3-89ad-d710e88477b7@linaro.org>
- <7b4b598f-bc13-aa4b-8677-71477e1f5434@quicinc.com>
- <8b05760b-db99-4b43-8444-d655b18d3699@kernel.org>
- <db232678-fa85-d75f-de72-d2b5e1ec611f@quicinc.com>
- <2a5hvicenftfiktviiofvknanyz756cbryu35gkfczdvbcdd5j@fktlzfieotgl>
- <c6e3b0c1-18fe-a9fa-0e72-d955809144e3@oss.qualcomm.com>
- <hmfvyajygmjoeaaashmddu4rg6ttzn7es4sjls5qvnemykkx2l@zuzixrzkmkgx>
-From: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>
-In-Reply-To: <hmfvyajygmjoeaaashmddu4rg6ttzn7es4sjls5qvnemykkx2l@zuzixrzkmkgx>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: p9o9autkuEDX5tRUsSZyR6g-iawFRZJ-
-X-Authority-Analysis: v=2.4 cv=ReKQC0tv c=1 sm=1 tr=0 ts=67dafdab cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=fppTZj3WDclMhW0upbEA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: p9o9autkuEDX5tRUsSZyR6g-iawFRZJ-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_06,2025-03-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- phishscore=0 suspectscore=0 impostorscore=0 clxscore=1015 mlxscore=0
- malwarescore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503190117
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319-3bf29b05bf02bfdaa32b261c@orel>
 
+On Wed, Mar 19, 2025 at 04:27:39PM +0100, Andrew Jones wrote:
+> On Tue, Mar 18, 2025 at 05:38:45PM -0700, Charlie Jenkins wrote:
+> > We have duplicated the definition of the nop instruction in ftrace.h and
+> > in jump_label.c. Move this definition into the generic file insn-def.h
+> > so that they can share the definition with each other and with future
+> > files.
+> > 
+> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
+> > ---
+> >  arch/riscv/include/asm/ftrace.h   | 1 -
+> >  arch/riscv/include/asm/insn-def.h | 2 ++
+> >  arch/riscv/kernel/ftrace.c        | 6 +++---
+> >  arch/riscv/kernel/jump_label.c    | 4 ++--
+> >  4 files changed, 7 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
+> > index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..b7f361a50f6445d02a0d88eef5547ee27c1fb52e 100644
+> > --- a/arch/riscv/include/asm/ftrace.h
+> > +++ b/arch/riscv/include/asm/ftrace.h
+> > @@ -79,7 +79,6 @@ struct dyn_arch_ftrace {
+> >  #define AUIPC_RA		(0x00000097)
+> >  #define JALR_T0			(0x000282e7)
+> >  #define AUIPC_T0		(0x00000297)
+> > -#define NOP4			(0x00000013)
+> >  
+> >  #define to_jalr_t0(offset)						\
+> >  	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
+> > diff --git a/arch/riscv/include/asm/insn-def.h b/arch/riscv/include/asm/insn-def.h
+> > index 9a913010cdd93cdfdd93f467e7880e20cce0dd2b..0a1fc5134f29da190554c59f8cee3b5374c9aa2d 100644
+> > --- a/arch/riscv/include/asm/insn-def.h
+> > +++ b/arch/riscv/include/asm/insn-def.h
+> > @@ -200,4 +200,6 @@
+> >  #define ZAWRS_WRS_NTO	".4byte 0x00d00073"
+> >  #define ZAWRS_WRS_STO	".4byte 0x01d00073"
+> >  
+> > +#define RISCV_INSN_NOP4	0x00000013U
+> 
+> This should be _AC(0x00000013, U), but since this is the first of its kind
+> (all other defines are of the form ".4byte ..." -- either explicitly, like
+> the ones above, or through the INSN_* macros), then it feels like it
+> either doesn't belong here at all or that we should provide it and a
+> ".4byte ..." version.
 
+Sure, I don't have a strong opinion about this. I was debating adding
+the .4byte version also but decided against it because it isn't being
+used yet, I will add it.
 
-On 3/19/2025 7:03 PM, Dmitry Baryshkov wrote:
-> On Wed, Mar 19, 2025 at 06:24:57PM +0530, Vasanthakumar Thiagarajan wrote:
->>
->>
->> On 3/19/2025 5:21 PM, Dmitry Baryshkov wrote:
->>> On Wed, Mar 19, 2025 at 05:02:39PM +0530, Vasanthakumar Thiagarajan wrote:
->>>>
->>>>
->>>> On 3/19/2025 3:57 PM, Krzysztof Kozlowski wrote:
->>>>> On 19/03/2025 10:06, Vasanthakumar Thiagarajan wrote:
->>>>>>>>> ---
->>>>>>>>> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
->>>>>>>>> change-id: 20250303-topic-ath12k-fix-crash-49e9055c61a1
->>>>>>>>>
->>>>>>>>> Best regards,
->>>>>>>>
->>>>>>>> NAK since this will break QCN
->>>>>>>> There is a series under internal review to address MLO issues for WCN chipsets
->>>>>>>
->>>>>>> ???
->>>>>>>
->>>>>>> The original commit is wrong, this fixes the conversion, nothing else.
->>>>>>
->>>>>> Nope. Driver changes to enable MLO with WCN chipset are not there yet.
->>>>>> Setting the mlo capability flag without having required driver changes
->>>>>> for WCN chipset will likely result in firmware crash. So the recommendation
->>>>>> is to enable MLO (in WCN) only when all the necessary driver changes
->>>>>> (in development, public posting in near future) are in place.
->>>>> Really, these are your answers? There is regression and first reply is
->>>>> upstream should wait for whatever you do internally. Second answer is
->>>>> the same - public posting in near future?
->>>>>
->>>>
->>>> May be I was not clear in my response. I was not telling MLO bug fixes were
->>>> in the development. Actually the MLO feature itself is not enabled
->>>> yet with WCN chip sets. Any code changes enabling it without full feature
->>>> support would result in firmware crashes with the existing firmware binaries
->>>> available in upstream.
->>>
->>> Is there an undocumented change of the behaviour in the commit
->>> 46d16f7e1d14 ("wifi: ath12k: rename mlo_capable_flags to
->>> single_chip_mlo_supp")?
->>>
->>
->> diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
->>
->> -       if (resp.single_chip_mlo_support_valid) {
->> -               if (resp.single_chip_mlo_support)
->> -                       ab->mlo_capable_flags |= ATH12K_INTRA_DEVICE_MLO_SUPPORT;
->> -               else
->> -                       ab->mlo_capable_flags &= ~ATH12K_INTRA_DEVICE_MLO_SUPPORT;
->> -       }
->>
->> The above logic seems to keep the initialized intra MLO support even when
->> single_chip_mlo_support_valid is not set. The above code removal is correct as
->> MLO support can not be enabled in host when firmware does not advertise it.
-> 
-> Ack
-> 
->>
->> diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
->>
-> 
-> You skipped an important chunk:
-> 
-> -	ab->mlo_capable_flags = ATH12K_INTRA_DEVICE_MLO_SUPPORT;
->> +       ab->single_chip_mlo_supp = false;
-> 
-> Is this an _undocumented_ change? I think it is. If the developer has
-> described that the commit disables MLO, there would be no such
-> questions.
-> 
+- Charlie
 
-Right. Since MLO was WCN was not supported, this default configuration was
-changed to avoid potential issues due to partial MLO configurations with
-official upstream firmware binaries.
-
->> diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
->>
->> +       if (resp.single_chip_mlo_support_valid &&
->> +           resp.single_chip_mlo_support)
->> +               ab->single_chip_mlo_supp = true;
->>
->> The above code does it in right way. Overriding firmware MLO capability as done
->> in the submitted patch under review is obviously wrong. The firmware used to report
->> the issue seems to have an odd behavior: 1. it does not seem to advertise MLO
->> capability in single_chip_mlo_support bit and 2. expects configurations to enable
->> MLO from host. None of the WCN firmware available in upstream either advertises
->> MLO capability or expects configurations to enable MLO from host.
 > 
-> Additionally, from the commit message:
+> Thanks,
+> drew
 > 
->      For the WCN7850 family of chipsets, since the event is not supported,
->      assumption is made that single chip MLO is supported.
-> 
-> However the code doesn't contain that change. Instead single chip MLO is
-> unconditionally disabled.
->
-
-This text in commit message seems to be a miss. This should have been
-removed as the merged patch version completely disables MLO for WCN
-chip.
-
-Vasanth
+> > +
+> >  #endif /* __ASM_INSN_DEF_H */
+> > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
+> > index 3524db5e4fa014a4594465f849d898a030bfb7b8..674dcdfae7a149c339f1e791adb450535f22991b 100644
+> > --- a/arch/riscv/kernel/ftrace.c
+> > +++ b/arch/riscv/kernel/ftrace.c
+> > @@ -36,7 +36,7 @@ static int ftrace_check_current_call(unsigned long hook_pos,
+> >  				     unsigned int *expected)
+> >  {
+> >  	unsigned int replaced[2];
+> > -	unsigned int nops[2] = {NOP4, NOP4};
+> > +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+> >  
+> >  	/* we expect nops at the hook position */
+> >  	if (!expected)
+> > @@ -68,7 +68,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
+> >  				bool enable, bool ra)
+> >  {
+> >  	unsigned int call[2];
+> > -	unsigned int nops[2] = {NOP4, NOP4};
+> > +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+> >  
+> >  	if (ra)
+> >  		make_call_ra(hook_pos, target, call);
+> > @@ -97,7 +97,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+> >  int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
+> >  		    unsigned long addr)
+> >  {
+> > -	unsigned int nops[2] = {NOP4, NOP4};
+> > +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
+> >  
+> >  	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
+> >  		return -EPERM;
+> > diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
+> > index 654ed159c830b3d5e34ac58bf367107066eb73a1..b4c1a6a3fbd28533552036194f27ed206bea305d 100644
+> > --- a/arch/riscv/kernel/jump_label.c
+> > +++ b/arch/riscv/kernel/jump_label.c
+> > @@ -11,8 +11,8 @@
+> >  #include <asm/bug.h>
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/text-patching.h>
+> > +#include <asm/insn-def.h>
+> >  
+> > -#define RISCV_INSN_NOP 0x00000013U
+> >  #define RISCV_INSN_JAL 0x0000006fU
+> >  
+> >  bool arch_jump_label_transform_queue(struct jump_entry *entry,
+> > @@ -33,7 +33,7 @@ bool arch_jump_label_transform_queue(struct jump_entry *entry,
+> >  			(((u32)offset & GENMASK(10,  1)) << (21 -  1)) |
+> >  			(((u32)offset & GENMASK(20, 20)) << (31 - 20));
+> >  	} else {
+> > -		insn = RISCV_INSN_NOP;
+> > +		insn = RISCV_INSN_NOP4;
+> >  	}
+> >  
+> >  	if (early_boot_irqs_disabled) {
+> > 
+> > -- 
+> > 2.43.0
+> > 
+> > 
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
