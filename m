@@ -1,37 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13291219A7E;
-	Wed, 19 Mar 2025 23:55:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4034F1DE3A9;
+	Wed, 19 Mar 2025 23:58:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742428513; cv=none; b=j7JtTPdOc7aBPwgfKCsKC2Dq2aKNF/6ECAY5GPSgM8AxN1wvvota0fXKvDJeNdumEjWMZtg7N34DTFvUCavLslocvGeJwOk6dOOd/1eqV4JE/gaVvBMDwpPNq/gQUVIPigy/aGS9myS7g9syGOw/JMwYTFE08HkA5eJ7ewDsE1g=
+	t=1742428693; cv=none; b=Ndoj6luz0+1V47TvDMU8A9SAhUnYbgXrpXC19oLWh9GppfgWp5VrRNgheaQhZuf9tOGi9jxFAa0HPGJisqeDTLXSGpHJztfgCo67nL91WwwLMYVyOuGNLFCUUZn781S2EEPaxJ6NWN+Mi7BgGsMtAJIE5RKenp32LrKBodwB+bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742428513; c=relaxed/simple;
-	bh=ZHlDr1DFYlSxB8cpiuHTZVz4DMnmYr21wuhSjCJu4Zo=;
+	s=arc-20240116; t=1742428693; c=relaxed/simple;
+	bh=ZZKfA84RzRDEAliz95nfjz5QwDog7cyZVSrWYTw/zI8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=u/G1iTYXr4cR04M9vJ8o07J+XqcWJ5+UiugtJDiEqHaKaW+NSF0Oeege6cNZ5Vc1qXao7tlACb1iWhHcDWNALVum4gB1a1+6J2RfFhEp2CyHR+/PjOeFNJlZu94jJ5P65GScnIuR15e01SytOK1rCZh8ZuGjkC8pC258IOA/lME=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=gB1kCa/w; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=nXLJj2x84gKvXdTOhljDJhSM5yr7bzeu76svY0Y1Q2dmiB6q9DJqFoC+K5wFpieUB20t80s0PX4Cg8cnWTxkCn76rYVsxjdcbCoXQQ32Ps/0IjVz5w39AWPna44nrdh4cPP9c1i4c+fEM439NUGZozmDZtzA808PA8yManRo5D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEs3QJCh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="gB1kCa/w"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A993C4CEE4;
-	Wed, 19 Mar 2025 23:55:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742428512;
-	bh=ZHlDr1DFYlSxB8cpiuHTZVz4DMnmYr21wuhSjCJu4Zo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aEs3QJCh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 458ACC4CEE4;
+	Wed, 19 Mar 2025 23:58:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742428692;
+	bh=ZZKfA84RzRDEAliz95nfjz5QwDog7cyZVSrWYTw/zI8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gB1kCa/wL/HzAdvTkgp38QB5Oapu3pyTOZgBjiYAJj447NC9yOq+Lxpul/ItjqkmV
-	 m8qyRNGHkgUHiW6RD268UZL3ZL6uiWf9vvbycp92LnqoHpL/v3kiC3FrNrElw1Etvi
-	 OJv4nyGhU5xTHwrEx/Egc8pCmUwd6WF6tqpkPxkA=
-Date: Wed, 19 Mar 2025 16:53:53 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Hardik Garg <hargar@linux.microsoft.com>
-Cc: frank.scheiner@web.de, dchinner@redhat.com, djwong@kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: 6.1.132-rc1 build regression on Azure x86 and arm64 VM
-Message-ID: <2025031946-polygon-barrel-6df0@gregkh>
-References: <8c6125d7-363c-42b3-bdbb-f802cb8b4408@web.de>
- <1742423150-5185-1-git-send-email-hargar@linux.microsoft.com>
+	b=aEs3QJChJFcdnPOHTauCmOrZ6IULAT7ZHAPKR4zUQKWpU4fVfq9xjjqMYvsI+BjnY
+	 tGhOwI9ScxsMy66k/+abaRY04I7+m9j1tjEdH9fAhcXCSi4LivrGhOBfVFXXTzlwMI
+	 p6De/RCvhON6CzIS0tGTyTbJuvO/FmRVGYyS9qC2+lu2dN/kngG4jI+E5IYPUo5gkM
+	 HheOzDF+CuZXuwayiJHFY7XfsiLvcbIecQPzGP0Uq9g85V4ym5K4eDIuM35vhUNiP3
+	 c/51O56HdxpGl/vDaGjSfPHxwvJ+8zacziTn2x/482i+A/8y3atJDVk6Ur1lsSqNve
+	 C0gP39TapTPrQ==
+Date: Thu, 20 Mar 2025 00:58:09 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Ming Yu <a0282524688@gmail.com>
+Cc: tmyu0@nuvoton.com, lee@kernel.org, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, mkl@pengutronix.de, mailhol.vincent@wanadoo.fr, 
+	andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com, kuba@kernel.org, 
+	pabeni@redhat.com, wim@linux-watchdog.org, linux@roeck-us.net, jdelvare@suse.com, 
+	alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-can@vger.kernel.org, netdev@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, linux-hwmon@vger.kernel.org, linux-rtc@vger.kernel.org, 
+	linux-usb@vger.kernel.org
+Subject: Re: [PATCH v8 3/7] i2c: Add Nuvoton NCT6694 I2C support
+Message-ID: <jpaqx2z5io2bvtluexnzrkz4zcvea7qqgpa6bdhm4yzby2rjgb@izncuolmv7tl>
+References: <20250225081644.3524915-1-a0282524688@gmail.com>
+ <20250225081644.3524915-4-a0282524688@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,50 +49,25 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1742423150-5185-1-git-send-email-hargar@linux.microsoft.com>
+In-Reply-To: <20250225081644.3524915-4-a0282524688@gmail.com>
 
-On Wed, Mar 19, 2025 at 03:25:50PM -0700, Hardik Garg wrote:
-> v6.1.132-rc1 build fails on Azure x86 and arm64 VM:
+Hi Ming,
 
-Odd, there is no real 6.1.132-rc1 announcement yet, so there's no rush
-at the moment :)
+...
 
-> fs/xfs/libxfs/xfs_alloc.c: In function '__xfs_free_extent_later':
-> fs/xfs/libxfs/xfs_alloc.c:2551:51: error: 'mp' undeclared (first use in this function); did you mean 'tp'?
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |                                                   ^~
-> ./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
->    78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
->       |                                             ^
-> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CORRUPT'
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |             ^~~~~~~~~~~~~~
-> fs/xfs/libxfs/xfs_alloc.c:2551:51: note: each undeclared identifier is reported only once for each function it appears in
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |                                                   ^~
-> ./include/linux/compiler.h:78:45: note: in definition of macro 'unlikely'
->    78 | # define unlikely(x)    __builtin_expect(!!(x), 0)
->       |                                             ^
-> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CORRUPT'
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |             ^~~~~~~~~~~~~~
-> In file included from ./fs/xfs/xfs.h:22,
->                  from fs/xfs/libxfs/xfs_alloc.c:6:
-> ./fs/xfs/xfs_linux.h:225:63: warning: left-hand operand of comma expression has no effect [-Wunused-value]
->   225 |                                                __this_address), \
->       |                                                               ^
-> fs/xfs/libxfs/xfs_alloc.c:2551:13: note: in expansion of macro 'XFS_IS_CORRUPT'
->  2551 |         if (XFS_IS_CORRUPT(mp, !xfs_verify_fsbext(mp, bno, len)))
->       |             ^~~~~~~~~~~~~~
->   CC [M]  net/ipv4/netfilter/arpt_mangle.o
->   CC      net/unix/scm.o
-> make[3]: *** [scripts/Makefile.build:250: fs/xfs/libxfs/xfs_alloc.o] Error 1
-> make[2]: *** [scripts/Makefile.build:503: fs/xfs] Error 2
+> +enum i2c_baudrate {
+> +	I2C_BR_25K = 0,
+> +	I2C_BR_50K,
+> +	I2C_BR_100K,
+> +	I2C_BR_200K,
+> +	I2C_BR_400K,
+> +	I2C_BR_800K,
+> +	I2C_BR_1M
+> +};
 
-Something is odd with the xfs patches I took?
+do we need all these frequencies? I don't see them use anywhere.
 
-Any hints on what to do is appreciated.
+Besides, can you please use a proper prefix? I2C_BR_* prefix
+doesn't belong to this driver.
 
-thanks,
-
-greg k-h
+Andi
