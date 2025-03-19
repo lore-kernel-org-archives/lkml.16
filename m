@@ -1,100 +1,214 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E44D253B60;
-	Wed, 19 Mar 2025 11:20:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE7B0253351
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:20:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383233; cv=none; b=M6ic+fEhCE+eYBTfnV/9VRX288I8XqQV04Ve1ZgXZXaUk0kQhNGUjjgnpgT9BdpzEyLVZUaJD+vhMFe/j58V2yUvBCqovKjAxwZyeb+Ahybmjv1tFoN9A/pOG2GrZR5VgXNxUaPOd6kzL7YfZaltEswsfa6NovrLW8ASQX/4Fqw=
+	t=1742383243; cv=none; b=ItuOyGurkpv+PobNL8cdYBRHmpqmYJ78bvQn14ETs0Zr6AyrsGS/Nbb0DsgE3lYoG5n2M6V3Hd9Z8u09bwxYj5aiOQ6yZDuTdkt4FAI9l3AmdH0jn16DePnrSLEQm6n99gvy0prP3XdD2AyJ4PjlTSAPnBSe3bdEMfnvZx7XoFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383233; c=relaxed/simple;
-	bh=B+17j5jolfdx3WXL9Gf2rnba3jqFhU90Ia7tK66cMlw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=bA68FI5dt/vw/eRoOD7OPnxlMl8bRKBCfO3cuRrgyIHGPfxLCyZtm0o6zHIMD2QOPqe2qWJCNmVRz8F6ivIKaWIX3MpZZlsQTqV0QPJYqyJbVR57A3JC174e0OAtTWALG5SDyFwKuEcPtLlDTeB1gPCDxA79LUQFR3/M3hBe6Gg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EuUXWWw+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742383243; c=relaxed/simple;
+	bh=3J58Se8XDTl9BlGgRs5d+IlBlOxSoL35kOrUGSCwDcM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cGfVxWwvtxUzcK1NAZRRFtyBzmdjDYrCNVvGTtfKrJ4rTOh46boDEhePjFjCve13uoi4x7p45vceBFY6lxUDtNVZVsJmsqtvaPucMhD8YInAFZ1BWAHeP+0SDcTkI5ZdNgLIAl8AYyRoTR5gJcjY/i8OvwtdF/TbuqCNOsjq9Oo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=JIWEf3xH; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EuUXWWw+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DEB2C4CEF0;
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="JIWEf3xH"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id 8BCF914C2D3;
+	Wed, 19 Mar 2025 12:20:31 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1742383233;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lXpgVvCHByq70ntTWtHcQtsufg4U/O6aceBq0lCugzo=;
+	b=JIWEf3xHy6HLfPcZIlPCTBJrwHhTuwPFgXkI/GHmE2gH9RHMNRh0EmG9zI97aKfeghRuPd
+	oWIylvR+zhgWtwY8tPqWJm5labeLymHzTfzF+M1KFszHcnMmL8YzkedjiVf3uRCzZHmE8y
+	jdGD5ih29L5UvjsUJG3i+lduNbDvVeR0SmPluroTBLvk9OZYb5dTF73YoFxzBg/SXQr/aO
+	2lYO9WtPRYeCAgICU1nCYjZ1RU1MJISerFLgnOA3o0gymE+ciWeaacP6ZA29Dr3K3TzZad
+	NZ6nfCwWzF7c/xMYuiPAQLt3HypLpUMbuV9OhEBH4DyMs3hZXVDZtXCwghMOrg==
+Received: from [127.0.0.1] (localhost.lan [::1])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 0eaf4a6f;
 	Wed, 19 Mar 2025 11:20:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742383232;
-	bh=B+17j5jolfdx3WXL9Gf2rnba3jqFhU90Ia7tK66cMlw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=EuUXWWw+NeeLGBB3nCjSsozR6iGNlrYLwWvH2lLXJj10zj04Wkm661PTmnn4WJau4
-	 NeL14YD3/Rifdaj7q8rVNLhW7JZWtbZc9d/oiR+DmKiX0wgWPbPyZ1t4E3kos0cgax
-	 C6zcZ6LJvZwpryUVSzBd9FxmnUAOMke3YlBoDgo7esh+7HSvbxBArioiJb5MTam7za
-	 vdX5acEElMKAPfqB2b93XaYqQ0FHKMLfI9YTqknoI5PG0Pa8KWeN4PIJIuFgJNWr2v
-	 hJuqgyfcYRUOmmvpjYPwQRp/n36IX8jDTo2NjiN0HaGFo2gtP+xjwGhxnGLKCc6MoI
-	 Gx0sPk8zo+qAg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: "Danilo Krummrich" <dakr@kernel.org>
-Cc: <bhelgaas@google.com>,  <gregkh@linuxfoundation.org>,
-  <rafael@kernel.org>,  <ojeda@kernel.org>,  <alex.gaynor@gmail.com>,
-  <boqun.feng@gmail.com>,  <gary@garyguo.net>,  <bjorn3_gh@protonmail.com>,
-  <benno.lossin@proton.me>,  <aliceryhl@google.com>,  <tmgross@umich.edu>,
-  <linux-pci@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>,
-  <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/2] rust: pci: impl Send + Sync for pci::Device
-In-Reply-To: <20250318212940.137577-1-dakr@kernel.org> (Danilo Krummrich's
-	message of "Tue, 18 Mar 2025 22:29:21 +0100")
-References: <ddLRqqXuFiaRVyCNUWk5k3cc0pJCteUQ5tBxGr5_7QXDeygE0d-YFc9nbJD0pNJ8RjZ3nCaWOCM56r0ZWmWdJw==@protonmail.internalid>
-	<20250318212940.137577-1-dakr@kernel.org>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 19 Mar 2025 12:18:35 +0100
-Message-ID: <87o6xxgtf8.fsf@kernel.org>
+From: Dominique Martinet <asmadeus@codewreck.org>
+Date: Wed, 19 Mar 2025 20:20:15 +0900
+Subject: [PATCH v3] 9p/net: fix improper handling of bogus negative
+ read/write replies
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250319-9p_unsigned_rw-v3-1-71327f1503d0@codewreck.org>
+X-B4-Tracking: v=1; b=H4sIAG+o2mcC/3XM0QrCIBiG4VsZHmfo72zYUfcRMUz/bRLo0HLF2
+ L3nBp0UHb4ffM9MEkaHiRyrmUTMLrngS4hdRcygfY/U2dIEGNQcAKga24dPrvdo2zhRJjolrZY
+ gNSPlNEbs3HMDz5fSg0v3EF+bn/m6/qUyp5wK1KrhFhgz15MJFqeI5rYPsScrl+FDSCZ480NAI
+ ZRttKq14geN38SyLG9uAfcH8wAAAA==
+To: Eric Van Hensbergen <ericvh@kernel.org>, 
+ Latchesar Ionkov <lucho@ionkov.net>, 
+ Christian Schoenebeck <linux_oss@crudebyte.com>
+Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ Robert Morris <rtm@mit.edu>, Dominique Martinet <asmadeus@codewreck.org>
+X-Mailer: b4 0.14-dev-87f09
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4885;
+ i=asmadeus@codewreck.org; h=from:subject:message-id;
+ bh=3J58Se8XDTl9BlGgRs5d+IlBlOxSoL35kOrUGSCwDcM=;
+ b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBn2qh5cq2NDOvwvpzA9OI2dfr364fxm3CO5+gvH
+ nmwNPRPw82JAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZ9qoeQAKCRCrTpvsapjm
+ cNKWEACW+5TL7uCVj8SEfCusCrPdUEQN9InPwhuUGzxCUuUe0nnhUhuXbBpP9VOv6VhLSorIWzD
+ qvPoimJdsOAeTY/4zczUyRQTXaVZjOnLFseCPvbecRnzTcEibivRetditsH0fpgt4y6MzgwEX5u
+ qFUTgSGdcigUtztDej4X4R0/0CP6qhrw3Qdq4C3YycC9rmQbZvli2j3FCjyrY5ShK3v+IwGiTh6
+ wDz3fxLz707fEQiz7tdrYbPzi+XX/fcf+II/ZBnaKJqUYYOL8OCVhxYN4FJpTQYRzi8GigTEOT5
+ rUhhsVMlR3dqWDQQCtLvH36huPjswBOXjD0EP8L7WSSgwo/SKQlHEF/Dt55JdRD/YeCc5O7cWPu
+ qaDOhpz5X+rBB1G5XWZ63OiadfwrRCeva9Jqu5mTQN3r9gdrNFAd0bieEenA7Q8+99p1r+OwF1Y
+ RUUdAoSb0Z6aL4u2v163zM8uVLwAobwLqd+1mgDVL4rdqey6f74BCVfYNIutS4zHgjeZO/n6YOx
+ VKMP+mu9kkRTG6hm7Mf09da9MZPughyZXNw9RMCHT5N6xR+vAQYrg4kyTdrAYR/vpOWKbT3qvN6
+ tYbely5AXvdWuSa2/sRjJqlv0+3DmbgxLixxA5+/zUf6K06mC0JBtWwMZzIjht3XvPo0qJ4UFy0
+ BfLSDrI5+CDPbSw==
+X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
+ fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
 
-"Danilo Krummrich" <dakr@kernel.org> writes:
+In p9_client_write() and p9_client_read_once(), if the server
+incorrectly replies with success but a negative write/read count then we
+would consider written (negative) <= rsize (positive) because both
+variables were signed.
 
-> Commit 7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
-> changed the definition of pci::Device and discarded the implicitly
-> derived Send and Sync traits.
->
-> This isn't required by upstream code yet, and hence did not cause any
-> issues. However, it is relied on by upcoming drivers, hence add it back
-> in.
->
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/pci.rs | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-> index 0ac6cef74f81..0d09ae34a64d 100644
-> --- a/rust/kernel/pci.rs
-> +++ b/rust/kernel/pci.rs
-> @@ -465,3 +465,10 @@ fn as_ref(&self) -> &device::Device {
->          unsafe { device::Device::as_ref(dev) }
->      }
->  }
-> +
-> +// SAFETY: A `Device` is always reference-counted and can be released from any thread.
-> +unsafe impl Send for Device {}
-> +
-> +// SAFETY: `Device` can be shared among threads because all methods of `Device`
-> +// (i.e. `Device<Normal>) are thread safe.
-> +unsafe impl Sync for Device {}
->
-> base-commit: 4d320e30ee04c25c660eca2bb33e846ebb71a79a
+Make variables unsigned to avoid this problem.
 
-I can't find the base-commit and the patch does not apply clean on v6.14-rc7:
+The reproducer linked below now fails with the following error instead
+of a null pointer deref:
+9pnet: bogus RWRITE count (4294967295 > 3)
 
-  patching file rust/kernel/pci.rs
-  Hunk #1 succeeded at 432 with fuzz 1 (offset -33 lines).
+Reported-by: Robert Morris <rtm@mit.edu>
+Closes: https://lore.kernel.org/16271.1734448631@26-5-164.dynamic.csail.mit.edu
+Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
+---
+Changes in v3:
+- fix bad print formats
+- Link to v2: https://lore.kernel.org/r/20250317-9p_unsigned_rw-v2-1-9d7a94a916ae@codewreck.org
 
-Otherwise looks good. You might want to rebase?
+Changes in v2:
+- fixed rsize to be u32 instead of size_t
+- Link to v1: https://lore.kernel.org/r/20241222-9p_unsigned_rw-v1-1-3ea971d200cb@codewreck.org
+---
+ net/9p/client.c | 30 ++++++++++++++++--------------
+ 1 file changed, 16 insertions(+), 14 deletions(-)
 
+diff --git a/net/9p/client.c b/net/9p/client.c
+index 09f8ced9f8bb..52a5497cfca7 100644
+--- a/net/9p/client.c
++++ b/net/9p/client.c
+@@ -1548,7 +1548,8 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
+ 	struct p9_client *clnt = fid->clnt;
+ 	struct p9_req_t *req;
+ 	int count = iov_iter_count(to);
+-	int rsize, received, non_zc = 0;
++	u32 rsize, received;
++	bool non_zc = false;
+ 	char *dataptr;
+ 
+ 	*err = 0;
+@@ -1571,7 +1572,7 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
+ 				       0, 11, "dqd", fid->fid,
+ 				       offset, rsize);
+ 	} else {
+-		non_zc = 1;
++		non_zc = true;
+ 		req = p9_client_rpc(clnt, P9_TREAD, "dqd", fid->fid, offset,
+ 				    rsize);
+ 	}
+@@ -1592,11 +1593,11 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
+ 		return 0;
+ 	}
+ 	if (rsize < received) {
+-		pr_err("bogus RREAD count (%d > %d)\n", received, rsize);
++		pr_err("bogus RREAD count (%u > %u)\n", received, rsize);
+ 		received = rsize;
+ 	}
+ 
+-	p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", received);
++	p9_debug(P9_DEBUG_9P, "<<< RREAD count %u\n", received);
+ 
+ 	if (non_zc) {
+ 		int n = copy_to_iter(dataptr, received, to);
+@@ -1623,9 +1624,9 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
+ 	*err = 0;
+ 
+ 	while (iov_iter_count(from)) {
+-		int count = iov_iter_count(from);
+-		int rsize = fid->iounit;
+-		int written;
++		size_t count = iov_iter_count(from);
++		u32 rsize = fid->iounit;
++		u32 written;
+ 
+ 		if (!rsize || rsize > clnt->msize - P9_IOHDRSZ)
+ 			rsize = clnt->msize - P9_IOHDRSZ;
+@@ -1633,7 +1634,7 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
+ 		if (count < rsize)
+ 			rsize = count;
+ 
+-		p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %d (/%d)\n",
++		p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %u (/%zu)\n",
+ 			 fid->fid, offset, rsize, count);
+ 
+ 		/* Don't bother zerocopy for small IO (< 1024) */
+@@ -1659,11 +1660,11 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
+ 			break;
+ 		}
+ 		if (rsize < written) {
+-			pr_err("bogus RWRITE count (%d > %d)\n", written, rsize);
++			pr_err("bogus RWRITE count (%u > %u)\n", written, rsize);
+ 			written = rsize;
+ 		}
+ 
+-		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", written);
++		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %u\n", written);
+ 
+ 		p9_req_put(clnt, req);
+ 		iov_iter_revert(from, count - written - iov_iter_count(from));
+@@ -2098,7 +2099,8 @@ EXPORT_SYMBOL_GPL(p9_client_xattrcreate);
+ 
+ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
+ {
+-	int err, rsize, non_zc = 0;
++	int err, non_zc = 0;
++	u32 rsize;
+ 	struct p9_client *clnt;
+ 	struct p9_req_t *req;
+ 	char *dataptr;
+@@ -2107,7 +2109,7 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
+ 
+ 	iov_iter_kvec(&to, ITER_DEST, &kv, 1, count);
+ 
+-	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %d\n",
++	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %u\n",
+ 		 fid->fid, offset, count);
+ 
+ 	clnt = fid->clnt;
+@@ -2142,11 +2144,11 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
+ 		goto free_and_error;
+ 	}
+ 	if (rsize < count) {
+-		pr_err("bogus RREADDIR count (%d > %d)\n", count, rsize);
++		pr_err("bogus RREADDIR count (%u > %u)\n", count, rsize);
+ 		count = rsize;
+ 	}
+ 
+-	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %d\n", count);
++	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %u\n", count);
+ 
+ 	if (non_zc)
+ 		memmove(data, dataptr, count);
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
-
+---
+base-commit: 28e6f0643ff4431aac807e902ff0c8de16b2216d
+change-id: 20241222-9p_unsigned_rw-03f95da525a0
 
 Best regards,
-Andreas Hindborg
-
+-- 
+Dominique Martinet | Asmadeus
 
