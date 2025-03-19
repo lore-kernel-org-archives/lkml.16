@@ -1,64 +1,58 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0899825CC6D;
-	Wed, 19 Mar 2025 11:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4001125D213;
+	Wed, 19 Mar 2025 11:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382237; cv=none; b=Eu37dROFcjpLaPftn0lrHMT1oTgxCFR6RDfIFq+Iak72KnK+myvUjf5JSe0ucKTvjTHGHKBNvsXhH5/j48F8LQ1oh+CoUWYz87wEsugABSxkCeyenD7Kja90eJKE4X09i3dZuETyvRuMOHQdUWCB/7C8pQk+3C7LWnpDaLO9ZQc=
+	t=1742382238; cv=none; b=NvgFOnwSnhFwUyVSoUjkBPN4j/4XRfyZleztizUgmooRxpr3Of7a5mnzmZ/hkFGSJ4w09KDqm0v10GmTdteeyRoOKOO6Fajvol+5DQN/ATLx3JAmpLhMc1apqL/VDB9yNJ91LZ8qdVtLTkZav45wCHvJkWe2yyPp1kVINZwT6D4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382237; c=relaxed/simple;
-	bh=7SXGMEj8ntnRHwzQ9if4v2JPI/DdPoxxHFOsy8TvSKc=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qPbzlnUb45d+creRxJHzjQFKnIPhWUmpokfM4AR78S3vIFonqIQGXO0iuLUt/9C0JxsJylOKQ17VaZqH74ah3cADs2L7RLPnzpv/kk6wh3Ub2rRmWTVCYbMrEGuzjIcTpAimgqKErS5phPuLPO8gSlzhaqm59THFYUtwq/oiskU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EylSePQW; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=W2sPgfsy; arc=none smtp.client-ip=193.142.43.55
+	s=arc-20240116; t=1742382238; c=relaxed/simple;
+	bh=mb7uaerLDeggVUEPwAhHEAE/aH6Cpkkbc9u5ClBE7Iw=;
+	h=Date:From:To:Subject:Cc:MIME-Version:Message-ID:Content-Type; b=EmVgVCEGBtTywyETlj2Zp9rD00lexCp7/tOvNMm9vcEibkUYnGl2tsyWBeUUz7EROueYUoA8q0cmA4L6bCBK+psXFAoudZBFssbF3/dUVanIN/gZCmnOcMji/NeqbOimTwPIvhnzfWU9Ux1EMKGhTF38xAUxl9oa4XlNyViMl7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vIkbc4jF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Fi6zQjPL; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EylSePQW";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="W2sPgfsy"
-Date: Wed, 19 Mar 2025 11:03:52 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vIkbc4jF";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Fi6zQjPL"
+Date: Wed, 19 Mar 2025 11:03:53 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382232;
+	s=2020; t=1742382234;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JNU8HJMX96zayZ8wzwRgglI8MG69Z0KRktZqoCfCJ2s=;
-	b=EylSePQWd3kxI+2ytktT4iqiBMvJBlYPUsrjCENfGaX/ZgxgsM0tcSfjkV0EZ1GscwB5nW
-	cRRJ6L/jEWgGBZT558STOiq537v8QwnF/DhAAC6ktS2WkQhR5Y5QSdICWNVliMSVbx+MJy
-	OrhLtiNfqIxWDwcWuo0PqTou5doiOKU/H86HZMCO81fgt95+xd5OV7boXZ0o59lbrHSAHJ
-	9qT+XnTB3BqEbjKz1kpBXWu0A6lNg1DoBLqzz8I+M7qAz0RW0C4F5YVLofvimmK69hjD9i
-	XdWrWJg0kJE7+PlTmj9M0Rth+Da44V5b66zITj8OPPbjt3vb4uCIadAMsq07Ag==
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=XnUkTbbjiUCbEnfHCifzLKt7/3gvERIafLj2qXsFs3o=;
+	b=vIkbc4jFw0kAH7gn1yhCEnCFTNlGmz+naAAdvsPkyL5FRdKsPWtgEGJeHLI0woQYwdLqc3
+	bqAsLQbF8xnm5vonBjBUpYXIDjmDJaBFAlKZk8y5brYPmUQdr7VGQRzE3U9ZBFvvN5KFGq
+	WDgffcLBu2xht2sxwG/coq53XH4LjZ7oaLDy2sK9epR0IIUxj4gLP4y4uI+EKZLTSdO9Jo
+	pf1BhBfT7oQg366fPsWHAdgzPh0NwkktMKe9Zm4o0K2n4CLv9QGtyfm78cwmwtCifxrduy
+	oGhsiGkP9mmvrEX2cy5LHqHrRNxh2qhcEKk7maFqeZkqD02CDw0I3QHQqjidOQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382232;
+	s=2020e; t=1742382234;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JNU8HJMX96zayZ8wzwRgglI8MG69Z0KRktZqoCfCJ2s=;
-	b=W2sPgfsy0TJPdV8AusD9+DGsHhQORlTr/ICiut37hYuZMK+ebeiGtkRAlU/sC/VxG2a2HX
-	sCRXafBhL4oqJlBw==
-From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
+	 content-type:content-type:  content-transfer-encoding:content-transfer-encoding;
+	bh=XnUkTbbjiUCbEnfHCifzLKt7/3gvERIafLj2qXsFs3o=;
+	b=Fi6zQjPLr9I7UBBITaAy1Ff7V4x9n07AffZKb1Zvxjvt1X1Rj2Yr08THkn9JA1bFnb8xLs
+	bSrOnANcU9oen3BA==
+From: "tip-bot2 for Thorsten Blum" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/core] x86/amd_node: Add support for debugfs access to SMN registers
-Cc: Mario Limonciello <mario.limonciello@amd.com>,
- Yazen Ghannam <yazen.ghannam@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250130-wip-x86-amd-nb-cleanup-v4-3-b5cc997e471b@amd.com>
-References: <20250130-wip-x86-amd-nb-cleanup-v4-3-b5cc997e471b@amd.com>
+Subject: [tip: x86/core] x86/mtrr: Use str_enabled_disabled() helper in
+ print_mtrr_state()
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+ Thorsten Blum <thorsten.blum@linux.dev>,
+ Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238223204.14745.16402008278992919220.tip-bot2@tip-bot2>
+Message-ID: <174238223377.14745.7305720279082979065.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,159 +62,62 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     9c19cc1f5f571b03cc56338ed12836531a4989a4
-Gitweb:        https://git.kernel.org/tip/9c19cc1f5f571b03cc56338ed12836531a4989a4
-Author:        Mario Limonciello <mario.limonciello@amd.com>
-AuthorDate:    Thu, 30 Jan 2025 19:48:57 
+Commit-ID:     ad5a3a8f41aaa511b2150859ef5b1d76fff34fc9
+Gitweb:        https://git.kernel.org/tip/ad5a3a8f41aaa511b2150859ef5b1d76fff34fc9
+Author:        Thorsten Blum <thorsten.blum@linux.dev>
+AuthorDate:    Fri, 17 Jan 2025 15:48:59 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:18:33 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:17:56 +01:00
 
-x86/amd_node: Add support for debugfs access to SMN registers
+x86/mtrr: Use str_enabled_disabled() helper in print_mtrr_state()
 
-There are certain registers on AMD Zen systems that can only be accessed
-through SMN.
+Remove hard-coded strings by using the str_enabled_disabled() helper
+function.
 
-Introduce a new interface that provides debugfs files for accessing SMN.  As
-this introduces the capability for userspace to manipulate the hardware in
-unpredictable ways, taint the kernel when writing.
-
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
-Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
+Suggested-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+Signed-off-by: Dave Hansen <dave.hansen@linux.intel.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250130-wip-x86-amd-nb-cleanup-v4-3-b5cc997e471b@amd.com
+Link: https://lore.kernel.org/all/20250117144900.171684-2-thorsten.blum%40linux.dev
 ---
- arch/x86/kernel/amd_node.c |  99 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 99 insertions(+)
+ arch/x86/kernel/cpu/mtrr/generic.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
-index ac57194..b670fa8 100644
---- a/arch/x86/kernel/amd_node.c
-+++ b/arch/x86/kernel/amd_node.c
-@@ -8,6 +8,7 @@
-  * Author: Yazen Ghannam <Yazen.Ghannam@amd.com>
-  */
+diff --git a/arch/x86/kernel/cpu/mtrr/generic.c b/arch/x86/kernel/cpu/mtrr/generic.c
+index 2fdfda2..6be3cad 100644
+--- a/arch/x86/kernel/cpu/mtrr/generic.c
++++ b/arch/x86/kernel/cpu/mtrr/generic.c
+@@ -9,6 +9,7 @@
+ #include <linux/io.h>
+ #include <linux/mm.h>
+ #include <linux/cc_platform.h>
++#include <linux/string_choices.h>
+ #include <asm/processor-flags.h>
+ #include <asm/cacheinfo.h>
+ #include <asm/cpufeature.h>
+@@ -646,10 +647,10 @@ static void __init print_mtrr_state(void)
+ 	pr_info("MTRR default type: %s\n",
+ 		mtrr_attrib_to_str(mtrr_state.def_type));
+ 	if (mtrr_state.have_fixed) {
+-		pr_info("MTRR fixed ranges %sabled:\n",
+-			((mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED) &&
+-			 (mtrr_state.enabled & MTRR_STATE_MTRR_FIXED_ENABLED)) ?
+-			 "en" : "dis");
++		pr_info("MTRR fixed ranges %s:\n",
++			str_enabled_disabled(
++			 (mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED) &&
++			 (mtrr_state.enabled & MTRR_STATE_MTRR_FIXED_ENABLED)));
+ 		print_fixed(0x00000, 0x10000, mtrr_state.fixed_ranges + 0);
+ 		for (i = 0; i < 2; ++i)
+ 			print_fixed(0x80000 + i * 0x20000, 0x04000,
+@@ -661,8 +662,8 @@ static void __init print_mtrr_state(void)
+ 		/* tail */
+ 		print_fixed_last();
+ 	}
+-	pr_info("MTRR variable ranges %sabled:\n",
+-		mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED ? "en" : "dis");
++	pr_info("MTRR variable ranges %s:\n",
++		str_enabled_disabled(mtrr_state.enabled & MTRR_STATE_MTRR_ENABLED));
+ 	high_width = (boot_cpu_data.x86_phys_bits - (32 - PAGE_SHIFT) + 3) / 4;
  
-+#include <linux/debugfs.h>
- #include <asm/amd_node.h>
- 
- /*
-@@ -192,6 +193,87 @@ int __must_check amd_smn_hsmp_rdwr(u16 node, u32 address, u32 *value, bool write
- }
- EXPORT_SYMBOL_GPL(amd_smn_hsmp_rdwr);
- 
-+static struct dentry *debugfs_dir;
-+static u16 debug_node;
-+static u32 debug_address;
-+
-+static ssize_t smn_node_write(struct file *file, const char __user *userbuf,
-+			      size_t count, loff_t *ppos)
-+{
-+	u16 node;
-+	int ret;
-+
-+	ret = kstrtou16_from_user(userbuf, count, 0, &node);
-+	if (ret)
-+		return ret;
-+
-+	if (node >= amd_num_nodes())
-+		return -ENODEV;
-+
-+	debug_node = node;
-+	return count;
-+}
-+
-+static int smn_node_show(struct seq_file *m, void *v)
-+{
-+	seq_printf(m, "0x%08x\n", debug_node);
-+	return 0;
-+}
-+
-+static ssize_t smn_address_write(struct file *file, const char __user *userbuf,
-+				 size_t count, loff_t *ppos)
-+{
-+	int ret;
-+
-+	ret = kstrtouint_from_user(userbuf, count, 0, &debug_address);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+static int smn_address_show(struct seq_file *m, void *v)
-+{
-+	seq_printf(m, "0x%08x\n", debug_address);
-+	return 0;
-+}
-+
-+static int smn_value_show(struct seq_file *m, void *v)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = amd_smn_read(debug_node, debug_address, &val);
-+	if (ret)
-+		return ret;
-+
-+	seq_printf(m, "0x%08x\n", val);
-+	return 0;
-+}
-+
-+static ssize_t smn_value_write(struct file *file, const char __user *userbuf,
-+			       size_t count, loff_t *ppos)
-+{
-+	u32 val;
-+	int ret;
-+
-+	ret = kstrtouint_from_user(userbuf, count, 0, &val);
-+	if (ret)
-+		return ret;
-+
-+	add_taint(TAINT_CPU_OUT_OF_SPEC, LOCKDEP_STILL_OK);
-+
-+	ret = amd_smn_write(debug_node, debug_address, val);
-+	if (ret)
-+		return ret;
-+
-+	return count;
-+}
-+
-+DEFINE_SHOW_STORE_ATTRIBUTE(smn_node);
-+DEFINE_SHOW_STORE_ATTRIBUTE(smn_address);
-+DEFINE_SHOW_STORE_ATTRIBUTE(smn_value);
-+
- static int amd_cache_roots(void)
- {
- 	u16 node, num_nodes = amd_num_nodes();
-@@ -239,6 +321,15 @@ static int reserve_root_config_spaces(void)
- 	return 0;
- }
- 
-+static bool enable_dfs;
-+
-+static int __init amd_smn_enable_dfs(char *str)
-+{
-+	enable_dfs = true;
-+	return 1;
-+}
-+__setup("amd_smn_debugfs_enable", amd_smn_enable_dfs);
-+
- static int __init amd_smn_init(void)
- {
- 	int err;
-@@ -259,6 +350,14 @@ static int __init amd_smn_init(void)
- 	if (err)
- 		return err;
- 
-+	if (enable_dfs) {
-+		debugfs_dir = debugfs_create_dir("amd_smn", arch_debugfs_dir);
-+
-+		debugfs_create_file("node",	0600, debugfs_dir, NULL, &smn_node_fops);
-+		debugfs_create_file("address",	0600, debugfs_dir, NULL, &smn_address_fops);
-+		debugfs_create_file("value",	0600, debugfs_dir, NULL, &smn_value_fops);
-+	}
-+
- 	return 0;
- }
- 
+ 	for (i = 0; i < num_var_ranges; ++i) {
