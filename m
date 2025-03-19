@@ -1,65 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD3BB259C89;
-	Wed, 19 Mar 2025 11:03:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCE1E25A2DB;
+	Wed, 19 Mar 2025 11:03:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382229; cv=none; b=rnKIPa1CUayW40kzScSYbPGMWg+7GzRXFRKo5a4zGjHegD87WT4ci6HvlADKtGEHAhvQguhF2cs5xNn+qwOpYQWp7aj37VwRdgGYf5uOJwKdZRl1YwwQI4K7qlD8tUvOD/fo5gK+aRVCWDUBU7/CQ/ETd/Mmc1Z/fNSjuU5eKHA=
+	t=1742382230; cv=none; b=su9JwLALdqg/OiYZ3ynzAyrhmAzB0SjHNUfH93ZitcgBOJg/BdNAAkm/Tqdq0Yj+dGCimrLZjsMCG1OgY0FR4lS/dEKzJifMwHwYCDKDd3o0h8X7Jyhrl8FkolL7cEGyaumQGUP7M+q/UNVmCgpGZm/ZAMTS/IqxgzciN7Sc1ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382229; c=relaxed/simple;
-	bh=Bzr5iUpNFSWZcevi7IsFDktHJwwlMF9u9EMqBkziGeI=;
+	s=arc-20240116; t=1742382230; c=relaxed/simple;
+	bh=pTor0/g4jS8sMY/M1jOBrGquupsbiAYwOIMOf0wkvOA=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=czeH1GSs7cvMYL53Hxkxwab1NYLarH29nH4EXyzAZpwcoLGJACVjMhj8qpsKgZEkwiX7rVQmKT0By5ADSMZNRhF3FqYtfYOZ2+4NMkmlptrtT2FsH8qztcV39RSTvcFK7/tY55FSpEnbIU4S8gcEg6hyC7EEIri4W3U9Im96K3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ZKlSFc8K; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PNt9DwcS; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=O89LzSGMEFeJhoiGecQSYgpnY9+emAP+aaGCCZVhLZ2pcfDIB/MKa4rhZhN9Uc9oX2JTE0a3rRfKeGvt8JCRdpVsRjwBdpFnnGSNpw0BpUp9j96nnKeozRZANVRGQcoxY5BT8Wqg3e1YDoim0I5NXaE0CaEIrqpZ7aYgS/DOOng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=eU8Q4T/H; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=bpGwQ7n3; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ZKlSFc8K";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PNt9DwcS"
-Date: Wed, 19 Mar 2025 11:03:44 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="eU8Q4T/H";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="bpGwQ7n3"
+Date: Wed, 19 Mar 2025 11:03:46 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382225;
+	s=2020; t=1742382227;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T+y3jel6eq1ao/U8bHEHkC3oDFEZdhn7eS44KXxeiZA=;
-	b=ZKlSFc8KnAowBju5lScSIeLMoQSqF4WDPQsWiP9upyh8P3+wyqwxqERtJL5Opg62QeUttD
-	bAdPAJcMApR62/0ro2jxtsAY05QIAJRuzqwGg9CP3H2knc+aqIFCcnvCs8vaR53vNf7x1p
-	DNTUbfh3b4KiyEK7nMjilkaFjUlO7FwF78i8RSOuP02hlgpvscSDySHtAwNgTdk9WCa9T1
-	vdBnauvp+KceNklRhc6YFAuz3sxLFOX1Ls54NQENTHHG+P2uLhBHVDLLvGYmyTIBQ01AG3
-	ScCNYXaePaIB+VqoDueck82YdK1D90bGecULosJ1aZbHEnyltvQmnH/XY6JCQg==
+	bh=sszwDkQMndhlt63BkzvwYgW9eLjTApT7uKVGuQkOPIs=;
+	b=eU8Q4T/HaQ28C5RZKlfIwGB3MJ20JG8hzfGK2UNuxzZNM+LtNtrT9i+5OROc+spSdKmlUM
+	V3rxjdxZFzGBbf/APC+PU+wnkjdlJCUdrvjOSXX2oQ0XFkBfD0Sx4+aaFPS9k4i8sMHZB1
+	uYWZzHKi8RbQS9ETVwwx+JWc/0sPlhot/KGSXCSaPshoej2zwvh9nM+6fbE7YBxVuyb50m
+	kCy6AugowfFubySukcp8g2WkpWmG6uEBfWVJQuzm5ZBbRWYprIGlTZG5VyT0sYDeJtwq1d
+	IXuBQZkCuQzLlC0m6cz1rsWT1WaO7uLVFfTs8M8siLEIYod8lYryXJ1nY4qqOA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382225;
+	s=2020e; t=1742382227;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=T+y3jel6eq1ao/U8bHEHkC3oDFEZdhn7eS44KXxeiZA=;
-	b=PNt9DwcS5weOiBKPY8RrrhJvuCq1HEfaiizuMs31d2+YUdJvlYV7LNoCDtADtzsrQ8LiEw
-	YixRfBJ8VgTZjDAA==
+	bh=sszwDkQMndhlt63BkzvwYgW9eLjTApT7uKVGuQkOPIs=;
+	b=bpGwQ7n3vcLRLmAXCI+Jo8Civ6CAn1JFDCX3bSlAwlMoJuh2LWRQ3gVJt5oA+kusW7EVR0
+	cuH73UmXvzzf92Bw==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/cpuid: Use u32 in instead of uint32_t in
- <asm/cpuid/api.h>
+Subject: [tip: x86/core] x86/cpuid: Clean up <asm/cpuid/types.h>
 Cc: Ingo Molnar <mingo@kernel.org>, Andrew Cooper <andrew.cooper3@citrix.com>,
  "H. Peter Anvin" <hpa@zytor.com>, John Ogness <john.ogness@linutronix.de>,
  "Ahmed S. Darwish" <darwi@linutronix.de>, x86-cpuid@lists.linux.dev,
  x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250317221824.3738853-6-mingo@kernel.org>
-References: <20250317221824.3738853-6-mingo@kernel.org>
+In-Reply-To: <20250317221824.3738853-3-mingo@kernel.org>
+References: <20250317221824.3738853-3-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238222478.14745.17077013245719326242.tip-bot2@tip-bot2>
+Message-ID: <174238222644.14745.8295195482372933154.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -69,22 +68,21 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     a46f322661857d58b93f557bcb708260f18c18fd
-Gitweb:        https://git.kernel.org/tip/a46f322661857d58b93f557bcb708260f18c18fd
+Commit-ID:     04a1007004da767db5ad8ba01809a5052c3a7909
+Gitweb:        https://git.kernel.org/tip/04a1007004da767db5ad8ba01809a5052c3a7909
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Mon, 17 Mar 2025 23:18:24 +01:00
+AuthorDate:    Mon, 17 Mar 2025 23:18:21 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:19:28 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:19:23 +01:00
 
-x86/cpuid: Use u32 in instead of uint32_t in <asm/cpuid/api.h>
+x86/cpuid: Clean up <asm/cpuid/types.h>
 
-Use u32 instead of uint32_t in hypervisor_cpuid_base().
+ - We have 0x0d, 0x9 and 0x1d as literals for the CPUID_LEAF definitions,
+   pick a single, consistent style of 0xZZ literals.
 
-Yes, uint32_t is used in Xen code et al, but this is a core x86
-architecture header and we should standardize on the type that
-is being used overwhelmingly in related x86 architecture code.
-
-The two types are the same so there should be no build warnings.
+ - Likewise, harmonize the style of the 'struct cpuid_regs' list of
+   registers with that of 'enum cpuid_regs_idx'. Because while computers
+   don't care about unnecessary visual noise, humans do.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Cc: Andrew Cooper <andrew.cooper3@citrix.com>
@@ -92,24 +90,40 @@ Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: John Ogness <john.ogness@linutronix.de>
 Cc: "Ahmed S. Darwish" <darwi@linutronix.de>
 Cc: x86-cpuid@lists.linux.dev
-Link: https://lore.kernel.org/r/20250317221824.3738853-6-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250317221824.3738853-3-mingo@kernel.org
 ---
- arch/x86/include/asm/cpuid/api.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/include/asm/cpuid/types.h | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/api.h
-index 356db18..9c180c9 100644
---- a/arch/x86/include/asm/cpuid/api.h
-+++ b/arch/x86/include/asm/cpuid/api.h
-@@ -187,9 +187,9 @@ static __always_inline bool cpuid_function_is_indexed(u32 function)
- #define for_each_possible_hypervisor_cpuid_base(function) \
- 	for (function = 0x40000000; function < 0x40010000; function += 0x100)
+diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
+index 724002a..8582e27 100644
+--- a/arch/x86/include/asm/cpuid/types.h
++++ b/arch/x86/include/asm/cpuid/types.h
+@@ -5,11 +5,14 @@
+ #include <linux/types.h>
  
--static inline uint32_t hypervisor_cpuid_base(const char *sig, uint32_t leaves)
-+static inline u32 hypervisor_cpuid_base(const char *sig, u32 leaves)
- {
--	uint32_t base, eax, signature[3];
-+	u32 base, eax, signature[3];
+ /*
+- * Types for raw CPUID access
++ * Types for raw CPUID access:
+  */
  
- 	for_each_possible_hypervisor_cpuid_base(base) {
- 		cpuid(base, &eax, &signature[0], &signature[1], &signature[2]);
+ struct cpuid_regs {
+-	u32 eax, ebx, ecx, edx;
++	u32 eax;
++	u32 ebx;
++	u32 ecx;
++	u32 edx;
+ };
+ 
+ enum cpuid_regs_idx {
+@@ -19,8 +22,8 @@ enum cpuid_regs_idx {
+ 	CPUID_EDX,
+ };
+ 
+-#define CPUID_LEAF_MWAIT	0x5
+-#define CPUID_LEAF_DCA		0x9
++#define CPUID_LEAF_MWAIT	0x05
++#define CPUID_LEAF_DCA		0x09
+ #define CPUID_LEAF_XSTATE	0x0d
+ #define CPUID_LEAF_TSC		0x15
+ #define CPUID_LEAF_FREQ		0x16
