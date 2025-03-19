@@ -1,96 +1,138 @@
-Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5577B19B5B8
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:13:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A885250F8
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742393594; cv=none; b=rN44ZuG0U2OG5eQCo+BPVV3fS4lx2TZKffjJ+UrfZiNUnZa8OWRITZVpdjFKmsg+7ymWpVLXw3jhE4mNgtexd799caDAKbkYdVsDU30cfYS7oXEO8ijGMiMXSzpPRWm5M4crIbbNZNmE4xYgeZmLS5OtIytnyjjEDqFsJGxw4xs=
+	t=1742393627; cv=none; b=qCh0SqRm2wttiPvVtmJ4c4RpU2oTtRVdTg7MEfwoE7CdSRTd+QKTwdNBhlv11fy4XovPH7JC+lrlRSnIet6oX1pgxAkQFEa3B0IrV3AMJi/0P6ReyRKmmYeujGgFWZmwcAg+l1U5j0gO1+eNH1fsCG5AyD12nMLhdCEDRalGPSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742393594; c=relaxed/simple;
-	bh=173mR8ZcqIucBbAsooxSJ7aCrBDlB0BXxLNyDYR2IkI=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jk+FDdsM4HLkCiX2Hi6CwMv4/hhlPsbOq4frlProzC15QxUJJ/IQkgxdEMOrx1LmmldsoBmr7V+oGmLp0bynbD7jrzl+CMeUMasQXroBuWtwAHSIDqp55AnkfJeEDr1tCs+UocPnJ3tB8+lha1DaofV5TuzH4pY1pPSq8V+g1W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=HY5WWWTf; arc=none smtp.client-ip=185.70.40.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1742393627; c=relaxed/simple;
+	bh=d1MWREdtzbaCDovZLjkEXWp+HndwpoCRn1SJTnJ/uMo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HeUAr+AynVxKa3gLBtqdN5sU2OSTVEcBS5nHxlYMD5n4Wn9po/XYpnLXSYJzuZ2qMjTFr3hQ7NewoOJan4mzBZZ7DzIsCdN0+tGKsU+HVZdbreZoEZIWh0PeRFLzhH2sYBAVxETC/4BSHdFGtOndDE1IbLPEE+MgJ8wjHK6K4qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GwAiX1tf; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="HY5WWWTf"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=protonmail; t=1742393584; x=1742652784;
-	bh=yYLcfHuvK6FvGpwQFNJmILNKHihIkpgM2uT8zMa5DCs=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=HY5WWWTfyhBjxkHduWvmBtGULW1loewR5xlXgUfO5cZ5gwsKQ+U9rARjqqR/ALYv1
-	 +7y34Ofkw0vwjdy2JiXZ9r2t2yTrNbDQv4pFyhFj6HbWhMoiwWyODDCS8wN+akkQek
-	 U+tBqfAGz3XVg7UgROscGQ0kz+AxoH+89vlSLpVSw/YWaUuke9/b0wjvEHxPJW8GXX
-	 XSuAJdj9v+KWeco8H7tBOcXAORnJVDPg+YFGFPL88D7x8jhh/8bJEgLGLmUFyqB4r7
-	 QTr4jNb/Wc5AuxkHZDQuAJKR7mGVHgGRU/t8nL6Iu365mtROL9ymCv+eD17DuBCqSu
-	 GdmtHSpSs7sng==
-Date: Wed, 19 Mar 2025 14:13:00 +0000
-To: Danilo Krummrich <dakr@kernel.org>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v7 3/3] rust: platform: allow ioremap of platform resources
-Message-ID: <D8KAZ2NYJ4C3.STH2PZYCM7X4@proton.me>
-In-Reply-To: <Z9qpC1EapJFNadME@pollux>
-References: <20250318-topics-tyr-platform_iomem-v7-0-7438691d9ef7@collabora.com> <20250318-topics-tyr-platform_iomem-v7-3-7438691d9ef7@collabora.com> <Z9mwu-RHwZ8qwcbH@cassiopeiae> <FF128DEF-28D6-4302-9C53-2DD4D417053A@collabora.com> <D8JTUPQ28758.2SKKTA6IL6Y8E@proton.me> <Z9qpC1EapJFNadME@pollux>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 72b1eaec6fc8bf9fcfcb1f6690c590f709d0dbd4
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GwAiX1tf"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742393625; x=1773929625;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=d1MWREdtzbaCDovZLjkEXWp+HndwpoCRn1SJTnJ/uMo=;
+  b=GwAiX1tfoCpl7KfbVOSiMwKfbBoZpbRTLEhciHjKvipBTn9MHvGv62Bn
+   yUEPaF4WfYdzLiRt4X5wvjoYsHeZPwrHYIB5HDLzZywq5NjJsSPPLgJt8
+   aGT7OCCAtxcoUUaBGvBchTP/pxSKPvjavDbkzIwRV+4xHUb+O+y99HBnZ
+   1eUG+wsm4L7zx8XrjeFdATUhw9bMs+3jSrLFoXveSmMSF8X4JG0KThuU1
+   6HicDCbZz/xpnIgUdfqGLW1AcivMSljCOYq0vGESMy8fWGd/DUwJ6zCHR
+   n7pxyBl0nG87Vuyxk294h2PB8uuTbLV4sUWaEki8CDx6u/8ATGO/fL7b5
+   Q==;
+X-CSE-ConnectionGUID: YqgTDnRjR7O00ZIZJ6TTYw==
+X-CSE-MsgGUID: GYOrEypFREaJy1v5F+uk9Q==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43601132"
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="43601132"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 07:13:45 -0700
+X-CSE-ConnectionGUID: GNLzpN9bRTqY6QzqszugxQ==
+X-CSE-MsgGUID: SlLQD+qyR1C3JCVaRA2HlQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="123126308"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 19 Mar 2025 07:13:41 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuuA0-000Eis-2c;
+	Wed, 19 Mar 2025 14:13:33 +0000
+Date: Wed, 19 Mar 2025 22:11:44 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Ahmed S. Darwish" <darwi@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Borislav Petkov <bp@alien8.de>
+Cc: oe-kbuild-all@lists.linux.dev, Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>, x86@kernel.org,
+	x86-cpuid@lists.linux.dev, LKML <linux-kernel@vger.kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: Re: [PATCH v2 18/29] x86/cacheinfo: Use enums for cache descriptor
+ types
+Message-ID: <202503192150.Vhannmnp-lkp@intel.com>
+References: <20250317164745.4754-19-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317164745.4754-19-darwi@linutronix.de>
 
-On Wed Mar 19, 2025 at 12:22 PM CET, Danilo Krummrich wrote:
-> On Wed, Mar 19, 2025 at 12:48:00AM +0000, Benno Lossin wrote:
->> On Tue Mar 18, 2025 at 7:22 PM CET, Daniel Almeida wrote:
->> > On 18 Mar 2025, at 14:43, Danilo Krummrich <dakr@kernel.org> wrote:
->> >> On Tue, Mar 18, 2025 at 02:20:43PM -0300, Daniel Almeida wrote:
->> >>> +    ///     // Read and write a 32-bit value at `offset`. Calling `=
-try_access()` on
->> >>> +    ///     // the `Devres` makes sure that the resource is still v=
-alid.
->> >>> +    ///     let data =3D iomem.try_access().ok_or(ENODEV)?.readl(of=
-fset);
->> >>> +    ///
->> >>> +    ///     iomem.try_access().ok_or(ENODEV)?.writel(data, offset);
->> >>=20
->> >> I'd probably write this as
->> >>=20
->> >> || -> Result {
->> >> let iomem =3D iomem.try_access().ok_or(ENODEV)?;
->> >>=20
->> >> iomem.read32(offset);
->> >> iomem.write32(data, offset);
->> >>=20
->> >> Ok(())
->> >> }()?;
->>=20
->> Why use a closure here?
->
-> Calling try_access() only once and not having the closure is fine too.
->
-> But I also think it would be good practice for an example to explicitly l=
-imit
-> the scope of the corresponding guard.
+Hi Ahmed,
 
-Ah you're using the closure to limit the lifetime of the guard. You
-don't need a closure, braces suffice.
+kernel test robot noticed the following build warnings:
 
-> Ideally, it uses [1], once available.
->
-> [1] https://lore.kernel.org/rust-for-linux/20250313-try_with-v1-1-adcae7e=
-d98a9@nvidia.com/
+[auto build test WARNING on 6d536cad0d55e71442b6d65500f74eb85544269e]
 
-Yeah that sounds best.
+url:    https://github.com/intel-lab-lkp/linux/commits/Ahmed-S-Darwish/x86-treewide-Introduce-x86_vendor_amd_or_hygon/20250318-011153
+base:   6d536cad0d55e71442b6d65500f74eb85544269e
+patch link:    https://lore.kernel.org/r/20250317164745.4754-19-darwi%40linutronix.de
+patch subject: [PATCH v2 18/29] x86/cacheinfo: Use enums for cache descriptor types
+config: i386-randconfig-061-20250319 (https://download.01.org/0day-ci/archive/20250319/202503192150.Vhannmnp-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503192150.Vhannmnp-lkp@intel.com/reproduce)
 
----
-Cheers,
-Benno
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503192150.Vhannmnp-lkp@intel.com/
 
+sparse warnings: (new ones prefixed by >>)
+   drivers/cpuidle/poll_state.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+--
+   drivers/cpuidle/cpuidle-haltpoll.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+--
+   drivers/cpuidle/sysfs.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+--
+   drivers/cpuidle/governor.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+--
+   drivers/cpuidle/driver.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+--
+   drivers/cpuidle/cpuidle.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+--
+   drivers/cpuidle/governors/menu.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+--
+   drivers/cpuidle/governors/haltpoll.c: note: in included file (through arch/x86/include/asm/cpuid/api.h, arch/x86/include/asm/cpuid.h, arch/x86/include/asm/processor.h, ...):
+>> arch/x86/include/asm/cpuid/types.h:56:1: sparse: sparse: static assertion failed: "sizeof(enum _cache_table_type) == 1"
+
+vim +56 arch/x86/include/asm/cpuid/types.h
+
+    45	
+    46	/*
+    47	 * Leaf 0x2 1-byte descriptors' cache types
+    48	 * To be used for their mappings at cache_table[]
+    49	 */
+    50	enum _cache_table_type {
+    51		CACHE_L1_INST,
+    52		CACHE_L1_DATA,
+    53		CACHE_L2,
+    54		CACHE_L3
+    55	} __packed;
+  > 56	static_assert(sizeof(enum _cache_table_type) == 1);
+    57	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
