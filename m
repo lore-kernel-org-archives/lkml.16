@@ -1,279 +1,278 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2057.outbound.protection.outlook.com [40.107.220.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC5B41CC89D;
-	Wed, 19 Mar 2025 14:21:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742394073; cv=none; b=HGUhqN8dJ8DcqhfCE9EjIjtZloii5uadc2Cc0nHabbzqRZJHa/Nj/DszQn3pkLUAWNvNylgXjpvHKBrS0B2SRxkV8Z6+yk/xUTUKCKLC7OAePZUnQq55ZAYS5W2oMJsYDw7QB/VBBPjzbZIhgvYrV4BKRIXN0O8k4cjKbf0LjRY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742394073; c=relaxed/simple;
-	bh=UPrvgxs1AioBmdUGE+vUXXuJ3vLEumqsNdNnl2J/ZYo=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NiVGWIq++x4Sd6SBFVKULcx7TAKNXW3mJXX9PMDtkMCKFCQ+XSpLLjrmxWnZp5wOPcOgQNt4Rhl0PprYMAoNaMBCBOXH4k9jKFDYdjdvlCtlE7i34TJJzJ3/XAh+Mcx5+9bZIXHDBuUXiW7D/YrJJdSQtsR6DTjm8M9hRdtAKOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=BeQK5WRI; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09E211B4F15;
+	Wed, 19 Mar 2025 14:25:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742394311; cv=fail; b=S6Gna1Qm2sYVPs+uTN+vXU1A21vdmIdJ7RPRBV/BHE0XN0A54U2p7q+3bsxbqpsHPFz4EJO4U/VCoGhUoe90MVMbBQsBBqqJ9zv1n1EqVazrlR3kvDhKE2RMiYWoiy60G9kZLUD8eyR4lOy445s9M1aYjMY45Xu+vbyXaT5HWj8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742394311; c=relaxed/simple;
+	bh=HF+QzPvewfam6nu4ujIaDKb2PaazoTuySQhjdYpcLNI=;
+	h=Content-Type:Date:Message-Id:To:Cc:Subject:From:References:
+	 In-Reply-To:MIME-Version; b=PmQZcaruG4CrFRDGAosz9JMZwu1TJ+2/FwcRYNijQ3DYNZVZxB+lox8SM5LDiI+33xNBheUjE9PSF4kJgKITKHUJ3CYlL4q3EbLqhzeQmHHkSz2vRRKKqf92Mzq7HrlPa8PtrIUSxab1NGM12ADJ69nvVu2A3bLldkHF1ooOqyU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=TUBAaSRJ; arc=fail smtp.client-ip=40.107.220.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="BeQK5WRI"
-Received: from francesco-nb.corp.toradex.com (31-10-206-125.static.upc.ch [31.10.206.125])
-	by mail11.truemail.it (Postfix) with ESMTPA id 0A13523524;
-	Wed, 19 Mar 2025 15:21:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1742394068;
-	bh=s4GUy3eExK4JSUHKIm0FsdvRmjkUsABh6A9R7Rhil0E=; h=From:To:Subject;
-	b=BeQK5WRIDuL3smkbfxu9clrN3T08RETmEFy0CMJipMRiix30CIoGNKK7dySXh7DTD
-	 8aADn2iwqJNxG9zRTch9KIHJEl7gsfVJ+v4tFVpsymNohkClNkJytJoO1f1K9fNSdp
-	 cRvsLgMjt89C4SMcLbc8ubPZE7BnHNC+8F7/T1SJcJ25yzHyeQjdXqsr3NXtyyCwbB
-	 Suw36g3Uqv5YuL3yvK+C+sGU41X95nG1kjOJSjDzGNa/XfrwAL8MiGkvKWKuGYjwms
-	 Q4R+WUN4kHTc+grWZ7eN+qa8s/UJGp+R5B9ew2tWyVEtG7s13i78mtfnLuRzMU6tNZ
-	 KIkdzGrSoXSkQ==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	patches@opensource.cirrus.com
-Cc: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>,
-	linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v4 5/5] ASoC: wm8904: add DMIC support
-Date: Wed, 19 Mar 2025 15:20:59 +0100
-Message-Id: <20250319142059.46692-6-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250319142059.46692-1-francesco@dolcini.it>
-References: <20250319142059.46692-1-francesco@dolcini.it>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="TUBAaSRJ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Fi8pEm4DrPnGUuK3iZrV7qw+Qombln0zdnvOFJVvtjEG+Y6ZDQljOHcctOb7g/yYedJf/1lMtqMUbI3V+6tKrkaI3Suej7Ii6MqiGDT5ozOxoXBjbB7Rgjb414sjEIEMOO/uV/aqHvZumXOqzZ1vMTStt1uSYVuXIr7RVzn3N4xYUlO5bfWB30NWJrJPdxXBW5055hKOfEsLBnTJPDBajNHYw0FXjxnmLeTmE7AgNBCZXqwgiga0uCY1OMhqWd2oo1b4nqEMEFVnWpFsiaGJbZfBEfdX41nQZIEWNhm557RAphQOhfCFy1tNCZfgsy3h+QdJQ5DsVgh8R19KY8ulOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Fet6fMcSEkM7Brw+T20eG9gjt5ShXm35kE2eWrvnOII=;
+ b=gxFs1GMWa3yilvwK0Njcaz0zG0zvM4piK6L2dFPe0JuOye1l33W0Xehb5DislunLbbzpgUM9s4JjEB3L4sc+XHctErRY4ZbzrNp8IY6TlnfqWr61hN0RFqY4a4fvPZWoZiWaGJEbFIKYRHCKMTBmvFXjpUGr3ctJugt0jwyh3/NKDC8fCTgiP/jMsMwql50r8aLfoffc5WoEEJMQ87lMKHUE6V3RlALjWQV0cpJUDS0/WlGjFMUMCEIoq7qVDGSWCw7loSyq49cLW174qZZN1z8olUVtfajNsmGkPthOWNQavzbuhzpLS++zGCdAqD3KROmr4x1+O4DILsAECPHT+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fet6fMcSEkM7Brw+T20eG9gjt5ShXm35kE2eWrvnOII=;
+ b=TUBAaSRJTGnbEi8AvMnZmTC63UnBkzJ3aeKkFqEuNJnQEBMZrqDc53Q/BCPPI6Fsh1lHFhA8G/F4vqyjVg5lQbAwN88Wrc7QcfLXa/6M7d7eRv9WJ15wscwyKrTxpzryS3zIhyv92rQxHBR3MI2XmJF8NVDP3Q35+xwgi+N2FQT34DuSXWF0GjV2qH6uSlzHnad5Lsxc9jEcc/a7z8yXcxIEX5JRkwy6jp2Kyjo78jD2VOOCrGJbwgwiIP3XtTMJj+MMLiV8cCSRnDU9chK6ra2BmW5JF2ERUF0pF6ghxwfYebs13uamTOpNaltou7LS17wlmfN6GNPD8tC3+oAUAQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by MW4PR12MB5643.namprd12.prod.outlook.com (2603:10b6:303:188::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
+ 2025 14:25:06 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
+ 14:25:06 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 19 Mar 2025 23:25:03 +0900
+Message-Id: <D8KB8CPBOIY1.10ATK35TV2X79@nvidia.com>
+To: "Daniel Almeida" <daniel.almeida@collabora.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <benno.lossin@proton.me>, "Andreas Hindborg" <a.hindborg@kernel.org>,
+ "Alice Ryhl" <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>,
+ "Danilo Krummrich" <dakr@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <rust-for-linux@vger.kernel.org>, "Fiona
+ Behrens" <me@kloenk.dev>
+Subject: Re: [PATCH v4] rust: kernel: add support for bits/genmask macros
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250318-topic-panthor-rs-genmask-v4-1-35004fca6ac5@collabora.com>
+In-Reply-To: <20250318-topic-panthor-rs-genmask-v4-1-35004fca6ac5@collabora.com>
+X-ClientProxiedBy: OS0PR01CA0041.jpnprd01.prod.outlook.com
+ (2603:1096:604:98::12) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|MW4PR12MB5643:EE_
+X-MS-Office365-Filtering-Correlation-Id: d46ed0a1-2ff5-4175-ee5a-08dd66f1d88b
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|10070799003|1800799024|376014|7416014|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?RjVuQmpIY0hQVTBxVVVvL29CTXlXcEFwVWdtOVpBYzRZeDRTYjBHMWJPVFBz?=
+ =?utf-8?B?dkF6clI1Tml3dk5MOHJmVWpoZDlKVENwME1idnpnNERycml5OEhhdnNacDMw?=
+ =?utf-8?B?QzVnaytwUGQ4dHVpWlVUNlhhWHFTcXV2V0RrekhncmN6N3VYTEFTcnNSNE1w?=
+ =?utf-8?B?Rk1rWFRFWG55Zk5YSWczK2hhSU50S21MRGg4THFGNjQxUWI5RFJZZzh2Z0t3?=
+ =?utf-8?B?L2Y0ZnNCejdUZTJwOEtYWVVqZTB4bm5JZ3JmbFp0cWQxRHpsR1dsRkF5RitV?=
+ =?utf-8?B?N0EyUlhTZXZidmE5cWZWRll5NmNxS2FBbGVBd3E3NGpkdGdBRkc2aWZSSmZs?=
+ =?utf-8?B?TXlCMUZJM2E3YUxmeEU2V1FiTUJLVnE4bExHMmJISUdHZVZQK2ZRM3FNVEVn?=
+ =?utf-8?B?dG5OZXNGWjQ5Y0p4dlp0YWhTcy9VVGVRTUtSOURaVW5aREhlOGVEMGxXTHpN?=
+ =?utf-8?B?SzQxbkJzaU9wbm1FaVhwSWx5MjJyN1JsUVlMcUY3RUJ3SUJtZDU3eTNzdjhs?=
+ =?utf-8?B?MmRhZm5TNXZ4ZHF5L2ZxYUY2UTlqSWJzRnJUN2FjY2xLZVdTMlFFTFhxZU10?=
+ =?utf-8?B?YUwxbk9ETlpjSU45VlZuamN5Vjhqczh4M011WGVWUWpRT0QwWm51a1dLckF0?=
+ =?utf-8?B?MExBZWpDV3JsNlNiRmV2bDlUTEd1cmJZeVo3Y3dlZGM2eXU3ZTZMVit3Ymxl?=
+ =?utf-8?B?V2YyODhldFhoTkFSdVphN3paNGpyVkFrTkdwYTNxdVJib3hVNTBZcXhtOXRx?=
+ =?utf-8?B?ZG02MVRsRzhxanFlTzJMN0d2RDRidFhTcnkveUlzM1NOQ0ttZkUxVVVZWEJ6?=
+ =?utf-8?B?KzBrTDhuUGRhKytPa0J4QmFoV0xSaTRxQlVSeXZnc0lmUGhlOGxtQzdMeVEr?=
+ =?utf-8?B?dVk3Vkl1RVRUZXQrRldod1k1c2tGSWh4bkpZMUgwL1ZLeEpETFR1VkpPRHAy?=
+ =?utf-8?B?Z0hybGxmYTFZZzBYRFAzYmV4bzVOMDg1TmE0RUh1VG5IM3J4bHVBVmRqanJw?=
+ =?utf-8?B?bytvM0N6QVVuZ1k2Y1NZNmpMZCtqM3Rud01oR1JSdDJ5VUMxeHY1aWl2clUy?=
+ =?utf-8?B?SklGRmpiWk12TEp5TENsV2w0YktvaU5CaytjL2h0c2phSXByR3dqNCs4QURo?=
+ =?utf-8?B?T2YyNmdqQlpQVlkxTzVvYTVpMjlMTlFoL1doUFNuSDdzY3AzQTZwSEVpTnRW?=
+ =?utf-8?B?dzdRb1JSbFlHaFFhSUQ5YWt1bWJuNWdpOUsvK0ozQUc1T2NSdlNGc2ZhYTlV?=
+ =?utf-8?B?NVFKLyt6TXExa0o2T0RsdWNqb1RhZFJJM2VpY1pJem9EazJBM011cC9PbjVI?=
+ =?utf-8?B?OCtpcmo1TG9aQU5wOXdybkZZeW9TK25neDFqbys0S2pmUzI0bUJRdy9CZ1B4?=
+ =?utf-8?B?N0VBL3lBeDNHT2JreDlJekZuVTUwY2xDdGViMkpWM2ZMSHpIWDJ5Q01MUmdV?=
+ =?utf-8?B?eGZjalNFaTVXQmJyejdQOXRVL3Q1TUpkdC9RbGNUNmpXanN6dGtkUjJ2WWI1?=
+ =?utf-8?B?cUFIa2kvTDRNM0V1NmRUUHRZSmNWWFVObTBxdzh6KzAwS2JFVGZPSllaRCt4?=
+ =?utf-8?B?WVhiMndRb0JlY1VmR2hvZjJyU2lFR2tyRHBPVnFGRjRBZTk5T0ZycDBreFl6?=
+ =?utf-8?B?R0Q5bXNjRUN2ZXlkWmRoeFVzeDYwS1pqYTFsVXU3UUNiQXMwWFRDWFE5WGZR?=
+ =?utf-8?B?VjhxMTBwYUtwRzhYL2syUEkzdVIwN3FKbTBSSkNaN0RnQlUwSVJ2YmM1NXRy?=
+ =?utf-8?B?U1dRUk1rNnREKzdPc2QwbU5UM1VmUENDU0Y0UDRHUFZCWWFGU3VhMGRjTXhZ?=
+ =?utf-8?B?Q1FDbUlnS0t5UzBBNW1SVkxyUFZjcno3Vnhka1lKSUYvTThjRjZuOUN2cFRT?=
+ =?utf-8?B?V1k4cTZHMUJiTVJ1S1hTajl3S1RjenI1RGtIMkFPY1NkOFRBVW1BZFJNc241?=
+ =?utf-8?Q?DH8Zsk7jvtY=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(1800799024)(376014)(7416014)(366016)(921020)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?NE9vVDRTeTJWanVHL1A0OUsydlhuQTBVWHJvbzJ4SzM4QUh1NlVQd2xubWEw?=
+ =?utf-8?B?Y3BlSmI2RFphSnNaVDdid1NtbFlPc0EvbUhSbllPKzZsQkc5OWFudk1iK2Jk?=
+ =?utf-8?B?V1FhZUdZRE1BT3gweEorRUluSXFpeGhBWUZTeVhMNTlkSWJ5RUdaMGkzcE1H?=
+ =?utf-8?B?TkhmVmhLcFovcEs0eTMvbTdCM3FoRWtqYmFnSHlFTkR6SjVlQTF3bS9wVldG?=
+ =?utf-8?B?OGxFNk5xRUc5UFdSMjJKNDEzQ2RnRlRSeVUzVmhxcFBaVVRkZHpnYitNWUU3?=
+ =?utf-8?B?R2RJUk9FekZoTkZKRGtCRVBhMmZRUHBnYkQvMjlKOTZZTDVQWU9scjc5R1lM?=
+ =?utf-8?B?N01wNmVhaUt6TEQrODBRRDlzRHUrcmI1K2VyNHNKQUQvRzlRUXFva0dwajdh?=
+ =?utf-8?B?QWZ5dUpFNGoraWwzSjZZQVhwOWdVMEFWWUFpdkZITFZzTVFHZTBQUWxpaEFJ?=
+ =?utf-8?B?d2FJWklRdGNMZ1NjaktXeTZwOENtRDBYb3Z5d2VjSFBNcFNyZG1wck1JeXhV?=
+ =?utf-8?B?UUh2NEx0MTBlKzM1SWNOYVNqeklKUldhZ0d0SHRYSU5CeUNkSXhBbHNWUSto?=
+ =?utf-8?B?cnFtTDdEUGZRNDJFQmE2ZzFCY09xK1A1WGQ2eG9VTGxIWVF4a1QxRFRKWmhS?=
+ =?utf-8?B?cWtoUFdRMWVyMzQxTFlVZThxSkVVaEJubXBTS0w5UUFHWUVYcnVHV3NYeXc3?=
+ =?utf-8?B?eXo1bXlUcFpzMTB0WWMxdkgwWE1ZL2p0bmZJWGNGQkdvYzVoVFh4S2IrTlZS?=
+ =?utf-8?B?N2ozRDRtNVRFKytVTlV0SVNRbmVGS1lUZU50ckVIQ1pMbUcxSSt2OGhweTRj?=
+ =?utf-8?B?ZnZ4M2hXd1U3OHBUUFFsZ0tEUTIyVDNMbHZqd1I4dUE3azJHcUgzWUUveTFY?=
+ =?utf-8?B?cHZaMDZndDRFUUZkV1dFeEN5UXpXVVZhejZTeDg1bm5iOUZjbUxEY1pIbGRB?=
+ =?utf-8?B?Y1ptUVZ6bWVMNkhDelBYbFh2VEpDb2RWTGlYSmd0dExoNnZNT3dOYUIrRGJX?=
+ =?utf-8?B?R1l3U1NVMXgvZUF3eDUxV3RZSWZ4V3I2Q09Ya3prVXBqT2V0R3p0YTFRcnpK?=
+ =?utf-8?B?YlVRc0tobyt6cTNoL3JjZDA3aFd3bnpSc05qc1FhVkQ4U0dDNUdLbkZJck9O?=
+ =?utf-8?B?TDRnU2xRZmdNaG9MWnhKaGpxc2hmQjNUbHJJQ3VhMnhEbmtCY0dmSkEwOFVk?=
+ =?utf-8?B?T2grVlVFUTQzYmNnNW1MQmZNNjRKK0M3cVIrSktEUGlvdDZvcWVUUWZtM21Z?=
+ =?utf-8?B?Rk1iSTgrOFdSL29nclJmSG12NjZxMm5pYjMxWTI5blI5cHJkMnFJU01xcVlr?=
+ =?utf-8?B?TWRrNnl3NXdRMlM3V0ZUbytEZm9PakdZNi9FSmtmaXlnSERYV3NkNDVKNnFM?=
+ =?utf-8?B?bUZDV0o0TnNtTndMdzlESXUxMlVSVzBsanNvbm1CbE1pS0JCUEc2SDBHb1RK?=
+ =?utf-8?B?ckRsRU9CNk9mL0FsWk5HWUxWbW5ITEQzdFJrd29sQ0tEUEpFRWlFZE9KUmNV?=
+ =?utf-8?B?TmIyMUkwdnpsWmtmSkVVY2t6WW1rNHBXOUlHM2pyRkVVMWEzN2MrODJLNGdI?=
+ =?utf-8?B?VFhtN2tCOU15VUdKby9tZHZQVVMvMEM2WkNKZGNrN0EyUG1Nb3BFcUJ2NGpm?=
+ =?utf-8?B?OUVhS3daZVplVFVEang4eE50SHpqZHpnSk5tUmM5YTJyRnlMUmFJUHY4WnpT?=
+ =?utf-8?B?UjloZlY1NVBFakVrWGw5SkFrZEh2MThvRWVSMTd0WG1MMkwwekJrbFAzQ1dH?=
+ =?utf-8?B?WDF0eU5ac2lLOHdEZTlRa1ViYnVySGlCNTJ5U2VLNzVOYkcxd2F2dDFQbXQ0?=
+ =?utf-8?B?ODNGeXNaWGEvQjlQTmIzV2ZpaHIxVWQ3b3lmc1E1K2MxNjZ1YkNqODdDQ1VU?=
+ =?utf-8?B?SXpoWFB0SWNDOXZRd2ZHN2g4S1RHQ0FXS0x3WWVUdVNZSFhWQWxZTGZWYzFO?=
+ =?utf-8?B?aDQ3VStaT2Z0OXliY0VtM1I4TXduNDF2d3QyQ0NZV1dSZWVCdkhzOFd0dStO?=
+ =?utf-8?B?S3RWYndKTmxwSU5yTXpXa2tsQlFCZjd1bHd1YkxMdnlWVng3YUMrRnRpTk5y?=
+ =?utf-8?B?d3VwK1ZhSDU2OEwzWTlic1FoSWFMOXdMaUoxZVVlMDB1RkR4aDNocyt1WEtw?=
+ =?utf-8?B?aGN4bVhzOGlaZ3BSdHhUd1A2NmdDc0F2MmErZUZUYWNCcTA2ekVBZHVwR1V2?=
+ =?utf-8?Q?h3e+XpGLdZnu0T14g4Jo+uucKGLMXPpSB1Dg4RFaQI6S?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d46ed0a1-2ff5-4175-ee5a-08dd66f1d88b
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 14:25:06.4263
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lIqvH/Ff8WIpzCsbSoz1FD8Wqqw+/14jXICgZZQXPQ/ma5x+fU4ZJoClAEtUexnMBkWZB9erhXDAs4U7OkZLig==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW4PR12MB5643
 
-From: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
+Hi Daniel,
 
-The WM8904 codec supports both ADC and DMIC inputs.
+On Wed Mar 19, 2025 at 12:34 AM JST, Daniel Almeida wrote:
+> In light of bindgen being unable to generate bindings for macros,
+> manually define the bit and genmask C macros in Rust.
+>
+> Bit and genmask are frequently used in drivers, and are simple enough to
+> just be redefined. Their implementation is also unlikely to ever change.
+>
+> These macros are converted from their kernel equivalent. Since
+> genmask_u32 and genmask_u64 are thought to suffice, these two versions
+> are implemented as const fns instead of declarative macros.
+>
+> Reviewed-by: Fiona Behrens <me@kloenk.dev>
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
 
-Get input pin functionality from the platform data and add the necessary
-controls depending on the possible additional routing.
+Cool, I'll probably depend on this for the next version of my register
+layout patch [1].
 
-The ADC and DMIC share the IN1L/DMICDAT1 and IN1R/DMICDAT2 pins.
+[1]
+https://lore.kernel.org/rust-for-linux/20250313-registers-v1-1-8d498537e8b2=
+@nvidia.com/
 
-This leads to a few scenarios requiring different DAPM routing:
-- When both are connected to an analog input, only the ADC is used.
-- When one line is a DMIC and the other an analog input, the DMIC source
-  is set from the platform data and a mux is added to select whether to
-  use the ADC or DMIC.
-- When both are connected to a DMIC, another mux is added to this to
-  select the DMIC source. Note that we still need to be able to select
-  the ADC system for use with the IN2L, IN2R, IN3L and IN3R pins.
+> ---
+> Changes in v4:
+> - Split bits into bits_u32 and bits_u64
+> - Added r-b's
+> - Rebased on top of rust-next
+> - Link to v3: https://lore.kernel.org/r/20250121-topic-panthor-rs-genmask=
+-v3-1-5c3bdf21ce05@collabora.com
+>
+> Changes in v3:
+> - Changed from declarative macro to const fn
+> - Added separate versions for u32 and u64
+> - Link to v2: https://lore.kernel.org/r/20241024-topic-panthor-rs-genmask=
+-v2-1-85237c1f0cea@collabora.com
+>
+> Changes in v2:
+>
+> - Added ticks around `BIT`, and `h >=3Dl` (Thanks, Benno).
+> - Decided to keep the arguments as `expr`, as I see no issues with that
+> - Added a proper example, with an assert_eq!() (Thanks, Benno)
+> - Fixed the condition h <=3D l, which should be h >=3D l.
+> - Checked that the assert for the condition above is described in the
+>   docs.
+> ---
+>  rust/kernel/bits.rs | 49 +++++++++++++++++++++++++++++++++++++++++++++++=
+++
+>  rust/kernel/lib.rs  |  1 +
+>  2 files changed, 50 insertions(+)
+>
+> diff --git a/rust/kernel/bits.rs b/rust/kernel/bits.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..ec13bb480082de9584b7d23c7=
+8df0e76d0fbf132
+> --- /dev/null
+> +++ b/rust/kernel/bits.rs
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +//! Bit manipulation macros.
+> +//!
+> +//! C header: [`include/linux/bits.h`](srctree/include/linux/bits.h)
+> +
+> +/// Produces a literal where bit `n` is set.
+> +///
+> +/// Equivalent to the kernel's `BIT` macro.
+> +pub const fn bit_u32(n: u32) -> u32 {
+> +    1 << n
+> +}
+> +
+> +/// Produces a literal where bit `n` is set.
+> +///
+> +/// Equivalent to the kernel's `BIT` macro.
+> +pub const fn bit_u64(n: u32) -> u64 {
+> +    1u64 << n as u64
+> +}
+> +
+> +/// Create a contiguous bitmask starting at bit position `l` and ending =
+at
+> +/// position `h`, where `h >=3D l`.
+> +///
+> +/// # Examples
+> +/// ```
+> +///     use kernel::bits::genmask_u64;
+> +///     let mask =3D genmask_u64(39, 21);
+> +///     assert_eq!(mask, 0x000000ffffe00000);
+> +/// ```
+> +///
+> +pub const fn genmask_u64(h: u32, l: u32) -> u64 {
+> +    assert!(h >=3D l);
+> +    (!0u64 - (1u64 << l) + 1) & (!0u64 >> (64 - 1 - h))
+> +}
+> +
+> +/// Create a contiguous bitmask starting at bit position `l` and ending =
+at
+> +/// position `h`, where `h >=3D l`.
+> +///
+> +/// # Examples
+> +/// ```
+> +///     use kernel::bits::genmask_u32;
+> +///     let mask =3D genmask_u32(9, 0);
+> +///     assert_eq!(mask, 0x000003ff);
+> +/// ```
+> +///
+> +pub const fn genmask_u32(h: u32, l: u32) -> u32 {
+> +    assert!(h >=3D l);
+> +    (!0u32 - (1u32 << l) + 1) & (!0u32 >> (32 - 1 - h))
+> +}
 
-Signed-off-by: Ernest Van Hoecke <ernest.vanhoecke@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
-v4: no changes
-v3: no changes
-v2: DAPM routes have been reworked, please see the commit message body.
-    The previous approach forgot that the ADC is still needed for the
-    IN2L/R and IN3L/R pins, and did not properly disconnect the PGAs
-    from the ADC when only the DMIC was in use.
-v1: https://lore.kernel.org/lkml/20250206163152.423199-6-francesco@dolcini.it/
-
-Cc: ckeepax@opensource.cirrus.com
----
- sound/soc/codecs/wm8904.c | 125 ++++++++++++++++++++++++++++++++++++--
- 1 file changed, 120 insertions(+), 5 deletions(-)
-
-diff --git a/sound/soc/codecs/wm8904.c b/sound/soc/codecs/wm8904.c
-index bac54c8e45a9..1c49e600eb6f 100644
---- a/sound/soc/codecs/wm8904.c
-+++ b/sound/soc/codecs/wm8904.c
-@@ -844,6 +844,26 @@ static int out_pga_event(struct snd_soc_dapm_widget *w,
- 	return 0;
- }
- 
-+static const char * const dmic_text[] = {
-+	"DMIC1", "DMIC2"
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(dmic_enum, WM8904_DIGITAL_MICROPHONE_0,
-+			    WM8904_DMIC_SRC_SHIFT, dmic_text);
-+
-+static const struct snd_kcontrol_new dmic_mux =
-+	SOC_DAPM_ENUM("DMIC Mux", dmic_enum);
-+
-+static const char * const cin_text[] = {
-+	"ADC", "DMIC"
-+};
-+
-+static SOC_ENUM_SINGLE_DECL(cin_enum, WM8904_DIGITAL_MICROPHONE_0,
-+			    WM8904_DMIC_ENA_SHIFT, cin_text);
-+
-+static const struct snd_kcontrol_new cin_mux =
-+	SOC_DAPM_ENUM("Capture Input", cin_enum);
-+
- static const char *input_mode_text[] = {
- 	"Single-Ended", "Differential Line", "Differential Mic"
- };
-@@ -963,6 +983,15 @@ SND_SOC_DAPM_AIF_OUT("AIFOUTL", "Capture", 0, SND_SOC_NOPM, 0, 0),
- SND_SOC_DAPM_AIF_OUT("AIFOUTR", "Capture", 1, SND_SOC_NOPM, 0, 0),
- };
- 
-+static const struct snd_soc_dapm_widget wm8904_dmic_dapm_widgets[] = {
-+SND_SOC_DAPM_MUX("DMIC Mux", SND_SOC_NOPM, 0, 0, &dmic_mux),
-+};
-+
-+static const struct snd_soc_dapm_widget wm8904_cin_dapm_widgets[] = {
-+SND_SOC_DAPM_MUX("Left Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
-+SND_SOC_DAPM_MUX("Right Capture Input", SND_SOC_NOPM, 0, 0, &cin_mux),
-+};
-+
- static const struct snd_soc_dapm_widget wm8904_dac_dapm_widgets[] = {
- SND_SOC_DAPM_AIF_IN("AIFINL", "Playback", 0, SND_SOC_NOPM, 0, 0),
- SND_SOC_DAPM_AIF_IN("AIFINR", "Playback", 1, SND_SOC_NOPM, 0, 0),
-@@ -1101,12 +1130,45 @@ static const struct snd_soc_dapm_route adc_intercon[] = {
- 	{ "AIFOUTR", NULL, "AIFOUTR Mux" },
- 
- 	{ "ADCL", NULL, "CLK_DSP" },
--	{ "ADCL", NULL, "Left Capture PGA" },
--
- 	{ "ADCR", NULL, "CLK_DSP" },
-+};
-+
-+/* No DMICs, always connect PGAs */
-+static const struct snd_soc_dapm_route cin_nodmic_con[] = {
-+	{ "ADCL", NULL, "Left Capture PGA" },
- 	{ "ADCR", NULL, "Right Capture PGA" },
- };
- 
-+/* DMIC system in use: mux between ADC and DMICDAT1, 2 or both */
-+static const struct snd_soc_dapm_route cin_adc_dmic_con[] = {
-+	{ "Left Capture Input", "ADC", "Left Capture PGA" },
-+	{ "Right Capture Input", "ADC", "Right Capture PGA" },
-+
-+	{ "ADCL", NULL, "Left Capture Input" },
-+	{ "ADCR", NULL, "Right Capture Input" },
-+};
-+
-+/*  IN1L as DMICDAT1 */
-+static const struct snd_soc_dapm_route cin_dmic1_con[] = {
-+	{ "Left Capture Input", "DMIC", "IN1L" },
-+	{ "Right Capture Input", "DMIC", "IN1L" },
-+};
-+
-+/* IN1R as DMICDAT2 */
-+static const struct snd_soc_dapm_route cin_dmic2_con[] = {
-+	{ "Left Capture Input", "DMIC", "IN1R" },
-+	{ "Right Capture Input", "DMIC", "IN1R" },
-+};
-+
-+/* DMICDAT1 and DMICDAT2: mux between them, ADC still used for IN2 and IN3 */
-+static const struct snd_soc_dapm_route cin_2dmics_con[] = {
-+	{ "DMIC Mux", "DMIC1", "IN1L" },
-+	{ "DMIC Mux", "DMIC2", "IN1R" },
-+
-+	{ "Left Capture Input", "DMIC", "DMIC Mux" },
-+	{ "Right Capture Input", "DMIC", "DMIC Mux" },
-+};
-+
- static const struct snd_soc_dapm_route dac_intercon[] = {
- 	{ "DACL Mux", "Left", "AIFINL" },
- 	{ "DACL Mux", "Right", "AIFINR" },
-@@ -2050,18 +2112,70 @@ static void wm8904_handle_retune_mobile_pdata(struct snd_soc_component *componen
- 			"Failed to add ReTune Mobile control: %d\n", ret);
- }
- 
-+static void wm8904_handle_dmic_pdata(struct snd_soc_component *component)
-+{
-+	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
-+	struct wm8904_priv *wm8904 = snd_soc_component_get_drvdata(component);
-+	struct wm8904_pdata *pdata = wm8904->pdata;
-+	unsigned int dmic_src;
-+
-+	if (!pdata->in1l_as_dmicdat1 && !pdata->in1r_as_dmicdat2) {
-+		snd_soc_dapm_add_routes(dapm, cin_nodmic_con,
-+					ARRAY_SIZE(cin_nodmic_con));
-+		snd_soc_component_update_bits(component, WM8904_DIGITAL_MICROPHONE_0,
-+					      WM8904_DMIC_ENA_MASK, 0);
-+		return;
-+	}
-+
-+	/* Need a control and routing to switch between DMIC and ADC */
-+	snd_soc_dapm_new_controls(dapm, wm8904_cin_dapm_widgets,
-+				  ARRAY_SIZE(wm8904_cin_dapm_widgets));
-+	snd_soc_dapm_add_routes(dapm, cin_adc_dmic_con,
-+				ARRAY_SIZE(cin_adc_dmic_con));
-+
-+	if (pdata->in1l_as_dmicdat1 && pdata->in1r_as_dmicdat2) {
-+		/* Need a control and routing to mux between DMICDAT1 and 2 */
-+		dev_dbg(component->dev, "DMICDAT1 and DMICDAT2 in use\n");
-+		snd_soc_dapm_new_controls(dapm, wm8904_dmic_dapm_widgets,
-+					  ARRAY_SIZE(wm8904_dmic_dapm_widgets));
-+		snd_soc_dapm_add_routes(dapm, cin_2dmics_con,
-+					ARRAY_SIZE(cin_2dmics_con));
-+		return;
-+	}
-+
-+	/* Either DMICDAT1 or DMICDAT2 is in use, not both */
-+	if (pdata->in1l_as_dmicdat1) {
-+		dmic_src = 0;
-+		snd_soc_dapm_add_routes(dapm, cin_dmic1_con,
-+					ARRAY_SIZE(cin_dmic1_con));
-+	} else {
-+		dmic_src = 1;
-+		snd_soc_dapm_add_routes(dapm, cin_dmic2_con,
-+					ARRAY_SIZE(cin_dmic2_con));
-+	}
-+	dev_dbg(component->dev, "DMIC_SRC (0 or 1): %d\n", dmic_src);
-+	snd_soc_component_update_bits(component, WM8904_DIGITAL_MICROPHONE_0,
-+				      WM8904_DMIC_SRC_MASK,
-+				      dmic_src << WM8904_DMIC_SRC_SHIFT);
-+}
-+
- static void wm8904_handle_pdata(struct snd_soc_component *component)
- {
-+	struct snd_soc_dapm_context *dapm = snd_soc_component_get_dapm(component);
- 	struct wm8904_priv *wm8904 = snd_soc_component_get_drvdata(component);
- 	struct wm8904_pdata *pdata = wm8904->pdata;
- 	int ret, i;
- 
- 	if (!pdata) {
-+		snd_soc_dapm_add_routes(dapm, cin_nodmic_con,
-+					ARRAY_SIZE(cin_nodmic_con));
- 		snd_soc_add_component_controls(component, wm8904_eq_controls,
--				     ARRAY_SIZE(wm8904_eq_controls));
-+					       ARRAY_SIZE(wm8904_eq_controls));
- 		return;
- 	}
- 
-+	wm8904_handle_dmic_pdata(component);
-+
- 	dev_dbg(component->dev, "%d DRC configurations\n", pdata->num_drc_cfgs);
- 
- 	if (pdata->num_drc_cfgs) {
-@@ -2117,10 +2231,11 @@ static int wm8904_probe(struct snd_soc_component *component)
- 		return -EINVAL;
- 	}
- 
--	wm8904_handle_pdata(component);
--
- 	wm8904_add_widgets(component);
- 
-+	/* This can add dependent widgets, so it is done after add_widgets */
-+	wm8904_handle_pdata(component);
-+
- 	return 0;
- }
- 
--- 
-2.39.5
-
+Would it make sense to also have u16 and u8 variants? I guess one can
+always use genmask_u32 and then cast to the desired type though.
