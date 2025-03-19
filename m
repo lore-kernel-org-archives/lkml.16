@@ -1,309 +1,244 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CBE51C6FE3
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 00:15:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742343354; cv=none; b=pYaeqVshUKCgEon/2A9qVeUAUFd+V0JgNm/n1LRn6vC8VPIADeAw7N7rdr41zSuJNILTFrf7uJODD65gAoWw7ah9q5rXOF4kM6PNWPJ4M6mwulRs/Sd2Uh7jhEEQaTgpu0CB/bTQbKm2T4EkQCOFLDhWu6IT5yiSO7NHGjveWxw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742343354; c=relaxed/simple;
-	bh=HrvGzL7SpIoKoXo8zFH3/CZ1R1e6uAmq2pNYC7W0pqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=awFghX89h2AWmCGeAOK/lPh7FRSQtMjp6exXRA6AbV1JiNEe3VJK3tYl5kfT2DOqrjMiFCRyuYwf1D3vNZIL+JQoCisv++SZGY3HmRjS3tCI6Z8LbPtKRkdDJRAQPHfHmsu0tzySkmacuxbQ2jiZa8G2KWufuH05aVKc112pxnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=m/qlmE01; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D419C134B0;
+	Wed, 19 Mar 2025 00:17:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.16
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742343423; cv=fail; b=EfvQoZsF6O1xUtO96pu7r8UDuFaBad2Ri7qCUQi5Ki3wP1lJYBS/rN+Jp0EsuC47JEBJbqY0w6hw7XWw8Q0WgoSWjsnrBAF08Sgr7lPWMau0A/1x5qNIx2HrphYkuvnxYRauvDfDjQtT8uNWZojriwW8TC0K0wt/UxHgRpY9FM0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742343423; c=relaxed/simple;
+	bh=aF+zPJM+I6nsqt6bXH88zqsWd/9UngfJAYSrUD1NOoI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=EYQqNoTnAnN0w/kumrkhE9GksfKJC5smh0Tn4qnIwabX1BTj0IpaGFnWwetPIyhp8a+vHYf/4y0Qt1O+PIgqw6ySrx2yl+Z6ldwE0o5n/2anHrZHLqp9vreWfp6UNU+qmSW0qqNuQVac7LYDkQ+cLb0p3aIZlJZzmVMx8/ukbWw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Wu9uujXy; arc=fail smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="m/qlmE01"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-225e3002dffso70234095ad.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Mar 2025 17:15:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1742343352; x=1742948152; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZB6CanLMGY6mZXQkGX+cRiOusq9nkfF+ZzLXVJxU5Ns=;
-        b=m/qlmE01QBk73ZOy9TB4yXQm4sUA0jAbyaT/jF8KepjyZbRTrU0uBgcxtOf6cVlu5c
-         ANbs1eibefl9/qap2HWUJfRvQyAWAnUA2eygVhhEYk+N/f6lvrlN1EKxZvE1TQikOfW6
-         7i4/ftSypVjjHjHpcaCoIx6Qy13ufcEWt+RBQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742343352; x=1742948152;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZB6CanLMGY6mZXQkGX+cRiOusq9nkfF+ZzLXVJxU5Ns=;
-        b=Gy72+PMMk6jn0SKuYF4+riz95Qwe2vM6lqKPgovMHz2SjHB0OJHHfj6zSRkPRkmwbp
-         xr2jaqeBXMw/JvMkfdkZDaH48mxwvUI1oCHq1KZXvpcC+1xY8CcykA0V/biBk//T9DxN
-         ouyFJB98SSKT2GBUyFbTCZe7wij94W/eLhnKpBLEMlbRrzLmbu9kuyluQH6V/1m+Ouul
-         xFSfB7xEtYP6nk3/bJxLT8TGb+GChPmstbWZaaA7rmCsCOQE7yOQtnDzPjGtgwrJNtpi
-         RnYv9JZholWZkhwfTGNNPXVedsBzBKpOra8T4WF+/uT1jcDuzTPl49sBdjkbpIOSxQ7t
-         caJA==
-X-Gm-Message-State: AOJu0Yx4JpD20dU43X5yuCYuSCjwcSM8SnM4LGp0VFR6IduNckUGyBmr
-	YLKNNaBnRRmD87NmYBxAEap2LrA+wVVbWMqC4llC0ylaMShcKlkx2adCBHlmBlA=
-X-Gm-Gg: ASbGncuUp7ekxZet+c22FFJCeuBCECTrTWS+tO4Yk2gDt/i6AhX7yMjMReF+RPJL1Zy
-	9i9WJ/0UDdZCW3Hj8UWYfplZT2qREb0ubXsNgxFgY0/2cyw66nKxxMxA9R4SIYiwOm2bK2tkmn8
-	GT3IUU25ybnTPoNwJMz0KS67HoNH8chlswn1xKsgAjrS1lUyGUC+iUWDUu+Ej1ZUcN/G8pJqrAe
-	/zt4ngpphPFHYZgIaRMwr/rsxSg6ChPEHuntBA6bc3msb37Pbzzg2/ABy41tekNQ8qH+/MUERVm
-	ovx6UqJ64lDWYXhASkjGtTCj15E0By5UHFN8JMFkeQpxDICLx2Va
-X-Google-Smtp-Source: AGHT+IGEjgNr8OXukMKpiMZiFHzun0R5NaGz3kNl/a4hrPUj8a+pmGVK3Inx5pRS8JA4nLBMKEl0Gg==
-X-Received: by 2002:a17:902:db12:b0:223:49cb:5eaa with SMTP id d9443c01a7336-22649a46a18mr10979595ad.35.1742343351630;
-        Tue, 18 Mar 2025 17:15:51 -0700 (PDT)
-Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68a4876sm101281375ad.70.2025.03.18.17.15.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 18 Mar 2025 17:15:51 -0700 (PDT)
-From: Joe Damato <jdamato@fastly.com>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	asml.silence@gmail.com,
-	linux-fsdevel@vger.kernel.org,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	linux-api@vger.kernel.org,
-	linux-arch@vger.kernel.org,
-	viro@zeniv.linux.org.uk,
-	jack@suse.cz,
-	kuba@kernel.org,
-	shuah@kernel.org,
-	sdf@fomichev.me,
-	mingo@redhat.com,
-	arnd@arndb.de,
-	brauner@kernel.org,
-	akpm@linux-foundation.org,
-	tglx@linutronix.de,
-	jolsa@kernel.org,
-	linux-kselftest@vger.kernel.org,
-	Joe Damato <jdamato@fastly.com>
-Subject: [RFC -next 09/10] fs: Add sendfile2 syscall
-Date: Wed, 19 Mar 2025 00:15:20 +0000
-Message-ID: <20250319001521.53249-10-jdamato@fastly.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250319001521.53249-1-jdamato@fastly.com>
-References: <20250319001521.53249-1-jdamato@fastly.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Wu9uujXy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742343421; x=1773879421;
+  h=date:from:to:cc:subject:message-id:references:
+   in-reply-to:mime-version;
+  bh=aF+zPJM+I6nsqt6bXH88zqsWd/9UngfJAYSrUD1NOoI=;
+  b=Wu9uujXyYSGX5ADIUie4bFVTYokZF6rU6iPS1yanda/qG4WJsK/TVD5F
+   ssIfEwoxO4B3tN27uGqQ5voom/4qV3duKQ+vRHJ84HWsPnZc1b2MyEl1i
+   gw1QbH0awOk3aK1twlUCjphQgKfeuFRR3R8cDa1tNHPhtICwSvghWKM6B
+   NPDymGL/zeLnNaQ5ZuwFXh8HH0Tlu3RGziQAjAfzTdmdtQvf7RdaV/Ewj
+   hMJzFwPdG2iN0XkOLm5Z3utRXM8CHGDH6ZL0SPTM4oX4cHmnzOwS0JVGb
+   YwpDou+S0YT1wbI9iuvI25Np9rTb0LTzw2lg2C+jFCsG17pgccfBZOaTI
+   g==;
+X-CSE-ConnectionGUID: LoS3dgaySTG2XBbPln+gtA==
+X-CSE-MsgGUID: VP00Td7fQgqWyWgQFKy9wA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43615570"
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="43615570"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 17:17:00 -0700
+X-CSE-ConnectionGUID: NjleBCYRSteVyMdIPmkN5Q==
+X-CSE-MsgGUID: aaIAJh+3TD6zoqvsetxpYw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="153264992"
+Received: from orsmsx903.amr.corp.intel.com ([10.22.229.25])
+  by orviesa002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 17:16:59 -0700
+Received: from ORSMSX903.amr.corp.intel.com (10.22.229.25) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Tue, 18 Mar 2025 17:16:58 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX903.amr.corp.intel.com (10.22.229.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Tue, 18 Mar 2025 17:16:58 -0700
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (104.47.73.170)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Tue, 18 Mar 2025 17:16:57 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=CVQNd46jYqoIopW3Rrqed6hoCQ0qOuP5lPtwCcAFiesob5p4+odcJPf0RhpeH3OiggSJXsenoNcK4r2IaTbeaqkLu3WVMfVi90J/wBM7dxg1CWGPD3KMUffeDEJPHdLBZ9a7q8oeq66bgld1Avtax4R9ow05BoU9ZVj80QY0ph64oTxpMGGyM+v25wMQt2MUYhnkwSkOEkN/PRMu17b238EBqOXLLk3nF+3zZ76N4bPQeNv+NZAUBu54nG348JTj8JC4fDBaCtuEvZY8pHednRitIVfymJfOty8AHwRr+idEmzMs200Jne3GfpTUCWJPYiS0XIAU+1PWpt8sJ2SkXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=HslB2DV5xAlB21YqFmVNoHffprU7Y//4K9hXb1DiIdA=;
+ b=vQB1ToCwXn7FWqodFydDhHOQzR4RXvlATd4AFFTHLLK+RcwgcSzRrdeHiDYwAHijED6tHeUa06ef5pDPwMxh7tuhDP57Idrrx6Eak6pgQuhMhpBxjZM0iaxdeUpIa3fovv1AMN8dPpOcyLPw1YPjEEY6P2BLuVVHZJB1rlcfDO5GIQ1SXulJlI3vx2nQYEWceIU7q4DeqS2XpNYY3Qrb8T61bw9SFjCJ4WvVgQomED0Lr6nIU7XJ43BF8GaQt0y24kWDkTqerntaPLLJ9dATHg/pZ3fyCDC0mJOw6HqQzBk/YTY6LPfhKFh7pFXwINBZTPYQy5tFvJ7+rU/fxTf5cQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
+ by CY8PR11MB7827.namprd11.prod.outlook.com (2603:10b6:930:77::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
+ 2025 00:16:14 +0000
+Received: from PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8]) by PH8PR11MB8107.namprd11.prod.outlook.com
+ ([fe80::6b05:74cf:a304:ecd8%4]) with mapi id 15.20.8534.031; Wed, 19 Mar 2025
+ 00:16:14 +0000
+Date: Tue, 18 Mar 2025 17:16:11 -0700
+From: Dan Williams <dan.j.williams@intel.com>
+To: Fan Ni <nifan.cxl@gmail.com>, Dan Williams <dan.j.williams@intel.com>
+CC: Dave Jiang <dave.jiang@intel.com>, <nifan.cxl@gmail.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <Jonathan.Cameron@huawei.com>,
+	<linux-cxl@vger.kernel.org>, <a.manzanares@samsung.com>, <dave@stgolabs.net>,
+	<linux-kernel@vger.kernel.org>, <anisa.su887@gmail.com>
+Subject: Re: [RFC] cxl/region: set numa node for target memdevs when a region
+ is committed
+Message-ID: <67da0ccb80781_201f029449@dwillia2-xfh.jf.intel.com.notmuch>
+References: <20250314164629.6937-1-nifan.cxl@gmail.com>
+ <ac564c1e-95e4-46d0-95c7-7f72c8fee0c2@intel.com>
+ <67d9e4d43360e_201f0294d6@dwillia2-xfh.jf.intel.com.notmuch>
+ <Z9n9qpySEkwbXN_F@debian>
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Z9n9qpySEkwbXN_F@debian>
+X-ClientProxiedBy: MW4PR03CA0138.namprd03.prod.outlook.com
+ (2603:10b6:303:8c::23) To PH8PR11MB8107.namprd11.prod.outlook.com
+ (2603:10b6:510:256::6)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|CY8PR11MB7827:EE_
+X-MS-Office365-Filtering-Correlation-Id: 24526cea-1443-4d63-431f-08dd667b428f
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016|7053199007;
+X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?JJcJid0n+vi8UuslRHG3ictopdSQxJLx486I0pjTRCS9RpeDAcqHmYyAt5s1?=
+ =?us-ascii?Q?a1a1Sj5nBbhj3Mn9BbYt0AkNF+yTLwz2dnpMIwl6mPeC7k/WSa8E5Sr0FBjS?=
+ =?us-ascii?Q?MEqrzU0sXOluYwBgQTBp0QUTQ/a+fCSxeFRCy/aYJbHmi5H1BYqJqjCxfVk+?=
+ =?us-ascii?Q?8v7tKpF4o6U2DJrdYLSZW63vO3Je7700lUMUJap+2kDtv1nGNHxX5O+TPMdf?=
+ =?us-ascii?Q?OraWU0n+UMV7WMRAkE1cx2zUsqmPMOL4zTgmRVYVBENImT6nazq3WUfuvYSP?=
+ =?us-ascii?Q?Y0MhZKHoZM/75CR2XKiza6gaSjbuaL85Jk7DSf9I/LzDrRySL0G9uFFtm/ky?=
+ =?us-ascii?Q?YCu5BwdB7OW5f5yD02W6v9dw8HmGfqMqvukKA3zWGlhi6RnlfjyXBp73YBez?=
+ =?us-ascii?Q?RWvlBxZHbDG14O0LeNCgT3dYudKxpU7GN7Ahjcko5Kk+OJn7xMr1kErwJV5H?=
+ =?us-ascii?Q?0jo/Yy2AHbCW6ITt6dImmMSyL+SDs0wD37qRuP59gvBwt7KrAfBTMVIgjEn0?=
+ =?us-ascii?Q?nxb/n0H2o9H7lEqAJYpbcHu9Kp2P56SIhMe6lb8gJj5yfZ39JAwcvBoJC1eD?=
+ =?us-ascii?Q?AvnQWOXyPG/XdpxEndvGElfr9GgEQ3Cil42/7mVKaxF3wubmelePOT5PCTYs?=
+ =?us-ascii?Q?LEDPXnyH0RkUMG+4K3igm3IZsVY1N4XKwIWopoSACLaYiSAfj7im+NkWZack?=
+ =?us-ascii?Q?5crD9K/8H36wIwyuIw0LBtlgZCR6HA9oEEfv4CUJ25zE7UGh31s/POQllljv?=
+ =?us-ascii?Q?Xn7EeXfiVqYyb2cJ9k2I6ajzPe38dMdC8eTkvzcazUIVPYwIS64MEjS4W71i?=
+ =?us-ascii?Q?bKmH4FlfcR7eDdgBXe/pPeK0IvIRkRCQZ9CIkvHC8dCsflEEYRIGgUR5Yroy?=
+ =?us-ascii?Q?4kUPQgenqdd7kvV6/XbERXMRb1+ikSeskqXoSn17nMU1Tp3X1AtsYvCRCyX3?=
+ =?us-ascii?Q?7oj3zYdjScLW7m9+Q5ZgXEbpdXs0ypbGTcmDAhdElmAuW8NT4GGdW5P8gGkz?=
+ =?us-ascii?Q?6diNh48FtqFnUWZ+0g6RoWt2ADYk4ENjdF5sBlfKLwBNj/ngoWMJhODyiuKW?=
+ =?us-ascii?Q?j9t2sOXzYHf66qa1x33UoAwtJdPMOcnuJnarao8eNGsaaM0Nc7C9DpHchtQR?=
+ =?us-ascii?Q?6VpIxoKbM22/8VtcKHMaAoEN2sVALfkKvl66SLktKAigfrnCQbzBTgA/dCIX?=
+ =?us-ascii?Q?ufB0eJGnkJXqdNOXaqr8iRLtHd7/8TZpt4f2Ry+F2m2ZydBOVjTxrD1/xC/j?=
+ =?us-ascii?Q?SMMVUieV3u22bq+eNSca3BbGuQBFDK9CSdfzTfYB/u9BzsvYx92VdgGhiK8y?=
+ =?us-ascii?Q?LMGvzMStxQVi4YVcpC4AW1/CgjDWT66vhoxSKMSoUGR8AucbwPwJBR1aUXWG?=
+ =?us-ascii?Q?UnEMb0kb63bY1u/o0M+skeM5ypBh?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?KHjwDo4yDVSYIU4BX+48L20QMmjPNvAEGKkufefpagSILTbvLyOUsfUAPLox?=
+ =?us-ascii?Q?iHW3N7VNf/ZkoqsxIQu9cPfh7qXk45i65WHAF/2On3FM3T+ORG85dLWSnBn4?=
+ =?us-ascii?Q?YaaYjPEKjguhNj6bHJGbZYskjV3kr9ASd/jT3nhgROCmJu86/gkqP2V48vV1?=
+ =?us-ascii?Q?Y3z6dDr6QUHbYWfl1yg3vuMfnMzR7rgcXLzONFk0TZ7QFJ98665v5/1FFelT?=
+ =?us-ascii?Q?gwd/rKQ1MhDl24/Zxn2tZIazVV5nchHsAnu33KkJOCH+nV31Giu1rYJrgDhA?=
+ =?us-ascii?Q?zrFXhlz5xqrpITQC/Qq+4lh8S5xW6fhO/dqSFBCbzxDJidBPO3cYwGPXNF/C?=
+ =?us-ascii?Q?ghvDQ1kG9rpvTAC2o5mjafkgJpohnCYVwVCKs1PTS4uNtwoeaW/xXSHdS1CA?=
+ =?us-ascii?Q?uQFb8yqihPjEYp90LU2EvMDAVt4L6TdYtBLemilnCEEAorgpq+4j/qUGOJqp?=
+ =?us-ascii?Q?RYiJLLO+U+88KsYQGBQH+XbXdeSshXjS+XqDmfIVc3kz3BMDsh8DRtNlieua?=
+ =?us-ascii?Q?/3pexaaOwl9BbWu/cIsx+BVj9eoFMBoFS5Wm+X5TndSKD2kloo7igEGeQsg5?=
+ =?us-ascii?Q?k/Ih1cc/BPQ8e9ExLKJsiosw3/d+QvnmvBsT6s6L/3Zm2yLiEBHF/OqQ2euX?=
+ =?us-ascii?Q?9rvppLNOvKdyO0RDOIZBmyr6OFDt4KtAssGkZ9oNWmSl2JAqgPe3b+Ysb5hc?=
+ =?us-ascii?Q?J9GwsqUijmmLlwbw/aGl44p62xG5VwqdHgkAfvPwl7rNiE6p2g7AZY22xHHY?=
+ =?us-ascii?Q?mDFxyaEVW++zEOO0S/CnD4r3Rd9WPrLcHRAQEVI+XdeGqHPji9+xdRTxNoBP?=
+ =?us-ascii?Q?61tFq62obiU/xPqErt2B2zWhMMWWaEwgwdTBmcjzVF+eiHGr88zrpgLyfNxi?=
+ =?us-ascii?Q?rMliVlpN+/TxzgeZTPIa55wJfpOyfcFuU8hr3OknNdiRBz9aiXd/CFn8cf7g?=
+ =?us-ascii?Q?0xIQFDeCS6H5mJI54fBkE0n2ps7ENOUeSlcoJUEe1c88HmqDTGRZO1KyXARP?=
+ =?us-ascii?Q?2XK9G7vsxxh2ulSfgk3SoeF9co3xmrkIb8mpsjcoHzOm5uoSpXjeXmusd5Tm?=
+ =?us-ascii?Q?1UlrX6EkbW/lgt0rHa4cWnRGE2O+TT81c4s7ZC3uAYcuiDFPk0RZU7C0aLyC?=
+ =?us-ascii?Q?FnfYrBWZYez8v8mKKtJErrNWIgmf2b0Kfov6p7fx1VMiYNN7NXY6H14DmakL?=
+ =?us-ascii?Q?2W+40U6emFTe9HbfcTklrw2dIVMpEeM5DSK3/Gj4BvvUo0H9wDYAfmQU7VqK?=
+ =?us-ascii?Q?EE9fQmHAs1IszlH7JB4zsN8swcmP6QmNOoOBtGTnV6WEKPnb59ospHD8gC/O?=
+ =?us-ascii?Q?iONTY/sYRuxTShAwqvYHwv/tmLT7o+y5+RBQiW5HlVQ1fd8dhYE5YtbNTfVO?=
+ =?us-ascii?Q?SZA5/+hqu0oJv5jtXi8cAUUxi+E9R0Dkpz9LTXxE0jcbwwE8/sYzGrhxVt/S?=
+ =?us-ascii?Q?7bR0bUutr0cduuKiD8k/R92lGI1GADlx+oGpBWIOia+OYpWX/K86oq++VCLo?=
+ =?us-ascii?Q?7upcjjeeGKnmzGkdiESQ1b33feqq50tKZDvuoGoP9R+3BxiIKAYvAi7992DE?=
+ =?us-ascii?Q?tyoy61KABeLhFtQEhNQy937xYwchAnQr1MyN74u1yEvXFv+mTHBZSz/K2myH?=
+ =?us-ascii?Q?3A=3D=3D?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 24526cea-1443-4d63-431f-08dd667b428f
+X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 00:16:14.2331
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: B9k3/ZCNY6SYB18rKtFdHiduNfwzznLqNjT5rvdT8y89DNt2AqydlK7N2iJBW7bbNHSqbKIkD9s+grW9Vy/VyofTuXDTDj9iYzEmxTqP8Ws=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY8PR11MB7827
+X-OriginatorOrg: intel.com
 
-The sendfile2 system call is similar to sendfile64, but takes a flags
-argument allowing the user to select either a default sendfile or for
-sendfile to generate zerocopy notifications similar to MSG_ZEROCOPY and
-sendmsg.
+Fan Ni wrote:
+> On Tue, Mar 18, 2025 at 02:25:40PM -0700, Dan Williams wrote:
+> > Dave Jiang wrote:
+> > > 
+> > > 
+> > > On 3/14/25 9:40 AM, nifan.cxl@gmail.com wrote:
+> > > > From: Fan Ni <fan.ni@samsung.com>
+> > > > 
+> > > > There is a sysfs attribute named "numa_node" for cxl memory device.
+> > > > however, it is never set so -1 is returned whenever it is read.
+> > > > 
+> > > > With this change, the numa_node of each target memdev is set based on the
+> > > > start address of the hpa_range of the endpoint decoder it associated when a
+> > > > cxl region is created; and it is reset when the region decoders are
+> > > > reset.
+> > > > 
+> > > > Open qeustion: do we need to set the numa_node when the memdev is
+> > > > probed instead of waiting until a region is created?
+> > > 
+> > > Typically, the numa node for a PCI device should be dev_to_node(),
+> > > where the device resides. So when the device is probed, it should be
+> > > set with that. See documentation [1]. Region should have its own NUMA
+> > > node based on phys_to_target_node() of the starting address.  
+> > 
+> > Right, the memdev node is the affinity of device-MMIO to a CPU. The
+> > HDM-memory that the device decodes may land in multiple proximity
+> > domains and is subject to CDAT, CXL QoS, HMAT Generic Port, etc...
+> > 
+> > If your memdev node is "NUMA_NO_NODE" then that likely means the
+> > affinity information for the PCI device is missing.
+> > 
+> > I would double check that first. See set_dev_node() in device_add().
+> 
+> Thanks Dave and Dan for the explanation. 
+> Then the issue must be from qemu setup.
+> 
+> I added some debug code as below
+> ---------------------------------------------
+> fan:~/cxl/linux-fixes$ git diff
+> diff --git a/drivers/base/core.c b/drivers/base/core.c
+> index 5a1f05198114..c86a9eb58e99 100644
+> --- a/drivers/base/core.c
+> +++ b/drivers/base/core.c
+> @@ -3594,6 +3594,10 @@ int device_add(struct device *dev)
+>         if (kobj)
+>                 dev->kobj.parent = kobj;
+>  
+> +        dev_dbg(dev, "device: '%s': %s XX node %d\n", dev_name(dev), __func__, dev_to_node(dev));
+> +        if (parent) {
+> +                dev_dbg(parent, "parent device: '%s': %s XX node %d\n", dev_name(parent), __func__, dev_to_node(parent));
+> +        }
+>         /* use parent numa_node */
+>         if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
+>                 set_dev_node(dev, dev_to_node(parent));
+> ---------------------------------------------
+> 
+> The output after loading cxl related drivers looks like below. All
+> numa_node is -1 in the cxl topology. 
+> 
+> Hi Jonathan,
+>    do I miss something in the qemu setup ??
 
-Signed-off-by: Joe Damato <jdamato@fastly.com>
----
- arch/alpha/kernel/syscalls/syscall.tbl      | 1 +
- arch/arm/tools/syscall.tbl                  | 1 +
- arch/arm64/tools/syscall_32.tbl             | 1 +
- arch/m68k/kernel/syscalls/syscall.tbl       | 1 +
- arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   | 1 +
- arch/parisc/kernel/syscalls/syscall.tbl     | 1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    | 1 +
- arch/s390/kernel/syscalls/syscall.tbl       | 1 +
- arch/sh/kernel/syscalls/syscall.tbl         | 1 +
- arch/sparc/kernel/syscalls/syscall.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
- include/linux/syscalls.h                    | 2 ++
- include/uapi/asm-generic/unistd.h           | 4 +++-
- scripts/syscall.tbl                         | 1 +
- 19 files changed, 22 insertions(+), 1 deletion(-)
-
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index c59d53d6d3f3..124313c745b6 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -506,3 +506,4 @@
- 574	common	getxattrat			sys_getxattrat
- 575	common	listxattrat			sys_listxattrat
- 576	common	removexattrat			sys_removexattrat
-+577	common	sendfile2			sys_sendfile2
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 49eeb2ad8dbd..ca61b5792148 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -481,3 +481,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/arm64/tools/syscall_32.tbl b/arch/arm64/tools/syscall_32.tbl
-index 69a829912a05..71695a61a1df 100644
---- a/arch/arm64/tools/syscall_32.tbl
-+++ b/arch/arm64/tools/syscall_32.tbl
-@@ -478,3 +478,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index f5ed71f1910d..6096a22b4472 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -466,3 +466,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 680f568b77f2..0429dc26ceee 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -472,3 +472,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index 0b9b7e25b69a..f6571c8ecb15 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -405,3 +405,4 @@
- 464	n32	getxattrat			sys_getxattrat
- 465	n32	listxattrat			sys_listxattrat
- 466	n32	removexattrat			sys_removexattrat
-+467	n32	sendfile2			sys_sendfile2
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index c844cd5cda62..532ce99478ee 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -381,3 +381,4 @@
- 464	n64	getxattrat			sys_getxattrat
- 465	n64	listxattrat			sys_listxattrat
- 466	n64	removexattrat			sys_removexattrat
-+467	n64	sendfile2			sys_sendfile2
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 349b8aad1159..9cacbbff6b12 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -454,3 +454,4 @@
- 464	o32	getxattrat			sys_getxattrat
- 465	o32	listxattrat			sys_listxattrat
- 466	o32	removexattrat			sys_removexattrat
-+467	o32	sendfile2			sys_sendfile2
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index d9fc94c86965..ca5a3e6eb8f3 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -465,3 +465,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index d8b4ab78bef0..450392aed1eb 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -557,3 +557,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index e9115b4d8b63..e7e1b16f4d39 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -469,3 +469,4 @@
- 464  common	getxattrat		sys_getxattrat			sys_getxattrat
- 465  common	listxattrat		sys_listxattrat			sys_listxattrat
- 466  common	removexattrat		sys_removexattrat		sys_removexattrat
-+467  64	sendfile2		sys_sendfile2			-
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index c8cad33bf250..c75a0e69c033 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -470,3 +470,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 727f99d333b3..fd15465b5330 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -512,3 +512,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 4d0fb2fba7e2..f711ee6068ec 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -472,3 +472,4 @@
- 464	i386	getxattrat		sys_getxattrat
- 465	i386	listxattrat		sys_listxattrat
- 466	i386	removexattrat		sys_removexattrat
-+467	i386    sendfile2		sys_sendfile2
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 5eb708bff1c7..0ba4edb1e4c0 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -390,6 +390,7 @@
- 464	common	getxattrat		sys_getxattrat
- 465	common	listxattrat		sys_listxattrat
- 466	common	removexattrat		sys_removexattrat
-+467	common  sendfile2		sys_sendfile2
- 
- #
- # Due to a historical design error, certain syscalls are numbered differently
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 37effc1b134e..142597c92baf 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -437,3 +437,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common	sendfile2			sys_sendfile2
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index c6333204d451..3ee0e997d6c6 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -491,6 +491,8 @@ asmlinkage long sys_pwritev(unsigned long fd, const struct iovec __user *vec,
- 			    unsigned long vlen, unsigned long pos_l, unsigned long pos_h);
- asmlinkage long sys_sendfile64(int out_fd, int in_fd,
- 			       loff_t __user *offset, size_t count);
-+asmlinkage long sys_sendfile2(int out_fd, int in_fd,
-+			      loff_t __user *offset, size_t count, int flags);
- asmlinkage long sys_pselect6(int, fd_set __user *, fd_set __user *,
- 			     fd_set __user *, struct __kernel_timespec __user *,
- 			     void __user *);
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 88dc393c2bca..ec0ac5a8d519 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -849,9 +849,11 @@ __SYSCALL(__NR_getxattrat, sys_getxattrat)
- __SYSCALL(__NR_listxattrat, sys_listxattrat)
- #define __NR_removexattrat 466
- __SYSCALL(__NR_removexattrat, sys_removexattrat)
-+#define __NR_sendfile2 467
-+__SYSCALL(__NR_sendfile2, sys_sendfile2)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 467
-+#define __NR_syscalls 468
- 
- /*
-  * 32 bit systems traditionally used different
-diff --git a/scripts/syscall.tbl b/scripts/syscall.tbl
-index ebbdb3c42e9f..1911a64d3b33 100644
---- a/scripts/syscall.tbl
-+++ b/scripts/syscall.tbl
-@@ -407,3 +407,4 @@
- 464	common	getxattrat			sys_getxattrat
- 465	common	listxattrat			sys_listxattrat
- 466	common	removexattrat			sys_removexattrat
-+467	common  sendfile2			sys_sendfile2
--- 
-2.43.0
-
+IIUC the typical expectation for communicating the affinity of PCI
+devices is an ACPI _PXM property for the host bridge object in the
+[DS]SDT. As far as I can see QEMU does not build _PXM information for
+its host bridges.
