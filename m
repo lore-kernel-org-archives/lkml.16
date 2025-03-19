@@ -1,118 +1,64 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C9DF14A09E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:15:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84B4D14A09E;
+	Wed, 19 Mar 2025 16:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742400938; cv=none; b=WWWFcp7rvxCUDWVEvxBfylp78YFopyxdqs84KDiHjpap8zGjeMi/6HnF8O2XNnS4tojlIY5HjtbymBTw49tuMzHAkDStuA6HOmIILmN0CC3DU31VrtPokfDP+JpHjGx4RR9o7rshmvwlNm1KovhHBCZ1+IYpvIYn/x5hFr4Eidk=
+	t=1742400949; cv=none; b=JopeAyqWXFHrCViPOxnQjE6H77i9mf/I5RoCb8NR/pGDqNA+IPEMscDmQZ4UQCbJx70CYP69SnCAyzBT8xs+d23HlBq3Y0z5ERe42ctaW1n5f/w57B0TeFFUWWcbQvjpzrAEwxspYv6sTcZTvGC8h3fZz1xDgIzLSiHC+/O6bRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742400938; c=relaxed/simple;
-	bh=9Rm+Ecf93L0QuN4AYxcrohMzWZf9871Yy9GwOrQBZpw=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=PhuzVMDdYkov/UmWu4oNvIeONF4fnoWNcGlHD4Y6xRHubH/uqAtTEZgTEPH65wcJtlNKo5UquZmcvKhN8l+hMIh1HYDrWGHgozwsaJnU+rF5SGZV/1GCx9g5/GcqABAuD6MB3D4D7WWa1tdDUoElcCAhvTJPElB+6LLvEIvp/b0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=uwz/sI56; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=41Ay8Y/y; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742400949; c=relaxed/simple;
+	bh=Tf1/4jcAAXic4Wmc2Mvv4rTmGh6E/30Wvsye7p69dtI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MbRE5WdUiJttVhBYaFKMy6C+3gjEN+FeEnJy/jq93eYipS1Kln2ZYc0TZjBQQBA2U8BeE9iTV4G4cY0GwOkk8T3v1HRS1FtlyPkMtGLy7ksf8KyWXL+f0aX6/Me/dgBD0ooUNwKZUQxxb1ldYM7Ra4KqgmVKgnoah/H8c2PhSdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=Peq5GDrv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uwz/sI56";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="41Ay8Y/y"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742400934;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Peq5GDrv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAFCBC4CEE4;
+	Wed, 19 Mar 2025 16:15:47 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="Peq5GDrv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1742400946;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=t3bqSNiWlG7o/3DIR8ylymiosqAL0mlKDTpmRL7uU6E=;
-	b=uwz/sI56wdvemgwD+2tMjoiAohlfR7RGHsF4HTC6dGhYWU2RpH1KZLQA5TEcvzPa+B+qnf
-	8H6P8ihBw/zgUIB8Cty95dOKxTG/yxMYgdVQkMxVeV/hbzXfaW3g62NwvUoAYt2+dS6Pi9
-	GyYC5akYM+eRbZVcEfFY3kIGHWAFYPwJJtLdSfI4EiMGfGWvjcwaTHxwtxGePvi7vQz30J
-	zYyAWVeK2SrRDOOAZC3fOrg/qF/Ggo8xc01ZroW7KIc8HQu/lsKtbBn2Q8nL2XTp7IE+7+
-	gQORQXkpM41ZNnYZXM6MxfAXnxO6XMa1OttJMTaEwkzOmEUIQRax63aKzubuNA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742400934;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=t3bqSNiWlG7o/3DIR8ylymiosqAL0mlKDTpmRL7uU6E=;
-	b=41Ay8Y/y/+mcT8ButyDwNemURwZaeqpaMXFmBONDcqjuDnTqa8Y7vCwoi4YNlecC5cgVCB
-	JX0TLwXDxlTUCnAQ==
-To: wenxiong@linux.ibm.com, linux-kernel@vger.kernel.org, gjoyce@linux.ibm.com
-Cc: Wen Xiong <wenxiong@linux.ibm.com>
-Subject: Re: [PATCH 1/1] genirq/msi: Dynamic remove/add stroage adapter hits
- EEH
-In-Reply-To: <1742386474-13717-1-git-send-email-wenxiong@linux.ibm.com>
-References: <1742386474-13717-1-git-send-email-wenxiong@linux.ibm.com>
-Date: Wed, 19 Mar 2025 17:15:34 +0100
-Message-ID: <87a59h3sk9.ffs@tglx>
+	bh=2VI/j+LK4IyIwE+OVTjjCr+GSdAaazGSA6tl8MFmzFY=;
+	b=Peq5GDrvXDyXsqluuFRNiMS6x0ptJGsrdn/f/Q0RxgsBVPRnSqGcM3mY19Eg2LLgKfucFb
+	WP/fFZCvRJjjx2xnPDHZVFAYbygBZZ0MZfpluc/fpLN5J3ZMb+ox4mMn/Cf537bviI/Mc/
+	wcZRIUeC+YyDbHJQgBGem0DNPqNTKFM=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id c2e07f44 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Wed, 19 Mar 2025 16:15:46 +0000 (UTC)
+Date: Wed, 19 Mar 2025 17:15:41 +0100
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Hangbin Liu <liuhangbin@gmail.com>
+Cc: netdev@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Simon Horman <horms@kernel.org>, Phil Sutter <phil@nwl.cc>,
+	Florian Westphal <fw@strlen.de>, Petr Mladek <pmladek@suse.com>,
+	Yoann Congal <yoann.congal@smile.fr>, wireguard@lists.zx2c4.com,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 RESEND net-next 2/2] selftests: wireguard: update to
+ using nft for qemu test
+Message-ID: <Z9rtrVk-15Ts_BNp@zx2c4.com>
+References: <20250106081043.2073169-1-liuhangbin@gmail.com>
+ <20250106081043.2073169-3-liuhangbin@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250106081043.2073169-3-liuhangbin@gmail.com>
 
-On Wed, Mar 19 2025 at 07:14, wenxiong@linux.ibm.com wrote:
-> There is very small window: irqbalance daemon kicks in before ipr driver
-> calls pci_restore_state(pdev), irqbalance daemon read back all 0 for that
-> msix vector in __pci_read_msi_msg().
+On Mon, Jan 06, 2025 at 08:10:43AM +0000, Hangbin Liu wrote:
+> +	echo "file /bin/nft $(NFTABLES_PATH)/src/nft 755 0 0" >> $@
+> +	echo "file /lib/libmnl.so.0 $(TOOLCHAIN_PATH)/lib/libmnl.so.0 755 0 0" >> $@
+> +	echo "file /lib/libnftnl.so.11 $(TOOLCHAIN_PATH)/lib/libnftnl.so.11 755 0 0" >> $@
 
-You fail to explain how irqbalanced is able to invoke __pci_read_msi_msg().
-
-I assume that this happens in the set_affinity() path, which ends up in
-pseries_msi_compose_msg(). pseries_msi_compose_msg() reads back the
-message from the device.
-
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index 396a067a8a56..fcde35efb64c 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -671,7 +671,8 @@ int msi_domain_set_affinity(struct irq_data *irq_data,
->  	if (ret >= 0 && ret != IRQ_SET_MASK_OK_DONE) {
->  		BUG_ON(irq_chip_compose_msi_msg(irq_data, msg));
->  		msi_check_level(irq_data->domain, msg);
-> -		irq_chip_write_msi_msg(irq_data, msg);
-> +		if ((msg->address_lo != 0) && (msg->address_hi != 0))
-> +			irq_chip_write_msi_msg(irq_data, msg);
-
-That's just papering over the underlying problem and thereby breaks all
-architetures except your machine. address_hi _IS_ zero on most systems
-and there is no requirement for address_lo to be non-zero when
-address_hi is non-zero. Not going to happen.
-
-The real problem has nothing to do with a remove/add operation. The
-problem is solely in the probe function.
-
-It does:
-
-   pci_alloc_irq_vectors();     // Exposes interrupts in /proc/irq/
-                                // which makes them visible to
-                                // irqbalanced
-
-   pci_save_state();
-
-#A reset_device();              // Clears the config space
-
-#B pci_restore_state();         // Restores the config space
-
-So the driver creates inconsistent state between #A and #B, which is
-wrong to begin with when it first sets up resources which are visible
-to other entities.
-
-Why are the interrupts set up _before_ the reset? That does not make any
-sense.
-
-And no, we are not going to do a random undocumented hack in generic
-code to work around such a driver insanity.
-
-Fix the problem where it was created, i.e. at the driver level.
-
-Thanks,
-
-        tglx
-
-
-
-
-
+Can't these be statically linked into the nft binary?
