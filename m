@@ -1,115 +1,121 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D61621364
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:00:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD92021364;
+	Wed, 19 Mar 2025 04:02:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742356856; cv=none; b=Rc29Dhuq8Mr2MKPRMcXw0khSFjQV1SOeHR+x2IvCcbfY5s5uTeWxAGk3phtI29aCWUsizZb36EHRzlK1ZMYN1HwO832LiTF11pSNnT4w5LzINu2O/uGvIyn13+zQGKRKi/qGH7qsoXyYBsbca9DUY23TNGu8UxLRLwpDlBvq8KI=
+	t=1742356928; cv=none; b=X6o7igM25eHdgcTWVTJeHsIFAeR/dEVVz2NcIDpd9m4G3bOeka5NHilpDxS7Ht8LdkLDnUzHpUbumxP4JW9M/0T5FpZK0WW2Ye9SO/m2spT3FipwNOYoQRiICyCoKDV7Iv0H/VKsRQhKnae5Kwrwuf/FXYOSjmPFFdDoU+fbqd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742356856; c=relaxed/simple;
-	bh=6KUdji6LAWRLbl5mSvI3LLC1ki16mv+bJ5mSFswe6yI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=TCJNF57TTVi7IRt9UTD9M9p7Nr39Hh4evPNUJsZsCbWh0QO9c3FSh5kiant3EKPDdafNpTZ1ijU8QfAlZZTP9wCZfbz9BrqRxrCtWxpkMvo43QhDoXjV03TdzXKYYB7crhLBEVfDG9sOQcmCDH1ymK9vXmJCdI6bSy6PUbS6cvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=hcqTaf+a; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742356928; c=relaxed/simple;
+	bh=fOrPNVam1pp2mboD70Wkd2CrOQySoRKMMq8x7u6IPK0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kouKerBNCMMkg7pKbYapg9zropF/zbuvpapcMtZljXDYiurhS5+KzWF8n/zJXNKuBNqQittbvc5R+mRRMB0bnZvn641oL44Cce2CGRJZ6zvsa60EFNAW8xshCLyHLuHXwH3+GFKUBsgt1GyoEVmR2dWdRMKjBtZd/UL7jvw2Ngs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=qf36ci9E; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="hcqTaf+a"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52IKa7Hw014684;
-	Wed, 19 Mar 2025 04:00:39 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=srljMD
-	XR/b3PlOTBTheVB7qDBh1nRazbG4VMwqXj+wI=; b=hcqTaf+aWYkEAE3KOPr1X0
-	05ZZWBXWDk3a94XU7mnyJcOnAPOSOcZ/7UkvzYsZA+dTOdMGyRUzGD75Yp1/cTPq
-	IhgUqtERV5XYQk0PYIDnkhhrO38bImdOJEw+Rnayv3ypllbHUvCAWBrDavSS/ucO
-	2vTr/hg75E90scjeD6SL2mS0QZx9zWtVstMMqmr7d2M7tF53BU6NU+MCO3IJL1JK
-	akd3SW2Rah+24SN8G1XwAkhsG1EK/owOvaT/cHSeyk/6CQS3HzOkEd28sxb8kyuA
-	/81XIg27hs+6t+isCApDvsDkAiByqs4uUlbrNNBFn25tQBC4lekWg0HmSIOEm8fQ
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fg0psd0d-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 04:00:38 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52J3wu5J024274;
-	Wed, 19 Mar 2025 04:00:38 GMT
-Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fg0psd08-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 04:00:38 +0000 (GMT)
-Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52J1oEvL024440;
-	Wed, 19 Mar 2025 04:00:37 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dncm7ewr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 04:00:37 +0000
-Received: from smtpav07.fra02v.mail.ibm.com (smtpav07.fra02v.mail.ibm.com [10.20.54.106])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52J40ZK220119866
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 04:00:35 GMT
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A0B8620040;
-	Wed, 19 Mar 2025 04:00:35 +0000 (GMT)
-Received: from smtpav07.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2E50120043;
-	Wed, 19 Mar 2025 04:00:35 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.63.197.14])
-	by smtpav07.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Wed, 19 Mar 2025 04:00:35 +0000 (GMT)
-Received: from jarvis.ozlabs.ibm.com (haven.au.ibm.com [9.63.198.114])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by ozlabs.au.ibm.com (Postfix) with ESMTPSA id A623C602D4;
-	Wed, 19 Mar 2025 15:00:32 +1100 (AEDT)
-Message-ID: <a1e92d89e9ec99a4b20b0f15bede1254b87b95b9.camel@linux.ibm.com>
-Subject: Re: [PATCH v2 5/6] powerpc: powernv: ocxl: use lock guard for mutex
-From: Andrew Donnellan <ajd@linux.ibm.com>
-To: Shrikanth Hegde <sshegde@linux.ibm.com>, maddy@linux.ibm.com,
-        linuxppc-dev@lists.ozlabs.org
-Cc: npiggin@gmail.com, christophe.leroy@csgroup.eu, mpe@ellerman.id.au,
-        peterz@infradead.org, fbarrat@linux.ibm.com, mahesh@linux.ibm.com,
-        oohall@gmail.com, hbathini@linux.ibm.com, dhowells@redhat.com,
-        haren@linux.ibm.com, linux-kernel@vger.kernel.org
-Date: Wed, 19 Mar 2025 15:00:32 +1100
-In-Reply-To: <20250314114502.2083434-6-sshegde@linux.ibm.com>
-References: <20250314114502.2083434-1-sshegde@linux.ibm.com>
-	 <20250314114502.2083434-6-sshegde@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="qf36ci9E"
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id 900B1603CF;
+	Wed, 19 Mar 2025 03:56:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1742356583;
+	bh=fOrPNVam1pp2mboD70Wkd2CrOQySoRKMMq8x7u6IPK0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=qf36ci9EzYJE6tcSpFViXgI2QU7/8ccXVLc+6cChOv/w5B7lY1c0QCOW/Dg9husNa
+	 YavYJAxvYZufubUMwbWrIfFLXS+DvIjOTuHuJ+2lMpHNt6NuUnkpu3RNwySD6YSKmN
+	 Y0sQBDTec3G+KDU/nqSxPMHOt8MNrSBs5jjM3V3eMIK8qNgpIi4GM3H6XIwUruf5JZ
+	 Z2NRpSzpBX/5j/TJguCt3h8WJAo5wBfjDQRuODPRB6s0rSGyszlgyZcdt3X2y+BVaz
+	 5Uqy/bO+37Dn6n1zl0WS2HqwN73T8qVHfd1qopIZQSyqVVkVzNQkSNNHQyzyKVhULN
+	 kIocipDvHBY+w==
+Date: Wed, 19 Mar 2025 05:56:06 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>,
+	"rogerq@kernel.org" <rogerq@kernel.org>,
+	"aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+	"khilman@baylibre.com" <khilman@baylibre.com>
+Subject: Re: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
+ interconnect devices first"
+Message-ID: <20250319035606.GA4957@atomide.com>
+References: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
+ <20250313202129.0dcfc44e@akair>
+ <6348326299702a12ed4faa6ea25ee8bbe5e232aa.camel@siemens.com>
+ <20250313230148.792f224b@akair>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: R0N88cqJTSOAuCXgV-U1Tw4Mx2qc5_18
-X-Proofpoint-ORIG-GUID: fdXd4xl0T6Ln_vzDPSiPLDnrnX94LhQ8
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_01,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
- bulkscore=0 suspectscore=0 spamscore=0 adultscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=537 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503190024
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250313230148.792f224b@akair>
 
-On Fri, 2025-03-14 at 17:15 +0530, Shrikanth Hegde wrote:
-> use guard(mutex) for scope based resource management of mutex.
-> This would make the code simpler and easier to maintain.
->=20
-> More details on lock guards can be found at
-> https://lore.kernel.org/all/20230612093537.614161713@infradead.org/T/#u
->=20
-> Signed-off-by: Shrikanth Hegde <sshegde@linux.ibm.com>
+* Andreas Kemnade <andreas@kemnade.info> [250313 22:01]:
+> Am Thu, 13 Mar 2025 20:42:23 +0000
+> schrieb "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>:
+> 
+> > Hi Andreas!
+> > 
+> > On Thu, 2025-03-13 at 20:21 +0100, Andreas Kemnade wrote:
+> > > > This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
+> > > > 
+> > > > It brakes target-module@2b300050 ("ti,sysc-omap2") probe on AM62x in a case
+> > > > when minimally-configured system tries to network-boot:
+> > > >   
+> > > brakes or breaks? To unterstand the severity of the issue...  
+> > 
+> > Thanks for the correction, it should have been "breaks"...
+> > 
+> > > > [    6.888776] probe of 2b300050.target-module returned 517 after 258 usecs
+> > > > [   17.129637] probe of 2b300050.target-module returned 517 after 708 usecs
+> > > > [   17.137397] platform 2b300050.target-module: deferred probe pending: (reason unknown)
+> > > > [   26.878471] Waiting up to 100 more seconds for network.
+> > > > 
+> > > > Arbitrary 10 deferrals is really not a solution to any problem.  
+> > > 
+> > > So there is a point where no more probe of anything pending are
+> > > triggered and therefore things are not probed?  
+> > 
+> > Because there is a point indeed (if we configure quite minimal set of drivers just
+> > enough to mount NFS) when deferred probes are not triggered any longer.
+> > 
+> > > > Stable mmc enumeration can be achiever by filling /aliases node properly
+> > > > (4700a00755fb commit's rationale).
+> > > >   
+> > > yes, it does not look like a clean solution. And we have the
+> > > proper aliases node in many places. What I am a bit wondering about is
+> > > what kind of sleeping dogs we are going to wake up by this revert. So I
+> > > think this should be tested a lot esp. about possible pm issues.
+> > > 
+> > > Not every dependency in the sysc probe area is properly defined.  
+> > 
+> > But the patch I propose to revert is really not a solution for missing
+> > dependencies on syscons. I'm fine with not propagating this to stable,
+> > but reverting in master should give enough time for older SoCs to test,
+> > WDYT?
+> >
+> I am not against your revert proposal and not against propagating it
+> to stable, I would just like to see some Tested-Bys before it gets
+> applied to anything. If anything nasty pops up, it should be solved in a
+> cleaner way then with the offending patch.
 
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+Sounds like for the AM62x problem there is simply some resource missing
+that needs to be configured. Did you track down which resource is causing
+the deferred probe without the revert?
 
---=20
-Andrew Donnellan    OzLabs, ADL Canberra
-ajd@linux.ibm.com   IBM Australia Limited
+Reverting the commit does not really fix the root cause. It just ignores
+the problem of the hierarchy of the interconnect instances. Some of the
+interconnect instances are always-on, and contain devices providing
+resources for the other interconnect devices. So I would not consider
+patching MMC aliases all over the place as an alternative to fixing the
+real problem :)
+
+Regards,
+
+Tony
