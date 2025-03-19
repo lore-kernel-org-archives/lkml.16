@@ -1,45 +1,38 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1789533985;
-	Wed, 19 Mar 2025 13:30:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1557F35942;
+	Wed, 19 Mar 2025 13:31:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742391033; cv=none; b=SPsAKOTRq511y7HQlMT9F9u8GZM4CHzEASDRzfBioqn/zVIfPinIKRqmMcJcYSc5hMMvVncdwvw9zkOzixnM1ECG4fSJTT48l1WNvzO/kmexbG+6X1IQkdYrztj0a7IPqdHqM2vxiq9BWA8BWnqTAFrklVTEBdktI3JcZM/j/ts=
+	t=1742391063; cv=none; b=S1eivqDI8edFJjbSvbgM75TfOhl8DLeSsw2cQCVunzVgHP61uP+PEYLMBZG7tqznwBhzBwHze8fjCznw6pEQkFiCtIXYGfmAFljK7cCr6EQ5AUus8OqOJaDmjMJMdSpqmgJYnoTPYr6NjmPKRvTcaRpomlARtFFZdpinaDFoCjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742391033; c=relaxed/simple;
-	bh=CADYdGo34yUI64OXS/Y3O3dbiajQU7zhFhsHUpgpWv0=;
+	s=arc-20240116; t=1742391063; c=relaxed/simple;
+	bh=0Epci9SDyt00rMVYsl2p86Xlmpbww68QfF792+rVcVw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e91L66qJLYk119stpAjjbAL4RXWMiHBJTGki0TKAIFfVKopVvzvrTzh68nU1B51QWpgCk7kebdyrMgzX2YDXSoFN3CVQ5EXhu7RWazBFcrQW6LE1H/YR4OYsXxckBzI7UzV7TibsvpUHzrRC/OlDgEmBOCEGzZdj0Y6oA7wA/Xw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lB/X4uRR; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lB/X4uRR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C9FFC4CEE9;
-	Wed, 19 Mar 2025 13:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742391031;
-	bh=CADYdGo34yUI64OXS/Y3O3dbiajQU7zhFhsHUpgpWv0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lB/X4uRRflJ0vnZxL6eCZS9pZl/sIveVLmLCG9ZfFwG88FFWKKwT+ZkQVzf82L9Ic
-	 BPzcDGtxoCxPUoYczvGCFO1Vqxn5fsPtt4/bf/oOgdGma6ctd1/VHVKbVLttGO+R1O
-	 NbLvDyWb2i3W1ObNVx9oyzfmjbV6OkvtV1m1iLl++Dnck4LUAlroXdVfAFczWXsURb
-	 wXZ1bqFoWUvl7nWD+2ttTlWN6nujGj6JtY93/b/qedTgFMQkzevMZ2rJIQoZd6qLIp
-	 V5VZIPv+1Qw+NYgpZhQcB0YKFKwqI3BTgnE300WumJlr6x36JbQxbxX3buzu8J+8Z2
-	 y7M/hzZ2lz5Ng==
-Date: Wed, 19 Mar 2025 14:30:25 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: bhelgaas@google.com, gregkh@linuxfoundation.org, rafael@kernel.org,
-	ojeda@kernel.org, alex.gaynor@gmail.com, boqun.feng@gmail.com,
-	gary@garyguo.net, bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, tmgross@umich.edu, linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] rust: pci: impl Send + Sync for pci::Device
-Message-ID: <Z9rG8QFRv_lQlXV4@cassiopeiae>
-References: <20250318212940.137577-1-dakr@kernel.org>
- <Z9qy-UNJjazZZnQw@google.com>
- <Z9q8xcsAYhQjIpe4@cassiopeiae>
- <Z9rDxOJ2V2bPjj5i@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lsD05TRHtS1uHpYatIz7E4obHihej9wWXs2zW9ppdzeso2MSO35KPD52VhzqbON4vPO3aD/3qFF5MoXqMIiC0XqrZq7cjjQGauOi1mKQZaeX+FCbtVZVKGv/Tm9vXg64/cUpqCAP47Eu4dOWoojkG/tQ0q0ek/xmV4QF6DBeWVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 88026113E;
+	Wed, 19 Mar 2025 06:31:08 -0700 (PDT)
+Received: from localhost (e132581.arm.com [10.1.196.87])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F354A3F673;
+	Wed, 19 Mar 2025 06:30:59 -0700 (PDT)
+Date: Wed, 19 Mar 2025 13:30:55 +0000
+From: Leo Yan <leo.yan@arm.com>
+To: James Clark <james.clark@linaro.org>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	"Liang, Kan" <kan.liang@linux.intel.com>,
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf build: Restore {0} initializer since GCC-15
+Message-ID: <20250319133055.GA3249206@e132581.arm.com>
+References: <20250319110454.3230687-1-leo.yan@arm.com>
+ <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,44 +41,77 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Z9rDxOJ2V2bPjj5i@google.com>
+In-Reply-To: <16b146f7-7568-437d-8ee5-f26bfb0354bd@linaro.org>
 
-On Wed, Mar 19, 2025 at 01:16:52PM +0000, Alice Ryhl wrote:
-> On Wed, Mar 19, 2025 at 01:47:01PM +0100, Danilo Krummrich wrote:
-> > On Wed, Mar 19, 2025 at 12:05:13PM +0000, Alice Ryhl wrote:
-> > > On Tue, Mar 18, 2025 at 10:29:21PM +0100, Danilo Krummrich wrote:
-> > > > Commit 7b948a2af6b5 ("rust: pci: fix unrestricted &mut pci::Device")
-> > > > changed the definition of pci::Device and discarded the implicitly
-> > > > derived Send and Sync traits.
-> > > > 
-> > > > This isn't required by upstream code yet, and hence did not cause any
-> > > > issues. However, it is relied on by upcoming drivers, hence add it back
-> > > > in.
-> > > > 
-> > > > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> > > 
-> > > I have a question related to this ... does the Driver trait need to
-> > > require T: Send?
-> > 
-> > The driver trait does not have a generic, it doesn't need one. But I think I
-> > still get what you're asking.
-
-Turns out I did not. :)
-
-> Right I mean, should it be:
+On Wed, Mar 19, 2025 at 11:19:38AM +0000, James Clark wrote:
 > 
-> trait Driver: Send + Sync {
->     ...
-> }
-
-Yes, you're absolutely right with this, thanks for pointing this out.
-
-> 
-> > The driver trait never owns a shared reference of the device, it only ever gives
-> > out a reference that the driver core guarantees to be valid.
+> On 19/03/2025 11:04 am, Leo Yan wrote:
+> > GCC-15 release claims [1]:
 > > 
-> > > The change itself LGTM, so:
-> > > 
-> > > Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> > > 
-> > > Alice
+> >   {0} initializer in C or C++ for unions no longer guarantees clearing
+> >   of the whole union (except for static storage duration initialization),
+> >   it just initializes the first union member to zero. If initialization
+> >   of the whole union including padding bits is desirable, use {} (valid
+> >   in C23 or C++) or use -fzero-init-padding-bits=unions option to
+> >   restore old GCC behavior.
+> > 
+> > This new behaviour might cause stale and unexpected data we defined in
+> > Perf.  Add the -fzero-init-padding-bits=unions option for entirely
+> > zeroing union structures.
+> > 
+> 
+> Do we need this? I don't see any unions initialized in that way. In fact
+> there is only one struct initialized with {0}, the other handful are char*s
+> but I don't think either are affected.
+
+Though I did not found a straightforward case in Perf for initializing
+union with "{0}", the result I got:
+
+$ git grep -E "\{ *0 *\}" tools/perf/
+tools/perf/arch/x86/tests/insn-x86.c:   {{0}, 0, 0, NULL, NULL, NULL},
+tools/perf/arch/x86/tests/insn-x86.c:   {{0}, 0, 0, NULL, NULL, NULL},
+tools/perf/arch/x86/tests/intel-pt-test.c:      {1, {0}, 0, {INTEL_PT_PAD, 0, 0}, 0, 1 },
+tools/perf/arch/x86/tests/intel-pt-test.c:      {0, {0}, 0, {0, 0, 0}, 0, 0 },
+tools/perf/arch/x86/util/perf_regs.c:   char new_reg[SDT_REG_NAME_SIZE] = {0};
+tools/perf/arch/x86/util/perf_regs.c:   char prefix[3] = {0};
+tools/perf/builtin-kwork.c:             .nr_skipped_events   = { 0 },
+tools/perf/builtin-record.c:    u8 pad[8] = {0};
+tools/perf/python/twatch.py:                    print("cpu: {0}, pid: {1}, tid: {2} {3}".format(event.sample_cpu,
+tools/perf/tests/code-reading.c:        unsigned char buf1[BUFSZ] = {0};
+tools/perf/tests/code-reading.c:        unsigned char buf2[BUFSZ] = {0};
+tools/perf/util/bpf_counter.c:  struct bpf_map_info map_info = {0};
+tools/perf/util/bpf_kwork.c:    char name[MAX_KWORKNAME] = { 0 };
+tools/perf/util/bpf_skel/bperf_follower.bpf.c:  struct bperf_filter_value child_fval = { 0 };
+tools/perf/util/lzma.c: char buf[6] = { 0 };
+tools/perf/util/mem-events.c:bool perf_mem_record[PERF_MEM_EVENTS__MAX] = { 0 };
+tools/perf/util/mem-events.c:   char hit_miss[5] = {0};
+tools/perf/util/trace-event-scripting.c:        char xs[16] = {0};
+tools/perf/util/zlib.c: char buf[2] = { 0 };
+
+We can see the bpf structures (bpf_map_info/bperf_filter_value) are
+initialized with {0}.  For a more complex case, {0} is used for
+initialize a specific field in a structure (see the results in
+insn-x86.c and intel-pt-test.c).
+
+> Adding options that allow people to add more non standard code doesn't feel
+> very portable or in the spirit of doing it the right way. Maybe there's an
+> argument that it guards against future mistakes, but it's not mentioned in
+> the commit message.
+
+I think Linux perf shares the same understanding with "we do expect
+initializers that always initialize the whole variable fully" (quote
+in [1]).  Furthermore, the reply mentioned:
+
+ The exact same problem happens with "{ 0 }" as happens with "{ }".
+ The bug is literally that some versions of clang seem to implement
+ BOTH of these as "initialize the first member of the union", which
+ then means that if the first member isn't the largest member, the
+ rest of the union is entirely undefined.
+
+So I think it is reasonable to imposes a compiler option to make
+compiler's behavouir consistent.
+
+Thanks,
+Leo
+
+[1] https://www.spinics.net/lists/netdev/msg1007244.html
