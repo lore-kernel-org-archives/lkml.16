@@ -1,149 +1,97 @@
-Received: from smtpbguseast3.qq.com (smtpbguseast3.qq.com [54.243.244.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64DBE7462;
-	Wed, 19 Mar 2025 14:02:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.243.244.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 343FA35963;
+	Wed, 19 Mar 2025 14:03:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742392978; cv=none; b=u0SSakZK1vmj5cOVkjkwPElrynlCF3/EuLPnBuqos4u8dHww6F6SfwkbqabG+hD7us3oUG+MJXZrNOzb8KutD/c6tQmVgkHDeKMWLf/Wv86SsrPXSNAsWo8kA54WG6Vg6WrhLyYMNT3rP+Z7iFYj+nXIwvxT9cs9r6z3jTpg8XY=
+	t=1742393027; cv=none; b=P+CbZwin2F63L6XXUdP9jYaiOUGar2SBrK996PAGFxjtd/aJX4UhncNH0hUQkWHAxK5+CMneA5uSrdwg1in4/0SDe6jkd0VYZ/UnLFnzRDxFyPRhENpkvfepotZeXCjncan8DqZrbjbwtQr5oekqDLdtmO4YXfR+7oWgao5Mue8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742392978; c=relaxed/simple;
-	bh=MwSIdKjmT0ZmSVMPxzWZ2wjwyXNpSondm43EnkEgpLc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dN21zR9oRlBUJw7Djgrslq0wstmcztaknJ4DIR6xpYXiP3LRs6nVeIy9TOC6EZswBTfnXkDPuKGbdAp+r0BL7SECvbkNYiI8pc4m9xO/JMUyCVrTglj7qABuf2ae1Qq6FAkvBpBxE+K1DmU/L/aLY4ld4m4LzcCBa8Wii92UMi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=ZuC25bCw; arc=none smtp.client-ip=54.243.244.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+	s=arc-20240116; t=1742393027; c=relaxed/simple;
+	bh=Kq3JdDRefkF3JLMBZg5uwocJhrV5QGmrtryamXqG72g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrhuhNKF09hvJO4VkCE50ZBbr2DzbiuIHmzXmNcrjjYMAx+hp5JRx0NqxIaZ8mm/FZ8Bgoc/SQudrWVjixT+U7dhRKi0Di/y4YNO6ULhC5jN3hDJZAgM8b6vGsPhK3OS8I1GS2lKjxxSYUG8Yg1tHGBip6mO9U3ihewjqdUYavk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gr6t+mX6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="ZuC25bCw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
-	s=onoh2408; t=1742392956;
-	bh=WpjoJ6z81oFZs/qbLdWvq8m6Ct7lQ6FGHAPq+b8uS88=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=ZuC25bCw4vfJn0RpbGvCuKd2L9lj4orjOBjSTGg1VaVQ/1vtKGGLlUUP1LZ49lClL
-	 hKJ546JvXl0eBRsNLI6BlnM0srFIaYMNQo52htwCuOEuDrQj+c9ZhI9VuCH9h7xd0j
-	 aHTWkwWM3n6O9gZssjloSbW6WI9jMQL44NmtdMLc=
-X-QQ-mid: bizesmtpip3t1742392912tvp36sv
-X-QQ-Originating-IP: VNUJIvmM/shlmSu8T7R5ko/Sox+Q6GyZBmxWnB0hTA8=
-Received: from localhost.localdomain ( [localhost])
-	by bizesmtp.qq.com (ESMTP) with 
-	id ; Wed, 19 Mar 2025 22:01:49 +0800 (CST)
-X-QQ-SSF: 0000000000000000000000000000000
-X-QQ-GoodBg: 1
-X-BIZMAIL-ID: 17825369448861157517
-From: WangYuli <wangyuli@uniontech.com>
-To: pablo@netfilter.org,
-	kadlec@netfilter.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org
-Cc: netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	eric.dumazet@gmail.com,
-	fw@strlen.de,
-	zhanjun@uniontech.com,
-	niecheng1@uniontech.com,
-	WangYuli <wangyuli@uniontech.com>,
-	Wentao Guan <guanwentao@uniontech.com>
-Subject: [PATCH net v2] netfilter: nf_tables: Only use nf_skip_indirect_calls() when MITIGATION_RETPOLINE
-Date: Wed, 19 Mar 2025 22:01:47 +0800
-Message-ID: <568612395203CC2F+20250319140147.1862336-1-wangyuli@uniontech.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gr6t+mX6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6B95C4CEE8;
+	Wed, 19 Mar 2025 14:03:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742393026;
+	bh=Kq3JdDRefkF3JLMBZg5uwocJhrV5QGmrtryamXqG72g=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+	b=Gr6t+mX648P9xEZ7pD4NPpsRM6JngJ86Wgm8Rgbs/SrBoHslwozVHulYbiSCcUfJg
+	 Dp8rSLQc8xtO7+9BqrEQjdONN+xiJi+/OB7hHC3jGsgRicNo/fYbkGxlgWo3fp0KeK
+	 FpAMblt0TQ4SJ8yrdgmkLo30Tw3+5Su1HSZr/16UvRVBjGvu8CS0wJB1lK4qARGC/z
+	 N4+CgaQ1AvD/KS19ERnN4ndwuyRoBwbCtZ5xWLHkitNxyq9p+gLH7dGubjxYfNXxKg
+	 I9YXXg23pyiceR0qWTJBvZnBGbJqkzq2zICpnbbhbJImcEPyqFzOBNM9kGxiMixcgU
+	 RLwVitf5EO8vw==
+Received: by paulmck-ThinkPad-P17-Gen-1.home (Postfix, from userid 1000)
+	id 8F136CE0BC5; Wed, 19 Mar 2025 07:03:46 -0700 (PDT)
+Date: Wed, 19 Mar 2025 07:03:46 -0700
+From: "Paul E. McKenney" <paulmck@kernel.org>
+To: Frederic Weisbecker <frederic@kernel.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Neeraj Upadhyay <neeraj.upadhyay@amd.com>,
+	Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
+Subject: Re: [PATCH 2/5] rcu/exp: Remove confusing needless full barrier on
+ task unblock
+Message-ID: <5bd01e08-85cd-4538-a75d-c230bed7b0dd@paulmck-laptop>
+Reply-To: paulmck@kernel.org
+References: <20250314143642.72554-1-frederic@kernel.org>
+ <20250314143642.72554-3-frederic@kernel.org>
+ <6fa10edf-a04c-4a1d-9e11-fbed6332bff0@paulmck-laptop>
+ <Z9qH8MHMtL-l_X-G@p200300d06f3e98759ed3c196478e337b.dip0.t-ipconnect.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-QQ-SENDSIZE: 520
-Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
-X-QQ-XMAILINFO: OVMqbsUyNYbuFsww4jmsiUwCuK3k/HTqJ2t8PHGTehFyD8qH2pQghHnL
-	BmH3I8lxuSjkkR8eXPXlGDoNjG0V8132HLnUp7IvN1YGN8AtKeE40JE1nRBP0DL9n6inlEI
-	UFiPaPp5+73jLTgXpESYqc0VUtG1JAQk/ZSEaSP/4YcpS9pH3bntMdiQws5zJRy/10Pcal2
-	eA2OsuTlNZ+vUwmQbIOa7ozRVDDARV/eECFNwuGJrw9JtR7j0FbrEaJ5294bwTNNhiZBbbL
-	4CR0bAGBwEroQUCvh+NGIeV4eptwNyjAlCU403M7AwqHXuKaHKLMp+jgyLHKfSL18TBSzpy
-	vxJn6gmTAeBgxX/5cqwMeOxvlqbDMw1dJlk2sMzB6hFv6QRpozuddrOqYlvGIZjbT0HJ/N6
-	ujrI/kusuQQET4nwy0B79/B/cqaB1kdwRKdBpXO7lbVUODaeJsPMMRvI5bRAFnoo+rDovX/
-	nqBiKM9i/txGSEaTYhJeX6GyxgrJAylxpjIIMcKIy9mwBfrudG9sUu41CR3akzUffa0uy5t
-	bRCoZQ2LbdBNizl+pAbUps3Ko82DwIB7lgDzd7qrTmmNXXrUVESh3kybtTT4LgFVO2aXBGz
-	BbupiOndIWVD4z8QbtW/6MXFjZurD154zMuScFmdagichrpRG3NBanbHL805WDJF3dwK5pm
-	zkxx9ED6rZkr8Hvb+Eg9lEQJFcLdYDP3G7ncz9PX96rGk3pH+jCdO2WPcfZadUtK5GhHVFq
-	ywhhVFCapu7DrEiqLDdfcsneizYJvuDZ8fe3ZhQlp/d8kYiOUwhP55X+YcvT+08nTEaRvWk
-	DM8YtvbyBBz/CzJV5Epw7vNWHMZmSDtdPoNrS797ajLhkdRHiYW8kFNfQ99kCZjYOdAblf4
-	Nxa3Ol+1cb9hJtnVLVPefl7pwbsM64R0L05ywNWXWDwvGSVwdctI7BNDpaHMRpB7lAe6ZsA
-	5ZzDcOnUid06vVs3Kj5o4QzfDlPLE06AXq5opcm52Yp1WFkhKbMuDFo8EYe74KplD7yw2XE
-	MQVYWiug==
-X-QQ-XMRINFO: Nq+8W0+stu50PRdwbJxPCL0=
-X-QQ-RECHKSPAM: 0
+In-Reply-To: <Z9qH8MHMtL-l_X-G@p200300d06f3e98759ed3c196478e337b.dip0.t-ipconnect.de>
 
-1. MITIGATION_RETPOLINE is x86-only (defined in arch/x86/Kconfig),
-so no need to AND with CONFIG_X86 when checking if enabled.
+On Wed, Mar 19, 2025 at 10:01:36AM +0100, Frederic Weisbecker wrote:
+> Le Tue, Mar 18, 2025 at 10:18:12AM -0700, Paul E. McKenney a écrit :
+> > On Fri, Mar 14, 2025 at 03:36:39PM +0100, Frederic Weisbecker wrote:
+> > > A full memory barrier in the RCU-PREEMPT task unblock path advertizes
+> > > to order the context switch (or rather the accesses prior to
+> > > rcu_read_unlock()) with the expedited grace period fastpath.
+> > > 
+> > > However the grace period can not complete without the rnp calling into
+> > > rcu_report_exp_rnp() with the node locked. This reports the quiescent
+> > > state in a fully ordered fashion against updater's accesses thanks to:
+> > > 
+> > > 1) The READ-SIDE smp_mb__after_unlock_lock() barrier accross nodes
+> > >    locking while propagating QS up to the root.
+> > > 
+> > > 2) The UPDATE-SIDE smp_mb__after_unlock_lock() barrier while holding the
+> > >    the root rnp to wait/check for the GP completion.
+> > > 
+> > > 3) The (perhaps redundant given step 1) and 2)) smp_mb() in rcu_seq_end()
+> > >    before the grace period completes.
+> > > 
+> > > This makes the explicit barrier in this place superflous. Therefore
+> > > remove it as it is confusing.
+> > > 
+> > > Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+> > 
+> > Still cannot see a problem with this, but still a bit nervous.
+> 
+> Where is the challenge in life if we manage to fall alseep within a minute
+> at bedtime?
 
-2. Remove unused declaration of nf_skip_indirect_calls() when
-MITIGATION_RETPOLINE is disabled to avoid warnings.
+;-) ;-) ;-)
 
-3. Declare nf_skip_indirect_calls() and nf_skip_indirect_calls_enable()
-as inline when MITIGATION_RETPOLINE is enabled, as they are called
-only once and have simple logic.
+Suppose that there was an issue with this that we are somehow not spotting.
+How would you go about debugging it?
 
-Fix follow error with clang-21 when W=1e:
-  net/netfilter/nf_tables_core.c:39:20: error: unused function 'nf_skip_indirect_calls' [-Werror,-Wunused-function]
-     39 | static inline bool nf_skip_indirect_calls(void) { return false; }
-        |                    ^~~~~~~~~~~~~~~~~~~~~~
-  1 error generated.
-  make[4]: *** [scripts/Makefile.build:207: net/netfilter/nf_tables_core.o] Error 1
-  make[3]: *** [scripts/Makefile.build:465: net/netfilter] Error 2
-  make[3]: *** Waiting for unfinished jobs....
+							Thanx, Paul
 
-Fixes: d8d760627855 ("netfilter: nf_tables: add static key to skip retpoline workarounds")
-Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
-Signed-off-by: WangYuli <wangyuli@uniontech.com>
----
-Changelog:
- *v1->v2: Avoid the extra CONFIG_MITIGATION_RETPOLINE.
----
- net/netfilter/nf_tables_core.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
-
-diff --git a/net/netfilter/nf_tables_core.c b/net/netfilter/nf_tables_core.c
-index 75598520b0fa..6557a4018c09 100644
---- a/net/netfilter/nf_tables_core.c
-+++ b/net/netfilter/nf_tables_core.c
-@@ -21,25 +21,22 @@
- #include <net/netfilter/nf_log.h>
- #include <net/netfilter/nft_meta.h>
- 
--#if defined(CONFIG_MITIGATION_RETPOLINE) && defined(CONFIG_X86)
--
-+#ifdef CONFIG_MITIGATION_RETPOLINE
- static struct static_key_false nf_tables_skip_direct_calls;
- 
--static bool nf_skip_indirect_calls(void)
-+static inline bool nf_skip_indirect_calls(void)
- {
- 	return static_branch_likely(&nf_tables_skip_direct_calls);
- }
- 
--static void __init nf_skip_indirect_calls_enable(void)
-+static inline void __init nf_skip_indirect_calls_enable(void)
- {
- 	if (!cpu_feature_enabled(X86_FEATURE_RETPOLINE))
- 		static_branch_enable(&nf_tables_skip_direct_calls);
- }
- #else
--static inline bool nf_skip_indirect_calls(void) { return false; }
--
- static inline void nf_skip_indirect_calls_enable(void) { }
--#endif
-+#endif /* CONFIG_MITIGATION_RETPOLINE */
- 
- static noinline void __nft_trace_packet(const struct nft_pktinfo *pkt,
- 					const struct nft_verdict *verdict,
--- 
-2.49.0
-
+> > Acked-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> Thanks!
