@@ -1,147 +1,100 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B6625744B;
-	Wed, 19 Mar 2025 10:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 726C32AEED;
+	Wed, 19 Mar 2025 10:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742381826; cv=none; b=CT10r1+bQUm6jzB0oTfg8JdSjio7GHmhAtDzwltXNHCv6zLO59P0XkU1tVrLM/24luYgtyoVneV0S1AapsE+NCD6WVL+YgTxZxtYiWVcoFIW2TCV+uBwVV2T98YaIa2oKOCCby7MkVVvNU1+YNEi4lwy6Ep9+M9eq2ey7o30iCY=
+	t=1742381902; cv=none; b=MRHofMd9G7ILfvH2s4qX3AR7gTua+kE0Wv+0PtFOUX3EgYFofmY9VkNyoREmm69peGo5R7j9thkv6u5d+m3GedHjV1tkq7wnaLCB1sIvw4AZPQlPF/H9N+99YAtxTuPlfgh5FOOghfvzjjCEt/fZcHDO4E7G2cpaev8NkpqRsCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742381826; c=relaxed/simple;
-	bh=ssriv9UH6GIB/QKdfAdOk80drmt5lDBuDkd1XkOsiE0=;
-	h=Message-ID:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Date; b=kc4Wv9bnq9R69gxBYEk2CWBffkWJ/qmvggcOyo9EcKoXG50sh47S21x9WAWRp7VNZ41fCeSlNLh+AhOcmOp82sYNnKZ1LDV6jTI31ShCkGZWalvmLE7gL7Y7MSzJ0ONLVgEUer/md3c6vYCm6swE7Y9EAf62upfRJZtxsFK6Qrw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UpGxDyVF; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=1phf6hT4; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742381902; c=relaxed/simple;
+	bh=sKvwfjsRTfkQXantG3ih0cTasoHqjKHbz3D9lnpMmmo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mzv0zW+zOAGZrkS6La16F6w04P2A47CyT0s1PvTxTDWhZH5uulV+/1BVLsuvi6fJpFKDhTFbID+Yf/2AWQtBiG3uSqCpwKd1lHK3rIj/5iKHtU5j1oPJuiAGiPgirgHIIym2n8KL2+qNS+hdde6AGVlNtGpkHk6nL77uxuK8sdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ROnndb5T; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UpGxDyVF";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1phf6hT4"
-Message-ID: <20250319105506.864699741@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742381822;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=DJS/MIuQIZyuzMhWo7bDK73OC9n1sTuX5FBXKqqm6mY=;
-	b=UpGxDyVF0R1wBUxx66iI7swqRGmg9632kkYAxPyZAPgM4xJ27/xpYxecVg22I1J0eqdkil
-	nAWOENQ+xaUKbQMhrd2UtL6sN+WLifNNgK0iAMAJL2yQGt6tyCrSdWBk4aUujiEWQ+1jAZ
-	FSuoiAwlgAhLKVGCGFvEw9oe3pbN38pFIHbxf/t3TNpX7kyWQ4yGXe3BnIzN17ihzvhxNT
-	B/0JeJbruwoEJzxNALqlHemGsXUlDZ81avSmgWqAjIrdFYzFPDTJBKX7YVXyfhLCLyV5X/
-	7uMD8TC/EGrxQx8y5lpETp+uU/HCQkgF9JXZhNhGAp1Xu/nnSWW7f9yv5s7BiQ==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742381822;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 references:references; bh=DJS/MIuQIZyuzMhWo7bDK73OC9n1sTuX5FBXKqqm6mY=;
-	b=1phf6hT4SmXq+7Lh4D3JcBX7vfH4Rn2FSaEHLGg7yTbiCEULM2yawtTU3jI9pqeWFsKdp/
-	kKfaHAr2lfc8xPBw==
-From: Thomas Gleixner <tglx@linutronix.de>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>,
- Peter Zijlstra <peterz@infradead.org>,
- Jonathan Cameron <Jonathan.Cameron@huwei.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Nishanth Menon <nm@ti.com>,
- Dhruva Gole <d-gole@ti.com>,
- Tero Kristo <kristo@kernel.org>,
- Santosh Shilimkar <ssantosh@kernel.org>,
- Logan Gunthorpe <logang@deltatee.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Jon Mason <jdmason@kudzu.us>,
- Allen Hubbe <allenbh@gmail.com>,
- ntb@lists.linux.dev,
- Michael Kelley <mhklinux@outlook.com>,
- Wei Liu <wei.liu@kernel.org>,
- Bjorn Helgaas <bhelgaas@google.com>,
- Haiyang Zhang <haiyangz@microsoft.com>,
- linux-hyperv@vger.kernel.org,
- linux-pci@vger.kernel.org,
- Wei Huang <wei.huang2@amd.com>,
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>,
- linux-scsi@vger.kernel.org
-Subject: [patch V4 14/14] genirq/msi: Rename msi_[un]lock_descs()
-References: <20250319104921.201434198@linutronix.de>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ROnndb5T"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742381900; x=1773917900;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=sKvwfjsRTfkQXantG3ih0cTasoHqjKHbz3D9lnpMmmo=;
+  b=ROnndb5Tqye900eaAvAwaIaP9t9Yj7Dh/eqQ8TpQLgXAL+TzKxciIyZm
+   16oKmTqHsMeVZ+yWS4yXlFRxfgVNq2dssjJskgS5/78ULdM/IITLmfkxn
+   I8RSngcv6jOF2GgZtqPDlDZUPpBiqxlcIorh33l7Z06pRM6z6ck2TmYDn
+   h8z4l4qfigK4GxcrgmSTt8nxtIaUzWU+PrawdnOlKuTRkx+YSAvxdr28T
+   cLjmF5JHXvYiXCbCHzlofjdjiqAlUnwzOC67uY0hAnHR/HqhWx9CdTnTG
+   3ilORPGr+BhkCXydJoogbBabz+Zi9jeeH7YbwSDioZlurDUHitDiPvSCK
+   A==;
+X-CSE-ConnectionGUID: p+Mnm5arRsmFIPzyPdkMMg==
+X-CSE-MsgGUID: /mQ/nF6aSSme4xXjypZ+eA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="31144445"
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="31144445"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 03:58:19 -0700
+X-CSE-ConnectionGUID: H0FQVJToRXqAoBBKVP/mxQ==
+X-CSE-MsgGUID: ubkkE9CaQ2Ouj7CVbTC+SA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="127639596"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa004.jf.intel.com with ESMTP; 19 Mar 2025 03:58:16 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id 97A1014B; Wed, 19 Mar 2025 12:58:15 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>
+Subject: [PATCH net v2 1/2] net: phy: Fix formatting specifier to avoid potential string cuts
+Date: Wed, 19 Mar 2025 12:54:33 +0200
+Message-ID: <20250319105813.3102076-2-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250319105813.3102076-1-andriy.shevchenko@linux.intel.com>
+References: <20250319105813.3102076-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 19 Mar 2025 11:57:01 +0100 (CET)
+Content-Transfer-Encoding: 8bit
 
-Now that all abuse is gone and the legit users are converted to
-guard(msi_descs_lock), rename the lock functions and document them as
-internal.
+The PHY_ID_FMT is defined with '%02x' which is _minumum_ digits
+to be printed. This, in particular, may trigger GCC warning, when
+the parameter for the above mentioned specifier is bigger than
+a byte. Avoid this, by limiting the amount of digits to be printed
+to two. This is okay as the PHY maximum address is 31 and it fits.
 
-No functional change.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huwei.com>
-
-
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- include/linux/msi.h |    8 ++++----
- kernel/irq/msi.c    |   16 ++++++++++------
- 2 files changed, 14 insertions(+), 10 deletions(-)
+ include/linux/phy.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/msi.h
-+++ b/include/linux/msi.h
-@@ -224,11 +224,11 @@ struct msi_dev_domain {
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 19f076a71f94..3b18c241f33e 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -309,7 +309,7 @@ static inline long rgmii_clock(int speed)
+ #define PHY_MAX_ADDR	32
  
- int msi_setup_device_data(struct device *dev);
+ /* Used when trying to connect to a specific phy (mii bus id:phy device id) */
+-#define PHY_ID_FMT "%s:%02x"
++#define PHY_ID_FMT "%s:%02hhx"
  
--void msi_lock_descs(struct device *dev);
--void msi_unlock_descs(struct device *dev);
-+void __msi_lock_descs(struct device *dev);
-+void __msi_unlock_descs(struct device *dev);
+ #define MII_BUS_ID_SIZE	61
  
--DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, msi_lock_descs(_T->lock),
--		    msi_unlock_descs(_T->lock));
-+DEFINE_LOCK_GUARD_1(msi_descs_lock, struct device, __msi_lock_descs(_T->lock),
-+		    __msi_unlock_descs(_T->lock));
- 
- struct msi_desc *msi_domain_first_desc(struct device *dev, unsigned int domid,
- 				       enum msi_desc_filter filter);
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -338,26 +338,30 @@ int msi_setup_device_data(struct device
- }
- 
- /**
-- * msi_lock_descs - Lock the MSI descriptor storage of a device
-+ * __msi_lock_descs - Lock the MSI descriptor storage of a device
-  * @dev:	Device to operate on
-+ *
-+ * Internal function for guard(msi_descs_lock). Don't use in code.
-  */
--void msi_lock_descs(struct device *dev)
-+void __msi_lock_descs(struct device *dev)
- {
- 	mutex_lock(&dev->msi.data->mutex);
- }
--EXPORT_SYMBOL_GPL(msi_lock_descs);
-+EXPORT_SYMBOL_GPL(__msi_lock_descs);
- 
- /**
-- * msi_unlock_descs - Unlock the MSI descriptor storage of a device
-+ * __msi_unlock_descs - Unlock the MSI descriptor storage of a device
-  * @dev:	Device to operate on
-+ *
-+ * Internal function for guard(msi_descs_lock). Don't use in code.
-  */
--void msi_unlock_descs(struct device *dev)
-+void __msi_unlock_descs(struct device *dev)
- {
- 	/* Invalidate the index which was cached by the iterator */
- 	dev->msi.data->__iter_idx = MSI_XA_MAX_INDEX;
- 	mutex_unlock(&dev->msi.data->mutex);
- }
--EXPORT_SYMBOL_GPL(msi_unlock_descs);
-+EXPORT_SYMBOL_GPL(__msi_unlock_descs);
- 
- static struct msi_desc *msi_find_desc(struct msi_device_data *md, unsigned int domid,
- 				      enum msi_desc_filter filter)
+-- 
+2.47.2
 
