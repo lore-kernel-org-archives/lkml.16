@@ -1,95 +1,132 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E41B51F4164
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFF61F4164;
+	Wed, 19 Mar 2025 19:37:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742412992; cv=none; b=MC5djWonbLC0uzUENlm78AnNn/KSEkAbovyPh1NRgX74XX6VA1Rgg/amnne7e+PnrCN9ZJgrlMqUMVSDwdFyNbeFPggwWghAUeUlWegUT7diR92vZlFM9QRpdYRcA3y+dQewb4PxPx9FpbSEpR0Mi1smisSbTCk++p/CyvwCQV0=
+	t=1742413057; cv=none; b=Ar8kgir24Qa+4zUkEwuDez95dBUKHuJSsHoBUp1BU4dtJiwHHz37Xp6Ppzqa+hnJ9BjdhMzBsZ+PrMTdV4glr4gnSm0nxIkMS1yljcdOvDPWR6GIUrWbtTIYGozT95cttiEt6w37Qlx1JXYHV2X4TozN9AoqQhtLcA5FMjmLMrU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742412992; c=relaxed/simple;
-	bh=GFiDluF3fB8gMKuc9iqC+xRclZUuq5KZyVwMIxZJFXo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JDvhWvR8k0M2fNiiZ/7qOjFxchAOT6OdPQtLm8Iepd2eHvZnyp7JoDCJSSZotVNSs5yP58DHQhBjwgWkLmHxmp/VW7zt0Jac34OTPHuHRCoRj68mYZdlpsVduxQ89pMp8hP4Wdv/k6XtS1uBb9lM1ceRi6ZE3cWFpKVQ2xpGpiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=RsBZdGFz; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1742413057; c=relaxed/simple;
+	bh=8nGPnTW1eyGh3a0wLALqR7KIKnLgAktSfc2CBz5uc1s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JaZw+8MNDUwc4AjudZiFTUtS9Sd4gtpkc0KqwpnBNyP2pchoLxAYRyJHwnKF1bxdR/2wnsv9OGrxpddQVN6Zytu8r9v4tK7FVjJN41YFaH/35304WXdRd0qRHQvetyLIcGopoPEFrqwEwpfAv/U9Guy77FEIcpPwdMMU828952c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e0UWZA1d; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="RsBZdGFz"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id C678640E01D1;
-	Wed, 19 Mar 2025 19:36:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id YjveOVdjTMpU; Wed, 19 Mar 2025 19:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742412980; bh=2rMfP9h0aeOQrOkpvanagx4fbuzagxqnWyXAvvKSQCQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RsBZdGFzDFUsVtP6RwWoYwSJktKYVbYkQTZy3cOsHKjsGV229yxsV0OyEPH94pDSD
-	 8wnSKnZcFCBfNjkXqLMgDTgS+nTHrIqDeyaoboRda/ou6jvUfXq8ADKk5xl+ACXBEk
-	 zywxlWOeSSbSBumMDVBmb7Y7JUgpQUb4NOju4z+UPAI9IPKaWPSamt07/3KXhAJ38y
-	 w+PHN0EcW8kQJfZopz+aPorfUPPboPkFtIinbIgOkBxum1SRBuvyU5RQbEe7WF7gcD
-	 VQc1vuNYo/zXGB4hHcJmhMMa5EM0MfdPajm+rJ12eQ0yDLPr+4izl5J7Ja6KJPx+Ex
-	 vT5bcGJqU8WVGJsriNEeMqaCKHy+TVnMFUJdJN8UigJXHAGfMsFi+qXCThe1ghmO8Z
-	 LlhZbo5XbhgV/5DzktSRPtwW6+A4N3t/GhX8Npv26xVhpQcGnzdr7mGuaujTT0p+zx
-	 ea3Z9GARptZPO3MpGhCwO7hY541O35PyhJcTVmyX71rc2YDISI6hQVYKY73xKFnYFV
-	 9r9ZK1TpiKnt4EqzeD4nEw/2RWQeOhArewXb5+fUisX4m79BhfQCopejeb311QqIVF
-	 cviBAGLbYunAQbLyQQBo7SQ55uHkqu7jcdDIG39T2mX3zDHW61Q48rdF5s10EDtfn0
-	 erZK+IhBQQYbFZpxe7dx0IKg=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id A932440E016E;
-	Wed, 19 Mar 2025 19:36:17 +0000 (UTC)
-Date: Wed, 19 Mar 2025 20:36:09 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: David Thompson <davthompson@nvidia.com>
-Cc: linux-kernel@vger.kernel.org, shravankr@nvidia.com
-Subject: Re: [PATCH] MAINTAINERS: add secondary maintainer for bluefield_edac
- driver
-Message-ID: <20250319193609.GFZ9scqZ2JL4waS9qn@fat_crate.local>
-References: <20250319181630.2673-1-davthompson@nvidia.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0UWZA1d"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5499659e669so64286e87.3;
+        Wed, 19 Mar 2025 12:37:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742413051; x=1743017851; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WelDcJYWQaS3l09AcZuppDXU1WugmJGhAokrLxNPCgE=;
+        b=e0UWZA1d8LNPWOLyT6YxiDakkPn5gPKmws+gNGaufI2R9ln/BFLk8yY52Lm1xIS1PB
+         JcVt/8pr80xlY7Ey7qG0b1S/4FqUzcZs30pi+fP8Ns5379MbOTQFlTzVq/Tbt3sIJxby
+         ixxsGHHZeT9EDnMSqIg7GVIH8ATHRGRgbQvpiJzFn8R3HZcJIMLLS8/3zgLxflzRfjh7
+         Ya/Vl1fJSIaBulahFjEdwszRyC/aV13O2DME/Cq/72Wwx4HNEYp80vTGAJyUrFQUzMsH
+         LJuIg+2JQE0+4W+PMJkJzOnlYbrep3fHcxY00Ucm/hmjn71SuNFm76kn/fd4RVAY0IGy
+         IGtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742413051; x=1743017851;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WelDcJYWQaS3l09AcZuppDXU1WugmJGhAokrLxNPCgE=;
+        b=blt7UMFl2qEB26HL3UUcA2+5Xsi3UYe2yuYilu7xS2lIFs6n4ZH0Rdjr/+Nt3R8JfB
+         01Q83rjmo/L6bhFNzq/EYRG2gYdMGW+yyPXlWgB9RZ2vWphSXMPrOXs20QQuNyowUfRN
+         B7u9R7GQ9J+jj3g2LACRzUNIYcZux63XPeu6Lc9VpiMsA3JKSBAawzuB0CoNOHJCjg0z
+         7zG+w36IL0112R7mj9ME+Co7fnQQiPRRW0kw41W7JbNpru7SNlbzDz97NRgwZ9tzDv30
+         aNUBe8dUhVGNlrQwat3TkRsm3UNp+XkgtucEo45RbJZ0Qb2pa4zs95RV4s71uJCSJVR9
+         H1sQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9/sIHxO4EwhoKjvYqhwDpBCQZhcX7a4Clrm78QSoVKsspWN01uVRqXo+LW1A/rHypQIhgW6Hs03M2@vger.kernel.org, AJvYcCXXbknY0lgkq2OINP3BRmPMmvvqXuhxL0nTE4uVKQ8AK1C0NvnC5HbDXeG2lX6qaVvJIWIw/DTvHBc0I6p6@vger.kernel.org
+X-Gm-Message-State: AOJu0YynarzBlz4H5ajBRrgEoeZ4DrfAcqkMZk6IpviIKGvDG9lUa7/1
+	wieXc17U07osSb58gZgs7vFwk80R7gpJ544Exx+7+Mr4b9bfrhejZShFAraY+3K8+a6P1yn6ypW
+	cnvUhW9jRmNHEPLSN04/6fRyQ6NY=
+X-Gm-Gg: ASbGncufOxwUPhI1UtVLsShF/q1GhKmdc/i8kYqtoyT+xnbMPvVG5pCjNIafciwIWpU
+	vTQC7Q8POzBDNDvV51neo6MQQWpzWiwYymipXY0BNoVMqCvtqlQDHnCbNiUYDz6GPQSmTd1o+6u
+	b9RNLh6rgkwNlM7v8dHG474+j+UkxzKlPfwbaIBQfo1HDCichO57pOO28fe3ns
+X-Google-Smtp-Source: AGHT+IHrvWI3UoKXZQQSRHhL+gWni4iREVrtOgZThxYJkYpKtEfFcO9VBstPjZnI4CM4VdBfLrcZazPcLCorx1NKX8A=
+X-Received: by 2002:a05:6512:398e:b0:549:38eb:d694 with SMTP id
+ 2adb3069b0e04-54acb1d23fbmr1449998e87.26.1742413051160; Wed, 19 Mar 2025
+ 12:37:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250319181630.2673-1-davthompson@nvidia.com>
+References: <20250319142858.2166-1-adiupina@astralinux.ru>
+In-Reply-To: <20250319142858.2166-1-adiupina@astralinux.ru>
+From: Steve French <smfrench@gmail.com>
+Date: Wed, 19 Mar 2025 14:37:19 -0500
+X-Gm-Features: AQ5f1JrgLUDmVpAP0c4ldz7sUhuXdXJkM2JqC2VPQQoZqLCK0Q3aELpbc3alokw
+Message-ID: <CAH2r5mukVacAnksOjDE7k4UOSwzkkkA4PXEaKZAzZcFz78YBgQ@mail.gmail.com>
+Subject: Re: [PATCH v2] cifs: avoid NULL pointer dereference in dbg call
+To: Alexandra Diupina <adiupina@astralinux.ru>
+Cc: Steve French <sfrench@samba.org>, Paulo Alcantara <pc@manguebit.com>, 
+	Ronnie Sahlberg <ronniesahlberg@gmail.com>, Shyam Prasad N <sprasad@microsoft.com>, 
+	Tom Talpey <tom@talpey.com>, Bharath SM <bharathsm@microsoft.com>, 
+	Pavel Shilovsky <pshilov@microsoft.com>, linux-cifs@vger.kernel.org, 
+	samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, 
+	lvc-project@linuxtesting.org, =?UTF-8?Q?Aur=C3=A9lien_Aptel?= <aaptel@samba.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 02:16:30PM -0400, David Thompson wrote:
-> Add a new line to bluefield_edac driver's section of MAINTAINERS
-> file, providing secondary maintainer's name and contact information.
-> 
-> Signed-off-by: David Thompson <davthompson@nvidia.com>
+Added to cifs-2.6.git for-next
+
+On Wed, Mar 19, 2025 at 10:00=E2=80=AFAM Alexandra Diupina
+<adiupina@astralinux.ru> wrote:
+>
+> cifs_server_dbg() implies server to be non-NULL so
+> move call under condition to avoid NULL pointer dereference.
+>
+> Found by Linux Verification Center (linuxtesting.org) with SVACE.
+>
+> Fixes: e79b0332ae06 ("cifs: ignore cached share root handle closing error=
+s")
+> Signed-off-by: Alexandra Diupina <adiupina@astralinux.ru>
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index efee40ea589f..570411b580ad 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -8214,6 +8214,7 @@ F:	drivers/edac/aspeed_edac.c
->  
->  EDAC-BLUEFIELD
->  M:	Shravan Kumar Ramani <shravankr@nvidia.com>
-> +M:	David Thompson <davthompson@nvidia.com>
->  S:	Supported
->  F:	drivers/edac/bluefield_edac.c
->  
-> -- 
+> v2: fix indentation
+>  fs/smb/client/smb2misc.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+>
+> diff --git a/fs/smb/client/smb2misc.c b/fs/smb/client/smb2misc.c
+> index f3c4b70b77b9..c02aab58aade 100644
+> --- a/fs/smb/client/smb2misc.c
+> +++ b/fs/smb/client/smb2misc.c
+> @@ -816,11 +816,12 @@ smb2_handle_cancelled_close(struct cifs_tcon *tcon,=
+ __u64 persistent_fid,
+>                 WARN_ONCE(tcon->tc_count < 0, "tcon refcount is negative"=
+);
+>                 spin_unlock(&cifs_tcp_ses_lock);
+>
+> -               if (tcon->ses)
+> +               if (tcon->ses) {
+>                         server =3D tcon->ses->server;
+> -
+> -               cifs_server_dbg(FYI, "tid=3D0x%x: tcon is closing, skippi=
+ng async close retry of fid %llu %llu\n",
+> -                               tcon->tid, persistent_fid, volatile_fid);
+> +                       cifs_server_dbg(FYI,
+> +                                       "tid=3D0x%x: tcon is closing, ski=
+pping async close retry of fid %llu %llu\n",
+> +                                       tcon->tid, persistent_fid, volati=
+le_fid);
+> +               }
+>
+>                 return 0;
+>         }
+> --
+> 2.30.2
+>
+>
 
-Applied, thanks.
 
--- 
-Regards/Gruss,
-    Boris.
+--=20
+Thanks,
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Steve
