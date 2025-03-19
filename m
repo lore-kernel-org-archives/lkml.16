@@ -1,133 +1,74 @@
-Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90E257444
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:34:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C58257449;
+	Wed, 19 Mar 2025 09:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376900; cv=none; b=uD92jQ6o1z9YIEIK4WdArz+V0bScHrQvayJp45st5tOMP0cpbtj8/nmJ7EJORZ+3aUOnroUy4c+k/xkAtkLirDU7wvnDVNQGKs41Uop/0pGWLNgJrDJ/PWIg7o6elnKX/oioV3IJrZmdRR1uGO8UEAO7xf/KbI5la4aUhEA/6fU=
+	t=1742376901; cv=none; b=jjuhDWSCfkQpB26xfw/q0yPQKYNNeekp5TphITxzu8TkSDqU7Ii7DdN0nskYZ2jbJgQvhGRQgguQ9uavT5V1uPnABYDwLjfrwmSpg+dv8xNjspr19PMKF+iq9dR44Qr1eUTHDU1ksWw3wREzHIChUrHgwuyHmo2Itxa8QdGvw8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376900; c=relaxed/simple;
-	bh=xxRiEguAyeGL9D+NNtgql1i2rcqNGXFBjQJxh1bi3rU=;
-	h=To:Cc:Message-ID:In-Reply-To:References:From:Subject:Date; b=qL7NS8OXF57keGoCdg8RqKoqHYxpI+/eH0xzfCWZ6Wr0Lb2Xy+xBwXAcZpX2Y4VDiHJhK40irhqEHkkcXvGvXsDH6Gm/ikXZVjWI5DJOBleRUKlGFZknYxAMiLYvsIw+rXp5MuwXfnMBUli0A4Deqa6aatU1Sa3HEXq6oK5V+jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Zmq/6zbQ; arc=none smtp.client-ip=202.12.124.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+	s=arc-20240116; t=1742376901; c=relaxed/simple;
+	bh=hlR1b92BGhraEdJ/3hiWtZX7ocppxEHtjil//YlkdMk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NhX2oPVQO/RO3EVrNh+qDcI9twNB5z/5B1sSQ4cXN4Vi/pSMwCoOCi+BIg0orUtELfFiu92y+hfmtPZn6+HwuFzYgGN26llbquTx1KaeQhZZyGdOYzUFryTs2EACS6RajB1EbBfdk0fqfUvpfI1osOeQR87JKepyUkoCDfzM+fM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AS2Iww3d; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zmq/6zbQ"
-Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
-	by mailfout.stl.internal (Postfix) with ESMTP id 2BF3911400D1;
-	Wed, 19 Mar 2025 05:34:58 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-01.internal (MEProxy); Wed, 19 Mar 2025 05:34:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
-	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742376898; x=
-	1742463298; bh=6vGTjqhrImDW99O46cZMgZcsLhmTGwXSWmZI+UM/MXc=; b=Z
-	mq/6zbQe1Lks5FWz5nNgEQRZd1H9RoycpJgBUOACnOsIJPOjcNDWYzwwIsvgH8Vy
-	RxjUgnHk/6S0//75Z3iDxt3XFyFicZwzi1QTjN6bW4vhUkU6NrTw3Rel+AI4F9c/
-	mqzd8qPEZeVFPPaX038gyO33ketUDWbbjHFF+rv/sXXEW4dUtRYUFGebvZGMPhZK
-	WAqFi1LSLSezQhZ2J7/wzpLXVnQb7EIdjhE1fL4ufh7sU8OUEKQFMKWStR94LvmS
-	J6mA4ZJfHV26R9P+2sY/+uyeAKZ6Tc1Fy9zg6Aptks9dnx/qGGEQ81WFvr62Wemm
-	HO8cU2PVzON0uTqUrESRA==
-X-ME-Sender: <xms:wY_aZ86PDbRhlvmW_qcRP9Bw1ki4s-cOwpt8jWPyMD9WxY2x53DMTQ>
-    <xme:wY_aZ95q11YYFQSjHpTIpDBZ_DlqbKycTLw169eaa_r64_Y5mrVxyO2hMSeoRLeBm
-    iWHmaeaJ0oXeQ3FaS4>
-X-ME-Received: <xmr:wY_aZ7dMxIOcJTJ-cE7FpZsAoeXrieWthf9leAE-2Heh_lUq9nOWqVfBhczL6GriSMTrkL-wwLc9tEcSqR2ZN2RCQWBk-Jk6qNw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeegleekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepvfevkfgjfhfhufffsedttdertddttddtnecu
-    hfhrohhmpefhihhnnhcuvfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrd
-    horhhgqeenucggtffrrghtthgvrhhnpeelgefhvefgveduhefffeeuveehtdeigedukeef
-    uddvhedvfefhkedugffffeetheenucffohhmrghinhephhgvrggurdhssgenucevlhhush
-    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfthhhrghinheslhhi
-    nhhugidqmheikehkrdhorhhgpdhnsggprhgtphhtthhopeefpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphht
-    thhopehlihhnuhigqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhgpd
-    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:wY_aZxKAGCc6tFjexY4f34b2H4SIs1Ql8TyDyrHavBchg19edjr1-w>
-    <xmx:wY_aZwJ4WpHBoAn6CdsQ7-GHV0omF_XQFu9MpIKGuFf_wMEHRvcPUA>
-    <xmx:wY_aZyyBFQqr6ePkBmogijYUBmATHk7M9ZhlemJ4elQEFD_l3J2G8g>
-    <xmx:wY_aZ0IZY0xcDvw1exKCMGtcpVNMR9kk-DyFvV-bdMVY9ddZkZVHCw>
-    <xmx:wo_aZ3XDR0AgpLiQRzfEU8jjf-qoX6sUTRGaJpMxZngd5WDkiG-09Pol>
-Feedback-ID: i58a146ae:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 19 Mar 2025 05:34:55 -0400 (EDT)
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-m68k@lists.linux-m68k.org,
-    linux-kernel@vger.kernel.org
-Message-ID: <1f27682893bba60572dfed728386a0f76044b17b.1742376675.git.fthain@linux-m68k.org>
-In-Reply-To: <cover.1742376675.git.fthain@linux-m68k.org>
-References: <cover.1742376675.git.fthain@linux-m68k.org>
-From: Finn Thain <fthain@linux-m68k.org>
-Subject: [PATCH v2 3/3] m68k: Remove unused "cursor home" code from debug
- console
-Date: Wed, 19 Mar 2025 20:31:15 +1100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AS2Iww3d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1742376898;
+	bh=hlR1b92BGhraEdJ/3hiWtZX7ocppxEHtjil//YlkdMk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=AS2Iww3d1F9jQhFkhUT9fyMjL5OAkGF/SF4kKJXETEPHnGmAHNAijXMxXXpZrhsBC
+	 XTOQhExk8vXABOLCpVJZjcqnFnsce/WjhkwQyLmi0WxXPPneE9YXOgn0zKNjBUmrfq
+	 NcM/lJpfpCZdpuXZtxd1xYitOoPghuTf0uZk6nXjHuIjQORpz+W57lkGQgwDbz1ju6
+	 PJQ8XdfLseNd8JRtebwup/DJ+Wbb4mrINtF18oJ3iz99XLulSNfXbxoIo5V5flC4Px
+	 CggIZG1vh9c1DTcEAUHNKh834OQqcCBFst6ZnQ8uzI04l2yHrx9c8FrEN3WWYKNjBq
+	 3EavTVERywcBQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 539DA17E0673;
+	Wed, 19 Mar 2025 10:34:57 +0100 (CET)
+Message-ID: <5bbf7b0d-245b-4f1d-a712-1d81709e35d2@collabora.com>
+Date: Wed, 19 Mar 2025 10:34:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 4/4] arm64: dts: mediatek: mt8390-genio-common: Add
+ firmware-name for scp0
+To: =?UTF-8?B?TsOtY29sYXMgRi4gUi4gQS4gUHJhZG8=?= <nfraprado@collabora.com>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Tinghan Shen <tinghan.shen@mediatek.com>,
+ Olivia Wen <olivia.wen@mediatek.com>
+Cc: kernel@collabora.com, linux-remoteproc@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20250318-scp-dual-core-mt8390-v1-0-8733e192cc73@collabora.com>
+ <20250318-scp-dual-core-mt8390-v1-4-8733e192cc73@collabora.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250318-scp-dual-core-mt8390-v1-4-8733e192cc73@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-The cursor home operation is unused and seems undesirable for logging.
-Remove it. The console_not_cr label actually means "not line feed and
-not carriage return either" so take the opportunity to replace it with
-something less confusing. Rectify some inconsistent whitespace while
-we're here.
+Il 18/03/25 23:22, Nícolas F. R. A. Prado ha scritto:
+> Add the firmware-name property for SCP core0 so the firmware can be
+> loaded from its canonical location in the linux-firmware repository.
+> 
+> Signed-off-by: Nícolas F. R. A. Prado <nfraprado@collabora.com>
 
-Signed-off-by: Finn Thain <fthain@linux-m68k.org>
----
- arch/m68k/kernel/head.S | 31 ++++++++++++-------------------
- 1 file changed, 12 insertions(+), 19 deletions(-)
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-diff --git a/arch/m68k/kernel/head.S b/arch/m68k/kernel/head.S
-index bf7fa344cd3a..48ef74e45535 100644
---- a/arch/m68k/kernel/head.S
-+++ b/arch/m68k/kernel/head.S
-@@ -3555,28 +3555,21 @@ func_start	console_putc,%a0/%a1/%d0-%d7
- 	jra	L(console_exit)
- 
- L(console_not_lf):
--	cmpib	#13,%d7
--	jne	L(console_not_cr)
-+	cmpib	#'\r',%d7
-+	jne	L(console_not_lf_not_cr)
- 	clrl	%a0@(Lconsole_struct_cur_column)
- 	jra	L(console_exit)
- 
--L(console_not_cr):
--	cmpib	#1,%d7
--	jne	L(console_not_home)
--	clrl	%a0@(Lconsole_struct_cur_row)
--	clrl	%a0@(Lconsole_struct_cur_column)
--	jra	L(console_exit)
--
--/*
-- *	At this point we know that the %d7 character is going to be
-- *	rendered on the screen.  Register usage is -
-- *		a0 = pointer to console globals
-- *		a1 = font data
-- *		d0 = cursor column
-- *		d1 = cursor row to draw the character
-- *		d7 = character number
-- */
--L(console_not_home):
-+	/*
-+	 *	At this point we know that the %d7 character is going to be
-+	 *	rendered on the screen.  Register usage is -
-+	 *	a0 = pointer to console globals
-+	 *	a1 = font data
-+	 *	d0 = cursor column
-+	 *	d1 = cursor row to draw the character
-+	 *	d7 = character number
-+	 */
-+L(console_not_lf_not_cr):
- 	movel	%a0@(Lconsole_struct_cur_column),%d0
- 	movel	%a0@(Lconsole_struct_cur_row),%d1
- 
--- 
-2.45.3
 
