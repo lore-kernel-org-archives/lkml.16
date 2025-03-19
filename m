@@ -1,201 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23482566EA;
-	Wed, 19 Mar 2025 09:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 515FF2566CC;
+	Wed, 19 Mar 2025 09:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742377666; cv=none; b=DYgFwVzMOhaopKLXSqpm8EjSW6kH/efkgYCCwjE5Ai0nC7I3vAmp62q2FbVns1S3kl4IsOngmAW8Rfqb6+cQSnx6ZdteIeM+sa74YbK6KK9X7m5JmtWYVlvzqL0qhTKcuqAIjklEFNqqgb8w4cJQECWMQVUbKDY7ey62+bT4hfI=
+	t=1742377666; cv=none; b=b8ZxWM4dgHgNUnoTvpT6b2u9iNJiuitpUCLNsBbuIp2Lj7QvTv2i5qPCHfZbbsdxH6OpHldZAyMc+Nn3SPkfYoXS4CM1t3mhi/nZdTOnmSHuR0L1zqCOn62HJvxVQIvT6KbB42aiDTn9MPDY02jSyziNwuWPYtP6+MzGWzLQSIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742377666; c=relaxed/simple;
-	bh=Ga6cduPK1BfqQQXpM0waODB2tzqbv9oLz7vtZxZm8aQ=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KGBCBlBTz6JEUGWUYlYWUZAD81oeXENJfh8ekL8uE8fCZXIZsvcs9wp867w0XljfpIphKDz5jlcLz05hsSW2D1AgUtaPOyYEtHbY9wWM2q4PIURQUqV8FeNzzGf+lu235JeHS/u7sShIGaazkgYkXiRGWrtk9RHSG18L4kjhUHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gfGVzs7I; arc=none smtp.client-ip=10.30.226.201
+	bh=GEjYP46691TzJJ8gbfyakXZjQK5z9OmyqU3rVbxsGmw=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vu16uhX5ft8qEgk7h6rx2MhPu6zcBCvxwD+jX/TqLUk9/XSUZ7GE3llwjgoz4PlBTs4YHVnfVcOv0Zi0zQQEdjcQVxMaT64MAWXEQq4VLJBLzWuO7wwTph1evL8GOK9w7NMpeL7jFJyIlm3kbsPXH5t2UPKrXG4XLkRDOBGndIk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QOkLejXc; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gfGVzs7I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5636BC4CEE9;
-	Wed, 19 Mar 2025 09:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742377665;
-	bh=Ga6cduPK1BfqQQXpM0waODB2tzqbv9oLz7vtZxZm8aQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=gfGVzs7IKAMTErRW/2ZplDVJsHrNvg6XSLRMTgjCg6rx5JQE3N8SWqNxmeWwWy5Sa
-	 yBYIlgGrsINtDKM14KZEWKt6T7c6w95rW82e/MQ62AclsdvfmrfjnAjyyVkrt2zZIb
-	 UYv1BdPPBThNS9NA5ExrYH3hM/n1KLY9+4aoYswLrrt3C0zHTEoTl3Z9Z3z56FBuxc
-	 Hh6E5l2VBWFKf0VCy5ryegzF8IsCHntfktyj1J1pJRqF232egwSuqf2geG+VQ0Pw2d
-	 ULXEjaimy8jrmS7kCDQhA+bMdMwn1uXp6VAVQqG5xTCk2L8WA+c/U/iEZhCMxaEks0
-	 aGrzAStxQ6ZYg==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tuq1W-00F0Nh-Vv;
-	Wed, 19 Mar 2025 09:47:43 +0000
-Date: Wed, 19 Mar 2025 09:47:42 +0000
-Message-ID: <86plidmjwh.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Akihiko Odaki <akihiko.odaki@daynix.com>
-Cc: Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu
- <yuzenghui@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Kees Cook <kees@kernel.org>,
-	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-hardening@vger.kernel.org,
-	devel@daynix.com
-Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
-In-Reply-To: <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
-References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
-	<Z9pze3J2_zrTk_yC@linux.dev>
-	<e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QOkLejXc"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43948f77f1aso31105465e9.0;
+        Wed, 19 Mar 2025 02:47:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742377662; x=1742982462; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
+        b=QOkLejXcWe01/J0I8RRG/trYJlGKf8FBe86lNHGxfOpKau/CdkSGWZtVgs8BPN25/Y
+         6C1KaIw2GtIrDzOx8KQfQ5vpJfLNkgVxeCaPJlXwE7enRem2pbUxQHXWHHL+h+395QRE
+         djK+8BeHfgz+C8w3QozzdBaey9CvIyDl7SlMeP4InCsPFmNEG+6fiaJSpkBFq4B5YGmG
+         Amx6+r7lzi2hL+B4lBmI0Iukkm+/pb168UVzqq+thV3ExyC4uNXFX6+gA3vyad/sPRoP
+         86mjEJc88sK/y7O0rsaZJHXA4KoWwF08BB43CAmDIV1n3TuoHKJKVpaSQu5Adqt6aGVg
+         ioGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742377662; x=1742982462;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:date:from
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2NZ23mVd1n9qSytnKBZpLN6PwJEeGdSdjRzESloq8e8=;
+        b=AdrueQLVJH+0V1BefNeEhHO7W/yq21KvkS+XzPg8ntG+JMePb+yWWWtAAo216IsXMe
+         ign4i6z7qAGG9eq7TpnWScfxycv81lvP3tial0A8yTaAHirU6XlHCy3ZL1t3/oaPU8o9
+         eS3ghjCLBRQELvaSEZq55MRbCTiH2mjIDrkiSm/cFlrpNp836v/DxOWrnDBHYOmiDbUJ
+         MnxqK6U5w/p46t2OKO5dGlkAEoZm3bcHDtfJsLTCQFRcuIe0+0JKfedmy+N9qEoLJ7St
+         dgjicMBctsUojGG7fZGg/MIrQNSmNKEfOjgf+sfKoJQPfhVMT4/1RT+nRboATHljP7+n
+         1pWw==
+X-Forwarded-Encrypted: i=1; AJvYcCUoWCJZsTzYRHLW+ByOiqGnvZa2yuWH0ZCl/lZiLGo83nwWqENKyJlKiR0HOaq5hgwW1Fk=@vger.kernel.org, AJvYcCVEcEcvoPx0wiZHej4qC1tE27+RiIw9+4BQ6K+RbAMYfZHlWlvmvhuVTy4yKXeBjcFZCPE07XtCmzcL47hYh4nhDsM=@vger.kernel.org, AJvYcCVPEqLj7kSVhziFP1phmpa93p9lgs9HklOjKph1sHZEnWEScLUj9CeuGn4imZWj5S4C3phVu03l3PA3QvUH@vger.kernel.org, AJvYcCVg7JwYX78eaOO1zVDS8gc2nc8t6j8VcL0ZaVBEt7bHDRhw+GtcAxTo7dXSFa8ehYnfj2FL+WJ1fP4MsuS0fXLEGA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YzotYN2Niwm0UDdwih3D8yqaWkyTqwId+BKR6uSNs2QKp0z8gPz
+	7iQozPuYVporF9bL7WDan2P8fA4hMYTTTwlnYEyM/cIk3kjEfrNu
+X-Gm-Gg: ASbGncsJghSC+Gpbo5PbdOnvXjPKms1Zo1DG3NTNao7ZzYXwe2uWH4ufRn9cvxOeAV6
+	iGEl9+zl+cceS2pbU6g+T08nzWbc9p5YNVBABsuUBSMeqgu3GcewqceDWmzUY8ZzySsshFWRh/i
+	N62Tp43KTIrqdhtM2mae1eQHif65/vm0n21nBHs+ZYFmMid6n3MkSP8uMYAnJcoqnwNNyxR5g01
+	uxCuj/U4BY1IPUmVv6FvpbpulzruaM9CV2+HeXNhS2EN4o/5aHQYn+0HDyf0yh5ETV+O7bEYBHG
+	9krxSHFvE/3GwESPyJJDK1I8OKDsLus=
+X-Google-Smtp-Source: AGHT+IF4OvZGanUh1jWZlL5uEktGdGZ5zMVRYf9shgP8va0gBvYxVKRQVQGxiDCBfvtWURNFZmoTug==
+X-Received: by 2002:a05:6000:2c7:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39973af9236mr1303964f8f.36.1742377662183;
+        Wed, 19 Mar 2025 02:47:42 -0700 (PDT)
+Received: from krava ([173.38.220.35])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975b09sm20832843f8f.57.2025.03.19.02.47.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 02:47:41 -0700 (PDT)
+From: Jiri Olsa <olsajiri@gmail.com>
+X-Google-Original-From: Jiri Olsa <jolsa@kernel.org>
+Date: Wed, 19 Mar 2025 10:47:40 +0100
+To: Namhyung Kim <namhyung@kernel.org>
+Cc: Quentin Monnet <qmo@kernel.org>, Ian Rogers <irogers@google.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	James Clark <james.clark@linaro.org>,
+	Kan Liang <kan.liang@linux.intel.com>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	linux-trace-devel@vger.kernel.org,
+	Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH 1/1 next] tools build: Remove the libunwind feature tests
+ from the ones detected when test-all.o builds
+Message-ID: <Z9qSvGTlMCzktlZJ@krava>
+References: <Z1mzpfAUi8zeiFOp@x1>
+ <CAP-5=fWqpcwc021enM8uMChSgCRB+UW_6z7+=pdsQG9msLJsbw@mail.gmail.com>
+ <Z9hWqwvNQO0GqH09@google.com>
+ <CAP-5=fWCWD5Rq5RR7NSMxrxmc1SUkK=8gg+D-JxGOgaHA7_WBA@mail.gmail.com>
+ <c4f4a1d0-aed8-4b09-a3d2-067fdd04bed3@kernel.org>
+ <Z9oHGfAffX2Bfl7a@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: akihiko.odaki@daynix.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, yuzenghui@huawei.com, catalin.marinas@arm.com, will@kernel.org, kees@kernel.org, gustavoars@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org, devel@daynix.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9oHGfAffX2Bfl7a@google.com>
 
-On Wed, 19 Mar 2025 08:37:29 +0000,
-Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+On Tue, Mar 18, 2025 at 04:51:53PM -0700, Namhyung Kim wrote:
+> Hello,
 > 
-> On 2025/03/19 16:34, Oliver Upton wrote:
-> > Hi Akihiko,
+> On Mon, Mar 17, 2025 at 09:19:22PM +0000, Quentin Monnet wrote:
+> > 2025-03-17 10:16 UTC-0700 ~ Ian Rogers <irogers@google.com>
+> > > On Mon, Mar 17, 2025 at 10:06 AM Namhyung Kim <namhyung@kernel.org> wrote:
+> > >>
+> > >> Hello,
+> > >>
+> > >> On Mon, Mar 17, 2025 at 09:10:29AM -0700, Ian Rogers wrote:
+> > >>> On Wed, Dec 11, 2024 at 7:45 AM Arnaldo Carvalho de Melo
+> > >>> <acme@kernel.org> wrote:
+> > >>>>
+> > >>>> We have a tools/build/feature/test-all.c that has the most common set of
+> > >>>> features that perf uses and are expected to have its development files
+> > >>>> available when building perf.
+> > >>>>
+> > >>>> When we made libwunwind opt-in we forgot to remove them from the list of
+> > >>>> features that are assumed to be available when test-all.c builds, remove
+> > >>>> them.
+> > >>>>
+> > >>>> Before this patch:
+> > >>>>
+> > >>>>   $ rm -rf /tmp/b ; mkdir /tmp/b ; make -C tools/perf O=/tmp/b feature-dump ; grep feature-libunwind-aarch64= /tmp/b/FEATURE-DUMP
+> > >>>>   feature-libunwind-aarch64=1
+> > >>>>   $
+> > >>>>
+> > >>>> Even tho this not being test built and those header files being
+> > >>>> available:
+> > >>>>
+> > >>>>   $ head -5 tools/build/feature/test-libunwind-aarch64.c
+> > >>>>   // SPDX-License-Identifier: GPL-2.0
+> > >>>>   #include <libunwind-aarch64.h>
+> > >>>>   #include <stdlib.h>
+> > >>>>
+> > >>>>   extern int UNW_OBJ(dwarf_search_unwind_table) (unw_addr_space_t as,
+> > >>>>   $
+> > >>>>
+> > >>>> After this patch:
+> > >>>>
+> > >>>>   $ grep feature-libunwind- /tmp/b/FEATURE-DUMP
+> > >>>>   $
+> > >>>>
+> > >>>> Now an audit on what is being enabled when test-all.c builds will be
+> > >>>> performed.
+> > >>>>
+> > >>>> Fixes: 176c9d1e6a06f2fa ("tools features: Don't check for libunwind devel files by default")
+> > >>>> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> > >>>> Cc: Ian Rogers <irogers@google.com>
+> > >>>> Cc: James Clark <james.clark@linaro.org>
+> > >>>> Cc: Jiri Olsa <jolsa@kernel.org>
+> > >>>> Cc: Kan Liang <kan.liang@linux.intel.com>
+> > >>>> Cc: Namhyung Kim <namhyung@kernel.org>
+> > >>>> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > >>>
+> > >>> Sorry for the delay on this.
+> > >>>
+> > >>> Reviewed-by: Ian Rogers <irogers@google.com>
+> > >>
+> > >> Thanks for the review, but I think this part is used by other tools like
+> > >> BPF and tracing.  It'd be nice to get reviews from them.
+> > > 
+> > > Sgtm. The patch hasn't had attention for 3 months. A quick grep for
+> > > "unwind" and "UNW_" shows only use in perf and the feature tests.
+> > > 
+> > > Thanks,
+> > > Ian
 > > 
-> > On Wed, Mar 19, 2025 at 03:33:46PM +0900, Akihiko Odaki wrote:
-> >> Problem
-> >> -------
-> >> 
-> >> arch/arm64/kvm/pmu-emul.c used to have a comment saying the follows:
-> >>> The observant among you will notice that the supported_cpus
-> >>> mask does not get updated for the default PMU even though it
-> >>> is quite possible the selected instance supports only a
-> >>> subset of cores in the system. This is intentional, and
-> >>> upholds the preexisting behavior on heterogeneous systems
-> >>> where vCPUs can be scheduled on any core but the guest
-> >>> counters could stop working.
-> >> 
-> >> Despite the reference manual says counters may not continuously
-> >> incrementing, Windows is not robust enough to handle stopped PMCCNTR_EL0
-> >> and crashes with a division-by-zero error and it also crashes when the
-> >> PMU is not present.
-> >> 
-> >> To avoid such a problem, the userspace should pin the vCPU threads to
-> >> pCPUs supported by one host PMU when initializing the vCPUs or specify
-> >> the host PMU to use with KVM_ARM_VCPU_PMU_V3_SET_PMU after the
-> >> initialization. However, QEMU/libvirt can pin vCPU threads only after the
-> >> vCPUs are initialized. It also limits the pCPUs the guest can use even
-> >> for VMMs that support proper pinning.
-> >> 
-> >> Solution
-> >> --------
-> >> 
-> >> Ideally, Windows should fix the division-by-zero error and QEMU/libvirt
-> >> should support pinning better, but neither of them are going to happen
-> >> anytime soon.
-> >> 
-> >> To allow running Windows on QEMU/libvirt or with heterogeneous cores,
-> >> combine all host PMUs necessary to cover the cores vCPUs can run and
-> >> keep PMCCNTR_EL0 working.
-> > > I'm extremely uneasy about making this a generalized solution. PMUs are
-> > deeply tied to the microarchitecture of a particular implementation, and
-> > that isn't something we can abstract away from the guest in KVM.
 > > 
-> > For example, you could have an event ID that counts on only a subset of
-> > cores, or better yet an event that counts something completely different
-> > depending on where a vCPU lands.> > I do appreciate the issue that you're trying to solve.
-> > 
-> > The good news though is that the fixed PMU cycle counter is the only
-> > thing guaranteed to be present in any PMUv3 implementation. Since
-> > that's the only counter Windows actually needs, perhaps we could
-> > special-case this in KVM.
-> > 
-> > I have the following (completely untested) patch, do you want to give it
-> > a try? There's still going to be observable differences between PMUs
-> > (e.g. CPU frequency) but at least it should get things booting.
+> > Indeed, bpftool does not rely on libunwind, and I don't remember other
+> > BPF components doing so, either.
 > 
-> I don't think it will work, unfortunately. perf_init_event() binds a
-> perf event to a particular PMU so the event will stop working when the
-> thread migrates away.
+> Right, but my concern was about the feature test itself and the related
+> changes in the build files.
 > 
-> It should also be the reason why the perf program creates an event for
-> each PMU. tools/perf/Documentation/intel-hybrid.txt has more
-> descriptions.
+> Can I get your Acked-by then?
 
-But perf on non-Intel behaves pretty differently. ARM PMUs behaves
-pretty differently, because there is no guarantee of homogeneous
-events.
+hi,
+I might be missing something, but I see following commit in git already:
+  b40fbeb0b1cd tools build: Remove the libunwind feature tests from the ones detected when test-all.o builds
 
-> 
-> Allowing to enable more than one counter and/or an event type other
-> than the cycle counter is not the goal. Enabling another event type
-> may result in a garbage value, but I don't think it's worse than the
-> current situation where the count stays zero; please tell me if I miss
-> something.
-> 
-> There is still room for improvement. Returning a garbage value may not
-> be worse than returning zero, but counters and event types not
-> supported by some cores shouldn't be advertised as available in the
-> first place. More concretely:
-> 
-> - The vCPU should be limited to run only on cores covered by PMUs when
-> KVM_ARM_VCPU_PMU_V3 is set.
-
-That's userspace's job. Bind to the desired PMU, and run. KVM will
-actively prevent you from running on the wrong CPU.
-
-> - PMCR_EL0.N advertised to the guest should be the minimum of ones of
-> host PMUs.
-
-How do you find out? CPUs can be hot-plugged on long after a VM has
-started, bringing in a new PMU, with a different number of counters.
-
-> - PMCEID0_EL0 and PMCEID1_EL0 advertised to the guest should be the
-> result of the AND operations of ones of host PMUs.
-
-Same problem.
-
-> 
-> Special-casing the cycle counter may make sense if we are going to fix
-> the advertised values of PMCR_EL0.N, PMCEID0_EL0, and
-> PMCEID1_EL0. PMCR_EL0.N as we can simply return zero for these
-> registers. We can also prevent enabling a counter that returns zero or
-> a garbage value.
->
-> Do you think it's worth fixing these registers? If so, I'll do that by
-> special-casing the cycle counter.
-
-I think this is really going in the wrong direction.
-
-The whole design of the PMU emulation is that we expose a single,
-architecturally correct PMU implementation. This is clearly
-documented.
-
-Furthermore, userspace is being given all the relevant information to
-place vcpus on the correct physical CPUs. Why should we add this sort
-of hack in the kernel, creating a new userspace ABI that we will have
-to support forever, when usespace can do the correct thing right now?
-
-Worse case, this is just a 'taskset' away, and everything will work.
-
-Frankly, I'm not prepared to add more hacks to KVM for the sake of the
-combination of broken userspace and broken guest.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
+jirka
