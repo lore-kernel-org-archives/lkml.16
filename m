@@ -1,64 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD63D25D918;
-	Wed, 19 Mar 2025 11:03:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BDF25DB18;
+	Wed, 19 Mar 2025 11:03:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382241; cv=none; b=Bo9rbooV9Bvhbh7pBqlaLyZlEx7DqGDt2PXqTwO5YtKZM5ZPgab59KlTnclJkrDRfm9o0JmcfJqex8VcaKc9KuJpdS0fIbbyBilrRUnVxiXj2IcBELc91tg3cRq9tcCQnrvwgmrRbaHzbCvSPZDUpCue980pzsFCxfsV1gFxSkw=
+	t=1742382242; cv=none; b=mK4b6aapPXzpxlMd113cGTg/OenwQ2IPx04qMycuaHuRtu6axyU5OZgJjyOf/RDkLFNfSIDMv++SB5zDPYlBrKJLVu4R8Qo+a7u7MxJV+SRvb0zvWvKwi/QIAH9mF0jM/CatdNcsRJm9UXTPXu7Fs51agJfghcE3pv30OhW0QFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382241; c=relaxed/simple;
-	bh=9DQdigSnh/86lBA85I/YOPVMDNpXcxf/sTpaFWx+oZk=;
+	s=arc-20240116; t=1742382242; c=relaxed/simple;
+	bh=Xv7GIb8zj/K5wKfcqjX9AU85H2HhV+uZBJZ6A303Qrs=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=s+QBX3Vz8XHj3dqfleysvqYcRkzllzslZ1gD9hGbYXxKOYz4Wjn0wriLgqPG5IaH7jVgBAdtNbvZGvFs4N0f1dPGBAgW7/b9ABAYiOpjBVGGsuGeM/cmDcCvxaZH/c2ikb2j7WzXv/K7CcDQQaSLFjuU6gLD2HNhFLxPSXCi2Uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=o8qnVbzQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ynvkPsKE; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=JtfGDxM0xvRuZ/BFfZ+EgRWk8+J9uwKjWhu+kt2+oK8ic1Rs0/sM0N6wHb/1pzBRFMAWO7qJVp3KCPMiomUnkhggdwc3mHFIFLjATVLd4xjml1C+wTVAw75JKyb4UdWVbcYRj2FaAgOAPOTCu4Aw166VVVYvM6WUCO1GYEva4PQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=AHPmlI1b; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2TJdjY2N; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="o8qnVbzQ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ynvkPsKE"
-Date: Wed, 19 Mar 2025 11:03:56 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="AHPmlI1b";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2TJdjY2N"
+Date: Wed, 19 Mar 2025 11:03:57 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382237;
+	s=2020; t=1742382238;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k/+xIBg9H/GGQC9qzRLnFLUHtHhKqucErYOvsLsi1+w=;
-	b=o8qnVbzQawj0fO+dKRy2YYcmmqYpuJJK35822VDmVVSX5oeoqzcT7XiXW64/+Rf/FYCy8c
-	bp2+0mWOSMay17humAYEJ+YhUDzrvEh22lw+q9FcEvclmfSSJKJSPVbORfXeGVP6xfhyDo
-	u7MqbAb0ChOMO0Ge+oCeQzViPv1RbzO30Uff1nApIl0YOawXr9JfjEcGqlXXEzinLysUNK
-	acU8+bh9kYMvK7qjwxhPTJclEVhRAkLb9/EO108Wpd/qwxKS5uiJZLeBo+I8qhwFFdtKmm
-	a45XUA4GYA8svOQ2pCao0Z8EMWJMEB31AEMz7+BfYbACoglPy2/6yNlxN3HYpA==
+	bh=pCP9bTbPar9kenkqOBtDMS9xeNK5rldVg4JUNeI5hr4=;
+	b=AHPmlI1bfLcSsPVx3OpP7UHYUrZfOTvVByIvcBMiV4KipmvJQEHTv8gNhHB/yhEA+fqDIR
+	/7lKSmFdvM1X7u3jeo2TtIQh8cD0b2GrQhP+QqMY/BvP8yQ7VJybpL08DbTdGmAIUL5edc
+	9fHXgWqqkCbAkPDZDcX0/XJo8M2cfF6mXCMdEFej/o88dHbnfERgwh0hphjdeCxsVNviUN
+	0WqMrryziyB7rmsf3hSsWrt1pYXGKom20neCVaMqe7+6oPLOmjc0b0BrPVIgk2jijIyB09
+	29ON+z47lrmrqk0AGN+E3j3EZNJ03q4/MB7xwUaGg29A+A5Vg11RBOkZPyI1Hw==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382237;
+	s=2020e; t=1742382238;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=k/+xIBg9H/GGQC9qzRLnFLUHtHhKqucErYOvsLsi1+w=;
-	b=ynvkPsKECSw5HVOzv2lVGOmhyjr2KtkcV7pxWM2l/cI/e+2libfESTNUd5HL3bmlvR9gL7
-	aTSh/FAUc+xYB2Cw==
+	bh=pCP9bTbPar9kenkqOBtDMS9xeNK5rldVg4JUNeI5hr4=;
+	b=2TJdjY2NoQcvZjwDfRQ8/HNBYb1lokwyRXypXb+sRGnPz/Bkp/+OGdmVY9bVo9otwGnmrt
+	ugK4FuEVBfrBRrAw==
 From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/cpu: Add cpu_type to struct x86_cpu_id
+Subject: [tip: x86/core] x86/cpu: Fix the description of X86_MATCH_VFM_STEPS()
 Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250311-add-cpu-type-v8-3-e8514dcaaff2@linux.intel.com>
-References: <20250311-add-cpu-type-v8-3-e8514dcaaff2@linux.intel.com>
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250311-add-cpu-type-v8-1-e8514dcaaff2@linux.intel.com>
+References: <20250311-add-cpu-type-v8-1-e8514dcaaff2@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238223677.14745.4728402080325037253.tip-bot2@tip-bot2>
+Message-ID: <174238223784.14745.2063277713363886874.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,157 +67,42 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     00d7fc04b703eb3e9d61dd3eac02a34c466e9f12
-Gitweb:        https://git.kernel.org/tip/00d7fc04b703eb3e9d61dd3eac02a34c466e9f12
+Commit-ID:     7b9b54e23a677efdc76220903afa4262069a5dc7
+Gitweb:        https://git.kernel.org/tip/7b9b54e23a677efdc76220903afa4262069a5dc7
 Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-AuthorDate:    Tue, 11 Mar 2025 08:02:36 -07:00
+AuthorDate:    Tue, 11 Mar 2025 08:02:05 -07:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:17:03 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:16:33 +01:00
 
-x86/cpu: Add cpu_type to struct x86_cpu_id
+x86/cpu: Fix the description of X86_MATCH_VFM_STEPS()
 
-In addition to matching vendor/family/model/feature, for hybrid variants it is
-required to also match cpu-type. For example, some CPU vulnerabilities like
-RFDS only affect a specific cpu-type.
+The comments needs to reflect an implementation change.
 
-To be able to also match CPUs based on their type, add a new field "type" to
-struct x86_cpu_id which is used by the CPU-matching tables. Introduce
-X86_CPU_TYPE_ANY for the cases that don't care about the cpu-type.
-
-  [ bp: Massage commit message. ]
+No functional change.
 
 Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/r/20250311-add-cpu-type-v8-3-e8514dcaaff2@linux.intel.com
+Link: https://lore.kernel.org/r/20250311-add-cpu-type-v8-1-e8514dcaaff2@linux.intel.com
 ---
- arch/x86/include/asm/cpu_device_id.h | 32 +++++++++++++++++++--------
- include/linux/mod_devicetable.h      |  2 ++-
- 2 files changed, 25 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/cpu_device_id.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/arch/x86/include/asm/cpu_device_id.h b/arch/x86/include/asm/cpu_device_id.h
-index 45489b0..6be777a 100644
+index ba32e0f..9ebc263 100644
 --- a/arch/x86/include/asm/cpu_device_id.h
 +++ b/arch/x86/include/asm/cpu_device_id.h
-@@ -74,13 +74,14 @@
-  * into another macro at the usage site for good reasons, then please
-  * start this local macro with X86_MATCH to allow easy grepping.
-  */
--#define X86_MATCH_CPU(_vendor, _family, _model, _steppings, _feature, _data) { \
-+#define X86_MATCH_CPU(_vendor, _family, _model, _steppings, _feature, _type, _data) { \
- 	.vendor		= _vendor,					\
- 	.family		= _family,					\
- 	.model		= _model,					\
- 	.steppings	= _steppings,					\
- 	.feature	= _feature,					\
- 	.flags		= X86_CPU_ID_FLAG_ENTRY_VALID,			\
-+	.type		= _type,					\
- 	.driver_data	= (unsigned long) _data				\
- }
- 
-@@ -96,7 +97,7 @@
-  */
- #define X86_MATCH_VENDOR_FAM_FEATURE(vendor, family, feature, data)		\
- 	X86_MATCH_CPU(X86_VENDOR_##vendor, family, X86_MODEL_ANY,		\
--		      X86_STEPPING_ANY, feature, data)
-+		      X86_STEPPING_ANY, feature, X86_CPU_TYPE_ANY, data)
- 
- /**
-  * X86_MATCH_VENDOR_FEATURE - Macro for matching vendor and CPU feature
-@@ -109,7 +110,7 @@
-  */
- #define X86_MATCH_VENDOR_FEATURE(vendor, feature, data)				\
- 	X86_MATCH_CPU(X86_VENDOR_##vendor, X86_FAMILY_ANY, X86_MODEL_ANY,	\
--		      X86_STEPPING_ANY, feature, data)
-+		      X86_STEPPING_ANY, feature, X86_CPU_TYPE_ANY, data)
- 
- /**
-  * X86_MATCH_FEATURE - Macro for matching a CPU feature
-@@ -120,7 +121,7 @@
-  */
- #define X86_MATCH_FEATURE(feature, data)					\
- 	X86_MATCH_CPU(X86_VENDOR_ANY, X86_FAMILY_ANY, X86_MODEL_ANY,		\
--		      X86_STEPPING_ANY, feature, data)
-+		      X86_STEPPING_ANY, feature, X86_CPU_TYPE_ANY, data)
- 
- /**
-  * X86_MATCH_VENDOR_FAM_MODEL - Match vendor, family and model
-@@ -134,7 +135,7 @@
-  */
- #define X86_MATCH_VENDOR_FAM_MODEL(vendor, family, model, data)			\
- 	X86_MATCH_CPU(X86_VENDOR_##vendor, family, model, X86_STEPPING_ANY,	\
--		      X86_FEATURE_ANY, data)
-+		      X86_FEATURE_ANY, X86_CPU_TYPE_ANY, data)
- 
- /**
-  * X86_MATCH_VENDOR_FAM - Match vendor and family
-@@ -147,7 +148,7 @@
-  */
- #define X86_MATCH_VENDOR_FAM(vendor, family, data)				\
- 	X86_MATCH_CPU(X86_VENDOR_##vendor, family, X86_MODEL_ANY,		\
--		      X86_STEPPING_ANY, X86_FEATURE_ANY, data)
-+		      X86_STEPPING_ANY, X86_FEATURE_ANY, X86_CPU_TYPE_ANY, data)
- 
- /**
-  * X86_MATCH_VFM - Match encoded vendor/family/model
-@@ -158,7 +159,7 @@
-  */
- #define X86_MATCH_VFM(vfm, data)						\
- 	X86_MATCH_CPU(VFM_VENDOR(vfm), VFM_FAMILY(vfm),	VFM_MODEL(vfm),		\
--		      X86_STEPPING_ANY, X86_FEATURE_ANY, data)
-+		      X86_STEPPING_ANY, X86_FEATURE_ANY, X86_CPU_TYPE_ANY, data)
+@@ -209,9 +209,11 @@
  
  #define __X86_STEPPINGS(mins, maxs)    GENMASK(maxs, mins)
  /**
-@@ -173,7 +174,8 @@
-  */
- #define X86_MATCH_VFM_STEPS(vfm, min_step, max_step, data)			\
- 	X86_MATCH_CPU(VFM_VENDOR(vfm), VFM_FAMILY(vfm), VFM_MODEL(vfm),		\
--		      __X86_STEPPINGS(min_step, max_step), X86_FEATURE_ANY, data)
-+		      __X86_STEPPINGS(min_step, max_step), X86_FEATURE_ANY,	\
-+		      X86_CPU_TYPE_ANY, data)
- 
- /**
-  * X86_MATCH_VFM_FEATURE - Match encoded vendor/family/model/feature
-@@ -185,7 +187,19 @@
-  */
- #define X86_MATCH_VFM_FEATURE(vfm, feature, data)				\
- 	X86_MATCH_CPU(VFM_VENDOR(vfm), VFM_FAMILY(vfm), VFM_MODEL(vfm),		\
--		      X86_STEPPING_ANY, feature, data)
-+		      X86_STEPPING_ANY, feature, X86_CPU_TYPE_ANY, data)
-+
-+/**
-+ * X86_MATCH_VFM_CPU_TYPE - Match encoded vendor/family/model/type
-+ * @vfm:	Encoded 8-bits each for vendor, family, model
-+ * @type:	CPU type e.g. P-core, E-core
-+ * @data:	Driver specific data or NULL. The internal storage
-+ *		format is unsigned long. The supplied value, pointer
-+ *		etc. is cast to unsigned long internally.
-+ */
-+#define X86_MATCH_VFM_CPU_TYPE(vfm, type, data)				\
-+	X86_MATCH_CPU(VFM_VENDOR(vfm), VFM_FAMILY(vfm), VFM_MODEL(vfm),	\
-+		      X86_STEPPING_ANY, X86_FEATURE_ANY, type, data)
- 
- extern const struct x86_cpu_id *x86_match_cpu(const struct x86_cpu_id *match);
- extern bool x86_match_min_microcode_rev(const struct x86_cpu_id *table);
-diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
-index d67614f..bd7e60c 100644
---- a/include/linux/mod_devicetable.h
-+++ b/include/linux/mod_devicetable.h
-@@ -692,6 +692,7 @@ struct x86_cpu_id {
- 	__u16 feature;	/* bit index */
- 	/* Solely for kernel-internal use: DO NOT EXPORT to userspace! */
- 	__u16 flags;
-+	__u8  type;
- 	kernel_ulong_t driver_data;
- };
- 
-@@ -703,6 +704,7 @@ struct x86_cpu_id {
- #define X86_STEP_MIN 0
- #define X86_STEP_MAX 0xf
- #define X86_FEATURE_ANY 0	/* Same as FPU, you can't test for that */
-+#define X86_CPU_TYPE_ANY 0
- 
- /*
-  * Generic table type for matching CPU features.
+- * X86_MATCH_VFM_STEPPINGS - Match encoded vendor/family/model/stepping
++ * X86_MATCH_VFM_STEPS - Match encoded vendor/family/model and steppings
++ *			 range.
+  * @vfm:	Encoded 8-bits each for vendor, family, model
+- * @steppings:	Bitmask of steppings to match
++ * @min_step:	Lowest stepping number to match
++ * @max_step:	Highest stepping number to match
+  * @data:	Driver specific data or NULL. The internal storage
+  *		format is unsigned long. The supplied value, pointer
+  *		etc. is cast to unsigned long internally.
