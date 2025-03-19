@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796881B0F20;
-	Wed, 19 Mar 2025 20:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F006D214A9E;
+	Wed, 19 Mar 2025 20:16:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742415400; cv=none; b=p2bZjghhz1fZUZtgY0QV9gQSsYIecdTF475MnxdsnlWTzsgfqVN8/VWu/Ma2+c0xwWfMnqj/wMYq0DOcDPUqfYbctOLtVab35lYIZDEq8UZyWH11XL9vZt9Ui4NLT0v2QD9pu31ztemN1NLQOlnYXVaV8S/MVrdSRml0FAne398=
+	t=1742415404; cv=none; b=HC4RueHXq6tYLVVFBfVOo3J4RWqDlpTxWQkX+TAKpRgtJ3pAiddUrgQgccKuuB5Kjzc5TeZZkd5F7ibt6POGlaT4ywqaDcPTKcyBxSSV9JocTzvVGu9qJCJfTFq3i2/aKZHWzdDXNDsPej+PG6ZHUQg80foDIzlqZHpZLs6HLoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742415400; c=relaxed/simple;
-	bh=nz5Sorhb4ps7kptLjC/ZGul4mOFCsLRQTWZ0j3Yv2IE=;
+	s=arc-20240116; t=1742415404; c=relaxed/simple;
+	bh=MSxPamEBHGPvu7IMAPqcyi0fJsP5xyqutLFnzVFpxY8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=ESWtYV/qywjt18pJPXZYc3rAHuMROje/+s7UFkXRcXWywnzfFVSZr242QD9bfgYt+oKWIKZeSTcBRFwNN1RCbNMWiMxA7FExpFKH/C7xlQkxLUHQ51Ci7l9IPB1sfYxQfEJKwqMAE5E5dkoKLoBRvsbp1XsFSS59XKIWxyOdUZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kt9iWFZk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=fb5KwYnaDgqP1Hmqq4EZaidodd3ZUexytY3W9meoeT3yFRkLTnuAz6q1sMf55qtBySyC/jPug8UpJxvxFE2yZW3MDSlOqNdv8kUDVWM5lLSuHDmg60Rr/TlfqkgXnhTOkHxxkm/K8MwIJWul0T7na4AUQBtTOwO1nJpaC0g3BfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkktvrLQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kt9iWFZk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2F28C4CEE4;
-	Wed, 19 Mar 2025 20:16:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkktvrLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 837BAC4CEE9;
+	Wed, 19 Mar 2025 20:16:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742415399;
-	bh=nz5Sorhb4ps7kptLjC/ZGul4mOFCsLRQTWZ0j3Yv2IE=;
+	s=k20201202; t=1742415403;
+	bh=MSxPamEBHGPvu7IMAPqcyi0fJsP5xyqutLFnzVFpxY8=;
 	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=Kt9iWFZkWXaex7mWHax18ZZ53kp9CUm7trX4T4TuDW7phABDZtkEJUwJ0lv/gutRh
-	 mp4bQTPEZVhTZaPRc0IvZscB2J8UQeP2TCeDPiBWqQvit4Dsnu81Q9whty1HwQhrPK
-	 rGBbJo/FtCYkDx1w0w9d162UACDAiunTq+0BABjC3NUPsyCQM5oxaSVqPG8sifUcvc
-	 T2DYTOX/yYRtssK5Wv4TEFT0tGssVZ7rtzuumbFI39ZPCOKxz1AT0rMPQL87mTcSW0
-	 KqKb5wSdRuA5rUcXifcybXj7/Ij4MgQ49mzVz7FHUadxdwxW99axCDZKa03JCOpA0c
-	 3eV4DvE5vdk1w==
+	b=gkktvrLQWUEklfjqWkk5x547LQ14HK9G5SNK4z9q1i/9cE61AXlv03sAsOE+nVORs
+	 zuE2AntdSmIWwq9cRLm1mKb7Evb1wxIfxWTnhwzm4QPDeSBzlGZ0gjHeVkZ5H9jfOc
+	 XRQnw0MLMGCJAKHLqUE5s03U4ygD8yMmYQk6rgQwpZtFL8BvQoTUCVpaGcaTDUpwx3
+	 m1PGCp6hEYdsja5RBD/TIWzm3iqVNlLBSunk+dUaVBdIF83ToJsUAIrikiyOH+RWu/
+	 ea4TiCzJPS3AOJuXBFqsAzIj39kn+53tiHi4yPRCc4rNCi7OgQVabUU8zNz1UBbrzF
+	 zatIAEmXvchFw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
 To: "Alice Ryhl" <aliceryhl@google.com>
 Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Alexander Viro"
@@ -37,16 +37,16 @@ Cc: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,  "Alexander Viro"
  <tmgross@umich.edu>,  "Danilo Krummrich" <dakr@kernel.org>,  "Matthew
  Maurer" <mmaurer@google.com>,  "Lee Jones" <lee@kernel.org>,
   <linux-kernel@vger.kernel.org>,  <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH 5/5] samples: rust_misc_device: Expand the sample to
- support read()ing from userspace
-In-Reply-To: <20250311-iov-iter-v1-5-f6c9134ea824@google.com> (Alice Ryhl's
-	message of "Tue, 11 Mar 2025 14:25:16 +0000")
+Subject: Re: [PATCH 3/5] rust: miscdevice: Provide additional abstractions
+ for iov_iter and kiocb structures
+In-Reply-To: <20250311-iov-iter-v1-3-f6c9134ea824@google.com> (Alice Ryhl's
+	message of "Tue, 11 Mar 2025 14:25:14 +0000")
 References: <20250311-iov-iter-v1-0-f6c9134ea824@google.com>
-	<Tfm4k4u95E5X-U3bEYcGAPbGrFqPmDV3F-MsJkvz9QST_luT89M_m27RzR2UG7ajOcfH83xsMIG6KxRWtk4Bwg==@protonmail.internalid>
-	<20250311-iov-iter-v1-5-f6c9134ea824@google.com>
+	<F1M8U62rghdw4RaELLHxMh1meevFz5toqtnX_01OqcA8NYebCaSWdHqSlVPBu8XNTWqI9_bRF10kDbWJnzvDBA==@protonmail.internalid>
+	<20250311-iov-iter-v1-3-f6c9134ea824@google.com>
 User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Wed, 19 Mar 2025 21:11:16 +0100
-Message-ID: <87bjtwg4rf.fsf@kernel.org>
+Date: Wed, 19 Mar 2025 21:16:27 +0100
+Message-ID: <8734f8g4is.fsf@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,19 +57,32 @@ Content-Type: text/plain
 
 "Alice Ryhl" <aliceryhl@google.com> writes:
 
-> From: Lee Jones <lee@kernel.org>
+> These will be used for the read_iter() and write_iter() callbacks, which
+> are now the preferred back-ends for when a user operates on a char device
+> with read() and write() respectively.
 >
-> A userland application can now operate on the char device with read() in
-> order to consume a locally held buffer.  Memory for the buffer is to be
-> provisioned and the buffer populated in its subsequently provided
-> write() counterpart.
->
+> Co-developed-by: Lee Jones <lee@kernel.org>
 > Signed-off-by: Lee Jones <lee@kernel.org>
-> Co-developed-by: Alice Ryhl <aliceryhl@google.com>
 > Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 
+[...]
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> +impl<'a, T: ForeignOwnable> Kiocb<'a, T> {
+> +    /// Get the private data in this kiocb.
+> +    pub fn private_data(&self) -> <T as ForeignOwnable>::Borrowed<'a> {
+> +        // SAFETY: The `kiocb` lets us access the private data.
+> +        let private = unsafe { (*(*self.inner.as_ptr()).ki_filp).private_data };
+> +        // SAFETY: The kiocb has shared access to the private data.
+> +        unsafe { <T as ForeignOwnable>::borrow(private) }
+> +    }
+
+Another quick observation: `kiocb` has a `void *private` field that is
+used in the same way that `struct file` `private_data` field is used.
+The naming of this function is misleading, since it does not return the
+`kiocb` private data.
+
+Either rename this function or exchange it for an access method for the
+associated file.
 
 
 Best regards,
