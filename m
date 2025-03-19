@@ -1,101 +1,149 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925251DEFD7;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C618821A92F;
 	Wed, 19 Mar 2025 14:55:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742396153; cv=none; b=t4smvNPzQmxUI+uet5S+LddicLtkoXUdk87oU+7qeYwwdt+VA9UacE+LNmaRndEqfBUj4iOHgCyd0aGlfnxXJT9EaXnELNZhLTnD1pApPk5O1HaPc8/njZCUaKfTW419MzYIxIPFKcOhthdQIYu9OBmPMYASH7uvTnjaMAP0u84=
+	t=1742396153; cv=none; b=S8of/MgzC+81oOLrLHLl3DhRq/E7mMPwTHSASGJfWohE//a9na6+80XZhTy9P9YeGcyLP2vQzyR0RFY7M9gnqsGak5MLbL0rkfCYXiRqmmIhTzsIMdnFANT+NEEAgwXPUfGj3YaAtD3RCwEvlC9Wr5qRlLaE9R++bo/puKQ1rEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742396153; c=relaxed/simple;
-	bh=cqlvzY55RcwBDFprNdjw52JF3DSZ7waUI40/fMoYc1E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HLP9AVdDsZEhjfuPnfwyJqCNV2L/ss6obFdprMydiTS786Qhe7ZbpJv+HAK4IE9e+xuaEDPmDyvnN88tTmdgB/2w6guP1m8b+lZsmhhxBv5gxRdoW0ueKf2t2H5FWnHso7FMz6KBL8BzlbA/Ok61BJhiEqInDGu6XTHoQ8/mnXk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iDaDc+xj; arc=none smtp.client-ip=209.85.128.43
+	bh=apOwKrOGjMBFZG/bB8HtRZL//5ABh3ISxn80csiHTzw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ivdwIU9eIlIG3AQfdtbHIm5/UBFLJSDGX4p5z+JLGPMsggCxWvLRTWLyLTAXpm4HJDdOdfsY0W1UnfG0ehsEenKergdjmm63tJnI7dTWfXu39EJsydxxyTpr4UuEaftCqgZqBTGCPp9pJXJMrHIkAQfeqXrugSov/hD/DkYx8wU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i38Fh7zJ; arc=none smtp.client-ip=209.85.214.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iDaDc+xj"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so31478885e9.3;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i38Fh7zJ"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2239c066347so153011705ad.2;
         Wed, 19 Mar 2025 07:55:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742396150; x=1743000950; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1742396151; x=1743000951; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=cqlvzY55RcwBDFprNdjw52JF3DSZ7waUI40/fMoYc1E=;
-        b=iDaDc+xjqcmW12fdXmNfysGPv9rHR8V6Gt3jU+Vj9tQiidGInxfb5bO9vl9oo/m4Ry
-         LhH2Ip1IgzJ7zvUgV5JDKE8DMF4Xa3amrKjqvWqM5h+SQIs+AzuSl+dBWezf3Rv/4nxs
-         z1zP2NEJ7jfYzuezTKPoQcuqb4g7If0HYkPbe94hZJtQjmUKRDkPcqtrhQXFuIPstcr9
-         GutAgGbiwK1L5n9T3e0Y1eR3j5S+iThWmbKP0T0ugAS/VV3T+IFOutPgYBZFqoVVTv0T
-         YFJv2XJ0voKBNK7SAG01vTJKpxPBt4CAb1yeKdNbpEe7fs72pJBVAaIsMaqA4lHrTm5F
-         lIJg==
+        bh=J0exLxAAAlQWwVFJcNsbOVvtN8oA++7dfPbHDbFWzdQ=;
+        b=i38Fh7zJYQMywr9OoQxSPYUE0RFlBxUI9FVbS4dK069vbhUR//EZze4UTTTrZfeoeA
+         1zgKQTwKhc6pYWthFVBZgdFdt+jCyrbp7+wFUwu7sKcrGgP3VRXYpExHjHpaFUA2Jsxa
+         IPxLmnP3d0VnXLbq5RFMnEwEA7yf5KBwm55pFkZyTcCNKK38siWDK5GAewTsd5ndPiRs
+         q2M5KeC7PXOcEkyZJj45bXsqPJh6NrpE0fhrQSb1zuafAK3oUbvqGZoWQtT+NS4CGKO1
+         ddv5XIQ+nd/Euw+BsDy/LbvgiSbRvvw/maENyLLOGw8GE+pVqYGHAfwT8yYQkI9wEfmO
+         jX3w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742396150; x=1743000950;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742396151; x=1743000951;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=cqlvzY55RcwBDFprNdjw52JF3DSZ7waUI40/fMoYc1E=;
-        b=mw8kEwzgjFwpZhrJ8eb4JZ0yUqXPAYVUetmzsUDoAh1ioNvrOZfCnI0V3ReogqPzEp
-         6YutrD+EOBpwIWMupSX3Oej1BOmzc/RiCYCP6yGqKcO4ZuvHRq1D0etnTYEdpJBVmy15
-         eV3HAM2+ygWkoxUy5lHBQNyRj7odhBfvz5YClwOsCn7eLLsEGcK0yodbVX5UpSQ+tQlF
-         VkJZQX9YaciZZFJLCl3kgPm4qNdTlAUWS5YsRPyqL+b3f9zRpU+Znk0PHvB5gQILVLTf
-         63qtHAjLBmxdmkaik4KYyuzB4N+e0eDIVSmzvTlrVNFjB1o5W4fJ64ve04WdmIN6Xcu8
-         ffIQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7UhxPc2mEDTR0F2k5NvdNjj5Vj1KV4nUWqr5NfNcKP5QmbmY9rNUpcoSf2QngaQ1HGo3OQcznnzlq9w==@vger.kernel.org, AJvYcCVHV5BSE445FJw6KSV+jX8R27IiHu6v+FabQMytefA3V7R8flHfaigJoiFevEqaueBLe+M=@vger.kernel.org, AJvYcCWL6OfAaCQcawx+G9RbcQmXcLrVP3Q6k/mnxGYYyNU8OdaemECCeEU8Nlw5w1WLmYltHD3itNeMTvfNKCe1@vger.kernel.org, AJvYcCWmJmtQo/X89AZah0t/a8fEnkWCgfeMsLg+92aIH21d9gYPSnEB70xecvLOS8s4YHuGbSHW07Op@vger.kernel.org
-X-Gm-Message-State: AOJu0YyoVN/5w4gtacK1hzGySVME2TKTCQVYoZE3lMd+qrkTXv1jn9th
-	eA/FQfn0sNFw9OECFuHTpHkbsjFjb1s+Z4GTBf6VmN3+7UKmsM8RWnoke/xzQ5CqESlhezTS7wH
-	WOdB1AhdPYYQAKzcFnU11O03OGfg=
-X-Gm-Gg: ASbGnctBe0PN9PVxAzUpltHy1oBcGHAXrQf/2ZK1U6Vz4LoYni3NYhyvMEwVaRiZfk1
-	8LqtQbHsBBywfAh5b4AH74zuovA5Wz34IV/SFY4IVP2aBVQF/6BipHTYAt52sLnru8zKOf/n7Mh
-	G4MgDamOAfh0A+IIptgRukLtcqejP5WJv4s4tbVPHC272uaMPkNi9f32HnBhY=
-X-Google-Smtp-Source: AGHT+IFYLJulgyA42kMSpPcMFV1BLWkjwnsRvgCvCmWo2WTkZJgZ47MI8MQWGFGPtZ9EU0QvFVF22Njp4qnWSDBleeU=
-X-Received: by 2002:a05:600c:1d15:b0:43c:ec4c:25b4 with SMTP id
- 5b1f17b1804b1-43d4378b3ddmr23619225e9.10.1742396149442; Wed, 19 Mar 2025
- 07:55:49 -0700 (PDT)
+        bh=J0exLxAAAlQWwVFJcNsbOVvtN8oA++7dfPbHDbFWzdQ=;
+        b=uxnUtkA6DRm4dGm480Bh0EsHcGgfbfeSkrsR145ucFgJjPpjtPk2uuKcS+crAEsTj/
+         k31pWLAmMF9KXGTYfiuLxcU7vttNAJW95w0oR4BTJ3o9K7FWklnK5sx5IdTldtW++Le4
+         wm6j1Xy8qsNdDJrJMmeQc6ZqF2jJ2+AuW9ZIOhghMNjVAEzApb/swO8kz84TyaLEBroa
+         6BENN0PeKScm9dCc3W9xV90BRoHCDKxqClzUNj2kpbeNT0PCLS7Hs1YiS/Jx0R783sq3
+         aJBHIQFO4MRVYxU2Gn4BYlwWUP6I6FjkQIsCHX+xpazPuDf0bMluCiIAQYqMfMh2PaGg
+         idNw==
+X-Forwarded-Encrypted: i=1; AJvYcCVIaO5brzomnZ1rFTgWt6y6Pl+ReAMs+RLXB1GsZRGRi1jJ+dC8y2L5CSM+oOIKA8gu0PlMFNXYVhUbQ7BV@vger.kernel.org, AJvYcCVfGeXHN0d6chwArfdMqfzEYthV6xC6JZLSffNb1lfIn3kGN0JU4HcrJI9/Wo/H2VBSIgk2bzbNenIq95qY@vger.kernel.org
+X-Gm-Message-State: AOJu0YxwwjpgWDdwRm7w8cuP3YORMjBFYwiq6GwW5fOOfKjAZAh0EElD
+	jNm56yrh7jXk5hjmYiCh/WFLMByzCUpqpw6xMwJQ5d0VTx+CNnML
+X-Gm-Gg: ASbGncvGTSMXamV4p0UwRae467XjuhMxm6s1Sr3Ndz3xwwlqYeWBxdK5lWPtVZFEqyL
+	5P3uVUqxIlk1InRcAlJ+KUXDnn9M38zWzFymohE6vMrEKpRua7jMlmXVQE72woqTdZYVzGPC6sy
+	0h1AK78KZDd9xvaA7xGGUQ9aHabOvBG0zgI6IAR4WwZda8MKi09WDR/cRUEzkSPSKjFzJoV7LE8
+	yDnozqvVyE2cD8prWHQyLnx2LoGZ4ChP+iiDL5CMOXVoyUQg2JydIdwSfvyjgdBjNaMJdR9ayab
+	tlQ+1wb3Tl1IoPqmikcZ+2+y4ErRgNrkyOoytCLlQ7caf973ynoBzb1fqluIMKfjAXoEuVClYw3
+	MloCr5g95hUoyvuq0NfIqNqdaT/N//w==
+X-Google-Smtp-Source: AGHT+IFoDLZMYe7t6b2/oYO0pMxb9/WPero4OWX4DxcDjSMBc4z23b1LAAx4FG3aJW9vP0kMLtgYMg==
+X-Received: by 2002:a17:902:ecc5:b0:224:1221:1ab4 with SMTP id d9443c01a7336-22649a39fd5mr44273665ad.22.1742396151063;
+        Wed, 19 Mar 2025 07:55:51 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbe8f9sm114441635ad.175.2025.03.19.07.55.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 07:55:50 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	Rob Clark <robdclark@chromium.org>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 23/34] drm/msm: Rename msm_gem_vma_purge() -> _unmap()
+Date: Wed, 19 Mar 2025 07:52:35 -0700
+Message-ID: <20250319145425.51935-24-robdclark@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250319145425.51935-1-robdclark@gmail.com>
+References: <20250319145425.51935-1-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319133309.6fce6404@canb.auug.org.au> <CAADnVQKotSrp8CkVpFw-y800NJ_R7An-iw-twrQZaOdYUeRtqQ@mail.gmail.com>
- <CAP01T76CqOxzEiMLKJ2y_YD=qDgWq+Fq5Zy-fnKP4AAyS30Dwg@mail.gmail.com>
- <CAP01T77_qMiMmyeyizud=-sbBH5q1jvY_Jkj-QLZqM1zh0a2hg@mail.gmail.com> <CAP01T77St7cpkvJ7w+5d3Ji-ULdz04QhZDxQWdNSBX9W7vXJCw@mail.gmail.com>
-In-Reply-To: <CAP01T77St7cpkvJ7w+5d3Ji-ULdz04QhZDxQWdNSBX9W7vXJCw@mail.gmail.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 19 Mar 2025 07:55:37 -0700
-X-Gm-Features: AQ5f1JrUGFyb55SOF2EzAAJYS9bLqfvB0QpPJ5iTTYTfSGUGnuhAmOsJWefBzbE
-Message-ID: <CAADnVQ+8apdQtyvMO=SKXCE_HWpQEo3CaTUwd39ekYEj-D4TQA@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-To: Kumar Kartikeya Dwivedi <memxor@gmail.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Alexei Starovoitov <ast@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Andrew Morton <akpm@linux-foundation.org>, Uros Bizjak <ubizjak@gmail.com>, bpf <bpf@vger.kernel.org>, 
-	Networking <netdev@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 19, 2025 at 7:36=E2=80=AFAM Kumar Kartikeya Dwivedi
-<memxor@gmail.com> wrote:
->
-> > >
-> > > I've sent a fix [0], but unfortunately I was unable to reproduce the
-> > > problem with an LLVM >=3D 19 build, idk why. I will try with GCC >=3D=
- 14
-> > > as the patches require to confirm, but based on the error I am 99%
-> > > sure it will fix the problem.
-> >
-> > Probably because __seg_gs has CC_HAS_NAMED_AS depends on CC_IS_GCC.
-> > Let me give it a go with GCC.
-> >
->
-> Can confirm now that this fixes it, I just did a build with GCC 14
-> where Uros's __percpu checks kick in.
+From: Rob Clark <robdclark@chromium.org>
 
-Great. Thanks for checking and quick fix.
+This is a more descriptive name.
 
-btw clang supports it with __attribute__((address_space(256))),
-so CC_IS_GCC probably should be relaxed.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/msm_gem.c     | 4 ++--
+ drivers/gpu/drm/msm/msm_gem.h     | 2 +-
+ drivers/gpu/drm/msm/msm_gem_vma.c | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/msm_gem.c b/drivers/gpu/drm/msm/msm_gem.c
+index 577da3c54c8c..dcf5f6a25f87 100644
+--- a/drivers/gpu/drm/msm/msm_gem.c
++++ b/drivers/gpu/drm/msm/msm_gem.c
+@@ -421,7 +421,7 @@ put_iova_spaces(struct drm_gem_object *obj, struct drm_gpuvm *vm, bool close)
+ 		drm_gpuvm_bo_get(vm_bo);
+ 
+ 		drm_gpuvm_bo_for_each_va_safe (vma, vmatmp, vm_bo) {
+-			msm_gem_vma_purge(vma);
++			msm_gem_vma_unmap(vma);
+ 			if (close)
+ 				msm_gem_vma_close(vma);
+ 		}
+@@ -600,7 +600,7 @@ static int clear_iova(struct drm_gem_object *obj,
+ 	if (!vma)
+ 		return 0;
+ 
+-	msm_gem_vma_purge(vma);
++	msm_gem_vma_unmap(vma);
+ 	msm_gem_vma_close(vma);
+ 
+ 	return 0;
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index 3919b384d599..1622d557ea1f 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -141,7 +141,7 @@ struct msm_gem_vma {
+ struct drm_gpuva *
+ msm_gem_vma_new(struct drm_gpuvm *vm, struct drm_gem_object *obj,
+ 		u64 offset, u64 range_start, u64 range_end);
+-void msm_gem_vma_purge(struct drm_gpuva *vma);
++void msm_gem_vma_unmap(struct drm_gpuva *vma);
+ int msm_gem_vma_map(struct drm_gpuva *vma, int prot, struct sg_table *sgt);
+ void msm_gem_vma_close(struct drm_gpuva *vma);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index d51d54c0da33..baa5c6a0ff22 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -21,7 +21,7 @@ msm_gem_vm_free(struct drm_gpuvm *gpuvm)
+ }
+ 
+ /* Actually unmap memory for the vma */
+-void msm_gem_vma_purge(struct drm_gpuva *vma)
++void msm_gem_vma_unmap(struct drm_gpuva *vma)
+ {
+ 	struct msm_gem_vma *msm_vma = to_msm_vma(vma);
+ 	struct msm_gem_vm *vm = to_msm_vm(vma->vm);
+-- 
+2.48.1
+
