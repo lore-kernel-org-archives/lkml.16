@@ -1,80 +1,68 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C6320AF7D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 20:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 972D61CAA89;
+	Wed, 19 Mar 2025 20:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742415105; cv=none; b=pcHYx9b2+yemoHGrTRzf3orCBOe0S4sXjLiOD/EkLq7pveH9fFb+sUYIJVpOYDmn+otv9ztgNG7DH4P7hds1ZvgctD8t3vkPLYq38dymk+0dtAvbrsoWL1hwCENA0bAgWLXwGU3pGNrcOvW70+gH2hbWYdb0skpHX8vc+An3Lh8=
+	t=1742415210; cv=none; b=otZtJpmOuq0uq8lXxRuyPErI0IDcMP6qBXrG1zZ1S1uYXzJFKJGX5aJ47aUTI7JKZcWiwQzN+VEGJF4ZWcVN4e9xQhfF1/1EFdCrhAGB+KyOI6HiA4wSTbvm3K4vR7973ptI2wA0x/yzLg5Hb6bot9I/4A+1m0von0Rcp0P9LSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742415105; c=relaxed/simple;
-	bh=4WqiFyzAD9xMCaMHZ7odABM/W/WfNwn2UuTWoyyMiXA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Qal0/aWqJJrRso2gXM5lGY4lRciiJmSt2Mt5q67bfM4HmacEJPnO7aakhrhJRMjUGej07To2zzJUzsJy77YllXB1ZKZlhZXlxudTJWqtOG38HkIsLZqIcqGnzFL6PVzlv6brM01CiTjhCO95Q+PlYUfgJiwhISNrdzXTsSLWlwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=c9lv5Rlx; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742415210; c=relaxed/simple;
+	bh=lOzyWTaFdm5D3cOcIb0lxqFPvrXuA8d/dvQka1kG81k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=uAILrKyh7gJM5yXl2BKg0lQdY2tdIDWzII00rVfnm5woY6AVIU5/hZd1IwjVgGr9JXVgn/6ZUbZp95dli02G+CFKCWP9imNzCMmz/KeyNWxgwndMWZv46swCvjacrMOsaYpJN/xMq7t+xuj3ApM841GecULuCXceDNBJWtELMlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PvrRNkLV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="c9lv5Rlx"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742415100;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=4WqiFyzAD9xMCaMHZ7odABM/W/WfNwn2UuTWoyyMiXA=;
-	b=c9lv5Rlx0WULGJzSP/fNh+WYud7uHfPhCoSfxYY3SLwtNrGMRpTb86JIYlyLW+/G5qJAzA
-	zQjNCfSvavyTcaD62jR4Pcq3LFfTtkOsASn+RjGFBQNjkCNf9JtU++i8WaLSFFSBR/NXfE
-	MUzqShh0zF+JVYZRaWS5ur8IQMl9BVs=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-280-4u00dda1MveelLlSphsFFg-1; Wed,
- 19 Mar 2025 16:11:38 -0400
-X-MC-Unique: 4u00dda1MveelLlSphsFFg-1
-X-Mimecast-MFC-AGG-ID: 4u00dda1MveelLlSphsFFg_1742415097
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C6C47195604F;
-	Wed, 19 Mar 2025 20:11:36 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 3DA3D1955BEF;
-	Wed, 19 Mar 2025 20:11:34 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Mar 2025 21:11:04 +0100 (CET)
-Date: Wed, 19 Mar 2025 21:11:01 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] exit: combine work under lock in
- synchronize_group_exit() and coredump_task_exit()
-Message-ID: <20250319201100.GH26879@redhat.com>
-References: <20250319195436.1864415-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PvrRNkLV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21487C4CEE4;
+	Wed, 19 Mar 2025 20:13:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742415210;
+	bh=lOzyWTaFdm5D3cOcIb0lxqFPvrXuA8d/dvQka1kG81k=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=PvrRNkLVPrV8HXySBA2gPZzGQvVfRLatWx8VKEau8dTL9eb1aLxYJREhid/7yU/5W
+	 EbSLlWwKdQxoozkSWsuAIebrS8tDQECeFHWEdHolZ5q5/gctfmzkD3mQa3kPsoKRnV
+	 sK6IuLXI5Bhk09b5/fhYIK4IFCwT59vQNSKV0I01ZItBk3LP742qD5s3VUwuU3f3rJ
+	 pvp8ga6cE/3Vo1M59WsHWdJa1BezNl5ViX3BWjYWnkKEZQNCrqC57Aa4x8+PRJJBDw
+	 kGkBln6TdTCdfTzFDtH5QRlygIcnTSf8MTCromsNADIf0YwFWc3DLNdcRHT6V2z1Z7
+	 6BryyDdJGRpFg==
+From: Namhyung Kim <namhyung@kernel.org>
+To: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, 
+ James Clark <james.clark@linaro.org>, Jiri Olsa <jolsa@kernel.org>, 
+ Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+ Kan Liang <kan.liang@linux.intel.com>, Clark Williams <williams@redhat.com>, 
+ linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
+ Arnaldo Carvalho de Melo <acme@redhat.com>
+In-Reply-To: <20250312203141.285263-1-acme@kernel.org>
+References: <20250312203141.285263-1-acme@kernel.org>
+Subject: Re: [PATCH v2 0/6] perf python binding fixes
+Message-Id: <174241521005.3133484.10830372265000276672.b4-ty@kernel.org>
+Date: Wed, 19 Mar 2025 13:13:30 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319195436.1864415-1-mjguzik@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-c04d2
 
-On 03/19, Mateusz Guzik wrote:
->
-> This reduces single-threaded overhead as it avoids one lock+irq trip on
-> exit.
->
-> It also improves scalability of spawning and killing threads within one
-> process (just shy of 5% when doing it on 24 cores on my test jig).
->
-> Both routines are moved below kcov and kmsan exit, which should be
-> harmless.
->
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
+On Wed, 12 Mar 2025 17:31:35 -0300, Arnaldo Carvalho de Melo wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> Hi Namhyung,
+> 
+>         So this simplifies it greatly, it almost ends up as a one-liner,
+> but there is an improvement as well to mark the event as consumed to
+> then parse its sample, because the copy of the whole event was done all
+> along.
+> 
+> [...]
+Applied to perf-tools-next, thanks!
 
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Best regards,
+Namhyung
+
 
