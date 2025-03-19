@@ -1,63 +1,63 @@
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B72DA15574E;
-	Wed, 19 Mar 2025 14:54:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495961F09BB;
+	Wed, 19 Mar 2025 14:54:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742396091; cv=none; b=B2JBiOdQmljRRonLuZLwePG4xwe9HvwGTwUAul8WdTvGDriY7q4XjfXPPceKC8xrieEeO5JdmME118Sqz/nBJWG4xOFtBRlMSSSBTVEKcu9hNrw4TZkd/ViE8zx+PPbMZkJyvO1xbdg/zwEEspeMLxkXsRnDBKWROfQHCvaynBY=
+	t=1742396094; cv=none; b=aiEEMSh5fMUFGDMcRndGJxTp2gukOjezgxBAv0T5vetss506RFfseky/S6MQiwKisu5VUOpZKMsob+9GnRo862IJEYESx6q/OTUNvqTV3UUCXCx6Ex+LhHcbpwyHjfE1UaUfqNp47P+9qDW93t/YEuUomXw1U6T7Nkj0op9Ljpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742396091; c=relaxed/simple;
-	bh=0C0WG8RuFcb4duEd3LV7+fbJ5H9jCOyDqUbHqQ5OjpQ=;
+	s=arc-20240116; t=1742396094; c=relaxed/simple;
+	bh=ye/Ha1gh841KfwNkbqX4DU3M51WIxb+TjhNn0UjruMU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hwRKv1Y3SOBFAgSueCoxA3eFXAqKtG95zKTkar7X/Co6M8GUhRm2d0dw2usDBRYPplqXDciZxIcgMz5N3V6uGk0x/fm84HJnK//wn+kYzV8AeuIYmO157qGBEqXuJjIF2+b/o/LzPZc8RXvnle335BzETTKXtfhkELpf8E/vKYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ht4KrR1c; arc=none smtp.client-ip=209.85.214.170
+	 MIME-Version; b=hVP4HToPV8sHpuZ6kJXtz57WJTf5HoDzOpx8pXLnf/dkj8alI0WZm138PnPoZeZgTRJ3Gjs8rzD0bUavFpJQFeQE/0BSF49yrmsKFc4wX8eSw3tCaXUSrNtgpZ3wSLpzAX2gGLgwcjObGY87tpIoomOVkS+PIeeuQpSuffsn4WI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LaiYqdAG; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ht4KrR1c"
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-2264aefc45dso23454095ad.0;
-        Wed, 19 Mar 2025 07:54:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LaiYqdAG"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-226185948ffso71182945ad.0;
+        Wed, 19 Mar 2025 07:54:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742396089; x=1743000889; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742396091; x=1743000891; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5dZtNKeQwhga7C/NdCHWATB5ZEqb/G6D875fLgA0Gp4=;
-        b=ht4KrR1cl/arWFhXYB5QGojq9WZGUoGfvdUYAUriqsr4pzwgBeQ0bEZIG4902tkisB
-         o68dUMlUjD06Wb1EAgP/6LRUQubwUMrelnjnvr1PJ8s2/KsYpOYXwXmClgiVkPtVIjwg
-         c0ugfrVlZH0t33Sd2xexW7xa1dthQjHqIlqR6I6CV+pba/Veu4OWovFB53gfxNfJfWbQ
-         MqmFKOHqPLxDmeej3+Gvzn0T1CPdpCs7PoMsfGLEobNEM0P/FMOKUG0wrrDYdxwaIdHt
-         YeZBF/7o80gt2JIEH9Nf1v2bKCWY4Zl62FCxfsgM2V5s3eqh4ighDcT03alHyVXbfnHy
-         NIew==
+        bh=aYQYwB4Q+56fcPRL5nHTiaN7xyPn+dVSiWbH+JLh+2I=;
+        b=LaiYqdAGjHqwL+GOw7PvabP9zF+bpyygjU7tHsbCetF3W50jiDvi4oP4yh5AEgh0Eo
+         3K4A10k+TA6suDMnLo8rgKNW+YXATGc25BcySAUti6GKifqh+a46DqBns91JFClQddr0
+         hwtOUqAjodJsv8HdozL7U+XM3ONw/pbsSDDixcSrCCIq9ytwyeZY+4oKcI4Tu/McBpns
+         +poPmLWAbQ1gIHDBeX7g6SnVKTuRpyP7Ny5xAM4gI1W7P+SdB0yzInBVrlk4z6AIkPkp
+         IAUE+hjT3kVFY08aFvIMIRKqSDZNqLq1PdRa820dm/egaXkQVHFg9r5f3z+ohee4i8n4
+         spGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742396089; x=1743000889;
+        d=1e100.net; s=20230601; t=1742396091; x=1743000891;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5dZtNKeQwhga7C/NdCHWATB5ZEqb/G6D875fLgA0Gp4=;
-        b=VGbBnAa2TOtYTRgJVYtfxi0Zk+8Hk44nIukUYa5apeCHE9mw90HSH6Dxg0iI3x7g/d
-         zJ/7d/TwsUgUSfiU5BZcWl6KZKXcUB2JG8w6SiiJPX/NvaO0okyaJmxlQ2BuQ0FVSOKo
-         HR1trb9BmOyXHqcfxSRrkK1GWGMaEJL1GHzq2ulH8GGhwr9Y3q9xeVJEMBxapzLEZek+
-         5kFoWP/GA7mTPamOJp3V6WXHShVr8/0kZCPFmZXjYZxmkauGanfJhArnollfQU2agw5n
-         0YiFfnf8kvm20tJ/Q0wLf4uoC57KSflVl9LUWe31iJmIjoSkePpxE/U3DG0HLkF2xix8
-         yoig==
-X-Forwarded-Encrypted: i=1; AJvYcCUjJj8qvxHJ4BrtItkX2Ryiiwk+SG2GUHKp2Fy2t9t9lt0dd92LJd7y+DiP2edGe68ms1Dz2iN1fvgZjVcc@vger.kernel.org, AJvYcCVUvJRQ28FOTeL8wLwpq7DB3w8rgLBUNEYsmhbPhPFgSHwUUDs+R0GKec7NNQKbCnEqCFL+wmluRgv+HSsG@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZqKEiei4wavD41GEZ/J8OqBV7XqI9wvYjTlkFpyK6Z0XCpMWS
-	QH7LYmRrJPLMyshek4f8wkH9XHYHK7ySS0rIQEW4egFMd2l69vDF
-X-Gm-Gg: ASbGnctWwVhMNOT0recMz+oKKEan5OTsNT3LOrJGeFZmMEuqSdzW0amfYSzEfynXxAq
-	lMiVRD0A/5sIs5QrGLvKXUe49YWzSqYdBqKFzBWAaj29zulpa5Hs0i9wh8fuqkN568xH2BAWhcP
-	K3T34Sc+EtWLJj/GfkdALaiSX3oI32l8tv5KyDvqIu7r87r69BR/VgpLE41Ld1KfPHOQxsDviRT
-	XzX2ctxTT/95MFkbOe/NpcRmlfVV4jHllfiZILi0Ml3iNzxIIOey5l2dIYQIQz7A85rGwTiTrVR
-	SwdEvWsQ1poX1xQgI4QIdCyxiH5zyCge4TGAJBTn8XYNSw+akRJUtt/c7K3M41Nu/jeDYsyJyfj
-	ugE2cTzxHwOcFSVjW8aA=
-X-Google-Smtp-Source: AGHT+IFOMy8+oTohkcWuHiW4WgtVgQ/iqyS7y8TuEZyHPSXdEIIYmiy16h8Qp/B345NHcEo1TSCqRg==
-X-Received: by 2002:a05:6a00:e09:b0:737:6e1f:29da with SMTP id d2e1a72fcca58-7376e1f2ae7mr4929307b3a.21.1742396088919;
-        Wed, 19 Mar 2025 07:54:48 -0700 (PDT)
+        bh=aYQYwB4Q+56fcPRL5nHTiaN7xyPn+dVSiWbH+JLh+2I=;
+        b=EbFwMh+2SShvacEu/bC4BX0XH1pRmaAuSa51xJAIR1lEntBchrKEpdUeVDEI6AuSc6
+         OWHEPmYf1cCpEkHF0HU3oITOageUwloAWi819ysWD1qUw25V7Q2D56uaZiYVzHMXeCLC
+         VcjI+OjVsVoipVaO2iXzO1HQ86T6TRU8xnikxBg5Be4tQIN0uxzvjZsORoFYHsCTzCac
+         +XZRT+2RI72jrAmTi9eJWgjs4iwVbTFxrqbGzq+hlApjVp9pO3pYdTs3Z8Fn7iiK6DTm
+         ymqjAGu5MI0p/N94uFk5N2nslpO0VFsIJ5iiTfRwFaNx8QTnWqL+AO6yXu3YWVbtjRw5
+         J2aQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU9vr6yhIXdBv8lXKO8eL5FWnY8ixhppULi9zEV7ywBB6xrrWWz5tAFkiQNcLpE3Yxxef7Jx3ZeUDRPzXvz@vger.kernel.org, AJvYcCVc8tkibrg6eIpjAGzrZqBmDSmhy7He2sbzF3o/nW0jabiQawSgd46I5t4FJID2ninO1m8gYWecfu1LOA4l@vger.kernel.org
+X-Gm-Message-State: AOJu0YzvQWfWvjRa8rwcP0yYM0WC1mAP78v8k4EYoDXi5j9k5HDsyCYH
+	XfpKm07QQtUqfWVSstrZyPngIZrasz8rYlU5hZaEwWgW4An2vzbe
+X-Gm-Gg: ASbGncv/MrpQX8eCHr+47WcnGsBzrZi2gegn4jHng4QPLvt0vani8xozBUvqW948PIE
+	Nii9Mn2fZuPyszfXqZU17LInBGxNWiADCH+33cq/6CFyjj5UtJUWBVrHwh74iJoP1Fp3jE3UMpV
+	92dsGT5W2t75tfdsxswqqwClaPwbEyLHyj6SrCSdBoQ0wBr4fQfEh3KNBR+w6zrrI83nZYbb/8B
+	b6AwmYRT/RCYFon+PeVde0cuDr85onRimFmNVhdFCrmXQQFxonrXV1Nwb+xiibSFfpXKGXSvhy9
+	538XCRqLNzVrywMlt/6lm2TJ48BAUS/6SOr7JS4j94OGgcLqq7xcJ9roL1q7qGa/4qAnilv+HVl
+	wEFjggu/SmkTYmxKNHlg=
+X-Google-Smtp-Source: AGHT+IE+lJUACMy/jDtMWHtB7qfzX6V/KZu/qqIx8l4Z/A67DfiqQ7vwjT+eCEkpsRZkdL/7NBCcXQ==
+X-Received: by 2002:a17:902:ea07:b0:224:e2a:9ff5 with SMTP id d9443c01a7336-22649800955mr49641495ad.9.1742396091394;
+        Wed, 19 Mar 2025 07:54:51 -0700 (PDT)
 Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371167df97sm11699520b3a.114.2025.03.19.07.54.47
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf63589dsm1681568a91.41.2025.03.19.07.54.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 07:54:47 -0700 (PDT)
+        Wed, 19 Mar 2025 07:54:50 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: freedreno@lists.freedesktop.org,
@@ -69,9 +69,9 @@ Cc: freedreno@lists.freedesktop.org,
 	David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 01/34] drm/gpuvm: Don't require obj lock in destructor path
-Date: Wed, 19 Mar 2025 07:52:13 -0700
-Message-ID: <20250319145425.51935-2-robdclark@gmail.com>
+Subject: [PATCH v2 02/34] drm/gpuvm: Remove bogus lock assert
+Date: Wed, 19 Mar 2025 07:52:14 -0700
+Message-ID: <20250319145425.51935-3-robdclark@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250319145425.51935-1-robdclark@gmail.com>
 References: <20250319145425.51935-1-robdclark@gmail.com>
@@ -85,39 +85,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-See commit a414fe3a2129 ("drm/msm/gem: Drop obj lock in
-msm_gem_free_object()") for justification.
+If the driver is using an external mutex to synchronize vm access, it
+doesn't need to hold vm->r_obj->resv.  And if the driver is already
+holding obj->resv, then needing to pointlessly grab vm->r_obj->resv will
+be seen by lockdep as nested locking.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/drm_gpuvm.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/drm_gpuvm.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
 diff --git a/drivers/gpu/drm/drm_gpuvm.c b/drivers/gpu/drm/drm_gpuvm.c
-index f9eb56f24bef..1e89a98caad4 100644
+index 1e89a98caad4..c9bf18119a86 100644
 --- a/drivers/gpu/drm/drm_gpuvm.c
 +++ b/drivers/gpu/drm/drm_gpuvm.c
-@@ -1511,7 +1511,9 @@ drm_gpuvm_bo_destroy(struct kref *kref)
+@@ -1505,9 +1505,6 @@ drm_gpuvm_bo_destroy(struct kref *kref)
+ 	struct drm_gem_object *obj = vm_bo->obj;
+ 	bool lock = !drm_gpuvm_resv_protected(gpuvm);
+ 
+-	if (!lock)
+-		drm_gpuvm_resv_assert_held(gpuvm);
+-
  	drm_gpuvm_bo_list_del(vm_bo, extobj, lock);
  	drm_gpuvm_bo_list_del(vm_bo, evict, lock);
  
--	drm_gem_gpuva_assert_lock_held(obj);
-+	if (kref_read(&obj->refcount) > 0)
-+		drm_gem_gpuva_assert_lock_held(obj);
-+
- 	list_del(&vm_bo->list.entry.gem);
- 
- 	if (ops && ops->vm_bo_free)
-@@ -1871,7 +1873,8 @@ drm_gpuva_unlink(struct drm_gpuva *va)
- 	if (unlikely(!obj))
- 		return;
- 
--	drm_gem_gpuva_assert_lock_held(obj);
-+	if (kref_read(&obj->refcount) > 0)
-+		drm_gem_gpuva_assert_lock_held(obj);
- 	list_del_init(&va->gem.entry);
- 
- 	va->vm_bo = NULL;
 -- 
 2.48.1
 
