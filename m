@@ -1,502 +1,1234 @@
-Received: from mx0b-00549402.pphosted.com (mx0b-00549402.pphosted.com [205.220.178.134])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A29190470;
-	Wed, 19 Mar 2025 21:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.134
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742418915; cv=fail; b=EPuWQ4M/lzgxudkxcWSXIStMQ2hVh0lEZWLrUHlrCd501WVB+9LuFiOSKPGih82tVaSuOMxgaIFQJ7MiMDJSNP5fNADAmAxvC6kGrkJDRQ93KB9heH1kPo2ENnbwTHXmeTKEYKSmHtdTK52IxkngDaWVW5N/wBaMh26jE0AJWZ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742418915; c=relaxed/simple;
-	bh=Xyiwo+TK/bN7Y1NUDTofYFedLNfC6oHj/kPbH0P+ePY=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=qPgLLvhoYtpai31MuXC3T5gQRlcBdoR7mmIngTxTtconhZINGZ6AOp2guAO6ss5Oa5q+w3z6fJnJTRPRw8MZ1ZcWS8V4pow/wjBvN4vCEJNLyhCEfOMoRFaRjHzwa3Mq2F5hW7dSaViAiIvYslHMcQqOo6tSH5UMyvjs3oWo4Wg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tdk.com; spf=pass smtp.mailfrom=tdk.com; dkim=pass (2048-bit key) header.d=tdk.com header.i=@tdk.com header.b=eW+jD81P; arc=fail smtp.client-ip=205.220.178.134
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tdk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tdk.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DE8019259E;
+	Wed, 19 Mar 2025 21:16:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742419001; cv=none; b=qYL7AGDo64Sw3CxMtdRdwe8Y7oNI/Jyc0mRb14KpqyHD510MrksDbgBSB5deXjj4fXPBjqfqiW9NjpANeB8HgQD8365X5dBZvJQwEYIVNyFMPTPUZYLsg4TksuGQpU1DZ7CBD61q/lzC1me4FP2M5cE6R/EdOlJ/8J4bKJTiKus=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742419001; c=relaxed/simple;
+	bh=/wYQoh2+RlTKQ+nE71rnt2iImBML87PywcEH1PXLGgc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=l60dkEVrQ022iB9DvZKOlpIuLgb9acfm3qXk6j0wc00Ve7Jq8p0XmObbYk8LugSP/uY1Gn0ZTBhamUkagdHJFxJ30b8Dx1SdNKXV04XEHnzXk79CKz/DNGHGeKN5wtq93RoSPhHlHBuX8Fq4guMlXsxvmdAP9wVfKm6xdlymdZo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OflW2n7Y; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tdk.com header.i=@tdk.com header.b="eW+jD81P"
-Received: from pps.filterd (m0233779.ppops.net [127.0.0.1])
-	by mx0b-00549402.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JKuJXS014218;
-	Wed, 19 Mar 2025 21:06:49 GMT
-Received: from fr4p281cu032.outbound.protection.outlook.com (mail-germanywestcentralazlp17012054.outbound.protection.outlook.com [40.93.78.54])
-	by mx0b-00549402.pphosted.com (PPS) with ESMTPS id 45d2wkktd4-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 21:06:48 +0000 (GMT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Dj40pD67iK3QgN95y8xDvwgD7F1Y/4yuITr1QPc0lnjKqS7WOOdFNoouEzgWUhWiBhHlo9/fBuxUkFgSdO1SqYjJe5g4XhmZVKTwlucpEJbnTS3RY1ESvJZHV8vgPt69TheS4JBVA7vGMzNcAENbCd8OTSrbcngcycWjxnfoSzK3ySqtL1SEtCp/9tLtmAG+jiY7X5eXCRvBYF/myxNqXsPYbmsV1LXlfIhLpFhvXxFKfheHBjsIJiCQDtqfRdR2bbs/oGi5fgPCteJDlKFDgSueDt1AOBda7uryHt7BuyfWZ3s0ikvqKKU25SXbVgwkzaqXDEvYu2I8heEoKZ9KUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=r9XCeriU/Qr5PhuWBB5JKOvwARVAX+uBZiDBqmJg2tI=;
- b=C7BWBNiaRbSac4rQAsb3sGDO/jstiup7uY3zfjgQaJUQVeDjDyGuBNZyy2hbSI/5P4LlRi1xF2/4js7Ak55Lv77Pz06cpGJSzxDkpOBBo/9J6liJvqF8tHR0LzFA3d4nhVFN7NLR4IWoaE3K/iqZFNtfdm2iQUW7sLEM6fxz4607lLsZ2UgJhWR8FtUBBJvYNCIzeerp9u4WaLVegnusYDXmQcGuzUNgnqil69TlW4XREkkZudl2hWEx/0m0R49Sl4586oTPoxR7Mn7vO4wYZDc3Lcu088yGS3QnQEXUJ2efY6nnbwLhAuZnr+1R3yW1VpNx+xL25jauSEhNTCT1gQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=tdk.com; dmarc=pass action=none header.from=tdk.com; dkim=pass
- header.d=tdk.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=tdk.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r9XCeriU/Qr5PhuWBB5JKOvwARVAX+uBZiDBqmJg2tI=;
- b=eW+jD81PxFW896oj0fVQsYtDKYAZ3OFT2HszIJp7X2KzqQAlX0czwkUpyzTvIHiLqID9WsEpZllt6MQmMGhf8dB1P0EZl/BPlGbhiFAAvE2HNY6IeJBMQIykGoML5m8wjLyL5g7q0uP2PiyU3gGdV3f7TQQyVzYWQj3hvcsnA1TpFo3LiknnywU58WzEWH4xvJSq4JiQWQ6jsH02b8arAsMW9asL4VJ7qvBjELGxhHN2VLeUk5l7Ep04/SlLcGwQVBQS2HYKZsODOVEIgQ7rNcMz+9nde3wl9bI0ulr31/dAZ779MY+2x5SL/UeXwQL3shX7uGnvgCWYvV91ReHdPA==
-Received: from FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM (2603:10a6:d10:7c::11)
- by BEZP281MB2549.DEUP281.PROD.OUTLOOK.COM (2603:10a6:b10:2a::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
- 2025 21:06:42 +0000
-Received: from FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM
- ([fe80::53a6:70d:823f:e9ac]) by FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM
- ([fe80::53a6:70d:823f:e9ac%4]) with mapi id 15.20.8534.031; Wed, 19 Mar 2025
- 21:06:41 +0000
-From: Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>
-To: Jonathan Cameron <jic23@kernel.org>
-CC: Jean-Baptiste Maneyrol via B4 Relay
-	<devnull+jean-baptiste.maneyrol.tdk.com@kernel.org>,
-        Lars-Peter Clausen
-	<lars@metafoo.de>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 2/2] iio: imu: inv_icm42600: add wakeup functionality for
- Wake-on-Motion
-Thread-Topic: [PATCH 2/2] iio: imu: inv_icm42600: add wakeup functionality for
- Wake-on-Motion
-Thread-Index: AQHbg9lX2uvVWSTYyEGDMQJusxdmZbNThDYAgBqodzSABnjIAIAGd3Pz
-Date: Wed, 19 Mar 2025 21:06:41 +0000
-Message-ID:
- <FR3P281MB175775CD8CDB29D7ACE8B544CED92@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
-References:
- <20250220-losd-3-inv-icm42600-add-wom-support-v1-0-9b937f986954@tdk.com>
-	<20250220-losd-3-inv-icm42600-add-wom-support-v1-2-9b937f986954@tdk.com>
-	<20250222162224.60059025@jic23-huawei>
-	<FR3P281MB17577B5BAF4C31E0C48F8504CED12@FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM>
- <20250315181758.2aaaf10e@jic23-huawei>
-In-Reply-To: <20250315181758.2aaaf10e@jic23-huawei>
-Accept-Language: en-US, fr-FR
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-msip_labels:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: FR3P281MB1757:EE_|BEZP281MB2549:EE_
-x-ms-office365-filtering-correlation-id: 947ff270-ce05-421c-25cf-08dd6729f284
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|10070799003|1800799024|366016|3613699012|38070700018;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?B6JgDfq5ZyxwRkVFTiuYdxxnFZBLDOemU/DMpS7fnq2WIxrCm/ewZCAmOM?=
- =?iso-8859-1?Q?k2RYLM0Z6zhraMxlTAXCjXrs0XRSKGQBMvoCDbYN+11ftXbdj4+BpWAYsw?=
- =?iso-8859-1?Q?v3D5l0BTztAYbOFscoC3sFuW+xm/ONV+YJ91Cs6hOVe/dip/IcfRO5qZo4?=
- =?iso-8859-1?Q?O5iKorP1Pjr3EHQTYOAoN+ONS+NF5GRyY9DdoVD1MMx9SMtR9+pcDtHLbx?=
- =?iso-8859-1?Q?sIis0i8vb5jQ+6boeweMvhX+rMFa/YT9UBbdMe3/zXNekfEwKz/AL3zXUU?=
- =?iso-8859-1?Q?NPBv8s9Jn3lJiHVAmvi/bkUvVzUPeHzhqtbsjU8HzWCKev+5BoxqFCzc7x?=
- =?iso-8859-1?Q?77EsjNs7FTFsQn6KOjdE5SCOxrQ6Oh/MmbQHDQwRmviP4igfY31oGnNybH?=
- =?iso-8859-1?Q?wnj7CbkaFetOJSw9KJWCev+VnW9iF1irLOe3885ITA7UMjCq4E/8XaZvdT?=
- =?iso-8859-1?Q?uhdYCtPMDc1EOp2VIqKqvhmJH0X5Bwzid9dw6VjzV0ZBYPevLdclboDaOt?=
- =?iso-8859-1?Q?0yyWb1cC0G6hsu6nffEw2LyTsdUslq+71Hq7OL0epBAj4xDRj3cPvp573H?=
- =?iso-8859-1?Q?3gMxNIB97qQ7MVVQkwRyIUAmW79ilOCtLmjJKyFXMgmBfWLJo6g/y8ZTvu?=
- =?iso-8859-1?Q?wHUcVfHJNOiQNZ1252D7iXmS61FEE0Ji+wzlT6cwl9X5W9cysVqHADP0Pe?=
- =?iso-8859-1?Q?BgWqy9Lfh8Jynh/xUxgTJiHsfJnLDfUKV3SY96v9lkOTAt5t1aM2jg/9/N?=
- =?iso-8859-1?Q?dlPtU04FSSsOhHy5waV6gbPb4bMCQmgIBAzO8IzzpeJhhRZb89jdNLjjEi?=
- =?iso-8859-1?Q?hPXTJK4X8wZ5jpRP/2mQumyV5Qz20nGQEZU9poCoIpwHLwra7HwaoedyO5?=
- =?iso-8859-1?Q?K3qTspBeEPJq7gD3nnxpd1Hu6I+tcH0hcX6bnrEp6F/IAzl0iUi6zw9Wm0?=
- =?iso-8859-1?Q?XmJNeS85rzkEII1F5+eaJqbiMGrVbf+kKJJRQo/iDDNbT1Xi2Uq3xnmIzS?=
- =?iso-8859-1?Q?utMog0M/vh+cOWmiaArtLcyu+/SllKHcHQVajCx4bBO59rTzv44epeH/Ph?=
- =?iso-8859-1?Q?4R73XdNn7O/N34Z59c09GyqlLgQJCiArbNSllcCejBhqo1r/DU+iOBajK4?=
- =?iso-8859-1?Q?oEcKfT/w5Aq+0Cd03+3MOru77yH84hLmTYYVRjjucpLYOlQ4HtwBonuOd8?=
- =?iso-8859-1?Q?nFg1rSXAgKwOnYis5TtVtIvmaxk/N7WvxOdsfS+Mcl0ly0e+zq21bPAR/N?=
- =?iso-8859-1?Q?NonRmbCuiVEbeeZ4l+OjvXVaAGMnINZInpEZJWW9nlB2B3YGNPgzVzw6zW?=
- =?iso-8859-1?Q?bFAICq1ne+C0vLf/+/s4i2kgqFvGgIxenGKgLtcEv93CdVp+eL2aVIodX3?=
- =?iso-8859-1?Q?vNE33c2ASXKVKxCqP75s6o4WDyGDeXACW/mraPN4ecI3hU4vMytoFeV81d?=
- =?iso-8859-1?Q?hAAOoSjD8MVacDoIZgmqar1VAKtEOIFLGvsqJx2YRjIn8wJxFdbHISp3tw?=
- =?iso-8859-1?Q?uwWwUyGu08E12fuE+g4k5ZvdU5bvFgCSBt1t3sCl/RO4bPU8WzQHXV8aNr?=
- =?iso-8859-1?Q?7J2BxHEsJf/e3Va7dynydrz1O7vf?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(10070799003)(1800799024)(366016)(3613699012)(38070700018);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?F3O19YnfntsxmZ0qsxBvRououiKn3ZetUVeXrmv8j9GoNcknb/HLAUxiAH?=
- =?iso-8859-1?Q?QT7UcJv0h1ADDmg5IRKnefupLv17uJVJjqrFQCAMTTXN7KX0E23jwb9Rhb?=
- =?iso-8859-1?Q?vHwok2gvjGkQbSXJrlHF9ZeOfuTu2xnN7Ivd808FP7upcrNNcFs1CIqxE2?=
- =?iso-8859-1?Q?s8e4CCEfWuKIFhcsLrXzy4tJdO/fw8H+8g0RAsgYVb9MDfNMKXpwFjBIqt?=
- =?iso-8859-1?Q?oo3qnFzglR+EC4KWcb9WSo5DqnAfgCh61ZHkRmdTRaFAi38b47KsgXgSlL?=
- =?iso-8859-1?Q?W7bKRaTnZ6DszlkH83rH/XeYHLOSgGg+Sbmg02h17MnhPXL/v0hb0Ct14E?=
- =?iso-8859-1?Q?b5HaSy8S+O01Khmo/Ea8OrbqXLKA443FbkBb9UqCYMiCyjvYf6ZfKtx2y2?=
- =?iso-8859-1?Q?LQjw682IgTXzDXLs6T4mudD+WBq+G9kBo5AWr3hKyBLU1D7gQBf2uBOiKu?=
- =?iso-8859-1?Q?zQLbBM47+emRt3dTprXmss+F6xsARZBrksJFAN1d/6voCU+6GhaT104ZQN?=
- =?iso-8859-1?Q?20vkpf4zTNXQa8Oa9yIszkfRYCYqY9oWRFhb/GVzaZipo7+xf+Z6ojhsJF?=
- =?iso-8859-1?Q?iE6oIWeGru0hCuIJae+WjNPuGCZJtqlxHjalRvnMR/QmJyWMyNnGyMPSv7?=
- =?iso-8859-1?Q?TgILUkUr8nJdInN423cv7/9SAsIFrVigpq5fzUQ3kc7YrlS8YFvBYZhxFO?=
- =?iso-8859-1?Q?FB/eMPXeYObhZ/jhvp1S9OhkvpNKAH6QScmm7A52SltTPd9/UjU7ulmHvK?=
- =?iso-8859-1?Q?hkHZdWxe0lMy9qJ7jtEMHpMR+6Fn2tejmE8Toch1I+pyYzgTDKaXOqu+Tz?=
- =?iso-8859-1?Q?16finsZQIcUd0fiK/ONFeh5mnmX6mlGDjJYVwSgyPwPy0UX5Cyjs3qoK89?=
- =?iso-8859-1?Q?Qr9gMgo6pF0oDlQbwtGn8jdUu2NAIabvGWM3QbizYu11XM2FVWba7DMBHx?=
- =?iso-8859-1?Q?NJ+dOeWj3lo3wQyAQKsgXIt/fxq8OAAoSuAuxbyZOsMPogUDOwFkV7p7r3?=
- =?iso-8859-1?Q?13xwP4Y0rH3uqVZHinVHV9gQVLLplUetm8afBuRWSNtxyw1eYcyI2aINNS?=
- =?iso-8859-1?Q?okwQiEiAWe8L4wj98wHwRconWC6tS3VKOMS3UXmno12ZBxPtSYbQE3+3KX?=
- =?iso-8859-1?Q?rGFCmwqg2/sdmOQr56EH2UN8g5++XqTw0stbFgTIGAFQua5l2cezcR0x1E?=
- =?iso-8859-1?Q?DoH5H4ONCie32oAl7vKpUwIPi0AVdNrNNPSLxrPqgG+KMK5Whu+yFBpljj?=
- =?iso-8859-1?Q?XgYM1/rDnETjx1uH3MHgGs2kUsDOeybYA2hKJeBaxAcvBzx8jJSs2B8vqc?=
- =?iso-8859-1?Q?0rujBD6myIeD3t+ban+KasyuM6fhebR9KxmSGpVBSCBl8NKfpaHlHZtK+W?=
- =?iso-8859-1?Q?jClvTZjOsh0jv/34B8hhXsyGlYPEyRwLnj1BtcBxTtFbEPU0ueQ5rA2w6n?=
- =?iso-8859-1?Q?VzNy+60reg+N9vZiW/He3TtoIPpxKD6k7CS4PZeFecs2KZA/jj16rXChdd?=
- =?iso-8859-1?Q?PY/3i7tyiwjBoxlIdAIRN4R+/93Q/gMngPT+qvP3swY4PZngjlf5u259o8?=
- =?iso-8859-1?Q?0BOqNMUjt0vrzEZw62hiF+KyY5U38C6OlapeIiVLwOnxQ9+pOkoRgoYoXa?=
- =?iso-8859-1?Q?MrSei0ZXaeh3OmIpFLBdW6YbCh6PtVyrEamXBNZ3sLz8F72+X7jhRRFCPA?=
- =?iso-8859-1?Q?1qJFSf0j6KdUi7HodaPaWV1hgNrJ9SIfZiXzOFbKMhT5/K91RrWG3z90ei?=
- =?iso-8859-1?Q?2+dQ=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OflW2n7Y"
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-30bf8632052so1610661fa.0;
+        Wed, 19 Mar 2025 14:16:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742418996; x=1743023796; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PdSdoX2FSgwC0BdaVZ20RyC/ANH2LWuta0c+41uug0w=;
+        b=OflW2n7YCbBjnGQp6xV+9q8lAavF7jQaSsj8VQzL37yuWThreX+8G02WVBNN2lxqHf
+         nupexIvRi92zet77p/Tt1fgMOoLZFAsE5ijSrVKipKj0e950ovzui2QSqoKsrzNNlg8r
+         vJb+gUPPaGGUN9DYM57QNw4F+niuC3Ai4BQl27uvzvi9JmX70ZoD5Uo5uU4iMqhC08et
+         1DCzIdi6NvJ29PsHM0wBfFHcfRSmHf02b/QKkxUIbTE3fg9rOhmD5ZwjmC+deUDx+tPf
+         g/swkNfxyPSHPK92YMx7HuBiqphLZcZamJ9RsOOXdDxgW3XSVH8sndny2qmAuvWv7FrH
+         TT5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742418996; x=1743023796;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PdSdoX2FSgwC0BdaVZ20RyC/ANH2LWuta0c+41uug0w=;
+        b=YHxFH+KiHIHZ1B7q7GTxjYDWVPs3Zsv0v1kIUSpQ8AoFVw1n+Cb9R8c9SUAdVy/NVe
+         fr+ILDNEWgHONSoZ0bKugupULPrwBzyWaAh7hsO+ibxbg50C7unPglW47XAY2m6YjTym
+         7DPXqBrlHSeka7elzKZN7EYAhwAsUw37UkaUXJd/VpXIc53XzvV5/PsstN9XKz9I5txt
+         H3CBBWvyBYUMYSQTqBvI3LWV3ZaMs/yPt7SExgYUlKudY2rcibDHTmgPE86vzFbiu89j
+         fcuhDMCx+F5sQDL4M7ihxpYVaA03AdwcfoKmBi+h5Gn3tC+YjhpvJxQhGHL8ncd1Qg/3
+         kykw==
+X-Forwarded-Encrypted: i=1; AJvYcCWMaaykNcvNCHVOjb6GNQBUdTz06YjOqOiBlZzh3+4Wg6FCRkPJwAomd+uQ2OcCbVTq8BIFaY2qtT707lxe@vger.kernel.org, AJvYcCWOkMm6Eul7qPFgBDDCB4W81Xk2iJYzXbZ/yM2n1GtY1C/Fd6c6FT7TarJhFITPMF/Myc1wqhD6SFihq1rW4gk=@vger.kernel.org, AJvYcCX8aJlJDbmIVadZUkbvCMFfInICdfTU5+3FlhqvUEuhaq33d/VOI2KJNn1/Nm7ztgtAiwow9AtzZI7vlBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlziAOBPKoCegVYEWTBr8Jo3Xm7P5C+TQCClRR1yfTEG5dYIzC
+	iJu6GdcGkbjRgf0woJXxm+LHcjv1N92yNFqZbvm4S5e9I+2O8Z62vGhBDOleRJfFholjxmVCHZ7
+	KKDi9vi6MGy+rG63UAIidxv6ZRwo=
+X-Gm-Gg: ASbGncvvsPeItMD4ChkV56Q9ZVMZBAcIdLpQ46z733AU/sU9Yse9QQROU2CMzeZLmTT
+	5yj/8Ii/QEnX5GNuzoKkQPl94KeoUOvd4hOPpotH50hogiqg1yVoESwdUDZXweqAtBjywpnP0iz
+	0Vr1vjXsfjD0wEf2VjFyYYGChUJknyBOYhEVy1307Glw==
+X-Google-Smtp-Source: AGHT+IHmOJCmqLWz4nlDJvCD94HIf803k+9JufoXFmZ11jBWHL1Wc4Jiq0ZzcTsM6jJp4eKLlsL5seRD1vqxHWniiMA=
+X-Received: by 2002:a2e:bc0e:0:b0:30b:b184:a904 with SMTP id
+ 38308e7fff4ca-30d72a5da8dmr3885721fa.4.1742418995061; Wed, 19 Mar 2025
+ 14:16:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: tdk.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: FR3P281MB1757.DEUP281.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-Network-Message-Id: 947ff270-ce05-421c-25cf-08dd6729f284
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2025 21:06:41.6384
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 7e452255-946f-4f17-800a-a0fb6835dc6c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tcO7HS7fcfaS2A0pfzau/zdUdjw8D++Jx9d/txOm2X9hnryhlKRbecYRq1AMCIV5YMzoEQ51QuRPFvfP5caNjMGP7vHrOLqCSgfuoPDvnbw=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BEZP281MB2549
-X-Proofpoint-GUID: 9aJV-UTQUpIKZFnT32k_VxBkbRks40US
-X-Proofpoint-ORIG-GUID: 9aJV-UTQUpIKZFnT32k_VxBkbRks40US
-X-Authority-Analysis: v=2.4 cv=KJ9aDEFo c=1 sm=1 tr=0 ts=67db31e8 cx=c_pps a=w5n1bf+9uxWZZxVc/eFLww==:117 a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=Vs1iUdzkB0EA:10 a=H5OGdu5hBBwA:10 a=Uwzcpa5oeQwA:10 a=VwQbUJbxAAAA:8 a=In8RU02eAAAA:8 a=YvLPLKCeur-NU4o4lZ8A:9 a=wPNLvfGTeEIA:10 a=EFfWL0t1EGez1ldKSZgj:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_07,2025-03-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 spamscore=0
- lowpriorityscore=0 bulkscore=0 phishscore=0 clxscore=1015 adultscore=0
- priorityscore=1501 impostorscore=0 mlxscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503190141
+References: <20250319205141.3528424-1-gary@garyguo.net> <20250319205141.3528424-3-gary@garyguo.net>
+In-Reply-To: <20250319205141.3528424-3-gary@garyguo.net>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Wed, 19 Mar 2025 17:15:58 -0400
+X-Gm-Features: AQ5f1JqW2wqYsnjXYr4WjcrGyRKEztIYdwA6AkLvRhgU6bSmNAdCSASH35hDKiw
+Message-ID: <CAJ-ks9mF5YtfNEULY2Y_D0AzMW1Wi6WMFrrWd+sMnY2-0js1pg@mail.gmail.com>
+Subject: Re: [PATCH v3 2/2] kbuild: rust: provide an option to inline C
+ helpers into Rust
+To: Gary Guo <gary@garyguo.net>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Nathan Chancellor <nathan@kernel.org>, 
+	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>, Bill Wendling <morbo@google.com>, 
+	Justin Stitt <justinstitt@google.com>, Masahiro Yamada <masahiroy@kernel.org>, 
+	Nicolas Schier <nicolas@fjasle.eu>, Andrew Morton <akpm@linux-foundation.org>, 
+	Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>, 
+	Waiman Long <longman@redhat.com>, Christian Brauner <brauner@kernel.org>, 
+	Wedson Almeida Filho <wedsonaf@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	Dirk Behme <dirk.behme@de.bosch.com>, Daniel Xu <dxu@dxuuu.xyz>, 
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>, FUJITA Tomonori <fujita.tomonori@gmail.com>, 
+	"Rob Herring (Arm)" <robh@kernel.org>, Matt Gilbride <mattgilbride@google.com>, 
+	Paul Moore <paul@paul-moore.com>, Kees Cook <kees@kernel.org>, rust-for-linux@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-kbuild@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Jonathan,=0A=
-=0A=
-I understand the issue, but using spi->irq for getting interrupt is somethi=
-ng we are already doing inside the driver. I agree we need to fix that, but=
- I would prefer fixing it after adding WoM support.=0A=
-=0A=
-Is that OK for you? Or do I need to fix getting the right interrupt first?=
-=0A=
-=0A=
-Thanks,=0A=
-JB=0A=
-=0A=
-________________________________________=0A=
-From:=A0Jonathan Cameron <jic23@kernel.org>=0A=
-Sent:=A0Saturday, March 15, 2025 19:17=0A=
-To:=A0Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>=0A=
-Cc:=A0Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.t=
-dk.com@kernel.org>; Lars-Peter Clausen <lars@metafoo.de>; linux-iio@vger.ke=
-rnel.org <linux-iio@vger.kernel.org>; linux-kernel@vger.kernel.org <linux-k=
-ernel@vger.kernel.org>=0A=
-Subject:=A0Re: [PATCH 2/2] iio: imu: inv_icm42600: add wakeup functionality=
- for Wake-on-Motion=0A=
-=A0=0A=
-This Message Is From an External Sender=0A=
-This message came from outside your organization.=0A=
-=A0=0A=
-On Tue, 11 Mar 2025 15:31:44 +0000=0A=
-Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com> wrote:=0A=
-=0A=
-> Hello Jonathan,=0A=
-> =0A=
-> still sorry for not being able to reply in-line.=0A=
-> =0A=
-> No problem for all changes, except handling the 2 interrupt lines. Curren=
-tly our driver only supports INT1 and cannot work with INT2, and this is no=
-t related to Wake-on-Motion feature. This is something we could add in anot=
-her series, and I prefer to have a dedicated series for that.=0A=
-=0A=
-You should check it isn't INT2 that you are getting via spi->irq etc.=0A=
-Absolutely fine to reject that in the driver but you need to be=0A=
-sure you have what you think you do and the spi->irq etc don't=0A=
-provide that surety - they just give you the first one in the=0A=
-dt-binding.=0A=
-=0A=
-Jonathan=0A=
-=0A=
-=0A=
-> =0A=
-> For the mutex rework, I will delete them. This is something we can also d=
-o in another dedicated patch not inside this series.=0A=
-> =0A=
-> Is that OK for you?=0A=
-> =0A=
-> Thanks,=0A=
-> JB=0A=
-> =0A=
-> ________________________________________=0A=
-> From:=A0Jonathan Cameron <jic23@kernel.org>=0A=
-> Sent:=A0Saturday, February 22, 2025 17:22=0A=
-> To:=A0Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol=
-.tdk.com@kernel.org>=0A=
-> Cc:=A0Jean-Baptiste Maneyrol <Jean-Baptiste.Maneyrol@tdk.com>; Lars-Peter=
- Clausen <lars@metafoo.de>; linux-iio@vger.kernel.org <linux-iio@vger.kerne=
-l.org>; linux-kernel@vger.kernel.org <linux-kernel@vger.kernel.org>=0A=
-> Subject:=A0Re: [PATCH 2/2] iio: imu: inv_icm42600: add wakeup functionali=
-ty for Wake-on-Motion=0A=
-> =A0=0A=
-> This Message Is From an External Sender=0A=
-> This message came from outside your organization.=0A=
-> =A0=0A=
-> On Thu, 20 Feb 2025 21:52:07 +0100=0A=
-> Jean-Baptiste Maneyrol via B4 Relay <devnull+jean-baptiste.maneyrol.tdk.c=
-om@kernel.org> wrote:=0A=
-> =0A=
-> > From: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com>=0A=
-> > =0A=
-> > When Wake-on-Motion is on, enable system wakeup and keep chip on for=0A=
-> > waking up system with interrupt.=0A=
-> > =0A=
-> > Signed-off-by: Jean-Baptiste Maneyrol <jean-baptiste.maneyrol@tdk.com> =
-=A0=0A=
-> Hi Jean-Baptiste,=0A=
-> =0A=
-> A few comments inline.=0A=
-> =0A=
-> > ---=0A=
-> > =A0drivers/iio/imu/inv_icm42600/inv_icm42600.h =A0 =A0 =A0 | =A02 +=0A=
-> > =A0drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c | =A03 +=0A=
-> > =A0drivers/iio/imu/inv_icm42600/inv_icm42600_core.c =A0| 89 +++++++++++=
-++++--------=0A=
-> > =A03 files changed, 63 insertions(+), 31 deletions(-)=0A=
-> > =0A=
-> > diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600.h b/drivers/iio/=
-imu/inv_icm42600/inv_icm42600.h=0A=
-> > index 8dfbeaf1c768d7d25cb58ecf9804446f3cbbd465..baf1dcd714800e84ccd21dc=
-1d1e486849c77a9ae 100644=0A=
-> > --- a/drivers/iio/imu/inv_icm42600/inv_icm42600.h=0A=
-> > +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600.h=0A=
-> > @@ -151,6 +151,7 @@ struct inv_icm42600_apex {=0A=
-> > =A0 * =A0@map:		regmap pointer.=0A=
-> > =A0 * =A0@vdd_supply:	VDD voltage regulator for the chip.=0A=
-> > =A0 * =A0@vddio_supply:	I/O voltage regulator for the chip.=0A=
-> > + * =A0@irq:		chip irq. =A0=0A=
-> =0A=
-> Maybe say a little on what the variable is used for. It's not otherwise=
-=0A=
-> obvious why we need it. =A0Also, does this chip really only have one irq =
-line?=0A=
-> Looks like there are two. So the drivers should be fixed to cope with the=
-=0A=
-> only one wired being irq2 =A0unless I've found the wrong datasheet which =
-is=0A=
-> certainly possible.=0A=
-> =0A=
-> =0A=
-> > =A0 * =A0@orientation:	sensor chip orientation relative to main hardwar=
-e.=0A=
-> > =A0 * =A0@conf:		chip sensors configurations.=0A=
-> > =A0 * =A0@suspended:		suspended sensors configuration.=0A=
-> > @@ -168,6 +169,7 @@ struct inv_icm42600_state {=0A=
-> > =A0	struct regmap *map;=0A=
-> > =A0	struct regulator *vdd_supply;=0A=
-> > =A0	struct regulator *vddio_supply;=0A=
-> > +	int irq;=0A=
-> > =A0	struct iio_mount_matrix orientation;=0A=
-> > =A0	struct inv_icm42600_conf conf;=0A=
-> > =A0	struct inv_icm42600_suspended suspended;=0A=
-> > diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c b/driver=
-s/iio/imu/inv_icm42600/inv_icm42600_accel.c=0A=
-> > index 8ce2276b3edc61cc1ea26810198dd0057054ec48..4240e8c576f4d07af5434e9=
-a91dfda532f87ffb9 100644=0A=
-> > --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c=0A=
-> > +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_accel.c=0A=
-> > @@ -1149,6 +1149,9 @@ struct iio_dev *inv_icm42600_accel_init(struct in=
-v_icm42600_state *st)=0A=
-> > =A0	if (ret)=0A=
-> > =A0		return ERR_PTR(ret);=0A=
-> > =A0=0A=
-> > +	/* accel events are wakeup capable */=0A=
-> > +	device_set_wakeup_capable(&indio_dev->dev, true);=0A=
-> > +=0A=
-> > =A0	return indio_dev;=0A=
-> > =A0}=0A=
-> > =A0=0A=
-> > diff --git a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c b/drivers=
-/iio/imu/inv_icm42600/inv_icm42600_core.c=0A=
-> > index c0fd2770d66f02d1965fa07f819fd2db9a1d6bd2..f94bda5dc094d6cc85e3fac=
-bd480b830bfbaa3f9 100644=0A=
-> > --- a/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c=0A=
-> > +++ b/drivers/iio/imu/inv_icm42600/inv_icm42600_core.c=0A=
-> > @@ -751,6 +751,7 @@ int inv_icm42600_core_probe(struct regmap *regmap, =
-int chip, int irq,=0A=
-> > =A0	mutex_init(&st->lock);=0A=
-> > =A0	st->chip =3D chip;=0A=
-> > =A0	st->map =3D regmap;=0A=
-> > +	st->irq =3D irq;=0A=
-> > =A0=0A=
-> > =A0	ret =3D iio_read_mount_matrix(dev, &st->orientation);=0A=
-> > =A0	if (ret) {=0A=
-> > @@ -829,44 +830,56 @@ EXPORT_SYMBOL_NS_GPL(inv_icm42600_core_probe, "II=
-O_ICM42600");=0A=
-> > =A0static int inv_icm42600_suspend(struct device *dev)=0A=
-> > =A0{=0A=
-> > =A0	struct inv_icm42600_state *st =3D dev_get_drvdata(dev);=0A=
-> > +	struct device *accel_dev;=0A=
-> > +	bool wakeup;=0A=
-> > +	int accel_conf;=0A=
-> > =A0	int ret;=0A=
-> > =A0=0A=
-> > -	mutex_lock(&st->lock);=0A=
-> > +	guard(mutex)(&st->lock); =A0=0A=
-> =0A=
-> As below. Pull these guard changes out as a precursor patch. That will ma=
-ke=0A=
-> it easier to spot the real changes here.=0A=
-> =0A=
-> > =A0=0A=
-> > =A0	st->suspended.gyro =3D st->conf.gyro.mode;=0A=
-> > =A0	st->suspended.accel =3D st->conf.accel.mode;=0A=
-> > =A0	st->suspended.temp =3D st->conf.temp_en;=0A=
-> > -	if (pm_runtime_suspended(dev)) {=0A=
-> > -		ret =3D 0;=0A=
-> > -		goto out_unlock;=0A=
-> > -	}=0A=
-> > +	if (pm_runtime_suspended(dev))=0A=
-> > +		return 0;=0A=
-> > =A0=0A=
-> > =A0	/* disable FIFO data streaming */=0A=
-> > =A0	if (st->fifo.on) {=0A=
-> > =A0		ret =3D regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFIG,=0A=
-> > =A0				 =A0 INV_ICM42600_FIFO_CONFIG_BYPASS);=0A=
-> > =A0		if (ret)=0A=
-> > -			goto out_unlock;=0A=
-> > +			return ret;=0A=
-> > =A0	}=0A=
-> > =A0=0A=
-> > -	/* disable APEX features */=0A=
-> > -	if (st->apex.wom.enable) {=0A=
-> > -		ret =3D inv_icm42600_set_wom(st, false);=0A=
-> > -		if (ret)=0A=
-> > -			goto out_unlock;=0A=
-> > +	/* keep chip on and wake-up capable if APEX and wakeup on */=0A=
-> > +	accel_dev =3D &st->indio_accel->dev;=0A=
-> > +	wakeup =3D (st->apex.on && device_may_wakeup(accel_dev)) ? true : fal=
-se;=0A=
-> > +=0A=
-> > +	if (!wakeup) {=0A=
-> > +		/* disable APEX features and accel if wakeup disabled */=0A=
-> > +		if (st->apex.wom.enable) {=0A=
-> > +			ret =3D inv_icm42600_set_wom(st, false);=0A=
-> > +			if (ret)=0A=
-> > +				return ret;=0A=
-> > +		}=0A=
-> > +		accel_conf =3D INV_ICM42600_SENSOR_MODE_OFF;=0A=
-> > +	} else {=0A=
-> > +		/* keep accel on and setup irq for wakeup */=0A=
-> > +		accel_conf =3D st->conf.accel.mode;=0A=
-> > +		enable_irq_wake(st->irq);=0A=
-> > +		disable_irq(st->irq);=0A=
-> > =A0	}=0A=
-> > =A0=0A=
-> > =A0	ret =3D inv_icm42600_set_pwr_mgmt0(st, INV_ICM42600_SENSOR_MODE_OFF=
-,=0A=
-> > -					 INV_ICM42600_SENSOR_MODE_OFF, false,=0A=
-> > -					 NULL);=0A=
-> > +					 accel_conf, false, NULL);=0A=
-> > =A0	if (ret)=0A=
-> > -		goto out_unlock;=0A=
-> > +		return ret;=0A=
-> > =A0=0A=
-> > -	regulator_disable(st->vddio_supply);=0A=
-> > +	/* disable vddio regulator if chip is sleeping */=0A=
-> > +	if (!wakeup)=0A=
-> > +		regulator_disable(st->vddio_supply);=0A=
-> > =A0=0A=
-> > -out_unlock:=0A=
-> > -	mutex_unlock(&st->lock);=0A=
-> > -	return ret;=0A=
-> > +	return 0;=0A=
-> > =A0}=0A=
-> > =A0=0A=
-> > =A0/*=0A=
-> > @@ -878,13 +891,25 @@ static int inv_icm42600_resume(struct device *dev=
-)=0A=
-> > =A0	struct inv_icm42600_state *st =3D dev_get_drvdata(dev);=0A=
-> > =A0	struct inv_icm42600_sensor_state *gyro_st =3D iio_priv(st->indio_gy=
-ro);=0A=
-> > =A0	struct inv_icm42600_sensor_state *accel_st =3D iio_priv(st->indio_a=
-ccel);=0A=
-> > +	struct device *accel_dev;=0A=
-> > +	bool wakeup;=0A=
-> > =A0	int ret;=0A=
-> > =A0=0A=
-> > -	mutex_lock(&st->lock);=0A=
-> > +	guard(mutex)(&st->lock); =A0=0A=
-> =0A=
-> Good change. =A0But separate patch as not related to most of what is goin=
-g on here.=0A=
-> =0A=
-> =0A=
-> > =A0=0A=
-> > -	ret =3D inv_icm42600_enable_regulator_vddio(st);=0A=
-> > -	if (ret)=0A=
-> > -		goto out_unlock;=0A=
-> > +	/* check wakeup capability */=0A=
-> > +	accel_dev =3D &st->indio_accel->dev;=0A=
-> > +	wakeup =3D (st->apex.on && device_may_wakeup(accel_dev)) ? true : fal=
-se;=0A=
-> > +=0A=
-> > +	/* restore vddio if cut off or irq state */=0A=
-> > +	if (!wakeup) {=0A=
-> > +		ret =3D inv_icm42600_enable_regulator_vddio(st);=0A=
-> > +		if (ret)=0A=
-> > +			return ret;=0A=
-> > +	} else {=0A=
-> > +		enable_irq(st->irq);=0A=
-> > +		disable_irq_wake(st->irq);=0A=
-> > +	}=0A=
-> > =A0=0A=
-> > =A0	pm_runtime_disable(dev);=0A=
-> > =A0	pm_runtime_set_active(dev);=0A=
-> > @@ -895,13 +920,15 @@ static int inv_icm42600_resume(struct device *dev=
-)=0A=
-> > =A0					 st->suspended.accel,=0A=
-> > =A0					 st->suspended.temp, NULL);=0A=
-> > =A0	if (ret)=0A=
-> > -		goto out_unlock;=0A=
-> > +		return ret;=0A=
-> > =A0=0A=
-> > -	/* restore APEX features */=0A=
-> > -	if (st->apex.wom.enable) {=0A=
-> > -		ret =3D inv_icm42600_set_wom(st, true);=0A=
-> > -		if (ret)=0A=
-> > -			goto out_unlock;=0A=
-> > +	/* restore APEX features if disabled */=0A=
-> > +	if (!wakeup) {=0A=
-> > +		if (st->apex.wom.enable) {=0A=
-> > +			ret =3D inv_icm42600_set_wom(st, true);=0A=
-> > +			if (ret)=0A=
-> > +				return ret;=0A=
-> > +		}=0A=
-> > =A0	}=0A=
-> > =A0=0A=
-> > =A0	/* restore FIFO data streaming */=0A=
-> > @@ -910,11 +937,11 @@ static int inv_icm42600_resume(struct device *dev=
-)=0A=
-> > =A0		inv_sensors_timestamp_reset(&accel_st->ts);=0A=
-> > =A0		ret =3D regmap_write(st->map, INV_ICM42600_REG_FIFO_CONFIG,=0A=
-> > =A0				 =A0 INV_ICM42600_FIFO_CONFIG_STREAM);=0A=
-> > +		if (ret)=0A=
-> > +			return ret;=0A=
-> > =A0	}=0A=
-> > =A0=0A=
-> > -out_unlock:=0A=
-> > -	mutex_unlock(&st->lock);=0A=
-> > -	return ret;=0A=
-> > +	return 0;=0A=
-> > =A0}=0A=
-> > =A0=0A=
-> > =A0/* Runtime suspend will turn off sensors that are enabled by iio dev=
-ices. */=0A=
-> > =A0 =0A=
-> =0A=
-=0A=
+On Wed, Mar 19, 2025 at 4:53=E2=80=AFPM Gary Guo <gary@garyguo.net> wrote:
+>
+> A new Kconfig option, `RUST_INLINE_HELPERS` is added to allow C helpers
+> (which were created to allow Rust to call into inline/macro C functions
+> without having to re-implement the logic in Rust) to be inlined into
+> Rust crates without performing global LTO.
+>
+> If the option is enabled, the following is performed:
+> * For helpers, instead of compiling them to an object file to be linked
+>   into vmlinux, they're compiled to LLVM IR.
+> * The LLVM IR is patched to add `linkonce_odr` linkage. This linkage
+>   means that functions are inlineable (effect of `_odr`), and the
+>   symbols generated will have weak linkage if emitted into object file
+
+either "object files" or "an object file"
+
+>   (important since as later described, we might have multiple copies of
+>   the same symbol) and it will may be discarded if it is not invoked or
+
+the subject of this clause is "the symbols generated", which is
+plural, but here you use "it", which is singular.
+
+"it will may" is also not correct; the word "will" looks misplaced.
+
+>   all invocations are inlined.
+> * The LLVM IR is compiled to bitcode (This is step is not necessary, but
+>   is a performance optimisation to prevent LLVM from always have to
+>   reparse the same IR).
+
+s/have/having/
+
+> * When a Rust crate is compiled, instead of generating an object file, we
+>   ask LLVM bitcode to be generated.
+> * llvm-link is invoked to combine the helper bitcode with the crate
+>   bitcode. This step is similar to LTO, but this is much faster since it
+>   only needs to inline the helpers.
+
+nit: s/but this is much/but is much/
+
+> * clang is invoked to turn the combined bitcode into a final object file.
+>
+> Some caveats with the option:
+> * clang and Rust doesn't have the exact target string. Clang generates
+
+s/doesn't/don't/ (because "clang and Rust" is plural)
+
+>   `+cmov,+cx8,+fxsr` but Rust doesn't enable them (in fact, Rust will
+>   complain if `-Ctarget-feature=3D+cmov,+cx8,+fxsr` is used). x86-64 alwa=
+ys
+
+is the fact that rustc complains a bug?
+
+>   enable these features, so they are in fact the same target string, but
+
+s/enable/enables/
+
+>   LLVM doesn't understand this and so inlining is inhibited. This is bypa=
+ssed
+>   with `--ignore-tti-inline-compatible`.
+> * LLVM doesn't want to inline functions compiled with
+>   `-fno-delete-null-pointer-checks` with code compiled without. So we
+>   remove this flag when compiling helpers. This is okay since this is one=
+ of
+>   the hardening features that does not change the ABI, and we shouldn't h=
+ave
+>   null pointer dereferences in these helpers.
+>
+> The checks can also be bypassed with force inlining (`__always_inline`),
+> but doing so would also bypass inlining cost analysis.
+>
+> Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Tested-by: Andreas Hindborg <a.hindborg@kernel.org>
+> Co-developed-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+> Signed-off-by: Gary Guo <gary@garyguo.net>
+> ---
+>  Makefile                     |  4 +++-
+>  lib/Kconfig.debug            | 14 ++++++++++++
+>  rust/Makefile                | 34 ++++++++++++++++++++++++++----
+>  rust/exports.c               |  5 ++++-
+>  rust/helpers/blk.c           |  5 +++--
+>  rust/helpers/bug.c           |  3 ++-
+>  rust/helpers/build_bug.c     |  3 ++-
+>  rust/helpers/cred.c          |  5 +++--
+>  rust/helpers/device.c        |  6 +++---
+>  rust/helpers/err.c           |  7 +++---
+>  rust/helpers/fs.c            |  3 ++-
+>  rust/helpers/helpers.h       | 13 ++++++++++++
+>  rust/helpers/io.c            | 41 ++++++++++++++++++++----------------
+>  rust/helpers/jump_label.c    |  3 ++-
+>  rust/helpers/kunit.c         |  3 ++-
+>  rust/helpers/mutex.c         | 10 +++++----
+>  rust/helpers/page.c          |  8 ++++---
+>  rust/helpers/pci.c           |  8 ++++---
+>  rust/helpers/pid_namespace.c |  9 +++++---
+>  rust/helpers/platform.c      |  7 ++++--
+>  rust/helpers/rbtree.c        |  6 ++++--
+>  rust/helpers/rcu.c           |  5 +++--
+>  rust/helpers/refcount.c      |  7 +++---
+>  rust/helpers/security.c      |  9 +++++---
+>  rust/helpers/signal.c        |  3 ++-
+>  rust/helpers/slab.c          |  9 ++++----
+>  rust/helpers/spinlock.c      | 14 ++++++------
+>  rust/helpers/task.c          | 23 ++++++++++----------
+>  rust/helpers/uaccess.c       |  9 ++++----
+>  rust/helpers/vmalloc.c       |  5 +++--
+>  rust/helpers/wait.c          |  3 ++-
+>  rust/helpers/workqueue.c     |  9 +++++---
+>  scripts/Makefile.build       |  5 ++++-
+>  33 files changed, 201 insertions(+), 97 deletions(-)
+>  create mode 100644 rust/helpers/helpers.h
+>
+> diff --git a/Makefile b/Makefile
+> index 70bdbf2218fc..97756ecd5a56 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -510,6 +510,8 @@ OBJCOPY             =3D $(LLVM_PREFIX)llvm-objcopy$(L=
+LVM_SUFFIX)
+>  OBJDUMP                =3D $(LLVM_PREFIX)llvm-objdump$(LLVM_SUFFIX)
+>  READELF                =3D $(LLVM_PREFIX)llvm-readelf$(LLVM_SUFFIX)
+>  STRIP          =3D $(LLVM_PREFIX)llvm-strip$(LLVM_SUFFIX)
+> +LLVM_LINK      =3D $(LLVM_PREFIX)llvm-link$(LLVM_SUFFIX)
+> +LLVM_AS        =3D $(LLVM_PREFIX)llvm-as$(LLVM_SUFFIX)
+>  else
+>  CC             =3D $(CROSS_COMPILE)gcc
+>  LD             =3D $(CROSS_COMPILE)ld
+> @@ -617,7 +619,7 @@ export RUSTC_BOOTSTRAP :=3D 1
+>  export CLIPPY_CONF_DIR :=3D $(srctree)
+>
+>  export ARCH SRCARCH CONFIG_SHELL BASH HOSTCC KBUILD_HOSTCFLAGS CROSS_COM=
+PILE LD CC HOSTPKG_CONFIG
+> -export RUSTC RUSTDOC RUSTFMT RUSTC_OR_CLIPPY_QUIET RUSTC_OR_CLIPPY BINDG=
+EN
+> +export RUSTC RUSTDOC RUSTFMT RUSTC_OR_CLIPPY_QUIET RUSTC_OR_CLIPPY BINDG=
+EN LLVM_LINK LLVM_AS
+>  export HOSTRUSTC KBUILD_HOSTRUSTFLAGS
+>  export CPP AR NM STRIP OBJCOPY OBJDUMP READELF PAHOLE RESOLVE_BTFIDS LEX=
+ YACC AWK INSTALLKERNEL
+>  export PERL PYTHON3 CHECK CHECKFLAGS MAKE UTS_MACHINE HOSTCXX
+> diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+> index 1af972a92d06..42e26f3377d1 100644
+> --- a/lib/Kconfig.debug
+> +++ b/lib/Kconfig.debug
+> @@ -3289,6 +3289,20 @@ config RUST_KERNEL_DOCTESTS
+>
+>           If unsure, say N.
+>
+> +config RUST_INLINE_HELPERS
+> +    bool "Inline C helpers into Rust crates"
+> +    depends on RUST && RUSTC_CLANG_LLVM_COMPATIBLE
+> +    help
+> +        Links C helpers into Rust crates through LLVM IR.
+> +
+> +        If this option is enabled, instead of generating object files di=
+rectly,
+> +        rustc is asked to produce LLVM IR, which is then linked together=
+ with
+> +        the LLVM IR of C helpers, before object file is generated.
+
+from previous review: should this say bitcode instead of IR?
+
+"before object file is" should be "before object files are" since you
+used plural in the prior clause.
+
+> +
+> +        This requires a matching LLVM version for Clang and rustc.
+> +
+> +        If unsure, say N.
+> +
+>  endmenu # "Rust"
+>
+>  endmenu # Kernel hacking
+> diff --git a/rust/Makefile b/rust/Makefile
+> index e761a8cc3bd5..07fc4f5d0e36 100644
+> --- a/rust/Makefile
+> +++ b/rust/Makefile
+> @@ -6,15 +6,19 @@ rustdoc_output :=3D $(objtree)/Documentation/output/rus=
+t/rustdoc
+>  obj-$(CONFIG_RUST) +=3D core.o compiler_builtins.o ffi.o
+>  always-$(CONFIG_RUST) +=3D exports_core_generated.h
+>
+> +ifdef CONFIG_RUST_INLINE_HELPERS
+> +always-$(CONFIG_RUST) +=3D helpers/helpers.bc
+> +else
+> +obj-$(CONFIG_RUST) +=3D helpers/helpers.o
+> +always-$(CONFIG_RUST) +=3D exports_helpers_generated.h
+> +endif
+>  # Missing prototypes are expected in the helpers since these are exporte=
+d
+>  # for Rust only, thus there is no header nor prototypes.
+> -obj-$(CONFIG_RUST) +=3D helpers/helpers.o
+>  CFLAGS_REMOVE_helpers/helpers.o =3D -Wmissing-prototypes -Wmissing-decla=
+rations
+>
+>  always-$(CONFIG_RUST) +=3D bindings/bindings_generated.rs bindings/bindi=
+ngs_helpers_generated.rs
+>  obj-$(CONFIG_RUST) +=3D bindings.o pin_init.o kernel.o
+> -always-$(CONFIG_RUST) +=3D exports_helpers_generated.h \
+> -    exports_bindings_generated.h exports_kernel_generated.h
+> +always-$(CONFIG_RUST) +=3D exports_bindings_generated.h exports_kernel_g=
+enerated.h
+>
+>  always-$(CONFIG_RUST) +=3D uapi/uapi_generated.rs
+>  obj-$(CONFIG_RUST) +=3D uapi.o
+> @@ -360,6 +364,21 @@ $(obj)/bindings/bindings_helpers_generated.rs: priva=
+te bindgen_target_extra =3D ;
+>  $(obj)/bindings/bindings_helpers_generated.rs: $(src)/helpers/helpers.c =
+FORCE
+>         $(call if_changed_dep,bindgen)
+>
+> +# When compiling helpers, filter `-fno-delete-null-pointer-checks` since=
+ LLVM
+> +# prevents inlining such functions into functions compiled without the o=
+ption
+> +# (e.g. Rust functions).
+> +#
+> +# `linkonce_odr` is added to make functions inlineable and allow LLVM to
+> +# omit unreferenced functions.
+> +quiet_cmd_rust_helper =3D HELPER  $@
+> +      cmd_rust_helper =3D \
+> +       $(CC) $(filter-out -fno-delete-null-pointer-checks $(CFLAGS_REMOV=
+E_helpers/helpers.o), $(c_flags)) -S $< -emit-llvm -o $(patsubst %.bc,%.ll,=
+$@); \
+> +       sed -i 's/^define dso_local/define linkonce_odr dso_local/g' $(pa=
+tsubst %.bc,%.ll,$@); \
+> +       $(LLVM_AS) $(patsubst %.bc,%.ll,$@) -o $@
+> +
+> +$(obj)/helpers/helpers.bc: $(obj)/helpers/helpers.c FORCE
+> +       +$(call if_changed_dep,rust_helper)
+
+from prior review: should all these rules be defined iff
+CONFIG_RUST_INLINE_HELPERS? Always defining them seems like it could
+lead to subtle bugs, but perhaps there's Makefile precedent I'm not
+aware of.
+
+> +
+>  rust_exports =3D $(NM) -p --defined-only $(1) | awk '$$2~/(T|R|D|B)/ && =
+$$3!~/__cfi/ && $$3!~/__odr_asan/ { printf $(2),$$3 }'
+>
+>  quiet_cmd_exports =3D EXPORTS $@
+> @@ -409,11 +428,13 @@ quiet_cmd_rustc_library =3D $(if $(skip_clippy),RUS=
+TC,$(RUSTC_OR_CLIPPY_QUIET)) L
+>         OBJTREE=3D$(abspath $(objtree)) \
+>         $(if $(skip_clippy),$(RUSTC),$(RUSTC_OR_CLIPPY)) \
+>                 $(filter-out $(skip_flags),$(rust_flags) $(rustc_target_f=
+lags)) \
+> -               --emit=3Ddep-info=3D$(depfile) --emit=3Dobj=3D$@ \
+> +               --emit=3Ddep-info=3D$(depfile) --emit=3D$(if $(link_helpe=
+r),llvm-bc=3D$(patsubst %.o,%.bc,$@),obj=3D$@) \
+>                 --emit=3Dmetadata=3D$(dir $@)$(patsubst %.o,lib%.rmeta,$(=
+notdir $@)) \
+>                 --crate-type rlib -L$(objtree)/$(obj) \
+>                 --crate-name $(patsubst %.o,%,$(notdir $@)) $< \
+>                 --sysroot=3D/dev/null \
+> +       $(if $(link_helper),;$(LLVM_LINK) $(patsubst %.o,%.bc,$@) $(obj)/=
+helpers/helpers.bc -o $(patsubst %.o,%.m.bc,$@); \
+> +               $(CC) $(CLANG_FLAGS) $(KBUILD_CFLAGS) -mllvm=3D--ignore-t=
+ti-inline-compatible -c $(patsubst %.o,%.m.bc,$@) -o $@) \
+>         $(if $(rustc_objcopy),;$(OBJCOPY) $(rustc_objcopy) $@) \
+>         $(cmd_objtool)
+>
+> @@ -522,4 +543,9 @@ ifdef CONFIG_JUMP_LABEL
+>  $(obj)/kernel.o: $(obj)/kernel/generated_arch_static_branch_asm.rs
+>  endif
+>
+> +ifdef CONFIG_RUST_INLINE_HELPERS
+> +$(obj)/kernel.o: private link_helper =3D 1
+> +$(obj)/kernel.o: $(obj)/helpers/helpers.bc
+> +endif
+
+From prior review: can this be combined with the other `ifdef
+CONFIG_RUST_INLINE_HELPERS`?
+
+
+> +
+>  endif # CONFIG_RUST
+> diff --git a/rust/exports.c b/rust/exports.c
+> index 587f0e776aba..1b52460b0f4e 100644
+> --- a/rust/exports.c
+> +++ b/rust/exports.c
+> @@ -16,10 +16,13 @@
+>  #define EXPORT_SYMBOL_RUST_GPL(sym) extern int sym; EXPORT_SYMBOL_GPL(sy=
+m)
+>
+>  #include "exports_core_generated.h"
+> -#include "exports_helpers_generated.h"
+>  #include "exports_bindings_generated.h"
+>  #include "exports_kernel_generated.h"
+>
+> +#ifndef CONFIG_RUST_INLINE_HELPERS
+> +#include "exports_helpers_generated.h"
+> +#endif
+> +
+>  // For modules using `rust/build_error.rs`.
+>  #ifdef CONFIG_RUST_BUILD_ASSERT_ALLOW
+>  EXPORT_SYMBOL_RUST_GPL(rust_build_error);
+> diff --git a/rust/helpers/blk.c b/rust/helpers/blk.c
+> index cc9f4e6a2d23..a96e5ddf384d 100644
+> --- a/rust/helpers/blk.c
+> +++ b/rust/helpers/blk.c
+> @@ -2,13 +2,14 @@
+>
+>  #include <linux/blk-mq.h>
+>  #include <linux/blkdev.h>
+> +#include "helpers.h"
+>
+> -void *rust_helper_blk_mq_rq_to_pdu(struct request *rq)
+> +__rust_helper void *rust_helper_blk_mq_rq_to_pdu(struct request *rq)
+>  {
+>         return blk_mq_rq_to_pdu(rq);
+>  }
+>
+> -struct request *rust_helper_blk_mq_rq_from_pdu(void *pdu)
+> +__rust_helper struct request *rust_helper_blk_mq_rq_from_pdu(void *pdu)
+>  {
+>         return blk_mq_rq_from_pdu(pdu);
+>  }
+> diff --git a/rust/helpers/bug.c b/rust/helpers/bug.c
+> index e2d13babc737..3bff5b730ca8 100644
+> --- a/rust/helpers/bug.c
+> +++ b/rust/helpers/bug.c
+> @@ -1,8 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/bug.h>
+> +#include "helpers.h"
+>
+> -__noreturn void rust_helper_BUG(void)
+> +__rust_helper __noreturn void rust_helper_BUG(void)
+>  {
+>         BUG();
+>  }
+> diff --git a/rust/helpers/build_bug.c b/rust/helpers/build_bug.c
+> index 44e579488037..9dc273fd8db1 100644
+> --- a/rust/helpers/build_bug.c
+> +++ b/rust/helpers/build_bug.c
+> @@ -1,8 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/errname.h>
+> +#include "helpers.h"
+>
+> -const char *rust_helper_errname(int err)
+> +__rust_helper const char *rust_helper_errname(int err)
+>  {
+>         return errname(err);
+>  }
+> diff --git a/rust/helpers/cred.c b/rust/helpers/cred.c
+> index fde7ae20cdd1..9dceeb7f8c87 100644
+> --- a/rust/helpers/cred.c
+> +++ b/rust/helpers/cred.c
+> @@ -1,13 +1,14 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/cred.h>
+> +#include "helpers.h"
+>
+> -const struct cred *rust_helper_get_cred(const struct cred *cred)
+> +__rust_helper const struct cred *rust_helper_get_cred(const struct cred =
+*cred)
+>  {
+>         return get_cred(cred);
+>  }
+>
+> -void rust_helper_put_cred(const struct cred *cred)
+> +__rust_helper void rust_helper_put_cred(const struct cred *cred)
+>  {
+>         put_cred(cred);
+>  }
+> diff --git a/rust/helpers/device.c b/rust/helpers/device.c
+> index b2135c6686b0..b9432cb2f085 100644
+> --- a/rust/helpers/device.c
+> +++ b/rust/helpers/device.c
+> @@ -2,9 +2,9 @@
+>
+>  #include <linux/device.h>
+>
+> -int rust_helper_devm_add_action(struct device *dev,
+> -                               void (*action)(void *),
+> -                               void *data)
+> +__rust_helper int rust_helper_devm_add_action(struct device *dev,
+> +                                             void (*action)(void *),
+> +                                             void *data)
+>  {
+>         return devm_add_action(dev, action, data);
+>  }
+> diff --git a/rust/helpers/err.c b/rust/helpers/err.c
+> index 544c7cb86632..b05516fce504 100644
+> --- a/rust/helpers/err.c
+> +++ b/rust/helpers/err.c
+> @@ -1,18 +1,19 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/err.h>
+> +#include "helpers.h"
+>
+> -__force void *rust_helper_ERR_PTR(long err)
+> +__rust_helper __force void *rust_helper_ERR_PTR(long err)
+>  {
+>         return ERR_PTR(err);
+>  }
+>
+> -bool rust_helper_IS_ERR(__force const void *ptr)
+> +__rust_helper bool rust_helper_IS_ERR(__force const void *ptr)
+>  {
+>         return IS_ERR(ptr);
+>  }
+>
+> -long rust_helper_PTR_ERR(__force const void *ptr)
+> +__rust_helper long rust_helper_PTR_ERR(__force const void *ptr)
+>  {
+>         return PTR_ERR(ptr);
+>  }
+> diff --git a/rust/helpers/fs.c b/rust/helpers/fs.c
+> index a75c96763372..7d44bda94203 100644
+> --- a/rust/helpers/fs.c
+> +++ b/rust/helpers/fs.c
+> @@ -5,8 +5,9 @@
+>   */
+>
+>  #include <linux/fs.h>
+> +#include "helpers.h"
+>
+> -struct file *rust_helper_get_file(struct file *f)
+> +__rust_helper struct file *rust_helper_get_file(struct file *f)
+>  {
+>         return get_file(f);
+>  }
+> diff --git a/rust/helpers/helpers.h b/rust/helpers/helpers.h
+> new file mode 100644
+> index 000000000000..d6ee9bf6f5ae
+> --- /dev/null
+> +++ b/rust/helpers/helpers.h
+> @@ -0,0 +1,13 @@
+> +#ifndef RUST_HELPERS_H
+> +#define RUST_HELPERS_H
+> +
+> +#include <linux/compiler_types.h>
+> +
+> +#ifdef __BINDGEN__
+> +// Omit `inline` for bindgen as it ignores inline functions.
+> +#define __rust_helper
+> +#else
+> +#define __rust_helper inline
+> +#endif
+> +
+> +#endif
+> diff --git a/rust/helpers/io.c b/rust/helpers/io.c
+> index 4c2401ccd720..f61cf77cf9cd 100644
+> --- a/rust/helpers/io.c
+> +++ b/rust/helpers/io.c
+> @@ -1,100 +1,105 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/io.h>
+> +#include "helpers.h"
+>
+> -void __iomem *rust_helper_ioremap(phys_addr_t offset, size_t size)
+> +__rust_helper void __iomem *rust_helper_ioremap(phys_addr_t offset, size=
+_t size)
+>  {
+>         return ioremap(offset, size);
+>  }
+>
+> -void rust_helper_iounmap(volatile void __iomem *addr)
+> +__rust_helper void rust_helper_iounmap(volatile void __iomem *addr)
+>  {
+>         iounmap(addr);
+>  }
+>
+> -u8 rust_helper_readb(const volatile void __iomem *addr)
+> +__rust_helper u8 rust_helper_readb(const volatile void __iomem *addr)
+>  {
+>         return readb(addr);
+>  }
+>
+> -u16 rust_helper_readw(const volatile void __iomem *addr)
+> +__rust_helper u16 rust_helper_readw(const volatile void __iomem *addr)
+>  {
+>         return readw(addr);
+>  }
+>
+> -u32 rust_helper_readl(const volatile void __iomem *addr)
+> +__rust_helper u32 rust_helper_readl(const volatile void __iomem *addr)
+>  {
+>         return readl(addr);
+>  }
+>
+>  #ifdef CONFIG_64BIT
+> -u64 rust_helper_readq(const volatile void __iomem *addr)
+> +__rust_helper u64 rust_helper_readq(const volatile void __iomem *addr)
+>  {
+>         return readq(addr);
+>  }
+>  #endif
+>
+> -void rust_helper_writeb(u8 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writeb(u8 value, volatile void __iomem *a=
+ddr)
+>  {
+>         writeb(value, addr);
+>  }
+>
+> -void rust_helper_writew(u16 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writew(u16 value, volatile void __iomem *=
+addr)
+>  {
+>         writew(value, addr);
+>  }
+>
+> -void rust_helper_writel(u32 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writel(u32 value, volatile void __iomem *=
+addr)
+>  {
+>         writel(value, addr);
+>  }
+>
+>  #ifdef CONFIG_64BIT
+> -void rust_helper_writeq(u64 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writeq(u64 value, volatile void __iomem *=
+addr)
+>  {
+>         writeq(value, addr);
+>  }
+>  #endif
+>
+> -u8 rust_helper_readb_relaxed(const volatile void __iomem *addr)
+> +__rust_helper u8 rust_helper_readb_relaxed(const volatile void __iomem *=
+addr)
+>  {
+>         return readb_relaxed(addr);
+>  }
+>
+> -u16 rust_helper_readw_relaxed(const volatile void __iomem *addr)
+> +__rust_helper u16 rust_helper_readw_relaxed(const volatile void __iomem =
+*addr)
+>  {
+>         return readw_relaxed(addr);
+>  }
+>
+> -u32 rust_helper_readl_relaxed(const volatile void __iomem *addr)
+> +__rust_helper u32 rust_helper_readl_relaxed(const volatile void __iomem =
+*addr)
+>  {
+>         return readl_relaxed(addr);
+>  }
+>
+>  #ifdef CONFIG_64BIT
+> -u64 rust_helper_readq_relaxed(const volatile void __iomem *addr)
+> +__rust_helper u64 rust_helper_readq_relaxed(const volatile void __iomem =
+*addr)
+>  {
+>         return readq_relaxed(addr);
+>  }
+>  #endif
+>
+> -void rust_helper_writeb_relaxed(u8 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writeb_relaxed(u8 value,
+> +                                             volatile void __iomem *addr=
+)
+>  {
+>         writeb_relaxed(value, addr);
+>  }
+>
+> -void rust_helper_writew_relaxed(u16 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writew_relaxed(u16 value,
+> +                                             volatile void __iomem *addr=
+)
+>  {
+>         writew_relaxed(value, addr);
+>  }
+>
+> -void rust_helper_writel_relaxed(u32 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writel_relaxed(u32 value,
+> +                                             volatile void __iomem *addr=
+)
+>  {
+>         writel_relaxed(value, addr);
+>  }
+>
+>  #ifdef CONFIG_64BIT
+> -void rust_helper_writeq_relaxed(u64 value, volatile void __iomem *addr)
+> +__rust_helper void rust_helper_writeq_relaxed(u64 value,
+> +                                             volatile void __iomem *addr=
+)
+>  {
+>         writeq_relaxed(value, addr);
+>  }
+> diff --git a/rust/helpers/jump_label.c b/rust/helpers/jump_label.c
+> index fc1f1e0df08e..c97a66c51cce 100644
+> --- a/rust/helpers/jump_label.c
+> +++ b/rust/helpers/jump_label.c
+> @@ -5,9 +5,10 @@
+>   */
+>
+>  #include <linux/jump_label.h>
+> +#include "helpers.h"
+>
+>  #ifndef CONFIG_JUMP_LABEL
+> -int rust_helper_static_key_count(struct static_key *key)
+> +__rust_helper int rust_helper_static_key_count(struct static_key *key)
+>  {
+>         return static_key_count(key);
+>  }
+> diff --git a/rust/helpers/kunit.c b/rust/helpers/kunit.c
+> index b85a4d394c11..f3621a564626 100644
+> --- a/rust/helpers/kunit.c
+> +++ b/rust/helpers/kunit.c
+> @@ -1,8 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <kunit/test-bug.h>
+> +#include "helpers.h"
+>
+> -struct kunit *rust_helper_kunit_get_current_test(void)
+> +__rust_helper struct kunit *rust_helper_kunit_get_current_test(void)
+>  {
+>         return kunit_get_current_test();
+>  }
+> diff --git a/rust/helpers/mutex.c b/rust/helpers/mutex.c
+> index 06575553eda5..8900cd504cb2 100644
+> --- a/rust/helpers/mutex.c
+> +++ b/rust/helpers/mutex.c
+> @@ -1,19 +1,21 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/mutex.h>
+> +#include "helpers.h"
+>
+> -void rust_helper_mutex_lock(struct mutex *lock)
+> +__rust_helper void rust_helper_mutex_lock(struct mutex *lock)
+>  {
+>         mutex_lock(lock);
+>  }
+>
+> -void rust_helper___mutex_init(struct mutex *mutex, const char *name,
+> -                             struct lock_class_key *key)
+> +__rust_helper void rust_helper___mutex_init(struct mutex *mutex,
+> +                                           const char *name,
+> +                                           struct lock_class_key *key)
+>  {
+>         __mutex_init(mutex, name, key);
+>  }
+>
+> -void rust_helper_mutex_assert_is_held(struct mutex *mutex)
+> +__rust_helper void rust_helper_mutex_assert_is_held(struct mutex *mutex)
+>  {
+>         lockdep_assert_held(mutex);
+>  }
+> diff --git a/rust/helpers/page.c b/rust/helpers/page.c
+> index b3f2b8fbf87f..cf7deea25cfa 100644
+> --- a/rust/helpers/page.c
+> +++ b/rust/helpers/page.c
+> @@ -2,18 +2,20 @@
+>
+>  #include <linux/gfp.h>
+>  #include <linux/highmem.h>
+> +#include "helpers.h"
+>
+> -struct page *rust_helper_alloc_pages(gfp_t gfp_mask, unsigned int order)
+> +__rust_helper struct page *rust_helper_alloc_pages(gfp_t gfp_mask,
+> +                                                  unsigned int order)
+>  {
+>         return alloc_pages(gfp_mask, order);
+>  }
+>
+> -void *rust_helper_kmap_local_page(struct page *page)
+> +__rust_helper void *rust_helper_kmap_local_page(struct page *page)
+>  {
+>         return kmap_local_page(page);
+>  }
+>
+> -void rust_helper_kunmap_local(const void *addr)
+> +__rust_helper void rust_helper_kunmap_local(const void *addr)
+>  {
+>         kunmap_local(addr);
+>  }
+> diff --git a/rust/helpers/pci.c b/rust/helpers/pci.c
+> index 8ba22f911459..5b1066028d7d 100644
+> --- a/rust/helpers/pci.c
+> +++ b/rust/helpers/pci.c
+> @@ -1,18 +1,20 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/pci.h>
+> +#include "helpers.h"
+>
+> -void rust_helper_pci_set_drvdata(struct pci_dev *pdev, void *data)
+> +__rust_helper void rust_helper_pci_set_drvdata(struct pci_dev *pdev, voi=
+d *data)
+>  {
+>         pci_set_drvdata(pdev, data);
+>  }
+>
+> -void *rust_helper_pci_get_drvdata(struct pci_dev *pdev)
+> +__rust_helper void *rust_helper_pci_get_drvdata(struct pci_dev *pdev)
+>  {
+>         return pci_get_drvdata(pdev);
+>  }
+>
+> -resource_size_t rust_helper_pci_resource_len(struct pci_dev *pdev, int b=
+ar)
+> +__rust_helper resource_size_t rust_helper_pci_resource_len(struct pci_de=
+v *pdev,
+> +                                                          int bar)
+>  {
+>         return pci_resource_len(pdev, bar);
+>  }
+> diff --git a/rust/helpers/pid_namespace.c b/rust/helpers/pid_namespace.c
+> index f41482bdec9a..f4419c3ff5bb 100644
+> --- a/rust/helpers/pid_namespace.c
+> +++ b/rust/helpers/pid_namespace.c
+> @@ -2,19 +2,22 @@
+>
+>  #include <linux/pid_namespace.h>
+>  #include <linux/cleanup.h>
+> +#include "helpers.h"
+>
+> -struct pid_namespace *rust_helper_get_pid_ns(struct pid_namespace *ns)
+> +__rust_helper struct pid_namespace *
+> +rust_helper_get_pid_ns(struct pid_namespace *ns)
+>  {
+>         return get_pid_ns(ns);
+>  }
+>
+> -void rust_helper_put_pid_ns(struct pid_namespace *ns)
+> +__rust_helper void rust_helper_put_pid_ns(struct pid_namespace *ns)
+>  {
+>         put_pid_ns(ns);
+>  }
+>
+>  /* Get a reference on a task's pid namespace. */
+> -struct pid_namespace *rust_helper_task_get_pid_ns(struct task_struct *ta=
+sk)
+> +__rust_helper struct pid_namespace *
+> +rust_helper_task_get_pid_ns(struct task_struct *task)
+>  {
+>         struct pid_namespace *pid_ns;
+>
+> diff --git a/rust/helpers/platform.c b/rust/helpers/platform.c
+> index ab9b9f317301..052b2a09f1a9 100644
+> --- a/rust/helpers/platform.c
+> +++ b/rust/helpers/platform.c
+> @@ -1,13 +1,16 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/platform_device.h>
+> +#include "helpers.h"
+>
+> -void *rust_helper_platform_get_drvdata(const struct platform_device *pde=
+v)
+> +__rust_helper void *
+> +rust_helper_platform_get_drvdata(const struct platform_device *pdev)
+>  {
+>         return platform_get_drvdata(pdev);
+>  }
+>
+> -void rust_helper_platform_set_drvdata(struct platform_device *pdev, void=
+ *data)
+> +__rust_helper void
+> +rust_helper_platform_set_drvdata(struct platform_device *pdev, void *dat=
+a)
+>  {
+>         platform_set_drvdata(pdev, data);
+>  }
+> diff --git a/rust/helpers/rbtree.c b/rust/helpers/rbtree.c
+> index 6d404b84a9b5..784d8796aa1c 100644
+> --- a/rust/helpers/rbtree.c
+> +++ b/rust/helpers/rbtree.c
+> @@ -1,9 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/rbtree.h>
+> +#include "helpers.h"
+>
+> -void rust_helper_rb_link_node(struct rb_node *node, struct rb_node *pare=
+nt,
+> -                             struct rb_node **rb_link)
+> +__rust_helper void rust_helper_rb_link_node(struct rb_node *node,
+> +                                           struct rb_node *parent,
+> +                                           struct rb_node **rb_link)
+>  {
+>         rb_link_node(node, parent, rb_link);
+>  }
+> diff --git a/rust/helpers/rcu.c b/rust/helpers/rcu.c
+> index f1cec6583513..0bd98ab32300 100644
+> --- a/rust/helpers/rcu.c
+> +++ b/rust/helpers/rcu.c
+> @@ -1,13 +1,14 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/rcupdate.h>
+> +#include "helpers.h"
+>
+> -void rust_helper_rcu_read_lock(void)
+> +__rust_helper void rust_helper_rcu_read_lock(void)
+>  {
+>         rcu_read_lock();
+>  }
+>
+> -void rust_helper_rcu_read_unlock(void)
+> +__rust_helper void rust_helper_rcu_read_unlock(void)
+>  {
+>         rcu_read_unlock();
+>  }
+> diff --git a/rust/helpers/refcount.c b/rust/helpers/refcount.c
+> index d6adbd2e45a1..ad80e153bf37 100644
+> --- a/rust/helpers/refcount.c
+> +++ b/rust/helpers/refcount.c
+> @@ -1,18 +1,19 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/refcount.h>
+> +#include "helpers.h"
+>
+> -refcount_t rust_helper_REFCOUNT_INIT(int n)
+> +__rust_helper refcount_t rust_helper_REFCOUNT_INIT(int n)
+>  {
+>         return (refcount_t)REFCOUNT_INIT(n);
+>  }
+>
+> -void rust_helper_refcount_inc(refcount_t *r)
+> +__rust_helper void rust_helper_refcount_inc(refcount_t *r)
+>  {
+>         refcount_inc(r);
+>  }
+>
+> -bool rust_helper_refcount_dec_and_test(refcount_t *r)
+> +__rust_helper bool rust_helper_refcount_dec_and_test(refcount_t *r)
+>  {
+>         return refcount_dec_and_test(r);
+>  }
+> diff --git a/rust/helpers/security.c b/rust/helpers/security.c
+> index 0c4c2065df28..676c82a4a6eb 100644
+> --- a/rust/helpers/security.c
+> +++ b/rust/helpers/security.c
+> @@ -1,19 +1,22 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/security.h>
+> +#include "helpers.h"
+>
+>  #ifndef CONFIG_SECURITY
+> -void rust_helper_security_cred_getsecid(const struct cred *c, u32 *secid=
+)
+> +__rust_helper void rust_helper_security_cred_getsecid(const struct cred =
+*c,
+> +                                                     u32 *secid)
+>  {
+>         security_cred_getsecid(c, secid);
+>  }
+>
+> -int rust_helper_security_secid_to_secctx(u32 secid, struct lsm_context *=
+cp)
+> +__rust_helper int rust_helper_security_secid_to_secctx(u32 secid,
+> +                                                      struct lsm_context=
+ *cp)
+>  {
+>         return security_secid_to_secctx(secid, cp);
+>  }
+>
+> -void rust_helper_security_release_secctx(struct lsm_context *cp)
+> +__rust_helper void rust_helper_security_release_secctx(struct lsm_contex=
+t *cp)
+>  {
+>         security_release_secctx(cp);
+>  }
+> diff --git a/rust/helpers/signal.c b/rust/helpers/signal.c
+> index 1a6bbe9438e2..67d3fe8d5132 100644
+> --- a/rust/helpers/signal.c
+> +++ b/rust/helpers/signal.c
+> @@ -1,8 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/sched/signal.h>
+> +#include "helpers.h"
+>
+> -int rust_helper_signal_pending(struct task_struct *t)
+> +__rust_helper int rust_helper_signal_pending(struct task_struct *t)
+>  {
+>         return signal_pending(t);
+>  }
+> diff --git a/rust/helpers/slab.c b/rust/helpers/slab.c
+> index a842bfbddcba..71dd3fc88d53 100644
+> --- a/rust/helpers/slab.c
+> +++ b/rust/helpers/slab.c
+> @@ -1,15 +1,16 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/slab.h>
+> +#include "helpers.h"
+>
+> -void * __must_check __realloc_size(2)
+> -rust_helper_krealloc(const void *objp, size_t new_size, gfp_t flags)
+> +__rust_helper void *__must_check __realloc_size(2)
+> +       rust_helper_krealloc(const void *objp, size_t new_size, gfp_t fla=
+gs)
+>  {
+>         return krealloc(objp, new_size, flags);
+>  }
+>
+> -void * __must_check __realloc_size(2)
+> -rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
+> +__rust_helper void *__must_check __realloc_size(2)
+> +       rust_helper_kvrealloc(const void *p, size_t size, gfp_t flags)
+>  {
+>         return kvrealloc(p, size, flags);
+>  }
+> diff --git a/rust/helpers/spinlock.c b/rust/helpers/spinlock.c
+> index 42c4bf01a23e..023ef3a24913 100644
+> --- a/rust/helpers/spinlock.c
+> +++ b/rust/helpers/spinlock.c
+> @@ -1,9 +1,11 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/spinlock.h>
+> +#include "helpers.h"
+>
+> -void rust_helper___spin_lock_init(spinlock_t *lock, const char *name,
+> -                                 struct lock_class_key *key)
+> +__rust_helper void rust_helper___spin_lock_init(spinlock_t *lock,
+> +                                               const char *name,
+> +                                               struct lock_class_key *ke=
+y)
+>  {
+>  #ifdef CONFIG_DEBUG_SPINLOCK
+>  # if defined(CONFIG_PREEMPT_RT)
+> @@ -16,22 +18,22 @@ void rust_helper___spin_lock_init(spinlock_t *lock, c=
+onst char *name,
+>  #endif /* CONFIG_DEBUG_SPINLOCK */
+>  }
+>
+> -void rust_helper_spin_lock(spinlock_t *lock)
+> +__rust_helper void rust_helper_spin_lock(spinlock_t *lock)
+>  {
+>         spin_lock(lock);
+>  }
+>
+> -void rust_helper_spin_unlock(spinlock_t *lock)
+> +__rust_helper void rust_helper_spin_unlock(spinlock_t *lock)
+>  {
+>         spin_unlock(lock);
+>  }
+>
+> -int rust_helper_spin_trylock(spinlock_t *lock)
+> +__rust_helper int rust_helper_spin_trylock(spinlock_t *lock)
+>  {
+>         return spin_trylock(lock);
+>  }
+>
+> -void rust_helper_spin_assert_is_held(spinlock_t *lock)
+> +__rust_helper void rust_helper_spin_assert_is_held(spinlock_t *lock)
+>  {
+>         lockdep_assert_held(lock);
+>  }
+> diff --git a/rust/helpers/task.c b/rust/helpers/task.c
+> index 31c33ea2dce6..741e1a4b15ee 100644
+> --- a/rust/helpers/task.c
+> +++ b/rust/helpers/task.c
+> @@ -1,56 +1,57 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/sched/task.h>
+> +#include "helpers.h"
+>
+> -struct task_struct *rust_helper_get_current(void)
+> +__rust_helper struct task_struct *rust_helper_get_current(void)
+>  {
+>         return current;
+>  }
+>
+> -void rust_helper_get_task_struct(struct task_struct *t)
+> +__rust_helper void rust_helper_get_task_struct(struct task_struct *t)
+>  {
+>         get_task_struct(t);
+>  }
+>
+> -void rust_helper_put_task_struct(struct task_struct *t)
+> +__rust_helper void rust_helper_put_task_struct(struct task_struct *t)
+>  {
+>         put_task_struct(t);
+>  }
+>
+> -kuid_t rust_helper_task_uid(struct task_struct *task)
+> +__rust_helper kuid_t rust_helper_task_uid(struct task_struct *task)
+>  {
+>         return task_uid(task);
+>  }
+>
+> -kuid_t rust_helper_task_euid(struct task_struct *task)
+> +__rust_helper kuid_t rust_helper_task_euid(struct task_struct *task)
+>  {
+>         return task_euid(task);
+>  }
+>
+>  #ifndef CONFIG_USER_NS
+> -uid_t rust_helper_from_kuid(struct user_namespace *to, kuid_t uid)
+> +__rust_helper uid_t rust_helper_from_kuid(struct user_namespace *to, kui=
+d_t uid)
+>  {
+>         return from_kuid(to, uid);
+>  }
+>  #endif /* CONFIG_USER_NS */
+>
+> -bool rust_helper_uid_eq(kuid_t left, kuid_t right)
+> +__rust_helper bool rust_helper_uid_eq(kuid_t left, kuid_t right)
+>  {
+>         return uid_eq(left, right);
+>  }
+>
+> -kuid_t rust_helper_current_euid(void)
+> +__rust_helper kuid_t rust_helper_current_euid(void)
+>  {
+>         return current_euid();
+>  }
+>
+> -struct user_namespace *rust_helper_current_user_ns(void)
+> +__rust_helper struct user_namespace *rust_helper_current_user_ns(void)
+>  {
+>         return current_user_ns();
+>  }
+>
+> -pid_t rust_helper_task_tgid_nr_ns(struct task_struct *tsk,
+> -                                 struct pid_namespace *ns)
+> +__rust_helper pid_t rust_helper_task_tgid_nr_ns(struct task_struct *tsk,
+> +                                               struct pid_namespace *ns)
+>  {
+>         return task_tgid_nr_ns(tsk, ns);
+>  }
+> diff --git a/rust/helpers/uaccess.c b/rust/helpers/uaccess.c
+> index f49076f813cd..08bf1851c06a 100644
+> --- a/rust/helpers/uaccess.c
+> +++ b/rust/helpers/uaccess.c
+> @@ -1,15 +1,16 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/uaccess.h>
+> +#include "helpers.h"
+>
+> -unsigned long rust_helper_copy_from_user(void *to, const void __user *fr=
+om,
+> -                                        unsigned long n)
+> +__rust_helper unsigned long
+> +rust_helper_copy_from_user(void *to, const void __user *from, unsigned l=
+ong n)
+>  {
+>         return copy_from_user(to, from, n);
+>  }
+>
+> -unsigned long rust_helper_copy_to_user(void __user *to, const void *from=
+,
+> -                                      unsigned long n)
+> +__rust_helper unsigned long
+> +rust_helper_copy_to_user(void __user *to, const void *from, unsigned lon=
+g n)
+>  {
+>         return copy_to_user(to, from, n);
+>  }
+> diff --git a/rust/helpers/vmalloc.c b/rust/helpers/vmalloc.c
+> index 80d34501bbc0..6ef908bd45f9 100644
+> --- a/rust/helpers/vmalloc.c
+> +++ b/rust/helpers/vmalloc.c
+> @@ -1,9 +1,10 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/vmalloc.h>
+> +#include "helpers.h"
+>
+> -void * __must_check __realloc_size(2)
+> -rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
+> +__rust_helper void *__must_check __realloc_size(2)
+> +       rust_helper_vrealloc(const void *p, size_t size, gfp_t flags)
+>  {
+>         return vrealloc(p, size, flags);
+>  }
+> diff --git a/rust/helpers/wait.c b/rust/helpers/wait.c
+> index ae48e33d9da3..7beaa85494bc 100644
+> --- a/rust/helpers/wait.c
+> +++ b/rust/helpers/wait.c
+> @@ -1,8 +1,9 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/wait.h>
+> +#include "helpers.h"
+>
+> -void rust_helper_init_wait(struct wait_queue_entry *wq_entry)
+> +__rust_helper void rust_helper_init_wait(struct wait_queue_entry *wq_ent=
+ry)
+>  {
+>         init_wait(wq_entry);
+>  }
+> diff --git a/rust/helpers/workqueue.c b/rust/helpers/workqueue.c
+> index b2b82753509b..4256f8c91ce6 100644
+> --- a/rust/helpers/workqueue.c
+> +++ b/rust/helpers/workqueue.c
+> @@ -1,10 +1,13 @@
+>  // SPDX-License-Identifier: GPL-2.0
+>
+>  #include <linux/workqueue.h>
+> +#include "helpers.h"
+>
+> -void rust_helper_init_work_with_key(struct work_struct *work, work_func_=
+t func,
+> -                                   bool onstack, const char *name,
+> -                                   struct lock_class_key *key)
+> +__rust_helper void rust_helper_init_work_with_key(struct work_struct *wo=
+rk,
+> +                                                 work_func_t func,
+> +                                                 bool onstack,
+> +                                                 const char *name,
+> +                                                 struct lock_class_key *=
+key)
+>  {
+>         __init_work(work, onstack);
+>         work->data =3D (atomic_long_t)WORK_DATA_INIT();
+> diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> index 08b6380933f5..f7bccb22328b 100644
+> --- a/scripts/Makefile.build
+> +++ b/scripts/Makefile.build
+> @@ -252,7 +252,10 @@ rust_common_cmd =3D \
+>  # would not match each other.
+>
+>  quiet_cmd_rustc_o_rs =3D $(RUSTC_OR_CLIPPY_QUIET) $(quiet_modtag) $@
+> -      cmd_rustc_o_rs =3D $(rust_common_cmd) --emit=3Dobj=3D$@ $< $(cmd_o=
+bjtool)
+> +      cmd_rustc_o_rs =3D $(rust_common_cmd) --emit=3D$(if $(CONFIG_RUST_=
+INLINE_HELPERS),llvm-bc=3D$(patsubst %.o,%.bc,$@),obj=3D$@) $< \
+> +       $(if $(CONFIG_RUST_INLINE_HELPERS),;$(LLVM_LINK) $(patsubst %.o,%=
+.bc,$@) $(objtree)/rust/helpers/helpers.bc -o $(patsubst %.o,%.m.bc,$@); \
+> +               $(CC) $(CLANG_FLAGS) $(KBUILD_CFLAGS) -mllvm=3D--ignore-t=
+ti-inline-compatible -c $(patsubst %.o,%.m.bc,$@) -o $@) \
+> +       $(cmd_objtool)
+
+Similar question here: should this be defined iff
+CONFIG_RUST_INLINE_HELPERS? Always defining them seems like it could
+lead to subtle bugs, but perhaps there's Makefile precedent I'm not
+aware of.
+
+>
+>  define rule_rustc_o_rs
+>         $(call cmd_and_fixdep,rustc_o_rs)
+> --
+> 2.47.2
+>
