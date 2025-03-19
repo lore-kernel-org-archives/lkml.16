@@ -1,217 +1,377 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2047.outbound.protection.outlook.com [40.107.237.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BE44213E78;
-	Wed, 19 Mar 2025 19:31:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742412680; cv=none; b=C0y7sUwXacl5/icAL6OmpOKqzR2E6qRyNq+D26fmtxG3XTHS+9+aHLH2oAzl6lGLnGz4uzdILKd3Y3+jxwhITKifZ5q+G3BSnr5EmPwBe2fbGVbUQiA/yNV+5GNgrfaE/PY2Q6BJuHQcBmSBV31FCdc2FFVRoQZ3AdcGDGbyR+Q=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742412680; c=relaxed/simple;
-	bh=CpfCtBcbiwBJ0pvVDr2LOLoj2GpLAXY2Jc7T3aqYATE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FJrGFU+s8nEfxbW7ux4DUoXMGlfxa05qZpK5UW0rfilJdrV6C1HExqYvVK2VFMtjkI96usHo7cdhrhgAEvnGpxGOc+J2ADW+UUnejr1B4XhuGcg1r9EHDz/MCIx6Q3MzQa40iBANAHKe4wBiyw9Xwcl2Sb/r8z7SvZKJ0+Ig7aI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tLHA5bCE; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2BBA212FBD
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:31:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742412681; cv=fail; b=n7PQUxx0QS+IfvIFeSY3U18Ko8+Q2a4MvbNl+PRD6+EmqKhUwkV8SQQB7KkPqAXwlIFRUo2PERAf2sgjBvx3z/WdyfC7i1wTLyGd/8ZK85tnLaTPFADLtITKU4hnUcuhmbM7a8XIld32InFroi8EQrgCl0D3vcJUAJUEnhRE1v8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742412681; c=relaxed/simple;
+	bh=2pUCrRZWlOG6fc23vIhfvL/s5SvBC38MUtr9NJCKhQE=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=A/sP+MgoNwAGHQIKf1DEJt4eVbSog85EB/UnGSOHFVAFvmb3FX0VbvPCxIkBA+fn0HE3tEVT+xyCXnK9QJ8XRIqoe8xWRURHzfa2B5HT3j5fXfLK60/BJhDjC91lu4AWybqZ2+veCU3TBPsSZ22Yx5qq5dMhcu/eoJQsorwR3XA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NHUsEDeZ; arc=fail smtp.client-ip=40.107.237.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tLHA5bCE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE7C2C4CEE4;
-	Wed, 19 Mar 2025 19:31:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742412680;
-	bh=CpfCtBcbiwBJ0pvVDr2LOLoj2GpLAXY2Jc7T3aqYATE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tLHA5bCEYAzsmdCwwKaCf6fUHZHdQpJrc4VNB9NQAPsckqR+KBod/BYx3UfCzJp5m
-	 cyIzLKyONGdzVgL355P6tEPJVDhG7wq2ja6eX66of4xmEolBgDiLzQ5pS6r3NAzjBw
-	 Dnj86XvJ2VqkY0wWFCjF/FfbjQgbPtaoPowbK/zYaRC0LAAiy0UWbAzrWqTMV+Gb3e
-	 Kiic1porYOBgID5Hw14r2Xm/kuGR/BkrylPKfwviCAIClMwC/UkJhWuBOAqUwgq0uv
-	 lHAO8kSc3ImQa6QoUb3dVQSgFQH9wE16XLtk/vu8o0DJiwaWxBgEgDQuPHshX+BhJK
-	 d5OetRRdl4yCg==
-Message-ID: <37f65ad0-69fa-4031-86da-8b07828aff34@kernel.org>
-Date: Wed, 19 Mar 2025 20:31:09 +0100
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NHUsEDeZ"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xk1QqGh6HBCRoIKnxFcZ2n//DJ1VX8R/RLfqy9TQGGdFkDbXRw/+sKX/VlQmhz/rrPlkXFxoyWh6wBfHRYAPKWPTrmHd9wC0GebVv6helMsYqo2rOYs4ldGG6N3hsm56XSo+O9tptPQsB7LgkKAEvdcPO/jIbC4Kp5dqMDDLwiy6aDmXMH/5Axcl3tQaCaaQ2Iw54x1mfQKsNIwzCssf29hU2hr52n9wcOQOe1ZwwT9sTMMrgOG+lekLfCeIqYbB4Dwe1+qtabYpufZiCFbtH04XUQv79GhHbBWOCIH8NYVFeEYw6ILk7erpfU0wKHC/N0tA7qwB+GUOUJOyhUMtIA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=n1YlgkAYpPVRIE0Exq0WZ36EVvjUeFBDZwrxw1q80i8=;
+ b=wRirfef74xUPsuzFwZM5FpQyP0iCAv48ehirJYkgPSZXPBgBKKY7eJGTvDGaAuRnITiQpTPw44BCYkVSoijeJDJA5wkuCdz2ZUrWZoOk1iXRIw7hcEfbwZJt4S9vTJOQEruYk8OTd+qhRyQXXuLhBCDKMEvmpkW84rPJmMhKCADN5rXb4oyR1DXEpILyAKwONkfrPm0EMTKNmMNh2+IWNNJjf0moWKROfNLsgAkmG+LBx5XFpLRIDn/BHopTxnSLTVxuyyhsKJhLduTaiBnXG2x+sjDda6uVFb+0c6ML+j8iZx9D+C5FLhIG3xLQ9csNTcKrbYZB4bGs8/G6Hv/jaw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=arm.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=n1YlgkAYpPVRIE0Exq0WZ36EVvjUeFBDZwrxw1q80i8=;
+ b=NHUsEDeZnSYaavYG0VPsefHnUOziaVjhbm8JatK9VWDk0dT9AKULm6iR8rVOuBQSRH/ZKRafcKqJ3wRP08euY47XsJ2UmLPoOfH+GsD8WGi/w580nHMQCNTW1y9LpB5JKhshK+JlMNz5AX1gNQCfZbW+ZckAKI4ekiMlzOLRYNM=
+Received: from SA1P222CA0187.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c4::14)
+ by PH7PR12MB7258.namprd12.prod.outlook.com (2603:10b6:510:206::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Wed, 19 Mar
+ 2025 19:31:13 +0000
+Received: from SN1PEPF00026369.namprd02.prod.outlook.com
+ (2603:10b6:806:3c4:cafe::c5) by SA1P222CA0187.outlook.office365.com
+ (2603:10b6:806:3c4::14) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Wed,
+ 19 Mar 2025 19:31:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF00026369.mail.protection.outlook.com (10.167.241.134) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Wed, 19 Mar 2025 19:31:13 +0000
+Received: from tunga.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Mar
+ 2025 14:31:02 -0500
+From: Raghavendra K T <raghavendra.kt@amd.com>
+To: <raghavendra.kt@amd.com>
+CC: <AneeshKumar.KizhakeVeetil@arm.com>, <Hasan.Maruf@amd.com>,
+	<Michael.Day@amd.com>, <akpm@linux-foundation.org>, <bharata@amd.com>,
+	<dave.hansen@intel.com>, <david@redhat.com>, <dongjoo.linux.dev@gmail.com>,
+	<feng.tang@intel.com>, <gourry@gourry.net>, <hannes@cmpxchg.org>,
+	<honggyu.kim@sk.com>, <hughd@google.com>, <jhubbard@nvidia.com>,
+	<jon.grimm@amd.com>, <k.shutemov@gmail.com>, <kbusch@meta.com>,
+	<kmanaouil.dev@gmail.com>, <leesuyeon0506@gmail.com>, <leillc@google.com>,
+	<liam.howlett@oracle.com>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <mgorman@techsingularity.net>, <mingo@redhat.com>,
+	<nadav.amit@gmail.com>, <nphamcs@gmail.com>, <peterz@infradead.org>,
+	<riel@surriel.com>, <rientjes@google.com>, <rppt@kernel.org>,
+	<santosh.shukla@amd.com>, <shivankg@amd.com>, <shy828301@gmail.com>,
+	<sj@kernel.org>, <vbabka@suse.cz>, <weixugc@google.com>,
+	<willy@infradead.org>, <ying.huang@linux.alibaba.com>, <ziy@nvidia.com>,
+	<Jonathan.Cameron@huawei.com>, <dave@stgolabs.net>
+Subject: [RFC PATCH V1 01/13] mm: Add kmmscand kernel daemon
+Date: Wed, 19 Mar 2025 19:30:16 +0000
+Message-ID: <20250319193028.29514-2-raghavendra.kt@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250319193028.29514-1-raghavendra.kt@amd.com>
+References: <20250319193028.29514-1-raghavendra.kt@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 6/6] arm64: dts: amlogic: Add Amlogic S4 Audio
-To: Jiebing Chen <jiebing.chen@amlogic.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com
-References: <20250319-audio_drvier-v4-0-686867fad719@amlogic.com>
- <20250319-audio_drvier-v4-6-686867fad719@amlogic.com>
- <20250319-quizzical-coyote-of-assurance-d4c91d@krzk-bin>
- <9397d6d5-518d-4bd0-a34a-7a5f5e1201f1@amlogic.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <9397d6d5-518d-4bd0-a34a-7a5f5e1201f1@amlogic.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF00026369:EE_|PH7PR12MB7258:EE_
+X-MS-Office365-Filtering-Correlation-Id: 8966c4a0-bc7f-44a7-2b6a-08dd671c9c2e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|82310400026|376014|1800799024|7416014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?uOsbzxn9Ra/71b3QdilmFLcwsYqgpUH8zMdp5Ax2j3KUkZTt1blWU399UecF?=
+ =?us-ascii?Q?QwEHWrSbSx1RCwQ1lKT3aRgkytNVHhitIxH0J62qi3Oyk8pBqRc0364V5Yag?=
+ =?us-ascii?Q?qGlzJu4x7qNo16eBdtWcm22bD+3AWUoXCrpv6yMvCXaSVomIFS380EWlUJhD?=
+ =?us-ascii?Q?c7mRi7HL4i+b2+tkkIBi72i1Nphw5FqKhPAEwf8Rc+JvMpx0yBZ9Ema3en6/?=
+ =?us-ascii?Q?OhVeDqJSwATPY39rxxNx4AZu6+i4mKRMGUX9snlUL7rMrR5bUf5OODCGrdmE?=
+ =?us-ascii?Q?vbJ+fSHDw98bPapVLq2Y/Dx+3j4QjJMx2Pzi0WzxOwStTuT/iqlX6dQPZmSU?=
+ =?us-ascii?Q?GH/ukniK0yNXF8jWNh2C7uWlVDzeRP7QTaA/pZheFcFhwWwA97ioTaV6OzeE?=
+ =?us-ascii?Q?ZGDs/tgrT4JBKa2DmPK31J5dYccFy1e8i9xE81ln6ROZ5fdOPOtKEbD+q4QP?=
+ =?us-ascii?Q?pDIo2eqnHQ4pKEThhtbv2DLi63iCg+7Ahjwzdv5t1cWGG3/u65aCyICGHzcC?=
+ =?us-ascii?Q?eE/ulAR2cGcFRDnQsUC+hHO7tuXXgJ6+m9SdcA3ed9TtwJU9GtZZUWwTNMXe?=
+ =?us-ascii?Q?F3lBnZhRpx755OR8nFEZbTsB6ymA+ySJzXrUf3Fq9Qi14Eu9rl8BGj2oD/HS?=
+ =?us-ascii?Q?WZ2r40OXANzApJnmz5SXNUpUFyOp9MDmp24ROyFaSfp+/jNdoYYdY01RilVw?=
+ =?us-ascii?Q?UokQhG/DuKdqb0QpFY/TfIo97Hx+H1jw2kGolN9VyfDQA+X5z81lobaHL4gv?=
+ =?us-ascii?Q?3aYvsiI8xWuPGmcMbIsIWNSapSc2AwLWEQ4WM2tM+VlbZ3f2bnzuhZpUz2hN?=
+ =?us-ascii?Q?llNCWF1tKncjMWZPDQOCrYlRpRfx4Jyiemye+4AyawaMjplZgXfEf5qrMqfN?=
+ =?us-ascii?Q?08Y8ZXXD3vC6sgYICsJ92HcyHQuObrWtyLfL4iYWB+Q85vj3C/+rrEvpd8z8?=
+ =?us-ascii?Q?1TM45KDg5UZo506zDgAmNFcaUQnDktniFWdKWl8haOpNG0kVPJStTU90w8c3?=
+ =?us-ascii?Q?iFAzznfMx0I072IuGpw/5gJmiHhPBz25EZjXC1Eg4hommyAnoZHjOrgtiLTa?=
+ =?us-ascii?Q?zkpD+cgNahu8sufAPoJrmMThPKF27UghP4Ltc0C8jdqg2ixyoULboNA92oie?=
+ =?us-ascii?Q?vqC2/SxKuU7SbA5ZH8hv4xUb45f1ZQZVfhMwS+OQWIL2f7DAi3jpVTNeWSp9?=
+ =?us-ascii?Q?qvsV0m4Hsceb+dqiXkUEZzA80xmKBZUaKwCb+Zav1E9aemWnUf6kOSgYNx4x?=
+ =?us-ascii?Q?dQGohjJ0Xir7Ajva61uScEoIIrqGIs0KyzAmioFvHmLILJpLg8er3PzgtGKU?=
+ =?us-ascii?Q?9DTsEme197NdthIoMGLFDVEvw5do4Ahp/G0IMUrwc/ZTnH3PuwfLkW1FXRUw?=
+ =?us-ascii?Q?RqprU7lvm75q3nUpFMqaIGBBk5ZZxpnFzpi8CQtVSm/Lms7XgkBBvjyDtoGW?=
+ =?us-ascii?Q?R1bE6yzdmcGMZuth5X5k3w8oBAsEotNcTjwxc1KY0hPc0nseeDCuJjLwiD2H?=
+ =?us-ascii?Q?TR8z1FeUhtpnR7A=3D?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(376014)(1800799024)(7416014);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 19:31:13.1620
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8966c4a0-bc7f-44a7-2b6a-08dd671c9c2e
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF00026369.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB7258
 
-On 19/03/2025 11:38, Jiebing Chen wrote:
->>>   };
->>>
->>>   &pwm_ef {
->>> diff --git a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
->>> index 957577d986c0675a503115e1ccbc4387c2051620..83edafc2646438e3e6b1945fa1c4b327254a4131 100644
->>> --- a/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
->>> +++ b/arch/arm64/boot/dts/amlogic/meson-s4.dtsi
->>> @@ -11,7 +11,11 @@
->>>   #include <dt-bindings/clock/amlogic,s4-peripherals-clkc.h>
->>>   #include <dt-bindings/power/meson-s4-power.h>
->>>   #include <dt-bindings/reset/amlogic,meson-s4-reset.h>
->>> -
->> Why?
-> 
-> The following files are included that the audio driver depends on
+Add a skeleton to support scanning and migration.
+Also add a config option for the same.
 
-Do you understand how emails work and patch review? I commented under
-your change, not unrelated code being there already.
+High level design:
 
-> 
-> it is same as sm1 chip
-> 
->>> +#include <dt-bindings/clock/axg-audio-clkc.h>
->>> +#include <dt-bindings/reset/amlogic,meson-axg-audio-arb.h>
->>> +#include <dt-bindings/reset/amlogic,meson-g12a-audio-reset.h>
->>> +#include <dt-bindings/sound/meson-g12a-toacodec.h>
->>> +#include <dt-bindings/sound/meson-g12a-tohdmitx.h>
->> Old style was correct.
-> 
-> I didn't understand where you were referring to, I'm guessing that's 
-> what it was about
+While (1):
+  scan the slowtier pages belonging to VMAs of a task.
+  Add to migation list
 
-Read your patch.
+Separate thread:
+  migrate scanned pages to a toptier node based on heuristics
 
+The overall code is heavily influenced by khugepaged design.
 
-> 
-> the following changes to tdmif_a
-> 
-> old:
-> 
-> clock-names = "mclk", "sclk", "lrclk";
-> 
-> new:
-> clock-names = "sclk", "lrclk","mclk";
-> it fix warning
+Signed-off-by: Raghavendra K T <raghavendra.kt@amd.com>
+---
+ mm/Kconfig    |   8 +++
+ mm/Makefile   |   1 +
+ mm/kmmscand.c | 176 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 185 insertions(+)
+ create mode 100644 mm/kmmscand.c
 
-How is this related to the patch hunk?
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 1b501db06417..5a4931633e15 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -783,6 +783,14 @@ config KSM
+ 	  until a program has madvised that an area is MADV_MERGEABLE, and
+ 	  root has set /sys/kernel/mm/ksm/run to 1 (if CONFIG_SYSFS is set).
+ 
++config KMMSCAND
++	bool "Enable PTE A bit scanning and Migration"
++	depends on NUMA_BALANCING
++	help
++	  Enable PTE A bit scanning of page. CXL pages accessed are migrated to
++	  a regular NUMA node. The option creates a separate kthread for
++	  scanning and migration.
++
+ config DEFAULT_MMAP_MIN_ADDR
+ 	int "Low address space to protect from user allocation"
+ 	depends on MMU
+diff --git a/mm/Makefile b/mm/Makefile
+index 850386a67b3e..45e2f8cc8fd6 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -94,6 +94,7 @@ obj-$(CONFIG_FAIL_PAGE_ALLOC) += fail_page_alloc.o
+ obj-$(CONFIG_MEMTEST)		+= memtest.o
+ obj-$(CONFIG_MIGRATION) += migrate.o
+ obj-$(CONFIG_NUMA) += memory-tiers.o
++obj-$(CONFIG_KMMSCAND) += kmmscand.o
+ obj-$(CONFIG_DEVICE_MIGRATION) += migrate_device.o
+ obj-$(CONFIG_TRANSPARENT_HUGEPAGE) += huge_memory.o khugepaged.o
+ obj-$(CONFIG_PAGE_COUNTER) += page_counter.o
+diff --git a/mm/kmmscand.c b/mm/kmmscand.c
+new file mode 100644
+index 000000000000..6c55250b5cfb
+--- /dev/null
++++ b/mm/kmmscand.c
+@@ -0,0 +1,176 @@
++// SPDX-License-Identifier: GPL-2.0
++#include <linux/mm.h>
++#include <linux/mm_types.h>
++#include <linux/sched.h>
++#include <linux/sched/mm.h>
++#include <linux/mmu_notifier.h>
++#include <linux/swap.h>
++#include <linux/mm_inline.h>
++#include <linux/kthread.h>
++#include <linux/string.h>
++#include <linux/delay.h>
++#include <linux/cleanup.h>
++
++#include <asm/pgalloc.h>
++#include "internal.h"
++
++
++static struct task_struct *kmmscand_thread __read_mostly;
++static DEFINE_MUTEX(kmmscand_mutex);
++
++/* How long to pause between two scan and migration cycle */
++static unsigned int kmmscand_scan_sleep_ms __read_mostly = 16;
++
++/* Max number of mms to scan in one scan and migration cycle */
++#define KMMSCAND_MMS_TO_SCAN	(4 * 1024UL)
++static unsigned long kmmscand_mms_to_scan __read_mostly = KMMSCAND_MMS_TO_SCAN;
++
++bool kmmscand_scan_enabled = true;
++static bool need_wakeup;
++
++static unsigned long kmmscand_sleep_expire;
++
++static DECLARE_WAIT_QUEUE_HEAD(kmmscand_wait);
++
++struct kmmscand_scan {
++	struct list_head mm_head;
++};
++
++struct kmmscand_scan kmmscand_scan = {
++	.mm_head = LIST_HEAD_INIT(kmmscand_scan.mm_head),
++};
++
++static int kmmscand_has_work(void)
++{
++	return !list_empty(&kmmscand_scan.mm_head);
++}
++
++static bool kmmscand_should_wakeup(void)
++{
++	bool wakeup =  kthread_should_stop() || need_wakeup ||
++	       time_after_eq(jiffies, kmmscand_sleep_expire);
++	if (need_wakeup)
++		need_wakeup = false;
++
++	return wakeup;
++}
++
++static void kmmscand_wait_work(void)
++{
++	const unsigned long scan_sleep_jiffies =
++		msecs_to_jiffies(kmmscand_scan_sleep_ms);
++
++	if (!scan_sleep_jiffies)
++		return;
++
++	kmmscand_sleep_expire = jiffies + scan_sleep_jiffies;
++	wait_event_timeout(kmmscand_wait,
++			kmmscand_should_wakeup(),
++			scan_sleep_jiffies);
++	return;
++}
++
++static unsigned long kmmscand_scan_mm_slot(void)
++{
++	/* placeholder for scanning */
++	msleep(100);
++	return 0;
++}
++
++static void kmmscand_do_scan(void)
++{
++	unsigned long iter = 0, mms_to_scan;
++
++	mms_to_scan = READ_ONCE(kmmscand_mms_to_scan);
++
++	while (true) {
++		cond_resched();
++
++		if (unlikely(kthread_should_stop()) ||
++			!READ_ONCE(kmmscand_scan_enabled))
++			break;
++
++		if (kmmscand_has_work())
++			kmmscand_scan_mm_slot();
++
++		iter++;
++		if (iter >= mms_to_scan)
++			break;
++	}
++}
++
++static int kmmscand(void *none)
++{
++	for (;;) {
++		if (unlikely(kthread_should_stop()))
++			break;
++
++		kmmscand_do_scan();
++
++		while (!READ_ONCE(kmmscand_scan_enabled)) {
++			cpu_relax();
++			kmmscand_wait_work();
++		}
++
++		kmmscand_wait_work();
++	}
++	return 0;
++}
++
++static int start_kmmscand(void)
++{
++	int err = 0;
++
++	guard(mutex)(&kmmscand_mutex);
++
++	/* Some one already succeeded in starting daemon */
++	if (kmmscand_thread)
++		goto end;
++
++	kmmscand_thread = kthread_run(kmmscand, NULL, "kmmscand");
++	if (IS_ERR(kmmscand_thread)) {
++		pr_err("kmmscand: kthread_run(kmmscand) failed\n");
++		err = PTR_ERR(kmmscand_thread);
++		kmmscand_thread = NULL;
++		goto end;
++	} else {
++		pr_info("kmmscand: Successfully started kmmscand");
++	}
++
++	if (!list_empty(&kmmscand_scan.mm_head))
++		wake_up_interruptible(&kmmscand_wait);
++
++end:
++	return err;
++}
++
++static int stop_kmmscand(void)
++{
++	int err = 0;
++
++	guard(mutex)(&kmmscand_mutex);
++
++	if (kmmscand_thread) {
++		kthread_stop(kmmscand_thread);
++		kmmscand_thread = NULL;
++	}
++
++	return err;
++}
++
++static int __init kmmscand_init(void)
++{
++	int err;
++
++	err = start_kmmscand();
++	if (err)
++		goto err_kmmscand;
++
++	return 0;
++
++err_kmmscand:
++	stop_kmmscand();
++
++	return err;
++}
++subsys_initcall(kmmscand_init);
+-- 
+2.34.1
 
-Do you understand how patch format works?
-
-
-...
-
->>>        timer {
->>>                compatible = "arm,armv8-timer";
->>>                interrupts = <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>,
->>> @@ -101,7 +135,6 @@ apb4: bus@fe000000 {
->>>                        #address-cells = <2>;
->>>                        #size-cells = <2>;
->>>                        ranges = <0x0 0x0 0x0 0xfe000000 0x0 0x480000>;
->>> -
->> Why? What is happening in this patch - why are you changing so many
->> other pieces?
-
-You did not respond here, so I assume you will fix this and do intensive
-review before posting next version.
-
->>
->>>                        clkc_periphs: clock-controller@0 {
->>>                                compatible = "amlogic,s4-peripherals-clkc";
->>>                                reg = <0x0 0x0 0x0 0x49c>;
->>> @@ -134,6 +167,17 @@ clkc_pll: clock-controller@8000 {
->>>                                #clock-cells = <1>;
->>>                        };
->>>
->>> +                     acodec: audio-controller@1a000 {
->>> +                             compatible = "amlogic,t9015";
->>> +                             reg = <0x0 0x1A000 0x0 0x14>;
->>> +                             #sound-dai-cells = <0>;
->>> +                             sound-name-prefix = "ACODEC";
->>> +                             clocks = <&clkc_periphs CLKID_ACODEC>;
->>> +                             clock-names = "pclk";
->>> +                             resets = <&reset RESET_ACODEC>;
->>> +                             AVDD-supply = <&vddio_ao1v8>;
->>> +                     };
->>> +
->>>                        watchdog@2100 {
->>>                                compatible = "amlogic,s4-wdt", "amlogic,t7-wdt";
->>>                                reg = <0x0 0x2100 0x0 0x10>;
->>> @@ -850,3 +894,327 @@ emmc: mmc@fe08c000 {
->>>                };
->>>        };
->>>   };
->>> +
->>> +&apb4 {
->>> +     audio: bus@330000 {
->>> +             compatible = "simple-bus";
->>> +             reg = <0x0 0x330000 0x0 0x1000>;
->> That's not a simple bus in such case.
-> 
-> these code base on old dts like sm1/g12a, we didn't easily change any of 
-> the relevant properties
-> 
-> To be consistent with the previous one
-
-Still NAK.
-
-You cannot add bugs just to be consistent.
-
-
-Best regards,
-Krzysztof
