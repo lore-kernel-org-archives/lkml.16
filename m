@@ -1,186 +1,98 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA7B16F841
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 15:15:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742397341; cv=none; b=KR8hBRXRSLuBqE/6nsbd3oh1+2XHZqn+tHHH337CQmvQ9PN9zEjrZcVIlPgWMU0SjEwIua1VSEVgRir8i+s6dXDiSUbJLCZ3jRI6sQLU8nAF8RZWtQGh7PNbOvITiiBq9xeoUfjA/H00FbVoItJPX/6L87QMc+0t1VbpUlG50Ts=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742397341; c=relaxed/simple;
-	bh=qgsA9dpPP3nktpy+wDsF8tYTvdd2TWPWR1XgE6sNtu4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Rt9r6oFMJp5pXLX6xeqcUDd2CZ9OHwimrgqMrhnKIx8y4JmxzcZLmiX2zdr1aFnqXJr9FN17DCBe9RaQE07XZDovHnLQRIrGC0DH2ZkX1rtevMjHQX/dDXBV3icfSBNaxL0jU8qqhF0uHX9lESvHGR/XQv+IPXd9CmalYJqiVos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=kUYTqpav; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB964224CC
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 15:16:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742397394; cv=pass; b=A1QTjuEMddyudjfawrZ7v/FrlPbAUyYOJ9MhQmhfoPzME7DuHOAZO+/0V3QFHX4u6vqNbIJwt2C9q4Pdk+1jAndzegIv7ywdKsrjXE2fVA1XOSLl68M5UYad+CKNKOq4j5nbKGTWg+fKvxwXc3fDvZZYM0j0X5nKeYr5+YjVTjM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742397394; c=relaxed/simple;
+	bh=FshwG//AkxCGIuS3ZqG7JLDXa2n6BvNcDj2ycU8dg8U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UAIbPs7lYBEgTHyoRVJZwugQ4U3HtiETVMZxJE8UqRcfYkQfEGNcuhPs8PFEWEy0Z35lF677dyc7cM6dRwcU5eHA1sr2WavPdnBZ7ERBrvNKfUb6tE7xj3OXPZaxRkOf+R0h93OOPzQOqosS4drb5KZRH/VQh4mTsdzSojzXEyM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=EdCtippt; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="kUYTqpav"
-Received: from mail-vk1-f198.google.com (mail-vk1-f198.google.com [209.85.221.198])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 996473FCD4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 15:15:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742397336;
-	bh=qgsA9dpPP3nktpy+wDsF8tYTvdd2TWPWR1XgE6sNtu4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=kUYTqpavung5IUy+/BLlGVKJhiW/MKr00Vw0cMy8Woq6AqseGXmo+sb997k7XdC5B
-	 aEwL4HF0sNgEUMaVki5gYnvoxUXyLqn/KMuxrS8NUZpSrDFnZL+zNlSshe19kfbSa0
-	 eCVvhwbp6B4CsNDWDRZEjyw80hAbpxWx5ODQeFNtG3Q0EPgnRlTQHBPXsS3u0MkRSv
-	 UoFXVNVzNcLLzcmd9uudrH4YNV1Wtod82cbfIaEGYBsY0z83Mii8tB2kgtJZKHrVg5
-	 MOw8Qw2gcwfKntj/1oXWkJm77i5PPXtc9PmMm7r5Ud6ZKaBgFK7lyrNjXSHuv8C1ej
-	 XI2L1F/PVg9cg==
-Received: by mail-vk1-f198.google.com with SMTP id 71dfb90a1353d-523ef27785aso1802018e0c.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 08:15:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742397335; x=1743002135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qgsA9dpPP3nktpy+wDsF8tYTvdd2TWPWR1XgE6sNtu4=;
-        b=wNQo7lEx7/42VR0gdfrvZ+/A52ordlkdi7b7ANlxvjrHZbxcFl9kpzMAmgAEbof0K7
-         PwlH9mTZTXMws1860asydssxYxvPScyljXq6QLg1Yjid8o4+RKllWRv95QanurUF17Ce
-         crrxwGx20YCyyY00s4A9z5GoX0AogJO9du9o2t4qvG6iKXaO59KKUhax+q8gUGa7Td5X
-         zkoOfhENntN3PqAQa7zZ4wEnK1fDWSO2MHDzTmAxjDE0CFSNe3dw48tDB7BOoA76vqpw
-         eYmD6L/zMJ6udBYuHJArL0rz/GcS934YT3tRUseRi09EZmf6XUDPmtWotiuwvQT1F0D0
-         rabA==
-X-Forwarded-Encrypted: i=1; AJvYcCWlHcArtv/Yvawl2NphypW97QAPgNRmoWMFXF/qUkedIM6griRUtEpLAGPjKuIMpeDL6DflCjXk/mi2ZMg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxYFtNsqLQsktFX+CvZOeuuLyl4xhLzWzSH31kTWnqrtGMwsxr+
-	2Q63pVB6nsEvLSj/XAvCvi/3cD89lPj9rqx7kzNg9RbBoquiSYOtdVpz3rrmI2O6UzBe3tHyhEm
-	2ILepFNyrrDGiIsUJDmsLzICUKyeIw37lTEr08SZhy3ByKKmeOLH0ocZQRS5wb3h17epOgoGtnf
-	GEPqHrpmXLbzGvYZy+dwjiXAweXDtkcXC2pSy6MjFVoanivAM/1uuN
-X-Gm-Gg: ASbGnctJjHD6PTvJApIwf6Gj6D0Se0GxdfRj7r82SosjRh6xzaREenEf71iQI69rOhD
-	R2STNOmu7VxRqLRHbvBUGxz4e8semOB3+STpiZFHf38Z5J8ERmYbtohVBt2FANub6JJffwMBB5w
-	==
-X-Received: by 2002:a05:6122:8d5:b0:520:51a4:b81c with SMTP id 71dfb90a1353d-525891bfc08mr2198601e0c.6.1742397333498;
-        Wed, 19 Mar 2025 08:15:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGw7muwol2OI7wSYL9a9iCyn+ZyN/NbRnjdL4AIqfECKKb7LsSD6rIVvzulorR8ijKfurSGNQLANVDULXCR0Sg=
-X-Received: by 2002:a05:6122:8d5:b0:520:51a4:b81c with SMTP id
- 71dfb90a1353d-525891bfc08mr2198425e0c.6.1742397332338; Wed, 19 Mar 2025
- 08:15:32 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="EdCtippt"
+ARC-Seal: i=1; a=rsa-sha256; t=1742397373; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=kP6MKm231y+p86vJj3lgqWO41uwKU7hab++9xSsLjAMYFNr8KpqU3si1FxV5CQ70vdqiBZ4oRE7daC0ac48QHqJXo+LqrqeZm4S++FeURr6YgZ5DbP++pEjEGSNYMQtIPl86+kWooWD6Ius3ukit1VexH1i6xCkEDaBGvibPLHA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742397373; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=iQsw2Yqkfu4c/F+2H/DRIW2untXcbSo1Qujc3AC3PUM=; 
+	b=KAnceKq3mqZtxruSZPl+wcl020RzYJ7+2bf0+ExjCmdEJVeqjIMVBQkVq6DaX9s8WHGiXYl10G9UvxNuQGEFJ7xbg9CjRw5CEkLyK4yK0rm70mJHiyr1gCwtXDXe1ohGaaZzKgTnYjTOzkuTAzFaB8eQLZVrG8fszFUUKy+pSCM=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
+	dmarc=pass header.from=<adrian.larumbe@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742397373;
+	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=iQsw2Yqkfu4c/F+2H/DRIW2untXcbSo1Qujc3AC3PUM=;
+	b=EdCtipptt3uSiM/xN4sPQyPSyyX7IyXuFHKbeWY/83/xVlrbAKLUGC/+yXpSTYQl
+	lKP8wy31bcZleBB2fyc295PCtlehHssL+USG89HE7XKBUAmWakwxIeu6ODLB18W3ZeI
+	ec6Kqvph54pSUnUe8QJBeaKxGYC1sxiO38tpxP7Q=
+Received: by mx.zohomail.com with SMTPS id 1742397372202236.04927725024265;
+	Wed, 19 Mar 2025 08:16:12 -0700 (PDT)
+From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
+To: Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Liviu Dudau <liviu.dudau@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>
+Cc: kernel@collabora.com,
+	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2 0/4] Panthor BO tagging and GEMS debug display
+Date: Wed, 19 Mar 2025 15:03:15 +0000
+Message-ID: <20250319150953.1634322-1-adrian.larumbe@collabora.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1730123433.git.lorenzo.stoakes@oracle.com>
- <zihwmp67m2lpuxbfktmztvjdyap7suzd75dowlw4eamu6bhjf3@6euydiqowc7h>
- <278393de-2729-4ed0-822c-87f33c7ce27e@redhat.com> <23000b6a-8a58-4c38-a032-ad62637d3fa4@lucifer.local>
-In-Reply-To: <23000b6a-8a58-4c38-a032-ad62637d3fa4@lucifer.local>
-From: Aleksandr Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>
-Date: Wed, 19 Mar 2025 16:15:21 +0100
-X-Gm-Features: AQ5f1JqxdWeNnEOv-kQ64TqNajnS4hkxmZIQ-2f_7rOqGOdfJG9iC0RXfJ9SbYY
-Message-ID: <CAEivzxeSupJXyCZthc=vGbocJ-AWCq_=q2f_hMKe7pe_83Q86Q@mail.gmail.com>
-Subject: Re: [PATCH v4 0/5] implement lightweight guard pages
-To: Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
-Cc: David Hildenbrand <david@redhat.com>, James.Bottomley@hansenpartnership.com, 
-	Liam.Howlett@oracle.com, akpm@linux-foundation.org, arnd@kernel.org, 
-	brauner@kernel.org, chris@zankel.net, deller@gmx.de, hch@infradead.org, 
-	jannh@google.com, jcmvbkbc@gmail.com, jeffxu@chromium.org, 
-	jhubbard@nvidia.com, linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mm@kvack.org, mattst88@gmail.com, muchun.song@linux.dev, 
-	paulmck@kernel.org, richard.henderson@linaro.org, shuah@kernel.org, 
-	sidhartha.kumar@oracle.com, surenb@google.com, tsbogend@alpha.franken.de, 
-	vbabka@suse.cz, willy@infradead.org, criu@lists.linux.dev, 
-	Andrei Vagin <avagin@gmail.com>, Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 19, 2025 at 4:02=E2=80=AFPM Lorenzo Stoakes
-<lorenzo.stoakes@oracle.com> wrote:
->
-> On Wed, Mar 19, 2025 at 03:52:56PM +0100, David Hildenbrand wrote:
-> > On 19.03.25 15:50, Alexander Mikhalitsyn wrote:
-> > > On Mon, Oct 28, 2024 at 02:13:26PM +0000, Lorenzo Stoakes wrote:
->
-> [snip]
->
->
-> > >
-> > > Dear Lorenzo,
-> > > Dear colleagues,
-> > >
-> > > sorry about raising an old thread.
-> > >
->
-> No worries!
->
-> > > It looks like this feature is now used in glibc [1]. And we noticed f=
-ailures in CRIU [2]
-> > > CI on Fedora Rawhide userspace. Now a question is how we can properly=
- detect such
-> > > "guarded" pages from user space. As I can see from MADV_GUARD_INSTALL=
- implementation,
-> > > it does not modify VMA flags anyhow, but only page tables. It means t=
-hat /proc/<pid>/maps
-> > > and /proc/<pid>/smaps interfaces are useless in this case. (Please, c=
-orrect me if I'm missing
-> > > anything here.)
->
-> Sorry to hear that.
+This patch series is aimed at providing UM with detailed memory profiling
+information in debug builds. It is achieved through a device-wide list of
+DRM GEM objects, and also implementing the ability to label BO's from UM
+through a new IOCTL.
 
-No problem at all ;)
+The new debugfs file shows a list of driver DRM GEM objects in tabular mode.
+To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
 
->
-> > >
-> > > I wonder if you have any ideas / suggestions regarding Checkpoint/Res=
-tore here. We (CRIU devs) are happy
-> > > to develop some patches to bring some uAPI to expose MADV_GUARDs, but=
- before going into this we decided
-> > > to raise this question in LKML.
->
-> There's no need.
->
-> >
-> >
-> > See [1] and [2]
-> >
-> > [1]
-> > https://lkml.kernel.org/r/cover.1740139449.git.lorenzo.stoakes@oracle.c=
-om
-> > [2] https://lwn.net/Articles/1011366/
->
-> As per David, there is already a feature heading for 6.15 which will allo=
-w
-> this to be exposed by /proc/$pid/pagemap.
+Previous discussion mail archive:
+https://lore.kernel.org/dri-devel/20250316215139.3940623-1-adrian.larumbe@collabora.com/
 
-Yeah, that's indeed very helpful!
+Changelog:
+ v2:
+  - Consolidated some debugfs and labelling struct members into nested structs
+  - Added helpers for handling the debugfs gems linked list
+  - Fixed ioctl naming scheme in the uapi header file
+  - Added label length limit and param consistency checks in BO labelling ioctl
 
->
-> In addition, I plan to add a 'maybe has guard regions' flag that can be
-> observed in smaps to assist narrowing down which VMAs to check.
->
-> However unfortunately due to the nature of the feature there is no gettin=
-g
-> around the need to traverse page tables.
->
-> That thread (and LWN article :) go into extensive detail as to why. In
-> essence - it's the basis of its design to express this information at the
-> page table level only, and any attempt to encode this at the VMA level
-> (other than a 'maybe' flag) would eliminate the purpose of the feature.
+Adrián Larumbe (4):
+  drm/panthor: Introduce BO labeling
+  drm/panthor: Add driver IOCTL for setting BO labels
+  drm/panthor: show device-wide list of DRM GEM objects over DebugFS
+  drm/panthor: Display heap chunk entries in DebugFS GEMS file
 
-Thank you very much for these explanations!
-I'll read the LWN article too.
+ drivers/gpu/drm/panthor/panthor_device.c |   5 +
+ drivers/gpu/drm/panthor/panthor_device.h |  11 ++
+ drivers/gpu/drm/panthor/panthor_drv.c    |  63 ++++++++++
+ drivers/gpu/drm/panthor/panthor_gem.c    | 154 +++++++++++++++++++++++
+ drivers/gpu/drm/panthor/panthor_gem.h    |  48 +++++++
+ drivers/gpu/drm/panthor/panthor_heap.c   |   3 +
+ include/uapi/drm/panthor_drm.h           |  19 +++
+ 7 files changed, 303 insertions(+)
 
->
-> Let me know if there's any way I can help!
-
-Keep in contact! ;)
-
-Kind regards,
-Alex
-
->
-> Cheers, Lorenzo
->
-> >
-> >
-> > --
-> > Cheers,
-> >
-> > David / dhildenb
-> >
+--
+2.48.1
