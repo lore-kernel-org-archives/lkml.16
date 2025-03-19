@@ -1,88 +1,210 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59BA0210186
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 13:33:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79BA725291E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 13:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742391183; cv=none; b=OI/m1u58L9iB9nWD8SJ7uJ4K9rF+z6+P1uKibfEB/P//OJ0bTYdGCzWtaBVCPfrUSYjMY0pEv3u3OwNkVjvdzk7syCSrS9Lgiol5WOQFMFg9ZzaynzdIuBgTsp9+707TjERzcVUc7DGouV9XoPnUlTtZzouL7HqzXJ1ltt/bQ+o=
+	t=1742391194; cv=none; b=NTYaNzBfSO9Avd2zBr3hLnUuW5V+vcwVuobDPMnEscsz5RCGfwLxPd3P7xJUyly1cUmaUdVWY2Si3JyZDN9KNfbpK81ttSFtVKRVLPM07PG7P4Tb7AvuT79C7ZZR3D+HThpslsGbs2LwIvJXpCfUYVejnHljfojuc52vqOW+7OQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742391183; c=relaxed/simple;
-	bh=gDqz679B7Uxk4MUJziXpWUWZLQc0EYr4/6vswwU89fQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jUvYV+VljEI0iJnN2k5CupJ7Bl0XEd1IKDP7za3WMf6NHDC6uOQK6hVwOwbV6osXYk8XVrFp7fOInzBDjAYmMqGPyy6b48ivt2sOMNHOIpW/QgJhmTFptD8X/vl9ZsCR1sGIuIIyVqxvCpGQ3gsT1CN+4r4NXZ6Ut5tSctbXBVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B469B113E;
-	Wed, 19 Mar 2025 06:33:08 -0700 (PDT)
-Received: from [192.168.3.45] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 92F903F673;
-	Wed, 19 Mar 2025 06:32:57 -0700 (PDT)
-Message-ID: <aa8baf67-a8ec-4ad8-a6a8-afdcd7036771@arm.com>
-Date: Wed, 19 Mar 2025 14:32:35 +0100
+	s=arc-20240116; t=1742391194; c=relaxed/simple;
+	bh=/sES4k8UjISgp/gWMbe6DvmWKaPMB3gKiTxA7xMQG0c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YDt/0yepbAxmpb+YWlaLQXyTNNaYdsLahjZ2rLa8kj5AuJ1xf2STQRNpIOcvZ2+whV9YRY2jfp1qVaaEC+GuYeJmLE5kgL1CJp/jw4BZ+L7i9DFIncW1q9FE1wiDvI2Cb6MvDKL+m2l3gFHJfYuTM1o8icn8bSG3rXy+XLXWHpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=gpX10aXo; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="gpX10aXo"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J4lknB020421
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 13:33:11 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=L1cwU2n8bj0ukeSke0nD730u
+	0joPNeYwiC6zq9RTN4I=; b=gpX10aXoXXMdN4Dy65Ua8Q/EcKiLPWP48XU62keu
+	y+b0D38HKwlw7ynKK+lVSNGCV6IZXoEalHSwd/lu9hL69xnoAaAv9iSBvbweYHXx
+	YhnLnwiGdek41PlnutY0k4Y2EMW79fzy5JioAIO6tNz3ughggdtX07CpCQYUxKJt
+	APeeJ+Dq3ny5tkJrGAPd4Gunx87J4ed3UwOy+AqrAVjG+FogQixCmtnSHApoGSi7
+	DpKlA3iYrnGjb82HLpYc5rkQ2ZUafXmo9WTmstGLtWQIekZ6InT3daYEX9HN0lX1
+	iFMacHYEjNxVRsUU5jX0MyGakiljq2zx8Yeew3tWRoRSbA==
+Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45fdmwts39-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 13:33:11 +0000 (GMT)
+Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c3b6450ef0so1052848585a.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 06:33:10 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742391190; x=1742995990;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=L1cwU2n8bj0ukeSke0nD730u0joPNeYwiC6zq9RTN4I=;
+        b=UJT6S4p2qw/otOkZGJUWslmh4eNkm643FQJf6iyAGB5RbyczNUgYZ6UCc51Qz1as7T
+         NoDxnLtcdTsQgkCP3S9dxy2sT+IJozAihJ3f5UxRZI212hjKpwEDBW3zdDUDjwBis7GQ
+         jKcNhIG1EF+yoX96KHciT6lToV4mcUnrx3JldkX+x7TD+k/pn1GjU9kwXif1+t14szTr
+         cAYRiOkvBPTCThfHXhaFWDV/SeVVjMD2/MoXUwAdO/4OfxSgh/pAGy/rsR98I1vh7kGe
+         qaViyvOajzYI7TABtFJuJKjkugMymkGyQ07siYqC75VJxZ0rzKaeszjW+uKVV3wJl/JB
+         Mmqw==
+X-Forwarded-Encrypted: i=1; AJvYcCXwYbrM4slbHRgqjoReINN1uPsb3zuW1PIE4UjzRs1ShFBJdKyhJyT+aujV0ehkxIAjKTc4VobsvDkWpBQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx4KOcpuXQCLkGrK77WkRh5AQiLvoIit2RqUC+w6yKAn7dwgiFE
+	/mjnPKd1oMAE1iBMeNTEGgTyARYxFC7M60oGpphuVgIrWEC8kao+asAahrwmdytzXlGXrjlssmd
+	vC+le1iVOWBgYw+2RLmrpgZ9SYkkMazgP1VIEnF3Tl+yoThNMO8qqdPuLFV/tqI/icdk+J2U=
+X-Gm-Gg: ASbGnctGLNtewNxjrRYJjE+asxntNbG1ksRk2kHUAvTEv1Jh8DPLpdt+iHYT7jECODB
+	o7flSPq4rXGWiahwfoMkghVaYgQNa9OJyvGFn7/oy+qdn8G9mktlF4MsezzBUX8urZTXlB9UOf7
+	rKbdBe7iUbggPL5EelW6W4rA3eLY/tpde8TRVg7XcwxpATKvvm+UqnSdM5rr1+GqC/mlz9hYC/W
+	2c5m/NFQCsVZfVICX6BhSX0ChPIg10xYTwePxQDeemkkrKjn8G+Sh4vq4t08FYKUW1PNNjvw7TP
+	bMKeRMjdmpwiar3bOZ4uxc/9vtwT64pUqjkVQCTMF93CfKWtdetQOxxUDzAml4LqwGM+N8E/zTt
+	/Yzg=
+X-Received: by 2002:a05:620a:469e:b0:7c5:6ba5:dd40 with SMTP id af79cd13be357-7c5a83967e9mr360447085a.17.1742391189593;
+        Wed, 19 Mar 2025 06:33:09 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMWEksZ3Z3ZSMIW+M3tVuDno6if0d5H3pY93bE3ZIDzh2MaZN8fU+f97WH5ZcHA6WCgI16Nw==
+X-Received: by 2002:a05:620a:469e:b0:7c5:6ba5:dd40 with SMTP id af79cd13be357-7c5a83967e9mr360441685a.17.1742391189080;
+        Wed, 19 Mar 2025 06:33:09 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba888069sm1932991e87.193.2025.03.19.06.33.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 06:33:08 -0700 (PDT)
+Date: Wed, 19 Mar 2025 15:33:06 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+Cc: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>, neil.armstrong@linaro.org,
+        Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jeff Johnson <jjohnson@kernel.org>,
+        Aditya Kumar Singh <quic_adisi@quicinc.com>,
+        linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH net] wifi: ath12k: properly set single_chip_mlo_supp to
+ true in ath12k_core_alloc()
+Message-ID: <hmfvyajygmjoeaaashmddu4rg6ttzn7es4sjls5qvnemykkx2l@zuzixrzkmkgx>
+References: <20250303-topic-ath12k-fix-crash-v1-1-f871d4e4d968@linaro.org>
+ <24b2f1f8-97bd-423a-acbd-9a5cd45e4a40@oss.qualcomm.com>
+ <7901d7f0-d6d0-4bf3-89ad-d710e88477b7@linaro.org>
+ <7b4b598f-bc13-aa4b-8677-71477e1f5434@quicinc.com>
+ <8b05760b-db99-4b43-8444-d655b18d3699@kernel.org>
+ <db232678-fa85-d75f-de72-d2b5e1ec611f@quicinc.com>
+ <2a5hvicenftfiktviiofvknanyz756cbryu35gkfczdvbcdd5j@fktlzfieotgl>
+ <c6e3b0c1-18fe-a9fa-0e72-d955809144e3@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH] sched/util_est: Do not sub the delayed-task's
- util-est
-To: Xuewen Yan <xuewen.yan@unisoc.com>, vincent.guittot@linaro.org,
- mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com
-Cc: rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.co, linux-kernel@vger.kernel.org, hongyan.xia2@arm.com,
- qyousef@layalina.io, ke.wang@unisoc.com, di.shen@unisoc.com,
- xuewen.yan94@gmail.com
-References: <20250314090909.8404-1-xuewen.yan@unisoc.com>
-From: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Content-Language: en-US
-In-Reply-To: <20250314090909.8404-1-xuewen.yan@unisoc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c6e3b0c1-18fe-a9fa-0e72-d955809144e3@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: e4HSCrhHmaUfLvyu_r7OxVSuJmvYtR-j
+X-Authority-Analysis: v=2.4 cv=ReKQC0tv c=1 sm=1 tr=0 ts=67dac797 cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=yba1ihJKBxQaQydNyIEA:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
+X-Proofpoint-GUID: e4HSCrhHmaUfLvyu_r7OxVSuJmvYtR-j
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_05,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503190093
 
-On 14/03/2025 10:09, Xuewen Yan wrote:
-> In cpu_util_without, When the task is in rq, we should
-> sub the task's util_est, however, the delayed_task->on_rq
-> is true, however, the delayed_task's util had been sub
-> when sleep, so there is no need to sub the delayed task's
-> util-est. So add the checking of delayed-task.
+On Wed, Mar 19, 2025 at 06:24:57PM +0530, Vasanthakumar Thiagarajan wrote:
 > 
-> On the other hand, as said in [1], the logic of util_est's
-> enqueue/dequeue could be simplified.
-> So simplify it by aligning with the conditions of uclamp.
+> 
+> On 3/19/2025 5:21 PM, Dmitry Baryshkov wrote:
+> > On Wed, Mar 19, 2025 at 05:02:39PM +0530, Vasanthakumar Thiagarajan wrote:
+> > > 
+> > > 
+> > > On 3/19/2025 3:57 PM, Krzysztof Kozlowski wrote:
+> > > > On 19/03/2025 10:06, Vasanthakumar Thiagarajan wrote:
+> > > > > > > > ---
+> > > > > > > > base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+> > > > > > > > change-id: 20250303-topic-ath12k-fix-crash-49e9055c61a1
+> > > > > > > > 
+> > > > > > > > Best regards,
+> > > > > > > 
+> > > > > > > NAK since this will break QCN
+> > > > > > > There is a series under internal review to address MLO issues for WCN chipsets
+> > > > > > 
+> > > > > > ???
+> > > > > > 
+> > > > > > The original commit is wrong, this fixes the conversion, nothing else.
+> > > > > 
+> > > > > Nope. Driver changes to enable MLO with WCN chipset are not there yet.
+> > > > > Setting the mlo capability flag without having required driver changes
+> > > > > for WCN chipset will likely result in firmware crash. So the recommendation
+> > > > > is to enable MLO (in WCN) only when all the necessary driver changes
+> > > > > (in development, public posting in near future) are in place.
+> > > > Really, these are your answers? There is regression and first reply is
+> > > > upstream should wait for whatever you do internally. Second answer is
+> > > > the same - public posting in near future?
+> > > > 
+> > > 
+> > > May be I was not clear in my response. I was not telling MLO bug fixes were
+> > > in the development. Actually the MLO feature itself is not enabled
+> > > yet with WCN chip sets. Any code changes enabling it without full feature
+> > > support would result in firmware crashes with the existing firmware binaries
+> > > available in upstream.
+> > 
+> > Is there an undocumented change of the behaviour in the commit
+> > 46d16f7e1d14 ("wifi: ath12k: rename mlo_capable_flags to
+> > single_chip_mlo_supp")?
+> > 
+> 
+> diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
+> 
+> -       if (resp.single_chip_mlo_support_valid) {
+> -               if (resp.single_chip_mlo_support)
+> -                       ab->mlo_capable_flags |= ATH12K_INTRA_DEVICE_MLO_SUPPORT;
+> -               else
+> -                       ab->mlo_capable_flags &= ~ATH12K_INTRA_DEVICE_MLO_SUPPORT;
+> -       }
+> 
+> The above logic seems to keep the initialized intra MLO support even when
+> single_chip_mlo_support_valid is not set. The above code removal is correct as
+> MLO support can not be enabled in host when firmware does not advertise it.
 
-This flag simplification looks good to me.
+Ack
 
-IMHO, you should submit this with the uclamp change so that we can call
-uclamp_rq_inc() before p->sched_class->enqueue_task(). To make sure the
-task which is enqueued with 'flags & ENQUEUE_DELAYED' is considered for
-cpufreq_update_util() in enqueue_task_fair() (Hongyan's finding in
-https://lkml.kernel.org/r/84441660bef0a5e67fd09dc3787178d0276dad31.1740664400.git.hongyan.xia2@arm.com)
+> 
+> diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+> 
 
-I would prefer the less invasive fix you presented here:
+You skipped an important chunk:
 
-https://lkml.kernel.org/r/CAB8ipk9LpbiUDnbcV6+59+Sa=Ai7tFzO===mpLD3obNdV4=J-A@mail.gmail.com
+-	ab->mlo_capable_flags = ATH12K_INTRA_DEVICE_MLO_SUPPORT;
+> +       ab->single_chip_mlo_supp = false;
 
-since uclamp is already a core thing (fair + rt), it works for current
-max aggregation and it's less invasive.
+Is this an _undocumented_ change? I think it is. If the developer has
+described that the commit disables MLO, there would be no such
+questions.
 
-[...]
+> diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
+> 
+> +       if (resp.single_chip_mlo_support_valid &&
+> +           resp.single_chip_mlo_support)
+> +               ab->single_chip_mlo_supp = true;
+> 
+> The above code does it in right way. Overriding firmware MLO capability as done
+> in the submitted patch under review is obviously wrong. The firmware used to report
+> the issue seems to have an odd behavior: 1. it does not seem to advertise MLO
+> capability in single_chip_mlo_support bit and 2. expects configurations to enable
+> MLO from host. None of the WCN firmware available in upstream either advertises
+> MLO capability or expects configurations to enable MLO from host.
 
-> @@ -8037,7 +8037,8 @@ cpu_util(int cpu, struct task_struct *p, int dst_cpu, int boost)
->  		 */
->  		if (dst_cpu == cpu)
->  			util_est += _task_util_est(p);
-> -		else if (p && unlikely(task_on_rq_queued(p) || current == p))
-> +		else if (p && unlikely(current == p ||
-> +			 (task_on_rq_queued(p) && !p->se.sched_delayed)))
->  			lsub_positive(&util_est, _task_util_est(p));
+Additionally, from the commit message:
 
-cpu_util(..., p != NULL, ...) is only used for select_task_rq_fair().
-IMHO p->se.sched_delayed is not set there.
+    For the WCN7850 family of chipsets, since the event is not supported,
+    assumption is made that single chip MLO is supported.
 
+However the code doesn't contain that change. Instead single chip MLO is
+unconditionally disabled.
 
+I guess, Neil's change should be reworked to be limited to WCN7850 only,
+however it must be done as it is what was expected from the commit
+message.
 
-
-
+-- 
+With best wishes
+Dmitry
