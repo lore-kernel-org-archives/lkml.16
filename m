@@ -1,206 +1,128 @@
-Received: from fllvem-ot03.ext.ti.com (fllvem-ot03.ext.ti.com [198.47.19.245])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F2F1B4138;
-	Wed, 19 Mar 2025 17:07:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.245
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1080F1E22E6;
+	Wed, 19 Mar 2025 17:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742404041; cv=none; b=nCME9Lpx3O4pGT4Jjr45bKV0V9MUWgU/n/OtalAqMqbF0Ot7HV0/zEtALKKRft3VVXxrJmzodBWNxk79eqeiHST6pZXOkE62XLmPky8tFWq+srosG1mzKGMHArnuZIM3sNH0uv4UCVKrA7tP/CFwTqELjCM+24AwNvFMcydCXU0=
+	t=1742404101; cv=none; b=PTtUmqFVXGZVLopTbwFkAZIwWXFaIBaweGOyRx6Fn9v6SG+ygjfaVIrKNdpAkAlOkko+srduj5WTggWz1o0Ag2x0gOamEcBDzHqyhOxxpYIVuGBFw2SdiU3vPZtElQ2RdFeMPvnJzjJaxz613zyda/T8JVz6Nyc706xPB9fglAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742404041; c=relaxed/simple;
-	bh=niyYTGDmpTPxcpRG6NKEaQYm6APr+GhvRE14BZy7+c0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:CC:References:
-	 In-Reply-To:Content-Type; b=kOYm2iRzy3JbaELBb+p+2KDw23A3OLNJV+jfQ7Op6eQoJaLWcfatJAG0mTCRsqEcweny8ITMzoCzaqtUoXNNG0FSATwWbb6Cqw1upic2ZKHENgrD4ozBF+kG7t+6StqudGBnqfaCwSgiDu6cj127elKyJtqL21Zy9ur6LYTSPZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=qsbKM2nz; arc=none smtp.client-ip=198.47.19.245
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+	s=arc-20240116; t=1742404101; c=relaxed/simple;
+	bh=nnCi2z3+hodZj81KTk+zaAwe0gxzfdo68ycMV8BotV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=Sj355QBZYC2tBKTwQV0DoIusRpEkWq8UU1o5smFOTIXeYlTeHX3nUr/1PCWl1gkVXksJyqW0LzSz+0QejdUzm9Oqf+1xaqQT0PKenDmPvsf70x3xH9gOLwnJyM5RLKJQSDv/t1jA6qmtDxn3QXaj6JzjIRz2IXsTkSb9GZgT/Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/FhDhai; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qsbKM2nz"
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by fllvem-ot03.ext.ti.com (8.15.2/8.15.2) with ESMTPS id 52JH72L52985222
-	(version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 19 Mar 2025 12:07:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1742404022;
-	bh=lI5UQx2IS3qM/+aBZXzoJwCNluD7HLRBssCGs/gwBWQ=;
-	h=Date:Subject:From:To:CC:References:In-Reply-To;
-	b=qsbKM2nzHfrQrlRa9n/BXMiU/wx+6ujjNrqYDNK8Drs/YWhzMoZ/+qVx1wB4Sg7He
-	 Yof8fq355RXza0boyc6k5F0lPnWVC2+MSRKAQ5sRCMAAcyeK643nbWGvFJG+glzieE
-	 V8dLSW+iIVeb8UYTqlc6MrczAMnO/uhkILtO5BVc=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 52JH72QB047664
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 19 Mar 2025 12:07:02 -0500
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 19
- Mar 2025 12:07:01 -0500
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 19 Mar 2025 12:07:01 -0500
-Received: from [128.247.81.105] (judy-hp.dhcp.ti.com [128.247.81.105])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 52JH71I8093411;
-	Wed, 19 Mar 2025 12:07:01 -0500
-Message-ID: <5cd9da69-95f1-4cf0-b6ee-cffcf984a390@ti.com>
-Date: Wed, 19 Mar 2025 12:07:01 -0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/FhDhai"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52D48C4CEE4;
+	Wed, 19 Mar 2025 17:08:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742404098;
+	bh=nnCi2z3+hodZj81KTk+zaAwe0gxzfdo68ycMV8BotV4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=U/FhDhaiw+ee08HFCH8h5MKIikEARG9FwNdcM8SBrOj97Z+CjWs2hBgSYUZQSjBYY
+	 3DKHg9SC9L/EKBQ+OkJcmeI9kungjWPU0KAyWi4uOcc0lM0gVOdROfG9zdY+l3tSFW
+	 kGKamqJm9rqY3vmXS16btHR0kCzPqutbqkUjF35t6JU5tgtIDuUkw0a/eQ6VNfFPyi
+	 QzGmDKm/HMTMBIVGFQma1cKtJZzNY/XpuJ48E3I7TzagAKe7HV49kHD2dJu4u2bz5G
+	 mM0Fb/6pQyCQ0H/jVweSJXssajgVCSH/W8J7GKFopdPRBa0tVjcoK5yh1EFUkhi36q
+	 R9eYL2DTClZ/g==
+Date: Wed, 19 Mar 2025 12:08:16 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: LKML <linux-kernel@vger.kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Nishanth Menon <nm@ti.com>, Dhruva Gole <d-gole@ti.com>,
+	Tero Kristo <kristo@kernel.org>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Logan Gunthorpe <logang@deltatee.com>,
+	Dave Jiang <dave.jiang@intel.com>, Jon Mason <jdmason@kudzu.us>,
+	Allen Hubbe <allenbh@gmail.com>, ntb@lists.linux.dev,
+	Michael Kelley <mhklinux@outlook.com>, Wei Liu <wei.liu@kernel.org>,
+	Bjorn Helgaas <bhelgaas@google.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-pci@vger.kernel.org,
+	Wei Huang <wei.huang2@amd.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	linux-scsi@vger.kernel.org,
+	Jonathan Cameron <Jonathan.Cameron@huwei.com>
+Subject: Re: [patch V4 05/14] PCI/MSI: Use guard(msi_desc_lock) where
+ applicable
+Message-ID: <20250319170816.GA1046112@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] Revert "mmc: sdhci_am654: Add
- sdhci_am654_start_signal_voltage_switch"
-From: Judith Mendez <jm@ti.com>
-To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>,
-        "josua@solid-run.com" <josua@solid-run.com>
-CC: "rabeeh@solid-run.com" <rabeeh@solid-run.com>,
-        "stable@vger.kernel.org"
-	<stable@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org"
-	<linux-mmc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "jon@solid-run.com" <jon@solid-run.com>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "adrian.hunter@intel.com"
-	<adrian.hunter@intel.com>
-References: <20250127-am654-mmc-regression-v2-1-9bb39fb12810@solid-run.com>
- <93d7e958-be62-45b3-ba8f-d3e4cf2839bf@ti.com>
- <5c6e447ad9633f969cad7ed6641c8f6cfcc51237.camel@siemens.com>
- <3be2f0a1-65f9-4aa7-9c0b-1f4fe626be17@ti.com>
-Content-Language: en-US
-In-Reply-To: <3be2f0a1-65f9-4aa7-9c0b-1f4fe626be17@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319105506.322536126@linutronix.de>
 
-Hi, Alexander, Joshua,
+On Wed, Mar 19, 2025 at 11:56:47AM +0100, Thomas Gleixner wrote:
+> Convert the trivial cases of msi_desc_lock/unlock() pairs.
+> 
+> No functional change.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-Let me correct who I direct my questions/responses for.
-
-On 3/19/25 11:25 AM, Judith Mendez wrote:
-> Hi, Alexander,
+> ---
+> V4: Split out from the previous combo patch
+> ---
+>  drivers/pci/msi/api.c |    6 ++----
+>  drivers/pci/msi/msi.c |   12 ++++++------
+>  2 files changed, 8 insertions(+), 10 deletions(-)
 > 
-> On 3/19/25 5:22 AM, Sverdlin, Alexander wrote:
->> Hi Judith, Ulf,
->>
->> On Wed, 2025-02-05 at 13:39 -0600, Judith Mendez wrote:
->>> Hi all,
->>>
->>> On 1/27/25 2:12 PM, Josua Mayer wrote:
->>>> This reverts commit 941a7abd4666912b84ab209396fdb54b0dae685d.
->>>>
->>>> This commit uses presence of device-tree properties vmmc-supply and
->>>> vqmmc-supply for deciding whether to enable a quirk affecting timing of
->>>> clock and data.
->>>> The intention was to address issues observed with eMMC and SD on AM62
->>>> platforms.
->>>>
->>>> This new quirk is however also enabled for AM64 breaking microSD access
->>>> on the SolidRun HimmingBoard-T which is supported in-tree since v6.11,
->>>> causing a regression. During boot microSD initialization now fails with
->>>> the error below:
->>>>
->>>> [    2.008520] mmc1: SDHCI controller on fa00000.mmc [fa00000.mmc] 
->>>> using ADMA 64-bit
->>>> [    2.115348] mmc1: error -110 whilst initialising SD card
->>>>
->>>> The heuristics for enabling the quirk are clearly not correct as they
->>>> break at least one but potentially many existing boards.
->>>>
->>>> Revert the change and restore original behaviour until a more
->>>> appropriate method of selecting the quirk is derived.
->>>
->>>
->>> Somehow I missed these emails, apologies.
->>>
->>> Thanks for reporting this issue Josua.
->>>
->>> We do need this patch for am62x devices since it fixes timing issues
->>> with a variety of SD cards on those boards, but if there is a
->>> regression, too bad, patch had to be reverted.
->>>
->>> I will look again into how to implement this quirk, I think using the
->>> voltage regulator nodes to discover if we need this quirk might not have
->>> been a good idea, based on your explanation. I believe I did test the
->>> patch on am64x SK and am64x EVM boards and saw no boot issue there,
->>> so the issue seems related to the voltage regulator nodes existing in DT
->>> (the heuristics for enabling the quirk) as you call it.
->>>
->>> Again, thanks for reporting, will look into fixing this issue for am62x
->>> again soon.
->>
->> does it mean, that 14afef2333af
->> ("arm64: dts: ti: k3-am62-main: Update otap/itap values") has to be 
->> reverted
->> as well, for the time being?
+> --- a/drivers/pci/msi/api.c
+> +++ b/drivers/pci/msi/api.c
+> @@ -53,10 +53,9 @@ void pci_disable_msi(struct pci_dev *dev
+>  	if (!pci_msi_enabled() || !dev || !dev->msi_enabled)
+>  		return;
+>  
+> -	msi_lock_descs(&dev->dev);
+> +	guard(msi_descs_lock)(&dev->dev);
+>  	pci_msi_shutdown(dev);
+>  	pci_free_msi_irqs(dev);
+> -	msi_unlock_descs(&dev->dev);
+>  }
+>  EXPORT_SYMBOL(pci_disable_msi);
+>  
+> @@ -196,10 +195,9 @@ void pci_disable_msix(struct pci_dev *de
+>  	if (!pci_msi_enabled() || !dev || !dev->msix_enabled)
+>  		return;
+>  
+> -	msi_lock_descs(&dev->dev);
+> +	guard(msi_descs_lock)(&dev->dev);
+>  	pci_msix_shutdown(dev);
+>  	pci_free_msi_irqs(dev);
+> -	msi_unlock_descs(&dev->dev);
+>  }
+>  EXPORT_SYMBOL(pci_disable_msix);
+>  
+> --- a/drivers/pci/msi/msi.c
+> +++ b/drivers/pci/msi/msi.c
+> @@ -871,13 +871,13 @@ void __pci_restore_msix_state(struct pci
+>  
+>  	write_msg = arch_restore_msi_irqs(dev);
+>  
+> -	msi_lock_descs(&dev->dev);
+> -	msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
+> -		if (write_msg)
+> -			__pci_write_msi_msg(entry, &entry->msg);
+> -		pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
+> +	scoped_guard (msi_descs_lock, &dev->dev) {
+> +		msi_for_each_desc(entry, &dev->dev, MSI_DESC_ALL) {
+> +			if (write_msg)
+> +				__pci_write_msi_msg(entry, &entry->msg);
+> +			pci_msix_write_vector_ctrl(entry, entry->pci.msix_ctrl);
+> +		}
+>  	}
+> -	msi_unlock_descs(&dev->dev);
+>  
+>  	pci_msix_clear_and_set_ctrl(dev, PCI_MSIX_FLAGS_MASKALL, 0);
+>  }
 > 
-> So sorry for the delay in response.
-> 
-> Does this fix: ("arm64: dts: ti: k3-am62-main: Update otap/itap values")
-> cause any issues for you?
-> 
-> The otap/itap fix is actually setting tap settings according to the
-> device datasheet since they were wrong in the first place.
-> 
-> The values in the datasheet are the optimal tap settings for our
-> boards based off of bench characterization results. If these values
-> provide issues for you, please let me know.
-
-This first part is for Alexander.
-
-> 
-> 
-> Changing topic:
-> 
-> Going back to the reverted patch. What the patch does is that it
-> tries to switch data launch from the rising clock edge to the
-> falling clock edge if we find two voltage supplies for SD/SDIO, one
-> for powering the SD/SDIO and another for IO voltage switch, or for
-> the case that no voltage supplies exist (eMMC).
-> 
-> (this was based off-of some internal debug that resulted with a
-> request to unset V1P8_SIGNAL_ENA to fix timing issues)
-> 
-> However, if you had one voltage supply, the patch should not have
-> affected you at all and I am really confused why you see an issue
-> downstream with only one voltage supply.
-> 
-> That being said, I have dug up more information on V1P8_SIGNAL_ENA.
-> If HIGH_SPEED_ENA is set or if V1P8_SIGNAL_ENA is set, these two bits
-> are OR'd and if any of the two is set, then data launch always happens
-> on rising clock edge. This should be the case for any of the UHS modes
-> or > mmc_hs mode for MMC.
-> 
-> If this is true, we should be setting HIGH_SPEED_ENA anyways for UHS
-> modes and thus this patch should have done nothing in this sense, since
-> data launch should still be happening on the rising clock edge.
-> 
-> I am still digging up more information to make sure disabling
-> V1P8_SIGNAL_ENA has no other implications.
-> 
-
-This second part is to Joshua.
-
-> 
-> ~ Judith
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-> 
-
