@@ -1,62 +1,48 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2068.outbound.protection.outlook.com [40.107.237.68])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA92211A0E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 06:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.68
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742366588; cv=fail; b=Dw9SVd8/nF3sSQZ/Ppxjep+F2N4N+oC6SLboRrEtAf5GR6AhSgywrCbmu1iqtBst4KjGuik3cQNH8FfzH6wA2DopllVLGRoED+XPWUaGr57C9vAyTN8zv7dC6GB/7SQL8aFHpyrPUxENK1DQQNcz4gCFb4nBbDbYr0YMryB9Ep4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742366588; c=relaxed/simple;
-	bh=8iX9yToyeEehIuV54Vul5ZX/9HqgmZtw2NY20EuI6gA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70DC2E552;
+	Wed, 19 Mar 2025 06:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742366844; cv=none; b=CT0+9Ud1ycrzS3izUYjPrsvLvHQQNgBkqVF/mcdpcQ+hLOKFzyax0vJMXAexAYWl3R4JjvU1uITSind8F6890GvIB4CXCYFIzYBinAxSDw6JFw9dAmHB1+BLTn1cyf/+eolv+qgfDn9Dmn0ncjAI37FCZ5XT4Jw0LZ2YRmtuXeg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742366844; c=relaxed/simple;
+	bh=SZ74C1A2GIjdkIZezaCs1k2RDgFtfbh9/7XU6gBsARk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=WYs2SQN0UwaVcc4WaZN6n6FEqrKMyi0cgsVOBr2jXbfVQY70qEfpS65J38eVO0RPHlNLbTZJfSuegoow31EjJeefilSRY/ZJ0OueRbugTRpx0CD/IhuW5MyOmzji0FQRxlL5kVMH/DaJqYwj3QJ4gHaOYXKtPkot8gnfdD3mRqE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=izR73lkA; arc=fail smtp.client-ip=40.107.237.68
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	 In-Reply-To:Content-Type; b=ptRls+VKZrID/eIhxnnNXmkxuziEEJ4LNwaAdpKceMtv5+i9GjGub7CvcIJKeCb5V9yJ34bXEO4407WgiemstU+fV2v9TUaMU5HNS9yNIpHemr9kHCsNR8gbFAxs4IynsoTpY6auXKwWPIc+Y3kJb+DLQ73DemTpbaDw+sYXN8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=V2K32Hkh; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="izR73lkA"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=czx0tv51JIIKA3v1OlBZVL491MWwOfQNuK5pt6ENinWvtQS1X1hw9qeUSNPB1Fk0shZ688BXaMSy7BV+p/WknQRpO1vXUPX9fDv6MYaSAiBikAlsviUDdTH3yU00N73ebIxNu75FzF/b5JMi5zKg0F9ctpU9/ehwTak9VHSehpw/xm7IVC9uuHKmRMvYwoHu6insQRaNYzl2AawqRujIlbuu+Mz3OV0itb+pw95BFCr6lidz6OoNsZ43qFwWAAqmkaQtISRZuC0FtMALY+rzIgNSrBQFWH/tomtVO9EVCKyya8PxJE9JXEfbq5Y0GkcAOhGNI6O1S8Y3uwSNaj0OOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vIAyzosYq3gs/ZdrWTDu5LjraFuK/n4AHenCF1M6MLk=;
- b=vzRAp9foCPZcMdbTK+oGsfqLonHoLPkDj+mTYthDDq+SI+hkaqLpPHpimqax/R53me0ClSzygGcGwZuUr3cbCrhUBiCxHCAqYNtRRaxxlT114Cp+wtZanoI/r4EGX1SOh96+W+TgrOP0gWzhEFBYIDc8843xTe2tPm4IAWVrXbRVToQGVlsbtex41hrtdIn0x+HnBWwqCpFDLPSF0yvZlotMocI7fLq0c1F+fdjWpXcG7p9uBehMnFG8+PQ4Vrq5+uvQ4dOoWXdKkhjX+s2NhHAaY6W3nBAgRCP4LRt4m+jZIetcuEN95WQ6qEoUU4mIUCHEKjBsqPpM4+nASVigmA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=intel.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vIAyzosYq3gs/ZdrWTDu5LjraFuK/n4AHenCF1M6MLk=;
- b=izR73lkAU4KvZp5lhIIdGaQTrv814ZH7lH8s8uIuy6ehVt/cWWDCTYEY+wmGvj04GaPd5CMQcZ78YM5H60iaLi2dbpsf1cNEs47m5hHvZcAjtilVRSdkCFjQDy1GiEFIox3w5iGbSN9/yM8pN4fwJaPO3M4QiWZy1QpG34fHQSA=
-Received: from BL6PEPF00013DF7.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:22e:400:0:1001:0:9) by IA1PR12MB8554.namprd12.prod.outlook.com
- (2603:10b6:208:450::8) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
- 2025 06:43:01 +0000
-Received: from BL6PEPF0001AB75.namprd02.prod.outlook.com
- (2a01:111:f403:f901::3) by BL6PEPF00013DF7.outlook.office365.com
- (2603:1036:903:4::4) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Wed,
- 19 Mar 2025 06:43:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB75.mail.protection.outlook.com (10.167.242.168) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Wed, 19 Mar 2025 06:43:00 +0000
-Received: from [10.71.198.71] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Mar
- 2025 01:42:55 -0500
-Message-ID: <beaf9eca-33d9-4fc5-ae9f-64e50b2663cc@amd.com>
-Date: Wed, 19 Mar 2025 12:12:53 +0530
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="V2K32Hkh"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J4liQf020761;
+	Wed, 19 Mar 2025 06:47:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	t0y/TCrIUgcCHFmCeC0dVj9Yieamk69pvvMnIjszNh4=; b=V2K32HkhTDlWmN5r
+	liWAvg2chu7i/9BJU7+kmzGMh9t24QYSC+NWen9oRhV+5Y/E1rWC5eeKxIWzk9YR
+	rrljp6Ibn4WLMbWqzUg6DfoBPMLMwwvJ8u7+OHg9OQnQ/BiwvMXuj7yWvZlnQjLK
+	2425CxVDr1mmCgJ9kXlt6T3Q1JgPGTLMXUkPV2AmiVc92MLdXBRI6NBJ/3dOJpI0
+	Z9vRzrlC42NY4AHbdD/HRn5rcP0HS2pXaPd/MJU9QgCe+FcLvdaek529Mrw4j+iB
+	zNOb9MPXm9m603MpJD4RNRCQC4A3NZUX1duL+YQFDWR/Y2qKLTqm+yhTM9Zo6Pk+
+	QZNIJg==
+Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45exx34c6u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 06:47:17 +0000 (GMT)
+Received: from nalasex01c.na.qualcomm.com (nalasex01c.na.qualcomm.com [10.47.97.35])
+	by NALASPPMTA02.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52J6lHrs008568
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 06:47:17 GMT
+Received: from [10.239.29.24] (10.80.80.8) by nalasex01c.na.qualcomm.com
+ (10.47.97.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 18 Mar
+ 2025 23:47:15 -0700
+Message-ID: <a8fc9f07-013c-4e31-9d9e-46e042d81dbf@quicinc.com>
+Date: Wed, 19 Mar 2025 14:47:12 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,169 +50,144 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 7/8] sched/fair: Retrieve cached group stats from
- sg_lb_stats_prop
-To: "Chen, Yu C" <yu.c.chen@intel.com>
-CC: Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, David Vernet
-	<void@manifault.com>, "Gautham R. Shenoy" <gautham.shenoy@amd.com>, "Swapnil
- Sapkal" <swapnil.sapkal@amd.com>, Shrikanth Hegde <sshegde@linux.ibm.com>,
-	<yu.chen.surf@foxmail.com>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
-	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
-	<vincent.guittot@linaro.org>, <linux-kernel@vger.kernel.org>
-References: <20250313093746.6760-1-kprateek.nayak@amd.com>
- <20250313093746.6760-8-kprateek.nayak@amd.com>
- <3915af7f-fe05-4a1b-a8b2-e9690827b916@intel.com>
+Subject: Re: [PATCH v2 ath-next 2/2] wifi: ath11k: fix HTC rx insufficient
+ length
+To: Johan Hovold <johan@kernel.org>
+CC: Jeff Johnson <jeff.johnson@oss.qualcomm.com>, <ath11k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <johan+linaro@kernel.org>
+References: <c0cdcaf2-655b-4d22-a949-1519c552e6a4@oss.qualcomm.com>
+ <72d95d77-674e-4ae7-83b0-ab58748b8251@quicinc.com>
+ <Z9G5zEOcTdGKm7Ei@hovoldconsulting.com>
+ <8ea7fe7c-7b4d-4a6f-ae03-b9ca127c23f8@quicinc.com>
+ <Z9METTzUJe9yqVEI@hovoldconsulting.com>
+ <b1c79589-4fcd-4630-9551-a620087e0c23@quicinc.com>
+ <Z9PjjDFBuSJ7exVj@hovoldconsulting.com>
+ <ecfe850c-b263-4bee-b888-c34178e690fc@quicinc.com>
+ <Z9gd9Aw5Bug8IKSV@hovoldconsulting.com>
+ <f30cf771-a9cd-4d8f-8d10-1640afd33c23@quicinc.com>
+ <Z9mwn3GzpPPZSiTG@hovoldconsulting.com>
 Content-Language: en-US
-From: K Prateek Nayak <kprateek.nayak@amd.com>
-In-Reply-To: <3915af7f-fe05-4a1b-a8b2-e9690827b916@intel.com>
+From: Miaoqing Pan <quic_miaoqing@quicinc.com>
+In-Reply-To: <Z9mwn3GzpPPZSiTG@hovoldconsulting.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB75:EE_|IA1PR12MB8554:EE_
-X-MS-Office365-Filtering-Correlation-Id: db3c9fa4-8e09-4710-e6d5-08dd66b14aa4
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|376014|36860700013|7416014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?ZVpqcFhDektCNXcyeDJjVjduV3N4Wm10TUxHZWNEZHBpQ2MwcHpFeUhVajZ5?=
- =?utf-8?B?Mk1RZWFqUHF3Yk5BSWNTV2ExNlVzV0xsakFHRzVkZUlwT2diVGxaNkh4eWNO?=
- =?utf-8?B?REF0SFVHYVBJNnVvOTdmTUVFR0NhNXNHVjhMR1AxeDdibnFuY3l2MTU2NkNl?=
- =?utf-8?B?R3ZUT0hDNVczZ1o5anVpU0NwVzJqV29lc01aVXdRcTU4Z3V0T052NVZWMFBv?=
- =?utf-8?B?REhHdjI5V1NuNGtmTXhESnEvekI3ZGh4aVFLN0hlYWpPQWxxZXpzb05hdWlM?=
- =?utf-8?B?c1QxdXoxL3g0TjR1ZkJ1MXhWQ2JWcDVpR1RQaUhmY1Q0OUc1TnZOS0UrdElH?=
- =?utf-8?B?S3VHZ3lFVkF5WXR1U1E3NEMwWldEbWJLLzlQTnduUDZlM3Q2ejBoZWdyN0Jo?=
- =?utf-8?B?SEcycmlZVnhybFJsbWNRQm55QUNGTitHc3BGTHFhT2N4c0VmamtJZ2ZsdjlG?=
- =?utf-8?B?SGpJUnZGRlY3QzlxMys2MmdsSnJOSnAxQzRDM0FMTDd6emdIYzFVektCZ0Nj?=
- =?utf-8?B?RTBqdnZkcTl6SUxiSVFGSkVxakJESG1qbTZROUtrSUEyRlZaNTQvbXdyOTEv?=
- =?utf-8?B?a1VZSFlzTnVRbE1ZeWZoVkZrRlN0cnA1Zlk1bGpSR3VIMGtSSUtCVXVqL0gz?=
- =?utf-8?B?SVg4cVZSaGlkY2J1ZlgzN0M0VW1BSGVsY25xVmlqYWFGQzFNNVQyVUQ1OFU5?=
- =?utf-8?B?eERRS2FnSUN4cHdxMmpxbkkwUHQzVlFFclFkajUwSHI4K3M5dVAwd0ZkNHNx?=
- =?utf-8?B?alk4TzhEUDYrQTV3U3dpNE1pVzBhcVJQTjlLK2cwcmZCNUx6Q2JTL2dIdW5G?=
- =?utf-8?B?T3ZoZjFuVmJlNXR2cVpyeHNnQ1U2bUpLUXRzQ1p2aGlOT0Era3ZFU2pLWStP?=
- =?utf-8?B?YjFXVlJ3MVpCcVlXM3dRSXlXNDhacVpIaU8rc0VFb3ZXYUpTTENXVmFhNUw3?=
- =?utf-8?B?WWlwaGg2VGEyN21vRFExR1R0bmFITUF5NW1nSnZYam1JSGhSa1RTS1puNzlS?=
- =?utf-8?B?b2M2QklVY3IvNVcxZHlMTWFWUGFQNzJnWFdTQW9EdC9NbER0RkRhRXVBUUNz?=
- =?utf-8?B?TEpBdjV4RUNSMFRxQnM1ZENvZHVDMjNYTldkOFZpZDBWK2djZ2ZTVW9jeU1x?=
- =?utf-8?B?c2gyMHRkV2dyRVFLamhMTWRyRG1hcS93WUpKZHg5VXJBSGNiVTdqOHl0NEVR?=
- =?utf-8?B?ME9nNmd4UDRQSmhQdlBUbndqNmtwUXhmWUpQckhDV1FkTjRNMTV1VlNTbEJV?=
- =?utf-8?B?ZVdaZzJJL2M1d2toOUM2TGphcHJieEE0SldCYmgyWkN3T2NOeldmdlJPbkcz?=
- =?utf-8?B?YUFyV2g5ZklFd25YRlZwRFJlNGNSQWlhRm9lL3VNQnVtZTViMWQ4d1Nodmxp?=
- =?utf-8?B?SExzWmFjbm54ekF2SkMvMVFnR1Bpa0FBb3FwQnRzTEFZS3ZabUw5WjVNcHh1?=
- =?utf-8?B?K0tGTW5vWVFwVzhmZEpFbmRTZ0ZZSDF1cG51MG52bks4S0NrOCsyQ1FCdlo5?=
- =?utf-8?B?M0xqK0oyajdGVmFXdWFwNGxlc1Y1UFdPSTY5dEhQa3V6Y2M3bDdqRnlBQUQ3?=
- =?utf-8?B?K3RDbEE4VFJaZmRPcWN5eTFXemdKTmFaOU4rcWkxRTk0Q004NXJzNnZOWU5Z?=
- =?utf-8?B?TTlZdUhrVGtNZ1pIcmN2UWlGaWFNZjJSSVJIaXpyUFgyUVhBTUZ1enE0NVZS?=
- =?utf-8?B?M2FhSmE3ZnZpcGVIWVRKS0JGYWgwZDNoZHZkYXRhVmd3dE5ZeDRMTnpUeUhK?=
- =?utf-8?B?SDlpeUtwN0JLNHpRK0M2SlBFM2lRb2xENU9CUUZjcm0vb3JNOHJkUEVmZDZv?=
- =?utf-8?B?dWtZdXFvU3pzd0k1dmVNSnRoQ3NPbCtCQ0I3RlUxVXBKUjdlTXdGVVRTM1g3?=
- =?utf-8?B?ZklSbnJNRWtPN29oUHRyUXJrWFV3NWJVaGFVRVJVanN2Wnc1ejZMeUpWb3FI?=
- =?utf-8?B?QnF2Y1o0dVRRZFQ4NThTQkY1RkhXaHZjMFYzYWFJbFNObWl3b0dUaGVOY2JO?=
- =?utf-8?B?NklTbnZ5dTNRPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(376014)(36860700013)(7416014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 06:43:00.3575
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: db3c9fa4-8e09-4710-e6d5-08dd66b14aa4
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB75.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8554
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01c.na.qualcomm.com (10.47.97.35)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=b+uy4sGx c=1 sm=1 tr=0 ts=67da6875 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=NEAV23lmAAAA:8 a=SdDGcHOF2Uqb6CuH5E0A:9 a=QEXdDO2ut3YA:10
+X-Proofpoint-ORIG-GUID: xdbP3m1r4BOFb-k3aPoIXCkFAIrdq0b9
+X-Proofpoint-GUID: xdbP3m1r4BOFb-k3aPoIXCkFAIrdq0b9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_02,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ bulkscore=0 clxscore=1015 mlxlogscore=999 priorityscore=1501 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 adultscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503190045
 
-Hello Chenyu,
 
-Thank you for taking a look at the series.
 
-On 3/17/2025 11:34 PM, Chen, Yu C wrote:
-> On 3/13/2025 5:37 PM, K Prateek Nayak wrote:
->> Allow update_sg_lb_stats() to retrieve the group stats cached in
->> sg_lb_stats_prop saved by another CPU performing load balancing around
->> the same time (same jiffy)
+On 3/19/2025 1:42 AM, Johan Hovold wrote:
+> On Tue, Mar 18, 2025 at 03:53:39PM +0800, Miaoqing Pan wrote:
+>> On 3/17/2025 9:04 PM, Johan Hovold wrote:
+> 
+>>> Then it seems we are looking at two separate root causes for the
+>>> corruption as the memory barrier appears to be all that is needed to fix
+>>> the X13s issue.
+>>>
+>>> A user who hit the corruption after 2 h without the fix has been running
+>>> over the weekend with the memory barrier without any problems. I'll ask
+>>> further users to test, but it certainly looks like it is working as
+>>> intended.
+>>>
+>>> And the memory barrier is de-facto missing as the head pointer and
+>>> descriptor are accessed through (two separate) coherent mappings so
+>>> there are no ordering guarantees without explicit barriers.
 >>
+>> This situation should occur when there is only one descriptor in the
+>> ring. If, as you mentioned, the CPU tries to load the descriptor first,
+>> but the descriptor fetch fails before the HP load because the ring
+>> returns empty, it won't trigger the current issue.
 > 
-> If I understand correctly, we allow update_sg_lb_stats() to retrieve
-> cached sg stats if another CPU in the same sched group has just done
-> load balance within a jiffy ago, say 10ms for CONFIG_100_HZ.
-
-Quick disclaimer: All of this is best effort currently.
-
-Periodic load balancing is easy to start since it only happens once a
-jiffy at the maximum so "last_update" as a jiffy counter should be
-good enough (in most cases).
-
-Secondly, and this is slightly harder to solve for, is to get all the
-CPUs to actually sync. Currently it is a best effort case since the
-tick can fire late due to disabled interrupts on CPU, SCHED_SOFTIRQ
-may run at different times depending on how much work is done at tick
-prior to reaching the softirq handler etc.
-
-But assuming some amount of sync, I would like:
-
-- During busy balance only one CPU gets to proceed as per
-   should_we_balance() heuristics. In addition to that, since all CPUs
-   are busy (should_we_balance() would have allowed the first idle CPU
-   to go ahead otherwise) the "idle_cpus" and "overloaded" situations
-   may change and those are hard to propagate.
-
-- By the time this CPU does busy balancing, other groups below it
-   hopefully had enough time to reach update_sd_lb_stats() and cache
-   their copy for this jiffy in there. If not - the load balancing CPU
-   will recompute.
-
-- Since stats at a higher domain is used only once, there was no need
-   to invalidate them which I couldn't get right back then (or maybe
-   even now :)
-
+> It could if the CPU observes the updates out of order due to the missing
+> barrier. The driver could be processing an earlier interrupt when the
+> new descriptor is added and head pointer updated. If for example the CPU
+> speculatively fetches the descriptor before the head pointer is updated,
+> then the descriptor length may be zero when the CPU sees the updated
+> head pointer.
 > 
-> There are two roles,  writer who updates the cached stats,
-> the reader who reads the cache stats. For both cache writer and
-> the cache reader, do we trigger them only when it is in busy periodic
-> load balance? If yes, consider the periodic load balance is usually
-> triggered on 1 CPU in each SD(should_we_balance()),  and the
-> interval increases with the number of CPUs in that sd, just wonder
-> if 10 ms is a little short to find a cached stats on large LLC?
 
-So the reader is always the CPU going to the higher domain and
-recomputing stats. The writer should have updated the stats by then
-or the reader won't care and recompute it.
+Sorry, I still think this situation won't happen. Please see the 
+following code.
 
-At the very least, since the CPU has to look at local stats too, the
-logic ensures at least that is reused and not recomputed.
+ath11k_hal_srng_access_begin(ab, srng);
+   => srng->u.dst_ring.cached_hp = *srng->u.dst_ring.hp_addr;
+desc = ath11k_hal_srng_dst_get_next_entry(ab, srng);
+   => if (srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp) return NULL;
+//dma_rmb();
+*nbytes = ath11k_hal_ce_dst_status_get_length(desc);
 
-Beyond the annotated PATCH 9, I've moved to a versioning scheme that
-could also be reused for newidle balancing with stats invalidation
-and that should help reuse stats more. There are some stats on the
-empty PATCH 9.
+If the condition 'srng->u.dst_ring.tp == srng->u.dst_ring.cached_hp' is 
+true, the descriptor retrieval fails.
 
--- 
-Thanks and Regards,
-Prateek
-
-> thanks,
-> Chenyu
+> This seems to be what is happening on the X13s since adding the memory
+> barrier makes the zero-length descriptors go away.
 > 
+
+Hmm, it is indeed a bit strange. Could it be that dma_rmb() introduces 
+some delay ?
+
+>> The Copy Engine hardware module copies the metadata to the Status
+>> Descriptor after the DMA is complete, then updates the HP to trigger an
+>> interrupt. I think there might be some issues in this process, such as
+>> the lack of a wmb instruction after the copy is complete, causing the HP
+>> to be updated first.
 > 
->> Current implementation without invalidation of cached stats have few
->> limitations namely that the stats reuse is limited to busy load
->> balancing since stats can only be updated once a jiffy. Newidle Balance
->> can happen frequently and concurrently on many CPUs which can result in
->> readers seeing inconsitent values for the propagated stats.
+> Yeah, possibly. At least it seems there are more issues than the missing
+> barrier on the machines you test.
+>   
+>>> Now obviously there are further issues in your system, which we should
+>>> make sure we understand before adding workarounds to the driver.
+>>>
+>>> Do you have a pointer to the downstream kernel sources you are testing
+>>> with? Or even better, can you reproduce the issue with mainline after
+>>> adding the PCIe patches that were posted to the lists for these
+>>> platforms?
+>>>
+>> https://github.com/qualcomm-linux/meta-qcom-hwe/blob/scarthgap/recipes-kernel/linux/linux-qcom-base_6.6.bb
+> 
+> Thanks for the pointer. That's a lot of out-of-tree patches on top of
+> stable so not that easy to check the state of the resulting tree.
+> 
+
+Yes, but there are only a few patches for ath11k.
+
+>>> Does it make any difference if you use a full rmb() barrier?
+>>>
+>> I've also tried rmb() and mb(), but they didn't work either.
+> 
+> Thanks for checking.
+> 
+> Just to be sure, you did add the barrier in the same place as my patch
+> (i.e. just before the descriptor read)?
+> 
+
+Yes.
+
+>>> And after modifying ath11k_hal_ce_dst_status_get_length() so that it
+>>> does not clear the length, how many times you need to retry? Does it
+>>> always work on the second try?
 >>
->> For this iteration, the focus is to reduce the time taken for busy load
->> balancing allowing the busy CPU to resume renning the task as quickly as
->> possible.
->>
->> Signed-off-by: K Prateek Nayak <kprateek.nayak@amd.com>
->> ---
+>> Yes, the test has been running continuously for over 48 hours, always
+>> work on the second try, updated in patch v4.
+> 
+> Good, at least the descriptor-length-sometimes-never-updated issue is
+> solved.
+> 
+> Johan
 
-
-
+Yeah, thanks for pointing out the issue.
