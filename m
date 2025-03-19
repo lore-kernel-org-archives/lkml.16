@@ -1,63 +1,63 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
+Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60D6321CC6D;
-	Wed, 19 Mar 2025 14:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2A81E7C23;
+	Wed, 19 Mar 2025 14:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742396161; cv=none; b=eyLtzqTWItgfrgVvD3JDAj/11RabE5e63gK1NkYKqt9mvNHL4oBn3iPus6Mp/uKCe16qYYGDkPlqV6WLNn7o2Kox0/jzjn5/H1xxb8Qa69gfRhGTSAD/Z+3q8uvA4yVIuJBTwD5rWSgm7IM7zQJofexVJHLUfG9NV0DaMpe22pI=
+	t=1742396164; cv=none; b=i3hwNYRT1dHJfE+JiG4MBuURpUKnT0pUsOhk3ly7hDYLKLHrLobZWjTPt03For17sYJczr6792axuXGwfZpXRw/o1sm0zgvazY6HTNiqY75T9uoZYozNgJiH1FCkL1yYLoZxMsNAQAYdvoXZ586FXlIrVw/DvqcWZDvx6/Rjfas=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742396161; c=relaxed/simple;
-	bh=ekdgcBAS0ggm2+xP926PED2wwIrwSL8aP+1AtstrJ9M=;
+	s=arc-20240116; t=1742396164; c=relaxed/simple;
+	bh=vQqwf3PALJORJbol4A/d3nzhw883SIIeAlCpCMUqb7M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=omDFrTp5ZGCvnDRHBHLU7lIOLNlOrEgkNoOkewy9VQn0G9MhOUDztoOo/OuqQ871uwl8YrR39fDnyXvTAKcOSIVd9AnA0yxv46hPkgLnSdv3fkPwYDnxt/8+fpzo9dsT1nFtR9Odb/edbckRRXfUwQ61yeBDd0ZcFXBGM9QUsJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZjHdRAs2; arc=none smtp.client-ip=209.85.214.177
+	 MIME-Version; b=YaV4QMEMxHEzPjSUsYIXNWTWxwbOFfAY82Sbz3fGK5uVPQCGAMmTZ9frYSqklaFqaonszFZZLGhSUubbLXVX0Mw1ZQXq1KVDsyHDU+bzxNbImFSuqIOWv9TT60ekCnM04UC9sqq0Hc48yiJs6vxwILMfdxLer0M5jY3IfxrKBPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nh4PaaNm; arc=none smtp.client-ip=209.85.216.50
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZjHdRAs2"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2240b4de12bso46467095ad.2;
-        Wed, 19 Mar 2025 07:55:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nh4PaaNm"
+Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-301c4850194so978897a91.2;
+        Wed, 19 Mar 2025 07:56:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742396159; x=1743000959; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742396162; x=1743000962; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jyO6kdDDIQqJK9TGT4jcPv5A3omBF22Bq6SHdz7luwA=;
-        b=ZjHdRAs2Rs3S/k3lxM4QlrkgkpYya9TeZPyPbJX7Za063Zv52uV9Ycz3o0NMFERFWm
-         2WoT2L8g4RoAyl8DOjNoIudMKr1TkeqF0Bq+SGxbG6wz3BeOSzfgZq1otMaMl3AA9klG
-         MUC4tGo49CmbwSFJerl5U+4ctrpdc4cxj1DBTABCrNFgd8IEmHFgku6Tub0zcq15icrf
-         JdrqTpqtSiSnsxwo7NJw3GznIWlciVDMIwrdEk22NycvbxyAUI6UPneN7qyeAhwX/RmT
-         1e28CyawTrbitWWuyoo+rPZZ3f5tZO5+vNlM0BIDQjFhl6APMYtfYTJ+SiUFMYgFh4PC
-         4Xyg==
+        bh=MaBXykVFASxAwzp1K2UYEY9RdYGqxushMJyfSpoqDmM=;
+        b=nh4PaaNmZh8HyZ6VPTwXBK1VKLs4L+A8g8quQmbco0KTiU1hW3qCkSi4gkgJWykrKl
+         OZer96vmr2y6LIKjAkaBfdH+/wxXtx8Vs0mWTW/OYdTz4dZnaH33NRB+e43gMkOR1IXc
+         tpmDA3oQNA/HPlMjmw4gpR2DJZF7EpcNEepbzmzU9VurejkAP1M3pYjEuNqE1572X9TA
+         DEBM5tdjD5VJtUSL8u3OA4u+sEL/KcRVbOr/iffnyuqsWn50/Jm1Oh0yraZ2m7jhxjRA
+         hpht87kNqcobdnvTucqSGE8kRCRHfRrLoRJPs/iJs5SY8Qs0ttk1/J6cTmWBpKUq2+8C
+         6rAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742396159; x=1743000959;
+        d=1e100.net; s=20230601; t=1742396162; x=1743000962;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=jyO6kdDDIQqJK9TGT4jcPv5A3omBF22Bq6SHdz7luwA=;
-        b=jnItHFFt+pmgZOAm+zEr9VRQENJhOFiUSeAspa+9YJnWG5UrDPedrmesyznv+T9mx1
-         JvsjqzxIqDag9XJM2G0AAlzziOaOWXhViQHbNEzQ7Iyx43sd2DgAA1qV5Hm/0cR+2Xlu
-         ng71X4rAg5G1DTI7Ar1Ais3j4dTKXOXnQxDMIdmGhUZXMDSQOTfsCM/MtEddAXgw9V4+
-         AuoZOvwqasDqRgkuDUQExTrkCbnXQWudhhbIxDb7shd+5lo2S4lBHmRSP9gkCgRXSm1n
-         gSTsHD81Z8Cigen7KJOcvevB4Yfj+/CqT0FbnSQZlODkMeCIyDUGzZY8Cmm1JdpoCaLK
-         n/+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCU0p6/yMQ2/Jvl9gDJufFcIZmqKcMvid4DAoLZOBoy9VbucdDngAk61/4kHCAsZweUFU1Op98h4ALW8mpMa@vger.kernel.org, AJvYcCUkg3sr/NzpwvdLi2Vn/cOF0XZrGf3nrAi7VfoPSB93w7e+5hDbbnaLdLfBn79FZNRYb7F2S9LKmS3+QbqN@vger.kernel.org
-X-Gm-Message-State: AOJu0YzwdSeyOhIaMtfgDuNxb8Hht/h0UChj7XEmt4DFmlx4xz+MsFCd
-	cq6/AO1J5KUQ/nPE/IrEsugm4O5hlzIfSIdKjHqmGAMdAPHrQIF/
-X-Gm-Gg: ASbGncsiL/Az6Iowez+vOy1tTgPieK+F7YC/rPkA8jUHXsAeuWnpaVZ5jNf9wTqBt2B
-	J8eEX63eoI/0yzm7PnWC14gcnn3aFIrz9dIFUWrVnLqEWQPs1xdKFjHTBmxjaM00yIHuk2W75D+
-	xXLqeGoubSkuP4Ht9cuI50YAIO8Hd8EdY7RrQePqcaNYeZm7g3rDSUVpag6G17HAY/a6heIaUyJ
-	xXdg0FMRkKMXZbje2LqRAxCq1QXqhklCvlQsdTdpQDR8Z2YC95A/2bDnuCCKHjeE8HvOHyThP3k
-	5oyR2i2P1OBLJV2UmQQgLqxsvZIBkBPYoK6nOED2xn27+wq3h/lmAC23XZ7hgfw5wI+yXv3bL1o
-	DGf6TSqYVB3BqcO3S+SE=
-X-Google-Smtp-Source: AGHT+IH6q5hAIc9t3N2nh4KbWjpJ3bsjbKbZog07bzbek/wCl7nglfjUn21b9XL9FzZ3ul4wkgb/gw==
-X-Received: by 2002:a17:902:c40a:b0:21f:7a8b:d675 with SMTP id d9443c01a7336-2264981d956mr47600395ad.4.1742396158377;
-        Wed, 19 Mar 2025 07:55:58 -0700 (PDT)
+        bh=MaBXykVFASxAwzp1K2UYEY9RdYGqxushMJyfSpoqDmM=;
+        b=YrSTmpMU3xqQUK1OPcvw+vTbMfEVKVLEw5QnFtbeNdo+TBqheSf1cctMUkfBzvq8H+
+         SoayMaunY7G6Q5DkWyc7amJTMc41icohH7vro0njka0quHPH49US0A3pHqrwWww6SCpw
+         PwqucesnUdJ0HdBYz+V7GX6/yMfKGyI2gXBqmqDXVs8t5x4JgqC4Zi6n7+sOGa3+iX24
+         /oKbhNere+cmBWhkVT8/N6sGkoUiXqCaF0rMbnnFkvBDo+a3Kxzht/EmdsO/mS2ZQMBv
+         uTX4NFJYkx2ID2nfRlgZ1clHtmnmnxjnSTUgjabHPDD1sRsKsTeZrVt4nEa9u/6RxADX
+         gcAQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV+TbZRVvbv+yEFaQLh9/UTbXHiOjKFa9mjrnqkKvxnSHlmsvBlxtFIHPxqkKe0nVDLA7bB3QKlnEbFy+So@vger.kernel.org, AJvYcCXMRuyhB6wkYoSKJuUsyaHGag+nhdR7+D5v1o05yW+gHyi/nnjzknLt7O//xZpwl4CuzO6BSk0cyjrNHmOU@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJM3AtFL7+qhFMpwPtS14Yf9Ydrm6lZRFMKJTbrHiBM/Ua2zqt
+	E3zTE8ZMLt6IszTbM8kOY+2o94fo1Q4cp5X9YuQej7qKfxbsmBwO2VnYrw==
+X-Gm-Gg: ASbGnct5/Bae6tWAREtmnFbfylGBvVm7eU0vq1uDZemmNO6fsnwFwLSfXRcv3s3yxYS
+	T2ZXzETZZh8dTKBwy7ZdBOdqKXU9rKHRm8e6p4Z18Q87K9iOGdsP9l2TDAnoSo/KMPC3KZBBKQL
+	mjLrTHUMN7C2/UyqXD9+ST1JQ+YhYfvkUm3cq2RK9GtuMlrc4fwzBT3MKMALkB+WI0FtChjMBAz
+	EfOYBuJEftXl5RHATPH7dCOZXGSmejxhQDoj7lCYG+IdUvRpu7SnC+//sZWauXgd1b6Gqc0JlfF
+	TcOLpmJdzAvIbKfFqDcdZKNda9khi96/2WOoSVHAQZx1RYWdB4boNo3sAV23s/9z/nffUKBPoyR
+	QtfR9u+SFK53K1/hPO/Bh33GjJGTVog==
+X-Google-Smtp-Source: AGHT+IFMlaSejbhUztYFhKWDKCCn4rM1IcgZmZyorwckAVgEaKWxG3BpCnnYdHXGWTzjGeXSG9hkLQ==
+X-Received: by 2002:a17:90a:e710:b0:2fe:a336:fe63 with SMTP id 98e67ed59e1d1-301be201f40mr5243686a91.24.1742396161750;
+        Wed, 19 Mar 2025 07:56:01 -0700 (PDT)
 Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd4e8dsm114677535ad.228.2025.03.19.07.55.57
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301b9e19ceesm1903278a91.0.2025.03.19.07.56.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 07:55:57 -0700 (PDT)
+        Wed, 19 Mar 2025 07:56:01 -0700 (PDT)
 From: Rob Clark <robdclark@gmail.com>
 To: dri-devel@lists.freedesktop.org
 Cc: freedreno@lists.freedesktop.org,
@@ -72,9 +72,9 @@ Cc: freedreno@lists.freedesktop.org,
 	David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 27/34] drm/msm: Pre-allocate pages for pgtable entries
-Date: Wed, 19 Mar 2025 07:52:39 -0700
-Message-ID: <20250319145425.51935-28-robdclark@gmail.com>
+Subject: [PATCH v2 29/34] drm/msm: Wire up drm_gpuvm debugfs
+Date: Wed, 19 Mar 2025 07:52:41 -0700
+Message-ID: <20250319145425.51935-30-robdclark@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250319145425.51935-1-robdclark@gmail.com>
 References: <20250319145425.51935-1-robdclark@gmail.com>
@@ -88,481 +88,187 @@ Content-Transfer-Encoding: 8bit
 
 From: Rob Clark <robdclark@chromium.org>
 
-Introduce a mechanism to count the worst case # of pages required in a
-VM_BIND op.
-
-Note that previously we would have had to somehow account for
-allocations in unmap, when splitting a block.  This behavior was removed
-in commit 33729a5fc0ca ("iommu/io-pgtable-arm: Remove split on unmap
-behavior)"
+Core drm already provides a helper to dump vm state.  We just need to
+wire up tracking of VMs and giving userspace VMs a suitable name.
 
 Signed-off-by: Rob Clark <robdclark@chromium.org>
 ---
- drivers/gpu/drm/msm/adreno/a6xx_gpu.c |   2 +-
- drivers/gpu/drm/msm/msm_gem.h         |   7 +-
- drivers/gpu/drm/msm/msm_gem_submit.c  |   5 +-
- drivers/gpu/drm/msm/msm_gem_vma.c     |  18 ++-
- drivers/gpu/drm/msm/msm_iommu.c       | 201 +++++++++++++++++++++++++-
- drivers/gpu/drm/msm/msm_mmu.h         |  36 ++++-
- 6 files changed, 260 insertions(+), 9 deletions(-)
+ drivers/gpu/drm/msm/adreno/a6xx_gpu.c |  2 +-
+ drivers/gpu/drm/msm/msm_debugfs.c     | 20 ++++++++++++++++++++
+ drivers/gpu/drm/msm/msm_drv.c         |  3 +++
+ drivers/gpu/drm/msm/msm_drv.h         |  4 ++++
+ drivers/gpu/drm/msm/msm_gem.h         |  8 ++++++++
+ drivers/gpu/drm/msm/msm_gem_vma.c     | 23 +++++++++++++++++++++++
+ 6 files changed, 59 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-index ca3247f845b5..9f66ad5bf0dc 100644
+index 9f66ad5bf0dc..3189a6f75d74 100644
 --- a/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
 +++ b/drivers/gpu/drm/msm/adreno/a6xx_gpu.c
-@@ -2267,7 +2267,7 @@ a6xx_create_private_vm(struct msm_gpu *gpu, bool kernel_managed)
- {
- 	struct msm_mmu *mmu;
- 
--	mmu = msm_iommu_pagetable_create(to_msm_vm(gpu->vm)->mmu);
-+	mmu = msm_iommu_pagetable_create(to_msm_vm(gpu->vm)->mmu, kernel_managed);
- 
+@@ -2272,7 +2272,7 @@ a6xx_create_private_vm(struct msm_gpu *gpu, bool kernel_managed)
  	if (IS_ERR(mmu))
  		return ERR_CAST(mmu);
-diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
-index d2ffaa11ec1a..117f0e35e628 100644
---- a/drivers/gpu/drm/msm/msm_gem.h
-+++ b/drivers/gpu/drm/msm/msm_gem.h
-@@ -7,6 +7,7 @@
- #ifndef __MSM_GEM_H__
- #define __MSM_GEM_H__
  
-+#include "msm_mmu.h"
- #include <linux/kref.h>
- #include <linux/dma-resv.h>
- #include "drm/drm_exec.h"
-@@ -115,7 +116,7 @@ msm_gem_vm_create(struct drm_device *drm, struct msm_mmu *mmu, const char *name,
- 
- void msm_gem_vm_close(struct drm_gpuvm *gpuvm);
- 
--void msm_vma_job_prepare(struct msm_gem_submit *submit);
-+int msm_vma_job_prepare(struct msm_gem_submit *submit);
- void msm_vma_job_cleanup(struct msm_gem_submit *submit);
- 
- struct msm_fence_context;
-@@ -348,6 +349,10 @@ struct msm_gem_submit {
- 	 */
- 	struct list_head preallocated_vmas;
- 
-+	/* Tracking for pre-allocated pgtable pages.
-+	 */
-+	struct msm_mmu_prealloc prealloc;
-+
- 	struct pid *pid;    /* submitting process */
- 	bool bos_pinned : 1;
- 	bool fault_dumped:1;/* Limit devcoredump dumping to one per submit */
-diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
-index a9b3e6692db3..ed0265ac4e1d 100644
---- a/drivers/gpu/drm/msm/msm_gem_submit.c
-+++ b/drivers/gpu/drm/msm/msm_gem_submit.c
-@@ -916,8 +916,9 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
- 	}
- 
- 	if (submit_is_vmbind(submit)) {
--		msm_vma_job_prepare(submit);
--		ret = submit_get_pages(submit);
-+		ret = msm_vma_job_prepare(submit);
-+		if (!ret)
-+			ret = submit_get_pages(submit);
- 	} else {
- 		ret = submit_pin_vmas(submit);
- 	}
-diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
-index b1808d95002f..554ec93456a0 100644
---- a/drivers/gpu/drm/msm/msm_gem_vma.c
-+++ b/drivers/gpu/drm/msm/msm_gem_vma.c
-@@ -270,9 +270,10 @@ static const struct drm_sched_backend_ops msm_vm_bind_ops = {
-  *
-  * Called after BOs are locked.
-  */
--void
-+int
- msm_vma_job_prepare(struct msm_gem_submit *submit)
- {
-+	struct msm_mmu *mmu = to_msm_vm(submit->vm)->mmu;
- 	unsigned num_prealloc_vmas = 0;
- 
- 	for (int i = 0; i < submit->nr_bos; i++) {
-@@ -299,13 +300,23 @@ msm_vma_job_prepare(struct msm_gem_submit *submit)
- 		 * OP_UNMAP could trigger a remap with either a prev or
- 		 * next VMA, but not both.
- 		 */
--		num_prealloc_vmas += (op == MSM_SUBMIT_BO_OP_UNMAP) ? 1 : 3;
-+		if (op != MSM_SUBMIT_BO_OP_UNMAP) {
-+			num_prealloc_vmas += 3;
-+
-+			mmu->funcs->prealloc_count(mmu, &submit->prealloc,
-+				submit->bos[i].iova,
-+				submit->bos[i].range);
-+		} else {
-+			num_prealloc_vmas += 1;
-+		}
- 	}
- 
- 	while (num_prealloc_vmas-- > 0) {
- 		struct msm_gem_vma *vma = kzalloc(sizeof(*vma), GFP_KERNEL);
- 		list_add_tail(&vma->base.rb.entry, &submit->preallocated_vmas);
- 	}
-+
-+	return mmu->funcs->prealloc_allocate(mmu, &submit->prealloc);
+-	return msm_gem_vm_create(gpu->dev, mmu, "gpu", 0x100000000ULL,
++	return msm_gem_vm_create(gpu->dev, mmu, NULL, 0x100000000ULL,
+ 				 adreno_private_vm_size(gpu), kernel_managed);
  }
  
- /**
-@@ -317,6 +328,7 @@ msm_vma_job_prepare(struct msm_gem_submit *submit)
- void
- msm_vma_job_cleanup(struct msm_gem_submit *submit)
- {
-+	struct msm_mmu *mmu = to_msm_vm(submit->vm)->mmu;
- 	struct drm_gpuva *vma;
+diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+index 7ab607252d18..bde25981254f 100644
+--- a/drivers/gpu/drm/msm/msm_debugfs.c
++++ b/drivers/gpu/drm/msm/msm_debugfs.c
+@@ -10,6 +10,7 @@
+ #include <linux/fault-inject.h>
  
- 	for (int i = 0; i < submit->nr_bos; i++) {
-@@ -331,6 +343,8 @@ msm_vma_job_cleanup(struct msm_gem_submit *submit)
- 		list_del(&vma->rb.entry);
- 		kfree(to_msm_vma(vma));
- 	}
-+
-+	mmu->funcs->prealloc_cleanup(mmu, &submit->prealloc);
- }
- 
- /**
-diff --git a/drivers/gpu/drm/msm/msm_iommu.c b/drivers/gpu/drm/msm/msm_iommu.c
-index 756bd55ee94f..ff04f2451d1d 100644
---- a/drivers/gpu/drm/msm/msm_iommu.c
-+++ b/drivers/gpu/drm/msm/msm_iommu.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/adreno-smmu-priv.h>
- #include <linux/io-pgtable.h>
-+#include <linux/kmemleak.h>
- #include "msm_drv.h"
- #include "msm_mmu.h"
- 
-@@ -14,6 +15,8 @@ struct msm_iommu {
- 	struct iommu_domain *domain;
- 	atomic_t pagetables;
- 	struct page *prr_page;
-+
-+	struct kmem_cache *pt_cache;
- };
- 
- #define to_msm_iommu(x) container_of(x, struct msm_iommu, base)
-@@ -27,6 +30,12 @@ struct msm_iommu_pagetable {
- 	unsigned long pgsize_bitmap;	/* Bitmap of page sizes in use */
- 	phys_addr_t ttbr;
- 	u32 asid;
-+
-+	/** @root_page_table: Stores the root page table pointer. */
-+	void *root_page_table;
-+
-+	/** @tblsz: pt table entry size */
-+	size_t tblsz;
- };
- static struct msm_iommu_pagetable *to_pagetable(struct msm_mmu *mmu)
- {
-@@ -273,7 +282,145 @@ msm_iommu_pagetable_walk(struct msm_mmu *mmu, unsigned long iova, uint64_t ptes[
+ #include <drm/drm_debugfs.h>
++#include <drm/drm_drv.h>
+ #include <drm/drm_fb_helper.h>
+ #include <drm/drm_file.h>
+ #include <drm/drm_framebuffer.h>
+@@ -238,6 +239,24 @@ static int msm_mm_show(struct seq_file *m, void *arg)
  	return 0;
  }
  
-+static void
-+msm_iommu_pagetable_prealloc_count(struct msm_mmu *mmu, struct msm_mmu_prealloc *p,
-+				   uint64_t iova, size_t len)
++static int msm_gpuvas_show(struct seq_file *m, void *arg)
 +{
-+	u64 pt_count;
++	struct drm_info_node *node = m->private;
++	struct drm_device *dev = node->minor->dev;
++	struct msm_drm_private *priv = dev->dev_private;
++	struct msm_gem_vm *vm;
 +
-+	/*
-+	 * L1, L2 and L3 page tables.
-+	 *
-+	 * We could optimize L3 allocation by iterating over the sgt and merging
-+	 * 2M contiguous blocks, but it's simpler to over-provision and return
-+	 * the pages if they're not used.
-+	 *
-+	 * The first level descriptor (v8 / v7-lpae page table format) encodes
-+	 * 30 bits of address.  The second level encodes 29.  For the 3rd it is
-+	 * 39.
-+	 *
-+	 * https://developer.arm.com/documentation/ddi0406/c/System-Level-Architecture/Virtual-Memory-System-Architecture--VMSA-/Long-descriptor-translation-table-format/Long-descriptor-translation-table-format-descriptors?lang=en#BEIHEFFB
-+	 */
-+	pt_count = ((ALIGN(iova + len, 1ull << 39) - ALIGN_DOWN(iova, 1ull << 39)) >> 39) +
-+		   ((ALIGN(iova + len, 1ull << 30) - ALIGN_DOWN(iova, 1ull << 30)) >> 30) +
-+		   ((ALIGN(iova + len, 1ull << 21) - ALIGN_DOWN(iova, 1ull << 21)) >> 21);
-+
-+	p->count += pt_count;
-+}
-+
-+static struct kmem_cache *
-+get_pt_cache(struct msm_mmu *mmu)
-+{
-+	struct msm_iommu_pagetable *pagetable = to_pagetable(mmu);
-+	return to_msm_iommu(pagetable->parent)->pt_cache;
-+}
-+
-+static int
-+msm_iommu_pagetable_prealloc_allocate(struct msm_mmu *mmu, struct msm_mmu_prealloc *p)
-+{
-+	struct kmem_cache *pt_cache = get_pt_cache(mmu);
-+	int ret;
-+
-+	p->pages = kcalloc(p->count, sizeof(p->pages), GFP_KERNEL);
-+	if (!p->pages)
-+		return -ENOMEM;
-+
-+	ret = kmem_cache_alloc_bulk(pt_cache, GFP_KERNEL, p->count, p->pages);
-+	if (ret != p->count) {
-+		p->count = ret;
-+		return -ENOMEM;
++	mutex_lock(&priv->vm_lock);
++	list_for_each_entry(vm, &priv->vms, node) {
++		mutex_lock(&vm->op_lock);
++		drm_debugfs_gpuva_info(m, &vm->base);
++		mutex_unlock(&vm->op_lock);
 +	}
++	mutex_unlock(&priv->vm_lock);
 +
 +	return 0;
 +}
 +
-+static void
-+msm_iommu_pagetable_prealloc_cleanup(struct msm_mmu *mmu, struct msm_mmu_prealloc *p)
-+{
-+	struct kmem_cache *pt_cache = get_pt_cache(mmu);
-+	uint32_t remaining_pt_count = p->count - p->ptr;
-+
-+	kmem_cache_free_bulk(pt_cache, remaining_pt_count, &p->pages[p->ptr]);
-+	kfree(p->pages);
-+}
-+
-+/**
-+ * alloc_pt() - Custom page table allocator
-+ * @cookie: Cookie passed at page table allocation time.
-+ * @size: Size of the page table. This size should be fixed,
-+ * and determined at creation time based on the granule size.
-+ * @gfp: GFP flags.
-+ *
-+ * We want a custom allocator so we can use a cache for page table
-+ * allocations and amortize the cost of the over-reservation that's
-+ * done to allow asynchronous VM operations.
-+ *
-+ * Return: non-NULL on success, NULL if the allocation failed for any
-+ * reason.
-+ */
-+static void *
-+msm_iommu_pagetable_alloc_pt(void *cookie, size_t size, gfp_t gfp)
-+{
-+	struct msm_iommu_pagetable *pagetable = cookie;
-+	struct msm_mmu_prealloc *p = pagetable->base.prealloc;
-+	void *page;
-+
-+	/* Allocation of the root page table happening during init. */
-+	if (unlikely(!pagetable->root_page_table)) {
-+		struct page *p;
-+
-+		p = alloc_pages_node(dev_to_node(pagetable->iommu_dev),
-+				     gfp | __GFP_ZERO, get_order(size));
-+		page = p ? page_address(p) : NULL;
-+		pagetable->root_page_table = page;
-+		return page;
-+	}
-+
-+	if (WARN_ON(!p) || WARN_ON(p->ptr >= p->count))
-+		return NULL;
-+
-+	page = p->pages[p->ptr++];
-+	memset(page, 0, size);
-+
-+	/*
-+	 * Page table entries don't use virtual addresses, which trips out
-+	 * kmemleak. kmemleak_alloc_phys() might work, but physical addresses
-+	 * are mixed with other fields, and I fear kmemleak won't detect that
-+	 * either.
-+	 *
-+	 * Let's just ignore memory passed to the page-table driver for now.
-+	 */
-+	kmemleak_ignore(page);
-+
-+	return page;
-+}
-+
-+
-+/**
-+ * free_pt() - Custom page table free function
-+ * @cookie: Cookie passed at page table allocation time.
-+ * @data: Page table to free.
-+ * @size: Size of the page table. This size should be fixed,
-+ * and determined at creation time based on the granule size.
-+ */
-+static void
-+msm_iommu_pagetable_free_pt(void *cookie, void *data, size_t size)
-+{
-+	struct msm_iommu_pagetable *pagetable = cookie;
-+
-+	if (unlikely(pagetable->root_page_table == data)) {
-+		free_pages((unsigned long)data, get_order(size));
-+		pagetable->root_page_table = NULL;
-+		return;
-+	}
-+
-+	kmem_cache_free(get_pt_cache(&pagetable->base), data);
-+}
-+
- static const struct msm_mmu_funcs pagetable_funcs = {
-+		.prealloc_count = msm_iommu_pagetable_prealloc_count,
-+		.prealloc_allocate = msm_iommu_pagetable_prealloc_allocate,
-+		.prealloc_cleanup = msm_iommu_pagetable_prealloc_cleanup,
- 		.map = msm_iommu_pagetable_map,
- 		.unmap = msm_iommu_pagetable_unmap,
- 		.destroy = msm_iommu_pagetable_destroy,
-@@ -324,7 +471,19 @@ static const struct iommu_flush_ops tlb_ops = {
- static int msm_gpu_fault_handler(struct iommu_domain *domain, struct device *dev,
- 		unsigned long iova, int flags, void *arg);
- 
--struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
-+
-+static size_t get_tblsz(const struct io_pgtable_cfg *cfg)
-+{
-+	int pg_shift, bits_per_level;
-+
-+	pg_shift = __ffs(cfg->pgsize_bitmap);
-+	/* arm_lpae_iopte is u64: */
-+	bits_per_level = pg_shift - ilog2(sizeof(u64));
-+
-+	return sizeof(u64) << bits_per_level;
-+}
-+
-+struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent, bool kernel_managed)
+ static int msm_fb_show(struct seq_file *m, void *arg)
  {
- 	struct adreno_smmu_priv *adreno_smmu = dev_get_drvdata(parent->dev);
- 	struct msm_iommu *iommu = to_msm_iommu(parent);
-@@ -358,6 +517,36 @@ struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
- 	ttbr0_cfg.quirks &= ~IO_PGTABLE_QUIRK_ARM_TTBR1;
- 	ttbr0_cfg.tlb = &tlb_ops;
- 
-+	if (!kernel_managed) {
-+		/*
-+		 * With userspace managed VM (aka VM_BIND), we need to pre-
-+		 * allocate pages ahead of time for map/unmap operations,
-+		 * handing them to io-pgtable via custom alloc/free ops as
-+		 * needed:
-+		 */
-+		ttbr0_cfg.alloc = msm_iommu_pagetable_alloc_pt;
-+		ttbr0_cfg.free  = msm_iommu_pagetable_free_pt;
-+
-+		pagetable->tblsz = get_tblsz(&ttbr0_cfg);
-+
-+		/*
-+		 * Restrict to single page granules.  Otherwise we may run
-+		 * into a situation where userspace wants to unmap/remap
-+		 * only a part of a larger block mapping, which is not
-+		 * possible without unmapping the entire block.  Which in
-+		 * turn could cause faults if the GPU is accessing other
-+		 * parts of the block mapping.
-+		 *
-+		 * Note that prior to commit 33729a5fc0ca ("iommu/io-pgtable-arm:
-+		 * Remove split on unmap behavior)" this was handled in
-+		 * io-pgtable-arm.  But this apparently does not work
-+		 * correctly on SMMUv3.
-+		 */
-+		WARN_ON(!(ttbr0_cfg.pgsize_bitmap & PAGE_SIZE));
-+		ttbr0_cfg.pgsize_bitmap = PAGE_SIZE;
-+	}
-+
-+	pagetable->iommu_dev = ttbr1_cfg->iommu_dev;
- 	pagetable->pgtbl_ops = alloc_io_pgtable_ops(ARM_64_LPAE_S1,
- 		&ttbr0_cfg, pagetable);
- 
-@@ -401,7 +590,6 @@ struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent)
- 	/* Needed later for TLB flush */
- 	pagetable->parent = parent;
- 	pagetable->tlb = ttbr1_cfg->tlb;
--	pagetable->iommu_dev = ttbr1_cfg->iommu_dev;
- 	pagetable->pgsize_bitmap = ttbr0_cfg.pgsize_bitmap;
- 	pagetable->ttbr = ttbr0_cfg.arm_lpae_s1_cfg.ttbr;
- 
-@@ -509,6 +697,7 @@ static void msm_iommu_destroy(struct msm_mmu *mmu)
- {
- 	struct msm_iommu *iommu = to_msm_iommu(mmu);
- 	iommu_domain_free(iommu->domain);
-+	kmem_cache_destroy(iommu->pt_cache);
- 	kfree(iommu);
- }
- 
-@@ -583,6 +772,14 @@ struct msm_mmu *msm_iommu_gpu_new(struct device *dev, struct msm_gpu *gpu, unsig
- 		return mmu;
- 
- 	iommu = to_msm_iommu(mmu);
-+	if (adreno_smmu && adreno_smmu->cookie) {
-+		const struct io_pgtable_cfg *cfg =
-+			adreno_smmu->get_ttbr1_cfg(adreno_smmu->cookie);
-+		size_t tblsz = get_tblsz(cfg);
-+
-+		iommu->pt_cache =
-+			kmem_cache_create("msm-mmu-pt", tblsz, tblsz, 0, NULL);
-+	}
- 	iommu_set_fault_handler(iommu->domain, msm_gpu_fault_handler, iommu);
- 
- 	/* Enable stall on iommu fault: */
-diff --git a/drivers/gpu/drm/msm/msm_mmu.h b/drivers/gpu/drm/msm/msm_mmu.h
-index c874852b7331..24ef04d267a6 100644
---- a/drivers/gpu/drm/msm/msm_mmu.h
-+++ b/drivers/gpu/drm/msm/msm_mmu.h
-@@ -9,8 +9,16 @@
- 
- #include <linux/iommu.h>
- 
-+struct msm_mmu_prealloc;
-+struct msm_mmu;
-+struct msm_gpu;
-+
- struct msm_mmu_funcs {
- 	void (*detach)(struct msm_mmu *mmu);
-+	void (*prealloc_count)(struct msm_mmu *mmu, struct msm_mmu_prealloc *p,
-+			       uint64_t iova, size_t len);
-+	int (*prealloc_allocate)(struct msm_mmu *mmu, struct msm_mmu_prealloc *p);
-+	void (*prealloc_cleanup)(struct msm_mmu *mmu, struct msm_mmu_prealloc *p);
- 	int (*map)(struct msm_mmu *mmu, uint64_t iova, struct sg_table *sgt,
- 			size_t off, size_t len, int prot);
- 	int (*unmap)(struct msm_mmu *mmu, uint64_t iova, size_t len);
-@@ -25,12 +33,38 @@ enum msm_mmu_type {
- 	MSM_MMU_IOMMU_PAGETABLE,
+ 	struct drm_info_node *node = m->private;
+@@ -266,6 +285,7 @@ static int msm_fb_show(struct seq_file *m, void *arg)
+ static struct drm_info_list msm_debugfs_list[] = {
+ 		{"gem", msm_gem_show},
+ 		{ "mm", msm_mm_show },
++		DRM_DEBUGFS_GPUVA_INFO(msm_gpuvas_show, NULL),
  };
  
-+/**
-+ * struct msm_mmu_prealloc - Tracking for pre-allocated pages for MMU updates.
-+ */
-+struct msm_mmu_prealloc {
-+	/** @count: Number of pages reserved. */
-+	uint32_t count;
-+	/** @ptr: Index of first unused page in @pages */
-+	uint32_t ptr;
-+	/**
-+	 * @pages: Array of pages preallocated for MMU table updates.
-+	 *
-+	 * After a VM operation, there might be free pages remaining in this
-+	 * array (since the amount allocated is a worst-case).  These are
-+	 * returned to the pt_cache at mmu->prealloc_cleanup().
-+	 */
-+	void **pages;
-+};
+ static struct drm_info_list msm_kms_debugfs_list[] = {
+diff --git a/drivers/gpu/drm/msm/msm_drv.c b/drivers/gpu/drm/msm/msm_drv.c
+index 5b5a64c8dddb..70c3a3712a3e 100644
+--- a/drivers/gpu/drm/msm/msm_drv.c
++++ b/drivers/gpu/drm/msm/msm_drv.c
+@@ -124,6 +124,9 @@ static int msm_drm_init(struct device *dev, const struct drm_driver *drv)
+ 		goto err_put_dev;
+ 	}
+ 
++	INIT_LIST_HEAD(&priv->vms);
++	mutex_init(&priv->vm_lock);
 +
- struct msm_mmu {
- 	const struct msm_mmu_funcs *funcs;
- 	struct device *dev;
- 	int (*handler)(void *arg, unsigned long iova, int flags, void *data);
- 	void *arg;
- 	enum msm_mmu_type type;
+ 	INIT_LIST_HEAD(&priv->objects);
+ 	mutex_init(&priv->obj_lock);
+ 
+diff --git a/drivers/gpu/drm/msm/msm_drv.h b/drivers/gpu/drm/msm/msm_drv.h
+index b0add236cbb3..83d2a480cfcf 100644
+--- a/drivers/gpu/drm/msm/msm_drv.h
++++ b/drivers/gpu/drm/msm/msm_drv.h
+@@ -112,6 +112,10 @@ struct msm_drm_private {
+ 	 */
+ 	atomic64_t total_mem;
+ 
++	/** @vms: List of all VMs, protected by @vm_lock */
++	struct list_head vms;
++	struct mutex vm_lock;
 +
+ 	/**
+ 	 * List of all GEM objects (mainly for debugfs, protected by obj_lock
+ 	 * (acquire before per GEM object lock)
+diff --git a/drivers/gpu/drm/msm/msm_gem.h b/drivers/gpu/drm/msm/msm_gem.h
+index 7f6315a66751..0409d35ebb32 100644
+--- a/drivers/gpu/drm/msm/msm_gem.h
++++ b/drivers/gpu/drm/msm/msm_gem.h
+@@ -54,6 +54,9 @@ struct msm_gem_vm {
+ 	/** @base: Inherit from drm_gpuvm. */
+ 	struct drm_gpuvm base;
+ 
++	/** @name: Storage for dynamically generated VM name for user VMs */
++	char name[32];
++
+ 	/**
+ 	 * @sched: Scheduler used for asynchronous VM_BIND request.
+ 	 *
+@@ -95,6 +98,11 @@ struct msm_gem_vm {
+ 	 */
+ 	struct pid *pid;
+ 
 +	/**
-+	 * @prealloc: pre-allocated pages for pgtable
-+	 *
-+	 * Set while a VM_BIND job is running, serialized under
-+	 * msm_gem_vm::op_lock.
++	 * @node: List node in msm_drm_private.vms list
 +	 */
-+	struct msm_mmu_prealloc *prealloc;
- };
++	struct list_head node;
++
+ 	/** @faults: the number of GPU hangs associated with this address space */
+ 	int faults;
  
- static inline void msm_mmu_init(struct msm_mmu *mmu, struct device *dev,
-@@ -52,7 +86,7 @@ static inline void msm_mmu_set_fault_handler(struct msm_mmu *mmu, void *arg,
- 	mmu->handler = handler;
- }
+diff --git a/drivers/gpu/drm/msm/msm_gem_vma.c b/drivers/gpu/drm/msm/msm_gem_vma.c
+index 09d4746248c2..8d0c4d3afa13 100644
+--- a/drivers/gpu/drm/msm/msm_gem_vma.c
++++ b/drivers/gpu/drm/msm/msm_gem_vma.c
+@@ -14,6 +14,11 @@ static void
+ msm_gem_vm_free(struct drm_gpuvm *gpuvm)
+ {
+ 	struct msm_gem_vm *vm = container_of(gpuvm, struct msm_gem_vm, base);
++	struct msm_drm_private *priv = gpuvm->drm->dev_private;
++
++	mutex_lock(&priv->vm_lock);
++	list_del(&vm->node);
++	mutex_unlock(&priv->vm_lock);
  
--struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent);
-+struct msm_mmu *msm_iommu_pagetable_create(struct msm_mmu *parent, bool kernel_managed);
+ 	drm_mm_takedown(&vm->mm);
+ 	if (vm->mmu)
+@@ -640,6 +645,7 @@ struct drm_gpuvm *
+ msm_gem_vm_create(struct drm_device *drm, struct msm_mmu *mmu, const char *name,
+ 		  u64 va_start, u64 va_size, bool managed)
+ {
++	struct msm_drm_private *priv = drm->dev_private;
+ 	enum drm_gpuvm_flags flags = managed ? DRM_GPUVM_VA_WEAK_REF : 0;
+ 	struct msm_gem_vm *vm;
+ 	struct drm_gem_object *dummy_gem;
+@@ -673,6 +679,19 @@ msm_gem_vm_create(struct drm_device *drm, struct msm_mmu *mmu, const char *name,
+ 			goto err_free_dummy;
+ 	}
  
- int msm_iommu_pagetable_params(struct msm_mmu *mmu, phys_addr_t *ttbr,
- 			       int *asid);
++	/* For userspace pgtables, generate a VM name based on comm and PID nr: */
++	if (!name) {
++		char tmpname[TASK_COMM_LEN];
++		struct pid *pid = get_pid(task_tgid(current));
++
++		get_task_comm(tmpname, current);
++		rcu_read_lock();
++		snprintf(vm->name, sizeof(name), "%s[%d]", tmpname, pid_nr(pid));
++		rcu_read_unlock();
++
++		name = vm->name;
++	}
++
+ 	drm_gpuvm_init(&vm->base, name, flags, drm, dummy_gem,
+ 		       va_start, va_size, 0, 0, &msm_gpuvm_ops);
+ 	drm_gem_object_put(dummy_gem);
+@@ -686,6 +705,10 @@ msm_gem_vm_create(struct drm_device *drm, struct msm_mmu *mmu, const char *name,
+ 
+ 	drm_mm_init(&vm->mm, va_start, va_size);
+ 
++	mutex_lock(&priv->vm_lock);
++	list_add_tail(&vm->node, &priv->vms);
++	mutex_unlock(&priv->vm_lock);
++
+ 	return &vm->base;
+ 
+ err_free_dummy:
 -- 
 2.48.1
 
