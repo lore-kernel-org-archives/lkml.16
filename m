@@ -1,128 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8FE218585
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D192165E2
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:09:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742418595; cv=none; b=AulT62dYYZ0WKYY6iUnWiY4gLNKDzvwhpCAHMlhcVtwGYl4c8929PrskYXLj7ywHFt12gHIDzBt4v3anYDQm4J5Dc4f24j0/kaVrNmWxf5Ga0JiXzUl7VgprNoUGAFq05YBVlRcGEqF9h3jXGuoJkurAXhzi1suhSOLmLfbI56E=
+	t=1742418595; cv=none; b=B7vDfhfXR8impEQ8ILR8AiA30aDrDX66E3NUFD/HoSQ4iwx9o8v0Ehrq53UpjgC6pYZtTeumqGMbL4cEcfH+oNs6/7SHKP9vxonGDou1G1O+YRdxFKqln9Wf+V81i6Bm0x7It7JtTU8T5KBHIKY7Cy7cUgN1xHoG6gvOWSRQN6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742418595; c=relaxed/simple;
-	bh=DtLzZ995TqoFa4x3we3CV5CTIUxWi8A16R0Kegkh084=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fuTlneInkLtFEnvKt0qAkA6vp9R71z2h0f9pmHYsnqvDwK8R4VReebOwJyaN8xqotZQzcg64uqfhSfphVxIfGtrbUwARlaIpwgEaUlHA7levpFrFm74n2ISXs7OGveHj236uX7q1T+31AhDynZh7sXhU5HrCQdu8JlCQsQF91do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJFUpwIF; arc=none smtp.client-ip=10.30.226.201
+	bh=t0DQSzj76o+q28S/J/Q+aN0pxw+YPVtotQKrAVrAB6Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FRWdUqun7RYe2M7E8qIuEQEeeFQBXPj/j4I0SBvgUufZQZRpinXsm8MZAtw/WzhjiYflePjTYvWavHiVwa227gWBLM/X8tcDNPPiVvi4dr9ixfCWvM890qixdxvlqOpTzAfT/2eBR5mtxCJ7spusozA7yBcORgjzZeZBZbrwdNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZuJfR0XL; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJFUpwIF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79089C4CEE4;
-	Wed, 19 Mar 2025 21:09:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742418594;
-	bh=DtLzZ995TqoFa4x3we3CV5CTIUxWi8A16R0Kegkh084=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NJFUpwIFAHSM9zvzskh2nspytZzzXOJ8K6k/D6kmADfKNBL3AXGYGIA+kJQM/kKU5
-	 POfMGgc6WO5lY5BU3LIOp1FxDDmz3lIYx+2AKdwWq8fQ/5r0Afrtnlv5AX3hOslYJk
-	 XSU0bZYPkFwaZ16qjrskLf4rJuJ8BxyylXe0kD7KVy7xC5vQbWBMPP4j0w+eTdrdIN
-	 7kKxXEDkITv7G+wzL8DxLbmZkMMtvWBvhW9rDhafZ071KAzRtwAwTlvF+AYwWrgv0P
-	 AwJOtwoNMqNW4X/49WEby45yB3kabe0SrommZ3yOWLDmeTpRGhBlb3eDtQaJQAk6QQ
-	 BUxeSRIJZkGFQ==
-Date: Wed, 19 Mar 2025 22:09:49 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Valentin Schneider <vschneid@redhat.com>
-Cc: linux-kernel@vger.kernel.org,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Shrikanth Hegde <sshegde@linux.ibm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
-	Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH 0/5] sched: Make CONFIG_SCHED_DEBUG features unconditional
-Message-ID: <Z9syncxlUbb_oj4Q@gmail.com>
-References: <20250317104257.3496611-1-mingo@kernel.org>
- <xhsmh4izppfqw.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZuJfR0XL"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742418592;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=j7HoSvSm7GM5yXTNBY3sCZv8nsyIwGMkLSsX5gJEiNY=;
+	b=ZuJfR0XL8tPr34oFameWkhYHn/iefUjtoj3DmEJQ1aBhbtvrf2H9RW6PBdsO92kJFiDER9
+	ORQzErbAOc3tdjuWYGo0fM2zKvlwjiOhb65SoqD3kwv1bETOnTQhlMCC2BVm57Crr3r4CG
+	xwZa9lekyWGyEKttox4gHVgIgHjRFHo=
+Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
+ [209.85.128.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-250-I4YqR1z4Oi-y11PgmvgXmg-1; Wed, 19 Mar 2025 17:09:49 -0400
+X-MC-Unique: I4YqR1z4Oi-y11PgmvgXmg-1
+X-Mimecast-MFC-AGG-ID: I4YqR1z4Oi-y11PgmvgXmg_1742418587
+Received: by mail-wm1-f69.google.com with SMTP id 5b1f17b1804b1-43ced8c2eb7so548555e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:09:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742418587; x=1743023387;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j7HoSvSm7GM5yXTNBY3sCZv8nsyIwGMkLSsX5gJEiNY=;
+        b=SpOGjItTjGbhV5xcmbSQSDHo2OFxVD6xqaLcANm6cXeb5NB5OW66i977P+Bh3E5/tA
+         /jOJZowzviDI+S+Of6PWiPRWERTLw0S8lfdoHDZjZv3ea7ujNcLoIsvYPW6D/pFDvLj3
+         9bKav3z4/VsL9iTO1U3yGA5Bd+yehmq1xwyPD5mQUs1J3zEkvmqK6EfwTlyfMNGCXbEZ
+         ncTBgdWjMakziTAEXLwYQhkwhJpE6ijxI9mE3YGT3rcRiCaKfWBNIRMoctFXRcDpwhVw
+         nbutx1sw4QxpCWMe02bfl6BFOXXVDmsY/wvU0Lr41jSDlc/72ApCVNqT+WPCSUinkKEr
+         TPnA==
+X-Forwarded-Encrypted: i=1; AJvYcCWno45ia2cz1afe8SVvlUjQdOLAKdU1FEB+A9MzsVAtGmPztg1WMMpfcb1zQoP9v7i81AjDSVvivGu4VZw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwKTTnRqslOYRn3rkK7pAHq63dc2T075X4zla0w44RKs2v5BnuD
+	Lx9XtlEhyY85lmWphgXyzgBvMPjmT+WrPC2J+br1vlJZIKTb4RJN0B2oU1vqVXz3dSdY/hjuM4x
+	NPhpLm+DptxC+LNUvZ9ZK+fd86ptl/xhCafNYm0D6opoh0GbuBIZOA4cmFg5w8g==
+X-Gm-Gg: ASbGncuOJQt1i1SPF/BaZ7OLOEXNzfFly8BzpMurZ+MBOa3vqeRYaNNL1wMjaIVDUtO
+	sRmBVZP2r3szr4I1Z1XDkuMoXpwUaeV6db+V/4Q64LizbAdqSsH9ZQ2ppEZSYsWFTwOFB3puGkh
+	b2XiE2MH7XnP1Lf38gOxr4Y9sB+CUD7k9iSlexIhwnC2SD5QesH9gur9KcyCA+SMkJK6hiPMxF9
+	YrVn6xEOiBqjsnMiwnCinue9Idh3RXa2esQ3d8sETwR8K0zNACQzt9eWyCLxCBha+JEOjD1ajfi
+	gdw5AxPV67X/guNucOBqX8LuKq+jcXmKXxv77DqpNdtCFA==
+X-Received: by 2002:a5d:5f4f:0:b0:38f:231a:635e with SMTP id ffacd0b85a97d-399795c2ademr966974f8f.25.1742418587037;
+        Wed, 19 Mar 2025 14:09:47 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFUNp5m5kg5nT9dIUi3KyGpUUwGQCEZhhXoTguvu2e0VxM6ACwAq8iInQv4AfDuk3Kc6Z9FwQ==
+X-Received: by 2002:a5d:5f4f:0:b0:38f:231a:635e with SMTP id ffacd0b85a97d-399795c2ademr966951f8f.25.1742418586581;
+        Wed, 19 Mar 2025 14:09:46 -0700 (PDT)
+Received: from [192.168.88.253] (146-241-10-172.dyn.eolo.it. [146.241.10.172])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df35ecsm22151312f8f.16.2025.03.19.14.09.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 14:09:46 -0700 (PDT)
+Message-ID: <09c84a94-85f3-4e28-8e7d-bdc227bf99ab@redhat.com>
+Date: Wed, 19 Mar 2025 22:09:44 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <xhsmh4izppfqw.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/3] vhost/vsock: use netns of process that opens the
+ vhost-vsock-netns device
+To: Bobby Eshleman <bobbyeshleman@gmail.com>,
+ Stefano Garzarella <sgarzare@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ "K. Y. Srinivasan" <kys@microsoft.com>,
+ Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
+ Dexuan Cui <decui@microsoft.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?=
+ <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>,
+ Vishnu Dasa <vishnu.dasa@broadcom.com>,
+ Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>
+Cc: "David S. Miller" <davem@davemloft.net>, virtualization@lists.linux.dev,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
+Content-Language: en-US
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+On 3/12/25 9:59 PM, Bobby Eshleman wrote:
+> @@ -753,6 +783,8 @@ static int vhost_vsock_dev_release(struct inode *inode, struct file *file)
+>  	virtio_vsock_skb_queue_purge(&vsock->send_pkt_queue);
+>  
+>  	vhost_dev_cleanup(&vsock->dev);
+> +	if (vsock->net)
+> +		put_net(vsock->net);
 
-* Valentin Schneider <vschneid@redhat.com> wrote:
+put_net() is a deprecated API, you should use put_net_track() instead.
 
-> On 17/03/25 11:42, Ingo Molnar wrote:
-> > For more than a decade, CONFIG_SCHED_DEBUG=y has been enabled
-> > in all the major Linux distributions:
-> >
-> >    /boot/config-6.11.0-19-generic:CONFIG_SCHED_DEBUG=y
-> >
-> > The reason is that while originally CONFIG_SCHED_DEBUG started
-> > out as a debugging feature, over the years (decades ...) it has
-> > grown various bits of statistics, instrumentation and
-> > control knobs that are useful for sysadmin and general software
-> > development purposes as well.
-> >
-> > But within the kernel we still pretend that there's a choice,
-> > and sometimes code that is seemingly 'debug only' creates overhead
-> > that should be optimized in reality.
-> >
-> > So make it all official and make CONFIG_SCHED_DEBUG unconditional.
-> > This gets rid of a large amount of #ifdefs, so good riddance ...
-> >
-> 
-> Pretty much every distro I'm aware of has CONFIG_SCHED_DEBUG=y; a quick check
-> tells me it's been like so for RHEL since at least 2013, and that's from a
-> commit copying configs from RHEL-6 to RHEL-7.
-> 
-> Two things however come to mind:
-> 
-> 1) What does this mean for the debug stuff we've repeatedly said wasn't ABI
->    because it was under CONFIG_SCHED_DEBUG? I've been burned by making
->    sched_domain.flags read-only, and there's still writable stuff:
-> 
->    # ls -al /sys/kernel/debug/sched/domains/cpu0/domain0/
->    total 0
->    drwxr-xr-x. 2 root root 0 Mar 19 04:36 .
->    drwxr-xr-x. 3 root root 0 Mar 19 04:36 ..
->    -rw-r--r--. 1 root root 0 Mar 19 04:36 busy_factor
->    -rw-r--r--. 1 root root 0 Mar 19 04:36 cache_nice_tries
->    -r--r--r--. 1 root root 0 Mar 19 04:36 flags
->    -r--r--r--. 1 root root 0 Mar 19 04:36 groups_flags
->    -rw-r--r--. 1 root root 0 Mar 19 04:36 imbalance_pct
->    -r--r--r--. 1 root root 0 Mar 19 04:36 level
->    -rw-r--r--. 1 root root 0 Mar 19 04:36 max_interval
->    -rw-r--r--. 1 root root 0 Mar 19 04:36 max_newidle_lb_cost
->    -rw-r--r--. 1 root root 0 Mar 19 04:36 min_interval
->    -r--r--r--. 1 root root 0 Mar 19 04:36 name
-> 
->    + all the non topology related debug knobs.
+>  	kfree(vsock->dev.vqs);
+>  	vhost_vsock_free(vsock);
+>  	return 0;
 
-Yeah, I don't think these or other sysctls are as contentious as 
-previously thought. We might want to put '/debug/' into the directory 
-name above, or we could move it over to debugfs entirely - but we 
-should make it clear via the name that these are debugging knobs in 
-essence.
-
-> 2) Peter mentioned a few times that, last time it was benchmarked, there
->    were noticeable perf differences between CONFIG_SCHED_DEBUG=n and
->    CONFIG_SCHED_DEBUG=y. This would be an occasion to re-measure that and
->    potentially move (some of) these checks to e.g. a sched_debug_verbose
->    static key.
-
-Yeah, and this is an argument strongly *in favor* of eliminating 
-CONFIG_SCHED_DEBUG: in a way the CONFIG_SCHED_DEBUG "option" created a 
-false sense of "it's only debug code". But it's not a genuine debug 
-option, it's actual overhead for the vast majority of Linux distros and 
-users.
-
-So let's just eliminate SCHED_DEBUG, and fix any overhead. It's exactly 
-what we should do anyway - nothing changes IMHO, just the appearance of 
-urgency. :-)
+Also series introducing new features should also include the related
+self-tests.
 
 Thanks,
 
-	Ingo
+Paolo
+
