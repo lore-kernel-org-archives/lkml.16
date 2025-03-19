@@ -1,70 +1,86 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ED2E20C46A;
-	Wed, 19 Mar 2025 09:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EE61B664
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:55:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742378072; cv=none; b=nnFq7Bat0OAlmk73M8nOkFgDPlBrYbD1jByHPDMKuLNKjYhV615u2btSesB/uTDghtb5snK6c3tShwv/yG8gVSXoOdJ1Ez1pa/KqBUj2mdwiH0wFj5vSKNmvMI2xhDlRcnrhFzsP7Rc9/+wUkN2qOL46E1S7AMTprN6O3AZez/4=
+	t=1742378122; cv=none; b=UhzEpz+Jx6LWnu/6xSyX9SlaTmXpO1pcdorSLLid2MPQGmXy9voduoAcNMmSkDCVrJlYJcxxkv8SWZKhQ1on2uazTTbGmST6+bvIAogzkgxmCgBdqzjVFSo8WJgk7AdTc18Rdfz8PVVxWFJLPx5p3IWMfRDWpFhStuYzBEZUju0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742378072; c=relaxed/simple;
-	bh=lcoJ/v4BNuTTqccAlT6cjQRIb0xerJabIpRrnhkHsKw=;
+	s=arc-20240116; t=1742378122; c=relaxed/simple;
+	bh=hBOe4eClj0gkWkRr8z2a+nIUH8GY5enRwn+OsacCLh0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mUaEqYQB/9H1qE78kA/X5Gbi9sGgd+XicgXVMrIjxr/LsLJKyooyZ2v+4ehKimUUPJZUmj+5mKm5OXF41jqmCUmFJ2MsQ3npAfoRZNFfWq5/limVQ1irb8C0TuQnKthKB8Rrwz+bshlqKXk7n2fthxASgxxRw+EdEqPyoL13dj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=JzKpmuwD; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=PBtNoRYjL9b/ZrpT7xcENgsHszGQaNQAPsucQd99/4fK6c444U0FEUFLsN39eUBAqbVx3cyeKmtwW05e1a6KO4wCP+myi3pJo8FMEnsIf74D3QaO7dvgPXuChXGzKlm9BTns2i/3eg1jvAtAZL6twwijyrTmBvTV7U2JFVtwmw8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ErJXr9Px; arc=none smtp.client-ip=209.85.214.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="JzKpmuwD"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 31DE140E0196;
-	Wed, 19 Mar 2025 09:54:25 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id 7o_IzpU70EBJ; Wed, 19 Mar 2025 09:54:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742378060; bh=WCsCMxOWpa+mMujFNfUXyDBBuoL0FWWVO1W19Vodfps=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JzKpmuwDLK1ETFX64FYT4xFx9IikmURRnkz5ACuMJ13afZgaSouvNkf25lYnv6Pf4
-	 CJk8dgqmTeheB9hOoDB3N7js8OyLZEwZ0INF4jPNWdSM9zyOIvMvSqYN5kiHKNoCEe
-	 YqUDi0vGQ0Wb0ComGOwNZBtAAiMZg9yzTnjVr01ONoJ4ieEkbmneNuMV+05Jso3zwf
-	 21cBF/7gjpEXSxzQpRWMbcqYG/qwxeq0UVQxvPmhA/WeY9XlLM6zxneO+qycBLJpmp
-	 QtLx9YB8hnOQGtrQkcuQeHR0wLxXMRLsW9IBaOshTef026zpeLg6zBU3B1PxMEaAWt
-	 6Xlo/73ycex0r6qaY3ZM6w/iESuH/qidl78nVP+r/+vpQzVGFURipWlGhsvR+geqX1
-	 E/+d3LTM0LK4er7V7vacZ/H3l3/z48vDvctFmMNXPhVzRXVa75rsvN+CudgTyvt2cL
-	 V31+GyYwoHmmttifB4hyJhsX7QLVqWZRgeIRGl9tzN2OT4tryJSZwfiFP6sZSp7o5n
-	 BGIAL/s1oKU9yvgGF/eijdIDU7ub+VSnZp8MQHFWkSGLA5wJQkeKN89ecp9BwI7/ku
-	 lrKF3xsJQKIBBvr2nWTlE0fdkjM080lzmNUUV9UB5IQpoQP61P4GzXFh2pNWnSysRr
-	 /eoWf3DVNE81i5T7chPOBo+E=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 67C1340E015E;
-	Wed, 19 Mar 2025 09:54:03 +0000 (UTC)
-Date: Wed, 19 Mar 2025 10:53:57 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-tip-commits@vger.kernel.org,
-	xingwei lee <xrivendell7@gmail.com>,
-	yuxin wang <wang1315768607@163.com>,
-	Marius Fleischer <fleischermarius@gmail.com>,
-	Ingo Molnar <mingo@kernel.org>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Linus Torvalds <torvalds@linux-foundation.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Andy Lutomirski <luto@kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Rik van Riel <riel@surriel.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Peter Xu <peterx@redhat.com>, x86@kernel.org,
-	Dan Carpenter <dan.carpenter@linaro.org>
-Subject: Re: [tip: x86/mm] x86/mm/pat: Fix VM_PAT handling when fork() fails
- in copy_page_range()
-Message-ID: <20250319095357.GAZ9qUNaWSORZMXdRK@fat_crate.local>
-References: <20241029210331.1339581-1-david@redhat.com>
- <174100624258.10177.4534865061014070904.tip-bot2@tip-bot2>
- <fe0a67dc-d7cb-42ff-9b20-9527af7f6a94@redhat.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ErJXr9Px"
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-223fd89d036so132377575ad.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:55:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742378120; x=1742982920; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WnVvGzQPAnyj4mnUyy5QvfWa2P714m+BjFv+31OFFM4=;
+        b=ErJXr9Px3IqX5NAhegRhH0YTyzIiSSt18QCZSc7CbbWB0wWVj60R4jSC/BQoWDDvsW
+         Az95PgUrJN/BQKQFlid8MV4mKxENbxdaPRDyWHMz9Z69Lr3os6saXGy7XSGq9AOEOyq2
+         jPprev0z9MCzhl7WHjMEeXsHgx6bUZ/H3m2SoMmjyUZfq9ypJ5ELD1wqM8cqWt/4w53/
+         BxYxdb8xLujafjHw92djc5uP1OeLdyVSdxS6UGBbfZ+72WY28EtL2kzsQRX9JjKB2k/4
+         Tt1OJxXZEmZocVNzfyOfAfWXn1Zx05zj44LEkAvgfvd3n8mcWcJCrbSqh1t+CKCh6rfq
+         tEgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742378120; x=1742982920;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WnVvGzQPAnyj4mnUyy5QvfWa2P714m+BjFv+31OFFM4=;
+        b=Wmp5VYfOIUSAch+Vu+yQ8bP2lv5OssuLMtt0S4EIeeJoT+ljm3richlzNzPjJMI9yQ
+         e/W2mQrm+4lgHmbL7KCJsx3DlxapUGk8Fqdal20hO8k9zRFZEqeAJzzWliwzFZA5sqwo
+         jYrVXrR9Qm2R9fGrVq1THeojHHa/vq6ZxkfgSf4Qb3g9jrEWjjeWuAf3WFVqHIoKsSzs
+         iOISmagkdtKW5c6d4DA29kuX1IvVPrA42E4FFsH4PdkBiVEHce8Lr9ByPPIcDCTq3oan
+         BjncM3mgOmZ1TyqW/0Ly3Dc0/07U8khvaAZoEGZfLPdy0bh7TwPQDjhk+umIsNnrWZr9
+         ETyw==
+X-Forwarded-Encrypted: i=1; AJvYcCU/CK7GyYZvpIvMdncpumDGKCtaCBn6JJNqxZJsN4Nf8/DAGeqms20QTGsiU0Yken5M7T+SKIEhH4QSHSU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YySGGxU6ylnHiUvoWqiZhoZ2d0EnOlnE+/si+7qNWIVXK54CseU
+	BHr46XNjt3eyOcD0C8CukNpISe8a9awExw68hqtIlj8GD+OfFxuM64xBqyHItQ==
+X-Gm-Gg: ASbGncsnXS005+DrGK0L1nYiAid08696pLps4/7XByHy7rKW1wtXV7qGIh3uqzsuNPq
+	w98mq0C1lofFUi0THQLfG/72ClTz5JXG6THD3+qlii13nZutIuPQyZ+mv3k8ypTS1uvAtubmvVV
+	3mCh7lEdVLdDSy2RqJtfxzF2t2npZ8BVyKaqEnfKbhGu/wedJeCNn2s8akDeOIYFcDAuBsUuiv+
+	gUM1DOhZFhTeq+1a6DRF2c95AG0xVzXpRxVLKEiihj9s0KpKlk+w2IuaPZ+HqDKBYEnaxDVRsVO
+	HdouMv6w9+P6ZENT/oD0c7bVpO3TbtewXYjsZ2XJ/nqIIbh9NIwBxXk=
+X-Google-Smtp-Source: AGHT+IGY1KwFvtNIJJm5MS9eiMIfZ3YUeAX6DKMaBqQ27dy8OhBjwCrp+JyiEaWtexFKt71h73MydQ==
+X-Received: by 2002:a05:6a00:9a4:b0:736:3c2f:acdd with SMTP id d2e1a72fcca58-7376d645bcemr3514839b3a.14.1742378119616;
+        Wed, 19 Mar 2025 02:55:19 -0700 (PDT)
+Received: from thinkpad ([120.60.70.130])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af56ea0511bsm10473365a12.45.2025.03.19.02.55.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 02:55:19 -0700 (PDT)
+Date: Wed, 19 Mar 2025 15:25:11 +0530
+From: "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: Siddharth Vadapalli <s-vadapalli@ti.com>,
+	"lpieralisi@kernel.org" <lpieralisi@kernel.org>,
+	"kw@linux.com" <kw@linux.com>, "robh@kernel.org" <robh@kernel.org>,
+	"bhelgaas@google.com" <bhelgaas@google.com>,
+	"vigneshr@ti.com" <vigneshr@ti.com>,
+	"kishon@kernel.org" <kishon@kernel.org>,
+	"cassel@kernel.org" <cassel@kernel.org>,
+	"wojciech.jasko-EXT@continental-corporation.com" <wojciech.jasko-EXT@continental-corporation.com>,
+	"thomas.richard@bootlin.com" <thomas.richard@bootlin.com>,
+	"bwawrzyn@cisco.com" <bwawrzyn@cisco.com>,
+	"linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	"srk@ti.com" <srk@ti.com>
+Subject: Re: [PATCH 0/4] Loadable Module support for PCIe Cadence and J721E
+Message-ID: <20250319095511.hf3y2c6vbbnm3ien@thinkpad>
+References: <20250307103128.3287497-1-s-vadapalli@ti.com>
+ <Z9pffxeXHVOsoi4O@nchen-desktop>
+ <20250319062534.ollh3s5t7znf5zqs@uda0492258>
+ <Z9qO1f5MgNcwO5A4@nchen-desktop>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,32 +89,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <fe0a67dc-d7cb-42ff-9b20-9527af7f6a94@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Z9qO1f5MgNcwO5A4@nchen-desktop>
 
-On Wed, Mar 19, 2025 at 09:15:25AM +0100, David Hildenbrand wrote:
-> @Ingo, can you drop this patch for now? It's supposed to be "!get_pat_info"
-> here, and I want to re-verify now that a couple of months passed, whether
-> it's all working as expected with that.
+On Wed, Mar 19, 2025 at 05:31:01PM +0800, Peter Chen wrote:
+> On 25-03-19 14:25:34, Siddharth Vadapalli wrote:
+> > > >
+> > > > Hello,
+> > > >
+> > > > This series enables support to build the PCIe Cadence Controller drivers
+> > > > and the PCI J721E Application/Wrapper/Glue driver as Loadable Kernel
+> > > > Modules. The motivation for this series is that PCIe is not a necessity
+> > > > for booting the SoC, due to which it doesn't have to be a built-in
+> > > > module. Additionally, the defconfig doesn't enable the PCIe Cadence
+> > > > Controller drivers and the PCI J721E driver, due to which PCIe is not
+> > > > supported by default. Enabling the configs as of now (i.e. without this
+> > > > series) will result in built-in drivers i.e. a bloated Linux Image for
+> > > > everyone who doesn't have the PCIe Controller.
+> > >
+> > > If the user doesn't enable PCIe controller device through DTS/ACPI,
+> > > that's doesn't matter.
+> > 
+> > The Linux Image for arm64 systems built using:
+> > arch/arm64/configs/defconfig
+> > will not have support for the Cadence PCIe Controller and the PCIe J721e
+> > driver, because these configs aren't enabled.
+> > 
+> > >
+> > > > @@ -209,6 +209,12 @@ CONFIG_NFC=m
+> > > >  CONFIG_NFC_NCI=m
+> > > >  CONFIG_NFC_S3FWRN5_I2C=m
+> > > >  CONFIG_PCI=y
+> > > > +CONFIG_PCI_J721E=m
+> > > > +CONFIG_PCI_J721E_HOST=m
+> > > > +CONFIG_PCI_J721E_EP=m
+> > > > +CONFIG_PCIE_CADENCE=m
+> > > > +CONFIG_PCIE_CADENCE_HOST=m
+> > > > +CONFIG_PCIE_CADENCE_EP=m
+> > >
+> > > The common Cadence configuration will be select if the glue layer's
+> > > configuration is select according to Kconfig.
+> > >
+> > > Please do not set common configuration as module, some user may need
+> > > it as build-in like dw's. Considering the situation, the rootfs is at
+> > > NVMe.
+> > 
+> > The common configuration at the moment is "DISABLED" i.e. no support for
+> > the Cadence Controller at all. Which "user" are you referring to? This
+> > series was introduced since having the drivers built-in was pushed back at:
 > 
-> (we could actually complain if get_pat_info() would fail at this point, let
-> me think about that)
+> We are using Cadence controller, and prepare upstream radxa-o6 board
+> whose rootfs is at PCIe NVMe.
 > 
-> I'll resend once I get to it. Thanks!
 
-That patch is deep into the x86/mm branch. We could
+It doesn't matter. Only criteria AFAIK to build the driver as built-in in
+defconfig is that it should be a depedency for console. For some time, storage
+was also a dependency, but for sure PCIe is not.
 
-- rebase: not good, especially one week before the merge window
+Moreover, CONFIG_BLK_DEV_NVME is built as a module in ARM64 defconfig. So it
+doesn't matter if you build PCIe controller driver as a built-in or not. You
+need to load the NVMe driver somehow.
 
-- send a revert: probably better along with an explanation why we're reverting
+So please use initramfs.
 
-- do a small fix which disables it ontop
+> You could build driver as module for TI glue layer, but don't force
+> other vendors using module as well, see dwc as an example please.
+> 
 
-- fix it properly: probably best! :-)
+DWC is a bad example here. Only reason the DWC drivers are not loadable is due
+to the in-built MSI controller implementation as irqchip. People tend to build
+the irqchip controllers as always built-in for some known issues. Even then some
+driver developers prefer to built them as loadable module but suppress unbind to
+avoid rmmoding the module.
 
-Thx.
+- Mani
 
 -- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+மணிவண்ணன் சதாசிவம்
