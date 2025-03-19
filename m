@@ -1,44 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D954B255E39
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30F8D253F1E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376674; cv=none; b=aN6zTxRlH7LooOCX+suToBs8wKXYCPDNiSHc8BYwidnkWQomXeV9wL0G/XPDCB+JE5dnKUZCLpDoAJM8UMhHV9L5JRhFLxapXZJkj6GLdnptFbf8NSl9KED6n61E6IgycPVBx2+X6pDqq1kiXItGOYx1lFDkxo31i2WvPM9Evj8=
+	t=1742376678; cv=none; b=ZtarLosuzVTwiSnl7xBGNhNSxaR6pXfyJeR7cPgWEcSJe1Wo6pF33En4cgtJGcg9e7VUFZqbk5PZJIqRgUlKfr84iJ6sjsteM60L632SQzX118bZkeI8RPTTTc78zYaNtfL9Tmv++n3djEPHvems34ioi79RSYu0VKPxd4Evvr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376674; c=relaxed/simple;
-	bh=NaUebujBUUHk/YLaA7S6CPpdQubsvT1Q6Qh1BsUzd/o=;
+	s=arc-20240116; t=1742376678; c=relaxed/simple;
+	bh=5X/2KZBe0rTzqTYeY+UtAe+OLiGg47tjFCLWPcVkPKo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e4BaxxN7A+1XVaYscY/Zgl6dC+3llV37Yndr7HCDTObVp/co1RdoxRdjhTwYCEdnlAupUWLeSuvt+pG969zE1E6AuQEnw7jAMVOxopE62DBI0t8JKUrNxYYmo521+iakt8Bxo8DjzgQVzFhYaiUFjS/e2kP3b6RBJHJSBNoNg8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fmumnTWt; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=lcjyy5F1/R3fxneO+jM4vS48cNDKKxN2tR+5lPcv/nwpQWAF2R6BP4R0iojwC/QG1xFlMISUZy6ywIOGbNV02oW1wQYsqm/cSesD/b6g6TMSMaU4aIL1NtiF4n2348DTAV6imzCAjZsMxquzs0Yj1YhS4Qrh6fEdQkvG1qbvCIU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jvi+Ey6A; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fmumnTWt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACBE9C4CEEE;
-	Wed, 19 Mar 2025 09:31:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jvi+Ey6A"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2288CC4CEE9;
+	Wed, 19 Mar 2025 09:31:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742376674;
-	bh=NaUebujBUUHk/YLaA7S6CPpdQubsvT1Q6Qh1BsUzd/o=;
+	s=k20201202; t=1742376676;
+	bh=5X/2KZBe0rTzqTYeY+UtAe+OLiGg47tjFCLWPcVkPKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=fmumnTWt09IkQ9Zs54sPuzsWTq54TsLy8Fdp67fx0LeQzaPU6mgHcRgGfbeTbsGzZ
-	 Ev87+UcHK6d9xah6YPoAR1bKDvRXDICOipIReKNLnBi8FegARxeJ/Hd0UZjognqsDU
-	 8pGrChIruS6SjslMWqmBAfTl5Yc8J2jTLen1KhmlwIvc1V7FEDbqH//ITGZcup9BA0
-	 sfB+h8aC5Tl8hw94PR+5w5gKFmy/9EzMWr046aCNNvD+GV5ouBraAdMhjEu/Gs/Ipu
-	 zVIZM4Arx/D+M1Q4XiKHf74RHOSB4R0dLkl30S+H5nosyX2bHyXUqp5NX6m43xjudc
-	 SuEGwhKaaseUQ==
+	b=jvi+Ey6Ap7q3t1h90SNBYQiWfxRBI4WpOQ27WwhyZ6nsbQjadFSYG+ClF0NsfiTTi
+	 nXU3tW5XPs7+hULnW5u2Q3PgDIuh814QaVAY04YQDQqLsk54bP2BSUshYBdsoHclwd
+	 1Fue+Nxwv7qfxI+dUV57EZ45ZUdXrZiJBvUsjvpixdL9EzLyMnYKSFPJX/sMzSEsG5
+	 tYpX7kMkf2dHLYlV65Hm3QZq6hExsTUH3ye0SKZ245vEyhCOMJvzEoY/MnaG9dTaeK
+	 JAR7T1oVvFMufFSarmlD+djKczI+hP5lVRviFJCbfeULcSLytlcVuh5bNsbIWKUGFX
+	 NiJcf96zy8rCQ==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: tglx@linutronix.de
 Cc: maz@kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	x86@kernel.org,
-	"H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH v2 10/57] irqdomain: x86: Switch to of_fwnode_handle()
-Date: Wed, 19 Mar 2025 10:29:03 +0100
-Message-ID: <20250319092951.37667-11-jirislaby@kernel.org>
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
+Subject: [PATCH v2 11/57] irqdomain: Drop of_node_to_fwnode()
+Date: Wed, 19 Mar 2025 10:29:04 +0100
+Message-ID: <20250319092951.37667-12-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
 References: <20250319092951.37667-1-jirislaby@kernel.org>
@@ -50,33 +45,108 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
-defined of_fwnode_handle(). The former is in the process of being
-removed, so use the latter instead.
+All uses of of_node_to_fwnode() in non-irqdomain code were changed to
+"officially" defined of_fwnode_handle(). Therefore, the former can be
+dropped along with the last uses in the irqdomain code.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: x86@kernel.org
-Cc: "H. Peter Anvin" <hpa@zytor.com>
 ---
- arch/x86/kernel/apic/io_apic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/irqdomain.h | 17 ++++++-----------
+ kernel/irq/irqdomain.c    |  4 ++--
+ 2 files changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kernel/apic/io_apic.c b/arch/x86/kernel/apic/io_apic.c
-index eebc360ed1bb..487992cb0836 100644
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2225,7 +2225,7 @@ static int mp_irqdomain_create(int ioapic)
+diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
+index bb7111105296..5eaaf74647ed 100644
+--- a/include/linux/irqdomain.h
++++ b/include/linux/irqdomain.h
+@@ -358,11 +358,6 @@ int irq_domain_alloc_descs(int virq, unsigned int nr_irqs,
+ 			   irq_hw_number_t hwirq, int node,
+ 			   const struct irq_affinity_desc *affinity);
  
- 	/* Handle device tree enumerated APICs proper */
- 	if (cfg->dev) {
--		fn = of_node_to_fwnode(cfg->dev);
-+		fn = of_fwnode_handle(cfg->dev);
- 	} else {
- 		fn = irq_domain_alloc_named_id_fwnode("IO-APIC", mpc_ioapic_id(ioapic));
- 		if (!fn)
+-static inline struct fwnode_handle *of_node_to_fwnode(struct device_node *node)
+-{
+-	return node ? &node->fwnode : NULL;
+-}
+-
+ extern const struct fwnode_operations irqchip_fwnode_ops;
+ 
+ static inline bool is_fwnode_irqchip(const struct fwnode_handle *fwnode)
+@@ -387,7 +382,7 @@ struct irq_domain *irq_find_matching_fwnode(struct fwnode_handle *fwnode,
+ static inline struct irq_domain *irq_find_matching_host(struct device_node *node,
+ 							enum irq_domain_bus_token bus_token)
+ {
+-	return irq_find_matching_fwnode(of_node_to_fwnode(node), bus_token);
++	return irq_find_matching_fwnode(of_fwnode_handle(node), bus_token);
+ }
+ 
+ static inline struct irq_domain *irq_find_host(struct device_node *node)
+@@ -407,7 +402,7 @@ static inline struct irq_domain *irq_domain_add_simple(struct device_node *of_no
+ 						       const struct irq_domain_ops *ops,
+ 						       void *host_data)
+ {
+-	return irq_domain_create_simple(of_node_to_fwnode(of_node), size, first_irq, ops, host_data);
++	return irq_domain_create_simple(of_fwnode_handle(of_node), size, first_irq, ops, host_data);
+ }
+ 
+ /**
+@@ -423,7 +418,7 @@ static inline struct irq_domain *irq_domain_add_linear(struct device_node *of_no
+ 					 void *host_data)
+ {
+ 	struct irq_domain_info info = {
+-		.fwnode		= of_node_to_fwnode(of_node),
++		.fwnode		= of_fwnode_handle(of_node),
+ 		.size		= size,
+ 		.hwirq_max	= size,
+ 		.ops		= ops,
+@@ -442,7 +437,7 @@ static inline struct irq_domain *irq_domain_add_nomap(struct device_node *of_nod
+ 					 void *host_data)
+ {
+ 	struct irq_domain_info info = {
+-		.fwnode		= of_node_to_fwnode(of_node),
++		.fwnode		= of_fwnode_handle(of_node),
+ 		.hwirq_max	= max_irq,
+ 		.direct_max	= max_irq,
+ 		.ops		= ops,
+@@ -462,7 +457,7 @@ static inline struct irq_domain *irq_domain_add_tree(struct device_node *of_node
+ 					 void *host_data)
+ {
+ 	struct irq_domain_info info = {
+-		.fwnode		= of_node_to_fwnode(of_node),
++		.fwnode		= of_fwnode_handle(of_node),
+ 		.hwirq_max	= ~0U,
+ 		.ops		= ops,
+ 		.host_data	= host_data,
+@@ -611,7 +606,7 @@ static inline struct irq_domain *irq_domain_add_hierarchy(struct irq_domain *par
+ 					    void *host_data)
+ {
+ 	return irq_domain_create_hierarchy(parent, flags, size,
+-					   of_node_to_fwnode(node),
++					   of_fwnode_handle(node),
+ 					   ops, host_data);
+ }
+ 
+diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
+index 9d5c8651492d..abed179737c2 100644
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -502,7 +502,7 @@ struct irq_domain *irq_domain_add_legacy(struct device_node *of_node,
+ 					 const struct irq_domain_ops *ops,
+ 					 void *host_data)
+ {
+-	return irq_domain_create_legacy(of_node_to_fwnode(of_node), size,
++	return irq_domain_create_legacy(of_fwnode_handle(of_node), size,
+ 					first_irq, first_hwirq, ops, host_data);
+ }
+ EXPORT_SYMBOL_GPL(irq_domain_add_legacy);
+@@ -885,7 +885,7 @@ void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
+ {
+ 	int i;
+ 
+-	fwspec->fwnode = of_node_to_fwnode(np);
++	fwspec->fwnode = of_fwnode_handle(np);
+ 	fwspec->param_count = count;
+ 
+ 	for (i = 0; i < count; i++)
 -- 
 2.49.0
 
