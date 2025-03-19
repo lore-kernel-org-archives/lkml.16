@@ -1,98 +1,225 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB964224CC
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 15:16:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742397394; cv=pass; b=A1QTjuEMddyudjfawrZ7v/FrlPbAUyYOJ9MhQmhfoPzME7DuHOAZO+/0V3QFHX4u6vqNbIJwt2C9q4Pdk+1jAndzegIv7ywdKsrjXE2fVA1XOSLl68M5UYad+CKNKOq4j5nbKGTWg+fKvxwXc3fDvZZYM0j0X5nKeYr5+YjVTjM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742397394; c=relaxed/simple;
-	bh=FshwG//AkxCGIuS3ZqG7JLDXa2n6BvNcDj2ycU8dg8U=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=UAIbPs7lYBEgTHyoRVJZwugQ4U3HtiETVMZxJE8UqRcfYkQfEGNcuhPs8PFEWEy0Z35lF677dyc7cM6dRwcU5eHA1sr2WavPdnBZ7ERBrvNKfUb6tE7xj3OXPZaxRkOf+R0h93OOPzQOqosS4drb5KZRH/VQh4mTsdzSojzXEyM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b=EdCtippt; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F52C1C5D53;
+	Wed, 19 Mar 2025 15:16:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742397395; cv=none; b=pZoitFQXNvjHaSg3XuCLXkrrw3jf6AU7LtBYw30R0RaxCEvNE9r1lwU7iFMjKe4EDoomlTMLkqgAQdufBSfvLVHvupsC3UMnbqCaxZJXm45HHVznPZkMFII6ZfM/5TKSFL5aYgKsebqL5pcrcKZhFDE44pB3q5i2OLPAT0Z6qxM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742397395; c=relaxed/simple;
+	bh=WVcWVQJpGeDUiTGY9vo3z1CvL7csVDDzGiAEHoJjlHU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jhVY1fAXAofSrOsDHmilzy5uDXW0YVXODuIsI58oOcFg+zIdIOQnectyLufkUsQOOIz7HtxXLXO4XYvQuAT/0mmjzMHKfCRB8oZqm9i3aOYrGTsimndwOfcAid0lxutLdu+DoQJhdO4E2UxgTpkri2oCTCp23SWK4n4Oede5Qj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Lc8QL+wu; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=adrian.larumbe@collabora.com header.b="EdCtippt"
-ARC-Seal: i=1; a=rsa-sha256; t=1742397373; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=kP6MKm231y+p86vJj3lgqWO41uwKU7hab++9xSsLjAMYFNr8KpqU3si1FxV5CQ70vdqiBZ4oRE7daC0ac48QHqJXo+LqrqeZm4S++FeURr6YgZ5DbP++pEjEGSNYMQtIPl86+kWooWD6Ius3ukit1VexH1i6xCkEDaBGvibPLHA=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742397373; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=iQsw2Yqkfu4c/F+2H/DRIW2untXcbSo1Qujc3AC3PUM=; 
-	b=KAnceKq3mqZtxruSZPl+wcl020RzYJ7+2bf0+ExjCmdEJVeqjIMVBQkVq6DaX9s8WHGiXYl10G9UvxNuQGEFJ7xbg9CjRw5CEkLyK4yK0rm70mJHiyr1gCwtXDXe1ohGaaZzKgTnYjTOzkuTAzFaB8eQLZVrG8fszFUUKy+pSCM=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=adrian.larumbe@collabora.com;
-	dmarc=pass header.from=<adrian.larumbe@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742397373;
-	s=zohomail; d=collabora.com; i=adrian.larumbe@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=iQsw2Yqkfu4c/F+2H/DRIW2untXcbSo1Qujc3AC3PUM=;
-	b=EdCtipptt3uSiM/xN4sPQyPSyyX7IyXuFHKbeWY/83/xVlrbAKLUGC/+yXpSTYQl
-	lKP8wy31bcZleBB2fyc295PCtlehHssL+USG89HE7XKBUAmWakwxIeu6ODLB18W3ZeI
-	ec6Kqvph54pSUnUe8QJBeaKxGYC1sxiO38tpxP7Q=
-Received: by mx.zohomail.com with SMTPS id 1742397372202236.04927725024265;
-	Wed, 19 Mar 2025 08:16:12 -0700 (PDT)
-From: =?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>
-To: Boris Brezillon <boris.brezillon@collabora.com>,
-	Steven Price <steven.price@arm.com>,
-	Liviu Dudau <liviu.dudau@arm.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Cc: kernel@collabora.com,
-	=?UTF-8?q?Adri=C3=A1n=20Larumbe?= <adrian.larumbe@collabora.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/4] Panthor BO tagging and GEMS debug display
-Date: Wed, 19 Mar 2025 15:03:15 +0000
-Message-ID: <20250319150953.1634322-1-adrian.larumbe@collabora.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Lc8QL+wu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742397393; x=1773933393;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=WVcWVQJpGeDUiTGY9vo3z1CvL7csVDDzGiAEHoJjlHU=;
+  b=Lc8QL+wu9BeVpDsCzf7tx0pSMAkyWYdl+bqmjHG8UlXBelr2AP7AstPV
+   R2N4+W1du9z9Es942lJb64+kqynlnZdAv8WRz40Ok8Gstu26Jhp3Q4KoU
+   PxCuj11N54IXjNn9EXi3JOqHmlLBbj2VVqpAelj8RpP2A5gRcwaHOpefG
+   Ur4CuOFmYzSgViqoYyPnUNWyFdWnyNv3EZwmhUUL33sCinzKxPQjx9w84
+   itpLygWrIYLP2QlAmoVwcN13iH2vhuiNlEhzVSi3m9Uhmyu+lxJz7DnUW
+   YX4D273qjZlWlrUAQPL8GWUfrBpSZgl684NNRnBnObIEKKn7/ePObgelM
+   g==;
+X-CSE-ConnectionGUID: klbsgNRwQpqWVU5sIPJ+GQ==
+X-CSE-MsgGUID: m9SU5dEVSemSBGeDOeLgEQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43778903"
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="43778903"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 08:16:27 -0700
+X-CSE-ConnectionGUID: 6lWnkvOESRuKL6SPREtqIA==
+X-CSE-MsgGUID: 8vqABt5QTl287LzZrRVQTQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="123150826"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa010.fm.intel.com with ESMTP; 19 Mar 2025 08:16:22 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuv9Y-000FP0-0W;
+	Wed, 19 Mar 2025 15:16:20 +0000
+Date: Wed, 19 Mar 2025 23:15:22 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>,
+	Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Kamel Bouhara <kamel.bouhara@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
+	andriy.shevchenko@intel.com,
+	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Subject: Re: [PATCH v5 09/11] input: keyboard: Add support for MAX7360 keypad
+Message-ID: <202503192258.ULXxG0T4-lkp@intel.com>
+References: <20250318-mdb-max7360-support-v5-9-fb20baf97da0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318-mdb-max7360-support-v5-9-fb20baf97da0@bootlin.com>
 
-This patch series is aimed at providing UM with detailed memory profiling
-information in debug builds. It is achieved through a device-wide list of
-DRM GEM objects, and also implementing the ability to label BO's from UM
-through a new IOCTL.
+Hi Mathieu,
 
-The new debugfs file shows a list of driver DRM GEM objects in tabular mode.
-To visualise it, cat sudo cat /sys/kernel/debug/dri/*.gpu/gems.
+kernel test robot noticed the following build errors:
 
-Previous discussion mail archive:
-https://lore.kernel.org/dri-devel/20250316215139.3940623-1-adrian.larumbe@collabora.com/
+[auto build test ERROR on a64dcfb451e254085a7daee5fe51bf22959d52d3]
 
-Changelog:
- v2:
-  - Consolidated some debugfs and labelling struct members into nested structs
-  - Added helpers for handling the debugfs gems linked list
-  - Fixed ioctl naming scheme in the uapi header file
-  - Added label length limit and param consistency checks in BO labelling ioctl
+url:    https://github.com/intel-lab-lkp/linux/commits/Mathieu-Dubois-Briand/dt-bindings-mfd-gpio-Add-MAX7360/20250319-003750
+base:   a64dcfb451e254085a7daee5fe51bf22959d52d3
+patch link:    https://lore.kernel.org/r/20250318-mdb-max7360-support-v5-9-fb20baf97da0%40bootlin.com
+patch subject: [PATCH v5 09/11] input: keyboard: Add support for MAX7360 keypad
+config: m68k-allmodconfig (https://download.01.org/0day-ci/archive/20250319/202503192258.ULXxG0T4-lkp@intel.com/config)
+compiler: m68k-linux-gcc (GCC) 8.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503192258.ULXxG0T4-lkp@intel.com/reproduce)
 
-Adrián Larumbe (4):
-  drm/panthor: Introduce BO labeling
-  drm/panthor: Add driver IOCTL for setting BO labels
-  drm/panthor: show device-wide list of DRM GEM objects over DebugFS
-  drm/panthor: Display heap chunk entries in DebugFS GEMS file
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503192258.ULXxG0T4-lkp@intel.com/
 
- drivers/gpu/drm/panthor/panthor_device.c |   5 +
- drivers/gpu/drm/panthor/panthor_device.h |  11 ++
- drivers/gpu/drm/panthor/panthor_drv.c    |  63 ++++++++++
- drivers/gpu/drm/panthor/panthor_gem.c    | 154 +++++++++++++++++++++++
- drivers/gpu/drm/panthor/panthor_gem.h    |  48 +++++++
- drivers/gpu/drm/panthor/panthor_heap.c   |   3 +
- include/uapi/drm/panthor_drm.h           |  19 +++
- 7 files changed, 303 insertions(+)
+All errors (new ones prefixed by >>):
 
---
-2.48.1
+   drivers/input/keyboard/max7360-keypad.c: In function 'max7360_keypad_irq':
+>> drivers/input/keyboard/max7360-keypad.c:57:8: error: implicit declaration of function 'FIELD_GET' [-Werror=implicit-function-declaration]
+     row = FIELD_GET(MAX7360_FIFO_ROW, val);
+           ^~~~~~~~~
+   drivers/input/keyboard/max7360-keypad.c: In function 'max7360_keypad_hw_init':
+>> drivers/input/keyboard/max7360-keypad.c:114:5: error: implicit declaration of function 'FIELD_PREP'; did you mean 'EV_REP'? [-Werror=implicit-function-declaration]
+        FIELD_PREP(MAX7360_DEBOUNCE, val));
+        ^~~~~~~~~~
+        EV_REP
+   cc1: some warnings being treated as errors
+
+
+vim +/FIELD_GET +57 drivers/input/keyboard/max7360-keypad.c
+
+    29	
+    30	static irqreturn_t max7360_keypad_irq(int irq, void *data)
+    31	{
+    32		struct max7360_keypad *max7360_keypad = data;
+    33		unsigned int val;
+    34		unsigned int row, col;
+    35		unsigned int release;
+    36		unsigned int code;
+    37		int ret;
+    38	
+    39		do {
+    40			ret = regmap_read(max7360_keypad->regmap, MAX7360_REG_KEYFIFO, &val);
+    41			if (ret) {
+    42				dev_err(&max7360_keypad->input->dev, "Failed to read max7360 FIFO");
+    43				return IRQ_NONE;
+    44			}
+    45	
+    46			/* FIFO overflow: ignore it and get next event. */
+    47			if (val == MAX7360_FIFO_OVERFLOW)
+    48				dev_warn(&max7360_keypad->input->dev, "max7360 FIFO overflow");
+    49		} while (val == MAX7360_FIFO_OVERFLOW);
+    50	
+    51		if (val == MAX7360_FIFO_EMPTY) {
+    52			dev_dbg(&max7360_keypad->input->dev, "Got a spurious interrupt");
+    53	
+    54			return IRQ_NONE;
+    55		}
+    56	
+  > 57		row = FIELD_GET(MAX7360_FIFO_ROW, val);
+    58		col = FIELD_GET(MAX7360_FIFO_COL, val);
+    59		release = val & MAX7360_FIFO_RELEASE;
+    60	
+    61		code = MATRIX_SCAN_CODE(row, col, MAX7360_ROW_SHIFT);
+    62	
+    63		dev_dbg(&max7360_keypad->input->dev, "key[%d:%d] %s\n", row, col,
+    64			release ? "release" : "press");
+    65	
+    66		input_event(max7360_keypad->input, EV_MSC, MSC_SCAN, code);
+    67		input_report_key(max7360_keypad->input, max7360_keypad->keycodes[code], !release);
+    68		input_sync(max7360_keypad->input);
+    69	
+    70		return IRQ_HANDLED;
+    71	}
+    72	
+    73	static int max7360_keypad_open(struct input_dev *pdev)
+    74	{
+    75		struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
+    76		int ret;
+    77	
+    78		/*
+    79		 * Somebody is using the device: get out of sleep.
+    80		 */
+    81		ret = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG,
+    82					MAX7360_CFG_SLEEP, MAX7360_CFG_SLEEP);
+    83		if (ret) {
+    84			dev_err(&max7360_keypad->input->dev,
+    85				"Failed to write max7360 configuration\n");
+    86			return ret;
+    87		}
+    88	
+    89		return 0;
+    90	}
+    91	
+    92	static void max7360_keypad_close(struct input_dev *pdev)
+    93	{
+    94		struct max7360_keypad *max7360_keypad = input_get_drvdata(pdev);
+    95		int ret;
+    96	
+    97		/*
+    98		 * Nobody is using the device anymore: go to sleep.
+    99		 */
+   100		ret = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_CONFIG, MAX7360_CFG_SLEEP, 0);
+   101		if (ret)
+   102			dev_err(&max7360_keypad->input->dev,
+   103				"Failed to write max7360 configuration\n");
+   104	}
+   105	
+   106	static int max7360_keypad_hw_init(struct max7360_keypad *max7360_keypad)
+   107	{
+   108		unsigned int val;
+   109		int ret;
+   110	
+   111		val = max7360_keypad->debounce_ms - MAX7360_DEBOUNCE_MIN;
+   112		ret = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_DEBOUNCE,
+   113					MAX7360_DEBOUNCE,
+ > 114					FIELD_PREP(MAX7360_DEBOUNCE, val));
+   115		if (ret) {
+   116			return dev_err_probe(&max7360_keypad->input->dev, ret,
+   117				"Failed to write max7360 debounce configuration\n");
+   118		}
+   119	
+   120		ret = regmap_write_bits(max7360_keypad->regmap, MAX7360_REG_INTERRUPT,
+   121					MAX7360_INTERRUPT_TIME_MASK,
+   122					FIELD_PREP(MAX7360_INTERRUPT_TIME_MASK, 1));
+   123		if (ret) {
+   124			return dev_err_probe(&max7360_keypad->input->dev, ret,
+   125				"Failed to write max7360 keypad interrupt configuration\n");
+   126		}
+   127	
+   128		return 0;
+   129	}
+   130	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
