@@ -1,141 +1,151 @@
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B611254B01
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDFB720D4F6;
+	Wed, 19 Mar 2025 11:40:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742384442; cv=none; b=pmTpueqlw9qkaKyr9hoOoC+2adinywFZvNLPSpzBml6bNbiGiCFj70oTLF33bNjn8uELDlOMR0sFyEb/MmSf71Fi5/0kCn1UNM3HZJMp+huRFbQIagGELa5AlulyARtQp7aTECkqcFquI4b2hd7SHQYkJyDScED1AnaKxOfoFvg=
+	t=1742384461; cv=none; b=EMvx/9MTcVcByGbgXb7UrRqvH/cz6dgqSQJ+0je1zmo403mVmt24e0pkCepdfQj57SrmPzZOjHAchwzzM7CHzyxx1Y3/euLThrqj47yMcbKjJc4dWn5hiApEDdhIu6UxbHMXZpiJOxZZ6JUnqJcir99+aQjS/+clKOZOfG2ioQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742384442; c=relaxed/simple;
-	bh=nqIrR5gsf+WAV1exZh0bkciSxO/FVA36+RLDOmghAPY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=QNHb+bIDq4LSE2LXVH+ikXbj4JYKjTRLtRM3/K8gqSas89RpAoKttsXfFO2FJb5O1gxXIONWJO6VT4UR1vfGIW9XblJr+DA6SNlubRZMc0kn6aa9OoAjAUZyFW/XOgWcs5a6EkfjvzfPUJTvh08psHY36IdOlMmt1fkt17nXqMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IqtzeUX/; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742384461; c=relaxed/simple;
+	bh=BASFzT3ozw1qSB0PTCEsUDr/JEgnlf5aEhe6sboZ5mM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P05O1wCCOjJDLPlqZscqd8g4y59tRTNWaO7DJAIWCJyaOYPfW2IXr02cK5XWGAdvwB67cecGsaKHndhMXergrtXnGh5yeA8w7nim+1uf1mDTqurztRLgU8+7kHAmSiObJgbBektIfdnfk3oXO/Feffq3yRwVipgXj1qzPDCyEDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jN0M9rQ6; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IqtzeUX/"
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so9480685a12.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:40:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jN0M9rQ6"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43cfb6e9031so39003055e9.0;
+        Wed, 19 Mar 2025 04:40:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742384438; x=1742989238; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=mnFp/IlyQSmTN11coM6CacS2HH63qWF1P6HQesyvvvY=;
-        b=IqtzeUX/xMCj0BV6NwRCRHv5/5FOdcGlFwp1s6bgmE2w4+wMDhmHTKw/fCS04x9wd9
-         PEWFC2SQNq7CkoN7cl7DiToNOlTGJ4Bml3XpwNZzuRjZqBoo9+pyL7hDCX2oJPrfXLc/
-         /3NX8TYi2yjyEO+5/7C1YhIpbJElQ3zUCmNho61/AezMtVgYXcXkRPWQb0Hfw6tqaJLn
-         1hYA/Uju1QwF6A0Z/RIrHkByWzm+7SyveKW8Zoc1Hc6K/Wau7SZ2jflxl2Jd3bUAt8sI
-         vUC++ikd5QQ55VNXxiWt4GKJIVLT6zNsxZuT48GBlPAI+plUXuG0hCWOlo1Muzs3Zh2Q
-         g9wA==
+        d=gmail.com; s=20230601; t=1742384458; x=1742989258; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=dF9trv6V6tj6EzP1hzQNjsFueUEo7+2EWFp7AG7Lq40=;
+        b=jN0M9rQ6+CvdeUSnNA29NjkLTyok42TdR6vJUm8bJDuL2yQGfqngGvQDvHwLcTugVf
+         /b/3+IHGivfxtiD82LW35iwCo7BPnLtRFkU5AtUp8DegVnI1gr8GMF/D/ALheZb9sGdX
+         jlqoCGZMOIhjCBVz3wcZvaTAG3JWGkuedcv7DeO3FMNAcYjD56+GQ8ZP1Tgvn719+X21
+         J14bSVuK1kGCG3nCseSkNpaYBQCFFRCooK2rDtGhtPtKMX5/Htx+HNLvMrTsLvhTJEyD
+         Z1y65/3vhiZIn0hgTeeiGy4qYfktZUID7PBsoxJ/CfFH7/fqfy73b+L/6EHOI9t+G0To
+         RirA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742384438; x=1742989238;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mnFp/IlyQSmTN11coM6CacS2HH63qWF1P6HQesyvvvY=;
-        b=J5kIgKNJMOR6maeHoJqWU5ugkGLsdYECR17EXBW5XY1tvEPCewdecs9G0q2gnmHctC
-         caAoO4zbEL/xUcbUYs5nQ32mkk7O40JtOR/mbZ3BKWdE9zMNKNWRt8fcD6r8jRM33eiS
-         ol6F5pv1FBv0wj8ZjiWg0ux6Hp7CgYMae2miN2vfJh2MweA3yzXszG7PDy+zgOqZRr23
-         aAYZkGpS+5o850dgMy6N6zEei3+X0sxq0lXpsr2YKCmk/2vUCN+wsIz8OwVVRVVqaij9
-         96kgVfeT4I+X2/OuJmYfhZzfbAnwBY0Crd01FVMNs2jHEUHaJFS7gcZ3GnsT+xC8znb+
-         zs0w==
-X-Forwarded-Encrypted: i=1; AJvYcCWygZZGfg8K0nor6nh9M7wBUNF8PWeMjX49LFq4QXYxOE3Yf6d1cPsUlupbftHXdp5YqYAaDVfiKV+AWYI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyaSmyiCxMZI3JonS+URCgpg1sz+9uhTdGIYAKPfM1icK/lGpaY
-	coSIr2+Ua4gfhC1pg+A2HHjsesL8W/ak1Y9DHDXnAHl125xlih/smDXr0mtlZyTU01khsRgtOxV
-	AuuaF8ypPcP95W60y5JoaiejJBSx8mYNQr2KeVA==
-X-Gm-Gg: ASbGncvdisRWonsw1cq7CgikBzjGKth8wfzqVh5ZUBfZ4SQBU37ykiulQmNul0iRhVR
-	3dFFXqHN6mxWDf/rHidGO68NKarCYZiViBE2F50s/kZMmgCb89+s+XDG1xqZbSUxcHaugGm2vln
-	S/boh18WWN+z2J4/AblN+ChzFSPO4=
-X-Google-Smtp-Source: AGHT+IF0PzKaNKAL7SPqWhs9UxBZVmDcGAhQ39w6MNvnxwI7NAxBaxdfkqg2A7NnvQaWeAw8MONWf7mWrGQhnF9ndlg=
-X-Received: by 2002:a17:907:3e1d:b0:ac2:aa51:5df2 with SMTP id
- a640c23a62f3a-ac3b7f91d17mr235997766b.47.1742384438476; Wed, 19 Mar 2025
- 04:40:38 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742384458; x=1742989258;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dF9trv6V6tj6EzP1hzQNjsFueUEo7+2EWFp7AG7Lq40=;
+        b=lVUgZBrvpl5N1NlAEnm2cLlOhmTc1EaCUjXdshzJesG18ux3nFCSrQG03zVDW+a23M
+         Ms2M9CZV3gq3hpoCklGnyrDf2nlke2E1T/Dn5QqRAk6hXm/EX+ghN4eOulnkav3KOqJT
+         GURPiLOYY6vviQoPleNSQAdhl61U+6rJdVnA1vI6QzKJjpnK8XzyK1jMWEesbEYlASIq
+         jR/GSJh47U8x3xasH3zTLVTeYDyvDLzEIc0aADMGRZewrCfOND9yD90FkN82MZiEm2IE
+         fDCcHBCTHn7tBOqiWDm+ifIdrk/FDHHeM+kEzGKfolN3Mm+IBdq1+GWwuKgWGGIiRued
+         GY8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUo2otzqnaLIfevDP8R0BfHJrct+TaexQTHlNho435BfNKhiNlRXhHEVPFk/2R9CcCw+2GwfqMD@vger.kernel.org, AJvYcCVnMeG5pLUb9VHahq8QJQR4CruWkmkm4mgQCr6QlksMipjOb/3J6XUQT4jLfi6mFcZzjYy+lHvN2y+q@vger.kernel.org, AJvYcCXUjkh834mL+YdMeM8nN8pp6FOOJecDQrpQvaezHdvjY0j4g2qBjZt13UTQhTIypO4+d/GQiceGxVkHqRQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywk8Q1QbwSpJD/6TdL41bSCNEIJR3xmo93cGLkaUj+BGtlZhtFE
+	i5OoOBvojEj8l7k/0GD+mMrp0c3j4x1ULrXOG405VpNlFliBTnSg
+X-Gm-Gg: ASbGncvQ+03JtJjkge7Phee8Q1RUjEWY9izp+Z/OS4c496rV/fp3hp2El7ChhVSdLQU
+	XqiM+zy/Nqhpz9YXEQsgDyrU8tEcprdrtE7P9jYd/iv0Av6DSK1Y5dwuaEEmzws/v5qdQNTnjQz
+	kWSxNQzIrIwec6t4+Jl9ax7Y09Gez0kGOHOnaN2pYLJFlE55WxNX8hOS5cLusvDyl/lViT2DxcA
+	c7PzWJe7dQ/m6hWxFh4moxSiwvfCtTV54i0ef50CHxdYt5WPiSkckbEJL1B+nh3SpnIs1xAwi2S
+	RJ7cEG0KPQ1443SUHeyg3RdKY+ewOICIO53/MRrNGIWCo58=
+X-Google-Smtp-Source: AGHT+IF+J63/c+/EFcV5cqtH2UTph+pVG1DweugejbGuYXOSiAYNF//6zKmCV6HVWGAwrVuLes76cQ==
+X-Received: by 2002:a05:600c:3490:b0:43d:1b74:e89a with SMTP id 5b1f17b1804b1-43d4379395amr20617155e9.9.1742384457936;
+        Wed, 19 Mar 2025 04:40:57 -0700 (PDT)
+Received: from qasdev.system ([2a02:c7c:6696:8300:7659:65a:5e42:31a9])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43fdeba1sm16258165e9.32.2025.03.19.04.40.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 04:40:57 -0700 (PDT)
+Date: Wed, 19 Mar 2025 11:40:51 +0000
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>, horms@kernel.org
+Cc: andrew+netdev@lunn.ch, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: fix uninitialised access in mii_nway_restart() and
+ cleanup error handling
+Message-ID: <Z9qtQ-oaEv9gatUW@qasdev.system>
+References: <20250311161157.49065-1-qasdev00@gmail.com>
+ <491430dd-71ad-4472-b3e1-0531da6d4ecc@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318140226.19650-1-linmq006@gmail.com>
-In-Reply-To: <20250318140226.19650-1-linmq006@gmail.com>
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Date: Wed, 19 Mar 2025 12:39:58 +0100
-X-Gm-Features: AQ5f1JpZhZOJWrjReMX_ekwAE_r0NF0Q1GA_lYDgPOQJ7eXkzTyG3252h8Kv8jI
-Message-ID: <CAPDyKFreSxNRF7ZuokqjxJQQsAxHOvX8VBS8C5usyDJuvT4p+Q@mail.gmail.com>
-Subject: Re: [PATCH] mmc: omap: Fix memory leak in mmc_omap_new_slot
-To: Miaoqian Lin <linmq006@gmail.com>
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, Aubin Constans <aubin.constans@microchip.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	Christian Loehle <christian.loehle@arm.com>, Allen Pais <allen.lkml@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-omap@vger.kernel.org, 
-	linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <491430dd-71ad-4472-b3e1-0531da6d4ecc@redhat.com>
 
-On Tue, 18 Mar 2025 at 15:02, Miaoqian Lin <linmq006@gmail.com> wrote:
->
-> Add err_free_host label to properly pair mmc_alloc_host() with
-> mmc_free_host() in GPIO error paths. The allocated host memory was
-> leaked when GPIO lookups failed.
->
-> Fixes: e519f0bb64ef ("ARM/mmc: Convert old mmci-omap to GPIO descriptors")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+On Tue, Mar 18, 2025 at 11:29:15AM +0100, Paolo Abeni wrote:
+> On 3/11/25 5:11 PM, Qasim Ijaz wrote:
+> > In mii_nway_restart() during the line:
+> > 
+> >         bmcr = mii->mdio_read(mii->dev, mii->phy_id, MII_BMCR);
+> > 
+> > The code attempts to call mii->mdio_read which is ch9200_mdio_read().
+> > 
+> > ch9200_mdio_read() utilises a local buffer, which is initialised
+> > with control_read():
+> > 
+> >         unsigned char buff[2];
+> > 
+> > However buff is conditionally initialised inside control_read():
+> > 
+> >         if (err == size) {
+> >                 memcpy(data, buf, size);
+> >         }
+> > 
+> > If the condition of "err == size" is not met, then buff remains
+> > uninitialised. Once this happens the uninitialised buff is accessed
+> > and returned during ch9200_mdio_read():
+> > 
+> >         return (buff[0] | buff[1] << 8);
+> > 
+> > The problem stems from the fact that ch9200_mdio_read() ignores the
+> > return value of control_read(), leading to uinit-access of buff.
+> > 
+> > To fix this we should check the return value of control_read()
+> > and return early on error.
+> > 
+> > Furthermore the get_mac_address() function has a similar problem where
+> > it does not directly check the return value of each control_read(),
+> > instead it sums up the return values and checks them all at the end
+> > which means if any call to control_read() fails the function just 
+> > continues on.
+> > 
+> > Handle this by validating the return value of each call and fail fast
+> > and early instead of continuing.
+> > 
+> > Lastly ch9200_bind() ignores the return values of multiple 
+> > control_write() calls.
+> > 
+> > Validate each control_write() call to ensure it succeeds before
+> > continuing with the next call.
+> > 
+> > Reported-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+> > Closes: https://syzkaller.appspot.com/bug?extid=3361c2d6f78a3e0892f9
+> > Tested-by: syzbot <syzbot+3361c2d6f78a3e0892f9@syzkaller.appspotmail.com>
+> > Fixes: 4a476bd6d1d9 ("usbnet: New driver for QinHeng CH9200 devices")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
+> 
+> Please split the patch in a small series, as suggested by Simon.
+> 
+> Please additionally include the target tree name ('net', in this case)
+> in the subj prefix.
+> 
+Hi Paolo and Simon,
 
-Applied for next and by adding a stable tag, thanks!
+Thanks for the suggestions and advice, I have sent a mini patch series which you
+can view:
 
-Kind regards
-Uffe
+Link: <https://lore.kernel.org/all/20250319112156.48312-1-qasdev00@gmail.com/>
 
+Thanks,
+Qasim
 
-> ---
->  drivers/mmc/host/omap.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/mmc/host/omap.c b/drivers/mmc/host/omap.c
-> index 62252ad4e20d..3cdb2fc44965 100644
-> --- a/drivers/mmc/host/omap.c
-> +++ b/drivers/mmc/host/omap.c
-> @@ -1272,19 +1272,25 @@ static int mmc_omap_new_slot(struct mmc_omap_host *host, int id)
->         /* Check for some optional GPIO controls */
->         slot->vsd = devm_gpiod_get_index_optional(host->dev, "vsd",
->                                                   id, GPIOD_OUT_LOW);
-> -       if (IS_ERR(slot->vsd))
-> -               return dev_err_probe(host->dev, PTR_ERR(slot->vsd),
-> +       if (IS_ERR(slot->vsd)) {
-> +               r = dev_err_probe(host->dev, PTR_ERR(slot->vsd),
->                                      "error looking up VSD GPIO\n");
-> +               goto err_free_host;
-> +       }
->         slot->vio = devm_gpiod_get_index_optional(host->dev, "vio",
->                                                   id, GPIOD_OUT_LOW);
-> -       if (IS_ERR(slot->vio))
-> -               return dev_err_probe(host->dev, PTR_ERR(slot->vio),
-> +       if (IS_ERR(slot->vio)) {
-> +               r = dev_err_probe(host->dev, PTR_ERR(slot->vio),
->                                      "error looking up VIO GPIO\n");
-> +               goto err_free_host;
-> +       }
->         slot->cover = devm_gpiod_get_index_optional(host->dev, "cover",
->                                                     id, GPIOD_IN);
-> -       if (IS_ERR(slot->cover))
-> -               return dev_err_probe(host->dev, PTR_ERR(slot->cover),
-> +       if (IS_ERR(slot->cover)) {
-> +               r = dev_err_probe(host->dev, PTR_ERR(slot->cover),
->                                      "error looking up cover switch GPIO\n");
-> +               goto err_free_host;
-> +       }
->
->         host->slots[id] = slot;
->
-> @@ -1344,6 +1350,7 @@ static int mmc_omap_new_slot(struct mmc_omap_host *host, int id)
->                 device_remove_file(&mmc->class_dev, &dev_attr_slot_name);
->  err_remove_host:
->         mmc_remove_host(mmc);
-> +err_free_host:
->         mmc_free_host(mmc);
->         return r;
->  }
-> --
-> 2.39.5 (Apple Git-154)
->
+> Thanks,
+> 
+> Paolo
+> 
