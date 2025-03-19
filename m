@@ -1,36 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2700A42A80;
-	Wed, 19 Mar 2025 03:11:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C5D142A80;
+	Wed, 19 Mar 2025 03:14:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742353901; cv=none; b=ZiK7+BsNJgSWBGs9UIIec3YMhIupwq5P0YV2meSN8Ip6Kg1KEGVCqwVuvgH3x6YU5YgbOA0Bmd+6PKAKEg4dDgud/Oklco11NZqXLwuEq7l7kPTfEYlw4QQADF9QryrI3eFzlZEzGCLO9N254HOBp+h/v6+WSb56yO8+FiXm4ow=
+	t=1742354052; cv=none; b=fiYJ7w4b2zlrpopcNqbJgQ5MMOG7QFBBHgE/yb+6H4JzBc/4wnUrtJ0fw30yDukLFEME2x2cYwQiTyyu8VtukSo3jgRD8JQ285hO6MKOE5F1LKHhThtq7kwWgV86cggk9LWd/kKJsjBkAmLC7qDl4AwmOCPFsJxi+ahorLvY2Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742353901; c=relaxed/simple;
-	bh=ypMMkKsvJ/Uf1JkZqtuKEEF9Wh2K7iXsnqGck2sa5Tc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=M52ycLznpd+wzXTO8uZ2ZqRMcLVDbnYsijm3tC5eSeCe5IHuvdigge9vlFGOchVSA9dqZyltq7S8+LbF55WJPFgjnoecEwBybJcDi7tAWX0jbGNNZH4NjuwY2OYs79YI0iiE5Tx8DqHKV1Mt6arNT7X2m8DHFFABxLC5d+pt1uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QW+/Sk6T; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742354052; c=relaxed/simple;
+	bh=yM4mhVvJmZfLeISwx/iN5lE/1L/nC+VHGrVR2s+Sbz4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=gZlAMTvJCS9ue+j6uq64mZOyo4nINm6ow5rqNdptZRMXoWXHu2prlUIMUx0jkrbCuxf6bHkoGfJQi9pRIiqo464TTNkuttWez6AcY/GYZKxCxEyyLK4Q2ZRTmNLkCbNWWwgbqmtxmgXWKpywixfCSBS5vlmTmUaBEwS/tEmIkRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XT3FLa6V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QW+/Sk6T"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 7D3AEC4CEDD;
-	Wed, 19 Mar 2025 03:11:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XT3FLa6V"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id F3C47C4CEE3;
+	Wed, 19 Mar 2025 03:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742353900;
-	bh=ypMMkKsvJ/Uf1JkZqtuKEEF9Wh2K7iXsnqGck2sa5Tc=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=QW+/Sk6TG/tyl45glLfkBo0I9mHv8we/xZ/4e7Nuza4pXnAvE1LLVgR65DO8ccfA/
-	 Q9ePt3tQaM7GITBXloHMavASTgxbpiuZ6wNOquijCmWbKZ/5tAvcLSOEWBBFignAFE
-	 YU9wz+/6K7R0yRujRXPbJTq55kIoKfo045+CDftZCBk2hSI/xghXfQAuvQ2L1YQgKV
-	 GThcAmjPIKcVLC9oPWh/rkDH2XKa+pogs3A9/p5sGG7eF1ic6+x2mshIesYz7ne4fE
-	 Mu6KB0hut4iiR27oGtpesckY9yHhQJJsEe7h804s7N2ZwET47ZWPud1BS7l8L+YOHb
-	 NObrOeeePxyew==
+	s=k20201202; t=1742354052;
+	bh=yM4mhVvJmZfLeISwx/iN5lE/1L/nC+VHGrVR2s+Sbz4=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=XT3FLa6VCWKyh5tVufhiPLl5dZ6VT8KqeEIBL4AmFMixEHOOYmUoDMcrHaf/hKBLs
+	 CIPbVnxSSnj8F8TVe7oj5pRSyD7gKXlToYekQruLJk1GeEDTIyNZsardLNnASeaK+h
+	 8yNYq23pwWdNG6LLxFwA/pCHwAz+ovso2yNfpdHyOyE55QmtZ0ifkki066/kr9/BmH
+	 PdSHr6spa99FnZxsC0tj/W73R6yWF23E+tQa4WmVJ00dqkXvqz0uEPoR7qRVLk5A5V
+	 tt8ZxTiS58+/I4/YCCr5Le8SzF0mshOiXCTDF3F7A3M2rsgOz3U2z7bAnN4E1XPgxh
+	 TRNIB4+RApjZQ==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F86BC28B2F;
-	Wed, 19 Mar 2025 03:11:40 +0000 (UTC)
-From: Bjorn Andersson via B4 Relay <devnull+bjorn.andersson.oss.qualcomm.com@kernel.org>
-Date: Tue, 18 Mar 2025 22:11:37 -0500
-Subject: [PATCH] arm64: defconfig: Enable USB retimer and redriver
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5AA4C35FF3;
+	Wed, 19 Mar 2025 03:14:11 +0000 (UTC)
+From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+Date: Wed, 19 Mar 2025 03:13:34 +0000
+Subject: [PATCH net-next v2 1/7] selftests/net: Print TCP flags in more
+ common format
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,68 +41,66 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250318-xelite-retimer-redriver-v1-1-b3e85a37d294@oss.qualcomm.com>
-X-B4-Tracking: v=1; b=H4sIAOg12mcC/x2MSQqAQBADvyJ9dkDH3a+IB3WiNrjRIyKIf7fxl
- BRU8pCHMDzVwUOCiz3vm0IcBjTM3TbBsFMmG9ksSuLS3Fj4hBGcvEI0nfClpbB9mqvgqtySrg/
- ByPf/3LTv+wG9RjTJaQAAAA==
-X-Change-ID: 20250318-xelite-retimer-redriver-72b46318d962
-To: Catalin Marinas <catalin.marinas@arm.com>, 
- Will Deacon <will@kernel.org>, andersson@kernel.org
-Cc: Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Message-Id: <20250319-tcp-ao-selftests-polling-v2-1-da48040153d1@gmail.com>
+References: <20250319-tcp-ao-selftests-polling-v2-0-da48040153d1@gmail.com>
+In-Reply-To: <20250319-tcp-ao-selftests-polling-v2-0-da48040153d1@gmail.com>
+To: "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Shuah Khan <shuah@kernel.org>, Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742353900; l=1300;
- i=bjorn.andersson@oss.qualcomm.com; s=20250318; h=from:subject:message-id;
- bh=xRKqtaffSGX6Pjvc76vk0LWObAmQZMRTKBjP4UwTEzw=;
- b=Ilmlg9Ibvz3XH1u7sHItyqo0EvVlOztOyFwXe0QY5EL4PoQ3fG04ma3H4a+kPHGcJiDdNdsXI
- mtCbAkXJSrHDMh8WKqLwGa1D7rgtQzEq8O5nIjRiu3pOy0p6HnKDzu2
-X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=ed25519;
- pk=rD3O9C9Erg+mUPBRBNw91AGaIaDVqquHZbnn6N6xh6s=
-X-Endpoint-Received: by B4 Relay for
- bjorn.andersson@oss.qualcomm.com/20250318 with auth_id=362
-X-Original-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Reply-To: bjorn.andersson@oss.qualcomm.com
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742354050; l=1922;
+ i=0x7f454c46@gmail.com; s=20240410; h=from:subject:message-id;
+ bh=iOlW43ng3yBwP5kn3YXXAavX+5ElU/Vcbzg1cmgHkUw=;
+ b=/+hRgGy1a3TxFF9aNzAm4ditnNMPN89DK7HhC1C7dEgHmLJJI8E/fCYVraGO8WaqbEoDS6YGb
+ 6D0neO2WTVvCNtEi/J4kAvyqCW1WAmXgg2Ll7ANTW/EkDUPjy7jDBiQ
+X-Developer-Key: i=0x7f454c46@gmail.com; a=ed25519;
+ pk=cFSWovqtkx0HrT5O9jFCEC/Cef4DY8a2FPeqP4THeZQ=
+X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
+ auth_id=152
+X-Original-From: Dmitry Safonov <0x7f454c46@gmail.com>
+Reply-To: 0x7f454c46@gmail.com
 
-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+From: Dmitry Safonov <0x7f454c46@gmail.com>
 
-Several boards based on the Qualcomm X Elite platform uses the NXP
-PTN3222 USB redriver and the Parade PS883x USB Type-C retimer. Without
-these USB, and in some cases display, doesn't probe successfully, so
-enable them.
+Before:
+># 13145[lib/ftrace-tcp.c:427] trace event filter tcp_ao_key_not_found [2001:db8:1::1:-1 => 2001:db8:254::1:7010, L3index 0, flags: !FS!R!P!., keyid: 100, rnext: 100, maclen: -1, sne: -1] = 1
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+After:
+># 13487[lib/ftrace-tcp.c:427] trace event filter tcp_ao_key_not_found [2001:db8:1::1:-1 => 2001:db8:254::1:7010, L3index 0, flags: S, keyid: 100, rnext: 100, maclen: -1, sne: -1] = 1
+
+For the history, I think the initial format was to emphasize the absence
+of flags as well as their presence (!R meant no RST flag). But looking
+again, it's just unreadable and hard to understand.
+Make it the standard/expected one.
+
+Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
 ---
- arch/arm64/configs/defconfig | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e8dfbe22db68d9aa24df5af0786a2eeb8f33bf3c..5bb8f09422a22116781169611482179b10798c14 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -1153,6 +1153,7 @@ CONFIG_TYPEC_HD3SS3220=m
- CONFIG_TYPEC_MUX_FSA4480=m
- CONFIG_TYPEC_MUX_GPIO_SBU=m
- CONFIG_TYPEC_MUX_NB7VPQ904M=m
-+CONFIG_TYPEC_MUX_PS883X=m
- CONFIG_TYPEC_MUX_WCD939X_USBSS=m
- CONFIG_TYPEC_DP_ALTMODE=m
- CONFIG_MMC=y
-@@ -1573,6 +1574,7 @@ CONFIG_RESET_RZG2L_USBPHY_CTRL=y
- CONFIG_RESET_TI_SCI=y
- CONFIG_PHY_XGENE=y
- CONFIG_PHY_CAN_TRANSCEIVER=m
-+CONFIG_PHY_NXP_PTN3222=m
- CONFIG_PHY_SUN4I_USB=y
- CONFIG_PHY_CADENCE_TORRENT=m
- CONFIG_PHY_CADENCE_DPHY_RX=m
+diff --git a/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c b/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c
+index 24380c68fec6b7613c363cdee68d13293e593aeb..27403f875054706718256e0007a4db77f82e60c8 100644
+--- a/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c
++++ b/tools/testing/selftests/net/tcp_ao/lib/ftrace-tcp.c
+@@ -427,11 +427,8 @@ static void dump_trace_event(struct expected_trace_point *e)
+ 	test_print("trace event filter %s [%s:%d => %s:%d, L3index %d, flags: %s%s%s%s%s, keyid: %d, rnext: %d, maclen: %d, sne: %d] = %zu",
+ 		   trace_event_names[e->type],
+ 		   src, e->src_port, dst, e->dst_port, e->L3index,
+-		   (e->fin > 0) ? "F" : (e->fin == 0) ? "!F" : "",
+-		   (e->syn > 0) ? "S" : (e->syn == 0) ? "!S" : "",
+-		   (e->rst > 0) ? "R" : (e->rst == 0) ? "!R" : "",
+-		   (e->psh > 0) ? "P" : (e->psh == 0) ? "!P" : "",
+-		   (e->ack > 0) ? "." : (e->ack == 0) ? "!." : "",
++		   e->fin ? "F" : "", e->syn ? "S" : "", e->rst ? "R" : "",
++		   e->psh ? "P" : "", e->ack ? "." : "",
+ 		   e->keyid, e->rnext, e->maclen, e->sne, e->matched);
+ }
+ 
 
----
-base-commit: c4d4884b67802c41fd67399747165d65c770621a
-change-id: 20250318-xelite-retimer-redriver-72b46318d962
-
-Best regards,
 -- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+2.42.2
 
 
