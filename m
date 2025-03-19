@@ -1,90 +1,63 @@
-Received: from smtpout.efficios.com (smtpout.efficios.com [158.69.130.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E31C933985;
-	Wed, 19 Mar 2025 20:22:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.69.130.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD2520AF7D;
+	Wed, 19 Mar 2025 20:22:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742415727; cv=none; b=JQEDrNeq9tleV5iTXJZeB8Srrbtp556vfoqnWCfM+Ay+qRXP8+lf9USgEDdx9q9CMVDaZKwP/1yMVlhZk+JO44V2jRBXrjWfwrGLx3YXpiUbtXjbgeeRPng9OP98fdgvGEzuI7cDHS6jJ/VzzFrszpnSHALV9qeeMLZNXvb0Wto=
+	t=1742415742; cv=none; b=XaWxG02hI+1uFCRoLkzXWuFJNDWQNDoUknwVNYFd3IgtV/k0ykn2sNgwV3dc+quxcQ0ar4Ml8uEnzouIsVjSkuQn7uiaRIJBqbIrvycUyvBL0MjZGS3HTRVcu3JBehZiE/vVtULaRsC/uU2xKKzA6NFMJoCbMw1ByDTDUQ2OsGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742415727; c=relaxed/simple;
-	bh=8jCk/9j4ZNMyGh80zLlWEqEC/MCFti+IC7mQX0FumQY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=k+VrvnKgUdKnRjkX+BZJn5Doe6Hk5Rt/CF9uRB9eTAJWddIsObIOsWcQJlb/q0mSh3+VNe1YjUv13DMSuoJSwH/mjGmrEmwJB0JxxTb+H5tWbs0kSLRs6a8JE2184HO9OvsXMGSxDtqSZWzRTt+JJK1S1AJcs9d/2pgfOjrZY2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com; spf=pass smtp.mailfrom=efficios.com; dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b=rMCUHIYR; arc=none smtp.client-ip=158.69.130.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=efficios.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=efficios.com
+	s=arc-20240116; t=1742415742; c=relaxed/simple;
+	bh=ernwCODLIOx2EF7L2h+j7Y1uYKIw7dkscX8M4HHa3SI=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=nfDmvvnBG20P8q7f7JsXURcw++5uQ0/i/MGSNgHN/iYqfO/jbXZkrQC5TIgQhhXH8vp/TbTzvQ6GXqLUyzroFrLwIHm7vMNKMcgCoLPA5ipDrQqN+aiA9OPiJA/U7ka0HJYhjtm27n+1m+yWgsBiyh3qAAbaocN7HfnIqjU1Pbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/ksVA/X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="rMCUHIYR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=efficios.com;
-	s=smtpout1; t=1742415718;
-	bh=8jCk/9j4ZNMyGh80zLlWEqEC/MCFti+IC7mQX0FumQY=;
-	h=From:To:Cc:Subject:Date:From;
-	b=rMCUHIYR0El5fvMjc3VhPpSEtL85Ya0Lmv+2Se45rRuQr7N/7vobl632C0A/qDKbk
-	 cdHBTYP76J3Fw6QWg/ou8xqilRNTssBAZKnGr8bV4v142HcC3fLKxw5/nZFrSQmzqm
-	 OzF9P82664wTq2fbxfD5681KKW+Vx/RbQ7X7e7giEW2WlKHYHktq75JPoezd5st0P8
-	 PbIIYdHIPhwGQpYu5Gp69B3UHKtsuS9w/og02hSeiWCu2jQrwBc/BSGxQC+qI3ZbcC
-	 JC6TQnaEAW0ZKwLzunLrnZ07yiJMSo8mtMUJVuPAZyS2E3XavxQgZFhqqUKke4V3IX
-	 evtx6vCbBj/qA==
-Received: from laptop-mjeanson.internal.efficios.com (96-127-217-162.qc.cable.ebox.net [96.127.217.162])
-	by smtpout.efficios.com (Postfix) with ESMTPSA id 4ZJ0VZ5fcNz170t;
-	Wed, 19 Mar 2025 16:21:58 -0400 (EDT)
-From: Michael Jeanson <mjeanson@efficios.com>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Michael Jeanson <mjeanson@efficios.com>,
-	Mark Brown <broonie@kernel.org>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Shuah Khan <shuah@kernel.org>,
-	linux-kernel@vger.kernel.org,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH] rseq/selftests: fix name clash with rseq UAPI header
-Date: Wed, 19 Mar 2025 16:21:39 -0400
-Message-ID: <20250319202144.1141542-1-mjeanson@efficios.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/ksVA/X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBCEBC4CEE4;
+	Wed, 19 Mar 2025 20:22:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742415741;
+	bh=ernwCODLIOx2EF7L2h+j7Y1uYKIw7dkscX8M4HHa3SI=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=M/ksVA/X+fjJuGuDuaIV5mGW6NGrDM01ZPYeq4AYSZQgmHNhQx4qIFTNf/pEgqQ35
+	 YmClRDq8vqADcjs5fL9ZiWS4Q2edT98NR84jFa0UgmRvwOu1xeK2MyZSA3mHIzS/Xw
+	 2tZUYfu9Fkwdrj20Eo0vJ0v9MXpc1tnac6RAuRHsFo/KuS0pViI/fH+VXAbndAPN/v
+	 FFtJv+K3dxdE+d6BFE0c8U0VZG1D0yxlCH+SCP91J/Co7lwyGJHekZiQZoYdhpEZ3M
+	 8D3eu29tt/nl2jntl9qEzcH3gWeACBcEBVwSvdN/ZhQyS24/pmAxCynw6ZWY86BeeF
+	 F+8rl+CPr9pcw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD673806654;
+	Wed, 19 Mar 2025 20:22:58 +0000 (UTC)
+Subject: Re: [GIT PULL] hwmon fixes for v6.14-rc8/6.14
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250319161203.358370-1-linux@roeck-us.net>
+References: <20250319161203.358370-1-linux@roeck-us.net>
+X-PR-Tracked-List-Id: <linux-hwmon.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250319161203.358370-1-linux@roeck-us.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-fixes-for-v6.14-rc8/6.14
+X-PR-Tracked-Commit-Id: 815f80ad20b63830949a77c816e35395d5d55144
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47
+Message-Id: <174241577735.1182345.13599797631654532425.pr-tracker-bot@kernel.org>
+Date: Wed, 19 Mar 2025 20:22:57 +0000
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When the rseq UAPI header is included 'union rseq' clashes with 'struct
-rseq', it's not the case in the rseq selftests but it does break the KVM
-selftests that also include this file.
+The pull request you sent on Wed, 19 Mar 2025 09:12:03 -0700:
 
-Rename 'union rseq' to 'union rseq_tls' to fix this.
+> git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-fixes-for-v6.14-rc8/6.14
 
-Fixes: e6644c967d3c ("rseq/selftests: Ensure the rseq ABI TLS is actually 1024 bytes")
-Reported-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Michael Jeanson <mjeanson@efficios.com>
-Reviewed-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
----
- tools/testing/selftests/rseq/rseq.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47
 
-diff --git a/tools/testing/selftests/rseq/rseq.c b/tools/testing/selftests/rseq/rseq.c
-index 6d8997d815ef..663a9cef1952 100644
---- a/tools/testing/selftests/rseq/rseq.c
-+++ b/tools/testing/selftests/rseq/rseq.c
-@@ -75,13 +75,13 @@ static int rseq_ownership;
-  * Use a union to ensure we allocate a TLS area of 1024 bytes to accomodate an
-  * rseq registration that is larger than the current rseq ABI.
-  */
--union rseq {
-+union rseq_tls {
- 	struct rseq_abi abi;
- 	char dummy[RSEQ_THREAD_AREA_ALLOC_SIZE];
- };
- 
- static
--__thread union rseq __rseq __attribute__((tls_model("initial-exec"))) = {
-+__thread union rseq_tls __rseq __attribute__((tls_model("initial-exec"))) = {
- 	.abi = {
- 		.cpu_id = RSEQ_ABI_CPU_ID_UNINITIALIZED,
- 	},
+Thank you!
+
 -- 
-2.43.0
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
