@@ -1,59 +1,59 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49B3F20F070
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:07:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDA824EA89
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:07:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742360834; cv=none; b=A+Ae4D1NEjX22DCnE/BH9O2WptPKKi88TfOILkA68L/5RmE6sUWoP+Vs6LwWUVvEJoyznuSXJakCRtEDTwFwFaVCaQzyJ0aald5t8lbDuNTdoUYYZeoB3xIBua1La6l1o+wsJnU0qbykcSyT9MtSfXVvH9oVoJ1rzU2Sos6FnTc=
+	t=1742360835; cv=none; b=fML4tbkQ5DhwLhSB2XfyesGF0Pds1074nAJFpqbnrz1qsoo+5EwBwikNNR6Or75GKmokcEmgBdp0MuTz3pUNChHkAE2vHRzj5XfZDZIak/W13o25PuzOQH8r8AcDzmFhqKyo0qRe8Jk19Cp4VBSWcumB9VE3K8ELSa2ilIk0CZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742360834; c=relaxed/simple;
-	bh=cH7r98RzDbaaU8OlKhJ751vRkoeRdtSKlbBKQb9u7Rc=;
+	s=arc-20240116; t=1742360835; c=relaxed/simple;
+	bh=/pKlRpzrFMOJFvWEfkuVM7VOXk4tiC90+0XLUButK0g=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=NzwI+EYabuKHljfg5CVtHH5mSCzFjdeLnyON69Y6lKo8Uj6OV3hcBpZgnG2VXS3rVCEhW2mgXImtVFrGgvNWpPZDqEUXzdfjGxQU2GOTX0i9tTulvXbkrEENEEfSKVqJzMRwbabHhmhHZUbyP1sGu2YMWaAhUzj4RfN/89rzJdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=VSG+dM/q; arc=none smtp.client-ip=192.198.163.9
+	 Content-Disposition; b=pQf2+00lxCeDkytjQ3jFiimGULiK9ksDp/V8wiBTJuSCxv1bZiusCMbtO273+gY4qZQD1uUKmoSvhj35Snn85ysrRlKRXsqkbmjSbNBEj1p6mvXxzRErGG6owxK0Mcfv3V7r6XIWeravxUeUqqwXBPYvobU1tk5JTNvzoMp+Dqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UzCkTOKG; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VSG+dM/q"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UzCkTOKG"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742360831; x=1773896831;
+  t=1742360834; x=1773896834;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=cH7r98RzDbaaU8OlKhJ751vRkoeRdtSKlbBKQb9u7Rc=;
-  b=VSG+dM/q98Av6xjKW2iqK7snZ/bWjZORM0VbmmyJMMwNZpsotTNc6URr
-   c5yKdbIW6C5fumlloiRfZN6VSR+nOWII4WUBojan05OWYALsx9HJ7Qmiq
-   SpWhmXM0cNj+UNM0ldxudZuwell2Hns/T1cEJ6HbcdoDp9QcQjGUCfSij
-   cgQjgd/kaM/Fwm7v3+6/lCN3IfhcRoWXRZHsbaS0CTXyF31e981BrkaW2
-   j33+ARU8Ib7mPYrI+lmxLePKEUclV683valSpprW696K1l7/+s9Nta9gg
-   Q9Dzfa0GfW3hlk2kHyyikbL9TvnzvxZBae3v4od54IKUIPVDFa8fz5/Eh
-   w==;
-X-CSE-ConnectionGUID: jgEVv7KxSamSCzLktT7YiQ==
-X-CSE-MsgGUID: jMqcWREvTUCSoWrJyKdaQA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="54165551"
+  bh=/pKlRpzrFMOJFvWEfkuVM7VOXk4tiC90+0XLUButK0g=;
+  b=UzCkTOKGqmjNu/hhsEapiSKRXbke3WKpP0s3BrAKkWXjWqwpCUTcBtsc
+   nb7BzpxFZaf+iy79sJQFopEFA3gWWMSuMVKyTXRbyi3RQiyDXuKZKLXZr
+   gK6eyGfPIKt0vneTkP8ClUe4OnAgT6sNj05lDx1E4ThcK/hKIWR75KZ6u
+   8mVrp+Nx8WKO8B2ljzeMNPNl0Cyl6WuGqYZYBXBc4sjxGeGMASbIziZVj
+   ZUGcvp1RwRBgYgHG54BPNE9+HO20WwwT5VFCsZhBKil122rQstRRcdRJT
+   fIvoWfscp2TM1xJVRExCOgxQwmgRXPcoEpdd+RKvIR6bUdxmSSDQJV2mu
+   Q==;
+X-CSE-ConnectionGUID: j5AoCbTlRYqUQB5ot5NKCA==
+X-CSE-MsgGUID: gMXqOFw/QaGvBtHyJbZirw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="54165554"
 X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="54165551"
+   d="scan'208";a="54165554"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
   by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 22:07:11 -0700
-X-CSE-ConnectionGUID: UMb3RN2zSRObhPJtdCMx4Q==
-X-CSE-MsgGUID: D9z7EaFATg6d62fMkB8t9w==
+X-CSE-ConnectionGUID: B6fQhWDmQPyhLOh7tmtBNA==
+X-CSE-MsgGUID: +vD10cAgRBOBeqZgl7ds8g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="159614975"
+   d="scan'208";a="159614974"
 Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
   by orviesa001.jf.intel.com with ESMTP; 18 Mar 2025 22:07:10 -0700
 Received: from kbuild by a4747d147074 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1tuldz-000ENH-0A;
-	Wed, 19 Mar 2025 05:07:07 +0000
-Date: Wed, 19 Mar 2025 13:06:36 +0800
+	id 1tuldy-000ENC-2i;
+	Wed, 19 Mar 2025 05:07:06 +0000
+Date: Wed, 19 Mar 2025 13:06:35 +0800
 From: kernel test robot <lkp@intel.com>
-To: Krishna Kurapati <quic_kriskura@quicinc.com>
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
 Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: drivers/usb/dwc3/core.c:1499:47: warning: '%u' directive output may
- be truncated writing between 1 and 10 bytes into a region of size 4
-Message-ID: <202503191317.9hvDBfeq-lkp@intel.com>
+	"Steven Rostedt (Google)" <rostedt@goodmis.org>
+Subject: arch/arm64/kernel/entry-ftrace.S:333: Error: undefined symbol
+ FREGS_SIZE used as an immediate value
+Message-ID: <202503191223.RCdQEebt-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,118 +63,56 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-Hi Krishna,
-
-FYI, the error/warning still remains.
-
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
 head:   81e4f8d68c66da301bb881862735bd74c6241a19
-commit: 3f12222a4bebeb13ce06ddecc1610ad32fa835dd usb: dwc3: core: Fix compile warning on s390 gcc in dwc3_get_phy call
-date:   11 months ago
-config: sparc64-randconfig-001-20250319 (https://download.01.org/0day-ci/archive/20250319/202503191317.9hvDBfeq-lkp@intel.com/config)
-compiler: sparc64-linux-gcc (GCC) 8.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503191317.9hvDBfeq-lkp@intel.com/reproduce)
+commit: a3ed4157b7d89800a0008de0c9e46a438a5c3745 fgraph: Replace fgraph_ret_regs with ftrace_regs
+date:   3 months ago
+config: arm64-randconfig-003-20250319 (https://download.01.org/0day-ci/archive/20250319/202503191223.RCdQEebt-lkp@intel.com/config)
+compiler: aarch64-linux-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503191223.RCdQEebt-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503191317.9hvDBfeq-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503191223.RCdQEebt-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All errors (new ones prefixed by >>):
 
-   drivers/usb/dwc3/core.c: In function 'dwc3_core_init':
->> drivers/usb/dwc3/core.c:1499:47: warning: '%u' directive output may be truncated writing between 1 and 10 bytes into a region of size 4 [-Wformat-truncation=]
-       snprintf(phy_name, sizeof(phy_name), "usb3-%u", i);
-                                                  ^~
-   drivers/usb/dwc3/core.c:1499:41: note: directive argument in the range [0, 2147483647]
-       snprintf(phy_name, sizeof(phy_name), "usb3-%u", i);
-                                            ^~~~~~~~~
-   drivers/usb/dwc3/core.c:1499:4: note: 'snprintf' output between 7 and 16 bytes into a destination of size 9
-       snprintf(phy_name, sizeof(phy_name), "usb3-%u", i);
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-   drivers/usb/dwc3/core.c:1482:48: warning: '%u' directive output may be truncated writing between 1 and 10 bytes into a region of size 4 [-Wformat-truncation=]
-       snprintf(phy_name, sizeof(phy_name),  "usb2-%u", i);
-                                                   ^~
-   drivers/usb/dwc3/core.c:1482:42: note: directive argument in the range [0, 2147483647]
-       snprintf(phy_name, sizeof(phy_name),  "usb2-%u", i);
-                                             ^~~~~~~~~
-   drivers/usb/dwc3/core.c:1482:4: note: 'snprintf' output between 7 and 16 bytes into a destination of size 9
-       snprintf(phy_name, sizeof(phy_name),  "usb2-%u", i);
-       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   arch/arm64/kernel/entry-ftrace.S: Assembler messages:
+>> arch/arm64/kernel/entry-ftrace.S:333: Error: undefined symbol FREGS_SIZE used as an immediate value
+>> arch/arm64/kernel/entry-ftrace.S:336: Error: undefined symbol FREGS_X0 used as an immediate value
+>> arch/arm64/kernel/entry-ftrace.S:337: Error: undefined symbol FREGS_X2 used as an immediate value
+>> arch/arm64/kernel/entry-ftrace.S:338: Error: undefined symbol FREGS_X4 used as an immediate value
+>> arch/arm64/kernel/entry-ftrace.S:339: Error: undefined symbol FREGS_X6 used as an immediate value
+>> arch/arm64/kernel/entry-ftrace.S:342: Error: undefined symbol FREGS_FP used as an immediate value
+   arch/arm64/kernel/entry-ftrace.S:349: Error: undefined symbol FREGS_X0 used as an immediate value
+   arch/arm64/kernel/entry-ftrace.S:350: Error: undefined symbol FREGS_X2 used as an immediate value
+   arch/arm64/kernel/entry-ftrace.S:351: Error: undefined symbol FREGS_X4 used as an immediate value
+   arch/arm64/kernel/entry-ftrace.S:352: Error: undefined symbol FREGS_X6 used as an immediate value
+   arch/arm64/kernel/entry-ftrace.S:353: Error: undefined symbol FREGS_SIZE used as an immediate value
 
 
-vim +1499 drivers/usb/dwc3/core.c
+vim +333 arch/arm64/kernel/entry-ftrace.S
 
-  1445	
-  1446	static int dwc3_core_get_phy(struct dwc3 *dwc)
-  1447	{
-  1448		struct device		*dev = dwc->dev;
-  1449		struct device_node	*node = dev->of_node;
-  1450		char phy_name[9];
-  1451		int ret;
-  1452		u8 i;
-  1453	
-  1454		if (node) {
-  1455			dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
-  1456			dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
-  1457		} else {
-  1458			dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
-  1459			dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
-  1460		}
-  1461	
-  1462		if (IS_ERR(dwc->usb2_phy)) {
-  1463			ret = PTR_ERR(dwc->usb2_phy);
-  1464			if (ret == -ENXIO || ret == -ENODEV)
-  1465				dwc->usb2_phy = NULL;
-  1466			else
-  1467				return dev_err_probe(dev, ret, "no usb2 phy configured\n");
-  1468		}
-  1469	
-  1470		if (IS_ERR(dwc->usb3_phy)) {
-  1471			ret = PTR_ERR(dwc->usb3_phy);
-  1472			if (ret == -ENXIO || ret == -ENODEV)
-  1473				dwc->usb3_phy = NULL;
-  1474			else
-  1475				return dev_err_probe(dev, ret, "no usb3 phy configured\n");
-  1476		}
-  1477	
-  1478		for (i = 0; i < dwc->num_usb2_ports; i++) {
-  1479			if (dwc->num_usb2_ports == 1)
-  1480				snprintf(phy_name, sizeof(phy_name), "usb2-phy");
-  1481			else
-  1482				snprintf(phy_name, sizeof(phy_name),  "usb2-%u", i);
-  1483	
-  1484			dwc->usb2_generic_phy[i] = devm_phy_get(dev, phy_name);
-  1485			if (IS_ERR(dwc->usb2_generic_phy[i])) {
-  1486				ret = PTR_ERR(dwc->usb2_generic_phy[i]);
-  1487				if (ret == -ENOSYS || ret == -ENODEV)
-  1488					dwc->usb2_generic_phy[i] = NULL;
-  1489				else
-  1490					return dev_err_probe(dev, ret, "failed to lookup phy %s\n",
-  1491								phy_name);
-  1492			}
-  1493		}
-  1494	
-  1495		for (i = 0; i < dwc->num_usb3_ports; i++) {
-  1496			if (dwc->num_usb3_ports == 1)
-  1497				snprintf(phy_name, sizeof(phy_name), "usb3-phy");
-  1498			else
-> 1499				snprintf(phy_name, sizeof(phy_name), "usb3-%u", i);
-  1500	
-  1501			dwc->usb3_generic_phy[i] = devm_phy_get(dev, phy_name);
-  1502			if (IS_ERR(dwc->usb3_generic_phy[i])) {
-  1503				ret = PTR_ERR(dwc->usb3_generic_phy[i]);
-  1504				if (ret == -ENOSYS || ret == -ENODEV)
-  1505					dwc->usb3_generic_phy[i] = NULL;
-  1506				else
-  1507					return dev_err_probe(dev, ret, "failed to lookup phy %s\n",
-  1508								phy_name);
-  1509			}
-  1510		}
-  1511	
-  1512		return 0;
-  1513	}
-  1514	
+   324	
+   325	/*
+   326	 * void return_to_handler(void)
+   327	 *
+   328	 * Run ftrace_return_to_handler() before going back to parent.
+   329	 * @fp is checked against the value passed by ftrace_graph_caller().
+   330	 */
+   331	SYM_CODE_START(return_to_handler)
+   332		/* Make room for ftrace_regs */
+ > 333		sub	sp, sp, #FREGS_SIZE
+   334	
+   335		/* Save return value regs */
+ > 336		stp	x0, x1, [sp, #FREGS_X0]
+ > 337		stp	x2, x3, [sp, #FREGS_X2]
+ > 338		stp	x4, x5, [sp, #FREGS_X4]
+ > 339		stp	x6, x7, [sp, #FREGS_X6]
+   340	
+   341		/* Save the callsite's FP */
+ > 342		str	x29, [sp, #FREGS_FP]
 
 -- 
 0-DAY CI Kernel Test Service
