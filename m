@@ -1,92 +1,75 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B33CD21B9C5;
-	Wed, 19 Mar 2025 22:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6662321B9C5;
+	Wed, 19 Mar 2025 22:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742424256; cv=none; b=PEYP3Q7CwUq32iMunt7YtaxB4eDC0tftt2vsZ26yBx+nyqgWoTAYBJjOmxv/zfGYHFOBhSi48CBCZ6YgryXYb9aKmgVaqnJjcSeLKMFiBszen43GefaEnz8UdPZitdIanOjJHEegWWeqgDFQKU2qDqdnZBSoE+BVN0RAsUKHsfI=
+	t=1742424262; cv=none; b=QSm4mtJrq6hWN3pgETTkeqcmifJ9o4LYIaMLRbapkzjkh3y0YtWJcDPrltaOnqK8xPs5IJ4vVqPJm9sO2PLQ0ItIRwvJbO46TxihF5z+rA1O6SZh4KGSGYQfexmPE/p0WsyEH5MRu/Pik9J90JX9VlhRrP+XjCQCPUtiecu7BPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742424256; c=relaxed/simple;
-	bh=0ph8TWg4i5QPlJyTQE6/THVW5Vuy8oxKuuPiP1VUq0M=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=WBacti81Agx1ywW+JnLffU2bze5Hc5vSOKu0VNs+H8kM5sW0BQNGyvq6ouqqoTr8chnljzQmMeYziYe64Hu8DQc26ISaf87BDYwumcQeXYb2ZtsUp52thPdRvfQG08JmeUgh2xy3bomkjmGny5MjBpCNn6MGOxDY/etuESIjW9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=awF+H281; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742424262; c=relaxed/simple;
+	bh=m9ljIg8QBHL1cuxpV8tltE/AaeCCSx7zVCWfERz6T4k=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References; b=WK/rGJ9xVz9KtPkNED/qI1hw8ajqzcHhLSIJhM14jp2mZRWuncxEsM2ysldgQwia1+/1q4apLxYfLTOkyYmOwuc2BpCf734zJYBGwZ/ZvPwPWGnr9y7jRe/OdzbOlNE5SZ+HbKO0v1aNWt3NA9u4ATiyL9s7f2tYPlUuhUmWy7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hwgbp43k; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="awF+H281"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742424255; x=1773960255;
-  h=from:to:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=0ph8TWg4i5QPlJyTQE6/THVW5Vuy8oxKuuPiP1VUq0M=;
-  b=awF+H2810p7XcDpN8L9PuMiyKU/q937gSX+lMMKmj3M9ODt42/8VjNZZ
-   XJJ4xojpPcXMfCxeodQPOXCe+kEExTQpiwnK8hjHPqH4rhIofoxROUHoq
-   WYh5el1mFEmzSn+pkcDVNN+7rwDRIPXEn6437pLd+i0dC/bsMibuBjVZn
-   14nmHGooWF9EZJk2fue8KwcNxqsyFL4wZkXdDSUHvPxfGDAe40IcnqxSd
-   pOSEU3GHJ+xCGxqtA1uEBfrInI8FetM9+6KtpVVrEsBnObli6QFUUkeQr
-   WdcWoEagEKWEaU2klecMEtNAJJBWmUZkHGmqun7tO5FLF0Wwx17n+Fac8
-   w==;
-X-CSE-ConnectionGUID: XnddF+i/R6eG9NZKqg3YHA==
-X-CSE-MsgGUID: zJfGCtJCRleSIzdXfUKrAg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="54304189"
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="54304189"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 15:44:14 -0700
-X-CSE-ConnectionGUID: ZBcqqMlPQICiWzd42qIzQg==
-X-CSE-MsgGUID: R90ltUHNQwCo/v4avMAsOA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="153723685"
-Received: from bjrankin-mobl3.amr.corp.intel.com (HELO xpardee-desk.lan) ([10.124.220.177])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 15:44:13 -0700
-From: Xi Pardee <xi.pardee@linux.intel.com>
-To: xi.pardee@linux.intel.com,
-	irenic.rajneesh@gmail.com,
-	david.e.box@linux.intel.com,
-	hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com,
-	platform-driver-x86@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hwgbp43k"
+Received: by linux.microsoft.com (Postfix, from userid 1158)
+	id ED29D2116B2E; Wed, 19 Mar 2025 15:44:20 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com ED29D2116B2E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742424260;
+	bh=9C5MNkeDfrgXTGKRvO5cwd75knMbSqXOloI8ZEJQJhs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=hwgbp43kq+XfAw5RvAtwzlGshINCmUO7NjUaEuLNG4902VRg711BcRuOq2BPTrxuw
+	 CEHaozpbdVLARQgTfXPm1zexQqJc0xVxUdlvDotwin8aAWDj1/KCCGpcWacS+IlitT
+	 nRUquiZCzMWRptqIU42cbtbRvsU2r3RbtTWctJfo=
+From: Hardik Garg <hargar@linux.microsoft.com>
+To: gregkh@linuxfoundation.org
+Cc: akpm@linux-foundation.org,
+	broonie@kernel.org,
+	conor@kernel.org,
+	f.fainelli@gmail.com,
+	hargar@microsoft.com,
+	jonathanh@nvidia.com,
 	linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH] platform/x86: intel/pmc: Fix iounmap call for valid addresses
-Date: Wed, 19 Mar 2025 15:44:06 -0700
-Message-ID: <20250319224410.788273-1-xi.pardee@linux.intel.com>
-X-Mailer: git-send-email 2.43.0
+	linux@roeck-us.net,
+	lkft-triage@lists.linaro.org,
+	patches@kernelci.org,
+	patches@lists.linux.dev,
+	pavel@denx.de,
+	rwarsow@gmx.de,
+	shuah@kernel.org,
+	srw@sladewatkins.net,
+	stable@vger.kernel.org,
+	sudipm.mukherjee@gmail.com,
+	torvalds@linux-foundation.org
+Subject: Re: [PATCH 6.12 000/231] 6.12.20-rc1 review
+Date: Wed, 19 Mar 2025 15:44:20 -0700
+Message-Id: <1742424260-8830-1-git-send-email-hargar@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <20250319143026.865956961@linuxfoundation.org>
+References: <20250319143026.865956961@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-pmc_core_clean_structure() is called when generic_core_init() fails.
-generic_core_init() could fail before ioremap() is called to get
-a valid regbase for pmc structure. The current code does not check
-regbase before calling iounmap(). Add a check to fix it.
+The kernel, bpf tool, perf tool, and kselftest builds fine for v6.12.20-rc1 on x86 and arm64 Azure VM.
 
-Fixes: 1b8c7b843c00 ("platform/x86:intel/pmc: Discover PMC devices")
-Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
----
- drivers/platform/x86/intel/pmc/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Kernel binary size for x86 build:
+text      data      bss      dec       hex      filename
+27756679  17715502  6393856  51866037  31769b5  vmlinux
 
-diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
-index 7a1d11f2914f..de5fc06232e5 100644
---- a/drivers/platform/x86/intel/pmc/core.c
-+++ b/drivers/platform/x86/intel/pmc/core.c
-@@ -1471,7 +1471,7 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
- 	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
- 		struct pmc *pmc = pmcdev->pmcs[i];
- 
--		if (pmc)
-+		if (pmc && pmc->regbase)
- 			iounmap(pmc->regbase);
- 	}
- 
--- 
-2.43.0
+Kernel binary size for arm64 build:
+text      data      bss      dec       hex      filename
+36408168  14997185  1052816  52458169  32072b9  vmlinux
 
+
+Tested-by: Hardik Garg <hargar@linux.microsoft.com>
+
+
+
+
+Thanks,
+Hardik
