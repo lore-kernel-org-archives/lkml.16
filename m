@@ -1,93 +1,151 @@
-Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D06292500CE;
-	Wed, 19 Mar 2025 08:20:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A53C250BF6;
+	Wed, 19 Mar 2025 08:20:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742372403; cv=none; b=SzOxjrdoqR+hKK/K9l3GrPx8gBIfDluse/KaCYkBprIYCXktJvv4N4HvD6ai5JDH3JT0k9tMYu0gDyF9PnlcQu8mYpRKyZSVZRUdj25LLcOC/MR5ms4B+7Sc57oNoZ45i8hoeIXSCy+1r/SiT75mjM1LVLbEfeNX2dKIHYGCJPA=
+	t=1742372406; cv=none; b=ny9fw6RmHy/pgwviwLs9LDxYKL8YYHB2XvZzOllM4ipdXUSw1UQGb7HaOcSEAefNCJMbR5HS0eLpi4vb1jyGRmJiyJGdP1hv3pRlmn+kJutOyU3XnFZFnrmMhn6igENy5KeCLNSihus0YpP0igameG5Fx4E9qi0iKYCMH/YKwCU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742372403; c=relaxed/simple;
-	bh=nw2JHhewuwOb3AnEtFuyX6WKAPTojvjERpuELnO2jWI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GwrPt4p+q9h024ROlTlw6RdlKchyC5UmwofXK1THVmDQQRC1QsSSocQKysf6F7At8PRWfTdW9zl3VDGhF5nlrJtX4+S3t2jctI140zP+aqjzbn+pjgW77R1yBhqqZsR/axMN0lpvdR5NtT1igaNjTfdYYoTwF4Bb7lQ3iNTQ184=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-86b9d9b02cbso2934875241.1;
-        Wed, 19 Mar 2025 01:20:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742372399; x=1742977199;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Str15wCmbKqnizOYQnR2RTvVjukUzPyRH6iLv6/AuGY=;
-        b=fF3zXJn+fvxAcJDwqUsTv/5NLcwEAu7ze4Mc6DqgOtnlbjpyuLmmVK/jMF7SWVki7/
-         YrXvb4UfIMqInZO7wS2u9X8qQtS1a/DdatinoF8qla5gPb8GP5SPeH+y0jhH8GseCgJL
-         oExLN/BsLXN5aUGzA6r6VKsYRiQHHaRsHUGUn00GMpFBFJ8/UwN44OAxd76fjZtwEUcY
-         jUal8RHvN3JTvHTTzkZOZWn0fzFWeAZUUjC3VqFA9GT97oUPVTS9stahe3NPVzIlW2ZB
-         MMnGWIZFI0oMTaAzDMBKIIHt28sC+8YZXhvItZq9cRt6pAmiefZEgleCDoAzlokfS7CZ
-         FVlQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUKh+ZV20HIHegOSaZgxFAsUPcmiJrxLWDmFmx0AHWmONhRdEho7SVnzPOnZSc0O1kWkvXRxNgzdxQx@vger.kernel.org, AJvYcCWiWC77WO+FeCnkx7z6J1nfJQkFTlESXbEf36Bt3QnWSQL3IrvwoP8M2/SbI/c2JeH0+IxMFEIikaLQ1RA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YycPCoFkQFLKmejgUadTnlhqil3u9qX77K3LCU7yIkYzhK6P8H8
-	Q8vwbMT5RX8frUspTyQWnrVLX/0UGpnSOF/V7KXbONHhnCEQLnb+ucBpbzxg
-X-Gm-Gg: ASbGncsjZwPpN4O2gTvUWjtj3VLp70X5Xz8m46YLvPS/omajgTyRKnfyiPlJenpG55o
-	qnLinwjcVdOvxNIig+vo39Vnb4/Ny2knTzMccLgoSi1wNsWiEqDcRQWstarvsm7/Jx1O5cqJHcw
-	C1sl2ulpGtFHd0FCa5L43G0uUcTMH+nEU/K5cBUXpYBgOUt36Qa80zqHVdoqi5T039Km0CHp2BZ
-	fQjNCYatXTtoqgoiAOvMQrpwZ+HLCdT/L16ZAn/YvbIIJjOJVX6u3Fx8YXcqUFyygExKQNdGUN/
-	RkAbbgi7/v7ppbkAWyJDFpvgoPvvVWxQfimG4vbqNyH+JdQDOgSC45WgLciAfoWRtuiJ/kFssJr
-	ZZKfgVkkqMDoVpYVNpA==
-X-Google-Smtp-Source: AGHT+IHIdGSXihKToCdd6Eb93AlOR7EgGSeFF5d2xsyB1lTYya7nEDQ+q2pnAcmZCI2pCCGP2rrASA==
-X-Received: by 2002:a05:6102:cce:b0:4c4:e3c7:cc8e with SMTP id ada2fe7eead31-4c4ec846eb1mr918844137.24.1742372399088;
-        Wed, 19 Mar 2025 01:19:59 -0700 (PDT)
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com. [209.85.222.43])
-        by smtp.gmail.com with ESMTPSA id ada2fe7eead31-4c374f1eefdsm2401484137.7.2025.03.19.01.19.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 01:19:57 -0700 (PDT)
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-86d5a786c7cso2787230241.2;
-        Wed, 19 Mar 2025 01:19:57 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCVwLIURZJqRTvOkBRu7W1O4ZmW5WbrBtwIoDv2G+tX52y8dUzDUXgG6yJoinPqOSWLXhCkE0NNs2/x8caw=@vger.kernel.org, AJvYcCW0yRw8jL0MNXND1z3TE3TjWfzxxu2AvbpOsC68mHY71u7JnEVRLtcK9SCk3RhBW/zlJLz5qSa09gAv@vger.kernel.org
-X-Received: by 2002:a05:6102:3590:b0:4c4:e518:e73b with SMTP id
- ada2fe7eead31-4c4ec813330mr853862137.19.1742372397512; Wed, 19 Mar 2025
- 01:19:57 -0700 (PDT)
+	s=arc-20240116; t=1742372406; c=relaxed/simple;
+	bh=9OlvM4XUWWvrHJOd2iYbZSXPoeKrvur3cTL1QmV2LNQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jGPJqRUmdTHdWfAUsr7ntxP/W8arq3G/Iffg08MrASUp/VinXPonljuAYzkK09NwFa5LW256RcQKiQlbpa3nO9gVg/akVdb+kbdE6zGg2iHxeMZU/vNdIWv3DZnmvfggYrbvm7+1mN8FpBwV1uXHo4CO0bx/W3CS98Eh0Msc7N8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZHh8p3p47z9sSY;
+	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id 5Pdv_1f5SWZW; Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZHh8p2Mb8z9sSX;
+	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 2617E8B78F;
+	Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id K6S1MuFrSThd; Wed, 19 Mar 2025 09:05:30 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 585CB8B763;
+	Wed, 19 Mar 2025 09:05:28 +0100 (CET)
+Message-ID: <a64bf821-ea90-4fd9-92ec-13bf7b7a3067@csgroup.eu>
+Date: Wed, 19 Mar 2025 09:05:27 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319032305.70340-1-linmq006@gmail.com>
-In-Reply-To: <20250319032305.70340-1-linmq006@gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 19 Mar 2025 09:19:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWLpV3129akyZ_fY3xZ04m9PWE9O4nM7UwzxZOSBfz3Lg@mail.gmail.com>
-X-Gm-Features: AQ5f1JoM4oTnWTCI5waqkrsBM7hUt9YIa99RsCf_Y1uj4DwnMxcm-Pbh5P0JeFw
-Message-ID: <CAMuHMdWLpV3129akyZ_fY3xZ04m9PWE9O4nM7UwzxZOSBfz3Lg@mail.gmail.com>
-Subject: Re: [PATCH] spi: Fix reference count leak in slave_show()
-To: Miaoqian Lin <linmq006@gmail.com>
-Cc: Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 07/14] arm64: Add support for suppressing warning
+ backtraces
+To: Will Deacon <will@kernel.org>, Alessandro Carminati <acarmina@redhat.com>
+Cc: linux-kselftest@vger.kernel.org, David Airlie <airlied@gmail.com>,
+ Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Ma=C3=ADra_Canal?=
+ <mcanal@igalia.com>, Dan Carpenter <dan.carpenter@linaro.org>,
+ Kees Cook <keescook@chromium.org>, Daniel Diaz <daniel.diaz@linaro.org>,
+ David Gow <davidgow@google.com>, Arthur Grillo <arthurgrillo@riseup.net>,
+ Brendan Higgins <brendan.higgins@linux.dev>,
+ Naresh Kamboju <naresh.kamboju@linaro.org>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Maxime Ripard
+ <mripard@kernel.org>, =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?=
+ <ville.syrjala@linux.intel.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Thomas Zimmermann <tzimmermann@suse.de>, Guenter Roeck <linux@roeck-us.net>,
+ Alessandro Carminati <alessandro.carminati@gmail.com>,
+ Jani Nikula <jani.nikula@intel.com>, dri-devel@lists.freedesktop.org,
+ kunit-dev@googlegroups.com, linux-arch@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+ linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+ loongarch@lists.linux.dev, x86@kernel.org,
+ Linux Kernel Functional Testing <lkft@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>
+References: <20250313114329.284104-1-acarmina@redhat.com>
+ <20250313114329.284104-8-acarmina@redhat.com>
+ <20250313122503.GA7438@willie-the-truck>
+ <CAGegRW5r3V2-_44-X353vS-GZwDYG=SVwc6MzSGE8GdFQuFoKA@mail.gmail.com>
+ <20250318155946.GC13829@willie-the-truck>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250318155946.GC13829@willie-the-truck>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, 19 Mar 2025 at 04:23, Miaoqian Lin <linmq006@gmail.com> wrote:
-> Fix a reference count leak in slave_show() by properly putting the device
-> reference obtained from device_find_any_child().
->
-> Fixes: 6c364062bfed ("spi: core: Add support for registering SPI slave controllers")
-> Fixes: c21b0837983d ("spi: Use device_find_any_child() instead of custom approach")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+Le 18/03/2025 à 16:59, Will Deacon a écrit :
+> On Thu, Mar 13, 2025 at 05:40:59PM +0100, Alessandro Carminati wrote:
+>> On Thu, Mar 13, 2025 at 1:25 PM Will Deacon <will@kernel.org> wrote:
+>>>
+>>> On Thu, Mar 13, 2025 at 11:43:22AM +0000, Alessandro Carminati wrote:
+>>>> diff --git a/arch/arm64/include/asm/bug.h b/arch/arm64/include/asm/bug.h
+>>>> index 28be048db3f6..044c5e24a17d 100644
+>>>> --- a/arch/arm64/include/asm/bug.h
+>>>> +++ b/arch/arm64/include/asm/bug.h
+>>>> @@ -11,8 +11,14 @@
+>>>>
+>>>>   #include <asm/asm-bug.h>
+>>>>
+>>>> +#ifdef HAVE_BUG_FUNCTION
+>>>> +# define __BUG_FUNC  __func__
+>>>> +#else
+>>>> +# define __BUG_FUNC  NULL
+>>>> +#endif
+>>>> +
+>>>>   #define __BUG_FLAGS(flags)                           \
+>>>> -     asm volatile (__stringify(ASM_BUG_FLAGS(flags)));
+>>>> +     asm volatile (__stringify(ASM_BUG_FLAGS(flags, %c0)) : : "i" (__BUG_FUNC));
+>>>
+>>> Why is 'i' the right asm constraint to use here? It seems a bit odd to
+>>> use that for a pointer.
+>>
+>> I received this code as legacy from a previous version.
+>> In my review, I considered the case when HAVE_BUG_FUNCTION is defined:
+>> Here, __BUG_FUNC is defined as __func__, which is the name of the
+>> current function as a string literal.
+>> Using the constraint "i" seems appropriate to me in this case.
+>>
+>> However, when HAVE_BUG_FUNCTION is not defined:
+>> __BUG_FUNC is defined as NULL. Initially, I considered it literal 0,
+>> but after investigating your concern, I found:
+>>
+>> ```
+>> $ echo -E "#include <stdio.h>\n#include <stddef.h>\nint main()
+>> {\nreturn 0;\n}" | aarch64-linux-gnu-gcc -E -dM - | grep NULL
+>> #define NULL ((void *)0)
+>> ```
+>>
+>> I realized that NULL is actually a pointer that is not a link time
+>> symbol, and using the "i" constraint with NULL may result in undefined
+>> behavior.
+>>
+>> Would the following alternative definition for __BUG_FUNC be more convincing?
+>>
+>> ```
+>> #ifdef HAVE_BUG_FUNCTION
+>>      #define __BUG_FUNC __func__
+>> #else
+>>      #define __BUG_FUNC (uintptr_t)0
+>> #endif
+>> ```
+>> Let me know your thoughts.
+> 
+> Thanks for the analysis; I hadn't noticed this specific issue, it just
+> smelled a bit fishy. Anyway, the diff above looks better, thanks.
 
-                        Geert
+That propably deserves a comment.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Doesn't sparse and/or checkpatch complain about 0 being used in lieu of 
+NULL ?
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+By the way I had similar problem in the past with GCC not seeing NULL as 
+a __builtin_constant_p(), refer commit 1d8f739b07bd ("powerpc/kuap: Fix 
+set direction in allow/prevent_user_access()")
+
+Christophe
