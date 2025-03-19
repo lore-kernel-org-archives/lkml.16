@@ -1,86 +1,109 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626FA213232
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:37:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2F3F214801;
+	Wed, 19 Mar 2025 21:38:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742420276; cv=none; b=h05IJZ9wPHO4EVMszCnsJdDrn/T2LtWEtn3Tqshbg7/Za0zklh3O5UkR9Zw5eyCR0fSVJ2XdByVdIAhm94syGfuMY/x6Krj2QjkKNvFnv08Aj5MFuUBF8kQHHwnTNZcpBCCotI5wkrweWNLMk6InS5Mt9vqr1izBtuPVCHdZCak=
+	t=1742420297; cv=none; b=k9h6Fie6RmjyTPamj/2o3CtLvSQagIZ+9guzCk8SnsSIAZpNyay4W3QaeT4S83t+JgV6/IW+RPQ1LJzsxYgkJKIZ+AF9wRV3NENAslTl3txGzKNGkOkSfnP4tYrk1ACGbP/jmti6qgIaF7B6kjvkzS4M9S3fYrjcRwuWgXHUnXY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742420276; c=relaxed/simple;
-	bh=igXvRtvCkoJEAtcvR466ksYl5KrIfTTEO33JIxuBk8w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xd0mi5OzzHimrEVezpZlUv8J6LGtMpwuK8Lfby2oP2d/hPlRaGpn1NK+Lx/hrj2Y8r//1t/yJMaCRVAfxiDpua620h3r1E76RniQHF8TalNTSzFlb9DvIbj+n5MXKqMgXxKyAroq+Tyuw/23gAHJKqtFzeRwbkWwml6HAGtez1g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=C3S+6Vmg; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+	s=arc-20240116; t=1742420297; c=relaxed/simple;
+	bh=CHbeGKtiOcjgUDiBD5Y2J8NFeMr77PuocseHhs6qAsI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R+d4fc44WHw4N+818WdBNaDVtx6vTuG0aOi8PdNYBp/SPC57SDk9+1ECp8/hhgcZ9IwCJwyOAZzU5owgDKc8SPaO6tEkNcWWcjXszv2Y7j1P/rl8qpxV2el+JZOE4l2Ywy5aK48LYHi+jbROgAtw+dgOCSO9KL2T3BRB0hTlReU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c6Fm9HRR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="C3S+6Vmg"
-Message-ID: <4d45df0c-d44e-4bb6-8daa-0dba1b834bc4@iencinas.com>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1742420262;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=DDJL+avqyQivSc/tZpy/FsXCVGYKqm0FhSqiAlMXSfk=;
-	b=C3S+6VmgvccqvPi6WWbIAzLwx40URVVAjPIg7cGnBwezs6jYObL58WESqdFHc6noSZbSvw
-	T8BeUvDq02cwuDDqht1BshGN2tEqjqjUJk4/j7iUm2/puMeQI18QpatopxEuYwoLwKfQH9
-	zlWoGkf4sAsp2jUcdW+6W8EdX3MbYggQwNbJCGMQeOsaKKoQqMNeH1TybmawyFP2kQmOxd
-	b5dvD+WZT/iyWKgg2uK5ZxD4R8Rl1UHn5qvG/6d9gC+MupWPQ4MJY7v63dnm9BYH8ezMoY
-	ryBbwnEgygNU1+VkpyLrSQHK7RtWILpr8Y9p1PMAGFfj6ffADLDxOYcI9WBR+g==
-Date: Wed, 19 Mar 2025 22:37:36 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c6Fm9HRR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4031FC4CEE4;
+	Wed, 19 Mar 2025 21:38:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742420296;
+	bh=CHbeGKtiOcjgUDiBD5Y2J8NFeMr77PuocseHhs6qAsI=;
+	h=From:To:Cc:Subject:Date:From;
+	b=c6Fm9HRR+4odFsCyCiBiNY3tiO7VQFcmHm7vcY53k4+USjAVqfEwBy7K9MDjYZM8r
+	 p78/4M0fY+qLB/c9qFVmY3p3TY57M82R/k3A5lUvGnYM5hIFlz2RCavJkYLliXb/AQ
+	 aR9JDA6yILTZ9s+i8i5U0svs4giTrtJQWSoG09WWDn3jWnwrFP3n88gTmfYYu9bh2X
+	 dUXekZdqRLOUKVZqoB9s2ouf8dgU/zIM9hrlrvFTqAp7z6M7qWuV+cOTO62T4eh+I0
+	 B82mfqzpFJ3Z9VGaaSOYxR1nXK1g2d9WCdAiDkra+g8mdqlqNQLx5TSjmfSNiB/YW7
+	 jf6+1evMS83aw==
+From: Song Liu <song@kernel.org>
+To: linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-toolchains@vger.kernel.org,
+	live-patching@vger.kernel.org
+Cc: indu.bhagat@oracle.com,
+	puranjay@kernel.org,
+	wnliu@google.com,
+	irogers@google.com,
+	joe.lawrence@redhat.com,
+	jpoimboe@kernel.org,
+	mark.rutland@arm.com,
+	peterz@infradead.org,
+	roman.gushchin@linux.dev,
+	rostedt@goodmis.org,
+	will@kernel.org,
+	kernel-team@meta.com,
+	song@kernel.org
+Subject: [PATCH v2 0/2] arm64: livepatch: Enable livepatch without sframe
+Date: Wed, 19 Mar 2025 14:37:05 -0700
+Message-ID: <20250319213707.1784775-1-song@kernel.org>
+X-Mailer: git-send-email 2.47.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/2] include/uapi/linux/swab.h: move default
- implementation for swab macros into asm-generic
-To: Arnd Bergmann <arnd@arndb.de>, Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- Shuah Khan <skhan@linuxfoundation.org>,
- Zhihang Shao <zhihang.shao.iscas@gmail.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>
-References: <20250319-riscv-swab-v2-0-d53b6d6ab915@iencinas.com>
- <20250319-riscv-swab-v2-1-d53b6d6ab915@iencinas.com>
- <2afab9dc-e39c-4399-ac5a-87ade4da5ab0@app.fastmail.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Ignacio Encinas Rubio <ignacio@iencinas.com>
-In-Reply-To: <2afab9dc-e39c-4399-ac5a-87ade4da5ab0@app.fastmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
 
+There are recent efforts to enable livepatch for arm64, with sframe [1] or
+without sframe [2]. This set tries to enable livepatch without sframe. Some
+of the code, however, are from [1].
 
+Although the sframe implementation is more promising in longer term, it
+suffers from the following issues:
 
-On 19/3/25 22:12, Arnd Bergmann wrote:
-> On Wed, Mar 19, 2025, at 22:09, Ignacio Encinas wrote:
->> Move the default byteswap implementation into asm-generic so that it can
->> be included from arch code.
->>
->> This is required by RISC-V in order to have a fallback implementation
->> without duplicating it.
->>
->> Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
->> ---
->>  include/uapi/asm-generic/swab.h | 32 ++++++++++++++++++++++++++++++++
->>  include/uapi/linux/swab.h       | 33 +--------------------------------
->>  2 files changed, 33 insertions(+), 32 deletions(-)
->>
-> 
-> I think we should just remove these entirely in favor of the
-> compiler-povided built-ins.
+  1. sframe is not yet supported in llvm;
+  2. There is still bug in binutil [3], so that we cannot yet use sframe
+     with gcc;
+  3. sframe unwinder hasn't been fully verified in the kernel.
 
-Got it. I assumed they existed to explicitly avoid relying on
-__builtin_bswap as they might not exist. However, I did a quick grep and
-found that there are some uses in the wild.
+On the other hand, arm64 processors have become more and more important in
+the data center world. Therefore, it is getting critical to support
+livepatching of arm64 kernels.
 
-I couldn't find compiler builtins for ___constant_swahb32 nor 
-___constant_swahw32, so I guess I'll leave them as they are.
+With recent change in arm64 unwinder [4], it is possible to reliably
+livepatch arm64 kernels without sframe. This is because we do not need
+arch_stack_walk_reliable() to get reliable stack trace in all scenarios.
+Instead, we only need arch_stack_walk_reliable() to detect when the
+stack trace is not reliable, then the livepatch logic can retry the patch
+transition at a later time.
 
-Thank you!
+Given the increasing need of livepatching, and relatively long time before
+sframe is fully ready (for both gcc and clang), we would like to enable
+livepatch without sframe.
+
+Thanks!
+
+[1] https://lore.kernel.org/live-patching/20250127213310.2496133-1-wnliu@google.com/
+[2] https://lore.kernel.org/live-patching/20250129232936.1795412-1-song@kernel.org/
+[3] https://sourceware.org/bugzilla/show_bug.cgi?id=32589
+[4] https://lore.kernel.org/linux-arm-kernel/20241017092538.1859841-1-mark.rutland@arm.com/
+
+Changes v1 => v2:
+
+1. Rework arch_stack_walk_reliable().
+
+v1: https://lore.kernel.org/live-patching/20250308012742.3208215-1-song@kernel.org/
+
+Song Liu (2):
+  arm64: Implement arch_stack_walk_reliable
+  arm64: Implement HAVE_LIVEPATCH
+
+ arch/arm64/Kconfig                   |  3 ++
+ arch/arm64/include/asm/thread_info.h |  4 +-
+ arch/arm64/kernel/entry-common.c     |  4 ++
+ arch/arm64/kernel/stacktrace.c       | 70 +++++++++++++++++++++-------
+ 4 files changed, 64 insertions(+), 17 deletions(-)
+
+--
+2.47.1
