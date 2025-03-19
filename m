@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807D724E4A8;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8663924E4B3;
 	Wed, 19 Mar 2025 03:14:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742354052; cv=none; b=FPsKcHaMFiBcDMATrBqGmXP7K4CKol0BSTc+8mr+07nYHQ8KrKhNqPDeABvqf541B9yKdyrzm7KzPX44b4NDkT9+s9P6Z0ywY2va/VhFyyWmRPcPBxPL+lVhSmVZj/0cDDmV/F4ozfOhA41vEx0Avrc4YtY6Z92Y/joQ1XNoXmg=
+	t=1742354052; cv=none; b=GcXXaAUiO4kShZ+ksTBj4n/xMNeK3tOJ0rilf9ok1FPN6rNEItJlFMN+ln3Z6GUcbc29HRk6gueGlba3brQZ6XS4KgCoxyCpo9EObeZsamjCg4KA3dXyF6eut/7OuJGLfxgWyIA9xiw8WeCzy++/7DHLA4l5KlJqeOX4/uRa3ZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742354052; c=relaxed/simple;
-	bh=etgJBoDA0+o3M60VBpSmAHMAVpuV7zSfirQ+bKuKABs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=qOZsltWvHM0CRsy/TpwNvkN5SiY6frah6vZ6XyU4yybyJtH7BTZq+6u+U05VSR6KPOBIyttIyXB4pQGLLaMF7zcn6VhORB0MaGhiYJVxAL2ofQTtZFFORkHk2rPCwtq5quZ267mCvwgvRR2S6Ah21UfYfVypGH6NEAfX+ewNNxo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HYuv9qC+; arc=none smtp.client-ip=10.30.226.201
+	bh=jpuUeVA/yemFV46gMrUwUd85DWAUB/ssFEsQrOfPmyA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CstlN8UpZG1BLG+KSFiOLBZiqWMnbwHNlCANGvE7SdkNaagf0COhswGVO7y0kUa01rpWXsQyPgqSxjjxRxaNzagO1hZwmDqMFVy0NYlIJ0SpF/kG60uC7apJMVreBFAY1rpvnItYDuuFqiwdJaLR3Sw6OyIhT+1Xexr+izOSGVo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epdQl0vb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HYuv9qC+"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E284FC4CEDD;
-	Wed, 19 Mar 2025 03:14:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epdQl0vb"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 505E0C4CEF7;
+	Wed, 19 Mar 2025 03:14:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742354052;
-	bh=etgJBoDA0+o3M60VBpSmAHMAVpuV7zSfirQ+bKuKABs=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=HYuv9qC+Jicrgs0ibOc2DgFnjShRyLNPFyngY9CbPl+Ooe4MmTppF9Y5aY9t12DK7
-	 us8HD3WbB3RB36CU87qfsd4qPjW/Jk1vGSujYLSOzw65w4LR4nw8oj/Nhev5zh+7O3
-	 9Jzy4+6Gg/kM1eaCTOS1TwtkLRg+XtMsfPM/BqWuQ9x8jHjD9rL0NIZdj34Qqa7cT5
-	 Dor16FsgU7sLHQMcNQj4ZNVN7lbdV+61+p83lzLcd6LXJq24dmc76fWnZsZnl7rdAL
-	 0dBwMoqAm8zwYIcxIaD+DEjJj0yCxMagYno5rGPnBn56nz1VJkIph/QtERoQy5L2n5
-	 ILnpQmdH02avQ==
+	bh=jpuUeVA/yemFV46gMrUwUd85DWAUB/ssFEsQrOfPmyA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=epdQl0vbKOFLRc0wt0A/kYRJqGUgUy/8ZPAjvHizaGMXGwhC5dNHctbxtIS0kWlHb
+	 shD15YH049QoFmaQ8CfUaurR0YgxVJyfi+5fL1fO75C9ECE+VVl50qM4UVFKgY+9o5
+	 dKyuX+xxCR34bRIUdM5hYCmYdMFdU9tbpQPhLOKJXeU7up82b6A8RwJFyxUg3t3IOf
+	 QW9/u0uWky0GROeLWxsX5fgW99ONSRXjZXeX8Xp0o7bCIedgYvQ5hLKgSpA2L+S5jI
+	 tqFjjrnvzN6YCtfTJjw5B5cDyokyH2A0DjylEHdVJvfLXFDiCq4g4Qneg/7f+k0n/5
+	 0zed1dxizNghg==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF7EAC28B2F;
-	Wed, 19 Mar 2025 03:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 483A0C35FFC;
+	Wed, 19 Mar 2025 03:14:12 +0000 (UTC)
 From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
-Subject: [PATCH net-next v2 0/7] selftests/net: Mixed select()+polling mode
- for TCP-AO tests
-Date: Wed, 19 Mar 2025 03:13:33 +0000
-Message-Id: <20250319-tcp-ao-selftests-polling-v2-0-da48040153d1@gmail.com>
+Date: Wed, 19 Mar 2025 03:13:38 +0000
+Subject: [PATCH net-next v2 5/7] selftests/net: Print the testing side in
+ unsigned-md5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,11 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAF422mcC/4WOwQqDMBBEf6XsuduatNHSU/+jeEjiqgFNJBvEI
- v57o9Bzj8Pw3swKTNERw/O0QqTZsQs+B3k+ge217whdkzPIQqriJiQmO6EOyDS0iTgxTmEYnO9
- QClMa07RVZUrI+BSpdcuhfoOnhJ6WBHVujGZCE7W3/a7+dddRO7+TveMU4uf4NIuD/z8/Cyywk
- rq8S/NQqlGvLvuGiw0j1Nu2fQHilFlT6gAAAA==
-X-Change-ID: 20250312-tcp-ao-selftests-polling-21b6bbdf77b6
+Message-Id: <20250319-tcp-ao-selftests-polling-v2-5-da48040153d1@gmail.com>
+References: <20250319-tcp-ao-selftests-polling-v2-0-da48040153d1@gmail.com>
+In-Reply-To: <20250319-tcp-ao-selftests-polling-v2-0-da48040153d1@gmail.com>
 To: "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
@@ -53,11 +51,11 @@ To: "David S. Miller" <davem@davemloft.net>,
 Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
  linux-kernel@vger.kernel.org
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742354050; l=2211;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742354050; l=6683;
  i=0x7f454c46@gmail.com; s=20240410; h=from:subject:message-id;
- bh=etgJBoDA0+o3M60VBpSmAHMAVpuV7zSfirQ+bKuKABs=;
- b=1I9QpOTeJb1TkomhompoA8/N2Kaaw0gS1HWvq/lyucF63bZKRXvykgBMV9jCQd8aKS3oHZ38P
- toxxWCRZjYFAuJeLISBiXQjnqtzQ7QJ2dXVJrCMpAOnNX2QeqvnxTSm
+ bh=ydYQTERZSZOIrkX7tioZa86cOGyjJIFbeHHeiWz4Tmo=;
+ b=rJkngdPcft4GRfNcmLEvk1RAGd52w2jCUdytvIwpLP+Afhlaf4DQaGcA06r/bbrZpBiED59G4
+ 1/fz5ulq/7YADqz5GFtKfBo/TVg42Tgm2/mE5qXHm7ovCH6NGQbQPGE
 X-Developer-Key: i=0x7f454c46@gmail.com; a=ed25519;
  pk=cFSWovqtkx0HrT5O9jFCEC/Cef4DY8a2FPeqP4THeZQ=
 X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
@@ -65,55 +63,126 @@ X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
 X-Original-From: Dmitry Safonov <0x7f454c46@gmail.com>
 Reply-To: 0x7f454c46@gmail.com
 
-Should fix flaky tcp-ao/connect-deny-ipv6 test.
-Begging pardon for the delay since the report and for sending it this
-late in the release cycle.
+From: Dmitry Safonov <0x7f454c46@gmail.com>
 
-To: David S. Miller <davem@davemloft.net>
-To: Eric Dumazet <edumazet@google.com>
-To: Jakub Kicinski <kuba@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-To: Simon Horman <horms@kernel.org>
-To: Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+As both client and server print the same test name on failure or pass,
+add "[server]" so that it's more obvious from a log which side printed
+"ok" or "not ok".
+
 Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
-
-Changes in v2:
-- Base on net-next (Paolo)
-- Add a missing Fixes tag (Paolo)
-- Link to v1: https://lore.kernel.org/r/20250312-tcp-ao-selftests-polling-v1-0-72a642b855d5@gmail.com
-
 ---
-Dmitry Safonov (7):
-      selftests/net: Print TCP flags in more common format
-      selftests/net: Provide tcp-ao counters comparison helper
-      selftests/net: Fetch and check TCP-MD5 counters
-      selftests/net: Add mixed select()+polling mode to TCP-AO tests
-      selftests/net: Print the testing side in unsigned-md5
-      selftests/net: Delete timeout from test_connect_socket()
-      selftests/net: Drop timeout argument from test_client_verify()
+ tools/testing/selftests/net/tcp_ao/unsigned-md5.c | 44 +++++++++++------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
- tools/testing/selftests/net/tcp_ao/connect-deny.c  |  58 ++--
- tools/testing/selftests/net/tcp_ao/connect.c       |  22 +-
- tools/testing/selftests/net/tcp_ao/icmps-discard.c |  17 +-
- .../testing/selftests/net/tcp_ao/key-management.c  |  76 ++---
- tools/testing/selftests/net/tcp_ao/lib/aolib.h     | 114 ++++++--
- .../testing/selftests/net/tcp_ao/lib/ftrace-tcp.c  |   7 +-
- tools/testing/selftests/net/tcp_ao/lib/sock.c      | 315 +++++++++++++++------
- tools/testing/selftests/net/tcp_ao/restore.c       |  75 +++--
- tools/testing/selftests/net/tcp_ao/rst.c           |  47 ++-
- tools/testing/selftests/net/tcp_ao/self-connect.c  |  18 +-
- tools/testing/selftests/net/tcp_ao/seq-ext.c       |  30 +-
- tools/testing/selftests/net/tcp_ao/unsigned-md5.c  | 118 ++++----
- 12 files changed, 552 insertions(+), 345 deletions(-)
----
-base-commit: 23c9ff659140f97d44bf6fb59f89526a168f2b86
-change-id: 20250312-tcp-ao-selftests-polling-21b6bbdf77b6
+diff --git a/tools/testing/selftests/net/tcp_ao/unsigned-md5.c b/tools/testing/selftests/net/tcp_ao/unsigned-md5.c
+index 4cde2c9f7f49c9ae5a7e1bf73745ef77c7b4706a..a1467b64390adcb5904c02fcfc378a37e989a8bd 100644
+--- a/tools/testing/selftests/net/tcp_ao/unsigned-md5.c
++++ b/tools/testing/selftests/net/tcp_ao/unsigned-md5.c
+@@ -157,80 +157,80 @@ static void *server_fn(void *arg)
+ 
+ 	server_add_routes();
+ 
+-	try_accept("AO server (INADDR_ANY): AO client", port++, NULL, 0,
++	try_accept("[server] AO server (INADDR_ANY): AO client", port++, NULL, 0,
+ 		   &addr_any, 0, 0, 100, 100, 0, "TCPAOGood",
+ 		   TEST_CNT_GOOD, 0, 0);
+-	try_accept("AO server (INADDR_ANY): MD5 client", port++, NULL, 0,
++	try_accept("[server] AO server (INADDR_ANY): MD5 client", port++, NULL, 0,
+ 		   &addr_any, 0, 0, 100, 100, 0, "TCPMD5Unexpected",
+ 		   TEST_CNT_NS_MD5_UNEXPECTED, 1, FAULT_TIMEOUT);
+-	try_accept("AO server (INADDR_ANY): no sign client", port++, NULL, 0,
++	try_accept("[server] AO server (INADDR_ANY): no sign client", port++, NULL, 0,
+ 		   &addr_any, 0, 0, 100, 100, 0, "TCPAORequired",
+ 		   TEST_CNT_AO_REQUIRED, 0, FAULT_TIMEOUT);
+-	try_accept("AO server (AO_REQUIRED): AO client", port++, NULL, 0,
++	try_accept("[server] AO server (AO_REQUIRED): AO client", port++, NULL, 0,
+ 		   &this_ip_dest, TEST_PREFIX, true,
+ 		   100, 100, 0, "TCPAOGood", TEST_CNT_GOOD, 0, 0);
+-	try_accept("AO server (AO_REQUIRED): unsigned client", port++, NULL, 0,
++	try_accept("[server] AO server (AO_REQUIRED): unsigned client", port++, NULL, 0,
+ 		   &this_ip_dest, TEST_PREFIX, true,
+ 		   100, 100, 0, "TCPAORequired",
+ 		   TEST_CNT_AO_REQUIRED, 0, FAULT_TIMEOUT);
+ 
+-	try_accept("MD5 server (INADDR_ANY): AO client", port++, &addr_any, 0,
++	try_accept("[server] MD5 server (INADDR_ANY): AO client", port++, &addr_any, 0,
+ 		   NULL, 0, 0, 0, 0, 0, "TCPAOKeyNotFound",
+ 		   TEST_CNT_NS_KEY_NOT_FOUND, 1, FAULT_TIMEOUT);
+-	try_accept("MD5 server (INADDR_ANY): MD5 client", port++, &addr_any, 0,
++	try_accept("[server] MD5 server (INADDR_ANY): MD5 client", port++, &addr_any, 0,
+ 		   NULL, 0, 0, 0, 0, 0, NULL, 0, 1, 0);
+-	try_accept("MD5 server (INADDR_ANY): no sign client", port++, &addr_any,
++	try_accept("[server] MD5 server (INADDR_ANY): no sign client", port++, &addr_any,
+ 		   0, NULL, 0, 0, 0, 0, 0, "TCPMD5NotFound",
+ 		   TEST_CNT_NS_MD5_NOT_FOUND, 1, FAULT_TIMEOUT);
+ 
+-	try_accept("no sign server: AO client", port++, NULL, 0,
++	try_accept("[server] no sign server: AO client", port++, NULL, 0,
+ 		   NULL, 0, 0, 0, 0, 0, "TCPAOKeyNotFound",
+ 		   TEST_CNT_NS_KEY_NOT_FOUND, 0, FAULT_TIMEOUT);
+-	try_accept("no sign server: MD5 client", port++, NULL, 0,
++	try_accept("[server] no sign server: MD5 client", port++, NULL, 0,
+ 		   NULL, 0, 0, 0, 0, 0, "TCPMD5Unexpected",
+ 		   TEST_CNT_NS_MD5_UNEXPECTED, 1, FAULT_TIMEOUT);
+-	try_accept("no sign server: no sign client", port++, NULL, 0,
++	try_accept("[server] no sign server: no sign client", port++, NULL, 0,
+ 		   NULL, 0, 0, 0, 0, 0, "CurrEstab", 0, 0, 0);
+ 
+-	try_accept("AO+MD5 server: AO client (matching)", port++,
++	try_accept("[server] AO+MD5 server: AO client (matching)", port++,
+ 		   &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "TCPAOGood", TEST_CNT_GOOD, 1, 0);
+-	try_accept("AO+MD5 server: AO client (misconfig, matching MD5)", port++,
++	try_accept("[server] AO+MD5 server: AO client (misconfig, matching MD5)", port++,
+ 		   &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "TCPAOKeyNotFound", TEST_CNT_AO_KEY_NOT_FOUND,
+ 		   1, FAULT_TIMEOUT);
+-	try_accept("AO+MD5 server: AO client (misconfig, non-matching)", port++,
++	try_accept("[server] AO+MD5 server: AO client (misconfig, non-matching)", port++,
+ 		   &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "TCPAOKeyNotFound", TEST_CNT_AO_KEY_NOT_FOUND,
+ 		   1, FAULT_TIMEOUT);
+-	try_accept("AO+MD5 server: MD5 client (matching)", port++,
++	try_accept("[server] AO+MD5 server: MD5 client (matching)", port++,
+ 		   &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, NULL, 0, 1, 0);
+-	try_accept("AO+MD5 server: MD5 client (misconfig, matching AO)", port++,
++	try_accept("[server] AO+MD5 server: MD5 client (misconfig, matching AO)", port++,
+ 		   &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "TCPMD5Unexpected",
+ 		   TEST_CNT_NS_MD5_UNEXPECTED, 1, FAULT_TIMEOUT);
+-	try_accept("AO+MD5 server: MD5 client (misconfig, non-matching)", port++,
++	try_accept("[server] AO+MD5 server: MD5 client (misconfig, non-matching)", port++,
+ 		   &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "TCPMD5Unexpected",
+ 		   TEST_CNT_NS_MD5_UNEXPECTED, 1, FAULT_TIMEOUT);
+-	try_accept("AO+MD5 server: no sign client (unmatched)", port++,
++	try_accept("[server] AO+MD5 server: no sign client (unmatched)", port++,
+ 		   &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "CurrEstab", 0, 1, 0);
+-	try_accept("AO+MD5 server: no sign client (misconfig, matching AO)",
++	try_accept("[server] AO+MD5 server: no sign client (misconfig, matching AO)",
+ 		   port++, &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "TCPAORequired",
+ 		   TEST_CNT_AO_REQUIRED, 1, FAULT_TIMEOUT);
+-	try_accept("AO+MD5 server: no sign client (misconfig, matching MD5)",
++	try_accept("[server] AO+MD5 server: no sign client (misconfig, matching MD5)",
+ 		   port++, &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, "TCPMD5NotFound",
+ 		   TEST_CNT_NS_MD5_NOT_FOUND, 1, FAULT_TIMEOUT);
+ 
+ 	/* Key rejected by the other side, failing short through skpair */
+-	try_accept("AO+MD5 server: client with both [TCP-MD5] and TCP-AO keys",
++	try_accept("[server] AO+MD5 server: client with both [TCP-MD5] and TCP-AO keys",
+ 		   port++, &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, NULL, 0, 1, FAULT_KEYREJECT);
+-	try_accept("AO+MD5 server: client with both TCP-MD5 and [TCP-AO] keys",
++	try_accept("[server] AO+MD5 server: client with both TCP-MD5 and [TCP-AO] keys",
+ 		   port++, &this_ip_dest, TEST_PREFIX, &client2, TEST_PREFIX, 0,
+ 		   100, 100, 0, NULL, 0, 1, FAULT_KEYREJECT);
+ 
 
-Best regards,
 -- 
-Dmitry Safonov <0x7f454c46@gmail.com>
+2.42.2
 
 
