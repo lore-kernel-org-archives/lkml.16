@@ -1,47 +1,47 @@
-Received: from PA4PR04CU001.outbound.protection.outlook.com (mail-francecentralazon11013002.outbound.protection.outlook.com [40.107.162.2])
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011070.outbound.protection.outlook.com [52.101.70.70])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D842571CB;
-	Wed, 19 Mar 2025 12:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.162.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339A225744B;
+	Wed, 19 Mar 2025 12:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.70
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742387487; cv=fail; b=q8SS2pVUFtc3flju1WerhkBCyhxcgzjbhEcK+su+K6hNOSc75tIFhIUJqpHfq6KVS5MiRKiZZfUbykNDsK52z4HLYEqUPNN4rQ961gnlUG02mrIM+ZaEa8kxQJyJr0jMLqFUYgL12LnMn5/fc3qhbUru8NlFFa+qDASlB1KdSdU=
+	t=1742387489; cv=fail; b=tabVWmZXUA1sA1cdRL4OSnnb8RlieXd0xiD8hB/6fj9GFSwzime3H4X4o/Lyi19tbj5Cozti8GsqZ3QXmBgjUDOmLj2JWOOh6NXSPG5Apj2b5uYliVSVBH/Tu02XQlNUneCBRTNqVUzywkGwINsMl/pDIEwdF+Zj2cOIJRNNxNM=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742387487; c=relaxed/simple;
-	bh=YYgorFPl1B3+kKFplaJR7buaAuCnVY1I/oPe48Gz/Dg=;
+	s=arc-20240116; t=1742387489; c=relaxed/simple;
+	bh=kJqtGuW7ZAvstDHYDti4Wrl4VJ57AC8EUWoR7yT6lf8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=R7SqscFJHwBQnmOJv3aKsBtpTI+Owhd/Eu2JHal1JL4y7oKrcuI1q1/yDXJGfoW30u0BJEmQP1E4JqWpWfEUvDngmmIORjKVRRkps/++a9b5uZdBStampu/Y1Db0MO2ub/mEgaiebYElus2NBgbjCZt/SLt0N9hAJr+QCF6ptNk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=fb3RRawQ; arc=fail smtp.client-ip=40.107.162.2
+	 Content-Type:MIME-Version; b=gIhH6e4/2fhgqllveQiHyLw4jNzlmBoV8pslYDEePYqE+hf63ceG/ymd+IURTX0e8yWCE2kOyti4IUMliqdEXB9RkqfqT16CRW5AFwXDRVb8BdJfckMhk5dyRaNmedAdN62WrbgfxgkjsaPXgIaDOCDVaRwH/Lxet/PgKyJxkyo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk; spf=pass smtp.mailfrom=prevas.dk; dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b=hjgKVuEB; arc=fail smtp.client-ip=52.101.70.70
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=prevas.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=prevas.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="fb3RRawQ"
+	dkim=pass (1024-bit key) header.d=prevas.dk header.i=@prevas.dk header.b="hjgKVuEB"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Xe85psz4Plvd+Uqj2jMouQR7PR/UxdiNaYKgHVms2mtt2x8dYcqCU8T0x8WU5Vana1BFgUxdJJnK/H3UvRUCYN7iLv8k2ppyHkiBCuTaG7vrARV3SRH6T56jZ3RsSjQmLnLVLmbuEo+akVrg7Qp/nnYzD3Snxd+vU1ewHOFKwBU8HSdF2qzT/AnLQQgG6PrL3ch6oHA3/fiPhn9w4F65dGDAZPBSoFnGJG9VpX/hQTuVJrFSkDluH4/Iu6JvGBeEm0Wj/sX8BTGfL8gwZyOhrDo03PvMOCFlhMgJnC8JuAA209odA1IoN+V/5inthQ1rT1Y751zvuU4AucJhgw7nhg==
+ b=ea5fbR9/X2WHpRr4vm4tiQt2LfODo7y8Nu00EVtm27Pg0sUui9XsrXQ4lyx/uYpJWLf6g8bQcQccppaI82fH+GScSdQSfjCF8PrONnLZJss1aYZdZP25wpu2ijDtS/WY2L7zGpMF541qJX2LEYdVh5okoc7UJWb6fR6dAtlvndIsDOsadrro+bPApmkX+58GpU5dHd+ZLyU6vRAyNlSCP2wrPBch+aJzAhWLmulIQi431dDpNkrwMJXal+LjPGku5jMr2jkWMDBu8DuhpTVd7+IG+GIVs+ML/Cb5MCw2UP1rEi1hNlsVGzjE5F8p3rxUWNLJ+MZrY2iQru0HHGY7+Q==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AhY25m2nlIOGMtUFgphbVF0Axx9gObv/Nzra+axx6dc=;
- b=UeiatxDxeC1lt7/fvVo303SAGOhz6lhzhAIWQ2DThpon3ECsgVFDrlbxeGMyouOSVRmiSjnQMghPnJPwcKEVgtK9jUvMxm47MzkuLDtXdevPgSgMIO607uEi+qZt/54rLF+pD2S+pvu+qCXpsg3BMGzKM/J8lCEApDmLaMupMKpmiTpPoYXvaCfgrcpTbgfyo5EZrhXo6ewPmg6Qj79weKJR4cwkU5PCl3IrSmmqcA6M0WdPVrEAc8C4CT5QlCpBxmMdN24fQCHDKdYhMiJ4S+Eh4PSupy+WibQuaYWBCHs7Qw+Elj9BJLelGJ7YcfSZAAptUF+W+fQ/eP6m1G76Yg==
+ bh=SoQ2mmcCqjOG9k/GuV/8j0xB497IgQ0pvFakQtTeooQ=;
+ b=aj64SzS9WGSJIgdxg8YaVLZv4Vt5v0z9g/H3wwHmZwDtmEYljSFWVlHQMAQxKzPptnQs9mk6QUImt5iooAnOSoaBQxjJsTBKL+dCENFYtDjFs1NYOIoA8kr/kyFp83xES3KW9ncyj7zZ1V/DYYlThA3ZRfQ89Y5eKIlI3txwjUxYJRnCok4Hg5snj5hZcqyveK8hseU1vbZcRu09lLQ2u+uehGEZUWdXacRUjVUP+SC6zMMEb7ecesU58fjbHWLtCc9+ev0aOJX2c3iwIMmbSLxNoDI6U4zBQoOo3AlvhF6zXO/gGdSJfo5Y0uTUG0BpGFJJ7Cu09JLfzCfVQ+ZfwQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=prevas.dk; dmarc=pass action=none header.from=prevas.dk;
  dkim=pass header.d=prevas.dk; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.dk;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AhY25m2nlIOGMtUFgphbVF0Axx9gObv/Nzra+axx6dc=;
- b=fb3RRawQwQYs5haYBMtS9hAP6tCZ9mLJPfWzy9XtRA+4WmBCn8/bMHiHI/wgujkUAl137eVwWmUuu5wzuBwsxUV3cbXrjZNzd1PeV6lEGFK9n+hIyvpKI1P09sUTZqx8PxfBCE5Z7XZPAXJMxVT5CeyAnYsrZSTC/a+DZ8o/Ip0=
+ bh=SoQ2mmcCqjOG9k/GuV/8j0xB497IgQ0pvFakQtTeooQ=;
+ b=hjgKVuEB3f4dlC0SRqmv+HFPbaU9Q6cN0n39jBJRi5+1UrnHxJh48/pawrwqZPK2DsNARQyNmLZqaNMuFEytHPNMPex7Qo9/VEa6YgwpXhbWzKuefW7brQjU801QC60rfyxvkrhuoZQPtc2N3HRmWsfIZHcqeMGsSHqJEsEXbpA=
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=prevas.dk;
 Received: from DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:41::17)
  by PAWPR10MB6856.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:33c::18) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
- 2025 12:31:08 +0000
+ 2025 12:31:18 +0000
 Received: from DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::7e2c:5309:f792:ded4]) by DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
  ([fe80::7e2c:5309:f792:ded4%5]) with mapi id 15.20.8534.031; Wed, 19 Mar 2025
- 12:31:08 +0000
+ 12:31:18 +0000
 From: Rasmus Villemoes <ravi@prevas.dk>
 To: Colin Foster <colin.foster@in-advantage.com>,
 	Lee Jones <lee@kernel.org>
@@ -49,16 +49,17 @@ Cc: linux-kernel@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	Felix Blix Everberg <felix.blix@prevas.dk>,
 	Rasmus Villemoes <ravi@prevas.dk>
-Subject: [PATCH 2/8] mfd: ocelot: move SPI specific macros to ocelot-spi.c
-Date: Wed, 19 Mar 2025 13:30:52 +0100
-Message-ID: <20250319123058.452202-3-ravi@prevas.dk>
+Subject: [PATCH 7/8] mfd: ocelot: enable support for mdio management
+Date: Wed, 19 Mar 2025 13:30:57 +0100
+Message-ID: <20250319123058.452202-8-ravi@prevas.dk>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250319123058.452202-1-ravi@prevas.dk>
 References: <20250319123058.452202-1-ravi@prevas.dk>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: MM0P280CA0028.SWEP280.PROD.OUTLOOK.COM (2603:10a6:190:a::8)
- To DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:10:41::17)
+X-ClientProxiedBy: MM0P280CA0099.SWEP280.PROD.OUTLOOK.COM
+ (2603:10a6:190:9::12) To DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:10:41::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,127 +68,305 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: DB7PR10MB2475:EE_|PAWPR10MB6856:EE_
-X-MS-Office365-Filtering-Correlation-Id: 60062349-66a6-43b6-3e6c-08dd66e1ecd0
+X-MS-Office365-Filtering-Correlation-Id: cfae93fe-26f9-4527-8f22-08dd66e1f2ab
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|366016|1800799024|376014|52116014|38350700014;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?SfVvCpGtURMwco/4Iq7qs9X7Xh9O55h5D1+BpisI5l0BcOHPJ+xWlj9c2qUm?=
- =?us-ascii?Q?2fv9oQYw3b0sH3Vcw9yYTDeOYZ5yIzrk8sWuVeMePJz/qghlol6g446OeQzH?=
- =?us-ascii?Q?ZMJpzQvNnDOgpZdTLaJF/jtLO8u1uDHab/MQZvvNBkFnMYjo8LkBWGuuqXjE?=
- =?us-ascii?Q?KQDHSzTALJNjphDoZT0UM7ldEkiUNkdtqmsn/U/zbDq6ZK23LlaN2osFkyxu?=
- =?us-ascii?Q?xtVDJsMD34YInK0OCDWIZT3+16j75ZZYZkrkudUCwlj9OQdvo/L4+1D7tCHA?=
- =?us-ascii?Q?vulPOouITKKk7byXibQfhBNmMa1bSDomcxqfrD5hJCZ3RsiSkqQvupnyv9Hk?=
- =?us-ascii?Q?tNTjMG2RbSPFLOG6ovKC6CW5xPv2uKcTJjrJfwXZsfp9XcaTxsmeDvGVR2xk?=
- =?us-ascii?Q?KFon+vmPN47NbycecQtGoxlfYTLzkQsh6/COLxDk4BVW6c2yKbC12tQByvOO?=
- =?us-ascii?Q?DfRiHA1rbeGxnud6OTxUlWieqt7Uh9ss8Y4jUCw5uOnIwafdvhFEp5vJGhVk?=
- =?us-ascii?Q?SMhlYMT27f+zQWuzgCP09wXaaezpTbQCGEVyj/j7VeS0uXzlhsr4JR2oktRx?=
- =?us-ascii?Q?D+kuxkZoOjtQvaB+3VyfBXJMNzuYeQur5W73aF+XxfcNR4L6B8br2XeY2SLC?=
- =?us-ascii?Q?YDyr765HM3ttAUIrzSC6IASu1XMLyYu1yQS8JkVjudzwI0T2kPyIjgxJpiBj?=
- =?us-ascii?Q?xA50QR380md70j4av/FjDoSjhr6HREWK6eBpjBkBtn4cJYtSaFK4jL9cXOjh?=
- =?us-ascii?Q?2cqn0+KHJ05ENnZC9yaY2v2UJAiQQIRLtJNFLmsL9gkUNfK/BjWx5VFynyL1?=
- =?us-ascii?Q?BVHVslhIcvCQ1GOCh0aMAPKtNkcAPnpLXxr8yz3LT659nonlxpELIZ4oGLI4?=
- =?us-ascii?Q?JJyoEKllln1KzhRT05IN1QjyjbQXasvixUbyuumE211nYsMJl+ath4f8NuVK?=
- =?us-ascii?Q?AXxKOnjZ99uAnPwmit21tGI5kirZa3E2JwjcEVYBITEYNOPl7GThRErdj9Oo?=
- =?us-ascii?Q?pq6w/r5VkVypkUN49B5olVtKX+I+8S8RZgpgA4leNzd4fnwUnWw6JwG9+csg?=
- =?us-ascii?Q?VqvHHP+1oys/qeZEnnKHhkru5+wG+MMSlMWvaZolgG7F5HKZC7hlvTdyPG7g?=
- =?us-ascii?Q?hU3WqHQQZqTSCAvIRz1ZyPuds9k79vUERNvWzfBTlbYAkTwVvaefkP/FPIXs?=
- =?us-ascii?Q?0ElH5imUB+Vmxs+pFOY82Ui7Yn8vKRocCl0XyREzgIJaeCwc7ZH5mKShCbTH?=
- =?us-ascii?Q?MPRwka9casLZITDPIAwxPvX+IRi1oJnyddtlt2v+85KnvvjKnJo+w6xiRyHQ?=
- =?us-ascii?Q?CPS6GaGz1FlkY+JH+gVN127hCflvLQssC8P5nsJahdm0YKmebIPk3h7VbPu5?=
- =?us-ascii?Q?zd345fgoFvG/LWeNvgH0YeI+5/N6kPdUvAWsb5EO0N7SdK2Wac3/DVYEr4+L?=
- =?us-ascii?Q?wNDRJKtBCtSr64u4H+5e4O5yKvFrImtY?=
+	=?us-ascii?Q?E95oD0Avs3hfVAscoQ2N419qMaab2oHuQSSidzoOqriFjebAOpZF0gMPyBbV?=
+ =?us-ascii?Q?RkU7d9NxVGVzTB/gOL+yynYeSXFfGCmyAhxb+rueJjWK4N9hFTTS1L3BvMWZ?=
+ =?us-ascii?Q?gpmcd+BDCjquPqi1BO7z6xr4SnmJd8zqHN+0xKcc7LqtmWNk8nhbVSEihynE?=
+ =?us-ascii?Q?FJ78qlnA/s5QhYEqD3TWVeEAm1LDDJBmauWQy0O/7vxCOjvgcoDHkmaDW6pf?=
+ =?us-ascii?Q?XgITLfdUxVrsP6lPE0PwySnh8mOojj42Cjouc60Xw7hr8iapVHDz6DS+i85N?=
+ =?us-ascii?Q?cO4x958kdmXi7D1rKfanE3H1OZpzk2WNNrY7nupDVMx4ddSsgFYUPph92nNl?=
+ =?us-ascii?Q?JpBp3V+VjpI9rZWiFMDxCkiMNXEzDEGTEvNSBsg1ftskkYifT/oAUwFmoc8R?=
+ =?us-ascii?Q?rbGnJxdhJVn0l7iw9hzHRS647NP95LudzuvV0vfyYvEdD52KK+71pNE9AGlL?=
+ =?us-ascii?Q?HJxLhZAh1Y9SCPIvRzzQhFXuvVEDADo/U/Aa+OUjbUUJn3XrfQTkQqyFd4W7?=
+ =?us-ascii?Q?ltVkgo/rBdMrsxSBOaBrPdX3Xmks/A8tuT0q+aTNaid3yZkKyvnwbhfr9nEd?=
+ =?us-ascii?Q?C4bVxKgnL2SMyqYL2sm8OBK/8OMyWAv+JHERE65DmwmBagACX2Hccjxm62UZ?=
+ =?us-ascii?Q?zyDLyohjUseDPVHKYkmc7WonXndJgdhzVYIjpaARH2Pxkk80/CMYCi6tGQ+l?=
+ =?us-ascii?Q?9MNLPgeN4YWZD+WZ6Zs4bC47mqw8LAUcAnpUJmukRaqO5IboYYyUZf/ZRWk3?=
+ =?us-ascii?Q?qGv2I0q5hYkhlcZ4g0m63vLuXmI0VjJ3cqxmTolwDK8YzzphHaPNWKH1REij?=
+ =?us-ascii?Q?3IdWCakvXCX/3IMDXZdj9EMZABAEu9GbL812TOxCauoQvadBWwhZ+5Sfnc8r?=
+ =?us-ascii?Q?m89eNknVQmEQOe0H79GjTIq2Xl77HVtCyAzuIg4koYzPyhzXcalBej5o7Th8?=
+ =?us-ascii?Q?kd3Oqxmbu8JgL51Yvx+gWZNfswQz9ll8jbovG7ulQbZPNqTCMDL/KAuigymM?=
+ =?us-ascii?Q?vIG053MMLN9Nf/RHuEcwA8cDpOjGzp6oQovtuGkkv/qDIpsIwdIBBTIVuJyX?=
+ =?us-ascii?Q?7AOEg4od0wFnu2MeT+MPLqR40C2aSwUWsEO6ETMesqQUdvXIqQCFo8Kzmhe2?=
+ =?us-ascii?Q?JEEstdr6d3i3qRaL1vHA4J4w+1qYX1U129cuP1nSinr13YB0fWKXArUFYwhX?=
+ =?us-ascii?Q?JI61k55nZx1QCub4M2CgnSV0SMct8aBn/e5gZ6/cK2G3yEmZRKhf0fU9WD7y?=
+ =?us-ascii?Q?dCS4WPcjLDLHUBaftrRMNSydt80e97dNV8BrR8pj8s/M5mDUKZJJxd3DtsYP?=
+ =?us-ascii?Q?CGXEchbRRnGizsyZ6g/5Rm9mW40/G/+yh7AaRf8mKC6Zoyqxu1tSf9LFuaxH?=
+ =?us-ascii?Q?iRICfXZ7FZ25BZNIhw7j5NSF1ZfK0rZ2vGDGpvMJyaG5kQRNxmBfq7PcM0Kk?=
+ =?us-ascii?Q?E74dLcYWhk0t/BwKWzOhtdRaFXKf2bk3?=
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(52116014)(38350700014);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?e9t8ttjdOlF2O3EFGsvJu/3JxTp0T0ALlBF6mm6qnp7pg4iJETPmapULHbb1?=
- =?us-ascii?Q?FTPfF32oL7GoHapSE37yeZq2aS6BuhvOcSnpQDSjNt/4hmaw8NnQD/DzD6Lg?=
- =?us-ascii?Q?imMuy3lsYx8Pl4aImLaSPV7y/MPNpUWhZjipQqBK7fflYITp12h+5ksxpcdQ?=
- =?us-ascii?Q?Xqludc4dDyU8+qE+LWYY3fBqKCp/7ki2hOAWE2R1eC/S1IAhAmSz4OjP8CwV?=
- =?us-ascii?Q?2pSvu/b6NJgjFZPsJ1ybgsPNJ4GBQY3Onv2PtCrxivhK7lUUifGhlbUzSthK?=
- =?us-ascii?Q?W8W7GqSYc5I9DXit0n7oiME9qZErkxN2EaOaqxhieet3NC4uOp1ePZ4S5erw?=
- =?us-ascii?Q?Vhvd65dfzJL4+xTsujACjTQAmqrthNxzjIj+J/3VcWQpmKCzKCimIJp0RRPu?=
- =?us-ascii?Q?NWvxsI/LdFZmeqB49nAl334cIydftgL5lrmpNK7B6j0jl0cX18rbhgBj5Iht?=
- =?us-ascii?Q?DZIAMQO1Pf6cJEj5XJVTDOb6A2jwyBvIgu1lJuAzyXBCS3oP63qvUsErc62P?=
- =?us-ascii?Q?EVEVvQBfDjtm7Wr5JELjSlyb30xAGdvs8suV/ayXN3nU5xb2c8iOpf9G02iL?=
- =?us-ascii?Q?BHf7AqDfSAAa3DjNc/zH444EINndbBY/MxdJ0du2dWgTL5t6aD4sQM3HKHUM?=
- =?us-ascii?Q?n4RmR/3hp+urxRIXQerYagnla+D96tR9nnKqBpVQlKoItJ8akcN7MpTo7Vyv?=
- =?us-ascii?Q?+5OVuoZ3szVxKk6eb4vj7SJ/qSlT2uxQtTb4isPQWRam7Q73YKApWs8XV7TG?=
- =?us-ascii?Q?SHXx8NF+Lj69/kHJ16BBjYfE1Ho8/VUX0rv2iuV+93sGzffPz9nyGqCw0ylL?=
- =?us-ascii?Q?mAKwuCjnVqKgsi7OF4pyNleHDLvrosf37itAQ5PfDMh5FKstogAUULiIcyfb?=
- =?us-ascii?Q?jJgBOJvgdiSRPYJVtC3DZUHUxOVCo7f2329hO9LuHWx0YaQgoO64IVTiwk0/?=
- =?us-ascii?Q?25JwShZyBZTienFHIdmqZ2CC3NgmmySm+fmKRsRHBsjfZ6WufvgC6KegUyWs?=
- =?us-ascii?Q?FrxQxbSPfajzSXf/u9Ipg2mpkBy0wgf4zR0uYe1kZw5fC3ztXwYe2AZK80LP?=
- =?us-ascii?Q?6QCjIduNcPLp386+v+4jU3lJSsd/E4ng81VLuE2kY4fqWlGpX4rPyzNL0rv7?=
- =?us-ascii?Q?DUewv3JXTfRf0G85BFtLLSfgLfwn9C6sn6wINKVvDZb+QohbMSAyBekU8PiM?=
- =?us-ascii?Q?rd9xSFfKntPZXj5Or8PcK+GJV1/51KGlIbgDlpdXjhGsU1lkzfuCo034YLNy?=
- =?us-ascii?Q?s4LItQMZwTHswqu0+AgtfkvzNYG6kgefVLBQqsYen58akOmLoURL4HstHXys?=
- =?us-ascii?Q?d9H6Vys68NtzUfJaNcBM4KHpVGrv3Q2MWKJueSnf0VIxMqmqVNNhSDpyzlqb?=
- =?us-ascii?Q?Ktf4HuslVjyq9t81u9SAnU0sWLkZKYpkJRKinfe60ehGT49tvJnup3e3Zj3Z?=
- =?us-ascii?Q?cPFidTYhGFK8hlJkFKVO4y2Djdkw3MouHisKHpftGUnukTOWMODD16/OenPx?=
- =?us-ascii?Q?VpDrDOaows5YsZOvuP1PUAcDbqsXTOg91Opq9MdnUXpDHwCaBBxdXwO7vFQj?=
- =?us-ascii?Q?TBQ2kpluudaoSWLKXhA+G/qRgjN5V4lc890dIqKo0UVjknhWzCnLKtkx2adT?=
- =?us-ascii?Q?Uw=3D=3D?=
+	=?us-ascii?Q?lmvg3DWnvdsfHgLi6V9UeLRVYgSXyI3oZ5bRBo9jdZtiUtDpnQDcd1M/+VPm?=
+ =?us-ascii?Q?xPLMKwO4qtQo5SfQoxVlf2XaEpE99OYzQI6lGpSjo9Qc937ZLWa58SZ63Ra5?=
+ =?us-ascii?Q?DPeq2EcWnEyFopGVNyGq1aMdBYMqyhTVbsJXs3vUbjh3R7IocmFxESMn68Ug?=
+ =?us-ascii?Q?x1EgtYYq3xX53MPz30l7DlL2aWV+7oU2i/TqJupXr/2QUzN678uTcIwXv6wB?=
+ =?us-ascii?Q?UiE4igpakIUR6l3U+xgfKhoWda/V2FHkXoqhEh0VKpxKqkUbf4lKeDwaxbHm?=
+ =?us-ascii?Q?OcN9NyMGNlMqN7Ve5OfzCdCPxa+lFUi+7pcNnRF3NOvyjvD4VztnE3TPwtA/?=
+ =?us-ascii?Q?tXnifi5x0Fgh+mtbP1OpCc4zPyU6e7/aqANOf79K5rh816CKH6Ii1Wn81689?=
+ =?us-ascii?Q?V4x31k2Dzc4YXSoPpf5G/Q9IewO0nDUExGTvVObmsvuCIPCI4ZsU5WUkPqTy?=
+ =?us-ascii?Q?Lx16gzyY6+K5o0jF9cgvhJj+B6hsP9FQLHKq/q4v1LwCfccD5H11jzb8rIYh?=
+ =?us-ascii?Q?o3Fjz+Ep4OjtDC8W0oFNO7Y+5NnlpLNQxwDdW7nkiWx95pOc75F+7F3Q5ZJy?=
+ =?us-ascii?Q?s8HFYLBjsiF59P1zNUvojFTgG42Sk8UAew1CmSOm6F6wbgIm982G7fIOlUyy?=
+ =?us-ascii?Q?DkVxml2eg87XzmsMNEZMxagoUBTQZQliQjFgJMV9DubE4Yl41ANVjA/utKkz?=
+ =?us-ascii?Q?MRcjfYx9NgpSbjrJ7v2LyqnShUrUlj3VbOQvBT/e/p0h7LZkbv9Uyc0wnqyh?=
+ =?us-ascii?Q?sEmUanXgjLg+kRr27U82hjxgtk0dHzPQdEkN7vH3jYU44EDmjTKywlFAYMLF?=
+ =?us-ascii?Q?JUmU6CAGRWbe0NehaUuu7y6InCzIaAgaKi7gammCYYl7bfdpZQKUgls4N3Bd?=
+ =?us-ascii?Q?CUM3MNpPPWwhqG5+9pcYaF2JoGfzjfwP2txhtkj1+2c99zQzneO2Tn8kSkec?=
+ =?us-ascii?Q?KpurPmvGxOrk7rm4owY1D2MdAfcpeGjCh8QJY6znJ2/DCM0qk0UYBntogKWu?=
+ =?us-ascii?Q?eg6X+xujnkLUJoFwW6HcPZmRBz6PRSDSOo6iThpo7wC5aTsDOzgEV/hdP9MS?=
+ =?us-ascii?Q?0FcWoKrrg1p5RgjZpMdtyM1jO0glKiq8wFAHz8f6HJRZcmq2E8UpOMivFu60?=
+ =?us-ascii?Q?OQ4ZqDd4sW+lrlvfPtE+4junyxY7DXIoJ0yDcVtfrJwVD4O5bUQIGOD1Es+/?=
+ =?us-ascii?Q?Sv1Y15WeMRYX/qjUcDkeQnxa0Pb5lDHqn76j6PmylXWYLL99fM7Ti7/qv6+E?=
+ =?us-ascii?Q?nU5lJp5GC3UtQorbaB1VflkstdUXmBTj5wZQgkmamN2usqnjDRnjQsAlBIi0?=
+ =?us-ascii?Q?+DiJW+MaTZY5Mv6HMDyqLXZWlgE5x2X8LVG7wrPjJJj6tI69EKRaG4mEunCo?=
+ =?us-ascii?Q?6SaFqv3ELRQkxM8kvIqV83m7y6semRONag3d8qn5GNvibvVQvj8rh4Ml9BtM?=
+ =?us-ascii?Q?/QaR3gKIdNsm8ajc8OczTf8I8hAyyDibjiN8S4KF+x0liFo76YdS7L28rp7b?=
+ =?us-ascii?Q?Y7aYCFIRMFrh/TpbTz9YPwgPxU1yw5wbSAr8c1SHBrXWUB5VKaB3ggxTIqFJ?=
+ =?us-ascii?Q?Gxf0gLWVmA7RxeC7di6gVDAazRL9J8aJfWQqm4pUvLR/lHqJlZXsi1Ii0/uZ?=
+ =?us-ascii?Q?qg=3D=3D?=
 X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: 60062349-66a6-43b6-3e6c-08dd66e1ecd0
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfae93fe-26f9-4527-8f22-08dd66e1f2ab
 X-MS-Exchange-CrossTenant-AuthSource: DB7PR10MB2475.EURPRD10.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 12:31:08.4421
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 12:31:18.3818
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: d350cf71-778d-4780-88f5-071a4cb1ed61
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OMPo9r9VZtxL3ZS2jXWRCufiWfgxi8+7Pyb0Dn9SnDPWxJtwkaYrzxgBwFl24+AtTp6Jq1I5JfaHBSKC2DLokj47IW/e4h0Fbo5uzRu4f9M=
+X-MS-Exchange-CrossTenant-UserPrincipalName: BgzhPzIzDRNsV2U3FWwbqfArLHRPJYUTzgmRlDwZroD9BA78eHwJMN7KaDB3C/NTB1rO8gk0bOrCxZPBq64AUyFJPyqac6uVOptMeGNmrY4=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAWPR10MB6856
 
-These are only used in and relevant to the SPI backend.
+The implementation is rather straight-forward, following section
+3.5.3 (MIIM interface in slave mode) in the data sheet for the
+vsc7514.
+
+Since each register access requires multiple MDIO accesses, keep the
+parent mii_bus locked for the whole read/write in order that accesses
+by different sub-devices do not end up corrupting each other. Since
+the MFD among other things exposes an mdio bus to the switch's
+internal PHYs, use MDIO_MUTEX_NESTED.
+
+Looking through the data sheets of all of VSC7511, VSC7512, VSC7513,
+VSC7514, I haven't seen any indication that they can be controlled
+over I2C, so drop that mention from the Kconfig help text and add MDIO
+in its place.
 
 Signed-off-by: Rasmus Villemoes <ravi@prevas.dk>
 ---
- drivers/mfd/ocelot-spi.c | 9 +++++++++
- drivers/mfd/ocelot.h     | 9 ---------
- 2 files changed, 9 insertions(+), 9 deletions(-)
+ drivers/mfd/Kconfig       |   3 +-
+ drivers/mfd/Makefile      |   2 +-
+ drivers/mfd/ocelot-mdio.c | 161 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 164 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/mfd/ocelot-mdio.c
 
-diff --git a/drivers/mfd/ocelot-spi.c b/drivers/mfd/ocelot-spi.c
-index a320a613d00e1..97e4061e3dff7 100644
---- a/drivers/mfd/ocelot-spi.c
-+++ b/drivers/mfd/ocelot-spi.c
-@@ -41,6 +41,15 @@
- #define VSC7512_CHIP_REGS_RES_START	0x71070000
- #define VSC7512_CHIP_REGS_RES_SIZE	0x14
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 4dc894061b62e..c062563794d9e 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -1048,6 +1048,7 @@ config MFD_MENF21BMC
+ config MFD_OCELOT
+ 	tristate "Microsemi Ocelot External Control Support"
+ 	depends on SPI_MASTER
++	select PHYLIB
+ 	select MFD_CORE
+ 	select REGMAP
+ 	help
+@@ -1056,7 +1057,7 @@ config MFD_OCELOT
+ 	  other functions, including pinctrl, MDIO, and communication with
+ 	  external chips. While some chips have an internal processor capable of
+ 	  running an OS, others don't. All chips can be controlled externally
+-	  through different interfaces, including SPI, I2C, and PCIe.
++	  through different interfaces, including SPI, MDIO, and PCIe.
  
-+#define OCELOT_SPI_BYTE_ORDER_LE 0x00000000
-+#define OCELOT_SPI_BYTE_ORDER_BE 0x81818181
-+
-+#ifdef __LITTLE_ENDIAN
-+#define OCELOT_SPI_BYTE_ORDER OCELOT_SPI_BYTE_ORDER_LE
-+#else
-+#define OCELOT_SPI_BYTE_ORDER OCELOT_SPI_BYTE_ORDER_BE
-+#endif
-+
- static const struct resource vsc7512_dev_cpuorg_resource =
- 	DEFINE_RES_REG_NAMED(VSC7512_DEVCPU_ORG_RES_START,
- 			     VSC7512_DEVCPU_ORG_RES_SIZE,
-diff --git a/drivers/mfd/ocelot.h b/drivers/mfd/ocelot.h
-index 4305e7a55cb1a..4f602611a5a86 100644
---- a/drivers/mfd/ocelot.h
-+++ b/drivers/mfd/ocelot.h
-@@ -35,13 +35,4 @@ struct ocelot_ddata {
- int ocelot_chip_reset(struct device *dev);
- int ocelot_core_init(struct device *dev);
+ 	  Say yes here to add support for Ocelot chips (VSC7511, VSC7512,
+ 	  VSC7513, VSC7514) controlled externally.
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 9220eaf7cf125..fc675ddd59f17 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -123,7 +123,7 @@ obj-$(CONFIG_MFD_MC13XXX_I2C)	+= mc13xxx-i2c.o
  
--#define OCELOT_SPI_BYTE_ORDER_LE 0x00000000
--#define OCELOT_SPI_BYTE_ORDER_BE 0x81818181
--
--#ifdef __LITTLE_ENDIAN
--#define OCELOT_SPI_BYTE_ORDER OCELOT_SPI_BYTE_ORDER_LE
--#else
--#define OCELOT_SPI_BYTE_ORDER OCELOT_SPI_BYTE_ORDER_BE
--#endif
--
- #endif
+ obj-$(CONFIG_MFD_CORE)		+= mfd-core.o
+ 
+-ocelot-soc-objs			:= ocelot-core.o ocelot-spi.o
++ocelot-soc-objs			:= ocelot-core.o ocelot-spi.o ocelot-mdio.o
+ obj-$(CONFIG_MFD_OCELOT)	+= ocelot-soc.o
+ 
+ obj-$(CONFIG_EZX_PCAP)		+= ezx-pcap.o
+diff --git a/drivers/mfd/ocelot-mdio.c b/drivers/mfd/ocelot-mdio.c
+new file mode 100644
+index 0000000000000..7ac232a1ad6ad
+--- /dev/null
++++ b/drivers/mfd/ocelot-mdio.c
+@@ -0,0 +1,161 @@
++// SPDX-License-Identifier: (GPL-2.0 OR MIT)
++/*
++ * MIIM core driver for the Ocelot chip family.
++ */
++
++/*
++ * Each register access requires multiple MDIO accesses.
++ */
++
++#include <linux/device.h>
++#include <linux/mdio.h>
++#include <linux/phy.h>
++#include <linux/regmap.h>
++
++#include "ocelot.h"
++
++#define ADDR_REG0 0
++#define ADDR_REG1 1
++#define DATA_REG0 2
++#define DATA_REG1 3
++
++static int
++ocelot_mdio_write_addr(struct mdio_device *mdiodev, unsigned int addr)
++{
++	int ret;
++
++	addr &= 0x00ffffff;
++	addr >>= 2;
++
++	ret = __mdiodev_write(mdiodev, ADDR_REG0, addr & 0xffff);
++	if (ret)
++		return ret;
++
++	return __mdiodev_write(mdiodev, ADDR_REG1, addr >> 16);
++}
++
++static int
++__ocelot_mdio_write(void *context, unsigned int reg, unsigned int val)
++{
++	struct mdio_device *mdiodev = context;
++	int ret;
++
++	ret = ocelot_mdio_write_addr(mdiodev, reg);
++	if (ret)
++		return ret;
++
++	ret = __mdiodev_write(mdiodev, DATA_REG0, val & 0xffff);
++	if (ret)
++		return ret;
++
++	return __mdiodev_write(mdiodev, DATA_REG1, val >> 16);
++}
++
++static int
++__ocelot_mdio_read(struct mdio_device *mdiodev, unsigned int reg, unsigned int *val)
++{
++	int ret, lo, hi, i;
++
++	ret = ocelot_mdio_write_addr(mdiodev, reg);
++	if (ret)
++		return ret;
++
++	/*
++	 * The data registers must be read twice. Only after the first
++	 * read is the value of the register whose address was written
++	 * into the address registers latched into the data registers.
++	 */
++	for (i = 0; i < 2; ++i) {
++		lo = __mdiodev_read(mdiodev, DATA_REG0);
++		if (lo < 0)
++			return lo;
++		hi = __mdiodev_read(mdiodev, DATA_REG1);
++		if (hi < 0)
++			return hi;
++	}
++
++	*val = (hi << 16) | (lo & 0xffff);
++
++	return 0;
++}
++
++static int
++ocelot_mdio_write(void *context, unsigned int reg, unsigned int val)
++{
++	struct mdio_device *mdiodev = context;
++	int ret;
++
++	mutex_lock_nested(&mdiodev->bus->mdio_lock, MDIO_MUTEX_NESTED);
++	ret = __ocelot_mdio_write(mdiodev, reg, val);
++	mutex_unlock(&mdiodev->bus->mdio_lock);
++
++	return ret;
++}
++
++static int
++ocelot_mdio_read(void *context, unsigned int reg, unsigned int *val)
++{
++	struct mdio_device *mdiodev = context;
++	int ret;
++
++	mutex_lock_nested(&mdiodev->bus->mdio_lock, MDIO_MUTEX_NESTED);
++	ret = __ocelot_mdio_read(mdiodev, reg, val);
++	mutex_unlock(&mdiodev->bus->mdio_lock);
++
++	return ret;
++}
++
++static const struct regmap_bus ocelot_mdio_regmap_bus = {
++	.reg_write = ocelot_mdio_write,
++	.reg_read = ocelot_mdio_read,
++};
++
++static struct regmap *ocelot_mdio_init_regmap(struct device *dev, const struct resource *res)
++{
++	struct mdio_device *mdiodev = to_mdio_device(dev);
++	struct regmap_config regmap_config = {};
++
++	regmap_config.reg_bits = 32;
++	regmap_config.reg_stride = 4;
++	regmap_config.val_bits = 32;
++	regmap_config.name = res->name;
++	regmap_config.max_register = resource_size(res) - 1;
++	regmap_config.reg_base = res->start;
++
++	return devm_regmap_init(dev, &ocelot_mdio_regmap_bus, mdiodev, &regmap_config);
++}
++
++static int ocelot_mdio_probe(struct mdio_device *mdiodev)
++{
++	struct device *dev = &mdiodev->dev;
++	struct ocelot_ddata *ddata;
++
++	ddata = devm_kzalloc(dev, sizeof(*ddata), GFP_KERNEL);
++	if (!ddata)
++		return -ENOMEM;
++
++	dev_set_drvdata(dev, ddata);
++	ddata->init_regmap = ocelot_mdio_init_regmap;
++
++	return ocelot_core_init(dev);
++}
++
++static const struct of_device_id ocelot_mdio_of_match[] = {
++	{ .compatible = "mscc,vsc7512" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, ocelot_mdio_of_match);
++
++static struct mdio_driver ocelot_mdio_driver = {
++	.probe = ocelot_mdio_probe,
++	.mdiodrv.driver = {
++		.name = "ocelot-soc",
++		.of_match_table = ocelot_mdio_of_match,
++	},
++};
++mdio_module_driver(ocelot_mdio_driver);
++
++MODULE_DESCRIPTION("MDIO Controlled Ocelot Chip Driver");
++MODULE_AUTHOR("Rasmus Villemoes <ravi@prevas.dk>");
++MODULE_LICENSE("Dual MIT/GPL");
++MODULE_IMPORT_NS("MFD_OCELOT");
 -- 
 2.49.0
 
