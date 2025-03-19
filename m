@@ -1,194 +1,172 @@
-Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4CE25334D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
+Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 944B8202C5C;
+	Wed, 19 Mar 2025 09:56:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742378127; cv=none; b=ECdAMwUWDTC9kp0O7eRZDKXQPw+jAxRsseqNlGPYJOw5DFHI4YUKM+Yx+XgYxWm1SqdQKW5WEo02ArpWm6ymOx52dPo44qCqtmlM6Fx4O0iPe13l6AtwhpLDDKazbqftHM9oYPD+fLVwpmT4YmSiUC6l2TLdvuWQn6AY+9x3TkA=
+	t=1742378202; cv=none; b=pHJ2T++S6LyHJz4Hew5sFm6a2ZRRuZzK7wMSNrxEP/uBjG/rqXXBNAXA1sAcEyZnL1DWLcRLQvJWtdou56Q29mS+wPMa1FqfxcjR/WCaqVKTgkNkBTayKQ1SassFjiTbXvCBY2p5vsPewT+47GeCykoRAlVwDX8qVV3NSV9b8qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742378127; c=relaxed/simple;
-	bh=6FZbkPbJ4ePzVYffL8C72QoqEF4QNnnpsp/H5EN0vjY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KBTTbZRojdV+N8j7bBj3LozCvx/Ps/0iGzMsDZWpAPw0GTYGM1pr6hH/VsnuaVkhNay5TyS1m7IFTn24GmjSo/V13IeuU+JVT/u4sZyvWHVmY9Yeg+imhLkeVPHB8SBCyWCKNPJit5793Obeq0Z4BAqz1MAVcvb8bGc2oaBygyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VdFreMkE; arc=none smtp.client-ip=209.85.208.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VdFreMkE"
-Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so9449248a12.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:55:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742378124; x=1742982924; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=SS9bYsCvPnvNzgl6SjoiJJxp+SurwbptoCTQawAakoE=;
-        b=VdFreMkEomE2uLx1rBY0W1HLVcs7fMeDtuRkEBp/oByPieYwCsj2k8yIAfYL2goj5t
-         XsNC6LnyqCEfDbTx5ShYd3gsoM24QipYrucmb4t4XkNcgnDvLbQEQDnZk7c8og9S+8Ti
-         kInaf6pbpCLaUvn1fOi3kCrIiBRXk8y8IvzUoX32XH0cS8ejDWA3826RIPU8Bj4YpNSa
-         uU7XtSYXDxB8YjBKFm6m1Vzs78MZPsupMRUzq1krGU6Dw1KOTE5YCAlaKIAeNrOqXjBX
-         17beeLGniLszv0t1c4Xu9tkWCtAn2E9b69tUUuUckzMvIWnBXLG+TmGsQi+KsqQa+nMy
-         +zkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742378124; x=1742982924;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=SS9bYsCvPnvNzgl6SjoiJJxp+SurwbptoCTQawAakoE=;
-        b=ru2NooODT1cGQM6zmG+ioIFml4YPBvrnnuTCIRKWBKRVbpSCPKfPUGLn4BqStWrIhu
-         MAYHj4hDJMHyCtPP9v+Vq+0vhMlR4CeM3mhNcAowR/DFMPXC7FsXABLAlcAxiyxjWZNE
-         C8KLssspIc5kzfwPUvmk0+5iqpspB3GU3t4OQJyw8MNkyeiQRr46mBqCPWpE235tzPR0
-         Rn+xu/G/APC/T8BAEn9JC4d9hUp9bifCF5/RpZqpkScccE5Rwpt50DTIp88z48HZYH/D
-         Lw3TBm0clAlKqIbYSfaQ6097GkZlnBITSEXpcNn6pkKr+Z7H/bARaaYK8oKEqqXRurzt
-         ivFA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNmQ8YhO4ynvTV3FbIQrzOut4ubhoXl2IvcbCAVnGe3+tJL1Y+N3y/KQoHq3mPZ3v4KKcpuOQZ9R/nWWw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxEmpIUf7Anqb1gfaYZvDbdcaFERytFJ1HnvfdQSil7zrVnNmG1
-	/7jT+3FWGjXJsu0RkJhfdGfyDj5s4gsI62AjiQ+5wUGxVnYC+AWCC7mRjM94pJb2VHppNdGTOaB
-	Re+GTz2nLaC5U2gnckNiseWSDHeugu5VEEIRbxw==
-X-Gm-Gg: ASbGncugSpkXV3BNLw1K2JQdSW4gevH04xIi3rCbpTo/5dY+DsPUMHLjltjwoDfAVPO
-	EUgzBUQGk76Tnp7rOML+2/prnu2XoTH04d141xwlqlikaqfT6R+exYQJXBgmtEtCN3czOyfLw30
-	i0RQLuAE7MTwCXWu+x7JkwI/Ex
-X-Google-Smtp-Source: AGHT+IGlnykGkaL97Fkuc2owu+Xvv7k6zuf6QSwsyZERy1qKSF8MYKIwfu/SZaumarcGkF54V9w78hOfZaOCvN2G41E=
-X-Received: by 2002:a05:6402:5112:b0:5e5:e78a:c501 with SMTP id
- 4fb4d7f45d1cf-5eb80cddfedmr1968036a12.13.1742378123691; Wed, 19 Mar 2025
- 02:55:23 -0700 (PDT)
+	s=arc-20240116; t=1742378202; c=relaxed/simple;
+	bh=4sEeMuXL5HIcpxs6iW8rxCZgQ9Iil/jn+d60m+Jgr5c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XAd1woxiBMpLdU0CXbml6kACrNARoFjyLcbKmrJ04ngRg+l1OSg0YK1uZg/uVPYyR/iBQF7N21PeubbCAabYD4GF3wRyLHg5pix7QwtNRxcdE4fSZ8xKQSBKdwhdCbNDC0NjEYMpqiS/Jc5UJIOrtB9U3rb4sp0DSGNOiHIs1CQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-74-67da94d1fc57
+From: Yunjeong Mun <yunjeong.mun@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: kernel_team@skhynix.com,
+	Joshua Hahn <joshua.hahnjy@gmail.com>,
+	harry.yoo@oracle.com,
+	ying.huang@linux.alibaba.com,
+	gregkh@linuxfoundation.org,
+	rakie.kim@sk.com,
+	akpm@linux-foundation.org,
+	rafael@kernel.org,
+	lenb@kernel.org,
+	dan.j.williams@intel.com,
+	Jonathan.Cameron@huawei.com,
+	dave.jiang@intel.com,
+	horen.chuang@linux.dev,
+	hannes@cmpxchg.org,
+	linux-kernel@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-mm@kvack.org,
+	kernel-team@meta.com,
+	Honggyu Kim <honggyu.kim@sk.com>
+Subject: Re: [PATCH 2/2 v6] mm/mempolicy: Don't create weight sysfs for memoryless nodes
+Date: Wed, 19 Mar 2025 18:56:21 +0900
+Message-ID: <20250319095630.1075-1-yunjeong.mun@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z9mNiWm1pNIxiu0t@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318022358.195154-1-wujianyong@hygon.cn> <CAKfTPtA+41UxOi6C2fcgZ1mjaL19rBYi5Kidc6TSYLhNt3u1mw@mail.gmail.com>
- <a056a0ec6a4646fbb4a6e1a30bc2fcab@hygon.cn> <CAKfTPtAZ_unLKjg5rxDOonrRdz3-4fqV6uEyd3eGLT5SFEjdOA@mail.gmail.com>
- <31ff4ffeb1f9448d8044f707f856c046@hygon.cn>
-In-Reply-To: <31ff4ffeb1f9448d8044f707f856c046@hygon.cn>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 19 Mar 2025 10:55:10 +0100
-X-Gm-Features: AQ5f1JpKi8ah0mNnY8rTyumCE03bmHuKDRz4EtEx17RJlgl9BjFZG6rCNSyYC44
-Message-ID: <CAKfTPtAfoMzVSoSRApKsQcKr+QXjwU868ghZ69gimQ2SBr5Bzg@mail.gmail.com>
-Subject: Re: [PATCH] SCHED: scatter nohz idle balance target cpus
-To: Jianyong Wu <wujianyong@hygon.cn>
-Cc: "mingo@redhat.com" <mingo@redhat.com>, "peterz@infradead.org" <peterz@infradead.org>, 
-	"jianyong.wu@outlook.com" <jianyong.wu@outlook.com>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrIIsWRmVeSWpSXmKPExsXC9ZZnoe7FKbfSDebMk7eYs34Nm8X0qRcY
+	LU7cbGSz+Hn3OLtF8+L1bBarN/la3F/2jMXidv85VotVC6+xWRzfOo/dYt9FoIadD9+yWSzf
+	189ocXnXHDaLe2v+s1rM/TKV2WL1mgwHQY/Db94ze+ycdZfdo7vtMrtHy5G3rB6L97xk8ti0
+	qpPNY9OnSeweJ2b8ZvHY+dDSY2HDVGaP/XPXsHucu1jh8fHpLRaPz5vkAviiuGxSUnMyy1KL
+	9O0SuDIWbf/CUvBBsqKr5Qt7A+McoS5GTg4JAROJlSfPMsLYZ+bNZAOx2QQ0JA4eOsncxcjB
+	ISKgKtF2xb2LkYuDWaCNReLmq8Vg9cICERLnHp1mAbFZgGpW9vWA2bwC5hLXlj9ih5ipKdFw
+	6R4TiM0pYCYxvfkt2HwhAR6JVxv2M0LUC0qcnPmEBWQXs4C6xPp5YKcxC8hLNG+dzQyyV0Lg
+	FLvEn0uTmCFmSkocXHGDZQKjwCwk7bMQ2mchaV/AyLyKUSgzryw3MTPHRC+jMi+zQi85P3cT
+	IzAil9X+id7B+OlC8CFGAQ5GJR5eg6Cb6UKsiWXFlbmHGCU4mJVEeN2fXE8X4k1JrKxKLcqP
+	LyrNSS0+xCjNwaIkzmv0rTxFSCA9sSQ1OzW1ILUIJsvEwSnVwKi3Q0NsB3uufm9NkNJ6P462
+	D8aci3sfHdp9ccKLeyEhzc8kPnc2PLiXcWqbkdfst0fXBdzabpi5mEv79LVQL76yf75yVlEN
+	PzuPLtFkVz7d4X3R1sni0Zrddmc6r3tO3CL2NU9uzmzxRbGpM37dWOtRIC6k9PpaeNjXifte
+	nTwoy/fE4du8hrlKLMUZiYZazEXFiQBGu0ERxAIAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsXCNUNWR/filFvpBls7uS3mrF/DZjF96gVG
+	ixM3G9ksft49zm7RvHg9m8XqTb4W95c9Y7H4/Ow1s8Xt/nOsFqsWXmOzOL51HrvFvotAXYfn
+	nmS12PnwLZvF8n39jBaXd81hs7i35j+rxdwvU5ktDl17zmqxek2Gg4jH4TfvmT12zrrL7tHd
+	dpndo+XIW1aPxXteMnlsWtXJ5rHp0yR2jxMzfrN47Hxo6bGwYSqzx/65a9g9zl2s8Pj49BaL
+	x7fbHh6LX3xg8vi8SS5AIIrLJiU1J7MstUjfLoErY9H2LywFHyQrulq+sDcwzhHqYuTkkBAw
+	kTgzbyYbiM0moCFx8NBJ5i5GDg4RAVWJtivuXYxcHMwCbSwSN18tZgSpERaIkDj36DQLiM0C
+	VLOyrwfM5hUwl7i2/BE7xExNiYZL95hAbE4BM4npzW/B5gsJ8Ei82rCfEaJeUOLkzCcsILuY
+	BdQl1s8DO4dZQF6ieets5gmMvLOQVM1CqJqFpGoBI/MqRpHMvLLcxMwcU73i7IzKvMwKveT8
+	3E2MwNhbVvtn4g7GL5fdDzEKcDAq8fAaBN1MF2JNLCuuzD3EKMHBrCTC6/7keroQb0piZVVq
+	UX58UWlOavEhRmkOFiVxXq/w1AQhgfTEktTs1NSC1CKYLBMHp1QDo8jWq51v3DKePTwtOX1x
+	styGi9uY70yJX8L86dr02csV1vx+t+P08oSYZM2o3doh/5nereBd+unyf5vYWtHjCwKf24tc
+	AhqgaZ4/bXKI98pfSZstHWZXxh5m3CZ5jG9NfmQaD+ef4M95zwQ+Waxj8NizNHjm5fjgG7u4
+	Jfy2zZj58efZww+X7ldiKc5INNRiLipOBABZ/3vbuQIAAA==
+X-CFilter-Loop: Reflected
 
-On Wed, 19 Mar 2025 at 10:42, Jianyong Wu <wujianyong@hygon.cn> wrote:
->
->
->
-> > -----Original Message-----
-> > From: Vincent Guittot <vincent.guittot@linaro.org>
-> > Sent: Wednesday, March 19, 2025 5:26 PM
-> > To: Jianyong Wu <wujianyong@hygon.cn>
-> > Cc: mingo@redhat.com; peterz@infradead.org; jianyong.wu@outlook.com;
-> > linux-kernel@vger.kernel.org
-> > Subject: Re: [PATCH] SCHED: scatter nohz idle balance target cpus
-> >
-> > On Wed, 19 Mar 2025 at 10:03, Jianyong Wu <wujianyong@hygon.cn> wrote:
-> > >
-> > >
-> > >
-> > > > -----Original Message-----
-> > > > From: Vincent Guittot <vincent.guittot@linaro.org>
-> > > > Sent: Wednesday, March 19, 2025 4:46 PM
-> > > > To: Jianyong Wu <wujianyong@hygon.cn>
-> > > > Cc: mingo@redhat.com; peterz@infradead.org; jianyong.wu@outlook.com;
-> > > > linux-kernel@vger.kernel.org
-> > > > Subject: Re: [PATCH] SCHED: scatter nohz idle balance target cpus
-> > > >
-> > > > On Tue, 18 Mar 2025 at 03:27, Jianyong Wu <wujianyong@hygon.cn> wrote:
-> > > > >
-> > > > > Currently, cpu selection logic for nohz idle balance lacks history
-> > > > > info that leads to cpu0 is always chosen if it's in nohz cpu mask.
-> > > > > It's not fair fot the tasks reside in numa node0. It's worse in
-> > > > > the machine with large cpu number, nohz idle balance may be very heavy.
-> > > >
-> > > > Could you provide more details about why it's not fair for tasks
-> > > > that reside on numa node 0 ? cpu0 is idle so ilb doesn't steal time to other
-> > tasks.
-> > > >
-> > > > Do you have figures or use cases to highlight this unfairness ?
-> > > >
-> > > [Jianyong Wu]
-> > > Yeah, here is a test case.
-> > > In a system with a large number of CPUs (in my scenario, there are 256 CPUs),
-> > when the entire system is under a low load, if you try to bind two or more CPU -
-> > bound jobs to a single CPU other than CPU0, you'll notice that the softirq
-> > utilization for CPU0 can reach approximately 10%, while it remains negligible for
-> > other CPUs. By checking the /proc/softirqs file, it becomes evident that a
-> > significant number of SCHED softirqs are only executed on CPU0.
-> >
-> > yes, but this 10% of softirq time would have been idle time otherwise so why
-> > should we care ?
-> >
-> [Jianyong Wu]
-> However, this value is proportional to the number of CPUs. In the event that tasks are scheduled to CPU0, delays will occur.
+Hi Gregory, thanks for your kind explanation.
 
-ILB aborts when a task is enqueued on the CPU so the 10% softirq does
-not reflect the delay of an enqueued task.  It would be good to get
-figures about the problem you are trying to solve
+On Tue, 18 Mar 2025 11:13:13 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Tue, Mar 18, 2025 at 08:02:46PM +0900, Honggyu Kim wrote:
+> > 
+> > 
+> > On 3/18/2025 5:02 PM, Yunjeong Mun wrote:
+> > 
+> > Some simple corrections here.  host-bridge{0-3} above aren't detected from CEDT.
+> > The corrected structure is as follows.
+> > 
+> > rootport/
+> > ├── socket0
+> > │   ├── cross-host-bridge0 -> SRAT && CEDT (interleave on) --> NODE 2
+> > │   │   ├── host-bridge0
+> > │   │   │   ├── cxl0 -> CEDT
+>                           node 4
+> > │   │   │   └── cxl1-> CEDT
+>                           node 5
+> > │   │   └── host-bridge1
+> > │   │       ├── cxl2 -> CEDT
+>                           node 6
+> > │   │       └── cxl3 -> CEDT
+>                           node 7
+> > │   └── dram0 -> SRAT ---------------------------------------> NODE 0
+> > └── socket1
+> >      ├── cross-host-bridge1 -> SRAT && CEDT (interleave on)---> NODE 3
+> >      │   ├── host-bridge2
+> >      │   │   ├── cxl4 -> CEDT
+>                            node 8
+> >      │   │   └── cxl5 -> CEDT
+>                            node 9
+> >      │   └── host-bridge3
+> >      │       ├── cxl6 -> CEDT
+>                            node 10
+> >      │       └── cxl7 -> CEDT
+>                            node 11
+> >      └── dram1 -> SRAT ---------------------------------------> NODE 1
+> > 
+> 
+> This is correct and expected.
+> 
+> All of these nodes are "possible" depending on how the user decides to
+> program the CXL decoders and expose memory to the page allocator.
+> 
+> In your /sys/bus/cxl/devices/ you should have something like
+> 
+>   decoder0.0  decoder0.1  decoder0.2   decoder0.3
+>   decoder0.4  decoder0.5  decoder0.6   decoder0.7
+>   decoder0.8  decoder0.9
+> 
 
->
-> > At the opposite, if all your cpus are busy, then cpu0 will do the busy load balance
-> > of parents sched domain level whereas other cpus will not and this time is stolen
-> > to the task running on CPU0 which could be unfair compared to task running on
-> > other CPUS
-> >
-> [Jianyong Wu]
-> Yeah. Do you think this patch can mitigate this?
-> >
-> > > > >
-> > > > > To address this issue, adding a member to "nohz" to indicate who
-> > > > > is chosen last time and choose next for this round of nohz idle balance.
-> > > > >
-> > > > > Signed-off-by: Jianyong Wu <wujianyong@hygon.cn>
-> > > > > ---
-> > > > >  kernel/sched/fair.c | 9 ++++++---
-> > > > >  1 file changed, 6 insertions(+), 3 deletions(-)
-> > > > >
-> > > > > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c index
-> > > > > c798d2795243..ba6930c79e25 100644
-> > > > > --- a/kernel/sched/fair.c
-> > > > > +++ b/kernel/sched/fair.c
-> > > > > @@ -7197,6 +7197,7 @@ static struct {
-> > > > >         atomic_t nr_cpus;
-> > > > >         int has_blocked;                /* Idle CPUS has blocked
-> > load
-> > > > */
-> > > > >         int needs_update;               /* Newly idle CPUs need
-> > their
-> > > > next_balance collated */
-> > > > > +       int last_cpu;                   /* Last cpu chosen to do
-> > nohz
-> > > > idle balance */
-> > > > >         unsigned long next_balance;     /* in jiffy units */
-> > > > >         unsigned long next_blocked;     /* Next update of blocked
-> > load in
-> > > > jiffies */
-> > > > >  } nohz ____cacheline_aligned;
-> > > > > @@ -12266,13 +12267,15 @@ static inline int find_new_ilb(void)
-> > > > >
-> > > > >         hk_mask = housekeeping_cpumask(HK_TYPE_KERNEL_NOISE);
-> > > > >
-> > > > > -       for_each_cpu_and(ilb_cpu, nohz.idle_cpus_mask, hk_mask) {
-> > > > > +       for_each_cpu_wrap(ilb_cpu, nohz.idle_cpus_mask,
-> > > > > + nohz.last_cpu
-> > > > > + + 1) {
-> > > > >
-> > > > > -               if (ilb_cpu == smp_processor_id())
-> > > > > +               if (ilb_cpu == smp_processor_id() ||
-> > > > > + !cpumask_test_cpu(ilb_cpu, hk_mask))
-> > > > >                         continue;
-> > > > >
-> > > > > -               if (idle_cpu(ilb_cpu))
-> > > > > +               if (idle_cpu(ilb_cpu)) {
-> > > > > +                       nohz.last_cpu = ilb_cpu;
-> > > > >                         return ilb_cpu;
-> > > > > +               }
-> > > > >         }
-> > > > >
-> > > > >         return -1;
-> > > > > --
-> > > > > 2.43.0
-> > > > >
+Yes, I can see many decoder#.# files in there, and their devtype values are
+shown below:
+    $ cat /sys/bus/cxl/devices/decoder*/devtype
+    cxl_decoder_root
+    ...
+    cxl_decoder_switch
+    ...
+    cxl_decoder_endpoint
+
+> These are the root decoders that should map up directly with each CEDT
+> CFMWS entry.
+> 
+> 2 of them should have interleave settings.
+> 
+> If you were to then program the endpoint and hostbridge decoders with
+> the matching non-interleave address values from the other CEDT entries,
+> you could bring each individual device online in its own NUMA node.
+> 
+
+I think this means that I can program the endpoint(=cxl_decoder_endpoint)
+to map to the 8 CFMWS, and the hostbridge decoder (=cxl_decoder switch) to map
+to another 2 CFMWS(cross-host bridge).
+
+> Or, you can do what you're doing now, and program the endpoints to map
+> to the 2 cross-host bridge interleave root decoders.
+
+In my understanding, that kind of programming is done at the firmware or BIOS 
+layer, right?
+
+> 
+> So your platform is giving you the option of how to online your devices,
+> and as such it needs to mark nodes as "possible" even if they're unused.
+> 
+
+Thank you for the clear explanation. I now understand why 'possible' has such
+value.
+
+> ~Gregory
+> 
+
+Best regards,
+Yunjeong
