@@ -1,47 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76D51C5F2C;
-	Wed, 19 Mar 2025 14:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C5E01CCB4B;
+	Wed, 19 Mar 2025 14:25:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742394332; cv=none; b=TeLpeJYIUTOzmx7rtdJyNLIAufFAuoTN5bXd85PwmhXnGaxoNNUdIzyGToAbknnYL0VUaKrAUqxEdrcQetLouE2hujkl5ctYceQqBcjYtpgjlBscjC1lcxx1t9yNZoePR5fJAFWBEzQGC0zINppWtD5H9GYCYjO8io+FP/gJPGw=
+	t=1742394335; cv=none; b=b20lTOMAeEeeaap/f4pnpg+mmGzAXehDGiS5QcZS0+4bHseahrHCwno6uIp9cclwGgb3gRnrEJe192pobLM12elTDyGEcFnjfubSkh71Dxn9eH0VSIgrZ3XJWI11SDWqCNP8fDNceelydPRjFXx8vTUkf0rpRaTg8uVAl9JNTOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742394332; c=relaxed/simple;
-	bh=a2iWg/O67JIEPXhrX1uo9DdqqHAnP4v9NGHzDu33uhk=;
+	s=arc-20240116; t=1742394335; c=relaxed/simple;
+	bh=TD42Tf0S1nxyCZtd8qEvFl6ihUI1l3yCTT58YFfzrlU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uhQ7h7QtXwy8KiLECjDn8WL/tjJAMzCunDOBrnrYHggKS/Jim3+QJ4xu+fPg6bA1NRN8HG87hPqoqVOPLCmqfkTsrYzULUVq1J6GsgahUt03kPkxWShCHMrvGFwLTJbWY16ug5dh+5MUYh0a0FBINKgBqCiNIbegHZhHvZoR2dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RcjEQRe0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=WuFmAyUeBJpWkQFUhu1gyZhEjanRs3zBthZg75qkUkSiiPiuEsQKwz+EpE2+msU0rDpJ4d4vSoGaFZdppND1TxJQDpSmdhiMDFI6AY6z27riuMM6TR7rMwxWWPU32Oy2a363FAaJcePtgiCnzkNEgCbb17GU/d5czEkATu5pfwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=u5Enb5L5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RcjEQRe0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72F56C4CEE8;
-	Wed, 19 Mar 2025 14:25:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742394332;
-	bh=a2iWg/O67JIEPXhrX1uo9DdqqHAnP4v9NGHzDu33uhk=;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="u5Enb5L5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A942C4CEEE;
+	Wed, 19 Mar 2025 14:25:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742394334;
+	bh=TD42Tf0S1nxyCZtd8qEvFl6ihUI1l3yCTT58YFfzrlU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RcjEQRe06Veu1SYlHZjFHNTjM3KsNymwigy8U6ZUERiOqz9UBgKGxC3ALrkpohILS
-	 nLI+MBZ4aQjqoNPrdWuvquQvevrd1bb0Za+BYunNb2rFSUvltlE89dWpQwqBZskQN2
-	 VZLdHku1cSYiNXUC+DAXOfCDHfpgHt+Gz5q+91SKTins3oOXsCEYGhlqseG08aw/Nw
-	 9pwDw83p6pJ87EiOphPiRmoJJ8C5eUPU78xblx5u2pY2f25xNdSuZ6OLpB7DbOsikp
-	 LRk9WllhiIHXMEue6tRCUJMiwct/Ua7WbWoxdBXp1umfO99SJhMipjdmtEUj/sUZoX
-	 va9gd0d06GnaA==
-Date: Wed, 19 Mar 2025 15:25:26 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Alexandre Courbot <acourbot@nvidia.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Bjorn Helgaas <bhelgaas@google.com>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] samples: rust: convert PCI rust sample driver to
- use try_access_with()
-Message-ID: <Z9rT1tfR_fAm5vKm@cassiopeiae>
-References: <20250319-try_with-v2-0-822ec63c05fb@nvidia.com>
- <20250319-try_with-v2-2-822ec63c05fb@nvidia.com>
+	b=u5Enb5L58D6VCz3n6wr4WI9SyChZGUB7bz0sKIu241VAf+x57lDhKx/xOB8o0WlOs
+	 3v8ZYbiZQOl65wHMimsW+E3eWsO3FwsA0XVR5Z8k5jQF8JXGrjJKVuujTgIAsc45+V
+	 j99HjkBDxUxz24S6kW+lIYQuc2uFPSlI/QwaykWw=
+Date: Wed, 19 Mar 2025 07:24:15 -0700
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Naman Jain <namjain@linux.microsoft.com>
+Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stephen Hemminger <stephen@networkplumber.org>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
+	Michael Kelley <mhklinux@outlook.com>
+Subject: Re: [PATCH v2] uio_hv_generic: Fix sysfs creation path for ring
+ buffer
+Message-ID: <2025031932-timid-xerox-7f0d@gregkh>
+References: <20250318061558.3294-1-namjain@linux.microsoft.com>
+ <2025031859-overwrite-tidy-f8ef@gregkh>
+ <2b09fa80-7b2f-4eb2-b059-d16d69ee8f0c@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,12 +47,69 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250319-try_with-v2-2-822ec63c05fb@nvidia.com>
+In-Reply-To: <2b09fa80-7b2f-4eb2-b059-d16d69ee8f0c@linux.microsoft.com>
 
-On Wed, Mar 19, 2025 at 11:18:56PM +0900, Alexandre Courbot wrote:
-> This method limits the scope of the revocable guard and is considered
-> safer to use for most cases, so let's showcase it here.
+On Wed, Mar 19, 2025 at 07:05:56PM +0530, Naman Jain wrote:
+> On 3/18/2025 6:58 PM, Greg Kroah-Hartman wrote:
+> > > +/*
+> > > + * hv_create_ring_sysfs - create ring sysfs entry corresponding to ring buffers for a channel
+> > > + */
+> > 
+> > Kerneldoc?
 > 
-> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+> Documentation of the ring sysfs is present here -
+> Documentation/ABI/stable/sysfs-bus-vmbus
+> 
+> What:           /sys/bus/vmbus/devices/<UUID>/channels/<N>/ring
+> Date:           January. 2018
+> KernelVersion:  4.16
+> Contact:        Stephen Hemminger <sthemmin@microsoft.com>
+> Description:    Binary file created by uio_hv_generic for ring buffer
+> Users:          Userspace drivers
+> 
+> I should probably change the description, to reflect that it's visibility is
+> controlled by uio_hv_generic, but it's created by hyperV drivers.
+> 
+> Please correct me if I misunderstood your comment.
 
-Acked-by: Danilo Krummrich <dakr@kernel.org>
+I mean you are adding a comment here that is NOT in the correct
+kerneldoc fomat.
+
+> > > +int hv_create_ring_sysfs(struct vmbus_channel *channel,
+> > > +			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
+> > > +						    struct vm_area_struct *vma))
+> > > +{
+> > > +	struct kobject *kobj = &channel->kobj;
+> > > +
+> > > +	channel->mmap_ring_buffer = hv_mmap_ring_buffer;
+> > > +	channel->ring_sysfs_visible = true;
+> > > +	return sysfs_update_group(kobj, &vmbus_chan_group);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
+> > 
+> > You just raced userspace and created a file without telling it that it
+> > showed up, right?  Something still feels really wrong here.
+> > 
+> > greg k-h
+> 
+> From use-case POV, we needed to have uio_hv_generic control the visibility
+> of this ring sysfs node, because the same device (HV_NIC) is used by either
+> hv_netvsc or uio_hv_generic at any given point of time. We didn't want to
+> expose ring buffer through sysfs when hv_netvsc is using it. That's the
+> reason why uio_hv_generic was creating sysfs in the first place.
+> 
+> DPDK, which uses this ring sysfs, checks for its presence for primary
+> channel but for secondary channels, it additionally does mmap() of this
+> ring. That's where it becomes more important, not to expose ring buffer when
+> uio_hv_generic is not bind to the device.
+> 
+> DPDK runs after uio_hv_generic probe is complete, so I am not sure if this
+> race can happen, in practice. I'll try to gather more information around it.
+
+Please do, and document the heck out of why you are doing it this way
+and why there is no such race or issue, and why no one else should ever
+copy this pattern as an example of what to do for other drivers.
+
+thanks,
+
+greg k-h
