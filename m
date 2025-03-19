@@ -1,60 +1,48 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A69725C71D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:23:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13082255249
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:23:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742386996; cv=none; b=fH8jvUA+jgazIdZBKGr5xEHRrVawxH9dZjPrFgOfAYOEc6R6j+rWlZLiqMVEddBCKjifSy1I9nrXjhIJ5nuJ9oNLh3HUAPLPxcKM+soq9A0JCNYDw+2PN4to1BvgxtV0vIMd4aKd1RybmcYFyKVM6OhxyvtvuWuG5oNxr17Gkpk=
+	t=1742387025; cv=none; b=ajiYcZH1wBlVle1yTKcN+eFwk/EVoMUMBeZaFzvrmK4X5LyDswk8tt36V8g6+hDpl7vT1acD4wCTeUN2LUmLUSC5R8v+Cyl2BFu0KgTaqxuI18+95PQharQYuDf8ux7ULul+Qk2qEAofY009kS88c3eqxyxzjEqNzFC8Rconlyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742386996; c=relaxed/simple;
-	bh=O5fwoGUir2sJrl4CT0DSG4QJbscmWRWltiKSUfcWM6E=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gvpC3i51TeKrXwME+/87yIqFBsLeWdfkaTAASPv87y6bSTzHwa4Kp09JsgFFoh69r9r6TL5nl0/omao708DO5+ukCFrL8EW/sEdWRwQW9l32IOVA/Ek681kcdP/cJyURn5HCZcdteR1BRnwImsKZyMSyLPjfR9goajPh9rSTYHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sdNeHxqm; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EYwMMjii; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742387025; c=relaxed/simple;
+	bh=hNFl32LCeGeA501PNntP8FtpjSqRnIpS4NJTM3v5P28=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=e7yBbCcb0OXAFGZB0eH13jZ7rSbCH5j7Cf1S/fUUc4qNTIBUP6zgM1P9mUqtaT2sZbYefgpfH1mgGwUQ+tf2A9UpGwdjAv47Tdzx96O1AEGduejV0r+VSYNzziM5MwZnAyvJComK+FRsB0woyQhUJD+hqnQHFI6LAF3yscLQHXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScrZ32LJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sdNeHxqm";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EYwMMjii"
-From: "Ahmed S. Darwish" <darwi@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742386993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WsDNajMuLUSUWVFOMt+H94Y8ummXa+oY4OeyGeOksL0=;
-	b=sdNeHxqmxbUBHsS5C2XoDeL8S30ObWA60Q2T/pOVe5mk5H00L30kRMqGPT4z5sMc7yg+d0
-	xlxoBL7qAzHi6WJjKIV570U4c6l9WXWH4Pzz7nHDXd+0WZBD2+RQsgHVIZBBD1jQA9btGi
-	DF83XE8eR4lkBNycQKAEPCpzy+meCTqXzZW2WDzLi17RwRi/yaP5/7xXOBLoUGszAKnlEu
-	hO35b13KeuhJEsvTkgdeRvtOoIHmG78jhHOGYKQfKhoPmuPRrcTV4ZwVW+AbPtusuFaX69
-	DdeYcWZEzf8Kk4m6/9w5CrX9X8H/kn2oEiKHRFENpaJkCth38i6dGlrD/rxTtw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742386993;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=WsDNajMuLUSUWVFOMt+H94Y8ummXa+oY4OeyGeOksL0=;
-	b=EYwMMjiif7RzObqNhX+P4W5FncXRwbkCxbzoXxwuFYjBEqizfg1tIDkzj1vMWT+ekvYwM2
-	1FJckY4UB+7VsFBQ==
-To: Ingo Molnar <mingo@redhat.com>,
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScrZ32LJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 713CCC4CEE9;
+	Wed, 19 Mar 2025 12:23:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742387024;
+	bh=hNFl32LCeGeA501PNntP8FtpjSqRnIpS4NJTM3v5P28=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ScrZ32LJZUhOdZyhp8qOjdoI3eTXhdJ+dz1KpqA8EJDXsRMc/CIPaYi/OsJ42e00o
+	 j2m/H7jqZbgz6DEi1/+ZjJsrcJ2UOgQvQpqZ1nJuvJDcemfRwignNzJpXmycU6lKAV
+	 +lDxlAUNzbv4WsxBms7Agm6wnk9u9cBK/fgw6bN+yVqhNzfUOJ02vi33XdtolXMa/C
+	 o9q5lW5MtvHupf6Aib7Wk2f49EczVkTW7A07Y9QqwgMOnU04YdRfzDKChXXl3Tey8y
+	 3RJHpj+LeL3496JsqYnFUBcnm0yX6xuj0nIf+R5hxnBeqAysKaiPNfuQupMJkf2nOr
+	 XZbnOUQ8IzIaA==
+From: Mike Rapoport <rppt@kernel.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>,
 	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Andrew Cooper <andrew.cooper3@citrix.com>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	Ingo Molnar <mingo@redhat.com>,
+	Mike Rapoport <rppt@kernel.org>,
 	"H. Peter Anvin" <hpa@zytor.com>,
-	John Ogness <john.ogness@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
 	x86@kernel.org,
-	x86-cpuid@lists.linux.dev,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v3 29/29] x86/cacheinfo: Apply maintainer-tip coding style fixes
-Date: Wed, 19 Mar 2025 13:21:37 +0100
-Message-ID: <20250319122137.4004-30-darwi@linutronix.de>
-In-Reply-To: <20250319122137.4004-1-darwi@linutronix.de>
-References: <20250319122137.4004-1-darwi@linutronix.de>
+	kernel test robot <oliver.sang@intel.com>
+Subject: [PATCH] x86/mm: restore early initialization of high_memory for 32-bits
+Date: Wed, 19 Mar 2025 14:23:37 +0200
+Message-ID: <20250319122337.1538924-1-rppt@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -63,434 +51,92 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The x86/cacheinfo code has been heavily refactored and fleshed out at
-parent commits, where any necessary coding style fixes were also done
-in place.
+From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
 
-Apply Documentation/process/maintainer-tip.rst coding style fixes to the
-rest of the code, and align its assignment expressions for readability.
+Kernel test robot reports the following crash on 32-bit system with
+HIGHMEM and DEBUG_VIRTUAL:
 
-Standardize on CPUID(n) when mentioning leaf queries.
+[    0.056128][    T0] kernel BUG at arch/x86/mm/physaddr.c:77!
+PANIC: early exception 0x06 IP 60:c116539d error 0 cr2 0x0
+[    0.056916][    T0] CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-rc4-00010-ga4dbe5c71817 #1
+[    0.057570][    T0] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
+[ 0.058299][ T0] EIP: __phys_addr (arch/x86/mm/physaddr.c:77)
+[ 0.058633][ T0] Code: 00 74 33 89 f0 e8 d3 8b 2e 00 89 c3 0f b6 d0 b8 58 bb 4b c5 31 c9 6a 00 e8 70 f5 15 00 83 c4 04 84 db 74 25 ff 05 78 de 5d c5 <0f> 0b b8 c8 91 ea c4 e8 e7 6e ea ff b8 58 bb 4b c5 31 d2 31 c9 6a
+All code
+[    0.060017][    T0] EAX: 00000000 EBX: c61f7001 ECX: 00000000 EDX: 00000000
+[    0.060519][    T0] ESI: c61f7000 EDI: 061f7000 EBP: c4e31f04 ESP: c61f7000
+[    0.061016][    T0] DS: 007b ES: 007b FS: 0000 GS: 0000 SS: cff4 EFLAGS: 00210002
+[    0.061560][    T0] CR0: 80050033 CR2: 00000000 CR3: 059fc000 CR4: 00000090
+[    0.062060][    T0] Call Trace:
+[ 0.062288][ T0] ? show_regs (arch/x86/kernel/dumpstack.c:478)
+[ 0.062588][ T0] ? early_fixup_exception (arch/x86/include/asm/nospec-branch.h:595)
+[ 0.062968][ T0] ? early_idt_handler_common (arch/x86/kernel/head_32.S:352)
+[ 0.063360][ T0] ? __phys_addr (arch/x86/mm/physaddr.c:77)
+[ 0.063677][ T0] ? one_page_table_init (arch/x86/mm/init_32.c:100)
+[ 0.064037][ T0] ? page_table_range_init (arch/x86/mm/init_32.c:227)
+[ 0.064411][ T0] ? permanent_kmaps_init (include/linux/pgtable.h:191 include/linux/pgtable.h:196 arch/x86/mm/init_32.c:395)
+[ 0.064814][ T0] ? paging_init (arch/x86/mm/init_32.c:677)
+[ 0.065118][ T0] ? native_pagetable_init (arch/x86/mm/init_32.c:481)
+[ 0.065503][ T0] ? setup_arch (arch/x86/kernel/setup.c:1131)
+[ 0.065819][ T0] ? start_kernel (include/linux/jump_label.h:267 init/main.c:920)
+[ 0.066143][ T0] ? i386_start_kernel (arch/x86/kernel/head32.c:79)
+[ 0.066501][ T0] ? startup_32_smp (arch/x86/kernel/head_32.S:292)
 
-Avoid breaking long lines when doing so helps readability.
+The crash happens because commit e120d1bc12da ("arch, mm: set high_memory
+in free_area_init()") moved initialization of high_memory after
+__vmalloc_start_set and with high_memory still set to 0 any address passes
+is_vmalloc_addr() check.
 
-At cacheinfo_amd_init_llc_id(), rename variable 'msb' to 'index_msb' as
-this is how it's called at the rest of cacheinfo.c code.
+Restore early initialization of high_memory on 32-bit systems in
+initmem_init().
 
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+Reported-by: kernel test robot <oliver.sang@intel.com>
+Closes: https://lore.kernel.org/oe-lkp/202503191442.112e954f-lkp@intel.com
+Fixes: e120d1bc12da ("arch, mm: set high_memory in free_area_init()")
+Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 ---
- arch/x86/kernel/cpu/cacheinfo.c | 215 ++++++++++++++++----------------
- 1 file changed, 107 insertions(+), 108 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 71587570705f..cd48d34ac04b 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -1,11 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-- *	Routines to identify caches on Intel CPU.
-+ * x86 CPU caches detection and configuration
-  *
-- *	Changes:
-- *	Venkatesh Pallipadi	: Adding cache identification through cpuid(4)
-- *	Ashok Raj <ashok.raj@intel.com>: Work with CPU hotplug infrastructure.
-- *	Andi Kleen / Andreas Herrmann	: CPUID4 emulation on AMD.
-+ * Previous changes
-+ * - Venkatesh Pallipadi:		Cache identification through CPUID(4)
-+ * - Ashok Raj <ashok.raj@intel.com>:	Work with CPU hotplug infrastructure
-+ * - Andi Kleen / Andreas Herrmann:	CPUID(4) emulation on AMD
-  */
+@Andrew, if it's still possible would be great to fold it into e120d1bc12da
+("arch, mm: set high_memory in free_area_init()").
+
+I think it can be fixed without restoring high_memory initialization in
+initmem_init(), but I didn't want to try anything less straightforward 
+
+
+ arch/x86/mm/init_32.c | 3 +++
+ arch/x86/mm/numa_32.c | 3 +++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 95b2758b4e4d..f69d2436d780 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -626,6 +626,9 @@ void __init initmem_init(void)
+ 		highstart_pfn = max_low_pfn;
+ 	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
+ 		pages_to_mb(highend_pfn - highstart_pfn));
++	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
++#else
++	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
+ #endif
  
- #include <linux/cacheinfo.h>
-@@ -35,37 +35,37 @@ static cpumask_var_t cpu_cacheinfo_mask;
- unsigned int memory_caching_control __ro_after_init;
- 
- enum _cache_type {
--	CTYPE_NULL = 0,
--	CTYPE_DATA = 1,
--	CTYPE_INST = 2,
--	CTYPE_UNIFIED = 3
-+	CTYPE_NULL	= 0,
-+	CTYPE_DATA	= 1,
-+	CTYPE_INST	= 2,
-+	CTYPE_UNIFIED	= 3
- };
- 
- union _cpuid4_leaf_eax {
- 	struct {
--		enum _cache_type	type:5;
--		unsigned int		level:3;
--		unsigned int		is_self_initializing:1;
--		unsigned int		is_fully_associative:1;
--		unsigned int		reserved:4;
--		unsigned int		num_threads_sharing:12;
--		unsigned int		num_cores_on_die:6;
-+		enum _cache_type	type			:5;
-+		unsigned int		level			:3;
-+		unsigned int		is_self_initializing	:1;
-+		unsigned int		is_fully_associative	:1;
-+		unsigned int		reserved		:4;
-+		unsigned int		num_threads_sharing	:12;
-+		unsigned int		num_cores_on_die	:6;
- 	} split;
- 	u32 full;
- };
- 
- union _cpuid4_leaf_ebx {
- 	struct {
--		unsigned int		coherency_line_size:12;
--		unsigned int		physical_line_partition:10;
--		unsigned int		ways_of_associativity:10;
-+		unsigned int		coherency_line_size	:12;
-+		unsigned int		physical_line_partition	:10;
-+		unsigned int		ways_of_associativity	:10;
- 	} split;
- 	u32 full;
- };
- 
- union _cpuid4_leaf_ecx {
- 	struct {
--		unsigned int		number_of_sets:32;
-+		unsigned int		number_of_sets		:32;
- 	} split;
- 	u32 full;
- };
-@@ -93,60 +93,59 @@ static const enum cache_type cache_type_map[] = {
- 
- union l1_cache {
- 	struct {
--		unsigned line_size:8;
--		unsigned lines_per_tag:8;
--		unsigned assoc:8;
--		unsigned size_in_kb:8;
-+		unsigned line_size	:8;
-+		unsigned lines_per_tag	:8;
-+		unsigned assoc		:8;
-+		unsigned size_in_kb	:8;
- 	};
--	unsigned val;
-+	unsigned int val;
- };
- 
- union l2_cache {
- 	struct {
--		unsigned line_size:8;
--		unsigned lines_per_tag:4;
--		unsigned assoc:4;
--		unsigned size_in_kb:16;
-+		unsigned line_size	:8;
-+		unsigned lines_per_tag	:4;
-+		unsigned assoc		:4;
-+		unsigned size_in_kb	:16;
- 	};
--	unsigned val;
-+	unsigned int val;
- };
- 
- union l3_cache {
- 	struct {
--		unsigned line_size:8;
--		unsigned lines_per_tag:4;
--		unsigned assoc:4;
--		unsigned res:2;
--		unsigned size_encoded:14;
-+		unsigned line_size	:8;
-+		unsigned lines_per_tag	:4;
-+		unsigned assoc		:4;
-+		unsigned res		:2;
-+		unsigned size_encoded	:14;
- 	};
--	unsigned val;
-+	unsigned int val;
- };
- 
- static const unsigned short assocs[] = {
--	[1] = 1,
--	[2] = 2,
--	[4] = 4,
--	[6] = 8,
--	[8] = 16,
--	[0xa] = 32,
--	[0xb] = 48,
--	[0xc] = 64,
--	[0xd] = 96,
--	[0xe] = 128,
--	[0xf] = 0xffff /* fully associative - no way to show this currently */
-+	[1]		= 1,
-+	[2]		= 2,
-+	[4]		= 4,
-+	[6]		= 8,
-+	[8]		= 16,
-+	[0xa]		= 32,
-+	[0xb]		= 48,
-+	[0xc]		= 64,
-+	[0xd]		= 96,
-+	[0xe]		= 128,
-+	[0xf]		= 0xffff	/* Fully associative */
- };
- 
- static const unsigned char levels[] = { 1, 1, 2, 3 };
--static const unsigned char types[] = { 1, 2, 3, 3 };
-+static const unsigned char types[]  = { 1, 2, 3, 3 };
- 
- static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
- 			      union _cpuid4_leaf_ebx *ebx, union _cpuid4_leaf_ecx *ecx)
- {
- 	unsigned int dummy, line_size, lines_per_tag, assoc, size_in_kb;
--	union l1_cache l1i, l1d;
-+	union l1_cache l1i, l1d, *l1;
- 	union l2_cache l2;
- 	union l3_cache l3;
--	union l1_cache *l1 = &l1d;
- 
- 	eax->full = 0;
- 	ebx->full = 0;
-@@ -155,6 +154,7 @@ static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
- 	cpuid(0x80000005, &dummy, &dummy, &l1d.val, &l1i.val);
- 	cpuid(0x80000006, &dummy, &dummy, &l2.val, &l3.val);
- 
-+	l1 = &l1d;
- 	switch (index) {
- 	case 1:
- 		l1 = &l1i;
-@@ -162,48 +162,52 @@ static void legacy_amd_cpuid4(int index, union _cpuid4_leaf_eax *eax,
- 	case 0:
- 		if (!l1->val)
- 			return;
--		assoc = assocs[l1->assoc];
--		line_size = l1->line_size;
--		lines_per_tag = l1->lines_per_tag;
--		size_in_kb = l1->size_in_kb;
-+
-+		assoc		= assocs[l1->assoc];
-+		line_size	= l1->line_size;
-+		lines_per_tag	= l1->lines_per_tag;
-+		size_in_kb	= l1->size_in_kb;
- 		break;
- 	case 2:
- 		if (!l2.val)
- 			return;
--		assoc = assocs[l2.assoc];
--		line_size = l2.line_size;
--		lines_per_tag = l2.lines_per_tag;
--		/* cpu_data has errata corrections for K7 applied */
--		size_in_kb = __this_cpu_read(cpu_info.x86_cache_size);
-+
-+		/* Use x86_cache_size as it might have K7 errata fixes */
-+		assoc		= assocs[l2.assoc];
-+		line_size	= l2.line_size;
-+		lines_per_tag	= l2.lines_per_tag;
-+		size_in_kb	= __this_cpu_read(cpu_info.x86_cache_size);
- 		break;
- 	case 3:
- 		if (!l3.val)
- 			return;
--		assoc = assocs[l3.assoc];
--		line_size = l3.line_size;
--		lines_per_tag = l3.lines_per_tag;
--		size_in_kb = l3.size_encoded * 512;
-+
-+		assoc		= assocs[l3.assoc];
-+		line_size	= l3.line_size;
-+		lines_per_tag	= l3.lines_per_tag;
-+		size_in_kb	= l3.size_encoded * 512;
- 		if (boot_cpu_has(X86_FEATURE_AMD_DCM)) {
--			size_in_kb = size_in_kb >> 1;
--			assoc = assoc >> 1;
-+			size_in_kb	= size_in_kb >> 1;
-+			assoc		= assoc >> 1;
- 		}
- 		break;
- 	default:
- 		return;
- 	}
- 
--	eax->split.is_self_initializing = 1;
--	eax->split.type = types[index];
--	eax->split.level = levels[index];
--	eax->split.num_threads_sharing = 0;
--	eax->split.num_cores_on_die = topology_num_cores_per_package();
-+	eax->split.is_self_initializing		= 1;
-+	eax->split.type				= types[index];
-+	eax->split.level			= levels[index];
-+	eax->split.num_threads_sharing		= 0;
-+	eax->split.num_cores_on_die		= topology_num_cores_per_package();
- 
- 	if (assoc == 0xffff)
- 		eax->split.is_fully_associative = 1;
--	ebx->split.coherency_line_size = line_size - 1;
--	ebx->split.ways_of_associativity = assoc - 1;
--	ebx->split.physical_line_partition = lines_per_tag - 1;
--	ecx->split.number_of_sets = (size_in_kb * 1024) / line_size /
-+
-+	ebx->split.coherency_line_size		= line_size - 1;
-+	ebx->split.ways_of_associativity	= assoc - 1;
-+	ebx->split.physical_line_partition	= lines_per_tag - 1;
-+	ecx->split.number_of_sets		= (size_in_kb * 1024) / line_size /
- 		(ebx->split.ways_of_associativity + 1) - 1;
- }
- 
-@@ -262,19 +266,14 @@ static int fill_cpuid4_info(int index, struct _cpuid4_info *id4)
- 
- static int find_num_cache_leaves(struct cpuinfo_x86 *c)
- {
--	unsigned int		eax, ebx, ecx, edx, op;
--	union _cpuid4_leaf_eax	cache_eax;
--	int 			i = -1;
--
--	if (c->x86_vendor == X86_VENDOR_AMD ||
--	    c->x86_vendor == X86_VENDOR_HYGON)
--		op = 0x8000001d;
--	else
--		op = 4;
-+	unsigned int eax, ebx, ecx, edx, op;
-+	union _cpuid4_leaf_eax cache_eax;
-+	int i = -1;
- 
-+	/* Do a CPUID(op) loop to calculate num_cache_leaves */
-+	op = (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON) ? 0x8000001d : 4;
- 	do {
- 		++i;
--		/* Do cpuid(op) loop to find out num_cache_leaves */
- 		cpuid_count(op, i, &eax, &ebx, &ecx, &edx);
- 		cache_eax.full = eax;
- 	} while (cache_eax.split.type != CTYPE_NULL);
-@@ -312,9 +311,9 @@ void cacheinfo_amd_init_llc_id(struct cpuinfo_x86 *c, u16 die_id)
- 			num_sharing_cache = ((eax >> 14) & 0xfff) + 1;
- 
- 		if (num_sharing_cache) {
--			int bits = get_count_order(num_sharing_cache);
-+			int index_msb = get_count_order(num_sharing_cache);
- 
--			c->topo.llc_id = c->topo.apicid >> bits;
-+			c->topo.llc_id = c->topo.apicid >> index_msb;
- 		}
- 	}
- }
-@@ -335,14 +334,10 @@ void init_amd_cacheinfo(struct cpuinfo_x86 *c)
- {
- 	struct cpu_cacheinfo *ci = get_cpu_cacheinfo(c->cpu_index);
- 
--	if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
-+	if (boot_cpu_has(X86_FEATURE_TOPOEXT))
- 		ci->num_leaves = find_num_cache_leaves(c);
--	} else if (c->extended_cpuid_level >= 0x80000006) {
--		if (cpuid_edx(0x80000006) & 0xf000)
--			ci->num_leaves = 4;
--		else
--			ci->num_leaves = 3;
--	}
-+	else if (c->extended_cpuid_level >= 0x80000006)
-+		ci->num_leaves = (cpuid_edx(0x80000006) & 0xf000) ? 4 : 3;
- }
- 
- void init_hygon_cacheinfo(struct cpuinfo_x86 *c)
-@@ -469,6 +464,9 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- 	intel_cacheinfo_0x2(c);
- }
- 
-+/*
-+ * linux/cacheinfo.h shared_cpu_map setup, AMD/Hygon
-+ */
- static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 				    const struct _cpuid4_info *id4)
- {
-@@ -485,12 +483,12 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 			this_cpu_ci = get_cpu_cacheinfo(i);
- 			if (!this_cpu_ci->info_list)
- 				continue;
-+
- 			ci = this_cpu_ci->info_list + index;
- 			for_each_cpu(sibling, cpu_llc_shared_mask(cpu)) {
- 				if (!cpu_online(sibling))
- 					continue;
--				cpumask_set_cpu(sibling,
--						&ci->shared_cpu_map);
-+				cpumask_set_cpu(sibling, &ci->shared_cpu_map);
- 			}
- 		}
- 	} else if (boot_cpu_has(X86_FEATURE_TOPOEXT)) {
-@@ -516,8 +514,7 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 				apicid = cpu_data(sibling).topo.apicid;
- 				if ((apicid < first) || (apicid > last))
- 					continue;
--				cpumask_set_cpu(sibling,
--						&ci->shared_cpu_map);
-+				cpumask_set_cpu(sibling, &ci->shared_cpu_map);
- 			}
- 		}
- 	} else
-@@ -526,17 +523,19 @@ static int __cache_amd_cpumap_setup(unsigned int cpu, int index,
- 	return 1;
- }
- 
-+/*
-+ * linux/cacheinfo.h shared_cpu_map setup, Intel + fallback AMD/Hygon
-+ */
- static void __cache_cpumap_setup(unsigned int cpu, int index,
- 				 const struct _cpuid4_info *id4)
- {
- 	struct cpu_cacheinfo *this_cpu_ci = get_cpu_cacheinfo(cpu);
-+	struct cpuinfo_x86 *c = &cpu_data(cpu);
- 	struct cacheinfo *ci, *sibling_ci;
- 	unsigned long num_threads_sharing;
- 	int index_msb, i;
--	struct cpuinfo_x86 *c = &cpu_data(cpu);
- 
--	if (c->x86_vendor == X86_VENDOR_AMD ||
--	    c->x86_vendor == X86_VENDOR_HYGON) {
-+	if (c->x86_vendor == X86_VENDOR_AMD || c->x86_vendor == X86_VENDOR_HYGON) {
- 		if (__cache_amd_cpumap_setup(cpu, index, id4))
- 			return;
- 	}
-@@ -554,8 +553,10 @@ static void __cache_cpumap_setup(unsigned int cpu, int index,
- 		if (cpu_data(i).topo.apicid >> index_msb == c->topo.apicid >> index_msb) {
- 			struct cpu_cacheinfo *sib_cpu_ci = get_cpu_cacheinfo(i);
- 
-+			/* Skip if itself or no cacheinfo */
- 			if (i == cpu || !sib_cpu_ci->info_list)
--				continue;/* skip if itself or no cacheinfo */
-+				continue;
-+
- 			sibling_ci = sib_cpu_ci->info_list + index;
- 			cpumask_set_cpu(i, &ci->shared_cpu_map);
- 			cpumask_set_cpu(cpu, &sibling_ci->shared_cpu_map);
-@@ -589,7 +590,7 @@ int init_cache_level(unsigned int cpu)
- }
- 
- /*
-- * The max shared threads number comes from CPUID.4:EAX[25-14] with input
-+ * The max shared threads number comes from CPUID(4) EAX[25-14] with input
-  * ECX as cache index. Then right shift apicid by the number's order to get
-  * cache id for this cache node.
-  */
-@@ -626,8 +627,8 @@ int populate_cache_leaves(unsigned int cpu)
- 		ci_info_init(ci++, &id4, nb);
- 		__cache_cpumap_setup(cpu, idx, &id4);
- 	}
--	this_cpu_ci->cpu_map_populated = true;
- 
-+	this_cpu_ci->cpu_map_populated = true;
- 	return 0;
- }
- 
-@@ -659,12 +660,10 @@ void cache_disable(void) __acquires(cache_disable_lock)
- 	unsigned long cr0;
- 
- 	/*
--	 * Note that this is not ideal
--	 * since the cache is only flushed/disabled for this CPU while the
--	 * MTRRs are changed, but changing this requires more invasive
--	 * changes to the way the kernel boots
-+	 * This is not ideal since the cache is only flushed/disabled
-+	 * for this CPU while the MTRRs are changed, but changing this
-+	 * requires more invasive changes to the way the kernel boots.
- 	 */
--
- 	raw_spin_lock(&cache_disable_lock);
- 
- 	/* Enter the no-fill (CD=1, NW=0) cache mode and flush caches. */
+ 	memblock_set_node(0, PHYS_ADDR_MAX, &memblock.memory, 0);
+diff --git a/arch/x86/mm/numa_32.c b/arch/x86/mm/numa_32.c
+index 442ef3facff0..65fda406e6f2 100644
+--- a/arch/x86/mm/numa_32.c
++++ b/arch/x86/mm/numa_32.c
+@@ -41,6 +41,9 @@ void __init initmem_init(void)
+ 		highstart_pfn = max_low_pfn;
+ 	printk(KERN_NOTICE "%ldMB HIGHMEM available.\n",
+ 	       pages_to_mb(highend_pfn - highstart_pfn));
++	high_memory = (void *) __va(highstart_pfn * PAGE_SIZE - 1) + 1;
++#else
++	high_memory = (void *) __va(max_low_pfn * PAGE_SIZE - 1) + 1;
+ #endif
+ 	printk(KERN_NOTICE "%ldMB LOWMEM available.\n",
+ 			pages_to_mb(max_low_pfn));
+
+base-commit: a211c6550efcc87aa2459ca347bda10721c7a46a
 -- 
-2.48.1
+2.47.2
 
