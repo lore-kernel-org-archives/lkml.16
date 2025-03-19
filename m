@@ -1,196 +1,168 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D1508F5A
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96502253F07
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:22:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742379718; cv=none; b=La1kKw5ogsikYbyBf+om+ydGiUnFZE8q2JMcTMRClShFxLHNrnEinXsvwI6JiHwq2R8hvZtLfgB5XuJv2aJtW3DCABW2R1gZDmI824hpg69ISyCGKcBfcQkSdb6JuZ6V232CNi5azHuLbk5Ua7VN36Sq6EYQ6W2ktDJgaGx70oc=
+	t=1742379723; cv=none; b=Z7t1aay0Hi+TCN/OZOQkD2yfu79mm+c272Lx0rD6YJPNtd+V2ODHO6Me5FPOhpNkqOPjGQvQZ0BgjyT+6ZozwqDFQiPZHPFqv+ZM3lbVHGxZjaFfHQEGQUWxvOFh6PbJpEmf4nHBr6gCALny9KICvcneFnRcu6DguJqdTgXgbmo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742379718; c=relaxed/simple;
-	bh=vdBp42KU+xVL9lOmtUOGglOSCQwElRtru87JSPH4UwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=S+rlX4F9xFTFq+vHPNhDddgyu2c+1DgSAIRVin8ucffmdME1D4BhNrHdIIyLIYEIuqg24nHgbIBt5ZW//Uo5HT7YEH/OX9GWd6Z9umseuRIB8zM7AGHHgdUyMoBoIVv3Qx0SoTnycDrXWpq3LFgAE7zxt+sAIJhmwONggbQdIH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=HD0YSCxb; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742379723; c=relaxed/simple;
+	bh=LAMhHX/286y3/HXXVcKrs+SLYXTmuluHXWt2q4eZ26Y=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OFaG3J3N9VX9GUPm3hs2N8TuTYai1zRUII4CNEAukh1LT3PEb2tvf+hRvkvlysBJzQKeI6cO49daYLWi8LVXctcpvkdzW3+FCEwg+GhIoBVPoBnCer+O5WpUJpzNjM5gBIYl5eX3RcXCv3oD5gQeSs4vALJIVYFN05WfwapUSS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ogfrWQGk; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="HD0YSCxb"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J4lxG6019760
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:21:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=SXb6GCSHn6NIJ/A3PEZrRmG6
-	bR5GGAFqRBpO3/iDlR8=; b=HD0YSCxb2GY7kIUPmugZugq1hkOOCaQLyFJhsNME
-	e8JM7PodWZv1h6VqX2dcD33aBIL4F3ML1f+D4Jhlxql7tnYY3GF20P0wQScN1PFV
-	iLRH27Xx3mrD5gbTJQVhcy62r5g68r8VgcjYD66tkE+3bYYtBkhA1iGdc2AkR3yP
-	1laaFoLMSOrqd8K9PEVLcpZhBEUCq6eaUb45uQ9x2s2Nx4M8u+gTCHppD47M1kyr
-	C4XTzq8WbTiBc5+cW1WwMYh7v42uctclOKY5GfHH13Ia8hZ0jvxuhaL9clmkWjOd
-	YpBDtpEMd+Zu5LLx065J7SEQfg2t9OIxVifLuDTkUL6dqA==
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45d1uu37ce-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:21:55 +0000 (GMT)
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-47682f9e7b9so113380801cf.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 03:21:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ogfrWQGk"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so20516735e9.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 03:22:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742379720; x=1742984520; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PPFvbCwo+PRCHaD6jfdENXZY2EG3HCcoClKlZq94Cy8=;
+        b=ogfrWQGkDofFk8lSIBf8lOrvjoZ88sBahQdwg50NyY0mltPfy2bdwqCr14HMIC3dCo
+         ZY8axDh7Az/CrDmClzPwlvYr+ObWROnu8UuqrTej+eeHGVS3Ng6oWKUyX+t0sgWOJLLU
+         oaof5fW2GIaA+OG3xTTKl25P8VFjjRrKuF6euUyTE32+jmTvaCtDq0c3bA6mrx6ryESZ
+         1TS/XlaAOPxF4ISzfWYYWJyQDZR6LabJtpHTiB3i9c5CIHhz8IBELA9N3Asp58e1ZY8f
+         rMH07DBqKqzWOe1yy4GIFI44OfeMr+BMjKIF0TJn6ies/OZLB6Yo8r5OnSaQ75UlAZzk
+         CAeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742379715; x=1742984515;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SXb6GCSHn6NIJ/A3PEZrRmG6bR5GGAFqRBpO3/iDlR8=;
-        b=MRbQpaFpLROWleiPG+zr9+Dv0DmFwUlp/5+WOoG5F1Jo8Au2l81errxjjUGRPYR+Z+
-         S6qOFQv913qjPVaEsGt3jXzk53ILhe3Fj+FFR00mj4M974CfZXe0zoPnrp+HeTo/oJnc
-         KogdUr7UjLAGJ97RvDsKRlP5Gvuv5MJ/1ADAl4UO2XpD3QHOxwrrTI2n6rua+TNoPi0w
-         zeogsrT8at0HwL4PLkddfAyGhTSD79h3Ef8Wi+XRLry7/oIGKCG7YpHdRGF4t5mI33Xi
-         DRgFNwToTW0MTq/hrE2hhyXOw0NSTaQbGDD261WH7c03C7CzKgcHaahM4iu5GegUbIJL
-         EK3Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWU0Lgw3SLpz5skaBsqlahBK9ysqyd2GMUkEStmUZVin++BE8hYdOtgX0e+ZCdSRTFk0v35m6hiO+gY2JE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDZhRy8fG7b40riBOIJH7CrzK+wOMNUFvzTz4lk/dAXZNS+z+k
-	2sfcGVHUQiE5EYnc2a2zznLBzaLpQti+ODwOXnaVP2rq3npSBAEo6ynGkewucUYLcUzPtjjdjxc
-	7Tuq7Ejdtd5KcwACFviSFfveisJ3FlvbFmbRSw3KJiry4rj4yqM8O8yGDa4ynnSM=
-X-Gm-Gg: ASbGncucwd0qVepRhcadCnCE5IwHfd5IoMz7nA3mBZmejjYChgcIU6Zr4hVsdXQ6Bjd
-	LbjjVBFdFihoL+wbEDJ4Nb/7eE0+Hjuhsj8OPbj8Ttpl5C/uYiyJRya6pq0oKvMcgtcoanSY6Kx
-	tREBUsYOfs05ql1g/DGCkF0nJfgJ7ym6z0apTEph8jvfpmdGepfOR1G9GLHy/WQ+8Qjfi6/DTT4
-	0MocTAluyZSc2WygzNrxn7cwgbJPnxkjbJw9gdBEFp4ypDDpojK8YRF/ScfZTYWb5Ds4H+/F4l9
-	HTXcLywm2J+lltxlXvAHhCZsrIGsbgHsjcYticSQVL8Iziw9X415gC1k0mTDgaQ9dU3Vgto+lrF
-	mOhY=
-X-Received: by 2002:a05:622a:5c93:b0:476:6a3d:de2e with SMTP id d75a77b69052e-477083333f6mr37440811cf.14.1742379715138;
-        Wed, 19 Mar 2025 03:21:55 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGU7oer480oyupxz0AqS/yum3pFWtzjAvJwW2neq+hJ7os5A2Zxq1giCSqQVIaJBMUAxSTs/Q==
-X-Received: by 2002:a05:622a:5c93:b0:476:6a3d:de2e with SMTP id d75a77b69052e-477083333f6mr37440261cf.14.1742379714636;
-        Wed, 19 Mar 2025 03:21:54 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba7a8b11sm1959902e87.30.2025.03.19.03.21.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 03:21:53 -0700 (PDT)
-Date: Wed, 19 Mar 2025 12:21:52 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-Cc: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        cros-qcom-dts-watchers@chromium.org, Jingoo Han <jingoohan1@gmail.com>,
-        Bartosz Golaszewski <brgl@bgdev.pl>, quic_vbadigan@quicnic.com,
-        amitk@kernel.org, dmitry.baryshkov@linaro.org,
-        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        jorge.ramirez@oss.qualcomm.com
-Subject: Re: [PATCH v4 02/10] arm64: dts: qcom: qcs6490-rb3gen2: Add TC956x
- PCIe switch node
-Message-ID: <xkjozxbchqi6mhstqctejfk7vmwux4kdff2nyrcu5nxqzxv73z@agb7rbapsvx2>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
- <kao2wccsiflgrvq7vj22cffbxeessfz5lc2o2hml54kfuv2mpn@2bf2qkdozzjq>
- <8a2bce29-95dc-53b0-0516-25a380d94532@oss.qualcomm.com>
- <CAO9ioeW6-KgRmFO93Ouhyx9uQcdaPoX3=mjpz_2SPHKiHh3RkQ@mail.gmail.com>
- <16a9ff11-70dc-22e9-bd3c-ed10bf8b4fea@quicinc.com>
- <hkm76yogjp6fjrldkyatekhg7orcd6wkc43d2e7cwzqfrdxjwh@b4f2rilmf6gh>
- <303194d4-d342-ea4c-0bb6-5f5d0297ba23@quicinc.com>
+        d=1e100.net; s=20230601; t=1742379720; x=1742984520;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=PPFvbCwo+PRCHaD6jfdENXZY2EG3HCcoClKlZq94Cy8=;
+        b=KITfT/MaS3V8H9JACjVb0iaqskAEG9j58Bt8037K3bjoUvOUQUya+YujYviKX2nq6t
+         JeooLeoLhun0NXn4MDvZRqoDL6TYuHgdOSZoLxj/GUqmKcSYsZctQ6Vb8YeDFPsMIp+K
+         KjfQGymXSY94v6yy5AZcZyBdyaa9Xu0X/sFL+7q7W+meKhPX71bLvdGE6lX7nV/Wki0O
+         uBqmpw5zdMJpI9fz1vdv38jkhz97GVkECMMT2srr/gZLrqfNh1Mdz8v3NlKABhAFRj44
+         NZE1mFrpYBO+R8alwvCpXll/0xleDW7sLUhCA88H8aU9+TIC4pBXBf7f9wpnMo24EV6G
+         K5LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3JJIy8g02EK/JxUWIIQmrbbuBAKXhFPvqSFIR/hBBKEpIPoIaReI5wBmvVpNZBNcyc64cm6jPi6qxLT0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKWmLbgzj+KGC372B6B1lvFAnmlD979gA7dXtoTFsKmOHyNpzh
+	Yftbwt/yY0aUUwB1QlbOUMcyoIEhlMJeKoymnOktOeVm3cf5gX9y6xxDpQQW2bg=
+X-Gm-Gg: ASbGncv4q2jC6x7ocPXi0E8dPXeWi3vH2zCQ9M2sWqrNpYGmPIhDo6sdgpvfekvfSFa
+	01uXtnQaoMVl2J6AD2GR7lxSbHLOYIjus+2DCq54Z6MW9a4ChbzAxOF4IO1gROEGKV5Ih+exJ0k
+	W9q5r1XHpz3Bz/+bIC2d5iJSCtwtaFQVVKUAYyOkX+Y0Zd96c8HMCt4lDKmwANW/PACy+cXWVpT
+	PnuT5iF9T91yvNMm4lBqG+2O5TdoZ/p8ZfdxnIyma2lR/RcpsEaiJtctMh+BIYbOy5QruvALha4
+	FDC/EWE2G4GPg15jevi15Dkdz/39za6bf4K723RqeEpCaK4sJ3Zj2YjySxQuxb1iUFu4FeONetB
+	leppprt+oB2bK1uTgcH3Veg==
+X-Google-Smtp-Source: AGHT+IF7qsUFGh7b/cZ62KfV0CEOIKewRH8TrAKUxQUlzKd+BTZTQCyUCBgYT9vnQFSO9Z26J4XamQ==
+X-Received: by 2002:a05:600c:3b07:b0:43b:cf12:2ca5 with SMTP id 5b1f17b1804b1-43d4378d067mr14030935e9.8.1742379719772;
+        Wed, 19 Mar 2025 03:21:59 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:f407:ab81:b45a:93e8? ([2a01:e0a:3d9:2080:f407:ab81:b45a:93e8])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f33242sm14664945e9.5.2025.03.19.03.21.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 03:21:59 -0700 (PDT)
+Message-ID: <42932860-dd78-4eed-b8ba-6eca1c7099ef@linaro.org>
+Date: Wed, 19 Mar 2025 11:21:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <303194d4-d342-ea4c-0bb6-5f5d0297ba23@quicinc.com>
-X-Authority-Analysis: v=2.4 cv=H8Pbw/Yi c=1 sm=1 tr=0 ts=67da9ac3 cx=c_pps a=JbAStetqSzwMeJznSMzCyw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=A6lhvS5bGOSaI-HtR3sA:9 a=CjuIK1q_8ugA:10
- a=uxP6HrT_eTzRwkO_Te1X:22 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-GUID: Avof9lemnjc_7aYXP5NIoUkWIMQtb6al
-X-Proofpoint-ORIG-GUID: Avof9lemnjc_7aYXP5NIoUkWIMQtb6al
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_03,2025-03-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 priorityscore=1501
- mlxscore=0 suspectscore=0 malwarescore=0 clxscore=1015 impostorscore=0
- phishscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503190071
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH net] wifi: ath12k: properly set single_chip_mlo_supp to
+ true in ath12k_core_alloc()
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Baochen Qiang <quic_bqiang@quicinc.com>,
+ Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson
+ <jjohnson@kernel.org>, Aditya Kumar Singh <quic_adisi@quicinc.com>,
+ linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250303-topic-ath12k-fix-crash-v1-1-f871d4e4d968@linaro.org>
+ <24b2f1f8-97bd-423a-acbd-9a5cd45e4a40@oss.qualcomm.com>
+ <7901d7f0-d6d0-4bf3-89ad-d710e88477b7@linaro.org>
+ <7b4b598f-bc13-aa4b-8677-71477e1f5434@quicinc.com>
+ <a5ebfdfb-107f-407f-b557-522b074c904f@linaro.org>
+ <38cd738c-1a2a-4382-80f8-d57feb7c829d@quicinc.com>
+ <6717d816-02b3-4d27-848b-620398808076@linaro.org>
+ <4pidr33bvbtykyufw35ubfr7mut2ypqmoiydgjlcsyxolqteze@j2xhigdoxqhp>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <4pidr33bvbtykyufw35ubfr7mut2ypqmoiydgjlcsyxolqteze@j2xhigdoxqhp>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 19, 2025 at 03:46:00PM +0530, Krishna Chaitanya Chundru wrote:
+On 19/03/2025 11:18, Dmitry Baryshkov wrote:
+> On Wed, Mar 19, 2025 at 11:00:34AM +0100, neil.armstrong@linaro.org wrote:
+>> Hi,
+>>
+>> On 19/03/2025 10:46, Baochen Qiang wrote:
+>>>
+>>>
+>>> On 3/19/2025 5:12 PM, neil.armstrong@linaro.org wrote:
+>>>> Hi,
+>>>>
+>>>> On 19/03/2025 10:06, Vasanthakumar Thiagarajan wrote:
+>>>>>
+>>>>>
+>>>>> On 3/19/2025 1:34 PM, Neil Armstrong wrote:
+>>>>>> On 18/03/2025 17:35, Jeff Johnson wrote:
+>>>>>>> On 3/3/2025 7:00 AM, Neil Armstrong wrote:
+>>>>>>>> In commit 46d16f7e1d14 ("wifi: ath12k: rename mlo_capable_flags to
+>>>>>>>> single_chip_mlo_supp")
+>>>>>>>> the line:
+>>>>>>>>       ab->mlo_capable_flags = ATH12K_INTRA_DEVICE_MLO_SUPPORT;
+>>>>>>>> was incorrectly updated to:
+>>>>>>>>       ab->single_chip_mlo_supp = false;
+>>>>>>>> leading to always disabling INTRA_DEVICE_MLO even if the device supports it.
+>>>>>>>>
+>>>>>>>> The firmware "WLAN.HMT.1.1.c5-00156-QCAHMTSWPL_V1.0_V2.0_SILICONZ-1"
+>>>>>>>> crashes on driver initialization with:
+>>>>>>>>     ath12k_pci 0000:01:00.0: chip_id 0x2 chip_family 0x4 board_id 0x3d soc_id 0x40170200
+>>>>>>>>     ath12k_pci 0000:01:00.0: fw_version 0x110f009c fw_build_timestamp 2024-05-30 11:35
+>>>>>>>> fw_build_id QC_IMAGE_VERSION_STRING=WLAN.HMT.1.1.c5-00156-
+>>>>>>>> QCAHMTSWPL_V1.0_V2.0_SILICONZ-1
+>>>
+>>> this FW version is not upstream yet, why are you testing with it?
+>>
+>> I was not aware the driver supported only a small subset of firmwares.
 > 
+> Yes, this has been communicated by Kalle (and now by Jeff) for ages:
+> using any firmware outside of linux-firmware is not supported, unless
+> you have been explicitly told to use a particular binary. Firmware
+> coming from the Android / Mobile might use different knobs and have
+> different expectations regarding driver behaviour.
 > 
-> On 3/19/2025 3:43 PM, Dmitry Baryshkov wrote:
-> > On Wed, Mar 19, 2025 at 09:14:22AM +0530, Krishna Chaitanya Chundru wrote:
-> > > 
-> > > 
-> > > On 3/18/2025 10:30 PM, Dmitry Baryshkov wrote:
-> > > > On Tue, 18 Mar 2025 at 18:11, Krishna Chaitanya Chundru
-> > > > <krishna.chundru@oss.qualcomm.com> wrote:
-> > > > > 
-> > > > > 
-> > > > > 
-> > > > > On 3/17/2025 4:57 PM, Dmitry Baryshkov wrote:
-> > > > > > On Tue, Feb 25, 2025 at 03:03:59PM +0530, Krishna Chaitanya Chundru wrote:
-> > > > > > > Add a node for the TC956x PCIe switch, which has three downstream ports.
-> > > > > > > Two embedded Ethernet devices are present on one of the downstream ports.
-> > > > > > > 
-> > > > > > > Power to the TC956x is supplied through two LDO regulators, controlled by
-> > > > > > > two GPIOs, which are added as fixed regulators. Configure the TC956x
-> > > > > > > through I2C.
-> > > > > > > 
-> > > > > > > Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> > > > > > > Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> > > > > > > Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > > ---
-> > > > > > >     arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 116 +++++++++++++++++++++++++++
-> > > > > > >     arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
-> > > > > > >     2 files changed, 117 insertions(+), 1 deletion(-)
-> > > > > > > 
-> > > > > > > @@ -735,6 +760,75 @@ &pcie1_phy {
-> > > > > > >        status = "okay";
-> > > > > > >     };
-> > > > > > > 
-> > > > > > > +&pcie1_port {
-> > > > > > > +    pcie@0,0 {
-> > > > > > > +            compatible = "pci1179,0623", "pciclass,0604";
-> > > > > > > +            reg = <0x10000 0x0 0x0 0x0 0x0>;
-> > > > > > > +            #address-cells = <3>;
-> > > > > > > +            #size-cells = <2>;
-> > > > > > > +
-> > > > > > > +            device_type = "pci";
-> > > > > > > +            ranges;
-> > > > > > > +            bus-range = <0x2 0xff>;
-> > > > > > > +
-> > > > > > > +            vddc-supply = <&vdd_ntn_0p9>;
-> > > > > > > +            vdd18-supply = <&vdd_ntn_1p8>;
-> > > > > > > +            vdd09-supply = <&vdd_ntn_0p9>;
-> > > > > > > +            vddio1-supply = <&vdd_ntn_1p8>;
-> > > > > > > +            vddio2-supply = <&vdd_ntn_1p8>;
-> > > > > > > +            vddio18-supply = <&vdd_ntn_1p8>;
-> > > > > > > +
-> > > > > > > +            i2c-parent = <&i2c0 0x77>;
-> > > > > > > +
-> > > > > > > +            reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
-> > > > > > > +
-> > > > > > 
-> > > > > > I think I've responded here, but I'm not sure where the message went:
-> > > > > > please add pinctrl entry for this pin.
-> > > > > > 
-> > > > > Do we need to also add pinctrl property for this node and refer the
-> > > > > pinctrl entry for this pin?
-> > > > 
-> > > > I think that is what I've asked for, was that not?
-> > > Currently there is no pincntrl property defined for this.
-> > 
-> > Does it need to be defined separately / specially?
-> > 
-> yes we need to define this property now.
 
-Could you please point out existing schema files defining those
-properties?
+The patch remain valid nevertheless, the 46d16f7e1d14 changeset remains
+bogus and needs to be fixed whatever the firmware version or ongoing work
+to fix MLO in the future.
 
--- 
-With best wishes
-Dmitry
+Neil
