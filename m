@@ -1,668 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCC291C6B4
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF4D213DDB9;
+	Wed, 19 Mar 2025 02:38:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742351815; cv=none; b=hgMAFy+dfJTiSlkWmvhevRHknRVYFfrLHw/ajv7XJJnWqA9RMXNdVq/GQXBunYUKTlNRqgiHKJOsGPJ5l7GTuXZq1rTMHgrcKjNsLEy7DmtPQsC/F5CECPoHl1jchFmioPidilrHwZGQFIrJhhzMa4sTgNNBqSWNfmRKwjZrvUw=
+	t=1742351891; cv=none; b=r8qDlI2jU5TJT2x3x0hA1qidxbSfXi3s8secxYKlh6wAYE19vhR/aKQLsiL/k4NaptA5qBkz4IxlSGI+HBki4EjE4e0OuXqVLmxczLBm+w7ol7KbEKmvMzX8J2FIxq09LCvFrVe2pPNQ7XHJbJjXZ6kafvdOneOXCLsindlzSh8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742351815; c=relaxed/simple;
-	bh=kEXakU1jOUBYfeiBBTQcXK+fLEiB+tQuux2yJDLebZ8=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=jgZ8VaW5ZtymAaJy/B4XsEwW7fPDcycaA4HhjObUf34IEWOK/mDOPlTazDgcronbR50Qtn6qr1HUlflX/N1UUlILBfcpZ0SE8+eA9AJX0hg6rNHmkMQ7JjruWrJgHuP+/WwHK/+Sx10ddPrhXLOdwW4OgSb0EnT0/+VlnNzdNUg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uI7btLZ9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742351891; c=relaxed/simple;
+	bh=tUOQuvlno9rHPWwRUOE5YWFNQqJnjUsmpriQGb3JZx4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=I7NdY/ejCuYsDbC+i309s+P/FZqjqqaFehQIDUbTmd6K0FmmIY5dvixaDn0C1kfh+cUZCEoW2EP7zHCXeAHouKbrhHn1bq/idT3O/0MXjA0/cBn7UG73kNs01Jwi7MhjdBEbhIdyXFj3ODws3EAiAl5lOmNmzNAaLFbxtCsZp3s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hq6hSfm7; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uI7btLZ9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66A3EC4CEE3;
-	Wed, 19 Mar 2025 02:36:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742351814;
-	bh=kEXakU1jOUBYfeiBBTQcXK+fLEiB+tQuux2yJDLebZ8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=uI7btLZ96ICoy1q1fTg+/cH8zJY+YJEaCioURRwmmhGN49rUxgLME5wwqS+SNA6Qu
-	 SxLZOL1d9KYNe6pVNKvevIZt/ngEulGyImE5Rzd19N5+CAVq6JXrGir86a2FnMSKFL
-	 Aom02HjqHC0m8jDBkWzfp7EJqM/+I4sLrQrOLpCk8/d6nbz45IDD73jjhfaeIGeVue
-	 ds8JtOOzYhpafY2k16i0gbjn7QJaDOuSG/TCwpuqcZkaPeWiHoya91Dmi3LfP7Lz01
-	 Lafy4Uijd5nb3ayRYfzci9TgwpWRzfwb2gqbJMY6dd7IbvxQdjTuaMoZ+1cnFa4Ohl
-	 XTJbNkg2jhC+Q==
-Date: Wed, 19 Mar 2025 11:36:49 +0900
-From: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-To: Qinxin Xia <xiaqinxin@huawei.com>
-Cc: <yangyicong@huawei.com>, <catalin.marinas@arm.com>, <will@kernel.org>,
- <naveen.n.rao@linux.ibm.com>, <anil.s.keshavamurthy@intel.com>,
- <davem@davemloft.net>, <linuxarm@huawei.com>,
- <linux-kernel@vger.kernel.org>, <fanghao11@huawei.com>,
- <prime.zeng@hisilicon.com>, <xuwei5@huawei.com>,
- <jonathan.cameron@huawei.com>
-Subject: Re: [PATCH v7] arm64: kprobe: Enable OPTPROBE for arm64
-Message-Id: <20250319113649.d2826756bf59d51445ab1630@kernel.org>
-In-Reply-To: <20250216070044.1792872-1-xiaqinxin@huawei.com>
-References: <20250216070044.1792872-1-xiaqinxin@huawei.com>
-X-Mailer: Sylpheed 3.8.0beta1 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hq6hSfm7"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2255003f4c6so113605175ad.0;
+        Tue, 18 Mar 2025 19:38:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742351889; x=1742956689; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5uiqpvRP3XPxWm2NV0PkZWPKnAddXpi1Y8S8sPBln3k=;
+        b=hq6hSfm7Ye8rt2Iu3fFkA4mTVMf/NnJZtHdFYktRRl9Y8vEXu63f3Ot/uhkdbRCBwl
+         QY1IRvpJWP3oV4cFHrj3JDBsU8kjchf9eH6nNpaS7d5N/Bnh1Vc/WiVGNYinqW66rCOk
+         bWnBEBq5nk2qHTXKNfiL4iGR0RbKNGNzUkZPyKSFM66eQe14+YkXS1QvFmv5W/c4CURg
+         PXNrd0MVNpQcvxWXcatlshHNa9yAxpE+Jmb89UV5rFxZACCiOgir/6wA9VC4RdKTEAuQ
+         fYomu0+rhhPocYaTkW0zez0nj1uwl4QfY+NHtcxeqwH1KG9jvozl48Vrp9vM8BKuutpa
+         RFjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742351889; x=1742956689;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to:subject
+         :user-agent:mime-version:date:message-id:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=5uiqpvRP3XPxWm2NV0PkZWPKnAddXpi1Y8S8sPBln3k=;
+        b=d5EmFEXEDX+VwTfOGgXszE+91m3fmpjT3BOky2k+YotZJXCHvVl491dEWHBnTaEgaj
+         uRgnLDkWSKNVxujjYPDTSk21BZkSPycmxzX4cMha0jyH5AqAB/kZvR2rtKzCUz5GhQPV
+         49lXfeh2bscGTkoEr8U7ZANSQHXURNSaFSVnLFrzMNzKTuk8DR4s8ttDLwm9wubPHY2I
+         U6DTuxFkuiC0Ld5868tsr8TqeU60dWG3UL9gCgz797oW83mcWSU1SYK2aqqyUUxbu44b
+         Qb7RjzC3o8PyofSk/OvZsbVveVd/BkFPU6YHrWIioazd5IlGYMTG95TrGGPsS47qnSgd
+         j+fA==
+X-Forwarded-Encrypted: i=1; AJvYcCUTc2FuVGg9a0hAqin9Gr+oPsffHrA1juOGz5k3vB6ccu1ml6cSd94Vy2u4+bLTAnGlXADkNJXKRy4HKu66@vger.kernel.org, AJvYcCWKkRUzcxdbleq4wwXBR94sQ7idkVzAegU8nLo7qKiXUNI3lkc7Dj0sCziCBg4cGpkHmVWc8GwGi4R0@vger.kernel.org, AJvYcCXZzjSXiLP8x0biWDjaMi5cUJGXr7bgS+yS8BSinhagjR5dQYn2TwwQSl91gVrDNF2LkzvOWlwU@vger.kernel.org
+X-Gm-Message-State: AOJu0YzyNitHzODZ2gnlng0SmScRiTGn+Nh55kok+rETn8Hl53icj5E/
+	HeoyyQ+FA8u4hjn0BkJeOnDDjKECc0KOLnGfEI+pWWJK7sKsCMBR
+X-Gm-Gg: ASbGncu77NV/moK9e7L33G7sfAT5SL/T4BAHo6OAqDSafEsNH4iVXvRfSSGfDbW2j+A
+	9JkMs5Pf5p75fevwbkSHwQOP2Z5A9dhcUZNJKyv9lV4F74CDsZlhwvOrvNrJ9TigN7dwiqq6dER
+	d/77uhrssT7VeOkEvhhwUajiolxTp5dZwiPSrOHF+g3uH/HG9Sh5pWLt6fPgRe4LbTeBkCgXU21
+	imnW5jrs8Rbdu0V1S795vvoeWrCMZvHjtO/4zOi4TPKRVtFzOiAvB1yN8EUJKjMNMFW85V53Nrh
+	I+e3nTYlrvXmODlaWH0H9YIpQRHQMrpA7VqIQCXWtW/fxPOsb0QwCLh7Q1MssKPVFg==
+X-Google-Smtp-Source: AGHT+IHKyMKAM+xsXy3cTomkkroHHXDIVIxP3TgfYLDXmikYftTTRgJgKY4wnTP8KzR6XjF6fyhYdw==
+X-Received: by 2002:a17:902:e84e:b0:223:501c:7576 with SMTP id d9443c01a7336-226499248aamr13132675ad.12.1742351888857;
+        Tue, 18 Mar 2025 19:38:08 -0700 (PDT)
+Received: from [10.125.192.74] ([103.165.80.178])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd5a7dsm102526865ad.251.2025.03.18.19.38.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 18 Mar 2025 19:38:08 -0700 (PDT)
+Message-ID: <b8c1a314-13ad-e610-31e4-fa931531aea9@gmail.com>
+Date: Wed, 19 Mar 2025 10:38:01 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+MIME-Version: 1.0
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:102.0)
+ Gecko/20100101 Thunderbird/102.15.0
+Subject: Re: [PATCH 1/2] mm: vmscan: Split proactive reclaim statistics from
+ direct reclaim statistics
+To: =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>
+Cc: hannes@cmpxchg.org, akpm@linux-foundation.org, tj@kernel.org,
+ corbet@lwn.net, mhocko@kernel.org, roman.gushchin@linux.dev,
+ shakeel.butt@linux.dev, muchun.song@linux.dev, cgroups@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+ Hao Jia <jiahao1@lixiang.com>
+References: <20250318075833.90615-1-jiahao.kernel@gmail.com>
+ <20250318075833.90615-2-jiahao.kernel@gmail.com>
+ <qt73bnzu5k7ac4hnom7jwhsd3qsr7otwidu3ptalm66mbnw2kb@2uunju6q2ltn>
+ <f62cb0c2-e2a4-e104-e573-97b179e3fd84@gmail.com>
+ <unm54ivbukzxasmab7u5r5uyn7evvmsmfzsd7zytrdfrgbt6r3@vasumbhdlyhm>
+From: Hao Jia <jiahao.kernel@gmail.com>
+In-Reply-To: <unm54ivbukzxasmab7u5r5uyn7evvmsmfzsd7zytrdfrgbt6r3@vasumbhdlyhm>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi, 
 
-Sorry for replying later.
-For the arm64 assembler part, I would like to have a review
-from the arm64 maintainer if possible.
 
-On Sun, 16 Feb 2025 15:00:44 +0800
-Qinxin Xia <xiaqinxin@huawei.com> wrote:
-
-> This patch introduce optprobe for ARM64. In optprobe, probed
-> instruction is replaced by a branch instruction to trampoline.
+On 2025/3/18 20:59, Michal Koutný wrote:
+> On Tue, Mar 18, 2025 at 08:03:44PM +0800, Hao Jia <jiahao.kernel@gmail.com> wrote:
+>>> How silly is it to have multiple memory.reclaim writers?
+>>> Would it make sense to bind those statistics to each such a write(r)
+>>> instead of the aggregated totals?
+>>
+>>
+>> I'm sorry, I didn't understand what your suggestion was conveying.
 > 
-> Performance of optprobe on Hip08 platform is test using kprobe
-> example module to analyze the latency of a kernel function,
-> and here is the result:
-> 
-> common kprobe:
-> [280709.846380] do_empty returned 0 and took 1530 ns to execute
-> [280709.852057] do_empty returned 0 and took 550 ns to execute
-> [280709.857631] do_empty returned 0 and took 440 ns to execute
-> [280709.863215] do_empty returned 0 and took 380 ns to execute
-> [280709.868787] do_empty returned 0 and took 360 ns to execute
-> [280709.874362] do_empty returned 0 and took 340 ns to execute
-> [280709.879936] do_empty returned 0 and took 320 ns to execute
-> [280709.885505] do_empty returned 0 and took 300 ns to execute
-> [280709.891075] do_empty returned 0 and took 280 ns to execute
-> [280709.896646] do_empty returned 0 and took 290 ns to execute
-> 
-> optprobe:
-> [ 2965.964572] do_empty returned 0 and took 90 ns to execute
-> [ 2965.969952] do_empty returned 0 and took 80 ns to execute
-> [ 2965.975332] do_empty returned 0 and took 70 ns to execute
-> [ 2965.980714] do_empty returned 0 and took 60 ns to execute
-> [ 2965.986128] do_empty returned 0 and took 80 ns to execute
-> [ 2965.991507] do_empty returned 0 and took 70 ns to execute
-> [ 2965.996884] do_empty returned 0 and took 70 ns to execute
-> [ 2966.002262] do_empty returned 0 and took 80 ns to execute
-> [ 2966.007642] do_empty returned 0 and took 70 ns to execute
-> [ 2966.013020] do_empty returned 0 and took 70 ns to execute
-> [ 2966.018400] do_empty returned 0 and took 70 ns to execute
-> 
-> As the result shows, optprobe can greatly reduce the latency. Big
-> latency of common kprobe will significantly impact the real result
-> while doing performance analysis or debugging performance issues
-> in lab, so optprobe is useful in this scenario.
-> 
-> The trampoline design is illustrated in the following diagram.
-> Some commands will be replaced in arch_prepare_optimized_kprobe.
-> +------------------optprobe_template_entry---------------------+
-> |- Saving stacks and registers                                 |
-> |- Loading params for callback                                 |
-> +------------------optprobe_template_common--------------------+
-> |- nop                                                         |
-> |(replaced to the branch jump to optprobe_common)              |
-> |- Restore stacks and registers                                |
-> +-------------optprobe_template_restore_orig_insn--------------+
-> |- nop                                                         |
-> |(replaced to the kprobe->opcode)                              |
-> +----------------optprobe_template_restore_end-----------------+
-> |- nop                                                         |
-> |(replaced to next address of the probe point)                 |
-> +------------------optprobe_template_val-----------------------+
-> |- 0 (two 32-bit words)                                        |
-> |(replaced to params for optprobe_optimized_callback)          |
-> +-----------------optprobe_template_orig_addr------------------+
-> |- 0 (two 32-bit words)                                        |
-> |(replaced to origin probe point address)                      |
-> +-------------------optprobe_template_end----------------------+
-> |- nop                                                         |
-> +--------------------------------------------------------------+
-> 
-> Co-developed-by: Qi Liu <liuqi115@huawei.com>
-> Signed-off-by: Qi Liu <liuqi115@huawei.com>
-> Signed-off-by: Qinxin Xia <xiaqinxin@huawei.com>
-> ---
-> 
-> Changes since V6:
-> - Address the comments from Masami, add design of optprobe trampoline in commit.
-> - Address the comments from Yicong, add nop in optprobe_template_end and move
-> optprobe_optimized_callback from framework to arch.
-> - Link: https://lore.kernel.org/lkml/20250103012753.66988-1-xiaqinxin@huawei.com/
-> 
-> Changes since V5:
-> - Address the comments from Masami, saves stack frames to obtain correct backtrace
-> and make an array of usage flags to manage the reserved OPT_SLOT_SIZE.
-> - Link: https://lore.kernel.org/lkml/20211207124002.59877-1-liuqi115@huawei.com/
-> 
-> Changes since V4:
-> - Address the comments from Masami, update arch_prepare_optimized_kprobe，
-> if the probe address is out of limit return -ERANGE.
-> - Link: https://lore.kernel.org/lkml/20210818073336.59678-1-liuqi115@huawei.com/
-> 
-> Changes since V3:
-> - Address the comments from Masami, reduce the number of aarch64_insn_patch_text
-> in arch_optimize_kprobes() and arch_unoptimize_kprobes().
-> - Link: https://lore.kernel.org/lkml/20210810055330.18924-1-liuqi115@huawei.com/
-> 
-> Changes since V2:
-> - Address the comments from Masami, prepare another writable buffer in
-> arch_prepare_optimized_kprobe()and build the trampoline code on it.
-> - Address the comments from Amit, move save_all_base_regs and
-> restore_all_base_regs to <asm/assembler.h>, as these two macros are reused
-> in optprobe.
-> - Link: https://lore.kernel.org/lkml/20210804060209.95817-1-liuqi115@huawei.com/
-> 
-> Changes since V1:
-> - Address the comments from Masami, checks for all branch instructions, and
-> use aarch64_insn_patch_text_nosync() instead of aarch64_insn_patch_text()
-> in each probe.
-> - Link: https://lore.kernel.org/lkml/20210719122417.10355-1-liuqi115@huawei.com/
-> ---
->  arch/arm64/Kconfig                            |   1 +
->  arch/arm64/include/asm/kprobes.h              |  22 ++
->  arch/arm64/kernel/probes/Makefile             |   2 +
->  arch/arm64/kernel/probes/opt_arm64.c          | 244 ++++++++++++++++++
->  .../arm64/kernel/probes/optprobe_trampoline.S | 113 ++++++++
->  5 files changed, 382 insertions(+)
->  create mode 100644 arch/arm64/kernel/probes/opt_arm64.c
->  create mode 100644 arch/arm64/kernel/probes/optprobe_trampoline.S
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 100570a048c5..f9c4e2625595 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -244,6 +244,7 @@ config ARM64
->  	select HAVE_SYSCALL_TRACEPOINTS
->  	select HAVE_KPROBES
->  	select HAVE_KRETPROBES
-> +	select HAVE_OPTPROBES
->  	select HAVE_GENERIC_VDSO
->  	select HOTPLUG_CORE_SYNC_DEAD if HOTPLUG_CPU
->  	select IRQ_DOMAIN
-> diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
-> index be7a3680dadf..bd4973bfb58d 100644
-> --- a/arch/arm64/include/asm/kprobes.h
-> +++ b/arch/arm64/include/asm/kprobes.h
-> @@ -37,6 +37,28 @@ struct kprobe_ctlblk {
->  
->  void arch_remove_kprobe(struct kprobe *);
->  int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
-> +
-> +struct arch_optimized_insn {
-> +	kprobe_opcode_t orig_insn[1];
-> +	kprobe_opcode_t *trampoline;
-> +};
-> +
-> +#define MAX_OPTIMIZED_LENGTH	sizeof(kprobe_opcode_t)
-> +#define MAX_OPTINSN_SIZE                                                       \
-> +	((unsigned long)optprobe_template_end - (unsigned long)optprobe_template_entry)
-> +
-> +extern __visible kprobe_opcode_t optprobe_template_entry[];
-> +extern __visible kprobe_opcode_t optprobe_template_val[];
-> +extern __visible kprobe_opcode_t optprobe_template_orig_addr[];
-> +extern __visible kprobe_opcode_t optprobe_template_common[];
-> +extern __visible kprobe_opcode_t optprobe_template_end[];
-> +extern __visible kprobe_opcode_t optprobe_template_restore_begin[];
-> +extern __visible kprobe_opcode_t optprobe_template_restore_orig_insn[];
-> +extern __visible kprobe_opcode_t optprobe_template_restore_end[];
-> +extern __visible kprobe_opcode_t optinsn_slot[];
-> +
-> +void optprobe_common(void);
-> +
->  void __kretprobe_trampoline(void);
->  void __kprobes *trampoline_probe_handler(struct pt_regs *regs);
->  
-> diff --git a/arch/arm64/kernel/probes/Makefile b/arch/arm64/kernel/probes/Makefile
-> index 8e4be92e25b1..7b2885b23ff6 100644
-> --- a/arch/arm64/kernel/probes/Makefile
-> +++ b/arch/arm64/kernel/probes/Makefile
-> @@ -4,3 +4,5 @@ obj-$(CONFIG_KPROBES)		+= kprobes.o decode-insn.o	\
->  				   simulate-insn.o
->  obj-$(CONFIG_UPROBES)		+= uprobes.o decode-insn.o	\
->  				   simulate-insn.o
-> +obj-$(CONFIG_OPTPROBES)	+= opt_arm64.o			\
-> +				   optprobe_trampoline.o
-> diff --git a/arch/arm64/kernel/probes/opt_arm64.c b/arch/arm64/kernel/probes/opt_arm64.c
-> new file mode 100644
-> index 000000000000..a7f34ab82a2f
-> --- /dev/null
-> +++ b/arch/arm64/kernel/probes/opt_arm64.c
-> @@ -0,0 +1,244 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Code for Kernel probes Jump optimization.
-> + *
-> + * Copyright (C) 2025 HiSilicon Limited
-> + */
-> +
-> +#include <linux/jump_label.h>
-> +#include <linux/kprobes.h>
-> +#include <linux/wordpart.h>
-> +
-> +#include <asm/cacheflush.h>
-> +#include <asm/compiler.h>
-> +#include <asm/insn.h>
-> +#include <asm/kprobes.h>
-> +#include <asm/text-patching.h>
-> +
-> +#define OPTPROBE_BATCH_SIZE 64
-> +
-> +#define TMPL_VAL_IDX \
-> +	(optprobe_template_val - optprobe_template_entry)
-> +#define TMPL_ORIGN_ADDR \
-> +	(optprobe_template_orig_addr - optprobe_template_entry)
-> +#define TMPL_CALL_COMMON \
-> +	(optprobe_template_common - optprobe_template_entry)
-> +#define TMPL_RESTORE_ORIGN_INSN \
-> +	(optprobe_template_restore_orig_insn - optprobe_template_entry)
-> +#define TMPL_RESTORE_END \
-> +	(optprobe_template_restore_end - optprobe_template_entry)
-> +
-> +#define OPT_SLOT_SIZE			65536
-> +#define OPT_INSN_PAGES			(OPT_SLOT_SIZE / PAGE_SIZE)
-> +
-> +static bool insn_page_in_use[OPT_INSN_PAGES];
-> +
-> +void *alloc_optinsn_page(void)
-> +{
-> +	int i;
-> +
-
-/*
- * This returns pre-allocated text page so that it is allocated enough near
- * from the code. Thus it would be within the area that can be jumped by
- * 26bit PC-relative branch.
- */
-
-> +	for (i = 0; i < OPT_INSN_PAGES; i++) {
-> +		if (!insn_page_in_use[i]) {
-> +			insn_page_in_use[i] = true;
-> +			return (void *)((unsigned long)optinsn_slot + PAGE_SIZE * i);
-> +		}
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +void free_optinsn_page(void *page)
-> +{
-> +	unsigned long idx = (unsigned long)page - (unsigned long)optinsn_slot;
-> +
-> +	WARN_ONCE(idx & (PAGE_SIZE - 1), "Invalid idx with wrong align\n");
-> +	idx >>= PAGE_SHIFT;
-> +	if (WARN_ONCE(idx >= OPT_INSN_PAGES, "Invalid idx with wrong size\n"))
-> +		return;
-> +	insn_page_in_use[idx] = false;
-> +}
-> +
-> +/*
-> + * In ARM ISA, kprobe opt always replace one instruction (4 bytes
-> + * aligned and 4 bytes long). It is impossible to encounter another
-> + * kprobe in the address range. So always return 0.
-> + */
-> +int arch_check_optimized_kprobe(struct optimized_kprobe *op)
-> +{
-> +	return 0;
-> +}
-> +
-> +int arch_prepared_optinsn(struct arch_optimized_insn *optinsn)
-> +{
-> +	return optinsn->trampoline != NULL;
-> +}
-> +
-> +int arch_within_optimized_kprobe(struct optimized_kprobe *op, kprobe_opcode_t *addr)
-> +{
-> +	return op->kp.addr == addr;
-> +}
-> +
-
-/*
- * Since the aarch64 optprobe will use a PC-relative 26bit immediate jump,
- * the jump offset must be in (-128MB, +128MB] range. (2^26*2^2 = 2^28)
- */
-
-> +static int optprobe_check_branch_limit(unsigned long pc, unsigned long addr)
-> +{
-> +	long offset;
-> +
-> +	if ((pc & 0x3) || (addr & 0x3))
-> +		return -ERANGE;
-> +
-> +	offset = (long)addr - (long)pc;
-> +	if (offset < -SZ_128M || offset >= SZ_128M)
-> +		return -ERANGE;
-
-BTW, just out of curiosity, modules can be in this range?
-
-> +
-> +	return 0;
-> +}
-> +
-> +int arch_prepare_optimized_kprobe(struct optimized_kprobe *op, struct kprobe *orig)
-> +{
-> +	kprobe_opcode_t *code, *buf;
-
-You can use __free(kfree) for 'buf' here to avoid agly gotos.
-
-	kprobe_opcode_t *buf __free(kfree) = NULL;
-
-Then, when returning from this function, if buf != NULL, 'kfree(buf)' is
-executed automatically.
-
-> +	int ret = -ENOMEM;
-> +	u32 insn;
-> +	int i;
-> +
-> +	buf = kzalloc(MAX_OPTINSN_SIZE, GFP_KERNEL);
-> +	if (!buf)
-> +		return ret;
-> +
-
-/*
- * On aarch64, optprobe uses b.imm26 branch code to pre-allocated trampoline area
- * thus the num
- */
-
-> +	code = get_optinsn_slot();
-> +	if (!code)
-
-This should NOT return -ENOMEM because there are free memory. Instead, this can
-return -EBUSY, because this fails to find a unused slot in pre-allocated memory
-and that is used by other optprobes. Thus it should be temporarily busy.
-(Hmm, I also need to update other arch implementation, since -ENOMEM has another
-meanings.)
-
-> +		goto out;
-> +
-> +	if (optprobe_check_branch_limit((unsigned long)code, (unsigned long)orig->addr + 8)) {
-
-This should return the return value from optprobe_check_branch_limit().
-
-	ret = optprobe_check_branch_limit((unsigned long)code, (unsigned long)orig->addr + 8)
-	if (ret)
-		goto error;
-
-
-> +		ret = -ERANGE;
-> +		goto error;
-> +	}
-> +
-> +	memcpy(buf, optprobe_template_entry, MAX_OPTINSN_SIZE);
-> +
-
-/* Inject a branch with link (function call) from trampoline to callback. */
-
-> +	insn = aarch64_insn_gen_branch_imm((unsigned long)&code[TMPL_CALL_COMMON],
-> +					   (unsigned long)&optprobe_common,
-> +					   AARCH64_INSN_BRANCH_LINK);
-> +	if (insn == AARCH64_BREAK_FAULT) {
-> +		ret = -ERANGE;
-
-If this should not happen, we can use WARN_ON_ONCE() for debugging purpose.
-
-> +		goto error;
-> +	}
-> +
-> +	buf[TMPL_CALL_COMMON] = insn;
-> +
-
-/* Inject a branch (jump back) from trampoline to the next of probed insn. */
-
-> +	insn = aarch64_insn_gen_branch_imm((unsigned long)&code[TMPL_RESTORE_END],
-> +					   (unsigned long)(op->kp.addr + 1),
-> +					   AARCH64_INSN_BRANCH_NOLINK);
-> +	if (insn == AARCH64_BREAK_FAULT) {
-> +		ret = -ERANGE;
-
-Ditto, because we already checked the range.
-
-> +		goto error;
-> +	}
-> +
-> +	buf[TMPL_RESTORE_END] = insn;
-> +
-> +	buf[TMPL_VAL_IDX] = cpu_to_le32(lower_32_bits((unsigned long)op));
-> +	buf[TMPL_VAL_IDX + 1] = cpu_to_le32(upper_32_bits((unsigned long)op));
-> +	buf[TMPL_ORIGN_ADDR] = cpu_to_le32(lower_32_bits((unsigned long)orig->addr));
-> +	buf[TMPL_ORIGN_ADDR + 1] = cpu_to_le32(upper_32_bits((unsigned long)orig->addr));
-> +
-> +	buf[TMPL_RESTORE_ORIGN_INSN] = orig->opcode;
-> +
-> +	/* Setup template */
-> +	for (i = 0; i < MAX_OPTINSN_SIZE / MAX_OPTIMIZED_LENGTH; i++)
-> +		aarch64_insn_patch_text_nosync(code + i, buf[i]);
-> +
-> +	flush_icache_range((unsigned long)code, (unsigned long)(&code[TMPL_VAL_IDX]));
-> +	/* Set op->optinsn.trampoline means prepared. */
-> +	op->optinsn.trampoline = code;
-> +
-> +	return 0;
-> +error:
-> +	free_optinsn_slot(code, 0);
-> +
-> +out:
-> +	kfree(buf);
-> +	return ret;
-> +}
-> +
-> +void arch_optimize_kprobes(struct list_head *oplist)
-> +{
-> +	struct optimized_kprobe *op, *tmp;
-> +	kprobe_opcode_t insns[OPTPROBE_BATCH_SIZE];
-> +	void *addrs[OPTPROBE_BATCH_SIZE];
-> +	int i = 0;
-> +
-> +	list_for_each_entry_safe(op, tmp, oplist, list) {
-> +		WARN_ON(kprobe_disabled(&op->kp));
-> +
-> +		/*
-> +		 * Backup instructions which will be replaced
-> +		 * by jump address
-> +		 */
-> +		memcpy(op->optinsn.orig_insn, op->kp.addr, AARCH64_INSN_SIZE);
-> +
-> +		addrs[i] = op->kp.addr;
-> +		insns[i] = aarch64_insn_gen_branch_imm((unsigned long)op->kp.addr,
-> +						       (unsigned long)op->optinsn.trampoline,
-> +						       AARCH64_INSN_BRANCH_NOLINK);
-> +
-> +		list_del_init(&op->list);
-> +		if (++i == OPTPROBE_BATCH_SIZE)
-> +			break;
-> +	}
-> +
-> +	aarch64_insn_patch_text(addrs, insns, i);
-> +}
-> +
-> +void arch_unoptimize_kprobe(struct optimized_kprobe *op)
-> +{
-> +	arch_arm_kprobe(&op->kp);
-> +}
-> +
-> +/*
-> + * Recover original instructions and breakpoints from relative jumps.
-> + * Caller must call with locking kprobe_mutex.
-> + */
-> +void arch_unoptimize_kprobes(struct list_head *oplist,
-> +			    struct list_head *done_list)
-> +{
-> +	struct optimized_kprobe *op, *tmp;
-> +	kprobe_opcode_t insns[OPTPROBE_BATCH_SIZE];
-> +	void *addrs[OPTPROBE_BATCH_SIZE];
-> +	int i = 0;
-> +
-> +	list_for_each_entry_safe(op, tmp, oplist, list) {
-> +		addrs[i] = op->kp.addr;
-> +		insns[i] = BRK64_OPCODE_KPROBES;
-> +		list_move(&op->list, done_list);
-> +
-> +		if (++i == OPTPROBE_BATCH_SIZE)
-> +			break;
-> +	}
-> +
-> +	aarch64_insn_patch_text(addrs, insns, i);
-> +}
-> +
-> +void arch_remove_optimized_kprobe(struct optimized_kprobe *op)
-> +{
-> +	if (op->optinsn.trampoline) {
-> +		free_optinsn_slot(op->optinsn.trampoline, 1);
-> +		op->optinsn.trampoline = NULL;
-> +	}
-> +
-> +}
-> +
-> +void optprobe_optimized_callback(struct optimized_kprobe *op, struct pt_regs *regs)
-> +{
-> +	if (kprobe_disabled(&op->kp))
-> +		return;
-> +
-> +	guard(preempt)();
-
-In this case, we can use preempt_disable() and preempt_enable() directly
-because there is no intermediate return. 
-
-> +
-> +	if (kprobe_running()) {
-> +		kprobes_inc_nmissed_count(&op->kp);
-> +	} else {
-> +		__this_cpu_write(current_kprobe, &op->kp);
-> +		get_kprobe_ctlblk()->kprobe_status = KPROBE_HIT_ACTIVE;
-> +		opt_pre_handler(&op->kp, regs);
-> +		__this_cpu_write(current_kprobe, NULL);
-> +	}
-> +}
-> +NOKPROBE_SYMBOL(optprobe_optimized_callback)
-> diff --git a/arch/arm64/kernel/probes/optprobe_trampoline.S b/arch/arm64/kernel/probes/optprobe_trampoline.S
-> new file mode 100644
-> index 000000000000..f564b119da69
-> --- /dev/null
-> +++ b/arch/arm64/kernel/probes/optprobe_trampoline.S
-
-For this file, I need some arm64 maintainer's review. 
-
-Thank you,
-
-> @@ -0,0 +1,113 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * trampoline entry and return code for optprobes.
-> + */
-> +
-> +#include <linux/linkage.h>
-> +#include <asm/asm-offsets.h>
-> +#include <asm/assembler.h>
-> +
-> +#define        OPT_SLOT_SIZE   65536
-> +
-> +	.global optinsn_slot
-> +optinsn_slot:
-> +	.space  OPT_SLOT_SIZE
-> +
-> +SYM_CODE_START(optprobe_common)
-> +	stp x2, x3, [sp, #S_X2]
-> +	stp x4, x5, [sp, #S_X4]
-> +	stp x6, x7, [sp, #S_X6]
-> +	stp x8, x9, [sp, #S_X8]
-> +	stp x10, x11, [sp, #S_X10]
-> +	stp x12, x13, [sp, #S_X12]
-> +	stp x14, x15, [sp, #S_X14]
-> +	stp x16, x17, [sp, #S_X16]
-> +	stp x18, x19, [sp, #S_X18]
-> +	stp x20, x21, [sp, #S_X20]
-> +	stp x22, x23, [sp, #S_X22]
-> +	stp x24, x25, [sp, #S_X24]
-> +	stp x26, x27, [sp, #S_X26]
-> +	stp x28, x29, [sp, #S_X28]
-> +	add x2, sp, #PT_REGS_SIZE
-> +	str x2, [sp, #S_SP]
-> +	/* Construct a useful saved PSTATE */
-> +	mrs x2, nzcv
-> +	mrs x3, daif
-> +	orr x2, x2, x3
-> +	mrs x3, CurrentEL
-> +	orr x2, x2, x3
-> +	mrs x3, SPSel
-> +	orr x2, x2, x3
-> +	adr x1, 2f
-> +	stp x1, x2, [sp, #S_PC]
-> +
-> +	/* set the pt_regs address to x1 */
-> +	mov x1, sp
-> +	/* store lr of optprobe_common temporary */
-> +	stp x29, x30, [sp, #-16]!
-> +	mov x29, sp
-> +
-> +	bl optprobe_optimized_callback
-> +
-> +	ldp x29, x30, [sp], #16
-> +
-> +	ldr x0, [sp, #S_PSTATE]
-> +	and x0, x0, #(PSR_N_BIT | PSR_Z_BIT | PSR_C_BIT | PSR_V_BIT)
-> +	msr nzcv, x0
-> +
-> +	ldp x0, x1, [sp, #S_X0]
-> +	ldp x2, x3, [sp, #S_X2]
-> +	ldp x4, x5, [sp, #S_X4]
-> +	ldp x6, x7, [sp, #S_X6]
-> +	ldp x8, x9, [sp, #S_X8]
-> +	ldp x10, x11, [sp, #S_X10]
-> +	ldp x12, x13, [sp, #S_X12]
-> +	ldp x14, x15, [sp, #S_X14]
-> +	ldp x16, x17, [sp, #S_X16]
-> +	ldp x18, x19, [sp, #S_X18]
-> +	ldp x20, x21, [sp, #S_X20]
-> +	ldp x22, x23, [sp, #S_X22]
-> +	ldp x24, x25, [sp, #S_X24]
-> +	ldp x26, x27, [sp, #S_X26]
-> +	ldp x28, x29, [sp, #S_X28]
-> +	ret
-> +SYM_CODE_END(optprobe_common)
-> +
-> +	.global optprobe_template_entry
-> +optprobe_template_entry:
-> +	stp x29, x30, [sp, #-16]!
-> +	mov x29, sp
-> +	adr x30, 2f
-> +	stp x29, x30, [sp, #-16]!
-> +	mov x29, sp
-> +	sub sp, sp, #PT_REGS_SIZE
-> +	str lr, [sp, #S_LR]
-> +	stp x0, x1, [sp, #S_X0]
-> +	/* Get parameters to optimized_callback() */
-> +	adr x0, 1f
-> +	.global optprobe_template_common
-> +optprobe_template_common:
-> +	nop
-> +	ldr lr, [sp, #S_LR]
-> +	add sp, sp, #PT_REGS_SIZE
-> +	ldp x29, x30, [sp], #16
-> +	ldp x29, x30, [sp], #16
-> +	.global optprobe_template_restore_orig_insn
-> +optprobe_template_restore_orig_insn:
-> +	nop
-> +	.global optprobe_template_restore_end
-> +optprobe_template_restore_end:
-> +	nop
-> +	.balign
-> +	.global optprobe_template_val
-> +optprobe_template_val:
-> +	1:	.long 0
-> +		.long 0
-> +	.balign
-> +	.global optprobe_template_orig_addr
-> +optprobe_template_orig_addr:
-> +	2:	.long 0
-> +		.long 0
-> +	.global optprobe_template_end
-> +optprobe_template_end:
-> +	nop
-> -- 
-> 2.33.0
+> For instance one reclaimer for page cache and another for anon (in one
+> memcg):
+>    echo "1G swappiness=0" >memory.reclaim &
+>    echo "1G swappiness=200" >memory.reclaim
 > 
 
+Thank you for your suggestion.
 
--- 
-Masami Hiramatsu (Google) <mhiramat@kernel.org>
+However, binding the statistics to the memory.reclaim writers may not be 
+suitable for our scenario. The userspace proactive memory reclaimer 
+triggers proactive memory reclaim on different memory cgroups, and all 
+memory reclaim statistics would be tied to this userspace proactive 
+memory reclaim process. This does not distinguish the proactive memory 
+reclaim status of different cgroups.
+
+
+Thanks,
+Hao
