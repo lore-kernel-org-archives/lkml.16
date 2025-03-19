@@ -1,134 +1,127 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19B516E863
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAEB72505C9;
+	Wed, 19 Mar 2025 07:42:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742370171; cv=none; b=uxmbvmTHqlq7MmrSLLhS0P6/2U38nC0M1X7OpqnvswEghZHR6l0vif4LC0GN97E+nvZ/muWtwx0RDPSmli1BBlNgnWUdeM0E7Tl94wiIXBVJBiErXZWL1mX2k/R333xma18pftAhYjh6eQWrCxQ5uGa53ZugoodrdadRgylfRxA=
+	t=1742370178; cv=none; b=S5Kv0/gWfXoRcUXoEdefNXcvYHp0bt4cJrd13n+zX+DAWaNn4Zs0oVZ608vqaFZty2kQPKVxNUkbj7i6D+m/Z2mvomgQ7px1p3jfcS1eBET10KF0XkZqwohRZSb5e2i9Xx4SUWEi4NlWUPNDU8w1e+HSpKib698F4kkaoD0Pa5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742370171; c=relaxed/simple;
-	bh=A3upgMdd3p3F0mJjZSeVytonLMMt0jGHCZ5/TYwCOq8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KJ3sgG1SJ0eql1LHrxWcvs1D4i1MWdCrMBvYIkZl+hpho2ZZRkxXzJjSSAcBfP4QKORXhzXRPyJK8vfKdxUvfmSegi1/n50VlVg6xdnzc5dYF3rs7lcCPIOXMzfSNLG8KQXyXASl1e8WOQVG+8+22NvpMblr80Sdm7Q9Iy/Ahao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=DMiG6fUd; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742370178; c=relaxed/simple;
+	bh=8PFrtxpnJpLFkdaeNeF+Kojf2rI5Gt9WPBc0gGLSfzc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=RAk0k3BApY4EfLZeBoTAmpXx8NxmsMk3kgW1fNUO28FXcz8d98BIbLAgJlTMe6W5FfcEfKUE7yKzuJ8IVTfv+vSSoLIePek0b7gcON/eHqex8mhzEBd9ezu6easNs2uzaPPCnRkexd889hkQzX0rBy8gx/nuSm9BbFkPB67ho7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iiKoPFKD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="DMiG6fUd"
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J4lgoH013129
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:42:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=qcppdkim1; bh=lMALD0Hve+i/GClWHdNV7zBXMss56VupDcZ
-	53K5XeAk=; b=DMiG6fUd6j7m0B0zJ7khBMqj4aaEHsTpzdDuAUoIiAQv3Sm0oYA
-	g1LfIUeeDZskcbUVbG1BAehGrfyDvs7mBGozs2dE/CcVFAuI5k01xW2RnIMUFMew
-	0NUnqgvKLR0NlnDxQBeSOfvWQGUgB1x78LbUTuKKby7nB5OLdPngYS/DUdyWgDNP
-	oi+WnnWHtXREhILcWhvoKvsTgdLmCRIYPMQcIgzH3mDiwvjfg0cCrkgQdRDH0y+0
-	BVQVnYpEboNfLGWr+tTzGnsk+R3dn5/FHnZteO8zxmckKKu/zBr1JGNtZ0xOiwFm
-	JKHHVt6UlVzeIyF2g9Vj44QYXPspLvHGF8Q==
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45exwtmk4x-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:42:48 +0000 (GMT)
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6eb1e240eddso27621136d6.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 00:42:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742370167; x=1742974967;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lMALD0Hve+i/GClWHdNV7zBXMss56VupDcZ53K5XeAk=;
-        b=wJDhEAkfL8KY4WvCWH17pNxl4ijXwOMZWVHzMhP0JS2h9FwXCDBaUEAUSD6mzjUX7K
-         I7GfiGyXKLPUPujAs/Qp9SURuuRwKCaLZ4yloWsZes49U7WvW9WMdmOEUkKx1lgXoa9n
-         FQfv2n6vYuiHya7H8HLS0O0WNNO0NY0KyYXwIDn6oH+yMe81Z3gINZW2Y4oFOb0ataAA
-         D3DgnmCw2mIT7WBMFpOLS0QL+V1jBJl0RYu1RRh1+SKv8bsA2tsYm1icyFQ/2D40TEMS
-         OLqUTZ0s0ISTXItSdlQ/mga4JRCiCdPJbsH1dDtoszZbjUnAoKuJwm2uWXRjskkajJXA
-         bjOA==
-X-Gm-Message-State: AOJu0Yx2qXrmxL1SW8kByXrLpLCNp1zCpn1OSr3qLKz0GkOXn1LVzbps
-	4ZS7Sjs1pSUpVgpNIDCDSdIKFbGDaymtYJzJrbePSuK5YBbt2qAeasErF+pJQWTT6m6mS+U2Wnm
-	rJ6pb1bNlUiaZatXrOUr+J/zC58d0s84QeF8Mq/91Pfz70qbxfiAwsW95Be5M4/cvbNxbnhtb/w
-	==
-X-Gm-Gg: ASbGncunF1FoNMp76O8hyVKFX0lSsfUYADs/0FeX3GAnBouq3TYx19e0dWuEGWJ3b/0
-	O8qi4qIYFh0fo5AQZpcN2Q75m+Pn+NTQFpMtuPL5rIqgFfypYb5q2lXDp8PeHM9jeqr6nPFKXL4
-	iqkYoi+zATDfy75f90s1jWd/oyiA8JOrgSTG9OiBiwwqIYQ8zxNf0vyCDnNF0u0dLClSZsd1RtN
-	iAZcbLX0TS4yag+vzJymWARPTiANlaaK4Y2b0KQ1BErr/xLIRRX4XT6T5ABMBdwqOayO+g7m55k
-	xmn8q5wSezENxyPhyM7KKanKoUVTWPCzeueSFEuYkw==
-X-Received: by 2002:ad4:5f8b:0:b0:6d8:b115:76a6 with SMTP id 6a1803df08f44-6eb28f74a48mr26669686d6.0.1742370167052;
-        Wed, 19 Mar 2025 00:42:47 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEk4gA1ZS16L2OBmxic0C8JJhHMjFNqmulO61pKUHh+FpPsi9nD/+nleRfzWPJ+1Vm1XhO2qA==
-X-Received: by 2002:ad4:5f8b:0:b0:6d8:b115:76a6 with SMTP id 6a1803df08f44-6eb28f74a48mr26669546d6.0.1742370166726;
-        Wed, 19 Mar 2025 00:42:46 -0700 (PDT)
-Received: from loic-ThinkPad-T470p.. ([2a01:e0a:82c:5f0:b6ca:9ea6:6507:9355])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f33242sm10773555e9.5.2025.03.19.00.42.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 00:42:45 -0700 (PDT)
-From: Loic Poulain <loic.poulain@oss.qualcomm.com>
-To: linux-kernel@vger.kernel.org
-Cc: Loic Poulain <loic.poulain@oss.qualcomm.com>
-Subject: [PATCH] MAINTAINERS: Update Loic Poulain's email address
-Date: Wed, 19 Mar 2025 08:42:34 +0100
-Message-Id: <20250319074234.165613-1-loic.poulain@oss.qualcomm.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iiKoPFKD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3D52CC4CEF3;
+	Wed, 19 Mar 2025 07:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742370178;
+	bh=8PFrtxpnJpLFkdaeNeF+Kojf2rI5Gt9WPBc0gGLSfzc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=iiKoPFKDTc33xyKDhIHbKi5oNeIAReF9v27f2A/TwDGMlqH55f0okfelLEKFi7Ryr
+	 ALAk1Ojri4s0xRIXxikE0jXhdh0r3vhuV6FUm/3L54FA7CXkj50YCaYp/1wQkbjqmS
+	 xT4A+HSqiBsRyFlwnbF2GhJ/D94no0z9n7ptwYdmjS0K6g0MnYqXOMcgWtKlyNpmMC
+	 57/wCXho8RgNkZfA4WFzJfDnL0K8jR90UE4umDeBLKBpeSUP38E5J+0bfMOo60YaCF
+	 i1FBATmQOHwqazh8fxnnuLFzGghq3pLqH4V2ArXAW/D9azzzPN7g3I7OXbRXaIres5
+	 Utmmpvj5OWmBA==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D625C36000;
+	Wed, 19 Mar 2025 07:42:58 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Wed, 19 Mar 2025 08:42:47 +0100
+Subject: [PATCH v4 2/5] dt-bindings: net: Add generic wireless controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-GUID: Zd8CNckHaNWQknGou8Wj6Aq_ofNVqKjN
-X-Proofpoint-ORIG-GUID: Zd8CNckHaNWQknGou8Wj6Aq_ofNVqKjN
-X-Authority-Analysis: v=2.4 cv=UoJjN/wB c=1 sm=1 tr=0 ts=67da7578 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=Vs1iUdzkB0EA:10 a=QcRrIoSkKhIA:10 a=VwQbUJbxAAAA:8 a=EUspDBNiAAAA:8 a=KKAkSRfTAAAA:8 a=JfrnYn6hAAAA:8 a=pGLkceISAAAA:8
- a=stkexhm8AAAA:8 a=_yfGIwS9ScqeBdm4lDcA:9 a=OIgjcC2v60KrkQgK7BGD:22 a=cvBusfyB2V15izCimMoJ:22 a=1CNFftbPRP8L7MoqJWF3:22 a=pIW3pCRaVxJDc-hWtpF8:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_02,2025-03-17_03,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- impostorscore=0 bulkscore=0 priorityscore=1501 mlxlogscore=622
- phishscore=0 adultscore=0 clxscore=1011 spamscore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503190052
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250319-dt-bindings-network-class-v4-2-2329336802b4@ixit.cz>
+References: <20250319-dt-bindings-network-class-v4-0-2329336802b4@ixit.cz>
+In-Reply-To: <20250319-dt-bindings-network-class-v4-0-2329336802b4@ixit.cz>
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Mailing List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>, 
+ =?utf-8?q?J=C3=A9r=C3=B4me_Pouiller?= <jerome.pouiller@silabs.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>, 
+ Mailing List <devicetree-spec@vger.kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Janne Grunau <j@jannau.net>, 
+ David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1188; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=s4h8B9gNJQ6JIaRS+FZDFjTYjzD5y6gNzE0ffwMuDco=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn2nV/6rsk3oZ7Zyx3BHMSxD/3T7AS4K6Ut8/Ix
+ lXZHWCc56KJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ9p1fwAKCRBgAj/E00kg
+ crwXEADFNSgiKo48SYtQuekFHAo+4fG9ATvPU7eD5a5aQHSz43A2DGLbx1N0t0m5x+UamLuzAYR
+ IMl7W1JI+To73ZgOCDkbdHrt9gOlO7OtyQtcIUENMFEba252GuCIeTbneN3qBnxdB33x5AufHx1
+ S70mveR8HrembIKmCEtHpf8+GSNkZ+bD3NzxB945vapzCjoF8uKY0EsUEovQ62pRee+D1k8tQn8
+ shug/+iZDVDBrCT7vopf6ENjZPzY+tqqCS+AxHq68frOCCEpro+2vZJEgV47dQ8Glve69kXQ/aD
+ DGZ+zh610NGjdnMaJYlAub3CB1AkvwpIAO9ovR55JIZm3wNaZwSMMfLXexOsGZ1C40L2o6DVqXR
+ ZNNCGhTGL7wt41wBzlCfSDyQAaWiJY30mpOb9ky6mR91exDXT1jHGLlRkOtPSsEiP+iENDCCgwd
+ 4FAgcm/1INX6D4ny0yaF0ird6L3ius/ZRotszDiViVYiKOWztVRx3xSBUUBzH6FCfZOtQI6p3+D
+ fIfCbd7Le45LQMXKKIh4MWOut9jogpciD+QexzNn+4OtJ+rIhVgCUlRFf2aONo8SS0HzQ5Fj5J6
+ usYDTtjvhRDLtmqpDueELxfxaW3TKoYXB5Zn187clI6x3cW8dK7Lg+001d76FLMVG2sMHHtf7qc
+ /BGK5UaVHz9dP1Q==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
-Update Loic Poulain's email address to @oss.qualcomm.com.
+From: David Heidelberg <david@ixit.cz>
 
-Signed-off-by: Loic Poulain <loic.poulain@oss.qualcomm.com>
+Wireless controllers share the common properties.
+
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: David Heidelberg <david@ixit.cz>
 ---
- MAINTAINERS | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../bindings/net/wireless/wireless-controller.yaml | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 16f51eb6ebe8..87e7c9ffe528 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -19545,7 +19545,7 @@ F:	Documentation/devicetree/bindings/i2c/qcom,i2c-geni-qcom.yaml
- F:	drivers/i2c/busses/i2c-qcom-geni.c
- 
- QUALCOMM I2C CCI DRIVER
--M:	Loic Poulain <loic.poulain@linaro.org>
-+M:	Loic Poulain <loic.poulain@oss.qualcomm.com>
- M:	Robert Foss <rfoss@kernel.org>
- L:	linux-i2c@vger.kernel.org
- L:	linux-arm-msm@vger.kernel.org
-@@ -19668,7 +19668,7 @@ F:	Documentation/devicetree/bindings/media/*venus*
- F:	drivers/media/platform/qcom/venus/
- 
- QUALCOMM WCN36XX WIRELESS DRIVER
--M:	Loic Poulain <loic.poulain@linaro.org>
-+M:	Loic Poulain <loic.poulain@oss.qualcomm.com>
- L:	wcn36xx@lists.infradead.org
- S:	Supported
- W:	https://wireless.wiki.kernel.org/en/users/Drivers/wcn36xx
-@@ -25655,7 +25655,7 @@ F:	kernel/workqueue.c
- F:	kernel/workqueue_internal.h
- 
- WWAN DRIVERS
--M:	Loic Poulain <loic.poulain@linaro.org>
-+M:	Loic Poulain <loic.poulain@oss.qualcomm.com>
- M:	Sergey Ryazanov <ryazanov.s.a@gmail.com>
- R:	Johannes Berg <johannes@sipsolutions.net>
- L:	netdev@vger.kernel.org
+diff --git a/Documentation/devicetree/bindings/net/wireless/wireless-controller.yaml b/Documentation/devicetree/bindings/net/wireless/wireless-controller.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..7379f6c1aa05c15a5bc7b34df6502cc174af9a90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/wireless-controller.yaml
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/wireless/wireless-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Wireless Controller Common Properties
++
++maintainers:
++  - Lorenzo Bianconi <lorenzo@kernel.org>
++
++properties:
++  $nodename:
++    pattern: "^wifi(@.*)?$"
++
++allOf:
++  - $ref: ieee80211.yaml#
++  - $ref: /schemas/net/network-class.yaml#
++
++additionalProperties: true
++
++...
++
+
 -- 
-2.34.1
+2.49.0
+
 
