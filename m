@@ -1,94 +1,133 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from fout-b6-smtp.messagingengine.com (fout-b6-smtp.messagingengine.com [202.12.124.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7993725335B;
-	Wed, 19 Mar 2025 09:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B90E257444
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:34:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376895; cv=none; b=SUNg32ZD6egbNnzyxjdu6oVYxAAAnXcIJSPIHaN8XQOicB5DrixiTM8M8O3uQ0QWn3+euIg7HzK/wKrAmbZeIhwO43no/ybhHJkG2n/JaMNCulxd5HLNbiAXrMTRXvbm3eTueVgeQV2xOaXp+1cchZcF8HfowkGg/nSK4BBv0sA=
+	t=1742376900; cv=none; b=uD92jQ6o1z9YIEIK4WdArz+V0bScHrQvayJp45st5tOMP0cpbtj8/nmJ7EJORZ+3aUOnroUy4c+k/xkAtkLirDU7wvnDVNQGKs41Uop/0pGWLNgJrDJ/PWIg7o6elnKX/oioV3IJrZmdRR1uGO8UEAO7xf/KbI5la4aUhEA/6fU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376895; c=relaxed/simple;
-	bh=7iRreKMp4uv/ls+Knss8Xl20fKJ+g1JXIencg+k8WvU=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=EFMmUq69HeIZ3KKmpYShcYNjF7XtgGdxuD6NmtGX5EKcHzeh1xkPnosW0RIepIHRVNEtExRsOmyqTvCnuf1gMxLJQJSEsCZrtV5z3uL75FUgKLnxdp2ucMllBJQH8rDh/AvtngGG2ZV/yKmuFHocaqrObslOXbATIT91CSvk9zc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=ifISZfNv; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742376900; c=relaxed/simple;
+	bh=xxRiEguAyeGL9D+NNtgql1i2rcqNGXFBjQJxh1bi3rU=;
+	h=To:Cc:Message-ID:In-Reply-To:References:From:Subject:Date; b=qL7NS8OXF57keGoCdg8RqKoqHYxpI+/eH0xzfCWZ6Wr0Lb2Xy+xBwXAcZpX2Y4VDiHJhK40irhqEHkkcXvGvXsDH6Gm/ikXZVjWI5DJOBleRUKlGFZknYxAMiLYvsIw+rXp5MuwXfnMBUli0A4Deqa6aatU1Sa3HEXq6oK5V+jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=none smtp.mailfrom=linux-m68k.org; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=Zmq/6zbQ; arc=none smtp.client-ip=202.12.124.149
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ifISZfNv"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742376890;
-	bh=7/MohhKR+11sDnpcy7Mo7u2pOk44eb1iqGi8YTyP2OU=;
-	h=Date:From:To:Cc:Subject:From;
-	b=ifISZfNvBzOcoKcqoobxYqft580v5hIwR2bKz7EmnR9ocp1cVjOZVZ8C7XkGj3qOt
-	 d+9xQN/MHLModwJMBVLxa313BXESjoZy67s57nWHHKw8rf/0aQL7s3h3C1hHJSjMwR
-	 Mea+OIeNUWtLu+tGLsWVCCEISp4RwLRcP7+NiyIB7f3rI9KvDL+d0hAGZvXUE58HTH
-	 Yw8Xkn5P0gnvenMAQDXQi95KTwSf4lzauk+blE9K7TT+eAO9cldoCUWyfspv/s4BfY
-	 lKUgXjH9/lgpD8Xihwt/lj032iAOfOyl9bXXWALpaqjlLjTqW6n23n11AOeahlIpPB
-	 YdTKpzLmWPwRw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZHk7t1YF1z4wxh;
-	Wed, 19 Mar 2025 20:34:50 +1100 (AEDT)
-Date: Wed, 19 Mar 2025 20:34:49 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: Alex Deucher <alexander.deucher@amd.com>, Dominik Kaszewski
- <dominik.kaszewski@amd.com>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: linux-next: build warning after merge of the amdgpu tree
-Message-ID: <20250319203449.386f9e00@canb.auug.org.au>
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Zmq/6zbQ"
+Received: from phl-compute-01.internal (phl-compute-01.phl.internal [10.202.2.41])
+	by mailfout.stl.internal (Postfix) with ESMTP id 2BF3911400D1;
+	Wed, 19 Mar 2025 05:34:58 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-01.internal (MEProxy); Wed, 19 Mar 2025 05:34:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:date:date:feedback-id
+	:feedback-id:from:from:in-reply-to:in-reply-to:message-id
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742376898; x=
+	1742463298; bh=6vGTjqhrImDW99O46cZMgZcsLhmTGwXSWmZI+UM/MXc=; b=Z
+	mq/6zbQe1Lks5FWz5nNgEQRZd1H9RoycpJgBUOACnOsIJPOjcNDWYzwwIsvgH8Vy
+	RxjUgnHk/6S0//75Z3iDxt3XFyFicZwzi1QTjN6bW4vhUkU6NrTw3Rel+AI4F9c/
+	mqzd8qPEZeVFPPaX038gyO33ketUDWbbjHFF+rv/sXXEW4dUtRYUFGebvZGMPhZK
+	WAqFi1LSLSezQhZ2J7/wzpLXVnQb7EIdjhE1fL4ufh7sU8OUEKQFMKWStR94LvmS
+	J6mA4ZJfHV26R9P+2sY/+uyeAKZ6Tc1Fy9zg6Aptks9dnx/qGGEQ81WFvr62Wemm
+	HO8cU2PVzON0uTqUrESRA==
+X-ME-Sender: <xms:wY_aZ86PDbRhlvmW_qcRP9Bw1ki4s-cOwpt8jWPyMD9WxY2x53DMTQ>
+    <xme:wY_aZ95q11YYFQSjHpTIpDBZ_DlqbKycTLw169eaa_r64_Y5mrVxyO2hMSeoRLeBm
+    iWHmaeaJ0oXeQ3FaS4>
+X-ME-Received: <xmr:wY_aZ7dMxIOcJTJ-cE7FpZsAoeXrieWthf9leAE-2Heh_lUq9nOWqVfBhczL6GriSMTrkL-wwLc9tEcSqR2ZN2RCQWBk-Jk6qNw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeegleekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepvfevkfgjfhfhufffsedttdertddttddtnecu
+    hfhrohhmpefhihhnnhcuvfhhrghinhcuoehfthhhrghinheslhhinhhugidqmheikehkrd
+    horhhgqeenucggtffrrghtthgvrhhnpeelgefhvefgveduhefffeeuveehtdeigedukeef
+    uddvhedvfefhkedugffffeetheenucffohhmrghinhephhgvrggurdhssgenucevlhhush
+    htvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhrohhmpehfthhhrghinheslhhi
+    nhhugidqmheikehkrdhorhhgpdhnsggprhgtphhtthhopeefpdhmohguvgepshhmthhpoh
+    huthdprhgtphhtthhopehgvggvrhhtsehlihhnuhigqdhmieekkhdrohhrghdprhgtphht
+    thhopehlihhnuhigqdhmieekkheslhhishhtshdrlhhinhhugidqmheikehkrdhorhhgpd
+    hrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-ME-Proxy: <xmx:wY_aZxKAGCc6tFjexY4f34b2H4SIs1Ql8TyDyrHavBchg19edjr1-w>
+    <xmx:wY_aZwJ4WpHBoAn6CdsQ7-GHV0omF_XQFu9MpIKGuFf_wMEHRvcPUA>
+    <xmx:wY_aZyyBFQqr6ePkBmogijYUBmATHk7M9ZhlemJ4elQEFD_l3J2G8g>
+    <xmx:wY_aZ0IZY0xcDvw1exKCMGtcpVNMR9kk-DyFvV-bdMVY9ddZkZVHCw>
+    <xmx:wo_aZ3XDR0AgpLiQRzfEU8jjf-qoX6sUTRGaJpMxZngd5WDkiG-09Pol>
+Feedback-ID: i58a146ae:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 19 Mar 2025 05:34:55 -0400 (EDT)
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: linux-m68k@lists.linux-m68k.org,
+    linux-kernel@vger.kernel.org
+Message-ID: <1f27682893bba60572dfed728386a0f76044b17b.1742376675.git.fthain@linux-m68k.org>
+In-Reply-To: <cover.1742376675.git.fthain@linux-m68k.org>
+References: <cover.1742376675.git.fthain@linux-m68k.org>
+From: Finn Thain <fthain@linux-m68k.org>
+Subject: [PATCH v2 3/3] m68k: Remove unused "cursor home" code from debug
+ console
+Date: Wed, 19 Mar 2025 20:31:15 +1100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Y5jd7EzePGe44WaoDpwtojz";
- protocol="application/pgp-signature"; micalg=pgp-sha256
 
---Sig_/Y5jd7EzePGe44WaoDpwtojz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The cursor home operation is unused and seems undesirable for logging.
+Remove it. The console_not_cr label actually means "not line feed and
+not carriage return either" so take the opportunity to replace it with
+something less confusing. Rectify some inconsistent whitespace while
+we're here.
 
-Hi all,
+Signed-off-by: Finn Thain <fthain@linux-m68k.org>
+---
+ arch/m68k/kernel/head.S | 31 ++++++++++++-------------------
+ 1 file changed, 12 insertions(+), 19 deletions(-)
 
-After merging the amdgpu tree, today's linux-next build (htmldocs)
-produced this warning:
+diff --git a/arch/m68k/kernel/head.S b/arch/m68k/kernel/head.S
+index bf7fa344cd3a..48ef74e45535 100644
+--- a/arch/m68k/kernel/head.S
++++ b/arch/m68k/kernel/head.S
+@@ -3555,28 +3555,21 @@ func_start	console_putc,%a0/%a1/%d0-%d7
+ 	jra	L(console_exit)
+ 
+ L(console_not_lf):
+-	cmpib	#13,%d7
+-	jne	L(console_not_cr)
++	cmpib	#'\r',%d7
++	jne	L(console_not_lf_not_cr)
+ 	clrl	%a0@(Lconsole_struct_cur_column)
+ 	jra	L(console_exit)
+ 
+-L(console_not_cr):
+-	cmpib	#1,%d7
+-	jne	L(console_not_home)
+-	clrl	%a0@(Lconsole_struct_cur_row)
+-	clrl	%a0@(Lconsole_struct_cur_column)
+-	jra	L(console_exit)
+-
+-/*
+- *	At this point we know that the %d7 character is going to be
+- *	rendered on the screen.  Register usage is -
+- *		a0 = pointer to console globals
+- *		a1 = font data
+- *		d0 = cursor column
+- *		d1 = cursor row to draw the character
+- *		d7 = character number
+- */
+-L(console_not_home):
++	/*
++	 *	At this point we know that the %d7 character is going to be
++	 *	rendered on the screen.  Register usage is -
++	 *	a0 = pointer to console globals
++	 *	a1 = font data
++	 *	d0 = cursor column
++	 *	d1 = cursor row to draw the character
++	 *	d7 = character number
++	 */
++L(console_not_lf_not_cr):
+ 	movel	%a0@(Lconsole_struct_cur_column),%d0
+ 	movel	%a0@(Lconsole_struct_cur_row),%d1
+ 
+-- 
+2.45.3
 
-drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of ker=
-nel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP=
- Locality Check FW
-drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of ker=
-nel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP=
- Locality Check FW
-drivers/gpu/drm/amd/include/amd_shared.h:373: warning: Enum value 'DC_HDCP_=
-LC_ENABLE_SW_FALLBACK' not described in enum 'DC_DEBUG_MASK'
-
-Introduced by commit
-
-  84ff5895399c ("drm/amdgpu: Add debug masks for HDCP LC FW testing")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/Y5jd7EzePGe44WaoDpwtojz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfaj7kACgkQAVBC80lX
-0Gz2WAgAgnoUl8mSLdeV+mhYllVtD/RjjnVAneK/Aija7k1FBaqX5DC9LIdt6EXS
-mUC+ZyLU+xD8Hoa0ULI8Cy7yhtrUI5LS/a7uLxWrAq5POfCUFX5yPg6xnP+G41EI
-5M/5ytJ/Ogf2MEU8P1aeWlp3sY7+wNZmGjnvrgvzgwFz4IChkZ2iuboRKUdSRmZu
-fJEl4qvPaegyPiiFAtqvlLDWO3F+LrDhkkposAX8tzWCDN59dcxr1238GxKrZDcX
-EAgc6K0Jyu1TqY0gcAHuI/W7AU1wlQ2Xeto4UzCvAeniQV4rSD4Dgrt3Y+TshNxI
-AJxiz+ssuVg8gF7R/IhTronmrcyvmA==
-=l7mo
------END PGP SIGNATURE-----
-
---Sig_/Y5jd7EzePGe44WaoDpwtojz--
