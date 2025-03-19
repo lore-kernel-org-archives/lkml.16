@@ -1,86 +1,90 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A761B20C47C
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 22:00:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4261A7E1;
+	Wed, 19 Mar 2025 22:07:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742421660; cv=none; b=k8ctkxttpt7JhHAXlZCmVJxpdP2E899aA2jQJgOv6pTW3iMpoL23fv97FGWxh1lbYcZ9Ud72Ty4lmuef8KN2cfAonYDGjP/6wjOAMqAkXK8xNDVgRfpARN5XuVSUXABh+0OYiKgFZT1JAvWkHl1KR4lj76yhqvwqKY8McmB8x44=
+	t=1742422024; cv=none; b=Esscy7Aoj3AUWSZ0emPVrL+5dBRPPuZnynk4wQ+Uy9cta9nXReKrdorb8+Izz7AW5N7wB+p5fLfm1MOx5uWtMkRBPfw2kU1dQeB1OxzNPly33ifst0ThJYVe5BQiG0K2KPXTPlhH6fAEpY9tv2TbM52+H0QfK5o1HtGH6/RKNhE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742421660; c=relaxed/simple;
-	bh=xFkzuPe8071QwP4bSLQApe14iWS2SWIctQbYZeTUqMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=o6GweTZUedajIepUAmsgKjtm9mzCJ1CQiFHC/88LFDbNbxM5ez0Szxhiap86EEes5FKCBKFnxHwy/0TNY7gvNIWoQN3+gTISvmGSgVfZY8GbEpTbzgSI2q5hTrLE1golG+LK8MKrD0gNfiyLTRLFDxvdqdjdBlWNDS3n99m4S2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fY7VwvaS; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742422024; c=relaxed/simple;
+	bh=kmh/hAovTpQ+Y4EsMHbXdMfe/ivjjIw0whfEgG4BHXM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tc0uRxSSkiG9YjdiTzvUu8N0Y5hG8lEFfzfMRVln7UWbkDQqhfmarKLFjoRyhvX/kr6VOfFQuoqAp0m9AigBV3DC6GprIeKF/lj/D8fUziDTLMiWmI/ezZ96CnUwynSqlApxeCoyIBWECQ/Zcw6k/s/6gjdn5ipxMgoIh7a1dhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XT8fTloY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fY7VwvaS"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742421658; x=1773957658;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=xFkzuPe8071QwP4bSLQApe14iWS2SWIctQbYZeTUqMs=;
-  b=fY7VwvaSwxv2HvwU7QV690UNrvnRmYZbAQhdpQWhKwXOlx1SelmCY+Hx
-   TbvpPhmRrinBNtPj8TwZWOCMq6vbO64rAZdL0PQztVeqezFuP1yzYSpnI
-   wmlnZwaguYAnBNQ2coKj1zEmjkp0GjMsQlzQvWwFLHq8B5/qpoO8vljPw
-   bcRHsXTDGPuS8nhE/YVmsiVmUSSYAJoRKqiL3IhT9KnrIfblMepphaMSm
-   96nXMfXdOH02RAOMPHHdp3UftcodBNfXFccCnKqoheo1eRyK5Da7AxSbv
-   kpoyyJbbird6YySmU+MnIZkF1PGqnm5FR5wUMNlO4W3Dkv6NTXpD6H2yV
-   Q==;
-X-CSE-ConnectionGUID: FrigOrJIS72+Tt1/IrcaHA==
-X-CSE-MsgGUID: RiFGvQNFTqOBLxvAsaDtbA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43364068"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="43364068"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 15:00:57 -0700
-X-CSE-ConnectionGUID: R07qKtp0RY2jZGX/IvLuqA==
-X-CSE-MsgGUID: 40Chy0WRQf6Cs2DF+6JBGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="153822794"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa001.fm.intel.com with ESMTP; 19 Mar 2025 15:00:56 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tv1T3-000Fha-32;
-	Wed, 19 Mar 2025 22:00:53 +0000
-Date: Thu, 20 Mar 2025 06:00:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Takashi Iwai <tiwai@suse.de>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: sound/core/seq/snd-seq.o: warning: objtool:
- cc_ev_to_ump_midi2+0x589: return with modified stack frame
-Message-ID: <202503200535.J3hAvcjw-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XT8fTloY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B9DCC4CEE4;
+	Wed, 19 Mar 2025 22:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742422023;
+	bh=kmh/hAovTpQ+Y4EsMHbXdMfe/ivjjIw0whfEgG4BHXM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XT8fTloYdVTM53YryP55n3LufVmhdEWOI4+bR30xzGorXR8Qnjj4CUILj8pgGVKoX
+	 FA7J/XK0Om4fH5bZkvjvcPpOOZdqoidQWmK1nRlRWt6MH1yCudpYkS4T947gIoKO3g
+	 t+GH740bpidSLx4u0HA5XU0QoAr/jCS1GivpvhSkOew2grWDEp3FsilBMI8yIMfGE5
+	 HM3glQa0SSCI5RY7ghBNoZMEwbhaoYq23PkgIIIzShAeMAtwieVc53y+Bt/vBynPkq
+	 3VmjcxnAbXOuYCdYkkd6beZLFwjKHWGvPuFQuxoC4FA3NxbzmzZQGSW8nTX3ExQHcT
+	 R7O9AeBBXV5lw==
+Date: Wed, 19 Mar 2025 15:07:01 -0700
+From: Namhyung Kim <namhyung@kernel.org>
+To: Howard Chu <howardchu95@gmail.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+	linux-perf-users@vger.kernel.org, bpf@vger.kernel.org,
+	Song Liu <song@kernel.org>
+Subject: Re: [PATCH v2] perf trace: Implement syscall summary in BPF
+Message-ID: <Z9tABRzmYYYUyEFO@google.com>
+References: <20250317180834.1862079-1-namhyung@kernel.org>
+ <CAH0uvogx1-oz4ZjLpcTRArTb2YJOyY1h1pccMXYSgCnHYD9bPA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+In-Reply-To: <CAH0uvogx1-oz4ZjLpcTRArTb2YJOyY1h1pccMXYSgCnHYD9bPA@mail.gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   81e4f8d68c66da301bb881862735bd74c6241a19
-commit: a4ff92ff0bdd731eca9f0b50b1cbb5aba89be4b2 ALSA: seq: ump: Transmit RPN/NRPN message at each MSB/LSB data reception
-date:   8 months ago
-config: x86_64-buildonly-randconfig-003-20250320 (https://download.01.org/0day-ci/archive/20250320/202503200535.J3hAvcjw-lkp@intel.com/config)
-compiler: clang version 20.1.0 (https://github.com/llvm/llvm-project 24a30daaa559829ad079f2ff7f73eb4e18095f88)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250320/202503200535.J3hAvcjw-lkp@intel.com/reproduce)
+Hello Howard,
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503200535.J3hAvcjw-lkp@intel.com/
+On Wed, Mar 19, 2025 at 12:00:10PM -0700, Howard Chu wrote:
+> Hello Namhyung,
+> 
+> Can you please rebase it? I cannot apply it, getting:
+> 
+> perf $ git apply --reject --whitespace=fix
+> ./v2_20250317_namhyung_perf_trace_implement_syscall_summary_in_bpf.mbx
+> Checking patch tools/perf/Documentation/perf-trace.txt...
+> Checking patch tools/perf/Makefile.perf...
+> Hunk #1 succeeded at 1198 (offset -8 lines).
+> Checking patch tools/perf/builtin-trace.c...
+> error: while searching for:
+>         bool       hexret;
+> };
+> 
+> enum summary_mode {
+>         SUMMARY__NONE = 0,
+>         SUMMARY__BY_TOTAL,
+>         SUMMARY__BY_THREAD,
+> };
+> 
+> struct trace {
+>         struct perf_tool        tool;
+>         struct {
+> 
+> error: patch failed: tools/perf/builtin-trace.c:140
 
-All warnings (new ones prefixed by >>):
+Oops, I think I forgot to say it's on top of Ian's change.
+Please try this first.  Sorry for the confusion.
 
-   ld.lld: warning: call to __read_overflow2_field marked "dontcall-warn": detected read beyond size of field (2nd parameter); maybe use struct_group()?
->> sound/core/seq/snd-seq.o: warning: objtool: cc_ev_to_ump_midi2+0x589: return with modified stack frame
+https://lore.kernel.org/r/20250319050741.269828-1-irogers@google.com
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+Namhyung
+
