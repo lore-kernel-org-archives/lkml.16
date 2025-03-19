@@ -1,148 +1,178 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EF325D558;
-	Wed, 19 Mar 2025 11:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C5EA25D537
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382240; cv=none; b=jNzxGeJxQIkUc7MGkDB4/54XNClT+U4Ib5iM4q99IRB7pYYhh/EdPRm1A7UfqUOVeHj99cnfoE6+x4UysJLITIWHuoDpUniMccvmto4jwuN0lp5Gk3xfDt8Hl8EkWSRtq0ihvcwM7Qd7qJTYKb6hdOSIeuJPUaa3SHuZDVmbxus=
+	t=1742382240; cv=none; b=Xg6hZAkeKWbCShEVvVz+IInXFiaTitk2G3YR9Sdg40bsU4tEvKF8rq0+4a3jSiimZPU9Ch+awM/AlFPrFg2JHL9pnPA2tUdiKaX4j46KF49CTy7Jtg0DB7w+WAcunOjZD73pJXjx5iaF7mpdoKiP/RVZFDqk38Fp/Q7GO8y8GA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742382240; c=relaxed/simple;
-	bh=3wYVIfQUDZ1L7Npb5FLwsK0yc/ZyO/8SahIGVmz37qE=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=b8jepX53JU21R5/IlWPvDpGTxl1qRRd/IYH0E4fETcJAFSK3gll28iR8WowlE/l7ew5HXGKRcGOhLXhJnJPrnV3MG+F6mG4UcFF0tD8q8O1Aq1xWgV4EeNngHscOpdOhZtFjw3xwCh5/czhR1Zfm4wxvsDEl0xVq2FU53E6y+H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=sL10/XIJ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=5ehDy/5q; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	bh=NcHfcUwCLbwHe5D53KCoWcwA4xO+xpxy4KWgV7nBxOc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=CHLf5UQuIe8/Ps3JjPB647cRhOUuMkXEgjtpPH6VMMXp34W/3fB8kSyXIKkPAfjGfE4McrqYZ/smZ2esOs9ALDVhkqYmkhTLKHbVM5aMQDPLisHvzM3LfI7eFoBIvRFdIHbWkuVFGguft3KKZiHz3UJRiL81HZHMSQMdRXS0dLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=VySlzV0L; arc=none smtp.client-ip=209.85.218.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="sL10/XIJ";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="5ehDy/5q"
-Date: Wed, 19 Mar 2025 11:03:55 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382236;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=60ySEfdFQ2rWm2wQyyF+azFPjWnOtUYqOwMS0bkYPII=;
-	b=sL10/XIJvlWltGkijyuK39gf0SqLlgW9Z86zuhX2mnsUf6gpYxz8OZwlvLPEelbxyhgZEH
-	/JOacedrO7FS8mfoybEuH2thujBhC0M3PSVBLbf1C32sY9+9CIV3p4a0J3KbPYA5bNLiD5
-	ODFZFOaek+cqnb6tXFgCNgkVQgOV5qG0LHHLq/dJjM7ZmdOImMPaRxzsdv6VmfNaWh//8U
-	GKUMEQHKf2gbXEV94iPUi6ifqNToeQj42x2uW7HIoZMyz6ss5zU12Ch2p7J01uNeqsgTni
-	3RPFcaX3dY745MjuRkSEewNgDSBe6v4vAvNl2qcR72bngeunTv5K5wXTqXGEuA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382236;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=60ySEfdFQ2rWm2wQyyF+azFPjWnOtUYqOwMS0bkYPII=;
-	b=5ehDy/5qxW//5ObJd+9YXM2ga3k9ypiT70raLqQer7P/ZqdJdPHia3W7KAfE85Vh/ZkeZw
-	JPFYitA6LR6i+BAg==
-From: "tip-bot2 for Pawan Gupta" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: x86/core] x86/rfds: Exclude P-only parts from the RFDS affected list
-Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
- "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250311-add-cpu-type-v8-5-e8514dcaaff2@linux.intel.com>
-References: <20250311-add-cpu-type-v8-5-e8514dcaaff2@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="VySlzV0L"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2963dc379so1141362866b.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 04:03:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1742382235; x=1742987035; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2I1CmNXU0vxFsOEAZFuw8IP7FJqaRF8yVBtpLAFgrXA=;
+        b=VySlzV0L2DPmw+O1Qnx0uQxT9JajZ7IxMqAvfJr27AnYt5bw9RtGiA23HiA/tfTThU
+         kuJ+UFw567LP7fCuRzriHLULUNIzX/Ch0rFjZx1GnduolsAdwWhjbB11Rpa43MkmUN3Y
+         WU7y8wUWl25MbUfwvuaHQxKhQDE+aoZ99W9o0IDHBeGoj0rIUft4cvPU/F4BLeDcM+Sr
+         PDeGnX+Qjlfrn+Hn26mt1ika/F41a7TwOc2FQhM4bFIhiFNjByFIVoQ0m/4hCmN7KK95
+         DtGYAd6QCwXIoIhpgZv6Z8j/NLn5/wm4+FuTv2+KHwH4sb1stuRzk79PppmHqAVSquBE
+         yxxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742382235; x=1742987035;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2I1CmNXU0vxFsOEAZFuw8IP7FJqaRF8yVBtpLAFgrXA=;
+        b=bRi3z/uSYh+ky+Uy68tX6h0+P+jngedeBHHfDPHWZ9bb+sPyDGLNbr3xZhKGuQQoln
+         m6zNnNhnhhsQvV/CNj917xrYFwO1HKIogt2b1eSaQou1h0gBEk/HuNKWedkDgV5wI8KY
+         tfwe7qcIkfMSZVWmkCFegwacunk4iPhbOS9odm+UHVXoNaP7razK/vUJpfi8liKkDpoJ
+         DF+yMqmmSaanQSCsuAh/UYafCq9dBsoQ7OOb/635vTpHJid3oWdX+5h5cAp61+B3yoYm
+         t9PznNVOi9ygmEBBMn3sieUPA5Tr/HTlTFccUh7JeGpz1bqr211kXV9hWrCpXwNWXZC3
+         2IHg==
+X-Forwarded-Encrypted: i=1; AJvYcCUwdd5lpwluMcCBryQi4XVR3V862nT395rJ/4SAsqaK/XwVRJQcIEHL90sOgR0UAHEkrXeCjkJASft/fHI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzhRAUn4SF1gMUl+OK4X/VCiWm39FLPmnoXI1WrvcgxFp9Te5ca
+	Mo+H/MihfVmXxwupYeHUUTM5JQGBuvmeIgayT2CDohiy806skiR6U3Pf5OSUOkLo2JTvZuVw+DV
+	u
+X-Gm-Gg: ASbGncsUqIuLjNXPJvBpvDp/+Nb0GF1U0UM2u0cnor46drgNxuyhTA/IuX5WYzEQVeD
+	WubHd8ULvgshWpbPh0NoHEh6taN0Q6gzTAbhOCukjU12+doP4KajIQKBQX5p0v4rx3KQquk/G6J
+	MjGLIRGckXxj9wsPwqDC6/AQzuD4ZbSh76818nZ0nPqXOmaWYO/mTc++OE9wBTwApWJ92g/DXAJ
+	ml/SDnLIVMQBFFn1AnXPJaUn9Sm9TrtoKoQUfbg1RPkKUZNd6QPKOO3qQ5j1nO8IbHcvfD6cU5C
+	xZd3rfhgal3JR2k4W+C5+MLQW0BMRvQLB2KjxaNqVkIyQfz86MyfDcZ4Tg+jr1FR6hlPF+3+wy2
+	wNZbu014ypdczNNSVwO5Yi52BwaNSqA==
+X-Google-Smtp-Source: AGHT+IF5XKrV37A9FB390sea/EQKrs962W3+vWeOQPrhoFnDUFkHSAlBd7BcVo+cBG6QrMqMqeoB1w==
+X-Received: by 2002:a17:907:7e5e:b0:abf:6ebf:5500 with SMTP id a640c23a62f3a-ac3b7c036d0mr274465366b.16.1742382234683;
+        Wed, 19 Mar 2025 04:03:54 -0700 (PDT)
+Received: from [127.0.1.1] (host-87-10-75-167.retail.telecomitalia.it. [87.10.75.167])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac314a47783sm1001431466b.144.2025.03.19.04.03.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 04:03:54 -0700 (PDT)
+From: Angelo Dureghello <adureghello@baylibre.com>
+X-Google-Original-From: Angelo Dureghello <adureghello@baylibre.org>
+Date: Wed, 19 Mar 2025 12:02:32 +0100
+Subject: [PATCH] iio: dac: ad3552r-hs: add debugfs reg access
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238223554.14745.16324041214602055294.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20250319-wip-bl-ad3552r-fixes-v1-1-cf10d6fae52a@baylibre.com>
+X-B4-Tracking: v=1; b=H4sIAEek2mcC/x3LQQqAIBBA0avErBtQy4VdJVpkM9ZAWChUIN09a
+ fn4/AKZk3CGoSmQ+JIsR6zQbQPLNseVUagajDJWddrhLSf6HWfqrDUJgzycsQ/esyPSZDzU9Uz
+ 8h3qO0/t+ujBhxmYAAAA=
+X-Change-ID: 20250319-wip-bl-ad3552r-fixes-4fbbe9dd1d2b
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Angelo Dureghello <adureghello@baylibre.com>
+X-Mailer: b4 0.14.2
 
-The following commit has been merged into the x86/core branch of tip:
+From: Angelo Dureghello <adureghello@baylibre.com>
 
-Commit-ID:     722fa0dba74f206999244facb177a8bfe3d513e6
-Gitweb:        https://git.kernel.org/tip/722fa0dba74f206999244facb177a8bfe3d513e6
-Author:        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-AuthorDate:    Tue, 11 Mar 2025 08:03:08 -07:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:17:23 +01:00
+Add debugfs register access.
 
-x86/rfds: Exclude P-only parts from the RFDS affected list
-
-The affected CPU table (cpu_vuln_blacklist) marks Alderlake and Raptorlake
-P-only parts affected by RFDS. This is not true because only E-cores are
-affected by RFDS. With the current family/model matching it is not possible
-to differentiate the unaffected parts, as the affected and unaffected
-hybrid variants have the same model number.
-
-Add a cpu-type match as well for such parts so as to exclude P-only parts
-being marked as affected.
-
-Note, family/model and cpu-type enumeration could be inaccurate in
-virtualized environments. In a guest affected status is decided by RFDS_NO
-and RFDS_CLEAR bits exposed by VMMs.
-
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
-Link: https://lore.kernel.org/r/20250311-add-cpu-type-v8-5-e8514dcaaff2@linux.intel.com
+Signed-off-by: Angelo Dureghello <adureghello@baylibre.com>
 ---
- Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst | 8 +-------
- arch/x86/kernel/cpu/common.c                                 | 7 ++++--
- 2 files changed, 5 insertions(+), 10 deletions(-)
+ drivers/iio/dac/ad3552r-hs.c | 31 +++++++++++++++++++++++++++++++
+ drivers/iio/dac/ad3552r.h    |  2 ++
+ 2 files changed, 33 insertions(+)
 
-diff --git a/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst b/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
-index 0585d02..ad15417 100644
---- a/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
-+++ b/Documentation/admin-guide/hw-vuln/reg-file-data-sampling.rst
-@@ -29,14 +29,6 @@ Below is the list of affected Intel processors [#f1]_:
-    RAPTORLAKE_S            06_BFH
-    ===================  ============
+diff --git a/drivers/iio/dac/ad3552r-hs.c b/drivers/iio/dac/ad3552r-hs.c
+index cd8dabb60c5548780f0fce5d1b68c494cd71321d..7bb6d8817a545f16de9432526ae28787af1a0146 100644
+--- a/drivers/iio/dac/ad3552r-hs.c
++++ b/drivers/iio/dac/ad3552r-hs.c
+@@ -7,6 +7,7 @@
+  */
  
--As an exception to this table, Intel Xeon E family parts ALDERLAKE(06_97H) and
--RAPTORLAKE(06_B7H) codenamed Catlow are not affected. They are reported as
--vulnerable in Linux because they share the same family/model with an affected
--part. Unlike their affected counterparts, they do not enumerate RFDS_CLEAR or
--CPUID.HYBRID. This information could be used to distinguish between the
--affected and unaffected parts, but it is deemed not worth adding complexity as
--the reporting is fixed automatically when these parts enumerate RFDS_NO.
--
- Mitigation
- ==========
- Intel released a microcode update that enables software to clear sensitive
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 5809534..a2b9a79 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -1203,6 +1203,9 @@ static const __initconst struct x86_cpu_id cpu_vuln_whitelist[] = {
- #define VULNBL_INTEL_STEPS(vfm, max_stepping, issues)		   \
- 	X86_MATCH_VFM_STEPS(vfm, X86_STEP_MIN, max_stepping, issues)
+ #include <linux/bitfield.h>
++#include <linux/debugfs.h>
+ #include <linux/delay.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/iio/backend.h>
+@@ -56,6 +57,15 @@ struct ad3552r_hs_state {
+ 	u32 config_d;
+ };
  
-+#define VULNBL_INTEL_TYPE(vfm, cpu_type, issues)	\
-+	X86_MATCH_VFM_CPU_TYPE(vfm, INTEL_CPU_TYPE_##cpu_type, issues)
++static int ad3552r_hs_get_reg_length(unsigned int reg)
++{
++	/*
++	 * There is no 3 or 4 bytes r/w len possible in HDL, so keeping 2
++	 * also for the 24bit area.
++	 */
++	return (reg > AD3552R_SECONDARY_REGION_START) ? 2 : 1;
++}
 +
- #define VULNBL_AMD(family, blacklist)		\
- 	VULNBL(AMD, family, X86_MODEL_ANY, blacklist)
+ static int ad3552r_hs_reg_read(struct ad3552r_hs_state *st, u32 reg, u32 *val,
+ 			       size_t xfer_size)
+ {
+@@ -464,6 +474,26 @@ static int ad3552r_hs_setup_custom_gain(struct ad3552r_hs_state *st,
+ 				      gain, 1);
+ }
  
-@@ -1251,9 +1254,9 @@ static const struct x86_cpu_id cpu_vuln_blacklist[] __initconst = {
- 	VULNBL_INTEL_STEPS(INTEL_TIGERLAKE,	     X86_STEP_MAX,	GDS),
- 	VULNBL_INTEL_STEPS(INTEL_LAKEFIELD,	     X86_STEP_MAX,	MMIO | MMIO_SBDS | RETBLEED),
- 	VULNBL_INTEL_STEPS(INTEL_ROCKETLAKE,	     X86_STEP_MAX,	MMIO | RETBLEED | GDS),
--	VULNBL_INTEL_STEPS(INTEL_ALDERLAKE,	     X86_STEP_MAX,	RFDS),
-+	VULNBL_INTEL_TYPE(INTEL_ALDERLAKE,		     ATOM,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_ALDERLAKE_L,	     X86_STEP_MAX,	RFDS),
--	VULNBL_INTEL_STEPS(INTEL_RAPTORLAKE,	     X86_STEP_MAX,	RFDS),
-+	VULNBL_INTEL_TYPE(INTEL_RAPTORLAKE,		     ATOM,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_RAPTORLAKE_P,	     X86_STEP_MAX,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_RAPTORLAKE_S,	     X86_STEP_MAX,	RFDS),
- 	VULNBL_INTEL_STEPS(INTEL_ATOM_GRACEMONT,     X86_STEP_MAX,	RFDS),
++static int ad3552r_hs_reg_access(struct iio_dev *indio_dev, unsigned int reg,
++				 unsigned int writeval, unsigned int *readval)
++{
++	struct ad3552r_hs_state *st = iio_priv(indio_dev);
++	int size_xfer, max_reg_addr;
++
++	max_reg_addr = (st->model_data->num_hw_channels == 2) ?
++			AD3552R_REG_ADDR_MAX : AD3551R_REG_ADDR_MAX;
++
++	if (reg > max_reg_addr)
++		return -EINVAL;
++
++	size_xfer = ad3552r_hs_get_reg_length(reg);
++
++	if (readval)
++		return ad3552r_hs_reg_read(st, reg, readval, size_xfer);
++
++	return st->data->bus_reg_write(st->back, reg, writeval, size_xfer);
++}
++
+ static int ad3552r_hs_setup(struct ad3552r_hs_state *st)
+ {
+ 	u16 id;
+@@ -639,6 +669,7 @@ static const struct iio_chan_spec ad3552r_hs_channels[] = {
+ static const struct iio_info ad3552r_hs_info = {
+ 	.read_raw = &ad3552r_hs_read_raw,
+ 	.write_raw = &ad3552r_hs_write_raw,
++	.debugfs_reg_access = &ad3552r_hs_reg_access,
+ };
+ 
+ static int ad3552r_hs_probe(struct platform_device *pdev)
+diff --git a/drivers/iio/dac/ad3552r.h b/drivers/iio/dac/ad3552r.h
+index 768fa264d39e9e6d517aeb4098382e072f153543..69ce96f132cdb353d2f140939c534586cb791aee 100644
+--- a/drivers/iio/dac/ad3552r.h
++++ b/drivers/iio/dac/ad3552r.h
+@@ -113,6 +113,8 @@
+ #define AD3552R_REG_ADDR_INPUT_PAGE_MASK_24B		0x44
+ #define AD3552R_REG_ADDR_SW_LDAC_24B			0x45
+ #define AD3552R_REG_ADDR_CH_INPUT_24B(ch)		(0x4B - (1 - (ch)) * 3)
++#define AD3551R_REG_ADDR_MAX				0x46
++#define AD3552R_REG_ADDR_MAX				0x49
+ 
+ #define AD3552R_MAX_CH					2
+ #define AD3552R_MASK_CH(ch)				BIT(ch)
+
+---
+base-commit: 6f9141cdd726e82d209b5fc6d6b5ea32ace339f1
+change-id: 20250319-wip-bl-ad3552r-fixes-4fbbe9dd1d2b
+
+Best regards,
+-- 
+Angelo Dureghello <adureghello@baylibre.com>
+
