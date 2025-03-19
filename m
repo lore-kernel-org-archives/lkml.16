@@ -1,107 +1,261 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0947C16BE3A
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055BE19DF6A
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742395925; cv=none; b=BHBMrrPQ2JxiVAlD2UwjKYo7z3q2+o2gvcCSLX0axufIl41t+d/tw7tW1GzkGpbGsLfCpbQQxP0hCLJoZwN+hCIDMAnL+VyhzC7mifgWAPMyKpCZoT4dVggh1XwbPJn6P2xJcmRiZy3lPELw+45LFsN453UGL+dcmC04o4GwFgc=
+	t=1742395988; cv=none; b=rWvCETyXAlRD7jS5YmH8Sd4SIQuyhHcbDR5Q7UQM3i8LG+jWet9eoVFRBSCRWxIj2iafbDhmOimk4+VwnGp9Nl9UgmL56vpf91X823kFj/m5N1N4zom3thH9/4cg6TLA9/TUY8boUx82wcEvc362bSbq32nF4fmY1FU3+2p6ZhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742395925; c=relaxed/simple;
-	bh=fmThr+0j5ZXRTB6Jpny73eJBulXT9fTCmES60M34KXI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UBnSR+YxPtRC3xKBQT15IomO46tHMAJg6gGVmmdvrrndDLglV6I1N8r9TVHKOqqKQQGBPMCr2megp/1W64ludIL9n8NIsbNvUt1A6/TlEAkghBc3n/WS20/KdfhpXtk1YjldWBlLkMURn4jUui1ptA6I+W/DbLAVI1COozXO3to=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Evn62ujM; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1742395988; c=relaxed/simple;
+	bh=YOgi5A0ie19P8MA4Y6lQRqa4t3xJ5eTeJCjFRTg09QE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BdjiojBdNzCkJiLYD8PgMSSUZ+UEqZrpamjAK9BdvrqUNwyTeE5xa9eKj4lXtrkIKBte12mU+MQl14j1/pgddGpTUsKq37ra4+glUpeUVMNluvOvR0tPbhtH9ixtlAq0meJsrbUZorzFvLG5uDz4TUpc3N8NpVyKZkM0Mvh+e0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=W0bFPBka; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Evn62ujM"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="W0bFPBka"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742395922;
+	s=mimecast20190719; t=1742395985;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rwWKRC3nWivzyNEP1S1vISXANNiFB9MsZAJYGEURD2o=;
-	b=Evn62ujML6jp2ES+yISKfyUUJrtucSs+rVMlxubyz1A3nDViwwVIW01n5LeItPhK6vgIHk
-	nYg92nbmIgzN92WgAMauEdwDnuU1d8uuVY/whSqc6a8hCaVmDNg8x4ThOoYwYItUxokw80
-	0bxCitvqewKDZD+xiO99wHQWCGtjdsA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-647-y1tPtKyJNL6OPCxZd64RTw-1; Wed,
- 19 Mar 2025 10:51:59 -0400
-X-MC-Unique: y1tPtKyJNL6OPCxZd64RTw-1
-X-Mimecast-MFC-AGG-ID: y1tPtKyJNL6OPCxZd64RTw_1742395916
-Received: from mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.4])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 1A6B71800349;
-	Wed, 19 Mar 2025 14:51:56 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
-	by mx-prod-int-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id C5A693001D12;
-	Wed, 19 Mar 2025 14:51:46 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Mar 2025 15:51:23 +0100 (CET)
-Date: Wed, 19 Mar 2025 15:51:13 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Jeremy Linton <jeremy.linton@arm.com>
-Cc: linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-	mhiramat@kernel.org, peterz@infradead.org, acme@kernel.org,
-	namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, thiago.bauermann@linaro.org,
-	broonie@kernel.org, yury.khrustalev@arm.com,
-	kristina.martsenko@arm.com, liaochang1@huawei.com,
-	catalin.marinas@arm.com, will@kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 6/7] uprobes: Allow the use of uprobe_warn() in arch code
-Message-ID: <20250319145057.GA10753@redhat.com>
-References: <20250318204841.373116-1-jeremy.linton@arm.com>
- <20250318204841.373116-7-jeremy.linton@arm.com>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=Xw9nEI8IIkPA7FZEqnNHbNY1dgUSXzG2QKz9ZdPxI04=;
+	b=W0bFPBkarDrwjtfuWoZpuMulc2GW6bD1fx2Im5atYExqTUaXEerUh+zToJln6Yud7rHvYk
+	0k/McTs6/CZrBiEj40XAlzrqJuKdtScinghxdw+xA+U89LV8bBEVuwnTWuun1xQzn1elRc
+	F8m9SUe+yR9z50wKWJsPRomQyb4kcUk=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-175-YCDRXto4PWeBPUs7OKKZkg-1; Wed, 19 Mar 2025 10:53:04 -0400
+X-MC-Unique: YCDRXto4PWeBPUs7OKKZkg-1
+X-Mimecast-MFC-AGG-ID: YCDRXto4PWeBPUs7OKKZkg_1742395983
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3913aaf1e32so4485123f8f.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:53:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742395983; x=1743000783;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:from:references:cc:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Xw9nEI8IIkPA7FZEqnNHbNY1dgUSXzG2QKz9ZdPxI04=;
+        b=hGPdnu77FmXNyV0KREWJFp7btNYWyVhOr9YBs+JZ+o4bGsdrhWCkJlMFwybXDXX2sW
+         tcjamAeqwVOjmKmU70C/RSlz9/r4aZDtx23wLK46rdzrXv5kVgOJHTQpQajTLk+fopqT
+         lCbBrtJ0fwefdt3PD447OGuw/SRqEmETmaE/zb80c5NfZt4tgyOJjq4qVkbgZ4efplaD
+         sZPp9b+or61MhYQ6nJmDrmlRC/z15+Ku6HynWc7/wk6gtAGHoCtMPow6ATsHXDSjXOJ6
+         lfF/F1YME32EWQNQu3NBWh2uiRMjBJcG5Ui7nI99ZpYUlxJA7dCMMlM6bc6Exb9EHrVV
+         p9kg==
+X-Forwarded-Encrypted: i=1; AJvYcCUP14fHMogqBGIrQVDJW92cIxrIHCexz/Xj86lD7fOUEadIGrXjvx/regxtZQblTee6F7p9CvX1bMj0DQg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVu8Q70DkLojzJ7tFvHNyrNUquP/I2oQmwFGhiZTwHjiU4xulm
+	VXEbmwE6FHEGx9mrapDDNObG0R3aKEW24r8j7C8peh5HrmSR+3Q5YYVwt7zdZ0fOISNOodXsHKq
+	aRjHkHpLRPF0H+mLwmHT5K8Db0HNEtid6dQ/C/OxFPAI+JdnUFp8wkQSqqGPFug==
+X-Gm-Gg: ASbGncvo7+HboDuC+PQjcdcSU6X1QUrz64yQnFbcUq42rNUMIenUpEbiSMPtyUSCAjT
+	TkKAF8uqKYahk2m2zsYgFL1wxhe1S1giSGJlY3K/vBdYXnVFHB2D91F2Umf5NNYrmzEDKo9Mscg
+	Mp+lpNXYLZOMDukFgh3vWOSoHd6t6wOWCjubawFgmIxDokrXagT1r99EQclVtXKw1wOIYdjR43E
+	viveWsQNj9AzJ0FQ5M+FByh8VXeeqswcuJoZnqUHJFBD4mQWTwCmhy6pX8OPRzwqavhxgQ56JGG
+	IRdxJ7gyvUUHw9GAhbHCEjUvdylebAUJqqOaknX2SyPZxZ68UQ6bZyaQC5+1j/rvovsDZqoQCOo
+	FoLExVM4eGZesC6nWG0G/VIRUxIP5004VfEjQhnUhvBc=
+X-Received: by 2002:adf:a454:0:b0:391:2da8:6e26 with SMTP id ffacd0b85a97d-39973b2dd47mr2031579f8f.52.1742395983185;
+        Wed, 19 Mar 2025 07:53:03 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEJMAACTGpkCFiqQxHj3Q309SaEdbRnKCTQelHyBGMvo5k8U+IEeQ59SOBOaeKpEwVVgqZDCQ==
+X-Received: by 2002:adf:a454:0:b0:391:2da8:6e26 with SMTP id ffacd0b85a97d-39973b2dd47mr2031533f8f.52.1742395982663;
+        Wed, 19 Mar 2025 07:53:02 -0700 (PDT)
+Received: from ?IPV6:2003:cb:c705:df00:67e8:5c3d:de72:4929? (p200300cbc705df0067e85c3dde724929.dip0.t-ipconnect.de. [2003:cb:c705:df00:67e8:5c3d:de72:4929])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f58ab6sm21011405e9.23.2025.03.19.07.52.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 07:53:01 -0700 (PDT)
+Message-ID: <278393de-2729-4ed0-822c-87f33c7ce27e@redhat.com>
+Date: Wed, 19 Mar 2025 15:52:56 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318204841.373116-7-jeremy.linton@arm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 0/5] implement lightweight guard pages
+To: Alexander Mikhalitsyn <aleksandr.mikhalitsyn@canonical.com>,
+ Lorenzo Stoakes <lorenzo.stoakes@oracle.com>
+Cc: James.Bottomley@hansenpartnership.com, Liam.Howlett@oracle.com,
+ akpm@linux-foundation.org, arnd@kernel.org, brauner@kernel.org,
+ chris@zankel.net, deller@gmx.de, hch@infradead.org, jannh@google.com,
+ jcmvbkbc@gmail.com, jeffxu@chromium.org, jhubbard@nvidia.com,
+ linux-api@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+ mattst88@gmail.com, muchun.song@linux.dev, paulmck@kernel.org,
+ richard.henderson@linaro.org, shuah@kernel.org, sidhartha.kumar@oracle.com,
+ surenb@google.com, tsbogend@alpha.franken.de, vbabka@suse.cz,
+ willy@infradead.org, criu@lists.linux.dev, Andrei Vagin <avagin@gmail.com>,
+ Pavel Tikhomirov <ptikhomirov@virtuozzo.com>
+References: <cover.1730123433.git.lorenzo.stoakes@oracle.com>
+ <zihwmp67m2lpuxbfktmztvjdyap7suzd75dowlw4eamu6bhjf3@6euydiqowc7h>
+From: David Hildenbrand <david@redhat.com>
+Content-Language: en-US
+Autocrypt: addr=david@redhat.com; keydata=
+ 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
+ WNyWQQ==
+Organization: Red Hat
+In-Reply-To: <zihwmp67m2lpuxbfktmztvjdyap7suzd75dowlw4eamu6bhjf3@6euydiqowc7h>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On 03/18, Jeremy Linton wrote:
->
-> --- a/include/linux/uprobes.h
-> +++ b/include/linux/uprobes.h
-> @@ -185,6 +185,7 @@ struct uprobes_state {
->  };
->  
->  extern void __init uprobes_init(void);
-> +extern void uprobe_warn(struct task_struct *t, const char *msg);
->  extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
->  extern int set_orig_insn(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
->  extern bool is_swbp_insn(uprobe_opcode_t *insn);
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index b4ca8898fe17..613c1c76f227 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -118,7 +118,7 @@ struct xol_area {
->  	unsigned long 			vaddr;		/* Page(s) of instruction slots */
->  };
->  
-> -static void uprobe_warn(struct task_struct *t, const char *msg)
-> +void uprobe_warn(struct task_struct *t, const char *msg)
->  {
->  	pr_warn("uprobe: %s:%d failed to %s\n", current->comm, current->pid, msg);
->  }
+On 19.03.25 15:50, Alexander Mikhalitsyn wrote:
+> On Mon, Oct 28, 2024 at 02:13:26PM +0000, Lorenzo Stoakes wrote:
+>> Userland library functions such as allocators and threading implementations
+>> often require regions of memory to act as 'guard pages' - mappings which,
+>> when accessed, result in a fatal signal being sent to the accessing
+>> process.
+>>
+>> The current means by which these are implemented is via a PROT_NONE mmap()
+>> mapping, which provides the required semantics however incur an overhead of
+>> a VMA for each such region.
+>>
+>> With a great many processes and threads, this can rapidly add up and incur
+>> a significant memory penalty. It also has the added problem of preventing
+>> merges that might otherwise be permitted.
+>>
+>> This series takes a different approach - an idea suggested by Vlasimil
+>> Babka (and before him David Hildenbrand and Jann Horn - perhaps more - the
+>> provenance becomes a little tricky to ascertain after this - please forgive
+>> any omissions!)  - rather than locating the guard pages at the VMA layer,
+>> instead placing them in page tables mapping the required ranges.
+>>
+>> Early testing of the prototype version of this code suggests a 5 times
+>> speed up in memory mapping invocations (in conjunction with use of
+>> process_madvise()) and a 13% reduction in VMAs on an entirely idle android
+>> system and unoptimised code.
+>>
+>> We expect with optimisation and a loaded system with a larger number of
+>> guard pages this could significantly increase, but in any case these
+>> numbers are encouraging.
+>>
+>> This way, rather than having separate VMAs specifying which parts of a
+>> range are guard pages, instead we have a VMA spanning the entire range of
+>> memory a user is permitted to access and including ranges which are to be
+>> 'guarded'.
+>>
+>> After mapping this, a user can specify which parts of the range should
+>> result in a fatal signal when accessed.
+>>
+>> By restricting the ability to specify guard pages to memory mapped by
+>> existing VMAs, we can rely on the mappings being torn down when the
+>> mappings are ultimately unmapped and everything works simply as if the
+>> memory were not faulted in, from the point of view of the containing VMAs.
+>>
+>> This mechanism in effect poisons memory ranges similar to hardware memory
+>> poisoning, only it is an entirely software-controlled form of poisoning.
+>>
+>> The mechanism is implemented via madvise() behaviour - MADV_GUARD_INSTALL
+>> which installs page table-level guard page markers - and
+>> MADV_GUARD_REMOVE - which clears them.
+>>
+>> Guard markers can be installed across multiple VMAs and any existing
+>> mappings will be cleared, that is zapped, before installing the guard page
+>> markers in the page tables.
+>>
+>> There is no concept of 'nested' guard markers, multiple attempts to install
+>> guard markers in a range will, after the first attempt, have no effect.
+>>
+>> Importantly, removing guard markers over a range that contains both guard
+>> markers and ordinary backed memory has no effect on anything but the guard
+>> markers (including leaving huge pages un-split), so a user can safely
+>> remove guard markers over a range of memory leaving the rest intact.
+>>
+>> The actual mechanism by which the page table entries are specified makes
+>> use of existing logic - PTE markers, which are used for the userfaultfd
+>> UFFDIO_POISON mechanism.
+>>
+>> Unfortunately PTE_MARKER_POISONED is not suited for the guard page
+>> mechanism as it results in VM_FAULT_HWPOISON semantics in the fault
+>> handler, so we add our own specific PTE_MARKER_GUARD and adapt existing
+>> logic to handle it.
+>>
+>> We also extend the generic page walk mechanism to allow for installation of
+>> PTEs (carefully restricted to memory management logic only to prevent
+>> unwanted abuse).
+>>
+>> We ensure that zapping performed by MADV_DONTNEED and MADV_FREE do not
+>> remove guard markers, nor does forking (except when VM_WIPEONFORK is
+>> specified for a VMA which implies a total removal of memory
+>> characteristics).
+>>
+>> It's important to note that the guard page implementation is emphatically
+>> NOT a security feature, so a user can remove the markers if they wish. We
+>> simply implement it in such a way as to provide the least surprising
+>> behaviour.
+>>
+>> An extensive set of self-tests are provided which ensure behaviour is as
+>> expected and additionally self-documents expected behaviour of guard
+>> ranges.
+> 
+> Dear Lorenzo,
+> Dear colleagues,
+> 
+> sorry about raising an old thread.
+> 
+> It looks like this feature is now used in glibc [1]. And we noticed failures in CRIU [2]
+> CI on Fedora Rawhide userspace. Now a question is how we can properly detect such
+> "guarded" pages from user space. As I can see from MADV_GUARD_INSTALL implementation,
+> it does not modify VMA flags anyhow, but only page tables. It means that /proc/<pid>/maps
+> and /proc/<pid>/smaps interfaces are useless in this case. (Please, correct me if I'm missing
+> anything here.)
+> 
+> I wonder if you have any ideas / suggestions regarding Checkpoint/Restore here. We (CRIU devs) are happy
+> to develop some patches to bring some uAPI to expose MADV_GUARDs, but before going into this we decided
+> to raise this question in LKML.
 
-Oh, no, please don't.
 
-uprobe_warn() is ugly and needs changes. If nothing else it doesn't even use
-its "t" argument.
+See [1] and [2]
 
-Oleg.
+[1] 
+https://lkml.kernel.org/r/cover.1740139449.git.lorenzo.stoakes@oracle.com
+[2] https://lwn.net/Articles/1011366/
+
+
+-- 
+Cheers,
+
+David / dhildenb
 
