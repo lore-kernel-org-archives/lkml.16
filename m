@@ -1,190 +1,162 @@
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (mail-mw2nam10on2079.outbound.protection.outlook.com [40.107.94.79])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CDB1C5D51;
-	Wed, 19 Mar 2025 14:04:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.94.79
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742393082; cv=fail; b=W+FU5RENm+4miQW2LF0noEFeao76Onp3KXDajHMakZGEDdmjIWveF1WkX89+YNc9ryNaSMpNrIRcj80quWJJwlQJiPbzOfT7b7Fp+JoYXkN0xE+/FaJPT8KfOAaz//GB/xZeuHecHiBjg7dqYlhKiLama7fpr09nZ0sM0vsM+6g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742393082; c=relaxed/simple;
-	bh=dXyTRlP1I5lYfvB7puPsPWcojviMTUPV0PWj2ycFI/M=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=r2Ha7B+FD/VYpQG1/x6pAPth8kjVYFacSCc+/ZeEhgQESE1Jxum81pFJXnm4VOBJ4JF9ROzik/MyMn7BUaRQTVij2jupBYNM14Sg8OhUPkajsQVyusSkRtGFtzwUdmpk5QLIXw0gIa2nOCC/tK+uCIPJw35zT63FXirIi5MbloU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=usgGf1DR; arc=fail smtp.client-ip=40.107.94.79
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 127F91D514F;
+	Wed, 19 Mar 2025 14:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742393086; cv=none; b=ItWYigyIO191QJPeUjnzB3kJMPLKAcBdEvANfy2lwAYe9mCadx667AXeafQD5R1FELsN3Hz8mOCOoT+ePP+yx9oA9LKwVxvUMgXa2lmLchxNsLD2JQrE3nj2zzqsdcpPWxj8JNQH3X7MliU7/zSTB/zjkCHootZAhKEdY5ji5lA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742393086; c=relaxed/simple;
+	bh=XLseAtVuZGTyV4UnXu78XBm/IOdbX1Pv0cEyqyRv/F0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TsF0PiFjkv4nDaSEuDxrbBGfPr4hCCeWsujj9YDIO5c7WBad81sqe9syMeaUuz08rfb8e2v93HVsZ4lsCvHQ39olMdmXOcyh2AeE12BF1UDQNW/MvOUgcouMZZoAL5FobQrSo+Q84YLgF0AyQditCNFMiDQmzFkE8UwUgl1vN2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lr4mL5vt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="usgGf1DR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HXZPP4ERRMx5SUVDirOKyk2mlHc2rjBUwiT08/q64/bMj4skYeYkQgTZcTWukQLHqNufAXxbBUfCpSUGFyft2spmqDHZSXQgfGNi7WVh362JRZs2MJx+IGA7u/8dASuWCFzEpJw5j+VEYaML12v2CLBpKjqgBju3yQqvMfmYvYqiIWKfT6Br3Hytjl4HIse+6YmmxANjupuGrjOUuY1Hf6gqp5QJft9BrTF2ldM0wU3WGrpkPlBA7yW+ShvLxXcp90bidWdsS+iR3d9PicgUBd2bW56oOagNomobhoWQztNiqUEh3RzkvhJc+L641RY2HLph5FEFPfcHO6TygzDMCg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=7d2kuBDtSR58wFjRxStxTHRspgdbkRA21KQn24KfMYI=;
- b=Sz3t3JkTVQe/REYZwUSzJe9J+pi5vKRdJGobL9lSMrpQSq7ApvzO5QC3WJptU3bTdRkxvXpHbupYCrwJYHUBksI4MZqA1VRUjUVSlGNQxvNRIikU6yTdlZg9IjkNSxbZHG9i6YFxqW61qJTACtmWc3zF5ZstMvzuI241vxRTnYwljE7fWhSjXiJ0KeJxHZgmSm4A3USY3J2XtKLg99ncdQzRyRSP7FxEZ30BTaqCJ+/mCHEb81LEzPX/gH35ugc8hurgvNwu8SUHWISMH3Bn5CEgoAYFKnIgbXCB3rixvjOhHq2f0YdAigc08UpJxLBtEyJmmcCzNZ2EWsIwWesPiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.118.232) smtp.rcpttodomain=davemloft.net smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=7d2kuBDtSR58wFjRxStxTHRspgdbkRA21KQn24KfMYI=;
- b=usgGf1DRZ7GUpnbDrWgZlMDuxwizBCh8zukTHUozY0ohpGdmtJ6QhTw+lE+h1MJ60rvqxqdx39GlWSHOYahQEWqQeMptt1SdBqIjY6sJvoIM1rW+nvhEMxAZakxy5/N8hGFk2M/7NwhfsqjRI6DaCepkPoBrSMIiFDoZWYUS1RCKMHk6x1plvL5UVYrqnxaX8ZSya7FtcBpUswpJAWpUrmHC3vD6hlQ3XSMayAkKWsbNwVxrjhBon/eYa7uZSKxQEM9ilGUNqZbA7nvcdOpim+LMXkHd4Pz4pWmWGSDq7rK8/pN4OsRrkSol5xpQYlNlThAb/AfplYPWDP4cBYWjJQ==
-Received: from MW4PR03CA0084.namprd03.prod.outlook.com (2603:10b6:303:b6::29)
- by IA1PR12MB7712.namprd12.prod.outlook.com (2603:10b6:208:420::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
- 2025 14:04:36 +0000
-Received: from CY4PEPF0000EE36.namprd05.prod.outlook.com
- (2603:10b6:303:b6:cafe::57) by MW4PR03CA0084.outlook.office365.com
- (2603:10b6:303:b6::29) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Wed,
- 19 Mar 2025 14:04:35 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.232)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.118.232 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.118.232; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.118.232) by
- CY4PEPF0000EE36.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8534.20 via Frontend Transport; Wed, 19 Mar 2025 14:04:35 +0000
-Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
- (10.127.129.5) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Wed, 19 Mar
- 2025 07:04:23 -0700
-Received: from drhqmail202.nvidia.com (10.126.190.181) by
- drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Wed, 19 Mar 2025 07:04:23 -0700
-Received: from vdi.nvidia.com (10.127.8.10) by mail.nvidia.com
- (10.126.190.181) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
- Transport; Wed, 19 Mar 2025 07:04:19 -0700
-From: Tariq Toukan <tariqt@nvidia.com>
-To: "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>, Eric Dumazet <edumazet@google.com>, "Andrew
- Lunn" <andrew+netdev@lunn.ch>
-CC: Gal Pressman <gal@nvidia.com>, Leon Romanovsky <leonro@nvidia.com>, "Saeed
- Mahameed" <saeedm@nvidia.com>, Leon Romanovsky <leon@kernel.org>, Tariq
- Toukan <tariqt@nvidia.com>, <netdev@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Moshe Shemesh
-	<moshe@nvidia.com>, Mark Bloch <mbloch@nvidia.com>, Shay Drory
-	<shayd@nvidia.com>
-Subject: [PATCH net-next 3/5] net/mlx5: Update pfnum retrieval for devlink port attributes
-Date: Wed, 19 Mar 2025 16:03:01 +0200
-Message-ID: <1742392983-153050-4-git-send-email-tariqt@nvidia.com>
-X-Mailer: git-send-email 2.8.0
-In-Reply-To: <1742392983-153050-1-git-send-email-tariqt@nvidia.com>
-References: <1742392983-153050-1-git-send-email-tariqt@nvidia.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lr4mL5vt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5491CC4CEE9;
+	Wed, 19 Mar 2025 14:04:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742393085;
+	bh=XLseAtVuZGTyV4UnXu78XBm/IOdbX1Pv0cEyqyRv/F0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lr4mL5vthnchBidBqeX/PhFJeLNf2cnh6HwecJptmGMC2gwUNW0q6ind2lia+zL95
+	 em7yXDmLmVipN7mxFXMmCONDhJk9RPEa1R5EKZ4jNpe2fzQpRwsdPHzYs9l7HBBquY
+	 CfoW+Sg1E5rdq/RXH1Sei3lvac+cCZb433qzoQVA=
+Date: Wed, 19 Mar 2025 07:03:26 -0700
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Cliff Liu <donghua.liu@windriver.com>
+Cc: stable@vger.kernel.org, sfrench@samba.org, pc@cjr.nz,
+	lsahlber@redhat.com, sprasad@microsoft.com, tom@talpey.com,
+	linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+	linux-kernel@vger.kernel.org, paul@darkrain42.org,
+	Zhe.He@windriver.com
+Subject: Re: [PATCH 6.1.y] smb: prevent use-after-free due to open_cached_dir
+ error paths
+Message-ID: <2025031913-unclaimed-ocean-06f5@gregkh>
+References: <20250319090839.3631424-1-donghua.liu@windriver.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-NV-OnPremToCloud: AnonymousSubmission
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EE36:EE_|IA1PR12MB7712:EE_
-X-MS-Office365-Filtering-Correlation-Id: fddf63a7-fe89-48b2-6ea0-08dd66eefaee
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|36860700013|376014|82310400026;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AKSvmIT6qdLPT2YBd5iv+k2R6TnRtgDGnppkBX9syWmLE9cGf0muHfQQCvBd?=
- =?us-ascii?Q?/YgEYQnuxkuw68NNk7bqwr0mv4sOfPcmqq/e2+ritDUMzCYHXJFEiidmW83K?=
- =?us-ascii?Q?/Ue+KzugGaoXmgXDMMRxVJGInq20zRzPYUJqgBly6LGMZxYfAAdVblUTGTVd?=
- =?us-ascii?Q?pW1Y3kheZemACAxaTRucKHjdj/PnCVOcA++8A3aRfG2hk9E23oxGGqaZA9p3?=
- =?us-ascii?Q?UB8p+gis2oQoWvPcE/Gps7fgPNKJd1K2VVlNUbrdmd0j8Pn08BMDblkLIwI1?=
- =?us-ascii?Q?D05dmywTPrqBB1FtCo+1QRMZJppTqrmxlBPplTsFKiSbh7WetrqdYk6tX+Om?=
- =?us-ascii?Q?uUVPLlK3xUdXUt0n+9+VTKW+d4q3gfcx+vWnELQ9efqyR+tSc4rTLTiqgOMl?=
- =?us-ascii?Q?4qKXO6SdRVVJgOpWrMK1tifr/i2jUef+1/EPFHBuBubW6MUTtfxk6FmzetCS?=
- =?us-ascii?Q?1CU97EKT+XVvb38h9gS5QBrUaLStmhrHDST6PvqFOzMnjPRj0G4PWKqyzTFl?=
- =?us-ascii?Q?Pzh6SVHOpe6KqDcyR2dfGTI9698OpgVDGWrdxfWJkp38LI3/z2stx3dcxnAm?=
- =?us-ascii?Q?8sHMZbnh31sJ8FYbdVKastgBMJQ2sFk1985dUz7f/Rv3/v2qfG6lxKN8f3Db?=
- =?us-ascii?Q?J2p+RS43YNseHfH9ih2RMOalYMLJj8dDkVYwxyX4OHH07/q+9pVIRMwy0LYd?=
- =?us-ascii?Q?SxJW4BhoNlPOj9RWa5NKO7pHTJ6bn1Il5O2jk4d/2CEEZ51ob0SQ1d9xedba?=
- =?us-ascii?Q?zof5OLUZICeUUWKG1W/MXPwE9GKURYGKF141BiKckTtYpU7GMFKiY7AfxhGQ?=
- =?us-ascii?Q?Bo9y4f4BT92W4taddMjH9NI4K5K9Hoe/eSsiTdAEFdvn3fYPphuGC/iBUNBP?=
- =?us-ascii?Q?GpwFfbnNkvBPf1wD+U3eXT/aSGWbfrKe+D4Pw3itCNSCWXMLPKLsFIoqziBd?=
- =?us-ascii?Q?dUeJLCFpR6Km6r+3Uy95ZN3+/5u/F7xvtltnrVi5EuoOrGWZ1ZazRUWGG4Da?=
- =?us-ascii?Q?TuY6OwRfzaL9VjdDn9fhRRBY2iu/MbZwMNoUWP8dmbSOoE0gtxcQTwvUa2eE?=
- =?us-ascii?Q?GGv0IikI3rjI5G2TWwyCBPpA94VvJFQ72VuYB23d/xSS6JnPaL/SrMRyre06?=
- =?us-ascii?Q?gjKRKyQ81UoCgOLUdQL3PGrOqUz1Z3ycSyI0g1rBNHzZoEX2PavKO0cQ6Jq1?=
- =?us-ascii?Q?jBW0Dd0WL2yMqlV15uBbcws50lVRtQbOG9/VDqhjOHOW53buSBn4RyzUpZEI?=
- =?us-ascii?Q?0ELZUPbwdI9Rw3Cg19zKCwCYEJQPvM6eJFNG1ZKhJsklXk9mmXvWCqSOeIvO?=
- =?us-ascii?Q?jK/PPzOl0T28nYaLDnwPzynNIxKd5Cp0hNZvoaTw+ydtWYz+d3Cgu+G10N+q?=
- =?us-ascii?Q?0rc5miLEnNSZeV/M5lFhHn+1OSHmR8DAzSpvy5yJwuAJX0P1Bx4McV9eQX5C?=
- =?us-ascii?Q?GLmDzNQPmd7YbpIGY+aUHELk1ByzDbE4Y9rM4DO7NiN4Pwb14iztZBuzp5iP?=
- =?us-ascii?Q?x7AtoxjJ8ImdO3I=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.118.232;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge1.nvidia.com;CAT:NONE;SFS:(13230040)(1800799024)(36860700013)(376014)(82310400026);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 14:04:35.3876
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fddf63a7-fe89-48b2-6ea0-08dd66eefaee
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.232];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EE36.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB7712
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250319090839.3631424-1-donghua.liu@windriver.com>
 
-From: Shay Drory <shayd@nvidia.com>
+On Wed, Mar 19, 2025 at 05:08:39PM +0800, Cliff Liu wrote:
+> From: Paul Aurich <paul@darkrain42.org>
+> 
+> If open_cached_dir() encounters an error parsing the lease from the
+> server, the error handling may race with receiving a lease break,
+> resulting in open_cached_dir() freeing the cfid while the queued work is
+> pending.
+> 
+> Update open_cached_dir() to drop refs rather than directly freeing the
+> cfid.
+> 
+> Have cached_dir_lease_break(), cfids_laundromat_worker(), and
+> invalidate_all_cached_dirs() clear has_lease immediately while still
+> holding cfids->cfid_list_lock, and then use this to also simplify the
+> reference counting in cfids_laundromat_worker() and
+> invalidate_all_cached_dirs().
+> 
+> Fixes this KASAN splat (which manually injects an error and lease break
+> in open_cached_dir()):
+> 
+> ==================================================================
+> BUG: KASAN: slab-use-after-free in smb2_cached_lease_break+0x27/0xb0
+> Read of size 8 at addr ffff88811cc24c10 by task kworker/3:1/65
+> 
+> CPU: 3 UID: 0 PID: 65 Comm: kworker/3:1 Not tainted 6.12.0-rc6-g255cf264e6e5-dirty #87
+> Hardware name: VMware, Inc. VMware Virtual Platform/440BX Desktop Reference Platform, BIOS 6.00 11/12/2020
+> Workqueue: cifsiod smb2_cached_lease_break
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x77/0xb0
+>  print_report+0xce/0x660
+>  kasan_report+0xd3/0x110
+>  smb2_cached_lease_break+0x27/0xb0
+>  process_one_work+0x50a/0xc50
+>  worker_thread+0x2ba/0x530
+>  kthread+0x17c/0x1c0
+>  ret_from_fork+0x34/0x60
+>  ret_from_fork_asm+0x1a/0x30
+>  </TASK>
+> 
+> Allocated by task 2464:
+>  kasan_save_stack+0x33/0x60
+>  kasan_save_track+0x14/0x30
+>  __kasan_kmalloc+0xaa/0xb0
+>  open_cached_dir+0xa7d/0x1fb0
+>  smb2_query_path_info+0x43c/0x6e0
+>  cifs_get_fattr+0x346/0xf10
+>  cifs_get_inode_info+0x157/0x210
+>  cifs_revalidate_dentry_attr+0x2d1/0x460
+>  cifs_getattr+0x173/0x470
+>  vfs_statx_path+0x10f/0x160
+>  vfs_statx+0xe9/0x150
+>  vfs_fstatat+0x5e/0xc0
+>  __do_sys_newfstatat+0x91/0xf0
+>  do_syscall_64+0x95/0x1a0
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> Freed by task 2464:
+>  kasan_save_stack+0x33/0x60
+>  kasan_save_track+0x14/0x30
+>  kasan_save_free_info+0x3b/0x60
+>  __kasan_slab_free+0x51/0x70
+>  kfree+0x174/0x520
+>  open_cached_dir+0x97f/0x1fb0
+>  smb2_query_path_info+0x43c/0x6e0
+>  cifs_get_fattr+0x346/0xf10
+>  cifs_get_inode_info+0x157/0x210
+>  cifs_revalidate_dentry_attr+0x2d1/0x460
+>  cifs_getattr+0x173/0x470
+>  vfs_statx_path+0x10f/0x160
+>  vfs_statx+0xe9/0x150
+>  vfs_fstatat+0x5e/0xc0
+>  __do_sys_newfstatat+0x91/0xf0
+>  do_syscall_64+0x95/0x1a0
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> Last potentially related work creation:
+>  kasan_save_stack+0x33/0x60
+>  __kasan_record_aux_stack+0xad/0xc0
+>  insert_work+0x32/0x100
+>  __queue_work+0x5c9/0x870
+>  queue_work_on+0x82/0x90
+>  open_cached_dir+0x1369/0x1fb0
+>  smb2_query_path_info+0x43c/0x6e0
+>  cifs_get_fattr+0x346/0xf10
+>  cifs_get_inode_info+0x157/0x210
+>  cifs_revalidate_dentry_attr+0x2d1/0x460
+>  cifs_getattr+0x173/0x470
+>  vfs_statx_path+0x10f/0x160
+>  vfs_statx+0xe9/0x150
+>  vfs_fstatat+0x5e/0xc0
+>  __do_sys_newfstatat+0x91/0xf0
+>  do_syscall_64+0x95/0x1a0
+>  entry_SYSCALL_64_after_hwframe+0x76/0x7e
+> 
+> The buggy address belongs to the object at ffff88811cc24c00
+>  which belongs to the cache kmalloc-1k of size 1024
+> The buggy address is located 16 bytes inside of
+>  freed 1024-byte region [ffff88811cc24c00, ffff88811cc25000)
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Paul Aurich <paul@darkrain42.org>
+> Signed-off-by: Steve French <stfrench@microsoft.com>
+> [ Do not apply the change for cfids_laundromat_worker() since there is no
+>   this function and related feature on 6.1.y. Update open_cached_dir()
+>   according to method of upstream patch. ]
+> Signed-off-by: Cliff Liu <donghua.liu@windriver.com>
+> Signed-off-by: He Zhe <Zhe.He@windriver.com>
+> ---
+> Verified the build test.
+> ---
+>  fs/smb/client/cached_dir.c | 39 ++++++++++++++++----------------------
+>  1 file changed, 16 insertions(+), 23 deletions(-)
 
-Align mlx5 driver usage of 'pfnum' with the documentation clarification
-introduced in commit bb70b0d48d8e ("devlink: Improve the port attributes
-description").
-
-Signed-off-by: Shay Drory <shayd@nvidia.com>
-Reviewed-by: Mark Bloch <mbloch@nvidia.com>
-Signed-off-by: Tariq Toukan <tariqt@nvidia.com>
----
- drivers/net/ethernet/mellanox/mlx5/core/esw/devlink_port.c | 4 ++--
- drivers/net/ethernet/mellanox/mlx5/core/sf/devlink.c       | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/esw/devlink_port.c b/drivers/net/ethernet/mellanox/mlx5/core/esw/devlink_port.c
-index 982fe3714683..b7102e14d23d 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/esw/devlink_port.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/esw/devlink_port.c
-@@ -32,7 +32,7 @@ static void mlx5_esw_offloads_pf_vf_devlink_port_attrs_set(struct mlx5_eswitch *
- 	u16 pfnum;
- 
- 	mlx5_esw_get_port_parent_id(dev, &ppid);
--	pfnum = mlx5_get_dev_index(dev);
-+	pfnum = PCI_FUNC(dev->pdev->devfn);
- 	external = mlx5_core_is_ecpf_esw_manager(dev);
- 	if (external)
- 		controller_num = dev->priv.eswitch->offloads.host_number + 1;
-@@ -110,7 +110,7 @@ static void mlx5_esw_offloads_sf_devlink_port_attrs_set(struct mlx5_eswitch *esw
- 	struct netdev_phys_item_id ppid = {};
- 	u16 pfnum;
- 
--	pfnum = mlx5_get_dev_index(dev);
-+	pfnum = PCI_FUNC(dev->pdev->devfn);
- 	mlx5_esw_get_port_parent_id(dev, &ppid);
- 	memcpy(dl_port->attrs.switch_id.id, &ppid.id[0], ppid.id_len);
- 	dl_port->attrs.switch_id.id_len = ppid.id_len;
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/sf/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/sf/devlink.c
-index b96909fbeb12..0864ba625c07 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/sf/devlink.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/sf/devlink.c
-@@ -285,7 +285,7 @@ mlx5_sf_new_check_attr(struct mlx5_core_dev *dev, const struct devlink_port_new_
- 		NL_SET_ERR_MSG_MOD(extack, "External controller is unsupported");
- 		return -EOPNOTSUPP;
- 	}
--	if (new_attr->pfnum != mlx5_get_dev_index(dev)) {
-+	if (new_attr->pfnum != PCI_FUNC(dev->pdev->devfn)) {
- 		NL_SET_ERR_MSG_MOD(extack, "Invalid pfnum supplied");
- 		return -EOPNOTSUPP;
- 	}
--- 
-2.31.1
-
+No upstream git id :(
