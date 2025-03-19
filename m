@@ -1,113 +1,169 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB72421148F
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:55:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAC531DE4E7;
+	Wed, 19 Mar 2025 14:55:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742396132; cv=none; b=PdyGvkyO7T+U5RQH6gtBoPBXfaxfMWmal4AHOgLkm47SnSB+rlyTYioFKwddHLzMP39+6F7elziMa253qDvwHBjJn0bGSoe8Mo64AAPX8MxqIi/KhlaY2GxOa/MEkCLZAjUotpmIlpzrCo/HX6njXOJzkr3gv5AbHa4q8edpEOM=
+	t=1742396133; cv=none; b=rzwe3+8anNUB2N4C8jg+jQZTf1WZqJa9bIqPX8eU3dyNJMTqQWcrkCJJuAarY7TWL2QRWAR66aP5EkLDjMd7X6Q3IkjbosfuS+VR9ECCIZLT+48+ooAEP+thmaTRikKo01RhoLBbd9E+HgMi+qZsTjVPhQqFFW51K0Yot/hkxpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742396132; c=relaxed/simple;
-	bh=WnQ+FuFaF+koDcvuXC70dNnZjwr287lNrdYcRE2s+ok=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m4VMDDJe1Yrv4Akpuura6dvd/zMm8D2wjE7TJQPX2iNbWJVVs3rsBgXkDKIPVwvI1ibEFVHw0kSXFyziuSgR+jTmzN29Z4dbr+mrY/MTX6Q6SP9a7VV1tRmqNhyUFPK5AccnCO7kCjaDJXCryDodu4aeKBDUJb0Dr/E17cEN8DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 66DB0106F;
-	Wed, 19 Mar 2025 07:55:37 -0700 (PDT)
-Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4FD2D3F694;
-	Wed, 19 Mar 2025 07:55:27 -0700 (PDT)
-Date: Wed, 19 Mar 2025 14:55:24 +0000
-From: Mark Rutland <mark.rutland@arm.com>
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: open list <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
-	Linux ARM <linux-arm-kernel@lists.infradead.org>,
-	kvmarm@lists.linux.dev,
-	Anshuman Khandual <anshuman.khandual@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Mark Brown <broonie@kernel.org>,
-	Aishwarya TCV <aishwarya.tcv@arm.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>
-Subject: Re: Fast model boot failure with Linux next-20250312
-Message-ID: <Z9ra3I2axii2HRVb@J2N7QTR9R3>
-References: <CA+G9fYvPu+MQKhYyPZSSDpAn-zhRGmeHQ8hJksT_cdDdxfbB-g@mail.gmail.com>
+	s=arc-20240116; t=1742396133; c=relaxed/simple;
+	bh=o79r6tCeY0P38PsiNUSlSfEWia91GTvNdpsKrUAZ+JE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=X5b27WU4SWkkub159XKJxYlPEUqQcbJ2v0I0KjDfftuaKdbRP343D2U/u2x2al0YC1EkTIkS1zX25ooxacKzPoLpbJ6hyJ5jc11WoCaShl45OovUbBWwLSXO0T7nr7qDIhM6ZsK8hpEvB40dXOWQKSYHqWcYtm8U53b6a/eqDUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LMNz5DF3; arc=none smtp.client-ip=209.85.216.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LMNz5DF3"
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-2ff615a114bso1332391a91.0;
+        Wed, 19 Mar 2025 07:55:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742396131; x=1743000931; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RNXaYltKdqI4pcwHv3VKQ0s77cLhZEAL3udH6bNlA1k=;
+        b=LMNz5DF3y8CgnYlEXfzpnDWbfTZ7c3VdLZB4CFo1wIbDPIU82OVwvZMMEm2NT8gb44
+         YWxLPnDeNrJB2IKTJdpOHryZt8v3VnemNGCRjdc+xZslhe9y9TQ7xDQHN8WE0irhrJSQ
+         puhjcQNT3eSqUzUZoSQImm+a6YxuqObqaSOhFHWuqs1YZT0IS1lfvpHuS4/o50b9IDi2
+         Fpnh9gOumLGheB6UJYas6lzCfeYFS6kVukQ+0/Y0NaZvXSPJSV6GbG62H+TlegbaJ3vD
+         g3uiT2Dd8oNVA+2E81IP3ogCvdUJ6hSPr+IegoE4cWnLCzPPkYWky+1DTgISXRm80xg2
+         Fk6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742396131; x=1743000931;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=RNXaYltKdqI4pcwHv3VKQ0s77cLhZEAL3udH6bNlA1k=;
+        b=dhrSgPt75gdX9xQx7Z7g/NHMWqq2HVnKWimG9OqYJhYd68aurz1VzXGgZkm9qIj8pX
+         pG7QKNxCfIUINxY7T/4sfNPHsGrW0pMjRMtXiMrcvqY1OqD6akow9Q93Zh+vbVxdoJzt
+         pPkLFNR78k0M8Nj/M9hmNvDXTZqdTNRAVkpZZWM3hLrjiDCyYLxv4LCQc9h/fO3CpdzG
+         8KyFKmM1mDXEHd2t9Nc5HMA2bIdAJbf3o4+WAS/gUPvmWwolV5eua8uyrA0bjka6aKcW
+         ZONGMIl6dd6XtALqkIpIb//Cp1qU7DCZO4Depn1nzPl/zkxT6MWgz+NyEhVk/nu8dlVi
+         kIng==
+X-Forwarded-Encrypted: i=1; AJvYcCU0jPUjd/CMEFWy58OydoNqf4Z3ZbKvQPIrUPnvKg+SHp2QweyhbnknK9JHetKAp2/hjXqjwKjyVeo8r3q7@vger.kernel.org, AJvYcCWiSe8/kvlaqdTB9tdeXp+bW2gEHUyEgrPnca2m1xeX/bTKZSAf+R5zTgJivpoQGP45dv0NkLvt/L+w4MKa@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJk0/A8FoXn+kh0jfItoljb33goW6r8BKqGB0WfIDf79Q7EIj9
+	MoHu5yv175b8I42VAzHnwb69lh7rXS/j0crQAkl4KW4MXax5PBK2
+X-Gm-Gg: ASbGncsdX0YuOcrtMfssp+78eLVGCIBZwVwZcWCn7ZFJtwLJ2CrLAaLFqn/e2nxiVYd
+	j/lUf5XMdP/11wjaZMPp0uiHq4yRvIAzWFJCl5EWUdlLJDpnb6XoRE04n9Huy7xEbaActX9HhPr
+	pqwLn1zbhP1aee62G1DBW1TPl2+bijyRe546Z2XVNNGwZxJPE3l65LdgNb+cYiUckQBqLS8Zkoz
+	24XogXRLt7N4fQIgLl0HnihAjX0quRFURtncsiJYfjQbzmrkHWfvETDuQd4KPbg5S70MIUlmE6l
+	/kPwPclFxtHGyfzxVhi+TrAGAne99gy4jsDp8If25lGgJscarl6Yaup4AbRKFCU51kTvzMDEE0D
+	ij0HrUywxSS4/wODm67g=
+X-Google-Smtp-Source: AGHT+IHYkvTd6Ji85eeGfR6RC4/2eCSeeWGGiU/i0Z4s8dLAfPk1JpKwIwLzLzIY/Vr8CeGvJLiqjQ==
+X-Received: by 2002:a17:90b:2f48:b0:2fa:1e56:5d82 with SMTP id 98e67ed59e1d1-301bdb1074cmr5400280a91.17.1742396131316;
+        Wed, 19 Mar 2025 07:55:31 -0700 (PDT)
+Received: from localhost ([2a00:79e0:3e00:2601:3afc:446b:f0df:eadc])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf58b360sm1682942a91.20.2025.03.19.07.55.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 07:55:30 -0700 (PDT)
+From: Rob Clark <robdclark@gmail.com>
+To: dri-devel@lists.freedesktop.org
+Cc: freedreno@lists.freedesktop.org,
+	linux-arm-msm@vger.kernel.org,
+	Rob Clark <robdclark@chromium.org>,
+	Rob Clark <robdclark@gmail.com>,
+	Abhinav Kumar <quic_abhinavk@quicinc.com>,
+	Dmitry Baryshkov <lumag@kernel.org>,
+	Sean Paul <sean@poorly.run>,
+	Marijn Suijten <marijn.suijten@somainline.org>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH v2 13/34] drm/msm: Split submit_pin_objects()
+Date: Wed, 19 Mar 2025 07:52:25 -0700
+Message-ID: <20250319145425.51935-14-robdclark@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250319145425.51935-1-robdclark@gmail.com>
+References: <20250319145425.51935-1-robdclark@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYvPu+MQKhYyPZSSDpAn-zhRGmeHQ8hJksT_cdDdxfbB-g@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Mar 19, 2025 at 08:07:47PM +0530, Naresh Kamboju wrote:
-> Regressions on the arm64 Fast Model (FVP-AEMvA) caused boot failures starting
-> with Linux next-20250312 and persisting through next-20250319.
-> 
-> First seen on the next-20250312
->  Good: next-20250311
->  Bad:  next-20250312 .. next-20250319
-> 
-> Regressions found on FVP:
->  - boot
-> 
-> Regression Analysis:
->  - New regression? Yes
->  - Reproducible? Yes
-> 
-> Boot regression: Fast model boot failure with Linux next-20250312
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> 
-> Anders bisected this to this commit id,
-> 
-> # first bad commit:
->   [858c7bfcb35e1100b58bb63c9f562d86e09418d9]
->   arm64/boot: Enable EL2 requirements for FEAT_PMUv3p9
-> 
-> NOTE:
->   LKFT is currently running FVP Fast Models version 11.24.
->   Planned upgrade to the Fast Models version 11.28 in this sprint.
+From: Rob Clark <robdclark@chromium.org>
 
-What firmware (and version therof) are you running within the model?
+For VM_BIND, in the first step, we just want to get the backing pages,
+but defer creating the vma until the map/unmap/ops are evaluated.
 
-For example, if the EL3 firmware lacks support for FEAT_FGT2 or
-FEAT_PMUv3p9, the kernel will trap to EL3 early during boot and die.
+Signed-off-by: Rob Clark <robdclark@chromium.org>
+---
+ drivers/gpu/drm/msm/msm_gem_submit.c | 27 +++++++++++++++++++--------
+ 1 file changed, 19 insertions(+), 8 deletions(-)
 
-It would be really helpful if you could capture that in the report in
-future.
+diff --git a/drivers/gpu/drm/msm/msm_gem_submit.c b/drivers/gpu/drm/msm/msm_gem_submit.c
+index 998cedb24941..c65f3a6a5256 100644
+--- a/drivers/gpu/drm/msm/msm_gem_submit.c
++++ b/drivers/gpu/drm/msm/msm_gem_submit.c
+@@ -292,12 +292,16 @@ static int submit_fence_sync(struct msm_gem_submit *submit)
+ 	return ret;
+ }
+ 
+-static int submit_pin_objects(struct msm_gem_submit *submit)
++static int submit_pin_vmas(struct msm_gem_submit *submit)
+ {
+-	struct msm_drm_private *priv = submit->dev->dev_private;
+-	int i, ret = 0;
++	int ret = 0;
+ 
+-	for (i = 0; i < submit->nr_bos; i++) {
++	/*
++	 * First loop, before holding the LRU lock, avoids holding the
++	 * LRU lock while calling msm_gem_pin_vma_locked (which could
++	 * trigger get_pages())
++	 */
++	for (int i = 0; i < submit->nr_bos; i++) {
+ 		struct drm_gem_object *obj = submit->bos[i].obj;
+ 		struct drm_gpuva *vma;
+ 
+@@ -315,6 +319,13 @@ static int submit_pin_objects(struct msm_gem_submit *submit)
+ 		submit->bos[i].iova = vma->va.addr;
+ 	}
+ 
++	return ret;
++}
++
++static void submit_pin_objects(struct msm_gem_submit *submit)
++{
++	struct msm_drm_private *priv = submit->dev->dev_private;
++
+ 	/*
+ 	 * A second loop while holding the LRU lock (a) avoids acquiring/dropping
+ 	 * the LRU lock for each individual bo, while (b) avoiding holding the
+@@ -323,14 +334,12 @@ static int submit_pin_objects(struct msm_gem_submit *submit)
+ 	 * could trigger deadlock with the shrinker).
+ 	 */
+ 	mutex_lock(&priv->lru.lock);
+-	for (i = 0; i < submit->nr_bos; i++) {
++	for (int i = 0; i < submit->nr_bos; i++) {
+ 		msm_gem_pin_obj_locked(submit->bos[i].obj);
+ 	}
+ 	mutex_unlock(&priv->lru.lock);
+ 
+ 	submit->bos_pinned = true;
+-
+-	return ret;
+ }
+ 
+ static void submit_unpin_objects(struct msm_gem_submit *submit)
+@@ -760,10 +769,12 @@ int msm_ioctl_gem_submit(struct drm_device *dev, void *data,
+ 			goto out;
+ 	}
+ 
+-	ret = submit_pin_objects(submit);
++	ret = submit_pin_vmas(submit);
+ 	if (ret)
+ 		goto out;
+ 
++	submit_pin_objects(submit);
++
+ 	for (i = 0; i < args->nr_cmds; i++) {
+ 		struct drm_gem_object *obj;
+ 		uint64_t iova;
+-- 
+2.48.1
 
-Mark.
-
-> 
-> ## Boot log
->   <No crash log on the console>
-> 
-> ## Source
-> * Kernel version: 6.14.0-rc7
-> * Git tree: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> * Git sha: ff7f9b199e3f4cc7d61df5a9a26a7cbb5c1492e6
-> * Git describe: next-20250319
-> * Project details:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319
-> * DUT: arm64 Fast Model (FVP-AEMvA)
-> * Toolchains: gcc-13 and clang-20
-> 
-> ## Build
-> * Build log: https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319/testrun/27675691/suite/boot/test/gcc-13-lkftconfig/log
-> * Build history:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319/testrun/27675685/suite/boot/test/gcc-13-lkftconfig/history/
-> * Build details:
-> https://qa-reports.linaro.org/lkft/linux-next-master/build/next-20250319/testrun/27675691/suite/boot/test/gcc-13-lkftconfig/
-> * Build link: https://storage.tuxsuite.com/public/linaro/lkft/builds/2uX2EtC2pQdmVZ7ccoyhoi01Yy0/
-> * Kernel config:
-> https://storage.tuxsuite.com/public/linaro/lkft/builds/2uX2EtC2pQdmVZ7ccoyhoi01Yy0/config
-> 
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
-> 
