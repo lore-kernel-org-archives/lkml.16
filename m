@@ -1,209 +1,113 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D9651A8F61
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:00:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E412219E9E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:00:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742418034; cv=none; b=r6+gxlotnzYd6x24H1WkXsN4ujXwE+q+pPB5Sn2Cvw8j879PMf3gjVJjEWfzPSPZVVbpeC+HF2BchtmZagSX1fff1+7LDDSBJu9369QIxU0/s08yo2Z9sjTy/27jVoOkcDc5PgLfno9eZau/nED83v3JuMfj/AYvtJoorrpfYFA=
+	t=1742418038; cv=none; b=K4q0RxO2IhPY9tshKN/C28h4iZVaSX2ql5hgGX5xBO2qlgt1qovxrAFxckVBZtOJJ6IvQGborU18B03jUCjAEyo39PSW0lDj8Vra0frrDbpmWpAEdMf5lC1l9UfaJDiHQ5X9T6McZ+gEDJyr+yYGOziawAa3j5ArPmI82kzAKJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742418034; c=relaxed/simple;
-	bh=E6B8L5hq+OC8KU1bidQMlMlcpJemsjolhzSTKsieqoQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MRXVZ1PuIEepLnfqcZay2HhCD6FFcUDtMDJWjNvR6Y9rLqaQHfvkmmLmyniwL9K4uYAItvPDdAFcNQ0vbE+qX7qFGKJXaQCbdXwyFtNcJSzZhKigZjFfeGXBoEnVHFe4lxyK4XVfo/jNTtWdXnNTXoHop4YLVQNe0ufSNHzlyeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=e/SIRs7q; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742418038; c=relaxed/simple;
+	bh=JpWbN3PonD02EeSQ+D1c94qmanNDOUGdytzOyMjZgKQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KMy2QdaAnmyqLrpaLqcE7uvXCgzeAlQ2YxZDBCnlid1ogpBJk76K6bTyoL2gRwv4QYbs7VvtAGIXnoHGARMgYjIqTH6bak9LQlqCZL5G9bWLWxvWGBvZQX3oQTJKlPTmrbDlwjre0GOLg9b7MxFE3/lLTUdvzT5TzCkaIaId9Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FhNidU0T; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="e/SIRs7q"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742418028;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=2D5bEcAAgOlpJrINg/LQg7aCdYFRnTJufts8MX/QuDU=;
-	b=e/SIRs7q4v+5jR/pyoL/DEk4mZgH5RnEbOEuSPWGewlQP9+zZ5UMjynfif2ozrp9817O0e
-	eIIWDLjGvYLL/liiOGq+WFWIOt60Fs0+q4K2eOkC8ePRHr7UQCtClQ5XEni2oIzQYPvXgF
-	uexX2XY6rH2tNrorDOcFeptw/YD6gXA=
-From: Yosry Ahmed <yosry.ahmed@linux.dev>
-To: Tejun Heo <tj@kernel.org>
-Cc: Johannes Weiner <hannes@cmpxchg.org>,
-	=?UTF-8?q?Michal=20Koutn=C3=BD?= <mkoutny@suse.com>,
-	Greg Thelen <gthelen@google.com>,
-	cgroups@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Yosry Ahmed <yosry.ahmed@linux.dev>
-Subject: [PATCH cgroup/for-6.15] cgroup: rstat: Cleanup flushing functions and locking
-Date: Wed, 19 Mar 2025 21:00:13 +0000
-Message-ID: <20250319210013.3572360-1-yosry.ahmed@linux.dev>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FhNidU0T"
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so30197f8f.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:00:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742418034; x=1743022834; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=h9fA0vigQcgLewl+P2hKDh1ek8N/s4rvS4ZYh23xgGc=;
+        b=FhNidU0TqclHktySFNOO9czi0awS2z6eLZwPya8XWaoLEvjILKnarlGTR7l8awz12K
+         g0LRHq0hls7C/EOYF8sHw57RhqS5lSv9Fh2TEndPRSmxZSMIbMnufPbbCzqBJAVUhbvR
+         P26Bb7kjKm32mKuIdWTVTkFU0UEVwBw0NRJLtYgCxRx3RKoz1OrtymiBoutoa7z4iAgR
+         YsdXjY6AwnyxSWLThdo5ccgPf2hcBN2Fp2kelV3d9xNhykb+XX3IVMfFn9gh7gHC8Zpz
+         cgGwnYsfV81WphPLQUNDRm0nk3Az+Z/waNMRYRtVbtMCqyi8mAu7qEvhzkK2mS9tmxv2
+         pJpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742418034; x=1743022834;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=h9fA0vigQcgLewl+P2hKDh1ek8N/s4rvS4ZYh23xgGc=;
+        b=OTE0HTxxfBibA+rhZcyxmdz7dC8ocrjzyyTAPqlfsYTFtgLuEtTzk16+tPyisWVfzI
+         KmPbz/XaBtX8+XhBoPkw81EknA6QBufWi7fBoQ5ZQOz55lDo4BSI2rGWhm0d4yuOs3pq
+         p7EmH0ZuNMdaLGw1/djYdiq1IJ7GpXIiPL4rYdZ7eRuoD1ig7wcn5sCBdJnZEb/15egY
+         f2CGwh1pJOFxd2Dy9MStUNc5rXgkPWHf3zWuxeEBZpwSkGvuCT4E/FpnZKB7H9dvKEhk
+         6pqUK0nOEVFEVGUK+Hup2pGU0IKuNKYXQyVlZ2aK2leMQje3bEjM2FDz51RQDlD9tJIh
+         IbXg==
+X-Forwarded-Encrypted: i=1; AJvYcCUlsynldGN6pZro6CFdDHcU5cPZrq/5/aAf3QTQ1IUgEGs6KfLketRTc+GdHVtPFOVlHTYZ5pJ8fMfRBqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykHmhoKNYQuYNsPcYfNSnIh+e0ZP4brubcGGaS2lWJaTNSU6YS
+	LyAA6kfMoD/1DYfpcxv9NCWBM8lKYx52I83XSmnwgfGGLmwKrqnV
+X-Gm-Gg: ASbGnctMJqVZ7Z4oV9c34iZ54UoaxY6ys62n41BPMIni12Jpv946TARBXeqlzsIwkt8
+	Bp79lWvZIXfTHf+4jI15PENRLoVOZ5BlD/azl5qqtQPQkp2CBi8jYmWqvUvVUa5moEeNKSkAZOA
+	Nrqds4VSu88jcE7nQp0wKbSGQXsggeIDqjGXJcQTY/twUoN39gh111Qi2x1xHU0C7CKgpCDzEou
+	exhqf5mnfnIIYBpPMBpDFMas4zn7eojWsLUplxRSCzKKR1wVDPODTduYOrLX3NDnaCO6h75AhvH
+	TTnt4nzRAc2DXyp1GtZRDGlVCjgVc7+Nav466I0VKjRWHJrZqls81bfGA8+UIGNL4HQKQAhVpE4
+	NqPOk5eI=
+X-Google-Smtp-Source: AGHT+IEh14hIPzocWY61j2hM9V2XCwKM6EoxuGhHTrrI0GDTgEhJ9w5eegw2wU9kY9qwW+6pbIpMug==
+X-Received: by 2002:a05:6000:21c4:b0:399:795e:d899 with SMTP id ffacd0b85a97d-399795ed8b6mr633215f8f.14.1742418034195;
+        Wed, 19 Mar 2025 14:00:34 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df3537sm21976764f8f.8.2025.03.19.14.00.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 14:00:33 -0700 (PDT)
+Date: Wed, 19 Mar 2025 21:00:32 +0000
+From: David Laight <david.laight.linux@gmail.com>
+To: <shao.mingyin@zte.com.cn>
+Cc: <hch@lst.de>, <sagi@grimberg.me>, <kch@nvidia.com>,
+ <linux-nvme@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+ <yang.tao172@zte.com.cn>, <yang.yang29@zte.com.cn>, <xu.xin16@zte.com.cn>
+Subject: Re: [PATCH] nvme: replace max(a, min(b, c)) by clamp(b, a, c)
+Message-ID: <20250319210032.5d442b0c@pumpkin>
+In-Reply-To: <20250317153909901uOL4saBkASEN9kOmQXDoP@zte.com.cn>
+References: <20250317153909901uOL4saBkASEN9kOmQXDoP@zte.com.cn>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Now that the rstat lock is being re-acquired on every CPU iteration in
-cgroup_rstat_flush_locked(), having the initially acquire the lock is
-unnecessary and unclear.
+On Mon, 17 Mar 2025 15:39:09 +0800 (CST)
+<shao.mingyin@zte.com.cn> wrote:
 
-Inline cgroup_rstat_flush_locked() into cgroup_rstat_flush() and move
-the lock/unlock calls to the beginning and ending of the loop body to
-make the critical section obvious.
+> From: LiHaoran <li.haoran7@zte.com.cn>
+> 
+> This patch replaces max(a, min(b, c)) by clamp(b, a, c) in the nvme
+> driver. This improves the readability.
+> 
+> Signed-off-by: LiHaoran <li.haoran7@zte.com.cn>
+> Cc: ShaoMingyin <shao.mingyin@zte.com.cn>
+> ---
+>  drivers/nvme/target/nvmet.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/nvme/target/nvmet.h b/drivers/nvme/target/nvmet.h
+> index fcf4f460dc9a..30804b0ca66e 100644
+> --- a/drivers/nvme/target/nvmet.h
+> +++ b/drivers/nvme/target/nvmet.h
+> @@ -819,7 +819,7 @@ static inline u8 nvmet_cc_iocqes(u32 cc)
+>  /* Convert a 32-bit number to a 16-bit 0's based number */
+>  static inline __le16 to0based(u32 a)
+>  {
+> -	return cpu_to_le16(max(1U, min(1U << 16, a)) - 1);
+> +	return cpu_to_le16(clamp(1U << 16, 1U, a) - 1);
 
-cgroup_rstat_flush_hold/release() do not make much sense with the lock
-being dropped and reacquired internally. Since it has no external
-callers, remove it and explicitly acquire the lock in
-cgroup_base_stat_cputime_show() instead.
+Swap the arguments into a sane order - clamp(a, 1, 1 << 16)
 
-This leaves the code with a single flushing function,
-cgroup_rstat_flush().
+	David
 
-Signed-off-by: Yosry Ahmed <yosry.ahmed@linux.dev>
----
-
-Applies on top of Greg's commit 0efc297a3c497 ("cgroup/rstat: avoid
-disabling irqs for O(num_cpu)").
-
----
- include/linux/cgroup.h |  2 --
- kernel/cgroup/rstat.c  | 79 +++++++++++-------------------------------
- 2 files changed, 20 insertions(+), 61 deletions(-)
-
-diff --git a/include/linux/cgroup.h b/include/linux/cgroup.h
-index 8e7415c64ed1d..28e999f2c6421 100644
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -690,8 +690,6 @@ static inline void cgroup_path_from_kernfs_id(u64 id, char *buf, size_t buflen)
-  */
- void cgroup_rstat_updated(struct cgroup *cgrp, int cpu);
- void cgroup_rstat_flush(struct cgroup *cgrp);
--void cgroup_rstat_flush_hold(struct cgroup *cgrp);
--void cgroup_rstat_flush_release(struct cgroup *cgrp);
- 
- /*
-  * Basic resource stats.
-diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
-index 2c1053e83945e..7831978a26bb9 100644
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -299,17 +299,29 @@ static inline void __cgroup_rstat_unlock(struct cgroup *cgrp, int cpu_in_loop)
- 	spin_unlock_irq(&cgroup_rstat_lock);
- }
- 
--/* see cgroup_rstat_flush() */
--static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
--	__releases(&cgroup_rstat_lock) __acquires(&cgroup_rstat_lock)
-+/**
-+ * cgroup_rstat_flush - flush stats in @cgrp's subtree
-+ * @cgrp: target cgroup
-+ *
-+ * Collect all per-cpu stats in @cgrp's subtree into the global counters
-+ * and propagate them upwards.  After this function returns, all cgroups in
-+ * the subtree have up-to-date ->stat.
-+ *
-+ * This also gets all cgroups in the subtree including @cgrp off the
-+ * ->updated_children lists.
-+ *
-+ * This function may block.
-+ */
-+__bpf_kfunc void cgroup_rstat_flush(struct cgroup *cgrp)
- {
- 	int cpu;
- 
--	lockdep_assert_held(&cgroup_rstat_lock);
--
-+	might_sleep();
- 	for_each_possible_cpu(cpu) {
- 		struct cgroup *pos = cgroup_rstat_updated_list(cgrp, cpu);
- 
-+		/* Reacquire for each CPU to avoid disabling IRQs too long */
-+		__cgroup_rstat_lock(cgrp, cpu);
- 		for (; pos; pos = pos->rstat_flush_next) {
- 			struct cgroup_subsys_state *css;
- 
-@@ -322,64 +334,12 @@ static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
- 				css->ss->css_rstat_flush(css, cpu);
- 			rcu_read_unlock();
- 		}
--
--		/* play nice and avoid disabling interrupts for a long time */
- 		__cgroup_rstat_unlock(cgrp, cpu);
- 		if (!cond_resched())
- 			cpu_relax();
--		__cgroup_rstat_lock(cgrp, cpu);
- 	}
- }
- 
--/**
-- * cgroup_rstat_flush - flush stats in @cgrp's subtree
-- * @cgrp: target cgroup
-- *
-- * Collect all per-cpu stats in @cgrp's subtree into the global counters
-- * and propagate them upwards.  After this function returns, all cgroups in
-- * the subtree have up-to-date ->stat.
-- *
-- * This also gets all cgroups in the subtree including @cgrp off the
-- * ->updated_children lists.
-- *
-- * This function may block.
-- */
--__bpf_kfunc void cgroup_rstat_flush(struct cgroup *cgrp)
--{
--	might_sleep();
--
--	__cgroup_rstat_lock(cgrp, -1);
--	cgroup_rstat_flush_locked(cgrp);
--	__cgroup_rstat_unlock(cgrp, -1);
--}
--
--/**
-- * cgroup_rstat_flush_hold - flush stats in @cgrp's subtree and hold
-- * @cgrp: target cgroup
-- *
-- * Flush stats in @cgrp's subtree and prevent further flushes.  Must be
-- * paired with cgroup_rstat_flush_release().
-- *
-- * This function may block.
-- */
--void cgroup_rstat_flush_hold(struct cgroup *cgrp)
--	__acquires(&cgroup_rstat_lock)
--{
--	might_sleep();
--	__cgroup_rstat_lock(cgrp, -1);
--	cgroup_rstat_flush_locked(cgrp);
--}
--
--/**
-- * cgroup_rstat_flush_release - release cgroup_rstat_flush_hold()
-- * @cgrp: cgroup used by tracepoint
-- */
--void cgroup_rstat_flush_release(struct cgroup *cgrp)
--	__releases(&cgroup_rstat_lock)
--{
--	__cgroup_rstat_unlock(cgrp, -1);
--}
--
- int cgroup_rstat_init(struct cgroup *cgrp)
- {
- 	int cpu;
-@@ -614,11 +574,12 @@ void cgroup_base_stat_cputime_show(struct seq_file *seq)
- 	struct cgroup_base_stat bstat;
- 
- 	if (cgroup_parent(cgrp)) {
--		cgroup_rstat_flush_hold(cgrp);
-+		cgroup_rstat_flush(cgrp);
-+		__cgroup_rstat_lock(cgrp, -1);
- 		bstat = cgrp->bstat;
- 		cputime_adjust(&cgrp->bstat.cputime, &cgrp->prev_cputime,
- 			       &bstat.cputime.utime, &bstat.cputime.stime);
--		cgroup_rstat_flush_release(cgrp);
-+		__cgroup_rstat_unlock(cgrp, -1);
- 	} else {
- 		root_cgroup_cputime(&bstat);
- 	}
--- 
-2.49.0.395.g12beb8f557-goog
+>  }
+> 
+>  static inline bool nvmet_ns_has_pi(struct nvmet_ns *ns)
 
