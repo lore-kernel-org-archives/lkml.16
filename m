@@ -1,66 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BC0525E465;
-	Wed, 19 Mar 2025 11:04:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EC0625F7AB;
+	Wed, 19 Mar 2025 11:04:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382245; cv=none; b=XwrgVyby93R8N1eF9Xfpen8sZYHqYeZupTqeX8ParPFpJ6npw7gqTTWQHmsTHWXaTqk5/2wqi+LKOIid9GHHqhRWWySPPLpfStdNQi3ynUU54qj0K7kLIwBbioT5DEE04IFCY7jeh1d4iOUafto1mKbK1U2FlabPhd2kUZmUkog=
+	t=1742382246; cv=none; b=ieQuk0jQU7+GMvoP532ySlw695tLNm1uWwxnZE/dLX32kbWm4pBil+N4bHWroVNMvJu2S5cKVn2oCeJi/W+TIQG/j5WpSsUfty/awH6TmOmNLIP55QuiG4e9CF7UtTPV08vHrRRjs34trboaQsxgK8zJ9VSUe/gN9yPL8Z4gGl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382245; c=relaxed/simple;
-	bh=dMkKJClcQbfZVXuRXtIec8pj7pynyS11EVPRDQ4M8VI=;
+	s=arc-20240116; t=1742382246; c=relaxed/simple;
+	bh=TjYb1xns1YoTcLvv5NV1LtXhsttZd2IIocP6j9lefUQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=RSW8pP0aFeDi4HMgXyODU/iBXW1WYQaMNX/U2+E1rAtfORoEjkFI6ND+Arrejt3Ywc+nvtqARgNLhrb9XICzjgmfo2NfIOSCKJIgz9bVU3wlQXiZeX0TokrLKd5di3w/rOgTcGuC4MRfZFhbTnnFc/0/DcxlrWOLAmuyX9Cu2AA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=zW/19k43; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Ztscujk7; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Dry1L9f0viyIX8MwcuQCCH/WZtuGo068ga6a6yAmgZoykkL+lPs4bx0tnTmsGnzbDz03OPWxCNYT/5cIC9TC9i6InSwXVD6SRKEv/EONMTmlIQb+ip/XD3siAVVbm9u6JrKdxeIoEBB2ohDKQSyO57PbnfddMhCYYAUxjlHxz54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=q4xm8ueP; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=7aFycZDL; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="zW/19k43";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Ztscujk7"
-Date: Wed, 19 Mar 2025 11:03:59 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="q4xm8ueP";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="7aFycZDL"
+Date: Wed, 19 Mar 2025 11:04:02 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382240;
+	s=2020; t=1742382243;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kZGtCkuhm6iQkUP9sKMEglk59R56GZ1vQhTx5BppSjY=;
-	b=zW/19k43Xt55gbGsrUJZt4zGyp6X/mpX+faU9JNWEVQqr67BphAEfhoAzHCnwVAlBWQXl1
-	quc82GNXFi1ibn5ISYNdAcx7rbjaAMkwwd1zCm6PLwkfBWa90cilQDJIX4mGY3LSIHsjb+
-	K4GtIrlVKovUQ9MtxaqmH+Q7DXH+omJUyJH1V447np4LBhpKt4OUNzqFN/pj9RcGBGYS1k
-	aI/dLap0V39kbYNiF5oTOlk20SP1dQ2Fi8bxEhPVRnAxpz9by5r2np1SjPl/bMqnvI0UlU
-	ar7lULu7cwtCh0L740dlLvaxXqsFhfJsWLN4ATMckbKxRiXeBFdKS+/c057I6g==
+	bh=nusJn7bR/ybrYlbqjUGGgI6BMSwF3FeCl9L3pYgrUmA=;
+	b=q4xm8uePv2+j02L4BnDnm1bV/4ZcZnk1BQOAWuzTRwxYdoJxADE4nnxT2KfaYwRJaSfuvo
+	dBJ/9HhFd1G/6iaWzSJXoilkqhiQHHMZlt97GFMtiQ6Uc9hhLRPCHGlmLh9geU5ehUAO7T
+	yb8GwN8Fq8oO+9c/P4SOImeobIIuwoKtPNZcx1j/bV9b0epcTDsOsFyepcZtMj515yQfJ9
+	4GelrZ5EVqB9nAMoNdo/8T2mMPbPkrV5UuE8DeX7WO4xXZx/ay/Z1C9hpZKlA3ChtkDqOB
+	Y6THfKa6Otq4ZWeZ9DAamXbFMNs3XH5ZvGxUuNKIQ1vOG9OxRR17CVmPTcGE/Q==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382240;
+	s=2020e; t=1742382243;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=kZGtCkuhm6iQkUP9sKMEglk59R56GZ1vQhTx5BppSjY=;
-	b=Ztscujk72dpEhDoUXaJAeGeLYB4ROv3ANy9UhNcs18bYfku5ht0P48uweN1WA0MubTnT/X
-	8G5AM72B0h/TXfBg==
-From: "tip-bot2 for H. Peter Anvin (Intel)" <tip-bot2@linutronix.de>
+	bh=nusJn7bR/ybrYlbqjUGGgI6BMSwF3FeCl9L3pYgrUmA=;
+	b=7aFycZDLVfDjZILVWvWAtTnscH2jm1srBZsQ+4K8Ivn67cRM+CZljrkGoUyCNY4SqHfOvW
+	1BTZaffbxhiRIyAA==
+From: "tip-bot2 for Tom Lendacky" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/cpufeatures: Generate the <asm/cpufeaturemasks.h>
- header based on build config
-Cc: "H. Peter Anvin (Intel)" <hpa@zytor.com>, "Xin Li (Intel)" <xin@zytor.com>,
+Subject: [tip: x86/core] x86/mm: Always set the ASID valid bit for the INVLPGB
+ instruction
+Cc: Tom Lendacky <thomas.lendacky@amd.com>,
  "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
- Nikolay Borisov <nik.borisov@suse.com>,
- Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250305184725.3341760-3-xin@zytor.com>
-References: <20250305184725.3341760-3-xin@zytor.com>
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250304120449.GHZ8bsYYyEBOKQIxBm@fat_crate.local>
+References: <20250304120449.GHZ8bsYYyEBOKQIxBm@fat_crate.local>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238223959.14745.6970497940010271580.tip-bot2@tip-bot2>
+Message-ID: <174238224228.14745.17859813215811435467.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,275 +68,131 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     841326332bcb13ae4e6cd456350bf566a402b45e
-Gitweb:        https://git.kernel.org/tip/841326332bcb13ae4e6cd456350bf566a402b45e
-Author:        H. Peter Anvin (Intel) <hpa@zytor.com>
-AuthorDate:    Wed, 05 Mar 2025 10:47:22 -08:00
+Commit-ID:     634ab76159a842f890743fb435f74c228e06bb04
+Gitweb:        https://git.kernel.org/tip/634ab76159a842f890743fb435f74c228e06bb04
+Author:        Tom Lendacky <thomas.lendacky@amd.com>
+AuthorDate:    Tue, 04 Mar 2025 12:59:56 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:15:11 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:12:29 +01:00
 
-x86/cpufeatures: Generate the <asm/cpufeaturemasks.h> header based on build config
+x86/mm: Always set the ASID valid bit for the INVLPGB instruction
 
-Introduce an AWK script to auto-generate the <asm/cpufeaturemasks.h> header
-with required and disabled feature masks based on <asm/cpufeatures.h>
-and the current build config.
+When executing the INVLPGB instruction on a bare-metal host or hypervisor, if
+the ASID valid bit is not set, the instruction will flush the TLB entries that
+match the specified criteria for any ASID, not just the those of the host. If
+virtual machines are running on the system, this may result in inadvertent
+flushes of guest TLB entries.
 
-Thus for any CPU feature with a build config, e.g., X86_FRED, simply add:
+When executing the INVLPGB instruction in a guest and the INVLPGB instruction is
+not intercepted by the hypervisor, the hardware will replace the requested ASID
+with the guest ASID and set the ASID valid bit before doing the broadcast
+invalidation. Thus a guest is only able to flush its own TLB entries.
 
-  config X86_DISABLED_FEATURE_FRED
-	def_bool y
-	depends on !X86_FRED
+So to limit the host TLB flushing reach, always set the ASID valid bit using an
+ASID value of 0 (which represents the host/hypervisor). This will will result in
+the desired effect in both host and guest.
 
-to arch/x86/Kconfig.cpufeatures, instead of adding a conditional CPU
-feature disable flag, e.g., DISABLE_FRED.
-
-Lastly, the generated required and disabled feature masks will be added to
-their corresponding feature masks for this particular compile-time
-configuration.
-
-  [ Xin: build integration improvements ]
-  [ mingo: Improved changelog and comments ]
-
-Signed-off-by: H. Peter Anvin (Intel) <hpa@zytor.com>
-Signed-off-by: Xin Li (Intel) <xin@zytor.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Nikolay Borisov <nik.borisov@suse.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250305184725.3341760-3-xin@zytor.com
+Link: https://lore.kernel.org/r/20250304120449.GHZ8bsYYyEBOKQIxBm@fat_crate.local
 ---
- arch/x86/Makefile                  | 15 +++++-
- arch/x86/boot/cpucheck.c           |  3 +-
- arch/x86/boot/cpuflags.c           |  1 +-
- arch/x86/boot/mkcpustr.c           |  3 +-
- arch/x86/include/asm/Kbuild        |  1 +-
- arch/x86/include/asm/cpufeature.h  |  1 +-
- arch/x86/include/asm/cpufeatures.h |  8 +---
- arch/x86/kernel/verify_cpu.S       |  4 +-
- arch/x86/tools/cpufeaturemasks.awk | 81 +++++++++++++++++++++++++++++-
- 9 files changed, 105 insertions(+), 12 deletions(-)
- create mode 100755 arch/x86/tools/cpufeaturemasks.awk
+ arch/x86/include/asm/tlb.h | 58 ++++++++++++++++++++-----------------
+ 1 file changed, 32 insertions(+), 26 deletions(-)
 
-diff --git a/arch/x86/Makefile b/arch/x86/Makefile
-index 6784129..a607769 100644
---- a/arch/x86/Makefile
-+++ b/arch/x86/Makefile
-@@ -269,6 +269,21 @@ archheaders:
- 	$(Q)$(MAKE) $(build)=arch/x86/entry/syscalls all
+diff --git a/arch/x86/include/asm/tlb.h b/arch/x86/include/asm/tlb.h
+index 31f6db4..866ea78 100644
+--- a/arch/x86/include/asm/tlb.h
++++ b/arch/x86/include/asm/tlb.h
+@@ -33,6 +33,27 @@ enum addr_stride {
+ 	PMD_STRIDE = 1
+ };
  
- ###
-+# <asm/cpufeaturemasks.h> header generation
++/*
++ * INVLPGB can be targeted by virtual address, PCID, ASID, or any combination
++ * of the three. For example:
++ * - FLAG_VA | FLAG_INCLUDE_GLOBAL: invalidate all TLB entries at the address
++ * - FLAG_PCID:			    invalidate all TLB entries matching the PCID
++ *
++ * The first is used to invalidate (kernel) mappings at a particular
++ * address across all processes.
++ *
++ * The latter invalidates all TLB entries matching a PCID.
++ */
++#define INVLPGB_FLAG_VA			BIT(0)
++#define INVLPGB_FLAG_PCID		BIT(1)
++#define INVLPGB_FLAG_ASID		BIT(2)
++#define INVLPGB_FLAG_INCLUDE_GLOBAL	BIT(3)
++#define INVLPGB_FLAG_FINAL_ONLY		BIT(4)
++#define INVLPGB_FLAG_INCLUDE_NESTED	BIT(5)
 +
-+cpufeaturemasks.hdr := arch/x86/include/generated/asm/cpufeaturemasks.h
-+cpufeaturemasks.awk := $(srctree)/arch/x86/tools/cpufeaturemasks.awk
-+cpufeatures_hdr := $(srctree)/arch/x86/include/asm/cpufeatures.h
-+targets += $(cpufeaturemasks.hdr)
-+quiet_cmd_gen_featuremasks = GEN     $@
-+      cmd_gen_featuremasks = $(AWK) -f $(cpufeaturemasks.awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) > $@
++/* The implied mode when all bits are clear: */
++#define INVLPGB_MODE_ALL_NONGLOBALS	0UL
 +
-+$(cpufeaturemasks.hdr): $(cpufeaturemasks.awk) $(cpufeatures_hdr) $(KCONFIG_CONFIG) FORCE
-+	$(shell mkdir -p $(dir $@))
-+	$(call if_changed,gen_featuremasks)
-+archprepare: $(cpufeaturemasks.hdr)
-+
-+###
- # Kernel objects
- 
- libs-y  += arch/x86/lib/
-diff --git a/arch/x86/boot/cpucheck.c b/arch/x86/boot/cpucheck.c
-index 0aae4d4..f82de8d 100644
---- a/arch/x86/boot/cpucheck.c
-+++ b/arch/x86/boot/cpucheck.c
-@@ -22,10 +22,11 @@
- # include "boot.h"
- #endif
- #include <linux/types.h>
-+#include <asm/cpufeaturemasks.h>
- #include <asm/intel-family.h>
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
-+
- #include "string.h"
- #include "msr.h"
- 
-diff --git a/arch/x86/boot/cpuflags.c b/arch/x86/boot/cpuflags.c
-index d75237b..0cabdac 100644
---- a/arch/x86/boot/cpuflags.c
-+++ b/arch/x86/boot/cpuflags.c
-@@ -3,7 +3,6 @@
- #include "bitops.h"
- 
- #include <asm/processor-flags.h>
--#include <asm/required-features.h>
- #include <asm/msr-index.h>
- #include "cpuflags.h"
- 
-diff --git a/arch/x86/boot/mkcpustr.c b/arch/x86/boot/mkcpustr.c
-index da0ccc5..22d730b 100644
---- a/arch/x86/boot/mkcpustr.c
-+++ b/arch/x86/boot/mkcpustr.c
-@@ -12,8 +12,6 @@
- 
- #include <stdio.h>
- 
--#include "../include/asm/required-features.h"
--#include "../include/asm/disabled-features.h"
- #include "../include/asm/cpufeatures.h"
- #include "../include/asm/vmxfeatures.h"
- #include "../kernel/cpu/capflags.c"
-@@ -23,6 +21,7 @@ int main(void)
- 	int i, j;
- 	const char *str;
- 
-+	printf("#include <asm/cpufeaturemasks.h>\n\n");
- 	printf("static const char x86_cap_strs[] =\n");
- 
- 	for (i = 0; i < NCAPINTS; i++) {
-diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-index 58f4dde..4566000 100644
---- a/arch/x86/include/asm/Kbuild
-+++ b/arch/x86/include/asm/Kbuild
-@@ -8,6 +8,7 @@ generated-y += syscalls_x32.h
- generated-y += unistd_32_ia32.h
- generated-y += unistd_64_x32.h
- generated-y += xen-hypercalls.h
-+generated-y += cpufeaturemasks.h
- 
- generic-y += early_ioremap.h
- generic-y += fprobe.h
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index e955da3..d54db88 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -9,6 +9,7 @@
- #include <asm/asm.h>
- #include <linux/bitops.h>
- #include <asm/alternative.h>
-+#include <asm/cpufeaturemasks.h>
- 
- enum cpuid_leafs
- {
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 8770dc1..c0462be 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -2,14 +2,6 @@
- #ifndef _ASM_X86_CPUFEATURES_H
- #define _ASM_X86_CPUFEATURES_H
- 
--#ifndef _ASM_X86_REQUIRED_FEATURES_H
--#include <asm/required-features.h>
--#endif
--
--#ifndef _ASM_X86_DISABLED_FEATURES_H
--#include <asm/disabled-features.h>
--#endif
--
+ #ifdef CONFIG_BROADCAST_TLB_FLUSH
  /*
-  * Defines x86 CPU feature bits
+  * INVLPGB does broadcast TLB invalidation across all the CPUs in the system.
+@@ -40,14 +61,20 @@ enum addr_stride {
+  * The INVLPGB instruction is weakly ordered, and a batch of invalidations can
+  * be done in a parallel fashion.
+  *
+- * The instruction takes the number of extra pages to invalidate, beyond
+- * the first page, while __invlpgb gets the more human readable number of
+- * pages to invalidate.
++ * The instruction takes the number of extra pages to invalidate, beyond the
++ * first page, while __invlpgb gets the more human readable number of pages to
++ * invalidate.
+  *
+  * The bits in rax[0:2] determine respectively which components of the address
+  * (VA, PCID, ASID) get compared when flushing. If neither bits are set, *any*
+  * address in the specified range matches.
+  *
++ * Since it is desired to only flush TLB entries for the ASID that is executing
++ * the instruction (a host/hypervisor or a guest), the ASID valid bit should
++ * always be set. On a host/hypervisor, the hardware will use the ASID value
++ * specified in EDX[15:0] (which should be 0). On a guest, the hardware will
++ * use the actual ASID value of the guest.
++ *
+  * TLBSYNC is used to ensure that pending INVLPGB invalidations initiated from
+  * this CPU have completed.
   */
-diff --git a/arch/x86/kernel/verify_cpu.S b/arch/x86/kernel/verify_cpu.S
-index 1258a58..37ad437 100644
---- a/arch/x86/kernel/verify_cpu.S
-+++ b/arch/x86/kernel/verify_cpu.S
-@@ -29,8 +29,12 @@
-  */
+@@ -55,9 +82,9 @@ static inline void __invlpgb(unsigned long asid, unsigned long pcid,
+ 			     unsigned long addr, u16 nr_pages,
+ 			     enum addr_stride stride, u8 flags)
+ {
+-	u32 edx = (pcid << 16) | asid;
++	u64 rax = addr | flags | INVLPGB_FLAG_ASID;
+ 	u32 ecx = (stride << 31) | (nr_pages - 1);
+-	u64 rax = addr | flags;
++	u32 edx = (pcid << 16) | asid;
  
- #include <asm/cpufeatures.h>
-+#include <asm/cpufeaturemasks.h>
- #include <asm/msr-index.h>
+ 	/* The low bits in rax are for flags. Verify addr is clean. */
+ 	VM_WARN_ON_ONCE(addr & ~PAGE_MASK);
+@@ -93,27 +120,6 @@ static inline void __invlpgb_all(unsigned long asid, unsigned long pcid, u8 flag
+ static inline void __tlbsync(void) { }
+ #endif
  
-+#define SSE_MASK	\
-+	(REQUIRED_MASK0 & ((1<<(X86_FEATURE_XMM & 31)) | (1<<(X86_FEATURE_XMM2 & 31))))
-+
- SYM_FUNC_START_LOCAL(verify_cpu)
- 	pushf				# Save caller passed flags
- 	push	$0			# Kill any dangerous flags
-diff --git a/arch/x86/tools/cpufeaturemasks.awk b/arch/x86/tools/cpufeaturemasks.awk
-new file mode 100755
-index 0000000..59757ca
---- /dev/null
-+++ b/arch/x86/tools/cpufeaturemasks.awk
-@@ -0,0 +1,81 @@
-+#!/usr/bin/awk
-+#
-+# Convert cpufeatures.h to a list of compile-time masks
-+# Note: this blithely assumes that each word has at least one
-+# feature defined in it; if not, something else is wrong!
-+#
-+
-+BEGIN {
-+	printf "#ifndef _ASM_X86_CPUFEATUREMASKS_H\n";
-+	printf "#define _ASM_X86_CPUFEATUREMASKS_H\n\n";
-+
-+	file = 0
-+}
-+
-+FNR == 1 {
-+	++file;
-+
-+	# arch/x86/include/asm/cpufeatures.h
-+	if (file == 1)
-+		FS = "[ \t()*+]+";
-+
-+	# .config
-+	if (file == 2)
-+		FS = "=";
-+}
-+
-+# Create a dictionary of sorts, containing all defined feature bits
-+file == 1 && $1 ~ /^#define$/ && $2 ~ /^X86_FEATURE_/ {
-+	nfeat = $3 * $4 + $5;
-+	feat = $2;
-+	sub(/^X86_FEATURE_/, "", feat);
-+	feats[nfeat] = feat;
-+}
-+file == 1 && $1 ~ /^#define$/ && $2 == "NCAPINTS" {
-+	ncapints = int($3);
-+}
-+
-+# Create a dictionary featstat[REQUIRED|DISABLED, FEATURE_NAME] = on | off
-+file == 2 && $1 ~ /^CONFIG_X86_(REQUIRED|DISABLED)_FEATURE_/ {
-+	on = ($2 == "y");
-+	if (split($1, fs, "CONFIG_X86_|_FEATURE_") == 3)
-+		featstat[fs[2], fs[3]] = on;
-+}
-+
-+END {
-+	sets[1] = "REQUIRED";
-+	sets[2] = "DISABLED";
-+
-+	for (ns in sets) {
-+		s = sets[ns];
-+
-+		printf "/*\n";
-+		printf " * %s features:\n", s;
-+		printf " *\n";
-+		fstr = "";
-+		for (i = 0; i < ncapints; i++) {
-+			mask = 0;
-+			for (j = 0; j < 32; j++) {
-+				feat = feats[i*32 + j];
-+				if (featstat[s, feat]) {
-+					nfstr = fstr " " feat;
-+					if (length(nfstr) > 72) {
-+						printf " *   %s\n", fstr;
-+						nfstr = " " feat;
-+					}
-+					fstr = nfstr;
-+					mask += (2 ^ j);
-+				}
-+			}
-+			masks[i] = mask;
-+		}
-+		printf " *   %s\n */\n", fstr;
-+
-+		for (i = 0; i < ncapints; i++)
-+			printf "#define %s_MASK%d\t0x%08xU\n", s, i, masks[i];
-+
-+		printf "#define %s_MASK_CHECK BUILD_BUG_ON_ZERO(NCAPINTS != %d)\n\n", s, ncapints;
-+	}
-+
-+	printf "#endif /* _ASM_X86_CPUFEATUREMASKS_H */\n";
-+}
+-/*
+- * INVLPGB can be targeted by virtual address, PCID, ASID, or any combination
+- * of the three. For example:
+- * - FLAG_VA | FLAG_INCLUDE_GLOBAL: invalidate all TLB entries at the address
+- * - FLAG_PCID:			    invalidate all TLB entries matching the PCID
+- *
+- * The first is used to invalidate (kernel) mappings at a particular
+- * address across all processes.
+- *
+- * The latter invalidates all TLB entries matching a PCID.
+- */
+-#define INVLPGB_FLAG_VA			BIT(0)
+-#define INVLPGB_FLAG_PCID		BIT(1)
+-#define INVLPGB_FLAG_ASID		BIT(2)
+-#define INVLPGB_FLAG_INCLUDE_GLOBAL	BIT(3)
+-#define INVLPGB_FLAG_FINAL_ONLY		BIT(4)
+-#define INVLPGB_FLAG_INCLUDE_NESTED	BIT(5)
+-
+-/* The implied mode when all bits are clear: */
+-#define INVLPGB_MODE_ALL_NONGLOBALS	0UL
+-
+ static inline void invlpgb_flush_user_nr_nosync(unsigned long pcid,
+ 						unsigned long addr,
+ 						u16 nr, bool stride)
