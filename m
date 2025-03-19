@@ -1,356 +1,212 @@
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2052.outbound.protection.outlook.com [40.107.243.52])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CC82F37
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:23:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.52
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742412194; cv=fail; b=bWkSak6KYBhH5ZoqgvHQdPMLPqVGDGdiSDd390Y09YBAY7AvDsdvtuR80GRcG50yB5y5nQWvdpDg5YZQH6jbflHfrqJuIg7xbWbNzYZMINRS34BBM6iZlbA9FOYhJA6/pxVUsSQt+nGpGJx+c44NmfDHyFyChURXDjg0PXA02KY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742412194; c=relaxed/simple;
-	bh=LNGyk09A6U40zNkcaKFoxfGH2SaYLZhM0ooleRc0xgM=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=jQiwZTwi/VePoqgJaplKSaIJI68D6ZU0y95c1aNGvLNYVU8SiNAzM9oyCQEfpsdNpH10MLstqphdb1lGEh9aynp+qfrym0sZNCkyrno+2biIXxZ4LljWd46ulxP+oEH85oBeN7vVULnYXqTQ2fXAzLsri6zMIe/+NIxn8iMPsyM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=hg9hnGpX; arc=fail smtp.client-ip=40.107.243.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D6AC2135DE;
+	Wed, 19 Mar 2025 19:23:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742412199; cv=none; b=KGdcJpa3t1jPdjk4QhStqW02whISzf8Iab4nYq1ayohljF373NYn9t3i7G7KO11Fb3b5dNeXozuYg1A+nQ8Km40TQTNyUlLQl21oj6PLOo6yWV3CtoXAFYXreLLvCVDwXnbpwIIYKeRhPAKxlCHOgO4kij/4nkf3igOpA4YfoPI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742412199; c=relaxed/simple;
+	bh=r/XHbPpCDJg8LK6akBmJpvgVHJpTE1lx9iFi1+FW9MU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FG2cG4LhNkODpK6SzTWxhSwz7/snbAe8OONPEuRg2vynHC2+sR/0Zq4g0T/DL+sV9lzjJ6BHHt5lya1ZSa4lpcWf/r1mAgHb99zqtWv0zyQsy+b+vU/prvRjKthQjKIl2hVr8e96J3M1h/RYs6jOie3Fs2wLrOnzYP4HcJiXAwg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJcjSaFg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="hg9hnGpX"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=X6RtF37uZgxAnUpRcGB2iA6I2JrfC9w95uceI8SR5I/0DvXt9v6xYS5w+Hkbk+5jcbruq9fig0KqVT6mVoK4wglpK31AaXfdX4eZWCWrskF3of0Nmij3zHeS/0qR1XPo6E6JB0zi3nvs4fRZgYaXQnOWG18Y6pRKMJn9YtrmVQfWA9n6W29ui4DGy+nOe/98IXnY8sc/UUfkob2Wn5zoJdoScqL+01A2tyu+Gw3iv5fy6W6lX9hOyN8yWSpUoLHf8P23WVxieMFBeQe/0JKkcrP8N8+3XAXkoSjctKRYwazNhpvll8pKrUWdin0WRPYGo4XZFcU80xzWzcsVSao5Ig==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JpjelLZrm3L9ypISzT7yGOZZBcLBbq1TDSdcmS8EePU=;
- b=AccDCOEzyMEyKXnRQ04J3ey0D945vuOiQMNyRVWGMwJJFfo5eodf5+STVfXin1iJsnAjm6jXE9tBX9Tq6Um4AEFzBm6/IlLqqnlYIlG1R6ylGiZft/uhdMQHEb11g+cCYqfB9tjZtyJxEWtF6T1YVY2eJ8leanbMtw76Y0Q2CHPDTnI2Qhtb6IssgD079bNHFhEGSgWGmnhGC3FRhyKOOCkKO0J/ezk217twiTiTKD/U6po7g+o+VYqwQTH16CA/+opZghvcVslme2PPlFOqTohEUwo4FJ0ORmK5DMrrRQ5rGI0ydDsj8jsFPHPj2QgWJN1Qrgy4XIG3IJedt+vang==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=linux-foundation.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JpjelLZrm3L9ypISzT7yGOZZBcLBbq1TDSdcmS8EePU=;
- b=hg9hnGpXfpL8uAcNf44mbMxd+ctjzqG7yjLa7p25JGyidWNTL9U1SDC0Gf3E2Ba/j5W6ahja3Sz/T0DFNVogkmdgy0KTomfzM0989Oz3NGTjuk3rSMN1zEWzywmGRKil28vSAWqNjQHr3ntnJq/aIxwZIjA0zaRch0HE2D5MBBA=
-Received: from BYAPR07CA0080.namprd07.prod.outlook.com (2603:10b6:a03:12b::21)
- by SA1PR12MB7200.namprd12.prod.outlook.com (2603:10b6:806:2bb::7) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
- 2025 19:23:08 +0000
-Received: from CY4PEPF0000EDD2.namprd03.prod.outlook.com
- (2603:10b6:a03:12b:cafe::4c) by BYAPR07CA0080.outlook.office365.com
- (2603:10b6:a03:12b::21) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Wed,
- 19 Mar 2025 19:23:08 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CY4PEPF0000EDD2.mail.protection.outlook.com (10.167.241.198) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Wed, 19 Mar 2025 19:23:08 +0000
-Received: from kaveri.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Wed, 19 Mar
- 2025 14:22:59 -0500
-From: Shivank Garg <shivankg@amd.com>
-To: <akpm@linux-foundation.org>, <linux-mm@kvack.org>, <ziy@nvidia.com>
-CC: <AneeshKumar.KizhakeVeetil@arm.com>, <baolin.wang@linux.alibaba.com>,
-	<bharata@amd.com>, <david@redhat.com>, <gregory.price@memverge.com>,
-	<honggyu.kim@sk.com>, <jane.chu@oracle.com>, <jhubbard@nvidia.com>,
-	<jon.grimm@amd.com>, <k.shutemov@gmail.com>, <leesuyeon0506@gmail.com>,
-	<leillc@google.com>, <liam.howlett@oracle.com>,
-	<linux-kernel@vger.kernel.org>, <mel.gorman@gmail.com>,
-	<Michael.Day@amd.com>, <Raghavendra.KodsaraThimmappa@amd.com>,
-	<riel@surriel.com>, <rientjes@google.com>, <santosh.shukla@amd.com>,
-	<shivankg@amd.com>, <shy828301@gmail.com>, <sj@kernel.org>,
-	<wangkefeng.wang@huawei.com>, <weixugc@google.com>, <willy@infradead.org>,
-	<ying.huang@linux.alibaba.com>, <anannara@amd.com>, <wei.huang2@amd.com>,
-	<Jonathan.Cameron@huawei.com>, <hyeonggon.yoo@sk.com>, <byungchul@sk.com>
-Subject: [PATCH RFC V2 0/9] Enhancements to Page Migration with Multi-threading and Batch Offloading to DMA
-Date: Wed, 19 Mar 2025 19:22:03 +0000
-Message-ID: <20250319192211.10092-1-shivankg@amd.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJcjSaFg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FD5FC4CEE9;
+	Wed, 19 Mar 2025 19:23:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742412199;
+	bh=r/XHbPpCDJg8LK6akBmJpvgVHJpTE1lx9iFi1+FW9MU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DJcjSaFg1WzjsfwN3S18h/TNsv+xT7Mfh/G3Ev/9JixtH5vs/cqkDaL5bIq0bSPp8
+	 CVGw9HXbJNMdxd0hCCo41zii/BvmkX9CbQ8tKJ1revkGZxxa/VlFf4P25TYt+xiJob
+	 4mI9hyx1WBLYCFfuv276gPhY3WqUZz5twwHydHId59OIiv1SLO6v1b6s207i2iKVvL
+	 roAKJa9XUgMVWf3hMsavNsfosOoQDpwdFOfw5kWZV1yWG2gnhyc6Fzvhvya0yEzahb
+	 nXziJePKSbeQQAjtDLL/yMzmb1OsTUzF1+VJtBTfa8ygzxaZ7455C7bccnu4BoCp4Z
+	 n2Zf1cERFJOlA==
+Message-ID: <b75a5c14-f399-45e2-80f3-923e7afe78ab@kernel.org>
+Date: Wed, 19 Mar 2025 20:23:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY4PEPF0000EDD2:EE_|SA1PR12MB7200:EE_
-X-MS-Office365-Filtering-Correlation-Id: 9ed11274-5489-4745-dc1a-08dd671b7b15
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?a0VzWkNaRmd1MmZRa2JpODQrc1JnQWZZVDJHL0duR0N0RlVDTVVVV2lQNjNW?=
- =?utf-8?B?a3JLTzd1MVUyTU03OGhmWFFrSFFHUzc5YVpBd3VYL1pMUllqZStkaHQ5MXlT?=
- =?utf-8?B?Z3czQTBCU1hjVEx5eDVGTEZGYUFFSzZUWnFOTmpkTnR5b3o3Y1cwM2JSQ3R0?=
- =?utf-8?B?MUNzTVk4YU5QTjhEYURISXU5V0kzOHQrbjJ6VnhWSERESVlQYzdGd0FMRFJI?=
- =?utf-8?B?NmNucjI0VXlrSlU4ZWM3WExLSDZBWklZNmVadUhkUFRkN3BLNTYzNHhzNGRD?=
- =?utf-8?B?ZjFsUTh0T1J6VFhVS3lEbER5bThra0JuNnQ4SkpqekcxSnh6d1JCN3Y0b0xP?=
- =?utf-8?B?aUZzbmdsT3RuWGFUamVUQkhwN2pRVXpqTWFCVDFtZUQ3NjN6MzA0ZmZIaGpB?=
- =?utf-8?B?eno3V3RyYjJORnlPZVdlNmtuNmpZZTh2dEFQbEtlQkhnQmx6R0xvb25UZll0?=
- =?utf-8?B?eDBOSG95SEV1d3FFLy9Pc2ZBajBwOVNsdy9JRUc2bGV4VS9YS0JQTHJPNXhu?=
- =?utf-8?B?QkU2VzdSL2RGcWRIcnJoZFRrRDV6NUdBSDNndktVQks0VzUyY1Z6NVJmRzF5?=
- =?utf-8?B?MjFLaFc3UXBOZzVVb2xsaUU2UjNoYWFUaTYyR2ZSU1gwU0hSaENRdVdnb1NB?=
- =?utf-8?B?R2FmdGZtQ05IMy9CdUpLZGpLOVc3S3luQWt3RXJIYWtGbGl1b1hmRkFSTDd6?=
- =?utf-8?B?ay9oN2J1ZlNkZE9FTWo0L3BJWDJXLzYwNWV4Rk15ZUFSZVZPU21OZDNYMFpE?=
- =?utf-8?B?cmVtTkRUNHFaVEpLL1YrQ0VsNWRpZGJVeWtxb0ZydXU3WTFaak93RVJENUgv?=
- =?utf-8?B?eUR1ZlNXeXUwdkNUbkFpVnVBUld2ZEhIbkhORGRpMzZ6eTdwMDhDN0hpeVc5?=
- =?utf-8?B?QTM0V0kxN3kxOG1HZ0E0dDJqS0JPNEN6bmxpclRHZGpLQzg1Mlp6RkZyWlNQ?=
- =?utf-8?B?ZXJNWWVhcVdZb1JOeTNTRW52ZkQ2dG1nZ3RCcm10TldYazI1VE95b1QrdXYx?=
- =?utf-8?B?MTQydnBnS2tuL2tGM3BsZmo0ZGN3ZndXc3BuU3VYcW5qSTdTMll5U0ppamtu?=
- =?utf-8?B?T2pWK0draUpVL043QkV0d0NrTytvNCtDU3hURmZHeGk3VGE3NlQ1RmtCRzk1?=
- =?utf-8?B?Qm4vVEJ0VWM5dTAvTUpPVjRIVHhJQkkyYlhCRGorVG9MNFFERWtOVUwxZlRM?=
- =?utf-8?B?TnZMQUpKK0FHK2pwZzNXdWl4b3VXQXUvaVkvYTZkOFJpd3F1Nk9CdXJxek0w?=
- =?utf-8?B?d21hWWxyWG1SZGpuajZiRy9KbGRIaS9wb2VLR1kzK3NRbENZdTNiVkUxYmRD?=
- =?utf-8?B?a25tWHExL0ppWjFReUZPVnk3OVVRZ1dZV3hrc1daTUZVdVpzNnN3aFNUem0v?=
- =?utf-8?B?YVdDaS9nV25tRVNsSXI0bTJ0RU5HalNzcnJrTVBXSG1RcUw5V0tXU2dDOVNw?=
- =?utf-8?B?NU1BWlNSUXRiSkpQZEJPZmNZajdjemgxQitiajJJMGRxcnBrYjFVUFMyUy9l?=
- =?utf-8?B?bTNmTHBFdWhSbDJwRVdiWHVxcWdnSFRaeTM5bmZWb2syRnFQZmlRKzZLKzc1?=
- =?utf-8?B?eE1nMm9rY0tTay9rdDRjN1R1Rlo2ZTdLV1gwcnBCU0IveEN1QTJ2RVBBZnNo?=
- =?utf-8?B?Z2tVdXoxVUw1MzhVeWFEU09zYW9qbGFDdzJPeGJMRzV6dGl1dDRUSDBMMlA4?=
- =?utf-8?B?M3J2RUhqZmlKOFBCSTVJVVZmYlJDMUNqZS90USs1NnQ5cFdDbWYrQmZsMldU?=
- =?utf-8?B?MUhnRXhBTXZmZDIxT0tuVHc1Ykkxa0RqOHZEcDVWSDBKZER4bVBNWFFwYkVB?=
- =?utf-8?B?Rk5vZ1lseXpUeDlzU2NseUdQSUVIZy9mRkg2dUJjcWtubW1sSDEvc3JiVmND?=
- =?utf-8?B?WHR2aGVnNGFhVFRhdGlhL1ZYQ1hFTGhiYXRrN3d0ZzR2U1pZNEZFRXk1ZGZX?=
- =?utf-8?B?cHdWUW1HOFZXZDZPMjI1SXlDeTQwTWk4R3RxeEZUa2k1TkpRc29RWkkydFZs?=
- =?utf-8?Q?qok98hfQLlHmhdMwVKpVF0TlFCoEgg=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(7416014)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Mar 2025 19:23:08.1724
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ed11274-5489-4745-dc1a-08dd671b7b15
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CY4PEPF0000EDD2.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR12MB7200
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 2/2] ARM: dts: aspeed: Add Initial device tree for AMD
+ Onyx Platform
+To: Rajaganesh Rathinasabapathi <rrathina@amd.com>,
+ Rajaganesh Rathinasabapathi <Rajaganesh.Rathinasabapathi@amd.com>,
+ devicetree@vger.kernel.org, openbmc@lists.ozlabs.org, joel@jms.id.au,
+ andrew@codeconstruct.com.au
+Cc: robh+dt@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org, jothayot@amd.com,
+ Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+References: <20250318174730.1921983-1-Rajaganesh.Rathinasabapathi@amd.com>
+ <20250318174730.1921983-2-Rajaganesh.Rathinasabapathi@amd.com>
+ <af75c352-0010-4c58-b8bc-ac0d02337d1a@kernel.org>
+ <8c7be61d-d5e4-4f7f-a995-06cf856a84ae@amd.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <8c7be61d-d5e4-4f7f-a995-06cf856a84ae@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-This patchset introduces enhancements to the page migration by batching
-folio-copy operations and using multiple CPU threads for copying or offloading
-the copy to DMA hardware.
+On 19/03/2025 17:41, Rajaganesh Rathinasabapathi wrote:
+> On 3/18/25 23:44, Krzysztof Kozlowski wrote:
+>> Caution: This message originated from an External Source. Use proper caution when opening attachments, clicking links, or responding.
+>>
+>>
+>> On 18/03/2025 18:47, Rajaganesh Rathinasabapathi wrote:
+>>> Add initial device tree and makefile updates for
+>>> AMD Onyx platform.
+>>>
+>>> AMD Onyx platform is an AMD customer reference board with an Aspeed
+>>> ast2600 BMC manufactured by AMD.
+>>> It describes I2C devices, UARTs, MAC, FMC, etc.
+>>> present on AMD Onyx platform.
+>>>
+>>> Signed-off-by: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+>>> Signed-off-by: Rajaganesh Rathinasabapathi <Rajaganesh.Rathinasabapathi@amd.com>
+>>> ---
+>>> Changes since v1:
+>>> * Incorporate review comments
+>>
+>> Which ones? I do not see my comments addressed and if you do not list
+>> them, I treat it as a clear sign you do not care.
+>>
+> 
+> Understood, will list them in next patch submission.
+>>> * Update commit message
+>>> * Remove vmalloc and earlyprintk
+>>>
+>>> Changes since v2:
+>>> * Address review comments
+>>
+>> Which ones? This has to be specific
+>>
+> Got it, will add details and fix in next patch.
+> 
+>>> * Fix checkpatch warnings
+>>> * Remove bootargs
+>>>
+>>> Changes since v3:
+>>> * Fix stdout-path
+>>> * Change commit summary
+>>> ---
+>>>  arch/arm/boot/dts/aspeed/Makefile             |   1 +
+>>>  .../boot/dts/aspeed/aspeed-bmc-amd-onyx.dts   | 102 ++++++++++++++++++
+>>>  2 files changed, 103 insertions(+)
+>>>  create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-amd-onyx.dts
+>>>
+>>> diff --git a/arch/arm/boot/dts/aspeed/Makefile b/arch/arm/boot/dts/aspeed/Makefile
+>>> index 2e5f4833a073..1e6a130377b8 100644
+>>> --- a/arch/arm/boot/dts/aspeed/Makefile
+>>> +++ b/arch/arm/boot/dts/aspeed/Makefile
+>>> @@ -5,6 +5,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>>>       aspeed-ast2600-evb.dtb \
+>>>       aspeed-bmc-amd-daytonax.dtb \
+>>>       aspeed-bmc-amd-ethanolx.dtb \
+>>> +     aspeed-bmc-amd-onyx.dtb \
+>>>       aspeed-bmc-ampere-mtjade.dtb \
+>>>       aspeed-bmc-ampere-mtjefferson.dtb \
+>>>       aspeed-bmc-ampere-mtmitchell.dtb \
+>>> diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-amd-onyx.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-amd-onyx.dts
+>>> new file mode 100644
+>>> index 000000000000..32509a651183
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-amd-onyx.dts
+>>> @@ -0,0 +1,102 @@
+>>> +// SPDX-License-Identifier: GPL-2.0+
+>>> +// Copyright (c) 2021 - 2024 AMD Inc.
+>>> +// Author: Supreeth Venkatesh <supreeth.venkatesh@amd.com>
+>>> +
+>>> +/dts-v1/;
+>>> +
+>>> +#include "aspeed-g6.dtsi"
+>>> +#include <dt-bindings/gpio/aspeed-gpio.h>
+>>> +
+>>> +/ {
+>>> +     model = "AMD Onyx BMC";
+>>> +     compatible = "amd,onyx-bmc", "aspeed,ast2600";
+>>> +
+>>> +     aliases {
+>>> +             serial0 = &uart1;
+>>> +             serial4 = &uart5;
+>>> +     };
+>>> +
+>>> +     chosen {
+>>> +             stdout-path = "serial4:115200n8";
+>>> +     };
+>>> +
+>>> +     memory@80000000 {
+>>> +             device_type = "memory";
+>>> +             reg = <0x80000000 0x80000000>;
+>>> +     };
+>>> +
+>>> +};
+>> How did you address comment here from v1 which was responded with "ACK"?
+>>
+>> What else what exactly fixed and what not?
+>>
+>> Best regards,
+>> Krzysztof
+> 
+> Thanks for the comments.
+> I will add 'Acked-by' and in next patch submission. 
+> 
 
-It builds upon Zi's work on accelerating page migration via multi-threading[1]
-and my previous work on enhancing page migration with batch offloading via DMA[2].
 
-MOTIVATION:
------------
-Page migration costs have become increasingly critical in modern systems with
-memory-tiers and NUMA nodes:
+What? Where did you get it from? Are you sure you understand submitting
+patches document regarding this section?
 
-1. Batching folio copies increases throughput, especially for base page migrations
-where kernel activities (moving folio metadata, updating page table entries) create
-overhead between individual copies. This is particularly important for smaller
-page-sizes (4KB on x86_64/ARM64, 64KB on ARM64).
+Read the comment given on v1 instead of some random actions.
 
-2. Current simple serial copy patterns underutilize modern hardware capabilities,
-leaving memory migration bandwidth capped by single-threaded CPU-bound operations.
-
-These improvements are particularly valuable in:
-- Large-scale tiered-memory systems with CXL nodes and HBM
-- CPU-GPU coherent systems with GPU memory exposed as NUMA nodes
-- Systems where frequent page promotion/demotion occurs
-
-Following the trend of batching operations in the memory migration core path (batch
-migration, batch TLB flush), batch copying folio content is the logical next step.
-Modern systems equipped with powerful hardware accelerators (DMA engines), GPUs, and
-high CPU core counts offer untapped potential for hardware acceleration.
-
-DESIGN:
--------
-The patchset implements three key enhancements:
-
-1. Batching:
-- Current approach: Process each folio individually
-  for_each_folio() {
-    Copy folio metadata like flags and mappings
-    Copy the folio content from src to dst
-    Update page tables with dst folio
-  }
-
-- New approach: Process in batches
-  for_each_folio() {
-    Copy folio metadata like flags and mappings
-  }
-  Batch copy all src folios to dst
-  for_each_folio() {
-    Update page tables with dst folios
-  }
-
-2. Multi-Threading:
-- Distribute folio batch copy operations across multiple CPU threads.
-
-3. DMA Offload:
-- Leverage DMA engines designed for high copy throughput.
-- Distribute folio batch-copy across mutliple DMA channels.
-
-PERFORMANCE RESULTS:
--------------------
-System Info:
-Testing environment: AMD Zen 3 EPYC server (2-sockets, 32 cores, SMT Enabled),
-1 NUMA node per socket, Linux Kernel 6.14.0-rc7+, DVFS set to Performance,
-PTDMA hardware.
-
-Measurement: Throughput (GB/s)
-
-
-1. Varying folio-size with different parallel threads/channels:
-
-Move different sized folios (mTHP - 4KB, 16KB,..., 2MB) such that total transfer
-size is constant (1GB), with different number of parallel threads/channels.
-
-a. Multi-Threaded CPU
-
-	   Folio Size-->
-Thread Cnt | 4K   |    16K   |    32K   |   64K    |   128K   |   256K   |   512K     |    1M     |    2M     |
-===============================================================================================================
-1      | 1.72±0.05| 3.55±0.14| 4.44±0.07| 5.19±0.37| 5.57±0.47| 6.27±0.02 | 6.43±0.09 | 6.59±0.05 | 10.73±0.07|
-2      | 1.93±0.06| 3.91±0.24| 5.22±0.03| 5.76±0.62| 7.42±0.16| 7.30±0.93 | 8.08±0.85 | 8.67±0.09 | 17.21±0.28|
-4      | 2.00±0.03| 4.30±0.22| 6.02±0.10| 7.61±0.26| 8.60±0.92| 9.54±1.11 | 10.03±1.12| 10.98±0.14| 29.61±0.43|
-8      | 2.07±0.08| 4.60±0.32| 6.06±0.85| 7.52±0.96| 7.98±1.83| 8.66±1.94 | 10.99±1.40| 11.22±1.49| 37.42±0.70|
-16     | 2.04±0.04| 4.74±0.31| 6.20±0.39| 7.51±0.86| 8.26±1.47| 10.99±0.11| 9.72±1.51 | 12.07±0.02| 37.08±0.53|
-
-b. DMA Offload
-
-	   Folio Size-->
-Channel Cnt| 4K   |   16K    |   32K    |    64K   |   128K   |   256K   |    512K  |   1M     |    2M     |
-============================================================================================================
-1      | 0.46±0.01| 1.35±0.02| 1.99±0.02| 2.76±0.02| 3.44±0.17| 3.87±0.20| 3.98±0.29| 4.36±0.01| 11.79±0.05|
-2      | 0.66±0.02| 1.84±0.07| 2.89±0.10| 4.02±0.30| 4.27±0.53| 5.98±0.05| 6.15±0.50| 5.83±0.64| 13.39±0.08|
-4      | 0.91±0.01| 2.62±0.13| 3.98±0.17| 5.57±0.41| 6.55±0.70| 8.32±0.04| 8.91±0.05| 8.82±0.96| 24.52±0.22|
-8      | 1.14±0.00| 3.21±0.07| 4.21±1.09| 6.07±0.81| 8.80±0.08| 8.91±1.38|11.03±0.02|10.68±1.38| 39.17±0.58|
-16     | 1.19±0.11| 3.33±0.20| 4.98±0.33| 7.65±0.10| 7.85±1.50| 8.38±1.35| 8.94±3.23|12.85±0.06| 55.45±1.20|
-
-Inference:
-- Throughput increases with folio size. Higher Size folios benefit more from DMA.
-- Multi-threading and DMA offloading both provide significant gains.
-
-
-2. Varying folio count (total transfer size)
-2MB folio-size, use only 1 thread
-
-a. CPU Multi-Threaded
-Folio Count| GB/s
-======================
-1          | 7.56±3.23
-8          | 9.54±1.34
-64         | 9.57±0.39
-256        | 10.09±0.17
-512        | 10.61±0.17
-1024       | 10.77±0.07
-2048       | 10.81±0.08
-8192       | 10.84±0.05
-
-b. DMA offload
-Folio Count| GB/s
-======================
-1          | 8.21±3.68
-8          | 9.92±2.12
-64         | 9.90±0.31
-256        | 11.51±0.32
-512        | 11.67±0.11
-1024       | 11.89±0.06
-2048       | 11.92±0.08
-8192       | 12.03±0.05
-
-Inference:
-- Throughput increase with folios count but plateaus after a threshold.
-  (The migrate_pages function uses a folio batch size of 512)
-
-3. CPU Threads scheduling
-Analyze effect of CPU topology
-
-a. Spread Across different CCDs
- Threads    | GB/s
-========================
- 1          | 10.60±0.06
- 2          | 17.21±0.12
- 4          | 29.94±0.16
- 8          | 37.07±1.62
- 16         | 36.19±0.97
-
-b. Fill one CCD completely before moving to next one
- Threads    | GB/s
-========================
- 1          | 10.44±0.47
- 2          | 10.93±0.11
- 4          | 10.99±0.04
- 8          | 11.08±0.03
- 16         | 17.91±0.12
-
-Inference:
-- Hardware topology matters. On AMD systems, distributing copy threads across
-  CCDs utilizes bandwidth better
-
-TODOs:
-We can further experiments to:
-- Characterize system behavior and develop heuristics
-- Analyze remote/local CPU scheduling impacts
-- Measure DMA setup overheads
-- Evaluate costs to userspace
-- Study cache hotness/pollution effects
-- DMA cost with different system I/O load
-
-[1] https://lore.kernel.org/linux-mm/20250103172419.4148674-1-ziy@nvidia.com
-[2] https://lore.kernel.org/linux-mm/20240614221525.19170-1-shivankg@amd.com
-[3] LSFMM Proposal: https://lore.kernel.org/all/cf6fc05d-c0b0-4de3-985e-5403977aa3aa@amd.com
-
-Mike Day (1):
-  mm: add support for copy offload for folio Migration
-
-Shivank Garg (4):
-  mm: batch folio copying during migration
-  mm/migrate: add migrate_folios_batch_move to batch the folio move
-    operations
-  dcbm: add dma core batch migrator for batch page offloading
-  mtcopy: spread threads across die for testing
-
-Zi Yan (4):
-  mm/migrate: factor out code in move_to_new_folio() and
-    migrate_folio_move()
-  mm/migrate: revive MIGRATE_NO_COPY in migrate_mode.
-  mm/migrate: introduce multi-threaded page copy routine
-  adjust NR_MAX_BATCHED_MIGRATION for testing
-
- drivers/Kconfig                        |   2 +
- drivers/Makefile                       |   3 +
- drivers/migoffcopy/Kconfig             |  17 ++
- drivers/migoffcopy/Makefile            |   2 +
- drivers/migoffcopy/dcbm/Makefile       |   1 +
- drivers/migoffcopy/dcbm/dcbm.c         | 393 ++++++++++++++++++++++++
- drivers/migoffcopy/mtcopy/Makefile     |   1 +
- drivers/migoffcopy/mtcopy/copy_pages.c | 408 +++++++++++++++++++++++++
- include/linux/migrate_mode.h           |   2 +
- include/linux/migrate_offc.h           |  36 +++
- include/linux/mm.h                     |   4 +
- mm/Kconfig                             |   8 +
- mm/Makefile                            |   1 +
- mm/migrate.c                           | 351 ++++++++++++++++++---
- mm/migrate_offc.c                      |  51 ++++
- mm/util.c                              |  41 +++
- 16 files changed, 1275 insertions(+), 46 deletions(-)
- create mode 100644 drivers/migoffcopy/Kconfig
- create mode 100644 drivers/migoffcopy/Makefile
- create mode 100644 drivers/migoffcopy/dcbm/Makefile
- create mode 100644 drivers/migoffcopy/dcbm/dcbm.c
- create mode 100644 drivers/migoffcopy/mtcopy/Makefile
- create mode 100644 drivers/migoffcopy/mtcopy/copy_pages.c
- create mode 100644 include/linux/migrate_offc.h
- create mode 100644 mm/migrate_offc.c
-
--- 
-2.34.1
-
+Best regards,
+Krzysztof
