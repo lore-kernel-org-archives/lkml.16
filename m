@@ -1,513 +1,154 @@
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A63D16BE3A;
-	Wed, 19 Mar 2025 14:51:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA53A16BE3A;
+	Wed, 19 Mar 2025 14:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742395885; cv=none; b=onxin4TBvOoKQWMTBCd1LX3hpuG0z4bbOApoUSMEA7DgEGeMr3eHpSntv+//7BTwyRDiWm2Uw5fZHBA0URlKUBsKqDZeIO9L4Xe1CwY7inB33XuxQW9usaj/48A7lawyTp99S7D8mtQYkctaNRQjA1nuUeaq3BUrVv3CdXAAIwc=
+	t=1742395908; cv=none; b=uQnPMOLkeDeuOpImzPjdBgMwk2N7t+cLXbCQXITS0JjUTrxGgaj1q51J6n8R2fBEQ5Z1JRGc+xr3bElwTnYA9FRDPlpAMf3jAzcvcmIVnFsdxGcyhQv1CsDv9siyDBEEBwCjJ5Zo+49UJ4R8rFL+MgQW38SFG8y5ZroAptWKFhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742395885; c=relaxed/simple;
-	bh=n7oVDuvEeaVu8MMqISFYxosA7NlwRoVEaeHVi1mYljk=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KTingi3hP/XvxpMO56M3Bf4RMy8Rk3WhMytbbVp7ScYxuzV0cKjL5LGr7BiZp5K4wSQqqxb3O2ISkG87UJKH4NaF+x50bFaV3t61MN6UPGmdNMv+NBu+M/sVEs/phcr73aGhJ8DcElY6dkIsEGERTprGeFFywYmsC4pGDpACH3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=LZzfAT/9; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="LZzfAT/9"
-Received: from francesco-nb.corp.toradex.com (31-10-206-125.static.upc.ch [31.10.206.125])
-	by mail11.truemail.it (Postfix) with ESMTPA id DD9281FB3E;
-	Wed, 19 Mar 2025 15:51:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1742395879;
-	bh=muD7WnQZSANKgQGPUSyfQvJo1xk+BwCaj3JqhwmPV+Y=; h=From:To:Subject;
-	b=LZzfAT/9VaCPgfKJlGn/gj3rtJmsI+TaiCouE5e1MQs/fFAPvWDmicYeiq37vieod
-	 sPaO1PE07wi8tyG75iz2l+I4WSryix7jEhbohMNW1p8vV5qyMrIOskEGj9yMRldFgZ
-	 fRq+iKlVdLrHSj78raocsYDt9cpLltB4bEja9SOGHAsUciLw09SJYICPODlZC5Mc+l
-	 2LltMR6GQDEsZizTpjtJjwM89pRs6PydYqkla1Q1555e7TBY1UrZKk+Pqbogg/5pDJ
-	 4C8+PbglJYRb6xtlSWz7mXGnEOyQ1pmtalXJP4BDLXZyZu+tisWxZGT6YLhbiodZ0T
-	 kLutAaDMSFGog==
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Dong Aisheng <aisheng.dong@nxp.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>
-Cc: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>,
-	linux-i2c@vger.kernel.org,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Francesco Dolcini <francesco.dolcini@toradex.com>
-Subject: [PATCH v1] i2c: lpi2c: implement master_xfer_atomic callback
-Date: Wed, 19 Mar 2025 15:51:14 +0100
-Message-Id: <20250319145114.50771-1-francesco@dolcini.it>
-X-Mailer: git-send-email 2.39.5
+	s=arc-20240116; t=1742395908; c=relaxed/simple;
+	bh=8fnh+mxNSdWC4xYUebdlycVe1MnQjASavmalZ/YWqzM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=FRGUOC/c4QcM8oPCPcZPmWu5LsquEojaBmG3EANDehJxsfUT7DkQnQiKTBZGbOAk9LL4tUs8+kCk7tSzi3cti2SppKBptYlvltjWyxQn8sozpL9PrUc6UEdrC/M01tjf3rV+wolaq77CDw4/u9PtFlI+8nFG9f3j3BUaVW0b/1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 360E8106F;
+	Wed, 19 Mar 2025 07:51:54 -0700 (PDT)
+Received: from [10.1.39.66] (e132430.arm.com [10.1.39.66])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E29473F694;
+	Wed, 19 Mar 2025 07:51:44 -0700 (PDT)
+Message-ID: <3732e7f8-a452-4f65-8e8b-1575c01d33b9@arm.com>
+Date: Wed, 19 Mar 2025 14:51:42 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] tracing: Rename trace_synth() to synth_event_trace2()
+To: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+Cc: rostedt@goodmis.org, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
+References: <20250318180814.226644-1-douglas.raillard@arm.com>
+ <20250318180814.226644-3-douglas.raillard@arm.com>
+ <20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
+Content-Language: en-US
+From: Douglas Raillard <douglas.raillard@arm.com>
+In-Reply-To: <20250319223728.ca7a5ac6fa37798d17bd2e29@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
+On 19-03-2025 13:37, Masami Hiramatsu (Google) wrote:
+> On Tue, 18 Mar 2025 18:08:12 +0000
+> Douglas RAILLARD <douglas.raillard@arm.com> wrote:
+> 
+>> From: Douglas Raillard <douglas.raillard@arm.com>
+>>
+>> Rename the frehsly exposed trace_synth() to synth_event_trace2() to
+>> comply with the existing naming convention. Since synth_event_trace()
+>> already exists (and operates on a "struct trace_event_file *"), use a
+>> new name for it.
+>>
+> 
+> I don't like this '2' and similar version digit naming for the functions.
+> Can you choose another better name?
 
-Rework the read and write code paths in the driver to support operation
-in atomic contexts. To achieve this, the driver must not rely on IRQs
-or perform any scheduling, e.g., via a sleep or schedule routine. Even
-jiffies do not advance in atomic contexts, so timeouts based on them
-are substituted with delays.
+I was hoping for some suggestions as I don't like it either :)
 
-Implement atomic, sleep-free, and IRQ-less operation. This increases
-complexity but is necessary for atomic I2C transfers required by some
-hardware configurations, e.g., to trigger reboots on an external PMIC chip.
+The natural prefix for functions operating on "struct synth_event *" would by "synth_event_*",
+but most of the existing API already uses the "synth_event_*" prefix, and is using
+"struct trace_event_file*".
 
-Signed-off-by: Emanuele Ghidoli <emanuele.ghidoli@toradex.com>
-Signed-off-by: Francesco Dolcini <francesco.dolcini@toradex.com>
----
- drivers/i2c/busses/i2c-imx-lpi2c.c | 258 +++++++++++++++++++----------
- 1 file changed, 173 insertions(+), 85 deletions(-)
+> BTW, can you also write a cover mail so that what is the goal of this
+> series, background and results? 
 
-diff --git a/drivers/i2c/busses/i2c-imx-lpi2c.c b/drivers/i2c/busses/i2c-imx-lpi2c.c
-index 0d4b3935e687..f34b6f07e9a4 100644
---- a/drivers/i2c/busses/i2c-imx-lpi2c.c
-+++ b/drivers/i2c/busses/i2c-imx-lpi2c.c
-@@ -16,6 +16,7 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -187,36 +188,35 @@ struct lpi2c_imx_struct {
- 	struct i2c_client	*target;
- };
- 
-+#define READL_POLL_TIMEOUT(atomic, addr, val, cond, delay_us, timeout_us) \
-+	(atomic ? readl_poll_timeout_atomic(addr, val, cond, delay_us, timeout_us) : \
-+		  readl_poll_timeout(addr, val, cond, delay_us, timeout_us))
-+
- static void lpi2c_imx_intctrl(struct lpi2c_imx_struct *lpi2c_imx,
- 			      unsigned int enable)
- {
- 	writel(enable, lpi2c_imx->base + LPI2C_MIER);
- }
- 
--static int lpi2c_imx_bus_busy(struct lpi2c_imx_struct *lpi2c_imx)
-+static int lpi2c_imx_bus_busy(struct lpi2c_imx_struct *lpi2c_imx, bool atomic)
- {
--	unsigned long orig_jiffies = jiffies;
- 	unsigned int temp;
- 
--	while (1) {
--		temp = readl(lpi2c_imx->base + LPI2C_MSR);
-+	READL_POLL_TIMEOUT(atomic, lpi2c_imx->base + LPI2C_MSR, temp,
-+			   temp & (MSR_ALF | MSR_BBF | MSR_MBF), 1, 500000);
- 
--		/* check for arbitration lost, clear if set */
--		if (temp & MSR_ALF) {
--			writel(temp, lpi2c_imx->base + LPI2C_MSR);
--			return -EAGAIN;
--		}
--
--		if (temp & (MSR_BBF | MSR_MBF))
--			break;
-+	/* check for arbitration lost, clear if set */
-+	if (temp & MSR_ALF) {
-+		writel(temp, lpi2c_imx->base + LPI2C_MSR);
-+		return -EAGAIN;
-+	}
- 
--		if (time_after(jiffies, orig_jiffies + msecs_to_jiffies(500))) {
--			dev_dbg(&lpi2c_imx->adapter.dev, "bus not work\n");
--			if (lpi2c_imx->adapter.bus_recovery_info)
--				i2c_recover_bus(&lpi2c_imx->adapter);
--			return -ETIMEDOUT;
--		}
--		schedule();
-+	/* check for bus not busy */
-+	if (!(temp & (MSR_BBF | MSR_MBF))) {
-+		dev_dbg(&lpi2c_imx->adapter.dev, "bus not work\n");
-+		if (lpi2c_imx->adapter.bus_recovery_info)
-+			i2c_recover_bus(&lpi2c_imx->adapter);
-+		return -ETIMEDOUT;
- 	}
- 
- 	return 0;
-@@ -242,7 +242,7 @@ static void lpi2c_imx_set_mode(struct lpi2c_imx_struct *lpi2c_imx)
- }
- 
- static int lpi2c_imx_start(struct lpi2c_imx_struct *lpi2c_imx,
--			   struct i2c_msg *msgs)
-+			   struct i2c_msg *msgs, bool atomic)
- {
- 	unsigned int temp;
- 
-@@ -254,30 +254,23 @@ static int lpi2c_imx_start(struct lpi2c_imx_struct *lpi2c_imx,
- 	temp = i2c_8bit_addr_from_msg(msgs) | (GEN_START << 8);
- 	writel(temp, lpi2c_imx->base + LPI2C_MTDR);
- 
--	return lpi2c_imx_bus_busy(lpi2c_imx);
-+	return lpi2c_imx_bus_busy(lpi2c_imx, atomic);
- }
- 
--static void lpi2c_imx_stop(struct lpi2c_imx_struct *lpi2c_imx)
-+static void lpi2c_imx_stop(struct lpi2c_imx_struct *lpi2c_imx, bool atomic)
- {
--	unsigned long orig_jiffies = jiffies;
- 	unsigned int temp;
- 
- 	writel(GEN_STOP << 8, lpi2c_imx->base + LPI2C_MTDR);
- 
--	do {
--		temp = readl(lpi2c_imx->base + LPI2C_MSR);
--		if (temp & MSR_SDF)
--			break;
--
--		if (time_after(jiffies, orig_jiffies + msecs_to_jiffies(500))) {
--			dev_dbg(&lpi2c_imx->adapter.dev, "stop timeout\n");
--			if (lpi2c_imx->adapter.bus_recovery_info)
--				i2c_recover_bus(&lpi2c_imx->adapter);
--			break;
--		}
--		schedule();
-+	READL_POLL_TIMEOUT(atomic, lpi2c_imx->base + LPI2C_MSR, temp,
-+			   temp & MSR_SDF, 1, 500000);
- 
--	} while (1);
-+	if (!(temp & MSR_SDF)) {
-+		dev_dbg(&lpi2c_imx->adapter.dev, "stop timeout\n");
-+		if (lpi2c_imx->adapter.bus_recovery_info)
-+			i2c_recover_bus(&lpi2c_imx->adapter);
-+	}
- }
- 
- /* CLKLO = I2C_CLK_RATIO * CLKHI, SETHOLD = CLKHI, DATAVD = CLKHI/2 */
-@@ -391,28 +384,31 @@ static int lpi2c_imx_pio_msg_complete(struct lpi2c_imx_struct *lpi2c_imx)
- 	return time_left ? 0 : -ETIMEDOUT;
- }
- 
--static int lpi2c_imx_txfifo_empty(struct lpi2c_imx_struct *lpi2c_imx)
-+static u32 txfifo_cnt(struct lpi2c_imx_struct *lpi2c_imx)
- {
--	unsigned long orig_jiffies = jiffies;
--	u32 txcnt;
-+	return readl(lpi2c_imx->base + LPI2C_MFSR) & 0xff;
-+}
- 
--	do {
--		txcnt = readl(lpi2c_imx->base + LPI2C_MFSR) & 0xff;
-+static int lpi2c_imx_txfifo_empty(struct lpi2c_imx_struct *lpi2c_imx, bool atomic)
-+{
-+	unsigned int temp;
-+	int err;
- 
--		if (readl(lpi2c_imx->base + LPI2C_MSR) & MSR_NDF) {
--			dev_dbg(&lpi2c_imx->adapter.dev, "NDF detected\n");
--			return -EIO;
--		}
-+	err = READL_POLL_TIMEOUT(atomic, lpi2c_imx->base + LPI2C_MSR, temp,
-+				 (temp & MSR_NDF) || !txfifo_cnt(lpi2c_imx),
-+				 1, 500000);
- 
--		if (time_after(jiffies, orig_jiffies + msecs_to_jiffies(500))) {
--			dev_dbg(&lpi2c_imx->adapter.dev, "txfifo empty timeout\n");
--			if (lpi2c_imx->adapter.bus_recovery_info)
--				i2c_recover_bus(&lpi2c_imx->adapter);
--			return -ETIMEDOUT;
--		}
--		schedule();
-+	if (temp & MSR_NDF) {
-+		dev_dbg(&lpi2c_imx->adapter.dev, "NDF detected\n");
-+		return -EIO;
-+	}
- 
--	} while (txcnt);
-+	if (err) {
-+		dev_dbg(&lpi2c_imx->adapter.dev, "txfifo empty timeout\n");
-+		if (lpi2c_imx->adapter.bus_recovery_info)
-+			i2c_recover_bus(&lpi2c_imx->adapter);
-+		return -ETIMEDOUT;
-+	}
- 
- 	return 0;
- }
-@@ -436,7 +432,7 @@ static void lpi2c_imx_set_rx_watermark(struct lpi2c_imx_struct *lpi2c_imx)
- 	writel(temp << 16, lpi2c_imx->base + LPI2C_MFCR);
- }
- 
--static void lpi2c_imx_write_txfifo(struct lpi2c_imx_struct *lpi2c_imx)
-+static bool lpi2c_imx_write_txfifo(struct lpi2c_imx_struct *lpi2c_imx, bool atomic)
- {
- 	unsigned int data, txcnt;
- 
-@@ -451,13 +447,19 @@ static void lpi2c_imx_write_txfifo(struct lpi2c_imx_struct *lpi2c_imx)
- 		txcnt++;
- 	}
- 
--	if (lpi2c_imx->delivered < lpi2c_imx->msglen)
--		lpi2c_imx_intctrl(lpi2c_imx, MIER_TDIE | MIER_NDIE);
--	else
-+	if (lpi2c_imx->delivered < lpi2c_imx->msglen) {
-+		if (!atomic)
-+			lpi2c_imx_intctrl(lpi2c_imx, MIER_TDIE | MIER_NDIE);
-+		return false;
-+	}
-+
-+	if (!atomic)
- 		complete(&lpi2c_imx->complete);
-+
-+	return true;
- }
- 
--static void lpi2c_imx_read_rxfifo(struct lpi2c_imx_struct *lpi2c_imx)
-+static bool lpi2c_imx_read_rxfifo(struct lpi2c_imx_struct *lpi2c_imx, bool atomic)
- {
- 	unsigned int blocklen, remaining;
- 	unsigned int temp, data;
-@@ -482,8 +484,9 @@ static void lpi2c_imx_read_rxfifo(struct lpi2c_imx_struct *lpi2c_imx)
- 	remaining = lpi2c_imx->msglen - lpi2c_imx->delivered;
- 
- 	if (!remaining) {
--		complete(&lpi2c_imx->complete);
--		return;
-+		if (!atomic)
-+			complete(&lpi2c_imx->complete);
-+		return true;
- 	}
- 
- 	/* not finished, still waiting for rx data */
-@@ -501,7 +504,10 @@ static void lpi2c_imx_read_rxfifo(struct lpi2c_imx_struct *lpi2c_imx)
- 		writel(temp, lpi2c_imx->base + LPI2C_MTDR);
- 	}
- 
--	lpi2c_imx_intctrl(lpi2c_imx, MIER_RDIE);
-+	if (!atomic)
-+		lpi2c_imx_intctrl(lpi2c_imx, MIER_RDIE);
-+
-+	return false;
- }
- 
- static void lpi2c_imx_write(struct lpi2c_imx_struct *lpi2c_imx,
-@@ -509,11 +515,29 @@ static void lpi2c_imx_write(struct lpi2c_imx_struct *lpi2c_imx,
- {
- 	lpi2c_imx->tx_buf = msgs->buf;
- 	lpi2c_imx_set_tx_watermark(lpi2c_imx);
--	lpi2c_imx_write_txfifo(lpi2c_imx);
-+	lpi2c_imx_write_txfifo(lpi2c_imx, false);
- }
- 
--static void lpi2c_imx_read(struct lpi2c_imx_struct *lpi2c_imx,
--			   struct i2c_msg *msgs)
-+static int lpi2c_imx_write_atomic(struct lpi2c_imx_struct *lpi2c_imx,
-+				  struct i2c_msg *msgs)
-+{
-+	u32 temp;
-+	int err;
-+
-+	lpi2c_imx->tx_buf = msgs->buf;
-+
-+	err = READL_POLL_TIMEOUT(true, lpi2c_imx->base + LPI2C_MSR, temp,
-+				 (temp & MSR_NDF) || lpi2c_imx_write_txfifo(lpi2c_imx, true),
-+				 5, 1000000);
-+
-+	if (temp & MSR_NDF)
-+		return -EIO;
-+
-+	return err;
-+}
-+
-+static void lpi2c_imx_read_init(struct lpi2c_imx_struct *lpi2c_imx,
-+				struct i2c_msg *msgs)
- {
- 	unsigned int temp;
- 
-@@ -524,8 +548,43 @@ static void lpi2c_imx_read(struct lpi2c_imx_struct *lpi2c_imx,
- 	temp = msgs->len > CHUNK_DATA ? CHUNK_DATA - 1 : msgs->len - 1;
- 	temp |= (RECV_DATA << 8);
- 	writel(temp, lpi2c_imx->base + LPI2C_MTDR);
-+}
-+
-+static bool lpi2c_imx_read_chunk_atomic(struct lpi2c_imx_struct *lpi2c_imx)
-+{
-+	u32 rxcnt;
-+
-+	rxcnt = (readl(lpi2c_imx->base + LPI2C_MFSR) >> 16) & 0xFF;
-+	if (!rxcnt)
-+		return false;
-+
-+	if (!lpi2c_imx_read_rxfifo(lpi2c_imx, true))
-+		return false;
- 
--	lpi2c_imx_intctrl(lpi2c_imx, MIER_RDIE | MIER_NDIE);
-+	return true;
-+}
-+
-+static int lpi2c_imx_read_atomic(struct lpi2c_imx_struct *lpi2c_imx,
-+				 struct i2c_msg *msgs)
-+{
-+	u32 temp;
-+	int tmo_us;
-+
-+	tmo_us = 1000000;
-+	do {
-+		if (lpi2c_imx_read_chunk_atomic(lpi2c_imx))
-+			return 0;
-+
-+		temp = readl(lpi2c_imx->base + LPI2C_MSR);
-+
-+		if (temp & MSR_NDF)
-+			return -EIO;
-+
-+		udelay(100);
-+		tmo_us -= 100;
-+	} while (tmo_us > 0);
-+
-+	return -ETIMEDOUT;
- }
- 
- static bool is_use_dma(struct lpi2c_imx_struct *lpi2c_imx, struct i2c_msg *msg)
-@@ -545,14 +604,27 @@ static int lpi2c_imx_pio_xfer(struct lpi2c_imx_struct *lpi2c_imx,
- {
- 	reinit_completion(&lpi2c_imx->complete);
- 
--	if (msg->flags & I2C_M_RD)
--		lpi2c_imx_read(lpi2c_imx, msg);
--	else
-+	if (msg->flags & I2C_M_RD) {
-+		lpi2c_imx_read_init(lpi2c_imx, msg);
-+		lpi2c_imx_intctrl(lpi2c_imx, MIER_RDIE | MIER_NDIE);
-+	} else {
- 		lpi2c_imx_write(lpi2c_imx, msg);
-+	}
- 
- 	return lpi2c_imx_pio_msg_complete(lpi2c_imx);
- }
- 
-+static int lpi2c_imx_pio_xfer_atomic(struct lpi2c_imx_struct *lpi2c_imx,
-+				     struct i2c_msg *msg)
-+{
-+	if (msg->flags & I2C_M_RD) {
-+		lpi2c_imx_read_init(lpi2c_imx, msg);
-+		return lpi2c_imx_read_atomic(lpi2c_imx, msg);
-+	}
-+
-+	return lpi2c_imx_write_atomic(lpi2c_imx, msg);
-+}
-+
- static int lpi2c_imx_dma_timeout_calculate(struct lpi2c_imx_struct *lpi2c_imx)
- {
- 	unsigned long time = 0;
-@@ -947,8 +1019,8 @@ static int lpi2c_imx_dma_xfer(struct lpi2c_imx_struct *lpi2c_imx,
- 	return ret;
- }
- 
--static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
--			  struct i2c_msg *msgs, int num)
-+static int lpi2c_imx_xfer_common(struct i2c_adapter *adapter,
-+				 struct i2c_msg *msgs, int num, bool atomic)
- {
- 	struct lpi2c_imx_struct *lpi2c_imx = i2c_get_adapdata(adapter);
- 	unsigned int temp;
-@@ -959,7 +1031,7 @@ static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
- 		return result;
- 
- 	for (i = 0; i < num; i++) {
--		result = lpi2c_imx_start(lpi2c_imx, &msgs[i]);
-+		result = lpi2c_imx_start(lpi2c_imx, &msgs[i], atomic);
- 		if (result)
- 			goto disable;
- 
-@@ -971,28 +1043,33 @@ static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
- 		lpi2c_imx->tx_buf = NULL;
- 		lpi2c_imx->delivered = 0;
- 		lpi2c_imx->msglen = msgs[i].len;
--		init_completion(&lpi2c_imx->complete);
- 
--		if (is_use_dma(lpi2c_imx, &msgs[i])) {
--			result = lpi2c_imx_dma_xfer(lpi2c_imx, &msgs[i]);
--			if (result && lpi2c_imx->dma->using_pio_mode)
--				result = lpi2c_imx_pio_xfer(lpi2c_imx, &msgs[i]);
-+		if (atomic) {
-+			result = lpi2c_imx_pio_xfer_atomic(lpi2c_imx, &msgs[i]);
- 		} else {
--			result = lpi2c_imx_pio_xfer(lpi2c_imx, &msgs[i]);
-+			init_completion(&lpi2c_imx->complete);
-+
-+			if (is_use_dma(lpi2c_imx, &msgs[i])) {
-+				result = lpi2c_imx_dma_xfer(lpi2c_imx, &msgs[i]);
-+				if (result && lpi2c_imx->dma->using_pio_mode)
-+					result = lpi2c_imx_pio_xfer(lpi2c_imx, &msgs[i]);
-+			} else {
-+				result = lpi2c_imx_pio_xfer(lpi2c_imx, &msgs[i]);
-+			}
- 		}
- 
- 		if (result)
- 			goto stop;
- 
- 		if (!(msgs[i].flags & I2C_M_RD)) {
--			result = lpi2c_imx_txfifo_empty(lpi2c_imx);
-+			result = lpi2c_imx_txfifo_empty(lpi2c_imx, atomic);
- 			if (result)
- 				goto stop;
- 		}
- 	}
- 
- stop:
--	lpi2c_imx_stop(lpi2c_imx);
-+	lpi2c_imx_stop(lpi2c_imx, atomic);
- 
- 	temp = readl(lpi2c_imx->base + LPI2C_MSR);
- 	if ((temp & MSR_NDF) && !result)
-@@ -1008,6 +1085,16 @@ static int lpi2c_imx_xfer(struct i2c_adapter *adapter,
- 	return (result < 0) ? result : num;
- }
- 
-+static int lpi2c_imx_xfer(struct i2c_adapter *adapter, struct i2c_msg *msgs, int num)
-+{
-+	return lpi2c_imx_xfer_common(adapter, msgs, num, false);
-+}
-+
-+static int lpi2c_imx_xfer_atomic(struct i2c_adapter *adapter, struct i2c_msg *msgs, int num)
-+{
-+	return lpi2c_imx_xfer_common(adapter, msgs, num, true);
-+}
-+
- static irqreturn_t lpi2c_imx_target_isr(struct lpi2c_imx_struct *lpi2c_imx,
- 					u32 ssr, u32 sier_filter)
- {
-@@ -1070,9 +1157,9 @@ static irqreturn_t lpi2c_imx_master_isr(struct lpi2c_imx_struct *lpi2c_imx)
- 	if (temp & MSR_NDF)
- 		complete(&lpi2c_imx->complete);
- 	else if (temp & MSR_RDF)
--		lpi2c_imx_read_rxfifo(lpi2c_imx);
-+		lpi2c_imx_read_rxfifo(lpi2c_imx, false);
- 	else if (temp & MSR_TDF)
--		lpi2c_imx_write_txfifo(lpi2c_imx);
-+		lpi2c_imx_write_txfifo(lpi2c_imx, false);
- 
- 	return IRQ_HANDLED;
- }
-@@ -1268,10 +1355,11 @@ static u32 lpi2c_imx_func(struct i2c_adapter *adapter)
- }
- 
- static const struct i2c_algorithm lpi2c_imx_algo = {
--	.master_xfer	= lpi2c_imx_xfer,
--	.functionality	= lpi2c_imx_func,
--	.reg_target	= lpi2c_imx_register_target,
--	.unreg_target	= lpi2c_imx_unregister_target,
-+	.master_xfer		= lpi2c_imx_xfer,
-+	.master_xfer_atomic	= lpi2c_imx_xfer_atomic,
-+	.functionality		= lpi2c_imx_func,
-+	.reg_target		= lpi2c_imx_register_target,
-+	.unreg_target		= lpi2c_imx_unregister_target,
- };
- 
- static const struct of_device_id lpi2c_imx_of_match[] = {
--- 
-2.39.5
+Ok, I'll respin the series with a proper cover letter. The gist is I was following the doc [1] on how
+to create a synthetic event, trying to apply that to a kernel module we have that needs to create new events.
+
+Unfortunately, it turned out that all the exposed APIs to emit the events (such as synth_event_trace()) require
+getting a "struct trace_event_file*" before the call. This breaks when a user starts creating instances in tracefs,
+as each instance will have its own "struct trace_event_file*". The way this is done for normal trace events is
+that each instance registers a probe on the tracepoint with the struct trace_event_file* as the void *data pointer.
+Then when the tracepoint is called, all the probes are called and the event data is copied in all instances in which
+it was enabled.
+
+Although the synthetic event API does create that tracepoint and has an appropriate probe function, none of the exposed API
+I could find make use of it. The exception is trace_events_hist.c had its own private version of it that actually calls all
+the probes of the tracepoint "manually", so that the event is correctly emitted in all the instances it was enabled in. This
+is the function touched by this patch.
+
+So that means that as it stands:
+1. The exposed API is only really usable with the "NULL" struct trace_event_file*, which maps to the top-level one.
+2. If a user creates an instance and enables the event in it using tracefs, the code that emits the event using the existing API
+    will completely ignore that and keep emitting the event in the top-level instance that it was wired to do.
+
+Approximately nothing in the synth event API that takes a "struct trace_event_file*" will work properly with user-created instances.
+
+[1] https://docs.kernel.org/trace/events.html#dyamically-creating-synthetic-event-definitions
+
+> 
+> Thank you,
+> 
+>> Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+>> ---
+>>   include/linux/trace_events.h      | 2 +-
+>>   kernel/trace/trace_events_hist.c  | 2 +-
+>>   kernel/trace/trace_events_synth.c | 4 ++--
+>>   3 files changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+>> index e069d84a73f0..753ce8aecfe4 100644
+>> --- a/include/linux/trace_events.h
+>> +++ b/include/linux/trace_events.h
+>> @@ -521,7 +521,7 @@ struct synth_event;
+>>   
+>>   extern struct synth_event *synth_event_find(const char *name);
+>>   
+>> -extern void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+>> +extern void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
+>>   			       unsigned int *var_ref_idx);
+>>   
+>>   extern int synth_event_delete(const char *name);
+>> diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+>> index 7067f6fedb1a..ee0fee123c91 100644
+>> --- a/kernel/trace/trace_events_hist.c
+>> +++ b/kernel/trace/trace_events_hist.c
+>> @@ -822,7 +822,7 @@ static void action_trace(struct hist_trigger_data *hist_data,
+>>   {
+>>   	struct synth_event *event = data->synth_event;
+>>   
+>> -	trace_synth(event, var_ref_vals, data->var_ref_idx);
+>> +	synth_event_trace2(event, var_ref_vals, data->var_ref_idx);
+>>   }
+>>   
+>>   struct hist_var_data {
+>> diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+>> index 4a9a44d37ffc..8837aa258479 100644
+>> --- a/kernel/trace/trace_events_synth.c
+>> +++ b/kernel/trace/trace_events_synth.c
+>> @@ -850,7 +850,7 @@ EXPORT_SYMBOL_GPL(synth_event_find);
+>>   typedef void (*synth_probe_func_t) (void *__data, u64 *var_ref_vals,
+>>   				    unsigned int *var_ref_idx);
+>>   
+>> -void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+>> +void synth_event_trace2(struct synth_event *event, u64 *var_ref_vals,
+>>   			       unsigned int *var_ref_idx)
+>>   {
+>>   	struct tracepoint *tp = event->tp;
+>> @@ -873,7 +873,7 @@ void trace_synth(struct synth_event *event, u64 *var_ref_vals,
+>>   		}
+>>   	}
+>>   }
+>> -EXPORT_SYMBOL_GPL(trace_synth);
+>> +EXPORT_SYMBOL_GPL(synth_event_trace2);
+>>   
+>>   static struct trace_event_fields synth_event_fields_array[] = {
+>>   	{ .type = TRACE_FUNCTION_TYPE,
+>> -- 
+>> 2.43.0
+>>
+> 
+> 
 
