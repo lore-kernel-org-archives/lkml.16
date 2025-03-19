@@ -1,594 +1,132 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7397725A338;
-	Wed, 19 Mar 2025 11:03:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2718E25525D;
+	Wed, 19 Mar 2025 11:03:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382232; cv=none; b=DVjeLVipu+HDlS9c8VlOJ2MMnh1ycxGbdpIhUHDBTewXy1/zPzq0/JrS9It5No0mVaNJAWkX+lgEQBVPrnrH70L6CPbKdm6Ygw3vF1U2PFxE3MrrbJ6d4zvLOubhGvxKbjflwN5lBLky3ki7ZL8G49WvCE8Sy4tEFfgg9HCS0OU=
+	t=1742382234; cv=none; b=Mz+GiL2Lqs/Uq54rgg1ASm1UUN+UQO23iRwNWn66xGwyWmY+ITTh2V9LpnJq2i9OB1O415By+crIChtzOfN+jAMiZW/E7RqoA4xy2LjMeQDsWFRLd7n6a7doK0Soya2y/0L9AUckzxmpAfb1//da0kCFEwlBPAh+oTzVbHyyGfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382232; c=relaxed/simple;
-	bh=east+BwkMu07zLc1PosgRYnak+xkih6DuzuNapvXHDI=;
+	s=arc-20240116; t=1742382234; c=relaxed/simple;
+	bh=UOi+ESBR6Dtom4AroO6OM3aEqepTVporXvwLO9GeBiQ=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=hDDDPIvekEY8WvbQC5BaxOl6GJqKMxpyKik25j+0+rWSzSP9QBDaA7fGlhW7CVzI9d35gzaTLJ/AU8KszyW37yZ/S3rPW1bq9sxh62DHSjQ+bCc4PSQ6/DOs4t4hLrFu9tcot2+NIDa9P66zR91Dud0ifybwcKTifnQhlwYu+/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kbB16+7Q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=XnHRYhvS; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=M7O1l+W4M4zhHbfAbxwGmU2AJQGkOAKbXv5RhSm6j+GWF5drhfQvwrzdrv4DemBIZQzMV5Tgew+e/cY4VbE9PthTsR5Qk7ImqIXf96eJH+ORjv/WAQ0DwSP1+BOp2RezqYXsbV9pa8mAk6NOio42bpP0e9nq0g9CDQp9JtTKyuQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=jZKc8PPB; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SHQvqKMK; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kbB16+7Q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="XnHRYhvS"
-Date: Wed, 19 Mar 2025 11:03:47 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="jZKc8PPB";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SHQvqKMK"
+Date: Wed, 19 Mar 2025 11:03:48 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382227;
+	s=2020; t=1742382228;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pBVYTP9EIwwR+hV8IgL4yuKeen5/C0fv1adyqc/wFf4=;
-	b=kbB16+7Q6hg0SFrDYUgOMX83W4g/7jCRreAx2Rl8Zm87KYKWsArHnndR6zVvVxZpMPfKFj
-	0hJcINYnNp1Wn/6wyBQUNpv2/c61cOxaHhd7RF3a5/9cY9kwkyX3kmngnji4JDsikx2Qxd
-	a9AnBm2Lro8SlK6YGZdfC+DWm6HsGh3G6v+FBFTqFpa2pAEjSFTHWx3tn2wtRLAxYYfsJ1
-	jHbbesFM2y8w0p0XHBeNkYBnsvPJno/FjfRfqeKh/OFH504Cg0thZjzv9NSY8fRZwJ6POJ
-	iQWNLA/M52eLHbLoElkrB4+ayVTuFvpv8gWsYO2VNHkP7rxstJFDYTfjX0tpFA==
+	bh=XXZZGPDlBYlKRsIFkgLf+nfzFt2s/T2lfOH0xtRxF8A=;
+	b=jZKc8PPBnz5sX8mK/j5urdXkEZVMLGUjTWEAB4lRQcHSGU4+kgBkez0DnQY2tD8kbJQkZO
+	sjo8vux0l0iWV1LkAZhT+lDxeXeJU6XXs6LSWb/QJuUQUwi25qFQl5eP/lwWcD42bZ1VG+
+	ozIgKU+OhvH7cvATjNva3Jr657O9bKKTfhSHS/wlHrIG3nOU/rAR35FSzdjrqiMQjkBf/Q
+	5/xoeUctAZFsLR2c75Rrx2G1t9PpXzNoDK5/MtLLsZP8FkBZCrgJ/uJc8k1it3vyqdBPtu
+	m40EvdyLIM2ucECYAMZxXKi1YDGyRSxPi8jqvmqdiowEmZOtD3AyuIwOKO2TnA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382227;
+	s=2020e; t=1742382228;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pBVYTP9EIwwR+hV8IgL4yuKeen5/C0fv1adyqc/wFf4=;
-	b=XnHRYhvSdtGQzySybSrHXnOV21E8CrFL1y9c2nnQPsdmvtoQbz4KivaWJOM6AvtgYBp7Os
-	Kc2LdqP4yylNcFAw==
-From: "tip-bot2 for Ahmed S. Darwish" <tip-bot2@linutronix.de>
+	bh=XXZZGPDlBYlKRsIFkgLf+nfzFt2s/T2lfOH0xtRxF8A=;
+	b=SHQvqKMKctabOd9qCXu9e7qxOH6aASFpCxtqR34ukA+D/Mt4RNVGP/CefNIFavAnUhixlZ
+	9QyYk+6WB4lvy8BA==
+From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/cpuid: Refactor <asm/cpuid.h>
-Cc: Ingo Molnar <mingo@kernel.org>, "Ahmed S. Darwish" <darwi@linutronix.de>,
- Andrew Cooper <andrew.cooper3@citrix.com>, "H. Peter Anvin" <hpa@zytor.com>,
- John Ogness <john.ogness@linutronix.de>, x86-cpuid@lists.linux.dev,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250317221824.3738853-2-mingo@kernel.org>
-References: <20250317221824.3738853-2-mingo@kernel.org>
+Subject: [tip: x86/core] x86/syscall: Remove stray semicolons
+Cc: Sohil Mehta <sohil.mehta@intel.com>, Brian Gerst <brgerst@gmail.com>,
+ Ingo Molnar <mingo@kernel.org>, Andy Lutomirski <luto@kernel.org>,
+ "H. Peter Anvin" <hpa@zytor.com>,
+ Linus Torvalds <torvalds@linux-foundation.org>,
+ Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+ linux-kernel@vger.kernel.org
+In-Reply-To: <20250314151220.862768-7-brgerst@gmail.com>
+References: <20250314151220.862768-7-brgerst@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238222703.14745.4177688045724885306.tip-bot2@tip-bot2>
+Message-ID: <174238222810.14745.14332700247939149457.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     adc574269bca8dbde9f8f22841e40d3380241921
-Gitweb:        https://git.kernel.org/tip/adc574269bca8dbde9f8f22841e40d33802=
-41921
-Author:        Ahmed S. Darwish <darwi@linutronix.de>
-AuthorDate:    Mon, 17 Mar 2025 23:18:20 +01:00
+Commit-ID:     604939552231730c52b823b178e9080877b20851
+Gitweb:        https://git.kernel.org/tip/604939552231730c52b823b178e9080877b20851
+Author:        Brian Gerst <brgerst@gmail.com>
+AuthorDate:    Fri, 14 Mar 2025 11:12:19 -04:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:19:22 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:19:18 +01:00
 
-x86/cpuid: Refactor <asm/cpuid.h>
+x86/syscall: Remove stray semicolons
 
-In preparation for future commits where CPUID headers will be expanded,
-refactor the CPUID header <asm/cpuid.h> into:
+No functional change.
 
-    asm/cpuid/
-    =E2=94=9C=E2=94=80=E2=94=80 api.h
-    =E2=94=94=E2=94=80=E2=94=80 types.h
-
-Move the CPUID data structures into <asm/cpuid/types.h> and the access
-APIs into <asm/cpuid/api.h>.  Let <asm/cpuid.h> be just an include of
-<asm/cpuid/api.h> so that existing call sites do not break.
-
-Suggested-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+Suggested-by: Sohil Mehta <sohil.mehta@intel.com>
+Signed-off-by: Brian Gerst <brgerst@gmail.com>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Andrew Cooper <andrew.cooper3@citrix.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: John Ogness <john.ogness@linutronix.de>
-Cc: "Ahmed S. Darwish" <darwi@linutronix.de>
-Cc: x86-cpuid@lists.linux.dev
-Link: https://lore.kernel.org/r/20250317221824.3738853-2-mingo@kernel.org
+Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Link: https://lore.kernel.org/r/20250314151220.862768-7-brgerst@gmail.com
 ---
- arch/x86/include/asm/cpuid.h       | 217 +----------------------------
- arch/x86/include/asm/cpuid/api.h   | 208 +++++++++++++++++++++++++++-
- arch/x86/include/asm/cpuid/types.h |  29 ++++-
- 3 files changed, 238 insertions(+), 216 deletions(-)
- create mode 100644 arch/x86/include/asm/cpuid/api.h
- create mode 100644 arch/x86/include/asm/cpuid/types.h
+ arch/x86/entry/syscall_32.c | 2 +-
+ arch/x86/entry/syscall_64.c | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/cpuid.h b/arch/x86/include/asm/cpuid.h
-index a92e4b0..d5749b2 100644
---- a/arch/x86/include/asm/cpuid.h
-+++ b/arch/x86/include/asm/cpuid.h
-@@ -1,223 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
--/*
-- * CPUID-related helpers/definitions
-- */
-=20
- #ifndef _ASM_X86_CPUID_H
- #define _ASM_X86_CPUID_H
-=20
--#include <linux/build_bug.h>
--#include <linux/types.h>
--
--#include <asm/string.h>
--
--struct cpuid_regs {
--	u32 eax, ebx, ecx, edx;
+diff --git a/arch/x86/entry/syscall_32.c b/arch/x86/entry/syscall_32.c
+index 06b9df1..993d725 100644
+--- a/arch/x86/entry/syscall_32.c
++++ b/arch/x86/entry/syscall_32.c
+@@ -47,7 +47,7 @@ long ia32_sys_call(const struct pt_regs *regs, unsigned int nr)
+ 	#include <asm/syscalls_32.h>
+ 	default: return __ia32_sys_ni_syscall(regs);
+ 	}
 -};
--
--enum cpuid_regs_idx {
--	CPUID_EAX =3D 0,
--	CPUID_EBX,
--	CPUID_ECX,
--	CPUID_EDX,
++}
+ 
+ static __always_inline int syscall_32_enter(struct pt_regs *regs)
+ {
+diff --git a/arch/x86/entry/syscall_64.c b/arch/x86/entry/syscall_64.c
+index a05f7be..b6e68ea 100644
+--- a/arch/x86/entry/syscall_64.c
++++ b/arch/x86/entry/syscall_64.c
+@@ -38,7 +38,7 @@ long x64_sys_call(const struct pt_regs *regs, unsigned int nr)
+ 	#include <asm/syscalls_64.h>
+ 	default: return __x64_sys_ni_syscall(regs);
+ 	}
 -};
--
--#define CPUID_LEAF_MWAIT	0x5
--#define CPUID_LEAF_DCA		0x9
--#define CPUID_LEAF_XSTATE	0x0d
--#define CPUID_LEAF_TSC		0x15
--#define CPUID_LEAF_FREQ		0x16
--#define CPUID_LEAF_TILE		0x1d
--
--#ifdef CONFIG_X86_32
--bool have_cpuid_p(void);
--#else
--static inline bool have_cpuid_p(void)
--{
--	return true;
--}
--#endif
--static inline void native_cpuid(unsigned int *eax, unsigned int *ebx,
--				unsigned int *ecx, unsigned int *edx)
--{
--	/* ecx is often an input as well as an output. */
--	asm volatile("cpuid"
--	    : "=3Da" (*eax),
--	      "=3Db" (*ebx),
--	      "=3Dc" (*ecx),
--	      "=3Dd" (*edx)
--	    : "0" (*eax), "2" (*ecx)
--	    : "memory");
--}
--
--#define native_cpuid_reg(reg)					\
--static inline unsigned int native_cpuid_##reg(unsigned int op)	\
--{								\
--	unsigned int eax =3D op, ebx, ecx =3D 0, edx;		\
--								\
--	native_cpuid(&eax, &ebx, &ecx, &edx);			\
--								\
--	return reg;						\
--}
--
--/*
-- * Native CPUID functions returning a single datum.
-- */
--native_cpuid_reg(eax)
--native_cpuid_reg(ebx)
--native_cpuid_reg(ecx)
--native_cpuid_reg(edx)
--
--#ifdef CONFIG_PARAVIRT_XXL
--#include <asm/paravirt.h>
--#else
--#define __cpuid			native_cpuid
--#endif
--
--/*
-- * Generic CPUID function
-- * clear %ecx since some cpus (Cyrix MII) do not set or clear %ecx
-- * resulting in stale register contents being returned.
-- */
--static inline void cpuid(unsigned int op,
--			 unsigned int *eax, unsigned int *ebx,
--			 unsigned int *ecx, unsigned int *edx)
--{
--	*eax =3D op;
--	*ecx =3D 0;
--	__cpuid(eax, ebx, ecx, edx);
--}
--
--/* Some CPUID calls want 'count' to be placed in ecx */
--static inline void cpuid_count(unsigned int op, int count,
--			       unsigned int *eax, unsigned int *ebx,
--			       unsigned int *ecx, unsigned int *edx)
--{
--	*eax =3D op;
--	*ecx =3D count;
--	__cpuid(eax, ebx, ecx, edx);
--}
--
--/*
-- * CPUID functions returning a single datum
-- */
--static inline unsigned int cpuid_eax(unsigned int op)
--{
--	unsigned int eax, ebx, ecx, edx;
--
--	cpuid(op, &eax, &ebx, &ecx, &edx);
--
--	return eax;
--}
--
--static inline unsigned int cpuid_ebx(unsigned int op)
--{
--	unsigned int eax, ebx, ecx, edx;
--
--	cpuid(op, &eax, &ebx, &ecx, &edx);
--
--	return ebx;
--}
--
--static inline unsigned int cpuid_ecx(unsigned int op)
--{
--	unsigned int eax, ebx, ecx, edx;
--
--	cpuid(op, &eax, &ebx, &ecx, &edx);
--
--	return ecx;
--}
--
--static inline unsigned int cpuid_edx(unsigned int op)
--{
--	unsigned int eax, ebx, ecx, edx;
--
--	cpuid(op, &eax, &ebx, &ecx, &edx);
--
--	return edx;
--}
--
--static inline void __cpuid_read(unsigned int leaf, unsigned int subleaf, u32=
- *regs)
--{
--	regs[CPUID_EAX] =3D leaf;
--	regs[CPUID_ECX] =3D subleaf;
--	__cpuid(regs + CPUID_EAX, regs + CPUID_EBX, regs + CPUID_ECX, regs + CPUID_=
-EDX);
--}
--
--#define cpuid_subleaf(leaf, subleaf, regs) {		\
--	static_assert(sizeof(*(regs)) =3D=3D 16);		\
--	__cpuid_read(leaf, subleaf, (u32 *)(regs));	\
--}
--
--#define cpuid_leaf(leaf, regs) {			\
--	static_assert(sizeof(*(regs)) =3D=3D 16);		\
--	__cpuid_read(leaf, 0, (u32 *)(regs));		\
--}
--
--static inline void __cpuid_read_reg(unsigned int leaf, unsigned int subleaf,
--				    enum cpuid_regs_idx regidx, u32 *reg)
--{
--	u32 regs[4];
--
--	__cpuid_read(leaf, subleaf, regs);
--	*reg =3D regs[regidx];
--}
--
--#define cpuid_subleaf_reg(leaf, subleaf, regidx, reg) {		\
--	static_assert(sizeof(*(reg)) =3D=3D 4);			\
--	__cpuid_read_reg(leaf, subleaf, regidx, (u32 *)(reg));	\
--}
--
--#define cpuid_leaf_reg(leaf, regidx, reg) {			\
--	static_assert(sizeof(*(reg)) =3D=3D 4);			\
--	__cpuid_read_reg(leaf, 0, regidx, (u32 *)(reg));	\
--}
--
--static __always_inline bool cpuid_function_is_indexed(u32 function)
--{
--	switch (function) {
--	case 4:
--	case 7:
--	case 0xb:
--	case 0xd:
--	case 0xf:
--	case 0x10:
--	case 0x12:
--	case 0x14:
--	case 0x17:
--	case 0x18:
--	case 0x1d:
--	case 0x1e:
--	case 0x1f:
--	case 0x24:
--	case 0x8000001d:
--		return true;
--	}
--
--	return false;
--}
--
--#define for_each_possible_hypervisor_cpuid_base(function) \
--	for (function =3D 0x40000000; function < 0x40010000; function +=3D 0x100)
--
--static inline uint32_t hypervisor_cpuid_base(const char *sig, uint32_t leave=
-s)
--{
--	uint32_t base, eax, signature[3];
--
--	for_each_possible_hypervisor_cpuid_base(base) {
--		cpuid(base, &eax, &signature[0], &signature[1], &signature[2]);
--
--		/*
--		 * This must not compile to "call memcmp" because it's called
--		 * from PVH early boot code before instrumentation is set up
--		 * and memcmp() itself may be instrumented.
--		 */
--		if (!__builtin_memcmp(sig, signature, 12) &&
--		    (leaves =3D=3D 0 || ((eax - base) >=3D leaves)))
--			return base;
--	}
--
--	return 0;
--}
-+#include <asm/cpuid/api.h>
-=20
- #endif /* _ASM_X86_CPUID_H */
-diff --git a/arch/x86/include/asm/cpuid/api.h b/arch/x86/include/asm/cpuid/ap=
-i.h
-new file mode 100644
-index 0000000..4d1da9c
---- /dev/null
-+++ b/arch/x86/include/asm/cpuid/api.h
-@@ -0,0 +1,208 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef _ASM_X86_CPUID_API_H
-+#define _ASM_X86_CPUID_API_H
-+
-+#include <linux/build_bug.h>
-+#include <linux/types.h>
-+
-+#include <asm/cpuid/types.h>
-+#include <asm/string.h>
-+
-+/*
-+ * Raw CPUID accessors
-+ */
-+
-+#ifdef CONFIG_X86_32
-+bool have_cpuid_p(void);
-+#else
-+static inline bool have_cpuid_p(void)
-+{
-+	return true;
 +}
-+#endif
-+static inline void native_cpuid(unsigned int *eax, unsigned int *ebx,
-+				unsigned int *ecx, unsigned int *edx)
-+{
-+	/* ecx is often an input as well as an output. */
-+	asm volatile("cpuid"
-+	    : "=3Da" (*eax),
-+	      "=3Db" (*ebx),
-+	      "=3Dc" (*ecx),
-+	      "=3Dd" (*edx)
-+	    : "0" (*eax), "2" (*ecx)
-+	    : "memory");
+ 
+ #ifdef CONFIG_X86_X32_ABI
+ long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
+@@ -47,7 +47,7 @@ long x32_sys_call(const struct pt_regs *regs, unsigned int nr)
+ 	#include <asm/syscalls_x32.h>
+ 	default: return __x64_sys_ni_syscall(regs);
+ 	}
+-};
 +}
-+
-+#define native_cpuid_reg(reg)					\
-+static inline unsigned int native_cpuid_##reg(unsigned int op)	\
-+{								\
-+	unsigned int eax =3D op, ebx, ecx =3D 0, edx;		\
-+								\
-+	native_cpuid(&eax, &ebx, &ecx, &edx);			\
-+								\
-+	return reg;						\
-+}
-+
-+/*
-+ * Native CPUID functions returning a single datum.
-+ */
-+native_cpuid_reg(eax)
-+native_cpuid_reg(ebx)
-+native_cpuid_reg(ecx)
-+native_cpuid_reg(edx)
-+
-+#ifdef CONFIG_PARAVIRT_XXL
-+#include <asm/paravirt.h>
-+#else
-+#define __cpuid			native_cpuid
-+#endif
-+
-+/*
-+ * Generic CPUID function
-+ * clear %ecx since some cpus (Cyrix MII) do not set or clear %ecx
-+ * resulting in stale register contents being returned.
-+ */
-+static inline void cpuid(unsigned int op,
-+			 unsigned int *eax, unsigned int *ebx,
-+			 unsigned int *ecx, unsigned int *edx)
-+{
-+	*eax =3D op;
-+	*ecx =3D 0;
-+	__cpuid(eax, ebx, ecx, edx);
-+}
-+
-+/* Some CPUID calls want 'count' to be placed in ecx */
-+static inline void cpuid_count(unsigned int op, int count,
-+			       unsigned int *eax, unsigned int *ebx,
-+			       unsigned int *ecx, unsigned int *edx)
-+{
-+	*eax =3D op;
-+	*ecx =3D count;
-+	__cpuid(eax, ebx, ecx, edx);
-+}
-+
-+/*
-+ * CPUID functions returning a single datum
-+ */
-+
-+static inline unsigned int cpuid_eax(unsigned int op)
-+{
-+	unsigned int eax, ebx, ecx, edx;
-+
-+	cpuid(op, &eax, &ebx, &ecx, &edx);
-+
-+	return eax;
-+}
-+
-+static inline unsigned int cpuid_ebx(unsigned int op)
-+{
-+	unsigned int eax, ebx, ecx, edx;
-+
-+	cpuid(op, &eax, &ebx, &ecx, &edx);
-+
-+	return ebx;
-+}
-+
-+static inline unsigned int cpuid_ecx(unsigned int op)
-+{
-+	unsigned int eax, ebx, ecx, edx;
-+
-+	cpuid(op, &eax, &ebx, &ecx, &edx);
-+
-+	return ecx;
-+}
-+
-+static inline unsigned int cpuid_edx(unsigned int op)
-+{
-+	unsigned int eax, ebx, ecx, edx;
-+
-+	cpuid(op, &eax, &ebx, &ecx, &edx);
-+
-+	return edx;
-+}
-+
-+static inline void __cpuid_read(unsigned int leaf, unsigned int subleaf, u32=
- *regs)
-+{
-+	regs[CPUID_EAX] =3D leaf;
-+	regs[CPUID_ECX] =3D subleaf;
-+	__cpuid(regs + CPUID_EAX, regs + CPUID_EBX, regs + CPUID_ECX, regs + CPUID_=
-EDX);
-+}
-+
-+#define cpuid_subleaf(leaf, subleaf, regs) {		\
-+	static_assert(sizeof(*(regs)) =3D=3D 16);		\
-+	__cpuid_read(leaf, subleaf, (u32 *)(regs));	\
-+}
-+
-+#define cpuid_leaf(leaf, regs) {			\
-+	static_assert(sizeof(*(regs)) =3D=3D 16);		\
-+	__cpuid_read(leaf, 0, (u32 *)(regs));		\
-+}
-+
-+static inline void __cpuid_read_reg(unsigned int leaf, unsigned int subleaf,
-+				    enum cpuid_regs_idx regidx, u32 *reg)
-+{
-+	u32 regs[4];
-+
-+	__cpuid_read(leaf, subleaf, regs);
-+	*reg =3D regs[regidx];
-+}
-+
-+#define cpuid_subleaf_reg(leaf, subleaf, regidx, reg) {		\
-+	static_assert(sizeof(*(reg)) =3D=3D 4);			\
-+	__cpuid_read_reg(leaf, subleaf, regidx, (u32 *)(reg));	\
-+}
-+
-+#define cpuid_leaf_reg(leaf, regidx, reg) {			\
-+	static_assert(sizeof(*(reg)) =3D=3D 4);			\
-+	__cpuid_read_reg(leaf, 0, regidx, (u32 *)(reg));	\
-+}
-+
-+static __always_inline bool cpuid_function_is_indexed(u32 function)
-+{
-+	switch (function) {
-+	case 4:
-+	case 7:
-+	case 0xb:
-+	case 0xd:
-+	case 0xf:
-+	case 0x10:
-+	case 0x12:
-+	case 0x14:
-+	case 0x17:
-+	case 0x18:
-+	case 0x1d:
-+	case 0x1e:
-+	case 0x1f:
-+	case 0x24:
-+	case 0x8000001d:
-+		return true;
-+	}
-+
-+	return false;
-+}
-+
-+#define for_each_possible_hypervisor_cpuid_base(function) \
-+	for (function =3D 0x40000000; function < 0x40010000; function +=3D 0x100)
-+
-+static inline uint32_t hypervisor_cpuid_base(const char *sig, uint32_t leave=
-s)
-+{
-+	uint32_t base, eax, signature[3];
-+
-+	for_each_possible_hypervisor_cpuid_base(base) {
-+		cpuid(base, &eax, &signature[0], &signature[1], &signature[2]);
-+
-+		/*
-+		 * This must not compile to "call memcmp" because it's called
-+		 * from PVH early boot code before instrumentation is set up
-+		 * and memcmp() itself may be instrumented.
-+		 */
-+		if (!__builtin_memcmp(sig, signature, 12) &&
-+		    (leaves =3D=3D 0 || ((eax - base) >=3D leaves)))
-+			return base;
-+	}
-+
-+	return 0;
-+}
-+
-+#endif /* _ASM_X86_CPUID_API_H */
-diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/=
-types.h
-new file mode 100644
-index 0000000..724002a
---- /dev/null
-+++ b/arch/x86/include/asm/cpuid/types.h
-@@ -0,0 +1,29 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_CPUID_TYPES_H
-+#define _ASM_X86_CPUID_TYPES_H
-+
-+#include <linux/types.h>
-+
-+/*
-+ * Types for raw CPUID access
-+ */
-+
-+struct cpuid_regs {
-+	u32 eax, ebx, ecx, edx;
-+};
-+
-+enum cpuid_regs_idx {
-+	CPUID_EAX =3D 0,
-+	CPUID_EBX,
-+	CPUID_ECX,
-+	CPUID_EDX,
-+};
-+
-+#define CPUID_LEAF_MWAIT	0x5
-+#define CPUID_LEAF_DCA		0x9
-+#define CPUID_LEAF_XSTATE	0x0d
-+#define CPUID_LEAF_TSC		0x15
-+#define CPUID_LEAF_FREQ		0x16
-+#define CPUID_LEAF_TILE		0x1d
-+
-+#endif /* _ASM_X86_CPUID_TYPES_H */
+ #endif
+ 
+ static __always_inline bool do_syscall_x64(struct pt_regs *regs, int nr)
