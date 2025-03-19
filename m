@@ -1,303 +1,102 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FB1621A45A;
-	Wed, 19 Mar 2025 18:11:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A62220AF69
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:12:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742407914; cv=none; b=ARjE7o7ij2DSxhkdJwOn3zNfMxdP4U5ViVgLYyNW+4Gab/PCO8ttN84fAQD5pdeiGaQlyrt88vYtJUk4zoHh5NkHrjqF8gJ/aeil+pOS0f2pLzmQ1S4ExQQNcxSGVl7XH+B5JGVHFLUX4XTfWGJBImyAB2DtIvsxB7+NEdtJRAc=
+	t=1742407939; cv=none; b=Gmx0az2y5CN+aPJzj9bWp0riRCSzpd47X0EUb/9+QUGUv1SPX+BkxWbmRcrs/g/UiFlBAchW0pcwB3WouPhm72WAuR5qSaj980I28HorkL3MyLjbF/3cRhb71OOEYsDxWhKDqv1HUlppeX3Z6CnSXIuACHkz+Fu2zJwqWXkxRwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742407914; c=relaxed/simple;
-	bh=2JmBtFbxKKQjNhgOlVG8wfl7nFBIR0TxMAgRZRCiFxc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JHQasTViOVYje1jfehlHmqdMH4MVyTXEppuCSX0McYT+fpggdlE0v78aA7TKYzgp+f6tFpYySYboPcEWASY5Tc16OElhtKcr6uRq4V4kPIVzTxZoNG+ADsa8obVhqpyWlrWPC+nYE0WdV43ljX7w6OrUBEZchlCVH2NOGqijQMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=jlmSt5j0; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742407939; c=relaxed/simple;
+	bh=fFeqEDSx+gFrh11ijFVYJhwWlYSMde/JsajtuuK8bvA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ALFqEw7SENWfo5XDrXkkqQWmwPjvpMYzc2HAGZw0vbPd5nTXsOpOOb6ba/yHOT/I0BhZpmgjxr9IPmi/wGyveXo46njeaw+pmbg0ztFkbjnjf7UkKfCJgnVqsxRksDQfttrtVQ1Rv3w5fGYcj5Hq2+fnNWmYyE7iCsMrJ3g/b3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SO+my/8i; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="jlmSt5j0"
-Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 3F57A2E095DB;
-	Wed, 19 Mar 2025 20:11:48 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742407910;
-	bh=dWLKrg1FIdgXcQO7bjik/WuI88OIFzXpgBzRQ4lKa5w=; h=From:To:Subject;
-	b=jlmSt5j0vQ/1DK57GxGESfdBensyYHh5Ns87Mhp5EjY8ZqhIr9eVFSwOBQrDfroDQ
-	 TMDHBKW9acXQyHZmtSUDWMJmxCR7psDmkA+4Yf/je2KcgqmsgPympehYqZxwvDsrbO
-	 8FlVROYYObpXNASx6p5IhuCU9wZ5XZP1tmHzHgiw=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
-	Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>,
-	linux-kernel@vger.kernel.org,
-	sre@kernel.org,
-	linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	mario.limonciello@amd.com,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v7 14/14] platform/x86: oxpec: Add charge threshold and
- behaviour to OneXPlayer
-Date: Wed, 19 Mar 2025 19:10:41 +0100
-Message-ID: <20250319181044.392235-15-lkml@antheas.dev>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250319181044.392235-1-lkml@antheas.dev>
-References: <20250319181044.392235-1-lkml@antheas.dev>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SO+my/8i"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ab7430e27b2so164882966b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:12:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google; t=1742407935; x=1743012735; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=PtsDpMKG3PVh8c/2wdkRvEAKIrMwiuW7c09tD+wzsRQ=;
+        b=SO+my/8iQC8Sry5gW8ScLtTJKz1xPXEWyhJqAmZk6pqTd7ZwdCTM1TQFPBDiePS1d+
+         T2u39Hctl8SR4BwtPK1xiHhBW8z3V4hBhIxnOdJ3qzOGK1nSPhn5TIYUixr6dvEsh2bx
+         WQPpNR+W3NXEtmu93UpOmsRDn0+jGh5+nwijw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742407935; x=1743012735;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=PtsDpMKG3PVh8c/2wdkRvEAKIrMwiuW7c09tD+wzsRQ=;
+        b=dCmNMlXXvn2tNixNnrv2S548e4N+QiQ84MYhJf9lnq6fRC1Cga4Xgab+84TPeptN/q
+         DS8Fyg5LPYN7nCzeaXNr6XGshRgeY2ERdtFcfJHhMXKPKmsamCAselxkimJoHoa6the3
+         3yeqncPhR6LdLuY1q17OTAE9JrIpolfSEaZ99kmpbag5tWI3e/KasKYHq4GAmWY1RquE
+         708M/WdNQ5XYVjDg/ALABzjRZ4K40DrFlwUKElTLt9rOB8ID5j7aVgBucsiTnM0d+DTo
+         Cv5Cz8fm3ue/SIX1iPSNlAIFpGE1cIh4F5haNMxQXEQj06zGgQXm4EaYHvMWdLrPG8A+
+         HGcQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUS8iyMrUDhy5SZBoAQAZyc3XVzBnWrQUpXDv80TCakS7rVWA7c8LPiVK3JVK9ZQCW0Xzplf2pSTEk+fjw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmP9jtWoWoPLgO94+Zm5Opo/EwZfEL2GHUh/O/STPicQEv2/XK
+	udbnXUWN8n5MiBTmimLDDvfU/JsTuVBfSq2l0LXDXnwSpps1/uauPobTeOLSR9/aFGpKwuDgRTs
+	pv3U=
+X-Gm-Gg: ASbGncv/mQGfkDvBsWWEAwZmUABQNON/PiOAFc3cVhSQEHkL35XuFs0fa/hKVv3QlVS
+	YM3mbFB3fz6jYLevoSvC7aLKys+2KSKW4Xmuk53QOYhfDmBXP3u53GAQkM/pRGyx1mrRSrmyg4/
+	iOYlwgEI7dCbYerLaKy+rV3AXa4GzRflwh4M2mFVOoSY/Wyu22UXIxRsbEz+s88pOjDgjBQ9rnY
+	c7EwQEAQYVw53PDTsKzsbjRA5qgeDnrAZVudEP/jlX2jP7mmtDNS65Qg5D+V/cvcTE+Iuo4vb9Y
+	dTKaMyZAaZgnLvAxEuTPwyKu+xFuh+H6IKvGe8+ipzljeaPzgXdXw1fEuJhRjwBUgDpCq1rcuDA
+	YO9FPSzfniOe8DRD/1g==
+X-Google-Smtp-Source: AGHT+IEa9iDUyzyr968Cxn/VGH8NpqxWYP21AHYy1GKA9mpyvleBoY7KsDC1nRfwARC7v96wsw71sg==
+X-Received: by 2002:a17:906:730e:b0:ac3:413b:69c7 with SMTP id a640c23a62f3a-ac3b7f730cdmr428325166b.39.1742407935334;
+        Wed, 19 Mar 2025 11:12:15 -0700 (PDT)
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com. [209.85.218.44])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146aefcfsm1037218766b.27.2025.03.19.11.12.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 11:12:13 -0700 (PDT)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-ab7430e27b2so164875066b.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:12:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWjY6N+dEdN0+wgnPUhk341m4bGtKAgYnYF3do7M1unxk20ZKhA2vRHWfNIYdNSaY4kQpTxJjQnmS2q9UI=@vger.kernel.org
+X-Received: by 2002:a17:907:ec0d:b0:ac3:bd68:24e4 with SMTP id
+ a640c23a62f3a-ac3bd6830damr446966766b.53.1742407933026; Wed, 19 Mar 2025
+ 11:12:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174240790985.3578.1398837508702229341@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+References: <2874581.1742399866@warthog.procyon.org.uk> <20250319163038.GD26879@redhat.com>
+In-Reply-To: <20250319163038.GD26879@redhat.com>
+From: Linus Torvalds <torvalds@linuxfoundation.org>
+Date: Wed, 19 Mar 2025 11:11:56 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wgqidLD38wYUw-5Y6ztFdAvkX3P+Gv2=K+rpkFBG-bf7g@mail.gmail.com>
+X-Gm-Features: AQ5f1JrIwulbm3bCXYePiRgtmwvEUEXDiL2TRjJKyWZ4_ecrDX73K-AxzmDTtIE
+Message-ID: <CAHk-=wgqidLD38wYUw-5Y6ztFdAvkX3P+Gv2=K+rpkFBG-bf7g@mail.gmail.com>
+Subject: Re: [PATCH v2] keys: Fix UAF in key_put()
+To: Oleg Nesterov <oleg@redhat.com>
+Cc: David Howells <dhowells@redhat.com>, Jarkko Sakkinen <jarkko@kernel.org>, Kees Cook <kees@kernel.org>, 
+	Greg KH <gregkh@linuxfoundation.org>, Josh Drake <josh@delphoslabs.com>, 
+	Suraj Sonawane <surajsonawane0215@gmail.com>, keyrings@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, security@kernel.org, 
+	stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-With the X1 (AMD), OneXPlayer added a charge limit and charge inhibit
-feature to their devices. Charge limit allows for choosing an arbitrary
-battery charge setpoint in percentages. Charge ihibit allows to instruct
-the device to stop charging either when it is awake or always.
+On Wed, 19 Mar 2025 at 09:31, Oleg Nesterov <oleg@redhat.com> wrote:
+>
+> Can't resist, smp_mb__before_atomic() should equally work,
+> but this doesn't really matter, please forget.
 
-This feature was then extended for the F1Pro as well. OneXPlayer also
-released BIOS updates for the X1 Mini, X1 (Intel), and F1 devices that
-add support for this feature. Therefore, enable it for all F1 and
-X1 devices.
+We really should have "test_bit_acquire()" and "set_bit_release()".
 
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
----
- drivers/platform/x86/Kconfig |   1 +
- drivers/platform/x86/oxpec.c | 160 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 157 insertions(+), 4 deletions(-)
+Well, we do have the test_bit_acquire().
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 82cfc76bc5c9f..f4d993658c01f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1189,6 +1189,7 @@ config SEL3350_PLATFORM
- config OXP_EC
- 	tristate "OneXPlayer EC platform control"
- 	depends on ACPI_EC
-+	depends on ACPI_BATTERY
- 	depends on HWMON
- 	depends on X86
- 	help
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 2e4c7e6188f08..3c445932fccbb 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -24,6 +24,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/processor.h>
-+#include <acpi/battery.h>
- 
- /* Handle ACPI lock mechanism */
- static u32 oxp_mutex;
-@@ -60,6 +61,7 @@ enum oxp_board {
- };
- 
- static enum oxp_board board;
-+static struct device *oxp_dev;
- 
- /* Fan reading and PWM */
- #define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 registers long */
-@@ -93,6 +95,23 @@ static enum oxp_board board;
- #define OXP_X1_TURBO_LED_OFF           0x01
- #define OXP_X1_TURBO_LED_ON            0x02
- 
-+/* Battery extension settings */
-+#define EC_CHARGE_CONTROL_BEHAVIOURS	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)             | \
-+					 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)    | \
-+					 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE))
-+
-+#define OXP_X1_CHARGE_LIMIT_REG      0xA3 /* X1 charge limit (%) */
-+#define OXP_X1_CHARGE_INHIBIT_REG     0xA4 /* X1 bypass charging */
-+
-+#define OXP_X1_CHARGE_INHIBIT_MASK_AWAKE 0x01
-+/*
-+ * X1 Mask is 0x0A, OneXFly F1Pro is just 0x02
-+ * but the extra bit on the X1 does nothing.
-+ */
-+#define OXP_X1_CHARGE_INHIBIT_MASK_OFF 0x02
-+#define OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS (OXP_X1_CHARGE_INHIBIT_MASK_AWAKE | \
-+	OXP_X1_CHARGE_INHIBIT_MASK_OFF)
-+
- static const struct dmi_system_id dmi_table[] = {
- 	{
- 		.matches = {
-@@ -507,6 +526,129 @@ static ssize_t tt_led_show(struct device *dev,
- 
- static DEVICE_ATTR_RW(tt_led);
- 
-+/* Callbacks for charge behaviour attributes */
-+static bool oxp_psy_ext_supported(void)
-+{
-+	switch (board) {
-+	case oxp_x1:
-+	case oxp_fly:
-+		return true;
-+	default:
-+		break;
-+	}
-+	return false;
-+}
-+
-+static int oxp_psy_ext_get_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *data,
-+				       enum power_supply_property psp,
-+				       union power_supply_propval *val)
-+{
-+	long raw_val;
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		ret = read_from_ec(OXP_X1_CHARGE_LIMIT_REG, 1, &raw_val);
-+		if (ret)
-+			return ret;
-+		if (raw_val > 100)
-+			return -EINVAL;
-+		val->intval = raw_val;
-+		return 0;
-+	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-+		ret = read_from_ec(OXP_X1_CHARGE_INHIBIT_REG, 1, &raw_val);
-+		if (ret)
-+			return ret;
-+		if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS) ==
-+		    OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS)
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
-+		else if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_AWAKE) ==
-+			 OXP_X1_CHARGE_INHIBIT_MASK_AWAKE)
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE;
-+		else
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int oxp_psy_ext_set_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *data,
-+				       enum power_supply_property psp,
-+				       const union power_supply_propval *val)
-+{
-+	long raw_val;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		if (val->intval > 100)
-+			return -EINVAL;
-+		return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
-+	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-+		switch (val->intval) {
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
-+			raw_val = 0;
-+			break;
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE:
-+			raw_val = OXP_X1_CHARGE_INHIBIT_MASK_AWAKE;
-+			break;
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
-+			raw_val = OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		return write_to_ec(OXP_X1_CHARGE_INHIBIT_REG, raw_val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int oxp_psy_prop_is_writeable(struct power_supply *psy,
-+					    const struct power_supply_ext *ext,
-+					    void *data,
-+					    enum power_supply_property psp)
-+{
-+	return true;
-+}
-+
-+static const enum power_supply_property oxp_psy_ext_props[] = {
-+	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
-+	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
-+};
-+
-+struct power_supply_ext oxp_psy_ext = {
-+	.name			= "oxp-charge-control",
-+	.properties		= oxp_psy_ext_props,
-+	.num_properties		= ARRAY_SIZE(oxp_psy_ext_props),
-+	.charge_behaviours	= EC_CHARGE_CONTROL_BEHAVIOURS,
-+	.get_property		= oxp_psy_ext_get_prop,
-+	.set_property		= oxp_psy_ext_set_prop,
-+	.property_is_writeable	= oxp_psy_prop_is_writeable,
-+};
-+
-+static int oxp_add_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	return power_supply_register_extension(battery, &oxp_psy_ext, oxp_dev, NULL);
-+}
-+
-+static int oxp_remove_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	power_supply_unregister_extension(battery, &oxp_psy_ext);
-+	return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook = {
-+	.add_battery	= oxp_add_battery,
-+	.remove_battery	= oxp_remove_battery,
-+	.name		= "OneXPlayer Battery",
-+};
-+
- /* PWM enable/disable functions */
- static int oxp_pwm_enable(void)
- {
-@@ -845,12 +987,22 @@ static const struct hwmon_chip_info oxp_ec_chip_info = {
- static int oxp_platform_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device *hwdev;
-+	int ret;
-+
-+	oxp_dev = dev;
-+	ret = PTR_ERR_OR_ZERO(devm_hwmon_device_register_with_info(
-+		dev, "oxp_ec", NULL, &oxp_ec_chip_info, NULL));
- 
--	hwdev = devm_hwmon_device_register_with_info(dev, "oxpec", NULL,
--						     &oxp_ec_chip_info, NULL);
-+	if (ret)
-+		return ret;
- 
--	return PTR_ERR_OR_ZERO(hwdev);
-+	if (oxp_psy_ext_supported()) {
-+		ret = devm_battery_hook_register(dev, &battery_hook);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static struct platform_driver oxp_platform_driver = {
--- 
-2.48.1
+We just don't have the set_bit side, because we only have the bit
+clearing version (and it's called "clear_bit_unlock()" for historical
+reasons).
 
+Annoying.
+
+             Linus
