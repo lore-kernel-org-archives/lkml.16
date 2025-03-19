@@ -1,118 +1,153 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from szxga03-in.huawei.com (szxga03-in.huawei.com [45.249.212.189])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 866E44690
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 03:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81A454690
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 03:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.189
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742355087; cv=none; b=KAiTwlP67mPDAvWNt09lQ/dd2GTyzcgp+XT4A6g9ehiWZb11xG6TsG1v566gtFmLqGSJ0Mf9NG6vIAofC3lQZoDb3ReEBRCURampW04JI4CNScCFTmWPSIym/waSWJCbRswt+XRKUsQ2vAHZZBipxlm6FHEXqWPpiGrsM5cx2Cs=
+	t=1742355149; cv=none; b=XacVCZF6iLsXhYBpcGyFQg+59+DPgvhwPHHHwNAYUuOCtVmhEu6ezteEJE6kf9yYpsjZhzM4Bhawq5+qoTShWq3sHXu3CfykjaQjqIBhXyTXb7xGJqdgy15EpzOP/jAEHztWs/du5LPgroVr6Au0E35bsNMMsdik+HUrC9FfiCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742355087; c=relaxed/simple;
-	bh=9G+X8S/v429Vow2GuVQbZRlED+Qj1Ccya4xo2OCzUWg=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=W/GY0yMgGz+2rNH0Z3pkDTdg6qUMRjK95Y3zAZKDk3F5fCFdyooivy4ZdrazUfgnaMn9IuiDoqc4AyDWkMvyQj712SLIx7Ssvjf1KZnEhs2pXM2FmuusnzrC13FhrRfa08LsiZGRLtR6mjcnDLPfevpZaPsCc+STKP2RfLk7/0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=Wim0ReK6; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Wim0ReK6"
-Received: from [127.0.0.1] ([76.133.66.138])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52J3UqAc1321961
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Tue, 18 Mar 2025 20:30:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52J3UqAc1321961
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1742355054;
-	bh=XkzRW8S4iG77INjLobxxM00eT3gh8YW/E/qtbpPX0fc=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=Wim0ReK618S3/6DuWrj9Laibe7pH9iCkwKZXnp/nV0fJ8Y4+6xCk6auuCAjH9t4bR
-	 2N31Vhd1SwnelVEIzfTHtT7EasYGDjhcKQZh6cUg3vBOt55SEi6AAfnTOHH+LziHVr
-	 xmgHGwzJKQcDhSHa6Qzj9bod7dVoYZRUh8a2vMBtL4dyMFIU+n6QZFEkXjbK8R1tdC
-	 Q1Fz2yHijy1zKPrEp7xfSukXvtH/BSQN8auC85nEDBid99muWIy4SFq9f7xn4XyOnA
-	 TEgHv7DXrDWmByLA9kOb/T0D8uU9neFd42/Jg3pkysEtB42AmT0sO/Q9iKLXZ95OT7
-	 BixWC5zb4g+Pg==
-Date: Tue, 18 Mar 2025 20:30:52 -0700
-From: "H. Peter Anvin" <hpa@zytor.com>
-To: Ingo Molnar <mingo@kernel.org>
-CC: linux-kernel@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Stefano Stabellini <sstabellini@kernel.org>,
-        "Ahmed S . Darwish" <darwi@linutronix.de>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        John Ogness <john.ogness@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>, Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_0/5=5D_x86/cpu=3A_Introduce_=3Casm/cpuid/t?=
- =?US-ASCII?Q?ypes=2Eh=3E_and_=3Casm/cpuid/api=2Eh=3E_and_clean_them_up?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <Z9m1rtmlk1PxGIQA@gmail.com>
-References: <20250317221824.3738853-1-mingo@kernel.org> <5A417EE0-8DF3-4C6E-A7E9-9EE6705282F1@zytor.com> <Z9m1rtmlk1PxGIQA@gmail.com>
-Message-ID: <76FE5F63-A27F-4D99-A9D8-DD316EA78656@zytor.com>
+	s=arc-20240116; t=1742355149; c=relaxed/simple;
+	bh=orXlxFkrjVDv17ePN/R2I0S3v7V8cT3bOud4Y8BxXp8=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YvT1FZZVZkxPBMmVnhx2inReGuuZcLObyawnAwblCWRY2JZne5CcBcCRwIX8yJY55A4zmMDStiuXxIzRc+bfYJ+Ka/7WnvTH9pjfSUh42bxf9eUAfl1AlOIlqF0qpQroSwfvDyeVoL7hRX89xuRqnA2CLqG69m05rdRyZ+G2t/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.189
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4ZHZ1x15H0zHrGF;
+	Wed, 19 Mar 2025 11:29:09 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id 2ED2C1800CD;
+	Wed, 19 Mar 2025 11:32:23 +0800 (CST)
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Wed, 19 Mar 2025 11:32:21 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 drm-dp 0/9] Add HPD, getting EDID, colorbar features in DP function
+Date: Wed, 19 Mar 2025 11:24:26 +0800
+Message-ID: <20250319032435.1119469-1-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-On March 18, 2025 11:04:30 AM PDT, Ingo Molnar <mingo@kernel=2Eorg> wrote:
->
->* H=2E Peter Anvin <hpa@zytor=2Ecom> wrote:
->
->> It would be nice to get rid of the bleacherous use of *eax and *ecx=20
->> as input-output operands=2E The use of four separate pointers is just=
-=20
->> barely tolerable because the compiler can remove them when the asm is=
-=20
->> inlined=2E
->
->So we have a nice structure of:
->
-> struct cpuid_regs {
->         u32 eax;
->         u32 ebx;
->         u32 ecx;
->         u32 edx;
-> };
->
->So instead of:
->
-> static inline void cpuid_count(unsigned int op, int count,
->                               unsigned int *eax, unsigned int *ebx,
->                               unsigned int *ecx, unsigned int *edx)
->
->=2E=2E=2E we could have:
->
-> static inline void cpuid_count(unsigned int op, int count, struct cpuid_=
-regs *cregs)
->
->or so?
->
->plus we could implement the main CPUID call as:
->
-> static inline void native_cpuid(struct cpuid_regs *cregs)
-> {
->        /* ecx is often an input as well as an output=2E */
->        asm volatile("cpuid"
->            : "=3Da" (cregs->eax),
->              "=3Db" (cregs->ebx),
->              "=3Dc" (cregs->ecx),
->              "=3Dd" (cregs->edx)
->            : "0" (cregs->eax), "2" (cregs->ecx)
->            : "memory");
-> }
->
->and thus we give the asm() statement only a single pointer in essence,=20
->'cregs'?
->
->Or do you mean something else?
->
->Thanks,
->
->	Ingo
+From: Baihan Li <libaihan@huawei.com>
 
-Yes, I attached an example, but I used the structure as a return=2E
+To support DP HPD, edid printing, and colorbar display features based on
+the Hisislcon DP devices.
+---
+ChangeLog:
+v6 -> v7:
+  - add if statement about drm aux in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
+  v6: https://lore.kernel.org/all/20250310040138.2025715-1-shiyongbang@huawei.com/
+v5 -> v6:
+  - fix the DP_SERDES_VOL2_PRE0 value after electrical test.
+  - move the detect_ctx() to the patch 7/9.
+  - add detect_ctx with 200ms delay, suggested by Dmitry Baryshkov.
+  v5: https://lore.kernel.org/all/20250307101640.4003229-1-shiyongbang@huawei.com/
+v4 -> v5:
+  - add commit log about hibmc_kms_init(), suggested by Dmitry Baryshkov.
+  - fix the format of block comments, suggested by Dmitry Baryshkov.
+  - add hibmc_dp_get_serdes_rate_cfg() to correct transferring serdes cfg.
+  - separate the vga part commit, suggested by Dmitry Baryshkov.
+  - remove pci_disable_msi() in hibmc_unload()
+  v4: https://lore.kernel.org/all/20250305112647.2344438-1-shiyongbang@huawei.com/
+v3 -> v4:
+  - fix the serdes cfg in hibmc_dp_serdes_set_tx_cfg(), suggested by Dmitry Baryshkov.
+  - move the dp serdes registers to dp_reg.h, suggested by Dmitry Baryshkov.
+  - add comments for if-statement of dp_init(), suggested by Dmitry Baryshkov.
+  - fix the comment log to imperative sentence, suggested by Dmitry Baryshkov.
+  - add comments in hibmc_control_write(), suggested by Dmitry Baryshkov.
+  - add link reset of rates and lanes in pre link training process, suggested by Dmitry Baryshkov.
+  - add vdac detect and connected/disconnected status to enable HPD process, suggested by Dmitry Baryshkov.
+  - remove a drm_client, suggested by Dmitry Baryshkov.
+  - fix build errors reported by kernel test robot <lkp@intel.com>
+    Closes: https://lore.kernel.org/oe-kbuild-all/202502231304.BCzV4Y8D-lkp@intel.com/
+  v3: https://lore.kernel.org/all/20250222025102.1519798-1-shiyongbang@huawei.com/
+v2 -> v3:
+  - restructuring the header p_reg.h, suggested by Dmitry Baryshkov.
+  - add commit log about dp serdes, suggested by Dmitry Baryshkov.
+  - return value in hibmc_dp_serdes_init(), suggested by Dmitry Baryshkov.
+  - add static const in the array of serdes_tx_cfg[], suggested by Dmitry Baryshkov.
+  - change drm_warn to drm_dbg_dp, suggested by Dmitry Baryshkov.
+  - add explanations about dp serdes macros, suggested by Dmitry Baryshkov.
+  - change commit to an imperative sentence, suggested by Dmitry Baryshkov.
+  - put HIBMC_DP_HOST_SERDES_CTRL in dp_serdes.h, suggested by Dmitry Baryshkov.
+  - split the patch into two parts, suggested by Dmitry Baryshkov.
+  - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
+  - rewrite the commit log, suggested by Dmitry Baryshkov.
+  - move colorbar debugfs entry to this patch, suggested by Dmitry Baryshkov.
+  - change binary format to integer format, suggested by Dmitry Baryshkov.
+  - remove mdelay(100) hpd function in ISR, suggested by Dmitry Baryshkov.
+  - remove enble_display in ISR, suggested by Dmitry Baryshkov.
+  - change drm_kms_helper_connector_hotplug_event() to
+    drm_connector_helper_hpd_irq_event(), suggested by Dmitry Baryshkov.
+  - move macros to dp_reg.h, suggested by Dmitry Baryshkov.
+  - remove struct irqs, suggested by Dmitry Baryshkov.
+  - split this patch into two parts, suggested by Dmitry Baryshkov.
+  v2: https://lore.kernel.org/all/20250210144959.100551-1-shiyongbang@huawei.com/
+v1 -> v2:
+  - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
+  - changing all names of dp phy to dp serdes.
+  - deleting type conversion, suggested by Dmitry Baryshkov.
+  - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
+  - add colorbar introduction in commit, suggested by Dmitry Baryshkov.
+  - deleting edid decoder and its debugfs, suggested by Dmitry Baryshkov.
+  - using debugfs_init() callback, suggested by Dmitry Baryshkov.
+  - splittting colorbar and debugfs in different patches, suggested by Dmitry Baryshkov.
+  - optimizing the description in commit message, suggested by Dmitry Baryshkov.
+  - add mdelay(100) comments, suggested by Dmitry Baryshkov.
+  - deleting display enable in hpd event, suggested by Dmitry Baryshkov.
+  v1: https://lore.kernel.org/all/20250127032024.1542219-1-shiyongbang@huawei.com/
+---
+
+Baihan Li (9):
+  drm/hisilicon/hibmc: Restructuring the header dp_reg.h
+  drm/hisilicon/hibmc: Add dp serdes cfg to adjust serdes rate, voltage
+    and pre-emphasis
+  drm/hisilicon/hibmc: Add dp serdes cfg in dp process
+  drm/hisilicon/hibmc: Refactor the member of drm_aux in struct hibmc_dp
+  drm/hisilicon/hibmc: Getting connector info and EDID by using AUX
+    channel
+  drm/hisilicon/hibmc: Add colorbar-cfg feature and its debugfs file
+  drm/hisilicon/hibmc: Enable this hot plug detect of irq feature
+  drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
+  drm/hisilicon/hibmc: Add vga connector detect functions
+
+ drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  16 ++-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  10 +-
+ .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |   2 +
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  91 +++++++++++-
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  36 +++++
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  |  97 +++++++++----
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   | 130 +++++++++++++-----
+ .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.c    |  71 ++++++++++
+ .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 104 ++++++++++++++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |  78 ++++++++++-
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  87 +++++++++---
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  12 ++
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c  |   3 +
+ 14 files changed, 638 insertions(+), 102 deletions(-)
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
+ create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
+
+-- 
+2.33.0
+
