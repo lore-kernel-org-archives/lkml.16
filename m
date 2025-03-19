@@ -1,92 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4250C215055;
-	Wed, 19 Mar 2025 03:22:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF4DA524F;
+	Wed, 19 Mar 2025 03:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742354577; cv=none; b=vGlrOEOM80rxZr1nB2Mx1cMEYyPLtR+FQ5sWejq2LbKXwqyNMFcDDWlJLFqEiIaQaD5yKH7lMPzFfePXvIAgTEZt9z3rFhjuaTKEhyepNTBaS60OmQg7WzYN3ue7GXMd63UhnbU5JZU6ygiWdFNfb+qplEXASnpT7Thlw8AsSpk=
+	t=1742354594; cv=none; b=A2Z5TS2VO6wOjsZf6lVDSiUpD8v/RZlX942ShwkBWeYkdT+p3SU7tIT7ECniAHi6ocBxPcejS/OL/IuZlYVlFKh/l2pgLHP4ESlFQ8lNTDttOjoR65RW6n+9XDJQdSyhSoj65oeTirHzTakXyKzcSURbdQ6r/ynUxCLTyGxKMYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742354577; c=relaxed/simple;
-	bh=OIzJIfkOFGoCE9pBG/Lr5IOf9VKdk7vbd7YcXAXXAEo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ltEDWhzWE9fy4SXguDjU4FkA2o+x18Yec2bwiXGGoWp1d09g5T5e2UY83v1tBpAu2LPMuVd++pk8mLzmZPNncx2ZOc5LOnRsZZl1F2+JQ1Ty4a0eD/RyYB+2dsQhd95b6Lj8JBk5ERemQIiwNTgeATKQClWsBRqrWCPOgE3zgzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SNu/RMkY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742354594; c=relaxed/simple;
+	bh=kKjAvj/AN5gYTkbsbr9Dtg3vdgdIpD2AgBSDbtGlOmk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=T0N1kIFC9vooGh7MkIxOycxsPXl5RqI+mfYSQVacmomV4u23zZ3oeSbbam7kcTEdANItKkUI6qpngHwHfngJTR5zIfr4XGjmA5L91S4P5dn9TJ0XuKqLGEKEuetV3calhjfAcAVqP+f8v34vwW7P2nqsB9IULRVne8sqY9HGE9M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a+1ErBMo; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SNu/RMkY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AA10BC4CEDD;
-	Wed, 19 Mar 2025 03:22:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742354576;
-	bh=OIzJIfkOFGoCE9pBG/Lr5IOf9VKdk7vbd7YcXAXXAEo=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=SNu/RMkYh2+8GNgZvWtiZZlQBpWr3PEuwWMvJuWkLyrHEDD9sSnxga8hgCx98jOMz
-	 JFHWnrMnFhFq25VZU2yOq+IpBdWh53nFPO5WHFZHdEcPCfBxdQ1JEL6bcG3NPjS0cx
-	 Eo04JjCACoH7t2kcvqxUwFxC587xys1yd50suGCPVaW/Eh82ejVa04ZB6XqARtfsEv
-	 iX4uipBIIVzPAtIULs4YMIQx3R1vEBPicwCj3NyVIvnMi63Gzl4OO+FnfpnTZiXkCm
-	 oIgDH2k9D3vwog+YZjtn5Em3q2SwVW9TFNFd5CaBl/a6ZPOOYKAb51uSlOpDkDifGy
-	 BJ/CFuXLiIMew==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94BD7C35FFB;
-	Wed, 19 Mar 2025 03:22:56 +0000 (UTC)
-From: Bjorn Andersson via B4 Relay <devnull+bjorn.andersson.oss.qualcomm.com@kernel.org>
-Subject: [PATCH 0/2] arm64: dts: qcom: x1e80100-dell-xps13-9345: Enable
- fingerprint sensor
-Date: Tue, 18 Mar 2025 22:22:55 -0500
-Message-Id: <20250318-xps13-fingerprint-v1-0-fbb02d5a34a7@oss.qualcomm.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a+1ErBMo"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22398e09e39so136672335ad.3;
+        Tue, 18 Mar 2025 20:23:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742354592; x=1742959392; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=FeTfA5EvYDZdhGTqIyHcGqcsQRwK5RGXcRhBZWZJHcs=;
+        b=a+1ErBMoscIi1XI5N5b0W6JrVMN08uCWxoxk0oCTxH4K/f9Tado3uAfTBVYNzBaF1a
+         KDeHkiCBSEQzJ/hoX65E8n0jQjNBgxr9dBpdkRzFcAoMU1ylWS+frm40nMguRQQcNcim
+         M13/iPwo2mhLLl5MeUXEMB9/R/tu0Ws0LAi4YK+aja7872LOj1tZi0KWJBuwleexQTPZ
+         1RxxA79sRYDpQwdK/fC2sPreQ//fbh4hWTM6CQmCOE/PudPs0gJ6s+hWBvPLzDpXSMV0
+         DP9TVKMU9P/b0g/BKA8OL/cMFCJy3h+u9i5p6IspLYMkQaJ/ZPxSsOgWgex4C4ynvs6j
+         CATQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742354592; x=1742959392;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=FeTfA5EvYDZdhGTqIyHcGqcsQRwK5RGXcRhBZWZJHcs=;
+        b=OQvydOzjpVd0P2iBlLTwhWDETiT2oFr5jta/6UBOZj+J7JarAa1Ut5DHWE5xDVV6az
+         xYF+cKItUTkqdLiyMsauAFBLFMEdYw1DHWq0+qtxXScFNRLcyD66gkWSkeaS1vbnTimQ
+         yd+ySB+Xbp/6GZPT/flVHtD8IxVo5nGFC2GnEfXH5d/Vew543cbVUZT8/5aRq/qDkiJS
+         nE6fu6U8QZEPOWBsfoIohu2/39/uUNwQ8GBoHlv7hMyKhr39g3aGNkwsfeAiA6uC5Qfu
+         jMjPn2ovV8ZVu1t0JbjMo9X6zIebiF9ZHirYo4OnXLki/qnViPhPhiVWD0tZicMvke/D
+         PP1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVDjHR/axM+Ij12RdWi9FS43hqKd41RZs3SZH8xfPcgXz2V6EhJ+0a8UMnGJ2wFajxAg7q11Asyjx1w@vger.kernel.org, AJvYcCXaKnoN+8inXKcP0WXC9lbS7hZmf6wijzeINI/SkVjioQYuCvashSIFkjsTiiMVzaNxGxm62BzLYWTu/MA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbYx5csXnve+pDd1bovOqCuRS/VftXiO6aSvpfUiuc/3c1+R5h
+	BaC6tyT4nrNmIky49NarIfvH0J+nOw3D38VafxQBKZzJy+yqIFKS
+X-Gm-Gg: ASbGncu/WxC8NdtiY5OXuCLob8GHmcyrWFm3GIbuiYJnmPLQbXdooSOBW6I2zMzZjZF
+	NqnnMFtGty4FTFginEcwH+oXdVDIs52zDA7jF4nqXVw+m0l+cDPPrvekn+64C80QrFO7hUGP8uz
+	uWfJlIvMKIf0XkOQU5sT1c/8/PS/X8NTrTiBRWrZwo8c42eXDu23NDIWZzZT8V6GRQU+K40VM4V
+	6dpuSao5Y/Q+GTo9iX6lAuCE8tB2WqB4zRRoH5A+XoX5xQmxoUt6N2ywLQlh6FKah0VbChQadQA
+	i0+0eAIjJcFOYqJIYMYB0hjrlARPUDPcKJ8pz+6hmH0kyKkIbuQsbWELcNC9HpenSA==
+X-Google-Smtp-Source: AGHT+IF2HGClT2t/YkULY9YGPj3N+zFEFj0PL3eDhpw9zJ/zZ1YETqaRj2KCXx2TkxDFDpecXKOS9Q==
+X-Received: by 2002:a17:903:2310:b0:224:256e:5e4e with SMTP id d9443c01a7336-226498228b4mr18231035ad.16.1742354592020;
+        Tue, 18 Mar 2025 20:23:12 -0700 (PDT)
+Received: from localhost.localdomain ([114.254.9.37])
+        by smtp.googlemail.com with ESMTPSA id d9443c01a7336-225c68bedd4sm103109595ad.105.2025.03.18.20.23.09
+        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
+        Tue, 18 Mar 2025 20:23:11 -0700 (PDT)
+From: Miaoqian Lin <linmq006@gmail.com>
+To: Mark Brown <broonie@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-spi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: linmq006@gmail.com
+Subject: [PATCH] spi: Fix reference count leak in slave_show()
+Date: Wed, 19 Mar 2025 11:23:04 +0800
+Message-Id: <20250319032305.70340-1-linmq006@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAI842mcC/x2MywqAIBAAfyX2nJBr0eNXooPZWnsxWSOE6N+Tj
- sMw80AiYUowVQ8I3Zz4DAV0XYE7bNhJ8VYYsMGuMXpQOSZtlOeiJAqHS9ner4T9iA5bKF0U8pz
- /57y87wdfDSP4YwAAAA==
-X-Change-ID: 20250318-xps13-fingerprint-a7fbe2792c24
-To: Vinod Koul <vkoul@kernel.org>, 
- Kishon Vijay Abraham I <kishon@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>, 
- linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742354576; l=770;
- i=bjorn.andersson@oss.qualcomm.com; s=20250318; h=from:subject:message-id;
- bh=OIzJIfkOFGoCE9pBG/Lr5IOf9VKdk7vbd7YcXAXXAEo=;
- b=xPdarBZ6Wboru3bGIBrX//UgIq+TafbLcKFRcVMI2nbSEI5CvAFcun9STrbiGIKfJIMr0AlgF
- 8qRciq7cCFgBd/GMkcO9od9WJ6yd77Y9k8jHNNoIYd04EkVb84UcJFE
-X-Developer-Key: i=bjorn.andersson@oss.qualcomm.com; a=ed25519;
- pk=rD3O9C9Erg+mUPBRBNw91AGaIaDVqquHZbnn6N6xh6s=
-X-Endpoint-Received: by B4 Relay for
- bjorn.andersson@oss.qualcomm.com/20250318 with auth_id=362
-X-Original-From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Reply-To: bjorn.andersson@oss.qualcomm.com
+Content-Transfer-Encoding: 8bit
 
-Make the repeater optional in the SNSP eUSB2 PHY driver and describe the
-involved components for enabling the fingerprint reader in the Dell
-XPS13.
+Fix a reference count leak in slave_show() by properly putting the device
+reference obtained from device_find_any_child().
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+Fixes: 6c364062bfed ("spi: core: Add support for registering SPI slave controllers")
+Fixes: c21b0837983d ("spi: Use device_find_any_child() instead of custom approach")
+Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
 ---
-Bjorn Andersson (2):
-      phy: qcom: phy-qcom-snps-eusb2: Make repeater optional
-      arm64: dts: qcom: x1e80100-dell-xps13-9345: Enable fingerprint sensor
+ drivers/spi/spi.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
- .../boot/dts/qcom/x1e80100-dell-xps13-9345.dts     | 59 +++++++++++++++++++++-
- drivers/phy/qualcomm/phy-qcom-snps-eusb2.c         | 10 ++--
- 2 files changed, 64 insertions(+), 5 deletions(-)
----
-base-commit: c4d4884b67802c41fd67399747165d65c770621a
-change-id: 20250318-xps13-fingerprint-a7fbe2792c24
-
-Best regards,
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index a7a4647717d4..ff07c87dbadc 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -2954,9 +2954,13 @@ static ssize_t slave_show(struct device *dev, struct device_attribute *attr,
+ 	struct spi_controller *ctlr = container_of(dev, struct spi_controller,
+ 						   dev);
+ 	struct device *child;
++	int ret;
+ 
+ 	child = device_find_any_child(&ctlr->dev);
+-	return sysfs_emit(buf, "%s\n", child ? to_spi_device(child)->modalias : NULL);
++	ret = sysfs_emit(buf, "%s\n", child ? to_spi_device(child)->modalias : NULL);
++	put_device(child);
++
++	return ret;
+ }
+ 
+ static ssize_t slave_store(struct device *dev, struct device_attribute *attr,
 -- 
-Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-
+2.39.5 (Apple Git-154)
 
