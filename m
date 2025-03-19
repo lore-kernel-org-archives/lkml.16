@@ -1,175 +1,131 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CF3F1DF269
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:49:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC37F1DF248;
+	Wed, 19 Mar 2025 16:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742402982; cv=none; b=Q/PCPir5nyAlednsnl1IEplFX73Vl0CN7BTxJT40cCK3xmsofDVr3YtaEFaqyCWXLy/aBv+uEGC7I6FFMHfITwcNkqhaYtjkuXLJ17iVdToMwLPt9cVwmYJnF2l7d5imKdmqWIisMWh3mV+rJnB6/7TQ+qsbfqXst0YALQYIZ+A=
+	t=1742402993; cv=none; b=nYxAZkVLn+O6RJWAVfGLOXX0EwdS75S3x2yO5hOBGjT+9LtvcQDgopm0GjnR4z9yre5nxSzJ/Iks9IIui21mnds1q2eML53dSBP47p9KztW9C00FBaL0gO39VONJniVBuqpjnLsBvCP9FkF01tx2TGf7/XIGBnD2Bko60IefrGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742402982; c=relaxed/simple;
-	bh=LPfVfrg8hx/lh7QEE3SxWHepoEcZXFl7iXM7aaRLY/w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ndp3T8LM89PGOQBsHI/eMAkDpMztGHXd9oW6UtLBdTrHW6/OHCYFm9Xz+/0f1iqmc4+Kl0EZy8pZXWqyO9nv12vKdh+xj4A15MRNJLSJBPOrEOwQT3gYjLUbmGb1qqBWZoTU9qtU09gMs49eXMi0PifOfv/Mokiu79y+7YWmlMw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=T9JsZip/; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1742402993; c=relaxed/simple;
+	bh=ltDzPnx9DrYQLZ42Mpq+ze7mXFl9npW/CfLcWJZUc+A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LC7u3vCWL6TBMhzEHb8fECgtvqjhUKYrYrx5873gri50PsTdrb7DRw1Epk8ZlMstGUHIk37NwlnydTtfLUUiGwia8ySbiPqXvR9lxPhL4RhpDqdYWUNoPCP6IGRsaml+LFzlqCbfD4jXoJzSJHq5sbrS9Trv64XL8ZrQZZNJDKA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bUc/lwHl; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="T9JsZip/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1742402978;
-	bh=LPfVfrg8hx/lh7QEE3SxWHepoEcZXFl7iXM7aaRLY/w=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=T9JsZip/+afFVovfMmo8vVTqxiOCARtWRKETM/26vqVlrqfcj0HpdMbogVO8bX6o3
-	 RUuctXwDD4COnelrpskMueE7VGwC9FuBgS5YsklRbGlWABTybzM9llfUccU7n1Cm2z
-	 Dw4AVmZ3AASBLo3P0WAE3EU/MYbmjhcxjDZHPnmfak51x7pPW4np2rCh1hCTEPY0kZ
-	 qnnkk7aD1aFKbsjT58/6S5+hMcmVB78sFr1SR/DPZR1bg/XvqePMd64DWPZYjQ5Vk1
-	 3bi/nVfdZRgZWxNXNbLyDHna6kadSEiJvpDjBwTaE5cpdEjFaV5DpO+G1nT308FocQ
-	 mCdAOuGlbc6oA==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 0DE9F17E086B;
-	Wed, 19 Mar 2025 17:49:38 +0100 (CET)
-Date: Wed, 19 Mar 2025 17:49:34 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: =?UTF-8?B?QWRyacOhbg==?= Larumbe <adrian.larumbe@collabora.com>
-Cc: Steven Price <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, kernel@collabora.com,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] drm/panthor: Introduce BO labeling
-Message-ID: <20250319174934.3efce6e5@collabora.com>
-In-Reply-To: <20250319150953.1634322-2-adrian.larumbe@collabora.com>
-References: <20250319150953.1634322-1-adrian.larumbe@collabora.com>
-	<20250319150953.1634322-2-adrian.larumbe@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUc/lwHl"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-223fb0f619dso124442685ad.1;
+        Wed, 19 Mar 2025 09:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742402991; x=1743007791; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=otdawq32D6/5bERzoT5Rk23HrOvjEoRzM0gTHt/o2Nk=;
+        b=bUc/lwHluyU/aCqOIfi1d5tp6FjMc7vfUti+YBzL+8Ol2/RokgGpIIeYzr0mpihcWR
+         KjHA26XrV4blVmiDywsdsxEwQyZaExJh2SpSs+k5OIuzv6PpJpsoBZMu4Kpr9TdVMvF/
+         Q4/0Mv9x0L1vO+XvMrcVOEEJOwlelLus85s1RKR4WiC2Pm8L/W5gBeVnaWThVTnFmd4v
+         N4CHhrRXXWcA8DNABtRAbvw0tqS20WvY5sdhiyDrVrB0CffgwazIIEVzDJQsm7e6onCV
+         81ud3NUuYchLS4TbD5xoH7+jDKiwbBNwxfqGx6v5ZUAlZ/V7E0MFv6MlcvlSf08z9nNu
+         OvsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742402991; x=1743007791;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=otdawq32D6/5bERzoT5Rk23HrOvjEoRzM0gTHt/o2Nk=;
+        b=hjsCVlKxUXKuRLzJqHI1oitC2AGinSJT7OthKJ2jNlQjOW8+W74uESmZkRsuJn+pkP
+         X23iUByJNBL7A6ReOvd8WiujUyFe2cki60eEYrCPRN7M9PCkR09S5MqLg2Y5ziPbqTXo
+         fkGKlbpBGpeG9AyvunZzo7IzQOQ6KSi7zv27HkyQRVm9QDJjb3vFLgVtaZoRHhqJQkeO
+         Sj+Bvp14fUGkkmgLDijF8e1ZxWx7qU/nSir/6B3CFnEgobzE6hmDARNqodXXwuoxFBoa
+         ktLxCv2ZXlUlXQJdyokehdwJYrRW+pQcBLdEa0cNds7TpusGpztatl2JwxLuKeOjYkAD
+         uTHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWV8aHsw2NB5Ovp7Ppdt0JswI+A9vqSXzVtRvnuEvUmsQ+ik+u+2tC+uZiMAq5dcU+0m0EUNGNkRE5m9Lk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykW2im57cgnFxtGhw34BRyPH/jbNoXd0Fd0GmobT93AwcxnXMc
+	UbAFVPXFpunvuxs5rpPayp9RDxBm4MscYYwBLXYNfw9hqweSecqk
+X-Gm-Gg: ASbGncsBcPT5nLuAc+d87xhLhbKs4VK/JBybel0ihdVAWVj+YLF3dw1pICoahP7QXhI
+	zPwHq4zmZR/aTGsvuiDdZqh0867etL4sVhqxE2tZBEvaT5SlkyV1f8urt+NBR4ltVLmdX75C5Di
+	1PSKfn02jAIGT49Crh1EiO0s/v3our+q9J/GiAMTpg43/9gbHgT9E/OCC+y9+e520g70jnNq2kK
+	3oZurCMOXuuzaJ0CtFv3cJ/kEFZqAZwUt8ro9kDKPk3TPXdFonv1NkSJU0mzZw58sAkUHDMAHxo
+	XspJYlY9mMPxZq9C7LeZbLm+U9pmmo3wNS+5yDW0hz5gphfjmWF7mJ3trMAl3GXc1PFBeORF2Df
+	HILBCUqOv1MumSyLr9rEwAA==
+X-Google-Smtp-Source: AGHT+IFWe5EGmpUjldgNs4K1HGGbn7yVxSWR9yHkVqi89+su3KAenSmxurHklNjkpkjyUU7So5s1SA==
+X-Received: by 2002:a17:90b:4a10:b0:2fe:a336:fe65 with SMTP id 98e67ed59e1d1-301bde5816fmr5014331a91.10.1742402990848;
+        Wed, 19 Mar 2025 09:49:50 -0700 (PDT)
+Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf576bc2sm1863641a91.5.2025.03.19.09.49.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 09:49:50 -0700 (PDT)
+From: Potin Lai <potin.lai.pt@gmail.com>
+Subject: [PATCH v4 0/8] ARM: dts: aspeed: catalina: Update DTS to support
+ Catalina PVT hardware
+Date: Thu, 20 Mar 2025 00:47:21 +0800
+Message-Id: <20250320-potin-catalina-dts-update-20250102-v4-0-7c34b8139014@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABn12mcC/43NQQqDMBCF4atI1k3JxGi0q96jdDHRqANWxaTSI
+ t69UWiRrlz+w/C9mTk7knXsEs1stBM56rsQ6hSxosGutpzK0EwKmQgQkg+9p44X6LGlDnnpHX8
+ OJXrLfy85KCNSVKY0yAI0jLai1zZyu4duyPl+fG+bE6zXLx8f4SfgwI0wGhMZF3maXesHUnsu+
+ gdb+UnuSDhGykCClgmArqzG/J+M96Q6RMYrqfIMtFJGVnZPLsvyAZAJFuB6AQAA
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ Patrick Williams <patrick@stwcx.xyz>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
+ Potin Lai <potin.lai.pt@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742402988; l=1684;
+ i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
+ bh=ltDzPnx9DrYQLZ42Mpq+ze7mXFl9npW/CfLcWJZUc+A=;
+ b=h9W1GzNDRP1ipPJnnPG4uywIzZY/IGU5ILv0VsAds08ZDU+V1HSp+fdDPVblhY2OxMh1OFhxX
+ 7AfuI8FFiVuC3b0Lw9OpX+U3yF11FTPUZn8Hj7nxYAz6fZ9Iin/gMVV
+X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
+ pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
 
-On Wed, 19 Mar 2025 15:03:16 +0000
-Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com> wrote:
+Update the DTS file for the Catalina platform based on the PVT hardware
+changes.
 
-> Add a new character string Panthor BO field, and a function that allows
-> setting it from within the driver.
->=20
-> Driver takes care of freeing the string when it's replaced or no longer
-> needed at object destruction time, but allocating it is the responsibility
-> of callers.
->=20
-> Signed-off-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
-> ---
->  drivers/gpu/drm/panthor/panthor_gem.c | 24 ++++++++++++++++++++++++
->  drivers/gpu/drm/panthor/panthor_gem.h | 17 +++++++++++++++++
->  2 files changed, 41 insertions(+)
->=20
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.c b/drivers/gpu/drm/pant=
-hor/panthor_gem.c
-> index 8244a4e6c2a2..165c7f4eb920 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.c
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.c
-> @@ -18,6 +18,9 @@ static void panthor_gem_free_object(struct drm_gem_obje=
-ct *obj)
->  	struct panthor_gem_object *bo =3D to_panthor_bo(obj);
->  	struct drm_gem_object *vm_root_gem =3D bo->exclusive_vm_root_gem;
-> =20
-> +	kfree(bo->label.str);
+Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
+---
+Changes in v4:
+- Split a single commit into multiple smaller commits to reduce complexity.
+- Add `multi-master` into i2c12 & i2c13  
+- Link to v3: https://lore.kernel.org/r/20250114-potin-catalina-dts-update-20250102-v3-1-14981744b2fe@gmail.com
 
-	/* Label might have been allocated with kstrdup_const(),
-	 * we need to take that into account when freeing the memory.
-	 */
-	kfree_const(bo->label.str);
+Changes in v3:
+- Remove delta_brick nodes due to compatible string not supported
+- Link to v2: https://lore.kernel.org/r/20250113-potin-catalina-dts-update-20250102-v2-1-1725117fe7a9@gmail.com
 
-> +	mutex_destroy(&bo->label.lock);
-> +
->  	drm_gem_free_mmap_offset(&bo->base.base);
->  	mutex_destroy(&bo->gpuva_list_lock);
->  	drm_gem_shmem_free(&bo->base);
-> @@ -196,6 +199,7 @@ struct drm_gem_object *panthor_gem_create_object(stru=
-ct drm_device *ddev, size_t
->  	obj->base.map_wc =3D !ptdev->coherent;
->  	mutex_init(&obj->gpuva_list_lock);
->  	drm_gem_gpuva_set_lock(&obj->base.base, &obj->gpuva_list_lock);
-> +	mutex_init(&obj->label.lock);
-> =20
->  	return &obj->base.base;
->  }
-> @@ -247,3 +251,23 @@ panthor_gem_create_with_handle(struct drm_file *file,
-> =20
->  	return ret;
->  }
-> +
-> +void
-> +panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *label)
-> +{
-> +	struct panthor_gem_object *bo =3D to_panthor_bo(obj);
-> +	const char *old_label;
-> +
-> +	mutex_lock(&bo->label.lock);
-> +	old_label =3D bo->label.str;
-> +	bo->label.str =3D label;
-> +	mutex_unlock(&bo->label.lock);
-> +
-> +	kfree(old_label);
-> +}
-> +
-> +void
-> +panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const char=
- *label)
-> +{
-> +	panthor_gem_bo_set_label(bo->obj, kstrdup_const(label, GFP_KERNEL));
+Changes in v2:
+- Add delta_brick nodes to support PDB brick board
+- Link to v1: https://lore.kernel.org/r/20250103-potin-catalina-dts-update-20250102-v1-1-b0b7a523c968@gmail.com
 
-You ignore the OOM case. Not sure it can happen in practice, and it's
-probably okay if we keep going in that case, because this is just debug
-information, but maybe this should be documented here.
+---
+Potin Lai (8):
+      ARM: dts: aspeed: catalina: Add IO Mezz board thermal sensor nodes
+      ARM: dts: aspeed: catalina: Add Front IO board remote thermal sensor
+      ARM: dts: aspeed: catalina: Add MP5990 power sensor node
+      ARM: dts: aspeed: catalina: Add fan controller support
+      ARM: dts: aspeed: catalina: Add second source fan controller support
+      ARM: dts: aspeed: catalina: Add second source HSC node support
+      ARM: dts: aspeed: catalina: Remove INA238 and INA230 nodes
+      ARM: dts: aspeed: catalina: Enable multi-master on additional I2C buses
 
-> +}
-> diff --git a/drivers/gpu/drm/panthor/panthor_gem.h b/drivers/gpu/drm/pant=
-hor/panthor_gem.h
-> index 5749ef2ebe03..0582826b341a 100644
-> --- a/drivers/gpu/drm/panthor/panthor_gem.h
-> +++ b/drivers/gpu/drm/panthor/panthor_gem.h
-> @@ -46,6 +46,20 @@ struct panthor_gem_object {
-> =20
->  	/** @flags: Combination of drm_panthor_bo_flags flags. */
->  	u32 flags;
-> +
-> +	/**
-> +	 * @label: BO tagging fields. The label can be assigned within the
-> +	 * driver itself or through a specific IOCTL.
-> +	 */
-> +	struct {
-> +		/**
-> +		 * @label.str: Pointer to NULL-terminated string,
-> +		 */
-> +		const char *str;
-> +
-> +		/** @lock.str: Protects access to the @label.str field. */
-> +		struct mutex lock;
-> +	} label;
->  };
-> =20
->  /**
-> @@ -91,6 +105,9 @@ panthor_gem_create_with_handle(struct drm_file *file,
->  			       struct panthor_vm *exclusive_vm,
->  			       u64 *size, u32 flags, uint32_t *handle);
-> =20
-> +void panthor_gem_bo_set_label(struct drm_gem_object *obj, const char *la=
-bel);
-> +void panthor_gem_kernel_bo_set_label(struct panthor_kernel_bo *bo, const=
- char *label);
-> +
->  static inline u64
->  panthor_kernel_bo_gpuva(struct panthor_kernel_bo *bo)
->  {
+ .../dts/aspeed/aspeed-bmc-facebook-catalina.dts    | 172 +++++++++++++++------
+ 1 file changed, 128 insertions(+), 44 deletions(-)
+---
+base-commit: becaccc292bfbd12df81148746043c5221e49da8
+change-id: 20250102-potin-catalina-dts-update-20250102-914b06a4bdba
+
+Best regards,
+-- 
+Potin Lai <potin.lai.pt@gmail.com>
 
