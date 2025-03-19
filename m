@@ -1,121 +1,224 @@
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD92021364;
-	Wed, 19 Mar 2025 04:02:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F6271F4C8B;
+	Wed, 19 Mar 2025 04:03:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742356928; cv=none; b=X6o7igM25eHdgcTWVTJeHsIFAeR/dEVVz2NcIDpd9m4G3bOeka5NHilpDxS7Ht8LdkLDnUzHpUbumxP4JW9M/0T5FpZK0WW2Ye9SO/m2spT3FipwNOYoQRiICyCoKDV7Iv0H/VKsRQhKnae5Kwrwuf/FXYOSjmPFFdDoU+fbqd0=
+	t=1742357038; cv=none; b=QcoHC5qyePz2HJ8HnmiS34KlAiHi1RzfbtMd+mZ/eH7L/fReEpVHLDOfy9lkOaLdI7dFTvDueXxdJuLmpQURqEQiaZqhS74vPdY5cOanairuFKXAzK02Vqem5tSzhbaXNB7O4gF6VxnNZh3NXVTvIjM3in9J0eGLz3JMMHEFYmw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742356928; c=relaxed/simple;
-	bh=fOrPNVam1pp2mboD70Wkd2CrOQySoRKMMq8x7u6IPK0=;
+	s=arc-20240116; t=1742357038; c=relaxed/simple;
+	bh=0/JR/pB+k+9AEcl5/c7cHM6TepMSr4auWngtYq/+i+A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kouKerBNCMMkg7pKbYapg9zropF/zbuvpapcMtZljXDYiurhS5+KzWF8n/zJXNKuBNqQittbvc5R+mRRMB0bnZvn641oL44Cce2CGRJZ6zvsa60EFNAW8xshCLyHLuHXwH3+GFKUBsgt1GyoEVmR2dWdRMKjBtZd/UL7jvw2Ngs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=qf36ci9E; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=r8eDJeaAsdUz81XKQ6LrUZLRMHKzbcPCCmxZJiucB8q8qyrXJiBQDJ2MiUnfq+z9Ntz4JCzv3pSJuqXCTlh7kAJ5dpwgzcLgIIM8SV0pyXru5LrBiX11PmjpseX0f3CUh74hRfh2FSsdbCAUeNyvoB3HvZQVzcPFbMvt+IsRC2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WftOnWra; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="qf36ci9E"
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 900B1603CF;
-	Wed, 19 Mar 2025 03:56:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1742356583;
-	bh=fOrPNVam1pp2mboD70Wkd2CrOQySoRKMMq8x7u6IPK0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qf36ci9EzYJE6tcSpFViXgI2QU7/8ccXVLc+6cChOv/w5B7lY1c0QCOW/Dg9husNa
-	 YavYJAxvYZufubUMwbWrIfFLXS+DvIjOTuHuJ+2lMpHNt6NuUnkpu3RNwySD6YSKmN
-	 Y0sQBDTec3G+KDU/nqSxPMHOt8MNrSBs5jjM3V3eMIK8qNgpIi4GM3H6XIwUruf5JZ
-	 Z2NRpSzpBX/5j/TJguCt3h8WJAo5wBfjDQRuODPRB6s0rSGyszlgyZcdt3X2y+BVaz
-	 5Uqy/bO+37Dn6n1zl0WS2HqwN73T8qVHfd1qopIZQSyqVVkVzNQkSNNHQyzyKVhULN
-	 kIocipDvHBY+w==
-Date: Wed, 19 Mar 2025 05:56:06 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>,
-	"rogerq@kernel.org" <rogerq@kernel.org>,
-	"aaro.koskinen@iki.fi" <aaro.koskinen@iki.fi>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-	"khilman@baylibre.com" <khilman@baylibre.com>
-Subject: Re: [PATCH] Revert "bus: ti-sysc: Probe for l4_wkup and l4_cfg
- interconnect devices first"
-Message-ID: <20250319035606.GA4957@atomide.com>
-References: <20250313094708.1003092-1-alexander.sverdlin@siemens.com>
- <20250313202129.0dcfc44e@akair>
- <6348326299702a12ed4faa6ea25ee8bbe5e232aa.camel@siemens.com>
- <20250313230148.792f224b@akair>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WftOnWra"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742357037; x=1773893037;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=0/JR/pB+k+9AEcl5/c7cHM6TepMSr4auWngtYq/+i+A=;
+  b=WftOnWraLRJp6fvLidgPPoPDVo4scMLUYcPztojnYbo9vV5O3xqfJ90u
+   /wwMFli3FYz1e6ahEndmSnBxpJVTMAmZWT5wYnrHMnJmbGhO6Q1MXk5CP
+   f0ZO2+z0Vw52CpJ8k6x+EVeKlDXhTPLMSPReklQVTtn9agOwahs5SfdeX
+   aqifaLasI7k+ZMHQ00zCcpH/1w18CUfA2dRYib6gBBksX7LiHzEfkFM/g
+   0nLYClO7jFGo7a8A02QuRP1MfJ2GfJwC77B1VsYjgixkB9OlKnN9Yvimi
+   m/3tLwlHAFnKquXUaJSsaiekgASpEqzGS4Txi0OiiDSHL4Z5RdGKBeb0i
+   A==;
+X-CSE-ConnectionGUID: WvxgiBjoRYy/D5YBa1XXZw==
+X-CSE-MsgGUID: Tozc/kSLTNiIxliATGX1mw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43448106"
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="43448106"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 21:03:56 -0700
+X-CSE-ConnectionGUID: ctKI1CrUT+umzslfbH++5A==
+X-CSE-MsgGUID: tvlyeC76SNqDAIywRMgd0Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="122630725"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa008.fm.intel.com with ESMTP; 18 Mar 2025 21:03:53 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tukei-000ELK-2m;
+	Wed, 19 Mar 2025 04:03:49 +0000
+Date: Wed, 19 Mar 2025 12:03:45 +0800
+From: kernel test robot <lkp@intel.com>
+To: chenchangcheng <ccc194101@163.com>, laurent.pinchart@ideasonboard.com,
+	hdegoede@redhat.com, mchehab@kernel.org
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+	chenchangcheng <chenchangcheng@kylinos.cn>
+Subject: Re: [PATCH v2] media: uvcvideo: Fix bandwidth issue for Alcor camera
+Message-ID: <202503191124.azEOPRHh-lkp@intel.com>
+References: <20250318085724.1151547-1-ccc194101@163.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313230148.792f224b@akair>
+In-Reply-To: <20250318085724.1151547-1-ccc194101@163.com>
 
-* Andreas Kemnade <andreas@kemnade.info> [250313 22:01]:
-> Am Thu, 13 Mar 2025 20:42:23 +0000
-> schrieb "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>:
-> 
-> > Hi Andreas!
-> > 
-> > On Thu, 2025-03-13 at 20:21 +0100, Andreas Kemnade wrote:
-> > > > This reverts commit 4700a00755fb5a4bb5109128297d6fd2d1272ee6.
-> > > > 
-> > > > It brakes target-module@2b300050 ("ti,sysc-omap2") probe on AM62x in a case
-> > > > when minimally-configured system tries to network-boot:
-> > > >   
-> > > brakes or breaks? To unterstand the severity of the issue...  
-> > 
-> > Thanks for the correction, it should have been "breaks"...
-> > 
-> > > > [    6.888776] probe of 2b300050.target-module returned 517 after 258 usecs
-> > > > [   17.129637] probe of 2b300050.target-module returned 517 after 708 usecs
-> > > > [   17.137397] platform 2b300050.target-module: deferred probe pending: (reason unknown)
-> > > > [   26.878471] Waiting up to 100 more seconds for network.
-> > > > 
-> > > > Arbitrary 10 deferrals is really not a solution to any problem.  
-> > > 
-> > > So there is a point where no more probe of anything pending are
-> > > triggered and therefore things are not probed?  
-> > 
-> > Because there is a point indeed (if we configure quite minimal set of drivers just
-> > enough to mount NFS) when deferred probes are not triggered any longer.
-> > 
-> > > > Stable mmc enumeration can be achiever by filling /aliases node properly
-> > > > (4700a00755fb commit's rationale).
-> > > >   
-> > > yes, it does not look like a clean solution. And we have the
-> > > proper aliases node in many places. What I am a bit wondering about is
-> > > what kind of sleeping dogs we are going to wake up by this revert. So I
-> > > think this should be tested a lot esp. about possible pm issues.
-> > > 
-> > > Not every dependency in the sysc probe area is properly defined.  
-> > 
-> > But the patch I propose to revert is really not a solution for missing
-> > dependencies on syscons. I'm fine with not propagating this to stable,
-> > but reverting in master should give enough time for older SoCs to test,
-> > WDYT?
-> >
-> I am not against your revert proposal and not against propagating it
-> to stable, I would just like to see some Tested-Bys before it gets
-> applied to anything. If anything nasty pops up, it should be solved in a
-> cleaner way then with the offending patch.
+Hi chenchangcheng,
 
-Sounds like for the AM62x problem there is simply some resource missing
-that needs to be configured. Did you track down which resource is causing
-the deferred probe without the revert?
+kernel test robot noticed the following build warnings:
 
-Reverting the commit does not really fix the root cause. It just ignores
-the problem of the hierarchy of the interconnect instances. Some of the
-interconnect instances are always-on, and contain devices providing
-resources for the other interconnect devices. So I would not consider
-patching MMC aliases all over the place as an alternative to fixing the
-real problem :)
+[auto build test WARNING on 4701f33a10702d5fc577c32434eb62adde0a1ae1]
 
-Regards,
+url:    https://github.com/intel-lab-lkp/linux/commits/chenchangcheng/media-uvcvideo-Fix-bandwidth-issue-for-Alcor-camera/20250318-165843
+base:   4701f33a10702d5fc577c32434eb62adde0a1ae1
+patch link:    https://lore.kernel.org/r/20250318085724.1151547-1-ccc194101%40163.com
+patch subject: [PATCH v2] media: uvcvideo: Fix bandwidth issue for Alcor camera
+config: i386-buildonly-randconfig-006-20250319 (https://download.01.org/0day-ci/archive/20250319/202503191124.azEOPRHh-lkp@intel.com/config)
+compiler: clang version 20.1.0 (https://github.com/llvm/llvm-project 24a30daaa559829ad079f2ff7f73eb4e18095f88)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503191124.azEOPRHh-lkp@intel.com/reproduce)
 
-Tony
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503191124.azEOPRHh-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   drivers/media/usb/uvc/uvc_video.c:269:3: error: call to undeclared function 'uvc_printk'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+     269 |                 uvc_printk(KERN_WARNING, "the max payload transmission size [%d]
+         |                 ^
+>> drivers/media/usb/uvc/uvc_video.c:269:28: warning: missing terminating '"' character [-Winvalid-pp-token]
+     269 |                 uvc_printk(KERN_WARNING, "the max payload transmission size [%d]
+         |                                          ^
+   drivers/media/usb/uvc/uvc_video.c:269:28: error: expected expression
+   drivers/media/usb/uvc/uvc_video.c:271:45: warning: missing terminating '"' character [-Winvalid-pp-token]
+     271 |                            use the default value of 1024 bytes.\n",
+         |                                                                  ^
+   2 warnings and 2 errors generated.
+
+
+vim +269 drivers/media/usb/uvc/uvc_video.c
+
+   162	
+   163	static void uvc_fixup_video_ctrl(struct uvc_streaming *stream,
+   164		struct uvc_streaming_control *ctrl)
+   165	{
+   166		const struct uvc_format *format = NULL;
+   167		const struct uvc_frame *frame = NULL;
+   168		unsigned int i;
+   169	
+   170		/*
+   171		 * The response of the Elgato Cam Link 4K is incorrect: The second byte
+   172		 * contains bFormatIndex (instead of being the second byte of bmHint).
+   173		 * The first byte is always zero. The third byte is always 1.
+   174		 *
+   175		 * The UVC 1.5 class specification defines the first five bits in the
+   176		 * bmHint bitfield. The remaining bits are reserved and should be zero.
+   177		 * Therefore a valid bmHint will be less than 32.
+   178		 *
+   179		 * Latest Elgato Cam Link 4K firmware as of 2021-03-23 needs this fix.
+   180		 * MCU: 20.02.19, FPGA: 67
+   181		 */
+   182		if (usb_match_one_id(stream->dev->intf, &elgato_cam_link_4k) &&
+   183		    ctrl->bmHint > 255) {
+   184			u8 corrected_format_index = ctrl->bmHint >> 8;
+   185	
+   186			uvc_dbg(stream->dev, VIDEO,
+   187				"Correct USB video probe response from {bmHint: 0x%04x, bFormatIndex: %u} to {bmHint: 0x%04x, bFormatIndex: %u}\n",
+   188				ctrl->bmHint, ctrl->bFormatIndex,
+   189				1, corrected_format_index);
+   190			ctrl->bmHint = 1;
+   191			ctrl->bFormatIndex = corrected_format_index;
+   192		}
+   193	
+   194		for (i = 0; i < stream->nformats; ++i) {
+   195			if (stream->formats[i].index == ctrl->bFormatIndex) {
+   196				format = &stream->formats[i];
+   197				break;
+   198			}
+   199		}
+   200	
+   201		if (format == NULL)
+   202			return;
+   203	
+   204		for (i = 0; i < format->nframes; ++i) {
+   205			if (format->frames[i].bFrameIndex == ctrl->bFrameIndex) {
+   206				frame = &format->frames[i];
+   207				break;
+   208			}
+   209		}
+   210	
+   211		if (frame == NULL)
+   212			return;
+   213	
+   214		if (!(format->flags & UVC_FMT_FLAG_COMPRESSED) ||
+   215		     (ctrl->dwMaxVideoFrameSize == 0 &&
+   216		      stream->dev->uvc_version < 0x0110))
+   217			ctrl->dwMaxVideoFrameSize =
+   218				frame->dwMaxVideoFrameBufferSize;
+   219	
+   220		/*
+   221		 * The "TOSHIBA Web Camera - 5M" Chicony device (04f2:b50b) seems to
+   222		 * compute the bandwidth on 16 bits and erroneously sign-extend it to
+   223		 * 32 bits, resulting in a huge bandwidth value. Detect and fix that
+   224		 * condition by setting the 16 MSBs to 0 when they're all equal to 1.
+   225		 */
+   226		if ((ctrl->dwMaxPayloadTransferSize & 0xffff0000) == 0xffff0000)
+   227			ctrl->dwMaxPayloadTransferSize &= ~0xffff0000;
+   228	
+   229		if (!(format->flags & UVC_FMT_FLAG_COMPRESSED) &&
+   230		    stream->dev->quirks & UVC_QUIRK_FIX_BANDWIDTH &&
+   231		    stream->intf->num_altsetting > 1) {
+   232			u32 interval;
+   233			u32 bandwidth;
+   234	
+   235			interval = (ctrl->dwFrameInterval > 100000)
+   236				 ? ctrl->dwFrameInterval
+   237				 : frame->dwFrameInterval[0];
+   238	
+   239			/*
+   240			 * Compute a bandwidth estimation by multiplying the frame
+   241			 * size by the number of video frames per second, divide the
+   242			 * result by the number of USB frames (or micro-frames for
+   243			 * high- and super-speed devices) per second and add the UVC
+   244			 * header size (assumed to be 12 bytes long).
+   245			 */
+   246			bandwidth = frame->wWidth * frame->wHeight / 8 * format->bpp;
+   247			bandwidth *= 10000000 / interval + 1;
+   248			bandwidth /= 1000;
+   249			if (stream->dev->udev->speed >= USB_SPEED_HIGH)
+   250				bandwidth /= 8;
+   251			bandwidth += 12;
+   252	
+   253			/*
+   254			 * The bandwidth estimate is too low for many cameras. Don't use
+   255			 * maximum packet sizes lower than 1024 bytes to try and work
+   256			 * around the problem. According to measurements done on two
+   257			 * different camera models, the value is high enough to get most
+   258			 * resolutions working while not preventing two simultaneous
+   259			 * VGA streams at 15 fps.
+   260			 */
+   261			bandwidth = max_t(u32, bandwidth, 1024);
+   262	
+   263			ctrl->dwMaxPayloadTransferSize = bandwidth;
+   264		}
+   265	
+   266		if (format->flags & UVC_FMT_FLAG_COMPRESSED &&
+   267		    stream->dev->quirks & UVC_QUIRK_OVERFLOW_BANDWIDTH &&
+   268		    ctrl->dwMaxPayloadTransferSize > stream->maxpsize) {
+ > 269			uvc_printk(KERN_WARNING, "the max payload transmission size [%d]
+   270				   exceededs the size of the ep max packet.
+   271				   use the default value of 1024 bytes.\n",
+   272				   ctrl->dwMaxPayloadTransferSize);
+   273			ctrl->dwMaxPayloadTransferSize = 1024;
+   274		}
+   275	}
+   276	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
