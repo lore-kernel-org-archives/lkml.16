@@ -1,176 +1,114 @@
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 992281DE3AE;
-	Wed, 19 Mar 2025 16:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A38BE1DF738;
+	Wed, 19 Mar 2025 16:12:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742400727; cv=none; b=ljempT8UpGhhtHhKefw5BX+GXEviUlnKUmKyiEon18NA2QsofU7i6hDcpddu7dGaAxsTtHUjzUctocyolpF6BhKbUrZAut36LZOyrz06lEqcQbdXEyHZIeUbLpPUeIyolEmdl505LVChkuV+5j9KbTXCadzkFrfIIQ4UAf7U0Y4=
+	t=1742400729; cv=none; b=mTnXLNJaulzXNsUGGwHCOHqHYPJ4tOBLpvgEJ3m+mwMalvimIVorY+Q1EG5vCOaO/eFbYMlTm7gDT2JvfyatyOOT1bKRT0IIU8EU1dgBc4E3ScbHchLXjITBy0qQBXQwEWe5mhpuRnhnqacH+knjz0MPNfFLmEMGDBT4aE3aUoc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742400727; c=relaxed/simple;
-	bh=ZTORiOP8lCWlxqPdsA9WOVthA28claYMiiXwkgF4t0E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dx8hYCpbv5Misoqe6piPkz2er05okY8iE0wiB/5AhYS9GslPpq0E/ajb0BtRCOdGb1AI4u7SqdU81PDZ8DlJbSNAaAxVmJAJkMM0gvMqb8Nk2/JNNT/L72MUlVng6ebDpsZ0qppI7ptj7oyNm50wIPtwfxdY9bNMkDyEzQCZR8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FtX/YH15; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742400729; c=relaxed/simple;
+	bh=PitlnMBcSUQWByVc/F9g1dyEBupB1s6/VlSzt+WGqm8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N0KsJcbgMsew/dJnMWmJ11pBv5MnbHoFAqJ5NtOJNXJfAGH2yrSM3St3t6x0GYETFh7V3bbuLJt5iE3ysUTqugJmXCxam4t/PaYUNfoKuT2vI/aedbhU6ds8ZAtaCqfQgEY1UsJS6VoJvNoBJy33kkI6gT9E3Y4nb3ruh8CmSVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hiP7OV/X; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FtX/YH15"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 4BE5620488;
-	Wed, 19 Mar 2025 16:11:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742400715;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=b1yAFy1jrUWs7EUz51HeUQ/XlIqYqsEuyGm9trXWWY0=;
-	b=FtX/YH15cz5MBTfAEo1M12IL65wfN42SFhpKoASraBoMJDBTvS3Tu5HafwMPgDsXEAUhE2
-	jqlUcNzzEv+QOQk8avYXqEulDkmqtiZX2ZAozeZK1eoEtBokU5NiW3bzVRKUW2G1S+WG+k
-	TCgoMuK9FCmz6Z7C/HiZqONxNfBRThlDx2vPmMh/ZGmARtVUNSa3FdXIH2GiqfczN0JDs5
-	YvNTwAUftXNmZ0GB9ptPOd0a40rvE+cTsb5D72bbw72q4+qIhG7ofrgmFu9at7cWS4zG/H
-	xe56a+se3incp1g8dbYNyMQMATYV3XhmCwD7loYS7yt0YOMD89ZsxW+NYZ837w==
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Date: Wed, 19 Mar 2025 17:08:11 +0100
-Subject: [PATCH v3 2/3] hexdump: Allow skipping identical lines
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hiP7OV/X"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2243803b776so32000325ad.0;
+        Wed, 19 Mar 2025 09:12:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742400727; x=1743005527; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jt1+akIffF5Oy8MHqoXlvpzmjdsajTsQHLl116uC05c=;
+        b=hiP7OV/XoMj7W+9jYz5ijXMnJ61orxP5K1Sq406JjHRc2Z4MVkGvv8plnw9GsdkxRa
+         tNptR76hMyKwsc5HclE/86Hd96vQHdBSm3Y6sLYQl+3674UZKEJZwL1XSRuucz7gV0eO
+         zBAky6r8onGrF2tLCKqjmS5SPAqnkiDzx8v1tl+VKKf0uUR1oencH9xuzX07fe8XrohG
+         BCfszxS2LYSea5x3+fcyZrhAjlvbJPWbwYIUQoFknRUZU+inGaFrrK8FU23xn8HbvelW
+         apoW8CcgbJTkHYXT2Scif/fYPFo4gkez9CfwL+AKSlf3yImZZfuuaSBXhEYQVMojrYXB
+         CBLw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742400727; x=1743005527;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Jt1+akIffF5Oy8MHqoXlvpzmjdsajTsQHLl116uC05c=;
+        b=DFXRZ8Odb6pVoyHmOXHcNZExKi4W/i52msvawy/ORtIpgGVvVdRv9yGBf+3XcN18SJ
+         jSN2grnc8N7lT/PPKCyTKTSP9m131TLH4sO99RvPXvpOzoszsytkYUwxL352GCEDy/kU
+         rIwdJqBKX4CuksXQUxTeIzIXve5vJJQ+vtVpIdQztPIpPBhP9roVNJFUrdhB4h5s2iCt
+         /kEmIYHQ3Ksl97SpmvuPJrlbIlWooac45wAoxE6Q6ZILCBsZapR/2H9FcwnsucfW+iGd
+         BqFHWLtz4Iy8wRLxUX39svP9r2lcQwcs8wL0F8/AxzIuTAe9xqwd5dN5lArCiuYXbQVu
+         qBBA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwvCZwy//PVEf3kZqySySIITF4uyJQAJjHraZzzoeCGAVZfkPYQz85SPMjAxuKUjq1r2XzfS9YoXLN9FI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOw3pK0izJGXAno5rhFoS7LSfrXBwyH0/8GIuwjb3NRI3lrtfq
+	7BrNJjliORpxQt5M7d5yl/yjdGedA8k0PG8lYQtuDDmn6Tn3DKOg6F5Xzg==
+X-Gm-Gg: ASbGncsSIYZSXjW7jvUIT7J1Ez+ZdqlOZq14ifu0NfmEI6vOrHivnrnRBN7C3AASKDh
+	PYgyE8V5BUj7AtqtBNgYVQamfScMZPQoZRik8q3gDkm5hxUcarkriZc/s8p3lkj8bZiAk0LCFkY
+	6ODnYUmmYLOSGzEPxi3xVC4hKS17LRtuh3pvDdYtsyWEnvsEsJHpsPrqqVG3aMvv/cHAfibabQ2
+	0ZehYdpAURqksxenh6zDl/7LeISWFQ19hqANH7NjLH+ZTLQVWoKnfwSxEX/FvtaiBFaX5oKvSvB
+	fL/n+rrPsZFtrgw6tNAmkn0AnqL1qFDyAGE6x4H6BE585yrmy7YsfgptIQ==
+X-Google-Smtp-Source: AGHT+IH0+8T6k0R4d1Cn4WzhD5rZY9gGzROe5ukycibivAGzLk0az/sSIWMaYeVgz0atvw8P/PWfOg==
+X-Received: by 2002:a17:903:2288:b0:224:1609:a747 with SMTP id d9443c01a7336-22649a375damr41156825ad.31.1742400726479;
+        Wed, 19 Mar 2025 09:12:06 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7371152953csm12216720b3a.11.2025.03.19.09.12.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 09:12:05 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [GIT PULL] hwmon fixes for v6.14-rc8/6.14
+Date: Wed, 19 Mar 2025 09:12:03 -0700
+Message-ID: <20250319161203.358370-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-perso-hexdump-v3-2-a6ba3a9f3742@bootlin.com>
-References: <20250319-perso-hexdump-v3-0-a6ba3a9f3742@bootlin.com>
-In-Reply-To: <20250319-perso-hexdump-v3-0-a6ba3a9f3742@bootlin.com>
-To: Petr Mladek <pmladek@suse.com>, 
- David Laight <david.laight.linux@gmail.com>, 
- Steven Rostedt <rostedt@goodmis.org>, 
- Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
- Sergey Senozhatsky <senozhatsky@chromium.org>, 
- Jonathan Corbet <corbet@lwn.net>, John Ogness <john.ogness@linutronix.de>, 
- Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>
-X-Mailer: b4 0.15-dev
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeehjeejucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthejredtredtjeenucfhrhhomhepofhiqhhuvghlucftrgihnhgrlhcuoehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelgfehvdduieefieeikeffgffggfdttdeugeffieetheeuleelfeehffdtffetveenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrdegvddrgeeingdpmhgrihhlfhhrohhmpehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedufedprhgtphhtthhopegrnhgurhhihidrshhhvghvtghhvghnkhhosehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqughotgesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopehrohhst
- hgvughtsehgohhoughmihhsrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhohhhnrdhoghhnvghssheslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmihhquhgvlhdrrhgrhihnrghlsegsohhothhlihhnrdgtohhm
-X-GND-Sasl: miquel.raynal@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-When dumping long buffers (especially for debug purposes) it may be very
-convenient to sometimes avoid spitting all the lines of the buffer if
-the lines are identical. Typically on embedded devices, the console
-would be wired to a UART running at 115200 bauds, which makes the dumps
-very (very) slow. In this case, having a flag to avoid printing
-duplicated lines is handy.
+Hi Linus,
 
-Example of a made up repetitive output:
-0f 53 63 47 56 55 78 7a aa b7 8c ff ff ff ff ff
-ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-ff ff ff ff ff ff ff ff ff ff ff ff 01 2a 39 eb
+Please pull hwmon fixes for Linux v6.14-rc8/6.14 from signed tag:
 
-Same but with the flag enabled:
-0f 53 63 47 56 55 78 7a aa b7 8c ff ff ff ff ff
-ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-*
-ff ff ff ff ff ff ff ff ff ff ff ff 01 2a 39 eb
+    git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git hwmon-fixes-for-v6.14-rc8/6.14
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- Documentation/core-api/printk-formats.rst |  4 +++-
- include/linux/printk.h                    |  1 +
- lib/hexdump.c                             | 20 +++++++++++++++++++-
- 3 files changed, 23 insertions(+), 2 deletions(-)
+Thanks,
+Guenter
+------
 
-diff --git a/Documentation/core-api/printk-formats.rst b/Documentation/core-api/printk-formats.rst
-index f80b5e262e9933992d1291f1d78fba97589d5631..820f92c65dc64e7d24af5c0031ee8c8d6bb0f931 100644
---- a/Documentation/core-api/printk-formats.rst
-+++ b/Documentation/core-api/printk-formats.rst
-@@ -310,7 +310,9 @@ Raw buffer as a hex string
- 
- For printing small buffers (up to 64 bytes long) as a hex string with a
- certain separator. For larger buffers consider using
--:c:func:`print_hex`.
-+:c:func:`print_hex`, especially since duplicated lines can be
-+skipped automatically to reduce the overhead with the
-+``DUMP_SKIP_IDENTICAL_LINES`` flag.
- 
- MAC/FDDI addresses
- ------------------
-diff --git a/include/linux/printk.h b/include/linux/printk.h
-index 7dca2270c82c0ed788cd706274f1c1b14ed9a7fe..d9e3e4b0bab8d3ff6a49600abbdbc9b1e6320a60 100644
---- a/include/linux/printk.h
-+++ b/include/linux/printk.h
-@@ -757,6 +757,7 @@ enum {
- 	DUMP_PREFIX_NONE = 0, /* Legacy definition for print_hex_dump() */
- 	DUMP_PREFIX_ADDRESS = BIT(1),
- 	DUMP_PREFIX_OFFSET = BIT(2),
-+	DUMP_SKIP_IDENTICAL_LINES = BIT(3),
- };
- 
- extern int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
-diff --git a/lib/hexdump.c b/lib/hexdump.c
-index 74fdcb4566d27f257a0e1288c261d81d231b06bf..f0d1a7f1ce817fd53a7ffd259fbe9b9c8348db16 100644
---- a/lib/hexdump.c
-+++ b/lib/hexdump.c
-@@ -8,6 +8,7 @@
- #include <linux/errno.h>
- #include <linux/kernel.h>
- #include <linux/minmax.h>
-+#include <linux/string.h>
- #include <linux/export.h>
- #include <linux/unaligned.h>
- 
-@@ -240,6 +241,8 @@ EXPORT_SYMBOL(hex_dump_to_buffer);
-  *   - %DUMP_PREFIX_OFFSET shows the offset in front of each line
-  *   - %DUMP_PREFIX_ADDRESS shows the address in front of each line
-  *   - %DUMP_ASCII prints the ascii equivalent after the hex output
-+ *   - %DUMP_SKIP_IDENTICAL_LINES will display a single '*' instead of
-+ *     duplicated lines.
-  *
-  * Given a buffer of u8 data, print_hex() prints a hex + ASCII dump
-  * to the kernel log at the specified kernel log level, with an optional
-@@ -263,8 +266,9 @@ void print_hex(const char *level, const char *prefix_str, int rowsize, int group
- 	       const void *buf, size_t len, unsigned int dump_flags)
- {
- 	const u8 *ptr = buf;
--	int i, linelen, remaining = len;
-+	int i, prev_i, linelen, remaining = len;
- 	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
-+	bool same_line = false;
- 
- 	if (rowsize != 16 && rowsize != 32)
- 		rowsize = 16;
-@@ -273,6 +277,20 @@ void print_hex(const char *level, const char *prefix_str, int rowsize, int group
- 		linelen = min(remaining, rowsize);
- 		remaining -= rowsize;
- 
-+		if (dump_flags & DUMP_SKIP_IDENTICAL_LINES) {
-+			if (i && !memcmp(ptr + i, ptr + prev_i, linelen)) {
-+				prev_i = i;
-+				if (same_line)
-+					continue;
-+				same_line = true;
-+				printk("%s*\n", level);
-+				continue;
-+			} else {
-+				prev_i = i;
-+				same_line = false;
-+			}
-+		}
-+
- 		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
- 				   linebuf, sizeof(linebuf),
- 				   dump_flags & DUMP_ASCII);
+The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
 
--- 
-2.48.1
+  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging.git tags/hwmon-fixes-for-v6.14-rc8/6.14
+
+for you to fetch changes up to 815f80ad20b63830949a77c816e35395d5d55144:
+
+  hwmon: (nct6775-core) Fix out of bounds access for NCT679{8,9} (2025-03-17 04:44:20 -0700)
+
+----------------------------------------------------------------
+hwmon fixes for v6.14-rc8/v6.14
+
+- Fix an entry in MAINTAINERS to avoid sending hwmon review requests
+  to the i2c mailing list.
+
+- Fix an out-of-bounds access in nct6775 driver
+
+----------------------------------------------------------------
+Tasos Sahanidis (1):
+      hwmon: (nct6775-core) Fix out of bounds access for NCT679{8,9}
+
+Wolfram Sang (1):
+      MAINTAINERS: correct list and scope of LTC4286 HARDWARE MONITOR
+
+ MAINTAINERS                  | 4 +---
+ drivers/hwmon/nct6775-core.c | 4 ++--
+ 2 files changed, 3 insertions(+), 5 deletions(-)
