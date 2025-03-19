@@ -1,192 +1,182 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 310911AB50D;
-	Wed, 19 Mar 2025 10:47:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C111420D519;
+	Wed, 19 Mar 2025 10:47:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742381225; cv=none; b=dYoBqqNMzIosBa8ygQZL5BzD2D6Wi8k5gD7Ztfx0HolLxhJyfd9+2pZqhP4laT3LOXQsRSiNKMZZNcY9UMaLYIzmFGEyOcuqzDixGMJ14P5U/wO0FLDHeQnhY9rfsPWXCczVDyx7RRNad7PzggRrRGOzFwiFKcG2HyVjOQBc2L4=
+	t=1742381268; cv=none; b=P8Zp823YkY8fzAp0pBON5P1Nzg9m1B+F7wMCjf93zT6NZmZAdnN7F62Tr6iS2m/uVoFgLMKZDBinKptXotP784Uz3nOXLCGV7Muo7ryQkhgz6/Jln901J6PaZgkvd3GOFHNx2Nps097o/ofjFgQB+Pe4owYqyvoX00y8sVjMVLs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742381225; c=relaxed/simple;
-	bh=oTjeU3H0xgLz5rvCK/p6GUcpiASa4U19hfsd4o7cV4o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=pCr7B5/FaTXiOe0lBBk/QqcZjlNckJiVLnnwd+HnQnHMqOs9zpjr8cXtPgRdgU2G/mJ9hkmSSIesrf8TtQqyi7EXG+XXYIvXMOYjb34Ygg82OWQnEjTLwl71/fhHVeiSAT7JelMYr5RiNw38kGE9rJvVBdd2hLK8lnEFi4wdMNo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=eXS/EgWo; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742381268; c=relaxed/simple;
+	bh=kHi8Yvnzfz3S+jrMumC+2AWhmfXkEX+V7FSyynl8LlY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XFmiPMf29gC8Vtse7LJULu81TWjDFtvnjyohohuMUIv2DarREm2YJ3DYo+0GfsrV20f3WBUkPt4kfPw0IXno/pGfy+gAj+Oz8pmowzD0smT316BDdP2xsXbtEAFj4yX4MXdaOT62ZVDIHkga6yfSYMVPdzSNkU8Eu5Od6/4XoJ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=At75imzN; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="eXS/EgWo"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J4lsh1002204;
-	Wed, 19 Mar 2025 10:46:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	SsDBzc36ohrpKX/5NkP/64fCbh3ApB3wzUJ4hBcpHfI=; b=eXS/EgWoYhBY9rF0
-	Ofyx8/HKM85VmaLQyucYqCEBUijYFKxgTca6z5kPUd5O5EOMqKUXSF4RwMB937/9
-	ogHxcs6Rggpe8ffw0PFkAxsx45bBSS4xO/kJT0uGLiB2V2uGXOroTqWimvFCw0ZB
-	cJK3NT9TY/AWmddozFRcu/CQGoVo/LqMzplFB+M9rr1sXHGsQ1atvMT4o2VWhlk9
-	nivUN9juSwmLoRq1ZCS+XoMwFZngxCd14bf6NnnwEHrm5JK+7kukHI/PFZC7m0tv
-	CRIoCq6YUEQm5d6w0WV+LgDGCIYDWVB6MZ3jFwvdqppXSov+ReJv6MajhIDQ+kxe
-	HwMRKw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45etmbwksf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 10:46:44 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52JAkhhY001946
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 10:46:43 GMT
-Received: from [10.216.37.197] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Wed, 19 Mar
- 2025 03:46:36 -0700
-Message-ID: <f2e67746-853d-8545-133a-13452548d504@quicinc.com>
-Date: Wed, 19 Mar 2025 16:16:33 +0530
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="At75imzN"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-39129fc51f8so5949252f8f.0;
+        Wed, 19 Mar 2025 03:47:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742381265; x=1742986065; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=W26Wk5z7hiFxOE5qJlj+yFWl9XayBRIq0uAxqiX8N3w=;
+        b=At75imzNcLh0i+IeN71ncr0FCrSYjuKM/v/YBjEwNPtrvNYaTwS58hL/O/V6f45Q4S
+         tIHLi4E90il2s2bSo/QwfVzL5iy6rUtmzZipa9onhV88hQiOz0MAcyNeDgRmum54Pbpw
+         Jt4CG50xb3sb9uUenj28rplUmqtxqSmL7HIJMZBVCUFqY0SUj97oRhn3heBTPZ+gzP59
+         kuvFnqtHfELJo6EMyl8wKgwoVWM0ZYT4jQUHKc0GkkG1lJvIpPFNvpXzvj/QbX+n1tYq
+         NWGQh/dE9MQUflBPGa3iOKsVHjVw/v/4mP5Bv/6DXtWwLF6VsJgabU912K4SnCVeaVqF
+         OfAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742381265; x=1742986065;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W26Wk5z7hiFxOE5qJlj+yFWl9XayBRIq0uAxqiX8N3w=;
+        b=vI2ewr1UqIZBx06q9O92Z5Jz4nyt9tgkuUw85jkwTHk1q8OyLn40bCqKx4rR0zsAjD
+         3ozMwSx0b0CJrrhbJJRV0iJze7WobpfWO96El+XOr0PKJm+M1JAb5pWYUJEr2LbwaD7D
+         lmEsVoRQH8sjvwqoM3MPzT2s0JZfI21b8QaTja0IyrYeC4CNByyjL7hti4w8qfByymo/
+         WHAgh6slCwiBoao2AVn4qSlt660mXEyVmGTlVvDL/AlGCmUUQ+R4cLOCu9ufLwQDW2Nw
+         aDGA6bQ+XcuIS+X4zhS9bixc8JoUJo7S07SmvgnfzaCSW3kYzm9w7NrZ1Gc5qb1uW1LN
+         QDMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVr/nzx/qaDoV08ErAKKhdNRDH+YhPxint791jYvGqijXaZqlvJPwKCaWMMD1gaXaSUt6a55Nus@vger.kernel.org, AJvYcCX2TevUuA4k9R79knrobK11IyUl5C7cUSEcDbmSGiRUzDXjkK+oVLYECs5ppHxBAJSZVAwc+T1w1OG50n+y@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzq+H0NyVp7sC5PVq4z/mHu2bpx1wz2YCSmUnYU+GeXY0vPu+iX
+	P1bK1a+iJXL1336sOrasEgIYGz+8xQZX+DN5elvx2hugfByVdmFo
+X-Gm-Gg: ASbGncuYCxRdBijjstKFxqjEAXJh/164DPeto6qMD0SCs06VbQGd/RZ9ltizysyOsLG
+	IDMxVytya4RG05h1cUbTAZGnJhQJhVTSRRrBzboCP+J9eQ9u+/7qHHmn+jWMj9lWHuEJj0eIlj3
+	IrWArBt+2Gh40WpI58NPGdAr8X3JNly6DeaerEO+nLFx5F9oq+TC9BEDMGF4mQhVpRUhkw2/5Bk
+	mFOnkMVDiSmvnAaQILGLOROK5OFAtpjPUYLVM0BPwIEpoc8WN22tMfEs7CDFNpNdoKVaPNDnriG
+	+BnWBiR9MUphNdfbFEi8rikxykOuic/nKCdqA/gFrWyNARBw07DCicEY9nYo2I2DXem10KI=
+X-Google-Smtp-Source: AGHT+IFeWFBVb117gHRg6qAEPcNELWKw8bczEycMdH3YPjjfnip/JT4VlAY82Ht7iJ8McuMZ7Sag+g==
+X-Received: by 2002:a05:6000:184d:b0:391:476f:d3b7 with SMTP id ffacd0b85a97d-39973b1d8d3mr1573400f8f.49.1742381264646;
+        Wed, 19 Mar 2025 03:47:44 -0700 (PDT)
+Received: from f (cst-prg-67-174.cust.vodafone.cz. [46.135.67.174])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8975bdfsm20320478f8f.49.2025.03.19.03.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 03:47:43 -0700 (PDT)
+Date: Wed, 19 Mar 2025 11:47:32 +0100
+From: Mateusz Guzik <mjguzik@gmail.com>
+To: Greg Thelen <gthelen@google.com>
+Cc: Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, 
+	Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	Eric Dumazet <edumzaet@google.com>, Yosry Ahmed <yosryahmed@google.com>, cgroups@vger.kernel.org, 
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH] cgroup/rstat: avoid disabling irqs for O(num_cpu)
+Message-ID: <u5kcjffhyrjsxagpdzas7q463ldgqtptaafozea3bv64odn2xt@agx42ih5m76l>
+References: <20250319071330.898763-1-gthelen@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH v4 02/10] arm64: dts: qcom: qcs6490-rb3gen2: Add TC956x
- PCIe switch node
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>,
-        "Bjorn
- Helgaas" <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        =?UTF-8?Q?Krzysztof_Wilczy=c5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam
-	<manivannan.sadhasivam@linaro.org>,
-        Rob Herring <robh@kernel.org>,
-        "Krzysztof
- Kozlowski" <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Bjorn
- Andersson" <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>,
-        <cros-qcom-dts-watchers@chromium.org>,
-        Jingoo Han <jingoohan1@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        <quic_vbadigan@quicnic.com>, <amitk@kernel.org>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <jorge.ramirez@oss.qualcomm.com>
-References: <20250225-qps615_v4_1-v4-0-e08633a7bdf8@oss.qualcomm.com>
- <20250225-qps615_v4_1-v4-2-e08633a7bdf8@oss.qualcomm.com>
- <kao2wccsiflgrvq7vj22cffbxeessfz5lc2o2hml54kfuv2mpn@2bf2qkdozzjq>
- <8a2bce29-95dc-53b0-0516-25a380d94532@oss.qualcomm.com>
- <CAO9ioeW6-KgRmFO93Ouhyx9uQcdaPoX3=mjpz_2SPHKiHh3RkQ@mail.gmail.com>
- <16a9ff11-70dc-22e9-bd3c-ed10bf8b4fea@quicinc.com>
- <hkm76yogjp6fjrldkyatekhg7orcd6wkc43d2e7cwzqfrdxjwh@b4f2rilmf6gh>
- <303194d4-d342-ea4c-0bb6-5f5d0297ba23@quicinc.com>
- <xkjozxbchqi6mhstqctejfk7vmwux4kdff2nyrcu5nxqzxv73z@agb7rbapsvx2>
-From: Krishna Chaitanya Chundru <quic_krichai@quicinc.com>
-In-Reply-To: <xkjozxbchqi6mhstqctejfk7vmwux4kdff2nyrcu5nxqzxv73z@agb7rbapsvx2>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 944huA-oaOxxljJyTO-sE6gk-GZXS9CZ
-X-Proofpoint-GUID: 944huA-oaOxxljJyTO-sE6gk-GZXS9CZ
-X-Authority-Analysis: v=2.4 cv=aMLwqa9m c=1 sm=1 tr=0 ts=67daa094 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8
- a=tXJkAfc3zCRTSkwtStQA:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-19_03,2025-03-19_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0 mlxscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503190074
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250319071330.898763-1-gthelen@google.com>
 
-
-
-On 3/19/2025 3:51 PM, Dmitry Baryshkov wrote:
-> On Wed, Mar 19, 2025 at 03:46:00PM +0530, Krishna Chaitanya Chundru wrote:
->>
->>
->> On 3/19/2025 3:43 PM, Dmitry Baryshkov wrote:
->>> On Wed, Mar 19, 2025 at 09:14:22AM +0530, Krishna Chaitanya Chundru wrote:
->>>>
->>>>
->>>> On 3/18/2025 10:30 PM, Dmitry Baryshkov wrote:
->>>>> On Tue, 18 Mar 2025 at 18:11, Krishna Chaitanya Chundru
->>>>> <krishna.chundru@oss.qualcomm.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 3/17/2025 4:57 PM, Dmitry Baryshkov wrote:
->>>>>>> On Tue, Feb 25, 2025 at 03:03:59PM +0530, Krishna Chaitanya Chundru wrote:
->>>>>>>> Add a node for the TC956x PCIe switch, which has three downstream ports.
->>>>>>>> Two embedded Ethernet devices are present on one of the downstream ports.
->>>>>>>>
->>>>>>>> Power to the TC956x is supplied through two LDO regulators, controlled by
->>>>>>>> two GPIOs, which are added as fixed regulators. Configure the TC956x
->>>>>>>> through I2C.
->>>>>>>>
->>>>>>>> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
->>>>>>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
->>>>>>>> Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
->>>>>>>> ---
->>>>>>>>      arch/arm64/boot/dts/qcom/qcs6490-rb3gen2.dts | 116 +++++++++++++++++++++++++++
->>>>>>>>      arch/arm64/boot/dts/qcom/sc7280.dtsi         |   2 +-
->>>>>>>>      2 files changed, 117 insertions(+), 1 deletion(-)
->>>>>>>>
->>>>>>>> @@ -735,6 +760,75 @@ &pcie1_phy {
->>>>>>>>         status = "okay";
->>>>>>>>      };
->>>>>>>>
->>>>>>>> +&pcie1_port {
->>>>>>>> +    pcie@0,0 {
->>>>>>>> +            compatible = "pci1179,0623", "pciclass,0604";
->>>>>>>> +            reg = <0x10000 0x0 0x0 0x0 0x0>;
->>>>>>>> +            #address-cells = <3>;
->>>>>>>> +            #size-cells = <2>;
->>>>>>>> +
->>>>>>>> +            device_type = "pci";
->>>>>>>> +            ranges;
->>>>>>>> +            bus-range = <0x2 0xff>;
->>>>>>>> +
->>>>>>>> +            vddc-supply = <&vdd_ntn_0p9>;
->>>>>>>> +            vdd18-supply = <&vdd_ntn_1p8>;
->>>>>>>> +            vdd09-supply = <&vdd_ntn_0p9>;
->>>>>>>> +            vddio1-supply = <&vdd_ntn_1p8>;
->>>>>>>> +            vddio2-supply = <&vdd_ntn_1p8>;
->>>>>>>> +            vddio18-supply = <&vdd_ntn_1p8>;
->>>>>>>> +
->>>>>>>> +            i2c-parent = <&i2c0 0x77>;
->>>>>>>> +
->>>>>>>> +            reset-gpios = <&pm8350c_gpios 1 GPIO_ACTIVE_LOW>;
->>>>>>>> +
->>>>>>>
->>>>>>> I think I've responded here, but I'm not sure where the message went:
->>>>>>> please add pinctrl entry for this pin.
->>>>>>>
->>>>>> Do we need to also add pinctrl property for this node and refer the
->>>>>> pinctrl entry for this pin?
->>>>>
->>>>> I think that is what I've asked for, was that not?
->>>> Currently there is no pincntrl property defined for this.
->>>
->>> Does it need to be defined separately / specially?
->>>
->> yes we need to define this property now.
+On Wed, Mar 19, 2025 at 12:13:30AM -0700, Greg Thelen wrote:
+> From: Eric Dumazet <edumazet@google.com>
 > 
-> Could you please point out existing schema files defining those
-> properties?
-sorry I was not able to get which schema file you are requesting for,
-if it is tc956x it is in this series only.
-
-What I understood from these conversation is we need to define pinctrl
-property and refer the reset gpio pin in next series. If it was wrong
-please correct me.
-
-- Krishna Chaitanya.
+> cgroup_rstat_flush_locked() grabs the irq safe cgroup_rstat_lock while
+> iterating all possible cpus. It only drops the lock if there is
+> scheduler or spin lock contention. If neither, then interrupts can be
+> disabled for a long time. On large machines this can disable interrupts
+> for a long enough time to drop network packets. On 400+ CPU machines
+> I've seen interrupt disabled for over 40 msec.
 > 
+> Prevent rstat from disabling interrupts while processing all possible
+> cpus. Instead drop and reacquire cgroup_rstat_lock for each cpu. This
+> approach was previously discussed in
+> https://lore.kernel.org/lkml/ZBz%2FV5a7%2F6PZeM7S@slm.duckdns.org/,
+> though this was in the context of an non-irq rstat spin lock.
+> 
+> Benchmark this change with:
+> 1) a single stat_reader process with 400 threads, each reading a test
+>    memcg's memory.stat repeatedly for 10 seconds.
+> 2) 400 memory hog processes running in the test memcg and repeatedly
+>    charging memory until oom killed. Then they repeat charging and oom
+>    killing.
+> 
+> v6.14-rc6 with CONFIG_IRQSOFF_TRACER with stat_reader and hogs, finds
+> interrupts are disabled by rstat for 45341 usec:
+>   #  => started at: _raw_spin_lock_irq
+>   #  => ended at:   cgroup_rstat_flush
+>   #
+>   #
+>   #                    _------=> CPU#
+>   #                   / _-----=> irqs-off/BH-disabled
+>   #                  | / _----=> need-resched
+>   #                  || / _---=> hardirq/softirq
+>   #                  ||| / _--=> preempt-depth
+>   #                  |||| / _-=> migrate-disable
+>   #                  ||||| /     delay
+>   #  cmd     pid     |||||| time  |   caller
+>   #     \   /        ||||||  \    |    /
+>   stat_rea-96532    52d....    0us*: _raw_spin_lock_irq
+>   stat_rea-96532    52d.... 45342us : cgroup_rstat_flush
+>   stat_rea-96532    52d.... 45342us : tracer_hardirqs_on <-cgroup_rstat_flush
+>   stat_rea-96532    52d.... 45343us : <stack trace>
+>    => memcg1_stat_format
+>    => memory_stat_format
+>    => memory_stat_show
+>    => seq_read_iter
+>    => vfs_read
+>    => ksys_read
+>    => do_syscall_64
+>    => entry_SYSCALL_64_after_hwframe
+> 
+> With this patch the CONFIG_IRQSOFF_TRACER doesn't find rstat to be the
+> longest holder. The longest irqs-off holder has irqs disabled for
+> 4142 usec, a huge reduction from previous 45341 usec rstat finding.
+> 
+> Running stat_reader memory.stat reader for 10 seconds:
+> - without memory hogs: 9.84M accesses => 12.7M accesses
+> -    with memory hogs: 9.46M accesses => 11.1M accesses
+> The throughput of memory.stat access improves.
+> 
+> The mode of memory.stat access latency after grouping by of 2 buckets:
+> - without memory hogs: 64 usec => 16 usec
+> -    with memory hogs: 64 usec =>  8 usec
+> The memory.stat latency improves.
+> 
+> Signed-off-by: Eric Dumazet <edumazet@google.com>
+> Signed-off-by: Greg Thelen <gthelen@google.com>
+> Tested-by: Greg Thelen <gthelen@google.com>
+> ---
+>  kernel/cgroup/rstat.c | 12 +++++-------
+>  1 file changed, 5 insertions(+), 7 deletions(-)
+> 
+> diff --git a/kernel/cgroup/rstat.c b/kernel/cgroup/rstat.c
+> index aac91466279f..976c24b3671a 100644
+> --- a/kernel/cgroup/rstat.c
+> +++ b/kernel/cgroup/rstat.c
+> @@ -323,13 +323,11 @@ static void cgroup_rstat_flush_locked(struct cgroup *cgrp)
+>  			rcu_read_unlock();
+>  		}
+>  
+> -		/* play nice and yield if necessary */
+> -		if (need_resched() || spin_needbreak(&cgroup_rstat_lock)) {
+> -			__cgroup_rstat_unlock(cgrp, cpu);
+> -			if (!cond_resched())
+> -				cpu_relax();
+> -			__cgroup_rstat_lock(cgrp, cpu);
+> -		}
+> +		/* play nice and avoid disabling interrupts for a long time */
+> +		__cgroup_rstat_unlock(cgrp, cpu);
+> +		if (!cond_resched())
+> +			cpu_relax();
+> +		__cgroup_rstat_lock(cgrp, cpu);
+>  	}
+>  }
+
+Is not this going a little too far?
+
+the lock + irq trip is quite expensive in its own right and now is
+going to be paid for each cpu, as in the total time spent executing
+cgroup_rstat_flush_locked is going to go up.
+
+Would your problem go away toggling this every -- say -- 8 cpus?
+
+Just a suggestion.
