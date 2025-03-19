@@ -1,30 +1,30 @@
 Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E2A4211A24;
-	Wed, 19 Mar 2025 19:13:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BEB214229;
+	Wed, 19 Mar 2025 19:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742411610; cv=none; b=WSgQBBgRQ++igUUBHPkVAk/4F2BT678sMxZb8j17UQqewnv0ce1grmBdLG6px5trBRIPR/gfPL5YkIF959Zayk/L2kMDQkca7HQwJZlzEB61yhD7JWjzjBYQoX8eJDlj1PotMgeCGGwtMOuCvfRA/YcsYc3/sR3RVFst/UxjBpI=
+	t=1742411612; cv=none; b=oy75HbFVxRIe71db6vDKSBu+9NGkUPB7gI141/Hncq3aiCvhkeMNVXC1GMkvOn/2X1pvHmTA9WK/Vli3+sBjOpGrfe6p6fSE2FG53Km9uZ8IlDIxtI7mbWRbGbjNFVLLj4Wb7+7Gms+xmwLYFi7NJcem8LL6OTHRR0qHFsy510Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742411610; c=relaxed/simple;
-	bh=jjlpPxF/o4bcVU3POrsYYyHNWQPPHKAdxI1XlxzBo/A=;
+	s=arc-20240116; t=1742411612; c=relaxed/simple;
+	bh=H6ahJ6dFl9NtA3U+I5cnYAHTpmlYoRnzVQceCiQh5i8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=GZrUz6tEqdG0lZ/liQVqczMssLP2/IbgL8cBLnuTp4QKJ6mnd48HuSSLY4/IG+4n21I6zi6ICuQmH+ZmCI9uXLXF2dWA6K7sDHHI1z1j1GZ5dB4gAb3mXjYx0D9AWWxGcVDYJwGG7nscweyvdxYB8NkqMkciuXfnFyp3VTWjvSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=ITgoLf7O; arc=none smtp.client-ip=185.138.42.100
+	 MIME-Version; b=nN0DOm428h0Sk/U07ZxU7ASlgceptq6lSd4+ytNSCxCwu81g6OEA8DKKjR0K7yr8UjS8tNwtgUr+aGGAFnAZO3OOTLMOSoygvzBNKzHDsWSNWhgnINzU5G2+STzySqJ+2Ahphxv2QWQTG8XFp3dwGKAYrZVsqvRashzYdKDlwE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=e6YW2tCk; arc=none smtp.client-ip=185.138.42.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="ITgoLf7O"
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="e6YW2tCk"
 Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id E1A682E0924F;
-	Wed, 19 Mar 2025 21:13:23 +0200 (EET)
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2BFE42E0927A;
+	Wed, 19 Mar 2025 21:13:27 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742411605;
-	bh=+2jYk8Z6h7BV4+cq0gxcvdXN9X7tzZNe0V0/p5KrIwc=; h=From:To:Subject;
-	b=ITgoLf7O3nHWNQ4WssO9cRaM+NTs9nI75sGMrBNJmrkmaLx0nyVRCJ1OHWNtRGsIG
-	 S+qQic8YWUHkR749RpbHpNAQEOivi/FOszzN1SjTbS+Wo2FMPOVJv7Cq7pnCRoyXJ+
-	 N/XQQyyxP3Z0ke/X3ee8Zq+NWAWQ7aqw2gET04L8=
+	s=default; t=1742411608;
+	bh=fjWMrevb+CUxvpgf71+gDqUfL7lddQjGNkYmwGGj3VQ=; h=From:To:Subject;
+	b=e6YW2tCkKmyj2JMbXzA4mwbJIlT3aseK0+RKaUPDJ36ps88PnvvVfGkXUQdp6pKBY
+	 H9yuxCy3hnGGoeNXMUqORNFgUXy4uhjv71od9NaOB47beRijBEozznBwVSEtDaOXQm
+	 KcVca4PD45+NeYXT7oCUTC+K6Sf0bw0YxLkrkiHw=
 Authentication-Results: linux1587.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
 Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
@@ -39,9 +39,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Hans de Goede <hdegoede@redhat.com>,
 	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH 01/11] HID: asus: refactor init sequence per spec
-Date: Wed, 19 Mar 2025 20:13:09 +0100
-Message-ID: <20250319191320.10092-2-lkml@antheas.dev>
+Subject: [PATCH 03/11] HID: asus: prevent binding to all HID devices on ROG
+Date: Wed, 19 Mar 2025 20:13:11 +0100
+Message-ID: <20250319191320.10092-4-lkml@antheas.dev>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250319191320.10092-1-lkml@antheas.dev>
 References: <20250319191320.10092-1-lkml@antheas.dev>
@@ -53,142 +53,128 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <174241160499.7642.1538751541080314698@linux1587.grserver.gr>
+ <174241160823.7785.16518627883513381170@linux1587.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
 X-Virus-Status: Clean
 
-Currently, asus_kbd_init() uses a reverse engineered init sequence
-from Windows, which contains the handshakes from multiple programs.
-Keep the main one, which is 0x5a (meant for drivers).
-
-In addition, perform a get_response and check if the response is the
-same. To avoid regressions, print an error if the response does not
-match instead of rejecting device.
+ROG keyboards are HID compliant. We only care about the endpoint that
+produces vendor events (e.g., fan mode) and has the keyboard backlight.
+If we attach to all the endpoints, we end up generating errors during
+probe for two of them because they are missing the ->input attribute
+and risk side effects during input fixups.
 
 Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- drivers/hid/hid-asus.c | 82 +++++++++++++++++++++++-------------------
- 1 file changed, 46 insertions(+), 36 deletions(-)
+ drivers/hid/hid-asus.c | 52 +++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 51 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-index 46e3e42f9eb5f..aa4a481dc4f27 100644
+index bcc317057b465..490a7ea369961 100644
 --- a/drivers/hid/hid-asus.c
 +++ b/drivers/hid/hid-asus.c
-@@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
- #define FEATURE_REPORT_ID 0x0d
- #define INPUT_REPORT_ID 0x5d
- #define FEATURE_KBD_REPORT_ID 0x5a
--#define FEATURE_KBD_REPORT_SIZE 16
-+#define FEATURE_KBD_REPORT_SIZE 64
- #define FEATURE_KBD_LED_REPORT_ID1 0x5d
- #define FEATURE_KBD_LED_REPORT_ID2 0x5e
+@@ -84,6 +84,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
+ #define QUIRK_MEDION_E1239T		BIT(10)
+ #define QUIRK_ROG_NKEY_KEYBOARD		BIT(11)
+ #define QUIRK_ROG_CLAYMORE_II_KEYBOARD BIT(12)
++#define QUIRK_HANDLE_GENERIC		BIT(13)
  
-@@ -386,16 +386,43 @@ static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t bu
- 	return ret;
- }
- 
--static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
-+static int asus_kbd_init(struct hid_device *hdev)
+ #define I2C_KEYBOARD_QUIRKS			(QUIRK_FIX_NOTEBOOK_REPORT | \
+ 						 QUIRK_NO_INIT_REPORTS | \
+@@ -326,6 +327,10 @@ static int asus_raw_event(struct hid_device *hdev,
  {
--	const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
--		     0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
-+	/*
-+	 * Asus handshake identifying us as a driver (0x5A)
-+	 * 0x5A then ASCII for "ASUS Tech.Inc."
-+	 * 0x5D is for userspace Windows applications.
-+	 *
-+	 * The handshake is first sent as a set_report, then retrieved
-+	 * from a get_report to verify the response.
-+	 */
-+	const u8 buf[] = { FEATURE_KBD_REPORT_ID, 0x41, 0x53, 0x55, 0x53, 0x20,
-+		0x54, 0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
-+	u8 *readbuf;
- 	int ret;
+ 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
  
- 	ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
--	if (ret < 0)
--		hid_err(hdev, "Asus failed to send init command: %d\n", ret);
-+	if (ret < 0) {
-+		hid_err(hdev, "Asus failed to send handshake: %d\n", ret);
-+		return ret;
-+	}
- 
-+	readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
-+	if (!readbuf)
-+		return -ENOMEM;
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return 0;
 +
-+	ret = hid_hw_raw_request(hdev, FEATURE_KBD_REPORT_ID, readbuf,
-+				 FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
-+				 HID_REQ_GET_REPORT);
-+	if (ret < 0) {
-+		hid_err(hdev, "Asus failed to receive handshake ack: %d\n", ret);
-+	} else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
-+		hid_err(hdev, "Asus handshake returned invalid response: %*ph\n",
-+			FEATURE_KBD_REPORT_SIZE, readbuf);
-+		// Do not return error if handshake is wrong to avoid regressions
-+	}
+ 	if (drvdata->battery && data[0] == BATTERY_REPORT_ID)
+ 		return asus_report_battery(drvdata, data, size);
+ 
+@@ -773,6 +778,10 @@ static int asus_input_configured(struct hid_device *hdev, struct hid_input *hi)
+ 	struct input_dev *input = hi->input;
+ 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+ 
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return 0;
 +
-+	kfree(readbuf);
- 	return ret;
- }
- 
-@@ -540,42 +567,25 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
- 	unsigned char kbd_func;
- 	int ret;
- 
--	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
--		/* Initialize keyboard */
--		ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
--		if (ret < 0)
--			return ret;
--
--		/* The LED endpoint is initialised in two HID */
--		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
--		if (ret < 0)
--			return ret;
--
--		ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
--		if (ret < 0)
--			return ret;
-+	ret = asus_kbd_init(hdev);
-+	if (ret < 0)
-+		return ret;
- 
--		if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
--			ret = asus_kbd_disable_oobe(hdev);
--			if (ret < 0)
--				return ret;
--		}
--	} else {
--		/* Initialize keyboard */
--		ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
--		if (ret < 0)
--			return ret;
-+	/* Get keyboard functions */
-+	ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
-+	if (ret < 0)
-+		return ret;
- 
--		/* Get keyboard functions */
--		ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
-+	if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-+		ret = asus_kbd_disable_oobe(hdev);
- 		if (ret < 0)
- 			return ret;
--
--		/* Check for backlight support */
--		if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
--			return -ENODEV;
+ 	/* T100CHI uses MULTI_INPUT, bind the touchpad to the mouse hid_input */
+ 	if (drvdata->quirks & QUIRK_T100CHI &&
+ 	    hi->report->id != T100CHI_MOUSE_REPORT_ID)
+@@ -850,6 +859,10 @@ static int asus_input_mapping(struct hid_device *hdev,
+ 		return -1;
  	}
  
-+	/* Check for backlight support */
-+	if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
-+		return -ENODEV;
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return 0;
 +
- 	drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
- 					      sizeof(struct asus_kbd_leds),
- 					      GFP_KERNEL);
+ 	/*
+ 	 * Ignore a bunch of bogus collections in the T100CHI descriptor.
+ 	 * This avoids a bunch of non-functional hid_input devices getting
+@@ -1025,8 +1038,10 @@ static int __maybe_unused asus_reset_resume(struct hid_device *hdev)
+ 
+ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ {
+-	int ret;
++	struct hid_report_enum *rep_enum;
+ 	struct asus_drvdata *drvdata;
++	struct hid_report *rep;
++	int ret, found = 0;
+ 
+ 	drvdata = devm_kzalloc(&hdev->dev, sizeof(*drvdata), GFP_KERNEL);
+ 	if (drvdata == NULL) {
+@@ -1110,6 +1125,37 @@ static int asus_probe(struct hid_device *hdev, const struct hid_device_id *id)
+ 		return ret;
+ 	}
+ 
++	if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
++		/*
++		 * The only application we care about on ROG NKEY keyboards is
++		 * 0xff310076. This is meant Asus drivers and uses report 0x54.
++		 */
++		rep_enum = &hdev->report_enum[HID_INPUT_REPORT];
++		list_for_each_entry(rep, &rep_enum->report_list, list) {
++			if (rep->application == 0xff310076)
++				found = true;
++		}
++
++		/*
++		 * If we didn't find the application, block hid-asus fixups
++		 * to prevent side effects on generic endpoints.
++		 *
++		 * We cannot -ENODEV here, as hid-generic checked our id_table
++		 * on its match and bailed so it will not take over the device.
++		 * We have to handle it transparently as part of this driver.
++		 */
++		if (!found)
++			drvdata->quirks |= QUIRK_HANDLE_GENERIC;
++
++		/*
++		 * Start all endpoints normally. Include the RGB endpoint
++		 * as it being the only one renamed looks out of place.
++		 * The ->input bail causes regressions in endpoints without
++		 * an input dev and is a NOOP on the RGB endpoint.
++		 */
++		return hid_hw_start(hdev, HID_CONNECT_DEFAULT);
++	}
++
+ 	ret = hid_hw_start(hdev, HID_CONNECT_DEFAULT);
+ 	if (ret) {
+ 		hid_err(hdev, "Asus hw start failed: %d\n", ret);
+@@ -1166,6 +1212,10 @@ static const __u8 *asus_report_fixup(struct hid_device *hdev, __u8 *rdesc,
+ {
+ 	struct asus_drvdata *drvdata = hid_get_drvdata(hdev);
+ 
++	if (drvdata->quirks & QUIRK_HANDLE_GENERIC)
++		/* NOOP on generic HID devices to avoid side effects. */
++		return rdesc;
++
+ 	if (drvdata->quirks & QUIRK_FIX_NOTEBOOK_REPORT &&
+ 			*rsize >= 56 && rdesc[54] == 0x25 && rdesc[55] == 0x65) {
+ 		hid_info(hdev, "Fixing up Asus notebook report descriptor\n");
 -- 
 2.48.1
 
