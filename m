@@ -1,234 +1,234 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.40])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C63D2207DEA;
-	Wed, 19 Mar 2025 07:51:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.40
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39626207DEA;
+	Wed, 19 Mar 2025 07:52:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742370699; cv=none; b=hs/rdvT7TySP9fHETu3FlsUmKGXVBKSG3V9inL+wkAq2x+SOySd2+Pwwd6sWJprYmK/No7Ld/Q3pRtXGX+PVOyX1iDwcdERAniYKer/JAzYp2O8BBREV7AZUaqg+YfBJmDAsnYNpEQWNgpLuCRMjvgiywjgJiQr3TXt1aQse36s=
+	t=1742370769; cv=none; b=jSL9XOal2h7TUAO/2DvZbCTo+6H1wP99M3iwWFbT4/nIGVQEFddzZRL9ZieiPrMKUlp6rO3zWFdudHvUlWKucZ0tV/erd/GRXIoDkJc4oSKcdNC6D3iBTheKOlYbHDdEjrjRdco0xVLWaUAOnj7fQH9B/fM+hUjTfWuZO4cXQjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742370699; c=relaxed/simple;
-	bh=a4bzULXAGLgt34aDN7C8Aa76N4nccXRuPU+2ejc805I=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=oZPVkZQz5LwRYybd0E4F9CTiAajkZDEjL2ccJbj+YU0Ki4gLYkd2FBS9ZlyDS+2TScFeWGxYM5ZldukxQDs9jon2yaQH7rhVJhmWthaFDz8ajdvhtKocux1ZALB77bFMNwFeRy+RVSYYqIlfwQZ+25CcHv4lKr/gGBisccxTgs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.40
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl2.zte.com.cn (unknown [10.5.228.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZHgrT4XhRz8R041;
-	Wed, 19 Mar 2025 15:51:21 +0800 (CST)
-Received: from njy2app02.zte.com.cn ([10.40.13.116])
-	by mse-fl2.zte.com.cn with SMTP id 52J7p8Qt038955;
-	Wed, 19 Mar 2025 15:51:08 +0800 (+08)
-	(envelope-from jiang.kun2@zte.com.cn)
-Received: from mapi (njy2app01[null])
-	by mapi (Zmail) with MAPI id mid204;
-	Wed, 19 Mar 2025 15:51:10 +0800 (CST)
-Date: Wed, 19 Mar 2025 15:51:10 +0800 (CST)
-X-Zmail-TransId: 2af967da776e0c2-0f22a
-X-Mailer: Zmail v1.0
-Message-ID: <20250319155110884FL0FcZmsjNzP1NnAC70Zs@zte.com.cn>
+	s=arc-20240116; t=1742370769; c=relaxed/simple;
+	bh=ydElR4BEsnGqBeQsKA4b4OztiPjBOlEfUTp4FQDIRF4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EfFSKoukvgIh1G1NCjS5zy0sGX0t+huxgoZcMT4UHMsWQR2KLvCqTcGHRVrKZ6/PnPLGp6JmsgZTyfggajLza1k6DjfVTOViSlJx8S9m/2eQXxzkufzHdyq+k7IMPfTkoSky8Lc6Lc1Yy1gO2QiWjpKbg+okOk2lPHVrIhtDQdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZawpNJqW; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZawpNJqW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9ECE8C4CEE9;
+	Wed, 19 Mar 2025 07:52:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742370768;
+	bh=ydElR4BEsnGqBeQsKA4b4OztiPjBOlEfUTp4FQDIRF4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZawpNJqW5F0nJzlIxTHQe8wIH6OvMljjK6B733L1oIEAIzDw3xMf/thgshXafMZfc
+	 lcFSHyUDn+Kr/ygEMw2gs+IXUrGshCSz5jlYhHoGURroJoUgoKS5XJl+hsosBlzr9Z
+	 cHWUBQzgJrg5JRTNW+YwzCmiIzWopgIwxI1IOFYzqO86GtPrYf+fR82vk6S92rJwnf
+	 a+FZGT1CEdbodIsGN1EwdG/2Dpzh+QOvupoU8CjvRllbvPYvHi0wKifyJgIAaexVEM
+	 ZzesVa0L9JtBJCpSecd3tutKPxTnZbsHZcZ3qXbZuRFicVzsIJh0v6tthIJlsulFvN
+	 x6T+bpJXD4gsw==
+Message-ID: <17d37eab-2275-49ff-97b9-6b6706756f04@kernel.org>
+Date: Wed, 19 Mar 2025 08:52:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <jiang.kun2@zte.com.cn>
-To: <alexs@kernel.org>, <si.yanteng@linux.dev>, <corbet@lwn.net>,
-        <linux-doc@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Cc: <xu.xin16@zte.com.cn>, <yang.yang29@zte.com.cn>, <wang.yaxin@zte.com.cn>,
-        <fan.yu9@zte.com.cn>, <he.peilin@zte.com.cn>, <tu.qiang35@zte.com.cn>,
-        <qiu.yutan@zte.com.cn>, <zhang.yunkai@zte.com.cn>,
-        <ye.xingchen@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIIGxpbnV4IG5leHQgMS8yXSBEb2NzL3poX0NOOiBUcmFuc2xhdGUgaW5kZXgucnN0CiB0byBTaW1wbGlmaWVkIENoaW5lc2U=?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl2.zte.com.cn 52J7p8Qt038955
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67DA7779.000/4ZHgrT4XhRz8R041
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/9] dt-bindings: x86: Add a binding for x86 wakeup
+ mailbox
+To: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+Cc: Yunhong Jiang <yunhong.jiang@linux.intel.com>, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org,
+ hpa@zytor.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ kys@microsoft.com, haiyangz@microsoft.com, wei.liu@kernel.org,
+ decui@microsoft.com, rafael@kernel.org, lenb@kernel.org,
+ kirill.shutemov@linux.intel.com, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-hyperv@vger.kernel.org,
+ linux-acpi@vger.kernel.org, ricardo.neri@intel.com, ravi.v.shankar@intel.com
+References: <20240823232327.2408869-1-yunhong.jiang@linux.intel.com>
+ <20240823232327.2408869-3-yunhong.jiang@linux.intel.com>
+ <ujfqrllrii6iijlhbwx3bltpjogiosw4xx5pqbcddgpxjobrzh@xqqrfxi5lv3i>
+ <20240827204549.GA4545@yjiang5-mobl.amr.corp.intel.com>
+ <20240910061227.GA76@yjiang5-mobl.amr.corp.intel.com>
+ <1d0ba3fc-1504-4af3-a0bc-fba86abe41e8@kernel.org>
+ <20240919191725.GA11928@yjiang5-mobl.amr.corp.intel.com>
+ <874d5908-f1db-412f-96a2-83fcebe8dd98@kernel.org>
+ <20250303222102.GA16733@ranerica-svr.sc.intel.com>
+ <acb5fa11-9dce-44d0-85e3-e67a6a10c48f@kernel.org>
+ <20250312055118.GA29492@ranerica-svr.sc.intel.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250312055118.GA29492@ranerica-svr.sc.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Wang Yaxin <wang.yaxin@zte.com.cn>
+On 12/03/2025 06:51, Ricardo Neri wrote:
+> On Tue, Mar 11, 2025 at 11:01:28AM +0100, Krzysztof Kozlowski wrote:
+>> On 03/03/2025 23:21, Ricardo Neri wrote:
+>>> On Fri, Sep 20, 2024 at 01:15:41PM +0200, Krzysztof Kozlowski wrote:
+>>>
+>>> [...]
+>>>  
+>>>> enable-method is part of CPUs, so you probably should match the CPUs...
+>>>> I am not sure, I don't have the big picture here.
+>>>>
+>>>> Maybe if companies want to push more of bindings for purely virtual
+>>>> systems, then they should first get involved more, instead of relying on
+>>>> us. Provide reviews for your virtual stuff, provide guidance. There is
+>>>> resistance in accepting bindings for such cases for a reason - I don't
+>>>> even know what exactly is this and judging/reviewing based on my
+>>>> practices will no be accurate.
+>>>
+>>> Hi Krzysztof,
+>>>
+>>> I am taking over this work from Yunhong.
+>>>
+>>> First of all, I apologize for the late reply. I will make sure
+>>> communications are timely in the future.
+>>>
+>>> Our goal is to describe in the device tree a mechanism or artifact to boot
+>>> secondary CPUs.
+>>>
+>>> In our setup, the firmware puts secondary CPUs to monitor a memory location
+>>> (i.e., the wakeup mailbox) while spinning. From the boot CPU, the OS writes
+>>> in the mailbox the wakeup vector and the ID of the secondary CPU it wants
+>>> to boot. When a secondary CPU sees its own ID it will jump to the wakeup
+>>> vector.
+>>>
+>>> This is similar to the spin-table described in the Device Tree
+>>> specification. The key difference is that with the spin-table CPUs spin
+>>> until a non-zero value is written in `cpu-release-addr`. The wakeup mailbox
+>>> uses CPU IDs.
+>>>
+>>> You raised the issue of the lack of a `compatible` property, and the fact
+>>> that we are not describing an actual device.
+>>>
+>>> I took your suggestion of matching by node and I came up with the binding
+>>> below. I see these advantages in this approach:
+>>>
+>>>   * I define a new node with a `compatible` property.
+>>>   * There is precedent: the psci node. In the `cpus` node, each cpu@n has
+>>
+> 
+> Thanks for your feedback!
+> 
+>> psci is a standard. If you are documenting here a standard, clearly
+>> express it and provide reference to the specification.
+> 
+> It is not really a standard, but this mailbox behaves indentically to the
+> wakeup mailbox described in the ACPI spec [1]. I am happy reference the
+> spec in the documentation of the binding... or describe in full the
+> mechanism of mailbox without referring to ACPI. You had indicated you don't
+> care about what ACPI does [2].
 
-translate the "index.rst" into Simplified Chinese.
+Behaving like ACPI and implementing a spec are two different things. The
+question is whether you need to implement it like that and I believe
+answer is: no.
 
-Update to commit e793b86ae44e("Documentation: networking: add
-Twisted Pair Ethernet diagnostics at OSI Layer 1")
+> 
+> In a nutshell, the wakeup mailbox is similar to the spin table used in ARM
+> boards: it is reserved memory region that secondary CPUs monitor while
+> spinning.
+> 
+>>
+>>
+>>>     an `enable-method` property that specify `psci`.
+>>>   * The mailbox is a device as it is located in a reserved memory region.
+>>>     This true regardless of the device tree describing bare-metal or
+>>>     virtualized machines.
+>>>
+>>> Thanks in advance for your feedback!
+>>>
+>>> Best,
+>>> Ricardo
+>>>
+>>> (only the relevant sections of the binding are shown for brevity)
+>>>
+>>> properties:
+>>>   $nodename:
+>>>     const: wakeup-mailbox
+>>>
+>>>   compatible:
+>>>     const: x86,wakeup-mailbox
+>>
+>> You need vendor prefix for this particular device. If I pointed out lack
+>> of device and specific compatible, then adding random compatible does
+>> not solve it. I understand it solves for you, but not from the bindings
+>> point of view.
+> 
+> I see. Platform firmware will implement the mailbox. It would not be any
+> specific hardware from Intel. Perhaps `intel,wakeup-mailbox`?
+> 
+>>
+>>>
+>>>   mailbox-addr:
+>>>     $ref: /schemas/types.yaml#/definitions/uint64
+>>
+>> So is this some sort of reserved memory?
+> 
+> Yes, the mailbox is located in reserved memory.
 
-Signed-off-by: Wang Yaxin <wang.yaxin@zte.com.cn>
-Signed-off-by: Jiang Kun <jiang.kun2@zte.com.cn>
-Signed-off-by: xu xin <xu.xin16@zte.com.cn>
-Signed-off-by: He Peilin <he.peilin@zte.com.cn>
----
- .../translations/zh_CN/networking/index.rst   | 159 ++++++++++++++++++
- 1 file changed, 159 insertions(+)
- create mode 100644 Documentation/translations/zh_CN/networking/index.rst
 
-diff --git a/Documentation/translations/zh_CN/networking/index.rst b/Documentation/translations/zh_CN/networking/index.rst
-new file mode 100644
-index 000000000000..5c7d01cf3fc0
---- /dev/null
-+++ b/Documentation/translations/zh_CN/networking/index.rst
-@@ -0,0 +1,159 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. include:: ../disclaimer-zh_CN.rst
-+
-+:Original: Documentation/networking/index.rst
-+
-+:翻译:
-+
-+ 王亚鑫 Wang Yaxin <wang.yaxin@zte.com.cn>
-+
-+:校译:
-+
-+网络
-+====
-+
-+有关网络设备（netdev）开发过程的详细指南，请参考：:ref:`netdev-FAQ`
-+
-+目录：
-+
-+.. toctree::
-+   :maxdepth: 2
-+
-+Todolist:
-+
-+*   af_xdp
-+*   bareudp
-+*   batman-adv
-+*   can
-+*   can_ucan_protocol
-+*   device_drivers/index
-+*   diagnostic/index
-+*   dsa/index
-+*   devlink/index
-+*   caif/index
-+*   ethtool-netlink
-+*   ieee802154
-+*   iso15765-2
-+*   j1939
-+*   kapi
-+*   msg_zerocopy
-+*   failover
-+*   net_dim
-+*   net_failover
-+*   page_pool
-+*   phy
-+*   sfp-phylink
-+*   alias
-+*   bridge
-+*   snmp_counter
-+*   checksum-offloads
-+*   segmentation-offloads
-+*   scaling
-+*   tls
-+*   tls-offload
-+*   tls-handshake
-+*   nfc
-+*   6lowpan
-+*   6pack
-+*   arcnet-hardware
-+*   arcnet
-+*   atm
-+*   ax25
-+*   bonding
-+*   cdc_mbim
-+*   dccp
-+*   dctcp
-+*   devmem
-+*   dns_resolver
-+*   driver
-+*   eql
-+*   fib_trie
-+*   filter
-+*   generic-hdlc
-+*   generic_netlink
-+*   netlink_spec/index
-+*   gen_stats
-+*   gtp
-+*   ila
-+*   ioam6-sysctl
-+*   ip_dynaddr
-+*   ipsec
-+*   ip-sysctl
-+*   ipv6
-+*   ipvlan
-+*   ipvs-sysctl
-+*   kcm
-+*   l2tp
-+*   lapb-module
-+*   mac80211-injection
-+*   mctp
-+*   mpls-sysctl
-+*   mptcp
-+*   mptcp-sysctl
-+*   multiqueue
-+*   multi-pf-netdev
-+*   napi
-+*   net_cachelines/index
-+*   netconsole
-+*   netdev-features
-+*   netdevices
-+*   netfilter-sysctl
-+*   netif-msg
-+*   netmem
-+*   nexthop-group-resilient
-+*   nf_conntrack-sysctl
-+*   nf_flowtable
-+*   oa-tc6-framework
-+*   openvswitch
-+*   operstates
-+*   packet_mmap
-+*   phonet
-+*   phy-link-topology
-+*   pktgen
-+*   plip
-+*   ppp_generic
-+*   proc_net_tcp
-+*   pse-pd/index
-+*   radiotap-headers
-+*   rds
-+*   regulatory
-+*   representors
-+*   rxrpc
-+*   sctp
-+*   secid
-+*   seg6-sysctl
-+*   skbuff
-+*   smc-sysctl
-+*   sriov
-+*   statistics
-+*   strparser
-+*   switchdev
-+*   sysfs-tagging
-+*   tc-actions-env-rules
-+*   tc-queue-filters
-+*   tcp_ao
-+*   tcp-thin
-+*   team
-+*   timestamping
-+*   tipc
-+*   tproxy
-+*   tuntap
-+*   udplite
-+*   vrf
-+*   vxlan
-+*   x25
-+*   x25-iface
-+*   xfrm_device
-+*   xfrm_proc
-+*   xfrm_sync
-+*   xfrm_sysctl
-+*   xdp-rx-metadata
-+*   xsk-tx-metadata
-+
-+.. only::  subproject and html
-+
-+   Indices
-+   =======
-+
-+   * :ref:`genindex`
--- 
-2.25.1
+Then why reserved memory bindings are not working?
+
+Anyway this was half a year ago. None of the emails are in my inbox.
+None of the context is in my head.
+
+It's the second or third email this month someone responds to my email
+from 2024.
+
+Frankly, that's a neat trick. I won't remember anything, but it would be
+impolite to say just "no" without arguments. So now you will resend the
+same code leading to the same discussions we had half a year ago. Or
+ignoring that discussions.
+
+I don't understand why this should be reviewers problem, so no, that's
+just unfair.
+
+
+Best regards,
+Krzysztof
