@@ -1,62 +1,63 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D20BF263F5F;
-	Wed, 19 Mar 2025 11:04:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CC9255243;
+	Wed, 19 Mar 2025 11:04:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382251; cv=none; b=BiYj3RNIOsO6RbT3WUmhjX+om8hyVxUdosulnUJjnsETWeGE/9iiv/pYHgKM2+3IcSOQzhYnA3cfErGhSI/F0nD65nlalCXERlVgmG3swcTuZebR75XbT7AcA+gRzMO+oGYZP6jhtHyyaZCf5CmaiF9neYJ4HtzdNo5MbGxyru0=
+	t=1742382252; cv=none; b=aG2t/RslwBTA93XBUVjcCLdRkQMlhJsjQncBSQc6CXvrLNndZ5prV5eQJvr+65Hr1dZFaq0EMeoPddFDhvA1yWE9XesdwKjtf8+Alg10jHwAmps+ZobLFOG6wx3usAmV7z22KuKJ3bDx3nH91o5rfc7nC741vc91QyaXDHMYtfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382251; c=relaxed/simple;
-	bh=+JB2WcmQ1AUhRdZM4JPD/AEQRjdZpLzj3BDysQS8L5Y=;
+	s=arc-20240116; t=1742382252; c=relaxed/simple;
+	bh=jOkwRWFA8IQaoQ4JgdYc5DebHzTWfemfW98qGax7IVY=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=hwxFRi/KbpvaOe597Jbx50gr0dMoKRGd8fKztiznM2W6njmEUfdyfxt2JMLy26+5U88/+8XB01W+1NFPU4da8bFJw9seNwC89rqkieqED4WJ3/zGw+ZD5k+HjB7iVtKHy2S/Hj+2W2sIj4BruZ2W44mXE9nfZT2wZ/trbZGYK1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=ymByg8me; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=2OEHGWtL; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=Azwzh5LJRjTSWacf2Bcz1RVZsJaQWZT4bRJh/UwmBHOLB7zz+Mj/FSp/k/jJsYhXrr4638y6SILmcJDf/EBZyeg0q7EyTDnRc/EPhldHRyfJ0QQd4eH3BWENZMpFjo6GmCi7fT5CCI5Iauc+isJ4DQC03PnY66pL5Np+TVKgB/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=Gv2jJKWk; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=UJHE2Fu5; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="ymByg8me";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="2OEHGWtL"
-Date: Wed, 19 Mar 2025 11:04:06 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="Gv2jJKWk";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="UJHE2Fu5"
+Date: Wed, 19 Mar 2025 11:04:08 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382247;
+	s=2020; t=1742382248;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UktUJfB6CtWEi9c1SdaA9ck7mTIXVHNaOPBwQcZ3Pyw=;
-	b=ymByg8meKsGeaZDWsDDDG02C+dLHktQunlrytCxiVeE8AohEUh4GREXoaF0GvAUMTAbgKz
-	mhSDZ9jikuTWnaBKzTK4iKIjwnr9i7y+yNUT4jm0F9N3/EFjooPrVMts8zVnEg1TIeYc0B
-	IITSh2kwtZHYBJHn+AcufgsfagPRPorI5EDjgowX/bVkGdg0pHfIZnvftyxXSP5z4Pkaea
-	eK/Dkl+6by8zfqUfCxiKWB7Lixn54SmQjF8omycruMxZt7oW0Ljh6n56DP8/usFbFs5YVN
-	YT8s7C4pTJZcjZ89bt0sMEUhoFaB8QxOdM98I8O+4HpGIm2+8Mjr5xA1Ii131Q==
+	bh=HPwNbHKYAAQ9d71RySNxzTF+DKUy+p5zF834T7BqpiM=;
+	b=Gv2jJKWkGkaCRp+6WWFdYnUxjjdZdwc+4KPu3ujVhoXxh3LfD4siFlmIITDA+xb4vP/G6R
+	TJSy06x2cN2G9hr3OW/Z27P1cIu+i2oRdWA4RIoK62cJ+kc0ulaQTbIsI2FmDJpXREX1Z2
+	3DIZ6wKlUMEkNyMF1Uso8RJ4u+csuIcAwZW8k33x5LHIfF8pdTc18XnA0lt1uKiei7z+rU
+	KzhCmYq0aSn18PJzFg+6VGD1yhnTIwyESY0PZUWnsgTUGskzh3yTefc5PAWiU5GJ4ZMW1F
+	oh9CFsfVKW04+3K4irE++6WTnUVaxjAsmeLCdG2CsbEj+honrJAcJIeQoYBqWA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382247;
+	s=2020e; t=1742382248;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=UktUJfB6CtWEi9c1SdaA9ck7mTIXVHNaOPBwQcZ3Pyw=;
-	b=2OEHGWtLOWOgLD9DCL4AFaEncSRLWqRCpk/a8vLPawCnH380HdHZB20XYs2QSg2FKxzqjI
-	OW0DMjSIBFcN7KCQ==
+	bh=HPwNbHKYAAQ9d71RySNxzTF+DKUy+p5zF834T7BqpiM=;
+	b=UJHE2Fu5kjFpoMYFJwNGo1EaF6La5H56Ypn6cwzb7o2yA7L5/Tm1NSSmNt+7HjAAYGTB2Z
+	mi54yN+YhRaso/Dw==
 From: "tip-bot2 for Rik van Riel" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/mm: Use INVLPGB for kernel TLB flushes
-Cc: Rik van Riel <riel@surriel.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
- Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250226030129.530345-5-riel@surriel.com>
-References: <20250226030129.530345-5-riel@surriel.com>
+Subject: [tip: x86/core] x86/mm: Consolidate full flush threshold decision
+Cc: Dave Hansen <dave.hansen@intel.com>, Rik van Riel <riel@surriel.com>,
+ "Borislav Petkov (AMD)" <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>,
+ x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250226030129.530345-2-riel@surriel.com>
+References: <20250226030129.530345-2-riel@surriel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238224641.14745.6125284611845723280.tip-bot2@tip-bot2>
+Message-ID: <174238224814.14745.16012164128504896566.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -66,107 +67,97 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     82378c6c2f435dba66145609de16bf44a9de6303
-Gitweb:        https://git.kernel.org/tip/82378c6c2f435dba66145609de16bf44a9de6303
+Commit-ID:     4a02ed8e1cc33acd04d8f5b89751d3bbb6be35d8
+Gitweb:        https://git.kernel.org/tip/4a02ed8e1cc33acd04d8f5b89751d3bbb6be35d8
 Author:        Rik van Riel <riel@surriel.com>
-AuthorDate:    Tue, 25 Feb 2025 22:00:39 -05:00
+AuthorDate:    Tue, 25 Feb 2025 22:00:36 -05:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:12:29 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:08:07 +01:00
 
-x86/mm: Use INVLPGB for kernel TLB flushes
+x86/mm: Consolidate full flush threshold decision
 
-Use broadcast TLB invalidation for kernel addresses when available.
-Remove the need to send IPIs for kernel TLB flushes.
+Reduce code duplication by consolidating the decision point for whether to do
+individual invalidations or a full flush inside get_flush_tlb_info().
 
-   [ bp: Integrate dhansen's comments additions, merge the
-     flush_tlb_all() change into this one too. ]
-
+Suggested-by: Dave Hansen <dave.hansen@intel.com>
 Signed-off-by: Rik van Riel <riel@surriel.com>
 Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Link: https://lore.kernel.org/r/20250226030129.530345-5-riel@surriel.com
+Reviewed-by: Borislav Petkov (AMD) <bp@alien8.de>
+Acked-by: Dave Hansen <dave.hansen@intel.com>
+Link: https://lore.kernel.org/r/20250226030129.530345-2-riel@surriel.com
 ---
- arch/x86/mm/tlb.c | 48 ++++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 44 insertions(+), 4 deletions(-)
+ arch/x86/mm/tlb.c | 41 +++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
 diff --git a/arch/x86/mm/tlb.c b/arch/x86/mm/tlb.c
-index dbcb5c9..8cd084b 100644
+index ffc25b3..dbcb5c9 100644
 --- a/arch/x86/mm/tlb.c
 +++ b/arch/x86/mm/tlb.c
-@@ -1064,7 +1064,6 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
- 	mmu_notifier_arch_invalidate_secondary_tlbs(mm, start, end);
- }
+@@ -1000,6 +1000,15 @@ static struct flush_tlb_info *get_flush_tlb_info(struct mm_struct *mm,
+ 	BUG_ON(this_cpu_inc_return(flush_tlb_info_idx) != 1);
+ #endif
  
--
- static void do_flush_tlb_all(void *info)
- {
- 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH_RECEIVED);
-@@ -1074,7 +1073,32 @@ static void do_flush_tlb_all(void *info)
- void flush_tlb_all(void)
- {
- 	count_vm_tlb_event(NR_TLB_REMOTE_FLUSH);
--	on_each_cpu(do_flush_tlb_all, NULL, 1);
-+
-+	/* First try (faster) hardware-assisted TLB invalidation. */
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		invlpgb_flush_all();
-+	else
-+		/* Fall back to the IPI-based invalidation. */
-+		on_each_cpu(do_flush_tlb_all, NULL, 1);
-+}
-+
-+/* Flush an arbitrarily large range of memory with INVLPGB. */
-+static void invlpgb_kernel_range_flush(struct flush_tlb_info *info)
-+{
-+	unsigned long addr, nr;
-+
-+	for (addr = info->start; addr < info->end; addr += nr << PAGE_SHIFT) {
-+		nr = (info->end - addr) >> PAGE_SHIFT;
-+
-+		/*
-+		 * INVLPGB has a limit on the size of ranges it can
-+		 * flush. Break up large flushes.
-+		 */
-+		nr = clamp_val(nr, 1, invlpgb_count_max);
-+
-+		invlpgb_flush_addr_nosync(addr, nr);
++	/*
++	 * If the number of flushes is so large that a full flush
++	 * would be faster, do a full flush.
++	 */
++	if ((end - start) >> stride_shift > tlb_single_page_flush_ceiling) {
++		start = 0;
++		end = TLB_FLUSH_ALL;
 +	}
-+	__tlbsync();
- }
- 
- static void do_kernel_range_flush(void *info)
-@@ -1087,6 +1111,22 @@ static void do_kernel_range_flush(void *info)
- 		flush_tlb_one_kernel(addr);
- }
- 
-+static void kernel_tlb_flush_all(struct flush_tlb_info *info)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		invlpgb_flush_all();
-+	else
-+		on_each_cpu(do_flush_tlb_all, NULL, 1);
-+}
 +
-+static void kernel_tlb_flush_range(struct flush_tlb_info *info)
-+{
-+	if (cpu_feature_enabled(X86_FEATURE_INVLPGB))
-+		invlpgb_kernel_range_flush(info);
-+	else
-+		on_each_cpu(do_kernel_range_flush, info, 1);
-+}
-+
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ 	info->start		= start;
+ 	info->end		= end;
+ 	info->mm		= mm;
+@@ -1026,17 +1035,8 @@ void flush_tlb_mm_range(struct mm_struct *mm, unsigned long start,
+ 				bool freed_tables)
  {
  	struct flush_tlb_info *info;
-@@ -1097,9 +1137,9 @@ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- 				  TLB_GENERATION_INVALID);
++	int cpu = get_cpu();
+ 	u64 new_tlb_gen;
+-	int cpu;
+-
+-	cpu = get_cpu();
+-
+-	/* Should we flush just the requested range? */
+-	if ((end == TLB_FLUSH_ALL) ||
+-	    ((end - start) >> stride_shift) > tlb_single_page_flush_ceiling) {
+-		start = 0;
+-		end = TLB_FLUSH_ALL;
+-	}
  
- 	if (info->end == TLB_FLUSH_ALL)
+ 	/* This is also a barrier that synchronizes with switch_mm(). */
+ 	new_tlb_gen = inc_mm_tlb_gen(mm);
+@@ -1089,22 +1089,19 @@ static void do_kernel_range_flush(void *info)
+ 
+ void flush_tlb_kernel_range(unsigned long start, unsigned long end)
+ {
+-	/* Balance as user space task's flush, a bit conservative */
+-	if (end == TLB_FLUSH_ALL ||
+-	    (end - start) > tlb_single_page_flush_ceiling << PAGE_SHIFT) {
 -		on_each_cpu(do_flush_tlb_all, NULL, 1);
-+		kernel_tlb_flush_all(info);
- 	else
--		on_each_cpu(do_kernel_range_flush, info, 1);
-+		kernel_tlb_flush_range(info);
+-	} else {
+-		struct flush_tlb_info *info;
++	struct flush_tlb_info *info;
++
++	guard(preempt)();
  
- 	put_flush_tlb_info();
+-		preempt_disable();
+-		info = get_flush_tlb_info(NULL, start, end, 0, false,
+-					  TLB_GENERATION_INVALID);
++	info = get_flush_tlb_info(NULL, start, end, PAGE_SHIFT, false,
++				  TLB_GENERATION_INVALID);
+ 
++	if (info->end == TLB_FLUSH_ALL)
++		on_each_cpu(do_flush_tlb_all, NULL, 1);
++	else
+ 		on_each_cpu(do_kernel_range_flush, info, 1);
+ 
+-		put_flush_tlb_info();
+-		preempt_enable();
+-	}
++	put_flush_tlb_info();
  }
+ 
+ /*
