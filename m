@@ -1,87 +1,75 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855551C0DED;
-	Wed, 19 Mar 2025 14:26:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9271C862A;
+	Wed, 19 Mar 2025 14:26:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742394370; cv=none; b=Zca4jjbq/Wu8npBOiQTf9M0h2o4E+5xfWx2IXO21yoOarr+XKH4O3Ep6OJGHDwnP3gYBFoCLMZGgNYYnDsAa2NwBnAXZb7UHXAK3/iJg0GYysNpTHtooQh22n2S2JCpD/2LVWRpDpDp8qisEsq3pDowEr9FvUf7nC8Wn2vIRcbg=
+	t=1742394373; cv=none; b=ac0dNj+0xC51GFxK/u39QD/APCrMyP586OWdilT+MZUQXedvZ0L2pL8ydNlKVJe9vZ9BAcUlU0QZpuVfYX8iSvSG8GdF886aqHIrMeO7PW3o/OKc/thWbb62kSO05RzhEiftfIu77rqVnWdY9uuFh24RnsFGB4vqk6GuxrE3Cv8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742394370; c=relaxed/simple;
-	bh=u9ne6noAROmIUk8hyjXM3BCGrOUF6I4+E9guqT83c0E=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PmbCea2gIQLGBkH2md6LYQrAp4pyH+LmatVezCMOHAlBQTLUHHIMQrNHEjWBdNlrA/HSP79BhH+AhbTjokwJ7K6LG5JgPQRTRsQZz82zEmf6yVMCvlddRBT6JsVuQ5IlpxWH4KOY3h4BF/l5SGc7OiHTzUU7JvhDCSfAs7FRZ+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DVMkRvdc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742394373; c=relaxed/simple;
+	bh=anHhSUQfHnLqojw56takRc7tj3TcrdOVFTZnnHcV0zw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=u/bvE3BBSfb98zha/j9lkNXyREFCyOk4FLdk20a+MH2Xw56G6YFWKV3j7foOLuoO1fyctGqEKw0locI3ZsyzairPVpkbQKgFeg2Wjix4mAiUvI4WJf+gFV0lIP3Z0wH8HFUEY8CcRuiEsGUu5vx2h5cbeR4rNrJnCxYAvyVR3gI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=m8YxZ4RV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DVMkRvdc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12D58C4CEE8;
-	Wed, 19 Mar 2025 14:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742394370;
-	bh=u9ne6noAROmIUk8hyjXM3BCGrOUF6I4+E9guqT83c0E=;
-	h=From:Subject:Date:To:Cc:From;
-	b=DVMkRvdcIvo0uon19WFzAlpe9JfyUtncBdpV55n1daiB9gIhrYVn3jEj+muKqJqYM
-	 8QyRWuqg/raggyUao3R3uzSC9S/vFSXuZE37ZMecirv0ksJ/zwWNCDvrqvCrZQ/Ll4
-	 TblYXLtlFu5ixuR3JWFqvZodF0YrdbzCI27aHTzZxT8hgPFKlZIBs3LRpE9f2JKdqn
-	 Tdhx3YI46/UkDKJwL0V40sT21u8HncjanTaU9OhJJbXoYV6wchW7p+Y9mO1qNROmVP
-	 CR0tx9gm9f0QypCbSs+HUAu1pvCSEwNibsAQ/6jgDmAfCbpBr8VolrYXGGJGrFsRHa
-	 HC0aa+gjGttvg==
-From: Konrad Dybcio <konradybcio@kernel.org>
-Subject: [PATCH 0/2] Allow 'nonposted-mmio' on single devices
-Date: Wed, 19 Mar 2025 15:25:56 +0100
-Message-Id: <20250319-topic-nonposted_mmio-v1-0-dfb886fbd15f@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="m8YxZ4RV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D67EAC4CEEA;
+	Wed, 19 Mar 2025 14:26:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742394372;
+	bh=anHhSUQfHnLqojw56takRc7tj3TcrdOVFTZnnHcV0zw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m8YxZ4RV/VV8Zs698RA9TqoG1eITeBEN8EXPZh4To/bQdllfBPKj+BzqWf/vYZot+
+	 vhtwExO3v1FUvcSRExPFH82XJrey+FfOHI9h4TUnQFq7m3Z2+XcXSakD9SVNmP/mHa
+	 fFFijxaG/JbXI/S4QRZQv7dCun9ZBXg0lY0Uep4E=
+Date: Wed, 19 Mar 2025 07:24:53 -0700
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-efi@vger.kernel.org
+Subject: Re: [PATCH v2 5/8] virt: efi_secret: Transition to the faux device
+ interface
+Message-ID: <2025031942-gotten-epidermis-eeee@gregkh>
+References: <20250318-plat2faux_dev-v2-0-e6cc73f78478@arm.com>
+ <20250318-plat2faux_dev-v2-5-e6cc73f78478@arm.com>
+ <CAMj1kXGJkApH73r9qEGABe3M4pXP2gMW3tDXfz2F6WGPZ3nhug@mail.gmail.com>
+ <Z9rDely6YxIQZTrK@bogus>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPTT2mcC/x3MQQqAIBBA0avErBO0wUVdJSJCp5pFjqhEIN09a
- fkW/1fIlJgyTF2FRDdnltBg+g7cuYWDFPtmGPRgNRqrikR2KkiIkgv59bpYlMURN/SkPVpoaUy
- 08/Nv5+V9P85vLpxmAAAA
-X-Change-ID: 20250315-topic-nonposted_mmio-5393a3de0d35
-To: Rob Herring <robh@kernel.org>, Saravana Kannan <saravanak@google.com>
-Cc: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>, 
- Melody Olvera <quic_molvera@quicinc.com>, 
- Marijn Suijten <marijn.suijten@somainline.org>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742394367; l=1084;
- i=konrad.dybcio@oss.qualcomm.com; s=20230215; h=from:subject:message-id;
- bh=u9ne6noAROmIUk8hyjXM3BCGrOUF6I4+E9guqT83c0E=;
- b=MFfiScu79U8kKeCNQrQjgsC/rDpanH0ypvf2lLeiZLcP/VQKaj/61zfckwPL7ek90C9AO2Cob
- cr5xxCcm40UCXgxvdRJJjdlHF6KMk8xTVPxn9Yj5xtY/8fndGrQGtwl
-X-Developer-Key: i=konrad.dybcio@oss.qualcomm.com; a=ed25519;
- pk=iclgkYvtl2w05SSXO5EjjSYlhFKsJ+5OSZBjOkQuEms=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9rDely6YxIQZTrK@bogus>
 
-For a plethora of reasons, usually not very pretty, a single device on
-a given bus/platform may require a different type of memory mapping.
+On Wed, Mar 19, 2025 at 01:15:38PM +0000, Sudeep Holla wrote:
+> On Tue, Mar 18, 2025 at 06:10:41PM +0100, Ard Biesheuvel wrote:
+> > On Tue, 18 Mar 2025 at 18:02, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> > >
+> > > The EFI secret area driver does not require the creation of a platform
+> > > device. Originally, this approach was chosen for simplicity when the
+> > > driver was first implemented.
+> > >
+> > > With the introduction of the lightweight faux device interface, we now
+> > > have a more appropriate alternative. Migrate the driver to utilize the
+> > > faux bus, given that the platform device it previously created was not
+> > > a real one anyway. This will simplify the code, reducing its footprint
+> > > while maintaining functionality.
+> > >
+> > > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > > Cc: linux-efi@vger.kernel.org
+> > > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> > 
+> > So how is module autoload supposed to work with this driver?
+> > 
+> 
+> IIUC, you are right. It doesn't work. I got carried away how efi_pstore was
+> autoloaded in Ubuntu even without alias or platform/faux device creation. I
+> don't know how yet but that works. This modules doesn't.
+> 
+> So we may have to retain platform device/driver for autoloading reasons ?
 
-With nonposted-mmio specifically, we want to limit the scope of setting
-it where it's not necessary, so as not to shoot ourselves in the foot
-in the performance department.
-
-This series allows mapping a single device as nE on arm64.
-A user will be sent separately, as a new node for a QC platform.
-
-The dt-bindings part is handled in the checker itself, see the following:
-https://github.com/devicetree-org/dt-schema/pull/156
-
-Signed-off-by: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
----
-Konrad Dybcio (2):
-      of: address: Expand nonposted-mmio to non-Apple Silicon platforms
-      of: address: Allow to specify nonposted-mmio per-device
-
- drivers/of/address.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
----
-base-commit: c4d4884b67802c41fd67399747165d65c770621a
-change-id: 20250315-topic-nonposted_mmio-5393a3de0d35
-
-Best regards,
--- 
-Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-
+If that's required, yes.
