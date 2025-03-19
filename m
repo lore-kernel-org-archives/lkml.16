@@ -1,118 +1,115 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail-40133.protonmail.ch (mail-40133.protonmail.ch [185.70.40.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E241421481D
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:11:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 779992046B2
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:12:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742418720; cv=none; b=r/MmbVoTP8iTASpthiCWyvp+EU0CI8h4CfVxuE3Q4qPFrC1QNXjaL3AT7Uak/IN21WpkeExelUYswM6PlbQhoz+Gw4mQWydqtc9vAg8VjhyhjWM2t854F4pN+3WXIBRB97xO0uBOFfo6xSn910Oago0KN6+wXOQI0CN1ujCJL4o=
+	t=1742418731; cv=none; b=V7M7dzWsoPfV2KzeQ92SlzFH6sK/+QS3tDulSYkYDtcApn5Ld6rkYpO0VrjnWm0RhI87ZBXKGvT5kjMoh4AwvsNs/fXi9vqrGM7loP1kVbT06GgGEUv2V2lk6/v8jUzYtz8nLXcZyteYoxBHSB3KcXMEYaIUWm1Vd60TjiyjhUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742418720; c=relaxed/simple;
-	bh=mHzkeamJAVirED9+PA9L2O3y8025Yf73WTQxHmfofNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kd2njQjuEoGKotcNTW49u3NW3uvvV6+cRAkEu/0u/YslFBL80O7dmYjwcVjDGnZtDtaYlsF8hZCciD6NI3QWa6qeMNDBxONf6kO0WFCG+PvZOgFqypJJIU8VWKqKrB1bSBHxldrsk4EVSQLdoxNDNbY49pHFcwxm5G8N70/2LN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=vyKfAYiH; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742418731; c=relaxed/simple;
+	bh=W79Rsy+zd+dgPSnOkEZWD7mS+bvrS3hy8Sfn2T1mSG0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=XqBo54lZWhW7tavaReiRVteJ1smS55vbCGtXUudZX2Cf5DYEmcr3n68oD3vEIy420u1Y+uIPpgYOY/SXHFBiXtDhNdcEEuZMn82P6qsOb+ZMRcZ63x1qNiAISGWhcFLFh74ffL5bAYTRjmIrPby7svGUDmtQTXo31zFXiWCaFuM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=F2Or04t5; arc=none smtp.client-ip=185.70.40.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vyKfAYiH"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e41e17645dso686216d6.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:11:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742418718; x=1743023518; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MzQ6ZEr1gpJCZD9/ARUm6ZtLa29Cm83+ahOdT49JFZM=;
-        b=vyKfAYiHIJi3E/xeVEJKI0LrDu6O5be38jHBcKB0O/1LeRKLJmXdwV2rft/7cc0W2i
-         GLtR+igTetV/DY50WXqbdLikHgrrKfrujNhXj+Aj7XPAjbYE6JZpE+npn29a1CY4/DMH
-         GgzHwFOwnbo0GlgdLdkPVo73AGdFGBRzf5VxC64C3/bdYzl0E4RRBNBPBN4py1MsdUnk
-         Q2W3eDcwYtnKIVHspinsw4qrmCc3E/v8dW8WpApqbq3kkDhplGee4ea9FMWNoWBDsDkB
-         V966MRSlkR4qMWWRDprA6pvFOlFs1BNkYTdLvjjnfhPXMUDh1UaAZrRH2xA31bpKoozD
-         Xdbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742418718; x=1743023518;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MzQ6ZEr1gpJCZD9/ARUm6ZtLa29Cm83+ahOdT49JFZM=;
-        b=TJFjP2dd0hzGOI96E/FFHSdXxrXl2Qe/J0fYnJ5P+wHi2KYyEu4/qftFEJs8k5DmZG
-         LfaIJKpnShZb7Br1N6ZBUWK64gkE2XhN/Z5USlLaFjbReO8XlfUgNlzCnG6MmI0/GSyz
-         5a/tRinVCe7TcUqXjd6ejMTww4/LfbGtZLmeDhdEd1mcfVhNJMAfXMkjGhdwLfVmkVlP
-         FMTx0ikkJtDlx8NfEBqtGKJYFZlyovyoRtZZ/91VrvBT1XbjPPEXZgpGy9W9CMj3p5g9
-         D8XW2B+MtdFSvshnSgx09fyVP1ursSn1gc6ZhAuHXjA3r6QBst2V3dbJirucLjSuUZoG
-         FB/w==
-X-Forwarded-Encrypted: i=1; AJvYcCUtPq4UoQR+IF9aNTcNQTXA0IMC1sBJKoz40n30+QPd0TqLuw58JW0XyLi1u2RYQt/cpN7t0OlchGTZ3fU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpaxCCarIpFufM93vmw8IzCLvm766S6cEwicFr61uDANKqjAvW
-	sqPNPcy0Uj9JKNjbob+l5xw5WMiWB+ymKJELrm8PwFJnOzfOyHR8LgXWxjcW9hTI5LW6Pxc8/0q
-	PuKAouJMU6e5ugjSkbMHZHlU9IVPPGjJMItsd
-X-Gm-Gg: ASbGnctSteRKCvVkInK79rTpmMC8taCrOabhXwL62wyseJIgJL18unu+t9QCHJa2xfm
-	wLvr8BWCIS1/mvXwLMK3VeTgna5u+DhnQsC1jIqNmC/44qtYtVLx2Js9I3TCPdS61hsdB4NqgO/
-	hV5yRCj/U2nxt6YEtDqgmu/vzUKcRf2VMic8RYrDgKyy0d/5WC2izE1YH1SW1h
-X-Google-Smtp-Source: AGHT+IGI0WFUFXKVZef1WwByRwZlBRHuGM1DviOdU10DZnONCKX8AFIG66ZYTPFgUbjuSNp1mcIIaop8R9piDbAczZ4=
-X-Received: by 2002:ad4:5747:0:b0:6e8:86d3:be73 with SMTP id
- 6a1803df08f44-6eb3538c672mr10615636d6.37.1742418717612; Wed, 19 Mar 2025
- 14:11:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="F2Or04t5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742418726; x=1742677926;
+	bh=XehIVCTSzumbYatfExiY6GZ+ddy62vDbZcUJxu968c4=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=F2Or04t58U7gkMiwx+rCdLGrhDxEj2uR7c6OXEuxeBjYqK7kKLMYcXFTCw/TbpTNG
+	 5ALGid4ZWLaY/QFmoFWt3vy3A0B8MOJE1UjGFGb0RgFhogA72vYC9acxjFZPrDX4nZ
+	 qiXYG/mJwiCixedtHT+DjAshv1H8JBzgM83UDINYHsRL6QTz5ew7G3i231StbEMhBS
+	 bq6O4EYAa7ouymAGWlHA//8g4X/fWWf7ceBd7X6BrZyhC9AcYgZAVp7aag8Ln1LSzo
+	 MCwS2SMOU+Z3EHBomkc/EmBYpCLZXV/JChp+pTb4N0vb+L1tZk7K8r15OlpJeyXmle
+	 DTPr7eW+3EeNA==
+Date: Wed, 19 Mar 2025 21:12:01 +0000
+To: Christian Schrefl <chrisi.schrefl@gmail.com>, Alice Ryhl <aliceryhl@google.com>, Andreas Hindborg <a.hindborg@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Matthew Maurer <mmaurer@google.com>, Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Subject: Re: [PATCH 2/5] rust: iov: add iov_iter abstractions for ITER_DEST
+Message-ID: <D8KJVUZUHCMQ.1WS0MBO4ZJLLM@proton.me>
+In-Reply-To: <52db38f9-427f-4cea-826f-eae5f39480c5@gmail.com>
+References: <20250311-iov-iter-v1-0-f6c9134ea824@google.com> <20250311-iov-iter-v1-2-f6c9134ea824@google.com> <XR-HMXHiYqCkDupCkyfLz4Rz-ucS6r5sCg1TmHQ7KeqAvf7-4ofJJcSCc2jKmS8WDivMc5oDgAYThptx7X_ExQ==@protonmail.internalid> <439baec2-dba8-4dab-abb5-faa14fbda943@gmail.com> <87v7s4g7ev.fsf@kernel.org> <52db38f9-427f-4cea-826f-eae5f39480c5@gmail.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: f658f2b0a50a0efdf8e6d6207d32c5d30975fee1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250313192714.1380005-1-rmoar@google.com> <CABVgOS=Pfp2_ZvCtxy6X_xoM6pGVgT6bD_4VxGVZ_SNWVgesGQ@mail.gmail.com>
- <CA+i-1C3ZORa0hFHz=d6F3ThVWUEFv8Qnyq-i6EFsrn843fSOtw@mail.gmail.com>
-In-Reply-To: <CA+i-1C3ZORa0hFHz=d6F3ThVWUEFv8Qnyq-i6EFsrn843fSOtw@mail.gmail.com>
-From: Rae Moar <rmoar@google.com>
-Date: Wed, 19 Mar 2025 17:11:46 -0400
-X-Gm-Features: AQ5f1JrFEqZICWggvDN9nQM3ZFvRMwPJ7oPNjINKbR3le5BHzjL9pyv2-L4Meq0
-Message-ID: <CA+GJov4CDitQ0w2CU46rk_zwNxU_Mn1wwGNgn-xx3uA3MwDoRg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] kunit: tool: Fix bug in parsing test plan
-To: Brendan Jackman <jackmanb@google.com>
-Cc: David Gow <davidgow@google.com>, shuah@kernel.org, linux-kselftest@vger.kernel.org, 
-	kunit-dev@googlegroups.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 12:13=E2=80=AFPM Brendan Jackman <jackmanb@google.c=
-om> wrote:
+On Wed Mar 19, 2025 at 9:01 PM CET, Christian Schrefl wrote:
+> On 19.03.25 8:14 PM, Andreas Hindborg wrote:
+>> "Christian Schrefl" <chrisi.schrefl@gmail.com> writes:
+>>> On 11.03.25 3:25 PM, Alice Ryhl wrote:
+>>>> +/// An IO vector that acts as a destination for data.
+>>>> +///
+>>>> +/// # Invariants
+>>>> +///
+>>>> +/// Must hold a valid `struct iov_iter` with `data_source` set to `IT=
+ER_DEST`. The buffers
+>>>> +/// referenced by the IO vector must be valid for writing for the dur=
+ation of `'data`.
+>>>> +///
+>>>> +/// Note that if the IO vector is backed by a userspace pointer, it i=
+s always considered valid for
+>>>> +/// writing.
+>>>> +#[repr(transparent)]
+>>>> +pub struct IovIterDest<'data> {
+>>>> +    iov: Opaque<bindings::iov_iter>,
+>>>> +    /// Represent to the type system that this value contains a point=
+er to writable data it does
+>>>> +    /// not own.
+>>>> +    _source: PhantomData<&'data mut [u8]>,
+>>>> +}
+>>>
+>>> It might be a bit nicer to add a (private) struct 'IovIter' that implem=
+ents the common operations.
+>>> Then 'IovIterDest' and 'IovIterSource' could store that struct and forw=
+ard the implementations to
+>>> it.
+>>> But I'm not sure if that's really much better.
+>>=20
+>> Yea, I was thinking the same. Maybe we could have an `IovInner` and a
+>> local `AsIovInner` trait that would give all the shared methods?
+>>=20
+>> I am sure Alice knows the idiomatic way to achieve code sharing here.
+>>=20
 >
-> On Fri, 14 Mar 2025 at 06:37, David Gow <davidgow@google.com> wrote:
-> >
-> > On Fri, 14 Mar 2025 at 03:27, Rae Moar <rmoar@google.com> wrote:
-> > >
-> > > A bug was identified where the KTAP below caused an infinite loop:
-> > >
-> > >  TAP version 13
-> > >  ok 4 test_case
-> > >  1..4
-> > >
-> > > The infinite loop was caused by the parser not parsing a test plan
-> > > if following a test result line.
-> > >
-> > > Fix this bug by parsing test plan line to avoid the infinite loop.
+> It would also be possible to use generics here.
 >
-> Hi Rae,
+> Something like (Maybe using types instead of the const-generic):
 >
-> With this change and this input:
+> pub struct IovIter<const DEST: bool> {
+>    ...
+> }
 >
-> https://gist.githubusercontent.com/bjackman/220265699f346e16161c6534b1150=
-19b/raw/a2e0e1aa75c0d8ab9814708b028ec78810a0471b/run_vmtests.sh.tap
+> impl <const DEST: bool> IovIter<DEST> {
+>    // Common functions
+> }
 >
-> The infinite loop is gone, but it's still hallucinating a [CRASHED] resul=
-t:
+> impl IovIter<false> {
+>    // Source functions
+> }
 >
-> [16:07:15] # SUMMARY: PASS=3D17 SKIP=3D0 FAIL=3D1
-> [16:07:15] [CRASHED]
-> ...
-> [16:07:15] Testing complete. Ran 19 tests: passed: 17, failed: 1, crashed=
-: 1
+> impl IovIter<false> {
+>    // Dest functions
+> }
 
-Hi! Thanks for the response. This is an interesting problem. Should a
-test plan at the bottom cause a crash because no tests were found
-after? Again with KTAP, a crash would make sense. I feel this example
-demonstrates why there is a need for a general parser that can parse
-kselftest output as well as KUnit.  I'll see how difficult it would be
-to change the parser to accommodate removing the crash in a new
-version. Thanks!
+I would prefer generic types, so `IovIter<Dest>` similar to what Danilo
+implemented for `Device<Core>` and `Device<Normal>`. `false` and `true`
+aren't descriptive and you also made a typo above :)
 
--Rae
+---
+Cheers,
+Benno
+
