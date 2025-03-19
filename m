@@ -1,129 +1,200 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2057.outbound.protection.outlook.com [40.107.93.57])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67E825F78E
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:35:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376905; cv=none; b=AfWa2/MBiPWTHj//qH8eDPhsJxG16OBBN11aBqQkbaroHxy7XWYkLKyx3KMb3wZtBjYP71i8ua2CDmG3AGCTTvIo2iDKOCZQ6s+J0GELDObATrbLVre0sX7s+RaErv8sSCBTZMn1Js7Jn1YGkpq4HPj5Nqdk/0qNK3CKZCbYeMA=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376905; c=relaxed/simple;
-	bh=JV2OdPz1WiI+QL4VUylyn5FzQGpYETj9MHxeFZ4p4bc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uJ5VS2yzbEvRvqAT8dOCJ4vcEt/ZDCw4Y/AEpecKBRa9GItfDLKWXcgCw3tqqpXn6HXweXPKI+1hjL+PakRWzJA94f4+OEgSDyhdy8M6LdTOIutLBv0FURNp/2BYM1lKVU04uQan8iLaKQ1SsK1068oJedYYxGUvDRsDejGZiwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wsiM85jw; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18AB7250C12;
+	Wed, 19 Mar 2025 09:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.57
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742377134; cv=fail; b=NgInW5+lbSg2bnsHe/sfpf+a8e1ngy6G4+SJGOD3UQuS/jjq7BupFw7eQnsb3d43nTAvENvg+G47LXFtyuZj10HiP/Y0OxqlPp0vXUZmEl8wxrQ9WpoIf7LxA2O3T/Env+lX8hJOc6Qds+9cENULFFtEYp4Ngdhh5I7+psck/fI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742377134; c=relaxed/simple;
+	bh=lQ+ozyF2pUnvy/WdMnTNHJzR/q4VWRPEzDcr8YUwZ34=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=UD5xvw+rcurP7u6V6HI24Y8SMfaZgL6hxgKcfjtsxgecN7dUyOeW40uKhoHYhBs6ya/ESgnxavE6FvYY/RdY6P0oWMHzzcoRUVhj3bc0pr1r6aFlomhYNitZ0Q48nG7YmsMxEWB3BRdTBVLF73nTrmFLJoo5vmA07HtYeWZl9Bw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=NafZvUFF; arc=fail smtp.client-ip=40.107.93.57
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wsiM85jw"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e66407963fso2805131a12.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742376902; x=1742981702; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Rmn2UOnqffmm0/krQIQoMdbT3AZ3yRTrlx8eCPNqDFs=;
-        b=wsiM85jwZUs0zdnXjCV77KHvTLAj6H4kuAUsBVrY8IVVfhu4H9yWNDhC8q2opvOH/f
-         XGOeSiIcueCBpRfPWVmBnLIrZ2RgiOf141KpX6np+rTWaPJGCMt/0EckutaF1DqkQvTY
-         DTJj0oSYHVLKn2JviQSxRx/vWDX3i20FAhl43pVUPAHqrLV5siC7LfPQmZD33gocfGHN
-         Mg+x5tIcCOlJ7haFx/c7OiZqAK7klr9bH++mo6FF9fkwIoXgdkr2hSx8cmb+oNOCWTr5
-         TK0Gp99tXPyShNKBlfsAfrjhcDyTLgeLhgtB8SPRDNXNiWyyzCRDEdQPlEyefzSHMVeS
-         A8Pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742376902; x=1742981702;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Rmn2UOnqffmm0/krQIQoMdbT3AZ3yRTrlx8eCPNqDFs=;
-        b=fSbrgqXHsbtJmcxW1mFO01ZgkDz2kdCimnDQp3jEdDIZm3dGb4PTSXlQ7qc7UFDV9J
-         oP7dyxhTBydM7/vz2sXsyvpyX1aYtTEUFP5hgT7/rfrK7rYOuGug6dR9D0FF3dYu+z7p
-         AB3Nre4TccTNw/A3cFjo1pmg7eKX/GdYE6zUB4RQObTE39vnoP6a+IgKlvvNUsuVcEhG
-         l5MjcRvDsHVj53Xm6q3tq6Kw7k3ht7rNw9tco9Du8xrB2XMUxIaHkhjqsMDFbLSDV07D
-         BWvYHXbbTpM7TAYWFtDp+MVhLkSEVHhZftc06X/3p1Ss3UJr+Lf1fbpZIuUE6kHVuCHC
-         nB6Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXzz351QIusPILXokJPtcHiKae7kpaVIfHkjq7Tu7J739IE7l1TYDB29qSBYgg6ssywfRNPv04qq1vO6/c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9WyCob8ziZubZ262MfkTvEyx6gLABJn4H5LijEu3xtqK0qDNU
-	2SVqhxxMpsqMMASQLlNyihklKHm8MujNZGC8DBy1552UFdwl1IJqkxHm8dbE/FlazOr2NhUow4x
-	mnNbmSnl7RobE1WM1k++6XSa1JAp64oxBc+xMZg==
-X-Gm-Gg: ASbGncsFXFsS2SEbAKyErWrHqSdVUOtKySxKXr083cykKt7SYnwP6yKrySjcclmd+mn
-	ClsO60Wgrgqk7w9Qc42BP3uyxqi83/1DzRoaFxIvldHkOcWO0h8C96GRhuq4KQ+1NMd9S8+FT75
-	57JMRDU5LtXb/iRCDx1jhYwY4M
-X-Google-Smtp-Source: AGHT+IEJB9yuQUTqwi4isGrxD5QyjQIW1ss1czUgdn55fd/AENDuhHLVVJIo8pq1i0qLz31Bl1W7vj1byd1jiefeGNg=
-X-Received: by 2002:a05:6402:354a:b0:5de:39fd:b2f5 with SMTP id
- 4fb4d7f45d1cf-5eb80d05ea6mr2082776a12.1.1742376901674; Wed, 19 Mar 2025
- 02:35:01 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="NafZvUFF"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=HCjFtYXB7QRg8DkJtNZx63rwPaL6Yz43t9dsO78b352CAqxFBXV4i4bF0SoBKguIIg6JsvSHf5D9z+q4jR5Fqfwco/18ioURPnQIwx7/JHHzIruSWJS/hUZT6xvdvCkFPc8lO6R+ZyWIc06roF8EKhzJ6gDzAqfg9ktH85IgFfIYHTMHe0fWsxKsIGdgYQjUrYrwkf/cO3dOC9N7WLZRW+LgAivEgohasdeKhhFLa2YPG2JiVQ+6qQq5e3s3c0mDEjrW39MoFFouGnwFAQs0pTpa2hf7R6So7YNgORcglbjHIjqdG2g/S7kQJ1W8VFJXV6PqqNMFSZ0+MQlUOOvxIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=tXpsSNODXKmtRuezAeFI/Q6tt5Xi8d1MmOfr+mW/wlc=;
+ b=pDGSyZvfh/P+uCoNtUAsj+4qk3WbYinMsf3f00vMl6qnB/GW6jFIzed8WHzgG59vxhPn/8N65YTlxGaPEhE/vGTc7gcH7Zpn78fuUNj1zW8fXYVxVp3qdsE/MoeAkKqH1Xpsb0mFLCFTG8CAGyMOZO5G5lHk6XrdBwlNOuJerWD4Cnq9O4WZfwhZvwhcTFhvSXFN8L3ELYU6GmMaYAoA8dCgAz1xGqiHurUnNcivkr5GEP0AdQUaH0vnvz0pxrbya7U5lxLCYmgnErs7yPUcwbL6iRyJhcAran6iG0TOMXM1fl7gbW0HbVFtQNQoFCTv/vAheLYx/bNjb5HwMcdevA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=tXpsSNODXKmtRuezAeFI/Q6tt5Xi8d1MmOfr+mW/wlc=;
+ b=NafZvUFFDYVYslWvesfGybtBUOjjNd0ahoNdJfdA3Tst1TgML7wHMctUxD/c+N3h6ljUQMIaJIQmNEBzQs9AKwzgMakOrMwlpuEbCtb0/Z8TUQUGBqcVW1a846rL2/zIGssYlk9fPiJgIhhn7W1ggk1TuUdil3tO/N5R8EKMpJ4=
+Received: from LV2PR12MB5798.namprd12.prod.outlook.com (2603:10b6:408:17a::6)
+ by MN2PR12MB4157.namprd12.prod.outlook.com (2603:10b6:208:1db::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Wed, 19 Mar
+ 2025 09:38:50 +0000
+Received: from LV2PR12MB5798.namprd12.prod.outlook.com
+ ([fe80::6f3e:b003:209b:9c9f]) by LV2PR12MB5798.namprd12.prod.outlook.com
+ ([fe80::6f3e:b003:209b:9c9f%3]) with mapi id 15.20.8534.034; Wed, 19 Mar 2025
+ 09:38:50 +0000
+From: "Kaszewski, Dominik" <Dominik.Kaszewski@amd.com>
+To: Stephen Rothwell <sfr@canb.auug.org.au>, Alex Deucher
+	<alexdeucher@gmail.com>
+CC: "Deucher, Alexander" <Alexander.Deucher@amd.com>, Linux Kernel Mailing
+ List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+	<linux-next@vger.kernel.org>
+Subject: RE: linux-next: build warning after merge of the amdgpu tree
+Thread-Topic: linux-next: build warning after merge of the amdgpu tree
+Thread-Index: AQHbmLItYB1lWj/+TkuBSnfih77gVbN6M4jQ
+Date: Wed, 19 Mar 2025 09:38:50 +0000
+Message-ID:
+ <LV2PR12MB579836A210FC20C79513D268F0D92@LV2PR12MB5798.namprd12.prod.outlook.com>
+References: <20250319203449.386f9e00@canb.auug.org.au>
+In-Reply-To: <20250319203449.386f9e00@canb.auug.org.au>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+ MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ActionId=6786f4ce-e264-44b9-8fd2-95b4b798f2a1;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_ContentBits=0;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Enabled=true;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Method=Standard;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Name=AMD
+ Internal Distribution
+ Only;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SetDate=2025-03-19T09:36:59Z;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;MSIP_Label_dce362fe-1558-4fb5-9f64-8a6240d76441_Tag=10,
+ 3, 0, 1;
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV2PR12MB5798:EE_|MN2PR12MB4157:EE_
+x-ms-office365-filtering-correlation-id: 9cf100f3-c54b-4f83-69c8-08dd66c9db07
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|376014|1800799024|38070700018;
+x-microsoft-antispam-message-info:
+ =?us-ascii?Q?j6gd43mdkW9pjTexVW5Jgsk9D+VMXjqBwQRiSjuqkSHLlobqtdZvDd1r3jOk?=
+ =?us-ascii?Q?qMQGV/GQIPFiyghM/HcwMMzZfLgdPAlxgJZzYRYQWEFDR7rHViVzmcdOYWuN?=
+ =?us-ascii?Q?w0IQXmM7dBrM+MIvPz6++Zr4jnh7XsCgSyqURCNcoy1X4eJP132TbNmpRnOn?=
+ =?us-ascii?Q?oC8f/mK7Eqk8P9bXLIJ91IkpVynVaEIWgHdiwcPAL9KhC1EchgwVyfyIlgNz?=
+ =?us-ascii?Q?8XkDS/8i7vQJMzyUjMBMMwXf3I8FIn3BEO3y009IJ6RE2YFakVCAssbx9eSh?=
+ =?us-ascii?Q?MD5d4laEA8g+O3Ngr0GMVaWnHZOZZLVd6CJNdC2JZE6l5PzZYs6BeWaXvlaj?=
+ =?us-ascii?Q?bHsyxqX09LMuXZGUzOd5QB65pzmhQjBTU1D2Fgf894VyfVXsuKz0pkrn7nlT?=
+ =?us-ascii?Q?MYsSiVnFxUq50SeTS+NMCOPGIiZLMoPk3NFH8Vc6aB+r9vz05HD3zA2trlRa?=
+ =?us-ascii?Q?XJK4NsTgSooOcEz+oZa993CaM1lSP/60xVvuJeFKD/G+o8FUybDBxlTY1iuH?=
+ =?us-ascii?Q?51q9BbrKbSV6FE1DzzRkUV7IZCnNNotcBHXiblGm80fxhJJPvI3oRdIOg1tX?=
+ =?us-ascii?Q?k4iAdL0LlsSBe9wYwMnO/MKNsDljdMRWZarmxi6QfkJZzSDUZ6VaALh2Lzja?=
+ =?us-ascii?Q?7kdQe/7AyG/F4NJjIEq1IFMGVEDkSmxGoJaWlD/ftY5XH9jVW/52Dfj1kRmi?=
+ =?us-ascii?Q?FM3N1W5DxXELaRRXwsvySrN0cQ7RMEhiQop23ZjSKbHYSnVc0QW6onCzuPBx?=
+ =?us-ascii?Q?PdKg9W0CI1RCA99cQxFhmN3t0hQYN9Xfp0JdxySQ7gwviIP+B7EWrGPH5Tml?=
+ =?us-ascii?Q?ooViKOZPQomBVLRWfAJojP/Z5zdaeSZ0FrSb6dXNeQUN7IYNFpUQ/v9kvL+v?=
+ =?us-ascii?Q?2HjdjxG0pob4QQPs68fWIkwtfdvTSbf0o7aITRZ7bSBou4WHfwRYt0bj6+rl?=
+ =?us-ascii?Q?q7Ovrex3FRDj45yWQQJwgiZLG6LQDN1I3w75SFTeZinbg5VMvCdf3Blm57v8?=
+ =?us-ascii?Q?XOWvokXeRXp4xsG0+/WaR0looC+53qLMGPllovvCAgmBBeKwKouOLlGj79ds?=
+ =?us-ascii?Q?EcMy01k/Q/BZ2az/ucbAOJ0H2vtfKfmWilLI+1TZZHIYmtYr9kfOzi5JG+0O?=
+ =?us-ascii?Q?L3RRzapZOEodf0DU6kszSNjrgvJxtYQPUymhBWhq2aNPnZr9ol52xuRdul0O?=
+ =?us-ascii?Q?7PsFDO6cJ+ZDpx0I89bF5TmtFOEqhNBgUrhq5kL+z0wqu//w3eHh+e/Sk8/I?=
+ =?us-ascii?Q?qIebktLOFihAyToPTP6cvZauwQQxSk20qZNLHBN/tevI9sg8W272YxW7qWOm?=
+ =?us-ascii?Q?IB5lkex9HjmUWOzniMY2pjRDG/yzEk/qNldCF1dRodOxoU3Ht1mk9Rd4+2X6?=
+ =?us-ascii?Q?taW1FriiivxX6yd7JSfjIxf5nlhO3tNTOQZPJaTRLDkQWlTn5/6lmei9K+MF?=
+ =?us-ascii?Q?4YO5J2oHIVh7o0JeT50K+UWevpazeE1s?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV2PR12MB5798.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?duwxI5gl9CNOiwqraU5CSglxiGr+EZG0NIvKloQJFtgJaDC3WucpYg9L5jUg?=
+ =?us-ascii?Q?TCh7wWw3J9ndEDcaUxfmzf5JEqaNlfcsrYyq9LMnp+1vaEtx73E1vLMrtJcw?=
+ =?us-ascii?Q?ys2ySA7Sr+7bPHNDU7MkSdmGdjrsrOCDivIyeChOLtOJKwo4lhVZC+HDA2zQ?=
+ =?us-ascii?Q?BdT3pld9XdOVCta1SacIsJ2OZT/r87EILYzfgAfaOn3+JOq5YbDcWMYTRVBz?=
+ =?us-ascii?Q?r7fUHvySdGH7WEHqyHRnu1ZgrgA10ub2LkBspG8bTZfXV0sAVrHuaBZextUs?=
+ =?us-ascii?Q?VMBcBJY/hVGqMiGOf71/EDbf25b/ITa6s3zoxYIzzpssSvCaOQDxjlu+jelr?=
+ =?us-ascii?Q?Wl4mnr5GGExbQOHTq5IlBPc47VGS7SWmwVUAvptdMbinW78vQT2fKdUPpm3W?=
+ =?us-ascii?Q?h7dp8JM/sFtl9NN7h+HoRmj2H+ZuO9DE4H2GW523KCceckgQX51arMr9QnvB?=
+ =?us-ascii?Q?zk1jZDUxYojjo5rUJQ+h6tJHFfoWqwG/ehLOG1IyuNBRns3IFuzvmac+rFm0?=
+ =?us-ascii?Q?NrV8hMZ7i/QfoFRgc3NZowhYCUt4FA6hR9HjDuYUG0gzF4DaD813yZ9b0XFe?=
+ =?us-ascii?Q?glacahoRWbl59C1WPolMdPGeJOUUWlmbzXxWMZz+k4rIkgwKMp6y2686qkN0?=
+ =?us-ascii?Q?q1FSf9iBD3SOFXY3eeq1rkZa/s69buHUeR9VIna2xjy3rkvZTu/EMgUQTLeR?=
+ =?us-ascii?Q?VZfiMwnKRX0crUbUiAhe8yzm/sy8vQEl2isHIU2HkAcL+thZZna/1BQkesGp?=
+ =?us-ascii?Q?10XJZXCsDR8skG4h3x94Xyuilq5Wr0W0YqpbtO5BQQucTau1kXaFmdVUCTqi?=
+ =?us-ascii?Q?VzOuW+Wca27ZRNd9nNUCht1RWOXvUIkdcaVVWTKFA0oiM4S0w09im2zdBjlM?=
+ =?us-ascii?Q?aFAj06nzvr9IV6fxI8NEeYdhnse2Gr6J+cwkC3iIImgs3r2LJH949mQDOOD1?=
+ =?us-ascii?Q?jINH+vqIgYZXicaLskuE4nKHDApjLJ/QZMv3AzWGOxU7L5R0ImB5c7/i3pdj?=
+ =?us-ascii?Q?9BhRCv+MK5ZckJ5NTCipBGKVAbh9ByxBDFm383zDehkLHMGmSTrPv7eYhILq?=
+ =?us-ascii?Q?LCeymTwOZ46si7aTe8ji19huabFdJrYg+qLFN18eDPuLuibPy+/cjfuDrB0m?=
+ =?us-ascii?Q?+jlkQ9e9/LrWp8ItQQvt6oIwcACk3fl+9HBpEG2gPBTplA5HsPNKlcAcUuj2?=
+ =?us-ascii?Q?+xOJt11U51LGStiFfeM1zpFJSsIjcdNxW1aV4C6sI1N5Pp9p6ChHZZdQdJTe?=
+ =?us-ascii?Q?ubINn5SqKJ19k3q05tRc7c4oCC+BsSzxReFn+QgZsShuJUElMNo6bguaB5vJ?=
+ =?us-ascii?Q?rNdwOFUqPMBQVuwdq5yzjFi9YiUQam351pu2bavxFe9VB/vO5zIcQgvZoXZR?=
+ =?us-ascii?Q?CUOgDvZ8IBOUCJVWuk1wLHt3u6hLvZp4NPXm6oJiIX8kgaSMZc6tPc/ZnlI9?=
+ =?us-ascii?Q?3pBpgT+XXzoqoWKn9OG2G93pHqJFMLaiUeCQp8GXdpvAm1Y4/G6KlZaVJiRy?=
+ =?us-ascii?Q?gPd3ateKfWZNP70MDs/DurS4lifTFnL3zzDzdS5kDrQ6OVg1b5eGp76VNP/R?=
+ =?us-ascii?Q?wEIGzCGOBH35CvSzaWg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250303105241.17251-1-xuewen.yan@unisoc.com> <20250303105241.17251-2-xuewen.yan@unisoc.com>
-In-Reply-To: <20250303105241.17251-2-xuewen.yan@unisoc.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Wed, 19 Mar 2025 10:34:49 +0100
-X-Gm-Features: AQ5f1Jr6RHA5TwlCEclQP4eh8ML-EvaEIJ8LDshhlG_AP2lcQROcu8uebNCWdTg
-Message-ID: <CAKfTPtC=QYe4uZuK87G3GG6zi+f3r214hUnK9=K1mNv59FsYFA@mail.gmail.com>
-Subject: Re: [RFC PATCH V2 1/3] sched/fair: Fixup-wake_up_sync-vs-DELAYED_DEQUEUE
-To: Xuewen Yan <xuewen.yan@unisoc.com>
-Cc: peterz@infradead.org, mingo@redhat.com, juri.lelli@redhat.com, 
-	dietmar.eggemann@arm.com, rostedt@goodmis.org, bsegall@google.com, 
-	mgorman@suse.de, vschneid@redhat.com, linux-kernel@vger.kernel.org, 
-	ke.wang@unisoc.com, di.shen@unisoc.com, xuewen.yan94@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV2PR12MB5798.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9cf100f3-c54b-4f83-69c8-08dd66c9db07
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Mar 2025 09:38:50.5175
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: waPWcLefAcUssisBYRnkn/pmbZlvMydz3sBRwiKQMjFvhiZ/n/gCuAy76TZ4MmZcFWoRjvFeYZS+tUjTAUjESQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR12MB4157
 
-On Mon, 3 Mar 2025 at 11:56, Xuewen Yan <xuewen.yan@unisoc.com> wrote:
->
-> Delayed dequeued feature keeps a sleeping task enqueued until its
-> lag has elapsed. As a result, it stays also visible in rq->nr_running.
-> So when in wake_affine_idle(), we should use the real running-tasks
-> in rq to check whether we should place the wake-up task to
-> current cpu.
-> On the other hand, add a helper function to return the nr-delayed.
->
-> Fixes: 152e11f6df29 ("sched/fair: Implement delayed dequeue")
-> Signed-off-by: Xuewen Yan <xuewen.yan@unisoc.com>
+[AMD Official Use Only - AMD Internal Distribution Only]
 
-Reviewed-by: Vincent Guittot <vincent.guittot@linaro.org>
+Hi,
 
-> ---
-> V2:
-> - add helper function (Vincent)
-> ---
->  kernel/sched/fair.c | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 1c0ef435a7aa..a354f29c4f6f 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7181,6 +7181,11 @@ static bool dequeue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->         return true;
->  }
->
-> +static inline unsigned int cfs_h_nr_delayed(struct rq *rq)
-> +{
-> +       return (rq->cfs.h_nr_queued - rq->cfs.h_nr_runnable);
-> +}
-> +
->  #ifdef CONFIG_SMP
->
->  /* Working cpumask for: sched_balance_rq(), sched_balance_newidle(). */
-> @@ -7342,8 +7347,12 @@ wake_affine_idle(int this_cpu, int prev_cpu, int sync)
->         if (available_idle_cpu(this_cpu) && cpus_share_cache(this_cpu, prev_cpu))
->                 return available_idle_cpu(prev_cpu) ? prev_cpu : this_cpu;
->
-> -       if (sync && cpu_rq(this_cpu)->nr_running == 1)
-> -               return this_cpu;
-> +       if (sync) {
-> +               struct rq *rq = cpu_rq(this_cpu);
-> +
-> +               if ((rq->nr_running - cfs_h_nr_delayed(rq)) == 1)
-> +                       return this_cpu;
-> +       }
->
->         if (available_idle_cpu(prev_cpu))
->                 return prev_cpu;
-> --
-> 2.25.1
->
+I don't understand this warning, the enum it cannot find has been introduce=
+d in the same commit immediately below:
+
++       /**
++        * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP Locality Check =
+FW
++        * path failure, retry using legacy SW path.
++        */
++       DC_HDCP_LC_ENABLE_SW_FALLBACK =3D 0x100000,
+
+Could it perhaps be about the missing colon before "If set"?
+
+Best regards,
+Dominik Kaszewski
+Senior Software Engineer
+SW - Display NPI
+
+-----Original Message-----
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Sent: Wednesday, March 19, 2025 10:35 AM
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: Deucher, Alexander <Alexander.Deucher@amd.com>; Kaszewski, Dominik <Dom=
+inik.Kaszewski@amd.com>; Linux Kernel Mailing List <linux-kernel@vger.kerne=
+l.org>; Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build warning after merge of the amdgpu tree
+
+Hi all,
+
+After merging the amdgpu tree, today's linux-next build (htmldocs) produced=
+ this warning:
+
+drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of ker=
+nel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP=
+ Locality Check FW
+drivers/gpu/drm/amd/include/amd_shared.h:369: warning: Incorrect use of ker=
+nel-doc format:          * @DC_HDCP_LC_ENABLE_SW_FALLBACK If set, upon HDCP=
+ Locality Check FW
+drivers/gpu/drm/amd/include/amd_shared.h:373: warning: Enum value 'DC_HDCP_=
+LC_ENABLE_SW_FALLBACK' not described in enum 'DC_DEBUG_MASK'
+
+Introduced by commit
+
+  84ff5895399c ("drm/amdgpu: Add debug masks for HDCP LC FW testing")
+
+--
+Cheers,
+Stephen Rothwell
