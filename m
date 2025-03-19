@@ -1,66 +1,64 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0294925C6EA;
-	Wed, 19 Mar 2025 11:03:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1507625CC9D;
+	Wed, 19 Mar 2025 11:03:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742382235; cv=none; b=W7T5/uCFoWsFFQD2Kt2bNN5g69BM/95J5Y+sMRa5Br8Rjsa18Ruo/FEFk0lCaVGlBIlJ5VcO7BHp/4tG+aABJnR8bGYStayxv5p+paK2+wUOHc/QzsnBsAL9bkC3WBUah4ffLwE+aSj8loNDhROgMJcjVzC9wVQkXW5l9k6jleM=
+	t=1742382237; cv=none; b=FRkuejQRV70tLpxC+qmaekA/8v9aWgEBR/we+Hd1Y5LxiuKp9luGNrs+xoAt7e5FgL9xuYgur1TZ7LdMNB1Ql+eSYaKnBl9zFR5TQ8HxHJopgiV1VCn4nx0Zys4s5mXLenA6DxnHi2yw0bKhv4CZz1itGdIOB+o4pyHhpEB9Pig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742382235; c=relaxed/simple;
-	bh=R6YYRm0n117UhsDVit+bSKvuQz2n/R4+XJVUythbFJQ=;
+	s=arc-20240116; t=1742382237; c=relaxed/simple;
+	bh=u8iDaWqBrSzrHPpCy+67WvIZ5gCuw+XbGeoyEol+JfM=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=qTXuKr6A4u023Xqn/qCrNBkXGvWR84gj+tofalRHZNsVSFwGZeXoykqGTOGB3T2EDlAv2ZPx15kZvRW151v9OldiDacurMcD+krAyPSD8b0Q2T94xkn2TjWAkG+gP5LGRBrcbXdLq2YCaU0eeqYYIQSvZqAxSr+Zz8tuF+qSCyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=egiN2Z6q; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=JPjCehxO; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=H0ScXareYRAWRxrRqHpyGleKGKyr4UuDTDAftmHt0bLVyM7hYJiTxdg3R2geYdS4K3SSUd1ihuXpZc0K8Inww1l3/Afr3zHN8Vr2iqOFxWV4oDEkRr5WDUIm/G1rJdFpshB3I3PMkmykI+raMagw99PlIWBjVMY9okfbFy8qPZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=a8ma1AyI; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=3u08Np7K; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="egiN2Z6q";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="JPjCehxO"
-Date: Wed, 19 Mar 2025 11:03:50 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="a8ma1AyI";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="3u08Np7K"
+Date: Wed, 19 Mar 2025 11:03:52 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742382231;
+	s=2020; t=1742382233;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cRdJb5imMniA5fnLJvx/TN1HLza5Q38T/njciqvCVko=;
-	b=egiN2Z6qOVNd7aAAKpdqRgg2GltFpHIC8XQ04RDMNT+vigxye5rfTw/eJ4u4+/Bql5mV/H
-	riZfuLHax3HQsL7Fbxh3XAMMf68ivLdvlLTXhU8ews1CrStEBk8Odeq+XdtM7R0Y1ifB+a
-	1AL07gOkIXqciVfBqYgdQLGBP6vlmiDcnSMhz3P3+uULDihj6Sybcip1ggHdqV2rSCOemO
-	7jKZWDOclda6TNpi5YIE+ABdjHQaGUvzJZ3l9cSG6TBsV6sppllxQWFtAlAhB8aF+DAX5F
-	GC+pvbCX8Fmr69iLwuYJubkQ0jeJ0KbYa9MCq6Ef5OzDMKQKKtXvcT2Aa8ecFA==
+	bh=040beFsXr1i2X/Lou6+0mibXGxylvoFUEk4HfwvCUNo=;
+	b=a8ma1AyIPqaT4YIrIqx/ruAXs3LJRxlJr6QvRxJuhAKqURbPT9EEib14SAe0Fz+vva9xHr
+	qFajl7ltJ5VxB/D7C9mvB5mJmEWRrsp7wy5PgFAnVLamfDBjRXoUGq/itMBRtteeFwfpHo
+	eyXbDX92YR6Ct3GcSBomCtLuciiJO0tMGTTrhNJSrqHG8Bow0PziKAz5XSqbsv6DGAijKY
+	IFlYO4wriyClieFwMGuDc5Gm8m1E4PFaKowOIZOYfs/H2wdNv4bqs3hmWA6D6twiDJeD75
+	65Cha+xke3RYszT8wyOcz0yRFTVFYkY5szHeznT+i/fKFu7pDL239PTgHHxOhQ==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742382231;
+	s=2020e; t=1742382233;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=cRdJb5imMniA5fnLJvx/TN1HLza5Q38T/njciqvCVko=;
-	b=JPjCehxO+tmliUdFscItmmIOxBPSrVc5ip3DAorZegcPdtuFUFHSHJlkIh7057RdvhumNy
-	AKIdcNGFXhuWcqDQ==
-From: "tip-bot2 for Brian Gerst" <tip-bot2@linutronix.de>
+	bh=040beFsXr1i2X/Lou6+0mibXGxylvoFUEk4HfwvCUNo=;
+	b=3u08Np7KW8GNcpzTKMFoKoghV4S2ypAFL8DWFmu93q/fRdOgXP7MaftrRiruZBW2pG+m5w
+	wKbQT3Xm0JtfDyDw==
+From: "tip-bot2 for Mario Limonciello" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/core] x86/xen: Move Xen upcall handler
-Cc: Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>,
- Juergen Gross <jgross@suse.com>, Sohil Mehta <sohil.mehta@intel.com>,
- Andy Lutomirski <luto@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
- linux-kernel@vger.kernel.org
-In-Reply-To: <20250314151220.862768-2-brgerst@gmail.com>
-References: <20250314151220.862768-2-brgerst@gmail.com>
+Subject:
+ [tip: x86/core] x86/amd_node: Add SMN offsets to exclusive region access
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+ Yazen Ghannam <yazen.ghannam@amd.com>, "Borislav Petkov (AMD)" <bp@alien8.de>,
+ Ingo Molnar <mingo@kernel.org>, x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20250130-wip-x86-amd-nb-cleanup-v4-2-b5cc997e471b@amd.com>
+References: <20250130-wip-x86-amd-nb-cleanup-v4-2-b5cc997e471b@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174238223094.14745.10299419038445932226.tip-bot2@tip-bot2>
+Message-ID: <174238223258.14745.18098609826988797661.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -70,211 +68,102 @@ Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the x86/core branch of tip:
 
-Commit-ID:     1ab7b5ed44ba9bce581e225f40219b793bc779d6
-Gitweb:        https://git.kernel.org/tip/1ab7b5ed44ba9bce581e225f40219b793bc779d6
-Author:        Brian Gerst <brgerst@gmail.com>
-AuthorDate:    Fri, 14 Mar 2025 11:12:14 -04:00
+Commit-ID:     83518453074d1f3eadbf7e61652b608a60087317
+Gitweb:        https://git.kernel.org/tip/83518453074d1f3eadbf7e61652b608a60087317
+Author:        Mario Limonciello <mario.limonciello@amd.com>
+AuthorDate:    Thu, 30 Jan 2025 19:48:56 
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 11:18:58 +01:00
+CommitterDate: Wed, 19 Mar 2025 11:18:23 +01:00
 
-x86/xen: Move Xen upcall handler
+x86/amd_node: Add SMN offsets to exclusive region access
 
-Move the upcall handler to Xen-specific files.
+Offsets 0x60 and 0x64 are used internally by kernel drivers that call
+the amd_smn_read() and amd_smn_write() functions. If userspace accesses
+the regions at the same time as the kernel it may cause malfunctions in
+drivers using the offsets.
 
-No functional changes.
+Add these offsets to the exclusions so that the kernel is tainted if a
+non locked down userspace tries to access them.
 
-Signed-off-by: Brian Gerst <brgerst@gmail.com>
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Signed-off-by: Yazen Ghannam <yazen.ghannam@amd.com>
+Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Reviewed-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Sohil Mehta <sohil.mehta@intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Link: https://lore.kernel.org/r/20250314151220.862768-2-brgerst@gmail.com
+Link: https://lore.kernel.org/r/20250130-wip-x86-amd-nb-cleanup-v4-2-b5cc997e471b@amd.com
 ---
- arch/x86/entry/common.c     | 72 +------------------------------------
- arch/x86/xen/enlighten_pv.c | 69 +++++++++++++++++++++++++++++++++++-
- 2 files changed, 69 insertions(+), 72 deletions(-)
+ arch/x86/kernel/amd_node.c | 41 +++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 41 insertions(+)
 
-diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-index 3514bf2..ce4d88e 100644
---- a/arch/x86/entry/common.c
-+++ b/arch/x86/entry/common.c
-@@ -21,11 +21,6 @@
- #include <linux/uaccess.h>
- #include <linux/init.h>
+diff --git a/arch/x86/kernel/amd_node.c b/arch/x86/kernel/amd_node.c
+index 65045f2..ac57194 100644
+--- a/arch/x86/kernel/amd_node.c
++++ b/arch/x86/kernel/amd_node.c
+@@ -93,6 +93,7 @@ static struct pci_dev **amd_roots;
  
--#ifdef CONFIG_XEN_PV
--#include <xen/xen-ops.h>
--#include <xen/events.h>
--#endif
--
- #include <asm/apic.h>
- #include <asm/desc.h>
- #include <asm/traps.h>
-@@ -455,70 +450,3 @@ SYSCALL_DEFINE0(ni_syscall)
- {
- 	return -ENOSYS;
+ /* Protect the PCI config register pairs used for SMN. */
+ static DEFINE_MUTEX(smn_mutex);
++static bool smn_exclusive;
+ 
+ #define SMN_INDEX_OFFSET	0x60
+ #define SMN_DATA_OFFSET		0x64
+@@ -149,6 +150,9 @@ static int __amd_smn_rw(u8 i_off, u8 d_off, u16 node, u32 address, u32 *value, b
+ 	if (!root)
+ 		return err;
+ 
++	if (!smn_exclusive)
++		return err;
++
+ 	guard(mutex)(&smn_mutex);
+ 
+ 	err = pci_write_config_dword(root, i_off, address);
+@@ -202,6 +206,39 @@ static int amd_cache_roots(void)
+ 	return 0;
  }
--
--#ifdef CONFIG_XEN_PV
--#ifndef CONFIG_PREEMPTION
--/*
-- * Some hypercalls issued by the toolstack can take many 10s of
-- * seconds. Allow tasks running hypercalls via the privcmd driver to
-- * be voluntarily preempted even if full kernel preemption is
-- * disabled.
-- *
-- * Such preemptible hypercalls are bracketed by
-- * xen_preemptible_hcall_begin() and xen_preemptible_hcall_end()
-- * calls.
-- */
--DEFINE_PER_CPU(bool, xen_in_preemptible_hcall);
--EXPORT_SYMBOL_GPL(xen_in_preemptible_hcall);
--
--/*
-- * In case of scheduling the flag must be cleared and restored after
-- * returning from schedule as the task might move to a different CPU.
-- */
--static __always_inline bool get_and_clear_inhcall(void)
--{
--	bool inhcall = __this_cpu_read(xen_in_preemptible_hcall);
--
--	__this_cpu_write(xen_in_preemptible_hcall, false);
--	return inhcall;
--}
--
--static __always_inline void restore_inhcall(bool inhcall)
--{
--	__this_cpu_write(xen_in_preemptible_hcall, inhcall);
--}
--#else
--static __always_inline bool get_and_clear_inhcall(void) { return false; }
--static __always_inline void restore_inhcall(bool inhcall) { }
--#endif
--
--static void __xen_pv_evtchn_do_upcall(struct pt_regs *regs)
--{
--	struct pt_regs *old_regs = set_irq_regs(regs);
--
--	inc_irq_stat(irq_hv_callback_count);
--
--	xen_evtchn_do_upcall();
--
--	set_irq_regs(old_regs);
--}
--
--__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
--{
--	irqentry_state_t state = irqentry_enter(regs);
--	bool inhcall;
--
--	instrumentation_begin();
--	run_sysvec_on_irqstack_cond(__xen_pv_evtchn_do_upcall, regs);
--
--	inhcall = get_and_clear_inhcall();
--	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
--		irqentry_exit_cond_resched();
--		instrumentation_end();
--		restore_inhcall(inhcall);
--	} else {
--		instrumentation_end();
--		irqentry_exit(regs, state);
--	}
--}
--#endif /* CONFIG_XEN_PV */
-diff --git a/arch/x86/xen/enlighten_pv.c b/arch/x86/xen/enlighten_pv.c
-index 5e57835..dcc2041 100644
---- a/arch/x86/xen/enlighten_pv.c
-+++ b/arch/x86/xen/enlighten_pv.c
-@@ -73,6 +73,7 @@
- #include <asm/mwait.h>
- #include <asm/pci_x86.h>
- #include <asm/cpu.h>
-+#include <asm/irq_stack.h>
- #ifdef CONFIG_X86_IOPL_IOPERM
- #include <asm/io_bitmap.h>
- #endif
-@@ -94,6 +95,44 @@ void *xen_initial_gdt;
- static int xen_cpu_up_prepare_pv(unsigned int cpu);
- static int xen_cpu_dead_pv(unsigned int cpu);
  
-+#ifndef CONFIG_PREEMPTION
-+/*
-+ * Some hypercalls issued by the toolstack can take many 10s of
-+ * seconds. Allow tasks running hypercalls via the privcmd driver to
-+ * be voluntarily preempted even if full kernel preemption is
-+ * disabled.
-+ *
-+ * Such preemptible hypercalls are bracketed by
-+ * xen_preemptible_hcall_begin() and xen_preemptible_hcall_end()
-+ * calls.
-+ */
-+DEFINE_PER_CPU(bool, xen_in_preemptible_hcall);
-+EXPORT_SYMBOL_GPL(xen_in_preemptible_hcall);
-+
-+/*
-+ * In case of scheduling the flag must be cleared and restored after
-+ * returning from schedule as the task might move to a different CPU.
-+ */
-+static __always_inline bool get_and_clear_inhcall(void)
++static int reserve_root_config_spaces(void)
 +{
-+	bool inhcall = __this_cpu_read(xen_in_preemptible_hcall);
++	struct pci_dev *root = NULL;
++	struct pci_bus *bus = NULL;
 +
-+	__this_cpu_write(xen_in_preemptible_hcall, false);
-+	return inhcall;
-+}
++	while ((bus = pci_find_next_bus(bus))) {
++		/* Root device is Device 0 Function 0 on each Primary Bus. */
++		root = pci_get_slot(bus, 0);
++		if (!root)
++			continue;
 +
-+static __always_inline void restore_inhcall(bool inhcall)
-+{
-+	__this_cpu_write(xen_in_preemptible_hcall, inhcall);
-+}
++		if (root->vendor != PCI_VENDOR_ID_AMD &&
++		    root->vendor != PCI_VENDOR_ID_HYGON)
++			continue;
 +
-+#else
++		pci_dbg(root, "Reserving PCI config space\n");
 +
-+static __always_inline bool get_and_clear_inhcall(void) { return false; }
-+static __always_inline void restore_inhcall(bool inhcall) { }
-+
-+#endif
-+
- struct tls_descs {
- 	struct desc_struct desc[3];
- };
-@@ -687,6 +726,36 @@ DEFINE_IDTENTRY_RAW(xenpv_exc_machine_check)
- }
- #endif
- 
-+static void __xen_pv_evtchn_do_upcall(struct pt_regs *regs)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
-+
-+	inc_irq_stat(irq_hv_callback_count);
-+
-+	xen_evtchn_do_upcall();
-+
-+	set_irq_regs(old_regs);
-+}
-+
-+__visible noinstr void xen_pv_evtchn_do_upcall(struct pt_regs *regs)
-+{
-+	irqentry_state_t state = irqentry_enter(regs);
-+	bool inhcall;
-+
-+	instrumentation_begin();
-+	run_sysvec_on_irqstack_cond(__xen_pv_evtchn_do_upcall, regs);
-+
-+	inhcall = get_and_clear_inhcall();
-+	if (inhcall && !WARN_ON_ONCE(state.exit_rcu)) {
-+		irqentry_exit_cond_resched();
-+		instrumentation_end();
-+		restore_inhcall(inhcall);
-+	} else {
-+		instrumentation_end();
-+		irqentry_exit(regs, state);
++		/*
++		 * There are a few SMN index/data pairs and other registers
++		 * that shouldn't be accessed by user space.
++		 * So reserve the entire PCI config space for simplicity rather
++		 * than covering specific registers piecemeal.
++		 */
++		if (!pci_request_config_region_exclusive(root, 0, PCI_CFG_SPACE_SIZE, NULL)) {
++			pci_err(root, "Failed to reserve config space\n");
++			return -EEXIST;
++		}
 +	}
++
++	smn_exclusive = true;
++	return 0;
 +}
 +
- struct trap_array_entry {
- 	void (*orig)(void);
- 	void (*xen)(void);
+ static int __init amd_smn_init(void)
+ {
+ 	int err;
+@@ -218,6 +255,10 @@ static int __init amd_smn_init(void)
+ 	if (err)
+ 		return err;
+ 
++	err = reserve_root_config_spaces();
++	if (err)
++		return err;
++
+ 	return 0;
+ }
+ 
