@@ -1,45 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C2A17A2F0;
-	Wed, 19 Mar 2025 19:45:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C7420C48E
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:46:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742413532; cv=none; b=pPgwoQXZ9Lr1GtS3zlduEb5s6q4Si5rqVTrDTgig+Ul2SsOr6E6/83Gw4W6tMG0YdF9Ubj8um+z0LjbN5k2E8QuuuCvNbYasEkTl2N9PBNEBVikufRGPWCY+QE/Ob9H67d1SVznGv0iSqykXIviuxyfDA2uUUTtAW+QlyfUan8w=
+	t=1742413575; cv=none; b=oLMZrgolHh5dqaltl8Jb7mWjZqtmHwAku5OmrPd+2VyD6AlrXWr3ohk3bnZDIwQtmNn+a957BVSLB7BFKWiQaWWDNlay+f25ojc0kia7LrCfH2AcQ15/ewyj70f1O3F10qklAsCV1IYq7RKbecO+C7ZHqaYFTYKmIaCAZ5A70Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742413532; c=relaxed/simple;
-	bh=Myrbj9m3hCsLiGJ67e/0Ahc4o+JFpDhFwC5X4tYyaWQ=;
+	s=arc-20240116; t=1742413575; c=relaxed/simple;
+	bh=qlvN6iAULWo5vrmeRzfDI9VaAi52aMTIKGtEDdG7464=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uGSsKS4zOs7/+CbOFr19m03/S3NkqQ81qFNYvKMmWsjBTs4S+I7I5mltlU7Jlk2PYnR/9a4CSMKjo4YKKybzuSTaa7Xrz0sOtv+u7VxdGqypzOR9YlkEekINwv79fQaU7/UYuvytpyZ9wXsbb2MymCf7iDSvh7tsP5XzcM5RrgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k83A1uaj; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=fCy87LJ9pFZHTHQsLfoA80PcWt1KF945CpaUUwKdPTONnPSdT//Seha6etJeVEDFljosqqEJ0uKuR5miPU/EkXSBEMDMGX/6ws/h7ON76pohdtqp+Zf60uqMneKl+3+PBrVz0f99blUm93dnYrt18BiCw/4fuVES6WSe/Gq9sps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org; spf=pass smtp.mailfrom=cmpxchg.org; dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b=ml95u2be; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cmpxchg.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cmpxchg.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k83A1uaj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 194F1C4CEE4;
-	Wed, 19 Mar 2025 19:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742413532;
-	bh=Myrbj9m3hCsLiGJ67e/0Ahc4o+JFpDhFwC5X4tYyaWQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=k83A1uajWbT+HjRfBwWMJPneWcAaqV8JUKcAotRtn3xRccysHf6Se8rOR6tPMmIRx
-	 MRaiXTRZ3l2DSxZNErw8zsSjnDQ14rm0PJ1zS29pTXfGn7vASw0CMSPOiYObcExFLk
-	 sxAr1VvnTVur/2PG9RUpkq77dounwhdqyNcqIjaHoBj74JBsVwM6aP0q2sacTOCqOO
-	 /e/66r7FNUHCQdGe6AHAI+qsfL99iNMlMKcRxWSSxFIDeKjLK8Iroa8SO0WgJxJsDJ
-	 pcygy6FToNzIz85JZ3cqVwsfXV6BL0A2rkytbN+EKRCTPMB0RLv7JFPQsHkiwOLEjk
-	 //6tSSP1ZNk8w==
-Date: Wed, 19 Mar 2025 14:45:29 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-Cc: bjorn.andersson@oss.qualcomm.com, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100-dell-xps13-9345: Enable
- fingerprint sensor
-Message-ID: <4kh3zg3ohqzarbhv4r64iapi5x7paz2r7z3wkesgbjmm5fvgsy@dkkbbgmgt6mo>
-References: <20250318-xps13-fingerprint-v1-0-fbb02d5a34a7@oss.qualcomm.com>
- <20250318-xps13-fingerprint-v1-2-fbb02d5a34a7@oss.qualcomm.com>
- <CAMcHhXoE+UvoKmy1ULJoAq1nrr+PO6qie3vxLuqQbUpiE=SMBQ@mail.gmail.com>
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20230601.gappssmtp.com header.i=@cmpxchg-org.20230601.gappssmtp.com header.b="ml95u2be"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6e8f8657f29so7486d6.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 12:46:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20230601.gappssmtp.com; s=20230601; t=1742413572; x=1743018372; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=EMGdQd+1GtsqkZyrmcturm7A0b+BWeuqV9nKfwmQHB8=;
+        b=ml95u2benNxrgrQJ3ZM0L+z97sokjxIn2GBTzPM7FPsatCO7sQvBQb2a93eO5770Gc
+         H+iK3fxOtHu+CpKdTCY5TbO6+TBe0b1gP6yjIDDMbzV4Rew7mHKN8/i4t1VfW65fgmlI
+         NyZIotrseobBq4wt3CFOsi48GnDazeG4oEVExeESnHOvfVwhWkskjO7Db3NRWVF4B102
+         rBJd/trhR/cz4lCf/XUAgU/VPp+86ePtnjfL3rDqXs400ARkfXw/mvZWqCfZhseWokNO
+         xZcRnBxNeLc3dlbhymWa8m59zzdEnpJFPWBMwhEpTWJD4UrdgizCU5Dsf6XYmEKQBgK/
+         F0ZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742413572; x=1743018372;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EMGdQd+1GtsqkZyrmcturm7A0b+BWeuqV9nKfwmQHB8=;
+        b=g3M0byrDcE6d/CTSkx2A2VdhhXqVGNTVETcl+UlJEQbJqt+NLXKkBNGESS2yFCXeOH
+         eZIKH8AlVniPXPv7y9EdT7oPrkXh72MPpPTp2RcPq205F8GFwO4JN+bt9RRx86vexJ5I
+         UycYVFmvRLk53A+qtg3R6v/o1k3Toa4eOD83QScX2uyKW0WYzj1+Vj4NwUr/MibFT3oO
+         D1qa8vBthMj4Qe4r3zkqasIWZqnTcFqG1V8JgUx9qHfHCS9aA2Wxuk1drqwEkk37/kg9
+         osS4I8hr2XyiiRZ6BQJJryp6VM/pO6FbgnRTXXLILLsL/DB+E9usGumG9tiOpcrJ1jw/
+         dBLw==
+X-Forwarded-Encrypted: i=1; AJvYcCUTS729qvyf8IErQUzrc2/yXLUMJV4EWWJed1KGKyaEZVsabQAGCH8muFH5xtoNBVGii/c1zvKdqs6Axjk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YytroEnQA5LyYQXKJPkwQtEpe48Zd4EsoWiQf09ZFp6vutEwzC/
+	E7UN+7SwjRzffQNAdQ04zAmzoxkHXqW8y4XhX8Rwoi697I3vl1bS1lKTXAWvNCg=
+X-Gm-Gg: ASbGncvRcvvvhcI2N8Em/PFQmdwQep2v8BIzIdA38cAP4Zzww7FMV9JcD/MQtL5LAP9
+	u31x/aj4pyU3bxhEXBReCpVk6+t1oNIzEeDNYrc7/lJ5xKi1RojZkGrgGf3pGGnPMCeH5zffyfR
+	8aqQrQdms/WsQAG3PFdhYi4TdykXvQz8QkbvVarKLjn/MGXke3YReubg5RBf+kZQ2WO1uiWPXc0
+	VgffwUXRuARK33721OweuiLQR268nowpf2SOLfFNcXgDWXp+OBABzOQ7xBq8tsyVMLrGwu7r8OE
+	fklWAnwPWopafOSGn6zAgaTGhT+MqDv/NickZXO5piA=
+X-Google-Smtp-Source: AGHT+IGBPtC/y//GuXQrmvUuvNI+AJ1VTUL//CIpJG88EeiQgsUx/MStOJniyzmiXVM1kRKKRMEnkw==
+X-Received: by 2002:ad4:4eae:0:b0:6e8:9dc9:1c03 with SMTP id 6a1803df08f44-6eb293a3360mr70586226d6.21.1742413572115;
+        Wed, 19 Mar 2025 12:46:12 -0700 (PDT)
+Received: from localhost ([2603:7000:c01:2716:da5e:d3ff:fee7:26e7])
+        by smtp.gmail.com with UTF8SMTPSA id 6a1803df08f44-6eb036e8b00sm49213526d6.17.2025.03.19.12.46.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 12:46:11 -0700 (PDT)
+Date: Wed, 19 Mar 2025 15:46:10 -0400
+From: Johannes Weiner <hannes@cmpxchg.org>
+To: Yosry Ahmed <yosry.ahmed@linux.dev>
+Cc: Greg Thelen <gthelen@google.com>, Tejun Heo <tj@kernel.org>,
+	Michal =?iso-8859-1?Q?Koutn=FD?= <mkoutny@suse.com>,
+	Andrew Morton <akpm@linux-foundation.org>, cgroups@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+	Eric Dumazet <edumazet@google.com>
+Subject: Re: [PATCH] cgroup/rstat: avoid disabling irqs for O(num_cpu)
+Message-ID: <20250319194610.GF1876369@cmpxchg.org>
+References: <20250319071330.898763-1-gthelen@google.com>
+ <Z9r70jKJLPdHyihM@google.com>
+ <20250319180643.GC1876369@cmpxchg.org>
+ <Z9sOVsMtaZ9n02MZ@google.com>
+ <20250319191638.GD1876369@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,151 +79,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMcHhXoE+UvoKmy1ULJoAq1nrr+PO6qie3vxLuqQbUpiE=SMBQ@mail.gmail.com>
+In-Reply-To: <20250319191638.GD1876369@cmpxchg.org>
 
-On Wed, Mar 19, 2025 at 04:05:41PM +0100, Aleksandrs Vinarskis wrote:
-> On Wed, 19 Mar 2025 at 04:22, Bjorn Andersson via B4 Relay
-> <devnull+bjorn.andersson.oss.qualcomm.com@kernel.org> wrote:
-> >
-> > From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> >
-> > The fingerprint sensor, hidden in the power button, is connected to one
-> > of the USB multiport ports; while the other port is unused.
-> >
-> > Describe the USB controller, the four phys and the repeater involved to
-> > make the fingerprint sensor operational.
-> >
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> > ---
+On Wed, Mar 19, 2025 at 03:16:42PM -0400, Johannes Weiner wrote:
+> On Wed, Mar 19, 2025 at 06:35:02PM +0000, Yosry Ahmed wrote:
+> > On Wed, Mar 19, 2025 at 02:06:43PM -0400, Johannes Weiner wrote:
+> > > (btw, why do we not have any locking around the root stats in
+> > > cgroup_base_stat_cputime_show()? There isn't anything preventing a
+> > > reader from seeing all zeroes if another reader runs the memset() on
+> > > cgrp->bstat, is there? Or double times...)
+> > 
+> > (I think root_cgroup_cputime() operates on a stack allocated bstat, not
+> > cgrp->bstat)
 > 
-> Thanks for getting to the bottom of this, it was certainly a long
-> awaited feature :)
+> That was the case until:
 > 
+> commit b824766504e49f3fdcbb8c722e70996a78c3636e
+> Author: Chen Ridong <chenridong@huawei.com>
+> Date:   Thu Jul 4 14:01:19 2024 +0000
 
-Didn't think it was something I wanted, but now that it's working I
-proved myself wrong ;)
+Nevermind, Tejun pointed me to the follow-up fix he's got already
+queued up:
 
-> >  .../boot/dts/qcom/x1e80100-dell-xps13-9345.dts     | 59 +++++++++++++++++++++-
-> >  1 file changed, 57 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts b/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
-> > index 967f6dba0878b51a985fd7c9570b8c4e71afe57d..a35557c562d771e2ce209fca05b82c1943d70f63 100644
-> > --- a/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
-> > +++ b/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
-> > @@ -744,8 +744,21 @@ touchscreen@10 {
-> >
-> >  &i2c9 {
-> >         clock-frequency = <400000>;
-> > -       status = "disabled";
-> > -       /* USB3 retimer device @0x4f */
-> > +       status = "okay";
-> > +
-> > +       eusb6_repeater: redriver@4f {
-> > +               compatible = "nxp,ptn3222";
-> > +               reg = <0x4f>;
-> > +               #phy-cells = <0>;
-> > +
-> > +               vdd3v3-supply = <&vreg_l13b_3p0>;
-> > +               vdd1v8-supply = <&vreg_l4b_1p8>;
-> > +
-> > +               reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
-> > +
-> > +               pinctrl-0 = <&eusb6_reset_n>;
-> > +               pinctrl-names = "default";
-> > +       };
-> >  };
-> >
-> >  &i2c17 {
-> > @@ -967,6 +980,14 @@ edp_reg_en: edp-reg-en-state {
-> >                 bias-disable;
-> >         };
-> >
-> > +       eusb6_reset_n: eusb6-reset-n-state {
-> > +               pins = "gpio184";
-> > +               function = "gpio";
-> > +               drive-strength = <2>;
-> > +               bias-disable;
-> > +               output-low;
-> > +       };
-> > +
-> >         hall_int_n_default: hall-int-n-state {
-> >                 pins = "gpio92";
-> >                 function = "gpio";
-> > @@ -1172,3 +1193,37 @@ &usb_1_ss1_dwc3_hs {
-> >  &usb_1_ss1_qmpphy_out {
-> >         remote-endpoint = <&retimer_ss1_ss_in>;
-> >  };
-> > +
-> > +&usb_mp {
-> > +       status = "okay";
-> > +};
-> > +
-> > +&usb_mp_hsphy0 {
-> > +       vdd-supply = <&vreg_l2e_0p8>;
-> > +       vdda12-supply = <&vreg_l3e_1p2>;
-> > +
-> > +       phys = <&eusb6_repeater>;
-> 
-> I was under the impression that the fingerprint reader is on the 2nd
-> port of the root hub, as:
-> * In ACPI, the only USB device of MP is listed under PRT1, PRT0 is empty
-> * On Windows the device is listed as PORT2...HUB1...
-> * `lsusb -t` for the device gives `Port 002: Dev 002,...12M`
-> 
-> Do `usb_mp_hsphy0` and `usb_mp_hsphy1` translate to port 1 and 2
-> respectively? Because if yes, repeater may belong to `usb_mp_hsphy1`
-> instead?
-> 
+https://web.git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git/commit/?id=c4af66a95aa3bc1d4f607ebd4eea524fb58946e3
 
-That would be more logical, I'll dig up some documentation for the
-SoC and see if I can better understand the naming of these instances.
-
-> Current series works. Moving `phys = <&eusb6_repeater>;` to
-> `usb_mp_hsphy1` also works, I'm assuming because we are not actually
-> disabling unused phys.
-> 
-
-While not being used for any communication, the PHY is there and the
-multiport controller seems to need them both to be present. Further
-regardless of something being connected to the PHY, it's still there, so
-it seems correct to represent it in the dtsi. That said, I didn't dig
-deeper into the exact details here.
-
-> Tested-by: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>
-> 
-
-Thanks.
-
-Regards,
-Bjorn
-
-> 
-> > +
-> > +       status = "okay";
-> > +};
-> > +
-> > +&usb_mp_hsphy1 {
-> > +       vdd-supply = <&vreg_l2e_0p8>;
-> > +       vdda12-supply = <&vreg_l3e_1p2>;
-> > +
-> > +       status = "okay";
-> > +};
-> > +
-> > +&usb_mp_qmpphy0 {
-> > +       vdda-phy-supply = <&vreg_l3e_1p2>;
-> > +       vdda-pll-supply = <&vreg_l3c_0p9>;
-> > +
-> > +       status = "okay";
-> > +};
-> > +
-> > +&usb_mp_qmpphy1 {
-> > +       vdda-phy-supply = <&vreg_l3e_1p2>;
-> > +       vdda-pll-supply = <&vreg_l3c_0p9>;
-> > +
-> > +       status = "okay";
-> > +};
-> >
-> > --
-> > 2.48.1
-> >
-> >
+That brings it all back on the stack.
