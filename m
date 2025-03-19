@@ -1,159 +1,65 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17F461DE899
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.2])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7C0519B3CB
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:23:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.2
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742401393; cv=none; b=gvBFVXOZyQeJHJ/TWYFfNNGdA6isCzlhkZHPpCC0gzf8U6rLetNm3QeFtopFKcz5NNx1g/97D9yVKPwhGLAqvoiqgGPtzmieBA4Q398xvmVGxdCe4/tIos7Uld0jWVGTC5nqu7pvhe92RaU4Ag/7VADnDML37gde9qmZtBQDFNY=
+	t=1742401432; cv=none; b=UETuo9NVVMhv30nM5wwu6erVwgxoJ7A90IrVDK/NOqaX5xEcGC3kXrMhOK1xxILU6i78x/ECj8azp0aLE6hrKVSFcSURGQgmJdLEb213Owov0z157F4vrmRyEHIZa6r/mSWqEsKiNpJa0bkCORRp6cGCPIzeo35bGZE/oKVojK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742401393; c=relaxed/simple;
-	bh=SFwRnGrXO5KGgMQycikweYX/ll3TkCBZ9K24iTTaav4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jTxmVZbyh7inUA6x6yDnp0i3R7dbQEuxcmKzdDRbPTHFBxiEX5EHY3+L1lp/ep6Q+NEbrd/LwHXgUjGYuB12HyRWbtw3ybeIlJsbe6n7q1quLTh16M9BcXeKyVomhC93OT7ma26+sQP6DD8Xi98I95FFHUU0eX3HJxy+50Stgpo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=M/RWn2nT; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=Cy2K5V8A; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=L6dQW+WE; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=XWsEXVVg; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
+	s=arc-20240116; t=1742401432; c=relaxed/simple;
+	bh=eXFMareT0j729yCGcXp+ap+t+xyUPza11v3I+cq8P4M=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=FmMpZuiEBaeti3xkwDZH1D+2qVExFn2nV3T/5DriLwuk5Y3veSrCG98j0yeedw1gGZQV+aPaywFbJFlJEWVF0Mb9+FzJDBdyA6V2qTCfnhf+6pMBQq68Rzjvd+Gg/I+t3LNPv39pk3vvM2JLALqYuS7AzsSnZtTNIiebCxOyAUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=fail (1024-bit key) header.d=163.com header.i=@163.com header.b=fRXoqkhu reason="signature verification failed"; arc=none smtp.client-ip=220.197.31.2
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="M/RWn2nT";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="Cy2K5V8A";
-	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="L6dQW+WE";
-	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="XWsEXVVg"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 3FFE721C8A;
-	Wed, 19 Mar 2025 16:23:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742401390; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
-	b=M/RWn2nTT3NUwwjDt7NsEdewu7k2XXz+IkEa60bFFpjq0gDwYW9PmtoSRh22Fn+pY5G7/7
-	tWYrtDAjuit3vGYPxZz4TUeyL6zwzTRyRMGmBwB7CW3qA5qoG9vOL+7NAZQXE9gcG10YQN
-	Bf2no+RiVgjxYsE2pVFuABn+QM5GJhs=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742401390;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
-	b=Cy2K5V8Adi6q4EIc7S8AWir3R+uEzU/roFqxkH76WBcn47ydmpjoSew+oW9W42jK8w3l3R
-	LF00Ei+0B/yu3hDQ==
-Authentication-Results: smtp-out1.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
-	t=1742401389; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
-	b=L6dQW+WEaDkDbxs9I54eXReQ1/mtJskkRKHOpxvUosqhFiTqUl/SZb7JWCt4vRbjQEbBIr
-	3xpOPgpXjv2xNm4Ib5mJ+FFGOf4BfKq3MiCQ6rVEbDOxcXYI2Invv2pJD3BGJf2XnJ4pAp
-	n0yHeWfk29UQsr8FyF92PTlVjczrT9Q=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
-	s=susede2_ed25519; t=1742401389;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ddRoTd0WptMGQ/Wz0t+xfTEL05P9OdBsDkf/zmdxcnA=;
-	b=XWsEXVVgHQml7A4UbbuYpyhMJkgdVjBaNEsffH8T8jk9TAywyErjyzL2IaqlUzvT8kE/X7
-	yuKto5sLxOyLG7Dw==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 30DB413A2C;
-	Wed, 19 Mar 2025 16:23:09 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id AxOgC23v2mdAWwAAD6G6ig
-	(envelope-from <jack@suse.cz>); Wed, 19 Mar 2025 16:23:09 +0000
-Received: by quack3.suse.cz (Postfix, from userid 1000)
-	id D2C2BA08D2; Wed, 19 Mar 2025 17:23:08 +0100 (CET)
-Date: Wed, 19 Mar 2025 17:23:08 +0100
-From: Jan Kara <jack@suse.cz>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: brauner@kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz, 
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH] fs: predict not reaching the limit in alloc_empty_file()
-Message-ID: <5d6wy7gdbsk5tvusuwx3kkoc3474gjxpwq4hoc2c25jihuvlup@zb5mwj2rhnjd>
-References: <20250319124923.1838719-1-mjguzik@gmail.com>
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=163.com header.i=@163.com header.b="fRXoqkhu"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=Date:From:Subject:Content-Type:MIME-Version:
+	Message-ID; bh=YIOAJuGEapQGaq2je2RAXjlrvCrqas88zQ1RK5Ljcxk=; b=f
+	RXoqkhuDREMxb7lCuv8Xa7RKS0NDmqjFhZASymkwSTRBYfIAuDBxU2Huqr94NgLZ
+	/XTzZfA9hzWOJj8tsMZLi7XqFxrc6anPkrKMVG5K5SYj0nwewgPIUvR3foAQ9ebD
+	oYY0f5z3GRcsmqCKxTpTjTWHyF+UE5t9Vh/Oz2xtWg=
+Received: from 00107082$163.com ( [111.35.188.213] ) by
+ ajax-webmail-wmsvr-40-100 (Coremail) ; Thu, 20 Mar 2025 00:23:05 +0800
+ (CST)
+Date: Thu, 20 Mar 2025 00:23:05 +0800 (CST)
+From: "David Wang" <00107082@163.com>
+To: "Keith Busch" <kbusch@kernel.org>
+Cc: axboe@kernel.dk, hch@lst.de, sagi@grimberg.me,
+	linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: nvme interrupt counters got reset after suspend/resume
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version XT5.0.14 build 20240801(9da12a7b)
+ Copyright (c) 2002-2025 www.mailtech.cn 163com
+In-Reply-To: <Z9rpeIsNlf6SBWi6@kbusch-mbp>
+References: <20250319153910.18684-1-00107082@163.com>
+ <Z9rpeIsNlf6SBWi6@kbusch-mbp>
+X-NTES-SC: AL_Qu2fAPibvksj4yifZekXn0oTju85XMCzuv8j3YJeN500siT23TInW29GB1LQws6qEAOhoAiNWwNEzf96Qpd9VIFdP9wFSrgCIMWd+3+S8/Jz
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319124923.1838719-1-mjguzik@gmail.com>
-X-Spam-Score: -3.80
-X-Spamd-Result: default: False [-3.80 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-0.998];
-	MID_RHS_NOT_FQDN(0.50)[];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	FREEMAIL_TO(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	ARC_NA(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[3];
-	FREEMAIL_ENVRCPT(0.00)[gmail.com];
-	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
-	FROM_EQ_ENVFROM(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	RCVD_TLS_LAST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.com:email]
-X-Spam-Flag: NO
-X-Spam-Level: 
+Message-ID: <349dba2d.b878.195af373591.Coremail.00107082@163.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:ZCgvCgAHyFlq79pnfgsoAA--.61915W
+X-CM-SenderInfo: qqqrilqqysqiywtou0bp/1tbiqBcVqmfa6klc6AACso
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 
-On Wed 19-03-25 13:49:23, Mateusz Guzik wrote:
-> Eliminates a jump over a call to capable() in the common case.
-> 
-> By default the limit is not even set, in which case the check can't even
-> fail to begin with. It remains unset at least on Debian and Ubuntu.
-> For this cases this can probably become a static branch instead.
-> 
-> In the meantime tidy it up.
-> 
-> I note the check separate from the bump makes the entire thing racy.
-> 
-> Signed-off-by: Mateusz Guzik <mjguzik@gmail.com>
-
-Looks good. Feel free to add:
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  fs/file_table.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/file_table.c b/fs/file_table.c
-> index 5b4cc9da1344..c04ed94cdc4b 100644
-> --- a/fs/file_table.c
-> +++ b/fs/file_table.c
-> @@ -221,7 +221,8 @@ struct file *alloc_empty_file(int flags, const struct cred *cred)
->  	/*
->  	 * Privileged users can go above max_files
->  	 */
-> -	if (get_nr_files() >= files_stat.max_files && !capable(CAP_SYS_ADMIN)) {
-> +	if (unlikely(get_nr_files() >= files_stat.max_files) &&
-> +	    !capable(CAP_SYS_ADMIN)) {
->  		/*
->  		 * percpu_counters are inaccurate.  Do an expensive check before
->  		 * we go and fail.
-> -- 
-> 2.43.0
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+SGksIAoKQXQgMjAyNS0wMy0xOSAyMzo1Nzo0NCwgIktlaXRoIEJ1c2NoIiA8a2J1c2NoQGtlcm5l
+bC5vcmc+IHdyb3RlOgo+T24gV2VkLCBNYXIgMTksIDIwMjUgYXQgMTE6Mzk6MTBQTSArMDgwMCwg
+RGF2aWQgV2FuZyB3cm90ZToKPj4gCj4+IFRoaXMgZG9lcyBub3QgaGFwcGVuZCB0byBjb3VudGVy
+cyBmb3Igb3RoZXIgaW50ZXJydXB0cyBvbiBteSBzeXN0ZW0uCj4+IE5vdCBzdXJlIHdoZXRoZXIg
+dGhpcyBpcyBkZXNpZ25lZCBleHBsaWNpdGx5IHRoaXMgd2F5LCBvciBoYXBwZW5kZWQgdG8gYmUg
+dGhpcyB3YXkgdG8gbWFrZSBzdXNwZW5kL3Jlc3VtZSB3b3JrLAo+PiBvciB0aGVyZSBpcyBzb21l
+IGJ1ZyBiZWhpbmQgdGhpcy4KPgo+VGhlIG52bWUgZHJpdmVyIGNvbXBsZXRlbHkgYnJpbmdzIGRv
+d24gdGhlIGludGVycnVwdHMgb24gc3VzcGVuZCBhbmQKPmNyZWF0ZXMgbmV3IG9uZXMgb24gcmVz
+dW1lLiBUaGV5IG1pZ2h0IGhhdmUgdGhlIHNhbWUgbnVtYmVycyBhbmQgbGFiZWxzCj5vbiB0aGUg
+b3RoZXIgc2lkZSBvZiB0aGUgcmVzdW1lLCBidXQgdGhleSdyZSBub3QgZnJvbSB0aGUgc2FtZSBv
+cmlnaW5hbAo+YWxsb2NhdGlvbiB0aGF0IHRyYWNrcyB0aGVzZSBzdGF0cy4gSG9wZSB0aGF0IGhl
+bHBzLgoKQ29weSB0aGF0fiEgIEFuZCB0aGFua3MgZm9yIGNsZWFyaW5nIHRoaW5ncyBvdXQuCgoK
+CkRhdmlkCg==
