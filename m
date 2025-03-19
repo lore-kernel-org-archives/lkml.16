@@ -1,100 +1,115 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5F131DE3C8;
-	Wed, 19 Mar 2025 16:05:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15271CB337;
+	Wed, 19 Mar 2025 16:06:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742400341; cv=none; b=Lb/XpByby2mnXnmx3lZGaSMDIJ0qBE1N6M9UpuDAxTHa0mpcRrZnjkbABx2wiZFtJCGLMmzy5zPgaOOmL2dB4X18ecn2KEoQEUJThKeek8nLWOynuTtVdi8MTFixucwTATZBXVdbHkTtWfdqhdW9/XqLg2IdAo+LXzMOeGcXKgI=
+	t=1742400413; cv=none; b=ZMLbzydh40dgqN97t/nitdhOndBZoDJL8VNLbOIUdvo9ThntgGjQWwXs2S/6EAy6AOHprCIJo57olbVd/O5jSdgehkZhwfOrH9Ds3S336HH0kD8TK6pKgDLUpWL5yNAN6kTNm+3oMdZneH+/RnEJCKfoZz0KyN2G1ZrvgCeJE8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742400341; c=relaxed/simple;
-	bh=RW64X/teWwNMpQr9/mY+TL0fnZ+0aV8TDGaDi6J9BC0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dhBHKQdf2rPzK9ttvvmqCDUheU1/LVUOelXKH8ONl4ZG1hXQ/eVafn+TeokAr0cAvMvqUke7+3lbmlugu092No8Q4H5NWz6I4N6Vd0DdG0lcHpq7Hp2y6fDyxZZHg3HVrQU6pgJ3ZoOZXW3t3YYWZxaLxPZozdsmnC5UvV6yxw0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=DYf+UT15; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1742400413; c=relaxed/simple;
+	bh=GIegq0oT6qB1JtJRey7NbwCdp+CUQJQWDDvFEpMnnUs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ACff3LvgVucDRRqllsDFt8ZF5CCxCi+Xzh09eqER9uL+A9/U9mmR8iCv0gfUz15mDArT408UgcdDwMyMlULopeKD4ZtRU8JRiSyC53JjzHlBYNbR6EHN+vHPHTTBqREAqiG/2vAN2TjJBseYuAlLwq69rRNgNRadTY6qrgqdn5s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eisGPEEM; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="DYf+UT15"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J5OEcU031622;
-	Wed, 19 Mar 2025 11:05:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=7OgdpVqb9pIwgdd830DoW+VuqcHMk4tD9PfXj/TVj5A=; b=
-	DYf+UT156iQIp4FJyqflNeaOVWR8ulbBme6z+hYtq3/aH9m+V8Z06wtbM0mxnkvX
-	L5izYqc1HFq0sO/rfh/Hsc7ubeu/MuM9SRmYF/+5U8VgmcehptYVxCRpOl3r7boh
-	elMTfk6pDsbASEk36auOKyMYYgb9Lf3B3+4It2K9EoG/rUOH507utR/jCoGnN9K2
-	MXcsS731E0S8Ceb4NvNPN8iNseqUK1rfn0QVlKZK2DDe2RQm1nV1TkLT5B2PwRWc
-	gtr7nVzZNFfPRhALmAzivVJN/bhmsTVX4mmkzRUExnw6d7rZwr7sh5gpfkjUyTQr
-	Adk2YoWgRZuePg170RbikA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 45dc0mt8ys-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 19 Mar 2025 11:05:15 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Wed, 19 Mar
- 2025 16:04:58 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Wed, 19 Mar 2025 16:04:58 +0000
-Received: from opensource.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id A9F95822563;
-	Wed, 19 Mar 2025 16:04:58 +0000 (UTC)
-Date: Wed, 19 Mar 2025 16:04:57 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Mark Brown <broonie@kernel.org>
-CC: <lgirdwood@gmail.com>, <shenghao-ding@ti.com>, <kevin-lu@ti.com>,
-        <baojun.xu@ti.com>, <linux-sound@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
-Subject: Re: [PATCH 13/15] ASoC: ops: Factor out common code from get
- callbacks
-Message-ID: <Z9rrKd1PoZ0WEaa6@opensource.cirrus.com>
-References: <20250318171459.3203730-1-ckeepax@opensource.cirrus.com>
- <20250318171459.3203730-14-ckeepax@opensource.cirrus.com>
- <1d6d7537-1dcf-4bbe-a16b-902705efa860@sirena.org.uk>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eisGPEEM"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5499c5d9691so7523583e87.2;
+        Wed, 19 Mar 2025 09:06:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742400410; x=1743005210; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GIegq0oT6qB1JtJRey7NbwCdp+CUQJQWDDvFEpMnnUs=;
+        b=eisGPEEMV3CypfbbqyfWUJ/2ly/FXL6QsoFEqckkgtm8sdIPUtasAHpkb9WvmZjQVl
+         zf9x2kAx6tuDghtOInC8GgADMBGWPDFxWgHRaBy98XECNsbUwFrc5mcuPrOZgK4A6yG5
+         rVRa0otoLfDDmVN7osxb7bCGBhUkI+6sE/63m2oFn6rnbNuFAmubW8M9aIWM5wG1cP+3
+         yV/aBtARbQ7uiYEA9OqbeKUlcHmfLjVWzpFuK2y1cKXaXRapnDstPyMFfU0eQf2I3N1h
+         LvvDzWZImpqBAkl1QstxNhZK7EZ7OsgXq87Vr9Cy8NKJ8uQNS/nN8OimUUa2iBPjeviF
+         84VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742400410; x=1743005210;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GIegq0oT6qB1JtJRey7NbwCdp+CUQJQWDDvFEpMnnUs=;
+        b=qnEw7WsnLXsLYjAqbJFOOVuH/HXTVuy2PgKVsraGde9CI+BdaVdUqrKrSbqj99DSwi
+         bnWxpSnb1Fop18FkDHkl0sfZsbk682vRCLp6ApaYLM7qdLvwT6lGx7dDZ4qYq9QMzBbI
+         9YIqNV+zKSLxLF/IARQUzLQt4MRQhexDzk8vEKUcY3D+cs3QAUSSN3wf60r9IuD0WKnJ
+         ODJwwBxH+geqzwHJ3O5c0eGQ7VOAe+8hVftmvnj7NO71IF5utw8tDt3Sbm7tkhGuBZ6N
+         OckXF+Va6xYzTnMSHme5C9TUSePZUStLcOZS7IYbqfX7uZbK34WgGQzs4XkI9h8Cb+ov
+         J34g==
+X-Forwarded-Encrypted: i=1; AJvYcCUCAC/EzvItOV/v5R9L8zARj1Fod4jrNpLIZDjtwBfZAj9ua8UXabpXA0piNJmJQqxzeKAeb4/xjXOOzA==@vger.kernel.org, AJvYcCUlWuPv4drDk/fBkzxTwmvdiSCT8atjOMHDMN4TPwI3q5kok8TOQnBSs8JIFTIOKV3pkPU=@vger.kernel.org, AJvYcCWFMhC6J2XKof28CmebTggvnfUW+ytYph7bGIfSlO1p9I8xY7IcL8Nzn5QAemanJKOSQIZDmYJwp+cJGdX/@vger.kernel.org, AJvYcCX98xLW1LTGIme1Nd4RYrLfkKZcXLe9HGNwY+Ku12ypBPjUGkgyepN+o8IcvpATj65X7NFz4sv6@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywezc7I8bWteMn+fZY8U7JytK7nPYP/QbVxAohdamVSP4vzeavk
+	F/RDNA3QV0zr5pfQ7hSx7hAIsphvNlFNWQzwLFciw/LLRhaJVAEPKOUuZdsc4Fh5yJegyAPW280
+	pz0b/e0JCgrJWeiLk7nB6ocr4kOEfhqVM/YxC6Q==
+X-Gm-Gg: ASbGncvyQHwUxyoagxtH2Q9RvAu4QXQzcuXnbWkKmhva44C6z2mHU+je8+1EPsBeJUv
+	bG9KuczZ3n2sAOsuGpxrxe3xW6LD0BJl9iMLabaDMYzfTtJceiPqa8eY2qSjQwU3HUf+v7Zrkjf
+	VxR/weiJUcgOy/V3J3r2a2ae4+7g==
+X-Google-Smtp-Source: AGHT+IHmMFBxgWTdhY8PJN51uSi03KQFkFqruTJL/3AzgzUJ2KoIhJ4kJd2FL5HM00A/MVSkbE9sDGmCM2sChyyPNxA=
+X-Received: by 2002:a05:6512:a90:b0:549:4a13:3a82 with SMTP id
+ 2adb3069b0e04-54acb1bf76fmr1334884e87.21.1742400409265; Wed, 19 Mar 2025
+ 09:06:49 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1d6d7537-1dcf-4bbe-a16b-902705efa860@sirena.org.uk>
-X-Proofpoint-GUID: vHAhANNwVBIdA6uPj3k1VZeyBIOEQiJO
-X-Proofpoint-ORIG-GUID: vHAhANNwVBIdA6uPj3k1VZeyBIOEQiJO
-X-Authority-Analysis: v=2.4 cv=XY+JzJ55 c=1 sm=1 tr=0 ts=67daeb3b cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=fExjZ7oZFv1sFj6PVPQA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-Spam-Reason: safe
+References: <20250319133309.6fce6404@canb.auug.org.au> <CAADnVQKotSrp8CkVpFw-y800NJ_R7An-iw-twrQZaOdYUeRtqQ@mail.gmail.com>
+ <CAP01T76CqOxzEiMLKJ2y_YD=qDgWq+Fq5Zy-fnKP4AAyS30Dwg@mail.gmail.com>
+ <CAP01T77_qMiMmyeyizud=-sbBH5q1jvY_Jkj-QLZqM1zh0a2hg@mail.gmail.com>
+ <CAP01T77St7cpkvJ7w+5d3Ji-ULdz04QhZDxQWdNSBX9W7vXJCw@mail.gmail.com> <CAADnVQ+8apdQtyvMO=SKXCE_HWpQEo3CaTUwd39ekYEj-D4TQA@mail.gmail.com>
+In-Reply-To: <CAADnVQ+8apdQtyvMO=SKXCE_HWpQEo3CaTUwd39ekYEj-D4TQA@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Wed, 19 Mar 2025 17:06:37 +0100
+X-Gm-Features: AQ5f1JqZYR9VPu0HjinWzHMC5L1Scq9q3VwTd7PzyM-8Rfg9zsp8PFtqKud26SI
+Message-ID: <CAFULd4brsMuNX3-jJ44JyyRZqN1PO9FwJX7N3mvMwRzi8XYLag@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the bpf-next tree
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, bpf <bpf@vger.kernel.org>, 
+	Networking <netdev@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 19, 2025 at 03:12:56PM +0000, Mark Brown wrote:
-> On Tue, Mar 18, 2025 at 05:14:57PM +0000, Charles Keepax wrote:
-> > There are only two differences between snd_soc_get_volsw() and
-> > snd_soc_get_volsw_sx(). The maximum field is handled differently, and
-> > snd_soc_get_volsw() supports double controls with both values in the
-> > same register.
-> 
-> This breaks an x86 allmodconfig build:
-> 
-> /build/stage/linux/sound/soc/soc-ops.c: In function ‘snd_soc_get_volsw_sx’:
-> /build/stage/linux/sound/soc/soc-ops.c:374:22: error: unused variable ‘reg2’ [-W
-> error=unused-variable]
->   374 |         unsigned int reg2 = mc->rreg;
->       |                      ^~~~
-> /build/stage/linux/sound/soc/soc-ops.c:373:22: error: unused variable ‘reg’ [-We
-> rror=unused-variable]
->   373 |         unsigned int reg = mc->reg;
->       |                      ^~~
-> cc1: all warnings being treated as errors
-> 
-> Please ensure your serieses are bisectable.
+On Wed, Mar 19, 2025 at 3:55=E2=80=AFPM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Wed, Mar 19, 2025 at 7:36=E2=80=AFAM Kumar Kartikeya Dwivedi
+> <memxor@gmail.com> wrote:
+> >
+> > > >
+> > > > I've sent a fix [0], but unfortunately I was unable to reproduce th=
+e
+> > > > problem with an LLVM >=3D 19 build, idk why. I will try with GCC >=
+=3D 14
+> > > > as the patches require to confirm, but based on the error I am 99%
+> > > > sure it will fix the problem.
+> > >
+> > > Probably because __seg_gs has CC_HAS_NAMED_AS depends on CC_IS_GCC.
+> > > Let me give it a go with GCC.
+> > >
+> >
+> > Can confirm now that this fixes it, I just did a build with GCC 14
+> > where Uros's __percpu checks kick in.
+>
+> Great. Thanks for checking and quick fix.
+>
+> btw clang supports it with __attribute__((address_space(256))),
+> so CC_IS_GCC probably should be relaxed.
 
-Sorry those do get cleaned up in the next patch but will respin
-to move them into this patch, must have got muddled in the rebase
-at some point.
+https://github.com/llvm/llvm-project/issues/93449
+
+needs to be fixed first. Also, the feature has to be thoroughly tested
+(preferably by someone having a deep knowledge of clang) before it is
+enabled by default.
 
 Thanks,
-Charles
+Uros.
