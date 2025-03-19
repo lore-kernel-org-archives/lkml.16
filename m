@@ -1,332 +1,289 @@
-Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA22212FA2
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:37:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFAD20D519
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 07:39:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742369872; cv=none; b=numexWR//CwEhuYn5EdPuoXvxEDlyPIvjusEWv5UtzQR705KtUmoAYTJcUhMhwGwhPRs98Rwd6Pvq00PWkqwkQVcaif+HbfCYEC7twGgI+l6SFrVxrgXMJZLJXNuhWv634kO+eBw2m5/xPBSHSz7rKTybiu0Ow8LjJGKgmKol80=
+	t=1742369960; cv=none; b=ul64eROpq3deG20CemdJyamjMes+MOT9+vYrYmLpRicrJ8gyaFw9vNrvVoRXrz7KkB29bOr8Oyv8Oy2zQJBNLGM8rIvNaaDRh6tvpk01YcVv/xx2wzds2IPKyJvZ6TZSgRDpiWCvT6YERsHGDu73NGr18N7zRinJA3jAMZPdr/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742369872; c=relaxed/simple;
-	bh=ixMTS/Arg4oWBuKoea1pswZg9PN1FnAdtKOX3ezXavo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DXWcner3PEq3BCErjlOcTgQNKqbNJ/dUoCYD5jaWkpAHAJwcHJDiEZFqG7XEZwZ7P5j2lIc522e1zgASqkeJmzL0rXL/SXs5fZbG8QnUS1oDfxBOr6YAsrhnKZb9SHwgMixlcKgdfGfqG3TmxIObgAlcZZETohz+YCC6RjMuiKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zN212hBS; arc=none smtp.client-ip=209.85.160.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742369960; c=relaxed/simple;
+	bh=59VG8MIiJcdiCaxrYyH9CrSs68v8t+zrmZvnXb1LuCg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rIIcVYGo/lXw5OHV3vBl8fQ1FYkOqRZM+CxiccUSNr6R4h7e1mFc7Zkv5/U1eqjmHHD1y2G8Grb90h4W36TDM9/3My2SQgjFVjalrk7NoKYaz+RdAOf70SebIa/WUzQn5WoDGSwX90laAC7AIdInD0R58U6ZQGSONk+x3jqHsiM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a96plyLP; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zN212hBS"
-Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2adc2b6837eso1960353fac.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 00:37:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a96plyLP"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22349bb8605so144791705ad.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 00:39:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742369870; x=1742974670; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=owwDzzKUpGneXk0r6P0900oOLRuhEZkHOZ3jJ6/2920=;
-        b=zN212hBSv4hvHIzxBW6flqD/xPHWZrklx38b2IyASXm49YCJwW9dPY36x8P8zMArMu
-         JOAvGeH08BAoH0fHL6PBCFfLE8ZOa4DRYiU6FOR9/+d+yH7ZbZDD5mEyWwSdaopT2GKZ
-         YyuAX8DGaSoPgkfglkUf97+77kO98E9yYd3BxIgkK6tjRWO0SiAvjXaA+pt5UDIz1n9B
-         HpIIFw5YEWjrV+cGTq9YEF8m3iwoHFbEvut6gPlgl4P1l0juoNIzmDKmifsZNjDnlT8Q
-         gMhCUNY5wCNRFvyyeyi7MVj6Hq9Jz4cA1hh44UW7M/ye0zUThGpz34ZB5DnF3nmfd6FU
-         0KIQ==
+        d=gmail.com; s=20230601; t=1742369958; x=1742974758; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zxDRI3yy3kbzuN5qeoEHV0+lf0cRz3kjqm00o+lSz2c=;
+        b=a96plyLPwyizEm8VHzrU+fSIS+/TAWaXg9JtmMXbS2wDKL4c/Nxijf1WZwnywKTrEy
+         wkwpT9Yzm8nzfRg2S90P97MPjBImPprXsBmw0iCUbIRiKHmxsWbIH8slzCfc9TuG3+OD
+         aFnBrIn9zub9PpKNRFspAKXCHdtan+H4ioMtikjnMEoNE37yxE1KSPZn8Muyl/+vhyXa
+         /vUPeUkpiqgx97Q5/BB/jkU23rMdZ6YquHHS6h6pTwa0CncpDuj9yAm4wdAIFNZ3BAgJ
+         Emg90i6YOgDvN8phEe2vmvmMei/iPn+xvJdJ+h5vn2sU0T1hXmMOJoQZhiXt5RtCTrXr
+         Mj2A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742369870; x=1742974670;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=owwDzzKUpGneXk0r6P0900oOLRuhEZkHOZ3jJ6/2920=;
-        b=WvcnIZ3VPd60qU08RSo4u8mu9VC7QZsIPfz9Xl9+bdLWHzhdE5JWSFq8xKZ7VDiE/r
-         5a5pq6Xq6m9sG1bn9yh/TFUTJxyf6oHgc7FA84u6236SeEGTT6qjPXhRaoavm8eMae/I
-         WweRyXevy3b0Gp7/p5Rx4Eso8y0BBjHC3Vo/rFnDqnFCMl6yO7iaUaoS4e/wYQZPSLJ5
-         gVme5R+73JQKd2oNubX7jrBISA5nOU0Mzp5qjZOxBRji+xBENns80FqqOMj4IY1eetA/
-         FASBbsTbva2bBDnCBY7ZIvirk7jBeCZ1KkxiDOiGEEsuk8HVWN+r5SVkeLn80SKt4loT
-         Dn+g==
-X-Forwarded-Encrypted: i=1; AJvYcCU0d4f4VQxnaU9+QvxSMutd5nBLBABxZDpyYmcEX2/ajgRqbxdfLwNjEZb2pnn5vF4h/eHnPuYXhBTGHzk=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3OT4Ac/Fo87MQfEbOcJW5h/Ff4OqZ2vVaPVtTy2tD3hvK24JE
-	5hhd+S9EBr85KgVuHEvbQnM4lM162U28vB3XCF3QEqpnhufha2Zn4mv1uDRHY0W2hs5MajbV6UK
-	Qubla2tQGsdoUUnxk5+2xVzGqsh1li8DT6VISOg==
-X-Gm-Gg: ASbGncufkgVfVJLLds0Jnl8miPjbaSoffdhu8glmdya1UtRSBfdc/hELfuXFZrm6Y19
-	jHn+QPFzAONsuSH12UuHQYiHDpZnSggSn+saNUVAToPTajVuLIxIkywxX2pEuzOlvmAyfbEA83Q
-	5V4SEV1A4efh8NnskEiQMX9g5wfQ8=
-X-Google-Smtp-Source: AGHT+IHhlr0ebpnI7ur3lSLDToxyweC0Ao9NnSXnP3sZR4rKFcxyBq8t5/yasVPUDL7hE6LOxReMuAl1+DoeTa0xu40=
-X-Received: by 2002:a05:6871:710:b0:29e:290f:7aea with SMTP id
- 586e51a60fabf-2c745785fb8mr1233815fac.34.1742369869734; Wed, 19 Mar 2025
- 00:37:49 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742369958; x=1742974758;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zxDRI3yy3kbzuN5qeoEHV0+lf0cRz3kjqm00o+lSz2c=;
+        b=XFAQv7U3a91KwkC+Xk8hhRynwOja2uNnLF7q19TZ059AlJH+QUfvim0TSeC0xvcyA7
+         0nnAno+kPNKyI2Oa8fpOKG+qS+GaW1J6IPjwicxb3ShsBPOnjvur08+WCwbSIWd7C3xE
+         l5cj3MCWhSV3UHBxsPjWOdg2DXsuR63rdoynVjEYJPfnynG62rXm+H4fr/zXMKF5CRmH
+         nnDnIEvWQSRMFlmTpm3Qlc/6lRtedmX5jVpxq7X8Fibuy0h4WNTepiLJT3oW43bBr8gE
+         RUBtNFy1tX0/cuB6ksR95xeVwD5ZS7iDKIzpUuS0iD0NlCd3xdfHoi5OY4wCQPVfOoI1
+         JYAw==
+X-Forwarded-Encrypted: i=1; AJvYcCXERlzD1Ohrn1PhBdzRGCN2J2Xqahr6wDu7MzC2BGfvvxlJX6OVq8hmlamKvN+QP4VQOLVBbztGIUjRHzs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygcoNPWUaLfp7Q9CfrFiDPJoBupQd83XqGKbvSX2T+mSwdwQVX
+	lVO8Lj1tsIseHX1jJqEDWLWCvHfPAKKkcUjdlUJ5BdkA9tf08HRz
+X-Gm-Gg: ASbGncvm6p0unMAUzZNA7cHy13+smqNYzb+WWofLMHt/AYiWO4EcwCp3Mo9XrINsfYd
+	o0STL/Ehj+cc5lMUP+7F0TzJXBxpt140C5DIEHcQ5IjnNQdnyiPjm7Qs0LzYoQxbU+bZZrJ+a9e
+	ShzTuKIRs7/3XAaYXW621/QlRpsIOzlVKS9Z+amY9+1ryEVz/fN/Tvp9hZkyjwm8e/knNuH+vHP
+	WnRSgI6+3WFeEmdtnVtftbsvyW3O7YQOALhc5wkAFMcwVXdWXUqApqHqBXJZ0PgIO3QNJqP7Ezq
+	61a/UnnPL/uMUi1xrXoycj8++GOVH5tEHP/ZLaHNMlMyEbmTjoj+tw==
+X-Google-Smtp-Source: AGHT+IH7w54kbrZ4KACEo/HNZuJdpE+uY4oEwrMSF7BbiB75U+3UDroYU+kXdh1GJBNXlIS0Aq57SQ==
+X-Received: by 2002:aa7:8885:0:b0:736:4fe0:2661 with SMTP id d2e1a72fcca58-7376d645d8cmr3026676b3a.11.1742369958356;
+        Wed, 19 Mar 2025 00:39:18 -0700 (PDT)
+Received: from archlinux.nitk.ac.in ([2400:4f20:11:c00::103:25cc])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-737115295e5sm10923556b3a.23.2025.03.19.00.39.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 00:39:17 -0700 (PDT)
+From: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+To: shaggy@kernel.org,
+	jfs-discussion@lists.sourceforge.net
+Cc: linux-kernel-mentees@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	skhan@linuxfoundation.org,
+	Suchit Karunakaran <suchitkarunakaran@gmail.com>
+Subject: [PATCH REPOST] jfs: jfs_xtree: replace XT_GETPAGE macro with xt_getpage() function
+Date: Wed, 19 Mar 2025 13:09:12 +0530
+Message-ID: <20250319073912.6849-1-suchitkarunakaran@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAHUa44G9hw-z6wzxg=HkVAxPKEW1yES5JTEqRWMvJUJAtcUDkQ@mail.gmail.com>
- <CAPj87rPHnME5Osgnf5-FSAu22mDpLj=dzvhi_NqEcOwr1ThgGw@mail.gmail.com>
- <CAHUa44Gs0D1fBD0=+EDgcQUMeDv4knci9trUkYEc1J98qFV7HQ@mail.gmail.com>
- <CAFA6WYOuTwRPEh3L7+hMyARB_E73xmp+OwhKyS-r4+ryS7=9sw@mail.gmail.com>
- <20250214164856.0d2ead8a@collabora.com> <CAFA6WYPc6EHQwcPuMZRm4C1P6SoDrCzEPUmju_meupB6NXQ1sg@mail.gmail.com>
- <CAPj87rN-OYTzh5=Gdv619UQD5=x=U6Yt=uV4N1kCs4Zao4RVAg@mail.gmail.com>
- <CAFA6WYMLLLSuz3y5J+DuRFAGrmwpZoWax5sasfAUhXoQXmrNNA@mail.gmail.com>
- <CAPj87rN7J6u9NsviAdw8=OenEYc8t719Lds6u6-BhFKrtkLZ-A@mail.gmail.com>
- <CAHUa44FkG1NAWpoW8UVBywv44XW_mjAJa32PcC9mcmiOLdiRqw@mail.gmail.com>
- <Z8avsigZJ4vqmiA4@sumit-X1> <32c29526416c07c37819aedabcbf1e562ee98bf2.camel@ndufresne.ca>
-In-Reply-To: <32c29526416c07c37819aedabcbf1e562ee98bf2.camel@ndufresne.ca>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Wed, 19 Mar 2025 08:37:38 +0100
-X-Gm-Features: AQ5f1JoBpDEcbO9dlVRTjtWYtOyjNLGsFkNPj_PW0jLG2Dag8-4LN8wDdyWmUJE
-Message-ID: <CAHUa44E11jYFrAFrZmNVTpLJ-XDs45QyTr-_DbeWBOQ0DjHPkQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/6] TEE subsystem for restricted dma-buf allocations
-To: Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc: Sumit Garg <sumit.garg@kernel.org>, Daniel Stone <daniel@fooishbar.org>, 
-	Boris Brezillon <boris.brezillon@collabora.com>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Media Mailing List <linux-media@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, 
-	"moderated list:DMA BUFFER SHARING FRAMEWORK" <linaro-mm-sig@lists.linaro.org>, op-tee@lists.trustedfirmware.org, 
-	linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Florent Tomasin <florent.tomasin@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Replace legacy XT_GETPAGE macro with an inline function and update all
+instances of XT_GETPAGE in jfs_xtree.c file to use the new function.
 
-On Tue, Mar 18, 2025 at 7:38=E2=80=AFPM Nicolas Dufresne <nicolas@ndufresne=
-.ca> wrote:
->
-> Le mardi 04 mars 2025 =C3=A0 13:15 +0530, Sumit Garg a =C3=A9crit :
-> > On Tue, Mar 04, 2025 at 08:17:23AM +0100, Jens Wiklander wrote:
-> > > Hi Daniel,
-> > >
-> > > On Fri, Feb 21, 2025 at 3:12=E2=80=AFPM Daniel Stone <daniel@fooishba=
-r.org> wrote:
-> > > >
-> > > > Hi Sumit,
-> > > >
-> > > > On Fri, 21 Feb 2025 at 11:24, Sumit Garg <sumit.garg@linaro.org> wr=
-ote:
-> > > > > On Tue, 18 Feb 2025 at 21:52, Daniel Stone <daniel@fooishbar.org>=
- wrote:
-> > > > > > dma-heaps was created to solve the problem of having too many
-> > > > > > 'allocate $n bytes from $specialplace' uAPIs. The proliferation=
- was
-> > > > > > painful and making it difficult for userspace to do what it nee=
-ded to
-> > > > > > do. Userspace doesn't _yet_ make full use of it, but the soluti=
-on is
-> > > > > > to make userspace make full use of it, not to go create entirel=
-y
-> > > > > > separate allocation paths for unclear reasons.
-> > > > > >
-> > > > > > Besides, I'm writing this from a platform that implements SVP n=
-ot via
-> > > > > > TEE. I've worked on platforms which implement SVP without any T=
-EE,
-> > > > > > where the TEE implementation would be at best a no-op stub, and=
- at
-> > > > > > worst flat-out impossible.
-> > > > >
-> > > > > Can you elaborate the non-TEE use-case for Secure Video Path (SVP=
-) a
-> > > > > bit more? As to how the protected/encrypted media content pipelin=
-e
-> > > > > works? Which architecture support does your use-case require? Is =
-there
-> > > > > any higher privileged level firmware interaction required to perf=
-orm
-> > > > > media content decryption into restricted memory? Do you plan to
-> > > > > upstream corresponding support in near future?
-> > > >
-> > > > You can see the MTK SVP patches on list which use the MTK SMC to me=
-diate it.
-> > > >
-> > > > There are TI Jacinto platforms which implement a 'secure' area
-> > > > configured statically by (IIRC) BL2, with static permissions define=
-d
-> > > > for each AXI endpoint, e.g. CPU write + codec RW + dispc read. I've
-> > > > heard of another SoC vendor doing the same, but I don't think I can
-> > > > share those details. There is no TEE interaction.
-> > > >
-> > > > I'm writing this message from an AMD laptop which implements
-> > > > restricted content paths outside of TEE. I don't have the full pict=
-ure
-> > > > of how SVP is implemented on AMD systems, but I do know that I don'=
-t
-> > > > have any TEE devices exposed.
-> > > >
-> > > > > Let me try to elaborate on the Secure Video Path (SVP) flow requi=
-ring
-> > > > > a TEE implementation (in general terms a higher privileged firmwa=
-re
-> > > > > managing the pipeline as the kernel/user-space has no access
-> > > > > permissions to the plain text media content):
-> > > > >
-> > > > > - [...]
-> > > >
-> > > > Yeah, I totally understand the TEE usecase. I think that TEE is a g=
-ood
-> > > > design to implement this. I think that TEE should be used for SVP
-> > > > where it makes sense.
-> > > >
-> > > > Please understand that I am _not_ arguing that no-one should use TE=
-E for SVP!
-> > > >
-> > > > > > So, again, let's
-> > > > > > please turn this around: _why_ TEE? Who benefits from exposing =
-this as
-> > > > > > completely separate to the more generic uAPI that we specifical=
-ly
-> > > > > > designed to handle things like this?
-> > > > >
-> > > > > The bridging between DMA heaps and TEE would still require user-s=
-pace
-> > > > > to perform an IOCTL into TEE to register the DMA-bufs as you can =
-see
-> > > > > here [1]. Then it will rather be two handles for user-space to ma=
-nage.
-> > > >
-> > > > Yes, the decoder would need to do this. That's common though: if yo=
-u
-> > > > want to share a buffer between V4L2 and DRM, you have three handles=
-:
-> > > > the V4L2 buffer handle, the DRM GEM handle, and the dmabuf you use =
-to
-> > > > bridge the two.
-> > > >
-> > > > > Similarly during restricted memory allocation/free we need anothe=
-r
-> > > > > glue layer under DMA heaps to TEE subsystem.
-> > > >
-> > > > Yep.
-> > > >
-> > > > > The reason is simply which has been iterated over many times in t=
-he
-> > > > > past threads that:
-> > > > >
-> > > > >     "If user-space has to interact with a TEE device for SVP use-=
-case
-> > > > > then why it's not better to ask TEE to allocate restricted DMA-bu=
-fs
-> > > > > too"
-> > > >
-> > > > The first word in your proposition is load-bearing.
-> > > >
-> > > > Build out the usecase a little more here. You have a DRMed video
-> > > > stream coming in, which you need to decode (involving TEE for this
-> > > > usecase). You get a dmabuf handle to the decoded frame. You need to
-> > > > pass the dmabuf across to the Wayland compositor. The compositor ne=
-eds
-> > > > to pass it to EGL/Vulkan to import and do composition, which in tur=
-n
-> > > > passes it to the GPU DRM driver. The output of the composition is i=
-n
-> > > > turn shared between the GPU DRM driver and the separate KMS DRM
-> > > > driver, with the involvement of GBM.
-> > > >
-> > > > For the platforms I'm interested in, the GPU DRM driver needs to
-> > > > switch into protected mode, which has no involvement at all with TE=
-E -
-> > > > it's architecturally impossible to have TEE involved without moving
-> > > > most of the GPU driver into TEE and destroying performance. The
-> > > > display hardware also needs to engage protected mode, which again h=
-as
-> > > > no involvement with TEE and again would need to have half the drive=
-r
-> > > > moved into TEE for no benefit in order to do so. The Wayland
-> > > > compositor also has no interest in TEE: it tells the GPU DRM driver
-> > > > about the protected status of its buffers, and that's it.
-> > > >
-> > > > What these components _are_ opinionated about, is the way buffers a=
-re
-> > > > allocated and managed. We built out dmabuf modifiers for this useca=
-se,
-> > > > and we have a good negotiation protocol around that. We also really
-> > > > care about buffer placement in some usecases - e.g. some display/co=
-dec
-> > > > hardware requires buffers to be sourced from contiguous memory, oth=
-er
-> > > > hardware needs to know that when it shares buffers with another
-> > > > device, it needs to place the buffers outside of inaccessible/slow
-> > > > local RAM. So we built out dma-heaps, so every part of the componen=
-t
-> > > > in the stack can communicate their buffer-placement needs in the sa=
-me
-> > > > way as we do modifiers, and negotiate an acceptable allocation.
-> > > >
-> > > > That's my starting point for this discussion. We have a mechanism t=
-o
-> > > > deal with the fact that buffers need to be shared between different=
- IP
-> > > > blocks which have their own constraints on buffer placement, avoidi=
-ng
-> > > > the current problem of having every subsystem reinvent their own
-> > > > allocation uAPI which was burying us in impedance mismatch and
-> > > > confusion. That mechanism is dma-heaps. It seems like your starting
-> > > > point from this discussion is that you've implemented a TEE-centric
-> > > > design for SVP, and so all of userspace should bypass our existing
-> > > > cross-subsystem special-purpose allocation mechanism, and write
-> > > > specifically to one implementation. I believe that is a massive ste=
-p
-> > > > backwards and an immediate introduction of technical debt.
-> > > >
-> > > > Again, having an implementation of SVP via TEE makes a huge amount =
-of
-> > > > sense. Having _most_ SVP implementations via TEE still makes a lot =
-of
-> > > > sense. Having _all_ SVP implementations eventually be via TEE would
-> > > > still make sense. But even if we were at that point - which we aren=
-'t
-> > > > - it still doesn't justify telling userspace 'use the generic dma-h=
-eap
-> > > > uAPI for every device-specific allocation constraint, apart from SV=
-P
-> > > > which has a completely different way to allocate some bytes'.
-> > >
-> > > I must admit that I don't see how this makes a significant difference=
-,
-> > > but then I haven't hacked much in the stacks you're talking about, so
-> > > I'm going to take your word for it.
-> > >
-> > > I've experimented with providing a dma-heap replacing the TEE API. Th=
-e
-> > > implementation is more complex than I first anticipated, adding about
-> > > 400 lines to the patch set.
-> >
-> > I did anticipated this but let's give it a try and see if DMA heaps
-> > really adds any value from user-space point of view. If it does then it
-> > will be worth the maintenence overhead.
-> >
-> > > From user space, it looks like another
-> > > dma-heap. I'm using the names you gave earlier,
-> > > protected,secure-video, protected,trusted-ui, and
-> > > protected,secure-video-record. However, I wonder if we shouldn't use
-> > > "restricted" instead of "protected" since we had agreed to call it
-> > > restricted memory earlier.
-> >
-> > Let's stick with "restricted" memory buffer references only.
->
-> Until now, we didn't have a standard to balance our naming choice, we
-> simply wanted to move away from "secure" which didn't mean much, and
-> restricted met our needs. I think the discussion is worth having again,
-> now that there is a standard that decided toward "protected". Matchcing
-> the Khronos standard means reducing a lot of confusion.
->
-> https://docs.vulkan.org/guide/latest/protected.html
+Signed-off-by: Suchit Karunakaran <suchitkarunakaran@gmail.com>
+---
+ fs/jfs/jfs_xtree.c | 86 ++++++++++++++++++++++++++++------------------
+ 1 file changed, 52 insertions(+), 34 deletions(-)
 
-Yeah, that's fine with me. I don't mind changing the name again as
-long as we progress. The latest version of the patchset is here [1].
-I've published a demo and changed the patchset to provide a heap
-interface instead of a special interface in the TEE subsystem for
-memory allocations as requested. I'm interested in feedback on the
-patches in general, but in particular, on how the heap interface is
-provided.
+diff --git a/fs/jfs/jfs_xtree.c b/fs/jfs/jfs_xtree.c
+index 5ee618d17e77..4fea5e90e29b 100644
+--- a/fs/jfs/jfs_xtree.c
++++ b/fs/jfs/jfs_xtree.c
+@@ -49,26 +49,6 @@
+ 
+ #define XT_PAGE(IP, MP) BT_PAGE(IP, MP, xtpage_t, i_xtroot)
+ 
+-/* get page buffer for specified block address */
+-/* ToDo: Replace this ugly macro with a function */
+-#define XT_GETPAGE(IP, BN, MP, SIZE, P, RC)				\
+-do {									\
+-	BT_GETPAGE(IP, BN, MP, xtpage_t, SIZE, P, RC, i_xtroot);	\
+-	if (!(RC)) {							\
+-		if ((le16_to_cpu((P)->header.nextindex) < XTENTRYSTART) || \
+-		    (le16_to_cpu((P)->header.nextindex) >		\
+-		     le16_to_cpu((P)->header.maxentry)) ||		\
+-		    (le16_to_cpu((P)->header.maxentry) >		\
+-		     (((BN) == 0) ? XTROOTMAXSLOT : PSIZE >> L2XTSLOTSIZE))) { \
+-			jfs_error((IP)->i_sb,				\
+-				  "XT_GETPAGE: xtree page corrupt\n");	\
+-			BT_PUTPAGE(MP);					\
+-			MP = NULL;					\
+-			RC = -EIO;					\
+-		}							\
+-	}								\
+-} while (0)
+-
+ /* for consistency */
+ #define XT_PUTPAGE(MP) BT_PUTPAGE(MP)
+ 
+@@ -114,6 +94,44 @@ static int xtSplitPage(tid_t tid, struct inode *ip, struct xtsplit * split,
+ static int xtSplitRoot(tid_t tid, struct inode *ip,
+ 		       struct xtsplit * split, struct metapage ** rmpp);
+ 
++/*
++ *	xt_getpage()
++ *
++ * function:	get the page buffer for a specified block address.
++ *
++ * parameters:
++ *	ip      - pointer to the inode
++ *	bn      - block number (s64) of the xtree page to be retrieved;
++ *	mp      - pointer to a metapage pointer where the page buffer is returned;
++ *	size    - size parameter to pass to BT_GETPAGE;
++ *	p       - pointer to an xtpage_t pointer mapping the page's data.
++ *
++ * returns:
++ *	0 on success, or -EIO if the page is corrupt or an error occurs.
++ */
++
++static inline int xt_getpage(struct inode *ip, s64 bn, struct metapage **mp,
++			unsigned int size, xtpage_t **p)
++{
++	int rc;
++
++	BT_GETPAGE(ip, bn, *mp, xtpage_t, size, *p, rc, i_xtroot);
++
++	if (!rc) {
++		if ((le16_to_cpu((*p)->header.nextindex) < XTENTRYSTART) ||
++			(le16_to_cpu((*p)->header.nextindex) >
++				le16_to_cpu((*p)->header.maxentry)) ||
++			(le16_to_cpu((*p)->header.maxentry) >
++				((bn == 0) ? XTROOTMAXSLOT : PSIZE >> L2XTSLOTSIZE))) {
++			jfs_error(ip->i_sb, "xt_getpage: xtree page corrupt\n");
++			BT_PUTPAGE(*mp);
++			*mp = NULL;
++			rc = -EIO;
++		}
++	}
++	return rc;
++}
++
+ /*
+  *	xtLookup()
+  *
+@@ -252,7 +270,7 @@ static int xtSearch(struct inode *ip, s64 xoff,	s64 *nextp,
+ 	 */
+ 	for (bn = 0;;) {
+ 		/* get/pin the page to search */
+-		XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++		rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -807,7 +825,7 @@ xtSplitUp(tid_t tid,
+ 		 * insert router entry in parent for new right child page <rp>
+ 		 */
+ 		/* get/pin the parent page <sp> */
+-		XT_GETPAGE(ip, parent->bn, smp, PSIZE, sp, rc);
++		rc = xt_getpage(ip, parent->bn, &smp, PSIZE, &sp);
+ 		if (rc) {
+ 			XT_PUTPAGE(rcmp);
+ 			return rc;
+@@ -1062,7 +1080,7 @@ xtSplitPage(tid_t tid, struct inode *ip,
+ 	 * update previous pointer of old next/right page of <sp>
+ 	 */
+ 	if (nextbn != 0) {
+-		XT_GETPAGE(ip, nextbn, mp, PSIZE, p, rc);
++		rc = xt_getpage(ip, nextbn, &mp, PSIZE, &p);
+ 		if (rc) {
+ 			XT_PUTPAGE(rmp);
+ 			goto clean_up;
+@@ -1417,7 +1435,7 @@ int xtExtend(tid_t tid,		/* transaction id */
+ 			return rc;
+ 
+ 		/* get back old page */
+-		XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++		rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 		if (rc)
+ 			return rc;
+ 		/*
+@@ -1433,7 +1451,7 @@ int xtExtend(tid_t tid,		/* transaction id */
+ 			XT_PUTPAGE(mp);
+ 
+ 			/* get new child page */
+-			XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++			rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 			if (rc)
+ 				return rc;
+ 
+@@ -1711,7 +1729,7 @@ int xtUpdate(tid_t tid, struct inode *ip, xad_t * nxad)
+ 			return rc;
+ 
+ 		/* get back old page */
+-		XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++		rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 		if (rc)
+ 			return rc;
+ 		/*
+@@ -1727,7 +1745,7 @@ int xtUpdate(tid_t tid, struct inode *ip, xad_t * nxad)
+ 			XT_PUTPAGE(mp);
+ 
+ 			/* get new child page */
+-			XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++			rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 			if (rc)
+ 				return rc;
+ 
+@@ -1788,7 +1806,7 @@ int xtUpdate(tid_t tid, struct inode *ip, xad_t * nxad)
+ 		XT_PUTPAGE(mp);
+ 
+ 		/* get new right page */
+-		XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++		rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -1864,7 +1882,7 @@ printf("xtUpdate.updateLeft.split p:0x%p\n", p);
+ 			return rc;
+ 
+ 		/* get back old page */
+-		XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++		rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -1881,7 +1899,7 @@ printf("xtUpdate.updateLeft.split p:0x%p\n", p);
+ 			XT_PUTPAGE(mp);
+ 
+ 			/* get new child page */
+-			XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++			rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 			if (rc)
+ 				return rc;
+ 
+@@ -2268,7 +2286,7 @@ s64 xtTruncate(tid_t tid, struct inode *ip, s64 newsize, int flag)
+ 	 * first access of each page:
+ 	 */
+       getPage:
+-	XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++	rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -2506,7 +2524,7 @@ s64 xtTruncate(tid_t tid, struct inode *ip, s64 newsize, int flag)
+ 
+ 	/* get back the parent page */
+ 	bn = parent->bn;
+-	XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++	rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 	if (rc)
+ 		return rc;
+ 
+@@ -2791,7 +2809,7 @@ s64 xtTruncate_pmap(tid_t tid, struct inode *ip, s64 committed_size)
+ 		 * first access of each page:
+ 		 */
+       getPage:
+-		XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++		rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 		if (rc)
+ 			return rc;
+ 
+@@ -2836,7 +2854,7 @@ s64 xtTruncate_pmap(tid_t tid, struct inode *ip, s64 committed_size)
+ 
+ 	/* get back the parent page */
+ 	bn = parent->bn;
+-	XT_GETPAGE(ip, bn, mp, PSIZE, p, rc);
++	rc = xt_getpage(ip, bn, &mp, PSIZE, &p);
+ 	if (rc)
+ 		return rc;
+ 
+-- 
+2.48.1
 
-[1] https://lore.kernel.org/lkml/20250305130634.1850178-1-jens.wiklander@li=
-naro.org/
-
-Cheers,
-Jens
