@@ -1,139 +1,79 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B23220E718
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACC9C20E718;
+	Wed, 19 Mar 2025 10:29:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742380131; cv=none; b=M8Gst7OgZIjEnjth1BMCjlbO0s+K06mnQ4nuOL/QIDiUQ0tHlt2OHf26FhNHPpK6yN4sVjWiAn7OzjYjnZFPGwvkzm+lo9bWTqww8i8QK9Ky59cIUxHQrjrzih+6Iay5zpQXw1m9f17buMJq6Vk6GHwL8ksE1xq98u0s4p2rHmo=
+	t=1742380161; cv=none; b=CGVxLdTlKTQJldMxWjAMtmTVQ5vN014761ruAuAB/XZVLW+eyNUGYev4OQAQLPl7Z4Y8sGOVS/i1pfuw3G6eRT/Ft62gzQzOEDu/ebzhWo2JZvTMMZowmmq9pdACCfcqAQ5h6E646U+5AKy3IxB4KaAqPRxPK+FwFjf9bsKyd5c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742380131; c=relaxed/simple;
-	bh=rEgY89i+gJemWrJ8RHRvqVZiLIAsS0ZnPsEl0a5jOcI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=V4NuyW/k3FF4sK5vA5Q2qD5ai+Z6LvMTfJJpdzr7aODREd/IC6gl2cw1jg2ens1uY0fcxxi5f1YubBH9i/9PnzKtCUmA/zhMamXgGYg6Cs+Xno7aD9ksND23UvC6y36t6deWK55Stzdtbi2WgJkF6IHYWCEQHwVuTMDiqEFEZUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JeESyd7q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JeESyd7q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742380128;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=IqT9EgtacH1pGzAa8bINKY6LuDFSP+bccvn9tGaRagA=;
-	b=JeESyd7q/lA++orEdcHXXBf5V6Y44ID6APCo1vgRFoZEJV+udeor7sG38albvim491F+DK
-	p4jF4f5F1VZ/ESHxIEdvqY9fgED2C9NYDiahuty0flVO3x497Aj/1M+Wf8HuCD2Qy/MU0a
-	8xA1Nc1Rau4dFOG+xX371XuESc/XGUw=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-464-ciDRAdjvMQe_nrcK0ExNKg-1; Wed, 19 Mar 2025 06:28:47 -0400
-X-MC-Unique: ciDRAdjvMQe_nrcK0ExNKg-1
-X-Mimecast-MFC-AGG-ID: ciDRAdjvMQe_nrcK0ExNKg_1742380126
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2255ae39f8fso13341125ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 03:28:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742380126; x=1742984926;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IqT9EgtacH1pGzAa8bINKY6LuDFSP+bccvn9tGaRagA=;
-        b=SLCZof/DQg0Q13slfMX4lrjESO6ViBQPEWSzwZ5AEOHqkqMUvByXGoeXPj3VwHxH1m
-         Ev3LKuRCJ73rzahqxNOGClf961dmxb/ImANezkFMkttVbVxPrB3xomPi22ls1cvVIo16
-         41ULJSNqfIrK6nVkfGWKxvButnck/DvoHxkrsFfhRcnNiof/y1hSUyYblIlWFi1SR0DX
-         +0xtEeMoTXflWoI+qVEBY0lh6n6l5REvzCC3Rp9j+Izkk1c+L7HV9HNP4Z0jcFKtEiDT
-         rkbZpAxl9rVJ9eXvIG9KzhtM8HFR+y/J1x3eAl95MmlhUg6TQgMGr1pDcM9yjD7wN3t+
-         8pWA==
-X-Forwarded-Encrypted: i=1; AJvYcCWGFLdqdZH6h5/6u+rd5bdmmSvrjgQAfl4n86JdAwPbwTjl4q4im+x50RgnjFrZdnsQTTlzIILmSM0yyGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyXhT7anPO40orBVUpe5E6WeHXXPlikxQwCM/WjC6V1z3WmKGnR
-	GVOm5iRV2ZiNmNTONqP022mCbH1hSlCjLfX9qdZNSJAIfL/oDni7rbLda+mY/rVqSRpZwRrX7qZ
-	WJRCkCooeN78EHZuM6bmOLkQPyq7+ebS9EBwCvDqR8awGBuTlKna6qY7ocE6zsw==
-X-Gm-Gg: ASbGncuXipD7VHguY8SU4pLtL79nnqvT95mnPoimOd9z8jZDctu/C6oX5rhDHc5eU1d
-	sB+mYH0yohcla8uOIWStqth1I5N9hv+NjRSw8PQw+N/keOKt8BZWoF7pbySPluZUAUfae6BFz2F
-	C5xHvyU0Zq3mPZEqF1/geYa+9w15j2ipu7lk8oifZNNptp8yKcV9OePG/QigTIbPVYwm1iTuuLZ
-	SRteswfHY3Su6xByKPp2jsfeHWM2fdnM0SUv+6hoTq/iT0FITVFLdCKb9Itwe7Kdnd5t4SsdzX9
-	sCadowZyaIfz7uZiJw==
-X-Received: by 2002:a17:902:d550:b0:223:5187:a886 with SMTP id d9443c01a7336-22648f0cba4mr43831015ad.22.1742380125921;
-        Wed, 19 Mar 2025 03:28:45 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IF115S9F7K8/VY/uIVVLVdYu52ScoDkva9X27jsROIn1MQLuwsTdtxucZqN9UFjhuGUvr6o3w==
-X-Received: by 2002:a17:902:d550:b0:223:5187:a886 with SMTP id d9443c01a7336-22648f0cba4mr43830585ad.22.1742380125494;
-        Wed, 19 Mar 2025 03:28:45 -0700 (PDT)
-Received: from [192.168.68.55] ([180.233.125.167])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbe960sm109981735ad.200.2025.03.19.03.28.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 19 Mar 2025 03:28:44 -0700 (PDT)
-Message-ID: <28cb8360-7fb0-46f0-b05f-5114f1974cf3@redhat.com>
-Date: Wed, 19 Mar 2025 20:28:38 +1000
+	s=arc-20240116; t=1742380161; c=relaxed/simple;
+	bh=qVfF5fC8VPa2jvIi5+vIGvyynDxrHKwWPbHvTNGZ+6M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C5q4AMo8AAygFK0GTz6br+MkMLz9+Uo+egOjzaLIGmJnc8nA705WTDy1OH52xBg2mf2wZe7A+uchl+vDZ71fgyKZgKgRWJqebdyVWp2DIybWeBKnFghbogxIEu61GfIFaRu5eIQyvmV71FNRmRnyjOucsah6KmQotSSlQS6wino=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3B52412FC;
+	Wed, 19 Mar 2025 03:29:27 -0700 (PDT)
+Received: from J2N7QTR9R3 (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 14C713F694;
+	Wed, 19 Mar 2025 03:29:16 -0700 (PDT)
+Date: Wed, 19 Mar 2025 10:29:14 +0000
+From: Mark Rutland <mark.rutland@arm.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Marc Zyngier <maz@kernel.org>,
+	Oliver Upton <oliver.upton@linux.dev>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org, Fuad Tabba <tabba@google.com>
+Subject: Re: [PATCH 6.13 8/8] KVM: arm64: Eagerly switch ZCR_EL{1,2}
+Message-ID: <Z9qcem7BVeuRd5XD@J2N7QTR9R3>
+References: <20250312-stable-sve-6-13-v1-0-c7ba07a6f4f7@kernel.org>
+ <20250312-stable-sve-6-13-v1-8-c7ba07a6f4f7@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] firmware: psci: Fix refcount leak in psci_dt_init
-To: Miaoqian Lin <linmq006@gmail.com>, Mark Rutland <mark.rutland@arm.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>, Will Deacon <will@kernel.org>,
- Hanjun Guo <guohanjun@huawei.com>, Catalin Marinas
- <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250318151712.28763-1-linmq006@gmail.com>
-Content-Language: en-US
-From: Gavin Shan <gshan@redhat.com>
-In-Reply-To: <20250318151712.28763-1-linmq006@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250312-stable-sve-6-13-v1-8-c7ba07a6f4f7@kernel.org>
 
-Hi Miaoqian,
+On Wed, Mar 12, 2025 at 11:49:16PM +0000, Mark Brown wrote:
+> diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> index 7262983c75fbc18ab44f52753bff1dd9167a68d3..84326765c66087d992a517a19fea94b04c39c994 100644
+> --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
+> @@ -5,6 +5,7 @@
+>   */
+>  
+>  #include <hyp/adjust_pc.h>
+> +#include <hyp/switch.h>
+>  
+>  #include <asm/pgtable-types.h>
+>  #include <asm/kvm_asm.h>
+> @@ -178,8 +179,12 @@ static void handle___kvm_vcpu_run(struct kvm_cpu_context *host_ctxt)
+>  		sync_hyp_vcpu(hyp_vcpu);
+>  		pkvm_put_hyp_vcpu(hyp_vcpu);
+>  	} else {
+> +		struct kvm_vcpu *vcpu = kern_hyp_va(host_vcpu);
+> +
+>  		/* The host is fully trusted, run its vCPU directly. */
+> -		ret = __kvm_vcpu_run(host_vcpu);
+> +		fpsimd_lazy_switch_to_guest(vcpu);
+> +		ret = __kvm_vcpu_run(vcpu);
+> +		fpsimd_lazy_switch_to_host(vcpu);
+>  	}
 
-On 3/19/25 1:17 AM, Miaoqian Lin wrote:
-> Fix a reference counter leak in psci_dt_init() where of_node_put(np) was
-> missing after of_find_matching_node_and_match() when np is unavailable.
-> 
-> Fixes: bff60792f994 ("arm64: psci: factor invocation code to drivers")
-> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
-> ---
->   drivers/firmware/psci/psci.c | 4 +++-
->   1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+As Gavin noted [1] for the v6.12 backport, the addition of kern_hyp_va()
+is not correct, since 'host_vcpu' has already been converted to a hyp VA
+at this point.
 
-I'm wandering if the fix tag is correct enough because !of_device_is_available(np)
-wasn't added by bff60792f994.
+[1] https://lore.kernel.org/linux-arm-kernel/019afc2d-b047-4e33-971c-7debbbaec84d@redhat.com/#t
 
-> diff --git a/drivers/firmware/psci/psci.c b/drivers/firmware/psci/psci.c
-> index a1ebbe9b73b1..38ca190d4a22 100644
-> --- a/drivers/firmware/psci/psci.c
-> +++ b/drivers/firmware/psci/psci.c
-> @@ -804,8 +804,10 @@ int __init psci_dt_init(void)
->   
->   	np = of_find_matching_node_and_match(NULL, psci_of_match, &matched_np);
->   
-> -	if (!np || !of_device_is_available(np))
-> +	if (!np || !of_device_is_available(np)) {
-> +		of_node_put(np);
->   		return -ENODEV;
-> +	}
-
-The fix looks good to me. The duplicated of_node_put() can be avoided with
-a 'out' tag added, something like below.
-
-	if (!np || !of_device_is_available(np)) {
-		ret = -ENODEV;
-		goto out;
-	}
-
-	:
-
-out:
-	of_node_put(np);
-	return ret;
-
->   
->   	init_fn = (psci_initcall_t)matched_np->data;
->   	ret = init_fn(np);
-
-Thanks,
-Gavin
-
+Mark.
