@@ -1,75 +1,39 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8579F22F19;
-	Wed, 19 Mar 2025 11:18:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BE0322F19;
+	Wed, 19 Mar 2025 11:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383141; cv=none; b=fwt1MIckbfXGcbS9mfTjfu1QoajB1MWp26A91+lHK9mXxFsNY77AvV6t+3CWdbUrnUJN3f4ibNOT146EV475YiCawXH8RaM6SYbUIYhfvxBTUFjjzSQRlGQbnH8i2DMnY/92H5VLt1GZu/OK9AVh3An7cTUPLGRfA7PxHyg8pQ8=
+	t=1742383157; cv=none; b=rQ7W7txZTmpNYyEIQ4QUEAEYxtEOF3kp0EkUymw299iK0EjK5j+AXUFpSB55cyMd7Ir1EJAnNt0IdyGl6Ka87m4cWaLyLLyJSZ3+DunUp8ODE10x9nTXNY4r9GSeF1nGJ8cFtZkGmvqZsLomuzHIdU662k/icMPp+f2wbZ1Gx+4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383141; c=relaxed/simple;
-	bh=be9QOWEBZuaCJDZwefTcleUq/fxaw1SZCizaMoJDlvs=;
+	s=arc-20240116; t=1742383157; c=relaxed/simple;
+	bh=6R3YUsQSGMZyEiglJxOVhBZ2TR5pPzevbToMDv8MVEE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hm7XtLPHSfGXby1AZmbK9uYwIPbHKjhUN6tSOHi766JEoULa3eeRituCm584NmGUsTMiOgCvWhf6R3iB8z5tItxRsdp2Ohr8DrhW3/hPYPPNCpudZeJgr41yNIl9KOH4qNmtgATFZ9pg5NTVfnzwDCwZODasWORdJuwPmNm8aeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZwV25WfF; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZvtLK6rrUv0P6DCTNrBq7K9kgvwsm++QhIcL2gPBe1pd1Rqj6qbpFLV8wHya1zs4XRzew2QXFkVVba4rwF+L30vwkBHLB6OuIXbcKp3AVZU4qh4/OEeB9tXNmF+aYLNedhEjQImflwPoGeb4MdFkwaM2dpii4F7BKC3q7Qsm+Ak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RNj0Ty/n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZwV25WfF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742383140; x=1773919140;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=be9QOWEBZuaCJDZwefTcleUq/fxaw1SZCizaMoJDlvs=;
-  b=ZwV25WfFgGvtdLh4OvhdHXYjfqgNu6tcRntvqI8DxNRtPoJM2tpahpBu
-   llQ67UXsBpnuNOlYDghcUNqrqA2Y8BmOWL9LBi2PFBqpnrI/aYFXajzmd
-   NQO2HXjLF+9rymf8sFxE2GyWYKH/5CTyTVuyIX1RrDhV0V+MspV/1Vo8+
-   Ya2zY1AoNPxK+DNVXiaOMTvCh3xzT0o0I+7U4Tkt7lKkTwlRZRpJf5/Tm
-   +a8zgo4oF+TPSIs1j3MmSWj0oUs0TIZcBg9Z0kDZdeCoA8rVtqRhrU+AL
-   gNdgtK8bkm/5ye+VmniQuSQV1UD8+I8XKk/fONl5Wzs2/a3K01pLXTYB4
-   w==;
-X-CSE-ConnectionGUID: t827X9z4T+6vkCfqtbPfgg==
-X-CSE-MsgGUID: uM7WPrlsSui1qgxqKMeILg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="53781337"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="53781337"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 04:18:59 -0700
-X-CSE-ConnectionGUID: pF67o22TRT24gXG55lGszg==
-X-CSE-MsgGUID: p6aAjr08TMSgzNNe2SxAHQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="127648477"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by orviesa004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 04:18:54 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1turRj-00000003tty-03tM;
-	Wed, 19 Mar 2025 13:18:51 +0200
-Date: Wed, 19 Mar 2025 13:18:50 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: mathieu.dubois-briand@bootlin.com
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Kamel Bouhara <kamel.bouhara@bootlin.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org,
-	=?iso-8859-1?Q?Gr=E9gory?= Clement <gregory.clement@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v5 04/11] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <Z9qoGmNKcozbIjeH@smile.fi.intel.com>
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RNj0Ty/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF98BC4CEE9;
+	Wed, 19 Mar 2025 11:19:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742383154;
+	bh=6R3YUsQSGMZyEiglJxOVhBZ2TR5pPzevbToMDv8MVEE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=RNj0Ty/n3IGUBDZ3XHF+5VzOT4MKnlNGtDdDl1ewG9MFrQ8g+Pe+6leXQr6xy5jHk
+	 JhHplJDhK/ZkBexFxvDn8PGFc2I3oaEpIPthemTHQH02wlBWvZ6nfiy2tEwRrHau/7
+	 yZ6UNwVlHJP9NbKy4sWfMUJK2MaW3fo+mlRrpaKY=
+Date: Wed, 19 Mar 2025 04:17:55 -0700
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: Miaoqian Lin <linmq006@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] spi: Fix reference count leak in slave_show()
+Message-ID: <2025031942-mountable-popular-03c1@gregkh>
+References: <20250319032305.70340-1-linmq006@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,160 +42,68 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250318-mdb-max7360-support-v5-4-fb20baf97da0@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20250319032305.70340-1-linmq006@gmail.com>
 
-On Tue, Mar 18, 2025 at 05:26:20PM +0100, mathieu.dubois-briand@bootlin.com wrote:
-> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+On Wed, Mar 19, 2025 at 11:23:04AM +0800, Miaoqian Lin wrote:
+> Fix a reference count leak in slave_show() by properly putting the device
+> reference obtained from device_find_any_child().
 > 
-> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
-> 8 independent PWM outputs.
-
-...
-
-> +#include <linux/bits.h>
-> +#include <linux/dev_printk.h>
-> +#include <linux/err.h>
-> +#include <linux/math64.h>
-> +#include <linux/mfd/max7360.h>
-> +#include <linux/minmax.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/time.h>
-> +#include <linux/types.h>
-
-...
-
-> +static void max7360_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-> +{
-> +	struct regmap *regmap;
-> +	struct device *dev;
-> +
-> +	regmap = pwmchip_get_drvdata(chip);
-> +	dev = regmap_get_device(regmap);
-
-Huh?!
-
-> +}
-
-...
-
-> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
-> +					   struct pwm_device *pwm,
-> +					   const struct pwm_waveform *wf,
-> +					   void *_wfhw)
-
-I would expect other way around, i.e. naming with leading underscore(s) to be
-private / local. Ditto for all similar cases.
-
-...
-
-> +static int max7360_pwm_write_waveform(struct pwm_chip *chip,
-> +				      struct pwm_device *pwm,
-> +				      const void *_wfhw)
-> +{
-> +	const struct max7360_pwm_waveform *wfhw = _wfhw;
-> +	struct regmap *regmap;
-> +	unsigned int val;
+> Fixes: 6c364062bfed ("spi: core: Add support for registering SPI slave controllers")
+> Fixes: c21b0837983d ("spi: Use device_find_any_child() instead of custom approach")
+> Signed-off-by: Miaoqian Lin <linmq006@gmail.com>
+> ---
+>  drivers/spi/spi.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index a7a4647717d4..ff07c87dbadc 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -2954,9 +2954,13 @@ static ssize_t slave_show(struct device *dev, struct device_attribute *attr,
+>  	struct spi_controller *ctlr = container_of(dev, struct spi_controller,
+>  						   dev);
+>  	struct device *child;
 > +	int ret;
-> +
-> +	regmap = pwmchip_get_drvdata(chip);
-> +	val = (wfhw->enabled) ? BIT(pwm->hwpwm) : 0;
-
-Redundant parentheses.
-
-> +	ret = regmap_write_bits(regmap, MAX7360_REG_GPIOCTRL, BIT(pwm->hwpwm), val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (wfhw->duty_steps)
-> +		return regmap_write(regmap, MAX7360_REG_PWM(pwm->hwpwm), wfhw->duty_steps);
-> +
-> +	return 0;
-> +}
-
-...
-
-> +static int max7360_pwm_read_waveform(struct pwm_chip *chip,
-> +				     struct pwm_device *pwm,
-> +				     void *_wfhw)
-> +{
-> +	struct max7360_pwm_waveform *wfhw = _wfhw;
-> +	struct regmap *regmap;
-> +	unsigned int val;
-> +	int ret;
-> +
-> +	regmap = pwmchip_get_drvdata(chip);
-> +
-> +	ret = regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (val & BIT(pwm->hwpwm)) {
-> +		wfhw->enabled = true;
-
-Also can be (but up to you)
-
-	wfhw->enabled = val & BIT(pwm->hwpwm);
-	if (wfhw->enabled) {
-
-And also see below. Perhaps it is not a good suggestion after all.
-
-> +		ret = regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
-> +		wfhw->duty_steps = val;
-
-Set to a garbage in case of error, why?
-
-> +	} else {
-> +		wfhw->enabled = false;
-> +		wfhw->duty_steps = 0;
-> +	}
+>  
+>  	child = device_find_any_child(&ctlr->dev);
+> -	return sysfs_emit(buf, "%s\n", child ? to_spi_device(child)->modalias : NULL);
+> +	ret = sysfs_emit(buf, "%s\n", child ? to_spi_device(child)->modalias : NULL);
+> +	put_device(child);
 > +
 > +	return ret;
-> +}
+>  }
+>  
+>  static ssize_t slave_store(struct device *dev, struct device_attribute *attr,
+> -- 
+> 2.39.5 (Apple Git-154)
+> 
 
-...
+Hi,
 
-> +static int max7360_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pwm_chip *chip;
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	if (!dev->parent)
-> +		return dev_err_probe(dev, -ENODEV, "no parent device\n");
+This is the friendly patch-bot of Greg Kroah-Hartman.  You have sent him
+a patch that has triggered this response.  He used to manually respond
+to these common problems, but in order to save his sanity (he kept
+writing the same thing over and over, yet to different people), I was
+created.  Hopefully you will not take offence and will fix the problem
+in your patch and resubmit it so that it can be accepted into the Linux
+kernel tree.
 
-Why? Code most likely will fail on the regmap retrieval. Just do that first.
+You are receiving this message because of the following common error(s)
+as indicated below:
 
-> +	chip = devm_pwmchip_alloc(dev->parent, MAX7360_NUM_PWMS, 0);
+- You have marked a patch with a "Fixes:" tag for a commit that is in an
+  older released kernel, yet you do not have a cc: stable line in the
+  signed-off-by area at all, which means that the patch will not be
+  applied to any older kernel releases.  To properly fix this, please
+  follow the documented rules in the
+  Documentation/process/stable-kernel-rules.rst file for how to resolve
+  this.
 
-This is quite worrying. The devm_ to parent makes a lot of assumptions that may
-not be realised. If you really need this, it has to have a very good comment
-explaining why and object lifetimes.
+If you wish to discuss this problem further, or you have questions about
+how to resolve this issue, please feel free to respond to this email and
+Greg will reply once he has dug out from the pending patches received
+from other developers.
 
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	chip->ops = &max7360_pwm_ops;
-> +
-> +	regmap = dev_get_regmap(dev->parent, NULL);
-> +	if (!regmap)
-> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
-> +
-> +	pwmchip_set_drvdata(chip, regmap);
-> +
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-> +
-> +	return 0;
-> +}
+thanks,
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+greg k-h's patch email bot
