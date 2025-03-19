@@ -1,95 +1,107 @@
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A54FA29;
-	Wed, 19 Mar 2025 05:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 177AD1DEFDA
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 05:07:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742360654; cv=none; b=BnzFk0FEzVFQWs53gVEsyC+sAb9dt+zJu/UsgyB/SHGE1fiX7CE2XQ9TpZ8Ys+CrOlw3gadUBDaDzOOUAfeJHctNuu4kjnys4IG3IVpaFEgOz5v3NKSXkPWtPdvETVOQJX1fu+Pi1XwEfvmp9E/V/FtAKHDftA2XAjwjJAyum4U=
+	t=1742360833; cv=none; b=uCuF6KumtkjLbNmylKXHHKKjxmieYvfzgZ0nM+eBU4p9yuuRLl2eEtIPBgACf1WFWpXC8nWHqsXaxPfTsTNds2zd0vXa56EJQu3h6tCjAXdivaCWOnyJj8Jj5SyO+U8EUKXlllra4ZCN7Sh0IBwOyUO0Dwbxev7I4FRYyZWt+g8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742360654; c=relaxed/simple;
-	bh=K9cqEsrg10sN2hEPIv2LuuniTdu3Pv38pnqwmx25GQQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p4sz1efzecza5RhAcinfDJYLCUyMvBTKurnMqWq25whyhgkVqzkQXEqhNFdfNE6PfRpIKfzuydi92Ya7/bILLcQQHuQFZs/RZaBnbr6uHE6kCy8XNDF05ygwFy4KdZD5qbLZdfiPcI40Jk905t4bDCim9CdEsQlk0NyrUsWDvwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FgMa4xPM; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742360833; c=relaxed/simple;
+	bh=aCpyJdqLyzvkjOuIKdcGot0j8nlU0JGD1exVqcWMG94=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=OkKHdLmN1qvVb37Lagt2CkgmL/Gj+yFdTKI45PG9v+dDTeTJ5S42yjaEGuuSUxYctLzAoOu5s0Kyz6uXmKH2mrYEZ9AmERzXpHnvoi8FbMKFWXgyiUZWWfozPvK8Dp8vmmsJx1plvaiernANFYUhwS8IOKtFUv+5DExZixqgEno=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QT1cuOdj; arc=none smtp.client-ip=198.175.65.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FgMa4xPM"
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30613802a04so72445801fa.2;
-        Tue, 18 Mar 2025 22:04:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742360650; x=1742965450; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=K9cqEsrg10sN2hEPIv2LuuniTdu3Pv38pnqwmx25GQQ=;
-        b=FgMa4xPMm6bLClFkXK6ufTLTjRQy1aS++DLqbPSOcnA0moTI9asQPqX6IXJiv8HPE+
-         ySH2RKu3fqx55COJMbh3HTOVt1DPhnvtwBqtXdeX86dXVEcBfwuBDu9D/02yms4sAvpG
-         1qkMrAEE9qyNz2SltmasxBbTPCofFL5nHwaqqu6daRXtmOrtwKnp6tenzahBsPDFR3ob
-         /V9+Y9imGnbAT1Ndi/yxW5v+5z2iNh568H3HpZDBJTwS0gnvQi6XRwSz84CmScgZT450
-         vrIDL1Nn+d+dGxpN4rwPDgguyEFPpdDrrBeo5EINRYjV3+XKnz/85Ps66B9awd+e+/Z+
-         +O1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742360650; x=1742965450;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=K9cqEsrg10sN2hEPIv2LuuniTdu3Pv38pnqwmx25GQQ=;
-        b=nqqvKFXdx5OxEEZbZYSBfXHDFLbHp1PyQa32La2oHPralig7qivTBCtiOD7F9GjzxG
-         bNvSVCkq5Gs+D6/xHtufbl5J3XnQ+dwFiDVddc+3oS0NH/5wUtFv3IVKY51xu20+36dr
-         HpNs+zNaU5Qn4hPe9hoMJtSKRCj3jcl3BMd4UPds93skb9P1QL/0WADNzBsZk6wmgTRg
-         iTB+HGwLtHEttrxXsclxkDfkpbtmosdWG4dxJurVewO8JZAh4977RQ189YXgChaQN2cL
-         zF27DV0nTKDWQOCejWwVAtxGdv+4lqxVfMQrUkLbh6dL6tsVhDtxhkHolxAsCNQqocWb
-         DaQw==
-X-Forwarded-Encrypted: i=1; AJvYcCUP8ZGwDoEjKaiGQ1uxz/mSmeS3C0uUUcpIXidxbEfxfawfvgEKUAIwjE5P4vI+fMSx88A=@vger.kernel.org, AJvYcCV0+O/h58HYtPl+022QR7u/T1VDRalBW1lKUHe8OYd4oMaerfKgKBCeC5ZeiNsl3pu7ptrBhyYH@vger.kernel.org, AJvYcCVFg4usg5yESJp0NgBjRdeO09dk7KZn+SZnhrvLh3kmwcZ2npTU+6VkwwjwF/4ffhoD5Et9eib8dfKb+Q==@vger.kernel.org, AJvYcCWuSEeSLLsL8EOVijMLPukuzzujhSy38mzqUVlR+UavcEwQcrt1paf+dhSEk41qUmk4136JbmpG6xohyWbA@vger.kernel.org
-X-Gm-Message-State: AOJu0YziHhOVqzO2IzhlNdUSiA4cPsXkPC6XbeaWajvfZbD7hnvhNTsX
-	Ec8EY4RdkGBB3jk/dOD6AxWzP3yTDhBzmQQ5biEk7SuKisywvAiW8dBPbSlwM+Lky/uRexSqcfZ
-	WMatdoXDZMPzDyHLk8fVcrJfbecBAys0a
-X-Gm-Gg: ASbGncuCzc7C7CfPV9LnmM8CVFKigcIyJD5RxKnTDJYKRoWvPDEYtqd8BtzObQoshPp
-	kmLVQtrIAi0PsphuG0NZQOjNNzSzLFfLTHSycsPy8tbcUOntgdEz7cKeyl6zqMMYFxGcHfzFx2K
-	06iDIfpHNwulFdX0X4inDPMd5LnA==
-X-Google-Smtp-Source: AGHT+IFBEKm7QSYXMFei+Jt2Q0kxGJr9qdw9JtrNW3V3AckRCmRUVFTGuZniOmWNfxwEKa+V9BlU7nHb9lygs5woRiA=
-X-Received: by 2002:a2e:3812:0:b0:30b:ef0f:81f1 with SMTP id
- 38308e7fff4ca-30d6a411061mr3691261fa.20.1742360650242; Tue, 18 Mar 2025
- 22:04:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QT1cuOdj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742360831; x=1773896831;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=aCpyJdqLyzvkjOuIKdcGot0j8nlU0JGD1exVqcWMG94=;
+  b=QT1cuOdj8jBPRq9wwrnUGlSgFlbCSUeLWJsC6ieXB5jZZOXqc4gOpdE4
+   5hemxgvhrCYai6lulmhwGYEFxk2rB8oTugutNLR97Mzle68D4A26XZH9h
+   M+tVfaO86gL5CHyKCDlaZ2FKGmKOQYjYhms7wVL/SKEWuIivB55iR5P/A
+   s09vJel4hTl7etEIgbY1iTJlAWPzRi6IT+0cZ46m3CKkp9pMAJfdbb0JI
+   RFOgljF+indlBZm4AwitHpbVkES7EiQ5prSmGXojp/x235UTb69qhzNut
+   AAht47qcu6yDTeNJx/W39jrrUpW7d3rAQckcqj6xkEUvSz2U/O3TDyivl
+   g==;
+X-CSE-ConnectionGUID: k1UiLBW8Tv+PLXWOYDKRQQ==
+X-CSE-MsgGUID: RoN9/Wq2TMq7bLy/tu8OZg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43265632"
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="43265632"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 22:07:11 -0700
+X-CSE-ConnectionGUID: qPv2bDi7RSmb3pjdL1vnOA==
+X-CSE-MsgGUID: ysYKOgBPTpSE1wnazadkPw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
+   d="scan'208";a="127569837"
+Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Mar 2025 22:07:09 -0700
+Received: from kbuild by a4747d147074 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tuldz-000ENE-03;
+	Wed, 19 Mar 2025 05:07:07 +0000
+Date: Wed, 19 Mar 2025 13:06:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jisheng Zhang <jszhang@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Charlie Jenkins <charlie@rivosinc.com>
+Subject: cc1: error: cannot load plugin
+ ./scripts/gcc-plugins/stackleak_plugin.so:
+ ./scripts/gcc-plugins/stackleak_plugin.so: undefined symbol:
+ _ZN8opt_pass14set_pass_paramEjb
+Message-ID: <202503191250.ZHqkeLVs-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319133309.6fce6404@canb.auug.org.au>
-In-Reply-To: <20250319133309.6fce6404@canb.auug.org.au>
-From: Uros Bizjak <ubizjak@gmail.com>
-Date: Wed, 19 Mar 2025 06:03:58 +0100
-X-Gm-Features: AQ5f1JrBsC7ZnHFadNWISPWdsbiOW1kMeosysAWck6DOgmlA0PRxbvzsNi9Gfvc
-Message-ID: <CAFULd4aaOPYMpSWN=FNueoqXDKKfLu7P0NLr2DU1J2HKgxr_8A@mail.gmail.com>
-Subject: Re: linux-next: build failure after merge of the bpf-next tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
-	Andrii Nakryiko <andrii@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, bpf <bpf@vger.kernel.org>, 
-	Networking <netdev@vger.kernel.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Mar 19, 2025 at 3:33=E2=80=AFAM Stephen Rothwell <sfr@canb.auug.org=
-.au> wrote:
-> Caused by the resilient-queued-spin-lock branch of the bpf-next tree
-> interacting with the "Enable strict percpu address space checks" series
-> form the mm-stable tree.
->
-> I don't know why this happens, but reverting that branch inf the bpf-next
-> tree makes the failure go away, so I have done that for today.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   81e4f8d68c66da301bb881862735bd74c6241a19
+commit: b5db73fb18257cd5d9cb59bc4b779fffa629566a riscv: enable HAVE_ARCH_STACKLEAK
+date:   8 months ago
+config: riscv-randconfig-r064-20250319 (https://download.01.org/0day-ci/archive/20250319/202503191250.ZHqkeLVs-lkp@intel.com/config)
+compiler: riscv32-linux-gcc (GCC) 10.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250319/202503191250.ZHqkeLVs-lkp@intel.com/reproduce)
 
-percpu pointers are now checked by the compiler, and their address
-spaces have to be handled properly. It is like "sparse" rule, but now
-enforced by the compiler.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503191250.ZHqkeLVs-lkp@intel.com/
 
-This functionality was in fact introduced to catch programming errors like =
-this.
+All errors (new ones prefixed by >>):
 
-Thanks,
-Uros.
+   scripts/genksyms/parse.y: warning: 9 shift/reduce conflicts [-Wconflicts-sr]
+   scripts/genksyms/parse.y: warning: 5 reduce/reduce conflicts [-Wconflicts-rr]
+   scripts/genksyms/parse.y: note: rerun with option '-Wcounterexamples' to generate conflict counterexamples
+   cc1: error: cannot load plugin ./scripts/gcc-plugins/structleak_plugin.so: ./scripts/gcc-plugins/structleak_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+   cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so: ./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+>> cc1: error: cannot load plugin ./scripts/gcc-plugins/stackleak_plugin.so: ./scripts/gcc-plugins/stackleak_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+   cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so: ./scripts/gcc-plugins/latent_entropy_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+   cc1: error: cannot load plugin ./scripts/gcc-plugins/structleak_plugin.so: ./scripts/gcc-plugins/structleak_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+   make[3]: *** [scripts/Makefile.build:244: scripts/mod/empty.o] Error 1
+   cc1: error: cannot load plugin ./scripts/gcc-plugins/randomize_layout_plugin.so: ./scripts/gcc-plugins/randomize_layout_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+>> cc1: error: cannot load plugin ./scripts/gcc-plugins/stackleak_plugin.so: ./scripts/gcc-plugins/stackleak_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+   cc1: error: cannot load plugin ./scripts/gcc-plugins/latent_entropy_plugin.so: ./scripts/gcc-plugins/latent_entropy_plugin.so: undefined symbol: _ZN8opt_pass14set_pass_paramEjb
+   make[3]: *** [scripts/Makefile.build:117: scripts/mod/devicetable-offsets.s] Error 1
+   make[3]: Target 'scripts/mod/' not remade because of errors.
+   make[2]: *** [Makefile:1207: prepare0] Error 2
+   make[2]: Target 'prepare' not remade because of errors.
+   make[1]: *** [Makefile:240: __sub-make] Error 2
+   make[1]: Target 'prepare' not remade because of errors.
+   make: *** [Makefile:240: __sub-make] Error 2
+   make: Target 'prepare' not remade because of errors.
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
