@@ -1,206 +1,140 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209A88C0B;
-	Wed, 19 Mar 2025 01:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 568D98C0B;
+	Wed, 19 Mar 2025 01:22:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742347243; cv=none; b=aXiZZGHpxTRcY+kJyut6V6VpSIkfCkby5Va2mVABt89UrjYLSwqWVU6y/Xsj0JwAcUUmkOubl6nwrjebGwo29vB2F7nBUWfj/iIoQbV9x5J43LF9Q+wBNJRXYOBD94jR08LSsM5DmPImuIs4/rlDcJlOCRdEGEYD91Fn5D5zNTU=
+	t=1742347375; cv=none; b=qwCWEaQpdvCNhhLwr0AnF5tfi0sxwDVkcDVXWepSNoF7y7tISCDFHaepWMQltLrnNhptcHFyEZuzJP5gl6DSYN1JF1032eHvMIIJ1o+uYfDpCJ47nzrvSP4boXr12tXJovR7K1BOKEwSFFllW0ozo+nwSJovSgSLhk/BCSjAiZc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742347243; c=relaxed/simple;
-	bh=klZl2FDzvcAMGPLd+IJeim3liy8ZCnwgQ+RoV7uAEfc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qj/KqjyM7ICVV5kTCsoppYwKvPApgkqYL0sYm5IqCITGKGvdA9AZZBRSa8E9xHPsaZBzbUDvAgeQ/1gSo09c0OKk3tfpRT9i9HQwQ/b3YeYdlX2TJ6uO68qkm2G4c1S+Rli3gpRdxXV+LwHGpFvgk0WJA8v+gMlR31v2FBYbSQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aSVuygri; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aSVuygri"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742347241; x=1773883241;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=klZl2FDzvcAMGPLd+IJeim3liy8ZCnwgQ+RoV7uAEfc=;
-  b=aSVuygrigaKBGVZcxlp1uLPmci+kktzUj0/6GDi9/HMltq7eG5iR6XcO
-   /mRE3vvKkXpYeHUeSMQYQ1cZGRKmaUK9tmlNnmsyqGSpctL3slOaaTMid
-   TN5xX9+sheJjzODqizBH3H3z2Vmosw3mbiVDM6HRiCP0flFpRzDYm5lw+
-   IGvzjjUsNTHwKl/3SLCkDnAI4Wa7z5hE9iFCBo+4HZFt7QCFwyTbWlYWa
-   j7/HwoArGo0tQ5yxJjQf8/B0d78cbBe3r2Uwfa2UFd6GBoEDA0YdYlop2
-   qFIu1RbsXfKpaF2LiUHh/Mj5PvIqc04ycNFoY01PRDNwv33REIHBr0lzI
-   g==;
-X-CSE-ConnectionGUID: kIvUauRKQl2/B+DyaGXgvg==
-X-CSE-MsgGUID: FwNZX0MVSkyBLRuP3PoCCQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11377"; a="43704905"
-X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="43704905"
-Received: from orviesa008.jf.intel.com ([10.64.159.148])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 18:20:40 -0700
-X-CSE-ConnectionGUID: r/qHRv9HQ0u0AJ/V19Wd0A==
-X-CSE-MsgGUID: EleE8tzCTWabczYH9kA37A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,258,1736841600"; 
-   d="scan'208";a="123358567"
-Received: from unknown (HELO [10.238.1.131]) ([10.238.1.131])
-  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Mar 2025 18:20:38 -0700
-Message-ID: <bc22ff85-4caa-410e-b8b0-ea35975aad65@linux.intel.com>
-Date: Wed, 19 Mar 2025 09:20:36 +0800
+	s=arc-20240116; t=1742347375; c=relaxed/simple;
+	bh=DEBFMxwAsJn6rC1BPqAY1aUJxtEqZ7s0Q0rSJs6fekQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Cs7/qZpiOyy9mjT52hwf4Th0K1RrnVYH09GvFP58koNpcjLhYI0e3wckBK2bvhemMbU5XkgA0IC4cxaYfAn3E55xF14L4Qq5ouLeEkDzlFz8DNMr7tsf7hM01FcX2YFRte74Ny2gOYn611DP2ZkvRHQIfLqL/I4rUztwk444Sb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J1LiKQ002371;
+	Tue, 18 Mar 2025 18:22:30 -0700
+Received: from ala-exchng01.corp.ad.wrs.com (ala-exchng01.wrs.com [147.11.82.252])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45eprr9s5a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+	Tue, 18 Mar 2025 18:22:29 -0700 (PDT)
+Received: from ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) by
+ ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.43; Tue, 18 Mar 2025 18:22:29 -0700
+Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
+ ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server id
+ 15.1.2507.43 via Frontend Transport; Tue, 18 Mar 2025 18:22:26 -0700
+From: <jianqi.ren.cn@windriver.com>
+To: <stable@vger.kernel.org>
+CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <jhs@mojatatu.com>,
+        <xiyou.wangcong@gmail.com>, <jiri@resnulli.us>, <davem@davemloft.net>,
+        <edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+        <netdev@vger.kernel.org>, <michal.swiatkowski@linux.intel.com>
+Subject: [RFC PATCH 6.1.y] net/sched: act_mirred: don't override retval if we already lost the skb
+Date: Wed, 19 Mar 2025 09:22:25 +0800
+Message-ID: <20250319012225.821278-1-jianqi.ren.cn@windriver.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/6] KVM: x86: do not allow re-enabling quirks
-To: Paolo Bonzini <pbonzini@redhat.com>
-Cc: linux-kernel@vger.kernel.org, kvm@vger.kernel.org, xiaoyao.li@intel.com,
- seanjc@google.com, yan.y.zhao@intel.com
-References: <20250304060647.2903469-1-pbonzini@redhat.com>
- <20250304060647.2903469-2-pbonzini@redhat.com>
-Content-Language: en-US
-From: Binbin Wu <binbin.wu@linux.intel.com>
-In-Reply-To: <20250304060647.2903469-2-pbonzini@redhat.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Authority-Analysis: v=2.4 cv=LZw86ifi c=1 sm=1 tr=0 ts=67da1c55 cx=c_pps a=/ZJR302f846pc/tyiSlYyQ==:117 a=/ZJR302f846pc/tyiSlYyQ==:17 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=A7XncKjpAAAA:8 a=J1Y8HTJGAAAA:8 a=t7CeM3EgAAAA:8
+ a=z6SZLS2PjRZJ6NiNSX0A:9 a=R9rPLQDAdC6-Ub70kJmZ:22 a=y1Q9-5lHfBjTkpIzbSAN:22 a=FdTzh2GWekK77mhwV6Dw:22
+X-Proofpoint-GUID: m1nnqcQeXG37wuuTHI20t1um596iVOkQ
+X-Proofpoint-ORIG-GUID: m1nnqcQeXG37wuuTHI20t1um596iVOkQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-18_10,2025-03-17_03,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ priorityscore=1501 impostorscore=0 lowpriorityscore=0 malwarescore=0
+ bulkscore=0 clxscore=1011 adultscore=0 spamscore=0 phishscore=0
+ suspectscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
+ definitions=main-2503190008
 
+From: Jakub Kicinski <kuba@kernel.org>
 
+[ Upstream commit 166c2c8a6a4dc2e4ceba9e10cfe81c3e469e3210 ]
 
-On 3/4/2025 2:06 PM, Paolo Bonzini wrote:
-> Allowing arbitrary re-enabling of quirks puts a limit on what the
-> quirks themselves can do, since you cannot assume that the quirk
-> prevents a particular state.  More important, it also prevents
-> KVM from disabling a quirk at VM creation time, because userspace
-> can always go back and re-enable that.
->
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
->   arch/x86/kvm/x86.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 856ceeb4fb35..35d03fcdb8e9 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -6525,7 +6525,7 @@ int kvm_vm_ioctl_enable_cap(struct kvm *kvm,
->   			break;
->   		fallthrough;
->   	case KVM_CAP_DISABLE_QUIRKS:
-> -		kvm->arch.disabled_quirks = cap->args[0];
-> +		kvm->arch.disabled_quirks |= cap->args[0];
->   		r = 0;
->   		break;
->   	case KVM_CAP_SPLIT_IRQCHIP: {
-This  change requires changes in KVM selftests for monitor_mwait_test.
+If we're redirecting the skb, and haven't called tcf_mirred_forward(),
+yet, we need to tell the core to drop the skb by setting the retcode
+to SHOT. If we have called tcf_mirred_forward(), however, the skb
+is out of our hands and returning SHOT will lead to UaF.
 
-I cooked a patch to pass the test case.
+Move the retval override to the error path which actually need it.
 
- From 29b22d0a5cb14b418d289d78e2e290f7e0fc1749 Mon Sep 17 00:00:00 2001
-From: Binbin Wu <binbin.wu@linux.intel.com>
-Date: Tue, 18 Mar 2025 17:31:51 +0800
-Subject: [PATCH] KVM: selftests: Test monitor/mwait cases in separate VMs
-
-Test different cases of disabling quirk combinations for monitor/mwait in
-separate VMs after KVM does not allow re-enabling quirks.
-
-Signed-off-by: Binbin Wu <binbin.wu@linux.intel.com>
+Reviewed-by: Michal Swiatkowski <michal.swiatkowski@linux.intel.com>
+Fixes: e5cf1baf92cb ("act_mirred: use TC_ACT_REINSERT when possible")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Acked-by: Jamal Hadi Salim <jhs@mojatatu.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
+Signed-off-by: He Zhe <zhe.he@windriver.com>
 ---
-  .../selftests/kvm/x86/monitor_mwait_test.c    | 44 ++++++++++++-------
-  1 file changed, 27 insertions(+), 17 deletions(-)
+Verified the build test
+---
+ net/sched/act_mirred.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/tools/testing/selftests/kvm/x86/monitor_mwait_test.c b/tools/testing/selftests/kvm/x86/monitor_mwait_test.c
-index 2b550eff35f1..b583e0523575 100644
---- a/tools/testing/selftests/kvm/x86/monitor_mwait_test.c
-+++ b/tools/testing/selftests/kvm/x86/monitor_mwait_test.c
-@@ -16,6 +16,8 @@ enum monitor_mwait_testcases {
-         MWAIT_DISABLED = BIT(2),
-  };
-
-+static int testcase;
+diff --git a/net/sched/act_mirred.c b/net/sched/act_mirred.c
+index 36395e5db3b4..24c70ba6eebc 100644
+--- a/net/sched/act_mirred.c
++++ b/net/sched/act_mirred.c
+@@ -259,13 +259,13 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	dev = rcu_dereference_bh(m->tcfm_dev);
+ 	if (unlikely(!dev)) {
+ 		pr_notice_once("tc mirred: target device is gone\n");
+-		goto out;
++		goto err_cant_do;
+ 	}
+ 
+ 	if (unlikely(!(dev->flags & IFF_UP)) || !netif_carrier_ok(dev)) {
+ 		net_notice_ratelimited("tc mirred to Houston: device %s is down\n",
+ 				       dev->name);
+-		goto out;
++		goto err_cant_do;
+ 	}
+ 
+ 	/* we could easily avoid the clone only if called by ingress and clsact;
+@@ -279,7 +279,7 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	if (!use_reinsert) {
+ 		skb2 = skb_clone(skb, GFP_ATOMIC);
+ 		if (!skb2)
+-			goto out;
++			goto err_cant_do;
+ 	}
+ 
+ 	want_ingress = tcf_mirred_act_wants_ingress(m_eaction);
+@@ -321,12 +321,16 @@ static int tcf_mirred_act(struct sk_buff *skb, const struct tc_action *a,
+ 	}
+ 
+ 	err = tcf_mirred_forward(want_ingress, skb2);
+-	if (err) {
+-out:
++	if (err)
+ 		tcf_action_inc_overlimit_qstats(&m->common);
+-		if (tcf_mirred_is_act_redirect(m_eaction))
+-			retval = TC_ACT_SHOT;
+-	}
++	__this_cpu_dec(mirred_nest_level);
 +
-  /*
-   * If both MWAIT and its quirk are disabled, MONITOR/MWAIT should #UD, in all
-   * other scenarios KVM should emulate them as nops.
-@@ -35,7 +37,7 @@ do {                                                                  \
-                                testcase, vector);                       \
-  } while (0)
-
--static void guest_monitor_wait(int testcase)
-+static void guest_monitor_wait(void)
-  {
-         u8 vector;
-
-@@ -54,31 +56,22 @@ static void guest_monitor_wait(int testcase)
-
-  static void guest_code(void)
-  {
--       guest_monitor_wait(MWAIT_DISABLED);
--
--       guest_monitor_wait(MWAIT_QUIRK_DISABLED | MWAIT_DISABLED);
--
--       guest_monitor_wait(MISC_ENABLES_QUIRK_DISABLED | MWAIT_DISABLED);
--       guest_monitor_wait(MISC_ENABLES_QUIRK_DISABLED);
--
--       guest_monitor_wait(MISC_ENABLES_QUIRK_DISABLED | MWAIT_QUIRK_DISABLED | MWAIT_DISABLED);
--       guest_monitor_wait(MISC_ENABLES_QUIRK_DISABLED | MWAIT_QUIRK_DISABLED);
--
-+       guest_monitor_wait();
-         GUEST_DONE();
-  }
-
--int main(int argc, char *argv[])
-+static void vm_test_case(int test_case)
-  {
-         uint64_t disabled_quirks;
-         struct kvm_vcpu *vcpu;
-         struct kvm_vm *vm;
-         struct ucall uc;
--       int testcase;
--
--       TEST_REQUIRE(this_cpu_has(X86_FEATURE_MWAIT));
--       TEST_REQUIRE(kvm_has_cap(KVM_CAP_DISABLE_QUIRKS2));
-
-         vm = vm_create_with_one_vcpu(&vcpu, guest_code);
++	return retval;
 +
-+       testcase = test_case;
-+       sync_global_to_guest(vm, testcase);
-+
-         vcpu_clear_cpuid_feature(vcpu, X86_FEATURE_MWAIT);
-
-         while (1) {
-@@ -87,7 +80,7 @@ int main(int argc, char *argv[])
-
-                 switch (get_ucall(vcpu, &uc)) {
-                 case UCALL_SYNC:
--                       testcase = uc.args[1];
-+                       TEST_ASSERT_EQ(testcase, uc.args[1]);
-                         break;
-                 case UCALL_ABORT:
-                         REPORT_GUEST_ASSERT(uc);
-@@ -125,5 +118,22 @@ int main(int argc, char *argv[])
-
-  done:
-         kvm_vm_free(vm);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+       TEST_REQUIRE(this_cpu_has(X86_FEATURE_MWAIT));
-+       TEST_REQUIRE(kvm_has_cap(KVM_CAP_DISABLE_QUIRKS2));
-+
-+       vm_test_case(MWAIT_DISABLED);
-+
-+       vm_test_case(MWAIT_QUIRK_DISABLED | MWAIT_DISABLED);
-+
-+       vm_test_case(MISC_ENABLES_QUIRK_DISABLED | MWAIT_DISABLED);
-+       vm_test_case(MISC_ENABLES_QUIRK_DISABLED);
-+
-+       vm_test_case(MISC_ENABLES_QUIRK_DISABLED | MWAIT_QUIRK_DISABLED | MWAIT_DISABLED);
-+       vm_test_case(MISC_ENABLES_QUIRK_DISABLED | MWAIT_QUIRK_DISABLED);
-+
-         return 0;
-  }
++err_cant_do:
++	if (tcf_mirred_is_act_redirect(m_eaction))
++		retval = TC_ACT_SHOT;
++	tcf_action_inc_overlimit_qstats(&m->common);
+ 	__this_cpu_dec(mirred_nest_level);
+ 
+ 	return retval;
 -- 
-2.46.0
-
+2.25.1
 
