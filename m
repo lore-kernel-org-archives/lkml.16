@@ -1,214 +1,52 @@
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE7B0253351
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:20:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8C2F251788;
+	Wed, 19 Mar 2025 11:21:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742383243; cv=none; b=ItuOyGurkpv+PobNL8cdYBRHmpqmYJ78bvQn14ETs0Zr6AyrsGS/Nbb0DsgE3lYoG5n2M6V3Hd9Z8u09bwxYj5aiOQ6yZDuTdkt4FAI9l3AmdH0jn16DePnrSLEQm6n99gvy0prP3XdD2AyJ4PjlTSAPnBSe3bdEMfnvZx7XoFY=
+	t=1742383288; cv=none; b=Q/h7vLBiKjrqD4rsvd1yQve9KsYLWpu7qCZ148UKLpcli1Otjee1no8701iEcAsb9xHb9l7QT2E4MbdTvNsSAsi1jWPz69Mo26zDnnNIl4dyOrWpPwLsVkYyCXP93Rm31Zy/Ks+z4A0Ogg9M5VFxGlkWcZqzsqJpCkK1YpNS0aQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742383243; c=relaxed/simple;
-	bh=3J58Se8XDTl9BlGgRs5d+IlBlOxSoL35kOrUGSCwDcM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=cGfVxWwvtxUzcK1NAZRRFtyBzmdjDYrCNVvGTtfKrJ4rTOh46boDEhePjFjCve13uoi4x7p45vceBFY6lxUDtNVZVsJmsqtvaPucMhD8YInAFZ1BWAHeP+0SDcTkI5ZdNgLIAl8AYyRoTR5gJcjY/i8OvwtdF/TbuqCNOsjq9Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=JIWEf3xH; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+	s=arc-20240116; t=1742383288; c=relaxed/simple;
+	bh=cTojPu+/tzVZonXBixc/OicuUZ+RrypjBB0rEAbJXJM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pRBMcqoBJVoeIzB/6z6Y7KNykW5ugfoGG2t1mOL6sm96v9+7PJhhikEkYvu8CKlYlZPvFOU6ch6BqVAkEtlX/IgWrcv/J2gVnWJ6slLF/iKrVhvncPPsXv94yO8HHjCFVa2Z4GGD9ijCJfKojVeszAbr7vjE6wJeHCTck/RNI/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=X0m2/zJU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="JIWEf3xH"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 8BCF914C2D3;
-	Wed, 19 Mar 2025 12:20:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1742383233;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=lXpgVvCHByq70ntTWtHcQtsufg4U/O6aceBq0lCugzo=;
-	b=JIWEf3xHy6HLfPcZIlPCTBJrwHhTuwPFgXkI/GHmE2gH9RHMNRh0EmG9zI97aKfeghRuPd
-	oWIylvR+zhgWtwY8tPqWJm5labeLymHzTfzF+M1KFszHcnMmL8YzkedjiVf3uRCzZHmE8y
-	jdGD5ih29L5UvjsUJG3i+lduNbDvVeR0SmPluroTBLvk9OZYb5dTF73YoFxzBg/SXQr/aO
-	2lYO9WtPRYeCAgICU1nCYjZ1RU1MJISerFLgnOA3o0gymE+ciWeaacP6ZA29Dr3K3TzZad
-	NZ6nfCwWzF7c/xMYuiPAQLt3HypLpUMbuV9OhEBH4DyMs3hZXVDZtXCwghMOrg==
-Received: from [127.0.0.1] (localhost.lan [::1])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTP id 0eaf4a6f;
-	Wed, 19 Mar 2025 11:20:29 +0000 (UTC)
-From: Dominique Martinet <asmadeus@codewreck.org>
-Date: Wed, 19 Mar 2025 20:20:15 +0900
-Subject: [PATCH v3] 9p/net: fix improper handling of bogus negative
- read/write replies
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="X0m2/zJU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C73EC4CEE9;
+	Wed, 19 Mar 2025 11:21:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742383287;
+	bh=cTojPu+/tzVZonXBixc/OicuUZ+RrypjBB0rEAbJXJM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=X0m2/zJUUvpVeW+WAJYWGE6zFcHfLxt9xVogLJBN85wJ+eIZSoVLsCY6p0JIcbi45
+	 AvO5kInR5006e2J/8O+hALAR6cXPUXlGAbcjoQLF8NVBJXGSN7A7FUt0KaPGl7n/M/
+	 c21ghuXoXh0qJr69m2L2FIwp/k9qhtkSY8bB2lJw=
+Date: Wed, 19 Mar 2025 04:20:08 -0700
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Wentao Guan <guanwentao@uniontech.com>
+Cc: John Keeping <jkeeping@inmusicbrands.com>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Ferry Toth <ftoth@exalondelft.nl>,
+	Ilpo =?iso-8859-1?Q?J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	linux-kernel <linux-kernel@vger.kernel.org>,
+	linux-serial <linux-serial@vger.kernel.org>
+Subject: Re: [PATCH] serial: 8250_dma: terminate correct DMA in tx_dma_flush()
+Message-ID: <2025031900-junkyard-crane-4c93@gregkh>
+References: <20250224121831.1429323-1-jkeeping@inmusicbrands.com>
+ <tencent_7FB378712CE341FE55666DAD@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-9p_unsigned_rw-v3-1-71327f1503d0@codewreck.org>
-X-B4-Tracking: v=1; b=H4sIAG+o2mcC/3XM0QrCIBiG4VsZHmfo72zYUfcRMUz/bRLo0HLF2
- L3nBp0UHb4ffM9MEkaHiRyrmUTMLrngS4hdRcygfY/U2dIEGNQcAKga24dPrvdo2zhRJjolrZY
- gNSPlNEbs3HMDz5fSg0v3EF+bn/m6/qUyp5wK1KrhFhgz15MJFqeI5rYPsScrl+FDSCZ480NAI
- ZRttKq14geN38SyLG9uAfcH8wAAAA==
-To: Eric Van Hensbergen <ericvh@kernel.org>, 
- Latchesar Ionkov <lucho@ionkov.net>, 
- Christian Schoenebeck <linux_oss@crudebyte.com>
-Cc: v9fs@lists.linux.dev, linux-kernel@vger.kernel.org, 
- Robert Morris <rtm@mit.edu>, Dominique Martinet <asmadeus@codewreck.org>
-X-Mailer: b4 0.14-dev-87f09
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4885;
- i=asmadeus@codewreck.org; h=from:subject:message-id;
- bh=3J58Se8XDTl9BlGgRs5d+IlBlOxSoL35kOrUGSCwDcM=;
- b=owEBbQKS/ZANAwAIAatOm+xqmOZwAcsmYgBn2qh5cq2NDOvwvpzA9OI2dfr364fxm3CO5+gvH
- nmwNPRPw82JAjMEAAEIAB0WIQT8g9txgG5a3TOhiE6rTpvsapjmcAUCZ9qoeQAKCRCrTpvsapjm
- cNKWEACW+5TL7uCVj8SEfCusCrPdUEQN9InPwhuUGzxCUuUe0nnhUhuXbBpP9VOv6VhLSorIWzD
- qvPoimJdsOAeTY/4zczUyRQTXaVZjOnLFseCPvbecRnzTcEibivRetditsH0fpgt4y6MzgwEX5u
- qFUTgSGdcigUtztDej4X4R0/0CP6qhrw3Qdq4C3YycC9rmQbZvli2j3FCjyrY5ShK3v+IwGiTh6
- wDz3fxLz707fEQiz7tdrYbPzi+XX/fcf+II/ZBnaKJqUYYOL8OCVhxYN4FJpTQYRzi8GigTEOT5
- rUhhsVMlR3dqWDQQCtLvH36huPjswBOXjD0EP8L7WSSgwo/SKQlHEF/Dt55JdRD/YeCc5O7cWPu
- qaDOhpz5X+rBB1G5XWZ63OiadfwrRCeva9Jqu5mTQN3r9gdrNFAd0bieEenA7Q8+99p1r+OwF1Y
- RUUdAoSb0Z6aL4u2v163zM8uVLwAobwLqd+1mgDVL4rdqey6f74BCVfYNIutS4zHgjeZO/n6YOx
- VKMP+mu9kkRTG6hm7Mf09da9MZPughyZXNw9RMCHT5N6xR+vAQYrg4kyTdrAYR/vpOWKbT3qvN6
- tYbely5AXvdWuSa2/sRjJqlv0+3DmbgxLixxA5+/zUf6K06mC0JBtWwMZzIjht3XvPo0qJ4UFy0
- BfLSDrI5+CDPbSw==
-X-Developer-Key: i=asmadeus@codewreck.org; a=openpgp;
- fpr=B894379F662089525B3FB1B9333F1F391BBBB00A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tencent_7FB378712CE341FE55666DAD@qq.com>
 
-In p9_client_write() and p9_client_read_once(), if the server
-incorrectly replies with success but a negative write/read count then we
-would consider written (negative) <= rsize (positive) because both
-variables were signed.
+On Wed, Mar 19, 2025 at 02:14:40PM +0800, Wentao Guan wrote:
+> Ping?
 
-Make variables unsigned to avoid this problem.
-
-The reproducer linked below now fails with the following error instead
-of a null pointer deref:
-9pnet: bogus RWRITE count (4294967295 > 3)
-
-Reported-by: Robert Morris <rtm@mit.edu>
-Closes: https://lore.kernel.org/16271.1734448631@26-5-164.dynamic.csail.mit.edu
-Signed-off-by: Dominique Martinet <asmadeus@codewreck.org>
----
-Changes in v3:
-- fix bad print formats
-- Link to v2: https://lore.kernel.org/r/20250317-9p_unsigned_rw-v2-1-9d7a94a916ae@codewreck.org
-
-Changes in v2:
-- fixed rsize to be u32 instead of size_t
-- Link to v1: https://lore.kernel.org/r/20241222-9p_unsigned_rw-v1-1-3ea971d200cb@codewreck.org
----
- net/9p/client.c | 30 ++++++++++++++++--------------
- 1 file changed, 16 insertions(+), 14 deletions(-)
-
-diff --git a/net/9p/client.c b/net/9p/client.c
-index 09f8ced9f8bb..52a5497cfca7 100644
---- a/net/9p/client.c
-+++ b/net/9p/client.c
-@@ -1548,7 +1548,8 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 	struct p9_client *clnt = fid->clnt;
- 	struct p9_req_t *req;
- 	int count = iov_iter_count(to);
--	int rsize, received, non_zc = 0;
-+	u32 rsize, received;
-+	bool non_zc = false;
- 	char *dataptr;
- 
- 	*err = 0;
-@@ -1571,7 +1572,7 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 				       0, 11, "dqd", fid->fid,
- 				       offset, rsize);
- 	} else {
--		non_zc = 1;
-+		non_zc = true;
- 		req = p9_client_rpc(clnt, P9_TREAD, "dqd", fid->fid, offset,
- 				    rsize);
- 	}
-@@ -1592,11 +1593,11 @@ p9_client_read_once(struct p9_fid *fid, u64 offset, struct iov_iter *to,
- 		return 0;
- 	}
- 	if (rsize < received) {
--		pr_err("bogus RREAD count (%d > %d)\n", received, rsize);
-+		pr_err("bogus RREAD count (%u > %u)\n", received, rsize);
- 		received = rsize;
- 	}
- 
--	p9_debug(P9_DEBUG_9P, "<<< RREAD count %d\n", received);
-+	p9_debug(P9_DEBUG_9P, "<<< RREAD count %u\n", received);
- 
- 	if (non_zc) {
- 		int n = copy_to_iter(dataptr, received, to);
-@@ -1623,9 +1624,9 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 	*err = 0;
- 
- 	while (iov_iter_count(from)) {
--		int count = iov_iter_count(from);
--		int rsize = fid->iounit;
--		int written;
-+		size_t count = iov_iter_count(from);
-+		u32 rsize = fid->iounit;
-+		u32 written;
- 
- 		if (!rsize || rsize > clnt->msize - P9_IOHDRSZ)
- 			rsize = clnt->msize - P9_IOHDRSZ;
-@@ -1633,7 +1634,7 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 		if (count < rsize)
- 			rsize = count;
- 
--		p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %d (/%d)\n",
-+		p9_debug(P9_DEBUG_9P, ">>> TWRITE fid %d offset %llu count %u (/%zu)\n",
- 			 fid->fid, offset, rsize, count);
- 
- 		/* Don't bother zerocopy for small IO (< 1024) */
-@@ -1659,11 +1660,11 @@ p9_client_write(struct p9_fid *fid, u64 offset, struct iov_iter *from, int *err)
- 			break;
- 		}
- 		if (rsize < written) {
--			pr_err("bogus RWRITE count (%d > %d)\n", written, rsize);
-+			pr_err("bogus RWRITE count (%u > %u)\n", written, rsize);
- 			written = rsize;
- 		}
- 
--		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %d\n", written);
-+		p9_debug(P9_DEBUG_9P, "<<< RWRITE count %u\n", written);
- 
- 		p9_req_put(clnt, req);
- 		iov_iter_revert(from, count - written - iov_iter_count(from));
-@@ -2098,7 +2099,8 @@ EXPORT_SYMBOL_GPL(p9_client_xattrcreate);
- 
- int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
- {
--	int err, rsize, non_zc = 0;
-+	int err, non_zc = 0;
-+	u32 rsize;
- 	struct p9_client *clnt;
- 	struct p9_req_t *req;
- 	char *dataptr;
-@@ -2107,7 +2109,7 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
- 
- 	iov_iter_kvec(&to, ITER_DEST, &kv, 1, count);
- 
--	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %d\n",
-+	p9_debug(P9_DEBUG_9P, ">>> TREADDIR fid %d offset %llu count %u\n",
- 		 fid->fid, offset, count);
- 
- 	clnt = fid->clnt;
-@@ -2142,11 +2144,11 @@ int p9_client_readdir(struct p9_fid *fid, char *data, u32 count, u64 offset)
- 		goto free_and_error;
- 	}
- 	if (rsize < count) {
--		pr_err("bogus RREADDIR count (%d > %d)\n", count, rsize);
-+		pr_err("bogus RREADDIR count (%u > %u)\n", count, rsize);
- 		count = rsize;
- 	}
- 
--	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %d\n", count);
-+	p9_debug(P9_DEBUG_9P, "<<< RREADDIR count %u\n", count);
- 
- 	if (non_zc)
- 		memmove(data, dataptr, count);
-
----
-base-commit: 28e6f0643ff4431aac807e902ff0c8de16b2216d
-change-id: 20241222-9p_unsigned_rw-03f95da525a0
-
-Best regards,
--- 
-Dominique Martinet | Asmadeus
-
+Context-less pings help no one :(
