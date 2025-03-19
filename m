@@ -1,85 +1,36 @@
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63867252915
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:17:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 661E9253339
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742375877; cv=none; b=tchY2jK5W3TRlsYYuCxO69KO2OFWWtfjgs6i4khV4QOB2mOESW6AEjhVQDJXrGAmujGeSWrSP45SVdZgOdXXl/PaPecZIecFkblAwuqPkcPyxwdIg4ekgsWhULT1OY4Wr9kv4CM6Zct1ChD3tbrD2ltc3s3/mYlO76B4uJYkXz4=
+	t=1742375888; cv=none; b=bHvhSizVoUy4vEkN8fVqnNy6vBwnxZUDRG7c7x+/M88gQp4Wixwn2gGYI9RzugnKeJu+KgGxon1gijGCaHxVxMG+uxv5qizU08aUCsEbNrPnsyzYaZQxy1+HU4aFIzz1kaOOz/if6iAMPjbfpoKCcgR5N5D68/2DDjd9sAeEMxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742375877; c=relaxed/simple;
-	bh=G/PQgzYwrYLYsv/3Tx21aVxfqG3KRo86XzpWAbXD6Ow=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ardAuXeUP6JRDBaQ0+o9+O9Wr7YRKHHAl2gWilp70hnzXmTzwptC+ALxPZcEe2rAgbLgpJB0A/xd/MuW0o0c3pfDMG/Hi6TQJr/wOU3JFAR4nrm9BW3iIp5DPSfQXjASqBf/IvHptnnqyc2p328a7dZg+NBrCQuzZytwE7kCeRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fqvb9XcT; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742375888; c=relaxed/simple;
+	bh=RDv1KyICqiDC1YJ+evku/seJfnaIAeC4xN8jw2DGw20=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cAG8U4M1IUtv/PuiJKWe7hIJAoqaEVHPs1V+IfA9oK3eGGSE7tEpXij8k31mwdzc758vQ/AqZm6RBueilmegeWOA4Df1BYxTjQCOcV9S4XZfVzqXEeKSGM+Fw2uTN8tSBd+sCL5AJWtvvL2Gpz78F9H6ey4Bn0ubaSaRn2fOBqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=lYjvunTK; arc=none smtp.client-ip=117.135.210.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fqvb9XcT"
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3912e96c8e8so4242077f8f.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:17:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742375874; x=1742980674; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MatIsPF8IuzJGTj4rqzD5SEaynR7KV/+RlpqBdYnhsQ=;
-        b=Fqvb9XcTfRzkbiNj7uB2sd1ZrN6eRfgSSOON3qcypf101Ons81bD8YEM8P7fFkJ+vv
-         Dr/inQ4V6bcHc/bSBZ84L6lDcyYqdv7jXDQ4VNN2Unn/YQpaOEmATo+DBH9+RNPFz8bU
-         ZteylGpRguI1b/1xiBL12YoM5SIOaRL51uVqkLKvjpeaAdK6aRnb7rHBQ6LsNUHAooAs
-         PQHmecUOutNRbF4Z9SPLBbhnCSvp1NT2KXA4ob7emNTSb45kvhdkasbKok0PDU6Djk5G
-         Svb52qxVJf2rjyXt/kCqdz8amF6Bq5k9EqrUBhxUFH6k9OEIHy/nE79/Vd50GqyvBp4e
-         MYXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742375874; x=1742980674;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MatIsPF8IuzJGTj4rqzD5SEaynR7KV/+RlpqBdYnhsQ=;
-        b=PJrwCRD1GF3iAZ7LBNzT/XSqTwEfPIoB2ytwRt54DdLab0InikfuEWpiGCpx4Atg0s
-         RgvnDiQNdLiLUHPzG7+IznuYlCJmOISxE3GyZRAwS8VZj6XHzAmDgFUbh14iPflTfTi6
-         cNjMtl6sa7L1G6P+QRo0ZQK66eJTO6kiCwZGp3hoPdA3JDElzQvbfTHRIJH3N/zZcMuP
-         SIK/udSYjIZm7nyR2YHk/rsYZ2Tdlyz4uAsXRuOThI5Zlr2CgxpQDeUmAuVNChKAf3GZ
-         uTaWAS6WnoI7VaHDTtzcRaxppZcR1owSVwRkzCiNCftJyhUiWqxkEVuILBokI5sfNt4t
-         ltbg==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Mhm66Qox0qGqmOy1ygBMEIdynvlQN6u9O2dxoNW3uBv1ILoBE8KOkkDtQQQaoRjeFJsxIN3jIy5ttik=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLmWz373VqT0Lqjts0lEivqQV9IAz/Vc3gL+SokEACedZZYSm4
-	H72YWEJW/iIGwEWrQb4IpJapRCWmcSRL9zm2Jz5coR0V1LgJlDZ2rSSHDJZnJyY=
-X-Gm-Gg: ASbGncs37fmcbNMy9yCA+hF9lEEuz+I6l96lnFXGoTk86pxPC0q5fWxFuSSv7csQy+R
-	YIOwuFFlvxiF0Z/0IFoa5RzYRMuPuxV4Uk7Wml2CUWDE3Ss5QmZDfJIaudnnlAdw0sS+uVAYuW6
-	ewjrY9jGNsB1dX+iS/HXOrZtFM2CrKF9TZJgpe/O2wBAjUD11LZ+RcTb1pXwmGk+sYHRvkOlgfx
-	kEKCPq33U/iAXQDPXj/IXLQfHeNcWfC2DAFqpLrymRSKQLC5bjh2phFHnRi/D8H4ZA89rQP/v/n
-	VEVSUuXd3M7TNypH1AihnZFAt0OsR7pCEvNkINhnPPc1NRd/EbAYr91gPxS0GDef+XYVIQ==
-X-Google-Smtp-Source: AGHT+IF2OI4R8vpQRvrvPUiz9MYuf6mjmby8aJEe+xnR6Wn2dDxTXW6xtohznPik5sEd2lnjFnvXNQ==
-X-Received: by 2002:a05:6000:2c7:b0:391:4674:b10f with SMTP id ffacd0b85a97d-39973af9236mr1231112f8f.36.1742375873640;
-        Wed, 19 Mar 2025 02:17:53 -0700 (PDT)
-Received: from localhost.localdomain ([5.133.47.210])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c82c255bsm20023810f8f.23.2025.03.19.02.17.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 02:17:52 -0700 (PDT)
-From: srinivas.kandagatla@linaro.org
-To: broonie@kernel.org,
-	andersson@kernel.org
-Cc: lgirdwood@gmail.com,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	konradybcio@kernel.org,
-	perex@perex.cz,
-	tiwai@suse.com,
-	dmitry.baryshkov@linaro.org,
-	linux-sound@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	devicetree@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="lYjvunTK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=2A3RE
+	e9nsA+ldu9d0e7nqZBVkqdCOqvQeQRE+0UzZgQ=; b=lYjvunTKIdh1uTICYuWr2
+	3VVpIDdq0p4UaTZpWpQ25kKPK7rnr0PWhfhXP/FEtsWhxper8iviMwctlmvYyoB0
+	OhlF6SovMu+xfzCzNiNVyHHYBx9BOeeQeB8Uhs6xWV+JgvZ/i/LZOuf1HBwzcsJF
+	fdLbxzQGZJ4yVQXJYFM1rQ=
+Received: from localhost.localdomain (unknown [])
+	by gzga-smtp-mtada-g0-2 (Coremail) with SMTP id _____wDnV+u6i9pn__i+AQ--.57877S2;
+	Wed, 19 Mar 2025 17:17:47 +0800 (CST)
+From: Liu Ye <liuyerd@163.com>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org,
-	johan+linaro@kernel.org,
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 3/3] arm64: dts: qcom: x1e78100-t14s: Enable audio headset support
-Date: Wed, 19 Mar 2025 09:16:37 +0000
-Message-Id: <20250319091637.4505-4-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250319091637.4505-1-srinivas.kandagatla@linaro.org>
-References: <20250319091637.4505-1-srinivas.kandagatla@linaro.org>
+	Liu Ye <liuye@kylinos.cn>
+Subject: [PATCH v4] mm/page_alloc: Remove unnecessary __maybe_unused in order_to_pindex()
+Date: Wed, 19 Mar 2025 17:17:26 +0800
+Message-Id: <20250319091726.401158-1-liuyerd@163.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,79 +38,46 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_____wDnV+u6i9pn__i+AQ--.57877S2
+X-Coremail-Antispam: 1Uf129KBjvdXoW7Jry7JrykGr1rAr48AFW8WFg_yoWfKwb_u3
+	Wjkrs293s5urn5KwsFkanagw4ft3WkCrn7WFn3Wr1aya42qFW2vw48A3y3AFs8W3y29F4f
+	WayqqFW7Gw1agjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUnD8n7UUUUU==
+X-CM-SenderInfo: 5olx5vlug6il2tof0z/1tbiEAIVTGfagzNuhgAGso
 
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+From: Liu Ye <liuye@kylinos.cn>
 
-On Lenovo ThinkPad T14s, the headset is connected via a HiFi Switch to
-support CTIA and OMTP headsets. This switch is used to minimise pop and
-click during headset type switching.
+The `movable` variable is always used when `CONFIG_TRANSPARENT_HUGEPAGE`
+is enabled, so the `__maybe_unused` attribute is not necessary.
+This patch removes it and keeps the variable declaration within the
+`#ifdef` block for better clarity.
 
-Enable the regulator required to power this switch along with wiring up
-gpio that control the headset switching.
+Signed-off-by: Liu Ye<liuye@kylinos.cn>
 
-Without this, headset audio will be very noisy and might see headset
-detection errors.
-
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 ---
- .../dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts | 18 +++++++++++++++++-
- 1 file changed, 17 insertions(+), 1 deletion(-)
+V4: Update from.
+V3: Update from.
+V2: Update from and Signed-off-by.
+---
+---
+ mm/page_alloc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-index b2c2347f54fa..f39c51c809e8 100644
---- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
-@@ -22,7 +22,7 @@ / {
- 	wcd938x: audio-codec {
- 		compatible = "qcom,wcd9385-codec";
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 542d25f77be8..fe76fd237dd0 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -508,9 +508,9 @@ static void bad_page(struct page *page, const char *reason)
  
--		pinctrl-0 = <&wcd_default>;
-+		pinctrl-0 = <&wcd_default>, <&us_euro_hs_sel>;
- 		pinctrl-names = "default";
+ static inline unsigned int order_to_pindex(int migratetype, int order)
+ {
+-	bool __maybe_unused movable;
  
- 		qcom,micbias1-microvolt = <1800000>;
-@@ -36,11 +36,13 @@ wcd938x: audio-codec {
- 		qcom,tx-device = <&wcd_tx>;
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
++	bool movable;
+ 	if (order > PAGE_ALLOC_COSTLY_ORDER) {
+ 		VM_BUG_ON(order != HPAGE_PMD_ORDER);
  
- 		reset-gpios = <&tlmm 191 GPIO_ACTIVE_LOW>;
-+		us-euro-gpios = <&tlmm 68 GPIO_ACTIVE_HIGH>;
- 
- 		vdd-buck-supply = <&vreg_l15b_1p8>;
- 		vdd-rxtx-supply = <&vreg_l15b_1p8>;
- 		vdd-io-supply = <&vreg_l15b_1p8>;
- 		vdd-mic-bias-supply = <&vreg_bob1>;
-+		vdd-hp-switch-supply = <&vreg_l16b_2p5>;
- 
- 		#sound-dai-cells = <1>;
- 	};
-@@ -367,6 +369,13 @@ vreg_l15b_1p8: ldo15 {
- 			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
- 		};
- 
-+		vreg_l16b_2p5: ldo16 {
-+			regulator-name = "vreg_l6b_2p5";
-+			regulator-min-microvolt = <2504000>;
-+			regulator-max-microvolt = <2504000>;
-+			regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
-+		};
-+
- 		vreg_l17b_2p5: ldo17 {
- 			regulator-name = "vreg_l17b_2p5";
- 			regulator-min-microvolt = <2504000>;
-@@ -942,6 +951,13 @@ int-n-pins {
- 		};
- 	};
- 
-+	us_euro_hs_sel: us-euro-hs-sel-state {
-+		pins = "gpio68";
-+		function = "gpio";
-+		bias-pull-down;
-+		drive-strength = <2>;
-+	};
-+
- 	kybd_default: kybd-default-state {
- 		pins = "gpio67";
- 		function = "gpio";
 -- 
-2.39.5
+2.25.1
 
