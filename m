@@ -1,84 +1,90 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0D4235971
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:24:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A763C1DE3BF
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742405088; cv=none; b=WF5FPedG0J9S2ROWLl7/1wiG3tDWSLMu3csGqohkz+ykoFnnG7iOYR5AmdbGRdiomugFvpFHUVTxbbMTxQbjFPIXxVhAnn7ZH0tlrSQdkZjpgSdoWzEciKskRNRaRZiNs66NVdVvnvIwmaTcPAG6jT/pK6gPvpJ3suX0TU+snz8=
+	t=1742405162; cv=none; b=Lip6MvSG4yyWO02WTQvMA9EK06wrXLdpXlN/EDaPO1g5kupquDl7i2DR+6enc/CxWqCehD1RUWlcJ2OJpoQd3Or58RKNt82V669K7ONpJD1WWhQmj5lm4bWfaHJQcxkI8fuSA4Cj/MJb3QrRnISGtnXMdvs680xCzmMZQsNNDBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742405088; c=relaxed/simple;
-	bh=gic5TJGgxxzRKjumPuv3tUCOhcLyMwuvkayfwcKIDGE=;
+	s=arc-20240116; t=1742405162; c=relaxed/simple;
+	bh=xWlwplV+ekInbFsUxRgTauEuEgk6dMw8nIVG3sysQ9k=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OALDTkg/EfUgz0fHul7Ecj3aWA9oVgE73JOX7KfEjRFEbiSTSxfa7n7/1Sk3Wwp3ejdvW8ngD0YXyYFNV7wCVhu6Ulr9wOQNrXW2Qk1t7+oegcSybFHfPXfI+1KlYa5gULMUY/yfJXSD+c0wU3fWB4jvUHIWCLwt9pZyGskEIOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=u6WmUBDe; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YqdTO6FK2pChs5frv6zS4AYIgYb7fHMxvTNr+b0Vbhn+hSRJDcY1KsWTFJmoquersUEkj7bS9wf7fibOa+aNKj2dyVHBU5OSjT/vIX1ctnrxYflKusaoRvWiR9pzA3VKTLh9PPsT3fDOIoo11bycf7MbUrT+aoFt4SdUgGOMwk8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=i4IKUdhV; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="u6WmUBDe"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so34798915ad.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:24:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742405085; x=1743009885; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=5Ovtjsc/ngsMtbRru+3v3f/ts46HtxiqzAUDsNuQW/M=;
-        b=u6WmUBDe70oiYQsofHKtFLi3UVsV41tiYrqOKAlelc3ksn/v9SPPn75e90pPLOvK+B
-         ouJhKJ8AyWtRUAoGhJ8+HVeErEiWmYCYX1IpEtFov3GL7gdYgK7KPkRasr5twcCUtEwi
-         O/bRTzmceUmxQFvyqK0xXMu2cxoER8hvipPLBLnPAp6r1KmvIkxvE9Xyh/R7D6gZq7G6
-         6U+8WHOHbG8uqfjDss3BEMsfA/lpHwxaP3L+HWsePBf5p58fkYyiKOjbFmnLTHm9dPIU
-         oT4VrT3gBCS78T7x8d26Mo5VlLnqXXFl5Zf4mPZwiWQxvhf3Rwi5P5Fh+YWHNyLzLSUy
-         OYUA==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="i4IKUdhV"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JDYJ94020468
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:25:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=wxTkGbnrj2G1AAERlXkdXjST
+	vimabqMigiyhzGpcsNs=; b=i4IKUdhVb25iQqlHQyI4tVrN6igUBit9UBocggcP
+	1a7AnHYWIcOPTbuHdMANqFkBy1Por4VMEVmLcrde8N34D3RJobN90CmEN8+gW5qP
+	xBpyCCpDTlVWC8GLejse8Ih33ueswRS7ey2dFimN+w9Un2lF/YpDikChWoaC6iFP
+	exD7cZEBY0RsiabXOldUuB9sw1sF9xxPFvyny0VSDnej4HtkHjSElpkrD3LSTyhs
+	AGARsGvBYXtbVvqkBbrCyVTB67rTjSOMCBNzTo8qNVk+Kj2pV5ZmaHPLFQ56DPwZ
+	hhLrEHVjyE4XSbr1GSMqWEEJaYUzaw7nOGn3vo2BnqDBMA==
+Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com [209.85.219.71])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45fdmwuge4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:25:59 +0000 (GMT)
+Received: by mail-qv1-f71.google.com with SMTP id 6a1803df08f44-6e91d8a7183so130309566d6.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:25:59 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742405085; x=1743009885;
+        d=1e100.net; s=20230601; t=1742405158; x=1743009958;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5Ovtjsc/ngsMtbRru+3v3f/ts46HtxiqzAUDsNuQW/M=;
-        b=DMoAOnEqF61dbqZKJ0VwbTPO+EEepPRk6ZX4P3bqQ4iy0tySlM1vh1td0q8+g9AuH8
-         m2n38Vi2dGk8KRal5XfXp9mOflRW+KOKWEHj1QIsGyOsEd9L+AU1vXlCfCcBEiFYry+5
-         ME1Me73zdy5S+wJG1wEHvMty/UASOuibkcCPKTnpxzL/NBxI5NX6mXcZf74D5kBB6zdN
-         v3H2M/SXKeE5DSGCNywaz4bA9k+X/xFGPdKrns04TJuxC9NyY2Xu7y4ryYA8p1Nyh2JI
-         1JYwyPzbkXzQsdq+HKOOEq2sS7whSlneTfzgF+ecZLMjKTmdGLJec4F/2QaTWn+anMuK
-         Uo5g==
-X-Forwarded-Encrypted: i=1; AJvYcCWc1335vCp3eoMnhbxVvN4gMCE7YIhep6GC9q1qb6reWEPLFwOjtyIQgNyDnp03bIPGdu8pccN+0CEIE+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxdzB8N+NQoVS04DPrspTPYMxIWS9/6CaR69bCLA3yWaMIdHetW
-	JdzIHGFVgEDPCV/DP5yJSU1RuHv3bPMcBd7Qvsp7u2taskL2+9rfoB8SaR8XQr0=
-X-Gm-Gg: ASbGncs1vuMcrQnNCekwjfO+XtPDT+Jwa+7gEeYfw4OLEv9sJzALNqHbic16Wa6x+OV
-	3u2yt/Ar+vN+AeXkcC/LLvOkp+fr50nRLg2l01pp1eXnnARarBlWfdicRI1AuHSPhd4h2a86GHQ
-	ET9kYwtP8+PtQuji02giAfVPKNkztD6rSXcYlgE3StMwOoG1mG+4bR53rVYAb517T7iIVSouqWE
-	1kFDRXrE1KA5Ys02tEHrKNsbHpqxE1lrKwVwRz0QK0TMfz9rgtM4xpgfDIsEeHsKRzH5PROgIg9
-	RDuWRlkPkpCQyd5LkCiBquqTkiKUxOVwW8GkfOTf
-X-Google-Smtp-Source: AGHT+IGGukMmGzrRkcCLcnDVIfPfEcGzaPbBFEMioj9IaaorGdbf4I/BJxhdPW8WI0glghzqTFGz+Q==
-X-Received: by 2002:a17:903:41ce:b0:224:1ec0:8a1a with SMTP id d9443c01a7336-22649caaa83mr46300995ad.51.1742405085227;
-        Wed, 19 Mar 2025 10:24:45 -0700 (PDT)
-Received: from ghost ([2601:647:6700:64d0:4763:97aa:9309:154a])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6888562sm117615825ad.2.2025.03.19.10.24.43
+        bh=wxTkGbnrj2G1AAERlXkdXjSTvimabqMigiyhzGpcsNs=;
+        b=d1pxt1/YqXlQwI9ioq2YcsQgh/Zafxjc+BZGVFcxnR4qUl+Ua8TFVTG7rqN4BgIAG3
+         iCT/xDope276p10n/oRiWfHUqYAjQDhlidQasI98hahb7Ulgd8ygh959NmCedfzRt6U0
+         QXzBfCW9lfkI7SUEQGJlAq6+IHPIvIDJJVNBPXxG+Pd2ubtGTywuW96iIHviAvietiwm
+         J7m+VL5E75J/0CM633N+oEojeZDllH3X1Ofca/pJqmjK10LGA5+/qs8oEtYNFYLh0TmR
+         Z1aPBCP6yUZxCvO+PCFYQbkfSr8tA/jWKzZ7Bau9rcquqPNxx3xyTKZP36mdUmNIheb7
+         BrnA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLOttPzH+J0IZbRit9+IaTZvlJosi3908E89gu9+nfKYejpvcRbvxgKPH0BYrLg/dPa7l7KXUSPvZ0h+I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWyNipGk3tg+o00PRzTOjgg5sP2C7Zd95WtjaZyvq3ws9pj7f1
+	RgFElDbvTMtaaByDxkA9TuC8oaaO8Ss32BRV+xwZPsbxzjMnmQO8aL9C0HwRDp1mJvRV/aQLkKn
+	AXd7T9SxaHOHSqEm7XO7YR08KL+qW7RkJUOSeHXO6yvz8hDfdiBR5LUvuVLqn5O0=
+X-Gm-Gg: ASbGnctiaf8nQJXINi4vnD0YRVB+h+QSH8ettkSPizFmEu3Tk1JOg3jWXCS6sKFo24r
+	0/smS9KGJ9rySkgC86eQy+RPgKksLTCP5flpGsVyjhISdjkapTD2TDGdJbmNp0wGZffo5Pisw0h
+	qD8AWbnXw9NwISaVMYaDoTfro6v+jyuVcATKQA+ILD3s+/V7kwWl6OiozlwiwvKx2TIHWyIWFib
+	q6sa0hi3CFXZL+mh9HjS+Px4n1PUpsy2eGi5irJSj+RbYQ7dAXfm12JUcVkgHYCp4tMtVOjXh1y
+	iGHOkTbn5xswTxOS9I12Um6TBubSTWecUNs1rOL1JCl+mHpNdhW3+ACNjIQym6iHW5F/OJjptCq
+	1emk=
+X-Received: by 2002:a05:6214:528b:b0:6e8:e8dd:3088 with SMTP id 6a1803df08f44-6eb29446070mr53033436d6.37.1742405158308;
+        Wed, 19 Mar 2025 10:25:58 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGcStmY6qruGD6vBp50x0OySWHCpSi6v3rL7uOiQJh632CHkOyH81K+9C72wFo4Ponx60tgYg==
+X-Received: by 2002:a05:6214:528b:b0:6e8:e8dd:3088 with SMTP id 6a1803df08f44-6eb29446070mr53033006d6.37.1742405157828;
+        Wed, 19 Mar 2025 10:25:57 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba888039sm2002361e87.203.2025.03.19.10.25.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 10:24:44 -0700 (PDT)
-Date: Wed, 19 Mar 2025 10:24:42 -0700
-From: Charlie Jenkins <charlie@rivosinc.com>
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Ben Dooks <ben.dooks@codethink.co.uk>,
-	Pasha Bouzarjomehri <pasha@rivosinc.com>,
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Alexandre Ghiti <alexghiti@rivosinc.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jason Baron <jbaron@akamai.com>, linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 1/2] riscv: Move nop definition to insn-def.h
-Message-ID: <Z9r92tCdsjoJTQ88@ghost>
-References: <20250318-runtime_const_riscv-v9-0-ddd3534d3e8e@rivosinc.com>
- <20250318-runtime_const_riscv-v9-1-ddd3534d3e8e@rivosinc.com>
- <20250319-3bf29b05bf02bfdaa32b261c@orel>
+        Wed, 19 Mar 2025 10:25:57 -0700 (PDT)
+Date: Wed, 19 Mar 2025 19:25:54 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Marc Gonzalez <mgonzalez@freebox.fr>,
+        Dmitry Baryshkov <lumag@kernel.org>, Arnaud Vrac <avrac@freebox.fr>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/8] arm64: dts: qcom: sc7180: Add specific APPS RSC
+ compatible
+Message-ID: <rg377etwxv3yupth3acak4ycthahi7sennm54sbah55yqj2qdk@vip4xxkbsp7n>
+References: <20250318-topic-more_dt_bindings_fixes-v1-0-cb36882ea9cc@oss.qualcomm.com>
+ <20250318-topic-more_dt_bindings_fixes-v1-2-cb36882ea9cc@oss.qualcomm.com>
+ <l4vd2xmrowmmtefieb4cbirq6ntkvnwbhtpxcyzwdeok2vgtt7@zqgqndumgecv>
+ <881655b5-30c0-42f3-863f-5b6606a3e2cd@oss.qualcomm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -87,123 +93,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250319-3bf29b05bf02bfdaa32b261c@orel>
+In-Reply-To: <881655b5-30c0-42f3-863f-5b6606a3e2cd@oss.qualcomm.com>
+X-Proofpoint-ORIG-GUID: L0vrRbMy8eawoVgPuc7nRuo0x_ug8tA9
+X-Authority-Analysis: v=2.4 cv=ReKQC0tv c=1 sm=1 tr=0 ts=67dafe27 cx=c_pps a=UgVkIMxJMSkC9lv97toC5g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=p9JctohuHJosm6c4YDkA:9 a=CjuIK1q_8ugA:10 a=1HOtulTD9v-eNWfpl4qZ:22
+X-Proofpoint-GUID: L0vrRbMy8eawoVgPuc7nRuo0x_ug8tA9
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_06,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 mlxlogscore=939 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503190117
 
-On Wed, Mar 19, 2025 at 04:27:39PM +0100, Andrew Jones wrote:
-> On Tue, Mar 18, 2025 at 05:38:45PM -0700, Charlie Jenkins wrote:
-> > We have duplicated the definition of the nop instruction in ftrace.h and
-> > in jump_label.c. Move this definition into the generic file insn-def.h
-> > so that they can share the definition with each other and with future
-> > files.
+On Wed, Mar 19, 2025 at 03:14:42PM +0100, Konrad Dybcio wrote:
+> On 3/18/25 10:30 PM, Dmitry Baryshkov wrote:
+> > On Tue, Mar 18, 2025 at 07:35:15PM +0100, Konrad Dybcio wrote:
+> >> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+> >>
+> >> SC7180 comes in a couple firmware flavors, some of which don't support
+> >> PSCI in OSI mode. That prevents the power domain exepcted by the RSC
+> >> node from providing useful information on system power collapse.
 > > 
-> > Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> > ---
-> >  arch/riscv/include/asm/ftrace.h   | 1 -
-> >  arch/riscv/include/asm/insn-def.h | 2 ++
-> >  arch/riscv/kernel/ftrace.c        | 6 +++---
-> >  arch/riscv/kernel/jump_label.c    | 4 ++--
-> >  4 files changed, 7 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/arch/riscv/include/asm/ftrace.h b/arch/riscv/include/asm/ftrace.h
-> > index c4721ce44ca474654b37b3d51bc0a63d46bc1eff..b7f361a50f6445d02a0d88eef5547ee27c1fb52e 100644
-> > --- a/arch/riscv/include/asm/ftrace.h
-> > +++ b/arch/riscv/include/asm/ftrace.h
-> > @@ -79,7 +79,6 @@ struct dyn_arch_ftrace {
-> >  #define AUIPC_RA		(0x00000097)
-> >  #define JALR_T0			(0x000282e7)
-> >  #define AUIPC_T0		(0x00000297)
-> > -#define NOP4			(0x00000013)
-> >  
-> >  #define to_jalr_t0(offset)						\
-> >  	(((offset & JALR_OFFSET_MASK) << JALR_SHIFT) | JALR_T0)
-> > diff --git a/arch/riscv/include/asm/insn-def.h b/arch/riscv/include/asm/insn-def.h
-> > index 9a913010cdd93cdfdd93f467e7880e20cce0dd2b..0a1fc5134f29da190554c59f8cee3b5374c9aa2d 100644
-> > --- a/arch/riscv/include/asm/insn-def.h
-> > +++ b/arch/riscv/include/asm/insn-def.h
-> > @@ -200,4 +200,6 @@
-> >  #define ZAWRS_WRS_NTO	".4byte 0x00d00073"
-> >  #define ZAWRS_WRS_STO	".4byte 0x01d00073"
-> >  
-> > +#define RISCV_INSN_NOP4	0x00000013U
+> > Is this behaviour specific to SC7180 or only to ChromeBooks? For example
+> > TCL Book 14 Go or ECS Liva QC710, would they also use this compat?
 > 
-> This should be _AC(0x00000013, U), but since this is the first of its kind
-> (all other defines are of the form ".4byte ..." -- either explicitly, like
-> the ones above, or through the INSN_* macros), then it feels like it
-> either doesn't belong here at all or that we should provide it and a
-> ".4byte ..." version.
+> The hardware and firmware representation of the RSC is identical, but
+> I wanted to alter the bindings required properties based on the specific
+> possibly-chrome platforms.
 
-Sure, I don't have a strong opinion about this. I was debating adding
-the .4byte version also but decided against it because it isn't being
-used yet, I will add it.
+Should we instead have a separate compatible (?) for ChromeOS platforms
+only?
 
-- Charlie
-
-> 
-> Thanks,
-> drew
-> 
-> > +
-> >  #endif /* __ASM_INSN_DEF_H */
-> > diff --git a/arch/riscv/kernel/ftrace.c b/arch/riscv/kernel/ftrace.c
-> > index 3524db5e4fa014a4594465f849d898a030bfb7b8..674dcdfae7a149c339f1e791adb450535f22991b 100644
-> > --- a/arch/riscv/kernel/ftrace.c
-> > +++ b/arch/riscv/kernel/ftrace.c
-> > @@ -36,7 +36,7 @@ static int ftrace_check_current_call(unsigned long hook_pos,
-> >  				     unsigned int *expected)
-> >  {
-> >  	unsigned int replaced[2];
-> > -	unsigned int nops[2] = {NOP4, NOP4};
-> > +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
-> >  
-> >  	/* we expect nops at the hook position */
-> >  	if (!expected)
-> > @@ -68,7 +68,7 @@ static int __ftrace_modify_call(unsigned long hook_pos, unsigned long target,
-> >  				bool enable, bool ra)
-> >  {
-> >  	unsigned int call[2];
-> > -	unsigned int nops[2] = {NOP4, NOP4};
-> > +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
-> >  
-> >  	if (ra)
-> >  		make_call_ra(hook_pos, target, call);
-> > @@ -97,7 +97,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
-> >  int ftrace_make_nop(struct module *mod, struct dyn_ftrace *rec,
-> >  		    unsigned long addr)
-> >  {
-> > -	unsigned int nops[2] = {NOP4, NOP4};
-> > +	unsigned int nops[2] = {RISCV_INSN_NOP4, RISCV_INSN_NOP4};
-> >  
-> >  	if (patch_insn_write((void *)rec->ip, nops, MCOUNT_INSN_SIZE))
-> >  		return -EPERM;
-> > diff --git a/arch/riscv/kernel/jump_label.c b/arch/riscv/kernel/jump_label.c
-> > index 654ed159c830b3d5e34ac58bf367107066eb73a1..b4c1a6a3fbd28533552036194f27ed206bea305d 100644
-> > --- a/arch/riscv/kernel/jump_label.c
-> > +++ b/arch/riscv/kernel/jump_label.c
-> > @@ -11,8 +11,8 @@
-> >  #include <asm/bug.h>
-> >  #include <asm/cacheflush.h>
-> >  #include <asm/text-patching.h>
-> > +#include <asm/insn-def.h>
-> >  
-> > -#define RISCV_INSN_NOP 0x00000013U
-> >  #define RISCV_INSN_JAL 0x0000006fU
-> >  
-> >  bool arch_jump_label_transform_queue(struct jump_entry *entry,
-> > @@ -33,7 +33,7 @@ bool arch_jump_label_transform_queue(struct jump_entry *entry,
-> >  			(((u32)offset & GENMASK(10,  1)) << (21 -  1)) |
-> >  			(((u32)offset & GENMASK(20, 20)) << (31 - 20));
-> >  	} else {
-> > -		insn = RISCV_INSN_NOP;
-> > +		insn = RISCV_INSN_NOP4;
-> >  	}
-> >  
-> >  	if (early_boot_irqs_disabled) {
-> > 
-> > -- 
-> > 2.43.0
-> > 
-> > 
-> > _______________________________________________
-> > linux-riscv mailing list
-> > linux-riscv@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-riscv
+-- 
+With best wishes
+Dmitry
