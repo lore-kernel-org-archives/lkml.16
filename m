@@ -1,107 +1,280 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F2F254AE9;
-	Wed, 19 Mar 2025 11:44:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A4F6221551
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 11:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742384645; cv=none; b=pgREXnxA9v/qxExt0jqj0J06pWsvhodvEB96NeqbkZ8/orVZKND7LNHT2ORP6kUIYSVE0hGQ2SYCuvtxqC31MH8J+Tp0NnPaTAhrvblhBw82FKFM4y0ex82j3O1/AYdN5WAgXEtQVhx1NO5OP0R9Ih0v/yy45Iyjs4i3F6xil9E=
+	t=1742384672; cv=none; b=bxOCuG1AChkvKSgPcMSO2XefnA0wO/Fp+XzlXa0VMJEM4cpbEm2Vo0qh+vKh2xpcH+tXZ/Unj1cnFZJwFi7xu4ss4qXOyRT7kQXbOWHOzKb0RxMGAFCkxCd6D6xz6kVPt5h+9qiI2CZmuYtnzrWOtkgyYkGzgvsbBZJn1kl4dx8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742384645; c=relaxed/simple;
-	bh=+pSipfeI+B+vV/e1XnG3T5gmVUXNbL9HXdZf0Q9JU0I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ExSShk2YtSoYlnRZ+c01mGfJBd9Et5qJDu6th3fXbJbvAqZ26DbqdjHWp1t8D7w3cHNkVgV2v9s1vWx4mz+VJGd80IDvIQ+Ze6AuZd1nzAlqXwv3wCjmviArx3WeCCT9aYhvgOu77TMbslPCqRNQsnE5+4u0RXu9AI8wDr67/h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GTd/qYAY; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742384672; c=relaxed/simple;
+	bh=1rE6hYqpBjWYetNgywdqgGqM6+qERitOJp2qkDS25BY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:References:
+	 In-Reply-To:Content-Type; b=aLSnsbZQGiVz07utgihAnDd7mHH2ZM9FZnz0wurNJGTN+LD1Sfe7G+dHJfbR9hKByxGR/5fEI4NW/h6E38vX3PsTgt1nEQd7K+VO8em1BOekJihT0S29jyXMlb378GpMEZ2lKXl10BvvE0vPFGT7zqgehZM8O8jYc0qXLdlJCbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=HCuZr5Ho; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTd/qYAY"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so20945195e9.1;
-        Wed, 19 Mar 2025 04:44:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742384642; x=1742989442; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=QL7BS25s4toe0J9QffAsg3Jfdyw2hfEy684XAQsMWEw=;
-        b=GTd/qYAYsIlL2ctFtLMhS59T4kVxXo0Es7ltNs7nvldVCsdDVWVg8mXRHE3s24XQYS
-         NIj/GvHIypqvxyVn+UKvYYYq0rD4PJ3QQ8Hl+RYt5fw26lGkEVToK01hJgHjtk0uuBCf
-         uvzXF5QIuOrDQJOV9R8aGO02718b60yIL2Oo50HBWmiAn/eq1yDzv7v5H+64JH6sg5uO
-         K1u/nfSArkJmFkBtXp51KhpgLmogbd5tDH1WIt1SpgV4iiI4EpIeM6BNwi5+H4+kdVKo
-         0haCO8UZdGif0KPg5Dlas54aNE2btzmXnzhHkvBbe9ual4NSj0ZlOYzwacriwFAyr9zf
-         PzwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742384642; x=1742989442;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=QL7BS25s4toe0J9QffAsg3Jfdyw2hfEy684XAQsMWEw=;
-        b=hu8FH2mgXgYsqcdVHr8f4BZMKPjkePTX6sfOLFtVL2rZk2QLpW6pLoo97DPlEhMatC
-         DkvyEoCK+9A31+ZGh5drr+AoPqDQxtaTQoTMFaRPkP6kSSBK50eIlq5K0HmJ+kBZYBPw
-         YZjaXckG0rqBm4/xsKBbV6YW3NhF+K4IN5RyBsUSY5N8rUL0mfK7/zdhU37DE+ONeBf0
-         SVyUyhiGUIYEejTyo6CHmjoBlowCuYxiVQq47H0LZMZSJPzPvcwWQkzCoivXuqqoiD33
-         jIiFkawMX3y4xUumLNkS1JSBh0mSoxX+b8gbimA41N9KEwXz3yIlUXoIxHxbGYtzy59o
-         Vbrw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAh4Pi0C8S/jnmsNI2BQA54bhG/mKgxFqNcEZmDMm5p/p2Zi/wLsd+nDaajThXBZ1NHi2Y3Oxb+o0=@vger.kernel.org, AJvYcCWjYrTPal7/kzgX+hJzIYSenrQ2YDrkZc135ITJF27UIfLwUmtElcqp/JW8J51kQ05dnQPTMh2Nd+rn6qU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzDw8oi7EHp20yOjuCIYrJEFZOFoyD2DZuifC2wMdYRXqN3vOu/
-	uJNege+qi/7eDpO+mGVw4TpU3LiPhR529EK4Gmg4PnncqtM/rmGIBudFG+D1B7w=
-X-Gm-Gg: ASbGncu6XcDtENNlUhVNVjsszjhv2QIp948sVEno7cgCLIzrW3ey8nG5tfWONLYjtz6
-	8xheJnBaBOu5/WWBqaMQBfVKAOlX9dupR5byupmdVbIxAaR6Ntpk1NQEWpCvH2TgKef+6p6s9xq
-	cdbOCrR0N9Lk/VFDs8CBExreggVnIP2UX7IemfnPhggg035LukzlhSy6NMxnWVUHZZVEg0khjDm
-	1rSD1MAi1NN1X3OChP+syDPum+l8V6eh7tvHlZyN39rx4h8/lJV7AFdboghRsEn2qDP2Q02eYPF
-	Rushc5StZoChCbqE04X4NjGcbZwt4sTOEGYxcPooo1bArw==
-X-Google-Smtp-Source: AGHT+IF7L7ygVo4N1A7Gdl1rTjfOLv0RMXKxqf4sN48Uize/BfTL/jm4QDLk58FaYcYVgIEsKDxf8Q==
-X-Received: by 2002:a5d:5982:0:b0:399:71d4:a2 with SMTP id ffacd0b85a97d-399739c1524mr2483183f8f.14.1742384641961;
-        Wed, 19 Mar 2025 04:44:01 -0700 (PDT)
-Received: from localhost ([194.120.133.58])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395cb40cdd0sm20819122f8f.77.2025.03.19.04.44.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 04:44:01 -0700 (PDT)
-From: Colin Ian King <colin.i.king@gmail.com>
-To: "Rafael J . Wysocki" <rafael@kernel.org>,
-	Len Brown <len.brown@intel.com>,
-	Pavel Machek <pavel@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-pm@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH][next] PM: sleep: Fix bit masking operation
-Date: Wed, 19 Mar 2025 11:43:24 +0000
-Message-ID: <20250319114324.791829-1-colin.i.king@gmail.com>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="HCuZr5Ho"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52J3kDaU019347;
+	Wed, 19 Mar 2025 11:44:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=
+	content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=vjxafd
+	7/u5Y+QwmhmIFT9I0JYjjq9NcGj0d7ATle1OU=; b=HCuZr5HoY6TJ1PxP/MS0T0
+	ECWr8BtK30zscdJQBHMYKjUrD1O5nQbbFYF0YeZEap8CrwabYNRbZS8/Mbi0w9lt
+	58Qt69utk/JI78BnyEZRXoJZ7hmGzdHH2LQpQqcRG/KzW2Y0kjZN76x6K09amYiK
+	1seQduMp9O0CY3ncI2hBGnK+VgM1pIszjBq4Bq6sgKHzZB2IbM02TBxl/IBdILf4
+	DS401szlwlFUA2Vlfnu0e/LxV+1eT0ZSEKF2iq5JTGTg1fKnSdZYbj4vNVIJEpkA
+	h0fATM1/Ve7dI+Zwl1akNCvCm0j+X1bddQWWZNYV4Qv1FD71dEoM7bVkEFg4KGwg
+	==
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45fpa9j3fa-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 11:44:19 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52JBDxu1023196;
+	Wed, 19 Mar 2025 11:44:18 GMT
+Received: from smtprelay02.dal12v.mail.ibm.com ([172.16.1.4])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45dp3ks3ts-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 19 Mar 2025 11:44:18 +0000
+Received: from smtpav03.wdc07v.mail.ibm.com (smtpav03.wdc07v.mail.ibm.com [10.39.53.230])
+	by smtprelay02.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52JBiHUg25887236
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 19 Mar 2025 11:44:17 GMT
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7DFB65805C;
+	Wed, 19 Mar 2025 11:44:17 +0000 (GMT)
+Received: from smtpav03.wdc07v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7C6A658054;
+	Wed, 19 Mar 2025 11:44:15 +0000 (GMT)
+Received: from [9.61.249.96] (unknown [9.61.249.96])
+	by smtpav03.wdc07v.mail.ibm.com (Postfix) with ESMTP;
+	Wed, 19 Mar 2025 11:44:14 +0000 (GMT)
+Message-ID: <6debfdf3-2e7b-4581-b1ab-cc5ec1607237@linux.ibm.com>
+Date: Wed, 19 Mar 2025 17:14:12 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+From: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+Subject: Re: [main-line][PowerPC]selftests/powerpc/signal: sigfuz fails
+To: Madhavan Srinivasan <maddy@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org,
+        LKML <linux-kernel@vger.kernel.org>
+References: <5f88a95b-1c8d-4a74-9753-9cdb2e64daf4@linux.ibm.com>
+ <87v7s7di56.fsf@mpe.ellerman.id.au>
+ <8efb89d6-cae0-441c-909c-3de5574e9058@linux.ibm.com>
+Content-Language: en-GB
+In-Reply-To: <8efb89d6-cae0-441c-909c-3de5574e9058@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: n8j5TlE9gbBlXD45tQbMS7QjYRdlzNth
+X-Proofpoint-ORIG-GUID: n8j5TlE9gbBlXD45tQbMS7QjYRdlzNth
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_03,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 spamscore=0 impostorscore=0 malwarescore=0
+ clxscore=1015 mlxscore=0 adultscore=0 lowpriorityscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503190080
 
-The mask operation link->flags | DL_FLAG_PM_RUNTIME is always true which
-is incorrect. The mask operation should be using the bit-wise &
-operator. Fix this.
+Thanks Michael and Maddy for the feedback.
 
-Fixes: bca84a7b93fd ("PM: sleep: Use DPM_FLAG_SMART_SUSPEND conditionally")
-Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
----
- drivers/base/power/main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On 18/03/25 4:20 pm, Madhavan Srinivasan wrote:
+> On 3/17/25 4:43 PM, Michael Ellerman wrote:
+>> Venkat Rao Bagalkote<venkat88@linux.ibm.com> writes:
+>>> Greetings!!
+>>>
+>>> I am observing selftests/powerpc/signal:sigfuz test fails on linux
+>>> mainline repo on IBM Power10 systems.
+>>>
+>>> The test passes on the kernel with commit head:
+>>> 619f0b6fad524f08d493a98d55bac9ab8895e3a6 and fails on the kernel with
+>>> commit head: ce69b4019001407f9cd738dd2ba217b3a8ab831b on the main line.
+>>>
+>>>
+>>> Repo:https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+>>>
+>>> I tried to do git bisect and the bisect tool pointed first bad commit
+>>> to: 16ebb6f5b6295c9688749862a39a4889c56227f8.
+>>>
+>>> But upon reverting the first bad commit issue is still seen. So please
+>>> ignore, if the bisection dosent help.
+>>>
+>>>
+>>> Error:
+>>>
+>>> # selftests: powerpc/signal: sigfuz
+>>> # test: signal_fuzzer
+>>> # tags: git_version:v6.14-rc7-1-g49c747976afa
+>>> # !! killing signal_fuzzer
+>>> # !! child died by signal 15
+>>> # failure: signal_fuzzer
+>>> not ok 3 selftests: powerpc/signal: sigfuz # exit=1
+>> That error means the test is timing out and being killed by the test
+>> harness.
+>>
+> I tired multiple times with the config shared by Venkat in my P10 LPAR
+> and it always passes for me with default timeout as 0.
+>
+>
+> ok 2 selftests: powerpc/signal: signal_tm
+> # timeout set to 0
+> # selftests: powerpc/signal: sigfuz
+> # test: signal_fuzzer
+> # tags: git_version:v6.14-rc2-61-g861efb8a48ee
+> # success: signal_fuzzer
+> ok 3 selftests: powerpc/signal: sigfuz
+> # timeout set to 0
+> # selftests: powerpc/signal: sigreturn_vdso
+> # test: sigreturn_vdso
+> # tags: git_version:v6.14-rc2-61-g861efb8a48ee
+> # VDSO is at 0x7fff9aac0000-0x7fff9aacffff (65536 bytes)
+> # Signal delivered OK with VDSO mapped
+> # VDSO moved to 0x7fff9aa50000-0x7fff9aa5ffff (65536 bytes)
+> # Signal delivered OK with VDSO moved
+> # Unmapped VDSO
+> # Remapped the stack executable
+> # Signal delivered OK with VDSO unmapped
+> # success: sigreturn_vdso
+>
+>
+> Setup: P10 LPAR with 16CPUs, LPAR running only the selftest
+> Kernel: powerpc/next (861efb8a48ee), config shared by venkat
+>
+> Maddy
+>
+>
+> One key difference which I could figure out so far in the set up is, mine is Power10 system running on P11 FW.
+>
+> I quickly gave a try with P10 system with P10 FW, and issue is not seen.
+>
+> Logs from P10 system running on P10 FW:
+>
+> make -j 33 -C powerpc/signal/ run_tests make: Entering directory 
+> '/root/venkat/linux/tools/testing/selftests/powerpc/signal' TAP 
+> version 13 1..7 # timeout set to 0 # selftests: powerpc/signal: signal 
+> # test: signal # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # 
+> success: signal ok 1 selftests: powerpc/signal: signal # timeout set 
+> to 0 # selftests: powerpc/signal: signal_tm # test: signal_tm # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # [SKIP] Test skipped on line 
+> 58 # skip: signal_tm ok 2 selftests: powerpc/signal: signal_tm # 
+> timeout set to 0 # selftests: powerpc/signal: sigfuz # test: 
+> signal_fuzzer # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # 
+> success: signal_fuzzer ok 3 selftests: powerpc/signal: sigfuz # 
+> timeout set to 0 # selftests: powerpc/signal: sigreturn_vdso # test: 
+> sigreturn_vdso # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # VDSO 
+> is at 0x7fffae2e0000-0x7fffae2effff (65536 bytes) # Signal delivered 
+> OK with VDSO mapped # VDSO moved to 0x7fffae270000-0x7fffae27ffff 
+> (65536 bytes) # Signal delivered OK with VDSO moved # Unmapped VDSO # 
+> Remapped the stack executable # Signal delivered OK with VDSO unmapped 
+> # success: sigreturn_vdso ok 4 selftests: powerpc/signal: 
+> sigreturn_vdso # timeout set to 0 # selftests: powerpc/signal: 
+> sig_sc_double_restart # test: sig sys restart # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # success: sig sys restart ok 5 
+> selftests: powerpc/signal: sig_sc_double_restart # timeout set to 0 # 
+> selftests: powerpc/signal: sigreturn_kernel # test: sigreturn_kernel # 
+> tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # All children killed as 
+> expected # success: sigreturn_kernel ok 6 selftests: powerpc/signal: 
+> sigreturn_kernel # timeout set to 0 # selftests: powerpc/signal: 
+> sigreturn_unaligned # test: sigreturn_unaligned # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # success: sigreturn_unaligned 
+> ok 7 selftests: powerpc/signal: sigreturn_unaligned make: Leaving 
+> directory '/root/venkat/linux/tools/testing/selftests/powerpc/signal'
+>> That could be due to a bug, but it could just be that your system is
+>> overloaded or something. You can increase the timeout in the code by
+>> adding a call to test_harness_timeout().
+>>
+>> The test also includes lots of randomisation, so if you actually need to
+>> bisect it you'd want to change the code to use a consistent random seed
+>> in the calls to srand().
+>>
+>> cheers
+> I increased the timeout from 0 to 120, I still see the issue.
+>
+> Below are the logs with and with out time out.
+>
+> make -j 33 -C powerpc/signal/ run_tests all clean clean_mods_dir 
+> emit_tests gen_mods_dir install run_tests [root@ltcden8-lp3 
+> selftests]# make -j 33 -C powerpc/signal/ run_tests make: Entering 
+> directory '/root/linux/tools/testing/selftests/powerpc/signal' CC 
+> signal CC signal_tm CC sigfuz CC sigreturn_vdso CC 
+> sig_sc_double_restart CC sigreturn_kernel CC sigreturn_unaligned TAP 
+> version 13 1..7 # timeout set to 0 # selftests: powerpc/signal: signal 
+> # test: signal # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # 
+> success: signal ok 1 selftests: powerpc/signal: signal # timeout set 
+> to 0 # selftests: powerpc/signal: signal_tm # test: signal_tm # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # [SKIP] Test skipped on line 
+> 58 # skip: signal_tm ok 2 selftests: powerpc/signal: signal_tm # 
+> timeout set to 0 # selftests: powerpc/signal: sigfuz # test: 
+> signal_fuzzer # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # !! 
+> killing signal_fuzzer # !! child died by signal 15 # failure: 
+> signal_fuzzer not ok 3 selftests: powerpc/signal: sigfuz # exit=1 # 
+> timeout set to 0 # selftests: powerpc/signal: sigreturn_vdso # test: 
+> sigreturn_vdso # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # VDSO 
+> is at 0x7fffb1860000-0x7fffb186ffff (65536 bytes) # Signal delivered 
+> OK with VDSO mapped # VDSO moved to 0x7fffb17f0000-0x7fffb17fffff 
+> (65536 bytes) # Signal delivered OK with VDSO moved # Unmapped VDSO # 
+> Remapped the stack executable # Signal delivered OK with VDSO unmapped 
+> # success: sigreturn_vdso ok 4 selftests: powerpc/signal: 
+> sigreturn_vdso # timeout set to 0 # selftests: powerpc/signal: 
+> sig_sc_double_restart # test: sig sys restart # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # success: sig sys restart ok 5 
+> selftests: powerpc/signal: sig_sc_double_restart # timeout set to 0 # 
+> selftests: powerpc/signal: sigreturn_kernel # test: sigreturn_kernel # 
+> tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # All children killed as 
+> expected # success: sigreturn_kernel ok 6 selftests: powerpc/signal: 
+> sigreturn_kernel # timeout set to 0 # selftests: powerpc/signal: 
+> sigreturn_unaligned # test: sigreturn_unaligned # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # success: sigreturn_unaligned 
+> ok 7 selftests: powerpc/signal: sigreturn_unaligned make: Leaving 
+> directory '/root/linux/tools/testing/selftests/powerpc/signal'
+> # vi powerpc/signal/settings make -j 33 -C powerpc/signal/ run_tests 
+> make: Entering directory 
+> '/root/linux/tools/testing/selftests/powerpc/signal' TAP version 13 
+> 1..7 # timeout set to 120 # selftests: powerpc/signal: signal # test: 
+> signal # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # success: 
+> signal ok 1 selftests: powerpc/signal: signal # timeout set to 120 # 
+> selftests: powerpc/signal: signal_tm # test: signal_tm # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # [SKIP] Test skipped on line 
+> 58 # skip: signal_tm ok 2 selftests: powerpc/signal: signal_tm # 
+> timeout set to 120 # selftests: powerpc/signal: sigfuz # test: 
+> signal_fuzzer # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # not ok 
+> 3 selftests: powerpc/signal: sigfuz # TIMEOUT 120 seconds # timeout 
+> set to 120 # selftests: powerpc/signal: sigreturn_vdso # test: 
+> sigreturn_vdso # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # VDSO 
+> is at 0x7fff8b170000-0x7fff8b17ffff (65536 bytes) # Signal delivered 
+> OK with VDSO mapped # VDSO moved to 0x7fff8b100000-0x7fff8b10ffff 
+> (65536 bytes) # Signal delivered OK with VDSO moved # Unmapped VDSO # 
+> Remapped the stack executable # Signal delivered OK with VDSO unmapped 
+> # success: sigreturn_vdso ok 4 selftests: powerpc/signal: 
+> sigreturn_vdso # timeout set to 120 # selftests: powerpc/signal: 
+> sig_sc_double_restart # test: sig sys restart # tags: 
+> git_version:v6.14-rc7-69-g81e4f8d68c66 # success: sig sys restart ok 5 
+> selftests: powerpc/signal: sig_sc_double_restart # timeout set to 120 
+> # selftests: powerpc/signal: sigreturn_kernel # test: sigreturn_kernel 
+> # tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # All children killed 
+> as expected # success: sigreturn_kernel ok 6 selftests: 
+> powerpc/signal: sigreturn_kernel # timeout set to 120 # selftests: 
+> powerpc/signal: sigreturn_unaligned # test: sigreturn_unaligned # 
+> tags: git_version:v6.14-rc7-69-g81e4f8d68c66 # success: 
+> sigreturn_unaligned ok 7 selftests: powerpc/signal: 
+> sigreturn_unaligned make: Leaving directory 
+> '/root/linux/tools/testing/selftests/powerpc/signal' [root@ltcden8-lp3 
+> selftests]# [root@ltcden8-lp3 selftests]# [root@ltcden8-lp3 
+> selftests]# uname -r 6.14.0-rc7-00069-g81e4f8d68c66 [root@ltcden8-lp3 
+> selftests]#
 
-diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
-index ad50018b8047..ac2a197c1234 100644
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -1836,7 +1836,7 @@ static bool device_prepare_smart_suspend(struct device *dev)
- 	idx = device_links_read_lock();
- 
- 	list_for_each_entry_rcu_locked(link, &dev->links.suppliers, c_node) {
--		if (!(link->flags | DL_FLAG_PM_RUNTIME))
-+		if (!(link->flags & DL_FLAG_PM_RUNTIME))
- 			continue;
- 
- 		if (!dev_pm_smart_suspend(link->supplier) &&
--- 
-2.49.0
+
+Regards,
+
+Venkat.
 
