@@ -1,111 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3F2B1CAA81
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE541B0F1E;
+	Wed, 19 Mar 2025 19:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742411433; cv=none; b=FOFuUvboMLeJ92ueQ4Wq1G9GTRJQOurRH6U6Dwpx6Dm7vp8lKy6xIZOr2cfN6aSUAUXKGNbhoNSwKdbtcpocd38qiJZoYew2widnSpYA2w64aY5bWUhGJEsLoYlqYbsE7rxYhRb1hAoxYuQ22EPgBveA8oMMMrfz9kBFLizB5oY=
+	t=1742411584; cv=none; b=myJmdCAZvMuovjjzQHevBTztD5IA7lxn/H/gX3iqBp4lM4X6KH8zDAX6qehnaJ5Bh0x1TFKD8/VBjNLXnP4nhUj8+U2x2CzoenFgr1KaYT7KGqR+g+uDkHLrQzKkmb7OmCAfB8kZ7P9fBwoB1IknWRJcxX3gILS/IUyteAXRf/Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742411433; c=relaxed/simple;
-	bh=0LIFQzQzWNUueswDhxo0s4V+5g06LIM0p6kAe3mcPFI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bdtMctPEhzaIeZK2KU3EgwL3SwIRwfmm2n9jDCVHNJGtqblknOMV8YJ+FAckYyc966UwHg5z3QlTul5dwvU9vKEy4dqqwYBaJcTdZ6WWwA658qpPVL6Ini0cW027n2ULXSvAn6X9yAeVBGg3VEjIw0/kP28IpDTIGKHklxCltYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L38+APyc; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742411584; c=relaxed/simple;
+	bh=eKeyoK7qLWcuF7MK3Oodipn/TPbsBhUk+axcbBmZaec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=BCy4REQN2BPTa87TGSsgt4tT0bBHU1SYWLn65E0ys5Zj9Qb+RyRJ8Y8Xq9Dp0nP3QQ2gm1ELiHHh1cVJhnscdm1TXTR/Kf1fxtsvPNrcU05klVnIRBJQBiseqg2IjB542hmIcT1gpxi3AeS3aQbxhwpz9dEBhuohI1Kh13Fm8qE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D9b+HSCl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L38+APyc"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742411430;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=l8Y7Sc62JSldNPcufsG+fYEDr2XeBdcbp9N4UXv3/VY=;
-	b=L38+APyci9wk7Dinegfn8f5gwk+4419wjoqOT5AuYQBjC1eREkNLEATWxCY4lb85oeSInl
-	HlNJ+6SvvSJQDy9ka0y8Qa2ZhOsulKxnNwrRnVVM82yOTjfGzHCi1hbVmYBD0NHNUiuizw
-	CA+3tC8oiDra9M2gzETWaaV2ArnX6/4=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-60-R4CCP6bmNA2INuNS9or1Kg-1; Wed,
- 19 Mar 2025 15:10:27 -0400
-X-MC-Unique: R4CCP6bmNA2INuNS9or1Kg-1
-X-Mimecast-MFC-AGG-ID: R4CCP6bmNA2INuNS9or1Kg_1742411426
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 5B5C71809CA3;
-	Wed, 19 Mar 2025 19:10:26 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.45.226.12])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 9429918001F6;
-	Wed, 19 Mar 2025 19:10:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Wed, 19 Mar 2025 20:09:53 +0100 (CET)
-Date: Wed, 19 Mar 2025 20:09:50 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: akpm@linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] exit: combine work under lock in
- synchronize_group_exit() and coredump_task_exit()
-Message-ID: <20250319190950.GF26879@redhat.com>
-References: <20250319185433.1859030-1-mjguzik@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D9b+HSCl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E84FC4CEE4;
+	Wed, 19 Mar 2025 19:12:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742411583;
+	bh=eKeyoK7qLWcuF7MK3Oodipn/TPbsBhUk+axcbBmZaec=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=D9b+HSClpVQhqw1Vz1PSyMwApeh+ZMhy3ph8L0jGz6joZ+/dWsbnDrdBWRQiUMcG5
+	 ehHBT1V0AepDbIftHGucP1YCqw3INZ9jqHXnZO559UMgg50aEok5MlTd9baEGhmHWM
+	 1vq/aBg0iPixiQvUziynABl06PSaPyVxEVC00U5ETOAqTdkR35IeVUoDTJ3x96GL34
+	 VgKJYWCveXbSJLxf8F2ty2fznC9a0HwwKGwLJk0MPtv2iqx/+KihVbg3SBJn1iLgb8
+	 c6stywFNKdEOF6PWpgaKoxoUEcl1rOXaY0/n1Sjnsz1Rr0hO0iPhM+4lsMDz1M+9WM
+	 MWjTovL2TA9FA==
+Message-ID: <61d55149-1955-4d5c-84de-d8644727b87f@kernel.org>
+Date: Wed, 19 Mar 2025 20:12:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319185433.1859030-1-mjguzik@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: light: bh1750: Add reset-gpios
+ property
+To: Sergio Perez <sergio@pereznus.es>, Tomasz Duszynski <tduszyns@gmail.com>,
+ Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250319161117.1780-1-sergio@pereznus.es>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20250319161117.1780-1-sergio@pereznus.es>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 03/19, Mateusz Guzik wrote:
->
-> +	spin_lock_irq(&sighand->siglock);
-> +	synchronize_group_exit(tsk, code);
-> +	core_state = coredump_task_exit_prep(tsk);
-> +	spin_unlock_irq(&sighand->siglock);
+On 19/03/2025 17:11, Sergio Perez wrote:
+> Some BH1750 sensors require a hardware reset via GPIO before they can
+> be properly detected on the I2C bus. Add a new reset-gpios property
+> to the binding to support this functionality.
+> 
+> The reset-gpios property allows specifying a GPIO that will be toggled
+> during driver initialization to reset the sensor.
+> 
+> Signed-off-by: Sergio Perez <sergio@pereznus.es>
+> ---
+>  Documentation/devicetree/bindings/iio/light/bh1750.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
+You just sent v3, while v4 was already on the lists, without improving
+and without responding to review.
 
-Well, but why do we need the new (and trivial) coredump_task_exit_prep?
+NAK.
 
-Can't synchronize_group_exit() be
+You keep repeating the same mistakes: not reading and responding
+feedback and it is getting tiresome.
 
-	static struct core_state *synchronize_group_exit(struct task_struct *tsk, long code)
-	{
-		struct sighand_struct *sighand = tsk->sighand;
-		struct signal_struct *signal = tsk->signal;
-		struct core_state *core_state = NULL;
-
-		spin_lock_irq(&sighand->siglock);
-		signal->quick_threads--;
-		if ((signal->quick_threads == 0) &&
-		    !(signal->flags & SIGNAL_GROUP_EXIT)) {
-			signal->flags = SIGNAL_GROUP_EXIT;
-			signal->group_exit_code = code;
-			signal->group_stop_count = 0;
-		}
-		/*
-		 * Serialize with any possible pending coredump.
-		 * We must hold siglock around checking core_state
-		 * and setting PF_POSTCOREDUMP.  The core-inducing thread
-		 * will increment ->nr_threads for each thread in the
-		 * group without PF_POSTCOREDUMP set.
-		 */
-		tsk->flags |= PF_POSTCOREDUMP;
-		core_state = tsk->signal->core_state;
-		spin_unlock_irq(&sighand->siglock);
-
-		return core_state;
-	}
-
-?
-
-No need to shift spin_lock_irq(siglock) from synchronize_group_exit() to do_exit(),
-no need to rename coredump_task_exit...
-
-Oleg.
-
+Best regards,
+Krzysztof
