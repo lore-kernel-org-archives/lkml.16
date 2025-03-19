@@ -1,133 +1,141 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F4081EF37B;
-	Wed, 19 Mar 2025 17:28:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708D918DF93
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742405286; cv=none; b=u7E7nl1Ps9QH7xPBiYfC2+gnr5buddzkVt/z/SRUeoScmkd3qjh3xP0vjocBz/gpFJ5egNNtyPtne3CAaUej+z5VenAqg2HvhcUwXRH59e0e4iQBFsF1pKvNebYJOAbIvHjQBcIzCIClFn9DRYwnK/CXCwiD8foLqMhAv+kEoyQ=
+	t=1742405332; cv=none; b=Qcg4leSXmWkCh+TLDGmOBRsmlxJX+WnQxm0OsJZ0gSq3tUwg2OPpXQQXetxpDSHkyETuRALhvxl9O6QtA1jchCKSMYj4yddggbseZWMsbri/h2FEgz5DahuCCKu/18NZZBJtlXJ5UsZX1LdoCINMrE2FBGuvJS5Kc47GQWTVD3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742405286; c=relaxed/simple;
-	bh=aFLtsNGSrtVmzExFbH/dbtFNmYuS7QOyHpWRr4vHvQo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BnV6Cm46d1ALbkN+quiA7JOLcR2zlZMLWnr8dZLjUr1OhsfGEYKfZVZ03P2QNnWVX32Sas2crJZ8gnr3uX2FCg4xkIkAyCXxanuzuiMm7CtxH2yha/TVn+ujakzTM8GgerLb+1O2kN2U7654iaOPSOt8xjJUJ7bkdkTMJa5Whok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZiSFuCYC; arc=none smtp.client-ip=198.175.65.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742405332; c=relaxed/simple;
+	bh=CWK+EArxHVvZhO9jSHqbQevs+LkkMH0t7GTRwoUCTc4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XnlvBss4E+NVvsq5ahdMtQcPuuvWCqVtndFoDjOWqUYNgaN7V+y2U6FE1Le+rnA88a0dFIGFXkvvAIc3QoGFxcO5Ndq641Yg4jn6e5PGd6kMAmjwyl9QfDu7fpaEeB5N7PGeekGtw/eFv5iWl7oiM6PU7MIXaJ9gMVbU0U+l0hQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lhCoWHCX; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZiSFuCYC"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742405283; x=1773941283;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=aFLtsNGSrtVmzExFbH/dbtFNmYuS7QOyHpWRr4vHvQo=;
-  b=ZiSFuCYChCjLg/yc6g9jV++36EAkHoXLbEUDvOEqi7ayQi1md43CwIt/
-   DJ13Ijr7G4zB/9Ixmco45NIXwOteyLUy32VDgNycxZJXOvIIbsF0TVS/a
-   yCZ3NcuLCdErYGpYCq4omxmSthsBZWjiDzgbs5oiXiLMgBeE7bZfzt6ol
-   5jqQ88QzKe4EbhVCh7PulCdRzbd7O27A7E+HDRftKqyPwtaTFv7QbXlj5
-   H7dzNHAEdX8eDZXhtxUYk8XexLmbvlzmNXfU6xCwylCOmsV6+V7MxOZvw
-   ck67pTk6rr8WB2zUbTa89yRAbIqwKGiph5lM0b52W342pakyAXI3utJZv
-   Q==;
-X-CSE-ConnectionGUID: 2tvCnqjNSvaCs0RcMZF0pw==
-X-CSE-MsgGUID: 3RzuXEBXSaK5aSOUtF0hdQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43714478"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="43714478"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 10:28:01 -0700
-X-CSE-ConnectionGUID: skn/x0DDTZqosT/FlJHvHg==
-X-CSE-MsgGUID: 0BwikP2CRMWgZSbI5GKuXw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="122538433"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 19 Mar 2025 10:27:57 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tuxCt-000FYs-1b;
-	Wed, 19 Mar 2025 17:27:55 +0000
-Date: Thu, 20 Mar 2025 01:27:31 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-usb@vger.kernel.org, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH net v2 1/2] net: phy: Fix formatting specifier to avoid
- potential string cuts
-Message-ID: <202503200024.WkseT3sA-lkp@intel.com>
-References: <20250319105813.3102076-2-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lhCoWHCX"
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52JE0IEJ020482
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:28:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	vdbmtSFf9LsX0Hod50MXJ8Rpn1iGHT3/np5G+JKs7cU=; b=lhCoWHCX7qe+rVwX
+	LqmV72JQOzvBnoG3aA8+g2N42668uUZSOLOtRgALRFXBdKuvzlehaeBL87CfUU2R
+	9uV/p/CyV9n3uO+k43dNmm7407EQLpHQNDRofDYbfAa68XUJocbik36mmzVKfOLf
+	dCz+XQIIBUz9smyQpuu0neKfMGend9fneY5Wie95bq/uYbzWpWqmOZmR3U1l/fuy
+	dU2YRsc1lHIGw+Qo08MN3uBZ1uUezWZr3kjrCcPxU9/FcATI890F4qbCatEMrwri
+	dcXLSIQ1yhr4BxpgXr+ToFKYV8NFpM43LoqCwljc93jZ20TZ3d8vqSoCgdQAMSEs
+	uVi+PQ==
+Received: from mail-qv1-f70.google.com (mail-qv1-f70.google.com [209.85.219.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45fdmwugmp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 17:28:50 +0000 (GMT)
+Received: by mail-qv1-f70.google.com with SMTP id 6a1803df08f44-6e19bfc2025so16360496d6.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 10:28:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742405329; x=1743010129;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=vdbmtSFf9LsX0Hod50MXJ8Rpn1iGHT3/np5G+JKs7cU=;
+        b=QnuByCEg7BIXr37X6YSGXLD9qzg3GUBf7CRPVQG5sNXGvzVVQNtxRpCNZUC3YxdyyD
+         QEqz3c2feocL4mYCeX9RpKkc5IebCWkswC8rxwtJXNp9sop27dXRu2iBU68i7TvbijHz
+         coobFXv1B5wVdumfEPYzPzk6AkhtBdV43Pe8sk0ABODPyMMRLR+dBbkdrzqVCxs+gGFN
+         dLMCHiR2XnCkdsn4u73wSWFoKohwmyoMdKTmHvBPlAya2igSvEgLh7Oq7Re580aAKeTJ
+         FS2ljHdX7dK1qTVlTfZfaCSb5wmZ7WTltbVsKZQRUjomXvAQKBcqCw9QgrtSCIqSyr/C
+         tQow==
+X-Forwarded-Encrypted: i=1; AJvYcCXW30ChG9+XP1FsgjRSZJMyGnvRGG2TCXuVynlhb9fL6zwadBShIA6DbApEnI2Zg24min6B5OPF3w63JfM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxK7qJaHrWIcG3c/HRBOPzu4O2R0izpvQi9FYMNj6GdJeWQudGl
+	unA7vfclIXFkgrbaCIMpdaljbIgp44oOa81fBAedp2p+dloAizXR5aUCGXaMSNayFizu9KVvTks
+	p8vQ1bIWcYCFNTfw13L4j48WUJ3mHtgJvkNU6/+9j0v1AkGyZdGVpH7TOgxS6g+I=
+X-Gm-Gg: ASbGncsFNZmGZ5caasYdaImBOPmkCBOzZ7NF8IqDaUonm1YZEUJj015NxCK/QMkhJsT
+	5FApESBXiEf9IWn1vvFKM43rhdkI3AmTRq+9OgmdmRTXU7h2gBI55mTibUUeKl5HAiCFHGMb+WW
+	B4jGV0MRtE9IYJjSUjNOvLLFLB00KApqQN/4muoQF4v9afb0jVvQJsvMjxgSAwbKqYcmHjWBrjG
+	PEXMn0r/4K6IdbWjUvHkoJ1eWjP3NmS4ZaBSkUBhWI8gcKAJdolobSb8OsJOmWnrjnGioehA35k
+	KkWoHWAhgt5VWWiFEWlYDKMXzlsgdoZZHftk8PRP0kgjfqY4fVFN/eZYb7jG8QEzu9gRew==
+X-Received: by 2002:a05:6214:f0a:b0:6e8:fe16:4d42 with SMTP id 6a1803df08f44-6eb2b93945bmr16243086d6.1.1742405329515;
+        Wed, 19 Mar 2025 10:28:49 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHSxO9Ad8Gc8/z7Se2G1kFx5n0pPSkG+JyMNgf9vIXCx+1ZEU+MZgfslIX3i34qdI2GvBa3LQ==
+X-Received: by 2002:a05:6214:f0a:b0:6e8:fe16:4d42 with SMTP id 6a1803df08f44-6eb2b93945bmr16242886d6.1.1742405329200;
+        Wed, 19 Mar 2025 10:28:49 -0700 (PDT)
+Received: from [192.168.65.90] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147e9bbbsm1060035466b.54.2025.03.19.10.28.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 19 Mar 2025 10:28:48 -0700 (PDT)
+Message-ID: <05e082b5-6ae3-4d25-af81-f2c3b664ad7b@oss.qualcomm.com>
+Date: Wed, 19 Mar 2025 18:28:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319105813.3102076-2-andriy.shevchenko@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/8] arm64: dts: qcom: sc7180: Add specific APPS RSC
+ compatible
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Konrad Dybcio <konradybcio@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>,
+        cros-qcom-dts-watchers@chromium.org,
+        Marc Gonzalez <mgonzalez@freebox.fr>,
+        Dmitry Baryshkov <lumag@kernel.org>, Arnaud Vrac <avrac@freebox.fr>,
+        Marijn Suijten <marijn.suijten@somainline.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20250318-topic-more_dt_bindings_fixes-v1-0-cb36882ea9cc@oss.qualcomm.com>
+ <20250318-topic-more_dt_bindings_fixes-v1-2-cb36882ea9cc@oss.qualcomm.com>
+ <l4vd2xmrowmmtefieb4cbirq6ntkvnwbhtpxcyzwdeok2vgtt7@zqgqndumgecv>
+ <881655b5-30c0-42f3-863f-5b6606a3e2cd@oss.qualcomm.com>
+ <rg377etwxv3yupth3acak4ycthahi7sennm54sbah55yqj2qdk@vip4xxkbsp7n>
+Content-Language: en-US
+From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+In-Reply-To: <rg377etwxv3yupth3acak4ycthahi7sennm54sbah55yqj2qdk@vip4xxkbsp7n>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: nGp9-yivtd9idePuWQ2pj-i52Uw45L5i
+X-Authority-Analysis: v=2.4 cv=ReKQC0tv c=1 sm=1 tr=0 ts=67dafed2 cx=c_pps a=oc9J++0uMp73DTRD5QyR2A==:117 a=FpWmc02/iXfjRdCD7H54yg==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=EUspDBNiAAAA:8 a=rhAqBTIILTDuOorn4egA:9 a=QEXdDO2ut3YA:10
+ a=iYH6xdkBrDN1Jqds4HTS:22
+X-Proofpoint-GUID: nGp9-yivtd9idePuWQ2pj-i52Uw45L5i
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_06,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
+ phishscore=0 suspectscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ malwarescore=0 mlxlogscore=999 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503190118
 
-Hi Andy,
+On 3/19/25 6:25 PM, Dmitry Baryshkov wrote:
+> On Wed, Mar 19, 2025 at 03:14:42PM +0100, Konrad Dybcio wrote:
+>> On 3/18/25 10:30 PM, Dmitry Baryshkov wrote:
+>>> On Tue, Mar 18, 2025 at 07:35:15PM +0100, Konrad Dybcio wrote:
+>>>> From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
+>>>>
+>>>> SC7180 comes in a couple firmware flavors, some of which don't support
+>>>> PSCI in OSI mode. That prevents the power domain exepcted by the RSC
+>>>> node from providing useful information on system power collapse.
+>>>
+>>> Is this behaviour specific to SC7180 or only to ChromeBooks? For example
+>>> TCL Book 14 Go or ECS Liva QC710, would they also use this compat?
+>>
+>> The hardware and firmware representation of the RSC is identical, but
+>> I wanted to alter the bindings required properties based on the specific
+>> possibly-chrome platforms.
+> 
+> Should we instead have a separate compatible (?) for ChromeOS platforms
+> only?
 
-kernel test robot noticed the following build errors:
+No, the RSC is exactly the same. Quite frankly, the expected power-domains
+entry is just a way that's convenient to Linux to signal the platform going
+off between the drivers
 
-[auto build test ERROR on net/main]
+I don't think there is much to overthink here.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/net-phy-Fix-formatting-specifier-to-avoid-potential-string-cuts/20250319-190433
-base:   net/main
-patch link:    https://lore.kernel.org/r/20250319105813.3102076-2-andriy.shevchenko%40linux.intel.com
-patch subject: [PATCH net v2 1/2] net: phy: Fix formatting specifier to avoid potential string cuts
-config: loongarch-allyesconfig (https://download.01.org/0day-ci/archive/20250320/202503200024.WkseT3sA-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250320/202503200024.WkseT3sA-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503200024.WkseT3sA-lkp@intel.com/
-
-All error/warnings (new ones prefixed by >>):
-
-   In file included from drivers/net/ethernet/broadcom/genet/bcmmii.c:17:
-   drivers/net/ethernet/broadcom/genet/bcmmii.c: In function 'bcmgenet_mii_pd_init':
->> include/linux/phy.h:312:20: warning: '%02hhx' directive output may be truncated writing 2 bytes into a region of size between 0 and 60 [-Wformat-truncation=]
-     312 | #define PHY_ID_FMT "%s:%02hhx"
-         |                    ^~~~~~~~~~~
-   drivers/net/ethernet/broadcom/genet/bcmmii.c:604:53: note: in expansion of macro 'PHY_ID_FMT'
-     604 |                 snprintf(phy_name, MII_BUS_ID_SIZE, PHY_ID_FMT,
-         |                                                     ^~~~~~~~~~
-   include/linux/phy.h:312:24: note: format string is defined here
-     312 | #define PHY_ID_FMT "%s:%02hhx"
-         |                        ^~~~~~
-   include/linux/phy.h:312:20: note: using the range [0, 255] for directive argument
-     312 | #define PHY_ID_FMT "%s:%02hhx"
-         |                    ^~~~~~~~~~~
-   drivers/net/ethernet/broadcom/genet/bcmmii.c:604:53: note: in expansion of macro 'PHY_ID_FMT'
-     604 |                 snprintf(phy_name, MII_BUS_ID_SIZE, PHY_ID_FMT,
-         |                                                     ^~~~~~~~~~
-   drivers/net/ethernet/broadcom/genet/bcmmii.c:604:17: note: 'snprintf' output between 4 and 64 bytes into a destination of size 61
-     604 |                 snprintf(phy_name, MII_BUS_ID_SIZE, PHY_ID_FMT,
-         |                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-     605 |                          mdio_bus_id, pd->phy_address);
-         |                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
---
-   loongarch64-linux-ld: arch/loongarch/kernel/head.o: relocation R_LARCH_B26 overflow 0xfffffffff3911f74
-   arch/loongarch/kernel/head.o: in function `smpboot_entry':
->> (.ref.text+0x15c): relocation truncated to fit: R_LARCH_B26 against symbol `start_secondary' defined in .text section in arch/loongarch/kernel/smp.o
-   loongarch64-linux-ld: final link failed: bad value
-
-
-vim +312 include/linux/phy.h
-
-   310	
-   311	/* Used when trying to connect to a specific phy (mii bus id:phy device id) */
- > 312	#define PHY_ID_FMT "%s:%02hhx"
-   313	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Konrad
