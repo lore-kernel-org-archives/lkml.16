@@ -1,198 +1,249 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E9C8209F32;
-	Wed, 19 Mar 2025 09:15:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE99F1F4E37
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:17:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742375757; cv=none; b=W/qb/qKsaTZknpFqn9F9sOGJqgQ44BewBlzw1YrGq3RDyFRwOzhJN+m0xb6sqDf/n7zNzGhNVff2JfJV6CQcjdxgHlp7Ur3yN4MV+UuOvozFbNq0t3NLk+QYyYOFQ/R+VS5IOYRQUxYx+3dYHSZ3N26pao6ApBEuK9nfvdvVFKM=
+	t=1742375848; cv=none; b=W33zxy0t9W5yulqm0dVMhsnJ/MWXH9o/TxdMG4aEfvwqo/z/kQQpPy1mIz7ZLR/jImL/rA2XD0dY6gunPc7gyqzQA8dAbmWYfYTtXLXvz6WU7RVSbO0UJSDKicNLMfTIsAXQXcXn4mbUE5ebsOdoGTSOA808Hp6JKJLkoIIpIQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742375757; c=relaxed/simple;
-	bh=VFcDyvuCt7vsiepWpgHUSSaWYSKC23V508SsmP0qre4=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=JG1hkVY3CF+OI5w/UqXO9Jq4rEg1dn6tQuT1REJfuiCrrYqdnjNi280uql+XcxC2TNdx2nW+NeuaHdH7YcVmw5ZwDAn/9tGRxZ6mV5ajU9E6IMDmVWH76LO3TPX6uSn6rFkapfYgsUHXuV27UsAOPdaSatlKjhDG3dcqqh/KLuU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HLOT7lcf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742375848; c=relaxed/simple;
+	bh=NzMd+cZZ4AuMOKsWgqjQ2wWoCskTOv5VZM4sRUzG9xY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rlHGRpB5q6dpG3waDeyI6KtuIhiAx038rnSDAyMOpGK36UM0Dzm4HLcnKC/QGXK4wob6cNBXRFOe5up9Qo9554+SXuC0HfyLGVhSR8/aZ4Fy14vFDUGY9Fd1cFZUKN1yPSfexYcngb2PX78c0Rjfm3O7FBIg1qqcwhUaeeGCYgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZoyM8FRV; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HLOT7lcf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17242C4CEE9;
-	Wed, 19 Mar 2025 09:15:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742375757;
-	bh=VFcDyvuCt7vsiepWpgHUSSaWYSKC23V508SsmP0qre4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=HLOT7lcfwBmNcUq6yIpkjNGivfFTHjfKPA+fnS/O5DEy/y9kDJ0uI4fC46Nq9AFn7
-	 +03a0nRHPbzHmeVXOZ34ICCWO8Xz0RvMSBwxvUKI7njmmPi2sXccF3YS3dKfAHFR+M
-	 Nj9N25i9iKzlglAz9Tzhxioza/En8gpwYFF+KRbzgznpNh+WUx0NbOfEdNiqiIpfca
-	 l7rTGKW9MX8/b/FcaMf2gGRMMuVPVH6eguCe9NLVFCcVAmJa2e7sIUVbsERDD9u2Hw
-	 cqIuJ0P9NJFJi/lB5AQHoK+cX+Q/d2BGkOKH/zMNqxPiQMoDf8hOVGYofERf/ADOvi
-	 /5afcVh01qMrA==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tupWk-00EzPO-L3;
-	Wed, 19 Mar 2025 09:15:54 +0000
-Date: Wed, 19 Mar 2025 09:15:54 +0000
-Message-ID: <86r02tmldh.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Brown <broonie@kernel.org>, Gavin Shan <gshan@redhat.com>
-Cc: 		Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	linux-arm-kernel@lists.infradead.org,
-	kvmarm@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org,
-	Mark Rutland <mark.rutland@arm.com>,
-	Fuad Tabba <tabba@google.com>
-Subject: Re: [PATCH 6.12 8/8] KVM: arm64: Eagerly switch ZCR_EL{1,2}
-In-Reply-To: <019afc2d-b047-4e33-971c-7debbbaec84d@redhat.com>
-References: <20250314-stable-sve-6-12-v1-0-ddc16609d9ba@kernel.org>
-	<20250314-stable-sve-6-12-v1-8-ddc16609d9ba@kernel.org>
-	<019afc2d-b047-4e33-971c-7debbbaec84d@redhat.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZoyM8FRV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742375845;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GpuGE8jwydSTtf5vqaCaaq5V296av9hmHXy0jgwtvI0=;
+	b=ZoyM8FRVYuajEwEGxqEzAjZaodUVX/2ZT2baz2aTlp/DGwwjo4/B12SJUcXYevXjFOsFl+
+	ih9FJCsGhWXvMh/+WN/qjAGs7nkjgTPFYOcxF6A6MBKtOlwvnfk6pLd9VAmXaxyR/Nr9Fz
+	08VoNZtw9Qc8Nusq7m6kiJ88f+d20cs=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-47-5e8ziNR7OZO_0Qy0tRHSLA-1; Wed, 19 Mar 2025 05:17:24 -0400
+X-MC-Unique: 5e8ziNR7OZO_0Qy0tRHSLA-1
+X-Mimecast-MFC-AGG-ID: 5e8ziNR7OZO_0Qy0tRHSLA_1742375843
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-43bd0586a73so26040675e9.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 02:17:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742375843; x=1742980643;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GpuGE8jwydSTtf5vqaCaaq5V296av9hmHXy0jgwtvI0=;
+        b=c9tpbRMI3+3RZxasi0PA81YdLyvlrANrOzmYscj5SoVuS8B5srGKyFQVmBmsZWlXFF
+         xKLBw3rNa0HPFGdX5s2YZByQBXc4GSGuWMwZ+dW0FEhCh1Hd6KP6YHW58Fj+uAdAPkuc
+         ID4yCzvGArEWcuWr3a7BdqD/t5tNG5XN6j2AFF16J7xiZ4+bFNcgt/jbRFZqTczU8mFn
+         lgnlvSQ8faVjeSxITbDW83X/HXlMnNLRd6TY/Pkt0VHBSh0mvk+mK+P+llp8x1g/cIjD
+         jc5pjr5i23jR8pZuXUhglajzBYUyFgIz35y7d4h/ukhdCTXqoJfwxyTaopw5MBtUJxQr
+         HOmg==
+X-Forwarded-Encrypted: i=1; AJvYcCUBTOWEpeXaWruQciOtP55VnArU2dAbJde4UOnhx7q2uKs2+UbcfW05/eIetZbROUYnQFUimIre+hhiSAM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIvLjydbJsZEgf54ovY0SVivRRGOGKCRMverf5hfaWvkUJqGVp
+	EUA4gsu+m0OWSuCKk3fnAnLaFLoaT8DwO2iqa4YSuaMdEcu8+SSR9A77ETWiFb0uDne3/xCVXD8
+	9wc5ZzxIOmIOIJL4Va9YjfcGOTJd232d0klIDTY0aRpeMyBaUC0tjFwQx6Co27g==
+X-Gm-Gg: ASbGncudMK+RG9Bp6xfJZaZ4XBcIS/RCrfGvywOI2ysw2TxtDFvFjcBMBJLCpIm+WCz
+	uHnfS/FtjlN2fn4jnH5Kg5RKKwLRubo1qqmeXC0wNATnXHBPn4/VNopr6UbYui2TUMYxwP1I2uQ
+	0YXAGhEOXs3g7JgcD7FQY6IpPHFT+dxFrfpeTczDjqgssi3+MljRTJARPym2f170fmcmHuUbesN
+	f/O4bSEtDAyEcqzVrgQFTC+ElIBqPEiFFNTD8Co3D3oYmDPamJMHy4JiMiDMenJc9KML6Sg4xta
+	3gBB5vuqnMcF1J07614ZkU6YGv3zAG+p4u4VD+z74D8wxAY6ycMAwLSSCVLedA==
+X-Received: by 2002:a05:600c:3845:b0:43c:f969:13c0 with SMTP id 5b1f17b1804b1-43d438a66afmr15766585e9.29.1742375843186;
+        Wed, 19 Mar 2025 02:17:23 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IF4AK1/6C4o6ihOcsyzkBG0ZkSaNoGqJBe8vr/NeUglQARpjCQ9rSgLBRWhjQdmkOJ/XhVmJg==
+X-Received: by 2002:a05:600c:3845:b0:43c:f969:13c0 with SMTP id 5b1f17b1804b1-43d438a66afmr15766005e9.29.1742375842419;
+        Wed, 19 Mar 2025 02:17:22 -0700 (PDT)
+Received: from sgarzare-redhat (host-79-53-30-53.retail.telecomitalia.it. [79.53.30.53])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4743dd13sm2275855e9.1.2025.03.19.02.17.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 02:17:21 -0700 (PDT)
+Date: Wed, 19 Mar 2025 10:17:18 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Michal Luczaj <mhal@rbox.co>
+Cc: "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	"Michael S. Tsirkin" <mst@redhat.com>, Bobby Eshleman <bobby.eshleman@bytedance.com>, 
+	Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, 
+	Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, 
+	Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>, 
+	John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
+	Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org, bpf@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH net v4 2/3] selftest/bpf: Add test for AF_VSOCK connect()
+ racing sockmap update
+Message-ID: <hlfjllms6ih53rdw45apgajek6fp4ljnfxlwkr2efyqcuf6fqo@rj6yjmj4fjem>
+References: <20250317-vsock-trans-signal-race-v4-0-fc8837f3f1d4@rbox.co>
+ <20250317-vsock-trans-signal-race-v4-2-fc8837f3f1d4@rbox.co>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: gregkh@linuxfoundation.org, broonie@kernel.org, gshan@redhat.com, oliver.upton@linux.dev, joey.gouly@arm.com, suzuki.poulose@arm.com, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org, mark.rutland@arm.com, tabba@google.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250317-vsock-trans-signal-race-v4-2-fc8837f3f1d4@rbox.co>
 
-On Wed, 19 Mar 2025 00:26:14 +0000,
-Gavin Shan <gshan@redhat.com> wrote:
-> 
-> Hi Mark,
-> 
-> On 3/14/25 10:35 AM, Mark Brown wrote:
-> > From: Mark Rutland <mark.rutland@arm.com>
-> > 
-> > [ Upstream commit 59419f10045bc955d2229819c7cf7a8b0b9c5b59 ]
-> > 
-> > In non-protected KVM modes, while the guest FPSIMD/SVE/SME state is live on the
-> > CPU, the host's active SVE VL may differ from the guest's maximum SVE VL:
-> > 
-> > * For VHE hosts, when a VM uses NV, ZCR_EL2 contains a value constrained
-> >    by the guest hypervisor, which may be less than or equal to that
-> >    guest's maximum VL.
-> > 
-> >    Note: in this case the value of ZCR_EL1 is immaterial due to E2H.
-> > 
-> > * For nVHE/hVHE hosts, ZCR_EL1 contains a value written by the guest,
-> >    which may be less than or greater than the guest's maximum VL.
-> > 
-> >    Note: in this case hyp code traps host SVE usage and lazily restores
-> >    ZCR_EL2 to the host's maximum VL, which may be greater than the
-> >    guest's maximum VL.
-> > 
-> > This can be the case between exiting a guest and kvm_arch_vcpu_put_fp().
-> > If a softirq is taken during this period and the softirq handler tries
-> > to use kernel-mode NEON, then the kernel will fail to save the guest's
-> > FPSIMD/SVE state, and will pend a SIGKILL for the current thread.
-> > 
-> > This happens because kvm_arch_vcpu_ctxsync_fp() binds the guest's live
-> > FPSIMD/SVE state with the guest's maximum SVE VL, and
-> > fpsimd_save_user_state() verifies that the live SVE VL is as expected
-> > before attempting to save the register state:
-> > 
-> > | if (WARN_ON(sve_get_vl() != vl)) {
-> > |         force_signal_inject(SIGKILL, SI_KERNEL, 0, 0);
-> > |         return;
-> > | }
-> > 
-> > Fix this and make this a bit easier to reason about by always eagerly
-> > switching ZCR_EL{1,2} at hyp during guest<->host transitions. With this
-> > happening, there's no need to trap host SVE usage, and the nVHE/nVHE
-> > __deactivate_cptr_traps() logic can be simplified to enable host access
-> > to all present FPSIMD/SVE/SME features.
-> > 
-> > In protected nVHE/hVHE modes, the host's state is always saved/restored
-> > by hyp, and the guest's state is saved prior to exit to the host, so
-> > from the host's PoV the guest never has live FPSIMD/SVE/SME state, and
-> > the host's ZCR_EL1 is never clobbered by hyp.
-> > 
-> > Fixes: 8c8010d69c132273 ("KVM: arm64: Save/restore SVE state for nVHE")
-> > Fixes: 2e3cf82063a00ea0 ("KVM: arm64: nv: Ensure correct VL is loaded before saving SVE state")
-> > Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> > Reviewed-by: Mark Brown <broonie@kernel.org>
-> > Tested-by: Mark Brown <broonie@kernel.org>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Fuad Tabba <tabba@google.com>
-> > Cc: Marc Zyngier <maz@kernel.org>
-> > Cc: Oliver Upton <oliver.upton@linux.dev>
-> > Cc: Will Deacon <will@kernel.org>
-> > Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
-> > Link: https://lore.kernel.org/r/20250210195226.1215254-9-mark.rutland@arm.com
-> > Signed-off-by: Marc Zyngier <maz@kernel.org>
-> > Signed-off-by: Mark Brown <broonie@kernel.org>
-> > ---
-> >   arch/arm64/kvm/fpsimd.c                 | 30 -----------------
-> >   arch/arm64/kvm/hyp/entry.S              |  5 +++
-> >   arch/arm64/kvm/hyp/include/hyp/switch.h | 59 +++++++++++++++++++++++++++++++++
-> >   arch/arm64/kvm/hyp/nvhe/hyp-main.c      | 13 ++++----
-> >   arch/arm64/kvm/hyp/nvhe/switch.c        | 33 +++++++++++++++---
-> >   arch/arm64/kvm/hyp/vhe/switch.c         |  4 +++
-> >   6 files changed, 103 insertions(+), 41 deletions(-)
-> > 
-> 
-> [...]
-> 
-> > diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> > index 4e757a77322c9efc59cdff501745f7c80d452358..1c8e2ad32e8c396fc4b11d5fec2e86728f2829d9 100644
-> > --- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> > +++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-> > @@ -5,6 +5,7 @@
-> >    */
-> >     #include <hyp/adjust_pc.h>
-> > +#include <hyp/switch.h>
-> >     #include <asm/pgtable-types.h>
-> >   #include <asm/kvm_asm.h>
-> > @@ -176,8 +177,12 @@ static void handle___kvm_vcpu_run(struct kvm_cpu_context *host_ctxt)
-> >   		sync_hyp_vcpu(hyp_vcpu);
-> >   		pkvm_put_hyp_vcpu(hyp_vcpu);
-> >   	} else {
-> > +		struct kvm_vcpu *vcpu = kern_hyp_va(host_vcpu);
-> > +
-> >   		/* The host is fully trusted, run its vCPU directly. */
-> > -		ret = __kvm_vcpu_run(host_vcpu);
-> > +		fpsimd_lazy_switch_to_guest(vcpu);
-> > +		ret = __kvm_vcpu_run(vcpu);
-> > +		fpsimd_lazy_switch_to_host(vcpu);
-> >   	}
-> >   
-> 
-> @host_vcpu should have been hypervisor's linear mapping address in v6.12. It looks
-> incorrect to assume it's a kernel's linear mapping address and convert it (@host_vcpu)
-> to the hypervisor's linear address agin, if I don't miss anything.
+On Mon, Mar 17, 2025 at 10:52:24AM +0100, Michal Luczaj wrote:
+>Racing signal-interrupted connect() and sockmap update may result in an
+>unconnected (and missing vsock transport) socket in a sockmap.
+>
+>Test spends 2 seconds attempting to reach WARN_ON_ONCE().
+>
+>connect
+>  / state = SS_CONNECTED /
+>                                sock_map_update_elem
+>  if signal_pending
+>    state = SS_UNCONNECTED
+>
+>connect
+>  transport = NULL
+>                                vsock_bpf_recvmsg
+>                                  WARN_ON_ONCE(!vsk->transport)
+>
+>Signed-off-by: Michal Luczaj <mhal@rbox.co>
+>---
+> .../selftests/bpf/prog_tests/sockmap_basic.c       | 99 ++++++++++++++++++++++
+> 1 file changed, 99 insertions(+)
 
-host_vcpu is passed as a parameter to the hypercall, and is definitely
-a kernel address.
+LGTM for the vsock part!
 
-However, at this stage, we have *already* converted it to a HYP VA:
+Acked-by: Stefano Garzarella <sgarzare@redhat.com>
 
-https://web.git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/arch/arm64/kvm/hyp/nvhe/hyp-main.c?h=linux-6.12.y#n147
+>
+>diff --git a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
+>index 1e3e4392dcca0e1722c1982ecc649a80c27443b2..2f8bba27866354848f1e30b5473cedb6a85244ff 100644
+>--- a/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
+>+++ b/tools/testing/selftests/bpf/prog_tests/sockmap_basic.c
+>@@ -3,6 +3,7 @@
+> #include <error.h>
+> #include <netinet/tcp.h>
+> #include <sys/epoll.h>
+>+#include <linux/time64.h>
+>
+> #include "test_progs.h"
+> #include "test_skmsg_load_helpers.skel.h"
+>@@ -1042,6 +1043,102 @@ static void test_sockmap_vsock_unconnected(void)
+> 	xclose(map);
+> }
+>
+>+#define CONNECT_SIGNAL_RACE_TIMEOUT 2 /* seconds */
+>+
+>+static void sig_handler(int signum)
+>+{
+>+	/* nop */
+>+}
+>+
+>+static void connect_signal_racer_cleanup(void *map)
+>+{
+>+	xclose(*(int *)map);
+>+}
+>+
+>+static void *connect_signal_racer(void *arg)
+>+{
+>+	pid_t pid;
+>+	int map;
+>+
+>+	map = bpf_map_create(BPF_MAP_TYPE_SOCKMAP, NULL, sizeof(int),
+>+			     sizeof(int), 1, NULL);
+>+	if (!ASSERT_OK_FD(map, "bpf_map_create"))
+>+		return NULL;
+>+
+>+	pthread_cleanup_push(connect_signal_racer_cleanup, &map);
+>+	pid = getpid();
+>+
+>+	for (;;) {
+>+		int c = *(int *)arg;
+>+		int zero = 0;
+>+
+>+		(void)bpf_map_update_elem(map, &zero, &c, BPF_ANY);
+>+
+>+		if (kill(pid, SIGUSR1)) {
+>+			FAIL_ERRNO("kill");
+>+			break;
+>+		}
+>+
+>+		if ((recv(c, NULL, 0, MSG_DONTWAIT) < 0) && errno == ENODEV) {
+>+			FAIL_ERRNO("recv");
+>+			break;
+>+		}
+>+	}
+>+
+>+	pthread_cleanup_pop(1);
+>+
+>+	return NULL;
+>+}
+>+
+>+static void test_sockmap_vsock_connect_signal_race(void)
+>+{
+>+	struct sockaddr_vm addr, bad_addr;
+>+	socklen_t alen = sizeof(addr);
+>+	sighandler_t orig_handler;
+>+	pthread_t thread;
+>+	int s, c, p;
+>+	__u64 tout;
+>+
+>+	orig_handler = signal(SIGUSR1, sig_handler);
+>+	if (!ASSERT_NEQ(orig_handler, SIG_ERR, "signal handler setup"))
+>+		return;
+>+
+>+	s = socket_loopback(AF_VSOCK, SOCK_SEQPACKET | SOCK_NONBLOCK);
+>+	if (s < 0)
+>+		goto restore;
+>+
+>+	if (xgetsockname(s, (struct sockaddr *)&addr, &alen))
+>+		goto close;
+>+
+>+	bad_addr = addr;
+>+	bad_addr.svm_cid = 0x42424242; /* non-existing */
+>+
+>+	if (xpthread_create(&thread, 0, connect_signal_racer, &c))
+>+		goto close;
+>+
+>+	tout = get_time_ns() + CONNECT_SIGNAL_RACE_TIMEOUT * NSEC_PER_SEC;
+>+	do {
+>+		c = xsocket(AF_VSOCK, SOCK_SEQPACKET, 0);
+>+		if (c < 0)
+>+			break;
+>+
+>+		if (connect(c, (struct sockaddr *)&addr, alen) && errno == EINTR)
+>+			(void)connect(c, (struct sockaddr *)&bad_addr, alen);
+>+
+>+		xclose(c);
+>+		p = accept(s, NULL, NULL);
+>+		if (p >= 0)
+>+			xclose(p);
+>+	} while (get_time_ns() < tout);
+>+
+>+	ASSERT_OK(pthread_cancel(thread), "pthread_cancel");
+>+	xpthread_join(thread, NULL);
+>+close:
+>+	xclose(s);
+>+restore:
+>+	ASSERT_NEQ(signal(SIGUSR1, orig_handler), SIG_ERR, "handler restore");
+>+}
+>+
+> void test_sockmap_basic(void)
+> {
+> 	if (test__start_subtest("sockmap create_update_free"))
+>@@ -1108,4 +1205,6 @@ void test_sockmap_basic(void)
+> 		test_sockmap_skb_verdict_vsock_poll();
+> 	if (test__start_subtest("sockmap vsock unconnected"))
+> 		test_sockmap_vsock_unconnected();
+>+	if (test__start_subtest("sockmap vsock connect signal race"))
+>+		test_sockmap_vsock_connect_signal_race();
+> }
+>
+>-- 
+>2.48.1
+>
 
-The result is that this change is turning a perfectly valid HYP VA
-into... something. Odds are that the masking/patching will not mess up
-the address, but this is completely buggy anyway. In general,
-kern_hyp_va() is not an idempotent operation.
-
-Thanks for noticing that something was wrong.
-
-Broonie, can you please look into this?
-
-Greg, it may be more prudent to unstage this series from 6.12-stable
-until we know for sure this is the only problem.
-
-	M.
-
--- 
-Without deviation from the norm, progress is not possible.
