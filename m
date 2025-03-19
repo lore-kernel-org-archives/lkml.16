@@ -1,96 +1,284 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from p00-icloudmta-asmtp-us-central-1k-60-percent-6.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (p-east1-cluster6-host1-snip4-2.eps.apple.com [57.103.90.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B0D1E22E6;
-	Wed, 19 Mar 2025 16:26:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F2A81DE4FF
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 16:27:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.103.90.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742401603; cv=none; b=dQOyILWUIfNveEly4gY6Fwt9WoWhmTL77bkEIya66h8R8qU43Z8Q6sHcEHv5PKEH+HqDmPwv4wHxh2U6SElbzP5VzHoyQTQEq5X8+45AphbMVbunJha94Kyp7ejKY543BDYIu6KBywcBlMP9MEhMFcrjlomeiv9ea3tJrrZswDM=
+	t=1742401628; cv=none; b=M4QZUJOAxnjEdPjI7senG6eDyRUBORdmgOYWzc6CTbD1EJVSvpTbsZ2FgcrXpHMN2/lzsLASnOsfdO0UlPU2XGl2nF+Aum+oHQXYHQdizC3b5P5v11bJlxFbmAly4upQe/Dw4lzyQ8+3sP//L5AVC8CfVvz2lNc2OtA5JImB93Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742401603; c=relaxed/simple;
-	bh=JCbo+OS7gMMD21BCxObdIbmZlgvKor9/I7YYo+EWd8A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cRFGGr50sZZDKzecH02NYPJLZncErv2G0ihTvK2bkbR7LjLh/P5/UDQP6d9/PECQr4gxMRlvkHCQxZkx6YDCLiQ1U4LQLRNBpczBDprRDG13SzInC+LFFtHFo7Z1ouvCWLQtBGuQzs8v3pZ3qJaU0Rdph5fXbLUbxTK6u9JeoEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RU546Tmt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742401628; c=relaxed/simple;
+	bh=R/AqNGF+n1Pr/1jORJcVIU6MI0bPeDE9FByo14rxmf0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bGBSaRU0P1K12nE56j9Ij0zcfDy0CCf6f+KrJjYL1AFmB8yQshxJuyGWvdtkmgyLQt1mWYguNy2CfY/yjfoHRTIVgqMT7t6FE4lZ3aY8AuxM0Uhjzjea8yh9QMfm+KKJG651rhas8tesxeH4bbkb+c/uz1QtcKlbFjE484FDD3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es; spf=pass smtp.mailfrom=pereznus.es; dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b=PfJvWWpe; arc=none smtp.client-ip=57.103.90.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pereznus.es
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pereznus.es
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RU546Tmt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72132C4CEF2;
-	Wed, 19 Mar 2025 16:26:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742401602;
-	bh=JCbo+OS7gMMD21BCxObdIbmZlgvKor9/I7YYo+EWd8A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RU546TmtxW7igIPls9r3Zo2C2gj+nuETcfSKlpfj3UJlrT+NljckqclVA+lahyqTZ
-	 pPuy8q7UkIlZHlEZ4eBRToW1THp1HqOuYpoYXYBhnCDr4xGr/kwB9PQKITkgHitB5Q
-	 XanQWM4D2x58kUCCv/YIwno+IgVQB15kQSu+969E=
-Date: Wed, 19 Mar 2025 09:25:23 -0700
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jan Stancek <jstancek@redhat.com>
-Cc: Huacai Chen <chenhuacai@loongson.cn>, Sasha Levin <sashal@kernel.org>,
-	Huacai Chen <chenhuacai@kernel.org>,
-	Xuerui Wang <kernel@xen0n.name>, stable@vger.kernel.org,
-	David Howells <dhowells@redhat.com>,
-	David Woodhouse <dwmw2@infradead.org>,
-	Jarkko Sakkinen <jarkko@kernel.org>, keyrings@vger.kernel.org,
-	linux-kernel@vger.kernel.org, loongarch@lists.linux.dev,
-	R Nageswara Sastry <rnsastry@linux.ibm.com>,
-	Neal Gompa <neal@gompa.dev>
-Subject: Re: [PATCH 6.1&6.6 V3 3/3] sign-file,extract-cert: use pkcs11
- provider for OPENSSL MAJOR >= 3
-Message-ID: <2025031942-portside-finite-34a9@gregkh>
-References: <20250319064031.2971073-1-chenhuacai@loongson.cn>
- <20250319064031.2971073-4-chenhuacai@loongson.cn>
- <2025031943-disparity-dash-cfa3@gregkh>
- <Z9rYQy3l5V5cvW7W@t14s>
+	dkim=pass (2048-bit key) header.d=pereznus.es header.i=@pereznus.es header.b="PfJvWWpe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pereznus.es; s=sig1;
+	bh=zuaUt4WDVbRPvE3zxuUy5lHsR+yMR2v2V90gWAZfcOQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:x-icloud-hme;
+	b=PfJvWWpeANC4tLpfcas09TbhS0LFGlp/mjT0TwR1vWt7B8peUejOhj6pyB5OMGeSi
+	 hVK/fIlAR60reiD14WfrLA/iTWCfJqqiJN2ygZxxYUMNjjMe0qw3MhKKzKeUB9rI5e
+	 rrezCRiCNu6BQ7jSD7GJ1sPaNqRZD0Ze3qNrqe1R/CG4Uwh0QLxMvNr6UGpGawpFpn
+	 2q+kWt8dn/1wDUJzeH7CgRO1tdcm/RpGU+FUI9KgYjM2n2nLeuf97g5ZrNhcy/TWFw
+	 RyHIwJwBtuc+IlRQqrHnk1fr1L8zNi7U+S9FXZGrhG/bEnjHU74/27hvWW/wsAXxlp
+	 b/KFniFo71O7g==
+Received: from [192.168.1.28] (ci-asmtp-me-k8s.p00.prod.me.com [17.57.156.36])
+	by p00-icloudmta-asmtp-us-central-1k-60-percent-6.p00-icloudmta-asmtp-vip.icloud-mail-production.svc.kube.us-central-1k.k8s.cloud.apple.com (Postfix) with ESMTPSA id BA8C1180085D;
+	Wed, 19 Mar 2025 16:27:01 +0000 (UTC)
+Message-ID: <4474831c-a8f6-496e-8348-a10e3fb7c798@pereznus.es>
+Date: Wed, 19 Mar 2025 17:26:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9rYQy3l5V5cvW7W@t14s>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] iio: light: bh1750: Add hardware reset support via GPIO
+To: Krzysztof Kozlowski <krzk@kernel.org>, linux-iio@vger.kernel.org
+Cc: tduszyns@gmail.com, jic23@kernel.org, lars@metafoo.de, robh@kernel.org,
+ conor+dt@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250316145514.627-1-sergio@pereznus.es>
+ <01f48f6d-55a4-4dbe-b1ae-ef8c54dcc1ff@kernel.org>
+ <f0536d74-5433-4086-9dfc-1ce6aeeebe00@pereznus.es>
+ <8992a79d-0859-4d7f-9b47-52e20b11260a@kernel.org>
+ <144b5c43-f8c6-44d1-bcff-83158ac29781@pereznus.es>
+ <202b4446-0ce4-4288-8588-6edfc32125d1@kernel.org>
+ <bde38364-5c20-4030-ad7d-9ae38971b260@kernel.org>
+ <bf16371c-189c-4e51-91e5-129f1dcad317@pereznus.es>
+ <ac008fb8-7c82-4b9c-9d24-52ea38b920e5@kernel.org>
+ <0507608a-91fd-4206-b921-942677c5f8d3@kernel.org>
+Content-Language: es-ES, en-US, ca
+From: =?UTF-8?Q?Sergio_P=C3=A9rez?= <sergio@pereznus.es>
+In-Reply-To: <0507608a-91fd-4206-b921-942677c5f8d3@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-GUID: qCxJwGjxhIgel5iamZq8_k5btd4RoIaL
+X-Proofpoint-ORIG-GUID: qCxJwGjxhIgel5iamZq8_k5btd4RoIaL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-19_06,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 clxscore=1030
+ adultscore=0 phishscore=0 bulkscore=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2308100000 definitions=main-2503190111
 
-On Wed, Mar 19, 2025 at 03:44:19PM +0100, Jan Stancek wrote:
-> On Wed, Mar 19, 2025 at 07:13:13AM -0700, Greg Kroah-Hartman wrote:
-> > On Wed, Mar 19, 2025 at 02:40:31PM +0800, Huacai Chen wrote:
-> > > From: Jan Stancek <jstancek@redhat.com>
-> > > 
-> > > commit 558bdc45dfb2669e1741384a0c80be9c82fa052c upstream.
-> > > 
-> > > ENGINE API has been deprecated since OpenSSL version 3.0 [1].
-> > > Distros have started dropping support from headers and in future
-> > > it will likely disappear also from library.
-> > > 
-> > > It has been superseded by the PROVIDER API, so use it instead
-> > > for OPENSSL MAJOR >= 3.
-> > > 
-> > > [1] https://github.com/openssl/openssl/blob/master/README-ENGINES.md
-> > > 
-> > > [jarkko: fixed up alignment issues reported by checkpatch.pl --strict]
-> > > 
-> > > Signed-off-by: Jan Stancek <jstancek@redhat.com>
-> > > Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > Tested-by: R Nageswara Sastry <rnsastry@linux.ibm.com>
-> > > Reviewed-by: Neal Gompa <neal@gompa.dev>
-> > > Signed-off-by: Jarkko Sakkinen <jarkko@kernel.org>
-> > > Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-> > > ---
-> > >  certs/extract-cert.c | 103 ++++++++++++++++++++++++++++++-------------
-> > >  scripts/sign-file.c  |  93 ++++++++++++++++++++++++++------------
-> > >  2 files changed, 138 insertions(+), 58 deletions(-)
-> > 
-> > This seems to differ from what is upstream by a lot, please document
-> > what you changed from it and why when you resend this series again.
-> 
-> Hunks are arranged differently, but code appears to be identical.
-> When I apply the series to v6.6.83 and compare with upstream I get:
 
-If so, why is the diffstat different?  Also why are the hunks arranged
-differently, that's a hint to me that something went wrong and I can't
-trust the patch at all.
+El 19/03/2025 a las 9:46, Krzysztof Kozlowski escribió:
+> On 18/03/2025 18:37, Krzysztof Kozlowski wrote:
+>>> I've now run the tool correctly on my patch file and have fixed the
+>>> identified issues:
+>>> - Removed trailing whitespace
+>>> - Fixed lines exceeding 79 characters
+>>> - Fixed the inconsistency between the description and example for
+>>> reset-gpios
+>>> - Modified the existing example instead of adding a new one
+>>> - Ensured proper line endings and formatting
+>>> - Used proper get_maintainers.pl to include all recipients
+>>>
+>> Please read the guides carefully. The process is extremely simple as:
+>>
+>> git add ...
+>> git commit --signed-off
+>> git format-patch -v3 -2
+>> scripts/chekpatch.pl v3*
+>> scripts/get_maintainers.pl --no-git-fallback v3*
+>> git send-email *
+> Please read this again. I gave you detailed instruction which you still
+> decided not to follow. The instructions are quite precise on purpose,
+> because other method leads to wrong patchset - broken that or other way.
+>
+I transcribe exactly the commands I have executed:
 
-thanks,
+$ git add Documentation/devicetree/bindings/iio/light/bh1750.yaml
 
-greg k-h
+$ git commit --signed-off
+
+$ git add drivers/iio/light/bh1750.c
+
+$ git commit --signed-off
+
+$ git format-patch -v3 -2
+
+$ scripts/checkpatch.pl v3*
+---------------------------------------------------------------
+v3-0001-dt-bindings-iio-light-bh1750-Add-reset-gpios-prop.patch
+---------------------------------------------------------------
+total: 0 errors, 0 warnings, 17 lines checked
+
+v3-0001-dt-bindings-iio-light-bh1750-Add-reset-gpios-prop.patch has no obvious style problems and is ready for submission.
+---------------------------------------------------------------
+v3-0002-iio-light-bh1750-Add-hardware-reset-support-via-G.patch
+---------------------------------------------------------------
+total: 0 errors, 0 warnings, 47 lines checked
+
+v3-0002-iio-light-bh1750-Add-hardware-reset-support-via-G.patch has no obvious style problems and is ready for submission.
+
+$ scripts/get_maintainer.pl --no-git-fallback v3*
+Tomasz Duszynski <tduszyns@gmail.com> (maintainer:ROHM BH1750 AMBIENT 
+LIGHT SENSOR DRIVER,in file)
+Jonathan Cameron <jic23@kernel.org> (maintainer:IIO SUBSYSTEM AND DRIVERS)
+Lars-Peter Clausen <lars@metafoo.de> (reviewer:IIO SUBSYSTEM AND DRIVERS)
+Rob Herring <robh@kernel.org> (maintainer:OPEN FIRMWARE AND FLATTENED 
+DEVICE TREE BINDINGS)
+Krzysztof Kozlowski <krzk+dt@kernel.org> (maintainer:OPEN FIRMWARE AND 
+FLATTENED DEVICE TREE BINDINGS)
+Conor Dooley <conor+dt@kernel.org> (maintainer:OPEN FIRMWARE AND 
+FLATTENED DEVICE TREE BINDINGS)
+linux-iio@vger.kernel.org (open list:IIO SUBSYSTEM AND DRIVERS)
+devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED DEVICE 
+TREE BINDINGS)
+linux-kernel@vger.kernel.org (open list)
+
+$ git_send_email v3*
+v3-0001-dt-bindings-iio-light-bh1750-Add-reset-gpios-prop.patch
+v3-0002-iio-light-bh1750-Add-hardware-reset-support-via-G.patch
+(mbox) Adding cc: Sergio Perez <sergio@pereznus.es> from line 'From: 
+Sergio Perez <sergio@pereznus.es>'
+(body) Adding cc: Sergio Perez <sergio@pereznus.es> from line 
+'Signed-off-by: Sergio Perez <sergio@pereznus.es>'
+
+From: Sergio Perez <sergio@pereznus.es>
+To: Tomasz Duszynski <tduszyns@gmail.com>,
+         Jonathan Cameron <jic23@kernel.org>,
+         Lars-Peter Clausen <lars@metafoo.de>,
+         Rob Herring <robh@kernel.org>,
+         Krzysztof Kozlowski <krzk+dt@kernel.org>,
+         Conor Dooley <conor+dt@kernel.org>,
+         linux-iio@vger.kernel.org,
+         devicetree@vger.kernel.org,
+         linux-kernel@vger.kernel.org
+Cc: Sergio Perez <sergio@pereznus.es>
+Subject: [PATCH v3 1/2] dt-bindings: iio: light: bh1750: Add reset-gpios 
+property
+Date: Wed, 19 Mar 2025 17:11:16 +0100
+Message-ID: <20250319161117.1780-1-sergio@pereznus.es>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+     The Cc list above has been expanded by additional
+     addresses found in the patch commit message. By default
+     send-email prompts before sending whenever this occurs.
+     This behavior is controlled by the sendemail.confirm
+     configuration setting.
+
+     For additional information, run 'git send-email --help'.
+     To retain the current behavior, but squelch this message,
+     run 'git config --global sendemail.confirm auto'.
+
+Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): y
+OK. Log says:
+Server: smtp.mail.me.com
+MAIL FROM:<sergio@pereznus.es>
+RCPT TO:<tduszyns@gmail.com>
+RCPT TO:<jic23@kernel.org>
+RCPT TO:<lars@metafoo.de>
+RCPT TO:<robh@kernel.org>
+RCPT TO:<krzk+dt@kernel.org>
+RCPT TO:<conor+dt@kernel.org>
+RCPT TO:<linux-iio@vger.kernel.org>
+RCPT TO:<devicetree@vger.kernel.org>
+RCPT TO:<linux-kernel@vger.kernel.org>
+RCPT TO:<sergio@pereznus.es>
+From: Sergio Perez <sergio@pereznus.es>
+To: Tomasz Duszynski <tduszyns@gmail.com>,
+         Jonathan Cameron <jic23@kernel.org>,
+         Lars-Peter Clausen <lars@metafoo.de>,
+         Rob Herring <robh@kernel.org>,
+         Krzysztof Kozlowski <krzk+dt@kernel.org>,
+         Conor Dooley <conor+dt@kernel.org>,
+         linux-iio@vger.kernel.org,
+         devicetree@vger.kernel.org,
+         linux-kernel@vger.kernel.org
+Cc: Sergio Perez <sergio@pereznus.es>
+Subject: [PATCH v3 1/2] dt-bindings: iio: light: bh1750: Add reset-gpios 
+property
+Date: Wed, 19 Mar 2025 17:11:16 +0100
+Message-ID: <20250319161117.1780-1-sergio@pereznus.es>
+X-Mailer: git-send-email 2.43.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Result: 250
+(mbox) Adding cc: Sergio Perez <sergio@pereznus.es> from line 'From: 
+Sergio Perez <sergio@pereznus.es>'
+(body) Adding cc: Sergio Perez <sergio@pereznus.es> from line 
+'Signed-off-by: Sergio Perez <sergio@pereznus.es>'
+
+From: Sergio Perez <sergio@pereznus.es>
+To: Tomasz Duszynski <tduszyns@gmail.com>,
+         Jonathan Cameron <jic23@kernel.org>,
+         Lars-Peter Clausen <lars@metafoo.de>,
+         Rob Herring <robh@kernel.org>,
+         Krzysztof Kozlowski <krzk+dt@kernel.org>,
+         Conor Dooley <conor+dt@kernel.org>,
+         linux-iio@vger.kernel.org,
+         devicetree@vger.kernel.org,
+         linux-kernel@vger.kernel.org
+Cc: Sergio Perez <sergio@pereznus.es>
+Subject: [PATCH v3 2/2] iio: light: bh1750: Add hardware reset support 
+via GPIO
+Date: Wed, 19 Mar 2025 17:11:17 +0100
+Message-ID: <20250319161117.1780-2-sergio@pereznus.es>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250319161117.1780-1-sergio@pereznus.es>
+References: <20250319161117.1780-1-sergio@pereznus.es>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Send this email? ([y]es|[n]o|[e]dit|[q]uit|[a]ll): y
+OK. Log says:
+Server: smtp.mail.me.com
+MAIL FROM:<sergio@pereznus.es>
+RCPT TO:<tduszyns@gmail.com>
+RCPT TO:<jic23@kernel.org>
+RCPT TO:<lars@metafoo.de>
+RCPT TO:<robh@kernel.org>
+RCPT TO:<krzk+dt@kernel.org>
+RCPT TO:<conor+dt@kernel.org>
+RCPT TO:<linux-iio@vger.kernel.org>
+RCPT TO:<devicetree@vger.kernel.org>
+RCPT TO:<linux-kernel@vger.kernel.org>
+RCPT TO:<sergio@pereznus.es>
+From: Sergio Perez <sergio@pereznus.es>
+To: Tomasz Duszynski <tduszyns@gmail.com>,
+         Jonathan Cameron <jic23@kernel.org>,
+         Lars-Peter Clausen <lars@metafoo.de>,
+         Rob Herring <robh@kernel.org>,
+         Krzysztof Kozlowski <krzk+dt@kernel.org>,
+         Conor Dooley <conor+dt@kernel.org>,
+         linux-iio@vger.kernel.org,
+         devicetree@vger.kernel.org,
+         linux-kernel@vger.kernel.org
+Cc: Sergio Perez <sergio@pereznus.es>
+Subject: [PATCH v3 2/2] iio: light: bh1750: Add hardware reset support 
+via GPIO
+Date: Wed, 19 Mar 2025 17:11:17 +0100
+Message-ID: <20250319161117.1780-2-sergio@pereznus.es>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250319161117.1780-1-sergio@pereznus.es>
+References: <20250319161117.1780-1-sergio@pereznus.es>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+
+Result: 250
+
+>> (or just use my git_send_email for last two)
+>> (or just use b4 for last four)
+>>
+>> The burden of reading the contributing guides is on you. We documented
+>> all this on purpose, so we will not have to repeat this on every email.
+>>
+>>
+>> [1]
+>> https://github.com/search?q=repo%3Akrzk%2Ftools%20git_send_email&type=code
+>>
+>> Best regards,
+>> Krzysztof
+>
+> Best regards,
+> Krzysztof
