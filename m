@@ -1,123 +1,123 @@
-Received: from out-181.mta1.migadu.com (out-181.mta1.migadu.com [95.215.58.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BA62135DE
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83470213232
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:11:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742418612; cv=none; b=XtuLqJNs/NAy2li2qTFfomsXiZMZPkftB4UCjs25DLNBLWYSdkbLCPRhKvLPkG/s4UxzaJHIU/VcE3nWoY2M82RUz4NSJcBp7y7dCZDOBFAxqywVditqQ3lJkTmMf/FhVyl63E06MMDbNZ+4NlYoZDSvTXuJ42e2FfJ6DgdUs4w=
+	t=1742418679; cv=none; b=HJOQ5sAo+sbPNZSXhlQLo/f/mpa7YfZIm0mCPe2nqI/jkxwbJbaeVxJdwBhYCtfN5O3GWaN/TiRbUWBKH7BziInhBzvn0ky8qExdtVzNehmsEdVanq8WJmGVSX4MhQGMrIA8uiRzamkidDmN42nOR8Lpnrc7uKBk5vOJk6o4JN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742418612; c=relaxed/simple;
-	bh=M1E3rlnRjg7zgjLtIZW+R/MLyP34kXkWb7jHt9CA/kQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ZO9c29jVB7zugDJ+r50sxjfuBgERSgboU4mqWjd787XKXJn59JO6kD2Q0776jrwMJIsaLaumjjFuR3ChyEIAaaPpsZS1YoSq3OXlv6aO+bqXYk2YyI5PYXUD2C218Te9FWqmhtUi7EKYBBt6sf8Dx+q8KinL5COHAF+fa1fQwm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com; spf=pass smtp.mailfrom=iencinas.com; dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b=FS5rfi6e; arc=none smtp.client-ip=95.215.58.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=iencinas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iencinas.com
+	s=arc-20240116; t=1742418679; c=relaxed/simple;
+	bh=K1xeiOzI5QDbeqXJEQSjyj9DLXrpjvjxHFutWxirMvw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kfdyk12K/HrQcMOvUMhfMQN4AFdUdNIDqF+fikVNXRGyEAQjD+I4hXFhQKszJK2F5RORIqAOr/bry4D3PdVN5lGTKDJ/58G2Xo8cQ/JYIjp9hnj2hYoblk2J6CYYePqNaQQrTCoUwa/NGcPwNgXFqUrKiqjFEtQmRiZo6qU7xVM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=skQHvquQ; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=iencinas.com header.i=@iencinas.com header.b="FS5rfi6e"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=iencinas.com;
-	s=key1; t=1742418608;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0Z50bW4uP9y2NKyrA9FP3XB/KfgBiP1prO7EaYYpM7k=;
-	b=FS5rfi6eUGa/2hpZla7vnwITZrOXs+XRdMr6mlvKgJNk6Qr44UPCas73LB4AcuXWld+pW/
-	cp2JPl5Oa+q8yXmOif+e5ckr2qqvvtwhyDlEUAakiy8GhLiNu0n4aiZYZ5DLoVUH89QO++
-	HJKsd3Z7Tb+GVk+ri/QsrfN4iFusXN5hEjEFiBOTS/9KsWJC5amy9mwxm0t6NTjdDCJXhV
-	ByOcT9GAKgvTuKNUGscSqUapyddmwmSa7TlMw1SPSvvEdKH3LU54peCmTlON0CwjrluyEX
-	pKreqAzF7js4T9HI5VSdxHyVc1idbvf+aWHGLv/sreortH8410YYlIAjHCSX+w==
-From: Ignacio Encinas <ignacio@iencinas.com>
-Date: Wed, 19 Mar 2025 22:09:46 +0100
-Subject: [PATCH v2 2/2] riscv: introduce asm/swab.h
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="skQHvquQ"
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-868da0af0fcso24650241.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 14:11:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742418676; x=1743023476; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pvlkhTWhAzJ84g1RHdy0S3etQzJbxZ8GWKau6gHnWHg=;
+        b=skQHvquQHIljqZhXAeJn6vQoR4AFIaIL5RLITvYeJakG68hafFhapjcYpFSeEWcxT+
+         YUwPdhUlc9pIhnhOYKDZWqEcKwqUI8wjMs+WQBIyQYHp/dwa9FOP1zmYnoS9CbsxNAhS
+         HIQGm3WWEuHRV6Eq7NF9ko18QnjOK75KVz4OXnvqAc+BldB7ic/kuzSHIvSCdOAhB1up
+         95QCnq/ZQcMKXwjdblnLIRFSgXivNZCs/dLbhY7MElUXTx5FFNftW4FVy7Te1MPBowZJ
+         hJlK/QS0cP6GDVjgJ4osKMX47KUefc3+uAX5eUP1LgEUgUpXd7LpSdVA4dT+S8Akc52r
+         PElQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742418676; x=1743023476;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pvlkhTWhAzJ84g1RHdy0S3etQzJbxZ8GWKau6gHnWHg=;
+        b=rL5fjTNlVMtB0pWFKe6w9XtM825YZ4bwIkuiYgp3qm7bQTaDrivsZF0PKbRJC8SauM
+         s8e5tDQC1NI4IlkBbHqHhXLcG9pJ1dN6A6XE/a9yqW1ni0JCw3Q0xurkMCLNRpTG566E
+         UjliVP5MY0MtPBiV4qDAg6++cVFh1kxCadAetVg1WQ9VLBIcaxkHu9PQkur0fDzkWFVY
+         oXspo2XaiTZ4pFmLE7uEq9IcBkgKWBZOSuAL3yOn0dGm+6+n4/sCTpaOt2K8GFNyxtp9
+         +x2MsbgPT5d+G67Ov8jOeH/E3mpup9/38T4c8GmGviHgjEHnx6o/K8iS9Zur4WvYJZN0
+         30HA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWvuXvGrPXAQ10ebi4+1UPnx4nATnBOsoAZxGtYkk33bpqccvX/FLnCQzjCRnP8KRuOZkgJ5qO19HcIZQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPeVZOirqkViGf9GLook62LpG1RGvFmtHfqlxvd3/aZzILq7tu
+	4WogCi8HNj3WCPvsYvie8bbNqoXkEr47akI4lvnq0v85MtjeKDHIihVt6k0bXXq4Tp/w9ZMmtft
+	58TlAP6rmu/+cIkDEo26EhA7kHPr3b2P1tfDf
+X-Gm-Gg: ASbGncv2MxT0lCNqAQpECsiFrgbJNdcVWRyN6b1hbANUhD4tWkwXl84PRRP63u+HHx0
+	FvzOC+Qj9X71fUN1cyQQA2MAcpXDIxuADQolkONFh0UOFeETpop9YJv74IvJ7P39USnGhQS9/mj
+	sTUnsTZ7SWyWA7SBXo58kMADB2ztzsQUxBVgJT4iVEEXk/rdISL6MvPKA=
+X-Google-Smtp-Source: AGHT+IG2d+8g4IUkmFtoj3fmX44ifjbLGO5wXGctt+Jqz4ODulKjbhb9daWIwSytvDrBuPXKFP8u73NR9yD8Vp49HwE=
+X-Received: by 2002:a05:6102:5488:b0:4b2:c391:7d16 with SMTP id
+ ada2fe7eead31-4c4fcd4b4e4mr773647137.7.1742418676277; Wed, 19 Mar 2025
+ 14:11:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250319-riscv-swab-v2-2-d53b6d6ab915@iencinas.com>
-References: <20250319-riscv-swab-v2-0-d53b6d6ab915@iencinas.com>
-In-Reply-To: <20250319-riscv-swab-v2-0-d53b6d6ab915@iencinas.com>
-To: Paul Walmsley <paul.walmsley@sifive.com>, 
- Palmer Dabbelt <palmer@dabbelt.com>, Alexandre Ghiti <alex@ghiti.fr>, 
- Arnd Bergmann <arnd@arndb.de>
-Cc: Eric Biggers <ebiggers@kernel.org>, linux-riscv@lists.infradead.org, 
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev, 
- skhan@linuxfoundation.org, Zhihang Shao <zhihang.shao.iscas@gmail.com>, 
- =?utf-8?q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>, 
- linux-arch@vger.kernel.org, Ignacio Encinas <ignacio@iencinas.com>
-X-Migadu-Flow: FLOW_OUT
+References: <20250319163341.2123-2-thorsten.blum@linux.dev>
+In-Reply-To: <20250319163341.2123-2-thorsten.blum@linux.dev>
+From: Justin Stitt <justinstitt@google.com>
+Date: Wed, 19 Mar 2025 14:11:04 -0700
+X-Gm-Features: AQ5f1JoN2uPsFw29iHN393K75wq6oD6Cg3O8Y2bxqAO1B28vC7GlbD6DEjlXh8k
+Message-ID: <CAFhGd8rH1PcjjRyKzaC9CgvFgA4_uEwvsCq-4v98bmVbqi=o2A@mail.gmail.com>
+Subject: Re: [PATCH] kdb: Remove optional size arguments from strscpy() calls
+To: Thorsten Blum <thorsten.blum@linux.dev>
+Cc: Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <danielt@kernel.org>, 
+	Douglas Anderson <dianders@chromium.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Daniel Thompson <daniel.thompson@linaro.org>, kgdb-bugreport@lists.sourceforge.net, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Implement endianness swap macros for RISC-V.
+On Wed, Mar 19, 2025 at 9:35=E2=80=AFAM Thorsten Blum <thorsten.blum@linux.=
+dev> wrote:
+>
+> If the destination buffer has a fixed length, strscpy() automatically
+> determines the size of the destination buffer using sizeof() if the
+> argument is omitted. This makes the explicit sizeof() unnecessary.
+>
+> Furthermore, CMD_BUFLEN is equal to sizeof(kdb_prompt_str) and can also
+> be removed. Remove them to shorten and simplify the code.
+>
+> No functional changes intended.
+>
+> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
+> ---
+>  kernel/debug/kdb/kdb_io.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/debug/kdb/kdb_io.c b/kernel/debug/kdb/kdb_io.c
+> index 6a77f1c779c4..9b11b10b120c 100644
+> --- a/kernel/debug/kdb/kdb_io.c
+> +++ b/kernel/debug/kdb/kdb_io.c
+> @@ -334,7 +334,7 @@ static char *kdb_read(char *buffer, size_t bufsize)
+>                 *cp =3D '\0';
+>                 p_tmp =3D strrchr(buffer, ' ');
+>                 p_tmp =3D (p_tmp ? p_tmp + 1 : buffer);
+> -               strscpy(tmpbuffer, p_tmp, sizeof(tmpbuffer));
+> +               strscpy(tmpbuffer, p_tmp);
+>                 *cp =3D tmp;
+>
+>                 len =3D strlen(tmpbuffer);
+> @@ -452,7 +452,7 @@ static char *kdb_read(char *buffer, size_t bufsize)
+>  char *kdb_getstr(char *buffer, size_t bufsize, const char *prompt)
+>  {
+>         if (prompt && kdb_prompt_str !=3D prompt)
+> -               strscpy(kdb_prompt_str, prompt, CMD_BUFLEN);
+> +               strscpy(kdb_prompt_str, prompt);
+>         kdb_printf("%s", kdb_prompt_str);
+>         kdb_nextline =3D 1;       /* Prompt and input resets line number =
+*/
+>         return kdb_read(buffer, bufsize);
 
-Use the rev8 instruction when Zbb is available. Otherwise, rely on the
-default mask-and-shift implementation.
+This matches the pattern of replacements I've done in the past, all looks g=
+ood.
 
-Signed-off-by: Ignacio Encinas <ignacio@iencinas.com>
----
- arch/riscv/include/asm/swab.h | 48 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
+Reviewed-by: Justin Stitt <justinstitt@google.com>
 
-diff --git a/arch/riscv/include/asm/swab.h b/arch/riscv/include/asm/swab.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..6cb40e8108c956dd445746d59bc1dd0a53475212
---- /dev/null
-+++ b/arch/riscv/include/asm/swab.h
-@@ -0,0 +1,48 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef _ASM_RISCV_SWAB_H
-+#define _ASM_RISCV_SWAB_H
-+
-+#include <linux/types.h>
-+#include <linux/compiler.h>
-+#include <asm/alternative-macros.h>
-+#include <asm/hwcap.h>
-+#include <asm-generic/swab.h>
-+
-+#if defined(CONFIG_RISCV_ISA_ZBB) && !defined(NO_ALTERNATIVE)
-+
-+#define ARCH_SWAB(size) \
-+static __always_inline unsigned long __arch_swab##size(__u##size value) \
-+{									\
-+	unsigned long x = value;					\
-+									\
-+	asm goto(ALTERNATIVE("j %l[legacy]", "nop", 0,			\
-+			     RISCV_ISA_EXT_ZBB, 1)			\
-+			     :::: legacy);				\
-+									\
-+	asm volatile (".option push\n"					\
-+		      ".option arch,+zbb\n"				\
-+		      "rev8 %0, %1\n"					\
-+		      ".option pop\n"					\
-+		      : "=r" (x) : "r" (x));				\
-+									\
-+	return x >> (BITS_PER_LONG - size);				\
-+									\
-+legacy:									\
-+	return  ___constant_swab##size(value);				\
-+}
-+
-+#ifdef CONFIG_64BIT
-+ARCH_SWAB(64)
-+#define __arch_swab64 __arch_swab64
-+#endif
-+
-+ARCH_SWAB(32)
-+#define __arch_swab32 __arch_swab32
-+
-+ARCH_SWAB(16)
-+#define __arch_swab16 __arch_swab16
-+
-+#undef ARCH_SWAB
-+
-+#endif /* defined(CONFIG_RISCV_ISA_ZBB) && !defined(NO_ALTERNATIVE) */
-+#endif /* _ASM_RISCV_SWAB_H */
-
--- 
-2.48.1
-
+Justin
