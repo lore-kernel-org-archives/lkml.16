@@ -1,68 +1,46 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F238D212FA0;
-	Wed, 19 Mar 2025 21:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D8FE218585
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 21:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742418375; cv=none; b=talVQkiZV2Z4O6jI+7SlGJlzHRlohc67dhAzMV4Z4Cxn9YiGBjSTk6d7SrLc+NuWz+fUdvcYnqYhLTr1id9Dp+631eCyVI/+ctv/Yz0M0GRihmjaTDsK5ruLi2EoDBQDiS4awdj9sIgFwetyntYP0wJFZUVh468DY0uwD1T/kH8=
+	t=1742418595; cv=none; b=AulT62dYYZ0WKYY6iUnWiY4gLNKDzvwhpCAHMlhcVtwGYl4c8929PrskYXLj7ywHFt12gHIDzBt4v3anYDQm4J5Dc4f24j0/kaVrNmWxf5Ga0JiXzUl7VgprNoUGAFq05YBVlRcGEqF9h3jXGuoJkurAXhzi1suhSOLmLfbI56E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742418375; c=relaxed/simple;
-	bh=e6HUDFunHFfYtPY/EoRGxpqtTPMlKnvDcmj4WUBULSs=;
+	s=arc-20240116; t=1742418595; c=relaxed/simple;
+	bh=DtLzZ995TqoFa4x3we3CV5CTIUxWi8A16R0Kegkh084=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RO+owXcMJa5t0AhMB2VVVV89uASACJ1tfHnFw6O9rMeYvYlJaHHyT+peeV7qhQc931BoGBPw2dIUzwuaMvD08woRYivEZdqxynR7RIL/WE10gMJ5GVwMZqI3S0M23NqrTVGKjtyhv6iEJ7fXkFFfKPW1O9pTRp/q2pnK1IX+2K0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gsObby/p; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fuTlneInkLtFEnvKt0qAkA6vp9R71z2h0f9pmHYsnqvDwK8R4VReebOwJyaN8xqotZQzcg64uqfhSfphVxIfGtrbUwARlaIpwgEaUlHA7levpFrFm74n2ISXs7OGveHj236uX7q1T+31AhDynZh7sXhU5HrCQdu8JlCQsQF91do=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJFUpwIF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gsObby/p"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742418373; x=1773954373;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=e6HUDFunHFfYtPY/EoRGxpqtTPMlKnvDcmj4WUBULSs=;
-  b=gsObby/p8zCJJsRdKEJxomcWqdY/zu1TgS7CHpr+nKKWmec9yn4darSe
-   +MOozQtCqRR8uBjdOTUNems3y2B2j4UQQGCgIrAIxM8hXqc4Ubw1vAUt4
-   Qac23pi17wyMbQe5PbDjw2iqcQWpWQXtDozZe3efAScMBBr6NfgfZiCxX
-   V1Psw4XiuS7pYyvrXrZ9j81BeoJM6Rku0gpgUGa97e2iaOoH3Wpusarnu
-   Wbb9e8bAMAdTCqGBN9DzH7Vh4FRYb6uQmBJWAm66SQQDJ/Pkw1UeP0nVX
-   TdctO2pfx5k+eCCHr6pukwKLDuiNRXEredQZqLtFh4zayWExc082gM6f8
-   w==;
-X-CSE-ConnectionGUID: mC7oJn+pT1qqnmA6lNS7Aw==
-X-CSE-MsgGUID: VIPWKFtcSrq+nuHzfUn+xg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="61021784"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="61021784"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 14:06:12 -0700
-X-CSE-ConnectionGUID: e9lDKsTWTASy50Bmpe8jwQ==
-X-CSE-MsgGUID: 5VXOzZZ9QaOhoa2RqDshkg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="122618558"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa006.fm.intel.com with ESMTP; 19 Mar 2025 14:06:09 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tv0bU-000FfG-08;
-	Wed, 19 Mar 2025 21:05:49 +0000
-Date: Thu, 20 Mar 2025 05:05:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Tamir Duberstein <tamird@gmail.com>, Danilo Krummrich <dakr@kernel.org>,
-	Andrew Ballance <andrewjballance@gmail.com>,
-	Alice Ryhl <aliceryhl@google.com>, Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>
-Cc: oe-kbuild-all@lists.linux.dev, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>
-Subject: Re: [PATCH 2/2] rust: alloc: add `Vec::dec_len`
-Message-ID: <202503200447.aF1NxDEq-lkp@intel.com>
-References: <20250316-vec-set-len-v1-2-60f98a28723f@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJFUpwIF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79089C4CEE4;
+	Wed, 19 Mar 2025 21:09:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742418594;
+	bh=DtLzZ995TqoFa4x3we3CV5CTIUxWi8A16R0Kegkh084=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NJFUpwIFAHSM9zvzskh2nspytZzzXOJ8K6k/D6kmADfKNBL3AXGYGIA+kJQM/kKU5
+	 POfMGgc6WO5lY5BU3LIOp1FxDDmz3lIYx+2AKdwWq8fQ/5r0Afrtnlv5AX3hOslYJk
+	 XSU0bZYPkFwaZ16qjrskLf4rJuJ8BxyylXe0kD7KVy7xC5vQbWBMPP4j0w+eTdrdIN
+	 7kKxXEDkITv7G+wzL8DxLbmZkMMtvWBvhW9rDhafZ071KAzRtwAwTlvF+AYwWrgv0P
+	 AwJOtwoNMqNW4X/49WEby45yB3kabe0SrommZ3yOWLDmeTpRGhBlb3eDtQaJQAk6QQ
+	 BUxeSRIJZkGFQ==
+Date: Wed, 19 Mar 2025 22:09:49 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Shrikanth Hegde <sshegde@linux.ibm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Steven Rostedt <rostedt@goodmis.org>, Mel Gorman <mgorman@suse.de>,
+	Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH 0/5] sched: Make CONFIG_SCHED_DEBUG features unconditional
+Message-ID: <Z9syncxlUbb_oj4Q@gmail.com>
+References: <20250317104257.3496611-1-mingo@kernel.org>
+ <xhsmh4izppfqw.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,43 +49,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250316-vec-set-len-v1-2-60f98a28723f@gmail.com>
+In-Reply-To: <xhsmh4izppfqw.mognet@vschneid-thinkpadt14sgen2i.remote.csb>
 
-Hi Tamir,
 
-kernel test robot noticed the following build warnings:
+* Valentin Schneider <vschneid@redhat.com> wrote:
 
-[auto build test WARNING on cf25bc61f8aecad9b0c45fe32697e35ea4b13378]
+> On 17/03/25 11:42, Ingo Molnar wrote:
+> > For more than a decade, CONFIG_SCHED_DEBUG=y has been enabled
+> > in all the major Linux distributions:
+> >
+> >    /boot/config-6.11.0-19-generic:CONFIG_SCHED_DEBUG=y
+> >
+> > The reason is that while originally CONFIG_SCHED_DEBUG started
+> > out as a debugging feature, over the years (decades ...) it has
+> > grown various bits of statistics, instrumentation and
+> > control knobs that are useful for sysadmin and general software
+> > development purposes as well.
+> >
+> > But within the kernel we still pretend that there's a choice,
+> > and sometimes code that is seemingly 'debug only' creates overhead
+> > that should be optimized in reality.
+> >
+> > So make it all official and make CONFIG_SCHED_DEBUG unconditional.
+> > This gets rid of a large amount of #ifdefs, so good riddance ...
+> >
+> 
+> Pretty much every distro I'm aware of has CONFIG_SCHED_DEBUG=y; a quick check
+> tells me it's been like so for RHEL since at least 2013, and that's from a
+> commit copying configs from RHEL-6 to RHEL-7.
+> 
+> Two things however come to mind:
+> 
+> 1) What does this mean for the debug stuff we've repeatedly said wasn't ABI
+>    because it was under CONFIG_SCHED_DEBUG? I've been burned by making
+>    sched_domain.flags read-only, and there's still writable stuff:
+> 
+>    # ls -al /sys/kernel/debug/sched/domains/cpu0/domain0/
+>    total 0
+>    drwxr-xr-x. 2 root root 0 Mar 19 04:36 .
+>    drwxr-xr-x. 3 root root 0 Mar 19 04:36 ..
+>    -rw-r--r--. 1 root root 0 Mar 19 04:36 busy_factor
+>    -rw-r--r--. 1 root root 0 Mar 19 04:36 cache_nice_tries
+>    -r--r--r--. 1 root root 0 Mar 19 04:36 flags
+>    -r--r--r--. 1 root root 0 Mar 19 04:36 groups_flags
+>    -rw-r--r--. 1 root root 0 Mar 19 04:36 imbalance_pct
+>    -r--r--r--. 1 root root 0 Mar 19 04:36 level
+>    -rw-r--r--. 1 root root 0 Mar 19 04:36 max_interval
+>    -rw-r--r--. 1 root root 0 Mar 19 04:36 max_newidle_lb_cost
+>    -rw-r--r--. 1 root root 0 Mar 19 04:36 min_interval
+>    -r--r--r--. 1 root root 0 Mar 19 04:36 name
+> 
+>    + all the non topology related debug knobs.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Tamir-Duberstein/rust-alloc-replace-Vec-set_len-with-inc_len/20250317-103338
-base:   cf25bc61f8aecad9b0c45fe32697e35ea4b13378
-patch link:    https://lore.kernel.org/r/20250316-vec-set-len-v1-2-60f98a28723f%40gmail.com
-patch subject: [PATCH 2/2] rust: alloc: add `Vec::dec_len`
-config: x86_64-rhel-9.4-rust (https://download.01.org/0day-ci/archive/20250320/202503200447.aF1NxDEq-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250320/202503200447.aF1NxDEq-lkp@intel.com/reproduce)
+Yeah, I don't think these or other sysctls are as contentious as 
+previously thought. We might want to put '/debug/' into the directory 
+name above, or we could move it over to debugfs entirely - but we 
+should make it clear via the name that these are debugging knobs in 
+essence.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503200447.aF1NxDEq-lkp@intel.com/
+> 2) Peter mentioned a few times that, last time it was benchmarked, there
+>    were noticeable perf differences between CONFIG_SCHED_DEBUG=n and
+>    CONFIG_SCHED_DEBUG=y. This would be an occasion to re-measure that and
+>    potentially move (some of) these checks to e.g. a sched_debug_verbose
+>    static key.
 
-All warnings (new ones prefixed by >>):
+Yeah, and this is an argument strongly *in favor* of eliminating 
+CONFIG_SCHED_DEBUG: in a way the CONFIG_SCHED_DEBUG "option" created a 
+false sense of "it's only debug code". But it's not a genuine debug 
+option, it's actual overhead for the vast majority of Linux distros and 
+users.
 
->> warning: method `dec_len` is never used
-   --> rust/kernel/alloc/kvec.rs:205:15
-   |
-   161 | / impl<T, A> Vec<T, A>
-   162 | | where
-   163 | |     A: Allocator,
-   | |_________________- method in this implementation
-   ...
-   205 |       unsafe fn dec_len(&mut self, count: usize) -> &mut [T] {
-   |                 ^^^^^^^
-   |
-   = note: `#[warn(dead_code)]` on by default
+So let's just eliminate SCHED_DEBUG, and fix any overhead. It's exactly 
+what we should do anyway - nothing changes IMHO, just the appearance of 
+urgency. :-)
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Thanks,
+
+	Ingo
