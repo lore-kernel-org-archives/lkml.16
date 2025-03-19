@@ -1,158 +1,259 @@
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05B63194A44;
-	Wed, 19 Mar 2025 15:23:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92D711AF0BC;
+	Wed, 19 Mar 2025 15:23:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742397820; cv=none; b=svujwNk/TS5ThR06L89CDnxo+Fn9yuL1HyfM+dXiKZdc5tMZ8NzaLDBJm2AeiSmpUBtEauiA7ZtPyhZPJ4lKQquvQtxZeYcRtty10fxbgivZSf+YUFR/QwLneuZYPYDiAMwW1tGjLj2U58wh3gfZcFeGn1KrQKTTZA5ONq/1xQY=
+	t=1742397833; cv=none; b=iVtcfBR/h3vOG5ZhpfE4PG7G8AdxXIcZd6XgADzZv8btEy/wJEcqIYgRHeFiQOpEiL5F+QWprVrPAePLbe+tlSpS5Zvf3tYHHVDZBXZMOm3QS04u9HcRM42mhmzDWXc2I2SnGDdLPIt2wkJvUmFxOi2JSAXCm6zjmyq0H/JXrfc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742397820; c=relaxed/simple;
-	bh=K8QsbPhk3iE2g5mRU+pM6Dwov0ogzDt1edO5SeIdQ2U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RkUa7tK44lLoirKEKZxDHwc4Oc1lX15uIBNWcdty3TpOr5VavaQTU77/41Yqs4Hoi1Ms4RJJpwyR8jsrVlwuM5quDzV4G6UUpMsTR4W1Pq0BkB9AJkb45ZiiYHYVgP/4m3eVGlUEYHH5v4AbeT5lthiLXCkIpky4MqTp5jR8gDw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de; spf=pass smtp.mailfrom=gmx.de; dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b=EEc7jCrd; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.de
+	s=arc-20240116; t=1742397833; c=relaxed/simple;
+	bh=+ND2GQ1ucjL2Fbj/gHU8rnxTiLp8tL39vHpjDRl8G5A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZLyj+tpYoWp+pv/JeVzRtKcA1HPWa3NgTm8b4+TjaSsfhO3YW+pIxMALKVlfzcocOg8PpFeIhvmHI1D7ToPV6hae6RCDxRmJI7J/k7wflT+6FJyUM38tRW1KoCnyx7ACaiET83PY8S66iAzPRbTCD1vkAx+Wv+zGY9pWcVesnjo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=eAsOR6BA; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.de header.i=rwarsow@gmx.de header.b="EEc7jCrd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.de;
-	s=s31663417; t=1742397778; x=1743002578; i=rwarsow@gmx.de;
-	bh=zr1kNpQluBJWeRvzP2vQQDfQWJstvl1L64TGUGtrH3s=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=EEc7jCrd6JS1tnvjcn/B5CgfU7HNbllxh/CCYwk9y57PIoAQKKA/K/yuSJ3i77TW
-	 AbKR/b210BdcMymepvKB67InGdH8I4TiC8vPiOHWpBuZz6nbM2hhn8PrJi6Cf22+b
-	 FaNxI/kue11S8O0eBijNp+G6eAeDoVbdaQCr4vLgOLhCdIgelrTY0hh1+oFCVIUpG
-	 9UMMmNflwojbaVlZMTQx/dmKEtALgE8N2+BqO1v309mtMW2N+/nck9NR8HwGqdxtE
-	 XFr6Kpqct7673PB/RuPUW9p0rTae8WXzXetuj/hCaPIqJdm2ZPRAtIlGNu114vXOa
-	 5M3Z0hyk/l1HnUsujA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.200.20] ([46.142.34.177]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MY68d-1tgp9o3iOL-00QVRE; Wed, 19
- Mar 2025 16:22:57 +0100
-Message-ID: <8330d511-9411-4b1b-91cd-dfbbf6d0fe37@gmx.de>
-Date: Wed, 19 Mar 2025 16:22:56 +0100
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eAsOR6BA"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742397832; x=1773933832;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+ND2GQ1ucjL2Fbj/gHU8rnxTiLp8tL39vHpjDRl8G5A=;
+  b=eAsOR6BAWppqkOMXNXLsbA4C/Jn/nP33uZFU67qC0+VZtmufHdiaNXBc
+   /4ImQGuriHjwy/AAz0az7uk6VUO1wCIHyYmVPrCWpHx528T9aCyyRzBu0
+   lYoiKEx1N4KixKyNjH1aQ7ZF0p+I3wK8S6GhI/zHwNVv1nblmoxX6d49h
+   s2M65DAlv46bWHosW4DZ8kU/d5kt6c18ie2MDiCbrJZVfl1CuZVzZD4wX
+   8dpc0KqI1DrjLchMTKkYg7/3lWEKGqsgv2sI+AgXiOsYjTdNpY1f8x8TQ
+   OZTjCQRqaBrJIAXxW8YETgf5cH5XZRfgl+t4O7uoeQ3mqn5LvbI7H9bGh
+   A==;
+X-CSE-ConnectionGUID: KBFwm3yhRfK8Lt0TtqUqFQ==
+X-CSE-MsgGUID: F8LdNn8fS66zhmF+LDD3tA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="31174872"
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="31174872"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 08:23:51 -0700
+X-CSE-ConnectionGUID: 1KhLNtoLQ4eE7Zyd8ixR4w==
+X-CSE-MsgGUID: 6RmOKgCuQwGgjoIUotAsvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
+   d="scan'208";a="153527828"
+Received: from turnipsi.fi.intel.com (HELO kekkonen.fi.intel.com) ([10.237.72.44])
+  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 08:23:45 -0700
+Received: from kekkonen.localdomain (localhost [127.0.0.1])
+	by kekkonen.fi.intel.com (Postfix) with SMTP id 5A9F811F998;
+	Wed, 19 Mar 2025 17:23:40 +0200 (EET)
+Date: Wed, 19 Mar 2025 15:23:40 +0000
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+From: Sakari Ailus <sakari.ailus@linux.intel.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Claudiu Manoil <claudiu.manoil@nxp.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	netdev@vger.kernel.org,
+	Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v8 02/10] property: Add functions to iterate named child
+Message-ID: <Z9rhfJUlCbi7kA2m@kekkonen.localdomain>
+References: <cover.1742225817.git.mazziesaccount@gmail.com>
+ <9c3880f74476436f39d796b5c10c540ae50b722c.1742225817.git.mazziesaccount@gmail.com>
+ <Z9mQPJwnKAkPHriT@kekkonen.localdomain>
+ <b6b62ddd-ab59-4112-8f6e-c72618c45910@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.13 000/241] 6.13.8-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250319143027.685727358@linuxfoundation.org>
-From: Ronald Warsow <rwarsow@gmx.de>
-Content-Language: de-DE, en-US
-In-Reply-To: <20250319143027.685727358@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:9Bwh10FpqO6KPV7oxnRs5GwpiZ0qdbOAcVKQQr4CoVSqQuyygfa
- eOaCXhR0caaqcKTpiVQ+3RMJHeKRopCF/0veoifOhjPIOzVqkBO5OlLAQg5XGYTWEaJcW8L
- R2JazD8kuB+h4m12pMsLtxLivyQLonJdUFoJ8s8200HcI4ifVruPvuO2bFvDG2Rw0KTUhDX
- gw7K4+T7fcBqvbpz/ooHQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:5IS7PFwG1RE=;s4QxJcidotvsFWHVPp+DPaXhxgg
- lrQfLoq/BJ8MXPYGurCJ7+k800ReVldqu1LPGtBJcA8pJdse5JBq9EywW9DteTny/43tARljx
- fuCsjIoSUvSfwwxsSJMzjv5dxU34FQ7eSYICCAIDgcBsPdQBE+TM61V1xUOm6rVxIOf61sUqu
- yGsBM6PQN6BXQrGq5AWSwRSDzbwWrnnqtSo2UgOQo6V3iJMiZC8V3nYu59W75ESmoSJNaSSMw
- YaCD+ESFV/Pwx50noPUq50GyjpdIdkzLLAqcYdvjtE9VaIJ86r64OpLZDHIDnk/mRYASkxjdF
- b+BWwA4Ej3j0tZQD41vUJCwGnZS7iZ3+dPp+zv1struJ19wXF2JOsJCxCt9VpxwBSf51jbMIa
- 3UIsqwR2W2izToft1PN+Kbp0QIwqkVcnKij6z0oGZnQItEFAF9ObTTGQZQXuMt4xyr8izRbVB
- voIx6W2wMPFkjsri8Y8kme2ihu6GBY1kMtJoOMH4fq2EkkhQPmx/nlSCDYSy8rEl0lN5IGFU2
- odxYPccSsYrq9V1QpkhtDPKjDoijWZqj4w3gE4k4SxoNaCoLxh8OiglzHXjCkLvR11FqJBTTM
- ZPGBPzXhYTRVSv+26X97n4zW10DOPdrw6Kswxq0zfmxq0zWbHxAUUB/CVk5mbNgGDjZktVVsp
- wVzlEeCKGr7dUqc1//7Dl7Mq/c3wMg7Lf6DeSrU+y/n9qoYdgCm8uOLOknpV7EYZJZNtasg/m
- DJBcB3H4ePSzAMdC6XuTR8DerPJlj4huNeDYRhqVngQcddCe5qi/1e35WBfAPJA0nyv88lmDP
- p7vDx2KHg04mlL65lC3GUS6d3bu/7k1mOIxsAYCUG/appiyvP/Edlfi6iDYMgRcWTcZ3KoK7b
- NkxaUXIw62d2Ma9D135y88/j/pYRHV9PllI3xZ9wYFFWqkYy75O7Phlom/A3eOdPseouXWHbT
- AiVZmc71+t8lMu+l2XBYCaBBpSRboyyvuCG25LUq5/tfkMYDSXh3f/Y6ND3qYIbv2MpUdeD6p
- 3EptWs1Bb3HmibO4cNBwzG1eMcLXOxFhNatVUmcMk65ZpU96PxoynX8u1EyYHqoPn594vZx7Y
- TCFeBqSAB8s+MmZUcu+K5fJ2y8rsFky3U63Zj//wuB+UuP61b26txc+F8/naAI7BL5ISM993I
- R4dFoZPp6Ih9F1GBLJjBLAP5qNU07MER84J0dRNlg1rnuFNywU1dcYuesae05XW0kyjMgfYYk
- pONGI9wuYRmRs/Mwu0K5v5fxBOdnGy+FlUwXxA2gUXSfsKj80bM5jxpWkwGMW1dw5VyP/ixak
- aOXIi9vwGmv/ngcDi0xyGum8jmjzvT4SnvDAaxsKoTO1kYl/ScxDwrZ0RZ8jsOMsMY5w0ucTs
- YEftVqeLGJ704sxWCCGUCDWR7LIShzZOFT7p7dMAZBcQotADFEVEE25cT09h9TAU9T8A4/WZ+
- hQHrRE+0IiCgJpy/XM2GVjEMGPxk=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <b6b62ddd-ab59-4112-8f6e-c72618c45910@gmail.com>
 
-Hi Greg
+Hei Matti,
 
-moved to Fedora 42 (Beta) with
+On Wed, Mar 19, 2025 at 08:02:24AM +0200, Matti Vaittinen wrote:
+> Moro Sakari,
+> 
+> Thanks for the review.
+> 
+> On 18/03/2025 17:24, Sakari Ailus wrote:
+> > Moi,
+> > 
+> > On Mon, Mar 17, 2025 at 05:50:38PM +0200, Matti Vaittinen wrote:
+> > > There are a few use-cases where child nodes with a specific name need to
+> > > be parsed. Code like:
+> > > 
+> > > fwnode_for_each_child_node()
+> > > 	if (fwnode_name_eq())
+> > > 		...
+> > > 
+> > > can be found from a various drivers/subsystems. Adding a macro for this
+> > > can simplify things a bit.
+> > > 
+> > > In a few cases the data from the found nodes is later added to an array,
+> > > which is allocated based on the number of found nodes. One example of
+> > > such use is the IIO subsystem's ADC channel nodes, where the relevant
+> > > nodes are named as channel[@N].
+> > > 
+> > > Add helpers for iterating and counting device's sub-nodes with certain
+> > > name instead of open-coding this in every user.
+> > > 
+> > > Suggested-by: Jonathan Cameron <jic23@kernel.org>
+> > > Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
+> > > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> > > ---
+> > > Revision history:
+> > > v7 => v8:
+> > >   - Fix the example in fwnode_get_named_child_node_count() documentation
+> > >     to use the fwnode_get_named_child_node_count() and not the
+> > >     device_get_named_child_node_count()
+> > >   - Fix the rest of the new macro's indentiations
+> > > v6 => v7:
+> > >   - Improve kerneldoc
+> > >   - Inline device_get_named_child_node_count() and change it to call
+> > >     fwnode_get_named_child_node_count() inside
+> > >   - Fix indentiation of the new macros
+> > > v5 => v6:
+> > >   - Add helpers to also iterate through the nodes.
+> > > v4 => v5:
+> > >   - Use given name instead of string 'channel' when counting the nodes
+> > >   - Add also fwnode_get_child_node_count_named() as suggested by Rob.
+> > > v3 => v4:
+> > >   - New patch as suggested by Jonathan, see discussion in:
+> > > https://lore.kernel.org/lkml/20250223161338.5c896280@jic23-huawei/
+> > > ---
+> > >   drivers/base/property.c  | 27 +++++++++++++++++++++++++++
+> > >   include/linux/property.h | 24 ++++++++++++++++++++++++
+> > >   2 files changed, 51 insertions(+)
+> > > 
+> > > diff --git a/drivers/base/property.c b/drivers/base/property.c
+> > > index c1392743df9c..f42f32ff45fc 100644
+> > > --- a/drivers/base/property.c
+> > > +++ b/drivers/base/property.c
+> > > @@ -945,6 +945,33 @@ unsigned int device_get_child_node_count(const struct device *dev)
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(device_get_child_node_count);
+> > > +/**
+> > > + * fwnode_get_named_child_node_count - number of child nodes with given name
+> > > + * @fwnode: Node which child nodes are counted.
+> > > + * @name: String to match child node name against.
+> > > + *
+> > > + * Scan child nodes and count all the nodes with a specific name. Potential
+> > > + * 'number' -ending after the 'at sign' for scanned names is ignored.
+> > > + * E.g.::
+> > > + *   fwnode_get_named_child_node_count(fwnode, "channel");
+> > > + * would match all the nodes::
+> > > + *   channel { }, channel@0 {}, channel@0xabba {}...
+> > > + *
+> > > + * Return: the number of child nodes with a matching name for a given device.
+> > > + */
+> > > +unsigned int fwnode_get_named_child_node_count(const struct fwnode_handle *fwnode,
+> > > +					       const char *name)
+> > > +{
+> > > +	struct fwnode_handle *child;
+> > > +	unsigned int count = 0;
+> > > +
+> > > +	fwnode_for_each_named_child_node(fwnode, child, name)
+> > > +		count++;
+> > > +
+> > > +	return count;
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(fwnode_get_named_child_node_count);
+> > > +
+> > >   bool device_dma_supported(const struct device *dev)
+> > >   {
+> > >   	return fwnode_call_bool_op(dev_fwnode(dev), device_dma_supported);
+> > > diff --git a/include/linux/property.h b/include/linux/property.h
+> > > index e214ecd241eb..a1856e6b714c 100644
+> > > --- a/include/linux/property.h
+> > > +++ b/include/linux/property.h
+> > > @@ -167,10 +167,18 @@ struct fwnode_handle *fwnode_get_next_available_child_node(
+> > >   	for (child = fwnode_get_next_child_node(fwnode, NULL); child;	\
+> > >   	     child = fwnode_get_next_child_node(fwnode, child))
+> > > +#define fwnode_for_each_named_child_node(fwnode, child, name)		\
+> > > +	fwnode_for_each_child_node(fwnode, child)			\
+> > > +		if (!fwnode_name_eq(child, name)) { } else
+> > > +
+> > >   #define fwnode_for_each_available_child_node(fwnode, child)		       \
+> > >   	for (child = fwnode_get_next_available_child_node(fwnode, NULL); child;\
+> > >   	     child = fwnode_get_next_available_child_node(fwnode, child))
+> > > +#define fwnode_for_each_available_named_child_node(fwnode, child, name)	\
+> > > +	fwnode_for_each_available_child_node(fwnode, child)		\
+> > > +		if (!fwnode_name_eq(child, name)) { } else
+> > > +
+> > 
+> > OF only enumerates available nodes via the fwnode API, software nodes don't
+> > have the concept but on ACPI I guess you could have a difference in nodes
+> > where you have device sub-nodes that aren't available. Still, these ACPI
+> > device nodes don't have meaningful names in this context (they're
+> > 4-character object names) so you wouldn't use them like this anyway.
+> 
+> I believe you have far better understanding on these concepts than I do. The
+> reason behind adding fwnode_for_each_available_child_node() was the patch
+> 10/10:
+> 
+> -	fwnode_for_each_available_child_node(sensors, node) {
+> -		if (fwnode_name_eq(node, "sensor")) {
+> -			if (!thp7312_sensor_parse_dt(thp7312, node))
+> -				num_sensors++;
+> -		}
+> +	fwnode_for_each_available_named_child_node(sensors, node, "sensor") {
+> +		if (!thp7312_sensor_parse_dt(thp7312, node))
+> +			num_sensors++;
+>  	}
+> 
+> 
+> > So my question is: is it useful to provide this besides
+> > fwnode_for_each_named_child_node(), given that both are effectively the
+> > same?
+> 
+> So, I suppose you're saying the existing thp7312 -driver has no real reason
+> to use the 'fwnode_for_each_available_child_node()', but it could be using
+> fwnode_for_each_child_node() instead?
+> 
+> If so, I am Ok with dropping the
+> 'fwnode_for_each_available_named_child_node()' and changing the 10/10 to:
+> 
+> -	fwnode_for_each_available_child_node(sensors, node) {
+> -		if (fwnode_name_eq(node, "sensor")) {
+> -			if (!thp7312_sensor_parse_dt(thp7312, node))
+> -				num_sensors++;
+> -		}
+> +	fwnode_for_each_named_child_node(sensors, node, "sensor") {
+> +		if (!thp7312_sensor_parse_dt(thp7312, node))
+> +			num_sensors++;
+>  	}
+> 
+> Do you think that'd be correct?
 
-gcc-15.0.1-0.10.fc42.x86_64
-gcc version 15.0.1 20250313 (Red Hat 15.0.1-0) (GCC)
+I'd say so. Feel free to cc me to the last patch as well.
 
-with this
-Kernel 6.13.x doesn't compile
-Kernel 6.14.0-rc7 does
+I guess one way to make this clearer is to switch to
+fwnode_for_each_child_node() in a separate patch before
+fwnode_for_each_named_child_node() conversion.
 
-so I'm offline until 6.14.x stable kernel releases
+There are also just a handful of users of
+fwnode_for_each_available_child_node() and I guess these could be
+converted, too, but I think it's outside the scope of the set.
 
-sorry !
+-- 
+Terveisin,
 
-Errors
-=3D=3D=3D=3D=3D=3D
-
-C032A7D52A7F0000:error:03000098:digital envelope
-routines:do_sigver_init:invalid digest:crypto/evp/m_sigver.c:342:
-make[3]: *** [certs/Makefile:53: certs/signing_key.pem] Error 1
-make[3]: *** Deleting file 'certs/signing_key.pem'
-make[2]: *** [scripts/Makefile.build:442: certs] Error 2
-
-...
-
-   CC      fs/ext4/indirect.o
-fs/netfs/fscache_cache.c:375:67: warning: initializer-string for array
-of =E2=80=98char=E2=80=99 truncates NUL terminator but destination lacks =
-=E2=80=98nonstring=E2=80=99
-attribute (6 chars into 5 available) [-Wunterminated-string-initialization=
-]
-   375 | static const char fscache_cache_states[NR__FSCACHE_CACHE_STATE]
-=3D "-PAEW";
-       |
-   ^~~~~~~
-   CC      fs/netfs/fscache_cookie.o
-
-...
-
-   CC      kernel/seccomp.o
-fs/netfs/fscache_cookie.c:32:69: warning: initializer-string for array
-of =E2=80=98char=E2=80=99 truncates NUL terminator but destination lacks =
-=E2=80=98nonstring=E2=80=99
-attribute (11 chars into 10 available)
-[-Wunterminated-string-initialization]
-    32 | static const char
-fscache_cookie_states[FSCACHE_COOKIE_STATE__NR] =3D "-LCAIFUWRD";
-       |
-     ^~~~~~~~~~~~
-   CC      fs/nfsd/nfssvc.o
-
-...
-
-   CC      fs/nfsd/blocklayoutxdr.o
-fs/cachefiles/key.c:12:9: warning: initializer-string for array of
-=E2=80=98char=E2=80=99 truncates NUL terminator but destination lacks =E2=
-=80=98nonstring=E2=80=99
-attribute (65 chars into 64 available)
-[-Wunterminated-string-initialization]
-    12 |         "0123456789"                    /* 0 - 9 */
-       |         ^~~~~~~~~~~~
-   CC      fs/cachefiles/main.o
-
-...
-
-   AR      fs/built-in.a
-make[1]: *** [/home/DATA/DEVEL/linux-6.13.7/Makefile:1989: .] Error 2
-make: *** [Makefile:251: __sub-make] Error 2
-
-
+Sakari Ailus
