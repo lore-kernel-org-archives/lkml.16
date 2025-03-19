@@ -1,75 +1,86 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC88B20AF6C;
-	Wed, 19 Mar 2025 19:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA41E1CAA81;
+	Wed, 19 Mar 2025 19:05:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742411011; cv=none; b=DKgA5I2VYP4Wi0Niz+GTy6Q7wklu6JBloeKhy5WdguYG1/YTLNOLxHtb/PHy4ys4yPfO047XP/nEQrFa+ss/qmvkSPK4j5//RhCfsNCU9Ja/SjAwC+Ij4wQ1oS5N5Aujw4Ih3k1d4cK2y0TN1Z6SHO5cE3O6J1FVqywXaZ7Dzsg=
+	t=1742411113; cv=none; b=KjaZBDSPxDbROErmsIG/WZ5t8WPsOxK2X/P2RYStahhSKX3+aRC01Fz6jigd1deicverbW4oislHGpjg0FXN7ixEkxI40FPYLQL0MPLuSxyZ99exZGDPnjr8ADHh5Ub/AsZsugdofn1McsM+l73oC3zCQhPKyi+bmSuyvkq0peY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742411011; c=relaxed/simple;
-	bh=kwOrHksy+YhrJJoSEw9ASHTSL1O0f+mcM2mEQsUJ2wI=;
+	s=arc-20240116; t=1742411113; c=relaxed/simple;
+	bh=Kv01JEx0IIZ+D1J60/PE70oFHhcpP5jrteoDemWZ0fA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lqbs4ZFDWWpkcpdQ55IoOw+y6Unrk3kUVFF6mfsK9c1qur8A7gBJC1ptd+BMaHRxCJ8etQgijU8HG5cJFWYozClKEFqn7N6pDfyaJSRm+SaTy8yyPTP0LKYbMn2XTb8KmujX6uJ1R16P3QzNOquM5ZN4GzpSD5/ihp+6SrPC0lw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T6cNoFa9; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=GHoipBs7fCMA3v70u+0jA7gd1er3AI6+TsdBVXd7YSC13LCZ91upvCGFQPsjv19Y8d+Rk7l2m3KFJ4/NHY0f6vSvt8jrsLYp1sLnguV0UPGCNtWGYvuivpi9joBSMl8nT4htSNEf6Fn58xrh+rVYhIaXMwfSC8Zuq9avNWBYNAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E0xQNsK0; arc=none smtp.client-ip=209.85.214.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T6cNoFa9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742411010; x=1773947010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=kwOrHksy+YhrJJoSEw9ASHTSL1O0f+mcM2mEQsUJ2wI=;
-  b=T6cNoFa9acwzV7gGuNP0T9l580e6B1KGPXCqLUnWVxRuCzUyETEoBLZa
-   a43VCIOciCC6AcOcb5dO8HMkzmNWeoXdkHx0CAPmtLJqum5Ly44feh832
-   nojbj8o4Koa/wgYCude98e+Fs6qUH7kJHerFgQKqS6TwwZrILgF66rRRP
-   ATlFk1EsQNxKe43I4EDr2lbU/KrFjlJcZgKRcCl/txQOVxXI+M8PNuAbO
-   SKcaymsFrjNm6/akt03uZ9VkQ6n/bM5XKxRAmVHDce4rUWbYGkLu4LcEW
-   6iOrNpsxIqgDkRgWxn59PM/LbM412n3IxllOwlF/+hpu/ToGY7+zXhEdP
-   A==;
-X-CSE-ConnectionGUID: IH7sMZLeTFGkFxya1loBSA==
-X-CSE-MsgGUID: wU/lHgSoTk2ny+rfoj6Hbg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="54997452"
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="54997452"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 12:03:29 -0700
-X-CSE-ConnectionGUID: Mbl85Yu1QW60SEdFPGiOjw==
-X-CSE-MsgGUID: RJQQdPK8QPK/WswUp91UjQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,259,1736841600"; 
-   d="scan'208";a="122769594"
-Received: from lkp-server02.sh.intel.com (HELO a4747d147074) ([10.239.97.151])
-  by fmviesa007.fm.intel.com with ESMTP; 19 Mar 2025 12:03:24 -0700
-Received: from kbuild by a4747d147074 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tuyhG-000FcE-0R;
-	Wed, 19 Mar 2025 19:03:22 +0000
-Date: Thu, 20 Mar 2025 03:02:22 +0800
-From: kernel test robot <lkp@intel.com>
-To: jiebing chen via B4 Relay <devnull+jiebing.chen.amlogic.com@kernel.org>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-sound@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-	jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com,
-	jiebing chen <jiebing.chen@amlogic.com>
-Subject: Re: [PATCH v4 4/6] ASoC: meson: g12a-toacodec: Add s4 tocodec driver
-Message-ID: <202503200205.amGhOXua-lkp@intel.com>
-References: <20250319-audio_drvier-v4-4-686867fad719@amlogic.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E0xQNsK0"
+Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-22580c9ee0aso129856035ad.2;
+        Wed, 19 Mar 2025 12:05:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742411111; x=1743015911; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VDNDArzO5k1C3dDCqgw9lXaD8g8wObtXKLtFnSZBfiM=;
+        b=E0xQNsK0JAit7NG5IQgWyVht3OjixCTbmwXzfw4vL7zZtotmwCFNZirOZyaz7ARLFS
+         +oE3+GV6ZWOxTE55zSgiKEkv+Da1W9M0dSUMKiyqPHE5MOl3Xc1eTlMwsOjy+fWr9TVB
+         Ves+nsA0pDjZR3+gklyzSuINLoku8FdrCEmpIk15dZjvT3d7tCh3EPlJj/n/Gl+/6EPM
+         2BQ23GK+3yFdMXJDEoss6MQHSLr2KJeKnDfnXJNvQbVuoWw1/7HrRV8m76YcjIABSXFf
+         kriCSVXuaOR5IF1I6ieruMbh02efICK4yF1H9CQ1btLEAuH/jeu1qzv8TyNKaQNLji1b
+         a+sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742411111; x=1743015911;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VDNDArzO5k1C3dDCqgw9lXaD8g8wObtXKLtFnSZBfiM=;
+        b=McO6b256zXUeeAeQllokqKAXuatJfOXVZ2skjfgYTIADZbp5P4SQCJLtKJ53yj8atM
+         +d2M/H6vHkADvYCsiVsvA2ndYcFIlNugP8MenUfA0eiqcnIIqTYmiAFhEDYAYjbTJ2lH
+         v3B4YhH9SbdnCz7voLS1r8i1XFJKjUxcULMji/4wby8DpXozhLWkVhlSTqJcCYjPwSji
+         jdv59PJxUYYTO6NbMPSVnQldc1Unt5l474OevLG4+W+Dmb+GfIGnrxsW/G5zbw5KiKSc
+         iA4UFSJkhht+QCnIThgN4vvquhBSdaap4xEsWI7aO9ZCn5q86c2j9lZt/ljG3EsrT5E4
+         e49A==
+X-Forwarded-Encrypted: i=1; AJvYcCUVruESeQq+KMjoZeq01QEzv05B3Kgi1CoLTTvWC1qCi2pGM+ZWgZPAapvEAM6x5rym2Sc=@vger.kernel.org, AJvYcCVnJ5R0K6s+NKcWEtWnnAPMxHPJCDmOxmy/KYo6xQTkqY81ByRT+YXWFSGgTAs/hz5meE/kRr4H@vger.kernel.org, AJvYcCWbWfmA7+8LynxuUeIQG0GZ07/aHPgcuXDAd/sqxGc3yhmrCSQ160RLbgQDQzMtarVIX3ejLiPl2bGWCrw6@vger.kernel.org, AJvYcCX1VyQFXilV2D4dQInfJl5wT1tLrPtpGnmxPCE7Fjhc/idmTlKddk2179VFAnEBt4fBhU51DxKshzQpUaLt@vger.kernel.org
+X-Gm-Message-State: AOJu0YyBlfJCK7E5PPSC+f/mQ+W9QQSyv9n60G6C08EZzVSE3SJF9die
+	3Hw0DRRAIQuUUNYEuF95+FHc4CPgWO/8C3y6KrKgS2FmHi9IkxPV
+X-Gm-Gg: ASbGncslR/J6koOaeK3z8IbJ0GUoIPncnaK2QDmpAf1Ep7yAX+YV0iMMUxe0Ns+gFWn
+	jI/R3Eu+vJzIP3zV7uOpqXOcsfN9IO6YLYPfyRl4sWMK8bUjnZU3AUm/3NRgP9k/x99HQ0tclnU
+	iYcnB2PCQefRZU7a/NlDbfPe4elbl2utvvuGfx2Kaa2AK/XW4vPh0f+ui3YFfyd9KHDWktNX9H9
+	abeBAZiOUqdbNRUisOHkt78jXqDr9GcwgAtQTfVnpZQv2IoAkUpmas7aX+BqDTYjC80mL4czZ/z
+	osR5S1tB36OvtHGnPuTt3xJgCJW2tafMonOSHd5vp8N7K3hCxtizSeWOUHfFbqtgcg==
+X-Google-Smtp-Source: AGHT+IHgxm4iaNrZNGMW9Oz+3tncQIFyq+/H3ImvQRNH0Q4o5Ap8UBOH1MEb2qULK3uBV1U+pGjbMw==
+X-Received: by 2002:a17:902:f605:b0:224:162:a3e0 with SMTP id d9443c01a7336-2265eeb78d7mr7863315ad.49.1742411110875;
+        Wed, 19 Mar 2025 12:05:10 -0700 (PDT)
+Received: from devvm6277.cco0.facebook.com ([2a03:2880:2ff:9::])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6cc7sm118713835ad.144.2025.03.19.12.05.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 19 Mar 2025 12:05:10 -0700 (PDT)
+Date: Wed, 19 Mar 2025 12:05:08 -0700
+From: Bobby Eshleman <bobbyeshleman@gmail.com>
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: Jakub Kicinski <kuba@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>,
+	"Michael S. Tsirkin" <mst@redhat.com>,
+	Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Eugenio =?iso-8859-1?Q?P=E9rez?= <eperezma@redhat.com>,
+	Bryan Tan <bryan-bt.tan@broadcom.com>,
+	Vishnu Dasa <vishnu.dasa@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	virtualization@lists.linux.dev, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org,
+	kvm@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] vsock/virtio_transport_common: handle netns of
+ received packets
+Message-ID: <Z9sVZOflrjJj9uMR@devvm6277.cco0.facebook.com>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <20250312-vsock-netns-v2-2-84bffa1aa97a@gmail.com>
+ <6iepaq4rqd65lhpqfpplzurwkezdyrjolijrz4feqakh3ghbjy@fxoiw5yiyzp3>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,64 +89,178 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250319-audio_drvier-v4-4-686867fad719@amlogic.com>
+In-Reply-To: <6iepaq4rqd65lhpqfpplzurwkezdyrjolijrz4feqakh3ghbjy@fxoiw5yiyzp3>
 
-Hi jiebing,
+On Wed, Mar 19, 2025 at 02:26:04PM +0100, Stefano Garzarella wrote:
+> On Wed, Mar 12, 2025 at 01:59:36PM -0700, Bobby Eshleman wrote:
+> > From: Stefano Garzarella <sgarzare@redhat.com>
+> > 
+> > This patch allows transports that use virtio_transport_common
+> > to specify the network namespace where a received packet is to
+> > be delivered.
+> > 
+> > virtio_transport and vhost_transport, for now, still do not use this
+> > capability and preserve old behavior.
+> 
+> What about vsock_loopback?
+> 
 
-kernel test robot noticed the following build warnings:
+Also unaffected, I'll add that comment here too.
 
-[auto build test WARNING on 6ecd20965bdc21b265a0671ccf36d9ad8043f5ab]
+> > 
+> > Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> > Signed-off-by: Bobby Eshleman <bobbyeshleman@gmail.com>
+> > ---
+> > V1 -> V2
+> > * use vsock_global_net()
+> > * add net to skb->cb
+> > * forward port for skb
+> > ---
+> > drivers/vhost/vsock.c                   |  1 +
+> > include/linux/virtio_vsock.h            |  2 ++
+> > net/vmw_vsock/virtio_transport.c        |  1 +
+> > net/vmw_vsock/virtio_transport_common.c | 11 ++++++++++-
+> > 4 files changed, 14 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/vhost/vsock.c b/drivers/vhost/vsock.c
+> > index 802153e230730bdbfbbb6f4ae263ae99502ef532..02e2a3551205a4398a74a167a82802d950c962f6 100644
+> > --- a/drivers/vhost/vsock.c
+> > +++ b/drivers/vhost/vsock.c
+> > @@ -525,6 +525,7 @@ static void vhost_vsock_handle_tx_kick(struct vhost_work *work)
+> > 			continue;
+> > 		}
+> > 
+> > +		VIRTIO_VSOCK_SKB_CB(skb)->net = vsock_global_net();
+> 
+> I'd add an helper for that.
+> 
+> Or, can we avoid that and pass the net parameter to
+> virtio_transport_recv_pkt()?
+> 
 
-url:    https://github.com/intel-lab-lkp/linux/commits/jiebing-chen-via-B4-Relay/dt-bindings-clock-meson-Add-audio-power-domain-for-s4-soc/20250319-151110
-base:   6ecd20965bdc21b265a0671ccf36d9ad8043f5ab
-patch link:    https://lore.kernel.org/r/20250319-audio_drvier-v4-4-686867fad719%40amlogic.com
-patch subject: [PATCH v4 4/6] ASoC: meson: g12a-toacodec: Add s4 tocodec driver
-config: i386-buildonly-randconfig-005-20250320 (https://download.01.org/0day-ci/archive/20250320/202503200205.amGhOXua-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250320/202503200205.amGhOXua-lkp@intel.com/reproduce)
+Makes sense. I like that passing it in reduces the places that cb->net is
+assigned.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503200205.amGhOXua-lkp@intel.com/
+> > 		total_len += sizeof(*hdr) + skb->len;
+> > 
+> > 		/* Deliver to monitoring devices all received packets */
+> > diff --git a/include/linux/virtio_vsock.h b/include/linux/virtio_vsock.h
+> > index 0387d64e2c66c69dd7ab0cad58db5cf0682ad424..e51f89559a1d92685027bf83a62c7b05dd9e566d 100644
+> > --- a/include/linux/virtio_vsock.h
+> > +++ b/include/linux/virtio_vsock.h
+> > @@ -12,6 +12,7 @@
+> > struct virtio_vsock_skb_cb {
+> > 	bool reply;
+> > 	bool tap_delivered;
+> > +	struct net *net;
+> > 	u32 offset;
+> > };
+> > 
+> > @@ -148,6 +149,7 @@ struct virtio_vsock_pkt_info {
+> > 	u32 remote_cid, remote_port;
+> > 	struct vsock_sock *vsk;
+> > 	struct msghdr *msg;
+> > +	struct net *net;
+> > 	u32 pkt_len;
+> > 	u16 type;
+> > 	u16 op;
+> > diff --git a/net/vmw_vsock/virtio_transport.c b/net/vmw_vsock/virtio_transport.c
+> > index f0e48e6911fc46cba87f7dafeb8dbc21421df254..163ddfc0808529ad6dda7992f9ec48837dd7337c 100644
+> > --- a/net/vmw_vsock/virtio_transport.c
+> > +++ b/net/vmw_vsock/virtio_transport.c
+> > @@ -650,6 +650,7 @@ static void virtio_transport_rx_work(struct work_struct *work)
+> > 
+> > 			virtio_vsock_skb_rx_put(skb);
+> > 			virtio_transport_deliver_tap_pkt(skb);
+> > +			VIRTIO_VSOCK_SKB_CB(skb)->net = vsock_global_net();
+> > 			virtio_transport_recv_pkt(&virtio_transport, skb);
+> > 		}
+> > 	} while (!virtqueue_enable_cb(vq));
+> > diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
+> > index 256d2a4fe482b3cb938a681b6924be69b2065616..028591a5863b84059b8e8bbafd499cb997a0c863 100644
+> > --- a/net/vmw_vsock/virtio_transport_common.c
+> > +++ b/net/vmw_vsock/virtio_transport_common.c
+> > @@ -314,6 +314,8 @@ static struct sk_buff *virtio_transport_alloc_skb(struct virtio_vsock_pkt_info *
+> > 					 info->flags,
+> > 					 zcopy);
+> > 
+> > +	VIRTIO_VSOCK_SKB_CB(skb)->net = info->net;
+> > +
+> > 	return skb;
+> > out:
+> > 	kfree_skb(skb);
+> > @@ -523,6 +525,7 @@ static int virtio_transport_send_credit_update(struct vsock_sock *vsk)
+> > 	struct virtio_vsock_pkt_info info = {
+> > 		.op = VIRTIO_VSOCK_OP_CREDIT_UPDATE,
+> > 		.vsk = vsk,
+> > +		.net = sock_net(sk_vsock(vsk)),
+> > 	};
+> > 
+> > 	return virtio_transport_send_pkt_info(vsk, &info);
+> > @@ -1061,6 +1064,7 @@ int virtio_transport_connect(struct vsock_sock *vsk)
+> > 	struct virtio_vsock_pkt_info info = {
+> > 		.op = VIRTIO_VSOCK_OP_REQUEST,
+> > 		.vsk = vsk,
+> > +		.net = sock_net(sk_vsock(vsk)),
+> > 	};
+> > 
+> > 	return virtio_transport_send_pkt_info(vsk, &info);
+> > @@ -1076,6 +1080,7 @@ int virtio_transport_shutdown(struct vsock_sock *vsk, int mode)
+> > 			 (mode & SEND_SHUTDOWN ?
+> > 			  VIRTIO_VSOCK_SHUTDOWN_SEND : 0),
+> > 		.vsk = vsk,
+> > +		.net = sock_net(sk_vsock(vsk)),
+> > 	};
+> > 
+> > 	return virtio_transport_send_pkt_info(vsk, &info);
+> > @@ -1102,6 +1107,7 @@ virtio_transport_stream_enqueue(struct vsock_sock *vsk,
+> > 		.msg = msg,
+> > 		.pkt_len = len,
+> > 		.vsk = vsk,
+> > +		.net = sock_net(sk_vsock(vsk)),
+> > 	};
+> > 
+> > 	return virtio_transport_send_pkt_info(vsk, &info);
+> > @@ -1139,6 +1145,7 @@ static int virtio_transport_reset(struct vsock_sock *vsk,
+> > 		.op = VIRTIO_VSOCK_OP_RST,
+> > 		.reply = !!skb,
+> > 		.vsk = vsk,
+> > +		.net = sock_net(sk_vsock(vsk)),
+> > 	};
+> > 
+> > 	/* Send RST only if the original pkt is not a RST pkt */
+> > @@ -1159,6 +1166,7 @@ static int virtio_transport_reset_no_sock(const struct virtio_transport *t,
+> > 		.op = VIRTIO_VSOCK_OP_RST,
+> > 		.type = le16_to_cpu(hdr->type),
+> > 		.reply = true,
+> > +		.net = VIRTIO_VSOCK_SKB_CB(skb)->net,
+> > 	};
+> > 	struct sk_buff *reply;
+> > 
+> > @@ -1476,6 +1484,7 @@ virtio_transport_send_response(struct vsock_sock *vsk,
+> > 		.remote_port = le32_to_cpu(hdr->src_port),
+> > 		.reply = true,
+> > 		.vsk = vsk,
+> > +		.net = sock_net(sk_vsock(vsk)),
+> > 	};
+> > 
+> > 	return virtio_transport_send_pkt_info(vsk, &info);
+> > @@ -1590,7 +1599,7 @@ void virtio_transport_recv_pkt(struct virtio_transport *t,
+> > 			       struct sk_buff *skb)
+> > {
+> > 	struct virtio_vsock_hdr *hdr = virtio_vsock_hdr(skb);
+> > -	struct net *net = vsock_global_net();
+> > +	struct net *net = VIRTIO_VSOCK_SKB_CB(skb)->net;
+> > 	struct sockaddr_vm src, dst;
+> > 	struct vsock_sock *vsk;
+> > 	struct sock *sk;
+> > 
+> > -- 
+> > 2.47.1
+> > 
+> 
 
-All warnings (new ones prefixed by >>):
+Thanks!
 
->> sound/soc/meson/g12a-toacodec.c:135:38: warning: 's4_toacodec_clk_enable' defined but not used [-Wunused-const-variable=]
-     135 | static const struct snd_kcontrol_new s4_toacodec_clk_enable =
-         |                                      ^~~~~~~~~~~~~~~~~~~~~~
-
-
-vim +/s4_toacodec_clk_enable +135 sound/soc/meson/g12a-toacodec.c
-
-   112	
-   113	static SOC_ENUM_SINGLE_DECL(g12a_toacodec_mux_enum, TOACODEC_CTRL0,
-   114				    CTRL0_DAT_SEL_LSB,
-   115				    g12a_toacodec_mux_texts);
-   116	
-   117	static SOC_ENUM_SINGLE_DECL(sm1_toacodec_mux_enum, TOACODEC_CTRL0,
-   118				    CTRL0_DAT_SEL_SM1_LSB,
-   119				    g12a_toacodec_mux_texts);
-   120	
-   121	static const struct snd_kcontrol_new g12a_toacodec_mux =
-   122		SOC_DAPM_ENUM_EXT("Source", g12a_toacodec_mux_enum,
-   123				  snd_soc_dapm_get_enum_double,
-   124				  g12a_toacodec_mux_put_enum);
-   125	
-   126	static const struct snd_kcontrol_new sm1_toacodec_mux =
-   127		SOC_DAPM_ENUM_EXT("Source", sm1_toacodec_mux_enum,
-   128				  snd_soc_dapm_get_enum_double,
-   129				  g12a_toacodec_mux_put_enum);
-   130	
-   131	static const struct snd_kcontrol_new g12a_toacodec_out_enable =
-   132		SOC_DAPM_SINGLE_AUTODISABLE("Switch", TOACODEC_CTRL0,
-   133					    CTRL0_ENABLE_SHIFT, 1, 0);
-   134	
- > 135	static const struct snd_kcontrol_new s4_toacodec_clk_enable =
-   136		SOC_DAPM_DOUBLE("Switch", TOACODEC_CTRL0,
-   137				CTRL0_BCLK_ENABLE_SHIFT, CTRL0_MCLK_ENABLE_SHIFT, 1, 0);
-   138	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Best,
+Bobby
