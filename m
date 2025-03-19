@@ -1,39 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F3B1253B43
-	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:30:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FDE254B02
+	for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 09:30:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742376652; cv=none; b=OabmqFGtcYAg4v/XAXWvNLlLJkDD48jWaALN4uQHYqnZCyYfYW/P/XLqdsendJidLEyjVkQDL2KlbsAXjynlucMeoB7j7Ro0vn8G9EPTe2O0sjQH6416z4HY3Ep5HJoOEehFDE5wnKqw8lb0ixfyI5HUUI1aycXQWANB8Erq51Y=
+	t=1742376655; cv=none; b=dqH1E8mvkgnGsWa80KBXVB6JG25POsTJACeS3efBUYDN4+ZM79v2ycc7t0FY9pd3JGwuLpz8Jk6+4G3+NVZ6IT6n8tCqUOaROyhLqdJm8VUvNTQpv+YPrxGsvnoXXJG++s0L8VuR0f9kF/WFjUZamKsHSlsMwudkDpW0vaEtscg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742376652; c=relaxed/simple;
-	bh=OkcOnPgwzPVAnLmEz2RKWbbG92ntdJe59vSCBAlm+QQ=;
+	s=arc-20240116; t=1742376655; c=relaxed/simple;
+	bh=ebyMNCtTTrEqBq7KBj2Z4r0pT6iv1SjarksoD2qQGSE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=r81hstNu2cqjyrdoyVQx95ytlnvgPfpD42cflxEBH48KB4I/yODf1wfPndxBt/XBA7KR8E9QVCVAAUKpqlOzKkHZ5iDl+fx5QgMtJn3rTo0Sd6FU0wjVcNW5syZm4w4AH8YlAAdTXTQToWtMpaHEpbI1LvYKiNS7ii2Vyi6m12M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ao9dMtML; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Y1HqK9GcjHEmPLwTi4MVe1e9s3mP2DPYZM8N28j1A8r7eqCbVkNqgYy/HwI6G9s2Zfgn8X20f1NQstI354pS+RirNNwdHcfXUjqBCqkrRHyFlZScwQVUljq0mnYBectSNSxHWKV7Xe1Xe304rskqrVOywE+Lb2qTjseYikGCrb8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ukWU7WJ0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ao9dMtML"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A583C4CEEA;
-	Wed, 19 Mar 2025 09:30:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ukWU7WJ0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13F86C4CEEE;
+	Wed, 19 Mar 2025 09:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742376651;
-	bh=OkcOnPgwzPVAnLmEz2RKWbbG92ntdJe59vSCBAlm+QQ=;
+	s=k20201202; t=1742376653;
+	bh=ebyMNCtTTrEqBq7KBj2Z4r0pT6iv1SjarksoD2qQGSE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ao9dMtMLQEUVu+fjWsBoLEqqh0R+BhKkWJpizhHO36TaM6xnso/mU/mpIJ2LwEzG6
-	 w3qBHEHoLZjoB/UDlEpK5DuDRj10RZg/HCkbLCytm8gufochwYvQZlmyjxwMpo2nY5
-	 pE9TarQ4MKyl9c1jlBi8CtkYT0LdO2umrsieILKUnjOtAlru8pwlOrNOS+zbyMH9OY
-	 Oe/1psdD8KujbLy2TDTLaCyhXoRNuGpPLiBQnuvUkw3mFaqEo34WaXFEiHj8ckV0Xx
-	 GqmRwxh6m4sCde1Vj87CyA8oUlLxELA33XpueV+4pXH5T4AyiCQWL+miE6lxvv11bR
-	 e8WPInQqrb+8w==
+	b=ukWU7WJ0noFM/hOU78+UK7hEPIM1AsCNMUg3I/v7hReBhZdSO1fLoD9PHYB8baKxQ
+	 MysnS6sBwxAfdluJ44xAGe+vEj8zwnk2yF4Nfgoh5YE4PUr9RPwMEVby+u1O05OGk9
+	 UWaa16jJqDUSyd7HPakNbpXf7wXHqNrkPLXxkvZ/tSSYMP2XHRkEjIB/NuJa6eh7YF
+	 UBeDFSaZSNar/8IG+SaXUPPl7SIjlfRxOVwLje/BpNgor7wCqy2AzNP3DH4YqWjxaR
+	 1jMASTxSZwvlAEDcAwhBDRWZrYRNLTCNiZSpBbEfc0kJTzwbP+JG7wM/AQiyjNrAOc
+	 if8CZNHQtxyVQ==
 From: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
 To: tglx@linutronix.de
 Cc: maz@kernel.org,
 	linux-kernel@vger.kernel.org,
-	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Subject: [PATCH v2 04/57] irqdomain.h: Stop using 'host' for domain
-Date: Wed, 19 Mar 2025 10:28:57 +0100
-Message-ID: <20250319092951.37667-5-jirislaby@kernel.org>
+	"Jiri Slaby (SUSE)" <jirislaby@kernel.org>,
+	Nipun Gupta <nipun.gupta@amd.com>,
+	Nikhil Agarwal <nikhil.agarwal@amd.com>
+Subject: [PATCH v2 05/57] irqdomain: cdx: Switch to of_fwnode_handle()
+Date: Wed, 19 Mar 2025 10:28:58 +0100
+Message-ID: <20250319092951.37667-6-jirislaby@kernel.org>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250319092951.37667-1-jirislaby@kernel.org>
 References: <20250319092951.37667-1-jirislaby@kernel.org>
@@ -45,66 +47,39 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-It is confusing to see 'host' and 'domain' to be used as 'domain'. Given
-this header is all about domains, switch the remaining 'host' uses to
-'domain'.
+of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
+defined of_fwnode_handle(). The former is in the process of being
+removed, so use the latter instead.
 
 Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Cc: Nipun Gupta <nipun.gupta@amd.com>
+Cc: Nikhil Agarwal <nikhil.agarwal@amd.com>
 ---
- include/linux/irqdomain.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/cdx/cdx_msi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index e9ab95fbc5a9..bb7111105296 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -72,7 +72,7 @@ void of_phandle_args_to_fwspec(struct device_node *np, const u32 *args,
+diff --git a/drivers/cdx/cdx_msi.c b/drivers/cdx/cdx_msi.c
+index 06d723978232..3388a5d1462c 100644
+--- a/drivers/cdx/cdx_msi.c
++++ b/drivers/cdx/cdx_msi.c
+@@ -165,7 +165,7 @@ struct irq_domain *cdx_msi_domain_init(struct device *dev)
+ 	struct device_node *parent_node;
+ 	struct irq_domain *parent;
  
- /**
-  * struct irq_domain_ops - Methods for irq_domain objects
-- * @match: Match an interrupt controller device node to a host, returns
-+ * @match: Match an interrupt controller device node to a domain, returns
-  *         1 on a match
-  * @select: Match an interrupt controller fw specification. It is more generic
-  *	    than @match as it receives a complete struct irq_fwspec. Therefore,
-@@ -454,7 +454,7 @@ static inline struct irq_domain *irq_domain_add_nomap(struct device_node *of_nod
- 	return IS_ERR(d) ? NULL : d;
- }
+-	fwnode_handle = of_node_to_fwnode(np);
++	fwnode_handle = of_fwnode_handle(np);
  
--unsigned int irq_create_direct_mapping(struct irq_domain *host);
-+unsigned int irq_create_direct_mapping(struct irq_domain *domain);
- #endif
+ 	parent_node = of_parse_phandle(np, "msi-map", 1);
+ 	if (!parent_node) {
+@@ -173,7 +173,7 @@ struct irq_domain *cdx_msi_domain_init(struct device *dev)
+ 		return NULL;
+ 	}
  
- static inline struct irq_domain *irq_domain_add_tree(struct device_node *of_node,
-@@ -507,7 +507,7 @@ static inline struct irq_domain *irq_domain_create_tree(struct fwnode_handle *fw
- 	return IS_ERR(d) ? NULL : d;
- }
- 
--void irq_domain_remove(struct irq_domain *host);
-+void irq_domain_remove(struct irq_domain *domain);
- 
- int irq_domain_associate(struct irq_domain *domain, unsigned int irq,
- 			 irq_hw_number_t hwirq);
-@@ -515,16 +515,16 @@ void irq_domain_associate_many(struct irq_domain *domain,
- 			       unsigned int irq_base,
- 			       irq_hw_number_t hwirq_base, int count);
- 
--unsigned int irq_create_mapping_affinity(struct irq_domain *host,
-+unsigned int irq_create_mapping_affinity(struct irq_domain *domain,
- 					 irq_hw_number_t hwirq,
- 					 const struct irq_affinity_desc *affinity);
- unsigned int irq_create_fwspec_mapping(struct irq_fwspec *fwspec);
- void irq_dispose_mapping(unsigned int virq);
- 
--static inline unsigned int irq_create_mapping(struct irq_domain *host,
-+static inline unsigned int irq_create_mapping(struct irq_domain *domain,
- 					      irq_hw_number_t hwirq)
- {
--	return irq_create_mapping_affinity(host, hwirq, NULL);
-+	return irq_create_mapping_affinity(domain, hwirq, NULL);
- }
- 
- struct irq_desc *__irq_resolve_mapping(struct irq_domain *domain,
+-	parent = irq_find_matching_fwnode(of_node_to_fwnode(parent_node), DOMAIN_BUS_NEXUS);
++	parent = irq_find_matching_fwnode(of_fwnode_handle(parent_node), DOMAIN_BUS_NEXUS);
+ 	if (!parent || !msi_get_domain_info(parent)) {
+ 		dev_err(dev, "unable to locate ITS domain\n");
+ 		return NULL;
 -- 
 2.49.0
 
