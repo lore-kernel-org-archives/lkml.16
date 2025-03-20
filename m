@@ -1,216 +1,216 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A74EA22B598
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB96322B59C
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 23:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742514192; cv=none; b=qT6EcW8slzWMECCq0axUCVG43krQC79g1uxzXSOvxwjvjHdSOa+Isj5/8CwrzuWSZsWtaK2NMxUGNkNmVY3kdb+SSRLNzBHmsT3jSADlWaSdmCUuINvIJGIpon50zPrwWlwqeWKowRzx0AMA/02YIFJXsd/DwTv6ShPVWA8afxQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.10
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742514192; cv=fail; b=Of/q/bCbr4xuO/ezGe9wj17LGbwuzXsgwmnJGHqRxBIDsdCl0mMfEBJ1jKRuFLqGFaEnE94a9idintfShCAHcle4ccpGnMpUTT57FXZYgJHKDNvK/1sdRTNr4vqGmubQo6o/aSPMOZtGXpGf7+Ro0zgdgHPRzRRSXeGOsEsdc9I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742514192; c=relaxed/simple;
-	bh=xkbyojQodbOAEhETLU1zQWNpvzsyZ8UW18+79jCNagE=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=EG6qyWIO63M9h6YqyrH+SKGatU2XR9eoG+uwDi++F1PWn8CJNwhwpKSMO3+V2dCqf9CD7ax8Zx5eJxodZetK1AzGd/V6ctPOI/ZGuZlNue60RTAIRPX45UgLhnt4vROYp7ihCSFKRqgQST9bsEbfUM4rr3WvtyTy1dzkSQ8iOr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEOjxjxl; arc=none smtp.client-ip=198.175.65.20
+	bh=NxzRfW2zVX0amIAvvy0X/yYMvLneQv3YqmYluknLgIk=;
+	h=Message-ID:Date:Subject:To:CC:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=rfMkqdW3iBOa4AFlH1yp/0SvisXqwgaYJcxegEAlk0Iaqp2RNn8G7w90vaVUDHGn02BZVYN3R+4xD3kimiVsq7NrPJWmev8iHgoPzy7YvzjyCT6MWouypOIn7BBkWU+Ssq9TpJvQVoT5j7aMSNMpcIGWAGR6ZTUEoApXqx/tFoo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=fS0oJQKY; arc=fail smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEOjxjxl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fS0oJQKY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
   t=1742514190; x=1774050190;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=xkbyojQodbOAEhETLU1zQWNpvzsyZ8UW18+79jCNagE=;
-  b=gEOjxjxl0QdRUfptJd4SRA1TlvD+yUNDlpY7EHykRpUEexnRTTdgrNkz
-   z+IDvJMffn75AGmZNdfDEYgzoPDObNDMroxaYaAXzqNbWf2E7Pem7aIGy
-   YJzt1NxbtI0DYjc55NNqgjw+y425uIc92QcOviO0V4ZXmqlSfkBICi6E+
-   EjCj4P17NyQHhs8LRmNBQ5PzhLRrSgmTQVplHTgZf90v/6fWvLhWq/9bi
-   oOv1euFIoedTLsZvhYqox/LNyFP5Rz723HPN+fJ7PV4sOhitMHBJHi8+v
-   HIi47WWSAGd2o1hxXTflF3gtD9j/gi9MUht/xaNQXF0MNZvklcGLYMtvA
-   Q==;
-X-CSE-ConnectionGUID: 2Wr2/YabSxeTb0ZzGnSaSQ==
-X-CSE-MsgGUID: OOBV3DU2Qw6nzZM2KmWPtg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="43502583"
+  h=message-id:date:subject:to:cc:references:from:
+   in-reply-to:content-transfer-encoding:mime-version;
+  bh=NxzRfW2zVX0amIAvvy0X/yYMvLneQv3YqmYluknLgIk=;
+  b=fS0oJQKYN3CAABQAkvj64wscMQdw5whP95iwKQFfizCY2s5CZKVCnOKp
+   9G1MIgkBnhq8qLPz26RIm+C8r0xZe8tye7ZYOBkmXpC2mkLvjS0eUSJW+
+   N1kcvl1URDIO05AaAuxbxwSn5qilgOtIvJ8BmpmbMXxIE/CCR3c4N5dGK
+   qVdYE+tq9wQVA0Ksg9TY9uflWgiYJpvJL5KnUywEklF2A54qxXnQ3pUt8
+   FIcIlBtT/UX96JK5WihjqIymHtJhGNy72JPodDRpchj2WEo3J6hg2zzlJ
+   36EPouxuykVh8rxCrezfuwMkaFSB85umO9ehhxRH8M9X1y3BzbuI7UZqY
+   w==;
+X-CSE-ConnectionGUID: lKLpYtv9RlCmR4oQD9CxQA==
+X-CSE-MsgGUID: f3D3act/SSuPZ8EdmvweZA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="55154442"
 X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
-   d="scan'208";a="43502583"
-Received: from orviesa009.jf.intel.com ([10.64.159.149])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 16:43:10 -0700
-X-CSE-ConnectionGUID: NtbQglzHSuWh3zuFsxOgYw==
-X-CSE-MsgGUID: BVQRnDeoQVuDAoWxQKNHzg==
+   d="scan'208";a="55154442"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 16:43:10 -0700
+X-CSE-ConnectionGUID: owDcERVeSOCMuF9d0cvAJQ==
+X-CSE-MsgGUID: 4//3CXCxS6yu2tDwwqQeSg==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
-   d="scan'208";a="122962938"
-Received: from cbae1-mobl.amr.corp.intel.com (HELO cbae1-mobl.intel.com) ([10.124.161.68])
-  by orviesa009.jf.intel.com with ESMTP; 20 Mar 2025 16:43:10 -0700
+   d="scan'208";a="128355354"
+Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
+  by fmviesa004.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 20 Mar 2025 16:43:10 -0700
+Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.44; Thu, 20 Mar 2025 16:43:09 -0700
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14 via Frontend Transport; Thu, 20 Mar 2025 16:43:09 -0700
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (104.47.56.45) by
+ edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.44; Thu, 20 Mar 2025 16:43:08 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=U/8YWkrkwtBhwuWcu7LxEEk40LqCYakVT/vyEdgwqvImOhz5cO/gNi9t8biKxRh5dp3gyXgcLAVme5HX6347iFEX0D8PC9pr+gaK6OkHsrNgC8SAggom25nR+SRwzmlzcvDvjmFXAAd/5O0S87z0d/mP+uuZfRvuxLJKcwCOkd4uRtYjmZj/8dL4DpT6MTBuaMvSOzSjm+LACHeTE1KqM1Ld83mKmzrNlf1ZQGc7qALjJgfXPGh2KnGSKhvWYSxhCGu+LIZu5df917eSnzyTf2LyZbGDGrHM1EzWKoT39NaKsZvGhz/Y/9766jPxSOhKnNDgCxx6Buy/VoDfhn1ZZw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1l7Jo/QSiNkejuT+3HnOBkxt0iAwZn8Pn+pJcp4qYgQ=;
+ b=xlbRu8fOQZwOs51RF3Nx6yAOMlq1CMClNNCIHdvau9jA6jCO/ASoC58VskmJy6IYbmJQsASnFFeRShIZz8GRB1+jnpEPz6HBReq4xNy1v7McOg6Cmxb2hOUI/1xtFL59fWcafb8CLtRVco3uJV7Ix8yAG0+O2I3RJeumsn9ZuxyuYZ+6q5LvBTO4DEupfLhIbuHiDUu7rrBLwcnUGZ6gJ9kjCwUpxo/APRAvlyqqshlTadeGeTtbbTAgbFAjtX9HE1FJC0ibmOSCCjV9oX5FdzJvKB7cFpUTllOqRny+9cbd/+HLF+4juhHQg/nWxnjNSzGyoAumGoo5E07I7Xp3rQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from DS0PR11MB7925.namprd11.prod.outlook.com (2603:10b6:8:f8::18) by
+ SN7PR11MB6798.namprd11.prod.outlook.com (2603:10b6:806:262::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Thu, 20 Mar
+ 2025 23:42:39 +0000
+Received: from DS0PR11MB7925.namprd11.prod.outlook.com
+ ([fe80::b1ef:c95b:554d:19c9]) by DS0PR11MB7925.namprd11.prod.outlook.com
+ ([fe80::b1ef:c95b:554d:19c9%6]) with mapi id 15.20.8534.034; Thu, 20 Mar 2025
+ 23:42:39 +0000
+Message-ID: <99fe30bc-47cf-4910-bd80-3eb743ef0548@intel.com>
+Date: Thu, 20 Mar 2025 16:42:37 -0700
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 5/6] x86/microcode/intel_staging: Support mailbox data
+ transfer
+To: Dave Hansen <dave.hansen@intel.com>, <linux-kernel@vger.kernel.org>
+CC: <x86@kernel.org>, <tglx@linutronix.de>, <mingo@redhat.com>,
+	<bp@alien8.de>, <dave.hansen@linux.intel.com>
+References: <20241001161042.465584-1-chang.seok.bae@intel.com>
+ <20241211014213.3671-1-chang.seok.bae@intel.com>
+ <20241211014213.3671-6-chang.seok.bae@intel.com>
+ <fac46937-e0a5-42c1-96ee-65fec4e17551@intel.com>
+Content-Language: en-US
 From: "Chang S. Bae" <chang.seok.bae@intel.com>
-To: linux-kernel@vger.kernel.org
-Cc: x86@kernel.org,
-	tglx@linutronix.de,
-	mingo@redhat.com,
-	bp@alien8.de,
-	dave.hansen@linux.intel.com,
-	chang.seok.bae@intel.com
-Subject: [PATCH RFC v2 2/9] x86/fpu/xstate: Introduce xfeature order table and accessor macro
-Date: Thu, 20 Mar 2025 16:42:53 -0700
-Message-ID: <20250320234301.8342-3-chang.seok.bae@intel.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250320234301.8342-1-chang.seok.bae@intel.com>
-References: <20250227184502.10288-1-chang.seok.bae@intel.com>
- <20250320234301.8342-1-chang.seok.bae@intel.com>
+In-Reply-To: <fac46937-e0a5-42c1-96ee-65fec4e17551@intel.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: BYAPR07CA0032.namprd07.prod.outlook.com
+ (2603:10b6:a02:bc::45) To DS0PR11MB7925.namprd11.prod.outlook.com
+ (2603:10b6:8:f8::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS0PR11MB7925:EE_|SN7PR11MB6798:EE_
+X-MS-Office365-Filtering-Correlation-Id: 643b0bef-7e6c-45b9-faba-08dd6808e647
+X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info: =?utf-8?B?RHA4L0tXenV4bWc1eDFXUkw5QVpCU3c5UmtZWjhwOE4yai9BVEJ5VnE4N1c0?=
+ =?utf-8?B?cEx0UlRWNU5HNE1HWi9wQUFVVnJMallLN0RMOVBhUUdSUWZ3QTR0NkJZbW5y?=
+ =?utf-8?B?SW9vUlhhMG9EbDU5MXltR3pKcTZkVjF4Zmw4VTgwTm9NOWYrUDVQbVZDcWVO?=
+ =?utf-8?B?SHdhZGJyMnM5RXBVM2ltbW9TZ2xFS0MvV1VRT2d4blBqQVdsd2FtcWNsc2hD?=
+ =?utf-8?B?a3l2U1hNd2QzNWdtcWk0M1VyZVhGNS9pd210dDlGYnFrNXVmcGFJQXZibnBw?=
+ =?utf-8?B?QWxSYlN5M1plKzh0ZWdjRFF3WTFHaGZNMDJqTGlPSWR2Z01rdnBEL3hDNWE0?=
+ =?utf-8?B?SGFQdXBLU3EzNVBmQUpycjVRNDA2NlE5aUFoa1J3UGtzdUJCQmhwUGw0bVZt?=
+ =?utf-8?B?QmljTWtxcWJrV2RPQ1BtQmRDVzhsTUlhTStMUWZHWTRlVGZVTytyZ0JwNS9l?=
+ =?utf-8?B?ZkY4YWlkMHQ1Qm5ZR3BOZ1VMcGdESnRqbFF6dktzRFFHNHhwTlJzRHA0clp5?=
+ =?utf-8?B?aGlKZStBa1lrME9yc1kxaHo1TWpaWi8ydWpqNE9xeFRtUGIwYVhEZFRWRG03?=
+ =?utf-8?B?d3F0OGpiVVNHdEZBS2ZLSzZUL2w5d2RoK0dsQ3Q3QXlTekhZai9CNWErMHAv?=
+ =?utf-8?B?ZmxzVGtSU1dYazFJN2lkSVNCY0NhR3dxQkRTbmhydTZlaUJaWVBQTkhuM0hU?=
+ =?utf-8?B?dnlEMXdySDNKM1A0RHZURzNwL0JHcWZSNkdiOWEzdHZHWXl1WGxVMjlyMTNM?=
+ =?utf-8?B?ZUE0MTlkdmFsbDdvMjh4MFgva3FJOWNtR2VoalFhUXc2UXBkZFhPU0pxeU9B?=
+ =?utf-8?B?RTB6QlJPNEllM3lUajNIckp5aFBFalFud1dXZ0xHUjZWTXl0ZFJNNUQ5K1NE?=
+ =?utf-8?B?SHZxYXJKWW00TEtUNHpBdjllSjR4SEdtdGZObjdQNjBWL0lBRisrSnhHdEhu?=
+ =?utf-8?B?OThEV0hLdm0zK3lOK0pvN3NVb0grK0dMamdHV0gwaTAyc2VwZnBBMCthQVFj?=
+ =?utf-8?B?R1l0NXRXRWxPQzRLRjRjdlRTeHkrOU0vUkxTbGc3S3liV3RKSldIZFlqY1NG?=
+ =?utf-8?B?YmZONWl5Zkw2SW9FbWg5NktBMFh5Z1U3TnU0SVUyNGw3d2dxak91bTNsTnJX?=
+ =?utf-8?B?RnZyTUhZQmpTRWVSQ3grTkE2MmxmR0dmMXRzSGJwZTZmSXk5TkpqbFZGeGcw?=
+ =?utf-8?B?Q1ZJOTluWTcrYjJ0aWwraldZOG9yQXlXRUF1M3l6RHZKOUlQWkp3NFlETERS?=
+ =?utf-8?B?SlpDSTJ1WUdBVlM1c1U3LzFubXlKV3l5WmhRbUZLUzNLeGdIcnY0MHFnMWI5?=
+ =?utf-8?B?RFVJZlpGOTZGZ2hUSXFqTWpMalNudGNYbm04d3FLUFBwdk9EVTdoSGsxbWVh?=
+ =?utf-8?B?bzNkT1dSbnh5ZnhkZ3lQNG1zUlU4L1JrQTg0ckNkcU42aUFDWDVJY3lvZUw0?=
+ =?utf-8?B?TFVFaWE3U29tbVdqeHVqdit3QzRVUytLOWJoU3Z2RmdZeWRBMDBTYkowWTls?=
+ =?utf-8?B?TzRWSGhuQUNGSHo5SXAvaGJBOWNrcXpEVVJIcFcvMUwyQUtJMWFQVjlDNzRE?=
+ =?utf-8?B?V2JuNEZYZG5jbzl5akEzSWxZMXhCUWp6RFZpQTYrZG5ldmJsbjk5SkZGY3Rs?=
+ =?utf-8?B?VUVYYmVEUWtRZkFwWXNIREpLZGdFaDY3a2hOOGNZbk84TDVTMWYzeFpYSWVl?=
+ =?utf-8?B?UURqcFpiLzJFeGg4VWN5ckZpSzdmR3ZoRTJuS1lPamhZVXk3TDRxZTRzTko4?=
+ =?utf-8?B?N25yb0luMjNnNXJkNERtaVJpRnhmMk1tb2E5WHpmWXppNHUvUGpuWHl0Qzh3?=
+ =?utf-8?B?Yk42VVlUczVCZmExQ2ZpUnY1YzllRDdkQVFnU1BleVJMbUxab1RSVWNOYk5Z?=
+ =?utf-8?Q?J5lGylZDUcgZB?=
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR11MB7925.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(376014)(1800799024);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?UTI2VDE0dXgrbnl5M1J2THdhWXBkUGNHeTNPN1AzQ09RNVpYZTdjdHZqVWNa?=
+ =?utf-8?B?b0pWL0xGZE5UL1pHVmU4eU5EczlqQzJyL2dVWUxZMkprcXJBWjBSdXNURHA5?=
+ =?utf-8?B?amRacERDZzUwM0NYY0NEYXMraG8vVHJHRnZmMTE5SzFKRGhZT1pqbE1ZSGZ5?=
+ =?utf-8?B?L2p0RVl5Y2pDNkJQakdXUW5ydDU5WWp1TG8yS3AvS0h6Y2dCYnkvKzVrOGFS?=
+ =?utf-8?B?ZzA3Yko5RWEvd0w1MlZvdjZHcVV6SjdERWZBcXZhVHBlcDhoR29MZ1pHRTIz?=
+ =?utf-8?B?L3RFWjNiSWdIOWUzQnFMSXJTc3o1OG9KdVNqZDJ4ell6VVpLUDUyMXlGSUJl?=
+ =?utf-8?B?T3RFWUVJa3ZjZXVDN1dnQlRkMURLVlJmckJ1WCtJTVhRMUNWRm1DM0QwWWhO?=
+ =?utf-8?B?bFl3UE1ncFpwb0FYSHNjYjlvRFJnRnBZRmNVNFJnbnJYM1k0UEhOWHMvOUkr?=
+ =?utf-8?B?cUo5ckE2SFlvUEZkNC8xWFprMHVERnJwZTdkb3VDZE4xS3JNU2lWdE5vUHI2?=
+ =?utf-8?B?MDBkT1p0NkRVUXliYSswajZKRnQ3cHRHUENOTHljd0taMEtSb2tzRlY1VTls?=
+ =?utf-8?B?MzhJMVRNdC9vTmR5Tm83bHdZcHJnYnhkVzVEYytxRWVWZGxZSVhDVCtzZldl?=
+ =?utf-8?B?Z2V5QlRjak5KdUdpa0pRY05kT3N2S2NIemM0ZVorcGhJb1g2Skp1Z0RoaEV0?=
+ =?utf-8?B?dzlOMTN5eWMvNW8rSE9LWS82YTBFNTVaai93K2RJU01nR3BsUHM5dmh6Nm1t?=
+ =?utf-8?B?Y0J6MThFekUyWThUWmwvWXRCOGxNRVcxQ244cVlvTFBSblJyblhidzRuWmVw?=
+ =?utf-8?B?ZGxDTkR6alFFQWd4Z0RSb2FaTkZQc2h2QnE1TGh0c0JtNUVxWWVNMXZLV3Mw?=
+ =?utf-8?B?ZGFwRzJpZnU4dUZUcVFqT2QyYUVBVEpyVW9zellPdndiZW12ZGZ3TnBJYWNM?=
+ =?utf-8?B?T0dpUlBSYnJZb3Q0VHlldlFwcXFRQXRna2RPNWlmbVJHSm9jQUFmN1NDUnBM?=
+ =?utf-8?B?VENRTUpGOEliWjNUbHNmMHR5ODFLYmgrS1BGZ2UyMnAyWUc2aXhOczJNNWNQ?=
+ =?utf-8?B?UG1kaXl3UGdRZ0tUQ3drSnBZZU1kNmFHOTBZMEtaZFF1YTNycmlwQUUzeVdj?=
+ =?utf-8?B?Y2wwVlVTdkhqaEQ0YWdTbnZwNkMyTXlQdy91WWRqYzRsYWVCVmFkVXNQcmxx?=
+ =?utf-8?B?cnVWbUV4THVuN3cydllIbGY1ZmhxYnZGc042SkdyeXduVUFKQ0hvNk9DVlBT?=
+ =?utf-8?B?U0llaU00Y09lMWh4SHRNYkh0Zm1ydDJCQWlNQnl0a1BxNXFUbWFSdVZWNmtr?=
+ =?utf-8?B?QXdrbDFRbzNxcThZaGdsMlUvWTJjbmNqRUUwdUFwRk9HZExXSTUwMHZxYWpT?=
+ =?utf-8?B?VFpjQnpURlc2enlvd3pacVh0UlVxQ1JxWTZzajg4MGc1SUF1TFB5SGViNkRY?=
+ =?utf-8?B?dGtnSXJ0RStnbkVlZnpzb0xPdk1CdUhaZlVLQlRLMUN0SzNEZ1J2SDQzcU10?=
+ =?utf-8?B?aVRTa3NNQlhuLzZJMnNkT0E4NmVGOWx6aHpubVltSzZpUkdqZ044dXJwS2lM?=
+ =?utf-8?B?cG9WRVNteEJwSEFQeXlkajZKYkVKUkJOYVdiWDlaMUU3UFF2UjI1Tk9qeGFp?=
+ =?utf-8?B?Q0FKU1dxRzZKemxlZnkvUnQ2MzduZ1hpVVk2OTRsTi9XYU4xeThOcVBxbUJK?=
+ =?utf-8?B?RXkxdU94N3VrdGdETXMvbUNDR1dzYzlWUkRPcmxxQ0dHNkp0b2RnVU8vVGZz?=
+ =?utf-8?B?dDJ4dDlhWWwzQXg2emNLN3l3TXZPVTkyTGMvRWNRVDNNNUhxNG8wTlFja1I2?=
+ =?utf-8?B?cm05N2EzakVrM0pDNThmNGFlcFk1SnowMnZlTFdoYkRBc2VGY3hGOTVhSzFs?=
+ =?utf-8?B?OG5EcUtLZjJKUWZWa0tmMERsSnNOemMwTlN3QVBSclNmcllXOVozSDZycng4?=
+ =?utf-8?B?Lzh3K3FPbTl3dGx2bWZjYmNCQUZ1S0ZrY0UvMlJ0UjJ1VmJaNWhJcWE1OGhn?=
+ =?utf-8?B?RTdmNXVoSEFYVTdwT1N6Rm5XbFlLdzlqdVJCdXB6UXZjeVUwcmJTeVNnckxP?=
+ =?utf-8?B?N2doODhIaXJpa3E3WU12MmJXRFVKVDhtaGhDN01UbUU3NkwwYk9sK0JwR0l1?=
+ =?utf-8?B?U0RUUUlFNjM0QUFGS2EwRzJBVVV2d0NSWldSV1hiUWduRWNhSzhYclJWaktN?=
+ =?utf-8?B?K3c9PQ==?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: 643b0bef-7e6c-45b9-faba-08dd6808e647
+X-MS-Exchange-CrossTenant-AuthSource: DS0PR11MB7925.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 23:42:39.0690
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: MtD9+CdgCil++DazzFSkptg0okIi4hDJKQQbleFgfXHqtMUofzQOELYOH9hQT3rkBa4rO+rhqjJrudOpD1V5QPeQNxF2NH4cTyrQ6l0xej0=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR11MB6798
+X-OriginatorOrg: intel.com
 
-The kernel has largely assumed that higher xstate component numbers
-correspond to later offsets in the buffer. However, this assumption no
-longer holds for the non-compacted format, where a newer state component
-may have a lower offset.
+On 2/18/2025 12:54 PM, Dave Hansen wrote:
+> 
+> BTW, is this kind of read/write normal for MMIO reads? It looks really
+> goofy to me, but I don't deal with devices much.
 
-When iterating over xstate components in offset order, using the feature
-number as an index may be misleading. At the same time, the CPU exposes
-each component’s size and offset based on its feature number, making it a
-key for state information.
+Yeah, looking at some device code, functions like memcpy_toio() and 
+__iowrite*_copy() seem to assume sufficient MMIO space to copy data from 
+kernel memory. I also noticed that some other mailbox code calls back 
+one of these functions.
 
-To provide flexibility in handling xstate ordering, introduce a mapping
-table: feature order -> feature number.  The table is dynamically
-populated based on the CPU-exposed features and is sorted in offset order
-at boot time.
+So, I think your assessment is correct:
 
-Additionally, add an accessor macro to facilitate sequential traversal of
-xstate components based on their actual buffer positions, given a feature
-bitmask. This accessor macro will be particularly useful for computing
-custom non-compacted format sizes and iterating over xstate offsets in
-non-compacted buffers.
+   > To me, it's much more akin to talking over a serial port than how I
+   > think of devices attached via MMIO.
 
-Suggested-by: Dave Hansen <dave.hansen@linux.intel.com>
-Signed-off-by: Chang S. Bae <chang.seok.bae@intel.com>
-Link: https://lore.kernel.org/all/7fa02be2-0884-4702-ae73-a3620938161b@intel.com
----
-RFC-V1 -> RFC-V2: Populate the order table dynamically (Dave).
+Certainly, this staging mailbox looks somewhat similar to a serial port. 
+I suspect the staging portion is quite resource-limited. That appears to 
+be one of key characteristics of this interface, which I should 
+highlight more comprehensively.
 
-This introduction lays the groundwork for handling APX, which is assigned
-feature number 19 but appears immediately after FEATURE_YMM in
-APX-enabled systems. Older CPUs, such as Skylake systems, previously used
-this region for MPX.
-
-Later in this series, APX and MPX will be explicitly marked as mutually
-exclusive to prevent conflicts. Since the xfeature order table is
-dynamically populated at boot, it will reflect the correct feature set
-for each system configuration.
----
- arch/x86/kernel/fpu/xstate.c | 58 +++++++++++++++++++++++++++++++-----
- 1 file changed, 50 insertions(+), 8 deletions(-)
-
-diff --git a/arch/x86/kernel/fpu/xstate.c b/arch/x86/kernel/fpu/xstate.c
-index 542c6981180d..1e22103a8e17 100644
---- a/arch/x86/kernel/fpu/xstate.c
-+++ b/arch/x86/kernel/fpu/xstate.c
-@@ -14,6 +14,7 @@
- #include <linux/proc_fs.h>
- #include <linux/vmalloc.h>
- #include <linux/coredump.h>
-+#include <linux/sort.h>
- 
- #include <asm/fpu/api.h>
- #include <asm/fpu/regset.h>
-@@ -88,6 +89,31 @@ static unsigned int xstate_sizes[XFEATURE_MAX] __ro_after_init =
- 	{ [ 0 ... XFEATURE_MAX - 1] = -1};
- static unsigned int xstate_flags[XFEATURE_MAX] __ro_after_init;
- 
-+/*
-+ * Ordering of xstate components in uncompacted format:  The xfeature
-+ * number does not necessarily indicate its position in the XSAVE buffer.
-+ * This array defines the traversal order of xstate features.
-+ */
-+static unsigned int xfeature_uncompact_order[XFEATURE_MAX] __ro_after_init =
-+	{ [ 0 ... XFEATURE_MAX - 1] = -1};
-+
-+static inline unsigned int next_xfeature_order(unsigned int i, u64 mask)
-+{
-+	for (; xfeature_uncompact_order[i] != -1; i++) {
-+		if (mask & BIT_ULL(xfeature_uncompact_order[i]))
-+			break;
-+	}
-+
-+	return i;
-+}
-+
-+/* Iterate xstate features in uncompacted order: */
-+#define for_each_extended_xfeature_in_order(i, mask)	\
-+	for (i = 0;					\
-+	     i = next_xfeature_order(i, mask),		\
-+	     xfeature_uncompact_order[i] != -1;		\
-+	     i++)
-+
- #define XSTATE_FLAG_SUPERVISOR	BIT(0)
- #define XSTATE_FLAG_ALIGNED64	BIT(1)
- 
-@@ -209,13 +235,20 @@ static bool xfeature_enabled(enum xfeature xfeature)
- 	return fpu_kernel_cfg.max_features & BIT_ULL(xfeature);
- }
- 
-+static int compare_xstate_offsets(const void *xfeature1, const void *xfeature2)
-+{
-+	return  xstate_offsets[*(unsigned int *)xfeature1] -
-+		xstate_offsets[*(unsigned int *)xfeature2];
-+}
-+
- /*
-  * Record the offsets and sizes of various xstates contained
-- * in the XSAVE state memory layout.
-+ * in the XSAVE state memory layout. Also, create an ordered
-+ * list of xfeatures for handling out-of-order offsets.
-  */
- static void __init setup_xstate_cache(void)
- {
--	u32 eax, ebx, ecx, edx, i;
-+	u32 eax, ebx, ecx, edx, xfeature, i = 0;
- 	/*
- 	 * The FP xstates and SSE xstates are legacy states. They are always
- 	 * in the fixed offsets in the xsave area in either compacted form
-@@ -229,21 +262,30 @@ static void __init setup_xstate_cache(void)
- 	xstate_sizes[XFEATURE_SSE]	= sizeof_field(struct fxregs_state,
- 						       xmm_space);
- 
--	for_each_extended_xfeature(i, fpu_kernel_cfg.max_features) {
--		cpuid_count(CPUID_LEAF_XSTATE, i, &eax, &ebx, &ecx, &edx);
-+	for_each_extended_xfeature(xfeature, fpu_kernel_cfg.max_features) {
-+		cpuid_count(CPUID_LEAF_XSTATE, xfeature, &eax, &ebx, &ecx, &edx);
- 
--		xstate_sizes[i] = eax;
--		xstate_flags[i] = ecx;
-+		xstate_sizes[xfeature] = eax;
-+		xstate_flags[xfeature] = ecx;
- 
- 		/*
- 		 * If an xfeature is supervisor state, the offset in EBX is
- 		 * invalid, leave it to -1.
- 		 */
--		if (xfeature_is_supervisor(i))
-+		if (xfeature_is_supervisor(xfeature))
- 			continue;
- 
--		xstate_offsets[i] = ebx;
-+		xstate_offsets[xfeature] = ebx;
-+
-+		/* Populate the list of xfeatures before sorting */
-+		xfeature_uncompact_order[i++] = xfeature;
- 	}
-+
-+	/*
-+	 * Sort xfeatures by their offsets to support out-of-order
-+	 * offsets in the uncompacted format.
-+	 */
-+	sort(xfeature_uncompact_order, i, sizeof(unsigned int), compare_xstate_offsets, NULL);
- }
- 
- /*
--- 
-2.45.2
-
+Thanks,
+Chang
