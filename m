@@ -1,179 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03F6C221542;
-	Thu, 20 Mar 2025 11:46:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B2C3221542
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:46:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742471161; cv=none; b=flB+Q0pHF2selRurXOvFPj76GKZZYGetcn/8Cg0BqX/YVZRk524mdDdvUveOIcAOP9R/2x960LemEuDuF0lmWJvd0Mg1abvN8G2yzxvkvpLMl80QAOMo4Q2KsHDNhCEaKzzYAn0RFGYKmQiuuRaDAwseFpF09XM/vpgPYf2HQO8=
+	t=1742471169; cv=none; b=N8KhBHM4/9HH83hqN8giCsKn2AAjj6BQvKOymnA7riB94JiSxUH/lELLdWD2QaE3XHJrqVuAFQv1DVOygPZQIFZSuk1PDa4RJaNd88WfRz07Ilpc+qlrg4FjZGhg94A/gq/Dp5UKXCseIGFPcIPDf5ypkIR3/UiAbH0Jh3Qz3b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742471161; c=relaxed/simple;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ez6rXfyaQYevTXm/P8FherXIlnUTO0dN3m7TQUbYIJgNHlklT2+UqVcVHU6xo0FNsgbVo4dcZ18eMUQDI7/HbtVTTGDeHMyr1aMqGU5TPUwaVJOA/OhnT8RACYzebPDvqcIizC7Vr7V8Qt4iCzuH1ZvbU9gzBjlSkwtWy97mxdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMD/8a8g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742471169; c=relaxed/simple;
+	bh=K3uUC4fl0Wd5qXU848rirln8bzCs66S0l5k9oxU/V9w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=MjZyaMb1JT9vyiEjaCU84pV5+DYdyi09pSVM0vCfe63qugGUJKUT+wNyFjVzTW+Lb8h7RjXW63H0bxTu5LF7RPuzncH1SFWROy1xTuE5e/OLWmV9v04NHGkWCVxp4WExLI+rB2L6Q+ExqFNHPafVJwSauDoupjJooCy/hRxOGs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GJcXTcd5; arc=none smtp.client-ip=209.85.221.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMD/8a8g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2F78C4CEDD;
-	Thu, 20 Mar 2025 11:45:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742471160;
-	bh=ILfVuLymqUPwgpbXMf4YH+PUBfgIPrXUs3zMoGXuMG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QMD/8a8gvfJF+IiruTKc0XWKt39h4xGxNtbA7nz29syUP06DIyVzZYGTQYaSvCKxe
-	 scIIoC9XvcNQSLjQ8WWt7l+4Iplav2LDHIokZVKyBPDwVL0ZHsNR4hvxbbex3UCAep
-	 EmyUDBBOeFjsBgTV1QNBZy2YJRuYIKFE0gS8p+J7hOXU8PidmdpGuQqiwPsroSv/dC
-	 bOXc55xit9YNiMmKiuzHy7MYWH0LVPf90CYBS5OcploKpR2x4MOwOsg4RGRewrrl5A
-	 7iN6F3Fesbqx8j71iaCquXjH0Hbb3iu9tDKupIhzYbH+jABNKcFbVDCDoKp5r9DcOW
-	 55Ar73EfzkEWw==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Subject: [PATCH RFCv3 21/23] selftests/bpf: Add 5-byte nop uprobe trigger bench
-Date: Thu, 20 Mar 2025 12:41:56 +0100
-Message-ID: <20250320114200.14377-22-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250320114200.14377-1-jolsa@kernel.org>
-References: <20250320114200.14377-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GJcXTcd5"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3965c995151so346645f8f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 04:46:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742471165; x=1743075965; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7W3HPSMP4f2CiNLUVG9hzYOpX9Z/+7n96rGcD94rGNM=;
+        b=GJcXTcd5BPkvUUGYBjC3h288rLOv7u91I8sVXkQ25dlycTGtGvZSiH7IyNhCHwO2tb
+         aNWolJXfaEkKE+7m3XMZoIuCrapwbqUMLLklBWD1Igy5E/yEaaIWNfHWSD3U++cyssZE
+         0KJoBvC+ttSOREnatdnFLlb22GMnZ48Rzi46ipVZYsARDbAEPTvbp0cVbGa7SSP7Kz7o
+         f2guzb0JfJn7ojKGOS5RnZarDPsuaL4EMpXOoJI+1CEZkJ/iFeo+8oCqry5aCZk/u+UJ
+         sDdboddIVJ969haMmRCM8yA9nYZOAnL+k3u5i1BjubxkZHe06jqwEiLbWCPEkdq00vr8
+         YnKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742471165; x=1743075965;
+        h=content-transfer-encoding:in-reply-to:from:cc:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7W3HPSMP4f2CiNLUVG9hzYOpX9Z/+7n96rGcD94rGNM=;
+        b=e0BxYRgqqlS2m21RlQSZ8qJllF/6QFLHzE8QKvL2gusuck0DtD0VAaqBwPmQYmLrYN
+         A2jAPdYPo+dfYRQfLpQTvHNz8gOftNNL80ehf5jUp7ai96iqciDDAOaQkGoMiuqAsL0u
+         nLL7ZQl5waH2eSQqv8J93LQ8jvzq3QGkVAfHqJTGBJ1sc243U3YHfPM7f1+ZrRdg3iv9
+         xBBhEIKTrY0Z8RtyYHiNl7RXJo25Z/cxb87ue5mDcCZSai84ybLYAmTXfi02eQUsWq0C
+         AO8bo4hpdlD438jLdWiio5IPwZ3JN6M7CinNkl3JQJrhANM7SexchU2z0Iz11IoGMBzH
+         l6ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCWWSNLjycl4Gza7o9v7qWyZKhsmh294KhP8OzhnfxQWDyp7Bb4jUrCVjbEGqdXCFrKlwZIUN4pf+M2PA/Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxfX3Z7hQX33g1jtlNhG391XoepneZ+pJNSWHjzU6pjd00NRjLM
+	pfIvYrSuhbzpXSmMYR+Jx9KJ5YjVZxFgRQXf7tA3O0aSolHNlQaNRfrn9yKbdlQ=
+X-Gm-Gg: ASbGncvZZyv/cXd/ziIfArt6BvbGhv1gEQcvJGFylmXYdZy4Vouebv007da+3YqUiT0
+	A5j2EFiPKE82AQnZS54iIZB/XKmIpkRUDv/BUk/tQezJXR3ghuFiytTkux1+loGEUOizgjpWyXl
+	LnnmYkWrFt3TAmulLOUUqg6bTfBVnytYZoJvxb3w54tZZJzXvCsJcx1YikQaeDybs19oA6Qhi+4
+	5G14QF9A2xaRe/K3WA3ZvJGxpGZ1u64YZHFA3BxGy1BGXKmpe6xZusp3V5V/GUN6q3+v87Aonh6
+	p/212lGjGFjkyHGtH/n5x/1R20NmAXAYFxfQqwG+vZCcBNZjFuOZtQ==
+X-Google-Smtp-Source: AGHT+IGcFNWraQoMB1oIelQ6Jpm900cEnPwSNonv9rK3S5bnytIvFEX4bYUOeHVyZIaHtwEF8g3fiQ==
+X-Received: by 2002:a05:6000:1a87:b0:391:48d4:bd02 with SMTP id ffacd0b85a97d-399739d7c73mr5449932f8f.29.1742471165180;
+        Thu, 20 Mar 2025 04:46:05 -0700 (PDT)
+Received: from [192.168.1.247] ([145.224.67.123])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c8881213sm23046180f8f.42.2025.03.20.04.46.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 04:46:04 -0700 (PDT)
+Message-ID: <06233fa3-0663-4861-8fd0-ca30806d38a3@linaro.org>
+Date: Thu, 20 Mar 2025 11:46:03 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] perf build: Use -fzero-init-padding-bits=all
+To: Leo Yan <leo.yan@arm.com>
+References: <20250320105235.3498106-1-leo.yan@arm.com>
+Content-Language: en-US
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
+ Namhyung Kim <namhyung@kernel.org>, Mark Rutland <mark.rutland@arm.com>,
+ Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+ Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
+ Adrian Hunter <adrian.hunter@intel.com>,
+ "Liang, Kan" <kan.liang@linux.intel.com>, linux-perf-users@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+From: James Clark <james.clark@linaro.org>
+In-Reply-To: <20250320105235.3498106-1-leo.yan@arm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add 5-byte nop uprobe trigger bench (x86_64 specific) to measure
-uprobes/uretprobes on top of nop5 instruction.
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/testing/selftests/bpf/bench.c           | 12 ++++++
- .../selftests/bpf/benchs/bench_trigger.c      | 42 +++++++++++++++++++
- .../selftests/bpf/benchs/run_bench_uprobes.sh |  2 +-
- 3 files changed, 55 insertions(+), 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/bench.c b/tools/testing/selftests/bpf/bench.c
-index 1bd403a5ef7b..0fd8c9b0d38f 100644
---- a/tools/testing/selftests/bpf/bench.c
-+++ b/tools/testing/selftests/bpf/bench.c
-@@ -526,6 +526,12 @@ extern const struct bench bench_trig_uprobe_multi_push;
- extern const struct bench bench_trig_uretprobe_multi_push;
- extern const struct bench bench_trig_uprobe_multi_ret;
- extern const struct bench bench_trig_uretprobe_multi_ret;
-+#ifdef __x86_64__
-+extern const struct bench bench_trig_uprobe_nop5;
-+extern const struct bench bench_trig_uretprobe_nop5;
-+extern const struct bench bench_trig_uprobe_multi_nop5;
-+extern const struct bench bench_trig_uretprobe_multi_nop5;
-+#endif
- 
- extern const struct bench bench_rb_libbpf;
- extern const struct bench bench_rb_custom;
-@@ -586,6 +592,12 @@ static const struct bench *benchs[] = {
- 	&bench_trig_uretprobe_multi_push,
- 	&bench_trig_uprobe_multi_ret,
- 	&bench_trig_uretprobe_multi_ret,
-+#ifdef __x86_64__
-+	&bench_trig_uprobe_nop5,
-+	&bench_trig_uretprobe_nop5,
-+	&bench_trig_uprobe_multi_nop5,
-+	&bench_trig_uretprobe_multi_nop5,
-+#endif
- 	/* ringbuf/perfbuf benchmarks */
- 	&bench_rb_libbpf,
- 	&bench_rb_custom,
-diff --git a/tools/testing/selftests/bpf/benchs/bench_trigger.c b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-index 32e9f194d449..82327657846e 100644
---- a/tools/testing/selftests/bpf/benchs/bench_trigger.c
-+++ b/tools/testing/selftests/bpf/benchs/bench_trigger.c
-@@ -333,6 +333,20 @@ static void *uprobe_producer_ret(void *input)
- 	return NULL;
- }
- 
-+#ifdef __x86_64__
-+__nocf_check __weak void uprobe_target_nop5(void)
-+{
-+	asm volatile (".byte 0x0f, 0x1f, 0x44, 0x00, 0x00");
-+}
-+
-+static void *uprobe_producer_nop5(void *input)
-+{
-+	while (true)
-+		uprobe_target_nop5();
-+	return NULL;
-+}
-+#endif
-+
- static void usetup(bool use_retprobe, bool use_multi, void *target_addr)
- {
- 	size_t uprobe_offset;
-@@ -448,6 +462,28 @@ static void uretprobe_multi_ret_setup(void)
- 	usetup(true, true /* use_multi */, &uprobe_target_ret);
- }
- 
-+#ifdef __x86_64__
-+static void uprobe_nop5_setup(void)
-+{
-+	usetup(false, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_nop5_setup(void)
-+{
-+	usetup(true, false /* !use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uprobe_multi_nop5_setup(void)
-+{
-+	usetup(false, true /* use_multi */, &uprobe_target_nop5);
-+}
-+
-+static void uretprobe_multi_nop5_setup(void)
-+{
-+	usetup(true, true /* use_multi */, &uprobe_target_nop5);
-+}
-+#endif
-+
- const struct bench bench_trig_syscall_count = {
- 	.name = "trig-syscall-count",
- 	.validate = trigger_validate,
-@@ -506,3 +542,9 @@ BENCH_TRIG_USERMODE(uprobe_multi_ret, ret, "uprobe-multi-ret");
- BENCH_TRIG_USERMODE(uretprobe_multi_nop, nop, "uretprobe-multi-nop");
- BENCH_TRIG_USERMODE(uretprobe_multi_push, push, "uretprobe-multi-push");
- BENCH_TRIG_USERMODE(uretprobe_multi_ret, ret, "uretprobe-multi-ret");
-+#ifdef __x86_64__
-+BENCH_TRIG_USERMODE(uprobe_nop5, nop5, "uprobe-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_nop5, nop5, "uretprobe-nop5");
-+BENCH_TRIG_USERMODE(uprobe_multi_nop5, nop5, "uprobe-multi-nop5");
-+BENCH_TRIG_USERMODE(uretprobe_multi_nop5, nop5, "uretprobe-multi-nop5");
-+#endif
-diff --git a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-index af169f831f2f..03f55405484b 100755
---- a/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-+++ b/tools/testing/selftests/bpf/benchs/run_bench_uprobes.sh
-@@ -2,7 +2,7 @@
- 
- set -eufo pipefail
- 
--for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret}
-+for i in usermode-count syscall-count {uprobe,uretprobe}-{nop,push,ret,nop5}
- do
- 	summary=$(sudo ./bench -w2 -d5 -a trig-$i | tail -n1 | cut -d'(' -f1 | cut -d' ' -f3-)
- 	printf "%-15s: %s\n" $i "$summary"
--- 
-2.49.0
+On 20/03/2025 10:52 am, Leo Yan wrote:
+> GCC-15 release claims [1]:
+> 
+>   {0} initializer in C or C++ for unions no longer guarantees clearing
+>   of the whole union (except for static storage duration initialization),
+>   it just initializes the first union member to zero. If initialization
+>   of the whole union including padding bits is desirable, use {} (valid
+>   in C23 or C++) or use -fzero-init-padding-bits=unions option to
+>   restore old GCC behavior.
+> 
+> This new behaviour might cause unexpected data when we define a union
+> with using the '{ 0 }' initializer.  Currently, the perf tool has ruled
+> out these cases with the sanitizer "-fsanitize=undefined".
+> 
+> But the sanitizer is not enabled by default, we need to manually enable
+> it with EXTRA_CFLAGS='-fsanitize=undefined'.  This means developers
+> might encounter issues caused by the initializer with new compilers.
+> 
+> Enable -fzero-init-padding-bits=all to zero padding bits in unions and
+> structures that might otherwise be left uninitialized.
+> 
+> [1] https://gcc.gnu.org/gcc-15/changes.html
+> 
+> Signed-off-by: Leo Yan <leo.yan@arm.com>
+> ---
+> 
+> Changes from v1:
+> - Changed to use '-fzero-init-padding-bits=all' to replace
+>    '-fzero-init-padding-bits=unions'. (Namhyung)
+> - Updated commit log for a bit background info. (Ian)
+> 
+>   tools/perf/Makefile.config | 2 ++
+>   1 file changed, 2 insertions(+)
+> 
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index a148ca9efca9..b4f6d656c729 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -323,6 +323,8 @@ FEATURE_CHECK_LDFLAGS-libaio = -lrt
+>   FEATURE_CHECK_LDFLAGS-disassembler-four-args = -lbfd -lopcodes -ldl
+>   FEATURE_CHECK_LDFLAGS-disassembler-init-styled = -lbfd -lopcodes -ldl
+>   
+> +# Explicitly clear padding bits with the initializer '{ 0 }'
+> +CORE_CFLAGS += $(call cc-option,-fzero-init-padding-bits=all)
+>   CORE_CFLAGS += -fno-omit-frame-pointer
+>   CORE_CFLAGS += -Wall
+>   CORE_CFLAGS += -Wextra
+
+I don't think this makes its way to libperf. I don't have a compiler 
+that supports it, but "-std=gnu11" is in CORE_CFLAGS and that's not 
+there on any libperf compile commands so I'm assuming CORE_CFLAGS is 
+only local to Perf.
 
