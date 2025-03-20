@@ -1,102 +1,113 @@
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EA397FBD6;
-	Thu, 20 Mar 2025 14:15:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 663341DF25C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:16:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742480152; cv=none; b=R9GaASNUAV/JK3Wi+ZQh2mPGKeCTLxD28nDak52PEbbNEI+A7i6dUn4k4rJLNoeVl1RcVLTwqltN5C9nWT9qMd86yFD64gEOUqbowqOnkTlFgSP+YNsO2N2qdlpAzB6NUVioPkS4XJYy4GgsiEVfCcSJtJ4BY+EyN8U00X/qPJk=
+	t=1742480188; cv=none; b=hUVur9Sj20QCFG5t5VkbWiP6Qs5RQ9PSIb2Ily8YxFNzy8teh+k6JQtmfOCi3tUAvLNgpiHJkQuAl4nI5sJy392T7pKJmyLHRcGvIJlcnrdf80fd/fnOfZEqhgXMmLqdA4r3pHqlqWLCRL43920jwy00iEB38cgyUzW2c1K3a0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742480152; c=relaxed/simple;
-	bh=jdSpzcpFMSxD+yHrtxtYUj7JjrIBKbvo4JpzpwSGQ0o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=pCeBxRobevqkcAz8iVx8AGQBfXm5FqW/8yCYBJtnZJA/BEZkKOyndWCTB6JqfdypkE8jdtw81GC+AhdYivLWd6YyD74irHpYTwnjzCuPwyUqZW9CBfZ5PlG6WbPmt8C5SVE4XdXAJBm6enFQTaHD4deIgs9NBlSI4s7/T8TfSwI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=X5HAxdiy; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742480188; c=relaxed/simple;
+	bh=BG7oXm8HfnNGRZ+BgKfaO795/z90fQRMwxeOL+t6m1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ZQPJgcJI2l06tbPuyCbthyKVAVqz5/5+cXStPPkiZD2lOwJJhPHeh0sSCUHhsn2u82WqRBMaZa/hHJxA3Jnl07nmUQ4fCI0bkmFqpC6Iv03bCA2qed5E/Qj2eIe5bVk6BGjmqoUFZ3IolulQgsrOFZx3ksFmOqCo4AJJOBKz2SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aaq+pKyC; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X5HAxdiy"
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-30c461a45f8so9176361fa.1;
-        Thu, 20 Mar 2025 07:15:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aaq+pKyC"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfed67e08so9999471fa.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 07:16:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742480148; x=1743084948; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jdSpzcpFMSxD+yHrtxtYUj7JjrIBKbvo4JpzpwSGQ0o=;
-        b=X5HAxdiyMyGD5HhpMA0Q4ZzG/ZKbfDnPglF7/lgkf6zGHJOGsoRA1w6nSQG3BaAeWZ
-         O/Xik50J4KXMxn+rlzS7/ZmX5Cg30O796pWmAI+F7qZihAR+JcwJX8boisVGdg8+B+Qd
-         RuL1F+5yc4z56Qf+XY0aORzaW+kBAglHJ7BEUzWecekJuHtG4uqKGTqQUuE6YKKUmBLW
-         XzGEEblmhkE6ltjWsygwN80LOK7c4YL5o/MwEFEXT0diXzcrSnbheVwixFfPiJCFsntx
-         ET54D5dKx9Tt4eDLXUC0nGU7Jya2SKqC06whKv5Zz0vcreq+8whjk3DH5sF708vkbIFa
-         cUxQ==
+        d=linaro.org; s=google; t=1742480184; x=1743084984; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=KiuwvxdAhCBLo6Y0nk402oGwzDCK0nUCR/MeYHjI7FQ=;
+        b=aaq+pKyC3GwcCj6hmyd/mndnt3vLZ0Bcew+vEPZvml/WjzGWVBi3KC3quSLEGpHFa5
+         rocEjkThEM5l9YBT4DSuBaPywskSwLKsYOLqOBa/jpJZPxfhiN/54vMcRru1G795dsq6
+         1RJvH2sk4jJN1WQ5UZv1m6kYoQuKZyqA1tfMyTDI+TCCpQvlBANvsWXObUbv8bXApUdP
+         uMSFolZBc4ckEIJDGR68OtGJ5fBxhUn9fObdsBZ/UpjGnsNtFM62sazihVCgl/eNSN91
+         uAAwhAKOt8S1JBwzcnMtf/E6Eog/nbEVEL0zOhpsI2qn7BN/poAhN43X+6ogbwPHogrO
+         YQIw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742480148; x=1743084948;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jdSpzcpFMSxD+yHrtxtYUj7JjrIBKbvo4JpzpwSGQ0o=;
-        b=WgdeYpaoFq5qzAAONH28isy0a6tr4k6omk606Kv55DL82WZWaHDum56wdtPm4HM2Wg
-         1dWr0fU5h5dgG5LARyVKjFJI6Uf1Z4aEpDrs0P13uSaX3ZoCWgAn1nYk9fJ6rYZf2ih2
-         rdwXuIv1cjsFqm0VMZnu27maiTOwUsPz/q1x4gOQV3V+K+6AGtAtbmzn/prRbq53IKTq
-         1Dc6XI59KseUQ5xtFZys2MW55GYqi5yIVRzygqsIqQCXdINAV4xdbqXypdAV51sQDzC6
-         ImLKzomVIO/Lovnn24jCILJvR6TEK9XnxEP/7CIJCeHsQCidWJEomIDzsxFlRGXcHr9e
-         7r5A==
-X-Forwarded-Encrypted: i=1; AJvYcCUCfhmXY8BRT2aQWUZQ5hGb9EZC1KITt3QTqH8HHxE/T9SnUe0o4u6gCTwDAvsdYzpVSrySGCthc/i8wGk70rs=@vger.kernel.org, AJvYcCXyZCk+Xqho4Uw2HbNl/LnS/bd0zmUJKWYuctVD7D2fMJCWMC0eE66CoenijonZujeW7KDbDS9wL8WGJ+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrY/gy9rFyrNdfTUKxTlnWyhYDYCetHFJ52/MR5OrsdDNwdnWJ
-	45aWPwcv4WAMrP2FEDcb9uBJFMBFJawzWdn2Qk6F2VdOtQn6mDY8pf0ncJwqAVdGtsQh6GqFcjf
-	SMFsVd5Okk2X7xuGngAw4onYCZ68=
-X-Gm-Gg: ASbGnctSaDym91m1bkRgeL+8ZMmPhKun4zF4Y2BQneFYbavd8ZRd7oGI/fy5rftEri2
-	0ZD2Zc9QzXpj/KthWrr+MU1on1Xx3mi849lxqQ3wfGmhZJGkBQMwVOfvAKndNqJqd8M801lhYl9
-	URiFyQRiQSRBw/6sbkNH7Qt+Dv4n6jaNwMssuh7+zEzw==
-X-Google-Smtp-Source: AGHT+IEFnvDpyUhpQ0aq5SjcgsYomornya+aah0zvslRXJWqXW8zpVnOjTwNC1PWjWbtDIKQA9FXGFP+BM6hudsprBc=
-X-Received: by 2002:a2e:b88b:0:b0:30d:7c13:8a88 with SMTP id
- 38308e7fff4ca-30d7c138ae1mr1309301fa.7.1742480148246; Thu, 20 Mar 2025
- 07:15:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742480184; x=1743084984;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=KiuwvxdAhCBLo6Y0nk402oGwzDCK0nUCR/MeYHjI7FQ=;
+        b=Bxsf0Mjfm/+5gc892/zcDxbTVQc8Rn6tWQ3ZZrMxKt3eJ0UAo2Z+jNKyDUTaUgkfsK
+         9P91jPTD4CUWm9ud9Y/XfSPVt8+ABpL4s11+vBS48B6WhVpbgqG/gVxos9Fe46x/r0mt
+         oSA9UQHiNmTl+nixxG2ZZoc1VUQVDNQwiWMa2rKYDRcaIprjfer9QWEqfiHdF4sF6Alu
+         kmls/aMP17n9mAbnEzqT2q6CX1DDKAmedA+377Y/yOWocn38EXGfMxmlze6JS3CHrmZX
+         RZpwsAD0baXnh5uY+OpzzIT7AdEo0NlaujGghH+eZfwFoFP3Fo/QyARqlzNqcPKithEx
+         hylw==
+X-Forwarded-Encrypted: i=1; AJvYcCXlq4SjS22pwSrekax4WaR0XqNPjgssyF2btZ6zbHD+ROFhPOHeNW3NJOEcaLwMIByIYmmlc96VDrUDVoE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV0xJo5GDQ/etb0nhu+gVdoXnE7sLVKq7TnK2TfUzfvjO4nwA5
+	MFoVoDcI7S2p12wA7bTYu2icDz0HEFXdq8977cISiwFOQwFC+LW3pogoFvBQyJc=
+X-Gm-Gg: ASbGncu5+R3Wy1qOV0dZ8GZpaj+HL3V/rtSxCsijAc4FvGYb8rPuCLq1tJzfTGR9o4w
+	7bVenZZ6XD9rZbwAE1RIi/HDso3UnM//qp8XMDB6hA9yFhKNe+85d3MGcYzEcOOj0G88fQDziqQ
+	skFuPSXbctseKfsQFBeWCi1s7MlCzt/lxc0ZN7f3gOgaj/dxWuxujkEsJ44zxVJGS7fV478HSAs
+	BQHk8vBgyT1G+jb4Q3H/wnoqadgq27HWAe3Q+yCwSuccV/Kxy2aUv/EtI1LZtA7jKEmisKO0VGw
+	3V/FLywP60NsFcEdRhR9ZITAFs9Tzp9KtTXVYsBVC9AbQuQledDiywHDBMtlrsbGYpLmpHnW/ac
+	hgawZnHYXAf3mfT+nLj0=
+X-Google-Smtp-Source: AGHT+IGq6ZMnqynS/LyosQzximB2DC5hiOhKm5mcuHaUP+x5dJQDT/ew7HjON49ahwTkD2EY/GpYaQ==
+X-Received: by 2002:a05:6512:693:b0:545:ae6:d73f with SMTP id 2adb3069b0e04-54acb21a725mr2921834e87.46.1742480184315;
+        Thu, 20 Mar 2025 07:16:24 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba864e24sm2267110e87.107.2025.03.20.07.16.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 07:16:22 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: Linus <torvalds@linux-foundation.org>,
+	linux-mmc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [GIT PULL] MMC fixes for v6.14-rc8
+Date: Thu, 20 Mar 2025 15:16:21 +0100
+Message-ID: <20250320141621.164515-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319-pin-init-internal-quote-v1-1-19de6a33a257@gmail.com>
- <D8L34IUZGXWX.D2LSS2S2NAN7@proton.me> <CAJ-ks9nTmno12ZC4DnLxV_b0NLUK5Kn5K+cRi4BEvKtveQzJjg@mail.gmail.com>
- <D8L5JXRXHX0N.UIFZ5M15FB3S@proton.me>
-In-Reply-To: <D8L5JXRXHX0N.UIFZ5M15FB3S@proton.me>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 20 Mar 2025 10:15:12 -0400
-X-Gm-Features: AQ5f1JqlJFQi6BV6NIpZvwrqkCi2Dgkd4NnCLQajuoYyZ5aMPFD7lL3SZi06-xY
-Message-ID: <CAJ-ks9mwNiJbr4MN5jfr7KCJc8j=B5=MUfX9XfhPg6yeRiFK=g@mail.gmail.com>
-Subject: Re: [PATCH] rust: pin_init_internal: fix rust-analyzer `mod quote`
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 20, 2025 at 10:10=E2=80=AFAM Benno Lossin <benno.lossin@proton.=
-me> wrote:
->
-> On Thu Mar 20, 2025 at 2:31 PM CET, Tamir Duberstein wrote:
-> > On Thu, Mar 20, 2025 at 8:16=E2=80=AFAM Benno Lossin <benno.lossin@prot=
-on.me> wrote:
-> >> I'd rather not have this change, since this will introduce a dangling
-> >> symlink upstream [1].
-> >>
-> >> [1]: https://github.com/rust-for-Linux/pin-init
-> >
-> > I agree it's aesthetically displeasing. I'm not aware of any
-> > alternative that fixes the development workflow of this crate in the
-> > kernel.
->
-> I don't think it's too bad, and this code is going away soon-ish
-> anyways.
+Hi Linus,
 
-What would Andreas say? :)
+Here's a PR with a couple of MMC fixes intended for v6.14-rc8. Details about the
+highlights are as usual found in the signed tag.
 
-I don't think the going away soon argument is relevant in this case -
-the same applies to the dangling symlink.
+Please pull this in!
+
+Kind regards
+Ulf Hansson
+
+
+The following changes since commit 80e54e84911a923c40d7bee33a34c1b4be148d7a:
+
+  Linux 6.14-rc6 (2025-03-09 13:45:25 -1000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v6.14-rc4
+
+for you to fetch changes up to 723ef0e20dbb2aa1b5406d2bb75374fc48187daa:
+
+  mmc: sdhci-brcmstb: add cqhci suspend/resume to PM ops (2025-03-17 11:42:42 +0100)
+
+----------------------------------------------------------------
+MMC host:
+ - sdhci-brcmstb: Fix CQE suspend/resume support
+ - atmel-mci: Add a missing clk_disable_unprepare() in ->probe()
+
+----------------------------------------------------------------
+Gu Bowen (1):
+      mmc: atmel-mci: Add missing clk_disable_unprepare()
+
+Kamal Dasu (1):
+      mmc: sdhci-brcmstb: add cqhci suspend/resume to PM ops
+
+ drivers/mmc/host/atmel-mci.c     |  4 +++-
+ drivers/mmc/host/sdhci-brcmstb.c | 10 ++++++++++
+ 2 files changed, 13 insertions(+), 1 deletion(-)
