@@ -1,100 +1,110 @@
-Received: from mout.web.de (mout.web.de [212.227.15.3])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FB57FBD6;
-	Thu, 20 Mar 2025 14:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F04A2222CF
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742479252; cv=none; b=mXfRANI9vjeoK1097HBjo1iKIROo6jXnPWaJFPWPBw6xvHfuoXn8+aeGQ7Tfo/eil9v1E5EPgGJCbRYb8GmCR9xPA8JunjPwVuBCIarMfFW5EavUNUcXKkVWjtNPsFd3TXJA4rK/zof56LlzfIhny+QdQtcc13D7cOFSNtZAl0o=
+	t=1742479254; cv=none; b=AGjJz9jfqEwDMZVPMCljOR0/KPhuFYAIxQ/3YNs8zmHHGRhaxP9AAHMA9W3V/nFTuAbjQDu3SphqiYNSeBeAw6uAG+eIEWcrOQ2KE8Hyed6n19QZBFeOBGWk3X+MB069ooypEdDzbSHG0e+MS9fI/gwMiHMrUZKu0w1VTvlWFNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742479252; c=relaxed/simple;
-	bh=Yed3L98sf2achdA6mINQRH7piijS/m3TD77kPOKAHcA=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=mKTT6xGpXEy8UReZ6w8Hdc4AH2tGMtgN/RIfr+rux89NX77xRbomlsYE30du0Le7xeJVEVPxfybCdqh6khkjSf0c4rz+pSqNc/R6r58uLSi1FDK64HQP54aKlXbrOl8tP+5cotagm8iZwAYNrXkbSiENBOKWRgX4TEq7mu+1qnY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=bfA6Lsdg; arc=none smtp.client-ip=212.227.15.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1742479254; c=relaxed/simple;
+	bh=TMAuU4onZ/cymJIqOhYHnqnXdS4duBL3QBe64ptE4WE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TBdkFghCi6lP6caszLrxrt0XaYXxnlxZ+z0/bZI3noNACZ8S448ZL2O3+NDTxb5E8y41v6kjYC/KKuWBSB4M8Z1aGNhmvPP5pfXVnikybMFRrcFs+tZIAJMFoN1g7hTvXO9aRVC/CMu3YPl6HPBFhTAeaNxNIPas6ubwmEXjDKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q1lWHOCQ; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="bfA6Lsdg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742479240; x=1743084040; i=markus.elfring@web.de;
-	bh=Yed3L98sf2achdA6mINQRH7piijS/m3TD77kPOKAHcA=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=bfA6LsdgjBtvI2DizTswuNxrVMsFRa++NKotRjV5lCLEoYbVx5wCOUBO5L+u3VC9
-	 LYYBqMAPRn9jZ856vm6Fs5j06Ov7EmbZSx5IWvkU5tZv0HnBlAzoRSowQdKEJLZqR
-	 Zyam0lR+kwOzpq4dZ3mGzI3gImy6jNeKGUJxhCiZSX61Jm4HrcHFODX7KFOJ5Av3G
-	 ny1wqZFB35gp/OK/5j0XDmy7sfgX9KNAleaYS1vI9KB6BF7t5j8IC+VDkIf4utwWX
-	 T74GwfleYlraLPEdcpFvgWVbI/DV/ShtNWziViyByEt+FJJfCSuIRJMnShTrBdRwB
-	 PvOm2bj0f+hEZRL5Cg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.70.46]) by smtp.web.de (mrweb005
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MhWop-1tIbmd0OHL-00hojO; Thu, 20
- Mar 2025 15:00:40 +0100
-Message-ID: <fe81f330-c4bc-4321-bd07-c03ee2cbebd4@web.de>
-Date: Thu, 20 Mar 2025 15:00:38 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q1lWHOCQ"
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-543e4bbcd86so976153e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 07:00:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742479250; x=1743084050; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=jVzbvi3/XOkK9yO+8BTkmB73EOh3os+jpQOtKlsdsjI=;
+        b=Q1lWHOCQY33Aa/+3B6BQRldaZyHpuImNA3g9jUhdE2SkBpLJedbp+kAVzwCR5DS1jg
+         n0YgSQPkgMvDqmCEe3rULS6UKStWjWRugpgKfVSkjMAd57oKyvsB4HdGGoiYIXcC1KUr
+         sUrlQ1MJKu2DEi4pgBCu0mBd26oE8WQIRKwcIBbnIS4iJfa50DFjk07lCCIHboGFktz0
+         1D9ykGLkVyGk8mv04EXQPtnVfEcvqaHwL8URKhTLsGsULURNxT0Qh6vJZyrUMkgZUGR4
+         PsC7bPowtMnF4W9eha7ONc7mUe5Sg7j7+dvtoLkBMUxrgAncZeZnWHCrXJSBazbrJBEo
+         cihA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742479250; x=1743084050;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=jVzbvi3/XOkK9yO+8BTkmB73EOh3os+jpQOtKlsdsjI=;
+        b=bVkImsrbEG62vfonv3gHPVEmOnR6jNfzczMM5qoZX0LmDQxuqeovHTUvhf/uCaQ9jc
+         APmNwWnR9S1ZJGrlhiQOhy+9fNZK78axV4Y8Pz8Aphn9tA83xkEmVHmcTDeDJ7azOadW
+         lX62jdRXPVvkUL3amk0t0TN1wQOHM2DyZ7+BnbW67D0cffX6/qpFG/pOGUhGB3/00LaY
+         cQNR4ZvqKZJZhAPAhWyqOmoSaePxLmHCgUQR6PHcGeur2gQQ2yzEKm4Rjposp6Uj/F8V
+         W6hSWTdWTEQI1367XIgrTl9hl3+SZKVT48aQVet7fCmMBcTyMp3yPbbIUSozLXYfRt6T
+         Htrw==
+X-Forwarded-Encrypted: i=1; AJvYcCXeqNkI8vtVWAnwccoU11KGQmLa5DKROaz2hPWXNsA14L8wRcX4SalSUin7ManG+ZcP/wWgthve+8pWM2c=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwdDpAiYcPYqENzsryv8M9q+FxXWd66IDrQnW4XyCeo70O8tfqb
+	kuxSi9YjD/D7mrnC0LnK31mH+T10noKjig6/6MqQ1f2FOLQ67MdIaoWa/seEiFrxTrAgQZCoVci
+	+
+X-Gm-Gg: ASbGnctpjSEnDv7k9fJu/8AyBhgowe8PESLlcVhN2NQtylSKjyKx2u2JLrKWy0StwzR
+	MIXDmA2TE6mVrE6Kipai1GX4Z2lqvrQWIaSdgQYbmhDT36BRBEnW70Bcn6at8gnGVv5/1Lhh2ML
+	1C6HYE/uCssR1S1DZQ2TEyXP+hW3fL3inM2O6gsBwQV+pAONtCaI4aN6DBYQahQj6s6Gt/gohAV
+	XZQzXlFYFG6pwr4x+8ff9nPqsA4//sP+xgL0fo/Ts/kwKLXLea0rBkUqS/Fsh2F4v9y1jFc2ZOa
+	bSQthqanC2vRaEeR6eDEr5fU1OHaucoKEVxai/Otcfw0a2WicYnanPIsB3W0uuqei5O3ujE5nqv
+	K3+K9ro+5K7gVEYD4MDQ=
+X-Google-Smtp-Source: AGHT+IFMYBU0DIXrF7R99VRRvNyaKksRIT+6rLXREKORT7TWKL6TEFXo8/nh8xP6GcxkGQSqzFY85g==
+X-Received: by 2002:a05:6512:3191:b0:545:49d:5474 with SMTP id 2adb3069b0e04-54ad062a16cmr981532e87.20.1742479248474;
+        Thu, 20 Mar 2025 07:00:48 -0700 (PDT)
+Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba864dd9sm2295029e87.148.2025.03.20.07.00.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 07:00:47 -0700 (PDT)
+From: Ulf Hansson <ulf.hansson@linaro.org>
+To: linux-mmc@vger.kernel.org,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Adrian Hunter <adrian.hunter@intel.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+	linux-renesas-soc@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] mmc: core: Add support for graceful host removal for eMMC/SD
+Date: Thu, 20 Mar 2025 15:00:31 +0100
+Message-ID: <20250320140040.162416-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Qasim Ijaz <qasdev00@gmail.com>, netdev@vger.kernel.org,
- linux-usb@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-References: <20250319112156.48312-5-qasdev00@gmail.com>
-Subject: Re: [PATCH 4/4] net: ch9200: add error handling in ch9200_bind()
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250319112156.48312-5-qasdev00@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:R8RapO+hNRgOyLi4zpg/YqbLfVBEDLfPXqAZEbs4abDg3tW39pq
- 1t5qbJB6W7kHa278b97hrkQOJGDo3NJsjeC8l2siT+tudCruh1/d47vLCZev40ExwHU7qwM
- iXivpgR4tyzafgQzi2upu1/SnYr5NC+Q6KcpNv3swgOcAheC29FtJzPU9JzehOUvSiZkYmb
- Rni8Ksy5O8f0Pe52mu5yQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:PTvn4IV07MI=;Uvsg1VKPY3fDn6aA6d9j1C1+4ak
- ZH0x9dI5L9MfbVdkK3+pqDlqdkK4gAESik3JLt4ZUvFj8A0VNic7SVt7C82ovoV1lEfdOTK3X
- r6MV+eLaMbuoer/r6zDi/Zno8OmMDsSs6fzUZ0b2mDyS9U6hCeGjQbVhlLDgc47RHv4Bz5Cvc
- MVPlO8ZZHESI3Y2KquPDie2/4luQiK1rzhD5K8SXEgoVUv40vv+2qpEvmJZ2Bk7W/o4CmyKSi
- 5uD7lIPywDQ3jJ+lwqdUZaWIyc712+DzUxZ2MemLJA6/fR/zNiYpfuptKoquTvu2+pfFasQPt
- FgnH9EuTULs4vUje/joV7TgzrGzRjMp8sbkG0G3JuxHDQ+4HXj6LV5pZ6P6ALzBQG4tzyBuFI
- rerfLqa05xiM4ymnBmxTPzCfoQVC6LIJrSR0MoaAWi+mxvIUJnHh1A6fNqEmNga4WCwKjNh4K
- pn4gRmOYixsT2poHzsH5ZLC+/hoOjATQYcguN40kLwbBD8dtrYvS26sjSEITDs7oLs+miVpuA
- DHpJ2g4ol0JqRDHeOUjMO9P3XEkm1wPZJxqcXEhMlUE85lq/la+YAUGpW7ghAfG/JWq670t8K
- YEGwKU9N/dux6xsHT7AyLC2HaD73fxVYgVsEI61aJ54izdPqomr1CiU6W2kklQf3W9BoT2zd+
- HjBsWMg/CHiPsGt/+nI9Mt7xYLFblDUxZjORgyEzqfRAQSQI7d98t2lrOHqf7D5Mye8AN1krX
- LhkMUFOcjPPXVJ4HnTfrNgcWF9LDNln2ehzOXz1iOKknAma29JK5q5vrXujW0/aVjz9yZWeZm
- kAd5IXCf1ucUpyVLmtGSOOVuIudg4B3iH6/KuNQbolJgg9siSQBluqmSnlxMVVTrE0CW13m3e
- KP4v6Y2rlqSHBRD49rzGpy4/CCkItjDAdM61qvr63ABxGh5X+4lxJh4WZxK9VXzpnblIxMzWD
- XxggMgSXKhRz35vapUH1uug2djaUJQGiXpY12V9Rw8e22fgbwRgHEqfgy4aK+GpvamE383Dxy
- i6BtKLUJXAXXuB1x5OaD2zuZXzVVOHjDUcc2RxgWJ65eq31uXmV6n16ptdwmZSwuQNWCKFLwC
- D9gZno1PcG98heDjnboPptNJQxR7Vc+MbaZNd0/shzfm+jTy8T2Bw1OyhnSRQKgl2vf50OrTL
- LxOkaepZKC/qITkN/gPdNtIJKVd5l8IigKcIJzdb+uYNHOb4YYzOG99CzVBhwUb3dLI+kWyRZ
- ioIGp8Nj+i8DsfSffamSkiC5FAgrb8aiA0CEwPPWNnVnestc88LiLFQlKEh8HpvYxW/aYbc7M
- +Mq/kh3Omp+tNSwrNqzdI6mR4bvgOhF+9GkY81QYyH8f83qSsrQHC4zbr4/u8601kGvSXNEAR
- A+Vr+iURm0jKwr6CkoNevncM+Y0UEvIByF/ONB6FjQrLQOueGCfeG1xu7nns+wW58aVLBU8sp
- B/w8J1YOH7AoDvBbKTPYQBkZlL3hCC0ebgkG0u2Ji/dVE+qQq
+Content-Transfer-Encoding: 8bit
 
-=E2=80=A6
-> Fix this by checking if any control_write() call fails and
-> propagate the error to the caller.
+As pointed out by Wolfram Sang and already discussed at LKML [1] - an mmc host
+driver may allow to unbind from its corresponding host device. If there is and
+eMMC/SD card attached to the host, the mmc core will just try to cut the power
+for it, without trying to make a graceful power-off, thus potentially we could
+damage the card.
 
-Another wording suggestion:
-Thus check if any control_write() call failed and propagate the error
-to the caller.
+This series intends to fix this problem for eMMC/SD cards.
 
+Please help to test and review!
 
+Kind regards
+Ulf Hansson
 
-Can it eventually be helpful to transform six control_write() calls
-into a loop?
+[1]
+https://lore.kernel.org/all/20241007093447.33084-2-wsa+renesas@sang-engineering.com/
 
-Regards,
-Markus
+Ulf Hansson (5):
+  mmc: core: Convert mmc_can_poweroff_notify() into a bool
+  mmc: core: Further avoid re-storing power to the eMMC before a
+    shutdown
+  mmc: core: Convert into an enum for the poweroff-type for eMMC
+  mmc: core: Add support for graceful host removal for eMMC
+  mmc: core: Add support for graceful host removal for SD
+
+ drivers/mmc/core/mmc.c | 66 +++++++++++++++++++++++++++++-------------
+ drivers/mmc/core/sd.c  | 25 +++++++++-------
+ 2 files changed, 61 insertions(+), 30 deletions(-)
+
+-- 
+2.43.0
+
