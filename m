@@ -1,143 +1,213 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF1112288EA
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 20:24:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 323552A1A4;
+	Thu, 20 Mar 2025 20:29:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742502294; cv=none; b=gGGLs0Nz7ze3lYL3YDa6KS+/5v6E5DpmuI3xW56fN2Xs9u7TOsgVsiY3nZmNrxP+5AaBswe0wwl/Ed/+0bQ4Y5PPeKHI/FkZMw1SDNjg6ubWxvlffxTXV5e5wwXp6AWs5uY343UwftOAP6Rk6S/9GCuuWVmiJppldxEHCfHKZuA=
+	t=1742502549; cv=none; b=gEYg6oWr1/kdH9MG0iB8geQSBfKaADl+cELMOmvj4O4MTgTE3j+LTARcm25gStxEAN2JmgrHCKzioYOW9+9R0g8s74h5jR9s1GJ7Rm51fNXpxpG5D7QNTd3XpnQmyimz2gf0w1CjkqGXmjxvCIK0ch6ohT4XLmBjcCUgmWVoZmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742502294; c=relaxed/simple;
-	bh=Y/NlFJOKWORBWvIQpg/pbrP2uz5vMat7aPPopK1J/mE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=OBdyMs/fTwyaWt6/8OJ87I1P1gTew9OxB7lC0HmKgqqxPf1QS0VGWrOPV27+TGWmCbL5wAl7DNMWleBuysp8KORLt5zULYsaZ69akLc6/u+bJF7qnKtT9BE4g7mf9OIRKHj2cwmCwNsWSbxRC/DtZuPhZOfV34iXSZHFNTu6rE8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h/ZBaK2a; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742502549; c=relaxed/simple;
+	bh=/A7i/1Uro6h6eIUjAdKuaXPvRrA3wGaUjO4OFnhofeM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DtWS7TflIo/6uY/ru6x5u8cUoPfj3KZXtvUsESNUSzIswrNO0uSE0hJ/r52Pshcnb3WXPrO5Gs+UjJR4PUH/cXGXdxqT7z9+qjLYIVkJLiklh83DZOViW6hjeCdtqh5aKx/eLXjsgIz8Af2iPTj9Prf7O7GBfT76PJMdVyCxiWI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gFR5E6BQ; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/ZBaK2a"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5dce099f4so1739337a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:24:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742502291; x=1743107091; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mXysNToi4JV5stFhHE3GKBUL3hMAfnax4alUV5eHbjA=;
-        b=h/ZBaK2a+du7nqAvxxCTJVnBVwyp1w0bFTgmkAiKWPgkyT8rW57wzp1cmGJLtXtMPi
-         /YFqs1r4PQgNTkTzn96zTdzQOviImreYms8sChOc6uZvmFW9AIey+DguTHP1ff0hh7n4
-         E6YYtqZkmgJogodxfvDwzlk969MOBsC0+nbNJH4/YG1RGJDazvV5SoGqqMOBWLXz0OYb
-         xtwA8Bo9BNRlCF2EdleWFeP+DwDB9jE6ZnrXqkmoe+MgqMfm2V/zKcjct/nPTllzUd4f
-         bIkFG1Dk4frHKvv5orIP7AU6IgiaCBMxsXon/syTaRWULT44x2DhA0dETF6RHEXs04C5
-         AG3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742502291; x=1743107091;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mXysNToi4JV5stFhHE3GKBUL3hMAfnax4alUV5eHbjA=;
-        b=mPOT2MfJqPXS9bHkXqrv2kCcAi6HJr+MEzaeYnt1pI6rO0omBq7jqwoOPjy1FfXZp8
-         +szdr+Eyn9k9khs3MXeVyO5HGm6tWgn1239f1mmxSffRgw7Zq+TiDXR1lSL1WLO4eXTV
-         9FsTuFnPJhTr7ELmXay5oiFGvKhduQialJ9XVvC+y6fNYDKu3ngsCv/WsCYqu55XfmS0
-         VmpeoR/Cn5T1zeJZg6eafQdkqB/zwpSvynV6WbDxVDfNvBPI8h9DmLxepdoI0sEfbt6C
-         HeZlVXzi/DCAfgW8Uz7JmxcWJC+ccyGi5eMiQvQbCMAaH0lEp4ffxByywJi/mlw5aw+C
-         Fnaw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4MZGk2b2jbyE4q3yRPXglMEx2pEpEtNCVF4urVJOYJJZwhe7W1X8Lt+OJu3Ce5lcp+xO9fZ2w5l4FzlE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzuv8/jxQokvau1rdSQB+c6BTsWEh2KFJ42oGO/lV14Gz6S6pYC
-	5rdk3Xd3s5f2c0cpORWNenXzrJpj3rMWVweEi02E2xT07WeNvgEytmrS4iur2m4+igRNpflecKi
-	dT4wPZFq91JgQebypHoaCVYWxXPw=
-X-Gm-Gg: ASbGncuO2sikodt0ks8LxZfePXqJmJK4Oz1Cvr0anv4ioRv1M8oygAf8/sCVuJXkGBp
-	OxsqG6JMKx1DXlfUzLdbveVeR0DZSCuRpexiNa3bz7AZdUcfsufZGKvwOLSOK57n7ztmnlKQw0z
-	rh3UyaYlooDi1VRw6/2QNv2owueA==
-X-Google-Smtp-Source: AGHT+IF682jPoaFerBOWCa4Bv9K+7bZ80fr3EB5+nULuhjW0rt/e0wcODBYkJgSK8K2HiyBMo8FVHpiDvvyRnIhlDYk=
-X-Received: by 2002:a05:6402:2694:b0:5eb:ca98:3d3d with SMTP id
- 4fb4d7f45d1cf-5ebcd4ef489mr537841a12.22.1742502290691; Thu, 20 Mar 2025
- 13:24:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gFR5E6BQ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742502547; x=1774038547;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/A7i/1Uro6h6eIUjAdKuaXPvRrA3wGaUjO4OFnhofeM=;
+  b=gFR5E6BQkeWuoPW9RqJAX0QSTbjHWq7anj9p94nVASl0lA1+/SbQLYQr
+   bNETSC6nxylpk4c8dMiq+78mDZV5j5YbOPUNSqbhPU06BwlsYuchpEfzP
+   2KnyFkt0bWLOyYOSErdLnGJ136uT8FWVBnLBwqDqSaMMmZo7Vj2doGJNd
+   dRKLb5fHHYS8BjKJnGSnHh1Ujvt2F6/KMK+Ekb7iTDN423xl3WBelemSh
+   t9a6ncU5EzoqR+ydJJ2VyjntF7IkhS/cCEqEZ8wET2yf6CYeYyk4VForK
+   gTXALtEiDbJft6ggk2A7Gb5RNznxx7Wk1w1WbTZ9OGLzNLPmEqsb6zmBF
+   A==;
+X-CSE-ConnectionGUID: v/SpxdCBS4mPPxJ1l+UoYw==
+X-CSE-MsgGUID: XyxZxKqmSMy33vGqH3ok5w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="43641584"
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="43641584"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 13:29:06 -0700
+X-CSE-ConnectionGUID: zWGEOKDhRA6107exREHPMQ==
+X-CSE-MsgGUID: mqxpcH5pQA2dGiRObZSJvQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
+   d="scan'208";a="122921213"
+Received: from ranerica-svr.sc.intel.com ([172.25.110.23])
+  by orviesa009.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 13:29:06 -0700
+Date: Thu, 20 Mar 2025 13:34:51 -0700
+From: Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Yunhong Jiang <yunhong.jiang@linux.intel.com>, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, kys@microsoft.com, haiyangz@microsoft.com,
+	wei.liu@kernel.org, decui@microsoft.com, rafael@kernel.org,
+	lenb@kernel.org, kirill.shutemov@linux.intel.com,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-hyperv@vger.kernel.org, linux-acpi@vger.kernel.org,
+	ricardo.neri@intel.com, ravi.v.shankar@intel.com
+Subject: Re: [PATCH v2 2/9] dt-bindings: x86: Add a binding for x86 wakeup
+ mailbox
+Message-ID: <20250320203451.GA8338@ranerica-svr.sc.intel.com>
+References: <ujfqrllrii6iijlhbwx3bltpjogiosw4xx5pqbcddgpxjobrzh@xqqrfxi5lv3i>
+ <20240827204549.GA4545@yjiang5-mobl.amr.corp.intel.com>
+ <20240910061227.GA76@yjiang5-mobl.amr.corp.intel.com>
+ <1d0ba3fc-1504-4af3-a0bc-fba86abe41e8@kernel.org>
+ <20240919191725.GA11928@yjiang5-mobl.amr.corp.intel.com>
+ <874d5908-f1db-412f-96a2-83fcebe8dd98@kernel.org>
+ <20250303222102.GA16733@ranerica-svr.sc.intel.com>
+ <acb5fa11-9dce-44d0-85e3-e67a6a10c48f@kernel.org>
+ <20250312055118.GA29492@ranerica-svr.sc.intel.com>
+ <17d37eab-2275-49ff-97b9-6b6706756f04@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320190514.1961144-1-mjguzik@gmail.com> <CAHk-=whd82fzhEbFRw9d_EMtR1SeefOJabjCHcm4-6jzeqqd3g@mail.gmail.com>
- <CAGudoHGNFT+LC24842ZKLWBxD3vvvddBqDKa6gkixN4Esor+RQ@mail.gmail.com>
-In-Reply-To: <CAGudoHGNFT+LC24842ZKLWBxD3vvvddBqDKa6gkixN4Esor+RQ@mail.gmail.com>
-From: Mateusz Guzik <mjguzik@gmail.com>
-Date: Thu, 20 Mar 2025 21:24:38 +0100
-X-Gm-Features: AQ5f1JqgXuDa-mSIh9yO1NSI6kJ36hz7-OH4m1U0T4zwICM_rcRWjgckmOrgFnY
-Message-ID: <CAGudoHFqGfiGPf2ZkVeAqco+0BD2G72_TSGCz29dP_tvwQN0NQ@mail.gmail.com>
-Subject: Re: [PATCH] x86: handle the tail in rep_movs_alternative() with an
- overlapping store
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: x86@kernel.org, hkrzesin@redhat.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, olichtne@redhat.com, 
-	atomasov@redhat.com, aokuliar@redhat.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <17d37eab-2275-49ff-97b9-6b6706756f04@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 
-On Thu, Mar 20, 2025 at 8:33=E2=80=AFPM Mateusz Guzik <mjguzik@gmail.com> w=
-rote:
->
-> On Thu, Mar 20, 2025 at 8:23=E2=80=AFPM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Thu, 20 Mar 2025 at 12:06, Mateusz Guzik <mjguzik@gmail.com> wrote:
-> > >
-> > > Sizes ranged <8,64> are copied 8 bytes at a time with a jump out to a
-> > > 1 byte at a time loop to handle the tail.
-> >
-> > I definitely do not mind this patch, but I think it doesn't go far enou=
-gh.
-> >
-> > It gets rid of the byte-at-a-time loop at the end, but only for the
-> > short-copy case of 8-63 bytes.
-> >
->
-> This bit I can vouch for.
->
-> > The .Llarge_movsq ends up still doing
-> >
-> >         testl %ecx,%ecx
-> >         jne .Lcopy_user_tail
-> >         RET
-> >
-> > and while that is only triggered by the non-ERMS case, that's what
-> > most older AMD CPU's will trigger, afaik.
-> >
->
-> This bit I can't.
->
-> Per my other e-mail it has been several years since I was seriously
-> digging in the area (around 7 by now I think) and details are rather
-> fuzzy.
->
-> I have a recollection that handling the tail after rep movsq with an
-> overlapping store was suffering a penalty big enough to warrant a
-> "normal" copy instead, avoiding the just written to area. I see my old
-> routine $elsewhere makes sure to do it. I don't have sensible hw to
-> bench this on either at the moment.
->
+On Wed, Mar 19, 2025 at 08:52:37AM +0100, Krzysztof Kozlowski wrote:
+> On 12/03/2025 06:51, Ricardo Neri wrote:
+> > On Tue, Mar 11, 2025 at 11:01:28AM +0100, Krzysztof Kozlowski wrote:
+> >> On 03/03/2025 23:21, Ricardo Neri wrote:
+> >>> On Fri, Sep 20, 2024 at 01:15:41PM +0200, Krzysztof Kozlowski wrote:
+> >>>
+> >>> [...]
+> >>>  
+> >>>> enable-method is part of CPUs, so you probably should match the CPUs...
+> >>>> I am not sure, I don't have the big picture here.
+> >>>>
+> >>>> Maybe if companies want to push more of bindings for purely virtual
+> >>>> systems, then they should first get involved more, instead of relying on
+> >>>> us. Provide reviews for your virtual stuff, provide guidance. There is
+> >>>> resistance in accepting bindings for such cases for a reason - I don't
+> >>>> even know what exactly is this and judging/reviewing based on my
+> >>>> practices will no be accurate.
+> >>>
+> >>> Hi Krzysztof,
+> >>>
+> >>> I am taking over this work from Yunhong.
+> >>>
+> >>> First of all, I apologize for the late reply. I will make sure
+> >>> communications are timely in the future.
+> >>>
+> >>> Our goal is to describe in the device tree a mechanism or artifact to boot
+> >>> secondary CPUs.
+> >>>
+> >>> In our setup, the firmware puts secondary CPUs to monitor a memory location
+> >>> (i.e., the wakeup mailbox) while spinning. From the boot CPU, the OS writes
+> >>> in the mailbox the wakeup vector and the ID of the secondary CPU it wants
+> >>> to boot. When a secondary CPU sees its own ID it will jump to the wakeup
+> >>> vector.
+> >>>
+> >>> This is similar to the spin-table described in the Device Tree
+> >>> specification. The key difference is that with the spin-table CPUs spin
+> >>> until a non-zero value is written in `cpu-release-addr`. The wakeup mailbox
+> >>> uses CPU IDs.
+> >>>
+> >>> You raised the issue of the lack of a `compatible` property, and the fact
+> >>> that we are not describing an actual device.
+> >>>
+> >>> I took your suggestion of matching by node and I came up with the binding
+> >>> below. I see these advantages in this approach:
+> >>>
+> >>>   * I define a new node with a `compatible` property.
+> >>>   * There is precedent: the psci node. In the `cpus` node, each cpu@n has
+> >>
+> > 
+> > Thanks for your feedback!
+> > 
+> >> psci is a standard. If you are documenting here a standard, clearly
+> >> express it and provide reference to the specification.
+> > 
+> > It is not really a standard, but this mailbox behaves indentically to the
+> > wakeup mailbox described in the ACPI spec [1]. I am happy reference the
+> > spec in the documentation of the binding... or describe in full the
+> > mechanism of mailbox without referring to ACPI. You had indicated you don't
+> > care about what ACPI does [2].
+> 
+> Behaving like ACPI and implementing a spec are two different things. The
+> question is whether you need to implement it like that and I believe
+> answer is: no.
+> 
+> > 
+> > In a nutshell, the wakeup mailbox is similar to the spin table used in ARM
+> > boards: it is reserved memory region that secondary CPUs monitor while
+> > spinning.
+> > 
+> >>
+> >>
+> >>>     an `enable-method` property that specify `psci`.
+> >>>   * The mailbox is a device as it is located in a reserved memory region.
+> >>>     This true regardless of the device tree describing bare-metal or
+> >>>     virtualized machines.
+> >>>
+> >>> Thanks in advance for your feedback!
+> >>>
+> >>> Best,
+> >>> Ricardo
+> >>>
+> >>> (only the relevant sections of the binding are shown for brevity)
+> >>>
+> >>> properties:
+> >>>   $nodename:
+> >>>     const: wakeup-mailbox
+> >>>
+> >>>   compatible:
+> >>>     const: x86,wakeup-mailbox
+> >>
+> >> You need vendor prefix for this particular device. If I pointed out lack
+> >> of device and specific compatible, then adding random compatible does
+> >> not solve it. I understand it solves for you, but not from the bindings
+> >> point of view.
+> > 
+> > I see. Platform firmware will implement the mailbox. It would not be any
+> > specific hardware from Intel. Perhaps `intel,wakeup-mailbox`?
+> > 
+> >>
+> >>>
+> >>>   mailbox-addr:
+> >>>     $ref: /schemas/types.yaml#/definitions/uint64
+> >>
+> >> So is this some sort of reserved memory?
+> > 
+> > Yes, the mailbox is located in reserved memory.
+> 
+> 
+> Then why reserved memory bindings are not working?
+> 
+> Anyway this was half a year ago. None of the emails are in my inbox.
+> None of the context is in my head.
+> 
+> It's the second or third email this month someone responds to my email
+> from 2024.
+> 
+> Frankly, that's a neat trick. I won't remember anything, but it would be
+> impolite to say just "no" without arguments. So now you will resend the
+> same code leading to the same discussions we had half a year ago. Or
+> ignoring that discussions.
+> 
+> I don't understand why this should be reviewers problem, so no, that's
+> just unfair.
+> 
 
-So I did some testing on Sapphire Rapids vs movsq (it is an
-FSRM-enabled sucker so I had to force it to use it) and the penalty I
-remembered is still there.
+Thank you again for your feedback. I will send a third version of the
+patchset. This will give the full context. I will incorporate your feedback
+in such version.
 
-I patched read1 from will-it-scale to do 128 and 129 byte reads.
+Thanks and BR,
+Ricardo
 
-On the stock kernel I get about 5% throughput drop rate when adding
-just the one byte.
-
-On a kernel patched to overlap these with prior movsq stores I get a 10% dr=
-op.
-
-While a CPU without ERMS/FSRM could have a different penalty, this
-very much lines up with my prior experiments back in the day, so I'm
-gonna have to assume this still is still a problem for others.
-
-So I stand by only patching the short range for the time being.
-
-Note that should someone(tm) rework this to use overlapping stores
-with bigger ranges (like memcpy), this will become less of an issue as
-there will be no per-byte copying.
---=20
-Mateusz Guzik <mjguzik gmail.com>
