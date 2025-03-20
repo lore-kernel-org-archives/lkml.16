@@ -1,252 +1,182 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-001b2d01.pphosted.com (mx0a-001b2d01.pphosted.com [148.163.156.1])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D09A1F03F2;
-	Thu, 20 Mar 2025 08:20:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E587F1F03F2;
+	Thu, 20 Mar 2025 08:21:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.156.1
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742458858; cv=none; b=EIc+mNkQi2RjKywc4eF5ADxkgOGRrzB2mOBFhiiXJ/Zne2JMO+8ICVbCugwdyfzPEVWoTCn7uRNixcokrLF1oJXzYL8bvOO5omkHjZjnZh4Kj8+63wWXkO/J2/6iM3etP9EfLP/1oi1wyaBFXqzRMSZV24SyogPqXlUTKlL7SKU=
+	t=1742458867; cv=none; b=eOxDIKFArb9sPJ7n9YnijCcCVCLASLMGdCnksUUBCaINREXLWLson2fTLzcTL8Ylhwfco8NsU3yqamkD7NoyMVUWyks4T5T7M1930K6Y4eCsLo0o+iYDyWV8K2FxVunRMncMrIZ5Jw4HES4pltw7tf6V251letkci+tlC120LC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742458858; c=relaxed/simple;
-	bh=m9ldrpcnCoikE6giWHd9jUoVh2I0mSYdeJC9WLuvQgA=;
+	s=arc-20240116; t=1742458867; c=relaxed/simple;
+	bh=9jVOE5DG0El/OsB+pqGYbr940r5MPTlxNv0abE4J8XI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jlRGb/ZEf+m+WwvaAa63yjvLrrTML79Liir8XpbQ3L7Ex3/PMLIX0BAZtHhFSRbLDRSscjZlR7c/NgRqKeb/UvvwnSNxYrRab4vwNgAqH+tXVH7DJngX+r8OxJ6ICp+2au1gjeXhf/tnQbSZvVu8dmULDECPjWD2xdK1QPt4qmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gwZmSDaw; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=eG6GpZEJ4WpHOplcaNO6Xv4crHXh/Xq4g8Q3pEOkmcjrvJcwZkVDXka+KguJ53qtAaSFXFhsyrced1bny3ym8J1v5Zp/Fskd3/tiHvIrt7EAoIUsyJmRa+9p+U5CV5l8VEAhJS8FFEit/KTMcPeLwX6t/S2R8LFCnyu6041MB5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Xebot/+8; arc=none smtp.client-ip=148.163.156.1
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwZmSDaw"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5499659e669so615899e87.3;
-        Thu, 20 Mar 2025 01:20:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742458854; x=1743063654; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9iENHKVkwQALSkIT4ciqqxVbw3ICVWHqdjLqSDCxudY=;
-        b=gwZmSDaw8ErlAuWjw9PQvB0qAHQodU2M3JtDhS4TY5a0DwuYSAHV1q6dVHD8EvwkG2
-         WyNfjCkZYw6nXP4SgzQu6hGb/FrDF3Ny1IOE5oMqFd9ImdU4ztC38Stxux+MqwkLYY+A
-         9qOiv1+ujSt8vH08Bjm63V0Vl6KcxH+6Wnd4eAFy47/pDAoachzDIC0GZBGz/4St7Alh
-         EVJleHGem09d8sOjzlwyrnLkxILmIWmJmX6xM2MHGbI1whPXYqkfALEW/qLxvjFSEusv
-         1+EX0d8HXdHiOXBeXGX1ynZTvfKCyOZS2RgSYvSCxzCGWGYcOWxhjP2n1WeXAasJK9H1
-         Zpgg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742458854; x=1743063654;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9iENHKVkwQALSkIT4ciqqxVbw3ICVWHqdjLqSDCxudY=;
-        b=rsPK/uyNt0KZsThvtacPCibOEQRyevsnaTv/Fzwg7wxm+6cY7YGz/SBzM+E0rzQeOQ
-         J5PWzN+zbG/sneV97s90kxuLf/8Z7YDXqfrVRtqnCnPiPIS45gYDkg9Pz9ThoBaGfm99
-         yWoKFqLkvnojsdreqWPRgbyHB5fQI2JtoskrDMxr/y/IZ3d+7ERF5kDlUqekuknpOw2P
-         dQRmb5hdDDBQId3skMNosNoEmadqIjO7IvdFgplCU77aOD8ZkEva9TzMyyEvM/yLuvmA
-         mELQa4X5/6UghXRcRojZc5ZRffXiMMdJ3eVMCBsEptXbBf+OoKBDut1ew+991NMhcmSb
-         xAoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUP0DNTMrhL1JQRU4rq898WjBuHrUtPjnv+UYyEFUS73KHaYkaESu4M1MpX8WJcR240/RTAM00E8Jn/s8+t@vger.kernel.org, AJvYcCUe5gOYJx1THkhaGMGR30jey37jWdbZLA2gMXSPTnl+/3JQWnYB0sjLH7pNfvw51lUB2bHkIcIQM+JF@vger.kernel.org, AJvYcCWx3zZvY/YqW8HP+e4DY4h+o6FF4K7LM/2VAIEWS2TTPUrBQyXt4dT1iGC1WFnJ6sf3LqiQ1z5dsOa0@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaUajbUENQQjafgfUEuvvR4AFIrwIkuCZIVila+V6T1bEAXotU
-	CFnd0Q5PbTKY8zT3SRBG6X5WCNDAiDZbhmFQemKU6wbB59cbGrT1
-X-Gm-Gg: ASbGnctPq177PpcWFGpQGqehHRWSwZOXsxkRynBD78iCtMtnEczQOxp0EekUb6CAtW2
-	vwa/IDQzy5wyO/tVILvJ12AwXN4i9hNdAVCfPAIrDNIRaLthorgRh1AWyhk4sb+uDgTVIsnK0cv
-	J2Vn2ttHCBj2Voo0G4mShnVVDc4OCxlbTvUIGtWqSLB4L0lfErp21v7W7zHXPRNHY5e2zNDGAsV
-	78sjE2rDNcoSs//4fG5bEuse4zk02FFdsIU7nbFWzCxwEki8vNYUYqzuF+iaWA3wiXDPcEEGtMH
-	5GN5H9M0+Xyuq9iTobDLoevOt3B3zqfJlf8RjWd6E/OE94a1uO4=
-X-Google-Smtp-Source: AGHT+IHZT50mChewQrqED18bCPxt8oOSgGTEXlwZ6D49vU1R1f4+KpfiFq2ln/VYvdhId27X2iik5w==
-X-Received: by 2002:a05:6512:130c:b0:549:903a:1c2 with SMTP id 2adb3069b0e04-54acb22429fmr1982203e87.49.1742458854183;
-        Thu, 20 Mar 2025 01:20:54 -0700 (PDT)
-Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba864dc3sm2209562e87.152.2025.03.20.01.20.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 01:20:53 -0700 (PDT)
-Date: Thu, 20 Mar 2025 10:20:47 +0200
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>,
-	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v9 1/8] dt-bindings: ROHM BD79124 ADC/GPO
-Message-ID: <e16f54b6214b0d796216729a7e29b8f7be9ae19e.1742457420.git.mazziesaccount@gmail.com>
-References: <cover.1742457420.git.mazziesaccount@gmail.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Xebot/+8"
+Received: from pps.filterd (m0360083.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52K3kF6A030483;
+	Thu, 20 Mar 2025 08:20:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=SxBx6A
+	aVQMU5kwkXSwRaRr0kAHgIW2x2jaGLw6CxjIs=; b=Xebot/+8ITMZHWcmOSFpet
+	VnwhSIzeRVFCMRGrAwnjRpnIJKWuSROm7WLFpn+lTCKQBT2eKghO2hkvBznyNff0
+	ojJw3HGUUEq2rReMlM+2vW/2YzxJxnFvpcKVmSzs4JVviLRbNnBodoBSo1VlaT51
+	kzlvP0eqZFf9QISaNZ4lNpU9m73RuAjxX4G5AL7tipikosTHEyNC4kmlvGCT99S/
+	tJiEDARt/4rbxW3Fgl+9KT4XeUR3bEtfMquDz5bN1AHAiMjPv9Muhp2aw1swxRjS
+	ODBITC+JYRNxY2nViGUblZD5HfWEWIe51ijz2CWG9ugxVCsmNifdHw5ql8Kot8ig
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gbd9h51v-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 08:20:42 +0000 (GMT)
+Received: from m0360083.ppops.net (m0360083.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52K8IkSo022645;
+	Thu, 20 Mar 2025 08:20:41 GMT
+Received: from ppma11.dal12v.mail.ibm.com (db.9e.1632.ip4.static.sl-reverse.com [50.22.158.219])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gbd9h51q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 08:20:41 +0000 (GMT)
+Received: from pps.filterd (ppma11.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma11.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52K6XmTp005721;
+	Thu, 20 Mar 2025 08:20:40 GMT
+Received: from smtprelay03.fra02v.mail.ibm.com ([9.218.2.224])
+	by ppma11.dal12v.mail.ibm.com (PPS) with ESMTPS id 45dpk2pfvc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 08:20:40 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay03.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52K8Kb3f57278776
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 20 Mar 2025 08:20:37 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 28F6320049;
+	Thu, 20 Mar 2025 08:20:37 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 43A2A2004E;
+	Thu, 20 Mar 2025 08:20:33 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.109.219.153])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTPS;
+	Thu, 20 Mar 2025 08:20:33 +0000 (GMT)
+Date: Thu, 20 Mar 2025 13:50:30 +0530
+From: Saket Kumar Bhaskar <skb99@linux.ibm.com>
+To: aleksander.lobakin@intel.com
+Cc: bpf@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ast@kernel.org, hbathini@linux.ibm.com, andrii@kernel.org,
+        daniel@iogearbox.net, davem@davemloft.net, kuba@kernel.org,
+        hawk@kernel.org, martin.lau@linux.dev, eddyz87@gmail.com,
+        song@kernel.org, yonghong.song@linux.dev, john.fastabend@gmail.com,
+        kpsingh@kernel.org, venkat88@linux.ibm.com
+Subject: Re: [PATCH v2 0/2] Fix xdp_adjust_frags_tail_grow selftest on powerpc
+Message-ID: <Z9vPzpfMlKE+D8kx@linux.ibm.com>
+References: <cover.1741188826.git.skb99@linux.ibm.com>
+ <96a959ec-c6a6-4740-a560-34134b2af7f7@linux.ibm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="xAcJQBerHGygPDu4"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <cover.1742457420.git.mazziesaccount@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <96a959ec-c6a6-4740-a560-34134b2af7f7@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: -zPmiBqpxt79rPkJ35Rjh__UWc9xdsBB
+X-Proofpoint-GUID: R9T0fej3nwi7dxupY1mldgeegiMu11wN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-20_02,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ priorityscore=1501 malwarescore=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 suspectscore=0
+ clxscore=1015 mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2503200046
 
+Gentle Ping...
 
---xAcJQBerHGygPDu4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Alexander and other net bpf guys, it would be great if you could share your
+feedback whenever you have a moment. Please do let me know if there's any
+additional change needed.
 
-Add binding document for the ROHM BD79124 ADC / GPO.
+Thanks,
+Saket
 
-ROHM BD79124 is a 8-channel, 12-bit ADC. The input pins can also be used
-as general purpose outputs.
-
-Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
----
-Revision history:
-v3 =3D>
- - No changes
-v2 =3D> v3:
- - Restrict channel numbers to 0-7 as suggested by Conor
-RFC v1 =3D> v2:
- - drop MFD and represent directly as ADC
- - drop pinmux and treat all non ADC channel pins as GPOs
----
- .../bindings/iio/adc/rohm,bd79124.yaml        | 114 ++++++++++++++++++
- 1 file changed, 114 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/rohm,bd79124.=
-yaml
-
-diff --git a/Documentation/devicetree/bindings/iio/adc/rohm,bd79124.yaml b/=
-Documentation/devicetree/bindings/iio/adc/rohm,bd79124.yaml
-new file mode 100644
-index 000000000000..503285823376
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/rohm,bd79124.yaml
-@@ -0,0 +1,114 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/adc/rohm,bd79124.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: ROHM BD79124 ADC/GPO
-+
-+maintainers:
-+  - Matti Vaittinen <mazziesaccount@gmail.com>
-+
-+description: |
-+  The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
-+  an automatic measurement mode, with an alarm interrupt for out-of-window
-+  measurements. ADC input pins can be also configured as general purpose
-+  outputs.
-+
-+properties:
-+  compatible:
-+    const: rohm,bd79124
-+
-+  reg:
-+    description:
-+      I2C slave address.
-+    maxItems: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  gpio-controller: true
-+
-+  "#gpio-cells":
-+    const: 1
-+    description:
-+      The pin number.
-+
-+  vdd-supply: true
-+
-+  iovdd-supply: true
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 0
-+
-+patternProperties:
-+  "^channel@[0-7]+$":
-+    type: object
-+    $ref: /schemas/iio/adc/adc.yaml#
-+    description: Represents ADC channel.
-+
-+    properties:
-+      reg:
-+        description: AIN pin number
-+        minimum: 0
-+        maximum: 7
-+
-+    required:
-+      - reg
-+
-+    additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - iovdd-supply
-+  - vdd-supply
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/leds/common.h>
-+    i2c {
-+        #address-cells =3D <1>;
-+        #size-cells =3D <0>;
-+        adc: adc@10 {
-+            compatible =3D "rohm,bd79124";
-+            reg =3D <0x10>;
-+
-+            interrupt-parent =3D <&gpio1>;
-+            interrupts =3D <29 8>;
-+
-+            vdd-supply =3D <&dummyreg>;
-+            iovdd-supply =3D <&dummyreg>;
-+
-+            #address-cells =3D <1>;
-+            #size-cells =3D <0>;
-+
-+            channel@0 {
-+                reg =3D <0>;
-+            };
-+            channel@1 {
-+                reg =3D <1>;
-+            };
-+            channel@2 {
-+                reg =3D <2>;
-+            };
-+            channel@3 {
-+                reg =3D <3>;
-+            };
-+            channel@4 {
-+                reg =3D <4>;
-+            };
-+            channel@5 {
-+                reg =3D <5>;
-+            };
-+            channel@6 {
-+                reg =3D <6>;
-+            };
-+        };
-+    };
---=20
-2.48.1
-
-
---xAcJQBerHGygPDu4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfbz98ACgkQeFA3/03a
-ocXyUwf+L0DqwbrheDMl+16Q49pBwmzb2F6jweE0QzMHkSi4HdY03hkryNUTNjPR
-BQWvGUGpaMSnBesvLkxSl4wN9mRS572T/YNutzEx6yYvXbaB2Mv3EZh6PdYahKHX
-irMgG6gq/7/NvRMQgYGJJ5erkfeXPp1nQkWBEFpalBkdX6tZEIQObsGCCQo5oFa0
-FENh88Tx9o3m+FDe9Ve889IkeTRzFOpGOXz3VpC6ZKXLiXLeaaZn6TrkVtqCi+9P
-vQQv6AkdXWZQXy7tVuWhwWbPn7BbUGK4BUxQ7CrNne4oLLqaiLXnM76JXKomUO4U
-8i7LBej4yfl5adKD/L2roLILk2ZvTQ==
-=tmL0
------END PGP SIGNATURE-----
-
---xAcJQBerHGygPDu4--
+On Fri, Mar 07, 2025 at 08:54:00PM +0530, Venkat Rao Bagalkote wrote:
+> 
+> On 05/03/25 10:43 pm, Saket Kumar Bhaskar wrote:
+> > For platforms on powerpc architecture with a default page size greater
+> > than 4096, there was an inconsistency in fragment size calculation.
+> > This caused the BPF selftest xdp_adjust_tail/xdp_adjust_frags_tail_grow
+> > to fail on powerpc.
+> > 
+> > The issue occurred because the fragment buffer size in
+> > bpf_prog_test_run_xdp() was set to 4096, while the actual data size in
+> > the fragment within the shared skb was checked against PAGE_SIZE
+> > (65536 on powerpc) in min_t, causing it to exceed 4096 and be set
+> > accordingly. This discrepancy led to an overflow when
+> > bpf_xdp_frags_increase_tail() checked for tailroom, as skb_frag_size(frag)
+> > could be greater than rxq->frag_size (when PAGE_SIZE > 4096).
+> > 
+> > This change fixes:
+> > 
+> > 1. test_run by getting the correct arch dependent PAGE_SIZE.
+> > 2. selftest by caculating tailroom and getting correct PAGE_SIZE.
+> > 
+> > Changes:
+> > v1 -> v2:
+> >     * Address comments from Alexander
+> >        * Use dynamic page size, cacheline size and size of
+> >          struct skb_shared_info to calculate parameters.
+> >        * Fixed both test_run and selftest.
+> > 
+> > v1: https://lore.kernel.org/all/20250122183720.1411176-1-skb99@linux.ibm.com/
+> > 
+> > Saket Kumar Bhaskar (2):
+> >    bpf, test_run: Replace hardcoded page size with dynamic PAGE_SIZE in
+> >      test_run
+> >    selftests/bpf: Refactor xdp_adjust_tail selftest with dynamic sizing
+> > 
+> >   .../bpf/prog_tests/xdp_adjust_tail.c          | 160 +++++++++++++-----
+> >   .../bpf/progs/test_xdp_adjust_tail_grow.c     |  41 +++--
+> >   2 files changed, 149 insertions(+), 52 deletions(-)
+> > 
+> Applied the patch series on the bpf-next and patch works as expected.
+> 
+> 
+> With Out the Patch:
+> 
+> test_xdp_adjust_frags_tail_grow:PASS:9Kb+10b 0 nsec
+> test_xdp_adjust_frags_tail_grow:FAIL:9Kb+10b retval unexpected 9Kb+10b
+> retval: actual 3 != expected 1
+> test_xdp_adjust_frags_tail_grow:FAIL:9Kb+10b size unexpected 9Kb+10b size:
+> actual 13097 != expected 9001
+> #583/5   xdp_adjust_tail/xdp_adjust_frags_tail_grow:FAIL
+> #583     xdp_adjust_tail:FAIL
+> Summary: 0/4 PASSED, 0 SKIPPED, 1 FAILED
+> 
+> 
+> With Patch:
+> 
+> # ./test_progs -t xdp_adjust_tail
+> #583/1   xdp_adjust_tail/xdp_adjust_tail_shrink:OK
+> #583/2   xdp_adjust_tail/xdp_adjust_tail_grow:OK
+> #583/3   xdp_adjust_tail/xdp_adjust_tail_grow2:OK
+> #583/4   xdp_adjust_tail/xdp_adjust_frags_tail_shrink:OK
+> #583/5   xdp_adjust_tail/xdp_adjust_frags_tail_grow:OK
+> #583     xdp_adjust_tail:OK
+> Summary: 1/5 PASSED, 0 SKIPPED, 0 FAILED
+> 
+> 
+> Please add below tag to all the patches in series.
+> 
+> Tested-by: Venkat Rao Bagalkote <venkat88@linux.ibm.com>
+> 
+> 
+> Regards,
+> 
+> Venkat.
+> 
