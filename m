@@ -1,159 +1,144 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CB017A2E3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BCE20A5D8
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742439176; cv=none; b=XxGlAl7vtlJ9HwvWzYaieY4ej9BcIHDZh5VZxA7bN2JUWgYiFmMXXPWo+0xzB7JvsKTuLYwg/s2Sz8fFFD7vX/0Glg6tifnf4r/RwENdzd07TQKtDZvADHiMSaL0WylRcf1zDNDSJgsjLCZIhnnuTMpDAt4GxBWmcjevdywxqzU=
+	t=1742439180; cv=none; b=kQ1/PuWumArETpWhTjyU4AzEm8HSjH2r1oNrQAqs43iIasMfaA50BBR8X45xwR4vVbXnonViUnxDK2dfKuRWHLoQ4JH/gVO9ba1+xgegjabSrEK6A9l/HEB7H2KGGLdl7Gc14BkZDELrwtVsn3b3iSTrM4ffNN3+eYTUTRF5TxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742439176; c=relaxed/simple;
-	bh=vg4+ggxmuzeKTljMhEG1Oo/JmSE8/6fLfiQV1X3qNsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AJ2CtmcCQJPxuyG5OyvjiWto02OwcYNtDCLIFgoGwWg6lbNkka3qBOdApTx8VYQlcy8IJ7S1lHr9gZDUX18VPgVWtxeQM8LXW2Tj1P9sOlpH4ASfLky/rnwf9K2ZbAsn3St9YMBS8lLcBURR7lfEAlMacNROFk/gxG7BXRwh76c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N3ccJmrU; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3ccJmrU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742439173;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=llxsDGyF5OTS0kLxtrZq1xxBUU0ow8OofIklAK3fpNU=;
-	b=N3ccJmrUh2Qv6PDYr1LkgrCeJNaj+nfS8IbXJVZV8WJczUgHZmvarH0oeF5hyU0gP8Bgjh
-	YUdWeycoMUthhT7ppotbZ3XqXjWDZR5s+5LdktA+xs3xlkcEA9/v7PmAXKM3Gt6K/tUGiH
-	mr18kvPDfpIaTdKRkzeRjQvF0B5ETMA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-121-BuMgurEROi-9O3Ip2yolXw-1; Wed,
- 19 Mar 2025 22:52:49 -0400
-X-MC-Unique: BuMgurEROi-9O3Ip2yolXw-1
-X-Mimecast-MFC-AGG-ID: BuMgurEROi-9O3Ip2yolXw_1742439167
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74EC41800875;
-	Thu, 20 Mar 2025 02:52:46 +0000 (UTC)
-Received: from localhost (unknown [10.72.112.30])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E66BA180174E;
-	Thu, 20 Mar 2025 02:52:42 +0000 (UTC)
-Date: Thu, 20 Mar 2025 10:52:38 +0800
-From: Baoquan He <bhe@redhat.com>
-To: steven chen <chenste@linux.microsoft.com>
-Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
-	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
-	eric.snowberg@oracle.com, ebiederm@xmission.com,
-	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
-	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
-	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
-	dyoung@redhat.com
-Subject: Re: [PATCH v10 7/8] ima: make the kexec extra memory configurable
-Message-ID: <Z9uC9g+UaVAA/0tY@MiWiFi-R3L-srv>
-References: <20250318010448.954-1-chenste@linux.microsoft.com>
- <20250318010448.954-8-chenste@linux.microsoft.com>
+	s=arc-20240116; t=1742439180; c=relaxed/simple;
+	bh=GuPQuUqNE0nQmAk/QBIYL+SVOYKISCByd3URDHf+v60=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=D0Ij0hqPSybVh0/zMmLybcMmiie5OKKB1lmDB7d3xhKa0ir4Q1v35q/MnmCHw5b3UQW+XEr0ZdxV5w8Wa9aM5JFj+eNUbTMmgJoInkG4nirAAqnU5V9BhUMaUwxosPXNjhFS+OaVbh6hbrV1e5MjO5PeXPLOlwBFIU3iHBzJryk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.93.142])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZJ99D4cVcz4f3jtt
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:32 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id F21B91A0E30
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:49 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP3 (Coremail) with SMTP id _Ch0CgAHW8X_gttnYGGmGw--.42197S5;
+	Thu, 20 Mar 2025 10:52:49 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org
+Cc: kasong@tencent.com,
+	tim.c.chen@linux.intel.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/8] mm: swap: use swap_entries_free() to free swap entry in swap_entry_put_locked()
+Date: Thu, 20 Mar 2025 19:48:24 +0800
+Message-Id: <20250320114829.25751-4-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20250320114829.25751-1-shikemeng@huaweicloud.com>
+References: <20250320114829.25751-1-shikemeng@huaweicloud.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318010448.954-8-chenste@linux.microsoft.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgAHW8X_gttnYGGmGw--.42197S5
+X-Coremail-Antispam: 1UD129KBjvJXoWxZF1DKr13Gr4xKr1ktrW3trb_yoW5XFWDpF
+	ZIgr4DtF48Ar17Kw4UAw45ZayFvw4xWw1jqF9rGw15ZasxJryFgFyDA3y7KFyUA3s8uas8
+	A3WUtr17uF4jyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI
+	0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUaTKu
+	UUUUU
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-On 03/17/25 at 06:04pm, steven chen wrote:
-> The extra memory allocated for carrying the IMA measurement list across
-> kexec is hard-coded as half a PAGE.  Make it configurable.
-> 
-> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
-> extra memory (in kb) to be allocated for IMA measurements added during
-> kexec soft reboot.  Ensure the default value of the option is set such
-> that extra half a page of memory for additional measurements is allocated
-> for the additional measurements.
-> 
-> Update ima_add_kexec_buffer() function to allocate memory based on the
-> Kconfig option value, rather than the currently hard-coded one.
-> 
-> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Signed-off-by: steven chen <chenste@linux.microsoft.com>
-> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
-> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-> ---
->  security/integrity/ima/Kconfig     | 10 ++++++++++
->  security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
->  2 files changed, 21 insertions(+), 5 deletions(-)
-> 
-> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-> index 475c32615006..d73c96c3c1c9 100644
-> --- a/security/integrity/ima/Kconfig
-> +++ b/security/integrity/ima/Kconfig
-> @@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
->  	help
->  	   This option disables htable to allow measurement of duplicate records.
->  
-> +config IMA_KEXEC_EXTRA_MEMORY_KB
-> +	int "Extra memory for IMA measurements added during kexec soft reboot"
-> +	depends on IMA_KEXEC
-> +	default 0
+In swap_entry_put_locked(), we will set slot to SWAP_HAS_CACHE before
+using swap_entries_free() to do actual swap entry freeing. This
+introduce an unnecessary intermediate state.
+By using swap_entries_free() in swap_entry_put_locked(), we can
+eliminate the need to set slot to SWAP_HAS_CACHE.
+This change would make the behavior of swap_entry_put_locked() more
+consistent with other put() operations which will do actual free work
+after put last reference.
 
-Is there range for this memory, e.g [0, max] and max will be a value
-according to our current perception?
+Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
+Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
+Reviewed-by: Kairui Song <kasong@tencent.com>
+---
+ mm/swapfile.c | 20 +++++++++-----------
+ 1 file changed, 9 insertions(+), 11 deletions(-)
 
-> +	help
-> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
-> +	  allocated (in kb) for IMA measurements added during kexec soft reboot.
-> +	  If set to the default value of 0, an extra half page of memory for those
-> +	  additional measurements will be allocated.
-> +
->  endif
-> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
-> index c390c745f882..0f214e41dd33 100644
-> --- a/security/integrity/ima/ima_kexec.c
-> +++ b/security/integrity/ima/ima_kexec.c
-> @@ -131,6 +131,7 @@ void ima_add_kexec_buffer(struct kimage *image)
->  				  .buf_min = 0, .buf_max = ULONG_MAX,
->  				  .top_down = true };
->  	unsigned long binary_runtime_size;
-> +	unsigned long extra_memory;
->  
->  	/* use more understandable variable names than defined in kbuf */
->  	size_t kexec_buffer_size = 0;
-> @@ -138,15 +139,20 @@ void ima_add_kexec_buffer(struct kimage *image)
->  	int ret;
->  
->  	/*
-> -	 * Reserve an extra half page of memory for additional measurements
-> -	 * added during the kexec load.
-> +	 * Reserve extra memory for measurements added during kexec.
->  	 */
-> -	binary_runtime_size = ima_get_binary_runtime_size();
-> +	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
-> +		extra_memory = PAGE_SIZE / 2;
-> +	else
-> +		extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
-> +
-> +	binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
-> +
->  	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
->  		kexec_segment_size = ULONG_MAX;
->  	else
-> -		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
-> -					   PAGE_SIZE / 2, PAGE_SIZE);
-> +		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
-> +
->  	if ((kexec_segment_size == ULONG_MAX) ||
->  	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
->  		pr_err("Binary measurement list too large.\n");
-> -- 
-> 2.25.1
-> 
-> 
+diff --git a/mm/swapfile.c b/mm/swapfile.c
+index 76720ca76aae..d05b58e9c723 100644
+--- a/mm/swapfile.c
++++ b/mm/swapfile.c
+@@ -1348,9 +1348,11 @@ static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
+ }
+ 
+ static unsigned char swap_entry_put_locked(struct swap_info_struct *si,
+-					   unsigned long offset,
++					   struct swap_cluster_info *ci,
++					   swp_entry_t entry,
+ 					   unsigned char usage)
+ {
++	unsigned long offset = swp_offset(entry);
+ 	unsigned char count;
+ 	unsigned char has_cache;
+ 
+@@ -1382,7 +1384,7 @@ static unsigned char swap_entry_put_locked(struct swap_info_struct *si,
+ 	if (usage)
+ 		WRITE_ONCE(si->swap_map[offset], usage);
+ 	else
+-		WRITE_ONCE(si->swap_map[offset], SWAP_HAS_CACHE);
++		swap_entries_free(si, ci, entry, 1);
+ 
+ 	return usage;
+ }
+@@ -1461,9 +1463,7 @@ static unsigned char swap_entry_put(struct swap_info_struct *si,
+ 	unsigned char usage;
+ 
+ 	ci = lock_cluster(si, offset);
+-	usage = swap_entry_put_locked(si, offset, 1);
+-	if (!usage)
+-		swap_entries_free(si, ci, swp_entry(si->type, offset), 1);
++	usage = swap_entry_put_locked(si, ci, entry, 1);
+ 	unlock_cluster(ci);
+ 
+ 	return usage;
+@@ -1558,8 +1558,8 @@ static void cluster_swap_free_nr(struct swap_info_struct *si,
+ 
+ 	ci = lock_cluster(si, offset);
+ 	do {
+-		if (!swap_entry_put_locked(si, offset, usage))
+-			swap_entries_free(si, ci, swp_entry(si->type, offset), 1);
++		swap_entry_put_locked(si, ci, swp_entry(si->type, offset),
++				      usage);
+ 	} while (++offset < end);
+ 	unlock_cluster(ci);
+ }
+@@ -1604,10 +1604,8 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
+ 	if (swap_only_has_cache(si, offset, size))
+ 		swap_entries_free(si, ci, entry, size);
+ 	else {
+-		for (int i = 0; i < size; i++, entry.val++) {
+-			if (!swap_entry_put_locked(si, offset + i, SWAP_HAS_CACHE))
+-				swap_entries_free(si, ci, entry, 1);
+-		}
++		for (int i = 0; i < size; i++, entry.val++)
++			swap_entry_put_locked(si, ci, entry, SWAP_HAS_CACHE);
+ 	}
+ 	unlock_cluster(ci);
+ }
+-- 
+2.30.0
 
