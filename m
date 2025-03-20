@@ -1,33 +1,33 @@
-Received: from smtp-bc0d.mail.infomaniak.ch (smtp-bc0d.mail.infomaniak.ch [45.157.188.13])
+Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7477322A4F4
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:07:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F47722A7FA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:07:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497664; cv=none; b=njFlQSJfdUgjthgAnmNSpa9OemAjfnSbbszSRuWuYTNPyT1LSltsOsfNRjCVJ3Iryp1GRmnT0UqLizYzrBkyXuRC6/WF+tFeQvgoErLZnG7NgDr42EuwEAREqxJQoUvVt01KYGDsxEODMuADodfVhtpqvAcOA5BMnnwB9LfzKWY=
+	t=1742497666; cv=none; b=kR8V/XTl++H5lYtATJn6M4+4fUpq+KbC8fzSptpml3+vjnkpULysUuSAISw7F4lC7/6kMqJz793ChfrCnrIvrTew/nJCm4adoaVOWWCGzb8zfFvQrjnKeKe6ZIW8zDBdTuxiH4iVunOs/9tnOte/BNguj8Mdlxu2VzQLu00AOAc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497664; c=relaxed/simple;
-	bh=7M2HCNBBbNvtHgndpxDFlHm5ZCUn465h1cpAk4NHpog=;
+	s=arc-20240116; t=1742497666; c=relaxed/simple;
+	bh=4MAiFprTJC3kmpLynaeul6ePvU83P97i8wEH0vJ8dCc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j5PyILnYtaH2k2aXXttXuk1XJQ9TQHC19Bd6jX8aalWQKJEkXOSNIgyFoUQCZX8djecPoseJHVe9C5ZUT3GKVQRVhp/lZ81MArv8ZaiAa8k5duU/fSMxsASLoraov20Amo0xFl1iT54fnWIT0yPvwgKGlbkFJJ4M1waJsZYUAlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=CySJmn9g; arc=none smtp.client-ip=45.157.188.13
+	 MIME-Version:Content-Type; b=mrRBWkfT03aO2aZuTsmaaWQNHsYpB8sdfdI2zfIaF3jO5hYfEbN8vXYt9OcviRoMCI8eDIm2QahDPkn5pHq1Kgn5j1ybVhaUrlGHb2aou79MiGXauM7i2Q2UPDsYWkYZ8fZAk3+a2fKaWb4knYHI7dPhGwu6YiFsZ5gViifrmzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=FUitkteR; arc=none smtp.client-ip=83.166.143.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="CySJmn9g"
-Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpF6l2kzLHv;
-	Thu, 20 Mar 2025 20:07:33 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="FUitkteR"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpP60LlzZJ;
+	Thu, 20 Mar 2025 20:07:41 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1742497653;
-	bh=bBvmm7L6QNI9FX5fCvyfCIGt4iiWKXVuXy7dSrsTyMQ=;
+	s=20191114; t=1742497661;
+	bh=dxBCVukpcR0WVQJCkCxCnN9GRm34vOU9+7XkDk9PqII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CySJmn9gsWHgo2JH4lfACWTO6DcoSEOJF2qZtw4LHB5NDjVFU7B4qDfnxvSFQUxYK
-	 9bLXUh+OUh40nUOYHKn89B4d8/DimxeQ+WCBVlVjzXYbMv4v2Zb+XkQD4j5Z3b/xxD
-	 thXUAsxFdUh/V+B6ISsnkx6f2supZGxyOlys/O44=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpF00VGzXRp;
-	Thu, 20 Mar 2025 20:07:32 +0100 (CET)
+	b=FUitkteRxrtDPM+NTmehPt0cI/gPbaVxRJmvphmjBHLBL8XTGJsXuTIeGY0Ytetli
+	 TPEBU7pAMw2nld0VaamF3rsl7YNkMFCEMwJuhEWX+6ny6TFy8dsbH0f4pi7SVW5o6t
+	 abeia1iTmgLWpStZFjF37EheyIfVfZyigd/kvuEk=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpN6f2BzD1v;
+	Thu, 20 Mar 2025 20:07:40 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -59,9 +59,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v7 06/28] landlock: Prepare to use credential instead of domain for scope
-Date: Thu, 20 Mar 2025 20:06:55 +0100
-Message-ID: <20250320190717.2287696-7-mic@digikod.net>
+Subject: [PATCH v7 11/28] landlock: Log mount-related denials
+Date: Thu, 20 Mar 2025 20:07:00 +0100
+Message-ID: <20250320190717.2287696-12-mic@digikod.net>
 In-Reply-To: <20250320190717.2287696-1-mic@digikod.net>
 References: <20250320190717.2287696-1-mic@digikod.net>
 Precedence: bulk
@@ -74,135 +74,269 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-This cosmetic change that is needed for audit support, specifically to
-be able to filter according to cross-execution boundaries.
+Add audit support for sb_mount, move_mount, sb_umount, sb_remount, and
+sb_pivot_root hooks.
 
-Replace hardcoded LANDLOCK_SCOPE_SIGNAL with the signal_scope.scope
-variable.
+The new related blocker is "fs.change_topology".
 
-Use scoped guards for RCU read-side critical sections.
+Audit event sample:
+
+  type=LANDLOCK_DENY msg=audit(1729738800.349:44): domain=195ba459b blockers=fs.change_topology name="/" dev="tmpfs" ino=1
+
+Remove landlock_get_applicable_domain() and get_current_fs_domain()
+which are now fully replaced with landlock_get_applicable_subject().
 
 Cc: Günther Noack <gnoack@google.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
 
 Changes since v6:
-- Rebase on the signal scoping fix.
+- Use "change_topology" instead of "change_layout".
+
+Changes since v5:
+- Move request declaration in the landlock_log_denial() calls.
 
 Changes since v4:
-- New patch.
----
- security/landlock/task.c | 49 +++++++++++++++++++++-------------------
- 1 file changed, 26 insertions(+), 23 deletions(-)
+- Rebase on top of the landlock_log_denial() and subject type changes.
+- Fix off-by-one error in landlock_match_layer_level(), now merged into
+  landlock_get_applicable_domain().
 
-diff --git a/security/landlock/task.c b/security/landlock/task.c
-index e04646d80e78..a44b8e4a6ea6 100644
---- a/security/landlock/task.c
-+++ b/security/landlock/task.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <asm/current.h>
-+#include <linux/cleanup.h>
- #include <linux/cred.h>
- #include <linux/errno.h>
- #include <linux/kernel.h>
-@@ -214,15 +215,15 @@ static int hook_unix_stream_connect(struct sock *const sock,
- 				    struct sock *const other,
- 				    struct sock *const newsk)
- {
--	const struct landlock_ruleset *const dom =
--		landlock_get_applicable_domain(landlock_get_current_domain(),
--					       unix_scope);
-+	const struct landlock_cred_security *const subject =
-+		landlock_get_applicable_subject(current_cred(), unix_scope,
-+						NULL);
- 
- 	/* Quick return for non-landlocked tasks. */
--	if (!dom)
-+	if (!subject)
- 		return 0;
- 
--	if (is_abstract_socket(other) && sock_is_scoped(other, dom))
-+	if (is_abstract_socket(other) && sock_is_scoped(other, subject->domain))
- 		return -EPERM;
- 
- 	return 0;
-@@ -231,11 +232,11 @@ static int hook_unix_stream_connect(struct sock *const sock,
- static int hook_unix_may_send(struct socket *const sock,
- 			      struct socket *const other)
- {
--	const struct landlock_ruleset *const dom =
--		landlock_get_applicable_domain(landlock_get_current_domain(),
--					       unix_scope);
-+	const struct landlock_cred_security *const subject =
-+		landlock_get_applicable_subject(current_cred(), unix_scope,
-+						NULL);
- 
--	if (!dom)
-+	if (!subject)
- 		return 0;
- 
- 	/*
-@@ -245,7 +246,8 @@ static int hook_unix_may_send(struct socket *const sock,
- 	if (unix_peer(sock->sk) == other->sk)
- 		return 0;
- 
--	if (is_abstract_socket(other->sk) && sock_is_scoped(other->sk, dom))
-+	if (is_abstract_socket(other->sk) &&
-+	    sock_is_scoped(other->sk, subject->domain))
- 		return -EPERM;
- 
- 	return 0;
-@@ -257,15 +259,12 @@ static const struct access_masks signal_scope = {
- 
- static int hook_task_kill(struct task_struct *const p,
- 			  struct kernel_siginfo *const info, const int sig,
--			  const struct cred *const cred)
-+			  const struct cred *cred)
- {
- 	bool is_scoped;
--	const struct landlock_ruleset *dom;
-+	const struct landlock_cred_security *subject;
- 
--	if (cred) {
--		/* Dealing with USB IO. */
--		dom = landlock_cred(cred)->domain;
--	} else {
-+	if (!cred) {
- 		/*
- 		 * Always allow sending signals between threads of the same process.
- 		 * This is required for process credential changes by the Native POSIX
-@@ -277,18 +276,22 @@ static int hook_task_kill(struct task_struct *const p,
- 		if (same_thread_group(p, current))
- 			return 0;
- 
--		dom = landlock_get_current_domain();
-+		/* Not dealing with USB IO. */
-+		cred = current_cred();
- 	}
--	dom = landlock_get_applicable_domain(dom, signal_scope);
+Changes since v3:
+- Cosmetic change to the "fs.change_layout" name.
+
+Changes since v2:
+- Log the domain that denied the action because not all layers block FS
+  layout changes.
+- Fix landlock_match_layer_level().
+
+Changes since v1:
+- Rebased on the TCP patch series.
+- Don't log missing permissions, only domain layer, and then remove the
+  permission word (suggested by Günther)
+---
+ security/landlock/audit.c   |  3 ++
+ security/landlock/audit.h   |  1 +
+ security/landlock/fs.c      | 81 ++++++++++++++++++++++++++++++++-----
+ security/landlock/ruleset.h | 30 --------------
+ 4 files changed, 74 insertions(+), 41 deletions(-)
+
+diff --git a/security/landlock/audit.c b/security/landlock/audit.c
+index a0e6041a1e21..423e8c61ebbd 100644
+--- a/security/landlock/audit.c
++++ b/security/landlock/audit.c
+@@ -21,6 +21,9 @@ static const char *get_blocker(const enum landlock_request_type type)
+ 	switch (type) {
+ 	case LANDLOCK_REQUEST_PTRACE:
+ 		return "ptrace";
 +
-+	subject = landlock_get_applicable_subject(cred, signal_scope, NULL);
++	case LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY:
++		return "fs.change_topology";
+ 	}
  
- 	/* Quick return for non-landlocked tasks. */
--	if (!dom)
+ 	WARN_ON_ONCE(1);
+diff --git a/security/landlock/audit.h b/security/landlock/audit.h
+index 40ff230316c4..9ebe8766bbfd 100644
+--- a/security/landlock/audit.h
++++ b/security/landlock/audit.h
+@@ -15,6 +15,7 @@
+ 
+ enum landlock_request_type {
+ 	LANDLOCK_REQUEST_PTRACE = 1,
++	LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
+ };
+ 
+ /*
+diff --git a/security/landlock/fs.c b/security/landlock/fs.c
+index 13d1cd78e8c8..7249371857fc 100644
+--- a/security/landlock/fs.c
++++ b/security/landlock/fs.c
+@@ -23,6 +23,7 @@
+ #include <linux/kernel.h>
+ #include <linux/limits.h>
+ #include <linux/list.h>
++#include <linux/lsm_audit.h>
+ #include <linux/lsm_hooks.h>
+ #include <linux/mount.h>
+ #include <linux/namei.h>
+@@ -39,6 +40,7 @@
+ #include <uapi/linux/landlock.h>
+ 
+ #include "access.h"
++#include "audit.h"
+ #include "common.h"
+ #include "cred.h"
+ #include "fs.h"
+@@ -395,12 +397,6 @@ static const struct access_masks any_fs = {
+ 	.fs = ~0,
+ };
+ 
+-static const struct landlock_ruleset *get_current_fs_domain(void)
+-{
+-	return landlock_get_applicable_domain(landlock_get_current_domain(),
+-					      any_fs);
+-}
+-
+ /*
+  * Check that a destination file hierarchy has more restrictions than a source
+  * file hierarchy.  This is only used for link and rename actions.
+@@ -1335,6 +1331,34 @@ static void hook_sb_delete(struct super_block *const sb)
+ 		       !atomic_long_read(&landlock_superblock(sb)->inode_refs));
+ }
+ 
++static void
++log_fs_change_topology_path(const struct landlock_cred_security *const subject,
++			    size_t handle_layer, const struct path *const path)
++{
++	landlock_log_denial(subject, &(struct landlock_request) {
++		.type = LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
++		.audit = {
++			.type = LSM_AUDIT_DATA_PATH,
++			.u.path = *path,
++		},
++		.layer_plus_one = handle_layer + 1,
++	});
++}
++
++static void log_fs_change_topology_dentry(
++	const struct landlock_cred_security *const subject, size_t handle_layer,
++	struct dentry *const dentry)
++{
++	landlock_log_denial(subject, &(struct landlock_request) {
++		.type = LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
++		.audit = {
++			.type = LSM_AUDIT_DATA_DENTRY,
++			.u.dentry = dentry,
++		},
++		.layer_plus_one = handle_layer + 1,
++	});
++}
++
+ /*
+  * Because a Landlock security policy is defined according to the filesystem
+  * topology (i.e. the mount namespace), changing it may grant access to files
+@@ -1357,16 +1381,30 @@ static int hook_sb_mount(const char *const dev_name,
+ 			 const struct path *const path, const char *const type,
+ 			 const unsigned long flags, void *const data)
+ {
+-	if (!get_current_fs_domain())
++	size_t handle_layer;
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), any_fs,
++						&handle_layer);
++
 +	if (!subject)
  		return 0;
++
++	log_fs_change_topology_path(subject, handle_layer, path);
+ 	return -EPERM;
+ }
  
--	rcu_read_lock();
--	is_scoped = domain_is_scoped(dom, landlock_get_task_domain(p),
--				     LANDLOCK_SCOPE_SIGNAL);
--	rcu_read_unlock();
-+	scoped_guard(rcu)
-+	{
-+		is_scoped = domain_is_scoped(subject->domain,
-+					     landlock_get_task_domain(p),
-+					     signal_scope.scope);
-+	}
- 	if (is_scoped)
- 		return -EPERM;
+ static int hook_move_mount(const struct path *const from_path,
+ 			   const struct path *const to_path)
+ {
+-	if (!get_current_fs_domain())
++	size_t handle_layer;
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), any_fs,
++						&handle_layer);
++
++	if (!subject)
+ 		return 0;
++
++	log_fs_change_topology_path(subject, handle_layer, to_path);
+ 	return -EPERM;
+ }
  
+@@ -1376,15 +1414,29 @@ static int hook_move_mount(const struct path *const from_path,
+  */
+ static int hook_sb_umount(struct vfsmount *const mnt, const int flags)
+ {
+-	if (!get_current_fs_domain())
++	size_t handle_layer;
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), any_fs,
++						&handle_layer);
++
++	if (!subject)
+ 		return 0;
++
++	log_fs_change_topology_dentry(subject, handle_layer, mnt->mnt_root);
+ 	return -EPERM;
+ }
+ 
+ static int hook_sb_remount(struct super_block *const sb, void *const mnt_opts)
+ {
+-	if (!get_current_fs_domain())
++	size_t handle_layer;
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), any_fs,
++						&handle_layer);
++
++	if (!subject)
+ 		return 0;
++
++	log_fs_change_topology_dentry(subject, handle_layer, sb->s_root);
+ 	return -EPERM;
+ }
+ 
+@@ -1399,8 +1451,15 @@ static int hook_sb_remount(struct super_block *const sb, void *const mnt_opts)
+ static int hook_sb_pivotroot(const struct path *const old_path,
+ 			     const struct path *const new_path)
+ {
+-	if (!get_current_fs_domain())
++	size_t handle_layer;
++	const struct landlock_cred_security *const subject =
++		landlock_get_applicable_subject(current_cred(), any_fs,
++						&handle_layer);
++
++	if (!subject)
+ 		return 0;
++
++	log_fs_change_topology_path(subject, handle_layer, new_path);
+ 	return -EPERM;
+ }
+ 
+diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
+index 28af42d66261..5da9a64f5af7 100644
+--- a/security/landlock/ruleset.h
++++ b/security/landlock/ruleset.h
+@@ -243,36 +243,6 @@ landlock_union_access_masks(const struct landlock_ruleset *const domain)
+ 	return matches.masks;
+ }
+ 
+-/**
+- * landlock_get_applicable_domain - Return @domain if it applies to (handles)
+- *				    at least one of the access rights specified
+- *				    in @masks
+- *
+- * @domain: Landlock ruleset (used as a domain)
+- * @masks: access masks
+- *
+- * Returns: @domain if any access rights specified in @masks is handled, or
+- * NULL otherwise.
+- */
+-static inline const struct landlock_ruleset *
+-landlock_get_applicable_domain(const struct landlock_ruleset *const domain,
+-			       const struct access_masks masks)
+-{
+-	const union access_masks_all masks_all = {
+-		.masks = masks,
+-	};
+-	union access_masks_all merge = {};
+-
+-	if (!domain)
+-		return NULL;
+-
+-	merge.masks = landlock_union_access_masks(domain);
+-	if (merge.all & masks_all.all)
+-		return domain;
+-
+-	return NULL;
+-}
+-
+ static inline void
+ landlock_add_fs_access_mask(struct landlock_ruleset *const ruleset,
+ 			    const access_mask_t fs_access_mask,
 -- 
 2.49.0
 
