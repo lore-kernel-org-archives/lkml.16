@@ -1,128 +1,139 @@
-Received: from weierstrass.telenet-ops.be (weierstrass.telenet-ops.be [195.130.137.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FAE21E2852
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:24:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4501175D53;
+	Thu, 20 Mar 2025 15:24:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742484247; cv=none; b=YXbgykS04DsTDKybzrVsTL2rUE0TslteA+HtPLekEw/b8DwvAIcp2xA8RL+wQ0ku2pT6j1FpkenmKW2KBOmDGcNbGSl//bZxN1t8JhZsIX6pjZp7luhCN/6KurCO72nwo8JpjywZsrmko7ZnzsPOwU6wlZUTLvAac13MUIu8QKM=
+	t=1742484271; cv=none; b=MaZ+td2wy96ESGBBz2Oo/UP2EA2LA8a2ei+HyoxuaQGx8AlDdJhmBOQuYqFSN69f8vXA/R6k4fbhhfGPXxjXwUITnrBMgOD2f19kKyj6XZswiTg4M2BXeIoaWpy3BqLxfL6OYM27ZPMHRTmR2wQKblBsNpxq/o6rVP59KUJ35xY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742484247; c=relaxed/simple;
-	bh=8mDKlB4zStFV9ZDiEQFcBMofkUekV5QNGKPeKjL6LNs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AgtXvQFfdIXkYH2LjJC5s85UbrTJixFBNH8NzE05GIluKNr5+EtBTXGnQaCkrmLnptWZ0/JKoUKrl6UFl/OvoRBQWadzuLgsE4hs2xgdegO1oivaoGKlGqWn/ehQhDtDznu95mZjB2Ztil1VPzWucec5iVhBTvt8xvfjPuyuZRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-	by weierstrass.telenet-ops.be (Postfix) with ESMTPS id 4ZJTg232Mwz4x0bF
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:15:58 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed80:a7a2:d643:e23:c1c8])
-	by michel.telenet-ops.be with cmsmtp
-	id T3Fn2E00C3dQZlQ063FnUp; Thu, 20 Mar 2025 16:15:51 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tvHc7-0000000EusU-3TIs;
-	Thu, 20 Mar 2025 16:15:47 +0100
-Received: from geert by rox.of.borg with local (Exim 4.97)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1tvHcZ-0000000BsKE-0NI2;
-	Thu, 20 Mar 2025 16:15:47 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Rob Herring <robh@kernel.org>,
-	Marc Kleine-Budde <mkl@pengutronix.de>,
-	Vincent Mailhol <mailhol.vincent@wanadoo.fr>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Peter Rosin <peda@axentia.se>,
-	Aswath Govindraju <a-govindraju@ti.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>
-Cc: linux-can@vger.kernel.org,
-	linux-phy@lists.infradead.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2] phy: can-transceiver: Re-instate "mux-states" property presence check
-Date: Thu, 20 Mar 2025 16:15:42 +0100
-Message-ID: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1742484271; c=relaxed/simple;
+	bh=cJ4PKBqJ1ZUnV8+yUZvNXJkgGfWoCnqYjpX/+o7T94w=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kBVN+kbIYHlKUBSfXXv8gGEIKYDpA65doMmVN+LhR5v/TVVNQ5IQXs4Aqm6VR3hax9p/p6wlEEoexaYotP+3sM4mq9iU7QU7U8edXFw/mmG37b5z0H13SsBHZaznKeT/KdzZ7lboDTK92awgSrO+IZ+z61dP67LlZUdedqFWlD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DLR7EPh0; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLR7EPh0"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2254e0b4b79so26533985ad.2;
+        Thu, 20 Mar 2025 08:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742484269; x=1743089069; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=xgBZ5CUSGzZQMXrNQ7iMZPeg3VKPPTQI8tLphlbuft8=;
+        b=DLR7EPh0l81F1Va9tJn9Mtm+HQv9USOMJnSzZ+TwwTLzGXWJDoPGfy0V+vozTUlBu1
+         CV2kkTkdoDn+OQMIFBe2K0OuVZ5XatyYiKPqnS//pGgje7/5RhXlSpT1lDhGeGnTqJSm
+         y0cfAfHFJxYIHlBp1dizrrABR1ZZws7EOP3lIZTJjqLx8UhiC44AXPZ4kfD0D69pTuVm
+         g/hZmqHB0+QIg3nFnACz5dflwU4fFwMtH5ejbqvCGV+2BiE2iap5SWNr71M4AIEHd7EY
+         DDHuVCE0MosPDZJpVyNwGpurlnZvpPlz2qMZ68pgpmaK4shM7a3f4da0mXIaZ81OWuaS
+         Vx0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742484269; x=1743089069;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=xgBZ5CUSGzZQMXrNQ7iMZPeg3VKPPTQI8tLphlbuft8=;
+        b=Kgn5HnL8pshTiWzveH6SfkjRYE1+eIP8917/WIX1goSub9sA8hkvGpyCikCZr7T5Ri
+         LXuClVg4kUO8imc5h99k2T3/PgxWtbCwGQk0tpcxtc7CXtf7H+7+XobwHrMZj2L44Xoz
+         cFdgElZaQincauCG0k5S09XIsNnw0Tl70CzLfuqXh6TyyNxulCXZpsuUI42iu6Gq6xgr
+         C+mAlslxmGXrdsEn7BwttqzJxffB06QXspl530vG9PaDeFOL1GMoPNO5XYvjm5ucodTj
+         fAikKqpaLlAER0j0MANqNnWgHlOGAKwfA4g2aTHmbT8xDZoXVq1mq3y7xiCBo8Fn0W4W
+         5kNw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjdGzBv+46xzQlTWz/C5vWggnErjZqzAtb3k9XToeN3EEDvxJvCWqriV4XgKIXtlaS+CwX1dxfVxGxncA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiC5p036qGDqDwsFZV5okfFPYolFv/2IlmHIMn7GQ6nq5IFp8J
+	zeCqISRu8fJwOFgfZFO7W+HslSAa8yF1q3WlwzpAup4NMIcoClYXBj/dww==
+X-Gm-Gg: ASbGncsP6+oLzXM6WiKdqiBRU6aFDwk3QhngNo+oLxUqtHDl89Iqpp1rDDaeYUjyZVv
+	GsJ09olS9dVSq4C8s6+zW+3Vb2qIYG/CFWd9qVCW2i3ny2DHDTPAZesg0LL3lKe6rvXuUmitsD3
+	BPFYSH8rzLCimWU0XLnbf7PMJXWFdRqBiUUejdUWQs5u/3Rxwzn/NKfdAFiHsUyGZk5W/YvODrS
+	C42S1DE4GqshgZtax/ZioDMk9/IusdzBRdt0R33SdV9pbV3j0WH+ao+6uTCK06VViJ5q1I/ZOFQ
+	Yqy3BRmPRRdA1ExBfMP1HWcKwmItypxFU65hBOBvRH7rrsyVQaHN+dEONyL5NEvFEgGMNen1Wot
+	oHbgX9zpy2llxcb5M9upkYQ==
+X-Google-Smtp-Source: AGHT+IE8wgx82LSpjOoMcp7xMjse6vZ9j5z6ddnJQvCI/Fs2gOi8QJmpGG9UFax94XWc9AkTdIPv9w==
+X-Received: by 2002:a17:903:2346:b0:223:5ace:eccf with SMTP id d9443c01a7336-2265ee0aedbmr64395195ad.25.1742484268680;
+        Thu, 20 Mar 2025 08:24:28 -0700 (PDT)
+Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd4a8fsm136905515ad.234.2025.03.20.08.24.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 08:24:28 -0700 (PDT)
+From: Potin Lai <potin.lai.pt@gmail.com>
+Subject: [PATCH v5 00/10] ARM: dts: aspeed: catalina: Update DTS to support
+ Catalina PVT hardware
+Date: Thu, 20 Mar 2025 23:21:50 +0800
+Message-Id: <20250320-potin-catalina-dts-update-20250102-v5-0-e161be6583a7@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAI4y3GcC/43NQW7CMBCF4asgrzvIY09wzKr3qFiMHQcsQRLFb
+ lSEcvc6SKURqyz/0eh7D5HCGEMSx91DjGGKKfZdiepjJ/yFu3OA2JQWSqpKolQw9Dl24DnzNXY
+ MTU7wPTScA7xeLJKTBybXOBYFGsbQxp/nyNep9CWm3I/35+aEy/WP11v4CQHBSWe4UtrbQ/15v
+ nG87n1/Ews/qRWJ20hVSDSqQjRtMGzfSb0maROpF5JsjYbIqTa8k/RPaiU3kQQSjNfkatRWIq3
+ JeZ5/AdkRxPXNAQAA
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
+ Andrew Jeffery <andrew@codeconstruct.com.au>, 
+ Patrick Williams <patrick@stwcx.xyz>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
+ Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
+ Potin Lai <potin.lai.pt@gmail.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742484265; l=2078;
+ i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
+ bh=cJ4PKBqJ1ZUnV8+yUZvNXJkgGfWoCnqYjpX/+o7T94w=;
+ b=S29qvnFmgZIP8YDEgxdV9L8SWhKqk1HlSw3tWuB6SnfHRj8puN3OAuw4BqZ/y3CK9surBXICF
+ qdFlkjwYr7QCHpzI9QI0C9x31DQb1Oc5lQS4+R35VLGiGuL+5jJF3Ar
+X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
+ pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
 
-On the Renesas Gray Hawk Single development board:
+Update the DTS file for the Catalina platform based on the PVT hardware
+changes.
 
-    can-transceiver-phy can-phy0: /can-phy0: failed to get mux-state (0)
-
-"mux-states" is an optional property for CAN transceivers.  However,
-mux_get() always prints an error message in case of an error, including
-when the property is not present, confusing the user.
-
-Fix this by re-instating the property presence check (this time using
-the proper API) in a wrapper around devm_mux_state_get().  When the
-multiplexer subsystem gains support for optional muxes, the wrapper can
-just be removed.
-
-In addition, propagate all real errors upstream, instead of ignoring
-them.
-
-Fixes: d02dfd4ceb2e9f34 ("phy: can-transceiver: Drop unnecessary "mux-states" property presence check")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
 ---
-Alternatively, the multiplexer subsystem needs to gain support for
-getting an optional mux...
+Changes in v5:
+- Revise CBC FRU eeprom i2c bus and address
+- Add MCTP support for backend NIC monitoring via PLDM over MCTP
+- Link to v4: https://lore.kernel.org/r/20250320-potin-catalina-dts-update-20250102-v4-0-7c34b8139014@gmail.com
 
-v2:
-  - Add and use devm_mux_state_get_optional(),
-  - No given tags added, as the new solution is different.
+Changes in v4:
+- Split a single commit into multiple smaller commits to reduce complexity.
+- Add `multi-master` into i2c12 & i2c13  
+- Link to v3: https://lore.kernel.org/r/20250114-potin-catalina-dts-update-20250102-v3-1-14981744b2fe@gmail.com
+
+Changes in v3:
+- Remove delta_brick nodes due to compatible string not supported
+- Link to v2: https://lore.kernel.org/r/20250113-potin-catalina-dts-update-20250102-v2-1-1725117fe7a9@gmail.com
+
+Changes in v2:
+- Add delta_brick nodes to support PDB brick board
+- Link to v1: https://lore.kernel.org/r/20250103-potin-catalina-dts-update-20250102-v1-1-b0b7a523c968@gmail.com
+
 ---
- drivers/phy/phy-can-transceiver.c | 22 +++++++++++++++-------
- 1 file changed, 15 insertions(+), 7 deletions(-)
+Potin Lai (10):
+      ARM: dts: aspeed: catalina: Add IO Mezz board thermal sensor nodes
+      ARM: dts: aspeed: catalina: Add Front IO board remote thermal sensor
+      ARM: dts: aspeed: catalina: Add MP5990 power sensor node
+      ARM: dts: aspeed: catalina: Add fan controller support
+      ARM: dts: aspeed: catalina: Add second source fan controller support
+      ARM: dts: aspeed: catalina: Add second source HSC node support
+      ARM: dts: aspeed: catalina: Remove INA238 and INA230 nodes
+      ARM: dts: aspeed: catalina: Enable multi-master on additional I2C buses
+      ARM: dts: aspeed: catalina: Update CBC FRU EEPROM I2C bus and address
+      ARM: dts: aspeed: catalina: Enable MCTP support for NIC management
 
-diff --git a/drivers/phy/phy-can-transceiver.c b/drivers/phy/phy-can-transceiver.c
-index 2bec70615449f94d..f59caff4b3d4c267 100644
---- a/drivers/phy/phy-can-transceiver.c
-+++ b/drivers/phy/phy-can-transceiver.c
-@@ -93,6 +93,16 @@ static const struct of_device_id can_transceiver_phy_ids[] = {
- };
- MODULE_DEVICE_TABLE(of, can_transceiver_phy_ids);
- 
-+/* Temporary wrapper until the multiplexer subsystem supports optional muxes */
-+static inline struct mux_state *
-+devm_mux_state_get_optional(struct device *dev, const char *mux_name)
-+{
-+	if (!of_property_present(dev->of_node, "mux-states"))
-+		return NULL;
-+
-+	return devm_mux_state_get(dev, mux_name);
-+}
-+
- static int can_transceiver_phy_probe(struct platform_device *pdev)
- {
- 	struct phy_provider *phy_provider;
-@@ -114,13 +124,11 @@ static int can_transceiver_phy_probe(struct platform_device *pdev)
- 	match = of_match_node(can_transceiver_phy_ids, pdev->dev.of_node);
- 	drvdata = match->data;
- 
--	mux_state = devm_mux_state_get(dev, NULL);
--	if (IS_ERR(mux_state)) {
--		if (PTR_ERR(mux_state) == -EPROBE_DEFER)
--			return PTR_ERR(mux_state);
--	} else {
--		can_transceiver_phy->mux_state = mux_state;
--	}
-+	mux_state = devm_mux_state_get_optional(dev, NULL);
-+	if (IS_ERR(mux_state))
-+		return PTR_ERR(mux_state);
-+
-+	can_transceiver_phy->mux_state = mux_state;
- 
- 	phy = devm_phy_create(dev, dev->of_node,
- 			      &can_transceiver_phy_ops);
+ .../dts/aspeed/aspeed-bmc-facebook-catalina.dts    | 197 +++++++++++++++------
+ 1 file changed, 144 insertions(+), 53 deletions(-)
+---
+base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+change-id: 20250102-potin-catalina-dts-update-20250102-914b06a4bdba
+
+Best regards,
 -- 
-2.43.0
+Potin Lai <potin.lai.pt@gmail.com>
 
