@@ -1,93 +1,172 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DEA722AE76;
-	Thu, 20 Mar 2025 21:36:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04AD233E7
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:36:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742506575; cv=none; b=Uy7PJTIOArYJZElR7bHBr9oY/hnZB3aHG+DT8jKdaGVhYoiIabRmfKPuRLgdQa+33Pq3hCJAUDYsOh+mxqoO1/pkKyLWVDHMN2D+0mlw9GvcnO5uR5kU8Yc1UlvUPfNPh0Vjy9OWWN663qNwAOcRqzMEi9/gQJTY5ryGsXG1+VE=
+	t=1742506614; cv=none; b=SSTG3Ve91VUlA8Sfgins1hx9SpOaBmef3g1Va/2GMJ3ckm6IiVX00VFS8wEI1tGxre5BC9ypFXIdPsg2H+2QsVxFTSfQq8QmiheiDwS6o+qDjbb7aj8waDKiufTWa+wc1By9XvZoViI2rxd2Fepk7SxmBL50s85I7FA6d1bmLHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742506575; c=relaxed/simple;
-	bh=w7+2idG48iwt6RdM0BdjXyWR2kOyypN3ae3K6dy6cJY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Mm1G7zsY5HUNqjaExkChq9qB2uzlSZy0+bp1lrbTee0cDhjm3NR72VZ8x7+n41+UmiaUwoCs9sVF039+AWWlIt56UeO4axus0MTIbtv6hb06hmIYStu8gsa7pra1eaDIZNYc6pcCBxLDPI6k9TyGm2JHrbzf2cUGgcvENx6HFF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QEfeDncB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742506614; c=relaxed/simple;
+	bh=7T7mCRUv80WJKGWdZte/WL6i1IdpqsfOrUhZIxZ6UZg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kUkm6EBELkniq4iGP5OqYb2Kpnd0zuMGFNPHBVChZVQmSdykF9ulHsGoxITwXU4xFLB891Gh6gA//gMBnrBPW+g7x9M7xUhsrH1JDGggjDtb9BeDnOPJLHwkCxHWhiXp6jU5Ln9DhGM58POhhGhIJhPLFJ1o2TnX2Z0r6JWpOhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=A8xoPFKR; arc=none smtp.client-ip=209.85.128.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QEfeDncB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B07ADC4CEE3;
-	Thu, 20 Mar 2025 21:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742506574;
-	bh=w7+2idG48iwt6RdM0BdjXyWR2kOyypN3ae3K6dy6cJY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=QEfeDncBOHJb2l7jM1Bq5CztiODqjtqd9sjuPZb1epRHlO5qa8oHRIfoWGT/JN+WP
-	 ReVV4wOeQDY3B1p/RewwHtMHCGj1etQS4o+kSiGME3qi//Ur+j9yjv+RP323HOZAca
-	 vrbC6UMzFDoEQU+w5Xyx6A2N3bZ8jimBsWjtFU84e8ZG7XeW+0E+6noGWPwE80ET+S
-	 uKw+CxzqB3IBuUlccPqr0gvsdddrraAnldS0+lbf5cF69HADE2piJApdJuhPaTdL5r
-	 xJIpuojWzzjXxF2OC/CE3OtFVcQwZCUElRUKJV7U/P38p9/ekB7KG/NsCiaJBBnzLW
-	 7DXCqqFslRlUw==
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Date: Thu, 20 Mar 2025 16:35:48 -0500
-Subject: [PATCH 3/3] dt-bindings: mmc: marvell,xenon-sdhci: Drop requiring
- 2 clocks
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="A8xoPFKR"
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6febbd3b75cso12290807b3.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:36:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1742506612; x=1743111412; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qyZVutv4Kbo86NuPvlmJO48TrYySdnlCPpx5adkmTKs=;
+        b=A8xoPFKRuuU0iDFj+64CmEKGuRy7UI+o8numXiGZBrB1qZaQig54zyNUWIs48zcaNW
+         qDzdwjiFBuFJ4w/m8HqkIC4DeyZFl+N9MGDI9mzLJo6/MfwFr0dJUBshs7SxZBa22ZUs
+         gnWjQMYbo8qV7Ob4Gy3b7oFEQNcDHw98qdAgHLgPlMANHfZti0uDEnVommBDn79yz6Dc
+         NNHl7zw6zX0RlLuDpBXzaYLXAiZIusFopRY8Up/GVj35kvkyFo3klhMawZqxBmjdrbM9
+         sUVNCcJH2BBRu5nNveg7N0wNarnO1zmSR34fe0yOMQlHlTFcgqlj8vB157tekDh7RRiP
+         a7kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742506612; x=1743111412;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qyZVutv4Kbo86NuPvlmJO48TrYySdnlCPpx5adkmTKs=;
+        b=WiKGru/8hGFaSwsRUG9FRhb4S2ilAc0Nmi4Ta6MFGK5bPwhoCb40hS5sZbTXbBDeNu
+         CaHjeqZK2RHiRfrnyb6DBkZDLGxGMTwcbOntny0UGri745kp/k+zBriUhRjSHdLifoI8
+         djwljLofAkj2C9fBqe6Q1WOIIXpjqGewAP6t7hPjaQQh/fBLUN/kyZBI1z0+ZWpXKM6N
+         ZS+2+N1gB+3pI5pmhJbmtlWpp902b0FD0yXU/Whs/irRyc4o3PSUxxgeIZiaCRc2tuRU
+         tlMZJhiRtBavhbG/YFKv3c0k9JCr+/GPklwM4HE3Ac5d06AU1UEicaZfH/18rFjmvqoe
+         PzOg==
+X-Forwarded-Encrypted: i=1; AJvYcCVjzmnFoAxDG557N1qbUU2PwqeRgWIgs4ZtKs5CujnEQOdHIjbOj0bfbC6m+rVxp3MgCJ6IYwJjOTJQvMo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/SOZlKJKXn35jPR2Ek59We52Y4iQ2PwkdJNZApx9uRSEWfaPB
+	I7lY0UAQFXtyQlVAfJovgY8FVsF6z/OIFc6GPE99nmPQvLS0Z0JusADHLclnGjYVvdX0EmTZyl7
+	Ci5jzyNe7+lWHE9bj/mUhsInEbRc4qbxxbsZM
+X-Gm-Gg: ASbGncvUXNrL1q+zQOwa0Gkd7SBOx/8pfk5RAIOhltui8Pxq8qHaj0nxfLT0mqHOtx4
+	HihzLekifdqzKa09auXFTaFdnAWWVa+KjbB0kop+RjIEJBSehdwDpBcFFKwkOM8sr8DCc1ZxRsY
+	qyg5GbZPMV2yV/uzus08Eq20l7pw==
+X-Google-Smtp-Source: AGHT+IFJ/8y4nRYG0B8A5J8ib2VPKClvoRy8JxYCkiIoEvg+R5jg8fqFBWw5SyaibbYjeIOB5RlLC8ykklezHgslACQ=
+X-Received: by 2002:a05:690c:296:b0:6fe:b88e:4d82 with SMTP id
+ 00721157ae682-700bacfbab5mr12941147b3.28.1742506611920; Thu, 20 Mar 2025
+ 14:36:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250320-dt-marvell-mmc-v1-3-e51002ea0238@kernel.org>
-References: <20250320-dt-marvell-mmc-v1-0-e51002ea0238@kernel.org>
-In-Reply-To: <20250320-dt-marvell-mmc-v1-0-e51002ea0238@kernel.org>
-To: Hu Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org
-X-Mailer: b4 0.15-dev
+References: <20241017155516.2582369-1-eric.snowberg@oracle.com>
+ <c490397315c2704e9ef65c8ad3fefedb239f1997.camel@linux.ibm.com>
+ <72F52F71-C7F3-402D-8441-3D636A093FE8@oracle.com> <CAHC9VhRHEw5c+drC=aX4xTqWoQJJZ+qkJ7aHUT5dcu+Q5f7BqA@mail.gmail.com>
+ <CAHC9VhSJpnaAK1efgs1Uk0Tr3CaDNR1LiDU-t_yDKDQG6J-74Q@mail.gmail.com>
+ <E20C617B-EA01-4E69-B5E2-31E9AAD6F7A2@oracle.com> <506e8e58e5236a4525b18d84bafa9aae80b24452.camel@linux.ibm.com>
+ <CAHC9VhTsZntLdGBV7=4suauS+rzSQv1O4UAoGcy2vEB02wRkoA@mail.gmail.com>
+ <c580811716f550ed5d6777db5e143afe4ad06edc.camel@linux.ibm.com>
+ <CAHC9VhTz6U5rRdbJBWq0_U4BSKTsiGCsaX=LTgisNNoZXZokOA@mail.gmail.com>
+ <FD501FB8-72D2-4B10-A03A-F52FC5B67646@oracle.com> <CAHC9VhR961uTFueovLXXaOf-3ZAnvQCWOTfw-wCRuAKOKPAOKw@mail.gmail.com>
+ <73B78CE7-1BB8-4065-9EBA-FB69E327725E@oracle.com> <CAHC9VhRMUkzLVT5GT5c5hgpfaaKubzcPOTWFDpOmhNne0sswPA@mail.gmail.com>
+ <1A222B45-FCC4-4BBD-8E17-D92697FE467D@oracle.com> <CAHC9VhTObTee95SwZ+C4EwPotovE9R3vy0gVXf+kATtP3vfXrg@mail.gmail.com>
+ <EB757F96-E152-4EAB-B3F7-75C1DBE3A03B@oracle.com> <1956e7f9d60.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+ <A3A29FB9-E015-4C87-B5F0-190A4C779CB3@oracle.com>
+In-Reply-To: <A3A29FB9-E015-4C87-B5F0-190A4C779CB3@oracle.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 20 Mar 2025 17:36:41 -0400
+X-Gm-Features: AQ5f1JqQwO9cUQQ6QCKvqyhp93snLVhEFtem_HInBr_dfTdWSHM5DQ2eAF2fppc
+Message-ID: <CAHC9VhQMN6cgWbxdAgBNffpCAo=ogGdm4qBGS_kKdDmiT8b3cw@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 00/13] Clavis LSM
+To: Eric Snowberg <eric.snowberg@oracle.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, 
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>, 
+	David Woodhouse <dwmw2@infradead.org>, 
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, 
+	Ard Biesheuvel <ardb@kernel.org>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	"casey@schaufler-ca.com" <casey@schaufler-ca.com>, Stefan Berger <stefanb@linux.ibm.com>, 
+	"ebiggers@kernel.org" <ebiggers@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"keyrings@vger.kernel.org" <keyrings@vger.kernel.org>, 
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, 
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, 
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The "axi" clock is optional on at least the "marvell,armada-ap806-sdhci"
-variant. Not sure what's correct here, so just drop the constraint.
+On Thu, Mar 20, 2025 at 12:29=E2=80=AFPM Eric Snowberg <eric.snowberg@oracl=
+e.com> wrote:
+> > On Mar 6, 2025, at 7:46=E2=80=AFPM, Paul Moore <paul@paul-moore.com> wr=
+ote:
+> > On March 6, 2025 5:29:36 PM Eric Snowberg <eric.snowberg@oracle.com> wr=
+ote:
 
-Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
----
- .../devicetree/bindings/mmc/marvell,xenon-sdhci.yaml | 20 --------------------
- 1 file changed, 20 deletions(-)
+...
 
-diff --git a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
-index e7df7a2a0331..ee2ddef36369 100644
---- a/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
-+++ b/Documentation/devicetree/bindings/mmc/marvell,xenon-sdhci.yaml
-@@ -169,26 +169,6 @@ allOf:
- 
-         marvell,pad-type: false
- 
--  - if:
--      properties:
--        compatible:
--          contains:
--            enum:
--              - marvell,armada-cp110-sdhci
--              - marvell,armada-ap807-sdhci
--              - marvell,armada-ap806-sdhci
--
--    then:
--      properties:
--        clocks:
--          minItems: 2
--
--        clock-names:
--          items:
--            - const: core
--            - const: axi
--
--
- required:
-   - compatible
-   - reg
+> >> Does this mean Microsoft will begin signing shims in the future withou=
+t
+> >> the lockdown requirement?
+> >
+> > That's not a question I can answer, you'll need to discuss that with th=
+e UEFI SB people.
+>
+> Based on your previous lockdown comments, I thought you might have
+> some new information.  Having lockdown enforcement has always been
+> a requirement to get a shim signed by Microsoft.
 
--- 
-2.47.2
+I want to address two things, the first, and most important, is that
+while I am currently employed by Microsoft, I do not speak for
+Microsoft and the decisions and actions I take as an upstream Linux
+kernel maintainer are not vetted by Microsoft in any way.  I think you
+will find that many upstream kernel maintainers operate in a similar
+way for a variety of very good reasons.
 
+The second issue is that my main focus is on ensuring we have a
+secure, safe, and well maintained LSM subsystem within the upstream
+Linux kernel.  While I do care about downstream efforts, e.g. UEFI
+Secure Boot, those efforts are largely outside the scope of the
+upstream Linux kernel and not my first concern.  If the developer
+groups who are focused on things like UEFI SB want to rely on
+functionality within the upstream Linux kernel they should be prepared
+to stand up and contribute/maintain those features or else they may go
+away at some point in the future.  In very blunt terms, contribute
+upstream or Lockdown dies.
+
+However, let me be clear that I consider deprecation and removal of a
+LSM to be an option of last resort.  My preference would be to find a
+capable maintainer, or two, that would be willing to take on a
+maintenance role for the LSM in question.  Luckily I think we may have
+some people who are interested in doing so for the Lockdown LSM,
+hopefully you'll see something on-list in the near future.
+
+> The alternative "usage-oriented keyring" approach you've suggested
+> wouldn't align with the threat model that lockdown aims to achieve.
+
+That's a Lockdown problem, or more specifically a problem for the
+people who are freeloading on the Lockdown LSM and expecting it to be
+maintained without contributing anything meaningful.
+
+> For
+> a distro-based kernel, I don't see the value in pursuing such an approach=
+.
+
+So you've said.  I disagree, but we've already had that discussion,
+let's agree to not waste any more time repeating ourselves.
+
+> With Clavis, I attempted to develop
+> an approach that would meet the lockdown threat model requirements
+> while allowing the end user to control key usage as they deem fit.
+
+As mentioned previously, the design/implementation choices you made
+for Clavis means it is better suited for inclusion in the key
+subsystem and not as a standalone LSM.  If you wanted to
+redesign/rework Clavis to stick to the traditional LSM security blobs
+perhaps that is something we could consider as a LSM, but it's
+probably worth seeing if David and Jarkko have any interest in
+including Clavis functionality in the key subsystem first.
+
+--=20
+paul-moore.com
