@@ -1,88 +1,99 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E98F3C0B;
-	Thu, 20 Mar 2025 15:28:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mx08-00178001.pphosted.com (mx08-00178001.pphosted.com [91.207.212.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2671E47CC;
+	Thu, 20 Mar 2025 15:29:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.207.212.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742484539; cv=none; b=B9izth3LbIb6lp4Wpac42TfzZHuRQhR/Ul8r6mqTAFHtHEd8DA5KCmcI0B0LoEvSJPZbiBdaFlbRmuLrWg1yx1yc/caagAio+FCT+67t32zr5MC2Pno0aLGVbo9ReQqZe3ge4IiERpx3J1bk7MHLjCNeXFiuIG/xSE+bs1+l92I=
+	t=1742484597; cv=none; b=QL0fOWIXyrIipFYWTL/FO7WSSER0JwsEyK2IfzMvmOEddG/xzt6Mr3EIxejb2hYv0fFV1pwKMkBMLv+UTbPF+I3lBYqxKSXh+8ItKTyTx1IObIvZXsqXiIu+FvembzuBOpcZG/d94MV0I2W4YRVY2gb8jLI5ikS85e7DrA6+uuM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742484539; c=relaxed/simple;
-	bh=vf4tAcImK/lyeaEP0yTngNOf0Cu595FOvZhjhfidrM4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ljQ0hHmhxlWp0lRUGy35pmIPeYSy+AqBAF7A58mhsSE+9qZkL4J0IkknoketcAiIZ/+/bR/jol5Jx5iBc2gMNJW+KuUan3uLFSRtMkBMTIlbHiz2XyTnGpqC5hXWTaIQC8If2hyN4mzCXWIAFHjw2MLl0WTPvigqBzHQHgxpIR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 11CA3113E;
-	Thu, 20 Mar 2025 08:29:04 -0700 (PDT)
-Received: from gentoo-vm (unknown [10.32.114.192])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 438423F673;
-	Thu, 20 Mar 2025 08:28:54 -0700 (PDT)
-Date: Thu, 20 Mar 2025 15:28:49 +0000
-From: Kajetan Puchalski <kajetan.puchalski@arm.com>
-To: Peter Chen <peter.chen@cixtech.com>
-Cc: Krzysztof Kozlowski <krzk@kernel.org>, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, 
-	arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com, marcin@juszkiewicz.com.pl, 
-	Fugang Duan <fugang.duan@cixtech.com>
-Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add CIX SoC maintainer entry
-Message-ID: <zsmeh4ukuspyetowryqi3blcquxlua5wzy5ibgy7lupryr5txx@74ic6drtremv>
-References: <20250305053823.2048217-1-peter.chen@cixtech.com>
- <20250305053823.2048217-7-peter.chen@cixtech.com>
- <7419360a-abc0-44cf-8d55-8f5fad8e9079@kernel.org>
- <Z9vyy7f5NOPyzUES@nchen-desktop>
+	s=arc-20240116; t=1742484597; c=relaxed/simple;
+	bh=nhlsebc47vjyAXYRWdQscnBm/MLer3fNbBO3/NN6CEQ=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l50ecAATCXCgvnqmJX26P1RQCQJe+xk9KL2VDNGjI2l+a0XvSw+Dk023CHuHCozK6Z/KbuOf27abzBlYIJSBFKKxdnA6820bIDLkCXc4rtsOWGlxj/jCnfczrt8QfWqLGSpoJyvX216GLKI+DGp4vfvciJ2/0SITG9ie1wu3iTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=qBSWxkQR; arc=none smtp.client-ip=91.207.212.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="qBSWxkQR"
+Received: from pps.filterd (m0369457.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52KEDdFE025715;
+	Thu, 20 Mar 2025 16:29:30 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=selector1; bh=N9t+AghIDu3YhdnKtuwb/m
+	1eiGg+UJ8M9f9LIHIvdYg=; b=qBSWxkQRxYg0v28ApSjg+eMdESIOTCLCqgoPg/
+	qUxjEA2xY9jPtKUpF7CM4yJSbxjyzDAA0/2Rl4nAeGVsi+kzLGmm3z/FVL7/IwjJ
+	8Yq5I00kcf2c5xGxSQsgYl/x8Gg6CucpPi/JkcJTqoKbGLPNN+1VqVyrZObBTOuA
+	+usEAhCY5yHqt0lK9aOaRLom94NLoszPhzXKhXtuaPGIA3FpiNW/MPNSlX2ldT6c
+	Rrd504BJ1vkTY53rsxrP5LkXtHMqswFJa6SdS75fCKckTTn2DJ1pQsvTcxpGPo+Q
+	DZm++goN/JSoTdj86vHuJ0NsgzFbw/JrBJB6xKy47sFaAVlg==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45fuc8pg4x-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 16:29:30 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id AE1F3400A7;
+	Thu, 20 Mar 2025 16:28:29 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node2.st.com [10.75.129.70])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 3FCDD8140B1;
+	Thu, 20 Mar 2025 16:26:11 +0100 (CET)
+Received: from localhost (10.48.81.58) by SHFDAG1NODE2.st.com (10.75.129.70)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Mar
+ 2025 16:26:10 +0100
+From: Cheick Traore <cheick.traore@foss.st.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby
+	<jirislaby@kernel.org>, Marek Vasut <marex@denx.de>
+CC: Cheick Traore <cheick.traore@foss.st.com>, <linux-kernel@vger.kernel.org>,
+        <linux-serial@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>
+Subject: [PATCH] serial: stm32: do not deassert RS485 RTS GPIO prematurely
+Date: Thu, 20 Mar 2025 16:25:40 +0100
+Message-ID: <20250320152540.709091-1-cheick.traore@foss.st.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9vyy7f5NOPyzUES@nchen-desktop>
-User-Agent: NeoMutt/20250109-134-7b7c50
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE2.st.com
+ (10.75.129.70)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-20_04,2025-03-20_01,2024-11-22_01
 
-On Thu, Mar 20, 2025 at 06:49:47PM +0800, Peter Chen wrote:
+If stm32_usart_start_tx is called with an empty xmit buffer, RTS GPIO
+could be deasserted prematurely, as bytes in TX FIFO are still
+transmitting.
+So this patch remove rts disable when xmit buffer is empty.
 
-(...)
+Fixes: d7c76716169d ("serial: stm32: Use TC interrupt to deassert GPIO RTS in RS485 mode")
+Signed-off-by: Cheick Traore <cheick.traore@foss.st.com>
+---
+ drivers/tty/serial/stm32-usart.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-> > > +ARM/CIX SKY ARM ARCHITECTURE
-> > > +M:   Peter Chen <peter.chen@cixtech.com>
-> > > +M:   Fugang Duan <fugang.duan@cixtech.com>
-> > > +R:   CIX Linux Kernel Upstream Group <cix-kernel-upstream@cixtech.com>
-> > > +L:   linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> > > +S:   Maintained
-> > > +F:   Documentation/devicetree/bindings/arm/cix.yaml
-> > > +F:   arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-> > > +F:   arch/arm64/boot/dts/cix/sky1.dtsi
-> >
-> > Instead:
-> > arch/arm64/boot/dts/cix/
-> >
-> > or if you think there will be more different architectures coming from
-> > cix, which you will not maintain, then useful would be a "sky" subdirectory.
-> >
-> Hi Krzysztof,
->
-> Thanks for your comment, CIX is Arm SoC based silicon design
-> company, we may have different SoC style for middle end in future.
-> So, for that SoC series, it may not name sky.
+diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
+index 4c97965ec43b..ad06b760cfca 100644
+--- a/drivers/tty/serial/stm32-usart.c
++++ b/drivers/tty/serial/stm32-usart.c
+@@ -965,10 +965,8 @@ static void stm32_usart_start_tx(struct uart_port *port)
+ {
+ 	struct tty_port *tport = &port->state->port;
+ 
+-	if (kfifo_is_empty(&tport->xmit_fifo) && !port->x_char) {
+-		stm32_usart_rs485_rts_disable(port);
++	if (kfifo_is_empty(&tport->xmit_fifo) && !port->x_char)
+ 		return;
+-	}
+ 
+ 	stm32_usart_rs485_rts_enable(port);
+ 
+-- 
+2.34.1
 
-I believe the idea is that the file should either say
-
-+F:   arch/arm64/boot/dts/cix/
-
-if the two of you intend to be maintainers for everything under cix/.
-You don't need to list every specific file.
-
-Otherwise it should say
-
-+F:   arch/arm64/boot/dts/cix/sky/
-
-with its own subdirectory if you only intend to be maintaining the sky family.
-
-> --
->
-> Best regards,
-> Peter
