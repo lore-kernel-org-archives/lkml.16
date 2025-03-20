@@ -1,134 +1,393 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA57229B10
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:05:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74029226D08;
+	Thu, 20 Mar 2025 18:05:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742493948; cv=none; b=HxWIFsQgypVpL0SOoYTgyVG4SY1co6JXPZzCmGQcLb30OnfddYcUlfKVXJCWGSrofrddms58OZZmxJ0A25GXfYd1lyLqaaKGCyuXXkNj/5jOWVw7470+q2IyYAFkBL8OfuWkrabISHLXjeAdasu7NpRZdnWr1PogSwYwTXKnCT4=
+	t=1742493949; cv=none; b=qBP5AaYs9CQ0IeOuCfZrqr08V5HJGtM2irti+daKAtNWtKMj+ZJYBh1aYDSzuwZbV3SxknGR9rif43tEhNnQZorZNGR7LErkmU4zWgkq78K3SM9uWGEFwoauF4nojTVysqaThxlS0XvEzvdwGEwhts6tKZqzDjcZ+5iFsxfyRD0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742493948; c=relaxed/simple;
-	bh=eSRjWYWO4yxvYztB0ncS8vovMEhY+BbOB3dCMJ7BgSw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=o/EQQSuL6uwkNqB7MH5/J+c4ceFn1/MVwGGwWAwsXd0CEV9K50A/noqkfSHTTVDtGWbDmvA+vCFsXyogWPvqKHlW9a7IKcBfcoEQP+5gRW2VQ7ou+N2e4QbK+UWMKJZMMlwkqP1ZvFGIV+R6qIeOonfQHz+6YWyZzGNPBtpdZhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=ajRjGUQX; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="ajRjGUQX"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so30415885ad.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:05:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1742493946; x=1743098746; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JM/OqN7Oy0ivRWEL6tEbo+CUHh5BBsQYtWvf3MvSx6w=;
-        b=ajRjGUQXyGVvsgtPaeQJmQu+Wsg70IKSHxrTMYZBn6eRX1UAm6V2gHcmTuZTV9REPV
-         1up0vNoQjtiVlGu4f207Mfv9yyryEWL08XFDtXjT9e/BencAUtujgH9hRlNWy7QpdhtN
-         dLPMa/+rqjHN+huFyT6bpvFUP2OUnRGCi/5Po=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742493946; x=1743098746;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JM/OqN7Oy0ivRWEL6tEbo+CUHh5BBsQYtWvf3MvSx6w=;
-        b=Evbk3sO7BwKGrVPu6Lr9XIOwfyEIf1GYwUS3RIONdVr2Wv8BTzswYzT+RT7BF6i7BH
-         ivHRG6NXhpad/VD/vkEjBihVHS/G65eHw0SPRM/saXoPFAZGK7rkxJyo+ueMxrGz/wcf
-         GqpHhqXlYxSfIlVJDfBi0sOlbCBBasD3QyhcBawq9JAeO1xpv1FPUQiK7AHNZlmSgcAW
-         xdLWZ6QVW7u2pCvy5D4hYKtFyH8hc7PGV0CbWaR7GPJ791X3oPcD9cyZ6r7ZK7AC5uxI
-         JUkMe4n4e4gW+X1nh+oEHrM/ZgyEWspnK8oKaDokvvFO9YE5snJ4aGlKOlNyWEmimOA+
-         rfig==
-X-Forwarded-Encrypted: i=1; AJvYcCXLkgGiUkJkFmeqw/hWm3j/hEnSxfvj/UsCUcJKojkRWKnVhjq3xtg9es3Ev/fS1xG2l/Pp7V7l4I+G9MU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO5P/nMvXXi8X1dFMN8cOtLCFqiFGdFyHWyTyzWbZXQvGsFM7T
-	7KkHVYMXb4ZhotLjApbLXo3tTcTtlpfuZha86fVlGYXhgK87uYgUMyXrbiEO4V4=
-X-Gm-Gg: ASbGncvAxvE+5aSQAx52JsUr6G3I7l1tO9p6speNuyqIoC7lhnrnKCcuGYiNRROoSBT
-	cpxT5j5RXeOWtIBJ2lcsSqDcJbyBGGiz27nnglA4hJxI3HCIpthi1k7OqiPFR1vh5gNJIcDssTk
-	JBwxM4j3/jFkZgIm3Vv+vb0vNZIpcOEFOXFiBj5zSXPjfyGraC1QEmOygZYj0N83m9IBU4eiiY6
-	o8LD/zt6K7MB0BxR36nNQDL89PS2vqImUqJLRmjffiQ2vBEEyQB6PuFRlZw8SztRKz9/yg1wyjB
-	J1WjT0LI1HV8IM5sBMNY5PPFOhihD88ueAxDGWyPxOlPXnbEr+ZQ12yUkTcph1EsHa/yHF43toi
-	/fk6GomRWf8BY4hEi
-X-Google-Smtp-Source: AGHT+IFkG9txbev4JCYggmYZhNgAMBuFDffjPJdvIx8M6hPHeRaY1eSW3KdhJ6WDYT270hXE0myOaQ==
-X-Received: by 2002:a05:6a00:2d84:b0:736:4e02:c543 with SMTP id d2e1a72fcca58-739059a3471mr465905b3a.9.1742493945615;
-        Thu, 20 Mar 2025 11:05:45 -0700 (PDT)
-Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618f1d1sm87958b3a.173.2025.03.20.11.05.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 11:05:45 -0700 (PDT)
-Date: Thu, 20 Mar 2025 11:05:41 -0700
-From: Joe Damato <jdamato@fastly.com>
-To: Christoph Hellwig <hch@infradead.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-	asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
-	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
-	linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-	viro@zeniv.linux.org.uk, jack@suse.cz, kuba@kernel.org,
-	shuah@kernel.org, sdf@fomichev.me, mingo@redhat.com, arnd@arndb.de,
-	brauner@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
-	jolsa@kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [RFC -next 00/10] Add ZC notifications to splice and sendfile
-Message-ID: <Z9xY9d2hOc6hOlda@LQ3V64L9R2>
-Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
-	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, asml.silence@gmail.com,
-	linux-fsdevel@vger.kernel.org, edumazet@google.com,
-	pabeni@redhat.com, horms@kernel.org, linux-api@vger.kernel.org,
-	linux-arch@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
-	kuba@kernel.org, shuah@kernel.org, sdf@fomichev.me,
-	mingo@redhat.com, arnd@arndb.de, brauner@kernel.org,
-	akpm@linux-foundation.org, tglx@linutronix.de, jolsa@kernel.org,
-	linux-kselftest@vger.kernel.org
-References: <20250319001521.53249-1-jdamato@fastly.com>
- <Z9p6oFlHxkYvUA8N@infradead.org>
- <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
- <Z9usmpFw7y75eOhk@infradead.org>
+	s=arc-20240116; t=1742493949; c=relaxed/simple;
+	bh=rvzK9EISyRVZGk9AkD7d1E/WfLOQ2d52vpl/ioSZjvc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PE/jy9669f3RGA51/lN5GWY3+gb4A1N/S6DkJNkTQp/BHiOmKirYaH5s69USzohHSsaJnPh7kE2qJHTIr4VcaI8YgBvuktV/UiW032ZzNQppPJfhnI9oN2EWZ1ubF6eUhNGa0gXRKTMKwUMv7u8zigAj4epgms8ydcS6iQrvh/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZJYMV5w66z6K5Yr;
+	Fri, 21 Mar 2025 02:02:46 +0800 (CST)
+Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
+	by mail.maildlp.com (Postfix) with ESMTPS id 595351405A0;
+	Fri, 21 Mar 2025 02:05:45 +0800 (CST)
+Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.156.145) by
+ frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.39; Thu, 20 Mar 2025 19:05:43 +0100
+From: <shiju.jose@huawei.com>
+To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
+	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
+	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
+	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>
+CC: <linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
+	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <bp@alien8.de>,
+	<tony.luck@intel.com>, <rafael@kernel.org>, <lenb@kernel.org>,
+	<mchehab@kernel.org>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
+	<rientjes@google.com>, <jiaqiyan@google.com>, <Jon.Grimm@amd.com>,
+	<dave.hansen@linux.intel.com>, <naoya.horiguchi@nec.com>,
+	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
+	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
+	<gthelen@google.com>, <wschwartz@amperecomputing.com>,
+	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
+	<nifan.cxl@gmail.com>, <yazen.ghannam@amd.com>, <tanxiaofei@huawei.com>,
+	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
+	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
+	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
+Subject: [PATCH v2 6/8] cxl: Support for finding memory operation attributes from the current boot
+Date: Thu, 20 Mar 2025 18:04:43 +0000
+Message-ID: <20250320180450.539-7-shiju.jose@huawei.com>
+X-Mailer: git-send-email 2.43.0.windows.1
+In-Reply-To: <20250320180450.539-1-shiju.jose@huawei.com>
+References: <20250320180450.539-1-shiju.jose@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Z9usmpFw7y75eOhk@infradead.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
+ frapeml500007.china.huawei.com (7.182.85.172)
 
-On Wed, Mar 19, 2025 at 10:50:18PM -0700, Christoph Hellwig wrote:
-> On Wed, Mar 19, 2025 at 08:32:19AM -0700, Joe Damato wrote:
-> > See the docs on MSG_ZEROCOPY [1], but in short when a user app calls
-> > sendmsg and passes MSG_ZEROCOPY a completion notification is added
-> > to the error queue. The user app can poll for these to find out when
-> > the TX has completed and the buffer it passed to the kernel can be
-> > overwritten.
-> 
-> Yikes.  That's not just an ugly interface, but something entirely
-> specific to sockets and incompatible with all other asynchronous I/O
-> interfaces.
+From: Shiju Jose <shiju.jose@huawei.com>
 
-I don't really know but I would assume it was introduced, as Jens
-said, as a work-around long before other completion mechanisms
-existed.
+Certain operations on memory, such as memory repair, are permitted
+only when the address and other attributes for the operation are
+from the current boot. This is determined by checking whether the
+memory attributes for the operation match those in the CXL gen_media
+or CXL DRAM memory event records reported during the current boot.
 
-> > > and why aren't you simply plugging this into io_uring and generate
-> > > a CQE so that it works like all other asynchronous operations?
-> > 
-> > I linked to the iouring work that Pavel did in the cover letter.
-> > Please take a look.
-> 
-> Please write down what matters in the cover letter, including all the
-> important tradeoffs.
+The CXL event records must be backed up because they are cleared
+in the hardware after being processed by the kernel.
 
-OK, I will enhance the cover letter for the next submission. I had
-originally thought I'd submit something officially, but I think I'll
-probably submit another RFC with some of the changes I've made based
-on the discussion with Jens.
+Support is added for storing CXL gen_media or CXL DRAM memory event
+records in xarrays. Additionally, helper functions are implemented
+to find a matching record in the xarray storage based on the memory
+attributes and repair type.
 
-Namely: dropping sendfile2 completely and plumbing the bits through
-for splice. I'll wait a bit to hear what Jens thinks about the
-SO_ZEROCOPY thing (basically: if a network socket has that option
-set, maybe the existing sendfile can generate error queue
-completions without needing a separate system call?).
+Add validity check, when matching attributes for sparing, using
+the validity flag in the DRAM event record, to ensure that all
+required attributes for a requested repair operation are valid and
+set.
 
-I agree overall that sendfile2 or sendmsg2 or whatever else could
-likely be built differently now that better interfaces and
-mechanisms exist in the kernel - but I still think there's room to
-improve existing system calls so they can be used safely.
+Co-developed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
+---
+ drivers/cxl/core/mbox.c   |  11 ++-
+ drivers/cxl/core/memdev.c |   9 +++
+ drivers/cxl/core/ras.c    | 145 ++++++++++++++++++++++++++++++++++++++
+ drivers/cxl/cxlmem.h      |  46 ++++++++++++
+ drivers/cxl/pci.c         |   3 +
+ 5 files changed, 212 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
+index 19d46a284650..c9328f1b6464 100644
+--- a/drivers/cxl/core/mbox.c
++++ b/drivers/cxl/core/mbox.c
+@@ -956,12 +956,19 @@ void cxl_event_trace_record(const struct cxl_memdev *cxlmd,
+ 				hpa_alias = hpa - cache_size;
+ 		}
+ 
+-		if (event_type == CXL_CPER_EVENT_GEN_MEDIA)
++		if (event_type == CXL_CPER_EVENT_GEN_MEDIA) {
++			if (cxl_store_rec_gen_media((struct cxl_memdev *)cxlmd, evt))
++				dev_dbg(&cxlmd->dev, "CXL store rec_gen_media failed\n");
++
+ 			trace_cxl_general_media(cxlmd, type, cxlr, hpa,
+ 						hpa_alias, &evt->gen_media);
+-		else if (event_type == CXL_CPER_EVENT_DRAM)
++		} else if (event_type == CXL_CPER_EVENT_DRAM) {
++			if (cxl_store_rec_dram((struct cxl_memdev *)cxlmd, evt))
++				dev_dbg(&cxlmd->dev, "CXL store rec_dram failed\n");
++
+ 			trace_cxl_dram(cxlmd, type, cxlr, hpa, hpa_alias,
+ 				       &evt->dram);
++		}
+ 	}
+ }
+ EXPORT_SYMBOL_NS_GPL(cxl_event_trace_record, "CXL");
+diff --git a/drivers/cxl/core/memdev.c b/drivers/cxl/core/memdev.c
+index a16a5886d40a..bd9ba50bc01e 100644
+--- a/drivers/cxl/core/memdev.c
++++ b/drivers/cxl/core/memdev.c
+@@ -25,8 +25,17 @@ static DEFINE_IDA(cxl_memdev_ida);
+ static void cxl_memdev_release(struct device *dev)
+ {
+ 	struct cxl_memdev *cxlmd = to_cxl_memdev(dev);
++	struct cxl_event_gen_media *rec_gen_media;
++	struct cxl_event_dram *rec_dram;
++	unsigned long index;
+ 
+ 	ida_free(&cxl_memdev_ida, cxlmd->id);
++	xa_for_each(&cxlmd->rec_dram, index, rec_dram)
++		kfree(rec_dram);
++	xa_destroy(&cxlmd->rec_dram);
++	xa_for_each(&cxlmd->rec_gen_media, index, rec_gen_media)
++		kfree(rec_gen_media);
++	xa_destroy(&cxlmd->rec_gen_media);
+ 	kfree(cxlmd);
+ }
+ 
+diff --git a/drivers/cxl/core/ras.c b/drivers/cxl/core/ras.c
+index 485a831695c7..c703d4e7e05b 100644
+--- a/drivers/cxl/core/ras.c
++++ b/drivers/cxl/core/ras.c
+@@ -7,6 +7,151 @@
+ #include <cxlmem.h>
+ #include "trace.h"
+ 
++struct cxl_event_gen_media *
++cxl_find_rec_gen_media(struct cxl_memdev *cxlmd,
++		       struct cxl_mem_repair_attrbs *attrbs)
++{
++	struct cxl_event_gen_media *rec;
++
++	rec = xa_load(&cxlmd->rec_gen_media, attrbs->dpa);
++	if (!rec)
++		return NULL;
++
++	if (attrbs->repair_type == CXL_PPR)
++		return rec;
++
++	return NULL;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_find_rec_gen_media, "CXL");
++
++struct cxl_event_dram *cxl_find_rec_dram(struct cxl_memdev *cxlmd,
++					 struct cxl_mem_repair_attrbs *attrbs)
++{
++	struct cxl_event_dram *rec;
++	u16 validity_flags;
++
++	rec = xa_load(&cxlmd->rec_dram, attrbs->dpa);
++	if (!rec)
++		return NULL;
++
++	validity_flags = get_unaligned_le16(rec->media_hdr.validity_flags);
++	if (!(validity_flags & CXL_DER_VALID_CHANNEL) ||
++	    !(validity_flags & CXL_DER_VALID_RANK))
++		return NULL;
++
++	switch (attrbs->repair_type) {
++	case CXL_PPR:
++		if (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
++		    get_unaligned_le24(rec->nibble_mask) == attrbs->nibble_mask)
++			return rec;
++		break;
++	case CXL_CACHELINE_SPARING:
++		if (!(validity_flags & CXL_DER_VALID_BANK_GROUP) ||
++		    !(validity_flags & CXL_DER_VALID_BANK) ||
++		    !(validity_flags & CXL_DER_VALID_ROW) ||
++		    !(validity_flags & CXL_DER_VALID_COLUMN))
++			return NULL;
++
++		if (rec->media_hdr.channel == attrbs->channel &&
++		    rec->media_hdr.rank == attrbs->rank &&
++		    rec->bank_group == attrbs->bank_group &&
++		    rec->bank == attrbs->bank &&
++		    get_unaligned_le24(rec->row) == attrbs->row &&
++		    get_unaligned_le16(rec->column) == attrbs->column &&
++		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
++		     get_unaligned_le24(rec->nibble_mask) ==
++			     attrbs->nibble_mask) &&
++		    (!(validity_flags & CXL_DER_VALID_SUB_CHANNEL) ||
++		     rec->sub_channel == attrbs->sub_channel))
++			return rec;
++		break;
++	case CXL_ROW_SPARING:
++		if (!(validity_flags & CXL_DER_VALID_BANK_GROUP) ||
++		    !(validity_flags & CXL_DER_VALID_BANK) ||
++		    !(validity_flags & CXL_DER_VALID_ROW))
++			return NULL;
++
++		if (rec->media_hdr.channel == attrbs->channel &&
++		    rec->media_hdr.rank == attrbs->rank &&
++		    rec->bank_group == attrbs->bank_group &&
++		    rec->bank == attrbs->bank &&
++		    get_unaligned_le24(rec->row) == attrbs->row &&
++		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
++		     get_unaligned_le24(rec->nibble_mask) ==
++			     attrbs->nibble_mask))
++			return rec;
++		break;
++	case CXL_BANK_SPARING:
++		if (!(validity_flags & CXL_DER_VALID_BANK_GROUP) ||
++		    !(validity_flags & CXL_DER_VALID_BANK))
++			return NULL;
++
++		if (rec->media_hdr.channel == attrbs->channel &&
++		    rec->media_hdr.rank == attrbs->rank &&
++		    rec->bank_group == attrbs->bank_group &&
++		    rec->bank == attrbs->bank &&
++		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
++		     get_unaligned_le24(rec->nibble_mask) ==
++			     attrbs->nibble_mask))
++			return rec;
++		break;
++	case CXL_RANK_SPARING:
++		if (rec->media_hdr.channel == attrbs->channel &&
++		    rec->media_hdr.rank == attrbs->rank &&
++		    (!(validity_flags & CXL_DER_VALID_NIBBLE) ||
++		     get_unaligned_le24(rec->nibble_mask) ==
++			     attrbs->nibble_mask))
++			return rec;
++		break;
++	default:
++		return NULL;
++	}
++
++	return NULL;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_find_rec_dram, "CXL");
++
++int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt)
++{
++	void *old_rec;
++	struct cxl_event_gen_media *rec =
++		kmemdup(&evt->gen_media, sizeof(*rec), GFP_KERNEL);
++	if (!rec)
++		return -ENOMEM;
++
++	old_rec = xa_store(&cxlmd->rec_gen_media,
++			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
++			   GFP_KERNEL);
++	if (xa_is_err(old_rec))
++		return xa_err(old_rec);
++
++	kfree(old_rec);
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_store_rec_gen_media, "CXL");
++
++int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt)
++{
++	void *old_rec;
++	struct cxl_event_dram *rec =
++		kmemdup(&evt->dram, sizeof(*rec), GFP_KERNEL);
++
++	if (!rec)
++		return -ENOMEM;
++
++	old_rec = xa_store(&cxlmd->rec_dram,
++			   le64_to_cpu(rec->media_hdr.phys_addr), rec,
++			   GFP_KERNEL);
++	if (xa_is_err(old_rec))
++		return xa_err(old_rec);
++
++	kfree(old_rec);
++
++	return 0;
++}
++EXPORT_SYMBOL_NS_GPL(cxl_store_rec_dram, "CXL");
++
+ static void cxl_cper_trace_corr_port_prot_err(struct pci_dev *pdev,
+ 					      struct cxl_ras_capability_regs ras_cap)
+ {
+diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
+index 7ab257e0c85e..24ece579a145 100644
+--- a/drivers/cxl/cxlmem.h
++++ b/drivers/cxl/cxlmem.h
+@@ -34,6 +34,41 @@
+ 	(FIELD_GET(CXLMDEV_RESET_NEEDED_MASK, status) !=                       \
+ 	 CXLMDEV_RESET_NEEDED_NOT)
+ 
++enum cxl_mem_repair_type {
++	CXL_PPR,
++	CXL_CACHELINE_SPARING,
++	CXL_ROW_SPARING,
++	CXL_BANK_SPARING,
++	CXL_RANK_SPARING,
++	CXL_REPAIR_MAX,
++};
++
++/**
++ * struct cxl_mem_repair_attrbs - CXL memory repair attributes
++ * @dpa: DPA of memory to repair
++ * @nibble_mask: nibble mask, identifies one or more nibbles on the memory bus
++ * @row: row of memory to repair
++ * @column: column of memory to repair
++ * @channel: channel of memory to repair
++ * @sub_channel: sub channel of memory to repair
++ * @rank: rank of memory to repair
++ * @bank_group: bank group of memory to repair
++ * @bank: bank of memory to repair
++ * @repair_type: repair type. For eg. PPR, memory sparing etc.
++ */
++struct cxl_mem_repair_attrbs {
++	u64 dpa;
++	u32 nibble_mask;
++	u32 row;
++	u16 column;
++	u8 channel;
++	u8 sub_channel;
++	u8 rank;
++	u8 bank_group;
++	u8 bank;
++	enum cxl_mem_repair_type repair_type;
++};
++
+ /**
+  * struct cxl_memdev - CXL bus object representing a Type-3 Memory Device
+  * @dev: driver core device object
+@@ -45,6 +80,8 @@
+  * @endpoint: connection to the CXL port topology for this memory device
+  * @id: id number of this memdev instance.
+  * @depth: endpoint port depth
++ * @rec_gen_media: xarray to store CXL general media records
++ * @rec_dram: xarray to store CXL DRAM records
+  */
+ struct cxl_memdev {
+ 	struct device dev;
+@@ -56,6 +93,8 @@ struct cxl_memdev {
+ 	struct cxl_port *endpoint;
+ 	int id;
+ 	int depth;
++	struct xarray rec_gen_media;
++	struct xarray rec_dram;
+ };
+ 
+ static inline struct cxl_memdev *to_cxl_memdev(struct device *dev)
+@@ -877,6 +916,13 @@ static inline int devm_cxl_region_edac_register(struct cxl_region *cxlr)
+ { return 0; }
+ #endif
+ 
++struct cxl_event_gen_media *
++cxl_find_rec_gen_media(struct cxl_memdev *cxlmd, struct cxl_mem_repair_attrbs *attrbs);
++struct cxl_event_dram *cxl_find_rec_dram(struct cxl_memdev *cxlmd,
++					 struct cxl_mem_repair_attrbs *attrbs);
++int cxl_store_rec_gen_media(struct cxl_memdev *cxlmd, union cxl_event *evt);
++int cxl_store_rec_dram(struct cxl_memdev *cxlmd, union cxl_event *evt);
++
+ #ifdef CONFIG_CXL_SUSPEND
+ void cxl_mem_active_inc(void);
+ void cxl_mem_active_dec(void);
+diff --git a/drivers/cxl/pci.c b/drivers/cxl/pci.c
+index 4288f4814cc5..51f09e685dd9 100644
+--- a/drivers/cxl/pci.c
++++ b/drivers/cxl/pci.c
+@@ -1053,6 +1053,9 @@ static int cxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	pci_save_state(pdev);
+ 
++	xa_init(&cxlmd->rec_gen_media);
++	xa_init(&cxlmd->rec_dram);
++
+ 	return rc;
+ }
+ 
+-- 
+2.43.0
+
