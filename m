@@ -1,208 +1,577 @@
-Received: from ixit.cz (ip-89-177-23-149.bb.vodafone.cz [89.177.23.149])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8975F12B73;
-	Thu, 20 Mar 2025 00:14:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=89.177.23.149
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46E441C63;
+	Thu, 20 Mar 2025 00:14:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742429657; cv=none; b=u/KG94h4QAR0RuwW7wl/njyvTTEDmLPJjLOzxcESkjse1A+QOIViSpyWvRSqUAEb8+RHsTeY9GQRDwWIAVWGXdQIsVrGAFoHRfudTKs9xU6LRY6ctQhK+pBZoiZSVmowMmkW0tb3Thy22K4rObU6cBhJEfVXK3GKn5csaYSBjPc=
+	t=1742429666; cv=none; b=hQr3/5OZg7eQSWWDkE89ndkbsz694Nl/MIqgDwSeoOOKzlEzziVAXZy9ErXLFwnOyM/nNgrw3vYytkxo+wRgCRaV+cMHNgoJXrGiA88ICZ2dzcj3h5RB+Mnw7ITkPuAUqEvP7IdLDCEZqURa0SOSbS4DVgSpX5cCy4YohrWPX/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742429657; c=relaxed/simple;
-	bh=Zv2ls7KoQMDvurCvt39mDEoOloXcGKm7QSI4WBIOOf8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JO/mqwf9KSFipH0nJu5t90ZdQlWaKmLq3dPQZU9ZdC7PUz0+4WNvuAZiyn6ixy8orebAjvWZjm2HnC0pgWog3jV53J0+7+3quLUQhNOrJseealT1h/xXI6sfHfLvpR8x/4x/6DYlBjzB6h60fohtpiyk3sO7Lr4uZHCnjcXz5DI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz; spf=pass smtp.mailfrom=ixit.cz; dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b=JO0VTa3s; arc=none smtp.client-ip=89.177.23.149
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ixit.cz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ixit.cz
+	s=arc-20240116; t=1742429666; c=relaxed/simple;
+	bh=T8RvA4W48D/W2/6rJww/f8xcFJyl7eCZIQ52Uo0a33U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=inbWQIVS3a8rN7jqbSstmgmEUnc3btJUC5Pez0Q6FqdUF/vTHv3eWL9anF4bmwqv2lbMsQQ3gQbbn0rAG+Fg7CnuoSrl6Fs/H7egBJpxjri6BbCnJie1goOW/sfeb0z0SKv+x31btB2uxNVE4fv2ZTmelc7jAaoVTjSbQTBW8/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com; spf=pass smtp.mailfrom=ethancedwards.com; dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b=axgfbgrc; arc=none smtp.client-ip=80.241.56.151
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ethancedwards.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ethancedwards.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ixit.cz header.i=@ixit.cz header.b="JO0VTa3s"
-Received: from [10.0.0.228] (unknown [10.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	dkim=pass (2048-bit key) header.d=ethancedwards.com header.i=@ethancedwards.com header.b="axgfbgrc"
+Received: from smtp202.mailbox.org (smtp202.mailbox.org [IPv6:2001:67c:2050:b231:465::202])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by ixit.cz (Postfix) with ESMTPSA id 448C31615EC;
-	Thu, 20 Mar 2025 01:14:04 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ixit.cz; s=dkim;
-	t=1742429644;
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4ZJ5fb2cVBz9sTb;
+	Thu, 20 Mar 2025 01:14:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ethancedwards.com;
+	s=MBO0001; t=1742429655;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7qZ1HpNB2ZHlzsN9ROOWbhITIJbhiwqTH5F9w84T/s4=;
-	b=JO0VTa3sw7zaYvmRNSRt6di4RphlccbjCzyDtX9E0D7va5HDnJRX+hMrVzTFFakf1igfYW
-	6eYIU1Vy/7Fy12gRk3CokjAzbtaR8RYpfoeIKUEWAdao1FHTrFKsH9Q4Z3vuD98DUfudn1
-	r67cQ8F+yd+u/yUDuWmmNjaYv3bMc50=
-Message-ID: <622b1887-6738-41d6-a8a8-37690cc0c63e@ixit.cz>
-Date: Thu, 20 Mar 2025 01:14:03 +0100
+	 in-reply-to:in-reply-to:references:references;
+	bh=hS3wUeyn5edffB0I+0408Cs6auO0ncoCTv/6FdG2OeI=;
+	b=axgfbgrcGRfqz5m2HJzIr1pJhkZqI0hKJxxIl4qNbEhuI7EMGuZNTTeD/Q6cAaXCNcqry2
+	ckVqDsNRV1bBehwnOi9PGiQT6qsizK7kzkBRplgJjJs3RO+QlclvBGNdE8AfUOoPe4pn4c
+	OXF7eSYWAZLKyQKhKR6cvXRyAdyVFJttNUfN4m7pYy+57bx8b4xyAMWuGvB6RdlI+RG+XZ
+	O4q4mKBGb1kM2PTZc9PKX73JsP3cktf/oNe/Ciz9zwu14lIUulzPN/0ImL7kp5mqiZt3t4
+	TOfuEf0CukEQJg2w0jzU/1KC5FGHE6V1jyEkt/MnDlm3DBX8K+mjTsy96o8ZWA==
+From: Ethan Carter Edwards <ethan@ethancedwards.com>
+Date: Wed, 19 Mar 2025 20:13:53 -0400
+Subject: [PATCH RFC v2 4/8] staging: apfs: init libzbitmap.{c,h} for
+ decompression
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] media: dt-bindings: Convert Analog Devices ad5820 to
- DT schema
-To: Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Pavel Machek <pavel@kernel.org>,
- Pavel Machek <pavel@ucw.cz>, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250314-b4-ad5820-dt-yaml-v2-1-287958c3c07c@ixit.cz>
- <Z9SYOCVxt70u_bad@kekkonen.localdomain>
- <ec820dbf-5a37-4477-a99d-f3fbe338c198@ixit.cz>
- <ih3ykzxrnpbwg4bvkmpoo2tashcxidir4r4zofhlvrs7udkp7o@6qtqh6wtmkwd>
-Content-Language: en-US
-From: David Heidelberg <david@ixit.cz>
-Autocrypt: addr=david@ixit.cz; keydata=
- xsFNBF5v1x4BEADS3EddwsNsvVAI1XF8uQKbdYPY/GhjaSLziwVnbwv5BGwqB1tfXoHnccoA
- 9kTgKAbiXG/CiZFhD6l4WCIskQDKzyQN3JhCUIxh16Xyw0lECI7iqoW9LmMoN1dNKcUmCO9g
- lZxQaOl+1bY/7ttd7DapLh9rmBXJ2lKiMEaIpUwb/Nw0d7Enp4Jy2TpkhPywIpUn8CoJCv3/
- 61qbvI9y5utB/UhfMAUXsaAgwEJyGPAqHlC0YZjaTwOu+YQUE3AFzhCbksq95CwDz4U4gdls
- dmv9tkATfu2OmzERZQ6vJTehK0Pu4l5KmCAzYg42I9Dy4E6b17x6NncKbcByQFOXMtG0qVUk
- F1yeeOQUHwu+8t3ZDMBUhCkRL/juuoqLmyDWKMc0hKNNeZ9BNXgB8fXkRLWEUfgDXsFyEkKp
- NxUy5bDRlivf6XfExnikk5kj9l2gGlNQwqROti/46bfbmlmc/a2GM4k8ZyalHNEAdwtXYSpP
- 8JJmlbQ7hNTLkc3HQLRsIocN5th/ur7pPMz1Beyp0gbE9GcOceqmdZQB80vJ01XDyCAihf6l
- AMnzwpXZsjqIqH9r7T7tM6tVEVbPSwPt4eZYXSoJijEBC/43TBbmxDX+5+3txRaSCRQrG9dY
- k3mMGM3xJLCps2KnaqMcgUnvb1KdTgEFUZQaItw7HyRd6RppewARAQABzSBEYXZpZCBIZWlk
- ZWxiZXJnIDxkYXZpZEBpeGl0LmN6PsLBlAQTAQgAPgIbAwULCQgHAgYVCgkICwIEFgIDAQIe
- AQIXgBYhBNd6Cc/u3Cu9U6cEdGACP8TTSSByBQJl+KksBQkPDaAOAAoJEGACP8TTSSBy6IAQ
- AMqFqVi9LLxCEcUWBn82ssQGiVSDniKpFE/tp7lMXflwhjD5xoftoWOmMYkiWE86t5x5Fsp7
- afALx7SEDz599F1K1bLnaga+budu55JEAYGudD2WwpLJ0kPzRhqBwGFIx8k6F+goZJzxPDsf
- loAtXQE62UvEKa4KRRcZmF0GGoRsgA7vE7OnV8LMeocdD3eb2CuXLzauHAfdvqF50IfPH/sE
- jbzROiAZU+WgrwU946aOzrN8jVU+Cy8XAccGAZxsmPBfhTY5f2VN1IqvfaRdkKKlmWVJWGw+
- ycFpAEJKFRdfcc5PSjUJcALn5C+hxzL2hBpIZJdfdfStn+DWHXNgBeRDiZj1x6vvyaC43RAb
- VXvRzOQfG4EaMVMIOvBjBA/FtIpb1gtXA42ewhvPnd5RVCqD9YYUxsVpJ9d+XsAy7uib3BsV
- W2idAEsPtoqhVhq8bCUs/G4sC2DdyGZK8MRFDJqciJSUbqA+5z1ZCuE8UOPDpZKiW6H/OuOM
- zDcjh0lOzr4p+/1TSg1PbUh7fQ+nbMuiT044sC1lLtJK0+Zyn0GwhR82oNM4fldNsaHRW42w
- QGD35+eNo5Pvb3We5XRMlBdhFnj7Siggp4J8/PJ6MJvRyC+RIJPGtbdMB2/RxWunFLn87e5w
- UgwR9jPMHAstuTR1yR23c4SIYoQ2fzkrRzuazsFNBF5v1x4BEADnlrbta2WL87BlEOotZUh0
- zXANMrNV15WxexsirLetfqbs0AGCaTRNj+uWlTUDJRXOVIwzmF76Us3I2796+Od2ocNpLheZ
- 7EIkq8budtLVd1c06qJ+GMraz51zfgSIazVInNMPk9T6fz0lembji5yEcNPNNBA4sHiFmXfo
- IhepHFOBApjS0CiOPqowYxSTPe/DLcJ/LDwWpTi37doKPhBwlHev1BwVCbrLEIFjY0MLM0aT
- jiBBlyLJaTqvE48gblonu2SGaNmGtkC3VoQUQFcVYDXtlL9CVbNo7BAt5gwPcNqEqkUL60Jh
- FtvVSKyQh6gn7HHsyMtgltjZ3NKjv8S3yQd7zxvCn79tCKwoeNevsvoMq/bzlKxc9QiKaRPO
- aDj3FtW7R/3XoKJBY8Hckyug6uc2qYWRpnuXc0as6S0wfek6gauExUttBKrtSbPPHiuTeNHt
- NsT4+dyvaJtQKPBTbPHkXpTO8e1+YAg7kPj3aKFToE/dakIh8iqUHLNxywDAamRVn8Ha67WO
- AEAA3iklJ49QQk2ZyS1RJ2Ul28ePFDZ3QSr9LoJiOBZv9XkbhXS164iRB7rBZk6ZRVgCz3V6
- hhhjkipYvpJ/fpjXNsVL8jvel1mYNf0a46T4QQDQx4KQj0zXJbC2fFikAtu1AULktF4iEXEI
- rSjFoqhd4euZ+QARAQABwsF8BBgBCAAmAhsMFiEE13oJz+7cK71TpwR0YAI/xNNJIHIFAmX4
- qVAFCQ8NoDIACgkQYAI/xNNJIHKN4A/+Ine2Ii7JiuGITjJkcV6pgKlfwYdEs4eFD1pTRb/K
- 5dprUz3QSLP41u9OJQ23HnESMvn31UENk9ffebNoW7WxZ/8cTQY0JY/cgTTrlNXtyAlGbR3/
- 3Q/VBJptf04Er7I6TaKAmqWzdVeKTw33LljpkHp02vrbOdylb4JQG/SginLV9purGAFptYRO
- 8JNa2J4FAQtQTrfOUjulOWMxy7XRkqK3QqLcPW79/CFn7q1yxamPkpoXUJq9/fVjlhk7P+da
- NYQpe4WQQnktBY29SkFnvfIAwqIVU8ix5Oz8rghuCcAdR7lEJ7hCX9bR0EE05FOXdZy5FWL9
- GHvFa/Opkq3DPmFl/0nt4HJqq1Nwrr+WR6d0414oo1n2hPEllge/6iD3ZYwptTvOFKEw/v0A
- yqOoYSiKX9F7Ko7QO+VnYeVDsDDevKic2T/4GDpcSVd9ipiKxCQvUAzKUH7RUpqDTa+rYurm
- zRKcgRumz2Tc1ouHj6qINlzEe3a5ldctIn/dvR1l2Ko7GBTG+VGp9U5NOAEkGpxHG9yg6eeY
- fFYnMme51H/HKiyUlFiE3yd5LSmv8Dhbf+vsI4x6BOOOq4Iyop/Exavj1owGxW0hpdUGcCl1
- ovlwVPO/6l/XLAmSGwdnGqok5eGZQzSst0tj9RC9O0dXO1TZocOsf0tJ8dR2egX4kxM=
-In-Reply-To: <ih3ykzxrnpbwg4bvkmpoo2tashcxidir4r4zofhlvrs7udkp7o@6qtqh6wtmkwd>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250319-apfs-v2-4-475de2e25782@ethancedwards.com>
+References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
+In-Reply-To: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
+To: brauner@kernel.org, tytso@mit.edu, jack@suse.cz, 
+ viro@zeniv.linux.org.uk
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ ernesto.mnd.fernandez@gmail.com, dan.carpenter@linaro.org, 
+ sven@svenpeter.dev, ernesto@corellium.com, gargaditya08@live.com, 
+ willy@infradead.org, asahi@lists.linux.dev, linux-kernel@vger.kernel.org, 
+ linux-fsdevel@vger.kernel.org, linux-staging@lists.linux.dev, 
+ Ethan Carter Edwards <ethan@ethancedwards.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=13474;
+ i=ethan@ethancedwards.com; h=from:subject:message-id;
+ bh=T8RvA4W48D/W2/6rJww/f8xcFJyl7eCZIQ52Uo0a33U=;
+ b=LS0tLS1CRUdJTiBQR1AgTUVTU0FHRS0tLS0tCgpvd0o0bkp2QXk4ekFKWGJEOXFoNThlVGp6e
+ GhQcXlVeHBOK09QZkNWLzYvcWtWY090ejFlRmgwdXZWQWRuTjA3ClM4aXBiS1BUeDduaDVZeUxi
+ aWQybExJd2lIRXh5SW9wc3Z6UFVVNTdxRGxEWWVkZmx5YVlPYXhNSUVNWXVEZ0YKWUNKWG56SXl
+ MSHI2NjQvUWlndE1BaFlGSFNxZmw3anhxcGc0NkpiSjJ1OTladXY1OTdxcEZ5UERCbVZqN1dVdA
+ pGODZWWFpvOW8vemszNzRQejJlLzkzakIrT21ML2xyTm1XWmFEQUIrQlUvQgo9eDdyawotLS0tL
+ UVORCBQR1AgTUVTU0FHRS0tLS0tCg==
+X-Developer-Key: i=ethan@ethancedwards.com; a=openpgp;
+ fpr=2E51F61839D1FA947A7300C234C04305D581DBFE
+X-Rspamd-Queue-Id: 4ZJ5fb2cVBz9sTb
 
-On 15/03/2025 16:49, Sebastian Reichel wrote:
-> Hello,
-> 
-> On Sat, Mar 15, 2025 at 02:18:40PM +0100, David Heidelberg wrote:
->> On 14/03/2025 21:57, Sakari Ailus wrote:
->>> Thanks for converting this to YAML.
->>>
->>> On Fri, Mar 14, 2025 at 08:58:27PM +0100, David Heidelberg via B4 Relay wrote:
->>>> From: David Heidelberg <david@ixit.cz>
->>>>
->>>> Convert the Analog Devices ad5820 to DT schema format.
->>>>
->>>> Add the previously undocumented io-channel-cells property,
->>>> which can be omitted. If present, it must be set to 0,
->>>> as the device provides only one channel.
->>>
->>> What's the purpose of this property? The driver doesn't use it nor I think
->>> it provides any information on the hardware either. The above description
->>> also appears to be saying it's redundant.
->>
->> Hello Sakari,
->>
->> from my understanding, you're right.
->>
->> I would prefer to drop it, see [1].
->>
->> Anyway from reading of documentation I understood it may be right to have
->> the property empty, but also may be omitted. I saw both approaches in the
->> code.
->>
->> If you choose not liking this redudancy, I push [1] and drop the property
->> here.
->>
->> David
->>
->> [1] https://patchwork.kernel.org/project/linux-omap/patch/20250213203208.93316-1-david@ixit.cz/
-> 
-> Like all DT properties starting with #, this is not about hardware,
-> but about parsing the device tree itself and used by core DT code:
-> 
-> $ git grep io-channels drivers/of/property.c
-> drivers/of/property.c:DEFINE_SIMPLE_PROP(io_channels, "io-channels", "#io-channel-cells")
-> 
-> Have a look at the following example DT:
-> 
-> iio_device1: iio-provider1 {
->      #io-channel-cells = <2>;
-> };
-> 
-> iio_device2: iio-provider2 {
->      #io-channel-cells = <1>;
-> };
-> 
-> iio_device3: iio-provider3 {
->      #io-channel-cells = <0>;
-> };
-> 
-> example-iio-user {
->      my-iio-reference = <&iio_device1 AREA0 CHANNEL2>, <&iio_device3>, <&iio_device2 CHAN0>;
-> };
-> 
-> While you can easily understand that without the io-channel-cells,
-> please have a look what it looks like after sending it through the
-> DT compiler. You will get something like this:
-> 
-> iio-provider1 {
->      #io-channel-cells = <2>;
->      phandle = <23>;
-> };
-> 
-> iio-provider2 {
->      #io-channel-cells = <1>;
->      phandle = <10>;
-> };
-> 
-> iio-provider3 {
->      #io-channel-cells = <0>;
->      phandle = <37>;
-> };
-> 
-> example-iio-user {
->      my-iio-reference = <23 42 13 37 10 0>;
-> };
-> 
-> But you can safely drop it, when there are no references to the IIO
-> device. So it's obviously not required in all cases.
-> 
-> I hope I could explain the purpose well enough :)
+This code handles lzbitmap decompression in filesystem reads. Write
+support is not yet implemented.
 
-This looks like a very good explanation, it helped me a lot.
+Signed-off-by: Ethan Carter Edwards <ethan@ethancedwards.com>
+---
+ drivers/staging/apfs/libzbitmap.c | 448 ++++++++++++++++++++++++++++++++++++++
+ drivers/staging/apfs/libzbitmap.h |  32 +++
+ 2 files changed, 480 insertions(+)
 
-Any chance to sneak it into the docs somewhere?
-
-David
-
-> 
-> Greetings,
-> 
-> -- Sebastian
+diff --git a/drivers/staging/apfs/libzbitmap.c b/drivers/staging/apfs/libzbitmap.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..26e8827b7b1b8d40684127a735743ffc8da7d8de
+--- /dev/null
++++ b/drivers/staging/apfs/libzbitmap.c
+@@ -0,0 +1,448 @@
++// SPDX-License-Identifier: GPL-2.0+ OR MIT
++/*
++ * Copyright (C) 2022 Corellium LLC
++ *
++ * Author: Ernesto A. Fernández <ernesto@corellium.com>
++ *
++ * Ported from libzbitmap (https://github.com/eafer/libzbitmap). Only the
++ * decompression code is included.
++ */
++
++#include <linux/errno.h>
++#include <linux/string.h>
++#include "libzbitmap.h"
++
++#define ZBM_MAGIC "ZBM\x09"
++#define ZBM_MAGIC_SZ 4
++
++#define ZBM_MAX_DECMP_CHUNK_SIZE 0x8000
++#define ZBM_MAX_DECMP_CHUNK_SIZE_BITS 15
++
++struct uint24 {
++	uint8_t low;
++	uint8_t mid;
++	uint8_t hig;
++};
++
++/* This header is shared by both compressed and decompressed chunks */
++struct zbm_chunk_hdr {
++	struct uint24 len; /* Length of the chunk */
++	struct uint24 decmp_len; /* Length of the chunk after decompression */
++};
++
++/* The full header for compressed chunks */
++struct zbm_cmp_chunk_hdr {
++	/* Shared with decompressed chunks */
++	struct zbm_chunk_hdr hdr;
++
++	/* Offset for each of the three metadata areas */
++	struct uint24 meta_off_1;
++	struct uint24 meta_off_2;
++	struct uint24 meta_off_3;
++};
++
++/* Pointer to a half-byte */
++struct nybl_ptr {
++	uint8_t *addr; /* Address of the byte */
++	int nibble; /* Which of the two nibbles? */
++};
++
++/* 0-2 and 0xf are not real bitmap indexes */
++#define ZBM_BITMAP_COUNT (16 - 1 - 3)
++#define ZBM_BITMAP_BASE 3
++#define ZBM_BITMAP_BYTECNT 17
++#define ZBM_MAX_PERIOD_BYTECNT 2
++
++struct zbm_bmap {
++	uint8_t bitmap; /* The bitmap */
++	uint8_t period_bytecnt; /* Read this many bytes to get the new period */
++};
++
++struct zbm_state {
++	/* Updated during a chunk read */
++	uint8_t *dest; /* Write the next byte here */
++	size_t dest_left; /* Room left in destination buffer */
++	uint32_t written; /* Bytes written so far for current chunk */
++	uint16_t period; /* Repetition period for decompression, in bytes */
++
++	/* Updated right before a chunk read */
++	const uint8_t *src_end; /* End of current chunk */
++	uint32_t len; /* Length of the chunk */
++	uint32_t decmp_len; /* Expected chunk length after decompression */
++
++	/* Updated after a chunk read */
++	const uint8_t *src; /* Start of buffer, or current chunk if any */
++	size_t src_left; /* Room left in the source buffer */
++	size_t prewritten; /* Bytes written for previous chunks */
++
++	/* Current position in data and metadata areas for this chunk */
++	const uint8_t *data;
++	const uint8_t *meta_1;
++	const uint8_t *meta_2;
++	struct nybl_ptr meta_3;
++
++	/* Array of bitmaps for the current chunk */
++	struct zbm_bmap bitmaps[ZBM_BITMAP_COUNT];
++};
++
++static int zbm_check_magic(struct zbm_state *state)
++{
++	if (state->src_left < ZBM_MAGIC_SZ)
++		return -EINVAL;
++
++	if (memcmp(state->src, ZBM_MAGIC, ZBM_MAGIC_SZ))
++		return -EINVAL;
++
++	state->src += ZBM_MAGIC_SZ;
++	state->src_left -= ZBM_MAGIC_SZ;
++	return 0;
++}
++
++static uint32_t zbm_u24_to_u32(struct uint24 n)
++{
++	uint32_t res;
++
++	res = n.hig;
++	res <<= 8;
++	res += n.mid;
++	res <<= 8;
++	res += n.low;
++	return res;
++}
++
++/* Some chunks just have regular uncompressed data, but with a header */
++static int zbm_chunk_is_uncompressed(struct zbm_state *state)
++{
++	return state->len == state->decmp_len + sizeof(struct zbm_chunk_hdr);
++}
++
++static int zbm_handle_uncompressed_chunk(struct zbm_state *state)
++{
++	state->meta_1 = state->meta_2 = NULL;
++	state->meta_3.addr = NULL;
++	state->meta_3.nibble = 0;
++	state->data = state->src + sizeof(struct zbm_chunk_hdr);
++	memcpy(state->dest, state->data, state->decmp_len);
++
++	state->dest += state->decmp_len;
++	state->dest_left -= state->decmp_len;
++	state->written = state->decmp_len;
++	return 0;
++}
++
++static int zbm_read_nibble(struct nybl_ptr *nybl, const uint8_t *limit,
++			   uint8_t *result)
++{
++	if (nybl->addr >= limit)
++		return -EINVAL;
++
++	if (nybl->nibble == 0) {
++		*result = *nybl->addr & 0xf;
++		nybl->nibble = 1;
++	} else {
++		*result = (*nybl->addr >> 4) & 0xf;
++		nybl->nibble = 0;
++		++nybl->addr;
++	}
++	return 0;
++}
++
++static void zbm_rewind_nibble(struct nybl_ptr *nybl)
++{
++	if (nybl->nibble == 0) {
++		nybl->nibble = 1;
++		--nybl->addr;
++	} else {
++		nybl->nibble = 0;
++	}
++}
++
++static int zbm_apply_bitmap(struct zbm_state *state, struct zbm_bmap *bitmap)
++{
++	int i;
++
++	/* The periods are stored in the first metadata area */
++	if (bitmap->period_bytecnt) {
++		state->period = 0;
++		for (i = 0; i < bitmap->period_bytecnt; ++i) {
++			if (state->meta_1 >= state->src_end)
++				return -EINVAL;
++			state->period |= *state->meta_1 << i * 8;
++			++state->meta_1;
++		}
++	}
++	if (state->period == 0)
++		return -EINVAL;
++
++	for (i = 0; i < 8; ++i) {
++		if (state->written == state->decmp_len)
++			break;
++		if (bitmap->bitmap & 1 << i) {
++			if (state->data >= state->src_end)
++				return -EINVAL;
++			*state->dest = *state->data;
++			++state->data;
++		} else {
++			if (state->prewritten + state->written < state->period)
++				return -EINVAL;
++			*state->dest = *(state->dest - state->period);
++		}
++		++state->dest;
++		--state->dest_left;
++		++state->written;
++	}
++
++	return 0;
++}
++
++static int zbm_apply_bitmap_number(struct zbm_state *state, uint8_t bmp_num)
++{
++	struct zbm_bmap next = { 0 };
++
++	/* Not a valid bitmap number (it signals a repetition) */
++	if (bmp_num == 0xf)
++		return -EINVAL;
++
++	/* An actual index in the bitmap array */
++	if (bmp_num > ZBM_MAX_PERIOD_BYTECNT)
++		return zbm_apply_bitmap(
++			state, &state->bitmaps[bmp_num - ZBM_BITMAP_BASE]);
++
++	/* For < 2, use the next bitmap in the second metadata area */
++	if (state->meta_2 >= state->src_end)
++		return -EINVAL;
++	next.bitmap = *state->meta_2;
++	next.period_bytecnt = bmp_num;
++	++state->meta_2;
++	return zbm_apply_bitmap(state, &next);
++}
++
++/* Find out how many times we need to repeat the current bitmap operation */
++static int zbm_read_repetition_count(struct zbm_state *state, uint16_t *repeat)
++{
++	uint8_t nibble;
++	uint16_t total;
++	int err;
++
++	/* Don't confuse the trailing bitmaps with a repetition count */
++	if (state->decmp_len - state->written <= 8) {
++		*repeat = 1;
++		return 0;
++	}
++
++	err = zbm_read_nibble(&state->meta_3, state->src_end, &nibble);
++	if (err)
++		return err;
++
++	if (nibble != 0xf) {
++		/* No repetition count: the previous bitmap number gets applied once */
++		zbm_rewind_nibble(&state->meta_3);
++		*repeat = 1;
++		return 0;
++	}
++
++	/*
++     * Under this scheme, repeating a bitmap number 3 times wouldn't save any
++     * space, so the repetition count starts from 4.
++     */
++	total = 4;
++	while (nibble == 0xf) {
++		err = zbm_read_nibble(&state->meta_3, state->src_end, &nibble);
++		if (err)
++			return err;
++		total += nibble;
++		if (total < nibble)
++			return -EINVAL;
++	}
++
++	*repeat = total;
++	return 0;
++}
++
++static int zbm_decompress_single_bitmap(struct zbm_state *state)
++{
++	uint8_t bmp_num;
++	uint16_t repeat;
++	int i;
++	int err;
++
++	/* The current nibble is the offset of the next bitmap to apply */
++	err = zbm_read_nibble(&state->meta_3, state->src_end, &bmp_num);
++	if (err)
++		return err;
++
++	err = zbm_read_repetition_count(state, &repeat);
++	if (err)
++		return err;
++
++	for (i = 0; i < repeat; ++i) {
++		err = zbm_apply_bitmap_number(state, bmp_num);
++		if (err)
++			return err;
++	}
++	return 0;
++}
++
++/* Pointer to a bit */
++struct bit_ptr {
++	uint8_t *addr; /* Address of the byte */
++	int offset; /* Bit number */
++};
++
++/* This function does not perform boundary checks, the caller must do it */
++static int zbm_read_single_bit(struct bit_ptr *bit)
++{
++	int res = *bit->addr >> bit->offset & 1;
++
++	++bit->offset;
++	if (bit->offset != 8)
++		return res;
++	bit->offset = 0;
++	++bit->addr;
++	return res;
++}
++
++static int zbm_read_single_bitmap(struct bit_ptr *bit, const uint8_t *limit,
++				  struct zbm_bmap *result)
++{
++	int i;
++
++	result->bitmap = 0;
++	result->period_bytecnt = 0;
++
++	/* The bitmap itself */
++	for (i = 0; i < 8; ++i) {
++		if (bit->addr >= limit)
++			return -EINVAL;
++		result->bitmap |= zbm_read_single_bit(bit) << i;
++	}
++
++	/*
++     * The two trailing bits tell us how many bytes to read for the next
++     * repetition period
++     */
++	for (i = 0; i < 2; ++i) {
++		if (bit->addr >= limit)
++			return -EINVAL;
++		result->period_bytecnt |= zbm_read_single_bit(bit) << i;
++	}
++
++	return 0;
++}
++
++static int zbm_read_bitmaps(struct zbm_state *state)
++{
++	struct bit_ptr bmap = { 0 };
++	int err, i;
++
++	if (state->len < ZBM_BITMAP_BYTECNT)
++		return -EINVAL;
++
++	bmap.addr = (uint8_t *)state->src_end - ZBM_BITMAP_BYTECNT;
++	bmap.offset = 0;
++
++	for (i = 0; i < ZBM_BITMAP_COUNT; ++i) {
++		err = zbm_read_single_bitmap(&bmap, state->src_end,
++					     &state->bitmaps[i]);
++		if (err)
++			return err;
++		if (state->bitmaps[i].period_bytecnt > ZBM_MAX_PERIOD_BYTECNT)
++			return -EINVAL;
++	}
++	return 0;
++}
++
++static int zbm_handle_compressed_chunk(struct zbm_state *state)
++{
++	const struct zbm_cmp_chunk_hdr *hdr = NULL;
++	uint32_t meta_off_1, meta_off_2, meta_off_3;
++	int err;
++
++	state->written = 0;
++	state->period = 8;
++
++	if (state->len < sizeof(*hdr))
++		return -EINVAL;
++	hdr = (struct zbm_cmp_chunk_hdr *)state->src;
++	state->data = state->src + sizeof(*hdr);
++
++	meta_off_1 = zbm_u24_to_u32(hdr->meta_off_1);
++	meta_off_2 = zbm_u24_to_u32(hdr->meta_off_2);
++	meta_off_3 = zbm_u24_to_u32(hdr->meta_off_3);
++	if (meta_off_1 >= state->len || meta_off_2 >= state->len ||
++	    meta_off_3 >= state->len)
++		return -EINVAL;
++	state->meta_1 = state->src + meta_off_1;
++	state->meta_2 = state->src + meta_off_2;
++	state->meta_3.addr = (uint8_t *)state->src + meta_off_3;
++	state->meta_3.nibble = 0;
++
++	err = zbm_read_bitmaps(state);
++	if (err)
++		return err;
++
++	while (state->written < state->decmp_len) {
++		err = zbm_decompress_single_bitmap(state);
++		if (err)
++			return err;
++	}
++
++	return 0;
++}
++
++static int zbm_handle_chunk(struct zbm_state *state)
++{
++	const struct zbm_chunk_hdr *decmp_hdr = NULL;
++
++	if (state->src_left < sizeof(*decmp_hdr))
++		return -EINVAL;
++	decmp_hdr = (struct zbm_chunk_hdr *)state->src;
++
++	state->len = zbm_u24_to_u32(decmp_hdr->len);
++	if (state->len > state->src_left)
++		return -EINVAL;
++	state->src_end = state->src + state->len;
++
++	state->decmp_len = zbm_u24_to_u32(decmp_hdr->decmp_len);
++	if (state->decmp_len > ZBM_MAX_DECMP_CHUNK_SIZE)
++		return -EINVAL;
++	if (!state->dest) /* We just wanted the length, so we are done */
++		return 0;
++	if (state->decmp_len > state->dest_left)
++		return -ERANGE;
++
++	if (zbm_chunk_is_uncompressed(state))
++		return zbm_handle_uncompressed_chunk(state);
++
++	return zbm_handle_compressed_chunk(state);
++}
++
++int zbm_decompress(void *dest, size_t dest_size, const void *src,
++		   size_t src_size, size_t *out_len)
++{
++	struct zbm_state state = { 0 };
++	int err;
++
++	state.src = src;
++	state.src_left = src_size;
++	state.dest = dest;
++	state.dest_left = dest_size;
++	state.prewritten = 0;
++
++	err = zbm_check_magic(&state);
++	if (err)
++		return err;
++
++	/* The final chunk has zero decompressed length */
++	do {
++		err = zbm_handle_chunk(&state);
++		if (err)
++			return err;
++		state.src += state.len;
++		state.src_left -= state.len;
++		state.prewritten += state.decmp_len;
++	} while (state.decmp_len != 0);
++
++	*out_len = state.prewritten;
++	return 0;
++}
+diff --git a/drivers/staging/apfs/libzbitmap.h b/drivers/staging/apfs/libzbitmap.h
+new file mode 100644
+index 0000000000000000000000000000000000000000..3b5ac4d828ad5dddc6fbcf32a99ade19ae06046f
+--- /dev/null
++++ b/drivers/staging/apfs/libzbitmap.h
+@@ -0,0 +1,32 @@
++/* SPDX-License-Identifier: GPL-2.0+ OR MIT */
++/*
++ * Copyright (c) 2022 Corellium LLC
++ *
++ * Author: Ernesto A. Fernández <ernesto@corellium.com>
++ *
++ * Ported from libzbitmap (https://github.com/eafer/libzbitmap). Only the
++ * decompression code is included.
++ */
++
++#ifndef _LIBZBITMAP_H
++#define _LIBZBITMAP_H
++
++#include <linux/errno.h>
++#include <linux/types.h>
++
++/**
++ * zbm_decompress - Decompress an LZBITMAP buffer
++ * @dest:       destination buffer (may be NULL)
++ * @dest_size:  size of the destination buffer
++ * @src:        source buffer
++ * @src_size:   size of the source buffer
++ * @out_len:    on return, the length of the decompressed output
++ *
++ * May be called with a NULL destination buffer to retrieve the expected length
++ * of the decompressed data. Returns 0 on success, or a negative error code in
++ * case of failure.
++ */
++int zbm_decompress(void *dest, size_t dest_size, const void *src,
++		   size_t src_size, size_t *out_len);
++
++#endif /* _LIBZBITMAP_H */
 
 -- 
-David Heidelberg
+2.48.1
 
