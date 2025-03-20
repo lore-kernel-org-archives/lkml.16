@@ -1,99 +1,96 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from ms.lwn.net (ms.lwn.net [45.79.88.28])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D60B1E1A17
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:44:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF8616D32A;
+	Thu, 20 Mar 2025 14:45:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.79.88.28
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742481869; cv=none; b=SbNlbTS4WSH2tHVKEf011j2RCBcJTDmN2iYQUKXJj3oGKt3C1sFEvT05X9yr3RxSvlR9E0a1f/WxFSNyInqzXdRfVofG9ZRyZHnDsokMu0b+u+KlMIJQPH3jksBQdpi2s6AgD8g7x+gBOWhAL6SJVxPIFXheRS2qVi9hvc/H3+U=
+	t=1742481908; cv=none; b=O4szitWigpWBpZKdfXO95dPYr/CPFm/+PnQjMEm8S07Q6QaLu20EXNkoxjd80Ywu87spgsO9Q+PkSf3lFXR8NG83o+i2zGjcExgiz7KPHSger0KQso+FzQWI6Tu1XBYgvcjTfOWX+5Gz0zI3IoZrcD+ZE+Wzy8G0grXxaCvnJJo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742481869; c=relaxed/simple;
-	bh=zJ2N5Sje1TsFpx1txcvkGVs9M1jCDKPalNO6wcsqJzA=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=Dqwnam7HqauDSiinNRCM1DYekuQLegwlwLULuvcjR5I4VLSCYItV3dnw8S0mBQVvZ0VIElH76foeVrXG2IgpPoQg/j62ACZnj9BdIgzsm6dDSJHE9aoIGk029vrMSf31L+YexNfM1CgFoBdwD77KwRhAIgLZDeVveSAXqoisLjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M0rsfSwD; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742481908; c=relaxed/simple;
+	bh=kvFDZZfubpKqfDarf88i3jdXBTPwFlTbnMmYGlzeAK0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=fskSpV+iVsAnypHQiP4tz5umBDfaGQ1dZHRSyI2QGYG6AvCNTovSCKTC3cpqWMW6cWBJBlsoUuP/qBHBbu5+HAAIR+ohECCkxmNizY8jE7D04n54Du8Gz2V5TKorEE4tbTWhBCFcX0swbHJH7OYQMUveHIYHvbcFMLtep+39u1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net; spf=pass smtp.mailfrom=lwn.net; dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b=islBIcnP; arc=none smtp.client-ip=45.79.88.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lwn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lwn.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M0rsfSwD"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742481866;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=EL9f1EpuEC79rGyi/SbJ4e42e9KhE2EM/hh13H42cIk=;
-	b=M0rsfSwDuuNcwmfyNEG1dgLZMOL6Is3dcJYPIspDJux8+hCIGQmnv6oV81X3797rwNX69k
-	64/8zCz1H6Y306I3qyz4j9WV3rQns1FFbcyLrcS77taYRO5/5fpHrgNc75pOlFLQV4Hq3U
-	E6mhUwwUF5hFXZeXkIDZyyMj+O+g3LA=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-617-kjbRVno5Nfm19xQJikLQEg-1; Thu,
- 20 Mar 2025 10:44:22 -0400
-X-MC-Unique: kjbRVno5Nfm19xQJikLQEg-1
-X-Mimecast-MFC-AGG-ID: kjbRVno5Nfm19xQJikLQEg_1742481861
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	dkim=pass (2048-bit key) header.d=lwn.net header.i=@lwn.net header.b="islBIcnP"
+DKIM-Filter: OpenDKIM Filter v2.11.0 ms.lwn.net 6D2FF41067
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=lwn.net; s=20201203;
+	t=1742481904; bh=CoF70uKeI5oxzSiOPNjzHWGikLf7hCVkYp2xH2dZwr8=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+	b=islBIcnPKt8uW5hA3T3PPSmSCAiYqTkWFBEgj6iGu0PWPhW3yjcXFHgamlCxP1MrS
+	 /Lj+fUKxr5XHpTVprLUBgUismDvPS5CB5J1IUUz2odXEXKxobBdvyGKp74eASDg1b7
+	 3NcoQjKXG2u/38NTpV85yQL2oGjhpBevYaOfsEqQNZYT3+llSNJ46De0it7L6QHik5
+	 4OCNYQKMEJTCOOJW9yd4iQ9bGRG/5GewfSs/+M1vFeCmQII3N0M93VIhTR33fzTGT2
+	 XjQTWkJpZniQrdJpagKpy1B+EeTb8h9XOtTFnPpNxPzbj/PPuetJF6/iR/xdwKAoCn
+	 7GVrkwxcSB9Ag==
+Received: from localhost (unknown [IPv6:2601:280:4600:2da9::1fe])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 09E731800266;
-	Thu, 20 Mar 2025 14:44:21 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.61])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A473218001D4;
-	Thu, 20 Mar 2025 14:44:17 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <b1108a2b01c693430abb4566b1bd644a5985ecf6.camel@ibm.com>
-References: <b1108a2b01c693430abb4566b1bd644a5985ecf6.camel@ibm.com> <20250313233341.1675324-1-dhowells@redhat.com> <20250313233341.1675324-23-dhowells@redhat.com>
-To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
-Cc: dhowells@redhat.com, Alex Markuze <amarkuze@redhat.com>,
-    "slava@dubeyko.com" <slava@dubeyko.com>,
-    "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-    "idryomov@gmail.com" <idryomov@gmail.com>,
-    "jlayton@kernel.org" <jlayton@kernel.org>,
-    "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-    "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-    "dongsheng.yang@easystack.cn" <dongsheng.yang@easystack.cn>,
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 22/35] libceph, rbd: Convert ceph_osdc_notify() reply to ceph_databuf
+	by ms.lwn.net (Postfix) with ESMTPSA id 6D2FF41067;
+	Thu, 20 Mar 2025 14:45:04 +0000 (UTC)
+From: Jonathan Corbet <corbet@lwn.net>
+To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
+Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org,
+ anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
+ benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
+ dave.hansen@linux.intel.com, dwmw2@infradead.org, ebiederm@xmission.com,
+ mingo@redhat.com, jgowans@amazon.com, krzk@kernel.org, rppt@kernel.org,
+ mark.rutland@arm.com, pbonzini@redhat.com, pasha.tatashin@soleen.com,
+ hpa@zytor.com, peterz@infradead.org, ptyadav@amazon.de,
+ robh+dt@kernel.org, robh@kernel.org, saravanak@google.com,
+ skinsburskii@linux.microsoft.com, rostedt@goodmis.org, tglx@linutronix.de,
+ thomas.lendacky@amd.com, usama.arif@bytedance.com, will@kernel.org,
+ devicetree@vger.kernel.org, kexec@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org,
+ linux-mm@kvack.org, x86@kernel.org, Changyuan Lyu <changyuanl@google.com>
+Subject: Re: [PATCH v5 16/16] Documentation: add documentation for KHO
+In-Reply-To: <20250320015551.2157511-17-changyuanl@google.com>
+References: <20250320015551.2157511-1-changyuanl@google.com>
+ <20250320015551.2157511-17-changyuanl@google.com>
+Date: Thu, 20 Mar 2025 08:45:03 -0600
+Message-ID: <87wmcj69sg.fsf@trenco.lwn.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3172345.1742481855.1@warthog.procyon.org.uk>
-Date: Thu, 20 Mar 2025 14:44:15 +0000
-Message-ID: <3172346.1742481855@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+Content-Type: text/plain
 
-Viacheslav Dubeyko <Slava.Dubeyko@ibm.com> wrote:
+Changyuan Lyu <changyuanl@google.com> writes:
 
-> >  		} else if (!completion_done(&lreq->notify_finish_wait)) {
-> > -			struct ceph_msg_data *data =
-> > -			    msg->num_data_items ? &msg->data[0] : NULL;
-> > -
-> > -			if (data) {
-> > -				if (lreq->preply_pages) {
-> > -					WARN_ON(data->type !=
-> > -							CEPH_MSG_DATA_PAGES);
-> > -					*lreq->preply_pages = data->pages;
-> > -					*lreq->preply_len = data->length;
-> > -					data->own_pages = false;
-> > -				}
-> > +			if (msg->num_data_items && lreq->reply) {
-> > +				struct ceph_msg_data *data = &msg->data[0];
-> 
-> This low-level access slightly worry me. I don't see any real problem
-> here. But, maybe, we need to hide this access into some iterator-like
-> function? However, it could be not feasible for the scope of this patchset.
+> From: Alexander Graf <graf@amazon.com>
+>
+> With KHO in place, let's add documentation that describes what it is and
+> how to use it.
+>
+> Signed-off-by: Alexander Graf <graf@amazon.com>
+> Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
+> Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+> Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> ---
+>  .../admin-guide/kernel-parameters.txt         |  25 ++++
+>  Documentation/kho/concepts.rst                |  70 +++++++++++
+>  Documentation/kho/fdt.rst                     |  62 +++++++++
+>  Documentation/kho/index.rst                   |  14 +++
+>  Documentation/kho/usage.rst                   | 118 ++++++++++++++++++
+>  Documentation/subsystem-apis.rst              |   1 +
+>  MAINTAINERS                                   |   1 +
+>  7 files changed, 291 insertions(+)
+>  create mode 100644 Documentation/kho/concepts.rst
+>  create mode 100644 Documentation/kho/fdt.rst
+>  create mode 100644 Documentation/kho/index.rst
+>  create mode 100644 Documentation/kho/usage.rst
 
-Yeah.  This is something that precedes my changes and I think it needs fixing
-apart from it.
+I will ask again: please let's not create another top-level docs
+directory for this...?  It looks like it belongs in the admin guide to
+me.
 
-David
+Thanks,
 
+jon
