@@ -1,95 +1,113 @@
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1BA528EA
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:50:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C907228EA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742439011; cv=none; b=P90J/nAYrv3/kjFfvqI4txo2nz8eD2C3MxYfpOi7xO1XqhNh7AGMpNiOz9uPGcBeKeNuQXvWUrFXAhjsA/ODR/jeFfWFaZh0bVQb2cYRVxg2Y2l5IYyfHuLiaSxKZf8Q5VINRPlZLum/dtd9n3G8g8u1dEoGiqh+t1tcG2jaCdU=
+	t=1742439175; cv=none; b=VdlfI30Lnv9rK/SxOC4D13GwQaZlCHAkattBBCDA4lne82C/ZUkAaKPW2FRJKWTJ/WSkRGwKeHkeU08gcYJrrPlSE/lOcr6/3kSTALIBNdD04BaFad/XpXVKqUvd27OnbsL7nEzlOxfY3uDcsVGPhgg5b1pIE3wY6oyYG7byHWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742439011; c=relaxed/simple;
-	bh=P3SiIqeVRj8iaEhNM+RBJmR1hKc8A4iDN9+dTEaaRcY=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=A92hsQpwXW/mCJg0xr3KU/5/UPD+f/M6x6xGMxy3GUwH9aahbEeoHMv4tjglJYqeIK4cUOKBkDajbOgFU7o5ywtwfqGK94EwU1MOwPwFMuT0YMcQClWDKOZvz2CRqSsevaJQaOrErSEEqvh1PH3U2GQrGVx1lDOY7IQZBZM45gA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=MNc2KZDW; arc=none smtp.client-ip=185.125.188.123
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="MNc2KZDW"
-Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com [209.85.218.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 4178D3F59F
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:50:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742439006;
-	bh=B6K+THwXySxBQJQOsWXD4oxCuQIyOq0AdqsbklaeKoI=;
-	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type;
-	b=MNc2KZDWkNTrQrKEU4WEFt0aQkhudHoRADEFdl4WXt+gO77ygT6rd6oKSrAw2RSkN
-	 s9nkqo+q3AbPH8tpyx9ZDJa9vMitKgIYqoGcbrH78lsTEdSQ0GJoyXswdYURiPExLW
-	 A+RDTpqgCdPgFP6EmkNxzOquFTD+j+xeoxSg0zq9EIBgfeEr37pxiU/BeaILn32Oyt
-	 /ZC0nVUUny6Ny4qtByq+OsPu6Yr/A4aFolK0mi/YIXSMKrvg8ypeCr2dNBhlNfJpyL
-	 QhglWQSH91RrRYSiq2+z8FhnAe7lt7ZB9N8BglMRIHqV5hYi/FX4ylIV7rG7deS3sn
-	 ETnAGZarGU+ww==
-Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-ac27d8ac365so21893166b.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 19:50:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742439004; x=1743043804;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B6K+THwXySxBQJQOsWXD4oxCuQIyOq0AdqsbklaeKoI=;
-        b=bKu/071R0F/cHZ8OjEu2mulb5OVvp2nKZISn54WMJ3B2N7Ih14iscIT3K1LB7EC/Yq
-         uV0JcoJQ1dwP9L01QbkDgCSYbyr/726am7HasE2Tt3vagqGXWs47X1ofutQjjqCMabYM
-         52dad1sQNhSO+WH0udUlchuY5flG8PE9MZIK9yolWkzDkQ15rhanZJEvAZpB+SczbpYZ
-         q2YE0Udls9Mr5vdIEuSw9hD2Gxe5vmZtMKjulJu8Vvwwh30KwUZa5fJYXhA29GVwGGUw
-         bLQWlUi6DGqF0sSKD5Qd6yoNoj+rY6GGnALuDJ8yTGKIms4S7n9MDBCSvoJLtRW9bg6D
-         1Uww==
-X-Forwarded-Encrypted: i=1; AJvYcCX7qIbv/st3NeIJsJdmdbLupIsE3GlN5mBbIVRxKpuCsZkM/3QDy1LwHX6b6D+5O+55iX+JTNEzKSKOj2w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrUkWdRtR9BzePU0P/lSmRPj7+G2n7ohZ87RVFivrPmiMIYVjD
-	L1c9IDWTnp0VtpBeBgBTzrjblZ2pwSrOB2EGHEWsXrYSuBY/g4kuoha+e6uDgryJ8IUQ3aszwrK
-	e4kX89HOOvFHKZ6QwwKBkkqE6U3ZHN87+UscwzedrY3TTk7PZgmnVmi8lnAFmmE026KSA0jVB86
-	+NlYlXwEfLc8fDC2Ii9+vAjZ2oUnlWuXgfYRNTmIh1r7ch3FFv3KeQbpbS1T3c5hFy+A==
-X-Gm-Gg: ASbGncvEUAfSzsVqOMdUaPbgRhHEALkm6ilhy4fwAyYCoyaq82gGCr8eORxXBdg8OZT
-	CjTZequhaNTTgB6eydv/w/r0m6ML8KTTsSdWN7aP02TnPxpyxYPMW0wnpKmK1LkKuzC0WPN1Hht
-	KSAg6t9AgCs4qsEn1j
-X-Received: by 2002:a17:907:e841:b0:ac3:c7c6:3c97 with SMTP id a640c23a62f3a-ac3c7c63e02mr312151966b.0.1742439004259;
-        Wed, 19 Mar 2025 19:50:04 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFxwS+F32m6Dcu78HgQNZGqxJlY3fybv+AmFOl0HtP3didoMbVm/KSAg3G+rEAHFJesanYJAO0wJ6h7PYuGw58=
-X-Received: by 2002:a17:907:e841:b0:ac3:c7c6:3c97 with SMTP id
- a640c23a62f3a-ac3c7c63e02mr312150166b.0.1742439003877; Wed, 19 Mar 2025
- 19:50:03 -0700 (PDT)
+	s=arc-20240116; t=1742439175; c=relaxed/simple;
+	bh=Om7rubbuR8fJ9FLnreh+anuCSEnghxm8vYWcuW9FmAI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ebBG26b6IGFrYQQEOs7jWcaDRzSbA+cNaakZhcd/VZ7I2JFFFDBaNPcnWmAyXkb2U6eQkPvsbLe+Ji+yR4AmZCmiam54UGdRUEh7DLexDhuN5k08d/UFsKPZKFfrUoDTiC//cfNEuQI2Sh2QrJbLDu3es6y1Xk/rf4zEuDh/5mQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZJ9963G85z4f3jcl
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:26 +0800 (CST)
+Received: from mail02.huawei.com (unknown [10.116.40.252])
+	by mail.maildlp.com (Postfix) with ESMTP id 2414E1A13D1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:49 +0800 (CST)
+Received: from huaweicloud.com (unknown [10.175.101.6])
+	by APP3 (Coremail) with SMTP id _Ch0CgAHW8X_gttnYGGmGw--.42197S2;
+	Thu, 20 Mar 2025 10:52:48 +0800 (CST)
+From: Kemeng Shi <shikemeng@huaweicloud.com>
+To: akpm@linux-foundation.org
+Cc: kasong@tencent.com,
+	tim.c.chen@linux.intel.com,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] Minor cleanups and improvements to swap freeing code
+Date: Thu, 20 Mar 2025 19:48:21 +0800
+Message-Id: <20250320114829.25751-1-shikemeng@huaweicloud.com>
+X-Mailer: git-send-email 2.30.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: AceLan Kao <acelan.kao@canonical.com>
-Date: Thu, 20 Mar 2025 10:49:52 +0800
-X-Gm-Features: AQ5f1JqrpuKUwPyaCxlP-DpgVkJ4Rtp6uFAR420KNM7iPB4x68hQryVObfFPATM
-Message-ID: <CAFv23QnqgTVoB-XRe5yNndRz4-Z_3y38+QpKRxQMeZ2xQTg=gw@mail.gmail.com>
-Subject: Regression found in memory stress test with stress-ng
-To: linux-block@vger.kernel.org, axboe@kernel.dk, 
-	Christoph Hellwig <hch@infradead.org>, 
-	"Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>, yangerkun@huawei.com, houtao1@huawei.com, 
-	yukuai3@huawei.com, libaokun1@huawei.com, Dirk Su <dirk.su@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:_Ch0CgAHW8X_gttnYGGmGw--.42197S2
+X-Coremail-Antispam: 1UD129KBjvJXoW7CrW3ury8Kw4DZFykuF15Jwb_yoW8uw4kpF
+	W3urnxGF18Jr1SywsxAw10q34rX3yrKF15J3W7ur1rZa43uF10qry0krZ5uFyDZ395ArWq
+	qF40gryUuF4YvrJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUv2b4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k2
+	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
+	8lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Ar0_
+	tr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26r
+	xl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv
+	0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z2
+	80aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkF7I0E
+	n4kS14v26r126r1DMxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I
+	0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWU
+	AVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcV
+	CY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAF
+	wI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa
+	7IU0A9N3UUUUU==
+X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Hi all,
+v2->v3:
+-Extent VM_BUG_ON instead of remove it
+-Keep bracket for more readability
+-Collect RVG from Tim for rest part
 
-We have found a regression while doing a memory stress test using
-stress-ng with the following command
-   sudo stress-ng --aggressive --verify --timeout 300 --mmapmany 0
+v1->v2:
+-Collect RVB from Tim
+-Drop patch to factor out __swap_entry_free()
+-Improve changelog and add more comment.
+-Avoid unneeded lock re-aquire
 
-This issue occurs on recent kernel versions, and we have found that
-the following commit leads to the issue
-   4e63aeb5d010 ("blk-wbt: don't throttle swap writes in direct reclaim")
+Hi All,
+This series contains some cleanups and improvements which are made
+during learning swapfile. Here is a summary of the changes:
+1. Function nameing improvments.
+-Use "put" instead of "free" to name functions which only do actual free
+when count drops to zero.
+-Use "entry" to name function only frees one swap slot. Use "entries" to
+name function could may free multi swap slots within one cluster. Use
+"_nr" suffix to name function which could free multi swap slots spanning
+cross multi clusters.
+2. Eliminate the need to set swap slot to intermediate SWAP_HAS_CACHE
+value before do actual free by using swap_entry_range_free()
+3. Add helpers swap_entries_put_map() and swap_entries_put_cache() as a
+general-purpose routine to free swap entries within a single cluster
+which will try batch-remove first and fallback to put eatch entry
+indvidually with cluster lock acquired/released only once. By using 
+these helpers, we could remove repeated code, levarage batch-remove in
+more cases and aoivd to acquire/release cluster lock for each single
+swap entry.
 
-Before reverting the commit directly, I wonder if we can identify the
-issue and implement a solution quickly.
-Currently, I'm unable to provide logs, as the system becomes
-unresponsive during testing. If you have any idea to capture logs,
-please let me know, I'm willing to help.
+Kemeng Shi (8):
+  mm: swap: rename __swap_[entry/entries]_free[_locked] to
+    swap_[entry/entries]_put[_locked]
+  mm: swap: enable swap_entry_range_free() to drop any kind of last ref
+  mm: swap: use swap_entries_free() to free swap entry in
+    swap_entry_put_locked()
+  mm: swap: use swap_entries_free() drop last ref count in
+    swap_entries_put_nr()
+  mm: swap: drop last SWAP_MAP_SHMEM flag in batch in
+    swap_entries_put_nr()
+  mm: swap: free each cluster individually in swap_entries_put_map_nr()
+  mm: swap: factor out helper to drop cache of entries within a single
+    cluster
+  mm: swap: replace cluster_swap_free_nr() with
+    swap_entries_put_[map/cache]()
 
-Best regards,
-AceLan Kao.
+ mm/swapfile.c | 165 +++++++++++++++++++++++++-------------------------
+ 1 file changed, 83 insertions(+), 82 deletions(-)
+
+-- 
+2.30.0
+
