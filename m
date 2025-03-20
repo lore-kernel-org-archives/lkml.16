@@ -1,114 +1,209 @@
-Received: from omta34.uswest2.a.cloudfilter.net (omta34.uswest2.a.cloudfilter.net [35.89.44.33])
+Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1554F213E78
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:22:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=35.89.44.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D6EB215783
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:22:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742466149; cv=none; b=ERxs4wPPxjs/md2rTaer6C1qoH4+yWvtN5DBH3iK7oo2Mskg9PPc0oHJtFD4v4ff/XVKel42NHa6f30tJSJEO195thZfxR5VyjCnyBx6CwZMaNO+c6pBIp/EPlTjRHdmwPlwoMDIcXbhNdpl+qHySvaxkZRXQD8i12X+zpta1Ko=
+	t=1742466168; cv=none; b=rXvHnjAOMN0NpfUmtyNYZtSYzQfXvDgmHUjuCO+Ntk8U7q0tYa8RdWZ0j/Zt26q/9iANfQTTmNbaEx0IcdKPyUXoqM5u1RzjeWbry5yoYuqX6ChJUBNSHX6ltourWRl6N3o2vmiCMIfgJRqKILnN78bE2cq03AkvqRvRH4oZT8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742466149; c=relaxed/simple;
-	bh=CZH8qRZ+aLhOTBwGExOsduZsgEMvMqe1mAKbAMcfpDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WElO+777n2BLSvAa4ycAOxbnTPNHdf50W4ciBd2GaZ4AJdorEjjUKyHV3YdQ+E9flVJzafgKvHod2rMAmG98UyVN4+fJTK8BMhgwAiAMa9wge6d6Lu2EJ9RB5+uhX6s7D5qvpaKOVb7svlhTG3hu76OHKGtpPz+krWwW3H+nYwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=F8ejs6uY; arc=none smtp.client-ip=35.89.44.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="F8ejs6uY"
-Received: from eig-obgw-5003a.ext.cloudfilter.net ([10.0.29.159])
-	by cmsmtp with ESMTPS
-	id v2OJt9vXvWuHKvD2atBspD; Thu, 20 Mar 2025 10:22:20 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id vD2ZtzrKsliBXvD2atbXAV; Thu, 20 Mar 2025 10:22:20 +0000
-X-Authority-Analysis: v=2.4 cv=bOXdI++Z c=1 sm=1 tr=0 ts=67dbec5c
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=reHiijyVQGdWo19NHnG5Kjmh7PXe0ltjvIFYByZcWWY=; b=F8ejs6uYZv4A7dU7KdYbr31j3v
-	d0ZI6S8yTNiZoiy5pAJ/FvfjjkT7r4S03F0+yyjSNLrEXNidBbKkpK+sEeaaOfiBdo1Hd/4ffZNOW
-	E/qn0qoeaZn2/OAyvVQ6pZnzg22kWTeOpYS3ALIilV4TdV9a9Xu0B45jup7JCY+ptOy8QPxAW4bJC
-	GQnNpjabwYeZMzdwb8aYhgoaMInLBMj7r48ji77ceRKBbMJYv8EGPxS6bnlwN98LrqQn8pYinqVNN
-	QKhjWW4muGM1Xx4FAjR0kVwBdxV3lXfrpR0OWNbfdKAnvpnqBaA1Iq4OFtHV9xoCseUBuULj+9ffD
-	WBpnrSPQ==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:49616 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1tvD2X-00000003M1R-3dTK;
-	Thu, 20 Mar 2025 04:22:17 -0600
-Message-ID: <bb37eb99-26d3-4a4d-a8d5-a71a21bca2ac@w6rz.net>
-Date: Thu, 20 Mar 2025 03:22:14 -0700
+	s=arc-20240116; t=1742466168; c=relaxed/simple;
+	bh=BsmGfVImH6VmbiWg9CYuWRiKEpSKEg4JkR4i2MKy3Uc=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=bARA9KXYTWGtCWTRYvGf4cOS+0RMIdvBjC80WPJFEXar40xjcx4CC/Hqdqfjy+U8hh2wrXxa+aT3fU5e3UyuK/3deoq2ti54rn3BHAL1Bq/jmfN3Me3ywEGbbpRvIPldqWDxLtzkzk1AqW34tkQMZ2JKi6Nqcnuqg+OVckj6GfM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4ZJM6z17t1ztR9V;
+	Thu, 20 Mar 2025 18:21:15 +0800 (CST)
+Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
+	by mail.maildlp.com (Postfix) with ESMTPS id D68E01800E5;
+	Thu, 20 Mar 2025 18:22:42 +0800 (CST)
+Received: from localhost.huawei.com (10.169.71.169) by
+ kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.10; Thu, 20 Mar 2025 18:22:41 +0800
+From: Yongbang Shi <shiyongbang@huawei.com>
+To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
+	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
+	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
+	<kong.kongxinwei@hisilicon.com>
+CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
+	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
+	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
+	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v8 drm-dp 1/9] drm/hisilicon/hibmc: Restructuring the header dp_reg.h
+Date: Thu, 20 Mar 2025 18:14:47 +0800
+Message-ID: <20250320101455.2538835-2-shiyongbang@huawei.com>
+X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250320101455.2538835-1-shiyongbang@huawei.com>
+References: <20250320101455.2538835-1-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.12 000/231] 6.12.20-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250319143026.865956961@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250319143026.865956961@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tvD2X-00000003M1R-3dTK
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:49616
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 35
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfJ1Yue4GH0pFvfU5ETJJrR/M1fecoupL8Zsl48ykcY1kxrnz5utQ2ARWcDM/tpaLQ2n5QNMgFHCmFZBUpFxaKCUEbQlowPLwYbp1qqx3tgRQbaV12fo2
- +we2eEWorUlyUVy9EIa7NDqz2x8cDgB4qlzKZCio11+Vt0VupNu7aDf78zrseycplT69O56584XUWAyfC3Cqf0N6/GLPmgmfRNE=
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ kwepemd500013.china.huawei.com (7.221.188.12)
 
-On 3/19/25 07:28, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.12.20 release.
-> There are 231 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 21 Mar 2025 14:29:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.12.20-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.12.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Baihan Li <libaihan@huawei.com>
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+Move the macros below their corresponding registers to make
+them more obvious.
 
-Tested-by: Ron Economos <re@w6rz.net>
+Signed-off-by: Baihan Li <libaihan@huawei.com>
+Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ChangeLog:
+v2 -> v3:
+  - restructuring the header dp_reg.h, suggested by Dmitry Baryshkov.
+---
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h | 98 +++++++++++++--------
+ 1 file changed, 60 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+index 4a515c726d52..dc2bd3f80b70 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
+@@ -5,72 +5,94 @@
+ #define DP_REG_H
+ 
+ #define HIBMC_DP_AUX_CMD_ADDR			0x50
++
+ #define HIBMC_DP_AUX_WR_DATA0			0x54
+ #define HIBMC_DP_AUX_WR_DATA1			0x58
+ #define HIBMC_DP_AUX_WR_DATA2			0x5c
+ #define HIBMC_DP_AUX_WR_DATA3			0x60
+ #define HIBMC_DP_AUX_RD_DATA0			0x64
++
+ #define HIBMC_DP_AUX_REQ			0x74
++#define HIBMC_DP_CFG_AUX_REQ			BIT(0)
++#define HIBMC_DP_CFG_AUX_SYNC_LEN_SEL		BIT(1)
++#define HIBMC_DP_CFG_AUX_TIMER_TIMEOUT		BIT(2)
++#define HIBMC_DP_CFG_AUX_MIN_PULSE_NUM		GENMASK(13, 9)
++
+ #define HIBMC_DP_AUX_STATUS			0x78
++#define HIBMC_DP_CFG_AUX_TIMEOUT		BIT(0)
++#define HIBMC_DP_CFG_AUX_STATUS			GENMASK(11, 4)
++#define HIBMC_DP_CFG_AUX_READY_DATA_BYTE	GENMASK(16, 12)
++#define HIBMC_DP_CFG_AUX			GENMASK(24, 17)
++
+ #define HIBMC_DP_PHYIF_CTRL0			0xa0
++#define HIBMC_DP_CFG_SCRAMBLE_EN		BIT(0)
++#define HIBMC_DP_CFG_PAT_SEL			GENMASK(7, 4)
++#define HIBMC_DP_CFG_LANE_DATA_EN		GENMASK(11, 8)
++
+ #define HIBMC_DP_VIDEO_CTRL			0x100
++#define HIBMC_DP_CFG_STREAM_RGB_ENABLE		BIT(1)
++#define HIBMC_DP_CFG_STREAM_VIDEO_MAPPING	GENMASK(5, 2)
++#define HIBMC_DP_CFG_STREAM_FRAME_MODE		BIT(6)
++#define HIBMC_DP_CFG_STREAM_HSYNC_POLARITY	BIT(7)
++#define HIBMC_DP_CFG_STREAM_VSYNC_POLARITY	BIT(8)
++
+ #define HIBMC_DP_VIDEO_CONFIG0			0x104
++#define HIBMC_DP_CFG_STREAM_HACTIVE		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_HBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_CONFIG1			0x108
++#define HIBMC_DP_CFG_STREAM_VACTIVE		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_VBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_CONFIG2			0x10c
++#define HIBMC_DP_CFG_STREAM_HSYNC_WIDTH		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_CONFIG3			0x110
++#define HIBMC_DP_CFG_STREAM_VSYNC_WIDTH		GENMASK(15, 0)
++#define HIBMC_DP_CFG_STREAM_VFRONT_PORCH	GENMASK(31, 16)
++
+ #define HIBMC_DP_VIDEO_PACKET			0x114
++#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_SIZE	GENMASK(5, 0)
++#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
++
+ #define HIBMC_DP_VIDEO_MSA0			0x118
++#define HIBMC_DP_CFG_STREAM_VSTART		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_HSTART		GENMASK(15, 0)
++
+ #define HIBMC_DP_VIDEO_MSA1			0x11c
+ #define HIBMC_DP_VIDEO_MSA2			0x120
++
+ #define HIBMC_DP_VIDEO_HORIZONTAL_SIZE		0X124
++#define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
++#define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
++
+ #define HIBMC_DP_TIMING_GEN_CONFIG0		0x26c
++#define HIBMC_DP_CFG_TIMING_GEN0_HACTIVE	GENMASK(31, 16)
++#define HIBMC_DP_CFG_TIMING_GEN0_HBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_TIMING_GEN_CONFIG2		0x274
++#define HIBMC_DP_CFG_TIMING_GEN0_VACTIVE	GENMASK(31, 16)
++#define HIBMC_DP_CFG_TIMING_GEN0_VBLANK		GENMASK(15, 0)
++
+ #define HIBMC_DP_TIMING_GEN_CONFIG3		0x278
++#define HIBMC_DP_CFG_TIMING_GEN0_VFRONT_PORCH	GENMASK(31, 16)
++
+ #define HIBMC_DP_HDCP_CFG			0x600
++
+ #define HIBMC_DP_DPTX_RST_CTRL			0x700
++#define HIBMC_DP_CFG_AUX_RST_N			BIT(4)
++
+ #define HIBMC_DP_DPTX_CLK_CTRL			0x704
++
+ #define HIBMC_DP_DPTX_GCTL0			0x708
++#define HIBMC_DP_CFG_PHY_LANE_NUM		GENMASK(2, 1)
++
+ #define HIBMC_DP_INTR_ENABLE			0x720
+ #define HIBMC_DP_INTR_ORIGINAL_STATUS		0x728
+-#define HIBMC_DP_TIMING_MODEL_CTRL		0x884
+-#define HIBMC_DP_TIMING_SYNC_CTRL		0xFF0
+ 
+-#define HIBMC_DP_CFG_AUX_SYNC_LEN_SEL		BIT(1)
+-#define HIBMC_DP_CFG_AUX_TIMER_TIMEOUT		BIT(2)
+-#define HIBMC_DP_CFG_STREAM_FRAME_MODE		BIT(6)
+-#define HIBMC_DP_CFG_AUX_MIN_PULSE_NUM		GENMASK(13, 9)
+-#define HIBMC_DP_CFG_LANE_DATA_EN		GENMASK(11, 8)
+-#define HIBMC_DP_CFG_PHY_LANE_NUM		GENMASK(2, 1)
+-#define HIBMC_DP_CFG_AUX_REQ			BIT(0)
+-#define HIBMC_DP_CFG_AUX_RST_N			BIT(4)
+-#define HIBMC_DP_CFG_AUX_TIMEOUT		BIT(0)
+-#define HIBMC_DP_CFG_AUX_READY_DATA_BYTE	GENMASK(16, 12)
+-#define HIBMC_DP_CFG_AUX			GENMASK(24, 17)
+-#define HIBMC_DP_CFG_AUX_STATUS			GENMASK(11, 4)
+-#define HIBMC_DP_CFG_SCRAMBLE_EN		BIT(0)
+-#define HIBMC_DP_CFG_PAT_SEL			GENMASK(7, 4)
+-#define HIBMC_DP_CFG_TIMING_GEN0_HACTIVE	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_TIMING_GEN0_HBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_TIMING_GEN0_VACTIVE	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_TIMING_GEN0_VBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_TIMING_GEN0_VFRONT_PORCH	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HACTIVE		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_HSYNC_WIDTH		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VACTIVE		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_VBLANK		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VFRONT_PORCH	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_VSYNC_WIDTH		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VSTART		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HSTART		GENMASK(15, 0)
+-#define HIBMC_DP_CFG_STREAM_VSYNC_POLARITY	BIT(8)
+-#define HIBMC_DP_CFG_STREAM_HSYNC_POLARITY	BIT(7)
+-#define HIBMC_DP_CFG_STREAM_RGB_ENABLE		BIT(1)
+-#define HIBMC_DP_CFG_STREAM_VIDEO_MAPPING	GENMASK(5, 2)
++#define HIBMC_DP_TIMING_MODEL_CTRL		0x884
+ #define HIBMC_DP_CFG_PIXEL_NUM_TIMING_MODE_SEL1	GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_SIZE	GENMASK(5, 0)
+-#define HIBMC_DP_CFG_STREAM_TU_SYMBOL_FRAC_SIZE	GENMASK(9, 6)
+-#define HIBMC_DP_CFG_STREAM_HTOTAL_SIZE		GENMASK(31, 16)
+-#define HIBMC_DP_CFG_STREAM_HBLANK_SIZE		GENMASK(15, 0)
++
++#define HIBMC_DP_TIMING_SYNC_CTRL		0xFF0
+ 
+ #endif
+-- 
+2.33.0
 
