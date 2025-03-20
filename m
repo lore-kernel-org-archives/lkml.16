@@ -1,133 +1,137 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 673B01DF248;
-	Thu, 20 Mar 2025 08:17:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BA92AE74
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:17:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742458647; cv=none; b=r8uXZuuqE9YHhzlLqoyOWaVVn+1Rj8Fko2q66vvzWHuHi7Ct2LfwamyCiGzj/IPjBfXxP+jTT3uZJvdzmGBvZbei9KhGUPsvnjMBirBRkjfJ8a6dWCzRqmL2iI9sBkotXF30vdN3FfP/3P6gL/bKtgnqfvmwIrxoQFpc3Q0YULQ=
+	t=1742458672; cv=none; b=dJec9o7QDk5LXc1hjNDHnwXXkZlxgThFGKqkJxXoz8oVy9d8qD27/mn3oKQhz/xt47eFJ83SfJRhSusv6EuYVC6EIJ7BpWKP6c8SbxFVuH8v7+YFMkK7dJgv+fCveGNkMl3I/Xm2WaXGqh5/AQjJsaUwakGILFdrKfVvPvvASag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742458647; c=relaxed/simple;
-	bh=R02fk1aNrcUVdzDlCBYTLwXrW2mT+IV1D/Zvo/mc4Uk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OwHsn9N5jF3FyADWmN+WdPUvi4HIxDqiV48+APHBHj+bTKlH6K7zlI/WZduJ+URT6NapUQkxxVot2fa71LfWp4Bwe9ZALcTickxajF3hq9oE8IEK3Xft9AwJKrgNaGuSi1F8kmaNSVEfSwmh94wcMx1Vk9OoCbevNmoJdRAcYZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=VlfTlwB6; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="VlfTlwB6"
-Received: from [10.95.65.22] (unknown [167.220.238.22])
-	by linux.microsoft.com (Postfix) with ESMTPSA id 1F1502116B34;
-	Thu, 20 Mar 2025 01:17:22 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 1F1502116B34
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742458645;
-	bh=AQRi9uQL203/5gLevlFcG3XGxd/uPrONV3CXSTwmPw8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VlfTlwB6NMlON0rKxDsXQTLkwVAqnp9LRvgpc+zb7OAJRX4e1nXBSuymad3kBj+OV
-	 SR9/uBGLLEGIC7tJkkJoDcH5TjjbHPSCMKnB0pVih2xl8mu2ei43tiFGlllCHb1rMr
-	 Nms9cc/JYvVCHwhMI3iZGz+Br+jSifaVGwPEspAI=
-Message-ID: <8c3e2920-41a2-40df-9cbd-79c381aa7b4c@linux.microsoft.com>
-Date: Thu, 20 Mar 2025 13:47:21 +0530
+	s=arc-20240116; t=1742458672; c=relaxed/simple;
+	bh=4mjAa+nyl0BSHp8qtJKT+jbtIMlL+xyANc9xP6daZYk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AJB5j+VMVuN5/l0jSjxa+koUvuksT+3525yD29LlxQkkklhVdDTNWSYC8moLeID4OPnSa39Z8k2oXuNSCR5PcduKKwFGq3/qp68b6lo2bo519roPJnLlqIczo9Ce0rWzveFvpkVND6ZYmnqjA2UUFA+5J2FKmDXj9afNw9GNgVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
+Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.emlix.com (Postfix) with ESMTPS id BD2775F88D;
+	Thu, 20 Mar 2025 09:10:40 +0100 (CET)
+From: Rolf Eike Beer <eb@emlix.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Will Deacon <will@kernel.org>, iommu@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Tomasz Jeznach <tjeznach@rivosinc.com>,
+ Nick Kossifidis <mick@ics.forth.gr>, Sebastien Boeuf <seb@rivosinc.com>,
+ Lu Baolu <baolu.lu@linux.intel.com>, Palmer Dabbelt <palmer@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Subject: Re: [PATCH 4/4] iommu: make inclusion of riscv directory conditional
+Date: Thu, 20 Mar 2025 09:10:34 +0100
+Message-ID: <2365431.ElGaqSPkdT@devpool47.emlix.com>
+Organization: emlix GmbH
+In-Reply-To: <Z9vMwUQ679SdSwhG@8bytes.org>
+References:
+ <2301497.iZASKD2KPV@devpool47.emlix.com>
+ <3536592.QJadu78ljV@devpool47.emlix.com> <Z9vMwUQ679SdSwhG@8bytes.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] uio_hv_generic: Fix sysfs creation path for ring
- buffer
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "K . Y . Srinivasan" <kys@microsoft.com>,
- Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>,
- Dexuan Cui <decui@microsoft.com>,
- Stephen Hemminger <stephen@networkplumber.org>,
- linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@kernel.org, Saurabh Sengar <ssengar@linux.microsoft.com>,
- Michael Kelley <mhklinux@outlook.com>
-References: <20250318061558.3294-1-namjain@linux.microsoft.com>
- <2025031859-overwrite-tidy-f8ef@gregkh>
- <2b09fa80-7b2f-4eb2-b059-d16d69ee8f0c@linux.microsoft.com>
- <2025031932-timid-xerox-7f0d@gregkh>
-Content-Language: en-US
-From: Naman Jain <namjain@linux.microsoft.com>
-In-Reply-To: <2025031932-timid-xerox-7f0d@gregkh>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="nextPart4971840.GXAFRqVoOG";
+ micalg="pgp-sha256"; protocol="application/pgp-signature"
 
+--nextPart4971840.GXAFRqVoOG
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
+From: Rolf Eike Beer <eb@emlix.com>
+To: Joerg Roedel <joro@8bytes.org>
+Date: Thu, 20 Mar 2025 09:10:34 +0100
+Message-ID: <2365431.ElGaqSPkdT@devpool47.emlix.com>
+Organization: emlix GmbH
+In-Reply-To: <Z9vMwUQ679SdSwhG@8bytes.org>
+MIME-Version: 1.0
 
+On Donnerstag, 20. M=C3=A4rz 2025 09:07:29 Mitteleurop=C3=A4ische Normalzei=
+t Joerg=20
+Roedel wrote:
+> On Tue, Mar 11, 2025 at 11:15:12AM +0100, Rolf Eike Beer wrote:
+> > Nothing in there is active if CONFIG_RISCV_IOMMU is not enabled, so the
+> > whole directory can depend on that switch as well.
+> >=20
+> > Fixes: 5c0ebbd3c6c6 ("iommu/riscv: Add RISC-V IOMMU platform device
+> > driver") Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+> > ---
+> >=20
+> >  drivers/iommu/Makefile | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+> > index 41b00cdc8621..17133876f777 100644
+> > --- a/drivers/iommu/Makefile
+> > +++ b/drivers/iommu/Makefile
+> > @@ -1,7 +1,8 @@
+> >=20
+> >  # SPDX-License-Identifier: GPL-2.0
+> >=20
+> > -obj-y +=3D arm/ iommufd/ riscv/
+> > +obj-y +=3D arm/ iommufd/
+> >=20
+> >  obj-$(CONFIG_AMD_IOMMU) +=3D amd/
+> >  obj-$(CONFIG_INTEL_IOMMU) +=3D intel/
+> >=20
+> > +obj-$(CONFIG_RISCV_IOMMU) +=3D riscv/
+> >=20
+> >  obj-$(CONFIG_IOMMU_API) +=3D iommu.o
+> >  obj-$(CONFIG_IOMMU_API) +=3D iommu-traces.o
+> >  obj-$(CONFIG_IOMMU_API) +=3D iommu-sysfs.o
+>=20
+> This allows for some additional cleanups in the Makefiles of the
+> sub-directory, no? Same for the other patches in this series.
 
-On 3/19/2025 7:54 PM, Greg Kroah-Hartman wrote:
-> On Wed, Mar 19, 2025 at 07:05:56PM +0530, Naman Jain wrote:
->> On 3/18/2025 6:58 PM, Greg Kroah-Hartman wrote:
->>>> +/*
->>>> + * hv_create_ring_sysfs - create ring sysfs entry corresponding to ring buffers for a channel
->>>> + */
->>>
->>> Kerneldoc?
->>
->> Documentation of the ring sysfs is present here -
->> Documentation/ABI/stable/sysfs-bus-vmbus
->>
->> What:           /sys/bus/vmbus/devices/<UUID>/channels/<N>/ring
->> Date:           January. 2018
->> KernelVersion:  4.16
->> Contact:        Stephen Hemminger <sthemmin@microsoft.com>
->> Description:    Binary file created by uio_hv_generic for ring buffer
->> Users:          Userspace drivers
->>
->> I should probably change the description, to reflect that it's visibility is
->> controlled by uio_hv_generic, but it's created by hyperV drivers.
->>
->> Please correct me if I misunderstood your comment.
-> 
-> I mean you are adding a comment here that is NOT in the correct
-> kerneldoc fomat.
-
-Thanks, I get it now. I'll make the changes.
-
-> 
->>>> +int hv_create_ring_sysfs(struct vmbus_channel *channel,
->>>> +			 int (*hv_mmap_ring_buffer)(struct vmbus_channel *channel,
->>>> +						    struct vm_area_struct *vma))
->>>> +{
->>>> +	struct kobject *kobj = &channel->kobj;
->>>> +
->>>> +	channel->mmap_ring_buffer = hv_mmap_ring_buffer;
->>>> +	channel->ring_sysfs_visible = true;
->>>> +	return sysfs_update_group(kobj, &vmbus_chan_group);
->>>> +}
->>>> +EXPORT_SYMBOL_GPL(hv_create_ring_sysfs);
->>>
->>> You just raced userspace and created a file without telling it that it
->>> showed up, right?  Something still feels really wrong here.
->>>
->>> greg k-h
->>
->>  From use-case POV, we needed to have uio_hv_generic control the visibility
->> of this ring sysfs node, because the same device (HV_NIC) is used by either
->> hv_netvsc or uio_hv_generic at any given point of time. We didn't want to
->> expose ring buffer through sysfs when hv_netvsc is using it. That's the
->> reason why uio_hv_generic was creating sysfs in the first place.
->>
->> DPDK, which uses this ring sysfs, checks for its presence for primary
->> channel but for secondary channels, it additionally does mmap() of this
->> ring. That's where it becomes more important, not to expose ring buffer when
->> uio_hv_generic is not bind to the device.
->>
->> DPDK runs after uio_hv_generic probe is complete, so I am not sure if this
->> race can happen, in practice. I'll try to gather more information around it.
-> 
-> Please do, and document the heck out of why you are doing it this way
-> and why there is no such race or issue, and why no one else should ever
-> copy this pattern as an example of what to do for other drivers.
-> 
-> thanks,
-> 
-> greg k-h
-
-I'll add the necessary comments to highlight these problems.
-
-Thanks for reviewing.
+Yes, and I can send those cleanups as a followup if you like. But for the f=
+irst=20
+step I wanted to keep this as less invasive as it could be. And to be hones=
+t I=20
+didn't want to invest time to do this cleanups if it's unclear if they woul=
+d=20
+be rejected anyway because these things are this way on purpose.
 
 Regards,
-Naman
+
+Eike
+=2D-=20
+Rolf Eike Beer
+
+emlix GmbH
+Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
+Phone +49 (0)551 30664-0, e-mail info@emlix.com
+District Court of G=C3=B6ttingen, Registry Number HR B 3160
+Managing Directors: Heike Jordan, Dr. Uwe Kracke
+VAT ID No. DE 205 198 055
+Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
+Office Bonn: Bachstr. 6, 53115 Bonn, Germany
+http://www.emlix.com
+
+emlix - your embedded Linux partner
+--nextPart4971840.GXAFRqVoOG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCZ9vNegAKCRCr5FH7Xu2t
+/NdZBACSGqKgQgJa4SmTU/OK6oUG11vk94MlA62E75QJ0SJrm89SOhFQgEALSEEe
+TXyuy+HkWvvUO5X+K1KaKPhP7STk73+OqqqXS1MHU9/+sOXw97us5R/awRy+SDhE
+/QJDDJGaO43pqnLvqI1+fxPYwz7qAw1fMdojAQhTh40iyI591w==
+=NJZm
+-----END PGP SIGNATURE-----
+
+--nextPart4971840.GXAFRqVoOG--
+
+
+
