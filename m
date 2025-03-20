@@ -1,63 +1,63 @@
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E89215F49;
-	Thu, 20 Mar 2025 13:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A3422540F;
+	Thu, 20 Mar 2025 13:01:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742475707; cv=none; b=PCDnWC8sDvlNAjQCiFIKJZEWISOHtvPAcVq9Xa+vA10YkQ5bH5hAbxUcHZ6zcrL+KbqCoE7m/m2rB0ORUTq2TLDJLDaGfzDNle4pPtzUZHzWVbZa8xCJIpRCsiHPEeT8LfpRIfhlCrMQJTe+1O1bISBogcaO0OQUEjeOEBb775U=
+	t=1742475712; cv=none; b=AflUqKfgsHcSJYeQJ3srZBhcAjXAjJqty4oceXMO87rlw2yLu/7UJKrDlnqB78Kdl4VGPSllF6ymCPVn5N0bUmXSP1CPuo2ZYMpu4YAp5iMMd11bZBK9eQ0OO9GPvtiKWz/IQMJdD58QofsmZWn8pIrRCbzzeUDNunO/CMOxZbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742475707; c=relaxed/simple;
-	bh=SSozAsF/5m7XLQJyMeCRrbZnfi5DVNHjPizHjjVGrl8=;
+	s=arc-20240116; t=1742475712; c=relaxed/simple;
+	bh=0DVNgFmCaYiuTa3nRsT6E8kjMPJtRCfoCmjiu+brQuo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kLFMr6nb2ja0keg3pSafTQNeaY84VPumimXsAS1nJBLU2mgDtacrtKMAem/Lo5beoJKjcG4WhTWckTVowdsDad9wogAXd3nQc3qwdQeusyefXGLe6gvHR5ox3vwBx4CJWtoqWldKU8xtiF0KHQYzk4bsn3Z5XpceEelevKXnkJw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=A7m4GsLf; arc=none smtp.client-ip=209.85.221.53
+	 MIME-Version; b=kFEm5QTS/exYW2l4jH/mbrhpCL2/ht8x4J/eTJ1h/uTNkbALlGcwwJiOjTbmQdXRANIhZTMi4qJTytnP8aj58IgwaQ2vcsQIkeerESasJnizR8bpSlQ/7JrgMaBrC0pJwI+r52n7DkfjPZeYNFI3tMAZu2hFO6T6667fCLuC7vo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nmW4C+2a; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A7m4GsLf"
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-394780e98easo444446f8f.1;
-        Thu, 20 Mar 2025 06:01:45 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmW4C+2a"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3912baafc58so630708f8f.1;
+        Thu, 20 Mar 2025 06:01:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742475704; x=1743080504; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742475709; x=1743080509; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Vc3dKjde0rLVyDC0QPLc/14aVKYKizi/3+LepGRxWFU=;
-        b=A7m4GsLfXnsL/v+ynQSycdAzvKJyIgF72GtuFMNbmGUedoQJ1pk/yV2oHaD6XoFg8D
-         L7JWvC9jkGSxqGQViLTDqnKvmgEGoUmttQGiX2kY2Lw9ktJuWIzdUSsthPDo3BuVgyzo
-         7/qrhlf+0H0WaM3P3seITkuJwMqljp04eorXc5pR5rCyWUB7s67zm4ezF7wE7jBeijZM
-         andNi9ZaCVLbBlnSYSawXo3i+E9IfYwaMs0mOmIgIbd+kf1nRjtNv6Lde0IFSyPmk6RJ
-         gMlZMEkb4vvQ1/uZqcSvLcrEssXmrvaph54kgfyIO6lI/TSFbojU/OuFleBDyUZBkd1P
-         F8wA==
+        bh=MZocKeaP4+m6t9O2v1jxFvpKpeZLmzryJkfebv96Xm0=;
+        b=nmW4C+2aGvUhWA6VYEra9r8M7M0dJj/v//K5Wzk7cdX9tdjf4/3bYAXb+JXVcIdY6Q
+         Nz3j5jWaInMrmU8oKkUxv2iqL/P2eX5ic3led5H/1fdvfsbQni2CZXaPEpS9Ibh5bF9N
+         DJUuo0vE2hfaM5CpYAV8DmJKdXPGIFHbvL9k7lmIYMH3TVmm/soiJwOocXNuPa8BXCO6
+         QXPBZozn5bcugAx9vD6JZ31ohszo+a780sQJDproAmwwgQc7EtdISVnea8TM/i4vdxaM
+         IWDSv3pzYhnfyAOYTo/jn4hw+7SXT9dBHCa+jRZNs/rjzxbMTMoEaTbKReV8BRQ6wd9a
+         77+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742475704; x=1743080504;
+        d=1e100.net; s=20230601; t=1742475709; x=1743080509;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Vc3dKjde0rLVyDC0QPLc/14aVKYKizi/3+LepGRxWFU=;
-        b=F9Fny0gSJvBCEIwGcLJRSCNZcQ2MaUnU6dJJ5dx85IDUBPOUb/8uJdr75YfTMBqqEm
-         QPHvuHxwEj9p8uWJRUo/kHwJU6tXsvnMHR+GIiljKQmNSJiOXE2xHKpXxJHEiAq0+MVu
-         +kkIZiMn9VzirukpLZC5kc0THdo3457SmdoIE+eB0y/c0lFk8GGbk/tzmMA1R8Ld87vN
-         tL1ZBzFxHkwpC794+f0YQUhY0vElTIfA3bN8GkLwcVn145/ZZ9O0LbqjFaU78s09ScNy
-         BuiPDWvX40Z+A+Kk5qivNlz5U7i99TjBkDmlTjNr9DFgsRieDSn81KP3aMVWypu1sC50
-         inCw==
-X-Forwarded-Encrypted: i=1; AJvYcCUu/Ij/xJWVPva0a/aWNf7D4fGP7TSZGgJX3M41LPaaR2MHTw/tJtZHTgNJzjs0JpagJYYA8MHMxXL3@vger.kernel.org, AJvYcCUx4Q87R2u/CwD7fu55fElG2GgAi7jfVlF/sYY+4+UxfXEBVfMvnM145F4+1e16YxGfJ0M8QVpsOUUe@vger.kernel.org, AJvYcCVMpZQKz/xjsb9cNVOZmD7Too+xIMiUszKT7N7SwKn4qkwNutVCvxfNohrTwaSLrCEG35omjsgERSeX@vger.kernel.org, AJvYcCWWxhqH/Jdpi72zUj39mAqmU3vUu5F5QUo4fpdv8p9ytZC62Nbf4/kOs7yunMo+TXXt2F7evgQzyOxVU9q4@vger.kernel.org
-X-Gm-Message-State: AOJu0YznkTxTGcPHuSpEUS//zR5E2KHn+3BRcKrcMzjHKzZI0jGP8vwY
-	wy35mfNDNkp+Y+1RJG1CF692Nj6xlBu2T5ErChlsW7PGSdDFrSg5
-X-Gm-Gg: ASbGncvcnMXlFlOpmZ8lQ4FAOsWaXyLblogMAZBapJMUDW3E0UYvn1X/g48TNRstRXJ
-	DpAmM0tl5L9SCC+L1H0tmhNWt81RMLePibzW0z/SSWp/aRKqtbbnTw7lxHYr+31WT7WaFSde73q
-	eQVV1gkt3p59nC2LdeSTFiLGbITy4K0i99GGFIUY8awL+wNiiFTNdzczYroBgeq0SRCPZ0SmoR7
-	iXzfAA/GPjG9eyFTisl7iGZL89x4Qh1BRym06D3JTrYP0yYn1TSDtJ+S1siK2oxi55qnJxvVqIr
-	F43AplgfYX0yGfZce4/wf2MmSpnVLPhzEEaLWUxJmbBOqSBDOtMxVxoiFOBJtAg+XQJFaxZRCJL
-	PZkr0JMxTqO+D7A==
-X-Google-Smtp-Source: AGHT+IF/l6XMrjHci+BW3RGcUAaz5jM7jX2EkvkrL4ZuF2YFu9cX6Xupx/UFNRAGRB5FWZYiIkaFbw==
-X-Received: by 2002:a5d:6d07:0:b0:38d:d9bd:18a6 with SMTP id ffacd0b85a97d-39973b32cf5mr5739209f8f.42.1742475701698;
-        Thu, 20 Mar 2025 06:01:41 -0700 (PDT)
+        bh=MZocKeaP4+m6t9O2v1jxFvpKpeZLmzryJkfebv96Xm0=;
+        b=HkAJDrBvG5FaGSZPvJaSnM6TM8nNl77JMmmyh4X92mD+irUHx8890g6lSweIvOui7q
+         pVxlHKMJJq6yPkhdRZBKp9tuwzqq7ZpHnbh7L7pJuYKXZmU0oRJOppskQ0zZfmFNm3+M
+         qbEqqOdMJ7EplExhp0rgE0iUfCV759r3rfSrqU87Q0YbuB+rws9ffo6dQHFYrP4w8NOR
+         4ChiAu6ojOaF0/l5YaeI2I1kN2bb9V9dwbYgPVfHg4bpIyrdigdwE318xXsDOTRvppI6
+         CaQOSMQ6XoXIpBZN/H7kSMTBbq+I9ym/Y4J7NYaepy5C7IOeUg78KPn5G+ZpJQUFJ3RI
+         A0mw==
+X-Forwarded-Encrypted: i=1; AJvYcCUPqVioU2YZFsl27Gi5rKpy5KwWcUiPx0Bssjk3gCQ5fJLk3wy2VBMLbWGTJqH23osYi3tS6/EQQUXE@vger.kernel.org, AJvYcCVnkLn4YaaLMAGnkw0lkAdtQQOePTtBKkonIOgHe1mefZudQvmJNsdif4UqASwTdPlVXnkweliX8JlP@vger.kernel.org, AJvYcCVqzEAMRZsx89pfp/O4ivfWoJTaVhZpzCiVJ+Qt/S4pXot2sWH/gObzpi37ju2iiYF6Eu4EmWWkir3NaMM4@vger.kernel.org, AJvYcCWAtGY7XmICk6YevOlaf8jcXppoEQNxEM7AwyAJzU20cOJgp+KCRu6llDUGFbJXT1LDmcB0Gs55zE9Y@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywq1JxPhglU2ef4fIIFxtegm8jL0fod6h6wj0ruL8nMnQvGWBka
+	4/wO9EP/7vNIVrmCHKhhA0AvrTYyCNoWCrNo7Lo4Nl+EV2d3ecjk
+X-Gm-Gg: ASbGncu31PaKFUoNPblLEIo5eWzsxwXrf0ldjTtb//zFuVCbM1LL5RxQ026Mt15RClW
+	na9BQZdjx0mwn5+ujhuFmZhwTBv3byZlbxgA1i02Kk3UBZ7ynZA1kMb99szndYq8G5dTAbskay6
+	whpi3yiC74QGoCaY0cJhq/YY44uAaAeBhkb13HjG9Lp9f/BiJkxuC4Jpkt6TpHefnndEme1juWN
+	k6iKT4NEAanB0s6drzdIB8x87QjtCMbkC4UIawJ2/u/bSzmVjqdLa+R+cykDynd6Gs7TDM32ANU
+	iYAB6Hekh5AvfQgv36PEwycGkyg7DE4cP6GLc+nSU6mJkfBZENaRDjCfTThKYuwbuApOAtX1HN1
+	WKI7fDFDJ7tKDgw==
+X-Google-Smtp-Source: AGHT+IFwiZIO1zJG6xqsD6hkKvEBYIiPzPEpp2yNsbAclaZLwl3OGlaU/Gn9w+5dTLKNFCSQz4VNOA==
+X-Received: by 2002:a05:6000:402c:b0:391:4684:dbdb with SMTP id ffacd0b85a97d-399795ad76amr2805038f8f.17.1742475707909;
+        Thu, 20 Mar 2025 06:01:47 -0700 (PDT)
 Received: from localhost.localdomain (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-397f2837e61sm18492328f8f.97.2025.03.20.06.01.39
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-397f2837e61sm18492328f8f.97.2025.03.20.06.01.45
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 06:01:41 -0700 (PDT)
+        Thu, 20 Mar 2025 06:01:47 -0700 (PDT)
 From: Christian Marangi <ansuelsmth@gmail.com>
 To: Michael Turquette <mturquette@baylibre.com>,
 	Stephen Boyd <sboyd@kernel.org>,
@@ -87,9 +87,9 @@ To: Michael Turquette <mturquette@baylibre.com>,
 	linux-mediatek@lists.infradead.org,
 	linux-usb@vger.kernel.org,
 	upstream@airoha.com
-Subject: [PATCH v2 07/11] dt-bindings: phy: Add documentation for Airoha AN7581 USB PHY
-Date: Thu, 20 Mar 2025 14:00:30 +0100
-Message-ID: <20250320130054.4804-8-ansuelsmth@gmail.com>
+Subject: [PATCH v2 10/11] usb: host: add ARCH_AIROHA in XHCI MTK dependency
+Date: Thu, 20 Mar 2025 14:00:33 +0100
+Message-ID: <20250320130054.4804-11-ansuelsmth@gmail.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250320130054.4804-1-ansuelsmth@gmail.com>
 References: <20250320130054.4804-1-ansuelsmth@gmail.com>
@@ -101,149 +101,28 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add documentation for Airoha AN7581 USB PHY that describe the USB PHY
-for the USB controller.
-
-Airoha AN7581 SoC support a maximum of 2 USB port. The USB 2.0 mode is
-always supported. The USB 3.0 mode is optional and depends on the Serdes
-mode currently configured on the system for the USB port.
-
-If the airoha,serdes-port property is not declared, it's assumed USB 3.0
-mode is not supported, as the Serdes mode can't be validated.
+Airoha SoC use the same register map a logic of the Mediatek xHCI
+driver, hence add it to the dependency list to permit compilation also
+on this ARCH.
 
 Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
 ---
- .../bindings/phy/airoha,an7581-usb-phy.yaml   | 83 +++++++++++++++++++
- MAINTAINERS                                   |  7 ++
- .../dt-bindings/phy/airoha,an7581-usb-phy.h   | 11 +++
- 3 files changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/airoha,an7581-usb-phy.yaml
- create mode 100644 include/dt-bindings/phy/airoha,an7581-usb-phy.h
+ drivers/usb/host/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/airoha,an7581-usb-phy.yaml b/Documentation/devicetree/bindings/phy/airoha,an7581-usb-phy.yaml
-new file mode 100644
-index 000000000000..39ceaded5d0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/airoha,an7581-usb-phy.yaml
-@@ -0,0 +1,83 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/phy/airoha,an7581-usb-phy.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Airoha AN7581 SoC USB PHY
-+
-+maintainers:
-+  - Christian Marangi <ansuelsmth@gmail.com>
-+
-+description: >
-+  The Airoha AN7581 SoC USB PHY describes the USB PHY for the USB controller.
-+
-+  Airoha AN7581 SoC support a maximum of 2 USB port. The USB 2.0 mode is
-+  always supported. The USB 3.0 mode is optional and depends on the Serdes
-+  mode currently configured on the system for the USB port.
-+
-+  If the airoha,serdes-port property is not declared, it's assumed USB 3.0
-+  mode is not supported, as the Serdes mode can't be validated.
-+
-+properties:
-+  compatible:
-+    const: airoha,an7581-usb-phy
-+
-+  reg:
-+    maxItems: 1
-+
-+
-+  airoha,usb2-monitor-clk-sel:
-+    description: Describe what oscillator across the available 4
-+      should be selected for USB 2.0 Slew Rate calibration.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1, 2, 3]
-+
-+  airoha,serdes-port:
-+    description: Describe what Serdes Port is attached to the USB 3.0 port.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1, 2, 3]
-+
-+  airoha,scu:
-+    description: Phandle to the SCU node for USB 3.0 Serdes mode validation.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  '#phy-cells':
-+    const: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - airoha,usb2-monitor-clk-sel
-+  - '#phy-cells'
-+
-+dependentRequired:
-+  airoha,serdes-port: [ 'airoha,scu' ]
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/phy/airoha,an7581-usb-phy.h>
-+    #include <dt-bindings/soc/airoha,scu-ssr.h>
-+
-+    phy@1fac0000 {
-+        compatible = "airoha,an7581-usb-phy";
-+        reg = <0x1fac0000 0x10000>;
-+
-+        airoha,usb2-monitor-clk-sel = <AIROHA_USB2_MONCLK_SEL1>;
-+        airoha,scu = <&scu>;
-+        airoha,serdes-port = <AIROHA_SCU_SERDES_USB1>;
-+
-+        #phy-cells = <1>;
-+    };
-+
-+    phy@1fae0000 {
-+        compatible = "airoha,an7581-usb-phy";
-+        reg = <0x1fae0000 0x10000>;
-+
-+        airoha,usb2-monitor-clk-sel = <AIROHA_USB2_MONCLK_SEL2>;
-+
-+        #phy-cells = <1>;
-+    };
-+
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7cd54c70aeed..c4a374da2b12 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -754,6 +754,13 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/spi/airoha,en7581-snand.yaml
- F:	drivers/spi/spi-airoha-snfi.c
- 
-+AIROHA USB PHY DRIVER
-+M:	Christian Marangi <ansuelsmth@gmail.com>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/phy/airoha,an7581-usb-phy.yaml
-+F:	include/dt-bindings/phy/airoha,an7581-usb-phy.h
-+
- AIRSPY MEDIA DRIVER
- L:	linux-media@vger.kernel.org
- S:	Orphan
-diff --git a/include/dt-bindings/phy/airoha,an7581-usb-phy.h b/include/dt-bindings/phy/airoha,an7581-usb-phy.h
-new file mode 100644
-index 000000000000..efbb0ae75e3a
---- /dev/null
-+++ b/include/dt-bindings/phy/airoha,an7581-usb-phy.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause */
-+
-+#ifndef _DT_BINDINGS_AIROHA_AN7581_USB_PHY_H_
-+#define _DT_BINDINGS_AIROHA_AN7581_USB_PHY_H_
-+
-+#define AIROHA_USB2_MONCLK_SEL0                 0
-+#define AIROHA_USB2_MONCLK_SEL1                 1
-+#define AIROHA_USB2_MONCLK_SEL2                 2
-+#define AIROHA_USB2_MONCLK_SEL3                 3
-+
-+#endif
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index d011d6c753ed..9d8626f36ca6 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -71,7 +71,7 @@ config USB_XHCI_HISTB
+ config USB_XHCI_MTK
+ 	tristate "xHCI support for MediaTek SoCs"
+ 	select MFD_SYSCON
+-	depends on (MIPS && SOC_MT7621) || ARCH_MEDIATEK || COMPILE_TEST
++	depends on (MIPS && SOC_MT7621) || ARCH_MEDIATEK || ARCH_AIROHA || COMPILE_TEST
+ 	help
+ 	  Say 'Y' to enable the support for the xHCI host controller
+ 	  found in MediaTek SoCs.
 -- 
 2.48.1
 
