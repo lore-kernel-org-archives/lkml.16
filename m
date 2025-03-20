@@ -1,116 +1,130 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 809E922A1CB;
-	Thu, 20 Mar 2025 20:15:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 626CB2248BE;
+	Thu, 20 Mar 2025 20:19:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742501761; cv=none; b=t+wLoqOfmtDfUlK8JTjB7pOAV+aJrukbKO+VZH0drsu2sbddYmJi0KKRrluNesGoDYHpYyYJCIpX1BPYQbnz7q0dhx/AXT1xctUndj7p+8HK4rM2xppgToVwnwJNWpClNFUUUTTLkzfQI1wyokqAGfjoN/Lr1AHfo/MYeZy6jkg=
+	t=1742501993; cv=none; b=PM/DIWVDE3+lB+ZG0lEPm/NUGlj5pS+dvW12FBkJ3ijV2lL3EjlL+0uAxDl5bfWHmzEOhxmKKocpec5/v/q/XlLNhrY0Q8qKr/CVQ5R0o3PuIXZbT6M0BWnnP+dbonAyu0LzjCluK9g5dCepKtlfRLibf0UGCWgSAIuBjdDxaNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742501761; c=relaxed/simple;
-	bh=aYFGXfMi2XYKkbxPZlAvLSb99LF5Dfig+IiAoIjUTcA=;
-	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=VCCVgSKk8s5rTXo61vQp+mDCH9mTASMkdaONenwGaR+4hPPS2SUMDyY6dY1RrbnsNgonXUJtb9iPuxwdkPFj5geP2ckhjuX2vEc1GGiBroC+h4xa9KuN7FyhM8Hrq0kx1LfjZPeB0y5zuX0FDLsxnTStB+VPBvIL3wvIOAns1dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=PzlsD9ka; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=6sblkTx9; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742501993; c=relaxed/simple;
+	bh=NCcf7Blmaus57gScMFkNJhhaDKWWFy/KV3mEnna1L1A=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LWT3VRYWt9E3fWcr3xXt7HIiLsaweta8yXyP/C7qVFqVWoKmpQuwbedaNoVHy+l3MGu3iNr43V1PCoud0Ozze9n6uD4rlv8NlW6df3d2A/9rOSLg0FxNTKn6H+uFtxu0QmKDCMCSzOpMkRzGC4LYsLIaIzzPt9q7zpeWgGBB2C4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BPxA/42d; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="PzlsD9ka";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="6sblkTx9"
-Date: Thu, 20 Mar 2025 20:15:48 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742501757;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bFx/2PXlmDo2ekF/EGr6kEACutZG7vER+SaxgstOcn4=;
-	b=PzlsD9kamGlGG9JkyM4g56wa04M+USUzCfoL9kt4Y+aNDHYj+ZhLpb/oPY8Htr1BZPM75g
-	x/S+gLTC4Mt9WDrB69QlsL3DrK2p2PRRzDDw+gRIKHQxcUIAekzkLR3hXINitbZ6geJPws
-	2btKsQ5GLcAQ+QN8ihVC12OPzvTx8Y2ko1E2ZhvNjXqtU8ae1aJNWu9z1w1DwfbyZMtdKa
-	7vbaWy7CrKTtwFTXiMvehZrrege2FY76u3lAGsujonHjB8+s1NCCoM7fuqP6BVut66dWOG
-	AH9UB5kh7gP6Gzx1kzc15CoTqGnYXVXte3YIcZtzTY6/+FP6NGVCJ5zLzp2NyA==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742501757;
-	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bFx/2PXlmDo2ekF/EGr6kEACutZG7vER+SaxgstOcn4=;
-	b=6sblkTx998c6clqy+GS7jEUWuBzwMJDqVgoOl2WQhE8Qq3dzvJgUKsaOBAimsUdydzpTqV
-	feHPGhk7wQDk8LCw==
-From: "tip-bot2 for Dhananjay Ugwekar" <tip-bot2@linutronix.de>
-Sender: tip-bot2@linutronix.de
-Reply-to: linux-kernel@vger.kernel.org
-To: linux-tip-commits@vger.kernel.org
-Subject:
- [tip: perf/urgent] perf/x86/rapl: Fix error handling in init_rapl_pmus()
-Cc: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>,
- Ingo Molnar <mingo@kernel.org>, Peter Zijlstra <peterz@infradead.org>,
- x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20250320100617.4480-1-dhananjay.ugwekar@amd.com>
-References: <20250320100617.4480-1-dhananjay.ugwekar@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BPxA/42d"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-390f5f48eafso713834f8f.0;
+        Thu, 20 Mar 2025 13:19:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742501989; x=1743106789; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dhyguxhy3QF6ssQ6N4HmtB46ru/Kl2lPpRXSHmaJ/rA=;
+        b=BPxA/42dqYQcwDXwjSt/jgPEYDQ3/4RStpN+WDJr8D8O9NHLc/ouS91uHLORGcAtWc
+         Pv5cY94u2ufeg+pu0i48HMIi4hQXvz0erbTI6688zhqWDHmSRXWjP0hnYRtmnpCTmA2m
+         O8oR3/txqh1PFxmoe2Tya9NOyVM2P/3dsTZKfeVTj4WwLS0+Y6e7UvN5Ro3q2RTH9SRK
+         vO+zgwZYVPOiMWLgxu9YDEHB7djUBsv+PcHfgftIt5NoT3EMeZ7LLg3DxnSLpAlPt4Er
+         55D/a4moQY+64DiKBWRP4njD8dVyp0JFJ9xy9iYmQlBctgJTByHCkl8YnVHMySCTe2TX
+         P3vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742501989; x=1743106789;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Dhyguxhy3QF6ssQ6N4HmtB46ru/Kl2lPpRXSHmaJ/rA=;
+        b=nkb/WuO7N5MoMzssCLNjEgPAOs2UlbT2MNQ71s0q6VpeEYTlRbFaqlBJeX/gJiG9zo
+         Vt6t/+lyNhQSHK+KZXx+Gu1ILWrdjI68TH3DYexSP3Dx5paW09eO2aCpCKvVEDcX9stF
+         hUA668oM10ywBXtrVd2Es+qWoABkjcZWop4ZmPanzWWc0gibN9lMDHNJ+6OZh5KfGv2L
+         lD8U1FgDnPQI1k3OtDtLuR5MW/qmbLgN3EULT/WSrdLN3pjwzT0cBk1oj4tEPM5cQ9JF
+         GJIBDThWzqiaUOHptV2++azatiVTCOzgcL5xgG448jHSmA9yPsBMNkh6mO8z+x4KZJ24
+         Mw4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWqg3R3WzwcaOLbOBhuytMUTjpgD9xnNLGFXeYKqXDUCbIuaksospjEgWLllYI8DdrFsxW+8MpVZn17reY=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7mn0oo6oj26lbFDEZZzEC9KUfplTkAqRQxJ6YsnYNjAUXpKiI
+	xF+/dywRY1BF/vfY5y8mVCnOni+E5WMY4BqT4ErqLiB/ECv8JZm+
+X-Gm-Gg: ASbGncvIUUlx4dWJnL2GDRbQkmYAxtKSSaz0NGkAdFrixW2XNYaBbitxUDxLutvg64X
+	GFI1JGjThN8NkQbzwTnwx5gGXVnpoK8Hg9SsdbRwUBOl7a5D6wHBERZHuF9rgotFvUSIaZrLgCJ
+	qXWOmgBy+bIbCqFgAPwOBH6QyQ+RlSEH8Fyut1y2YVAajA9A0aUTiIIuo8JZpd9or6vJC5A6piH
+	1sirZize81Ikk0CD7yCCW4s7bwlJzmdfYZURQs8n6p97CyWHkp3lHFA2vvylRA7iYZxRTpNdMCu
+	R8vgsYHJrDKAJujgJA4CAW7UhB5Tqv6IUn1PjO7lpKRXLw==
+X-Google-Smtp-Source: AGHT+IE/btzueE8JU/eAqEkp1q9M1cbr7FO2mpWZMkpMLSmIZhDdqe7dSjJh7OehvrSNgBvLJbC84A==
+X-Received: by 2002:a05:6000:1566:b0:38f:451b:653c with SMTP id ffacd0b85a97d-3997f8edadamr632159f8f.7.1742501989262;
+        Thu, 20 Mar 2025 13:19:49 -0700 (PDT)
+Received: from qasdev.Home ([2a02:c7c:6696:8300:a534:f4c9:f77d:6a2e])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbd1c7sm6948465e9.40.2025.03.20.13.19.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 13:19:48 -0700 (PDT)
+From: Qasim Ijaz <qasdev00@gmail.com>
+To: nbd@nbd.name,
+	lorenzo@kernel.org,
+	ryder.lee@mediatek.com,
+	shayne.chen@mediatek.com,
+	sean.wang@mediatek.com,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	chui-hao.chiu@mediatek.com,
+	Bo.Jiao@mediatek.com
+Cc: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Qasim Ijaz <qasdev00@gmail.com>
+Subject: [PATCH] wifi: mt76: mt7996: prevent uninit return in mt7996_mac_sta_add_links
+Date: Thu, 20 Mar 2025 20:19:14 +0000
+Message-Id: <20250320201914.48159-1-qasdev00@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174250174933.14745.3144777458054823623.tip-bot2@tip-bot2>
-Robot-ID: <tip-bot2@linutronix.de>
-Robot-Unsubscribe:
- Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Precedence: bulk
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-The following commit has been merged into the perf/urgent branch of tip:
+If link_conf_dereference_protected() or mt7996_vif_link() 
+or link_sta_dereference_protected() fail the code jumps to
+the error_unlink label and returns ret which is uninitialised.
 
-Commit-ID:     7e512f5ad24458e2c930b5be5d96ddf9e176e05d
-Gitweb:        https://git.kernel.org/tip/7e512f5ad24458e2c930b5be5d96ddf9e176e05d
-Author:        Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-AuthorDate:    Thu, 20 Mar 2025 10:06:19 
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Thu, 20 Mar 2025 21:03:55 +01:00
+Fix this by setting err before jumping to error_unlink.
 
-perf/x86/rapl: Fix error handling in init_rapl_pmus()
-
-If init_rapl_pmu() fails while allocating memory for "rapl_pmu" objects,
-we miss freeing the "rapl_pmus" object in the error path. Fix that.
-
-Fixes: 9b99d65c0bb4 ("perf/x86/rapl: Move the pmu allocation out of CPU hotplug")
-Signed-off-by: Dhananjay Ugwekar <dhananjay.ugwekar@amd.com>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: https://lore.kernel.org/r/20250320100617.4480-1-dhananjay.ugwekar@amd.com
+Fixes: c7e4fc362443 ("wifi: mt76: mt7996: Update mt7996_mcu_add_sta to MLO support")
+Fixes: dd82a9e02c05 ("wifi: mt76: mt7996: Rely on mt7996_sta_link in sta_add/sta_remove callbacks")
+Signed-off-by: Qasim Ijaz <qasdev00@gmail.com>
 ---
- arch/x86/events/rapl.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/wireless/mediatek/mt76/mt7996/main.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/events/rapl.c b/arch/x86/events/rapl.c
-index 6941f48..043f0a0 100644
---- a/arch/x86/events/rapl.c
-+++ b/arch/x86/events/rapl.c
-@@ -730,6 +730,7 @@ static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr, int rapl_pmu_
- {
- 	int nr_rapl_pmu = topology_max_packages();
- 	struct rapl_pmus *rapl_pmus;
-+	int ret;
+diff --git a/drivers/net/wireless/mediatek/mt76/mt7996/main.c b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
+index 91c64e3a0860..78f7f1fc867e 100644
+--- a/drivers/net/wireless/mediatek/mt76/mt7996/main.c
++++ b/drivers/net/wireless/mediatek/mt76/mt7996/main.c
+@@ -998,16 +998,22 @@ mt7996_mac_sta_add_links(struct mt7996_dev *dev, struct ieee80211_vif *vif,
+ 			continue;
  
- 	/*
- 	 * rapl_pmu_scope must be either PKG, DIE or CORE
-@@ -761,7 +762,11 @@ static int __init init_rapl_pmus(struct rapl_pmus **rapl_pmus_ptr, int rapl_pmu_
- 	rapl_pmus->pmu.module		= THIS_MODULE;
- 	rapl_pmus->pmu.capabilities	= PERF_PMU_CAP_NO_EXCLUDE;
+ 		link_conf = link_conf_dereference_protected(vif, link_id);
+-		if (!link_conf)
++		if (!link_conf) {
++			err = -EINVAL;
+ 			goto error_unlink;
++		}
  
--	return init_rapl_pmu(rapl_pmus);
-+	ret = init_rapl_pmu(rapl_pmus);
-+	if (ret)
-+		kfree(rapl_pmus);
-+
-+	return ret;
- }
+ 		link = mt7996_vif_link(dev, vif, link_id);
+-		if (!link)
++		if (!link) {
++			err = -EINVAL;
+ 			goto error_unlink;
++		}
  
- static struct rapl_model model_snb = {
+ 		link_sta = link_sta_dereference_protected(sta, link_id);
+-		if (!link_sta)
++		if (!link_sta) {
++			err = -EINVAL
+ 			goto error_unlink;
++		}
+ 
+ 		err = mt7996_mac_sta_init_link(dev, link_conf, link_sta, link,
+ 					       link_id);
+-- 
+2.39.5
+
