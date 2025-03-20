@@ -1,45 +1,47 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B7D221DBC
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:25:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C48DD222572
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742462734; cv=none; b=k4pnaQ3G9xN+fDkh0K6Uk5n8+s4Tvg0kE94cMFdyCVWbUIClcXz+UrYFmNhg1ovQS7wm+jqZc718tgAtwH4fhzPWP5t0oQ6oLph1eow39j54natFjc+ShtenAUsZWZc9+4/UbEdqZg3FAI9ZkfWOp94SWwz6R+VZWXj1C4B40lY=
+	t=1742462739; cv=none; b=UGpAEYGT7spc87CJIuhA/EKikqxiuorbN3U2WZ0vd4905B87WOWy5PK6ZEt+HvfK5Smv5pOZ9rcZYkOv+UEvRPPI/ZfHIpsXunETsRCj7GHpv90B51FhUW2bbhXvUgKxQRuSnr0yU/phXfPrUsmX/IQpgASBt+7ZD463HiAMVSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742462734; c=relaxed/simple;
-	bh=024QgvEdox7lmIFc6JNkbdRW+SBagty2L2qX4+Mqe8A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dorzjFCRCkdMALhUH2iX/xXL//eeDr5oh9BQmMvPm6W+EaEREl77TWjxAIwuGnUjfBPZmhcF6DhRHLXlHRM+QnRV743kFgOPOfA0pLk4D0A0QjZxb1wtmYzvqXpnIUlQNtzKdKbjF0FFRe+QIxXx/sybrmi6f2ymNFGwNEn/KO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q1R8Pzv4; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1742462739; c=relaxed/simple;
+	bh=kKKw2YDnQQHPnT9LbTVKhigQoKma9s2FHV+0OsoJoik=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RDX5j79TW4A2gVpAm7b8uY5j57ithlIcWQYc8ugg5275TR/f0J7HT5lWIZfZH+1JkWhikZYu6TMooxTK0hrmDWs3ZLk892R4MknrPPiXGgvsFOe0qoxSVTvKGE/IsN1H4F0IDuMqhdQzypAs7c7h1g5JI594MhjcB2JJ7NXW1O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=e5rTDyP+; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1R8Pzv4"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="e5rTDyP+"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742462731;
+	s=mimecast20190719; t=1742462736;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=8MPzZFdU5NaYPh2NGTOtu5hpDZLpTD6ezNgyItb/nos=;
-	b=Q1R8Pzv4zFXlq1jUEtXT9rwNHKRrgeSzcOh1sCtdM3SOu1Y+vLnjPuhUicLBWBs2aClhQW
-	5ApCZ8Oz/ZfHulPAADiGO4yN5BIeCec/++xNmC6BT5hQVewc80eXdWgZVxXQLRSygvPRVS
-	5ZlGwgVD06SmyqXhWNFPkSPF5HdXOpY=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=npOoAdwDRfq/OwDwgMN6XaA4VXQ/Fv54SkxXQuW++/A=;
+	b=e5rTDyP+0lUHHyB32GFw3LHl+usmuknBmdG1hzIb+arm+O9Hrfncs5k1nsEap8mu9aphOZ
+	03tEw4GIpdfftNccoHtN5bsWO5mdQjG88j/1gdblGyegfu1pXYkqf4MTrwMufntHPP03Pb
+	kxbopcpNbc9X60932kFH87VAaK3nvq4=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-258-bdws55N7OSuKf7YmzmmnyA-1; Thu,
- 20 Mar 2025 05:25:27 -0400
-X-MC-Unique: bdws55N7OSuKf7YmzmmnyA-1
-X-Mimecast-MFC-AGG-ID: bdws55N7OSuKf7YmzmmnyA_1742462726
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-77-55VbvF5HNBimGStKPyYL7w-1; Thu,
+ 20 Mar 2025 05:25:35 -0400
+X-MC-Unique: 55VbvF5HNBimGStKPyYL7w-1
+X-Mimecast-MFC-AGG-ID: 55VbvF5HNBimGStKPyYL7w_1742462734
 Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAAFF180882E;
-	Thu, 20 Mar 2025 09:25:25 +0000 (UTC)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7019B1933B44;
+	Thu, 20 Mar 2025 09:25:34 +0000 (UTC)
 Received: from fedora.redhat.com (unknown [10.45.224.73])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A81D19560AF;
-	Thu, 20 Mar 2025 09:25:23 +0000 (UTC)
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1C4CD19560AF;
+	Thu, 20 Mar 2025 09:25:31 +0000 (UTC)
 From: Tomas Glozar <tglozar@redhat.com>
 To: Steven Rostedt <rostedt@goodmis.org>
 Cc: linux-trace-kernel@vger.kernel.org,
@@ -47,9 +49,11 @@ Cc: linux-trace-kernel@vger.kernel.org,
 	John Kacur <jkacur@redhat.com>,
 	Luis Goncalves <lgoncalv@redhat.com>,
 	Tomas Glozar <tglozar@redhat.com>
-Subject: [PATCH 0/6] rtla: Always set all tracer options
-Date: Thu, 20 Mar 2025 10:24:54 +0100
-Message-ID: <20250320092500.101385-1-tglozar@redhat.com>
+Subject: [PATCH 3/6] rtla/osnoise: Set OSNOISE_WORKLOAD to true
+Date: Thu, 20 Mar 2025 10:24:57 +0100
+Message-ID: <20250320092500.101385-4-tglozar@redhat.com>
+In-Reply-To: <20250320092500.101385-1-tglozar@redhat.com>
+References: <20250320092500.101385-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -59,55 +63,52 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
-rtla should not rely on osnoise tracer being set to default options,
-since this might not be the case - either due to the user using the
-tracer without rtla, or due to rtla exiting abnormally and not resetting
-the options to their previous value.
+If running rtla osnoise with NO_OSNOISE_WORKLOAD, it reports no samples:
 
-A part of the problem is already fixed by commits 217f0b1e990e
-("rtla/timerlat_top: Set OSNOISE_WORKLOAD for kernel threads") and
-d8d866171a41 ("rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel
-threads"), but for other options than for OSNOISE_WORKLOAD, and for all
-options in the case of rtla-osnoise, it is not fixed.
+$ echo NO_OSNOISE_WORKLOAD > /sys/kernel/tracing/osnoise/options
+$ rtla osnoise hist -d 10s
+Index
+over: 0
+count: 0
+min: 0
+avg: 0
+max: 0
 
-This patchset sets all options to their default values, unless they are
-set by command line options to different values.
+This situation can also happen when running rtla-osnoise after an
+improperly exited rtla-timerlat run.
 
-Before doing that, code setting the tracer options is unified between
-top and hist for both osnoise and timerlat.
+Set OSNOISE_WORKLOAD in rtla-osnoise, too, similarly to what we
+already did for timerlat in commit 217f0b1e990e ("rtla/timerlat_top: Set
+OSNOISE_WORKLOAD for kernel threads") and commit d8d866171a41
+("rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel threads").
 
-Notes:
-- The unification depends on a commit in linux-next that already does
-that for rtla-timerlat, for the purpose of the implementation of the BPF
-sample collection [1]. For rtla-osnoise, this is done in an analogous
-commit in this patchset.
-- Because of the former and because of the unification requiring changes
-for older versions of the kernel, I do not Cc stable here. If needed,
-I can sent the backport to stable manually after both this and the BPF
-sample collection patchsets are in Linus's tree.
+Note that there is no user workload mode for rtla-osnoise yet, so
+OSNOISE_WORKLOAD is always set to true.
 
-[1] https://lore.kernel.org/linux-trace-kernel/20250218145859.27762-2-tglozar@redhat.com/
+Fixes: 1eceb2fc2ca5 ("rtla/osnoise: Add osnoise top mode")
+Fixes: 829a6c0b5698 ("rtla/osnoise: Add the hist mode")
+Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+---
+ tools/tracing/rtla/src/osnoise.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Tomas Glozar (6):
-  rtla/osnoise: Unify params struct
-  rtla: Unify apply_config between top and hist
-  rtla/osnoise: Set OSNOISE_WORKLOAD to true
-  rtla: Always set all tracer options
-  rtla/tests: Reset osnoise options before check
-  rtla/tests: Test setting default options
-
- tools/tracing/rtla/src/osnoise.c       |  86 +++++++++++++++++-
- tools/tracing/rtla/src/osnoise.h       |  48 ++++++++++
- tools/tracing/rtla/src/osnoise_hist.c  | 118 +++---------------------
- tools/tracing/rtla/src/osnoise_top.c   | 120 +++----------------------
- tools/tracing/rtla/src/timerlat.c      | 106 ++++++++++++++++++++++
- tools/tracing/rtla/src/timerlat.h      |  12 +--
- tools/tracing/rtla/src/timerlat_hist.c | 119 ++++--------------------
- tools/tracing/rtla/src/timerlat_top.c  | 110 +++--------------------
- tools/tracing/rtla/tests/engine.sh     |  66 ++++++++++++++
- tools/tracing/rtla/tests/osnoise.t     |   6 ++
- 10 files changed, 370 insertions(+), 421 deletions(-)
-
+diff --git a/tools/tracing/rtla/src/osnoise.c b/tools/tracing/rtla/src/osnoise.c
+index 1735a36466c4..a71618d876e9 100644
+--- a/tools/tracing/rtla/src/osnoise.c
++++ b/tools/tracing/rtla/src/osnoise.c
+@@ -1187,6 +1187,12 @@ osnoise_apply_config(struct osnoise_tool *tool, struct osnoise_params *params)
+ 		auto_house_keeping(&params->monitored_cpus);
+ 	}
+ 
++	retval = osnoise_set_workload(tool->context, true);
++	if (retval < -1) {
++		err_msg("Failed to set OSNOISE_WORKLOAD option\n");
++		goto out_err;
++	}
++
+ 	return 0;
+ 
+ out_err:
 -- 
 2.48.1
 
