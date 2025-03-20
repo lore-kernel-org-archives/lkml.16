@@ -1,65 +1,66 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1854820A5C2
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:49:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D334D2066C8
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:49:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742460557; cv=none; b=BdLHfsiSAgENvOzZxlwDf3ovbLo3Q87XAQkcZgoWvT5LU8DMWElVs+t8tAmSTbS48t7kDa0XUziEOwp/cswxS7C0C3QfVrR/1jPkpbejeXpL5b673BUQfNyq+EDJQgjRSLbnAOX7HRYZLlYmytiVlhmbS6Sc+zdmA8hK7ybXpI4=
+	t=1742460558; cv=none; b=aJ15YtJBv592Eix7hKjVAY1txcnI7KoINZ9aqB0SE9FtCp76ywSzLJPitlmX5pyJ8hrny7bxh8jS8xrMBu6mt1hX0ei9Mk6n7a6M9Nw7PT25+Bc8tI456Gf/G9tA0JGII2qdpepuJfg0+5DGiyNQKqXyGp/knJOTBtiQmFaHODY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742460557; c=relaxed/simple;
-	bh=dFWBZa11361gL22ddaMWSIWli3shFJKSBcr7kHO8OAs=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rIjzxLkPuRx6q+S8QDk6VkddKsCJAke3Oi7x7UbqKJCyoCjvMuWLNRkdHO817pOevrDudsZa//kWf1R8DLk0cme6QCFW+3DGpW4whu7zIqRld+7k5HH2VVO6vSs/vuXNGngPC6g39M9qi09/qLvYxITrRM7ktcgPswspcKxk8a0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=aDK4MhFf; arc=none smtp.client-ip=209.85.128.41
+	s=arc-20240116; t=1742460558; c=relaxed/simple;
+	bh=gHl0LdUTqSzXFqfH/bwqt0Qp3EzE+6UWudOR8k0D9wo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=kcnVk9Fqtu22SpUwA4af1udOCm1w4rB7pUpekaW/qSqO07KJfr0X63lvyEw5uV59hFgVJ6mM6Pu6TenlJpO1mF4ZAUoILyN8cEyZySDYbJrighcEWGlfSQhiJJQs9rRGR1DjtGU+609yDCoWJb5V8Et2wcJrYQ96dADGCpw/n1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Xn9Ht6ra; arc=none smtp.client-ip=209.85.128.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="aDK4MhFf"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so5349395e9.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:49:14 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Xn9Ht6ra"
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso2961425e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:49:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1742460553; x=1743065353; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=3dSSUDp0kq8Zg5C9MUmkhdPhVDOdSmRPSZzAk4mUfCY=;
-        b=aDK4MhFfQ+RglU8pJuH4nxXfuGtmA6INu4XIfWhmpUdvB0AAoq5z5z6PTmIaC7I7hB
-         JZd5JAvWafGQB3TbtOciGv6FSXrsCOww8mNOngWe1yPD+vT1DIypXHyvDtUj2qgbfKwG
-         ya0t/Epw66bt+cjYijH6FFoXQHG8nPNCFa13mjbKaPWKhFBpNVJqpk2oLM/R6dBgI0cf
-         CHk8FlgWSLtTrK6zsHT+OY2MPwITiWhToRjTNfVrMfRrnqbj85Uel57LolOExXnOiTmv
-         L5oPINeuux11kwxAUs/8pcfP2BT3jLxjZTQmsfoGYWImz+m2JLn9JzDH1plkOEyEVs9A
-         Hziw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742460553; x=1743065353;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1742460555; x=1743065355; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=3dSSUDp0kq8Zg5C9MUmkhdPhVDOdSmRPSZzAk4mUfCY=;
-        b=SNRsqQ6MU8JkrO5RPtYqg+++3JlyTQcH+uVj9bPV98ebqMgmfZ5qHFUKZNAJXfixZA
-         NVx7XMBV69DAF8gURgtReG0m+H0A8+I8S//cU4VS8ghFindxwr75uHHwr2zeIQz6ci6a
-         JlMTmALbi8/wnkBbVnxh/7Ozops8fzgNVhYyfmFZ9CunJLG/zmZYqcn9uIAIALHTzFsD
-         +M/eR2qgvtp+5V+92BSypL1iRhDNBxxR1QIlWUSDlhw20+0JhKsAs11F62CahQAVCbVK
-         0PH6tclX/1v2uw036uAT5EfGZRfHa9Rm6MWAvG/+02p3vIjfPCYYUG4d5R0eCUrQKoMQ
-         1iEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXiFfRd8dSEkskjosSQVLsT58pbUVe+/NJcqEMk0mbAUnEvE+3ybcEenzQ0uySxGAA/stSYjQbON6DET38=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyA1m7XhfVvLI2xJ0PkQgemxuWAZ90x4uiAeYvb58VcfJB7aswy
-	6z1a/b+XEdpnKHv/ERqTjU6dkFkqvZU/fivHxbDz+bvDphMxhwnhETeDnf2QaSkEr91BuHEYt9U
-	2lQ8=
-X-Gm-Gg: ASbGncudihiRqBolvO2T/MOnVVLA7FobkbrFdVGDv3gclJWsxZNTiy+VuvtlY+ng9LT
-	kJkkAcylXiI7rT/PyCudfStNvJEUeIgWkjlTNGw4nx+UQQC/b8rcc5hR+TMZPbhYcQ1wZM46yUv
-	fldM3LZR99XUzoZp3FNJnUuww+zWXLE6JgohIEnDfH1cPy2loHx7Bdb3cetTPOdVIYVE3EC1mA2
-	TVRtqYacfWuMpBbYVO5c7yBhG6SJJA66CNCrkC07pA/YrXuadlo6xj6XOryqYyXWDdh2fMKKhRp
-	DVpqP+6Ct3t6DbjJ46/KjnKCbJguHdsFhBNo0MK4jHbqbSle
-X-Google-Smtp-Source: AGHT+IESyPaiI1V9B3T+xCXcpOdHP115r4JOZkpshAPm0pBqPbQrvCBH6xJxDvOxDEUrw+x64IGdGA==
-X-Received: by 2002:a5d:584c:0:b0:391:12a5:3c95 with SMTP id ffacd0b85a97d-399795adb01mr1697690f8f.22.1742460553152;
-        Thu, 20 Mar 2025 01:49:13 -0700 (PDT)
+        bh=YJV9USVZmsP9ZdAAuuoldoMM46JkHDHsnIzVnX7GtUI=;
+        b=Xn9Ht6ra+BtScPoyBSPbPiUyir+F6kd+sL/DRYI6PPFm1B7WHVxKROM9gOQ+jPtfW7
+         CtNr4Z8Gn+SEwvPasnyvCDEbU01jvldB9Qk5v9FCG+It7JDurlUJFzlAsAwNIbSD/tju
+         JZq4uSVRACsdFu4OQylxBharPTfiO9DTXH0j1/ex+4cGqIoL273hV7rXsdyIp4eyKmUB
+         zzNekqlhc9GH0qf3o7gVY1Alp8hKuceBI2dEkJE4dhlo+VIw/DJjFc1S0Rrix0y56jof
+         B+Nd+kCbqXR653mk6m9STLjAcBsrkbdMpP/5kkc7L0xvu/FuTN/aMFr/JLHVN3iqGEHV
+         GbYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742460555; x=1743065355;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YJV9USVZmsP9ZdAAuuoldoMM46JkHDHsnIzVnX7GtUI=;
+        b=km/gBt+cLe4Hho1/+MzBhcTjNiGy2AaZVMSwGt5eIB268x2xBGM+0z3HqSKk9LPuyZ
+         1hxjDb3Pn5H+36hFXj1/M96cjOqoXvyvG7EsT5Bw8gk9pADrPS1n1FQWSiuGQf0mpfB7
+         7ejCNUc9IKRUDHctse0aYTAVLnCi9Pbq5VlETPjNGcKbNTwu8FqurhRXWOcws1ynk4pj
+         B6XrI4okhnADLsRCxOjA8/dxMhrR+oIWJmFT1toBos7sA32CUi3DFy8fdwX4cM0L7QTq
+         LIZ2Hv1AZbsgrBowReSw9p+ftLE9nQl4CGCVeGTcIHugU9J46H0t6yBfjHOiU/BZPOk7
+         pmHA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5LWFep70VPvlQCQIiQtnz9UsWReby4A3+UFUIEEGZ07+pDRkM11UTdDIrwcVIu8sHiZRzxRDnQ0jU+Ek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzoQS5jHkJAil7AIi1hZ5Igs95aIlbJBAE5uxGP1Re5Yw+0mLzQ
+	ugq0buAHfrBUocbLbyaaoiRU7y83olqR7CPBeIqHT0p9vaXgVI8N2o5zBSHu4R4=
+X-Gm-Gg: ASbGncs+ko6SqWxkcStY/tCw+OUytJzRwuw0mFKWaRR+nt64ZImvQuyZYJ8B/U+MI/K
+	LJRXXsFPoJ/psYwcmj032rLHhZ4dZFxsymjWHdboAlLAwbH68afuYOQxwa8hZMN0CluZeirtjMP
+	juPnKqmm//0juA1GRkGUR+GVceaw7FfhCyLt+AX+pRMADyjr2f9jHn1A6THt8jjeFwxs+Txmgdr
+	jzUMCzAduEmj7qGFJEiUnyXknr0GvqHiTqXK6EvkTDB3rH+juZANVNAb4zeWxhMGO1AwQ3xic8w
+	QnGJP4DKhKvSbCjHKp0quk3Z8ruemPcrATfdUMildwZh/6SzYWpDZvVpU6I=
+X-Google-Smtp-Source: AGHT+IGvyzObe3HUgUPIOkcUmHLI+6xANcIGJKxeOg9jouXNulvNZlxlIH6nFdT6PpdEkn3OcgskSQ==
+X-Received: by 2002:a05:600c:138d:b0:43b:4829:8067 with SMTP id 5b1f17b1804b1-43d4ac2b356mr13977715e9.6.1742460555324;
+        Thu, 20 Mar 2025 01:49:15 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:e0a:5ee:79d0:c11c:487d:c821:54a0])
-        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d43fdac9dsm41381655e9.30.2025.03.20.01.49.11
+        by smtp.googlemail.com with ESMTPSA id 5b1f17b1804b1-43d43fdac9dsm41381655e9.30.2025.03.20.01.49.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 01:49:12 -0700 (PDT)
+        Thu, 20 Mar 2025 01:49:14 -0700 (PDT)
 From: Alexandre Mergnat <amergnat@baylibre.com>
-Subject: [PATCH v8 0/3] Add display support for the MT8365-EVK board
-Date: Thu, 20 Mar 2025 09:48:44 +0100
-Message-Id: <20231023-display-support-v8-0-c2dd7b0fb2bd@baylibre.com>
+Date: Thu, 20 Mar 2025 09:48:46 +0100
+Subject: [PATCH v8 2/3] drm/panel: startek-kd070fhfid015: add another init
+ step
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,11 +69,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAGzW22cC/4XQS27EIAwG4KuMWJcKMBBmVr1H1QUP0yBNkwjSq
- NEody/MskrFgsVvyZ9tHqRgTljI7fIgGbdU0jzVYF4uxI92+kSaQs1EMAG8PhpSWe52p+V7Wea
- 8Uq8lNw4YSn4ltcvZgtRlO/mx9a1YVt7qS8aYfp6T3j9qHlNZ57w/B2+8Vf+fsXHKqPJGMwzKA
- 7g3Z/d7chlf/fxFGreJDiEqAeDRGC2dEMMJAR0C2hYAxkTAAPJsC9khZCUwGIGOaxMdPyFUh1D
- tkCtTkaN0BtQJoTuEroTXNsoIMspgToihQwyV0AOD+hVCG/h7yHEcv+U7Pw1bAgAA
+Message-Id: <20231023-display-support-v8-2-c2dd7b0fb2bd@baylibre.com>
+References: <20231023-display-support-v8-0-c2dd7b0fb2bd@baylibre.com>
+In-Reply-To: <20231023-display-support-v8-0-c2dd7b0fb2bd@baylibre.com>
 To: Catalin Marinas <catalin.marinas@arm.com>, 
  Will Deacon <will@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>, 
  Jessica Zhang <quic_jesszhan@quicinc.com>, 
@@ -85,152 +84,96 @@ To: Catalin Marinas <catalin.marinas@arm.com>,
  AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
  dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, 
- Alexandre Mergnat <amergnat@baylibre.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+ Alexandre Mergnat <amergnat@baylibre.com>
 X-Mailer: b4 0.12.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5549; i=amergnat@baylibre.com;
- h=from:subject:message-id; bh=dFWBZa11361gL22ddaMWSIWli3shFJKSBcr7kHO8OAs=;
- b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBn29aHbKmfCxg9p7exTe9tO4ahnJps7WII3FBjPnb4
- 3eBbyQaJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZ9vWhwAKCRArRkmdfjHURXGrEA
- Cmq6GfCcjI8Ht1UNcjWmd4WfAieGbhW5mYUQQVUZyrkkVUl2sEDA94dd7L1HlTzNmiO9qXciEj+GZ4
- CD5NhyDyHrTXp8bkL0bgGIjHZXf8QqT3ae/1WYtL0HUH4c8sTjcWF8p8fIDmRzE3ql2nSKmTB5w9fb
- 6T+oJLElauBuc6eWCq6nJjF4PfdmotiB/2RyRmo+9FNm8jp9PSYjniUQo61mmbssD0zx1fGiDMJcNE
- dfXFLBOhju/EEHdvcAqBD/sHMu+4//dxQ2ZPmJ4CV6lTFeJpJDNX98Vy7tgehwEAs5QfLzqawHpgh4
- tN/2XWMzX1S/pNqcr2DMw2UJwMGHuD+/yr9bmsbSwtadQCWflHc8HNCRiT3qGvXBYdQ2nX1D34SHGS
- yhOSRFKlIKQTcIhsOLJMx+go6P/BiffF3PsPFlnClkdu9Rp8MaohY8YKRNnpPAdQnly1FYZ8OKNJ7L
- XJRh3+RoEC/eZNgm/As3WaJjJYoRU9d3Io5XvOqis3TFJwUMZNhzsyHNlmILLFiPdT3sKqYt/1+UFK
- MrKj41Oe6yoMBlQupg9mQc34O8Wiq5ap7bI/5sfAwwqV8YNojrqnlh71tf7QGQdFBrLoCTonkx6gR3
- tGEGOZO1VwKbIUnxiKIvX8I1iBHJejB8KysIYz8BVCnhPK9vSuOv71qUJbdQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2311; i=amergnat@baylibre.com;
+ h=from:subject:message-id; bh=gHl0LdUTqSzXFqfH/bwqt0Qp3EzE+6UWudOR8k0D9wo=;
+ b=owEBbQKS/ZANAwAKAStGSZ1+MdRFAcsmYgBn29aHBpzXiGFeZYZjQ2WV79w2etmusdRumeCDA2/j
+ En4xIveJAjMEAAEKAB0WIQQjG17X8+qqcA5g/osrRkmdfjHURQUCZ9vWhwAKCRArRkmdfjHURUS3D/
+ 9vN0KMVYZZKmprhPA5LN7rawwuTGP/uyEhk9jFV0/j6JL6U4PVd0nArK1OQLjxBSyc8nUS1QhpHFhL
+ GNVR07l6xuu0efimjhIgzKpfapyc0xJDcsSLokHgtrFYnnFsxhYNegLt2qFhQnAzfhs6CkD8JQRe7j
+ K5ZiuZbQaE9rSuPU9dMg9/Nc9+eO8HpPVfckzLWretHlNh7yz42U0FAUp9KvfnDilzIcxzydGuuNzy
+ Jd/N0DstuCiy80SPtbL4cE8FVcQZpZe5jPrx+mMVIUtyaVPTkJwyP++ureQvWDzAQ334cDPfrwy2Ei
+ Oeh0VnncqzOktXqxToMmHFzuFwKfoDr0/6LV+dlVtsI2RP/3/bW67t8xKV0I6eMGMGESBck72W9vwD
+ ca1+TzhnFFesumJlEkaj/XnlS6mvr4PPLAaqauBwaKTiAXgZT/btqNWTVJBx+sYj3/dyd+1Sy0NtJ2
+ lpmstf0PEKIOMLotSfh7vkJ/+71UqXjgjVbmV6k0f1lgMLHIpGEEqNz/Us0zURzuYQEVwsj6cFRsyw
+ W6Lz1Pgec4nQ9wjY5aeCuLQPAkLl9D87UWlEs4SeCgePB7fs9v/PogO0y5kTxHItyjqRqV2XGGIAxe
+ Lu9b+dTaPTCrjNEDXVF5nGl/HyIMiJ8yrA1aWPFooOUtSOMg18/vt4NOuirQ==
 X-Developer-Key: i=amergnat@baylibre.com; a=openpgp;
  fpr=231B5ED7F3EAAA700E60FE8B2B46499D7E31D445
 
-The purpose of this series is to add the display support for the mt8365-evk.
+Currently, the panel set power, set gpio and enable the display link
+in stk_panel_prepare, pointed by drm_panel_funcs.prepare, called by
+panel_bridge_atomic_pre_enable, pointed by
+drm_bridge_funcs.atomic_pre_enable. According to the drm_bridge.h,
+atomic_pre_enable must not enable the display link
 
-This is the list of HWs / IPs support added:
-- Connectors (HW):
-  - HDMI
-  - MIPI DSI (Mobile Industry Processor Interface Display Serial Interface)
-- HDMI bridge (it66121)
-- DSI pannel (startek,kd070fhfid015)
-- SoC display blocks (IP):
-  - OVL0 (Overlay)
-  - RDMA0 (Data Path Read DMA)
-  - Color0
-  - CCorr0 (Color Correction)
-  - AAL0 (Adaptive Ambient Light)
-  - GAMMA0
-  - Dither0
-  - DSI0 (Display Serial Interface)
-  - RDMA1 (Data Path Read DMA)
-  - DPI0 (Display Parallel Interface)
+Since the DSI driver is properly inited by the DRM, the panel try to
+communicate with the panel before DSI is powered on.
 
-The Mediatek DSI, DPI and DRM drivers are also improved.
-
-The series is rebased on top of Angelo's series [1] to
-use the OF graphs support.
-
-Update 03/20/25:
-According to Angelo's comment, the DSI fix in the previous version
-doesn't fix the root issue.
-Then, the "drm/mediatek: dsi: Improves the DSI lane setup robustness"
-as been replaced by two other patch to fix the DSI power on sequence
-and remove custom power function.
-
-Regards,
-Alex
+To solve that, use stk_panel_enable to enable the display link because
+it's called after the mtk_dsi_bridge_atomic_pre_enable which is power
+on the DSI.
 
 Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 ---
-Changes in v8:
-- Patch merged, then removed from the series:
-  - dt-bindings: display: mediatek: dpi: add power-domains example
-  - drm/mediatek: add MT8365 SoC support
-  - arm64: dts: mediatek: add display blocks support for the MT8365 SoC
-  - arm64: dts: mediatek: add display support for mt8365-evk
-- Patch removed:
-  - drm/mediatek: dsi: Improves the DSI lane setup robustness
-- Patch added:
-  - drm/panel: startek-kd070fhfid015: add another init step
-  - drm/mediatek: dsi: remove custom init part
-- Remove MTK custom init function for the DSI driver to avoid conflict
-  with what the DRM APIs provide.
-- Link to v7: https://lore.kernel.org/r/20231023-display-support-v7-0-6703f3e26831@baylibre.com
-
-Changes in v7:
-- Improve defconfig commit description
-- Add comment in the DTS about pins clash with ethernet and HDMI (DPI0)
-- Link to v6: https://lore.kernel.org/r/20231023-display-support-v6-0-c6af4f34f4d8@baylibre.com
-
-Changes in v6:
-- Fix DPI binding: remove the duplicated property (power-domains).
-- Squash defconfig commit.
-- Fix the property order in the DTS.
-- Link to v5: https://lore.kernel.org/r/20231023-display-support-v5-0-3905f1e4b835@baylibre.com
-
-Changes in v5:
-- Patch merged, then removed from the series:
-  - dt-bindings: display: mediatek: rdma: add compatible for MT8365 SoC
-  - dt-bindings: display: mediatek: ovl: add compatible for MT8365 SoC
-  - dt-bindings: display: mediatek: gamma: add compatible for MT8365 SoC
-  - dt-bindings: display: mediatek: dpi: add compatible for MT8365
-  - dt-bindings: display: mediatek: dsi: add compatible for MT8365 SoC
-  - dt-bindings: display: mediatek: dither: add compatible for MT8365 SoC
-  - dt-bindings: display: mediatek: color: add compatible for MT8365 SoC
-  - dt-bindings: display: mediatek: ccorr: add compatible for MT8365 SoC
-  - dt-bindings: display: mediatek: aal: add compatible for MT8365 SoC
-- Enable STARTEK KD070FHFID015 panel in the defconfig.
-- Rebase on top of 6.13-rc6.
-- Link to v4: https://lore.kernel.org/all/20231023-display-support-v4-0-ed82eb168fb1@baylibre.com
-
-Changes in v4:
-- Patch merged, then removed from the series:
-  - dt-bindings: display: mediatek: dpi: add power-domains property
-  - dt-bindings: pwm: mediatek,pwm-disp: add compatible for mt8365 SoC
-  - clk: mediatek: mt8365-mm: fix DPI0 parent
-- Remove mediatek,mt8365-dpi compatible from mtk_drm_drv.c because it
-  use the mt8192's data. It's a miss.
-- Add MT8365 OF graphs support, remove the hardcoded display path and
-  rebase on top of Angelo's series [1].
-- Link to v3: https://lore.kernel.org/r/20231023-display-support-v3-0-53388f3ed34b@baylibre.com
-
-Changes in v3:
-- Drop "drm/mediatek: add mt8365 dpi support" because it's the same
-  config as mt8192 SoC
-- Drop "dt-bindings: pwm: mediatek,pwm-disp: add power-domains property"
-  because an equivalent patch has been merge already.
-- Add DPI clock fix in a separate commit.
-- Improve DTS(I) readability.
-- Link to v2: https://lore.kernel.org/r/20231023-display-support-v2-0-33ce8864b227@baylibre.com
-
-Changes in v2:
-- s/binding/compatible/ in commit messages/titles.
-- Improve commit messages as Conor suggest.
-- pwm-disp: Set power domain property for MT8365. This one is optionnal
-  and can be used for other SoC.
-- Fix mediatek,dsi.yaml issue.
-- Remove the extra clock in the DPI node/driver and fix the dpi clock
-  parenting to be consistent with the DPI clock assignement.
-- Link to v1: https://lore.kernel.org/r/20231023-display-support-v1-0-5c860ed5c33b@baylibre.com
-
-[1] https://lore.kernel.org/lkml/20240516081104.83458-1-angelogioacchino.delregno@collabora.com/
-
----
-Alexandre Mergnat (3):
-      arm64: defconfig: enable display support for mt8365-evk
-      drm/panel: startek-kd070fhfid015: add another init step
-      drm/mediatek: dsi: remove custom init part
-
- arch/arm64/configs/defconfig                       |  2 ++
- drivers/gpu/drm/mediatek/mtk_ddp_comp.c            |  2 --
- drivers/gpu/drm/mediatek/mtk_disp_drv.h            |  2 --
- drivers/gpu/drm/mediatek/mtk_dsi.c                 | 16 --------------
  .../gpu/drm/panel/panel-startek-kd070fhfid015.c    | 25 +++++++++++++---------
- 5 files changed, 17 insertions(+), 30 deletions(-)
----
-base-commit: 72e8ab284ff34785ec292f79610de5fcf3825b32
-change-id: 20231023-display-support-c6418b30e419
+ 1 file changed, 15 insertions(+), 10 deletions(-)
 
-Best regards,
+diff --git a/drivers/gpu/drm/panel/panel-startek-kd070fhfid015.c b/drivers/gpu/drm/panel/panel-startek-kd070fhfid015.c
+index c0c95355b7435..bc3c4038bf4f5 100644
+--- a/drivers/gpu/drm/panel/panel-startek-kd070fhfid015.c
++++ b/drivers/gpu/drm/panel/panel-startek-kd070fhfid015.c
+@@ -135,19 +135,9 @@ static int stk_panel_prepare(struct drm_panel *panel)
+ 	gpiod_set_value(stk->enable_gpio, 1);
+ 	mdelay(20);
+ 	gpiod_set_value(stk->reset_gpio, 1);
+-	mdelay(10);
+-	ret = stk_panel_init(stk);
+-	if (ret < 0)
+-		goto poweroff;
+-
+-	ret = stk_panel_on(stk);
+-	if (ret < 0)
+-		goto poweroff;
+ 
+ 	return 0;
+ 
+-poweroff:
+-	regulator_disable(stk->supplies[POWER].consumer);
+ iovccoff:
+ 	regulator_disable(stk->supplies[IOVCC].consumer);
+ 	gpiod_set_value(stk->reset_gpio, 0);
+@@ -156,6 +146,20 @@ static int stk_panel_prepare(struct drm_panel *panel)
+ 	return ret;
+ }
+ 
++static int stk_panel_enable(struct drm_panel *panel)
++{
++	struct stk_panel *stk = to_stk_panel(panel);
++	int ret;
++
++	ret = stk_panel_init(stk);
++	if (ret < 0)
++		return ret;
++
++	ret = stk_panel_on(stk);
++
++	return ret;
++}
++
+ static const struct drm_display_mode default_mode = {
+ 		.clock = 163204,
+ 		.hdisplay = 1200,
+@@ -239,6 +243,7 @@ drm_panel_create_dsi_backlight(struct mipi_dsi_device *dsi)
+ }
+ 
+ static const struct drm_panel_funcs stk_panel_funcs = {
++	.enable = stk_panel_enable,
+ 	.unprepare = stk_panel_unprepare,
+ 	.prepare = stk_panel_prepare,
+ 	.get_modes = stk_panel_get_modes,
+
 -- 
-Alexandre Mergnat <amergnat@baylibre.com>
+2.25.1
 
