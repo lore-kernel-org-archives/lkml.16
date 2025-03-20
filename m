@@ -1,45 +1,54 @@
-Received: from szxga06-in.huawei.com (szxga06-in.huawei.com [45.249.212.32])
+Received: from smtpbgeu1.qq.com (smtpbgeu1.qq.com [52.59.177.22])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8792225798
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:22:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9B80224229
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:24:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.59.177.22
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742466182; cv=none; b=BaP6GQovsUlFyUKn0+yLQiPr6yTKBAA5T4OJ3HpuMqCd/+ACdopBWCbtwZkx+ggUST3tNK3iVlKnlaliT4g/6eNGkfA2Sx58xb4EXc/JYPx2j/14bD1WrU/SrChHDCHK4dgDwKGV5+8CUMMUS3FCdxR67qtp/dHxs/lOihPJoX4=
+	t=1742466295; cv=none; b=M0ZvHN5ET9pHHSCx0PwCJznVOHVao+fkPSXp6LcqJgbMi99WHlMgOl4FvBHyutF57CiEtfdZ1CJb/BM5wca9QlRfSq2i7vJOUqQFZkmtf1Km0EYrHx7UQpgvKUWqPzLOI/9vZrH4f/zcPqRUAIYEAeBuONHGQjGKvdJBDn4CeuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742466182; c=relaxed/simple;
-	bh=AuhnF22lBIPI4J8+aDvGKlxpt8YZz4FYBxTZj4hFY/4=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uZFQu2cieBqxFFqWWBGP8aoyuYaO5p4YtQ7TPqYWx024dA+wbBecmSK5MAoL2uOc6fwylWZkkYn5vjTCmmChXI4RlOLhXxsAWDzNY5Dz2lyamW1sPa1vaM+Mct5rHmPx5/heeFSoDFFJkWHf+yAr4QoKjgaGEdl0xqbhYYa1eJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.112])
-	by szxga06-in.huawei.com (SkyGuard) with ESMTP id 4ZJM9X0fLMz27h6Z;
-	Thu, 20 Mar 2025 18:23:28 +0800 (CST)
-Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id 8717514013B;
-	Thu, 20 Mar 2025 18:22:51 +0800 (CST)
-Received: from localhost.huawei.com (10.169.71.169) by
- kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 20 Mar 2025 18:22:50 +0800
-From: Yongbang Shi <shiyongbang@huawei.com>
-To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
-	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
-	<tzimmermann@suse.de>, <airlied@gmail.com>, <daniel@ffwll.ch>,
-	<kong.kongxinwei@hisilicon.com>
-CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
-	<lidongming5@huawei.com>, <shiyongbang@huawei.com>, <libaihan@huawei.com>,
-	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
-	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 drm-dp 8/9] drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
-Date: Thu, 20 Mar 2025 18:14:54 +0800
-Message-ID: <20250320101455.2538835-9-shiyongbang@huawei.com>
-X-Mailer: git-send-email 2.33.0
-In-Reply-To: <20250320101455.2538835-1-shiyongbang@huawei.com>
-References: <20250320101455.2538835-1-shiyongbang@huawei.com>
+	s=arc-20240116; t=1742466295; c=relaxed/simple;
+	bh=P6Cyg6ZZOL/bdfJ/B4iOaMgGeE2iSEc4uJhQIlA74AE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kSCmezvXtKLnOvdvoml64BpvddjLpygr/bYTzjabZgW045dwTBAUNPtgicTx2HyyXIFQAhOBDmKjrORnq3tsikTIQbOcTzIVqOk20mk234tWbnZaZev1WIh2UY5ueBZb4DMMAUtML1C+qTUnOyVJ+4rowrIQEBATYxS1ySIA76w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com; spf=pass smtp.mailfrom=uniontech.com; dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b=Zw5ciXRY; arc=none smtp.client-ip=52.59.177.22
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniontech.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=uniontech.com header.i=@uniontech.com header.b="Zw5ciXRY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniontech.com;
+	s=onoh2408; t=1742466212;
+	bh=UQkpjbCZSJNKsn4kZHUA6N+b2zXax0ohSXZNeMcNv0g=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version;
+	b=Zw5ciXRYbGkdhcv38Eo7qJsiJcfVw1tKKJ+zMxZ4/H3NerxzVK9nOB6WYtz7a6/qd
+	 /hq5rBtaJGTmwyttjh8mLyRZF87n4KF3qtAITC0yU6Kj4FZY+lxixN9GVpO93UDcK2
+	 En78vzqpnJRm1VNwEuU4z5YxdomM8iYysK5fsro0=
+X-QQ-mid: bizesmtpip3t1742466200t1f8q4h
+X-QQ-Originating-IP: QU9FNwBoxjDpk5O9q9jrJU66DqalOoSS7/8913wuNAA=
+Received: from localhost.localdomain ( [localhost])
+	by bizesmtp.qq.com (ESMTP) with 
+	id ; Thu, 20 Mar 2025 18:23:18 +0800 (CST)
+X-QQ-SSF: 0002000000000000000000000000000
+X-QQ-GoodBg: 1
+X-BIZMAIL-ID: 2980775555184553124
+From: WangYuli <wangyuli@uniontech.com>
+To: chenhuacai@kernel.org,
+	kernel@xen0n.name
+Cc: wangyuli@uniontech.com,
+	guanwentao@uniontech.com,
+	wentao@uniontech.com,
+	loongarch@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	zhangqing@loongson.cn,
+	zhoubinbin@loongson.cn,
+	lihui@loongson.cn,
+	rdunlap@infradead.org,
+	chenhuacai@loongson.cn,
+	zhanjun@uniontech.com,
+	niecheng1@uniontech.com
+Subject: [PATCH] LoongArch: KGDB: Do not inline arch_kgdb_breakpoint()
+Date: Thu, 20 Mar 2025 18:23:14 +0800
+Message-ID: <EE51449BC2104F82+20250320102314.2062639-1-wangyuli@uniontech.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,175 +56,66 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- kwepemd500013.china.huawei.com (7.221.188.12)
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtpip:uniontech.com:qybglogicsvrgz:qybglogicsvrgz8a-1
+X-QQ-XMAILINFO: NN51gi9eLBwaVbYlzEPeqmTIAxDuFI36Ki08YPBgNwm/yRt3mfSfrJCv
+	TE2U+KCj3AZFXkxn62OALKtprdcV4NHLd9XL7yR89UfbijJuL4HZoWybDEAbr4mbACTMx4o
+	o++QCDM7BUWGYlHFM9DxuXOnmLYg8I7lj5GQEWpKwx472iw4dJhdoviYMbls96vtuvOWKcC
+	gbr5uHT1+W49P+gQoH1kQ38/UUAcdEQ3iGx9hZCBqtrQirw+yy6VCc+nE4d88duDRhxBI1H
+	YgwUhsthaBAuopAhGYZ+UXYsyRXdPK2PzP22FzfyeHYAD6dH4Y4ZvVzRYOcx7+Bt0UtoaaS
+	g0qpdEDHT7f3YNPg9TLuJa5AOjTTXSMp7ctnM1V4Ih5Gnet+FD9QeEGE0ELy3p8c7nVvXiT
+	gbH5ZdXfLMRoTkvr+mN4Qoo8dxshAHI8wiPqotHbyKnDk2jFXXBNiBcc3YnZS8VDSBfBUbE
+	zzTl8+1/P3x9kVNDw67uEBns7q5bgy8eUaPx39ZuJfJ5dHI/uUT//Wk2J2Ioke//fZfvh4q
+	5g+4x/sllujMjrjWvPXNK55GxTxpfP+kU1LuhEk3K3+ZD8rSvevcMo8GaJbjh6PbnkVWAdK
+	agNBbV6XyylBSkHNxgBBFA3XHKuKi2toQ9A1l/7sVRnRiiQ+rlrUUrbICcvcJulMTnmWBr5
+	UJYSSIFcYZttBVMCGHNh8SpfrCj8tPsIIvpwVlB133bGnBsfz5XE2U+5cLpes4rU741GkDK
+	ueRsHCYflA6NyNrAswwVJO2i+IEUgSEit+5HCv2btGBs8k09icJJbJimfeYP1iwg1YWUpSp
+	/MoVQbt+hna5s/7fY8LY7IHnXtzHQaihb5WCT30zG6D3l9eD96hNsU4pyRTw4YK6LhdijrL
+	yS2R7O4nG+UKqOsoESKIuJ8XjzYkiQUECKgvCAdhauPrsdRZmi47M8ewkBGtfIz5ilsFZI7
+	k15vLblILXT09F3Wl0fqReIsVAdTqJxISmUHHaef95pohIopVr/PNwH6TVZoFV+eN6qgjPp
+	SMmmF+U48Jgu2///kHTp4Ig2hSqD0=
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+X-QQ-RECHKSPAM: 0
 
-From: Baihan Li <libaihan@huawei.com>
+The arch_kgdb_breakpoint() function defines the kgdb_breakinst
+symbol using inline assembly.
 
-To realize HPD feature, request irq for HPD , add its handler function.
-We use pci_alloc_irq_vectors() to get our msi irq, because we have two
-interrupts now.
+There's a potential issue where the compiler might inline
+arch_kgdb_breakpoint(), which would then define the kgdb_breakinst
+symbol multiple times, leading to a linker error.
 
-Signed-off-by: Baihan Li <libaihan@huawei.com>
-Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+To prevent this, declare arch_kgdb_breakpoint() as noline.
+
+Fix follow error with LLVM-19 *only* when LTO_CLANG_FULL:
+    LD      vmlinux.o
+  ld.lld-19: error: ld-temp.o <inline asm>:3:1: symbol 'kgdb_breakinst' is already defined
+  kgdb_breakinst: break 2
+  ^
+
+Fixes: e14dd076964e ("LoongArch: Add basic KGDB & KDB support")
+Co-developed-by: Winston Wen <wentao@uniontech.com>
+Signed-off-by: Winston Wen <wentao@uniontech.com>
+Co-developed-by: Wentao Guan <guanwentao@uniontech.com>
+Signed-off-by: Wentao Guan <guanwentao@uniontech.com>
+Tested-by: Yuli Wang <wangyuli@uniontech.com>
+Signed-off-by: Yuli Wang <wangyuli@uniontech.com>
 ---
-ChangeLog:
-v4 -> v5:
-  - remove pci_disable_msi() in hibmc_unload()
----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   |  3 +
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   | 74 +++++++++++++++----
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  3 +
- 3 files changed, 66 insertions(+), 14 deletions(-)
+ arch/loongarch/kernel/kgdb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-index 5614b727a710..394b1e933c3a 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h
-@@ -99,6 +99,9 @@
- 
- #define HIBMC_DP_TIMING_SYNC_CTRL		0xFF0
- 
-+#define HIBMC_DP_INTSTAT			0x1e0724
-+#define HIBMC_DP_INTCLR				0x1e0728
-+
- /* dp serdes reg */
- #define HIBMC_DP_HOST_OFFSET		0x10000
- #define HIBMC_DP_LANE0_RATE_OFFSET	0x4
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-index 98b01c8aee8e..768b97f9e74a 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c
-@@ -32,6 +32,8 @@
- 
- DEFINE_DRM_GEM_FOPS(hibmc_fops);
- 
-+static const char *g_irqs_names_map[HIBMC_MAX_VECTORS] = { "vblank", "hpd" };
-+
- static irqreturn_t hibmc_interrupt(int irq, void *arg)
- {
- 	struct drm_device *dev = (struct drm_device *)arg;
-@@ -49,6 +51,22 @@ static irqreturn_t hibmc_interrupt(int irq, void *arg)
- 	return IRQ_HANDLED;
+diff --git a/arch/loongarch/kernel/kgdb.c b/arch/loongarch/kernel/kgdb.c
+index 445c452d72a7..03ad4632e720 100644
+--- a/arch/loongarch/kernel/kgdb.c
++++ b/arch/loongarch/kernel/kgdb.c
+@@ -224,7 +224,7 @@ void kgdb_arch_set_pc(struct pt_regs *regs, unsigned long pc)
+ 	regs->csr_era = pc;
  }
  
-+static irqreturn_t hibmc_dp_interrupt(int irq, void *arg)
-+{
-+	struct drm_device *dev = (struct drm_device *)arg;
-+	struct hibmc_drm_private *priv = to_hibmc_drm_private(dev);
-+	u32 status;
-+
-+	status = readl(priv->mmio + HIBMC_DP_INTSTAT);
-+	if (status) {
-+		priv->dp.irq_status = status;
-+		writel(status, priv->mmio + HIBMC_DP_INTCLR);
-+		return IRQ_WAKE_THREAD;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int hibmc_dumb_create(struct drm_file *file, struct drm_device *dev,
- 			     struct drm_mode_create_dumb *args)
+-void arch_kgdb_breakpoint(void)
++noinline void arch_kgdb_breakpoint(void)
  {
-@@ -251,15 +269,48 @@ static int hibmc_hw_init(struct hibmc_drm_private *priv)
- 	return 0;
- }
- 
--static int hibmc_unload(struct drm_device *dev)
-+static void hibmc_unload(struct drm_device *dev)
- {
--	struct pci_dev *pdev = to_pci_dev(dev->dev);
--
- 	drm_atomic_helper_shutdown(dev);
-+}
- 
--	free_irq(pdev->irq, dev);
-+static int hibmc_msi_init(struct drm_device *dev)
-+{
-+	struct pci_dev *pdev = to_pci_dev(dev->dev);
-+	char name[32] = {0};
-+	int valid_irq_num;
-+	int irq;
-+	int ret;
- 
--	pci_disable_msi(to_pci_dev(dev->dev));
-+	ret = pci_alloc_irq_vectors(pdev, HIBMC_MIN_VECTORS,
-+				    HIBMC_MAX_VECTORS, PCI_IRQ_MSI);
-+	if (ret < 0) {
-+		drm_err(dev, "enabling MSI failed: %d\n", ret);
-+		return ret;
-+	}
-+
-+	valid_irq_num = ret;
-+
-+	for (int i = 0; i < valid_irq_num; i++) {
-+		snprintf(name, ARRAY_SIZE(name) - 1, "%s-%s-%s",
-+			 dev->driver->name, pci_name(pdev), g_irqs_names_map[i]);
-+
-+		irq = pci_irq_vector(pdev, i);
-+
-+		if (i)
-+			/* PCI devices require shared interrupts. */
-+			ret = devm_request_threaded_irq(&pdev->dev, irq,
-+							hibmc_dp_interrupt,
-+							hibmc_dp_hpd_isr,
-+							IRQF_SHARED, name, dev);
-+		else
-+			ret = devm_request_irq(&pdev->dev, irq, hibmc_interrupt,
-+					       IRQF_SHARED, name, dev);
-+		if (ret) {
-+			drm_err(dev, "install irq failed: %d\n", ret);
-+			return ret;
-+		}
-+	}
- 
- 	return 0;
- }
-@@ -291,15 +342,10 @@ static int hibmc_load(struct drm_device *dev)
- 		goto err;
- 	}
- 
--	ret = pci_enable_msi(pdev);
-+	ret = hibmc_msi_init(dev);
- 	if (ret) {
--		drm_warn(dev, "enabling MSI failed: %d\n", ret);
--	} else {
--		/* PCI devices require shared interrupts. */
--		ret = request_irq(pdev->irq, hibmc_interrupt, IRQF_SHARED,
--				  dev->driver->name, dev);
--		if (ret)
--			drm_warn(dev, "install irq failed: %d\n", ret);
-+		drm_err(dev, "hibmc msi init failed, ret:%d\n", ret);
-+		goto err;
- 	}
- 
- 	/* reset all the states of crtc/plane/encoder/connector */
-@@ -375,7 +421,7 @@ static void hibmc_pci_remove(struct pci_dev *pdev)
- 
- static void hibmc_pci_shutdown(struct pci_dev *pdev)
- {
--	drm_atomic_helper_shutdown(pci_get_drvdata(pdev));
-+	hibmc_pci_remove(pdev);
- }
- 
- static const struct pci_device_id hibmc_pci_table[] = {
-diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-index daed1330b961..274feabe7df0 100644
---- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-+++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
-@@ -22,6 +22,9 @@
- 
- #include "dp/dp_hw.h"
- 
-+#define HIBMC_MIN_VECTORS	1
-+#define HIBMC_MAX_VECTORS	2
-+
- struct hibmc_vdac {
- 	struct drm_device *dev;
- 	struct drm_encoder encoder;
+ 	__asm__ __volatile__ (			\
+ 		".globl kgdb_breakinst\n\t"	\
 -- 
-2.33.0
+2.49.0
 
