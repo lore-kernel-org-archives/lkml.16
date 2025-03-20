@@ -1,69 +1,63 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 014AC1EA7DE;
-	Thu, 20 Mar 2025 21:20:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC3321EA7DE;
+	Thu, 20 Mar 2025 21:20:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742505654; cv=none; b=O7KnIzxZRtv0quyBwP/vydFkkabXmK1qJrXsQYE2LPtTYT2aRd5Bw5kgJOuctzF6ptE9x633Cg6mJ0G403whaA0aNX53wbs19kQCbwlAFjGNy7OTD9QDsCNbimh6LwYbmwZYuIJ/Vcap/YWFh8w1QSgv+009jr3lzYb8K9Ix3Wk=
+	t=1742505657; cv=none; b=gZBXhV/Wfk06VXuhWs/LhVPQen87fK4enxIcjx/kWmahTyVGLbpOrwDf81n8a3Js8tFQPzmfX2o3cOLZq+g4puSj7daWeytOQ6de/V9YfKdwVLAjPi+VioW0Bc7yQ/mW/cGS5B4Fw/9EnJomJJXGTSO4wds+XnJIZsvFsZHZM3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742505654; c=relaxed/simple;
-	bh=+s7ZB5CBM9CcGb7PpCJcK4Lr37jqrpaUHbWPFDVwTgA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bf1Y1Qzl9iu4tnZE5/j5kVp6inuv1GvHFPrMei2k04Dma3p5u6BMkNpzi9JtxH6nh7N6lEHIr2AIl09NCDra7PPoSyrwK5A0AvqItbt6JCY8s6Q3bYf8bUyu6U0aksA4hH1z4Q8KcRiL1mzA5vIVBxwpkoeAI5XAKTJylHf3pTo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=aA516Z88; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1742505657; c=relaxed/simple;
+	bh=0CBbTIoBBF4aAI0D3E8y1fxPrPQ0h84mwobccsofjrc=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=kd/wIbzuUP+8cvYE+Fqhw+NmftVt6M0k6vT1DbEFYv4zKmBoxJT1U/hY2TR8sEdkI+k4O/3XZcxgUZ2lE2DtBZumOWQTHetwxqmWzmaceHyC+bVsp230cPcOwdFHLOeA9wmXbTXhKroq3jnEQ5cCuNgyMUzkeQRITvVZtMDNTk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=epKzaLr9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="aA516Z88"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=+UI5/kSNnDWvxYjcQDDBW5iFQFnCG/NBqKa7zfzLaO8=; b=aA516Z88ocJ1ZbpR5Vx88VqxFq
-	xq+NNe2hLJZz8N1TJ7TN86HC+bA32PanbhdX0HOqUYLPcmFuMQJMiY2QCJV6ymLJvSajp5aW3LJoC
-	EdX/5TvdyKyLJLVMFUxZuyw3whhMoamPljYS62YTDS3JLejwZKmpWQqUFzawHMw1MI5g=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1tvNJe-006W48-U2; Thu, 20 Mar 2025 22:20:38 +0100
-Date: Thu, 20 Mar 2025 22:20:38 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: hfdevel@gmx.net
-Cc: Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	FUJITA Tomonori <fujita.tomonori@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 4/7] net: phy: aquantia: add essential
- functions to aqr105 driver
-Message-ID: <075283ba-ced1-4aa8-b9ec-7bb456d1d82a@lunn.ch>
-References: <20250318-tn9510-v3a-v6-0-808a9089d24b@gmx.net>
- <20250318-tn9510-v3a-v6-4-808a9089d24b@gmx.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="epKzaLr9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9928AC4CEDD;
+	Thu, 20 Mar 2025 21:20:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742505657;
+	bh=0CBbTIoBBF4aAI0D3E8y1fxPrPQ0h84mwobccsofjrc=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=epKzaLr9sJf6CcPTfJpI0mBfIKcat7jBdTGFGqqRXlKmcevgg6o5O4IHBi2Varx+r
+	 wotaiXTY2G678YN0WbI6UiZJEzkYV6HK2XDnf3tsS5snvbqAS6BeHZ8AfDkJ0jFlvC
+	 jVhCE7I9VI7DG8sraQZUHhCFMNwPZHknmQc1VoeWoUR6GnbtlxGMKq+ngKIDyYGqx7
+	 g14MPIycXAzwkJV3rv7OBiPhq3vh+wtfY9NmXWsd+rLzCDCovNIbUtXW5asIoD7wHP
+	 4g2cHD5faYXGC2bxuSOMwL0pOgIYbwlHRBTPtP5mEfeNbt3LcssCnHr5Dwd33snMir
+	 cNw8OqvwzlaOw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADD843806654;
+	Thu, 20 Mar 2025 21:21:34 +0000 (UTC)
+Subject: Re: [GIT PULL] vfs fixes
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20250320-vfs-fixes-35ad42f81f73@brauner>
+References: <20250320-vfs-fixes-35ad42f81f73@brauner>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20250320-vfs-fixes-35ad42f81f73@brauner>
+X-PR-Tracked-Remote: git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.14-final.fixes
+X-PR-Tracked-Commit-Id: f70681e9e6066ab7b102e6b46a336a8ed67812ae
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: b5329d5a35582abbef57562f9fb6cb26a643f252
+Message-Id: <174250569334.1915575.7434340460098271366.pr-tracker-bot@kernel.org>
+Date: Thu, 20 Mar 2025 21:21:33 +0000
+To: Christian Brauner <brauner@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Christian Brauner <brauner@kernel.org>, linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318-tn9510-v3a-v6-4-808a9089d24b@gmx.net>
 
-> +static int aqr105_config_speed(struct phy_device *phydev)
-> +{
+The pull request you sent on Thu, 20 Mar 2025 16:22:48 +0100:
 
-This is used when autoneg is disabled. Generally the name would be
-_setup_forced, e.g. genphy_setup_forced(). Sticking to that naming
-convention makes is simpler to understand if you know other PHY
-drivers.
+> git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.14-final.fixes
 
-Once you have changed this, you can add my Reviewed-by:
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/b5329d5a35582abbef57562f9fb6cb26a643f252
 
-    Andrew
+Thank you!
 
----
-pw-bot: cr
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
