@@ -1,172 +1,71 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB3501DF248
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:18:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05D841E832E
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:19:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742458687; cv=none; b=MPVh2cbcTqIrMF3OpYHYMfqW9FzihTFDG37hbb8hEg5D1zbxnrXmDMwjfHK/cO2cyIk9ozYAEZ13criBm9iTkd5EDoyIlp34FbgUCvoIO//opSlbeifOqxiixw8UtUI4rWzlOLNDufsYeNsuJZmTLUNuBFRlzkkKSd1iVLfeF3w=
+	t=1742458749; cv=none; b=ovydlyU0ovqD4ykAw6dNk8jPrrTOj+5D1PSbwg6WDALbbJDVuW7MSotHGRCQZynRzCStAgjhhXJt7NTtxsAVQSzwf4AjXMh97l8gmcv9fPd5g3dIZ+vf3KyzfwZNe4UxpCGt4DH0YdZC4u3gHQNtuqV+B+8geCTBj+Ub8cZIrZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742458687; c=relaxed/simple;
-	bh=h4z+dIBpmf2izwGwuMDiHo+OLqgnEXNtCiW0C4T7hwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KquNpDX65eVezOJxnLHsjyyfl0jMMtEOQCDpqj/nWC+NUyO4W85EnmrnigTpfXX2dv2sv1UPGyHkQ4rlcvv+N5VqUyp6MRnVPIknQUM8hHoppv4dCqpobKLnIbdX8lN7++b4j8m0746JgxFhtKx4qtaRxe+bBzKCk9QnnPNER7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dHv5Fe/Z; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dHv5Fe/Z"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-394780e98easo246206f8f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:18:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742458684; x=1743063484; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=zjVQ5SOz+jm8u6D48pQ2cGM9HKLDE1RuGZARc2eKPlQ=;
-        b=dHv5Fe/ZlyM+qyPLLzlCs1xvB/L9ozUhyHjvHEaTchBwVPJ0jWxlU6pJgwMMBCSp78
-         yZlSMnaHkaXjoh+xd1S+HNnGguC46FEOI9NZjtkMt+rlvejQ2MZhfVLOepC9j68m6UMU
-         cDUl7bJOr/HSRjY3pXvP3Ir6CRP/gIqbFonqOlFOer0HixPgVS+9QW6nRt4Elylfu+Kq
-         jzX/BRGwaO3+6sba8+r+A3r4iaQvdSf9SclgkHBSY3Ouc35JAUhM61Bu06J5xZrxuTk9
-         GZs2IsMv5zpkBDLDqFx70A75KdQkVU/xraB0lUlxKqtB+xTUi4r1+xjD5vbvGGpE1iwF
-         7kVQ==
+	s=arc-20240116; t=1742458749; c=relaxed/simple;
+	bh=dQSLooTmN2HIWPJybpTzymcE+nUlDPqrg9LSn3p/eek=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=HQrPRnIf1tfv8OFlmfuJrfwc6rvL/Jr9ku6ORx+W0qaAzQXAlvP8odUb+ocQxchI+JV3Cb00UqJCLoUt9nGoNw0saNVcLT8JM4yB/YaiHvpCfX4z5Vq7Ot+k8sx/FmiG2X2oSGrzOpI7E66oeqNv/EYb5tbuR74eGdw+iSn/u50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d434c328dbso9160755ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:19:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742458684; x=1743063484;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=zjVQ5SOz+jm8u6D48pQ2cGM9HKLDE1RuGZARc2eKPlQ=;
-        b=jzX1l5Ukbba/CRcycNS/d5AhNvbej6fmvLBTcGI/zHcUI2Jn2CSAp0cGHSC5QQ0j96
-         xv/ehdT1Xq8ih8iZY4IZlHzl3H77YgKcvqNRyFPugJWtdPNk2laBX+fpbEt5iV7eJFo2
-         KUFfsR9wavPBoAF5otNHGIICwn/vYyMY8fiaGy2FkI8vnAF78xOoq3tgTugwggiOgrzZ
-         sek0e2dqfMBlpNAoYZuNYtN/wKuFDoTNQMRv6VtKmjm4+Ab95TVgynLka1SCYkSXt+jW
-         hRfWbaI0dEigbGVKQr+B2mEVPK4/M/CizQqWrmuxu8jjcZLYehLgWcIQvhAPIK/IzuWp
-         8gjg==
-X-Forwarded-Encrypted: i=1; AJvYcCVUL83dXcpAHG1nP2LhqGo9+JkdIf1r7McJBnSODF/enHqQgYsT2Ui6pkUw4TS/N6S/Uyzmdk1fjY6qv+E=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyw6+KUi90aZokfHS9NoO3EshhzL5xE1JktQ2Tij8mX5A2eY+s+
-	7acJm5QCz4cKS+ldSgDsn7KVPX0nXgmQXcg/3oLdYEdwBKknTgMK
-X-Gm-Gg: ASbGnctMek0iR1H+GspmNfvoAaaHjuk/6EMj2Mx1yv3XcgcrX9feXgK4WS3gU9EmLIL
-	n5deJov/hGcGuJDXPAdoNzwtU9XKjipjygG5JTqdW2LZgYsURlL8mzL/3754W8DV5IX9a4Rqvdt
-	Qqmg5QJcalbzL1H9VHL0pZkX+R9hySwhSOaNYMCfqNuJvFqg4R2pgKArJdFrfXiXq3tvpz6cwXk
-	sNV3iF1rJjxilH7VbBV2mOihXotNg2N4LdKQYA4rvEDGuAMuHOtoV37L4LIXfLsCpZq5NeLK6Xm
-	i42rMEIU9a8PMsbhNaTTtRyb4Q++R3y3Ul5raX5ztraKRach7LTZmnEhgeUW
-X-Google-Smtp-Source: AGHT+IGgIm07Ipnj4FQkYOCqmmroZDk4enzX0nHBxCLPbW6TYwFUSSA2fsm9mL6oryT4dBL9wlwrHw==
-X-Received: by 2002:a5d:64a8:0:b0:391:1806:e23d with SMTP id ffacd0b85a97d-399739bc113mr4512519f8f.6.1742458683554;
-        Thu, 20 Mar 2025 01:18:03 -0700 (PDT)
-Received: from egonzo (82-64-73-52.subs.proxad.net. [82.64.73.52])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb40cdafsm23245424f8f.62.2025.03.20.01.18.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 01:18:02 -0700 (PDT)
-Date: Thu, 20 Mar 2025 09:18:00 +0100
-From: Dave Penkler <dpenkler@gmail.com>
-To: Michael Rubin <matchstick@neverthere.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 00/20] Removing typedef for gpib_board
-Message-ID: <Z9vPOKAFv3Jw5l1r@egonzo>
-References: <20250319215924.19387-1-matchstick@neverthere.org>
+        d=1e100.net; s=20230601; t=1742458747; x=1743063547;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0FkZsC+86W3g9jPGh3loS/ZM0dl7YZEVEqLlCHTRhnY=;
+        b=qpNaHwCeArfM5iCF5mzMK4ObIXihx9x7uCeGsslMEjHP8nZOVHCyFtrS2jOIY02su3
+         9aD31GtSp5owL2dW9Wg9tpbUC8LGasegLK9xbXXr3W16yvG7rmBRcW3E2MP4eontk4hJ
+         LN60WZ8PVi9gWx7dQeWgzK4S+oOrSeL+dFs8H6tN9kWsC/g07YEMMWo8KXt5mr6qPZ03
+         so/pofRFpKWfSPReZe3drQTNmm37noR4+/IlSz5DurCiUOKYI8w3bdimGXybNOeBsECB
+         Yi3q+b//A8/rekSiOqVLgdlDFjsMUSH0HowSi77ImvQhdXaEdlIIR05Zv/EI6PYg1il2
+         b2/g==
+X-Forwarded-Encrypted: i=1; AJvYcCXBR2TzuPHCuk7g5Eqhq5t+qrHsUBqsiwuba52/IroufRMWHz29hknrL+V9rT70KNQXGQKq7I0QI1TLEHA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwoXFjzZhgDhbjDz4CmCoOQ96bYMPyEp/TA9mZWnQQGZFtJa0Mw
+	W5O0yBCHRNDkv5yRoc7C+u7U8jDOCr49sp1+v6iMLhVZsGpnenfi2UGBlZQpaiVvH11yg9Wbtht
+	mo5diO/ee2WSwMc9DjajT/RVkKSttKcrR2tLNX5KvEcDD5FKFsVFrRJ0=
+X-Google-Smtp-Source: AGHT+IHBHBHfCd1wdHWYTZ2r9LRa3Dj2LKb/16m3v+HxIa4TFf7nb/73CAlga1yPkZgEzbIT4nhHKljQF9D1QArJKYTQaL7Nj9CK
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319215924.19387-1-matchstick@neverthere.org>
+X-Received: by 2002:a05:6e02:1549:b0:3d3:e3fc:d5e1 with SMTP id
+ e9e14a558f8ab-3d586b1b246mr57152235ab.1.1742458747107; Thu, 20 Mar 2025
+ 01:19:07 -0700 (PDT)
+Date: Thu, 20 Mar 2025 01:19:07 -0700
+In-Reply-To: <CAMj1kXGxmGwJieicpgOcErBGaMm2=CZz9Ra6G203AobexUCyhQ@mail.gmail.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67dbcf7b.050a0220.31a16b.0009.GAE@google.com>
+Subject: Re: [syzbot] linux-next build error (20)
+From: syzbot <syzbot+06fd1a3613c50d36129e@syzkaller.appspotmail.com>
+To: ardb@kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Wed, Mar 19, 2025 at 09:59:04PM +0000, Michael Rubin wrote:
-> staging: gpib: Removing typedef for gpib_board
-> 
-> Adhering to Linux code style.
-> 
-> In general, a pointer, or a struct that has elements that can reasonably be
-> directly accessed should never be a typedef.
-> 
-> * Patch 1: struct typing for gpib_board
-> 
->   Introduces struct gpib_board replacing gpib_board_t
-> 
-> * Patch 2 - Patch 18
-> 
->   Adopting "struct gpib_board" as opposed to "gpib_board_t" for each
->   subsystem in gpib.
-> 
->   *  staging: gpib: agilent_82350b: struct gpib_board
->   *  staging: gpib: agilent_82357a: struct gpib_board
->   *  staging: gpib: cb7210: struct gpib_board
->   *  staging: gpib: cec_gpib: struct gpib_board
->   *  staging: gpib: common: struct gpib_board
->   *  staging: gpib: eastwood: struct gpib_board
->   *  staging: gpib: fmh_gpib: struct gpib_board
->   *  staging: gpib: gpio: struct gpib_board
->   *  staging: gpib: hp2335: struct gpib_board
->   *  staging: gpib: hp_82341: struct gpib_board
->   *  staging: gpib: ines: struct gpib_board
->   *  staging: gpib: lpvo_usb_gpib: struct gpib_board
->   *  staging: gpib: nec7210 struct gpib_board
->   *  staging: gpib: ni_usb_gpib: struct gpib_board
->   *  staging: gpib: pc2: struct gpib_board
->   *  staging: gpib: tms9914: struct gpib_board
->   *  staging: gpib: tnt4882: struct gpib_board
-> 
-> * Patch 19: staging: gpib: struct typing for gpib_gboard_t
-> 
->   Adopting "struct gbip_board" as opposed to "gpib_board_t" for include files.
-> 
-> * Patch 20: staging: gpib: Removing typedef for gpib_board
-> 
->   Removing typedef for gpib_board_t
-> 
-> Michael Rubin (20):
->   staging: gpib: struct typing for gpib_board
->   staging: gpib: agilent_82350b: struct gpib_board
->   staging: gpib: agilent_82357a: struct gpib_board
->   staging: gpib: cb7210: struct gpib_board
->   staging: gpib: cec_gpib: struct gpib_board
->   staging: gpib: common: struct gpib_board
->   staging: gpib: eastwood: struct gpib_board
->   staging: gpib: fmh_gpib: struct gpib_board
->   staging: gpib: gpio: struct gpib_board
->   staging: gpib: hp2335: struct gpib_board
->   staging: gpib: hp_82341: struct gpib_board
->   staging: gpib: ines: struct gpib_board
->   staging: gpib: lpvo_usb_gpib: struct gpib_board
->   staging: gpib: nec7210 struct gpib_board
->   staging: gpib: ni_usb_gpib: struct gpib_board
->   staging: gpib: pc2: struct gpib_board
->   staging: gpib: tms9914: struct gpib_board
->   staging: gpib: tnt4882: struct gpib_board
->   staging: gpib: struct typing for gpib_gboard_t
->   staging: gpib: Removing typedef for gpib_board
-> 
->  .../gpib/agilent_82350b/agilent_82350b.c      |  99 +++++----
->  .../gpib/agilent_82357a/agilent_82357a.c      |  85 ++++----
->  drivers/staging/gpib/cb7210/cb7210.c          | 107 +++++-----
->  drivers/staging/gpib/cec/cec_gpib.c           |  59 +++---
->  drivers/staging/gpib/common/gpib_os.c         | 196 +++++++++---------
->  drivers/staging/gpib/common/iblib.c           |  50 ++---
->  drivers/staging/gpib/common/ibsys.h           |  14 +-
->  drivers/staging/gpib/eastwood/fluke_gpib.c    |  93 +++++----
->  drivers/staging/gpib/fmh_gpib/fmh_gpib.c      | 122 +++++------
->  drivers/staging/gpib/gpio/gpib_bitbang.c      |  72 +++----
->  drivers/staging/gpib/hp_82335/hp82335.c       |  56 ++---
->  drivers/staging/gpib/hp_82341/hp_82341.c      |  68 +++---
->  drivers/staging/gpib/include/gpibP.h          |  10 +-
->  drivers/staging/gpib/include/gpib_proto.h     |  58 +++---
->  drivers/staging/gpib/include/gpib_types.h     |  58 +++---
->  drivers/staging/gpib/include/nec7210.h        |  58 +++---
->  drivers/staging/gpib/include/tms9914.h        |  52 ++---
->  drivers/staging/gpib/ines/ines.h              |  54 ++---
->  drivers/staging/gpib/ines/ines_gpib.c         | 111 +++++-----
->  .../gpib/lpvo_usb_gpib/lpvo_usb_gpib.c        |  66 +++---
->  drivers/staging/gpib/nec7210/nec7210.c        |  76 +++----
->  drivers/staging/gpib/ni_usb/ni_usb_gpib.c     |  70 +++----
->  drivers/staging/gpib/pc2/pc2_gpib.c           |  68 +++---
->  drivers/staging/gpib/tms9914/tms9914.c        |  66 +++---
->  drivers/staging/gpib/tnt4882/tnt4882_gpib.c   | 100 ++++-----
->  25 files changed, 947 insertions(+), 921 deletions(-)
-> 
-> -- 
-> 2.43.0
-> 
-Acked-By: Dave Penkler <dpenkler@gmail.com>
+Hello,
+
+syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+
+Reported-by: syzbot+06fd1a3613c50d36129e@syzkaller.appspotmail.com
+Tested-by: syzbot+06fd1a3613c50d36129e@syzkaller.appspotmail.com
+
+Tested on:
+
+commit:         ff7f9b19 Add linux-next specific files for 20250319
+git tree:       linux-next
+kernel config:  https://syzkaller.appspot.com/x/.config?x=4bdd42b70d1ca0a
+dashboard link: https://syzkaller.appspot.com/bug?extid=06fd1a3613c50d36129e
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=174fe004580000
+
+Note: testing is done by a robot and is best-effort only.
