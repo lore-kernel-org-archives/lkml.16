@@ -1,157 +1,127 @@
-Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7984D135A53;
-	Thu, 20 Mar 2025 08:35:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77CCB20FA90;
+	Thu, 20 Mar 2025 08:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742459722; cv=none; b=EMvvw6yOUhmTFWac0XaOWqBsFyp9/xzWiIwBJC8XjYF7Kt4/+uVHSp36B/1s/4BDCTt9f9NOB9t8zDVcV/Pp/Qs7dIE37YL2VKeJXfphHQA47id/4YEnWF0dCF3M8o85ktYOJlqFF0HgRXyG6ERDTPICg6hxcSW/xzXqoCOuv/o=
+	t=1742459747; cv=none; b=hLfOPMWXk6UiY8Bu7G3OYX0LxvKpm+Spnl39s8IKXhMqE8fw8a/Al6y8gGbkWeqIIuPnRK2tTFmTZAXVxIQcdQlMH0ikz3I6ljiL2G/VktaQ2OL3Gb6igOpUSkszMh2ODn8j3oqUx5tLgwQ39+6l4VT6gUPxgtzPwVB9PiI2qFA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742459722; c=relaxed/simple;
-	bh=sUziqnDx5HipdXEQZzKdU/xJa6kyN7gQKQ+NgAfVeEU=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=Lh1Vkfd7e/M7y6M0ZQ85anHZDQjOsDJa1jPrxB8JzBn+WOzsLpW1oWLY6Nl3g1apyaNDGEjOqqSCuSFU0XP0vQMIW/NZg8N60obpRtTqddMCSNCTdT7Z+OobX7w7urZHuOKGaaRnsGtUX1aeX+4w4lSYtUlse2UEFqBnzJnhSkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Vs2Zs7IE; arc=none smtp.client-ip=217.70.183.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742459747; c=relaxed/simple;
+	bh=Fi+/sL/HB7rD5Vc5usDgoiW1Oe/Vw1Swp0WgOewHlmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QwMIEP08vAPjD1IiaonSdjCQFkoHQBsk654j+tU8A2Y/cACVCPvhCz3Llhj+W+C4ys1+5xrTQx5lu6ytDHodEzmMSDfmWNz7G4oxJW5+sMqvaHkOVOaJVHWVFux+ugLQjrq2majocsB91FZXbtuiMZC4dU+NKMTaiuesSQEeRC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I7VOgy6t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Vs2Zs7IE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 63F1E44352;
-	Thu, 20 Mar 2025 08:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742459716;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=akGvbcc/DlR2ufwKb6VM3ncFhbuTbmowB2fKkrdI8X0=;
-	b=Vs2Zs7IEPUnrYZWWQRTcAjYTOYWWnkRbgrKvEU4tI1weTDrwLQd4wPE7ZDzmJKE90Ie4gD
-	oiSV5oiBE1AeC6xRrpAmsRJu7nkHKa2ObeAlOfjz0xjz5MtGs9Yth5fSFLyLD/Fgpu87qJ
-	iyfXg464IGz39lN7lIB1npGQBBed6W1dkioQvarDVMN5sTtQOw6rX+LB4k0/pcAuqh2Awc
-	sF4hHRFk6vNNybfj4F9aXJBRagYyhXJvgRybpKtANdkjJGKZl0llddqEQwFq/uNrfJPwnX
-	KjN4DAMMb4+/k2zAtRvsQNIUF2n8KRrvWcZ25vLbBfZWuuy/FfQI+vMEf/FN1A==
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I7VOgy6t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B86DCC4CEEC;
+	Thu, 20 Mar 2025 08:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742459747;
+	bh=Fi+/sL/HB7rD5Vc5usDgoiW1Oe/Vw1Swp0WgOewHlmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I7VOgy6tfCHbABO0CGULJ8EYynSLFNdNXzP9fKTvU1m8bbJpGSB45IUuELwoiHAI4
+	 xano06wJvgouG9j4DOz/n3Ky9fWtqyk5OZhxDLsLQ57SkvKKKtHLdJIORsgn0aq8X/
+	 y8fGoAVEgz6Fm/HidSov+MV1J/ayJ/Mu83lIwfreV+QKmq7vicrjsVu1oJXxnxu0J/
+	 ZyM/H0tBOkXUANONwi15x+Jkp46/hgn//TEDiYetlfeM/4dhERsBPXDYKOPZEPc4rz
+	 0sKXXtevId7M+aiRNJPd/UVEibDBP5C6Qti1+czXqJKJTzvGz0D64CramVwLnUR4g/
+	 haA06zXU99XUA==
+Date: Thu, 20 Mar 2025 09:35:43 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: David Heidelberg <david@ixit.cz>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Mailing List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Johannes Berg <johannes@sipsolutions.net>, 
+	Lorenzo Bianconi <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>, 
+	=?utf-8?B?SsOpcsO0bWU=?= Pouiller <jerome.pouiller@silabs.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Mailing List <devicetree-spec@vger.kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Janne Grunau <j@jannau.net>
+Subject: Re: [PATCH v4 1/5] dt-bindings: net: Add network-class schema for
+ mac-address properties
+Message-ID: <20250320-cocky-proficient-alligator-5da8a2@krzk-bin>
+References: <20250319-dt-bindings-network-class-v4-0-2329336802b4@ixit.cz>
+ <20250319-dt-bindings-network-class-v4-1-2329336802b4@ixit.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 20 Mar 2025 09:35:15 +0100
-Message-Id: <D8KYF2DZOBT4.1337YU51E0ZKH@bootlin.com>
-Subject: Re: [PATCH v5 06/11] gpio: regmap: Allow to allocate regmap-irq
- device
-Cc: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: "Michael Walle" <mwalle@kernel.org>, "Lee Jones" <lee@kernel.org>, "Rob
- Herring" <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>,
- "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
- <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
- <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>
-X-Mailer: aerc 0.18.2-0-ge037c095a049
-References: <20250318-mdb-max7360-support-v5-0-fb20baf97da0@bootlin.com>
- <20250318-mdb-max7360-support-v5-6-fb20baf97da0@bootlin.com>
- <D8K23TCWC5TO.3T1YPKL3G0OY5@kernel.org>
-In-Reply-To: <D8K23TCWC5TO.3T1YPKL3G0OY5@kernel.org>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeejjeegucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegvtdgrmegrieeimeefudektdemtgdtsggvmegslegrkeemvgehledvmeeirgeffhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvrgdtudemvgdtrgemrgeiieemfedukedtmegttdgsvgemsgelrgekmegvheelvdemiegrfehfpdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvvddprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepr
- hhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250319-dt-bindings-network-class-v4-1-2329336802b4@ixit.cz>
 
-On Wed Mar 19, 2025 at 8:15 AM CET, Michael Walle wrote:
-> Hi,
->
-> > GPIO controller often have support for IRQ: allow to easily allocate
-> > both gpio-regmap and regmap-irq in one operation.
-> >
-> > Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com=
->
-> > ---
-> >  drivers/gpio/gpio-regmap.c  | 23 +++++++++++++++++++++--
-> >  include/linux/gpio/regmap.h | 15 +++++++++++++++
-> >  2 files changed, 36 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-> > index 05f8781b5204..61d5f48b445d 100644
-> > --- a/drivers/gpio/gpio-regmap.c
-> > +++ b/drivers/gpio/gpio-regmap.c
-> > @@ -203,6 +203,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_get_drvdata);
-> >   */
-> >  struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_conf=
-ig *config)
-> >  {
-> > +	struct irq_domain *irq_domain;
-> >  	struct gpio_regmap *gpio;
-> >  	struct gpio_chip *chip;
-> >  	int ret;
-> > @@ -280,8 +281,26 @@ struct gpio_regmap *gpio_regmap_register(const str=
-uct gpio_regmap_config *config
-> >  	if (ret < 0)
-> >  		goto err_free_gpio;
-> > =20
-> > -	if (config->irq_domain) {
-> > -		ret =3D gpiochip_irqchip_add_domain(chip, config->irq_domain);
-> > +	irq_domain =3D config->irq_domain;
-> > +#ifdef CONFIG_GPIOLIB_IRQCHIP
->
-> Why do we need this ifdef?
->
+On Wed, Mar 19, 2025 at 08:42:46AM +0100, David Heidelberg wrote:
+> From: Janne Grunau <j@jannau.net>
+> 
+> The ethernet-controller schema specifies "mac-address" and
+> "local-mac-address" but other network devices such as wireless network
+> adapters use mac addresses as well.
+> The Devicetree Specification, Release v0.3 specifies in section 4.3.1
+> a generic "Network Class Binding" with "address-bits", "mac-address",
+> "local-mac-address" and "max-frame-size". This schema specifies the
+> "address-bits" property and moves the remaining properties over from
+> the ethernet-controller.yaml schema.
+> 
+> The "max-frame-size" property is used to describe the maximal payload
+> size despite its name. Keep the description from ethernet-controller
+> specifying this property as MTU. The contradictory description in the
+> Devicetree Specification is ignored.
+> 
+> Signed-off-by: Janne Grunau <j@jannau.net>
 
-Hum yes, on second thought we probably need to depend on
-CONFIG_REGMAP_IRQ here.
+Incorrect DCO chain, missing SoB.
 
-> > +	if (config->regmap_irq_chip) {
-> > +		struct regmap_irq_chip_data *irq_chip_data;
-> > +
-> > +		ret =3D devm_regmap_add_irq_chip_fwnode(config->parent, dev_fwnode(c=
-onfig->parent),
-> > +						      config->regmap, config->regmap_irq_irqno,
-> > +						      config->regmap_irq_flags, 0,
-> > +						      config->regmap_irq_chip, &irq_chip_data);
-> > +		if (ret)
-> > +			goto err_free_gpio;
-> > +
-> > +		irq_domain =3D regmap_irq_get_domain(irq_chip_data);
-> > +		if (config->regmap_irq_chip_data)
-> > +			*config->regmap_irq_chip_data =3D irq_chip_data;
->
-> I'm not a fan of misusing the config to return any data. Can we have
-> a normal gpio_regmap_get_...()? Usually, the config is on the stack
-> of the caller, what if you need to get irq_chip_data afterwards?
-> Then your caller has to save it somewhere.
->
+...
 
-Yes, makes sense. As suggested by Andy Shevchenko, I will remove this
-parameter as there is no user today: a way to retrieve it can be added
-later if needed.
+> +  - Devicetree Specification Mailing List <devicetree-spec@vger.kernel.org>
+> +
+> +properties:
+> +  address-bits:
+> +    description:
+> +      Specifies number of address bits required to address the device described
 
-> Also, what is the advantage of this? Your caller doesn't have to
-> call devm_regmap_add_irq_chip_fwnode(), but on the flip side you
-> have to cram all its parameters in the gpio_regmap config. I'd like
-> to keep that small and simple (but still extensible!). IMHO just
-> setting the irq_domain is enough to achieve that.
+"Specifies number of address bits required to address the device
+described by this node, e.g. size of the MAC address."
 
-This was a request from Andy on my previous series.
+And drop the second sentence.
 
->
-> -michael
->
+> +      by this node. This property specifies number of bits in MAC address.
+> +    default: 48
+> +    const: 48
+> +
 
-Thanks for your review.
-Mathieu
+...
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +  mac-address:
+> +    description:
+> +      Specifies the MAC address that was last used by the boot program. This
+> +      property should be used in cases where the MAC address assigned to the
+> +      device by the boot program is different from the
+> +      local-mac-address property. This property shall be used only if the value
+> +      differs from local-mac-address property value.
+> +    $ref: /schemas/types.yaml#/definitions/uint8-array
+> +    minItems: 6
+> +    maxItems: 6
+> +
+> +  max-frame-size:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description:
+> +      Maximum transfer unit (IEEE defined MTU), rather than the
+> +      maximum frame size (there\'s contradiction in the Devicetree
+> +      Specification).
+> +
+> +
+
+Just one blank line
+
+> +additionalProperties: true
+> 
+
+Best regards,
+Krzysztof
 
