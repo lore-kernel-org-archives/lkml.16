@@ -1,101 +1,159 @@
-Received: from dggsgout12.his.huawei.com (dggsgout12.his.huawei.com [45.249.212.56])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BF2078F20
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97CB017A2E3
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742439176; cv=none; b=LlfoKbrMutzV8PgE0QzXV1HoWxQSde2ALQQAK4p8gEQb8/gFytjClxXktNhXJENkZf6I8XSKgRQZ+KYD2R0PGP8UO5K+cD5A98zUE5U6PvsNvv7wEFfQIoRTvExhzzTvFqveIVaHk905NXkgZusipfTU9pgBjHYsvazZ2w3v2jw=
+	t=1742439176; cv=none; b=XxGlAl7vtlJ9HwvWzYaieY4ej9BcIHDZh5VZxA7bN2JUWgYiFmMXXPWo+0xzB7JvsKTuLYwg/s2Sz8fFFD7vX/0Glg6tifnf4r/RwENdzd07TQKtDZvADHiMSaL0WylRcf1zDNDSJgsjLCZIhnnuTMpDAt4GxBWmcjevdywxqzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742439176; c=relaxed/simple;
-	bh=nswgk7yAfPznam4vgmJZCVxardMppDsT1htfrtHksyg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rEb89eokai1OqhnH8PQDKFCLktGKTksSOx16D7niM66PbcJkAMoRZcoTCCp3XaR88GDC/h3OWfusax8rQ1HGf6y72LiuBpWxGMBL5MKbTea6nFT+uxijW7g9uWtXInhvzeeor7RApTdG+1mDOiJ4K9X5/kOXZcv1u8berWaV/iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout12.his.huawei.com (SkyGuard) with ESMTP id 4ZJ9976lt0z4f3jcp
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:27 +0800 (CST)
-Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 9EA251A06DC
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:50 +0800 (CST)
-Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHW8X_gttnYGGmGw--.42197S7;
-	Thu, 20 Mar 2025 10:52:50 +0800 (CST)
-From: Kemeng Shi <shikemeng@huaweicloud.com>
-To: akpm@linux-foundation.org
-Cc: kasong@tencent.com,
-	tim.c.chen@linux.intel.com,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/8] mm: swap: drop last SWAP_MAP_SHMEM flag in batch in swap_entries_put_nr()
-Date: Thu, 20 Mar 2025 19:48:26 +0800
-Message-Id: <20250320114829.25751-6-shikemeng@huaweicloud.com>
-X-Mailer: git-send-email 2.30.0
-In-Reply-To: <20250320114829.25751-1-shikemeng@huaweicloud.com>
-References: <20250320114829.25751-1-shikemeng@huaweicloud.com>
+	bh=vg4+ggxmuzeKTljMhEG1Oo/JmSE8/6fLfiQV1X3qNsY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AJ2CtmcCQJPxuyG5OyvjiWto02OwcYNtDCLIFgoGwWg6lbNkka3qBOdApTx8VYQlcy8IJ7S1lHr9gZDUX18VPgVWtxeQM8LXW2Tj1P9sOlpH4ASfLky/rnwf9K2ZbAsn3St9YMBS8lLcBURR7lfEAlMacNROFk/gxG7BXRwh76c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=N3ccJmrU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="N3ccJmrU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742439173;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=llxsDGyF5OTS0kLxtrZq1xxBUU0ow8OofIklAK3fpNU=;
+	b=N3ccJmrUh2Qv6PDYr1LkgrCeJNaj+nfS8IbXJVZV8WJczUgHZmvarH0oeF5hyU0gP8Bgjh
+	YUdWeycoMUthhT7ppotbZ3XqXjWDZR5s+5LdktA+xs3xlkcEA9/v7PmAXKM3Gt6K/tUGiH
+	mr18kvPDfpIaTdKRkzeRjQvF0B5ETMA=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-121-BuMgurEROi-9O3Ip2yolXw-1; Wed,
+ 19 Mar 2025 22:52:49 -0400
+X-MC-Unique: BuMgurEROi-9O3Ip2yolXw-1
+X-Mimecast-MFC-AGG-ID: BuMgurEROi-9O3Ip2yolXw_1742439167
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 74EC41800875;
+	Thu, 20 Mar 2025 02:52:46 +0000 (UTC)
+Received: from localhost (unknown [10.72.112.30])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id E66BA180174E;
+	Thu, 20 Mar 2025 02:52:42 +0000 (UTC)
+Date: Thu, 20 Mar 2025 10:52:38 +0800
+From: Baoquan He <bhe@redhat.com>
+To: steven chen <chenste@linux.microsoft.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+	roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+	eric.snowberg@oracle.com, ebiederm@xmission.com,
+	paul@paul-moore.com, code@tyhicks.com, bauermann@kolabnow.com,
+	linux-integrity@vger.kernel.org, kexec@lists.infradead.org,
+	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
+	madvenka@linux.microsoft.com, nramas@linux.microsoft.com,
+	James.Bottomley@hansenpartnership.com, vgoyal@redhat.com,
+	dyoung@redhat.com
+Subject: Re: [PATCH v10 7/8] ima: make the kexec extra memory configurable
+Message-ID: <Z9uC9g+UaVAA/0tY@MiWiFi-R3L-srv>
+References: <20250318010448.954-1-chenste@linux.microsoft.com>
+ <20250318010448.954-8-chenste@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAHW8X_gttnYGGmGw--.42197S7
-X-Coremail-Antispam: 1UD129KBjvJXoWrKF1Dtry5ur18tryxAw1kKrg_yoW8Jr18pF
-	4Fq34DKF48tr17AFW7A3Z8Cry5Kr1vkF1Yqry7G34fA3s5tw45u3s2yayrA3WjqFnYyFyY
-	g3ZFgryxuFyvqrUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
-	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
-	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
-	AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
-	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	s3kuDUUUU
-X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318010448.954-8-chenste@linux.microsoft.com>
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-The SWAP_MAP_SHMEM indicates last map from shmem. Therefore we can drop
-SWAP_MAP_SHMEM in batch in similar way to drop last ref count in batch.
+On 03/17/25 at 06:04pm, steven chen wrote:
+> The extra memory allocated for carrying the IMA measurement list across
+> kexec is hard-coded as half a PAGE.  Make it configurable.
+> 
+> Define a Kconfig option, IMA_KEXEC_EXTRA_MEMORY_KB, to configure the
+> extra memory (in kb) to be allocated for IMA measurements added during
+> kexec soft reboot.  Ensure the default value of the option is set such
+> that extra half a page of memory for additional measurements is allocated
+> for the additional measurements.
+> 
+> Update ima_add_kexec_buffer() function to allocate memory based on the
+> Kconfig option value, rather than the currently hard-coded one.
+> 
+> Suggested-by: Stefan Berger <stefanb@linux.ibm.com>
+> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+> Signed-off-by: steven chen <chenste@linux.microsoft.com>
+> Reviewed-by: Stefan Berger <stefanb@linux.ibm.com>
+> Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
+> ---
+>  security/integrity/ima/Kconfig     | 10 ++++++++++
+>  security/integrity/ima/ima_kexec.c | 16 +++++++++++-----
+>  2 files changed, 21 insertions(+), 5 deletions(-)
+> 
+> diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> index 475c32615006..d73c96c3c1c9 100644
+> --- a/security/integrity/ima/Kconfig
+> +++ b/security/integrity/ima/Kconfig
+> @@ -321,4 +321,14 @@ config IMA_DISABLE_HTABLE
+>  	help
+>  	   This option disables htable to allow measurement of duplicate records.
+>  
+> +config IMA_KEXEC_EXTRA_MEMORY_KB
+> +	int "Extra memory for IMA measurements added during kexec soft reboot"
+> +	depends on IMA_KEXEC
+> +	default 0
 
-Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
-Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
----
- mm/swapfile.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+Is there range for this memory, e.g [0, max] and max will be a value
+according to our current perception?
 
-diff --git a/mm/swapfile.c b/mm/swapfile.c
-index e83519fbd40e..6f11619665e8 100644
---- a/mm/swapfile.c
-+++ b/mm/swapfile.c
-@@ -192,7 +192,7 @@ static bool swap_is_last_map(struct swap_info_struct *si,
- 	unsigned char *map_end = map + nr_pages;
- 	unsigned char count = *map;
- 
--	if (swap_count(count) != 1)
-+	if (swap_count(count) != 1 && swap_count(count) != SWAP_MAP_SHMEM)
- 		return false;
- 
- 	while (++map < map_end) {
-@@ -1479,7 +1479,10 @@ static bool swap_entries_put_nr(struct swap_info_struct *si,
- 	unsigned char count;
- 	int i;
- 
--	if (nr <= 1 || swap_count(data_race(si->swap_map[offset])) != 1)
-+	if (nr <= 1)
-+		goto fallback;
-+	count = swap_count(data_race(si->swap_map[offset]));
-+	if (count != 1 && count != SWAP_MAP_SHMEM)
- 		goto fallback;
- 	/* cross into another cluster */
- 	if (nr > SWAPFILE_CLUSTER - offset % SWAPFILE_CLUSTER)
--- 
-2.30.0
+> +	help
+> +	  IMA_KEXEC_EXTRA_MEMORY_KB determines the extra memory to be
+> +	  allocated (in kb) for IMA measurements added during kexec soft reboot.
+> +	  If set to the default value of 0, an extra half page of memory for those
+> +	  additional measurements will be allocated.
+> +
+>  endif
+> diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+> index c390c745f882..0f214e41dd33 100644
+> --- a/security/integrity/ima/ima_kexec.c
+> +++ b/security/integrity/ima/ima_kexec.c
+> @@ -131,6 +131,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  				  .buf_min = 0, .buf_max = ULONG_MAX,
+>  				  .top_down = true };
+>  	unsigned long binary_runtime_size;
+> +	unsigned long extra_memory;
+>  
+>  	/* use more understandable variable names than defined in kbuf */
+>  	size_t kexec_buffer_size = 0;
+> @@ -138,15 +139,20 @@ void ima_add_kexec_buffer(struct kimage *image)
+>  	int ret;
+>  
+>  	/*
+> -	 * Reserve an extra half page of memory for additional measurements
+> -	 * added during the kexec load.
+> +	 * Reserve extra memory for measurements added during kexec.
+>  	 */
+> -	binary_runtime_size = ima_get_binary_runtime_size();
+> +	if (CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB <= 0)
+> +		extra_memory = PAGE_SIZE / 2;
+> +	else
+> +		extra_memory = CONFIG_IMA_KEXEC_EXTRA_MEMORY_KB * 1024;
+> +
+> +	binary_runtime_size = ima_get_binary_runtime_size() + extra_memory;
+> +
+>  	if (binary_runtime_size >= ULONG_MAX - PAGE_SIZE)
+>  		kexec_segment_size = ULONG_MAX;
+>  	else
+> -		kexec_segment_size = ALIGN(ima_get_binary_runtime_size() +
+> -					   PAGE_SIZE / 2, PAGE_SIZE);
+> +		kexec_segment_size = ALIGN(binary_runtime_size, PAGE_SIZE);
+> +
+>  	if ((kexec_segment_size == ULONG_MAX) ||
+>  	    ((kexec_segment_size >> PAGE_SHIFT) > totalram_pages() / 2)) {
+>  		pr_err("Binary measurement list too large.\n");
+> -- 
+> 2.25.1
+> 
+> 
 
