@@ -1,235 +1,188 @@
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2A5E1EB195
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:56:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79BE1DE3B1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:57:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742486195; cv=none; b=sdlIDLL5DDaevM3SMysvFnLEIyYWvotvXXTcSmKPabDXbEfHL3gRq0BnGVM9/0/r3WmqoL8Otla1AlwfdfcDsnUQquYPVO8BArQvm9Wcl92JRwda9wMqJe4qhZYWAMAKWDzzRRvEsPlRQc1TiJgQzs1BV1L+R6TRRpfr+YPASt4=
+	t=1742486280; cv=none; b=XZv2jE3TLIAzN6TcdYTOM54Lo/nxkqh+F8d8w+3oVxInjI+tTvEoUZ3g1YowQB0SUJ2FZa7cueyQbuTyZxYA6ngyl4iM/FFWYPI7e+WofKW8qHilnzaBEfBWMx5N734Pmn02XmOqG2mFavFhXQPqPpOoL0YvLjuqF7XZMXkx1/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742486195; c=relaxed/simple;
-	bh=Pg+8432XIY1RmD3o7Gs+WGJlVnBjwftYIj/Xx29MjkY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oic8Qzjw36635ANoE/E2GwkOzYMnKGphiwXgoYjsNQ9EfdxP2k2/yVjEFEm44u07N5c+Cse9nec/uYeH95ph7drsqHqW563RTp/ufmyYxi+zIZc24+ph/bcLq1TSQiGAj7tMhrrJ5xbTQO7a2b7VRJcHmYkbN094ijh5Gmoc/9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=UkFNKTiT; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1742486280; c=relaxed/simple;
+	bh=1HG1R5pgnE3jTOBFHjrcrx5hNP55t9mVMYMylghCRyY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HQJ4EdzWEQ/wBgeGdKjOjQHNCGtCk9OyKsQ/0WQsrw89jGcUbwOAGSz14JsYqv/fS6EG1J+8cBlLmV39dzDsAY+puVKXPYCdlY+kVI5rxjVdrli7B46mf3VzTYI4B4+CFit+dsPh20BC6zkQzE4/vYyYd/eNfAzLy8pLhYnCqGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=NthndX+4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="UkFNKTiT"
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30613802a6bso9989631fa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:56:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742486192; x=1743090992; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8n8TNAgQeXDINcAz9ek7HcTAkZoaBTVAa+vhgGh7zC8=;
-        b=UkFNKTiTk2jcOiBYGxDE9VX2UvjeBF8GiKO6NUAylRBDnP0mLMC86FkXN2uKPke7gV
-         Q40snUHHAMqDQGeupeqw0sPFHt+A7Xw0xiPWsn4mgDCeZ3Oc3FlZEsdXDgBXoEe96HJ+
-         21aoEGr9sUc2j742dizqI8m9gkdMTgrv39bkqNoNo9Fb+b3ye9RljZtQTvySh1/HYvXs
-         fCdxISB+cAKyL5nl6DWmcPEEJ+oTdoXWbqoB5xxFK1ZmtANwIHiN8jaN+J/vhWb4g4Yj
-         cWnzh+j1HJxAgphKj4gByYlrywmbgJ0FGaFflM2mvj/FHEf0cTEnnAKnDgO5V58ZXHuR
-         Uvhg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="NthndX+4"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52KDoS5a005934
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:57:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	7EAFxyWTIXD2IGnfq82GcLshDDFop+FScfu6PliKyoE=; b=NthndX+41AkrKXLN
+	gpUbr94ve4On6PUCVFGcAM3MJROe6ttkTe/PXJ8HkV0A02OLjHwqfCXx1mbUPM1F
+	RQ1XMQGAi/fdziCTqePEOP5AyIZXlXeAue1a41M9hB7iF3pc72Ceh3pS1Au0ON1B
+	g7g/LTKZneQ//e+yvUdNbI6Mqe+986IJ32+085KLp4yuTT69TyqBOZyYmzbx4euK
+	S4+HS5I4pnGkEH7Mgd7jg5P6BBfI9VSXqJG5FKfkqDzyq+uE+CVMiYxl+VKHG4TV
+	xQjM8bJ4f2Vave56zP4SSwKR3ceB/ni+Bx4Tk0ml3HZw2tmQPnDwbTa6UwHva9AW
+	08h+lA==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45etmc282a-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:57:57 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-22403329f9eso12034245ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:57:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742486192; x=1743090992;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8n8TNAgQeXDINcAz9ek7HcTAkZoaBTVAa+vhgGh7zC8=;
-        b=s4aYrMoWfde3wwU8/PV1gs4JF9VawHo+vLNorQs23UsjqxagZPu2z4YUDIAWdg2OEf
-         O9hPY3Afnm82+uk0AGw6/sau6PsK1BdgtAt0BdZFOOV/SzCW+c/UpoH6BRRh2FXckyNm
-         tdj3TSe+8td24ZHLCTlYnhntHjQ7mJUt3FID+1PBA4R15n+4S0ubjPsZ98GHAg1w7Bgu
-         jgRHnER629E7bxCQyKKOnT7uiDclFcBVxeB/2mpu8grH0lDgIybruUUDkkLJ1kUCW04R
-         MwI2DhISiOqPBIwBnh5CVHBIm9956Dn/idVxdSCJVl/dJtqvUuPSKGgmgRHhvRAtejkb
-         t/xA==
-X-Forwarded-Encrypted: i=1; AJvYcCXf5TOx94uJYkSdLx4G1SpiCrQmK5shFH4yAB/5vrprbeWiYaDfjj4PR/lv4JEwjxrHZ9J/KWk4raDf7dc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrxioLqlkzuACz237wR2Tgl5IN9ceK1jdjIi6ze3tGeDVtTMEv
-	48lqVO3j4H/VtWkkL+JOj+AcxDLZl4o7J0ZOstaMl8bEpwUfH3eucVfAjAXiRnJB09dlQaZd1XE
-	pUs6Ij/reRp4bDJdK+AfX/M/HI8MbOEf+8t0csw==
-X-Gm-Gg: ASbGncvH3CAHmVPgLMhO3NESi+qVYeNbkN5S4gRi2lPV89FRKISKoH+JrrBoUHY1rCZ
-	hfRX9Msp7KctPahQ/wOFPqG07tuJYfaVeXVhdBsCgvoA8wtNB9yL1Hm2ldG9fQacGG7NZbqSpED
-	glbPsfl5bH2fO9tmOrs8l0HjbRSgmqw8lrB4p7onf87Sg9RP59C9JivUAdUaqMhBkB2DSB
-X-Google-Smtp-Source: AGHT+IGTwvnzBedelgYeIG2XIlrHeQ96Vy3zCeIi71ifL5+oZNFvcJoCUD0BJMTuIVRe2FGR3+BTabWjimKS/VvsbXc=
-X-Received: by 2002:a2e:b8d6:0:b0:30b:edfc:5d8a with SMTP id
- 38308e7fff4ca-30d6a1efadbmr34464451fa.0.1742486191822; Thu, 20 Mar 2025
- 08:56:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742486276; x=1743091076;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7EAFxyWTIXD2IGnfq82GcLshDDFop+FScfu6PliKyoE=;
+        b=AdgoufjPPyeM894kaTqQwsdCk+MYxno4GjIhulYvLLG++7quFFgcVekl3awERT6URU
+         +wzxkRhW94UXHB8LyLxe3ApRhMbPOLrL2cpDbzaPIqgseJGV7FahEY3X+O9LuEr9HmAt
+         7DKUwtm6IDL/+VtA2GDGkecXZzyDxJa5qj/VzbGTYMaFvAFmVwBZ6nu75P0OwPZN8pw7
+         WSrSZt1MS34jl3ouZyMSjePHTYWhB5xusA3lfU2hsoj96IHqMtDkRdaemDeYnXLpqeP2
+         O4zZVbh8deuGUNhm4Qnftu24t9tmXEpkOBI0fNUIRtnLDC4a+27vLnEcuaHK3g9+WbHC
+         DcPw==
+X-Forwarded-Encrypted: i=1; AJvYcCVCjxlvtyIn8+B1RlGlmV7KRBEs9tUZQsfGtmOie5YqH9ekYZPUunjzn4dDzJP+fCYYgyJcDXQAZBoXzj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxdctF6/5bEP1TDz0a3OwO0gvY3nt3trtwoiGuvjf+eP99sm+54
+	rXVJvmdeAUDNKyAL++H3Aj9pDVR4BmMbwOCrCxKHpOTFdBxqWxTrvWEhpumR3x6nVCpSXpOQEHL
+	KYMtzzgO5O/b6C9wTp6MRxjZE7sNbtJggdbffae7uv6WSsZKhCatfKCLDmVz9Yco=
+X-Gm-Gg: ASbGncvsEMvi+9crm0dm5v9Ta3hv7mESs4WgGjQkP0KBBip7L5fT+7D6gb9DKUJSsxk
+	nsZa9bF7qyCRPHClylGcio8P4cGl+2jnNIH2ohM8lYZaE67anDyJnTsImzPhZUCFAU7tczh17Mw
+	nDUDHQxexSVBDmtqk6Sjme35OPqLo0k/jJR++mhWM+yyMu113hbZgZ67FUOoDwz4L/z+SEQvvsI
+	wFau7l24YpM26iUDusZDLhXgi4nEE6IXTpbdjxIPLC6C51W2PmXU2ErUDUN/5L0PnFf6KL2GF97
+	r2MFs63PAPy0//EwWlKevl1aUuWfmPgEFqrzxhPbHA==
+X-Received: by 2002:a17:903:2ac6:b0:220:e362:9b1a with SMTP id d9443c01a7336-2265edee4b7mr69582595ad.25.1742486275690;
+        Thu, 20 Mar 2025 08:57:55 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGi8XbhLs92+ZkMltC891+1rpGELh9oFO3sgLfdR5Hc5Ego4ssiojy48Xlws9pVR6ouyP0mhg==
+X-Received: by 2002:a17:903:2ac6:b0:220:e362:9b1a with SMTP id d9443c01a7336-2265edee4b7mr69582035ad.25.1742486275268;
+        Thu, 20 Mar 2025 08:57:55 -0700 (PDT)
+Received: from [192.168.1.5] ([122.164.167.76])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c68884ecsm137243495ad.5.2025.03.20.08.57.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 08:57:54 -0700 (PDT)
+Message-ID: <e46be95c-ca8d-48ce-a616-5f068bd28ebc@oss.qualcomm.com>
+Date: Thu, 20 Mar 2025 21:27:42 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250315164123.1855142-1-koichiro.den@canonical.com>
-In-Reply-To: <20250315164123.1855142-1-koichiro.den@canonical.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 20 Mar 2025 16:56:20 +0100
-X-Gm-Features: AQ5f1JowFng81dq75UDfEEYlHxIDBQIW-PBU1W4Hva1SRz22XpNprkVHqgRNKUc
-Message-ID: <CAMRc=Me=um+=uAKxP8enVPQ4gZvKgtsmaT5m0tM_=7-xGRVY3w@mail.gmail.com>
-Subject: Re: [PATCH v6 0/9] Introduce configfs-based interface for gpio-aggregator
-To: Koichiro Den <koichiro.den@canonical.com>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] misc: fastrpc: Add polling mode support for
+ fastRPC driver
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
+        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
+        dri-devel@lists.freedesktop.org, arnd@arndb.de
+References: <20250127044239.578540-1-quic_ekangupt@quicinc.com>
+ <20250127044239.578540-5-quic_ekangupt@quicinc.com>
+ <hgox77a7e6zzriltwhzzciau6u2pmil4y3rl5o2l6zkp4fmlmp@q2dai5fxcvtq>
+ <49295da9-82d4-45a0-a2a4-fdaa6600c70d@quicinc.com>
+ <an4cvztdkqmrt7w2iaziihlxf4tbox65ze362v2lmycjnqg26y@jizjmh2ki34z>
+ <939fcff6-fb93-487b-995b-88e3ff020784@oss.qualcomm.com>
+ <2k6573yrw3dyn3rpwqz4asdpx3nlmj4ornm7kmxv3f4jlc6hzg@qkwn7gqduwri>
+Content-Language: en-US
+From: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+In-Reply-To: <2k6573yrw3dyn3rpwqz4asdpx3nlmj4ornm7kmxv3f4jlc6hzg@qkwn7gqduwri>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: ajISmRU-gDyW9816RfhzCfoPXe5UK5-9
+X-Proofpoint-GUID: ajISmRU-gDyW9816RfhzCfoPXe5UK5-9
+X-Authority-Analysis: v=2.4 cv=aMLwqa9m c=1 sm=1 tr=0 ts=67dc3b05 cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=rQ4PyoImJZNyGwpw8nHSHQ==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=NEAV23lmAAAA:8 a=iVoIhCtSH5cMpfonS4MA:9 a=QEXdDO2ut3YA:10
+ a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-20_04,2025-03-20_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 spamscore=0 clxscore=1015 phishscore=0 mlxscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 bulkscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503200101
 
-On Sat, Mar 15, 2025 at 5:41=E2=80=AFPM Koichiro Den <koichiro.den@canonica=
-l.com> wrote:
+
+
+On 3/20/2025 7:45 PM, Dmitry Baryshkov wrote:
+> On Thu, Mar 20, 2025 at 07:19:31PM +0530, Ekansh Gupta wrote:
+>>
+>> On 1/29/2025 4:10 PM, Dmitry Baryshkov wrote:
+>>> On Wed, Jan 29, 2025 at 11:12:16AM +0530, Ekansh Gupta wrote:
+>>>>
+>>>> On 1/29/2025 4:59 AM, Dmitry Baryshkov wrote:
+>>>>> On Mon, Jan 27, 2025 at 10:12:38AM +0530, Ekansh Gupta wrote:
+>>>>>> For any remote call to DSP, after sending an invocation message,
+>>>>>> fastRPC driver waits for glink response and during this time the
+>>>>>> CPU can go into low power modes. Adding a polling mode support
+>>>>>> with which fastRPC driver will poll continuously on a memory
+>>>>>> after sending a message to remote subsystem which will eliminate
+>>>>>> CPU wakeup and scheduling latencies and reduce fastRPC overhead.
+>>>>>> With this change, DSP always sends a glink response which will
+>>>>>> get ignored if polling mode didn't time out.
+>>>>> Is there a chance to implement actual async I/O protocol with the help
+>>>>> of the poll() call instead of hiding the polling / wait inside the
+>>>>> invoke2?
+>>>> This design is based on the implementation on DSP firmware as of today:
+>>>> Call flow: https://github.com/quic-ekangupt/fastrpc/blob/invokev2/Docs/invoke_v2.md#5-polling-mode
+>>>>
+>>>> Can you please give some reference to the async I/O protocol that you've
+>>>> suggested? I can check if it can be implemented here.
+>>> As with the typical poll() call implementation:
+>>> - write some data using ioctl
+>>> - call poll() / select() to wait for the data to be processed
+>>> - read data using another ioctl
+>>>
+>>> Getting back to your patch. from you commit message it is not clear,
+>>> which SoCs support this feature. Reminding you that we are supporting
+>>> all kinds of platforms, including the ones that are EoLed by Qualcomm.
+>>>
+>>> Next, you wrote that in-driver polling eliminates CPU wakeup and
+>>> scheduling. However this should also increase power consumption. Is
+>>> there any measurable difference in the latencies, granted that you
+>>> already use ioctl() syscall, as such there will be two context switches.
+>>> What is the actual impact?
+>> Hi Dmitry,
+>>
+>> Thank you for your feedback.
+>>
+>> I'm currently reworking this change and adding testing details. Regarding the SoC
+>> support, I'll add all the necessary information.
+> Please make sure that both the kernel and the userspace can handle the
+> 'non-supported' case properly.
+
+Yes, I will include changes to handle in both userspace and kernel.
+
 >
-> This patch series introduces a configfs-based interface to gpio-aggregato=
-r
-> to address limitations in the existing 'new_device' interface.
+>> For now, with in-driver
+>> polling, we are seeing significant performance improvements for calls
+>> with different sized buffers. On polling supporting platform, I've observed an
+>> ~80us improvement in latency. You can find more details in the test
+>> results here: 
+>> https://github.com/quic/fastrpc/pull/134/files#diff-7dbc6537cd3ade7fea5766229cf585db585704e02730efd72e7afc9b148e28ed
+> Does the improvement come from the CPU not goint to idle or from the
+> glink response processing?
+
+Although both are contributing to performance improvement, the major
+improvement is coming from CPU not going to idle state.
+
+Thanks,
+Ekansh
+
 >
-> The existing 'new_device' interface has several limitations:
->
->   Issue#1. No way to determine when GPIO aggregator creation is complete.
->   Issue#2. No way to retrieve errors when creating a GPIO aggregator.
->   Issue#3. No way to trace a GPIO line of an aggregator back to its
->            corresponding physical device.
->   Issue#4. The 'new_device' echo does not indicate which virtual
->            gpiochip<N> was created.
->   Issue#5. No way to assign names to GPIO lines exported through an
->            aggregator.
->
-> Although Issue#1 to #3 could technically be resolved easily without
-> configfs, using configfs offers a streamlined, modern, and extensible
-> approach, especially since gpio-sim and gpio-virtuser already utilize
-> configfs.
->
-> This v6 patch series includes 9 patches:
->
->   Patch#1: Fix an issue that was spotted during v3 preparation.
->            (Not present in gpio/for-next, so retained in v6.)
->   Patch#2: Reorder functions to prepare for configfs introduction.
->   Patch#3: Add aggr_alloc() to reduce code duplication.
->   Patch#4: Introduce basic configfs interface. Address Issue#1 to #5.
->   Patch#5: Prepare for Patch#6.
->   Patch#6: Expose devices created with sysfs to configfs.
->   Patch#7: Suppress deferred probe for purely configfs-based aggregators.
->   Patch#8: Documentation for the new configfs interface.
->   Patch#9: Selftest for gpio-aggregator.
->
-> N.B. This submission is targeting at gpio/for-next and is based on:
->      commit 21c853ad9309 ("gpio: adnp: use new line value setter callback=
-s")
->
-> v5->v6 changes:
->   - Addressed feedback from Bartosz:
->     * Resolved issues spotted with lockdep and kasan.
->     * Added kselftest for gpio-aggregator.
->   - Fixed a memory leak in aggr_free_line() (missing kfree(line->name)).
->   - Fixed a bug I mistakenly added in aggr_parse() (misplaced scnprintf()=
-).
->   - Eliminated a potential lock inversion deadlock by removing
->     gpio_aggregator_lock acquisition in gpio_aggregator_remove_all(), whi=
-ch
->     became unnecessary after the upstream commit 12f65d120350 ("gpio:
->     aggregator: protect driver attr handlers against module unload").
->
-> v4->v5 changes:
->   - Rebased off of the latest gpio/for-next, that includes the patch seri=
-es:
->     "Add synchronous fake device creation utility for GPIO drivers"
->     (https://lore.kernel.org/all/20250221133501.2203897-1-koichiro.den@ca=
-nonical.com/)
->
-> v3->v4 changes:
->   - Split off the introduction of gpio-pseudo.[ch] and conversions.
->   - Reordered commits to place a fix commit first.
->   - Squashed the trivial update for gpio-aggregator's conversion to gpio-=
-pseudo
->     into the primary commit "gpio: aggregator: introduce basic configfs i=
-nterface"
->     as it is only meaningful when combined.
->
-> v2->v3 changes:
->   - Addressed feedback from Bartosz:
->     * Factored out the common mechanism for synchronizing platform device
->       probe by adding gpio-pseudo.[ch].
->     * Renamed "_auto." prefix to "_sysfs." for auto-generated
->       configfs entries corresponding to sysfs-created devices.
->     * Squashed v2 Patch#3 into its predecessor.
->   - Addressed feedback from Geert:
->     * Factored out duplicate code in struct gpio_aggregator initializatio=
-n
->       by adding gpio_alloc()/gpio_free() functions. Note that v2 Patch#7
->       was dropped for other reasons as mentioned below, so aggr_free() in
->       v3 is unrelated to the same-named function in v2.
->     * Removed redundant parsing of gpio-line-names and unnecessary
->       chip->names assignments; squashed v2 Patch#4 + v2 Patch#5 into v3
->       Patch#9.
->     * Updated to use sysfs_emit().
->     * Updated Kconfig (select CONFIGFS_FS).
->     * Fixed typos, coding style issues, missing const qualifiers, and oth=
-er
->       minor issues.
->   - Resolved an issue that was spotted during v3 preparation. See Patch#2=
-.
->   - Reordered resource initialization order in gpio_aggregator_init() to
->     both eliminate a potential race condition (as noted in the source cod=
-e
->     comment) and simplify the code. See Patch#8. This enabled:
->     * Removal of v2 Patch#7.
->     * Merging of aggr_unregister_lines() and aggr_free_lines() into a
->       unified function.
->   - Disabled 'delete_device' functionality for devices created via config=
-fs
->     for simplicity. It was mistakenly allowed in v2 and proved buggy. See
->     Patch #8.
->
-> RFC->v2 changes:
->   - Addressed feedback from Bartosz:
->     * Expose devices created with sysfs to configfs.
->     * Drop 'num_lines' attribute.
->     * Fix bugs and crashes.
->     * Organize internal symbol prefixes more cleanly.
->   - Split diffs for improved reviewability.
->   - Update kernel doc to reflect the changes.
->
-> v5: https://lore.kernel.org/all/20250224143134.3024598-1-koichiro.den@can=
-onical.com/
-> v4: https://lore.kernel.org/all/20250217143531.541185-1-koichiro.den@cano=
-nical.com/
-> v3: https://lore.kernel.org/all/20250216125816.14430-1-koichiro.den@canon=
-ical.com/
-> v2: https://lore.kernel.org/all/20250203031213.399914-1-koichiro.den@cano=
-nical.com/
-> RFC (v1): https://lore.kernel.org/linux-gpio/20250129155525.663780-1-koic=
-hiro.den@canonical.com/T/#u
->
->
-> Koichiro Den (9):
->   gpio: aggregator: protect driver attr handlers against module unload
->   gpio: aggregator: reorder functions to prepare for configfs
->     introduction
->   gpio: aggregator: add aggr_alloc()/aggr_free()
->   gpio: aggregator: introduce basic configfs interface
->   gpio: aggregator: rename 'name' to 'key' in aggr_parse()
->   gpio: aggregator: expose aggregator created via legacy sysfs to
->     configfs
->   gpio: aggregator: cancel deferred probe for devices created via
->     configfs
->   Documentation: gpio: document configfs interface for gpio-aggregator
->   selftests: gpio: add test cases for gpio-aggregator
->
->  .../admin-guide/gpio/gpio-aggregator.rst      |  107 ++
->  drivers/gpio/Kconfig                          |    2 +
->  drivers/gpio/gpio-aggregator.c                | 1155 ++++++++++++++---
->  tools/testing/selftests/gpio/Makefile         |    2 +-
->  tools/testing/selftests/gpio/config           |    1 +
->  .../testing/selftests/gpio/gpio-aggregator.sh |  723 +++++++++++
->  6 files changed, 1800 insertions(+), 190 deletions(-)
->  create mode 100755 tools/testing/selftests/gpio/gpio-aggregator.sh
->
-> --
-> 2.45.2
+>> Regarding your concerns about power consumption, while in-driver polling
+>> eliminates CPU wakeup and scheduling, it does increase power consumption.
+>> However, the performance gains seem to outweigh this increase.
+>>
+>> Do you think the poll implementation that you suggested above could provide similar
+>> improvements?
+> No, I agree here. I was more concentrated on userspace polling rather
+> than hw polling.
 >
 
-It's too late in the cycle for this to make v6.15, let's try again
-once v6.15-rc1 is tagged. I've tested it and it now seems to work
-well, I've been unable to trigger any issues even with corner cases.
-
-I still see some nits I'd like to see fixed but I think we're close to
-getting it into the tree.
-
-Bart
