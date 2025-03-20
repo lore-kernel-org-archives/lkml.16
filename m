@@ -1,39 +1,33 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 815A51E3DD3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816071E3DD3;
+	Thu, 20 Mar 2025 16:20:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742487611; cv=none; b=sFtikRmoCoK8d/3Iwp/oS8pgGbxuOAkqEqCSeD1/yYfDcJwYggSfr3w3n4B1VN7yq02q7RhZFJcSonGufUtGBcTAAGo6sJGDn/wPooGoBvMjM89APsSDofNxqcX/SsfX0h7owtRQpORNJwXWsAXBRRqbY8GJQ11CxVhXA8u4zlQ=
+	t=1742487639; cv=none; b=VdngUInG0jJXzV8ug0Ftd7T0sEVO8aq6Aw4ct5Dxts5x7PjPqtvJM3m53DA+3nhG35ac8vyxp3g2Tgj7e5IdKx1Uk0txvFT4DkTCFTYjk29KZTbevpYyi4ZHfk4l8/Rr4II/Ehr8hnGVv+1v0ZkmIW3moU2zrEuJgl0wJG/uDHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742487611; c=relaxed/simple;
-	bh=kGpBLhOeNbMipzXgZdQHWX+9QizRGxv66IZDvFRfIFg=;
+	s=arc-20240116; t=1742487639; c=relaxed/simple;
+	bh=09ZvEo9Lo8wDXBHYBhzRezudTriTulM3WHI6hCa51Nk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mGjvF54W13bUfV85FiuXoeHo16XQi9uvms26A8xF3671LwJ+wUe1ybsiXygF0RbmpSMgf5H0IwmmLKO/uWJl5LpVMK1M0A9fKMakgy9/6xb/lMGICrKDTjgcu2xCdni7hLUyumbb4M7BbfeaZe33xqD/Gmq59pzC9HK3LzTViRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZJVZy5GhBz9sRr;
-	Thu, 20 Mar 2025 16:57:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id lpSF7WRgoDNQ; Thu, 20 Mar 2025 16:57:30 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJVZy4Fbyz9sPd;
-	Thu, 20 Mar 2025 16:57:30 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E13A8B799;
-	Thu, 20 Mar 2025 16:57:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id g0xQPgVyxzkg; Thu, 20 Mar 2025 16:57:30 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id E8D5B8B763;
-	Thu, 20 Mar 2025 16:57:29 +0100 (CET)
-Message-ID: <f79c2e97-2d50-467d-9852-c64971f11370@csgroup.eu>
-Date: Thu, 20 Mar 2025 16:57:29 +0100
+	 In-Reply-To:Content-Type; b=aYvQtcnERqziMYpjFzd+GAvEKz1UY9xqrlZ35HKdcj+NEtjqMI0Wngg5e8aZBDsndh72wfjFI8RUcZpKFj9a/c0eBth3nkakl+JUAacePSC153iZac2NUVwFZw0tudKv0F229L9VvYSYJjtwesUqiLtlnL3q2+mgt7swjlju2os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=puN9NyjL; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="puN9NyjL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8ED1C4CEDD;
+	Thu, 20 Mar 2025 16:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742487639;
+	bh=09ZvEo9Lo8wDXBHYBhzRezudTriTulM3WHI6hCa51Nk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=puN9NyjLrRNlhGHgDejODSbzff/92krPiS3mKFZxi7T3OFQfMvTeFQdk6sERmu42Z
+	 NxTOJtZDglCsMi60wIoF+UTQvG+pEtM7j5F6noCDnlq3BD59nye912C4pdV7OWh/x1
+	 qDQsX59VD247e3kXWne8Gy1zP5Q4BJoVSdABpWv7u6wvYTbYxTy4cr1BHly75RrZIr
+	 RNR8B6G9csJjcJnpZBlpTk6m7wFLVG8/hlNIzDKD59Y82lBUivyVxgfD7+nqdSMt8v
+	 duDkpXpFaQ/lpzmqD8qd1Kuza0VbabVRo5QaNj7TMRZ/BW35xPYazQrSZSxjL9YEMz
+	 TWVRrgv9zHD1Q==
+Message-ID: <7ed2af14-7677-4188-b77b-7f3c325d40a4@kernel.org>
+Date: Thu, 20 Mar 2025 17:20:32 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,164 +35,119 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] bus: fsl-mc: Remove deadcode
-To: linux@treblig.org, ioana.ciornei@nxp.com
-Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
- stuyoder@gmail.com, linux-kernel@vger.kernel.org
-References: <20241115152055.279732-1-linux@treblig.org>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20241115152055.279732-1-linux@treblig.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add CIX SoC maintainer entry
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
+ marcin@juszkiewicz.com.pl, Fugang Duan <fugang.duan@cixtech.com>
+References: <20250305053823.2048217-1-peter.chen@cixtech.com>
+ <20250305053823.2048217-7-peter.chen@cixtech.com>
+ <7419360a-abc0-44cf-8d55-8f5fad8e9079@kernel.org>
+ <Z9vyy7f5NOPyzUES@nchen-desktop>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <Z9vyy7f5NOPyzUES@nchen-desktop>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Ioana,
+On 20/03/2025 11:49, Peter Chen wrote:
+> On 25-03-20 10:25:53, Krzysztof Kozlowski wrote:
+>> EXTERNAL EMAIL
+>>
+>> On 05/03/2025 06:38, Peter Chen wrote:
+>>> Using this entry as the maintainers information for CIX SKY series SoCs.
+>>>
+>>> Acked-by: Fugang Duan <fugang.duan@cixtech.com>
+>>> Signed-off-by: Peter Chen <peter.chen@cixtech.com>
+>>> ---
+>>> Changes for v4
+>>> - Add two dts files as maintained files
+>>>
+>>>  MAINTAINERS | 10 ++++++++++
+>>>  1 file changed, 10 insertions(+)
+>>>
+>>> diff --git a/MAINTAINERS b/MAINTAINERS
+>>> index efee40ea589f..edf26cf11ee2 100644
+>>> --- a/MAINTAINERS
+>>> +++ b/MAINTAINERS
+>>> @@ -2354,6 +2354,16 @@ F:     arch/arm/boot/compressed/misc-ep93xx.h
+>>>  F:   arch/arm/mach-ep93xx/
+>>>  F:   drivers/iio/adc/ep93xx_adc.c
+>>>
+>>> +ARM/CIX SKY ARM ARCHITECTURE
+>>> +M:   Peter Chen <peter.chen@cixtech.com>
+>>> +M:   Fugang Duan <fugang.duan@cixtech.com>
+>>> +R:   CIX Linux Kernel Upstream Group <cix-kernel-upstream@cixtech.com>
+>>> +L:   linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+>>> +S:   Maintained
+>>> +F:   Documentation/devicetree/bindings/arm/cix.yaml
+>>> +F:   arch/arm64/boot/dts/cix/sky1-orion-o6.dts
+>>> +F:   arch/arm64/boot/dts/cix/sky1.dtsi
+>>
+>> Instead:
+>> arch/arm64/boot/dts/cix/
+>>
+>> or if you think there will be more different architectures coming from
+>> cix, which you will not maintain, then useful would be a "sky" subdirectory.
+>>
+> Hi Krzysztof,
+> 
+> Thanks for your comment, CIX is Arm SoC based silicon design
+> company, we may have different SoC style for middle end in future.
+> So, for that SoC series, it may not name sky.
 
-Le 15/11/2024 à 16:20, linux@treblig.org a écrit :
-> [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
-> 
-> From: "Dr. David Alan Gilbert" <linux@treblig.org>
-> 
-> fsl_mc_allocator_driver_exit() was added explicitly by
-> commit 1e8ac83b6caf ("bus: fsl-mc: add fsl_mc_allocator cleanup function")
-> but was never used.
-> 
-> Remove it.
-> 
-> fsl_mc_portal_reset() was added in 2015 by
-> commit 197f4d6a4a00 ("staging: fsl-mc: fsl-mc object allocator driver")
-> but was never used.
-> 
-> Remove it.
-> 
-> fsl_mc_portal_reset() was the only caller of dpmcp_reset().
-> 
-> Remove it.
-> 
-> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
+Your Kconfig says ARCH_CIX :/
 
-Can you ack this patch ?
+Anyway, listing individual files is pointless, so if you are not going
+to maintain entire arch, then create subdir. Otherwise why creating so
+many entries? The biggest upstreamed SoC vendor (by number of SoCs and
+boards has one entry.
 
-Thanks
-Christophe
 
-> ---
->   drivers/bus/fsl-mc/dpmcp.c            | 22 ----------------------
->   drivers/bus/fsl-mc/fsl-mc-allocator.c |  5 -----
->   drivers/bus/fsl-mc/fsl-mc-private.h   |  6 ------
->   drivers/bus/fsl-mc/mc-io.c            | 20 --------------------
->   include/linux/fsl/mc.h                |  2 --
->   5 files changed, 55 deletions(-)
-> 
-> diff --git a/drivers/bus/fsl-mc/dpmcp.c b/drivers/bus/fsl-mc/dpmcp.c
-> index 5fbd0dbde24a..7816c0a728ef 100644
-> --- a/drivers/bus/fsl-mc/dpmcp.c
-> +++ b/drivers/bus/fsl-mc/dpmcp.c
-> @@ -75,25 +75,3 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
->          /* send command to mc*/
->          return mc_send_command(mc_io, &cmd);
->   }
-> -
-> -/**
-> - * dpmcp_reset() - Reset the DPMCP, returns the object to initial state.
-> - * @mc_io:     Pointer to MC portal's I/O object
-> - * @cmd_flags: Command flags; one or more of 'MC_CMD_FLAG_'
-> - * @token:     Token of DPMCP object
-> - *
-> - * Return:     '0' on Success; Error code otherwise.
-> - */
-> -int dpmcp_reset(struct fsl_mc_io *mc_io,
-> -               u32 cmd_flags,
-> -               u16 token)
-> -{
-> -       struct fsl_mc_command cmd = { 0 };
-> -
-> -       /* prepare command */
-> -       cmd.header = mc_encode_cmd_header(DPMCP_CMDID_RESET,
-> -                                         cmd_flags, token);
-> -
-> -       /* send command to mc*/
-> -       return mc_send_command(mc_io, &cmd);
-> -}
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-allocator.c b/drivers/bus/fsl-mc/fsl-mc-allocator.c
-> index b5e8c021fa1f..6c3beb82dd1b 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-allocator.c
-> +++ b/drivers/bus/fsl-mc/fsl-mc-allocator.c
-> @@ -656,8 +656,3 @@ int __init fsl_mc_allocator_driver_init(void)
->   {
->          return fsl_mc_driver_register(&fsl_mc_allocator_driver);
->   }
-> -
-> -void fsl_mc_allocator_driver_exit(void)
-> -{
-> -       fsl_mc_driver_unregister(&fsl_mc_allocator_driver);
-> -}
-> diff --git a/drivers/bus/fsl-mc/fsl-mc-private.h b/drivers/bus/fsl-mc/fsl-mc-private.h
-> index b3520ea1b9f4..e1b7ec3ed1a7 100644
-> --- a/drivers/bus/fsl-mc/fsl-mc-private.h
-> +++ b/drivers/bus/fsl-mc/fsl-mc-private.h
-> @@ -66,10 +66,6 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
->                  u32 cmd_flags,
->                  u16 token);
-> 
-> -int dpmcp_reset(struct fsl_mc_io *mc_io,
-> -               u32 cmd_flags,
-> -               u16 token);
-> -
->   /*
->    * Data Path Resource Container (DPRC) API
->    */
-> @@ -631,8 +627,6 @@ int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
-> 
->   int __init fsl_mc_allocator_driver_init(void);
-> 
-> -void fsl_mc_allocator_driver_exit(void);
-> -
->   void fsl_mc_init_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
-> 
->   void fsl_mc_cleanup_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
-> diff --git a/drivers/bus/fsl-mc/mc-io.c b/drivers/bus/fsl-mc/mc-io.c
-> index 95b10a6cf307..a0ad7866cbfc 100644
-> --- a/drivers/bus/fsl-mc/mc-io.c
-> +++ b/drivers/bus/fsl-mc/mc-io.c
-> @@ -263,23 +263,3 @@ void fsl_mc_portal_free(struct fsl_mc_io *mc_io)
->          dpmcp_dev->consumer_link = NULL;
->   }
->   EXPORT_SYMBOL_GPL(fsl_mc_portal_free);
-> -
-> -/**
-> - * fsl_mc_portal_reset - Resets the dpmcp object for a given fsl_mc_io object
-> - *
-> - * @mc_io: Pointer to the fsl_mc_io object that wraps the MC portal to free
-> - */
-> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io)
-> -{
-> -       int error;
-> -       struct fsl_mc_device *dpmcp_dev = mc_io->dpmcp_dev;
-> -
-> -       error = dpmcp_reset(mc_io, 0, dpmcp_dev->mc_handle);
-> -       if (error < 0) {
-> -               dev_err(&dpmcp_dev->dev, "dpmcp_reset() failed: %d\n", error);
-> -               return error;
-> -       }
-> -
-> -       return 0;
-> -}
-> -EXPORT_SYMBOL_GPL(fsl_mc_portal_reset);
-> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
-> index c90ec889bfc2..37316a58d2ed 100644
-> --- a/include/linux/fsl/mc.h
-> +++ b/include/linux/fsl/mc.h
-> @@ -417,8 +417,6 @@ int __must_check fsl_mc_portal_allocate(struct fsl_mc_device *mc_dev,
-> 
->   void fsl_mc_portal_free(struct fsl_mc_io *mc_io);
-> 
-> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io);
-> -
->   int __must_check fsl_mc_object_allocate(struct fsl_mc_device *mc_dev,
->                                          enum fsl_mc_pool_type pool_type,
->                                          struct fsl_mc_device **new_mc_adev);
-> --
-> 2.47.0
-> 
-
+Best regards,
+Krzysztof
