@@ -1,182 +1,110 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E59B22C356
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:01:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A72EC1E8339
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:03:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497272; cv=none; b=RbCmjGh3UTAcuBCiYVlENs+9DxVJWHJfj/FQue4geI7+g/6g9agW4hpkfGPfV6BkWnKcrIFiZUiUNl2daCbIbmtVazcuE/UFzuBYwaDlmh/IlBfU6L9mHYi3X0l/h694BoBpaXc06+OyZAQOOw3lpD0JwWjdRENB78pbSgHv41o=
+	t=1742497419; cv=none; b=LWarBoRmEn4/QWRBX9Khqf1GsRc0AWyv+68tlXkJvXXrn83N1U68Tjtxg4hfJugeVrul94i+7xIVhxn1G+qHqvhuhF2ADvN6At/tuXmC5DyeRYibScoD/6XMXlCSuGRaCj5Ewtq3VYfEO7cr0+dwAPGGu9RgH9o9ppf24/56VGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497272; c=relaxed/simple;
-	bh=1AEV0UefWPqmLk11yVWlf8pY3IE091dEEE3fKtmBJ9E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nvDSGCLQPwhF0Qa4GskhN/tZv1+GTiZO5aI2lNVykOhmvdoS1SgXiaHn9W+oWV1Qxozz6ZndpcU9XA2a56BcpFcuGEAcEBqvAuOTvxueTmXoNrLAlo1zXALV9FW96IPS7i9XSHxWeJtnHVEsdcsUb1cqs03zm6bMivyVQr2QGiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=UILZNxMe; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="UILZNxMe"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-476a304a8edso10776081cf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1742497268; x=1743102068; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=BhESFHo1Qup0h87mxwY0rWQxJzpcXtzcXamkJ/AajPs=;
-        b=UILZNxMeBalRgpqvW96mIFgljCh/sDCMei65OfTkv60r7Ndb7L+4s+oEOsT6i1Bas2
-         r5ntC1cEyScwf/srb78tmVZmLtYRv84BeoGhHjGvawnMLcQ5PnPmeUFdiPDkWTu+j+zF
-         A8Xn0QQdb23dXiBVhsUxRgdCiHc88cspzijG7WBsqkzSqvnM3ivg0wGcGXjpqYGgJ1J1
-         gYkeZPqG10Y2z+bLMAtYK7eQzxUMaGE4YDZSNRDp2LSLL6sdHvWe0kHhBjAfiw62xM8p
-         kkDyKfqCFjgJ8CfJCB3Y/LUM6ChTXE0gHOaAtQv7UXAyd+HtyfSOznviwQnm0W7V3NWz
-         zwWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742497268; x=1743102068;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=BhESFHo1Qup0h87mxwY0rWQxJzpcXtzcXamkJ/AajPs=;
-        b=aoRlPgIksE0FvJsDeVibjUJBXT7225hM2H5hZj+/I8wN+dJ7TNQWRkxJ2aeNJBRPye
-         bedHudLRXc7nsYY3pvTkCLEj8dd0cnAasLf/SSOKlS/NF7q80Yn804yDU+gzHnaSQrTB
-         TkXU/RW/9YXum20wFbdCIzUnvzdH9CK5T3pAzE8q+yQkxdvA56jejn2UISVbFIRyu6L9
-         +Xtme5GjRfaEcxoiNjgO3viWy1Cp1OfTpPL+FLrUTYWf4NrO/1YD2lvfWIV/C2RM18fL
-         LNan6Ekv7lJ8keiIhbTi+aHyUOG8kYcgze2n0mTuRq6Sn+lvPxy7bLg/8zfj28hMzBQ1
-         5B1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUwLwu5JFeNQNLWnnnmwchjjB44t3NHbuHvwlcbgJsko4SKymshRApPFp/1MwufmFWSyH3QNoPUXkj1Hsg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpuY4EBMaDNXxpsc8TFk032hwfodBt95l00ABR3bD1gA/baZFd
-	KV81azAMgE/kyrpiB8UgJ4GewuXf2RpQny2lypP1ODFAAE6atORosbdb84Go+wWn5zsyu2JPPl/
-	mEVZTfLqKfWnJOBxtj/WYE5mACrkZUcSWNZgdOw==
-X-Gm-Gg: ASbGncvH7d1LojWsbqljlfJemLwS368SFDJRCuQ7Q4XujoouwKs74MJPeklCuSQNYez
-	oXbdqqsbpc3a8YIbJVjkcdxE+0KcAACTf0qSybArzMGqXiBFU6r9UmB8P7Ovb2sdtZ+l7U4gpGm
-	jsKHz8CYgIjNFpIrcOFitWGp8=
-X-Google-Smtp-Source: AGHT+IEWuzyg9BKoYY96+r28nA923Sxob7bNjbOsMkoucEcF17cRXDEr0XabgiEuLbqh8S3+owG87YRnG7PjRKEVrfI=
-X-Received: by 2002:a05:622a:5108:b0:476:fe1b:d979 with SMTP id
- d75a77b69052e-4771de612d0mr7065671cf.48.1742497268430; Thu, 20 Mar 2025
- 12:01:08 -0700 (PDT)
+	s=arc-20240116; t=1742497419; c=relaxed/simple;
+	bh=mm+dj8wSs978+mApZ/0we3RAsELyN7uir68uaj2JFRo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=afDpT77ioyLrztTiguB4Xg0Gf3yoXhS+EcSce+AfaUTXMtzW78G3u/8dSmbpsWzJCScq+s0d55yi55GFd74zdOhDeHd22BEIzdU46K/o/NmLMll7tjT+k+dCtd/+tDAMoeuVZHhsHSvKXh16ar8LdfwkdC0tmd6Tw+vH82w254o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9B4381424
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:03:43 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id AA7DD3F63F
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:03:35 -0700 (PDT)
+Date: Thu, 20 Mar 2025 19:03:24 +0000
+From: Liviu Dudau <liviu.dudau@arm.com>
+To: Karunika Choo <karunika.choo@arm.com>
+Cc: dri-devel@lists.freedesktop.org, nd@arm.com,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Steven Price <steven.price@arm.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] drm/panthor: Add support for Mali-G710,
+ Mali-G510, and Mali-G310
+Message-ID: <Z9xmfJDCEz_-u8PH@e110455-lin.cambridge.arm.com>
+References: <20250320111741.1937892-1-karunika.choo@arm.com>
+ <20250320111741.1937892-10-karunika.choo@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320024011.2995837-1-pasha.tatashin@soleen.com>
- <20250320024011.2995837-2-pasha.tatashin@soleen.com> <20250320144338.GW9311@nvidia.com>
-In-Reply-To: <20250320144338.GW9311@nvidia.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 20 Mar 2025 15:00:31 -0400
-X-Gm-Features: AQ5f1JoRx2DXMVlFoq6PSocQQynFcw4m_U7KN9tp2PZfJfgfG69kbcGZpJvT488
-Message-ID: <CA+CK2bBovJ68FPOqD5J-_xmzy_mm8gNhJW80EsWGLgq+NhuX5Q@mail.gmail.com>
-Subject: Re: [RFC v1 1/3] luo: Live Update Orchestrator
-To: Jason Gunthorpe <jgg@nvidia.com>
-Cc: changyuanl@google.com, graf@amazon.com, rppt@kernel.org, 
-	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
-	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
-	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
-	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
-	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
-	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
-	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	gregkh@linuxfoundation.org, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, 
-	rafael@kernel.org, dakr@kernel.org, bartosz.golaszewski@linaro.org, 
-	cw00.choi@samsung.com, myungjoo.ham@samsung.com, yesanishhere@gmail.com, 
-	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com, 
-	aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, jgowans@amazon.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250320111741.1937892-10-karunika.choo@arm.com>
 
-Hi Jason,
+On Thu, Mar 20, 2025 at 11:17:41AM +0000, Karunika Choo wrote:
+> This patch adds GPU model name and FW binary support for Mali-G710,
+> Mali-G510, and Mali-G310.
+> 
+> Signed-off-by: Karunika Choo <karunika.choo@arm.com>
+> ---
+>  drivers/gpu/drm/panthor/panthor_fw.c | 2 ++
+>  drivers/gpu/drm/panthor/panthor_hw.c | 6 ++++++
+>  2 files changed, 8 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/panthor/panthor_fw.c b/drivers/gpu/drm/panthor/panthor_fw.c
+> index 8a967af0e2b4..7050adfaa8b6 100644
+> --- a/drivers/gpu/drm/panthor/panthor_fw.c
+> +++ b/drivers/gpu/drm/panthor/panthor_fw.c
+> @@ -1398,6 +1398,8 @@ int panthor_fw_init(struct panthor_device *ptdev)
+>  }
+>  
+>  MODULE_FIRMWARE("arm/mali/arch10.8/mali_csffw.bin");
+> +MODULE_FIRMWARE("arm/mali/arch10.10/mali_csffw.bin");
+> +MODULE_FIRMWARE("arm/mali/arch10.12/mali_csffw.bin");
+>  MODULE_FIRMWARE("arm/mali/arch11.8/mali_csffw.bin");
+>  MODULE_FIRMWARE("arm/mali/arch12.8/mali_csffw.bin");
+>  MODULE_FIRMWARE("arm/mali/arch13.8/mali_csffw.bin");
 
-Thank you for your feedback.
+Firmware available for testing here:
 
-> > Features introduced:
-> >
-> > - Core orchestration logic for managing the live update process.
-> > - A state machine (NORMAL, PREPARED, UPDATED, *_FAILED) to track
-> >   the progress of live updates.
-> > - Notifier chains for subsystems (device layer, interrupts, KVM, IOMMU,
-> >   etc.) to register callbacks for different live update events:
-> >     - LIVEUPDATE_PREPARE: Prepare for reboot (before blackout).
-> >     - LIVEUPDATE_REBOOT: Final serialization before kexec (blackout).
-> >     - LIVEUPDATE_FINISH: Cleanup after update (after blackout).
-> >     - LIVEUPDATE_CANCEL: Rollback actions on failure or user request.
->
-> I still don't think notifier chains are the right way to go about alot
-> of this, most if it should be driven off of the file descriptors and
-> fdbox, not through notification.
->
-> At the very least we should not be adding notifier chains without a
-> clear user of them, and I'm not convinced that the iommu driver or
-> vfio are those users at the moment.
->
-> I feel more like the iommu can be brought into the serialization
-> indirectly by putting an iommufd into a fdbox.
+https://gitlab.com/dliviu/linux-firmware
 
-We have identified the subsystems that need to participate in Live
-Update: KVM, IOMMU, Devices, and Interrupts. We are planning to
-present how each of them will integrate with the LUO.
+Best regards,
+Liviu
 
-> > - A sysfs interface (/sys/kernel/liveupdate/) for user-space control:
-> >     - `prepare`: Initiate preparation (write 1) or reset (write 0).
-> >     - `finish`: Finalize update in new kernel (write 1).
-> >     - `cancel`: Abort ongoing preparation or reboot (write 1).
-> >     - `reset`: Force state back to normal (write 1).
-> >     - `state`: Read-only view of the current LUO state.
-> >     - `enabled`: Read-only view of whether live update is enabled.
+> diff --git a/drivers/gpu/drm/panthor/panthor_hw.c b/drivers/gpu/drm/panthor/panthor_hw.c
+> index e6354304bbef..6f18b7420f90 100644
+> --- a/drivers/gpu/drm/panthor/panthor_hw.c
+> +++ b/drivers/gpu/drm/panthor/panthor_hw.c
+> @@ -49,8 +49,14 @@ static char *get_gpu_model_name(struct panthor_device *ptdev)
+>  	const u8 shader_core_count = hweight64(ptdev->gpu_info.shader_present);
+>  
+>  	switch (product_id) {
+> +	case GPU_PROD_ID_MAKE(10, 2):
+> +		return "Mali-G710";
+>  	case GPU_PROD_ID_MAKE(10, 7):
+>  		return "Mali-G610";
+> +	case GPU_PROD_ID_MAKE(10, 3):
+> +		return "Mali-G510";
+> +	case GPU_PROD_ID_MAKE(10, 4):
+> +		return "Mali-G310";
+>  	case GPU_PROD_ID_MAKE(11, 2):
+>  		if (shader_core_count > 10 && ray_intersection)
+>  			return "Mali-G715-Immortalis";
+> -- 
+> 2.47.1
+> 
 
-I forgot to update the commit message, there are no: enabled, reset,
-and cancel files. We only have three files in LUO: `prepare`,
-`finish`, and `prepare`
-
->
-> I also think we should give up on the sysfs. If fdbox is going forward
-> in a char dev direction then I think we should have two char devs
-> /dev/kho/serialize and /dev/kho/deserialize and run the whole thing
-
-KHO is a mechanism to preserve kernel memory across reboots. It can be
-used independently of live update, for example, to preserve kexec
-reboot telemetry, traces, and for other purposes. The LUO utilizes KHO
-for memory preservation but also orchestrates specifically a live
-update process, provides a generic way for subsystems and devices to
-participate, handles error recovery, unclaimed devices, and other live
-update-specific steps.
-
-That said, I can transition the LUO interface from sysfs to a character device.
-
-> through that. The concepts shown in the fdbox patches should be merged
-> into the kho/serialize char dev as just a general architecture of open
-> the char dev, put stuff into it, then finalize and do the kexec.
-
-Some participating subsystems, such as interrupts, do not have a way
-to export a file descriptor. It is unclear why we would require this
-for kernel-internal state that needs to be preserved for live update,
-which should instead register with internally.
-
-> It gives you more options to avoid things like notifiers and a very
-> clear "session" linked to a FD lifetime that encloses the
-> serialization effort. I think that will make error case cleanup easier
-> and the whole thing more maintainable. IMHO sysfs is not a great API
-> choice for something so complicated.
-
-IMO, the current API and state machine are quite simple (I plan to
-present and go through them at one of the Hypervisor Live Update
-meetings). However, I am open to changing to a different API, and we
-can expose it through a character device.
-
-> Also agree with Greg, I think this needs more thoughtful patch staging
-> with actual complete solutions. I think focusing on a progression of
-> demonstrable kexec preservation:
->  - A simple KVM and the VM's backing memory in a memfd is perserved
->  - A simple vfio-noiommu doing DMA to a preserved memfd, including not
->    resetting the device (but with no iommu driver)
->  - iommufd
-
-We are working on this. However, each component builds upon the
-previous one, so it makes sense to discuss the lower layers early to
-get early feedback.
-
-Pasha
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
