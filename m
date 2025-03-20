@@ -1,211 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FDC521A45D;
-	Thu, 20 Mar 2025 09:32:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A19F42222CA;
+	Thu, 20 Mar 2025 09:33:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463164; cv=none; b=KZmBvugyHAOYe7aNX3QmWSK6JF/x+oP+BAWi9rheUAa6pq8sQFc1pJindF3LQKibx8AfdLqIcnHNvruKC1vZtkMFZFFNiNDuqwdw2AbpxPS3tvNjrRiXP6IfE+P7VXXHOC3VEJcXPWyfKTpaC7yL+WJMdnCAdryi3oHHEEHccpk=
+	t=1742463185; cv=none; b=Tvy8LcGcBYY3rBQzBiGsWnxzuT07HqdPHfpA+t95/iP3rGumty7ITbkDNwyLePMdED/vWk8s3wUwZKF7EVGpb6q+NehoiTLGfBBlerT/Cx2ytQsr33Ki//frzh8tArHWhb9QvCxjWyXKw21gIDCu0481XtTVdmj1y6oGzA9kUic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463164; c=relaxed/simple;
-	bh=K70P253ZuNPbc5P+9WHqbMvbW4leGH37gLYRTFdQAtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mKl9yRGAfSNPM5DIGPAb8N70jWP1DkWvhtjI7zs1R+tblO0yDryVD74pxGfG16C0ZMWTgUv26gcwyaYCCQ9ziag3HhFenqoN6Hy1jq10S/cu55Dl12tmYY6+xsDCxO6iYFCjfexMy96fjPYqvSftbpOrPeTZk8ciuifwezai1NM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KsOyYFXx; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KsOyYFXx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92340C4CEDD;
-	Thu, 20 Mar 2025 09:32:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742463164;
-	bh=K70P253ZuNPbc5P+9WHqbMvbW4leGH37gLYRTFdQAtI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KsOyYFXxuKq6b1hc6Zmxr0Gjqy3AesdsYisTUUCe3Va/VljwRAShmYWyafoHrxDPw
-	 nEWbAe70IIszSd92wieSH0/HbpAuZ/29k+dw95k/qES7a2TmMLyvQgUJ/ADdVB7pUa
-	 DFWrhpQuf3bq91ykWWajQA5yL82rJ+HOT/sjgZPv7UkheezfVmIYjdj57fKWiQ/4i5
-	 24HvlcRUV2BDhH+c5yV0ywcHq+SDvdoASRdFYy+/Tp0aPITpR3aBGPLun+WcV5jqic
-	 V90gq08y+48yd6gs0/4C0SIKZiekkFsDEZ1Plq9yjFp6RpZ142YdIpfWcSlASeOs08
-	 uevyPq55GCFBA==
-Date: Thu, 20 Mar 2025 10:32:39 +0100
-From: Ingo Molnar <mingo@kernel.org>
-To: Namhyung Kim <namhyung@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Kan Liang <kan.liang@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	linux-perf-users@vger.kernel.org,
-	Dmitry Vyukov <dvyukov@google.com>
-Subject: Re: [PATCH 1/3] perf sort: Keep output fields in the same level
-Message-ID: <Z9vgt1pjiNbDBDbM@gmail.com>
-References: <20250307080829.354947-1-namhyung@kernel.org>
- <Z9tjKcKvjYgbR6hb@google.com>
+	s=arc-20240116; t=1742463185; c=relaxed/simple;
+	bh=zGVoYuexyNAYTW+12AY61QB9oJUhu0/d1dOlv0Die0w=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JZp8dYPMLPDPOa/a6yd30Qa5cnKZ+rEOQ3wXKB2nA9aDKmA6h8AEN6UWfc2aL84/FJHCj4qcdI9WzERqOdcSna2tkJf9ya83O9z/5f1RVxuEBmpfh/FsoH1r0MwJCBMkwgSomta3aXUI6IEnQPM4MTK6mXnDGKcs3Eexcfb9BRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost.localdomain (unknown [210.73.43.1])
+	by APP-05 (Coremail) with SMTP id zQCowADn7qLC4Ntn6cmWFg--.39879S2;
+	Thu, 20 Mar 2025 17:32:51 +0800 (CST)
+From: Zhe Qiao <qiaozhe@iscas.ac.cn>
+To: qiaozhe@iscas.ac.cn,
+	robert.moore@intel.com,
+	rafael.j.wysocki@intel.com,
+	lenb@kernel.org
+Cc: linux-acpi@vger.kernel.org,
+	acpica-devel@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] ACPICA: Adjust the position of code lines.
+Date: Thu, 20 Mar 2025 17:29:43 +0800
+Message-Id: <20250320092943.92790-1-qiaozhe@iscas.ac.cn>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z9tjKcKvjYgbR6hb@google.com>
+X-CM-TRANSID:zQCowADn7qLC4Ntn6cmWFg--.39879S2
+X-Coremail-Antispam: 1UD129KBjvdXoW7XFykXF18Zr4fAFWrCw15Jwb_yoWDXFc_WF
+	nxJFs3XFWFyF1xWw10qa4fWr4av3y7uFWxKFy7try3Aw1xZry2v34UCr1fZa1Ykw4F9Fsx
+	X3yDXryfAr9F9jkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbsAFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
+	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
+	6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVW8JVWxJwAm72CE4IkC6x0Yz7v_Jr
+	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7MxkF7I0En4kS14v2
+	6r126r1DMxkIecxEwVAFwVW8uwCF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+	UI43ZEXa7VUUKFAJUUUUU==
+X-CM-SenderInfo: ptld061kh6x2xfdvhtffof0/
 
+In the acpica/utcache.c file, adjust the position of the
+"ACPI_MEM_TRACKING(cache->total_allocated++);" code line
+to ensure that the increment operation on total_allocated
+is included within the ACPI_DBG_TRACK_ALLOCATIONS configuration.
 
-* Namhyung Kim <namhyung@kernel.org> wrote:
+Signed-off-by: Zhe Qiao <qiaozhe@iscas.ac.cn>
+---
+ drivers/acpi/acpica/utcache.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On Fri, Mar 07, 2025 at 12:08:27AM -0800, Namhyung Kim wrote:
-> > This is useful for hierarchy output mode where the first level is
-> > considered as output fields.  We want them in the same level so that it
-> > can show only the remaining groups in the hierarchy.
-> > 
-> > Before:
-> >   $ perf report -s overhead,sample,period,comm,dso -H --stdio
-> >   ...
-> >   #          Overhead  Samples / Period / Command / Shared Object
-> >   # .................  ..........................................
-> >   #
-> >      100.00%           4035
-> >         100.00%           3835883066
-> >            100.00%           perf
-> >                99.37%           perf
-> >                 0.50%           ld-linux-x86-64.so.2
-> >                 0.06%           [unknown]
-> >                 0.04%           libc.so.6
-> >                 0.02%           libLLVM-16.so.1
-> > 
-> > After:
-> >   $ perf report -s overhead,sample,period,comm,dso -H --stdio
-> >   ...
-> >   #    Overhead       Samples        Period  Command / Shared Object
-> >   # .......................................  .......................
-> >   #
-> >      100.00%          4035    3835883066     perf
-> >          99.37%          4005    3811826223     perf
-> >           0.50%            19      19210014     ld-linux-x86-64.so.2
-> >           0.06%             8       2367089     [unknown]
-> >           0.04%             2       1720336     libc.so.6
-> >           0.02%             1        759404     libLLVM-16.so.1
-> > 
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Ping!  Anybody interested in this change? :)
+diff --git a/drivers/acpi/acpica/utcache.c b/drivers/acpi/acpica/utcache.c
+index 85a85f7cf750..046e6ba127d4 100644
+--- a/drivers/acpi/acpica/utcache.c
++++ b/drivers/acpi/acpica/utcache.c
+@@ -251,9 +251,9 @@ void *acpi_os_acquire_object(struct acpi_memory_list *cache)
+ 	} else {
+ 		/* The cache is empty, create a new object */
+ 
++#ifdef ACPI_DBG_TRACK_ALLOCATIONS
+ 		ACPI_MEM_TRACKING(cache->total_allocated++);
+ 
+-#ifdef ACPI_DBG_TRACK_ALLOCATIONS
+ 		if ((cache->total_allocated - cache->total_freed) >
+ 		    cache->max_occupied) {
+ 			cache->max_occupied =
+-- 
+2.34.1
 
-Oh yes, all such pieces of intelligent organization of textual output 
-of profiling data are worth their weight in gold in my book. :-)
-
-  Acked-by: Ingo Molnar <mingo@kernel.org>
-
-1)
-
-On a related note, does anyone know why perf stat output alignment 
-sucks so much these days:
-
-  starship:~/tip> perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging 2>&1 | grep elapsed
-           0.11620 +- 0.00327 seconds time elapsed  ( +-  2.81% )
-          0.120813 +- 0.000570 seconds time elapsed  ( +-  0.47% )
-          0.122280 +- 0.000443 seconds time elapsed  ( +-  0.36% )
-          0.119813 +- 0.000752 seconds time elapsed  ( +-  0.63% )
-           0.12190 +- 0.00134 seconds time elapsed  ( +-  1.10% )
-          0.119862 +- 0.000542 seconds time elapsed  ( +-  0.45% )
-          0.120075 +- 0.000608 seconds time elapsed  ( +-  0.51% )
-          0.120350 +- 0.000273 seconds time elapsed  ( +-  0.23% )
-           0.12203 +- 0.00114 seconds time elapsed  ( +-  0.93% )
-           0.12229 +- 0.00114 seconds time elapsed  ( +-  0.93% )
-           0.12032 +- 0.00115 seconds time elapsed  ( +-  0.95% )
-          0.121241 +- 0.000463 seconds time elapsed  ( +-  0.38% )
-          0.119404 +- 0.000333 seconds time elapsed  ( +-  0.28% )
-          0.119945 +- 0.000766 seconds time elapsed  ( +-  0.64% )
-          0.121215 +- 0.000879 seconds time elapsed  ( +-  0.72% )
-           0.12001 +- 0.00109 seconds time elapsed  ( +-  0.91% )
-           0.12193 +- 0.00182 seconds time elapsed  ( +-  1.49% )
-          0.119184 +- 0.000794 seconds time elapsed  ( +-  0.67% )
-          0.120062 +- 0.000439 seconds time elapsed  ( +-  0.37% )
-          0.120834 +- 0.000760 seconds time elapsed  ( +-  0.63% )
-          0.369473 +- 0.000992 seconds time elapsed  ( +-  0.27% )
-
-... see how the vertical alignment of the output goes randomly wacko - 
-I presume because there's a trailing zero in the output number and the 
-code for some inexplicable reason decides to shorten it to make the 
-life of developers harder? ;-)
-
-2)
-
-It's also incredibly hard to Ctrl-C a 'perf stat --repeat' instance:
-
- starship:~/tip> perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
- # Running 'sched/messaging' benchmark:
- # 20 sender and receiver processes per group
- # 10 groups == 400 processes run
-
- ...
- Ctrl-C
-
- # Running 'sched/messaging' benchmark:
- perf: pollperf: perf: pollperf: pollpollperf: pollperf: pollperf: : Interrupted system call
- : Interrupted system call
- poll: Interrupted system call
- perf: pollperf: : Interrupted system call
- perf: pollperf: pollpollperf: : Interrupted system call
- pollperf: pollperf: perf: perf: pollpollpollperf: : Interrupted system call
- pollperf: poll: Interrupted system call
- : Interrupted system call
- : Interrupted system call
- : Interrupted system call
- perf: poll: Interrupted system call
- perf: perf: pollpoll: Interrupted system call
- : Interrupted system call
- perf: perf: perf: perf: perf: perf: : Interrupted system call
- pollpollpollpollpollpoll: Interrupted system call
- : Interrupted system call
- : Interrupted system call
- perf: perf: pollperf: perf: perf: perf: perf: perf: pollperf: : Interrupted system call
- pollpollpoll: Interrupted system call
-
-Note how the perf stat instance actually *hangs*. I have to Ctrl-Z it, 
-and kill -9 %1 it the hard way to clean up:
-
- pollpollpoll: Interrupted system call
- �
- [1]+  Stopped                 perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
- starship:~/tip> kill -9 %1
-
- [1]+  Stopped                 perf stat --null --repeat 20 perf stat --null --repeat 3 perf bench sched messaging
- starship:~/tip> kill -9 %1
-
-Does anyone use this thing for actual benchmarking work? ;-)
-
-3)
-
-It would also be nice to be able to Ctrl-C out of a 'perf top' instance 
-that freezes the output or so. Or prints a snapshot in ASCII. Anything 
-but what it does currently: it just exits and clears the xterm screen 
-of all useful information...
-
-I have to use 'f' (how many people know about that feature?) and copy & 
-paste anything interesting from the screen the hard way.
-
-4)
-
-It would also be nice to have an export function to save current 'perf 
-top' profiling data and have it available for 'perf report' et al 
-analysis. Ie. frequently I just see an interesting snapshot and decide 
-that it's good for further analysis, freeze the screen and are left 
-with very few options to keep it for further look and reference.
-
-5)
-
-Would anyone be interested in an OpenGL-ish version of perf top, with 
-its own low level shader for font-atlas based text output and vertex 
-based polygon graphics, double buffering, full screen support with very 
-little Xorg interaction for the GX pathway, etc? It should be *far* 
-faster and lower overhead than the current ncurses->xterm->Wayland 
-levels of indirection... and it could open up a new world of on-screen 
-profiling information as well. Basically a very simple self-sustained 
-OpenGL game engine for the key low level graphics primitives of modern 
-GFX hardware. I could whip up a prototype if there's interest.
-
-Thanks,
-
-	Ingo
