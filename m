@@ -1,65 +1,64 @@
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C470E21D3ED
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66986212FB3
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:28:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742473566; cv=none; b=tvmYDF/g870IFzN26ENxPhH1gjvamC3zlXA/stkACbcfEiATT/Gm2mO4Pnod6J7Jbta5/F/NL/m/fISiKYi5o0zjBl1rTiP9U+8o9sbl61P7ILih9HWvBKrkufF1dMDi/ZRYfj5QMk7FTDyRCVGVB/+qfq8dOVgjBxiQih99OPc=
+	t=1742473711; cv=none; b=bHR+mvCo86M0CcawWCxUzC2aGWMXDU6bn3hKCRNnwnD/JZB/YNT1v+VIr1A895OiSGhXngc+d5svJp+T9bbsSEjnsyEJ5SZEgNUOyBXjNKk7rUsmStGD2lsHgySQknAl7sAqAoMpmXrqX1oRhnyMd+BSaw1aiA/WHMjeLHgTso0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742473566; c=relaxed/simple;
-	bh=hyJJNpohcdAU4yMBA4YOg2G2u7d26Sa45nVB2rMFA9w=;
+	s=arc-20240116; t=1742473711; c=relaxed/simple;
+	bh=uEFlV5ye5JUwGIq12bEusiHzsY35WJz9M7dh8l8zZhQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aI7lHCPLXYFycTvm8kNxHh/tY7WtUFTQdKW5uB1xmeM9wxGCJXdK/Jt4/elPBzF5sq0sozmBZHk2hC+o+G0RLuLfFcNdBNBGoBsaBV1jf6hHshDSJbhLazUs5AcIeLAVwKtTx8MMyRiilvuHA0VSdl76FAlcQqse26naYyQfRp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=SS7HUKj5; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
+	 In-Reply-To:Content-Type; b=czIf71ZZSbc4BTw7OT1gsze0PSkb1CTbdi7FqmPWVsX3gDPUCJFLtN7/61oTWvnBI0E/M9Ms4YSPT8xrhJeBIORNlNH33u8TrE6WwMh4pK7K4UAqoACpd7raLMBOHFzC16MKOhdmNyxkqpwe28vSryBmpHFjl4iRokWa6R2yjaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xmwEsnYk; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="SS7HUKj5"
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-43d07ca6a80so3267515e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 05:26:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xmwEsnYk"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso5061115e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 05:28:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742473562; x=1743078362; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1742473707; x=1743078507; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=e8ZNXPFVzOU94mt6m9mbPGIBWqdibsgDwCTGYVYUKFE=;
-        b=SS7HUKj5ls7TrZWTIGWB8yE6kLVyXKJOmDdCSehJneP9pzwpETTuSYcQikm+zqiNV8
-         SmSWHts+OTeMegyGhr0A7sxnoHD8MWDbPnkzRZ0KFQAHMgm4xFrhzJDAB3hi15l9nOQN
-         FZPO4V2ZPRTkakDE1zQ7g/xErixxXpb48K9NG2Ix5/f1Qkv96pJUKWRCval4YTyi/x7J
-         JnJeGTbyeeu9CBVE8FetZ4PeQDCIYlI19uJl230j9Z9BZOL0W/pjqEg4Et3kaBj2t9RO
-         44dmjluhDaAUs++Nz7VcPByRe4nnzJR9qKLfRuJsHCTkwWCIgusB9KX85mCLQv7yAZhT
-         mNPA==
+        bh=k9cOgDku+0Amja1d3cYnnljiqdZbZHTap1QLiTDrlbQ=;
+        b=xmwEsnYk13kyGn3kP2wcj2PoCqKENSen0LpMlQr6qX8xyyvwxU3zaleD3tk++S8nTI
+         vh1CdCAo/R7Ypvf2Tz4s0HcZoUF+jklBrDKqWaULe6Cfmt3nLo2/F2S8VAui6fWmqmLn
+         /wD0RZ5TDAQVmOMKMSR5+7rEyxhDHT52ZokHZv4Csgav4Wf977sxXxBgLlAXjdMNG6pl
+         rdQ2notsndvmZsDIqqn1TWuLpz8lPO/r++IVt0ETeTlnMmbj2fuTWsGneE5hD0hR0SKj
+         WZLDF0PSpL6ZVbhs8+rYw0C2Dz/VQ059A1cy1FWi2OEWsEayUrmEmuVS3ZLJAq2GaJjD
+         hADQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742473562; x=1743078362;
+        d=1e100.net; s=20230601; t=1742473707; x=1743078507;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=e8ZNXPFVzOU94mt6m9mbPGIBWqdibsgDwCTGYVYUKFE=;
-        b=TPMzFMW+MLPTNSMhZEf7MXGMwEpScHm4H7rPukVioZ3/lW9GS+eLtnAQNUdhKJzvqb
-         pvlTek/CMCdZ81h0I4CqqByEh4Xnsmynw/PSTWQWjH4msycq/SDVoS7+6smfrbD2HYt0
-         zWl8j2/A1BQXh+muuc348pGyCucYXpOOVxcZ1YPqtBkMh/MgPdcy8CQQELUC6ZQDq2H3
-         8z1LwGnCf1OgmoDG1CL1q5Pu4wT/4Ll1jAet6dNPMZBR9JRrb1Mqb5deifZv77JATxQf
-         unp4VZi3Zc4g1fqUZUNi56bHq0FgOkAonsyT/8Zx4Q29qAzVCojEJ8ZKWHKNioc+ZdJ8
-         VHvQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWRv/n7b/JGhitDF/nPO6Zq5vXEljRnkdoXY8VPaNfHny5bmNRAVs3AnRqOpFlTx5bgy09OKsgQO9EO5ns=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUk+YFpjkTbRPbIhPgqKFbk2Sux9WH2ua4Sie/c02rJz2qX4T5
-	aSQQu8F31SK+zZM3yL/5LKeZ3B1e4Tbmrl9lk9iY1xiZIcIvi8BtyMkF6ebHaXk=
-X-Gm-Gg: ASbGncvTBOx5ZL267YVIXQLRsqkwFKhjk/p6f8QQBXbiCNzz+41A+S1y18FTsW/7mkE
-	++89oXJwO1S9mbgPVTEcK0l6yLg1kWQeT+UQpXX9tttYpu6xKP+FQ7YECJvo4xbjsAQpALMt0ni
-	qvpS8bUU/AbGyZKZudMlMqZJo2Md65e57y8WF8jqHhqJjh17LazbQEWYkdE/AuLMTZvhQvGQci7
-	VHPN5aD4F3xlqvH10hFPnRnLEqPWX4PXU3lz+4+1OtHYV9kslHToZJhXGzkaj32Rl/1EVHCGsR6
-	s6lmLXXIn0M3O+NTuSuBmOPKN9fCeTYGg7D/0+UE7XmJRt/he74J7H8lD2IHZI4d/nK+/Mm4z5U
-	LFEU5hz7AbyTXMw==
-X-Google-Smtp-Source: AGHT+IFnoeXcjNAxgR/nncQsW47FJFX+8xYUDmI97yV8HuiwXCeccO5v+DsUKuiyYhZi6nrc3nxEYg==
-X-Received: by 2002:a05:600c:4503:b0:43c:f6c6:578c with SMTP id 5b1f17b1804b1-43d437c330fmr74088995e9.15.1742473561773;
-        Thu, 20 Mar 2025 05:26:01 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:e17:9700:16d2:7456:6634:9626? ([2a01:e0a:e17:9700:16d2:7456:6634:9626])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df35ecsm23914546f8f.16.2025.03.20.05.26.00
+        bh=k9cOgDku+0Amja1d3cYnnljiqdZbZHTap1QLiTDrlbQ=;
+        b=NGwLGUJs2ouwtqbGpkh1uR231CItEPZiRQHag8Dee1JH8KOkbtOksh46UJ4Fi5ZZgP
+         2d7MdIgl1+rbscWbmZmSAtWLb2h8bwPKbnYYLzivPtoeTX232wM/mWyijpKf6FOfh0aP
+         Hu+Q2trdg/4QCJhsnn6Re3AW6YjHcWLy8zOu/f1vVuSAjfEs6alLyTcuyEoYIz1mvt2m
+         geswqDOOgX/ooF8S4sMpRSMEnNW4XkjnwSi+x4puwrb66azPLQfToolkLLAZnMRgKLm1
+         iN5Z2ctbjihhR2i0scpjavrhx3EN4z1QC3V9pdg4taaZH638yOVIiC8uJW3Ba9QzsN6+
+         U96g==
+X-Forwarded-Encrypted: i=1; AJvYcCWQ1MKh+sQq5YmzsOFLPVQg9TLGoKrov5rUEVgUQilt9R/CPeNqg32ZxoMjJMx1M325Ksnxbx6FivQwoTI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJUWJ5HXTwGgllUnzidWkEOaYsKDAkmqwN3MiVA6i690/c/Xap
+	lQxC1HEzIdLsy9oi2lDmxaxhdjo2+IvLuYFQ0QpqkGcKGjoTSzJ+ciYP9X8PUNo=
+X-Gm-Gg: ASbGnct62OU1LLAajDcIFgEPwYdX0nvscaLiTVgXeOhpVGNZ1PVxAcRgKsJATUjUlot
+	O+wPvFseC54z7g+xYvg4DyQCAa3tlka4+Vt+Dvrg4Dy9mVxqIi4l3ncenJOIzTex0Gzz3y1Xyot
+	WeKKxVTHHkRcJ0qW9wsuiNDsNEynoCgk4TgE2xy9g9I6x9O+zLLHRsht6efTMjChLArdW62E7r4
+	daKsi0b8mdmwbk5lCMAqCWiljzuvetiJlrBBNRCdyeK7fYijBe+GARiKklh4Blt5obCaD+Kdzg+
+	WzP1I/5QrzLluXcZxMRGPi1utmaSw3h/W6gSJR5ZSbg8bBk5C07lFbEjOM02dJL9
+X-Google-Smtp-Source: AGHT+IHYMw/fKseNAgpR6bEDDF/GOdtjD/avJ+5+yhNRO0ILjtoSbBDdWDvP1ili6k6UrKkFRBtFTA==
+X-Received: by 2002:a05:600c:b95:b0:43c:fe15:41e1 with SMTP id 5b1f17b1804b1-43d437801e2mr63982575e9.4.1742473707500;
+        Thu, 20 Mar 2025 05:28:27 -0700 (PDT)
+Received: from [192.168.0.14] ([79.115.63.206])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f376d3sm48539535e9.4.2025.03.20.05.28.26
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 05:26:01 -0700 (PDT)
-Message-ID: <8115698f-3cf7-4a6a-83cf-9dc288c84ee0@rivosinc.com>
-Date: Thu, 20 Mar 2025 13:26:00 +0100
+        Thu, 20 Mar 2025 05:28:26 -0700 (PDT)
+Message-ID: <b6531c3b-b550-48ae-9a57-29a11d9e5cf3@linaro.org>
+Date: Thu, 20 Mar 2025 12:28:25 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -67,155 +66,73 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/4] riscv: add support for SBI Supervisor Software
- Events extension
-To: Andrew Jones <ajones@ventanamicro.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- Himanshu Chauhan <hchauhan@ventanamicro.com>,
- Anup Patel <apatel@ventanamicro.com>, Xu Lu <luxu.kernel@bytedance.com>,
- Atish Patra <atishp@atishpatra.org>
-References: <20241206163102.843505-1-cleger@rivosinc.com>
- <20241206163102.843505-3-cleger@rivosinc.com>
- <20250319-46b625cf8b771616d4c7c053@orel>
- <b3fbd730-295f-4491-b0d6-d4e258941ae5@rivosinc.com>
- <20250320-5f9612f1b503c79c9b185b10@orel>
+Subject: Re: [PATCH 06/21] mtd: spinand: Use more specific naming for the page
+ read op
+To: Miquel Raynal <miquel.raynal@bootlin.com>,
+ Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>,
+ Santhosh Kumar K <s-k6@ti.com>
+Cc: Pratyush Yadav <pratyush@kernel.org>, Michael Walle <michael@walle.cc>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Steam Lin <stlin2@winbond.com>, linux-mtd@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250307-winbond-6-14-rc1-octal-v1-0-45c1e074ad74@bootlin.com>
+ <20250307-winbond-6-14-rc1-octal-v1-6-45c1e074ad74@bootlin.com>
 Content-Language: en-US
-From: =?UTF-8?B?Q2zDqW1lbnQgTMOpZ2Vy?= <cleger@rivosinc.com>
-In-Reply-To: <20250320-5f9612f1b503c79c9b185b10@orel>
+From: Tudor Ambarus <tudor.ambarus@linaro.org>
+In-Reply-To: <20250307-winbond-6-14-rc1-octal-v1-6-45c1e074ad74@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 
 
-On 20/03/2025 12:52, Andrew Jones wrote:
-> On Thu, Mar 20, 2025 at 09:16:07AM +0100, Clément Léger wrote:
->>
->>
->> On 19/03/2025 18:08, Andrew Jones wrote:
->>> On Fri, Dec 06, 2024 at 05:30:58PM +0100, Clément Léger wrote:
->>> ...
->>>> +int arch_sse_init_event(struct sse_event_arch_data *arch_evt, u32 evt_id, int cpu)
->>>> +{
->>>> +	void *stack;
->>>> +
->>>> +	arch_evt->evt_id = evt_id;
->>>> +	stack = sse_stack_alloc(cpu, SSE_STACK_SIZE);
->>>> +	if (!stack)
->>>> +		return -ENOMEM;
->>>> +
->>>> +	arch_evt->stack = stack + SSE_STACK_SIZE;
->>>> +
->>>> +	if (sse_init_scs(cpu, arch_evt))
->>>> +		goto free_stack;
->>>> +
->>>> +	if (is_kernel_percpu_address((unsigned long)&arch_evt->interrupted)) {
->>>> +		arch_evt->interrupted_state_phys =
->>>> +				per_cpu_ptr_to_phys(&arch_evt->interrupted);
->>>> +	} else {
->>>> +		arch_evt->interrupted_state_phys =
->>>> +				virt_to_phys(&arch_evt->interrupted);
->>>> +	}
->>>> +
->>>> +	return 0;
->>>
->>> Hi Clément,
->>>
->>> Testing SSE support with tools/testing/selftests/kvm/riscv/sbi_pmu_test
->>> led to an opensbi sbi_trap_error because the output_phys_lo address passed
->>> to sbi_sse_read_attrs() wasn't a physical address. The reason is that
->>> is_kernel_percpu_address() can only be used on static percpu addresses,
->>> but local sse events get their percpu addresses with alloc_percpu(), so
->>> is_kernel_percpu_address() was returning false even for local events. I
->>> made the following changes to get things working.
->>
->> Hi Andrew,
->>
->> Did something changed recently ? Because I tested that when it was send
->> (PMU + some kernel internal testsuite) and didn't saw that. Anyway, I'll
->> respin it with your changes as well.
+On 3/7/25 3:08 PM, Miquel Raynal wrote:
+> SPI operations have been initially described through macros implicitly
+> implying the use of a single SPI SDR bus. Macros for supporting dual and
+> quad I/O transfers have been added on top, generally inspired by vendor
+> naming, followed by DTR operations. Soon we might see octal
+> and even octal DTR operations as well (including the opcode byte).
 > 
-> It depends on the kernel config. Configs that don't have many
-> alloc_percpu() calls prior to the one made by sse can work, because,
-> iiuc, alloc_percpu() will get its allocation from the percpu allocator's
-> first chunk until that chunck fills up. The first chunck is shared with
-> the static allocations.
-
-Makes sense ! Thanks, I'll look at it.
-
+> Let's clarify what the macro really means by describing the expected bus
+> topology in the page read macro name.
 > 
-> Thanks,
-> drew
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/mtd/nand/spi/core.c | 2 +-
+>  include/linux/mtd/spinand.h | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
 > 
->>
->> Thanks !
->>
->> Clément
->>
->>>
->>> Thanks,
->>> drew
->>>
->>> diff --git a/arch/riscv/kernel/sse.c b/arch/riscv/kernel/sse.c
->>> index b48ae69dad8d..f46893946086 100644
->>> --- a/arch/riscv/kernel/sse.c
->>> +++ b/arch/riscv/kernel/sse.c
->>> @@ -100,12 +100,12 @@ int arch_sse_init_event(struct sse_event_arch_data *arch_evt, u32 evt_id, int cp
->>>         if (sse_init_scs(cpu, arch_evt))
->>>                 goto free_stack;
->>>
->>> -       if (is_kernel_percpu_address((unsigned long)&arch_evt->interrupted)) {
->>> +       if (sse_event_is_global(evt_id)) {
->>>                 arch_evt->interrupted_state_phys =
->>> -                               per_cpu_ptr_to_phys(&arch_evt->interrupted);
->>> +                               virt_to_phys(&arch_evt->interrupted);
->>>         } else {
->>>                 arch_evt->interrupted_state_phys =
->>> -                               virt_to_phys(&arch_evt->interrupted);
->>> +                               per_cpu_ptr_to_phys(&arch_evt->interrupted);
->>>         }
->>>
->>>         return 0;
->>> diff --git a/drivers/firmware/riscv/riscv_sse.c b/drivers/firmware/riscv/riscv_sse.c
->>> index 511db9ad7a9e..fef375046f75 100644
->>> --- a/drivers/firmware/riscv/riscv_sse.c
->>> +++ b/drivers/firmware/riscv/riscv_sse.c
->>> @@ -62,11 +62,6 @@ void sse_handle_event(struct sse_event_arch_data *arch_event,
->>>                         ret);
->>>  }
->>>
->>> -static bool sse_event_is_global(u32 evt)
->>> -{
->>> -       return !!(evt & SBI_SSE_EVENT_GLOBAL);
->>> -}
->>> -
->>>  static
->>>  struct sse_event *sse_event_get(u32 evt)
->>>  {
->>> diff --git a/include/linux/riscv_sse.h b/include/linux/riscv_sse.h
->>> index 16700677f1e8..06b757b036b0 100644
->>> --- a/include/linux/riscv_sse.h
->>> +++ b/include/linux/riscv_sse.h
->>> @@ -8,6 +8,7 @@
->>>
->>>  #include <linux/types.h>
->>>  #include <linux/linkage.h>
->>> +#include <asm/sbi.h>
->>>
->>>  struct sse_event;
->>>  struct pt_regs;
->>> @@ -16,6 +17,11 @@ struct ghes;
->>>
->>>  typedef int (sse_event_handler)(u32 event_num, void *arg, struct pt_regs *regs);
->>>
->>> +static inline bool sse_event_is_global(u32 evt)
->>> +{
->>> +       return !!(evt & SBI_SSE_EVENT_GLOBAL);
->>> +}
->>> +
->>>  #ifdef CONFIG_RISCV_SSE
->>>
->>>  struct sse_event *sse_event_register(u32 event_num, u32 priority,
->>
+> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+> index 1959e8d9c64be004c71a0d6ac6454fde08e708fa..2ebc802299068ef69068422d1ef6585f63365832 100644
+> --- a/drivers/mtd/nand/spi/core.c
+> +++ b/drivers/mtd/nand/spi/core.c
+> @@ -372,7 +372,7 @@ static int spinand_load_page_op(struct spinand_device *spinand,
+>  {
+>  	struct nand_device *nand = spinand_to_nand(spinand);
+>  	unsigned int row = nanddev_pos_to_row(nand, &req->pos);
+> -	struct spi_mem_op op = SPINAND_PAGE_READ_OP(row);
+> +	struct spi_mem_op op = SPINAND_PAGE_READ_1S_1S_0_OP(row);
+>  
+>  	return spi_mem_exec_op(spinand->spimem, &op);
+>  }
+> diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
+> index 545531afe2dac593d112065483afd180226cc533..882b635228860f45e52d516421c1fc3b2c723b9b 100644
+> --- a/include/linux/mtd/spinand.h
+> +++ b/include/linux/mtd/spinand.h
+> @@ -56,7 +56,7 @@
+>  		   SPI_MEM_OP_NO_DUMMY,					\
+>  		   SPI_MEM_OP_NO_DATA)
+>  
+> -#define SPINAND_PAGE_READ_OP(addr)					\
+> +#define SPINAND_PAGE_READ_1S_1S_0_OP(addr)				\
+
+I now see that when all STR you chose to still put S next to the op
+fields. 1_1_0_OP is alright too, it's equivalent to 1S-1S-0. Both are
+fine for me:
+
+Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+
+>  	SPI_MEM_OP(SPI_MEM_OP_CMD(0x13, 1),				\
+>  		   SPI_MEM_OP_ADDR(3, addr, 1),				\
+>  		   SPI_MEM_OP_NO_DUMMY,					\
+> 
 
