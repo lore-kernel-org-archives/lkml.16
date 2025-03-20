@@ -1,127 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 339421E3769;
-	Thu, 20 Mar 2025 07:52:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA121DE2C2
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 07:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742457124; cv=none; b=CZLanidYPcINg77zZ2cHuKv13oeSTYP6D5xyXNis54wctNqil5CaLh4tc6s88g/4Rnz5bOOPenIXZWYQakDA2kscJN5D8P7JrDre8XdCDyQ5/JBbEG6DSB35nLXkkA2ZvQWo0tA2FwXUYe8ZlG1u7m++6X/jgP2+dDjDTZsynqo=
+	t=1742457197; cv=none; b=BFkIzhAolP+evblVsbxvpkRHFc+50cyu8P9mJDx/o8aim7PATf8qxFp/ybq9h1+OrYZ9Jb2zaNe18T0Qmg5U3MF+7xExybj5KMXEzk00xQ6CkGtABXcRGqVnTiH7AAm4i1sEMjum+3pgSuyfDtnUPgg6zEYIavBJFYrxKUnFwRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742457124; c=relaxed/simple;
-	bh=LpoG0RMzz7fNHCibF4J26zt4F7k2qKpDYABHIjcJWbA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IOcodI2PjuYWZZ0TsEbWH2IFgDCu87ocoEtXyhS/L0ue9HTJNuEs5+vrLc1hwNQoNjQ2RHO9DpZczCCq41vLqn4/CN8/gcwVVrBrmHvR/d4dYgOPg6PBGAz0qGRCMFvAV0ctoAe8JDBHzDulMFEE5J8SLe9D24C2ai96u4khF0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A1EsmT+Z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742457197; c=relaxed/simple;
+	bh=VhbF6ZtYEqGBOiwoaOVEj9aGmLZOUW++9yFtPjjR3sY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tkeTppLaNyh1jxMIJvEx2tl2YVeMTixcEWLGlbLZY7ESUccKplE5mOp9aSGXJk4xlphKpbc7YsP95HkyIah7Fbwt4OJppTyPDTw/8Q4BZnypVfyE7KExy6UDFzhrX1vppodkjy8AUotgYK4ENUWNm1pClLyrBNi0HPf1a5+kIbY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AnuH8ztO; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A1EsmT+Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00BF1C4CEDD;
-	Thu, 20 Mar 2025 07:52:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742457123;
-	bh=LpoG0RMzz7fNHCibF4J26zt4F7k2qKpDYABHIjcJWbA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=A1EsmT+ZyuwER8PWWk+8VDDwn8MyxNR6/58Yh9KcqoPWHygFa/vTkGMHxde8NiRUb
-	 UEgLZha98wOIWOlHM1c9b0JfY8TjZJxHZdVb/vcOtv4/lqWhFwtPJ4lW+E2C5YNFRz
-	 WwrnZs00mOeqq3tzeFe8b/MbnKPCw2IjHvm75OB+AHk8YyCADbVzMRANLeZC0sTUOF
-	 M7NElBp8F+z6n+H62jVYZ5bWrgl9cajxXzcFkjVEK+rdbM+NaL35GkbP4s8XbEjotz
-	 GyTHa9bfjgoG7m+Oe46opYoDUPX1LuQ14MAxukVc7/urZ5SA+Dr55j/CYVpCjUhE6W
-	 twqrKspucBoUQ==
-Date: Thu, 20 Mar 2025 08:52:00 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: "hailong.fan" <hailong.fan@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Peter Ujfalusi <peter.ujfalusi@linux.intel.com>, Bard Liao <yung-chuan.liao@linux.intel.com>, 
-	Ranjani Sridharan <ranjani.sridharan@linux.intel.com>, Daniel Baluta <daniel.baluta@nxp.com>, 
-	Kai Vehmanen <kai.vehmanen@linux.intel.com>, Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>, 
-	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	sound-open-firmware@alsa-project.org, linux-sound@vger.kernel.org, 
-	Project_Global_Chrome_Upstream_Group@mediatek.com, Jjian.Zhou@mediatek.com, Xiangzhi.Tang@mediatek.com
-Subject: Re: [PATCH 1/2] ASoC: SOF: MediaTek: Add mt8196 hardware support
-Message-ID: <20250320-cocky-adventurous-rooster-be2abd@krzk-bin>
-References: <20250320031753.13669-1-hailong.fan@mediatek.com>
- <20250320031753.13669-2-hailong.fan@mediatek.com>
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AnuH8ztO"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1742457193;
+	bh=VhbF6ZtYEqGBOiwoaOVEj9aGmLZOUW++9yFtPjjR3sY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=AnuH8ztOU+Us9eO+xpcEWA9p8bFnMWhaomhHGRwL+utffwumwSh/s/c8nuUBpIA4g
+	 iChtv0F7s1GW2i3pmdkMwW8dbInDBvm88xPFa0ROl4Tcgv2ZsGLEHGSCoYwIwhweRj
+	 qJjUs6eRriOyVlAzWc+H5rJW5rXFnN4GR6PApaGGANtRROusEdN8/bPDlL/W6nhIR7
+	 eEIiC2Fk2zwIV3d53lsDyiqf0M8K3xukUKA4+BUUy3m+uOxqSeNGFXIltYrTn35tuF
+	 zaEjKzheK3fXJlbeEEH1r94xjMUWiHFheO3nW/oLCqeuuryHfYmF+OeZtICe4xzh0A
+	 XozbA05VQTFvQ==
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: bbrezillon)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 9B6D317E0147;
+	Thu, 20 Mar 2025 08:53:12 +0100 (CET)
+Date: Thu, 20 Mar 2025 08:53:03 +0100
+From: Boris Brezillon <boris.brezillon@collabora.com>
+To: Adrian Larumbe <adrian.larumbe@collabora.com>
+Cc: Ashley Smith <ashley.smith@collabora.com>, Steven Price
+ <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Heiko Stuebner
+ <heiko@sntech.de>, kernel@collabora.com, Daniel Stone
+ <daniels@collabora.com>, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] drm/panthor: Make the timeout per-queue instead of
+ per-job
+Message-ID: <20250320085303.71803639@collabora.com>
+In-Reply-To: <7xwg4gflszioaqizpu5k22ulswlninpkuiyptfalscgic2aqsu@w23h66cahlrz>
+References: <20250310133050.280614-1-ashley.smith@collabora.com>
+	<7xwg4gflszioaqizpu5k22ulswlninpkuiyptfalscgic2aqsu@w23h66cahlrz>
+Organization: Collabora
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250320031753.13669-2-hailong.fan@mediatek.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 20, 2025 at 11:17:24AM +0800, hailong.fan wrote:
-> +
-> +void mt8196_sof_hifixdsp_shutdown(struct snd_sof_dev *sdev)
-> +{
-> +	/* set RUNSTALL to stop core */
-> +	snd_sof_dsp_update_bits(sdev, DSP_REG_BAR, ADSP_HIFI_RUNSTALL,
-> +				RUNSTALL, RUNSTALL);
-> +
-> +	/* assert core reset */
-> +	snd_sof_dsp_update_bits(sdev, DSP_REG_BAR, ADSP_CFGREG_SW_RSTN,
-> +				SW_RSTN_C0 | SW_DBG_RSTN_C0,
-> +				SW_RSTN_C0 | SW_DBG_RSTN_C0);
-> +}
-> +
+On Wed, 19 Mar 2025 19:51:47 +0000
+Adrian Larumbe <adrian.larumbe@collabora.com> wrote:
 
-Drop stray blank line.
+> On 10.03.2025 13:30, Ashley Smith wrote:
+> > The timeout logic provided by drm_sched leads to races when we try
+> > to suspend it while the drm_sched workqueue queues more jobs. Let's
+> > overhaul the timeout handling in panthor to have our own delayed work
+> > that's resumed/suspended when a group is resumed/suspended. When an
+> > actual timeout occurs, we call drm_sched_fault() to report it
+> > through drm_sched, still. But otherwise, the drm_sched timeout is
+> > disabled (set to MAX_SCHEDULE_TIMEOUT), which leaves us in control of
+> > how we protect modifications on the timer.
+> >
+> > One issue seems to be when we call drm_sched_suspend_timeout() from
+> > both queue_run_job() and tick_work() which could lead to races due to
+> > drm_sched_suspend_timeout() not having a lock. Another issue seems to
+> > be in queue_run_job() if the group is not scheduled, we suspend the
+> > timeout again which undoes what drm_sched_job_begin() did when calling
+> > drm_sched_start_timeout(). So the timeout does not reset when a job
+> > is finished.
+> >
+> > Co-developed-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+> > Tested-by: Daniel Stone <daniels@collabora.com>
+> > Fixes: de8548813824 ("drm/panthor: Add the scheduler logical block")
+> > Signed-off-by: Ashley Smith <ashley.smith@collabora.com> =20
+>=20
+> Reviewed-by: Adri=C3=A1n Larumbe <adrian.larumbe@collabora.com>
+>=20
+> > ---
+> >  drivers/gpu/drm/panthor/panthor_sched.c | 233 +++++++++++++++++-------
+> >  1 file changed, 167 insertions(+), 66 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/panthor/panthor_sched.c b/drivers/gpu/drm/=
+panthor/panthor_sched.c
+> > index 4d31d1967716..5f02d2ec28f9 100644
+> > --- a/drivers/gpu/drm/panthor/panthor_sched.c
+> > +++ b/drivers/gpu/drm/panthor/panthor_sched.c
+> > @@ -360,17 +360,20 @@ struct panthor_queue {
+> >  	/** @entity: DRM scheduling entity used for this queue. */
+> >  	struct drm_sched_entity entity;
+> >
+> > -	/**
+> > -	 * @remaining_time: Time remaining before the job timeout expires.
+> > -	 *
+> > -	 * The job timeout is suspended when the queue is not scheduled by the
+> > -	 * FW. Every time we suspend the timer, we need to save the remaining
+> > -	 * time so we can restore it later on.
+> > -	 */
+> > -	unsigned long remaining_time;
+> > +	/** @timeout: Queue timeout related fields. */
+> > +	struct {
+> > +		/** @timeout.work: Work executed when a queue timeout occurs. */
+> > +		struct delayed_work work; =20
+>=20
+> Nit: Maybe for the sake of sticking to the convention of naming already
+> existing delayed_work structs in a way that reflects their goal, call
+> this one 'timeout_work'.
 
-> diff --git a/sound/soc/sof/mediatek/mt8196/mt8196.c b/sound/soc/sof/mediatek/mt8196/mt8196.c
-> new file mode 100644
-> index 000000000000..364069ce9954
-> --- /dev/null
-> +++ b/sound/soc/sof/mediatek/mt8196/mt8196.c
-> @@ -0,0 +1,650 @@
-> +// SPDX-License-Identifier: GPL-2.0
-
-Look here
-
-> +/*
-> + * Copyright (c) 2025 MediaTek Inc.
-> + * Author: Hailong Fan <hailong.fan@mediatek.com>
-> + */
-
-...
-
-> +
-> +static const struct of_device_id sof_of_mt8196_ids[] = {
-> +	{ .compatible = "mediatek,mt8196-dsp", .data = &sof_of_mt8196_desc},
-
-Bindings are before users.
-
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sof_of_mt8196_ids);
-> +
-> +/* DT driver definition */
-> +static struct platform_driver snd_sof_of_mt8196_driver = {
-> +	.probe = sof_of_probe,
-> +	.remove = sof_of_remove,
-> +	.shutdown = sof_of_shutdown,
-> +	.driver = {
-> +	.name = "sof-audio-of-mt8196",
-> +		.pm = &sof_of_pm,
-> +		.of_match_table = sof_of_mt8196_ids,
-> +	},
-> +};
-> +module_platform_driver(snd_sof_of_mt8196_driver);
-> +
-> +MODULE_LICENSE("Dual BSD/GPL");
-
-And here Hm? Don't fake the licensing.
-
-> +MODULE_DESCRIPTION("SOF support for MT8196 platforms");
-> +MODULE_IMPORT_NS("SND_SOC_SOF_XTENSA");
-
-Is this correct?
-
-
-Best regards,
-Krzysztof
+It's already under the timeout struct, and naming it timeout_work would
+be redundant IMHO (timeout.timeout_work vs timeout.work).
 
