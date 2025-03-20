@@ -1,302 +1,159 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81ED42222CD;
-	Thu, 20 Mar 2025 09:51:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCBB79C4
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:53:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742464267; cv=none; b=ZvVfbhxVu/GUzQn1glN8en4MGNkaXKhiqeMs49tUOgyN6odvRYCkpRW+K2Du+Albs/+8HP40F0whpPuO7f6qj1xW0R/+1Shwegtlo4XWHoEw7Jxr3mpiJofMwyYzvuKaLZ1cu3HpQtSEpTMAjVZOTP6iTeei+Wff16toeJOtpno=
+	t=1742464385; cv=none; b=DheIJRt8jOWHZR+JqTBv9bjqgjiOBmYP/RNg1URak0cbb3to93EFlDY/zxh0lsY0PkZ+mUdtZoVBe9nUS2FTwhtU1fXA2aMwQz0nAJJWQoWE8YSGQGMnsYLSeAjb2fbzXQZRgKZ7pMDHoV6dYQ9QmB5uIiX4pdtw8svKmrPxmMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742464267; c=relaxed/simple;
-	bh=V5pdiDmIiaTInS4DzWKdY2WwroRMhueqxusiSOWo+b0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FRP0ol8/yZFoCcUg6YPCyJP1sVtaNXkIw/B0KP7Imsv9aOPoflYjJnvhe6VnQs4tQPlfAxf4c/TG04GfxRuXW7F8C/+GsfqkyGd70dA8uf2yBSff0U8F1p+MZ9v09jnOtYdAiBftMu3znAsxGELR13rEvHhMdo/KmMmyVCZGTTE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=GqCvCWpW; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742464385; c=relaxed/simple;
+	bh=eCS46a9D6IsT0VB7R2DUK7ltce4HrARlbC83vt2uUpI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bGhnCqwQlPiM4b3rv4j8w1/PA+Bn/pL/Aq39Ffn6pLSMMzz8TXorTEVNFhwMbmKvbaZAIa1VAC9IBWGhR64oMFkN69HQjqXVX66x9bf9hjU6YoQiUQPohA5A/2ZDWbT1Tv6qsPB2IT+KrCBIubJJE31DBhFlPoQQQd7uFpthqUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com; spf=pass smtp.mailfrom=daynix.com; dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b=Rhl4Za3j; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=daynix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=daynix.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="GqCvCWpW"
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 02E192E088E2;
-	Thu, 20 Mar 2025 11:50:58 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742464259;
-	bh=F64ph2xi8UAAfC5J+KyB7cwoJd/pe10eALeTB2Q/Gws=;
-	h=Received:From:Subject:To;
-	b=GqCvCWpWKvd11syYBC/ADzx3y+MbBLnBS1yGdmx9hD8Et0+hjJWziGx7qSwxGXaDh
-	 QziKiAaHZKDdlmjAV8VULKNT19vFvC9N1LmG30lGgAu1i+LN4d+WpGBhA2PVzE4kAe
-	 Pl0+j6MBH6qbchGBXVMRRG7U/x009M99KTsAE0Ww=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.174) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f174.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f174.google.com with SMTP id
- 38308e7fff4ca-30bfd4d4c63so6320651fa.2;
-        Thu, 20 Mar 2025 02:50:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVt/d/cdyJe9rcjFWs4Fo+Yg8xWA9SOfPZGLakHYeg+Y2ZQsBHi7n94+79fv/g2qRYMTI6hfS/dh1CVGA==@vger.kernel.org,
- AJvYcCW6hw+KUMX1I96yRFgdt4eEfdd7rkCkJSwxcaJKc9XTVXfwBmUZVV8nV5C1bqA/P6/0S/o1c/qcGLgnBJyb@vger.kernel.org
-X-Gm-Message-State: AOJu0YyBK0n2uFI37ipdI1r78wQIliiXWcNv/oLUR276VhdzR66Epxsn
-	uVUSG6klREbfSvoDvQqHSonH3X0ZzpxZGubaYGw00uxZgRrrcBXMDnW8iYl8sTxqARsb3D6NVNw
-	zRfCpViM3vIwnCFIQtwoZqh2XKaw=
-X-Google-Smtp-Source: 
- AGHT+IGhE9bp10SF3Gq0RdQyK+lzDrA5IHwYnQHSQIYNAhsRYq8ZylmbEznKRJjlmshyTR6XHjqIzN3eeoiQ48/joE8=
-X-Received: by 2002:a05:6512:2344:b0:549:916b:f6eb with SMTP id
- 2adb3069b0e04-54acb1a387emr1886642e87.1.1742464258231; Thu, 20 Mar 2025
- 02:50:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=daynix-com.20230601.gappssmtp.com header.i=@daynix-com.20230601.gappssmtp.com header.b="Rhl4Za3j"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-223fd89d036so7944475ad.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:53:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=daynix-com.20230601.gappssmtp.com; s=20230601; t=1742464383; x=1743069183; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m7D4rqlmtfwr1EgAb/lUYH/aHJeqF4FrFxKoiXcpfuI=;
+        b=Rhl4Za3jHiMs/FR8jSY/LZmuutp+vLuMU6wd7AAVZOaIfICm5vmlsc75izsljygqF1
+         1MFRpH5xCLR6O/PAo0AgOgoaNPey8sHZcgke4onCpp8RPGv2zxZ8BIqQNkTq5rUM3M3U
+         kayeGQgC7pNI4ZJCaApCqGFzU8oo4wcXR7H48waOqRm5zft1GMjfZ62Kdq59gUM5ZfJf
+         yOhO8hQG1Uc878eIdoqSUMSLGHFFscSFQriV9ROkJnPB/oVyoQhGErnYk+kKV94IT+8E
+         wTKVlo6RL9onGTlsbWAHG4rsFMY2iZiCjU6QN3lp6IyLGEDUY0ErbSZ/gfPoLtJo2h5G
+         oQug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742464383; x=1743069183;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m7D4rqlmtfwr1EgAb/lUYH/aHJeqF4FrFxKoiXcpfuI=;
+        b=FHQWWBK/QqUnauX1KMquIiY9fEnWOGtRNQ0w8FNSFPn18e4+zUJfZElZyTEXXJedkE
+         +XWuslyto5IXMlS4qggN0NHVsmOGx3amCS3vidn6sK1abbM+8IaxHTspwD531ylVOHUr
+         OcIqsNBb0eD63Vo8uvl4DAnt0p215nysCGSQMJpRvrkJ7+HTQls1IByZuYmclGGS9hxn
+         C3ymloGabm2mUzu+GnBF95KUKbt3BhDTlbU8mJS/AFSv41V56jczGYO0FKDe+yMnRRIX
+         OER/ZrHjQCu55I3FiIhTpMpkHVg8rUyhYHEPms3ng1Ji4wYrDZlMTnV1NKoF/Hg83/4x
+         4ovg==
+X-Forwarded-Encrypted: i=1; AJvYcCWrJUuBbbUKirCaBALHb/DG3ljDtbFOomAQQyc+dIUeCYTCqqnnwy3wNQhF6ul8Iw1o3RI/HjmEiC2qLLA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxUHkOvZahWM0dEriTGLIgtBvg82bY1V+dAGU2GJg6P4KUJzAPD
+	TLtM5MePgF9opVyoGipICcMfcuALPEsHlW3i9s/u5WZAGnfd19D+cDeEsKSpyyM=
+X-Gm-Gg: ASbGncvBriC/wRub5Wn2Fk37YohLQaDSqjY4j7T2KxmNoHRZEaW8z/AAvJd2mw0ZGsS
+	GqIZ/pkjz3p/BIfGFYLTZ5SBVGzcuI7vJWo8DtoSAB0zYLXJr4ob4F4VTML1ov8JReS+TWxrQWR
+	xaNYsWrlTAoIYYTv878ZvKQK9AxuRCq1V8RnXMZb5Lv3HoAGyljRdM1TkLoP789Yl0V4PGYmC+f
+	mD52xfuLCPOpKE/1raboKP98W5lSCPdIC+xXfcylA0hlZHnqzr9M9yLJaehNhPkJqIKOtsD/zvX
+	IK3KkfBaHFMhCXXkTS1/2kdlXYmRT8VHSgyPPNxsiqbUn5LxiVg9f+d4Zg==
+X-Google-Smtp-Source: AGHT+IE3mIGDRFikUIqZ1qqXpt2WAHzRmavgaURSEY1rWIOdBI4jZWh2D1HIB2Ty4Cr8ew7b4T+ofQ==
+X-Received: by 2002:a17:902:e810:b0:223:88af:2c30 with SMTP id d9443c01a7336-22649a30485mr90872845ad.16.1742464383534;
+        Thu, 20 Mar 2025 02:53:03 -0700 (PDT)
+Received: from [157.82.207.107] ([157.82.207.107])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6ba6d52sm130630135ad.116.2025.03.20.02.53.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 02:53:03 -0700 (PDT)
+Message-ID: <ba9cd6d2-1ee5-478a-8102-42b4dac411ce@daynix.com>
+Date: Thu, 20 Mar 2025 18:52:59 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319191320.10092-1-lkml@antheas.dev>
- <20250319191320.10092-2-lkml@antheas.dev>
- <567b2056-8687-4f92-b4d2-7f289321275e@ljones.dev>
-In-Reply-To: <567b2056-8687-4f92-b4d2-7f289321275e@ljones.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Thu, 20 Mar 2025 10:50:46 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGB69__pYzeTOmKnJrx1M8X4mgnDeRXE-dyFy9p495sBQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr_Sh1-0LXBCSN2rSlO5DGocWbkIr-wRaP_jF8FR5LwpCnSxuXLEqu6skU
-Message-ID: 
- <CAGwozwGB69__pYzeTOmKnJrx1M8X4mgnDeRXE-dyFy9p495sBQ@mail.gmail.com>
-Subject: Re: [PATCH 01/11] HID: asus: refactor init sequence per spec
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
- Corentin Chary <corentin.chary@gmail.com>,
-	Hans de Goede <hdegoede@redhat.com>,
- =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174246425947.4164.12178216220255030923@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+To: Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>, Joey Gouly <joey.gouly@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+ "Gustavo A. R. Silva" <gustavoars@kernel.org>,
+ linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+ linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+ devel@daynix.com
+References: <20250319-hybrid-v1-1-4d1ada10e705@daynix.com>
+ <Z9pze3J2_zrTk_yC@linux.dev>
+ <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+ <86plidmjwh.wl-maz@kernel.org>
+ <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+ <86o6xxmg87.wl-maz@kernel.org>
+ <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+ <86msdhmemw.wl-maz@kernel.org>
+ <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+ <86ldt0n9w1.wl-maz@kernel.org> <Z9sSMJAlf7cQ5viu@linux.dev>
+ <0d84bc94-1c65-4737-a2eb-aa7f96a7d1e0@daynix.com>
+ <86iko4m5i4.wl-maz@kernel.org>
+Content-Language: en-US
+From: Akihiko Odaki <akihiko.odaki@daynix.com>
+In-Reply-To: <86iko4m5i4.wl-maz@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Mar 2025 at 08:19, Luke D. Jones <luke@ljones.dev> wrote:
->
->
-> On 20/03/25 08:13, Antheas Kapenekakis wrote:
-> > Currently, asus_kbd_init() uses a reverse engineered init sequence
-> > from Windows, which contains the handshakes from multiple programs.
-> > Keep the main one, which is 0x5a (meant for drivers).
->
-> 0x5A is also used for Ally setup commands, used from userspace in
-> Windows. Only a nit but I don't think stating it's only for drivers is
-> accurate but then again asus kind of blurs the line a bit.
+On 2025/03/20 18:10, Marc Zyngier wrote:
+> On Thu, 20 Mar 2025 06:03:35 +0000,
+> Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>
+>> On 2025/03/20 3:51, Oliver Upton wrote:
+>>> On Wed, Mar 19, 2025 at 06:38:38PM +0000, Marc Zyngier wrote:
+>>>> On Wed, 19 Mar 2025 11:51:21 +0000, Akihiko Odaki <akihiko.odaki@daynix.com> wrote:
+>>>>> What about setting the flag automatically when a user fails to pin
+>>>>> vCPUs to CPUs that are covered by one PMU? There would be no change if
+>>>>> a user correctly pins vCPUs as it is. Otherwise, they will see a
+>>>>> correct feature set advertised to the guest and the cycle counter
+>>>>> working.
+>>>>
+>>>> How do you know that the affinity is "correct"? VCPU affinity can be
+>>>> changed at any time. I, for one, do not want my VMs to change
+>>>> behaviour because I let the vcpus bounce around as the scheduler sees
+>>>> fit.
+>>
+>> Checking the affinity when picking the default PMU; the vCPU affinity
+>> is the only thing that rules the choice of the default PMU even now.
+>>
+>> Perhaps we may model the API as follows: introduce another "composite"
+>> PMU that works on any core but only exposes the cycle counter. Robust
+>> VMMs will choose it or one of hardware PMUs with
+>> KVM_ARM_VCPU_PMU_V3_SET_PMU. KVM will choose the default PMU according
+>> to the vCPU affinity at the point of KVM_ARM_VCPU_INIT otherwise. If
+>> the affinity is covered by one hardware PMU, that PMU will be chosen
+>> as the default. The "composite" PMU will be the default otherwise.
+> 
+> This makes no sense to me. A VCPU is always affine to a PMU, because
+> we do not support configurations where only some CPUs have a PMU. This
+> is an all-or-nothing situation.
 
-ROG devices contain a HID USB endpoint that exposes multiple
-applications. On my Z13, that is 4 hiddev devices.
+At least isn't it fine to have the composite PMU with a new value for 
+KVM_ARM_VCPU_PMU_V3_SET_PMU?
 
-However, we only care about two. Those are:
+> 
+> More importantly, you keep suggesting the same "new default", and I
+> keep saying NO.
+> 
+> My position is clear: if you want a *new* behaviour, you *must* add a
+> new flag that the VMM explicitly provides to enable this CC-only PMU.
+> No change in default behaviour at all.
+> 
+> I'm not going to move from that.
 
-Application / Report ID:
-0xff310076 / 0x5a meant for Asus drivers
-0xff310079 / 0x5d meant for Asus applications
+Why not? It will not break anything guaranteed to work in the past.
 
-Both require the same handshake when they start. Well, in theory. But
-as you say in some of the Anime stuff requires it in practice too.
+Currently KVM only guarantees that the emulated PMU correctly counts 
+only when
+1) the vCPU affinity is contained by one PMU and
+2) it will not expand
 
-The handshake is set_report 0x5X + "Asus...", then get_report with the
-same ID which should return the asus string.
+Breaking these conditions will make the behavior of the emulated PMU 
+undefined. Now I'm proposing to remove 1).
 
-In hiddraw, they appear under the same endpoint, both on the Ally and
-the Z13. But in hiddev (with hid-asus disabled or with this series),
-they appear as separate.
+Regards,
+Akihiko Odaki
 
-I cannot comment on the Aura protocol, because I don't know, but for
-the basic sticky RGB mode that supports set and apply, they _should_
-behave identically. I use 0x5d in my userspace software for everything
-now [1]. Previously, I used 0x5a but I am not a driver.
+> 
+> 	M.
+> 
 
-They do behave identically on the Ally X and the Z13 2025 though.
-
-I do not know about 0x5e. Perhaps Asus made a special endpoint for
-their Anime creation app.
-
-> > In addition, perform a get_response and check if the response is the
-> > same. To avoid regressions, print an error if the response does not
-> > match instead of rejecting device.
-> >
-> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
-> > ---
-> >   drivers/hid/hid-asus.c | 82 +++++++++++++++++++++++-------------------
-> >   1 file changed, 46 insertions(+), 36 deletions(-)
-> >
-> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
-> > index 46e3e42f9eb5f..aa4a481dc4f27 100644
-> > --- a/drivers/hid/hid-asus.c
-> > +++ b/drivers/hid/hid-asus.c
-> > @@ -48,7 +48,7 @@ MODULE_DESCRIPTION("Asus HID Keyboard and TouchPad");
-> >   #define FEATURE_REPORT_ID 0x0d
-> >   #define INPUT_REPORT_ID 0x5d
-> >   #define FEATURE_KBD_REPORT_ID 0x5a
-> > -#define FEATURE_KBD_REPORT_SIZE 16
-> > +#define FEATURE_KBD_REPORT_SIZE 64
-> >   #define FEATURE_KBD_LED_REPORT_ID1 0x5d
-> >   #define FEATURE_KBD_LED_REPORT_ID2 0x5e
-> >
-> > @@ -386,16 +386,43 @@ static int asus_kbd_set_report(struct hid_device *hdev, const u8 *buf, size_t bu
-> >       return ret;
-> >   }
-> >
-> > -static int asus_kbd_init(struct hid_device *hdev, u8 report_id)
-> > +static int asus_kbd_init(struct hid_device *hdev)
-> >   {
-> > -     const u8 buf[] = { report_id, 0x41, 0x53, 0x55, 0x53, 0x20, 0x54,
-> > -                  0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
-> > +     /*
-> > +      * Asus handshake identifying us as a driver (0x5A)
-> > +      * 0x5A then ASCII for "ASUS Tech.Inc."
-> > +      * 0x5D is for userspace Windows applications.
->
-> 0x5D is the report ID used for commands such as RGB modes. Probably
-> don't need to mention it here, and only where it is used.
-
-Yep, see above. Not required for basic RGB. Maybe it is for Aura, but
-I'd leave that to userspace.
-
-> > +      * The handshake is first sent as a set_report, then retrieved
-> > +      * from a get_report to verify the response.
-> > +      */
-> > +     const u8 buf[] = { FEATURE_KBD_REPORT_ID, 0x41, 0x53, 0x55, 0x53, 0x20,
-> > +             0x54, 0x65, 0x63, 0x68, 0x2e, 0x49, 0x6e, 0x63, 0x2e, 0x00 };
-> > +     u8 *readbuf;
-> >       int ret;
-> >
-> >       ret = asus_kbd_set_report(hdev, buf, sizeof(buf));
-> > -     if (ret < 0)
-> > -             hid_err(hdev, "Asus failed to send init command: %d\n", ret);
-> > +     if (ret < 0) {
-> > +             hid_err(hdev, "Asus failed to send handshake: %d\n", ret);
-> > +             return ret;
-> > +     }
-> >
-> > +     readbuf = kzalloc(FEATURE_KBD_REPORT_SIZE, GFP_KERNEL);
-> > +     if (!readbuf)
-> > +             return -ENOMEM;
-> > +
-> > +     ret = hid_hw_raw_request(hdev, FEATURE_KBD_REPORT_ID, readbuf,
-> > +                              FEATURE_KBD_REPORT_SIZE, HID_FEATURE_REPORT,
-> > +                              HID_REQ_GET_REPORT);
-> > +     if (ret < 0) {
-> > +             hid_err(hdev, "Asus failed to receive handshake ack: %d\n", ret);
-> > +     } else if (memcmp(readbuf, buf, sizeof(buf)) != 0) {
-> > +             hid_err(hdev, "Asus handshake returned invalid response: %*ph\n",
-> > +                     FEATURE_KBD_REPORT_SIZE, readbuf);
-> > +             // Do not return error if handshake is wrong to avoid regressions
->
-> I'll have to test this on the oldest model I have. Hopefully it's a
-> non-issue and this can return error instead.
->
-> Side-note: I notice you're using a msleep to try and work around an
-> issue in a later patch - it might be worth trying replacing that with a
-> retry/count loop with an inner of small msleep + a call to this init,
-> see if it still responds to this during that critical period.
-
-The call did not fail. I was thinking it was because the device needs
-some time to warm up (it happens with certain devices).
-
-Turns out it was hid-multitouch not attaching.
-
-> > +     }
-> > +
-> > +     kfree(readbuf);
-> >       return ret;
-> >   }
-> >
-> > @@ -540,42 +567,25 @@ static int asus_kbd_register_leds(struct hid_device *hdev)
-> >       unsigned char kbd_func;
-> >       int ret;
-> >
-> > -     if (drvdata->quirks & QUIRK_ROG_NKEY_KEYBOARD) {
-> > -             /* Initialize keyboard */
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > -
-> > -             /* The LED endpoint is initialised in two HID */
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID1);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > -
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_LED_REPORT_ID2);
-> > -             if (ret < 0)
-> > -                     return ret;
->
-> Ah, I recall now. Some devices like the Slash or AniMe Matrix required
-> the 0x5E and 0x5D report ID (device dependent) however these are
-> currently being done via userspace due to not being HID devices.
->
-> There *are* some older laptops still in use that require init on 0x5E or
-> 0x5D for RGB to be usable, from memory. It's been over 5 years so I'll
-> pull out the laptop I have with 0x1866 PID MCU and see if that is
-> actually true and not just my imagination.
-
-Hopefully you handshake with these devices over userspace, so they
-will not be affected.
-
-> > +     ret = asus_kbd_init(hdev);
-> > +     if (ret < 0)
-> > +             return ret;
-> >
-> > -             if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-> > -                     ret = asus_kbd_disable_oobe(hdev);
-> > -                     if (ret < 0)
-> > -                             return ret;
-> > -             }
-> > -     } else {
-> > -             /* Initialize keyboard */
-> > -             ret = asus_kbd_init(hdev, FEATURE_KBD_REPORT_ID);
-> > -             if (ret < 0)
-> > -                     return ret;
-> > +     /* Get keyboard functions */
-> > +     ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
-> > +     if (ret < 0)
-> > +             return ret;
-> >
-> > -             /* Get keyboard functions */
-> > -             ret = asus_kbd_get_functions(hdev, &kbd_func, FEATURE_KBD_REPORT_ID);
-> > +     if (dmi_match(DMI_PRODUCT_FAMILY, "ProArt P16")) {
-> > +             ret = asus_kbd_disable_oobe(hdev);
-> >               if (ret < 0)
-> >                       return ret;
-> > -
-> > -             /* Check for backlight support */
-> > -             if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
-> > -                     return -ENODEV;
-> >       }
-> >
-> > +     /* Check for backlight support */
-> > +     if (!(kbd_func & SUPPORT_KBD_BACKLIGHT))
-> > +             return -ENODEV;
-> > +
-> >       drvdata->kbd_backlight = devm_kzalloc(&hdev->dev,
-> >                                             sizeof(struct asus_kbd_leds),
-> >                                             GFP_KERNEL);
->
-> I've left only small comments on a few patches for now. I'll review in
-> full after I get testing done on a variety of devices whcih I'm aiming
-> for this weekend. Overall impression so far is everything looks good and
-> this is a nice improvement. Thank you for taking the time to implement it.
->
-> Cheers,
-> Luke.
-
-I'll try to have V2 out today. I finished it yesterday and fixed all
-the lockups and the hid-multitouch issue. Just needs a good
-lookthrough.
-
-Perhaps I will also do a small multi-intensity endpoint that works
-with KDE and only applies the colors when asked. This way our programs
-are not affected and normal laptop users get basic RGB OOTB.
-
-If I do that, I will make the quirk for the Ally in a separate patch,
-so that you can nack it if you'd rather introduce RGB support with
-your driver, so that it does not need to be reverted.
-
-Antheas
-
-[1] https://github.com/hhd-dev/hhd/blob/d3bbd7fa25fe9a4838896a2c5cfda460abe48dc6/src/hhd/device/rog_ally/const.py#L5-L8
