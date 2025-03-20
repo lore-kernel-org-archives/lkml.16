@@ -1,87 +1,160 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EB981BD01D
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 05:39:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C46431BD01D;
+	Thu, 20 Mar 2025 05:39:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742449171; cv=none; b=UyHVbECsLW92ObFxKiTLuUH411jvWgiKeR6cYpnpKT+W9uzZLXPe6Tal6a7x0yoWJBUGy+2oxvrkFFBzJvLgTcAWYBDaiCNBfUe4rZ5gevRv1qlrF6f2WIDm3Gn1U+pv5sIFuunWS8JKhdiC6qdugj0ca3Wl/qG45Fk4wK1voWU=
+	t=1742449185; cv=none; b=gOuqZznTDM8CALdkFPSYkEgE8GAhqzZ4/kMnTKgwDqtZEezEGbcaLeJYCLIOJMQL6pxF0k6UYtRpYZwU31AbPFKDEYtowfxtNKrdCKPVuVNoCmNFvEx/nBtVaCvt00+XysJVhlxAJbVv5X1aMD9l23Qm9G0xJ/xkUD94NOJ5+Jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742449171; c=relaxed/simple;
-	bh=HSCSKfhfDD7I1zTxBolH/tzZ9w0jNV+XNDv1/LCD76o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OaXoBejeTS+SiYxgbHunHr309KqNRtoOdSAaG5buTkoRyn5qrvF1b76QvNa/SH278jKOtxTUI1U6zQNi0iZcGpv6aNPk1Ks2JfTrTH7pXgpo4wOoM9PvZjyPCAbtiF02Doq8LmbDOrNxEejwcPv7ioU83vNvu37DNw5Z66OEJ5M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mH/nYgnZ; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742449185; c=relaxed/simple;
+	bh=OWte6lejDS7n5xIpsWqNW8pBu+MRjbH+R4O10AsrXCs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iIfIMTAHnOe2Y/LTtm1ic1UVMJAriBmvG3iEPmFFiWulyv/tSFIIeata3H8+YqHupAMOtpMq1fISrcOpDRjiBReyxnWSLi5NSRSBHqwC5X0Sj2USwrV8pPHNrJYF+3Z/fny/nbxDPMlrOQ7Ia18QYFIo/wx5GBAh83niY5TjZ5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fyc9tomQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mH/nYgnZ"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-394780e98easo177039f8f.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 22:39:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742449168; x=1743053968; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=T1xfmCIlDCLZv6ta1QqTTHp5D0zhqGln1AOW6eZ+4nQ=;
-        b=mH/nYgnZW/DbN1VRYVvFwzepXqzkrut4fgO2GX5Lsf6Nk2+Ixby17BeC8gr1cftnDi
-         jKfx26DnI4yq82lZXLi/i20RUM+sxeWxLWyp9D8Gx5tIGGfhN2rLsvSEQElg79EOyPUC
-         1rnQD/4ermbWGgOFNJ2WRBGR2lf9zUJng/gQGzuHyPQN+qqcgSkJVUla+GHN7rq2bd4A
-         Bgo6Wy8nMkfhREskXKc5Ily/bZsuv9858HvUcXuIuP8yWXi9aeGeOwtOO9kHukpmWbBu
-         Mwy33St28bzsb6HlIpPoqOA5i9Zfnevv0OxA4QIuqZ15wZzO5ELhR3DtbpNwPbbofuu3
-         v7og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742449168; x=1743053968;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T1xfmCIlDCLZv6ta1QqTTHp5D0zhqGln1AOW6eZ+4nQ=;
-        b=hUAjB9Yf145xEY2yEI2mNjxCPY0Imoa8PdZt0ga1rdPrXdxiUoQoylv44Zq9tiO5X+
-         SUjJYI8lsDWI6cYJzZmntFbL9cmoir2ffrsjyRgQYF9KvOuJlMWG6f/39rXrky+on0fr
-         XjYy9kvmUN+ZyvvVxnY9A4b+tC9FsFY+dFlfCrkc3hpQgwWWWyQuLPx0ZyY7Rfnz84sB
-         Yf9mx7qtSpPv1uV55ANhweNTmPhR4jIMxj16HisUwBPsGDgS+Tbl5gsIhINRj9jO2iej
-         ahCQLCypC4mDdW+f06jnG3Akme0Dv60rhTazisEeTUBEam3GIrfN9Wd98//jO2njvUSv
-         WSjw==
-X-Forwarded-Encrypted: i=1; AJvYcCXVmLAq65NKaohfIVq6Wd8D1cyvrO0aGnthTPVw2TWdm/Fj63ceGe8ZB5lkl82YpCtkd6x8cv4iAIAXqbs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySNnwBkWAEiGarvr9d+lWGcOgEXeyM/CIFMcjbMEhyVyACTMGk
-	jplooHraaV6HYiMDEeG8qg+k9aPPRU60LTWPIljw5t3KsAQOlvieuTqFoxhdHWQ=
-X-Gm-Gg: ASbGnctNw41P4vX5VJNGrim9BpLAIZyoL8dfKvAKXiY83VgDDznVaOqVB77FiaxAkGn
-	Q5M06UjvF9ql9Yngw85/B1QlkDUxc/USXE4Teto2jNghhQWUnWqXJCdeR8h+JHSEycq0/M73wMv
-	FMrkY7ajRneObvzoZGpEY/ZhuljxmCHFW98QyI643FwgZNJ0W4C/5uAjLSMe2GWEbKL/pxIj6Xt
-	lBGeDVo0b5ey3KqWSSY5arDgr5DYr8EqGczeOMdz10HIDhv1pZDx0g3VfNyTAILtw+0i/PE4qSC
-	XgcVqAPJdLmsBjHXU/R0Yj1D40rXBwXyia2RALN/jXcR4IuAEQ==
-X-Google-Smtp-Source: AGHT+IGQzpC9EimzyS/t+4sa9m1WxjhJGJdtlCwpcWgQVOt2GkYCyDGik+tts44dUuzfVSiwyZSIYA==
-X-Received: by 2002:a5d:5888:0:b0:391:231b:8e0d with SMTP id ffacd0b85a97d-39973b32bb3mr6150923f8f.39.1742449168214;
-        Wed, 19 Mar 2025 22:39:28 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-395c83b6a10sm22976809f8f.36.2025.03.19.22.39.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Mar 2025 22:39:27 -0700 (PDT)
-Date: Thu, 20 Mar 2025 08:39:24 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ethan Carter Edwards <ethan@ethancedwards.com>
-Cc: brauner@kernel.org, tytso@mit.edu, jack@suse.cz,
-	viro@zeniv.linux.org.uk,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	ernesto.mnd.fernandez@gmail.com, sven@svenpeter.dev,
-	ernesto@corellium.com, gargaditya08@live.com, willy@infradead.org,
-	asahi@lists.linux.dev, linux-kernel@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-staging@lists.linux.dev
-Subject: Re: [RFC PATCH v2 0/8] staging: apfs: init APFS filesystem support
-Message-ID: <541236f7-adb5-4514-a888-19fef74c14f0@stanley.mountain>
-References: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fyc9tomQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A920C4CEE3;
+	Thu, 20 Mar 2025 05:39:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742449185;
+	bh=OWte6lejDS7n5xIpsWqNW8pBu+MRjbH+R4O10AsrXCs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Fyc9tomQ64s56+TofXY8CXmj7hPdLTha2V/olx6+ZQbTBJJanyE+TAb6+p2b94+RZ
+	 1P64OLMK8aXnOoWxEkCbHrxkFhqEN9O2lRgKkUcrJaOLVZvsDmKf9+cMwcZAJU42t0
+	 Vi164iO6fwcKtPiEpGv8rv+FisbgxZWnLQtk24QCtlmZYCsCiut9gIX2COawqTk/i8
+	 ZKjsMGo4YuEOm7HbXO4mR8zpF5ZDX0YNZKq/JPeGuRQ4NRVBn+lxSAn9EYq0p3YGPJ
+	 bhCakZMystvl3krGPdFcIpMpgerUxj73uB4KopW95FsZdEn6ZrxOOrInavSdZX4WAL
+	 0X8/1PZZdnasg==
+From: SeongJae Park <sj@kernel.org>
+To: 
+Cc: SeongJae Park <sj@kernel.org>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	damon@lists.linux.dev,
+	kernel-team@meta.com,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org
+Subject: [RFC PATCH 1/4] mm/damon/core: introduce two damos quota goal metrics for NUMA memory utilization and free space ratios
+Date: Wed, 19 Mar 2025 22:39:34 -0700
+Message-Id: <20250320053937.57734-2-sj@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250320053937.57734-1-sj@kernel.org>
+References: <20250320053937.57734-1-sj@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319-apfs-v2-0-475de2e25782@ethancedwards.com>
+Content-Transfer-Encoding: 8bit
 
-I don't think this filesystem should be merged.  The real upstream
-is out of tree.
+Utilization and free space ratios for specific NUMA nodes can be useful
+inputs for NUMA-specific DAMOS schemes' aggressiveness self-tuning
+feedback loop.  Implement DAMOS quota goal metrics for such self-tuned
+schemes.
 
-regards,
-dan carpenter
+Signed-off-by: SeongJae Park <sj@kernel.org>
+---
+ include/linux/damon.h    |  6 ++++++
+ mm/damon/core.c          | 27 +++++++++++++++++++++++++++
+ mm/damon/sysfs-schemes.c |  2 ++
+ 3 files changed, 35 insertions(+)
 
+diff --git a/include/linux/damon.h b/include/linux/damon.h
+index 9f0eec85e636..ba3604cd4d60 100644
+--- a/include/linux/damon.h
++++ b/include/linux/damon.h
+@@ -154,6 +154,8 @@ enum damos_action {
+  *
+  * @DAMOS_QUOTA_USER_INPUT:	User-input value.
+  * @DAMOS_QUOTA_SOME_MEM_PSI_US:	System level some memory PSI in us.
++ * @DAMOS_QUOTA_NODE_MEM_USED_BP:	MemUsed ratio of a node.
++ * @DAMOS_QUOTA_NODE_MEM_FREE_BP:	MemFree ratio of a node.
+  * @NR_DAMOS_QUOTA_GOAL_METRICS:	Number of DAMOS quota goal metrics.
+  *
+  * Metrics equal to larger than @NR_DAMOS_QUOTA_GOAL_METRICS are unsupported.
+@@ -161,6 +163,8 @@ enum damos_action {
+ enum damos_quota_goal_metric {
+ 	DAMOS_QUOTA_USER_INPUT,
+ 	DAMOS_QUOTA_SOME_MEM_PSI_US,
++	DAMOS_QUOTA_NODE_MEM_USED_BP,
++	DAMOS_QUOTA_NODE_MEM_FREE_BP,
+ 	NR_DAMOS_QUOTA_GOAL_METRICS,
+ };
+ 
+@@ -170,6 +174,7 @@ enum damos_quota_goal_metric {
+  * @target_value:	Target value of @metric to achieve with the tuning.
+  * @current_value:	Current value of @metric.
+  * @last_psi_total:	Last measured total PSI
++ * @nid:		Node id.
+  * @list:		List head for siblings.
+  *
+  * Data structure for getting the current score of the quota tuning goal.  The
+@@ -188,6 +193,7 @@ struct damos_quota_goal {
+ 	/* metric-dependent fields */
+ 	union {
+ 		u64 last_psi_total;
++		int nid;
+ 	};
+ 	struct list_head list;
+ };
+diff --git a/mm/damon/core.c b/mm/damon/core.c
+index fc1eba3da419..c4ce8e2c22c1 100644
+--- a/mm/damon/core.c
++++ b/mm/damon/core.c
+@@ -1890,6 +1890,29 @@ static inline u64 damos_get_some_mem_psi_total(void)
+ 
+ #endif	/* CONFIG_PSI */
+ 
++#ifdef CONFIG_NUMA
++static __kernel_ulong_t damos_get_node_mem_bp(
++		struct damos_quota_goal *goal)
++{
++	struct sysinfo i;
++	__kernel_ulong_t numerator;
++
++	si_meminfo_node(&i, goal->nid);
++	if (goal->metric == DAMOS_QUOTA_NODE_MEM_USED_BP)
++		numerator = i.totalram - i.freeram;
++	else	/* DAMOS_QUOTA_NODE_MEM_FREE_BP */
++		numerator = i.freeram;
++	return numerator * 10000 / i.totalram;
++}
++#else
++static __kernel_ulong_t damos_get_node_mem_bp(
++		struct damos_quota_goal *goal)
++{
++	return 0;
++}
++#endif
++
++
+ static void damos_set_quota_goal_current_value(struct damos_quota_goal *goal)
+ {
+ 	u64 now_psi_total;
+@@ -1903,6 +1926,10 @@ static void damos_set_quota_goal_current_value(struct damos_quota_goal *goal)
+ 		goal->current_value = now_psi_total - goal->last_psi_total;
+ 		goal->last_psi_total = now_psi_total;
+ 		break;
++	case DAMOS_QUOTA_NODE_MEM_USED_BP:
++	case DAMOS_QUOTA_NODE_MEM_FREE_BP:
++		goal->current_value = damos_get_node_mem_bp(goal);
++		break;
+ 	default:
+ 		break;
+ 	}
+diff --git a/mm/damon/sysfs-schemes.c b/mm/damon/sysfs-schemes.c
+index 9cff4ec6973f..0f338ba1db43 100644
+--- a/mm/damon/sysfs-schemes.c
++++ b/mm/damon/sysfs-schemes.c
+@@ -942,6 +942,8 @@ struct damos_sysfs_quota_goal {
+ static const char * const damos_sysfs_quota_goal_metric_strs[] = {
+ 	"user_input",
+ 	"some_mem_psi_us",
++	"node_mem_used_bp",
++	"node_mem_free_bp",
+ };
+ 
+ static struct damos_sysfs_quota_goal *damos_sysfs_quota_goal_alloc(void)
+-- 
+2.39.5
