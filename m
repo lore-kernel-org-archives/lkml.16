@@ -1,33 +1,33 @@
-Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
+Received: from smtp-8faa.mail.infomaniak.ch (smtp-8faa.mail.infomaniak.ch [83.166.143.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607B722DFF3
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:08:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 004D61DED4B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:08:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497682; cv=none; b=k4jn7X787GHBxyq2pO654S6oxbY3YjZORlU2O/aDhaff5yGesi8qS4AMEOjzfUqca8hSXVYszadOhZGqgYYpd+ETjfrMvmOt4RZeEM2Sap9Kfecg8vZU4a0bJyr1KLp7rSljFxkb60haEDwpuLof86OaWc2P6O2GEdxcLexQkUw=
+	t=1742497688; cv=none; b=qqRBXJk62dAmVPyQhk+1O37Sbk8dzStsm2BoSmRjNDtWBJ2NwzOHE4o62AxXmJQirPYz9oa636tmus3mfUIW1tpspa0LM+raKJZfwD84VIeqe7fDEIXjNKIQIr2O7kc1sEwN6JvVGuRk3moM0+0CpfeL9RBvTZ8E7JRQJY5hBnE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497682; c=relaxed/simple;
-	bh=7flhWP8ygpcvAmUbY85qVo1LcnNeczBMgOiTvpScqak=;
+	s=arc-20240116; t=1742497688; c=relaxed/simple;
+	bh=WCiYi6/5YPW6GYBH6rdc3JFd7Vug8oKUjJEUZ0zOPiI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hs/NFhTquLQQDc/ylAvZabuGg+hYEUKqY6+KyEsad+sfwvcNhqqCjFSYmyQl8mcgSjbpqazl3LybCsyDE0eSjyG4ot7kkslleigT8g3J7n69u5IjYVegq7/cWhOj9KDU6kisUydFRyfX7NlkQ7T2j1o/4H27Vz6bqpwSsj1PN4Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=MLAjprmN; arc=none smtp.client-ip=185.125.25.15
+	 MIME-Version:Content-Type; b=pSpY22A2q/SBALC/5YGX6kXgzAzuyCXkuNxuAGMO84iWen6EqPiKSRL/f4yLSp9rvxZRGwEzlDNschmuGFqum40hJlj4QgrOSwS/NELYXMWwfQkGTnLMqX76IcpUvIS87L5so8yxCtoOGzmwETJrNI6dpQ6DJ52JZhY6BHLsXTg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=khZGcTxg; arc=none smtp.client-ip=83.166.143.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="MLAjprmN"
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpd2hyZzHj6;
-	Thu, 20 Mar 2025 20:07:53 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="khZGcTxg"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpr1pnhzwdD;
+	Thu, 20 Mar 2025 20:08:04 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1742497673;
-	bh=nNswpTtD18zUqILHBB9Imp9vJiNfAbZ/1aLoVvoOLNQ=;
+	s=20191114; t=1742497684;
+	bh=48tyc0VLiY0MDywwnAC06mW/SWXf4hBircunrYD3qQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MLAjprmNV//6/HbewYtCglZ+lDi/jBc3nKCKSkYZYcQgtJ7S9Q+f3sTuy37fUmjvb
-	 5k9jl16Xn0uHdPTO9lzf9YAHkH7FadL8JxzQ0WN6p9aP8V8tL0u5rrnGqpGKRXGVl/
-	 97pDosVl3jitE5ohDbUV656SYt+Nhq7gKsqqkKgI=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpc2D9nz5rc;
-	Thu, 20 Mar 2025 20:07:52 +0100 (CET)
+	b=khZGcTxgm4DGoD8LH5ia1NkEw+chcr2cBa8sEWOa7fN+SWYFxDEXV842UjMgr/r4d
+	 UXlZelzL6u/LO4BOjZW3ZHpX2xP/lgr3SzOXgPxUaPn0PukJkinVr8zB9u25cowSqg
+	 Q0VBGsWERkiIxlK1rY9eb8h/3FuijgLPq2ihr9LI=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpq2xyJzBht;
+	Thu, 20 Mar 2025 20:08:03 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -59,9 +59,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v7 18/28] landlock: Add LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF
-Date: Thu, 20 Mar 2025 20:07:07 +0100
-Message-ID: <20250320190717.2287696-19-mic@digikod.net>
+Subject: [PATCH v7 25/28] selftests/landlock: Add audit tests for abstract UNIX socket scoping
+Date: Thu, 20 Mar 2025 20:07:14 +0100
+Message-ID: <20250320190717.2287696-26-mic@digikod.net>
 In-Reply-To: <20250320190717.2287696-1-mic@digikod.net>
 References: <20250320190717.2287696-1-mic@digikod.net>
 Precedence: bulk
@@ -74,192 +74,153 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF for the case of sandboxer
-tools, init systems, or runtime containers launching programs sandboxing
-themselves in an inconsistent way.  Setting this flag should only
-depends on runtime configuration (i.e. not hardcoded).
-
-We don't create a new ruleset's option because this should not be part
-of the security policy: only the task that enforces the policy (not the
-one that create it) knows if itself or its children may request denied
-actions.
-
-This is the first and only flag that can be set without actually
-restricting the caller (i.e. without providing a ruleset).
-
-Extend struct landlock_cred_security with a u8 log_subdomains_off.
-struct landlock_file_security is still 16 bytes.
+Add a new scoped_audit.connect_to_child test to check the abstract UNIX
+socket blocker.
 
 Cc: Günther Noack <gnoack@google.com>
 Cc: Paul Moore <paul@paul-moore.com>
-Closes: https://github.com/landlock-lsm/linux/issues/3
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
 
-Changes since v5:
-- Rename LANDLOCK_RESTRICT_SELF_QUIET_SUBDOMAINS to
-  LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF.  As for
-  LANDLOCK_RESTRICT_SELF_LOG_OFF, this makes more sense.
-- Store the log_subdomains bit in landlock_cred instead of
-  landlock_hirerarchy because it is not directly related to the current
-  domain.
-- Make it possible to set this flag without actually restricting the
-  calling task, and update the related documentation.
+Changes since v6:
+- Check audit_count_records() calls for audit errors.
+- Simplify tests.
 
-Changes since v4:
+Changes since v5:
 - New patch.
 ---
- include/uapi/linux/landlock.h | 12 ++++++++++
- security/landlock/cred.h      |  7 ++++++
- security/landlock/limits.h    |  2 +-
- security/landlock/syscalls.c  | 41 ++++++++++++++++++++++++++++++-----
- 4 files changed, 55 insertions(+), 7 deletions(-)
+ .../landlock/scoped_abstract_unix_test.c      | 111 ++++++++++++++++++
+ 1 file changed, 111 insertions(+)
 
-diff --git a/include/uapi/linux/landlock.h b/include/uapi/linux/landlock.h
-index 56b0094ef792..d9d0cb827117 100644
---- a/include/uapi/linux/landlock.h
-+++ b/include/uapi/linux/landlock.h
-@@ -79,10 +79,22 @@ struct landlock_ruleset_attr {
-  *   This flag should only be set if all the programs than can legitimately be
-  *   executed will not try to request a denied access (which could spam audit
-  *   logs).
-+ * - %LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF: Do not create any log related
-+ *   to the enforced restrictions coming from future nested domains created by
-+ *   the caller or its descendants.  This should only be set according to a
-+ *   runtime configuration (i.e. not hardcoded) by programs launching other
-+ *   unknown or untrusted programs that may create their own Landlock domains
-+ *   and spam logs.  The main use case is for container runtimes to enable users
-+ *   to mute buggy sandboxed programs for a specific container image.  Other use
-+ *   cases include sandboxer tools and init systems.  Unlike
-+ *   %LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF,
-+ *   %LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF does not impact the requested
-+ *   restriction (if any) but only the future nested domains.
-  */
- /* clang-format off */
- #define LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF		(1U << 0)
- #define LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON			(1U << 1)
-+#define LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF		(1U << 2)
- /* clang-format on */
+diff --git a/tools/testing/selftests/landlock/scoped_abstract_unix_test.c b/tools/testing/selftests/landlock/scoped_abstract_unix_test.c
+index a6b59d2ab1b4..6825082c079c 100644
+--- a/tools/testing/selftests/landlock/scoped_abstract_unix_test.c
++++ b/tools/testing/selftests/landlock/scoped_abstract_unix_test.c
+@@ -20,6 +20,7 @@
+ #include <sys/wait.h>
+ #include <unistd.h>
  
- /**
-diff --git a/security/landlock/cred.h b/security/landlock/cred.h
-index 3bf18551d7b8..c82fe63ec598 100644
---- a/security/landlock/cred.h
-+++ b/security/landlock/cred.h
-@@ -40,6 +40,13 @@ struct landlock_cred_security {
- 	 * landlock_restrict_self(2)).
- 	 */
- 	u16 domain_exec;
-+	/**
-+	 * @log_subdomains_off: Set if the domain descendants's log_status should be
-+	 * set to %LANDLOCK_LOG_DISABLED.  This is not a landlock_hierarchy
-+	 * configuration because it applies to future descendant domains and it does
-+	 * not require a current domain.
-+	 */
-+	u8 log_subdomains_off : 1;
- #endif /* CONFIG_AUDIT */
- } __packed;
++#include "audit.h"
+ #include "common.h"
+ #include "scoped_common.h"
  
-diff --git a/security/landlock/limits.h b/security/landlock/limits.h
-index 404e880cccf9..65b5ff051674 100644
---- a/security/landlock/limits.h
-+++ b/security/landlock/limits.h
-@@ -31,7 +31,7 @@
- #define LANDLOCK_MASK_SCOPE		((LANDLOCK_LAST_SCOPE << 1) - 1)
- #define LANDLOCK_NUM_SCOPE		__const_hweight64(LANDLOCK_MASK_SCOPE)
+@@ -267,6 +268,116 @@ TEST_F(scoped_domains, connect_to_child)
+ 		_metadata->exit_code = KSFT_FAIL;
+ }
  
--#define LANDLOCK_LAST_RESTRICT_SELF	LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
-+#define LANDLOCK_LAST_RESTRICT_SELF	LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF
- #define LANDLOCK_MASK_RESTRICT_SELF	((LANDLOCK_LAST_RESTRICT_SELF << 1) - 1)
- 
- /* clang-format on */
-diff --git a/security/landlock/syscalls.c b/security/landlock/syscalls.c
-index 5c49a6ef14e4..74d5cc2963b7 100644
---- a/security/landlock/syscalls.c
-+++ b/security/landlock/syscalls.c
-@@ -454,12 +454,16 @@ SYSCALL_DEFINE4(landlock_add_rule, const int, ruleset_fd,
-  *
-  * - %LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF
-  * - %LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON
-+ * - %LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF
-  *
-  * This system call enables to enforce a Landlock ruleset on the current
-  * thread.  Enforcing a ruleset requires that the task has %CAP_SYS_ADMIN in its
-  * namespace or is running with no_new_privs.  This avoids scenarios where
-  * unprivileged tasks can affect the behavior of privileged children.
-  *
-+ * It is allowed to only pass the %LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF
-+ * flag with a @ruleset_fd value of -1.
-+ *
-  * Possible returned errors are:
-  *
-  * - %EOPNOTSUPP: Landlock is supported by the kernel but disabled at boot time;
-@@ -479,7 +483,8 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
- 		*ruleset __free(landlock_put_ruleset) = NULL;
- 	struct cred *new_cred;
- 	struct landlock_cred_security *new_llcred;
--	bool log_same_exec, log_cross_exec;
-+	bool log_same_exec, log_cross_exec, log_subdomains,
-+		__maybe_unused prev_log_subdomains;
- 
- 	if (!is_initialized())
- 		return -EOPNOTSUPP;
-@@ -500,11 +505,20 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
- 	log_same_exec = !(flags & LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF);
- 	/* Translates "on" flag to boolean. */
- 	log_cross_exec = !!(flags & LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON);
-+	/* Translates "off" flag to boolean. */
-+	log_subdomains = !(flags & LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF);
- 
--	/* Gets and checks the ruleset. */
--	ruleset = get_ruleset_from_fd(ruleset_fd, FMODE_CAN_READ);
--	if (IS_ERR(ruleset))
--		return PTR_ERR(ruleset);
-+	/*
-+	 * It is allowed to set %LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF with -1
-+	 * as @ruleset_fd, but no other flag must be set.
-+	 */
-+	if (!(ruleset_fd == -1 &&
-+	      flags == LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF)) {
-+		/* Gets and checks the ruleset. */
-+		ruleset = get_ruleset_from_fd(ruleset_fd, FMODE_CAN_READ);
-+		if (IS_ERR(ruleset))
-+			return PTR_ERR(ruleset);
++FIXTURE(scoped_audit)
++{
++	struct service_fixture dgram_address;
++	struct audit_filter audit_filter;
++	int audit_fd;
++};
++
++FIXTURE_SETUP(scoped_audit)
++{
++	disable_caps(_metadata);
++
++	memset(&self->dgram_address, 0, sizeof(self->dgram_address));
++	set_unix_address(&self->dgram_address, 1);
++
++	set_cap(_metadata, CAP_AUDIT_CONTROL);
++	self->audit_fd = audit_init_with_exe_filter(&self->audit_filter);
++	EXPECT_LE(0, self->audit_fd);
++	drop_caps(_metadata);
++}
++
++FIXTURE_TEARDOWN_PARENT(scoped_audit)
++{
++	EXPECT_EQ(0, audit_cleanup(-1, NULL));
++}
++
++/* python -c 'print(b"\0selftests-landlock-abstract-unix-".hex().upper())' */
++#define ABSTRACT_SOCKET_PATH_PREFIX \
++	"0073656C6674657374732D6C616E646C6F636B2D61627374726163742D756E69782D"
++
++/*
++ * Simpler version of scoped_domains.connect_to_child, but with audit tests.
++ */
++TEST_F(scoped_audit, connect_to_child)
++{
++	pid_t child;
++	int err_dgram, status;
++	int pipe_child[2], pipe_parent[2];
++	char buf;
++	int dgram_client;
++	struct audit_records records;
++
++	/* Makes sure there is no superfluous logged records. */
++	EXPECT_EQ(0, audit_count_records(self->audit_fd, &records));
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
++
++	ASSERT_EQ(0, pipe2(pipe_child, O_CLOEXEC));
++	ASSERT_EQ(0, pipe2(pipe_parent, O_CLOEXEC));
++
++	child = fork();
++	ASSERT_LE(0, child);
++	if (child == 0) {
++		int dgram_server;
++
++		EXPECT_EQ(0, close(pipe_parent[1]));
++		EXPECT_EQ(0, close(pipe_child[0]));
++
++		/* Waits for the parent to be in a domain. */
++		ASSERT_EQ(1, read(pipe_parent[0], &buf, 1));
++
++		dgram_server = socket(AF_UNIX, SOCK_DGRAM, 0);
++		ASSERT_LE(0, dgram_server);
++		ASSERT_EQ(0, bind(dgram_server, &self->dgram_address.unix_addr,
++				  self->dgram_address.unix_addr_len));
++
++		/* Signals to the parent that child is listening. */
++		ASSERT_EQ(1, write(pipe_child[1], ".", 1));
++
++		/* Waits to connect. */
++		ASSERT_EQ(1, read(pipe_parent[0], &buf, 1));
++		EXPECT_EQ(0, close(dgram_server));
++		_exit(_metadata->exit_code);
++		return;
 +	}
- 
- 	/* Prepares new credentials. */
- 	new_cred = prepare_creds();
-@@ -513,6 +527,21 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
- 
- 	new_llcred = landlock_cred(new_cred);
- 
-+#ifdef CONFIG_AUDIT
-+	prev_log_subdomains = !new_llcred->log_subdomains_off;
-+	new_llcred->log_subdomains_off = !prev_log_subdomains ||
-+					 !log_subdomains;
-+#endif /* CONFIG_AUDIT */
++	EXPECT_EQ(0, close(pipe_child[1]));
++	EXPECT_EQ(0, close(pipe_parent[0]));
 +
-+	/*
-+	 * The only case when a ruleset may not be set is if
-+	 * LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF is set and ruleset_fd is -1.
-+	 * We could optimize this case by not calling commit_creds() if this flag
-+	 * was already set, but it is not worth the complexity.
-+	 */
-+	if (!ruleset)
-+		return commit_creds(new_cred);
++	create_scoped_domain(_metadata, LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET);
 +
- 	/*
- 	 * There is no possible race condition while copying and manipulating
- 	 * the current credentials because they are dedicated per thread.
-@@ -526,7 +555,7 @@ SYSCALL_DEFINE2(landlock_restrict_self, const int, ruleset_fd, const __u32,
- #ifdef CONFIG_AUDIT
- 	new_dom->hierarchy->log_same_exec = log_same_exec;
- 	new_dom->hierarchy->log_cross_exec = log_cross_exec;
--	if (!log_same_exec && !log_cross_exec)
-+	if ((!log_same_exec && !log_cross_exec) || !prev_log_subdomains)
- 		new_dom->hierarchy->log_status = LANDLOCK_LOG_DISABLED;
- #endif /* CONFIG_AUDIT */
- 
++	/* Signals that the parent is in a domain, if any. */
++	ASSERT_EQ(1, write(pipe_parent[1], ".", 1));
++
++	dgram_client = socket(AF_UNIX, SOCK_DGRAM, 0);
++	ASSERT_LE(0, dgram_client);
++
++	/* Waits for the child to listen */
++	ASSERT_EQ(1, read(pipe_child[0], &buf, 1));
++	err_dgram = connect(dgram_client, &self->dgram_address.unix_addr,
++			    self->dgram_address.unix_addr_len);
++	EXPECT_EQ(-1, err_dgram);
++	EXPECT_EQ(EPERM, errno);
++
++	EXPECT_EQ(
++		0,
++		audit_match_record(
++			self->audit_fd, AUDIT_LANDLOCK_ACCESS,
++			REGEX_LANDLOCK_PREFIX
++			" blockers=scope\\.abstract_unix_socket path=" ABSTRACT_SOCKET_PATH_PREFIX
++			"[0-9A-F]\\+$",
++			NULL));
++
++	ASSERT_EQ(1, write(pipe_parent[1], ".", 1));
++	EXPECT_EQ(0, close(dgram_client));
++
++	ASSERT_EQ(child, waitpid(child, &status, 0));
++	if (WIFSIGNALED(status) || !WIFEXITED(status) ||
++	    WEXITSTATUS(status) != EXIT_SUCCESS)
++		_metadata->exit_code = KSFT_FAIL;
++}
++
+ FIXTURE(scoped_vs_unscoped)
+ {
+ 	struct service_fixture parent_stream_address, parent_dgram_address,
 -- 
 2.49.0
 
