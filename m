@@ -1,121 +1,81 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx.nixnet.email (mx.nixnet.email [5.161.67.119])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FA6C22A4FD
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 23:28:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60AB321577D;
+	Thu, 20 Mar 2025 23:30:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.161.67.119
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742513287; cv=none; b=OZYzn6dpL7CVs3tHkJNY+aV9A1yvS7gEhXUkgIASjWPm2GeTpoMqsNQIZzfelLPEFjCLPyXIP3GBl9FpMSUjLMcz5mgCscyyUgOYu0xnMw3aN5Mm1GrcVfmpMB4l+D7pCLDrOwVHdhruF9Oe3vHQJDo3HChifKtCunoBX0mSbN0=
+	t=1742513416; cv=none; b=b87SvYQJCjwcDuvKknuBYR4GzvJuphHLmz4yBwqyoyXQ0IqJvaVtjPIXvLXEwln2rceQlI+wpuFgdhEnDbSRzNY3PYy79fWsOIcSvRWL9X4FjlKe33eMI15Wxy/geiIuuvIBOGYKk92FQwFyf1d0AXBnLEfqNhHbZBsf3qfMUEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742513287; c=relaxed/simple;
-	bh=sTzT5PtwQSPHGFOm3VurrDvsdk8Mjq6EUX9qB/8ft9M=;
-	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=Q3KyRNYLZVWpUxc8BbcNWo3jHXFTwozGEU2PTQfKc7joJ7tb+QN+6y2DyttWHtzPKwmmrpd/S5F5R5IMseAmdDC1KJ+35tu0A4c2XKG53UvZuVmX5Nx2zVAoqe/AOO5pA7i7+FBbi8KdBxHGiWlVrmDn8ybUcQ+jQqKRQE3IjsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MaSTqBvV; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--samitolvanen.bounces.google.com
+	s=arc-20240116; t=1742513416; c=relaxed/simple;
+	bh=SYuzpk+px42U3u0B0b6aH3gUKA150zqr0yAGUPT6MkY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=EIHi+g+mRx+Wrl+lBZF1iKf7DFHzb5SELvB3mripUrYE683mZ6EDtjyqzLSnmi1r5qYq0qoDjPyje3lJtZqzQQP0F0W7q52EMpOh4bUZH5bKtAP2TuWI4y7k2y3gJtfB6tsW0LffrBWD2Z1/mhJbpf3TUqFD2IqkmUAYnHWIeqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life; spf=pass smtp.mailfrom=pwned.life; dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b=fNgr/Eey; arc=none smtp.client-ip=5.161.67.119
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=pwned.life
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pwned.life
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MaSTqBvV"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6167e9ccso3053936a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:28:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742513284; x=1743118084; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=kzKhceJYkAUqAvfvyFb46En6N7ik17gmHG0Ft959/Ys=;
-        b=MaSTqBvVlvd8QmrxkuM4IcrQwPmDyczMhD4BOENlrUXSO7ORTweuil9G5IkpK8Z4yO
-         QX7iP93UA/RXBSgAK0BETlkZuJR6XBjLJxj9N2oq+es+/xgxiSFewfEyKLIVNDVIHOM+
-         2v18BjEpsCqjHU2lFMgia5rSn5iqn3haADyl9AENK+GUdXTEz3PYPKOlw0rLAJkhl+w9
-         zrpzSbj0rCt0iQJgamPhz5iE4saJqL1L4yI+01FjKA9Un/UMHlf9FYYdHG1uiNXf0oBW
-         G/HUERmg5OLRSxTneZElq6VH8UHs+ThHQ3Qgd3lyk9INqBZwjNgfWR6xcKWW5nOwp7s/
-         B7qQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742513284; x=1743118084;
-        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=kzKhceJYkAUqAvfvyFb46En6N7ik17gmHG0Ft959/Ys=;
-        b=xG4gvA2GPrDZEfjea5v+ONz8gHBnofFmVBzsXdwy4cukppzJFamX2ruQT6/SOHD6iM
-         arx6IeYMHx6k32l39EzXkMa7s9MMZl8WsWWDWf2jCWEd9QEVKcX+ABt8MnDkm+dhhdul
-         3V2AUHMRGaoTaSWpqbjdGQUyblxM+I1G7Ld+EKwf2NW0/KxJdh1hk79o0/tNvU/DkX0H
-         LdRLLczXrO/afXg8zFNH8UgS7kN1Iq0rLIeSloBux3X1d+cSltEGOLJlqqnnWUKm1MH3
-         wdxME7+0ucGAfvlowrUlNmqkYlJUuSLxhSx9aCYCsN6fFTfVhwkHwk+E2tMNSukbm7Fe
-         UhSw==
-X-Forwarded-Encrypted: i=1; AJvYcCUwtqZzSnVkdbOgytmPeVUBjebptbzpzNa+iTISnpjljci+zHKQgKoH8OpJVDjrIXxlf3GIHZGdZH8+Fa4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwElXp9olbyGjNTIvYXtjNAnHAMT2QYr7zsTPXY8gZ6PsLT0XJL
-	w9V0e6ZIzggYdpEuOLSWS8071iHhQjhYmcvZAz+7MbsGudPuzLWQmaxdERRJvLNyvkNES6kb0fy
-	bYNOB79uSWz0x8JFlzO/HhR5Szw==
-X-Google-Smtp-Source: AGHT+IHnAupWokYIK22X9v/qMVPuyMFNnXuVjx1FMSGpF61YwN2ljJRb873YXI9hUKxhoK14+Ih+q/r8UQu7GQopifg=
-X-Received: from pjbpq9.prod.google.com ([2002:a17:90b:3d89:b0:2fa:a101:755])
- (user=samitolvanen job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:2551:b0:2ee:d193:f3d5 with SMTP id 98e67ed59e1d1-3030fe595c0mr2031878a91.7.1742513283758;
- Thu, 20 Mar 2025 16:28:03 -0700 (PDT)
-Date: Thu, 20 Mar 2025 23:27:58 +0000
+	dkim=pass (1024-bit key) header.d=pwned.life header.i=@pwned.life header.b="fNgr/Eey"
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	by mx.nixnet.email (Postfix) with ESMTPSA id 9B1CD7D2E3;
+	Fri, 21 Mar 2025 00:20:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pwned.life; s=202002021149;
+	t=1742512842;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=avCcyNinvHxHfLjLW9hb3JXsotFCmyMou6TeLSEEHuA=;
+	b=fNgr/EeyA5/GxyI0wJjivl4bb8ZmCHEPa55i55BX2qKVnKZeg+Esbl7RXBWg0Xbj6NLhtZ
+	A2hbvK7Jiq11p7YImesnNkOcnLNN5KT0v7483mBWXzpedppBPcPjIaTFaiBVJz4u5r1vtp
+	h/UXo7LB2+A/35wbor03NjRvMyVJ65c=
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-X-Developer-Key: i=samitolvanen@google.com; a=openpgp; fpr=35CCFB63B283D6D3AEB783944CB5F6848BBC56EE
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2029; i=samitolvanen@google.com;
- h=from:subject; bh=sTzT5PtwQSPHGFOm3VurrDvsdk8Mjq6EUX9qB/8ft9M=;
- b=owGbwMvMwCEWxa662nLh8irG02pJDOl3ltT2hVutY8g1/PDl6u6AP4GND2d9CpBU873Zs17EK
- yOh9uTmjlIWBjEOBlkxRZaWr6u37v7ulPrqc5EEzBxWJpAhDFycAjCRskiG/9F5Px3Ot6o136w5
- fDv7eqJv8iR3w0YZT3Nv0Xldn2/su8LIcJpxm8H6V2m6thEKRncv5XZu3y67Qsar1+CK8aGe+Xw beQA=
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250320232757.2283956-2-samitolvanen@google.com>
-Subject: [PATCH] kbuild: Require pahole >v1.29 with GENDWARFKSYMS and BTF on X86
-From: Sami Tolvanen <samitolvanen@google.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Luis Chamberlain <mcgrof@kernel.org>, Petr Pavlu <petr.pavlu@suse.com>, 
-	Daniel Gomez <da.gomez@samsung.com>, linux-modules@vger.kernel.org, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Sami Tolvanen <samitolvanen@google.com>, Paolo Pisati <paolo.pisati@canonical.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 21 Mar 2025 00:20:38 +0100
+Message-Id: <D8LH8Z7F0IO7.210MAQO7ZF8DT@pwned.life>
+Cc: <patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+ <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+ <lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+ <f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>,
+ <srw@sladewatkins.net>, <rwarsow@gmx.de>, <conor@kernel.org>,
+ <hargar@microsoft.com>, <broonie@kernel.org>
+Subject: Re: [PATCH 6.13 000/207] 6.13.7-rc1 review
+From: "Achill Gilgenast" <fossdd@pwned.life>
+To: "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ <stable@vger.kernel.org>
+X-Greeting: Hi mom! Look, I'm in somebodys mail client!
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250310170447.729440535@linuxfoundation.org>
+In-Reply-To: <20250310170447.729440535@linuxfoundation.org>
 
-With CONFIG_GENDWARFKSYMS, __gendwarfksyms_ptr variables are added
-to the kernel in EXPORT_SYMBOL() to ensure DWARF type information
-is available for exported symbols in the TUs where they're actually
-exported. These symbols are dropped when linking vmlinux, but
-dangling references to them remain in DWARF.
+On Mon Mar 10, 2025 at 6:03 PM CET, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.7 release.
+> There are 207 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed, 12 Mar 2025 17:04:00 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.7-=
+rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git=
+ linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-With CONFIG_DEBUG_INFO_BTF enabled on X86, pahole versions
-before commit 9810758003ce ("btf_encoder: Verify 0 address
-DWARF variables are in ELF section") place these symbols in the
-.data..percpu section, which results in an "Invalid offset" error in
-btf_datasec_check_meta() during boot, as all the variables are at
-zero offset and have non-zero size. If CONFIG_DEBUG_INFO_BTF_MODULES
-is enabled, this also results in a failure to load modules with:
+Thanks! Builded and tested with Alpine Linux configs.
 
-  failed to validate module [$module] BTF: -22
-
-The pahole commit that adds 0 address DWARF variable verification
-was merged after v1.29 was released, so later versions of pahole
-shouldn't have this issue. Require pahole >v1.29 when GENDWARFKSYMS
-is enabled with DEBUG_INFO_BTF on X86.
-
-Reported-by: Paolo Pisati <paolo.pisati@canonical.com>
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
----
- kernel/module/Kconfig | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/kernel/module/Kconfig b/kernel/module/Kconfig
-index d7762ef5949a..7c75832aa1af 100644
---- a/kernel/module/Kconfig
-+++ b/kernel/module/Kconfig
-@@ -192,6 +192,10 @@ config GENDWARFKSYMS
- 	depends on !DEBUG_INFO_REDUCED && !DEBUG_INFO_SPLIT
- 	# Requires ELF object files.
- 	depends on !LTO
-+	# Requires pahole commit 9810758003ce ("btf_encoder: Verify 0 address
-+	# DWARF variables are in ELF section") on X86 to avoid conflicts with
-+	# __gendwarfksyms_ptr symbols.
-+	depends on !X86 || !DEBUG_INFO_BTF || PAHOLE_VERSION > 129
- 	help
- 	  Calculate symbol versions from DWARF debugging information using
- 	  gendwarfksyms. Requires DEBUG_INFO to be enabled.
-
-base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
--- 
-2.49.0.395.g12beb8f557-goog
-
+Tested-By: Achill Gilgenast <fossdd@pwned.life>
