@@ -1,180 +1,122 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0943FD2FB
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:07:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F8E20E32B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742461648; cv=none; b=LykCTONZ81nrMbPTAuDO8k7/oIruHh/JWfSXZzaM8ynNXY7QB7qeIbd/yrxV5LzDKqkanY4bE8AzmMXTxe4P4EiV8DacPIj5qJvUIuGKmVHc6nnkDW/xyfyR7HKh587QMeKDM5y18COIsAI+aih3Vh/L0Gsocd06FmLJn41ZE98=
+	t=1742461695; cv=none; b=g66cemCgKFfDXABxGKxobgh1JpuGXDZyACvvSiqBCKP4cl4PD34J/lJydLr/zGq6+vMGYATZK0iamTqb7M/Ya5bVz/xlcBtlsEhzvZC41I1dfVh6glyWIL2Zyz98HfeqJkLkDNs4p4KpiZzCA7lOO0pIXCWLQOWgrkb0KZoThjk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742461648; c=relaxed/simple;
-	bh=tB0s+m6aFPYw2aUKhjQrnBmhGjg3R3H1qUca04bdGEs=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=YW6FoThIp1w20j/wzUgTdVt6o8fo26F9nFDJBhY1xBp+JdW19cRRTgqlid1dSVdFsPHWY0N40wwLx6ct/QZSdAmXL8NS4fYzFybsVj7kHh2M5F7t9R7ZOVd6YHDJAjp7pg1KkDtF7KEuncfMgEfWNj0x6CClaLQ8KVsaObSfVOs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d44b221f0dso11911945ab.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:07:26 -0700 (PDT)
+	s=arc-20240116; t=1742461695; c=relaxed/simple;
+	bh=5W1uHTX0JS3ybfrgNeMmG6TgEZd4dU4vl69eG6Vq4OU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ULBE0UJ+HCLawNMzyK7M1vx5KVB6lx0NSObRtq7k1UXu134vJqEbhs95ZHSUV5As0PA3p/BheCThHGw6FrkNnlE41wRKtT9cta5mzjgHhuFtiZcoHmeCp1dm15MC5mF592eq2sq7ZX96FxnP3RKOHZaRfgKCAbMuWSaLZnyVJOA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=iMUff2xb; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="iMUff2xb"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742461693;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=bDTq60/uptS/vYIusNxJ/yOQlPzuUR9or0TJgSxpmhw=;
+	b=iMUff2xbcMVsZUkbgKSwbBzHicSNpA5LIqYyjHnuGJdO8bVfNuw5N7PRqYJbF9hB0a46wz
+	fezjH9hdKJdUs0zWGtWSu5wUfdO9uLYHtQLNTOCnPmtxwVbN5SA611RLuMBm8J95BTpr1J
+	IyvZS7Dya2r8vBDAa1UNqV8ZCFvcwIA=
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-591-U7_qS4nVPOqR6RkFeWS77w-1; Thu, 20 Mar 2025 05:08:11 -0400
+X-MC-Unique: U7_qS4nVPOqR6RkFeWS77w-1
+X-Mimecast-MFC-AGG-ID: U7_qS4nVPOqR6RkFeWS77w_1742461690
+Received: by mail-ed1-f69.google.com with SMTP id 4fb4d7f45d1cf-5e6a64bd1ecso543283a12.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:08:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742461646; x=1743066446;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hJAGCcFQC5ruyciO77MttM2UXxm4c5ZthxU0/9v+U6I=;
-        b=MotGRjqsRTLbm6sSxWnb7ve0dD7VoZGXOKfM3RGklHSZNqNRz6gaT3yfHM8DolunYa
-         NpgkcGm2+l2vjnmqzuX00dggDpKjuPf4sHQyKwB0OzuGlKhG+/OZuTlM8pWortIZgIS2
-         Xqla7PGpQGD5Fn8vA2M5mLDmdnIZBjSIwtMQwrnfTF7C9mmRJ8ZccMlyPPlYp30p43L0
-         afmv+re5qLCYn2kw25Mb70GZmVzLjqd8nFkNJXaXL8+CkU72LkjkanNk8T8qAeu3cKmS
-         TriuXq2ytHm236FlUoX52p+IIiR+WPZyVjXNzU5dXZd6VEUAa1LDudvWstx+OjSJlIxK
-         HoYw==
-X-Forwarded-Encrypted: i=1; AJvYcCVFXSEePDsBEk6ltoukjdIqmoFy06G8f6+mI89p2T3v2n5x768LFhLl+gQvxv+CGSowazI1d8cL/XllCGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMiXVlF2zyd+e9yq1+BRaxygDUmLHD5ieLT4M5KQrpsgOLCaWK
-	hI8x6+54x5F3PlIVKSbwsnaDzjqjOhyPi08DAESgb+z8C7O6jLWIMJEwBsrx4hJpYQLx1RK46qS
-	p5eQXYELV7smul43k59iQAiJUgGfPmamVErEm68Uz/8B1J5PQftTBY7o=
-X-Google-Smtp-Source: AGHT+IHkd9aGmCSyxtOnJ9AZaC1LbCNax4fNstQBY5Acgd7vJs6VEfBK5wbWW4AK2HGnt+Ium+k8WqxbeCT9VqX/8PTVGPeRjhE2
+        d=1e100.net; s=20230601; t=1742461690; x=1743066490;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bDTq60/uptS/vYIusNxJ/yOQlPzuUR9or0TJgSxpmhw=;
+        b=lqAFUiYnGtzkrgIFk8tcElwLkk21+cHcQ8KQ2vhlnYPCc4Adc3YiiWy194cXyrG8t5
+         4s/d7dvz4pq96Rh8yzCJn0YOXe4MlSZDULl137i3bVbR4psU3oYVZJHTxFBuzYI1rtJe
+         bbYFN9kUpTEdSXzuyRKSHDF+CdxcOFOV3rVgWn92UyO7761YaxFRTJkkVpCqwSo5oNRm
+         gkjtlJzqWNezXGCyfQ43INls/dw6PzFNB+ZpA4TDZoQcF3i9UHfzbK5wT/eR6EWqjFmT
+         +WDtqjf87a0uXj5Fn2hwqN+nNss5qR7cMmYUjmJIRq+razCThuHrRk4x6ooJ4cwvwixp
+         Rtdg==
+X-Forwarded-Encrypted: i=1; AJvYcCWAkPijaU0+JSQnXOlxoEFFFRBVcpW5q+yXlSKcde1+rqc5r/4Kc973pPpw2238nUaQ6c0Yuc9KKaFv6ZM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxshiSGTSe6AtP3ZPkZIlMKKAs2+6Y43QH1Nk49or5keJKlzyGJ
+	FoEV++HFljrgUivL7I4uxLFtWV5TnnwrTWxxB4jwYvzueOc5QqyAgwN68Ou9Ri2K8axZ9cFVzqH
+	OzB8qdHJ2s1rgAMEXnH5tBwem25mwh/pVmG7EstfQP0rq100bvapG8NvTqJf/Ug==
+X-Gm-Gg: ASbGncuDVJoPevv90cE4GcZw6e6fDJhgv0zJA/5+BPBHq4/1BFXUDuTocgGuboWTGXj
+	YEfeqkNTO4ulr85UnakWKL216Cn+Fat88BbEUHkMdBskyWL3Z4ax+MN0qZCHQBa3wO05n3QulXj
+	m0lk6DNjUxsnVCH++NskuYq7kfcXM27hoI/VxJ7fi/TqoiujRHMpwKCS4lcHyH6MHbV4lk8vjVc
+	1x0kHsC1LaaaqlURQO2OzmoUgqa4I0zzTmgbVW4d4c9FmxipU5u68qpWzFo1HcQnZvqLEHCFl/S
+	TWc/hMy2KOqf13QoXeEMXGxRPHh0Ka4/NqCrmRlce14x2ugv7aLA96wnPYQCj2o2
+X-Received: by 2002:a05:6402:13cf:b0:5e7:c779:85db with SMTP id 4fb4d7f45d1cf-5eb80cdea32mr5839726a12.4.1742461690253;
+        Thu, 20 Mar 2025 02:08:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGOQHfmcgMblKkiR1tHejD7TWeiNXKZXGZAyBKU76H5X4T1+QQ1dIB97fNyYdpVkDoNZIj46Q==
+X-Received: by 2002:a05:6402:13cf:b0:5e7:c779:85db with SMTP id 4fb4d7f45d1cf-5eb80cdea32mr5839682a12.4.1742461689546;
+        Thu, 20 Mar 2025 02:08:09 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5e816afeaabsm10004728a12.69.2025.03.20.02.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 02:08:09 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:08:02 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Bobby Eshleman <bobbyeshleman@gmail.com>, 
+	Jakub Kicinski <kuba@kernel.org>, "K. Y. Srinivasan" <kys@microsoft.com>, 
+	Haiyang Zhang <haiyangz@microsoft.com>, Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Eugenio =?utf-8?B?UMOpcmV6?= <eperezma@redhat.com>, Bryan Tan <bryan-bt.tan@broadcom.com>, 
+	Vishnu Dasa <vishnu.dasa@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, "David S. Miller" <davem@davemloft.net>, 
+	virtualization@lists.linux.dev, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-hyperv@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] vhost/vsock: use netns of process that opens the
+ vhost-vsock-netns device
+Message-ID: <nwksousz7f4pkzwefvrpbgmmq6bt5kimv4icdkvm7n2nlom6yu@e62c5gdzmamg>
+References: <20250312-vsock-netns-v2-0-84bffa1aa97a@gmail.com>
+ <20250312-vsock-netns-v2-3-84bffa1aa97a@gmail.com>
+ <09c84a94-85f3-4e28-8e7d-bdc227bf99ab@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1547:b0:3d3:d07d:20a3 with SMTP id
- e9e14a558f8ab-3d58ebc2d70mr26103775ab.10.1742461646218; Thu, 20 Mar 2025
- 02:07:26 -0700 (PDT)
-Date: Thu, 20 Mar 2025 02:07:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67dbdace.050a0220.31a16b.000b.GAE@google.com>
-Subject: [syzbot] [bluetooth?] [usb?] BUG: soft lockup in hci_cmd_timeout (2)
-From: syzbot <syzbot+7f3e9d90cb008752b863@syzkaller.appspotmail.com>
-To: johan.hedberg@gmail.com, linux-bluetooth@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, luiz.dentz@gmail.com, 
-	marcel@holtmann.org, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <09c84a94-85f3-4e28-8e7d-bdc227bf99ab@redhat.com>
 
-Hello,
+On Wed, Mar 19, 2025 at 10:09:44PM +0100, Paolo Abeni wrote:
+>On 3/12/25 9:59 PM, Bobby Eshleman wrote:
+>> @@ -753,6 +783,8 @@ static int vhost_vsock_dev_release(struct inode *inode, struct file *file)
+>>  	virtio_vsock_skb_queue_purge(&vsock->send_pkt_queue);
+>>
+>>  	vhost_dev_cleanup(&vsock->dev);
+>> +	if (vsock->net)
+>> +		put_net(vsock->net);
+>
+>put_net() is a deprecated API, you should use put_net_track() instead.
+>
+>>  	kfree(vsock->dev.vqs);
+>>  	vhost_vsock_free(vsock);
+>>  	return 0;
+>
+>Also series introducing new features should also include the related
+>self-tests.
 
-syzbot found the following issue on:
+Yes, I was thinking about testing as well, but to test this I think we 
+need to run QEMU with Linux in it, is this feasible in self-tests?
 
-HEAD commit:    a5618886fdab Merge remote-tracking branch 'will/for-next/p..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git for-kernelci
-console output: https://syzkaller.appspot.com/x/log.txt?x=101283b0580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=29061e148cfaa3d3
-dashboard link: https://syzkaller.appspot.com/bug?extid=7f3e9d90cb008752b863
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: arm64
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=138abff8580000
+We should start looking at that, because for now I have my own ansible 
+script that runs tests (tools/testing/vsock/vsock_test) in nested VMs to 
+test both host (vhost-vsock) and guest (virtio-vsock).
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/8b90307e7f61/disk-a5618886.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/8b5ea0300ee3/vmlinux-a5618886.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/47f59a45fc8c/Image-a5618886.gz.xz
+Thanks,
+Stefano
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+7f3e9d90cb008752b863@syzkaller.appspotmail.com
-
-yealink 1-1:36.0: unexpected response 0
-yealink 1-1:36.0: urb_ctl_callback - urb status -71
-yealink 1-1:36.0: urb_irq_callback - urb status -71
-yealink 1-1:36.0: unexpected response 0
-watchdog: BUG: soft lockup - CPU#1 stuck for 26s! [kworker/u9:1:6013]
-Modules linked in:
-irq event stamp: 347894
-hardirqs last  enabled at (347893): [<ffff8000804b08ac>] console_emit_next_record kernel/printk/printk.c:3130 [inline]
-hardirqs last  enabled at (347893): [<ffff8000804b08ac>] console_flush_all+0x678/0xb90 kernel/printk/printk.c:3210
-hardirqs last disabled at (347894): [<ffff80008b7cdd84>] __el1_irq arch/arm64/kernel/entry-common.c:557 [inline]
-hardirqs last disabled at (347894): [<ffff80008b7cdd84>] el1_interrupt+0x24/0x68 arch/arm64/kernel/entry-common.c:575
-softirqs last  enabled at (347888): [<ffff8000803128a4>] softirq_handle_end kernel/softirq.c:407 [inline]
-softirqs last  enabled at (347888): [<ffff8000803128a4>] handle_softirqs+0xb44/0xd34 kernel/softirq.c:589
-softirqs last disabled at (347877): [<ffff800080020dbc>] __do_softirq+0x14/0x20 kernel/softirq.c:595
-CPU: 1 UID: 0 PID: 6013 Comm: kworker/u9:1 Not tainted 6.14.0-rc6-syzkaller-ga5618886fdab #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: hci3 hci_cmd_timeout
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __daif_local_irq_restore arch/arm64/include/asm/irqflags.h:176 [inline]
-pc : arch_local_irq_restore arch/arm64/include/asm/irqflags.h:195 [inline]
-pc : console_emit_next_record kernel/printk/printk.c:3130 [inline]
-pc : console_flush_all+0x69c/0xb90 kernel/printk/printk.c:3210
-lr : console_emit_next_record kernel/printk/printk.c:3130 [inline]
-lr : console_flush_all+0x698/0xb90 kernel/printk/printk.c:3210
-sp : ffff8000a4ad72c0
-x29: ffff8000a4ad7400 x28: 1ffff0001495ae72 x27: 1fffe0001aec87a2
-x26: dfff800000000000 x25: 1ffff000122bcaa7 x24: 0000000000000001
-x23: ffff8000915e5538 x22: ffff8000915e54e0 x21: 0000000000000000
-x20: 0000000000000000 x19: 00000000000000c0 x18: ffff8000a4ad7208
-x17: 20627275202d206b x16: ffff80008046947c x15: 0000000000000001
-x14: 1ffff00011f8fe70 x13: ffff8000a4ad8000 x12: 0000000000000003
-x11: 0000000000000001 x10: 0000000000ff0100 x9 : 0000000000000000
-x8 : ffff0000d7643d00 x7 : ffff8000804aa598 x6 : 0000000000000000
-x5 : 0000000000000001 x4 : 0000000000000001 x3 : 0000000000000000
-x2 : 0000000000000006 x1 : 0000000000000080 x0 : 0000000000000000
-Call trace:
- __daif_local_irq_restore arch/arm64/include/asm/irqflags.h:175 [inline] (P)
- arch_local_irq_restore arch/arm64/include/asm/irqflags.h:195 [inline] (P)
- console_emit_next_record kernel/printk/printk.c:3130 [inline] (P)
- console_flush_all+0x69c/0xb90 kernel/printk/printk.c:3210 (P)
- __console_flush_and_unlock kernel/printk/printk.c:3269 [inline]
- console_unlock+0x138/0x3ac kernel/printk/printk.c:3309
- vprintk_emit+0x308/0x55c kernel/printk/printk.c:2432
- vprintk_default+0xa0/0xe4 kernel/printk/printk.c:2447
- vprintk+0x94/0x12c kernel/printk/printk_safe.c:82
- _printk+0xdc/0x128 kernel/printk/printk.c:2457
- bt_err+0xfc/0x144 net/bluetooth/lib.c:296
- hci_cmd_timeout+0x108/0x1cc net/bluetooth/hci_core.c:1452
- process_one_work+0x810/0x1638 kernel/workqueue.c:3238
- process_scheduled_works kernel/workqueue.c:3319 [inline]
- worker_thread+0x97c/0xeec kernel/workqueue.c:3400
- kthread+0x65c/0x7b0 kernel/kthread.c:464
- ret_from_fork+0x10/0x20 arch/arm64/kernel/entry.S:862
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.14.0-rc6-syzkaller-ga5618886fdab #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-pstate: 80400005 (Nzcv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:50
-lr : default_idle_call+0xf8/0x128 kernel/sched/idle.c:124
-sp : ffff80008fb37cf0
-x29: ffff80008fb37cf0 x28: dfff800000000000 x27: 1ffff00011f66fac
-x26: ffff80008fbbd000 x25: 0000000000000000 x24: 0000000000000001
-x23: 1ffff00011f77ac1 x22: ffff80008fbbd608 x21: 0000000000000000
-x20: ffff80008fbe6780 x19: ffff800080410018 x18: 1fffe000366f1886
-x17: ffff80008fbbd000 x16: ffff80008040f8f8 x15: 0000000000000001
-x14: 1fffe000366f3537 x13: 0000000000000000 x12: 0000000000000003
-x11: 0000000000000001 x10: 0000000000000003 x9 : 0000000000000000
-x8 : 000000000028a3a3 x7 : ffff8000805c3f98 x6 : 0000000000000000
-x5 : 0000000000000001 x4 : 0000000000000001 x3 : ffff80008b7d2680
-x2 : 0000000000000000 x1 : ffff80008b87a760 x0 : ffff800123c84000
-Call trace:
- __daif_local_irq_enable arch/arm64/include/asm/irqflags.h:26 [inline] (P)
- arch_local_irq_enable+0x8/0xc arch/arm64/include/asm/irqflags.h:48 (P)
- cpuidle_idle_call kernel/sched/idle.c:185 [inline]
- do_idle+0x1ec/0x4e0 kernel/sched/idle.c:325
- cpu_startup_entry+0x5c/0x74 kernel/sched/idle.c:423
- rest_init+0x2dc/0x2f4 init/main.c:743
- start_kernel+0x3f8/0x4f8 init/main.c:1099
- __primary_switched+0x8c/0x94 arch/arm64/kernel/head.S:246
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
