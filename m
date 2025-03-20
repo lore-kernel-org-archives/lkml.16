@@ -1,127 +1,202 @@
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9866B22A4E1;
-	Thu, 20 Mar 2025 22:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A84D1EF388
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 22:16:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742508810; cv=none; b=ntaY1OOJQjkCfByqlRo+IknrnVDR5gjEq5HFpecajVfjEwz3ZIySFoc3anIaX/5L0RNKA/VrPx/3fFF2xAPbUR4PjrAY5tdyQd0rW9PVob1q7g5QWSLjsbb74161G0FV8/GUU+DA5zzyHxPgvbeUOEQx5N4zMCDm96hLmR7mMLE=
+	t=1742509000; cv=none; b=OqTlKL8WJWk3YlhaA573hKL5b/6DK8VbMbFoF0lQ+SAkRDa/k4/RtFdheWAh68WaXrUvSvE9v5vv3i6jOpkhGKq+wO9ESotXWvZXP+TivTnCq1J/Lm1sW2OdlrixvIQiV+7vIXSzrrIZCgKABFG8+UIFBv6Ul7YhcXXEoOI7JDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742508810; c=relaxed/simple;
-	bh=KgiuVskFuqPodQ88jiuald1cK0Yq6BI+rekg6RVxwKk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qx1ujgKZA50D7Ldwk+ExgrsioDGDUparTfDiTXC2dwr9LaF74heXnn6uuRvxrQ9/wo4IvHsh7du6NGLzU0xIr91S7oo+9YzvxFVFqnVJAsMNPO2P1i4C02bnDH7gQYOfO3h8OAc8bfO56G/hG4mN6zbohyuUY3Ugdp3S5oLYBjQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZSTVI8e; arc=none smtp.client-ip=209.85.208.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742509000; c=relaxed/simple;
+	bh=XDkXkOYgIyPoo6Enp9hnq1lKySVeP/oOl29rKkY3590=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RYiXnHYfomIuC1YNdMKiZcQkaCnW7GUmvbYmx9xNm8mB3txv7hFa+QY/jN5BJqAMesH2yH4CjihmX0fHupz0vyP/pDd+8jKDPj+wy+CRjA95kSWy6xns7B50qVLR3SthM9PmOnxEnFZI/AddYOuuNG3DkjrddG9KL2Nex3k6qag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GFhPGhrR; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZSTVI8e"
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-30bfc79ad97so24335101fa.1;
-        Thu, 20 Mar 2025 15:13:28 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GFhPGhrR"
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4393dc02b78so9067895e9.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:16:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742508806; x=1743113606; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uAFxENMZn4QcPzJ1M/33TjyaxDestwUuk1FF0bJ1mGE=;
-        b=CZSTVI8euG0YebS6ltK8hDAFffK9qHMstckbVds8rApHyT6EDzDBF572IKJSuhUE9a
-         +SLBgU6Zapk61v3u6kGNkrvlg70RUricp8Nw7MkclRHXocJ2IaxiXo/I+H4NpCT+8P8l
-         6OcBotdDRo2gFvRKnCOf2Zm9tErkzFnFJw/dfxyg6DMOCDd/1vK0HdaPDt+PWpPP0dTl
-         ferQkLfajmnKLpDQVWFq/rrqWy7kzf4qic27I+JCstgq1jnm89zmu75eU1GdbflHWM5E
-         IM0QfDlKN9+rdmdHhwtVO/ZQbB9nhoQqKizkqcj165ptquaCUqd5Hfj/NUqwnhKg+CIJ
-         3Oeg==
+        d=linaro.org; s=google; t=1742508997; x=1743113797; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=WfPnk7WQgtcfoHo8JXsI+oWzDaDs3bw9jASaZ3sIJgg=;
+        b=GFhPGhrR3D2PbkBXSPgE3mgQWcuVmKLcv6Hy74RlsvBBdMDlvsFiRfGT5eN5G15sP9
+         aa30XCvaxs7KSBnCgwBoLC5BgZUKhwq736HS2aSwckpoXKfKFNgkpjquo+J2CasyzHEu
+         eW2xOfiXD/j7J2Ee9Rq0ssOjkBk9HL3NHie+h0z1jGOfmkQxhdTDxboBibuBANiCQjUq
+         NLfCB9/W0Q7DToGsiKPlDeJTPUCM3uOS38uTaMt2+66PYXbY23u78E7lXqwsIcRM3HiK
+         sicqhMt/vkH7CKKM9LZ5d5HIbg28RBw/gRIAvaXnTIqHw6BwOZ/ptMja2+YxupqhruHY
+         o81g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742508806; x=1743113606;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uAFxENMZn4QcPzJ1M/33TjyaxDestwUuk1FF0bJ1mGE=;
-        b=VcMlZ0qfuMn7MwK0TAUM/N4kNXLSVK6FPB4UptWkiB8H/DExtg2Juoj/V9sKrPwGCN
-         6Ju1PvKAH5nzNsVg3A9Aj23xavJtxkeYvtmyoQZ/u/ltLMulHnkMs+6wvgj7bSq2dwUb
-         BeVXweGckcYPxFzJnLTR3pA59ItsRfoLXqIhPE50zo3Q2Sz4UiK6MbmdM2pIsq2ACc+Y
-         vBwka/kfEcHk/sQ+EChoBMJhxh00r8jVxUzkZPlM4S7frmomlJKyS/EOrQ8QuCN9/9F+
-         h0OEIegT5QBaMICDREqTLLZdW3rf+rCOXF+kK8twjLSPWNNJ/yr8NOR7Zxu77IjtyVne
-         BWug==
-X-Forwarded-Encrypted: i=1; AJvYcCV79AYLQL5JWQrUxW/+E5Ohxi4aix/cvEW58+RYSw6Q952wzU+dXrqUn3vzV/oukPZqooUJqX7pELUEgCU=@vger.kernel.org, AJvYcCXzaUucxkBdO5pUMRUs1cq/lhHaUDMRMyagIdiDOqsekUWvrFDvgIQIKjcNNDnSqfSdmFybsi4cCfvm+/xWq5o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy32+piIDcnZzR1sE8rAhfEC1IxMFt4LnUQc9aKJ1N6yz1iGlWL
-	JDUq0OUCD9x7kkWfTX4xDOabQzO/T55JRC9DcS5uo6zGcJSeU/Vv8GIJaSiVo3vM+oOdnV/ekhC
-	LIgwtY4q0JpVA3THlWKZvd2BdRso=
-X-Gm-Gg: ASbGnctaZBlCtRG52qj3Kum5D/CZ3jwR5gPBaSd0dGolLCrPwm7hWt7cYI/QAtFCa+v
-	8U/ZG947RBNDXTu9O3l4zVP49A2ejvLNpnnH+HxMPlP6nyVY76Bymq9DElcKskj8cFcczL5rZGY
-	WtElS/krwaaO3/vgW+Y/3XmfNahhpCHXfPPG2OfXsKPw==
-X-Google-Smtp-Source: AGHT+IEfRLZm/iAzfrGhRw3gUEIzjK7pWZsGSEejyzKMWKCzaLSHBcDKlDg9oPvyH1jxAjXznCm+yWylqqY5IPu/dyc=
-X-Received: by 2002:a2e:6817:0:b0:30b:f599:d78f with SMTP id
- 38308e7fff4ca-30d727317a3mr21754151fa.7.1742508806373; Thu, 20 Mar 2025
- 15:13:26 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742508997; x=1743113797;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WfPnk7WQgtcfoHo8JXsI+oWzDaDs3bw9jASaZ3sIJgg=;
+        b=TghX0aXQskvGwuK4B32LsKekZLgElfDTEPRngdxRty+APi9Yyb/MJQwVyAIQhU6xkR
+         Xv1qUgMcm8apznkxr+jQKf6Q9/t2DZLkCzcRPfvu/h3RdcH4GAf8F4PVJbDlQfjR6p/V
+         PrlEqMSjvugUJb5oNWzTFwHGXVf7RjPZMg6nmaWaZPqtctHjQ24R7fWMTB6D19fnhK3L
+         kt+YfbmS6VI5lB+oKuEOD3IKPMEi4X1hHGfS8hkxtWUqq4a5kQkW/WNZqC+wcn3C793E
+         qkHJeRUxdm0jA8VwkPiaUcICYQV3U9Lm8dSnoz0UTy5CcYlsKHi92z4tqXLNlgHBV369
+         Pk3A==
+X-Forwarded-Encrypted: i=1; AJvYcCU2ay/du7P4ZoubOOj9KB5j6MIy8jtYz+BJL8cNViIjWN82QXbTyajiQXh/I91iVcUE9c4W4t6yPTAW+wY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzAlm/rTtVj9o7SIhBtRiFPF998BnDLoEmNzXdBAT3hpRvlVK+b
+	FdskTkjL1SYG3OhzVGxFB8rjYGgNe3969GpHQOx7kgm6RD3mt4qU/XF8RsFYpKY=
+X-Gm-Gg: ASbGncsepggWbI6MDWnIDBPyPMmK8tjCyj0m9r6rznUZ2bWjWzrjbfHgdsEFBmH7feG
+	AnJUJB436NQizeMpIKKSW0rq7Tw9WfbE1lnfX91XL1aBvoXI3nX8AQOD6SP83cNUF60REKTniRY
+	fLJFn5580EOVS1aNynaYdK/jDQuOC1DFrop/0lvAjh054KEXrMCp7qVpErPVdz5x4Nebr2kLi+3
+	fqvw86prxckBN+E5sVu8V/L7RIGvaVLi06UZY2Aqf49FQEbMK/myRdHPaiqWXcmoGR7rNcrhLw+
+	h50632QC2VAyHGJp7Y85jJn09wwMNtshrkjw3N0TMoF+T+BjT/Pw7/woRFPTx6JTnd4P+2i0V2k
+	fOLBR31hcpw==
+X-Google-Smtp-Source: AGHT+IHNuD3oxALNHIxu9dYwYRUPmP+cyvEmCJ1ayFakdYJH3c8S+O6yOUzhs//I8smCyDXpzHD2VQ==
+X-Received: by 2002:a05:600c:3155:b0:43c:f81d:34 with SMTP id 5b1f17b1804b1-43d509eae2dmr5415125e9.9.1742508996459;
+        Thu, 20 Mar 2025 15:16:36 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbd348sm9042715e9.39.2025.03.20.15.16.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 15:16:35 -0700 (PDT)
+Message-ID: <d64b222b-0b4f-4a17-a4db-74079502f7f4@linaro.org>
+Date: Thu, 20 Mar 2025 22:16:34 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320-vec-methods-v1-0-7dff5cf25fe8@google.com> <20250320-vec-methods-v1-4-7dff5cf25fe8@google.com>
-In-Reply-To: <20250320-vec-methods-v1-4-7dff5cf25fe8@google.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Thu, 20 Mar 2025 18:12:50 -0400
-X-Gm-Features: AQ5f1Jr2DYB_Zdwm3HARPJ4W1U2NuURVVPm9kt-h-3RHgSrYd1T_64m_bOS-Fbo
-Message-ID: <CAJ-ks9mM6cb_b0G_ZZh+tnijOPo1imWv-bzhgrLpGcNXMsMjBA@mail.gmail.com>
-Subject: Re: [PATCH 4/5] rust: alloc: add Vec::drain_all
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: x1e80100-dell-xps13-9345: Enable
+ fingerprint sensor
+To: bjorn.andersson@oss.qualcomm.com, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
+Cc: Aleksandrs Vinarskis <alex.vinarskis@gmail.com>,
+ linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+References: <20250318-xps13-fingerprint-v1-0-fbb02d5a34a7@oss.qualcomm.com>
+ <1nCVo0cfBlz7dR2Jqu8M0rjyv_aRuYvO5M8Ho3sHTuU7-BfteG7JQ6iklpXIsiVEheMKOx4-JSJNsdf37ObJag==@protonmail.internalid>
+ <20250318-xps13-fingerprint-v1-2-fbb02d5a34a7@oss.qualcomm.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250318-xps13-fingerprint-v1-2-fbb02d5a34a7@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Thu, Mar 20, 2025 at 9:56=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
->
-> This is like the stdlib method drain, except that it's hard-coded to use
-> the entire vector's range. Rust Binder uses it in the range allocator to
-> take ownership of everything in a vector in a case where reusing the
-> vector is desirable.
->
-> Implementing `DrainAll` in terms of `slice::IterMut` lets us reuse some
-> nice optimizations in core for the case where T is a ZST.
->
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
+On 19/03/2025 03:22, Bjorn Andersson via B4 Relay wrote:
+> From: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> 
+> The fingerprint sensor, hidden in the power button, is connected to one
+> of the USB multiport ports; while the other port is unused.
+> 
+> Describe the USB controller, the four phys and the repeater involved to
+> make the fingerprint sensor operational.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
 > ---
->  rust/kernel/alloc/kvec.rs | 57 +++++++++++++++++++++++++++++++++++++++++=
-++++++
->  1 file changed, 57 insertions(+)
->
-> diff --git a/rust/kernel/alloc/kvec.rs b/rust/kernel/alloc/kvec.rs
-> index df930ff0d0b85b8b03c9b7932a2b31dfb62612ed..303198509885f5e24b74da5a9=
-2382b518de3e1c0 100644
-> --- a/rust/kernel/alloc/kvec.rs
-> +++ b/rust/kernel/alloc/kvec.rs
-> @@ -564,6 +564,30 @@ pub fn truncate(&mut self, len: usize) {
->          //   len, therefore we have exclusive access to [`new_len`, `old=
-_len`)
->          unsafe { ptr::drop_in_place(ptr) };
->      }
+>   .../boot/dts/qcom/x1e80100-dell-xps13-9345.dts     | 59 +++++++++++++++++++++-
+>   1 file changed, 57 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts b/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
+> index 967f6dba0878b51a985fd7c9570b8c4e71afe57d..a35557c562d771e2ce209fca05b82c1943d70f63 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1e80100-dell-xps13-9345.dts
+> @@ -744,8 +744,21 @@ touchscreen@10 {
+> 
+>   &i2c9 {
+>   	clock-frequency = <400000>;
+> -	status = "disabled";
+> -	/* USB3 retimer device @0x4f */
+> +	status = "okay";
 > +
-> +    /// Takes ownership of all items in this vector without consuming th=
-e allocation.
-> +    ///
-> +    /// # Examples
-> +    ///
-> +    /// ```
-> +    /// let mut v =3D kernel::kvec![0, 1, 2, 3]?;
-> +    ///
-> +    /// for (i, j) in v.drain_all().enumerate() {
-> +    ///     assert_eq!(i, j);
-> +    /// }
-> +    ///
-> +    /// assert!(v.capacity() >=3D 4);
-> +    /// ```
-> +    pub fn drain_all(&mut self) -> DrainAll<'_, T> {
-> +        let len =3D self.len();
-> +        // INVARIANT: The first 0 elements are valid.
-> +        self.len =3D 0;
+> +	eusb6_repeater: redriver@4f {
 
-Could you use `self.dec_len(self.len)` here? Then you'd have a &mut
-[T] rather than `MaybeUninit`. Provided you agree `dec_len` is sound,
-of course.
+How about
 
-Link: https://lore.kernel.org/rust-for-linux/20250318-vec-set-len-v2-2-293d=
-55f82d18@gmail.com/
+eusb6_frp_repeater: redriver@4f
+
+leading to> +		compatible = "nxp,ptn3222";
+> +		reg = <0x4f>;
+> +		#phy-cells = <0>;
+> +
+> +		vdd3v3-supply = <&vreg_l13b_3p0>;
+> +		vdd1v8-supply = <&vreg_l4b_1p8>;
+> +
+> +		reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
+> +
+> +		pinctrl-0 = <&eusb6_reset_n>;
+> +		pinctrl-names = "default";
+> +	};
+>   };
+> 
+>   &i2c17 {
+> @@ -967,6 +980,14 @@ edp_reg_en: edp-reg-en-state {
+>   		bias-disable;
+>   	};
+> 
+> +	eusb6_reset_n: eusb6-reset-n-state {
+> +		pins = "gpio184";
+> +		function = "gpio";
+> +		drive-strength = <2>;
+> +		bias-disable;
+> +		output-low;
+> +	};
+> +
+>   	hall_int_n_default: hall-int-n-state {
+>   		pins = "gpio92";
+>   		function = "gpio";
+> @@ -1172,3 +1193,37 @@ &usb_1_ss1_dwc3_hs {
+>   &usb_1_ss1_qmpphy_out {
+>   	remote-endpoint = <&retimer_ss1_ss_in>;
+>   };
+> +
+> +&usb_mp {
+> +	status = "okay";
+> +};
+> +
+> +&usb_mp_hsphy0 {
+> +	vdd-supply = <&vreg_l2e_0p8>;
+> +	vdda12-supply = <&vreg_l3e_1p2>;
+> +
+> +	phys = <&eusb6_repeater>;
+
+phys = <&eusb6_frp_repeater>;
+
+That's how I did it on Insprion14 and it helps me make sense of the dts 
+back to the schematic.
+
+> +
+> +	status = "okay";
+> +};
+> +
+> +&usb_mp_hsphy1 {
+> +	vdd-supply = <&vreg_l2e_0p8>;
+> +	vdda12-supply = <&vreg_l3e_1p2>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&usb_mp_qmpphy0 {
+> +	vdda-phy-supply = <&vreg_l3e_1p2>;
+> +	vdda-pll-supply = <&vreg_l3c_0p9>;
+> +
+> +	status = "okay";
+> +};
+> +
+> +&usb_mp_qmpphy1 {
+> +	vdda-phy-supply = <&vreg_l3e_1p2>;
+> +	vdda-pll-supply = <&vreg_l3c_0p9>;
+> +
+> +	status = "okay";
+> +};
+> 
+> --
+> 2.48.1
+> 
+> 
+> 
+Completely optional obviously.
+Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
