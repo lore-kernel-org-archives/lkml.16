@@ -1,206 +1,134 @@
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2049.outbound.protection.outlook.com [40.107.96.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24805221DBD
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742464848; cv=fail; b=o5+gKgjFTX58H0XlPDkJ/7TTc1Vuoi6EqMPouG1D6JGi5FeeVI/P52cEms5Mcn/Z0LM2E3W7SOwwHFzrGMZUzWxMagRqrZBuDCQqxj0B9h2VI1dB4I3Z9h0tJICz0SN5ZTvxvqOVbyO381BaWigy6jHHYqpVOf6wb/a33rNkz8I=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742464848; c=relaxed/simple;
-	bh=YLEewMA4sJQYFGuuNPKpPUzLyq5mVHnOnzvWEFbRcZ8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BN4rjz18HsV3A0XhvPkidPMm07eb69+Fw6kNFJQ2hNTbw+2bMrkX78CfW5XjEX0fNwDEhJ+4wEz8wkVEXjUT1CvdIaoJwxCLLv741EUiV96X4bXSKhUyPDTV2MQhWd/+k1r6fWuFmje5HhUiJK1LDAV8YLebz6n8Fch/o4dnfSk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=GQEq2YiQ; arc=fail smtp.client-ip=40.107.96.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0D2D22259E;
+	Thu, 20 Mar 2025 10:01:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742464903; cv=none; b=OIicpOk7zobi+DLAGDT0ryom1dGMXijBk9BSZb6f/bFoCeV/QLsvMErhGN7xCi8BHdQvlOUwyUVgfclxhwVUXNoMp7JOXaApDG6rPqHIYag74gmVEsHi/HoJWEH8ka5XgN0f4cPcvpfXWSIN4JbuJzSQQu6g+B+GpKyeqKtIzHo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742464903; c=relaxed/simple;
+	bh=3uEhFvWgTZ3qE+HGzh3HTAH18SIHho193NXFHIRXPSU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Kfrj2ufM75izW7VYWKyXHI+Cfao2G9Nua8LniYQ+Y5Notm2ExVDFpBlq1Ftt9g5XhnrDRKT1wYq07Wxi6khVm6uN3AnluQyZ0bMPycjb4n1kgQnGY9Augxv2voeE5/AxZ8ACJo93A6R+yKpWSf7H/QnZ4lBTfSJWm8iUfAz/vis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mdXykzDW; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="GQEq2YiQ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CmGB5E1JxGtu1sJxEIaP0R5r67Zo6rmCS13EJt8h++d22t6PObQqHa6m7UCGWGX/+4aWYTb8XMiWnJE3TCj0mfMNYO67BzOnW0BwXMj6kOFYrgSzV/gc1r+tywxtwdwqgtzN7UTVN0OpMz+/9EC00y25t6zSOvLOLEuodpc6S8rqCPDAqSCtalBset9zCkSF/tZ8SQW90cU8jxMcJ00UYIbD4eQKspegKt9TSkz9N7n3w4Gv8zJnfojcf+upqMw5w+/PnBXcq/7HcPFMdK+3kAth8Aw14gpVwkg3ncqWWE7/Yyeiuj04d+ffyo63jWa4qfKPmEOZW/r9wO1RiCk5mQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zVtA1YyRilqZIq0fGLqaKlpDFOxhGPPsyzlmco83oMI=;
- b=W7XTtNdNa3asr0+H6/qVbr/enyqufOuFLjKCyrUTh9fd1WVILgF3j76vuHB7j52ixUQuJGn6B3mIItnt8Fd66N0MqhWE8IPGymh+D+CeVYJ15Lh3YQg1zp6iSrKhddUKqt52cWFqSc1CdF2ImTfqRJTo1U+tL3qRnkK+Yzv8jydfyfferU9FXA1b3kG5nq3Q7p5GsI5gDxvcVlowWBbBaJ8G9utcox8u8NvwaTWJgdRVcFSoI4xs73dyWMgPfsWORdL0P9BO6fewRSK24XXP0kLspFzIXvpEn9xyUQ0tsE1M6z4KHJZvhZl0wtN3iuLwIUZKb2dbf+1uVw0lq9MvSg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=gmail.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zVtA1YyRilqZIq0fGLqaKlpDFOxhGPPsyzlmco83oMI=;
- b=GQEq2YiQsodu0ZoiiN+z2X4NTSVl1TTTfCpUHjSStuGYH4HCm4R/iG3/lYtWd2YQ34a8NwSx/j5ocxHxGtAsEul8IxuH5BMcFmMVzNQyBnxVSonStpqC238MB3E5uYQzZHCYhFc9E8gpo5hkC3wqCLDTELl1mEmOq4QVqhziTtU=
-Received: from BN9PR03CA0162.namprd03.prod.outlook.com (2603:10b6:408:f4::17)
- by SN7PR12MB8772.namprd12.prod.outlook.com (2603:10b6:806:341::10) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Thu, 20 Mar
- 2025 10:00:43 +0000
-Received: from BL02EPF0001A0FD.namprd03.prod.outlook.com
- (2603:10b6:408:f4:cafe::da) by BN9PR03CA0162.outlook.office365.com
- (2603:10b6:408:f4::17) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.33 via Frontend Transport; Thu,
- 20 Mar 2025 10:00:43 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL02EPF0001A0FD.mail.protection.outlook.com (10.167.242.104) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Thu, 20 Mar 2025 10:00:43 +0000
-Received: from FRAPPELLOUX01.amd.com (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Mar
- 2025 05:00:41 -0500
-From: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
-To: Alex Deucher <alexander.deucher@amd.com>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>, David Airlie
-	<airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-CC: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>,
-	<amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 10/10] drm/amdgpu: update trace format to match gpu_scheduler_trace
-Date: Thu, 20 Mar 2025 10:58:06 +0100
-Message-ID: <20250320095818.40622-11-pierre-eric.pelloux-prayer@amd.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250320095818.40622-1-pierre-eric.pelloux-prayer@amd.com>
-References: <20250320095818.40622-1-pierre-eric.pelloux-prayer@amd.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mdXykzDW"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-5242f137a1eso282817e0c.1;
+        Thu, 20 Mar 2025 03:01:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742464900; x=1743069700; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VkOqX1hHmiQ4/Ww30LXv9z0S90BxKz274f5FP6A6x7o=;
+        b=mdXykzDWiepnGY4YOctmeanonRAn+jIl6jhtB/lgIVfPfVoJHYXxVuGc430NxmEhHj
+         urSAu6zONRESSof+EZJ0o7rFK5J9ZUyQvsfHUFBObKzBdqfKMTMCLVxTFfWq6mZ9u3ZV
+         040N0Dmnr7q5GG2gU7X+qjogZh0Z9FWJOKCAz6hWvh0UkTAlBYwmHyRKERSaj/Zn5k3t
+         XfYNId+8k570f1YODSUMcqcJvo2sqq2XNfm2zgh8e5QRlYD5SeZQCZP62wuCOGUoA/A/
+         Q7w2y21ao4SEcvPb1Uch9SJWgDz+aJ5YdWzPABaGBA/zZdrb4+0g+4x77P0cUWYVpCvj
+         flVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742464900; x=1743069700;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VkOqX1hHmiQ4/Ww30LXv9z0S90BxKz274f5FP6A6x7o=;
+        b=qEYOijJ018sWrhJdpFKCDC1kywwjMGZDvJFRBu/FdhYjX+off4YFWGCrQpQ6HqpNtH
+         Iv3LbXEautgQKRuUp0n/sQMBi0UwmFQ8fZ/SfxpfcVUE3KBfSL9s4cAsuvx5shpeARdf
+         V7sC3xZvEO0FMvgYOeUIExGM1MIY4j5cT5Jx8/zXVSazb+BdCyDVdt16BcodVl7K43ty
+         B9rRbUIqGVdIxEpmij668+6gL8M4dLz92shLQycDAyjd8WKL/Sc1T3iNFkh9YFlyWzSJ
+         deYKZ+QfheuohrE9D9CMhCMErXE8P2uHEOQ/McwsH1wugo8TKy8994EPx3DS8qmKYlCY
+         lQnw==
+X-Forwarded-Encrypted: i=1; AJvYcCUE0OnH4bFhWm97z0oESC15b8sasokxxWmVTMQZpZmB3Q43V1pXVcRtd6lSFJ9OMVO8pecqrPY/@vger.kernel.org, AJvYcCVA2rkLaTLGEugpOmOhAAFV4rRK6wXn85J9FzT4pyV2Adxd+jSOEjz+VTEOy0fXjbgJPhlg3T8OEAu6A7lZ7HbQTHs=@vger.kernel.org, AJvYcCXjFjyZLEoSnSmSK1Ala5vs/fSVU2WW4aEjNNJwaWShYuyt75zfP0N4k2jVZdAecbsSrMc2xkUg2FSI@vger.kernel.org, AJvYcCXrDHvkWY/055khguTo1A9dA05twSMEJesSSUxKmo7vAW1mLhq2UXc9DcWAQEqFneBZDTZI3GREB3zVTO0X@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+4/xLlkHBGJD/EBsFbMPg0Cyc0dl5uI9vXppf6VD3v9hXFGvS
+	EBlS6RgH5M+8JC+5Bvjdgu+9jBBNeuItw4rsCZx3hHEVYDQOtFdOvGDsJivCfIK61l3bsEju08X
+	/axnyBY2JOAYAaLoTNRGTq45447E=
+X-Gm-Gg: ASbGncseYFUVOXtHKl324huv+2CPwN9+Nh1ZAHsDhMNJsbVkHGlvqs/vh3QdBHMLf2F
+	B6APp1FDa4Mw9jJkhdn+3D84HMqhK1h8JOsbx3RJqmXFbnwDFcI7DMzc6GYdHXlJbnEJ4Vf2zrG
+	Gfn06TQuFxH608mI0AGl+Z1aFbcA==
+X-Google-Smtp-Source: AGHT+IFYV5TnCzk+c53bzke6nPS2rmsXWIkLBB61jOeJkZU/pepHxMCueeeEqgu0mBt8iULwpOf2mSKf5NdE5ODHOPs=
+X-Received: by 2002:a05:6122:4312:b0:520:6773:e5c5 with SMTP id
+ 71dfb90a1353d-5258926463bmr4862359e0c.7.1742464900176; Thu, 20 Mar 2025
+ 03:01:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF0001A0FD:EE_|SN7PR12MB8772:EE_
-X-MS-Office365-Filtering-Correlation-Id: 535ea1c8-74b3-455e-4f10-08dd679613d7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|82310400026|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?lEzKbZc3uudeEsMY/GddeZ+TcDV9PHljSIHdRLgUABHBI06ziOr9SaxOR4ze?=
- =?us-ascii?Q?kJ7PNue3z+qeRmJ+9xb4vn9aL7Xgu/j1Ril/p6w+9Oz5llmRxOlcHxexvu5w?=
- =?us-ascii?Q?ewfmioOgxTJLV34btvl91hUM5qxnBZBEI1WLlaFg2c1EZ6MpuQYr12g4+kqf?=
- =?us-ascii?Q?B7AWUbOhOtV9y93fdIuw823TMn3b0X6WAGugoLikLr23qlcfxF68Jz7WBL/+?=
- =?us-ascii?Q?7P3SqUQ0cCq1UPIi5zB0JaNdsaKEniO2u+OtAZCZwz8Lro1f10jlmPRPykfB?=
- =?us-ascii?Q?FcDemXXi/WoTFtivOYN1XDi3smuBalF3s64jhXPkRkaafI97pu5Z1punUKyW?=
- =?us-ascii?Q?BeVgU2+4m3nQ07FEijJ7K0GlILx3enp+aN8uX/Adp4DTKIZ1vheWORJwT1D7?=
- =?us-ascii?Q?FIl/+OXpoNAmmq5QqWo8zaqjIiiQYMVLP8GHYYkKAmhpUJPSaQ2PqRzN2OEg?=
- =?us-ascii?Q?JaES5Uj3JOzb58NMmpGbIhOU84kYFGcq8adFhdj8/pcbjkBaGVfxvAKg1Vl+?=
- =?us-ascii?Q?r7J249Zl8+fxVYUOP8F3LmuixC6It3xE1MT6GWZ4684FCZfKyRVuKzgLmM2z?=
- =?us-ascii?Q?FZMUZYZ+cBJQM06lRAQc7H35HJYlnLc2wUuvh0eOIe9p0EqodcVnOwgjnBGP?=
- =?us-ascii?Q?k4jx4tN5isFtOPPBUlQrG9pyGSp8ty6ChEX6nTyIs5S5S7ajkHL4O1o2Jhin?=
- =?us-ascii?Q?Zx9CvV0wOTO64iRZo50ru58qUHGj/N+gRY4sqDmFV1tdUF2HXk0xkoHpYBJX?=
- =?us-ascii?Q?jr2vVz5i/q6lXHPj+hIFXMdjWeRqR62bDt+HM9aQxL18Jw3Ye51gwD+ngmE7?=
- =?us-ascii?Q?iD6k6ifrXZ3ULnm/I55aCTXHqVWgj8NQTGef6ZhVnRW0Jexwclg/VZ8kVJ5W?=
- =?us-ascii?Q?buou4eOpaZhBzGz+UcjmcI50qJYVcGjPsqBDK8ZLAZdPc3z8ZefasKJD2yw8?=
- =?us-ascii?Q?w8h4w1OgFz8gT6WAHAH1pGNFggXJXvddNPr8vIQz2TBoZZTqo9+sahyu/u3G?=
- =?us-ascii?Q?aXRJsF+z/z3zCjFRwSaNltMfQSl6p/9Uczf6ZKXUa/gB+6FEqzI+B1uOmRdD?=
- =?us-ascii?Q?jJVms9Nwj672EQBcOdyDnBJa8FudGS/Q9h6MFjZDHegM1CjUaMd7TZcYRQLN?=
- =?us-ascii?Q?5++VT/25gv9WvZUTDUUU/gHeWa3rHMO74+yfDD3WGMXdASOATKd1Gwin79hL?=
- =?us-ascii?Q?KCiZ3hw12BJx6lD9LRhu9k4FgVMfqCE2sIyzY8QcT1f4dpehNV6waA50gmHl?=
- =?us-ascii?Q?HpLNVdPr9F6gnf2AM9M/gD16PxThtDSuq7nQGuiSM0vO5lVDhHQpBDllDo/k?=
- =?us-ascii?Q?bxIbTpM537A7qhmNtkPGNj8ETrj7IE32jR4vP1auS5UITJzai2HTdNyrOQNM?=
- =?us-ascii?Q?XSpRYYFA/i/9jHO0BJtmaffNQ9tUpTOAsTXp4UQujN7/V5ALcDBi1LFxh4Jb?=
- =?us-ascii?Q?AziE/omSWRTew8thCe+KmMrvF1flZaKVHoQJAP87RrghHPGzaqsoqA=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(82310400026)(1800799024)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 10:00:43.1642
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 535ea1c8-74b3-455e-4f10-08dd679613d7
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF0001A0FD.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB8772
+References: <20250318205735.122590-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <202503200755.DoMipQnf-lkp@intel.com>
+In-Reply-To: <202503200755.DoMipQnf-lkp@intel.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Thu, 20 Mar 2025 10:01:14 +0000
+X-Gm-Features: AQ5f1Jrf1Dd0xKJnFdvTZS6D8krk5Rik-xKFXlxkwAiuooKI5_9kmPU6SYIxyac
+Message-ID: <CA+V-a8us=RbApdSJ7SLchrQLSbch8jkP3uOCC8TVFiVe4yULnw@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 3/3] net: stmmac: Add DWMAC glue layer for
+ Renesas GBETH
+To: kernel test robot <lkp@intel.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Magnus Damm <magnus.damm@gmail.com>, 
+	"Russell King (Oracle)" <rmk+kernel@armlinux.org.uk>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, 
+	Jose Abreu <joabreu@synopsys.com>, llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, 
+	netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Log fences using the same format for coherency.
+Hi,
 
-Signed-off-by: Pierre-Eric Pelloux-Prayer <pierre-eric.pelloux-prayer@amd.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
+On Thu, Mar 20, 2025 at 12:29=E2=80=AFAM kernel test robot <lkp@intel.com> =
+wrote:
+>
+> Hi Prabhakar,
+>
+> kernel test robot noticed the following build errors:
+>
+> [auto build test ERROR on net-next/main]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Prabhakar/dt-bindi=
+ngs-net-dwmac-Increase-maxItems-for-interrupts-and-interrupt-names/20250319=
+-050021
+> base:   net-next/main
+> patch link:    https://lore.kernel.org/r/20250318205735.122590-4-prabhaka=
+r.mahadev-lad.rj%40bp.renesas.com
+> patch subject: [PATCH net-next v4 3/3] net: stmmac: Add DWMAC glue layer =
+for Renesas GBETH
+> config: s390-allmodconfig (https://download.01.org/0day-ci/archive/202503=
+20/202503200755.DoMipQnf-lkp@intel.com/config)
+> compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b=
+5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20250320/202503200755.DoMipQnf-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202503200755.DoMipQnf-lkp=
+@intel.com/
+>
+> All errors (new ones prefixed by >>):
+>
+> >> drivers/net/ethernet/stmicro/stmmac/dwmac-renesas-gbeth.c:125:7: error=
+: use of undeclared identifier 'STMMAC_FLAG_EN_TX_LPI_CLK_PHY_CAP'
+>      125 |                            STMMAC_FLAG_EN_TX_LPI_CLK_PHY_CAP |
+>          |                            ^
+>    1 error generated.
+>
+The dependent patch [0] has now merged into net-next, with this we
+shouldn't be able to see this build issue.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-index a4f394d827bc..d302c68c1258 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_trace.h
-@@ -168,8 +168,8 @@ TRACE_EVENT(amdgpu_cs_ioctl,
- 	    TP_ARGS(job),
- 	    TP_STRUCT__entry(
- 			     __string(timeline, AMDGPU_JOB_GET_TIMELINE_NAME(job))
--			     __field(unsigned int, context)
--			     __field(unsigned int, seqno)
-+			     __field(u64, context)
-+			     __field(u64, seqno)
- 			     __field(struct dma_fence *, fence)
- 			     __string(ring, to_amdgpu_ring(job->base.sched)->name)
- 			     __field(u32, num_ibs)
-@@ -182,7 +182,7 @@ TRACE_EVENT(amdgpu_cs_ioctl,
- 			   __assign_str(ring);
- 			   __entry->num_ibs = job->num_ibs;
- 			   ),
--	    TP_printk("timeline=%s, context=%u, seqno=%u, ring_name=%s, num_ibs=%u",
-+	    TP_printk("timeline=%s, fence=%llu:%llu, ring_name=%s, num_ibs=%u",
- 		      __get_str(timeline), __entry->context,
- 		      __entry->seqno, __get_str(ring), __entry->num_ibs)
- );
-@@ -192,8 +192,8 @@ TRACE_EVENT(amdgpu_sched_run_job,
- 	    TP_ARGS(job),
- 	    TP_STRUCT__entry(
- 			     __string(timeline, AMDGPU_JOB_GET_TIMELINE_NAME(job))
--			     __field(unsigned int, context)
--			     __field(unsigned int, seqno)
-+			     __field(u64, context)
-+			     __field(u64, seqno)
- 			     __string(ring, to_amdgpu_ring(job->base.sched)->name)
- 			     __field(u32, num_ibs)
- 			     ),
-@@ -205,7 +205,7 @@ TRACE_EVENT(amdgpu_sched_run_job,
- 			   __assign_str(ring);
- 			   __entry->num_ibs = job->num_ibs;
- 			   ),
--	    TP_printk("timeline=%s, context=%u, seqno=%u, ring_name=%s, num_ibs=%u",
-+	    TP_printk("timeline=%s, fence=%llu:%llu, ring_name=%s, num_ibs=%u",
- 		      __get_str(timeline), __entry->context,
- 		      __entry->seqno, __get_str(ring), __entry->num_ibs)
- );
-@@ -516,8 +516,8 @@ TRACE_EVENT(amdgpu_ib_pipe_sync,
- 	    TP_STRUCT__entry(
- 			     __string(ring, sched_job->base.sched->name)
- 			     __field(struct dma_fence *, fence)
--			     __field(uint64_t, ctx)
--			     __field(unsigned, seqno)
-+			     __field(u64, ctx)
-+			     __field(u64, seqno)
- 			     ),
- 
- 	    TP_fast_assign(
-@@ -526,10 +526,8 @@ TRACE_EVENT(amdgpu_ib_pipe_sync,
- 			   __entry->ctx = fence->context;
- 			   __entry->seqno = fence->seqno;
- 			   ),
--	    TP_printk("job ring=%s need pipe sync to fence=%p, context=%llu, seq=%u",
--		      __get_str(ring),
--		      __entry->fence, __entry->ctx,
--		      __entry->seqno)
-+	    TP_printk("job ring=%s need pipe sync to fence=%llu:%llu",
-+		      __get_str(ring), __entry->ctx, __entry->seqno)
- );
- 
- TRACE_EVENT(amdgpu_reset_reg_dumps,
--- 
-2.43.0
+[0] https://web.git.kernel.org/pub/scm/linux/kernel/git/netdev/net-next.git=
+/commit/?id=3D0c1f1eb65425
 
+Cheers,
+Prabhakar
