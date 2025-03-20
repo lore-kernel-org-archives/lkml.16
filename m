@@ -1,37 +1,37 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4BCE20A5D8
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE9B20B81E
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742439180; cv=none; b=kQ1/PuWumArETpWhTjyU4AzEm8HSjH2r1oNrQAqs43iIasMfaA50BBR8X45xwR4vVbXnonViUnxDK2dfKuRWHLoQ4JH/gVO9ba1+xgegjabSrEK6A9l/HEB7H2KGGLdl7Gc14BkZDELrwtVsn3b3iSTrM4ffNN3+eYTUTRF5TxM=
+	t=1742439181; cv=none; b=VhdoKv2BmEuMqcaNhhKMT90vqGg3QhwE7KISDqC6Q5VxAFi0/Bfp26itx9axKQUDpIZoAPem25HAFNQjkOBP8b63iBvsLGEGi9hQezAIkr+UyElPT68YEAcG5Zi4GeSx4EaRJTsuTyptAxQ34Vp8jM4xPixfApWrqUu9xjWgF3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742439180; c=relaxed/simple;
-	bh=GuPQuUqNE0nQmAk/QBIYL+SVOYKISCByd3URDHf+v60=;
+	s=arc-20240116; t=1742439181; c=relaxed/simple;
+	bh=0SOqLYSx6ZzKa3TjO0XltVXubezyUIug8jAeI5DG+b8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=D0Ij0hqPSybVh0/zMmLybcMmiie5OKKB1lmDB7d3xhKa0ir4Q1v35q/MnmCHw5b3UQW+XEr0ZdxV5w8Wa9aM5JFj+eNUbTMmgJoInkG4nirAAqnU5V9BhUMaUwxosPXNjhFS+OaVbh6hbrV1e5MjO5PeXPLOlwBFIU3iHBzJryk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=EuI9pTM7z+xph1Uf80EFch22imgVSIrzEcCcSfY0qvSokuHSfuWiDACOX+cfO166rfn+sCH7SYGCANW/v0JH+go0lIIcHtK7jnZRbwi46w6WaVYSyYppyOITFBbWC7giS8qKLz6Nvi+SXt/pVPxNUWGT8pW6jIo/45Qh0aA+fhY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.93.142])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZJ99D4cVcz4f3jtt
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:32 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.235])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZJ9970GKQz4f3lfn
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:27 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id F21B91A0E30
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:49 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id 326FB1A06DC
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:51 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHW8X_gttnYGGmGw--.42197S5;
-	Thu, 20 Mar 2025 10:52:49 +0800 (CST)
+	by APP3 (Coremail) with SMTP id _Ch0CgAHW8X_gttnYGGmGw--.42197S9;
+	Thu, 20 Mar 2025 10:52:51 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: akpm@linux-foundation.org
 Cc: kasong@tencent.com,
 	tim.c.chen@linux.intel.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/8] mm: swap: use swap_entries_free() to free swap entry in swap_entry_put_locked()
-Date: Thu, 20 Mar 2025 19:48:24 +0800
-Message-Id: <20250320114829.25751-4-shikemeng@huaweicloud.com>
+Subject: [PATCH v3 7/8] mm: swap: factor out helper to drop cache of entries within a single cluster
+Date: Thu, 20 Mar 2025 19:48:28 +0800
+Message-Id: <20250320114829.25751-8-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250320114829.25751-1-shikemeng@huaweicloud.com>
 References: <20250320114829.25751-1-shikemeng@huaweicloud.com>
@@ -42,103 +42,88 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAHW8X_gttnYGGmGw--.42197S5
-X-Coremail-Antispam: 1UD129KBjvJXoWxZF1DKr13Gr4xKr1ktrW3trb_yoW5XFWDpF
-	ZIgr4DtF48Ar17Kw4UAw45ZayFvw4xWw1jqF9rGw15ZasxJryFgFyDA3y7KFyUA3s8uas8
-	A3WUtr17uF4jyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:_Ch0CgAHW8X_gttnYGGmGw--.42197S9
+X-Coremail-Antispam: 1UD129KBjvJXoW7uFWkAFy5WF48GF4xGFWkCrg_yoW8ZryxpF
+	9Igwn8Kr48Xr13Gw4xXw45JayFv3yxW3W2qFy7Gr1av3Z3Jr10gFyqyrWa9ry5CrykuF98
+	Ca4DKry2gF4jyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUWwA2048vs2IY020Ec7CjxVAFwI0_Gr0_Xr1l8cAvFVAK
-	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
-	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
-	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
-	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
-	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI
-	0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
-	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
-	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
-	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
-	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUaTKu
-	UUUUU
+	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
+	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
+	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
+	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
+	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
+	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
+	AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
+	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
+	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
+	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
+	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
+	s3kuDUUUU
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-In swap_entry_put_locked(), we will set slot to SWAP_HAS_CACHE before
-using swap_entries_free() to do actual swap entry freeing. This
-introduce an unnecessary intermediate state.
-By using swap_entries_free() in swap_entry_put_locked(), we can
-eliminate the need to set slot to SWAP_HAS_CACHE.
-This change would make the behavior of swap_entry_put_locked() more
-consistent with other put() operations which will do actual free work
-after put last reference.
+Factor out helper swap_entries_put_cache() from put_swap_folio() to server
+as a general-purpose routine for dropping cache flag of entries within a
+single cluster.
 
 Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
-Reviewed-by: Kairui Song <kasong@tencent.com>
 ---
- mm/swapfile.c | 20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
+ mm/swapfile.c | 27 +++++++++++++++++----------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 76720ca76aae..d05b58e9c723 100644
+index 646efccdd2ec..40a7d75c01e8 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -1348,9 +1348,11 @@ static struct swap_info_struct *_swap_info_get(swp_entry_t entry)
+@@ -1455,6 +1455,22 @@ struct swap_info_struct *get_swap_device(swp_entry_t entry)
+ 	return NULL;
  }
  
- static unsigned char swap_entry_put_locked(struct swap_info_struct *si,
--					   unsigned long offset,
-+					   struct swap_cluster_info *ci,
-+					   swp_entry_t entry,
- 					   unsigned char usage)
- {
++static void swap_entries_put_cache(struct swap_info_struct *si,
++				   swp_entry_t entry, int nr)
++{
 +	unsigned long offset = swp_offset(entry);
- 	unsigned char count;
- 	unsigned char has_cache;
- 
-@@ -1382,7 +1384,7 @@ static unsigned char swap_entry_put_locked(struct swap_info_struct *si,
- 	if (usage)
- 		WRITE_ONCE(si->swap_map[offset], usage);
- 	else
--		WRITE_ONCE(si->swap_map[offset], SWAP_HAS_CACHE);
-+		swap_entries_free(si, ci, entry, 1);
- 
- 	return usage;
- }
-@@ -1461,9 +1463,7 @@ static unsigned char swap_entry_put(struct swap_info_struct *si,
- 	unsigned char usage;
- 
- 	ci = lock_cluster(si, offset);
--	usage = swap_entry_put_locked(si, offset, 1);
--	if (!usage)
--		swap_entries_free(si, ci, swp_entry(si->type, offset), 1);
-+	usage = swap_entry_put_locked(si, ci, entry, 1);
- 	unlock_cluster(ci);
- 
- 	return usage;
-@@ -1558,8 +1558,8 @@ static void cluster_swap_free_nr(struct swap_info_struct *si,
- 
- 	ci = lock_cluster(si, offset);
- 	do {
--		if (!swap_entry_put_locked(si, offset, usage))
--			swap_entries_free(si, ci, swp_entry(si->type, offset), 1);
-+		swap_entry_put_locked(si, ci, swp_entry(si->type, offset),
-+				      usage);
- 	} while (++offset < end);
- 	unlock_cluster(ci);
- }
-@@ -1604,10 +1604,8 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
- 	if (swap_only_has_cache(si, offset, size))
- 		swap_entries_free(si, ci, entry, size);
- 	else {
--		for (int i = 0; i < size; i++, entry.val++) {
--			if (!swap_entry_put_locked(si, offset + i, SWAP_HAS_CACHE))
--				swap_entries_free(si, ci, entry, 1);
--		}
-+		for (int i = 0; i < size; i++, entry.val++)
++	struct swap_cluster_info *ci;
++
++	ci = lock_cluster(si, offset);
++	if (swap_only_has_cache(si, offset, nr))
++		swap_entries_free(si, ci, entry, nr);
++	else {
++		for (int i = 0; i < nr; i++, entry.val++)
 +			swap_entry_put_locked(si, ci, entry, SWAP_HAS_CACHE);
- 	}
- 	unlock_cluster(ci);
++	}
++	unlock_cluster(ci);
++}
++
+ static bool swap_entries_put_map(struct swap_info_struct *si,
+ 				 swp_entry_t entry, int nr)
+ {
+@@ -1595,8 +1611,6 @@ void swap_free_nr(swp_entry_t entry, int nr_pages)
+  */
+ void put_swap_folio(struct folio *folio, swp_entry_t entry)
+ {
+-	unsigned long offset = swp_offset(entry);
+-	struct swap_cluster_info *ci;
+ 	struct swap_info_struct *si;
+ 	int size = 1 << swap_entry_order(folio_order(folio));
+ 
+@@ -1604,14 +1618,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
+ 	if (!si)
+ 		return;
+ 
+-	ci = lock_cluster(si, offset);
+-	if (swap_only_has_cache(si, offset, size))
+-		swap_entries_free(si, ci, entry, size);
+-	else {
+-		for (int i = 0; i < size; i++, entry.val++)
+-			swap_entry_put_locked(si, ci, entry, SWAP_HAS_CACHE);
+-	}
+-	unlock_cluster(ci);
++	swap_entries_put_cache(si, entry, size);
  }
+ 
+ int __swap_count(swp_entry_t entry)
 -- 
 2.30.0
 
