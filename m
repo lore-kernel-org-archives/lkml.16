@@ -1,158 +1,180 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9683C2F;
-	Thu, 20 Mar 2025 14:59:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DE931B4F0F
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742482754; cv=none; b=ce628IwdBlwuaDMGuqAe2BzkpQJesX7rALx7tCJ8KYd01nqpsQUlqMKF8R/Ta9lVCqYdebsB2xpbwIrsMaEjPwy5nV8xadgehh4/NrLmBxztyUDBxVC4z7gtNnaCTjN0NUa87bT567HfQYtjkOJaPk29EpTOlVe0QBD0Pe0TDDk=
+	t=1742482794; cv=none; b=kCAVhcWwee0sdCQtqKpnYP0QY0F5K72mavKDv8GbruCdXN2nwGNlcztX1Gbcd0bifdjxcDmdq1wBWHWPR3RUuefEF92tTEoUhIc1juywkxpSx3yyj+pbsW1dfU2o9azVnhbBDY7ITDXDslIIKiTkr6g1XDEFEudc0XczeIBO0lE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742482754; c=relaxed/simple;
-	bh=gvvve4bfA2xN7CqM1D0GuF35FojJxC50q/W6Ep0Q37Q=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nowkeJ0uMqb6KgwCwhWHym14otzUtATGJTcJe77AnKDmK1dOEJnuFzRsXQQ2Ac2xqr8LejwaN9p9pPYQkpT2hMHYHBZav6ex6IjYOzkup2N0I9Lh5HWdXoSKAKMHDfV1kIZG2HV8X6tC2g9JZOOkUrfOJ4yi8mIspGwIlF2mD8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lquIPGPn; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742482794; c=relaxed/simple;
+	bh=GF0VK7dHmJO63fo0/Pot316tCpl4vo7OCRgrDVzVx/I=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rkIFTELNiMpIfSVVPPVPqFfxhBojk8Ce7vzuNzneiB40F5wBoJfX3IbIqsXtv26JaAnwb/uYkzzTLo6wEggB9AuOVngEEvhdcHty8pMqNOEqYm+jlNPR2i+3VZ6JshVQ8Pto5YjGYoh0NkrPiWPkiO0IL20papbulgNqvDuFAq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YZon6yTm; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lquIPGPn"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cf628cb14so13832675e9.1;
-        Thu, 20 Mar 2025 07:59:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YZon6yTm"
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so8393885e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 07:59:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742482751; x=1743087551; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=9MXWVPiHsl/ybfeX0fVWWFkRY/xYzUHOKzudQkSQFpg=;
-        b=lquIPGPnXBWgHdFe147D9WAdZXoPrrDtO6qzwdY7Y21oNbiTX2KyDscgaHSP/1k6p5
-         F3p2srZ7kaViz7/fR9PLw8F2zEtsLseaDx2hVpfrpFH8EPGeypztdl9SfpibPFnbkuKV
-         DRxkHk4MfyDkQcjPoRgsPtPPxd4pbAclbjOjTscw/en1CaO3h8KFrW8SgJQUjbdY3DEW
-         tGdCTHFcVGq5ONMKhl8eUHL3QohTD1HEZO9w+6QXLZdsdZ4qr3mUlLEn09o5UyKqLH1R
-         vkuf5kDc5hOqUJA9OFRQuoLs32b+z05WZn93WDGkf5ychbezCuvQGIxj2SYXGT2urwWA
-         P+tQ==
+        d=linaro.org; s=google; t=1742482791; x=1743087591; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=1dCpo5qNPPogUTHw1o2z5IsnXomo/xWgvWYpE6X6Nss=;
+        b=YZon6yTmN7L/3X2tFcN58C2zcFmmib2yIYDaIrxfKIPDY3oIFzV9ws8u80hyCWK3zq
+         aj0jLrF98TDtkEkYRpbq0Y0mwFjiRFcCfQV1YNQo7l3o99RoV1c4YF66Oqrjo/t9fV/k
+         646tFOO88yqRSfi/smXqDdrjmyEi6z0/W79C+95P+swuSi+m8U5MRbaqjNNBFn/5edNb
+         FpOlGah6LLkEMQ2ABK5YIm0yqxekl1rH8ZXEZQfMYTZ1JrkWH/jbQwHkLqmFPEhddcAD
+         yiPR7gEdP8zU7YhRcod3qcer5alYOhWtTaD5q2K7sHzqOg7hN9zTyWDVTOwWk7sfMNMb
+         9VIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742482751; x=1743087551;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9MXWVPiHsl/ybfeX0fVWWFkRY/xYzUHOKzudQkSQFpg=;
-        b=PM89XItoHs6OZeXybrmfR2aCHHNNr0WG+uajCj2AtBdMFA/NFlyVW+eyoK2w6Jb1QH
-         Wxk+eJIUKJZh/Ubq6VQ2Oe/pKlxDNQ9GBmikefvMR3TOQEFrUfsTvXKug8xnSSZ3gaf8
-         D4vmcNIMcOB/Wmg0k0d+I0lcfY4a8YOzrcOT4/Vl0bCw/QEuCDpQ5c+QLQpNyoZ5IqsL
-         2wDMAKIpr98EjqAssQIR3t8iomvzjAr7McJu3XVdK2wGUtFXQ5977zuXnH1R1UZb4wHf
-         uNTBibg3S3WgO331tKtme3PUyP83+XwJEozpQYmHqIv6QBY9E9E/a7/IXGjZecizE/Jz
-         6TjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUIcVicuJU7hVd2F4QqvqxpA9T8uJaDNSHweGelYKcdU/1iJj4fQ3JkFqXSyyJLLP793vpdsBnZcAk8@vger.kernel.org, AJvYcCULsoB8P8BYNWyGANJtryZWO/Iwj2Em3zFuwgYPTfhZTXSzK9bHdcfi2vxHAu5N99PUN6Z3GKKsWN7OEqaB@vger.kernel.org, AJvYcCUwj+y6qDVYQ08fdS8wyRx4Wl8GlUV+sfBKejcsOnKp/46i+VvX04FTwa9A0QB9WMn71b1CM2+dDqhs@vger.kernel.org, AJvYcCWJpVSZp7RnY37oIN92NhVU8/6j/GEKcH4apVgAVsmmG5uWoO53d6GE6nc4r+2fo0uKKZHWJ0ANAk07@vger.kernel.org
-X-Gm-Message-State: AOJu0YzpaJMzheb7FsAbCBjR1idPViZiqx8eKTi8s8wIMbdNMJ9Fd8bv
-	nz0cJx6ElKuLwONxyQYTR+H+8d4GNmOKhUKRFLi8limErM3ded1+
-X-Gm-Gg: ASbGnct9J0LOLl60xg+1FlqL5hyVAmeuOYxRuKQubdCd1su9Od9BbD9DdKhNvtMmeuS
-	RvWk4qTi3UzKTl2Wyz2ySXcW+igwc4OycTFzWuefrIm5q8DpgFLetnUV4HPqJesMRaJ8zj+A0mX
-	YWhMu19XVkFqEqd+7oT6E73jSIXBgTfcGh2jcbDB672NMYAeZ+jkKQMqq9wek9w7At3M9iGQkEM
-	iv48HzaoaHGdIStG2dcaCFDDq1/4ynmz3HZaPKQLLSeak7QGAX30qP7mAD2Pjtjp2HtQ7jRvvCJ
-	0olN4KYeOETP1ld6enXBgQ0QJEdRyX4x45ysdNrwwX/YJ6es+iovmLPifEGWaxU+jn5cxGZelPx
-	N
-X-Google-Smtp-Source: AGHT+IFSmo8fFuEqajq9aZA55RF0/kNYRGkGPQelDDCd7p8x/2z2TYhPjj6gPq4JZPeYBBnh3Gq1Ag==
-X-Received: by 2002:a5d:64a8:0:b0:390:ff84:532b with SMTP id ffacd0b85a97d-3997955cc22mr2933292f8f.7.1742482750791;
-        Thu, 20 Mar 2025 07:59:10 -0700 (PDT)
-Received: from Ansuel-XPS. (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f43e35sm51134405e9.14.2025.03.20.07.59.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 07:59:10 -0700 (PDT)
-Message-ID: <67dc2d3e.050a0220.2e39a4.c3f0@mx.google.com>
-X-Google-Original-Message-ID: <Z9wtOv-ttPCY-Lpg@Ansuel-XPS.>
-Date: Thu, 20 Mar 2025 15:59:06 +0100
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Daniel Danzberger <dd@embedd.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Nikita Shubin <nikita.shubin@maquefel.me>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Yangyu Chen <cyy@cyyself.name>, Ben Hutchings <ben@decadent.org.uk>,
-	Felix Fietkau <nbd@nbd.name>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-phy@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-usb@vger.kernel.org,
-	upstream@airoha.com
-Subject: Re: [PATCH v2 04/11] soc: airoha: add support for configuring SCU
- SSR Serdes port
-References: <20250320130054.4804-1-ansuelsmth@gmail.com>
- <20250320130054.4804-5-ansuelsmth@gmail.com>
- <d6e27266-dc5b-4ef8-b708-21cedd06621e@app.fastmail.com>
+        d=1e100.net; s=20230601; t=1742482791; x=1743087591;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1dCpo5qNPPogUTHw1o2z5IsnXomo/xWgvWYpE6X6Nss=;
+        b=YTrZuA3oAE3UpQw6efr9haKsiVYqQG+SBPwA5JIqj6ysMy6dqRkvhRtJiXBSVkHQJJ
+         j8ZCtGCgmNoGGeWW5rl74NWQ5Ukd4uwLaOf3/y9rt7JhCZ26xaDzsxgbXSTM0IBz1k/y
+         pehTsrHDNucLlpa1pr2Xq/VKb1LLPPBWG0CEVnaWNx+Dr2owpT5hplKzmUJty0SpwROh
+         hxGeee33JnOz0iV0cbuK8XPa00NfZY7ke4Tx+mdPRoqUF7n2yA99PaoX8Lh239cUgCl7
+         CsS0djSF3ZKwFcnZgBatAmAyY2RuA2tMqvl7oyCpUXR7MWsjiC5+DHKiez4gjpwPqUMi
+         EX1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVc8v8jenWk7wWaXzBZSO/IMMB4SsES0usRTebUH9tHOWf1p//2eXbeWAQStiJ45TXwIH8+83WkWTP+t1Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwC+hpsMs+jxlPqEx1xBPqhnUmIlTRK+jmDgEhPmreKY4sTikSC
+	+5mUepTjnJfJwrE2DKrhdFyiebRs2gA30CTMbiKi/o+L7bEi+eckrWppFbgom1+LzHg3GRsovwU
+	t7jREMgRTrqwVwrZ0lHFEqnETj5c266MIVC5XTA==
+X-Gm-Gg: ASbGnctsVE+ktV7Seds4RcBswFa7/CMcT7eSgWof5EWJ27nVvkNGDlhDx+XbFUoFM9i
+	LqpFm4ateyENIMVf13fHkFAn2xDn+5kw7O8HMYfByUtIFzen/6ikiHJAxXupVVuacPqPJoh3Sp6
+	Omdmai1s51HzRFbnoboRcL4IybtDEtHe7h1s/YEbQ3fCJd4Rq9/6eY9yqotPM=
+X-Google-Smtp-Source: AGHT+IEuovMa5wU5MZaFsiegZRX9kpE8KrzlwzUFosPnm3xJM5d92iy014o6qQlzbCC26zceDb2qYp50jMoAELnW4f4=
+X-Received: by 2002:a05:6000:400a:b0:391:3207:2e75 with SMTP id
+ ffacd0b85a97d-399739bc965mr8027422f8f.18.1742482790540; Thu, 20 Mar 2025
+ 07:59:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d6e27266-dc5b-4ef8-b708-21cedd06621e@app.fastmail.com>
+References: <20250320115633.4248-1-srinivas.kandagatla@linaro.org> <20250320115633.4248-6-srinivas.kandagatla@linaro.org>
+In-Reply-To: <20250320115633.4248-6-srinivas.kandagatla@linaro.org>
+From: Christopher Obbard <christopher.obbard@linaro.org>
+Date: Thu, 20 Mar 2025 14:59:40 +0000
+X-Gm-Features: AQ5f1JqWow6fqmzjop6LRMzUEYKQ_-u1q6WapafopX3_R9ft_ibeNfvcRLu1M1E
+Message-ID: <CACr-zFAvcvBsTE2Y8W2i-o59x-PiUGJYsyb_OtBWJ9VvgipYNQ@mail.gmail.com>
+Subject: Re: [PATCH v2 5/5] arm64: dts: qcom: x1e78100-t14s: Enable audio
+ headset support
+To: srinivas.kandagatla@linaro.org
+Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org, 
+	krzk+dt@kernel.org, ivprusov@salutedevices.com, luca.ceresoli@bootlin.com, 
+	zhoubinbin@loongson.cn, paulha@opensource.cirrus.com, lgirdwood@gmail.com, 
+	robh@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz, 
+	tiwai@suse.com, dmitry.baryshkov@oss.qualcomm.com, 
+	linux-sound@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	johan+linaro@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Mar 20, 2025 at 03:49:08PM +0100, Arnd Bergmann wrote:
-> On Thu, Mar 20, 2025, at 14:00, Christian Marangi wrote:
-> > Add support for configuring SCU SSR Serdes port. Airoha AN7581 SoC can
-> > configure the different Serdes port by toggling bits in the SCU register
-> > space.
-> >
-> > Port Serdes mode are mutually exclusive, force example the USB2 Serdes port
-> > can either used for USB 3.0 or PCIe 2 port. Enabling USB 3.0 makes the
-> > PCIe 2 to not work.
-> >
-> > The current supported Serdes port are:
-> > - WiFi 1 and defaults to PCIe0 1 line mode
-> > - Wifi 2 and defaults to PCIe1 1 line mode
-> > - USB 1 and defaults to USB 3.0 mode
-> > - USB 2 and defaults to USB 3.0 mode
-> >
-> > WiFi 1, WiFi 2 and USB 1 also support a particular Ethernet mode that
-> > can toggle between USXGMII or HSGMII mode (USB 1 only to HSGMII)
-> > Such mode doesn't configure bits as specific Ethernet PCS driver will
-> > take care of configuring the Serdes mode based on what is required.
-> >
-> > This driver is to correctly setup these bits.
-> > Single driver can't independently set the Serdes port mode as that
-> > would cause a conflict if someone declare, for example, in DT
-> > (and enable) PCIe 2 port and USB2 3.0 port.
-> >
-> > Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
-> 
-> I think serdes drivers are usually implement in the drivers/phy
-> layer, and I see there is already a drivers/phy/phy-airoha-pcie.c,
-> which may or may not overlap with this one (I have not looked at
-> the details).
-> 
-> Have you tried to use the phy subsystem interface here instead
-> of creating a custom in-kernel interface?
+Hi Srini,
+
+On Thu, 20 Mar 2025 at 12:02, <srinivas.kandagatla@linaro.org> wrote:
 >
+> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>
+> On Lenovo ThinkPad T14s, the headset is connected via a HiFi mux to
+> support CTIA and OMTP headsets. This switch is used to minimise pop and
+> click during headset type switching.
+>
+> Enable the mux controls required to power this switch along with wiring up
+> gpio that control the headset switching.
+>
+> Without this, headset audio will be very noisy and might see headset
+> detection errors.
+>
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-These really set 1-2 bit and I think PHY can't describe PCIe in x2 mode
-or in x1. Also I think PHY is used for more advanced stuff and usually
-have dedicated register/maps. This is really to configure 1-2 bit and
-provide the mode, nothing else... no enable, no power up.
+I tested this series (with
+https://github.com/alsa-project/alsa-ucm-conf/pull/522 and latest
+audioreach firmware X1E80100-LENOVO-Thinkpad-T14s-tplg.bin) on top of
+Johan's kernel (https://github.com/jhovold/linux/tree/wip/x1e80100-6.14-rc7/)
+on OLED T14s with Gnome and PipeWire/WirePlumber from Debian unstable
+and everything appears to work OK.
 
-Do you think a it's possible to implement a ""read-only"" PHY driver?
+The following works:
+- internal speakers (no regression)
+- internal mic (no regression)
+- 3-pin headset, the default output auto-switches when plugged/unplugged
+- 4-pin headset with mic, the default output/input auto-switches when
+plugged/unplugged
 
-The PCIe x2 mode maybe can be modelled with
-phy-cells = <2> and adding a extra entry to enforce x2 line mode?
+Please let me know if I can test anything else.
 
-But I feel it would be wrong to say that the SCU expose PHY as it won't
-be true.
+Tested-by: Christopher Obbard <christopher.obbard@linaro.org>
 
-Honestly we should really consider starting to implement a generic
-provider for these stuff... it's not the first time we have bit that
-configure part of the entire system.
-
-For example this is very common for QCOM with TCSR and also for Mediatek
-with the TPHY. (but TPHY is at least more realistic as it can enable and
-disable serdes port... here it's just 1 bit)
-
--- 
-	Ansuel
+> ---
+>  .../qcom/x1e78100-lenovo-thinkpad-t14s.dts    | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> index b2c2347f54fa..b40775c20493 100644
+> --- a/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> +++ b/arch/arm64/boot/dts/qcom/x1e78100-lenovo-thinkpad-t14s.dts
+> @@ -19,6 +19,16 @@ / {
+>         compatible = "lenovo,thinkpad-t14s", "qcom,x1e78100", "qcom,x1e80100";
+>         chassis-type = "laptop";
+>
+> +       /* two muxes together support CTIA and OMTP switching */
+> +       us_euro_mux_ctrl: mux-controller {
+> +               compatible = "gpio-mux";
+> +               pinctrl-0 = <&us_euro_hs_sel>;
+> +               pinctrl-names = "default";
+> +               mux-supply = <&vreg_l16b_2p5>;
+> +               #mux-control-cells = <0>;
+> +               mux-gpios = <&tlmm 68 GPIO_ACTIVE_HIGH>;
+> +       };
+> +
+>         wcd938x: audio-codec {
+>                 compatible = "qcom,wcd9385-codec";
+>
+> @@ -36,6 +46,7 @@ wcd938x: audio-codec {
+>                 qcom,tx-device = <&wcd_tx>;
+>
+>                 reset-gpios = <&tlmm 191 GPIO_ACTIVE_LOW>;
+> +               mux-controls = <&us_euro_mux_ctrl>;
+>
+>                 vdd-buck-supply = <&vreg_l15b_1p8>;
+>                 vdd-rxtx-supply = <&vreg_l15b_1p8>;
+> @@ -367,6 +378,13 @@ vreg_l15b_1p8: ldo15 {
+>                         regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+>                 };
+>
+> +               vreg_l16b_2p5: ldo16 {
+> +                       regulator-name = "vreg_l16b_2p5";
+> +                       regulator-min-microvolt = <2504000>;
+> +                       regulator-max-microvolt = <2504000>;
+> +                       regulator-initial-mode = <RPMH_REGULATOR_MODE_HPM>;
+> +               };
+> +
+>                 vreg_l17b_2p5: ldo17 {
+>                         regulator-name = "vreg_l17b_2p5";
+>                         regulator-min-microvolt = <2504000>;
+> @@ -942,6 +960,13 @@ int-n-pins {
+>                 };
+>         };
+>
+> +       us_euro_hs_sel: us-euro-hs-sel-state {
+> +               pins = "gpio68";
+> +               function = "gpio";
+> +               bias-pull-down;
+> +               drive-strength = <2>;
+> +       };
+> +
+>         kybd_default: kybd-default-state {
+>                 pins = "gpio67";
+>                 function = "gpio";
+> --
+> 2.39.5
+>
+>
