@@ -1,123 +1,145 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED35A1C3BE0;
-	Thu, 20 Mar 2025 15:11:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8BED192B86
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742483504; cv=none; b=j7Th0GEj6R0jsWpOp0Rxp9fqrpwCEql0TtlcWYfFu7GxvWGozEaHSjLxF4nE2SSJefvAdoCgSdfpRJzETEk/aRChAU2Ht6bsh0irP7zZKlv79tmSl27HVZWdMn4fI1r+0Wrwvhyidzc692oqokMvuzLVGzVbL9u5hTUsO1RYmhA=
+	t=1742483789; cv=none; b=aY4sOTOGjsEL+tkEjlSV9Ob+I3lk1R3q95CljrwcC2wGXbvyU/yVeShSOrJlb9+hQ1AW3m8k2pcPLI1ViW2RxtURtvIzIbMooyaXtpQpmMwkWFxq1w0ftd+7JdlQdZylr3dD9zfWT0gsdlpExIopx/qBY1G56iHeCx40L7mhTtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742483504; c=relaxed/simple;
-	bh=BjLAQEDSErfN9sPXIBj0NC15mJmGU7FYhtQ9W7EZxwg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hqx4ZHJJ+xVCZMtJPBN0Gk6y6KXIgXFJli7ofB7DlTM/ZtK291/5CXB0+QxwwcUSOhVZaeAQnHKFUhmN9W9mY6HkJV3XrQbZL6kHkEgNA3JxFYpE/iFfFpH0JnMrIwU1Toka0htz3GFxqOfLaIOiNyCzV/p9l5c2hc/tAIRN4mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=CXAoMV8u; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	s=arc-20240116; t=1742483789; c=relaxed/simple;
+	bh=m6RbaG5UBdPDJobW3JsiDnRlu3Sit1mKtD1fE5degHc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=IUYnoweoYRBkbTFTG5t1g9aKTCZfEtOBejAP9R7HOvGtbMfuEB9401YrlZKfQtBPI3A4kFBh6GtS06T4Pq7EK6p5T1zQtNPKN/5A/HI4hOp2BhWfdyYHZ+N79EJTowwwb9VS2/uhB17SDCSHMcPpCYFleNGVY5hEiyY+z6LojVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=pD7NpAzN; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="CXAoMV8u"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id B2DA140E021F;
-	Thu, 20 Mar 2025 15:11:40 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id RNXjYP4yihtd; Thu, 20 Mar 2025 15:11:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742483496; bh=qeM1gyjqPFAqI7hDvnbI6oljMznMz2Vvn97c6yg0h4k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=CXAoMV8uUoMIZ0erR0gXo+BW2ihP6hKnxrRhrycZlzGIgmqXbZPcP1TIDPAe1v21i
-	 OffFO5/I/be3Tl0AXwRu7cYyQdvDSKgFO/X/gitCXjwi+bXRZNIItnIEhgiugBVt6R
-	 hBDTrf6BLObTCayJqzbpPuneUTaLAOWnvvqXX/Tbbhp7DL0wsr+N68wqs/YQ3Iw2GA
-	 x6D7HqofSiImvT52LCSJy7WWM/1oWwmnun958NxN1Pyt8pz5WqSy7wXNfK9gSv7k/j
-	 Fj1KQhUGbI02o7mpkJwvXcnSed+4sO+FXxMf3RhI+5gAGIVNdzv6ro437nvni6r2zF
-	 EzXnxz41Otb97V+5wAsQ6KGZfiAIsPMMWqFGLX5+9uO0a1MDBjmEXdXJFM+cuqXp5g
-	 nOE+vXn9VyVkqQeEBvgArqtfDgm7vRhWsraXkgLUlFbaF9plhp3kyAasj/iRkLXgwD
-	 jryfu4EM3ussNR/C4XPZaQzGBfzNiAvv+NyOw655yMxYxOWTQN91TVix9FmONlEzDL
-	 sPNMHFIdAGbb49V5PwAJK5kuoUYZKYoVM4o8DcDn/lACGMcARRWbG7uzr6kOwaeedh
-	 ie9gwYogwK645B2X8fhipGwqWMn0A6yJ/fsp9ReynVfbMiIxcHnpZqHfs2Dgm74BgD
-	 ms0RLiTTp8UGMPCw91iCGfds=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 9363E40E015D;
-	Thu, 20 Mar 2025 15:11:26 +0000 (UTC)
-Date: Thu, 20 Mar 2025 16:11:20 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Akihiro Suda <suda.gitsendemail@gmail.com>,
-	linux-kernel@vger.kernel.org, x86@kernel.org,
-	stable@vger.kernel.org, suda.kyoto@gmail.com,
-	regressions@lists.linux.dev, aruna.ramakrishna@oracle.com,
-	tglx@linutronix.de, Akihiro Suda <akihiro.suda.cz@hco.ntt.co.jp>
-Subject: Re: [PATCH] x86/pkeys: Disable PKU when XFEATURE_PKRU is missing
-Message-ID: <20250320151120.GCZ9wwGJZQMLKKm5fT@fat_crate.local>
-References: <CAG8fp8S92hXFxMKQtMBkGqk1sWGu7pdHYDowsYbmurt0BGjfww@mail.gmail.com>
- <20250314084818.2826-1-akihiro.suda.cz@hco.ntt.co.jp>
- <Z9s5lam2QzWCOOKi@gmail.com>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="pD7NpAzN"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742483775;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=gZZRLALnFywosQyAbfYxHqxa+mApnY/ujk8b1UZoQbg=;
+	b=pD7NpAzNuRwuLWgqSWOU8Zf1FkMoKvIyDExeNDjj8bm2eJvdnfzt2YjmX+w1iFIRGENLOG
+	kMmUvfKYuxJDtso+P8cbqEr9t9de543EW9597nKbdN3IxsD1cJ8p7HvbkkJENtRejOGZdQ
+	eGPVw+4P8l8ocOJepro6emUD+/v42kE=
+From: Roman Gushchin <roman.gushchin@linux.dev>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Shakeel Butt <shakeel.butt@linux.dev>,  Jingxiang Zeng
+ <linuszeng@tencent.com>,  akpm@linux-foundation.org,  linux-mm@kvack.org,
+  cgroups@vger.kernel.org,  linux-kernel@vger.kernel.org,
+  mhocko@kernel.org,  muchun.song@linux.dev,  kasong@tencent.com
+Subject: Re: [RFC 2/5] memcontrol: add boot option to enable memsw account
+ on dfl
+In-Reply-To: <20250320142846.GG1876369@cmpxchg.org> (Johannes Weiner's message
+	of "Thu, 20 Mar 2025 10:28:46 -0400")
+References: <20250319064148.774406-1-jingxiangzeng.cas@gmail.com>
+	<20250319064148.774406-3-jingxiangzeng.cas@gmail.com>
+	<m35wwnetfubjrgcikiia7aurhd4hkcguwqywjamxm4xnaximt7@cnscqcgwh4da>
+	<7ia4tt7ovekj.fsf@castle.c.googlers.com>
+	<20250320142846.GG1876369@cmpxchg.org>
+Date: Thu, 20 Mar 2025 15:16:10 +0000
+Message-ID: <7ia4plibspfp.fsf@castle.c.googlers.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <Z9s5lam2QzWCOOKi@gmail.com>
+Content-Type: text/plain
+X-Migadu-Flow: FLOW_OUT
 
-On Wed, Mar 19, 2025 at 10:39:33PM +0100, Ingo Molnar wrote:
-> Note that silent quirks are counterproductive, as they don't give VM 
-> vendors any incentives to fix their VM for such bugs.
-> 
-> So I changed your quirk to be:
+Johannes Weiner <hannes@cmpxchg.org> writes:
 
-This fires on my Zen3 now :-P
+> On Wed, Mar 19, 2025 at 10:30:20PM +0000, Roman Gushchin wrote:
+>> Shakeel Butt <shakeel.butt@linux.dev> writes:
+>> 
+>> > On Wed, Mar 19, 2025 at 02:41:45PM +0800, Jingxiang Zeng wrote:
+>> >> From: Zeng Jingxiang <linuszeng@tencent.com>
+>> >> 
+>> >> Added cgroup.memsw_account_on_dfl startup parameter, which
+>> >> is off by default. When enabled in cgroupv2 mode, the memory
+>> >> accounting mode of swap will be reverted to cgroupv1 mode.
+>> >> 
+>> >> Signed-off-by: Zeng Jingxiang <linuszeng@tencent.com>
+>> >> ---
+>> >>  include/linux/memcontrol.h |  4 +++-
+>> >>  mm/memcontrol.c            | 11 +++++++++++
+>> >>  2 files changed, 14 insertions(+), 1 deletion(-)
+>> >> 
+>> >> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+>> >> index dcb087ee6e8d..96f2fad1c351 100644
+>> >> --- a/include/linux/memcontrol.h
+>> >> +++ b/include/linux/memcontrol.h
+>> >> @@ -62,10 +62,12 @@ struct mem_cgroup_reclaim_cookie {
+>> >>  
+>> >>  #ifdef CONFIG_MEMCG
+>> >>  
+>> >> +DECLARE_STATIC_KEY_FALSE(memsw_account_on_dfl);
+>> >>  /* Whether enable memory+swap account in cgroupv2 */
+>> >>  static inline bool do_memsw_account_on_dfl(void)
+>> >>  {
+>> >> -	return IS_ENABLED(CONFIG_MEMSW_ACCOUNT_ON_DFL);
+>> >> +	return IS_ENABLED(CONFIG_MEMSW_ACCOUNT_ON_DFL)
+>> >> +				|| static_branch_unlikely(&memsw_account_on_dfl);
+>> >
+>> > Why || in above condition? Shouldn't it be && ?
+>> >
+>> >>  }
+>> >>  
+>> >>  #define MEM_CGROUP_ID_SHIFT	16
+>> >> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>> >> index 768d6b15dbfa..c1171fb2bfd6 100644
+>> >> --- a/mm/memcontrol.c
+>> >> +++ b/mm/memcontrol.c
+>> >> @@ -5478,3 +5478,14 @@ static int __init mem_cgroup_swap_init(void)
+>> >>  subsys_initcall(mem_cgroup_swap_init);
+>> >>  
+>> >>  #endif /* CONFIG_SWAP */
+>> >> +
+>> >> +DEFINE_STATIC_KEY_FALSE(memsw_account_on_dfl);
+>> >> +static int __init memsw_account_on_dfl_setup(char *s)
+>> >> +{
+>> >> +	if (!strcmp(s, "1"))
+>> >> +		static_branch_enable(&memsw_account_on_dfl);
+>> >> +	else if (!strcmp(s, "0"))
+>> >> +		static_branch_disable(&memsw_account_on_dfl);
+>> >> +	return 1;
+>> >> +}
+>> >> +__setup("cgroup.memsw_account_on_dfl=", memsw_account_on_dfl_setup);
+>> >
+>> > Please keep the above in memcontrol-v1.c
+>> 
+>> Hm, I'm not sure about this. This feature might be actually useful with
+>> cgroup v2, as some companies are dependent on the old cgroup v1
+>> semantics here but otherwise would prefer to move to v2.
+>> In other words, I see it as a cgroup v2 feature, not as a cgroup v1.
+>> So there is no reason to move it into the cgroup v1 code.
+>
+> Agreed. Let's think of this proposal as making memsw tracking and
+> control a full-fledged v2 feature.
+>
+>> I think it deserves a separate config option (if we're really concerned
+>> about the memory overhead in struct mem_cgroup) or IMO better a
+>> boot/mount time option.
+>
+> Yeah, a config option forces distros to enable it :/
+>
+> I'm hesitant to agree with making it optional in any manner. If you
+> consider the functionality that is implemented, the overhead should be
+> fairly minimal. It isn't right now, because page_counter contains a
+> ton of stuff that isn't applicable to this new user. That overhead is
+> still paid for unnecessarily by users who _do_ need to enable it.
 
-[    2.411315] x86/cpu: User Mode Instruction Prevention (UMIP) activated
-[    2.415307] ------------[ cut here ]------------
-[    2.419306] [Firmware Bug]: Invalid XFEATURE_PKRU configuration.
-[    2.423307] WARNING: CPU: 0 PID: 0 at arch/x86/kernel/cpu/common.c:530 identify_cpu+0x82a/0x840
-[    2.427306] Modules linked in:
-[    2.431307] CPU: 0 UID: 0 PID: 0 Comm: swapper/0 Not tainted 6.14.0-rc7+ #1 PREEMPT(full) 
-[    2.435306] Hardware name: Micro-Star International Co., Ltd. MS-7A38/B450M PRO-VDH MAX (MS-7A38), BIOS B.G0 07/26/2022
-[    2.439306] RIP: 0010:identify_cpu+0x82a/0x840
-[    2.443306] Code: e8 bb f2 ff ff e9 4f ff ff ff 80 3d 07 4e 7b 01 00 0f 85 af fb ff ff 48 c7 c7 a8 fd f0 81 c6 05 f3 4d 7b 01 01 e8 e6 49 04 00 <0f> 0b e9 95 fb ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00
-[    2.447306] RSP: 0000:ffffffff82203ec8 EFLAGS: 00010296
-[    2.451306] RAX: 0000000000000034 RBX: 0000000000000000 RCX: 0000000000000000
-[    2.455306] RDX: 0000000080000003 RSI: 00000000ffffffea RDI: 0000000000000001
-[    2.459306] RBP: ffffffff82a09f40 R08: ffff88883e1fafe8 R09: 000000000027fffb
-[    2.463306] R10: 00000000000000ee R11: ffff88883d5fb000 R12: 0000000000000000
-[    2.467306] R13: ffff88883f373180 R14: ffffffff8220ba78 R15: 000000000008b000
-[    2.471306] FS:  0000000000000000(0000) GS:ffff88889742b000(0000) knlGS:0000000000000000
-[    2.475306] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[    2.479306] CR2: ffff88883f1ff000 CR3: 000000000221a000 CR4: 00000000003108b0
-[    2.483306] Call Trace:
-[    2.487307]  <TASK>
-[    2.489459]  ? __warn+0x85/0x150
-[    2.491306]  ? identify_cpu+0x82a/0x840
-[    2.495306]  ? report_bug+0x1c3/0x1d0
-[    2.499306]  ? identify_cpu+0x82a/0x840
-[    2.503306]  ? identify_cpu+0x82c/0x840
-[    2.507306]  ? handle_bug+0xec/0x120
-[    2.511306]  ? exc_invalid_op+0x14/0x70
-[    2.515306]  ? asm_exc_invalid_op+0x16/0x20
-[    2.519306]  ? identify_cpu+0x82a/0x840
-[    2.523306]  ? identify_cpu+0x82a/0x840
-[    2.527306]  arch_cpu_finalize_init+0x23/0x150
-[    2.531307]  start_kernel+0x40a/0x720
-[    2.535306]  x86_64_start_reservations+0x14/0x30
-[    2.539306]  x86_64_start_kernel+0xa8/0xc0
-[    2.543306]  common_startup_64+0x12c/0x138
-[    2.547307]  </TASK>
-[    2.551306] ---[ end trace 0000000000000000 ]---
+Agree. Memcg is already huge, so another page_counter won't add a lot
+percentage-wise.
 
-Zapping it for the time being.
+>
+> It seems like a good opportunity to refactor struct page_counter.
 
--- 
-Regards/Gruss,
-    Boris.
+I don't think it's a hard dependency here, but otherwise fully agree.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks!
