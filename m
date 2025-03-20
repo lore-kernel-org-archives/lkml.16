@@ -1,37 +1,37 @@
 Received: from dggsgout11.his.huawei.com (dggsgout11.his.huawei.com [45.249.212.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AE9B20B81E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4B6A20A5C2
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:52:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742439181; cv=none; b=VhdoKv2BmEuMqcaNhhKMT90vqGg3QhwE7KISDqC6Q5VxAFi0/Bfp26itx9axKQUDpIZoAPem25HAFNQjkOBP8b63iBvsLGEGi9hQezAIkr+UyElPT68YEAcG5Zi4GeSx4EaRJTsuTyptAxQ34Vp8jM4xPixfApWrqUu9xjWgF3I=
+	t=1742439181; cv=none; b=Iisdtcic2zGKtRyhbGWwn6oR96frgLcBXU2QVipyvLMQHrcQ/A+NwaihX8moqjElGQouZJfNOGiD86R9Jpe2lW6LGRDC0k3wb/2gg8Nnh6TvAyO3LIPIkvy4wZYkySFf4us6th9zc2ETSibx3C65GLbQijRRH/UjO834AsgxHj0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742439181; c=relaxed/simple;
-	bh=0SOqLYSx6ZzKa3TjO0XltVXubezyUIug8jAeI5DG+b8=;
+	bh=ydq/VCuy8v4G2RCSYVvciCouf9ws6iJWMbNwpbvikyE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=EuI9pTM7z+xph1Uf80EFch22imgVSIrzEcCcSfY0qvSokuHSfuWiDACOX+cfO166rfn+sCH7SYGCANW/v0JH+go0lIIcHtK7jnZRbwi46w6WaVYSyYppyOITFBbWC7giS8qKLz6Nvi+SXt/pVPxNUWGT8pW6jIo/45Qh0aA+fhY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=none smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
+	 MIME-Version; b=KGfgOSzpl4oELSrmSBOolQpDHAUebqwvxTZCSoZ4q1fY2zlMlFrxPe5MB3OecI8g7cWMIYhFt3eohyyGwHE2NL69pLJNkSC9LotjWFlxAES/u0GI8umeR3flEtSLDTVDKCmGlxPZi+D9h1Q67VqlLhkAdhWaYrQ5FyR22+zNMnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com; spf=pass smtp.mailfrom=huaweicloud.com; arc=none smtp.client-ip=45.249.212.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=huaweicloud.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=huaweicloud.com
-Received: from mail.maildlp.com (unknown [172.19.163.235])
-	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZJ9970GKQz4f3lfn
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:27 +0800 (CST)
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huaweicloud.com
+Received: from mail.maildlp.com (unknown [172.19.163.216])
+	by dggsgout11.his.huawei.com (SkyGuard) with ESMTP id 4ZJ9953wV9z4f3lfX
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:25 +0800 (CST)
 Received: from mail02.huawei.com (unknown [10.116.40.252])
-	by mail.maildlp.com (Postfix) with ESMTP id 326FB1A06DC
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:51 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTP id AEA701A13DD
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:52:49 +0800 (CST)
 Received: from huaweicloud.com (unknown [10.175.101.6])
-	by APP3 (Coremail) with SMTP id _Ch0CgAHW8X_gttnYGGmGw--.42197S9;
-	Thu, 20 Mar 2025 10:52:51 +0800 (CST)
+	by APP3 (Coremail) with SMTP id _Ch0CgAHW8X_gttnYGGmGw--.42197S4;
+	Thu, 20 Mar 2025 10:52:49 +0800 (CST)
 From: Kemeng Shi <shikemeng@huaweicloud.com>
 To: akpm@linux-foundation.org
 Cc: kasong@tencent.com,
 	tim.c.chen@linux.intel.com,
 	linux-mm@kvack.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 7/8] mm: swap: factor out helper to drop cache of entries within a single cluster
-Date: Thu, 20 Mar 2025 19:48:28 +0800
-Message-Id: <20250320114829.25751-8-shikemeng@huaweicloud.com>
+Subject: [PATCH v3 2/8] mm: swap: enable swap_entry_range_free() to drop any kind of last ref
+Date: Thu, 20 Mar 2025 19:48:23 +0800
+Message-Id: <20250320114829.25751-3-shikemeng@huaweicloud.com>
 X-Mailer: git-send-email 2.30.0
 In-Reply-To: <20250320114829.25751-1-shikemeng@huaweicloud.com>
 References: <20250320114829.25751-1-shikemeng@huaweicloud.com>
@@ -42,88 +42,133 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_Ch0CgAHW8X_gttnYGGmGw--.42197S9
-X-Coremail-Antispam: 1UD129KBjvJXoW7uFWkAFy5WF48GF4xGFWkCrg_yoW8ZryxpF
-	9Igwn8Kr48Xr13Gw4xXw45JayFv3yxW3W2qFy7Gr1av3Z3Jr10gFyqyrWa9ry5CrykuF98
-	Ca4DKry2gF4jyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUPab4IE77IF4wAFF20E14v26rWj6s0DM7CY07I20VC2zVCF04k2
+X-CM-TRANSID:_Ch0CgAHW8X_gttnYGGmGw--.42197S4
+X-Coremail-Antispam: 1UD129KBjvJXoWxWr1ktF18tF48GF4ruryDJrb_yoWrAFy7pF
+	9Igrn8Kr4xJF13K3y3Jw4Yyw4Sv3yxWw18ZF9rGw1Sv3ZxJry0qFyDA3yYkFyUA34kuF90
+	ka1qqr17GF4jyFUanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUPFb4IE77IF4wAFF20E14v26ryj6rWUM7CY07I20VC2zVCF04k2
 	6cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6r1a6r45M2
-	8IrcIa0xkI8VA2jI8067AKxVWUAVCq3wA2048vs2IY020Ec7CjxVAFwI0_Xr0E3s1l8cAv
-	FVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3w
-	A2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE
-	3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr2
-	1l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv
-	67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2
-	AFwI0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAq
-	x4xG67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r
-	1DMIIYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_JFI_Gr1lIxAIcVC0I7IYx2IY6xkF
-	7I0E14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxV
-	WUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxU
-	s3kuDUUUU
+	8IrcIa0xkI8VA2jI8067AKxVWUXwA2048vs2IY020Ec7CjxVAFwI0_JFI_Gr1l8cAvFVAK
+	0II2c7xJM28CjxkF64kEwVA0rcxSw2x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4
+	x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l
+	84ACjcxK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I
+	8CrVACY4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AK
+	xVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lc7CjxVAaw2AFwI
+	0_JF0_Jw1l42xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG
+	67AKxVWUJVWUGwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r126r1DMI
+	IYrxkI7VAKI48JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E
+	14v26r4j6F4UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJV
+	W8JwCI42IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjxUVveH
+	DUUUU
 X-CM-SenderInfo: 5vklyvpphqwq5kxd4v5lfo033gof0z/
 
-Factor out helper swap_entries_put_cache() from put_swap_folio() to server
-as a general-purpose routine for dropping cache flag of entries within a
-single cluster.
+The original VM_BUG_ON only allows swap_entry_range_free() to drop last
+SWAP_HAS_CACHE ref. By allowing other kind of last ref in VM_BUG_ON,
+swap_entry_range_free() could be a more general-purpose function able to
+handle all kind of last ref.
+Following thi change, also rename swap_entry_range_free() to
+swap_entries_free() and update it's comment accordingly.
+
+This is a preparation to use swap_entries_free() to drop more kind of
+last ref other than SWAP_HAS_CACHE.
 
 Signed-off-by: Kemeng Shi <shikemeng@huaweicloud.com>
 Reviewed-by: Tim Chen <tim.c.chen@linux.intel.com>
 ---
- mm/swapfile.c | 27 +++++++++++++++++----------
- 1 file changed, 17 insertions(+), 10 deletions(-)
+ mm/swapfile.c | 34 ++++++++++++++++++++--------------
+ 1 file changed, 20 insertions(+), 14 deletions(-)
 
 diff --git a/mm/swapfile.c b/mm/swapfile.c
-index 646efccdd2ec..40a7d75c01e8 100644
+index 5a775456e26c..76720ca76aae 100644
 --- a/mm/swapfile.c
 +++ b/mm/swapfile.c
-@@ -1455,6 +1455,22 @@ struct swap_info_struct *get_swap_device(swp_entry_t entry)
- 	return NULL;
+@@ -52,9 +52,9 @@
+ static bool swap_count_continued(struct swap_info_struct *, pgoff_t,
+ 				 unsigned char);
+ static void free_swap_count_continuations(struct swap_info_struct *);
+-static void swap_entry_range_free(struct swap_info_struct *si,
+-				  struct swap_cluster_info *ci,
+-				  swp_entry_t entry, unsigned int nr_pages);
++static void swap_entries_free(struct swap_info_struct *si,
++			      struct swap_cluster_info *ci,
++			      swp_entry_t entry, unsigned int nr_pages);
+ static void swap_range_alloc(struct swap_info_struct *si,
+ 			     unsigned int nr_entries);
+ static bool folio_swapcache_freeable(struct folio *folio);
+@@ -1463,7 +1463,7 @@ static unsigned char swap_entry_put(struct swap_info_struct *si,
+ 	ci = lock_cluster(si, offset);
+ 	usage = swap_entry_put_locked(si, offset, 1);
+ 	if (!usage)
+-		swap_entry_range_free(si, ci, swp_entry(si->type, offset), 1);
++		swap_entries_free(si, ci, swp_entry(si->type, offset), 1);
+ 	unlock_cluster(ci);
+ 
+ 	return usage;
+@@ -1493,7 +1493,7 @@ static bool swap_entries_put_nr(struct swap_info_struct *si,
+ 	for (i = 0; i < nr; i++)
+ 		WRITE_ONCE(si->swap_map[offset + i], SWAP_HAS_CACHE);
+ 	if (!has_cache)
+-		swap_entry_range_free(si, ci, entry, nr);
++		swap_entries_free(si, ci, entry, nr);
+ 	unlock_cluster(ci);
+ 
+ 	return has_cache;
+@@ -1512,12 +1512,18 @@ static bool swap_entries_put_nr(struct swap_info_struct *si,
  }
  
-+static void swap_entries_put_cache(struct swap_info_struct *si,
-+				   swp_entry_t entry, int nr)
+ /*
+- * Drop the last HAS_CACHE flag of swap entries, caller have to
+- * ensure all entries belong to the same cgroup.
++ * Drop the last ref(1, SWAP_HAS_CACHE or SWAP_MAP_SHMEM) of swap entries,
++ * caller have to ensure all entries belong to the same cgroup and cluster.
+  */
+-static void swap_entry_range_free(struct swap_info_struct *si,
+-				  struct swap_cluster_info *ci,
+-				  swp_entry_t entry, unsigned int nr_pages)
++static inline bool swap_is_last_ref(unsigned char count)
 +{
-+	unsigned long offset = swp_offset(entry);
-+	struct swap_cluster_info *ci;
-+
-+	ci = lock_cluster(si, offset);
-+	if (swap_only_has_cache(si, offset, nr))
-+		swap_entries_free(si, ci, entry, nr);
-+	else {
-+		for (int i = 0; i < nr; i++, entry.val++)
-+			swap_entry_put_locked(si, ci, entry, SWAP_HAS_CACHE);
-+	}
-+	unlock_cluster(ci);
++	return (count == SWAP_HAS_CACHE) || (count == 1) ||
++	       (count == SWAP_MAP_SHMEM);
 +}
 +
- static bool swap_entries_put_map(struct swap_info_struct *si,
- 				 swp_entry_t entry, int nr)
++static void swap_entries_free(struct swap_info_struct *si,
++			      struct swap_cluster_info *ci,
++			      swp_entry_t entry, unsigned int nr_pages)
  {
-@@ -1595,8 +1611,6 @@ void swap_free_nr(swp_entry_t entry, int nr_pages)
-  */
- void put_swap_folio(struct folio *folio, swp_entry_t entry)
- {
--	unsigned long offset = swp_offset(entry);
--	struct swap_cluster_info *ci;
- 	struct swap_info_struct *si;
- 	int size = 1 << swap_entry_order(folio_order(folio));
+ 	unsigned long offset = swp_offset(entry);
+ 	unsigned char *map = si->swap_map + offset;
+@@ -1530,7 +1536,7 @@ static void swap_entry_range_free(struct swap_info_struct *si,
  
-@@ -1604,14 +1618,7 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
- 	if (!si)
- 		return;
+ 	ci->count -= nr_pages;
+ 	do {
+-		VM_BUG_ON(*map != SWAP_HAS_CACHE);
++		VM_BUG_ON(!swap_is_last_ref(*map));
+ 		*map = 0;
+ 	} while (++map < map_end);
  
--	ci = lock_cluster(si, offset);
--	if (swap_only_has_cache(si, offset, size))
--		swap_entries_free(si, ci, entry, size);
--	else {
--		for (int i = 0; i < size; i++, entry.val++)
--			swap_entry_put_locked(si, ci, entry, SWAP_HAS_CACHE);
--	}
--	unlock_cluster(ci);
-+	swap_entries_put_cache(si, entry, size);
+@@ -1553,7 +1559,7 @@ static void cluster_swap_free_nr(struct swap_info_struct *si,
+ 	ci = lock_cluster(si, offset);
+ 	do {
+ 		if (!swap_entry_put_locked(si, offset, usage))
+-			swap_entry_range_free(si, ci, swp_entry(si->type, offset), 1);
++			swap_entries_free(si, ci, swp_entry(si->type, offset), 1);
+ 	} while (++offset < end);
+ 	unlock_cluster(ci);
  }
+@@ -1596,11 +1602,11 @@ void put_swap_folio(struct folio *folio, swp_entry_t entry)
  
- int __swap_count(swp_entry_t entry)
+ 	ci = lock_cluster(si, offset);
+ 	if (swap_only_has_cache(si, offset, size))
+-		swap_entry_range_free(si, ci, entry, size);
++		swap_entries_free(si, ci, entry, size);
+ 	else {
+ 		for (int i = 0; i < size; i++, entry.val++) {
+ 			if (!swap_entry_put_locked(si, offset + i, SWAP_HAS_CACHE))
+-				swap_entry_range_free(si, ci, entry, 1);
++				swap_entries_free(si, ci, entry, 1);
+ 		}
+ 	}
+ 	unlock_cluster(ci);
 -- 
 2.30.0
 
