@@ -1,48 +1,34 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4D11EB198;
-	Thu, 20 Mar 2025 16:00:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D961922C0
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:00:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742486442; cv=none; b=qsrSi0RHgpX5utlScALpfs8CXIilS9Ax3bY7YSMl1dvh003Kmdjxk+MGYXvWwLKHu2v4yyJ0+7BabwVp6y4cN1MkFA8kIAM6ajC1ZrX5wk/YeEBBVdrcN3F2ektlsWlDnXZArwQ+0Lf7ExX0spqs2cpR/920RZZqU3ynClOwsp0=
+	t=1742486441; cv=none; b=kjUnIELGhkNLVD1s7i8EnCj6JXJDsqg3lUQv8PYB3JJq/BoX0lAtnbBnWeuB8fEVRN+CGRce+uo9fWntz/XRDTzZvrlGPgHKC7h0uGbvgy+plyZZZmMqQmGsrmdqRuMYSxRry01Q/wGeWh+lleY55ppFX2yV2Mj9dNDQCc+Y6hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742486442; c=relaxed/simple;
-	bh=ScNqOhXWunAFAGfa06cLfLvXFeM250TqGzgCnafYnMI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=mJWIzpNL7nSWsxl+C8cQBAghZNCDFOsFhWTB74vp1eypj+rwuyJeNqL/IV5yqNtJieqav74+ZM6zvKUZnZvo2oA6CTnRNQN5DMa3+0RPBE9qiG3FieTTE5SbrN4fxWJbW9T4PSPZlxRjNZBsc6ZIti+ya3Xr/QvnzgnBOg/+W3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OrzX4B98; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742486441; c=relaxed/simple;
+	bh=tWpzu7ba133Zdaj4dIf8mfTY5P/FzEw3AwQGlLkB6nY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=pOM/DNNoaI3g8WTQYV8QPvA2IbBZDVHLQ4ZG3SufXRiKO9THfJKEU1mQB7z44J9iKn7nL1BwZBNJMtLUe5iNSVfqzl9nTSrHPbYTjsiAFYA2+A3P16NzIlEEu6QlfMyJcve1LA2fA0+B+IPdug7OqDUvhyoXuRtl37U1cnfI5jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Jo6hJDzx; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OrzX4B98"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AED1C4CEE8;
-	Thu, 20 Mar 2025 16:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742486441;
-	bh=ScNqOhXWunAFAGfa06cLfLvXFeM250TqGzgCnafYnMI=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=OrzX4B98T69jNgT02cY6z7qXCtPLDODKwHXpq7B1XbjfiEpOlw0dfDHwkrxcfrv38
-	 1fWqxPwZdGIbLnEJOVYHZKejuBPNnxD5KxHLuEmvLM+FbgIKKoa+JvAbqbu19mK6PD
-	 RjtQ3UFB512vRXheUBjeBIE+UqTqClx4jRbE2xXQJ+bTIAnUH4venTU7eGs8ieFYV6
-	 GKEUyLA8vWR9pnlUCCya0u2gthNdvPqBe2MSsmllyBeLqH2Rx4EWPfNnQQ2Tfk7Uxb
-	 iLPHB02xh1JrKtZQInMBqbSdaeikUwfw/z30q906Lt3qrTwm+iiMmYhL8Ym0ns1lna
-	 shgAgoCBjVbhQ==
-From: Namhyung Kim <namhyung@kernel.org>
-To: Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Stephen Brennan <stephen.s.brennan@oracle.com>
-Cc: linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>, 
- Ian Rogers <irogers@google.com>, linux-kernel@vger.kernel.org, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Chaitanya S Prakash <chaitanyas.prakash@arm.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, 
- Athira Rajeev <atrajeev@linux.vnet.ibm.com>, 
- Adrian Hunter <adrian.hunter@intel.com>
-In-Reply-To: <20250318230012.2038790-1-stephen.s.brennan@oracle.com>
-References: <20250318230012.2038790-1-stephen.s.brennan@oracle.com>
-Subject: Re: [PATCH] perf dso: fix dso__is_kallsyms() check
-Message-Id: <174248644099.3704425.17283492904024257461.b4-ty@kernel.org>
-Date: Thu, 20 Mar 2025 09:00:41 -0700
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Jo6hJDzx"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 333C6836;
+	Thu, 20 Mar 2025 16:58:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1742486328;
+	bh=tWpzu7ba133Zdaj4dIf8mfTY5P/FzEw3AwQGlLkB6nY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=Jo6hJDzx4MMVutviFoW6uze0v/t/ZUm3X99o4o+jspdo0aHxYvjZr5GZqfyHXe72l
+	 cVOWAeLOIYol7UZjpp2ic1QNh6dyw0QY5HSFa/V1rBRn+Dmt0oLVbMTdU9nPjjWvRp
+	 f5azgycs2yk3KZQDl9kPW2S6tLE5LGaoHomhfRJc=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Thu, 20 Mar 2025 17:59:56 +0200
+Subject: [PATCH 01/18] drm/tidss: Fix missing includes and struct decls
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -51,21 +37,112 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Message-Id: <20250320-cdns-dsi-impro-v1-1-725277c5f43b@ideasonboard.com>
+References: <20250320-cdns-dsi-impro-v1-0-725277c5f43b@ideasonboard.com>
+In-Reply-To: <20250320-cdns-dsi-impro-v1-0-725277c5f43b@ideasonboard.com>
+To: Jyri Sarha <jyri.sarha@iki.fi>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
+ Devarsh Thakkar <devarsht@ti.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2118;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=tWpzu7ba133Zdaj4dIf8mfTY5P/FzEw3AwQGlLkB6nY=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn3DuW0VeV/16xby0waSsVTa5y/p9LuoqqSPndU
+ 5qCby6XyN6JAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ9w7lgAKCRD6PaqMvJYe
+ 9dQ0D/9sDS7OWljZibT3MD38u4WdeOEtCPLTN1jQCfDoLLOLHAfQUc+o+a4qSO7UTE/cwMA6PPL
+ /vB4NvQh55DDELk66YfnQh7/FtRB5yDEIrP1RLuZWYY5Cz6TAmoB76WsjRqP+9axnYTYy5GFiP6
+ 5gDJKn3Vmdh+xCqc21B65a6f23OGqzwDvkedeFjBuMp5H2pKJFoU+33s0t7SLbeT6XiumAqkQzu
+ 8k4W82fykMZZnoZQDWCNDVOX6hkJCWUJucgV3ImF3UmPqy6uDo0XVs6TXDaDGjC3yvYMrBtWl5Q
+ /pnXmA93cICYvkxW0jRsP7DXw/VpWddrvuF9OSioi1cfNxvucKp6brh75Ox1d0Uma52+aVOCYsk
+ Fws048xy7UkFtnDRuMTH0172iX5a3uwxVSxT0Jq3nZjPsO2jsTNLUsnlKo5TaObi0KLTlwjP13H
+ ggG04o92RTjt93ztMubmHVmpjVmm/3QoEOypvKycMyLQ9H3+r+idMSZrmGaAZZNqm0oEIO4CLzb
+ YAlRi70GtFcrO9uN3dZGgTL8vjJkKppyAnmxX9V4ChjuqZYnoYKaiMSsUYGNUt+P7mk1Oq9Zj7P
+ GQvFstwP99RXtjk0naJTT9N3/3vhbCo34aBtQ2IDx+I8StOcRzUTzfe1+I9cYd/w6YeoJWsAXRl
+ 6MXwh1eLPU6BTpA==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-On Tue, 18 Mar 2025 16:00:11 -0700, Stephen Brennan wrote:
-> Kernel modules for which we cannot find a file on-disk will have a
-> dso->long_name that looks like "[module_name]". Prior to the commit
-> listed in the fixes, the dso->kernel field would be zero (for user
-> space), so dso__is_kallsyms() would return false. After the commit,
-> kernel module DSOs are correctly labeled, but the result is that
-> dso__is_kallsyms() erroneously returns true for those modules without a
-> filesystem path.
-> 
-> [...]
-Applied to perf-tools-next, thanks!
+Fix missing includes and struct declarations. Even if these don't cause
+any compile issues at the moment, it's good to have them correct.
 
-Best regards,
-Namhyung
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+---
+ drivers/gpu/drm/tidss/tidss_dispc.h       | 3 +++
+ drivers/gpu/drm/tidss/tidss_drv.h         | 2 ++
+ drivers/gpu/drm/tidss/tidss_plane.h       | 2 ++
+ drivers/gpu/drm/tidss/tidss_scale_coefs.h | 2 ++
+ 4 files changed, 9 insertions(+)
 
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.h b/drivers/gpu/drm/tidss/tidss_dispc.h
+index 086327d51a90..c31b477a18b0 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.h
++++ b/drivers/gpu/drm/tidss/tidss_dispc.h
+@@ -7,11 +7,14 @@
+ #ifndef __TIDSS_DISPC_H__
+ #define __TIDSS_DISPC_H__
+ 
++#include <drm/drm_color_mgmt.h>
++
+ #include "tidss_drv.h"
+ 
+ struct dispc_device;
+ 
+ struct drm_crtc_state;
++struct drm_plane_state;
+ 
+ enum tidss_gamma_type { TIDSS_GAMMA_8BIT, TIDSS_GAMMA_10BIT };
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_drv.h b/drivers/gpu/drm/tidss/tidss_drv.h
+index 7f4f4282bc04..56a2020e20d0 100644
+--- a/drivers/gpu/drm/tidss/tidss_drv.h
++++ b/drivers/gpu/drm/tidss/tidss_drv.h
+@@ -9,6 +9,8 @@
+ 
+ #include <linux/spinlock.h>
+ 
++#include <drm/drm_device.h>
++
+ #define TIDSS_MAX_PORTS 4
+ #define TIDSS_MAX_PLANES 4
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_plane.h b/drivers/gpu/drm/tidss/tidss_plane.h
+index aecaf2728406..92c560c3a621 100644
+--- a/drivers/gpu/drm/tidss/tidss_plane.h
++++ b/drivers/gpu/drm/tidss/tidss_plane.h
+@@ -7,6 +7,8 @@
+ #ifndef __TIDSS_PLANE_H__
+ #define __TIDSS_PLANE_H__
+ 
++#include <drm/drm_plane.h>
++
+ #define to_tidss_plane(p) container_of((p), struct tidss_plane, plane)
+ 
+ struct tidss_device;
+diff --git a/drivers/gpu/drm/tidss/tidss_scale_coefs.h b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
+index 9c560d0fdac0..9824d02d9d1f 100644
+--- a/drivers/gpu/drm/tidss/tidss_scale_coefs.h
++++ b/drivers/gpu/drm/tidss/tidss_scale_coefs.h
+@@ -9,6 +9,8 @@
+ 
+ #include <linux/types.h>
+ 
++struct device;
++
+ struct tidss_scale_coefs {
+ 	s16 c2[16];
+ 	s16 c1[16];
+
+-- 
+2.43.0
 
