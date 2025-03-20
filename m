@@ -1,126 +1,310 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B3C6219314;
-	Thu, 20 Mar 2025 08:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C172063E3;
+	Thu, 20 Mar 2025 08:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742460912; cv=none; b=irEezFf6WcBN6VSG6Y2GMZcqL3kRHTXa7kdfL8QFcFn/0XbpUPlYnc1G0Xo31S8XpxxIQE1baDVzuIMMeX7c0eMmr8ALPK/t9GTD5/dGI+gGtcrJGE/ni8VXmqzoreZUQ6SKbAxZHX3wpT6mQMoY7PoaJqBbXeYTIUvfgJrJ1to=
+	t=1742460991; cv=none; b=N/zPKflhGlDX0D4UaMUo/8iP+n7qI8ER9lEkLtywd7wqhDjrPGCPI2nBoLE/AbZ+OlfyDMq4o+4z7AXZsCsKrYKKzyaY/9PcWAAFaqjRzU7VQWFcookChT/oGFrC17WfpryK0CIRzlEqBuAAivmPN4eWrxpMNbnPCXMeakWC0Uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742460912; c=relaxed/simple;
-	bh=i7sIthTZh5Ux9SoBhNZClmo1bhyB2SHe6MT3XxrIePw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Sdr7sn6waBFBAdatk1W8Z3fuHuLuCf0qgiASpVqX42kvWQR9nHheq6Kh1JluSL6hBQzI05IdRVOiWiGxSoVSI6Xu4rL7rmNMG7Fc3If9myM4feuYrRpHxLCRwcZWYbvMuPyq7ZJErUU5nQ0RsMHvrjWlYAIt1IHgCFpocxfoOwE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F4+Ekbc2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742460991; c=relaxed/simple;
+	bh=gdZAjknnz0YrskMZ0It43wYj0bd38CLDxpFwA9E+gMM=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=cEnVRbEkPE8enoNiBBBKX+ohhnWZ0uLHDOM6cgKAzW52gHTuCErcUG+ZueqmROUqoRsT3Y/OxweRcesoG7Fl/w/4sHwIUkiKFvNbxnZPl5th0nSTGFyGPbBAeF+1FJ6o9E2gtRTni/fHqhjYok3sHQXRip6kehjR2hxxtqf/iVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=UlpFhDn9; arc=none smtp.client-ip=212.129.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F4+Ekbc2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCD80C4CEDD;
-	Thu, 20 Mar 2025 08:55:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742460911;
-	bh=i7sIthTZh5Ux9SoBhNZClmo1bhyB2SHe6MT3XxrIePw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F4+Ekbc2Q6navfZCq9Hecs1a3IT3LctFFfX9OIF8j2+6Mx00MZIDoIiy4LgvdIAI9
-	 W+9uVd+2xE55fYLyh6m5CGjQjEvuqF5oMA1uYVXROnKwPlNDs+I3l0ibizVOPWdayq
-	 pa0U4LQ0NmAfXuZ/0BDJ+MtD98GdACNBf1W94hrH61OY1cF3fh9aKQTTMN90alnP4A
-	 KrGgDmWzW/ZTvAlWobba9pV+XCCMOGhUSVt5edk+EzQUELQiZjSDOZ59Aj+NBZfAso
-	 rqWylQcbVYPY938eW3D3gdhQCyvMGRy4tlK0ZapVyHhIOqKbLZNAAjbPKK0/e7T3TH
-	 kpaxPiI2yGSRw==
-Date: Thu, 20 Mar 2025 09:55:08 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Sergio =?utf-8?B?UMOpcmV6?= <sergio@pereznus.es>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 2/2] iio: light: bh1750: Add hardware reset support
- via GPIO
-Message-ID: <20250320-banana-chowchow-of-acceptance-62685c@krzk-bin>
-References: <20250319161117.1780-1-sergio@pereznus.es>
- <20250319161117.1780-2-sergio@pereznus.es>
- <9b8b74d5-ac63-4990-acc9-dbc3bd2f89f6@kernel.org>
- <e4ffd13f-1452-4f18-8d80-f63b391f2545@pereznus.es>
+	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="UlpFhDn9"
+Received: from localhost (mail.3xo.fr [212.129.21.66])
+	by mail.3xo.fr (Postfix) with ESMTP id B90A48D;
+	Thu, 20 Mar 2025 09:46:42 +0100 (CET)
+X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
+Received: from mail.3xo.fr ([212.129.21.66])
+ by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
+ id TFMQh25sqaFy; Thu, 20 Mar 2025 09:46:37 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr 0E08C11
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
+	t=1742460397; bh=YpuTsNOqDkHSttTmOREnJkZMDGhY5t61giUH4vTHhWg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=UlpFhDn9nC7w2d8mBrrActVNmd/8ceRFJja60t7Ra37sm4t9xjpjXajnC1AlfucQl
+	 MITIBg3RPO6wmbUmu1UrhyDVMPQmzDiPwje52/lZMkmgTQXTIulainpgHHYbZ1NT4+
+	 2+XbSGZkhp78t5gKpKpkHMvjwjsOyEcTScP13HshtWcy2+qnTyNKVvde65dgmqrblz
+	 MMbF4ii7oUOcwZLZLAeGFJ3etAcoYRswyRfTIIM2yHjswXkJKch6Bp9rrYurRa0qXP
+	 Hh0UUgBJNvA9/esTMyVPQlQDXkS6Tq7hUhEDvoFy9VYxchtQS14vApzFiD7DEp8jvQ
+	 Y62jRGtNnXBdQ==
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3xo.fr (Postfix) with ESMTPSA id 0E08C11;
+	Thu, 20 Mar 2025 09:46:37 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <e4ffd13f-1452-4f18-8d80-f63b391f2545@pereznus.es>
+Date: Thu, 20 Mar 2025 09:46:36 +0100
+From: Nicolas Baranger <nicolas.baranger@3xo.fr>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: David Howells <dhowells@redhat.com>, Steve French <smfrench@gmail.com>,
+ Jeff Layton <jlayton@kernel.org>, Christian Brauner <brauner@kernel.org>,
+ netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [Linux 6.14 - netfs/cifs] loop on file cat + file copy
+In-Reply-To: <Z3v3-LNGff6OxObh@infradead.org>
+References: <fedd8a40d54b2969097ffa4507979858@3xo.fr>
+ <669f22fc89e45dd4e56d75876dc8f2bf@3xo.fr>
+ <286638.1736163444@warthog.procyon.org.uk> <Z3v3-LNGff6OxObh@infradead.org>
+Message-ID: <a6515315ba0d24b0568ebd756e147795@3xo.fr>
+X-Sender: nicolas.baranger@3xo.fr
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Wed, Mar 19, 2025 at 11:40:27PM +0100, Sergio P=C3=A9rez wrote:
->=20
-> El 19/03/2025 a las 20:15, Krzysztof Kozlowski escribi=C3=B3:
-> > On 19/03/2025 17:11, Sergio Perez wrote:
-> > >   struct bh1750_chip_info {
-> > > @@ -248,6 +253,24 @@ static int bh1750_probe(struct i2c_client *clien=
-t)
-> > >   	data->client =3D client;
-> > >   	data->chip_info =3D &bh1750_chip_info_tbl[id->driver_data];
-> > > +	/* Get reset GPIO from device tree */
-> > > +	data->reset_gpio =3D devm_gpiod_get_optional(&client->dev,
-> > > +									"reset", GPIOD_OUT_HIGH);
-> >=20
-> > Mess indentation.
-> Regarding indentation, I'll fix it in the next version to ensure consiste=
-ncy
-> with kernel style guidelines.
-> >=20
-> > > +	if (IS_ERR(data->reset_gpio))
-> > > +		return dev_err_probe(&client->dev, PTR_ERR(data->reset_gpio),
-> > > +							"Failed to get reset GPIO\n");
-> > > +
-> > > +	/* Perform hardware reset if GPIO is provided */
-> > > +	if (data->reset_gpio) {
-> > > +		/* Perform reset sequence: low-high */
-> > > +		gpiod_set_value_cansleep(data->reset_gpio, 0);
-> > > +		fsleep(BH1750_RESET_DELAY_US);
-> > > +		gpiod_set_value_cansleep(data->reset_gpio, 1);
-> >=20
-> > So you keep device at reset state. This wasn't tested or your DTS is wr=
-ong.
-> The BH1750 reset pin (DVI) is "active low", meaning the device is in reset
-> state when the pin is at 0V. When the pin is at high level, the device ex=
-its
-> reset and operates normally.
 
-I read this after responding to your binding change, so this confirms
-what I saw in datasheet and is contradictory to your response to the
-binding.
+Hi Christoph
 
-First,  your binding should say which pin it is in the description.
+Sorry to contact you again but last time you and David H. help me a lot 
+with 'kernel async DIO' / 'Losetup Direct I/O breaks BACK-FILE 
+filesystem on CIFS share (Appears in Linux 6.10 and reproduced on 
+mainline)'
 
-Second, it is active low...
+I don't know if it had already been reported but after building Linux 
+6.14-rc1 I constat the following behaviour:
 
->=20
-> According to the datasheet (can provide upon request), the reset sequence
-> should:
-> 1. Pull the reset pin low to enter reset state
-> 2. Wait (minimum 1=C2=B5s, I use 10ms to be safe)
-> 3. Pull the reset pin high to exit reset state
-> 4. Leave the pin high for normal operation
->=20
-> My implementation follows this exact sequence, so the device is NOT left =
-in
-> reset state. The initialization code:
-> 1. Sets the pin to 0 (device enters reset)
+'cat' command is going on a loop when I cat a file which reside on cifs 
+share
 
-I don't think you get how GPIOs work. 0 means logical zero, so GPIO is
-not active, not the actual signal level.
+And so 'cp' command does the same: it copy the content of a file on cifs 
+share and loop writing it to the destination
+I did test with a file named 'toto' and containing only ascii string 
+'toto'.
 
-> 2. Waits
-> 3. Sets the pin to 1 (device exits reset)
-> 4. Leaves it at 1, which is the normal operating state
->=20
-> I've modified the YAML description to remove "active low" to avoid
-> confusion, as the implementation is correct for this hardware.
+When I started copying it from cifs share to local filesystem, I had to 
+CTRL+C the copy of this 5 bytes file after some time because the 
+destination file was using all the filesystem free space and containing 
+billions of 'toto' lines
 
-You have wrong implementation.
+Here is an example with cat:
 
-Best regards,
-Krzysztof
+CIFS SHARE is mounted as /mnt/fbx/FBX-24T
 
+CIFS mount options:
+grep cifs /proc/mounts
+//10.0.10.100/FBX24T /mnt/fbx/FBX-24T cifs 
+rw,nosuid,nodev,noexec,relatime,vers=3.1.1,cache=none,upcall_target=app,username=fbx,domain=HOMELAN,uid=0,noforceuid,gid=0,noforcegid,addr=10.0.10.100,file_mode=0666,dir_mode=0755,iocharset=utf8,soft,nounix,serverino,mapposix,mfsymlinks,reparse=nfs,nativesocket,symlink=mfsymlinks,rsize=65536,wsize=65536,bsize=16777216,retrans=1,echo_interval=60,actimeo=1,closetimeo=1 
+0 0
+
+KERNEL: uname -a
+Linux 14RV-SERVER.14rv.lan 6.14.0.1-ast-rc2-amd64 #0 SMP PREEMPT_DYNAMIC 
+Wed Feb 12 18:23:00 CET 2025 x86_64 GNU/Linux
+
+
+To be reproduced:
+echo toto >/mnt/fbx/FBX-24T/toto
+
+ls -l /mnt/fbx/FBX-24T/toto
+-rw-rw-rw- 1 root root 5 20 mars  09:20 /mnt/fbx/FBX-24T/toto
+
+cat /mnt/fbx/FBX-24T/toto
+toto
+toto
+toto
+toto
+toto
+toto
+toto
+^C
+
+strace cat /mnt/fbx/FBX-24T/toto
+execve("/usr/bin/cat", ["cat", "/mnt/fbx/FBX-24T/toto"], 0x7ffc39b41848 
+/* 19 vars */) = 0
+brk(NULL)                               = 0x55755b1c1000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) 
+= 0x7f55f95d6000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (Aucun fichier ou 
+dossier de ce type)
+openat(AT_FDCWD, "glibc-hwcaps/x86-64-v3/libc.so.6", O_RDONLY|O_CLOEXEC) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "glibc-hwcaps/x86-64-v2/libc.so.6", O_RDONLY|O_CLOEXEC) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = 
+-1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 
+ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT 
+(Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun 
+fichier ou dossier de ce type)
+openat(AT_FDCWD, "haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 
+ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT 
+(Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT 
+(Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun 
+fichier ou dossier de ce type)
+openat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v3/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v3", 0x7fff25937800, 0) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v2/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v2", 0x7fff25937800, 0) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/tls/haswell/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/haswell/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/haswell/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/haswell", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls", 0x7fff25937800, 
+0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64", 
+{st_mode=S_IFDIR|S_ISGID|0755, st_size=4570, ...}, 0) = 0
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=148466, ...}, 
+AT_EMPTY_PATH) = 0
+mmap(NULL, 148466, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f55f95b1000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) 
+= 3
+read(3, 
+"\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20t\2\0\0\0\0\0"..., 
+832) = 832
+pread64(3, 
+"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 
+64) = 784
+newfstatat(3, "", {st_mode=S_IFREG|0755, st_size=1922136, ...}, 
+AT_EMPTY_PATH) = 0
+pread64(3, 
+"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 
+64) = 784
+mmap(NULL, 1970000, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 
+0x7f55f93d0000
+mmap(0x7f55f93f6000, 1396736, PROT_READ|PROT_EXEC, 
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x26000) = 0x7f55f93f6000
+mmap(0x7f55f954b000, 339968, PROT_READ, 
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17b000) = 0x7f55f954b000
+mmap(0x7f55f959e000, 24576, PROT_READ|PROT_WRITE, 
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1ce000) = 0x7f55f959e000
+mmap(0x7f55f95a4000, 53072, PROT_READ|PROT_WRITE, 
+MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f55f95a4000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 
+0) = 0x7f55f93cd000
+arch_prctl(ARCH_SET_FS, 0x7f55f93cd740) = 0
+set_tid_address(0x7f55f93cda10)         = 38427
+set_robust_list(0x7f55f93cda20, 24)     = 0
+rseq(0x7f55f93ce060, 0x20, 0, 0x53053053) = 0
+mprotect(0x7f55f959e000, 16384, PROT_READ) = 0
+mprotect(0x55754475e000, 4096, PROT_READ) = 0
+mprotect(0x7f55f960e000, 8192, PROT_READ) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, 
+rlim_max=RLIM64_INFINITY}) = 0
+munmap(0x7f55f95b1000, 148466)          = 0
+getrandom("\x19\x6b\x9e\x55\x7e\x09\x74\x5f", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x55755b1c1000
+brk(0x55755b1e2000)                     = 0x55755b1e2000
+openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 
+3
+newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=3048928, ...}, 
+AT_EMPTY_PATH) = 0
+mmap(NULL, 3048928, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f55f9000000
+close(3)                                = 0
+newfstatat(1, "", {st_mode=S_IFCHR|0600, st_rdev=makedev(0x88, 0), ...}, 
+AT_EMPTY_PATH) = 0
+openat(AT_FDCWD, "/mnt/fbx/FBX-24T/toto", O_RDONLY) = 3
+newfstatat(3, "", {st_mode=S_IFREG|0666, st_size=5, ...}, AT_EMPTY_PATH) 
+= 0
+fadvise64(3, 0, 0, POSIX_FADV_SEQUENTIAL) = 0
+mmap(NULL, 16785408, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 
+-1, 0) = 0x7f55f7ffe000
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+^Cstrace: Process 38427 detached
+  <detached ...>
+
+
+Please let me know if it had already been fixed or reported and if 
+you're able to reproduce this issue.
+
+Thanks for help
+
+Kind regards
+Nicolas Baranger
