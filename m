@@ -1,97 +1,142 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58176222582;
-	Thu, 20 Mar 2025 09:36:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157E821D5A1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463400; cv=none; b=tNfI41+NK4xsm6ItvqguMP5y6NjeQGGtIztPrBkaQlQlN2Rel8fH7PNjsitnmeRtWXgVQU4MKxhLTebdsiYZAknfawEzaYwTBjfRgJc6JCKE5yH0UQGOJQ8tr+mYldIgPo3Y3Yb2INrEWgf76lR7T8LrVjpW1TXwxOdhhUhJAyM=
+	t=1742463533; cv=none; b=Ei7zmA63Cre6Pohmq2taj0xSbu8O3UAXcu16w5PVkogO/kB6FUJ6raOzPenlrM8K9GCb4LmRzR5sVcv4ahyQhKtiViE5Zpn86pFeAlbE1g0P5T0qCqiGaMYho2E+KqUEwSD5kw3T1OBvdJ5yDwzpuHqHQ8GBkS4EGUJT1P2TBYk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463400; c=relaxed/simple;
-	bh=rmeSFUps1Kb2AtfHcDE+ZMpy59r9/O2cRtKHsWdcCUk=;
-	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=eBqGUwljuXwipW9kku5yY1gHNDxhUoMlL8tdCM41v3qQCwLK59i+OQHgQgO16qiI84TE7kUPndfSbOie6XxpvQRCK4+gaXx/avi3vCYCgNNRAnCvRgokF+S+Lp2dfaTlwbenQPU6bhJtO9kaIFaKcB8pq5aXsR0cf+bipfCjyfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tp7QHmDH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742463533; c=relaxed/simple;
+	bh=XxhDtK+NPjrUigmQEObn5NVqHG9KWOcga5qM3iqOX/k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FFJxBd/bvc8sGhhW/no5o8IVMoraZUDfQJAFQ7YZ5/n9S+Cpn5bEm7ztGlbhTHCNvwojCme8uUR94p6eRi6M0Cko2oXfb4yaFwsFHZS+uEWVYpx9atUJfgNNv0dRNqr6f38OzeLc9Af9Cug221A6V4STvZzMqlDGxYPUp0FMago=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hs8qLtk2; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tp7QHmDH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD713C4CEE8;
-	Thu, 20 Mar 2025 09:36:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742463399;
-	bh=rmeSFUps1Kb2AtfHcDE+ZMpy59r9/O2cRtKHsWdcCUk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=tp7QHmDHLsCLToRlVqIsxUleoMkwXDIZ4bPn9UQusiIXJOJMwUPHiWRS+gq7o8MOf
-	 IrblgrUP3CzOiWTL1R6GlxU1uzYrvqR4Ozr29XyCknH5ld1l8PjdG+RV1VdRsAgnis
-	 /QP8mAM0Y3mMfX1FWYG6PtgsbQfYEXzRc+kG3bVi6VkbTK3v/GIW6u98dPVvgCGcC/
-	 ATWGz4B6i4ZxUF9tzvWMY5KKKCN5TCOTosnihTzXzoQ4UXJzjVVHVtNHQz5qMMJP6B
-	 QTGuTwiPDew5odbN7r0OQsa8RdFysk2x6w/Zdkc1fvIy4PKTcx0V2flwwWSbc0JhCE
-	 /RnpJ/E0H/0cw==
-Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
-	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.95)
-	(envelope-from <maz@kernel.org>)
-	id 1tvCKL-00FMtF-K5;
-	Thu, 20 Mar 2025 09:36:37 +0000
-Date: Thu, 20 Mar 2025 09:36:37 +0000
-Message-ID: <86frj8m4be.wl-maz@kernel.org>
-From: Marc Zyngier <maz@kernel.org>
-To: Peter Chen <peter.chen@cixtech.com>
-Cc: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	arnd@arndb.de,
-	linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	cix-kernel-upstream@cixtech.com,
-	marcin@juszkiewicz.com.pl,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Fugang Duan <fugang.duan@cixtech.com>
-Subject: Re: [PATCH v4 5/6] arm64: dts: cix: add initial CIX P1(SKY1) dts support
-In-Reply-To: <20250305053823.2048217-6-peter.chen@cixtech.com>
-References: <20250305053823.2048217-1-peter.chen@cixtech.com>
-	<20250305053823.2048217-6-peter.chen@cixtech.com>
-User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
- FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
- (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hs8qLtk2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742463532; x=1773999532;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=XxhDtK+NPjrUigmQEObn5NVqHG9KWOcga5qM3iqOX/k=;
+  b=hs8qLtk2etejV/wehYUtt63WBgqav6sJqM1Rcpwnquvva6fjpew5SpVe
+   2lmDQZGvPyZCXaZ8Kkh8qIEDCvU1lOCzHHUj6P3wUI+eJjzEiTpnkWeMG
+   HfqodtUKRsn7rYiy2bAff8ziFB0g3h7ECMhHiEXx8ZsgrhL4vh0UzWViP
+   ZZL5MNwptRfDC+YeP6ANAOfq09ZnMjUbP0Plhmc/D8KXbj2A6PEjWOHqc
+   Tell+zFIbTQVXiUJPDJ6LhxD8ToCW5QRyhSpCRemezrnXfRk7Uv+vE1iK
+   XF1a1uZllDN1Wx9GlM6BE8emmRZWVO3MlhYDE4KrKk55ahFayoOm0Eg04
+   w==;
+X-CSE-ConnectionGUID: kOL8lJSPTQ6Tyo6LTikiPA==
+X-CSE-MsgGUID: iBXH9o8kQC2c4RiyfXwJ9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="47341107"
+X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
+   d="scan'208";a="47341107"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 02:38:50 -0700
+X-CSE-ConnectionGUID: KT0aoQBlQDqdQcJOlWaX2g==
+X-CSE-MsgGUID: AIYXmeVVQbu8OR1s90H7Cw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
+   d="scan'208";a="127879555"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa003.jf.intel.com with ESMTP; 20 Mar 2025 02:38:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 856FE1E0; Thu, 20 Mar 2025 11:38:46 +0200 (EET)
+Date: Thu, 20 Mar 2025 11:38:46 +0200
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: dave.hansen@linux.intel.com, linux-coco@lists.linux.dev, 
+	x86@kernel.org, linux-kernel@vger.kernel.org, vannapurve@google.com, 
+	Elena Reshetova <elena.reshetova@intel.com>
+Subject: Re: [RFC PATCH] /dev/mem: Disable /dev/mem under TDX guest
+Message-ID: <h46ki6cfmrflbw4fhebsb646cpzba6iqq6cozq4prveqhowdtj@ifwsk64zo73k>
+References: <20250318113604.297726-1-nik.borisov@suse.com>
+ <guatjzjzipzjzvj4oou2gktxmzileawshxmxj22hsa5kmet5g4@2rhf7tzaiytw>
+ <b6d132a7-b259-46f4-8bde-fc517bd9d294@suse.com>
+ <auno67lcikllqdlgdsad72hvsmym4lqxnaqaohmvtvf2boscxu@54ftt6342jxy>
+ <d0891544-98b9-447a-a382-bfc078865243@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
-Content-Type: text/plain; charset=US-ASCII
-X-SA-Exim-Connect-IP: 185.219.108.64
-X-SA-Exim-Rcpt-To: peter.chen@cixtech.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com, marcin@juszkiewicz.com.pl, krzysztof.kozlowski@linaro.org, fugang.duan@cixtech.com
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <d0891544-98b9-447a-a382-bfc078865243@suse.com>
 
-On Wed, 05 Mar 2025 05:38:22 +0000,
-Peter Chen <peter.chen@cixtech.com> wrote:
+On Tue, Mar 18, 2025 at 04:21:21PM +0200, Nikolay Borisov wrote:
 > 
-> +	pmu-a520 {
-> +		compatible = "arm,cortex-a520-pmu";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_partition0>;
-> +	};
-> +
-> +	pmu-a720 {
-> +		compatible = "arm,cortex-a720-pmu";
-> +		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_partition1>;
-> +	};
-> +
-> +	pmu-spe {
-> +		compatible = "arm,statistical-profiling-extension-v1";
-> +		interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_LOW 0>;
-> +	};
+> 
+> On 18.03.25 г. 15:27 ч., Kirill A. Shutemov wrote:
+> > On Tue, Mar 18, 2025 at 02:53:34PM +0200, Nikolay Borisov wrote:
+> > > > I think we need to think wider. What about applying a subset of LOCKDOWN_*
+> > > > in all coco guests by default. Many of them are relevant for the guest security.
+> > > 
+> > > How do you envision this to work, by introducing another
+> > > CONFIG_LOCK_DOWN_KERNEL_FORCE_COCO or some such ? Will it be opt-in or
+> > > mandatory?
+> > 
+> > I think cc_platform_has(CC_ATTR_xxx) should enabled some subset of
+> > LOCKDOWN_*. No need in new config options.
+> 
+> Care to suggest which ones should be included? The way lockdown works at the
+> moment is that it only supports 2 levels (check lock_kernel_down() and
+> lockdown_is_locked_down()) at which you can lockdown - INTEGRITY_MAX and
+> CONFIDENTIALITY_MAX,  where each level includes everything below it. So by
+> choosing integrity max you get:
+> 
+>     19         LOCKDOWN_MODULE_SIGNATURE,
+> 
+>     18         LOCKDOWN_DEV_MEM,
+> 
+>     17         LOCKDOWN_EFI_TEST,
+> 
+>     16         LOCKDOWN_KEXEC,
+> 
+>     15         LOCKDOWN_HIBERNATION,
+> 
+>     14         LOCKDOWN_PCI_ACCESS,
+> 
+>     13         LOCKDOWN_IOPORT,
+> 
+>     12         LOCKDOWN_MSR,
+> 
+>     11         LOCKDOWN_ACPI_TABLES,
+> 
+>     10         LOCKDOWN_DEVICE_TREE,
+> 
+>      9         LOCKDOWN_PCMCIA_CIS,
+> 
+>      8         LOCKDOWN_TIOCSSERIAL,
+> 
+>      7         LOCKDOWN_MODULE_PARAMETERS,
+> 
+>      6         LOCKDOWN_MMIOTRACE,
+> 
+>      5         LOCKDOWN_DEBUGFS,
+> 
+>      4         LOCKDOWN_XMON_WR,
+> 
+>      3         LOCKDOWN_BPF_WRITE_USER,
+> 
+>      2         LOCKDOWN_DBG_WRITE_KERNEL,
+> 
+>      1         LOCKDOWN_RTAS_ERROR_INJECTION,
+> 
+> Given this if we for example choose to lockdown the kernel for DEV_MEM,
+> we'll also get the MODULE_SIGNATURE lockdown as well. I find this somewhat
+> inflexible as we might have to rejuggle the current ordering.
 
-SPE should follow the same model as the PMU, as each CPU has its own
-SPE implementation, exposing different micro-architectural details.
+Urgh.. I thought we track the lockdown level for each feature separately,
+but it is lockdown depth instead :/
 
-The rest looks OK.
-
-	M.
+Maybe it is worth reworking internals to have bitmap of lockdown features?
+It will allow us to pick and choose features to lockdown.
 
 -- 
-Without deviation from the norm, progress is not possible.
+  Kiryl Shutsemau / Kirill A. Shutemov
