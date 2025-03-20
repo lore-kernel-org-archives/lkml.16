@@ -1,278 +1,127 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D49511EE010;
-	Thu, 20 Mar 2025 04:18:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A0AA926
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 04:18:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742444314; cv=none; b=fHv/pxp4+2RJ/Gl/67Y0I8cscpn2PVQ3rfxuI5ciblW26XAbfafsVm6dbHepQr7Dap68hkrRCWCooMTbww5wKm5kBr87i0f06CoA6eVNmw+CfluZnco5W/u8RhE93XmcIhpdV4zSM0HtSXGp2udojxooPGPLpwLLOYCxxc+awZ0=
+	t=1742444333; cv=none; b=Hr8S/Ot4vk9QRZO5NmW4iCdLxYqq6t00/mptQza5J/f1taIAL+40j2RLiEgIZCaiADcqf+gKXsJOhtDw+JmjhhGB5f/HtmXiD5s6PQlkVSPuO3gE/I16Qx4uBPzy5rH2CENZd+azNThMAz5JgLHZAN/aegra97JCPpCCQOKks58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742444314; c=relaxed/simple;
-	bh=3XYlrZ+XnbsjuFy6YK2KNxnwj2O9KJ3LwPlsnms0OLk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KtaksJtavshIMRHQw86IgJ5xKnr90cKoctOLxdM4ra/hXY61csjFt18PORR2GtF+nBfIJgGZ0zFtLiR/qtYcI6RYiNjUAfMRC4TeYfeMqMZGwqmgJqOgZxTD3xpgxxuLS6Lwyn8Uxql7OZ017lyG6Fsg2hkqfgRnkptn9Y5Ycbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-681ff7000002311f-46-67db970c9614
-From: Rakie Kim <rakie.kim@sk.com>
-To: gourry@gourry.net
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	rakie.kim@sk.com
-Subject: [PATCH v3 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Thu, 20 Mar 2025 13:17:48 +0900
-Message-ID: <20250320041749.881-4-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250320041749.881-1-rakie.kim@sk.com>
-References: <20250320041749.881-1-rakie.kim@sk.com>
+	s=arc-20240116; t=1742444333; c=relaxed/simple;
+	bh=bDg/TFsSsAergY8F8yNJGYdHaRnohAoosdRef+WJbFg=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Z+i65GKAFzQGas73YAbvXvgo9l8KvRWTN5LTbCfiIjqiyaiOtbDbnfw5vFGYga3YLkJ+X5eMNInZCucYwPi4uXTaLcShtatS+wOCOsW7nN7xGi0ZKJ3lgmr2YLBXWbJgEc3s9PpjDXNDSWZZzIRD2J8qhFkPvDbAdMtXWLjnrsQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Jct7BLI7; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Jct7BLI7"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742444332; x=1773980332;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=bDg/TFsSsAergY8F8yNJGYdHaRnohAoosdRef+WJbFg=;
+  b=Jct7BLI71oKQUVtvpvveUmLmwJZ7flOZdWErtGlCHC39BByDX3YfllAl
+   l+AZTlBsoFfmUuVG3lMzhfXypgfqgpRmL5F/tTI4SOxXw4ySR8EZdI8Ky
+   QtEUJamIoB1/ob0bghDpS8kcx8XrvhPMhIwnqXtrTPpoHA11Fv81cW7Bi
+   kitAsVrXWUhg7P0bLhHdhEuOy0iZtxO9f1WTRPrHjLT7GxOm16e4hnALX
+   VOpYGosO6MMxrQgF6ZdBBtV/woPUCDFnOn5Fw/vIx7DZ2UJ7Ya3PDdSbH
+   s7zF4S9Zg+O9DaqHYFhljzvXYgwQ46wQNUrmrTkMfpkNT3gEYQ0FT9rdG
+   Q==;
+X-CSE-ConnectionGUID: Qs9aBRTERDm+0x3oxSsrQQ==
+X-CSE-MsgGUID: r/XWrgC7TKy3tNRaDrDx9w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43547934"
+X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
+   d="scan'208";a="43547934"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 21:18:51 -0700
+X-CSE-ConnectionGUID: C9joRENzQP647RLxm5+5jA==
+X-CSE-MsgGUID: iSI/6MiYR2mON2nFJzAi2g==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
+   d="scan'208";a="160143874"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa001.jf.intel.com with ESMTP; 19 Mar 2025 21:18:49 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tv7MN-0000C9-2Z;
+	Thu, 20 Mar 2025 04:18:25 +0000
+Date: Thu, 20 Mar 2025 12:16:57 +0800
+From: kernel test robot <lkp@intel.com>
+To: Huang Ying <ying.huang@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Linux Memory Management List <linux-mm@kvack.org>
+Subject: include/linux/minmax.h:93:30: warning: large integer implicitly
+ truncated to unsigned type
+Message-ID: <202503201231.VrUIFcq2-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrALMWRmVeSWpSXmKPExsXC9ZZnoS7P9NvpBt3TBC3mrF/DZjF96gVG
-	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg/6xSLxeVdc9gs7q35z2qxek2GA5fHzll32T262y6z
-	e7QcecvqsXjPSyaPTZ8msXucmPGbxWPnQ0uP9/uusnl83iQXwBnFZZOSmpNZllqkb5fAlbG2
-	9wFTwXODigt3VzM1MM7Q6GLk5JAQMJE4uvEIG4x9cNYmpi5GDg42ASWJY3tjQMIiAqIS847O
-	Zuli5OJgFrjGJHHg800WkISwQLDEo+aTTCA2i4CqxNHlvcwgNq+AsUTL/jOMEDM1JRou3QOr
-	4QSaP+XqfDaQ+UJANW/P8UKUC0qcnPkEbCSzgLxE89bZzCC7JASes0lcffYU6jZJiYMrbrBM
-	YOSfhaRnFpKeBYxMqxiFMvPKchMzc0z0MirzMiv0kvNzNzECw31Z7Z/oHYyfLgQfYhTgYFTi
-	4X1x5Va6EGtiWXFl7iFGCQ5mJRFekY7b6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJ
-	pCeWpGanphakFsFkmTg4pRoYS5dNOlymeTGj7MR6YZ0N+1SqRYPE59/cr/ZM0v64m722sttu
-	h58ighs9pxs9aVgllT73UkL+P783u2e8Y+C1vHR4RfM5iXXd1876/NyQ+/HlLZ1TKxKtW3+9
-	12SbUF2sKHrPSe3r9deL2Pce//tYSj7vvMm2t3434/7HnzN8vCIrdN6+dS82VyqxFGckGmox
-	FxUnAgAEo+wMcwIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrFLMWRmVeSWpSXmKPExsXCNUNNS5dn+u10g3tdbBZz1q9hs5g+9QKj
-	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLQ5de85q
-	sXpNhsXvbSvYHPg8ds66y+7R3XaZ3aPlyFtWj8V7XjJ5bPo0id3jxIzfLB47H1p6vN93lc3j
-	220Pj8UvPjB5fN4kF8AdxWWTkpqTWZZapG+XwJWxtvcBU8Fzg4oLd1czNTDO0Ohi5OSQEDCR
-	ODhrE1MXIwcHm4CSxLG9MSBhEQFRiXlHZ7N0MXJxMAtcY5I48PkmC0hCWCBY4lHzSSYQm0VA
-	VeLo8l5mEJtXwFiiZf8ZRoiZmhINl+6B1XACzZ9ydT4byHwhoJq353ghygUlTs58AjaSWUBe
-	onnrbOYJjDyzkKRmIUktYGRaxSiSmVeWm5iZY6pXnJ1RmZdZoZecn7uJERjiy2r/TNzB+OWy
-	+yFGAQ5GJR7eF1dupQuxJpYVV+YeYpTgYFYS4RXpuJ0uxJuSWFmVWpQfX1Sak1p8iFGag0VJ
-	nNcrPDVBSCA9sSQ1OzW1ILUIJsvEwSnVwLjIqcjtnZqO+HZmLRHtjItJW07HGT8vXqz4+9pu
-	s7wlxyIP+3XdurK1kmWfXNkSfS/mtbwBMj73prrPdzHy25KkWcJn8Ng28/+ypyXTxGoKtonW
-	vvgfF5p0ep/Rtb+67D+2cjz6p1u6QFspS8iSLymUf1Hogf+7GzXctkhuOlL/7Jlhe2V/qRJL
-	cUaioRZzUXEiAKUUvvJtAgAA
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The weighted interleave policy distributes page allocations across multiple
-NUMA nodes based on their performance weight, thereby improving memory
-bandwidth utilization. The weight values for each node are configured
-through sysfs.
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47
+commit: 99185c10d5d9214d0d0c8b7866660203e344ee3b resource, kunit: add test case for region_intersects()
+date:   6 months ago
+config: arm-randconfig-r063-20250320 (https://download.01.org/0day-ci/archive/20250320/202503201231.VrUIFcq2-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250320/202503201231.VrUIFcq2-lkp@intel.com/reproduce)
 
-Previously, sysfs entries for configuring weighted interleave were created
-for all possible nodes (N_POSSIBLE) at initialization, including nodes that
-might not have memory. However, not all nodes in N_POSSIBLE are usable at
-runtime, as some may remain memoryless or offline.
-This led to sysfs entries being created for unusable nodes, causing
-potential misconfiguration issues.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503201231.VrUIFcq2-lkp@intel.com/
 
-To address this issue, this patch modifies the sysfs creation logic to:
-1) Limit sysfs entries to nodes that are online and have memory, reducing
-   the creation of sysfs attributes for unusable nodes.
-2) Support memory hotplug by dynamically adding and removing sysfs entries
-   based on whether a node transitions into or out of the N_MEMORY state.
+All warnings (new ones prefixed by >>):
 
-Additionally, the patch ensures that sysfs attributes are properly managed
-when nodes go offline, preventing stale or redundant entries from persisting
-in the system.
+   In file included from include/linux/ioport.h:15:0,
+                    from kernel/resource.c:15:
+   kernel/resource.c: In function 'gfr_start':
+>> include/linux/minmax.h:93:30: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+     ({ type ux = (x); type uy = (y); __cmp(op, ux, uy); })
+                                 ^
+   include/linux/minmax.h:96:2: note: in expansion of macro '__cmp_once_unique'
+     __cmp_once_unique(op, type, x, y, __UNIQUE_ID(x_), __UNIQUE_ID(y_))
+     ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:213:27: note: in expansion of macro '__cmp_once'
+    #define min_t(type, x, y) __cmp_once(min, type, x, y)
+                              ^~~~~~~~~~
+   kernel/resource.c:1838:9: note: in expansion of macro 'min_t'
+      end = min_t(resource_size_t, base->end, MAX_PHYS_ADDR);
+            ^~~~~
+   kernel/resource.c: In function 'gfr_continue':
+>> include/linux/minmax.h:93:30: warning: large integer implicitly truncated to unsigned type [-Woverflow]
+     ({ type ux = (x); type uy = (y); __cmp(op, ux, uy); })
+                                 ^
+   include/linux/minmax.h:96:2: note: in expansion of macro '__cmp_once_unique'
+     __cmp_once_unique(op, type, x, y, __UNIQUE_ID(x_), __UNIQUE_ID(y_))
+     ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:213:27: note: in expansion of macro '__cmp_once'
+    #define min_t(type, x, y) __cmp_once(min, type, x, y)
+                              ^~~~~~~~~~
+   kernel/resource.c:1855:11: note: in expansion of macro 'min_t'
+      addr <= min_t(resource_size_t, base->end, MAX_PHYS_ADDR);
+              ^~~~~
 
-By making these changes, the weighted interleave policy now manages its
-sysfs entries more efficiently, ensuring that only relevant nodes are
-considered for interleaving, and dynamically adapting to memory hotplug
-events.
 
-Signed-off-by: Rakie Kim <rakie.kim@sk.com>
----
- mm/mempolicy.c | 108 +++++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 86 insertions(+), 22 deletions(-)
+vim +93 include/linux/minmax.h
 
-diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-index 6c8843114afd..91cdc1d9d43e 100644
---- a/mm/mempolicy.c
-+++ b/mm/mempolicy.c
-@@ -113,6 +113,7 @@
- #include <asm/tlbflush.h>
- #include <asm/tlb.h>
- #include <linux/uaccess.h>
-+#include <linux/memory.h>
- 
- #include "internal.h"
- 
-@@ -3390,6 +3391,7 @@ struct iw_node_attr {
- 
- struct sysfs_wi_group {
- 	struct kobject wi_kobj;
-+	struct mutex kobj_lock;
- 	struct iw_node_attr *nattrs[];
- };
- 
-@@ -3439,12 +3441,24 @@ static ssize_t node_store(struct kobject *kobj, struct kobj_attribute *attr,
- 
- static void sysfs_wi_node_release(int nid)
- {
--	if (!sgrp->nattrs[nid])
-+	struct iw_node_attr *attr;
-+
-+	if (nid < 0 || nid >= nr_node_ids)
-+		return;
-+
-+	mutex_lock(&sgrp->kobj_lock);
-+	attr = sgrp->nattrs[nid];
-+	if (!attr) {
-+		mutex_unlock(&sgrp->kobj_lock);
- 		return;
-+	}
-+
-+	sgrp->nattrs[nid] = NULL;
-+	mutex_unlock(&sgrp->kobj_lock);
- 
--	sysfs_remove_file(&sgrp->wi_kobj, &sgrp->nattrs[nid]->kobj_attr.attr);
--	kfree(sgrp->nattrs[nid]->kobj_attr.attr.name);
--	kfree(sgrp->nattrs[nid]);
-+	sysfs_remove_file(&sgrp->wi_kobj, &attr->kobj_attr.attr);
-+	kfree(attr->kobj_attr.attr.name);
-+	kfree(attr);
- }
- 
- static void sysfs_wi_release(struct kobject *wi_kobj)
-@@ -3463,35 +3477,80 @@ static const struct kobj_type wi_ktype = {
- 
- static int sysfs_wi_node_add(int nid)
- {
--	struct iw_node_attr *node_attr;
-+	int ret = 0;
- 	char *name;
-+	struct iw_node_attr *new_attr = NULL;
-+
-+	if (nid < 0 || nid >= nr_node_ids) {
-+		pr_err("Invalid node id: %d\n", nid);
-+		return -EINVAL;
-+	}
- 
--	node_attr = kzalloc(sizeof(*node_attr), GFP_KERNEL);
--	if (!node_attr)
-+	new_attr = kzalloc(sizeof(struct iw_node_attr), GFP_KERNEL);
-+	if (!new_attr)
- 		return -ENOMEM;
- 
- 	name = kasprintf(GFP_KERNEL, "node%d", nid);
- 	if (!name) {
--		kfree(node_attr);
-+		kfree(new_attr);
- 		return -ENOMEM;
- 	}
- 
--	sysfs_attr_init(&node_attr->kobj_attr.attr);
--	node_attr->kobj_attr.attr.name = name;
--	node_attr->kobj_attr.attr.mode = 0644;
--	node_attr->kobj_attr.show = node_show;
--	node_attr->kobj_attr.store = node_store;
--	node_attr->nid = nid;
-+	mutex_lock(&sgrp->kobj_lock);
-+	if (sgrp->nattrs[nid]) {
-+		mutex_unlock(&sgrp->kobj_lock);
-+		pr_info("Node [%d] already exists\n", nid);
-+		kfree(new_attr);
-+		kfree(name);
-+		return 0;
-+	}
- 
--	if (sysfs_create_file(&sgrp->wi_kobj, &node_attr->kobj_attr.attr)) {
--		kfree(node_attr->kobj_attr.attr.name);
--		kfree(node_attr);
--		pr_err("failed to add attribute to weighted_interleave\n");
--		return -ENOMEM;
-+	sgrp->nattrs[nid] = new_attr;
-+	mutex_unlock(&sgrp->kobj_lock);
-+
-+	sysfs_attr_init(&sgrp->nattrs[nid]->kobj_attr.attr);
-+	sgrp->nattrs[nid]->kobj_attr.attr.name = name;
-+	sgrp->nattrs[nid]->kobj_attr.attr.mode = 0644;
-+	sgrp->nattrs[nid]->kobj_attr.show = node_show;
-+	sgrp->nattrs[nid]->kobj_attr.store = node_store;
-+	sgrp->nattrs[nid]->nid = nid;
-+
-+	ret = sysfs_create_file(&sgrp->wi_kobj, &sgrp->nattrs[nid]->kobj_attr.attr);
-+	if (ret) {
-+		kfree(sgrp->nattrs[nid]->kobj_attr.attr.name);
-+		kfree(sgrp->nattrs[nid]);
-+		sgrp->nattrs[nid] = NULL;
-+		pr_err("Failed to add attribute to weighted_interleave: %d\n", ret);
- 	}
- 
--	sgrp->nattrs[nid] = node_attr;
--	return 0;
-+	return ret;
-+}
-+
-+static int wi_node_notifier(struct notifier_block *nb,
-+			       unsigned long action, void *data)
-+{
-+	int err;
-+	struct memory_notify *arg = data;
-+	int nid = arg->status_change_nid;
-+
-+	if (nid < 0)
-+		goto notifier_end;
-+
-+	switch(action) {
-+	case MEM_ONLINE:
-+		err = sysfs_wi_node_add(nid);
-+		if (err) {
-+			pr_err("failed to add sysfs [node%d]\n", nid);
-+			return NOTIFY_BAD;
-+		}
-+		break;
-+	case MEM_OFFLINE:
-+		sysfs_wi_node_release(nid);
-+		break;
-+	}
-+
-+notifier_end:
-+	return NOTIFY_OK;
- }
- 
- static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
-@@ -3503,13 +3562,17 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 		       GFP_KERNEL);
- 	if (!sgrp)
- 		return -ENOMEM;
-+	mutex_init(&sgrp->kobj_lock);
- 
- 	err = kobject_init_and_add(&sgrp->wi_kobj, &wi_ktype, mempolicy_kobj,
- 				   "weighted_interleave");
- 	if (err)
- 		goto err_out;
- 
--	for_each_node_state(nid, N_POSSIBLE) {
-+	for_each_online_node(nid) {
-+		if (!node_state(nid, N_MEMORY))
-+			continue;
-+
- 		err = sysfs_wi_node_add(nid);
- 		if (err) {
- 			pr_err("failed to add sysfs [node%d]\n", nid);
-@@ -3517,6 +3580,7 @@ static int add_weighted_interleave_group(struct kobject *mempolicy_kobj)
- 		}
- 	}
- 
-+	hotplug_memory_notifier(wi_node_notifier, DEFAULT_CALLBACK_PRI);
- 	return 0;
- 
- err_out:
+d03eba99f5bf7c David Laight   2023-09-18  91  
+017fa3e8918784 Linus Torvalds 2024-07-28  92  #define __cmp_once_unique(op, type, x, y, ux, uy) \
+017fa3e8918784 Linus Torvalds 2024-07-28 @93  	({ type ux = (x); type uy = (y); __cmp(op, ux, uy); })
+017fa3e8918784 Linus Torvalds 2024-07-28  94  
+
+:::::: The code at line 93 was first introduced by commit
+:::::: 017fa3e89187848fd056af757769c9e66ac3e93d minmax: simplify and clarify min_t()/max_t() implementation
+
+:::::: TO: Linus Torvalds <torvalds@linux-foundation.org>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
 -- 
-2.34.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
