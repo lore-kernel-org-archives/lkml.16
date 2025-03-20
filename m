@@ -1,576 +1,185 @@
-Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazon11011060.outbound.protection.outlook.com [40.93.199.60])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2049.outbound.protection.outlook.com [40.107.236.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D373224223;
-	Thu, 20 Mar 2025 16:46:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.199.60
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D0BC2222A2;
+	Thu, 20 Mar 2025 16:47:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.49
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742489210; cv=fail; b=FQsTuEv1/uxMP/KCPhz8UGNH74u3EtLujtA4X5+bKWnIZ882q2iSongZU2vw1sImB8POqjp/GArWIEPLJD6C5Mg+dvbJGG+WtlffxLRcHkxSIIJ/1p4GKY0ptl/7HFhDjmDepkuHzb1SmFUgPUai/YlAIKr+kIDmpPeV0ojdErE=
+	t=1742489239; cv=fail; b=f1ujEZxP0riA0afJECqWq6J1GzpNDWFfuD2OP54ueaPN011DrmeAVcRl+2HZM8crwmx1CMD4rhuwd0YXiIE4hrlwbopi567WIW2HEzTt7hwnib/gXfsFmss8Ap5yzrYI1tbFt9DNlYRMea0iBZxju+pebLfBOigyyC4CdsHeP/k=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742489210; c=relaxed/simple;
-	bh=o08r/mIXe+y7WuVyutbzqePOddzUlXqVn+rpSJBP9DQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UNC1uj+p06A39W8QCdGNxvDyJnBGpOs854jiQsJbiGRfgmxZu0fPD4KszDyFM/iEIimzaUud4vZt62ymQJVpGVPQW3aJDQeE1LmlBJYFNhCCpw/DB9acyDkbvF1+lkJ/VaW8LAoONB17kWjjxA4etqVDKTP2vOvVVWsS7QiDC5E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=H7dDwOc6; arc=fail smtp.client-ip=40.93.199.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	s=arc-20240116; t=1742489239; c=relaxed/simple;
+	bh=WLoKHhzbsbQZySqEIXOrSeG/dL5F9p8qf6S13P6cbDg=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Ty0beQXSI2YaBbDUSWUcCHgmjokymDevLlx1PpmLfr7MiT8VPlfajlmOstcBcfhxfupVttxxoJZyr0JeK4G/PpVfQj6VwOeZYe3xdV039IujvKeoQt/3Az4qhZJH0avzE3Hx/N2rUrdFTedZIPwhsd9eyZV2ePRaArumsSahGH4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=pxCIwC+z; arc=fail smtp.client-ip=40.107.236.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="H7dDwOc6"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="pxCIwC+z"
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=OfZ78pV5zcEep97g3B71dVqalN+nWfSOAsRZArUEqjmfTNC00ZBKNtKn19Rp6tpiZjtHQH4g6RLInsjeZo3RSQEXALM/VQZ3bfK9WVs/1sc0Q/F9gALfUGxQ6UNMNQh+DWddndTZLlZMkgW0klZcR4DE1CpFZlVQg5VrRSBfBbsUSmsNuPWYqCy0H1RytHejID9vvYYhcXtOTZ7jh0C+edgX1zSblGKtKg+YeU0bLjNEhHXbOYOY2lwgeJZX0t66KAvh+FsjQy8Oj9URU3u4JQ1pglYxw3MMQmEG45tmLiAtYdZyAVHOg3PSDgSaTtend3OQSwlyfN3MEXXL8Hox0A==
+ b=wz0pWTtaAvrKizZLqIPNMjoeu2SVyJVTvg/HnCYArKlrgk8R3rNWilhhWBBNYhP/o6vf9vfwT+cH4zl33nrGL3/yG6mak1/Vc0vnDMGDAe8w40I9NX16zck/kve86O3S9e07WKaPCi1bpI7P10SGiRJD7jAXUOV0bpc1OTr+kQECrPs/S9enc5NkkPR80/UvB5Ok8a1F3DMKljS+uge3ZeQJb657bPbYxyCjTmQpP+mgbPCGo35nAjyGrKtmaMxMgywDemYKdASSCe1eVzX1kQX7f/cWHHIM7wTaKGKY8Tbyw4CS99dgtNRKhaV9sluqJwtQS/1LMKoPUgmYQNhzNA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=+gSwtAjRN8TXe2bTSkkz0TFDB4+f4JwxqGOUqE0M3/g=;
- b=VVcK8CJJ597BBliwrXvSit0iYP3Ox19Rji/pxHNlgGehX4b+95um1vmnLx0iGmXEQLcVkTlNKoq8B0QRf4FubEt54JpDvxvTa1yIkRSWaqjePp+lbooOVEaSul37enbuS2432DOU8AlLAqHqqLXtS+hlPqAljHgDoyY4aXkTO6v6xD7H3i3n6hu6ABuvqFbh8mK+ZtTMwBTO9KxxFVNS7BStFvPAVKPFGLlWBe+dO7luNRvLAeaF66wQIcNxZn22UDpPkA1hem0PgfLvskCazj++iL3jty+vKKBQfC2F95wvZIvqJCVMg3Q+vRfJPX8LspuLGSwA7XqNsMmkWjqZwQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ bh=iT1U1SDE0Yrf9C1Lh3TGFkKS4+XkzwyYeN0KPASTdfg=;
+ b=WxFZNquTxifkXArVaGVrej3vXKDM/vlAT4o1Gmm5p2ygg3JN/TLDQOHvxUWHC2I+ugs9a5V6veOiapQNNfo/peJzNwiYNZRvAiZbEW3qS/Y0PGK29b8sIHsuPaKB0nYEz7Fw5rRM802azbU07JGccfZRHX0Xo9ZD6NVyyeKx8891xJssQREGcZZtOUbOoivF3iWbsOBcNDBLDF7X7rX9SAsapMtyxCDGOgcmu06raQ3pFbp9kTWa3aAj+LaKwrcl/Mx685w22lNrcupofcO002BlRs+VYp4dNwbSp0FCy3DQMUGukY2rR46jCmU7kS48oOuo7sPCydoMghEheWVvEw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.118.233) smtp.rcpttodomain=kernel.org smtp.mailfrom=nvidia.com;
+ dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+gSwtAjRN8TXe2bTSkkz0TFDB4+f4JwxqGOUqE0M3/g=;
- b=H7dDwOc6jNYcZ5kOFWNuej4qZeBgucW+8yE7cZfznntfzvpNFq0PqmxUyf3m1/fgcXRqePXy9uyq2blXqZCzS5NFUTtEIlqkijyF0LM9T1SSiGnkGKXzVqTANQWH+PvvclQzTQ2oJr2AalY+tqA/MMVcMDRcOadbuVsxmsSUTER/FqQbqmUzbws1JTeB4VDOeMqAZt8UjyWFVWn1QJn/McnrU8nv0Phchp0zxI6WF4BILA34nymV8ox4v6xHIEjqEdeONy3DCzuPSoPdLQIEyUPdmF6/b79bPt0MxdZDk8v5XG/qWURrK/CDEEOzerxuccsrvYxNH6yvF+grZLwBjA==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
- by PH7PR03MB7003.namprd03.prod.outlook.com (2603:10b6:510:12e::6) with
+ bh=iT1U1SDE0Yrf9C1Lh3TGFkKS4+XkzwyYeN0KPASTdfg=;
+ b=pxCIwC+zD3rCSlUw5NIMNAjttLIVCG3YNzaRx4WDyBC6svMdTySpMdYqpDiDuCm0LrJQvSIIJpm6xtQCR1ZBedyW/slWO2Z3q6jEbVc39+022mYxkPOlik1DLNLLCbC+cBpgvQC/NXqIS92YB0fnkEPKKilc+O/e7GQBRlTW8gnORzHoQWADSdza2cKURzZfeCXxT9hGbh95XPcaguLM+PNNRWYQKg4QbhNQ+9EF8Yj9dv4oBr8Mn4AgS+8yMlE6wVH69b3h/0SgoxkL60Hw9OJ98u2jjtjvUsUAfvX3Ru8n82M3JfaBG1F8DUkOWuTBlOMEDhBNvGLz87FiWFpvwg==
+Received: from SA1P222CA0139.NAMP222.PROD.OUTLOOK.COM (2603:10b6:806:3c2::25)
+ by BL4PR12MB9483.namprd12.prod.outlook.com (2603:10b6:208:590::15) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Thu, 20 Mar
- 2025 16:46:42 +0000
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c%2]) with mapi id 15.20.8534.031; Thu, 20 Mar 2025
- 16:46:42 +0000
-From: Matthew Gerlach <matthew.gerlach@altera.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	dinguyen@kernel.org,
-	bp@alien8.de,
-	tony.luck@intel.com,
-	james.morse@arm.com,
-	mchehab@kernel.org,
-	rric@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@altera.com>
-Subject: [PATCH 1/4] dt-bindings: edac: altera-s10: Convert to YAML
-Date: Thu, 20 Mar 2025 09:46:19 -0700
-Message-Id: <20250320164622.6971-2-matthew.gerlach@altera.com>
-X-Mailer: git-send-email 2.35.3
-In-Reply-To: <20250320164622.6971-1-matthew.gerlach@altera.com>
-References: <20250320164622.6971-1-matthew.gerlach@altera.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR04CA0014.namprd04.prod.outlook.com
- (2603:10b6:a03:217::19) To BYAPR03MB3461.namprd03.prod.outlook.com
- (2603:10b6:a02:b4::23)
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Thu, 20 Mar
+ 2025 16:47:13 +0000
+Received: from SA2PEPF00003F62.namprd04.prod.outlook.com
+ (2603:10b6:806:3c2:cafe::a0) by SA1P222CA0139.outlook.office365.com
+ (2603:10b6:806:3c2::25) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.36 via Frontend Transport; Thu,
+ 20 Mar 2025 16:47:13 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.118.233)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.118.233 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.118.233; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.118.233) by
+ SA2PEPF00003F62.mail.protection.outlook.com (10.167.248.37) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Thu, 20 Mar 2025 16:47:13 +0000
+Received: from drhqmail201.nvidia.com (10.126.190.180) by mail.nvidia.com
+ (10.127.129.6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Thu, 20 Mar
+ 2025 09:47:04 -0700
+Received: from drhqmail203.nvidia.com (10.126.190.182) by
+ drhqmail201.nvidia.com (10.126.190.180) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.14; Thu, 20 Mar 2025 09:47:03 -0700
+Received: from willie-obmc-builder.nvidia.com (10.127.8.10) by mail.nvidia.com
+ (10.126.190.182) with Microsoft SMTP Server id 15.2.1544.14 via Frontend
+ Transport; Thu, 20 Mar 2025 09:47:03 -0700
+From: Willie Thai <wthai@nvidia.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<joel@jms.id.au>, <andrew@codeconstruct.com.au>, <kees@kernel.org>,
+	<tony.luck@intel.com>, <gpiccoli@igalia.com>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-aspeed@lists.ozlabs.org>,
+	<linux-kernel@vger.kernel.org>, <linux-hardening@vger.kernel.org>,
+	<openbmc@lists.ozlabs.org>
+CC: <wthai@nvidia.com>, <leohu@nvidia.com>, <tingkaic@nvidia.com>,
+	<dkodihalli@nvidia.com>, Mars Yang <maryang@nvidia.com>, Krzysztof Kozlowski
+	<krzk@kernel.org>, Andrew Lunn <andrew@lunn.ch>, Paul Menzel
+	<pmenzel@molgen.mpg.de>
+Subject: [PATCH v3 0/2] Add device tree for Nvidia's GB200NVL BMC
+Date: Thu, 20 Mar 2025 16:46:31 +0000
+Message-ID: <20250320164633.101331-1-wthai@nvidia.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|PH7PR03MB7003:EE_
-X-MS-Office365-Filtering-Correlation-Id: a175b667-17f0-4ae1-f7e5-08dd67cecaf9
-X-MS-Exchange-AtpMessageProperties: SA
+X-MS-TrafficTypeDiagnostic: SA2PEPF00003F62:EE_|BL4PR12MB9483:EE_
+X-MS-Office365-Filtering-Correlation-Id: b77ff01c-7c32-4abb-820f-08dd67cedd88
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020;
+	BCL:0;ARA:13230040|7416014|376014|36860700013|1800799024|82310400026|921020|13003099007|7053199007;
 X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?BkiWVH2hVPADNZv8gpQIZXulckZftPYWFlgP403Ym08EbwkWQ6eOeDPyuPak?=
- =?us-ascii?Q?qsOQXG2LFKtxpOm9x15a7CV7o9+HjyseHr89h2MxqN6bCx8I9mF7mmIowvof?=
- =?us-ascii?Q?B0RL06PEtCSjEYfbaSI68xMTfuvbg+ouDooqm4MEv24g484xRm8IX1q3Jm/+?=
- =?us-ascii?Q?nPHDD/N202R/K8XDkwEnBasrrnnbqwHedVdcihmotx95zll2hsHWyuKi2LQQ?=
- =?us-ascii?Q?cA8J3rNNgel7i86mlAO5OhBFdRAtdOSB9gNywe8CpsVdsWNhu6pTqHnY72Uz?=
- =?us-ascii?Q?vb84So8xjZk00gq9aZbBYbQ5xOIHC+7zrmcefHwyzrwaMEK0W/lcSB/4wYQz?=
- =?us-ascii?Q?JIyHhY/sChWO1sH1XoUBRFg6FK98vevSnzYc+qvxa2hhjNcFphBPexfeJ731?=
- =?us-ascii?Q?zSe5uPSV+tFuP5OK3ulfmzl5EfaUQi/Wisf+e0U172qsVqQE9ceD0lyPQXWi?=
- =?us-ascii?Q?EjTY6kgEMnzBOR44NHaLD8bpjRjUhOLZl4n958gIctaA8JgZOMiKQ6hWyAVB?=
- =?us-ascii?Q?gf0VltA2uBk6DxBzEP26+1+MHNvLZWf+MCCe6UC5afO+wbjlKZdAV7aDrV2L?=
- =?us-ascii?Q?1fRYJSHbacbeEvQVoS+aGWpX05XAhagmLoX+XtYqt+cfsiLT+yDbYicWtYQN?=
- =?us-ascii?Q?UbNleYigaw8Phq7L36nEpKtWmz+dxzRz2TGoh5YxmqhWeGQRAJNgwiGKOMX+?=
- =?us-ascii?Q?GCd/81okNwHQKIGKurHTgDsxTdeg+USFttiNScdOboqtY4pRG/hr1XjHgtoa?=
- =?us-ascii?Q?IZPJNkDrpOr10EhiVVHBWcGpmb0Pk/VH/d5QuwxsAn6mn/c1Al2qQhDCbP2B?=
- =?us-ascii?Q?fMuyLLlA3IgR1wWjE02Z0P4WHax4MAiUA5TKDf5icSd7K1l12H+bAKIobnT4?=
- =?us-ascii?Q?KcV58v0dCBNtCY+sDTaf1Nink/WKjKmhHIR/rtDpSKMOCG7CEBXP9LW/nMBz?=
- =?us-ascii?Q?vEZgG3+Ds8j4scmclSZBjHajV9HEKAdauSgnCu3OWr0T4cwGghI66siKHliK?=
- =?us-ascii?Q?gVmb0xU2n4WpQu+kzQNcUgOZCrMFz/0yLqLdkvZjZWVFTXfyJ8oWhvBjiGnz?=
- =?us-ascii?Q?+83GNFrPzZRn41KFbhUTY2uKkbdut1aQtkASY8TGKZSV+J3eEqV1aRpgMXXq?=
- =?us-ascii?Q?6DHPCxlZH8MXSS1T2h5XKsM7dBE1by5zryZuItULM9UdQTFdXe77GCiINu6N?=
- =?us-ascii?Q?JfR7PTfy6DKpiqXoTsG4WVHESA9QIQRXnN/8wd1RqfiC6seg8N2KORyaqhqs?=
- =?us-ascii?Q?a4uzHTnXAWtVYtA7p8oDyk8uDK+QKE49TzX7aASMWPb2udY8k0/BhZv3gzj/?=
- =?us-ascii?Q?UguWXie/HLZ6ktLOyQyAAg+xVRY+L4sfAZxMfHj7+PKbxlpR3C+72ltyqU+F?=
- =?us-ascii?Q?qYNlxGrc2Mj+DrG8MRzOf8OHGKLw?=
+	=?us-ascii?Q?XgHMoS8LtW6ijra5YRRUszrzJ+xkOUSTTxCSDDX8/zcZawDoj253F7zx+J7F?=
+ =?us-ascii?Q?zL4qg78sbuLYsLB/H3vYAAQtbGgBHV/yxx4DPCoXGrZSkDFggXgdT8SBVL17?=
+ =?us-ascii?Q?Mka7Ub3JYU9w9rEeDvS3LX4VOhfTl/ktr9isz4IvP4di31pRjd5C1DcitQAY?=
+ =?us-ascii?Q?Y/PelxiyTVEZLVYk9yFzm4r5rzqog/u9BohT8QK8Hvq6dUKzHfdDnwbik237?=
+ =?us-ascii?Q?o5YBCOu7QauMNoxihSrRHlPYN8iKsjQve3F9gqVRTErlLQViYS9QuEuxPv1a?=
+ =?us-ascii?Q?zNpU9iYa9TUh3NFxALD1/huuQ2sT5KAMDSysl2vg9Kbopu14WmSJDqV0PdsQ?=
+ =?us-ascii?Q?cepSqM365z03fYYQmxWAi19ILvAsTTkUzFec1G/LPHaGIwhZfaP5SSyE0mkr?=
+ =?us-ascii?Q?Ak3/K8Ff6SsP94kQ45Oqs+jPSqDeqLoPkd9eIcs4K1w30mI8mNbvFGSMT7hC?=
+ =?us-ascii?Q?Z1qJz8JQ0eqn2fKpaF11GDR8/7gbQCzL8CXVKDGyYVijpGGDhbswyzAW7CEB?=
+ =?us-ascii?Q?r3DT+ZI+jjPkjJp8z8fcDlbJpHNiihG36P/y0ofUU+J4D4Rdx25Mp02RYRvf?=
+ =?us-ascii?Q?1pf4ntHoeOGMa3ZL8QAksEJfjgtuO+YXr9Zz+2O/gKR54Cwhm8YMQDq4BAbl?=
+ =?us-ascii?Q?9y08yMyXmXrsPWLG1u4vQS3xWdZrowhrjmBbIkLKWZwLNtdV6DkrP8wHiZSx?=
+ =?us-ascii?Q?QDFDG4t7in4kBT5w1s3mT42QFmjB+xxpnlyhSIdFRCL3vlhTp5zbftWjhoLg?=
+ =?us-ascii?Q?7k2ao4DYxnnJgD1KSwtnxr9PjdYlFZj99EZddg0VnO0TU4O726rd0ed3XY6s?=
+ =?us-ascii?Q?0YW18KYSgg7gXGVUuG8puB6MY9mEsdOqb9gVCJwvBd3C+E4hcp9MJuOasbKL?=
+ =?us-ascii?Q?KjxQCEXNCVk2wnPixYXnVUxHYGwnweOTkAxszCJA5L6KVYgldpiy0xi+3+GS?=
+ =?us-ascii?Q?4590LEjIHmI+OHKsa5S3GHoMeH5mctAE9s4bUxSlPEnfdB++6RM3DWpwoG0n?=
+ =?us-ascii?Q?1CKh/MStINLx0+ISXJUjqP2ehVYviX4hCafy/nJewptE2a8aaKXxkGiFH2CG?=
+ =?us-ascii?Q?Bk3v4dZV/M+hspIKnqlRixK98xCnn6iNqgi7eA9K7RfQV2RV0qPgg+veLbHS?=
+ =?us-ascii?Q?i0/nBQkwLxkgcVUbzUODuljIdyPKX64BdP0v5KJdIPiju3wRa81bF3XZ/7kz?=
+ =?us-ascii?Q?vUZwG9ow7k4AL4VkV58pyTExVJ2IwG/IpPVvNc/4kSqTnKmq9PsHvMIXsWFK?=
+ =?us-ascii?Q?DmxuXPjZrb+xcq62cdm/YgPkqcEq1G+W3lAU83H9n3w8mbT++8FPuWrqX7eg?=
+ =?us-ascii?Q?9vv8OddlWc98OYoufz2uYh2HfT/ypPY48zKR3hFruQ3ixluztISJ3OTRrgmU?=
+ =?us-ascii?Q?QIAz8WaMWrHaxhYXdPtNkQKq/RsRSabzrwvRJ/vrTlVbirbm3qKB9qj+IdI0?=
+ =?us-ascii?Q?l7r3GPiRstDVFP8z/rPfXju5dYmWmGw6/MQXDJMGIeFXyNor2aZOi3YMkXSM?=
+ =?us-ascii?Q?gY3xtUSVJ6GIrW2CZTBoVsqHIPgixIWs4lTz?=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?XOopi8z/Pvh3YvRSX9n+jY1FVRy96XR2U5USk+kjrR1EHCBIUxJwilChSiW7?=
- =?us-ascii?Q?X0CE8bQHlXXECTRDa0LUrr4QgHxMlSVM7hWv3SR7iOagy3S0TljNw4iG52k9?=
- =?us-ascii?Q?Dp9THJ2aPzHgQwbgufJsXrXpBaRYmEMT1FoKwxJB/oFTH8udCzQNgEa2BaKe?=
- =?us-ascii?Q?lrC2p2Nw0rIVVpP0Fi6OZIRg71dDz+E5Ysr41ozrwZaY8hMQAY+vFOKvnc9p?=
- =?us-ascii?Q?IertpXTGpD1lUyUxs/Y9zaoDtVExp/MgbXsKlIoQhH2sYrgI0fZmUgjUot1Y?=
- =?us-ascii?Q?7ZGTzBgpspOn7ecFG1Zzb195+Y2lLUjOLficu17mO75y4JdMGsww5Vgjojd/?=
- =?us-ascii?Q?U54L4w2vZ/MBMCrhssV57Pxbhn8enpv4oAZGOxriINDU9bA6fKf6b+LBEtyn?=
- =?us-ascii?Q?ZVioQAD1GPS0HSgWXKwpZhcBNcBFWyeBZmAjkUy2Bb7Uo1yYL+ey3gNeEmUz?=
- =?us-ascii?Q?5lXk0yHSh06H4BTg3nAMHCVYLmfcSM2NxwV2oDitJH+3SwI0RjosJZQr0aO4?=
- =?us-ascii?Q?DQ08VACM2X2OFSlBeVm3E3hSYLkWCyB/ysHDOyZdLz5PzcV5EP4gM+o1yUqT?=
- =?us-ascii?Q?DTqiUhul5rMniKkQytWitxeqhcz3mmLXPdu1u7IVH0+HBbkgO5CVTbsUVscf?=
- =?us-ascii?Q?BrnTEne2rG3TGGaYdPyqEbdQvk5Fwc8uzHaOe8rycNrD9Xmlj3/JODzGbSco?=
- =?us-ascii?Q?H2pdOyHbEgkXGbUkpmUjco6Ikxh/71YlH7hNHhX+ijI/Yv6nWjj+z53tv3x9?=
- =?us-ascii?Q?WJqtwWBtS9UNrV3nHbhhzu6guzgw0qUTYJFsLupH/0HWVedkTnHIZnnqgbKG?=
- =?us-ascii?Q?t5Kz6ZvlerDOU1EBTDJ2/m2YEmHoiVan1B9MYTJPJxl9p5o2bq9aebXN4K53?=
- =?us-ascii?Q?pRoUr7WaH9hYb5Oj5BDue2hBNV5iQMT904O2H4l2pijb/A7P0+8PU8ygaxFG?=
- =?us-ascii?Q?CJkcRsd5GnR6ugGWGXNKE1Lt0lJrTxeiOUSPIJ65D9+mMU1WAt2aFevp7CY7?=
- =?us-ascii?Q?jNUhLWZ1JlMQri/7L/PzWouleVYN+sWfwOSJMMlasmauqCn69SC2BiCFBeaL?=
- =?us-ascii?Q?Mcwp/JDA69o0I8KQ+TN7HyO93TYs3l2+dM5PqWd3jk4onk4cn6gMZ+BiiLJr?=
- =?us-ascii?Q?wJ1C+EK6vIgPXGevwlha5nWHCEEJRsuLcEfDI11JJTsiBxeRvYIcNidmgtdS?=
- =?us-ascii?Q?slhmSzVPvAgN+QI6lpbBcwA3+WBRswWoGoIEmWxzpH0JmiqCmcvq5HmxFmxe?=
- =?us-ascii?Q?9ETv2f0xfNXdC6zP4voV+uonLiXoYChWunoHedezFx9zoJEbw5e4A2HQ4Z1M?=
- =?us-ascii?Q?E3u7h3BMuj95mII9B1rDojPuaeH+MSHVrT/rxO+N4uQ8GIgQ9hB6Xi3NyY0Z?=
- =?us-ascii?Q?87DblCb4V/p/YTe8capIsVwlecBD3167/xazdAxdEvA2xRSLJiHxeg0W6EPS?=
- =?us-ascii?Q?Md+MSV5X1ZwU1LUhmoktKimv2vOQye8TTKF+m5nnYU+PCBzbitTQQcdk2bo2?=
- =?us-ascii?Q?1P7pmHgrdY5TNnowTMIF2SfwG8FYKDxwTJq2f9Lohfrwoi6pwivIs4LKCIzb?=
- =?us-ascii?Q?6qd6AjjuVWN6KrJKxxp5n7m9Fuvugq8IqOyIVZFE1S616mk2GsGGHD/eYzJg?=
- =?us-ascii?Q?zg=3D=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a175b667-17f0-4ae1-f7e5-08dd67cecaf9
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 16:46:42.4160
+	CIP:216.228.118.233;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc7edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(1800799024)(82310400026)(921020)(13003099007)(7053199007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 16:47:13.3175
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: NqHO+LKN8DPirZDEjCnNa0ASnysTggIUp+3i9H2ss+TibBtbMga1xk74S1WGOOGS3ECVdBCYS7gkaS5cF1nOJ7jimZiZja4TW6JaCv1SL70=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR03MB7003
+X-MS-Exchange-CrossTenant-Network-Message-Id: b77ff01c-7c32-4abb-820f-08dd67cedd88
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.118.233];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SA2PEPF00003F62.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL4PR12MB9483
 
-Convert the device tree bindings for the Altera Stratix10 SoCFPGA ECC
-Manager from text to yaml. The hardware for the device tree subnodes
-have not changed since Arria10; so don't change the compatible strings
-to include "-s10-".
+The GB200NVL BMC is an Aspeed Ast2600 based BMC
+for Nvidia Blackwell GB200NVL platform.
+Reference to Ast2600 SOC [1].
+Reference to Blackwell GB200NVL Platform [2].
 
-Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+Co-developed-by: Mars Yang <maryang@nvidia.com>
+Signed-off-by: Mars Yang <maryang@nvidia.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Paul Menzel <pmenzel@molgen.mpg.de>
+Link: https://www.aspeedtech.com/server_ast2600/ [1]
+Link: https://nvdam.widen.net/s/wwnsxrhm2w/blackwell-datasheet-3384703 [2]
+Signed-off-by: Willie Thai <wthai@nvidia.com>
 ---
- .../edac/altr,socfpga-s10-ecc-manager.yaml    | 228 ++++++++++++++++++
- .../bindings/edac/socfpga-eccmgr.txt          | 150 ------------
- MAINTAINERS                                   |   5 +
- 3 files changed, 233 insertions(+), 150 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/edac/altr,socfpga-s10-ecc-manager.yaml
+Changes v1 -> v2:
+  - Fix the SOB name [Krzysztof]
+  - Fix warnings from scripts/checkpatch.pl run [Krzysztof]
+  - Fix DTS coding style [Krzysztof]
+  - Move pinctrl override to the bottom [Krzysztof]
+  - Drop bootargs [Krzysztof]
+  - Follow DTS coding style and change naming for leds node [Krzysztof]
+  - Change flash 0 status property [Krzysztof]
+  - Change the phy-mode to rgmii [Andrew]
+  - Remove the max-speed in mac0 [Andrew]
+  - Put gpio line name in one line per group of 8 gpios, but keep some b/c they can exceed length limit [Paul]
+Changes v2 -> v3:
+  - Fix missing new line [Krzysztof]
+  - Fix missing binding define, adding it in the patch no.1 of this patch set v3 [Krzysztof, Rob]
+  - Fix DTS coding style [Krzysztof]
+  - Modify nodes name to generic name for: i2c expander pca9546, gpio expander pca9555, power monitor lm5066i, fan controller max31790 [Krzysztof]
+  - Skip mac setting and wait till the delay issue in phy-mode fix from Aspeed SOC vendor side [Andrew]
+  - Remove i2c-scl-clk-low-timeout-us which is Apseed proprietary property [Mars]
+---
 
-diff --git a/Documentation/devicetree/bindings/edac/altr,socfpga-s10-ecc-manager.yaml b/Documentation/devicetree/bindings/edac/altr,socfpga-s10-ecc-manager.yaml
-new file mode 100644
-index 000000000000..ad057a63e88b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/edac/altr,socfpga-s10-ecc-manager.yaml
-@@ -0,0 +1,228 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+# Copyright (C) 2025 Altera Corporation
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/altr,socfpga-s10-ecc-manager.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Altera Stratix10 SoCFPGA ECC Manager (ARM64)
-+
-+maintainers:
-+  - Matthew Gerlach <matthew.gerlach@altera.com
-+
-+description: |
-+  The Stratix10 implementation of the SoCFPGA ECC Manager counts and corrects
-+  single bit errors. Double bit errors are treated as SErrors in ARM64. This
-+  implementation requires access to registers only available to the Secure
-+  Device Manager (SDM) via Secure Monitor Calls (SMC).
-+
-+properties:
-+
-+  compatible:
-+    items:
-+      - const: altr,socfpga-s10-ecc-manager
-+
-+  altr,sysmgr-syscon:
-+    maxItems: 1
-+
-+  "#address-cells":
-+    const: 1
-+
-+  "#size-cells":
-+    const: 1
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  interrupt-controller: true
-+
-+  "#interrupt-cells":
-+    const: 2
-+
-+  ranges: true
-+
-+  sdramedac:
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      compatible:
-+        const: altr,sdram-edac-s10
-+      altr,sdr-syscon:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description: phandle to SDRAM parent
-+      interrupts:
-+        maxItems: 1
-+    required:
-+      - compatible
-+      - altr,sdr-syscon
-+      - interrupts
-+
-+  ocram-ecc@ff8cc000:
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      compatible:
-+        items:
-+          - const: altr,socfpga-a10-ocram-ecc
-+
-+      reg:
-+        maxItems: 1
-+      altr,ecc-parent:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description: phandle to OCRAM parent
-+      interrupts:
-+        maxItems: 1
-+    required:
-+      - compatible
-+      - reg
-+      - altr,ecc-parent
-+      - interrupts
-+
-+  usb0-ecc@ff8c4000:
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      compatible:
-+        items:
-+          - const: altr,socfpga-usb-ecc
-+      reg:
-+        maxItems: 1
-+      altr,ecc-parent:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description: phandle to USB parent
-+      interrupts:
-+        maxItems: 1
-+    required:
-+      - compatible
-+      - reg
-+      - altr,ecc-parent
-+      - interrupts
-+
-+  emac0-rx-ecc@ff8c0000:
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      compatible:
-+        items:
-+          - const: altr,socfpga-eth-mac-ecc
-+      reg:
-+        maxItems: 1
-+      altr,ecc-parent:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description: phandle to ethernet parent
-+      interrupts:
-+        maxItems: 1
-+    required:
-+      - compatible
-+      - reg
-+      - altr,ecc-parent
-+      - interrupts
-+
-+  emac0-tx-ecc@ff8c0400:
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      compatible:
-+        items:
-+          - const: altr,socfpga-eth-mac-ecc
-+      reg:
-+        maxItems: 1
-+      altr,ecc-parent:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description: phandle to ethernet parent
-+      interrupts:
-+        maxItems: 1
-+    required:
-+      - compatible
-+      - reg
-+      - altr,ecc-parent
-+      - interrupts
-+
-+  sdmmca-ecc@ff8c8c00:
-+    type: object
-+    additionalProperties: false
-+    properties:
-+      compatible:
-+        items:
-+          - const: altr,socfpga-sdmmc-ecc
-+      reg:
-+        maxItems: 1
-+      altr,ecc-parent:
-+        $ref: /schemas/types.yaml#/definitions/phandle
-+        description: phandle to ethernet parent
-+      interrupts:
-+        maxItems: 2
-+    required:
-+      - compatible
-+      - reg
-+      - altr,ecc-parent
-+      - interrupts
-+
-+required:
-+  - compatible
-+  - altr,sysmgr-syscon
-+  - "#address-cells"
-+  - "#size-cells"
-+  - interrupts
-+  - interrupt-controller
-+  - "#interrupt-cells"
-+  - ranges
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    eccmgr {
-+        compatible = "altr,socfpga-s10-ecc-manager";
-+        altr,sysmgr-syscon = <&sysmgr>;
-+        #address-cells = <1>;
-+        #size-cells = <1>;
-+        interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+        interrupt-controller;
-+        #interrupt-cells = <2>;
-+        ranges;
-+
-+        sdramedac {
-+            compatible = "altr,sdram-edac-s10";
-+            altr,sdr-syscon = <&sdr>;
-+            interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+
-+        ocram-ecc@ff8cc000 {
-+            compatible = "altr,socfpga-a10-ocram-ecc";
-+            reg = <0xff8cc000 0x100>;
-+            altr,ecc-parent = <&ocram>;
-+            interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+
-+        usb0-ecc@ff8c4000 {
-+            compatible = "altr,socfpga-usb-ecc";
-+            reg = <0xff8c4000 0x100>;
-+            altr,ecc-parent = <&usb0>;
-+            interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+
-+        emac0-rx-ecc@ff8c0000 {
-+            compatible = "altr,socfpga-eth-mac-ecc";
-+            reg = <0xff8c0000 0x100>;
-+            altr,ecc-parent = <&gmac0>;
-+            interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+
-+        emac0-tx-ecc@ff8c0400 {
-+            compatible = "altr,socfpga-eth-mac-ecc";
-+            reg = <0xff8c0400 0x100>;
-+            altr,ecc-parent = <&gmac0>;
-+            interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+
-+        sdmmca-ecc@ff8c8c00 {
-+            compatible = "altr,socfpga-sdmmc-ecc";
-+            reg = <0xff8c8c00 0x100>;
-+            altr,ecc-parent = <&mmc>;
-+            interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
-+                         <15 IRQ_TYPE_LEVEL_HIGH>;
-+        };
-+    };
-diff --git a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-index 8f52206cfd2a..4a1714f96bab 100644
---- a/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-+++ b/Documentation/devicetree/bindings/edac/socfpga-eccmgr.txt
-@@ -231,153 +231,3 @@ Example:
- 				     <48 IRQ_TYPE_LEVEL_HIGH>;
- 		};
- 	};
--
--Stratix10 SoCFPGA ECC Manager (ARM64)
--The Stratix10 SoC ECC Manager handles the IRQs for each peripheral
--in a shared register similar to the Arria10. However, Stratix10 ECC
--requires access to registers that can only be read from Secure Monitor
--with SMC calls. Therefore the device tree is slightly different. Note
--that only 1 interrupt is sent in Stratix10 because the double bit errors
--are treated as SErrors in ARM64 instead of IRQs in ARM32.
--
--Required Properties:
--- compatible : Should be "altr,socfpga-s10-ecc-manager"
--- altr,sysgr-syscon : phandle to Stratix10 System Manager Block
--	              containing the ECC manager registers.
--- interrupts : Should be single bit error interrupt.
--- interrupt-controller : boolean indicator that ECC Manager is an interrupt controller
--- #interrupt-cells : must be set to 2.
--- #address-cells: must be 1
--- #size-cells: must be 1
--- ranges : standard definition, should translate from local addresses
--
--Subcomponents:
--
--SDRAM ECC
--Required Properties:
--- compatible : Should be "altr,sdram-edac-s10"
--- interrupts : Should be single bit error interrupt.
--
--On-Chip RAM ECC
--Required Properties:
--- compatible      : Should be "altr,socfpga-s10-ocram-ecc"
--- reg             : Address and size for ECC block registers.
--- altr,ecc-parent : phandle to parent OCRAM node.
--- interrupts      : Should be single bit error interrupt.
--
--Ethernet FIFO ECC
--Required Properties:
--- compatible      : Should be "altr,socfpga-s10-eth-mac-ecc"
--- reg             : Address and size for ECC block registers.
--- altr,ecc-parent : phandle to parent Ethernet node.
--- interrupts      : Should be single bit error interrupt.
--
--NAND FIFO ECC
--Required Properties:
--- compatible      : Should be "altr,socfpga-s10-nand-ecc"
--- reg             : Address and size for ECC block registers.
--- altr,ecc-parent : phandle to parent NAND node.
--- interrupts      : Should be single bit error interrupt.
--
--DMA FIFO ECC
--Required Properties:
--- compatible      : Should be "altr,socfpga-s10-dma-ecc"
--- reg             : Address and size for ECC block registers.
--- altr,ecc-parent : phandle to parent DMA node.
--- interrupts      : Should be single bit error interrupt.
--
--USB FIFO ECC
--Required Properties:
--- compatible      : Should be "altr,socfpga-s10-usb-ecc"
--- reg             : Address and size for ECC block registers.
--- altr,ecc-parent : phandle to parent USB node.
--- interrupts      : Should be single bit error interrupt.
--
--SDMMC FIFO ECC
--Required Properties:
--- compatible      : Should be "altr,socfpga-s10-sdmmc-ecc"
--- reg             : Address and size for ECC block registers.
--- altr,ecc-parent : phandle to parent SD/MMC node.
--- interrupts      : Should be single bit error interrupt for port A
--		    and then single bit error interrupt for port B.
--
--Example:
--
--	eccmgr {
--		compatible = "altr,socfpga-s10-ecc-manager";
--		altr,sysmgr-syscon = <&sysmgr>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		interrupts = <0 15 4>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		ranges;
--
--		sdramedac {
--			compatible = "altr,sdram-edac-s10";
--			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		ocram-ecc@ff8cc000 {
--			compatible = "altr,socfpga-s10-ocram-ecc";
--			reg = <ff8cc000 0x100>;
--			altr,ecc-parent = <&ocram>;
--			interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		emac0-rx-ecc@ff8c0000 {
--			compatible = "altr,socfpga-s10-eth-mac-ecc";
--			reg = <0xff8c0000 0x100>;
--			altr,ecc-parent = <&gmac0>;
--			interrupts = <4 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		emac0-tx-ecc@ff8c0400 {
--			compatible = "altr,socfpga-s10-eth-mac-ecc";
--			reg = <0xff8c0400 0x100>;
--			altr,ecc-parent = <&gmac0>;
--			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>'
--		};
--
--		nand-buf-ecc@ff8c8000 {
--			compatible = "altr,socfpga-s10-nand-ecc";
--			reg = <0xff8c8000 0x100>;
--			altr,ecc-parent = <&nand>;
--			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		nand-rd-ecc@ff8c8400 {
--			compatible = "altr,socfpga-s10-nand-ecc";
--			reg = <0xff8c8400 0x100>;
--			altr,ecc-parent = <&nand>;
--			interrupts = <13 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		nand-wr-ecc@ff8c8800 {
--			compatible = "altr,socfpga-s10-nand-ecc";
--			reg = <0xff8c8800 0x100>;
--			altr,ecc-parent = <&nand>;
--			interrupts = <12 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		dma-ecc@ff8c9000 {
--			compatible = "altr,socfpga-s10-dma-ecc";
--			reg = <0xff8c9000 0x100>;
--			altr,ecc-parent = <&pdma>;
--			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
--
--		usb0-ecc@ff8c4000 {
--			compatible = "altr,socfpga-s10-usb-ecc";
--			reg = <0xff8c4000 0x100>;
--			altr,ecc-parent = <&usb0>;
--			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
--		};
--
--		sdmmc-ecc@ff8c8c00 {
--			compatible = "altr,socfpga-s10-sdmmc-ecc";
--			reg = <0xff8c8c00 0x100>;
--			altr,ecc-parent = <&mmc>;
--			interrupts = <14 IRQ_TYPE_LEVEL_HIGH>,
--				     <15 IRQ_TYPE_LEVEL_HIGH>;
--		};
--	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0c8fb060072b..236e23174719 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3191,6 +3191,11 @@ M:	Dinh Nguyen <dinguyen@kernel.org>
- S:	Maintained
- F:	drivers/clk/socfpga/
- 
-+ARM/SOCFPGA EDAC BINDINGS
-+M:	Matthew Gerlach <matthew.gerlach@altera.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/edac/altr,socfpga-s10-ecc-manager.yaml
-+
- ARM/SOCFPGA EDAC SUPPORT
- M:	Dinh Nguyen <dinguyen@kernel.org>
- S:	Maintained
+Willie Thai (2):
+  ARM: dts: aspeed: Add device tree for Nvidia's GB200NVL BMC
+  dt-bindings: arm: aspeed: add Nvidia's GB200NVL BMC
+
+ .../bindings/arm/aspeed/aspeed.yaml           |    1 +
+ arch/arm/boot/dts/aspeed/Makefile             |    1 +
+ .../aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts | 1168 +++++++++++++++++
+ 3 files changed, 1170 insertions(+)
+ create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-nvidia-gb200nvl-bmc.dts
+
 -- 
-2.35.3
+2.25.1
 
