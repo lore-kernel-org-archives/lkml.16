@@ -1,106 +1,115 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C307B21D59B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:46:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF651E25EB
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:47:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742507193; cv=none; b=NqTDNyG2yLC6vH0dKSp/bBf2N/9eTdkQXhBm6//ZdOMQEd+KkRA5bUYu5y6snRNAkuQ77ok/vKXJE3Z1z8rxW0O44AjPnPSkzjukTvNEKHjRmK8Sik4zeUVg8l85BboqeRUnDSRkC2RsipSB3hh26/eYGXjldedoUFMKAghcY1M=
+	t=1742507257; cv=none; b=LVm5e4JjT6BsgicuBCsJ/hts8BBUbceY5J9IB64nAhpHvCacG18g+ch8QAK7FgFC6xn2QGfmnzlTj5n5PZESxkA8LRn9gpM4ClBEky3Idez3BuakZ2lhebhdq9R59kqg+AyiRCevaWz7JcbUsatOvYNFjKzw6DnwFKdCyCY0t4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742507193; c=relaxed/simple;
-	bh=fG6ALNWknG0HB6n9+duDH0Qkh+TNCnyz7MyjxbEtwuw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=fsVQMQjs4sxeZKtSoQIP2tUOkm9qpn7u6oGHTa7Glq+XS4Xu0/MQ3MrjZD9uLLoIA9BpRQ0WEPyGU9DhKHQHlQy8IQNj90E33V6Wis5w22cre7fCifCilZbxXtWn3XjbWkOm+s8alswSbR6CczTAZlDtXDbD6Gqy9hrrCsg6+5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=FHJklZCd; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742507257; c=relaxed/simple;
+	bh=6aFeAcQOrE9iX5bnT0IHoBmr8TSEA7XYOZSeAKpYzh4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QmprzAsP4pJzNnRnW4D7H6ptP41W4ns0DBs7/tFHZJ2jXpBcxp7x0Hp/cmPyEbmpmf+3w9Bx9eMYQlltsCOi3CD9SG4+6rxfO9f1caoBCO2n9CymOYlMfC3MUM5R/bbVs956yAIni4r6UJoN879rsy+jexApO/W7VYCxyUs/NsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sOIhLCLC; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FHJklZCd"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742507192; x=1774043192;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=fG6ALNWknG0HB6n9+duDH0Qkh+TNCnyz7MyjxbEtwuw=;
-  b=FHJklZCd807Q6toCVqkM8uiWnO6H06JiErGhfn3MN3O/3NdW06JNSM+q
-   yDAg5vGKaliOVYhVd1ktn8x6qbMu9TJ2rbeHoti2w24XKr2lPwi6Td6c8
-   6OBt/trOQ1tqYLBrmuYXdBCf2kATpOE/KsbxNp93MCC01f4HMdjyEtAGh
-   n6tVX5GCofrks71rZ0oFzsp+v61jvhUNttdzaU4cFz8Lgw/l6r/n/g9Ne
-   dcFJWhRhKfR5BTkLGd+VBuLusYK83NfM8D9/3alI8Lqil/tFoQGZySKiw
-   Yr7hPR6m92B5ve3wshKAkm+DDJCHVjItrUUkWzt4pPxomwnpoAdVkEyYL
-   w==;
-X-CSE-ConnectionGUID: W8piFuBcSXe/9daxE6/0sQ==
-X-CSE-MsgGUID: PIru6bTTSWOXbYvrR0jQUA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="46517514"
-X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
-   d="scan'208";a="46517514"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 14:46:31 -0700
-X-CSE-ConnectionGUID: OsqT4JVtQGqk2/ZBqE/ETg==
-X-CSE-MsgGUID: aCil67QeQCu+MRqe8eUexg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,262,1736841600"; 
-   d="scan'208";a="160449884"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 20 Mar 2025 14:46:29 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tvNid-0000nP-09;
-	Thu, 20 Mar 2025 21:46:27 +0000
-Date: Fri, 21 Mar 2025 05:45:58 +0800
-From: kernel test robot <lkp@intel.com>
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
-	Stafford Horne <shorne@gmail.com>, Rong Xu <xur@google.com>
-Subject: (.head.text+0x900): relocation truncated to fit: R_OR1K_INSN_REL_26
- against `no symbol'
-Message-ID: <202503210518.c0mKdawI-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sOIhLCLC"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so11768475e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:47:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742507254; x=1743112054; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0pDs0WVPO2a99lut0kg8geJYSA583A+0xvILgC594aY=;
+        b=sOIhLCLC4KdTb/cpTmXDZvW3uho4lVcm69fYU4rW5iyvoV8Y6ux/WSuIjwE1fZCdcD
+         VAUtny72w+EdsGYjuOqFulw/uPPQ+rFsgQkOsQTT7sGyFNvqbze5PnRUkL/mcKr4qfIg
+         sWPfKwqc+y7sE0EC3unb0RR2Qz+Zs+Kidzj0/TWlLU0o1EA6AltMeLNo7vWiOExR9Aiu
+         8syp6JhTW0V5zD/+XZzlfvWfwj8kzIwSZDfV+FDyJYtiWtxd5Ci5oQWZebWSV4QZNzig
+         STgOCJae4/84EEZpeUja9eSHuR5bBepwoMhlgDRkb406e9kCOwfFXbg6+1grryniDstr
+         oZhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742507254; x=1743112054;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0pDs0WVPO2a99lut0kg8geJYSA583A+0xvILgC594aY=;
+        b=f5aW7vNrsM8YNsXnGro1LHqRW5OgTimhy/O2kWnah3Bm0aCH5Qogqy+wQ3q+tCA00u
+         l426OLSB8VMZu0/inZcUAG+ANW0BTJlfSDDFbJjDsq4KlmU/1BSNTmJfWMTSwpFcEhBp
+         Sttz5C7WU4TuljgBkQSkirx8Q9sB4RCcs11rYJ7tc8vgNMzx2B+NC1joGUAVLKPZ+knS
+         fBGOYzY7o199e/RilYhKSCOFCmEbdi57QIzUFyPz1L/NgtXSaJfBq1TzJrybRgYG+vDh
+         wcoBs5eGmV6F9orV2AQAqwwlVbQC0/ebNLy1HlhdRA9ZU+Ix+AETbnz7pHx5zIgsWLqw
+         PoFA==
+X-Forwarded-Encrypted: i=1; AJvYcCV7qU08qwYA9YxqdDMsz3KId46EvvKDfu8oInngHgHxGrUVuN37s4r95QdUlnbkm4DQtnBDLSTkJ9fTsj8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwJqqHEPdm+rEC5J3YYbsMk/AQHsm3NgGwlQbKfO4w80J8R+9nA
+	6hdQ/zPF9XHVDD17njDamo/NIptp2P63S4b9bUgTE47Xtoz6ZZNMs8Zre3PNxvM=
+X-Gm-Gg: ASbGncuQZKr9lvuDS1JzJ5L+DcVBAB9M2VhCwwzBrJVjr5LbajOhqjbv2J0NY/jrnCR
+	t6ZbRBrgkx/HMvaR3Kgv97LAwoBkcpgcnRtvO1htrEEb5WXT5r3tTAMJK9MQe8JA3FQdTSNwPXM
+	nKYphLrKKGsQAptRssrKq/O4unJuAbU6fjlkQDR+JkDOBGbGiwbflolmSo3/pG3zhRKZ6Qs+Fd6
+	6XTvSB8Z95d9yowA7BbQydyN2Ie9ppmbST3pCUW4f6rGj2pkVbvoV4JFBAEd7QR2yPF3t6IIGgm
+	3E6LDxU+U/YmEzMdsi8/5V0nv9D8oRys3d8mq0KqTUcXf1TeHpoAldUMfCat3+jsrPoIT1+NEZV
+	lF7tQQSagyA==
+X-Google-Smtp-Source: AGHT+IH1QR2lA5j20mnRQxFbbvbhsn3PhLymz9T80NY3pVx9+kYUunZaqACuc30VQqERvPO4097GDQ==
+X-Received: by 2002:a05:600c:1e26:b0:43d:300f:fa1d with SMTP id 5b1f17b1804b1-43d50a4e498mr6521745e9.31.1742507253926;
+        Thu, 20 Mar 2025 14:47:33 -0700 (PDT)
+Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d3bb2b2ffsm67871675e9.1.2025.03.20.14.47.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 14:47:33 -0700 (PDT)
+Message-ID: <a4134aed-0b6a-463e-828e-326636fbadc3@linaro.org>
+Date: Thu, 20 Mar 2025 21:47:31 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 3/3] arm64: dts: qcom: sa8775p-ride: enable video
+To: Vikash Garodia <quic_vgarodia@quicinc.com>,
+ Dikshita Agarwal <quic_dikshita@quicinc.com>,
+ Abhinav Kumar <quic_abhinavk@quicinc.com>,
+ Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ sumit.garg@oss.qualcomm.com
+References: <20250320-dtbinding-v3-0-2a16fced51d5@quicinc.com>
+ <QmxHHC087sYySMBmJH4INHn5KxydFiCpjxuGSwMWq2izyyd5JQByDX7LBzvgK_SccwtrWn2FzazAyF3252YvDg==@protonmail.internalid>
+ <20250320-dtbinding-v3-3-2a16fced51d5@quicinc.com>
+Content-Language: en-US
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+In-Reply-To: <20250320-dtbinding-v3-3-2a16fced51d5@quicinc.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Masahiro,
+On 20/03/2025 18:06, Vikash Garodia wrote:
+> +
+> +&iris {
+> +	firmware-name = "qcom/vpu/vpu30_p4_s6.mbn";
+> +
+> +	status = "okay";
+> +};
 
-FYI, the error/warning still remains.
+You're out of alphanumeric order here.
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-head:   5fc31936081919a8572a3d644f3fbb258038f337
-commit: a412f04070e52e6d6b5f6f964b9d9644de16bb81 openrisc: place exception table at the head of vmlinux
-date:   3 months ago
-config: openrisc-allyesconfig (https://download.01.org/0day-ci/archive/20250321/202503210518.c0mKdawI-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250321/202503210518.c0mKdawI-lkp@intel.com/reproduce)
+Should be:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503210518.c0mKdawI-lkp@intel.com/
+  };
 
-All errors (new ones prefixed by >>):
++
++&iris {
++       firmware-name = "qcom/vpu/vpu30_p4_s6.mbn";
++
++       status = "okay";
++};
++
+  &mdss0 {
 
-   arch/openrisc/kernel/head.o: in function `_dispatch_do_ipage_fault':
->> (.head.text+0x900): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   (.head.text+0xa00): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   arch/openrisc/kernel/head.o: in function `exit_with_no_dtranslation':
->> (.init.text+0x21bc): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   arch/openrisc/kernel/head.o: in function `exit_with_no_itranslation':
-   (.init.text+0x2264): relocation truncated to fit: R_OR1K_INSN_REL_26 against `no symbol'
-   init/main.o: in function `trace_event_raw_event_initcall_level':
-   main.c:(.text+0x28c): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `strlen' defined in .text section in lib/string.o
-   init/main.o: in function `initcall_blacklisted':
-   main.c:(.text+0x6f4): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `strcmp' defined in .text section in lib/string.o
-   init/main.o: in function `trace_initcall_finish_cb':
-   main.c:(.text+0x818): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   main.c:(.text+0x83c): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   main.c:(.text+0x87c): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   main.c:(.text+0x8a8): relocation truncated to fit: R_OR1K_INSN_REL_26 against symbol `__muldi3' defined in .text section in ../lib/gcc/or1k-linux/14.2.0/libgcc.a(_muldi3.o)
-   init/main.o: in function `do_one_initcall':
-   main.c:(.text+0xec0): additional relocation overflows omitted from the output
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+---
+bod
