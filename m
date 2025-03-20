@@ -1,131 +1,93 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3ADB22259C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:16:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B00F22157F;
+	Thu, 20 Mar 2025 14:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742480205; cv=none; b=ioF0k+sEdj+zxr3viEqsXeExvTvWgekvjiXkqFmR7/GO5T5a5CMJ88q20pAUPuOHS9WGWES8XSDov9NYkVhEOBLzf0UEhmwRK7rd9fOYB/5AYThcxLbbX3lTVKeNRgmjg/+xWiCyOUSEWDsogX1/83p18uw+riLgLtUZDw/utXc=
+	t=1742480226; cv=none; b=HUABtOvAG3bCLBUcVqaoZSYJb7cRWxuHsgXErcVnoqoHZU9du5Z44UggikmoxNRMl+9lg0JCp3Sx4xa6HIpJxdcjgk2M8RFNLawdBNOy1WRovMRAlCvGkqF/NUlCmA7yGII9+lI4DNfT3yMRdSS0eVz8eDySVZq01+UAXmROrRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742480205; c=relaxed/simple;
-	bh=J8LnsHeJmO0fVH7avVIr14dMWf0HIdoxRIKRn5jvHL8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=nvJbCRv+gyiemPtSlvP3HHmwjSqdI0IUjj7rxj6A/3Cr7x1pLVLDwogepmPBQxs4gXIgjqwl4seV8hvvMLw9cTINR4P48kKwLWsv6A9TPHEcxsyfDVlu6pjp3I0x0Lhf3Zbrjl4x7O3G2zQ6M3qCAw2w91YoOkWdffpiSaCyumI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WIZ82fuy; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742480226; c=relaxed/simple;
+	bh=EjjKERzL9oRudkewhdPf4Dc/ASPKyLKPzJYZKd4P92U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Dak1c+QyFhmXs+xoe/WF3LvtW4bui9iFYagyX2LiFM4uNEumxyLGAW5nw/2p6G7piZDxNML2bEkH5KXXZbCnpuxOdGWVNKqedCxi4FJRWS/44dTlDDDAEY671C1EQQ0xgZIs1rK7hVxvtVa0hSQ3jqKUEbttP9tb0udY4AKIlgk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c+24EFHJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WIZ82fuy"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742480204; x=1774016204;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=J8LnsHeJmO0fVH7avVIr14dMWf0HIdoxRIKRn5jvHL8=;
-  b=WIZ82fuyLFuYw5K1JPBiuBHE23OthkK0Zq6J+6oga77OYU1oDsUhu1OE
-   8ZXCqQvP7ros5RI/xMm+ABVzyhGurOClOPwaYG+d4+YIz+sVcthaNSYDx
-   ePlxKv4qaEZDqYNKF02Rclv8hBFNls7OM/y0woCmHRKduo11dTZNrnn8U
-   9Horq+CyXbS9wrqmgHO9+9fWFVpovTG4jlU0N3MEUFRje9ukr+dg5d2qF
-   y4osLnW0xyO3x8Fty6XgBOccW8dhi5Szm1M0cC6rTKlOMbMrVfq8wE9UC
-   8f1gVsP5ri320YyQQub3L6PMs9ktpC375ve5vA5Xn1PcQexhQCrBjr6j0
-   Q==;
-X-CSE-ConnectionGUID: cLmJeSvgSDeFdCm4CtJB4A==
-X-CSE-MsgGUID: IMcebxQHQVSBx5DADtEN4g==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="61104402"
-X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
-   d="scan'208";a="61104402"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 07:16:43 -0700
-X-CSE-ConnectionGUID: IBkT1U8LS3GJrfbOkn8yJw==
-X-CSE-MsgGUID: QsazBzbgTKyjCXEAhTHS4A==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
-   d="scan'208";a="127942854"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa003.jf.intel.com with ESMTP; 20 Mar 2025 07:16:37 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tvGhF-0000UR-2H;
-	Thu, 20 Mar 2025 14:16:33 +0000
-Date: Thu, 20 Mar 2025 22:15:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Changyuan Lyu <changyuanl@google.com>, linux-kernel@vger.kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, graf@amazon.com,
-	akpm@linux-foundation.org, luto@kernel.org,
-	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com,
-	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com,
-	dave.hansen@linux.intel.com, dwmw2@infradead.org,
-	ebiederm@xmission.com, mingo@redhat.com, jgowans@amazon.com,
-	corbet@lwn.net, krzk@kernel.org, rppt@kernel.org,
-	mark.rutland@arm.com, pbonzini@redhat.com,
-	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org,
-	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org,
-	saravanak@google.com, skinsburskii@linux.microsoft.com,
-	rostedt@goodmis.org, tglx@linutronix.de
-Subject: Re: [PATCH v5 01/16] kexec: define functions to map and unmap
- segments
-Message-ID: <202503202151.vHOV0UKU-lkp@intel.com>
-References: <20250320015551.2157511-2-changyuanl@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c+24EFHJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C873C4CEDD;
+	Thu, 20 Mar 2025 14:17:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742480225;
+	bh=EjjKERzL9oRudkewhdPf4Dc/ASPKyLKPzJYZKd4P92U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=c+24EFHJ04X18330vNb0qvQVQclTR51gvmZhx6dCiNEg2GMog2RB+E9oFoujVqvrZ
+	 LeYq+0Hy8UGCA2CRXtXx+CybrELjaI3qHoOE6hphTeSrwfxJ0NarRajZEro1L6FTKA
+	 OEN79OzpDUc+76vZk/mI+iPCzl44CWK4GKuJfQLc92NqZPPCBF/PhU2kfa8LBQnlFf
+	 vOKWPwW5p6feTiikS9vP8LT6DNznx+tH4tXIxqHMGgSRqbgUG8j6Yrj7r7m4e/r5zG
+	 x3R/XZxd4JHCXUidFVPs76J8QxPfyAMDZQsR2at66r4ah7VACODMTzqdTvzgmhGRhG
+	 Y+uxgO2DH8zmQ==
+From: Christian Brauner <brauner@kernel.org>
+To: djwong@kernel.org,
+	hch@lst.de,
+	John Garry <john.g.garry@oracle.com>
+Cc: Christian Brauner <brauner@kernel.org>,
+	linux-fsdevel@vger.kernel.org,
+	dchinner@redhat.com,
+	linux-xfs@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com,
+	ritesh.list@gmail.com,
+	martin.petersen@oracle.com,
+	tytso@mit.edu,
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH 0/3] further iomap large atomic writes changes
+Date: Thu, 20 Mar 2025 15:16:57 +0100
+Message-ID: <20250320-unliebsam-uninteressant-341618121b90@brauner>
+X-Mailer: git-send-email 2.47.2
+In-Reply-To: <20250320120250.4087011-1-john.g.garry@oracle.com>
+References: <20250320120250.4087011-1-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250320015551.2157511-2-changyuanl@google.com>
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1552; i=brauner@kernel.org; h=from:subject:message-id; bh=EjjKERzL9oRudkewhdPf4Dc/ASPKyLKPzJYZKd4P92U=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTfUY42ZJ0Uqvq22KudT+TgNBGXPrb+6WtOPX11wHrtP /E9ly/ldpSyMIhxMciKKbI4tJuEyy3nqdhslKkBM4eVCWQIAxenAEwk7jgjw90g3VKXcqWbGtIW x0Kz2Y1eGXAs2d92TYsv+uDCTO3FOxn+mW+eumPi5kP380yfX7a8IGMnc2PzsqvF91gMn8VyPwi 1YAAA
+X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
+Content-Transfer-Encoding: 8bit
 
-Hi Changyuan,
+On Thu, 20 Mar 2025 12:02:47 +0000, John Garry wrote:
+> These iomap changes are spun-off the XFS large atomic writes series at
+> https://lore.kernel.org/linux-xfs/86a64256-497a-453b-bbba-a5ac6b4cb056@oracle.com/T/#ma99c763221de9d49ea2ccfca9ff9b8d71c8b2677
+> 
+> The XFS parts there are not ready yet, but it is worth having the iomap
+> changes queued in advance.
+> 
+> Some much earlier changes from that same series were already queued in the
+> vfs tree, and these patches rework those changes - specifically the
+> first patch in this series does.
+> 
+> [...]
 
-kernel test robot noticed the following build warnings:
+Applied to the vfs-6.15.iomap branch of the vfs/vfs.git tree.
+Patches in the vfs-6.15.iomap branch should appear in linux-next soon.
 
-[auto build test WARNING on a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47]
+Please report any outstanding bugs that were missed during review in a
+new review to the original patch series allowing us to drop it.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Changyuan-Lyu/kexec-define-functions-to-map-and-unmap-segments/20250320-095900
-base:   a7f2e10ecd8f18b83951b0bab47ddaf48f93bf47
-patch link:    https://lore.kernel.org/r/20250320015551.2157511-2-changyuanl%40google.com
-patch subject: [PATCH v5 01/16] kexec: define functions to map and unmap segments
-config: i386-buildonly-randconfig-002-20250320 (https://download.01.org/0day-ci/archive/20250320/202503202151.vHOV0UKU-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250320/202503202151.vHOV0UKU-lkp@intel.com/reproduce)
+It's encouraged to provide Acked-bys and Reviewed-bys even though the
+patch has now been applied. If possible patch trailers will be updated.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503202151.vHOV0UKU-lkp@intel.com/
+Note that commit hashes shown below are subject to change due to rebase,
+trailer updates or similar. If in doubt, please check the listed branch.
 
-All warnings (new ones prefixed by >>):
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/vfs/vfs.git
+branch: vfs-6.15.iomap
 
-   In file included from kernel/reboot.c:13:
->> include/linux/kexec.h:479:47: warning: declaration of 'struct kimage' will not be visible outside of this function [-Wvisibility]
-     479 | static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
-         |                                               ^
-   1 warning generated.
-
-
-vim +479 include/linux/kexec.h
-
-   466	
-   467	#define kexec_dprintk(fmt, arg...) \
-   468	        do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
-   469	
-   470	void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
-   471	void kimage_unmap_segment(void *buffer);
-   472	#else /* !CONFIG_KEXEC_CORE */
-   473	struct pt_regs;
-   474	struct task_struct;
-   475	static inline void __crash_kexec(struct pt_regs *regs) { }
-   476	static inline void crash_kexec(struct pt_regs *regs) { }
-   477	static inline int kexec_should_crash(struct task_struct *p) { return 0; }
-   478	static inline int kexec_crash_loaded(void) { return 0; }
- > 479	static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
-   480	{ return NULL; }
-   481	static inline void kimage_unmap_segment(void *buffer) { }
-   482	#define kexec_in_progress false
-   483	#endif /* CONFIG_KEXEC_CORE */
-   484	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+[1/3] iomap: inline iomap_dio_bio_opflags()
+      https://git.kernel.org/vfs/vfs/c/d279c80e0bac
+[2/3] iomap: comment on atomic write checks in iomap_dio_bio_iter()
+      https://git.kernel.org/vfs/vfs/c/aacd436e40b0
+[3/3] iomap: rework IOMAP atomic flags
+      https://git.kernel.org/vfs/vfs/c/370a6de7651b
