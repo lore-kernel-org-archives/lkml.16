@@ -1,192 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2611E1308
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:38:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3151E2858
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:41:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742485101; cv=none; b=f2BrsDELD72H+amYPEPMp/a6ypPdNP7IgNgN6wRW3bFVRiuAz0E7+U89zwjVfnujCjgEEzNgHpaxSt4heSxN2eAxunUi5p9RBQJuTFRpI8L2lkTg/6Z3lWK5f/YiKyN3W0lCaDbJdIjBZ0NhRs8IN8ETBGwxJOGPIYsIHkINuO4=
+	t=1742485307; cv=none; b=U5R5FEyBvbJYghiRdty5ICmRkFH4dFh8seSqebISASbwQ2pekx1ta3egdyg5kEvhcM3QmB/E9lK+JoKXHsMJthGzKvcOYvAM7ok3BPVwzDv0GeETRW+OWB6PcjZkhedA/0ho5o2BuOBuEl+4j9LaiInT5FL7r62XVYmT79/X3EY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742485101; c=relaxed/simple;
-	bh=uRdiTVbQkm4pvbxGi/kkATI+pxb9e8rW3KQUa7Y7oGE=;
-	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
-	 Content-Type:Date:Message-ID; b=aU9RNL2nMmkhYpdsFE2XqlfFAjqqLObHzkjz3o0I3mF8D7CbLrNhRElXoqYaNIVqKxB6vGogkCePNIwoG5gcz1/X8kDJWnVfHsnomO+kB/gfaaPE09TIEMUBDottNE0n9ONjBH0Q5wSnwq0jzVfIx/uHV6JeZTORPqjxGqtwpP0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KffU33hF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742485307; c=relaxed/simple;
+	bh=SwzN4rsNO+8yq0gB9kYdl+eu93RIZ2WSiBjET65clOA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=spw8rDDOObz6IRQYDxlSgj7VMxdQJiFbniXMqb8TPO/0jbZqglY2tNaS4wSEjkeuFU5BnDt5sd71bWONoAX45jfs5QwDSuyWhxGq8wqZGJMFPs0E3fvWPQIbEcyYwTgk6UENwMipzkEQHaw0iBx0NPhWMyp1FAGsparEm2IU/0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=1U/AATt0; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KffU33hF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742485098;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jfSEIrY/qgegWJTIRwrY+ragQR0uVn2TNvXZB6uD0e8=;
-	b=KffU33hFmEoyeRu6j9qcSWiPUc78PvHBgNzI1FejqfOd7XqW6CWzGgy7yjondKVaejfnMo
-	JELOedyAxgp1ALVtoCxBp/JF/0UiIPcdvY7yHWHI3z/v+3+y8TTndHzoLRzAiUWIPaiHqq
-	F8im2f/Wc+8Uh2+l7FVI/c6AusGumDw=
-Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-41-7-UAd8ssNKi_alG6mQXI0A-1; Thu,
- 20 Mar 2025 11:38:15 -0400
-X-MC-Unique: 7-UAd8ssNKi_alG6mQXI0A-1
-X-Mimecast-MFC-AGG-ID: 7-UAd8ssNKi_alG6mQXI0A_1742485093
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B138E180AF4C;
-	Thu, 20 Mar 2025 15:38:12 +0000 (UTC)
-Received: from warthog.procyon.org.uk (unknown [10.42.28.61])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BB3361955BFE;
-	Thu, 20 Mar 2025 15:38:09 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-	Kingdom.
-	Registered in England and Wales under Company Registration No. 3798903
-From: David Howells <dhowells@redhat.com>
-In-Reply-To: <4c30dae500352e31a47ecfa34d60f4a8c015297e.camel@ibm.com>
-References: <4c30dae500352e31a47ecfa34d60f4a8c015297e.camel@ibm.com> <20250313233341.1675324-1-dhowells@redhat.com> <20250313233341.1675324-34-dhowells@redhat.com>
-To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
-Cc: dhowells@redhat.com, Alex Markuze <amarkuze@redhat.com>,
-    "slava@dubeyko.com" <slava@dubeyko.com>,
-    "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-    "idryomov@gmail.com" <idryomov@gmail.com>,
-    "jlayton@kernel.org" <jlayton@kernel.org>,
-    "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-    "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
-    "dongsheng.yang@easystack.cn" <dongsheng.yang@easystack.cn>,
-    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC PATCH 33/35] ceph: Use netfslib [INCOMPLETE]
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1U/AATt0"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=YH8NMYy0CZP6enlttApaJU7aUE5w6jDlUhfkMzIiI7A=; b=1U/AATt0kBpkEhxO2ToduoWXQj
+	+xlELDPKYbHti4hUO/e7vGAWCr5J/8TAb1srdfgAxD2UIXUEVwa8ewWPQvCFQ9w/ajrt/iPmSLmNk
+	h0HQ+SKqv+yLmVrsTkeSqYugonNYGMICFPl3xxpQkMuBbGOZHD72jX7Z42ECAporjEBfKttUcHRzj
+	QXWeL1ez5mv6Xb7Op6Csvi+FADHOL8sk/Ujqt54DC7Rdf3YOByuFlcWUHUkxygKpPucPCmyn8EIK7
+	vxWgBF+bBwWPAuOcx1bNcmvryqd+i/NY2IAbTv9RBclTqRuTOAvKxVmmjGKRGNRKHT2OV80b5MQox
+	GZ3t8k5A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1tvI1V-0000000CZ6M-01Db;
+	Thu, 20 Mar 2025 15:41:33 +0000
+Date: Thu, 20 Mar 2025 08:41:32 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: Yunhui Cui <cuiyunhui@bytedance.com>
+Cc: paul.walmsley@sifive.com, palmer@dabbelt.com, aou@eecs.berkeley.edu,
+	alex@ghiti.fr, anshuman.khandual@arm.com, akpm@linux-foundation.org,
+	mingo@kernel.org, catalin.marinas@arm.com, ryan.roberts@arm.com,
+	kirill.shutemov@linux.intel.com, namcao@linutronix.de,
+	bjorn@rivosinc.com, arnd@arndb.de, stuart.menefy@codasip.com,
+	luxu.kernel@bytedance.com, vincenzo.frascino@arm.com,
+	samuel.holland@sifive.com, christophe.leroy@csgroup.eu,
+	dawei.li@shingroup.cn, rppt@kernel.org,
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] riscv: introduce the ioremap_prot() function
+Message-ID: <Z9w3LL8oZixBKM3t@infradead.org>
+References: <20250320084428.51151-1-cuiyunhui@bytedance.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <3174102.1742485088.1@warthog.procyon.org.uk>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 20 Mar 2025 15:38:08 +0000
-Message-ID: <3174103.1742485088@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250320084428.51151-1-cuiyunhui@bytedance.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Viacheslav Dubeyko <Slava.Dubeyko@ibm.com> wrote:
+> +{
+> +	phys_addr_t addr = PFN_PHYS(pfn);
+> +
+> +	/* avoid false positives for bogus PFNs, see comment in pfn_valid() */
+> +	if (PHYS_PFN(addr) != pfn)
+> +		return 0;
+> +
+> +	return memblock_is_map_memory(addr);
+> +}
+> +EXPORT_SYMBOL(pfn_is_map_memory);
 
-> > +		fret =3D ceph_fscrypt_decrypt_pages(inode, &page[pgidx],
-> > +						 off + pgsoff, ext->len);
-> > +		dout("%s: [%d] 0x%llx~0x%llx fret %d\n", __func__, i,
-> > +				ext->off, ext->len, fret);
-> > +		if (fret < 0) {
-> =
+This should not be exported or even exposed.  Please just open code it
+in the only caller.
 
-> Possibly, I am missing some logic here. But do we really need to introdu=
-ce fret?
-> Why we cannot user ret here? =
+> +void __iomem *ioremap_prot(phys_addr_t phys_addr, size_t size,
+> +			   pgprot_t pgprot)
+> +{
+> +	/* Don't allow RAM to be mapped. */
+> +	if (WARN_ON(pfn_is_map_memory(__phys_to_pfn(phys_addr))))
+> +		return NULL;
 
-> =
+Or just use pfn_valid as that's what we usually use for that check.
+Or am I missing something specific here?
 
-> > +			if (ret =3D=3D 0)
-> > +				ret =3D fret;
-> > +			break;
-> > +		}
-> > +		ret =3D pgsoff + fret;
-
-Because ret holds the amount of data so far decrypted.  We should only ret=
-urn
-an error if we didn't decrypt any (ie. ret =3D=3D 0 at the time of error).
-
-> > +static int ceph_init_request(struct netfs_io_request *rreq, struct fi=
-le *file)
-> > +{
-> > +	struct ceph_io_request *priv =3D container_of(rreq, struct ceph_io_r=
-equest, rreq);
-> > +	struct inode *inode =3D rreq->inode;
-> > +	struct ceph_client *cl =3D ceph_inode_to_client(inode);
-> > +	struct ceph_fs_client *fsc =3D ceph_inode_to_fs_client(inode);
-> > +	int got =3D 0, want =3D CEPH_CAP_FILE_CACHE;
-> > +	int ret =3D 0;
-> > +
-> > +	rreq->rsize =3D 1024 * 1024;
-> =
-
-> Why do we hardcoded rreq->rsize value?
-> =
-
-> struct ceph_mount_options {
-> 	unsigned int flags;
-> =
-
-> 	unsigned int wsize;            /* max write size */
-> 	unsigned int rsize;            /* max read size */
-> 	unsigned int rasize;           /* max readahead */
-> 	unsigned int congestion_kb;    /* max writeback in flight */
-> 	unsigned int caps_wanted_delay_min, caps_wanted_delay_max;
-> 	int caps_max;
-> 	unsigned int max_readdir;       /* max readdir result (entries) */
-> 	unsigned int max_readdir_bytes; /* max readdir result (bytes) */
-> =
-
-> 	bool new_dev_syntax;
-> =
-
-> 	/*
-> 	 * everything above this point can be memcmp'd; everything below
-> 	 * is handled in compare_mount_options()
-> 	 */
-> =
-
-> 	char *snapdir_name;   /* default ".snap" */
-> 	char *mds_namespace;  /* default NULL */
-> 	char *server_path;    /* default NULL (means "/") */
-> 	char *fscache_uniq;   /* default NULL */
-> 	char *mon_addr;
-> 	struct fscrypt_dummy_policy dummy_enc_policy;
-> };
-> =
-
-> Why we don't use fsc->mount_options->rsize?
-
-Actually, I should get rid of rreq->rsize since there's now a function,
-->prepare_read() to deal with this.
-
-> > +	loff_t limit =3D max(i_size_read(inode), fsc->max_file_size);
-> =
-
-> Do we need to take into account the quota max bytes here?
-
-Could be.
-
-> > +/*
-> > + * Size of allocations for default netfs_io_(sub)request object slabs=
- and
-> > + * mempools.  If a filesystem's request and subrequest objects fit wi=
-thin this
-> > + * size, they can use these otherwise they must provide their own.
-> > + */
-> > +#define NETFS_DEF_IO_REQUEST_SIZE (sizeof(struct netfs_io_request) + =
-24)
-> =
-
-> Why do we hardcode 24 here? What's about named constant? And why namely =
-24?
-> =
-
-> > +#define NETFS_DEF_IO_SUBREQUEST_SIZE (sizeof(struct netfs_io_subreque=
-st) + 16)
-> =
-
-> The same question about 16.
-
-See the comment.  24 allows three extra words and 16 two.  Actually, I sho=
-uld
-probably express it as a multiple of sizeof(long).  But this allows netfsl=
-ib
-to allocate (sub)request structs for ceph from the default mempool by allo=
-wing
-a little bit of extra space.
-
-David
-
+It would also be nice to just life this to common code.
