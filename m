@@ -1,28 +1,29 @@
 Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0232F224888
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 022B5224887
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:22:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742466171; cv=none; b=l8SeJthPk21yJOFqA6NZcSD//zIYzWJQ78CgMtKv0ftiFFI5n0DpVQDKwQxR+bDzwJyCSsJI+XkupmDTFXGE50xhM3uMZlX9463kbDlJhbuwpSfTx35yL/XWbcaT1ckQqz6GgsB1tNRuIEOKPyfqV2T6yCKuNibtMRXjU3em6Tc=
+	t=1742466172; cv=none; b=vDdFhQ7I1L5/9pkXlU0ZzSyfbcWVS12YHrnsmKQyTYvLWfBbBOESKjRi1HyI4HSv2qyiY/G4EDmVsKPKOgarHdzwI9fdmmmwG7yEb7k1LwiuCji5j4mAY43MKhwcBfBlu1Jj6Pn1j0IzbUTJNqFVMv/4mZhpMSPwOLy1cZQMAYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742466171; c=relaxed/simple;
-	bh=JE2b9GDG6Guj8rpfu3ni6Jy2gRqN5mPfvTix4Qj8dx4=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TZdCxib1NBm027ZODrJa7MmqHthQ3ReZWW8GHkceIEZjmFWCsjFtBAXixNsb4Umj1CXl/unCPg1EefE4oEZh84QTHgI5/ZJfF5ZdMtUQoScuhlF/uO2IpQRqpewz666BsLccUqrtzt3tvVsFrms5Ft4uQdqCfqV+H3pzIXkm3xI=
+	s=arc-20240116; t=1742466172; c=relaxed/simple;
+	bh=e1hDxFwz9Wh9QDJad/DIQXo/kcO0j0HcSZMPTd8kGYY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=AQnc3wA094UNC3oGRnWMYWvcIx1vEe2WkZAkHTXl3+fKcIFarPFgUCHze4dNNDjHdYkG8oFLAU0rOK47cYwHdEcueEK780fB6v6Tg5hzFhkZEiqzzVv/88DQALMT0QszYmkNLCXLZaIIz4UgHuRNth5aNbuKgCsrOJ8QMn/nbZ8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZJM4v284mz2CdC6;
-	Thu, 20 Mar 2025 18:19:27 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.17])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZJM513RVsz2CdCD;
+	Thu, 20 Mar 2025 18:19:33 +0800 (CST)
 Received: from kwepemd500013.china.huawei.com (unknown [7.221.188.12])
-	by mail.maildlp.com (Postfix) with ESMTPS id 9CC4114034D;
-	Thu, 20 Mar 2025 18:22:41 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id C8F041A0188;
+	Thu, 20 Mar 2025 18:22:47 +0800 (CST)
 Received: from localhost.huawei.com (10.169.71.169) by
  kwepemd500013.china.huawei.com (7.221.188.12) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1748.10; Thu, 20 Mar 2025 18:22:40 +0800
+ 15.2.1748.10; Thu, 20 Mar 2025 18:22:46 +0800
 From: Yongbang Shi <shiyongbang@huawei.com>
 To: <xinliang.liu@linaro.org>, <tiantao6@hisilicon.com>,
 	<maarten.lankhorst@linux.intel.com>, <mripard@kernel.org>,
@@ -33,10 +34,12 @@ CC: <liangjian010@huawei.com>, <chenjianmin@huawei.com>,
 	<shenjian15@huawei.com>, <shaojijie@huawei.com>,
 	<jani.nikula@linux.intel.com>, <dri-devel@lists.freedesktop.org>,
 	<linux-kernel@vger.kernel.org>
-Subject: [PATCH v8 drm-dp 0/9] Add HPD, getting EDID, colorbar features in DP function
-Date: Thu, 20 Mar 2025 18:14:46 +0800
-Message-ID: <20250320101455.2538835-1-shiyongbang@huawei.com>
+Subject: [PATCH v8 drm-dp 5/9] drm/hisilicon/hibmc: Getting connector info and EDID by using AUX channel
+Date: Thu, 20 Mar 2025 18:14:51 +0800
+Message-ID: <20250320101455.2538835-6-shiyongbang@huawei.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20250320101455.2538835-1-shiyongbang@huawei.com>
+References: <20250320101455.2538835-1-shiyongbang@huawei.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,108 +53,126 @@ X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
 
 From: Baihan Li <libaihan@huawei.com>
 
-To support DP HPD, edid printing, and colorbar display features based on
-the Hisislcon DP devices.
+Add registering drm_aux and use it to get connector edid with drm
+functions. Add ddc channel in connector initialization to put drm_aux
+in drm_connector.
+
+Signed-off-by: Baihan Li <libaihan@huawei.com>
+Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 ---
 ChangeLog:
 v7 -> v8:
   - use drm_edid_read() in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
-  v7: https://lore.kernel.org/all/20250319032435.1119469-1-shiyongbang@huawei.com/
 v6 -> v7:
   - add if statement about drm aux in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
-  v6: https://lore.kernel.org/all/20250310040138.2025715-1-shiyongbang@huawei.com/
 v5 -> v6:
-  - fix the DP_SERDES_VOL2_PRE0 value after electrical test.
   - move the detect_ctx() to the patch 7/9.
-  - add detect_ctx with 200ms delay, suggested by Dmitry Baryshkov.
-  v5: https://lore.kernel.org/all/20250307101640.4003229-1-shiyongbang@huawei.com/
-v4 -> v5:
-  - add commit log about hibmc_kms_init(), suggested by Dmitry Baryshkov.
-  - fix the format of block comments, suggested by Dmitry Baryshkov.
-  - add hibmc_dp_get_serdes_rate_cfg() to correct transferring serdes cfg.
-  - separate the vga part commit, suggested by Dmitry Baryshkov.
-  - remove pci_disable_msi() in hibmc_unload()
-  v4: https://lore.kernel.org/all/20250305112647.2344438-1-shiyongbang@huawei.com/
-v3 -> v4:
-  - fix the serdes cfg in hibmc_dp_serdes_set_tx_cfg(), suggested by Dmitry Baryshkov.
-  - move the dp serdes registers to dp_reg.h, suggested by Dmitry Baryshkov.
-  - add comments for if-statement of dp_init(), suggested by Dmitry Baryshkov.
-  - fix the comment log to imperative sentence, suggested by Dmitry Baryshkov.
-  - add comments in hibmc_control_write(), suggested by Dmitry Baryshkov.
-  - add link reset of rates and lanes in pre link training process, suggested by Dmitry Baryshkov.
-  - add vdac detect and connected/disconnected status to enable HPD process, suggested by Dmitry Baryshkov.
-  - remove a drm_client, suggested by Dmitry Baryshkov.
-  - fix build errors reported by kernel test robot <lkp@intel.com>
-    Closes: https://lore.kernel.org/oe-kbuild-all/202502231304.BCzV4Y8D-lkp@intel.com/
-  v3: https://lore.kernel.org/all/20250222025102.1519798-1-shiyongbang@huawei.com/
 v2 -> v3:
-  - restructuring the header p_reg.h, suggested by Dmitry Baryshkov.
-  - add commit log about dp serdes, suggested by Dmitry Baryshkov.
-  - return value in hibmc_dp_serdes_init(), suggested by Dmitry Baryshkov.
-  - add static const in the array of serdes_tx_cfg[], suggested by Dmitry Baryshkov.
-  - change drm_warn to drm_dbg_dp, suggested by Dmitry Baryshkov.
-  - add explanations about dp serdes macros, suggested by Dmitry Baryshkov.
-  - change commit to an imperative sentence, suggested by Dmitry Baryshkov.
-  - put HIBMC_DP_HOST_SERDES_CTRL in dp_serdes.h, suggested by Dmitry Baryshkov.
-  - split the patch into two parts, suggested by Dmitry Baryshkov.
   - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
-  - rewrite the commit log, suggested by Dmitry Baryshkov.
-  - move colorbar debugfs entry to this patch, suggested by Dmitry Baryshkov.
-  - change binary format to integer format, suggested by Dmitry Baryshkov.
-  - remove mdelay(100) hpd function in ISR, suggested by Dmitry Baryshkov.
-  - remove enble_display in ISR, suggested by Dmitry Baryshkov.
-  - change drm_kms_helper_connector_hotplug_event() to
-    drm_connector_helper_hpd_irq_event(), suggested by Dmitry Baryshkov.
-  - move macros to dp_reg.h, suggested by Dmitry Baryshkov.
-  - remove struct irqs, suggested by Dmitry Baryshkov.
-  - split this patch into two parts, suggested by Dmitry Baryshkov.
-  v2: https://lore.kernel.org/all/20250210144959.100551-1-shiyongbang@huawei.com/
 v1 -> v2:
-  - splittting the patch and add more detailed the changes in the commit message, suggested by Dmitry Baryshkov.
-  - changing all names of dp phy to dp serdes.
   - deleting type conversion, suggested by Dmitry Baryshkov.
   - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
-  - add colorbar introduction in commit, suggested by Dmitry Baryshkov.
-  - deleting edid decoder and its debugfs, suggested by Dmitry Baryshkov.
-  - using debugfs_init() callback, suggested by Dmitry Baryshkov.
-  - splittting colorbar and debugfs in different patches, suggested by Dmitry Baryshkov.
-  - optimizing the description in commit message, suggested by Dmitry Baryshkov.
-  - add mdelay(100) comments, suggested by Dmitry Baryshkov.
-  - deleting display enable in hpd event, suggested by Dmitry Baryshkov.
-  v1: https://lore.kernel.org/all/20250127032024.1542219-1-shiyongbang@huawei.com/
 ---
+ drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  3 +-
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    | 31 ++++++++++++++++---
+ .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  5 +++
+ 3 files changed, 33 insertions(+), 6 deletions(-)
 
-Baihan Li (9):
-  drm/hisilicon/hibmc: Restructuring the header dp_reg.h
-  drm/hisilicon/hibmc: Add dp serdes cfg to adjust serdes rate, voltage
-    and pre-emphasis
-  drm/hisilicon/hibmc: Add dp serdes cfg in dp process
-  drm/hisilicon/hibmc: Refactor the member of drm_aux in struct hibmc_dp
-  drm/hisilicon/hibmc: Getting connector info and EDID by using AUX
-    channel
-  drm/hisilicon/hibmc: Add colorbar-cfg feature and its debugfs file
-  drm/hisilicon/hibmc: Enable this hot plug detect of irq feature
-  drm/hisilicon/hibmc: Add MSI irq getting and requesting for HPD
-  drm/hisilicon/hibmc: Add vga connector detect functions
-
- drivers/gpu/drm/hisilicon/hibmc/Makefile      |   3 +-
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  16 ++-
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_comm.h  |  10 +-
- .../gpu/drm/hisilicon/hibmc/dp/dp_config.h    |   2 +
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.c    |  91 +++++++++++-
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_hw.h    |  36 +++++
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_link.c  |  97 +++++++++----
- drivers/gpu/drm/hisilicon/hibmc/dp/dp_reg.h   | 130 +++++++++++++-----
- .../gpu/drm/hisilicon/hibmc/dp/dp_serdes.c    |  71 ++++++++++
- .../drm/hisilicon/hibmc/hibmc_drm_debugfs.c   | 104 ++++++++++++++
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    |  74 +++++++++-
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.c   |  87 +++++++++---
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  12 ++
- .../gpu/drm/hisilicon/hibmc/hibmc_drm_vdac.c  |   3 +
- 14 files changed, 634 insertions(+), 102 deletions(-)
- create mode 100644 drivers/gpu/drm/hisilicon/hibmc/dp/dp_serdes.c
- create mode 100644 drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_debugfs.c
-
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
+index ded9e7ce887a..e0bb9b14d9d8 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
+@@ -161,7 +161,8 @@ void hibmc_dp_aux_init(struct hibmc_dp *dp)
+ 				 HIBMC_DP_MIN_PULSE_NUM);
+ 
+ 	dp->aux.transfer = hibmc_dp_aux_xfer;
+-	dp->aux.is_remote = 0;
++	dp->aux.name = kasprintf(GFP_KERNEL, "HIBMC DRM dp aux");
++	dp->aux.drm_dev = dp->drm_dev;
+ 	drm_dp_aux_init(&dp->aux);
+ 	dp->dp_dev->aux = &dp->aux;
+ }
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+index 603d6b198a54..8e5ee816dfbd 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+@@ -15,11 +15,16 @@
+ 
+ static int hibmc_dp_connector_get_modes(struct drm_connector *connector)
+ {
++	const struct drm_edid *drm_edid;
+ 	int count;
+ 
+-	count = drm_add_modes_noedid(connector, connector->dev->mode_config.max_width,
+-				     connector->dev->mode_config.max_height);
+-	drm_set_preferred_mode(connector, 1024, 768); // temporary implementation
++	drm_edid = drm_edid_read(connector);
++
++	drm_edid_connector_update(connector, drm_edid);
++
++	count = drm_edid_connector_add_modes(connector);
++
++	drm_edid_free(drm_edid);
+ 
+ 	return count;
+ }
+@@ -28,12 +33,28 @@ static const struct drm_connector_helper_funcs hibmc_dp_conn_helper_funcs = {
+ 	.get_modes = hibmc_dp_connector_get_modes,
+ };
+ 
++static int hibmc_dp_late_register(struct drm_connector *connector)
++{
++	struct hibmc_dp *dp = to_hibmc_dp(connector);
++
++	return drm_dp_aux_register(&dp->aux);
++}
++
++static void hibmc_dp_early_unregister(struct drm_connector *connector)
++{
++	struct hibmc_dp *dp = to_hibmc_dp(connector);
++
++	drm_dp_aux_unregister(&dp->aux);
++}
++
+ static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
+ 	.reset = drm_atomic_helper_connector_reset,
+ 	.fill_modes = drm_helper_probe_single_connector_modes,
+ 	.destroy = drm_connector_cleanup,
+ 	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+ 	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
++	.late_register = hibmc_dp_late_register,
++	.early_unregister = hibmc_dp_early_unregister,
+ };
+ 
+ static inline int hibmc_dp_prepare(struct hibmc_dp *dp, struct drm_display_mode *mode)
+@@ -103,8 +124,8 @@ int hibmc_dp_init(struct hibmc_drm_private *priv)
+ 
+ 	drm_encoder_helper_add(encoder, &hibmc_dp_encoder_helper_funcs);
+ 
+-	ret = drm_connector_init(dev, connector, &hibmc_dp_conn_funcs,
+-				 DRM_MODE_CONNECTOR_DisplayPort);
++	ret = drm_connector_init_with_ddc(dev, connector, &hibmc_dp_conn_funcs,
++					  DRM_MODE_CONNECTOR_DisplayPort, &dp->aux.ddc);
+ 	if (ret) {
+ 		drm_err(dev, "init dp connector failed: %d\n", ret);
+ 		return ret;
+diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+index d982f1e4b958..3ddd71aada66 100644
+--- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
++++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+@@ -47,6 +47,11 @@ static inline struct hibmc_vdac *to_hibmc_vdac(struct drm_connector *connector)
+ 	return container_of(connector, struct hibmc_vdac, connector);
+ }
+ 
++static inline struct hibmc_dp *to_hibmc_dp(struct drm_connector *connector)
++{
++	return container_of(connector, struct hibmc_dp, connector);
++}
++
+ static inline struct hibmc_drm_private *to_hibmc_drm_private(struct drm_device *dev)
+ {
+ 	return container_of(dev, struct hibmc_drm_private, dev);
 -- 
 2.33.0
 
