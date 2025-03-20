@@ -1,33 +1,33 @@
-Received: from smtp-42aa.mail.infomaniak.ch (smtp-42aa.mail.infomaniak.ch [84.16.66.170])
+Received: from smtp-1908.mail.infomaniak.ch (smtp-1908.mail.infomaniak.ch [185.125.25.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D64D8227EA1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2447D227EBB
 	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.170
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742498115; cv=none; b=XpHpcDAWCmk1rJqTD7cNViNjoehpfF7pSc66bzC4xmPajHkyEwzAXpflntauY7JtXbJuz9KPx2DXz72ottQ1c9P0RA4HSuOCQsdSxkddHsHQ9DosXfGGXSjbLvRW8VHs+rLEN227J4FshsofdHw7+7amHlNOSx6bb01Roki5eyg=
+	t=1742498116; cv=none; b=hBJt7jJzrFmY+lq6V48FsbJClB/+L+4tm13dMrFF8Zq0zAHjueJQqWKPDVvRnmeYCgiVushXw2JhErghhVWOdNHNZv0MGjUWJbem4Tbout+tSbLOx+nTFTydUAWqrOaR/n3kVF3ZCHQTAC8HA4Y4EEtwjui5UIRCPYBXQbkXtOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742498115; c=relaxed/simple;
-	bh=4APA0yd3c+w7p33UrZkR+u3PdFp86U0HE/ww9K2v2Ug=;
+	s=arc-20240116; t=1742498116; c=relaxed/simple;
+	bh=72bSzaF/WAyhB2+cT35s56a62hawTZ8Sl1A2BYgdIqY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YIOZuAj0tQ1wm4wYQHWw9QDyWGWvLhXU3CC8DsBJFOBSjl5Pkd7K5L4e1XC6Xx1NblI8OjvlJVe8yrM4EeSgyquyXDjHkXkfKOsR539EoHSpKSfbFhwcHh2mL8eAWDe+Hd3Ai8d8+wNpe6F2r17RD5sMLu1Hz67uHXHS3GBZcRo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=t8sb4QrQ; arc=none smtp.client-ip=84.16.66.170
+	 MIME-Version:Content-Type; b=UTvLbQDJQs2zIGn1q2l5A+2QI0F7o+sNuMX56iXA48fTVTm64lcWrlO+IDhW1RHpXJb6w5mmQM30iow6TjKkJnt3L1XMUVuuO9sNUxwWVvdsdCg4gvp2raDOVFkheIuXrML6kawvL4LqVhZmKq/suVYtRjH2xIAyWyTxqyjxttU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=jpNaEG5V; arc=none smtp.client-ip=185.125.25.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="t8sb4QrQ"
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="jpNaEG5V"
 Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZp56XQFzwgX;
-	Thu, 20 Mar 2025 20:07:25 +0100 (CET)
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpp57sdzxll;
+	Thu, 20 Mar 2025 20:08:02 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1742497645;
-	bh=zr5gmFSYD1tD7fpfRv2XYUIy9g8rF8FEdaY+2pUts9w=;
+	s=20191114; t=1742497682;
+	bh=VBbvjZjOvkXxWgsTKZSVby+Do+mkG3vl/fpWp5738dQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t8sb4QrQAnScemqm3VR/dsDjqAgP/joYvY+9TJHKGKtYbZCjNsHrg7R248bPi4WXU
-	 2+B5vOcKw3ss65jdzQ1Dl3VinBLjcpwF9oezlD+gHjL8w837FUkGICFhWi+Ir7lcBt
-	 RSkx/AdBz/HUbsbnq3A40ZAU2ENEBxROhHzNz4o0=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZp46cCTzPnK;
-	Thu, 20 Mar 2025 20:07:24 +0100 (CET)
+	b=jpNaEG5VgYPZsjLWHAR8KA08XvnE36oSH3sIm8IL7FAXh3H9Wps2wbNc0jgLmbwFA
+	 jRe1V5lXzv2dixF1CTrv7X35JeGQ4ChDDWmrAcNBP/V6lkde/nde9jhNeNgo1RKfC+
+	 QqJ3564S5BryolPK1oIn7E3gI3aAT8j8mEXiSFks=
+Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpn4lpDzQSy;
+	Thu, 20 Mar 2025 20:08:01 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -59,9 +59,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v7 01/28] lsm: Add audit_log_lsm_data() helper
-Date: Thu, 20 Mar 2025 20:06:50 +0100
-Message-ID: <20250320190717.2287696-2-mic@digikod.net>
+Subject: [PATCH v7 24/28] selftests/landlock: Add audit tests for ptrace
+Date: Thu, 20 Mar 2025 20:07:13 +0100
+Message-ID: <20250320190717.2287696-25-mic@digikod.net>
 In-Reply-To: <20250320190717.2287696-1-mic@digikod.net>
 References: <20250320190717.2287696-1-mic@digikod.net>
 Precedence: bulk
@@ -74,117 +74,200 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Extract code from dump_common_audit_data() into the audit_log_lsm_data()
-helper. This helps reuse common LSM audit data while not abusing
-AUDIT_AVC records because of the common_lsm_audit() helper.
+Add tests for all ptrace actions checking "blockers=ptrace" records.
 
-Cc: Casey Schaufler <casey@schaufler-ca.com>
-Cc: James Morris <jmorris@namei.org>
-Cc: Serge E. Hallyn <serge@hallyn.com>
-Acked-by: Paul Moore <paul@paul-moore.com>
-Depends-on: 7ccbe076d987 ("lsm: Only build lsm_audit.c if CONFIG_SECURITY and CONFIG_AUDIT are set")
+This also improves PTRACE_TRACEME and PTRACE_ATTACH tests by making sure
+that the restrictions comes from Landlock, and with the expected
+process.  These extended tests are like enhanced errno checks that make
+sure Landlock enforcement is consistent.
+
+Cc: Günther Noack <gnoack@google.com>
+Cc: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
 
-Changes since v4:
-- Add Depends-on tag.
+Changes since v6:
+- Check audit_count_records() calls for audit errors.
+- Update and fix PTRACE_TRACEME test to reflect kernel change.
+
+Changes since v5:
+- Move all audit tests to a new audit.trace test suite.
+- Simplify tests by only checking PTRACE_TRACEME and PTRACE_ATTACH with
+  one scenario.  This is preferable to not impact existing tests.
+- Make sure there is no unknown Landlock audit record.
 
 Changes since v3:
-- Rebase on top of the v6.13's get_task_comm() fix.
-- Add Acked-by Paul.
+- Update test coverage.
 
-Changes since v1:
-- Fix commit message (spotted by Paul).
-- Constify dump_common_audit_data()'s and audit_log_lsm_data()'s "a"
-  argument.
-- Fix build without CONFIG_NET: see previous patch.
+Changes since v2:
+- New patch.
 ---
- include/linux/lsm_audit.h |  8 ++++++++
- security/lsm_audit.c      | 27 ++++++++++++++++++---------
- 2 files changed, 26 insertions(+), 9 deletions(-)
+ .../testing/selftests/landlock/ptrace_test.c  | 140 ++++++++++++++++++
+ 1 file changed, 140 insertions(+)
 
-diff --git a/include/linux/lsm_audit.h b/include/linux/lsm_audit.h
-index e13d2f947b51..bddd694f7c4c 100644
---- a/include/linux/lsm_audit.h
-+++ b/include/linux/lsm_audit.h
-@@ -132,6 +132,9 @@ void common_lsm_audit(struct common_audit_data *a,
- 	void (*pre_audit)(struct audit_buffer *, void *),
- 	void (*post_audit)(struct audit_buffer *, void *));
- 
-+void audit_log_lsm_data(struct audit_buffer *ab,
-+			const struct common_audit_data *a);
-+
- #else /* CONFIG_AUDIT */
- 
- static inline void common_lsm_audit(struct common_audit_data *a,
-@@ -140,6 +143,11 @@ static inline void common_lsm_audit(struct common_audit_data *a,
- {
- }
- 
-+static inline void audit_log_lsm_data(struct audit_buffer *ab,
-+			const struct common_audit_data *a)
-+{
-+}
-+
- #endif /* CONFIG_AUDIT */
- 
- #endif
-diff --git a/security/lsm_audit.c b/security/lsm_audit.c
-index 52db886dbba8..a61c7ebdb6a7 100644
---- a/security/lsm_audit.c
-+++ b/security/lsm_audit.c
-@@ -189,16 +189,13 @@ static inline void print_ipv4_addr(struct audit_buffer *ab, __be32 addr,
- }
- 
- /**
-- * dump_common_audit_data - helper to dump common audit data
-+ * audit_log_lsm_data - helper to log common LSM audit data
-  * @ab : the audit buffer
-  * @a : common audit data
-- *
+diff --git a/tools/testing/selftests/landlock/ptrace_test.c b/tools/testing/selftests/landlock/ptrace_test.c
+index 8f31b673ff2d..4e356334ecb7 100644
+--- a/tools/testing/selftests/landlock/ptrace_test.c
++++ b/tools/testing/selftests/landlock/ptrace_test.c
+@@ -4,6 +4,7 @@
+  *
+  * Copyright © 2017-2020 Mickaël Salaün <mic@digikod.net>
+  * Copyright © 2019-2020 ANSSI
++ * Copyright © 2024-2025 Microsoft Corporation
   */
--static void dump_common_audit_data(struct audit_buffer *ab,
--				   struct common_audit_data *a)
-+void audit_log_lsm_data(struct audit_buffer *ab,
-+			const struct common_audit_data *a)
- {
--	char comm[sizeof(current->comm)];
--
- 	/*
- 	 * To keep stack sizes in check force programmers to notice if they
- 	 * start making this union too large!  See struct lsm_network_audit
-@@ -206,9 +203,6 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 	 */
- 	BUILD_BUG_ON(sizeof(a->u) > sizeof(void *)*2);
  
--	audit_log_format(ab, " pid=%d comm=", task_tgid_nr(current));
--	audit_log_untrustedstring(ab, get_task_comm(comm, current));
--
- 	switch (a->type) {
- 	case LSM_AUDIT_DATA_NONE:
- 		return;
-@@ -431,6 +425,21 @@ static void dump_common_audit_data(struct audit_buffer *ab,
- 	} /* switch (a->type) */
+ #define _GNU_SOURCE
+@@ -17,6 +18,7 @@
+ #include <sys/wait.h>
+ #include <unistd.h>
+ 
++#include "audit.h"
+ #include "common.h"
+ 
+ /* Copied from security/yama/yama_lsm.c */
+@@ -434,4 +436,142 @@ TEST_F(hierarchy, trace)
+ 		_metadata->exit_code = KSFT_FAIL;
  }
  
-+/**
-+ * dump_common_audit_data - helper to dump common audit data
-+ * @ab : the audit buffer
-+ * @a : common audit data
-+ */
-+static void dump_common_audit_data(struct audit_buffer *ab,
-+				   const struct common_audit_data *a)
++static int matches_log_ptrace(struct __test_metadata *const _metadata,
++			      int audit_fd, const pid_t opid)
 +{
-+	char comm[sizeof(current->comm)];
++	static const char log_template[] = REGEX_LANDLOCK_PREFIX
++		" blockers=ptrace opid=%d ocomm=\"ptrace_test\"$";
++	char log_match[sizeof(log_template) + 10];
++	int log_match_len;
 +
-+	audit_log_format(ab, " pid=%d comm=", task_tgid_nr(current));
-+	audit_log_untrustedstring(ab, get_task_comm(comm, current));
-+	audit_log_lsm_data(ab, a);
++	log_match_len =
++		snprintf(log_match, sizeof(log_match), log_template, opid);
++	if (log_match_len > sizeof(log_match))
++		return -E2BIG;
++
++	return audit_match_record(audit_fd, AUDIT_LANDLOCK_ACCESS, log_match,
++				  NULL);
 +}
 +
- /**
-  * common_lsm_audit - generic LSM auditing function
-  * @a:  auxiliary audit data
++FIXTURE(audit)
++{
++	struct audit_filter audit_filter;
++	int audit_fd;
++};
++
++FIXTURE_SETUP(audit)
++{
++	disable_caps(_metadata);
++	set_cap(_metadata, CAP_AUDIT_CONTROL);
++	self->audit_fd = audit_init_with_exe_filter(&self->audit_filter);
++	EXPECT_LE(0, self->audit_fd);
++	clear_cap(_metadata, CAP_AUDIT_CONTROL);
++}
++
++FIXTURE_TEARDOWN_PARENT(audit)
++{
++	EXPECT_EQ(0, audit_cleanup(-1, NULL));
++}
++
++/* Test PTRACE_TRACEME and PTRACE_ATTACH for parent and child. */
++TEST_F(audit, trace)
++{
++	pid_t child;
++	int status;
++	int pipe_child[2], pipe_parent[2];
++	int yama_ptrace_scope;
++	char buf_parent;
++	struct audit_records records;
++
++	/* Makes sure there is no superfluous logged records. */
++	EXPECT_EQ(0, audit_count_records(self->audit_fd, &records));
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
++
++	yama_ptrace_scope = get_yama_ptrace_scope();
++	ASSERT_LE(0, yama_ptrace_scope);
++
++	if (yama_ptrace_scope > YAMA_SCOPE_DISABLED)
++		TH_LOG("Incomplete tests due to Yama restrictions (scope %d)",
++		       yama_ptrace_scope);
++
++	/*
++	 * Removes all effective and permitted capabilities to not interfere
++	 * with cap_ptrace_access_check() in case of PTRACE_MODE_FSCREDS.
++	 */
++	drop_caps(_metadata);
++
++	ASSERT_EQ(0, pipe2(pipe_child, O_CLOEXEC));
++	ASSERT_EQ(0, pipe2(pipe_parent, O_CLOEXEC));
++
++	child = fork();
++	ASSERT_LE(0, child);
++	if (child == 0) {
++		char buf_child;
++
++		ASSERT_EQ(0, close(pipe_parent[1]));
++		ASSERT_EQ(0, close(pipe_child[0]));
++
++		/* Waits for the parent to be in a domain, if any. */
++		ASSERT_EQ(1, read(pipe_parent[0], &buf_child, 1));
++
++		/* Tests child PTRACE_TRACEME. */
++		EXPECT_EQ(-1, ptrace(PTRACE_TRACEME));
++		EXPECT_EQ(EPERM, errno);
++		/* We should see the child process. */
++		EXPECT_EQ(0, matches_log_ptrace(_metadata, self->audit_fd,
++						getpid()));
++
++		EXPECT_EQ(0, audit_count_records(self->audit_fd, &records));
++		EXPECT_EQ(0, records.access);
++		/* Checks for a domain creation. */
++		EXPECT_EQ(1, records.domain);
++
++		/*
++		 * Signals that the PTRACE_ATTACH test is done and the
++		 * PTRACE_TRACEME test is ongoing.
++		 */
++		ASSERT_EQ(1, write(pipe_child[1], ".", 1));
++
++		/* Waits for the parent PTRACE_ATTACH test. */
++		ASSERT_EQ(1, read(pipe_parent[0], &buf_child, 1));
++		_exit(_metadata->exit_code);
++		return;
++	}
++
++	ASSERT_EQ(0, close(pipe_child[1]));
++	ASSERT_EQ(0, close(pipe_parent[0]));
++	create_domain(_metadata);
++
++	/* Signals that the parent is in a domain. */
++	ASSERT_EQ(1, write(pipe_parent[1], ".", 1));
++
++	/*
++	 * Waits for the child to test PTRACE_ATTACH on the parent and start
++	 * testing PTRACE_TRACEME.
++	 */
++	ASSERT_EQ(1, read(pipe_child[0], &buf_parent, 1));
++
++	/* The child should not be traced by the parent. */
++	EXPECT_EQ(-1, ptrace(PTRACE_DETACH, child, NULL, 0));
++	EXPECT_EQ(ESRCH, errno);
++
++	/* Tests PTRACE_ATTACH on the child. */
++	EXPECT_EQ(-1, ptrace(PTRACE_ATTACH, child, NULL, 0));
++	EXPECT_EQ(EPERM, errno);
++	EXPECT_EQ(0, matches_log_ptrace(_metadata, self->audit_fd, child));
++
++	/* Signals that the parent PTRACE_ATTACH test is done. */
++	ASSERT_EQ(1, write(pipe_parent[1], ".", 1));
++	ASSERT_EQ(child, waitpid(child, &status, 0));
++	if (WIFSIGNALED(status) || !WIFEXITED(status) ||
++	    WEXITSTATUS(status) != EXIT_SUCCESS)
++		_metadata->exit_code = KSFT_FAIL;
++
++	/* Makes sure there is no superfluous logged records. */
++	EXPECT_EQ(0, audit_count_records(self->audit_fd, &records));
++	EXPECT_EQ(0, records.access);
++	EXPECT_EQ(0, records.domain);
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.49.0
 
