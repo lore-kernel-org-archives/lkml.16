@@ -1,32 +1,33 @@
-Received: from smtp-bc0f.mail.infomaniak.ch (smtp-bc0f.mail.infomaniak.ch [45.157.188.15])
+Received: from smtp-bc09.mail.infomaniak.ch (smtp-bc09.mail.infomaniak.ch [45.157.188.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF7BF1C5F2C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:07:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F95227BA1
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:07:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497657; cv=none; b=uAS8ItYFvoO5t00jQ1zXD/1Z+8+MRqIxzV51yE3Qy/2qgFShlQbgTS0hNIBIGPvZeYO02pxEmMMSHNCiZ7DeltDivaipSR6ztr5rPwNyioHclwOjx2TTy2UziHfufbLzkOLDOuKvaD9Mk5fGiC5dtfgVoc3tQbXS05Z+yldn5n0=
+	t=1742497659; cv=none; b=kc/AKr6+LJ3/ep0hEn0PqjxClp3p2lcgw+TpHQSFpkZrIjMde84dUxiYrx3qwHMJgBRz7uDE3u2CE39dLqualVjj1dleqeO2p1wLhm8A8gb1e7letUNmOierOsBi+1jh34HONj+DaiUS4s7lYgcTIP22XlN1d5FoC//CCIKZSp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497657; c=relaxed/simple;
-	bh=rMHUMHua2A9bGKmJCg698wcuFg6v/Q8cRiOUssdd7JQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PoCFS3ogF/ZueNmyzDfC8r8FXzcQu1pN+w0PmpuvkFev0C/eB7LMPM1DYPjDqed74ep9HJibAC3uRMhK1CmBqKwNu1evnyLJinOMxBsIOK9oTEXc1QL4wBKcXMEtb8PcqOY2q412XWYJagCtG8RR9iOHLOgBelg1VB1vXz6kao0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=qO9CzJw5; arc=none smtp.client-ip=45.157.188.15
+	s=arc-20240116; t=1742497659; c=relaxed/simple;
+	bh=ogmOObyQYm429HQGtG7XSlNzoUCGyjARKRcSitcNRpY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=h5nT0PZekMM9+vdEE1gNpMzXcdoCM7lRWr7qjmszYgdetK+zG9utHz8QIAVUBcxkVIWnZDGQM88Ac8xNX6Z6/+fBZanF/6pg/XdoJPxoVSCQeRG8zxqKVj3/OLiHO+BdPXPn9TORKU584YzS4OEfWFReRLx1aEBmpjhdKkArJho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=soF+khba; arc=none smtp.client-ip=45.157.188.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="qO9CzJw5"
-Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZp42DZTzK4n;
-	Thu, 20 Mar 2025 20:07:24 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="soF+khba"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZp92T6SzJJH;
+	Thu, 20 Mar 2025 20:07:29 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1742497644;
-	bh=JbWUiTwrW2cLQ+5RJ0O6hjQPCipmh6twonJvlRboMd8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=qO9CzJw5x+Npblk4fGC5oRbeBd+fKctI82xRpS9zCedGRpNeCYEcZ5I6mjd8hiX50
-	 mvbCt3tGkmUjyNXMYqTbae6kyOHx4JSVU4wFVf3BWusOIpwvQ8CUvXPDs2bQ0PkGPm
-	 Iiceci2qC8fqA8RZStoNYtGqbYNl2vYB99HJ0QkY=
-Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZp15wYgz52j;
-	Thu, 20 Mar 2025 20:07:21 +0100 (CET)
+	s=20191114; t=1742497649;
+	bh=qEGd0lERgaH2QLpPujm2sHK6D8gJ29JKPp1dnStaz68=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=soF+khbai1pfcSFFBtAaIMDtaZ+GutL1/QqgwDJ2IYUVEqdPhTiNvPlLJzBTCyT7X
+	 U1+ng2RYpghikUn8Om45cNHlo32aKUg8y239igVR6CiP1iKWAiTb8njNtNh10cKcM0
+	 16IH9Fxd4jbb9PUM+gyCs7actcH1r2BHqLILDKww=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZp82tbLzXb4;
+	Thu, 20 Mar 2025 20:07:28 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -58,9 +59,11 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v7 00/28] Landlock audit support
-Date: Thu, 20 Mar 2025 20:06:49 +0100
-Message-ID: <20250320190717.2287696-1-mic@digikod.net>
+Subject: [PATCH v7 03/28] landlock: Move domain hierarchy management
+Date: Thu, 20 Mar 2025 20:06:52 +0100
+Message-ID: <20250320190717.2287696-4-mic@digikod.net>
+In-Reply-To: <20250320190717.2287696-1-mic@digikod.net>
+References: <20250320190717.2287696-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,184 +74,188 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Hi,
+Create a new domain.h file containing the struct landlock_hierarchy
+definition and helpers.  This type will grow with audit support.  This
+also prepares for a new domain type.
 
-This patch series adds audit support to Landlock.
+Cc: Günther Noack <gnoack@google.com>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+---
 
-Logging denied requests is useful for different use cases:
-- sysadmins: to look for users' issues,
-- security experts: to detect attack attempts,
-- power users: to understand denials,
-- developers: to ease sandboxing support and get feedback from users.
+Changes since v6:
+- Clean up headers.
 
-Because of its unprivileged nature, Landlock can compose standalone
-security policies (i.e. domains).  To make logs useful, they need to
-contain the most relevant Landlock domain that denied an action, and the
-reason of such denial.  This translates to the latest nested domain and
-the related blockers: missing access rights or other kind of
-restrictions.
+Changes since v4:
+- Revert v3 changes because of the new audit rule patch removal.
 
-# Main changes from previous version
+Changes since v3:
+- Export landlock_get_hierarchy() and landlock_put_hierarchy().
+- Clean up Makefile entries.
 
-A lot of new tests for domain layers, filesystem, and netwoking.  the
-previous test race condition is fixed.  Test coverage is now 94%!
-
-Some issues fixed thanks to the new tests, code simplification, a few
-cosmetic changes, and an improved documentation.
-
-This series is rebased on top of these fixes:
-https://lore.kernel.org/r/20250318161443.279194-1-mic@digikod.net
-
-# Design
-
-Log records are created for any denied actions caused by a Landlock
-policy, which means that a well-sandboxed applications should not log
-anything except for unattended access requests that might be the result
-of attacks or bugs.
-
-However, sandbox tools creating restricted environments could lead to
-abundant log entries because the sandboxed processes may not be aware of
-the related restrictions.  To avoid log spam, the
-landlock_restrict_self(2) syscall gets new flags to not log denials
-related to this specific domain.  Except for well-understood exceptions,
-these flags should not be set.  Indeed, applications sandboxing
-themselves should only try to bypass their own sandbox if they are
-compromised, which should ring a bell thanks to log events.
-
-When an action is denied, the related Landlock domain ID is specified.
-If this domain was not previously described in a log record, one is
-created.  This record contains the domain ID, its creation time, and
-informations about the process that enforced the restriction (at the
-time of the call to landlock_restrict_self): PID, UID, executable path,
-and name (comm).
-
-This new approach also brings building blocks for an upcoming
-unprivileged introspection interface.  The unique Landlock IDs will be
-useful to tie audit log entries to running processes, and to get
-properties of the related Landlock domains.  This will replace the
-previously logged ruleset properties.
-
-# Samples
-
-Here are two examples of log events (see serial numbers):
-
-$ LL_FS_RO=/ LL_FS_RW=/ LL_SCOPED=s LL_FORCE_LOG=1 ./sandboxer kill 1
-
-  type=LANDLOCK_ACCESS msg=audit(1729738800.268:30): domain=1a6fdc66f blockers=scope.signal opid=1 ocomm="systemd"
-  type=LANDLOCK_DOMAIN msg=audit(1729738800.268:30): domain=1a6fdc66f status=allocated mode=enforcing pid=286 uid=0 exe="/root/sandboxer" comm="sandboxer"
-  type=SYSCALL msg=audit(1729738800.268:30): arch=c000003e syscall=62 success=no exit=-1 [..] ppid=272 pid=286 auid=0 uid=0 gid=0 [...] comm="kill" [...]
-  type=PROCTITLE msg=audit(1729738800.268:30): proctitle=6B696C6C0031
-  type=LANDLOCK_DOMAIN msg=audit(1729738800.324:31): domain=1a6fdc66f status=deallocated denials=1
-
-$ LL_FS_RO=/ LL_FS_RW=/tmp LL_FORCE_LOG=1 ./sandboxer sh -c "echo > /etc/passwd"
-
-  type=LANDLOCK_ACCESS msg=audit(1729738800.221:33): domain=1a6fdc679 blockers=fs.write_file path="/dev/tty" dev="devtmpfs" ino=9
-  type=LANDLOCK_DOMAIN msg=audit(1729738800.221:33): domain=1a6fdc679 status=allocated mode=enforcing pid=289 uid=0 exe="/root/sandboxer" comm="sandboxer"
-  type=SYSCALL msg=audit(1729738800.221:33): arch=c000003e syscall=257 success=no exit=-13 [...] ppid=272 pid=289 auid=0 uid=0 gid=0 [...] comm="sh" [...]
-  type=PROCTITLE msg=audit(1729738800.221:33): proctitle=7368002D63006563686F203E202F6574632F706173737764
-  type=LANDLOCK_ACCESS msg=audit(1729738800.221:34): domain=1a6fdc679 blockers=fs.write_file path="/etc/passwd" dev="vda2" ino=143821
-  type=SYSCALL msg=audit(1729738800.221:34): arch=c000003e syscall=257 success=no exit=-13 [...] ppid=272 pid=289 auid=0 uid=0 gid=0 [...] comm="sh" [...]
-  type=PROCTITLE msg=audit(1729738800.221:34): proctitle=7368002D63006563686F203E202F6574632F706173737764
-  type=LANDLOCK_DOMAIN msg=audit(1729738800.261:35): domain=1a6fdc679 status=deallocated denials=2
-
-# Previous versions
-
-v6: https://lore.kernel.org/r/20250308184422.2159360-1-mic@digikod.net
-v5: https://lore.kernel.org/r/20250131163059.1139617-1-mic@digikod.net
-v4: https://lore.kernel.org/r/20250108154338.1129069-1-mic@digikod.net
-v3: https://lore.kernel.org/r/20241122143353.59367-1-mic@digikod.net
-v2: https://lore.kernel.org/r/20241022161009.982584-1-mic@digikod.net
-v1: https://lore.kernel.org/r/20230921061641.273654-1-mic@digikod.net
-
-Regards,
-
-Mickaël Salaün (28):
-  lsm: Add audit_log_lsm_data() helper
-  landlock: Add unique ID generator
-  landlock: Move domain hierarchy management
-  landlock: Prepare to use credential instead of domain for filesystem
-  landlock: Prepare to use credential instead of domain for network
-  landlock: Prepare to use credential instead of domain for scope
-  landlock: Prepare to use credential instead of domain for fowner
-  landlock: Identify domain execution crossing
-  landlock: Add AUDIT_LANDLOCK_ACCESS and log ptrace denials
-  landlock: Add AUDIT_LANDLOCK_DOMAIN and log domain status
-  landlock: Log mount-related denials
-  landlock: Log file-related denials
-  landlock: Factor out IOCTL hooks
-  landlock: Log truncate and IOCTL denials
-  landlock: Log TCP bind and connect denials
-  landlock: Log scoped denials
-  landlock: Add LANDLOCK_RESTRICT_SELF_LOG_*_EXEC_* flags
-  landlock: Add LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF
-  samples/landlock: Enable users to log sandbox denials
-  selftests/landlock: Add test for invalid ruleset file descriptor
-  selftests/landlock: Extend tests for landlock_restrict_self(2)'s flags
-  selftests/landlock: Add tests for audit flags and domain IDs
-  selftests/landlock: Test audit with restrict flags
-  selftests/landlock: Add audit tests for ptrace
-  selftests/landlock: Add audit tests for abstract UNIX socket scoping
-  selftests/landlock: Add audit tests for filesystem
-  selftests/landlock: Add audit tests for network
-  landlock: Add audit documentation
-
- Documentation/admin-guide/LSM/index.rst       |   1 +
- Documentation/admin-guide/LSM/landlock.rst    | 158 +++++
- Documentation/security/landlock.rst           |  13 +-
- Documentation/userspace-api/landlock.rst      |  17 +
- MAINTAINERS                                   |   1 +
- include/linux/lsm_audit.h                     |   8 +
- include/uapi/linux/audit.h                    |   4 +-
- include/uapi/linux/landlock.h                 |  33 +
- samples/landlock/sandboxer.c                  |  37 +-
- security/landlock/.kunitconfig                |   2 +
- security/landlock/Makefile                    |   5 +
- security/landlock/access.h                    |  23 +
- security/landlock/audit.c                     | 523 +++++++++++++++
- security/landlock/audit.h                     |  76 +++
- security/landlock/cred.c                      |  26 +-
- security/landlock/cred.h                      |  92 ++-
- security/landlock/domain.c                    | 264 ++++++++
- security/landlock/domain.h                    | 174 +++++
- security/landlock/fs.c                        | 288 +++++++--
- security/landlock/fs.h                        |  37 +-
- security/landlock/id.c                        | 251 ++++++++
- security/landlock/id.h                        |  25 +
- security/landlock/limits.h                    |   7 +-
- security/landlock/net.c                       |  74 ++-
- security/landlock/ruleset.c                   |  30 +-
- security/landlock/ruleset.h                   |  48 +-
- security/landlock/setup.c                     |   2 +
- security/landlock/syscalls.c                  |  77 ++-
- security/landlock/task.c                      | 243 +++++--
- security/lsm_audit.c                          |  27 +-
- tools/testing/kunit/configs/all_tests.config  |   2 +
- tools/testing/selftests/landlock/.gitignore   |   1 +
- tools/testing/selftests/landlock/Makefile     |   6 +-
- tools/testing/selftests/landlock/audit.h      | 472 ++++++++++++++
- tools/testing/selftests/landlock/audit_test.c | 551 ++++++++++++++++
- tools/testing/selftests/landlock/base_test.c  |  84 ++-
- tools/testing/selftests/landlock/common.h     |  19 +
- tools/testing/selftests/landlock/config       |   1 +
- tools/testing/selftests/landlock/fs_test.c    | 594 ++++++++++++++++++
- tools/testing/selftests/landlock/net_test.c   | 132 ++++
- .../testing/selftests/landlock/ptrace_test.c  | 140 +++++
- .../landlock/scoped_abstract_unix_test.c      | 111 ++++
- .../selftests/landlock/wait-pipe-sandbox.c    | 131 ++++
- 43 files changed, 4554 insertions(+), 256 deletions(-)
- create mode 100644 Documentation/admin-guide/LSM/landlock.rst
- create mode 100644 security/landlock/audit.c
- create mode 100644 security/landlock/audit.h
- create mode 100644 security/landlock/domain.c
+Changes since v1:
+- New patch.
+---
+ security/landlock/domain.h  | 48 +++++++++++++++++++++++++++++++++++++
+ security/landlock/ruleset.c | 21 +++-------------
+ security/landlock/ruleset.h | 17 +------------
+ security/landlock/task.c    |  1 +
+ 4 files changed, 53 insertions(+), 34 deletions(-)
  create mode 100644 security/landlock/domain.h
- create mode 100644 security/landlock/id.c
- create mode 100644 security/landlock/id.h
- create mode 100644 tools/testing/selftests/landlock/audit.h
- create mode 100644 tools/testing/selftests/landlock/audit_test.c
- create mode 100644 tools/testing/selftests/landlock/wait-pipe-sandbox.c
 
-
-base-commit: 4f06e22607e6e138be661494964d7f2614ec7ae6
+diff --git a/security/landlock/domain.h b/security/landlock/domain.h
+new file mode 100644
+index 000000000000..d22712e5fb0f
+--- /dev/null
++++ b/security/landlock/domain.h
+@@ -0,0 +1,48 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Landlock - Domain management
++ *
++ * Copyright © 2016-2020 Mickaël Salaün <mic@digikod.net>
++ * Copyright © 2018-2020 ANSSI
++ */
++
++#ifndef _SECURITY_LANDLOCK_DOMAIN_H
++#define _SECURITY_LANDLOCK_DOMAIN_H
++
++#include <linux/mm.h>
++#include <linux/refcount.h>
++
++/**
++ * struct landlock_hierarchy - Node in a domain hierarchy
++ */
++struct landlock_hierarchy {
++	/**
++	 * @parent: Pointer to the parent node, or NULL if it is a root
++	 * Landlock domain.
++	 */
++	struct landlock_hierarchy *parent;
++	/**
++	 * @usage: Number of potential children domains plus their parent
++	 * domain.
++	 */
++	refcount_t usage;
++};
++
++static inline void
++landlock_get_hierarchy(struct landlock_hierarchy *const hierarchy)
++{
++	if (hierarchy)
++		refcount_inc(&hierarchy->usage);
++}
++
++static inline void landlock_put_hierarchy(struct landlock_hierarchy *hierarchy)
++{
++	while (hierarchy && refcount_dec_and_test(&hierarchy->usage)) {
++		const struct landlock_hierarchy *const freeme = hierarchy;
++
++		hierarchy = hierarchy->parent;
++		kfree(freeme);
++	}
++}
++
++#endif /* _SECURITY_LANDLOCK_DOMAIN_H */
+diff --git a/security/landlock/ruleset.c b/security/landlock/ruleset.c
+index bff4e40a3093..adb7f87828df 100644
+--- a/security/landlock/ruleset.c
++++ b/security/landlock/ruleset.c
+@@ -23,6 +23,7 @@
+ #include <linux/workqueue.h>
+ 
+ #include "access.h"
++#include "domain.h"
+ #include "limits.h"
+ #include "object.h"
+ #include "ruleset.h"
+@@ -307,22 +308,6 @@ int landlock_insert_rule(struct landlock_ruleset *const ruleset,
+ 	return insert_rule(ruleset, id, &layers, ARRAY_SIZE(layers));
+ }
+ 
+-static void get_hierarchy(struct landlock_hierarchy *const hierarchy)
+-{
+-	if (hierarchy)
+-		refcount_inc(&hierarchy->usage);
+-}
+-
+-static void put_hierarchy(struct landlock_hierarchy *hierarchy)
+-{
+-	while (hierarchy && refcount_dec_and_test(&hierarchy->usage)) {
+-		const struct landlock_hierarchy *const freeme = hierarchy;
+-
+-		hierarchy = hierarchy->parent;
+-		kfree(freeme);
+-	}
+-}
+-
+ static int merge_tree(struct landlock_ruleset *const dst,
+ 		      struct landlock_ruleset *const src,
+ 		      const enum landlock_key_type key_type)
+@@ -477,7 +462,7 @@ static int inherit_ruleset(struct landlock_ruleset *const parent,
+ 		err = -EINVAL;
+ 		goto out_unlock;
+ 	}
+-	get_hierarchy(parent->hierarchy);
++	landlock_get_hierarchy(parent->hierarchy);
+ 	child->hierarchy->parent = parent->hierarchy;
+ 
+ out_unlock:
+@@ -501,7 +486,7 @@ static void free_ruleset(struct landlock_ruleset *const ruleset)
+ 		free_rule(freeme, LANDLOCK_KEY_NET_PORT);
+ #endif /* IS_ENABLED(CONFIG_INET) */
+ 
+-	put_hierarchy(ruleset->hierarchy);
++	landlock_put_hierarchy(ruleset->hierarchy);
+ 	kfree(ruleset);
+ }
+ 
+diff --git a/security/landlock/ruleset.h b/security/landlock/ruleset.h
+index 52f4f0af6ab0..bbb5996545d2 100644
+--- a/security/landlock/ruleset.h
++++ b/security/landlock/ruleset.h
+@@ -17,6 +17,7 @@
+ #include <linux/workqueue.h>
+ 
+ #include "access.h"
++#include "domain.h"
+ #include "limits.h"
+ #include "object.h"
+ 
+@@ -108,22 +109,6 @@ struct landlock_rule {
+ 	struct landlock_layer layers[] __counted_by(num_layers);
+ };
+ 
+-/**
+- * struct landlock_hierarchy - Node in a ruleset hierarchy
+- */
+-struct landlock_hierarchy {
+-	/**
+-	 * @parent: Pointer to the parent node, or NULL if it is a root
+-	 * Landlock domain.
+-	 */
+-	struct landlock_hierarchy *parent;
+-	/**
+-	 * @usage: Number of potential children domains plus their parent
+-	 * domain.
+-	 */
+-	refcount_t usage;
+-};
+-
+ /**
+  * struct landlock_ruleset - Landlock ruleset
+  *
+diff --git a/security/landlock/task.c b/security/landlock/task.c
+index 4578ce6e319d..e04646d80e78 100644
+--- a/security/landlock/task.c
++++ b/security/landlock/task.c
+@@ -19,6 +19,7 @@
+ 
+ #include "common.h"
+ #include "cred.h"
++#include "domain.h"
+ #include "fs.h"
+ #include "ruleset.h"
+ #include "setup.h"
 -- 
 2.49.0
 
