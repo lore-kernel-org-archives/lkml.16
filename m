@@ -1,116 +1,45 @@
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959B6EEBA;
-	Thu, 20 Mar 2025 14:09:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A5F221563;
+	Thu, 20 Mar 2025 14:10:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742479792; cv=none; b=uNrBhCDEcwVdRg3FKrjE5P576O5OxTDcazAMNjyzqC0w2y1tU5ABkmRTaIAxQgPjWbR7+s7EXT9OGBSPt0MbBrHWFB196mYRrvOtS4ngN54ZHchL1FIyNgT60SD0bQCPsevgCmb3HKTF+W2xupZamPapptjPKjJSAdAxVwb04Zw=
+	t=1742479812; cv=none; b=QYhFGoDj0VdXNuDOEo/GT3Dds1ZTmAEtVqF0/DJtZCGKjK+dUAfyl81mBfZfiNzwsMaEQyZKUQTo3tXzC9pj1ahRCCLCtrEyLSk+lLVn/EEr7IJizbHm4sMBCA5YE1OIB6pQAXGXCBuiwFAyfz3Ugia/E9M/sLwN4KVYJNnIiT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742479792; c=relaxed/simple;
-	bh=3gUsqaE7mUufKOG+8Ij0UulGdSKP7dyRB6jukOjry5w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=j4dK9tmiBtTp6InsfuPnLSryiHUlotFM1WFhkHhRSC1+XK2pRWOntJpWyaWUiS7X1mSxOchuZvfnFjhJbSPHukt4SMLZ3LxWPc0yqnZrGrwcx0S8+z5HHJ+K6smazNI1EfoI0xxdixi5c2v/KZ9jKEQm83Y9WtQnDxiMmAH7ybY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=RnjYKOkT; arc=none smtp.client-ip=217.70.183.196
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="RnjYKOkT"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 9A3AB444F5;
-	Thu, 20 Mar 2025 14:09:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742479787;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=+k1WKBS8wmBGYzs9sr3LXVqLTZJWa/ILl+XBNscDrbY=;
-	b=RnjYKOkToOruA8gtWMfVJQ2lVzosiERg2s/F0lfOMsW+ruPaTOwSBxJrVEsbEBOUHf/zsi
-	Taf0zisRRm7yXvuh9Y9N/mcLcRLWcp9ghxNIIYxEdy4JgNKmvIzry06R7k4pdux4r+kp3/
-	Jc8HCqJe+bRnGbNoYJ7/HbDSLXy8gId8hxT7K3adtc9V9+q7l8sWWqbpXywAuhYgDoFbLW
-	XxgGGb4+afw6A+479MukdQiPptRg7ekdm1cE33XeQWAMLG2GpfHYuROX5G5njn2M6xixjx
-	uCjG68LJ3GXjQQhXjXUpVGe1Yppmn19/s3b/4tpGVIw1gaJFCZLHvOOs+TeVfw==
-Date: Thu, 20 Mar 2025 15:09:44 +0100
-From: Kory Maincent <kory.maincent@bootlin.com>
-To: Oleksij Rempel <o.rempel@pengutronix.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo
- Abeni <pabeni@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Donald Hunter
- <donald.hunter@gmail.com>, Rob Herring <robh@kernel.org>, Andrew Lunn
- <andrew+netdev@lunn.ch>, Simon Horman <horms@kernel.org>, Heiner Kallweit
- <hkallweit1@gmail.com>, Russell King <linux@armlinux.org.uk>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Liam
- Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Thomas
- Petazzoni <thomas.petazzoni@bootlin.com>, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, Kyle Swenson <kyle.swenson@est.tech>, Dent
- Project <dentproject@linuxfoundation.org>, kernel@pengutronix.de, Maxime
- Chevallier <maxime.chevallier@bootlin.com>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 03/12] net: pse-pd: tps23881: Add support
- for PSE events and interrupts
-Message-ID: <20250320150944.6ee054c3@kmaincent-XPS-13-7390>
-In-Reply-To: <Z9fu3u34K3-OeDis@pengutronix.de>
-References: <20250304-feature_poe_port_prio-v6-0-3dc0c5ebaf32@bootlin.com>
-	<20250304-feature_poe_port_prio-v6-3-3dc0c5ebaf32@bootlin.com>
-	<Z9fu3u34K3-OeDis@pengutronix.de>
-Organization: bootlin
-X-Mailer: Claws Mail 4.0.0 (GTK+ 3.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1742479812; c=relaxed/simple;
+	bh=M7NmYC/Iylm9myghHwqILim55SAUt9QrM+UZYk0eJlw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UfVPBoyYFaxG3jHFx8Ikd/nkZ53CJhlp2BNWFpJDx3NRuAG3va0mNxaQgpLuZSFynop3j97+BRuol234mOd9vZVjXq7aaPGoWkNUYIdtAPXFa+ApEl3QEm8xFW8qhmX26NlIYLO9ygvcxjwzwYkepQyFy+YTm+4DMI84vHjre6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
+Received: by verein.lst.de (Postfix, from userid 2407)
+	id 6B45768BFE; Thu, 20 Mar 2025 15:10:06 +0100 (CET)
+Date: Thu, 20 Mar 2025 15:10:05 +0100
+From: Christoph Hellwig <hch@lst.de>
+To: John Garry <john.g.garry@oracle.com>
+Cc: brauner@kernel.org, djwong@kernel.org, hch@lst.de,
+	linux-fsdevel@vger.kernel.org, dchinner@redhat.com,
+	linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
+	martin.petersen@oracle.com, tytso@mit.edu,
+	linux-ext4@vger.kernel.org
+Subject: Re: [PATCH 3/3] iomap: rework IOMAP atomic flags
+Message-ID: <20250320141005.GB10939@lst.de>
+References: <20250320120250.4087011-1-john.g.garry@oracle.com> <20250320120250.4087011-4-john.g.garry@oracle.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeekgedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtqhertdertdejnecuhfhrohhmpefmohhrhicuofgrihhntggvnhhtuceokhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgfdutdefvedtudegvefgvedtgfdvhfdtueeltefffefffffhgfetkedvfeduieeinecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppeeltddrkeelrdduieefrdduvdejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepledtrdekledrudeifedruddvjedphhgvlhhopehkmhgrihhntggvnhhtqdgirffuqddufedqjeefledtpdhmrghilhhfrhhomhepkhhorhihrdhmrghinhgtvghnthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdejpdhrtghpthhtohepohdrrhgvmhhpvghlsehpvghnghhuthhrohhnihigrdguvgdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtohepvgguuhhmrgiivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehku
- hgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegtohhrsggvtheslhifnhdrnhgvthdprhgtphhtthhopeguohhnrghlugdrhhhunhhtvghrsehgmhgrihhlrdgtohhm
-X-GND-Sasl: kory.maincent@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250320120250.4087011-4-john.g.garry@oracle.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Mon, 17 Mar 2025 10:43:58 +0100
-Oleksij Rempel <o.rempel@pengutronix.de> wrote:
+Looks good:
 
-> On Tue, Mar 04, 2025 at 11:18:52AM +0100, Kory Maincent wrote:
-> > +static int tps23881_irq_handler(int irq, struct pse_controller_dev *pc=
-dev,
-> > +				unsigned long *notifs,
-> > +				unsigned long *notifs_mask)
-> > +{
-> > +	struct tps23881_priv *priv =3D to_tps23881_priv(pcdev);
-> > +	struct i2c_client *client =3D priv->client;
-> > +	int ret, it_mask;
-> > +
-> > +	/* Get interruption mask */
-> > +	ret =3D i2c_smbus_read_word_data(client, TPS23881_REG_IT_MASK);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	it_mask =3D ret;
-> > +
-> > +	/* Read interrupt register until it frees the interruption pin. */
-> > +	while (true) { =20
->=20
-> If the hardware has a stuck interrupt, this could result in an infinite
-> loop. max_retries with some sane value would be good.
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
-Ack I will. Do you have a value in mind as a sane value?
-
-> > +
-> > +static int tps23881_setup_irq(struct tps23881_priv *priv, int irq)
-> > +{
-> > +	struct i2c_client *client =3D priv->client;
-> > +	struct pse_irq_desc irq_desc =3D {
-> > +		.name =3D "tps23881-irq", =20
->=20
-> here or in devm_pse_irq_helper() it would be good to add intex suffix to
-> the irq handler name.
-
-You mean index? Like the PSE index?
-So I will need to add back the support of the PSE index in the series.
-
-Regards,
---=20
-K=C3=B6ry Maincent, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
