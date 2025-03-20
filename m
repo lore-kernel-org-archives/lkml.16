@@ -1,225 +1,113 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4694821B196;
-	Thu, 20 Mar 2025 09:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B7D221DBC
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:25:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742462646; cv=none; b=myRTJU8OPEEhS1Lb+6KNvoAeC7zEMBoVxU4Y1cgpMhyLWAPwP/kQ8dHWUsOaTUqHUXRh6iGR2PpLCgBrctCXqItJB7UWsVxjdbmYVVew9LHvPT70bbk82ryn8QCLqDCp6WzBanEGem5vZAUFv4e5tdrvBSxmGHDot2vFs2WMqic=
+	t=1742462734; cv=none; b=k4pnaQ3G9xN+fDkh0K6Uk5n8+s4Tvg0kE94cMFdyCVWbUIClcXz+UrYFmNhg1ovQS7wm+jqZc718tgAtwH4fhzPWP5t0oQ6oLph1eow39j54natFjc+ShtenAUsZWZc9+4/UbEdqZg3FAI9ZkfWOp94SWwz6R+VZWXj1C4B40lY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742462646; c=relaxed/simple;
-	bh=mdZT7p6btRxqZ/HAzsWsKG7+qFDbrt8BpR+R3LmNz8o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=No/me4dNaQkmSZSRHNpRHZdA83taRRRkn/JtWbZJZYfHO9f5ecVcBMbZoXzvdQlw2FduPHmg82PeBCHxWzkyZVjnIPsfZdXpgVEsb+A62ZtiDO1BMF8xhiiNLJfn57wMT8uArtSKEjq/ecdjiPjTOLxXFdjHE6TFAIvTx35RISw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=SAdDYbMG; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1742462734; c=relaxed/simple;
+	bh=024QgvEdox7lmIFc6JNkbdRW+SBagty2L2qX4+Mqe8A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=dorzjFCRCkdMALhUH2iX/xXL//eeDr5oh9BQmMvPm6W+EaEREl77TWjxAIwuGnUjfBPZmhcF6DhRHLXlHRM+QnRV743kFgOPOfA0pLk4D0A0QjZxb1wtmYzvqXpnIUlQNtzKdKbjF0FFRe+QIxXx/sybrmi6f2ymNFGwNEn/KO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Q1R8Pzv4; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="SAdDYbMG"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52K9HKHq023149;
-	Thu, 20 Mar 2025 10:23:39 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	crexQWu4l57R3sbdMnceBIPuj5iuismgQR90iwJhOlw=; b=SAdDYbMG9niyLueX
-	EmzCVR2UEw3l/kOQ0MwvxKZXvC+VsrRFslJFtNFw82j4ojfMLQ7c/92hs5wpdQZb
-	4pJLqvivmJP1npces5+rUxcaO0ZP3VD7BMgzU3HKp7ROvOQKo3UhrvVAfger3DYR
-	MG4YNVl28gSKPE6+LEulzoavrtjdTEz9mK/8Xpw48mBVW8GV8FKYTRiUbYxeNa85
-	aS+uag6Ka/MqzZ/37uKVx+RJDvG+1NW9JzBYrDDai9hCSaHR8ixkozxXbtNJmNXv
-	a1O013eA5hu5sFUBAG+IpUImoCNXg5hKNSAnPQLtGsak+EYIMDBetGbOgE+tP5m6
-	uCZcUw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45d1u84m7s-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Mar 2025 10:23:39 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id BAD0D4005D;
-	Thu, 20 Mar 2025 10:22:13 +0100 (CET)
-Received: from Webmail-eu.st.com (eqndag1node4.st.com [10.75.129.133])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id CEE927C1EF4;
-	Thu, 20 Mar 2025 10:21:28 +0100 (CET)
-Received: from SAFDAG1NODE1.st.com (10.75.90.17) by EQNDAG1NODE4.st.com
- (10.75.129.133) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Mar
- 2025 10:21:28 +0100
-Received: from [10.252.18.22] (10.252.18.22) by SAFDAG1NODE1.st.com
- (10.75.90.17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Thu, 20 Mar
- 2025 10:21:27 +0100
-Message-ID: <130d61a8-6f03-46dc-94ca-f098bc09babc@foss.st.com>
-Date: Thu, 20 Mar 2025 10:21:26 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q1R8Pzv4"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742462731;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8MPzZFdU5NaYPh2NGTOtu5hpDZLpTD6ezNgyItb/nos=;
+	b=Q1R8Pzv4zFXlq1jUEtXT9rwNHKRrgeSzcOh1sCtdM3SOu1Y+vLnjPuhUicLBWBs2aClhQW
+	5ApCZ8Oz/ZfHulPAADiGO4yN5BIeCec/++xNmC6BT5hQVewc80eXdWgZVxXQLRSygvPRVS
+	5ZlGwgVD06SmyqXhWNFPkSPF5HdXOpY=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-258-bdws55N7OSuKf7YmzmmnyA-1; Thu,
+ 20 Mar 2025 05:25:27 -0400
+X-MC-Unique: bdws55N7OSuKf7YmzmmnyA-1
+X-Mimecast-MFC-AGG-ID: bdws55N7OSuKf7YmzmmnyA_1742462726
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id EAAFF180882E;
+	Thu, 20 Mar 2025 09:25:25 +0000 (UTC)
+Received: from fedora.redhat.com (unknown [10.45.224.73])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8A81D19560AF;
+	Thu, 20 Mar 2025 09:25:23 +0000 (UTC)
+From: Tomas Glozar <tglozar@redhat.com>
+To: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-trace-kernel@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	John Kacur <jkacur@redhat.com>,
+	Luis Goncalves <lgoncalv@redhat.com>,
+	Tomas Glozar <tglozar@redhat.com>
+Subject: [PATCH 0/6] rtla: Always set all tracer options
+Date: Thu, 20 Mar 2025 10:24:54 +0100
+Message-ID: <20250320092500.101385-1-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Linux-stm32] [PATCH 3/3] remoteproc: Use
- of_reserved_mem_region_* functions for "memory-region"
-To: Rob Herring <robh@kernel.org>
-CC: Saravana Kannan <saravanak@google.com>,
-        Bjorn Andersson
-	<andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "Shawn
- Guo" <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        "Pengutronix Kernel Team" <kernel@pengutronix.de>,
-        Fabio Estevam
-	<festevam@gmail.com>,
-        Patrice Chotard <patrice.chotard@foss.st.com>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        <devicetree@vger.kernel.org>, <imx@lists.linux.dev>,
-        <linux-arm-msm@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20250317232426.952188-1-robh@kernel.org>
- <20250317232426.952188-4-robh@kernel.org>
- <26e72cb2-c355-4c40-bb98-fc0ff267bf4f@foss.st.com>
- <CAL_Jsq+7ZhMWgbFDvPB+3BG7YfiS9PweybOGNY3r=d40RbGHJA@mail.gmail.com>
-Content-Language: en-US
-From: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Organization: STMicroelectronics
-In-Reply-To: <CAL_Jsq+7ZhMWgbFDvPB+3BG7YfiS9PweybOGNY3r=d40RbGHJA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: SHFCAS1NODE1.st.com (10.75.129.72) To SAFDAG1NODE1.st.com
- (10.75.90.17)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-20_03,2025-03-19_01,2024-11-22_01
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
 
+rtla should not rely on osnoise tracer being set to default options,
+since this might not be the case - either due to the user using the
+tracer without rtla, or due to rtla exiting abnormally and not resetting
+the options to their previous value.
 
+A part of the problem is already fixed by commits 217f0b1e990e
+("rtla/timerlat_top: Set OSNOISE_WORKLOAD for kernel threads") and
+d8d866171a41 ("rtla/timerlat_hist: Set OSNOISE_WORKLOAD for kernel
+threads"), but for other options than for OSNOISE_WORKLOAD, and for all
+options in the case of rtla-osnoise, it is not fixed.
 
-On 3/20/25 00:04, Rob Herring wrote:
-> On Wed, Mar 19, 2025 at 10:26 AM Arnaud POULIQUEN
-> <arnaud.pouliquen@foss.st.com> wrote:
->>
->> Hello Rob,
->>
->> On 3/18/25 00:24, Rob Herring (Arm) wrote:
->>> Use the newly added of_reserved_mem_region_to_resource() and
->>> of_reserved_mem_region_count() functions to handle "memory-region"
->>> properties.
->>>
->>> The error handling is a bit different in some cases. Often
->>> "memory-region" is optional, so failed lookup is not an error. But then
->>> an error in of_reserved_mem_lookup() is treated as an error. However,
->>> that distinction is not really important. Either the region is available
->>> and usable or it is not. So now, it is just
->>> of_reserved_mem_region_to_resource() which is checked for an error.
->>>
->>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
->>> ---
->>> For v6.16
->>>
-> 
-> [...]
-> 
->>> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm32_rproc.c
->>> index b02b36a3f515..9d2bd8904c49 100644
->>> --- a/drivers/remoteproc/stm32_rproc.c
->>> +++ b/drivers/remoteproc/stm32_rproc.c
->>> @@ -213,52 +213,46 @@ static int stm32_rproc_prepare(struct rproc *rproc)
->>>  {
->>>       struct device *dev = rproc->dev.parent;
->>>       struct device_node *np = dev->of_node;
->>> -     struct of_phandle_iterator it;
->>>       struct rproc_mem_entry *mem;
->>> -     struct reserved_mem *rmem;
->>>       u64 da;
->>> -     int index = 0;
->>> +     int index = 0, mr = 0;
->>>
->>>       /* Register associated reserved memory regions */
->>> -     of_phandle_iterator_init(&it, np, "memory-region", NULL, 0);
->>> -     while (of_phandle_iterator_next(&it) == 0) {
->>> -             rmem = of_reserved_mem_lookup(it.node);
->>> -             if (!rmem) {
->>> -                     of_node_put(it.node);
->>> -                     dev_err(dev, "unable to acquire memory-region\n");
->>> -                     return -EINVAL;
->>> -             }
->>> +     while (1) {
->>> +             struct resource res;
->>> +             int ret;
->>> +
->>> +             ret = of_reserved_mem_region_to_resource(np, mr++, &res);
->>> +             if (ret)
->>> +                     return 0;
->>>
->>> -             if (stm32_rproc_pa_to_da(rproc, rmem->base, &da) < 0) {
->>> -                     of_node_put(it.node);
->>> -                     dev_err(dev, "memory region not valid %pa\n",
->>> -                             &rmem->base);
->>> +             if (stm32_rproc_pa_to_da(rproc, res.start, &da) < 0) {
->>> +                     dev_err(dev, "memory region not valid %pR\n", &res);
->>>                       return -EINVAL;
->>>               }
->>>
->>>               /*  No need to map vdev buffer */
->>> -             if (strcmp(it.node->name, "vdev0buffer")) {
->>> +             if (strcmp(res.name, "vdev0buffer")) {
->>
->> I tested your patches
-> 
-> Thank you.
-> 
->> The update introduces a regression here. The strcmp function never returns 0.
->> Indeed, it.node->name stores the memory region label "vdev0buffer," while
->> res.name stores the memory region name "vdev0buffer@10042000."
->>
->> Several remoteproc drivers may face the same issue as they embed similar code.
-> 
-> Indeed. I confused myself because node 'name' is without the
-> unit-address, but this is using the full name. I've replaced the
-> strcmp's with strstarts() to address this. I've updated my branch with
-> the changes.
+This patchset sets all options to their default values, unless they are
+set by command line options to different values.
 
-This is not enough as the remoteproc core function rproc_find_carveout_by_name()
-also compares the memory names. With the following additional fix, it is working
-on my STM32MP15-DK board.
+Before doing that, code setting the tracer options is unified between
+top and hist for both osnoise and timerlat.
 
-@@ -309,11 +309,11 @@ rproc_find_carveout_by_name(struct rproc *rproc, const
-char *name, ...)
- 	vsnprintf(_name, sizeof(_name), name, args);
- 	va_end(args);
+Notes:
+- The unification depends on a commit in linux-next that already does
+that for rtla-timerlat, for the purpose of the implementation of the BPF
+sample collection [1]. For rtla-osnoise, this is done in an analogous
+commit in this patchset.
+- Because of the former and because of the unification requiring changes
+for older versions of the kernel, I do not Cc stable here. If needed,
+I can sent the backport to stable manually after both this and the BPF
+sample collection patchsets are in Linus's tree.
 
- 	list_for_each_entry(carveout, &rproc->carveouts, node) {
- 		/* Compare carveout and requested names */
--		if (!strcmp(carveout->name, _name)) {
-+		if (strstarts(carveout->name, _name)) {
- 			mem = carveout;
- 			break;
- 		}
- 	}
+[1] https://lore.kernel.org/linux-trace-kernel/20250218145859.27762-2-tglozar@redhat.com/
 
-I just wonder if would not be more suitable to address this using the
-"memory-region-names" field.
+Tomas Glozar (6):
+  rtla/osnoise: Unify params struct
+  rtla: Unify apply_config between top and hist
+  rtla/osnoise: Set OSNOISE_WORKLOAD to true
+  rtla: Always set all tracer options
+  rtla/tests: Reset osnoise options before check
+  rtla/tests: Test setting default options
 
-The drawback is that we would break compatibility with legacy boards...
+ tools/tracing/rtla/src/osnoise.c       |  86 +++++++++++++++++-
+ tools/tracing/rtla/src/osnoise.h       |  48 ++++++++++
+ tools/tracing/rtla/src/osnoise_hist.c  | 118 +++---------------------
+ tools/tracing/rtla/src/osnoise_top.c   | 120 +++----------------------
+ tools/tracing/rtla/src/timerlat.c      | 106 ++++++++++++++++++++++
+ tools/tracing/rtla/src/timerlat.h      |  12 +--
+ tools/tracing/rtla/src/timerlat_hist.c | 119 ++++--------------------
+ tools/tracing/rtla/src/timerlat_top.c  | 110 +++--------------------
+ tools/tracing/rtla/tests/engine.sh     |  66 ++++++++++++++
+ tools/tracing/rtla/tests/osnoise.t     |   6 ++
+ 10 files changed, 370 insertions(+), 421 deletions(-)
 
-I let Mathieu and Bjorn review and comment
+-- 
+2.48.1
 
-
-Else with the fix in rproc_find_carveout_by_name(),
-
--for the stm32_rproc:
-reviewed-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-tested-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-
-- for the st_remoteproc
-reviewed-by: Arnaud Pouliquen <arnaud.pouliquen@foss.st.com>
-
-Thanks,
-Arnaud
-
-
-> 
-> Rob
