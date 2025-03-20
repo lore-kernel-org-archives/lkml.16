@@ -1,68 +1,70 @@
-Received: from mail-4322.protonmail.ch (mail-4322.protonmail.ch [185.70.43.22])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB7261DED7C;
-	Thu, 20 Mar 2025 14:10:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76A06223321;
+	Thu, 20 Mar 2025 14:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742479857; cv=none; b=LaqFDpqAvTlZ6OLQH8cF8EXumWhmzmm0fHLRAxEFZMGEoOCGubpOYOUkLAgxUx43a4vOhVzPHPl151NFQ0qQObonoMTgw7sXlwZmXilFfWVMMJGWR/pdtFfOC6IGlrFNBvfAbbx+BUIttyIr5uYRpT5MZKF1Zk6idVqo2F5kZyM=
+	t=1742479859; cv=none; b=W9toHj7fPQ5KPR+cSwPqFMAj8P58VRog0OXA0VSOdNfOldatucLU6WpUk7UPW8cEgHje9ST7cs6uDmrUUftapLnO/b7+Ssycu609Y6rIjJESg70IsxLk7NsJbMKKntn41rEGxgoSDm6Nf4RQ1/35XA4MiKq8joYqLLLnLot74TA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742479857; c=relaxed/simple;
-	bh=Kt14O2cfoN2G/GyFj9ojaCiqMAko5fuIIc4n4UzkX1M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=WmUTxOeYTD4hGSktrpdywFi5ONTt4kJictRypc8KKsD0vJB3lMaSt0XReNOusl2ROeTd8n/f0i14Fv2zgmiJ4xOWE/8WS0Qrq8vahBsDRpPem2TfY0G1ymtblx2cyuI5Vow0F6GWz7XAvrbZ417lFEjYbk6m1zefcqK4xoMi6mQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=DJoc/lWo; arc=none smtp.client-ip=185.70.43.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
+	s=arc-20240116; t=1742479859; c=relaxed/simple;
+	bh=3HEJnEhZ/d669MOLql9alT4mXVOxE30ft99+n226O20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jAZpf+MYHj5OLpA1GjBlNkybI7SKdHnOtHRLigqkIP/Rzu6jU4HlhuswdhrHxQxvy9IOANzYMShDeqcOveC+Hz/C+uaerwTnZe9WnISkFpfBeRJOe9wEJMTB+KLKohmkbcflteNQat5oXgDtV7neAY4DTkVNi+S2WcyJC3WyihU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hLoGDzES; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="DJoc/lWo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
-	s=6ss77oerjbcj5jnmufyhvcw7ym.protonmail; t=1742479853; x=1742739053;
-	bh=Kt14O2cfoN2G/GyFj9ojaCiqMAko5fuIIc4n4UzkX1M=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
-	b=DJoc/lWoVAAtnAcnNFS/cuxr7eWAo3XRLqDxJNMMo/fBFfLs2Iy5l3EwEm7shyHXB
-	 D8EcopN13gVgM3+PYx4ZZPzN1kG1XseeW94L+2De1lZyOrNCoQ1E0qWwC1OwM+B03v
-	 K7wSiBisfkFkT7TQMLeMRezty8imIt4MT975OelaarykV6sZbrzVXh2riSeQAo0thB
-	 vivjXFC6PuICVw3xU0vdZulyIYszvsThnDepio/uE9UWPkKvwqGMJhSKut5yfw7G+h
-	 lqMaP1ni06FPgihu3zN7BNm4VAeBo+tFzmh9/ZoU9Mz/Y8+2nNEnC7SLN3YfXHU9pl
-	 iM4sd7fsQpf4A==
-Date: Thu, 20 Mar 2025 14:10:47 +0000
-To: Tamir Duberstein <tamird@gmail.com>
-From: Benno Lossin <benno.lossin@proton.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH] rust: pin_init_internal: fix rust-analyzer `mod quote`
-Message-ID: <D8L5JXRXHX0N.UIFZ5M15FB3S@proton.me>
-In-Reply-To: <CAJ-ks9nTmno12ZC4DnLxV_b0NLUK5Kn5K+cRi4BEvKtveQzJjg@mail.gmail.com>
-References: <20250319-pin-init-internal-quote-v1-1-19de6a33a257@gmail.com> <D8L34IUZGXWX.D2LSS2S2NAN7@proton.me> <CAJ-ks9nTmno12ZC4DnLxV_b0NLUK5Kn5K+cRi4BEvKtveQzJjg@mail.gmail.com>
-Feedback-ID: 71780778:user:proton
-X-Pm-Message-ID: 0c0d3ef6d055f74376746995de674f0b1f0aae08
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hLoGDzES"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5229C4AF0B;
+	Thu, 20 Mar 2025 14:10:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742479858;
+	bh=3HEJnEhZ/d669MOLql9alT4mXVOxE30ft99+n226O20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hLoGDzESP3WOVoxz7nzIQITIX9J0ISZilVyTxhEO/rO0w+bR1rTys4f1iIpcJXJXT
+	 RuFpwDPEjuVFG1PYJIAdUs3au1pe4Cfz5Hq0cvxN3DxW5PBs6MuHSk6m/TnUjjR6K0
+	 blK1D1rs88Was9bVgiN2RYWVd5qN0fK3kV/TSUGs=
+Date: Thu, 20 Mar 2025 07:09:39 -0700
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Madhur Kumar <madhurkumar004@gmail.com>
+Cc: sudipm.mukherjee@gmail.com, teddy.wang@siliconmotion.com,
+	linux-fbdev@vger.kernel.org, linux-staging@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Dan Carpenter <dan.carpenter@linaro.org>
+Subject: Re: [PATCH] [PATCH v2] staging: sm750fb: Make g_fbmode truly constant
+Message-ID: <2025032027-babble-ominous-c704@gregkh>
+References: <20250222201514.15730-1-madhurkumar004@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250222201514.15730-1-madhurkumar004@gmail.com>
 
-On Thu Mar 20, 2025 at 2:31 PM CET, Tamir Duberstein wrote:
-> On Thu, Mar 20, 2025 at 8:16=E2=80=AFAM Benno Lossin <benno.lossin@proton=
-.me> wrote:
->> I'd rather not have this change, since this will introduce a dangling
->> symlink upstream [1].
->>
->> [1]: https://github.com/rust-for-Linux/pin-init
->
-> I agree it's aesthetically displeasing. I'm not aware of any
-> alternative that fixes the development workflow of this crate in the
-> kernel.
+On Sun, Feb 23, 2025 at 01:45:14AM +0530, Madhur Kumar wrote:
+> Declare g_fbmode as a pointer to constant data. This ensures that both
+> array and its element are immutable.
+> 
+> Reviewed-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Signed-off-by: Madhur Kumar <madhurkumar004@gmail.com>
+> ---
+> Changes in v2:
+> - Added commit message
+> ---
+>  drivers/staging/sm750fb/sm750.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/sm750fb/sm750.c b/drivers/staging/sm750fb/sm750.c
+> index 04c1b32a2..aa154032f 100644
+> --- a/drivers/staging/sm750fb/sm750.c
+> +++ b/drivers/staging/sm750fb/sm750.c
+> @@ -33,7 +33,7 @@
+>  static int g_hwcursor = 1;
+>  static int g_noaccel;
+>  static int g_nomtrr;
+> -static const char *g_fbmode[] = {NULL, NULL};
+> +static const char * const g_fbmode[] = {NULL, NULL};
 
-I don't think it's too bad, and this code is going away soon-ish
-anyways.
-
----
-Cheers,
-Benno
-
+How did you test this?  It totally breaks the build :(
