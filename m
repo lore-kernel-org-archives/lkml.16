@@ -1,101 +1,253 @@
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A6801A238C
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:02:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFFBD2FB;
+	Thu, 20 Mar 2025 09:06:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742461359; cv=none; b=CI4fjVXRv20NXfZIaSQe0Tn9GX+CFFNY+bJo+1fKKGfuSGLVOwYv7ZqXU8d1woq22zQceKrDOA4tpG5qMLkPyXCPuNOETlsb1ZcrQHE+AxwGO32uDSPhdNHVNuQ9WaLt0isqqjHA8FXR2+FKVP84HgDlwKzufCOs0p7sUGI/LVc=
+	t=1742461617; cv=none; b=edVJAVwMPO7Wkkms6KLWsjQ6ygc8MvFUYfNz/BaG22JwNdsS/slwsi70Lx/aqK+yoVtIhdKoviUiDb/MgKib4qmuyvmq5PwXneXqWytlL36mUGncRmwgbTmDcB0ynPr7juPeFM5oaN71DuNNO6eZyLHcrOs4QboX4swb11HenHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742461359; c=relaxed/simple;
-	bh=pGrzZsD7jQD4q+HpXNfMs+ajcvDEH8ArFztx4QnT5O4=;
+	s=arc-20240116; t=1742461617; c=relaxed/simple;
+	bh=pfQ50DScHy5B2hGnA/xfElhuDtGGC1uqaV5CxJ3vKgs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pK9KcFc01NXcTSXjrULjY1yJrPTWXTycAHJcJs1z2QDROgzapYNETELsBp3o9PA9WHmVJ5oG0b0aiOTwPjf13ehOrvuS/Cc+V3dqWmvHJ4EcaJMWhYXCwvF0L1SCf5XbtmGIw13pHWUqcU0WNBz0oeol5YlVwu+3YDV9I54B5GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=If9Q4JJk; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=shRhtJ2Wz42bWkjY02C+ImSuz+KuV/uV3h8cV41D1LKySQav6YfRBD/Fkv19G47YztjxQ1qr17z5S3HmQJZ3Wcloo+Rnk9yLmLwmaydZcZICl8JOU1URFiJhzgGq6j35otUplyIwj8LnQUSYE8vNWL+ce+dKNHPwfN05tejpLpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eK8MGuqU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="If9Q4JJk"
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-39129fc51f8so406394f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 02:02:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1742461356; x=1743066156; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=72uAcvX5/rJRkialBraZlcCWh3cO7qq403Dc9iTXm5o=;
-        b=If9Q4JJkjEBVVzG0hxA/8zqxT9dhbAx2BRcb1XkAOFsU3ReicbKkGFVENv4A0S2TXH
-         x8WyT34JHFfUtINwfWNgZZvuKcNRC/poA/bG6ic66qtu9Xmp0ycGJRs19M9gbtFbDZ86
-         dXQ/Z6UECNg2a95YzwMq7a1twsp9BFIeJLCwdjO6cnmCDd/nGsiSZBqO+ipWu50AlQwV
-         4GIyMd8HqWPxqGadMVZicadBvkiAKu3srh6xXkk3sBSYXpBYqvJor+0ibHzOySECrDCk
-         uyu9V5GkVSoy2JBHH2oV/RIIYaK50yIS1pU+Cuz72idYNVZFN4sepxnRoLdiGQuVXJtr
-         F3Lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742461356; x=1743066156;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=72uAcvX5/rJRkialBraZlcCWh3cO7qq403Dc9iTXm5o=;
-        b=UsfrG25FfRfcdIi88XmFDbklVf3gxpewkS74SHkZ+iUHLVuFYhG1LN/vw4t85X6daB
-         UH21+0k763ENWJGHFELxiVd+EnsF2/WC55Iad09P4qg7PsQNaPQclIMVmOKkdMEosTtU
-         tBLcTlbvcHMa9ha+eD7uvOivSEOpWfJchBajldNIHlD0CR7d/LEUbxErLEcOoS6222gg
-         eSwuO4wHGOFwHjoGtglMDVTI1IHiT/C+M82mxoBraJZwmNXjiOuobqm/kzvMNWgUui7C
-         3vgb3yf0aQLZFsbmCf94htz29YTw5ejONce7xnGFVVRVyd1ni8PUUyQ9+C+ch2R/j19T
-         XycQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVxHiMjgSN91+gMvGw0UMXE8j1SqoH+7Q4943ak+TzWGU1FD3FElKVTRpa5uefIBFIQDY5EIKxxopvTOHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzG0qU7RREStAYmputSqopRfi/YNU5MOV1NrFQGrd2BTaZFoFXB
-	neL7qJpzsYgCjHO3iXgXyF8A6r83RZmUkjYiyw/AXRLfHmxXLARqsHLziTAiayI=
-X-Gm-Gg: ASbGnctGsH5y8u8euatlhWOU4tuUb+wtErbX3AgrdVEktcR7QHS8YLLzoHapSqEln4p
-	Sp1D1Y0epKsdFnujKXS7yBuaBZCb4itKqHx7S1OvKuP4XmxjPUMeqJj+qUCUE6suu8BIF9PL2le
-	nC1Qrs+BcDfZzIXtpxtdT3ScGwyHFF80z/bfB3MvO1+wRYNh0dTAPH1JYwnxCvs5SzUAfnzLBPj
-	b30lCbdp7PhuvN4l+Bi5bMPo3bnl+fWt0AU2j/Cwj3I2xuAa9yEVfSGyTSC0Vmd+GWpN+U0j0mt
-	bmnPEFf11GIJ+4pUhGl0zyjIidYUI2n5
-X-Google-Smtp-Source: AGHT+IGEgBOjhueRBJQDOOD+YjPfNJuNtGPXMADUyLrPBgDpdIBjVWb7iZ7LsyjAfh/7UNsZ+oLmUA==
-X-Received: by 2002:a05:6000:1565:b0:391:122c:8b2 with SMTP id ffacd0b85a97d-399795ae3a9mr2247824f8f.31.1742461355604;
-        Thu, 20 Mar 2025 02:02:35 -0700 (PDT)
-Received: from localhost ([2a02:8308:a00c:e200::59a5])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c7df413esm22708633f8f.20.2025.03.20.02.02.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 02:02:34 -0700 (PDT)
-Date: Thu, 20 Mar 2025 10:02:33 +0100
-From: Andrew Jones <ajones@ventanamicro.com>
-To: Charlie Jenkins <charlie@rivosinc.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Ard Biesheuvel <ardb@kernel.org>, 
-	Ben Dooks <ben.dooks@codethink.co.uk>, Pasha Bouzarjomehri <pasha@rivosinc.com>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>, Alexandre Ghiti <alexghiti@rivosinc.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Masami Hiramatsu <mhiramat@kernel.org>, 
-	Mark Rutland <mark.rutland@arm.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Peter Zijlstra <peterz@infradead.org>, Josh Poimboeuf <jpoimboe@kernel.org>, 
-	Jason Baron <jbaron@akamai.com>, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 1/2] riscv: Move nop definition to insn-def.h
-Message-ID: <20250320-25d2b6edb008a666151b786f@orel>
-References: <20250319-runtime_const_riscv-v10-0-745b31a11d65@rivosinc.com>
- <20250319-runtime_const_riscv-v10-1-745b31a11d65@rivosinc.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eK8MGuqU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC0D0C4CEDD;
+	Thu, 20 Mar 2025 09:06:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742461616;
+	bh=pfQ50DScHy5B2hGnA/xfElhuDtGGC1uqaV5CxJ3vKgs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eK8MGuqUeyd5bwCQSPsxOFNGfg/DLAGcO/YG8RTKbVY4pCMGLLvlwDmCVj88SKLkr
+	 SLv0ZjGu/pHxMW0vQyHogtyIo6Q4cU4wTbB/nvljDfOwJhXqyRyW1/YaOKpE+YF3cw
+	 /2e+mdquudcqcdnmkuGTw/cxIdMXG84kf5CjLGhXwQv5wci3F4WJBDeFol2B7D4USs
+	 mvbLvuJ/eJa/1JJ9MucQlzGo2UAXmKH2Ygk15kuZiceYbc+oQiQms88wBO7eJoU7b4
+	 GNeOlvS5K4rjl2ls3SiIcdJjWy4l8Zkz09rQj1MIVqhR0tqy6578R1H1wRtnqpKZsA
+	 gY+rXi4CrmvAw==
+Date: Thu, 20 Mar 2025 10:06:53 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 1/2] dt-bindings: regulator: add adi,adp5055-regulator
+Message-ID: <20250320-unbiased-cooperative-coyote-e7e255@krzk-bin>
+References: <20250320-upstream-adp5055-v2-0-aac2d3705802@analog.com>
+ <20250320-upstream-adp5055-v2-1-aac2d3705802@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250319-runtime_const_riscv-v10-1-745b31a11d65@rivosinc.com>
+In-Reply-To: <20250320-upstream-adp5055-v2-1-aac2d3705802@analog.com>
 
-On Wed, Mar 19, 2025 at 11:35:19AM -0700, Charlie Jenkins wrote:
-> We have duplicated the definition of the nop instruction in ftrace.h and
-> in jump_label.c. Move this definition into the generic file insn-def.h
-> so that they can share the definition with each other and with future
-> files.
+On Thu, Mar 20, 2025 at 02:53:54PM +0800, Alexis Czezar Torreno wrote:
+> Add documentation for devicetree bindings for ADP5055. The device consists
+> of 3 buck regulators able to connect to high input voltages of up to 18V
+> with no preregulators.
 > 
-> Signed-off-by: Charlie Jenkins <charlie@rivosinc.com>
-> Reviewed-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> Tested-by: Alexandre Ghiti <alexghiti@rivosinc.com>
-> ---
->  arch/riscv/include/asm/ftrace.h   | 1 -
->  arch/riscv/include/asm/insn-def.h | 3 +++
->  arch/riscv/kernel/ftrace.c        | 6 +++---
->  arch/riscv/kernel/jump_label.c    | 4 ++--
->  4 files changed, 8 insertions(+), 6 deletions(-)
 
-Reviewed-by: Andrew Jones <ajones@ventanamicro.com>
+Please use subject prefixes matching the subsystem. You can get them for
+example with 'git log --oneline -- DIRECTORY_OR_FILE' on the directory
+your patch is touching. For bindings, the preferred subjects are
+explained here:
+https://www.kernel.org/doc/html/latest/devicetree/bindings/submitting-patches.html#i-for-patch-submitters
+
+
+> Signed-off-by: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+> ---
+>  .../bindings/regulator/adi,adp5055-regulator.yaml  | 161 +++++++++++++++++++++
+>  MAINTAINERS                                        |   6 +
+>  2 files changed, 167 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml b/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..fc8f1e61ba321f8b4c6f8c1e3d0e91d570fb4953
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/adi,adp5055-regulator.yaml
+> @@ -0,0 +1,161 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/adi,adp5055-regulator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices ADP5055 Triple Buck Regulator
+> +
+> +maintainers:
+> +  - Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
+> +
+> +description: |
+> +  The ADP5055 combines three high performance buck regulators.
+> +  The device enables direct connection to high input voltages
+> +  up to 18 V with no preregulators.
+> +  https://www.analog.com/media/en/technical-documentation/data-sheets/adp5055.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adp5055
+> +
+> +  reg:
+> +    enum:
+> +      - 0x70
+> +      - 0x71
+> +
+> +  adi,tset-us:
+> +    description:
+> +      Setting time used by the device. This is changed via soldering
+> +      specific resistor values on the CFG2 pin.
+> +    enum: [2600, 20800]
+> +    default: 2600
+> +
+> +  adi,hw-en-array-gpios:
+
+Drop prefix, drop "array" and this probably will be changed anyway.
+
+> +    description:
+> +      Asserted during driver probe. Each array entry acts as the
+
+s/Asserted during driver probe.//
+If driver moves this code to other place, does it mean bindings are
+wrong?
+
+> +      hardware enable for channels 0-2. Should be marked 0 for active
+
+What does it mean "0" for active low? No, active low has its own flag.
+
+Use proper flags and implement it properly in the driver.
+
+What is hardware enable and software enable? Is it enable-gpios per
+regulator? Then why this isn't in the regulator node, just like we
+expect for all regulator bindings?
+
+
+> +      low. Requires all three channels to be initialized. Not adding
+> +      the property turns the system to a software only enable mode.
+> +    minItems: 3
+> +    maxItems: 3
+> +
+> +  adi,ocp-blanking:
+> +    description:
+> +      If present, the over current protection
+> +      blanking (OCP) for all channels is on.
+
+Don't
+wrap
+at
+random
+places, plese.
+
+> +    type: boolean
+> +
+> +  adi,delay-power-good:
+> +    description:
+> +      Configures delay timer of the power good (PWRGD) pin.
+> +      Delay is based on Tset which can be 2.6 ms or 20.8 ms.
+> +    type: boolean
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^channel@([0-2])$":
+
+This is a mess... never tested and makes no sense. Either this is a
+regulator or a channel. Looks like regulator, but you called it a
+channel. If regulator, then missing ref to regulator schema.
+
+> +    type: object
+> +    additionalProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        description: The channel number representing each buck converter.
+> +        maximum: 2
+> +
+> +      adi,dvs-limit-upper-microvolt:
+> +        description:
+> +          Configure the allowable upper side limit of the
+> +          voltage output of each channel in microvolt.
+> +          Voltages are in 12mV steps, value is autoadjusted.
+> +          Vout_high = Vout + DVS_upper_limit.
+
+And how do you configure vout?
+
+> +        minimum: 12000
+> +        maximum: 192000
+> +        default: 192000
+> +
+> +      adi,dvs-limit-lower-microvolt:
+> +        description:
+> +          Configure the allowable lower side limit of the
+> +          voltage output of each channel in microvolt.
+> +          Voltages are in 12mV steps, value is autoadjusted.
+> +          Vout_low = Vout + DVS_lower_limit.
+> +        minimum: -190500
+> +        maximum: -10500
+> +        default: -190500
+> +
+> +      adi,fast-transient:
+> +        description:
+> +          Configures the fast transient sensitivity for each channel.
+> +          "none"    - No fast transient.
+> +          "3G_1.5%" - 1.5% window with 3*350uA/V
+> +          "5G_1.5%" - 1.5% window with 5*350uA/V
+> +          "5G_2.5%" - 2.5% window with 5*350uA/V
+> +        enum: [none, 3G_1.5%, 5G_1.5%, 5G_2.5%]
+> +        default: 5G_2.5%
+> +
+> +      adi,mask-power-good:
+> +        description:
+> +          If present, masks individual channels to the external
+> +          PWRGD hardware pin.
+> +        type: boolean
+> +
+> +    required:
+> +      - regulator-name
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        regulator@70 {
+> +            compatible = "adi,adp5055";
+> +            reg = <0x70>;
+> +            #address-cells = <1>;
+> +            #size-cells = <0>;
+> +
+> +            adi,tset-us = <2600>;
+> +            adi,hw-en-array-gpios = <&gpio 17 0>,
+> +                                    <&gpio 18 0>,
+> +                                    <&gpio 19 0>;
+
+No, use proper defines and proper flags.
+
+> +
+> +            adi,ocp-blanking;
+> +            adi,delay-power-good;
+> +
+> +            DCDC0 {
+
+Your schema said something else. Test your patches before sending, not
+through our systems.
+
+Best regards,
+Krzysztof
+
