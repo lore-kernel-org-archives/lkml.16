@@ -1,182 +1,125 @@
-Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.126.134])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF12B1E3DDB
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:09:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBD6D1C5F2C;
+	Thu, 20 Mar 2025 19:09:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.126.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497778; cv=none; b=POoX65WBu3nPgkXvSp7vzLbH9jOeGEpMbUokpOeCjWPEDd70zwuijL5+VOMsSpFJlTkpByp6GSvWZgdo4pwvBFmp6iUzzXBkuf1rq9reWsYm4AGgkIYIL780I05VmIU3zImnX0sFiBLB2VTe62S4d9SsiPrxkUwiJs++FiQlFx4=
+	t=1742497799; cv=none; b=WijRL1EH5GUUj1Lc91fTbc1bVc0hGLhk5284fLQXReiRG2wySgm9DyXqv93xV+IGqyAqMIG2F7f2Nr/P10AZ2OUfMZHnGGocsw/6Wnljdp43nDNTlwzLQojsbMkJy2YQB5CBYh0KxbfNoGtOeyIk5NOj2PbUHtAQ59iz7vyEWA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497778; c=relaxed/simple;
-	bh=IqK30dSg0VXcE8Hxcmvi+ASodPwc59V7GZz1jXxeDdQ=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=OrHC4KHJLb5QgJc2tsyAcTIGd+LKjXqMYtz5Tt3au1eRr3x5QbrV5lBiUMoKGUPOGfDPmWjytRThnRbm4baOiQgv2uB3ooL7X/1j5wA9d/GbgQK1xC8+b1SlaLBAH3CoHlDa3E9VYVkMS7KB+WiNk8bLlprv/UTH8yLStCwUzNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-85b53875729so245021639f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:09:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742497776; x=1743102576;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pbu2gMOs/U0oLHAsDX8wLz3Z53T/x8PaRosDpy4/fbw=;
-        b=SlpBU13H4zb2THBOSyvWxYj4+6fO0NTMuULNkwLHrHjjG6R1RG9bqmZfdn5zB1PfBX
-         EL5ny6inNkTgxdRsXIU3a2cCAQQPZfXZRNfxtYjIvCPiBamDUyHPzrRPgr+pmr43DKB3
-         tbRdGWzuGwgWn0/+mEkHjCRjERwO43UdRvIKJUDK+F3ln6nqwlLeEABDfdId+I032zEL
-         dyk1CA03v78iMh0e+ppmSyAfY/I2hJi09xc2e98h6eJDtoSTKiiTzDdav5lfQMDw0iwy
-         6L4HxkP5OB4RIA4uICxKWzwXkEYJLQ6hzEvWZtG/JhdD7RCEtUfyBar4mmWVrLgJ5nku
-         9pZA==
-X-Forwarded-Encrypted: i=1; AJvYcCXWNtMx4TFV5LKjjwpidIubxmrfLuKQeL9QY07Md4k+pbgNUPa2CjZliGoA+RGxp8f7MtHE5xbv9h7UJKo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYSluPcHdigZDRU3HWP+p0T9FgF+YBWlys5WXxabtPcVk4GIFX
-	bYwgYEdksCCUKqXqaItGhROOEc7wxCd+QjrXoeTfqKMO2nGXOfEiC3jUUm2YHBLipKE6fVRZc1C
-	1D8iH/KB6YmD4c434CspRD2CiCn78kNeDNyotL+v+gHlPX4IsKDmqmKU=
-X-Google-Smtp-Source: AGHT+IGH76oVaYImak1yulyKzTW1M6dX+LZo9EfJLdjGWwIfgc25EP+Qp7ndSxK/TrVUssGaX4893mqnNfvuhWp3ZBvBKu2t3FMe
+	s=arc-20240116; t=1742497799; c=relaxed/simple;
+	bh=TJPs+6wmIiv7YBBthqS5uAj/EfP7DIgfa/FVnOx9cNc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AK2Irm6RplW1R7IoAnOQ+Rh4KEnH24H2hCKk6YqDkNeAuLKHiXgCY20SQ9K60BpF7iDB4CUTrqcD2PFwT8lh6cIzkdDF+Zb0lsGC3kItzPMumniNRdA5tcag9dDQkQBBXoV/rvnaZxphV81BKsE/nIjBOOqdvE/NFxnFiZ4mkEk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=szANa/5a; arc=none smtp.client-ip=212.227.126.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="szANa/5a"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=heusel.eu;
+	s=s1-ionos; t=1742497781; x=1743102581; i=christian@heusel.eu;
+	bh=dN7Ji6DtQjkkoXTgLs8+LwmmvBuvr5b2CCS+MInyr4Y=;
+	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:In-Reply-To:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=szANa/5a4iwCELE7d7JBQQ+CAv+YgAtp0WSb1Sqy8g7vzScFAXT+GWhzOFExSuN0
+	 /LpryzDxAM3H/drbOTPjHJTpjgivzSFfd1u/pAfdayYatovznivPq8AhsOV8NmtnN
+	 fxuDziye6eTRQXuwvlb4Mdnc99C2r4u5Zba9b/bx9MdxijOWR2EzTviyG9KZ0i8Fh
+	 l6wlvH1eDSm0ZWdkQreEHLrSxIO0hIM43vFNYKpEBgzD5KTqepggh29+NTBEUO+bc
+	 Az++cktr78peXvwAbb5CWKfI04mo4WOekLj/7YjU1UMqBjuoIKmLn+d+/bYivJf5H
+	 JtnvMYGxytUZ6O6XNg==
+X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
+Received: from localhost ([147.142.150.221]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1N5mWp-1t7d7S0mXz-016eyf; Thu, 20 Mar 2025 19:54:49 +0100
+Date: Thu, 20 Mar 2025 19:54:46 +0100
+From: Christian Heusel <christian@heusel.eu>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, akpm@linux-foundation.org, 
+	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org, 
+	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com, f.fainelli@gmail.com, 
+	sudipm.mukherjee@gmail.com, srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, 
+	hargar@microsoft.com, broonie@kernel.org
+Subject: Re: [PATCH 6.13 000/241] 6.13.8-rc1 review
+Message-ID: <7ab191ab-448f-476a-a54e-31113996b110@heusel.eu>
+References: <20250319143027.685727358@linuxfoundation.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a92:c263:0:b0:3cf:c773:6992 with SMTP id
- e9e14a558f8ab-3d59611acdbmr7769445ab.12.1742497776031; Thu, 20 Mar 2025
- 12:09:36 -0700 (PDT)
-Date: Thu, 20 Mar 2025 12:09:36 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67dc67f0.050a0220.25ae54.001e.GAE@google.com>
-Subject: [syzbot] [mm?] BUG: unable to handle kernel paging request in vma_merge_existing_range
-From: syzbot <syzbot+20ed41006cf9d842c2b5@syzkaller.appspotmail.com>
-To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, jannh@google.com, 
-	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
-	syzkaller-bugs@googlegroups.com, vbabka@suse.cz
-Content-Type: text/plain; charset="UTF-8"
-
-Hello,
-
-syzbot found the following issue on:
-
-HEAD commit:    eb88e6bfbc0a Merge tag 'fsnotify_for_v6.14-rc7' of git://g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11e6c83f980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=77423669c2b8fa9
-dashboard link: https://syzkaller.appspot.com/bug?extid=20ed41006cf9d842c2b5
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-eb88e6bf.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/ded0ce69669f/vmlinux-eb88e6bf.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/6e6fa3c719e7/bzImage-eb88e6bf.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+20ed41006cf9d842c2b5@syzkaller.appspotmail.com
-
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-BUG: unable to handle page fault for address: fffffffffffffff4
-#PF: supervisor read access in kernel mode
-#PF: error_code(0x0000) - not-present page
-PGD df84067 P4D df84067 PUD df86067 PMD 0 
-Oops: Oops: 0000 [#1] PREEMPT SMP KASAN NOPTI
-CPU: 1 UID: 0 PID: 17805 Comm: syz.8.3237 Not tainted 6.14.0-rc6-syzkaller-00212-geb88e6bfbc0a #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:vma_merge_existing_range+0x266/0x2070 mm/vma.c:734
-Code: e8 5f 25 ad ff 48 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 1c 19 00 00 48 8b 04 24 48 8b 74 24 08 <4c> 8b 38 4c 89 ff e8 9f 1f ad ff 48 8b 44 24 08 49 39 c7 0f 83 db
-RSP: 0000:ffffc9000319f988 EFLAGS: 00010246
-RAX: fffffffffffffff4 RBX: ffffc9000319fae8 RCX: ffffffff820cd3e5
-RDX: 1ffffffffffffffe RSI: 0000000080c2a000 RDI: 0000000000000005
-RBP: 0000000080ce2000 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000001
-R13: ffffc9000319fb08 R14: ffff888025eddc98 R15: ffff88804eec0a00
-FS:  0000000000000000(0000) GS:ffff88802b500000(0063) knlGS:00000000f5106b40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: fffffffffffffff4 CR3: 00000000614d6000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- vma_modify.constprop.0+0x87/0x410 mm/vma.c:1517
- vma_modify_flags_uffd+0x241/0x2e0 mm/vma.c:1598
- userfaultfd_clear_vma+0x91/0x130 mm/userfaultfd.c:1906
- userfaultfd_release_all+0x2ae/0x4c0 mm/userfaultfd.c:2024
- userfaultfd_release+0xf4/0x1c0 fs/userfaultfd.c:865
- __fput+0x3ff/0xb70 fs/file_table.c:464
- task_work_run+0x14e/0x250 kernel/task_work.c:227
- resume_user_mode_work include/linux/resume_user_mode.h:50 [inline]
- exit_to_user_mode_loop kernel/entry/common.c:114 [inline]
- exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
- __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
- syscall_exit_to_user_mode+0x27b/0x2a0 kernel/entry/common.c:218
- __do_fast_syscall_32+0x80/0x120 arch/x86/entry/common.c:390
- do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:412
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-RIP: 0023:0xf7fe6579
-Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-RSP: 002b:00000000f510655c EFLAGS: 00000296 ORIG_RAX: 0000000000000135
-RAX: 0000000000000001 RBX: 0000000080000180 RCX: 0000000000000001
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000293 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-Modules linked in:
-CR2: fffffffffffffff4
----[ end trace 0000000000000000 ]---
-RIP: 0010:vma_merge_existing_range+0x266/0x2070 mm/vma.c:734
-Code: e8 5f 25 ad ff 48 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 1c 19 00 00 48 8b 04 24 48 8b 74 24 08 <4c> 8b 38 4c 89 ff e8 9f 1f ad ff 48 8b 44 24 08 49 39 c7 0f 83 db
-RSP: 0000:ffffc9000319f988 EFLAGS: 00010246
-RAX: fffffffffffffff4 RBX: ffffc9000319fae8 RCX: ffffffff820cd3e5
-RDX: 1ffffffffffffffe RSI: 0000000080c2a000 RDI: 0000000000000005
-RBP: 0000000080ce2000 R08: 0000000000000005 R09: 0000000000000000
-R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000001
-R13: ffffc9000319fb08 R14: ffff888025eddc98 R15: ffff88804eec0a00
-FS:  0000000000000000(0000) GS:ffff88802b500000(0063) knlGS:00000000f5106b40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: fffffffffffffff4 CR3: 00000000614d6000 CR4: 0000000000352ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-----------------
-Code disassembly (best guess):
-   0:	e8 5f 25 ad ff       	call   0xffad2564
-   5:	48 8b 14 24          	mov    (%rsp),%rdx
-   9:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
-  10:	fc ff df
-  13:	48 c1 ea 03          	shr    $0x3,%rdx
-  17:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
-  1b:	0f 85 1c 19 00 00    	jne    0x193d
-  21:	48 8b 04 24          	mov    (%rsp),%rax
-  25:	48 8b 74 24 08       	mov    0x8(%rsp),%rsi
-* 2a:	4c 8b 38             	mov    (%rax),%r15 <-- trapping instruction
-  2d:	4c 89 ff             	mov    %r15,%rdi
-  30:	e8 9f 1f ad ff       	call   0xffad1fd4
-  35:	48 8b 44 24 08       	mov    0x8(%rsp),%rax
-  3a:	49 39 c7             	cmp    %rax,%r15
-  3d:	0f                   	.byte 0xf
-  3e:	83                   	.byte 0x83
-  3f:	db                   	.byte 0xdb
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="xw3vwn7ep3f4np5v"
+Content-Disposition: inline
+In-Reply-To: <20250319143027.685727358@linuxfoundation.org>
+X-Provags-ID: V03:K1:qS2mWgbyy4p+6ATI4UNi8W2UsUcEoRtG63M2FiZ4bB/p3WEqOkD
+ MFXP4hUkttdmZW+Kt8ApPjcvr1F58NOr4B53AOby9TcTVQybuP1zK337lRpSz3jDh+1MeUs
+ 6YYKwFqi5E3lJh22eBhMkj5YmYKQVjUyDLZSCwQ9VR/wylgVev8k80Dxc0ay4fuVQpUaLth
+ 8aobssraWGqkAe/kkQjaw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lNB/bmmMXEs=;MLmfs0EPjz6VTOr6arRdkm2iOZf
+ 0u52w5A2WbnIGiIO/htPgAhtp34rBmeJBjRDCLR1GJ+GVDxs1EQgHS+gZxYW6EgfyJzwoToL9
+ ZOAu1r4BBZURZgrPOitVAKLvdMxD34GBRpv8HovQuRh5dTPyVmb88tRQWXlB7CWBlMtMAfVvD
+ e/Kjtfsjp++kKTF5dhQyyT1kOpoZtIfYjJmlXvm96tjipnVoysS+n10NfppeKJfNsD8BC7RqY
+ 37bL5cRxbUPl11sIYXrkYubH+0ELs1EriFTxBGANCOxvPloGHN0k0NMUKrX5iJz5+LWv7Ugb1
+ uMpb5SE2LTt+QL3mwEy907yQlkMScLdB1YqU7l59An136Hz69BjW3gX9L5vSsWOCUAnZ08XwT
+ Z/ZXYEnW7lW+0aR8y/LKdCpQuuf871w+Idhf0jAak2y9KqwN5QZ8oaM+2w0ZGn91lDMS0SfSX
+ vYlRNsOwJR+BKuGHoZN7GK8NI2d8G4iO3R7ZLN6gM2RBFoFek6rZ4EHoLtrKynAY6SV+zgBwZ
+ uQj1X2oNzG4POSI6/of5A+bwUDqOq9L1HqsZm0NvvWMV5aOg8RA1Uf17iHeehLPDNPag5NgCV
+ YV2FJ08RSSMSnWO47C/cxlvgiX8RnMkTJ4FNMAh2iOt8403ViuW9JCyVJyNY8ZpXl/0QOT9kF
+ cg3ywCTMZ2ykeUd4p6n0+ok5NILs98xM7Lufot4okT2eNyByogBXAG9RzIi1SLl9WZB+bHJrl
+ 3/f8jcdKLJPHzl4oLik4esSV7vVMiEFhAsDD+uTNSZmFuHzNs9m5K/q/kbNvjY17lOU0fawSz
+ FeKnJfVtWkzm9G+FACFT0FyItwrhMxfVgzS+EQTYz3WsKf4gnnEKEKjV3YQvBonDP9obRUHxX
+ 1GFBQrMqxTXWemdQz3L6lg6qnE5lNn7Zneoq1k1pJLBR4xBUNUbGnX2iOv191hWqMdfStm3rY
+ OSMkZ0ea1YSWkyOQKj09Iass8EdDCU+mTpJGoPUMytaJzYYfVaneXO+e3p4M+VjHDI2xqloOD
+ 6ATaFb3mDP6j0QIoF5I/rrBuHZwpNj+oF4vNSd9qEDx9HKAerHCh37KD/tBp1gziyf8Y4x+FX
+ Ffk00z5iCpzc0ycfdSkw/tBFzbJmiZdDjjc07NZUwaoii+r9z2FhpWMd6YLabQp73SKkdEd2O
+ TlKI7GBtaDPyQJ1ytcfxz9J2NzkCztMZmx5USP6DKqPjc4aAjTdwNp/zOOW1KERrxNPkw7yG0
+ RdpZr2pwCSx1hm3S0J59Zhbs3EBMzL+q63tIGA2rY8hebJ3PtRDCHs8Tea2U1don3pWd3OtRl
+ JZwuO3Tf85QGN9n8qquHAlDUDK1O1yWE03dqKKcalBk6UEK8InvVkocKJYoi7PbgWmmYefzgo
+ L5hLx8Kq2hiS2gGt0cvaoEBRa8kRnMkS2cFY8=
 
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--xw3vwn7ep3f4np5v
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 6.13 000/241] 6.13.8-rc1 review
+MIME-Version: 1.0
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+On 25/03/19 07:27AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.8 release.
+> There are 241 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>=20
+> Responses should be made by Fri, 21 Mar 2025 14:29:55 +0000.
+> Anything received after that time might be too late.
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
+Tested on a ThinkPad E14 Gen 3 with a AMD Ryzen 5 5500U CPU, on the
+Steam Deck (LCD variant) aswell as the Framework Desktop.
 
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
+--xw3vwn7ep3f4np5v
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
+-----BEGIN PGP SIGNATURE-----
 
-If you want to undo deduplication, reply with:
-#syz undup
+iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmfcZHYACgkQwEfU8yi1
+JYV7ExAAsTcCSYipslyJJfjqj46cseSWoEVf/H3DawpIPeCrTX0vp284cL2uRz7n
+6KHXAWp0KP3hSxXo5i/NyPhQ5SZus8BNYkbKmkMSUciC/vrTY9b5PrnQ//mndhUa
+luM5yE6SAShkbl69LuMIxr8Jg9+/Lzk6HYdLeiOE+dvy/tR6izcKEhrulDn08qCD
+qrIGMYGlvTNtAKrrwQYnHqBOv3akXUtXv8xrdoa5e7XeyArFbIXwU1wTJllLaevn
+UQdAOjRD7PKAQYLV0HA6iY0Uic1yICZ2kEueSgfn7iEuvkijeS2rXLjynoev5YSA
+J9LNHY7UQTQVzVyvRr72TmodRUwLFsETRwpYqPbhj37p7tYVfSV+YCHoEfI65IgS
+LkMlZe0QdH8ywSsGbBs3chPcrA+y/bKeJ4pzSnuLLBOcrZPwK6qcxm9nQGcFMqu+
+LmC3BxekambG6f+B4rF15vtuiK0QU1VlkJeFy5IGGJKSEDeQmqHmpbz+6i8AJplq
+M9SfI6nmNyI0NNDiG7QtHYvnmD8Hcyst3Oiip+1gwfkN2WVn9v8vXiw1l3H4AcOZ
+qAzA78xhnjZhpTN+WKPZNJVhQB0tdrpC0E6H7LSbeGh+3vS1WH5LrAhgCiRz/Zhy
+uVfvQL+BJFJPn1AyVSXa6CYOMYKGHdQHghY0qOy1to1SkqxwJpk=
+=ejVD
+-----END PGP SIGNATURE-----
+
+--xw3vwn7ep3f4np5v--
