@@ -1,139 +1,85 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE6E217A31A;
-	Thu, 20 Mar 2025 12:20:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1470E221D92;
+	Thu, 20 Mar 2025 12:22:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742473259; cv=none; b=swaz7+VwEqPPldh0bxg3ARCfi/en4mBSDw1bPkfnkvBCoBKfm+zp5zM+7Y38VBCFVQHd+3Uu9CroKWFs1kwKoiVtnx64oXSc4VKELpa7UD+Y5nReJeINvKzPA+VEwYvy5RnF0mgO9T10JikfAVVWlNjQsC9FmvEbH5mwDujSB7Y=
+	t=1742473345; cv=none; b=dEAlgwIWfkc6wziANQTGV+UCj6fPsHo2x104krE43v1p698CfWrt6IPvcT2MY/kDSr5LnwgEHk8ddgeBZiReTLw21FrPP6DUbWjBusS9/vu80hFVujcBrDAmmZo6o6gQu3hzlOATmZYpeDE2o52GoSp1zc6bOkctbIOW9KoPFoA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742473259; c=relaxed/simple;
-	bh=ObbmHjbc8zZC963JR2zDwtsuXqPwG1o6MCnmRa4zEeg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=r5+nLW0dfMnjeVoZq9ViysQU5/2bfKM/3h0l2Blk1VZIbqxe2AwUUzqHrd53xtwWI+VZn77Nafre7HWMLY6Kenf3FssRK1QrKPEhw/2j12lEu/gmPWDZYhhAcjiHkCanJsl5N/aFVn3DmI7rOzBqd9HeBsk2ez4AEuBXWSFkh9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=BxGBJrtk; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+	s=arc-20240116; t=1742473345; c=relaxed/simple;
+	bh=b9v858p0OIaRBMwtd4olUrdpUpSNpUSwYD8pwZH55AM=;
+	h=From:To:Subject:Date:Message-Id; b=W7dHtG06962qZUx5wMFfZw5ohTJsfFBpW7J9lut64x8Ns7NFsilJY6GzCg5tqFhOOjI7PzNgZ25jXGhtsXu4OZ7uTUJij1pEof9BDjK86b/8sQDpqC/99t0LtaBScP1zkE9Bz8n3ly+2QMQrc+kNck58AO1+Iy/BtOVHs9OqNas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=XrEHnCM9; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="BxGBJrtk"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52K59d8q031203;
-	Thu, 20 Mar 2025 07:20:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=
-	PODMain02222019; bh=3tLRhB83LvBqQnQvwrt/Ef3YOjAwm3tOEBLod32rvM4=; b=
-	BxGBJrtkgP8YYuiB4+Wg7NP5ioeHhSU8EZU7WuQ5x/1OyoIxsrkC+0RI+C6iCZq9
-	IQido1gKVEryspyyY63qJ3bSqFo+8J9dr0O5Vr5U+blE3GCFDSl4TeaK2BaNmV64
-	jA3vI7+KlbZGFFmw6K7A9XtUdRECz1liZ6DNjMW5lwlNXfjUxH4/1T6AgO2BkQOv
-	1wySWpw4nvngZNIhq8jSiI8oDbY8tuzlVdD7GiKhCSEVBZxa1BkZFNoYRoNPx/17
-	+ya/OEAbygOxVmtJE47bfzxgxdE33xaj+EdeQZmzKTIvL0ySU4KWzOi0wkElh2pp
-	hxc/pqJu340Awj1dpBHcKg==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 45g9p6s0by-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 20 Mar 2025 07:20:38 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Thu, 20 Mar
- 2025 12:20:36 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server id
- 15.2.1544.14 via Frontend Transport; Thu, 20 Mar 2025 12:20:36 +0000
-Received: from [198.61.68.186] (EDIN4L06LR3.ad.cirrus.com [198.61.68.186])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 0FB9282255A;
-	Thu, 20 Mar 2025 12:20:35 +0000 (UTC)
-Message-ID: <d8fc1f66-f220-42fb-b58f-f5f9c7d30100@opensource.cirrus.com>
-Date: Thu, 20 Mar 2025 12:20:34 +0000
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="XrEHnCM9"
+Received: by linux.microsoft.com (Postfix, from userid 1173)
+	id 4F18D2116B34; Thu, 20 Mar 2025 05:22:23 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4F18D2116B34
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742473343;
+	bh=nmXuhRxA4O5/iLeq1TWM0swpJEXmF9yq9iS58rojMrw=;
+	h=From:To:Subject:Date:From;
+	b=XrEHnCM9bQSDvYdYumIFkdIg+C64BIaGVOO5dml1XMl70uD9tno+jiWtmdHBOfonQ
+	 nNcB5P7Bp6rKip1IYN5w1X2o+yD7cJ5IxTE9dOEuPElJYjx1/IYibAdNuorlZVLofk
+	 eGpwfzkh1OdHRkDQAM6ComdjKVs3NZYwO8ggFZSY=
+From: Erni Sri Satya Vennela <ernis@linux.microsoft.com>
+To: kys@microsoft.com,
+	haiyangz@microsoft.com,
+	wei.liu@kernel.org,
+	decui@microsoft.com,
+	andrew+netdev@lunn.ch,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	longli@microsoft.com,
+	kotaranov@microsoft.com,
+	horms@kernel.org,
+	brett.creeley@amd.com,
+	ernis@linux.microsoft.com,
+	surenb@google.com,
+	schakrabarti@linux.microsoft.com,
+	kent.overstreet@linux.dev,
+	shradhagupta@linux.microsoft.com,
+	erick.archer@outlook.com,
+	rosenp@gmail.com,
+	linux-hyperv@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-rdma@vger.kernel.org
+Subject: [PATCH 0/3] Add support for speed in MANA ethtool
+Date: Thu, 20 Mar 2025 05:22:18 -0700
+Message-Id: <1742473341-15262-1-git-send-email-ernis@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] kunit: cs_dsp: Depend on FW_CS_DSP rather then enabling
- it
-To: Nico Pache <npache@redhat.com>, <broonie@kernel.org>,
-        <patches@opensource.cirrus.com>, <linux-kernel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <kunit-dev@googlegroups.com>
-CC: <simont@opensource.cirrus.com>, <ckeepax@opensource.cirrus.com>,
-        <brendan.higgins@linux.dev>, <davidgow@google.com>, <rmoar@google.com>,
-        <johannes.berg@intel.com>, <sj@kernel.org>
-References: <20250319230539.140869-1-npache@redhat.com>
- <CAA1CXcD2g=sRRwgLSudiOAqWXq3sCj+NPuE1ju7B2gFXXefjXA@mail.gmail.com>
-Content-Language: en-US
-From: Richard Fitzgerald <rf@opensource.cirrus.com>
-In-Reply-To: <CAA1CXcD2g=sRRwgLSudiOAqWXq3sCj+NPuE1ju7B2gFXXefjXA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=Vcz3PEp9 c=1 sm=1 tr=0 ts=67dc0816 cx=c_pps a=uGhh+3tQvKmCLpEUO+DX4w==:117 a=uGhh+3tQvKmCLpEUO+DX4w==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=20KFwNOVAAAA:8 a=2PFKkWWLCDjf3SO0miIA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-Proofpoint-GUID: cagRjpx59etYv9AJ4wAhWJHlCdStqxuh
-X-Proofpoint-ORIG-GUID: cagRjpx59etYv9AJ4wAhWJHlCdStqxuh
-X-Proofpoint-Spam-Reason: safe
 
-On 19/3/25 23:11, Nico Pache wrote:
-> On Wed, Mar 19, 2025 at 5:05 PM Nico Pache <npache@redhat.com> wrote:
->>
->> FW_CS_DSP gets enabled if KUNIT is enabled. The test should rather
->> depend on if the feature is enabled. Fix this by moving FW_CS_DSP to the
->> depends on clause, and set CONFIG_FW_CS_DSP=y in the kunit tooling.
-> 
-> A further note here:
-> 
-> This test is failing and panicing across multiple arches, and
-> triggering kasan slats on debug kernels. I think this test needs more
-> testing ;P
->
+Display speed information of the port via get_link_ksettings
+ethtool operation using a HWC command MANA_QUERY_LINK_CONFIG
+to fetch the speed information from the hardware.
 
-Please supply details of failures or links to bug reports.
-"is failing" and "panicing" doesn't tell me enough to fix anything.
-Failing how? Panicking how? On what architectures?
-I tested it on the architectures I have available, and the kunit um
-architecture. Unfortunately not everyone has hardware for every
-architecture supported by Linux so we have to trust somewhat that
-other architectures don't do anything unexpectedly different from
-what we _can_ test it on.
+Add support for mana_set_link_ksettings in MANA ethtool operation.
+A HWC command (MANA_SET_BW_CLAMP) is sent to hardware to set
+the bandwidth at specified speed.
 
-Also, are any of these failures the unterminated string bug that someone
-fixed recently?
+This feature is not supported by all hardware. For any unsupported
+clusters, the speed will be displayed as Unknown.
 
->>
->> Fixes: dd0b6b1f29b9 ("firmware: cs_dsp: Add KUnit testing of bin file download")
->> Signed-off-by: Nico Pache <npache@redhat.com>
->> ---
->>   drivers/firmware/cirrus/Kconfig              | 3 +--
->>   tools/testing/kunit/configs/all_tests.config | 2 ++
->>   2 files changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/firmware/cirrus/Kconfig b/drivers/firmware/cirrus/Kconfig
->> index 0a883091259a..989568ab5712 100644
->> --- a/drivers/firmware/cirrus/Kconfig
->> +++ b/drivers/firmware/cirrus/Kconfig
->> @@ -11,9 +11,8 @@ config FW_CS_DSP_KUNIT_TEST_UTILS
->>
->>   config FW_CS_DSP_KUNIT_TEST
->>          tristate "KUnit tests for Cirrus Logic cs_dsp" if !KUNIT_ALL_TESTS
->> -       depends on KUNIT && REGMAP
->> +       depends on KUNIT && REGMAP && FW_CS_DSP
->>          default KUNIT_ALL_TESTS
->> -       select FW_CS_DSP
->>          select FW_CS_DSP_KUNIT_TEST_UTILS
->>          help
->>            This builds KUnit tests for cs_dsp.
->> diff --git a/tools/testing/kunit/configs/all_tests.config b/tools/testing/kunit/configs/all_tests.config
->> index b0049be00c70..96c6b4aca87d 100644
->> --- a/tools/testing/kunit/configs/all_tests.config
->> +++ b/tools/testing/kunit/configs/all_tests.config
->> @@ -49,3 +49,5 @@ CONFIG_SOUND=y
->>   CONFIG_SND=y
->>   CONFIG_SND_SOC=y
->>   CONFIG_SND_SOC_TOPOLOGY_BUILD=y
->> +
->> +CONFIG_FW_CS_DSP=y
->> \ No newline at end of file
->> --
->> 2.48.1
->>
-> 
+Erni Sri Satya Vennela (3):
+  net: mana: Add speed support in mana_get_link_ksettings
+  net: mana: Implement set_link_ksettings in ethtool for speed
+  net: mana: Handle unsupported HWC commands
+
+ .../net/ethernet/microsoft/mana/hw_channel.c  |  4 +
+ drivers/net/ethernet/microsoft/mana/mana_en.c | 92 +++++++++++++++++++
+ .../ethernet/microsoft/mana/mana_ethtool.c    | 19 ++++
+ include/net/mana/mana.h                       | 33 +++++++
+ 4 files changed, 148 insertions(+)
+
+-- 
+2.34.1
 
