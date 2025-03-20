@@ -1,95 +1,134 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43DF224B13
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:06:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20CF41EB5D9;
+	Thu, 20 Mar 2025 18:07:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742494019; cv=none; b=DSqJ1H7Ow2csCXQQ0eJ5c1Qho+E98T3poAwCkOHWSdaSTAfE7+RQTRUq5URQlpPHohZVPkhOtVZXVzWqC31YqzfpGNb1HMU3uLvlE0HPecWa4WPlbKcEk4R/mo1N5iZBMeYCjy9nRSYFasaJfUfBq0na0+dweo0EJ436Cpr0FyA=
+	t=1742494063; cv=none; b=u5PR1QzTF0XmjLYSsbdix1yp9veN+WwRJJ2Fs/yWGKfkSozKzxAfQUoL2DuG6Bhix8ScdKjv2SPV3DpZDLAvKEM2HlffWHKHMCbmchvFGmjI663L0OAy+JIq+G3Wetc8zwjC2Xwwt62iNmfDo8OHKtP5jBMVK4wy5+2YV4SMmtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742494019; c=relaxed/simple;
-	bh=VbcBXlqxQ8R1Ak3EnW4jRzK2MT9B93mYiE6a4eqTPeg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V14RkvQE0m2h+yDubjGSVgf5U2VOezWQRUsnjEL+npBGOdMlnWTEecAJofFSbSoa8gxNlPp0tNaZofwE2NbKS7/T2nECO+iy9bjsajsGegROrZ4SgX2O5nO6H7k5lTRA0JAIxL0/5i488qRrCBKYbBmdLJvouuNU054+Y+4mm9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=G5g2stWj; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742494063; c=relaxed/simple;
+	bh=QV8L3eVu7WzhPo4f9l+/FZnZO++yXN6ZtUYKcJzPTjU=;
+	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=GbrUMnHu3FynYj9ggM2olyoTqK7v2SvDz+Prll6kksdx4i700BwcL1Xa50VUQXLXUgn/gP3Axse2N/v4UwjRtEylKS4Q5MwXFuBdBnwbVWRuX92hA3iR2xaSIhRRCe7nXG5Ix2Uyp/NweENBBAyKxrufc8fKEcr7cScNnqBDvx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Gzu//wCC; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="G5g2stWj"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742494015;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=4KWDo96DATcrCi+aZaGajcdmZmzyQjrvIRx3fYoFil0=;
-	b=G5g2stWjE1aTDWjIzLgcI6hVG/LtAQ4AeJtUUMPwy+cYOS1m4Hl8Zji9B5j0c5Inxvmm8S
-	ZSemdO9P6CVwWDADfOjJaPtJo9LtZJdl8tDlmMrNbJ+PTEGw7WbVPHZawKXG0QXDtAMR1P
-	F1IFXZoOd1Hz1DIF2JcWv4OLyS5Ky/U=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-451-mhjdh0KtNu6c-5W776kB4Q-1; Thu,
- 20 Mar 2025 14:05:25 -0400
-X-MC-Unique: mhjdh0KtNu6c-5W776kB4Q-1
-X-Mimecast-MFC-AGG-ID: mhjdh0KtNu6c-5W776kB4Q_1742493924
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 385AB1933B48;
-	Thu, 20 Mar 2025 18:05:24 +0000 (UTC)
-Received: from virtlab1023.lab.eng.rdu2.redhat.com (virtlab1023.lab.eng.rdu2.redhat.com [10.8.1.187])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 91CAC1828A83;
-	Thu, 20 Mar 2025 18:05:23 +0000 (UTC)
-From: Paolo Bonzini <pbonzini@redhat.com>
-To: torvalds@linux-foundation.org
-Cc: linux-kernel@vger.kernel.org,
-	kvm@vger.kernel.org
-Subject: [GIT PULL] KVM fix for Linux 6.14 final
-Date: Thu, 20 Mar 2025 14:05:22 -0400
-Message-ID: <20250320180522.155371-1-pbonzini@redhat.com>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Gzu//wCC"
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52KDl50c016217;
+	Thu, 20 Mar 2025 18:07:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=tadcaHxvBRJlFagk5nf3Zh
+	Q7Wvcdf0zs7Bhe9EIYvoc=; b=Gzu//wCCDKo9L+fF10Ijhr0H1dC8qdPMcldMCn
+	D+ZsSb+oAkpR/mh1uLxJuPk43MaTchVDP1+U/WNcsHakr8OqUVBKL0aLzIke4wBk
+	mtAYIeCVM3X6rAkCDo171Ysu/dvm4Uf3e+O6w9ja7yN8T/G1hfps2uNXYrH/Cqzq
+	z4NliqhmeFqi+kl8U+sLfWPu+w2Gt0u3jMe/d8l6+mvY2bcbRIwv/Paohoq/Q7Np
+	afvV9F30S2iwkfx28tQ3gVdC+CTJ/sL7meACwvYA5IITkC4y+cdykQPOKEh2Yzu9
+	LzJMXXDHxsLpxvYT7Vpgv3EtUmJcFil0eTaFCk/O8exiXL6g==
+Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45g4t43cgh-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 18:07:38 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52KI7bGP014994
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 18:07:37 GMT
+Received: from hu-vgarodia-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Mar 2025 11:07:33 -0700
+From: Vikash Garodia <quic_vgarodia@quicinc.com>
+Subject: [PATCH v3 0/3] media: qcom: iris: add support for SA8775P
+Date: Thu, 20 Mar 2025 23:36:49 +0530
+Message-ID: <20250320-dtbinding-v3-0-2a16fced51d5@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADlZ3GcC/1WOzQ6CMBAGX4X0bE1/RIon38N4KNsF9mDBFhsN4
+ d0tJCZ4nC87k51ZxEAY2aWYWcBEkQafQR8KBr31HXJymZkSqhRaCu6mhrwj33FTK9m0IEuJNcv
+ 3Y8CW3lvrds/cU5yG8NnSSa7rryJ3lSS54CUYUTmt28ri9fkiIA9HGB5s7SS1c9X+g6Sya5xBa
+ 09YnQH+3WVZvhuprHDgAAAA
+X-Change-ID: 20250310-dtbinding-8921bfc151e9
+To: Dikshita Agarwal <quic_dikshita@quicinc.com>,
+        Abhinav Kumar
+	<quic_abhinavk@quicinc.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "Rob
+ Herring" <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        "Conor
+ Dooley" <conor+dt@kernel.org>,
+        Bjorn Andersson <andersson@kernel.org>,
+        "Konrad Dybcio" <konradybcio@kernel.org>,
+        Dmitry Baryshkov
+	<dmitry.baryshkov@oss.qualcomm.com>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-media@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sumit.garg@oss.qualcomm.com>,
+        Vikash Garodia <quic_vgarodia@quicinc.com>,
+        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742494052; l=1153;
+ i=quic_vgarodia@quicinc.com; s=20241104; h=from:subject:message-id;
+ bh=QV8L3eVu7WzhPo4f9l+/FZnZO++yXN6ZtUYKcJzPTjU=;
+ b=uJbnqkjfGzk4h+QepT29doFi3uOF7Sb+ut5M00khKcDnoIxs0k7dfSZ/AtkTVAy9ao1yO+LWa
+ PXBuVodK3+5A7RcDepLd3E5YKZDWANZMg+XXy0dBYwP0xjs7qXEdwEQ
+X-Developer-Key: i=quic_vgarodia@quicinc.com; a=ed25519;
+ pk=LY9Eqp4KiHWxzGNKGHbwRFEJOfRCSzG/rxQNmvZvaKE=
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=HMPDFptv c=1 sm=1 tr=0 ts=67dc596a cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=uUO1Guatd2edvWoe2zcA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: lWW2PVSU77sp1TjwE-GVwLAA2WlwpfgQ
+X-Proofpoint-ORIG-GUID: lWW2PVSU77sp1TjwE-GVwLAA2WlwpfgQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-20_05,2025-03-20_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 bulkscore=0 impostorscore=0
+ mlxlogscore=989 malwarescore=0 adultscore=0 suspectscore=0
+ lowpriorityscore=0 phishscore=0 classifier=spam authscore=0 authtc=n/a
+ authcc= route=outbound adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503200117
 
-Linus,
+add support for video hardware acceleration on SA8775P platform.
 
-The following changes since commit 4701f33a10702d5fc577c32434eb62adde0a1ae1:
+Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+---
+Changes in v3:
+- Fix nit review comments.
+- Link to v2: https://lore.kernel.org/r/20250320-dtbinding-v2-0-8d8eaa4e76cc@quicinc.com
 
-  Linux 6.14-rc7 (2025-03-16 12:55:17 -1000)
+Changes in v2:
+- Drop 01/04 patch as it was not needed.
+- Introduce sa8775p as fallback compatible to sm8550.
+- Move firmware files to board DT
+- Link to v1: https://lore.kernel.org/r/20250311-dtbinding-v1-0-5c807d33f7ae@quicinc.com
 
-are available in the Git repository at:
+---
+Vikash Garodia (3):
+      dt-bindings: media: qcom,sm8550-iris: document SA8775p IRIS accelerator
+      arm64: dts: qcom: sa8775p: add support for video node
+      arm64: dts: qcom: sa8775p-ride: enable video
 
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+ .../bindings/media/qcom,sm8550-iris.yaml           |  7 ++-
+ arch/arm64/boot/dts/qcom/sa8775p-ride.dtsi         |  6 ++
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi              | 71 ++++++++++++++++++++++
+ 3 files changed, 83 insertions(+), 1 deletion(-)
+---
+base-commit: f2151613e040973c868d28c8b00885dfab69eb75
+change-id: 20250310-dtbinding-8921bfc151e9
 
-for you to fetch changes up to abab683b972cb99378e0a1426c8f9db835fa43b4:
-
-  Merge tag 'kvm-s390-master-6.14-1' of https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD (2025-03-19 09:01:53 -0400)
-
-----------------------------------------------------------------
-A lone fix for a s390 regression.  An earlier 6.14 commit stopped
-taking the pte lock for pages that are being converted to secure,
-but it was needed to avoid races.
-
-The patch was in development for a while and is finally ready, but
-I wish it was split into 3-4 commits at least.
-
-----------------------------------------------------------------
-Claudio Imbrenda (1):
-      KVM: s390: pv: fix race when making a page secure
-
-Paolo Bonzini (1):
-      Merge tag 'kvm-s390-master-6.14-1' of https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into HEAD
-
- arch/s390/include/asm/gmap.h |   1 -
- arch/s390/include/asm/uv.h   |   2 +-
- arch/s390/kernel/uv.c        | 136 ++++++++++++++++++++++++++++++++++++++++---
- arch/s390/kvm/gmap.c         | 103 ++------------------------------
- arch/s390/kvm/kvm-s390.c     |  25 ++++----
- arch/s390/mm/gmap.c          |  28 ---------
- 6 files changed, 151 insertions(+), 144 deletions(-)
+Best regards,
+-- 
+Vikash Garodia <quic_vgarodia@quicinc.com>
 
