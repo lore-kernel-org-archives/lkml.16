@@ -1,135 +1,105 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 910A6218ADD
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 23:21:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C7722A7FF;
+	Thu, 20 Mar 2025 23:22:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742512909; cv=none; b=s5OuHuw1hNDZTCdiq8rXMPAm4K2BmpliQg1RXWXE9DbErL6Rq+8wZQDaEwvSnRTG7ZniJEwpSzg1tLGunW9UaMaiydB3xBop3eJR7tSHxjY56RZ7nUzOjlYi19ZXLRjMUOIR4f05acUJdzg0OcEprQuySaqp9htjUe92fQh/40s=
+	t=1742512950; cv=none; b=s7rt5lZHJapBEVAM68JmFayieUzh5eUQ2qD0PrmSud/Oyl5iNhXHXae/mcKsg68ZweCRrQ8RFjIIHuj+aZ1dqRwd/oMU4VSUtA7HsmPwfHorAfL57ngBb59wA4+ny6JRTPEW81k/PnJkZONzwj/1W+ot8TJDP80SqcnE4EuAQYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742512909; c=relaxed/simple;
-	bh=AHDmzyijp9ZELgL1o7g85JgdlQHpfVV++jmUNt0pl44=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type:
-	 References; b=exv+bMxqJw4BL/uDgRr3DuRk/nRTPkgG9G9E1YiYD417YpBpnQBbuC+umlHC7wpDKQzMoT2+GvqHAYBbaxu1zKfHrUeOOhxmkxn9eKyhYYXMX+6fRYHzFvRxg1ss9VndMOCnW+5xB+/Uq6ozfx7Xy2nftW3g+IFRF/hOekrxl14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=L0QfNVNw; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1742512950; c=relaxed/simple;
+	bh=rsqeVDdht3L66LHZac8aylMcpBieGO2/hBxpHx2hDBs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=svUNUaZf6LSeaTw3MPf9/zW/er8GoXbu1kzlCPoMbWD8bZBJsjp/EgndkeBmNTbsOpYdk1MOgT9uOwlj21e54OOZd/0C1nz6XEndrecXE9EALB33XcDbzjI7WPYpH4jz7+d/tvHYWs46qB1eFK8q4qtBduFGNxOQv42E06XH1Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G/eHqXvt; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L0QfNVNw"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250320232138euoutp02c53157ac59cef5ceffe6cb46083a6dba~upj_scmtq3150231502euoutp023
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 23:21:38 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250320232138euoutp02c53157ac59cef5ceffe6cb46083a6dba~upj_scmtq3150231502euoutp023
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742512898;
-	bh=Jgh7/aGnQ8G2WHCuJK0N49oWUWg1YldfBxA4ZHdy2LI=;
-	h=From:To:Cc:Subject:Date:References:From;
-	b=L0QfNVNwRPosJe8SgrBHCSjPuXflg9A3P5y4iNVLOpb7D2MrhDIQUcTRfDEjal+Xj
-	 3jSY+etlkAjMWl8crKFwHwc9AJ3BzejewH7l+l58hNQ1VHcNkwtj9hZFOAeW+p9wNV
-	 wfRCVunWjlsKcoCyxfNP0xbwHQPasHv7QPNib0Jo=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-	20250320232137eucas1p289da6fe11c17ac87a8faa6ab647746dc~upj_b7M5z2395123951eucas1p2N;
-	Thu, 20 Mar 2025 23:21:37 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id FE.8A.20409.103ACD76; Thu, 20
-	Mar 2025 23:21:37 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250320232137eucas1p2f877454de65336d638b200d920ccf2f3~upj9wupIO2394423944eucas1p2L;
-	Thu, 20 Mar 2025 23:21:37 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20250320232137eusmtrp2b4030c2d062c85cec93d261b45a0e0f1~upj9wRTqg0223902239eusmtrp2X;
-	Thu, 20 Mar 2025 23:21:37 +0000 (GMT)
-X-AuditID: cbfec7f4-c0df970000004fb9-63-67dca3018d2a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 53.68.19920.103ACD76; Thu, 20
-	Mar 2025 23:21:37 +0000 (GMT)
-Received: from AMDC4653.digital.local (unknown [106.120.51.32]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250320232136eusmtip2d3eb93a765e337482f1f6bb1c6cf220f~upj9cXt820599605996eusmtip2c;
-	Thu, 20 Mar 2025 23:21:36 +0000 (GMT)
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, iommu@lists.linux.dev
-Subject: [GIT PULL] dma-mapping fix for Linux 6.14
-Date: Fri, 21 Mar 2025 00:21:15 +0100
-Message-Id: <20250320232115.3940-1-m.szyprowski@samsung.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G/eHqXvt"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-225887c7265so3001865ad.0;
+        Thu, 20 Mar 2025 16:22:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742512949; x=1743117749; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WdKauJu93MoJRBBc3vto2MePH9Tt2mlxWo5dQZdkk6c=;
+        b=G/eHqXvt5cmn2TiBdAijtb40APV1fdMbHO6MTNCCjDhGX5FJCL4CCXXR9ofwUkPw3Y
+         Iw0TRwKfqqeo43fYjnbPHmPNMR02a4PByUobfBXSPdRQvz16lTz3NMZP3IeL982phKEz
+         gaqki1lcXwBElqkkh+iioT3dQbT+OtFNFB9u5gUyMHC0qPXgFBBzpzL28HLrH+xSOIqn
+         9hQH3hVQs08tcG1ymoLQfAHlt9tO8L0UPl3MP+bnRGqhBlXJ7pRL/jxIq3+zOA4whnQ/
+         dLbo196bzaOMtOenFLqXBNGW3g0K94u/VxeQ4E6CQg4z9aPAjwsm5ArqF1D3O2Ff9u2k
+         4GtA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742512949; x=1743117749;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WdKauJu93MoJRBBc3vto2MePH9Tt2mlxWo5dQZdkk6c=;
+        b=nfzhAOnkoUafOpprRPP4NWI7mkknvomHOOC5RKBCcXGe0zCPTQ7T4nY6d5hstPUZ0L
+         2pKC2w5sbnGW02zpiLTVP1s7tKPhHkGnSkSCOK6gXyvMV35t7KzsLYJxMwuufZ/RZT+b
+         h3nlXFyzqYWOieswkrJtRbf6I8RujDTZUTeZmyCjahp6jXpvV1rJdigWzqqTs7iZ+sK/
+         /ED4PZL9OOXH2kbsJj0kdP2F9cnVA/GPxqu8oklRjrwREpy76DJC3p7n85qxKFZeid5Z
+         JvW9/FqmdmiPxIAF8qD9dR0EGxlF1YfObxJthNNqFRTSb6mTLIvFj09DgqBzldLJRfWD
+         NRcw==
+X-Forwarded-Encrypted: i=1; AJvYcCUh2RsPYwH2LaxitN9RB20aBu209I54ckXd/CQ/meyVcPAIu1Kfw3vZrOpXOPx2yHyG91EsVjBAfuTruxY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwcnmpU7/bdpuUV7Py2NYsQQoa2yflLT8sDt3/6VP7HO7fMckjp
+	GZtsFXbegQ29YAZBUofu5mu85mWLyxExW2z/AxiLp9wMYI3z133BKiKiOXliYFxAtN2m/lt+CNs
+	9GUW0mvHjPxjpV+9rer8N7cbH4N8=
+X-Gm-Gg: ASbGncsSeH9jJusm85cMOOV0v3FVo1gbTUOO8GL+/QHzFiNQAXgfzHDfsFzEXez5J4n
+	lRRy4p3nse+YyzQes6HEZPulUWocTTgzaIvEAaNTbSlQUfu8a6Fm7g+aNk0JwB25v7gENjBhymh
+	DgEkmz46tI0ggGiNo9nQ1p9YUpww==
+X-Google-Smtp-Source: AGHT+IHBYgL2z5SOF0wcGeJiLprNiblgwngPdjLO6Y46Kvg1U568ayZ1Q7zD3yMLx1qf5LEfFZGbpyKvtwUTOO2J9NQ=
+X-Received: by 2002:a17:902:d4c1:b0:223:28a8:610b with SMTP id
+ d9443c01a7336-227852b8081mr2510905ad.14.1742512948653; Thu, 20 Mar 2025
+ 16:22:28 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrIIsWRmVeSWpSXmKPExsWy7djPc7qMi++kGyz/Y2zx64uFxeVdc9gs
-	HvW9ZXdg9jgx4zeLx4vNMxk9Pm+SC2CO4rJJSc3JLEst0rdL4MpoWHqHsaCXo2LF/z72Bsa/
-	bF2MnBwSAiYS19ZcY+li5OIQEljBKNH6dT4jSEJI4AujxJwbIRCJz4wSN+dvYoTp+PGzkQ0i
-	sZxR4smlG+wQDlDHhbaVLCBVbAKGEl1vu8B2iAgYSXx+cYUVxGYWMJf48nMeO4gtDBTf+uUt
-	WA2LgKrEvJNLwTbwCthI3Dm8nhlim7zE/oNnmSHighInZz5hgZgjL9G8dTYzyGIJgbfsEv0z
-	24AWcAA5LhKn9ldD9ApLvDq+hR3ClpH4v3M+E0R9O6PEgt/3oZwJjBINz29B/WYtcefcLzaQ
-	QcwCmhLrd+lDhB0lXl/sZISYzydx460gxA18EpO2TWeGCPNKdLQJQVSrScw6vg5u7cELl6BK
-	PCSu7SiDBG6sxKbr75gmMCrMQvLYLCSPzUI4YQEj8ypG8dTS4tz01GKjvNRyveLE3OLSvHS9
-	5PzcTYzAVHH63/EvOxiXv/qod4iRiYPxEKMEB7OSCK9Ix+10Id6UxMqq1KL8+KLSnNTiQ4zS
-	HCxK4ryL9remCwmkJ5akZqemFqQWwWSZODilGpgy3UR8Iz7Nib/7O0J145Wvl5abcennGJ6e
-	OXd38eFjex9X5Eus+3j47pZ/PFKfO3YJf5ycuURI5vLvjTpxRhx3zyyztMtXWR2flcvspMal
-	bvNbaqHY0kKXaws/b1krwPf0kXFZo+VVb/PXYfm2RsY3vz0KV1yr9Pv/uhV7HS80nzs/y1r+
-	3IWrer+q/Wa/kgiY6H1ugjPX6psX/oo/PybgKLlJKOPRJtuIN8ueJddtqpNwWaxW/snI/HOx
-	p9Cs6XV3jTRkdbMcD7U/DyuK/172+13dbsbO+AieC6E2p14EiZbfjnvvc8+w/GDS/5p5+g97
-	i/Szd629PmWtgMty18tpqYfdnRK/rsvKa/jDdM5JiaU4I9FQi7moOBEAH7AGIIQDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrJLMWRmVeSWpSXmKPExsVy+t/xe7qMi++kGyw4wmHx64uFxeVdc9gs
-	HvW9ZXdg9jgx4zeLx4vNMxk9Pm+SC2CO0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2
-	j7UyMlXSt7NJSc3JLEst0rdL0MtoWHqHsaCXo2LF/z72Bsa/bF2MnBwSAiYSP342AtlcHEIC
-	Sxkllu+bwwiRkJE4Oa2BFcIWlvhzrQuq6BOjxIojM8CK2AQMJbredoFNEhEwkvj84gpYA7OA
-	pcTX63OZQWxhoPjWL2/BalgEVCXmnVwK1ssrYCNx5/B6ZogF8hL7D55lhogLSpyc+YQFYo68
-	RPPW2cwTGPlmIUnNQpJawMi0ilEktbQ4Nz232FCvODG3uDQvXS85P3cTIzBMtx37uXkH47xX
-	H/UOMTJxMB5ilOBgVhLhFem4nS7Em5JYWZValB9fVJqTWnyI0RTovonMUqLJ+cBIySuJNzQz
-	MDU0MbM0MLU0M1YS53W7fD5NSCA9sSQ1OzW1ILUIpo+Jg1OqgWnqIgWJyfUtyttC5x/b0BQ1
-	z3fj43jfTbtWB+R/Ozb9WtVXg8KMnpOdhq9PhXc9E53T8lltc8qXnoJmH6GN9aquHsZZaYe0
-	HIyT/zGua11uHnoqOpSN8dmeFZadHsI251RljFlvXXg30Wbj2T+7JzxXbXXlCrhz9qnKUktb
-	qfC1VbdSlmoKRF+W4jFV3cjTeHOF7eQPaRLbJ967xzStbM57zw375MvbjczM4128q9pvlauH
-	rErYX7fwYIzFXPUZL79eYWPfKrL9/Yc/G/RXr+MNPx5V9H1j+SZ3vavF/zim7Db1WmgXvS3b
-	utBnjnWvv9yMcp1fmz4ws97rFcv3tp9nYP79uUTakm8FnK/rZiuxFGckGmoxFxUnAgDeE3UR
-	3AIAAA==
-X-CMS-MailID: 20250320232137eucas1p2f877454de65336d638b200d920ccf2f3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250320232137eucas1p2f877454de65336d638b200d920ccf2f3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20250320232137eucas1p2f877454de65336d638b200d920ccf2f3
-References: <CGME20250320232137eucas1p2f877454de65336d638b200d920ccf2f3@eucas1p2.samsung.com>
+References: <20250317185345.2608976-1-abdiel.janulgue@gmail.com>
+In-Reply-To: <20250317185345.2608976-1-abdiel.janulgue@gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 21 Mar 2025 00:22:16 +0100
+X-Gm-Features: AQ5f1JpBk6Nt5QqSgaZxqHC41axRSzyVxdHhPrG_3P7bjcNOlmhVgpt7sAY0xjw
+Message-ID: <CANiq72kAK84N-2ZzB1tKPQ-gwiYzE=QginDc1Fw4g7FBLDn4yw@mail.gmail.com>
+Subject: Re: [PATCH v15 00/11] rust: add dma coherent allocator abstraction
+To: Abdiel Janulgue <abdiel.janulgue@gmail.com>
+Cc: rust-for-linux@vger.kernel.org, daniel.almeida@collabora.com, 
+	dakr@kernel.org, robin.murphy@arm.com, aliceryhl@google.com, 
+	Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Valentin Obst <kernel@valentinobst.de>, 
+	open list <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com, 
+	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The following changes since commit 2014c95afecee3e76ca4a56956a936e23283f05b:
+On Mon, Mar 17, 2025 at 7:54=E2=80=AFPM Abdiel Janulgue
+<abdiel.janulgue@gmail.com> wrote:
+>
+> This series adds the rust bindings for the dma coherent allocator which
+> is needed for nova-core[0].
+>
+> For v15, document safety comments on the exception of usage on
+> read_volatile and write_volatile as suggested by Boqun Feng.
+>
+> This is tested on a Nvidia GA104 GPU device using PoC code which parses
+> and loads the GSP firmware via DMA.
 
-  Linux 6.14-rc1 (2025-02-02 15:39:26 -0800)
+Applied (up to the `MAINTAINERS` patch, as discussed) to `rust-next`
+-- thanks everyone!
 
-are available in the Git repository at:
+    [ Removed period. - Miguel ]
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git tags/dma-mapping-6.14-2025-03-21
+    [ Renamed Kconfig symbol and moved it up. Migrated to the new
+      `authors` key in `module!`. Fixed module name in description
+      and typo in commit message. - Miguel ]
 
-for you to fetch changes up to 8324993f60305e50f27b98358b01b9837e10d159:
-
-  dma-mapping: fix missing clear bdr in check_ram_in_range_map() (2025-03-12 13:41:44 +0100)
-
-----------------------------------------------------------------
-dma-mapping fix for Linux 6.14
-
-- fix missing clear bdr in check_ram_in_range_map()
-  (Baochen Qiang)
-
-----------------------------------------------------------------
-Baochen Qiang (1):
-      dma-mapping: fix missing clear bdr in check_ram_in_range_map()
-
- kernel/dma/direct.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
-----------------------------------------------------------------
-
-Thanks!
-
-Best regards
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+Cheers,
+Miguel
