@@ -1,35 +1,34 @@
 Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA412288D5
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:00:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1106621D3F9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:00:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742486457; cv=none; b=gD3YpNFzhGH01NjebeCH+IyihUYhKYJJ4fG1NdNibhrvBLQhGJL+7VLOoCoVY3CAma+xdWCwecTowKb3Z4zpyQ5Ie8HCphdGSU60UYtnRyZcM5uWCofQxdXhkCSX1TJAyKFY3nuaxU3FdUJ8b4P65oge9ooxLuB5SMagkfPlo/w=
+	t=1742486460; cv=none; b=tjg6sZXZgHCoh8t9Y9oKUyjQ6coqvQQipPjDXoXyCv3MCMRYmRhRzkPo4hoAXkiiWJ8wEAEMFSS/YE23V5wXgaWEfF8L9lM33mXzV1WImpXuKZE6MykdR3i/whNC+nRidt0z5mQM0NgXWxdYmUGzv9ua8BTe+tzLVfAoLXFiW/A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742486457; c=relaxed/simple;
-	bh=2qJfC7oDxsjuiQHnkQy9vy3BrMM57VcAHQdpuKoTbDE=;
+	s=arc-20240116; t=1742486460; c=relaxed/simple;
+	bh=NRiwCTHabbz+p81RY4GkrUeFRgzVyalNNk+RjRNcX5o=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=a5VYmo3yGDaWNLsjKPr/KRUMoUmM/xAVPT/XWaDpYrAHdsiL26793cNL7VKSaS39uguJ8tFtPM70hBrsagbUANSgmUWHt9E8VxP2A4S+h2AKJjD8BNapFBICjVpMOzizE6un44dM1tTAH9+vucy66BZstpNzMn4nX5gmwvPID2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=l4q+8nmi; arc=none smtp.client-ip=213.167.242.64
+	 In-Reply-To:To:Cc; b=jlHyaO1eF0Bn+8qimL4xVPM4LfionFl5oA/I8uMvlwXOREUxS3CQp4NR4eCgEm+/WwI4pO3x4JCOyagje7JYK7OlokUlP+mVYTQo6knw6ZMjjifU2xfYE8lFl4/6yEF5CBCBEuc6aN8ryZ23hRQqEDkNCXjPaUHbjwzbEL/FC5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=eTkGfef9; arc=none smtp.client-ip=213.167.242.64
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="l4q+8nmi"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="eTkGfef9"
 Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BA3BC1AA2;
-	Thu, 20 Mar 2025 16:58:58 +0100 (CET)
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 158091AF6;
+	Thu, 20 Mar 2025 16:59:01 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1742486339;
-	bh=2qJfC7oDxsjuiQHnkQy9vy3BrMM57VcAHQdpuKoTbDE=;
+	s=mail; t=1742486342;
+	bh=NRiwCTHabbz+p81RY4GkrUeFRgzVyalNNk+RjRNcX5o=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=l4q+8nmiKdZvGDdc4OF/N3AdHW/hYrdnKPDiPj/sJk6FfqycU2hhQ93rZv1efxbaB
-	 LznJj8ygVtS9xZVB4yYIVCvdSGhF1pTPNhcCL6vShI5sUrfl+uXqES+ESVhoYkc2ap
-	 LrbFF6/MzrQxRW0ZjQPL7ANVXp9KZr1qtnsK9hts=
+	b=eTkGfef9c4eLyHnGTF57/9I38Tmd/aF81JpzOp7HKJ8/VG3HDfHDYwW3os64W3Xpy
+	 mfXOMniZoprYsVQH1Uo/+JM6KZtXiAQajY2eXKTsqaIwoNuXJwMYPb2prG6pYyy1UC
+	 i76idGffrPitu9uxhFQL9wg6KXjPXScOCPiC4sK0=
 From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
-Date: Thu, 20 Mar 2025 18:00:06 +0200
-Subject: [PATCH 11/18] drm/bridge: cdns-dsi: Remove broken fifo emptying
- check
+Date: Thu, 20 Mar 2025 18:00:08 +0200
+Subject: [PATCH 13/18] drm/bridge: cdns-dsi: Do not use crtc_* values
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -38,7 +37,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250320-cdns-dsi-impro-v1-11-725277c5f43b@ideasonboard.com>
+Message-Id: <20250320-cdns-dsi-impro-v1-13-725277c5f43b@ideasonboard.com>
 References: <20250320-cdns-dsi-impro-v1-0-725277c5f43b@ideasonboard.com>
 In-Reply-To: <20250320-cdns-dsi-impro-v1-0-725277c5f43b@ideasonboard.com>
 To: Jyri Sarha <jyri.sarha@iki.fi>, 
@@ -56,93 +55,99 @@ Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
  Devarsh Thakkar <devarsht@ti.com>, 
  Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 X-Mailer: b4 0.15-dev-c25d1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2637;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3185;
  i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
- bh=2qJfC7oDxsjuiQHnkQy9vy3BrMM57VcAHQdpuKoTbDE=;
- b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn3DuaQq9hV+Av0sNdDt5WPw0dUmqMOoU6xMT7X
- vNEd8uoI8aJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ9w7mgAKCRD6PaqMvJYe
- 9VwuD/wOzrCBJ07hi2Fzd8rgAuPYU4vIAjyi0cYLPgPPSuo5f9GUyA5kIfobRS3C8XQuvfoPqXx
- WJi4nr8P0/3yU+1+KjRO8GS7hMRwNuRoYH1b7SpQaF0UFViTd1YLlv7HBaoxe/A5IHiKRxuxsEa
- s/F3TeTfmTpo6v8g5nRJCORUsKfAWzbEuiqnMVG+hHVd1O9wZ2tT1QHkZFgKEd8xu1QMhXrQar/
- VXJLYi0XAGqeWgdrnZlgxVODy7Em6JTK96/LOcF5S9pkV6R49Ceq7R+08R70N1bVpvzf9vKk6RO
- ufH0ndj5MHWMP6ocByN/vZm+57FacEACdaUXRJ3od2f78jqk/Qfrc5w9fu+adN1OLNaQOMdf2Iv
- gW3tk/LRQ0Rh1aziNOghLhUpJI1VmYVDHCOXpkZ5IZaTWjlImcw2/F8NEAgDqH5Ygm8sTnm7kRr
- +cqsmF2xeAwW1H6YnSi3hjaUlXPTqUlJ6GZTtcA0/hE6O2Tv7GdwzP/yRlhEkjrIN7mCHaGvaAl
- KkyBnR1c0+bR1rCPGalh6i/Ze1PLT3JlPpIr8uaIXVw8vsFoS/gEgKTwMOn0n8EZuwxwo5NI9L7
- 6T9DCNBtAniF7T5W9n/wVtxSM8vwALecjTYgik2u8v/36cLBf2Oz68Cg25NNrSwq+PeZ3usOEts
- 41ThLQtzdq22QqQ==
+ bh=NRiwCTHabbz+p81RY4GkrUeFRgzVyalNNk+RjRNcX5o=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn3DuaJBl/Bj3bIpsidbOdy0WDF+M2ekIW2h00H
+ CV/5EUW1vCJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ9w7mgAKCRD6PaqMvJYe
+ 9WE1EACQbmVEp0iXWdv/F75eMgjtyPJQC74XIzB+5fNwrjOIyV/bxvzwg4UwrTkQeVhaGkhfxz7
+ O/Tt42jR/dfCNX4AMeIsF/YeWmxn2mNWk5oDslMLZBKVzjab2acg4Lz0DVq14xsruij9Ytrg2sE
+ 3HWtInuu9ZpGPANhHQG4VJlF6ghkvWgZ6WPnWfH3b7YEU+s9vR0l1FmhzD0AgzWu2vXmMqG6P/F
+ zTOTH8QnB0DZmdGbnkZdMQNEsmqcmnsaGrdUMO3vQzmEpVkeIlicClDcm0fagjEmaEfoDbrvTO8
+ OyWO0u+hsT4wiQGlBOYb5Rxaes9yUTvaI/ug+wFAMCV3P3du4/cB3c+0b73R/isokqs41mO94wW
+ zsO8s87VsiaCrqpdODfMFj/imWgH2Gns3a9WNvBfnc1eRJbbelzXZhqDxYPTa8RoXabI4iScqTH
+ 3nnn/ajLN5ZAy7sKk0BnPxWrmaX3p7sGw3WiUIAQ6V8e7fUtfooP2I8HO/p78rxO47wjkI+nCnr
+ oNpV44QDFoDIH8Gk3G5rWFH9N6LkNng5r2402ePIgAIgUncxntg4JbJgR/w5vHpTQ+H0pQ3Oms4
+ zXegaAStHwEVpSz4PIxp2PX3pR7QzbZBRbhVC8eroqWQdp4jkKVNZt/hVQvrCU2QYLTP4cgrv6/
+ z0/rszyd/2WyZSw==
 X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
  fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-The driver check if "DPI(HFP) > DSI(HSS+HSA+HSE+HBP)", and rejects the
-mode if not.
+The driver uses crtc_* fields from the mode. While I think in the
+enable-path this would be correct, I do not think it's correct in the
+check phase, as the crtc hasn't had a chance to update the crtc_* fields
+yet.
 
-However, testing shows that this doesn't hold at all. I can set the hfp
-to very small values, with no errors. The feedback from the HW team also
-was that the check is not right, although it's not clear if there's a
-way to validate the FIFO emptying.
+Overall, my understanding is that the crtc_* fields are relevant only in
+cases where we have things like interlace or double pixel mode, where we
+have a logical and real timings. We never use those with DSI, so the
+crtc_* fields should just always match the normal values.
 
-The check rejects quite a lot of modes, apparently for no good reason,
-so drop the check.
+So, drop the use of crtc_* values.
 
 Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 ---
- drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 28 --------------------------
- 1 file changed, 28 deletions(-)
+ drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-index 9797e6faa29d..e85c8652c96e 100644
+index cf783680b1b4..220213f5cb09 100644
 --- a/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
 +++ b/drivers/gpu/drm/bridge/cadence/cdns-dsi-core.c
-@@ -453,15 +453,6 @@ bridge_to_cdns_dsi_input(struct drm_bridge *bridge)
- 	return container_of(bridge, struct cdns_dsi_input, bridge);
- }
+@@ -476,10 +476,10 @@ static int cdns_dsi_mode2cfg(struct cdns_dsi *dsi,
+ 	bool sync_pulse;
+ 	int bpp;
  
--static unsigned int mode_to_dpi_hfp(const struct drm_display_mode *mode,
--				    bool mode_valid_check)
--{
--	if (mode_valid_check)
--		return mode->hsync_start - mode->hdisplay;
--
--	return mode->crtc_hsync_start - mode->crtc_hdisplay;
--}
--
- static unsigned int dpi_to_dsi_timing(unsigned int dpi_timing,
- 				      unsigned int dpi_bpp,
- 				      unsigned int dsi_pkt_overhead)
-@@ -583,7 +574,6 @@ static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
- {
- 	struct cdns_dsi_output *output = &dsi->output;
- 	struct phy_configure_opts_mipi_dphy *phy_cfg = &output->phy_opts.mipi_dphy;
--	unsigned long dsi_hss_hsa_hse_hbp;
- 	unsigned int nlanes = output->dev->lanes;
- 	int mode_clock = (mode_valid_check ? mode->clock : mode->crtc_clock);
- 	unsigned long req_hs_clk_rate;
-@@ -617,24 +607,6 @@ static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
+-	dpi_hsa = mode->crtc_hsync_end - mode->crtc_hsync_start;
+-	dpi_hbp = mode->crtc_htotal - mode->crtc_hsync_end;
+-	dpi_hfp =  mode->crtc_hsync_start - mode->crtc_hdisplay;
+-	dpi_hact = mode->crtc_hdisplay;
++	dpi_hsa = mode->hsync_end - mode->hsync_start;
++	dpi_hbp = mode->htotal - mode->hsync_end;
++	dpi_hfp =  mode->hsync_start - mode->hdisplay;
++	dpi_hact = mode->hdisplay;
+ 
+ 	memset(dsi_cfg, 0, sizeof(*dsi_cfg));
+ 
+@@ -540,11 +540,11 @@ static int cdns_dsi_adjust_phy_config(struct cdns_dsi *dsi,
+ 	if (dsi_htotal % lanes)
+ 		adj_dsi_htotal += lanes - (dsi_htotal % lanes);
+ 
+-	dpi_hz = mode->crtc_clock * 1000;
++	dpi_hz = mode->clock * 1000;
+ 	dlane_bps = (unsigned long long)dpi_hz * adj_dsi_htotal;
+ 
+ 	/* data rate in bytes/sec is not an integer, refuse the mode. */
+-	dpi_htotal = mode->crtc_htotal;
++	dpi_htotal = mode->htotal;
+ 	if (do_div(dlane_bps, lanes * dpi_htotal))
  		return -EINVAL;
- 	}
  
--	if (output->dev->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE) {
--		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_PULSE_OVERHEAD;
--		dsi_hss_hsa_hse_hbp += dsi_cfg->hsa + DSI_HSA_FRAME_OVERHEAD;
--	} else {
--		dsi_hss_hsa_hse_hbp = dsi_cfg->hbp + DSI_HBP_FRAME_EVENT_OVERHEAD;
--	}
--
--	/*
--	 * Make sure DPI(HFP) > DSI(HSS+HSA+HSE+HBP) to guarantee that the FIFO
--	 * is empty before we start a receiving a new line on the DPI
--	 * interface.
--	 */
--	if ((u64)phy_cfg->hs_clk_rate *
--	    mode_to_dpi_hfp(mode, mode_valid_check) * nlanes <
--	    (u64)dsi_hss_hsa_hse_hbp *
--	    (mode_valid_check ? mode->clock : mode->crtc_clock) * 1000)
--		return -EINVAL;
--
- 	return 0;
- }
+@@ -572,7 +572,7 @@ static int cdns_dsi_check_conf(struct cdns_dsi *dsi,
+ 	if (ret)
+ 		return ret;
  
+-	ret = phy_mipi_dphy_get_default_config(mode->crtc_clock * 1000,
++	ret = phy_mipi_dphy_get_default_config(mode->clock * 1000,
+ 					       mipi_dsi_pixel_format_to_bpp(output->dev->format),
+ 					       nlanes, phy_cfg);
+ 	if (ret)
+@@ -822,11 +822,11 @@ static void cdns_dsi_bridge_atomic_pre_enable(struct drm_bridge *bridge,
+ 	writel(HFP_LEN(dsi_cfg.hfp) | HACT_LEN(dsi_cfg.hact),
+ 	       dsi->regs + VID_HSIZE2);
+ 
+-	writel(VBP_LEN(mode->crtc_vtotal - mode->crtc_vsync_end - 1) |
+-	       VFP_LEN(mode->crtc_vsync_start - mode->crtc_vdisplay) |
+-	       VSA_LEN(mode->crtc_vsync_end - mode->crtc_vsync_start + 1),
++	writel(VBP_LEN(mode->vtotal - mode->vsync_end - 1) |
++	       VFP_LEN(mode->vsync_start - mode->vdisplay) |
++	       VSA_LEN(mode->vsync_end - mode->vsync_start + 1),
+ 	       dsi->regs + VID_VSIZE1);
+-	writel(mode->crtc_vdisplay, dsi->regs + VID_VSIZE2);
++	writel(mode->vdisplay, dsi->regs + VID_VSIZE2);
+ 
+ 	tmp = dsi_cfg.htotal -
+ 	      (dsi_cfg.hsa + DSI_BLANKING_FRAME_OVERHEAD +
 
 -- 
 2.43.0
