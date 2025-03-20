@@ -1,71 +1,65 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69A4B1EEE9
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:55:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BF5C18E2A
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742475344; cv=none; b=ha4N0hYxIAyq2kgOGd/zO//gclZHPAAkNBU7rN6YWsR69TM+N1XM3AIErFGu1PgGE/fH7epEWD+XPDkHy5dNk3LXN4PhNBlwrhi4b48WmiEa4SqGn4DkelIbYIVnUDDY4pa8F5eLv3HSpeWe+RLnCPvArnCVAetjeCl6gmtwtFc=
+	t=1742475388; cv=none; b=cLPbNM1Or3DGwptfyuWuOr4L3ZAUcJId/IwKGSzzWpFCVLcp21Hv2NrCrUd8u8Owz4LO1aeN5qLtQKmfi2HsXisSH05um/0xfARntkh/9aNUjS3MPlaO1vM8rEOt9llgHSWu3FVNi5mUxnnfF+SDcD70MFGA16uO3H/SVC0Volo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742475344; c=relaxed/simple;
-	bh=XqnyCkR9PaLdrirpUUgfbS1fw8JcxnFYqckykpD0OFU=;
+	s=arc-20240116; t=1742475388; c=relaxed/simple;
+	bh=zTnXAKmTuZRtU1d1p7Q5TlC/BTFpcP/VJalqvVhGyj8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VcCJtiGVqDcjuJJy331tTrPhaL5iuy2PmFnLtYC/jesplL4zi4rS4rDbUJYkMW6phdfu/z2yCwyOar/fn9D46/cN+vUFXh9pkTAVyEigvECGTvxC3X8RSmF0Y3bmOaGsL1LUx7OGCZKsGOI5xfalh5d7yl3gV9mGaGpEQe2OC8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=SOumW9nO; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=MU3NJ5JK4+pPZ3oxaHiT8dEakccmda+vk25VSuYhZsTo5bL0+EXTvmXU9yZxavQNoEkReMjOjea2XjijDc5TQaWmiUQ30fpPUzdDOK3PuH0IjqzjvCtuqrwyg8O5LW/X7M44gMK02uO+kpa4FudjY4+9ZcYtWrc3lCUhBEMT4yU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tjFExFxj; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SOumW9nO"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742475341;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=uU76Eu9ghlyg5AgC3XDLkiwwMGgB66PTcG6tUKpdUeM=;
-	b=SOumW9nOebqC2LnFonrSKDSyHX4FGc4z0npwwxYDCBPGevPXHPFrQ1IPBzXsNBNNsGz90e
-	uEPTTtlHMAHsqqxcKEfI3B60qJJ8iZ9T0QFZEGWT/GjrOx3tkJRuAFpCM5LWwqrBpxjnKh
-	22FM7eIl2L0WEvXv+aqvRxuDGc1NhL0=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-141-zQ6Iz-07OYWo0IvOChO7Mg-1; Thu, 20 Mar 2025 08:55:40 -0400
-X-MC-Unique: zQ6Iz-07OYWo0IvOChO7Mg-1
-X-Mimecast-MFC-AGG-ID: zQ6Iz-07OYWo0IvOChO7Mg_1742475339
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-39131851046so313949f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 05:55:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tjFExFxj"
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-abf3d64849dso135439866b.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 05:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742475384; x=1743080184; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HTiBMnvR5EfiapTBlQ2zIHklJYLCh/G/HYnYPld7nw4=;
+        b=tjFExFxjbUzksAmUGKs8bktnIAL/dOdAIUu3uNWvSMhjDPsaW4uoHKutafmN0FVyLh
+         ekTaSBtt9wKZaKYmJXpK72UxQPHEy43whWsR5evtAvjC5huZNbQpB/CNjzTIrri7rh8N
+         diz+e0BKg56edVlYvqArZmvLOH0LrYe0k9nLU2dZ1ljZgq1r8uSbf1ewL53kyVpOPUx9
+         gxN58T0N5A+uOB5eEIPVPYJGOaFcoKgI6B3HpwjjRafAzpyBDJq/2dj8u+BKcU5yNKmM
+         Tu6DTpMrgszaMYb8navO0fLM09oejSADZEt4fhIqYfO9mKU0yz6YpXRmSxwMjAYWM6dE
+         6TXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742475339; x=1743080139;
+        d=1e100.net; s=20230601; t=1742475384; x=1743080184;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uU76Eu9ghlyg5AgC3XDLkiwwMGgB66PTcG6tUKpdUeM=;
-        b=BIVV/sd+7egdUYQCWsHx9wUFEHa6SBaunti1Ub614kFt+lXMaOvoLvX3Be4jE0IRJl
-         c+737jvFN1Z3lFwJ4HxbpsKp9/2qDfMckLO9Ta9XWFNSD+wYO1qYOWBGeSQ5g97I2J9P
-         bLqr1U/7MrGuD9TZ2fa/3cIW61DaXOn3AO0jYIlozome3CXByhZewTznElidYDJqyXtN
-         yJJzqHZ16XsouH+cc9ZCbynh9IA3z9HXT1FLrkVhv5lpDwvL+wkNcbqyb6vt3jssETPQ
-         TTCdoUhku64BuAHJnP5PKzeXk3AXtDOQK2iHeaW5uDm8dxXpzDhaR/TGoaTwm2epFNIw
-         4KMA==
-X-Forwarded-Encrypted: i=1; AJvYcCWcKFr7kmJRF+wgLqnfXiGY31Ps3dJn6wAotC06VjEmLDHabXDaZhawtdssJHciZFCMd+zY8U/6UJK7MtE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx9YR+4b0hkf+WGpiYZLtW9sYop7TZd/IedpvubD/CqDNLjR5kU
-	//uXw3vSCqWRHfqehxxM+PqAIlwIYZtqJsO6WbkOfrWX8PhIcyUX+Pir86CaJhnZENaSg3fg3Pn
-	e2AwunouxmKzy8p9UwFDBjoVMXuM20IWqxxnXqwBBoSDvL4OLg8X7xHtu+L06mA==
-X-Gm-Gg: ASbGncvAMWLS9L34mPm9y1g4zBJJ1RseDEMXPehmLscuhSMFyqyvEEETLGjkUMqJl9q
-	1At9edaM6TgxbsESMbjUuUm7fRk4GCbz2yF7mbFEy0jBTZ4xHJM+7fYlLg84Lrw5Lk6HAbhNgUb
-	KR7nx/7wj6bd15KnMYIJOgHbCZhIgpsQh7w/BCnVrlKdT3cbUAvv07zJ7Jw9/cYptD9beWJRAGR
-	jJU1lTp+RBPzds3W5gbhBTA7w/0zQATOVc8h4FjKtQG9+RcZEys5kj3FDrj8JfVFvd7YeBn4y+Y
-	M6LtIFXHQTq+1CTFWBHhv9sB+E7o8ycMM9FMMih5YYoewg==
-X-Received: by 2002:a5d:648e:0:b0:391:3cb7:d441 with SMTP id ffacd0b85a97d-399795add2dmr2937683f8f.25.1742475338813;
-        Thu, 20 Mar 2025 05:55:38 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFVyhKnTFE+P2/7j9GGvHMrQKyFkRwtXXAFWRCzOhdCzCZGUHga7gonRw/o8WPG2tCQOD4bkA==
-X-Received: by 2002:a5d:648e:0:b0:391:3cb7:d441 with SMTP id ffacd0b85a97d-399795add2dmr2937650f8f.25.1742475338377;
-        Thu, 20 Mar 2025 05:55:38 -0700 (PDT)
-Received: from [192.168.88.253] (146-241-10-172.dyn.eolo.it. [146.241.10.172])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb7eb9ccsm24137143f8f.96.2025.03.20.05.55.37
+        bh=HTiBMnvR5EfiapTBlQ2zIHklJYLCh/G/HYnYPld7nw4=;
+        b=K9mSF3KtJDd7OoI/Dthe0G8/JP5Kk0qGwkuj76vrnidSsu3RMhspzIFk64K33ixBbe
+         PDZHKcAMztsbPbbtRFvo/51hiZ1BdXwN9XxJAKs9TZQIhpfcxnBeuvTeE2j5Ya7i/nZl
+         klNLUS9ZF3oChaQcY7c+Nh4h7o3i2Ibcn66ioCP00hQF9/wPgMaAS7Paogy4/I7AmWM1
+         XoqTfO8e5jm8YTB6sIxBsqc4OznwyvT/Su0FtvJibnwGe2VaVB1z5Lecw6FiYQlBFjO5
+         f8fQrPkhJKiYGMy87D88zSGhvxAYJF2Xbzjn/hhy+6R7Qgce9xnsmrVHbCTLWJS7E8fk
+         xMBg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrgfKouYsyvQBwitxms9Z0UXsvTaRpi3V2xBfRSJtcHWI29EUe6bti/+1z/8RrGFfWqMjy8EEd8Gi0+Zg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSsWI/KeDF6Lzx6Smy1kWB0YlIIXsIreLQ5kVJEtFcqj2wEd49
+	VOFN9rWSATPE1lPM9f/1KSc2E1JpGQf58Zb36RlgLIRyCVp38qIJJCJ9kKsnSQ4=
+X-Gm-Gg: ASbGncvgYxZTSZOKgQMaNfxPoPAwZqyOc3WVDhH6MGsK0dBvWawa4mtcNCkuJt1WTkb
+	Z6PvgQK1pA1jXUH+at+JnIlLu21u+vDBC+f3zA+NbSXDtyimde2yCx8ewOUSy5YSUppJjvNq+qy
+	5TnnPqSEEKq1ISGmQoqtGKAliletrzINUUAhcG0RkzKlFZ+sm3OkYizZ0vxXCCRQfUPT+go8g4K
+	Hzb457a2N37MCRVprBnDDPkQMqK9wVhs9SdEzZtT7uY5bcdqTg+qND129fc25hB8vPkD4PiggIh
+	Q7Vqk/Wz0JpatRO6cc/bD41rAWyWM2DTKWc5joOchEYHICexTucAkTL/oH7SqmKrI07DqNpVONy
+	HwazHvRIgKtue
+X-Google-Smtp-Source: AGHT+IFwbUtBKy1cKZpiAYgKgI/ab8Fj6ZMme+dS/eEmYErdP1Yx16iHt4BcTPb5hz8rYdlEnkXIEA==
+X-Received: by 2002:a17:907:f50a:b0:ac3:45c0:6d08 with SMTP id a640c23a62f3a-ac3b7373065mr786509366b.0.1742475384270;
+        Thu, 20 Mar 2025 05:56:24 -0700 (PDT)
+Received: from [192.168.69.235] (88-187-86-199.subs.proxad.net. [88.187.86.199])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3146af080sm1155354066b.31.2025.03.20.05.56.23
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 05:55:37 -0700 (PDT)
-Message-ID: <1811bd9a-846a-48f4-95f3-6badc3e063f0@redhat.com>
-Date: Thu, 20 Mar 2025 13:55:36 +0100
+        Thu, 20 Mar 2025 05:56:23 -0700 (PDT)
+Message-ID: <817c02a0-5493-419a-9663-73a85182b047@linaro.org>
+Date: Thu, 20 Mar 2025 13:56:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -73,72 +67,90 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net 2/3] mptcp: sockopt: fix getting IPV6_V6ONLY
-To: Matthieu Baerts <matttbe@kernel.org>, Simon Horman <horms@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
- <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-2-122dbb249db3@kernel.org>
- <20250319153827.GC768132@kernel.org>
- <a2b61202-a257-4317-b454-799da27951e8@kernel.org>
+Subject: Re: [PATCH 19/41] mips: Replace __ASSEMBLY__ with __ASSEMBLER__ in
+ the mips headers
+To: Thomas Huth <thuth@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org
+References: <20250314071013.1575167-1-thuth@redhat.com>
+ <20250314071013.1575167-20-thuth@redhat.com>
 Content-Language: en-US
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <a2b61202-a257-4317-b454-799da27951e8@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: =?UTF-8?Q?Philippe_Mathieu-Daud=C3=A9?= <philmd@linaro.org>
+In-Reply-To: <20250314071013.1575167-20-thuth@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On 3/19/25 5:26 PM, Matthieu Baerts wrote:
-> On 19/03/2025 16:38, Simon Horman wrote:
->> On Fri, Mar 14, 2025 at 09:11:32PM +0100, Matthieu Baerts (NGI0) wrote:
->>> When adding a socket option support in MPTCP, both the get and set parts
->>> are supposed to be implemented.
->>>
->>> IPV6_V6ONLY support for the setsockopt part has been added a while ago,
->>> but it looks like the get part got forgotten. It should have been
->>> present as a way to verify a setting has been set as expected, and not
->>> to act differently from TCP or any other socket types.
->>>
->>> Not supporting this getsockopt(IPV6_V6ONLY) blocks some apps which want
->>> to check the default value, before doing extra actions. On Linux, the
->>> default value is 0, but this can be changed with the net.ipv6.bindv6only
->>> sysctl knob. On Windows, it is set to 1 by default. So supporting the
->>> get part, like for all other socket options, is important.
->>>
->>> Everything was in place to expose it, just the last step was missing.
->>> Only new code is added to cover this specific getsockopt(), that seems
->>> safe.
->>>
->>> Fixes: c9b95a135987 ("mptcp: support IPV6_V6ONLY setsockopt")
->>> Cc: stable@vger.kernel.org
->>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/550
->>> Reviewed-by: Mat Martineau <martineau@kernel.org>
->>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->> Hi Matthieu, all,
->>
->> TBH, I would lean towards this being net-next material rather than a fix
->> for net. But that notwithstanding this looks good to me.
-> I understand. This patch and the next one target "net" because, with
-> MPTCP, we try to mimic TCP when interacting with the userspace.
+On 14/3/25 08:09, Thomas Huth wrote:
+> While the GCC and Clang compilers already define __ASSEMBLER__
+> automatically when compiling assembly code, __ASSEMBLY__ is a
+> macro that only gets defined by the Makefiles in the kernel.
+> This can be very confusing when switching between userspace
+> and kernelspace coding, or when dealing with uapi headers that
+> rather should use __ASSEMBLER__ instead. So let's standardize on
+> the __ASSEMBLER__ macro that is provided by the compilers now.
 > 
-> Not supporting "getsockopt(IPV6_V6ONLY)" breaks some legacy apps forced
-> to use MPTCP instead of TCP. These apps apparently "strangely" check
-> this "getsockopt(IPV6_V6ONLY)" before changing the behaviour with
-> "setsockopt(IPV6_V6ONLY)" which is supported for a long time. The "get"
-> part should have been added from the beginning, and I don't see this
-> patch as a new feature. Because it simply sets an integer like most
-> other "get" options, it seems better to target net and fix these apps
-> ASAP rather than targeting net-next and delay this "safe" fix.
+> This is almost a completely mechanical patch (done with a simple
+> "sed -i" statement), with just one comment tweaked manually in
+> arch/mips/include/asm/cpu.h (that was missing some underscores).
 > 
-> If that's OK, I would then prefer if these patches are applied in "net".
-> Or they can be applied in "net-next" if we can keep their "Cc: stable"
-> and "Fixes" tags, but that looks strange.
+> Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Cc: linux-mips@vger.kernel.org
+> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> ---
+>   arch/mips/include/asm/addrspace.h            |  4 +--
+>   arch/mips/include/asm/asm-eva.h              |  6 ++--
+>   arch/mips/include/asm/asm.h                  |  8 ++---
+>   arch/mips/include/asm/bmips.h                |  4 +--
+>   arch/mips/include/asm/cpu.h                  |  4 +--
+>   arch/mips/include/asm/dec/ecc.h              |  2 +-
+>   arch/mips/include/asm/dec/interrupts.h       |  4 +--
+>   arch/mips/include/asm/dec/kn01.h             |  2 +-
+>   arch/mips/include/asm/dec/kn02.h             |  2 +-
+>   arch/mips/include/asm/dec/kn02xa.h           |  2 +-
+>   arch/mips/include/asm/eva.h                  |  4 +--
+>   arch/mips/include/asm/ftrace.h               |  4 +--
+>   arch/mips/include/asm/hazards.h              |  4 +--
+>   arch/mips/include/asm/irqflags.h             |  4 +--
+>   arch/mips/include/asm/jazz.h                 | 16 ++++-----
+>   arch/mips/include/asm/jump_label.h           |  4 +--
+>   arch/mips/include/asm/linkage.h              |  2 +-
+>   arch/mips/include/asm/mach-generic/spaces.h  |  4 +--
+>   arch/mips/include/asm/mips-boards/bonito64.h |  4 +--
+>   arch/mips/include/asm/mipsmtregs.h           |  6 ++--
+>   arch/mips/include/asm/mipsregs.h             |  6 ++--
+>   arch/mips/include/asm/msa.h                  |  4 +--
+>   arch/mips/include/asm/pci/bridge.h           |  4 +--
+>   arch/mips/include/asm/pm.h                   |  6 ++--
+>   arch/mips/include/asm/prefetch.h             |  2 +-
+>   arch/mips/include/asm/regdef.h               |  4 +--
+>   arch/mips/include/asm/sibyte/board.h         |  4 +--
+>   arch/mips/include/asm/sibyte/sb1250.h        |  2 +-
+>   arch/mips/include/asm/sibyte/sb1250_defs.h   |  6 ++--
+>   arch/mips/include/asm/smp-cps.h              |  6 ++--
+>   arch/mips/include/asm/sn/addrs.h             | 18 +++++-----
+>   arch/mips/include/asm/sn/gda.h               |  4 +--
+>   arch/mips/include/asm/sn/kldir.h             |  4 +--
+>   arch/mips/include/asm/sn/klkernvars.h        |  4 +--
+>   arch/mips/include/asm/sn/launch.h            |  4 +--
+>   arch/mips/include/asm/sn/nmi.h               |  8 ++---
+>   arch/mips/include/asm/sn/sn0/addrs.h         | 14 ++++----
+>   arch/mips/include/asm/sn/sn0/hub.h           |  2 +-
+>   arch/mips/include/asm/sn/sn0/hubio.h         | 36 ++++++++++----------
+>   arch/mips/include/asm/sn/sn0/hubmd.h         |  4 +--
+>   arch/mips/include/asm/sn/sn0/hubni.h         |  6 ++--
+>   arch/mips/include/asm/sn/sn0/hubpi.h         |  4 +--
+>   arch/mips/include/asm/sn/types.h             |  2 +-
+>   arch/mips/include/asm/sync.h                 |  2 +-
+>   arch/mips/include/asm/thread_info.h          |  4 +--
+>   arch/mips/include/asm/unistd.h               |  4 +--
+>   arch/mips/include/asm/vdso/gettimeofday.h    |  4 +--
+>   arch/mips/include/asm/vdso/processor.h       |  4 +--
+>   arch/mips/include/asm/vdso/vdso.h            |  4 +--
+>   arch/mips/include/asm/vdso/vsyscall.h        |  4 +--
+>   arch/mips/include/asm/xtalk/xtalk.h          |  4 +--
+>   arch/mips/include/asm/xtalk/xwidget.h        |  4 +--
+>   drivers/soc/bcm/brcmstb/pm/pm.h              |  2 +-
+>   53 files changed, 140 insertions(+), 140 deletions(-)
 
-As per off-line discussion I'm going to apply only the first patch in
-this series to net, and leave the other for net-next.
-
-/P
+Reviewed-by: Philippe Mathieu-Daudé <philmd@linaro.org>
 
