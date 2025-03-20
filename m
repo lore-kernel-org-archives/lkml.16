@@ -1,334 +1,112 @@
-Received: from smtp-8fac.mail.infomaniak.ch (smtp-8fac.mail.infomaniak.ch [83.166.143.172])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E4F8227EBD
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:15:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C3FE555
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:19:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742498115; cv=none; b=jd4c9NUg0zc/c0LinDel5j+kEzPLr5HzUjoHfYFrB4L6+a0iWJoiiWQPGzw/eIAm1TG3O0e5P2qC665ndJvo7GWl15p/EpgGUdXAel3rDTYBx1QKLXzBVVMccunYAwHOn8HIRHUc/Uwrs/eU5KWBtxua0rkAetpXosAHtSAUgRo=
+	t=1742498399; cv=none; b=C6zJSwJNTNFaED4zVg+o3URyWIbu+RIEs+7ZOvSEE1A26Ku1r/Lg0hTli5Q/ZbQpy4rwr67f9FJ41onaRSnJDM/uzBzDVG29Mkvbhr4kMDNceFfghRGJm+McwV2rXv/QOi6aucmpH6inEt6t7WH5I2L5tu0rrLGZfpB7Pk302Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742498115; c=relaxed/simple;
-	bh=4SNnRAMcn/buWJ73VixqKzsHtEiCg4YAKKG2egMQaEM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=R32i/rvOQmH7BNM2g8+VgqSZBbcf9/2m/fCHscIFaTdW8OiFPmv6H5TPN+4cOl+ruTeFJJEfgAecBevTySzlKnQdNjmxpPUsuFOMUefVNKIcaQML25bIbcamWjU9x14cVOnpsxfJSd8CnkSl2wuoWG1yJEn4XJr8Nb5j5nz7KQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=kD2zjvO+; arc=none smtp.client-ip=83.166.143.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1742498399; c=relaxed/simple;
+	bh=18p1g7p7G+WKSCR/Qx7WOfz7URI7QNEFAgdaVdJ298A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=LXfn0xYXRHQLu4ee6QY/xepUS2CRO3zSMJYF2O6hH3iYmMRmGJDOdrChxW/bv5r90pJVH3518X9e5LvayXY9RM/9V+HBqzvwWDyRSBUoqKcpzcaE1H//TxvB/ogXUuQe5CUd2m9BKs+Ir1f6xR2c4eQuSY3uu10rgyZDK16vSWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZXu3DYpo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="kD2zjvO+"
-Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpB5h3hznG;
-	Thu, 20 Mar 2025 20:07:30 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1742497650;
-	bh=3TGxirgC/A39nXENCc8QN6zIrJvX5eX/CewKbYGsbmQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kD2zjvO+oDPW9AwdLVgw2tgTMz/YGp/SjxvqsCai9GU3n2qP0DAPVv4zdEOkhMvV1
-	 jQRgMtKHhUJV4+7Y69vZt2Swms2fBUZGxx+LvDzLcBKFEJQh1VbNxJPapTnSMHtprK
-	 KZT+cK7qMVD7LjALdFZuvKucLTt+QCF7wbevUVQc=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpB06g6zDS4;
-	Thu, 20 Mar 2025 20:07:30 +0100 (CET)
-From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To: Eric Paris <eparis@redhat.com>,
-	Paul Moore <paul@paul-moore.com>,
-	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
-	"Serge E . Hallyn" <serge@hallyn.com>
-Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-	Ben Scarlato <akhna@google.com>,
-	Casey Schaufler <casey@schaufler-ca.com>,
-	Charles Zaffery <czaffery@roblox.com>,
-	Daniel Burgener <dburgener@linux.microsoft.com>,
-	Francis Laniel <flaniel@linux.microsoft.com>,
-	James Morris <jmorris@namei.org>,
-	Jann Horn <jannh@google.com>,
-	Jeff Xu <jeffxu@google.com>,
-	Jorge Lucangeli Obes <jorgelo@google.com>,
-	Kees Cook <kees@kernel.org>,
-	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
-	Matt Bobrowski <mattbobrowski@google.com>,
-	Matthieu Buffet <matthieu@buffet.re>,
-	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
-	Phil Sutter <phil@nwl.cc>,
-	Praveen K Paladugu <prapal@linux.microsoft.com>,
-	Robert Salvet <robert.salvet@roblox.com>,
-	Shervin Oloumi <enlightened@google.com>,
-	Song Liu <song@kernel.org>,
-	Tahera Fahimi <fahimitahera@gmail.com>,
-	Tingmao Wang <m@maowtm.org>,
-	Tyler Hicks <code@tyhicks.com>,
-	audit@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-security-module@vger.kernel.org
-Subject: [PATCH v7 04/28] landlock: Prepare to use credential instead of domain for filesystem
-Date: Thu, 20 Mar 2025 20:06:53 +0100
-Message-ID: <20250320190717.2287696-5-mic@digikod.net>
-In-Reply-To: <20250320190717.2287696-1-mic@digikod.net>
-References: <20250320190717.2287696-1-mic@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZXu3DYpo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56420C4CEEC
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:19:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742498399;
+	bh=18p1g7p7G+WKSCR/Qx7WOfz7URI7QNEFAgdaVdJ298A=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZXu3DYpot12xIosUsDGsQEawKQ/ZHXEh2gPkhxa3naMlou/8MKX1Dq31zYGKuRV5N
+	 cSNnnPHAfu8Hj7zNuV5mAsPsV2dVv3G8dJFFFXo/aoJEe6tSmrRpUjjB4EEyNbrOeW
+	 8qTfBa2HdODIKEBr6ctEMj6JMuxSGXWPMtfwJ8O5tWNQBqMd4wsJpJN1gQ8bM2WYgW
+	 1BFbhYrDHsTgWTjgVvf7UF7qK1hlTfG77FF4wmyAm1zhnjgVF/TTZnhMyXevMxg5IO
+	 C+ZAqYhrSScmbDp4nv0MEwO0c8AnmUpOkrhe7xKVIkhNK2m9MXrLLnqAAd0OSGAbnw
+	 72iUa79dN1/tg==
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-30beedb99c9so11960531fa.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 12:19:59 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWf5eqsigUtoEOgIaJ///QTtUdcyDoSrwXFAIcTGx3v9SOhcuZ+/yL2KkNbtUPK9EEPeW2sBSPk+rppfow=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxYYXe9WantxO6kdBeM0Z348G16DmLtKXyX/OAbumesRXEANJoE
+	kzC/hPeQhldhjUpB0YzGmsw7q4Yo6l5StKCEMpaqPAj+TiiGZ7Oc1ZQ9vYd4D4BfJu+QFgk0I3k
+	3W2+3rMCro80fXV2emiV032RUaPM=
+X-Google-Smtp-Source: AGHT+IFv6qp9ZC3REaL6pqtdJRcVeHiw0hqk4WEaMMyj3aa+lTrEnhzZ4agUq0zoyXipvH8hAe5e45n4ydKb3Rnfc88=
+X-Received: by 2002:a2e:bc04:0:b0:30c:201a:149a with SMTP id
+ 38308e7fff4ca-30d7e2aab8bmr1729101fa.25.1742498397674; Thu, 20 Mar 2025
+ 12:19:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Infomaniak-Routing: alpha
+References: <SN6PR02MB415723FBCD79365E8D72CA5FD4D82@SN6PR02MB4157.namprd02.prod.outlook.com>
+In-Reply-To: <SN6PR02MB415723FBCD79365E8D72CA5FD4D82@SN6PR02MB4157.namprd02.prod.outlook.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Thu, 20 Mar 2025 20:19:45 +0100
+X-Gmail-Original-Message-ID: <CAMj1kXH-awwT99FTaBJqyEbgBoxc20h4LfbzXMP00NQHBs03+A@mail.gmail.com>
+X-Gm-Features: AQ5f1JpmsC5AWna36uVwzk7RFc0W8oqX3rhKRXxe5GLuxfgWLI07lDcdjZDXf7U
+Message-ID: <CAMj1kXH-awwT99FTaBJqyEbgBoxc20h4LfbzXMP00NQHBs03+A@mail.gmail.com>
+Subject: Re: Compile problems w/gcc 9.4.0 in linux-next
+To: Michael Kelley <mhklinux@outlook.com>
+Cc: "brgerst@gmail.com" <brgerst@gmail.com>, "mingo@kernel.org" <mingo@kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-This cosmetic change is needed for audit support, specifically to be
-able to filter according to cross-execution boundaries.
+Hi Michael,
 
-Add landlock_get_applicable_subject(), mainly a copy of
-landlock_get_applicable_domain(), which will fully replace it in a
-following commit.
+On Thu, 20 Mar 2025 at 19:29, Michael Kelley <mhklinux@outlook.com> wrote:
+>
+> Brian/Ingo/Ard -
+>
+> I'm seeing a compile problem in linux-next-20250319 with gcc 9.4.0. I've bisected
+> to a group of 6 commits that you authored:
+>
+> a9a76b38aaf5 x86/boot: Disable stack protector for early boot code
+> f58b63857ae3 x86/pvh: Use fixed_percpu_data for early boot GSBASE
+> cb7927fda002 x86/relocs: Handle R_X86_64_REX_GOTPCRELX relocations
+> 78c4374ef8b8 x86/module: Deal with GOT based stack cookie load on Clang < 17
+> 80d47defddc0 x86/stackprotector/64: Convert to normal per-CPU variable
+> 9d7de2aa8b41 x86/percpu/64: Use relative percpu offsets
+>
+> As of a9a76b38aaf5, everything compiles correctly.
+>
+> For f58b63857ae3 thru 80d47defddc0, this error occurs:
+>
+>     arch/x86/platform/pvh/head.S: Assembler messages:
+>     arch/x86/platform/pvh/head.S:183: Error: operand size mismatch for `movq'
+>
 
-Optimize current_check_access_path() to only handle the access request.
+This is simply a bug in patch f58b63857ae3, which uses movq on
+EDX/EAX. This breaks bisection (as you've noticed), annoyingly, and
+I'll leave it to the tip maintainers to decide whether this warrants a
+rebase (given that the fix is already queued up as well)
 
-Partially replace get_current_fs_domain() with explicit calls to
-landlock_get_applicable_subject().  The remaining ones will follow with
-more changes.
+> As of 9d7de2aa8b41 and later, the head.S error goes away, and this
+> error occurs:
+>
+>     lib/zstd/compress/huf_compress.c:1033:1: internal compiler error: Segmentation fault
+>      1033 | {
+>           | ^
+>     Please submit a full bug report,
+>     with preprocessed source if appropriate.
+>     See <file:///usr/share/doc/gcc-9/README.Bugs> for instructions.
+>
+> Interestingly, if DYNAMIC_BMI2 in lib/zstd/common/portability_macros.h
+> is changed on line 61 to always be defined as 0, the compile problem in
+> huf_compress.c goes away.
+>
 
-Remove explicit domain->num_layers check which is now part of the
-landlock_get_applicable_subject() call.
+Without having looked at the crashing code, I suspect that the only
+meaningful course of action here is to tweak the conditional logic
+that defines DYNAMIC_BMI2 to only enable it for GCC >= 10.1 (assuming
+those are unaffected) In any case, GCC 9.4 is not going to get fixed
+in the field, so even if this gets fixed on the GCC side, we will have
+to deal with it here.
 
-Cc: Günther Noack <gnoack@google.com>
-Signed-off-by: Mickaël Salaün <mic@digikod.net>
----
-
-Changes since v6:
-- Update headers.
-
-Changes since v4:
-- New patch to avoid duplicated computation of the layer level that
-  denied an access.
----
- security/landlock/cred.h | 53 +++++++++++++++++++++++++++++++-
- security/landlock/fs.c   | 65 +++++++++++++++++++++++-----------------
- 2 files changed, 90 insertions(+), 28 deletions(-)
-
-diff --git a/security/landlock/cred.h b/security/landlock/cred.h
-index bf755459838a..eb691130dd67 100644
---- a/security/landlock/cred.h
-+++ b/security/landlock/cred.h
-@@ -1,9 +1,10 @@
- /* SPDX-License-Identifier: GPL-2.0-only */
- /*
-- * Landlock LSM - Credential hooks
-+ * Landlock - Credential hooks
-  *
-  * Copyright © 2019-2020 Mickaël Salaün <mic@digikod.net>
-  * Copyright © 2019-2020 ANSSI
-+ * Copyright © 2021-2025 Microsoft Corporation
-  */
- 
- #ifndef _SECURITY_LANDLOCK_CRED_H
-@@ -13,6 +14,7 @@
- #include <linux/init.h>
- #include <linux/rcupdate.h>
- 
-+#include "access.h"
- #include "ruleset.h"
- #include "setup.h"
- 
-@@ -53,6 +55,55 @@ static inline bool landlocked(const struct task_struct *const task)
- 	return has_dom;
- }
- 
-+/**
-+ * landlock_get_applicable_subject - Return the subject's Landlock credential
-+ *                                   if its enforced domain applies to (i.e.
-+ *                                   handles) at least one of the access rights
-+ *                                   specified in @masks
-+ *
-+ * @cred: credential
-+ * @masks: access masks
-+ * @handle_layer: returned youngest layer handling a subset of @masks.  Not set
-+ *                if the function returns NULL.
-+ *
-+ * Returns: landlock_cred(@cred) if any access rights specified in @masks is
-+ * handled, or NULL otherwise.
-+ */
-+static inline const struct landlock_cred_security *
-+landlock_get_applicable_subject(const struct cred *const cred,
-+				const struct access_masks masks,
-+				size_t *const handle_layer)
-+{
-+	const union access_masks_all masks_all = {
-+		.masks = masks,
-+	};
-+	const struct landlock_ruleset *domain;
-+	ssize_t layer_level;
-+
-+	if (!cred)
-+		return NULL;
-+
-+	domain = landlock_cred(cred)->domain;
-+	if (!domain)
-+		return NULL;
-+
-+	for (layer_level = domain->num_layers - 1; layer_level >= 0;
-+	     layer_level--) {
-+		union access_masks_all layer = {
-+			.masks = domain->access_masks[layer_level],
-+		};
-+
-+		if (layer.all & masks_all.all) {
-+			if (handle_layer)
-+				*handle_layer = layer_level;
-+
-+			return landlock_cred(cred);
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
- __init void landlock_add_cred_hooks(void);
- 
- #endif /* _SECURITY_LANDLOCK_CRED_H */
-diff --git a/security/landlock/fs.c b/security/landlock/fs.c
-index 47c862fe14e4..fd858f989a3d 100644
---- a/security/landlock/fs.c
-+++ b/security/landlock/fs.c
-@@ -773,11 +773,14 @@ static bool is_access_to_paths_allowed(
- 
- 	if (!access_request_parent1 && !access_request_parent2)
- 		return true;
--	if (WARN_ON_ONCE(!domain || !path))
-+
-+	if (WARN_ON_ONCE(!path))
- 		return true;
-+
- 	if (is_nouser_or_private(path->dentry))
- 		return true;
--	if (WARN_ON_ONCE(domain->num_layers < 1 || !layer_masks_parent1))
-+
-+	if (WARN_ON_ONCE(!layer_masks_parent1))
- 		return false;
- 
- 	allowed_parent1 = is_layer_masks_allowed(layer_masks_parent1);
-@@ -928,16 +931,21 @@ static bool is_access_to_paths_allowed(
- static int current_check_access_path(const struct path *const path,
- 				     access_mask_t access_request)
- {
--	const struct landlock_ruleset *const dom = get_current_fs_domain();
-+	const struct access_masks masks = {
-+		.fs = access_request,
-+	};
-+	const struct landlock_cred_security *const subject =
-+		landlock_get_applicable_subject(current_cred(), masks, NULL);
- 	layer_mask_t layer_masks[LANDLOCK_NUM_ACCESS_FS] = {};
- 
--	if (!dom)
-+	if (!subject)
- 		return 0;
- 
--	access_request = landlock_init_layer_masks(
--		dom, access_request, &layer_masks, LANDLOCK_KEY_INODE);
--	if (is_access_to_paths_allowed(dom, path, access_request, &layer_masks,
--				       NULL, 0, NULL, NULL))
-+	access_request = landlock_init_layer_masks(subject->domain,
-+						   access_request, &layer_masks,
-+						   LANDLOCK_KEY_INODE);
-+	if (is_access_to_paths_allowed(subject->domain, path, access_request,
-+				       &layer_masks, NULL, 0, NULL, NULL))
- 		return 0;
- 
- 	return -EACCES;
-@@ -1100,7 +1108,8 @@ static int current_check_refer_path(struct dentry *const old_dentry,
- 				    struct dentry *const new_dentry,
- 				    const bool removable, const bool exchange)
- {
--	const struct landlock_ruleset *const dom = get_current_fs_domain();
-+	const struct landlock_cred_security *const subject =
-+		landlock_get_applicable_subject(current_cred(), any_fs, NULL);
- 	bool allow_parent1, allow_parent2;
- 	access_mask_t access_request_parent1, access_request_parent2;
- 	struct path mnt_dir;
-@@ -1108,10 +1117,9 @@ static int current_check_refer_path(struct dentry *const old_dentry,
- 	layer_mask_t layer_masks_parent1[LANDLOCK_NUM_ACCESS_FS] = {},
- 		     layer_masks_parent2[LANDLOCK_NUM_ACCESS_FS] = {};
- 
--	if (!dom)
-+	if (!subject)
- 		return 0;
--	if (WARN_ON_ONCE(dom->num_layers < 1))
--		return -EACCES;
-+
- 	if (unlikely(d_is_negative(old_dentry)))
- 		return -ENOENT;
- 	if (exchange) {
-@@ -1136,10 +1144,11 @@ static int current_check_refer_path(struct dentry *const old_dentry,
- 		 * for same-directory referer (i.e. no reparenting).
- 		 */
- 		access_request_parent1 = landlock_init_layer_masks(
--			dom, access_request_parent1 | access_request_parent2,
-+			subject->domain,
-+			access_request_parent1 | access_request_parent2,
- 			&layer_masks_parent1, LANDLOCK_KEY_INODE);
- 		if (is_access_to_paths_allowed(
--			    dom, new_dir, access_request_parent1,
-+			    subject->domain, new_dir, access_request_parent1,
- 			    &layer_masks_parent1, NULL, 0, NULL, NULL))
- 			return 0;
- 		return -EACCES;
-@@ -1162,10 +1171,12 @@ static int current_check_refer_path(struct dentry *const old_dentry,
- 						      old_dentry->d_parent;
- 
- 	/* new_dir->dentry is equal to new_dentry->d_parent */
--	allow_parent1 = collect_domain_accesses(dom, mnt_dir.dentry, old_parent,
-+	allow_parent1 = collect_domain_accesses(subject->domain, mnt_dir.dentry,
-+						old_parent,
- 						&layer_masks_parent1);
--	allow_parent2 = collect_domain_accesses(
--		dom, mnt_dir.dentry, new_dir->dentry, &layer_masks_parent2);
-+	allow_parent2 = collect_domain_accesses(subject->domain, mnt_dir.dentry,
-+						new_dir->dentry,
-+						&layer_masks_parent2);
- 
- 	if (allow_parent1 && allow_parent2)
- 		return 0;
-@@ -1177,9 +1188,9 @@ static int current_check_refer_path(struct dentry *const old_dentry,
- 	 * destination parent access rights.
- 	 */
- 	if (is_access_to_paths_allowed(
--		    dom, &mnt_dir, access_request_parent1, &layer_masks_parent1,
--		    old_dentry, access_request_parent2, &layer_masks_parent2,
--		    exchange ? new_dentry : NULL))
-+		    subject->domain, &mnt_dir, access_request_parent1,
-+		    &layer_masks_parent1, old_dentry, access_request_parent2,
-+		    &layer_masks_parent2, exchange ? new_dentry : NULL))
- 		return 0;
- 
- 	/*
-@@ -1506,11 +1517,10 @@ static int hook_file_open(struct file *const file)
- 	layer_mask_t layer_masks[LANDLOCK_NUM_ACCESS_FS] = {};
- 	access_mask_t open_access_request, full_access_request, allowed_access,
- 		optional_access;
--	const struct landlock_ruleset *const dom =
--		landlock_get_applicable_domain(
--			landlock_cred(file->f_cred)->domain, any_fs);
-+	const struct landlock_cred_security *const subject =
-+		landlock_get_applicable_subject(file->f_cred, any_fs, NULL);
- 
--	if (!dom)
-+	if (!subject)
- 		return 0;
- 
- 	/*
-@@ -1531,9 +1541,10 @@ static int hook_file_open(struct file *const file)
- 	full_access_request = open_access_request | optional_access;
- 
- 	if (is_access_to_paths_allowed(
--		    dom, &file->f_path,
--		    landlock_init_layer_masks(dom, full_access_request,
--					      &layer_masks, LANDLOCK_KEY_INODE),
-+		    subject->domain, &file->f_path,
-+		    landlock_init_layer_masks(subject->domain,
-+					      full_access_request, &layer_masks,
-+					      LANDLOCK_KEY_INODE),
- 		    &layer_masks, NULL, 0, NULL, NULL)) {
- 		allowed_access = full_access_request;
- 	} else {
--- 
-2.49.0
-
+> I'm using gcc 9.4.0 in an Ubuntu 20.04 install as it's the standard compiler
+> for that version of Ubuntu. I'm guessing that getting a fix for that
+> relatively old version of gcc isn't likely. I have not tested with other
+> gcc versions.
