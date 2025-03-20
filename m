@@ -1,33 +1,33 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 418EB3D994;
-	Thu, 20 Mar 2025 05:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EFD54F8C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 05:31:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742448578; cv=none; b=pUJXggRFbhJrvKyaDeVYApeg0M6kfEiXJsf50JiEuz+vD90z9Sxed2LXHpjmpXZzCJiyX9gjbOAKRH/6Bq9UA8NUhIupLMjy7pxHBiCsmN8cJ/5N9EJeNkNbpKBBZDJ6oWm3rC9akT8ru/KrTlCX6U9cvjgV7nL0NrqLkp94/cs=
+	t=1742448715; cv=none; b=KcKiMmMe1a+xLkhJlgQQlHIGY9+HhkRI7YOuar2Dk0hvkgIbgZjYtTclr0NPfuUipdBL3t2ABLDFc7ecTa5Y7VuPWkvGey8POmqjhfTF83o7/G+vt84yX2SCOtA7egUUOPwvAvLDsW2Sm2doU4kItp0A7F2eeajv2gbJUDEDWEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742448578; c=relaxed/simple;
-	bh=bDfQSsLmLnxeqEW9bKVw08xONqJ1TOJd2A9qPkd57ps=;
+	s=arc-20240116; t=1742448715; c=relaxed/simple;
+	bh=WzRz+8E4lJ5mSY3nXf7WDj2T7Vxh/B5E9SaA0rJo96E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SDDw3F9/ZQZguEyEg+ldJa1uKMdwhZjLXuEHgsj/tikcdOY1YLfsyTb3GDyphKQXBYbQ/U/McxUOpTZd2j+WKFZxQwqKFSccHBj7zPCFY1m9Ym7od4YJQM2vW6iipFhdsMiLj/qlvrc1CGP4Qa3219gfFYIJJTB+mV9kc04kYSM=
+	 Content-Type:Content-Disposition:In-Reply-To; b=JFyxdjgmo2Gi56OtCP2NIlb6xjbhvJ/YPcV+0vFsZShpSeDWRRkpguJjQTkfyiN48/AnIv+4+VENhYmnvDv0ZZpAFvVbREGh3sl5mt5HNm4/rjXyTCv2RE1EiLYdWeuzA19HXIfWM0BhbiIF9rodoqnOsloRtLaQWO8Tjrp1BB0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id 13F0068AA6; Thu, 20 Mar 2025 06:29:30 +0100 (CET)
-Date: Thu, 20 Mar 2025 06:29:29 +0100
+	id E972B68AA6; Thu, 20 Mar 2025 06:31:47 +0100 (CET)
+Date: Thu, 20 Mar 2025 06:31:47 +0100
 From: Christoph Hellwig <hch@lst.de>
-To: John Garry <john.g.garry@oracle.com>
-Cc: Christoph Hellwig <hch@lst.de>, brauner@kernel.org, djwong@kernel.org,
-	cem@kernel.org, dchinner@redhat.com, linux-xfs@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ojaswin@linux.ibm.com, ritesh.list@gmail.com,
-	martin.petersen@oracle.com, tytso@mit.edu,
-	linux-ext4@vger.kernel.org
-Subject: Re: [PATCH v6 10/13] xfs: iomap COW-based atomic write support
-Message-ID: <20250320052929.GA12560@lst.de>
-References: <20250313171310.1886394-1-john.g.garry@oracle.com> <20250313171310.1886394-11-john.g.garry@oracle.com> <Z9fOoE3LxcLNcddh@infradead.org> <eb7a6175-5637-4ea6-a08c-14776aa67d8b@oracle.com> <20250318053906.GD14470@lst.de> <eff45548-df5a-469b-a4ee-6d09845c86e2@oracle.com> <20250318083203.GA18902@lst.de> <de3f6e25-851a-4ed7-9511-397270785794@oracle.com> <20250319073045.GA25373@lst.de> <ef315f4e-d7e9-48ee-b975-e0a014d10ba2@oracle.com>
+To: Gao Xiang <hsiangkao@linux.alibaba.com>
+Cc: Christoph Hellwig <hch@lst.de>, akpm@linux-foundation.org,
+	bingbu.cao@linux.intel.com, linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org, lorenzo.stoakes@oracle.com,
+	opensource.kernel@vivo.com, rppt@kernel.org, ryan.roberts@arm.com,
+	urezki@gmail.com, ziy@nvidia.com, vivek.kasireddy@intel.com,
+	Huan Yang <link@vivo.com>
+Subject: Re: [PATCH] mm/vmalloc: fix mischeck pfn valid in vmap_pfns
+Message-ID: <20250320053147.GB12560@lst.de>
+References: <20250317055304.GB26662@lst.de> <5a12454c-16a1-4400-a764-f49293d8dece@vivo.com> <20250318064805.GA16121@lst.de> <5229b24f-1984-4225-ae03-8b952de56e3b@vivo.com> <20250318083330.GB18902@lst.de> <bcbbc2e9-858f-46ed-909e-1d911dd614f0@vivo.com> <20250318084453.GB19274@lst.de> <64a43d16-606c-4255-8a8b-96d6e4e44729@linux.alibaba.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -36,35 +36,22 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ef315f4e-d7e9-48ee-b975-e0a014d10ba2@oracle.com>
+In-Reply-To: <64a43d16-606c-4255-8a8b-96d6e4e44729@linux.alibaba.com>
 User-Agent: Mutt/1.5.17 (2007-11-01)
 
-On Wed, Mar 19, 2025 at 10:24:55AM +0000, John Garry wrote:
-> it seems to work ok, cheers
-
-Better test it very well, this was really just intended as a sketch..
-
->> +	count_fsb = end_fsb - offset_fsb;
->> +	resaligned = xfs_aligned_fsb_count(offset_fsb, count_fsb,
->> +			xfs_get_cowextsz_hint(ip));
->> +	xfs_iunlock(ip, XFS_ILOCK_EXCL);
->> +
->> +	error = xfs_trans_alloc_inode(ip, &M_RES(mp)->tr_write,
->> +			XFS_DIOSTRAT_SPACE_RES(mp, resaligned), 0, false, &tp);
->>   	if (error)
->>   		return error;
->>   -	error = xfs_bmapi_read(ip, offset_fsb, end_fsb - offset_fsb, &imap,
->> -			&nimaps, 0);
->> -	if (error)
->> -		goto out_unlock;
->> +	if (!xfs_iext_lookup_extent(ip, ip->i_cowfp, offset_fsb, &icur, &cmap))
->> +		cmap.br_startoff = end_fsb;
+On Wed, Mar 19, 2025 at 05:09:06PM +0800, Gao Xiang wrote:
+> The minimum map unit is page size instead of variable-size folio.
 >
-> Do we really need this logic?
+> For many cases, vmap (to combine many partial folios) is useful
+> (instead of split all folios to order-0 folios in advance) but
+> I agree page array may be inefficient.
 >
-> offset_fsb does not change, and logically cmap.br_startoff == end_fsb 
-> already, right?
+> So I don't think another folio vmap() version is better overall
+> anyway.
 
-Afte unlocking and relocking the ilock the extent layout could have
-changed.
+Then just reject the mappings for now.  vmap/vm_map_ram isn't really
+intended for mapping totally arbitrary scattered memory anyway.
+As mentioned before udmabuf also has a grave bug in the dma mapping
+part, so just marking it broken would be another very sensible
+option.
 
