@@ -1,216 +1,179 @@
-Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012038.outbound.protection.outlook.com [40.93.195.38])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31B31EB5E0;
-	Thu, 20 Mar 2025 16:45:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742489137; cv=none; b=mCjYJMnbnTyMu02Llo1zpKBdy1NRSMy/veTZ0JA/2ktl76TLiEMgh1n3EZZxZi9jYP99ZufJuoi6cCvc9nMru0bkjlqG3zCwUuOJfepXNtqUmINThdPWavwZCdB7nXsxUpcvl/5Mwbj21rv6/TZHd1gABCiVzRvDr4pGe+ei0DQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742489137; c=relaxed/simple;
-	bh=qqItqlFyk4AZ90MU5hbCbICUAFIIBuVrqI1oy8rs+0A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JFBNNqxhVup2D8b42R9hBXFfkNaJsy9cOvtV5ZxQP+5X/+HS4lAeCUlcw9CMYyzEaUVPGIrOtIp6TDwqMeJv5kl+TU+RqixLDWFSZ9V5S/9kqX7QdUhF22JIWrsZ6clvqfYLfPYr05ETLJfh4aCtcTqkBlPvMpOI5lvRJGMvCR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=avX6NG7A; arc=none smtp.client-ip=209.85.128.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30CB31DF739;
+	Thu, 20 Mar 2025 16:46:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.195.38
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742489206; cv=fail; b=iZiNcw6p/9DFhqPYKPuo9s4ZW0ejUEh5UnYCs9W3eXfIF/cwR3rzyh3zsVFPBZR5jM2lvccLDOi0ntAplbz/dgBN7fP9wEtPnrXuFSqXpPQzSZcM2PPY+vqDmjzZRh+1H7PAHxRLsFR0EgLscOesCQzuTpVp8G5iDZk46NunM9w=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742489206; c=relaxed/simple;
+	bh=1DUuukOb12zbehszLyJ7y+Skc3rgugPP+fNjWJPuiMg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=TmqnBE3Jv7QPQc1St9m3Teyuzs2Jz29WYMK4LvjArPFrpH4ezbPSxfAXVmIAdhZvXnK03PT9fng7tznDhzmyzpWMyfH9ctOQQybNq7KpNPVxoQ32CvRfFeksTv9K5V+KGp8Iit8P/CMP/QI5FO5epKo0mEcapL8SbsDon0lD/Eo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=SpxQST3L; arc=fail smtp.client-ip=40.93.195.38
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="avX6NG7A"
-Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6febf391132so9931347b3.1;
-        Thu, 20 Mar 2025 09:45:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742489135; x=1743093935; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2KezL3PAx4Yqh0KckvimzJ7vzPDGdKm/LH84hRf1qio=;
-        b=avX6NG7AUZxFRzKdzUqhNUf1NRyXs+XM1O9NOE1FmHw9uaojKtWmefGU2nfPAmnqVS
-         Nelj9krFdk7SemgGm3cz4a0gkdkFfgsf2tnAgNQc/xNSBKf/bwwX8H96U76EOtfJhM8Q
-         EkRhs7qZKIvGC6g/LAZMMZHGBCyaDcl/fLxfHZft/8kVuzZkouSMSsBGhLXzxj/BZ0dt
-         CyXDFnXmAzNha4EKbrJpaA6++Wo/yjP1RbGya7vE8MCoL6Dccfgyh07K56h0dksV/aju
-         Wizkgn5C9UdpAwXTRZhbqWh6eQsaQExVrVbzzF8oV1BJ0D2Z/9Fstqy6QdGXfwOHEK5W
-         zimQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742489135; x=1743093935;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2KezL3PAx4Yqh0KckvimzJ7vzPDGdKm/LH84hRf1qio=;
-        b=GrrRH8obBV3prL8RbYPp20pus2AF2qZ1udqpUsMW05IL64yXo3bNRgGmToKzxmkCwG
-         Dk3uExIuEE2MkOLXfq8PtnsNtq56HudrG/t99JQeLf0jLg/r3oR2qO7GFiK3LGYf2Dkz
-         GWF5TyIZcf63f+qWWeEK2pjmFmqI0L4xLgYVjztKRYOAkRzUxTtKlWednzoYfyYl0xGG
-         xuSCISfI2VT8ew+YG5VYgt3KEqZaTsVTffJwAPdjL+yr/sNURqKSoQBcaMjrpbxSpF4c
-         NyHQQOoJKNeY9p5D2iibv4UJEs0hUoHi69kA1J7dO+ajDHxgQH+boCuko+Lp0Umb9ZFA
-         0DtA==
-X-Forwarded-Encrypted: i=1; AJvYcCW3gEiXlBNGD8AUckPVddER8y+bum/4dJACHw8RVhQJxYJ/qIbIcrHOW1A6u+UQhrfOc2kNN3DiJf+syqqL@vger.kernel.org, AJvYcCWhMIUk7SO2BvHwE4dQL9lV/hzigq+fqL6OOzA58WFQcxVsjZn+6bkveomdzXuM+UpLiIPiYP+Hur8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwCgFKGRGSPylO6ePfIRv2uQcqbGeIqWd6ER/BPJogx44QuH65s
-	IzwiYrlFse0Ny8iGzfpF2hNU0plOhdLNYGGcgANc3C+KCIWb5B3t
-X-Gm-Gg: ASbGnct5rdn3ZyZWHRAK6HeGpxkOvysn74lK6n1e1dpXkpyuCV2/dUkKJUF8F0PYeuV
-	jjaumyTWd71VtfIHiZlchf0ghbPFI8M+I4W+mjLSBbImgOiWD7+rSAt3CGcSZWI356w5fKxoA1I
-	JxZBaMFwx+96LHrOkcJ5BDqyu0w8s9QLA5P/Hbh6PeLXUBjtSFBdW8TluMbtZ/iU3rce7SvGspd
-	yBdVhKMl7jHOq5rwVmECEiS7cWhlEksro5H9JCFA47HGekg7JW784bMj8DYyDhLbcAhW+c808Eq
-	uX8NVH+7LKGyEz9Eu1rakZURbWt/BEr0ckyQWgK+MCAb
-X-Google-Smtp-Source: AGHT+IEHB9i2wGUB7JoCCEDiuzQ+VHkFY61m+oAR66RJyCZK95REKh6ZfA0CzpEWMiphX0glIYrNPg==
-X-Received: by 2002:a05:690c:4809:b0:6fb:9702:f1ca with SMTP id 00721157ae682-700ac5fe1c2mr57390707b3.20.1742489134456;
-        Thu, 20 Mar 2025 09:45:34 -0700 (PDT)
-Received: from localhost ([2a03:2880:25ff:70::])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-700ba8565a4sm81687b3.86.2025.03.20.09.45.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 09:45:33 -0700 (PDT)
-From: Joshua Hahn <joshua.hahnjy@gmail.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: gourry@gourry.net,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
+	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="SpxQST3L"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Lk9jWFXSzetd7Z1h3oTCihJD/c64KBSL8cY9tiI4pifdqCKx6UTaQ6tyw4+byE3rd7EI5zLK3dRUIJwxLOFJRcPYexWPIF7UMa0nyjCn1tVre9IarJYccuvn9evok8ltxHkTGEqgeJwQOMrmz9N3mj9FNGDaCUMgHEpRXM90MnmAj+a6KwGif30Xz0jINnygf+OukvwgbQnK4t2VInUxMrExVPGebTZ1Xq0nusMtcsbAcznekHAzcjCKiILdHER0fl4NSDjfJP2Jp91Jzs2q0temHe6jxiAqzIvTUDINlDH1M1U2hp1qmx3rUj3Pz6zkrVPoh2GBp3PsPgUyDevQVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=jBHwzH+60c7mJn7oA0LpJXFJNmWFco2NOnC6Z+0HuS4=;
+ b=ujXCmMUasXv9eFJhFo7SXfBZO/DYnjyTgTirgpmbW59rN3JSsg7r11M/2LUTS5eGnnHLuVKrKZEyjFMpu/6dTCAS17wdgEidX+3BZoDhNshRuFMib6p+U6CzuzaX+InP/kqBdYySah4ByoHxtpNEr9yY53QfK5hST1qQGU7soe+mzjSOnCRQnRvttMZSbCQlXskHrVAt61D4KjtnyZ3h7vfOhag/1Q0zhXwA0OFsNT741b8KNtmyL0UoMAvLM0COnX33iw4YzUFJEiFwjsZxmYzA0AFBtVUqFK0HF9a6yFf/S5QEn0l4UUD8yHSKlESb9wSvucKDPQSAB9VL6rQnJw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
+ dkim=pass header.d=altera.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=jBHwzH+60c7mJn7oA0LpJXFJNmWFco2NOnC6Z+0HuS4=;
+ b=SpxQST3LWeaCr5HwqEtQxI1XXlpdEa0WLkvPbze4bJPrDUHqPB7S5AAy6YAUU8O+ozoEx8HvJ2UGbBs5Usz/llTQYgMSsvQY4rBm9tJNIYDOeeBem4av+hf1sGbVHFEVpypuh1rZqjSI4/L1a9SUyaQNIzKETq4SN1rrzlOa2wgsj0QaDaZt0WeQ0mT/ydLedLGwjMw1uwjOdUZIGwV9oWIghrnlIjzHBg5G39iHI0C/VEj3Ho+IsaHt/LxOmqnoUpPUcbMTKjPnvWXGCrXekfXrEUSl1shQhlJ4OyaCDB6ce3o9WbSTfq+dYC6ylffurDzrK5AmtOPQJKS9I37kJw==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=altera.com;
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
+ by BY5PR03MB5014.namprd03.prod.outlook.com (2603:10b6:a03:1e6::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Thu, 20 Mar
+ 2025 16:46:42 +0000
+Received: from BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
+ ([fe80::706b:dd15:bc81:313c%2]) with mapi id 15.20.8534.031; Thu, 20 Mar 2025
+ 16:46:42 +0000
+From: Matthew Gerlach <matthew.gerlach@altera.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	dinguyen@kernel.org,
+	bp@alien8.de,
+	tony.luck@intel.com,
+	james.morse@arm.com,
+	mchehab@kernel.org,
+	rric@kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com
-Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
-Date: Thu, 20 Mar 2025 09:45:31 -0700
-Message-ID: <20250320164532.1313581-1-joshua.hahnjy@gmail.com>
-X-Mailer: git-send-email 2.47.1
-In-Reply-To: <20250320041749.881-2-rakie.kim@sk.com>
-References: 
+	linux-edac@vger.kernel.org
+Cc: Matthew Gerlach <matthew.gerlach@altera.com>
+Subject: [PATCH 2/4] EDAC, altera: update driver to reflect hw/yaml
+Date: Thu, 20 Mar 2025 09:46:20 -0700
+Message-Id: <20250320164622.6971-3-matthew.gerlach@altera.com>
+X-Mailer: git-send-email 2.35.3
+In-Reply-To: <20250320164622.6971-1-matthew.gerlach@altera.com>
+References: <20250320164622.6971-1-matthew.gerlach@altera.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BY3PR04CA0014.namprd04.prod.outlook.com
+ (2603:10b6:a03:217::19) To BYAPR03MB3461.namprd03.prod.outlook.com
+ (2603:10b6:a02:b4::23)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|BY5PR03MB5014:EE_
+X-MS-Office365-Filtering-Correlation-Id: 43f1b9be-f426-4752-21ba-08dd67cecb47
+X-MS-Exchange-AtpMessageProperties: SA
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|7416014|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?LpKagnNyZxblvlQZ8dAHi3P+8z7u6CbZWoGnyYn9ngyaEkGjmf0szZ/QnFgR?=
+ =?us-ascii?Q?B5W6+sV3reaf9+/zAM4ujMPetkfdzavxLcBy9w4XldGzTWUz38/DXXLeuUwh?=
+ =?us-ascii?Q?s0hmvDPTWFYqSZ/kMqRiu7o+y58H69ZL2pESvcviBBIQOh3k6npQU8GFenos?=
+ =?us-ascii?Q?/h2hcb/lW8yCNx688Z77bUMc8iA7avBgNQ3zTiyz/oRW41IGOHChQFdlt0fK?=
+ =?us-ascii?Q?4Z0jaNmjYOWg3tNJzEnZZQ7RvF03srOLICMe+MQX3BEWByU6m72QtGhF+cCW?=
+ =?us-ascii?Q?0DLAHP7tsEGlXCp/tMAJyFeadUthekpu5BniBmd+cgAR8cIQQG2bMYhR7rFR?=
+ =?us-ascii?Q?jfv5MgPbkwul3rvn8cvXxgf3MqvuELWJBUnTQjnb8kUe21HYU6pvkW/agy/d?=
+ =?us-ascii?Q?Y72hugfXbz5wwYQm2OW9zEQ+tHnuJPk3RQG/dLRJg7Qjnq9N4o5LktFunOr2?=
+ =?us-ascii?Q?m04DKf23TPW0ZFtV1CniL0g0KkT4XtkP6kkGpWXRRU1e72kmqoarJmQaqcDE?=
+ =?us-ascii?Q?ISbrjO6V0xZj9/C5yaoV/2IhHzJnnQIVB5+P/QGgfzhxEK9+IafdWFHPC5qO?=
+ =?us-ascii?Q?EnXcWGT/H2/kt+DfbM31ZF+ygDXjDbZka9D/Eg8v2+9qiUOaY5naj+/lMEJf?=
+ =?us-ascii?Q?30aHWnS4SJq6qi6pC5YPnmACxZ2JBTkDQUX+cL3pySrHrHWt4TZ+Xlh1D3rN?=
+ =?us-ascii?Q?xpIljYvBbWPxoum2eNU0FCX4HwRi8Y38i78PgAq8FdKecS/KUtPrYcJ6ojMT?=
+ =?us-ascii?Q?SRLEVRFpdra8XS3ZEpDe5cvJWIEjFQOmzJLltRNafz/iY6ICNbStb7VQZjee?=
+ =?us-ascii?Q?ydkLwN3g4edTVAp0oY12as3AIEiw5BY+XvtcWwxKQn6JqZab5+8BrIdNvP2M?=
+ =?us-ascii?Q?ssbSjQCVdsaqgxis3y4ZojCiPDBh2M3fMr76Q9iDtes2Z8it/d5LkX59Un6N?=
+ =?us-ascii?Q?0yIflJKKZrWFWXJFqLuU5+ZPRkz+FiGgbq9l3gCD+Xr1I4m+VtPtwBb32PeB?=
+ =?us-ascii?Q?zaQuXLaCAXqinPEzk7Ugblh68tMErszTE32ToqqdE3dHqZlZM/K7JthulzH/?=
+ =?us-ascii?Q?1BK4KDMNFVp1PxXy1b1dTyOIhonX62xNbpsPiiusCcv7/nBLn3uRzBj42clI?=
+ =?us-ascii?Q?fW3vc4hMtZXPmGlDN96I4/jyjhV/3NzmKzouWGyAry63pNvM0+Sl47ar/Bp/?=
+ =?us-ascii?Q?8SF86mvBJW+Wl7+G6nsJQZUaFVgqlAeGeQpLssXOTcGRME5S5MaUSqfdZwLX?=
+ =?us-ascii?Q?lxMsNXjkFu3W7K9zeY8m+D/MGeGR2emeucwiHtV+VNAV0NELKVSxqQ/UyU0V?=
+ =?us-ascii?Q?4HJ5FnQvWkoFuVqNDRmMbzOwYH27Yp83o9E9ojh5AG/KJraFY3WaAd0l78UR?=
+ =?us-ascii?Q?taXvDmIXrQjuvReXTxsmQHnWzrEGOaF8hoN9EPD4R6QCuREMYqrfdtSb2fce?=
+ =?us-ascii?Q?e7y0yacVxR4=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(921020);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?KNb1rZOb61mjT6CXcRcpM0S2+4TgXOuMEzVAeZVUJQSt+to12Qdbk3ddx9xx?=
+ =?us-ascii?Q?n/UGW3K52W9BBuVvWFLgw9wQwpv+EVps/w67kkirJhNQXOFlp6X/w0Xx2mJX?=
+ =?us-ascii?Q?a1NbP0NwI8wTQhRvwMGHDxoLM5UKkB+NBh9k5lVP3TJA80A6awaONZbOCVBR?=
+ =?us-ascii?Q?ZKozq3XohwqRuP+xWgl+ouIOqICT5V7B4D+xix4xGuIv7YbJIx/uWsKJaQnz?=
+ =?us-ascii?Q?nEB4C+PFDo4W577bQZBMmTUGCpxX3vGxYJGnn6c1Gx50xvYpJF7oGlmnj0fH?=
+ =?us-ascii?Q?mcZQhKP+7mmLHLINgfBpIwdYi2g3I1tVfpRQ+rrrMdQIdbHaPBkUM0lMUI6S?=
+ =?us-ascii?Q?LUOH+uv+a5VLAJV9Prf6WM7cJ3vy2erfvctNPMJth9KsQCeSlzgKZUVeEnoQ?=
+ =?us-ascii?Q?3Dpg6pp7WJyzv6tf5b6nc4CZDagL5u0zYac9ZIK1x93S7agV8U535VxYF/65?=
+ =?us-ascii?Q?+KVq25Lkn8WPW0kYK3PeeXsKjbkHXobqAHvQ5U6d9e2g4VxlvjlQ4tMM3Sep?=
+ =?us-ascii?Q?X6QdJj+7RyO2qjBFAAMhSYuCWRAyFb9y9xqAZ5ug5bChQKpJP9rcRgklevhk?=
+ =?us-ascii?Q?6C2gYRFDAm+zYNTS+KlASt/veIHlQloUt+at9GIBj8jHzSKGsVepU4KLDkDG?=
+ =?us-ascii?Q?W+GX5IX9ENj995oNRiL/OrKiosF+k2xEjn16CboSUSEcwwKGzDAK1C/xxBjx?=
+ =?us-ascii?Q?T0bl6pYBXbzEKqaXdfggiipTKZkYWm3GTOdl/8itJMKW4R464LDdkJcgSB1m?=
+ =?us-ascii?Q?5dLK077wKNZD6P6KLFv5H9czLKLgb7gCmgSK/EWErx/aBZoYJk3oZR1mVxM/?=
+ =?us-ascii?Q?buf5X/sx1Pru5X09xolehg41khdNmE7HWIfYPglj/JkydUq/ZXNowiYqlK+l?=
+ =?us-ascii?Q?tpL910eYlbcj+Xv063EgrooU7F8kKs7lhEU8XzQyV4bYJzc/A0r+kFE82lfr?=
+ =?us-ascii?Q?fGhkjeZfUJnWnaBxoWn8LO8CB0eD02LT1bAow8s7Oduht754oQAHPB/XT/bZ?=
+ =?us-ascii?Q?XGpMPdVq0CMNG786NiQ/zyoGeo0RGJ1a0EiSRQciKGPDSKG65iV25nFtnVAk?=
+ =?us-ascii?Q?R2JNxGp4fyFpqePvruMvGSV6LHHGvd8AtZ5CvzBJRscE7oRraORk/xpo0OFz?=
+ =?us-ascii?Q?YSYRFLJVe/e/H4N0UCHgU+lFQT9o7fOdqJ9R1eS8FpTvaTmlNka5WnCsn+Nc?=
+ =?us-ascii?Q?gYl/J87aZO3Q80G8CqJ2AVHkdwodpxcB08XBwfQAAXvDnkLbb3LvPnNHpIIo?=
+ =?us-ascii?Q?y0a2AGFv5qB2ZfUkU0+picOlratnvNFs9nfoVFrA50l4e7xZ+exb3ZgPL/4e?=
+ =?us-ascii?Q?6jn4m4g90zuPHPu1PSoIvRa3WqfNafS1E3FRi5VuHt3CHrrBIKcAfIkz8bTn?=
+ =?us-ascii?Q?O6xf2f0L7THgHX+rQDwy3k+GhbeTZDGsIW4l2nKwP6qFUQU6tp7JAcel4U3J?=
+ =?us-ascii?Q?Hi39PTqQyHCTZ8eCvj7zy8DCmjkxjtTwAP7SuoLMABnz0tUXMjMY6W9l3pR5?=
+ =?us-ascii?Q?x5KSKlZoqj5Yq34M6FXMrqcStvhDnOpMERtQZjqGtjFAHxdZ064nDUvIrMXB?=
+ =?us-ascii?Q?mIAqwcWJNHFM6XZLWI27kC/hOVovwxTSKIQBoJfoEb0YY4a+olpK3o6RmNU5?=
+ =?us-ascii?Q?AQ=3D=3D?=
+X-OriginatorOrg: altera.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 43f1b9be-f426-4752-21ba-08dd67cecb47
+X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 16:46:42.9214
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: v+Xn/y+5+8WDHD2ihLblUGVRLt7+YZPIiJwY4YylbIWC10x7eI6yLP3OBgOGjd2fjRO/573CcpeNiezSFsmF1IOLIHH4flfNQdAvKnemYHE=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR03MB5014
 
-Hi Rakie, thank you for the new version! I have just a few questions / nits
-about this patch.
+The device tree subnodes, and hardware, for the eccmgr are
+the same for Arria10, Stratix10, and Agilex. Update driver
+to allow the subnodes to be allowed for "altr,socfpga-s10-ecc-manager".
 
-On Thu, 20 Mar 2025 13:17:46 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
+Signed-off-by: Matthew Gerlach <matthew.gerlach@altera.com>
+---
+ drivers/edac/altera_edac.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> Memory leaks occurred when removing sysfs attributes for weighted
-> interleave. Improper kobject deallocation led to unreleased memory
-> when initialization failed or when nodes were removed.
-> 
-> This patch resolves the issue by replacing unnecessary `kfree()`
-> calls with `kobject_put()`, ensuring proper cleanup and preventing
-> memory leaks.
-> 
-> By correctly using `kobject_put()`, the release function now
-> properly deallocates memory without causing resource leaks,
-> thereby improving system stability.
-> 
-> Fixes: dce41f5ae253 ("mm/mempolicy: implement the sysfs-based weighted_interleave interface")
-> Signed-off-by: Rakie Kim <rakie.kim@sk.com>
-> ---
->  mm/mempolicy.c | 61 +++++++++++++++++++++++++-------------------------
->  1 file changed, 31 insertions(+), 30 deletions(-)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index bbaadbeeb291..5950d5d5b85e 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -3448,7 +3448,9 @@ static void sysfs_wi_release(struct kobject *wi_kobj)
->  
->  	for (i = 0; i < nr_node_ids; i++)
->  		sysfs_wi_node_release(node_attrs[i], wi_kobj);
-> -	kobject_put(wi_kobj);
-> +
-> +	kfree(node_attrs);
-> +	kfree(wi_kobj);
->  }
-
-I think the intent here is to make mempolicy_sysfs_init call kobject_put, which
-will then call sysfs_wi_release when the refcount is 0. So I think replacing
-kobject_put with kfree makes a lot of sense here. However, I think it is a bit
-confusing based on the commit message, which states that you are doing the
-opposite (replacing kfree with kobject_put). Perhaps it makes more sense to
-say that you are moving kfree() from sysfs_init to the release function, so
-that the struct and the node_attrs struct is freed together by the last
-reference holder.
-
->  static const struct kobj_type wi_ktype = {
-> @@ -3494,15 +3496,22 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  	struct kobject *wi_kobj;
->  	int nid, err;
->  
-> -	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> -	if (!wi_kobj)
-> +	node_attrs = kcalloc(nr_node_ids, sizeof(struct iw_node_attr *),
-> +			     GFP_KERNEL);
-> +	if (!node_attrs)
->  		return -ENOMEM;
-
-It's also not obvious to me why the allocation for node_attrs was moved to
-add_weighted_interleave_group. Maybe this refactoring belongs in patch 2,
-whose described intent is to consolidate the two objects into one (I expand
-on this idea below)
-
-> +	wi_kobj = kzalloc(sizeof(struct kobject), GFP_KERNEL);
-> +	if (!wi_kobj) {
-> +		err = -ENOMEM;
-> +		goto node_out;
-> +	}
-> +
->  	err = kobject_init_and_add(wi_kobj, &wi_ktype, root_kobj,
->  				   "weighted_interleave");
->  	if (err) {
-> -		kfree(wi_kobj);
-> -		return err;
-> +		kobject_put(wi_kobj);
-> +		goto err_out;
->  	}
->  
->  	for_each_node_state(nid, N_POSSIBLE) {
-> @@ -3512,9 +3521,17 @@ static int add_weighted_interleave_group(struct kobject *root_kobj)
->  			break;
->  		}
->  	}
-> -	if (err)
-> +	if (err) {
->  		kobject_put(wi_kobj);
-> +		goto err_out;
-> +	}
-> +
->  	return 0;
-> +
-> +node_out:
-> +	kfree(node_attrs);
-> +err_out:
-
-NIT: Is there a reason why we have a single line goto statement? Maybe it
-is more readable to replace all `goto err_out` with `return err` and save
-a few jumps : -)
-
-> +	return err;
->  }
->  
->  static void mempolicy_kobj_release(struct kobject *kobj)
-> @@ -3528,7 +3545,6 @@ static void mempolicy_kobj_release(struct kobject *kobj)
->  	mutex_unlock(&iw_table_lock);
->  	synchronize_rcu();
->  	kfree(old);
-> -	kfree(node_attrs);
-
-I think the intent of this patch is slightly confusing. Viewing this patch
-alone, it is not entirely obvious why the kfree for node_attrs is now being
-moved from the release of mempolicy_kobj to wi_kobj. Of course, we know that
-it is actually because this patch serves a secondary purpose of moving
-the allocations / freeing of nattrs and wi_kobj together, so that in the
-next patch they can be combined into a single struct.
-
-I think one way to make this patch more readable and maintainable is to
-separate it into (1) fixes, (as the Fixes: tag in your commit message suggests)
-and (2) refactoring that prepares for the next patch.
-
-Please let me know what you think -- these were just some thoughts that I had
-while I was reading the patch. Thank you again for this new version!
-
-Have a great day : -)
-Joshua
-
-Sent using hkml (https://github.com/sjp38/hackermail)
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 3e971f902363..895a5beb700f 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1030,6 +1030,9 @@ static int __init __maybe_unused altr_init_a10_ecc_device_type(char *compat)
+ 
+ 	np = of_find_compatible_node(NULL, NULL,
+ 				     "altr,socfpga-a10-ecc-manager");
++	if (!np)
++		np = of_find_compatible_node(NULL, NULL,
++					     "altr,socfpga-s10-ecc-manager");
+ 	if (!np) {
+ 		edac_printk(KERN_ERR, EDAC_DEVICE, "ECC Manager not found\n");
+ 		return -ENODEV;
+-- 
+2.35.3
 
