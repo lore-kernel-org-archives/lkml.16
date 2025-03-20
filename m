@@ -1,122 +1,153 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E645F1E9919
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:42:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 337D11E98EA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:42:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742485359; cv=none; b=WPELq68vcMd1rnH7fahN6TTFmTszJvp1C3pUhxyo//kLoky4WFaeuU+alYUi+en1sGg4XSKjuiG0T+lA27fweYCicSoUoid+Cgc22Hn8MZ/dFZlw6NvH8qKZWwXZZ6FDuYfKCTASbe2eZ1m6rabgySqIw3iMjnp/g4J9e3D70DM=
+	t=1742485358; cv=none; b=UUR0BZFFtkm/hCtfyyS+9rzdbxp5WMHLwD1DII0SFSnQ9MVtY1nB4ihrKiLraEZI+y2Bg+AtDxZQ2sSXdjV7rpcqVvP9EyjkItlzWJjlBvnUvkx1ZhK3NK5ZgBclPt8Giq7S0M+D3kDjoFsBkesv1OlBSbsxKdWJCbwoZIvCBds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742485359; c=relaxed/simple;
-	bh=J32prBUm6oBZ88b3RAURwzKHHWR9F+LoXAHqBCRBzBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jS7VzNJ1F5ItJCQSieBldFjjd67KEqm0rfWQjILIKsAQVXYwMzJrD6j9vyMOCyJ6vlv1qYG0WKqcZqjkc2uH9vQP01kyoQfxJrXFlHvHHZoTG5pMd2Cg6CTmOIveIvLdMkkhUzcgRdBEIn82ZkRmrt5zEpPyaLVB+iVUJcd4i7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=fOC0lpNT; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1742485358; c=relaxed/simple;
+	bh=d94NmL5l/c4RNcgkHzekopRG1modY77iggD4ffQWA1M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=r9VAm7XplGW+6fwOFoa9P8n75YdA/02H+Rn3e0rfqAosEJCuVawr5U/uKcwCL9F8l1BRfJb3+g1C5xdl2HGTQ48GhYVHpeyJNkbBKMx8F7Uequg8uADpdml9YWTB/J8hfJqC2+FULOMrO433oGGgIUBH/H4UItG56m6CgiBBY3U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=m18W9V4w; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="fOC0lpNT"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso6726025e9.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:42:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742485355; x=1743090155; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=AzdNEu6y+XONtMGIUQtcG5XKDkgKB41TTl7oxU5xJJg=;
-        b=fOC0lpNTZrUXHleugTQhIkfVp5+yJzbR7CcCZBPVLAZAgt4QRGqRKBLKt3zuHpKBeF
-         NkAjWYKde5Q47uZ90Qf0srZ3T1wr/jdIPr7PY4mYJ+F0IQv4Wf9Mu2oDj+h38Ytni8aw
-         1bmbhSZDkLT5ZHrYXM8EE+jsMpHH9slrHpo/Pd1KsGJc916okrCF8QvGkRKALkuGex4L
-         M7T7C3SGVNINQzRDfFM4Yvkqu0EX0s4TAB6Ui0724vUA4Qhj0Hm70az+vFbHE4Hbs1TR
-         148wd/MKf5ygXUD+9zfbgDNQpcGssEhlpsVPwT91N/AJGK65nqI0RB4yUSptXQgrpyEy
-         8cjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742485355; x=1743090155;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=AzdNEu6y+XONtMGIUQtcG5XKDkgKB41TTl7oxU5xJJg=;
-        b=nn8Q8ljXDZllBXzPxlEO5k+dke3oe7p1+hXbWCHqvywjcPeD/fQGXynHM7x6TCSQ8i
-         iXpAp3wbfdXbqEMwJeSu+PlxBoGgXK3HK93mRnSRPHFqK6gCZKehRWSzEUZQMPkKBWD/
-         xk7Vjpuym+khIyE/40Cf3KmXiYtQHRXaepes5+TjTk8/91DMu1chOvlSt6EIbokbixWP
-         rmfJVpsEMy3IZMqWXYDI2yRJdoIlLqkTJ6/W7BrEXRk42qdOfFAUswFk1Xa/h0NV8grz
-         sccTdhTmW8c9WZIxuBWm6RqKtH8w0ZQuJclQI9ggntvRj4c5ldi7qcu+me0/O0em0YIy
-         jQzg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmBs7G+TDe5aZIDKrbE5Y/++HW34m6Nc6CkjoYnI0ko372HE3bXqK83/GP8PC2xATOx6rd4UXz96DGcGU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw66qZNLCYa6y2j+EKioyag89x+doU9wtZSBymwALLHN3/Srphd
-	f29ZooQLQHQqdMAsdAEWSkFlZgntKEZYZaAHJ6m0/tEykg/fzKI5sTD73c0xHZs=
-X-Gm-Gg: ASbGnctfZPynle9PLBs3JY0spCvtTjcPtBeAPPnZCr2EfUDC2fK5LyNf6dY1bKHb8iU
-	cMgcGvtI62Ft/mU67ahrcMRcxG9tThAWm+vk9Q1Z5wOY3dVfE26zoMG4rTfabb+lbPl1Izi0jC/
-	7K4WZBMQTp2Mxj/0+rogqKbnfAmrM8BvLX05ZG8SZvuq7LQ4uKv2cO1+MeNITVxhJYOXly/mOyU
-	IA3/X1qdd/hL5fVzvxiisbz3A42WVFpdga7vBVyc67wSXt5syJvti9+n/OfWPkoIEUSedypFL33
-	7Re7wWX+spuMpMS/WXK62SLC2g5oL3PwQm4lK1XO9TAdfS4PKomCNH/X9UcGehKyeT4Ve68HhPg
-	5FFaIbDlBlX0o36nqYdNCWg==
-X-Google-Smtp-Source: AGHT+IFQEufoOY/ocwSQk/juDoom1Vr2/cRMpKfbGJG8KRcBZIE/XUKwxnHaV2M2+UGrtqFY48z25w==
-X-Received: by 2002:a05:600c:1f92:b0:43b:c857:e9d7 with SMTP id 5b1f17b1804b1-43d502e338emr69485e9.5.1742485354965;
-        Thu, 20 Mar 2025 08:42:34 -0700 (PDT)
-Received: from ?IPV6:2001:a61:1348:8f01:d3d3:1b29:8986:519c? ([2001:a61:1348:8f01:d3d3:1b29:8986:519c])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbd348sm1141335e9.39.2025.03.20.08.42.34
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 08:42:34 -0700 (PDT)
-Message-ID: <7be81186-2d18-4d0e-8a93-d2dda20b02b2@suse.com>
-Date: Thu, 20 Mar 2025 16:42:33 +0100
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="m18W9V4w"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id ACB0D44408;
+	Thu, 20 Mar 2025 15:42:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742485352;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=8mBeHfjSG+AR7A8Fp8QKLSrhvK7lhd1SXAkNAnYVLtw=;
+	b=m18W9V4w7yusNw0mo6qqU9toSKUuwPKXTEBs5rlqYEFiw4yzWXhSy1EChVjxOqiubNVJjD
+	pAL2KTjUrvqX1tzM1/cEkI6ZOaVEzFJ8nBLpbpADeIq/6/Ayqk9wKswVouV6NfHHNExWw5
+	qayfzfiglank6Q4uNeCYNi5MXslQnDXWuQwiX8kro0kwzD5xfvJiD3cAGAxZYzlZm0yrdf
+	bpSLDnc2PkZg3S7s0PDz49uSDOtQWVhv1CP5JVL4RRDpf1Y7DKDC7Uipt3XcQ5jCAXwtJw
+	SKvFr4HyEtnAily0Fp+lKUbE8CL0CNj3JiMEAoILcnAW1QOGAn0KrBOE9AgrmQ==
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+Subject: [PATCH v8 0/5] drm/bridge: add devm_drm_bridge_alloc() with bridge
+ refcount
+Date: Thu, 20 Mar 2025 16:42:09 +0100
+Message-Id: <20250320-drm-bridge-refcount-v8-0-b3ddaa9f1368@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: WARNING in cm109_urb_irq_callback/usb_submit_urb
-To: Alan Stern <stern@rowland.harvard.edu>, Oliver Neukum <oneukum@suse.com>
-Cc: =?UTF-8?B?55m954OB5YaJ?= <baishuoran@hrbeu.edu.cn>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Dmitry Torokhov <dmitry.torokhov@gmail.com>, Kun Hu <huk23@m.fudan.edu.cn>,
- Jiaji Qin <jjtan24@m.fudan.edu.cn>, linux-usb@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
- syzkaller@googlegroups.com
-References: <559eddf1.5c68.195b1d950ef.Coremail.baishuoran@hrbeu.edu.cn>
- <62d91b68-2137-4a3a-a78a-c765402edd35@suse.com>
- <a3f66f2e-a99e-47f2-a3ef-742b6903cc5d@rowland.harvard.edu>
-Content-Language: en-US
-From: Oliver Neukum <oneukum@suse.com>
-In-Reply-To: <a3f66f2e-a99e-47f2-a3ef-742b6903cc5d@rowland.harvard.edu>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFE33GcC/32NTQ7CIBCFr9LMWgzUUqgr72G6sPzYSSwYqETTc
+ HfHHsDkbb75Mu9tkF1Cl+HcbJBcwYwxEOhDA2a+hbtjaImh5a3kJ9ExmxY2JbRkkvMmvsLKpLY
+ DWYrvgT6fZPC9t15H4hnzGtNnHynqd/3fVxTjTMhWKuG16YfuMsW4PjAcTVxgrLV+AR1PxK24A
+ AAA
+X-Change-ID: 20250314-drm-bridge-refcount-58d9503503f6
+To: Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>, 
+ Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, Inki Dae <inki.dae@samsung.com>, 
+ Jagan Teki <jagan@amarulasolutions.com>, 
+ Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Anusha Srivatsa <asrivats@redhat.com>, 
+ Paul Kocialkowski <paulk@sys-base.io>, Dmitry Baryshkov <lumag@kernel.org>, 
+ =?utf-8?q?Herv=C3=A9_Codina?= <herve.codina@bootlin.com>, 
+ Hui Pu <Hui.Pu@gehealthcare.com>, dri-devel@lists.freedesktop.org, 
+ linux-kernel@vger.kernel.org, imx@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, 
+ Luca Ceresoli <luca.ceresoli@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeekiedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthejredtredtjeenucfhrhhomhepnfhutggrucevvghrvghsohhlihcuoehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpefgieetkeekgfdtudevueffueffveekheeiudfhfedvhfeukeeuhffhtddtvdekfeenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecukfhppedvrgdtvdemieejtdemvddtvddtmegvrgdtudemsggvgedumeelhegvjeemfeegfeemledufegvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddvmeeijedtmedvtddvtdemvggrtddumegsvgegudemleehvgejmeefgeefmeeludefvgdphhgvlhhopegludelvddrudeikedrudejkedruddukegnpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedupdhrtghpthhtoheprhhfohhssheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopehtiihimhhmvghrmhgrnhhnsehsu
+ hhsvgdruggvpdhrtghpthhtohepihhmgieslhhishhtshdrlhhinhhugidruggvvhdprhgtphhtthhopehjvghrnhgvjhdrshhkrhgrsggvtgesghhmrghilhdrtghomhdprhgtphhtthhopehluhgtrgdrtggvrhgvshholhhisegsohhothhlihhnrdgtohhmpdhrtghpthhtohepnfgruhhrvghnthdrphhinhgthhgrrhhtsehiuggvrghsohhnsghorghrugdrtghomhdprhgtphhtthhopehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-On 20.03.25 15:25, Alan Stern wrote:
+This series improves the way DRM bridges are allocated and initialized and
+makes them reference-counted. The goal of reference counting is to avoid
+use-after-free by drivers which got a pointer to a bridge and keep it
+stored and used even after the bridge has been deallocated.
 
-> This test must itself be subject to the same race, right?  There needs
-> to be some kind of synchronization between the two tasks (i.e., a mutex,
-> spinlock, or something similar).
+The overall goal is supporting Linux devices with a DRM pipeline whose
+final components can be hot-plugged and hot-unplugged, including one or
+more bridges. For more details see the big picture [0].
 
-Hi,
+DRM bridge drivers will have to be adapted to the new API -- the change is
+trivial for most cases. This series converts two of them to serve as an
+example. The remaining ones will be done as a follow-up after this first
+part is merged.
 
-there is:
+After that, refcounting will have to be added on the two sides: all
+functions returning a bridge pointer and all code obtaining such a
+pointer. A few examples have been sent in v7 (link below), they are OK, but
+I removed them from v8 because they must be merged only after converting
+all bridges.
 
-static void cm109_stop_traffic(struct cm109_dev *dev)
-{
-         dev->shutdown = 1;
-         /*
-          * Make sure other CPUs see this
-          */
-         smp_wmb();
-                 
-         usb_kill_urb(dev->urb_ctl);
-         usb_kill_urb(dev->urb_irq);
-                 
-         cm109_toggle_buzzer_sync(dev, 0);
-                 
-         dev->shutdown = 0;
-         smp_wmb();
-}
+Here's the grand plan:
 
-This driver has a tough job as the two completion
-handlers submitted each other's as well as their own
-URBs based on the data they get.
-That scheme is rather complex, but as far as I can tell correct,
-but you need to test that flag everywhere.
+ A. add new alloc API and refcounting (this series, at least patches 1-3)
+ B. after (A), convert all bridge drivers to new API
+ C. after (A), add documentation and kunit tests
+ D. after (B), add get/put to drm_bridge_add/remove() + attach/detech()
+    (patches 3-4 in the v7 series)
+ E. after (B), convert accessors (including patches 5-9 in the v7 series
+    which convert drm_bridge_chain_get_first_bridge() and its users);
+    this is a large work and can be done in chunks
 
-	Regards
-		Oliver
-           
+Series layout:
+
+ 1. Add the new API and refcounting:
+
+    drm/bridge: add devm_drm_bridge_alloc()
+    drm/bridge: add support for refcounting
+    drm/bridge: deprecate old-style bridge allocation
+
+ 2. convert a few bridge drivers (bridge providers) to the new API:
+
+    drm/bridge: ti-sn65dsi83: use dynamic lifetime management
+    drm/bridge: samsung-dsim: use dynamic lifetime management
+
+[0] https://lore.kernel.org/dri-devel/20250206-hotplug-drm-bridge-v6-0-9d6f2c9c3058@bootlin.com/
+
+Signed-off-by: Luca Ceresoli <luca.ceresoli@bootlin.com>
+---
+Changes in v8:
+- Applied requested changes to patch 2
+- Add R-by to other patches
+- Removed v7 patches 3-9: they are OK but must wait until all bridge
+  drivers are converted to the new API
+- Added patch to deprecate old-style bridge allocation
+- Link to v7: https://lore.kernel.org/r/20250314-drm-bridge-refcount-v7-0-152571f8c694@bootlin.com
+
+---
+Luca Ceresoli (5):
+      drm/bridge: add devm_drm_bridge_alloc()
+      drm/bridge: add support for refcounting
+      drm/bridge: deprecate old-style bridge allocation
+      drm/bridge: ti-sn65dsi83: use dynamic lifetime management
+      drm/bridge: samsung-dsim: use dynamic lifetime management
+
+ drivers/gpu/drm/bridge/samsung-dsim.c |  7 ++-
+ drivers/gpu/drm/bridge/ti-sn65dsi83.c |  7 ++-
+ drivers/gpu/drm/drm_bridge.c          | 96 +++++++++++++++++++++++++++++++++++
+ include/drm/drm_bridge.h              | 36 +++++++++++++
+ 4 files changed, 138 insertions(+), 8 deletions(-)
+---
+base-commit: c940d00c7306a77ec293661abca634756207c885
+change-id: 20250314-drm-bridge-refcount-58d9503503f6
+
+Best regards,
+-- 
+Luca Ceresoli <luca.ceresoli@bootlin.com>
+
