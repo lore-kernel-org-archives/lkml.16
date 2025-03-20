@@ -1,133 +1,168 @@
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from zebra.cherry.relay.mailchannels.net (zebra.cherry.relay.mailchannels.net [23.83.223.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDE66227E9B
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 22:06:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742508397; cv=none; b=LIHXZKNIpNAga2eVEx5Iy2apS0n8BKe+Vv3aJkp6smjNGYtIzvv2Vse0aYsHLfnLWv9pfNOqawizy+AvWP/jNQ7By/qA9rqvDnz/VCBK3M3JwL3VxBRmrb4r+85RVbFMDhg0BDAz0HU3IlKRdqQyxAhPq2C68n9x5v6tthFS2T8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742508397; c=relaxed/simple;
-	bh=wVNswW8rL4OetwqeJVEiR14YDddt4iIFHENN5BwD65c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=JNrl2oGgbaI18HLDxeUqwIyUdNGtjIzoffFiYga0aPD6HMz+URzuHa2faIeoY9C+rw/yP01BSaBlFTsNG6IuS+JD3WKlpkWkPldHBoMS3VqD+rsHCF2MviOruc+Ic0AkiYI/nc/1PfitN1Pb/uw7oCExLh5hIM7zTwdCln4GiYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VFEcz5p5; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAE71221702
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 22:06:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.195
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742508414; cv=pass; b=PMVs9cTJXeEL6D09lqzMSesa0pzS5hchyRFOYWi5fi7OJ2ThzwsVSMx5oD/lgg+KylxgGv54NHLlA6UMUO/GpkT/ofarkqrooT4fuO93d4fKCnnCiycjs2UORt+47n13ZktvJj4ZSxEatDWElnaQiRBf66AXZGRCZV8W0DRNNOQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742508414; c=relaxed/simple;
+	bh=rKnRuj1sOu1P6GoDMqyMdLAxFo1dk1B7Wxfi2jiBslQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=skSqOBsqxIcRf0qumQQQis3jSKsCXROmgv/BeE1dbbpoQQryCbJaGRMLmUbkmzDFKdvDaL2mLkSCvcMwVcv2JXAPypyF4UhBT8157ydchF+ZBoJbsk78IrAt1DwwDtFNVkJf6lkRNWYhJxyPcacaFIs5T1MpJVTEKyUYbA0xihM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=Zirxau5G; arc=pass smtp.client-ip=23.83.223.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VFEcz5p5"
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-43cfe574976so8133405e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:06:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742508393; x=1743113193; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=S+DKgKKe0d2S0aLSGa2DZ5AxLYPiZ/5bN97M2PhD9xQ=;
-        b=VFEcz5p5PxWd8KE8AHf+jggrtqzwlB6lwxj5zzG3vL5xcaCcDITZdhKZtDetK3//j3
-         eX9s+1QTYJp6MbncUPplXY7t4h2kmKo+AJQ2at43n7B6qUTr4v3rLpBGVc8ZvjrretAa
-         ApziytqIYQR/gAmUS5c/DYYh3KQn7gFsHtFMb4gDiY4WgD9JD00OYMHSTiVbpz6OHXrs
-         bQ8H1Rxc0EGieHZiXyNkN9pHjnQqApZBDTsvrdLW+aIlTIa1jrsaedhh7WBjVc7YMTOS
-         tIhTLUwuNlZdoW3F7x8coZ5tRCjDUaMGqp3eWbshyLThFNAG7pInnaZBJKe/lkt0vWRK
-         UP3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742508393; x=1743113193;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S+DKgKKe0d2S0aLSGa2DZ5AxLYPiZ/5bN97M2PhD9xQ=;
-        b=LWLQ6UY73Oz6oqIMNTR/17ipPEN5hL3o71e7pPXfAHWJQS3cqx8Kj2ofH9VyALCYhF
-         kD33B0zan+JjEgZM4bR2nUGMQMMtAtF6VwG3fzjL0BfxExvdaQIE6rrCsIuMQxQqCAwJ
-         VXyyVw8IhNi4ast5FQDl3av/19NZXgr7Trj2OZO5o8FmRtGlJxk/92Xm7Xpkx5be0ipS
-         SoRXNPM8ShB7Jorn5outhSpyNxXg9QP1+QkbzdtRxmUG9GQnKhRAmyi1FMdthhyz/fts
-         XcKxs8poPPiLUIq44ajkvwirMamEtFR1TogwbrXZjRntXOcVFBfP+mpbIaXLFmYtswqx
-         4v2w==
-X-Forwarded-Encrypted: i=1; AJvYcCXkscbuDLsb8gilHaBd6FF1hwJnaq5vjiVaR3iwN3tczAwlUSQ/8NF9d5Q6ZEh9VWIJGwiNHYJrQkRBlXY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLRuEPjixW7BuBej0Hb84QE6Pnu8TICm+mg/S1O2x26IBlL6LZ
-	b5LRPBpQkJ7C9TPBeN0a/LJWNzFaLr1hL6M9lr6weYuU5zUT6qVC+wbfnbzSlGk=
-X-Gm-Gg: ASbGncsjL3X1dl208SsfaPvB0RhUTKi94D9ty7kI8YNYvp4ejUpC/79JaXYkENeUwpb
-	lbX7Q7ZpJpza3v1T+r8JIDrr+WfYZMOUaIL56rH0zCMdTZ8AgzsxTfNZUZB5oEdeI4LEYx0FxPx
-	qHN2pJNe+93eBhXfWSpDiGQ+NIPAxIj2EHISCW8nc/NChzIoWNpGKM9YCWmAYdSOY8io39ENDIG
-	iPSU0IcaSalGmrx1lCnI40cSSEv7IR1Bhdmq8I0mMDrSUmk7t8To5bvLDYwZtkuuS42gy5ygDAZ
-	/6da1NCVXk6gYPdJ6tMxvsD2E6ULOPMXiIl4UrZ4k3pM0c3F72goCvk5KaIV2mEOY255rR8NsNE
-	NT9Mlpoo8VA==
-X-Google-Smtp-Source: AGHT+IF666w+fhi7xMb+8oGJRC8UIY8sQphK9beWqbHC+xtVyIDPE6027D6kLOQ0WtAFbDSaxhPr2Q==
-X-Received: by 2002:a05:600c:4584:b0:43b:cc42:c54f with SMTP id 5b1f17b1804b1-43d509f433amr7194745e9.14.1742508392863;
-        Thu, 20 Mar 2025 15:06:32 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e64casm662410f8f.73.2025.03.20.15.06.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 15:06:32 -0700 (PDT)
-Message-ID: <7dc8700f-0d53-45f5-bfff-2bec71c7053e@linaro.org>
-Date: Thu, 20 Mar 2025 22:06:31 +0000
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="Zirxau5G"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 70FE42C45EF;
+	Thu, 20 Mar 2025 21:51:03 +0000 (UTC)
+Received: from pdx1-sub0-mail-a203.dreamhost.com (100-118-196-158.trex-nlb.outbound.svc.cluster.local [100.118.196.158])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 529622C2B48;
+	Thu, 20 Mar 2025 21:51:02 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742507462; a=rsa-sha256;
+	cv=none;
+	b=b6kki2cOSvV90fmc/GzqhMDjx6vucTa1JoGeYHYgZoQpP80GyGzC41lfN/mugdu+JJkx0H
+	+gkoI1vjsInROXn2gf2UD8dJp8ExkH7aOi5Y2KPrduabLCbd/PdSjYThVpbvJStPpkeqRZ
+	enG/TorqqDtMKV5jS37HgBG2iCf38qeOjYHDj7qxgSKVpyn3qfBMP4P7cofiCknGkIKyh0
+	RJKgUxmf9SsA6JngZwPKunByl7CrYdNJrBJaK/ahF5ry3IWYimuQJm+Hi5qwsTPaCb3yCZ
+	2OkYY4DeciX3kf3hSiy+8yjF4WYTcDE9op7sXk1RsldlTkNVYjK1UwgdSg6Rww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1742507462;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=rKnRuj1sOu1P6GoDMqyMdLAxFo1dk1B7Wxfi2jiBslQ=;
+	b=oR0KJfYEbBEqzhU9m2NvAZaVh0aIjzFR7+EFX7ceHFwxvlwuDk7lsAEFlGmM61Z7j8ZOKP
+	gGnzNhivm7o0YTIapWUBmjkjX35zAI+TUaCS1vG2ella8ic7ViLnU00Pl5i5T0CuT28qJe
+	O0ekW+a2zN9gYA1E6pg28AHEhKuwX/97nG84JEHYvNKmtUidK29aeYmUIcp9f6FIqh/CRe
+	MJwTNj6a9G/kbXhcZsm7na40LGCKTuv1ZCfJFcEEWyAKFn+MudDNU2FcYTTU95J01v5ar7
+	/sjTQpd85SmpQ6TLPj4MX+dPQLpOGmwkBy2sfsDR+Qa+lS2cxiGWIehAnxy1+g==
+ARC-Authentication-Results: i=1;
+	rspamd-588454d544-hp7ss;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Trail-Average: 537d018d746d63d8_1742507463174_1537222768
+X-MC-Loop-Signature: 1742507463174:1378819086
+X-MC-Ingress-Time: 1742507463174
+Received: from pdx1-sub0-mail-a203.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.118.196.158 (trex/7.0.2);
+	Thu, 20 Mar 2025 21:51:03 +0000
+Received: from offworld (unknown [104.36.25.240])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a203.dreamhost.com (Postfix) with ESMTPSA id 4ZJfQq3VzSz4x;
+	Thu, 20 Mar 2025 14:50:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1742507462;
+	bh=rKnRuj1sOu1P6GoDMqyMdLAxFo1dk1B7Wxfi2jiBslQ=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=Zirxau5Gg+fixQD8oJaOo/EhgqYA95gOT5zQ0Lt8ulojHb2y04BLjtm5yOHukUXwO
+	 CFe9jLHE51bHO4x7xpV+pGADEXUmi+NQfMke0uotwCrLHADSwNrf+X3JHTeWfVR8/Z
+	 zaFjp5z4wG2c70vA3Gpvv9h4vjmPgHFX0nsuaPF3KLfym9TmGA4VeWvlN8s34cGFdQ
+	 LqV3plDIdVhUmOrycylqHMpzo3kLdTRbRApaxS3W8ZkyGk5DIDfL9L7DmVIgC3HxcL
+	 oLJW5cNIRjrjO1zatLFeJlVkkxgGrDlchLTJ0fK99CCw1kHyPznXVmSN3v/XaAUtpK
+	 KNH28qH5wLh9A==
+Date: Thu, 20 Mar 2025 14:50:56 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Raghavendra K T <raghavendra.kt@amd.com>
+Cc: AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com,
+	Michael.Day@amd.com, akpm@linux-foundation.org, bharata@amd.com,
+	dave.hansen@intel.com, david@redhat.com,
+	dongjoo.linux.dev@gmail.com, feng.tang@intel.com, gourry@gourry.net,
+	hannes@cmpxchg.org, honggyu.kim@sk.com, hughd@google.com,
+	jhubbard@nvidia.com, jon.grimm@amd.com, k.shutemov@gmail.com,
+	kbusch@meta.com, kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com,
+	leillc@google.com, liam.howlett@oracle.com,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	mgorman@techsingularity.net, mingo@redhat.com, nadav.amit@gmail.com,
+	nphamcs@gmail.com, peterz@infradead.org, riel@surriel.com,
+	rientjes@google.com, rppt@kernel.org, santosh.shukla@amd.com,
+	shivankg@amd.com, shy828301@gmail.com, sj@kernel.org,
+	vbabka@suse.cz, weixugc@google.com, willy@infradead.org,
+	ying.huang@linux.alibaba.com, ziy@nvidia.com,
+	Jonathan.Cameron@huawei.com, alok.rathore@samsung.com
+Subject: Re: [RFC PATCH V1 00/13] mm: slowtier page promotion based on PTE A
+ bit
+Message-ID: <20250320215056.miwm2vdphdksrfjx@offworld>
+Mail-Followup-To: Raghavendra K T <raghavendra.kt@amd.com>,
+	AneeshKumar.KizhakeVeetil@arm.com, Hasan.Maruf@amd.com,
+	Michael.Day@amd.com, akpm@linux-foundation.org, bharata@amd.com,
+	dave.hansen@intel.com, david@redhat.com,
+	dongjoo.linux.dev@gmail.com, feng.tang@intel.com, gourry@gourry.net,
+	hannes@cmpxchg.org, honggyu.kim@sk.com, hughd@google.com,
+	jhubbard@nvidia.com, jon.grimm@amd.com, k.shutemov@gmail.com,
+	kbusch@meta.com, kmanaouil.dev@gmail.com, leesuyeon0506@gmail.com,
+	leillc@google.com, liam.howlett@oracle.com,
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+	mgorman@techsingularity.net, mingo@redhat.com, nadav.amit@gmail.com,
+	nphamcs@gmail.com, peterz@infradead.org, riel@surriel.com,
+	rientjes@google.com, rppt@kernel.org, santosh.shukla@amd.com,
+	shivankg@amd.com, shy828301@gmail.com, sj@kernel.org,
+	vbabka@suse.cz, weixugc@google.com, willy@infradead.org,
+	ying.huang@linux.alibaba.com, ziy@nvidia.com,
+	Jonathan.Cameron@huawei.com, alok.rathore@samsung.com
+References: <20250319193028.29514-1-raghavendra.kt@amd.com>
+ <20250319230015.bewglxf3hrf2mx3f@offworld>
+ <52b2c1dd-2f4a-42fa-8a40-bd3664e7c56a@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 2/3] arm64: dts: qcom: x1e80100: add bus topology for
- PCIe domain 3
-To: Wenbin Yao <quic_wenbyao@quicinc.com>, andersson@kernel.org,
- konradybcio@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, linux-arm-msm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- catalin.marinas@arm.com, will@kernel.org, quic_qianyu@quicinc.com,
- sfr@canb.auug.org.au, linux-arm-kernel@lists.infradead.org
-References: <20250320055502.274849-1-quic_wenbyao@quicinc.com>
- <U9NTFHDe_r-uUozJFJGmc7VpxMDx39onKby4M3B_sy0jJ2fr7-iXkS801m2slu8PXanf7Y7faBxuZ8fzWiKxTg==@protonmail.internalid>
- <20250320055502.274849-3-quic_wenbyao@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250320055502.274849-3-quic_wenbyao@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <52b2c1dd-2f4a-42fa-8a40-bd3664e7c56a@amd.com>
+User-Agent: NeoMutt/20220429
 
-On 20/03/2025 05:55, Wenbin Yao wrote:
-> From: Qiang Yu <quic_qianyu@quicinc.com>
-> 
-> Add pcie3port node to represent the PCIe bridge of PCIe3 so that PCI slot
-> voltage rails can be described under this node in the board's dts.
-> 
-> Signed-off-by: Qiang Yu <quic_qianyu@quicinc.com>
-> Signed-off-by: Wenbin Yao <quic_wenbyao@quicinc.com>
-> ---
->   arch/arm64/boot/dts/qcom/x1e80100.dtsi | 10 ++++++++++
->   1 file changed, 10 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/x1e80100.dtsi b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> index 46b79fce9..32e8d400a 100644
-> --- a/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/x1e80100.dtsi
-> @@ -3287,6 +3287,16 @@ opp-128000000 {
->   					opp-peak-kBps = <15753000 1>;
->   				};
->   			};
-> +			pcie3port: pcie@0 { 
+On Thu, 20 Mar 2025, Raghavendra K T wrote:
 
-Missing newline, please check your dtb checks.
+>>Does NUMAB2 continue to exist? Are there any benefits in having two
+>>sources?
+>>
+>
+>I think there is surely a benefit in having two sources.
 
+I think I was a bit vague. What I'm really asking is if the scanning is
+done async (kmmscand), should NUMAB2 also exist as a source and also feed
+into the migrator? Looking at it differently, I guess doing so would allow
+additional flexibility in choosing what to use.
 
-> +				device_type = "pci";
-> +				compatible = "pciclass,0604";
-> +				reg = <0x0 0x0 0x0 0x0 0x0>;
-> +				bus-range = <0x01 0xff>;
-> +
-> +				#address-cells = <3>;
-> +				#size-cells = <2>;
-> +				ranges;
-> +			};
->   		};
+>NUMAB2 is more accurate but slow learning.
 
-Why is pice3port the only port to be enabled ?
+Yes. Which is also why it is important to have demotion in the picture to
+measure the ping pong effect. LRU based heuristics work best here.
 
-What about the other ports ?
->   		pcie3_phy: phy@1be0000 {
-> --
-> 2.34.1
-> 
-> 
+>IBS: No scan overhead but we need more sampledata.
 
----
-bod
+>PTE A bit: more scanning overhead (but was not much significant to
+>impact performance when compared with NUMAB1/NUMAB2, rather it was more
+>performing because of proactive migration) but has less accurate data on
+>hotness, target_node(?).
+>
+>When system is more stable, IBS was more effective.
+
+IBS will never be as effective as it should be simply because of the lack
+of time decay/frequency (hence all that related phi hackery in the kpromoted
+series). It has a global view of memory, it should beat any sw scanning
+heuristics by far but the numbers have lacked.
+
+As you know, PeterZ, Dave Hansen, Ying and I have expressed concerns about
+this in the past. But that is not to say it does not serve as a source,
+as you point out.
+
+Thanks,
+Davidlohr
