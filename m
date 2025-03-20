@@ -1,101 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0BDD1C1F2F;
-	Thu, 20 Mar 2025 09:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A951CDFCE
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:31:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463000; cv=none; b=e34YEo4z62jB3eE/wsi7ZEqky2jAK6/NAzXSN0caa0WrH4qxoR0eC86LqnAm4Y6c6Rt012XLmlyYRZOS+DjZzboB3YbDM0tNiQ5p53p3vRA/ZUtogNCFJJyHGjUDBtrdNOHj9oliLhK8/elK84I/Z9i0khwbgiTelGjnH6P0X0E=
+	t=1742463076; cv=none; b=TE7hN/AWbKsUr60pewMHjs6tNkKnlNknZ+iBDuSP38OTkwdBII5n+yxfJb4bsedxHqYB5WoAbBYrUQSUCWIA/N/LTPFDP8fvFDz9dAm7R2xYhpxlIa/CjXQVm0VXnJzVX6drbCLvCofHfqRHOhm+cVECEL/1HhZKoHBVrsGUCYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463000; c=relaxed/simple;
-	bh=dw5ASQC8hlhdIlEBxhQ13OH2Na6Ploy5abBdY4RpC7o=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=eSL40Iao3xFrckvNEIyLa4i+10pLZLpbKKxaskIfmgOH9hcbECGv7UrbaDdeyngQPETRAhLRQxK5nniH1NIPXGCifkNFq6W7byQZuvKKoCTwZNPbwwfoexnvB/Q0C1okUF3qtSJpTQYpiJ7qUqjiVU78mXfnoUoYeO5iJOPWcJs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C9O+5vm/; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C9O+5vm/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66309C4CEDD;
-	Thu, 20 Mar 2025 09:29:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742462999;
-	bh=dw5ASQC8hlhdIlEBxhQ13OH2Na6Ploy5abBdY4RpC7o=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=C9O+5vm/fgxVcGbIa0CSvUZTqO1EN332MFqVP5ms+f5GW2KqPTGsFSpnSbpN4a+ws
-	 L5o7bPrdNG6oz+/sn7+qysMoUgojy1ZCMKSPLuY6rCGwGmnLOiyuVgBHPoR7SKLTcm
-	 EY3dvujW32ceYa4uw8JBJfp/iRtx7MwwadMEQhaviy8GFMfimMkCUIN7C/wcklG0LX
-	 hREaHmkt92sIcuiAILo0Z6Pi3Ao8JQsicWY5CGtwrEfbbglPG0pUjECAUljOpON+AF
-	 3QzuDri5cr+3pk/OvRk5C2CYi9ENwiJIuLNZathWMcBaiRCVbg49N+P51rhlJsunUD
-	 7B6clqADSgbuQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 71FC93806654;
-	Thu, 20 Mar 2025 09:30:36 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1742463076; c=relaxed/simple;
+	bh=Y66KsA3GQgAvbU1qFYkPKPeelZgF94pVlJgOrb4lujQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=N596j1emJWxVInDM390oN+HGpif+KhS4i0DR/g/Sui8SdP1P7owTwdNTX8nwZgegp8A2/TPfXvbAk1IaLyoovCsoYkP8n+zcTISkIm6BceUutIDESUy6LowfUuYZnKNTJlmJWogSs0gFWYtUfUU0UXq9tljZ3FxCp7ywQqN63SE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
+Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.emlix.com (Postfix) with ESMTPS id 6DCF05F8E7;
+	Thu, 20 Mar 2025 10:31:10 +0100 (CET)
+From: Rolf Eike Beer <eb@emlix.com>
+To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Kevin Tian <kevin.tian@intel.com>
+Subject: [PATCH 6/6] iommu: make inclusion of iommufd directory conditional
+Date: Thu, 20 Mar 2025 10:22:37 +0100
+Message-ID: <2243601.irdbgypaU6@devpool47.emlix.com>
+Organization: emlix GmbH
+In-Reply-To: <12652899.O9o76ZdvQC@devpool47.emlix.com>
+References: <12652899.O9o76ZdvQC@devpool47.emlix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/12] mptcp: pm: prep work for new ops and sysctl
- knobs
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174246303526.1366947.13566116463963705037.git-patchwork-notify@kernel.org>
-Date: Thu, 20 Mar 2025 09:30:35 +0000
-References: <20250313-net-next-mptcp-pm-ops-intro-v1-0-f4e4a88efc50@kernel.org>
-In-Reply-To: <20250313-net-next-mptcp-pm-ops-intro-v1-0-f4e4a88efc50@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, corbet@lwn.net, shuah@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kselftest@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-Hello:
+Nothing in there is active if CONFIG_IOMMUFD is not enabled, so the whole
+directory can depend on that switch as well.
 
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
+=46ixes: 2ff4bed7fee7 ("iommufd: File descriptor, context, kconfig and make=
+files")
+Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+=2D--
+ drivers/iommu/Makefile         | 3 ++-
+ drivers/iommu/iommufd/Makefile | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-On Thu, 13 Mar 2025 11:20:49 +0100 you wrote:
-> Here are a few cleanups, preparation work for the new PM ops, and sysctl
-> knobs.
-> 
-> - Patch 1: reorg: move generic NL code used by all PMs to pm_netlink.c.
-> 
-> - Patch 2: use kmemdup() instead of kmalloc + copy.
-> 
-> [...]
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 17133876f777..38ee96607acf 100644
+=2D-- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -1,8 +1,9 @@
+ # SPDX-License-Identifier: GPL-2.0
+=2Dobj-y +=3D arm/ iommufd/
++obj-y +=3D arm/
+ obj-$(CONFIG_AMD_IOMMU) +=3D amd/
+ obj-$(CONFIG_INTEL_IOMMU) +=3D intel/
+ obj-$(CONFIG_RISCV_IOMMU) +=3D riscv/
++obj-$(CONFIG_IOMMUFD) +=3D iommufd/
+ obj-$(CONFIG_IOMMU_API) +=3D iommu.o
+ obj-$(CONFIG_IOMMU_API) +=3D iommu-traces.o
+ obj-$(CONFIG_IOMMU_API) +=3D iommu-sysfs.o
+diff --git a/drivers/iommu/iommufd/Makefile b/drivers/iommu/iommufd/Makefile
+index cb784da6cddc..071f2a504167 100644
+=2D-- a/drivers/iommu/iommufd/Makefile
++++ b/drivers/iommu/iommufd/Makefile
+@@ -12,7 +12,7 @@ iommufd-y :=3D \
+=20
+ iommufd-$(CONFIG_IOMMUFD_TEST) +=3D selftest.o
+=20
+=2Dobj-$(CONFIG_IOMMUFD) +=3D iommufd.o
++obj-y +=3D iommufd.o
+ obj-$(CONFIG_IOMMUFD_DRIVER) +=3D iova_bitmap.o
+=20
+ iommufd_driver-y :=3D driver.o
+=2D-=20
+2.49.0
 
-Here is the summary with links:
-  - [net-next,01/12] mptcp: pm: split netlink and in-kernel init
-    https://git.kernel.org/netdev/net-next/c/b97d6b682027
-  - [net-next,02/12] mptcp: pm: in-kernel: use kmemdup helper
-    https://git.kernel.org/netdev/net-next/c/fa123489e7ef
-  - [net-next,03/12] mptcp: pm: use pm variable instead of msk->pm
-    https://git.kernel.org/netdev/net-next/c/5fff36b69cd4
-  - [net-next,04/12] mptcp: pm: only fill id_avail_bitmap for in-kernel pm
-    https://git.kernel.org/netdev/net-next/c/98a0a99e81b6
-  - [net-next,05/12] mptcp: pm: add struct_group in mptcp_pm_data
-    https://git.kernel.org/netdev/net-next/c/eff5b1578e99
-  - [net-next,06/12] mptcp: pm: define struct mptcp_pm_ops
-    https://git.kernel.org/netdev/net-next/c/1305b0c22eca
-  - [net-next,07/12] mptcp: pm: register in-kernel and userspace PM
-    https://git.kernel.org/netdev/net-next/c/770170b41810
-  - [net-next,08/12] mptcp: sysctl: set path manager by name
-    https://git.kernel.org/netdev/net-next/c/595c26d122d1
-  - [net-next,09/12] mptcp: sysctl: map path_manager to pm_type
-    https://git.kernel.org/netdev/net-next/c/573b653401a8
-  - [net-next,10/12] mptcp: sysctl: map pm_type to path_manager
-    https://git.kernel.org/netdev/net-next/c/7982ed0edda3
-  - [net-next,11/12] mptcp: sysctl: add available_path_managers
-    https://git.kernel.org/netdev/net-next/c/fa3ee9dd8067
-  - [net-next,12/12] selftests: mptcp: add pm sysctl mapping tests
-    https://git.kernel.org/netdev/net-next/c/9cf0128e64ab
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+=2D-=20
+Rolf Eike Beer
+
+emlix GmbH
+Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
+Phone +49 (0)551 30664-0, e-mail info@emlix.com
+District Court of G=C3=B6ttingen, Registry Number HR B 3160
+Managing Directors: Heike Jordan, Dr. Uwe Kracke
+VAT ID No. DE 205 198 055
+Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
+Office Bonn: Bachstr. 6, 53115 Bonn, Germany
+http://www.emlix.com
+
+emlix - your embedded Linux partner
 
 
