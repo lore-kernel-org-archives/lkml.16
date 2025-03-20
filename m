@@ -1,95 +1,86 @@
-Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE07C1A5BBA
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:31:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5748C222560;
+	Thu, 20 Mar 2025 09:31:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463085; cv=none; b=FmXkO13ZJtSkrUbYFwajPDbcw5B0IytOKb0TiOdYQiRMi/In0GrLLIMiwgp8XRWdG0QdhnRtfRHnX3HXqrfeHiEvf21seedH5fsMrXJ52nvulmdnJ8vI2hDtTMBwQkDrogwEylsVsjQ6Ap6hx2XuRvSKsFn53GLL82QHFW/4r7w=
+	t=1742463089; cv=none; b=FoygxjMugPCSY/9E/WTv7Rq7w3WyRM59q7JcUwdcmgzegRY6orzHqDU0aQDEcvKFqRPsbx4uz7Hto91VPvI29c5/jA1nimPdyssG/XhzTtzfEtiZIKDEP8L02YVjulM0gEqikO297nThIK1U7liFXCfebNRXCEkUuqBd/w3W7JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463085; c=relaxed/simple;
-	bh=Fq7N5XhzkBZZ2U7tumyB/nILV22NxS/iDWf9NYICOTk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=dNDjTjdrodeUrnYhHrlUoAQkLmKfxK7vKKMYdZKqplXCKFTXnIFeN2ikaMQzxQxwCpUzxEocDMHgMu4zfl1NmqeBrM0rp2jax2kjjXMcdN4O/1v5Og5fv5mP1KJJ/U83xdAO+jHP8eh057GWXlP7Ma0TUJmNCA4/nTlBciEcSdE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
-Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id BC3445F9AD;
-	Thu, 20 Mar 2025 10:31:10 +0100 (CET)
-From: Rolf Eike Beer <eb@emlix.com>
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
-Subject:
- [PATCH 5/6] iommu: make inclusion of arm/arm-smmu-v3 directory conditional
-Date: Thu, 20 Mar 2025 10:19:12 +0100
-Message-ID: <6164975.lOV4Wx5bFT@devpool47.emlix.com>
-Organization: emlix GmbH
-In-Reply-To: <12652899.O9o76ZdvQC@devpool47.emlix.com>
-References: <12652899.O9o76ZdvQC@devpool47.emlix.com>
+	s=arc-20240116; t=1742463089; c=relaxed/simple;
+	bh=l9eem7WJGYypfrHFJiimr1YXth3+uzyUvblKHYU1JeE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=f3zmHsa//l6z+1/+1pjQuoX2Cz0exkSHTe7lcwuyc2JKPvJ6Jp382M2nPeLIepOSdQC4C1TiuokRU8Vmp+9/cKolMXDYSkFXLj4R8ZPs2N1jKhhcZJphv0AZCAHbUhrVRCRTP1W9FO1vtMbV5hIAYiHwjZ/Qv6YxQKlvf32G8gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXeUXtPE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXeUXtPE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77A8C4CEDD;
+	Thu, 20 Mar 2025 09:31:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742463088;
+	bh=l9eem7WJGYypfrHFJiimr1YXth3+uzyUvblKHYU1JeE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NXeUXtPE6JVonW5rDIhp1JZVyg4q+rxLeJkeWKwRxe0N3QetCZ+WNlsU8VVZ8ZI8W
+	 JPjdtUfgOMSEMgRmrl/8igSZ1rNl197VPSAbTgmMY2u51EqM76RE2GSzRQKDLS22eH
+	 7gsBzF9uVsFRCtO7D1Xq7jvZO39EM6EDqmNjUyt4q3cxN43kEsXtoj60QVHZ972kDH
+	 Du5T1LPvNDr8gN4CzWteepf6bxtlxKCCwvoQMKAHzlSEnkeG9FLDtLColrpatXMzhg
+	 oPRV6+B9ZGqU3r4XeHCdL4S6/OLQtIt3W3ORZAg5ziDaYiIH7uLWZ0FO0iR+Qq8ixX
+	 Uo6tSWhp9yQFQ==
+Date: Thu, 20 Mar 2025 10:31:25 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, 
+	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, andersson@kernel.org, lgirdwood@gmail.com, robh@kernel.org, 
+	krzk+dt@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz, 
+	tiwai@suse.com, dmitry.baryshkov@linaro.org, linux-sound@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	johan+linaro@kernel.org
+Subject: Re: [PATCH 1/3] ASoC: dt-bindings: wcd93xx: add bindings for audio
+ switch controlling hp
+Message-ID: <20250320-feathered-super-walrus-8eeef8@krzk-bin>
+References: <20250319091637.4505-1-srinivas.kandagatla@linaro.org>
+ <20250319091637.4505-2-srinivas.kandagatla@linaro.org>
+ <4ie22uuz5tpg77jto3c3hec6lhonr44hrjda7jk655axlaxvba@u3atd4gcyghn>
+ <660115f1-d1fb-4fd7-a453-e8c177be9eed@linaro.org>
+ <51dd7cb2-0c22-4043-b3a1-fa8410903cbd@sirena.org.uk>
+ <938cb09f-3fb1-4daf-802d-2d95222f30db@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <938cb09f-3fb1-4daf-802d-2d95222f30db@linaro.org>
 
-Nothing in there is active if CONFIG_ARM_SMMU_V3 is not enabled, so the who=
-le
-directory can depend on that switch as well.
+On Wed, Mar 19, 2025 at 06:00:51PM +0000, Srinivas Kandagatla wrote:
+> 
+> 
+> On 19/03/2025 16:03, Mark Brown wrote:
+> > On Wed, Mar 19, 2025 at 03:59:23PM +0000, Srinivas Kandagatla wrote:
+> > > On 19/03/2025 10:01, Dmitry Baryshkov wrote:
+> > 
+> > > > Is this regulator supplying the codec or some external component? In the
+> > > > latter case it's likely that it should not be a part of WCD bindings.
+> > 
+> > > This is regulator powering a mux that is driven by gpio which is part of
+> > > codec binding. So I would assume this will fall into the codec.
+> > 
+> > > Where would we fit this if not part of codec?
+> > 
+> > > Unless we mark this regulator as always on.
+> > 
+> > I would expect that the mux would appear in the DT and consume both the
+> > GPIO and the regulator.
+> Yes, its doable, so we would endup with a mux driver consuming regulator and
+> gpio and move the gpio handling in codec to move to use mux control.
+> 
+> Let met try that and see how it looks like.
 
-=46ixes: e86d1aa8b60f ("iommu/arm-smmu: Move Arm SMMU drivers into their ow=
-n subdirectory")
-Signed-off-by: Rolf Eike Beer <eb@emlix.com>
-=2D--
- drivers/iommu/arm/Makefile             | 3 ++-
- drivers/iommu/arm/arm-smmu-v3/Makefile | 2 +-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+Looking at schematics this is clearly not a supply of a codec, but as
+Dmitry said, separate switch. Actually two switches.
 
-diff --git a/drivers/iommu/arm/Makefile b/drivers/iommu/arm/Makefile
-index 0f9efeab709f..35a7e13eef34 100644
-=2D-- a/drivers/iommu/arm/Makefile
-+++ b/drivers/iommu/arm/Makefile
-@@ -1,2 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
-=2Dobj-y +=3D arm-smmu/ arm-smmu-v3/
-+obj-y +=3D arm-smmu/
-+obj-$(CONFIG_ARM_SMMU_V3) +=3D arm-smmu-v3/
-diff --git a/drivers/iommu/arm/arm-smmu-v3/Makefile b/drivers/iommu/arm/arm=
-=2Dsmmu-v3/Makefile
-index 493a659cc66b..6cc7c8557b9e 100644
-=2D-- a/drivers/iommu/arm/arm-smmu-v3/Makefile
-+++ b/drivers/iommu/arm/arm-smmu-v3/Makefile
-@@ -1,5 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
-=2Dobj-$(CONFIG_ARM_SMMU_V3) +=3D arm_smmu_v3.o
-+obj-y +=3D arm_smmu_v3.o
- arm_smmu_v3-y :=3D arm-smmu-v3.o
- arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_IOMMUFD) +=3D arm-smmu-v3-iommufd.o
- arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_SVA) +=3D arm-smmu-v3-sva.o
-=2D-=20
-2.49.0
-
-
-
-=2D-=20
-Rolf Eike Beer
-
-emlix GmbH
-Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
-Phone +49 (0)551 30664-0, e-mail info@emlix.com
-District Court of G=C3=B6ttingen, Registry Number HR B 3160
-Managing Directors: Heike Jordan, Dr. Uwe Kracke
-VAT ID No. DE 205 198 055
-Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
-Office Bonn: Bachstr. 6, 53115 Bonn, Germany
-http://www.emlix.com
-
-emlix - your embedded Linux partner
-
+Best regards,
+Krzysztof
 
