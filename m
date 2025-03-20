@@ -1,167 +1,77 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4887D33E7
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:35:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E36033E7;
+	Thu, 20 Mar 2025 21:36:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742506560; cv=none; b=IDd2c3Xn0MD0ZhoMMJeaEm9pBAwLSp391Vv4sCBGBbNO00VB/jakXacd+IZs+CJ1FoFatZkm20bPvB4Wis+Hahr/bcWwJHPYfOO8ihlIpOClNXmrukXsCOfqIe+V1yeBhT6MoU1wu3UVu/eXoJikwXcgZHRyTftJGNIfcxqJKiY=
+	t=1742506571; cv=none; b=RXweGGl+YdqM6vBQmjdl2teh/YQsYec7Nmcvb9+ySTyut7DGCdvI7bofn3aB4JEDHPMIQIMvw5hTVC4Q9d7Ci9vBJxWqZVU7VWOiIqrB5ehzsNPxqly/vHX7tVlLzKccNpPqC0EAka+gMDOBoUAY+c0cVughtFVJG5QSzjHYYFg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742506560; c=relaxed/simple;
-	bh=0gasMJ9MwLFF9X4TIJDjjd2uvTa8ezZ/DrhvXflVu0E=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=jFVVPxdoz4cELIwvPJqDHH/N20C7WNKKaPXEihbi0BBrDwWpqJz9332c+NMKpa9Vlfyv8pgWrYcKZkO+Ee4+Qnff5elziAXB+2Ymxxn0My80ajZmz+yvkMsjTJNT3Z+532oj2faZVYnbl+GTJRMEdY9s8B1NVmUMMcfGeu7sCTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=G5JYC3jm; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
+	s=arc-20240116; t=1742506571; c=relaxed/simple;
+	bh=rN904yvS6LUlvzNs7MUBSbq3Pe/yzlAlW1Ee2nN1rdw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Ga0Y8UoR0wbLR9GiTSS6vr61Ne68X4n+8MO4bxbXRltbz4N1DonQK49L8w2/TO36QqfYeRW0LDoZygUaDD7BbNo4LI/kqMQDZ5lLWjHybO2kqdk3jKD4nR2xyg2Pe2xtcO6zrNOKNWtQv2iZtuAIZm5qboK+AznbNJvDIdCdSww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GyYdHh9l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="G5JYC3jm"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43bc21f831bso869815e9.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:35:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ventanamicro.com; s=google; t=1742506555; x=1743111355; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JqJgAERJO0hWodgjO+O6nsJOj3YPTpObkXEvNBlmG3c=;
-        b=G5JYC3jmOb6Ff6mrYC1Qo26ZnarpsB81DQV9Kc+bUEWnMhXaly+qjZvxG0p0KjOBum
-         ryIRnFQu2RO/iEP8XJxRypNekFqA6IpYfSuR0MFKfnHCq6V8wQKpjyhE2jclV1S18efO
-         MJCiKZA+53oolojvPRJ450/cEsJjjlLB2RfSTJhuEgIQarg+KPK1c6akJARSSsofNfPD
-         Rd0HCwzfE4hUr/3VHKKPvGGVSg4m65k7DJmu9iAGCezSGjYisxglBwUQ/tGTEjhO0oBC
-         Y7WtOA/EUh2856lqJ7qx/EgRq3IetHW4JjNIf0sQkNzF1dSt+r92eZ8w/xK63tTQw2bc
-         fXpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742506555; x=1743111355;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=JqJgAERJO0hWodgjO+O6nsJOj3YPTpObkXEvNBlmG3c=;
-        b=OAixbA7q1RIuJDWWE2yJ1Uy9rLHDH+hM6XVNsbSY0dqhpJ2xbWox6B19O3Q7d6Q6fs
-         Q1XK/6cHAIU91Qa56+r2LiOUUXbePq63HH2lrS3+dGN+CFD82xdhLpyPub8ddcfevhyx
-         ga6fsDr9hfd9RqpIy4izO/2uZ4spjJr9XU5QKyeYqDJ3o6dvlofU95i1UQ6OFH6x7dIS
-         h5X4KRprOWXmlfW6k/vbesaP17OmYgM4y7VlHEwtMM6YwkU0neRd1hdl07m2PMImK56H
-         PmkfF/jytnbTI6MBhVlQOV9QEcLoZ0N3/bCmO5R1qr+yfS/1Nt/RKhWHJKsQX7pQyrwo
-         dvQg==
-X-Gm-Message-State: AOJu0YxoRQ+I59LElVpJ2lmnfpAjmQj/342Ov/4gS+zHJ+jtQMp9dmXC
-	WChWu2EF0qexQzluCC2ZStQmP7GnoheepPjtZoVsHV9PE1gBkWla7bIJ2VhUmes=
-X-Gm-Gg: ASbGncsTmqVpZbbQUCioH+gWMP0cvRLODAcQVhEIrIw1eKJFV47vWqnytyAj8ARGO4C
-	eZyxtoMjPWtgl4ZgBTdE05IauX/RZXtdMrI+0Ou1l4R9QcLkMKI0uwZlsGmk9TY73TEVTK2yleJ
-	WdkQn9Acwh6yLrGQjXyEdNE/DERISpeUGszsjW3vGcm4inpPljaxfYETMrBquECWJ11bH+RGjut
-	a+7AC02sQ2BHbdKDcBzsELIEaq07MosMWVB8kjeyVE0t6rbQQMtlDo14l9iVqy+4WBJ54Pdyaf7
-	GH500YEzZEvycabNJsfALl6nYnhSShK+H4PZojeNYwH0+5PytEpinIm5QubKdCbf3P5cTsjuY7w
-	1Qy1I
-X-Google-Smtp-Source: AGHT+IHQLBHBcxn45pDMJ6mBe7Q5GjHdSOzikTUHc7bZFFqM3IvCF49MKGgOPWFCY1ifjxDw5fxebw==
-X-Received: by 2002:a05:600c:3552:b0:439:9a40:aa1a with SMTP id 5b1f17b1804b1-43d5170c622mr550105e9.6.1742506555439;
-        Thu, 20 Mar 2025 14:35:55 -0700 (PDT)
-Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9ef16csm605211f8f.86.2025.03.20.14.35.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 14:35:53 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GyYdHh9l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504A5C4CEDD;
+	Thu, 20 Mar 2025 21:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742506570;
+	bh=rN904yvS6LUlvzNs7MUBSbq3Pe/yzlAlW1Ee2nN1rdw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=GyYdHh9lOr7jWf4PAtuaJ9SYeN7MlmEf7AiOlsa2g6LwLZJO+GKTJLbiIjNHngdWK
+	 y1/7Az4tEDsJtkWa8VTyfu7DzukNCIf6xKaZ3+HbfAK4A9VzqvV2Mp9GESrpdV7jpn
+	 N9IoY5SqoGPs3dqFsPwcs5KbcNexVKmbSTgArICYiTShbCJXeQXG/STpQCHs84W230
+	 NsWGWRguFwZ655KQC78xSQfwnwwxn2NO+ejzpz9xpGS9kt2gjKbNVvm8xCCslljpQB
+	 VUX6Yz79YdZfdG5dAcpVwUXx4wc517FNSbzyTmpTQAS5wBGYaOMuPRT4BvuF7MAc9K
+	 /ENmpBYCvbLYQ==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Subject: [PATCH 0/3] dt-bindings: mmc: marvell,xenon-sdhci: Fix several
+ validation warnings
+Date: Thu, 20 Mar 2025 16:35:45 -0500
+Message-Id: <20250320-dt-marvell-mmc-v1-0-e51002ea0238@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 20 Mar 2025 22:35:52 +0100
-Message-Id: <D8LF0RDZ6809.1I3MCCVSHRSQ2@ventanamicro.com>
-Subject: Re: [PATCH v12 23/28] riscv: kernel command line option to opt out
- of user cfi
-Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
- <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
- <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
- <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
- <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
- <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
- <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
- <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
- <broonie@kernel.org>, <rick.p.edgecombe@intel.com>, "linux-riscv"
- <linux-riscv-bounces@lists.infradead.org>
-To: "Deepak Gupta" <debug@rivosinc.com>, "Thomas Gleixner"
- <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
- <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
- <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
- <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
- "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
- <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
- "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
- <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
- <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
- <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
- <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
- <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>
-From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
-References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
- <20250314-v5_user_cfi_series-v12-23-e51202b53138@rivosinc.com>
-In-Reply-To: <20250314-v5_user_cfi_series-v12-23-e51202b53138@rivosinc.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADGK3GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI1MDYyMD3ZQS3dzEorLUnBzd3NxkXRMT46QUAwMzA0tzEyWgpoKi1LTMCrC
+ B0bG1tQC5yHL9YAAAAA==
+X-Change-ID: 20250320-dt-marvell-mmc-443bd0060974
+To: Hu Ziji <huziji@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org
+X-Mailer: b4 0.15-dev
 
-2025-03-14T14:39:42-07:00, Deepak Gupta <debug@rivosinc.com>:
-> This commit adds a kernel command line option using which user cfi can be
-> disabled.
->
-> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
-> ---
->  arch/riscv/kernel/usercfi.c | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->
-> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
-> index d31d89618763..813162ce4f15 100644
-> --- a/arch/riscv/kernel/usercfi.c
-> +++ b/arch/riscv/kernel/usercfi.c
-> @@ -17,6 +17,8 @@
->  #include <asm/csr.h>
->  #include <asm/usercfi.h>
-> =20
-> +bool disable_riscv_usercfi;
-> +
->  #define SHSTK_ENTRY_SIZE sizeof(void *)
-> =20
->  bool is_shstk_enabled(struct task_struct *task)
-> @@ -396,6 +398,9 @@ int arch_set_shadow_stack_status(struct task_struct *=
-t, unsigned long status)
->  	unsigned long size =3D 0, addr =3D 0;
->  	bool enable_shstk =3D false;
-> =20
-> +	if (disable_riscv_usercfi)
-> +		return 0;
-> +
->  	if (!cpu_supports_shadow_stack())
->  		return -EINVAL;
-> =20
-> @@ -475,6 +480,9 @@ int arch_set_indir_br_lp_status(struct task_struct *t=
-, unsigned long status)
->  {
->  	bool enable_indir_lp =3D false;
-> =20
-> +	if (disable_riscv_usercfi)
-> +		return 0;
-> +
->  	if (!cpu_supports_indirect_br_lp_instr())
->  		return -EINVAL;
-> =20
-> @@ -507,3 +515,16 @@ int arch_lock_indir_br_lp_status(struct task_struct =
-*task,
-> =20
->  	return 0;
->  }
-> +
-> +static int __init setup_global_riscv_enable(char *str)
-> +{
-> +	if (strcmp(str, "true") =3D=3D 0)
-> +		disable_riscv_usercfi =3D true;
-> +
-> +	pr_info("Setting riscv usercfi to be %s\n",
-> +		(disable_riscv_usercfi ? "disabled" : "enabled"));
-> +
-> +	return 1;
-> +}
-> +
-> +__setup("disable_riscv_usercfi=3D", setup_global_riscv_enable);
+This small series fixes several validation warnings caused by the 
+marvell,xenon-sdhci binding:
 
-I'd prefer two command line options instead.
+marvell: mmc@6e0000: clocks: [[4, 4]] is too short
+marvell: mmc@6e0000: clock-names: ['core'] is too short
+marvell: mmc@780000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
+marvell: mmc@780000: Unevaluated properties are not allowed ('dma-coherent', 'iommus' were unexpected)
+marvell: mmc@d0000: Unevaluated properties are not allowed ('sdhci-caps-mask' was unexpected)
 
-In any case, I think we still document params in kernel-parameters.txt.
+Signed-off-by: "Rob Herring (Arm)" <robh@kernel.org>
+---
+Rob Herring (Arm) (3):
+      dt-bindings: mmc: marvell,xenon-sdhci: Allow "dma-coherent" and "iommus"
+      dt-bindings: mmc: marvell,xenon-sdhci: Add reference to sdhci-common.yaml
+      dt-bindings: mmc: marvell,xenon-sdhci: Drop requiring 2 clocks
+
+ .../bindings/mmc/marvell,xenon-sdhci.yaml          | 27 +++++-----------------
+ 1 file changed, 6 insertions(+), 21 deletions(-)
+---
+base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
+change-id: 20250320-dt-marvell-mmc-443bd0060974
+
+Best regards,
+-- 
+Rob Herring (Arm) <robh@kernel.org>
+
