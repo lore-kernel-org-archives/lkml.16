@@ -1,80 +1,225 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-174.mta0.migadu.com (out-174.mta0.migadu.com [91.218.175.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1056978F5B;
-	Thu, 20 Mar 2025 14:45:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC9051D5CCD
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:48:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742481927; cv=none; b=il3vDKRkS1+qOMkTae2FpUgOSgUVdhzlKC25S+QN4jVEFNq2UX3YsfVPNIfwDJiWAx/OkbBB+J2RSPF0MxZgEpInXlrCHU/x1dtYHyeCg9sv2XPCL7/MPQalqPaObP0jzCKaHYGuQymvpu74U+SzLfzn1mV86RXbhvVlDPWm7tY=
+	t=1742482101; cv=none; b=g+hwhGpara+9kvCRpSboOMKlViqut/Nd2w0klwmpg7noKoqEoC6cGhyn/T2EM8luO9+8S36cjBGXrj0X12991uoePmZuRzT/3wfIIRo4NUDwbPVKCsPCMpf9UFq2xJNNl3bAiLwlDSp6BvQqGWXjQ9ShKb/VpFjUt0Z/RkCCM7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742481927; c=relaxed/simple;
-	bh=mFTONBur+13F+uY2kS+NldAEhsm33/yBF8Gvhz/9VI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KSlaNwcYpex2PrFo3KWykAFf17rxWt+dmJANRwAF4dxFajsyIh/GOFAxHg2c7VOn9SsKqYYj5RZcJORzJTajg2KbGejbppLVYe9MoYMF99MwkRRC2Go2XYTyvDwpSS9Hhrj3ZC435dtVBjVPRPbUIcnSNWFPibMrOWEszmDp6Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oWa1zvwd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742482101; c=relaxed/simple;
+	bh=WJ070vkc9pvl3EedyR6k/ajws5zd59U5a2Diu/Qubms=;
+	h=MIME-Version:Date:Content-Type:From:Message-ID:Subject:To:Cc:
+	 In-Reply-To:References; b=FXhsSznpHAV1JpuAOrDXNhv87r4YFZmiZkN7gK+5OZhzf3Cjooy6aetKTDKcN26E60xtvFsRFHNxlLH/1k4nAE2TO11IGZjD8wwBZSO9pJM1PNnzyzMYNSFdKUK6/nyqg81j6zNdt93Ybht90HwFcdmU3fzUxodDqS5oY30Lkz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=EnkjezDc; arc=none smtp.client-ip=91.218.175.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oWa1zvwd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 821BCC4CEED;
-	Thu, 20 Mar 2025 14:45:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742481926;
-	bh=mFTONBur+13F+uY2kS+NldAEhsm33/yBF8Gvhz/9VI0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=oWa1zvwdX03b861YpeQo7bWkNd9aZXYjBdXFtNS5bpLwb4dx8Z+bBDzUsgE6MNBmr
-	 wtaQEPIS9xhovtfwxLp5DGqFUQmjrBCQXeZwI6BwLkV3QRXxpNWltn5MeGsq6rZUWv
-	 iVMIysmjL/mN7nl/WquAIUS/dimuSYapsuNAAGAH5vS33oqXUbDngrO14Zd1cnNTOl
-	 ROyNj+xi07lAg3Cw2u69Q94YKAnGr0LybsrZCSj3JD5cfU55YWGVh3D1AePUePHYpY
-	 7sUHuFU95zBM9CgHaz8xI6VUqa1Ua2gAHb8MigGwPiZYneHhZkMHTrUd/trHJ4zKsE
-	 WgO1eHk2WoPGQ==
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30613802a6bso9101101fa.1;
-        Thu, 20 Mar 2025 07:45:26 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUV9NBGDV5LVCmyoZk6A/nRsFkru+JDP2VEWbe6Ct7lynxI9Y0d0+Vl9d0xJxHhNBOtJndr2jWp8V8SR8o=@vger.kernel.org, AJvYcCWlyAkQmxsTi9dL9tHrj4xDAOP6aYgI53qJVfrPGftNHPoKNJyA8VS+jqHPCgXO4Ch696NLL/48UI73S4c/@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8nwCL83skDcA1QguS60umoD9utI1uMA28NW9Ex7Hx6z13epmE
-	lIRHgg8zvf8+uskCH1PJz5lIxnkHAImbDsNn/BNAoii3c07oKLJ/XUUpT6cdaoY/JI9yUxt60rs
-	7L9YvZ2jwTDkBx2Lnh4Wb0Yoek+o=
-X-Google-Smtp-Source: AGHT+IHRtXdnLD8pUfqFi3hNor1VULqyvxiUBeS9XF8+MMG8aoaeBpY9PZBo60bd6p0fXyUA0Ud5ySCOZahuCtQOfAg=
-X-Received: by 2002:a05:6512:39d2:b0:549:5769:6ad8 with SMTP id
- 2adb3069b0e04-54acb195c01mr2552380e87.4.1742481924873; Thu, 20 Mar 2025
- 07:45:24 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="EnkjezDc"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320070746.101552-2-ardb+git@google.com> <CAK7LNARR+LZEUuYSe-TaWwsvA_knwUOoDxZsbucK8GkwBJxgmA@mail.gmail.com>
-In-Reply-To: <CAK7LNARR+LZEUuYSe-TaWwsvA_knwUOoDxZsbucK8GkwBJxgmA@mail.gmail.com>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Thu, 20 Mar 2025 15:45:13 +0100
-X-Gmail-Original-Message-ID: <CAMj1kXE1jVp+3aoyWEKNUOg3VWJ14xtyFGE0n3-UScEPA402Jg@mail.gmail.com>
-X-Gm-Features: AQ5f1JqptoXNZA92Dzm9aR9FxjvzL1RCem2adm9WQ8n0JxNa-D4vxCArZR9uRlA
-Message-ID: <CAMj1kXE1jVp+3aoyWEKNUOg3VWJ14xtyFGE0n3-UScEPA402Jg@mail.gmail.com>
-Subject: Re: [PATCH] gendwarfksyms: define __GENKSYMS__ when processing asm-protoypes.h
-To: Masahiro Yamada <masahiroy@kernel.org>
-Cc: Ard Biesheuvel <ardb+git@google.com>, linux-kbuild@vger.kernel.org, brgerst@gmail.com, 
-	x86@kernel.org, nathan@kernel.org, linux-kernel@vger.kernel.org, 
-	nogikh@google.com, Sami Tolvanen <samitolvanen@google.com>, 
-	syzbot+06fd1a3613c50d36129e@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742482087;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AGPSkGX7UwV9BGhBv1TQ2kKav1LFAHSe1DoGva65c3k=;
+	b=EnkjezDcXHj/gATbfqdkfs25Bqrpm0w00SWpQzToKkB4R+pmXe62IEvrSERDZmi86mUHUn
+	exFoKK55wTEgBC9iRtE+ze8P7M5xQ/FhZ5y5dqCt//NBP3oFTc6utcbXDLwd96IpNU1M5h
+	Ky06AvtFqzAiTwt7e2uGvczUcIgMSVg=
+Date: Thu, 20 Mar 2025 14:48:05 +0000
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: "Jiayuan Chen" <jiayuan.chen@linux.dev>
+Message-ID: <f2bd7e45b327d7b190edef4916d5b9e6dc83e87a@linux.dev>
+TLS-Required: No
+Subject: Re: [PATCH bpf-next v3 1/3] bpf, sockmap: avoid using sk_socket
+ after free when sending
+To: "Michal Luczaj" <mhal@rbox.co>, xiyou.wangcong@gmail.com,
+ john.fastabend@gmail.com, jakub@cloudflare.com
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, andrii@kernel.org,
+ eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org, daniel@iogearbox.net,
+ martin.lau@linux.dev, song@kernel.org, yonghong.song@linux.dev,
+ kpsingh@kernel.org, sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org,
+ shuah@kernel.org, sgarzare@redhat.com, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org
+In-Reply-To: <1e8c8e7a-23d9-4ed3-902a-8a4ba06f1f69@rbox.co>
+References: <20250317092257.68760-1-jiayuan.chen@linux.dev>
+ <20250317092257.68760-2-jiayuan.chen@linux.dev>
+ <1e8c8e7a-23d9-4ed3-902a-8a4ba06f1f69@rbox.co>
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 20 Mar 2025 at 15:40, Masahiro Yamada <masahiroy@kernel.org> wrote:
->
-> On Thu, Mar 20, 2025 at 4:08=E2=80=AFPM Ard Biesheuvel <ardb+git@google.c=
-om> wrote:
-> >
-> > From: Ard Biesheuvel <ardb@kernel.org>
-> >
-> > Ensure that __GENKSYMS__ is #define'd when passing asm/asm-prototypes.h
-> > through the compiler to capture the exported symbols. This ensures that
-> > exported symbols such as __ref_stack_chk_guard on x86, which is declare=
-d
-> > conditionally, is visible to the tool.
->
->
-> Why don't you make it unconditional, then?
+March 20, 2025 at 20:32, "Michal Luczaj" <mhal@rbox.co> wrote:
+
+>=20
+>=20On 3/17/25 10:22, Jiayuan Chen wrote:
+>=20
+>=20>=20
+>=20> The sk->sk_socket is not locked or referenced, and during the call =
+to
+> >=20
+>=20>  skb_send_sock(), there is a race condition with the release of sk_=
+socket.
+> >=20
+>=20>  All types of sockets(tcp/udp/unix/vsock) will be affected.
+> >=20
+>=20>  ...
+> >=20
+>=20>  Some approach I tried
+> >=20
+>=20>  ...
+> >=20
+>=20>  2. Increased the reference of sk_socket->file:
+> >=20
+>=20>  - If the user calls close(fd), we will do nothing because the refe=
+rence
+> >=20
+>=20>  count is not set to 0. It's unexpected.
+> >=20
+>=20
+> Have you considered bumping file's refcnt only for the time of
+>=20
+>=20send/callback? Along the lines of:
+>=20
+>=20static struct file *sock_get_file(struct sock *sk)
+>=20
+>=20{
+>=20
+>=20 struct file *file =3D NULL;
+>=20
+>=20 struct socket *sock;
+>=20
+>=20 rcu_read_lock();
+>=20
+>=20 sock =3D sk->sk_socket;
+>=20
+>=20 if (sock)
+>=20
+>=20 file =3D get_file_active(&sock->file);
+>=20
+>=20 rcu_read_unlock();
+>=20
+>=20 return file;
+>=20
+>=20}
+>=20
+>=20static int sk_psock_handle_skb(struct sk_psock *psock, struct sk_buff=
+ *skb,
+>=20
+>=20 u32 off, u32 len, bool ingress)
+>=20
+>=20{
+>=20
+>=20 int err;
+>=20
+>=20 if (!ingress) {
+>=20
+>=20 struct sock *sk =3D psock->sk;
+>=20
+>=20 struct file *file;
+>=20
+>=20 ...
+>=20
+>=20 file =3D sock_get_file(sk);
+>=20
+>=20 if (!file)
+>=20
+>=20 return -EIO;
+>=20
+>=20 err =3D skb_send_sock(sk, skb, off, len);
+>=20
+>=20 fput(file);
+>=20
+>=20 return err;
+>=20
+>=20 }
+>=20
+>=20 ...
+>=20
+>=20}
+>=20
+>=20static void sk_psock_verdict_data_ready(struct sock *sk)
+>=20
+>=20{
+>=20
+>=20 struct file *file;
+>=20
+>=20 ...
+>=20
+>=20 file =3D sock_get_file(sk);
+>=20
+>=20 if (!file)
+>=20
+>=20 return;
+>=20
+>=20 copied =3D sk->sk_socket->ops->read_skb(sk, sk_psock_verdict_recv);
+>=20
+>=20 fput(file);
+>=20
+>=20 ...
+>=20
+>=20}
 >
 
-Because this symbol is being hidden from the compiler.
+Thank you for your suggestions.
 
-Commit 577c134d311b9b has the details.
+I previously attempted a similar approach in another version, but
+felt that manipulating the file layer within sockmap was quite odd.
+
+Moreover, the actual process flow is more complex than we initially
+imagined.
+
+The current overall close process looks roughly like this:
+'''
+close(fd):
+    file_ref_put(file):
+        __sock_release(sock)
+            sock_map_close()
+            saved_close()
+               sk->sk_socket =3D NULL
+            sock->ops =3D NULL
+            sock->file =3D NULL
+'''
+
+We can observe that while sk->sk_socket might not be NULL, it doesn=E2=80=
+=99t
+guarantee that sock->file is not NULL. This means the following code
+is problematic:
+'''
+sock =3D sk->sk_socket;
+if (sock)
+    sock->file->xx <=3D=3D sock->file may be set to NULL
+'''
+
+Of course, we might try something like:
+'''
+try_hold_sock() {
+    rcu_read_lock();
+=20=20=20=20
+=20   sock =3D sk->sk_socket;
+    if (!sock)
+        unlock_return;
+=20=20=20=20
+=20   file =3D sock->file;
+    if (!file)
+        unlock_return;
+=20=20=20=20
+=20   file =3D get_file_active(&file);
+    rcu_read_unlock();
+    return file;
+}
+'''
+
+Acquiring the socket's reference count requires significant effort,
+and we need to pay special attention to the socket's own release
+process to ensure correctness. Ultimately, this led me to decide to
+operate on psock instead of directly manipulating the file layer to
+avoid this issue.
