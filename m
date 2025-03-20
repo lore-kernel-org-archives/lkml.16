@@ -1,31 +1,52 @@
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B67321E412A
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 06:40:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+Received: from smtp.cecloud.com (unknown [1.203.97.246])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B10AB29A0
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 06:42:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=1.203.97.246
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742452824; cv=none; b=rJBWewXjSroXJugFt14nHuQ0iUKrpDr07R1/LNGFoU/U7Be3+2dC7Kwhxv/rl32z77Bc6PF8Ovzqx0cb5XyhWlB6/LAMjRaW/1kc0ubbFLwXxr0PoJKBcuzAeib0TTdRddLNGIC46rrwJVZGlrqdC60YBBnKYqp5oCY8vnbQzIk=
+	t=1742452931; cv=none; b=lRjpWGXMu8b0rn9BaYAJ3r2a5Yw+d5chk7igvkAht4BzgD8OzdBooUwb81hR7bJ69ctFED2Mq6ZieacIShlkDgPaq+tRhQ5cLLKWpowntcf5MCKDA0hDSW8FkXy7qmPJNYLbJc6OabN6v7vzaTuOjIr0fZvkkyhpMCtx9Iv0t2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742452824; c=relaxed/simple;
-	bh=cMwdsmwGiCyScaGzBB3hUxyKAKbVEkB62bzE7ZxgtX8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZT+583PRleG2/aXncEKYqje39h71HZrZJK8APYnK0Ogl6sKrS8LAMwtFdOblqpb/VPPonTyzA12atFlcZ3fBxu8W3Xs3REt2JH9Uv6ZbmjgiC7Uez7V4/TjayJytMNoqJCpY4iZzdVwVU/pLhsmr25jtbWwUNoaqoWMfayPUNrQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAD33TBIuNtn1PPhFg--.14774S2;
-	Thu, 20 Mar 2025 14:40:08 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: linux@dominikbrodowski.net,
-	tony@atomide.com,
-	arnd@arndb.de
-Cc: linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] pcmcia: omap: Add missing check for platform_get_resource
-Date: Thu, 20 Mar 2025 14:39:56 +0800
-Message-Id: <20250320063956.211577-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742452931; c=relaxed/simple;
+	bh=FUzJ9jmM6F97ERSY8jwNCIx2978t1zJTWOPpNILMHjo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rdwRfWGcKsRdVJLfn7AwQieE+wReujPsApu69SkzT4rO5ag4fRvPch8dRfYIgrs7pziSivE1OXH5iyGj7lMfPYG5MxtzZVDplgPFFGBfRG8sdQ6QbS+Ma7DaGHwAyPvqDb7zP7WKrFwwLDTSWPQPgJdmOt8+EpyuqGZ2ki+xsDE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn; spf=pass smtp.mailfrom=cestc.cn; arc=none smtp.client-ip=1.203.97.246
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cestc.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cestc.cn
+Received: from localhost (localhost [127.0.0.1])
+	by smtp.cecloud.com (Postfix) with ESMTP id A16057C0115;
+	Thu, 20 Mar 2025 14:36:35 +0800 (CST)
+X-MAIL-GRAY:0
+X-MAIL-DELIVERY:1
+X-SKE-CHECKED:1
+X-ANTISPAM-LEVEL:2
+Received: from localhost.localdomain (unknown [111.48.58.12])
+	by smtp.cecloud.com (postfix) whith ESMTP id P1609374T281456747934064S1742452594471158_;
+	Thu, 20 Mar 2025 14:36:35 +0800 (CST)
+X-IP-DOMAINF:1
+X-RL-SENDER:shaopeijie@cestc.cn
+X-SENDER:shaopeijie@cestc.cn
+X-LOGIN-NAME:shaopeijie@cestc.cn
+X-FST-TO:kbusch@kernel.org
+X-RCPT-COUNT:9
+X-LOCAL-RCPT-COUNT:3
+X-MUTI-DOMAIN-COUNT:0
+X-SENDER-IP:111.48.58.12
+X-ATTACHMENT-NUM:0
+X-UNIQUE-TAG:<ba8584b988ac8f78fbffabd1439a33d6>
+X-System-Flag:0
+From: shaopeijie@cestc.cn
+To: kbusch@kernel.org,
+	axboe@kernel.dk,
+	hch@lst.de,
+	sagi@grimberg.me
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	zhang.guanghui@cestc.cn,
+	gechangzhong@cestc.cn,
+	Peijie Shao <shaopeijie@cestc.cn>
+Subject: [PATCH] nvme-tcp: fix selinux denied when calling sock_sendmsg
+Date: Thu, 20 Mar 2025 14:35:23 +0800
+Message-ID: <20250320063523.2201926-1-shaopeijie@cestc.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -33,47 +54,48 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAD33TBIuNtn1PPhFg--.14774S2
-X-Coremail-Antispam: 1UD129KBjvdXoW7GF45Jw43CF4UCFWDKFy7Awb_yoW3JFc_Gw
-	4vgr1xGr45Zryqkw43A3Z3uFy2yF1q9a1DWr1rtaySv3y7u3Wj9ryv9r93Wws29ryUKF9r
-	Jryjyr4fuw13CjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbVxFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_Gr0_Xr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Cr
-	1j6rxdM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVW8Jr0_Cr1UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc7CjxVAaw2AF
-	wI0_JF0_Jw1lc2xSY4AK67AK6r47MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r
-	1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CE
-	b7AF67AKxVWUAVWUtwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0x
-	vE2Ix0cI8IcVCY1x0267AKxVWUJVW8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAI
-	cVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa
-	73UjIFyTuYvjfU8nYwUUUUU
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
 
-Add missing check for platform_get_resource() and return error if it fails
-to catch the error.
+From: Peijie Shao <shaopeijie@cestc.cn>
 
-Fixes: d87d44f7ab35 ("ARM: omap1: move CF chipselect setup to board file")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+In a SELinux enabled kernel, socket_create() initializes the
+security label of the socket using the security label of the
+calling process, this typically works well.
+
+However, in a containerized environment like Kubernetes,
+problem arises when a privileged container(domain spc_t)
+connects to an NVMe target and mounts the NVMe as persistent
+storage for unprivileged containers(domain container_t).
+
+This is because the container_t domain cannot access
+resources labeled with spc_t, resulting in socket_sendmsg
+returning -EACCES.
+
+The solution is to use socket_create_kern() instead of
+socket_create(), which labels the socket context to kernel_t.
+Access control will then be handled by the VFS layer rather
+than the socket itself.
+
+Signed-off-by: Peijie Shao <shaopeijie@cestc.cn>
 ---
- drivers/pcmcia/omap_cf.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/nvme/host/tcp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pcmcia/omap_cf.c b/drivers/pcmcia/omap_cf.c
-index f0ccf479f36e..e0a3820acaef 100644
---- a/drivers/pcmcia/omap_cf.c
-+++ b/drivers/pcmcia/omap_cf.c
-@@ -215,6 +215,8 @@ static int __init omap_cf_probe(struct platform_device *pdev)
- 		return -EINVAL;
+diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
+index 327f3f2f5399..71f7045881eb 100644
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -1790,7 +1790,8 @@ static int nvme_tcp_alloc_queue(struct nvme_ctrl *nctrl, int qid,
+ 		queue->cmnd_capsule_len = sizeof(struct nvme_command) +
+ 						NVME_TCP_ADMIN_CCSZ;
  
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -EINVAL;
- 
- 	cf = kzalloc(sizeof *cf, GFP_KERNEL);
- 	if (!cf)
+-	ret = sock_create(ctrl->addr.ss_family, SOCK_STREAM,
++	ret = sock_create_kern(current->nsproxy->net_ns,
++			ctrl->addr.ss_family, SOCK_STREAM,
+ 			IPPROTO_TCP, &queue->sock);
+ 	if (ret) {
+ 		dev_err(nctrl->device,
 -- 
-2.25.1
+2.43.0
+
+
 
