@@ -1,62 +1,62 @@
 Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D7B724A066
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:54:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B32124BBF2
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:54:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742496850; cv=none; b=bbwPaj4zz+h/dA+8OS/cBghKxHAteOMhofSfA/IKqGMlstmhq9Jlrp/nq48v8nE3Ai6+aetaecjqyPUSpuztDo3flApjLKiYFZ33HOsHOjzdRDPCgZqkoZ5B68UNxZMUCyF8XTnYqamkSLrONjeJCJFe8Ng/Tz+Nu6FX8KOUcLs=
+	t=1742496852; cv=none; b=h675DnqNI5n4zQzPvpsAbx44gU1RDTCa55gDMPm/1k/oaej8wzoSucy9MUPLaXOvZHTGyyfRyceJTKINvm/yPMxyh2XKOB1lG6RTBjJeP6jPodzNJ82/E4/8BrTIYfVkfRj4rQzF8foMQA3vI1tCl+sCJITWB9N3iFqsxcCKKOo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742496850; c=relaxed/simple;
-	bh=jtmuGtEYcaPHI+wbnujDHwf0zLuAr7ob6sebW7yeKAM=;
+	s=arc-20240116; t=1742496852; c=relaxed/simple;
+	bh=jo1ydT2hB6u1cx8n6xgWYmM/1GUAUgZV4IauZsWcOk0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rOe1JFBBc5kfD0DsTvzAH0eeTbNE818pNauauzDSnu/p008UCgwdaeBKUuSV6m7YJ0yAivCRmgCVecybyG/x8qum/SSUdOCPsDZNs0cwhnYOby2/QLhTi8Tis3mOB39ZCik+JWfrVD8pmgF24XgxM8ZHL89nT+QQltXok5E6nbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HbVzAjGk; arc=none smtp.client-ip=209.85.166.47
+	 MIME-Version; b=N6HZJaHtx4aXjdmE40GJ3FpsuPiBJrDt6Yj/zWjH1gntZ4Z9+1Wn3krfUgdc57NOE8JTbJaO/Eyj0joO9RjNZ+20gJruugd0gxTKIxOTsFIRG/ebf+qq72IjoqNRkVN5zazTAq1n9iycqc04gYGHQbNH7D2L3XDUI+giqR2/okQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2x15mOz; arc=none smtp.client-ip=209.85.166.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HbVzAjGk"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85ae131983eso125399439f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:54:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2x15mOz"
+Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85b4277d03fso43924439f.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742496848; x=1743101648; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742496849; x=1743101649; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=v1ua5S//H69kDLjZ/ereYDRSGWaurp/ZUyrfcdHp8ig=;
-        b=HbVzAjGk7zx4+zTws2JuiEHfkJ974OI4ZcKAKpkjGtai2gLbTgslMpSpuPvqMev8Op
-         vLUWJVCP81HGkb7GDnmLmcd6HQWVk35C3ezTbBg+Bt1DiDclmNNOZXir6WcWIrKPDhQA
-         VKySi2Az4ju9mxi/ZWHlEk8UNdSYBMSvbj+/df33ogSwkWSDTv1hQW5oke0DkjUc257m
-         Bj27nukjZ1LwzwCjEUq/N3WlBam84LrDvVrGQDglihtwOxtSEQ2SSvcEdzs0k6tsmCDE
-         HV4Thw9sUaPO9lbHa1R7KZyEdjPW5FssYL6ntr+HGwac8g0YNoq1o3o6q/OlM6BduJBT
-         UL/g==
+        bh=riXSD1tORrHtkttiQwAlqFF38I5b7O133kwF8VYREw8=;
+        b=T2x15mOz1CSO6ZORPg77Fz2K00aOoPBU5wKc1um9gmMd2RWyC+4qgc1m/N9Ctr6Lio
+         232pbeWRzCLGc1i+KqjMAhqigW3Ve6+clAK/vIDo3Wn+yPVY6a5bknNkexeB7X2/TG1z
+         Dg2tRIScx43IfCzGY89icFN9DCv37PyzmD98n/TFX7L2zh+nYBwkeA3riPL7tifuBjpf
+         J4eG0llN9VJvMW95wKIJZ7es6wsy8wlKwIo1ACo4Ncv+bLuSbl6K3J7qERkzgiaor/nf
+         mfdt7xjG+PH1gJ9SG0tJ5GgpyuBNYDy4n7jpgtAu1myRoWUk2Q+kxjO3FPS59GqU1YR2
+         s+9g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742496848; x=1743101648;
+        d=1e100.net; s=20230601; t=1742496849; x=1743101649;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=v1ua5S//H69kDLjZ/ereYDRSGWaurp/ZUyrfcdHp8ig=;
-        b=rwsr/BFLmTqP6Ta5/sEDa3L90I0OESwvBpU+tQJUEKRGo6OkWL2Zm5PC/F8+sRjUyV
-         4ZA7pe0Ry1o3ZMPmo9uiFqTXLbr4dowqMBzv//w/T1up0T/odS9uhYyYe7vWX33vHgnU
-         6P9SZrTOuf+TLHbpY9vLw9XVgME6ozFMoh6E5fzXub9dfXZcGAfrDpGRp2iF/lelWAxb
-         yCIaOyf0P5kfxGTCc+O+fHIdzjf+OkYk2IPe3qccX8gOuMo+egJyPmupWKS1tsjney8S
-         Q85KJOv/x33VRc0YaVIrVxHsqrnLS7sQmptfAIeBmAuvbydUBE0RhK2m+TeB/AP7j0mG
-         Ybyg==
-X-Gm-Message-State: AOJu0YwOwbIOoGkNibqWgu3scXroDwdvvzPlVN8kBDIT1vZRCeBz0eva
-	mcspZyKOfANOOa3rgpFlMFo3bHGURgkCMlmq0PH1etLVD50WTZrFmXJsNa1B
-X-Gm-Gg: ASbGncuhR5WVqqcrEX46gnCezs1dwviurP6Vgk0fCu8+oQsprKiRZUjGo0aqgS/K6rk
-	uVUpJYfrMgxAe92v0mH2LwGTKTyKUNBicWiX6HwcDtBPHEknGIOTBcWdOIxXJKHl/ADlx7wsIYU
-	IDXe/W+GI8w+REqofamoF9PTQVVFSJJ8DOIt/10O+iIuiIQnxhgHl8Cdu7PFhrz/8HidFFn4DLj
-	n+FVz6n5MsCMmbi87UNpw3ZdXSLb72Q4z1xp1sBuHVkt08gP1bRhZA6ecdEok8lXcm2KCfHa9km
-	AqCnIZDMAsHUBT9F5B4weV2oqHzyW1aGFAZdn7tRkLCvecKuOA5ETsSf+krsOKWKUSrC8tdPd/X
-	3pA==
-X-Google-Smtp-Source: AGHT+IF1BVm3oe17yrUphtZQXL8NOfypQ6M9iJgJRk9AIUUygDykxaFcqniPfeAk5RCxls2FZZiEnQ==
-X-Received: by 2002:a05:6602:3997:b0:85a:ec03:b124 with SMTP id ca18e2360f4ac-85e2ca64293mr50159939f.4.1742496848117;
-        Thu, 20 Mar 2025 11:54:08 -0700 (PDT)
+        bh=riXSD1tORrHtkttiQwAlqFF38I5b7O133kwF8VYREw8=;
+        b=rqhNgelYbt/vcuJzafL/fFp4iFodfvC4ytnWiKfAaiSuvs/XApXvnxu2hmh7OYneeF
+         5/iLg/aivul596HFove7d/6AuufpeC2YPLNPp5T9kv1pJ/g+PSZWNOPW97ZHZNMiQrll
+         S2adjbG3u51YH5y4h2lHvlcbOMoqx1iQVeQ8gKqWoZ0zwB6/6StcroaSHPhBC3Y3NmZc
+         tmn+bEE8jNY/3i70IaDUVunsWG3GzVGrkg/5gvVhMv0pCSisZQuuWHzLoEou5TLkXVAP
+         GrWpg5AeF0J85z1aTxMg6ZvKPlm15KoCj+CKegWnDLekLOmvMgW2dlm0S7s9DDFhvBG7
+         95kw==
+X-Gm-Message-State: AOJu0YyuCpA8WzAGgtqMWuqMaRl9oK+5zL8FWsr9lRqRXFghkwea0cW7
+	HvMT95Y0cdgWIlTuCkq1J0mOYfb81reWPM5hknI3umkbcqpLi4og1l8hTxeE
+X-Gm-Gg: ASbGncv6cQB7pQ5VCLsLh1xkrILXO3LoV6FtLc+FQ6iRPbgt+zCUJSuWFQALe2jChrC
+	Id+i0kZOdgQTRFhkiske1nq33f1NYI802S9vFtZjpyVxlADXZt5HXE5IveVS90WDkJrtJ/8xsH7
+	z1AfjlTg0ItoZyVOwcVizhwhY/cj5wiVJuE8wlsxictSb1AUOIqQyMfND7BoEwxHXnP8QMJUoa9
+	F4vwpJqbnThjs/2Ux9r0ITnsxZE0LK2OLRCYKmp3Q5QgZq0+ZqQceX2RIm9KYIpRyPgYGxdy80z
+	bilsnX4P0SE7T3xhXpdU72IdF+3f8TdQyoS2BFdo4GU4wIMxE4V6yBkapcStwsJtKAl1qO9icP6
+	FBg==
+X-Google-Smtp-Source: AGHT+IF1oSBpmraBX8zPImUtfNnxyTPneTMK46EMc6j1uPXohNjQQHHeHYBBNbkda865fA0ElyE4Lg==
+X-Received: by 2002:a05:6602:4145:b0:85b:37eb:f466 with SMTP id ca18e2360f4ac-85e2ca19f85mr41137739f.1.1742496849336;
+        Thu, 20 Mar 2025 11:54:09 -0700 (PDT)
 Received: from gandalf.. (c-67-165-245-5.hsd1.co.comcast.net. [67.165.245.5])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-85e2bc273e7sm7078039f.17.2025.03.20.11.54.07
+        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-85e2bc273e7sm7078039f.17.2025.03.20.11.54.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 11:54:07 -0700 (PDT)
+        Thu, 20 Mar 2025 11:54:08 -0700 (PDT)
 From: Jim Cromie <jim.cromie@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
@@ -73,9 +73,9 @@ Cc: jbaron@akamai.com,
 	jani.nikula@intel.com,
 	ville.syrjala@linux.intel.com,
 	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v2 56/59] drm-dyndbg: add DRM_CLASSMAP_USE to the qxl driver
-Date: Thu, 20 Mar 2025 12:52:34 -0600
-Message-ID: <20250320185238.447458-57-jim.cromie@gmail.com>
+Subject: [PATCH v2 57/59] drm-dyndbg: add DRM_CLASSMAP_USE to the drm_gem_shmem_helper driver
+Date: Thu, 20 Mar 2025 12:52:35 -0600
+Message-ID: <20250320185238.447458-58-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250320185238.447458-1-jim.cromie@gmail.com>
 References: <20250320185238.447458-1-jim.cromie@gmail.com>
@@ -87,28 +87,27 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The qxl driver has a number of DRM_UT_* debugs, make them
-controllable when CONFIG_DRM_USE_DYNAMIC_DEBUG=y by telling dyndbg
-that the module uses them.
+The drm_gem_shmem_helper driver has a number of DRM_UT_* debugs, make
+them controllable when CONFIG_DRM_USE_DYNAMIC_DEBUG=y by telling
+dyndbg that the module uses them.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- drivers/gpu/drm/qxl/qxl_drv.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/drm_gem_shmem_helper.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index 417061ae59eb..c18577a3153d 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -66,6 +66,8 @@ module_param_named(modeset, qxl_modeset, int, 0400);
- MODULE_PARM_DESC(num_heads, "Number of virtual crtcs to expose (default 4)");
- module_param_named(num_heads, qxl_num_crtc, int, 0400);
+diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
+index 5ab351409312..481d18561688 100644
+--- a/drivers/gpu/drm/drm_gem_shmem_helper.c
++++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
+@@ -23,6 +23,7 @@
+ #include <drm/drm_print.h>
  
+ MODULE_IMPORT_NS("DMA_BUF");
 +DRM_CLASSMAP_USE(drm_debug_classes);
-+
- static struct drm_driver qxl_driver;
- static struct pci_driver qxl_pci_driver;
  
+ /**
+  * DOC: overview
 -- 
 2.49.0
 
