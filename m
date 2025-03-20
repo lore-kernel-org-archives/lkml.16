@@ -1,86 +1,101 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5748C222560;
-	Thu, 20 Mar 2025 09:31:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8039B22371F
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:31:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463089; cv=none; b=FoygxjMugPCSY/9E/WTv7Rq7w3WyRM59q7JcUwdcmgzegRY6orzHqDU0aQDEcvKFqRPsbx4uz7Hto91VPvI29c5/jA1nimPdyssG/XhzTtzfEtiZIKDEP8L02YVjulM0gEqikO297nThIK1U7liFXCfebNRXCEkUuqBd/w3W7JY=
+	t=1742463094; cv=none; b=pqj3i/x4fmGNNJBe5I8/6oipXVfc+QX3scZP1Rg5Zyp6VVjuLTTPaRyjidkRO8eCzNuAV7RAaQ4VkPk3BCjeqnr1ZBo2MmRiSFgkyEesKsgkYACDqOfkLX4YQQW00uVrWAbgDeSGSpflVrxuuhKwraTQQ5TUACc6/4Qo1d8UzpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463089; c=relaxed/simple;
-	bh=l9eem7WJGYypfrHFJiimr1YXth3+uzyUvblKHYU1JeE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=f3zmHsa//l6z+1/+1pjQuoX2Cz0exkSHTe7lcwuyc2JKPvJ6Jp382M2nPeLIepOSdQC4C1TiuokRU8Vmp+9/cKolMXDYSkFXLj4R8ZPs2N1jKhhcZJphv0AZCAHbUhrVRCRTP1W9FO1vtMbV5hIAYiHwjZ/Qv6YxQKlvf32G8gY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NXeUXtPE; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NXeUXtPE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77A8C4CEDD;
-	Thu, 20 Mar 2025 09:31:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742463088;
-	bh=l9eem7WJGYypfrHFJiimr1YXth3+uzyUvblKHYU1JeE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NXeUXtPE6JVonW5rDIhp1JZVyg4q+rxLeJkeWKwRxe0N3QetCZ+WNlsU8VVZ8ZI8W
-	 JPjdtUfgOMSEMgRmrl/8igSZ1rNl197VPSAbTgmMY2u51EqM76RE2GSzRQKDLS22eH
-	 7gsBzF9uVsFRCtO7D1Xq7jvZO39EM6EDqmNjUyt4q3cxN43kEsXtoj60QVHZ972kDH
-	 Du5T1LPvNDr8gN4CzWteepf6bxtlxKCCwvoQMKAHzlSEnkeG9FLDtLColrpatXMzhg
-	 oPRV6+B9ZGqU3r4XeHCdL4S6/OLQtIt3W3ORZAg5ziDaYiIH7uLWZ0FO0iR+Qq8ixX
-	 Uo6tSWhp9yQFQ==
-Date: Thu, 20 Mar 2025 10:31:25 +0100
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, 
-	Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, andersson@kernel.org, lgirdwood@gmail.com, robh@kernel.org, 
-	krzk+dt@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz, 
-	tiwai@suse.com, dmitry.baryshkov@linaro.org, linux-sound@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	johan+linaro@kernel.org
-Subject: Re: [PATCH 1/3] ASoC: dt-bindings: wcd93xx: add bindings for audio
- switch controlling hp
-Message-ID: <20250320-feathered-super-walrus-8eeef8@krzk-bin>
-References: <20250319091637.4505-1-srinivas.kandagatla@linaro.org>
- <20250319091637.4505-2-srinivas.kandagatla@linaro.org>
- <4ie22uuz5tpg77jto3c3hec6lhonr44hrjda7jk655axlaxvba@u3atd4gcyghn>
- <660115f1-d1fb-4fd7-a453-e8c177be9eed@linaro.org>
- <51dd7cb2-0c22-4043-b3a1-fa8410903cbd@sirena.org.uk>
- <938cb09f-3fb1-4daf-802d-2d95222f30db@linaro.org>
+	s=arc-20240116; t=1742463094; c=relaxed/simple;
+	bh=QQJ0ImmdL/HKntUKe1cie262ZM77rnlCQJSMwKm7cBU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=iaAA1EEi1j1lb0BcCROtLyFyC/YZsesZqApvKjx3Olke2jUk4rsNY+g5jiX/eWWj2frQIzqq7vNOgwvhj77nVIgXyk73vNZ8TpYJlcHBkYIILf53b7Mf/U2rn06xK78IE6tBsq/Fc11o0obJ6M+zblhnPOKhP3vRpFCQglYTI80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
+Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
+	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.emlix.com (Postfix) with ESMTPS id 3E27C5F888;
+	Thu, 20 Mar 2025 10:31:11 +0100 (CET)
+From: Rolf Eike Beer <eb@emlix.com>
+To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
+Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Bert Karwatzki <spasswolf@web.de>, Lu Baolu <baolu.lu@linux.intel.com>,
+ Jerry Snitselaar <jsnitsel@redhat.com>,
+ Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
+ Tomasz Jeznach <tjeznach@rivosinc.com>, Nick Kossifidis <mick@ics.forth.gr>,
+ Sebastien Boeuf <seb@rivosinc.com>, Palmer Dabbelt <palmer@rivosinc.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH 4/6] iommu: make inclusion of riscv directory conditional
+Date: Thu, 20 Mar 2025 10:16:12 +0100
+Message-ID: <2799755.mvXUDI8C0e@devpool47.emlix.com>
+Organization: emlix GmbH
+In-Reply-To: <12652899.O9o76ZdvQC@devpool47.emlix.com>
+References: <12652899.O9o76ZdvQC@devpool47.emlix.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <938cb09f-3fb1-4daf-802d-2d95222f30db@linaro.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Wed, Mar 19, 2025 at 06:00:51PM +0000, Srinivas Kandagatla wrote:
-> 
-> 
-> On 19/03/2025 16:03, Mark Brown wrote:
-> > On Wed, Mar 19, 2025 at 03:59:23PM +0000, Srinivas Kandagatla wrote:
-> > > On 19/03/2025 10:01, Dmitry Baryshkov wrote:
-> > 
-> > > > Is this regulator supplying the codec or some external component? In the
-> > > > latter case it's likely that it should not be a part of WCD bindings.
-> > 
-> > > This is regulator powering a mux that is driven by gpio which is part of
-> > > codec binding. So I would assume this will fall into the codec.
-> > 
-> > > Where would we fit this if not part of codec?
-> > 
-> > > Unless we mark this regulator as always on.
-> > 
-> > I would expect that the mux would appear in the DT and consume both the
-> > GPIO and the regulator.
-> Yes, its doable, so we would endup with a mux driver consuming regulator and
-> gpio and move the gpio handling in codec to move to use mux control.
-> 
-> Let met try that and see how it looks like.
+Nothing in there is active if CONFIG_RISCV_IOMMU is not enabled, so the who=
+le
+directory can depend on that switch as well.
 
-Looking at schematics this is clearly not a supply of a codec, but as
-Dmitry said, separate switch. Actually two switches.
+=46ixes: 5c0ebbd3c6c6 ("iommu/riscv: Add RISC-V IOMMU platform device drive=
+r")
+Signed-off-by: Rolf Eike Beer <eb@emlix.com>
+=2D--
+ drivers/iommu/Makefile       | 3 ++-
+ drivers/iommu/riscv/Makefile | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
+index 41b00cdc8621..17133876f777 100644
+=2D-- a/drivers/iommu/Makefile
++++ b/drivers/iommu/Makefile
+@@ -1,7 +1,8 @@
+ # SPDX-License-Identifier: GPL-2.0
+=2Dobj-y +=3D arm/ iommufd/ riscv/
++obj-y +=3D arm/ iommufd/
+ obj-$(CONFIG_AMD_IOMMU) +=3D amd/
+ obj-$(CONFIG_INTEL_IOMMU) +=3D intel/
++obj-$(CONFIG_RISCV_IOMMU) +=3D riscv/
+ obj-$(CONFIG_IOMMU_API) +=3D iommu.o
+ obj-$(CONFIG_IOMMU_API) +=3D iommu-traces.o
+ obj-$(CONFIG_IOMMU_API) +=3D iommu-sysfs.o
+diff --git a/drivers/iommu/riscv/Makefile b/drivers/iommu/riscv/Makefile
+index f54c9ed17d41..b5929f9f23e6 100644
+=2D-- a/drivers/iommu/riscv/Makefile
++++ b/drivers/iommu/riscv/Makefile
+@@ -1,3 +1,3 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+=2Dobj-$(CONFIG_RISCV_IOMMU) +=3D iommu.o iommu-platform.o
++obj-y +=3D iommu.o iommu-platform.o
+ obj-$(CONFIG_RISCV_IOMMU_PCI) +=3D iommu-pci.o
+=2D-=20
+2.49.0
+
+=2D-=20
+Rolf Eike Beer
+
+emlix GmbH
+Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
+Phone +49 (0)551 30664-0, e-mail info@emlix.com
+District Court of G=C3=B6ttingen, Registry Number HR B 3160
+Managing Directors: Heike Jordan, Dr. Uwe Kracke
+VAT ID No. DE 205 198 055
+Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
+Office Bonn: Bachstr. 6, 53115 Bonn, Germany
+http://www.emlix.com
+
+emlix - your embedded Linux partner
+
+
 
