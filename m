@@ -1,146 +1,159 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 937B322A1E1;
-	Thu, 20 Mar 2025 20:41:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBC20212FB3
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 20:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742503307; cv=none; b=TbjgIIS0+N+nGPH4vnYP+IF3xWtBUJcCHUlXLD4NdHToOLTu9bYq0jJhHvU12RaJsi1M+fvb2q/8FGRilFg3USQZ+E2jRmL2gu2tf9y8lFcZwkqJ+hGa14Z16w7bnaFdcANwzExAy6XER/5N+gD/tcu3utPmWfXyco2mMoEi+QY=
+	t=1742503381; cv=none; b=MOJl6uIpSRjeunYitVqLONy1tJNxwL0Q0DpB8TSbSSbjfh4clsHN9/ft8+XPVtzjqj3S/Kbbo5YSRMx7NvlQHQ7Inmo3jmU0A+asXODAbZVCw1gUQAFnWr7MuIxw9Rw7F0OPJwT85Vli7hTMjat4S76MrrjFzKHJVhB8T/MHzss=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742503307; c=relaxed/simple;
-	bh=we7z1WwNJDJljOB6Mz7Zq0uh+GzR+JX7NMU010ZfZsA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YTY2ofIdXH3wLd3aVyOvCIl5rF6ei6bOvA96ujWYHvrN2b0vSds8PpPJBVcVfcUT67MubjtmH7PPAzhSOjYcybxSNzNP1fJfvL/cYMpnGkh4QSbHDX1rk656cE+/4VJxgrr0SNcCaQjHvaKgX5D/D/c4MSzlaXrkfoVo0mkwHgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dlp2Pook; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742503381; c=relaxed/simple;
+	bh=Xdh/MJnCIprNyk5gQo7vfrxF4hS9VbcpNTXzPMRPSTY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=LfcJKlD/6bF8OGl6Zz2RkJWg0cGvn3KY1aMlzTfRJVfTUrEi8of9JA9x+84qLcY/pn6l4ZN9970imDdDktvtoiXruUEKknDQOd7jgaf06nN779DwCmB9Poz0ub4r8+SyAQ63SXTSFmeuziDzZ3QNIgf7t+nLVzmsdm1SobCT+D8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ITipPvyU; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dlp2Pook"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0A85C4CEE8;
-	Thu, 20 Mar 2025 20:41:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742503307;
-	bh=we7z1WwNJDJljOB6Mz7Zq0uh+GzR+JX7NMU010ZfZsA=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dlp2PooktNvBiG1iuY/0+3hesVXOmP7KadLXiWARDz41nyC5snhjr/ETbsSe2uLMr
-	 XCj1c9Pu540hLOvjFcB32/A53PvVxNyGvxQoyDiAzXJWTUowVnXM2bFIcYm0UQljN6
-	 qQm8jG/OGWYqWUyIjw//sVyAKb2x/WL1jXPXHMqHadmquFs7AmDCJdWJFuGoIktvcd
-	 F4C44bbUV9AFhv3TWI48GYFVqsVBOaNlybwyDsRZY4q3qKdpSAbmEuQin3LVuQxK3L
-	 7LaMW12caf+y0lJxKBZx6cvCpb23U2DIMslPh2te8EgYpIei9yhjvZ3rPfjAabIw4R
-	 /Zz8YyQ4V9Pcw==
-From: Christian Brauner <brauner@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Christian Brauner <brauner@kernel.org>,
-	linux-fsdevel@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [GIT PULL] vfs fixes
-Date: Thu, 20 Mar 2025 16:22:48 +0100
-Message-ID: <20250320-vfs-fixes-35ad42f81f73@brauner>
-X-Mailer: git-send-email 2.47.2
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ITipPvyU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742503378;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Lk0vo4ySgcjWcYyqJYaGojYKQ2mTUpyWgtMJYQlkL3c=;
+	b=ITipPvyU0es/gAYc/5fZy+eBasaPdbvaubi0L9k/nZwC749dmnQPGHAJVQYLzGcJnHG2rx
+	JF5/KZnMgnnGHfiQvLJwhq1VdHcCwBm4wW0VydfB5kpnU/hfCvsKpl8PvykCje1SQp0gqv
+	yJ4xU8aEgc8hBGeW3i+vq1gk83dPcDM=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-665-N6y2mbzsPwuDPwO-biQMdw-1; Thu, 20 Mar 2025 16:42:57 -0400
+X-MC-Unique: N6y2mbzsPwuDPwO-biQMdw-1
+X-Mimecast-MFC-AGG-ID: N6y2mbzsPwuDPwO-biQMdw_1742503377
+Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-47682f9e7b9so19806391cf.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:42:57 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742503377; x=1743108177;
+        h=mime-version:references:message-id:in-reply-to:subject:cc:to:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Lk0vo4ySgcjWcYyqJYaGojYKQ2mTUpyWgtMJYQlkL3c=;
+        b=lv50dTqwwf25OYJyuijVHwh6UgWOmcvpolNV6rhOZoEygdLUiTjo/DrJ7YydFtacAF
+         2+XLFvQj7ifkJo23JP8zcDoelI3i8gmVbZB89GZkYl/B/ZgmIIRByfnDWFmftOK+CjyZ
+         RBMzlOjh/9jPtIBROJjDXS8duRFlZpuW1Qvmu0/qDUYodDDeuhMMWaiTsaq9mj7DWsOT
+         05/mG+kU0WjpVx32jn/sqn7FQb2W3ukFOeLOnaCy6uqKcmxRdcX1HG1hPXvkRLAQuEJy
+         jamQ8ZyLPW82/xoS6xq6kjRSKyu3ZBQ5B2E+F3XvBHycxs8lKNkOS7TNhUBMT4tFUkeD
+         CIHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVuXTGF7y3lc7t8zglwJRuS/wwrKHTi6mVlBrxkuOW2RRYmLQT/wzCjZAJMq4yvPi0oifwfoby1NjTpfwA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzp+u68KY600x6Uqjo+5DUjbJO5pIljKQ/Miw2MElX5C9QX9hoC
+	odEWR1n1h+9B7xxyUtbX2dhyBG5Xn5D1OB4uNqOvtW3sP75mnawKu0/zUy+VGCTEtoZ1E+knerF
+	b+4hqsUFv0SiqbdTlrhWc2jH3YQ+6OVg3YTrV9rFuSDzXEnkiCjE507SWI3COEg==
+X-Gm-Gg: ASbGncsJUSGXzA9Ey0CgAVelk4T3S3RtDPufy/XvKwco9bzZepmKWC4TM2FKkRmcBCm
+	VUyRgSBnbk+Gdy1Y5XBv/74XO3RfPtt6EI2AZkPvuVdA967URIslOHuNtzYvcahg/YMpmikRgul
+	0zKCm1JJqYBOt+L/SkeRzX13aBMB84PEoUok+m6yQrxyRzS3fsz34j31xMQ7lgOjgkt+jMuMYku
+	XtTrUWbKohPx7oSnK4il2tT4xkDKeNv2c1boyCsp2k8SLNEOGTjExn9DWmznEZ0zL6U0WBa//BH
+X-Received: by 2002:ac8:5ac3:0:b0:477:1f29:e80f with SMTP id d75a77b69052e-4771f29e85fmr1879711cf.4.1742503376810;
+        Thu, 20 Mar 2025 13:42:56 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGMG1UpKj1xwg60B9Ao0w2zuv2Lvk2uR3IbSS3I1F5A4BrQHvbrmH05TUt/jndE9B9USAOUbA==
+X-Received: by 2002:ac8:5ac3:0:b0:477:1f29:e80f with SMTP id d75a77b69052e-4771f29e85fmr1879321cf.4.1742503376308;
+        Thu, 20 Mar 2025 13:42:56 -0700 (PDT)
+Received: from fionn ([76.69.33.37])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d18f7d4sm2876801cf.37.2025.03.20.13.42.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 13:42:55 -0700 (PDT)
+Date: Thu, 20 Mar 2025 16:42:44 -0400 (EDT)
+From: John Kacur <jkacur@redhat.com>
+To: Tomas Glozar <tglozar@redhat.com>
+cc: Steven Rostedt <rostedt@goodmis.org>, linux-trace-kernel@vger.kernel.org, 
+    linux-kernel@vger.kernel.org, Luis Goncalves <lgoncalv@redhat.com>
+Subject: Re: [PATCH 6/6] rtla/tests: Test setting default options
+In-Reply-To: <20250320092500.101385-7-tglozar@redhat.com>
+Message-ID: <72c05486-1b49-242e-478d-e83c367e16fa@redhat.com>
+References: <20250320092500.101385-1-tglozar@redhat.com> <20250320092500.101385-7-tglozar@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2928; i=brauner@kernel.org; h=from:subject:message-id; bh=we7z1WwNJDJljOB6Mz7Zq0uh+GzR+JX7NMU010ZfZsA=; b=owGbwMvMwCU28Zj0gdSKO4sYT6slMaTfMTrLa/Zzu8onbp7T5alTDxtrrQ6u0Wt8wVjG9nBvq 82xuU3hHaUsDGJcDLJiiiwO7Sbhcst5KjYbZWrAzGFlAhnCwMUpABPJsGX4p/n31wG260E290qq PV2s+rVuZ0dqrX241bDD5sgMi4VHBRj+u1WfO3+EtyA3L9rXc2t3wqvbkvuy7ycJ2vzPvbJ3js0 dRgA=
-X-Developer-Key: i=brauner@kernel.org; a=openpgp; fpr=4880B8C9BD0E5106FC070F4F7B3C391EFEA93624
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 
-/* Summary */
 
-This contains a final set of fixes for this cycle:
 
-VFS:
+On Thu, 20 Mar 2025, Tomas Glozar wrote:
 
-- Ensure that the stable offset api doesn't return duplicate directory
-  entries when userspace has to perform the getdents call multiple times
-  on large directories.
+> Add function to test engine to test with pre-set osnoise options, and
+> use it to test whether osnoise period (as an example) is set correctly.
+> 
+> The test works by pre-setting a high period of 10 minutes and stop on
+> threshold. Thus, it is easy to check whether rtla is properly resetting
+> the period to default: if it is, the test will complete on time, since
+> the first sample will overflow the threshold. If not, it will time out.
+> 
+> Signed-off-by: Tomas Glozar <tglozar@redhat.com>
+> ---
+>  tools/tracing/rtla/tests/engine.sh | 26 ++++++++++++++++++++++++++
+>  tools/tracing/rtla/tests/osnoise.t |  6 ++++++
+>  2 files changed, 32 insertions(+)
+> 
+> diff --git a/tools/tracing/rtla/tests/engine.sh b/tools/tracing/rtla/tests/engine.sh
+> index 5db8aa4bc031..b1697b3e3f52 100644
+> --- a/tools/tracing/rtla/tests/engine.sh
+> +++ b/tools/tracing/rtla/tests/engine.sh
+> @@ -61,6 +61,32 @@ check() {
+>  	fi
+>  }
+>  
+> +check_with_osnoise_options() {
+> +	# Do the same as "check", but with pre-set osnoise options.
+> +	# Note: rtla should reset the osnoise options, this is used to test
+> +	# if it indeed does so.
+> +	# Save original arguments
+> +	arg1=$1
+> +	arg2=$2
+> +
+> +	# Apply osnoise options (if not dry run)
+> +	if [ -n "$TEST_COUNT" ]
+> +	then
+> +		[ "$NO_RESET_OSNOISE" == 1 ] || reset_osnoise
+> +		shift
+> +		while shift
+> +		do
+> +			[ "$1" == "" ] && continue
+> +			option=$(echo $1 | cut -d '=' -f 1)
+> +			value=$(echo $1 | cut -d '=' -f 2)
+> +			echo "option: $option, value: $value"
+> +			echo "$value" > "/sys/kernel/tracing/osnoise/$option" || return 1
+> +		done
+> +	fi
+> +
+> +	NO_RESET_OSNOISE=1 check "$arg1" "$arg2"
+> +}
+> +
+>  set_timeout() {
+>  	TIMEOUT="timeout -v -k 15s $1"
+>  }
+> diff --git a/tools/tracing/rtla/tests/osnoise.t b/tools/tracing/rtla/tests/osnoise.t
+> index 86596e547893..e5995c03c790 100644
+> --- a/tools/tracing/rtla/tests/osnoise.t
+> +++ b/tools/tracing/rtla/tests/osnoise.t
+> @@ -16,4 +16,10 @@ check "verify the  --trace param" \
+>  check "verify the --entries/-E param" \
+>  	"osnoise hist -P F:1 -c 0 -r 900000 -d 1M -b 10 -E 25"
+>  
+> +# Test setting default period by putting an absurdly high period
+> +# and stopping on threshold.
+> +# If default period is not set, this will time out.
+> +check_with_osnoise_options "apply default period" \
+> +	"osnoise hist -s 1" period_us=600000000
+> +
+>  test_end
+> -- 
+> 2.48.1
+> 
+> 
+> 
+looks correct
+change "stop" to "stopping" in description
+Reviewed-by: John Kacur <jkacur@redhat.com>
 
-afs:
-
-- Prevent invalid pointer dereference during get_link RCU pathwalk.
-
-fuse:
-
-- Fix deadlock caused by uninitialized rings when using io_uring with fuse.
-
-- Handle race condition when using io_uring with fuse to prevent NULL dereference.
-
-libnetfs:
-
-- Ensure that invalidate_cache is only called if implemented.
-
-- Fix collection of results during pause when collection is offloaded.
-
-- Ensure rolling_buffer_load_from_ra() doesn't clear mark bits.
-
-- Make netfs_unbuffered_read() return ssize_t rather than int.
-
-/* Testing */
-
-gcc version (Debian 14.2.0-8) 14.2.0
-Debian clang version 19.1.4 (1)
-
-No build failures or warnings were observed.
-
-/* Conflicts */
-
-Merge conflicts with mainline
-=============================
-
-No known conflicts.
-
-Merge conflicts with other trees
-================================
-
-No known conflicts.
-
-The following changes since commit 4701f33a10702d5fc577c32434eb62adde0a1ae1:
-
-  Linux 6.14-rc7 (2025-03-16 12:55:17 -1000)
-
-are available in the Git repository at:
-
-  git@gitolite.kernel.org:pub/scm/linux/kernel/git/vfs/vfs tags/vfs-6.14-final.fixes
-
-for you to fetch changes up to f70681e9e6066ab7b102e6b46a336a8ed67812ae:
-
-  libfs: Fix duplicate directory entry in offset_dir_lookup (2025-03-20 14:28:18 +0100)
-
-Please consider pulling these changes from the signed vfs-6.14-final.fixes tag.
-
-Thanks!
-Christian
-
-----------------------------------------------------------------
-vfs-6.14-final.fixes
-
-----------------------------------------------------------------
-Christian Brauner (1):
-      Merge patch series "netfs: Miscellaneous fixes"
-
-David Howells (4):
-      afs: Fix afs_atcell_get_link() to check if ws_cell is unset first
-      netfs: Fix collection of results during pause when collection offloaded
-      netfs: Fix rolling_buffer_load_from_ra() to not clear mark bits
-      netfs: Fix netfs_unbuffered_read() to return ssize_t rather than int
-
-Joanne Koong (1):
-      fuse: fix uring race condition for null dereference of fc
-
-Luis Henriques (1):
-      fuse: fix possible deadlock if rings are never initialized
-
-Max Kellermann (1):
-      netfs: Call `invalidate_cache` only if implemented
-
-Yongjian Sun (1):
-      libfs: Fix duplicate directory entry in offset_dir_lookup
-
- fs/afs/dynroot.c          |  6 +++---
- fs/fuse/dev.c             |  2 +-
- fs/fuse/dev_uring.c       |  4 ++--
- fs/libfs.c                |  2 +-
- fs/netfs/direct_read.c    |  6 +++---
- fs/netfs/read_collect.c   | 18 ++++++++++--------
- fs/netfs/rolling_buffer.c |  4 ----
- fs/netfs/write_collect.c  |  3 ++-
- 8 files changed, 22 insertions(+), 23 deletions(-)
