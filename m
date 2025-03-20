@@ -1,40 +1,58 @@
-Received: from out-189.mta1.migadu.com (out-189.mta1.migadu.com [95.215.58.189])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AA3221DAC
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:35:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B441221D3C7;
+	Thu, 20 Mar 2025 13:36:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742477737; cv=none; b=Va0jBDU5xvfTdfbrrf3s3A+nDxbujir2eqCP47R+Two00NTfiH0kdu7A0IYVJI9siXdceh9aNd0PX+PSqnLY+jsYAbVc3KwJFwZaQiAZj7685AZYVjOlZ4vdN/bJzS7icZCa2gREnqezc4WdY35nDdn26KNnqstTJ+zH7BWy+JE=
+	t=1742477771; cv=none; b=c3weWtJKL9Kq3RIc6cOw5Xe29KZX7PHdDC6HuzkwHKxCKvg3GHHgl/HMLjy3Bm3JsviRiN4INqbGZu9Jj3q1cMi3ODRsMkCwmjyKe5Sn6Uj1rUr6tlmogfaWYHuCmuFq3MmB8wh7vo8SJ9HwK2/+osAv4CSiHXbXSFRJFfJpXP4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742477737; c=relaxed/simple;
-	bh=Vc7ZkIzv8oxEJ6+goncNLTFMvXYEeeE5ytAwHO+0mLI=;
+	s=arc-20240116; t=1742477771; c=relaxed/simple;
+	bh=+nXJuo4PVgrYVzRLdytPzdcjJMPdL09Z4Vn3ItA2wxw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hPRU2lXEBzDjBrzYgdiQe2OigxD8L4PUAZdx+WTCzubj+zApSM1VlyNoRIdDduQ+p+N+pztdzPOIwbSMf5J7dwmFUn50SmMYxhtIhKrSGk7ujxoxDtQOU6YquHTS/wjlC8CYtf0K02/kfgX3GD0LL5SLkK5NeHik3Mio8yzOf9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=B2CDebSS; arc=none smtp.client-ip=95.215.58.189
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=I4EXPYn3TjB6XkPt2sa6s+UuvdZaarYDUu2w+StdvujNCUIRx9y9i5GKqdXe3WUdaaPF7ziMRpSDte0iR51Mskk7MFx7xGL7qAGFHGGBgbF+Nc1TRldB6hN315Q4ylAQZUMALr+fL0Nodt06rxLYUgycGfQjjn6UFobJOg8twHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=r/LwXuCd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="B2CDebSS"
-Date: Thu, 20 Mar 2025 06:35:23 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742477733;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=OZwUz6QZstkoXHa6zv2WBNC3kFaN1c29ScZyOwFuwuQ=;
-	b=B2CDebSSLH2AF34xHfzkuc/XnnMSxIQwb3jQFJyXO4XUzeGS83OBG24MKkE/3yb/Y97Pr+
-	sKnl0AoQmIGtVx2g3chtdV8PXnP4p2IPfe9yt8SngOx0WS5I4vFjqfaTU2R72wn2VNz5L1
-	uEXPH6ZozCXMbaA9/K60DGEragrZKjA=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Oliver Upton <oliver.upton@linux.dev>
-To: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Christoffer Dall <cdall@cs.columbia.edu>, Marc Zyngier <maz@kernel.org>,
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-	Linux Next Mailing List <linux-next@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the kvm-arm tree
-Message-ID: <Z9wZm388iYM0Cnrd@linux.dev>
-References: <20250320203203.1de92b98@canb.auug.org.au>
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="r/LwXuCd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E784AC4CEDD;
+	Thu, 20 Mar 2025 13:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1742477771;
+	bh=+nXJuo4PVgrYVzRLdytPzdcjJMPdL09Z4Vn3ItA2wxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=r/LwXuCd/zhrldkbCAunIsE57gCSgS9itwMKb3ImZMbOZr7o+8D2nQI03PyWDDhxh
+	 OmWcLhT5ToBm/Ddz9ne3xn9vXy96MDIK2gg56dXQFdnqX2j1/0n1Y+2i7Kwcw4t6B5
+	 vjBHDrbmsq+wg3QZhMxh0XkN9HRNLilBO64mikKA=
+Date: Thu, 20 Mar 2025 06:34:51 -0700
+From: Greg KH <gregkh@linuxfoundation.org>
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: changyuanl@google.com, graf@amazon.com, rppt@kernel.org,
+	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org,
+	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com,
+	ojeda@kernel.org, aliceryhl@google.com, masahiroy@kernel.org,
+	akpm@linux-foundation.org, tj@kernel.org, yoann.congal@smile.fr,
+	mmaurer@google.com, roman.gushchin@linux.dev, chenridong@huawei.com,
+	axboe@kernel.dk, mark.rutland@arm.com, jannh@google.com,
+	vincent.guittot@linaro.org, hannes@cmpxchg.org,
+	dan.j.williams@intel.com, david@redhat.com,
+	joel.granados@kernel.org, rostedt@goodmis.org,
+	anna.schumaker@oracle.com, song@kernel.org, zhangguopeng@kylinos.cn,
+	linux@weissschuh.net, linux-kernel@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-mm@kvack.org, tglx@linutronix.de,
+	mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com,
+	x86@kernel.org, hpa@zytor.com, rafael@kernel.org, dakr@kernel.org,
+	bartosz.golaszewski@linaro.org, cw00.choi@samsung.com,
+	myungjoo.ham@samsung.com, yesanishhere@gmail.com,
+	Jonathan.Cameron@huawei.com, quic_zijuhu@quicinc.com,
+	aleksander.lobakin@intel.com, ira.weiny@intel.com,
+	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de,
+	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com,
+	stuart.w.hayes@gmail.com, jgowans@amazon.com, jgg@nvidia.com
+Subject: Re: [RFC v1 2/3] luo: dev_liveupdate: Add device live update
+ infrastructure
+Message-ID: <2025032058-reassure-veneering-0fdb@gregkh>
+References: <20250320024011.2995837-1-pasha.tatashin@soleen.com>
+ <20250320024011.2995837-3-pasha.tatashin@soleen.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -43,46 +61,57 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250320203203.1de92b98@canb.auug.org.au>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250320024011.2995837-3-pasha.tatashin@soleen.com>
 
-Hi,
+On Thu, Mar 20, 2025 at 02:40:10AM +0000, Pasha Tatashin wrote:
+> Introduce a new subsystem within the driver core to enable keeping
+> devices alive during kernel live update. This infrastructure is
+> designed to be registered with and driven by a separate Live Update
+> Orchestrator, allowing the LUO's state machine to manage the save and
+> restore process of device state during a kernel transition.
+> 
+> The goal is to allow drivers and buses to participate in a coordinated
+> save and restore process orchestrated by a live update mechanism. By
+> saving device state before the kernel switch and restoring it
+> immediately after, the device can appear to remain continuously
+> operational from the perspective of the system and userspace.
+> 
+> components introduced:
+> 
+> - `struct dev_liveupdate`: Embedded in `struct device` to track the
+>   device's participation and state during a live update, including
+>   request status, preservation status, and dependency depth.
+> 
+> - `liveupdate()` callback: Added to `struct bus_type` and
+>   `struct device_driver`. This callback receives an enum
+>   `liveupdate_event` to manage device state at different stages of the
+>   live update process:
+>     - LIVEUPDATE_PREPARE: Save device state before the kernel switch.
+>     - LIVEUPDATE_REBOOT: Final actions just before the kernel jump.
+>     - LIVEUPDATE_FINISH: Clean-up after live update.
+>     - LIVEUPDATE_CANCEL: Clean up any saved state if the update is
+>       aborted.
+> 
+> - Sysfs attribute "liveupdate/requested": Added under each device
+>   directory, allowing user to request that a specific device to
+>   participate in live update. I.e. its state is to be preserved
+>   during the update.
 
-On Thu, Mar 20, 2025 at 08:32:03PM +1100, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the kvm-arm tree, today's linux-next build (arm64 defconfig)
-> failed like this:
-> 
-> arch/arm64/kernel/cpu_errata.c: In function 'has_impdef_pmuv3':
-> arch/arm64/kernel/cpu_errata.c:279:38: error: passing argument 1 of 'is_midr_in_range_list' makes pointer from integer without a cast [-Wint-conversion]
->   279 |         return is_midr_in_range_list(read_cpuid_id(), impdef_pmuv3_cpus);
->       |                                      ^~~~~~~~~~~~~~~
->       |                                      |
->       |                                      u32 {aka unsigned int}
-> arch/arm64/kernel/cpu_errata.c:47:53: note: expected 'const struct midr_range *' but argument is of type 'u32' {aka 'unsigned int'}
->    47 | bool is_midr_in_range_list(struct midr_range const *ranges)
->       |                            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
-> arch/arm64/kernel/cpu_errata.c:279:16: error: too many arguments to function 'is_midr_in_range_list'
->   279 |         return is_midr_in_range_list(read_cpuid_id(), impdef_pmuv3_cpus);
->       |                ^~~~~~~~~~~~~~~~~~~~~
-> arch/arm64/kernel/cpu_errata.c:47:6: note: declared here
->    47 | bool is_midr_in_range_list(struct midr_range const *ranges)
->       |      ^~~~~~~~~~~~~~~~~~~~~
-> 
-> Caused by commit
-> 
->   1f561ad4b8f5 ("Merge branch 'kvm-arm64/pv-cpuid' into new-next")
-> 
-> The merge missed fixing up this instance from commit
-> 
->   e1231aacb065 ("arm64: Enable IMP DEF PMUv3 traps on Apple M*")
-> 
-> I have applied the following patch for today (but this should go into
-> the kvm-arm tree (perhaps squashed into the above merge).
+As you can imagine, I have "thoughts" about all of this being added to
+the driver core.  But, before I go off on that, I want to see some real,
+actual, working, patches for at least 3 bus subsystems that correctly
+implement this before I even consider reviewing this.
 
-Thanks Stephen for the fix. Looks like I forgot to push /next when I
-pushed out the tag, addressing now.
+Show us real users please, otherwise any attempt at reviewing this is
+going to just be a waste of our time as I have doubts that this actually
+even works :)
 
-Thanks,
-Oliver
+Also, as you are adding a new user/kernel api, please also point at the
+userspace tools that are written to handle all of this.  As you are
+going to be handling potentially tens of thousands of devices from
+userspace this way, in a single system, real code is needed to even
+consider that this is an acceptable solution.
+
+thanks,
+
+greg k-h
