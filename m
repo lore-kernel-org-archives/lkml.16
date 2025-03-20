@@ -1,97 +1,192 @@
-Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0D571E1308
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:35:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A2611E1308
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:38:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742484909; cv=none; b=VGeBJ6cduFESAxV9m+qHSytQuf0LkZMgOWK2F3vfcqv7NRCwjv80DeZMMRxfNO2bycI6eBwVeylhiBU0VuTeuKb0GWOiw1LRM5MvOV6E4hISqC+QRMpGGgS1+iA1WuBvZZZA6jBdRwvdrG08wTEvNcnOouEWDNXnH2Rka1+2Ktw=
+	t=1742485101; cv=none; b=f2BrsDELD72H+amYPEPMp/a6ypPdNP7IgNgN6wRW3bFVRiuAz0E7+U89zwjVfnujCjgEEzNgHpaxSt4heSxN2eAxunUi5p9RBQJuTFRpI8L2lkTg/6Z3lWK5f/YiKyN3W0lCaDbJdIjBZ0NhRs8IN8ETBGwxJOGPIYsIHkINuO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742484909; c=relaxed/simple;
-	bh=JE7TRJHgKZugbOb+fvx+jb6lPiNMeVF9wnCO2Egr894=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FBOTR+t9pZ57z3rSsvulFHmEwSjaXBb2+9oq51DXlWbCAimFeU64UX9qPFgjTe8+20PHvHCBx6wjtceuZq2ELMVwF8bod7FzTTJJ9g5brZ1ee3tmurSHTBvx779L+4LN+aUVTkkNAX0J/sxcJEQGgt/FDKEK/Ub4mTjNO8R6Nbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com; spf=pass smtp.mailfrom=soleen.com; dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b=aOnq5Wpw; arc=none smtp.client-ip=209.85.160.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=soleen.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=soleen.com
+	s=arc-20240116; t=1742485101; c=relaxed/simple;
+	bh=uRdiTVbQkm4pvbxGi/kkATI+pxb9e8rW3KQUa7Y7oGE=;
+	h=From:In-Reply-To:References:To:Cc:Subject:MIME-Version:
+	 Content-Type:Date:Message-ID; b=aU9RNL2nMmkhYpdsFE2XqlfFAjqqLObHzkjz3o0I3mF8D7CbLrNhRElXoqYaNIVqKxB6vGogkCePNIwoG5gcz1/X8kDJWnVfHsnomO+kB/gfaaPE09TIEMUBDottNE0n9ONjBH0Q5wSnwq0jzVfIx/uHV6JeZTORPqjxGqtwpP0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KffU33hF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=soleen-com.20230601.gappssmtp.com header.i=@soleen-com.20230601.gappssmtp.com header.b="aOnq5Wpw"
-Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-4768f90bf36so9489201cf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:35:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=soleen-com.20230601.gappssmtp.com; s=20230601; t=1742484906; x=1743089706; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=IKafdfY9ZWhVKC7KjhxqxesIH7gCbQGedUOZZuhyaVY=;
-        b=aOnq5WpwW7qCVcdFKpKi3AHKDBExgpjRUKLQTQ0BzEdMbdYY1ugBjXpSj/qazi8yIs
-         GwfHWbxzLSMMumISwDeg2tbpt4dwU2yotiw0UV83TAMOpbiVC4j2yyLfwy7XvpdkjgV/
-         bH1ZkjYPIL1xRFXT2EiAsmGc3+EoTxecoYDmKdHvAgH9MBqem+G8U3FxqGdAUDmIaKNq
-         WVYYFxYMLb6WdJG3Tu+h1cO/e/w+Wf57hlc8AHlIs6jgckGb2FNyxg1GDPCwGCL3B6Au
-         m351kZCP0gUxmveYjdaWkr7jV5gz40Q9cI9MH0DslFDuiGICDWmQ7EWXij5uG4mecCUf
-         CuMw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742484906; x=1743089706;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IKafdfY9ZWhVKC7KjhxqxesIH7gCbQGedUOZZuhyaVY=;
-        b=kX0VWgIc7N6Ks6AQon9MuQErrKCpK4mVHQbQApfxhpcrC4EJ1yV/ZbU6q822osvnVn
-         nCPv2vuLxqYV4njQBXRHfoRjauC4t0AGl8i3CAdHyA2BZW/8vV4oqxRUf5UbkGLukbGe
-         XCBNkCcsuFz2vUhECT1GYIPF0hX/oX1zHPZbnBdedm9IcdMIOboKSbb4aOVHvnHXsj1E
-         wmXHEAOFnc0oiAtX8y5M6VDDE1t6m4efL19EotSPqirNP96tZxyubXmCSuuWFCqxVJ8b
-         n0p3GKiW4VeWOP4ITmyCuuk1wwEXJp8Www3sEm7EGOOMKZAkj3VpMSeRCZsw8HSVWWTz
-         h4YQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVdksQbk5nxD1qLBPC2RtW19MM5ySwKKqfI6gQFwUuGXfklKQZe5J54zq8wyBW+7oag9RPV/8KDMe/lmew=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIWBCdSn/ZjmJ7+4Dz7YMEbcjP7B6aPiOra0YIvVf+X/hS07uT
-	kSc4ojCpETP05HJgHrLQuBqDjmOlCm7yItjODe1TN75nZ9N6zNlMGfO8FCgfEi0yzufzyXBW0SM
-	uCNnXOgs5Du54s1vYXMwEWOT+0RUWWAKhrw6kPA==
-X-Gm-Gg: ASbGncsP0XIwQ1ws9beKEsG4YOQcIeskCYPeDjlOySUsdL9PYc7fW5k8uzi4M+3RqED
-	ZnJxz9V48e2AEHxJOZ5jYDENOHyjQkBmH6nXqmu2SK0FtszTz8b5dReaybPACDsfJZEV1+2nz9V
-	zIY+CF6U3hs6kR2XXL8SW+FII=
-X-Google-Smtp-Source: AGHT+IG23zWMPcn01aREq7x/0tvXcHrTZ0TQmBtFI8pmoBe8ztNU5sWQOWjuGUrVzDIlMW9fQ4VgnR1HuRZz41Vr2us=
-X-Received: by 2002:a05:622a:5a95:b0:476:6189:4f40 with SMTP id
- d75a77b69052e-477083fa813mr116439551cf.45.1742484906584; Thu, 20 Mar 2025
- 08:35:06 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KffU33hF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742485098;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=jfSEIrY/qgegWJTIRwrY+ragQR0uVn2TNvXZB6uD0e8=;
+	b=KffU33hFmEoyeRu6j9qcSWiPUc78PvHBgNzI1FejqfOd7XqW6CWzGgy7yjondKVaejfnMo
+	JELOedyAxgp1ALVtoCxBp/JF/0UiIPcdvY7yHWHI3z/v+3+y8TTndHzoLRzAiUWIPaiHqq
+	F8im2f/Wc+8Uh2+l7FVI/c6AusGumDw=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-41-7-UAd8ssNKi_alG6mQXI0A-1; Thu,
+ 20 Mar 2025 11:38:15 -0400
+X-MC-Unique: 7-UAd8ssNKi_alG6mQXI0A-1
+X-Mimecast-MFC-AGG-ID: 7-UAd8ssNKi_alG6mQXI0A_1742485093
+Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.15])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B138E180AF4C;
+	Thu, 20 Mar 2025 15:38:12 +0000 (UTC)
+Received: from warthog.procyon.org.uk (unknown [10.42.28.61])
+	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id BB3361955BFE;
+	Thu, 20 Mar 2025 15:38:09 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+	Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+	Kingdom.
+	Registered in England and Wales under Company Registration No. 3798903
+From: David Howells <dhowells@redhat.com>
+In-Reply-To: <4c30dae500352e31a47ecfa34d60f4a8c015297e.camel@ibm.com>
+References: <4c30dae500352e31a47ecfa34d60f4a8c015297e.camel@ibm.com> <20250313233341.1675324-1-dhowells@redhat.com> <20250313233341.1675324-34-dhowells@redhat.com>
+To: Viacheslav Dubeyko <Slava.Dubeyko@ibm.com>
+Cc: dhowells@redhat.com, Alex Markuze <amarkuze@redhat.com>,
+    "slava@dubeyko.com" <slava@dubeyko.com>,
+    "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+    "idryomov@gmail.com" <idryomov@gmail.com>,
+    "jlayton@kernel.org" <jlayton@kernel.org>,
+    "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+    "ceph-devel@vger.kernel.org" <ceph-devel@vger.kernel.org>,
+    "dongsheng.yang@easystack.cn" <dongsheng.yang@easystack.cn>,
+    "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH 33/35] ceph: Use netfslib [INCOMPLETE]
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320024011.2995837-1-pasha.tatashin@soleen.com> <2025032015-urgency-partake-9dc1@gregkh>
-In-Reply-To: <2025032015-urgency-partake-9dc1@gregkh>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 20 Mar 2025 11:34:29 -0400
-X-Gm-Features: AQ5f1JpJmSgK_4q12OaIr3YC3SPbsDRr7KPaQPliJnG6M1-RyT2N3BASX8hSa6o
-Message-ID: <CA+CK2bD2tfMXT7BDHs7p0NzPYJQLkATEXh6wUeP9P7HtY+e2iw@mail.gmail.com>
-Subject: Re: [RFC v1 0/3] Live Update Orchestrator
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: changyuanl@google.com, graf@amazon.com, rppt@kernel.org, 
-	rientjes@google.com, corbet@lwn.net, rdunlap@infradead.org, 
-	ilpo.jarvinen@linux.intel.com, kanie@linux.alibaba.com, ojeda@kernel.org, 
-	aliceryhl@google.com, masahiroy@kernel.org, akpm@linux-foundation.org, 
-	tj@kernel.org, yoann.congal@smile.fr, mmaurer@google.com, 
-	roman.gushchin@linux.dev, chenridong@huawei.com, axboe@kernel.dk, 
-	mark.rutland@arm.com, jannh@google.com, vincent.guittot@linaro.org, 
-	hannes@cmpxchg.org, dan.j.williams@intel.com, david@redhat.com, 
-	joel.granados@kernel.org, rostedt@goodmis.org, anna.schumaker@oracle.com, 
-	song@kernel.org, zhangguopeng@kylinos.cn, linux@weissschuh.net, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-mm@kvack.org, 
-	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, 
-	dave.hansen@linux.intel.com, x86@kernel.org, hpa@zytor.com, rafael@kernel.org, 
-	dakr@kernel.org, bartosz.golaszewski@linaro.org, cw00.choi@samsung.com, 
-	myungjoo.ham@samsung.com, yesanishhere@gmail.com, Jonathan.Cameron@huawei.com, 
-	quic_zijuhu@quicinc.com, aleksander.lobakin@intel.com, ira.weiny@intel.com, 
-	andriy.shevchenko@linux.intel.com, leon@kernel.org, lukas@wunner.de, 
-	bhelgaas@google.com, wagi@kernel.org, djeffery@redhat.com, 
-	stuart.w.hayes@gmail.com, jgowans@amazon.com, jgg@nvidia.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3174102.1742485088.1@warthog.procyon.org.uk>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 20 Mar 2025 15:38:08 +0000
+Message-ID: <3174103.1742485088@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
 
-> > From: Pasha Tatashin <tatashin@google.com>
->
-> Note, this does not match the author and signed-off-by on the actual
-> patches themselves.  Please use your google.com email address to
-> send/review/work on this.
+Viacheslav Dubeyko <Slava.Dubeyko@ibm.com> wrote:
 
-This  was accidental, I meant to use pasha.tatashin@soleen.com here, I
-use this e-mail for upstream work.
+> > +		fret =3D ceph_fscrypt_decrypt_pages(inode, &page[pgidx],
+> > +						 off + pgsoff, ext->len);
+> > +		dout("%s: [%d] 0x%llx~0x%llx fret %d\n", __func__, i,
+> > +				ext->off, ext->len, fret);
+> > +		if (fret < 0) {
+> =
+
+> Possibly, I am missing some logic here. But do we really need to introdu=
+ce fret?
+> Why we cannot user ret here? =
+
+> =
+
+> > +			if (ret =3D=3D 0)
+> > +				ret =3D fret;
+> > +			break;
+> > +		}
+> > +		ret =3D pgsoff + fret;
+
+Because ret holds the amount of data so far decrypted.  We should only ret=
+urn
+an error if we didn't decrypt any (ie. ret =3D=3D 0 at the time of error).
+
+> > +static int ceph_init_request(struct netfs_io_request *rreq, struct fi=
+le *file)
+> > +{
+> > +	struct ceph_io_request *priv =3D container_of(rreq, struct ceph_io_r=
+equest, rreq);
+> > +	struct inode *inode =3D rreq->inode;
+> > +	struct ceph_client *cl =3D ceph_inode_to_client(inode);
+> > +	struct ceph_fs_client *fsc =3D ceph_inode_to_fs_client(inode);
+> > +	int got =3D 0, want =3D CEPH_CAP_FILE_CACHE;
+> > +	int ret =3D 0;
+> > +
+> > +	rreq->rsize =3D 1024 * 1024;
+> =
+
+> Why do we hardcoded rreq->rsize value?
+> =
+
+> struct ceph_mount_options {
+> 	unsigned int flags;
+> =
+
+> 	unsigned int wsize;            /* max write size */
+> 	unsigned int rsize;            /* max read size */
+> 	unsigned int rasize;           /* max readahead */
+> 	unsigned int congestion_kb;    /* max writeback in flight */
+> 	unsigned int caps_wanted_delay_min, caps_wanted_delay_max;
+> 	int caps_max;
+> 	unsigned int max_readdir;       /* max readdir result (entries) */
+> 	unsigned int max_readdir_bytes; /* max readdir result (bytes) */
+> =
+
+> 	bool new_dev_syntax;
+> =
+
+> 	/*
+> 	 * everything above this point can be memcmp'd; everything below
+> 	 * is handled in compare_mount_options()
+> 	 */
+> =
+
+> 	char *snapdir_name;   /* default ".snap" */
+> 	char *mds_namespace;  /* default NULL */
+> 	char *server_path;    /* default NULL (means "/") */
+> 	char *fscache_uniq;   /* default NULL */
+> 	char *mon_addr;
+> 	struct fscrypt_dummy_policy dummy_enc_policy;
+> };
+> =
+
+> Why we don't use fsc->mount_options->rsize?
+
+Actually, I should get rid of rreq->rsize since there's now a function,
+->prepare_read() to deal with this.
+
+> > +	loff_t limit =3D max(i_size_read(inode), fsc->max_file_size);
+> =
+
+> Do we need to take into account the quota max bytes here?
+
+Could be.
+
+> > +/*
+> > + * Size of allocations for default netfs_io_(sub)request object slabs=
+ and
+> > + * mempools.  If a filesystem's request and subrequest objects fit wi=
+thin this
+> > + * size, they can use these otherwise they must provide their own.
+> > + */
+> > +#define NETFS_DEF_IO_REQUEST_SIZE (sizeof(struct netfs_io_request) + =
+24)
+> =
+
+> Why do we hardcode 24 here? What's about named constant? And why namely =
+24?
+> =
+
+> > +#define NETFS_DEF_IO_SUBREQUEST_SIZE (sizeof(struct netfs_io_subreque=
+st) + 16)
+> =
+
+> The same question about 16.
+
+See the comment.  24 allows three extra words and 16 two.  Actually, I sho=
+uld
+probably express it as a multiple of sizeof(long).  But this allows netfsl=
+ib
+to allocate (sub)request structs for ceph from the default mempool by allo=
+wing
+a little bit of extra space.
+
+David
+
