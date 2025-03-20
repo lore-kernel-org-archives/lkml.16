@@ -1,167 +1,134 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5E0226CE5;
-	Thu, 20 Mar 2025 18:05:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA57229B10
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:05:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742493946; cv=none; b=c1Z55ZRnPT4AXQFVeSFXPN8IBnDN0f9eGStu7j/y8b4z/mbWAKOaYXgciL1WtN3QG1KIs7oMQuxQc9mXDizGQeI8WtlvV2ibpHhGBazRfL3ug7/35EoVh9Ykj0f486zuk3ZvPPo82MpCkCan90K4TPi78TdfEHx3ZdaLoF/Ir/g=
+	t=1742493948; cv=none; b=HxWIFsQgypVpL0SOoYTgyVG4SY1co6JXPZzCmGQcLb30OnfddYcUlfKVXJCWGSrofrddms58OZZmxJ0A25GXfYd1lyLqaaKGCyuXXkNj/5jOWVw7470+q2IyYAFkBL8OfuWkrabISHLXjeAdasu7NpRZdnWr1PogSwYwTXKnCT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742493946; c=relaxed/simple;
-	bh=o+yL9tkFoVdL13trPIrqDxF2bvZz2EoXjvJ1ME/Cw84=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YPiSqhQgdaJASaZht4B9SmDc6VUCvQFeIPPX9PrqfNw0PUCf1T+Dlyb+9wWSK7SVZFgvI+EI1dIuwizqcy6Nj5YBEGH8sJWVJrlEx9vPod1R+a1frsIhGtNgrhRxmYQZS63QmCXmBP5RrNe0vnYFFK6nk8kI12n+6k6V45yC6rM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZJYMR6rbcz6K9Lg;
-	Fri, 21 Mar 2025 02:02:43 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (unknown [7.182.85.172])
-	by mail.maildlp.com (Postfix) with ESMTPS id 794921405A0;
-	Fri, 21 Mar 2025 02:05:42 +0800 (CST)
-Received: from P_UKIT01-A7bmah.china.huawei.com (10.48.156.145) by
- frapeml500007.china.huawei.com (7.182.85.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Thu, 20 Mar 2025 19:05:40 +0100
-From: <shiju.jose@huawei.com>
-To: <linux-cxl@vger.kernel.org>, <dan.j.williams@intel.com>,
-	<dave@stgolabs.net>, <jonathan.cameron@huawei.com>, <dave.jiang@intel.com>,
-	<alison.schofield@intel.com>, <vishal.l.verma@intel.com>,
-	<ira.weiny@intel.com>, <david@redhat.com>, <Vilas.Sridharan@amd.com>
-CC: <linux-edac@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
-	<linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>, <bp@alien8.de>,
-	<tony.luck@intel.com>, <rafael@kernel.org>, <lenb@kernel.org>,
-	<mchehab@kernel.org>, <leo.duran@amd.com>, <Yazen.Ghannam@amd.com>,
-	<rientjes@google.com>, <jiaqiyan@google.com>, <Jon.Grimm@amd.com>,
-	<dave.hansen@linux.intel.com>, <naoya.horiguchi@nec.com>,
-	<james.morse@arm.com>, <jthoughton@google.com>, <somasundaram.a@hpe.com>,
-	<erdemaktas@google.com>, <pgonda@google.com>, <duenwen@google.com>,
-	<gthelen@google.com>, <wschwartz@amperecomputing.com>,
-	<dferguson@amperecomputing.com>, <wbs@os.amperecomputing.com>,
-	<nifan.cxl@gmail.com>, <yazen.ghannam@amd.com>, <tanxiaofei@huawei.com>,
-	<prime.zeng@hisilicon.com>, <roberto.sassu@huawei.com>,
-	<kangkang.shen@futurewei.com>, <wanghuiqiang@huawei.com>,
-	<linuxarm@huawei.com>, <shiju.jose@huawei.com>
-Subject: [PATCH v2 5/8] cxl/mbox: Add support for PERFORM_MAINTENANCE mailbox command
-Date: Thu, 20 Mar 2025 18:04:42 +0000
-Message-ID: <20250320180450.539-6-shiju.jose@huawei.com>
-X-Mailer: git-send-email 2.43.0.windows.1
-In-Reply-To: <20250320180450.539-1-shiju.jose@huawei.com>
-References: <20250320180450.539-1-shiju.jose@huawei.com>
+	s=arc-20240116; t=1742493948; c=relaxed/simple;
+	bh=eSRjWYWO4yxvYztB0ncS8vovMEhY+BbOB3dCMJ7BgSw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=o/EQQSuL6uwkNqB7MH5/J+c4ceFn1/MVwGGwWAwsXd0CEV9K50A/noqkfSHTTVDtGWbDmvA+vCFsXyogWPvqKHlW9a7IKcBfcoEQP+5gRW2VQ7ou+N2e4QbK+UWMKJZMMlwkqP1ZvFGIV+R6qIeOonfQHz+6YWyZzGNPBtpdZhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=ajRjGUQX; arc=none smtp.client-ip=209.85.214.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="ajRjGUQX"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2243803b776so30415885ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:05:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1742493946; x=1743098746; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JM/OqN7Oy0ivRWEL6tEbo+CUHh5BBsQYtWvf3MvSx6w=;
+        b=ajRjGUQXyGVvsgtPaeQJmQu+Wsg70IKSHxrTMYZBn6eRX1UAm6V2gHcmTuZTV9REPV
+         1up0vNoQjtiVlGu4f207Mfv9yyryEWL08XFDtXjT9e/BencAUtujgH9hRlNWy7QpdhtN
+         dLPMa/+rqjHN+huFyT6bpvFUP2OUnRGCi/5Po=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742493946; x=1743098746;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JM/OqN7Oy0ivRWEL6tEbo+CUHh5BBsQYtWvf3MvSx6w=;
+        b=Evbk3sO7BwKGrVPu6Lr9XIOwfyEIf1GYwUS3RIONdVr2Wv8BTzswYzT+RT7BF6i7BH
+         ivHRG6NXhpad/VD/vkEjBihVHS/G65eHw0SPRM/saXoPFAZGK7rkxJyo+ueMxrGz/wcf
+         GqpHhqXlYxSfIlVJDfBi0sOlbCBBasD3QyhcBawq9JAeO1xpv1FPUQiK7AHNZlmSgcAW
+         xdLWZ6QVW7u2pCvy5D4hYKtFyH8hc7PGV0CbWaR7GPJ791X3oPcD9cyZ6r7ZK7AC5uxI
+         JUkMe4n4e4gW+X1nh+oEHrM/ZgyEWspnK8oKaDokvvFO9YE5snJ4aGlKOlNyWEmimOA+
+         rfig==
+X-Forwarded-Encrypted: i=1; AJvYcCXLkgGiUkJkFmeqw/hWm3j/hEnSxfvj/UsCUcJKojkRWKnVhjq3xtg9es3Ev/fS1xG2l/Pp7V7l4I+G9MU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzO5P/nMvXXi8X1dFMN8cOtLCFqiFGdFyHWyTyzWbZXQvGsFM7T
+	7KkHVYMXb4ZhotLjApbLXo3tTcTtlpfuZha86fVlGYXhgK87uYgUMyXrbiEO4V4=
+X-Gm-Gg: ASbGncvAxvE+5aSQAx52JsUr6G3I7l1tO9p6speNuyqIoC7lhnrnKCcuGYiNRROoSBT
+	cpxT5j5RXeOWtIBJ2lcsSqDcJbyBGGiz27nnglA4hJxI3HCIpthi1k7OqiPFR1vh5gNJIcDssTk
+	JBwxM4j3/jFkZgIm3Vv+vb0vNZIpcOEFOXFiBj5zSXPjfyGraC1QEmOygZYj0N83m9IBU4eiiY6
+	o8LD/zt6K7MB0BxR36nNQDL89PS2vqImUqJLRmjffiQ2vBEEyQB6PuFRlZw8SztRKz9/yg1wyjB
+	J1WjT0LI1HV8IM5sBMNY5PPFOhihD88ueAxDGWyPxOlPXnbEr+ZQ12yUkTcph1EsHa/yHF43toi
+	/fk6GomRWf8BY4hEi
+X-Google-Smtp-Source: AGHT+IFkG9txbev4JCYggmYZhNgAMBuFDffjPJdvIx8M6hPHeRaY1eSW3KdhJ6WDYT270hXE0myOaQ==
+X-Received: by 2002:a05:6a00:2d84:b0:736:4e02:c543 with SMTP id d2e1a72fcca58-739059a3471mr465905b3a.9.1742493945615;
+        Thu, 20 Mar 2025 11:05:45 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390618f1d1sm87958b3a.173.2025.03.20.11.05.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 11:05:45 -0700 (PDT)
+Date: Thu, 20 Mar 2025 11:05:41 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, kuba@kernel.org,
+	shuah@kernel.org, sdf@fomichev.me, mingo@redhat.com, arnd@arndb.de,
+	brauner@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
+	jolsa@kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [RFC -next 00/10] Add ZC notifications to splice and sendfile
+Message-ID: <Z9xY9d2hOc6hOlda@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Christoph Hellwig <hch@infradead.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, asml.silence@gmail.com,
+	linux-fsdevel@vger.kernel.org, edumazet@google.com,
+	pabeni@redhat.com, horms@kernel.org, linux-api@vger.kernel.org,
+	linux-arch@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	kuba@kernel.org, shuah@kernel.org, sdf@fomichev.me,
+	mingo@redhat.com, arnd@arndb.de, brauner@kernel.org,
+	akpm@linux-foundation.org, tglx@linutronix.de, jolsa@kernel.org,
+	linux-kselftest@vger.kernel.org
+References: <20250319001521.53249-1-jdamato@fastly.com>
+ <Z9p6oFlHxkYvUA8N@infradead.org>
+ <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
+ <Z9usmpFw7y75eOhk@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: lhrpeml100003.china.huawei.com (7.191.160.210) To
- frapeml500007.china.huawei.com (7.182.85.172)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9usmpFw7y75eOhk@infradead.org>
 
-From: Shiju Jose <shiju.jose@huawei.com>
+On Wed, Mar 19, 2025 at 10:50:18PM -0700, Christoph Hellwig wrote:
+> On Wed, Mar 19, 2025 at 08:32:19AM -0700, Joe Damato wrote:
+> > See the docs on MSG_ZEROCOPY [1], but in short when a user app calls
+> > sendmsg and passes MSG_ZEROCOPY a completion notification is added
+> > to the error queue. The user app can poll for these to find out when
+> > the TX has completed and the buffer it passed to the kernel can be
+> > overwritten.
+> 
+> Yikes.  That's not just an ugly interface, but something entirely
+> specific to sockets and incompatible with all other asynchronous I/O
+> interfaces.
 
-Add support for PERFORM_MAINTENANCE mailbox command.
+I don't really know but I would assume it was introduced, as Jens
+said, as a work-around long before other completion mechanisms
+existed.
 
-CXL spec 3.2 section 8.2.10.7.1 describes the Perform Maintenance command.
-This command requests the device to execute the maintenance operation
-specified by the maintenance operation class and the maintenance operation
-subclass.
+> > > and why aren't you simply plugging this into io_uring and generate
+> > > a CQE so that it works like all other asynchronous operations?
+> > 
+> > I linked to the iouring work that Pavel did in the cover letter.
+> > Please take a look.
+> 
+> Please write down what matters in the cover letter, including all the
+> important tradeoffs.
 
-Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Reviewed-by: Dave Jiang <dave.jiang@intel.com>
-Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
----
- drivers/cxl/core/mbox.c | 34 ++++++++++++++++++++++++++++++++++
- drivers/cxl/cxlmem.h    | 17 +++++++++++++++++
- 2 files changed, 51 insertions(+)
+OK, I will enhance the cover letter for the next submission. I had
+originally thought I'd submit something officially, but I think I'll
+probably submit another RFC with some of the changes I've made based
+on the discussion with Jens.
 
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index d72764056ce6..19d46a284650 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -824,6 +824,40 @@ static const uuid_t log_uuid[] = {
- 	[VENDOR_DEBUG_UUID] = DEFINE_CXL_VENDOR_DEBUG_UUID,
- };
- 
-+int cxl_do_maintenance(struct cxl_mailbox *cxl_mbox,
-+		       u8 class, u8 subclass,
-+		       void *data_in, size_t data_in_size)
-+{
-+	struct cxl_memdev_maintenance_pi {
-+		struct cxl_mbox_do_maintenance_hdr hdr;
-+		u8 data[];
-+	}  __packed;
-+	struct cxl_mbox_cmd mbox_cmd;
-+	size_t hdr_size;
-+
-+	struct cxl_memdev_maintenance_pi *pi __free(kfree) =
-+					kmalloc(cxl_mbox->payload_size, GFP_KERNEL);
-+	pi->hdr.op_class = class;
-+	pi->hdr.op_subclass = subclass;
-+	hdr_size = sizeof(pi->hdr);
-+	/*
-+	 * Check minimum mbox payload size is available for
-+	 * the maintenance data transfer.
-+	 */
-+	if (hdr_size + data_in_size > cxl_mbox->payload_size)
-+		return -ENOMEM;
-+
-+	memcpy(pi->data, data_in, data_in_size);
-+	mbox_cmd = (struct cxl_mbox_cmd) {
-+		.opcode = CXL_MBOX_OP_DO_MAINTENANCE,
-+		.size_in = hdr_size + data_in_size,
-+		.payload_in = pi,
-+	};
-+
-+	return cxl_internal_send_cmd(cxl_mbox, &mbox_cmd);
-+}
-+EXPORT_SYMBOL_NS_GPL(cxl_do_maintenance, "CXL");
-+
- /**
-  * cxl_enumerate_cmds() - Enumerate commands for a device.
-  * @mds: The driver data for the operation
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 11fa98cc4d9c..7ab257e0c85e 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -527,6 +527,7 @@ enum cxl_opcode {
- 	CXL_MBOX_OP_GET_SUPPORTED_FEATURES	= 0x0500,
- 	CXL_MBOX_OP_GET_FEATURE		= 0x0501,
- 	CXL_MBOX_OP_SET_FEATURE		= 0x0502,
-+	CXL_MBOX_OP_DO_MAINTENANCE	= 0x0600,
- 	CXL_MBOX_OP_IDENTIFY		= 0x4000,
- 	CXL_MBOX_OP_GET_PARTITION_INFO	= 0x4100,
- 	CXL_MBOX_OP_SET_PARTITION_INFO	= 0x4101,
-@@ -827,6 +828,19 @@ enum {
- 	CXL_PMEM_SEC_PASS_USER,
- };
- 
-+/*
-+ * Perform Maintenance CXL 3.2 Spec 8.2.10.7.1
-+ */
-+
-+/*
-+ * Perform Maintenance input payload
-+ * CXL rev 3.2 section 8.2.10.7.1 Table 8-117
-+ */
-+struct cxl_mbox_do_maintenance_hdr {
-+	u8 op_class;
-+	u8 op_subclass;
-+}  __packed;
-+
- int cxl_internal_send_cmd(struct cxl_mailbox *cxl_mbox,
- 			  struct cxl_mbox_cmd *cmd);
- int cxl_dev_state_identify(struct cxl_memdev_state *mds);
-@@ -898,4 +912,7 @@ struct cxl_hdm {
- struct seq_file;
- struct dentry *cxl_debugfs_create_dir(const char *dir);
- void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
-+int cxl_do_maintenance(struct cxl_mailbox *cxl_mbox,
-+		       u8 class, u8 subclass,
-+		       void *data_in, size_t data_in_size);
- #endif /* __CXL_MEM_H__ */
--- 
-2.43.0
+Namely: dropping sendfile2 completely and plumbing the bits through
+for splice. I'll wait a bit to hear what Jens thinks about the
+SO_ZEROCOPY thing (basically: if a network socket has that option
+set, maybe the existing sendfile can generate error queue
+completions without needing a separate system call?).
 
+I agree overall that sendfile2 or sendmsg2 or whatever else could
+likely be built differently now that better interfaces and
+mechanisms exist in the kernel - but I still think there's room to
+improve existing system calls so they can be used safely.
