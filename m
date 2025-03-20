@@ -1,346 +1,268 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 028401E832E;
-	Thu, 20 Mar 2025 08:19:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24A0679C0;
+	Thu, 20 Mar 2025 08:20:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742458782; cv=none; b=LD+nmqDXna86zPo6XbbNTuKltW9MDZuHtYDn853pinKvjQAAc70Z72vMUmnZ3qeUncXy+FYThiYS3hP5CyH0Ftb8H4AB+uqioKyGvDcK83l5PcWeBwBR5HnsHH7gaCnjacLRqPS/+gtjupXzfbvPZNw5kCH+C0edZepH5DMyla8=
+	t=1742458845; cv=none; b=AJVSjp0EgzpNEvw8ozeu7K7Le6Md1Xp/1/3mMxfwcSRlzE4/yQHPyvoIEVo5AZI+sR60CA1N6BDQUkeCtgdIQPdQJQgAmDhvBQqfEdTMBG+2dn7Qw8d0KHl2xrr9n++hrbB8koLkH/hHNg02pwg8V4TYIhM9KYwGiELIGmfPcvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742458782; c=relaxed/simple;
-	bh=wFfbaNg3wsvfFKP1ifvMbGHH7f1HN+6srFuJIoWJvuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cBQ+bADgkYZRoT2SsN6gT23esnKWGk4L9VIKSp9SE9JyefYw43Z0pSDG9suQP0+Q20D+b2UDQsGSeRtZllOOEKTbX8qdoIrVE4FOTPFcVXHKTxFfhw+NemuKTMqZ4mCFLIMn78LeWO8buccgIVHRu1q5LgmL7HKM9aKtIbVaD/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ik5lQE5Q; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742458845; c=relaxed/simple;
+	bh=ChysvofED6/qp4H6ckCX8CPGxxeohDJRgBl7V7bQEk8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=m9n9akBfwapWOEOwEsWiwk/ER4x5gfR+tvuPY988KDjf1WwBBByGpHAMdzCiro1ycKT7i9mPlbog0J10jPbcvITM+DG1DcFDUVVlr6tdWg7qWqFKXpFCgYtWHC2emzvp+C1sw0FbUxo1L3KyCXjNGHCOpLbmRlEbxpuusyLWzjY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nR0vIyLX; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ik5lQE5Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742458781; x=1773994781;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=wFfbaNg3wsvfFKP1ifvMbGHH7f1HN+6srFuJIoWJvuU=;
-  b=ik5lQE5Q/aSq37WTtX7zy+rcgeE+Dp2QtTfdb9cMrRbKQSHsLNIyr2yE
-   +MhwTo5DU7gimBX0jkpvgLT2qVPfnmZem30kIroXN32tasciZQ+R7/I2A
-   FBOZqgG5FpqdwM8KkYQD9L+YY0kdgmnNlkppt/LO0gVD75fXzyiRUQ6hQ
-   4BrHQ9czM2/PX7a1FvcXo3Gk0WLuM2gVBetTBaluJh7r0rHCJskhqHv1I
-   J8cZKNh2k0UjH9F12MVDtzFzTd0VXmDnPDYa/G8OAC1dV8utocyDqL0L4
-   /fu0ARJ72Nyi1dPExfmIwAsNwYx4Wi3lopxrRA1PLKTqQHiT9vfcv2Obj
-   w==;
-X-CSE-ConnectionGUID: pYwug0mnSSGARAjcVcOA1w==
-X-CSE-MsgGUID: fVBYHjWYRhmtj2aK4IKN+w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="31261489"
-X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
-   d="scan'208";a="31261489"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 01:19:40 -0700
-X-CSE-ConnectionGUID: BvTRZpolTnSFDmQf10zL9Q==
-X-CSE-MsgGUID: bN7SLZmNQtOcYaDFtBLqqQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
-   d="scan'208";a="122954458"
-Received: from ysun46-mobl1.sh.intel.com ([10.239.161.21])
-  by orviesa010.jf.intel.com with ESMTP; 20 Mar 2025 01:19:38 -0700
-From: Yi Sun <yi.sun@intel.com>
-To: dave.jiang@intel.com,
-	anil.s.keshavamurthy@intel.com,
-	vkoul@kernel.org,
-	dmaengine@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: gordon.jin@intel.com,
-	andriy.shevchenko@intel.com,
-	yi.sun@linux.intel.com,
-	Yi Sun <yi.sun@intel.com>
-Subject: [PATCH] dma/idxd: Remove __packed from structures
-Date: Thu, 20 Mar 2025 16:18:07 +0800
-Message-ID: <20250320081807.3688123-1-yi.sun@intel.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nR0vIyLX"
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-30bd11bfec6so5595931fa.0;
+        Thu, 20 Mar 2025 01:20:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742458841; x=1743063641; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qcBMPfg10XMsOOKKKa4T9Z75+9TBcciaNtXWqiNMB48=;
+        b=nR0vIyLXkcstFYYEDevlVVa+W07TW8ZT8beyauOzMqWAIfxLsRExDGzg5TSy4Vv7xe
+         dwmBpshgdOJn0vTZZN/LRN2AEGaZxVOS6KvDqPIxkFzhDnlKG4aGPEwajLKUFTSsx3uW
+         LeoIE6S/cKzX01I7VJUgPGhtDHct8dJStQPkjzkUeXXD4z/ZBD8B8rjkqz/EgiTth+Wf
+         fyYx6sJai6i0f5QiSYUnmR70+qqUXpwsgDTRvvCNw1CwglON8pvoNzj3tUUS3PY+IY59
+         Vn2gqQ+deuxnZUa/uU7DJtY7LYrbkuRDVqYoLNfKBR0P9TbU/G6NnNA7HnIWtkvFdE1V
+         GHhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742458841; x=1743063641;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qcBMPfg10XMsOOKKKa4T9Z75+9TBcciaNtXWqiNMB48=;
+        b=YYCxGwedfCFLEBlaOPOn2ZqiZxkvo67/oQG+jBF+JDfoxWWp11Wucpj2UY0QOweTpN
+         wd2NImewb5Be1WLnHhNue1oIyoxpO1r+CzVwwLodE2W+gVMAUUqJUYlkepvttMvaAw+c
+         LN/S9S+W+7VLqJSmrr+nJXfMgbCA6yDlKWxEz87VCU7A73ZIZKHkI2K2QX/cmPGI56le
+         hgG6yJs+yJG7qhw3WpHxaxcshLTdltCsPUMEHCnRzoiAeCO0dTi30bWPFzpdjE4MnXDR
+         KEQtQZ3nfFmTbI4/86QzhCYpFn8TSKhwIvRhw7dy9uw/qbJoqtJOu2Ho1d/+/NyT++7f
+         6Fbg==
+X-Forwarded-Encrypted: i=1; AJvYcCWKN9RsAPtDuJCP8CatxvnP3yTMe3f0k5LVIpgDJVMo8xOeDkh/n8NtMLxzSRKSq5rloCCezughhqfy@vger.kernel.org, AJvYcCWQ/TVbUzzxjLBQ6EF2NoqBQsXiOT2f4IZn4bOZl41KYQ0LcyHNyCns3eMmHVPaQWH9KDyTX59BJTS2rg==@vger.kernel.org, AJvYcCWyeT0cBEysUyy1YY54z4MBoatH8bRsmwB9NBdlSBxsEZpRGM/gcy1GAfMGQCD5k1NcR/CYrjlEZgu5@vger.kernel.org, AJvYcCXHsFG2eFKvvnoDiDc93QSYNSz3y5JaH3eg8perqpaDbR1eHXIFCaPFM/7Hnj07m1CXC6HVjb30wP/p+bCzHycjWP8=@vger.kernel.org, AJvYcCXU1xPW0Jl2AR0iOzROwhpiCUVLE2W/e/waUeKLw3YunOkta7+rB3kftXkttf+Kl3v6IJbUHjbE3T5TJgIL@vger.kernel.org
+X-Gm-Message-State: AOJu0YzjlP1QHkFA6E8bKruvh5gOJAY1jiOtZEBPLpAGoNP7QKCWKOGP
+	Zc2E1alSvGY7TSzy4LL6KiuG7tYnya2SOUl+9aY/tIxWCWVmYCar
+X-Gm-Gg: ASbGncvEXA3OrxT/uuhsyp8RebLAV7MCWxyrNPFXciV+uuRreQvcgsgzjI0hwOQZS4+
+	XehkEMJ5fXUGbrOgQDPtoD7+xbj0PoLmmFRqcFu3+7/6B5hAnvsjQGIbj+paRb563zrHwSc3bLZ
+	FPBKF4Wt4CB2YTiQSK4KccE06pD6kMjfzzaPLeSxECoLHV/fsQsdTjqjd51yUDh+ShtHzHwjg2s
+	xJQT3OpJ1y2iyGagdvxtPyIOti/GvGTW1fXhghiWrdPgERkGSXaTHWcnHDCVEbqRM77cOKyEhV/
+	+iVhvaeQnIPu+EyPeHczy1DKBER2JuNBKnl0YLAFcRQxvv5dRVk=
+X-Google-Smtp-Source: AGHT+IEB7xNRabtoDCrqpRPpYSHi1cLEIKy0GXAIlYchpxKvuhgZzcxQviLJ3YHh+2p0B1Ru98dxhA==
+X-Received: by 2002:a2e:bc0f:0:b0:304:4e03:f9d9 with SMTP id 38308e7fff4ca-30d6a44cc9fmr22997491fa.28.1742458840786;
+        Thu, 20 Mar 2025 01:20:40 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30c3f1db81esm25239221fa.99.2025.03.20.01.20.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 01:20:39 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:20:32 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Daniel Scally <djrscally@gmail.com>,
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Sakari Ailus <sakari.ailus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>, Nuno Sa <nuno.sa@analog.com>,
+	David Lechner <dlechner@baylibre.com>,
+	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
+	Guillaume Stols <gstols@baylibre.com>,
+	Olivier Moysan <olivier.moysan@foss.st.com>,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>,
+	Trevor Gamblin <tgamblin@baylibre.com>,
+	Matteo Martelli <matteomartelli3@gmail.com>,
+	Alisa-Dariana Roman <alisadariana@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
+	Ramona Alexandra Nechita <ramona.nechita@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev
+Subject: [PATCH v9 0/8] Support ROHM BD79124 ADC
+Message-ID: <cover.1742457420.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="YoKLVAxRz7wFwxMC"
+Content-Disposition: inline
 
-The __packed attribute introduces potential unaligned memory accesses
-and endianness portability issues. Instead of relying on compiler-specific
-packing, it's much better to explicitly fill structure gaps using padding
-fields, ensuring natural alignment.
 
-Since all previously __packed structures already enforce proper alignment
-through manual padding, the __packed qualifiers are unnecessary and can be
-safely removed.
+--YoKLVAxRz7wFwxMC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Yi Sun <yi.sun@intel.com>
+Support ROHM BD79124 ADC.
 
-diff --git a/drivers/dma/idxd/registers.h b/drivers/dma/idxd/registers.h
-index 006ba206ab1b..9c1c546fe443 100644
---- a/drivers/dma/idxd/registers.h
-+++ b/drivers/dma/idxd/registers.h
-@@ -45,7 +45,7 @@ union gen_cap_reg {
- 		u64 rsvd3:32;
- 	};
- 	u64 bits;
--} __packed;
-+};
- #define IDXD_GENCAP_OFFSET		0x10
- 
- union wq_cap_reg {
-@@ -65,7 +65,7 @@ union wq_cap_reg {
- 		u64 rsvd4:8;
- 	};
- 	u64 bits;
--} __packed;
-+};
- #define IDXD_WQCAP_OFFSET		0x20
- #define IDXD_WQCFG_MIN			5
- 
-@@ -79,7 +79,7 @@ union group_cap_reg {
- 		u64 rsvd:45;
- 	};
- 	u64 bits;
--} __packed;
-+};
- #define IDXD_GRPCAP_OFFSET		0x30
- 
- union engine_cap_reg {
-@@ -88,7 +88,7 @@ union engine_cap_reg {
- 		u64 rsvd:56;
- 	};
- 	u64 bits;
--} __packed;
-+};
- 
- #define IDXD_ENGCAP_OFFSET		0x38
- 
-@@ -114,7 +114,7 @@ union offsets_reg {
- 		u64 rsvd:48;
- 	};
- 	u64 bits[2];
--} __packed;
-+};
- 
- #define IDXD_TABLE_MULT			0x100
- 
-@@ -128,7 +128,7 @@ union gencfg_reg {
- 		u32 rsvd2:18;
- 	};
- 	u32 bits;
--} __packed;
-+};
- 
- #define IDXD_GENCTRL_OFFSET		0x88
- union genctrl_reg {
-@@ -139,7 +139,7 @@ union genctrl_reg {
- 		u32 rsvd:29;
- 	};
- 	u32 bits;
--} __packed;
-+};
- 
- #define IDXD_GENSTATS_OFFSET		0x90
- union gensts_reg {
-@@ -149,7 +149,7 @@ union gensts_reg {
- 		u32 rsvd:28;
- 	};
- 	u32 bits;
--} __packed;
-+};
- 
- enum idxd_device_status_state {
- 	IDXD_DEVICE_STATE_DISABLED = 0,
-@@ -183,7 +183,7 @@ union idxd_command_reg {
- 		u32 int_req:1;
- 	};
- 	u32 bits;
--} __packed;
-+};
- 
- enum idxd_cmd {
- 	IDXD_CMD_ENABLE_DEVICE = 1,
-@@ -213,7 +213,7 @@ union cmdsts_reg {
- 		u8 active:1;
- 	};
- 	u32 bits;
--} __packed;
-+};
- #define IDXD_CMDSTS_ACTIVE		0x80000000
- #define IDXD_CMDSTS_ERR_MASK		0xff
- #define IDXD_CMDSTS_RES_SHIFT		8
-@@ -284,7 +284,7 @@ union sw_err_reg {
- 		u64 rsvd5;
- 	};
- 	u64 bits[4];
--} __packed;
-+};
- 
- union iaa_cap_reg {
- 	struct {
-@@ -303,7 +303,7 @@ union iaa_cap_reg {
- 		u64 rsvd:52;
- 	};
- 	u64 bits;
--} __packed;
-+};
- 
- #define IDXD_IAACAP_OFFSET	0x180
- 
-@@ -320,7 +320,7 @@ union evlcfg_reg {
- 		u64 rsvd2:28;
- 	};
- 	u64 bits[2];
--} __packed;
-+};
- 
- #define IDXD_EVL_SIZE_MIN	0x0040
- #define IDXD_EVL_SIZE_MAX	0xffff
-@@ -334,7 +334,7 @@ union msix_perm {
- 		u32 pasid:20;
- 	};
- 	u32 bits;
--} __packed;
-+};
- 
- union group_flags {
- 	struct {
-@@ -352,13 +352,13 @@ union group_flags {
- 		u64 rsvd5:26;
- 	};
- 	u64 bits;
--} __packed;
-+};
- 
- struct grpcfg {
- 	u64 wqs[4];
- 	u64 engines;
- 	union group_flags flags;
--} __packed;
-+};
- 
- union wqcfg {
- 	struct {
-@@ -410,7 +410,7 @@ union wqcfg {
- 		u64 op_config[4];
- 	};
- 	u32 bits[16];
--} __packed;
-+};
- 
- #define WQCFG_PASID_IDX                2
- #define WQCFG_PRIVL_IDX		2
-@@ -474,7 +474,7 @@ union idxd_perfcap {
- 		u64 rsvd3:8;
- 	};
- 	u64 bits;
--} __packed;
-+};
- 
- #define IDXD_EVNTCAP_OFFSET		0x80
- union idxd_evntcap {
-@@ -483,7 +483,7 @@ union idxd_evntcap {
- 		u64 rsvd:36;
- 	};
- 	u64 bits;
--} __packed;
-+};
- 
- struct idxd_event {
- 	union {
-@@ -493,7 +493,7 @@ struct idxd_event {
- 		};
- 		u32 val;
- 	};
--} __packed;
-+};
- 
- #define IDXD_CNTRCAP_OFFSET		0x800
- struct idxd_cntrcap {
-@@ -506,7 +506,7 @@ struct idxd_cntrcap {
- 		u32 val;
- 	};
- 	struct idxd_event events[];
--} __packed;
-+};
- 
- #define IDXD_PERFRST_OFFSET		0x10
- union idxd_perfrst {
-@@ -516,7 +516,7 @@ union idxd_perfrst {
- 		u32 rsvd:30;
- 	};
- 	u32 val;
--} __packed;
-+};
- 
- #define IDXD_OVFSTATUS_OFFSET		0x30
- #define IDXD_PERFFRZ_OFFSET		0x20
-@@ -533,7 +533,7 @@ union idxd_cntrcfg {
- 		u64 rsvd3:4;
- 	};
- 	u64 val;
--} __packed;
-+};
- 
- #define IDXD_FLTCFG_OFFSET		0x300
- 
-@@ -543,7 +543,7 @@ union idxd_cntrdata {
- 		u64 event_count_value;
- 	};
- 	u64 val;
--} __packed;
-+};
- 
- union event_cfg {
- 	struct {
-@@ -551,7 +551,7 @@ union event_cfg {
- 		u64 event_enc:28;
- 	};
- 	u64 val;
--} __packed;
-+};
- 
- union filter_cfg {
- 	struct {
-@@ -562,7 +562,7 @@ union filter_cfg {
- 		u64 eng:8;
- 	};
- 	u64 val;
--} __packed;
-+};
- 
- #define IDXD_EVLSTATUS_OFFSET		0xf0
- 
-@@ -580,7 +580,7 @@ union evl_status_reg {
- 		u32 bits_upper32;
- 	};
- 	u64 bits;
--} __packed;
-+};
- 
- #define IDXD_MAX_BATCH_IDENT	256
- 
-@@ -620,17 +620,17 @@ struct __evl_entry {
- 	};
- 	u64 fault_addr;
- 	u64 rsvd5;
--} __packed;
-+};
- 
- struct dsa_evl_entry {
- 	struct __evl_entry e;
- 	struct dsa_completion_record cr;
--} __packed;
-+};
- 
- struct iax_evl_entry {
- 	struct __evl_entry e;
- 	u64 rsvd[4];
- 	struct iax_completion_record cr;
--} __packed;
-+};
- 
- #endif
--- 
-2.43.0
+This series adds also couple of IIO ADC helper functions for parsing the
+channel information from the device tree. There are also new helpers
+included for iterating and counting firmware child nodes with a specific
+name.
 
+The rzg2l_adc and the sun20i-gpadc are converted to use the new ADC helper.
+
+There has been some discussion about how useful these ADC helpers are,
+and whether they should support also differential and single ended channel
+configurations. This version does not include support for those - with the
+benefit of reduced complexity and easier to use API.
+
+NOTE: The rzg2l_adc and the sun20i-gpadc are untested as I lack of relevant
+HW. They have been compile tested only.
+
+The ROHM BD79124 ADC itself is quite usual stuff. 12-bit, 8-channel ADC
+with threshold monitoring.
+
+Except that:
+ - each ADC input pin can be configured as a general purpose output.
+ - manually starting an ADC conversion and reading the result would
+   require the I2C _master_ to do clock stretching(!) for the duration
+   of the conversion... Let's just say this is not well supported.
+ - IC supports 'autonomous measurement mode' and storing latest results
+   to the result registers. This mode is used by the driver due to the
+   "peculiar" I2C when doing manual reads.
+
+Furthermore, the ADC uses this continuous autonomous measuring,
+and the IC keeps producing new 'out of window' IRQs if measurements are
+out of window - the driver disables the event for 1 seconds when sending
+it to user. This prevents generating storm of events
+
+Revision history:
+
+v8 =3D> v9:
+ - Drop the gianfar and the thp7312 drivers from the series to limit the
+   review noise and to simplify the merging. They can be submitted later
+   as separate changes.
+ - Drop the fwnode_for_each_available_named_child() as suggested by
+   Sakari.
+ - BD79124 driver styling and fixes
+
+v7 =3D> v8:
+  property helpers:
+    - Fix the example in fwnode_get_named_child_node_count() documentation
+      to use the fwnode_get_named_child_node_count() and not the
+      device_get_named_child_node_count()
+    - Fix the rest of the new macro's indentiations
+  adc helpers:
+    - Treat 0 ADC channels as an error in
+      devm_iio_adc_device_alloc_chaninfo_se().
+  rzg2l_adc / sun20i-gpadc:
+    - Drop zero channels check from the ADC drivers using
+      devm_iio_adc_device_alloc_chaninfo_se()
+  BD79124:
+    - Use unsigned for regmap values
+    - Commit message fine tuning
+    - Check devm_mutex_init() return value
+    - Handle 'ALL pins as ADC or GPO' cleanly in BD79124 driver
+    - BD79124 styling / typofixes
+
+v6 =3D> v7:
+ - Inline device_get_named_child_node_count()
+ - Fix kernel-doc for fwnode_get_named_child_node_count()
+ - Minor styling fixes
+ More accurate changelog in individual patches.
+
+v5 =3D> v6:
+ - Drop applied patch
+ - Add *_for_each_named_child_* iterators
+ - Add a patch converting the thp7312 driver to use the new helper
+ - Styling and minor things pointed by reviewers
+
+v4 =3D> v5: Fixes as per various review comments. Most notably:
+ - Drop the patch making the TI's ADC driver to respect device tree.
+ - Add (RFC) patch converting gianfar driver to use new name child-node
+   counting API as suggested by Andy.
+ - Add fwnode_get_child_node_count_named() as suggested by Rob.
+ - rebase to v6.14-rc5
+ More accurate changelog in individual patches.
+
+v3 =3D> v4:
+ - Drop the ADC helper support for differential channels
+ - Drop the ADC helper for getting only channel IDs by fwnode.
+ - "Promote" the function counting the number of child nodes with a
+   specific name to the property.h (As suggested by Jonathan).
+ - Add ADC helpers to a namespace.
+ - Rebase on v6.14-rc3
+ - More minor changes described in individual patches.
+
+v2 =3D> v3:
+ - Restrict BD79124 channel numbers as suggested by Conor and add
+   Conor's Reviewed-by tag.
+ - Support differential and single-ended inputs
+ - Convert couple of existing drivers to use the added ADC helpers
+ - Minor fixes based on reviews
+Link to v2:
+https://lore.kernel.org/all/cover.1738761899.git.mazziesaccount@gmail.com/
+
+RFC v1 =3D> v2:
+ - Drop MFD and pinmux.
+ - Automatically re-enable events after 1 second.
+ - Export fwnode parsing helpers for finding the ADC channels.
+
+---
+
+Matti Vaittinen (8):
+  dt-bindings: ROHM BD79124 ADC/GPO
+  property: Add functions to iterate named child
+  iio: adc: add helpers for parsing ADC nodes
+  iio: adc: rzg2l_adc: Use adc-helpers
+  iio: adc: sun20i-gpadc: Use adc-helpers
+  iio: adc: Support ROHM BD79124 ADC
+  MAINTAINERS: Add IIO ADC helpers
+  MAINTAINERS: Add ROHM BD79124 ADC/GPO
+
+ .../bindings/iio/adc/rohm,bd79124.yaml        |  114 ++
+ MAINTAINERS                                   |   12 +
+ drivers/base/property.c                       |   27 +
+ drivers/iio/adc/Kconfig                       |   17 +
+ drivers/iio/adc/Makefile                      |    3 +
+ drivers/iio/adc/industrialio-adc.c            |   82 ++
+ drivers/iio/adc/rohm-bd79124.c                | 1138 +++++++++++++++++
+ drivers/iio/adc/rzg2l_adc.c                   |   39 +-
+ drivers/iio/adc/sun20i-gpadc-iio.c            |   39 +-
+ include/linux/iio/adc-helpers.h               |   27 +
+ include/linux/property.h                      |   20 +
+ 11 files changed, 1470 insertions(+), 48 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/rohm,bd79124.=
+yaml
+ create mode 100644 drivers/iio/adc/industrialio-adc.c
+ create mode 100644 drivers/iio/adc/rohm-bd79124.c
+ create mode 100644 include/linux/iio/adc-helpers.h
+
+
+base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+--=20
+2.48.1
+
+
+--YoKLVAxRz7wFwxMC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfbz8wACgkQeFA3/03a
+ocW2+Af/XifXJoPI6HJO09tF8ui3zqe7MXsN3HOrb+oqgxrNofGdGysmeb3+vqvE
+4nyq5fXZZe0gv0KxwCqLba9TdOvwR5drPIZAVwW/UcVY/VAF2OFTxMnO452AqAIH
+mtZG8kYI35jOwMZKODEU4hGkSgktm+KLdg0ifwLd9W5XZrQ6Je6mp31XMm8DOuMh
+lCHIpWu7LUhOeMkRHs1WQuttYiyZzhHsa65Myrj04x2Pf7eMiS00MAOMFGLqvObi
+ogV2CJD3ZqfGRQiBFbKeZltIDKnrTqetJb2F5cdEFKtmlPvyZ+jxaQhi9ilUbPaO
+SsqjcdK5qBal2wasXx6P82n/+u1gqw==
+=kDea
+-----END PGP SIGNATURE-----
+
+--YoKLVAxRz7wFwxMC--
