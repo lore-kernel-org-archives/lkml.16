@@ -1,190 +1,406 @@
-Received: from CY4PR02CU008.outbound.protection.outlook.com (mail-westcentralusazon11011060.outbound.protection.outlook.com [40.93.199.60])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FEB617591;
-	Thu, 20 Mar 2025 16:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.199.60
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742489207; cv=fail; b=A5YzFzH8h82z6kru+ixr2BXHngn7tjjeWEtgYN2NvI1n6a439kgZRSeYFTjaltRbp4d7SAj4teJXuZ+0w/BqjET5Acfz+h85QgS6pXESSgeaNf59fJColiA7ArJP4QbsvnZPsExUAboadVqWOQJg+y/z2hETbbOS2Mnv5i/BxRA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDEC19DF98;
+	Thu, 20 Mar 2025 16:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742489207; cv=none; b=N6QqlefMNANt7roI7epvXMm9YwaGazdFtHZfwWhKFYvOEQWg71yoL39wcCynNTmLl5FhftfcijzEDbjchdQmKr+dIqr3i/JC/sli1YJ2M1Sr05cuu0b0k784nA6g8UcaozRggjPjXt9QBS5CDHOaDcqBlvOUqQIkWhuEz7BJfH0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742489207; c=relaxed/simple;
-	bh=889gja+tVuFKeDX5ixH0Rwe5VOigh0XkpqOocHzqDZY=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=CZquyBG6AD00s4nRqSq2zP6EKaIbqZj5k+W08+HdMYcW+KAtkSgI4Pqja8EN6co0CL03GbD5YrLEKBNcg2H5peENSwXDEwTj389s/mhWpWeiz3szfmxKgqV11LjTGwXwxHK7kq3RaAlGlkqg/Jrqts8qlqum+dCHEeap6Trvocg=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com; spf=pass smtp.mailfrom=altera.com; dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b=IiU6msvZ; arc=fail smtp.client-ip=40.93.199.60
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=altera.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=altera.com
+	bh=8PzccMNrJT5W8W7N7Yc4hGCXeynPoeHzA1FX/c6gIjE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZnFicenqpwjk99wYbSxfQdM47/k6WrF9d+UGHpfLdwqEE759IApEMFoHIgpPc3dBp5Mvey3huCSc+nIzh70mTUQDAtxGT7JKoGXAT/+FN7n53hlier/w2PACFcq7DHwaHCriKDk59gRZV9jgBO1pJWPBBEcEfdyJslf4s60SMYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dizFEInD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=altera.com header.i=@altera.com header.b="IiU6msvZ"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=soQBDGyj3i2jQMSNIPjPAmtnyp5gvNw/E037CS9U++e9R1VAtSX00Ye3NbJEL99QuvtOOucdZMhxDxlOXbuyU2Ui0OlnH19szuoFzr5tUEn1mUpvOQhNmnmefcUPnsSWDJ9MMGu/8y//uK7PZA9OsbTvLFAp4vX/fy3vkXVN6wuxUqgxICYGCLgymDcbi1sz6jnmm08d8BYBq/hzGjENd5F+dMygHhv5i6dsoC9F8MdM6XdMYtavVIJP+Xtf29UF1VH+YShluSvVlLZQ1TIgsDdhYb5crsfovYYMwTeNonjo/pA3Z47xka0pvkSNTBoy1iRx/v2Vh17zWvZx/Zbymw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JWMmIsD7Hq93yEQ+2l7UvzFucV40/ElJRlJMry1EpDY=;
- b=HW2GT8gbWzD67/GTKU9u7WuyOTmFEjzHFt7HoCKHGotK8F+wd2cFs9iJtQLuTZl6R/zQrsXSb9kDAz7jJXGnFlooLJ/xoCJa0B69TBF4fyrlkRC5Yyiim9OmJFq9M132Rj3/pgC/ucNDR6p1sliXcnotqczuQPO54wX1Bacum/M+nw8tXTDLqRiseneVmrusop6MLMgcRVJ3cIwgLCTa9xvno5omxzp1AY7ACUSTUaUsyITdDbhW66Ej7NZ+YVp0qqLC11bI24IujvbxzefYLCc3UvaOOenh3BV3xCjhPKBI0M2LeNcnPGdoij9XJuhYW5ASxcMneiqP8EoZ52UwxQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=altera.com; dmarc=pass action=none header.from=altera.com;
- dkim=pass header.d=altera.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=altera.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=JWMmIsD7Hq93yEQ+2l7UvzFucV40/ElJRlJMry1EpDY=;
- b=IiU6msvZwFbx3NczHcyRkyiz9RuW6lXW4ciey1qbAqb9F+/g2hdbPPx3jMc9TfDdWq4qrVOiONtmAOYg+z6SmoGsFqRJ2Q1VsIaei7TGy3n4PTYZRdCmUpX7C/+c7bWjhcTQvpBFGUrVdpkqmsWjN0gs5M0VK4ic/4+cTCLBUYL2/GV1vhrLYn/tGYRMvhcIzq1OPUxbYWeWV4/noaD67Hly+17XMFX7tlkeVP1tUf5yV8s8ahK89CVSONovO8L8SJ6jBZy/diA+mydF+Wwe0BA2EEeam8Od6H54Emc1khjGhTWTE076qw7xVIXraJOg2fu5A0wKHtVaLYJDCQXa4w==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=altera.com;
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com (2603:10b6:a02:b4::23)
- by PH7PR03MB7003.namprd03.prod.outlook.com (2603:10b6:510:12e::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Thu, 20 Mar
- 2025 16:46:42 +0000
-Received: from BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c]) by BYAPR03MB3461.namprd03.prod.outlook.com
- ([fe80::706b:dd15:bc81:313c%2]) with mapi id 15.20.8534.031; Thu, 20 Mar 2025
- 16:46:41 +0000
-From: Matthew Gerlach <matthew.gerlach@altera.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	dinguyen@kernel.org,
-	bp@alien8.de,
-	tony.luck@intel.com,
-	james.morse@arm.com,
-	mchehab@kernel.org,
-	rric@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-edac@vger.kernel.org
-Cc: Matthew Gerlach <matthew.gerlach@altera.com>
-Subject: [PATCH 0/4] dt-bindings: edac: altera-s10: Convert to YAML
-Date: Thu, 20 Mar 2025 09:46:18 -0700
-Message-Id: <20250320164622.6971-1-matthew.gerlach@altera.com>
-X-Mailer: git-send-email 2.35.3
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: BY3PR04CA0014.namprd04.prod.outlook.com
- (2603:10b6:a03:217::19) To BYAPR03MB3461.namprd03.prod.outlook.com
- (2603:10b6:a02:b4::23)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dizFEInD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C461C4CEDD;
+	Thu, 20 Mar 2025 16:46:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742489207;
+	bh=8PzccMNrJT5W8W7N7Yc4hGCXeynPoeHzA1FX/c6gIjE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dizFEInDR/7AXa1hkGS5nkOJUqZ9O3fAVaDVd/TKU1TdEDC3ZQSZBPdrsxGNVlbgd
+	 KxS26QNR6nTK3WwKfr9xBecSQq04Z/cTKML5TeVrW5d76Agce+6DLOSKrQqvZGzzfd
+	 nSSMEa1eH+oV4H94FlefCPdwdCALF/Nf1/IS2ssgq8jfJdpYBFEvthr1E3vQc1RxWw
+	 3Us6NaiRUhic6I4NE5ss2+PHQx9ujtEAT/5eptE0HWVxGynPZxR7CC/Maq9a3npYfu
+	 ajQ4Dwt+of3XqYNRyMTCWAmtcP/k/0pfG4gZ5czOcHGD1DY6iKzwco7qjdTk9LlIwN
+	 yChsoK5zgYtdg==
+Message-ID: <1b54afae-cb86-4022-b9f5-e5c1fc075be8@kernel.org>
+Date: Thu, 20 Mar 2025 11:46:44 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR03MB3461:EE_|PH7PR03MB7003:EE_
-X-MS-Office365-Filtering-Correlation-Id: 6bd7ffe1-1d2d-42a7-5dc7-08dd67cecaa4
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|7416014|376014|366016|1800799024|921020;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?5xjEGc8UAPs3vCOyWFht5Y6fyRe6vqTrmRJkjQwfhHG7RFUZwM0DlrqEoNQf?=
- =?us-ascii?Q?67zJ0fjLiO/ZGf9uIo1ZjfPBcC3JUDq1Xd2ESWhOs3RLquJOyunw1TMAarQu?=
- =?us-ascii?Q?TiLn64/FmeAS40AYI9HKgKgIHwKbUG+eNn6p99sZs0y1pNPlVtGrkF6jfjoS?=
- =?us-ascii?Q?bin2ymlQSc1dVsu8KkDYbkF2hHIya+ZsbkOC28Mw/AzYlTr6/R+2AmVK1lqD?=
- =?us-ascii?Q?HFZyXOcO2eQYF/IqJH84SaiMESnbN2V3jr3Ai5DdMU9pDONY8u1EnMeLj6uT?=
- =?us-ascii?Q?od5xWBMm6p5mjik/RdX8ahS2XLxSKtAktlT0uvTuGj9v8ehV/OAmbvvzmtj1?=
- =?us-ascii?Q?3llS/fm9jnTrRbnyQq4Lg9I8+qY7Uh+Ff0iGcjEZFulOwgy7pSpmnSLxtPPW?=
- =?us-ascii?Q?LXJSE5hwRjIuMv1mUeyD3qeH7Uv9vec5dHU6R9iL4LS+5qOgfWPc4VdToF+Y?=
- =?us-ascii?Q?R1q9oBC09NlUcqui3wJD33eL32knZ1+vFFHD7oEofryYjRl1L2gQvPmprS5K?=
- =?us-ascii?Q?ItETmu8qGLLyy5zqzrwZxD+aZPV+vQSbijpbFmVbKrY79UgnB3q2W82NwQd8?=
- =?us-ascii?Q?J5bpwKRwbG2hApsWeVO7kLGdzefsfS0SGuUSMxFA1xpkt8YudEAn80CSDLvl?=
- =?us-ascii?Q?BFGBuvzEjPNMuMmxA9VH4jiHfzF9/CQm+AxpZWEhFULleOrH0f69NRfDYBzp?=
- =?us-ascii?Q?F21rOFYEuTXVuKod/pG2AEBPgWIvzVwbCQUhoA9ary1cIAiNI4RFe7qDJjs0?=
- =?us-ascii?Q?mCypZeoYto7fPCrqtPd7hiXY6UezoMCLD6mT3hHwi+8U9cb/HlKCQvbhleuE?=
- =?us-ascii?Q?eKfAwxZ3s7EgcROY/rYW01aD6vhzFvu3pRmjCT8Be+aOANm1XgmH9ua1zrq6?=
- =?us-ascii?Q?Faq2NEsO6xqHaFlmIX/lGW04MxfTwUtYBSANpO96uxObtITx/A2k4jQC+Mva?=
- =?us-ascii?Q?Mp6cXlX9DdjwjFqRDxgSOJTsXDSj8jf95sCMpX6s8TDjIyGwOFba+lnd34rC?=
- =?us-ascii?Q?a+gROm7bcm2DOdLi90/XDHThCjv4I0GpvNeWTz+vlPV8A14j+DHKBh6iLp7s?=
- =?us-ascii?Q?oWJEU0fQ9GqNZBUWoDsGhueEnKt4CafiRe5owa/1CVjaNcjoCDvnpFIIhv3E?=
- =?us-ascii?Q?/xxIJTDkxn8+Rs/kc2Q7xKYqxxp5mm51P0DAh05993Y912jdFhuZqbvbQ6D3?=
- =?us-ascii?Q?TOzRBGnPVpX08QG/wDH5aYkKO8fmq6t6+FhaLLSw49rtifyV4tmU113hdnuI?=
- =?us-ascii?Q?kIyLZSASnyfDPy5UfIOot9pikIrNxfRlerRJTRSJZrZC5XZ6Hv7EOPR5Q6wh?=
- =?us-ascii?Q?yneVcszrY3MMsTfq1y4PKxf677/JYTbO6zsiWZn0LUd5w88vNGnaB7M6eKgh?=
- =?us-ascii?Q?ThLzDwsRG+4220UDNLI028M/HLPfFLymgJ32wMfUnxcNcRifJhtS8SB7BWCr?=
- =?us-ascii?Q?buPjtElU83w=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR03MB3461.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(1800799024)(921020);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?+Y9QJLwsGkJ75MxVwr8O4f/INQP6T9qx4O5iE88YK8DxmpSiwPlTndBtkW5w?=
- =?us-ascii?Q?LfGRq9a4Kig2N6M2PXsrE1PkAsETXVE69JCSzrVa0+1p1461FkfnJH60uf9Y?=
- =?us-ascii?Q?LeSkOPTRHk/B+FDWN2AZAyBVli4/IgnC3hFNMWHn80bRPD0sNsG9bSflAQ9O?=
- =?us-ascii?Q?I7ACQjhzCktNRSnECj5Rlwia3gtxNOui0gJSuNuPz2W+NUMcEKqoovHbfX8L?=
- =?us-ascii?Q?d55UtYy3o+XnDxq6aTg1DiX24RVPPnHi14T+2D5LaaSWVlGZrauI8O0bg1Mq?=
- =?us-ascii?Q?5RuX/o4CSgQg3V+on67G8GBSMJH9EQ29iqkjlE0UdMp+E9J4rZWHsvG/JvI/?=
- =?us-ascii?Q?uOfx+CYlyjtjklXvWt0WRRtsQRnOgK4xI/738LF9Jrr7KNsiuLPfSJdjlTFp?=
- =?us-ascii?Q?PxKAW/p/mkZgxflDQTdXnp1ENBhGJXXSlsLmGXF7zBYHQOMOuNtlbIKLQfpE?=
- =?us-ascii?Q?jItk8ikR9EW6iZJQQElcteckvGnR8x/RRW56y+920apbU2wLWkQ/7yzNnbsY?=
- =?us-ascii?Q?gOkEzEkte6eIi/GCyk1O/8mTlO965X5ENU+iMcsGfiIHlSDSnB4+uvpt7UXg?=
- =?us-ascii?Q?LkyPJRVJiG53hyKJ0syCEkK1iArSd1lEgrQJFMs5U0vR6CXv3UE5CneIdxBi?=
- =?us-ascii?Q?4Y2pygH0QfHGe81t+r9e3RhUNqG/5U/yExeR97PeFS719QxtcFZWYHvX0UFL?=
- =?us-ascii?Q?dQwz3bxMmeKbbvreimkGxBOPuncRbQzZArjO/eqCGQDorW4vComFUngZSfPC?=
- =?us-ascii?Q?GjY3J5ti8iqnqk90s0I3LHP0qpku/UXd2qHacd6fRWivtiEyJAJXenJb0u8h?=
- =?us-ascii?Q?Tt3fmyx0rT9F4Ejxly7MQl/3MTg2GUzsAWRoJmmZo18jfai16+YaeOsO/0p0?=
- =?us-ascii?Q?4zgU33SDOqyZ1HX4a1j4hJRXvrhosuT1K++d84151LSm93/0vUSFH5jXrnow?=
- =?us-ascii?Q?shYUgFhSIGafQLUFJAn4gVdd2VGeexlbfNg0QWcIXthk2WldUpBkyjv109Z9?=
- =?us-ascii?Q?yA/eUqMigRtA7w7VAYC/LgGRiVua2XWUsHWysX/IOaYNELLNaBQM6jk5//E5?=
- =?us-ascii?Q?WRESQDGmGAraSR9026Zdwxd3BieZDMUXV9yM5icVmkep2b7RhhXJWRqk0ezS?=
- =?us-ascii?Q?F5O7pqil+9H2LrHgozZBfNCmmziTabouylsGk/GVRkaqSxWaSWh4/CTZrb0n?=
- =?us-ascii?Q?IZ1tkfTaOUzJoGnLFsHzWeZ4C9Vv6laRzUT+9sgzNp8WePV5L+rh74lkDgzP?=
- =?us-ascii?Q?nc7bvWUxr6uHOBuX94rF+P+7P0zUCYYWCciyZSsKh9pte6w8Ogw3ohPuq6EP?=
- =?us-ascii?Q?mTVPJp1haOPvHUFxsHAQZUHvQQi0XpHMdzo5Bh+fE7MZhGe+zSo+DXqtmMab?=
- =?us-ascii?Q?kSt7Cwadl849giS4JcgEOW72qrzvRWD+JHPbK6OiHVI4zMXvwmRbgZDy4t5O?=
- =?us-ascii?Q?lD2B0rcL2kyC0FXeAoN2rv/w7MoOqMrj2iw+9Z+1a2x/kwSYFdWWqbWoXS8S?=
- =?us-ascii?Q?+scNk/qlbn/X8sdbtZRi0i+9Z6TDQQGSAdlHhBNLuKv362fynmbQouvJdTxY?=
- =?us-ascii?Q?QSWH5J7UnMvidY87WLtuCxkL64gKRTSsaXqF9GpC4Q9mIr+zjz12G8lpSKz8?=
- =?us-ascii?Q?RQ=3D=3D?=
-X-OriginatorOrg: altera.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6bd7ffe1-1d2d-42a7-5dc7-08dd67cecaa4
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR03MB3461.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2025 16:46:41.8864
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: fbd72e03-d4a5-4110-adce-614d51f2077a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RDNJ+7HjOQbeCID0QSzbPjl0pdCFb/Gk+U3d5nRowD3LHC8GtgXJ7IV0pQA0Jdq8rkU+RWWB/2AVK3sTWg4UjiLU2OWFWmWQ3wOKiHQ9YhQ=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR03MB7003
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 04/13] platform/x86: hfi: Introduce AMD Hardware
+ Feedback Interface Driver
+To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+ Mario Limonciello <mario.limonciello@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>, Thomas Gleixner <tglx@linutronix.de>,
+ Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+ "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>,
+ Huang Rui <ray.huang@amd.com>, "Gautham R . Shenoy"
+ <gautham.shenoy@amd.com>, "Rafael J . Wysocki" <rafael@kernel.org>,
+ Viresh Kumar <viresh.kumar@linaro.org>,
+ "open list:AMD HETERO CORE HARDWARE FEEDBACK DRIVER"
+ <platform-driver-x86@vger.kernel.org>,
+ "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+ "open list:AMD PSTATE DRIVER" <linux-pm@vger.kernel.org>,
+ Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+References: <20250218190822.1039982-1-superm1@kernel.org>
+ <20250218190822.1039982-5-superm1@kernel.org>
+ <f90d49d6-e031-4722-b63f-26931eae1aa5@linux.intel.com>
+Content-Language: en-US
+From: Mario Limonciello <superm1@kernel.org>
+In-Reply-To: <f90d49d6-e031-4722-b63f-26931eae1aa5@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This patch set creates a YAML device tree binding for the Altera Stratix10
-Error Detection and Correction component referred to as the ECC Manager. The
-peripheral subcomponents are the same hardware as the Arria10 implementation;
-so the YAML binding does not change compatible strings of the subcomponents.
-This more accurate hardware description requires some minor driver and DTSI/DTS
-changes.
+On 3/19/2025 09:03, Ilpo Järvinen wrote:
+> On Tue, 18 Feb 2025, Mario Limonciello wrote:
+> 
+>> From: Perry Yuan <Perry.Yuan@amd.com>
+>>
+>> The AMD Heterogeneous core design and Hardware Feedback Interface (HFI)
+>> provide behavioral classification and a dynamically updated ranking table
+>> for the scheduler to use when choosing cores for tasks.
+>>
+>> There are two CPU core types defined: `Classic Core` and `Dense Core`.
+>> "Classic" cores are the standard performance cores, while "Dense" cores
+>> are optimized for area and efficiency.
+>>
+>> Heterogeneous compute refers to CPU implementations that are comprised
+>> of more than one architectural class, each with two capabilities. This
+>> means each CPU reports two separate capabilities: "perf" and "eff".
+>>
+>> Each capability lists all core ranking numbers between 0 and 255, where
+>> a higher number represents a higher capability.
+>>
+>> Heterogeneous systems can also extend to more than two architectural
+>> classes.
+>>
+>> The purpose of the scheduling feedback mechanism is to provide information
+>> to the operating system scheduler in real time, allowing the scheduler to
+>> direct threads to the optimal core during task scheduling.
+>>
+>> All core ranking data are provided by the PMFW via a shared memory ranking
+>> table, which the driver reads and uses to update core capabilities to the
+>> scheduler. When the hardware updates the table, it generates a platform
+>> interrupt to notify the OS to read the new ranking table.
+>>
+>> Link: https://bugzilla.kernel.org/show_bug.cgi?id=206537
+>> Reviewed-by: Gautham R. Shenoy <gautham.shenoy@amd.com>
+>> Reviewed-by: Shyam Sundar S K <Shyam-sundar.S-k@amd.com>
+>> Signed-off-by: Perry Yuan <perry.yuan@amd.com>
+>> Co-developed-by: Mario Limonciello <mario.limonciello@amd.com>
+>> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+>> ---
+>> v8:
+>>   * s,devm_kzalloc,devm_kcalloc,
+>>   * fold newlines from patch 5 into this patch
+>>   * Drop ->cpu member, push to later patch
+>>   * s,for_each_present_cpu,for_each_possible_cpu,
+>> v7:
+>>   * Adjust Kconfig to 80 characters
+>> ---
+>>   drivers/platform/x86/amd/Kconfig      |   1 +
+>>   drivers/platform/x86/amd/Makefile     |   1 +
+>>   drivers/platform/x86/amd/hfi/Kconfig  |  20 ++++
+>>   drivers/platform/x86/amd/hfi/Makefile |   7 ++
+>>   drivers/platform/x86/amd/hfi/hfi.c    | 162 ++++++++++++++++++++++++++
+>>   5 files changed, 191 insertions(+)
+>>   create mode 100644 drivers/platform/x86/amd/hfi/Kconfig
+>>   create mode 100644 drivers/platform/x86/amd/hfi/Makefile
+>>   create mode 100644 drivers/platform/x86/amd/hfi/hfi.c
+>>
+>> diff --git a/drivers/platform/x86/amd/Kconfig b/drivers/platform/x86/amd/Kconfig
+>> index c3e086ea64fc6..589d61ebf726b 100644
+>> --- a/drivers/platform/x86/amd/Kconfig
+>> +++ b/drivers/platform/x86/amd/Kconfig
+>> @@ -6,6 +6,7 @@
+>>   source "drivers/platform/x86/amd/hsmp/Kconfig"
+>>   source "drivers/platform/x86/amd/pmf/Kconfig"
+>>   source "drivers/platform/x86/amd/pmc/Kconfig"
+>> +source "drivers/platform/x86/amd/hfi/Kconfig"
+>>   
+>>   config AMD_3D_VCACHE
+>>   	tristate "AMD 3D V-Cache Performance Optimizer Driver"
+>> diff --git a/drivers/platform/x86/amd/Makefile b/drivers/platform/x86/amd/Makefile
+>> index 56f62fc9c97b4..c50e93c3334cf 100644
+>> --- a/drivers/platform/x86/amd/Makefile
+>> +++ b/drivers/platform/x86/amd/Makefile
+>> @@ -10,3 +10,4 @@ obj-$(CONFIG_AMD_PMC)		+= pmc/
+>>   obj-$(CONFIG_AMD_HSMP)		+= hsmp/
+>>   obj-$(CONFIG_AMD_PMF)		+= pmf/
+>>   obj-$(CONFIG_AMD_WBRF)		+= wbrf.o
+>> +obj-$(CONFIG_AMD_HFI)		+= hfi/
+>> diff --git a/drivers/platform/x86/amd/hfi/Kconfig b/drivers/platform/x86/amd/hfi/Kconfig
+>> new file mode 100644
+>> index 0000000000000..532939eb08a6a
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/hfi/Kconfig
+>> @@ -0,0 +1,20 @@
+>> +# SPDX-License-Identifier: GPL-2.0-only
+>> +#
+>> +# AMD Hardware Feedback Interface Driver
+>> +#
+>> +
+>> +config AMD_HFI
+>> +	bool "AMD Hetero Core Hardware Feedback Driver"
+>> +	depends on ACPI
+>> +	depends on CPU_SUP_AMD
+>> +	help
+>> +	 Select this option to enable the AMD Heterogeneous Core Hardware
+>> +	 Feedback Interface. If selected, hardware provides runtime thread
+>> +	 classification guidance to the operating system on the performance and
+>> +	 energy efficiency capabilities of each heterogeneous CPU core. These
+>> +	 capabilities may vary due to the inherent differences in the core types
+>> +	 and can also change as a result of variations in the operating
+>> +	 conditions of the system such as power and thermal limits. If selected,
+> 
+> This says the capabilities can change but metadata is only read and scores
+> updated during probe?
+> 
+>> +	 the kernel relays updates in heterogeneous CPUs' capabilities to
+>> +	 userspace, allowing for more optimal task scheduling and resource
+>> +	 allocation, leveraging the diverse set of cores available.
+> 
+> How are the capabilities communicated to userspace as mentioned here? I'm
+> asking this because I only noted debugfs interface, and that commit
+> claimed the debug fs interface was to troubleshoot scheduler issues.
 
-Patch 1:
-  Convert text device tree binding to YAML.
+This is one of those cases that the split into multiple parts shows. 
+Thinking through I feel it makes more sense to adjust for now and then 
+we can change it again on the next part.
 
-Patch 2:
-  Update driver to allow the peripheral subcomponents to be child nodes of
-  altr,socfpga-s10-ecc-manager.
+> 
+>> diff --git a/drivers/platform/x86/amd/hfi/Makefile b/drivers/platform/x86/amd/hfi/Makefile
+>> new file mode 100644
+>> index 0000000000000..672c6ac106e95
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/hfi/Makefile
+>> @@ -0,0 +1,7 @@
+>> +# SPDX-License-Identifier: GPL-2.0
+>> +#
+>> +# AMD Hardware Feedback Interface Driver
+>> +#
+>> +
+>> +obj-$(CONFIG_AMD_HFI) += amd_hfi.o
+>> +amd_hfi-objs := hfi.o
+>> diff --git a/drivers/platform/x86/amd/hfi/hfi.c b/drivers/platform/x86/amd/hfi/hfi.c
+>> new file mode 100644
+>> index 0000000000000..426f7e520b76c
+>> --- /dev/null
+>> +++ b/drivers/platform/x86/amd/hfi/hfi.c
+>> @@ -0,0 +1,162 @@
+>> +// SPDX-License-Identifier: GPL-2.0-or-later
+>> +/*
+>> + * AMD Hardware Feedback Interface Driver
+>> + *
+>> + * Copyright (C) 2024 Advanced Micro Devices, Inc. All Rights Reserved.
+> 
+> 2025 ?
 
-Patch 3:
-  Update Agilex DTSI to use correct compatible strings for peripheral
-  subcomponents. 
+Ack.
 
-Patch 4:
-  Update Stratix10 DTSI/DTS to use correct compatibles strings.
+Heh, earlier versions started in 2024!
 
-Matthew Gerlach (4):
-  dt-bindings: edac: altera-s10: Convert to YAML
-  EDAC, altera: update driver to reflect hw/yaml
-  arm64: dts: agilex: Update eccmgr in DTSI to reflect hw/yaml
-  arm64: dts: startix10: Update eccmgr in DTSI/DTS to reflect hw/yaml
+> 
+>> + *
+>> + * Authors: Perry Yuan <Perry.Yuan@amd.com>
+>> + *          Mario Limonciello <mario.limonciello@amd.com>
+>> + */
+>> +
+>> +#define pr_fmt(fmt)  "amd-hfi: " fmt
+>> +
+>> +#include <linux/acpi.h>
+>> +#include <linux/cpu.h>
+>> +#include <linux/cpumask.h>
+>> +#include <linux/gfp.h>
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/mutex.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/smp.h>
+>> +
+>> +#define AMD_HFI_DRIVER		"amd_hfi"
+>> +
+>> +#define AMD_HETERO_CPUID_27	0x80000027
+>> +
+>> +static struct platform_device *device;
+>> +
+>> +struct amd_hfi_data {
+>> +	const char	*name;
+>> +	struct device	*dev;
+>> +	struct mutex	lock;
+> 
+> Please mention what this protects.
 
- .../edac/altr,socfpga-s10-ecc-manager.yaml    | 228 ++++++++++++++++++
- .../bindings/edac/socfpga-eccmgr.txt          | 150 ------------
- MAINTAINERS                                   |   5 +
- .../boot/dts/altera/socfpga_stratix10.dtsi    |  15 +-
- .../dts/altera/socfpga_stratix10_socdk.dts    |   3 +-
- arch/arm64/boot/dts/intel/socfpga_agilex.dtsi |  18 +-
- drivers/edac/altera_edac.c                    |   3 +
- 7 files changed, 248 insertions(+), 174 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/edac/altr,socfpga-s10-ecc-manager.yaml
+As a comment at the end like this, right?
 
--- 
-2.35.3
+struct mutex lock; /* lock the foo */
+
+> 
+>> +};
+>> +
+>> +struct amd_hfi_classes {
+>> +	u32	perf;
+>> +	u32	eff;
+>> +};
+>> +
+>> +/**
+>> + * struct amd_hfi_cpuinfo - HFI workload class info per CPU
+>> + * @cpu:		cpu index
+>> + * @class_index:	workload class ID index
+>> + * @nr_class:		max number of workload class supported
+>> + * @amd_hfi_classes:	current cpu workload class ranking data
+>> + *
+>> + * Parameters of a logical processor linked with hardware feedback class
+> 
+> missing .
+
+Ack
+
+> 
+>> + */
+>> +struct amd_hfi_cpuinfo {
+>> +	int		cpu;
+>> +	s16		class_index;
+>> +	u8		nr_class;
+>> +	struct amd_hfi_classes	*amd_hfi_classes;
+>> +};
+>> +
+>> +static DEFINE_PER_CPU(struct amd_hfi_cpuinfo, amd_hfi_cpuinfo) = {.class_index = -1};
+>> +
+>> +static int amd_hfi_alloc_class_data(struct platform_device *pdev)
+>> +{
+>> +	struct amd_hfi_cpuinfo *hfi_cpuinfo;
+>> +	struct device *dev = &pdev->dev;
+>> +	int idx;
+>> +	int nr_class_id;
+>> +
+>> +	nr_class_id = cpuid_eax(AMD_HETERO_CPUID_27);
+>> +	if (nr_class_id < 0 || nr_class_id > 255) {
+> 
+> Is the signed type correct for this?
+> 
+>> +		dev_err(dev, "failed to get number of supported classes: %d\n",
+>> +			nr_class_id);
+> 
+> I'd reword the error message as the number of classes was just too
+> large / outside the allowed range.
+
+OK.
+
+> 
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	for_each_possible_cpu(idx) {
+>> +		struct amd_hfi_classes *classes;
+>> +
+>> +		classes = devm_kcalloc(dev,
+>> +				       nr_class_id,
+>> +				       sizeof(struct amd_hfi_classes),
+>> +				       GFP_KERNEL);
+>> +		if (!classes)
+>> +			return -ENOMEM;
+>> +		hfi_cpuinfo = per_cpu_ptr(&amd_hfi_cpuinfo, idx);
+>> +		hfi_cpuinfo->amd_hfi_classes = classes;
+>> +		hfi_cpuinfo->nr_class = nr_class_id;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct acpi_device_id amd_hfi_platform_match[] = {
+>> +	{"AMDI0104", 0},
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(acpi, amd_hfi_platform_match);
+>> +
+>> +static int amd_hfi_probe(struct platform_device *pdev)
+>> +{
+>> +	struct amd_hfi_data *amd_hfi_data;
+>> +	int ret;
+>> +
+>> +	if (!acpi_match_device(amd_hfi_platform_match, &pdev->dev))
+>> +		return -ENODEV;
+>> +
+>> +	amd_hfi_data = devm_kzalloc(&pdev->dev, sizeof(*amd_hfi_data), GFP_KERNEL);
+>> +	if (!amd_hfi_data)
+>> +		return -ENOMEM;
+>> +
+>> +	amd_hfi_data->dev = &pdev->dev;
+>> +	ret = devm_mutex_init(&pdev->dev, &amd_hfi_data->lock);
+>> +	if (ret)
+>> +		return ret;
+>> +	platform_set_drvdata(pdev, amd_hfi_data);
+>> +
+>> +	ret = amd_hfi_alloc_class_data(pdev);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct platform_driver amd_hfi_driver = {
+>> +	.driver = {
+>> +		.name = AMD_HFI_DRIVER,
+>> +		.owner = THIS_MODULE,
+>> +		.acpi_match_table = ACPI_PTR(amd_hfi_platform_match),
+>> +	},
+>> +	.probe = amd_hfi_probe,
+>> +};
+>> +
+>> +static int __init amd_hfi_init(void)
+>> +{
+>> +	int ret;
+>> +
+>> +	if (acpi_disabled ||
+>> +	    !cpu_feature_enabled(X86_FEATURE_AMD_HETEROGENEOUS_CORES) ||
+>> +	    !cpu_feature_enabled(X86_FEATURE_AMD_WORKLOAD_CLASS))
+>> +		return -ENODEV;
+>> +
+>> +	device = platform_device_register_simple(AMD_HFI_DRIVER, -1, NULL, 0);
+>> +	if (IS_ERR(device)) {
+>> +		pr_err("unable to register HFI platform device\n");
+>> +		return PTR_ERR(device);
+>> +	}
+>> +
+>> +	ret = platform_driver_register(&amd_hfi_driver);
+>> +	if (ret)
+>> +		pr_err("failed to register HFI driver\n");
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +static __exit void amd_hfi_exit(void)
+>> +{
+>> +	platform_device_unregister(device);
+>> +	platform_driver_unregister(&amd_hfi_driver);
+> 
+> Why are these not in the opposite order than in init?
+
+Oversight.  Will fix it.
+
+> 
+>> +}
+>> +module_init(amd_hfi_init);
+>> +module_exit(amd_hfi_exit);
+>> +
+>> +MODULE_LICENSE("GPL");
+>> +MODULE_DESCRIPTION("AMD Hardware Feedback Interface Driver");
+>>
+> 
 
