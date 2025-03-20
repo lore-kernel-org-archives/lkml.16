@@ -1,281 +1,203 @@
-Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5D8417A30E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4081E224B13
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:24:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742494806; cv=none; b=ugInXYl5Qcyj4YRQjbrgRojMsd7DK2H+XbT8YYGAVYpfUEjnjS+bm/SeCs+ss6ab1igqfSRulkA/DL4ozbV0Vtw1pP18r1RR9fd/cBz99QHXQAYVQbGGitbP/+2P3YsDmgudcC4TLNvO6Uzli4lWcYH0mpbMQcYAULITIvWhoWE=
+	t=1742495043; cv=none; b=kJ+5FHkncquDO+8jy9VwzvG6L3bungleFG+2vhViBRmJuC0idWYeoBYNRONf2FpS/fqJqOOmTyvVziADT0SybtwqDOUa9G6/ecFfS29zpivzz+SoLwIA6PAkrBL9Rud3azWPbGCD6zaScmnm6nPk7k8GQr4hW1MZoM8XJBEoG4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742494806; c=relaxed/simple;
-	bh=O8HlzTpBdqEIzh13kTYm82TgnsQigT6o0+2VL8Q1h1M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OPryfSwsIfN/qzwXjsoZRio4ZqXd8aybNZKTzZVLK8ahZQgN87vGSPehK4gwEIkNnWC2SptEU9iuUuk9kSJj1LKgkRJy0sFU+jyp4IX4ddA2PtjWB0+/us6BeHaHXzI6wjMJ+z1Kpl7L5qz54nUZLEZBBbvvVgjpl7wG3gFjAF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
-Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZJYcq2hVdz9sS8;
-	Thu, 20 Mar 2025 19:14:19 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from pegase2.c-s.fr ([172.26.127.65])
-	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id FIxIWHcGzLNY; Thu, 20 Mar 2025 19:14:19 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJYcq0NGwz9sRr;
-	Thu, 20 Mar 2025 19:14:19 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id A9BC48B79C;
-	Thu, 20 Mar 2025 19:14:18 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id ChJ9MNcL_MA0; Thu, 20 Mar 2025 19:14:18 +0100 (CET)
-Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 088EF8B763;
-	Thu, 20 Mar 2025 19:14:17 +0100 (CET)
-Message-ID: <f00cca9b-d9d3-41c1-b808-3cee858c06c4@csgroup.eu>
-Date: Thu, 20 Mar 2025 19:14:17 +0100
+	s=arc-20240116; t=1742495043; c=relaxed/simple;
+	bh=p5C7au6pn1wBtzZYZ4qP8jufg2hjU9r8Y3dB0+e4uZo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sEtq5kIGAgUxg/GEt0Kr7/v/pWAFCUabCppZBhXywuFp6ontzxOKZ1JK3AqWLlx15OL1WKQiLK/IJZCw23l8PgcVg5dd8fY5Fa7DqxKL/Wg7TV+V7Wq7t71JFq3dIu53dkOEJ+0vw95X9Suxq+4SaUSgJWn9pB7/E8j1OsHKeac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=WwBCTEms; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="WwBCTEms"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-22401f4d35aso24210355ad.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:24:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1742495041; x=1743099841; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u4hqLDLaMuKQjfJXNLqiy/5jqelv39CVb9y2B7DStAE=;
+        b=WwBCTEmsZsE0u14w5+lel9PAQUo60ea3JFr9XutPnHRtSOArkey5lZs8L4WVD6XJsN
+         H6cqTFbJQcbGEOWQZsJOsnuUviSYfA1qIVQNWfltM+2DamzufJB+olTsVkz/pBdrznhA
+         ork0WIN/gbD1s4W2PsgM6+6+c4H/gbspynRv0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742495041; x=1743099841;
+        h=in-reply-to:content-disposition:mime-version:references
+         :mail-followup-to:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u4hqLDLaMuKQjfJXNLqiy/5jqelv39CVb9y2B7DStAE=;
+        b=QBDfXT/w4tPTnje2B/x/5Iz1tB9F2AXGI+IFAHOiSjdjU9TNBEST0++URunIQYAN7j
+         VhAr9w5s4LGqn60Rr42OynmDYJg6BoBA68FB0OPJof73MoycrY8bKK8JpVQoHcg1YIAc
+         S8Qk+RlXwTsFdhlpr/e5iXy7I+FRAq9IuzQQRvyQ3eHbhP3wKN31+1qV2PFBhwkfxtfA
+         B8r7o1yVSetEic3DQ3Qbn2WBPEbYqE+AHBf2FsacrJcPctdigeNOKuoj8/maWEJ9iBXr
+         WIBcfCZrZdbrL9jbDn97BrrC0LBczU4WbToxanVFfuvoXUzBLkSn6ZXBsYHLrX2IgRM8
+         IuUw==
+X-Forwarded-Encrypted: i=1; AJvYcCUB28iVxkqwE340JV/ueg6mzwe+SFm+WH6yaQyturypyQg5e6viFnwnLXaD3DceJ2ga64j8wpljnAOcP2o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkqxcJg6gpqukW+/fmCspZhGv5/ZM+cyhvAzNIkgNQBtMCBcce
+	2iqLI3l0bPprQt8cc6V/4FSv2Va1DQGR8xDUu9C2OGimyuWWpgtRHz8oXPna/7/35VLFLVktF0L
+	4
+X-Gm-Gg: ASbGnct8kWhi3rx6yubG+y9TSLEoifXGpDsbwYMjsTjqpxqlGVrpt4V8ZF5v2YFVmjG
+	QjGd6jr9aRjGXLk/fTxCJDbqPTi+S76VnJevF2mcZ3DTBtM07MvnyXwGODvU/gc6wElhRlhT1HQ
+	QBSqdBlo3nNzU/8XwgSrmBJTleEnbYTLhay+yYaWcj3SD2w5/vgw2WCuYj8PvZ6niGLeoWmGazx
+	2u/wESYxjIKqb1IGl7FCyuhQcVxgv8tuOeCO9iV3BDNAxXamN0FHctWB+6OuTObbGnZZozlwWuR
+	zxrMm+cZ0Fhb1b+oxKY0WxhoEqpBDgKXDsZc0HDqrgoBd8T2Mc8HcAtZ95JquWdsftHbXnhG+4u
+	Ak2B4nNR/jEn3b157
+X-Google-Smtp-Source: AGHT+IFjGyoj26a+mfA5sPrt2XYRA48FDA00r7QAzbLWG2KYNvo58GwB3aOzyQT77qllSS0qHLvptA==
+X-Received: by 2002:a17:90b:2fc7:b0:2f9:bcd8:da33 with SMTP id 98e67ed59e1d1-3030feaa56fmr348796a91.21.1742495041407;
+        Thu, 20 Mar 2025 11:24:01 -0700 (PDT)
+Received: from LQ3V64L9R2 (c-24-6-151-244.hsd1.ca.comcast.net. [24.6.151.244])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3030f5d4e46sm180311a91.14.2025.03.20.11.23.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 11:24:00 -0700 (PDT)
+Date: Thu, 20 Mar 2025 11:23:57 -0700
+From: Joe Damato <jdamato@fastly.com>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Jens Axboe <axboe@kernel.dk>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, asml.silence@gmail.com,
+	linux-fsdevel@vger.kernel.org, edumazet@google.com,
+	pabeni@redhat.com, horms@kernel.org, linux-api@vger.kernel.org,
+	linux-arch@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+	kuba@kernel.org, shuah@kernel.org, sdf@fomichev.me,
+	mingo@redhat.com, arnd@arndb.de, brauner@kernel.org,
+	akpm@linux-foundation.org, tglx@linutronix.de, jolsa@kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: Re: [RFC -next 00/10] Add ZC notifications to splice and sendfile
+Message-ID: <Z9xdPVQeLBrB-Anu@LQ3V64L9R2>
+Mail-Followup-To: Joe Damato <jdamato@fastly.com>,
+	Christoph Hellwig <hch@infradead.org>, Jens Axboe <axboe@kernel.dk>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	asml.silence@gmail.com, linux-fsdevel@vger.kernel.org,
+	edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+	linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+	viro@zeniv.linux.org.uk, jack@suse.cz, kuba@kernel.org,
+	shuah@kernel.org, sdf@fomichev.me, mingo@redhat.com, arnd@arndb.de,
+	brauner@kernel.org, akpm@linux-foundation.org, tglx@linutronix.de,
+	jolsa@kernel.org, linux-kselftest@vger.kernel.org
+References: <20250319001521.53249-1-jdamato@fastly.com>
+ <Z9p6oFlHxkYvUA8N@infradead.org>
+ <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
+ <2d68bc91-c22c-4b48-a06d-fa9ec06dfb25@kernel.dk>
+ <Z9r5JE3AJdnsXy_u@LQ3V64L9R2>
+ <19e3056c-2f7b-4f41-9c40-98955c4a9ed3@kernel.dk>
+ <Z9sCsooW7OSTgyAk@LQ3V64L9R2>
+ <Z9uuSQ7SrigAsLmt@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 41/57] irqdomain: ppc: Switch to irq_find_mapping()
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, tglx@linutronix.de
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org,
- Madhavan Srinivasan <maddy@linux.ibm.com>,
- Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
- Naveen N Rao <naveen@kernel.org>, Anatolij Gustschin <agust@denx.de>,
- Scott Wood <oss@buserror.net>, linuxppc-dev@lists.ozlabs.org
-References: <20250319092951.37667-1-jirislaby@kernel.org>
- <20250319092951.37667-42-jirislaby@kernel.org>
-Content-Language: fr-FR
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250319092951.37667-42-jirislaby@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9uuSQ7SrigAsLmt@infradead.org>
 
-
-
-Le 19/03/2025 à 10:29, Jiri Slaby (SUSE) a écrit :
-> irq_linear_revmap() is deprecated, so remove all its uses and supersede
-> them by an identical call to irq_find_mapping().
+On Wed, Mar 19, 2025 at 10:57:29PM -0700, Christoph Hellwig wrote:
+> On Wed, Mar 19, 2025 at 10:45:22AM -0700, Joe Damato wrote:
+> > I don't disagree; I just don't know if app developers:
+> >   a.) know that this is possible to do, and
+> >   b.) know how to do it
 > 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Nicholas Piggin <npiggin@gmail.com>
-> Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Naveen N Rao <naveen@kernel.org>
-> Cc: Anatolij Gustschin <agust@denx.de>
-> Cc: Scott Wood <oss@buserror.net>
-> Cc: linuxppc-dev@lists.ozlabs.org
+> So if you don't know that why do you even do the work?
 
-Acked-by: Christophe Leroy <christophe.leroy@csgroup.eu> # for 8xx
+I am doing the work because I use splice and sendfile and it seems
+relatively straightforward to make them safer using an existing
+mechanism, at least for network sockets.
 
-> ---
->   arch/powerpc/platforms/44x/uic.c                 | 2 +-
->   arch/powerpc/platforms/52xx/mpc52xx_gpt.c        | 2 +-
->   arch/powerpc/platforms/52xx/mpc52xx_pic.c        | 2 +-
->   arch/powerpc/platforms/85xx/socrates_fpga_pic.c  | 2 +-
->   arch/powerpc/platforms/8xx/cpm1-ic.c             | 2 +-
->   arch/powerpc/platforms/8xx/pic.c                 | 2 +-
->   arch/powerpc/platforms/embedded6xx/flipper-pic.c | 2 +-
->   arch/powerpc/platforms/embedded6xx/hlwd-pic.c    | 2 +-
->   arch/powerpc/platforms/powermac/pic.c            | 2 +-
->   arch/powerpc/sysdev/cpm2_pic.c                   | 2 +-
->   arch/powerpc/sysdev/ehv_pic.c                    | 2 +-
->   arch/powerpc/sysdev/ge/ge_pic.c                  | 2 +-
->   arch/powerpc/sysdev/ipic.c                       | 2 +-
->   arch/powerpc/sysdev/mpic.c                       | 4 ++--
->   14 files changed, 15 insertions(+), 15 deletions(-)
+After dropping the sendfile2 patches completely, it looks like in my
+new set all of the code is within CONFIG_NET defines in fs/splice.c.
+ 
+> > In general: it does seem a bit odd to me that there isn't a safe
+> > sendfile syscall in Linux that uses existing completion notification
+> > mechanisms.
 > 
-> diff --git a/arch/powerpc/platforms/44x/uic.c b/arch/powerpc/platforms/44x/uic.c
-> index 481ec25ce78f..85daf841fd3f 100644
-> --- a/arch/powerpc/platforms/44x/uic.c
-> +++ b/arch/powerpc/platforms/44x/uic.c
-> @@ -328,5 +328,5 @@ unsigned int uic_get_irq(void)
->   	msr = mfdcr(primary_uic->dcrbase + UIC_MSR);
->   	src = 32 - ffs(msr);
->   
-> -	return irq_linear_revmap(primary_uic->irqhost, src);
-> +	return irq_find_mapping(primary_uic->irqhost, src);
->   }
-> diff --git a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
-> index f042b21b2b73..3dbe5a5e5d1f 100644
-> --- a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
-> +++ b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
-> @@ -369,7 +369,7 @@ struct mpc52xx_gpt_priv *mpc52xx_gpt_from_irq(int irq)
->   	mutex_lock(&mpc52xx_gpt_list_mutex);
->   	list_for_each(pos, &mpc52xx_gpt_list) {
->   		gpt = container_of(pos, struct mpc52xx_gpt_priv, list);
-> -		if (gpt->irqhost && irq == irq_linear_revmap(gpt->irqhost, 0)) {
-> +		if (gpt->irqhost && irq == irq_find_mapping(gpt->irqhost, 0)) {
->   			mutex_unlock(&mpc52xx_gpt_list_mutex);
->   			return gpt;
->   		}
-> diff --git a/arch/powerpc/platforms/52xx/mpc52xx_pic.c b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
-> index 7ec56d3788a9..eb6a4e745c08 100644
-> --- a/arch/powerpc/platforms/52xx/mpc52xx_pic.c
-> +++ b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
-> @@ -515,5 +515,5 @@ unsigned int mpc52xx_get_irq(void)
->   		return 0;
->   	}
->   
-> -	return irq_linear_revmap(mpc52xx_irqhost, irq);
-> +	return irq_find_mapping(mpc52xx_irqhost, irq);
->   }
-> diff --git a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
-> index b4f6360830b1..4b69fb321a68 100644
-> --- a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
-> +++ b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
-> @@ -83,7 +83,7 @@ static inline unsigned int socrates_fpga_pic_get_irq(unsigned int irq)
->   		if (cause >> (i + 16))
->   			break;
->   	}
-> -	return irq_linear_revmap(socrates_fpga_pic_irq_host,
-> +	return irq_find_mapping(socrates_fpga_pic_irq_host,
->   			(irq_hw_number_t)i);
->   }
->   
-> diff --git a/arch/powerpc/platforms/8xx/cpm1-ic.c b/arch/powerpc/platforms/8xx/cpm1-ic.c
-> index 1549f6cd29f4..a49d4a9ab3bc 100644
-> --- a/arch/powerpc/platforms/8xx/cpm1-ic.c
-> +++ b/arch/powerpc/platforms/8xx/cpm1-ic.c
-> @@ -59,7 +59,7 @@ static int cpm_get_irq(struct irq_desc *desc)
->   	cpm_vec = in_be16(&data->reg->cpic_civr);
->   	cpm_vec >>= 11;
->   
-> -	return irq_linear_revmap(data->host, cpm_vec);
-> +	return irq_find_mapping(data->host, cpm_vec);
->   }
->   
->   static void cpm_cascade(struct irq_desc *desc)
-> diff --git a/arch/powerpc/platforms/8xx/pic.c b/arch/powerpc/platforms/8xx/pic.c
-> index 7639f28172be..933d6ab7f512 100644
-> --- a/arch/powerpc/platforms/8xx/pic.c
-> +++ b/arch/powerpc/platforms/8xx/pic.c
-> @@ -80,7 +80,7 @@ unsigned int mpc8xx_get_irq(void)
->   	if (irq == PIC_VEC_SPURRIOUS)
->   		return 0;
->   
-> -        return irq_linear_revmap(mpc8xx_pic_host, irq);
-> +        return irq_find_mapping(mpc8xx_pic_host, irq);
->   
->   }
->   
-> diff --git a/arch/powerpc/platforms/embedded6xx/flipper-pic.c b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
-> index a41649bf0cb8..91a8f0a7086e 100644
-> --- a/arch/powerpc/platforms/embedded6xx/flipper-pic.c
-> +++ b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
-> @@ -173,7 +173,7 @@ unsigned int flipper_pic_get_irq(void)
->   		return 0;	/* no more IRQs pending */
->   
->   	irq = __ffs(irq_status);
-> -	return irq_linear_revmap(flipper_irq_host, irq);
-> +	return irq_find_mapping(flipper_irq_host, irq);
->   }
->   
->   /*
-> diff --git a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
-> index 9abb3da36ba5..b57e87b0b3ce 100644
-> --- a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
-> +++ b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
-> @@ -190,7 +190,7 @@ static struct irq_domain *__init hlwd_pic_init(struct device_node *np)
->   unsigned int hlwd_pic_get_irq(void)
->   {
->   	unsigned int hwirq = __hlwd_pic_get_irq(hlwd_irq_host);
-> -	return hwirq ? irq_linear_revmap(hlwd_irq_host, hwirq) : 0;
-> +	return hwirq ? irq_find_mapping(hlwd_irq_host, hwirq) : 0;
->   }
->   
->   /*
-> diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
-> index 2eddc8bff7ab..c37783a03d25 100644
-> --- a/arch/powerpc/platforms/powermac/pic.c
-> +++ b/arch/powerpc/platforms/powermac/pic.c
-> @@ -250,7 +250,7 @@ static unsigned int pmac_pic_get_irq(void)
->   	raw_spin_unlock_irqrestore(&pmac_pic_lock, flags);
->   	if (unlikely(irq < 0))
->   		return 0;
-> -	return irq_linear_revmap(pmac_pic_host, irq);
-> +	return irq_find_mapping(pmac_pic_host, irq);
->   }
->   
->   static int pmac_pic_host_match(struct irq_domain *h, struct device_node *node,
-> diff --git a/arch/powerpc/sysdev/cpm2_pic.c b/arch/powerpc/sysdev/cpm2_pic.c
-> index c63d72f17a3e..4a59ed1d62ce 100644
-> --- a/arch/powerpc/sysdev/cpm2_pic.c
-> +++ b/arch/powerpc/sysdev/cpm2_pic.c
-> @@ -207,7 +207,7 @@ unsigned int cpm2_get_irq(void)
->   
->   	if (irq == 0)
->   		return(-1);
-> -	return irq_linear_revmap(cpm2_pic_host, irq);
-> +	return irq_find_mapping(cpm2_pic_host, irq);
->   }
->   
->   static int cpm2_pic_host_map(struct irq_domain *h, unsigned int virq,
-> diff --git a/arch/powerpc/sysdev/ehv_pic.c b/arch/powerpc/sysdev/ehv_pic.c
-> index 4ee8d36ca647..b6f9774038e1 100644
-> --- a/arch/powerpc/sysdev/ehv_pic.c
-> +++ b/arch/powerpc/sysdev/ehv_pic.c
-> @@ -175,7 +175,7 @@ unsigned int ehv_pic_get_irq(void)
->   	 * this will also setup revmap[] in the slow path for the first
->   	 * time, next calls will always use fast path by indexing revmap
->   	 */
-> -	return irq_linear_revmap(global_ehv_pic->irqhost, irq);
-> +	return irq_find_mapping(global_ehv_pic->irqhost, irq);
->   }
->   
->   static int ehv_pic_host_match(struct irq_domain *h, struct device_node *node,
-> diff --git a/arch/powerpc/sysdev/ge/ge_pic.c b/arch/powerpc/sysdev/ge/ge_pic.c
-> index 5b1f8dc3c960..0bc3f0b36528 100644
-> --- a/arch/powerpc/sysdev/ge/ge_pic.c
-> +++ b/arch/powerpc/sysdev/ge/ge_pic.c
-> @@ -245,7 +245,7 @@ unsigned int gef_pic_get_irq(void)
->   			if (active & (0x1 << hwirq))
->   				break;
->   		}
-> -		virq = irq_linear_revmap(gef_pic_irq_host,
-> +		virq = irq_find_mapping(gef_pic_irq_host,
->   			(irq_hw_number_t)hwirq);
->   	}
->   
-> diff --git a/arch/powerpc/sysdev/ipic.c b/arch/powerpc/sysdev/ipic.c
-> index f7b415ebb71c..70be2105865d 100644
-> --- a/arch/powerpc/sysdev/ipic.c
-> +++ b/arch/powerpc/sysdev/ipic.c
-> @@ -801,7 +801,7 @@ unsigned int ipic_get_irq(void)
->   	if (irq == 0)    /* 0 --> no irq is pending */
->   		return 0;
->   
-> -	return irq_linear_revmap(primary_ipic->irqhost, irq);
-> +	return irq_find_mapping(primary_ipic->irqhost, irq);
->   }
->   
->   #ifdef CONFIG_SUSPEND
-> diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
-> index 3de090159a1b..787a88efdb35 100644
-> --- a/arch/powerpc/sysdev/mpic.c
-> +++ b/arch/powerpc/sysdev/mpic.c
-> @@ -1785,7 +1785,7 @@ static unsigned int _mpic_get_one_irq(struct mpic *mpic, int reg)
->   		return 0;
->   	}
->   
-> -	return irq_linear_revmap(mpic->irqhost, src);
-> +	return irq_find_mapping(mpic->irqhost, src);
->   }
->   
->   unsigned int mpic_get_one_irq(struct mpic *mpic)
-> @@ -1823,7 +1823,7 @@ unsigned int mpic_get_coreint_irq(void)
->   		return 0;
->   	}
->   
-> -	return irq_linear_revmap(mpic->irqhost, src);
-> +	return irq_find_mapping(mpic->irqhost, src);
->   #else
->   	return 0;
->   #endif
+> Agreed.  Where the existing notification mechanism is called io_uring.
 
+Sure. As I mentioned to Jens: I agree that any new system call
+should be built differently.
+
+But does that mean we should leave splice and sendfile as-is when
+there is a way to potentially make them safer?
+
+In my other message to Jens I proposed:
+  - SPLICE_F_ZC for splice to generate zc completion notifications
+    to the error queue
+  - Modifying sendfile so that if SO_ZEROCOPY (which already exists)
+    is set on a network socket, zc completion notifications are
+    generated.
+
+In both cases no new system call is needed and both splice and
+sendfile become safer to use. 
+
+At some point in the future a mechanism built on top of iouring
+introduced as new system calls (sendmsg2, sendfile2, splice2, etc)
+can be built.
+
+> > Of course, I certainly agree that the error queue is a work around.
+> > But it works, app use it, and its fairly well known. I don't see any
+> > reason, other than historical context, why sendmsg can use this
+> > mechanism, splice can, but sendfile shouldn't?
+> 
+> Because sendmsg should never have done that it certainly should not
+> spread beyond purely socket specific syscalls.
+
+I don't know the entire historical context, but I presume sendmsg
+did that because there was no other mechanism at the time.
+
+I will explain it more clearly in the next cover letter, but the way
+I see the situation is:
+  - There are existing system calls which operate on network sockets
+    (splice and sendfile) that avoid copies
+  - There is a mechanism already in the kernel in the networking
+    stack for generating completion notifications
+  - Both splice and sendfile could be extended to support this for
+    network sockets so they can be used more safely, without
+    introducing a new system call
+
+> > If you feel very strongly that this cannot be merged without
+> > dropping sendfile2 and only plumbing this through for splice, then
+> > I'll drop the sendfile2 syscall when I submit officially (probably
+> > next week?).
+> 
+> Splice should also not do "error queue notifications".  Nothing
+> new and certainly nothing outside of net/ should.
+
+It seems like Jens suggested that plumbing this through for splice
+was a possibility, but sounds like you disagree.
+
+Not really sure how to proceed here?
+
+If code I am modifying is within CONFIG_NET defines, but lives in
+fs/splice.c ... is that within the realm of net or fs ?
+
+I am asking because I genuinely don't know.
+
+As mentioned above and in other messages, it seems like it is
+possible to improve the networking parts of splice (and therefore
+sendfile) to make them safer to use without introducing a new system
+call.
+
+Are you saying that you are against doing that, even if the code is
+network specific (but lives in fs/)?
+
+> > I do feel pretty strongly that it's more likely apps would use
+> > sendfile2 and we'd have safer apps out in the wild. But, I could be
+> > wrong.
+> 
+> A purely synchronous sendfile that is safe is a good thing.  Spreading
+> non-standard out of band notifications is not.  How to build that
+> safe sendmsg is a good question, and a sendmsg2 might be a sane
+> option for that.  The important thing is that the underlying code
+> should use iocbs and ki_complete to notify I/O completion so that
+> all the existing infrastucture like io_uring and in-kernel callers
+> can reuse this.
+
+I'm not currently planning to build sendmsg2 (and I've already
+mentioned to Jens and above I will drop sendfile2), but if I have the time
+it sounds like an interesting project.
