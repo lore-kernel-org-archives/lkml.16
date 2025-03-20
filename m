@@ -1,134 +1,156 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F3B2225403
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:20:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46EBF2222D9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:21:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742480431; cv=none; b=J6Wm9ikAWwOOp6RrL1gpRJ+bucY5vARkjs/Yc329KYIaY4bpFLAqJGVPrVHBtzkFfmVtmSeKwzQk49aTB00uyDikOCf/BHMlIASrm4ZBHOWInjH7Sh0jsbb6LPKYDadMiF+j08KAMNVmcR7eGIDfxv2pOjHtf2d4gJ9nd/ylulo=
+	t=1742480495; cv=none; b=pR6JFZeBfu5ijcLFeUu6JrveZmcpfuRbqEvGg8tOEngT5NWkqRGy6BwJzPDG4ya3e/vjoFOQIunryfa5oU+rRnHzpCpBHa8DXvvBLci3JjiYn3HHgd1T9N9PHDwYvZYVpMOTHdsZIA/q7ByLJCB5Iuyu932YexMgZIt8sqJvdYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742480431; c=relaxed/simple;
-	bh=Il0oi8W0P1a3TdzcT4YRMppA6PiszW9iVacc6BETtEU=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=EiXBfeUxjf56+SuauGGr6g1GKEoFLaP3vbNXYzKlrmO2H1l8hcfhH06gtfU1nAXAJ4V3kcvjy4213KKTsjAJNpOPo50S0lO0F2X9ml4oFyt8Sqsv26KVFo8hRIUY//rgN+18q/M3+R6/LphL3C08tlyA5LGuisPWuxB4gyvBGZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=3AG9xUgc; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
+	s=arc-20240116; t=1742480495; c=relaxed/simple;
+	bh=KM4ZCMaCLFfkTKaneHhDJ+FlPOOBtprvWKZvUFRSOko=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=besQvpxUMexKimeVhhdUFMCIcm/0UefIrUBe5TC9RhVY8rq0ratnX8KRvKB8MCYqKze4ebOQoj1WDL/flhJVjo42DIncMLmfoK1sypWH9x03n2LK9X4IIA17f2Ug/sA1JtZ1zWFFd7nDtTgVz3uUVvReW+14mox7CCbK7IFWY/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=fb2xLXAr; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="3AG9xUgc"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff7cf599beso2037420a91.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 07:20:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fb2xLXAr"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cfe574976so5360975e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 07:21:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742480429; x=1743085229; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=qmMYNbiE7NCmjn3AfFSyN2d7EeiAyZE9x1WOdP/HlBU=;
-        b=3AG9xUgc3lGd6Pprwr5yr5yEN1mF7TejSfjEUZ/gzhImLPe8OsrvWOCIAtz4MDuiJn
-         CwyQTTwYdjpSjPRJPcpsIt2EnuaU/4l4959u0cEwtvQaewkwDAmej+tCF55jGUiJ+vjL
-         ldgcB+C4f1ddKuFBxU0tIZjIHBZ+c86EKWQjss74HgXc1lbOJc2EQFDL6Nv6YTyhLxsa
-         cJG8PUfyhhvQ7h2FXFS1KVCl0NVZ+EQFeadT25obuVL9vLe8+LrfUkYMN5a+fKRMNzQR
-         /EAqe5WJY+VCqok6IhnApi+JY/KQN6K9LIO5jsp6uv0xPMGDczTOjlGJ7MdMGYroquI3
-         zbeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742480429; x=1743085229;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=linaro.org; s=google; t=1742480491; x=1743085291; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=qmMYNbiE7NCmjn3AfFSyN2d7EeiAyZE9x1WOdP/HlBU=;
-        b=I53q5yq5Hm3QmxM8w2BYt+alBovWHpBUCYx1YC8Qw6mUOwACseBSjinXx4JGa990ZW
-         Q4sihwHpW5cV7qnE1qeMTX1azcI6miGQfsPENKl1tkQprMNoWo0K1CkgFimFwhwA+DtJ
-         21jFhgzsxzC10TPCo5cUOZdOLF2JbzFiXaVM7drk3R3k2fjr1QOOthZQsFqfZBlbF5pf
-         vBBxa2LN1PZu9HQDtIRA4Wpmjghuri+TU4vkaXWtGvx24FmqWYYBNgzGaay7rS1Zx4yV
-         NuLouHIa+bq0ncDQUvW1uw2DEP5pIKbihO8eu0SOSzCZZfwvHQSqjxSsDG4JpItYFqLW
-         tRww==
-X-Forwarded-Encrypted: i=1; AJvYcCWfrZZAMjWFji8wwRW5EAURq9/WUXEs2JnEMAELcTXcCyzkUy9keJnoGqU/yudL46K/7R50ycdErTD6lCI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmdJKR4ApPlnvoFIdZg00I086KpmubBzTNvy5n7jKYFfrNqIzK
-	0w4SMbZRkhNTE2uT083lSIsvZc2AyyQEjigWZecCK9WNStDYKu0BHXZGRJzXX45hkvy0CR+ahle
-	RKA==
-X-Google-Smtp-Source: AGHT+IE+kfb1HoHRnQ267XvStqDZApTqRyoY0YWXiW9OB48WA4CtrHH/pA04OI5VxdB4Gu95vkhQH/SyzBw=
-X-Received: from pjur8.prod.google.com ([2002:a17:90a:d408:b0:2fa:b84:b308])
- (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2f84:b0:2fe:8c08:88c6
- with SMTP id 98e67ed59e1d1-301bde53e35mr11107321a91.7.1742480429675; Thu, 20
- Mar 2025 07:20:29 -0700 (PDT)
-Reply-To: Sean Christopherson <seanjc@google.com>
-Date: Thu, 20 Mar 2025 07:20:22 -0700
-In-Reply-To: <20250320142022.766201-1-seanjc@google.com>
+        bh=NZbg94QK7tAjZ4eqQ8xaJAIEHJ1PEfH8AojbdclcFGM=;
+        b=fb2xLXArsFgmWyCE/nONlc1OHxH2mimygwuFvOqkfuAW6gq7uLAN1Lqi0Tc3vfF4Pm
+         uYak3CDFRnZCLS+eXxZJIqZ2pn8TcX8kIfdbaXheLA+TE5POblR6NkdUYpdD4jX0xvdu
+         g+O7qM3OWN3TqM+c7lWBp9mZ17HhI3QFsjVlXqd3V5P20S2wIH7X3L5GODYEU5Ovf7CY
+         JjDrIHsP6o1I7uBnvbKBE1Ii84xgzodvbwHNybjeAgIPtQVtPBM73uyETVDLfL4Tdh8u
+         AbyBd+s8dMvS+LlM98MXBVXYWmkLE1lUGOfCrVSh4XXkze2k+6L6sQUonSiSLGjLCyXt
+         c36Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742480491; x=1743085291;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=NZbg94QK7tAjZ4eqQ8xaJAIEHJ1PEfH8AojbdclcFGM=;
+        b=Z/qh6V8D81LrFk+vWdN6LbGmkqced+acHL+Tl/XXLk07411ES8/CrP6M/Ck0xmyoHt
+         0rrYaR+S8kmKrT6991Jp7QYbvvyQLVwwJ0yDywD7XwZd4hLwtlmDPKmyv2jHNXgX8fAv
+         Kt/AvWwsr56wrFxR4huIyN6mb2vxWyVEuN65wZsGvbT6dmUepgR9XJNPOW7VQYQy6fMi
+         mukVDGwEvfY+/stNM9c1cl65NY03XZ3OP8uWfnAvuD6D+ZXXDe0422gAH9g7fd+Yp37J
+         uCy5AyMeJr7tv4pJ9u+mJPjrCnHwGvKiJfbiWUCBWLVpP3zin8lSmjJJGCZMhzcvIBct
+         dYlA==
+X-Forwarded-Encrypted: i=1; AJvYcCVZfKezcUMTZuK9Jk4CnqvuOgh6Ppkj7tLJA6fvkB+Gx5ot835rxI2VMDAlI4CnDcK9JzgaxQ4ckVNhSlM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5C0JLgeCaX5rcHKSMZTDmwliEWIFsYUU7UVqdrZ1TNiOXusGZ
+	rUag/sA/Q6udpi2RG1+mZfQ51LAPlET99Wk3asR8MT1yMAnarMUD8ztanh+aeYo=
+X-Gm-Gg: ASbGncvl6eyT2In1qPZpaSQQRyMT+dSm2ECC38hMFE26KIJUmWQu5jnBAVCIm8nr4HA
+	q99hmPSglhi3NHfmLrGp1hYTUvi5ZpVsa9zpNrK72cGYru2i1sTgXUXcHbjDum2rEbHJMPSCaPL
+	xZJbQNOeI4I511z3Qjx4yN4x1BCON5piAGiFeZ8slVz8EYb4H8eXyrW1vPVl/Y2qegv4fHToQrj
+	bJ4M6gM4/b5wAaD487Ba0cf/yS81eMAaVdxLRq5yx0TRx5eacBrN+IsQ78Yu/JB8WGoZQeSqr87
+	OztFZp8YTZ/uR3enSBBqKVn5uVTpXFjDqbww8BVAcGpEKfT+2jRlIq5ux4dh5YikrookJcjCkkE
+	YIeohqOD8y+bD0oG1
+X-Google-Smtp-Source: AGHT+IHwKg3G7PLtrFm8wWRV8MxbX7wu9hl+TgEb8GtAYHTVjykg6cpeFV88/xcw1UY02BI2wxLzKw==
+X-Received: by 2002:a7b:c314:0:b0:43b:cc3c:60bc with SMTP id 5b1f17b1804b1-43d43793107mr56231295e9.15.1742480491447;
+        Thu, 20 Mar 2025 07:21:31 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:3bd:568:f697:d1a2? ([2a01:e0a:3d9:2080:3bd:568:f697:d1a2])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395cb40fab8sm24634233f8f.63.2025.03.20.07.21.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 07:21:31 -0700 (PDT)
+Message-ID: <9cdd8ed8-082f-4b17-94a0-e8ee61b9da9c@linaro.org>
+Date: Thu, 20 Mar 2025 15:21:30 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250320142022.766201-1-seanjc@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250320142022.766201-4-seanjc@google.com>
-Subject: [PATCH v2 3/3] KVM: x86: Add a module param to control and enumerate
- device posted IRQs
-From: Sean Christopherson <seanjc@google.com>
-To: Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Yosry Ahmed <yosry.ahmed@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH v5 2/7] dt-bindings: usb: Introduce qcom,snps-dwc3
+To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Felipe Balbi <balbi@kernel.org>,
+ Wesley Cheng <quic_wcheng@quicinc.com>,
+ Saravana Kannan <saravanak@google.com>,
+ Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>, Frank Li <Frank.li@nxp.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com>
+ <20250318-dwc3-refactor-v5-2-90ea6e5b3ba4@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250318-dwc3-refactor-v5-2-90ea6e5b3ba4@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Add a module param to allow disabling device posted interrupts without
-having to sacrifice all of APICv/AVIC, and to also effectively enumerate
-to userspace whether or not KVM may be utilizing device posted IRQs.
-Disabling device posted interrupts is very desirable for testing, and can
-even be desirable for production environments, e.g. if the host kernel
-wants to interpose on device interrupts.
+Hi,
 
-Signed-off-by: Sean Christopherson <seanjc@google.com>
----
- arch/x86/include/asm/kvm_host.h | 1 +
- arch/x86/kvm/x86.c              | 9 ++++++++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+On 18/03/2025 20:05, Bjorn Andersson wrote:
+> The Qualcomm USB glue is not separate of the Synopsys DWC3 core and
+> several of the snps,dwc3 properties (such as clocks and reset) conflicts
+> in expectation with the Qualcomm integration.
+> 
+> Using the newly split out Synopsys DWC3 core properties, describe the
+> Qualcomm USB block in a single block. The new binding is a copy of
+> qcom,dwc3 with the needed modifications.
+> 
+> It would have been convenient to retain the two structures with the same
+> compatibles, but as there exist no way to select a binding based on the
+> absence of a subnode/patternProperty, a new generic compatible is
+> introduced to describe this binding.
+> 
+> To avoid redefining all the platform-specific compatibles, "select" is
+> used to tell the DeviceTree validator which binding to use solely on the
+> generic compatible. (Otherwise if the specific compatible matches during
+> validation, the generic one must match as well)
+> 
+> Mark qcom,dwc3 deprecated, to favor expressing future platforms using
+> the new combined binding.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
+> ---
+>   .../devicetree/bindings/usb/qcom,dwc3.yaml         |  13 +-
+>   .../devicetree/bindings/usb/qcom,snps-dwc3.yaml    | 620 +++++++++++++++++++++
+>   2 files changed, 632 insertions(+), 1 deletion(-)
+> 
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-index d881e7d276b1..bf11c5ee50cb 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1922,6 +1922,7 @@ struct kvm_arch_async_pf {
- extern u32 __read_mostly kvm_nr_uret_msrs;
- extern bool __read_mostly allow_smaller_maxphyaddr;
- extern bool __read_mostly enable_apicv;
-+extern bool __read_mostly enable_device_posted_irqs;
- extern struct kvm_x86_ops kvm_x86_ops;
- 
- #define kvm_x86_call(func) static_call(kvm_x86_##func)
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index f76d655dc9a8..e7eb2198db26 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -227,6 +227,10 @@ EXPORT_SYMBOL_GPL(allow_smaller_maxphyaddr);
- bool __read_mostly enable_apicv = true;
- EXPORT_SYMBOL_GPL(enable_apicv);
- 
-+bool __read_mostly enable_device_posted_irqs = true;
-+module_param(enable_device_posted_irqs, bool, 0444);
-+EXPORT_SYMBOL_GPL(enable_device_posted_irqs);
-+
- const struct _kvm_stats_desc kvm_vm_stats_desc[] = {
- 	KVM_GENERIC_VM_STATS(),
- 	STATS_DESC_COUNTER(VM, mmu_shadow_zapped),
-@@ -9772,6 +9776,9 @@ int kvm_x86_vendor_init(struct kvm_x86_init_ops *ops)
- 	if (r != 0)
- 		goto out_mmu_exit;
- 
-+	enable_device_posted_irqs &= enable_apicv &&
-+				     irq_remapping_cap(IRQ_POSTING_CAP);
-+
- 	kvm_ops_update(ops);
- 
- 	for_each_online_cpu(cpu) {
-@@ -13552,7 +13559,7 @@ EXPORT_SYMBOL_GPL(kvm_arch_has_noncoherent_dma);
- 
- bool kvm_arch_has_irq_bypass(void)
- {
--	return enable_apicv && irq_remapping_cap(IRQ_POSTING_CAP);
-+	return enable_device_posted_irqs;
- }
- EXPORT_SYMBOL_GPL(kvm_arch_has_irq_bypass);
- 
--- 
-2.49.0.395.g12beb8f557-goog
+When converting sm8550 and sm8650, I get:
+usb@a600000: Unevaluated properties are not allowed ('dma-coherent' was unexpected)
+         from schema $id: http://devicetree.org/schemas/usb/qcom,snps-dwc3.yaml#
 
+So I guess it should be added.
+
+Neil
