@@ -1,417 +1,182 @@
-Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6724017BA5
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:01:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1361117BA5;
+	Thu, 20 Mar 2025 13:01:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742475672; cv=none; b=BRQQXVguQHe53RoIZQvxU6ccaGmjCYvB+NtAOY87snNSRR9tDS9JtoGzwzAreebJB/faeNwDmmFfeaWoBTZjvIHxXuHLT2D4OtG1jalIGfrj/cTpUjBm16ihbGb4XudvaYSoID3oTYihe17kArdeIDBCNRsxuIUhOCutxYGPG0s=
+	t=1742475689; cv=none; b=aq/UEy0OgZeYNm53FrnFuxrNV3Pm1S1OgihihAYzyGVfgBGKpotwUIrWrj7z9Vn/ALe4RsJAH9M6XIsQyNYn1s4B10ngUoY42s08brZmFBP6ih31OXztYS/9NQPNwOkiNrcMZf+3VdBaQSk2Ljc7vMgivx7oj3/LYIFYGQt2jtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742475672; c=relaxed/simple;
-	bh=c9gJuYkEB6S4q6yZj/iXbiiROOeGgszdUG9DzSJp/bE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a6QBGveLoa+Z9yDp2LDZvi1bHKQi5EGGm9CQReZAUkyNkjaBGBtbzOLHAWA3LzUbz/C8A/VUPZuW8m+yhObE95XLm5P30cg99vGKheVIpNu3euvT9XhhzxIRglBiwjKw+ueAkdoB6/CJFxglxV0YKlcYITZxPmWeE4i102aBrVc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GOMtSaDR; arc=none smtp.client-ip=209.85.161.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742475689; c=relaxed/simple;
+	bh=WMto3apGvnTVFrZ2Rgo/7crodKVQXZ4U2w2f+ZqEgcs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=owXTFzCL+W/Tq8S8YWA2Ticjw9dFmCeApjOsThDak6JMCnm3FL5SkPk++auR6EIbVESdxJxdudHdxwvkpirUHintkBPKGaSlg1EDaC32BaOPyJgrvwwHS/2GUZiE0SzPLNJu4tWwngFrDRsrT9rdHUqZfXMzqaLk2YCRJqFleCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O1Vwat0c; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GOMtSaDR"
-Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-601a46ee19fso337918eaf.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 06:01:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O1Vwat0c"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so8097985e9.3;
+        Thu, 20 Mar 2025 06:01:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742475669; x=1743080469; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=6+yMktsFjcXwHGeZP7s6JArkbmDxE6SXJWbsTPxURm4=;
-        b=GOMtSaDRLJJWZ7SVHF08vU9tgkqIUULT98kgTZPA7czxl8/efu0k6qODAeSEGPcCqc
-         OEwwbamDWUjaIR2gorbpOvn94p7Lj+cevya6z98IRzI0z5kZOq8oI+Imoj4XhYHsLx0d
-         IKyTuTZjx6yeyBkE8RMwmFEu3Gq+0drXsIXWgLbyuKaBJ0C2fqwga+rL5FqWOBoH0uO3
-         3PVljo1hm2Gl+xScThdE/TMaAWm/Nwalkv6Ie8cxlU6KgRlajWgaoZ+9enq0KHxq4bnB
-         963jgK8ZezuWE54PSTpB9dnATS0GfhZekVPYdYpybpPKe3udA1nCHyaJSvtIqo+WK1BN
-         LR1w==
+        d=gmail.com; s=20230601; t=1742475686; x=1743080486; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=E4jlgljNt40Vu2CmEv7FaT2u7xedRKcXuIPlI99mDNo=;
+        b=O1Vwat0c/VNDjj9z71/B8wZnJHyk284iFJye+OHL1Hv2aySuJ9jwXSuHPH8OzDXUqR
+         2OTJYg/6uRthH2xDCe3SWZzCoOkGMFfeOctvnLQtEZtBzrpNpDE8XnrsMJ1slotfP9yb
+         bpX1dpvkvTwc2/NTXzRiq0RysBlObKohwJtQhrqX93mw1mozfNMiyPXC0rEBjxrpgUQM
+         6163reAt3htrfaBqs/gRjO71gKxKiHfKukfAJWOLV7BNfN4x6qPbZZKjvHjqeZIDLNTO
+         o3UvjJk0m8oM15SD+gmgdTVc5L3bI2Kkjco62Mw7gtXaJ3eTu0sfFnl7A4peQohgtEyo
+         BwNg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742475669; x=1743080469;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=6+yMktsFjcXwHGeZP7s6JArkbmDxE6SXJWbsTPxURm4=;
-        b=GcjIGDcV/XSJkxt4TXTrZrISv7EpxeFqwGjOTm4kRXVUKsn4G4OjBqk6SCay+iBpfN
-         KtUjAn8bPaKmmyrmuAAcJRaaECDbWY68ZRs1mbhh2zr1DfPb+X33gL5IT/BH6nB4Pzih
-         KjTPEx4NXM/iVRaJB/T6WO5BrzpRvw+NbmEIWRkiKsY6782cawgSHgrfuQjghgJmteMi
-         +RI9/uytqJoBvaWZGfb0C6yMmytKevySjnXI8Toqlb75fXaevcnapPLCa9g83EptbnjQ
-         BjGFseVWUzru6ADPQy2E3FgK5pyzXrfrGioDLY+2NzWM6LnR3eUuETKRbiAfPC5UKfLC
-         COBQ==
-X-Gm-Message-State: AOJu0YzLHcd+KnXMAvgBKGp69AaWsJfLK+JT7vFdRAihm0eidiqWa4sT
-	1yPd4Zve4YG55R0n9uPK4Hc54kZXPH8qHhafOdQSn7P8x6rWN380v/y4VvhMryATFk7Ks4SvwoL
-	vk2DqyDwsRldhVQbBUB/JWqXty2iluuz+dt25zg==
-X-Gm-Gg: ASbGncvX0Y3lDzdvM0TTOyTQm1+prTmjwNBBsioE24pM4KVnqYmKUQESheJ57APeR/R
-	gYeF1hEgStwp5b3vPD1oeDwfEz4qSv1ePhYEjjujshT8PU2csle7Q4AcW9jOTBeYqOOAZ5gFuFI
-	5NBApcX2bi9pIhbQwyzTFvOUdzMy8UOkoy+7w4fg==
-X-Google-Smtp-Source: AGHT+IER3lKHIcEcdiIVPrJ7eloen80fgOB7PhdbTn8nzLcptKR7mRUWWhDSjhkLCICrC6XXoZNVwNg8WYZmtACVo/Q=
-X-Received: by 2002:a05:6870:ab83:b0:2b7:fd8f:7ade with SMTP id
- 586e51a60fabf-2c76334484amr2016430fac.33.1742475669160; Thu, 20 Mar 2025
- 06:01:09 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742475686; x=1743080486;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=E4jlgljNt40Vu2CmEv7FaT2u7xedRKcXuIPlI99mDNo=;
+        b=pcjipTsQp2t6+24XnMOsjNb+fOo5RaGySn8OHPbGpf3gLCzPhw2InN0DJYcLZBU6nt
+         szeTfii76nLgG8gHYy1QoI0rA4DcsyGs3dUZrVSVaFlhbzPRQN50FbxDDKNyv2UwK98i
+         WMtBr433vNflW7FGF+F2wmMOTjzjMqf9YGLu7fg9vVb5wDEgwxob0Vwx73Cas2JTH0q+
+         Yq4a6kv0yjHGZasmTXUUoQYgKWNKfPOyopPbFNKbYYxcr970USywk6Uszi1WgYbnrYQe
+         hT6IKZMbKmnCX9Mft01UpNftHJSawUSbflLs/u8gXu4dO5sLEPx8uW6UKbzZeJObq20w
+         fssw==
+X-Forwarded-Encrypted: i=1; AJvYcCUDRjUfSAwtCpSYcTri6sSntIpdwZz+7gpJUO4WtAuO8aU7L4Vy//Xv2RBhWu3FpNWJ2SA6mqyYkNyn@vger.kernel.org, AJvYcCVz2nMD9uK1TFun0Jd7CaDonKgCu0zWmF+XzIL6rgRR1Tgx34dhKiogQoX3Ny2bWMdxborQGet6Bcdk@vger.kernel.org, AJvYcCXKHbbrW2I0HkE7uTDr9uU8kLE3ym8dr0dsdYVCWX5wQMq5fqtPFzdoJYx2vEZTR/HJYxftQgtBI8xdhG1d@vger.kernel.org, AJvYcCXqVUEJ0wpnxi7+qjcoEyzH46tlvPPCPi4336Taeh1Hrr9DNZ08573te5HgfAkiCd63JPTMafIhITH+@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzixv3BfeICefV5U5NTnlxzViRz/B8D3fsHRN/ODsJebFTjFS1H
+	L9EE8kiI++1Tt1CFG2yfwy3HihX2WDUP1e7eGMiAGCFQ0vKYIg5LvKUPjw==
+X-Gm-Gg: ASbGncvq/AvmJTM7RC5tEqzxOI+jB02dYw7GO8sViLoBKBolTYkv8/OgAdCprQgkHiE
+	iX6Hx11ZrhWS1HcTU8SM6K7xWzmgo9f9jAB6Inuy3/MTYNUQ2qwNZr0MllGNeeIn1kgtkoj54k+
+	0ZOab2V6JiGE1yiouYEvrGTJuQOTFWsZ8Bs0rhsAl/W8oy+rlWsXkcs7ZNo+kech/V3NwSpsJOn
+	hGl/zBrUDcmQu5Fab7ItO8sgyIO6XHVDICwSbPYYZKlOb81zsGTT9xzPCtlpMNT2TYg48UChnvB
+	Oi7u4mYvqogD3b3EhQdqlAm2GRr7nswXPIPefyY5wDmMf/c8vkHRfnz54t3pgqj4mM1qQuG0SSX
+	Sy94b7LMn+tnewg==
+X-Google-Smtp-Source: AGHT+IGqvxRe9sNnKeQqg/T2zeY+NXunY9lY/OA3ABv2ihxgYNSNA4zfa6VlIvxCoHVeEJdasraRWg==
+X-Received: by 2002:a5d:47c9:0:b0:391:13ef:1af5 with SMTP id ffacd0b85a97d-399795e6d96mr3565437f8f.48.1742475685246;
+        Thu, 20 Mar 2025 06:01:25 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-397f2837e61sm18492328f8f.97.2025.03.20.06.01.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 06:01:24 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Christian Marangi <ansuelsmth@gmail.com>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Daniel Danzberger <dd@embedd.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Nikita Shubin <nikita.shubin@maquefel.me>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Yangyu Chen <cyy@cyyself.name>,
+	Ben Hutchings <ben@decadent.org.uk>,
+	Felix Fietkau <nbd@nbd.name>,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-phy@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	linux-usb@vger.kernel.org,
+	upstream@airoha.com
+Subject: [PATCH v2 00/11] airoha: en7581: clk cleanup + USB support
+Date: Thu, 20 Mar 2025 14:00:23 +0100
+Message-ID: <20250320130054.4804-1-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250305130634.1850178-1-jens.wiklander@linaro.org>
- <20250305130634.1850178-4-jens.wiklander@linaro.org> <Z9K2RQYuXSJc8Y1E@sumit-X1>
- <CAHUa44H5Zc_POJ_RWaVd4iFVagRkFaN+8Ajs=19FKboZapbQHw@mail.gmail.com> <Z9vfD4UWSrqSTPnP@sumit-X1>
-In-Reply-To: <Z9vfD4UWSrqSTPnP@sumit-X1>
-From: Jens Wiklander <jens.wiklander@linaro.org>
-Date: Thu, 20 Mar 2025 14:00:57 +0100
-X-Gm-Features: AQ5f1JqCC2vKgZCS03acwOcn_LV15c6BJFqVOmzZ6QYuBDoLBS5gBdANwGZwQY0
-Message-ID: <CAHUa44HY-jZCoDXKnx-f4gBoABRVdh1+6PA1AYHSva9aL=rDAA@mail.gmail.com>
-Subject: Re: [PATCH v6 03/10] optee: account for direction while converting parameters
-To: Sumit Garg <sumit.garg@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org, 
-	op-tee@lists.trustedfirmware.org, linux-arm-kernel@lists.infradead.org, 
-	Olivier Masse <olivier.masse@nxp.com>, Thierry Reding <thierry.reding@gmail.com>, 
-	Yong Wu <yong.wu@mediatek.com>, Sumit Semwal <sumit.semwal@linaro.org>, 
-	Benjamin Gaignard <benjamin.gaignard@collabora.com>, Brian Starkey <Brian.Starkey@arm.com>, 
-	John Stultz <jstultz@google.com>, "T . J . Mercier" <tjmercier@google.com>, 
-	=?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, azarrabi@qti.qualcomm.com, 
-	Simona Vetter <simona.vetter@ffwll.ch>, Daniel Stone <daniel@fooishbar.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Sumit,
+This series implement all the changes required to correctly handle
+USB support for the Airoha EN7581 SoC.
 
-On Thu, Mar 20, 2025 at 10:25=E2=80=AFAM Sumit Garg <sumit.garg@kernel.org>=
- wrote:
->
-> Hi Jens,
->
-> On Mon, Mar 17, 2025 at 08:42:01AM +0100, Jens Wiklander wrote:
-> > Hi Sumit,
-> >
-> > On Thu, Mar 13, 2025 at 11:41=E2=80=AFAM Sumit Garg <sumit.garg@kernel.=
-org> wrote:
-> > >
-> > > Hi Jens,
-> > >
-> > > On Wed, Mar 05, 2025 at 02:04:09PM +0100, Jens Wiklander wrote:
-> > > > The OP-TEE backend driver has two internal function pointers to con=
-vert
-> > > > between the subsystem type struct tee_param and the OP-TEE type str=
-uct
-> > > > optee_msg_param.
-> > > >
-> > > > The conversion is done from one of the types to the other, which is=
- then
-> > > > involved in some operation and finally converted back to the origin=
-al
-> > > > type. When converting to prepare the parameters for the operation, =
-all
-> > > > fields must be taken into account, but then converting back, it's e=
-nough
-> > > > to update only out-values and out-sizes. So, an update_out paramete=
-r is
-> > > > added to the conversion functions to tell if all or only some field=
-s
-> > > > must be copied.
-> > > >
-> > > > This is needed in a later patch where it might get confusing when
-> > > > converting back in from_msg_param() callback since an allocated
-> > > > restricted SHM can be using the sec_world_id of the used restricted
-> > > > memory pool and that doesn't translate back well.
-> > > >
-> > > > Signed-off-by: Jens Wiklander <jens.wiklander@linaro.org>
-> > > > ---
-> > > >  drivers/tee/optee/call.c          | 10 ++--
-> > > >  drivers/tee/optee/ffa_abi.c       | 43 +++++++++++++----
-> > > >  drivers/tee/optee/optee_private.h | 42 +++++++++++------
-> > > >  drivers/tee/optee/rpc.c           | 31 +++++++++----
-> > > >  drivers/tee/optee/smc_abi.c       | 76 +++++++++++++++++++++++----=
-----
-> > > >  5 files changed, 144 insertions(+), 58 deletions(-)
-> > > >
-> > > > diff --git a/drivers/tee/optee/call.c b/drivers/tee/optee/call.c
-> > > > index 16eb953e14bb..f1533b894726 100644
-> > > > --- a/drivers/tee/optee/call.c
-> > > > +++ b/drivers/tee/optee/call.c
-> > > > @@ -400,7 +400,8 @@ int optee_open_session(struct tee_context *ctx,
-> > > >       export_uuid(msg_arg->params[1].u.octets, &client_uuid);
-> > > >
-> > > >       rc =3D optee->ops->to_msg_param(optee, msg_arg->params + 2,
-> > > > -                                   arg->num_params, param);
-> > > > +                                   arg->num_params, param,
-> > > > +                                   false /*!update_out*/);
-> > > >       if (rc)
-> > > >               goto out;
-> > > >
-> > > > @@ -427,7 +428,8 @@ int optee_open_session(struct tee_context *ctx,
-> > > >       }
-> > > >
-> > > >       if (optee->ops->from_msg_param(optee, param, arg->num_params,
-> > > > -                                    msg_arg->params + 2)) {
-> > > > +                                    msg_arg->params + 2,
-> > > > +                                    true /*update_out*/)) {
-> > > >               arg->ret =3D TEEC_ERROR_COMMUNICATION;
-> > > >               arg->ret_origin =3D TEEC_ORIGIN_COMMS;
-> > > >               /* Close session again to avoid leakage */
-> > > > @@ -541,7 +543,7 @@ int optee_invoke_func(struct tee_context *ctx, =
-struct tee_ioctl_invoke_arg *arg,
-> > > >       msg_arg->cancel_id =3D arg->cancel_id;
-> > > >
-> > > >       rc =3D optee->ops->to_msg_param(optee, msg_arg->params, arg->=
-num_params,
-> > > > -                                   param);
-> > > > +                                   param, false /*!update_out*/);
-> > > >       if (rc)
-> > > >               goto out;
-> > > >
-> > > > @@ -551,7 +553,7 @@ int optee_invoke_func(struct tee_context *ctx, =
-struct tee_ioctl_invoke_arg *arg,
-> > > >       }
-> > > >
-> > > >       if (optee->ops->from_msg_param(optee, param, arg->num_params,
-> > > > -                                    msg_arg->params)) {
-> > > > +                                    msg_arg->params, true /*update=
-_out*/)) {
-> > > >               msg_arg->ret =3D TEEC_ERROR_COMMUNICATION;
-> > > >               msg_arg->ret_origin =3D TEEC_ORIGIN_COMMS;
-> > > >       }
-> > > > diff --git a/drivers/tee/optee/ffa_abi.c b/drivers/tee/optee/ffa_ab=
-i.c
-> > > > index 4ca1d5161b82..e4b08cd195f3 100644
-> > > > --- a/drivers/tee/optee/ffa_abi.c
-> > > > +++ b/drivers/tee/optee/ffa_abi.c
-> > > > @@ -122,15 +122,21 @@ static int optee_shm_rem_ffa_handle(struct op=
-tee *optee, u64 global_id)
-> > > >   */
-> > > >
-> > > >  static void from_msg_param_ffa_mem(struct optee *optee, struct tee=
-_param *p,
-> > > > -                                u32 attr, const struct optee_msg_p=
-aram *mp)
-> > > > +                                u32 attr, const struct optee_msg_p=
-aram *mp,
-> > > > +                                bool update_out)
-> > > >  {
-> > > >       struct tee_shm *shm =3D NULL;
-> > > >       u64 offs_high =3D 0;
-> > > >       u64 offs_low =3D 0;
-> > > >
-> > > > +     if (update_out) {
-> > > > +             if (attr =3D=3D OPTEE_MSG_ATTR_TYPE_FMEM_INPUT)
-> > > > +                     return;
-> > > > +             goto out;
-> > > > +     }
-> > > > +
-> > > >       p->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT +
-> > > >                 attr - OPTEE_MSG_ATTR_TYPE_FMEM_INPUT;
-> > > > -     p->u.memref.size =3D mp->u.fmem.size;
-> > > >
-> > > >       if (mp->u.fmem.global_id !=3D OPTEE_MSG_FMEM_INVALID_GLOBAL_I=
-D)
-> > > >               shm =3D optee_shm_from_ffa_handle(optee, mp->u.fmem.g=
-lobal_id);
-> > > > @@ -141,6 +147,8 @@ static void from_msg_param_ffa_mem(struct optee=
- *optee, struct tee_param *p,
-> > > >               offs_high =3D mp->u.fmem.offs_high;
-> > > >       }
-> > > >       p->u.memref.shm_offs =3D offs_low | offs_high << 32;
-> > > > +out:
-> > > > +     p->u.memref.size =3D mp->u.fmem.size;
-> > > >  }
-> > > >
-> > > >  /**
-> > > > @@ -150,12 +158,14 @@ static void from_msg_param_ffa_mem(struct opt=
-ee *optee, struct tee_param *p,
-> > > >   * @params:  subsystem internal parameter representation
-> > > >   * @num_params:      number of elements in the parameter arrays
-> > > >   * @msg_params:      OPTEE_MSG parameters
-> > > > + * @update_out: update parameter for output only
-> > > >   *
-> > > >   * Returns 0 on success or <0 on failure
-> > > >   */
-> > > >  static int optee_ffa_from_msg_param(struct optee *optee,
-> > > >                                   struct tee_param *params, size_t =
-num_params,
-> > > > -                                 const struct optee_msg_param *msg=
-_params)
-> > > > +                                 const struct optee_msg_param *msg=
-_params,
-> > > > +                                 bool update_out)
-> > > >  {
-> > > >       size_t n;
-> > > >
-> > > > @@ -166,18 +176,20 @@ static int optee_ffa_from_msg_param(struct op=
-tee *optee,
-> > > >
-> > > >               switch (attr) {
-> > > >               case OPTEE_MSG_ATTR_TYPE_NONE:
-> > > > +                     if (update_out)
-> > > > +                             break;
-> > > >                       p->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_NONE;
-> > > >                       memset(&p->u, 0, sizeof(p->u));
-> > > >                       break;
-> > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_INPUT:
-> > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_OUTPUT:
-> > > >               case OPTEE_MSG_ATTR_TYPE_VALUE_INOUT:
-> > > > -                     optee_from_msg_param_value(p, attr, mp);
-> > > > +                     optee_from_msg_param_value(p, attr, mp, updat=
-e_out);
-> > > >                       break;
-> > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_INPUT:
-> > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_OUTPUT:
-> > > >               case OPTEE_MSG_ATTR_TYPE_FMEM_INOUT:
-> > > > -                     from_msg_param_ffa_mem(optee, p, attr, mp);
-> > > > +                     from_msg_param_ffa_mem(optee, p, attr, mp, up=
-date_out);
-> > > >                       break;
-> > > >               default:
-> > > >                       return -EINVAL;
-> > > > @@ -188,10 +200,16 @@ static int optee_ffa_from_msg_param(struct op=
-tee *optee,
-> > > >  }
-> > > >
-> > > >  static int to_msg_param_ffa_mem(struct optee_msg_param *mp,
-> > > > -                             const struct tee_param *p)
-> > > > +                             const struct tee_param *p, bool updat=
-e_out)
-> > > >  {
-> > > >       struct tee_shm *shm =3D p->u.memref.shm;
-> > > >
-> > > > +     if (update_out) {
-> > > > +             if (p->attr =3D=3D TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_I=
-NPUT)
-> > > > +                     return 0;
-> > > > +             goto out;
-> > > > +     }
-> > > > +
-> > > >       mp->attr =3D OPTEE_MSG_ATTR_TYPE_FMEM_INPUT + p->attr -
-> > > >                  TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT;
-> > > >
-> > > > @@ -211,6 +229,7 @@ static int to_msg_param_ffa_mem(struct optee_ms=
-g_param *mp,
-> > > >               memset(&mp->u, 0, sizeof(mp->u));
-> > > >               mp->u.fmem.global_id =3D OPTEE_MSG_FMEM_INVALID_GLOBA=
-L_ID;
-> > > >       }
-> > > > +out:
-> > > >       mp->u.fmem.size =3D p->u.memref.size;
-> > > >
-> > > >       return 0;
-> > > > @@ -222,13 +241,15 @@ static int to_msg_param_ffa_mem(struct optee_=
-msg_param *mp,
-> > > >   * @optee:   main service struct
-> > > >   * @msg_params:      OPTEE_MSG parameters
-> > > >   * @num_params:      number of elements in the parameter arrays
-> > > > - * @params:  subsystem itnernal parameter representation
-> > > > + * @params:  subsystem internal parameter representation
-> > > > + * @update_out: update parameter for output only
-> > > >   * Returns 0 on success or <0 on failure
-> > > >   */
-> > > >  static int optee_ffa_to_msg_param(struct optee *optee,
-> > > >                                 struct optee_msg_param *msg_params,
-> > > >                                 size_t num_params,
-> > > > -                               const struct tee_param *params)
-> > > > +                               const struct tee_param *params,
-> > > > +                               bool update_out)
-> > > >  {
-> > > >       size_t n;
-> > > >
-> > > > @@ -238,18 +259,20 @@ static int optee_ffa_to_msg_param(struct opte=
-e *optee,
-> > > >
-> > > >               switch (p->attr) {
-> > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
-> > > > +                     if (update_out)
-> > > > +                             break;
-> > > >                       mp->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_NONE;
-> > > >                       memset(&mp->u, 0, sizeof(mp->u));
-> > > >                       break;
-> > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
-> > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-> > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-> > > > -                     optee_to_msg_param_value(mp, p);
-> > > > +                     optee_to_msg_param_value(mp, p, update_out);
-> > > >                       break;
-> > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-> > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> > > >               case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> > > > -                     if (to_msg_param_ffa_mem(mp, p))
-> > > > +                     if (to_msg_param_ffa_mem(mp, p, update_out))
-> > > >                               return -EINVAL;
-> > > >                       break;
-> > > >               default:
-> > >
-> > > Can we rather handle it as follows to improve code readability and
-> > > maintainence long term? Ditto for all other places.
-> > >
-> > > static int optee_ffa_to_msg_param(struct optee *optee,
-> > >                                   struct optee_msg_param *msg_params,
-> > >                                   size_t num_params,
-> > >                                   const struct tee_param *params,
-> > >                                   bool update_out)
-> > > {
-> > >         size_t n;
-> > >
-> > >         for (n =3D 0; n < num_params; n++) {
-> > >                 const struct tee_param *p =3D params + n;
-> > >                 struct optee_msg_param *mp =3D msg_params + n;
-> > >
-> > >                 if (update_out && (p->attr =3D=3D TEE_IOCTL_PARAM_ATT=
-R_TYPE_NONE ||
-> > >                      p->attr =3D=3D TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_I=
-NPUT ||
-> > >                      p->attr =3D=3D TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_=
-INPUT))
-> > >                     continue;
-> >
-> > You're missing updating the length field for memrefs.
-> >
->
-> Do we need to update length field for input memrefs when update_out is
-> set? I don't see that happening in your existing patch too.
+The first few patch are cleanup for the clock driver and the
+introduction of the SCU SSR SoC driver.
 
-I'm sorry, I was unclear. The update_out parameter means only the
-output fields should be updated, not the attribute, offsets, ids, etc.
-That is, the length field for memrefs, and the value fields a, b, c
-for value params. Some of the memrefs aren't translated one-to-one
-with SDP, but the length field can and must be updated.
+The SoC always support USB 2.0 but for USB 3.0 it needs additional
+configuration for the Serdes port. Such port can be either configured
+for USB usage or for PCIe lines or HSGMII and these are configured
+in the SCU space.
 
-Cheers,
-Jens
+The xHCI USB is based on the Mediatek implementation but the PHY
+handling although conceptually similar, is indded different compared
+to Mediatek due to SSR checks and different port power up.
 
->
-> -Sumit
->
-> > Cheers,
-> > Jens
-> >
-> > >
-> > >                 switch (p->attr) {
-> > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_NONE:
-> > >                         mp->attr =3D TEE_IOCTL_PARAM_ATTR_TYPE_NONE;
-> > >                         memset(&mp->u, 0, sizeof(mp->u));
-> > >                         break;
-> > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INPUT:
-> > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_OUTPUT:
-> > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_VALUE_INOUT:
-> > >                         optee_to_msg_param_value(mp, p);
-> > >                         break;
-> > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INPUT:
-> > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_OUTPUT:
-> > >                 case TEE_IOCTL_PARAM_ATTR_TYPE_MEMREF_INOUT:
-> > >                         if (to_msg_param_ffa_mem(mp, p))
-> > >                                 return -EINVAL;
-> > >                         break;
-> > >                 default:
-> > >                         return -EINVAL;
-> > >                 }
-> > >         }
-> > >
-> > >         return 0;
-> > > }
-> > >
-> > > -Sumit
+The SSR driver expose an API to poll the current status of the Serdes
+port and the USB PHY driver validates it. Refer to the specific commit
+for additional info.
+
+Consider that there is currently an inconsistency as AN7581 and
+EN7581 refer to the same thing. This is due to the fact that
+the SoC born under EcoNet but then was acquired by Airoha.
+
+Changes v2:
+- Drop changes for simple-mfd
+- Rework PHY node structure to single node
+- Drop port-id property in favor of serdes-port and
+  usb2-monitor-clock-sel
+- Make the SSR driver probe from the clock driver
+
+Christian Marangi (11):
+  clk: en7523: convert driver to regmap API
+  clk: en7523: generalize register clocks function
+  dt-bindings: clock: en7523: add Documentation for Airoha AN7581 SCU
+    SSR
+  soc: airoha: add support for configuring SCU SSR Serdes port
+  clk: en7523: define and register SoC SCU SSR driver for EN7581
+  soc: airoha: scu-ssr: expose API to read current Serdes Port mode
+  dt-bindings: phy: Add documentation for Airoha AN7581 USB PHY
+  phy: move Airoha PCIe PHY driver to dedicated directory
+  phy: airoha: Add support for Airoha AN7581 USB PHY
+  usb: host: add ARCH_AIROHA in XHCI MTK dependency
+  arm64: dts: airoha: en7581: add USB nodes
+
+ .../bindings/clock/airoha,en7523-scu.yaml     |  101 +-
+ .../bindings/phy/airoha,an7581-usb-phy.yaml   |   83 ++
+ MAINTAINERS                                   |   21 +-
+ arch/arm64/boot/dts/airoha/en7581.dtsi        |   49 +
+ drivers/clk/clk-en7523.c                      |  340 +++--
+ drivers/phy/Kconfig                           |   11 +-
+ drivers/phy/Makefile                          |    5 +-
+ drivers/phy/airoha/Kconfig                    |   23 +
+ drivers/phy/airoha/Makefile                   |    4 +
+ drivers/phy/airoha/phy-airoha-pcie-regs.h     |  494 +++++++
+ drivers/phy/airoha/phy-airoha-pcie.c          | 1290 +++++++++++++++++
+ drivers/phy/airoha/phy-airoha-usb.c           |  571 ++++++++
+ drivers/soc/Kconfig                           |    1 +
+ drivers/soc/Makefile                          |    1 +
+ drivers/soc/airoha/Kconfig                    |   18 +
+ drivers/soc/airoha/Makefile                   |    3 +
+ drivers/soc/airoha/airoha-scu-ssr.c           |  271 ++++
+ drivers/usb/host/Kconfig                      |    2 +-
+ .../dt-bindings/phy/airoha,an7581-usb-phy.h   |   11 +
+ include/dt-bindings/soc/airoha,scu-ssr.h      |   11 +
+ include/linux/clk/clk-en7523.h                |   10 +
+ include/linux/soc/airoha/airoha-scu-ssr.h     |   34 +
+ 22 files changed, 3202 insertions(+), 152 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/airoha,an7581-usb-phy.yaml
+ create mode 100644 drivers/phy/airoha/Kconfig
+ create mode 100644 drivers/phy/airoha/Makefile
+ create mode 100644 drivers/phy/airoha/phy-airoha-pcie-regs.h
+ create mode 100644 drivers/phy/airoha/phy-airoha-pcie.c
+ create mode 100644 drivers/phy/airoha/phy-airoha-usb.c
+ create mode 100644 drivers/soc/airoha/Kconfig
+ create mode 100644 drivers/soc/airoha/Makefile
+ create mode 100644 drivers/soc/airoha/airoha-scu-ssr.c
+ create mode 100644 include/dt-bindings/phy/airoha,an7581-usb-phy.h
+ create mode 100644 include/dt-bindings/soc/airoha,scu-ssr.h
+ create mode 100644 include/linux/clk/clk-en7523.h
+ create mode 100644 include/linux/soc/airoha/airoha-scu-ssr.h
+
+-- 
+2.48.1
+
