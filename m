@@ -1,159 +1,84 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 543981E5B6A
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:24:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB6421DFE00
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 13:25:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742477102; cv=none; b=STn/5eB3mQ7+m4JqnLgyyi6TN9mqcCBoxIpXYjZblAXwiw3M0feLeBrL0HcC3tEynoX9M7LzPWFXZW+Hq1gJEzX/T+pm9Y5Z3N9rkz4f1Vi2HWd4UhmO7yxPhU8R/xHrUkF5nMqIxN2bxGP+RFxbAH20HIDDWMjUZkSSvGrMKNk=
+	t=1742477126; cv=none; b=ozfjfsGuhAadMc1WEzZcK/kG0rknzCeSoSCVChxPWH745umK2aRGK5XJ/JMKyqJdmzAXdFgca15QOhvqxxRj2bRWpe3fuXihG8ao1zm227eKz8KvDUERvjiHNav5/YC/P8U5SXk29BZkztk2/xOeJkAM3wxHyGGUiMpSMWAliLM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742477102; c=relaxed/simple;
-	bh=CQJgVxP67q4nLt1VGZxW4sjt4uFjV3uDcWhjP0Nv2Vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MWAuAj5sucpnqus/GQb/ht16nugmF7oNS7nlrnBTffEdamqmbvz5DhuGTpOvQqfXf24pbzf9Qn9hlNnO2/ji5XDusrQTu5vyVVWjlsEFwTOcPF199qKjDU7WKKT2dlEWmoX7jdxXB7q9Tpqq8A0ASUlKE/RitEtvkfka+ICyMAU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=upRkIDwp; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742477126; c=relaxed/simple;
+	bh=CrAvtI+KqPJLCyH+EGcOWM8qTU28nSUxFfDHQusAqr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=sC7AVD2eYoa2CGRplFuBkJ1IWnlLRBFghxnVWaBNJzB1HxcY50Oi5qmUyN8caEW1Y0i6nIA40Hyo+4xIf4777IFb4R2/Piqgvi33484P4u0WZqDFvoxa1uQo+qJEmx09HlukuE1V+uFV56QyTzqrAklsWV4m3SEPWkzXt0jFZ6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=VfGBYS6u; arc=none smtp.client-ip=65.109.113.108
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="upRkIDwp"
-Message-ID: <2c0b49a2-7cf3-4432-bab0-1eb110e8e8c2@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742477087;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k5XdiQFl3wHL7QNP07tkObb+sgwtdF2xYbguKHVcnVo=;
-	b=upRkIDwpO4rHzaEi+hcMbgEBwiKyQQUVhZmYdXrv2e0R6BCFT8FGTje640+mtfOqQRdlvS
-	iK44EU2bNCkwdtSqPCWXPaULCS3mMHs3DMorrOhoZT4xUOZPpD4Zg+bXbwnIzjPOTu0OhR
-	YEVqZOamntJd13i7nLKonrbFytyAqeA=
-Date: Thu, 20 Mar 2025 18:54:05 +0530
+	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="VfGBYS6u"
+Received: from localhost (localhost.localdomain [127.0.0.1])
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id 3268140E021E;
+	Thu, 20 Mar 2025 13:25:20 +0000 (UTC)
+X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
+Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
+	header.d=alien8.de
+Received: from mail.alien8.de ([127.0.0.1])
+	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
+	with ESMTP id PeTxtJwwvYry; Thu, 20 Mar 2025 13:25:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
+	t=1742477115; bh=3aa+wS37o38K92WJhVN/aqRy0B/qXAhUuUTdFXoVlf0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=VfGBYS6uuXebLXBqF378GrTbYGNoCHQZnd/KGXDNXdOZmknAFXVGubXnh75iVrR7Y
+	 sskwPeY8yElZef++/YMkclvBwR8qSIg1Hq6ehXhLQOYVh6ODBgiTXME28MkZuI5Q4Z
+	 gYmv3Ah098dvGfQMRepBgZHYD2ZwxH6ja3FtFADVPSsgNY1nUrxzEYcnJsZV9AN7op
+	 1S18ZTarWq0pXGqZPt0w9rZXl0G38IJh9uBDZHVBlKyX0v+NoNKL46TjawHsIJBoip
+	 JYYdpgzv9PScMAqMxgQB4toO29Z4nTxUzcvXz2WkVgXg594qpDRJVzgfw2cg+6P2uk
+	 te129dtV7xAgGRfyweMHCgmPBz+lA2Z6vjBJkhlFjCaykjm1zYmp/lyhszMy0+JRZl
+	 uReWJcn2oAIciWKec4wkQt2x1hhnZuiut3S14DjxKvjNYkZDzQ/nA1EUdWE2bmHV3t
+	 CiFuWYJp/F9VsynjU+GsJLnmqL7P7z3LkJCxGGC+93vtSo4MWdUDJQpNij+X1i61bC
+	 tBXOBO2I0wFSMt4ur0b00TCxiBUrrH6HPpOxSCsLKKYo8CLQgKzLIj8D5/avam+lOF
+	 0wqi6Rc3fKgXCmDwdT0HHSkQ8QkJUgfpn85pFOPDZtMOchxZJpl+jrzOZTUFs1X5jn
+	 AWt1ryg9hIxF9S50AfmpURX0=
+Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
+	(No client certificate requested)
+	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 17BEA40E0215;
+	Thu, 20 Mar 2025 13:25:11 +0000 (UTC)
+Date: Thu, 20 Mar 2025 14:25:05 +0100
+From: Borislav Petkov <bp@alien8.de>
+To: Nick Terrell <terrelln@meta.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, x86-ml <x86@kernel.org>,
+	lkml <linux-kernel@vger.kernel.org>
+Subject: Re: lib/zstd/compress/huf_compress.c:1033:1: internal compiler
+ error: Segmentation fault
+Message-ID: <20250320132505.GAZ9wXMd9_6LB6OKKW@fat_crate.local>
+References: <20250317135539.GDZ9gp24DhTKBGmkd8@fat_crate.local>
+ <4C937266-6136-4103-A53C-C313B5DBC676@meta.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v4 0/3] drm/tidss: Add OLDI bridge support
-To: "Sverdlin, Alexander" <alexander.sverdlin@siemens.com>
-Cc: "j-choudhary@ti.com" <j-choudhary@ti.com>,
- "u-kumar1@ti.com" <u-kumar1@ti.com>,
- "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "devarsht@ti.com" <devarsht@ti.com>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "nm@ti.com" <nm@ti.com>, "vigneshr@ti.com" <vigneshr@ti.com>,
- "praneeth@ti.com" <praneeth@ti.com>
-References: <20241124143649.686995-1-aradhya.bhatia@linux.dev>
- <8366a3d736f9937667aab024895a59e5947dd4a5.camel@siemens.com>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Aradhya Bhatia <aradhya.bhatia@linux.dev>
-In-Reply-To: <8366a3d736f9937667aab024895a59e5947dd4a5.camel@siemens.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <4C937266-6136-4103-A53C-C313B5DBC676@meta.com>
 
-Hi Alexander,
-
-Thank you for testing and reviewing the patches!
-
-On 19/03/25 23:30, Sverdlin, Alexander wrote:
-> Thank you for the patches, Aradhya!
+On Wed, Mar 19, 2025 at 05:10:01PM +0000, Nick Terrell wrote:
+> Zstd hasn't changed in that duration, but I'm preparing an update now.
+> You could check to see if this branch fixes your issue:
 > 
-> On Sun, 2024-11-24 at 20:06 +0530, Aradhya Bhatia wrote:
->> Regardless, I'd appreciate it if somebody can test it, and report back if they
->> observe any issues.
-> 
-> I've tried to test the patchset with necessary pre-requisites and DT additions
-> with a single channel LVDS pannel and while I'm not successful yet, I've also noticed
-> the following warning:
-> 
-> tidss 30200000.dss: vp0: Clock rate 24285714 differs over 5% from requested 37000000
-> 
-> even though later the clock seems to be correctly set up:
-> 
-> $ cat /sys/kernel/debug/clk/clk_summary 
-> 
->                                  enable  prepare  protect                                duty  hardware                            connection
->    clock                          count    count    count        rate   accuracy phase  cycle    enable   consumer                         id
-> ---------------------------------------------------------------------------------------------------------------------------------------------
->  clk:186:6                           1       1        0        250000000   0          0     50000      Y   30200000.dss                    fck                      
->                                                                                                            deviceless                      no_connection_id         
->  clk:186:4                           0       0        0        0           0          0     50000      Y   deviceless                      no_connection_id         
->  clk:186:3                           0       0        0        170000000   0          0     50000      Y   deviceless                      no_connection_id         
->     clk:186:2                        0       0        0        170000000   0          0     50000      Y      30200000.dss                    vp2                      
->                                                                                                               deviceless                      no_connection_id         
->  clk:186:0                           1       1        0        259090909   0          0     50000      Y   oldi@0                          serial                   
->                                                                                                            deviceless                      no_connection_id         
->     clock-divider-oldi               1       1        0        37012987    0          0     50000      Y      30200000.dss                    vp1                      
-> 
-> Looks like "clock-divider-oldi" doesn't propagate clk_set_rate() to the parent,
-> but the parent is being set later independently?
-> 
+>  https://github.com/terrelln/linux.git tags/2025-03-13-zstd-v1.5.7-v1
 
-Yes, you are right. The "clock-divider-oldi" does not propagate the
-clk_set_rate() to the parent.
+Nah, that didn't but updating the toolchain did.
 
-The actual parent clock is now owned by the oldi bridge driver, and that
-is what sets the clock rate (7 * pixel freq). The equivalent action from
-tidss vp (DRM crtc) is a no op in cases of OLDI display pipeline.
+Perhaps some artifact of using debian testing...
 
-Usually, the DRM crtc is enabled first, before _any_ of the DRM bridges
-get pre_enabled or enabled.
-
-Since, OLDI is a DRM bridge, the OLDI enable (and by extension the
-actual clk_set_rate()) takes place _after_ the DRM crtc has been
-enabled (which is why you see the parent being set later on).
-
-DRM crtc enable is where tidss vp attempts (and fails) to set the clock
-rate, causing the warning you see initially.
-
-
-I have attempted to re-order the bridge pre_enable and crtc enable calls
-in these patches[0], separately.
-
-While you have mentioned that you did add the prerequisites, could you
-confirm that you applied the (now older) dependency patch mentioned in
-the v4 cover-letter[1]?
-Ideally, you should not observe these concerns if [1] were successfully
-applied.
-
-More importantly, if you are already on latest linux-next, I would
-request you to use v6 of this OLDI series[2], along with the latest
-dependency patches[0], as the older dependency patch is simply not
-applicable on latest kernel anymore! =)
-
-I'd appreciate it if you are able to test the latest revisions on your
-single-link setup, and report back any issue you see! Thank you! =)
-
+Thx.
 
 -- 
-Regards
-Aradhya
+Regards/Gruss,
+    Boris.
 
-
-
-[0]: Pre Requisite patches that re-order crtc/encoder/bridge sequences
-(latest revision).
-
-a. ("drm/atomic-helper: Refactor crtc & encoder-bridge op loops into
-separate functions")
-https://lore.kernel.org/all/20250226155737.565931-3-aradhya.bhatia@linux.dev/
-
-b. ("drm/atomic-helper: Separate out bridge pre_enable/post_disable from
-enable/disable")
-https://lore.kernel.org/all/20250226155737.565931-4-aradhya.bhatia@linux.dev/
-
-c. ("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
-https://lore.kernel.org/all/20250226155737.565931-5-aradhya.bhatia@linux.dev/
-
-
-[1]: Dependency patch mentioned in v4 OLDI series.
-("drm/atomic-helper: Re-order bridge chain pre-enable and post-disable")
-https://lore.kernel.org/all/20240622110929.3115714-11-a-bhatia1@ti.com/
-
-
-[2]: Latest OLDI series (v6)
-https://lore.kernel.org/all/20250226181300.756610-1-aradhya.bhatia@linux.dev/
-
+https://people.kernel.org/tglx/notes-about-netiquette
