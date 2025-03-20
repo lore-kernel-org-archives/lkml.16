@@ -1,269 +1,200 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6501F1B81DC;
-	Thu, 20 Mar 2025 01:55:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D31BB1D63E2
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:56:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742435719; cv=none; b=DwKyL3tEzi+2J220jdWExncKdi/+zSkOiLJhdewNQCpcXRwI6KoNeVoncYWiLUZhbzPUS+uq0a0aCQMnYdT8tlyOHGNeBblhB3Tj6U1q7AkCS1pkbvl8j1tb5Vq8PasH9YltDet3aXrz/iptIjYFuZtPaA+JLZRc8mGA2pvS8CU=
+	t=1742435764; cv=none; b=J3UrdM6G88zaMQVB5wZUqDA7dNuMWrXaHnzidYNb0gJQvFmz9vDPF4WZPw3SY4HR3JgIwNgCoPGhIGNMilhheDt7oyXN7dJq8NKj2/Wm54pa746APKzIdDeOXkQb1izloYyJX/f3QGaFgMp+JUkxuNEAlrDQz/mIbfHL8axrZPE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742435719; c=relaxed/simple;
-	bh=bhkj2LY+NFVBJwqfQ11YjE5f4cXbFEAgE+iqrONhw3w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KEIfPei02rDpE0uFfkDEo9kCmvJI5CO73JuLYW4mXYLluyuMeGUHy/7ay9RsZw85KPnWZ80+ykwInt2JBZrn1SvCpDzbKVV37aoZQHsgFP1cK9EI2p7JM5ZBeye/Sh8rjrgvSSUY9toZ9ieM1rnSeRaNuXyQ0lHmXyi3fe53GXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SGpI18+q; arc=none smtp.client-ip=198.175.65.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742435764; c=relaxed/simple;
+	bh=B+qYOGhJFDAceoX7ga8HkHVOQunVrboad8cUr9L75EU=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=kkBlwT1ldF/EplVzMu+jLiKfGnByB5p4uA/maU1pWryZmNGmreVATpeJrIjZNSAZj4gkqG8wxO1Yr8GgZM4s65BvQ2mTPKJOwiyvV9ftNZYihvivSEAkJgr1MYVmMPlD/S4nTbG29adXmhbVZr5drSRm6yBdpvjiS9REt67qGwc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=17RDJ1R1; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SGpI18+q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742435716; x=1773971716;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=bhkj2LY+NFVBJwqfQ11YjE5f4cXbFEAgE+iqrONhw3w=;
-  b=SGpI18+qhj4Jgor13fvqstf3AWztJS/HT2Ivl99pmBYJ8ldlHbDfi8y/
-   xTraiHTjjTp9F0RgLSnGzXTTA2AFkRLd80jpja/IcvwgNKzde5WOxwWgd
-   pstfkEzYyRQT47NYv6XJu8vp1L/Ainbat3Bt3WIDugK6u4ZtTjgvgL3Dc
-   0qSRO317zoCO6lPEYKON+/C82CXUKAtz99GyqmNlSi8Mra1p7j3wltK1k
-   H+pJbS8b/oRw7oBV33sy99WONQwJ580qrPpPAstMxthD4Mjz6WOjZKnzt
-   NEX8z6f100Z08IuMNLl5/aqhzI8UAbxd+28A+Y86l3ECU5kohJXWX68WH
-   Q==;
-X-CSE-ConnectionGUID: DNGhSbz9RxqsQ23LtKJVQA==
-X-CSE-MsgGUID: pEIhymEGR+uPLZ95jVGiRg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="43665301"
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="43665301"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Mar 2025 18:55:15 -0700
-X-CSE-ConnectionGUID: tZO+WAlaRcScjbsPOBPWaA==
-X-CSE-MsgGUID: JGReu0G3Q+SI0MZqGMcJfg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,260,1736841600"; 
-   d="scan'208";a="127967853"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa004.jf.intel.com with ESMTP; 19 Mar 2025 18:55:10 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tv57k-00005b-2W;
-	Thu, 20 Mar 2025 01:55:08 +0000
-Date: Thu, 20 Mar 2025 09:54:10 +0800
-From: kernel test robot <lkp@intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Daniel Golle <daniel@makrotopia.org>, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, upstream@airoha.com
-Cc: oe-kbuild-all@lists.linux.dev, netdev@vger.kernel.org
-Subject: Re: [net-next PATCH 5/6] net: pcs: airoha: add PCS driver for Airoha
- SoC
-Message-ID: <202503200928.j6AEMrdf-lkp@intel.com>
-References: <20250318235850.6411-6-ansuelsmth@gmail.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="17RDJ1R1"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff68033070so409090a91.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:56:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742435762; x=1743040562; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=MyKsFNp8HnVmgjRlr9CxzqXpTdvZkVjeQqS6GTtSoj0=;
+        b=17RDJ1R1uDoun9sbhFnd6PVnAgsWrkFjwa7p4IsSxcgsS/sQ/eHu3j9NS1Oz4XRPzo
+         bj1dh5zl8dx/P1kPvfUXWk+Pv6omIhbOq4Abghr/12vZkeCFsCw9oX4re3dVp55Dv+SF
+         RNy40wOXLwFF8z813XOlzaX8bT4Cq2N5E9apq1ZVkTlQnkciHz2PQKNn9wqsC+y0HXxp
+         g9aZO1ipH1D0o4bS6zteg4m669kg/FDV2efHf+EEdrpctEE4CfLHjERNCRjshZEUtKgz
+         fFjgbVhl9RjYlCoduR9g44CeYokg67BtMsPMN7dYTr6PoKvYrKKGAYO0lHcAqRa0ZWuY
+         AZww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742435762; x=1743040562;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MyKsFNp8HnVmgjRlr9CxzqXpTdvZkVjeQqS6GTtSoj0=;
+        b=s8N/1qt+1pW/6qmfuxRdYTYf4Sz/eQuuI8FLtrKS7F7r8ZfO+0NtVVQG88BiZmjQun
+         OpHGqhGSo1ehH0p70tNzMK5JWmSJ5OTEtLXWxG9mrK5A3Su7dCdFnHIhf52mDiz4ODLM
+         HSSIvUew+62dUm1cnC8jBcFP5qgsLsi3K6VxMZH9zuccjaVWwEyAAr3M4OuPB7toQu8M
+         q/gwVLXannGi9DavvLK6Vs8cjq4nuejcGJD50MVJuEbqEQy6wDhMEc6posxUN+6R0tjW
+         TdCpfYVqzANHX9/ST48JEDkJ/sWk4qs0v1zBFhEbLxAybh5Iuj05CnSJIc1Idd84T+ZR
+         pgNQ==
+X-Gm-Message-State: AOJu0YzptTQbMtXEkd1nBzb7/nyM+BfGULF3uL8Y+Lylnl42EGkvDDrg
+	/pf/1CcxUw+bNu6KW6GMEYqO7QAWHT/FOQ61X1MrJXPDMIZ6BXqO2f+UMn36HoEnMXIEi5Qyitr
+	2R8z7IWa1YnJPkKl6oWGxo2uayTNqVj9QTzwekwOSOTJSZ13eUn3y5fFwhVRz+Q5haQfrLbVArO
+	86Yw5RsspLhxTNvgW1/yHKUqTZ62rWwfH57UslTmUGZndUk9asjz15056k1UJpTw==
+X-Google-Smtp-Source: AGHT+IH4fNuT0QWlfSI42heq+dLpm/GFEXTXaL6bQRWMvudZOwxIJGtvzZFRNXPgaqxisIVnXeLUFEDTHfoI9HMH
+X-Received: from pjur6.prod.google.com ([2002:a17:90a:d406:b0:2ee:4a90:3d06])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:90b:4fc5:b0:2f6:d266:f462 with SMTP id 98e67ed59e1d1-301be20750dmr7815826a91.35.1742435761976;
+ Wed, 19 Mar 2025 18:56:01 -0700 (PDT)
+Date: Wed, 19 Mar 2025 18:55:36 -0700
+In-Reply-To: <20250320015551.2157511-1-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318235850.6411-6-ansuelsmth@gmail.com>
+Mime-Version: 1.0
+References: <20250320015551.2157511-1-changyuanl@google.com>
+X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
+Message-ID: <20250320015551.2157511-2-changyuanl@google.com>
+Subject: [PATCH v5 01/16] kexec: define functions to map and unmap segments
+From: Changyuan Lyu <changyuanl@google.com>
+To: linux-kernel@vger.kernel.org
+Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org, 
+	anthony.yznaga@oracle.com, arnd@arndb.de, ashish.kalra@amd.com, 
+	benh@kernel.crashing.org, bp@alien8.de, catalin.marinas@arm.com, 
+	dave.hansen@linux.intel.com, dwmw2@infradead.org, ebiederm@xmission.com, 
+	mingo@redhat.com, jgowans@amazon.com, corbet@lwn.net, krzk@kernel.org, 
+	rppt@kernel.org, mark.rutland@arm.com, pbonzini@redhat.com, 
+	pasha.tatashin@soleen.com, hpa@zytor.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org, saravanak@google.com, 
+	skinsburskii@linux.microsoft.com, rostedt@goodmis.org, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, usama.arif@bytedance.com, will@kernel.org, 
+	devicetree@vger.kernel.org, kexec@lists.infradead.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-mm@kvack.org, x86@kernel.org, steven chen <chenste@linux.microsoft.com>, 
+	Tushar Sugandhi <tusharsu@linux.microsoft.com>, Changyuan Lyu <changyuanl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Christian,
+From: steven chen <chenste@linux.microsoft.com>
 
-kernel test robot noticed the following build warnings:
+Currently, the mechanism to map and unmap segments to the kimage
+structure is not available to the subsystems outside of kexec.  This
+functionality is needed when IMA is allocating the memory segments
+during kexec 'load' operation.  Implement functions to map and unmap
+segments to kimage.
 
-[auto build test WARNING on net-next/main]
+Implement kimage_map_segment() to enable mapping of IMA buffer source
+pages to the kimage structure post kexec 'load'.  This function,
+accepting a kimage pointer, an address, and a size, will gather the
+source pages within the specified address range, create an array of page
+pointers, and map these to a contiguous virtual address range.  The
+function returns the start of this range if successful, or NULL if
+unsuccessful.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/net-phylink-reset-PCS-Phylink-double-reference-on-phylink_stop/20250319-080303
-base:   net-next/main
-patch link:    https://lore.kernel.org/r/20250318235850.6411-6-ansuelsmth%40gmail.com
-patch subject: [net-next PATCH 5/6] net: pcs: airoha: add PCS driver for Airoha SoC
-config: arm64-randconfig-r132-20250320 (https://download.01.org/0day-ci/archive/20250320/202503200928.j6AEMrdf-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 87916f8c32ebd8e284091db9b70339df57fd1e90)
-reproduce: (https://download.01.org/0day-ci/archive/20250320/202503200928.j6AEMrdf-lkp@intel.com/reproduce)
+Implement kimage_unmap_segment() for unmapping segments
+using vunmap().
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503200928.j6AEMrdf-lkp@intel.com/
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Signed-off-by: steven chen <chenste@linux.microsoft.com>
+Co-developed-by: Changyuan Lyu <changyuanl@google.com>
+Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+---
+ include/linux/kexec.h |  5 ++++
+ kernel/kexec_core.c   | 54 +++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/net/pcs/pcs-airoha.c:2723:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2723:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2723:14: sparse:     got void [noderef] __iomem *
->> drivers/net/pcs/pcs-airoha.c:2728:25: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2728:25: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2728:25: sparse:     got void *base
-   drivers/net/pcs/pcs-airoha.c:2732:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2732:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2732:14: sparse:     got void [noderef] __iomem *
-   drivers/net/pcs/pcs-airoha.c:2737:27: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2737:27: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2737:27: sparse:     got void *base
-   drivers/net/pcs/pcs-airoha.c:2741:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2741:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2741:14: sparse:     got void [noderef] __iomem *
-   drivers/net/pcs/pcs-airoha.c:2746:28: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2746:28: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2746:28: sparse:     got void *base
-   drivers/net/pcs/pcs-airoha.c:2750:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2750:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2750:14: sparse:     got void [noderef] __iomem *
-   drivers/net/pcs/pcs-airoha.c:2755:33: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2755:33: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2755:33: sparse:     got void *base
-   drivers/net/pcs/pcs-airoha.c:2759:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2759:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2759:14: sparse:     got void [noderef] __iomem *
-   drivers/net/pcs/pcs-airoha.c:2764:29: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2764:29: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2764:29: sparse:     got void *base
-   drivers/net/pcs/pcs-airoha.c:2768:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2768:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2768:14: sparse:     got void [noderef] __iomem *
-   drivers/net/pcs/pcs-airoha.c:2773:29: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2773:29: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2773:29: sparse:     got void *base
-   drivers/net/pcs/pcs-airoha.c:2777:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2777:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2777:14: sparse:     got void [noderef] __iomem *
-   drivers/net/pcs/pcs-airoha.c:2782:25: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2782:25: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2782:25: sparse:     got void *base
-   drivers/net/pcs/pcs-airoha.c:2786:14: sparse: sparse: incorrect type in assignment (different address spaces) @@     expected void *base @@     got void [noderef] __iomem * @@
-   drivers/net/pcs/pcs-airoha.c:2786:14: sparse:     expected void *base
-   drivers/net/pcs/pcs-airoha.c:2786:14: sparse:     got void [noderef] __iomem *
-   drivers/net/pcs/pcs-airoha.c:2791:25: sparse: sparse: incorrect type in argument 3 (different address spaces) @@     expected void [noderef] __iomem *regs @@     got void *base @@
-   drivers/net/pcs/pcs-airoha.c:2791:25: sparse:     expected void [noderef] __iomem *regs
-   drivers/net/pcs/pcs-airoha.c:2791:25: sparse:     got void *base
-
-vim +2723 drivers/net/pcs/pcs-airoha.c
-
-  2707	
-  2708	static int airoha_pcs_probe(struct platform_device *pdev)
-  2709	{
-  2710		struct regmap_config syscon_config = airoha_pcs_regmap_config;
-  2711		struct device *dev = &pdev->dev;
-  2712		struct airoha_pcs_priv *priv;
-  2713		void *base;
-  2714		int ret;
-  2715	
-  2716		priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-  2717		if (!priv)
-  2718			return -ENOMEM;
-  2719	
-  2720		priv->dev = dev;
-  2721		priv->data = of_device_get_match_data(dev);
-  2722	
-> 2723		base = devm_platform_ioremap_resource_byname(pdev, "xfi_mac");
-  2724		if (IS_ERR(base))
-  2725			return PTR_ERR(base);
-  2726	
-  2727		syscon_config.name = "xfi_mac";
-> 2728		priv->xfi_mac = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2729		if (IS_ERR(priv->xfi_mac))
-  2730			return PTR_ERR(priv->xfi_mac);
-  2731	
-  2732		base = devm_platform_ioremap_resource_byname(pdev, "hsgmii_an");
-  2733		if (IS_ERR(base))
-  2734			return PTR_ERR(base);
-  2735	
-  2736		syscon_config.name = "hsgmii_an";
-  2737		priv->hsgmii_an = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2738		if (IS_ERR(priv->hsgmii_an))
-  2739			return PTR_ERR(priv->hsgmii_an);
-  2740	
-  2741		base = devm_platform_ioremap_resource_byname(pdev, "hsgmii_pcs");
-  2742		if (IS_ERR(base))
-  2743			return PTR_ERR(base);
-  2744	
-  2745		syscon_config.name = "hsgmii_pcs";
-  2746		priv->hsgmii_pcs = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2747		if (IS_ERR(priv->hsgmii_pcs))
-  2748			return PTR_ERR(priv->hsgmii_pcs);
-  2749	
-  2750		base = devm_platform_ioremap_resource_byname(pdev, "hsgmii_rate_adp");
-  2751		if (IS_ERR(base))
-  2752			return PTR_ERR(base);
-  2753	
-  2754		syscon_config.name = "hsgmii_rate_adp";
-  2755		priv->hsgmii_rate_adp = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2756		if (IS_ERR(priv->hsgmii_rate_adp))
-  2757			return PTR_ERR(priv->hsgmii_rate_adp);
-  2758	
-  2759		base = devm_platform_ioremap_resource_byname(pdev, "multi_sgmii");
-  2760		if (IS_ERR(base))
-  2761			return PTR_ERR(base);
-  2762	
-  2763		syscon_config.name = "multi_sgmii";
-  2764		priv->multi_sgmii = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2765		if (IS_ERR(priv->multi_sgmii))
-  2766			return PTR_ERR(priv->multi_sgmii);
-  2767	
-  2768		base = devm_platform_ioremap_resource_byname(pdev, "usxgmii");
-  2769		if (IS_ERR(base) && PTR_ERR(base) != -ENOENT)
-  2770			return PTR_ERR(base);
-  2771	
-  2772		syscon_config.name = "usxgmii";
-  2773		priv->usxgmii_pcs = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2774		if (IS_ERR(priv->usxgmii_pcs))
-  2775			return PTR_ERR(priv->usxgmii_pcs);
-  2776	
-  2777		base = devm_platform_ioremap_resource_byname(pdev, "xfi_pma");
-  2778		if (IS_ERR(base) && PTR_ERR(base) != -ENOENT)
-  2779			return PTR_ERR(base);
-  2780	
-  2781		syscon_config.name = "xfi_pma";
-  2782		priv->xfi_pma = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2783		if (IS_ERR(priv->xfi_pma))
-  2784			return PTR_ERR(priv->xfi_pma);
-  2785	
-  2786		base = devm_platform_ioremap_resource_byname(pdev, "xfi_ana");
-  2787		if (IS_ERR(base) && PTR_ERR(base) != -ENOENT)
-  2788			return PTR_ERR(base);
-  2789	
-  2790		syscon_config.name = "xfi_ana";
-  2791		priv->xfi_ana = devm_regmap_init_mmio(dev, base, &syscon_config);
-  2792		if (IS_ERR(priv->xfi_ana))
-  2793			return PTR_ERR(priv->xfi_ana);
-  2794	
-  2795		/* SCU is used to toggle XFI or HSGMII in global SoC registers */
-  2796		priv->scu = syscon_regmap_lookup_by_compatible("airoha,en7581-scu");
-  2797		if (IS_ERR(priv->scu))
-  2798			return PTR_ERR(priv->scu);
-  2799	
-  2800		priv->rsts[0].id = "mac";
-  2801		priv->rsts[1].id = "phy";
-  2802		ret = devm_reset_control_bulk_get_exclusive(dev, ARRAY_SIZE(priv->rsts),
-  2803							    priv->rsts);
-  2804		if (ret)
-  2805			return dev_err_probe(dev, ret, "failed to get bulk reset lines\n");
-  2806	
-  2807		platform_set_drvdata(pdev, priv);
-  2808	
-  2809		priv->pcs.ops = &airoha_pcs_ops;
-  2810		priv->pcs.poll = true;
-  2811	
-  2812		__set_bit(PHY_INTERFACE_MODE_SGMII, priv->pcs.supported_interfaces);
-  2813		__set_bit(PHY_INTERFACE_MODE_1000BASEX, priv->pcs.supported_interfaces);
-  2814		__set_bit(PHY_INTERFACE_MODE_2500BASEX, priv->pcs.supported_interfaces);
-  2815		__set_bit(PHY_INTERFACE_MODE_10GBASER, priv->pcs.supported_interfaces);
-  2816		__set_bit(PHY_INTERFACE_MODE_USXGMII, priv->pcs.supported_interfaces);
-  2817	
-  2818		return of_pcs_add_provider(dev->of_node, of_pcs_simple_get,
-  2819					   &priv->pcs);
-  2820	}
-  2821	
-
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index f0e9f8eda7a3..fad04f3bcf1d 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -467,6 +467,8 @@ extern bool kexec_file_dbg_print;
+ #define kexec_dprintk(fmt, arg...) \
+         do { if (kexec_file_dbg_print) pr_info(fmt, ##arg); } while (0)
+ 
++void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size);
++void kimage_unmap_segment(void *buffer);
+ #else /* !CONFIG_KEXEC_CORE */
+ struct pt_regs;
+ struct task_struct;
+@@ -474,6 +476,9 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ static inline int kexec_crash_loaded(void) { return 0; }
++static inline void *kimage_map_segment(struct kimage *image, unsigned long addr, unsigned long size)
++{ return NULL; }
++static inline void kimage_unmap_segment(void *buffer) { }
+ #define kexec_in_progress false
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index c0bdc1686154..640d252306ea 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -867,6 +867,60 @@ int kimage_load_segment(struct kimage *image,
+ 	return result;
+ }
+ 
++void *kimage_map_segment(struct kimage *image,
++			 unsigned long addr, unsigned long size)
++{
++	unsigned long eaddr = addr + size;
++	unsigned long src_page_addr, dest_page_addr;
++	unsigned int npages;
++	struct page **src_pages;
++	int i;
++	kimage_entry_t *ptr, entry;
++	void *vaddr = NULL;
++
++	/*
++	 * Collect the source pages and map them in a contiguous VA range.
++	 */
++	npages = PFN_UP(eaddr) - PFN_DOWN(addr);
++	src_pages = kvmalloc_array(npages, sizeof(*src_pages), GFP_KERNEL);
++	if (!src_pages) {
++		pr_err("Could not allocate source pages array for destination %lx.\n", addr);
++		return NULL;
++	}
++
++	i = 0;
++	for_each_kimage_entry(image, ptr, entry) {
++		if (entry & IND_DESTINATION) {
++			dest_page_addr = entry & PAGE_MASK;
++		} else if (entry & IND_SOURCE) {
++			if (dest_page_addr >= addr && dest_page_addr < eaddr) {
++				src_page_addr = entry & PAGE_MASK;
++				src_pages[i++] =
++					virt_to_page(__va(src_page_addr));
++				if (i == npages)
++					break;
++				dest_page_addr += PAGE_SIZE;
++			}
++		}
++	}
++
++	/* Sanity check. */
++	WARN_ON(i < npages);
++
++	vaddr = vmap(src_pages, npages, VM_MAP, PAGE_KERNEL);
++	kvfree(src_pages);
++
++	if (!vaddr)
++		pr_err("Could not map segment source pages for destination %lx.\n", addr);
++
++	return vaddr;
++}
++
++void kimage_unmap_segment(void *segment_buffer)
++{
++	vunmap(segment_buffer);
++}
++
+ struct kexec_load_limit {
+ 	/* Mutex protects the limit count. */
+ 	struct mutex mutex;
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1.711.g2feabab25a-goog
+
