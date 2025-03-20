@@ -1,93 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190c.mail.infomaniak.ch (smtp-190c.mail.infomaniak.ch [185.125.25.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 415B120297C;
-	Thu, 20 Mar 2025 19:14:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C768227EB4
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:15:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742498044; cv=none; b=FpTQJWREDZsenyngGIzqdsa1dBCVGjyChHThbvS1Lrl273ZYTxAPeqVej5ff3MWBHzgPL4oZZyS5CxKLDf+jHFNyVaaS3qN+JK9snRIWB34GtYoCDPuXwvYnl3HHuTDn+ilSQW8XAK4QjDu8IwqRRq9O0Xvz6zEts4+1oNpF9MY=
+	t=1742498115; cv=none; b=JsbR0RvTuMcpSR9Gbdzl0B6x9Hq/xfXILwtt8k5eoxGtHv9saP2DJqfIaiYGbozv9s/tMcacEu+9vKWWhPXkDbHcwzFSO1uOc9DSCLPhkN2WpObRyTYrLQAZcowGOLUQU1IjqtzYZEgN6QphhqaB6Sxzb+EamwmQ9NVCK85p9QI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742498044; c=relaxed/simple;
-	bh=GMKQ+IsWksG+8EFLNZfKP/T07o9pwNrkxZF5rQ7ya3U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MXUZjftTNvPHbGKjH0iReTFt7yXx/OdQXBQJE7mUcq/FPwE7XSKsOgEaa31UTUnspH6Oehl11/+5pcKNUmdQh2zRG2/CEQ0cRJOEAuv2B9H0xzZLo/+oTOaPuq8HeT19aD4fv+6pAYf2lDw3umfmKlanIM4za/iGq5tRyq6ar2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SryMWsN/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742498115; c=relaxed/simple;
+	bh=h99UV6dEfyU1k/qyN8ITOEukGniyS56PiLOeR0hdq+8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=SuzWFanO2iVSYivbtg0RHXfySndgL4PbrrTgHQqmn3X2QjyU5TjY2f/xlHpcnD2Ooq+X60cjUbxhrZojtB9XxLSBdTSoUm3kU+3bgGBcCYI5TQjCSuwJhSeYntgw+Fn7R/3qBJyUuFRQdHPgmhFCFdjvyFKT2uoAKRVoTQb9Ysk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=VYn8Jkqd; arc=none smtp.client-ip=185.125.25.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SryMWsN/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04768C4CEDD;
-	Thu, 20 Mar 2025 19:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742498043;
-	bh=GMKQ+IsWksG+8EFLNZfKP/T07o9pwNrkxZF5rQ7ya3U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SryMWsN/ZDyqRfkm+Ild3Ogufm4HIPsfW1YToRbRWN8e0fDnBEUX9M54kQRMbXyIy
-	 Hbh/ZHIvepdBZ+aRyLEOtSKoisSwkcimysMyLm2mX6E1HNpSN2D81GLRFre2kBbOh8
-	 U6PIX4ftGtZ7fS6x0qOPsieRA+vTNcHW9rMKtBKxPpvbC481kqWasaSoyFUenSZhMa
-	 SRaetseswCRcNjN/iGAoIyRePmNYP3ElOs5FWrDeCKUJBH29CgvfLRK5Mn0pdOEwcF
-	 eWyBayJJmPqa2dcWuFCyukPFE1ShiNxH61CLGYGVMxH1O2EjMtzvxXGW7OC3hcQuGF
-	 22DQb3tzsmRGQ==
-Date: Thu, 20 Mar 2025 19:13:58 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Nico Pache <npache@redhat.com>
-Cc: rf@opensource.cirrus.com, patches@opensource.cirrus.com,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kunit-dev@googlegroups.com, simont@opensource.cirrus.com,
-	ckeepax@opensource.cirrus.com, brendan.higgins@linux.dev,
-	davidgow@google.com, rmoar@google.com, johannes.berg@intel.com,
-	sj@kernel.org
-Subject: Re: [PATCH] kunit: cs_dsp: Depend on FW_CS_DSP rather then enabling
- it
-Message-ID: <618b8578-1897-45e4-83eb-b725102ab27d@sirena.org.uk>
-References: <20250319230539.140869-1-npache@redhat.com>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="VYn8Jkqd"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZph2c4rzqd3;
+	Thu, 20 Mar 2025 20:07:56 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1742497676;
+	bh=DHsZKcdwvCQFfpxw3M74s3cguCDBRVMCrII724HjMEc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=VYn8JkqdlM88scdaMCgjPNjpysSJTIAxQKYDM94cbpqcHBN2x/Ru8ozRg1ZBW7rMY
+	 8kPfc9k7uR1eKQzvR9qJ8WuW0H0Gw07zRlC1+3JqBpfpisz7o7g3HDaGbBtrgO1hd/
+	 qOcACyjs4xuW3zoS8Z37npT0zGR9u6eCtg67LfUA=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpg3mjHzCTs;
+	Thu, 20 Mar 2025 20:07:55 +0100 (CET)
+From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
+To: Eric Paris <eparis@redhat.com>,
+	Paul Moore <paul@paul-moore.com>,
+	=?UTF-8?q?G=C3=BCnther=20Noack?= <gnoack@google.com>,
+	"Serge E . Hallyn" <serge@hallyn.com>
+Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
+	Ben Scarlato <akhna@google.com>,
+	Casey Schaufler <casey@schaufler-ca.com>,
+	Charles Zaffery <czaffery@roblox.com>,
+	Daniel Burgener <dburgener@linux.microsoft.com>,
+	Francis Laniel <flaniel@linux.microsoft.com>,
+	James Morris <jmorris@namei.org>,
+	Jann Horn <jannh@google.com>,
+	Jeff Xu <jeffxu@google.com>,
+	Jorge Lucangeli Obes <jorgelo@google.com>,
+	Kees Cook <kees@kernel.org>,
+	Konstantin Meskhidze <konstantin.meskhidze@huawei.com>,
+	Matt Bobrowski <mattbobrowski@google.com>,
+	Matthieu Buffet <matthieu@buffet.re>,
+	Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>,
+	Phil Sutter <phil@nwl.cc>,
+	Praveen K Paladugu <prapal@linux.microsoft.com>,
+	Robert Salvet <robert.salvet@roblox.com>,
+	Shervin Oloumi <enlightened@google.com>,
+	Song Liu <song@kernel.org>,
+	Tahera Fahimi <fahimitahera@gmail.com>,
+	Tingmao Wang <m@maowtm.org>,
+	Tyler Hicks <code@tyhicks.com>,
+	audit@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-security-module@vger.kernel.org
+Subject: [PATCH v7 20/28] selftests/landlock: Add test for invalid ruleset file descriptor
+Date: Thu, 20 Mar 2025 20:07:09 +0100
+Message-ID: <20250320190717.2287696-21-mic@digikod.net>
+In-Reply-To: <20250320190717.2287696-1-mic@digikod.net>
+References: <20250320190717.2287696-1-mic@digikod.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yj/ZQFCSnYoR7wNF"
-Content-Disposition: inline
-In-Reply-To: <20250319230539.140869-1-npache@redhat.com>
-X-Cookie: Do not fold, spindle or mutilate.
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Infomaniak-Routing: alpha
 
+To align with fs_test's layout1.inval and layout0.proc_nsfs which test
+EBADFD for landlock_add_rule(2), create a new base_test's
+restrict_self_fd which test EBADFD for landlock_restrict_self(2).
 
---yj/ZQFCSnYoR7wNF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Cc: Günther Noack <gnoack@google.com>
+Cc: Paul Moore <paul@paul-moore.com>
+Signed-off-by: Mickaël Salaün <mic@digikod.net>
+---
 
-On Wed, Mar 19, 2025 at 05:05:39PM -0600, Nico Pache wrote:
-> FW_CS_DSP gets enabled if KUNIT is enabled. The test should rather
-> depend on if the feature is enabled. Fix this by moving FW_CS_DSP to the
-> depends on clause, and set CONFIG_FW_CS_DSP=y in the kunit tooling.
+Changes since v5:
+- New standalone patch (that can be backported).
+---
+ tools/testing/selftests/landlock/base_test.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
->  config FW_CS_DSP_KUNIT_TEST
->  	tristate "KUnit tests for Cirrus Logic cs_dsp" if !KUNIT_ALL_TESTS
-> -	depends on KUNIT && REGMAP
-> +	depends on KUNIT && REGMAP && FW_CS_DSP
->  	default KUNIT_ALL_TESTS
-> -	select FW_CS_DSP
+diff --git a/tools/testing/selftests/landlock/base_test.c b/tools/testing/selftests/landlock/base_test.c
+index 7dc431a0e18e..cb13416533d2 100644
+--- a/tools/testing/selftests/landlock/base_test.c
++++ b/tools/testing/selftests/landlock/base_test.c
+@@ -269,6 +269,17 @@ TEST(restrict_self_checks_ordering)
+ 	ASSERT_EQ(0, close(ruleset_fd));
+ }
+ 
++TEST(restrict_self_fd)
++{
++	int fd;
++
++	fd = open("/dev/null", O_RDONLY | O_CLOEXEC);
++	ASSERT_LE(0, fd);
++
++	EXPECT_EQ(-1, landlock_restrict_self(fd, 0));
++	EXPECT_EQ(EBADFD, errno);
++}
++
+ TEST(ruleset_fd_io)
+ {
+ 	struct landlock_ruleset_attr ruleset_attr = {
+-- 
+2.49.0
 
-This makes no sense to me, the select statement is forcing on the code
-it's testing which is a library and so is selected by it's users, this
-change will just stop the tests being run unless someone does the dance
-to enable a driver which relies on the library.  That is something that
-seems unlikely to change the outcome of the tests when run from KUnit
-which is independent of any hardware.
-
---yj/ZQFCSnYoR7wNF
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfcaPUACgkQJNaLcl1U
-h9AIRgf/ccGrIBHTcdZaATYWPh0Ma2trtMpDz+zzZLn/Darau6fPQVOZYxw57Jfm
-XVQ4la3YkHtK6A2p12YD84pcpE2VzE3GN3xyhjoaBoO+h9cESs4foUWvRLhy1QbU
-oQXGUDgFR5Fs8bix/z1cEGbexaE5n1TwruWvrkFJUKbrKcmKXlB8qZQCq7iX/qOU
-8qSksIDnzq4YU/c4sWxMw7TdJriDX6h0adQlgDZb+lAZS2XK3Gd4Tsb/bRMK14nA
-iRdnQji3tW5WJH2FOTt7hoOMNu2hECfbFDYzHUVhpQM0zJG4plgHi3syp8/AlSSU
-cobYnJ2yCJMhMHU+us8jRNV3leRrcg==
-=bWLQ
------END PGP SIGNATURE-----
-
---yj/ZQFCSnYoR7wNF--
