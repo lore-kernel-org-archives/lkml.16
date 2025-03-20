@@ -1,45 +1,35 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC631DEFE4;
-	Thu, 20 Mar 2025 16:00:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924BA2144C9
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:00:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742486444; cv=none; b=qqiVpx33UmVyMZxnvJEgTDZYqnAbvC3kGgfKtXEjo9TEjjzAoYHpycrYfu0aqvU+90d47+a9bivaS9FMXwfSiZpjwj8tO4e5t0ETO+UbaFk6Q8IN9JInkH5ciC7yIkL9PwMtrVdf/uTZSKd06+XtO3+yB+bQdmtY1W2Kso/YGKg=
+	t=1742486444; cv=none; b=CnGjVDKXIVkELpBR06zpfzwVPc5/e6LWV/rKR0V848MtVjIdIYZJHqrIYQtIVtx7/DXC8VSfay4dJE8+s9QIeeh3acAvC8/LthkhjD6L8FpC5oLK+i1KliNGCIVy/5PUi2W0k2cLR9sqgmBThbqF94ZVgNc5ZjoLzoFBQ3prC1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742486444; c=relaxed/simple;
-	bh=ZrZ6pPWFymFNidzRt2WThDxFrIE/cEW7YG+avE2zXmo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=NN/MFdentGtfCqLX17R1UAl6mtSD8tM73uIz0oPUMQikCAtf6byo2C3C336YVH7qZ5c75GF0cgv1UpHZozZpDQvO+dIdw0MvIM6enP3MHWgoy8hAffw0Nb0SHGuPoqjfEUUQj+dJDd2BAvjUgzYUOhvrDomzPKQFx4zeM0HJX38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blhWxaVB; arc=none smtp.client-ip=10.30.226.201
+	bh=lEa3BxN/6LhqthWXir58vTyZRT4d8BUmsi3iv05b4SI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=CCsdj5vzlx0xdujRo1ZBHbCSCQcOphL/kODo6FHlIImlL3wD/Sns6uck2JOm+TNKuh1wIQBvVweVVuivUIEliZ/JD9vvKJ6OuKe5B+fQ+Ct9vuSE2gICbkFOqtvYCOSghMz8FSfmbPRCkMljQcTi8DdwtpnzVEiOXdB/ba1gVr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=T5Vls0GF; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blhWxaVB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE694C4CEE7;
-	Thu, 20 Mar 2025 16:00:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742486444;
-	bh=ZrZ6pPWFymFNidzRt2WThDxFrIE/cEW7YG+avE2zXmo=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=blhWxaVBpZm9WrQcpHom9TqivQrOSJ2wneSQXQplfAeJ0O2A7BQkrLO2LF/5CmwS5
-	 SnY5OrLGPEVfrY5qOkyjfg+wNYlQAD/xk4NlETspaFD7H+k0pj+lBKp8V33c5yo/qm
-	 wuvFc8DuQlWgCjZfbE340ZlYZOzzRgmgk4XAmb3sE74/oHUn7Ri1369EdxqMNdyK+m
-	 CCuakzlmxHewQ4JR5CZXD4r7EldamWLlSvmiEOU1LTdXzgEA2Kv1xb3/PW+TTv4QZ0
-	 VjV0ShMpocmBgiKPStprdbrjhyUrYuwnuJUp7dl74HSOEn/P0Ckp9cSGnnJnZZEleE
-	 HsEqw2tuj+aOg==
-From: Namhyung Kim <namhyung@kernel.org>
-To: linux-perf-users@vger.kernel.org, James Clark <james.clark@linaro.org>
-Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Arnaldo Carvalho de Melo <acme@kernel.org>, 
- Mark Rutland <mark.rutland@arm.com>, 
- Alexander Shishkin <alexander.shishkin@linux.intel.com>, 
- Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>, 
- Adrian Hunter <adrian.hunter@intel.com>, 
- "Liang, Kan" <kan.liang@linux.intel.com>, linux-kernel@vger.kernel.org
-In-Reply-To: <20250319114009.417865-1-james.clark@linaro.org>
-References: <20250319114009.417865-1-james.clark@linaro.org>
-Subject: Re: [PATCH] libperf: Don't remove -g when EXTRA_CFLAGS are used
-Message-Id: <174248644371.3704425.15114872503087361576.b4-ty@kernel.org>
-Date: Thu, 20 Mar 2025 09:00:43 -0700
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="T5Vls0GF"
+Received: from [127.0.1.1] (91-158-153-178.elisa-laajakaista.fi [91.158.153.178])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 5633BA98;
+	Thu, 20 Mar 2025 16:58:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1742486329;
+	bh=lEa3BxN/6LhqthWXir58vTyZRT4d8BUmsi3iv05b4SI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=T5Vls0GFxnPD5hn1unW34oSBxrMO4OhNp9j7+A6Cd/7trv98Dlxt18y3spIQ/h0i7
+	 OrNwM13+SUvs/qwg4Bu91rsBZ6ltlm6QJ3rLP7Q8en7StCMqAq22FDMzAExbVc4o/6
+	 RfqhiV1GJzDDtv4TQHxhYOohXdZeXjMira+mO67c=
+From: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Date: Thu, 20 Mar 2025 17:59:57 +0200
+Subject: [PATCH 02/18] drm/tidss: Use the crtc_* timings when programming
+ the HW
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,20 +38,101 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.15-dev-c04d2
+Message-Id: <20250320-cdns-dsi-impro-v1-2-725277c5f43b@ideasonboard.com>
+References: <20250320-cdns-dsi-impro-v1-0-725277c5f43b@ideasonboard.com>
+In-Reply-To: <20250320-cdns-dsi-impro-v1-0-725277c5f43b@ideasonboard.com>
+To: Jyri Sarha <jyri.sarha@iki.fi>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>
+Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+ linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+ Aradhya Bhatia <aradhya.bhatia@linux.dev>, 
+ Devarsh Thakkar <devarsht@ti.com>, 
+ Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+X-Mailer: b4 0.15-dev-c25d1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2447;
+ i=tomi.valkeinen@ideasonboard.com; h=from:subject:message-id;
+ bh=lEa3BxN/6LhqthWXir58vTyZRT4d8BUmsi3iv05b4SI=;
+ b=owEBbQKS/ZANAwAIAfo9qoy8lh71AcsmYgBn3DuWAhb6U3BLt5lLhsPChcq8E4oZSETUJXSx5
+ z12mq0p56KJAjMEAAEIAB0WIQTEOAw+ll79gQef86f6PaqMvJYe9QUCZ9w7lgAKCRD6PaqMvJYe
+ 9Th3EACjcrw6JZ9VPnH9olNkIpUQhmsh0DkbdGgOZ2y8ivDMJb390ebjUjcycXeJzVAwa11yzjv
+ ARnz9GkQYtX1PSm6EMaxo6GvwryU4NcgJYUbeQvL8ZIRcYhggMFmIFOih5Xwor3BjRPg5tn2oMG
+ 67zYVSK9YdQ3JnTmEWXyzSo164E8/nhJRoWz4/28U8ywqbeAWrBImTxgsPcP4D95I74h+bmdMe3
+ qov6INwon7Bgg85T+1DEyXjcjZWjGenn7gXSJIqgjr6x8KX2KIC3ObutCIMuKXq4KuZdBvB4KFn
+ tBlgqVWeJYXXaxTfRLgKvYVF5QE8HcOA3QJO1IdjNVAkJ7kdpWOxt0G6w/JdI5XFP5gLusf4eA4
+ fP6bDH7iGRh4FLnzzYBC2CN6hVo1I2SQeygB8ZXJiTCa1ULxtJMwUpan/MlqfnmBaSZeRFqsjtU
+ 1X1C+hZE/HKKon9Mx/GXPb64iHJfvAc1Nc+bX/9+baLDDjdAtOGoyXBcDRwBseUV8e+v1+0cmjw
+ E6Et+9k44cpM9Dj9G2ppuF3lNjMtyYhCuceqzmu2DUrCF51U1ZPMdhz3YX6LG0bUlsiHwC6UfFc
+ 8uIdeiCbMnT6+m/B8SdTag2o0UoMxWtT7+7MSTLAH0DAZv/0L9/plFbDBbXQ+om+MdZNwy4lD+f
+ DhEeFcQOT4L1Jkw==
+X-Developer-Key: i=tomi.valkeinen@ideasonboard.com; a=openpgp;
+ fpr=C4380C3E965EFD81079FF3A7FA3DAA8CBC961EF5
 
-On Wed, 19 Mar 2025 11:40:09 +0000, James Clark wrote:
-> When using EXTRA_CFLAGS, for example "EXTRA_CFLAGS=-DREFCNT_CHECKING=1",
-> this construct stops setting -g which you'd expect would not be affected
-> by adding extra flags. Additionally, EXTRA_CFLAGS should be the last
-> thing to be appended so that it can be used to undo any defaults. And no
-> condition is required, just += appends to any existing CFLAGS and also
-> appends or doesn't append EXTRA_CFLAGS if they are or aren't set.
-> 
-> [...]
-Applied to perf-tools-next, thanks!
+Use the crtc_* fields from drm_display_mode, instead of the "logical"
+fields. This shouldn't change anything in practice, but afaiu the crtc_*
+fields are the correct ones to use here.
 
-Best regards,
-Namhyung
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+---
+ drivers/gpu/drm/tidss/tidss_crtc.c  |  2 +-
+ drivers/gpu/drm/tidss/tidss_dispc.c | 16 ++++++++--------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
+diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/tidss_crtc.c
+index 94f8e3178df5..1604eca265ef 100644
+--- a/drivers/gpu/drm/tidss/tidss_crtc.c
++++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+@@ -225,7 +225,7 @@ static void tidss_crtc_atomic_enable(struct drm_crtc *crtc,
+ 	tidss_runtime_get(tidss);
+ 
+ 	r = dispc_vp_set_clk_rate(tidss->dispc, tcrtc->hw_videoport,
+-				  mode->clock * 1000);
++				  mode->crtc_clock * 1000);
+ 	if (r != 0)
+ 		return;
+ 
+diff --git a/drivers/gpu/drm/tidss/tidss_dispc.c b/drivers/gpu/drm/tidss/tidss_dispc.c
+index cacb5f3d8085..a5107f2732b1 100644
+--- a/drivers/gpu/drm/tidss/tidss_dispc.c
++++ b/drivers/gpu/drm/tidss/tidss_dispc.c
+@@ -1084,13 +1084,13 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
+ 
+ 	dispc_set_num_datalines(dispc, hw_videoport, fmt->data_width);
+ 
+-	hfp = mode->hsync_start - mode->hdisplay;
+-	hsw = mode->hsync_end - mode->hsync_start;
+-	hbp = mode->htotal - mode->hsync_end;
++	hfp = mode->crtc_hsync_start - mode->crtc_hdisplay;
++	hsw = mode->crtc_hsync_end - mode->crtc_hsync_start;
++	hbp = mode->crtc_htotal - mode->crtc_hsync_end;
+ 
+-	vfp = mode->vsync_start - mode->vdisplay;
+-	vsw = mode->vsync_end - mode->vsync_start;
+-	vbp = mode->vtotal - mode->vsync_end;
++	vfp = mode->crtc_vsync_start - mode->crtc_vdisplay;
++	vsw = mode->crtc_vsync_end - mode->crtc_vsync_start;
++	vbp = mode->crtc_vtotal - mode->crtc_vsync_end;
+ 
+ 	dispc_vp_write(dispc, hw_videoport, DISPC_VP_TIMING_H,
+ 		       FLD_VAL(hsw - 1, 7, 0) |
+@@ -1132,8 +1132,8 @@ void dispc_vp_enable(struct dispc_device *dispc, u32 hw_videoport,
+ 		       FLD_VAL(ivs, 12, 12));
+ 
+ 	dispc_vp_write(dispc, hw_videoport, DISPC_VP_SIZE_SCREEN,
+-		       FLD_VAL(mode->hdisplay - 1, 11, 0) |
+-		       FLD_VAL(mode->vdisplay - 1, 27, 16));
++		       FLD_VAL(mode->crtc_hdisplay - 1, 11, 0) |
++		       FLD_VAL(mode->crtc_vdisplay - 1, 27, 16));
+ 
+ 	VP_REG_FLD_MOD(dispc, hw_videoport, DISPC_VP_CONTROL, 1, 0, 0);
+ }
+
+-- 
+2.43.0
 
