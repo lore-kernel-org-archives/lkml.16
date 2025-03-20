@@ -1,208 +1,136 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8883624C062
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CB4A1C69D;
+	Thu, 20 Mar 2025 18:55:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742496854; cv=none; b=k4t4Sbr1PBvYVBItDQNui9UX6sRBcB7wHOidOP1zupEkM/8LniyVDVh9JK8VYxOc3Nl9uf7bjFhguP6GWBnNapVD9gKpm/kI840NPWhf1lbCu87/ijCPQC+T/aPig1MtFpZfprR3WMXhPgR54pdjcIbtzvkcu0pK4lpk+n5fh2E=
+	t=1742496954; cv=none; b=g02BRJ5Qi+JE1HkaTTjcJJR7oaWYkluCnfeD9Rp1cHrDdBJo7srDYx/z1qTs/aiaPorPqhc62fRUdKyazU1UzpET06N54dEVdeK+hyVP4xvHmdBRp9NXbmcDtpDlLTTunXAkixQQ2UOInghpxhdqID1EcAK9UdHXMgfhVPkodOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742496854; c=relaxed/simple;
-	bh=ysvtgpv8Lzoof+7How0DiBM+y+vEotUTIOC5+Z4md5Q=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jU0BgX2+f/7vCHwS0FvLpplv1q1XX24lbTqibpohwO8Q25DY2hd0lpo77DxT0iB0RL1HApJ7L6tUJCj1RVjiwEFQgMMA2kkq1hgk6fRHB6GStd6kWMfa/VS/DPKry02N+z/dcHcqwl7VnwIP8dzuCEnD6jgzCN+0fHifUK32vvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MTQfTeRS; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742496954; c=relaxed/simple;
+	bh=bpN/85K3GQ3AlOPx5AI0LjvEzJfDvNGW47DH3s5PiEU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PZ7aLiIaaVZYSaYw4lnAdlBRYz5jUIx3PfKQ+j5oNfX7z4W598vvgppoQPR+AELNStySN8xueI0PucXjFu94/Omz+eKjGXECAI7Rvzs/gEmR4kZA1MVVpPxdVf45vW9/APEObfzUyoF4PvaULfEdG6tDgb0C+SPkmQP31YHRork=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n3lHK5vH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MTQfTeRS"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-85ae4dc67e5so58339539f.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:54:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742496851; x=1743101651; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dmamZMwYgFpi0j7+3VuOLzPrfkXXmhZ2avEG64/SS20=;
-        b=MTQfTeRS+/Q1W0wvLLzdrz22NJUiFN8iGORy9jhGbnaYou3vNBIdENgcvxGe3a+wX9
-         gGlZBPWolcAq+2Rcc2rB644qpuAsg8+1bdMKABIyy1G/VBkfvU2Lke/3Z04d6scKHXVM
-         f1JfioyJaxU35ll6uZnaGMZbefVzQ5np5maCqG5E4wIh6/jcY06LNvrluIaEG911CpCk
-         X+aTYX/582QppkQMbSwGLouANJnJClV7XPP7Z9Anc5Ke1GR/0e+Gce9uqlz6lDA/49IL
-         H4L0y41okN44r5BV2V05z9+dAojpnkFoG8trOo2rj1RdLRolxndPFKII85qXIEZ+9HNZ
-         iXvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742496851; x=1743101651;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dmamZMwYgFpi0j7+3VuOLzPrfkXXmhZ2avEG64/SS20=;
-        b=i57L+cP9XiGbMOtfJjP2jZp6Q0AkOtR0pI3Mf+YZp+7RFfU5N1F/QQkl6AM1JUJMRA
-         ykO8qL8dizqoK0IDxr2m9PcqU7543/qUR9FWIqEK1B93tcVOAzuRisPz6IOh5Qlmd8h6
-         N690JSqduYCBbHhcdBrnHDRqE5shXD1uHBnIIgyWmJLpo0+my3L/TCca+6o5fd5ReJ0S
-         dmptzjm8SoVJPyZxcwdwkN491USNfbm0BcgfRh3HOrBtrWTTZU61fh5hoa88/54iuwif
-         FX2il7r0ef8Cgg5YWeccoSdRkk0ICoeobigcRYgxoCgrHQgq0KNYmyxkoUXnMJvdbnXi
-         GF/g==
-X-Gm-Message-State: AOJu0YwGGw739lwBX3YBsVuE/VvcS2nIfDhkqN8bErQxonXoqI57PM5f
-	J6owkhEQgJtpSC/jvBGp3AiuwnZoyZ4v2CXyRes+HP0Wsaz1kNAjX4npGaaX
-X-Gm-Gg: ASbGncvd7EYNg4o4pBNRIlwozaLwX4d8AHdP5BPR8n6RTeFLAntQ1rcC8IMwBuh7lyG
-	iIcA9YqMxnHaS8oJ4/nj5bvrZ9Lq4tNU+n1ksAJQ8zifdvyIffBBVl69WpD+qXeEn2HsYMVWfK6
-	Q5TvTek0wxw64BLgM7wHNdiEKsRdkci01IlwElrdceh4p9OLmMb//W772S52M4kTYWHqudJontK
-	H5qIyaB1noL1uMLwuoKUXUqVlEnhJw1zpaOEO6/ggXQ/Qn31Hi9D/KFZSgX1+1Dij7g24g9kVuo
-	XDubezTqPfOhhtHnI1iTsQRIZzP+hNft5F41UkjFm7QIfoI3u7Rqg2+SQm3WA2Pcm3W+f4UGl/t
-	3Xg==
-X-Google-Smtp-Source: AGHT+IEyrbzWzNkR3QwCwlCn6oXouTTauTHLnXeGSIezaRONhT+4uCAGUm+vEaKPMsebN3xP2W4/iw==
-X-Received: by 2002:a05:6602:380a:b0:85b:4185:1f91 with SMTP id ca18e2360f4ac-85e2c8f7201mr53612539f.0.1742496851514;
-        Thu, 20 Mar 2025 11:54:11 -0700 (PDT)
-Received: from gandalf.. (c-67-165-245-5.hsd1.co.comcast.net. [67.165.245.5])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-85e2bc273e7sm7078039f.17.2025.03.20.11.54.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 11:54:11 -0700 (PDT)
-From: Jim Cromie <jim.cromie@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	amd-gfx@lists.freedesktop.org,
-	intel-gvt-dev@lists.freedesktop.org,
-	intel-gfx@lists.freedesktop.org,
-	intel-gfx-trybot@lists.freedesktop.org
-Cc: jbaron@akamai.com,
-	gregkh@linuxfoundation.org,
-	ukaszb@chromium.org,
-	louis.chauvet@bootlin.com,
-	daniel.vetter@ffwll.ch,
-	tvrtko.ursulin@linux.intel.com,
-	jani.nikula@intel.com,
-	ville.syrjala@linux.intel.com,
-	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v2 59/59] drm: RFC - make drm_dyndbg_user.o for drm-*_helpers, drivers
-Date: Thu, 20 Mar 2025 12:52:37 -0600
-Message-ID: <20250320185238.447458-60-jim.cromie@gmail.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250320185238.447458-1-jim.cromie@gmail.com>
-References: <20250320185238.447458-1-jim.cromie@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n3lHK5vH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B057EC4CEDD;
+	Thu, 20 Mar 2025 18:55:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742496954;
+	bh=bpN/85K3GQ3AlOPx5AI0LjvEzJfDvNGW47DH3s5PiEU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=n3lHK5vHOqpFKN1p3oJ3mUrEoqQ81FB0P7fbPDe1YezSmZV6wSL52DcI+X4wO8oTu
+	 y8sPDVBbPi7g5gRrk4g2PCEtvi5oWabcgJGE3EkQvU1+LcpS28Prpuv/rVjT39iptx
+	 Bw7aJ1dU6fHji1x7v+0LykFg5SrJu2VLPo1QvXf4s4rErZgG3YKnwUySAij60V7RA5
+	 iNBVL3ANuGxWyCHYPpoYL5Bt/vz+iQtubTo9f+6+sd0Td6eJj7LZZkS5hfy+UAlhvA
+	 wzEJUZo+AxUGx5bSABIwep3bniIGzEHLZMVDfjzd9LxzlqLoIM9qR22vZhpP8siwYk
+	 m5QV5kkAEww2A==
+Date: Thu, 20 Mar 2025 18:55:49 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Petr Tesarik <ptesarik@suse.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>,
+	linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+	Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH] spi: Ensure memory used for spi_write_then_read() is DMA
+ safe
+Message-ID: <c46aa694-d804-47d6-a2d0-990ca6fbebb2@sirena.org.uk>
+References: <1359268504-24937-1-git-send-email-broonie@opensource.wolfsonmicro.com>
+ <20130205142128.2E28D3E1265@localhost>
+ <20250320124330.480d652d@mordecai.tesarici.cz>
+ <ca70e24d-57b6-4250-bd0d-7f5c72e1d282@sirena.org.uk>
+ <b37480a4-5344-4cf4-8fd1-400e2588fc28@app.fastmail.com>
+ <20250320153536.44774a74@mordecai.tesarici.cz>
+ <9ac953ec-fba3-41a7-8e5d-b867abc1566f@sirena.org.uk>
+ <20250320170846.64db4a4d@mordecai.tesarici.cz>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gFCt+t73yFgTihPX"
+Content-Disposition: inline
+In-Reply-To: <20250320170846.64db4a4d@mordecai.tesarici.cz>
+X-Cookie: Do not fold, spindle or mutilate.
 
-Add new drm_dyndbg_user.c with a single call to
-DYNDBG_CLASSMAP_USE(drm_debug_classes).  This creates a _class_user
-record (and a linkage dependency).
 
-If a driver adds this object to its Makefile target, it gets the
-record, which authorizes dyndbg to enable the module's class'd
-pr_debugs, such as DRMs <category>_dbg() macros.
+--gFCt+t73yFgTihPX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-So Id like to automatically inject this object into drivers.  I tried
-subdir-objs-y, but thats not a thing.
+On Thu, Mar 20, 2025 at 05:08:46PM +0100, Petr Tesarik wrote:
+> Mark Brown <broonie@kernel.org> wrote:
+> > On Thu, Mar 20, 2025 at 03:35:36PM +0100, Petr Tesarik wrote:
 
-In drm/Makefile:
+> > > CC'ing Robin Murphy, because there seem to be some doubts about DMA A=
+PI
+> > > efficiency. =20
 
-Add object dependency to drm_*_helper-y targets:
+> > Or possibly just documentation, the number of memory types we have to
+> > deal with and disjoint interfaces makes all this stuff pretty miserable.
 
-  $targ-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
+> I have to agree here. Plus the existing documentation is confusing, as
+> it introduces some opaque terms: streaming, consistent, coherent ...
+> what next?
 
-Attempt a foreach:
+> I volunteer to clean it up a bit. Or at least to give it a try.
 
-  to add $driver-y += ../drm_dyndbg_user.o
+That would be amazing.
 
-this appears to be a train-wreck for impl reasons, but it describes a
-want/need reasonably well.  It might not be a good maintainble idea.
+> If we want to make life easier for authors who don't need to squeeze
+> the last bit of performance from their driver, the core DMA API could be
+> extended with a wrapper function that checks DMA-ability of a buffer
+> address and takes the appropriate action. I kind of like the idea, but
+> I'm not a subsystem maintainer, so my opinion doesn't mean much. ;-)
 
-Explicitly adding to radeon/Makefile worked:
+That sounds sensible.  There's the dance that spi_{map,unmap}_buf() is
+doing which feels like it should be more generic, a general "I have this
+buffer, make it DMAable" which sounds like the same sort of ballpark and
+I always thought could be usefully factored out but never got round to
+finding a home for.
 
-  $radeon-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += ../drm_dyndbg_user.o
+> > > I still believe the SPI subsystem should not try to be clever. The
+> > > DMA API already avoids unnecessary copying as much as possible. =20
 
-But doing this is just as per-module as just adding the _USE()
-explicitly to the main .c file, which is less magical than make-fu.
+> > It's not particularly trying to be clever here?
 
-Also, it appears to cause make && make rebuilds.
+> Well, it tries to guess whether the lower layer will have to make a
+> copy, but it does not always get it right (e.g. memory encryption).
 
-and try to link it to helpers and everything
+> Besides, txbuf and rxbuf might be used without any copying at all, e.g.
+> if they point to direct-mapped virtual addresses (e.g. returned by
+> kmalloc).
 
-Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
----
- drivers/gpu/drm/Makefile          |  9 +++++++++
- drivers/gpu/drm/drm_dyndbg_user.c | 11 +++++++++++
- 2 files changed, 20 insertions(+)
- create mode 100644 drivers/gpu/drm/drm_dyndbg_user.c
+> At the end of the day, it's no big deal, because SPI transfers are
+> usually small and not performance-critical. I wouldn't be bothered
+> myself if it wasn't part of a larger project (getting rid of DMA zones).
 
-diff --git a/drivers/gpu/drm/Makefile b/drivers/gpu/drm/Makefile
-index 704f94efc804..1adb5a262180 100644
---- a/drivers/gpu/drm/Makefile
-+++ b/drivers/gpu/drm/Makefile
-@@ -74,10 +74,12 @@ drm-y := \
- 	drm_vblank_work.o \
- 	drm_vma_manager.o \
- 	drm_writeback.o
-+
- drm-$(CONFIG_DRM_CLIENT) += \
- 	drm_client.o \
- 	drm_client_event.o \
- 	drm_client_modeset.o
-+
- drm-$(CONFIG_DRM_LIB_RANDOM) += lib/drm_random.o
- drm-$(CONFIG_COMPAT) += drm_ioc32.o
- drm-$(CONFIG_DRM_PANEL) += drm_panel.o
-@@ -111,20 +113,25 @@ obj-$(CONFIG_DRM_BUDDY) += drm_buddy.o
- drm_dma_helper-y := drm_gem_dma_helper.o
- drm_dma_helper-$(CONFIG_DRM_FBDEV_EMULATION) += drm_fbdev_dma.o
- drm_dma_helper-$(CONFIG_DRM_KMS_HELPER) += drm_fb_dma_helper.o
-+drm_dma_helper-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
- obj-$(CONFIG_DRM_GEM_DMA_HELPER) += drm_dma_helper.o
- 
- drm_shmem_helper-y := drm_gem_shmem_helper.o
- drm_shmem_helper-$(CONFIG_DRM_FBDEV_EMULATION) += drm_fbdev_shmem.o
-+drm_shmem_helper-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
- obj-$(CONFIG_DRM_GEM_SHMEM_HELPER) += drm_shmem_helper.o
- 
- drm_suballoc_helper-y := drm_suballoc.o
-+drm_suballoc_helper-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
- obj-$(CONFIG_DRM_SUBALLOC_HELPER) += drm_suballoc_helper.o
- 
- drm_vram_helper-y := drm_gem_vram_helper.o
-+drm_vram_helper-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
- obj-$(CONFIG_DRM_VRAM_HELPER) += drm_vram_helper.o
- 
- drm_ttm_helper-y := drm_gem_ttm_helper.o
- drm_ttm_helper-$(CONFIG_DRM_FBDEV_EMULATION) += drm_fbdev_ttm.o
-+drm_ttm_helper-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
- obj-$(CONFIG_DRM_TTM_HELPER) += drm_ttm_helper.o
- 
- #
-@@ -149,11 +156,13 @@ drm_kms_helper-y := \
- 	drm_simple_kms_helper.o
- drm_kms_helper-$(CONFIG_DRM_PANEL_BRIDGE) += bridge/panel.o
- drm_kms_helper-$(CONFIG_DRM_FBDEV_EMULATION) += drm_fb_helper.o
-+drm_kms_helper-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
- obj-$(CONFIG_DRM_KMS_HELPER) += drm_kms_helper.o
- 
- #
- # Drivers and the rest
- #
-+subdir-obj-$(CONFIG_DRM_USE_DYNAMIC_DEBUG) += drm_dyndbg_user.o
- 
- obj-y			+= tests/
- 
-diff --git a/drivers/gpu/drm/drm_dyndbg_user.c b/drivers/gpu/drm/drm_dyndbg_user.c
-new file mode 100644
-index 000000000000..9e4aa87d4b58
---- /dev/null
-+++ b/drivers/gpu/drm/drm_dyndbg_user.c
-@@ -0,0 +1,11 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+
-+#include "drm/drm_print.h"
-+/*
-+ * if DRM_USE_DYNAMIC_DEBBUG:
-+ *    DYNDBG_CLASSMAP_USE(drm_debug_classes);
-+ *
-+ * dyndbg classmaps are opt-in, so modules which call drm:_*_dbg must
-+ * link this to authorize dyndbg to change the static-keys underneath.
-+ */
-+DRM_CLASSMAP_USE(drm_debug_classes);
--- 
-2.49.0
+Some of the IIO users might beg to differ about performance criticality
+and transfer sizes there, and there's things like firmware download and
+SPI flashes too.  A lot of the performance work on the subsystem came
+=66rom people with CAN controllers they're trying to saturate, some of
+which was large messages.  It's not the same situation as block devices
+or networking but it's an area where anything we can do to eliminate
+dead time on the bus can be really noticable to applications.  It gets
+used a lot with mixed signal applications where implementing digital
+logic is expensive but you might want to get a lot of data in or out.
 
+--gFCt+t73yFgTihPX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfcZLUACgkQJNaLcl1U
+h9DOIwgAgPEw0mfje+6KbfDLvx2eO3UqUQ8cGQZ1eq97+oAVr5FhPdfZbvtEylBu
+jRGSiB6i2jFxAFcEUHFNDmBEXIHO97CDjoe8bcqui5OaEisPaQpugFbpFKPAiwSa
+6rXpZmIXPeHxJ5gBFE1c2zsGPSnoZVPSowlX1d77aR/eqHP3VcxDMfLmJkufu+4O
+L+e2LFCXnf+88o79K3ZVrartGpNQ5zRVL2/jLFzsWYzlZJaxla/NLm2WoyBkbaVk
+8mbnpdGXs2D03zXIUAYAEgFbFiiz7AQ5997bWAUidbzThMtq0bKmh5odjwI5hq4g
++PY0lhtuYrNr8wmyqmTPzm4OEbgehg==
+=cWMq
+-----END PGP SIGNATURE-----
+
+--gFCt+t73yFgTihPX--
