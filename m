@@ -1,51 +1,53 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DB82AE99;
-	Thu, 20 Mar 2025 13:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC8D41DFE00;
+	Thu, 20 Mar 2025 13:24:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742477040; cv=none; b=IHuJRUZ1200kLx2/Bvv9oXdx/bo7Fgt5KAh5jsksTVczfeFI/IM1PjoyvxW1dr97nQiXilXTrXU7cQILDdT0b1niG86bsFpAx1KH11nIymJ22My+A2Z45stU/YNsBkU51mrmhTjoQFmnj6HOIP2Q0xc6vFC2olBMYIJeruK27LY=
+	t=1742477052; cv=none; b=AuMGBzivTXvewIBrKJOr+KnGpRldg+5EKoi/NNLARuPT5vR4gHU03fYHiUb9vvkV9nrKL2HUsYF8XsZiRgwFFsG5CqWL1ujLo0Lg2Jakym1yAA00vUyDZ15yCWiIVErRd79UdoeCak5DJZahCBoKZdbPAT3I0zh+aO5M+vKbDNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742477040; c=relaxed/simple;
-	bh=yXpAdwA2wl9V0/3d11cnGwhrhvLntuVhj2WqTNZoesc=;
+	s=arc-20240116; t=1742477052; c=relaxed/simple;
+	bh=+TpLCsKFfjMwGBDtTsipoHPUIvdSM3dn8mNDo87/f8A=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VnsKBZQaVDca+pxcWKEXrcs3uEJpWF0BhEheIH1U7gGurFdM/aY6MlLa2x8Icy4PZen6TwCGw5YJ2kdbC5QyJ6ne/YgxDhxnlUn+J4HLRRhxsFf+JNtC0ygOs3KBd3ilgpD68gysMWPjgLWC3ddAb22fuD6wkT79PdkpxV4vR4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=imA9543D; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=deFZT3Xk+SVNA0A+5iv4fcTzC+sWx9bL2JmPYmuCLUlrbaXOtK7Igvpbo+5Oar5j2Ya2uJjMGNyLsaQVC0w5ryJGV+rRQ1t+ab9wxhNAjT23ghIeXK+PktHyzQSEiMm4rpGb1cEAw5/APhZgliBwqGp06nUMJ/PHEu0iw0D5V8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=UukUAibz; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="imA9543D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827C9C4CEDD;
-	Thu, 20 Mar 2025 13:23:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742477039;
-	bh=yXpAdwA2wl9V0/3d11cnGwhrhvLntuVhj2WqTNZoesc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=imA9543DJ5p7W1TnaDybPi40iJGhQojll3ucOtdIcsIz9/4H1vVOLmiiwksPt0oS+
-	 kiD5jANyRvdNomXm/w6YxLRNKXigdJ8hqxC7dLQWUZ4io3ckAcAl4jv8hLAKbVFTDQ
-	 6iyFUitOX8WzTxnpMhpqKTRQxdPXq3D0zl48FvMs=
-Date: Thu, 20 Mar 2025 06:22:40 -0700
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Jens Axboe <axboe@kernel.dk>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>, stable@vger.kernel.org,
-	patches@lists.linux.dev, linux-kernel@vger.kernel.org,
-	torvalds@linux-foundation.org, akpm@linux-foundation.org,
-	linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-	lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
-	f.fainelli@gmail.com, sudipm.mukherjee@gmail.com,
-	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org,
-	hargar@microsoft.com, broonie@kernel.org,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Anders Roxell <anders.roxell@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	Arnd Bergmann <arnd@arndb.de>, io-uring@vger.kernel.org
-Subject: Re: [PATCH 6.6 000/166] 6.6.84-rc1 review
-Message-ID: <2025032031-negative-wreckage-dedf@gregkh>
-References: <20250319143019.983527953@linuxfoundation.org>
- <CA+G9fYvM_riojtryOUb3UrYbtw6yUZTTnbP+_X96nJLCcWYwBA@mail.gmail.com>
- <2deb9e86-7ca8-4baf-8576-83dad1ea065f@kernel.dk>
- <2025031910-poking-crusher-b38f@gregkh>
- <3dc5b070-0837-4737-be78-ba846016c02e@kernel.dk>
- <412b08d9-17fc-4a62-afd3-7371cf479f2d@kernel.dk>
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="UukUAibz"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=m/Tu4PfY/OmYLj9IINFcwahi6xEnQdf1mSKCgFo1yJI=; b=UukUAibzOcZU1Qa6sLw0/3vXzu
+	4ZoM+SY8VlP2g4RqKALQ3cXbGQeWoBKt4q6hU9Ea5/ljiytKmxVsOC/bAcEQeMjCGRwYbgeyE4vpn
+	AoKW6s0OoCYMqD7ajG5TmxtsaLEM+wlvdwCyOAOTpL6+H5FXO+okIovtDhVTpdg5hE5w=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tvFsG-006Tmp-SM; Thu, 20 Mar 2025 14:23:52 +0100
+Date: Thu, 20 Mar 2025 14:23:52 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Wei Fang <wei.fang@nxp.com>, Shenwei Wang <shenwei.wang@nxp.com>,
+	Clark Wang <xiaoning.wang@nxp.com>,
+	Steve Glendinning <steve.glendinning@shawell.net>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Marek Vasut <marex@denx.de>, Simon Horman <horms@kernel.org>,
+	Ronald Wahl <ronald.wahl@raritan.com>, Peng Fan <peng.fan@nxp.com>,
+	"open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"open list:FREESCALE IMX / MXC FEC DRIVER" <imx@lists.linux.dev>
+Subject: Re: [PATCH net-next] net: ethernet: Drop unused of_gpio.h
+Message-ID: <46bbe18e-05d8-40e3-a50a-b9c31d5ddede@lunn.ch>
+References: <20250320031542.3960381-1-peng.fan@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -54,83 +56,19 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <412b08d9-17fc-4a62-afd3-7371cf479f2d@kernel.dk>
+In-Reply-To: <20250320031542.3960381-1-peng.fan@oss.nxp.com>
 
-On Thu, Mar 20, 2025 at 07:02:23AM -0600, Jens Axboe wrote:
-> On 3/20/25 6:55 AM, Jens Axboe wrote:
-> > On 3/19/25 5:51 PM, Greg Kroah-Hartman wrote:
-> >> On Wed, Mar 19, 2025 at 10:37:20AM -0600, Jens Axboe wrote:
-> >>> On 3/19/25 10:33 AM, Naresh Kamboju wrote:
-> >>>> On Wed, 19 Mar 2025 at 20:09, Greg Kroah-Hartman
-> >>>> <gregkh@linuxfoundation.org> wrote:
-> >>>>>
-> >>>>> This is the start of the stable review cycle for the 6.6.84 release.
-> >>>>> There are 166 patches in this series, all will be posted as a response
-> >>>>> to this one.  If anyone has any issues with these being applied, please
-> >>>>> let me know.
-> >>>>>
-> >>>>> Responses should be made by Fri, 21 Mar 2025 14:29:55 +0000.
-> >>>>> Anything received after that time might be too late.
-> >>>>>
-> >>>>> The whole patch series can be found in one patch at:
-> >>>>>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.84-rc1.gz
-> >>>>> or in the git tree and branch at:
-> >>>>>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> >>>>> and the diffstat can be found below.
-> >>>>>
-> >>>>> thanks,
-> >>>>>
-> >>>>> greg k-h
-> >>>>
-> >>>> Regressions on mips the rt305x_defconfig builds failed with gcc-12
-> >>>> the stable-rc v6.6.83-167-gd16a828e7b09
-> >>>>
-> >>>> First seen on the v6.6.83-167-gd16a828e7b09
-> >>>>  Good: v6.6.83
-> >>>>  Bad: v6.6.83-167-gd16a828e7b09
-> >>>>
-> >>>> * mips, build
-> >>>>   - gcc-12-rt305x_defconfig
-> >>>>
-> >>>> Regression Analysis:
-> >>>>  - New regression? Yes
-> >>>>  - Reproducibility? Yes
-> >>>>
-> >>>> Build regression: mips implicit declaration of function 'vunmap'
-> >>>> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-> >>>
-> >>> Ah that's my fault, forgot to include the backport of:
-> >>>
-> >>> commit 62346c6cb28b043f2a6e95337d9081ec0b37b5f5
-> >>> Author: Jens Axboe <axboe@kernel.dk>
-> >>> Date:   Sat Mar 16 07:21:43 2024 -0600
-> >>>
-> >>>     mm: add nommu variant of vm_insert_pages()
-> >>>
-> >>> for 6.1-stable and 6.6-stable. Greg, can you just cherry pick that one?
-> >>> It'll pick cleanly into both, should go before the io_uring mmap series
-> >>> obviously.
-> >>>
-> >>> Sorry about that! I did have it in my local trees, but for some reason
-> >>> forgot to include it in the sent in series.
-> >>
-> >> Wait, this is already in the 6.6.y and 6.1.y queues, so this can't be
-> >> the fix.  Was there a fixup for that commit somewhere else that I'm
-> >> missing?
-> > 
-> > Huh indeed, guess I didn't mess up in the first place. What is going on
-> > here indeed... Is that mips config NOMMU yet doesn't link in mm/nommu.o?
-> > 
-> > Checking, and no, it definitely has MMU=y in the config. Guess I
-> > should've read the initial report more closely, it's simply missing the
-> > vunmap definition. Adding linux/vmalloc.h to io_uring/io_uring.c should
-> > fix it.
-> > 
-> > How do we want to deal with this?
+On Thu, Mar 20, 2025 at 11:15:24AM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Either fold in the hunk from the previous email, or replace patch 2 in
-> the series I sent with this one instead, which adds the vmalloc.h
-> include. That should sort out the issue without needing add-on patches
-> that don't exist upstream.
+> of_gpio.h is deprecated. Since there is no of_gpio_x API, drop
+> unused of_gpio.h. While at here, drop gpio.h and gpio/consumer.h if
+> no user in driver.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Now replaced, thanks!
+net-next.
+
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+
+    Andrew
