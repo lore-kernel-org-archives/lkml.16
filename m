@@ -1,175 +1,154 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21ABC22371E;
-	Thu, 20 Mar 2025 15:24:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179F222424C
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742484289; cv=none; b=UfL1C0fd5T2P0EA/0Bn17b4TpkIxRKhWgrw6BChD0tftKJOP8siGg81xy/uG+m8qpLdNPVxDvaj6u+jAYlVx9WGjHjNytYCVuPmV9P1Fn6r3qFuJY4JcnbOTS5VdsfXnT/nqPh1umgX5wwqJiE7BqzCZnomy7LqldAog+o9Tqsc=
+	t=1742484290; cv=none; b=pQPXYSEeFXByCVayhc+kp3ayfMJKF/knsnWuOXoRNYeOulCvku/otAwAj7rpx0Fl14Ap30mWtz1MMnwKJbJbs+1uZWthGdeNbZAHCM6jDovCAzkhdAZoe/avUYKT293wBOG45X9jag3/Tns5bm28W4L7MtlHvq60HqSVFNzMZBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742484289; c=relaxed/simple;
-	bh=QdPjNftOZyhcrxaBENJ2ZcCMQ0d2Elbpse3JT06Zbt8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ezPPQ5sWe3s0BM7maRj2GrNxB5nMcccsqHmpRtdloZf+2KeAWEILpYtz8FYBodgi9/7vBs+bAK/EyzCoj1iJXTv/iwU2VCo/gJGEMHevK66HBDfleYRtC3sN/bFnEf73UijtUg0ulgvQhsDFmOMmlOikpOvQ9MOp8m0C5pa7wLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=K3yV4RF8; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742484290; c=relaxed/simple;
+	bh=myzODkLCXU9k+CNuyKZbtSDZie+rrUzmakLImNhXOvk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=geN8pPOICYtcRqiNm+gk4SB8vKR+u+S2sT7EsQaFYd1g5gGQ0QV6w7+U14qSmEUO+OailVaE6VZSXX0zqM7OK5rMs3CzZLiae26IIGByP1/pvpg4JUxaJ76B96r3DbnKt6OgM7++rh+KNb8xDs2szmt/6JYcyRPffbiK+wDVX/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=KyCK5eTi; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K3yV4RF8"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-223f4c06e9fso16382075ad.1;
-        Thu, 20 Mar 2025 08:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742484287; x=1743089087; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=sUfisYcWp0a9uSKCTzhEOlOpswYrDKtyklCDtr9oI7U=;
-        b=K3yV4RF8wZ+SxBZtq7NY/YIfvmop+dghTW1rkEF+++7Ia3QkFi3E5MILmU0MgvktPg
-         QUrSJestzDePZe5KelTK6mNWq8OWDbl4Dn1lW6Bh9CuHH9zXt/zWraOPBwXMkCtrK3mm
-         jNokagoBoTt4mx6JNdovn1Dlsi+kCoroLQCJbH0Ou83gj7drv0GvwFpVF0chwYm12+0t
-         FqKIzXHTH3X3dgttdeZLwP4yz2TTmpozRfTRwndzNb0EBaHBxaRfcxGubo2ng66jfZyL
-         gKKQ/AoJxi7vlM2E4Ws0o0EsXCGoiMdY4zdJusClehUuql05S6bu7NCtBYIGnjwOZCWy
-         KyBw==
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KyCK5eTi"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742484288;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Z2gxWk7Mqfo6u16dcSf4IdAvykfJIBF0LRh5CbMS2gE=;
+	b=KyCK5eTix5t+Lq3zQ6T56LC2o7wJ9l5Kqv1SxP9/LfnTnUBZwcAiY77PYNA+NjJj52zFtY
+	8MAHm0AgY61aIJURvus6+etbh43etlSTbJdvkbF4j6z8eUA0KVGZrLDDaSPymxffGgq04k
+	xJr500oYwifD/6Wp3AN6k7p1EjOGE5w=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-104-MR9KYDbQN-iXRKfwP4ELlw-1; Thu, 20 Mar 2025 11:24:46 -0400
+X-MC-Unique: MR9KYDbQN-iXRKfwP4ELlw-1
+X-Mimecast-MFC-AGG-ID: MR9KYDbQN-iXRKfwP4ELlw_1742484284
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-43947979ce8so4271665e9.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:24:46 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742484287; x=1743089087;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742484284; x=1743089084;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=sUfisYcWp0a9uSKCTzhEOlOpswYrDKtyklCDtr9oI7U=;
-        b=rTSK0o7YNBlDYTI4cXGmvRSFiWiJk+TR9wb4jAc2scyg8GtwPCH+1/amJVba2W6HSy
-         V7ltfjYl9P/yyDtMEsQGMWRWzqAt0WTFlNzB6VQwfGrPDTbbbfyx8U6pqFlzyp6T5zU3
-         VqoTe282qtI+Kydk4i6Wh4aS1Gw4nAPJO2N8aZRD5kltOmy/uSc4BkJBiVNXvvpISoCv
-         U8SwMTY5gfxeOvD4haz7PIDI/8uknQs+03xMPYATcxu53KPLRdqxFD+/t/7ee5SPu6LX
-         CCOjG7HT4/UheQBk22/mEIIKoRlKUADHymoIPFQ2O+VGNezN9BKsTC5BrLHtfPdP3KsD
-         29kg==
-X-Forwarded-Encrypted: i=1; AJvYcCX2QzIjYF/crrF9WK+otGRqhFzdaIUUYbSxLbleFxouPtAGYLC7sNqYrYQQyRsvCTqqDrnc0CztpTch7l4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy7aFa1aqn8RsMf6btxVMPsCwFwFFPfdsasYkJ0M6npuoZnBGsn
-	T6howGPmQcRzq2KVlIDISf2Hscu72pxwP1/m4Uzy/tTuGZY+py/q
-X-Gm-Gg: ASbGncvUe7HZ1cVmQQMCh5Sp76guRVcnhqQZbAECYR6i9zrbUI5du7ZBrBTNNbAy6Rr
-	ZUpNFF3h1BPNOOqRGlrZbPKkVQZ8AcNw6Yi72fi4z8tidmklgVZ43KkGZ2OYRn7Bqeb5UqW7TXU
-	eeVXFLzRvf2OrTWBEEx2CHu3BmQc9dzgFi0yEQX43y+uLUKhN9lez5wTHIWOkaXKetM7QnGqvpe
-	91rtrR3XgglXtg26SEeves/mfT3LSd3dlyCe2TCRrei5oA21Z0ShjpnGPoexksnkFVj8/EXATID
-	TE3MIpWAL8R+Mnpjpza5uGYVl89KR5lbnd+sn2OqF3itVK5NxVeQhXCKvkeNbM9wr+KpEew3Vtt
-	DBHg1GbrlYqN+3ZYbvy+ETQ==
-X-Google-Smtp-Source: AGHT+IEhD+AwDbS1bWQ1xV8+/CAKiat6otvbsanGzMCX+jMw60SVH48Jml3Jk1BukssYExoZ1JfSjA==
-X-Received: by 2002:a17:903:1a27:b0:21f:98fc:8414 with SMTP id d9443c01a7336-2265e7c2830mr65399575ad.26.1742484287128;
-        Thu, 20 Mar 2025 08:24:47 -0700 (PDT)
-Received: from localhost.localdomain (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bd4a8fsm136905515ad.234.2025.03.20.08.24.44
+        bh=Z2gxWk7Mqfo6u16dcSf4IdAvykfJIBF0LRh5CbMS2gE=;
+        b=iDod980WkVj/9VUPb9zHEBXUHDKH1iaZEgKUVb7HkCSI3nY1ZimTyH/b7HCbbgEt8K
+         kRF3/Rq8Q032aR5LiZ6DxNUe+O/cu00gTLZ8AUXBKXQMQvfllV2dMJRx0p6kOKAUAN2Z
+         EaVr3C8W+ZWX3fDl/D4MlybmxEVDr81//ml5VVDUh64LVFeL6BoIVZEDSvW1xINUHPOQ
+         H2+6m2zcfKfosdrWoC9R+5i80MLfk4MWsU3Mg3HqdRG9xrm14ea10KrGK4RDiLfq+lxc
+         iw+F3tzv40PqYlTJyC31KCylaWAKKwo+g3NFzPfZXJL3lOZUhUWL6aRvRMLKcicuQp5K
+         noLA==
+X-Forwarded-Encrypted: i=1; AJvYcCVQtJeVbcdlFxMEmKoeBuobEzigYK3Eh+P4tAHuUckzpicndpH6r3tjrWpIS6zGhu0Ja6wInSqhUtSSNkM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrnW3Nd84DfHElD1qt6Vgu0S/rtXuGeE83+SlC/mmWy+p30kER
+	weP0cUHVdvnm5P2yKqMxxzP+oeFBuWfMn2kMFfCB2hD882nQyONrFL9h38aTxZTfhORfihZQUch
+	3ZB1TbW7D3oNXxSUAinTiZZ1Cc5Lkt28KMzXiTNc2eCn8yDzEmscPlqftOWPgqw==
+X-Gm-Gg: ASbGncvjfirRI76Qf4MJ1njlw0DkOSIrNLWVlC9jzZah0dhtklBM1t5fsp9Ge+Imcej
+	8/X0FxW+S5svcVUfdCTikWt6uIGhAbim48rzkQaCxRYikuW7GZtbAgJ2u57HH/lFT4J4udkOXFI
+	I2NE3/VSLkFlUK0kqyWL0E7B/A9c3JsGgCO0MckSHky0s2BlAEEH0vW/1Fdspn3IU4VLUmWuD2F
+	lM5R6lRY8NPelpe2M4EtWf/yXQXQkyHU7iExTMpXqlQ5m7ovvXCG9OU+xh4I8M0ln8W5aEmks/m
+	792jaWEbHD5cUFjo7J0zMvcOyWC0fGH0zXeXZeUwTGT1Lg7O4GuWa00M9UYcouGZnQ==
+X-Received: by 2002:a05:6000:1a8b:b0:391:6fd:bb65 with SMTP id ffacd0b85a97d-399739b4dbamr6532450f8f.9.1742484284377;
+        Thu, 20 Mar 2025 08:24:44 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH8AHddaOw437CUySFfwsnP8Hprx1HumUa59qJL3ncy08x6hV7c2+DaL0UrDROuWkbDQnZ/yg==
+X-Received: by 2002:a05:6000:1a8b:b0:391:6fd:bb65 with SMTP id ffacd0b85a97d-399739b4dbamr6532410f8f.9.1742484283787;
+        Thu, 20 Mar 2025 08:24:43 -0700 (PDT)
+Received: from stex1.redhat.com (host-87-12-25-55.business.telecomitalia.it. [87.12.25.55])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fceacf3sm974085e9.3.2025.03.20.08.24.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 08:24:46 -0700 (PDT)
-From: Potin Lai <potin.lai.pt@gmail.com>
-Date: Thu, 20 Mar 2025 23:21:57 +0800
-Subject: [PATCH v5 07/10] ARM: dts: aspeed: catalina: Remove INA238 and
- INA230 nodes
+        Thu, 20 Mar 2025 08:24:41 -0700 (PDT)
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Jarkko Sakkinen <jarkko@kernel.org>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>,
+	linux-kernel@vger.kernel.org,
+	Peter Huewe <peterhuewe@gmx.de>,
+	linux-integrity@vger.kernel.org,
+	James Bottomley <James.Bottomley@HansenPartnership.com>,
+	Jens Wiklander <jens.wiklander@linaro.org>,
+	Sumit Garg <sumit.garg@kernel.org>,
+	Stefano Garzarella <sgarzare@redhat.com>
+Subject: [PATCH 1/2] tpm: add send_recv() op in tpm_class_ops
+Date: Thu, 20 Mar 2025 16:24:32 +0100
+Message-ID: <20250320152433.144083-2-sgarzare@redhat.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250320152433.144083-1-sgarzare@redhat.com>
+References: <20250320152433.144083-1-sgarzare@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250320-potin-catalina-dts-update-20250102-v5-7-e161be6583a7@gmail.com>
-References: <20250320-potin-catalina-dts-update-20250102-v5-0-e161be6583a7@gmail.com>
-In-Reply-To: <20250320-potin-catalina-dts-update-20250102-v5-0-e161be6583a7@gmail.com>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, 
- Andrew Jeffery <andrew@codeconstruct.com.au>, 
- Patrick Williams <patrick@stwcx.xyz>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, 
- Cosmo Chou <cosmo.chou@quantatw.com>, Potin Lai <potin.lai@quantatw.com>, 
- Potin Lai <potin.lai.pt@gmail.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742484265; l=2083;
- i=potin.lai.pt@gmail.com; s=20240724; h=from:subject:message-id;
- bh=QdPjNftOZyhcrxaBENJ2ZcCMQ0d2Elbpse3JT06Zbt8=;
- b=ahiqRaLzLCuBq51XXJGrLe1R+4sfoCcFv/8CoxoOuZot1U3ktNGhpx9+KLCyQx04a92RUgyp5
- LimJ83PUITOBAM65OVPGU6vgHp/CdOyT0QXMr9zq1HR18oRBnRzLvxr
-X-Developer-Key: i=potin.lai.pt@gmail.com; a=ed25519;
- pk=6Z4H4V4fJwLteH/WzIXSsx6TkuY5FOcBBP+4OflJ5gM=
+Content-Transfer-Encoding: 8bit
 
-Remove INA238 and INA230 power sensor nodes from the device tree (DTS) due
-to incompatibility with the second-source ISL28022, which shares the same
-I2C address.
+From: Stefano Garzarella <sgarzare@redhat.com>
 
-Move the driver probe to userspace to handle sensor dynamically.
+Some devices do not support interrupts and provide a single operation
+to send the command and receive the response on the same buffer.
 
-Signed-off-by: Potin Lai <potin.lai.pt@gmail.com>
+To support this scenario, a driver could set TPM_CHIP_FLAG_IRQ in the
+chip's flags to get recv() to be called immediately after send() in
+tpm_try_transmit(), or it needs to implement .status() to return 0,
+and set both .req_complete_mask and .req_complete_val to 0.
+
+In order to simplify these drivers and avoid temporary buffers to be
+used between the .send() and .recv() callbacks, introduce a new callback
+send_recv(). If that callback is defined, it is called in
+tpm_try_transmit() to send the command and receive the response on
+the same buffer in a single call.
+
+Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
 ---
- .../dts/aspeed/aspeed-bmc-facebook-catalina.dts    | 45 ----------------------
- 1 file changed, 45 deletions(-)
+ include/linux/tpm.h              | 2 ++
+ drivers/char/tpm/tpm-interface.c | 7 +++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-index cf8a31b50074..1e1bcc9ac2f0 100644
---- a/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-+++ b/arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-catalina.dts
-@@ -432,35 +432,11 @@ power-sensor@22 {
- 				compatible = "mps,mp5990";
- 				reg = <0x22>;
- 			};
--			power-sensor@41 {
--				compatible = "ti,ina238";
--				reg = <0x41>;
--				shunt-resistor = <500>;
--			};
--			power-sensor@42 {
--				compatible = "ti,ina238";
--				reg = <0x42>;
--				shunt-resistor = <500>;
--			};
--			power-sensor@44 {
--				compatible = "ti,ina238";
--				reg = <0x44>;
--				shunt-resistor = <500>;
--			};
- 		};
- 		i2c1mux0ch1: i2c@1 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <0x1>;
--
--			power-sensor@41 {
--				compatible = "ti,ina238";
--				reg = <0x41>;
--			};
--			power-sensor@43 {
--				compatible = "ti,ina238";
--				reg = <0x43>;
--			};
- 		};
- 		i2c1mux0ch2: i2c@2 {
- 			#address-cells = <1>;
-@@ -753,27 +729,6 @@ i2c5mux0ch7: i2c@7 {
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			reg = <7>;
--
--			power-sensor@40 {
--				compatible = "ti,ina230";
--				reg = <0x40>;
--				shunt-resistor = <2000>;
--			};
--			power-sensor@41 {
--				compatible = "ti,ina230";
--				reg = <0x41>;
--				shunt-resistor = <2000>;
--			};
--			power-sensor@44 {
--				compatible = "ti,ina230";
--				reg = <0x44>;
--				shunt-resistor = <2000>;
--			};
--			power-sensor@45 {
--				compatible = "ti,ina230";
--				reg = <0x45>;
--				shunt-resistor = <2000>;
--			};
- 		};
- 	};
- };
-
+diff --git a/include/linux/tpm.h b/include/linux/tpm.h
+index 6c3125300c00..4e796b8726b5 100644
+--- a/include/linux/tpm.h
++++ b/include/linux/tpm.h
+@@ -88,6 +88,8 @@ struct tpm_class_ops {
+ 	bool (*req_canceled)(struct tpm_chip *chip, u8 status);
+ 	int (*recv) (struct tpm_chip *chip, u8 *buf, size_t len);
+ 	int (*send) (struct tpm_chip *chip, u8 *buf, size_t len);
++	int (*send_recv)(struct tpm_chip *chip, u8 *buf, size_t buf_len,
++			 size_t cmd_len);
+ 	void (*cancel) (struct tpm_chip *chip);
+ 	u8 (*status) (struct tpm_chip *chip);
+ 	void (*update_timeouts)(struct tpm_chip *chip,
+diff --git a/drivers/char/tpm/tpm-interface.c b/drivers/char/tpm/tpm-interface.c
+index f62f7871edbd..7f4e01790352 100644
+--- a/drivers/char/tpm/tpm-interface.c
++++ b/drivers/char/tpm/tpm-interface.c
+@@ -82,6 +82,12 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+ 		return -E2BIG;
+ 	}
+ 
++	if (chip->ops->send_recv) {
++		rc = 0;
++		len = chip->ops->send_recv(chip, buf, bufsiz, count);
++		goto out_send_recv;
++	}
++
+ 	rc = chip->ops->send(chip, buf, count);
+ 	if (rc < 0) {
+ 		if (rc != -EPIPE)
+@@ -124,6 +130,7 @@ static ssize_t tpm_try_transmit(struct tpm_chip *chip, void *buf, size_t bufsiz)
+ 
+ out_recv:
+ 	len = chip->ops->recv(chip, buf, bufsiz);
++out_send_recv:
+ 	if (len < 0) {
+ 		rc = len;
+ 		dev_err(&chip->dev, "tpm_transmit: tpm_recv: error %d\n", rc);
 -- 
-2.31.1
+2.48.1
 
