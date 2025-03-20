@@ -1,79 +1,65 @@
-Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
+Received: from mail-wm1-f66.google.com (mail-wm1-f66.google.com [209.85.128.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6686422AE7F
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 22:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D5F22A4E5;
+	Thu, 20 Mar 2025 22:44:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742510675; cv=none; b=BafX7FW8yT5v9ZGHcnqInMD2bUyTOCP8ffWF/MiPCiD+9zAA1V2nijLt68/vjYojzqI6dUcgrRTPfzZrz0PIxKmJ/iIzDGN2MSGGdIwZD2Uz36JJRb7QCOmFnLiVtxIUP1+6dYYBjBRAFx0CmsdtDCzLxaYDG9QFMrBaedyo4A8=
+	t=1742510687; cv=none; b=N5SiexihVTQ7wtL1RYvWWlh/gQ9gKncUYiVXtV2URKEy0fK8pM/aNY+ECtlpVgb/oI95uFaGWzRJRKUiRP9C0BetsbBkaoyLeDhfZDZouB6bU5eYiHQjBFMIUYDvaCIKF57XrXknTsaNXqAUmZOtb6ZcdLIE7/VUu6qGw+Z6SJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742510675; c=relaxed/simple;
-	bh=/4Jn1Ns5m8J/PS8HTpLyGbF9ChF8Fk4/RvIEUizoI+k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=NXeW9k53QdWYorqs58dXhqEwrJm3UUfupje5uOYt8dJzKnIlh/c4FXDSsYj124zL2fpbfLl81OUJyWJi1Tadm5G/vSQS5YJNO4Lj32vek/TIuXUhopPPowPXXEM+PxUrJMbtfLGg6aa4cKhgD8L1+GxpYNHFL19wEpsTq3HII/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com; spf=pass smtp.mailfrom=tenstorrent.com; dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b=DeHttRIq; arc=none smtp.client-ip=209.85.167.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tenstorrent.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tenstorrent.com header.i=@tenstorrent.com header.b="DeHttRIq"
-Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3fa0eb29cebso1475242b6e.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 15:44:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tenstorrent.com; s=google; t=1742510672; x=1743115472; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aUM4cL2icpLrYe67mQWolXHTOhfxBr7CeU0SRh8tC7k=;
-        b=DeHttRIqzYg1KebH4c5Rc2gr4ur2MPIAk3PXJCaXLfhIucGyDvriscnkhzWZAuw7g0
-         FvJtIcGCPsglo98tlWo+1UiOBce9r9w+GiWHPR5agnLpvUtP+xYgUyqvAIt1FooQkaPu
-         DfcHpRyw6wC8vgHAbIYqrET/IIVZG2LUC6XDxcJRky5SZJGRmaUJWofXpnbaKSE4xDY3
-         PHDx745WVh5ezJ86tx+1zhLyTBgnLNdNEJ20X1jSkC783+5+gvuBcYTDKndIrXNE1wKT
-         YKgXfb6IAeaHPpRHqiTiajCvp6INO0QiYE4B1UipDTIwsy9LtG7wWiLqo7M63s1TzGTn
-         MYxA==
+	s=arc-20240116; t=1742510687; c=relaxed/simple;
+	bh=81W+fRdC1ccZbYs88xxJfmhU+006b6KJS+29d3+FUM0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=SWDg9H8Yr3bstWe1Z2ALS42324Nm0Vy2As85OmNGDsmRkBCVuYrihmwRXd+dPpTVhzxHCBIzqFJYhIVe/hc3nGGB2RcfIwEfHipMtJ5QbOh+TUU1wmywmviRppTCW12uJnhXu3STGPONbEsukQhvzOpU885aUfxQdOYxM6mXnWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ovn.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f66.google.com with SMTP id 5b1f17b1804b1-43948021a45so10831785e9.1;
+        Thu, 20 Mar 2025 15:44:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742510672; x=1743115472;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aUM4cL2icpLrYe67mQWolXHTOhfxBr7CeU0SRh8tC7k=;
-        b=GvUj/sSizhJD5Ba1loTbuS7i6f8W+uHh3XXhcYvfmoU2xCgVMPZ0uhSdV/CfSnehUN
-         Q1jM7WcEbOK+/PE0RgdxFB8hvVtVI1+bj3Jm9hPLckNR8BRrX4Fx9yO9WfB/cMHmj9Mx
-         U0+AzTgYYXwykVULGMNsILyMUE56edrDmkAQI4MBSLFE2RS7luYZ0NMMVSoVsKCi7ELM
-         Z2ektV4HGEfKJvnrDPcooHEUkojsRs2PM3N9vF2TUNeZNZCXSYyK6c6EgImcWNZaFioZ
-         h8slx1By5mnMmeBbA7TLxT0Np//tvL846loigteqV3jn00qyVPmKFiK1nhTqasgixpic
-         J0hw==
-X-Forwarded-Encrypted: i=1; AJvYcCVGyOaRKpdrLnGRwjQTdtsd8cDmJTuKzzakC2n9a60z8OXopMF48q1fCvujgULu1YrdI3sqzZBq8nXitik=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/oCCgAbV1/GplxZaDwXRV6YCF1qMuxROFLKrgjGgjJbXsLhGP
-	uu1r7FbpFaHWQ0q/0d1qX17N/CHJaM2DyVzI19xNYKUn41jW0jonm4loxIh12g==
-X-Gm-Gg: ASbGncvkjAPlHpQi6p3MC4qVH42K5LPxNzcnclYgK5ER8Fdaq+EKaiUMq3YtoEznfFB
-	K1wISDZsbjH9eGhHPB8K0F8L0Z+FQMJF3WYuAmvYG8Ko6c3EN/Gte0jzZfLX223wrPKL+dB6JK9
-	SNLL6+LMbMKTDnbo5/rfoe/DHDKH0mFyAG7V3wcypS+iRXOJC4+bxvYWGvLrQqr+uVPeYML0gVO
-	KPLbHQPsr8wEUlM71NqxHTMI7N2RkcZGs0WfEQ3QcD6W8zxmp01cB+a8M3CaV+7eUxKadRZ37UT
-	NSzPQ5p4riciVr2QArWLr/beUx5XSsrKQuvvBhtVvx6+atg2yWsXHR2/VVkzpCs=
-X-Google-Smtp-Source: AGHT+IHChpwGgXIo7oPDkSwy3Z8aUFaMgcTSyEt/gVcKCBKfeFe7Livn0EfqfYGjYKQnsyWXdaZjLg==
-X-Received: by 2002:a05:6808:444b:b0:3fa:10b4:698c with SMTP id 5614622812f47-3febeea9cf6mr1033217b6e.17.1742510672433;
-        Thu, 20 Mar 2025 15:44:32 -0700 (PDT)
-Received: from aus-ird.tenstorrent.com ([38.104.49.66])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3febf6dcc09sm103524b6e.12.2025.03.20.15.44.31
+        d=1e100.net; s=20230601; t=1742510684; x=1743115484;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=K8Go2A9K/0sa4Ok8A3HNxc/VLWrtBUpGE6Rv5fEk69U=;
+        b=dPumryMp92/MXEfUXv3632RjC6B8jyv91NLUrvrl1qPWexV4qlCXRHa3uCO6/HEj6e
+         opnWeO64cbnPfiK9pC4tsB0rslpRuFMN6Q7vb41IRYuY+mOGXx/TIDi4Gyunt7oX01PM
+         wH6HNSOhgUjbtnue5cFb1B2h/wg5km5FhfC999+m2GyrkBz4cBYHYO3DNvDrrYU45X0X
+         O0QOimZ9vCwt1BWFuKAiR8oUoE1tfVgWA0pH3gRP2GBaltz1KIa2rz/p6Sl/cww/VUf4
+         OrGIkBPntyrUdfISPK/x8jytLE9gHAyWDtn6lGXI3tAb+BP6hiYzUs7HLsr5DERrouuZ
+         XmOg==
+X-Forwarded-Encrypted: i=1; AJvYcCXWMKm4GYtyG7SywNLPGW0C4t0S/owYoAV3SPhXZq0FgS3ydQnN8XVi9M/QXjK9brf27xZ69Y7j22A1f2g=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa0ffOm7DeG9DF1rLmoBNmP6yOPswWnCVR4hyDvLtBSdCjFTTi
+	jPzZCI73Qdsp4viek7m1+Y0aGqIlmUg9qG9UyfUgKf3gyXnSaLTbEvZVKxI4
+X-Gm-Gg: ASbGncsSRyOh7cGI7UB/y7uOpjw++dBgRQPXw5Q43w5cn5/mgarfxdagxgZens0biug
+	uyjgwrqfT/R7XvqaE15sWA6Vl4pHh4rrrt/AuyW6vb9NYGWl/SgBsUUsZ1PLxT7VLJdLBOV1mg4
+	1yOUmcsOdz8pN6Yjmy5YcizrN7hQoI9tMShydhH9E5d7FKXjbyq7CYQg7dcTIybsiBGuDrfC6um
+	fPFBtc3urV7/fvloALW3ZT+HF3MNG4d4ZaJksELr/Zjz1G8GRBd+9x8zIJXgXedmZwtihfzhNMJ
+	Hf7hN2PdqdRknA8k4x2s5OZrmq5jy8Iy7etUlsNbkCeIfQsOLKdUYBzJJo5iWnn3+g5HvGpviMF
+	V+ihqyMg=
+X-Google-Smtp-Source: AGHT+IH9z/Ufr9GSKlFGp9wTMcIjmzn+VkGQIRZdhq3lJFSjiuvPgv3WMgtMOmTxIVkvQ1BM9FrwhQ==
+X-Received: by 2002:a05:600c:1989:b0:43c:ebc4:36a5 with SMTP id 5b1f17b1804b1-43d509e9dd0mr7675245e9.7.1742510683300;
+        Thu, 20 Mar 2025 15:44:43 -0700 (PDT)
+Received: from im-t490s.redhat.com (ip-86-49-44-151.bb.vodafone.cz. [86.49.44.151])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbcfaasm9490115e9.35.2025.03.20.15.44.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 15:44:31 -0700 (PDT)
-From: Cyril Bur <cyrilbur@tenstorrent.com>
-To: palmer@dabbelt.com,
-	aou@eecs.berkeley.edu,
-	paul.walmsley@sifive.com,
-	charlie@rivosinc.com,
-	jrtc27@jrtc27.com,
-	ben.dooks@codethink.co.uk,
-	alex@ghiti.fr
-Cc: linux-riscv@lists.infradead.org,
+        Thu, 20 Mar 2025 15:44:42 -0700 (PDT)
+From: Ilya Maximets <i.maximets@ovn.org>
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	dev@openvswitch.org,
 	linux-kernel@vger.kernel.org,
-	jszhang@kernel.org
-Subject: [PATCH v5 5/5] riscv: uaccess: use 'asm_goto_output' for get_user()
-Date: Thu, 20 Mar 2025 22:44:23 +0000
-Message-Id: <20250320224423.1838493-6-cyrilbur@tenstorrent.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250320224423.1838493-1-cyrilbur@tenstorrent.com>
-References: <20250320224423.1838493-1-cyrilbur@tenstorrent.com>
+	Pravin B Shelar <pshelar@ovn.org>,
+	Eelco Chaudron <echaudro@redhat.com>,
+	Aaron Conole <aconole@redhat.com>,
+	Ilya Maximets <i.maximets@ovn.org>
+Subject: [PATCH net-next] net: openvswitch: fix kernel-doc warnings in internal headers
+Date: Thu, 20 Mar 2025 23:42:07 +0100
+Message-ID: <20250320224431.252489-1-i.maximets@ovn.org>
+X-Mailer: git-send-email 2.47.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -82,200 +68,144 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Jisheng Zhang <jszhang@kernel.org>
+Some field descriptions were missing, some were not very accurate.
+Not touching the uAPI header or .c files for now.
 
-With 'asm goto' we don't need to test the error etc, the exception just
-jumps to the error handling directly.
+Formatting of those comments isn't great in general, but at least
+they are not missing anything now.
 
-Unlike put_user(), get_user() must work around GCC bugs [1] when using
-output clobbers in an asm goto statement.
+Before:
+  $ ./scripts/kernel-doc -none -Wall net/openvswitch/*.h 2>&1 | wc -l
+  16
 
-Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=113921 # 1
+After:
+  $ ./scripts/kernel-doc -none -Wall net/openvswitch/*.h 2>&1 | wc -l
+  0
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-[Cyril Bur: Rewritten commit message]
-Signed-off-by: Cyril Bur <cyrilbur@tenstorrent.com>
+Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
 ---
- arch/riscv/include/asm/uaccess.h | 95 +++++++++++++++++++++++---------
- 1 file changed, 68 insertions(+), 27 deletions(-)
+ net/openvswitch/datapath.h | 20 ++++++++++++++------
+ net/openvswitch/vport.h    |  9 +++++++++
+ 2 files changed, 23 insertions(+), 6 deletions(-)
 
-diff --git a/arch/riscv/include/asm/uaccess.h b/arch/riscv/include/asm/uaccess.h
-index 719c9179a751..8823471b201f 100644
---- a/arch/riscv/include/asm/uaccess.h
-+++ b/arch/riscv/include/asm/uaccess.h
-@@ -96,27 +96,58 @@ static inline unsigned long __untagged_addr_remote(struct mm_struct *mm, unsigne
-  * call.
+diff --git a/net/openvswitch/datapath.h b/net/openvswitch/datapath.h
+index 9ca6231ea647..384ca77f4e79 100644
+--- a/net/openvswitch/datapath.h
++++ b/net/openvswitch/datapath.h
+@@ -29,8 +29,8 @@
+  * datapath.
+  * @n_hit: Number of received packets for which a matching flow was found in
+  * the flow table.
+- * @n_miss: Number of received packets that had no matching flow in the flow
+- * table.  The sum of @n_hit and @n_miss is the number of packets that have
++ * @n_missed: Number of received packets that had no matching flow in the flow
++ * table.  The sum of @n_hit and @n_missed is the number of packets that have
+  * been received by the datapath.
+  * @n_lost: Number of received packets that had no matching flow in the flow
+  * table that could not be sent to userspace (normally due to an overflow in
+@@ -40,6 +40,7 @@
+  *   up per packet.
+  * @n_cache_hit: The number of received packets that had their mask found using
+  * the mask cache.
++ * @syncp: Synchronization point for 64bit counters.
   */
+ struct dp_stats_percpu {
+ 	u64 n_hit;
+@@ -74,8 +75,10 @@ struct dp_nlsk_pids {
+  * ovs_mutex and RCU.
+  * @stats_percpu: Per-CPU datapath statistics.
+  * @net: Reference to net namespace.
+- * @max_headroom: the maximum headroom of all vports in this datapath; it will
++ * @user_features: Bitmap of enabled %OVS_DP_F_* features.
++ * @max_headroom: The maximum headroom of all vports in this datapath; it will
+  * be used by all the internal vports in this dp.
++ * @meter_tbl: Meter table.
+  * @upcall_portids: RCU protected 'struct dp_nlsk_pids'.
+  *
+  * Context: See the comment on locking at the top of datapath.c for additional
+@@ -128,10 +131,13 @@ struct ovs_skb_cb {
+ #define OVS_CB(skb) ((struct ovs_skb_cb *)(skb)->cb)
  
--#define __get_user_asm(insn, x, ptr, err)			\
-+#ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
-+#define __get_user_asm(insn, x, ptr, label)			\
-+	asm_goto_output(					\
-+		"1:\n"						\
-+		"	" insn " %0, %1\n"			\
-+		_ASM_EXTABLE_UACCESS_ERR(1b, %l2, %0)		\
-+		: "=&r" (x)					\
-+		: "m" (*(ptr)) : : label)
-+#else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
-+#define __get_user_asm(insn, x, ptr, label)			\
- do {								\
--	__typeof__(x) __x;					\
-+	long __gua_err = 0;					\
- 	__asm__ __volatile__ (					\
- 		"1:\n"						\
- 		"	" insn " %1, %2\n"			\
- 		"2:\n"						\
- 		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 2b, %0, %1)	\
--		: "+r" (err), "=&r" (__x)			\
-+		: "+r" (__gua_err), "=&r" (x)			\
- 		: "m" (*(ptr)));				\
--	(x) = __x;						\
-+	if (__gua_err)						\
-+		goto label;					\
- } while (0)
-+#endif /* CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
- 
- #ifdef CONFIG_64BIT
--#define __get_user_8(x, ptr, err) \
--	__get_user_asm("ld", x, ptr, err)
-+#define __get_user_8(x, ptr, label) \
-+	__get_user_asm("ld", x, ptr, label)
- #else /* !CONFIG_64BIT */
--#define __get_user_8(x, ptr, err)				\
-+
-+#ifdef CONFIG_CC_HAS_ASM_GOTO_OUTPUT
-+#define __get_user_8(x, ptr, label)				\
-+	u32 __user *__ptr = (u32 __user *)(ptr);		\
-+	u32 __lo, __hi;						\
-+	asm_goto_output(					\
-+		"1:\n"						\
-+		"	lw %0, %2\n"				\
-+		"2:\n"						\
-+		"	lw %1, %3\n"				\
-+		_ASM_EXTABLE_UACCESS_ERR(1b, %l4, %0)		\
-+		_ASM_EXTABLE_UACCESS_ERR(2b, %l4, %0)		\
-+		: "=&r" (__lo), "=r" (__hi)			\
-+		: "m" (__ptr[__LSW]), "m" (__ptr[__MSW])	\
-+		: : label)                                      \
-+	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
-+		(((u64)__hi << 32) | __lo)));			\
-+
-+#else /* !CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
-+#define __get_user_8(x, ptr, label)				\
- do {								\
- 	u32 __user *__ptr = (u32 __user *)(ptr);		\
- 	u32 __lo, __hi;						\
-+	long __gu8_err = 0;					\
- 	__asm__ __volatile__ (					\
- 		"1:\n"						\
- 		"	lw %1, %3\n"				\
-@@ -125,35 +156,51 @@ do {								\
- 		"3:\n"						\
- 		_ASM_EXTABLE_UACCESS_ERR_ZERO(1b, 3b, %0, %1)	\
- 		_ASM_EXTABLE_UACCESS_ERR_ZERO(2b, 3b, %0, %1)	\
--		: "+r" (err), "=&r" (__lo), "=r" (__hi)		\
-+		: "+r" (__gu8_err), "=&r" (__lo), "=r" (__hi)	\
- 		: "m" (__ptr[__LSW]), "m" (__ptr[__MSW]));	\
--	if (err)						\
-+	if (__gu8_err) {					\
- 		__hi = 0;					\
--	(x) = (__typeof__(x))((__typeof__((x)-(x)))(		\
-+		goto label;					\
-+	}							\
-+	(x) = (__typeof__(x))((__typeof__((x) - (x)))(		\
- 		(((u64)__hi << 32) | __lo)));			\
- } while (0)
-+#endif /* CONFIG_CC_HAS_ASM_GOTO_OUTPUT */
-+
- #endif /* CONFIG_64BIT */
- 
--#define __get_user_nocheck(x, __gu_ptr, __gu_err)		\
-+#define __get_user_nocheck(x, __gu_ptr, label)			\
- do {								\
- 	switch (sizeof(*__gu_ptr)) {				\
- 	case 1:							\
--		__get_user_asm("lb", (x), __gu_ptr, __gu_err);	\
-+		__get_user_asm("lb", (x), __gu_ptr, label);	\
- 		break;						\
- 	case 2:							\
--		__get_user_asm("lh", (x), __gu_ptr, __gu_err);	\
-+		__get_user_asm("lh", (x), __gu_ptr, label);	\
- 		break;						\
- 	case 4:							\
--		__get_user_asm("lw", (x), __gu_ptr, __gu_err);	\
-+		__get_user_asm("lw", (x), __gu_ptr, label);	\
- 		break;						\
- 	case 8:							\
--		__get_user_8((x), __gu_ptr, __gu_err);	\
-+		__get_user_8((x), __gu_ptr, label);		\
- 		break;						\
- 	default:						\
- 		BUILD_BUG();					\
- 	}							\
- } while (0)
- 
-+#define __get_user_error(x, ptr, err)					\
-+do {									\
-+	__label__ __gu_failed;						\
-+									\
-+	__get_user_nocheck(x, ptr, __gu_failed);			\
-+		err = 0;						\
-+		break;							\
-+__gu_failed:								\
-+		x = 0;							\
-+		err = -EFAULT;						\
-+} while (0)
-+
  /**
-  * __get_user: - Get a simple variable from user space, with less checking.
-  * @x:   Variable to store result.
-@@ -178,13 +225,16 @@ do {								\
- ({								\
- 	const __typeof__(*(ptr)) __user *__gu_ptr = untagged_addr(ptr); \
- 	long __gu_err = 0;					\
-+	__typeof__(x) __gu_val;					\
- 								\
- 	__chk_user_ptr(__gu_ptr);				\
- 								\
- 	__enable_user_access();					\
--	__get_user_nocheck(x, __gu_ptr, __gu_err);		\
-+	__get_user_error(__gu_val, __gu_ptr, __gu_err);		\
- 	__disable_user_access();				\
- 								\
-+	(x) = __gu_val;						\
-+								\
- 	__gu_err;						\
- })
+- * struct dp_upcall - metadata to include with a packet to send to userspace
++ * struct dp_upcall_info - metadata to include with a packet sent to userspace
+  * @cmd: One of %OVS_PACKET_CMD_*.
+  * @userdata: If nonnull, its variable-length value is passed to userspace as
+  * %OVS_PACKET_ATTR_USERDATA.
++ * @actions: If nonnull, its variable-length value is passed to userspace as
++ * %OVS_PACKET_ATTR_ACTIONS.
++ * @actions_len: The length of the @actions.
+  * @portid: Netlink portid to which packet should be sent.  If @portid is 0
+  * then no packet is sent and the packet is accounted in the datapath's @n_lost
+  * counter.
+@@ -152,6 +158,10 @@ struct dp_upcall_info {
+  * struct ovs_net - Per net-namespace data for ovs.
+  * @dps: List of datapaths to enable dumping them all out.
+  * Protected by genl_mutex.
++ * @dp_notify_work: A work notifier to handle port unregistering.
++ * @masks_rebalance: A work to periodically optimize flow table caches.
++ * @ct_limit_info: A hash table of conntrack zone connection limits.
++ * @xt_label: Whether connlables are configured for the network or not.
+  */
+ struct ovs_net {
+ 	struct list_head dps;
+@@ -160,8 +170,6 @@ struct ovs_net {
+ #if	IS_ENABLED(CONFIG_NETFILTER_CONNCOUNT)
+ 	struct ovs_ct_limit_info *ct_limit_info;
+ #endif
+-
+-	/* Module reference for configuring conntrack. */
+ 	bool xt_label;
+ };
  
-@@ -369,13 +419,7 @@ unsigned long __must_check clear_user(void __user *to, unsigned long n)
- }
- 
- #define __get_kernel_nofault(dst, src, type, err_label)			\
--do {									\
--	long __kr_err = 0;						\
--									\
--	__get_user_nocheck(*((type *)(dst)), (type *)(src), __kr_err);	\
--	if (unlikely(__kr_err))						\
--		goto err_label;						\
--} while (0)
-+	__get_user_nocheck(*((type *)(dst)), (type *)(src), err_label)
- 
- #define __put_kernel_nofault(dst, src, type, err_label)			\
- 	__put_user_nocheck(*((type *)(src)), (type *)(dst), err_label)
-@@ -401,12 +445,9 @@ static inline void user_access_restore(unsigned long enabled) { }
- 	__put_user_nocheck(x, (ptr), label)
- 
- #define unsafe_get_user(x, ptr, label)	do {				\
--	long __err = 0;							\
- 	__inttype(*(ptr)) __gu_val;					\
--	__get_user_nocheck(__gu_val, (ptr), __err);			\
-+	__get_user_nocheck(__gu_val, (ptr), label);			\
- 	(x) = (__force __typeof__(*(ptr)))__gu_val;			\
--	if (__err)							\
--		goto label;						\
- } while (0)
- 
- #define unsafe_copy_loop(dst, src, len, type, op, label)		\
+diff --git a/net/openvswitch/vport.h b/net/openvswitch/vport.h
+index 3e71ca8ad8a7..9f67b9dd49f9 100644
+--- a/net/openvswitch/vport.h
++++ b/net/openvswitch/vport.h
+@@ -97,6 +97,8 @@ struct vport {
+  * @desired_ifindex: New vport's ifindex.
+  * @dp: New vport's datapath.
+  * @port_no: New vport's port number.
++ * @upcall_portids: %OVS_VPORT_ATTR_UPCALL_PID attribute from Netlink message,
++ * %NULL if none was supplied.
+  */
+ struct vport_parms {
+ 	const char *name;
+@@ -125,6 +127,8 @@ struct vport_parms {
+  * have any configuration.
+  * @send: Send a packet on the device.
+  * zero for dropped packets or negative for error.
++ * @owner: Module that implements this vport type.
++ * @list: List entry in the global list of vport types.
+  */
+ struct vport_ops {
+ 	enum ovs_vport_type type;
+@@ -144,6 +148,7 @@ struct vport_ops {
+ /**
+  * struct vport_upcall_stats_percpu - per-cpu packet upcall statistics for
+  * a given vport.
++ * @syncp:     Synchronization point for 64bit counters.
+  * @n_success: Number of packets that upcall to userspace succeed.
+  * @n_fail:    Number of packets that upcall to userspace failed.
+  */
+@@ -164,6 +169,8 @@ void ovs_vport_free(struct vport *);
+  *
+  * @vport: vport to access
+  *
++ * Returns: A void pointer to a private data allocated in the @vport.
++ *
+  * If a nonzero size was passed in priv_size of vport_alloc() a private data
+  * area was allocated on creation.  This allows that area to be accessed and
+  * used for any purpose needed by the vport implementer.
+@@ -178,6 +185,8 @@ static inline void *vport_priv(const struct vport *vport)
+  *
+  * @priv: Start of private data area.
+  *
++ * Returns: A reference to a vport structure that contains @priv.
++ *
+  * It is sometimes useful to translate from a pointer to the private data
+  * area to the vport, such as in the case where the private data pointer is
+  * the result of a hash table lookup.  @priv must point to the start of the
 -- 
-2.34.1
+2.47.0
 
