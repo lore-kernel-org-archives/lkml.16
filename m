@@ -1,33 +1,33 @@
-Received: from smtp-42ae.mail.infomaniak.ch (smtp-42ae.mail.infomaniak.ch [84.16.66.174])
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD34B22D4DF
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:07:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E58AE22DFAA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:07:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742497678; cv=none; b=fNOJldG3LndBj7WFD+7AkdDsdvg66ikR+eztoozWT5VQsfsbd7ZGikx/7iumPqKEL2/KLvp4eUR/X/R3nY5JK7rNORPGxXLmPMKYw0zzmiFaLQJcF+OkUPQqwwtc6wuPSeJLdiCHftS1UxXvoDi3erbb1j1QSbYdC186hLVkZwo=
+	t=1742497682; cv=none; b=aQ8oWxeluRI1QrhdLdW46TpJVd0b+aDsBn5yONk/PPBt8Kauy5znzLUdp4GnNH17QkjKr5d+fmgajNCDW4mjo6dLEacB6DYYxPc2Aueuw0TqUB6Ao66ZkH0IKyqSpj0JqPfzKIzbKRi2hnjrRHvh7JdE5m4+aWrSscGO7IuSDQY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742497678; c=relaxed/simple;
-	bh=UZgrTKwwnpZMru3hFB6cWmjZEpSfr1aJxv1aOn5i/co=;
+	s=arc-20240116; t=1742497682; c=relaxed/simple;
+	bh=5wSp16PzXW25jQHwWtDQzWvXn57TRsLbcOkap5zElVY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=hWrx8uez4uuYJKpefEx1Q78rMe2l72/+CGujoxTwA5eD3Zc6HveU+TpDHkhXFmtK1CzTDLAfnsegNjB5mwMuuea59dx65vFYdk/B9uSp6CflCjN0cNKgOo1/ipKjrfG5in8Xo5T1+fQ9F0aLglENSG0KkMqnrTMW2uyn7JE2ILk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=jFWadMAE; arc=none smtp.client-ip=84.16.66.174
+	 MIME-Version:Content-Type; b=h/DwRUDncpjmdDsqZAMvp0U0wpofnKcCzc+KNPz38I3isytluI/LRNA80kz0rwG5k6Tbv3h/mZckPuPsfk0Esr5v6AlqIffEKsTcb5AvmmcTxSTkp56QdnEPxAdo433N6IPnzJR9kudiO/90VT7H+L82TOU/0Hr7mLdpy9f2O88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=OKU40taV; arc=none smtp.client-ip=185.125.25.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="jFWadMAE"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpX25T2zxvJ;
-	Thu, 20 Mar 2025 20:07:48 +0100 (CET)
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="OKU40taV"
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZJZpj6vvwzK0k;
+	Thu, 20 Mar 2025 20:07:57 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1742497668;
-	bh=YrYB2X4cLWgBwHHGFEMnc1idqQl0CQlMHetQ1DDbagU=;
+	s=20191114; t=1742497677;
+	bh=74ouMiX4giVyHf7pbwBfSsgmdEoGD0LYiGig71u+SKs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jFWadMAEhoz++Vg1hEdpI1tZ2fINFjdb/vP9zn5mmN80gGb0yMAnn1CONY++rc1TW
-	 p58kA156gaEbRKhdCPHljQlLbqviICTVZwDzvxerTX+5izZy5BHiYYD6vnl8ewlFu1
-	 XGLCrGFxoCdf49NbW+muPCadhgbMPUuW6OtyDyvs=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpW3hd4zFMr;
-	Thu, 20 Mar 2025 20:07:47 +0100 (CET)
+	b=OKU40taVi3Xur8MFY6eJFnaXshLfzl9O/lEZ5Mjvy55raWDnZZSFx7AzPuz0HeGDL
+	 tw9Zmcr/dWVeQX3mfR6ty6yoeLlhuV5hgoDuQ1CoHExYRJrp5aNRtxdeFP0RiXrn4/
+	 LFr0jMHe3CGEQVF2TaqmNiVjZs771w5i+UrbrFj4=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZJZpj0Rv9z6P6;
+	Thu, 20 Mar 2025 20:07:57 +0100 (CET)
 From: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
 To: Eric Paris <eparis@redhat.com>,
 	Paul Moore <paul@paul-moore.com>,
@@ -59,9 +59,9 @@ Cc: =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
 	audit@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-security-module@vger.kernel.org
-Subject: [PATCH v7 15/28] landlock: Log TCP bind and connect denials
-Date: Thu, 20 Mar 2025 20:07:04 +0100
-Message-ID: <20250320190717.2287696-16-mic@digikod.net>
+Subject: [PATCH v7 21/28] selftests/landlock: Extend tests for landlock_restrict_self(2)'s flags
+Date: Thu, 20 Mar 2025 20:07:10 +0100
+Message-ID: <20250320190717.2287696-22-mic@digikod.net>
 In-Reply-To: <20250320190717.2287696-1-mic@digikod.net>
 References: <20250320190717.2287696-1-mic@digikod.net>
 Precedence: bulk
@@ -74,179 +74,122 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-Infomaniak-Routing: alpha
 
-Add audit support to socket_bind and socket_connect hooks.
+Add the base_test's restrict_self_fd_flags tests to align with previous
+restrict_self_fd tests but with the new
+LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF flag.
 
-The related blockers are:
-- net.bind_tcp
-- net.connect_tcp
-
-Audit event sample:
-
-  type=LANDLOCK_DENY msg=audit(1729738800.349:44): domain=195ba459b blockers=net.connect_tcp daddr=127.0.0.1 dest=80
+Add the restrict_self_flags tests to check that
+LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF,
+LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON, and
+LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF are valid but not the next
+bit.  Some checks are similar to restrict_self_checks_ordering's ones.
 
 Cc: Günther Noack <gnoack@google.com>
-Cc: Konstantin Meskhidze <konstantin.meskhidze@huawei.com>
-Cc: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
+Cc: Paul Moore <paul@paul-moore.com>
 Signed-off-by: Mickaël Salaün <mic@digikod.net>
 ---
 
 Changes since v5:
-- Move request declaration in the landlock_log_denial() call to
-  not impact allowed requests with audit.
+- Rename restrict flags.
+- Update LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF test to pass with -1
+  as ruleset FD, and flag ordering.
+- Add restrict_self_fd_flags tests.
 
 Changes since v4:
-- Rebase on top of the landlock_log_denial() and subject type changes.
+- Update with LANDLOCK_RESTRICT_SELF_QUIET_SUBDOMAINS, and
+  LANDLOCK_RESTRICT_SELF_LOG_CROSS_EXEC.
 
 Changes since v3:
-- Rename blockers from net_* to net.*
+- Use a last_flag variable.
 
 Changes since v2:
-- Remove potentially superfluous IPv6 saddr log, spotted by Francis
-  Laniel.
-- Cosmetic improvements.
+- New patch.
 ---
- security/landlock/audit.c | 12 +++++++++
- security/landlock/audit.h |  1 +
- security/landlock/net.c   | 51 ++++++++++++++++++++++++++++++++++++---
- 3 files changed, 60 insertions(+), 4 deletions(-)
+ tools/testing/selftests/landlock/base_test.c | 71 ++++++++++++++++++++
+ 1 file changed, 71 insertions(+)
 
-diff --git a/security/landlock/audit.c b/security/landlock/audit.c
-index f50ce677e3a0..66ff9a5d9866 100644
---- a/security/landlock/audit.c
-+++ b/security/landlock/audit.c
-@@ -41,6 +41,13 @@ static const char *const fs_access_strings[] = {
- 
- static_assert(ARRAY_SIZE(fs_access_strings) == LANDLOCK_NUM_ACCESS_FS);
- 
-+static const char *const net_access_strings[] = {
-+	[BIT_INDEX(LANDLOCK_ACCESS_NET_BIND_TCP)] = "net.bind_tcp",
-+	[BIT_INDEX(LANDLOCK_ACCESS_NET_CONNECT_TCP)] = "net.connect_tcp",
-+};
-+
-+static_assert(ARRAY_SIZE(net_access_strings) == LANDLOCK_NUM_ACCESS_NET);
-+
- static __attribute_const__ const char *
- get_blocker(const enum landlock_request_type type,
- 	    const unsigned long access_bit)
-@@ -58,6 +65,11 @@ get_blocker(const enum landlock_request_type type,
- 		if (WARN_ON_ONCE(access_bit >= ARRAY_SIZE(fs_access_strings)))
- 			return "unknown";
- 		return fs_access_strings[access_bit];
-+
-+	case LANDLOCK_REQUEST_NET_ACCESS:
-+		if (WARN_ON_ONCE(access_bit >= ARRAY_SIZE(net_access_strings)))
-+			return "unknown";
-+		return net_access_strings[access_bit];
- 	}
- 
- 	WARN_ON_ONCE(1);
-diff --git a/security/landlock/audit.h b/security/landlock/audit.h
-index 8130a6fcad07..486b4e7050d3 100644
---- a/security/landlock/audit.h
-+++ b/security/landlock/audit.h
-@@ -18,6 +18,7 @@ enum landlock_request_type {
- 	LANDLOCK_REQUEST_PTRACE = 1,
- 	LANDLOCK_REQUEST_FS_CHANGE_TOPOLOGY,
- 	LANDLOCK_REQUEST_FS_ACCESS,
-+	LANDLOCK_REQUEST_NET_ACCESS,
- };
- 
- /*
-diff --git a/security/landlock/net.c b/security/landlock/net.c
-index 6fb3e60bc5ff..f4478e6a2c0b 100644
---- a/security/landlock/net.c
-+++ b/security/landlock/net.c
-@@ -7,10 +7,12 @@
-  */
- 
- #include <linux/in.h>
-+#include <linux/lsm_audit.h>
- #include <linux/net.h>
- #include <linux/socket.h>
- #include <net/ipv6.h>
- 
-+#include "audit.h"
- #include "common.h"
- #include "cred.h"
- #include "limits.h"
-@@ -55,6 +57,7 @@ static int current_check_access_socket(struct socket *const sock,
- 	};
- 	const struct landlock_cred_security *const subject =
- 		landlock_get_applicable_subject(current_cred(), masks, NULL);
-+	struct lsm_network_audit audit_net = {};
- 
- 	if (!subject)
- 		return 0;
-@@ -68,18 +71,48 @@ static int current_check_access_socket(struct socket *const sock,
- 
- 	switch (address->sa_family) {
- 	case AF_UNSPEC:
--	case AF_INET:
-+	case AF_INET: {
-+		const struct sockaddr_in *addr4;
-+
- 		if (addrlen < sizeof(struct sockaddr_in))
- 			return -EINVAL;
--		port = ((struct sockaddr_in *)address)->sin_port;
-+
-+		addr4 = (struct sockaddr_in *)address;
-+		port = addr4->sin_port;
-+
-+		if (access_request == LANDLOCK_ACCESS_NET_CONNECT_TCP) {
-+			audit_net.dport = port;
-+			audit_net.v4info.daddr = addr4->sin_addr.s_addr;
-+		} else if (access_request == LANDLOCK_ACCESS_NET_BIND_TCP) {
-+			audit_net.sport = port;
-+			audit_net.v4info.saddr = addr4->sin_addr.s_addr;
-+		} else {
-+			WARN_ON_ONCE(1);
-+		}
- 		break;
-+	}
- 
- #if IS_ENABLED(CONFIG_IPV6)
--	case AF_INET6:
-+	case AF_INET6: {
-+		const struct sockaddr_in6 *addr6;
-+
- 		if (addrlen < SIN6_LEN_RFC2133)
- 			return -EINVAL;
--		port = ((struct sockaddr_in6 *)address)->sin6_port;
-+
-+		addr6 = (struct sockaddr_in6 *)address;
-+		port = addr6->sin6_port;
-+
-+		if (access_request == LANDLOCK_ACCESS_NET_CONNECT_TCP) {
-+			audit_net.dport = port;
-+			audit_net.v6info.daddr = addr6->sin6_addr;
-+		} else if (access_request == LANDLOCK_ACCESS_NET_BIND_TCP) {
-+			audit_net.sport = port;
-+			audit_net.v6info.saddr = addr6->sin6_addr;
-+		} else {
-+			WARN_ON_ONCE(1);
-+		}
- 		break;
-+	}
- #endif /* IS_ENABLED(CONFIG_IPV6) */
- 
- 	default:
-@@ -149,6 +182,16 @@ static int current_check_access_socket(struct socket *const sock,
- 				   ARRAY_SIZE(layer_masks)))
- 		return 0;
- 
-+	audit_net.family = address->sa_family;
-+	landlock_log_denial(subject,
-+			    &(struct landlock_request){
-+				    .type = LANDLOCK_REQUEST_NET_ACCESS,
-+				    .audit.type = LSM_AUDIT_DATA_NET,
-+				    .audit.u.net = &audit_net,
-+				    .access = access_request,
-+				    .layer_masks = &layer_masks,
-+				    .layer_masks_size = ARRAY_SIZE(layer_masks),
-+			    });
- 	return -EACCES;
+diff --git a/tools/testing/selftests/landlock/base_test.c b/tools/testing/selftests/landlock/base_test.c
+index cb13416533d2..c75ac925b912 100644
+--- a/tools/testing/selftests/landlock/base_test.c
++++ b/tools/testing/selftests/landlock/base_test.c
+@@ -280,6 +280,77 @@ TEST(restrict_self_fd)
+ 	EXPECT_EQ(EBADFD, errno);
  }
  
++TEST(restrict_self_fd_flags)
++{
++	int fd;
++
++	fd = open("/dev/null", O_RDONLY | O_CLOEXEC);
++	ASSERT_LE(0, fd);
++
++	/*
++	 * LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF accepts -1 but not any file
++	 * descriptor.
++	 */
++	EXPECT_EQ(-1, landlock_restrict_self(
++			      fd, LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF));
++	EXPECT_EQ(EBADFD, errno);
++}
++
++TEST(restrict_self_flags)
++{
++	const __u32 last_flag = LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF;
++
++	/* Tests invalid flag combinations. */
++
++	EXPECT_EQ(-1, landlock_restrict_self(-1, last_flag << 1));
++	EXPECT_EQ(EINVAL, errno);
++
++	EXPECT_EQ(-1, landlock_restrict_self(-1, -1));
++	EXPECT_EQ(EINVAL, errno);
++
++	/* Tests valid flag combinations. */
++
++	EXPECT_EQ(-1, landlock_restrict_self(-1, 0));
++	EXPECT_EQ(EBADF, errno);
++
++	EXPECT_EQ(-1, landlock_restrict_self(
++			      -1, LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF));
++	EXPECT_EQ(EBADF, errno);
++
++	EXPECT_EQ(-1,
++		  landlock_restrict_self(
++			  -1,
++			  LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF |
++				  LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF));
++	EXPECT_EQ(EBADF, errno);
++
++	EXPECT_EQ(-1,
++		  landlock_restrict_self(
++			  -1,
++			  LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON |
++				  LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF));
++	EXPECT_EQ(EBADF, errno);
++
++	EXPECT_EQ(-1, landlock_restrict_self(
++			      -1, LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON));
++	EXPECT_EQ(EBADF, errno);
++
++	EXPECT_EQ(-1,
++		  landlock_restrict_self(
++			  -1, LANDLOCK_RESTRICT_SELF_LOG_SAME_EXEC_OFF |
++				      LANDLOCK_RESTRICT_SELF_LOG_NEW_EXEC_ON));
++	EXPECT_EQ(EBADF, errno);
++
++	/* Tests with an invalid ruleset_fd. */
++
++	EXPECT_EQ(-1, landlock_restrict_self(
++			      -2, LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF));
++	EXPECT_EQ(EBADF, errno);
++
++	EXPECT_EQ(0, landlock_restrict_self(
++			     -1, LANDLOCK_RESTRICT_SELF_LOG_SUBDOMAINS_OFF));
++}
++
+ TEST(ruleset_fd_io)
+ {
+ 	struct landlock_ruleset_attr ruleset_attr = {
 -- 
 2.49.0
 
