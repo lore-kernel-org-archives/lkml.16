@@ -1,163 +1,204 @@
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EDD01E3DEF
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 815A51E3DD3
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742487582; cv=none; b=Uuoc+Al0TwaHMtuw2d1H9wxZTNg/udFIjOE8sioF/d2X2iR3cem7XHQdnwDUK4nRRImW0aeX6tQz4aB/3/iJOM35AuQnfxcHQfhZOGRr65juRTH4RdxZ3mQ/t33jTkA0vyo5pgvoj0X2Y3CG2HeHlfHyETUXMBojTHXVYmLX8N8=
+	t=1742487611; cv=none; b=sFtikRmoCoK8d/3Iwp/oS8pgGbxuOAkqEqCSeD1/yYfDcJwYggSfr3w3n4B1VN7yq02q7RhZFJcSonGufUtGBcTAAGo6sJGDn/wPooGoBvMjM89APsSDofNxqcX/SsfX0h7owtRQpORNJwXWsAXBRRqbY8GJQ11CxVhXA8u4zlQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742487582; c=relaxed/simple;
-	bh=qBJxg1shh5xIWb/EGEp/yZw666gWV1SYFdnG1TDjCyc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=h7mVOlAIXQ6uH9lZjZr1bhY3cqj1GONQsOOqEpCxWq8qQcyuWraMPRewMuYPcICIPEh2Y5Jfn8wzfu04JjjpLjd7sH0O2Rd0YORM9YHF6TmULsQVb9xpaD8Twv8YpjKnTdovEY5ANCBvOm/TwrrHtQlESTn/1621tMSEWALK2Xg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai; spf=none smtp.mailfrom=furiosa.ai; dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b=AqttIiog; arc=none smtp.client-ip=209.85.214.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=furiosa.ai
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=furiosa.ai
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=furiosa.ai header.i=@furiosa.ai header.b="AqttIiog"
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-2239c066347so24127115ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:19:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=furiosa.ai; s=google; t=1742487579; x=1743092379; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=E1EkxBQfCDmnx+n40Vp0lQXT3U/EpuuEwT1O/tsDLy8=;
-        b=AqttIiogKzRrEVtvUGN2K9Xsux6kBQ2eXR67MVBG4b3bnlxxH0x9ujI7g+xf0dDygc
-         /77HOQjrRowrjmnxrsM31rVDKtp8XbnQuZXKey0UadV+fSD9oIs2KIBVncoerm3xuqUA
-         JMMuYK4WfcieUGuLUPB3PYzowcUH0cB7ZzNwI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742487579; x=1743092379;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E1EkxBQfCDmnx+n40Vp0lQXT3U/EpuuEwT1O/tsDLy8=;
-        b=iPpyV0kXqZrxkxJvJG8O85n3EVjLN1mLg8bTp+mvCmxyz8jhvpo1y60i2ZV9qiPZbn
-         czRo9EFapUTWWVjKQScS8conJbDB53wEjVAjwEKk30Kpnvf3x8OXrgosMMIlimikOzD6
-         y9q3ow7rhH0j26e3f4LO7tQ5dzwQHxWEIYrbxMhtwQ64/NS/iJ04HTo3g1rSC+D1BX43
-         H09TjsrxcPiW6YNsISHK8WwdusYzutQL0ZcYLVyxzDf+JyLYVjnuxsyb47ZOgiM+ur7Z
-         qvwQvg/D3ELj0osnEfgkWZFGIx+YlGC6yfimrGZED9nXfNsx1fsx2+OfRrJBH+8bt4Oi
-         ViYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUr5kS3NWOJVion1/ZCGboS8N1qQGrVzvJpl1W8/nW3Y10KUJQSPclpGAV1FBdvZTaQr/k/yTaVd395u9g=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnpAbHrBBJvNnhqxgZMvji76KA5dQuhG8At3hTigrTwx3r2Bwf
-	x6oT/lT2hOPMC2JLyYEM9+1DJHtjj0QBjXipNDxSJyrvmCAYXICe2IJlmzJOCMM=
-X-Gm-Gg: ASbGncudO5QVZVYq/WfhVsttzRTXf0a8c+MaqFyHlMnS9yyZdkQBbLQgaxbGOfKz6mG
-	VaRwPow1QuLz33OCKWajHi2Cfdq6hRizV+AkV212DhLQnTwfH6rQJTKQajGfysJf2/X0AwHgcAd
-	//9hRdEAFd/5QaVttkWX5FztroU5zD1SoFQVzyxC9rbd39x0hi+Gnf3SjtDFdQOFO03eZ/OX4jq
-	M75suESH7SCaso8cagCHdMCQseaEfSRpmxkneIuKd+wDOtuhEfwjwFUV0OjeRTmPTGly5uzAfj/
-	x6iW0nzQbsFV0baaMpwOBbVDrj4QUJ/ggj+JlHWSJYPC093ieuUJEC84I4d2RAAQWF1D+kukky8
-	h
-X-Google-Smtp-Source: AGHT+IHkoC8+a/PI1OgLEI6QOhiYG1kobquqNfEOAiiqzCU00hktNWB4i+b5NArdRabJhomNAfkeIg==
-X-Received: by 2002:a17:903:2301:b0:220:f151:b668 with SMTP id d9443c01a7336-22780d9597dmr51485ad.20.1742487579151;
-        Thu, 20 Mar 2025 09:19:39 -0700 (PDT)
-Received: from sidongui-MacBookPro.local ([61.83.209.48])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c6bbe766sm137642715ad.184.2025.03.20.09.19.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 09:19:38 -0700 (PDT)
-Date: Fri, 21 Mar 2025 01:19:34 +0900
-From: Sidong Yang <sidong.yang@furiosa.ai>
-To: Pavel Begunkov <asml.silence@gmail.com>
-Cc: Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-	Jens Axboe <axboe@kernel.dk>, linux-btrfs@vger.kernel.org,
-	linux-kernel@vger.kernel.org, io-uring@vger.kernel.org
-Subject: Re: [RFC PATCH v5 5/5] btrfs: ioctl: introduce
- btrfs_uring_import_iovec()
-Message-ID: <Z9xAFpS-9CNF3Jiv@sidongui-MacBookPro.local>
-References: <20250319061251.21452-1-sidong.yang@furiosa.ai>
- <20250319061251.21452-6-sidong.yang@furiosa.ai>
- <14f5b4bc-e189-4b18-9fe6-a98c91e96d3d@gmail.com>
+	s=arc-20240116; t=1742487611; c=relaxed/simple;
+	bh=kGpBLhOeNbMipzXgZdQHWX+9QizRGxv66IZDvFRfIFg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=mGjvF54W13bUfV85FiuXoeHo16XQi9uvms26A8xF3671LwJ+wUe1ybsiXygF0RbmpSMgf5H0IwmmLKO/uWJl5LpVMK1M0A9fKMakgy9/6xb/lMGICrKDTjgcu2xCdni7hLUyumbb4M7BbfeaZe33xqD/Gmq59pzC9HK3LzTViRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZJVZy5GhBz9sRr;
+	Thu, 20 Mar 2025 16:57:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id lpSF7WRgoDNQ; Thu, 20 Mar 2025 16:57:30 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJVZy4Fbyz9sPd;
+	Thu, 20 Mar 2025 16:57:30 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 7E13A8B799;
+	Thu, 20 Mar 2025 16:57:30 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id g0xQPgVyxzkg; Thu, 20 Mar 2025 16:57:30 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id E8D5B8B763;
+	Thu, 20 Mar 2025 16:57:29 +0100 (CET)
+Message-ID: <f79c2e97-2d50-467d-9852-c64971f11370@csgroup.eu>
+Date: Thu, 20 Mar 2025 16:57:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <14f5b4bc-e189-4b18-9fe6-a98c91e96d3d@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] bus: fsl-mc: Remove deadcode
+To: linux@treblig.org, ioana.ciornei@nxp.com
+Cc: linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org,
+ stuyoder@gmail.com, linux-kernel@vger.kernel.org
+References: <20241115152055.279732-1-linux@treblig.org>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20241115152055.279732-1-linux@treblig.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 20, 2025 at 12:01:42PM +0000, Pavel Begunkov wrote:
-> On 3/19/25 06:12, Sidong Yang wrote:
-> > This patch introduces btrfs_uring_import_iovec(). In encoded read/write
-> > with uring cmd, it uses import_iovec without supporting fixed buffer.
-> > btrfs_using_import_iovec() could use fixed buffer if cmd flags has
-> > IORING_URING_CMD_FIXED.
-> 
-> Looks fine to me. The only comment, it appears btrfs silently ignored
-> IORING_URING_CMD_FIXED before, so theoretically it changes the uapi.
-> It should be fine, but maybe we should sneak in and backport a patch
-> refusing the flag for older kernels?
+Ioana,
 
-I think it's okay to leave the old version as it is. Making it to refuse
-the flag could break user application.
+Le 15/11/2024 à 16:20, linux@treblig.org a écrit :
+> [Vous ne recevez pas souvent de courriers de linux@treblig.org. Découvrez pourquoi ceci est important à https://aka.ms/LearnAboutSenderIdentification ]
+> 
+> From: "Dr. David Alan Gilbert" <linux@treblig.org>
+> 
+> fsl_mc_allocator_driver_exit() was added explicitly by
+> commit 1e8ac83b6caf ("bus: fsl-mc: add fsl_mc_allocator cleanup function")
+> but was never used.
+> 
+> Remove it.
+> 
+> fsl_mc_portal_reset() was added in 2015 by
+> commit 197f4d6a4a00 ("staging: fsl-mc: fsl-mc object allocator driver")
+> but was never used.
+> 
+> Remove it.
+> 
+> fsl_mc_portal_reset() was the only caller of dpmcp_reset().
+> 
+> Remove it.
+> 
+> Signed-off-by: Dr. David Alan Gilbert <linux@treblig.org>
 
-Thanks,
-Sidong
+Can you ack this patch ?
 
+Thanks
+Christophe
+
+> ---
+>   drivers/bus/fsl-mc/dpmcp.c            | 22 ----------------------
+>   drivers/bus/fsl-mc/fsl-mc-allocator.c |  5 -----
+>   drivers/bus/fsl-mc/fsl-mc-private.h   |  6 ------
+>   drivers/bus/fsl-mc/mc-io.c            | 20 --------------------
+>   include/linux/fsl/mc.h                |  2 --
+>   5 files changed, 55 deletions(-)
 > 
-> Reviewed-by: Pavel Begunkov <asml.silence@gmail.com>
+> diff --git a/drivers/bus/fsl-mc/dpmcp.c b/drivers/bus/fsl-mc/dpmcp.c
+> index 5fbd0dbde24a..7816c0a728ef 100644
+> --- a/drivers/bus/fsl-mc/dpmcp.c
+> +++ b/drivers/bus/fsl-mc/dpmcp.c
+> @@ -75,25 +75,3 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
+>          /* send command to mc*/
+>          return mc_send_command(mc_io, &cmd);
+>   }
+> -
+> -/**
+> - * dpmcp_reset() - Reset the DPMCP, returns the object to initial state.
+> - * @mc_io:     Pointer to MC portal's I/O object
+> - * @cmd_flags: Command flags; one or more of 'MC_CMD_FLAG_'
+> - * @token:     Token of DPMCP object
+> - *
+> - * Return:     '0' on Success; Error code otherwise.
+> - */
+> -int dpmcp_reset(struct fsl_mc_io *mc_io,
+> -               u32 cmd_flags,
+> -               u16 token)
+> -{
+> -       struct fsl_mc_command cmd = { 0 };
+> -
+> -       /* prepare command */
+> -       cmd.header = mc_encode_cmd_header(DPMCP_CMDID_RESET,
+> -                                         cmd_flags, token);
+> -
+> -       /* send command to mc*/
+> -       return mc_send_command(mc_io, &cmd);
+> -}
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-allocator.c b/drivers/bus/fsl-mc/fsl-mc-allocator.c
+> index b5e8c021fa1f..6c3beb82dd1b 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-allocator.c
+> +++ b/drivers/bus/fsl-mc/fsl-mc-allocator.c
+> @@ -656,8 +656,3 @@ int __init fsl_mc_allocator_driver_init(void)
+>   {
+>          return fsl_mc_driver_register(&fsl_mc_allocator_driver);
+>   }
+> -
+> -void fsl_mc_allocator_driver_exit(void)
+> -{
+> -       fsl_mc_driver_unregister(&fsl_mc_allocator_driver);
+> -}
+> diff --git a/drivers/bus/fsl-mc/fsl-mc-private.h b/drivers/bus/fsl-mc/fsl-mc-private.h
+> index b3520ea1b9f4..e1b7ec3ed1a7 100644
+> --- a/drivers/bus/fsl-mc/fsl-mc-private.h
+> +++ b/drivers/bus/fsl-mc/fsl-mc-private.h
+> @@ -66,10 +66,6 @@ int dpmcp_close(struct fsl_mc_io *mc_io,
+>                  u32 cmd_flags,
+>                  u16 token);
 > 
-> > 
-> > Signed-off-by: Sidong Yang <sidong.yang@furiosa.ai>
-> > ---
-> >   fs/btrfs/ioctl.c | 34 +++++++++++++++++++++++++---------
-> >   1 file changed, 25 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
-> > index 6c18bad53cd3..e5b4af41ca6b 100644
-> > --- a/fs/btrfs/ioctl.c
-> > +++ b/fs/btrfs/ioctl.c
-> > @@ -4802,7 +4802,29 @@ struct btrfs_uring_encoded_data {
-> >   	struct iov_iter iter;
-> >   };
-> > -static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue_flags)
-> > +static int btrfs_uring_import_iovec(struct io_uring_cmd *cmd,
-> > +				    unsigned int issue_flags, int rw)
-> > +{
-> > +	struct btrfs_uring_encoded_data *data =
-> > +		io_uring_cmd_get_async_data(cmd)->op_data;
-> > +	int ret;
-> > +
-> > +	if (cmd->flags & IORING_URING_CMD_FIXED) {
-> > +		data->iov = NULL;
-> > +		ret = io_uring_cmd_import_fixed_vec(cmd, data->args.iov,
-> > +						    data->args.iovcnt, rw,
-> > +						    &data->iter, issue_flags);
-> > +	} else {
-> > +		data->iov = data->iovstack;
-> > +		ret = import_iovec(rw, data->args.iov, data->args.iovcnt,
-> > +				   ARRAY_SIZE(data->iovstack), &data->iov,
-> > +				   &data->iter);
-> > +	}
-> > +	return ret;
-> > +}
-> > +
-> > +static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd,
-> > +				    unsigned int issue_flags)
-> >   {
-> >   	size_t copy_end_kernel = offsetofend(struct btrfs_ioctl_encoded_io_args, flags);
-> >   	size_t copy_end;
-> > @@ -4874,10 +4896,7 @@ static int btrfs_uring_encoded_read(struct io_uring_cmd *cmd, unsigned int issue
-> >   			goto out_acct;
-> >   		}
-> > -		data->iov = data->iovstack;
-> > -		ret = import_iovec(ITER_DEST, data->args.iov, data->args.iovcnt,
-> > -				   ARRAY_SIZE(data->iovstack), &data->iov,
-> > -				   &data->iter);
-> > +		ret = btrfs_uring_import_iovec(cmd, issue_flags, ITER_DEST);
-> >   		if (ret < 0)
-> >   			goto out_acct;
-> > @@ -5022,10 +5041,7 @@ static int btrfs_uring_encoded_write(struct io_uring_cmd *cmd, unsigned int issu
-> >   		if (data->args.len > data->args.unencoded_len - data->args.unencoded_offset)
-> >   			goto out_acct;
-> > -		data->iov = data->iovstack;
-> > -		ret = import_iovec(ITER_SOURCE, data->args.iov, data->args.iovcnt,
-> > -				   ARRAY_SIZE(data->iovstack), &data->iov,
-> > -				   &data->iter);
-> > +		ret = btrfs_uring_import_iovec(cmd, issue_flags, ITER_SOURCE);
-> >   		if (ret < 0)
-> >   			goto out_acct;
+> -int dpmcp_reset(struct fsl_mc_io *mc_io,
+> -               u32 cmd_flags,
+> -               u16 token);
+> -
+>   /*
+>    * Data Path Resource Container (DPRC) API
+>    */
+> @@ -631,8 +627,6 @@ int dprc_scan_objects(struct fsl_mc_device *mc_bus_dev,
 > 
-> -- 
-> Pavel Begunkov
+>   int __init fsl_mc_allocator_driver_init(void);
 > 
+> -void fsl_mc_allocator_driver_exit(void);
+> -
+>   void fsl_mc_init_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
+> 
+>   void fsl_mc_cleanup_all_resource_pools(struct fsl_mc_device *mc_bus_dev);
+> diff --git a/drivers/bus/fsl-mc/mc-io.c b/drivers/bus/fsl-mc/mc-io.c
+> index 95b10a6cf307..a0ad7866cbfc 100644
+> --- a/drivers/bus/fsl-mc/mc-io.c
+> +++ b/drivers/bus/fsl-mc/mc-io.c
+> @@ -263,23 +263,3 @@ void fsl_mc_portal_free(struct fsl_mc_io *mc_io)
+>          dpmcp_dev->consumer_link = NULL;
+>   }
+>   EXPORT_SYMBOL_GPL(fsl_mc_portal_free);
+> -
+> -/**
+> - * fsl_mc_portal_reset - Resets the dpmcp object for a given fsl_mc_io object
+> - *
+> - * @mc_io: Pointer to the fsl_mc_io object that wraps the MC portal to free
+> - */
+> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io)
+> -{
+> -       int error;
+> -       struct fsl_mc_device *dpmcp_dev = mc_io->dpmcp_dev;
+> -
+> -       error = dpmcp_reset(mc_io, 0, dpmcp_dev->mc_handle);
+> -       if (error < 0) {
+> -               dev_err(&dpmcp_dev->dev, "dpmcp_reset() failed: %d\n", error);
+> -               return error;
+> -       }
+> -
+> -       return 0;
+> -}
+> -EXPORT_SYMBOL_GPL(fsl_mc_portal_reset);
+> diff --git a/include/linux/fsl/mc.h b/include/linux/fsl/mc.h
+> index c90ec889bfc2..37316a58d2ed 100644
+> --- a/include/linux/fsl/mc.h
+> +++ b/include/linux/fsl/mc.h
+> @@ -417,8 +417,6 @@ int __must_check fsl_mc_portal_allocate(struct fsl_mc_device *mc_dev,
+> 
+>   void fsl_mc_portal_free(struct fsl_mc_io *mc_io);
+> 
+> -int fsl_mc_portal_reset(struct fsl_mc_io *mc_io);
+> -
+>   int __must_check fsl_mc_object_allocate(struct fsl_mc_device *mc_dev,
+>                                          enum fsl_mc_pool_type pool_type,
+>                                          struct fsl_mc_device **new_mc_adev);
+> --
+> 2.47.0
+> 
+
