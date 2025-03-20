@@ -1,253 +1,261 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C0C22068D;
-	Thu, 20 Mar 2025 11:45:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEEEB226CF4;
+	Thu, 20 Mar 2025 11:45:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742471138; cv=none; b=WGaCnNyVzl5j+CiXUHRE1rLzJXHjpDnO+0O/6s8L88aSU9HkdgbwDHDKnTNJvJDlvcOdZ1ab3YvCweqlxkMcGiXcbLji7Ew4bLrKBHnfmULJejB6kU+MLJ7JfyDc8y6Mh0kj6mBmvm6iXCSAai1yocpuJezDPOv/XbwuBazNHSo=
+	t=1742471142; cv=none; b=NCNcN18DnuH4SNvEb3aHVz+m5LOdhD65YgZacaFVWe2zVNN7ZURI/mWLmlWy5ppwvZXUsMtSYyit7ix88Z4INCDuaprkBHWzz2QhTdnp+ZQTPnUmFv7MQFhcQVqEeejNSHTZAdo2Olw75y+jPl4q/0Ki66TTQDiNhne3/TXoyAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742471138; c=relaxed/simple;
-	bh=uXGPOiOOdsppE2rXpARjq1zblWUgfa+EtwPmNGuQXvw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lLGoL16oJHg3pc557FQ5vHSOXCMyXGvtsYq5agU1zIj2PiDtsM36M/gWFbPimKA7GDxdJG1SHr4LShE2gxPRB2yCOCb3eOdlphHFoUGa/QwdpsPIE153U6wuM7t6z52UYMAWANyVxs2RuHpho7Lcn7+RGng91Nm4zDZ1wWUAfmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L0c8nFXR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742471142; c=relaxed/simple;
+	bh=AiG8zpJ+4Lzdhs3ZkkOdbU49oRwheNJ+GLQss5hysdI=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EvGOr6vrleXrhLSpGKqhZk0JH6/ZybU6Hjzl9eaFBEuv64qabM/JPJmGedVEAToCIzb+WN+777F/1ovr5XwwWLFZFL5qxR+9jZK68k6Uig30WwTMErXDtLnLgJLYV2dSU34FulMS/gm4ACzLsVVUics758TWEWpb12di8oenv7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=g5MJi3Ke; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L0c8nFXR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3631C4CEDD;
-	Thu, 20 Mar 2025 11:45:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742471138;
-	bh=uXGPOiOOdsppE2rXpARjq1zblWUgfa+EtwPmNGuQXvw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=L0c8nFXRdyRq+0X2yD+lfta7R/MhEa5H4wWnXSRxwupLbASLRSEovJo8jNUidvRQi
-	 upVjI1wA+HzPZA/K7bqiV5zl2NhfU5yHPBLXmzbEoBKtlS3nHIivifReYKJ9v3PUf5
-	 H/+FR9qgylclk/tqAlrTaK0ccjzoBJZ9YpBbY9v8tr3C4IGjqbcjax6/anGEetC06/
-	 MXHdGJjmJpB+oh8LO4xeX3zOMujPsiJCun9DpdHIcxg1PHnjTmEoyT2K18nMlwBUFp
-	 EALlkVv2QDRoz7UdTtumIJGbsjp/c5DQwBIABUsSP40k0wp/dN/oBsiRY7YDEYc4C+
-	 MxxSMPviCppEg==
-From: Jiri Olsa <jolsa@kernel.org>
-To: Oleg Nesterov <oleg@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Andrii Nakryiko <andrii@kernel.org>
-Cc: bpf@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	x86@kernel.org,
-	Song Liu <songliubraving@fb.com>,
-	Yonghong Song <yhs@fb.com>,
-	John Fastabend <john.fastabend@gmail.com>,
-	Hao Luo <haoluo@google.com>,
-	Steven Rostedt <rostedt@goodmis.org>,
-	Masami Hiramatsu <mhiramat@kernel.org>,
-	Alan Maguire <alan.maguire@oracle.com>,
-	David Laight <David.Laight@ACULAB.COM>,
-	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
-Subject: [PATCH RFCv3 19/23] selftests/bpf: Add uprobe_regs_equal test
-Date: Thu, 20 Mar 2025 12:41:54 +0100
-Message-ID: <20250320114200.14377-20-jolsa@kernel.org>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250320114200.14377-1-jolsa@kernel.org>
-References: <20250320114200.14377-1-jolsa@kernel.org>
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g5MJi3Ke"
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52K6Z6EL014273;
+	Thu, 20 Mar 2025 11:45:36 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=PVBeExWVDEEnGUKR4gEguT4G
+	uIAycJmRZQQVissjodY=; b=g5MJi3KeqHzpf9S+Fe2RzqjwApOawCQ1yQ5vzFpv
+	zezgbjNWdYOo0e6xYphqVfQBt3gyM87u7z6waBu0TmwkHITcwUDEOG4SQN3zcQ2f
+	+k0+WqRbLaV0iEZucTBHMsrRdM5nYJf1013CY3MjO5wRmDKCHa8Mo9sMMq2uFyGx
+	Lztw0XDgnjF++OgyK7HIZ+slSWAy+2yHfN/XOCdTQbQjjD24gU6R6O7DnjtxWSPC
+	q1ftPTY+X/bbg7+8ENJiT2IK3ir7jvYswkAN0DatmmkOUQOFeC0MZZh3fQnPLBDQ
+	vZQzEytQ5JWH2b6NvTuSy1jpsMCnpVNpnIS5y8yER17Qng==
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45g09f2ytc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 11:45:36 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA03.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52KBjZT5014641
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 11:45:35 GMT
+Received: from hu-wasimn-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Mar 2025 04:45:28 -0700
+Date: Thu, 20 Mar 2025 17:15:19 +0530
+From: Wasim Nazir <quic_wasimn@quicinc.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+CC: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        Bjorn Andersson
+	<andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>
+Subject: Re: [PATCH v5 5/6] arm64: dts: qcom: Add support for QCS9075 Ride &
+ Ride-r3
+Message-ID: <Z9v/z/i6OyWXXe7N@hu-wasimn-hyd.qualcomm.com>
+References: <67b888fb-2207-4da5-b52e-ce84a53ae1f9@kernel.org>
+ <Z3/hmncCDG8OzVkc@hu-wasimn-hyd.qualcomm.com>
+ <b0b08c81-0295-4edb-ad97-73715a88bea6@kernel.org>
+ <Z4dMRjK5I8s2lT3k@hu-wasimn-hyd.qualcomm.com>
+ <80e59b3b-2160-4e24-93f2-ab183a7cbc74@kernel.org>
+ <Z8AWHiVu05s0RJws@hu-wasimn-hyd.qualcomm.com>
+ <a8991221-88b2-4a39-a51b-587c4cdeebe4@kernel.org>
+ <Z8laCxtHOdNm3rRu@hu-wasimn-hyd.qualcomm.com>
+ <Z8lb889QrqluPXXl@hu-wasimn-hyd.qualcomm.com>
+ <e00a7061-5283-4809-b652-5f6c5e1e4496@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <e00a7061-5283-4809-b652-5f6c5e1e4496@kernel.org>
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=BvKdwZX5 c=1 sm=1 tr=0 ts=67dbffe0 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=YMAUWDJ-R26CST9i6d4A:9 a=CjuIK1q_8ugA:10
+X-Proofpoint-ORIG-GUID: PllAftRfbZnpMCrct6k3NwDDmHFYS3YS
+X-Proofpoint-GUID: PllAftRfbZnpMCrct6k3NwDDmHFYS3YS
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-20_03,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 mlxscore=0 bulkscore=0 impostorscore=0 spamscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503200071
 
-Changing uretprobe_regs_trigger to allow the test for both
-uprobe and uretprobe and renaming it to uprobe_regs_equal.
+Hi Krzysztof,
 
-We check that both uprobe and uretprobe probes (bpf programs)
-see expected registers with few exceptions.
+> >>
+> >> Which piece of actual hardware is represented in qcom-ride-common?
+> >>
+> > 
+> > All daughter cards like SOC-card, display, camera, ethernet, pcie, sensor, etc.
+> 
+> No, I asked about the name of the hardware, datasheet, ID or picture.
+> Common DTSI represents somoething, not just because you wanted to add
+> something you had in downstream.
+> 
 
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- .../selftests/bpf/prog_tests/uprobe_syscall.c | 57 ++++++++++++++-----
- .../selftests/bpf/progs/uprobe_syscall.c      |  4 +-
- 2 files changed, 44 insertions(+), 17 deletions(-)
+Currently we don't have any datasheet or document which is publicly
+available, so I will try my best to describe our HW.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-index b3518f48329c..f1c297a9bb03 100644
---- a/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/prog_tests/uprobe_syscall.c
-@@ -18,15 +18,17 @@
- 
- #pragma GCC diagnostic ignored "-Wattributes"
- 
--__naked unsigned long uretprobe_regs_trigger(void)
-+__attribute__((aligned(16)))
-+__nocf_check __weak __naked unsigned long uprobe_regs_trigger(void)
- {
- 	asm volatile (
--		"movq $0xdeadbeef, %rax\n"
-+		".byte 0x0f, 0x1f, 0x44, 0x00, 0x00	\n"
-+		"movq $0xdeadbeef, %rax			\n"
- 		"ret\n"
- 	);
- }
- 
--__naked void uretprobe_regs(struct pt_regs *before, struct pt_regs *after)
-+__naked void uprobe_regs(struct pt_regs *before, struct pt_regs *after)
- {
- 	asm volatile (
- 		"movq %r15,   0(%rdi)\n"
-@@ -47,15 +49,17 @@ __naked void uretprobe_regs(struct pt_regs *before, struct pt_regs *after)
- 		"movq   $0, 120(%rdi)\n" /* orig_rax */
- 		"movq   $0, 128(%rdi)\n" /* rip      */
- 		"movq   $0, 136(%rdi)\n" /* cs       */
-+		"pushq %rax\n"
- 		"pushf\n"
- 		"pop %rax\n"
- 		"movq %rax, 144(%rdi)\n" /* eflags   */
-+		"pop %rax\n"
- 		"movq %rsp, 152(%rdi)\n" /* rsp      */
- 		"movq   $0, 160(%rdi)\n" /* ss       */
- 
- 		/* save 2nd argument */
- 		"pushq %rsi\n"
--		"call uretprobe_regs_trigger\n"
-+		"call uprobe_regs_trigger\n"
- 
- 		/* save  return value and load 2nd argument pointer to rax */
- 		"pushq %rax\n"
-@@ -95,25 +99,37 @@ __naked void uretprobe_regs(struct pt_regs *before, struct pt_regs *after)
- );
- }
- 
--static void test_uretprobe_regs_equal(void)
-+static void test_uprobe_regs_equal(bool retprobe)
- {
-+	LIBBPF_OPTS(bpf_uprobe_opts, opts,
-+		.retprobe = retprobe,
-+	);
- 	struct uprobe_syscall *skel = NULL;
- 	struct pt_regs before = {}, after = {};
- 	unsigned long *pb = (unsigned long *) &before;
- 	unsigned long *pa = (unsigned long *) &after;
- 	unsigned long *pp;
-+	unsigned long offset;
- 	unsigned int i, cnt;
--	int err;
-+
-+	offset = get_uprobe_offset(&uprobe_regs_trigger);
-+	if (!ASSERT_GE(offset, 0, "get_uprobe_offset"))
-+		return;
- 
- 	skel = uprobe_syscall__open_and_load();
- 	if (!ASSERT_OK_PTR(skel, "uprobe_syscall__open_and_load"))
- 		goto cleanup;
- 
--	err = uprobe_syscall__attach(skel);
--	if (!ASSERT_OK(err, "uprobe_syscall__attach"))
-+	skel->links.probe = bpf_program__attach_uprobe_opts(skel->progs.probe,
-+				0, "/proc/self/exe", offset, &opts);
-+	if (!ASSERT_OK_PTR(skel->links.probe, "bpf_program__attach_uprobe_opts"))
- 		goto cleanup;
- 
--	uretprobe_regs(&before, &after);
-+	/* make sure uprobe gets optimized */
-+	if (!retprobe)
-+		uprobe_regs_trigger();
-+
-+	uprobe_regs(&before, &after);
- 
- 	pp = (unsigned long *) &skel->bss->regs;
- 	cnt = sizeof(before)/sizeof(*pb);
-@@ -122,7 +138,7 @@ static void test_uretprobe_regs_equal(void)
- 		unsigned int offset = i * sizeof(unsigned long);
- 
- 		/*
--		 * Check register before and after uretprobe_regs_trigger call
-+		 * Check register before and after uprobe_regs_trigger call
- 		 * that triggers the uretprobe.
- 		 */
- 		switch (offset) {
-@@ -136,7 +152,7 @@ static void test_uretprobe_regs_equal(void)
- 
- 		/*
- 		 * Check register seen from bpf program and register after
--		 * uretprobe_regs_trigger call
-+		 * uprobe_regs_trigger call (with rax exception, check below).
- 		 */
- 		switch (offset) {
- 		/*
-@@ -149,6 +165,15 @@ static void test_uretprobe_regs_equal(void)
- 		case offsetof(struct pt_regs, rsp):
- 		case offsetof(struct pt_regs, ss):
- 			break;
-+		/*
-+		 * uprobe does not see return value in rax, it needs to see the
-+		 * original (before) rax value
-+		 */
-+		case offsetof(struct pt_regs, rax):
-+			if (!retprobe) {
-+				ASSERT_EQ(pp[i], pb[i], "uprobe rax prog-before value check");
-+				break;
-+			}
- 		default:
- 			if (!ASSERT_EQ(pp[i], pa[i], "register prog-after value check"))
- 				fprintf(stdout, "failed register offset %u\n", offset);
-@@ -186,13 +211,13 @@ static void test_uretprobe_regs_change(void)
- 	unsigned long cnt = sizeof(before)/sizeof(*pb);
- 	unsigned int i, err, offset;
- 
--	offset = get_uprobe_offset(uretprobe_regs_trigger);
-+	offset = get_uprobe_offset(uprobe_regs_trigger);
- 
- 	err = write_bpf_testmod_uprobe(offset);
- 	if (!ASSERT_OK(err, "register_uprobe"))
- 		return;
- 
--	uretprobe_regs(&before, &after);
-+	uprobe_regs(&before, &after);
- 
- 	err = write_bpf_testmod_uprobe(0);
- 	if (!ASSERT_OK(err, "unregister_uprobe"))
-@@ -347,7 +372,7 @@ static void test_uretprobe_shadow_stack(void)
- 	}
- 
- 	/* Run all of the uretprobe tests. */
--	test_uretprobe_regs_equal();
-+	test_uprobe_regs_equal(false);
- 	test_uretprobe_regs_change();
- 	test_uretprobe_syscall_call();
- 
-@@ -709,7 +734,7 @@ static void test_uprobe_sigill(void)
- static void __test_uprobe_syscall(void)
- {
- 	if (test__start_subtest("uretprobe_regs_equal"))
--		test_uretprobe_regs_equal();
-+		test_uprobe_regs_equal(true);
- 	if (test__start_subtest("uretprobe_regs_change"))
- 		test_uretprobe_regs_change();
- 	if (test__start_subtest("uretprobe_syscall_call"))
-@@ -728,6 +753,8 @@ static void __test_uprobe_syscall(void)
- 		test_uprobe_race();
- 	if (test__start_subtest("uprobe_sigill"))
- 		test_uprobe_sigill();
-+	if (test__start_subtest("uprobe_regs_equal"))
-+		test_uprobe_regs_equal(false);
- }
- #else
- static void __test_uprobe_syscall(void)
-diff --git a/tools/testing/selftests/bpf/progs/uprobe_syscall.c b/tools/testing/selftests/bpf/progs/uprobe_syscall.c
-index 8a4fa6c7ef59..e08c31669e5a 100644
---- a/tools/testing/selftests/bpf/progs/uprobe_syscall.c
-+++ b/tools/testing/selftests/bpf/progs/uprobe_syscall.c
-@@ -7,8 +7,8 @@ struct pt_regs regs;
- 
- char _license[] SEC("license") = "GPL";
- 
--SEC("uretprobe//proc/self/exe:uretprobe_regs_trigger")
--int uretprobe(struct pt_regs *ctx)
-+SEC("uprobe")
-+int probe(struct pt_regs *ctx)
- {
- 	__builtin_memcpy(&regs, ctx, sizeof(regs));
- 	return 0;
--- 
-2.49.0
+Ride is a modular hardware system with several smaller daughter cards
+connected to single backplane board and each daughter card is stacked on
+top of each other. I will try to explain each daughter card with HW
+components and how it is connected to construct the ride-hw.
 
+Backplane board:
+  - It contains an MCU (Aurix TC397), CAN/LIN transceiver,
+	Audio/GNSS/IMU-I2C signals, Fan header
+  - It holds & connects all the daughter cards.
+
+SoC card:
+  - It contains:
+    - SoM:
+      - One of QCS9075M/QCS9100M/QAM8775p SoM.
+	  - Each SoM is composed of either qcs9075/qcs9100/sa8775p SoC, along
+		with DDR & PMICs.
+      - Each SoM can be mounted to same SoC-daughter card of ride-hw.
+    - In addition to SoM, it also has
+      - 4x UART, 2x USB 3.1 & 1x USB 2.0
+      - Memory: 1x OSPI, 2x UFS-3.1
+      - Debug: JTAG/QDSS header
+      - PCIe0, PCIe1 & Display signals
+      - Reset button
+  - It is connected to backplain board via B2B connector.
+
+Display card:
+  - It contains:
+    - 4 eDP ports & 2 DSI-DP bridge
+    - I2C GPIO expander & I2C switch
+  - It is connected to SoC-card via B2B connector.
+
+Camera card:
+  - It contains:
+    - 4 Quad DE-serializer, each supporting 4 MIPI CSI inputs
+    - Total upto 16 Cameras ports are supported.
+  - It is connected to backplain board via B2B connector.
+
+Ethernet card:
+  - There are two variants of ethernet card each with different
+	capabilities:
+    - [Ethernet-v1] card contains:
+      - 2x 1G RGMII phy, 2x 1G SGMII phy(enabled currently)
+	  - Total 4 phy supported, only 2 phy are enabled and it is used in
+		ride.
+    - [Ethernet-v2] card contains:
+	  - 2x 1G RGMII phy, 2x 2.5G HSGMII(enabled currently) & 10G PCIe based
+		MAC+PHY controller
+	  - Total 5 phy supported, only 2 phy are enabled and it is used in
+		ride-r3.
+  - Either [Ethernet-v1] or [Ethernet-v2] is connected to backplain board
+	via B2B connector.
+
+PCIe card:
+  - It contains:
+    - PCIe connections to SoC-card
+	- NVME, 2x WLBT module QCA6696/QCA6698 (Wi-Fi & bluetooth solution) &
+	  GNSS module
+  - It is connected to backplain board via B2B connector & PCIe signals are
+	connected to SoC card via flyover cables.
+
+Sensor Card:
+  - It contains 3-Axix compass & 6-Axis 3D IMU (accel/gyro) module which
+	are communicating via I2C
+  - It is connected to backplain board via B2B connector.
+
+Front panel card:
+  - It does not contain any active circuitry, only ports are available
+    - Audio-in/out ports
+    - USB hub ports
+    - CAN/LIN ports
+    - 12V power off switch
+  - It is connected to backplain board via ribbon cable.
+
+> 
+> > 
+
+> >> |             |                      | +-------------------------+-----------------------+-----------------< sa8775p-ride-common.dtsi           |
+> 
+> 
+> There is no ride-common hardware. If there is, send us any proof of its
+> existence. all your statements here show you want to create some
+> structure because you like it. I don't think you get my questions. You
+> painted diagram of DTS, not hardware.
+> 
+> We talk about hardware. Not your DTS. Drop all DTSI, DTS, DTSO from here
+> and show us the hardware.
+> 
+
+Considering outlined h/w description, following are ride configuration
+variation each platform supporting:
+
+Between qcs9075, qcs9100 & sa8775p ride/ride-r3 boards, SoM is changing;
+And between ride & ride-r3 ethernet is changing.
+Excluding these differences all other cards i.e SoC, display, camera, PCIe,
+sensor, front & backplain are same and are refactored in ride-common.
+If any variant of these cards comes up in future we need to refactor
+ride-common accordingly. I will try to outline this as clearly as possible
+in next commit log.
+
+Considering current outlines of all daughter cards, following defines
+ride/ride-r3 variant boards:
+  - sa8775p ride    : QAM8775p SoM + [Ethernet-v1] + other daughter cards
+  - sa8775p ride-r3 : QAM8775p SoM + [Ethernet-v2] + other daughter cards
+  - qcs9100 ride-r3 : QCS9100M SoM + [Ethernet-v2] + other daughter cards
+  - qcs9075 ride-r3 : QCS9075M SoM + [Ethernet-v2] + other daughter cards
+
+Since we don't have a document yet which formally describes
+qcs9075/qcs9100 ride board with [Ethernet-v1] card, I shall be dropping
+this particular variant in next patch series and re-send after complete
+documentation is available.
+
+> > Actually we are not including dts here instead *.dtso file will be
+> > overlayed to *-ride.dts to generate *-ride-r3.dts.
+> > 
+> > Below is the correct arrow sequence.
+> 
+> And the overlay represents what exactly? Different board? No, that's not
+> how overlays should be used.
+> 
+> You have different board, you have different DTS.
+> 
+
+No the overlay is not a different ride board. This overlay represents
+[Ethernet-v2] card which is different than [Ethernet-v1] card.
+
+We thought of using overlay as otherwise we have to create separate board
+DTS to support [Ethernet-v2] cards.
+
+> 
+> > 
+
+
+> >> |                                    +-------------------------+-----------------------+-------------------< sa8775p-ride-ethernet-aqr115c.dtso |
+> 
+> How does "sa8775p-ride-ethernet-aqr115c" hardware look like?
+> 
+
+Here sa8775p-ride-ethernet-aqr115c.dtso is representing [Ethernet-v2] card.
+
+> 
+> Several companies solved it - most of NXP vendors, many Renesas etc. I
+> really do not get why this needs so much talk and you cannot learn from
+> their architecture how SoM should be represented.
+> 
+
+Our SoM is separate HW which is reusable in ride-hw. Can you share more
+details on what we can improve here?
+
+
+Thanks & regards,
+Wasim
