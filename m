@@ -1,52 +1,52 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AB6221481E;
-	Thu, 20 Mar 2025 09:00:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8706F22259F;
+	Thu, 20 Mar 2025 09:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742461206; cv=none; b=OoD3LKMbuwvmRswgZgf6ff9U2h/4b0sKQwMgOsxq2zcWqnojLJPziFbcJAssaB573rG2vIuVUG7MZJw0K9ClhDobNFxpwP/3zoBro5ReY8Qt6cio6i/r2probU+B7GIf4aksTfxDIV56Juu3dVnj/XA+o+sZDyHRnF60bN9IMU0=
+	t=1742461209; cv=none; b=tBYUG1fU5Q9mZT0fU2k84R4ji/+HbG0K+XcZn4pPcoi/W3eZFQ5NPRYcA8vfyAc2iSaqukWKRauc03TWmxrhKqgz1Mln5SEq4pQAa4pHnBkya52VFomTLx41vqGqnvMuKI+SR2X8rWoEV+gTVl6MWlWt/mzuh5IyTKgDHoeHC14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742461206; c=relaxed/simple;
-	bh=gK/5yhC3m02Df7DK11Aq4/OzGCzn9zMj3t5SrFXKpk0=;
+	s=arc-20240116; t=1742461209; c=relaxed/simple;
+	bh=rGAtucbfQDSgT6LiW6Xj82VpPFYolVmtdGWGiZ6WFOw=;
 	h=Date:From:To:Subject:Cc:In-Reply-To:References:MIME-Version:
-	 Message-ID:Content-Type; b=LWxIRYEl0uZzxpNoRgx2CE2lZXDwB021AcWpMIbi5rHDxhILaeeeWvAgv+/q1ZYvjCfgUxNOg78xqT70kNgbilOEY9vCzll/ERh09QjO/PLgDOvy0wgTF8nw6eG6os9UaSP5kvFRJdatlGYgu4FF35B3LuvDfK9x8BbPdcQoLsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=nwB0yxuD; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=H2x8xh3i; arc=none smtp.client-ip=193.142.43.55
+	 Message-ID:Content-Type; b=GJl/iyCkWYklYcqV/I4yYh8vDXTZDkSDWHlQDJeS2qqHUyeDBDJsAWIA0YS4iXCefK+iJUas6cC1ACgrJ3D3aZ/JeMrJbArwKxjH4YA4wahgaxFAalMdcWz4oPM/MEiX9d+RpGu6PGcHHZbZjOiBTVj5wILn6nuxsqv2zuY1CGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=yRV+pKPw; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kQiunrPu; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="nwB0yxuD";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="H2x8xh3i"
-Date: Thu, 20 Mar 2025 09:00:01 -0000
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="yRV+pKPw";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kQiunrPu"
+Date: Thu, 20 Mar 2025 09:00:03 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742461202;
+	s=2020; t=1742461204;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+ofuC/UbfTB+z7M7nOFtIGyr/fY+CMNF/3pugnXIq+E=;
-	b=nwB0yxuDvnnqztDijtlxHuMs4hQ/eKRa/tuMlBwCDPgd1hOR9oBej94TVhCIDrm64JqSTn
-	WASed6FgSNvo2lf3Noq2tT4gpMycMarcbYgRYf8czKSvL87/2w+r4h0dfoZcBreEGAIrf4
-	5hlzFzvpvN7HeElTCesb+j/VpXIhp5vOR9gB2/27Cqh9tcK7FkU9f9IAM3xAzt6tsSgDYd
-	AfQfRr6kgyHlwBWNmOnZyWpcuzumdUT5Jlr0J5ZGdvdD9/e7kof5b4ifhJHaQd83x3WX24
-	GXsILOomp6ZnuexppTSkyZx+nY/b9fC6FKxwtyJIxbrHXAseCIg2B13cz1y/QQ==
+	bh=sVmd7kS88DNqB3EdhjOM0mStloNzIglBvTtFQAeQx88=;
+	b=yRV+pKPwHZjUiQ5jGeHnQK1Kc9MlzpiS3HtCPXkulPBxL6CfQ2KpYwE5AwmOOgtpLG9/5U
+	8pxJ0lepZh1A+pA2Q7fquZS5+NArCx4a5CEPMhupf8lgaxg0CnHsUXss/j83Mx7sq6WDKv
+	4xpM3UPc/jnq7nucNjQ8azjsinJwD+r14kkmtPO+fBy1obrweLBBgfOfDB5W3JsDmSMyYn
+	Sy2EfdQ3JNhuWwa4xZXJhFI9aWzjeeIyBIjtJ5i50VoDgC/pX1LLumqXBxlTR31HmlShii
+	nAiKwKcGSh9w3C5sgPeXUEpii5c6Y+kH1tuUAgocZypjdrwsse4vGn8Mzaa0Ow==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742461202;
+	s=2020e; t=1742461204;
 	h=from:from:sender:sender:reply-to:reply-to:subject:subject:date:date:
 	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
 	 content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=+ofuC/UbfTB+z7M7nOFtIGyr/fY+CMNF/3pugnXIq+E=;
-	b=H2x8xh3i4dDQ/4fzOUUhHjK6M/p/F/cK40we7T1W8mXjxIZVj98L+LirUap51jD2Jzt9gE
-	bkQOfE6PURN2AAAw==
+	bh=sVmd7kS88DNqB3EdhjOM0mStloNzIglBvTtFQAeQx88=;
+	b=kQiunrPuI0BKnt3LTx3fOWCyn9wFw/HAvzEQDyBKyLRGXMpYXAZKnpVBTyL3XkPOZnapUu
+	9UCGrBlVJQzasgDQ==
 From: "tip-bot2 for Ingo Molnar" <tip-bot2@linutronix.de>
 Sender: tip-bot2@linutronix.de
 Reply-to: linux-kernel@vger.kernel.org
 To: linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/debug, Documentation: Remove (most)
- CONFIG_SCHED_DEBUG references from documentation
+Subject: [tip: sched/core] sched/debug: Make 'const_debug' tunables
+ unconditional __read_mostly
 Cc: Ingo Molnar <mingo@kernel.org>, Shrikanth Hegde <sshegde@linux.ibm.com>,
  Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>,
  Vincent Guittot <vincent.guittot@linaro.org>,
@@ -55,38 +55,35 @@ Cc: Ingo Molnar <mingo@kernel.org>, Shrikanth Hegde <sshegde@linux.ibm.com>,
  Mel Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>,
  Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org,
  linux-kernel@vger.kernel.org
-In-Reply-To: <20250317104257.3496611-5-mingo@kernel.org>
-References: <20250317104257.3496611-5-mingo@kernel.org>
+In-Reply-To: <20250317104257.3496611-3-mingo@kernel.org>
+References: <20250317104257.3496611-3-mingo@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <174246120134.14745.13772927227797745702.tip-bot2@tip-bot2>
+Message-ID: <174246120330.14745.16501280562362931634.tip-bot2@tip-bot2>
 Robot-ID: <tip-bot2@linutronix.de>
 Robot-Unsubscribe:
  Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
 Precedence: bulk
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 
 The following commit has been merged into the sched/core branch of tip:
 
-Commit-ID:     1b68a6aba00efbee9804c11d85019646b2e2646f
-Gitweb:        https://git.kernel.org/tip/1b68a6aba00efbee9804c11d85019646b2e=
-2646f
+Commit-ID:     57903f72f270a3deb9de408ac61001a3fd94bf2f
+Gitweb:        https://git.kernel.org/tip/57903f72f270a3deb9de408ac61001a3fd94bf2f
 Author:        Ingo Molnar <mingo@kernel.org>
-AuthorDate:    Mon, 17 Mar 2025 11:42:55 +01:00
+AuthorDate:    Mon, 17 Mar 2025 11:42:53 +01:00
 Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 19 Mar 2025 22:20:54 +01:00
+CommitterDate: Wed, 19 Mar 2025 22:20:53 +01:00
 
-sched/debug, Documentation: Remove (most) CONFIG_SCHED_DEBUG references from =
-documentation
+sched/debug: Make 'const_debug' tunables unconditional __read_mostly
 
-Since it's enabled unconditionally now, remove all references to it.
-
-(Left out languages I cannot read.)
+With CONFIG_SCHED_DEBUG becoming unconditional, remove the
+extra 'const_debug' indirection towards __read_mostly.
 
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Tested-by: Shrikanth Hegde <sshegde@linux.ibm.com>
@@ -99,110 +96,93 @@ Cc: Ben Segall <bsegall@google.com>
 Cc: Mel Gorman <mgorman@suse.de>
 Cc: Valentin Schneider <vschneid@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/r/20250317104257.3496611-5-mingo@kernel.org
+Link: https://lore.kernel.org/r/20250317104257.3496611-3-mingo@kernel.org
 ---
- Documentation/scheduler/sched-debug.rst                         | 2 +-
- Documentation/scheduler/sched-design-CFS.rst                    | 2 +-
- Documentation/scheduler/sched-domains.rst                       | 5 ++---
- Documentation/scheduler/sched-ext.rst                           | 3 +--
- Documentation/scheduler/sched-stats.rst                         | 2 +-
- Documentation/translations/sp_SP/scheduler/sched-design-CFS.rst | 2 +-
- 6 files changed, 7 insertions(+), 9 deletions(-)
+ kernel/sched/core.c  |  4 ++--
+ kernel/sched/fair.c  |  2 +-
+ kernel/sched/sched.h | 15 +++++----------
+ 3 files changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/Documentation/scheduler/sched-debug.rst b/Documentation/schedule=
-r/sched-debug.rst
-index 4d3d24f..b5a92a3 100644
---- a/Documentation/scheduler/sched-debug.rst
-+++ b/Documentation/scheduler/sched-debug.rst
-@@ -2,7 +2,7 @@
- Scheduler debugfs
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
--Booting a kernel with CONFIG_SCHED_DEBUG=3Dy will give access to
-+Booting a kernel with debugfs enabled will give access to
- scheduler specific debug files under /sys/kernel/debug/sched. Some of
- those files are described below.
-=20
-diff --git a/Documentation/scheduler/sched-design-CFS.rst b/Documentation/sch=
-eduler/sched-design-CFS.rst
-index 8786f21..b574a26 100644
---- a/Documentation/scheduler/sched-design-CFS.rst
-+++ b/Documentation/scheduler/sched-design-CFS.rst
-@@ -96,7 +96,7 @@ picked and the current task is preempted.
- CFS uses nanosecond granularity accounting and does not rely on any jiffies =
-or
- other HZ detail.  Thus the CFS scheduler has no notion of "timeslices" in the
- way the previous scheduler had, and has no heuristics whatsoever.  There is
--only one central tunable (you have to switch on CONFIG_SCHED_DEBUG):
-+only one central tunable:
-=20
-    /sys/kernel/debug/sched/base_slice_ns
-=20
-diff --git a/Documentation/scheduler/sched-domains.rst b/Documentation/schedu=
-ler/sched-domains.rst
-index 5e996fe..15e3a4c 100644
---- a/Documentation/scheduler/sched-domains.rst
-+++ b/Documentation/scheduler/sched-domains.rst
-@@ -73,9 +73,8 @@ Architectures may override the generic domain builder and t=
-he default SD flags
- for a given topology level by creating a sched_domain_topology_level array a=
-nd
- calling set_sched_topology() with this array as the parameter.
-=20
--The sched-domains debugging infrastructure can be enabled by enabling
--CONFIG_SCHED_DEBUG and adding 'sched_verbose' to your cmdline. If you
--forgot to tweak your cmdline, you can also flip the
-+The sched-domains debugging infrastructure can be enabled by 'sched_verbose'
-+to your cmdline. If you forgot to tweak your cmdline, you can also flip the
- /sys/kernel/debug/sched/verbose knob. This enables an error checking parse of
- the sched domains which should catch most possible errors (described above).=
- It
- also prints out the domain structure in a visual format.
-diff --git a/Documentation/scheduler/sched-ext.rst b/Documentation/scheduler/=
-sched-ext.rst
-index c4672d7..5788a33 100644
---- a/Documentation/scheduler/sched-ext.rst
-+++ b/Documentation/scheduler/sched-ext.rst
-@@ -107,8 +107,7 @@ detailed information:
-     nr_rejected   : 0
-     enable_seq    : 1
-=20
--If ``CONFIG_SCHED_DEBUG`` is set, whether a given task is on sched_ext can
--be determined as follows:
-+Whether a given task is on sched_ext can be determined as follows:
-=20
- .. code-block:: none
-=20
-diff --git a/Documentation/scheduler/sched-stats.rst b/Documentation/schedule=
-r/sched-stats.rst
-index caea83d..08b6bc9 100644
---- a/Documentation/scheduler/sched-stats.rst
-+++ b/Documentation/scheduler/sched-stats.rst
-@@ -88,7 +88,7 @@ One of these is produced per domain for each cpu described.=
- (Note that if
- CONFIG_SMP is not defined, *no* domains are utilized and these lines
- will not appear in the output. <name> is an extension to the domain field
- that prints the name of the corresponding sched domain. It can appear in
--schedstat version 17 and above, and requires CONFIG_SCHED_DEBUG.)
-+schedstat version 17 and above.
-=20
- domain<N> <name> <cpumask> 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 2=
-0 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45
-=20
-diff --git a/Documentation/translations/sp_SP/scheduler/sched-design-CFS.rst =
-b/Documentation/translations/sp_SP/scheduler/sched-design-CFS.rst
-index dc728c7..b35d244 100644
---- a/Documentation/translations/sp_SP/scheduler/sched-design-CFS.rst
-+++ b/Documentation/translations/sp_SP/scheduler/sched-design-CFS.rst
-@@ -112,7 +112,7 @@ CFS usa una granularidad de nanosegundos y no depende de =
-ning=C3=BAn
- jiffy o detalles como HZ. De este modo, el gestor de tareas CFS no tiene
- noci=C3=B3n de "ventanas de tiempo" de la forma en que ten=C3=ADa el gestor =
-de
- tareas previo, y tampoco tiene heur=C3=ADsticos. =C3=9Anicamente hay un par=
-=C3=A1metro
--central ajustable (se ha de cambiar en CONFIG_SCHED_DEBUG):
-+central ajustable:
-=20
-    /sys/kernel/debug/sched/base_slice_ns
-=20
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 6f666b4..3589abc 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -128,7 +128,7 @@ DEFINE_PER_CPU_SHARED_ALIGNED(struct rq, runqueues);
+  */
+ #define SCHED_FEAT(name, enabled)	\
+ 	(1UL << __SCHED_FEAT_##name) * enabled |
+-const_debug unsigned int sysctl_sched_features =
++__read_mostly unsigned int sysctl_sched_features =
+ #include "features.h"
+ 	0;
+ #undef SCHED_FEAT
+@@ -148,7 +148,7 @@ __read_mostly int sysctl_resched_latency_warn_once = 1;
+  * Number of tasks to iterate in a single balance run.
+  * Limited because this is done with IRQs disabled.
+  */
+-const_debug unsigned int sysctl_sched_nr_migrate = SCHED_NR_MIGRATE_BREAK;
++__read_mostly unsigned int sysctl_sched_nr_migrate = SCHED_NR_MIGRATE_BREAK;
+ 
+ __read_mostly int scheduler_running;
+ 
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 89609eb..35ee8d9 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -79,7 +79,7 @@ unsigned int sysctl_sched_tunable_scaling = SCHED_TUNABLESCALING_LOG;
+ unsigned int sysctl_sched_base_slice			= 700000ULL;
+ static unsigned int normalized_sysctl_sched_base_slice	= 700000ULL;
+ 
+-const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
++__read_mostly unsigned int sysctl_sched_migration_cost	= 500000UL;
+ 
+ static int __init setup_sched_thermal_decay_shift(char *str)
+ {
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index fadaabe..d8e4040 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -2194,13 +2194,8 @@ static inline void __set_task_cpu(struct task_struct *p, unsigned int cpu)
+ }
+ 
+ /*
+- * Tunables that become constants when CONFIG_SCHED_DEBUG is off:
++ * Tunables:
+  */
+-#ifdef CONFIG_SCHED_DEBUG
+-# define const_debug __read_mostly
+-#else
+-# define const_debug const
+-#endif
+ 
+ #define SCHED_FEAT(name, enabled)	\
+ 	__SCHED_FEAT_##name ,
+@@ -2218,7 +2213,7 @@ enum {
+  * To support run-time toggling of sched features, all the translation units
+  * (but core.c) reference the sysctl_sched_features defined in core.c.
+  */
+-extern const_debug unsigned int sysctl_sched_features;
++extern __read_mostly unsigned int sysctl_sched_features;
+ 
+ #ifdef CONFIG_JUMP_LABEL
+ 
+@@ -2249,7 +2244,7 @@ extern struct static_key sched_feat_keys[__SCHED_FEAT_NR];
+  */
+ #define SCHED_FEAT(name, enabled)	\
+ 	(1UL << __SCHED_FEAT_##name) * enabled |
+-static const_debug __maybe_unused unsigned int sysctl_sched_features =
++static __read_mostly __maybe_unused unsigned int sysctl_sched_features =
+ #include "features.h"
+ 	0;
+ #undef SCHED_FEAT
+@@ -2837,8 +2832,8 @@ extern void wakeup_preempt(struct rq *rq, struct task_struct *p, int flags);
+ # define SCHED_NR_MIGRATE_BREAK 32
+ #endif
+ 
+-extern const_debug unsigned int sysctl_sched_nr_migrate;
+-extern const_debug unsigned int sysctl_sched_migration_cost;
++extern __read_mostly unsigned int sysctl_sched_nr_migrate;
++extern __read_mostly unsigned int sysctl_sched_migration_cost;
+ 
+ extern unsigned int sysctl_sched_base_slice;
+ 
