@@ -1,55 +1,55 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C33461DE4CC
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA53F1EB184
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:56:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742435775; cv=none; b=iRI5E01+DLPBhs53TXvOEk0e1O694JN1SYbKuiI7kRHfw9FN+Hm7PBU/5pRegXY44xC7UI0x90AGvZkNqZ/iaUPk6d45RAz3B0LBCCf89LZl8EB2iO2cultPIoq7spha8JlJhN26ODzIpuT3RvC5Ih11nTHxuvZK/WfrSkEtl6s=
+	t=1742435778; cv=none; b=Zk0g6Khj+TcpifWx708G0YV9Ehq4rqjhDhpt4wQRLFKhJWqwKwq3aKqv3r4cLAsmC8ZEMJ54109PhG1P/w9+z5Qppv2gCata3BU1dH2V48g7ZXVXQVvGtm7yjRtnpfzoYt7hU1NzTa6W2j5EpSND1qEPHUxO0jTLLxI3T4I5u38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742435775; c=relaxed/simple;
-	bh=f96UQvXAoaESrAv8KQBB5dWNb3SN2WonSEJafSW7k2o=;
+	s=arc-20240116; t=1742435778; c=relaxed/simple;
+	bh=YduT0zZZwUKZCM0bZLy9u+Av8YFPM7RHq5fs4VHJw6s=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=DqnkMQjGe6YgE0mV1WJ7GfJsT7p3VG/s7X3aB2qtOFpeSJEKHDckG+yJmx7cViV4WSdY4yg6G9dOZ3Y0ynihF2PVhJUU2ioRb0Qu2iYBKp9yCM6cvVJo7BMt5anVB2XidiXJEQ7ISmqWJqp7utyhqwB8r4mPJEFlajvu8Y+86m0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=T6+sS4UN; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=umPmR9Jm9VxH4suB/FqokK7xXbsedvQG2LycS7CBv/thy9sSgqto7v8WO3uhrQy9MSfzeJ3A+zhA8Nz0mPqlCEgTBISzsUl0tBzRNz0pEfZ6tBoNrVDTVXWU7X2z0Nt8yaA3sAthU7cA0AwiCT1iv0kTRzXaUh3MPI8OD7EeJqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FrFOxKgV; arc=none smtp.client-ip=209.85.214.202
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="T6+sS4UN"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff53a4754aso857680a91.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:56:13 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FrFOxKgV"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-224191d9228so4684745ad.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Mar 2025 18:56:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742435773; x=1743040573; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742435776; x=1743040576; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uzt28YGX83ujtBiUFsJhvG1AtvyLncXc8B9iuS5ri6U=;
-        b=T6+sS4UN4ayAaTjK7GBylZ5vj/BMb9XnS3bi2sAjkQFF+F8nowXaTvm8d2FRJCkQpb
-         7THlhSpDsrfQvjbCQhpqVmmP41Hn8yovAVe/+quE2pGrZHZCUpErB0o1qUxwwYM89DYb
-         5MgxFAUO9cH1uv54QS2o02z9vcDxpHEp5XJI2P3czAcaftsQCXkIMVGABnom1WHAhEXB
-         RD2NF4ke1BzftYKePp/LmeDuIH6vgUfseBYYZCvUtciu9dk8cneBuABBZOS3NWRfR6O+
-         cU1kcXVu0+MHsSDDlZDh/+BdECSOeiAvI2+t7HQaXs03PngsUlCAVKg4JVo0/6tl6dUG
-         oizg==
+        bh=8V+X6vapuQnm7T0BErSGY0fSGWOIaeixziHNtlYjz6I=;
+        b=FrFOxKgVoBtnNVLAdBcFP9ATQigVVZ+bqNFjJ4/mR6P39JzbJLxYE7UrVT/yA9pIeZ
+         yUnfGfZDPwa916AcLv+ZZkatHkvo7kYKKDV2oX5Bu5ia9ElFEXp7jdrNxSG8u3rrC/Iw
+         pqq57d0cQCYtXrXAkA0h/9Bavx5LQcyA59txahBGvEWK69x69NSSxkbsPXsJ+nhalT70
+         CMQJMQHkQQb7UPzfM26RjY4+cer1A8c3jlcr6VFqGqG0/1nxFEksheGFlehrkSyCknEs
+         VAFNphhO7ggjBLY19vZnyT4qRCSJ8jH8hP55KKiwNG4g9R+Rs7XAfKPw03ZWy5xsrgqj
+         hehw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742435773; x=1743040573;
+        d=1e100.net; s=20230601; t=1742435776; x=1743040576;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uzt28YGX83ujtBiUFsJhvG1AtvyLncXc8B9iuS5ri6U=;
-        b=fni1Xoawx4D/QcMklJ3V0GNqFt0Dn6143UQNNaMS8bSRudlD3m0ZkE7aWlhaqMiKpZ
-         e5kv5sFbQwzonRDEHGECihJLrqDfDj6EKkgjDUBUV7hZ9AWJHjH5G9swrOLum+5ddqtI
-         J4jkRgm8+ZENZVqaWOvp9111DFjoyrWDIN96sdXOoks/iBIhmYiJKJ9mox8uaVLoTUYl
-         +r1kUUpy/8FXaEqkKJEuOyxDKstetoavCuJLRe8dlqH2Qe7UEqg5CqrdEJNEt8AzATKh
-         PzNoqxngMvQAEjlAO6NK5L79qf7Vyy+A8ET+aOz0dxP0Fu+LuOgLG4IlhxCH9sJCiTyY
-         0J5Q==
-X-Gm-Message-State: AOJu0YyzSQF31vYByiNY5jArSQ66OJrQZWao6YvgYcla8wPveYBf9e7j
-	Lb/HiXb1cZhlC/WM8L9spwP3Qd+c965oZSo87aRZoEPRVs+UdWcTv2oM701sROUTX4JDJTuCcEu
-	J7Nd+1qMgAyDjQomn0ETdMHmoeHh8zEGphqZa+aAP0j95Mbq8eM6MqFuZ0JB7g2b+mFWbkPgQd5
-	JHzVrHns/LUaxOD+KoqXfFpWmkgdivFW4cTwfyR+QBlHj6lqQAKceht0OcP8szmQ==
-X-Google-Smtp-Source: AGHT+IETZEnQ1fnebG+EPXz8EIs4aUlnfPIGCh4puq8YWTGEpiNjSNK1+MOm9oAvMrmsXQRIpafhM24FzfM8r9f8
-X-Received: from pgct9.prod.google.com ([2002:a05:6a02:5289:b0:aef:faff:6861])
+        bh=8V+X6vapuQnm7T0BErSGY0fSGWOIaeixziHNtlYjz6I=;
+        b=mM0zgWwdPnnA7yC8EXsWHGS/bhnra6Cci8n1jD18ZHxFpDhTUMptgY2FM+YUSJzv3C
+         bND99IHi2HZh0mrE2Hhs17o6UQUke/GxQaDeLhpYtkMarkU8h2VIZ/IGNe6umqROWjKI
+         mMr1VcPbvkBda80zQwPh/Z2dv4PpIs+YRC43DSI3fpRLcNyHB6K2byHElFN95e/xRr/X
+         zyrCCqK4gxrqGzJ/CafMhWxD6G0qLQFfDyXsc4aOk7YbsZ+Y+KAatv2eHHqiMkKDkg+8
+         5EeO9hzWoMKlPd74T+UtdxYofGHL961cAwMGDe0XNY/cj3LEvrGTEtusWmZnzS2y6azk
+         z0Lg==
+X-Gm-Message-State: AOJu0YwE+ZfbazauzUGiALceg4ccmpF8Uitg0cAIvZNzlISxLpg/W86g
+	4annZDzUSTDuF6r1tRevCfV8Qhs1/4nuwUjYnW8bvKQva1WevRemaQC3lY1kdfNoWPgKOkYzbl6
+	s7sV/Hhv4DvAEfjL61tbxZq3X1vx2HyXB2pk87CuyjnfX1mUGEgDfDOfM535VD3P6G46LBunKCN
+	1U62CCzf+2EFbuNlvV7pLGVVkxHZ9i0sHnh4ZULkCgBPfsr31Vlqj1ksUZ/BaMJg==
+X-Google-Smtp-Source: AGHT+IEM1zhUI4aB8FBWWC+mYMClc6ahuDGj6ZxX8EDQ9DE5DKRFOEqA+5eaTn1Hw9R605eYXv4+w1iX7+c1hN7N
+X-Received: from pltk7.prod.google.com ([2002:a17:902:6947:b0:223:6930:304e])
  (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:c901:b0:1f5:7f45:7f8a with SMTP id adf61e73a8af0-1fd13ed2b9fmr2759978637.38.1742435773077;
- Wed, 19 Mar 2025 18:56:13 -0700 (PDT)
-Date: Wed, 19 Mar 2025 18:55:43 -0700
+ 2002:a17:902:db0a:b0:223:f408:c3f7 with SMTP id d9443c01a7336-2265edc7b36mr19232405ad.16.1742435776171;
+ Wed, 19 Mar 2025 18:56:16 -0700 (PDT)
+Date: Wed, 19 Mar 2025 18:55:45 -0700
 In-Reply-To: <20250320015551.2157511-1-changyuanl@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250320015551.2157511-1-changyuanl@google.com>
 X-Mailer: git-send-email 2.49.0.rc1.451.g8f38331e32-goog
-Message-ID: <20250320015551.2157511-9-changyuanl@google.com>
-Subject: [PATCH v5 08/16] kexec: add KHO parsing support
+Message-ID: <20250320015551.2157511-11-changyuanl@google.com>
+Subject: [PATCH v5 10/16] kexec: add KHO support to kexec file loads
 From: Changyuan Lyu <changyuanl@google.com>
 To: linux-kernel@vger.kernel.org
 Cc: graf@amazon.com, akpm@linux-foundation.org, luto@kernel.org, 
@@ -80,11 +80,15 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Alexander Graf <graf@amazon.com>
 
-When we have a KHO kexec, we get an FDT blob and scratch region to
-populate the state of the system. Provide helper functions that allow
-architecture code to easily handle memory reservations based on them and
-give device drivers visibility into the KHO FDT and memory reservations
-so they can recover their own state.
+Kexec has 2 modes: A user space driven mode and a kernel driven mode.
+For the kernel driven mode, kernel code determines the physical
+addresses of all target buffers that the payload gets copied into.
+
+With KHO, we can only safely copy payloads into the "scratch area".
+Teach the kexec file loader about it, so it only allocates for that
+area. In addition, enlighten it with support to ask the KHO subsystem
+for its respective payloads to copy into target memory. Also teach the
+KHO subsystem how to fill the images for file loads.
 
 Signed-off-by: Alexander Graf <graf@amazon.com>
 Co-developed-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
@@ -92,444 +96,243 @@ Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 Co-developed-by: Changyuan Lyu <changyuanl@google.com>
 Signed-off-by: Changyuan Lyu <changyuanl@google.com>
 ---
- include/linux/kexec_handover.h |  48 ++++++
- kernel/kexec_handover.c        | 302 ++++++++++++++++++++++++++++++++-
- mm/memblock.c                  |   1 +
- 3 files changed, 350 insertions(+), 1 deletion(-)
+ include/linux/kexec.h   |   7 +++
+ kernel/kexec_core.c     |   4 ++
+ kernel/kexec_file.c     |  19 +++++++
+ kernel/kexec_handover.c | 108 ++++++++++++++++++++++++++++++++++++++++
+ kernel/kexec_internal.h |  18 +++++++
+ 5 files changed, 156 insertions(+)
 
-diff --git a/include/linux/kexec_handover.h b/include/linux/kexec_handover.h
-index 9cd9ad31e2d1..c665ff6cd728 100644
---- a/include/linux/kexec_handover.h
-+++ b/include/linux/kexec_handover.h
-@@ -35,6 +35,10 @@ struct kho_node {
- 	bool visited;
- };
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index fad04f3bcf1d..d59eee60e36e 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -364,6 +364,13 @@ struct kimage {
+ 	size_t ima_buffer_size;
+ #endif
  
-+struct kho_in_node {
-+	int offset;
-+};
++#ifdef CONFIG_KEXEC_HANDOVER
++	struct {
++		struct kexec_segment *scratch;
++		struct kexec_segment *fdt;
++	} kho;
++#endif
 +
- #ifdef CONFIG_KEXEC_HANDOVER
- bool kho_is_enabled(void);
- void kho_init_node(struct kho_node *node);
-@@ -51,6 +55,19 @@ int register_kho_notifier(struct notifier_block *nb);
- int unregister_kho_notifier(struct notifier_block *nb);
+ 	/* Core ELF header buffer */
+ 	void *elf_headers;
+ 	unsigned long elf_headers_sz;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 640d252306ea..67fb9c0b3714 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1053,6 +1053,10 @@ int kernel_kexec(void)
+ 		goto Unlock;
+ 	}
  
- void kho_memory_init(void);
++	error = kho_copy_fdt(kexec_image);
++	if (error)
++		goto Unlock;
 +
-+void kho_populate(phys_addr_t handover_fdt_phys, phys_addr_t scratch_phys,
-+		  u64 scratch_len);
-+
-+int kho_get_node(const struct kho_in_node *parent, const char *name,
-+		 struct kho_in_node *child);
-+int kho_get_nodes(const struct kho_in_node *parent,
-+		  int (*func)(const char *, const struct kho_in_node *, void *),
-+		  void *data);
-+const void *kho_get_prop(const struct kho_in_node *node, const char *key,
-+			 u32 *size);
-+int kho_node_check_compatible(const struct kho_in_node *node,
-+			      const char *compatible);
- #else
- static inline bool kho_is_enabled(void)
- {
-@@ -104,6 +121,37 @@ static inline int unregister_kho_notifier(struct notifier_block *nb)
- static inline void kho_memory_init(void)
- {
- }
-+
-+static inline void kho_populate(phys_addr_t handover_fdt_phys,
-+				phys_addr_t scratch_phys, u64 scratch_len)
-+{
-+}
-+
-+static inline int kho_get_node(const struct kho_in_node *parent,
-+			       const char *name, struct kho_in_node *child)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline int kho_get_nodes(const struct kho_in_node *parent,
-+				int (*func)(const char *,
-+					    const struct kho_in_node *, void *),
-+				void *data)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
-+static inline const void *kho_get_prop(const struct kho_in_node *node,
-+				       const char *key, u32 *size)
-+{
-+	return ERR_PTR(-EOPNOTSUPP);
-+}
-+
-+static inline int kho_node_check_compatible(const struct kho_in_node *node,
-+					    const char *compatible)
-+{
-+	return -EOPNOTSUPP;
-+}
- #endif /* CONFIG_KEXEC_HANDOVER */
+ #ifdef CONFIG_KEXEC_JUMP
+ 	if (kexec_image->preserve_context) {
+ 		/*
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 3eedb8c226ad..070ef206f573 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -253,6 +253,11 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* IMA needs to pass the measurement list to the next kernel. */
+ 	ima_add_kexec_buffer(image);
  
- #endif /* LINUX_KEXEC_HANDOVER_H */
++	/* If KHO is active, add its images to the list */
++	ret = kho_fill_kimage(image);
++	if (ret)
++		goto out;
++
+ 	/* Call image load handler */
+ 	ldata = kexec_image_load_default(image);
+ 
+@@ -636,6 +641,14 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
+ 		return 0;
+ 
++	/*
++	 * If KHO is active, only use KHO scratch memory. All other memory
++	 * could potentially be handed over.
++	 */
++	ret = kho_locate_mem_hole(kbuf, locate_mem_hole_callback);
++	if (ret <= 0)
++		return ret;
++
+ 	if (!IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
+ 		ret = kexec_walk_resources(kbuf, locate_mem_hole_callback);
+ 	else
+@@ -764,6 +777,12 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 		if (ksegment->kbuf == pi->purgatory_buf)
+ 			continue;
+ 
++#ifdef CONFIG_KEXEC_HANDOVER
++		/* Skip KHO FDT as its contects are copied in kernel_kexec(). */
++		if (ksegment == image->kho.fdt)
++			continue;
++#endif
++
+ 		ret = crypto_shash_update(desc, ksegment->kbuf,
+ 					  ksegment->bufsz);
+ 		if (ret)
 diff --git a/kernel/kexec_handover.c b/kernel/kexec_handover.c
-index df0d9debbb64..6ebad2f023f9 100644
+index 592563c21369..5108e2cc1a22 100644
 --- a/kernel/kexec_handover.c
 +++ b/kernel/kexec_handover.c
-@@ -73,6 +73,20 @@ static struct kho_out kho_out = {
- 	.fdt_max = 10 * SZ_1M,
- };
- 
-+struct kho_in {
-+	struct debugfs_blob_wrapper fdt_wrapper;
-+	struct dentry *dir;
-+	phys_addr_t kho_scratch_phys;
-+	phys_addr_t fdt_phys;
-+};
-+
-+static struct kho_in kho_in;
-+
-+static const void *kho_get_fdt(void)
-+{
-+	return kho_in.fdt_phys ? phys_to_virt(kho_in.fdt_phys) : NULL;
-+}
-+
- int register_kho_notifier(struct notifier_block *nb)
- {
- 	return blocking_notifier_chain_register(&kho_out.chain_head, nb);
-@@ -85,6 +99,144 @@ int unregister_kho_notifier(struct notifier_block *nb)
+@@ -245,6 +245,85 @@ int kho_node_check_compatible(const struct kho_in_node *node,
  }
- EXPORT_SYMBOL_GPL(unregister_kho_notifier);
+ EXPORT_SYMBOL_GPL(kho_node_check_compatible);
  
-+/**
-+ * kho_get_node - retrieve a node saved in KHO FDT.
-+ * @parent: the parent node to look up for.
-+ * @name: the name of the node to look for.
-+ * @child: if a node named @name is found under @parent, it is stored in @child.
-+ *
-+ * If @parent is NULL, this function looks up for @name under KHO root node.
-+ *
-+ * Return: 0 on success, and @child is populated, error code on failure.
-+ */
-+int kho_get_node(const struct kho_in_node *parent, const char *name,
-+		 struct kho_in_node *child)
++int kho_fill_kimage(struct kimage *image)
 +{
-+	int parent_offset = 0;
-+	int offset = 0;
-+	const void *fdt = kho_get_fdt();
++	ssize_t scratch_size;
++	int err = 0;
 +
-+	if (!fdt)
-+		return -ENOENT;
++	if (!kho_enable)
++		return 0;
 +
-+	if (!child)
-+		return -EINVAL;
++	/* Allocate target memory for KHO FDT */
++	struct kexec_buf fdt = {
++		.image = image,
++		.buffer = NULL,
++		.bufsz = 0,
++		.mem = KEXEC_BUF_MEM_UNKNOWN,
++		.memsz = kho_out.fdt_max,
++		.buf_align = SZ_64K, /* Makes it easier to map */
++		.buf_max = ULONG_MAX,
++		.top_down = true,
++	};
++	err = kexec_add_buffer(&fdt);
++	if (err) {
++		pr_err("failed to reserved a segment for KHO FDT: %d\n", err);
++		return err;
++	}
++	image->kho.fdt = &image->segment[image->nr_segments - 1];
 +
-+	if (parent)
-+		parent_offset = parent->offset;
++	scratch_size = sizeof(*kho_scratch) * kho_scratch_cnt;
++	struct kexec_buf scratch = {
++		.image = image,
++		.buffer = kho_scratch,
++		.bufsz = scratch_size,
++		.mem = KEXEC_BUF_MEM_UNKNOWN,
++		.memsz = scratch_size,
++		.buf_align = SZ_64K, /* Makes it easier to map */
++		.buf_max = ULONG_MAX,
++		.top_down = true,
++	};
++	err = kexec_add_buffer(&scratch);
++	if (err)
++		return err;
++	image->kho.scratch = &image->segment[image->nr_segments - 1];
 +
-+	offset = fdt_subnode_offset(fdt, parent_offset, name);
-+	if (offset < 0)
-+		return -ENOENT;
-+
-+	child->offset = offset;
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(kho_get_node);
 +
-+/**
-+ * kho_get_nodes - iterate over all direct child nodes.
-+ * @parent: the parent node to look for child nodes.
-+ * @func: a function pointer to be called on each child node.
-+ * @data: auxiliary data to be passed to @func.
-+ *
-+ * For every direct child node of @parent, @func is called with the child node
-+ * name, the child node (a struct kho_in_node *), and @data.
-+ *
-+ * If @parent is NULL, this function iterates over the child nodes of the KHO
-+ * root node.
-+ *
-+ * Return: 0 on success, error code on failure.
-+ */
-+int kho_get_nodes(const struct kho_in_node *parent,
-+		  int (*func)(const char *, const struct kho_in_node *, void *),
-+		  void *data)
++static int kho_walk_scratch(struct kexec_buf *kbuf,
++			    int (*func)(struct resource *, void *))
 +{
-+	int parent_offset = 0;
-+	struct kho_in_node child;
-+	const char *name;
 +	int ret = 0;
-+	const void *fdt = kho_get_fdt();
++	int i;
 +
-+	if (!fdt)
-+		return -ENOENT;
++	for (i = 0; i < kho_scratch_cnt; i++) {
++		struct resource res = {
++			.start = kho_scratch[i].addr,
++			.end = kho_scratch[i].addr + kho_scratch[i].size - 1,
++		};
 +
-+	if (parent)
-+		parent_offset = parent->offset;
-+
-+	fdt_for_each_subnode(child.offset, fdt, parent_offset) {
-+		if (child.offset < 0)
-+			return -EINVAL;
-+
-+		name = fdt_get_name(fdt, child.offset, NULL);
-+
-+		if (!name)
-+			return -EINVAL;
-+
-+		ret = func(name, &child, data);
-+
-+		if (ret < 0)
++		/* Try to fit the kimage into our KHO scratch region */
++		ret = func(&res, kbuf);
++		if (ret)
 +			break;
 +	}
 +
 +	return ret;
 +}
-+EXPORT_SYMBOL_GPL(kho_get_nodes);
 +
-+/**
-+ * kho_get_prop - retrieve the property data stored in the KHO tree.
-+ * @node: the node to look up for.
-+ * @key: the key of the property.
-+ * @size: a pointer to store the size of the data in bytes.
-+ *
-+ * Return: pointer to the data, and data size is stored in @size, or NULL on
-+ * failure.
-+ */
-+const void *kho_get_prop(const struct kho_in_node *node, const char *key,
-+			 u32 *size)
++int kho_locate_mem_hole(struct kexec_buf *kbuf,
++			int (*func)(struct resource *, void *))
 +{
-+	int offset = 0;
-+	u32 s;
-+	const void *fdt = kho_get_fdt();
++	int ret;
 +
-+	if (!fdt)
-+		return NULL;
++	if (!kho_enable || kbuf->image->type == KEXEC_TYPE_CRASH)
++		return 1;
 +
-+	if (node)
-+		offset = node->offset;
++	ret = kho_walk_scratch(kbuf, func);
 +
-+	if (!size)
-+		size = &s;
-+
-+	return fdt_getprop(fdt, offset, key, size);
++	return ret == 1 ? 0 : -EADDRNOTAVAIL;
 +}
-+EXPORT_SYMBOL_GPL(kho_get_prop);
 +
-+/**
-+ * kho_node_check_compatible - check a node's compatible property.
-+ * @node: the node to check.
-+ * @compatible: the compatible stirng.
-+ *
-+ * Wrapper of fdt_node_check_compatible().
-+ *
-+ * Return: 0 if @compatible is in the node's "compatible" list, or
-+ * error code on failure.
-+ */
-+int kho_node_check_compatible(const struct kho_in_node *node,
-+			      const char *compatible)
-+{
-+	int result = 0;
-+	const void *fdt = kho_get_fdt();
-+
-+	if (!fdt)
-+		return -ENOENT;
-+
-+	result = fdt_node_check_compatible(fdt, node->offset, compatible);
-+
-+	return result ? -EINVAL : 0;
-+}
-+EXPORT_SYMBOL_GPL(kho_node_check_compatible);
-+
- /* Helper functions for KHO state tree */
- 
- struct kho_prop {
-@@ -605,6 +757,32 @@ static int scratch_len_show(struct seq_file *m, void *v)
+ /*
+  * Keep track of memory that is to be preserved across KHO.
+  *
+@@ -1141,6 +1220,35 @@ static int kho_finalize(void)
+ 	return err;
  }
- DEFINE_SHOW_ATTRIBUTE(scratch_len);
  
-+/* Handling for debugfs/kho/in */
-+static __init int kho_in_debugfs_init(const void *fdt)
++int kho_copy_fdt(struct kimage *image)
 +{
-+	struct dentry *file;
-+	int err;
++	int err = 0;
++	void *fdt;
 +
-+	kho_in.dir = debugfs_create_dir("in", debugfs_root);
-+	if (IS_ERR(kho_in.dir))
-+		return PTR_ERR(kho_in.dir);
++	if (!kho_enable || !image->file_mode)
++		return 0;
 +
-+	kho_in.fdt_wrapper.size = fdt_totalsize(fdt);
-+	kho_in.fdt_wrapper.data = (void *)fdt;
-+	file = debugfs_create_blob("fdt", 0400, kho_in.dir,
-+				   &kho_in.fdt_wrapper);
-+	if (IS_ERR(file)) {
-+		err = PTR_ERR(file);
-+		goto err_rmdir;
++	if (!kho_out.fdt) {
++		err = kho_finalize();
++		kho_out_update_debugfs_fdt();
++		if (err)
++			return err;
 +	}
++
++	fdt = kimage_map_segment(image, image->kho.fdt->mem,
++				 PAGE_ALIGN(kho_out.fdt_max));
++	if (!fdt) {
++		pr_err("failed to vmap fdt ksegment in kimage\n");
++		return -ENOMEM;
++	}
++
++	memcpy(fdt, kho_out.fdt, fdt_totalsize(kho_out.fdt));
++
++	kimage_unmap_segment(fdt);
 +
 +	return 0;
-+
-+err_rmdir:
-+	debugfs_remove(kho_in.dir);
-+	return err;
 +}
 +
- static __init int kho_out_debugfs_init(void)
+ /* Handling for debug/kho/out */
+ static int kho_out_finalize_get(void *data, u64 *val)
  {
- 	struct dentry *dir, *f;
-@@ -644,6 +822,7 @@ static __init int kho_out_debugfs_init(void)
- static __init int kho_init(void)
- {
- 	int err;
-+	const void *fdt = kho_get_fdt();
- 
- 	if (!kho_enable)
- 		return 0;
-@@ -663,6 +842,21 @@ static __init int kho_init(void)
- 	if (err)
- 		goto err_free_scratch;
- 
-+	if (fdt) {
-+		err = kho_in_debugfs_init(fdt);
-+		/*
-+		 * Failure to create /sys/kernel/debug/kho/in does not prevent
-+		 * reviving state from KHO and setting up KHO for the next
-+		 * kexec.
-+		 */
-+		if (err)
-+			pr_err("failed exposing handover FDT in debugfs\n");
+diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
+index d35d9792402d..ec9555a4751d 100644
+--- a/kernel/kexec_internal.h
++++ b/kernel/kexec_internal.h
+@@ -39,4 +39,22 @@ extern size_t kexec_purgatory_size;
+ #else /* CONFIG_KEXEC_FILE */
+ static inline void kimage_file_post_load_cleanup(struct kimage *image) { }
+ #endif /* CONFIG_KEXEC_FILE */
 +
-+		kho_scratch = __va(kho_in.kho_scratch_phys);
++struct kexec_buf;
 +
-+		return 0;
-+	}
-+
- 	for (int i = 0; i < kho_scratch_cnt; i++) {
- 		unsigned long base_pfn = PHYS_PFN(kho_scratch[i].addr);
- 		unsigned long count = kho_scratch[i].size >> PAGE_SHIFT;
-@@ -859,7 +1053,113 @@ static void __init kho_reserve_scratch(void)
- 	kho_enable = false;
- }
- 
-+static void __init kho_release_scratch(void)
++#ifdef CONFIG_KEXEC_HANDOVER
++int kho_locate_mem_hole(struct kexec_buf *kbuf,
++			int (*func)(struct resource *, void *));
++int kho_fill_kimage(struct kimage *image);
++int kho_copy_fdt(struct kimage *image);
++#else
++static inline int kho_locate_mem_hole(struct kexec_buf *kbuf,
++				      int (*func)(struct resource *, void *))
 +{
-+	phys_addr_t start, end;
-+	u64 i;
-+
-+	memmap_init_kho_scratch_pages();
-+
-+	/*
-+	 * Mark scratch mem as CMA before we return it. That way we
-+	 * ensure that no kernel allocations happen on it. That means
-+	 * we can reuse it as scratch memory again later.
-+	 */
-+	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
-+			     MEMBLOCK_KHO_SCRATCH, &start, &end, NULL) {
-+		ulong start_pfn = pageblock_start_pfn(PFN_DOWN(start));
-+		ulong end_pfn = pageblock_align(PFN_UP(end));
-+		ulong pfn;
-+
-+		for (pfn = start_pfn; pfn < end_pfn; pfn += pageblock_nr_pages)
-+			set_pageblock_migratetype(pfn_to_page(pfn),
-+						  MIGRATE_CMA);
-+	}
++	return 1;
 +}
 +
- void __init kho_memory_init(void)
- {
--	kho_reserve_scratch();
-+	if (!kho_get_fdt())
-+		kho_reserve_scratch();
-+	else
-+		kho_release_scratch();
-+}
-+
-+void __init kho_populate(phys_addr_t handover_fdt_phys,
-+			 phys_addr_t scratch_phys, u64 scratch_len)
-+{
-+	void *handover_fdt;
-+	struct kho_scratch *scratch;
-+	u32 fdt_size = 0;
-+
-+	/* Determine the real size of the FDT */
-+	handover_fdt =
-+		early_memremap(handover_fdt_phys, sizeof(struct fdt_header));
-+	if (!handover_fdt) {
-+		pr_warn("setup: failed to memremap kexec FDT (0x%llx)\n",
-+			handover_fdt_phys);
-+		return;
-+	}
-+
-+	if (fdt_check_header(handover_fdt)) {
-+		pr_warn("setup: kexec handover FDT is invalid (0x%llx)\n",
-+			handover_fdt_phys);
-+		early_memunmap(handover_fdt, sizeof(struct fdt_header));
-+		return;
-+	}
-+
-+	fdt_size = fdt_totalsize(handover_fdt);
-+	kho_in.fdt_phys = handover_fdt_phys;
-+
-+	early_memunmap(handover_fdt, sizeof(struct fdt_header));
-+
-+	/* Reserve the DT so we can still access it in late boot */
-+	memblock_reserve(handover_fdt_phys, fdt_size);
-+
-+	kho_in.kho_scratch_phys = scratch_phys;
-+	kho_scratch_cnt = scratch_len / sizeof(*kho_scratch);
-+	scratch = early_memremap(scratch_phys, scratch_len);
-+	if (!scratch) {
-+		pr_warn("setup: failed to memremap kexec scratch (0x%llx)\n",
-+			scratch_phys);
-+		return;
-+	}
-+
-+	/*
-+	 * We pass a safe contiguous blocks of memory to use for early boot
-+	 * purporses from the previous kernel so that we can resize the
-+	 * memblock array as needed.
-+	 */
-+	for (int i = 0; i < kho_scratch_cnt; i++) {
-+		struct kho_scratch *area = &scratch[i];
-+		u64 size = area->size;
-+
-+		memblock_add(area->addr, size);
-+
-+		if (WARN_ON(memblock_mark_kho_scratch(area->addr, size))) {
-+			pr_err("Kexec failed to mark the scratch region. Disabling KHO revival.");
-+			kho_in.fdt_phys = 0;
-+			scratch = NULL;
-+			break;
-+		}
-+		pr_debug("Marked 0x%pa+0x%pa as scratch", &area->addr, &size);
-+	}
-+
-+	early_memunmap(scratch, scratch_len);
-+
-+	if (!scratch)
-+		return;
-+
-+	memblock_reserve(scratch_phys, scratch_len);
-+
-+	/*
-+	 * Now that we have a viable region of scratch memory, let's tell
-+	 * the memblocks allocator to only use that for any allocations.
-+	 * That way we ensure that nothing scribbles over in use data while
-+	 * we initialize the page tables which we will need to ingest all
-+	 * memory reservations from the previous kernel.
-+	 */
-+	memblock_set_kho_scratch_only();
-+
-+	pr_info("setup: Found kexec handover data. Will skip init for some devices\n");
- }
-diff --git a/mm/memblock.c b/mm/memblock.c
-index d5d406a5160a..d28abf3def1c 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -2374,6 +2374,7 @@ void __init memblock_free_all(void)
- 	free_unused_memmap();
- 	reset_all_zones_managed_pages();
- 
-+	memblock_clear_kho_scratch_only();
- 	pages = free_low_memory_core_early();
- 	totalram_pages_add(pages);
- }
++static inline int kho_fill_kimage(struct kimage *image) { return 0; }
++static inline int kho_copy_fdt(struct kimage *image) { return 0; }
++#endif /* CONFIG_KEXEC_HANDOVER */
+ #endif /* LINUX_KEXEC_INTERNAL_H */
 -- 
 2.48.1.711.g2feabab25a-goog
 
