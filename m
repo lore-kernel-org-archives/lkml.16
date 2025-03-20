@@ -1,148 +1,200 @@
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE538225405
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:00:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C87A3204F85;
+	Thu, 20 Mar 2025 14:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742479260; cv=none; b=Dk9os9rMQcijITwckXzJ/PqnCPUuqwdfKx8mHqRUSJOscgu2eY5xIuqLM3nBgWUKugz45Vn9Sb/E4bKR6EUF3eCfyz3IdT7R0R9btScfRgHLnFE0xLqM5MKZKDauqo0Y8VPgB5vdE9Xi9s3lkRTcAzWI9FwMTxDOj0XZBlIPweE=
+	t=1742479306; cv=none; b=dhD+Di1+q+m32ekZZZl30bJ22mZIfHH+wDrYlDLT5PEmH6Z1iq31EBIAj5gGpaegV9BZgFqOY65qwYKDLH9Q7Rp62Gmn67RmhLBtqyWdpWyQ7PRx+CUmJBrzmntIkazezWpdyWQTokWVKILWUp/0PI0LWn+DvJC4okZngvCIi3s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742479260; c=relaxed/simple;
-	bh=tJcpx7kVoOVh62Qzq7CsqXZyteSS2xTmfx3MklEEb5g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ZG0HdZaQwUFRpuA1sG5klM8MskeBLhQIOHgefJT80q3ErZC5iXvERD4+g5P82he7nx9OZSaGZvqHWjLkw65wiipUCIRx+xfFljyyi+idgw9T4LrKLgyjap0Q6tJ7hmsxbsClRwC/YHj/kUPXoL3Zpv5AlJuygEl9CVvWIajHVXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ovGwlYVK; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ovGwlYVK"
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5499d2134e8so1120556e87.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 07:00:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742479257; x=1743084057; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+cpurPguaZZPLjWUcw85lV4P2hxnhe8DmTCMrQ+sP8E=;
-        b=ovGwlYVK5p5MCyM7n0n+8jzkYo3MDkQnvXTmQoBhq/Fjh5q1C8rjW8+ORWSc16MwdC
-         bfG2H8MJeRj1WXehec8O2cCg/yKJGsAJG6c2aSvvVjDVuAuWKHkNW7bKFLr9cHUW0cXS
-         OFIplJZpUJGcrZxpKZNOArUOjXFd8NcXyA4RNcOAfcjx8NcRArND8/CBRZlhB1k95wck
-         vEdwWTfLJR+uvJDNLiE6CdoXE4l9g9eBPfyoAzQh3ixQMw+V/7yzpV/DFJYm0fpcpumN
-         VvgkXx0rWCMtS6OCHQNWYM/7W048E8KX3lh+NXGxFqOEo6zAlH1+MZ/FuRNcD7rRE4IC
-         x7Iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742479257; x=1743084057;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+cpurPguaZZPLjWUcw85lV4P2hxnhe8DmTCMrQ+sP8E=;
-        b=ULPp1DdX4Ax+lQs75R9ZToHk2pNjSFrgt8+n2THamwHnIzIw/C+WkTs6YLoK7CuHsi
-         gCOw9P3zscAka3SKoL3xQiVc0RWsQgpDPJ+CtjTimSFLaH5JnugWhsecim/DpRAceCHh
-         2rSVovDxaUQCRX6tYmz/RxC2sPLlX0hbNWzFFnPM34tyFaIZn9u9sCmIvsO7CiraAdf1
-         qQEsgRWgDMGTXhJYeLW732f1ne7iVeIoS+HJ8DJmcfaLlihEOk6HQlvYf6nMnZTV+evE
-         L+ataXGju9i7rDPJjStgqKf5vjCBqJs3VP4WVQtYz/vepMu/+M82ryP142xHVHLnJykU
-         7ErA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCrcVor1sZMx5zSUg1dHFEmw6lDPs03bG+zYA/a82bYD0zPH0TEg06xRRG1NCPp/4oEDBV4svRKO8B2ko=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3VA+TGSbZujOznt1cW1uessp0bn0lyYjGWe22ETnm0jtuRrvM
-	o5fbNOB+5dBQiC2ub/1V7Mx0HQqJXJso9+jTLbkNpeqM86ZQUwNU5Nt6LAzOr78=
-X-Gm-Gg: ASbGncvlFAZsaHyN6g72QzAEfnPa8aoI9LC0krqtjvFj3/r+VVO26zl1MgAWXc+luPl
-	0tE8rEHVmJf3271oQlgsgcu2MNbqhVIeHD1GkaUfCuPpmvCfQjCt8atqYAZWmL48sMQ3hfRxa7n
-	VvmLNP7qbU8DZkoE2ApHUfVnXoA6Dva/T/TkagLZg3r4ZTfY+Mh2nwDynr8lOu4VE7hTXgq9YVm
-	xb90u5cVPnRYlTwbIQWAFbuUABlfDhSopKF7xljTqXk1+eze7iWnpaFzMGoYeHg2K0QX/y2ucNq
-	hIhCX7TU/zDuK/RpVA6Efhd81EQyAz2ML+zWamsWweYMs0r8wf2FIO1lDtpEx4ZwkCoIvE16ejw
-	Z8RZsLePsVap9jT0fyETyQY29y2iFeg==
-X-Google-Smtp-Source: AGHT+IFI1fZrjfRWED8P3YwlNenPg/UaJprkHPw65/8Gv1KQD06yFcLy7lNo8+Ww7atrOreTQU9wBQ==
-X-Received: by 2002:a05:6512:400c:b0:549:9078:dd46 with SMTP id 2adb3069b0e04-54acb21a517mr2932004e87.43.1742479256977;
-        Thu, 20 Mar 2025 07:00:56 -0700 (PDT)
-Received: from uffe-tuxpro14.. (h-178-174-189-39.A498.priv.bahnhof.se. [178.174.189.39])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-549ba864dd9sm2295029e87.148.2025.03.20.07.00.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 07:00:56 -0700 (PDT)
-From: Ulf Hansson <ulf.hansson@linaro.org>
-To: linux-mmc@vger.kernel.org,
-	Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] mmc: core: Add support for graceful host removal for SD
-Date: Thu, 20 Mar 2025 15:00:36 +0100
-Message-ID: <20250320140040.162416-6-ulf.hansson@linaro.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250320140040.162416-1-ulf.hansson@linaro.org>
-References: <20250320140040.162416-1-ulf.hansson@linaro.org>
+	s=arc-20240116; t=1742479306; c=relaxed/simple;
+	bh=EbDfeZBW+Qqxz9QJQfg9SBKQSFAEasL45ys9LJXsEhQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Zt0ir2zis7GaWeMXWyVwG0BElX/O84pRqnBm+YrLkfNiZ8Z8kgtEDWlmRrS8m4Tp5vfp3eDfaqoVIEWjhW0T7ZJ12e6I4WPVtDKxutK7U+EuIQ/yq7/u4RlFeME9uXYRG0CU9/XPT1qrS3nwtF6PJZioAPWN3ryL7OoT8tRA+Jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFF5A113E;
+	Thu, 20 Mar 2025 07:01:51 -0700 (PDT)
+Received: from [10.57.84.158] (unknown [10.57.84.158])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7EAC3F63F;
+	Thu, 20 Mar 2025 07:01:39 -0700 (PDT)
+Message-ID: <2cbca34c-477c-4055-b388-a13bb6c22b4d@arm.com>
+Date: Thu, 20 Mar 2025 14:01:38 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/3] arm64: Add BBM Level 2 cpu feature
+Content-Language: en-GB
+To: Ard Biesheuvel <ardb@kernel.org>,
+ =?UTF-8?Q?Miko=C5=82aj_Lenczewski?= <miko.lenczewski@arm.com>
+Cc: suzuki.poulose@arm.com, yang@os.amperecomputing.com, corbet@lwn.net,
+ catalin.marinas@arm.com, will@kernel.org, jean-philippe@linaro.org,
+ robin.murphy@arm.com, joro@8bytes.org, akpm@linux-foundation.org,
+ mark.rutland@arm.com, joey.gouly@arm.com, maz@kernel.org,
+ james.morse@arm.com, broonie@kernel.org, oliver.upton@linux.dev,
+ baohua@kernel.org, david@redhat.com, ioworker0@gmail.com, jgg@ziepe.ca,
+ nicolinc@nvidia.com, mshavit@google.com, jsnitsel@redhat.com,
+ smostafa@google.com, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ iommu@lists.linux.dev
+References: <20250319150533.37440-2-miko.lenczewski@arm.com>
+ <20250319150533.37440-3-miko.lenczewski@arm.com>
+ <CAMj1kXFOofRCiVHxxxBZMGQHRH-ghtqNxgd=uww9D4sr4vvjEQ@mail.gmail.com>
+From: Ryan Roberts <ryan.roberts@arm.com>
+In-Reply-To: <CAMj1kXFOofRCiVHxxxBZMGQHRH-ghtqNxgd=uww9D4sr4vvjEQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-An mmc host driver may allow to unbind from its corresponding host device.
-If an SD card is attached to the host, the mmc core will just try to cut
-the power for it, without obeying to the SD spec that potentially may
-damage the card.
+On 20/03/2025 13:37, Ard Biesheuvel wrote:
+> On Wed, 19 Mar 2025 at 16:06, Mikołaj Lenczewski
+> <miko.lenczewski@arm.com> wrote:
+>>
+>> The Break-Before-Make cpu feature supports multiple levels (levels 0-2),
+>> and this commit adds a dedicated BBML2 cpufeature to test against
+>> support for, as well as a kernel commandline parameter to optionally
+>> disable BBML2 altogether.
+>>
+>> This is a system feature as we might have a big.LITTLE architecture
+>> where some cores support BBML2 and some don't, but we want all cores to
+>> be available and BBM to default to level 0 (as opposed to having cores
+>> without BBML2 not coming online).
+>>
+>> To support BBML2 in as wide a range of contexts as we can, we want not
+>> only the architectural guarantees that BBML2 makes, but additionally
+>> want BBML2 to not create TLB conflict aborts. Not causing aborts avoids
+>> us having to prove that no recursive faults can be induced in any path
+>> that uses BBML2, allowing its use for arbitrary kernel mappings.
+>> Support detection of such CPUs.
+>>
+>> Signed-off-by: Mikołaj Lenczewski <miko.lenczewski@arm.com>
+>> ---
+>>  .../admin-guide/kernel-parameters.txt         |  3 +
+>>  arch/arm64/Kconfig                            | 11 +++
+>>  arch/arm64/include/asm/cpucaps.h              |  2 +
+>>  arch/arm64/include/asm/cpufeature.h           |  5 ++
+>>  arch/arm64/kernel/cpufeature.c                | 68 +++++++++++++++++++
+>>  arch/arm64/kernel/pi/idreg-override.c         |  2 +
+>>  arch/arm64/tools/cpucaps                      |  1 +
+>>  7 files changed, 92 insertions(+)
+>>
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index fb8752b42ec8..3e4cc917a07e 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -453,6 +453,9 @@
+>>         arm64.no32bit_el0 [ARM64] Unconditionally disable the execution of
+>>                         32 bit applications.
+>>
+>> +       arm64.nobbml2   [ARM64] Unconditionally disable Break-Before-Make Level
+>> +                       2 support
+>> +
+>>         arm64.nobti     [ARM64] Unconditionally disable Branch Target
+>>                         Identification support
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 940343beb3d4..49deda2b22ae 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -2057,6 +2057,17 @@ config ARM64_TLB_RANGE
+>>           The feature introduces new assembly instructions, and they were
+>>           support when binutils >= 2.30.
+>>
+>> +config ARM64_BBML2_NOABORT
+>> +       bool "Enable support for Break-Before-Make Level 2 detection and usage"
+>> +       default y
+>> +       help
+>> +         FEAT_BBM provides detection of support levels for break-before-make
+>> +         sequences. If BBM level 2 is supported, some TLB maintenance requirements
+>> +         can be relaxed to improve performance. We additonally require the
+>> +         property that the implementation cannot ever raise TLB Conflict Aborts.
+>> +         Selecting N causes the kernel to fallback to BBM level 0 behaviour
+>> +         even if the system supports BBM level 2.
+>> +
+>>  endmenu # "ARMv8.4 architectural features"
+>>
+>>  menu "ARMv8.5 architectural features"
+>> diff --git a/arch/arm64/include/asm/cpucaps.h b/arch/arm64/include/asm/cpucaps.h
+>> index 0b5ca6e0eb09..2d6db33d4e45 100644
+>> --- a/arch/arm64/include/asm/cpucaps.h
+>> +++ b/arch/arm64/include/asm/cpucaps.h
+>> @@ -23,6 +23,8 @@ cpucap_is_possible(const unsigned int cap)
+>>                 return IS_ENABLED(CONFIG_ARM64_PAN);
+>>         case ARM64_HAS_EPAN:
+>>                 return IS_ENABLED(CONFIG_ARM64_EPAN);
+>> +       case ARM64_HAS_BBML2_NOABORT:
+>> +               return IS_ENABLED(CONFIG_ARM64_BBML2_NOABORT);
+>>         case ARM64_SVE:
+>>                 return IS_ENABLED(CONFIG_ARM64_SVE);
+>>         case ARM64_SME:
+>> diff --git a/arch/arm64/include/asm/cpufeature.h b/arch/arm64/include/asm/cpufeature.h
+>> index e0e4478f5fb5..108ef3fbbc00 100644
+>> --- a/arch/arm64/include/asm/cpufeature.h
+>> +++ b/arch/arm64/include/asm/cpufeature.h
+>> @@ -866,6 +866,11 @@ static __always_inline bool system_supports_mpam_hcr(void)
+>>         return alternative_has_cap_unlikely(ARM64_MPAM_HCR);
+>>  }
+>>
+>> +static inline bool system_supports_bbml2_noabort(void)
+>> +{
+>> +       return alternative_has_cap_unlikely(ARM64_HAS_BBML2_NOABORT);
+>> +}
+>> +
+>>  int do_emulate_mrs(struct pt_regs *regs, u32 sys_reg, u32 rt);
+>>  bool try_emulate_mrs(struct pt_regs *regs, u32 isn);
+>>
+>> diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+>> index d561cf3b8ac7..1a4adcda267b 100644
+>> --- a/arch/arm64/kernel/cpufeature.c
+>> +++ b/arch/arm64/kernel/cpufeature.c
+>> @@ -2176,6 +2176,67 @@ static bool hvhe_possible(const struct arm64_cpu_capabilities *entry,
+>>         return arm64_test_sw_feature_override(ARM64_SW_FEATURE_OVERRIDE_HVHE);
+>>  }
+>>
+>> +static bool cpu_has_bbml2_noabort(unsigned int cpu_midr)
+>> +{
+> 
+> We generally start these block comments with just /* on the first line
+> 
+>> +       /* We want to allow usage of bbml2 in as wide a range of kernel contexts
+>> +        * as possible. This list is therefore an allow-list of known-good
+>> +        * implementations that both support bbml2 and additionally, fulfill the
+>> +        * extra constraint of never generating TLB conflict aborts when using
+>> +        * the relaxed bbml2 semantics (such aborts make use of bbml2 in certain
+>> +        * kernel contexts difficult to prove safe against recursive aborts).
+>> +        *
+>> +        * Note that implementations can only be considered "known-good" if their
+>> +        * implementors attest to the fact that the implementation never raises
+>> +        * TLBI conflict aborts for bbml2 mapping granularity changes.
+>> +        */
+>> +       static const struct midr_range supports_bbml2_noabort_list[] = {
+>> +               MIDR_REV_RANGE(MIDR_CORTEX_X4, 0, 3, 0xf),
+>> +               MIDR_REV_RANGE(MIDR_NEOVERSE_V3, 0, 2, 0xf),
+>> +               {}
+>> +       };
+>> +
+> 
+> Why on earth is this needed? Is there nothing in the architecture that
+> can inform us about this? That seems like a huge oversight to me ...
 
-Let's fix this problem by implementing a graceful power-down of the card at
-host removal.
+Currently the architecture can only tell us about the BBM support level.
+Currently level 2 is the highest and that permits an implementation to raise a
+conflict abort instead of handling it in HW.
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/mmc/core/sd.c | 25 +++++++++++++++----------
- 1 file changed, 15 insertions(+), 10 deletions(-)
+Since this series only relies on BBML2 for user space memory, we believe we
+could contain and handle any conflict abort safely (the first version of this
+series handled the abort). But Yang Shi has a series on list that aims to use
+BBML2 to enable dynamically splitting the linear map. It becomes much harder to
+reason about the safety of any conflict abort in that case.
 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index 8eba697d3d86..cb4254a43f85 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -1596,15 +1596,6 @@ static int mmc_sd_init_card(struct mmc_host *host, u32 ocr,
- 	return err;
- }
- 
--/*
-- * Host is being removed. Free up the current card.
-- */
--static void mmc_sd_remove(struct mmc_host *host)
--{
--	mmc_remove_card(host->card);
--	host->card = NULL;
--}
--
- /*
-  * Card detection - card is alive.
-  */
-@@ -1630,7 +1621,8 @@ static void mmc_sd_detect(struct mmc_host *host)
- 	mmc_put_card(host->card, NULL);
- 
- 	if (err) {
--		mmc_sd_remove(host);
-+		mmc_remove_card(host->card);
-+		host->card = NULL;
- 
- 		mmc_claim_host(host);
- 		mmc_detach_bus(host);
-@@ -1730,6 +1722,19 @@ static int _mmc_sd_suspend(struct mmc_host *host)
- 	return err;
- }
- 
-+/*
-+ * Host is being removed. Free up the current card and do a graceful power-off.
-+ */
-+static void mmc_sd_remove(struct mmc_host *host)
-+{
-+	get_device(&host->card->dev);
-+	mmc_remove_card(host->card);
-+
-+	_mmc_sd_suspend(host);
-+
-+	put_device(&host->card->dev);
-+	host->card = NULL;
-+}
- /*
-  * Callback for suspend
-  */
--- 
-2.43.0
+Will was keen to take this approach were we decide if the HW supports
+"BBML2+NOABORT" semanitics based on the MIDR. Plans are in flight to fix the
+arch so we can tidy this up long term, but Will didn't want to hold up Ampere.
+
+Thanks,
+Ryan
+
 
