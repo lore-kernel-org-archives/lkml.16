@@ -1,114 +1,78 @@
-Received: from omta036.useast.a.cloudfilter.net (omta036.useast.a.cloudfilter.net [44.202.169.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8903D224888
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E002248B4;
+	Thu, 20 Mar 2025 10:30:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742466530; cv=none; b=XyhzrMkJLvcNSyymKmcm0Jaqoiz1e0ssrraR8OJJN/IALTRQe+7OphtLyhiKWlia6VcaEjT6wTufPabrMi14XfuQugvtB/defxyE4pdFXlyjo4ZWp/aUffIz+opjt6tOK+BaVq2gFd0+nYDKkT3D/78GIOXuNcgeX1SC5JvDIyM=
+	t=1742466602; cv=none; b=udKwHMzRZP/ro6sLGogBlk65Wdw91IYJA8nMUvH6Vw2CpnoUJIiWKmcAmDTXa6nHewmSwaU+CscJOkjn89H47h7QiJ/7Y140zyRGLzHF2sQ6PfPvHKNh9sjxiLt11PqKcVeJuagWqWUS0gTJWF/z+am8GwlSnfwOqtBEgmzP7hE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742466530; c=relaxed/simple;
-	bh=khC4F+I13TkYeZQRBsGXVV/+15Z5FgfMSYY+HvGff3E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D6hemG6kFjrajIb2oFckpXnLojKHGGNexBjiTS2E+H8ulNRwzFB+Bit23uyqwb9Amk0r4BiJJJ9PkwQALrKBPqhcqKsrAhCd8OYt9mM1hP3BDEXu3csfrktUL1gSO/WARf6LXGsa4IMRx/Ye85FY/vk3gSfcXCLwllsXW+YGf3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=EH33pLp4; arc=none smtp.client-ip=44.202.169.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
+	s=arc-20240116; t=1742466602; c=relaxed/simple;
+	bh=HvW+yK+cfSz6X1+LbzCfZ79HknqBLpkWp03giIKD3lo=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=iwYJKg2LxJgnxToPvSt3KCXPoEcojUR8YwdR68AeMy6B4DzRPbevJ7Ac3uPJVSczdVOq9JyqUF5wOR7IxtixuzPs+FEtxS1DrnFwHjd1f7WHly5yoaPKiRWvzOhzwbSQyROfK22QkThdmF7FvfmFuv8SnsGuQvCJHbDkVg87oAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YsHtC2gF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="EH33pLp4"
-Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
-	by cmsmtp with ESMTPS
-	id us5dtaQbMzZPavD8ptWAeX; Thu, 20 Mar 2025 10:28:47 +0000
-Received: from box5620.bluehost.com ([162.241.219.59])
-	by cmsmtp with ESMTPS
-	id vD8otRlL8RlrsvD8pt6mct; Thu, 20 Mar 2025 10:28:47 +0000
-X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=67dbeddf
- a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
- a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
- a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
- a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
-	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=axMDLpPUFtze2iTFic/lgRRWODnye8AgYMuvuh4UIEI=; b=EH33pLp44M4dTjP49mBCCq791v
-	ZByVNM5YChupJoGEcTrhwtJvNnx6uh4TgfTRZ+fDnW7OBygZPZJkfafT90MMZ644/TZbGtKHpOopI
-	msg88KXLPeCTRxiVmb4zcgkZcfEzLreDWKNnRfL0ddEYs3yaxbYmtIAZc8MlRVGkhKxEQFsTiFRuz
-	/voE6ZXJ20xgUqgfoZjsiVPZMLTgim/O9jmSh2MAaQMJJXNISEalwEBA1a3E/j6RP7Zg8goppxmNj
-	jkI0BupvqxeXmKPy2B64bKSB3koKi03NM5bfDQhq1UqPZj0wQtxWNhAySVP4iZoWXCmUpBF7//Auf
-	jTWFhxSQ==;
-Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:48952 helo=[10.0.1.116])
-	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-	(Exim 4.98.1)
-	(envelope-from <re@w6rz.net>)
-	id 1tvD8m-00000003O0V-3XXh;
-	Thu, 20 Mar 2025 04:28:44 -0600
-Message-ID: <2ff822ea-589b-4370-89a8-d9519da6989d@w6rz.net>
-Date: Thu, 20 Mar 2025 03:28:41 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YsHtC2gF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E81BC4CEEA;
+	Thu, 20 Mar 2025 10:30:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742466602;
+	bh=HvW+yK+cfSz6X1+LbzCfZ79HknqBLpkWp03giIKD3lo=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=YsHtC2gFw73GoQ7d8h636mMRm5qXhy50XrWpjyZFb32cbwS/f4sMiaTasUEp3IQ3p
+	 feG+2DJUaNtHsP55K4RGVHHEzFFpeuqoNOvunDskEWkP9HArA3JxhQKWMd2nJrkxJ0
+	 Ey1JEkFUCVhm9dlnpjQTImugB7jaKoZcPpGX0HDztesGA7ikFjz11BLlLKZu6qiXPw
+	 PVuav+LUnV866RmApjyO54Isx5Q21VeDSDA/VBOEL5MrlyLDVLZKTCX7uDvHHCoI+G
+	 jdozQPt+wwYKUkrO3F1danStATATMEqB8gvDW3JUB7b+Yl7TP1Y95o5/FzhOgBZMkv
+	 /nlh2/KeB4wtw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33DB43806654;
+	Thu, 20 Mar 2025 10:30:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6.6 000/166] 6.6.84-rc1 review
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
-Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
- torvalds@linux-foundation.org, akpm@linux-foundation.org,
- linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
- lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
- f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
- rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
-References: <20250319143019.983527953@linuxfoundation.org>
-Content-Language: en-US
-From: Ron Economos <re@w6rz.net>
-In-Reply-To: <20250319143019.983527953@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - box5620.bluehost.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - w6rz.net
-X-BWhitelist: no
-X-Source-IP: 73.223.253.157
-X-Source-L: No
-X-Exim-ID: 1tvD8m-00000003O0V-3XXh
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:48952
-X-Source-Auth: re@w6rz.net
-X-Email-Count: 54
-X-Org: HG=bhshared;ORG=bluehost;
-X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
-X-Local-Domain: yes
-X-CMAE-Envelope: MS4xfMlHX0qBV66tyxd8YRU79PXY1wEZsMPftKDFuVEEzpjGYzinpxaLb5Uk+jK/kCyw4hwzChCMA2pvS7vBq0yDw1bQUa+Rti5Qz1KDJbaDzK1JZOkJY5c5
- N90Lpq5gDszMK2tZyvGGpCsZWuV79nQpt2K3qyM6ZzDt56y4KdzgBJ9yhMc0tldLb6JwzFZfnuUTcXCqHh46fMxVsGdPe2g1mMs=
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] net: ti: icssg-prueth: Add lock to stats
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174246663785.1712233.14659376394563532017.git-patchwork-notify@kernel.org>
+Date: Thu, 20 Mar 2025 10:30:37 +0000
+References: <20250314102721.1394366-1-danishanwar@ti.com>
+In-Reply-To: <20250314102721.1394366-1-danishanwar@ti.com>
+To: MD Danish Anwar <danishanwar@ti.com>
+Cc: saikrishnag@marvell.com, m-malladi@ti.com, diogo.ivo@siemens.com,
+ pabeni@redhat.com, kuba@kernel.org, edumazet@google.com, davem@davemloft.net,
+ andrew+netdev@lunn.ch, linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, srk@ti.com, vigneshr@ti.com,
+ rogerq@kernel.org
 
-On 3/19/25 07:29, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 6.6.84 release.
-> There are 166 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Fri, 21 Mar 2025 14:29:55 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.84-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Hello:
 
-Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
+This patch was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Tested-by: Ron Economos <re@w6rz.net>
+On Fri, 14 Mar 2025 15:57:21 +0530 you wrote:
+> Currently the API emac_update_hardware_stats() reads different ICSSG
+> stats without any lock protection.
+> 
+> This API gets called by .ndo_get_stats64() which is only under RCU
+> protection and nothing else. Add lock to this API so that the reading of
+> statistics happens during lock.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net] net: ti: icssg-prueth: Add lock to stats
+    https://git.kernel.org/netdev/net/c/47a9b5e52abd
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
