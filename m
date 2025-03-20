@@ -1,106 +1,143 @@
-Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E42221DA0
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:32:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C41C5224251;
+	Thu, 20 Mar 2025 09:32:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463127; cv=none; b=JK0oegQIuHUD8invuAAoMJ1VisgN6DXGupwVl94GFq+ck187UE37f3VNvgtPxe2UJTQQTPuOOmLXuayoyTJ7D8ZGNHbTYfr09x80b4WzTuaeDGUoT2zvOYZbn7XCBiSqE+ccI2PrPk5k+EIU/+ckrx4QfuQmKiAcJc7ecvdZ1jQ=
+	t=1742463131; cv=none; b=Eam8y2qjyOyFuVrWlWC3MsnMbTiRbjGqjWhK0lsJi350ZZlyARQCgrt8/98T/JzhyPpPQAizjYtTfopTFUsgyDyRl/x16qm3XNnWKwZsaZmJcOIgBTJfXNeDHDFAsOwGdmcpFrOYDQd8IrkkQm+lQYRPprH3Zz7559Dmp69ZW4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463127; c=relaxed/simple;
-	bh=cP96Ga6Wb2QsqdS2mmypFULWz7tPrLEpp/5d+TrLzAU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=G3iToiBayRfTn+vNIQ+liKn5VbqTF+Dhn4PY5FWGZJxygR0iEws83bQbC4Fbn+8q2PUCJHqR4ITkNXM0heQS84pomxyW97EiVJzbng/U46tob7jbrbyoEwQ0eW1BxHCNSU7GJ97nEUV+H/T5TzABKrkYy8hXOpdDPjMaX+04JKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
-Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
-	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id A88995FE16;
-	Thu, 20 Mar 2025 10:31:12 +0100 (CET)
-From: Rolf Eike Beer <eb@emlix.com>
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Bert Karwatzki <spasswolf@web.de>, Lu Baolu <baolu.lu@linux.intel.com>,
- Jerry Snitselaar <jsnitsel@redhat.com>,
- Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>,
- Tomasz Jeznach <tjeznach@rivosinc.com>, Nick Kossifidis <mick@ics.forth.gr>,
- Sebastien Boeuf <seb@rivosinc.com>, Palmer Dabbelt <palmer@rivosinc.com>,
- Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Alexandre Ghiti <alex@ghiti.fr>, Robin Murphy <robin.murphy@arm.com>,
- linux-arm-kernel@lists.infradead.org, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>
-Subject: [PATCHv2 0/6] make vendor specific subdirectory inclusion conditional
-Date: Thu, 20 Mar 2025 10:01:45 +0100
-Message-ID: <12652899.O9o76ZdvQC@devpool47.emlix.com>
-Organization: emlix GmbH
+	s=arc-20240116; t=1742463131; c=relaxed/simple;
+	bh=tHuvJnP4uRK63orzy6zArkuxjyWYWccb/DmPEXCqXuA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=ECDbMPL4KhWrlxnGnYHDGL+qg6eTdDwAVLvgAQpFAC8tF+ypPsbF5VfiQ2OBODDViEFlcFTPr8jsx9oBUEBsBwPweAQMJf+5fcfiqhJ+SvR70cX7GqmpV3ximYCSSN6RjA0kXEUrVMvxQWTlXTqh0htS9Et5dFVjW4Rr9iaaD88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=bimXV2Oz; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bimXV2Oz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742463125;
+	bh=8uxhXqcFzCfeFQ8k22+d/lRU0NYGv1JJCI64sK3b1sY=;
+	h=Date:From:To:Cc:Subject:From;
+	b=bimXV2Oz/et+qpkp60c153GCGITWCqyp7W96swbvTLvv3SeK3fXRCuFM2mRAgQaIR
+	 V1QClx42tVLdzp+WxpfwZLxkCwVuGsvVwgSbSCo9P2N8Zc0FpC55za7dmAJs0O3TmM
+	 gHQnpN9rcUgOhRa7m7ZFpol2C7kpEnedCLkVQ89INQ/X00o3Ggh3rCfcifw7gxTfqq
+	 8vITmqNBOZER1QZTkMV99zPkF9HHAddnHLar0iODi2BqHcbIehtzpmcmosXBqRxPrj
+	 /4CV5zdxv8AruO7EuaYh519gBeZEiCxPHgwY6oYI+vAAWBRmNMP2c/g/vFu2g5smYf
+	 AX1n+qMgHH8lw==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZJL2F0Vwkz4wj2;
+	Thu, 20 Mar 2025 20:32:04 +1100 (AEDT)
+Date: Thu, 20 Mar 2025 20:32:03 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Christoffer Dall <cdall@cs.columbia.edu>, Marc Zyngier <maz@kernel.org>
+Cc: Oliver Upton <oliver.upton@linux.dev>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the kvm-arm tree
+Message-ID: <20250320203203.1de92b98@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart5893241.DvuYhMxLoT";
- micalg="pgp-sha256"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; boundary="Sig_//o_m+Z2CJp8xH/O=gM6kZ0E";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
---nextPart5893241.DvuYhMxLoT
+--Sig_//o_m+Z2CJp8xH/O=gM6kZ0E
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"; protected-headers="v1"
-From: Rolf Eike Beer <eb@emlix.com>
-To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
-Date: Thu, 20 Mar 2025 10:01:45 +0100
-Message-ID: <12652899.O9o76ZdvQC@devpool47.emlix.com>
-Organization: emlix GmbH
-MIME-Version: 1.0
 
-I found it strange that the vendor specific subdirectories were uncondition=
-ally=20
-added. Everything in these directories obviously depends on the specific Kc=
-onfig=20
-option. This series cleans this up by making the directory itself depend on=
+Hi all,
+
+After merging the kvm-arm tree, today's linux-next build (arm64 defconfig)
+failed like this:
+
+arch/arm64/kernel/cpu_errata.c: In function 'has_impdef_pmuv3':
+arch/arm64/kernel/cpu_errata.c:279:38: error: passing argument 1 of 'is_mid=
+r_in_range_list' makes pointer from integer without a cast [-Wint-conversio=
+n]
+  279 |         return is_midr_in_range_list(read_cpuid_id(), impdef_pmuv3_=
+cpus);
+      |                                      ^~~~~~~~~~~~~~~
+      |                                      |
+      |                                      u32 {aka unsigned int}
+arch/arm64/kernel/cpu_errata.c:47:53: note: expected 'const struct midr_ran=
+ge *' but argument is of type 'u32' {aka 'unsigned int'}
+   47 | bool is_midr_in_range_list(struct midr_range const *ranges)
+      |                            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+arch/arm64/kernel/cpu_errata.c:279:16: error: too many arguments to functio=
+n 'is_midr_in_range_list'
+  279 |         return is_midr_in_range_list(read_cpuid_id(), impdef_pmuv3_=
+cpus);
+      |                ^~~~~~~~~~~~~~~~~~~~~
+arch/arm64/kernel/cpu_errata.c:47:6: note: declared here
+   47 | bool is_midr_in_range_list(struct midr_range const *ranges)
+      |      ^~~~~~~~~~~~~~~~~~~~~
+
+Caused by commit
+
+  1f561ad4b8f5 ("Merge branch 'kvm-arm64/pv-cpuid' into new-next")
+
+The merge missed fixing up this instance from commit
+
+  e1231aacb065 ("arm64: Enable IMP DEF PMUv3 traps on Apple M*")
+
+I have applied the following patch for today (but this should go into
+the kvm-arm tree (perhaps squashed into the above merge).
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Thu, 20 Mar 2025 20:24:04 +1100
+Subject: [PATCH] fix up for "Merge branch 'kvm-arm64/pv-cpuid' into new-nex=
+t"
+
+interacting with "arm64: Enable IMP DEF PMUv3 traps on Apple M*"
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ arch/arm64/kernel/cpu_errata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
+index caac9e10a5bb..b55f5f705750 100644
+--- a/arch/arm64/kernel/cpu_errata.c
++++ b/arch/arm64/kernel/cpu_errata.c
+@@ -276,7 +276,7 @@ static bool has_impdef_pmuv3(const struct arm64_cpu_cap=
+abilities *entry, int sco
+ 	if (pmuver !=3D ID_AA64DFR0_EL1_PMUVer_IMP_DEF)
+ 		return false;
 =20
-the respective option which looks more natural to me.
+-	return is_midr_in_range_list(read_cpuid_id(), impdef_pmuv3_cpus);
++	return is_midr_in_range_list(impdef_pmuv3_cpus);
+ }
+=20
+ static void cpu_enable_impdef_pmuv3_traps(const struct arm64_cpu_capabilit=
+ies *__unused)
+--=20
+2.45.2
 
-I must confess that I am too lazy to find a good solution for the "arm/"=20
-directory, so I left it as is.
+--=20
+Cheers,
+Stephen Rothwell
 
-Regards,
-
-Eike
-
-=2D--
-Changes in v2:
-=2D clean up subdirectory Makefiles to use obj-y now
-=2D add arm/arm-smmu-v3 and iommufd patches
-=2D-=20
-Rolf Eike Beer
-
-emlix GmbH
-Headquarters: Berliner Str. 12, 37073 G=C3=B6ttingen, Germany
-Phone +49 (0)551 30664-0, e-mail info@emlix.com
-District Court of G=C3=B6ttingen, Registry Number HR B 3160
-Managing Directors: Heike Jordan, Dr. Uwe Kracke
-VAT ID No. DE 205 198 055
-Office Berlin: Panoramastr. 1, 10178 Berlin, Germany
-Office Bonn: Bachstr. 6, 53115 Bonn, Germany
-http://www.emlix.com
-
-emlix - your embedded Linux partner
---nextPart5893241.DvuYhMxLoT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+--Sig_//o_m+Z2CJp8xH/O=gM6kZ0E
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
 -----BEGIN PGP SIGNATURE-----
 
-iLMEAAEIAB0WIQQ/Uctzh31xzAxFCLur5FH7Xu2t/AUCZ9vZeQAKCRCr5FH7Xu2t
-/KzhBACEdmdr0bY0N6eQxB1byUc3X3h+0fMpnAPDybVl8uNLVdes2BnFk1VDMZCt
-Etxao2Oyzq2vNJuDl8zYA8utbXiiIz0LeenQwyrVo1kgEev3GkJbqRwIkpyko3q/
-K8Esb1BlIF85LDn81KbjQgi2YHG0fMEuRHID/dL2/4SUbTConw==
-=+N/3
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfb4JMACgkQAVBC80lX
+0GxKiQf/RRuXAMkWtwGPAX+9PZUo3jkIm6O1I/mDrWFBkDJoRclHtCVkWIBE5ZJ8
+8SMXolqy+tjPajY6pkdBQnB8Lgs8AOSpDRBa6zUmhgrGMtbyzwUxF5Cxz90qaW5z
+njfwCgJwFJYei6dRfPVytGnJvmNZx1pgCNVwIjTKTV9/QMudPgCn8z0NIRIB0qG6
+uqYhhE+a/di8rEODjJlcjJ3V45p1U0XGkiAX5HM9D/gQlnHMvBcT9TfcMyFl4vDD
+f3MExx9srYsPl6xroMiNsH//23g0guLZD3OQg2ETsz3N4PNjU5ooqDXJw6fGyW1U
+orCIy20EEpamtKSkefVn1ynP4LD0Sg==
+=6dJ7
 -----END PGP SIGNATURE-----
 
---nextPart5893241.DvuYhMxLoT--
-
-
-
+--Sig_//o_m+Z2CJp8xH/O=gM6kZ0E--
