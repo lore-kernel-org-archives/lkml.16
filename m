@@ -1,136 +1,93 @@
-Received: from mail-pj1-f48.google.com (mail-pj1-f48.google.com [209.85.216.48])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF5C1E7C23;
-	Thu, 20 Mar 2025 08:09:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDE21CC8B0
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 08:13:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742458183; cv=none; b=lZJa7BcojtFCoT+M4McJaWYYiLeEr9Wj4yvoFpen5YaCYO5o3I0DSSEAHcnYiUKmKKm6r70yjjnvqz2ZYF9b22yPiMlvPraow2YEJAsha5PmbUCNb3ArQ3CGOgOGPKq6f5dkIw0MvmxgeUp5BxK5J9e9JEi+YXewcJWSWK+Ph9M=
+	t=1742458418; cv=none; b=oh8hAdSkwDEvBvcDkREPU04i1hmtO5CITKofDQ7YyVVVNFsWN+4uTRoebahv5RGs0N1jWFDcxcLUDzTLFbweJOC9uLlLX57fAnH3ns5X2wblc3/I70hYSkSPZ7oCNIgCQwTeqPXfqC0edk6GULhSEuwNpfTlOkTlWuOwjxX2a7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742458183; c=relaxed/simple;
-	bh=JMhkC/qzy7CJY247FAczSaMR9th3O24RtFPlon4S9k4=;
+	s=arc-20240116; t=1742458418; c=relaxed/simple;
+	bh=6Ji1RBIOpRF3KKxjONADrWSLZ8hGYxB9lOHKQd1SPN8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y6XphAz3tgydVUQYTs9zWqczXwhjVE6sVeyY2RjheXQX9Jz4ZHACpJxVy8SsO6qUdoAlfjiiVOWP5PnTrLAf797yRdug/kZS77Mnyi/P2Dl9ceBwG2gd3EjGcHOiWL6sFFe87z8aTVz3uP4VnbOJdqSuDCWQex32Ij38uK6wSZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BpLMDD28; arc=none smtp.client-ip=209.85.216.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	 To:Cc:Content-Type; b=AIeSRZbZIRjhITiz6oUaX58cSDR1woxUKNODRurBcT1k3OpOg+O+jOIeudfu7J/ej/JZegyTgmqjNl4b4Gj64Hi8nQkF93dUlzWYSQnfoFDRhLsqLpgDGlkFMJQWzcCOih9AtMTU0mjo4Y8U3vkSyHLWduSLVkje+RcjgArinQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nWhxWzso; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BpLMDD28"
-Received: by mail-pj1-f48.google.com with SMTP id 98e67ed59e1d1-2ff80290e44so1060159a91.0;
-        Thu, 20 Mar 2025 01:09:40 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nWhxWzso"
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-54ac9b3ddf6so565672e87.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 01:13:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742458180; x=1743062980; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=JMhkC/qzy7CJY247FAczSaMR9th3O24RtFPlon4S9k4=;
-        b=BpLMDD28q6FfdptARc3ZyhkUN3WE/jwtx5No8PkEQPesXtvGHxPFlpotoSqRcOstm9
-         xecUrdvSJQwKmTESFaKLYGOfrxBZQ6MbDZGeoX4ySMNxOMAVdvt+3vxsZp2VzQ4qJwVk
-         JBy3nU6rjn6vZYeb8jAl4NC7WHF5UtWA454Nrv5j9kO3PsygBPHyELh73Id+eZyDb3f3
-         ia+KGjfKE5b6yCcr09q9QeYULYIh+H7z3L5RGtJeVCSnkbcOhpZ6fIVsBbIGU0h2dQH6
-         6SijttiAgUSaIeGI1XoxjUAJCMjHUFKOaAGCQSm0oy7c5H5rkz/5Zqnxom//fbPm24X6
-         K2Dw==
+        d=linaro.org; s=google; t=1742458413; x=1743063213; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FH/3f5Dac1JZ7PB6fCTYluQ28FDUu14YKXsBxY9FGQg=;
+        b=nWhxWzsobggiluwJCxbDVfDnPmsDCfvAABhSrHVU5Iw1vBbjUXA1W/RkeIUwka7q0N
+         i37OH3tnLf1Na42ip7whz+23z+xpuTwg0QViQMQwueWsGXdEWqesVJxYMqg+TJdEVK2I
+         5G0wFEosfn1XtAEaq7eRrnQPdXuUE00Uhqhr3tGOZgfcTOKv2Ew2yHN5BudbFdfaAwaa
+         NdTs6KcEJNc9SB6rTscuRJwz4pfJ8tHKnYRvx1+n98L8LOa35gjHvGaFZOMYrA2xQpbJ
+         n/RbxVB+RmoqP9WaTzEpBCtVho8h9QnZmSRDU8/VtvbnKWUWA1ynSRyBGrAvJ1QkgRaB
+         AcNA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742458180; x=1743062980;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=JMhkC/qzy7CJY247FAczSaMR9th3O24RtFPlon4S9k4=;
-        b=K5Nv5Nj732TIZfbWFh+JwYyoFbHR1Xokjwo2zhby0vIy1lAoTpjkD23cTQuPGjs5NP
-         uDLmM1tVznBEwKCc75YKQU4HFgsGc8DzVtwuegg4rX8JQbqoy/Puzgz9i1uVwx8FFkb7
-         8z1oqvM57+vxZATiSm7giGotgPOUsTg+gWPygz7RPZcdHjNs1BfRTRGIOP2p1puIitcg
-         33wU/NqXeaGzkd/+I2fRB7OgmXs3MM4eUEOisM2UIjShVxSpbknEs7GwJXALePYWJ0Zq
-         Ye5pwuU03ySSjBMJYhgdtJEglYQw5NeMqQUZI1wzCp+zaEsuHn7rpYZIeQb2ZXWGx9KS
-         Ob0w==
-X-Forwarded-Encrypted: i=1; AJvYcCUVtOBfFhBp0x+DhMjYV0VxK1NBj9WxD1Id5THpRJxe4c3Q60fP6XaR+76G66QygwXpOa+xR0I7OrZfpBR3@vger.kernel.org, AJvYcCVkKTI2B0/5KYHoKBMB3exyP2J0Q/c1TvyzPpZHs0zhvzbofxsj38yDT9MI9VmtzxSEXrHLn8O5@vger.kernel.org
-X-Gm-Message-State: AOJu0YyP6N26dlirrTQp7K+J5Ds/3CijHQAwPqycb/XlJ7GBYSqYYuzQ
-	CmujUZ3nk8qaJndQZu2x8z9lrOqpZvdWhGj4tfVQ3U03P5l77c2bUv9erlVT8rY3Nh8R+0/QCTB
-	RKNcJFLZSV4sL5j9YPQgPPPUkl6x8/Tg+uuk=
-X-Gm-Gg: ASbGncu6g6p/JCM9dem6LBsKirH+xhrpUJ2KBYzgmej1p/Uv2PNqxqojLUKTkqT8DnP
-	7pXRM/sOKyCyNPOsVfGlegPKE3+i4nooQC09Eqno+bTjkDB7ZtMDm5t4YM5TKEmD7c3au2oOzXw
-	q6zHzjjseFAa7YDRtbbHE0DErvlw==
-X-Google-Smtp-Source: AGHT+IEQiTKOt2LMSqy3PQHK3F1M7BdfLFWEHQ4J+Jl93iXKf+ApncxDTs9g4rgwDvOjOKsh5oKBLX2x98Ctz5xOddg=
-X-Received: by 2002:a17:90b:5285:b0:2fc:c262:ef4b with SMTP id
- 98e67ed59e1d1-301bdf93e0cmr10361659a91.18.1742458180445; Thu, 20 Mar 2025
- 01:09:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742458413; x=1743063213;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FH/3f5Dac1JZ7PB6fCTYluQ28FDUu14YKXsBxY9FGQg=;
+        b=nfLa//5a+8MqpiAbvqE0FGgYmdNAr6r7tvKdzLU8or2458fClpucSHCJFzUGGJRuFT
+         C0F1cnoTFqFFliXFyP9ma+wTfWwqclWQST3v6uWVWkCK0R8sZ92xKbuqUPnB15V3HwkR
+         emrdEUWIpc8y2l9WaQ+RURSrWz7X3rOrifiR2ERtlXZ08dXF8gCgk/qQaBJ1bIGQ0m3R
+         vh307VM7cE1mfp4saWIB7MBce6xJyfNOsAwZ3Fk0NXKRkX05DeQOr0e7gQ2DjAgBG/XO
+         cG0dcq4WbH1MsDMxk853xs3sqNm51j9lvm8xeVpl9t55MymdgpOIDu5zvy2e64PlkuKb
+         FbFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXD6MK64QI+47OQG9RJTDjJzcYyWKqlkonZ6MtYt3vLp7dYc4gWuLxpmeZOEkMzLf+DRe6FOFoB5gVSEmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzf4MwujP0g0GLg2WPknkbPQ9ocWi5ASSJNDi0gMz5+qQjYtVzj
+	YFIJYA5L01HfbcwT9xdvZ5yjdFC/ZqaTpAPO7RF2nsyBTJkI7fiULlbHqQx81cAOgoSTlPLisgb
+	hQ12a+4kY13IhKazPmxVLyYoZKTgN+OBaie4KPw==
+X-Gm-Gg: ASbGncterdX1TvKGLcEb0FjUJqTlyOiMdojGM4F4Pbkz3nF0l084B9d8rorclxpFIKV
+	w16g2mtMzBkNO3tGbaWe5n1nS3ljDKIATLoy1ePAOyI+tWFIWiCqGSF0MVE23ZayqaFJ2CHF6Gv
+	Ow9JiV49JEz2AqZOinwpaDOWA=
+X-Google-Smtp-Source: AGHT+IHlRAMm6DHFmGnX4O6qtM7WU7UfemcO1DW0vJWDefpFUiW/wKer02pkqfNiLKCodEdnMprWlIdw9ApK2Vl4254=
+X-Received: by 2002:a05:6512:3d27:b0:549:b0fa:6733 with SMTP id
+ 2adb3069b0e04-54acb1fc7f6mr2205401e87.37.1742458412840; Thu, 20 Mar 2025
+ 01:13:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250319064148.774406-1-jingxiangzeng.cas@gmail.com> <20250319193838.GE1876369@cmpxchg.org>
-In-Reply-To: <20250319193838.GE1876369@cmpxchg.org>
-From: jingxiang zeng <jingxiangzeng.cas@gmail.com>
-Date: Thu, 20 Mar 2025 16:09:29 +0800
-X-Gm-Features: AQ5f1JrZZEoKedaMtWNsJLn9ST0hUA5wF5GIy5JQ7u50GlSaaHdntRsri3F9-y8
-Message-ID: <CAJqJ8ig7BrPp0H3Lzbd0u9R6RhS5V0-i3b4eMWf+4EhujRU-jw@mail.gmail.com>
-Subject: Re: [RFC 0/5] add option to restore swap account to cgroupv1 mode
-To: Johannes Weiner <hannes@cmpxchg.org>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, mhocko@kernel.org, roman.gushchin@linux.dev, 
-	shakeel.butt@linux.dev, muchun.song@linux.dev, kasong@tencent.com, 
-	Zeng Jingxiang <linuszeng@tencent.com>
+References: <82b40d9d-b437-42a9-9eb3-2328aa6877ac@stanley.mountain>
+In-Reply-To: <82b40d9d-b437-42a9-9eb3-2328aa6877ac@stanley.mountain>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 20 Mar 2025 09:13:42 +0100
+X-Gm-Features: AQ5f1JrO8Xfjg5ntIWbaCB7qZbTiTVkH-WMLNIyd4WNCkBTjqRZTBB1zv4h7_O8
+Message-ID: <CACRpkdY1NhHQ43L+pAoC6EC_ydJKY2u+P=nhNAgo_Gw9McNngw@mail.gmail.com>
+Subject: Re: [PATCH next] pinctrl: tegra: Fix off by one in tegra_pinctrl_get_group()
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Prathamesh Shete <pshete@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Peng Fan <peng.fan@nxp.com>, linux-gpio@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel-janitors@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 20 Mar 2025 at 03:38, Johannes Weiner <hannes@cmpxchg.org> wrote:
+On Wed, Mar 19, 2025 at 8:05=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro=
+.org> wrote:
+
+> This should be >=3D pmx->soc->ngroups instead of > to avoid an out of
+> bounds access.  The pmx->soc->groups[] array is allocated in
+> tegra_pinctrl_probe().
 >
-> On Wed, Mar 19, 2025 at 02:41:43PM +0800, Jingxiang Zeng wrote:
-> > From: Zeng Jingxiang <linuszeng@tencent.com>
-> >
-> > memsw account is a very useful knob for container memory
-> > overcommitting: It's a great abstraction of the "expected total
-> > memory usage" of a container, so containers can't allocate too
-> > much memory using SWAP, but still be able to SWAP out.
-> >
-> > For a simple example, with memsw.limit == memory.limit, containers
-> > can't exceed their original memory limit, even with SWAP enabled, they
-> > get OOM killed as how they used to, but the host is now able to
-> > offload cold pages.
-> >
-> > Similar ability seems absent with V2: With memory.swap.max == 0, the
-> > host can't use SWAP to reclaim container memory at all. But with a
-> > value larger than that, containers are able to overuse memory, causing
-> > delayed OOM kill, thrashing, CPU/Memory usage ratio could be heavily
-> > out of balance, especially with compress SWAP backends.
-> >
-> > This patch set adds two interfaces to control the behavior of the
-> > memory.swap.max/current in cgroupv2:
-> >
-> > CONFIG_MEMSW_ACCOUNT_ON_DFL
-> > cgroup.memsw_account_on_dfl={0, 1}
-> >
-> > When one of the interfaces is enabled: memory.swap.current and
-> > memory.swap.max represents the usage/limit of swap.
-> > When neither is enabled (default behavior),memory.swap.current and
-> > memory.swap.max represents the usage/limit of memory+swap.
->
-> This should be new knobs, e.g. memory.memsw.current, memory.memsw.max.
->
-> Overloading the existing swap knobs is confusing.
->
-> And there doesn't seem to be a good reason to make the behavior
-> either-or anyway. If memory.swap.max=max (default), it won't interfere
-> with the memsw operation. And it's at least conceivable somebody might
-> want to set both, memsw.max > swap.max, to get some flexibility while
-> excluding the craziest edge cases.
+> Fixes: c12bfa0fee65 ("pinctrl-tegra: Restore SFSEL bit when freeing pins"=
+)
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Hi Johannes,
+Thanks Dan, excellent find.
 
-If both memsw.max and swap.max are provided in cgroupv2, there will be some
-issues as follows:
-(1. As Shakeel Butt mentioned, currently memsw and swap share the page_counter,
-and we need to provide a separate page_counter for memsw.
-(2. Currently, the statistics for memsw and swap are mutually
-exclusive. For example,
-during uncharging, both memsw and swap call the __mem_cgroup_uncharge_swap
-function together, and this function currently only selects a single
-counter for statistics
-based on the static do_memsw_account.
+Patch applied!
 
-As mentioned above, this patch set considers the approach suggested by Roman
-Gushchin[1], which involves switching to cgroupv1 behavior through a
-configuration
-option, making it easier to implement.
-
-Link: https://lore.kernel.org/all/Zk-fQtFrj-2YDJOo@P9FQF9L96D.corp.robot.car/
-[1]
+Yours,
+Linus Walleij
