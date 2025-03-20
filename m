@@ -1,32 +1,32 @@
 Received: from mx1.emlix.com (mx1.emlix.com [178.63.209.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99A951CDFCE
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:31:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE07C1A5BBA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:31:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.63.209.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742463076; cv=none; b=TE7hN/AWbKsUr60pewMHjs6tNkKnlNknZ+iBDuSP38OTkwdBII5n+yxfJb4bsedxHqYB5WoAbBYrUQSUCWIA/N/LTPFDP8fvFDz9dAm7R2xYhpxlIa/CjXQVm0VXnJzVX6drbCLvCofHfqRHOhm+cVECEL/1HhZKoHBVrsGUCYQ=
+	t=1742463085; cv=none; b=FmXkO13ZJtSkrUbYFwajPDbcw5B0IytOKb0TiOdYQiRMi/In0GrLLIMiwgp8XRWdG0QdhnRtfRHnX3HXqrfeHiEvf21seedH5fsMrXJ52nvulmdnJ8vI2hDtTMBwQkDrogwEylsVsjQ6Ap6hx2XuRvSKsFn53GLL82QHFW/4r7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742463076; c=relaxed/simple;
-	bh=Y66KsA3GQgAvbU1qFYkPKPeelZgF94pVlJgOrb4lujQ=;
+	s=arc-20240116; t=1742463085; c=relaxed/simple;
+	bh=Fq7N5XhzkBZZ2U7tumyB/nILV22NxS/iDWf9NYICOTk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=N596j1emJWxVInDM390oN+HGpif+KhS4i0DR/g/Sui8SdP1P7owTwdNTX8nwZgegp8A2/TPfXvbAk1IaLyoovCsoYkP8n+zcTISkIm6BceUutIDESUy6LowfUuYZnKNTJlmJWogSs0gFWYtUfUU0UXq9tljZ3FxCp7ywQqN63SE=
+	 MIME-Version:Content-Type; b=dNDjTjdrodeUrnYhHrlUoAQkLmKfxK7vKKMYdZKqplXCKFTXnIFeN2ikaMQzxQxwCpUzxEocDMHgMu4zfl1NmqeBrM0rp2jax2kjjXMcdN4O/1v5Og5fv5mP1KJJ/U83xdAO+jHP8eh057GWXlP7Ma0TUJmNCA4/nTlBciEcSdE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com; spf=pass smtp.mailfrom=emlix.com; arc=none smtp.client-ip=178.63.209.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=emlix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emlix.com
 Received: from mailer.emlix.com (p5098be52.dip0.t-ipconnect.de [80.152.190.82])
 	(using TLSv1.2 with cipher ADH-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mx1.emlix.com (Postfix) with ESMTPS id 6DCF05F8E7;
+	by mx1.emlix.com (Postfix) with ESMTPS id BC3445F9AD;
 	Thu, 20 Mar 2025 10:31:10 +0100 (CET)
 From: Rolf Eike Beer <eb@emlix.com>
 To: Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>
 Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>
-Subject: [PATCH 6/6] iommu: make inclusion of iommufd directory conditional
-Date: Thu, 20 Mar 2025 10:22:37 +0100
-Message-ID: <2243601.irdbgypaU6@devpool47.emlix.com>
+ Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel@lists.infradead.org
+Subject:
+ [PATCH 5/6] iommu: make inclusion of arm/arm-smmu-v3 directory conditional
+Date: Thu, 20 Mar 2025 10:19:12 +0100
+Message-ID: <6164975.lOV4Wx5bFT@devpool47.emlix.com>
 Organization: emlix GmbH
 In-Reply-To: <12652899.O9o76ZdvQC@devpool47.emlix.com>
 References: <12652899.O9o76ZdvQC@devpool47.emlix.com>
@@ -39,47 +39,42 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
 
-Nothing in there is active if CONFIG_IOMMUFD is not enabled, so the whole
+Nothing in there is active if CONFIG_ARM_SMMU_V3 is not enabled, so the who=
+le
 directory can depend on that switch as well.
 
-=46ixes: 2ff4bed7fee7 ("iommufd: File descriptor, context, kconfig and make=
-files")
+=46ixes: e86d1aa8b60f ("iommu/arm-smmu: Move Arm SMMU drivers into their ow=
+n subdirectory")
 Signed-off-by: Rolf Eike Beer <eb@emlix.com>
 =2D--
- drivers/iommu/Makefile         | 3 ++-
- drivers/iommu/iommufd/Makefile | 2 +-
+ drivers/iommu/arm/Makefile             | 3 ++-
+ drivers/iommu/arm/arm-smmu-v3/Makefile | 2 +-
  2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/iommu/Makefile b/drivers/iommu/Makefile
-index 17133876f777..38ee96607acf 100644
-=2D-- a/drivers/iommu/Makefile
-+++ b/drivers/iommu/Makefile
-@@ -1,8 +1,9 @@
+diff --git a/drivers/iommu/arm/Makefile b/drivers/iommu/arm/Makefile
+index 0f9efeab709f..35a7e13eef34 100644
+=2D-- a/drivers/iommu/arm/Makefile
++++ b/drivers/iommu/arm/Makefile
+@@ -1,2 +1,3 @@
  # SPDX-License-Identifier: GPL-2.0
-=2Dobj-y +=3D arm/ iommufd/
-+obj-y +=3D arm/
- obj-$(CONFIG_AMD_IOMMU) +=3D amd/
- obj-$(CONFIG_INTEL_IOMMU) +=3D intel/
- obj-$(CONFIG_RISCV_IOMMU) +=3D riscv/
-+obj-$(CONFIG_IOMMUFD) +=3D iommufd/
- obj-$(CONFIG_IOMMU_API) +=3D iommu.o
- obj-$(CONFIG_IOMMU_API) +=3D iommu-traces.o
- obj-$(CONFIG_IOMMU_API) +=3D iommu-sysfs.o
-diff --git a/drivers/iommu/iommufd/Makefile b/drivers/iommu/iommufd/Makefile
-index cb784da6cddc..071f2a504167 100644
-=2D-- a/drivers/iommu/iommufd/Makefile
-+++ b/drivers/iommu/iommufd/Makefile
-@@ -12,7 +12,7 @@ iommufd-y :=3D \
-=20
- iommufd-$(CONFIG_IOMMUFD_TEST) +=3D selftest.o
-=20
-=2Dobj-$(CONFIG_IOMMUFD) +=3D iommufd.o
-+obj-y +=3D iommufd.o
- obj-$(CONFIG_IOMMUFD_DRIVER) +=3D iova_bitmap.o
-=20
- iommufd_driver-y :=3D driver.o
+=2Dobj-y +=3D arm-smmu/ arm-smmu-v3/
++obj-y +=3D arm-smmu/
++obj-$(CONFIG_ARM_SMMU_V3) +=3D arm-smmu-v3/
+diff --git a/drivers/iommu/arm/arm-smmu-v3/Makefile b/drivers/iommu/arm/arm=
+=2Dsmmu-v3/Makefile
+index 493a659cc66b..6cc7c8557b9e 100644
+=2D-- a/drivers/iommu/arm/arm-smmu-v3/Makefile
++++ b/drivers/iommu/arm/arm-smmu-v3/Makefile
+@@ -1,5 +1,5 @@
+ # SPDX-License-Identifier: GPL-2.0
+=2Dobj-$(CONFIG_ARM_SMMU_V3) +=3D arm_smmu_v3.o
++obj-y +=3D arm_smmu_v3.o
+ arm_smmu_v3-y :=3D arm-smmu-v3.o
+ arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_IOMMUFD) +=3D arm-smmu-v3-iommufd.o
+ arm_smmu_v3-$(CONFIG_ARM_SMMU_V3_SVA) +=3D arm-smmu-v3-sva.o
 =2D-=20
 2.49.0
+
 
 
 =2D-=20
