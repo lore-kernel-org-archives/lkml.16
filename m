@@ -1,319 +1,120 @@
-Received: from mx07-00376f01.pphosted.com (mx07-00376f01.pphosted.com [185.132.180.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD125221552;
-	Thu, 20 Mar 2025 11:51:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.180.163
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55D9822173D;
+	Thu, 20 Mar 2025 11:52:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742471516; cv=none; b=fHZuddPn24oCgZx/wjuYbmRmQLMln2zrhnfavJfYrFFv28cTXey3tg9IVOwCVCkSk/ttCWCKpvWoJMrXDNwKxRcMyEJC/eQJyaOzvfWBFTmxmo7VgnA2byro0p3KestsIGPq40ngfiTrNnYyKl056+0uB8ad7ll4fnuq29Ao8jk=
+	t=1742471561; cv=none; b=mNIKANs0+9OSvwp8UIhY8QdWRfp2kXwXSsVoUkb2hdYp/7AlO73VbwkLpJ+ZSRWdWhGbIZkCFqy7UztdVHN3nnDCeFmBT7Z+Layp7EcJApfq7tM/QMXdfujCxi8+W8ipR2iXXi383/x70+18a78ZA4YVyBib79OT7dNxVA5XdvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742471516; c=relaxed/simple;
-	bh=T+hpsImhgiFeH2BgCcVhHcfJTxaVmlGCWi8dtwF+wwU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=HFz+GYvcVMCM06o3H+IstwcgYfZBQPdOWWdsE0Rs4sothEj64Mz2/r4UUHCSk6gqvWLFD8BDhgZW+rEkFvJ41dwDq9NLer0McmGCS+309rukmsSg54MRj7ORMuqsgNSXVNxsreY/AXFgER/NP2mzSZoV8wXVz42KHptk2SyzlOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com; spf=pass smtp.mailfrom=imgtec.com; dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b=fX6PjPB/; arc=none smtp.client-ip=185.132.180.163
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=imgtec.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=imgtec.com
+	s=arc-20240116; t=1742471561; c=relaxed/simple;
+	bh=wwYMwFQRAEv66kogG7c9e6lDrkYHDgxQuvQmvun4+Ic=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BFBMbkFRenJjjT74xQ03W7P1tEG5TsiO9zi9+8j2oQQXSsPBL9HOZwRcq7fEgpM2SXCEez+nIK9lJ5r21dQSGk2b4VPYcZEAAMyiY6O7AYGyPjzyvHQIzHHhPBU9nUKthxwzpMaQGy3c5NDVXFBIrOj3EWDdQEcNC8YqJAhzSwA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GslEGAVS; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=imgtec.com header.i=@imgtec.com header.b="fX6PjPB/"
-Received: from pps.filterd (m0168889.ppops.net [127.0.0.1])
-	by mx07-00376f01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52K5Ntgd021993;
-	Thu, 20 Mar 2025 11:32:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=imgtec.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=dk201812; bh=m
-	CtQPrZfbRTIuLmfjb45Nylxz2IhUE0zTvD43WiR/E0=; b=fX6PjPB/AX8bzysjz
-	aFkKFh+6e+d0PwVJ1ngtCMvDB3Z0omxfxMqY1JjzXW6/Y1S8cnC2nEs236HDy0mI
-	x1BPzAFAOSLOXyWa6Pz5fM0Cn49EA7bj5MGHiyiRPeLBZxsaqYZUB6FsLPanRQhq
-	ZcSujZAJ1bTgxGlruNPLxEHP0N6cAVHuIBEHL4KjGyXbr7ZtywOu/3a2IQYqIOyw
-	qips8Qz9V7af2VA7NsIVt7kQEN2DBDQT58k1/g7we19REpG6ds/rl+PVrPVHVJ6G
-	WlH8spf0qpAKcBQl+cJsLvJDlSrJdRJwQl5U+U9RMSR7cVySbSBQqViCUq8AfOeQ
-	yDuCw==
-Received: from hhmail05.hh.imgtec.org (83-244-153-141.cust-83.exponential-e.net [83.244.153.141])
-	by mx07-00376f01.pphosted.com (PPS) with ESMTPS id 45d2h1kwg4-2
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Thu, 20 Mar 2025 11:32:29 +0000 (GMT)
-Received: from
- 1.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.ip6.arpa
- (172.25.0.133) by HHMAIL05.hh.imgtec.org (10.100.10.120) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 20 Mar 2025 11:32:27 +0000
-From: Matt Coster <matt.coster@imgtec.com>
-Date: Thu, 20 Mar 2025 11:32:17 +0000
-Subject: [PATCH v4 07/18] drm/imagination: Handle Rogue safety event IRQs
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GslEGAVS"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-abbb12bea54so153277566b.0;
+        Thu, 20 Mar 2025 04:52:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742471557; x=1743076357; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=MYeHXyTh3fhxrKqIA00QWEYQrk6Uzb2lupwN2gVVWFc=;
+        b=GslEGAVSXVwCHjVTKG/s8RpBGuaQz9k4UdPahQ7i59NJcxHC4B30dmDwD2SWmYn+vZ
+         01t1c0rKV9VFNZoVV1PKJyX3WBHkc42tcPW3fusHHQkMIPUmshO+tA4rvk2c+ZTQeVgx
+         6/yjleMpgj+aLdYtBR1QQCQuE3MqY07rpZ2b9cLqOm9xInr4zQOQwAdVi5ZaFEe6U1Zo
+         OYe1DcdQEK9AdcWf29C5bLSn4RytnNPYwX7WOd2Xvhc9Vi75nPn+F5ZcWnJGVtl3gZnE
+         HVi925RG0OYeMXIwTXh2Juzua65TDPqaixHrDRXamfsc+FmnmN13l0TwkXnARkaWKJ7R
+         C+pg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742471557; x=1743076357;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=MYeHXyTh3fhxrKqIA00QWEYQrk6Uzb2lupwN2gVVWFc=;
+        b=aZ3PLYesiP7CsSnaDTB8ElMOR6h0kprVxJRkrMm0BQkkff28gkRwl294oXClMlZXNW
+         3YJ7LlhZvJ00jKoyWfuzGg3d/tWwxmPpTJ8wscWLpAHGtcaacWwXf8Qc0p8TG8Y2JU/V
+         oxaVp0iwGtGuQXOaB+AudQOGMdEKbuQi7EyfVqgy+CykekDLBvlCezyxL3TtFhJhQje8
+         csiwSwaMUpAn1hUDHUsJYQ4AA/+5DF1Kr8G/PUwhjUgW0mzXEBAuzQ9wq9xHYo66ByRW
+         gymtYs11ma6RMm3kacp4BLrhgtHWG3oxPtrU9jSR1vJ33jL8cYpE1kB0fh+FaJnFbNqe
+         N6LQ==
+X-Forwarded-Encrypted: i=1; AJvYcCULSul1qiVLDVSZxWrASFqJzfX905s9yeunemeX/dISvuNUAnDmDcJAIpWiGul1CvxZDBIONYjDHtCB/FEB@vger.kernel.org, AJvYcCWmSESgK/AgknT7cSCMluc2+B7A6MKJ1rZ+pL3b4D16pOdKMAUFyHmeTUpl1FRcIoSOfL/+/+NDUA==@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxmw99M1dXUsKZsD2ju1IfcOgoxS1WKZrjv4jX15kozo+D4jIJX
+	DpQ/l4ZK9MCvMJeHJMu9/dLpOHDwTaQAQkma4vsqiPqmKuZd8KKfU5RAOA==
+X-Gm-Gg: ASbGncu0wb/snjP23JSUZ8ex2KRWnFjapyNAaZWoqWupiYYUPs/95zk+PUAAc6Mw29r
+	AFqBkvssLz5wFLJBtYadMlWun5sTibxCSTmiHPo3osEwUoEu1Naka2PD5zzDJK6Ru0LUo8K6po2
+	jloaBOzgIse7hip4sbhfhPHOLxk4j1NAYLVjZZVWKGjrTH76cUZG3IdXXfu/Haw3cGkpQazelSn
+	iw307xEdAwo3o+A1Qkkad8uM59pjZ+rVYS1YqNbJQPONzunA4/iv/6M/H+KJlPO3HWcLdYgYxl2
+	JQg2uOpttF+cU4gK7RWPlb9LLQsyyJxKdfwJpR8PqDrLbwFrJfkLLkd/p2GuqoWSegIYGchOgTy
+	cfw==
+X-Google-Smtp-Source: AGHT+IFAUXWnNkmvXfc46o6a6NN7i+IHxmpDda+DxlLiRENhdKAiO6iDWb3G4KeIpahPY+tfnLzJig==
+X-Received: by 2002:a17:907:bd0d:b0:abf:3cb2:1c04 with SMTP id a640c23a62f3a-ac3b7c49f43mr798684366b.9.1742471557171;
+        Thu, 20 Mar 2025 04:52:37 -0700 (PDT)
+Received: from ?IPV6:2620:10d:c096:325:77fd:1068:74c8:af87? ([2620:10d:c092:600::1:5148])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3147f0f5dsm1173437166b.63.2025.03.20.04.52.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 04:52:36 -0700 (PDT)
+Message-ID: <457194e1-409d-455c-a863-4877934006a0@gmail.com>
+Date: Thu, 20 Mar 2025 11:53:33 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset) [RFC PATCH v5 0/5] introduce
+ io_uring_cmd_import_fixed_vec
+To: Jens Axboe <axboe@kernel.dk>, Josef Bacik <josef@toxicpanda.com>,
+ David Sterba <dsterba@suse.com>, Sidong Yang <sidong.yang@furiosa.ai>
+Cc: linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+ io-uring@vger.kernel.org
+References: <20250319061251.21452-1-sidong.yang@furiosa.ai>
+ <174239798984.85082.13872425373891225169.b4-ty@kernel.dk>
+ <f78c156e-8712-4239-b17f-d917be03226a@kernel.dk>
+Content-Language: en-US
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <f78c156e-8712-4239-b17f-d917be03226a@kernel.dk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-ID: <20250320-sets-bxs-4-64-patch-v1-v4-7-d987cf4ca439@imgtec.com>
-References: <20250320-sets-bxs-4-64-patch-v1-v4-0-d987cf4ca439@imgtec.com>
-In-Reply-To: <20250320-sets-bxs-4-64-patch-v1-v4-0-d987cf4ca439@imgtec.com>
-To: Frank Binns <frank.binns@imgtec.com>,
-        Matt Coster
-	<matt.coster@imgtec.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, Nishanth Menon <nm@ti.com>,
-        "Vignesh
- Raghavendra" <vigneshr@ti.com>,
-        Tero Kristo <kristo@kernel.org>
-CC: <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        Randolph Sapp <rs@ti.com>, Darren Etheridge <detheridge@ti.com>,
-        "Michal
- Wilczynski" <m.wilczynski@samsung.com>,
-        Alessio Belle
-	<alessio.belle@imgtec.com>,
-        Alexandru Dadu <alexandru.dadu@imgtec.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7649;
- i=matt.coster@imgtec.com; h=from:subject:message-id;
- bh=aLuAXMpe/oFtydsrIvDzuL1XwTst+jd6hdP9VV20og8=;
- b=owGbwMvMwCFWuUfy8817WRsYT6slMaTf/nPkdq/FCYvw+os+O2R2TJizqPnE/0nLPjXMmVXGW
- d9zMuCUf0cpC4MYB4OsmCLLjhWWK9T+qGlJ3PhVDDOHlQlkCAMXpwBMROsrw/+UjYdOMymdElWe
- pNoT9urI7gcHmP0kTjq9OtSgFfRG/+I+RoZlfcsmpVycbjKPy6cmdpepj8PzLtOWqS5li1oWHbj
- TpMsIAA==
-X-Developer-Key: i=matt.coster@imgtec.com; a=openpgp;
- fpr=05A40CFCE7269D61D97100A1747F0A9036F90DFA
-X-EXCLAIMER-MD-CONFIG: 15a78312-3e47-46eb-9010-2e54d84a9631
-X-Proofpoint-GUID: fhmkTHiQvqoeTI74QBG5V5BtQ54jecXt
-X-Proofpoint-ORIG-GUID: fhmkTHiQvqoeTI74QBG5V5BtQ54jecXt
-X-Authority-Analysis: v=2.4 cv=V8Z90fni c=1 sm=1 tr=0 ts=67dbfccd cx=c_pps a=AKOq//PuzOIrVTIF9yBwbA==:117 a=AKOq//PuzOIrVTIF9yBwbA==:17 a=ETbM1kImDFEA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=r_1tXGB3AAAA:8 a=EFqOhPBUpbQHUZJt0gEA:9
- a=QEXdDO2ut3YA:10 a=t8nPyN_e6usw4ciXM-Pk:22
 
-From: Alessio Belle <alessio.belle@imgtec.com>
+On 3/19/25 15:27, Jens Axboe wrote:
+> On 3/19/25 9:26 AM, Jens Axboe wrote:
+>>
+>> On Wed, 19 Mar 2025 06:12:46 +0000, Sidong Yang wrote:
+>>> This patche series introduce io_uring_cmd_import_vec. With this function,
+>>> Multiple fixed buffer could be used in uring cmd. It's vectored version
+>>> for io_uring_cmd_import_fixed(). Also this patch series includes a usage
+>>> for new api for encoded read/write in btrfs by using uring cmd.
+>>>
+>>> There was approximately 10 percent of performance improvements through benchmark.
+>>> The benchmark code is in
+>>> https://github.com/SidongYang/btrfs-encoded-io-test/blob/main/main.c
+>>>
+>>> [...]
+>>
+>> Applied, thanks!
+>>
+>> [1/5] io_uring: rename the data cmd cache
+>>        commit: 575e7b0629d4bd485517c40ff20676180476f5f9
+>> [2/5] io_uring/cmd: don't expose entire cmd async data
+>>        commit: 5f14404bfa245a156915ee44c827edc56655b067
+>> [3/5] io_uring/cmd: add iovec cache for commands
+>>        commit: fe549edab6c3b7995b58450e31232566b383a249
+>> [4/5] io_uring/cmd: introduce io_uring_cmd_import_fixed_vec
+>>        commit: b24cb04c1e072ecd859a98b2e4258ca8fe8d2d4d
+> 
+> 1-4 look pretty straight forward to me - I'll be happy to queue the
+> btrfs one as well if the btrfs people are happy with it, just didn't
+> want to assume anything here.
 
-Extend interrupt handling logic to check for safety event IRQs, then clear
-and handle them in the IRQ handler thread.
-
-Safety events need to be checked and cleared with a different set of GPU
-registers than those the IRQ handler has been using so far.
-
-Only two safety events need to be handled on the host: FW fault (ECC error
-correction or detection) and device watchdog timeout. Handling right now
-simply consists of clearing any error and logging the event. If either of
-these events results in an unrecoverable GPU or FW, the driver will
-eventually attempt to recover from it e.g. via pvr_power_reset().
-
-Note that Rogue GPUs may send interrupts to the host for all types of
-safety events, not just the two above. For events not handled by the host,
-clearing the associated interrupt is sufficient.
-
-Signed-off-by: Alessio Belle <alessio.belle@imgtec.com>
-Signed-off-by: Matt Coster <matt.coster@imgtec.com>
----
-Changes in v4:
-- Only invoke pvr_device_safety_irq_clear() if has_safety_events is set
-- Link to v3: https://lore.kernel.org/r/20250310-sets-bxs-4-64-patch-v1-v3-7-143b3dbef02f@imgtec.com
-Changes in v3:
-- Added
----
- drivers/gpu/drm/imagination/pvr_device.c | 113 ++++++++++++++++++++++++++++++-
- drivers/gpu/drm/imagination/pvr_device.h |   3 +
- drivers/gpu/drm/imagination/pvr_fw.c     |   3 +
- 3 files changed, 117 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/imagination/pvr_device.c b/drivers/gpu/drm/imagination/pvr_device.c
-index b6ce936f07c8bb26d240e50b72a1d991dbe4b045..a47dd1dd82432f1d66ff90aca26b7b264f4068df 100644
---- a/drivers/gpu/drm/imagination/pvr_device.c
-+++ b/drivers/gpu/drm/imagination/pvr_device.c
-@@ -146,9 +146,61 @@ static void pvr_device_process_active_queues(struct pvr_device *pvr_dev)
- 	mutex_unlock(&pvr_dev->queues.lock);
- }
- 
-+static bool pvr_device_safety_irq_pending(struct pvr_device *pvr_dev)
-+{
-+	u32 events;
-+
-+	WARN_ON_ONCE(!pvr_dev->has_safety_events);
-+
-+	events = pvr_cr_read32(pvr_dev, ROGUE_CR_EVENT_STATUS);
-+
-+	return (events & ROGUE_CR_EVENT_STATUS_SAFETY_EN) != 0;
-+}
-+
-+static void pvr_device_safety_irq_clear(struct pvr_device *pvr_dev)
-+{
-+	WARN_ON_ONCE(!pvr_dev->has_safety_events);
-+
-+	pvr_cr_write32(pvr_dev, ROGUE_CR_EVENT_CLEAR,
-+		       ROGUE_CR_EVENT_CLEAR_SAFETY_EN);
-+}
-+
-+static void pvr_device_handle_safety_events(struct pvr_device *pvr_dev)
-+{
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
-+	u32 events;
-+
-+	WARN_ON_ONCE(!pvr_dev->has_safety_events);
-+
-+	events = pvr_cr_read32(pvr_dev, ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE);
-+
-+	/* Handle only these events on the host and leave the rest to the FW. */
-+	events &= ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__FAULT_FW_EN |
-+		ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__WATCHDOG_TIMEOUT_EN;
-+
-+	pvr_cr_write32(pvr_dev, ROGUE_CR_SAFETY_EVENT_CLEAR__ROGUEXE, events);
-+
-+	if (events & ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__FAULT_FW_EN) {
-+		u32 fault_fw = pvr_cr_read32(pvr_dev, ROGUE_CR_FAULT_FW_STATUS);
-+
-+		pvr_cr_write32(pvr_dev, ROGUE_CR_FAULT_FW_CLEAR, fault_fw);
-+
-+		drm_info(drm_dev, "Safety event: FW fault (mask=0x%08x)\n", fault_fw);
-+	}
-+
-+	if (events & ROGUE_CR_SAFETY_EVENT_STATUS__ROGUEXE__WATCHDOG_TIMEOUT_EN) {
-+		/*
-+		 * The watchdog timer is disabled by the driver so this event
-+		 * should never be fired.
-+		 */
-+		drm_info(drm_dev, "Safety event: Watchdog timeout\n");
-+	}
-+}
-+
- static irqreturn_t pvr_device_irq_thread_handler(int irq, void *data)
- {
- 	struct pvr_device *pvr_dev = data;
-+	struct drm_device *drm_dev = from_pvr_device(pvr_dev);
- 	irqreturn_t ret = IRQ_NONE;
- 
- 	/* We are in the threaded handler, we can keep dequeuing events until we
-@@ -164,24 +216,76 @@ static irqreturn_t pvr_device_irq_thread_handler(int irq, void *data)
- 			pvr_device_process_active_queues(pvr_dev);
- 		}
- 
--		pm_runtime_mark_last_busy(from_pvr_device(pvr_dev)->dev);
-+		pm_runtime_mark_last_busy(drm_dev->dev);
- 
- 		ret = IRQ_HANDLED;
- 	}
- 
-+	if (pvr_dev->has_safety_events) {
-+		int err;
-+
-+		/*
-+		 * Ensure the GPU is powered on since some safety events (such
-+		 * as ECC faults) can happen outside of job submissions, which
-+		 * are otherwise the only time a power reference is held.
-+		 */
-+		err = pvr_power_get(pvr_dev);
-+		if (err) {
-+			drm_err_ratelimited(drm_dev,
-+					    "%s: could not take power reference (%d)\n",
-+					    __func__, err);
-+			return ret;
-+		}
-+
-+		while (pvr_device_safety_irq_pending(pvr_dev)) {
-+			pvr_device_safety_irq_clear(pvr_dev);
-+			pvr_device_handle_safety_events(pvr_dev);
-+
-+			ret = IRQ_HANDLED;
-+		}
-+
-+		pvr_power_put(pvr_dev);
-+	}
-+
- 	return ret;
- }
- 
- static irqreturn_t pvr_device_irq_handler(int irq, void *data)
- {
- 	struct pvr_device *pvr_dev = data;
-+	bool safety_irq_pending = false;
-+
-+	if (pvr_dev->has_safety_events)
-+		safety_irq_pending = pvr_device_safety_irq_pending(pvr_dev);
- 
--	if (!pvr_fw_irq_pending(pvr_dev))
-+	if (!pvr_fw_irq_pending(pvr_dev) && !safety_irq_pending)
- 		return IRQ_NONE; /* Spurious IRQ - ignore. */
- 
- 	return IRQ_WAKE_THREAD;
- }
- 
-+static void pvr_device_safety_irq_init(struct pvr_device *pvr_dev)
-+{
-+	u32 num_ecc_rams = 0;
-+
-+	/*
-+	 * Safety events are an optional feature of the RogueXE platform. They
-+	 * are only enabled if at least one of ECC memory or the watchdog timer
-+	 * are present in HW. While safety events can be generated by other
-+	 * systems, that will never happen if the above mentioned hardware is
-+	 * not present.
-+	 */
-+	if (!PVR_HAS_FEATURE(pvr_dev, roguexe)) {
-+		pvr_dev->has_safety_events = false;
-+		return;
-+	}
-+
-+	PVR_FEATURE_VALUE(pvr_dev, ecc_rams, &num_ecc_rams);
-+
-+	pvr_dev->has_safety_events =
-+		num_ecc_rams > 0 || PVR_HAS_FEATURE(pvr_dev, watchdog_timer);
-+}
-+
- /**
-  * pvr_device_irq_init() - Initialise IRQ required by a PowerVR device
-  * @pvr_dev: Target PowerVR device.
-@@ -199,6 +303,8 @@ pvr_device_irq_init(struct pvr_device *pvr_dev)
- 
- 	init_waitqueue_head(&pvr_dev->kccb.rtn_q);
- 
-+	pvr_device_safety_irq_init(pvr_dev);
-+
- 	pvr_dev->irq = platform_get_irq(plat_dev, 0);
- 	if (pvr_dev->irq < 0)
- 		return pvr_dev->irq;
-@@ -207,6 +313,9 @@ pvr_device_irq_init(struct pvr_device *pvr_dev)
- 	pvr_fw_irq_clear(pvr_dev);
- 	pvr_fw_irq_enable(pvr_dev);
- 
-+	if (pvr_dev->has_safety_events)
-+		pvr_device_safety_irq_clear(pvr_dev);
-+
- 	/*
- 	 * The ONESHOT flag ensures IRQs are masked while the thread handler is
- 	 * running.
-diff --git a/drivers/gpu/drm/imagination/pvr_device.h b/drivers/gpu/drm/imagination/pvr_device.h
-index 2dd8a8885fe07078896d669d822525fb2b7bab51..6c01d96657de6dc3904ef5ca28365f06cfe0f40b 100644
---- a/drivers/gpu/drm/imagination/pvr_device.h
-+++ b/drivers/gpu/drm/imagination/pvr_device.h
-@@ -308,6 +308,9 @@ struct pvr_device {
- 	 *  struct pvr_file.
- 	 */
- 	spinlock_t ctx_list_lock;
-+
-+	/** @has_safety_events: Whether this device can raise safety events. */
-+	bool has_safety_events;
- };
- 
- /**
-diff --git a/drivers/gpu/drm/imagination/pvr_fw.c b/drivers/gpu/drm/imagination/pvr_fw.c
-index d09c4c68411627714c14dee5ed4e61b07baca1ba..555b5ca4a27de78ac092bf94c601d284abe41ea6 100644
---- a/drivers/gpu/drm/imagination/pvr_fw.c
-+++ b/drivers/gpu/drm/imagination/pvr_fw.c
-@@ -441,6 +441,9 @@ fw_runtime_cfg_init(void *cpu_ptr, void *priv)
- 	runtime_cfg->active_pm_latency_persistant = true;
- 	WARN_ON(PVR_FEATURE_VALUE(pvr_dev, num_clusters,
- 				  &runtime_cfg->default_dusts_num_init) != 0);
-+
-+	/* Keep watchdog timer disabled. */
-+	runtime_cfg->wdg_period_us = 0;
- }
- 
- static void
+fwiw, finally got time to wire a hacky test with a separate cmd,
+works fine, but I'll need to setup btrfs to test the last patch.
 
 -- 
-2.49.0
+Pavel Begunkov
 
