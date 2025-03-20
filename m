@@ -1,66 +1,67 @@
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 030B421B909
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:13:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1A3221F13
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742465638; cv=none; b=Ah09FFykB1sdkFK6y7pDPK63e1Y6BnvFlNqGVsEt2vCHWbriWBzCQmdeP/4PFBkaw4ASR/jDEjKOwHlNbHFMuzNxy0vG65rb2P8gtW3ESMnaVh8qk3l60BkuNQ1RqtHZ8cpsrLMKjWWGRG7Pk5AhISGO64XlDc8Nkj28eZhszyM=
+	t=1742465698; cv=none; b=eyUb5WB+CcxArWw4nlcGWaI4PQOdRshD5S9HQV8lZBTm2fUWu9HmHMjce5y7iFgG3bHgjL+6iZFGvyydTe7ssAfk8Fv+zyiqagl/s4/+EzE/VmKwoOcCfi3XQp8e3NkG3hGuR0URw22+NhBVQnCM8YN1n9gzb5JOBTDScD9e5CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742465638; c=relaxed/simple;
-	bh=S11fedHhosY54Bc91quv/K0qTQ/kq6TxJKQcDVOrQ+c=;
+	s=arc-20240116; t=1742465698; c=relaxed/simple;
+	bh=mad9TF6HWlzgsDYW0Xw2B9cirt0EV2aKRdW2jLlXXxQ=;
 	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=cM2/oxpjeJ3OPcv1mPOilisK6oFOQ+298rkKnd4VLC0jwTovLnxcqB7Rc94/IAnbKJC3YQR//D4B9oWh0dLY+RCUjF5JFt1NypiCd/GuR98kd8zC6Y4DMQdvswaiiTP/IRvS2CjQwbx8tpnlmvO1DhZAgZ/WfeIFrzzPqgECSaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Z9knasg0; arc=none smtp.client-ip=209.85.221.43
+	 In-Reply-To:Content-Type; b=lbP4yDNceNeM1epaX02f/5InaZ4H3t7s98ER5aY9JsXvXeXG3xnAsP8v8CWtS3kqOKOBFQJEh/WuD3UqNI3FGESnV4PHWbhs77H15+A883zI10vKDTHwkMbLdSeAQsb9JDZ4c+WV+AuuGEZycyEYb3oVovFykKADKDO7sIIJUDg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fv71Bc/F; arc=none smtp.client-ip=209.85.128.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z9knasg0"
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3913d129c1aso379901f8f.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 03:13:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fv71Bc/F"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so6038125e9.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 03:14:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742465635; x=1743070435; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1742465694; x=1743070494; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=bV66V/p60Wk+2XhxvPR3Nk3GpUu5hUuAdEAB2IaMLaM=;
-        b=Z9knasg0OvvJHOwLlGFqxauzyM/yr95xpRLZhMWd7CgSRpVgHKNlCsrekZgBdVdfO7
-         KfshRtyt+7lA2cWmUoUd41ZUFFT3X0ejSTaC9jHuf6Vzattrkk6cZmjqGY2SovlymQvQ
-         MTTHcm6x2EyB9D08xAYgzIYNagM/Eq+c+C+fA4wN5K0FUSdwpP458Fg1SVZs2Vvx18DH
-         dNJDXfjbgaK4svCsr2xXWdPgqSGu7ebNLnpn49ZqwQ6OExM5mVphMMZvD69pHrQcpT6d
-         kdxyoSj99lLZBkKEDYKo8mjA/MvcHAdbtRu96nAgyvC4aeslBdGrLnQ4lmx0/dlyLhvT
-         YBuQ==
+        bh=KsTKzQd+0EkTWpAX3OmSlSj7NCNCv0EtzNWUjH+/fWo=;
+        b=Fv71Bc/FD3d6wsQD+D34W5hZ+qkWPMI92bhpQx4fOqmzLWzQBv75oEX1O/XOWhLOiv
+         QNKA1uHtgThbFPCNI+6XbpiwgFh7ZGY6xnkGjBBP2tApKYaugGJCLK2pMob6GwxkdPT9
+         3LvdMJPKS9YSAroLlyqNnlPaGySd3HRVy0DMyjahz012dyGPD2zsd9rH4I9qeU5vdg0C
+         yrLtINAhO7VZicm9UtY4dfZW3+dC7LsS9oUJqBRwlG8e3EEjMIuRfekOeaT8DiqEEVdT
+         95Y3epCUDLz+Sf5s2xFppVlgSZlQpOXtM7RbflYw4L7h80J5dnZ9OTvVs2H8vHpTlAce
+         x+rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742465635; x=1743070435;
+        d=1e100.net; s=20230601; t=1742465694; x=1743070494;
         h=content-transfer-encoding:in-reply-to:organization:autocrypt
          :content-language:references:cc:to:subject:reply-to:from:user-agent
          :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=bV66V/p60Wk+2XhxvPR3Nk3GpUu5hUuAdEAB2IaMLaM=;
-        b=R31RyS6wYhie5qTa78HKbdsO8bCUIZlkkHVmquaqHkJx7C+cKo94RTwTSc+Xyj1iVe
-         tc/9y+3LHtwi11pJgy9ewRTyLDnHm4LCJ3estbvAmjFD+AhTtXdKeBRKzzJug8xbGQst
-         /tL+urdQy8Z32lsaOslfYYFftaSRmhc5dzG0Ya8qNcy+sqgdpdQgRsZu5s0Gki9V+Gm6
-         3ik7WY4iqx4eBDeFBZ5w0ja7p0jV2H254yIp9fpEX0iW+Z7Zikg5VX3HdaCHjJL/mMmx
-         m5Ovy8hXwqiKmyN0hGXUzBQAspgyGbFdiNg4p0CdGND+yEtYtmg/1VEBakx/QoUkecKQ
-         Q0lg==
-X-Gm-Message-State: AOJu0Yw0qLJHvNPkWg5fVu0H/41kLo96Ldu2+Ik/7+pmdYcxc38lJj7U
-	royl0C534oFw5eLRCgLAtDfnwZ5OIeachpGoyclYGKAINPI9f8JqJ3SmXWtq4yY=
-X-Gm-Gg: ASbGncu+I6xS3+v9wLoCUvEP+qt6A9u4ts8izRzgsT3gyoEZf6wlkf5M1iH6mhLvcjZ
-	Qrp8rEp5DU1Eslm9y3nge7NmuW0IqhjmzJakmUJgq2T5XzrUdeGMH2MYJ4l4dpwcZbNtdq2UrDw
-	mFI/G5NaCtZxHstRWZqD6vigdr2orHE/ADWnhIKJNy4ZSvNC8NtIqUDbCIvGzL5I5Nymr0UywRd
-	dvKO/Yxke6Oj5ieFtCRFeOrbD26317EyB3PVqV1xw9OcsCwOAXJ7wCBJFd9gTZJaS6nbfB9SChb
-	5rM96nprSuMVfaDJ+s8+VvZw8smZ4pyKdVGFzb3bQtOg8qJt1K8iVWuvWVsMxBqIv4hjSWaez1l
-	7FbrKhQ3Rdy3xDnXretKbubs8W/A=
-X-Google-Smtp-Source: AGHT+IH8USMlxcvWw3brdBxbL20R/qbI2aQmWJLGCZnD+dGhlJtalJjKJ2p9WsroJVe2qodDZtR+cg==
-X-Received: by 2002:a5d:64ce:0:b0:38d:dc03:a3d6 with SMTP id ffacd0b85a97d-399795567f7mr2513425f8f.4.1742465635222;
-        Thu, 20 Mar 2025 03:13:55 -0700 (PDT)
+        bh=KsTKzQd+0EkTWpAX3OmSlSj7NCNCv0EtzNWUjH+/fWo=;
+        b=Da40EyJc1q2shsDoYDDc8m5eMrW6F5GBfrYVq9pWpyFhYL2NsaVqh2nG0R47lDPVOB
+         6/UJqaZI15KTMw1AdD384tt2lwKJH4/tToG6ZAoFbUeGJ5y2rPTYrGd30Xjyhe/cn50u
+         MtBiayt8470EEGHY9w9emIfheki/JX08VdQjn3ITYKbMzERGR6QO4ACTlDoB1tLt0PBG
+         8z9wBsg+wk3ddAhu1Sb05WWLEneKTHQkDkHbu15mhwKmkLIgKbn34MPdI+CGjE/0YF6H
+         h5c2brwP690lRhOJbU+auk3mD7q04iNlCMkegEycIOZlkBeBmh/sPWiKiW29uKRfUzIP
+         MzoA==
+X-Forwarded-Encrypted: i=1; AJvYcCVNilVpjBP/6qclQThfH6+qPry2iI8TE/fbh5479nQ7e+ACmQmpOV0zu0h/EwHZZjeATqz6K/vqHUHtaP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwU7wzZb4eyzzqFmZicKyTqWsyyLOkhcvHsX6dp/pp8k4OkfoEs
+	vCgxdg/cH6RBbohQEFuYpxvIRpi8VEcfwgB+pu2E/hGKjKqELEqh9lR8ew6saBo=
+X-Gm-Gg: ASbGncsUv0wsc4oJgv+PLT2jAIqJj6ASkaaAxLxj4SaMEkfa7vrnlqwGcIUdmDAmcbv
+	60gcTHmzWB6xHsNkw0IYSRaSg34f03no1ZyvC9gpEIZoJR+/D8Y6XV2m2ydMC1upWqIWG4BRl/O
+	TVByepyARZfwUbQaMln4Ercpx2BqrrrvFu3LiDNfmnlxm4p0LDYmY/m9XFBpyEX3A5cUqMoOUrk
+	C+2kP/QtSmNoYq3XbIu/nIIQ/i79OM86a35S1eqZID92HKKm9UY5uYF1HHQhr43pm9ZUE7KMlcb
+	PezIjv+/TZyCShSozXzvivC5QIuQe6rvc9rxM+dHkj+lEkyHaGDx4Ox+GveyBOvD3u5DYfv11eL
+	a4bThJ2DYqPAppRlP
+X-Google-Smtp-Source: AGHT+IFim8WXF4Bw641hmtsIGi/r9529B0IxX/j4bUMRvtVtznNxhRUIgBVI1Lkw4lHn3sf2W9z0JA==
+X-Received: by 2002:a5d:59ae:0:b0:398:9e96:e798 with SMTP id ffacd0b85a97d-399795a8cb5mr3197534f8f.13.1742465694455;
+        Thu, 20 Mar 2025 03:14:54 -0700 (PDT)
 Received: from ?IPV6:2a01:e0a:3d9:2080:3bd:568:f697:d1a2? ([2a01:e0a:3d9:2080:3bd:568:f697:d1a2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b6a5esm22990493f8f.27.2025.03.20.03.13.54
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b7656sm22861868f8f.40.2025.03.20.03.14.53
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 03:13:54 -0700 (PDT)
-Message-ID: <6f1470ee-4807-40be-8f22-d093700a575a@linaro.org>
-Date: Thu, 20 Mar 2025 11:13:54 +0100
+        Thu, 20 Mar 2025 03:14:54 -0700 (PDT)
+Message-ID: <2fafed58-4959-41ca-b0e1-c10a8da60aa1@linaro.org>
+Date: Thu, 20 Mar 2025 11:14:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,14 +69,23 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: Neil Armstrong <neil.armstrong@linaro.org>
+From: neil.armstrong@linaro.org
 Reply-To: neil.armstrong@linaro.org
-Subject: Re: linux-next: Signed-off-by missing for commit in the amlogic tree
-To: Stephen Rothwell <sfr@canb.auug.org.au>,
- Kevin Hilman <khilman@baylibre.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
- Linux Next Mailing List <linux-next@vger.kernel.org>
-References: <20250320211150.3d09eb46@canb.auug.org.au>
+Subject: Re: [PATCH net] wifi: ath12k: properly set single_chip_mlo_supp to
+ true in ath12k_core_alloc()
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson
+ <jjohnson@kernel.org>, Aditya Kumar Singh <quic_adisi@quicinc.com>
+Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250303-topic-ath12k-fix-crash-v1-1-f871d4e4d968@linaro.org>
+ <24b2f1f8-97bd-423a-acbd-9a5cd45e4a40@oss.qualcomm.com>
+ <7901d7f0-d6d0-4bf3-89ad-d710e88477b7@linaro.org>
+ <7b4b598f-bc13-aa4b-8677-71477e1f5434@quicinc.com>
+ <8b05760b-db99-4b43-8444-d655b18d3699@kernel.org>
+ <770daf27-ae9c-4ed5-87d0-aadcc3b74bbd@oss.qualcomm.com>
 Content-Language: en-US, fr
 Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
@@ -102,25 +112,77 @@ Autocrypt: addr=neil.armstrong@linaro.org; keydata=
  4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
  QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
 Organization: Linaro
-In-Reply-To: <20250320211150.3d09eb46@canb.auug.org.au>
+In-Reply-To: <770daf27-ae9c-4ed5-87d0-aadcc3b74bbd@oss.qualcomm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Jeff,
 
-On 20/03/2025 11:11, Stephen Rothwell wrote:
-> Hi all,
+On 19/03/2025 19:32, Jeff Johnson wrote:
+> On 3/19/2025 3:27 AM, Krzysztof Kozlowski wrote:
+>> On 19/03/2025 10:06, Vasanthakumar Thiagarajan wrote:
+>>>>>> ---
+>>>>>> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+>>>>>> change-id: 20250303-topic-ath12k-fix-crash-49e9055c61a1
+>>>>>>
+>>>>>> Best regards,
+>>>>>
+>>>>> NAK since this will break QCN
+>>>>> There is a series under internal review to address MLO issues for WCN chipsets
+>>>>
+>>>> ???
+>>>>
+>>>> The original commit is wrong, this fixes the conversion, nothing else.
+>>>
+>>> Nope. Driver changes to enable MLO with WCN chipset are not there yet.
+>>> Setting the mlo capability flag without having required driver changes
+>>> for WCN chipset will likely result in firmware crash. So the recommendation
+>>> is to enable MLO (in WCN) only when all the necessary driver changes
+>>> (in development, public posting in near future) are in place.
+>> Really, these are your answers? There is regression and first reply is
+>> upstream should wait for whatever you do internally. Second answer is
+>> the same - public posting in near future?
+>>
+>> Can you start working with the upstream instead?
 > 
-> Commits
+> There is a lot going on in this thread. I want to address the big picture. It
+> is no secret that Qualcomm has historically focused on downstream drivers, and
+> upstream was mostly an afterthought. But that mindset has changed. Qualcomm is
+> fully embracing upstream kernel development, and has actively recruited (and
+> is still recruiting!) experienced upstream Linux Kernel engineers. And in
+> places where there are shortcoming, Qualcomm has partnered with companies like
+> Linaro to bring in needed support. So Qualcomm is very much "working with the
+> upstream." We may not be working well sometimes, but many of us are still
+> inexperienced with working with the upstream. We are coming up to speed.
+> Specifically for Wi-Fi, we have a large number of engineers who have primarily
+> worked on downstream code who are now working on upstream (including me!). And
+> we still have the issue that many of the products we are shipping now still
+> have a lot of downstream DNA, especially when it comes to firmware interfaces.
+> So please bear with us as we learn and evolve.
 > 
->    5ed591a0d5dd ("MAINTAINERS: Add an entry for Amlogic pinctrl driver")
->    7c17ddbb050e ("pinctrl: Add driver support for Amlogic SoCs")
->    793d454f91e7 ("pinctrl: pinconf-generic: Add API for pinmux propertity in DTS file")
->    f2ecac49778e ("dt-bindings: pinctrl: Add support for Amlogic A4 SoC")
-> 
-> are missing a Signed-off-by from their committers.
-> 
+> Please keep the constructive feedback coming. And remember, the more detailed
+> the feedback, the easier it is to incorporate the feedback.
 
-My bad, bad rebase, thanks for reporting.
+Thanks for all the feedback, all this escalated mainly because the 46d16f7e1d14
+commit doesn't do what is written in the commit message, and there were no clear
+sign MLO support with WCN firmares would be removed shortly and redeveloped later.
 
+As final note for this patch, do you have any timeline for when MLO would be enabled
+again on WCN chips ?
+
+I'm happy Qualcomm is embracing mainline development, but Qualcomm still ships
+hundreds of different incompatible firmware and downstream drivers variant in the
+field, and this makes system integration very hard.
+
+And as you mention the partnership with Linaro, we are very happy to help
+and support your mainline development over time by reviewing, testing and
+reporting.
+
+Thanks,
 Neil
+
+> 
+> Thanks!
+> /jeff
+> 
+
