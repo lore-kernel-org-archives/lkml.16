@@ -1,94 +1,105 @@
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A84042A80;
-	Thu, 20 Mar 2025 17:15:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C2EF42A80
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 17:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742490925; cv=none; b=mVTrhVxnKcSXy/FDSNp0oxpsfcx+f+NWPfSnVT4hmxZv/CH4aguUpi44T1sIN4VdUxvWtl/XvYNcV4CgywW9aetUpDsgfDiD7U8dkh5XMABfxLfLRIRA9v8ZcSajUJbuCMvbkcHxQ+C4JRzBbAyXyFIO8NnnYPnd8S2fWGWku6k=
+	t=1742490960; cv=none; b=TBa3hdqGdoqIkEWuQ0bnPeNxitM3+fpknNS42ndzgiaZXstS5OFVRk1r0Lb1PJRqiDtbTrMZ3EMVE3/Qj3AeLAN0WK9IjR+MNSEqy/lhGbnRsuQbo8OU8fScgZk6tdql5aU1zsVKkpKjbr9FTclGQmBs9RwmpXSuv9N0tfSD05M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742490925; c=relaxed/simple;
-	bh=hOqyTiYO4SAvCtYtejWnWK1GKbOLHYL+G0pZHLC9R1w=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Wke0ZzF3c8kux3xr7Sk58riTh7Mo6/Gx5wru/nl4P1fIS/bHoh6CbM5+QV3YUpFuRPJMor5+KdRIwhAN9yAWBmuIL6eCNEGbEJZpan4SQC/Px6bxKpkrFQMdifcHq+0OmH0jDPr4jE5j/z/dwARJgZfOK1KzBTwMlEUYEG+wJUY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=J9IJpfJx; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742490960; c=relaxed/simple;
+	bh=5vcA7VYkAbR6dJ4uPGsop0RCD9nTLsdEHjU7/It/kNw=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=UYxRTp+h/DKfX8gKsDNUm1T/ny5JZ97+ly30o1yqfuRejF0kGioKX5O6ZPRag2HVzC+RPK+WY96NGfPfqdiv4Wun6w8pnXame+O0Bjck6lXv4MbhKR2r9Git5f68gqQOr6k6CwutvnWdmJt92OFbY5oX9uVpTbTpV4/ti9YfecY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jifhEwLO; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="J9IJpfJx"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B8861443AB;
-	Thu, 20 Mar 2025 17:15:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742490914;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=SxcpHL6JN0oeezTkg7NVy58dIuvVNMDJ2U1SuOSdwYU=;
-	b=J9IJpfJxCUQy4Nmv3ICqgxXGSZ6zv41jNmXAdsbdKwqXzLaMoy2ew7RCtXu5kef/Qj3UaF
-	2+zElCQGrOuVLtFPPGpzcf0ORi6zbAgThOr3jt8MSGqTewV8LkyAcFrOub33cnTGhHm4ar
-	+Yjt05/rZBHpbLjzJ0yMU4mJPyS1sVB0JlyPwtCLy0Rek9OG/1w4yvPoe0lqnNZN7Hy4ZH
-	iDkGER6Agr4nUeyy4ujo3PCO0lt28Nff7uJGFke26TRdk+V2mG5xX4NQNx6whIo35RVIvA
-	mOBc/Tkse0yiIsQ/+2DTBIftNn2i5pBmRhc9cRmwADMAw5PcFX20fwBKo1+lIA==
-Date: Thu, 20 Mar 2025 18:15:08 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>
-Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
- Antoine Tenart <atenart@kernel.org>, Sven Peter <sven@svenpeter.dev>, Janne
- Grunau <j@jannau.net>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, Andrew
- Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>,
- Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Linus Walleij
- <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, Huacai Chen
- <chenhuacai@kernel.org>, WANG Xuerui <kernel@xen0n.name>, Jiaxun Yang
- <jiaxun.yang@flygoat.com>, Neil Armstrong <neil.armstrong@linaro.org>,
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Anup Patel
- <anup@brainfault.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
- Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
- Ghiti <alex@ghiti.fr>, Maxime Coquelin <mcoquelin.stm32@gmail.com>,
- Alexandre Torgue <alexandre.torgue@foss.st.com>, Nishanth Menon
- <nm@ti.com>, Tero Kristo <kristo@kernel.org>, Santosh Shilimkar
- <ssantosh@kernel.org>, Kunihiko Hayashi <hayashi.kunihiko@socionext.com>,
- Masami Hiramatsu <mhiramat@kernel.org>,
- linux-arm-kernel@lists.infradead.org, asahi@lists.linux.dev,
- loongarch@lists.linux.dev, linux-mips@vger.kernel.org,
- linux-amlogic@lists.infradead.org, linux-riscv@lists.infradead.org,
- linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [PATCH v2 06/57] irqdomain: irqchip: Switch to
- of_fwnode_handle()
-Message-ID: <20250320181508.132c4636@bootlin.com>
-In-Reply-To: <20250319092951.37667-7-jirislaby@kernel.org>
-References: <20250319092951.37667-1-jirislaby@kernel.org>
-	<20250319092951.37667-7-jirislaby@kernel.org>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jifhEwLO"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2265a09dbfcso26126765ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:15:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742490958; x=1743095758; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=5vcA7VYkAbR6dJ4uPGsop0RCD9nTLsdEHjU7/It/kNw=;
+        b=jifhEwLOsTmmg5SUxzZWE5IxMAgs2cJJVvZbiOjzWcRSVWZJpiS1cfWoE628redgEY
+         B5IV5a4SaTq3FhFbEzMyl5SOsQaAUXvA9xOgF/L9UodHJqLuVOSnfvraIdmt2kD7BgiC
+         ehZNktjwN/w5rUZAbCMmnmPxIopUz5upyawMHaSp/rxxm47ktCL4FeC7xmaborOPImLY
+         JDdPo+wo6fCoMIpRbMKh1TjbJ3pHrOt0R+t1BZlYK7dCikcidmYetkANKEIhne5Q+mGk
+         Vs6Fbb+5G2sxpsZrox5rSOR+Y4VhAxN4v0yhexTML2kpb3k/C+RB0E/Q4Hbh72J9P2sx
+         /vdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742490958; x=1743095758;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=5vcA7VYkAbR6dJ4uPGsop0RCD9nTLsdEHjU7/It/kNw=;
+        b=HU5nkgx+HsDwnEs/efGW60W9/ry6sb42sHLOtCrcPgHwVg4IjWCdM0Lf27Nk6w7cC/
+         o9p6L7NuPz6q4GMNjU6mM8+VXbXgb7N+bfttR8n264zPS2jAirSNdTDhzS7WO4WE3niv
+         wwao120OrABgWyB3gHuPD5LSrNU0NCgF+Fi+gS6zGZaGF86efV/Hkp4mDY70FyBmvtlv
+         PfbxhhAQK1kXjlU67Z13pEZRaGjny58u9lE5Yt4thwSZq58HIsGTppGE2Y1EaFUFcHNC
+         ij9C858EiSH1qzqTmbCMbi9pAfZ9hj3IdAqpBLLxwLaJ3oPaNmqNTw/9KnvwcVh93h+c
+         NaCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXmcIvNoyeMs3Qqsh6yIMZN2Diz/AQu74Ru2RXONMW7Wyo68NjX/q4eA64QpUpu5CVfKtG1T5sUIPT2aHE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzIt6hmnqGfqdI0ShbQSuxH6ovR7DGAUFxtnEbauzp8SAdxn+Bl
+	kkfCLGnGC/mHczitLZoC0At6NuJ6tZ2l8n8iwGJxl4i8jsqevBQL2P0WDCAVaov+jad7+J6ihp1
+	0I1YOop2fzmyB/kZN7Q==
+X-Google-Smtp-Source: AGHT+IFSTOZJPhF0A6p4zYu8XqyFCbfj+1u7L3mgdhQb13y/kwPpTEfBMQ3apw/ZGc9/6LxAV+vBXTVj5vs9bXs4
+X-Received: from pfbkq8.prod.google.com ([2002:a05:6a00:4b08:b0:732:6425:de9a])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:6a00:b55:b0:737:678d:fb66 with SMTP id d2e1a72fcca58-73905955db0mr383661b3a.5.1742490957851;
+ Thu, 20 Mar 2025 10:15:57 -0700 (PDT)
+Date: Thu, 20 Mar 2025 10:15:45 -0700
+In-Reply-To: <16b14662-d69b-478a-9e2f-a05c56f2c4ce@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgddugeekjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtkeertdertdejnecuhfhrohhmpefjvghrvhgvucevohguihhnrgcuoehhvghrvhgvrdgtohguihhnrgessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveeiffefgeeitdelleeigefhjeelueeuveekveetgeffheeltdekgeduiefggfdvnecukfhppedvrgdtudemvgdtrgemvdegieemjeejledtmedviegtgeemvgdvvdemiedtfegumeehkegrnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegvtdgrmedvgeeimeejjeeltdemvdeitgegmegvvddvmeeitdefugemheekrgdphhgvlhhopehlohgtrghlhhhoshhtpdhmrghilhhfrhhomhephhgvrhhvvgdrtghoughinhgrsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopeefledprhgtphhtthhopehjihhrihhslhgrsgihsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehtghhlgieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopehmrgiisehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhesvhhgvghrrdhkvghrnhgvl
- hdrohhrghdprhgtphhtthhopegrthgvnhgrrhhtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehsvhgvnhesshhvvghnphgvthgvrhdruggvvhdprhgtphhtthhopehjsehjrghnnhgruhdrnhgvthdprhgtphhtthhopegrlhihshhsrgesrhhoshgvnhiifigvihhgrdhioh
-X-GND-Sasl: herve.codina@bootlin.com
+Mime-Version: 1.0
+References: <16b14662-d69b-478a-9e2f-a05c56f2c4ce@kernel.org>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250320171545.2324955-1-changyuanl@google.com>
+Subject: Re: [PATCH v5 02/16] mm/mm_init: rename init_reserved_page to init_deferred_page
+From: Changyuan Lyu <changyuanl@google.com>
+To: krzk@kernel.org
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+	catalin.marinas@arm.com, changyuanl@google.com, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, devicetree@vger.kernel.org, dwmw2@infradead.org, 
+	ebiederm@xmission.com, graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, 
+	kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	luto@kernel.org, mark.rutland@arm.com, mingo@redhat.com, 
+	pasha.tatashin@soleen.com, pbonzini@redhat.com, peterz@infradead.org, 
+	ptyadav@amazon.de, robh+dt@kernel.org, robh@kernel.org, rostedt@goodmis.org, 
+	rppt@kernel.org, saravanak@google.com, skinsburskii@linux.microsoft.com, 
+	tglx@linutronix.de, thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Jiri,
+Hi Krzysztof,
 
-On Wed, 19 Mar 2025 10:28:59 +0100
-"Jiri Slaby (SUSE)" <jirislaby@kernel.org> wrote:
+On Thu, Mar 20, 2025 at 08:10:48 +0100, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> On 20/03/2025 02:55, Changyuan Lyu wrote:
+> > From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
+> >
+> > When CONFIG_DEFERRED_STRUCT_PAGE_INIT is enabled, init_reserved_page()
+> > function performs initialization of a struct page that would have been
+> > deferred normally.
+> >
+> > Rename it to init_deferred_page() to better reflect what the function does.
+> >
+> > Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
 
-> of_node_to_fwnode() is irqdomain's reimplementation of the "officially"
-> defined of_fwnode_handle(). The former is in the process of being
-> removed, so use the latter instead.
-> 
-> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
+Signed-off-by: Changyuan Lyu <changyuanl@google.com>
 
-Reviewed-by: Herve Codina <herve.codina@bootlin.com>
-Acked-by: Herve Codina <herve.codina@bootlin.com> # irq-lan966x-oic
+>
+> Incorrect DCO chain.
+>
 
-Best regards,
-Hervé
+Thanks for the reminder! I missed "Signed-off-by" in a few patches from
+Mike and Alex where I did not make any changes. I will fix them in the
+next version.
+
+Best,
+Changyuan
