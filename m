@@ -1,62 +1,62 @@
-Received: from mail-io1-f47.google.com (mail-io1-f47.google.com [209.85.166.47])
+Received: from mail-io1-f45.google.com (mail-io1-f45.google.com [209.85.166.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B32124BBF2
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:54:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3992C227B8E
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:54:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742496852; cv=none; b=h675DnqNI5n4zQzPvpsAbx44gU1RDTCa55gDMPm/1k/oaej8wzoSucy9MUPLaXOvZHTGyyfRyceJTKINvm/yPMxyh2XKOB1lG6RTBjJeP6jPodzNJ82/E4/8BrTIYfVkfRj4rQzF8foMQA3vI1tCl+sCJITWB9N3iFqsxcCKKOo=
+	t=1742496852; cv=none; b=uQj/xKSNGcd3Y2tQRUwMgmV47JXZPogIaT9YrG0BGu94SdkI6SzseAIsS7I1+UETWFUaIedYrtzqGcRK+AR7g8WJI/ObOuOfo2/5wjpK2N7vHhA5F++UyOJkUM+3dsy8OCRvtDl+ZDpat/gdK78THFRcY6iQtOKseRoUKel0KpQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742496852; c=relaxed/simple;
-	bh=jo1ydT2hB6u1cx8n6xgWYmM/1GUAUgZV4IauZsWcOk0=;
+	bh=2hj07UwdhkVjVMyzWoCwFWPShBiCLBIyGVcsL78LCFs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N6HZJaHtx4aXjdmE40GJ3FpsuPiBJrDt6Yj/zWjH1gntZ4Z9+1Wn3krfUgdc57NOE8JTbJaO/Eyj0joO9RjNZ+20gJruugd0gxTKIxOTsFIRG/ebf+qq72IjoqNRkVN5zazTAq1n9iycqc04gYGHQbNH7D2L3XDUI+giqR2/okQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T2x15mOz; arc=none smtp.client-ip=209.85.166.47
+	 MIME-Version; b=bXYMuSe6HPQtYr3t9MRB6scZ6ObB4p51h+HNPQykad3naMiOYva3YryKDbvKdz9yMef8CuHBE+fKrVcpLHAF+ebkJMwhsWqvDKb4YN1MGr786miL8f4wxrUEoHA2kamkEHpaytnzx4nvYI60+RNQnulswm161kVtHELlWC4cyD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnH357E5; arc=none smtp.client-ip=209.85.166.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T2x15mOz"
-Received: by mail-io1-f47.google.com with SMTP id ca18e2360f4ac-85b4277d03fso43924439f.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:54:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnH357E5"
+Received: by mail-io1-f45.google.com with SMTP id ca18e2360f4ac-85da5a36679so109022739f.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 11:54:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742496849; x=1743101649; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742496850; x=1743101650; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=riXSD1tORrHtkttiQwAlqFF38I5b7O133kwF8VYREw8=;
-        b=T2x15mOz1CSO6ZORPg77Fz2K00aOoPBU5wKc1um9gmMd2RWyC+4qgc1m/N9Ctr6Lio
-         232pbeWRzCLGc1i+KqjMAhqigW3Ve6+clAK/vIDo3Wn+yPVY6a5bknNkexeB7X2/TG1z
-         Dg2tRIScx43IfCzGY89icFN9DCv37PyzmD98n/TFX7L2zh+nYBwkeA3riPL7tifuBjpf
-         J4eG0llN9VJvMW95wKIJZ7es6wsy8wlKwIo1ACo4Ncv+bLuSbl6K3J7qERkzgiaor/nf
-         mfdt7xjG+PH1gJ9SG0tJ5GgpyuBNYDy4n7jpgtAu1myRoWUk2Q+kxjO3FPS59GqU1YR2
-         s+9g==
+        bh=/+QMYU6kMnFOETa/gyjW3XwbPIpROUU0JSPdCI4eHHw=;
+        b=LnH357E5aATLNc7FWU3AyA0CnWX76vsxMNdNHuTU/w5WjTQcC1JG8wjPA4QzfBQOFg
+         abAozYwi14DkZSer9N5pRF6ISI0dQ/Qs1fIYQPP2uNzZNP9dIfYFaP3qZNXU6f7gcJHz
+         iuolKWZTwzFMoONaNP3UNTw+7Qh7O8EV1q3eGLQ/lY+XG1YnQu29///FYd00PJ8QYJ5g
+         o4SJaqogCBoM3WtCv8pWU9U0q++Lt18dutGoutmdea6O7Xd6p/a47Pd2hfP1P+zLGcVK
+         cCj1HqKoOCvJf8fleUh5OGdcd5hNuVDhPFrZ8byjq5LgfgbokTmePcX5PTazKy6H1/nJ
+         fTuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742496849; x=1743101649;
+        d=1e100.net; s=20230601; t=1742496850; x=1743101650;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=riXSD1tORrHtkttiQwAlqFF38I5b7O133kwF8VYREw8=;
-        b=rqhNgelYbt/vcuJzafL/fFp4iFodfvC4ytnWiKfAaiSuvs/XApXvnxu2hmh7OYneeF
-         5/iLg/aivul596HFove7d/6AuufpeC2YPLNPp5T9kv1pJ/g+PSZWNOPW97ZHZNMiQrll
-         S2adjbG3u51YH5y4h2lHvlcbOMoqx1iQVeQ8gKqWoZ0zwB6/6StcroaSHPhBC3Y3NmZc
-         tmn+bEE8jNY/3i70IaDUVunsWG3GzVGrkg/5gvVhMv0pCSisZQuuWHzLoEou5TLkXVAP
-         GrWpg5AeF0J85z1aTxMg6ZvKPlm15KoCj+CKegWnDLekLOmvMgW2dlm0S7s9DDFhvBG7
-         95kw==
-X-Gm-Message-State: AOJu0YyuCpA8WzAGgtqMWuqMaRl9oK+5zL8FWsr9lRqRXFghkwea0cW7
-	HvMT95Y0cdgWIlTuCkq1J0mOYfb81reWPM5hknI3umkbcqpLi4og1l8hTxeE
-X-Gm-Gg: ASbGncv6cQB7pQ5VCLsLh1xkrILXO3LoV6FtLc+FQ6iRPbgt+zCUJSuWFQALe2jChrC
-	Id+i0kZOdgQTRFhkiske1nq33f1NYI802S9vFtZjpyVxlADXZt5HXE5IveVS90WDkJrtJ/8xsH7
-	z1AfjlTg0ItoZyVOwcVizhwhY/cj5wiVJuE8wlsxictSb1AUOIqQyMfND7BoEwxHXnP8QMJUoa9
-	F4vwpJqbnThjs/2Ux9r0ITnsxZE0LK2OLRCYKmp3Q5QgZq0+ZqQceX2RIm9KYIpRyPgYGxdy80z
-	bilsnX4P0SE7T3xhXpdU72IdF+3f8TdQyoS2BFdo4GU4wIMxE4V6yBkapcStwsJtKAl1qO9icP6
-	FBg==
-X-Google-Smtp-Source: AGHT+IF1oSBpmraBX8zPImUtfNnxyTPneTMK46EMc6j1uPXohNjQQHHeHYBBNbkda865fA0ElyE4Lg==
-X-Received: by 2002:a05:6602:4145:b0:85b:37eb:f466 with SMTP id ca18e2360f4ac-85e2ca19f85mr41137739f.1.1742496849336;
-        Thu, 20 Mar 2025 11:54:09 -0700 (PDT)
+        bh=/+QMYU6kMnFOETa/gyjW3XwbPIpROUU0JSPdCI4eHHw=;
+        b=SP3KmvU5fFJiHLZNfhUWWIWWk5TA8utod5QzcD211hmloyvo6jwgAo6DKDztCXk/Fs
+         A6Yp9H0PyurFl62rnn3PO9LIa7+8CHPM4oemu1ub636W2+izrllbVhcVu9ZHlpsYlrxh
+         eT20VPcVHP1H5+lkLMbWxe5BGR+v7e4Z1YDWmlkoeApZKspiqaupqHAByr5jweF1ogSt
+         mF9eNvF8I1sHJ1vJqLSuYmBTxu6d0wDFpaOI2CDwuSycd9AiIBqNlgU1k2OIo0D1cksp
+         W/h5iOyWSgR07V2vx/pfKLLh3rTmnTFm8iLUInB9uy7/db0uGZSH8cb5VzZXkxj5Zv9r
+         axfg==
+X-Gm-Message-State: AOJu0YxbVfG5Ur8XjbPVV6FfcVHgVYXnIHyXQ2dZOdaHGvLdbAOPcYyn
+	2TbZ9m0Z/kudM1OCMxtzJzz+ZAFOVd0ytCPveo7zkrRLwiRYTN4w39wOrCfF
+X-Gm-Gg: ASbGncvBJQRAXzwOLZ2rdkhoe8+yFb9aiyS3pz8wg90HXixO4N5w4eWHXXnHdC+rt77
+	RPq1Y6rwWUAq2uPhqOgD4xabr0h6j4/0VhCpsNDRDJ7rW+R4hGn/6gLuWjP7q6RJCc81/K+Jqzc
+	FBkdmvPzF3egLXJ8468emIxyoN1smjLAbSThOlgePj/7S1JmlY83Wv4vdHcvXvmoAbGJzL0Nip3
+	SOM3VrJ4WnaYLGbJORmk0yVpRfIO1bslj0H2vJVIHKdJKweCkDE3Akp3Lxp72QOVk/95l/lrZ67
+	0rkCkbej4bKviTvbLErHobUjIrCK1sqU8zUBPFHu6OxkppXcUbH3FDH9uFPBa1e8j3PNjFGCfbm
+	z6NNTM0KMvUP7
+X-Google-Smtp-Source: AGHT+IFM14DB5b0+Yb3xk+iy8bUVQ6+k06Y9+AI7/qq96L95YVo4adquNQGvMAtgqIcPJKOtb0c8DA==
+X-Received: by 2002:a05:6602:408e:b0:85b:4170:e1a1 with SMTP id ca18e2360f4ac-85e2cc7c771mr36727539f.13.1742496850400;
+        Thu, 20 Mar 2025 11:54:10 -0700 (PDT)
 Received: from gandalf.. (c-67-165-245-5.hsd1.co.comcast.net. [67.165.245.5])
-        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-85e2bc273e7sm7078039f.17.2025.03.20.11.54.08
+        by smtp.googlemail.com with ESMTPSA id ca18e2360f4ac-85e2bc273e7sm7078039f.17.2025.03.20.11.54.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 11:54:08 -0700 (PDT)
+        Thu, 20 Mar 2025 11:54:09 -0700 (PDT)
 From: Jim Cromie <jim.cromie@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	dri-devel@lists.freedesktop.org,
@@ -73,9 +73,9 @@ Cc: jbaron@akamai.com,
 	jani.nikula@intel.com,
 	ville.syrjala@linux.intel.com,
 	Jim Cromie <jim.cromie@gmail.com>
-Subject: [PATCH v2 57/59] drm-dyndbg: add DRM_CLASSMAP_USE to the drm_gem_shmem_helper driver
-Date: Thu, 20 Mar 2025 12:52:35 -0600
-Message-ID: <20250320185238.447458-58-jim.cromie@gmail.com>
+Subject: [PATCH v2 58/59] drm: restore CONFIG_DRM_USE_DYNAMIC_DEBUG un-BROKEN
+Date: Thu, 20 Mar 2025 12:52:36 -0600
+Message-ID: <20250320185238.447458-59-jim.cromie@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250320185238.447458-1-jim.cromie@gmail.com>
 References: <20250320185238.447458-1-jim.cromie@gmail.com>
@@ -87,27 +87,32 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The drm_gem_shmem_helper driver has a number of DRM_UT_* debugs, make
-them controllable when CONFIG_DRM_USE_DYNAMIC_DEBUG=y by telling
-dyndbg that the module uses them.
+Time for some thorough CI.
+
+Also, the previous 18 patches could perhaps be replaced by a single
+invocation of DYNDBG_CLASSMAP_USE, from a C-file linked into all drm
+drivers & helpers.  I didn't find such a file, nor a drm-client
+linkage item in the Makefile.
 
 Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
 ---
- drivers/gpu/drm/drm_gem_shmem_helper.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/Kconfig | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index 5ab351409312..481d18561688 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -23,6 +23,7 @@
- #include <drm/drm_print.h>
+diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
+index fbef3f471bd0..c7d6adbe17eb 100644
+--- a/drivers/gpu/drm/Kconfig
++++ b/drivers/gpu/drm/Kconfig
+@@ -53,8 +53,7 @@ config DRM_DEBUG_MM
  
- MODULE_IMPORT_NS("DMA_BUF");
-+DRM_CLASSMAP_USE(drm_debug_classes);
- 
- /**
-  * DOC: overview
+ config DRM_USE_DYNAMIC_DEBUG
+ 	bool "use dynamic debug to implement drm.debug"
+-	default n
+-	depends on BROKEN
++	default y
+ 	depends on DRM
+ 	depends on DYNAMIC_DEBUG || DYNAMIC_DEBUG_CORE
+ 	depends on JUMP_LABEL
 -- 
 2.49.0
 
