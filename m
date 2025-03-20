@@ -1,102 +1,150 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1998422157F;
-	Thu, 20 Mar 2025 11:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F133F21E0BC;
+	Thu, 20 Mar 2025 11:43:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742470979; cv=none; b=HdgxM957OsTONZnyE0GF3ZcLkgclRks0Hy10UQw788iMlSAkvwIR7bH0EnruB0ilIQAIMgzIAS7HtDg3I39I6mIIB8j2/DKTsGJwHBFawWNJD+bvSW7C1xar8cAnDPrmJuGN35bkblPMoggyzOpIjpSdYapRIcUNStwxvEFTL98=
+	t=1742470983; cv=none; b=trF/kfULW65GKKQy6lVFm3blnol80DPVBp7rG9c/7bLmdxQtXsG8iIcJVEJexetVASa9ypdZicCrbY4BVyEWOnD5RndBnCyHC+mm19Gye/o9LernoRWGNw1QMbo4MtK6p8DBlJeqHci9Jv8UltHjBfyUJDNh7Dt9VQWIhBrlfPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742470979; c=relaxed/simple;
-	bh=jCvarqBKWorrrpUzuPAMbwKq4dDSB6+ZMUEviakxeIA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lSl27BwbE544EqR0wDLDotf7iUI4WomaxC8JGq6IuaGh6iQxn1U5on5rFVhQSIfvPK68GRvCXq1w+h++h6gSBM2o37WHe3aafq0nd15XHrg31CgJoxQOOjA1plCRJjC5hYVS5Zfs29Q+Sa/toekTrEVvSsBYTjvmQRE/QWoji2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFOwjvTe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742470983; c=relaxed/simple;
+	bh=hMoN5nrOBX6BPHmo1EYYh4t0YkawVfiChcxjCi7UeBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TNnobbiKmF2DONnDyeRmNr2E/H/iE8c4OKWwosqwlLhrBWqJcL54AgVVSqTTsmGs+XgXJVqXjEFi8niDxm2zpgVBrQtlVu31WvKC/du6+bVBfeIHVK78ou5bCf1X/jG/ce1vAgbqsKpTx2bdH50d/HXHCn42/JKtOeABUe4kO/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OVzP6ba8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aFOwjvTe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBFEFC4CEEA;
-	Thu, 20 Mar 2025 11:42:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OVzP6ba8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96620C4CEE8;
+	Thu, 20 Mar 2025 11:42:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742470978;
-	bh=jCvarqBKWorrrpUzuPAMbwKq4dDSB6+ZMUEviakxeIA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aFOwjvTepPKm0/EgUOUo4CQAgKdBdzkXt+Pzutohh1tr0Ru9epzXWuuExYOOCeHIK
-	 VdTIYSl7QYb0fle2eufzGR4PdlpIJZtGD+yX6D9yEai0LlyBII0cWChUZre9I5AFgT
-	 49IYOib0Gb5MbEnfE61iRJKK/NLeSlgpcIsFgcP5phpqyFqT3LMX3/HjRb7UcMCHmT
-	 yxkAR32JwyD6ZY4o56V12IW3poaqJhW/WbIT38J3DhilM0NG1PMRwMHinp5P3A30u7
-	 0WkoslmXOfYOZmU34GYaiOhUFhSS3kvQckvNmO23cFEyf2iCZO6em0NLK9qyGZP2jk
-	 bVPTRCOdvcDMw==
-Date: Thu, 20 Mar 2025 11:42:53 +0000
-From: Simon Horman <horms@kernel.org>
-To: tang.dongxing@zte.com.cn
-Cc: krzk@kernel.org, davem@davemloft.net, feng.wei8@zte.com.cn,
-	shao.mingyin@zte.com.cn, xie.ludan@zte.com.cn, edumazet@google.com,
-	kuba@kernel.org, pabeni@redhat.com, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, yang.guang5@zte.com.cn,
-	yang.yang29@zte.com.cn, ye.xingchen@zte.com.cn, xu.xin16@zte.com.cn
-Subject: Re: [PATCH] net: atm: use sysfs_emit_at() instead of scnprintf()
-Message-ID: <20250320114253.GJ280585@kernel.org>
-References: <e0204a28-7e3a-48f9-aea9-20b35294ada6@kernel.org>
- <20250317170902154iQh7_gBiO8KjCrFrhnAqn@zte.com.cn>
+	s=k20201202; t=1742470982;
+	bh=hMoN5nrOBX6BPHmo1EYYh4t0YkawVfiChcxjCi7UeBg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=OVzP6ba8ZkwsUCYildrFJMpMgUrpPRlN2rFyyAhMNRmr2bealjh3SFYYlwDp7LbjV
+	 TI/cGLzjPMpRTUJMKZx4q/3kj+NO1P5Gz0xDO4sfxDTUaQ98oogP6J2fHmh/uOOa2g
+	 LB8pDTWDoVkgB0Wg3MavTkQteGVjkD/3r8Znvp+ytp6JmaakPYK4y8/4gL9tMgwaQ5
+	 VPbblOBuO5OUlYHRCZr74/yaIhPBaTeJGzols8rIqTQhj002sRWzLo4YykTHyOPkc4
+	 1bdVBizqwOtDwrLrKFXZiA/2Ad/0k7yXKqNm2zMsS5DoXy93z4MXMVpTwSU0hxiikQ
+	 Eo9o5Kb2T8aiQ==
+From: Jiri Olsa <jolsa@kernel.org>
+To: Oleg Nesterov <oleg@redhat.com>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andrii Nakryiko <andrii@kernel.org>
+Cc: bpf@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	x86@kernel.org,
+	Song Liu <songliubraving@fb.com>,
+	Yonghong Song <yhs@fb.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Hao Luo <haoluo@google.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Masami Hiramatsu <mhiramat@kernel.org>,
+	Alan Maguire <alan.maguire@oracle.com>,
+	David Laight <David.Laight@ACULAB.COM>,
+	=?UTF-8?q?Thomas=20Wei=C3=9Fschuh?= <thomas@t-8ch.de>
+Subject: [PATCH RFCv3 05/23] uprobes: Add nbytes argument to uprobe_write_opcode
+Date: Thu, 20 Mar 2025 12:41:40 +0100
+Message-ID: <20250320114200.14377-6-jolsa@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250320114200.14377-1-jolsa@kernel.org>
+References: <20250320114200.14377-1-jolsa@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317170902154iQh7_gBiO8KjCrFrhnAqn@zte.com.cn>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 17, 2025 at 05:09:02PM +0800, tang.dongxing@zte.com.cn wrote:
-> >On 17/03/2025 08:51, tang.dongxing@zte.com.cn wrote:> From: TangDongxing <tang.dongxing@zte.com.cn>
-> >> 
-> >> Follow the advice in Documentation/filesystems/sysfs.rst:
-> >> show() should only use sysfs_emit() or sysfs_emit_at() when formatting
-> >> the value to be returned to user space.
-> >> 
-> >> Signed-off-by: Tang Dongxing <tang.dongxing@zte.com.cn>Dear ZTE,
-> >
-> >Can you slow down? You sent a bunch of emails with similar issues which
-> >means that dozen of maintainers will deal with the same issues
-> >independently. This looks like another vivo or huawei style submission,
-> >leading to bugs sneaked via flood of patches.
-> >
-> >First, fix the name used in the SoB (see submitting patches) to match
-> >Latin transcription.
-> >
-> >Second, use proper SoB chain, see submitting patches.
-> >
-> >Third, really, really be sure that what you send is correct. You already
-> >got quite responses, but you still keep sending patches.
-> >
-> >Fourth, respond to received feedback instead of flooding us with more of
-> >this!
-> 
-> Dear Krzysztof,
-> Thank you for your feedback. I apologize for my previous submissions.
-> Regarding the issues you've pointed out:
-> I will correct the name used in the SoB to ensure it matches the Latin transcription as required.
-> I will double-check my work before sending any further updates.
-> I appreciate your guidance and will follow the submission guidelines more carefully going forward. If you have any further advice or resources to help me improve my submissions, I would be grateful for your input.
-> Best regards, 
-> Tang Dongxing
+Adding nbytes argument to uprobe_write_opcode as preparation
+for writing whole instructions in following changes.
 
-Thanks Tang Dongxing,
+Acked-by: Andrii Nakryiko <andrii@kernel.org>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ include/linux/uprobes.h |  4 ++--
+ kernel/events/uprobes.c | 14 +++++++-------
+ 2 files changed, 9 insertions(+), 9 deletions(-)
 
-Further to Krzystof's comments: please coordinate with your colleague
-Xie Ludan who has also posted a patch in this area.
-
-  https://lore.kernel.org/all/20250317152933756kWrF1Y_e-2EKtrR_GGegq@zte.com.cn/
-
-It will be much easier for review if there is a single patch
-that addresses these issues for ATM.
-
-Also, please consider reading the following guidance on processes
-for the networking subsystem of the Linux kernel. These are similar
-but different to other subsystems.
-
-  https://docs.kernel.org/process/maintainer-netdev.html
-
+diff --git a/include/linux/uprobes.h b/include/linux/uprobes.h
+index 1dbaebc30ff9..c69a05775394 100644
+--- a/include/linux/uprobes.h
++++ b/include/linux/uprobes.h
+@@ -187,7 +187,7 @@ struct uprobes_state {
+ 	struct xol_area		*xol_area;
+ };
+ 
+-typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr, uprobe_opcode_t *opcode);
++typedef int (*uprobe_write_verify_t)(struct page *page, unsigned long vaddr, uprobe_opcode_t *opcode, int nbytes);
+ 
+ extern void __init uprobes_init(void);
+ extern int set_swbp(struct arch_uprobe *aup, struct mm_struct *mm, unsigned long vaddr);
+@@ -198,7 +198,7 @@ extern unsigned long uprobe_get_swbp_addr(struct pt_regs *regs);
+ extern unsigned long uprobe_get_trap_addr(struct pt_regs *regs);
+ extern int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr, uprobe_opcode_t);
+ extern int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm, unsigned long vaddr,
+-			uprobe_opcode_t *opcode, uprobe_write_verify_t verify);
++			uprobe_opcode_t *insn, int nbytes, uprobe_write_verify_t verify);
+ extern struct uprobe *uprobe_register(struct inode *inode, loff_t offset, loff_t ref_ctr_offset, struct uprobe_consumer *uc);
+ extern int uprobe_apply(struct uprobe *uprobe, struct uprobe_consumer *uc, bool);
+ extern void uprobe_unregister_nosync(struct uprobe *uprobe, struct uprobe_consumer *uc);
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index 546e8755cf6d..7ff1f07c8f79 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -264,7 +264,7 @@ static void uprobe_copy_to_page(struct page *page, unsigned long vaddr, const vo
+ 	kunmap_atomic(kaddr);
+ }
+ 
+-static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode)
++static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode, int nbytes)
+ {
+ 	uprobe_opcode_t old_opcode;
+ 	bool is_swbp;
+@@ -473,12 +473,12 @@ static int update_ref_ctr(struct uprobe *uprobe, struct mm_struct *mm,
+ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 			unsigned long vaddr, uprobe_opcode_t opcode)
+ {
+-	return uprobe_write(auprobe, mm, vaddr, &opcode, verify_opcode);
++	return uprobe_write(auprobe, mm, vaddr, &opcode, UPROBE_SWBP_INSN_SIZE, verify_opcode);
+ }
+ 
+ int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm,
+-		 unsigned long vaddr, uprobe_opcode_t *opcode,
+-		 uprobe_write_verify_t verify)
++		 unsigned long vaddr, uprobe_opcode_t *insn,
++		 int nbytes, uprobe_write_verify_t verify)
+ {
+ 	struct page *old_page, *new_page;
+ 	struct vm_area_struct *vma;
+@@ -486,7 +486,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	bool orig_page_huge = false;
+ 	unsigned int gup_flags = FOLL_FORCE;
+ 
+-	is_register = is_swbp_insn(opcode);
++	is_register = is_swbp_insn(insn);
+ 
+ retry:
+ 	if (is_register)
+@@ -496,7 +496,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 	if (IS_ERR(old_page))
+ 		return PTR_ERR(old_page);
+ 
+-	ret = verify(old_page, vaddr, opcode);
++	ret = verify(old_page, vaddr, insn, nbytes);
+ 	if (ret <= 0)
+ 		goto put_old;
+ 
+@@ -526,7 +526,7 @@ int uprobe_write(struct arch_uprobe *auprobe, struct mm_struct *mm,
+ 
+ 	__SetPageUptodate(new_page);
+ 	copy_highpage(new_page, old_page);
+-	uprobe_copy_to_page(new_page, vaddr, opcode, UPROBE_SWBP_INSN_SIZE);
++	uprobe_copy_to_page(new_page, vaddr, insn, nbytes);
+ 
+ 	if (!is_register) {
+ 		struct page *orig_page;
 -- 
-pw-bot: changes-requested
+2.49.0
+
