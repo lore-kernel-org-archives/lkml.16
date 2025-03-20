@@ -1,67 +1,52 @@
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from omta040.useast.a.cloudfilter.net (omta040.useast.a.cloudfilter.net [44.202.169.39])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A1A3221F13
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EAA1A5BBA
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:15:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=44.202.169.39
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742465698; cv=none; b=eyUb5WB+CcxArWw4nlcGWaI4PQOdRshD5S9HQV8lZBTm2fUWu9HmHMjce5y7iFgG3bHgjL+6iZFGvyydTe7ssAfk8Fv+zyiqagl/s4/+EzE/VmKwoOcCfi3XQp8e3NkG3hGuR0URw22+NhBVQnCM8YN1n9gzb5JOBTDScD9e5CE=
+	t=1742465741; cv=none; b=PwTK301KdPoE/jl7BzBltTvLLPoYzie0rXUd+VltKociptwHg3Q3u1SALsGLx74slubQ80zI59Z5cL9wKFqDiWubjv7TiXF87WSDjzhpa7hY9IgzHSq3XzNFWj7A3s+mf6yV1D0kS6WqYZrxQqIuWfsuQbxvKyZdIJAPDPb/uUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742465698; c=relaxed/simple;
-	bh=mad9TF6HWlzgsDYW0Xw2B9cirt0EV2aKRdW2jLlXXxQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=lbP4yDNceNeM1epaX02f/5InaZ4H3t7s98ER5aY9JsXvXeXG3xnAsP8v8CWtS3kqOKOBFQJEh/WuD3UqNI3FGESnV4PHWbhs77H15+A883zI10vKDTHwkMbLdSeAQsb9JDZ4c+WV+AuuGEZycyEYb3oVovFykKADKDO7sIIJUDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Fv71Bc/F; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742465741; c=relaxed/simple;
+	bh=4VTXpDEltRP9tmY/UY7UmnYkLoz+YKNmwptimwr2jj4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kO4j4yORxelft4gKCbFMa/dlvHI8ANe2jpg6y2CrdYgbmJvyN65/dTS6bTw3fEF6KLTGVJ1oAHbsSjfKDFu9fRCuzpbNOccblK8SE664o7GLyu6Cfp1evy5p/UCL7EPq72LrmFaZdQFgQqzYLBBqd4MQqh05rfWgyOJajCVgjRg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net; spf=pass smtp.mailfrom=w6rz.net; dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b=KVzzrbTP; arc=none smtp.client-ip=44.202.169.39
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=w6rz.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=w6rz.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fv71Bc/F"
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43cfe63c592so6038125e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 03:14:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742465694; x=1743070494; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KsTKzQd+0EkTWpAX3OmSlSj7NCNCv0EtzNWUjH+/fWo=;
-        b=Fv71Bc/FD3d6wsQD+D34W5hZ+qkWPMI92bhpQx4fOqmzLWzQBv75oEX1O/XOWhLOiv
-         QNKA1uHtgThbFPCNI+6XbpiwgFh7ZGY6xnkGjBBP2tApKYaugGJCLK2pMob6GwxkdPT9
-         3LvdMJPKS9YSAroLlyqNnlPaGySd3HRVy0DMyjahz012dyGPD2zsd9rH4I9qeU5vdg0C
-         yrLtINAhO7VZicm9UtY4dfZW3+dC7LsS9oUJqBRwlG8e3EEjMIuRfekOeaT8DiqEEVdT
-         95Y3epCUDLz+Sf5s2xFppVlgSZlQpOXtM7RbflYw4L7h80J5dnZ9OTvVs2H8vHpTlAce
-         x+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742465694; x=1743070494;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:references:cc:to:subject:reply-to:from:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=KsTKzQd+0EkTWpAX3OmSlSj7NCNCv0EtzNWUjH+/fWo=;
-        b=Da40EyJc1q2shsDoYDDc8m5eMrW6F5GBfrYVq9pWpyFhYL2NsaVqh2nG0R47lDPVOB
-         6/UJqaZI15KTMw1AdD384tt2lwKJH4/tToG6ZAoFbUeGJ5y2rPTYrGd30Xjyhe/cn50u
-         MtBiayt8470EEGHY9w9emIfheki/JX08VdQjn3ITYKbMzERGR6QO4ACTlDoB1tLt0PBG
-         8z9wBsg+wk3ddAhu1Sb05WWLEneKTHQkDkHbu15mhwKmkLIgKbn34MPdI+CGjE/0YF6H
-         h5c2brwP690lRhOJbU+auk3mD7q04iNlCMkegEycIOZlkBeBmh/sPWiKiW29uKRfUzIP
-         MzoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVNilVpjBP/6qclQThfH6+qPry2iI8TE/fbh5479nQ7e+ACmQmpOV0zu0h/EwHZZjeATqz6K/vqHUHtaP4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwU7wzZb4eyzzqFmZicKyTqWsyyLOkhcvHsX6dp/pp8k4OkfoEs
-	vCgxdg/cH6RBbohQEFuYpxvIRpi8VEcfwgB+pu2E/hGKjKqELEqh9lR8ew6saBo=
-X-Gm-Gg: ASbGncsUv0wsc4oJgv+PLT2jAIqJj6ASkaaAxLxj4SaMEkfa7vrnlqwGcIUdmDAmcbv
-	60gcTHmzWB6xHsNkw0IYSRaSg34f03no1ZyvC9gpEIZoJR+/D8Y6XV2m2ydMC1upWqIWG4BRl/O
-	TVByepyARZfwUbQaMln4Ercpx2BqrrrvFu3LiDNfmnlxm4p0LDYmY/m9XFBpyEX3A5cUqMoOUrk
-	C+2kP/QtSmNoYq3XbIu/nIIQ/i79OM86a35S1eqZID92HKKm9UY5uYF1HHQhr43pm9ZUE7KMlcb
-	PezIjv+/TZyCShSozXzvivC5QIuQe6rvc9rxM+dHkj+lEkyHaGDx4Ox+GveyBOvD3u5DYfv11eL
-	a4bThJ2DYqPAppRlP
-X-Google-Smtp-Source: AGHT+IFim8WXF4Bw641hmtsIGi/r9529B0IxX/j4bUMRvtVtznNxhRUIgBVI1Lkw4lHn3sf2W9z0JA==
-X-Received: by 2002:a5d:59ae:0:b0:398:9e96:e798 with SMTP id ffacd0b85a97d-399795a8cb5mr3197534f8f.13.1742465694455;
-        Thu, 20 Mar 2025 03:14:54 -0700 (PDT)
-Received: from ?IPV6:2a01:e0a:3d9:2080:3bd:568:f697:d1a2? ([2a01:e0a:3d9:2080:3bd:568:f697:d1a2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-395c83b7656sm22861868f8f.40.2025.03.20.03.14.53
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 03:14:54 -0700 (PDT)
-Message-ID: <2fafed58-4959-41ca-b0e1-c10a8da60aa1@linaro.org>
-Date: Thu, 20 Mar 2025 11:14:53 +0100
+	dkim=pass (2048-bit key) header.d=w6rz.net header.i=@w6rz.net header.b="KVzzrbTP"
+Received: from eig-obgw-6004a.ext.cloudfilter.net ([10.0.30.197])
+	by cmsmtp with ESMTPS
+	id vBkytglQbVkcRvCw0tWLSF; Thu, 20 Mar 2025 10:15:32 +0000
+Received: from box5620.bluehost.com ([162.241.219.59])
+	by cmsmtp with ESMTPS
+	id vCvztRaRORlrsvCvzt6cCL; Thu, 20 Mar 2025 10:15:31 +0000
+X-Authority-Analysis: v=2.4 cv=Qamtvdbv c=1 sm=1 tr=0 ts=67dbeac3
+ a=30941lsx5skRcbJ0JMGu9A==:117 a=30941lsx5skRcbJ0JMGu9A==:17
+ a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=7vwVE5O1G3EA:10 a=VwQbUJbxAAAA:8
+ a=HaFmDPmJAAAA:8 a=49j0FZ7RFL9ueZfULrUA:9 a=QEXdDO2ut3YA:10
+ a=nmWuMzfKamIsx3l42hEX:22 a=hTR6fmoedSdf3N0JiVF8:22
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=w6rz.net;
+	s=default; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
+	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
+	List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=CugIFSejTzcMExHdPSZF6GXe9DEmJbUCSV3ntiluwGY=; b=KVzzrbTP0ctNDWfQvbMHFwGiDE
+	leWcpLa2HUUXT8nnJSe0fbz/xdRdhXaZtQ8Hi1uIQUnRAzDk+MtmvJxO1JcLB7PkPgaRG0Df0xm6I
+	RgfCjBA92uQNdCT4/JXLW2dFDoCJTFSLGSwf9H0UCkNg6A06R+vCcMoiQMgLw6sq7zZBeEN5qKiX4
+	INmQwMPbCdcY133xUIQNGtc+ZiO27aGmkyeEhrOMztjji/xIy6As2l11Vpz/K/GeFqec/GZoerawC
+	/7/K7alxk3tUlgCcK6/yue0Vb/QscPHpOMxvz7Po+DrkkImXOEzdtkMnGlHvTSyoYkNTpTkQTvWBB
+	K+m1v2kA==;
+Received: from c-73-223-253-157.hsd1.ca.comcast.net ([73.223.253.157]:48944 helo=[10.0.1.116])
+	by box5620.bluehost.com with esmtpsa  (TLS1.2) tls TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+	(Exim 4.98.1)
+	(envelope-from <re@w6rz.net>)
+	id 1tvCvx-00000003IPl-0Xg1;
+	Thu, 20 Mar 2025 04:15:29 -0600
+Message-ID: <7d7f1f1c-72e7-49a0-abdd-fa1f8d924196@w6rz.net>
+Date: Thu, 20 Mar 2025 03:15:25 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -69,120 +54,61 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-From: neil.armstrong@linaro.org
-Reply-To: neil.armstrong@linaro.org
-Subject: Re: [PATCH net] wifi: ath12k: properly set single_chip_mlo_supp to
- true in ath12k_core_alloc()
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
- Krzysztof Kozlowski <krzk@kernel.org>,
- Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>,
- Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson
- <jjohnson@kernel.org>, Aditya Kumar Singh <quic_adisi@quicinc.com>
-Cc: linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <20250303-topic-ath12k-fix-crash-v1-1-f871d4e4d968@linaro.org>
- <24b2f1f8-97bd-423a-acbd-9a5cd45e4a40@oss.qualcomm.com>
- <7901d7f0-d6d0-4bf3-89ad-d710e88477b7@linaro.org>
- <7b4b598f-bc13-aa4b-8677-71477e1f5434@quicinc.com>
- <8b05760b-db99-4b43-8444-d655b18d3699@kernel.org>
- <770daf27-ae9c-4ed5-87d0-aadcc3b74bbd@oss.qualcomm.com>
-Content-Language: en-US, fr
-Autocrypt: addr=neil.armstrong@linaro.org; keydata=
- xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
- GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
- BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
- qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
- 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
- AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
- OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
- Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
- YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
- GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
- UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
- GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
- yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
- QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
- SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
- 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
- Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
- oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
- M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
- 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
- KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
- 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
- QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
-Organization: Linaro
-In-Reply-To: <770daf27-ae9c-4ed5-87d0-aadcc3b74bbd@oss.qualcomm.com>
+Subject: Re: [PATCH 6.13 000/241] 6.13.8-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250319143027.685727358@linuxfoundation.org>
+Content-Language: en-US
+From: Ron Economos <re@w6rz.net>
+In-Reply-To: <20250319143027.685727358@linuxfoundation.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - box5620.bluehost.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - w6rz.net
+X-BWhitelist: no
+X-Source-IP: 73.223.253.157
+X-Source-L: No
+X-Exim-ID: 1tvCvx-00000003IPl-0Xg1
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: c-73-223-253-157.hsd1.ca.comcast.net ([10.0.1.116]) [73.223.253.157]:48944
+X-Source-Auth: re@w6rz.net
+X-Email-Count: 16
+X-Org: HG=bhshared;ORG=bluehost;
+X-Source-Cap: d3NpeHJ6bmU7d3NpeHJ6bmU7Ym94NTYyMC5ibHVlaG9zdC5jb20=
+X-Local-Domain: yes
+X-CMAE-Envelope: MS4xfI5gkrcEqbxHIvoRX0FqBzinvWWmRCJQe4+2z+DvkDkqZGANt27JxvP/OL/LMTHuQvXDvpZjAkafBgR13R6e8Q8+O7m3UtUofXLkVLZWjL2sUp5rhBC+
+ X0RJfSydtY+hKKRAU4dlDRbs2XuE5EpP6cFqe8tZhWf9G5nnPu8lhJXiWTPIO3L1LgZo22+Jal/x85++e65z9NKyaSOUgkyDqrU=
 
-Hi Jeff,
+On 3/19/25 07:27, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.13.8 release.
+> There are 241 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 21 Mar 2025 14:29:55 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.13.8-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-On 19/03/2025 19:32, Jeff Johnson wrote:
-> On 3/19/2025 3:27 AM, Krzysztof Kozlowski wrote:
->> On 19/03/2025 10:06, Vasanthakumar Thiagarajan wrote:
->>>>>> ---
->>>>>> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
->>>>>> change-id: 20250303-topic-ath12k-fix-crash-49e9055c61a1
->>>>>>
->>>>>> Best regards,
->>>>>
->>>>> NAK since this will break QCN
->>>>> There is a series under internal review to address MLO issues for WCN chipsets
->>>>
->>>> ???
->>>>
->>>> The original commit is wrong, this fixes the conversion, nothing else.
->>>
->>> Nope. Driver changes to enable MLO with WCN chipset are not there yet.
->>> Setting the mlo capability flag without having required driver changes
->>> for WCN chipset will likely result in firmware crash. So the recommendation
->>> is to enable MLO (in WCN) only when all the necessary driver changes
->>> (in development, public posting in near future) are in place.
->> Really, these are your answers? There is regression and first reply is
->> upstream should wait for whatever you do internally. Second answer is
->> the same - public posting in near future?
->>
->> Can you start working with the upstream instead?
-> 
-> There is a lot going on in this thread. I want to address the big picture. It
-> is no secret that Qualcomm has historically focused on downstream drivers, and
-> upstream was mostly an afterthought. But that mindset has changed. Qualcomm is
-> fully embracing upstream kernel development, and has actively recruited (and
-> is still recruiting!) experienced upstream Linux Kernel engineers. And in
-> places where there are shortcoming, Qualcomm has partnered with companies like
-> Linaro to bring in needed support. So Qualcomm is very much "working with the
-> upstream." We may not be working well sometimes, but many of us are still
-> inexperienced with working with the upstream. We are coming up to speed.
-> Specifically for Wi-Fi, we have a large number of engineers who have primarily
-> worked on downstream code who are now working on upstream (including me!). And
-> we still have the issue that many of the products we are shipping now still
-> have a lot of downstream DNA, especially when it comes to firmware interfaces.
-> So please bear with us as we learn and evolve.
-> 
-> Please keep the constructive feedback coming. And remember, the more detailed
-> the feedback, the easier it is to incorporate the feedback.
+Built and booted successfully on RISC-V RV64 (HiFive Unmatched).
 
-Thanks for all the feedback, all this escalated mainly because the 46d16f7e1d14
-commit doesn't do what is written in the commit message, and there were no clear
-sign MLO support with WCN firmares would be removed shortly and redeveloped later.
-
-As final note for this patch, do you have any timeline for when MLO would be enabled
-again on WCN chips ?
-
-I'm happy Qualcomm is embracing mainline development, but Qualcomm still ships
-hundreds of different incompatible firmware and downstream drivers variant in the
-field, and this makes system integration very hard.
-
-And as you mention the partnership with Linaro, we are very happy to help
-and support your mainline development over time by reviewing, testing and
-reporting.
-
-Thanks,
-Neil
-
-> 
-> Thanks!
-> /jeff
-> 
+Tested-by: Ron Economos <re@w6rz.net>
 
