@@ -1,161 +1,113 @@
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-174.mta1.migadu.com (out-174.mta1.migadu.com [95.215.58.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C2E22618F;
-	Thu, 20 Mar 2025 17:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FEEC22540B
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 17:44:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742492404; cv=none; b=sj0PonIYm9bXXPSN9flt3OfbZWqWhp3oZ+1m7IMHddR9kzfqYaOrbdIjvNsnRrKR9tBdTOXQJGY2AHIIMwThjKrnZ6fml/6EolNY4CZM9r1gJ27kizT75o8p6a8Zf8SJyIgG7z9T9WQfXyeYqeXJOwTh3km+0Ldup6hdUHI7ezA=
+	t=1742492663; cv=none; b=N8Dczian/kgpA/FHD7A60TA8jHNRXJGcTQhLYKLB475sLFBr4QDFabc21t14Z2Gc8DaoyVwI+l4ZP4O/Z3jjZ/U0HZ3A6+5CqWcfNcChwEnYAsbDsJlVWl8HfHPFsh11naE5khF/oiflduMoG83iBMxH4j37cEU9fTFOpSvHj+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742492404; c=relaxed/simple;
-	bh=gpGLVKoREoUi12NpjXgAakIGPXWe4J/DtcP8JYm5+4s=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tRWLE+Sf6uHjCeN5SMAMCXnJ267bL1uTRHXBn+p/NqaUgxQL+oke9pTezZld5E43paHIS4+tQL1eSxICa3YGL0lvNN1EUTDhVi6cjZV9TmWaLNe2rPREgSGtprHmPRNLiBunttvC4hdqpCIUvSCvp9UWd7enQcLGSikvY+sp7BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cps9DzPG; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742492663; c=relaxed/simple;
+	bh=kp5gSLLd6PjV+marxwMgoHBh0YDqzC67ywX2X0Na7+c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e8NOKijIOv6jAehEKGZw12c2hHAw+lSQrphOeu0mhaQslDgQcpyjetn+dxALagPadx3TI1i2clzkJ0Evl7zTl2XNHPIXgFGhiF67af5oinby5SnOxu7VoqmkXEsfiqKfbgCBIMWUtMh+z69MMlnk+yBvqR97xDdtqk0I60VqV7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=JTCyBZ6m; arc=none smtp.client-ip=95.215.58.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cps9DzPG"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf89f81c5so1245025e9.2;
-        Thu, 20 Mar 2025 10:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742492400; x=1743097200; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ICJPfH1Men5qwSYszeUMQ6QRHz5SpwAhZQR7oJ7/pJ8=;
-        b=Cps9DzPGAEGwJdLX7vZyU60BKv8AKLZz/xnxP3J5MzGT8bwKY7LKJACP2+7JS6YO7G
-         wM7xEsAMBwRUPNEZo82TNcX6DlRm8YFEvyF5Msxig0djvjHbiKeHjwh61pI0YBq4B1Pt
-         EvfFv4MNeIYSwA/qxzHfE8UrUH8IpHFBbPPndGAhx7H654lWFI+GRukDCaEfZwI2C2d5
-         iAhBMFH5TWyKLjwgPZCviDVmMBZ6tgZYm4ucHIF7f8SD3xXr/wsG8dYghGpptFRlZVX+
-         eP8ScCpNQx33gHWX8GojQGQ6pkyVW0ZofROtkW/r3NgN9a7Q3Th2CqArS0GYc2p5aCm4
-         gc+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742492400; x=1743097200;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ICJPfH1Men5qwSYszeUMQ6QRHz5SpwAhZQR7oJ7/pJ8=;
-        b=IsC+E9LtzGLL2vgC2LK2HoMMhZKwW4Re3jLgc//o9raebxNxIto9DtFpBYh2bn2qki
-         zs5wKjjtfGCQDJ93phMEJwcKmoPf9j5gi/9GVr6FNi0vZU1pO2ZFq5QVh3cbSVW9f/za
-         1LVd4bAbEvIgg86AoMOf8u6NPJwA+hrRx2P2iswplfdhuZI82IDqULxMGNSFLCypBt6+
-         sFHpg31M+VfEVX8YhD0DrOWkh4+CvTdOdaXENQjz1HshiAeSeXysmosidDplLxU108Uh
-         mnlHhvVmYggYKIW3m6iwABdypcMtY3Gf9pXx96wh3lyT5RSELagzR6ZnJZv9kzDSXDxt
-         /nZw==
-X-Forwarded-Encrypted: i=1; AJvYcCVnSXFlSU5p8Za5krAISjm97sKgVMQ9hYDXMiLjfmIj0KFWKXc/Yn3/zCpCjlkpcULPR9tWlAFk0FU6nA30@vger.kernel.org, AJvYcCWfkmmmvr+KbLea3QvwcLvI15SP4Lp/GUPD5MgKyvzSoQ+n3+4zYBcEfsT28Uqz9XM3SYuQLRPr6fg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTqW76WP9tkXX591J6wfnK9lWkJH6eGGG6UtTURmTIhLq8buDy
-	Phmm8MXcdijQHOOWElvZ/l1GMI956g77ov8pIqMwOwUh5RYLJlsIINoFKoC79UavzCia2eo5c3T
-	th3hOEV7lFxsqJV1wbSLyZ3mMB+8=
-X-Gm-Gg: ASbGncv01ocobIWUaOtsG3Y3geWhS/RG/sqpxkbOqY5MzYup8MfO3HdBBByEZF+FY2Q
-	6FY6vR1/dRmKsozzj6rW79ghfOrKuEilFvnNAJDrhD7sVNxd2FR/Hjr/bXAzoHyhY2xjI0fC4H4
-	z7r9Px+R6NpeK1IWw/WA0Mns2hhMXS3mXlxZNU8JmnJKncZPh2OPKelMD4
-X-Google-Smtp-Source: AGHT+IEX+FZMqw/uKIyLvjuLIVQFBZHkjVI/CUtdYx+oxdxQMzv1hpI+TEDGWokkbPtcXqceiLtWpgt7xJ7OwvQ//Fc=
-X-Received: by 2002:a05:600c:46c3:b0:43b:bbb9:e25f with SMTP id
- 5b1f17b1804b1-43d44d75804mr24674625e9.6.1742492399899; Thu, 20 Mar 2025
- 10:39:59 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="JTCyBZ6m"
+Date: Thu, 20 Mar 2025 17:44:03 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742492660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=T+nATEGPwxa2fwpxH+oyQjnjtO3F1E78wE3wcZDa8qM=;
+	b=JTCyBZ6mjiYhZGkv782PMWnYrzrKTbJ3koWgqojfxmL4ewWviXPY0IyXE8HjwsaLSf10Wc
+	NlnV38ZtLi9zY89NSxiMVnXzGuD9xU4Er7f+X8odYLu78qoIK7anhWcMI6CtIv0I/jpVBR
+	ltETHPFcSerr+Yyx7eDLcRRzlzAunQw=
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Oliver Upton <oliver.upton@linux.dev>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Akihiko Odaki <akihiko.odaki@daynix.com>,
+	Joey Gouly <joey.gouly@arm.com>,
+	Suzuki K Poulose <suzuki.poulose@arm.com>,
+	Zenghui Yu <yuzenghui@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, Kees Cook <kees@kernel.org>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org,
+	devel@daynix.com
+Subject: Re: [PATCH RFC] KVM: arm64: PMU: Use multiple host PMUs
+Message-ID: <Z9xT4_fwCgp7VSgC@linux.dev>
+References: <e8324d9d-3756-41cf-a102-28572e302368@daynix.com>
+ <86plidmjwh.wl-maz@kernel.org>
+ <bd681ec6-0b4c-47d9-8a4a-b7324c0883a6@daynix.com>
+ <86o6xxmg87.wl-maz@kernel.org>
+ <aabd71eb-286b-475c-a30e-d5cf5c4f2769@daynix.com>
+ <86msdhmemw.wl-maz@kernel.org>
+ <cd7b4528-34a3-4d87-9711-acc2c2e6f6e1@daynix.com>
+ <86ldt0n9w1.wl-maz@kernel.org>
+ <Z9sSMJAlf7cQ5viu@linux.dev>
+ <86h63om54p.wl-maz@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1739866028.git.maciej.wieczor-retman@intel.com> <383482f87ad4f68690021e0cc75df8143b6babe2.1739866028.git.maciej.wieczor-retman@intel.com>
-In-Reply-To: <383482f87ad4f68690021e0cc75df8143b6babe2.1739866028.git.maciej.wieczor-retman@intel.com>
-From: Andrey Ryabinin <ryabinin.a.a@gmail.com>
-Date: Thu, 20 Mar 2025 18:39:35 +0100
-X-Gm-Features: AQ5f1JqCTLk6bw5pMZNlmkGp7az-6cdHmNjgmKBcGwH1kgc8PZz3csgjGnMk__8
-Message-ID: <CAPAsAGxDRv_uFeMYu9TwhBVWHCCtkSxoWY4xmFB_vowMbi8raw@mail.gmail.com>
-Subject: Re: [PATCH v2 09/14] mm: Pcpu chunk address tag reset
-To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-Cc: kees@kernel.org, julian.stecklina@cyberus-technology.de, 
-	kevinloughlin@google.com, peterz@infradead.org, tglx@linutronix.de, 
-	justinstitt@google.com, catalin.marinas@arm.com, wangkefeng.wang@huawei.com, 
-	bhe@redhat.com, kirill.shutemov@linux.intel.com, will@kernel.org, 
-	ardb@kernel.org, jason.andryuk@amd.com, dave.hansen@linux.intel.com, 
-	pasha.tatashin@soleen.com, ndesaulniers@google.com, 
-	guoweikang.kernel@gmail.com, dwmw@amazon.co.uk, mark.rutland@arm.com, 
-	broonie@kernel.org, apopple@nvidia.com, bp@alien8.de, rppt@kernel.org, 
-	kaleshsingh@google.com, richard.weiyang@gmail.com, luto@kernel.org, 
-	glider@google.com, pankaj.gupta@amd.com, andreyknvl@gmail.com, 
-	pawan.kumar.gupta@linux.intel.com, kuan-ying.lee@canonical.com, 
-	tony.luck@intel.com, tj@kernel.org, jgross@suse.com, dvyukov@google.com, 
-	baohua@kernel.org, samuel.holland@sifive.com, dennis@kernel.org, 
-	akpm@linux-foundation.org, thomas.weissschuh@linutronix.de, surenb@google.com, 
-	kbingham@kernel.org, ankita@nvidia.com, nathan@kernel.org, ziy@nvidia.com, 
-	xin@zytor.com, rafael.j.wysocki@intel.com, andriy.shevchenko@linux.intel.com, 
-	cl@linux.com, jhubbard@nvidia.com, hpa@zytor.com, 
-	scott@os.amperecomputing.com, david@redhat.com, jan.kiszka@siemens.com, 
-	vincenzo.frascino@arm.com, corbet@lwn.net, maz@kernel.org, mingo@redhat.com, 
-	arnd@arndb.de, ytcoode@gmail.com, xur@google.com, morbo@google.com, 
-	thiago.bauermann@linaro.org, linux-doc@vger.kernel.org, 
-	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
-	llvm@lists.linux.dev, linux-mm@kvack.org, 
-	linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86h63om54p.wl-maz@kernel.org>
+X-Migadu-Flow: FLOW_OUT
 
-On Tue, Feb 18, 2025 at 9:19=E2=80=AFAM Maciej Wieczor-Retman
-<maciej.wieczor-retman@intel.com> wrote:
->
-> The problem presented here is related to NUMA systems and tag-based
-> KASAN mode. Getting to it can be explained in the following points:
->
->         1. A new chunk is created with pcpu_create_chunk() and
->            vm_structs are allocated. On systems with one NUMA node only
->            one is allocated, but with more NUMA nodes at least a second
->            one will be allocated too.
->
->         2. chunk->base_addr is assigned the modified value of
->            vms[0]->addr and thus inherits the tag of this allocated
->            structure.
->
->         3. In pcpu_alloc() for each possible cpu pcpu_chunk_addr() is
->            executed which calculates per cpu pointers that correspond to
->            the vms structure addresses. The calculations are based on
->            adding an offset from a table to chunk->base_addr.
->
-> Here the problem presents itself since for addresses based on vms[1] and
-> up, the tag will be different than the ones based on vms[0] (base_addr).
-> The tag mismatch happens and an error is reported.
->
-> Reset the base_addr tag, since it will disable tag checks for pointers
-> derived arithmetically from base_addr that would inherit its tag.
->
-> Signed-off-by: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
-> ---
->  mm/percpu-vm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/mm/percpu-vm.c b/mm/percpu-vm.c
-> index cd69caf6aa8d..e13750d804f7 100644
-> --- a/mm/percpu-vm.c
-> +++ b/mm/percpu-vm.c
-> @@ -347,7 +347,7 @@ static struct pcpu_chunk *pcpu_create_chunk(gfp_t gfp=
-)
->         }
->
->         chunk->data =3D vms;
-> -       chunk->base_addr =3D vms[0]->addr - pcpu_group_offsets[0];
-> +       chunk->base_addr =3D kasan_reset_tag(vms[0]->addr) - pcpu_group_o=
-ffsets[0];
+On Thu, Mar 20, 2025 at 09:19:02AM +0000, Marc Zyngier wrote:
+> On Wed, 19 Mar 2025 18:51:28 +0000, Oliver Upton <oliver.upton@linux.dev> wrote:
+> > I'm at least willing to plug my nose and do the following:
+> > 
+> >  1) When the VMM does not specify a vPMU type:
+> > 
+> >    - We continue to present the 'default' PMU (including event counters)
+> >      to the VM
+> > 
+> >    - KVM ensures that the fixed CPU cycle counter works on any PMUv3
+> >      implementation in the system, even if it is different from the
+> >      default
+> > 
+> >    - Otherwise, event counters will only count on the default
+> >      implementation and will not count on different PMUs
+> 
+> I think this is confusing. The CC is counting, but nothing else, and
+> people using the cycle counters in conjunction with other events (a
+> very common use case) will not be able to correlate things correctly.
+> The current behaviour is, for all its sins, at least consistent.
 
-This looks like a generic tags mode bug. I mean that arm64 is also
-affected by this.
-I assume it just wasn't noticed before because arm64 with multiple
-NUMAs are much less common.
+You of course have a good point. What Windows is doing is definitely an
+outlier.
 
-With this change tag-mode KASAN won't be able to catch bugus accesses
-to pcpu areas.
-I'm thinking it would be better to fix this on the pcpu_get_vm_areas()
-area side by replacing
-this
-    for (area =3D 0; area < nr_vms; area++)
-        vms[area]->addr =3D kasan_unpoison_vmalloc(vms[area]->addr,
-                                             vms[area]->size,
-KASAN_VMALLOC_PROT_NORMAL);
+> > 
+> >  2) Implement your suggestion of a UAPI where the VMM can select a PMU
+> >     that only has the CPU cycle counter and works on any PMUv3
+> >     implementation.
+> > 
+> > Either way KVM will need to have some special case handling of the fixed
+> > CPU cycle counter. That'd allow users to actually run Windows *now* and
+> > provide a clear mechanism for userspace to present a less-broken vPMU if
+> > it cares.
+> 
+> Honestly, I don't care about one guest or another. My point is that if
+> we are changing the behaviour of the PMU to deal with this sort of
+> things, then it has to be a userspace buy-in.
 
-with something like
-    kasan_unpoison_vmap_areas(vms, nr_vms);
-which will unpoison all areas using the same tag.
+I'm fine with just the user buy-in then. But I still do care about the
+guest compatibility issue, especially since the end user of all this
+crap is unlikely to know/care about the fine details of the
+implementation.
 
-Thoughts?
+So, Akihiko, I would *greatly* appreciate it if you propose a complete
+solution to the problem, including the KVM and VMM patches to make it
+all work.
+
+Thanks,
+Oliver
