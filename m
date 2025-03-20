@@ -1,85 +1,103 @@
-Received: from mail-gw02.astralinux.ru (mail-gw02.astralinux.ru [195.16.41.108])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4689215171
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 09:12:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.16.41.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748A8221F03;
+	Thu, 20 Mar 2025 09:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742461966; cv=none; b=dyCxfXc8rsiTdHDo3Toci1Dwr3zntkabv3tmABKU/ys+x4PcHwtJneb8hPhO81VshZEpcWvEI6kRA3UCZIZ/j84bRELnsG2Uw2Suceg2vSSi3Ki2/kSCjmvMrNiNtQ005ynfrVypxMdOCsRJBWokUDbLUIDGadYA7e8D5FG4Wpc=
+	t=1742462116; cv=none; b=GOw9ZqYBGMtcXFYFlDh8tTbINriGF2WkOAnR9U/bhy7iv7Qu3biymJQTc1zLCxAMfPUCs1CfUUkZrvyYQW3qvYEekG/UUMQDklsFeAHIgKlp7GA8oKHyhwXtJe2IMizh4prPOb++f2BXbBZr9HmFdpcv1ZSOI+psh7Sv54d9UIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742461966; c=relaxed/simple;
-	bh=JSl2k7C1dXpa216Hb1t2QVy/jPZ1Yxk5+MMJGgQqCwA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KcQdHEFQeY7LnGTfdGjlBBMVO7vw1rX9hAhkuOdOFRLtC2xRUWDGTOH+iQBjicwVznobQQ1IZgnwyok2iR/fND0zvRfJi0ZnlR5r28I35r0AwUOe1JdkkN9EnoTKBtDAsiT8wS+4wjy1dgzPgiPFke+QBPEJyeeyBuyqj7KWTsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru; spf=pass smtp.mailfrom=astralinux.ru; arc=none smtp.client-ip=195.16.41.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=astralinux.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=astralinux.ru
-Received: from gca-msk-a-srv-ksmg02.astralinux.ru (localhost [127.0.0.1])
-	by mail-gw02.astralinux.ru (Postfix) with ESMTP id D15781F45B;
-	Thu, 20 Mar 2025 12:12:36 +0300 (MSK)
-Received: from new-mail.astralinux.ru (gca-yc-ruca-srv-mail04.astralinux.ru [10.177.185.109])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail-gw02.astralinux.ru (Postfix) with ESMTPS;
-	Thu, 20 Mar 2025 12:12:35 +0300 (MSK)
-Received: from [10.177.20.124] (unknown [10.177.20.124])
-	by new-mail.astralinux.ru (Postfix) with ESMTPA id 4ZJKbj6gJ6zkX0x;
-	Thu, 20 Mar 2025 12:12:33 +0300 (MSK)
-Message-ID: <ad70d906-8889-40d3-9af6-6a2be68faf77@astralinux.ru>
-Date: Thu, 20 Mar 2025 12:12:27 +0300
+	s=arc-20240116; t=1742462116; c=relaxed/simple;
+	bh=CRpBvJD3bd8E6TTulPATV/6grgnqeVKJw7mnxiB6weU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=PV/gN+2C4W2mITY46r0kvLlZnEToViSks7gTEKvzkqITy7E+VrgpBP3PIpRlPq65vQTDTH5H8Y8zjXqWqH+MeiP6vQRgWRzf45SHEsnMojAeGSyybirxREh8S8j71p1N3cc79th14dzLgPlrRJaFjnJB/KihfB9lGV6BuxR4N/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ofcXfjG7; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ofcXfjG7"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52K6YuFX004912;
+	Thu, 20 Mar 2025 09:15:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=qcppdkim1; bh=EHuR2s0HntACm/a6lI2yEX
+	QONouLca54q5cFKrGrdwg=; b=ofcXfjG7p5RZHNkabQt+CMskaeG6lJP4H/aCYQ
+	7sQfEwfdszJ8IzEHAL1fQTGaS5g8V7UYncu24PQSBlnSqZYFVRuTw44LmO7SQH2D
+	AixNZqD/GNUNLzZzR2ZEN7FrSi4AHfNfLePJ8Bj5GwDk4tTdNLRQwZGN9GU5orWF
+	Q7Mb1i24GROEhwlegTLXsfwFW6jQBOgrDnm93mueBwhPSMlPOSvP4wlAGXVInCOv
+	ZKDq54HyR/GpqrDG6IGTvkS6v67JSHRCuPFvo/mpesw30JhyXYK1bfAIUe634+ha
+	0xklIF/w/CDa97GYHcWy42LTNDi/YquzPIWw3AEg/v4qHq6A==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45gcd18myf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 09:15:03 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA04.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52K9F1eG020305
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 20 Mar 2025 09:15:01 GMT
+Received: from hu-lxu5-sha.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Thu, 20 Mar 2025 02:14:57 -0700
+From: Ling Xu <quic_lxu5@quicinc.com>
+To: <andersson@kernel.org>, <konradybcio@kernel.org>, <robh@kernel.org>,
+        <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+        <srinivas.kandagatla@linaro.org>, <amahesh@qti.qualcomm.com>,
+        <arnd@arndb.de>, <gregkh@linuxfoundation.org>
+CC: <quic_kuiw@quicinc.com>, <quic_ekangupt@quicinc.com>,
+        <linux-arm-msm@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
+        Ling Xu
+	<quic_lxu5@quicinc.com>
+Subject: [PATCH v2 0/3] Add support for gpdsp remoteproc on sa8775p
+Date: Thu, 20 Mar 2025 14:44:43 +0530
+Message-ID: <20250320091446.3647918-1-quic_lxu5@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/zsmalloc: prevent integer overflow in obj_free
-To: Sergey Senozhatsky <senozhatsky@chromium.org>
-Cc: Minchan Kim <minchan@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org
-References: <20250313115147.47418-1-abelova@astralinux.ru>
- <w7ralg6gzp6kuqwulpczs7uv4htllt2rasuto5unoy7xasr5cv@2z6pd7syyj6q>
-Content-Language: ru
-From: Anastasia Belova <abelova@astralinux.ru>
-In-Reply-To: <w7ralg6gzp6kuqwulpczs7uv4htllt2rasuto5unoy7xasr5cv@2z6pd7syyj6q>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: abelova@astralinux.ru
-X-KSMG-AntiSpam-Info: LuaCore: 51 0.3.51 68896fb0083a027476849bf400a331a2d5d94398, {Tracking_arrow_text}, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;new-mail.astralinux.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;astralinux.ru:7.1.1, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 191963 [Mar 20 2025]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.11
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.0.7854, bases: 2025/03/20 06:25:00 #27805285
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Authority-Analysis: v=2.4 cv=bfFrUPPB c=1 sm=1 tr=0 ts=67dbdc97 cx=c_pps a=JYp8KDb2vCoCEuGobkYCKw==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=GEpy-HfZoHoA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=mVQdYIaDE-e1hwXU0PQA:9
+ a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-GUID: uwh-G20-QTZH51FtrEmNzrC0mG2qq-qA
+X-Proofpoint-ORIG-GUID: uwh-G20-QTZH51FtrEmNzrC0mG2qq-qA
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-20_03,2025-03-19_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ clxscore=1015 suspectscore=0 malwarescore=0 bulkscore=0 mlxlogscore=769
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 adultscore=0 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503200055
 
+The fastrpc driver has support for 5 types of remoteprocs. There are
+some products which support GPDSP remoteprocs. GPDSPs are General
+Purpose DSPs where tasks can be offloaded. Add changes to support GPDSP
+remoteprocs and also add GPDSP fastrpc nodes.
+Patch [v1]: https://lore.kernel.org/all/20250320051645.2254904-1-quic_lxu5@quicinc.com/
 
-On 3/13/25 5:42 PM, Sergey Senozhatsky wrote:
-> On (25/03/13 14:51), Anastasia Belova wrote:
->> The result of multiplication of class_size and f_objidx
->> may not fit unsigned integer. Add explicit casting to
->> unsigned long to prevent integer overflow.
-> I can't see how this can be possible.  Neither size_class nor
-> object idx can take values to cause mul overflow.
+Changes in v2:
+  - Add GPDSP labels in dt-bindings.
 
-object index may be up to OBJ_INDEX_MASK = ((_AC(1, UL) << 
-OBJ_INDEX_BITS) - 1)
-= ((_AC(1, UL) << PAGE_SHIFT) - 1)
+Ling Xu (3):
+  arm64: dts: qcom: sa8775p: add GPDSP fastrpc-compute-cb nodes
+  misc: fastrpc: add support for gpdsp remoteproc
+  dt-bindings: misc: qcom,fastrpc: Add GPDSPs label
 
-class_size may be up to ZS_MAX_ALLOC_SIZE = PAGE_SIZE.
+ .../bindings/misc/qcom,fastrpc.yaml           |  2 +
+ arch/arm64/boot/dts/qcom/sa8775p.dtsi         | 58 +++++++++++++++++++
+ drivers/misc/fastrpc.c                        | 10 +++-
+ 3 files changed, 68 insertions(+), 2 deletions(-)
 
-If address (and unsigned long) is 64-bit, the result of multiplication
-won't fit 32-bit integer. Please correct me if I'm wrong.
+-- 
+2.34.1
 
-Best regards,
-Anastasia Belova
