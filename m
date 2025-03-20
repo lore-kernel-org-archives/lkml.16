@@ -1,98 +1,77 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E60DB8F6E
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:17:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F17EE1DE3CA;
+	Thu, 20 Mar 2025 21:19:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742505459; cv=none; b=cIVR/RrlBBdIW8YCBGL+YwCJKUGuyJxitAOydBGRVZYHfvKufgw07sbDnLrb9qifXiLSFhcygbqOZJq+7QiARawxOH8jIonW43uP9QspYVaeQ8QbQZE/YO/3Tq6myGcu+Mp7dwWz2Xo6kRKJ2JCwAtdZKYWr+ntnAv5hYi4eDic=
+	t=1742505567; cv=none; b=UmmWoHK7Aur0cPQgZziE5qhsSHqjXXpcFfCuckQsswz9IyekKZr6vELzTGzmq8KMa7o0vM6SBpD2AreXaNTVvhP2o+BnO/SDz8S0RqOXHGhLc+blls/UZpNEzHV4/GIUgbXr9NLuv1Ocu/shrlNS/j6s6SaC0ZZ0v0L/cHidxUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742505459; c=relaxed/simple;
-	bh=BzH/S4FqA82HJo+ciJuAPbxGd6hiA1rpZmdgxXUWuO0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EnTBVcVHNGBOultKSI20Ljh//DfFXZns8ZWfidikdrpb/vUnOgMfVZ+X6qWbTqcJc1p6BoWKUCDeR8JJnWYPOS0hjOC9AXSfp4/TbbjOFNbcS0feg4dW4G93siZ0nVnhexnV3I41PyGCaiua/TPWALUlDvw0LQ5uZmeQvppIuBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=LOYGvOMi; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1742505567; c=relaxed/simple;
+	bh=otPRo7MmZtMEwZMgORvrMe6BrsQxTxxInq8ef2QgTbU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DS/TMBcD0Cip9Z0M5QPYTQO0llZ61TdaMo+zfIlD07T4DEvkp8bFL+80Buba84eIrdCkVQ3Wx+VxkfCi+24T8dfGJw4oMrF/Ni6A9nFIgvFvTMP1r5xTVCNDShJ2OEOWJlJEOoh2aKfKk7QM6UoiR7Y5ip42iDVgHb9jLntoDac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X3Ksx6nB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="LOYGvOMi"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac2bfcd2a70so205221966b.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:17:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1742505455; x=1743110255; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=/ocm4Iixnlvf/PhQHaxpMXyWMKgJoCTvlBlRAbJwnpc=;
-        b=LOYGvOMiib2mEkRS8ayYWgeS3OVFSFSy2CImhDDC3rBW2DVG9oPe5XTWI/LscVkigB
-         U9k2HHelvNBR5w7zPemPwHfnVBItan0Weshn/fph0WTRyT60ttFbWJo3xZLAtAwvaPs6
-         I4oSOlnNNgJxOYzpwfu0/Yk6ZKqlgSwZXKEPQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742505455; x=1743110255;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/ocm4Iixnlvf/PhQHaxpMXyWMKgJoCTvlBlRAbJwnpc=;
-        b=N5t0fZUaqWycVFnkT1Ns57f5Vdfec88QtgF71T1I+hyKmxJiWhQI93b3xwcsk5v086
-         jGnl2h/872A0ONFEXwAbM/+OQ34WV2F3EXJeKSUiiGMeJFmw28AFW+IEuw5gndMI9T6O
-         yDsr7138Voy4/GoX04IqN3e/6yOvVi/81sXs6u/Bskk+LZpGy2ScdeeiD39kGS+qr4R8
-         4g0j2n3RNDG6j/xqV5aueuZAejTGQ7dANIQKUTsxZU4lzdYivXoJrWhj7d4F5GLrbEIC
-         n//BbohA/fqoUq0EcWAbREakrihWIX5PV5GWUvt0lBj0BJBh30WpAYuc8QHhfx2tZLI8
-         g1fw==
-X-Forwarded-Encrypted: i=1; AJvYcCVka94vqXaJDaG+nAghlI7tp1/WzqTTcnqUUq4wUlctJJnrVZX02PkpRmCCif+zAaaApi3UgTpg52z2ruY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzTYkjvdxvwgZC67TZccxk5wyDJRIqz2ILvjgPR0juvz2hqpf7t
-	CSZTUNAntRElaNtu8fVokY0DGQCDA6fza816kbSSSXQDyZ3xoTA+fklx0AC4tHsZ3Jtw/3LRzVX
-	yKDM=
-X-Gm-Gg: ASbGncsLN00/l760l3DWleOPt45WVly4VeN8fh/EI3LEN7mZJKgzKzI81N0hl2TrLYv
-	BnTeBIDv5kYqt035pKjjbtMNRAjBVIrMJ1e1jxuTQB9Nb18XOdHjqxklec4aF9fcvLDIBEPjEjf
-	Pm+EZMTXEpE/d/GsW2HAfksc/Y16ZL7rtytoWeezCDOPtMvDNBMSC8+/JeGQSAOmT6618v4Gzh9
-	kWiLzihljUIYPnCDYV4mGoz2X3DtH0iqxYrbAcVJkDDDhKd2uoDQtnGTnTPq3KRwlGV7p37oDRh
-	65amDzdNOTINAtY0pCnhg8FFL+f74NqyNuBIxz8yZ9cJzFwOonbsKzUHgG15S2RydiEdxf+rBaJ
-	xXg2gXToEuByLUyjmu5cokMNGA6th+w==
-X-Google-Smtp-Source: AGHT+IEs19hEixbySqNUTWM5MZVSjyxRklffoc2DHNgEde9R9z95W26bInilCRYOHSF/1CdtUNw3wg==
-X-Received: by 2002:a17:907:95a4:b0:aaf:103a:e6e3 with SMTP id a640c23a62f3a-ac3f26addbemr75468966b.43.1742505454926;
-        Thu, 20 Mar 2025 14:17:34 -0700 (PDT)
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com. [209.85.218.42])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8e532asm35917266b.56.2025.03.20.14.17.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 14:17:33 -0700 (PDT)
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-ac2963dc379so220474266b.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:17:33 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCUvQTwN8ADiKAMOqduL1ZLguvikvK1TWibJj+82zS+HRqRO33UBCRC1l62urZfsr/pECpFBjoaVhGiinys=@vger.kernel.org
-X-Received: by 2002:a17:907:2d0e:b0:abf:7636:3cab with SMTP id
- a640c23a62f3a-ac3f24fca13mr62083866b.29.1742505453491; Thu, 20 Mar 2025
- 14:17:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X3Ksx6nB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EBE3C4CEDD;
+	Thu, 20 Mar 2025 21:19:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742505566;
+	bh=otPRo7MmZtMEwZMgORvrMe6BrsQxTxxInq8ef2QgTbU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=X3Ksx6nBkLL4MQtRy0ldgQlodlZ4OcV9FPmmlmjvRuHMLjiURRJYfrp+vk7Bv/10v
+	 xM2wmURnunFDqT64Kh5MPMYwPA7Q11fPNOlQRAGtTjAjAlPr4Ck17zCvE1zihc9Rx+
+	 vq1+VvBRkTJbjyUO9k1UlnDqwYFI/BzYW7R0QNip/thXFiWcmHPwoWotyzr+hzTRTY
+	 h+kuvrw8KO137npE/AcKudn5gGmfjoccgTbVgSnLrOX54Y+QN51Mo2X69m7x1Rgd5o
+	 Sw3eiE5p+FfIWD0GNEyaumWPpH3jko6uSxpRJbrRNt9ORL+F0imzx1dObmXH3+VS0k
+	 EAcarm/H+DfRQ==
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Ulf Hansson <ulf.hansson@linaro.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-mmc@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: mmc: Remove redundant sdhci.txt
+Date: Thu, 20 Mar 2025 16:19:21 -0500
+Message-ID: <20250320211922.1135669-1-robh@kernel.org>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320190514.1961144-1-mjguzik@gmail.com> <CAHk-=whd82fzhEbFRw9d_EMtR1SeefOJabjCHcm4-6jzeqqd3g@mail.gmail.com>
- <CAGudoHGNFT+LC24842ZKLWBxD3vvvddBqDKa6gkixN4Esor+RQ@mail.gmail.com>
-In-Reply-To: <CAGudoHGNFT+LC24842ZKLWBxD3vvvddBqDKa6gkixN4Esor+RQ@mail.gmail.com>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 20 Mar 2025 14:17:17 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjo__Bj3JNw_7E8HhTDUF65LVOApvN0D2cofgotJoqpmg@mail.gmail.com>
-X-Gm-Features: AQ5f1JqP7gG7Echr-TuoJlqUay7SS30vYXYq6MLQs0dyblkHABDG-F9h7nYMVl8
-Message-ID: <CAHk-=wjo__Bj3JNw_7E8HhTDUF65LVOApvN0D2cofgotJoqpmg@mail.gmail.com>
-Subject: Re: [PATCH] x86: handle the tail in rep_movs_alternative() with an
- overlapping store
-To: Mateusz Guzik <mjguzik@gmail.com>
-Cc: x86@kernel.org, hkrzesin@redhat.com, tglx@linutronix.de, mingo@redhat.com, 
-	bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, olichtne@redhat.com, 
-	atomasov@redhat.com, aokuliar@redhat.com, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 20 Mar 2025 at 12:33, Mateusz Guzik <mjguzik@gmail.com> wrote:
->
-> I have a recollection that handling the tail after rep movsq with an
-> overlapping store was suffering a penalty big enough to warrant a
-> "normal" copy instead, avoiding the just written to area.
+The properties in sdhci.txt are documented in sdhci-common.yaml, too.
+Remove the txt binding.
 
-Ahh. Good point. The rep movsq might indeed end up having odd effects
-with subsequent aliasing memory operations.
+Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci.txt | 13 -------------
+ 1 file changed, 13 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mmc/sdhci.txt
 
-Consider myself convinced.
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci.txt b/Documentation/devicetree/bindings/mmc/sdhci.txt
+deleted file mode 100644
+index 0e9923a64024..000000000000
+--- a/Documentation/devicetree/bindings/mmc/sdhci.txt
++++ /dev/null
+@@ -1,13 +0,0 @@
+-The properties specific for SD host controllers. For properties shared by MMC
+-host controllers refer to the mmc[1] bindings.
+-
+-  [1] Documentation/devicetree/bindings/mmc/mmc.txt
+-
+-Optional properties:
+-- sdhci-caps-mask: The sdhci capabilities register is incorrect. This 64bit
+-  property corresponds to the bits in the sdhci capability register. If the bit
+-  is on in the mask then the bit is incorrect in the register and should be
+-  turned off, before applying sdhci-caps.
+-- sdhci-caps: The sdhci capabilities register is incorrect. This 64bit
+-  property corresponds to the bits in the sdhci capability register. If the
+-  bit is on in the property then the bit should be turned on.
+-- 
+2.47.2
 
-           Linus
