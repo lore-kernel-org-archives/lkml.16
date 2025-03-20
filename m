@@ -1,131 +1,167 @@
 Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ADDA1E5205
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:34:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4887D33E7
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:35:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742506462; cv=none; b=Hxrtl1EO3w6VYZIfLwt7rLpoaTwOCmU9p/Y0e2Oj6eNXU6CqrwxCJ6q6ze+aKxIRioNiR2Em/6JYmBu+AEi/1r/gSpGzliyFkxUMBr3GCpQvjLKmBWZBOMXizC06N4ENv6uOVMIDtAZPs0ApbS3cABmGdYr+9wO6SQp1JBsCQI4=
+	t=1742506560; cv=none; b=IDd2c3Xn0MD0ZhoMMJeaEm9pBAwLSp391Vv4sCBGBbNO00VB/jakXacd+IZs+CJ1FoFatZkm20bPvB4Wis+Hahr/bcWwJHPYfOO8ihlIpOClNXmrukXsCOfqIe+V1yeBhT6MoU1wu3UVu/eXoJikwXcgZHRyTftJGNIfcxqJKiY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742506462; c=relaxed/simple;
-	bh=mOnDqgj0BSZmK+Rt4jod6O1D9Yk05JHk1R77dSq+p8U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=leE1emFlEC2hm0/cB9MXGd94K5Z3IEIGSyaovOML/9irPHYknsU7s8C3HnpLF2U0dWKR44hRTTmx0ACPm6J5yV+QIull90B418lPVghruwKQSL2BqFiMgUwHoDO4Fr0XDTCI0j7it0Uwf4HVzsI2K8qSq4e9y2ZFYHgNFJyB9HY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cGT31qBd; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742506560; c=relaxed/simple;
+	bh=0gasMJ9MwLFF9X4TIJDjjd2uvTa8ezZ/DrhvXflVu0E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=jFVVPxdoz4cELIwvPJqDHH/N20C7WNKKaPXEihbi0BBrDwWpqJz9332c+NMKpa9Vlfyv8pgWrYcKZkO+Ee4+Qnff5elziAXB+2Ymxxn0My80ajZmz+yvkMsjTJNT3Z+532oj2faZVYnbl+GTJRMEdY9s8B1NVmUMMcfGeu7sCTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com; spf=pass smtp.mailfrom=ventanamicro.com; dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b=G5JYC3jm; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ventanamicro.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ventanamicro.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cGT31qBd"
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cf257158fso9217885e9.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:34:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=ventanamicro.com header.i=@ventanamicro.com header.b="G5JYC3jm"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43bc21f831bso869815e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 14:35:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742506458; x=1743111258; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HOP7UU/BixFyu9/NC0nZ1KUzXLkUEuMKRRqPCxM5rYI=;
-        b=cGT31qBdK2VlXckzYhgSbUwqq6j4Q4utLzzwfhz+8PtriJH2ViChHswg+UFsVF5Yjr
-         SHLrFkjei4URpXCT9LcD9zXov2fLgLONAHLBioclh0axjjSz8F03V6Ju/uKCShFO4qjC
-         E0/euujhohMkqsFbK5kREZMTc1WYIrIO7HfueeNTguSceBAIYTbp8MYKp9N72HeUFC/h
-         TAUr2huD1MTE/ylGFPlvhoYgCRTmEys9xOaz+2t3hf44mhzpL2zPKhFM0NteW1l1edGI
-         14rNwfX5b0T4rCEx7jyI9noi1nm7nkdEclZQWakxsdl2y9cGWjAKvqUMZPSECg5dT+/K
-         hQjA==
+        d=ventanamicro.com; s=google; t=1742506555; x=1743111355; darn=vger.kernel.org;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JqJgAERJO0hWodgjO+O6nsJOj3YPTpObkXEvNBlmG3c=;
+        b=G5JYC3jmOb6Ff6mrYC1Qo26ZnarpsB81DQV9Kc+bUEWnMhXaly+qjZvxG0p0KjOBum
+         ryIRnFQu2RO/iEP8XJxRypNekFqA6IpYfSuR0MFKfnHCq6V8wQKpjyhE2jclV1S18efO
+         MJCiKZA+53oolojvPRJ450/cEsJjjlLB2RfSTJhuEgIQarg+KPK1c6akJARSSsofNfPD
+         Rd0HCwzfE4hUr/3VHKKPvGGVSg4m65k7DJmu9iAGCezSGjYisxglBwUQ/tGTEjhO0oBC
+         Y7WtOA/EUh2856lqJ7qx/EgRq3IetHW4JjNIf0sQkNzF1dSt+r92eZ8w/xK63tTQw2bc
+         fXpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742506458; x=1743111258;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HOP7UU/BixFyu9/NC0nZ1KUzXLkUEuMKRRqPCxM5rYI=;
-        b=dngOx5KDTLSWupdkLmjzjKN5ZdHDW0AzatG4t+qfMTvDcVJVaUH98SJVsmLsGgzsJy
-         pVT7Z+TSkUn8FDOeJEP+qptY2tbbKQCQy4Kfn8r1BC6tpLk03E6+OLzScRKsI6a0gDCE
-         sWJTj0O+3VqEJTn01Kax5JmOiVwjHHkjTTVyZnRmlE3WtNdPcoHTRDMoIVoWJv+G/eRm
-         WIo810iw4BP6ema9ENjzyGRCmZFkp2FCO2iif8noM9Z92nrdTsoAs0qKfLqNoBs97ikT
-         dzw1cqvY0c2+vesx/uiIlEOLAtJW+ikLgeje6QKN1YOAYBOnhpoQBYQwryLbBnhY4mjR
-         6glg==
-X-Forwarded-Encrypted: i=1; AJvYcCUmJFf8XxYyAM6/fJ70ZGz7eKdnf/AR+PhoOHkoX07c+LPtT8WKQqQtzwDGZzcu2Wekp5V9mTjbaDTtlB0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQxBYtxxNQukpPkI7JbdfnBxW7i1KWx2zMyH+oPz4UqrfnYBNq
-	b9PrjvwvDQYdLz4DCGEYNM1ZlT1ndzaJfGAKxs5t2ktSA/ZPf+gYGzMsoCvlNw8=
-X-Gm-Gg: ASbGncsyfoWdCU4qBva4y02WnbD+PfWTHGRDdP9nkgfmd+vlS5KghnFO5fqzOBDDQBR
-	YRGSj6FSXwiV5cXGEYF1CSOwsceiH0DsV67XXGsgkEupLahA1GF/UWmZFXU/H1w2l4TgEuahw8p
-	D3+Uo3+wSDjVd0xgz1NxUBNb+2RJRzK16ZIG7VsSo7l20ab0n/FDj3PVc3pTsvTGJwJIagt1r7u
-	2SEY8qltB0lO4IWXc6/eEW3Bh+h9XTgVNmHKvZAc2nZU64iw2ovV/M4lfXMf3Eu93aEP8KMNHfy
-	zW4mpSK06oh3pjEnOrbUyfPxSYNsHSSRQpi+f5hUEACBEwYfJBojs+uchjKapCOE/mCaXGbKn1H
-	YGTJc0q7qXw==
-X-Google-Smtp-Source: AGHT+IHQR7pkacXemvapFQy9AD+rGlE3cMkaNllM4VM3ccQmOQ8FA68ceqVMTtWLDwQnmI2/UxzSmg==
-X-Received: by 2002:a05:600c:3c9b:b0:43d:d06:3798 with SMTP id 5b1f17b1804b1-43d50a31ffamr5334675e9.20.1742506458138;
-        Thu, 20 Mar 2025 14:34:18 -0700 (PDT)
-Received: from [192.168.0.34] (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f995766sm625994f8f.1.2025.03.20.14.34.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 14:34:17 -0700 (PDT)
-Message-ID: <49512bee-906c-4587-853a-b36da7a4407d@linaro.org>
-Date: Thu, 20 Mar 2025 21:34:16 +0000
+        d=1e100.net; s=20230601; t=1742506555; x=1743111355;
+        h=in-reply-to:references:from:to:cc:subject:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=JqJgAERJO0hWodgjO+O6nsJOj3YPTpObkXEvNBlmG3c=;
+        b=OAixbA7q1RIuJDWWE2yJ1Uy9rLHDH+hM6XVNsbSY0dqhpJ2xbWox6B19O3Q7d6Q6fs
+         Q1XK/6cHAIU91Qa56+r2LiOUUXbePq63HH2lrS3+dGN+CFD82xdhLpyPub8ddcfevhyx
+         ga6fsDr9hfd9RqpIy4izO/2uZ4spjJr9XU5QKyeYqDJ3o6dvlofU95i1UQ6OFH6x7dIS
+         h5X4KRprOWXmlfW6k/vbesaP17OmYgM4y7VlHEwtMM6YwkU0neRd1hdl07m2PMImK56H
+         PmkfF/jytnbTI6MBhVlQOV9QEcLoZ0N3/bCmO5R1qr+yfS/1Nt/RKhWHJKsQX7pQyrwo
+         dvQg==
+X-Gm-Message-State: AOJu0YxoRQ+I59LElVpJ2lmnfpAjmQj/342Ov/4gS+zHJ+jtQMp9dmXC
+	WChWu2EF0qexQzluCC2ZStQmP7GnoheepPjtZoVsHV9PE1gBkWla7bIJ2VhUmes=
+X-Gm-Gg: ASbGncsTmqVpZbbQUCioH+gWMP0cvRLODAcQVhEIrIw1eKJFV47vWqnytyAj8ARGO4C
+	eZyxtoMjPWtgl4ZgBTdE05IauX/RZXtdMrI+0Ou1l4R9QcLkMKI0uwZlsGmk9TY73TEVTK2yleJ
+	WdkQn9Acwh6yLrGQjXyEdNE/DERISpeUGszsjW3vGcm4inpPljaxfYETMrBquECWJ11bH+RGjut
+	a+7AC02sQ2BHbdKDcBzsELIEaq07MosMWVB8kjeyVE0t6rbQQMtlDo14l9iVqy+4WBJ54Pdyaf7
+	GH500YEzZEvycabNJsfALl6nYnhSShK+H4PZojeNYwH0+5PytEpinIm5QubKdCbf3P5cTsjuY7w
+	1Qy1I
+X-Google-Smtp-Source: AGHT+IHQLBHBcxn45pDMJ6mBe7Q5GjHdSOzikTUHc7bZFFqM3IvCF49MKGgOPWFCY1ifjxDw5fxebw==
+X-Received: by 2002:a05:600c:3552:b0:439:9a40:aa1a with SMTP id 5b1f17b1804b1-43d5170c622mr550105e9.6.1742506555439;
+        Thu, 20 Mar 2025 14:35:55 -0700 (PDT)
+Received: from localhost (ip-89-103-73-235.bb.vodafone.cz. [89.103.73.235])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9ef16csm605211f8f.86.2025.03.20.14.35.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 14:35:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: media: qcom,sm8550-iris: document
- SA8775p IRIS accelerator
-To: Vikash Garodia <quic_vgarodia@quicinc.com>,
- Dikshita Agarwal <quic_dikshita@quicinc.com>,
- Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-media@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- sumit.garg@oss.qualcomm.com
-References: <20250320-dtbinding-v2-0-8d8eaa4e76cc@quicinc.com>
- <uD9su4uJAo1PBanhrBSliY8k1KZvid_UHJJu8OYLgugkOMHBgQaYSpv93UpTrJoAzgsUMH-HomFg78fes-aqQA==@protonmail.internalid>
- <20250320-dtbinding-v2-1-8d8eaa4e76cc@quicinc.com>
-Content-Language: en-US
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-In-Reply-To: <20250320-dtbinding-v2-1-8d8eaa4e76cc@quicinc.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 20 Mar 2025 22:35:52 +0100
+Message-Id: <D8LF0RDZ6809.1I3MCCVSHRSQ2@ventanamicro.com>
+Subject: Re: [PATCH v12 23/28] riscv: kernel command line option to opt out
+ of user cfi
+Cc: <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+ <linux-mm@kvack.org>, <linux-riscv@lists.infradead.org>,
+ <devicetree@vger.kernel.org>, <linux-arch@vger.kernel.org>,
+ <linux-doc@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+ <alistair.francis@wdc.com>, <richard.henderson@linaro.org>,
+ <jim.shu@sifive.com>, <andybnac@gmail.com>, <kito.cheng@sifive.com>,
+ <charlie@rivosinc.com>, <atishp@rivosinc.com>, <evan@rivosinc.com>,
+ <cleger@rivosinc.com>, <alexghiti@rivosinc.com>, <samitolvanen@google.com>,
+ <broonie@kernel.org>, <rick.p.edgecombe@intel.com>, "linux-riscv"
+ <linux-riscv-bounces@lists.infradead.org>
+To: "Deepak Gupta" <debug@rivosinc.com>, "Thomas Gleixner"
+ <tglx@linutronix.de>, "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov"
+ <bp@alien8.de>, "Dave Hansen" <dave.hansen@linux.intel.com>,
+ <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "Andrew Morton"
+ <akpm@linux-foundation.org>, "Liam R. Howlett" <Liam.Howlett@oracle.com>,
+ "Vlastimil Babka" <vbabka@suse.cz>, "Lorenzo Stoakes"
+ <lorenzo.stoakes@oracle.com>, "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Conor Dooley" <conor@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Arnd Bergmann"
+ <arnd@arndb.de>, "Christian Brauner" <brauner@kernel.org>, "Peter Zijlstra"
+ <peterz@infradead.org>, "Oleg Nesterov" <oleg@redhat.com>, "Eric Biederman"
+ <ebiederm@xmission.com>, "Kees Cook" <kees@kernel.org>, "Jonathan Corbet"
+ <corbet@lwn.net>, "Shuah Khan" <shuah@kernel.org>, "Jann Horn"
+ <jannh@google.com>, "Conor Dooley" <conor+dt@kernel.org>
+From: =?utf-8?q?Radim_Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@ventanamicro.com>
+References: <20250314-v5_user_cfi_series-v12-0-e51202b53138@rivosinc.com>
+ <20250314-v5_user_cfi_series-v12-23-e51202b53138@rivosinc.com>
+In-Reply-To: <20250314-v5_user_cfi_series-v12-23-e51202b53138@rivosinc.com>
 
-On 20/03/2025 02:54, Vikash Garodia wrote:
-> Document the IRIS video decoder and encoder accelerator found in the
-> SA8775p platform. SA8775p and SM8550 are irisv3 with same core and
-> bindings, hence SA8775p is made fallback to SM8550.
-> QCS8300 is a downscaled version of irisv3 and have different hardware
-> capabilities. SM8650 is an irisv3 with different (higher) number of
-> reset lines compared to SM8550. QCS8300 is yet to come in future
-> posting, while SM8650 is posted as
-> https://lore.kernel.org/all/20250305-topic-sm8x50-iris-v10-v2-1-bd65a3fc099e@linaro.org/
-> 
-> Signed-off-by: Vikash Garodia <quic_vgarodia@quicinc.com>
+2025-03-14T14:39:42-07:00, Deepak Gupta <debug@rivosinc.com>:
+> This commit adds a kernel command line option using which user cfi can be
+> disabled.
+>
+> Signed-off-by: Deepak Gupta <debug@rivosinc.com>
 > ---
->   Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml | 7 ++++++-
->   1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-> index e424ea84c211f473a799481fd5463a16580187ed..6a89e9e3808758cfdbf6a51dfb9fc6559864253a 100644
-> --- a/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-> +++ b/Documentation/devicetree/bindings/media/qcom,sm8550-iris.yaml
-> @@ -19,7 +19,12 @@ allOf:
-> 
->   properties:
->     compatible:
-> -    const: qcom,sm8550-iris
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - qcom,sa8775p-iris
-> +          - const: qcom,sm8550-iris
-> +      - const: qcom,sm8550-iris
-> 
->     power-domains:
->       maxItems: 4
-> 
-> --
-> 2.34.1
-> 
-> 
+>  arch/riscv/kernel/usercfi.c | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+>
+> diff --git a/arch/riscv/kernel/usercfi.c b/arch/riscv/kernel/usercfi.c
+> index d31d89618763..813162ce4f15 100644
+> --- a/arch/riscv/kernel/usercfi.c
+> +++ b/arch/riscv/kernel/usercfi.c
+> @@ -17,6 +17,8 @@
+>  #include <asm/csr.h>
+>  #include <asm/usercfi.h>
+> =20
+> +bool disable_riscv_usercfi;
+> +
+>  #define SHSTK_ENTRY_SIZE sizeof(void *)
+> =20
+>  bool is_shstk_enabled(struct task_struct *task)
+> @@ -396,6 +398,9 @@ int arch_set_shadow_stack_status(struct task_struct *=
+t, unsigned long status)
+>  	unsigned long size =3D 0, addr =3D 0;
+>  	bool enable_shstk =3D false;
+> =20
+> +	if (disable_riscv_usercfi)
+> +		return 0;
+> +
+>  	if (!cpu_supports_shadow_stack())
+>  		return -EINVAL;
+> =20
+> @@ -475,6 +480,9 @@ int arch_set_indir_br_lp_status(struct task_struct *t=
+, unsigned long status)
+>  {
+>  	bool enable_indir_lp =3D false;
+> =20
+> +	if (disable_riscv_usercfi)
+> +		return 0;
+> +
+>  	if (!cpu_supports_indirect_br_lp_instr())
+>  		return -EINVAL;
+> =20
+> @@ -507,3 +515,16 @@ int arch_lock_indir_br_lp_status(struct task_struct =
+*task,
+> =20
+>  	return 0;
+>  }
+> +
+> +static int __init setup_global_riscv_enable(char *str)
+> +{
+> +	if (strcmp(str, "true") =3D=3D 0)
+> +		disable_riscv_usercfi =3D true;
+> +
+> +	pr_info("Setting riscv usercfi to be %s\n",
+> +		(disable_riscv_usercfi ? "disabled" : "enabled"));
+> +
+> +	return 1;
+> +}
+> +
+> +__setup("disable_riscv_usercfi=3D", setup_global_riscv_enable);
 
-Reviewed-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+I'd prefer two command line options instead.
+
+In any case, I think we still document params in kernel-parameters.txt.
