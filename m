@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 091FF15A8
-	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 06:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D7DE15A8;
+	Thu, 20 Mar 2025 06:26:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742451529; cv=none; b=Gln+JdHHO9JIA8/PAUYauu4USSCmypEm6bFSX1PQTH6tfpNCKS5U0+buO1cekhPUBrWtFTDqIgMNfJYPmWzeCrsu2dp759SkBJzPs3K9ftPpv7/+5b458UtVlFE8HsCU5lUcfP7Ag/rurWHMAlTSrQlTTZeC3KvihFqhr21Vd/A=
+	t=1742451980; cv=none; b=ke+zi36Z7VZ/xWiWC91PwD6HJbEZAQLsY83eod5TX5ZN6BDYmWpMkBttMqJHE6t8sFLwlAik+RaazmL/wiiR3bnNwoPgIvJCgT5Glyzj1gZEF3H2pUwcJRPl2RkX/CssKD7xE/O/UQWu3O8gHym0DNpuLVlX3qaLoQa5SsRBba8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742451529; c=relaxed/simple;
-	bh=1c1kmAm5YHZdLxKDuxCEkhZ5UwWDwR30i3EUmSHagHk=;
+	s=arc-20240116; t=1742451980; c=relaxed/simple;
+	bh=OTeO1mDZ68FB/NGRuVKX7yUGtO4Y8nHFoWrewcm0+uE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=f58yOQcd77oPxoVSLOmhfO77Wgmn7atFHAuahfXClC3h+7f0esWJCcfVOi90kEmN/I688hv1ZB1KtzemiPVz3lowSOTTxidsk8YZlI28EmT/FJPbS/X9y6hcAjBuqC6SwhhgDuWg/edXp7J+i6jn55K1ORGync1wxj3Kqm1y6oE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5Sf+VMi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cQNjzBnk/Ia2A2f28ImDXeo3zZ9duSiDxoUTXXYEsgM5fSh+3BWU7GhUFK4B9gjS4qcXmxwZe8ZFiZVGfMCfeoe1MJDhfShSl5Ya1+vYfUuTIwngjv0zwLZxNGJ8R2MU+W+3U8TFbTo1Pw8NUOT/VHnAbA6O3gOXgZx/bpyVpko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HZA4c8He; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5Sf+VMi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C62CC4CEDD;
-	Thu, 20 Mar 2025 06:18:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HZA4c8He"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7458AC4CEE7;
+	Thu, 20 Mar 2025 06:26:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742451528;
-	bh=1c1kmAm5YHZdLxKDuxCEkhZ5UwWDwR30i3EUmSHagHk=;
+	s=k20201202; t=1742451978;
+	bh=OTeO1mDZ68FB/NGRuVKX7yUGtO4Y8nHFoWrewcm0+uE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K5Sf+VMiYkmW7L9Dqo2TWju9l5rxAyKbT21Iw3oGv4DUX3E+tjLawwADCBI39KqEk
-	 qZazDy62blKEfxfS6bU/v0YYiY9WDWIk9Lx9DIz9dBNzxCHi6L5fqPjhxSDCicRLFf
-	 w8mCzDfuqzmM/WYrYTmQdyoH+xDcEmAeZjZm0KMsMW5R6y521QRNsdXOx2rqsggNxo
-	 48zU0WJbnZGa0RXqqjscMIQAPzzpaffmcGEYTTVMrEqREyt4R/S25z1yCMb0ZI4ZzK
-	 C17u9Q+WVMUNb2Rl6nuMvk3Jk5MZ6sF2a+SdYzfjnD63OALkHLNyrJ/ryaDHavgWV9
-	 qisKohnH2qW+A==
-Message-ID: <9c63ccf8-92ee-42f5-b08c-80622d181838@kernel.org>
-Date: Thu, 20 Mar 2025 07:18:43 +0100
+	b=HZA4c8HeCtpv6R6PzglcHMonN2ZkRlzOXLiQqGyP3xq28btIYjh80FLIwO0lOjD8J
+	 HHlH/kqHGyOfPedR0y8+kaokEHEbO2+RD91wqiTL0LxPV7YQbOYP2pw9yHlYhAUoh3
+	 8uD5b9F3wB3QNRbWqVpE4E1XCarYmSteCUmtx2B1q610plXe5lGyMv2YoAzELxUTsp
+	 6KmrX2LNLZ7om2re2OuAbjd9UYMne+f6nvL/VPRpSmXUHCK4Ax9+U4nXDcreJkXmJU
+	 cMDPaKODAbyNOxJ5Cikj/l6Rej5/ehct4IZZ0kFXxFtaQ6YZoZJdxqUlInd4JfX4AA
+	 STyvR4EHTj0qg==
+Message-ID: <1367aa41-3829-4cf7-9012-e3cb0ca42b58@kernel.org>
+Date: Thu, 20 Mar 2025 07:26:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,21 +35,13 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 18/57] irqdomain: gpu: Switch to
- irq_domain_create_linear()
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: tglx@linutronix.de, maz@kernel.org, linux-kernel@vger.kernel.org,
- Alex Deucher <alexander.deucher@amd.com>,
- =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- Rob Clark <robdclark@gmail.com>, Abhinav Kumar <quic_abhinavk@quicinc.com>,
- Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Sean Paul <sean@poorly.run>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, amd-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH v2 55/57] docs: irq-domain.rst: Simple improvements
+To: Randy Dunlap <rdunlap@infradead.org>, tglx@linutronix.de
+Cc: maz@kernel.org, linux-kernel@vger.kernel.org,
+ Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
 References: <20250319092951.37667-1-jirislaby@kernel.org>
- <20250319092951.37667-19-jirislaby@kernel.org>
- <CADnq5_P93d5TTPA36JB_RSGE8uRwoQQ5to7Wp9STD6xJrrMqdg@mail.gmail.com>
+ <20250319092951.37667-56-jirislaby@kernel.org>
+ <4c71b7bd-5264-4a64-81bc-297dcf1c81a1@infradead.org>
 Content-Language: en-US
 From: Jiri Slaby <jirislaby@kernel.org>
 Autocrypt: addr=jirislaby@kernel.org; keydata=
@@ -94,47 +86,71 @@ Autocrypt: addr=jirislaby@kernel.org; keydata=
  f/bIWIr0cqQmqQ33FgRhrG1+Xml6UXyJ2jExmlO8JljuOGeXYh6ZkIEyzqzffzBLXZCujlYQ
  DFXpyMNVJ2ZwPmX2mWEoYuaBU0JN7wM+/zWgOf2zRwhEuD3A2cO2PxoiIfyUEfB9SSmffaK/
  S4xXoB6wvGENZ85Hg37C7WDNdaAt6Xh2uQIly5grkgvWppkNy4ZHxE+jeNsU7tg=
-In-Reply-To: <CADnq5_P93d5TTPA36JB_RSGE8uRwoQQ5to7Wp9STD6xJrrMqdg@mail.gmail.com>
+In-Reply-To: <4c71b7bd-5264-4a64-81bc-297dcf1c81a1@infradead.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 19. 03. 25, 14:31, Alex Deucher wrote:
-> On Wed, Mar 19, 2025 at 5:44 AM Jiri Slaby (SUSE) <jirislaby@kernel.org> wrote:
->>
->> irq_domain_add_linear() is going away as being obsolete now. Switch to
->> the preferred irq_domain_create_linear(). That differs in the first
->> parameter: It takes more generic struct fwnode_handle instead of struct
->> device_node. Therefore, of_fwnode_handle() is added around the
->> parameter.
->>
->> Note some of the users can likely use dev->fwnode directly instead of
->> indirect of_fwnode_handle(dev->of_node). But dev->fwnode is not
->> guaranteed to be set for all, so this has to be investigated on case to
->> case basis (by people who can actually test with the HW).
+On 19. 03. 25, 18:54, Randy Dunlap wrote:
+> Hi,
+> 
+> On 3/19/25 2:29 AM, Jiri Slaby (SUSE) wrote:
+>> The improvements include:
+>> * Capitals in headlines.
+>> * Added commas: for easier reading, it is always desired to add commas
+>>    at some places in text. Like before adverbs or after fronted
+>>    sentences.
+>> * 3rd person -> add 's' to verbs.
+>> * End some sentences with period and start a new one. Avoid thus heavy
+>>    sentences.
 >>
 >> Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
->> Cc: Alex Deucher <alexander.deucher@amd.com>
->> Cc: "Christian König" <christian.koenig@amd.com>
->> Cc: David Airlie <airlied@gmail.com>
->> Cc: Simona Vetter <simona@ffwll.ch>
->> Cc: Rob Clark <robdclark@gmail.com>
->> Cc: Abhinav Kumar <quic_abhinavk@quicinc.com>
->> Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Cc: Sean Paul <sean@poorly.run>
->> Cc: Marijn Suijten <marijn.suijten@somainline.org>
->> Cc: Philipp Zabel <p.zabel@pengutronix.de>
->> Cc: amd-gfx@lists.freedesktop.org
->> Cc: dri-devel@lists.freedesktop.org
+>> Cc: Jonathan Corbet <corbet@lwn.net>
+>> Cc: linux-doc@vger.kernel.org
+>> Cc: Randy Dunlap <rdunlap@infradead.org>
 >> ---
->>   drivers/gpu/drm/amd/amdgpu/amdgpu_irq.c | 4 ++--
->>   drivers/gpu/drm/msm/msm_mdss.c          | 2 +-
->>   drivers/gpu/ipu-v3/ipu-common.c         | 4 ++--
+>>   Documentation/core-api/irq/irq-domain.rst | 22 +++++++++++-----------
+>>   1 file changed, 11 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/Documentation/core-api/irq/irq-domain.rst b/Documentation/core-api/irq/irq-domain.rst
+>> index 775dd43b3340..c2f2728b1a35 100644
+>> --- a/Documentation/core-api/irq/irq-domain.rst
+>> +++ b/Documentation/core-api/irq/irq-domain.rst
+>> @@ -1,19 +1,19 @@
+>>   ===============================================
+>> -The irq_domain interrupt number mapping library
+>> +The irq_domain Interrupt Number Mapping Library
+>>   ===============================================
+>>   
+>>   The current design of the Linux kernel uses a single large number
+>>   space where each separate IRQ source is assigned a different number.
+>>   This is simple when there is only one interrupt controller, but in
+>> -systems with multiple interrupt controllers the kernel must ensure
+>> +systems with multiple interrupt controllers, the kernel must ensure
+>>   that each one gets assigned non-overlapping allocations of Linux
+>>   IRQ numbers.
+>>   
 > 
-> I would suggest splitting this by driver.
+> (I'm OK with all of the changes here except this one:)
+> 
+>>   The number of interrupt controllers registered as unique irqchips> -show a rising tendency: for example subdrivers of different kinds
+>> +shows a rising tendency. For example, subdrivers of different kinds
+>>   such as GPIO controllers avoid reimplementing identical callback
+>>   mechanisms as the IRQ core system by modelling their interrupt
+>> -handlers as irqchips, i.e. in effect cascading interrupt controllers.
+>> +handlers as irqchips. I.e. in effect cascading interrupt controllers.
+> 
+> I would just add a comma after "i.e.". In the new + line, the "I.e." part
+> is not a sentence.
 
-Done for v3.
+Thanks. Of course, so now, I have:
 
-thanks,
+The number of interrupt controllers registered as unique irqchips
+shows a rising tendency. For example, subdrivers of different kinds
+such as GPIO controllers avoid reimplementing identical callback
+mechanisms as the IRQ core system by modelling their interrupt
+handlers as irqchips, i.e., in effect cascading interrupt controllers.
+
+
 -- 
 js
 suse labs
