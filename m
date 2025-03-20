@@ -1,241 +1,267 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850768F6D;
-	Thu, 20 Mar 2025 10:06:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEE0F8F6D
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 10:06:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742465172; cv=none; b=jZyFH7ZuEj0ZFPXIjbZkN/lRF/MKGBRRx+0IcTSqtyY0wwy0it/HnttBlUHxf8E/KA+995YKqFr5HNexjVDPGeVxCwrwKU5H4IjbqETqcdLynkB7uji18UKSvYRfsD6P6O+6RsnJPWH0QPWTkpDGsxjZ+vSQYIb3vY3PGCAGyQY=
+	t=1742465196; cv=none; b=OCCKUHj5q/ODl3hNrin0x/TcBOH60UwW2DSi883REKzsMVVFXtTnlNDAXUOuUKJpwjjWedbeyhipFi3K99sU7P8TSM+DS4w9T55DGlidW9772oE5XARQiwMF5ji64MBNgnacXnkzXF0T/7844dpIOIf6ipxIZ4wfqA7JZmkerGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742465172; c=relaxed/simple;
-	bh=1/W9ZnOxLtkGDumZwqSmDSGWKZan3W+vbsFUgU9wlvg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DmUZwRZCw1BZ3bYMHZ1pS4FpIArw4AOy5QztDPZFNpTwzUooQEuVdPF3LfHq7jhI6t2m2WOwPhYGQmAFUUJI0A+yotqZTyH5Z50Hd8aK4x2MPVM3YWiqqo604kBN773MT9Zf81QjkWE7v62ys4ggTVqX2PJj7poUYj0tH+SDnmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GK3w8G34; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742465196; c=relaxed/simple;
+	bh=hwv0GYbl8wVEmn0TNp6E7sW9L2fOtzsVAqxN0IBQVe8=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=TqKsDEWfzm9s6/jFI8jqnx9/6gFnJjJG8Itv2ye34aSenyOJTGVa8vYN8IXoCxbMVy/5xv5mA4MqZr++96NyDDFKhKkXq8C/UMsEIEztNyrkUlw65MhHu6BakBf8itGwe+blI6hI4lDLpThVmSpPxz59oTC6NAoIvecsdzb4f/0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mZSbu5Av; arc=none smtp.client-ip=209.85.128.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GK3w8G34"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742465170; x=1774001170;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1/W9ZnOxLtkGDumZwqSmDSGWKZan3W+vbsFUgU9wlvg=;
-  b=GK3w8G34HlUtvkwdwWVpZl4XxsKILJNCVo29mqBdIYFI1zB2fYFrt0BR
-   0M5/EI8ydGBE9brrVWy+EqiMBQTf+KLSQ6g+i7tHee95ZMASp3UeVYwKx
-   hedwix4lE24HGx7a/6wbk014kzEoLLCRyO4/+5mzxLApAhsDx+U32u+nG
-   KvggemL4PAB0Bh8oJGxjUwBGGrbUK01yfkSImX2sC3ysziBw8ZdZSEP4x
-   EMwNmQv1kPoW3DBOVlLkY1W+T/32oDB45YKGg+/UMh+nuQyKbuZuXV2i9
-   3eSJzg2BL0AiUsPhJ+rr9IC4mmuytPvJY01FOUXje/c+3Lp10uAFGQ048
-   w==;
-X-CSE-ConnectionGUID: q9BaiTCpT163E4BXcqrlFA==
-X-CSE-MsgGUID: /dBrzB//SP+qqPonUZum5A==
-X-IronPort-AV: E=McAfee;i="6700,10204,11378"; a="47567613"
-X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
-   d="scan'208";a="47567613"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 03:06:09 -0700
-X-CSE-ConnectionGUID: Fs4yULOuRSeeEEGeFKebWw==
-X-CSE-MsgGUID: RfAYdKxjQ6Khx2MJlFA6HQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,261,1736841600"; 
-   d="scan'208";a="123511643"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 20 Mar 2025 03:06:04 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tvCmo-0000Lr-0X;
-	Thu, 20 Mar 2025 10:06:02 +0000
-Date: Thu, 20 Mar 2025 18:05:57 +0800
-From: kernel test robot <lkp@intel.com>
-To: jiebing chen via B4 Relay <devnull+jiebing.chen.amlogic.com@kernel.org>,
-	Jerome Brunet <jbrunet@baylibre.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-sound@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
-	jian.xu@amlogic.com, shuai.li@amlogic.com, zhe.wang@amlogic.com,
-	jiebing chen <jiebing.chen@amlogic.com>
-Subject: Re: [PATCH v4 5/6] clk: meson: axg-audio: Add the mclk pad div for
- s4 chip
-Message-ID: <202503201714.sI6HIkYs-lkp@intel.com>
-References: <20250319-audio_drvier-v4-5-686867fad719@amlogic.com>
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mZSbu5Av"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso3905465e9.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 03:06:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742465193; x=1743069993; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ef93EvBdMpDqmUh6kx0QLTgICnU6/6SZCOXaKlyYf2U=;
+        b=mZSbu5Av2Y60GErK/wWVHYCilqwlYNI1xwhFRv0UzDgpKC+P2Y64Djk1XYt3M3BPoK
+         tfiKevayWmvFse5S3w/W273ylh1qP2XLlS+PeIy5BwhZzpKpv2EbZjhKRwawqtIuVrjB
+         +2aWwSp/ef7Le4g9C9SXzDx/9qrJNj2ffjrNSja6OWRl+jvjTD7kjCykzjdr0vX7G+2+
+         aUPO99rBCABYJY0Mzt2JPqcLJwzWxdJ8805are1akHA2UmSKcdq0Zw32i7flQdlM6ode
+         /RYYjZBdszykDiFv2iKeIppiqzxnh5ts22zYBwfqyASFMc8mIMbAoghzRBxy9CcsOeBO
+         PNFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742465193; x=1743069993;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ef93EvBdMpDqmUh6kx0QLTgICnU6/6SZCOXaKlyYf2U=;
+        b=N9WdKSlu+NtPG82EcVcSCJDW1/6Mevs849qT8P1AT/B5jI2MXAcSGVrbCmnMn75i/o
+         odGrFrPg9QsGYm4kQTmm1fRxeSywtQ6BwRIVlUPkn+BcuQDQrl/UJDWNq94k04dlTL5M
+         c8O1X63fvp8uyn71IwnWFZjTH7Tlr/h3FTMtB8+/7kT6z7KnCmz0nnQgQpOFyfjewyOz
+         d9tv2IoZSfCIVTDcI2ghnb596bpqD2WLab+DhiQnV3zCfUyJPxEYBh9f5vyFXjnIN37g
+         eeIBYGveNwhHIHrt+KvFR2SrK9P1uXDuIPeDFoaWdYCSY27xUvZF81nAUM6/U4oVtLRf
+         6yaA==
+X-Forwarded-Encrypted: i=1; AJvYcCXIljJ7FgSzXN25RYSiLd9LJPweBTjAG3bWZNkJW6CuOu4sIWKrFY068UtA0iYCB/vSoH/6oy8BCTGDGP4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJos2RvnXbENgdikYUDxSJUWEGpQRrhu8bhQheKxuVGR9R/kV/
+	nZGC+wXMXVP3aLckpkO4KibiqRoDmWqgSBfraoxkWtOCu9aWn4LaTEShD2rvGiw=
+X-Gm-Gg: ASbGncsZUbA3NiuEc46EnQP7Gv8/GU/z6dQW69PEPu7DoRWEFuk30DL2DHuIYEbOZMu
+	iFfJuRwwXzVNKvt9+Zep3BaniQ8xR4MPMTNU1SoxqQv/DQYzOosC6qZRM3og5XaJ+dRkHbAtpkM
+	TuR+uPSokQL7rHm5eu0JL18sN6nxHBZZRKNvz9kmS2G508MJjBPFsfdBqv9O+r0iCaGSMm/fApr
+	iYDO3MiJTmlWUNkIvnUjOfwnIfErZlYa7yi3t1mLIDY0TXiGQDIibkwSaY0kSDOkKMUv1rcgU4C
+	2pKBREd35gBqDa4Y14Qb3PdMz1j+OXi7Xpn1/Mu/vC7DWTOeyvo2H4aMY5vi49ILj0EzNZjf6tY
+	fhpCjCcLSa/jx9ZZX
+X-Google-Smtp-Source: AGHT+IFs2kUJ2yBcT1Hej45544hEo1UrQ1/ldZ8xLV3PQovPYI/9lDfWv1Fm3js+MIioMjHCm6lcnA==
+X-Received: by 2002:a05:600c:1f83:b0:43c:ef13:7e5e with SMTP id 5b1f17b1804b1-43d4383d55bmr49232035e9.26.1742465192777;
+        Thu, 20 Mar 2025 03:06:32 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:3bd:568:f697:d1a2? ([2a01:e0a:3d9:2080:3bd:568:f697:d1a2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f43cbasm43375265e9.9.2025.03.20.03.06.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 03:06:32 -0700 (PDT)
+Message-ID: <bcc653d4-ef34-4a2b-9843-a7e9f43bdb23@linaro.org>
+Date: Thu, 20 Mar 2025 11:06:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250319-audio_drvier-v4-5-686867fad719@amlogic.com>
+User-Agent: Mozilla Thunderbird
+From: neil.armstrong@linaro.org
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH net] wifi: ath12k: properly set single_chip_mlo_supp to
+ true in ath12k_core_alloc()
+To: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>,
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vasanthakumar Thiagarajan <quic_vthiagar@quicinc.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>,
+ Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+ Johannes Berg <johannes@sipsolutions.net>, Jeff Johnson
+ <jjohnson@kernel.org>, Aditya Kumar Singh <quic_adisi@quicinc.com>,
+ linux-wireless@vger.kernel.org, ath12k@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <20250303-topic-ath12k-fix-crash-v1-1-f871d4e4d968@linaro.org>
+ <24b2f1f8-97bd-423a-acbd-9a5cd45e4a40@oss.qualcomm.com>
+ <7901d7f0-d6d0-4bf3-89ad-d710e88477b7@linaro.org>
+ <7b4b598f-bc13-aa4b-8677-71477e1f5434@quicinc.com>
+ <8b05760b-db99-4b43-8444-d655b18d3699@kernel.org>
+ <db232678-fa85-d75f-de72-d2b5e1ec611f@quicinc.com>
+ <2a5hvicenftfiktviiofvknanyz756cbryu35gkfczdvbcdd5j@fktlzfieotgl>
+ <c6e3b0c1-18fe-a9fa-0e72-d955809144e3@oss.qualcomm.com>
+ <hmfvyajygmjoeaaashmddu4rg6ttzn7es4sjls5qvnemykkx2l@zuzixrzkmkgx>
+ <c556876d-01af-a6b7-51dd-2748d6d0bbba@oss.qualcomm.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <c556876d-01af-a6b7-51dd-2748d6d0bbba@oss.qualcomm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi jiebing,
+Hi,
 
-kernel test robot noticed the following build errors:
+On 20/03/2025 08:23, Vasanthakumar Thiagarajan wrote:
+> 
+> 
+> On 3/19/2025 7:03 PM, Dmitry Baryshkov wrote:
+>> On Wed, Mar 19, 2025 at 06:24:57PM +0530, Vasanthakumar Thiagarajan wrote:
+>>>
+>>>
+>>> On 3/19/2025 5:21 PM, Dmitry Baryshkov wrote:
+>>>> On Wed, Mar 19, 2025 at 05:02:39PM +0530, Vasanthakumar Thiagarajan wrote:
+>>>>>
+>>>>>
+>>>>> On 3/19/2025 3:57 PM, Krzysztof Kozlowski wrote:
+>>>>>> On 19/03/2025 10:06, Vasanthakumar Thiagarajan wrote:
+>>>>>>>>>> ---
+>>>>>>>>>> base-commit: 7eb172143d5508b4da468ed59ee857c6e5e01da6
+>>>>>>>>>> change-id: 20250303-topic-ath12k-fix-crash-49e9055c61a1
+>>>>>>>>>>
+>>>>>>>>>> Best regards,
+>>>>>>>>>
+>>>>>>>>> NAK since this will break QCN
+>>>>>>>>> There is a series under internal review to address MLO issues for WCN chipsets
+>>>>>>>>
+>>>>>>>> ???
+>>>>>>>>
+>>>>>>>> The original commit is wrong, this fixes the conversion, nothing else.
+>>>>>>>
+>>>>>>> Nope. Driver changes to enable MLO with WCN chipset are not there yet.
+>>>>>>> Setting the mlo capability flag without having required driver changes
+>>>>>>> for WCN chipset will likely result in firmware crash. So the recommendation
+>>>>>>> is to enable MLO (in WCN) only when all the necessary driver changes
+>>>>>>> (in development, public posting in near future) are in place.
+>>>>>> Really, these are your answers? There is regression and first reply is
+>>>>>> upstream should wait for whatever you do internally. Second answer is
+>>>>>> the same - public posting in near future?
+>>>>>>
+>>>>>
+>>>>> May be I was not clear in my response. I was not telling MLO bug fixes were
+>>>>> in the development. Actually the MLO feature itself is not enabled
+>>>>> yet with WCN chip sets. Any code changes enabling it without full feature
+>>>>> support would result in firmware crashes with the existing firmware binaries
+>>>>> available in upstream.
+>>>>
+>>>> Is there an undocumented change of the behaviour in the commit
+>>>> 46d16f7e1d14 ("wifi: ath12k: rename mlo_capable_flags to
+>>>> single_chip_mlo_supp")?
+>>>>
+>>>
+>>> diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
+>>>
+>>> -       if (resp.single_chip_mlo_support_valid) {
+>>> -               if (resp.single_chip_mlo_support)
+>>> -                       ab->mlo_capable_flags |= ATH12K_INTRA_DEVICE_MLO_SUPPORT;
+>>> -               else
+>>> -                       ab->mlo_capable_flags &= ~ATH12K_INTRA_DEVICE_MLO_SUPPORT;
+>>> -       }
+>>>
+>>> The above logic seems to keep the initialized intra MLO support even when
+>>> single_chip_mlo_support_valid is not set. The above code removal is correct as
+>>> MLO support can not be enabled in host when firmware does not advertise it.
+>>
+>> Ack
+>>
+>>>
+>>> diff --git a/drivers/net/wireless/ath/ath12k/core.c b/drivers/net/wireless/ath/ath12k/core.c
+>>>
+>>
+>> You skipped an important chunk:
+>>
+>> -    ab->mlo_capable_flags = ATH12K_INTRA_DEVICE_MLO_SUPPORT;
+>>> +       ab->single_chip_mlo_supp = false;
+>>
+>> Is this an _undocumented_ change? I think it is. If the developer has
+>> described that the commit disables MLO, there would be no such
+>> questions.
+>>
+>>> diff --git a/drivers/net/wireless/ath/ath12k/qmi.c b/drivers/net/wireless/ath/ath12k/qmi.c
+>>>
+>>> +       if (resp.single_chip_mlo_support_valid &&
+>>> +           resp.single_chip_mlo_support)
+>>> +               ab->single_chip_mlo_supp = true;
+>>>
+>>> The above code does it in right way. Overriding firmware MLO capability as done
+>>> in the submitted patch under review is obviously wrong. The firmware used to report
+>>> the issue seems to have an odd behavior: 1. it does not seem to advertise MLO
+>>> capability in single_chip_mlo_support bit and 2. expects configurations to enable
+>>> MLO from host. None of the WCN firmware available in upstream either advertises
+>>> MLO capability or expects configurations to enable MLO from host.
+>>
+>> Additionally, from the commit message:
+>>
+>>      For the WCN7850 family of chipsets, since the event is not supported,
+>>      assumption is made that single chip MLO is supported.
+>>
+>> However the code doesn't contain that change. Instead single chip MLO is
+>> unconditionally disabled.
+>>
+>> I guess, Neil's change should be reworked to be limited to WCN7850 only,
+>> however it must be done as it is what was expected from the commit
+>> message.
+>>
+> 
+> There has been lots of rework gone in to ath12k driver towards enabling
+> MLO support for QCN chip set. As of now, MLO boot and runtime configurations
+> are restricted to  QCN chipset. WCN will not work with those MLO changes.
+> Re-enabling single_chip_mlo_supp equivalent (single_chip_mlo_supp got cleaned up in ath/linux-next) will create issues when MLO gets enabled for WCN. Driver
+> changes/hacks to support this non-upstream firmware specific behavior will
+> become a major challenge over a period as new features are getting added in driver/firmware.
 
-[auto build test ERROR on 6ecd20965bdc21b265a0671ccf36d9ad8043f5ab]
+Making sure a driver doesn't regress with a fw is a major challenge for everyone,
+this is why we CI test the kernel on different platform and make sure
+it still works over time.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/jiebing-chen-via-B4-Relay/dt-bindings-clock-meson-Add-audio-power-domain-for-s4-soc/20250319-151110
-base:   6ecd20965bdc21b265a0671ccf36d9ad8043f5ab
-patch link:    https://lore.kernel.org/r/20250319-audio_drvier-v4-5-686867fad719%40amlogic.com
-patch subject: [PATCH v4 5/6] clk: meson: axg-audio: Add the mclk pad div for s4 chip
-config: arm64-randconfig-001-20250320 (https://download.01.org/0day-ci/archive/20250320/202503201714.sI6HIkYs-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project 87916f8c32ebd8e284091db9b70339df57fd1e90)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250320/202503201714.sI6HIkYs-lkp@intel.com/reproduce)
+Please share your roadmap with the community and add some documentation
+explaining which firmwares & features are currently supported and which
+features are in development. It's something usually done in a TODO and
+ROADMAP file in the driver directory.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503201714.sI6HIkYs-lkp@intel.com/
+And honestly, please report a warning in the kernel when using a non-supported
+firmware version, because Qualcomm ships hundreds of different firmwares
+with cryptic namings working with different driver versions and the situation
+is honestly impossible to handle for developers & customers when setting up
+systems based on mainline Linux.
 
-All errors (new ones prefixed by >>):
+Finally, it seems you only test the WCN on an x86 platform, and since you ship
+the WCN along (at least) the SM8550, SM8650 and SM8750 SoCs (which is like millions
+of phones) and since those SoCs are pretty well supported in mainline Linux,
+these targets should be validated aswell since they have different power-up
+requirements than the standalone PCIe card.
 
->> drivers/clk/meson/axg-audio.c:2228:34: error: cannot assign to variable 'aud_regmap_config' with const-qualified type 'const struct regmap_config'
-    2228 |                 aud_regmap_config.max_register = resource_size(res) - 4;
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ ^
-   drivers/clk/meson/axg-audio.c:2220:37: note: variable 'aud_regmap_config' declared const here
-    2220 |                 static const struct regmap_config aud_regmap_config = {
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-    2221 |                         .reg_bits = 32,
-         |                         ~~~~~~~~~~~~~~~
-    2222 |                         .val_bits = 32,
-         |                         ~~~~~~~~~~~~~~~
-    2223 |                         .reg_stride = 4,
-         |                         ~~~~~~~~~~~~~~~~
-    2224 |                 };
-         |                 ~
-   drivers/clk/meson/axg-audio.c:2229:26: error: cannot assign to variable 'aud_regmap_config' with const-qualified type 'const struct regmap_config'
-    2229 |                 aud_regmap_config.name =
-         |                 ~~~~~~~~~~~~~~~~~~~~~~ ^
-   drivers/clk/meson/axg-audio.c:2220:37: note: variable 'aud_regmap_config' declared const here
-    2220 |                 static const struct regmap_config aud_regmap_config = {
-         |                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~
-    2221 |                         .reg_bits = 32,
-         |                         ~~~~~~~~~~~~~~~
-    2222 |                         .val_bits = 32,
-         |                         ~~~~~~~~~~~~~~~
-    2223 |                         .reg_stride = 4,
-         |                         ~~~~~~~~~~~~~~~~
-    2224 |                 };
-         |                 ~
-   2 errors generated.
+Last note, there's no "upstream firmware", the linux-firmware repository is a handy
+collection of firmwares shared by vendors in a central place with clear reditribution
+licencing, but it cannot be considered as "upstream" like the Linux code is.
+So expliciting which firmware version is supported in the documentation and the
+code is the preferred way.
 
+Thanks,
+Neil
 
-vim +2228 drivers/clk/meson/axg-audio.c
+> 
+> Vasanth
 
-  2175	
-  2176	static int axg_audio_clkc_probe(struct platform_device *pdev)
-  2177	{
-  2178		struct device *dev = &pdev->dev;
-  2179		const struct audioclk_data *data;
-  2180		struct axg_audio_reset_data *rst;
-  2181		struct regmap *map;
-  2182		void __iomem *regs;
-  2183		struct clk_hw *hw;
-  2184		struct clk *clk;
-  2185		int ret, i;
-  2186	
-  2187		data = of_device_get_match_data(dev);
-  2188		if (!data)
-  2189			return -EINVAL;
-  2190	
-  2191		regs = devm_platform_ioremap_resource(pdev, 0);
-  2192		if (IS_ERR(regs))
-  2193			return PTR_ERR(regs);
-  2194	
-  2195		axg_audio_regmap_cfg.max_register = data->max_register;
-  2196		map = devm_regmap_init_mmio(dev, regs, &axg_audio_regmap_cfg);
-  2197		if (IS_ERR(map)) {
-  2198			dev_err(dev, "failed to init regmap: %ld\n", PTR_ERR(map));
-  2199			return PTR_ERR(map);
-  2200		}
-  2201	
-  2202		/* Get the mandatory peripheral clock */
-  2203		clk = devm_clk_get_enabled(dev, "pclk");
-  2204		if (IS_ERR(clk))
-  2205			return PTR_ERR(clk);
-  2206	
-  2207		ret = device_reset(dev);
-  2208		if (ret) {
-  2209			dev_err_probe(dev, ret, "failed to reset device\n");
-  2210			return ret;
-  2211		}
-  2212	
-  2213		/* Populate regmap for the regmap backed clocks */
-  2214		for (i = 0; i < data->regmap_clk_num; i++)
-  2215			data->regmap_clks[i]->map = map;
-  2216	
-  2217		/* some amlogic chip clock pad reg domian is different */
-  2218		if (audio_clock_pad_is_new_regmap(dev->of_node)) {
-  2219			struct resource *res;
-  2220			static const struct regmap_config aud_regmap_config = {
-  2221				.reg_bits = 32,
-  2222				.val_bits = 32,
-  2223				.reg_stride = 4,
-  2224			};
-  2225			regs = devm_platform_get_and_ioremap_resource(pdev, 1, &res);
-  2226			if (IS_ERR(regs))
-  2227				return PTR_ERR(regs);
-> 2228			aud_regmap_config.max_register = resource_size(res) - 4;
-  2229			aud_regmap_config.name =
-  2230				devm_kasprintf(dev, GFP_KERNEL, "%s-%s", dev->of_node->name, "pads");
-  2231			map = devm_regmap_init_mmio(dev, regs, &aud_regmap_config);
-  2232			/* Populate clk pad regmap for the regmap backed clocks */
-  2233			for (i = 0; i < data->regmap_clk_pads_num; i++)
-  2234				data->regmap_clks_pads[i]->map = map;
-  2235		}
-  2236		/* Take care to skip the registered input clocks */
-  2237		for (i = AUD_CLKID_DDR_ARB; i < data->hw_clks.num; i++) {
-  2238			const char *name;
-  2239	
-  2240			hw = data->hw_clks.hws[i];
-  2241			/* array might be sparse */
-  2242			if (!hw)
-  2243				continue;
-  2244	
-  2245			name = hw->init->name;
-  2246			ret = devm_clk_hw_register(dev, hw);
-  2247			if (ret) {
-  2248				dev_err(dev, "failed to register clock %s\n", name);
-  2249				return ret;
-  2250			}
-  2251		}
-  2252	
-  2253		ret = devm_of_clk_add_hw_provider(dev, meson_clk_hw_get, (void *)&data->hw_clks);
-  2254		if (ret)
-  2255			return ret;
-  2256	
-  2257		/* Stop here if there is no reset */
-  2258		if (!data->reset_num)
-  2259			return 0;
-  2260	
-  2261		rst = devm_kzalloc(dev, sizeof(*rst), GFP_KERNEL);
-  2262		if (!rst)
-  2263			return -ENOMEM;
-  2264	
-  2265		rst->map = map;
-  2266		rst->offset = data->reset_offset;
-  2267		rst->rstc.nr_resets = data->reset_num;
-  2268		rst->rstc.ops = &axg_audio_rstc_ops;
-  2269		rst->rstc.of_node = dev->of_node;
-  2270		rst->rstc.owner = THIS_MODULE;
-  2271	
-  2272		return devm_reset_controller_register(dev, &rst->rstc);
-  2273	}
-  2274	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
