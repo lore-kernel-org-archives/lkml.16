@@ -1,63 +1,91 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B75C1DEFE4;
-	Thu, 20 Mar 2025 23:59:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A77822AE49
+	for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 23:59:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742515152; cv=none; b=H94ocMezMgjzyQC5J/Y7hFdH6vn8N5xO0LpYgLRsOiYQMKEwh5+gy2GNhZjavak4lEoLtYNoQtGVcIWDxKe61AETs9gXjexGT8Rd+P2weKHQs+pMk/ldIucNyFDekHDlbjSdYlKHM7h+kzTj0ynn0efMBdBryGBjBATDyMlsy+w=
+	t=1742515157; cv=none; b=cE7rS+DdwWGSkyLFS+Ele45GYCBQPDTyLHTWPuGMK6CpSJKnL1+ksh8eWNzWlRHUSdZ69PDoP4HTmujX/ZEZn6VcTGCD/8DmOhI3jKaP/Ubd0r6xg2A3Nsw21gMUV2PDg5d6gIxMe4zLxaAp77rqSCztMClEZU+VM0Zy2wR9J/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742515152; c=relaxed/simple;
-	bh=ETmVZMyiueeUOukjC5G5xNwuzGq6r33lp68Aa8aXCAQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=QuqfVhE4rMR542rf4vTWuIPUsfAeA6zhMFr1wdJzCXgquXPg2kvcvL2bg/Cf/LIFh7mTpYPj372K9ESOgFe4UyM70gPtL7ys7Z8l610nplL5T1R2J8W0lcPpr3tGKfqIvrLxo9awPNIFCGb5Pg2fKkOg3wufoIiXFkESRF0hxbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EPad98dK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742515157; c=relaxed/simple;
+	bh=KWXgKeeRyxAABGX1lfsepKxCW80NDLlNH+a5wGO3ias=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=pN/q5VXyyaLK5JKZGLHvyyemYHC0WGLFz5yBb2z583yh22DZ93xKM3Hnp50P01ClakEz5wJH2jCxVjzLqADOo71Le/xy7q5I3AKX6wN/pAQNIeg4eMH7PDYbM9+bTmSZEbp3bLQBvqj7o9omz3r12qPf0d3JSsDVxwWZcyCpCSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wgCxEuVX; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPad98dK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A087C4CEDD;
-	Thu, 20 Mar 2025 23:59:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742515151;
-	bh=ETmVZMyiueeUOukjC5G5xNwuzGq6r33lp68Aa8aXCAQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=EPad98dKp7pD8edluDa0J084CUFabhoCpjqWpedQw1Z0Fy/dNpSfilZXry4eu7iZB
-	 U97FOc8rR0czycOtK5z8VByJTl3vJzK4q8FJgEr/hx7RkF5YR0wGTzy9OjltY6YboY
-	 PkCU0FP3ADXllIw/cDpnt9ogLb6qS4r8Btbdw0RVg49yqrYrGSCm7zRQbp3vsz+3LY
-	 VRaFITiwh/jJ5UJ82974+QhLTXbHru5QImjQPMcz4qVbuMwD/IF4M2BO4b0UFezWRp
-	 wkqjPauMyRRFSX1ePuqLONK06rt+S8VnubHSO60cGRwQWK1r966krpiH/ncpD/Hh0E
-	 7wfWoSVVjDL2w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE32E3806654;
-	Thu, 20 Mar 2025 23:59:48 +0000 (UTC)
-Subject: Re: [GIT PULL] dma-mapping fix for Linux 6.14
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20250320232115.3940-1-m.szyprowski@samsung.com>
-References: <CGME20250320232137eucas1p2f877454de65336d638b200d920ccf2f3@eucas1p2.samsung.com> <20250320232115.3940-1-m.szyprowski@samsung.com>
-X-PR-Tracked-List-Id: <iommu.lists.linux.dev>
-X-PR-Tracked-Message-Id: <20250320232115.3940-1-m.szyprowski@samsung.com>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git tags/dma-mapping-6.14-2025-03-21
-X-PR-Tracked-Commit-Id: 8324993f60305e50f27b98358b01b9837e10d159
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a1cffe8cc8aef85f1b07c4464f0998b9785b795a
-Message-Id: <174251518733.1956662.8849960651830486201.pr-tracker-bot@kernel.org>
-Date: Thu, 20 Mar 2025 23:59:47 +0000
-To: Marek Szyprowski <m.szyprowski@samsung.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org, iommu@lists.linux.dev
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wgCxEuVX"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-22650077995so32638765ad.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 16:59:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742515155; x=1743119955; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=loL07EFpzn9RFKU+1xqTjFTK8szpohqpYkvK4IMMJvM=;
+        b=wgCxEuVXhmDVDzrSqhk2f+scb80/w14odECcL895xvoBFqjxZ9yRkVqSDRTaqdbq6r
+         1WoE/B5LcdHtwq2TDOM3LFITV7YqbAlL+1l26ofqBTx0hV4WMWwy1jTEKpQyftc6arND
+         WfZhqkPcOTCy+bJ3Ii3ILMF7UOzYqai7tlpr0OVX3Rjz0vl6Xl+BxhOe2t1OkDs/7h/R
+         BMskBKnjja2YqA8LD8E74Nfhsl0pV+WypXp6cmutdvPlS1fQn+89DESY+AC0TFOAUX3n
+         HpswEeGnvK/g6Wjx6RCWL8sXPcVzBX2Pzv+L7zzzTF4qZ9x+T+KiPSt6/NFyeQIEjQ6H
+         62iA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742515155; x=1743119955;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=loL07EFpzn9RFKU+1xqTjFTK8szpohqpYkvK4IMMJvM=;
+        b=BxbeHei4UwBZZv4mv1F7h1WM4Aqjg3AUrZqGf2rXgeGMRGWy4qrPpUhTWg2RaN9ilo
+         VfKOrbcjk9ZYqIBgysjFQlB9iKURgxtnWIgXmwVMOOzCBCQgsHryY7EBDmpHA4oatCDF
+         GS7DktNHRCBqq26UtL86D2egzXppgABI7a3EHdxfee/ulTCWE8Xmsx0KaBhwpb+lCy0V
+         YjlKf/mY1W6fqDO/jzMIN40ltXdsFE6t719xI4/Jddniuza/40biCQiWlMkyKPPcFeTp
+         m7kmJ1Zs66R4rUMDd7Th/zpXtlQ0ZLEyHLrB0iX2Dy1I6xyfdZe28V42pAxvXD46Nkuh
+         BBsQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWOB2dABUCYO8KXDtY/f44cPU+dXZ8zsF+cn32bkyAx6JL67wzvZt8bEbhOf7nOg3XXdDYHBtJG42RpJpA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzXbPa1SfhTcLznsd45/prMSwEBgnXMYNNpmFup5MNBX45ObzWv
+	2wMbRAsQZversMFdWdz/Ui3RNOK+9l4u0STEzphQf32Iu7nYoYftSH1oF246C2IzhDXXVko7+gI
+	iFjg/jdTtt7YnRxdOlQ==
+X-Google-Smtp-Source: AGHT+IE1j4tW7U4miv/y5fn9y5TOdg/R4Dy4plBXh7gVZbeDYE6afhmC9AZBc/+Ph53Y4uJfcVzswUVKCNNLOFbd
+X-Received: from plgu5.prod.google.com ([2002:a17:902:e805:b0:223:58e2:570d])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:d50e:b0:224:7a4:b2a with SMTP id d9443c01a7336-22780c50a89mr16920945ad.11.1742515155584;
+ Thu, 20 Mar 2025 16:59:15 -0700 (PDT)
+Date: Thu, 20 Mar 2025 16:59:10 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250320235910.334620-1-changyuanl@google.com>
+Subject: [PATCH] clang-format: add for_each macros from libfdt
+From: Changyuan Lyu <changyuanl@google.com>
+To: ojeda@kernel.org
+Cc: nathan@kernel.org, nick.desaulniers+lkml@gmail.com, morbo@google.com, 
+	Daisuke Nishimura <nishimura@mxp.nes.nec.co.jp>, justinstitt@google.com, 
+	linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	Changyuan Lyu <changyuanl@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The pull request you sent on Fri, 21 Mar 2025 00:21:15 +0100:
+Add two for_each macros from scripts/dtc/libfdt/libfdt.h.
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/mszyprowski/linux.git tags/dma-mapping-6.14-2025-03-21
+Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+---
+ .clang-format | 2 ++
+ 1 file changed, 2 insertions(+)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a1cffe8cc8aef85f1b07c4464f0998b9785b795a
-
-Thank you!
-
+diff --git a/.clang-format b/.clang-format
+index fe1aa1a30d40..4decda7474e1 100644
+--- a/.clang-format
++++ b/.clang-format
+@@ -210,6 +210,8 @@ ForEachMacros:
+   - 'evlist__for_each_entry_from'
+   - 'evlist__for_each_entry_reverse'
+   - 'evlist__for_each_entry_safe'
++  - 'fdt_for_each_property_offset'
++  - 'fdt_for_each_subnode'
+   - 'flow_action_for_each'
+   - 'for_each_acpi_consumer_dev'
+   - 'for_each_acpi_dev_match'
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.49.0.395.g12beb8f557-goog
+
