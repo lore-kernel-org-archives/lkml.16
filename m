@@ -1,40 +1,40 @@
 Received: from naesa04.arrow.com (naesa04.arrow.com [216.150.161.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA0A5223719;
-	Thu, 20 Mar 2025 10:56:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536212253FD;
+	Thu, 20 Mar 2025 10:56:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.150.161.24
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742468163; cv=none; b=WfYr9yFmtKA/Y+7wA6nk2nszv9MgX234DjgNQZQpofgYLZJoNfphj1sanGHp8P/i02mHcJLG45Dl1OxIP1plHL2yiAtUfjbkRBgXfOBNYLaSgdimqmX+d1UaHdrjHHjCdgGF5xMaWcuk1F6XIiVQJTNTaO1i8iPlxOYucimVsdg=
+	t=1742468165; cv=none; b=GX+HgYn3WCKzEFIMX1ON7qhye2G770E9zV97JCDTjEYah7iymDJJik+lQdn0Zhwi5RM11TK/yfacLteZp59J9lBOMAIse84t2D5NBPbpIZSIlr5PRTc72NGzwDCIuTGb+AvEHleD1ySNe02lW0qY1XyOa+Whf0roVcN1KP0lxPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742468163; c=relaxed/simple;
-	bh=48tAi45I8uFpjXnUr6Whz6NO1YAMjCklEIDkcMApDYw=;
+	s=arc-20240116; t=1742468165; c=relaxed/simple;
+	bh=nz4TSR/yeylSySeEwBwXH8XYkLvFxfEvkT0aa/4zgd0=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jxge+rizM8IhEIzi/bOQDQscJgJ6TJzal5cUfiFPD7+NbQg72gFIPDzLv1Pff1H/KDc+wJkL71KIxw9rEF65egoM+PUzfV9JKqNnRXg1DsWQf0MRPTiqxo9Cjjd8wVpCnBWfP9mmBa3DNmEnYI3E+zE9HPynecsEHAcs+dA2A/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=S/JV0h9s; arc=none smtp.client-ip=216.150.161.24
+	 MIME-Version; b=Ffd3XXruhNMdqS+92eD9wMG9l8FMY6GorTyKKE1Xh9/En5LYcqX/ohxG3pM37Gc/yPzk0nO4SuKX96c6SIJjJlXXtEq9BCM4aF18IsIZ/DYCE0/ldNMIuv++tG9oFYOaDixtfA9Wu4YTFwjybmW+QI5OJfCiAuEZeVl8B6dIJk0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com; spf=pass smtp.mailfrom=einfochips.com; dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b=cPcvcTdi; arc=none smtp.client-ip=216.150.161.24
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=einfochips.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="S/JV0h9s"
+	dkim=pass (2048-bit key) header.d=einfochips.com header.i=@einfochips.com header.b="cPcvcTdi"
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=einfochips.com; i=@einfochips.com; l=984; q=dns/txt;
-  s=NAESA-Selector1; t=1742468161; x=1774004161;
+  d=einfochips.com; i=@einfochips.com; l=1173; q=dns/txt;
+  s=NAESA-Selector1; t=1742468163; x=1774004163;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=48tAi45I8uFpjXnUr6Whz6NO1YAMjCklEIDkcMApDYw=;
-  b=S/JV0h9sIILohJobk8gFXTTCgo1adNL7tHQNi/qAw7TXBSxmNLsq1c9S
-   spq6b8JF7sN8FLKcqSWqeQq1farST0/nM7W4LwKydvWCjLVGpxxfUCPWd
-   i1wwpgAv1nlk8ZLUYFDUK1lh48rO3t6mgM3dWgurNZ87C6QDBaErz77bn
-   FZmgfTaqjqVV6VoJgXBG7ix9nlQtGZrqmUB5l2AABQnk21Lgg868s0OkF
-   eovjqIaJT2eMzMHrz7Yyyqh2u+z5CiyaWjeltJmwFOiiKSPqho0PwjfaM
-   W3LRn+sgbxM4vY00L4meP6rU6zQrRzFpn+lr+yHeEr8DuBsmHwOEZFs3F
+  bh=nz4TSR/yeylSySeEwBwXH8XYkLvFxfEvkT0aa/4zgd0=;
+  b=cPcvcTdivCjzI6STrYZcG6PXMijU8B/w7PmQNDnn0fMNhsxcEAt2DoMC
+   duAyFEpUHRzncmKixyjOHOuNP2rzhhWvkfz8hL3tbH5yHJJy8YuD5nq4l
+   8D3Ex9bny4j7wurGGc5aNiEoFRpJTuV+XkFdKRzbA8QoI96nqok95N+Hr
+   FG/xLfq2oLTzGATnjWQI4F1jLCfXuhFMDyWDEG3+lD3pwb5iMR19rQMzw
+   GOVSZb2/1KA6BtK8iE5Q3HhAml0dcfzPK3sg5suYhsLZ1L+GLga9e9ufV
+   smVNOBgB4DDIZ/fLQV53inFbDWBDShd7QbfosX0HsKsAo6XR8AOibBSSz
    g==;
-X-CSE-ConnectionGUID: XuAfGMfURxWbm/K/Mu2rjw==
-X-CSE-MsgGUID: UUCMG54/QQqQYub1WfEu1A==
+X-CSE-ConnectionGUID: J/nZqdQVQX+P34auv1ZPrg==
+X-CSE-MsgGUID: YU+HKEo6Svmxpdr4xPWa4w==
 X-IronPort-AV: E=Sophos;i="6.14,261,1736838000"; 
-   d="scan'208";a="80263089"
+   d="scan'208";a="80263099"
 Received: from unknown (HELO eicahmirelay01.einfochips.com) ([10.100.49.50])
-  by naesa04out.arrow.com with ESMTP; 20 Mar 2025 04:54:52 -0600
+  by naesa04out.arrow.com with ESMTP; 20 Mar 2025 04:54:54 -0600
 Received: from AHMCPU1888.ap.corp.arrow.com ([172.25.5.100]) by eicahmirelay01.einfochips.com with Microsoft SMTPSVC(10.0.14393.4169);
 	 Thu, 20 Mar 2025 16:24:49 +0530
 From: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
@@ -64,9 +64,9 @@ Cc: Paul Walmsley <paul.walmsley@sifive.com>,
 	devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v2 01/10] dt-bindings: riscv: Add SiFive P550 CPU compatible
-Date: Thu, 20 Mar 2025 16:24:40 +0530
-Message-Id: <20250320105449.2094192-2-pinkesh.vaghela@einfochips.com>
+Subject: [PATCH v2 03/10] dt-bindings: vendor-prefixes: add eswin
+Date: Thu, 20 Mar 2025 16:24:42 +0530
+Message-Id: <20250320105449.2094192-4-pinkesh.vaghela@einfochips.com>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <20250320105449.2094192-1-pinkesh.vaghela@einfochips.com>
 References: <20250320105449.2094192-1-pinkesh.vaghela@einfochips.com>
@@ -77,32 +77,37 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-OriginalArrivalTime: 20 Mar 2025 10:54:49.0757 (UTC) FILETIME=[8077E4D0:01DB9986]
+X-OriginalArrivalTime: 20 Mar 2025 10:54:49.0819 (UTC) FILETIME=[80815AB0:01DB9986]
 
-From: Darshan Prajapati <darshan.prajapati@einfochips.com>
+From: Pritesh Patel <pritesh.patel@einfochips.com>
 
-Update Documentation for supporting SiFive P550 based CPU
+Add new vendor string to dt bindings.
+This new vendor string is used by
+- ESWIN EIC770X SoC
+- HiFive Premier P550 board which uses EIC7700 SoC.
 
-Signed-off-by: Darshan Prajapati <darshan.prajapati@einfochips.com>
+Link: https://www.eswin.com/en/
+Signed-off-by: Pritesh Patel <pritesh.patel@einfochips.com>
 Reviewed-by: Samuel Holland <samuel.holland@sifive.com>
 Signed-off-by: Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- Documentation/devicetree/bindings/riscv/cpus.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/riscv/cpus.yaml b/Documentation/devicetree/bindings/riscv/cpus.yaml
-index 2c72f148a74b..3ee7468001f6 100644
---- a/Documentation/devicetree/bindings/riscv/cpus.yaml
-+++ b/Documentation/devicetree/bindings/riscv/cpus.yaml
-@@ -51,6 +51,7 @@ properties:
-               - sifive,e5
-               - sifive,e7
-               - sifive,e71
-+              - sifive,p550
-               - sifive,rocket0
-               - sifive,s7
-               - sifive,u5
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5079ca6ce1d1..07ff140e67dc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -490,6 +490,8 @@ patternProperties:
+     description: Espressif Systems Co. Ltd.
+   "^est,.*":
+     description: ESTeem Wireless Modems
++  "^eswin,.*":
++    description: Beijing ESWIN Technology Group Co. Ltd.
+   "^ettus,.*":
+     description: NI Ettus Research
+   "^eukrea,.*":
 -- 
 2.25.1
 
