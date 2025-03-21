@@ -1,112 +1,143 @@
-Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4817A22FDE2
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 20:12:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29BE1DEFF3;
+	Fri, 21 Mar 2025 20:16:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742587926; cv=none; b=FslrCVSNoOfAYbjkPPUEb3n7pipmv1yHEqC9nw/X/4fZ+BET4rVm83qIhY+AtfDE5Bb7Suqq8s8vkzFtgMIPO8hp8raAwxYlZXZmPtJJ2eKVewwqj+N4xikgxZIilVaVVShmFQzngl2bMxCWK0k1kuDUZNpEhH/Fk2ASERC0xRY=
+	t=1742588187; cv=none; b=klpIBKfkOvu94ZgXobUp9a+N4BDmN2cZXlEyE7HN8GCl6ZKZzfA5/TfKG36BQQ0VpLOBPSxwEwLHbmCtOvpyGwg9DlC/Dl1hpV1j1pE4WKQQXCZeXtdwtL/vGEOUpxUJ3KfgxiVoRRwn1PKNX3jkStjmANonRu7jzfkoAmz4+sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742587926; c=relaxed/simple;
-	bh=hgo5F8h+Z5rr3chs5DifIfiWaOyXhg0eK756Iet55RM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=poeSgyidpE6TOxEr3D4swIj7CoBGkmRUIABi5aglnsHAxs2pJO0dEJY5u5e5B9ArbuWLCIQi7SyQDsbYgMgcbn/OKls7xMOv7JFphmlMeX44OZnVtwHJ6IUIrldUZGo/8gTeAb6zZbpgWkdTT/bAv8XT1h6w3I6d0GmR8lqOK0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=yzfYBCdn; arc=none smtp.client-ip=209.85.167.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+	s=arc-20240116; t=1742588187; c=relaxed/simple;
+	bh=C0+RouyfLpsQW5xvPju9cRpnBiU/H1OG+89X01tDYOY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=c3rzu9sLhIkk+hGWYc3MCEZszOmFVKPZx9T43+N6P5PpzMCA7AggFJ18rdkS8dmsNK9/GPEyyHutjSPVnDX0dNcLc3075InrqQ5sRFM4lYvkXRbro5V9rH3dfhng6qKaACsAYq7zYFR4xA2y1E7jtbLOnZDxD5TBLR0SsOdDtu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=W9msX7ML; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="yzfYBCdn"
-Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3f9832f798aso1408769b6e.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:12:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W9msX7ML"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3913b539aabso1328878f8f.2;
+        Fri, 21 Mar 2025 13:16:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1742587922; x=1743192722; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ccG9w73MG8ltY7+ND06i6LTf/TTQC5xPKuyTK8RSyKM=;
-        b=yzfYBCdnjhTKSeFe7OPQn8MkiJvsEGYsBrqIXNiwrs/0oj8DFd5eVMmEb+KLw0CE/M
-         FE65h8/8mqo0nFoM9tdwfZpgEqcgAl4IPzss16QbgQg/gZTFC/5RieZ0Sc9IB0+ne6MD
-         WyYQyVzgQEenluGgtVXsZWkXe0yz8PKJLcJDWjcm+UylkMb8VAgoD/IwpKCei5nr2i/S
-         Vzl3sY+jSAwcMyXoVh2Pa5V11ne8i9DiqL9q2pPfgVYAU8B8WJp16e0utj2NTleq/r0F
-         TsoMcwnKS3wonax50KAIDKqpiT08TylJ9KGKBl/4wPjerGXSXaNlFbyXCpL1Ndk/MUTX
-         7Rtg==
+        d=gmail.com; s=20230601; t=1742588184; x=1743192984; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C0+RouyfLpsQW5xvPju9cRpnBiU/H1OG+89X01tDYOY=;
+        b=W9msX7MLWZrCxAixfKzxnsBR7fd6wlGTvmo5iA6pBesS7nzd4Jky1AibrVm0/qBOrX
+         xz/G+MNXVDIWWhBGkcRYnm8BTP2RIgxa56zm5PbEhyfs/uk1hmQy5ttqchGMJZWXekap
+         w77opukg1FCZDYMfIuqvIsP6I4OY8B73zON659y/fW+CrtVBeOZJfGKN/IjiP6WNeZw8
+         RPJYv7hHLy/c9mycCFaKOKQ/clGWJDRnoYVEBmty8Ns5J5V6ULPy+YftQfg94ee225uO
+         jMZUtFek8HaBw3xXaE8qqRczQOHx7RuntXxWEvBjtNJbZGqLgcpQAHGqRkojri9Q7mV+
+         SYrw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742587922; x=1743192722;
-        h=content-transfer-encoding:in-reply-to:content-language:from
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ccG9w73MG8ltY7+ND06i6LTf/TTQC5xPKuyTK8RSyKM=;
-        b=DXL50faJWCakxw3PWklKfzRwBKA1hQT72h7ucLUEzDWPvYaZl+pmV8YhriuJcKUvQ9
-         hQ/h7FfIUi6CBEtPzungdaK8GOuRuSTpAHFLIDSc2YrW+auTWBAFrZkpDBFrw0dlYL5N
-         L6vpgVQOL5xiviNrmnVo9eycullbSq6NEJSjlpTUc+PTLMKCRitRRZDmtHaw34tFumgR
-         wojQAD+9qvNgUaMA+xKqIuq7GOad3meQhq63PdlYEarFF6rUeR/vscYUO9238/S5vSEV
-         TAMsQk3Ikjh5dcSXafDfcyCx/3b2SrDYad23p4B4IHNXFVWpmlPjkk4MUGnGQd90LZLz
-         iM+A==
-X-Forwarded-Encrypted: i=1; AJvYcCXo36d1SNXtijzxSv69FlNkdBXdsdN401mmgazaM4Rzb+h4ZDjZAOMW2aPDdBt4k4XhR85Qr8ey3ejrzUA=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyodec8f2RELTTtPmZ6fAtkfIeW4vrmEvU08YEVoWPDXHEVHKYs
-	/dOePARja+9KszFXTLK6mLZBt8Iz9QSy/+Qqw97IHNo8JqQxd+tI3IArcyvQFt8=
-X-Gm-Gg: ASbGncu/jjB0qDaPoEdafSVLb3hauVHaHy3cS5plUBE7Tj7HIpCmivnV02c3O55yJK/
-	px/hL28ke8b1Daou3QBGBH98S0sw4E83PPPKJqXGJkBN19KqIqdUcZ970ZrAEX41bt5ujIURiIx
-	1P6LcS5/QjGun5szoHKGJnjv7Vr89wyzNffoGtKLhqeB8dfZ+cCantnaR/hqs5fawCNueVlNbRu
-	BXd/2Q7Ol/JSxvQVWTkpQYqZc/LMR98NJzYVts5baI8nju9msAqnZ+NgbfXrOHnLVZuKXuyHcje
-	5n2LcPt9CQ9gHbgxRKK5eYENcDKsikzAAVDRPjKNtlx5+Wb6IOm/tPrlcB/MEb2Cl26l4V5CACV
-	grZ7y1HCaXMcimhzk
-X-Google-Smtp-Source: AGHT+IFiaVUXe/AFyDJjh4bHXe5rna40Jytm7qgCzXcdV00KZLBzj27++qjiSCFI5MNnva14T16qnw==
-X-Received: by 2002:a05:6808:1a23:b0:3f6:aad5:eac8 with SMTP id 5614622812f47-3febf7091damr3077556b6e.6.1742587922167;
-        Fri, 21 Mar 2025 13:12:02 -0700 (PDT)
-Received: from [192.168.0.113] (ip98-183-112-25.ok.ok.cox.net. [98.183.112.25])
-        by smtp.gmail.com with ESMTPSA id 5614622812f47-3febf79283dsm481347b6e.40.2025.03.21.13.12.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 13:12:00 -0700 (PDT)
-Message-ID: <336f3db7-6f8d-4eab-b28e-c8389a3d05c0@baylibre.com>
-Date: Fri, 21 Mar 2025 15:11:59 -0500
+        d=1e100.net; s=20230601; t=1742588184; x=1743192984;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=C0+RouyfLpsQW5xvPju9cRpnBiU/H1OG+89X01tDYOY=;
+        b=kJAAtQ1ZlJpnzsvwciC/s12p80xKw9zCojPTTAZBPSLjgbMkme1wd+HtQHJyDeASIE
+         nANcvu1A1vPEGAE3X1+HkIGggSbPxaSCsbi6HihXI0XsvP20D45RSM98aubjAMLVkHTi
+         y92D8pqbhgRponvSF61l6pRM4AVgifL/1W1s7zglDC08Y2F4M3SWUWanwbV2vuu6F8zT
+         VF8oxMEtFF33kvGfKQuoA0ZnG1hBI38uD2FF1llyA/zi7PtuzaNj6FWHCu/zlNyqdp1j
+         06PhIHbAAczhyVtPBw1dbl7eD1V5clWmztL80uycIMqZwtYTD9BwTxCYH+kdYkhgibhl
+         mguQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWdnK2iMpFp+VjfOpXY0HTCVYwab0NLumeyqn8QqlttaSeZVdW3dYSRK0KN2QcrTiro/NJQGEULgImVj0Eh@vger.kernel.org, AJvYcCXak/G4j/nU1j1sysw6Zp/hJdBDkhyTVF/4w6op6O/l1jE8NZuMDefeBvi+Dc3FfbYXYoO73NRvtx4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzENJspL5FqvQgl9hLGtUW52FNegt1diqEJw0INO2IkR6nfYvyW
+	qEoJNrkyahfnuZNvM4xW4BZeX2EcsRNBLf08VMddWIxmZxjE7/WHEivtYzRX3kK0jma1bby48y8
+	5LKRDKEUYDhMgyjV5c26W8ghvzv4=
+X-Gm-Gg: ASbGnctjUnwl+wOFE2p4YyVp4EPJJTC/KLU+rPM+4Y72Te+iARP4pzNlDCbvT23iPYR
+	EWxrPHfe2SH1jzvj60xma+vJr6IdipfrSETwW83ZcueXwOmVo5L3pB3g7gLmmvwLMxYJiTaATyz
+	EnC3O3smdpGEMlQMuRwtUqlDSUo6E=
+X-Google-Smtp-Source: AGHT+IG96TW62bsJhBDZbnfMPxfAxceG/bIkR9QnkTX8HFU26Hzcqf/Z/0wc9M9c7myGqdnMqBXKa2D8CUSlfaQ28eQ=
+X-Received: by 2002:a5d:5846:0:b0:391:4559:8761 with SMTP id
+ ffacd0b85a97d-3997f94da30mr4175995f8f.36.1742588183868; Fri, 21 Mar 2025
+ 13:16:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/5] iio: adc: ad4000: Add support for SPI offload
-To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
-Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, jic23@kernel.org,
- lars@metafoo.de, Michael.Hennerich@analog.com, corbet@lwn.net
-References: <cover.1742394806.git.marcelo.schmitt@analog.com>
- <84843837a2acab58f8853152ecaa67c79b9a9666.1742394806.git.marcelo.schmitt@analog.com>
- <c449fff5-ef23-4094-8306-0a6b27a22c1c@baylibre.com>
- <Z93D8CAmgKSO-Ta6@debian-BULLSEYE-live-builder-AMD64>
-From: David Lechner <dlechner@baylibre.com>
-Content-Language: en-US
-In-Reply-To: <Z93D8CAmgKSO-Ta6@debian-BULLSEYE-live-builder-AMD64>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1739866028.git.maciej.wieczor-retman@intel.com>
+ <2a2f08bc8118b369610d34e4d190a879d44f76b8.1739866028.git.maciej.wieczor-retman@intel.com>
+ <CA+fCnZdtJj7VcEJfsjkjr3UhmkcKS25SEPTs=dB9k3cEFvfX2g@mail.gmail.com>
+ <lcbigfjrgkckybimqx6cjoogon7nwyztv2tbet62wxbkm7hsyr@nyssicid3kwb>
+ <CA+fCnZcOjyFrT7HKeSEvAEW05h8dFPMJKMB=PC_11h2W6g5eMw@mail.gmail.com>
+ <uov3nar7yt7p3gb76mrmtw6fjfbxm5nmurn3hl72bkz6qwsfmv@ztvxz235oggw>
+ <CA+fCnZcsg13eoaDJpueZ=erWjosgLDeTrjXVaifA305qAFEYDQ@mail.gmail.com>
+ <ffr673gcremzfvcmjnt5qigfjfkrgchipgungjgnzqnf6kc7y6@n4kdu7nxoaw4>
+ <CA+fCnZejp4YKT0-9Ak_8kauXDg5MsTLy0CVNQzzvtP29rqQ6Bw@mail.gmail.com> <t5bgb7eiyfc2ufsljsrdcinaqtzsnpyyorh2tqww2x35mg6tbt@sexrvo55uxfi>
+In-Reply-To: <t5bgb7eiyfc2ufsljsrdcinaqtzsnpyyorh2tqww2x35mg6tbt@sexrvo55uxfi>
+From: Andrey Konovalov <andreyknvl@gmail.com>
+Date: Fri, 21 Mar 2025 21:16:12 +0100
+X-Gm-Features: AQ5f1Jrn_9IapCqgYgSltS6n-7mZrLrWLtgtTd5C1mwQlaSaD5HTlmPhaoggwwM
+Message-ID: <CA+fCnZdunJhoNgsQMm4cPyephj9L7sMq-YF9sE7ANk0e7h7d=Q@mail.gmail.com>
+Subject: Re: [PATCH v2 13/14] x86: runtime_const used for KASAN_SHADOW_END
+To: Maciej Wieczor-Retman <maciej.wieczor-retman@intel.com>
+Cc: Florian Mayer <fmayer@google.com>, Vitaly Buka <vitalybuka@google.com>, kees@kernel.org, 
+	julian.stecklina@cyberus-technology.de, kevinloughlin@google.com, 
+	peterz@infradead.org, tglx@linutronix.de, justinstitt@google.com, 
+	catalin.marinas@arm.com, wangkefeng.wang@huawei.com, bhe@redhat.com, 
+	ryabinin.a.a@gmail.com, kirill.shutemov@linux.intel.com, will@kernel.org, 
+	ardb@kernel.org, jason.andryuk@amd.com, dave.hansen@linux.intel.com, 
+	pasha.tatashin@soleen.com, ndesaulniers@google.com, 
+	guoweikang.kernel@gmail.com, dwmw@amazon.co.uk, mark.rutland@arm.com, 
+	broonie@kernel.org, apopple@nvidia.com, bp@alien8.de, rppt@kernel.org, 
+	kaleshsingh@google.com, richard.weiyang@gmail.com, luto@kernel.org, 
+	glider@google.com, pankaj.gupta@amd.com, pawan.kumar.gupta@linux.intel.com, 
+	kuan-ying.lee@canonical.com, tony.luck@intel.com, tj@kernel.org, 
+	jgross@suse.com, dvyukov@google.com, baohua@kernel.org, 
+	samuel.holland@sifive.com, dennis@kernel.org, akpm@linux-foundation.org, 
+	thomas.weissschuh@linutronix.de, surenb@google.com, kbingham@kernel.org, 
+	ankita@nvidia.com, nathan@kernel.org, ziy@nvidia.com, xin@zytor.com, 
+	rafael.j.wysocki@intel.com, andriy.shevchenko@linux.intel.com, cl@linux.com, 
+	jhubbard@nvidia.com, hpa@zytor.com, scott@os.amperecomputing.com, 
+	david@redhat.com, jan.kiszka@siemens.com, vincenzo.frascino@arm.com, 
+	corbet@lwn.net, maz@kernel.org, mingo@redhat.com, arnd@arndb.de, 
+	ytcoode@gmail.com, xur@google.com, morbo@google.com, 
+	thiago.bauermann@linaro.org, linux-doc@vger.kernel.org, 
+	kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org, 
+	llvm@lists.linux.dev, linux-mm@kvack.org, 
+	linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/21/25 2:54 PM, Marcelo Schmitt wrote:
-> On 03/20, David Lechner wrote:
->> On 3/19/25 9:57 AM, Marcelo Schmitt wrote:
->>> FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
->>> The PWM IP is used to trigger SPI-Engine offload modules that in turn set
->>> SPI-Engine to execute transfers to poll data from the ADC. That allows data
->>> to be read at the maximum sample rates. Also, it is possible to set a
->>> specific sample rate by setting the proper PWM duty cycle and related state
->>> parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
->>> trigger) is used in combination with SPI-Engine.
->>>
->>> Add support for SPI offload.
->>>
->>> Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
->>> ---
->>
->> I'm surprised I'm not on the CC for this series. scripts/get_maintainer.pl should
->> have picked me up due to K: spi_offload which matches this patch.
-> 
-> get_maintainers doesn't list you if run over ad4000.c.
-> If run over the patch file, get_maintainers lists many developers. Some of them
-> don't seem to be related to this series, so I cropped the list to avoid churn.
-> Will CC you on the next versions.
-> 
-I use b4 these days, but IIRC, I used to use the --no-git-fallback option of
-get_maintainer.pl to prune the list while keeping actual matches from the
-MAINTAINERS file that shouldn't be pruned.
+On Fri, Mar 21, 2025 at 8:21=E2=80=AFPM Maciej Wieczor-Retman
+<maciej.wieczor-retman@intel.com> wrote:
+>
+> >To account for this, let's then set hwasan-instrument-with-calls=3D0
+> >when CONFIG_KASAN_INLINE is enabled. And also please add a comment
+> >explaining why this is done.
+>
+> After adding this option the kernel doesn't want to boot past uncompressi=
+ng :b
+>
+> I went into Samuel's clang PR [1] and found there might be one more LShr =
+that
+> needs changing into AShr [2]? But I'm not very good at clang code. Do you=
+ maybe
+> know if anything else in the clang code could be messing things up?
+>
+> After changing that LShr to AShr it moves a little further and hangs on s=
+ome
+> initmem setup code. Then I thought my KASAN_SHADOW_OFFSET is an issue so =
+I
+> changed to 4-level paging and the offset to 0xfffffc0000000000 and it mov=
+es a
+> little further and panics on kmem_cache_init. I'll be debugging that furt=
+her but
+> just thought I'd ask if you know about something missing from the compile=
+r side?
+>
+> [1] https://github.com/llvm/llvm-project/pull/103727
+> [2] https://github.com/SiFiveHolland/llvm-project/blob/up/hwasan-opt/llvm=
+/lib/Transforms/Instrumentation/HWAddressSanitizer.cpp#L995
 
+Hm, I only recall looking at the compiler code when investigating [1].
+But as this series points out, [1] can be considered a feature and not
+a bug. Other than that, nothing comes to mind.
+
+Thanks!
+
+[1] https://bugzilla.kernel.org/show_bug.cgi?id=3D218043
