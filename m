@@ -1,82 +1,116 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C99FB1D63E1;
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCF251D86DC;
 	Fri, 21 Mar 2025 13:59:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742565552; cv=none; b=Y4ebVs/lNXFWOCTbonbL3kuhsTo4N06l0rG7HMX3MaXSOARggzTTk9G0EHYwV9RtXGI6BFIPfqjAxtaeXqbKO8nptO9Qz8N71AEKivzeJSGuUyvO5I1RiejsTHX0marbESPDXDltlXualhkZVNgXg2knCVPzElyKtvpwb0cfYCM=
+	t=1742565552; cv=none; b=pfDl2b2oQd1TDNZMPme5hg8LMJ1WZ3nP4vLxvF6lW20O8Ro2aExHy6LZJvAXOT6zt7gDRg+2i5lDYD/dRcNa9ClWlpFKFKpktdOuRSab/BUALg11zxGrFx0PFSI2UqV++KzYrwPR7mKmM+baLbDilNu6n1n5g7aOYO2YC5B4wpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742565552; c=relaxed/simple;
-	bh=c/YDzsiM+GDCifgu1m4Ci5vYTdih1/CrpsRgbzWPihA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pPD//8yEDXlQpGc22gT04iJoDgZge+vijyY8/UC4BljB4Z0meycloHvZu/Rvim+S0sIij8HHYP++Q+7UIGqvwweUzK+L1nuoPzIN02EyzVgGoFvm15TqruKJRuiueV4yH2YkdzjXc4dDHt0WRMeRb2VQOLZniMbBNAFbqh1Y/Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=DjNLnSnR; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	bh=aG9NoIWabNMfOTs0C2SDDYKzoP6m6WnbmaDWoB6bUR0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Av0DubOIjYr3nJo9z5F6t7lNz6rbU5e/kDUdipDOvm+bYWRzwMxT4OEUHfWkfpmGAXMyxGMSl2IWfN1YT93nSUwc0/C+HPkTtjgv7m+ZzK+bFZuVeQ2wrhTnZeHP6jraLss54YqBdTfLU+NdWqwBrXgTTotTq5JzOx2ijB8o82w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ag5Bf0G2; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="DjNLnSnR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=SiaPKDoE/YTcT89KFnIvHEyzNIcPjSlYbVVHxQMqPOs=;
-	b=DjNLnSnRU4ZCX+N6UdhAyMgBGDZJ6XxErIN+YERbAQZZNN+gQ190RS0XNpx172
-	XnBKE2JUMliGzvO1XSYnSlN/e3Lc/su2Bw5x9IpPDE04Ezfxt2vlpldM88eqzW/s
-	+B2A1Gw57hoeHazyORP6hVlRydY40w9d5ln9nq3XQwC7E=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wD3P22DcN1nnlvTAw--.63994S2;
-	Fri, 21 Mar 2025 21:58:27 +0800 (CST)
-Message-ID: <17b4e704-8c71-4863-aa3c-85a591f53390@163.com>
-Date: Fri, 21 Mar 2025 21:58:27 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ag5Bf0G2"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-399737f4fa4so1253374f8f.0;
+        Fri, 21 Mar 2025 06:59:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742565548; x=1743170348; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uD97zpV+wlCAc5Dqa3CJHXuYAasrjMGVcgw8nIaOK+Y=;
+        b=ag5Bf0G2GSH1Ct9DNjUZucPCehh4tECvIViBM49XPZpTNJe+ZafrClsvDEzrujSQLg
+         VPjJrasNcSgM1iuMEw00EJRS4Mlj0zDRq6N3WxWsh+vBn+wxcBFFRE1LzgHnq1jr/Kkb
+         B5Tic4JHPM64CKV3HiTzza2giIo5tNxLU4Hkql8nWjzuYdd1qaw+AhPzGFFlDJKilFAw
+         QG93oEjgTjvrIQlovqmmqgz0EyZ6zJavy1rOZ1rcPhD7BJN07RktYHPpkgIE+vBf5yKS
+         vKZXIreEpkGf87GZASS4sqW0A+32QFxWGKikp8b9+ldpJcG7S9jlW5j5XnlLVa91DQwx
+         Ft6Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742565548; x=1743170348;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=uD97zpV+wlCAc5Dqa3CJHXuYAasrjMGVcgw8nIaOK+Y=;
+        b=eFTZ9WD6E9Uf1B9u/NaMM97uJywGWbmFZf/lbn8bhSpSvOdZmdjM+wG0AMVZBNxZrJ
+         2659tGeyyAiUdhtzshOyMXsQasfSYINilaLqJXzP3KlJQxudGyMVUeCKjxd+oTzbvVw7
+         H5EtcL+C7LAA1uimuNAqz8lPVJqde8bHnQHBvul67Ha/QErMRB5z5cYNfePGKF1WZyOB
+         5J1xEQxf2mSMCpMLyZovRTt59buMm3y2K/IACO0VrxEkP/Vs4y1hTX84qaBUh0iVTPw6
+         JQvsvo4jc32jiksOdAIvTuDClFShSsRIEWMO+5g1tkZr84MD0vCCmpSPzWvJAD75AjEP
+         4SaA==
+X-Forwarded-Encrypted: i=1; AJvYcCUw3ryfTMFwdrcy7EQ1ACqvvaJYrAzRhpAOOkdaOiVDuXcxI1rF5k7n2EgnbjW0lvIjMbbNWKzk5xrA@vger.kernel.org, AJvYcCV3qOSjz18SDBxHo365Lo7VytnaJ/g0hqzb7qdsA+QPzX5TPuLhuWJWQyu+vm8qbM5pN6wK2jHQNtBqyUKJ@vger.kernel.org, AJvYcCVzCAPkOtClafLU8r6CR+iKPM9ioX/fFmUDbbjcnqinz4R8Tx2LioxUTjLb+GM9cdUe874DpsEXXre/ng6FCXd9sD4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWP+P+tkBfVEm5eQdV0IOQ8bQuolBqpA91xp45WutWRXnPmOA+
+	89Ah2df9jePKvhZyXjAuZBSueDvPESNT3iALMKvxqHfQtcZw4U+ZxIq2NQ==
+X-Gm-Gg: ASbGnctqHBvog0aAhsuAXRm6DX+6aseaUkFo9leADPKWxgWbndTFy22fqgwFS5K8ubm
+	V3wqCAZAxCZIKx4SEz2w0L0XcaFGEyjWwg6Ym9C9BCiYiAno3Gqe3UmSjZ/yIKZwWVkYEaPk7Wu
+	MAVAofSUDXShS8MlDYaDx+wHt9acTgSqEiD5Qxe4iaT8kFXpbmXEWOjx42Iuv8oJuqYUKEf2K5d
+	cN87z5UgvdF17j1RrWQlKheu+frst8dghYmMiVfnL4rBgjQ1U/7jflZ8lGxWRwHH1fl8xHHOi3S
+	ydL2eN6Y483Dha14wDWmpoMRdNedOv5tOtH8nFkckcl40ffPXK8rY7k1p4ayXeoGkC4fRkeH9KE
+	OsFF0Q/vEyE2lJFx7tC+C
+X-Google-Smtp-Source: AGHT+IHNglCQ4pfTDqUg0F9f2emm3ZLLUSteSk2Ug+yZnhnzh83HDlmHCb8q2+bgezMSK3osOJoQPw==
+X-Received: by 2002:a5d:6d88:0:b0:391:1473:336a with SMTP id ffacd0b85a97d-3997f937d76mr3249245f8f.36.1742565547842;
+        Fri, 21 Mar 2025 06:59:07 -0700 (PDT)
+Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e6651sm2437162f8f.75.2025.03.21.06.59.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 06:59:07 -0700 (PDT)
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+To: Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Abel Vesa <abel.vesa@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-phy@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org
+Subject: [PATCH v3 07/10] phy: phy-snps-eusb2: make reset control optional
+Date: Fri, 21 Mar 2025 15:58:51 +0200
+Message-ID: <20250321135854.1431375-8-ivo.ivanov.ivanov1@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20250321135854.1431375-1-ivo.ivanov.ivanov1@gmail.com>
+References: <20250321135854.1431375-1-ivo.ivanov.ivanov1@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v4 2/4] PCI: dwc: Replace dw_pcie_find_capability() and
- dw_pcie_find_ext_capability()
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: lpieralisi@kernel.org, kw@linux.com, robh@kernel.org,
- bhelgaas@google.com, jingoohan1@gmail.com, thomas.richard@bootlin.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250321101710.371480-1-18255117159@163.com>
- <20250321101710.371480-3-18255117159@163.com>
- <20250321130516.7pkvfl5ls7fzgtdf@thinkpad>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250321130516.7pkvfl5ls7fzgtdf@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wD3P22DcN1nnlvTAw--.63994S2
-X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
-	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUriSdDUUUU
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWx8Xo2fdalqulgAAsC
+Content-Transfer-Encoding: 8bit
 
+Not all SoCs expose the reset line controls to the kernel, so make them
+optional.
 
+Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+---
+ drivers/phy/phy-snps-eusb2.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 2025/3/21 21:05, Manivannan Sadhasivam wrote:
-> On Fri, Mar 21, 2025 at 06:17:08PM +0800, Hans Zhang wrote:
->> Replace duplicate logic code. Use a common interface and provide callback
->> functions.
->>
-> 
-> I'd reword the subject and description as:
-> 
-> ```
-> PCI: dwc: Use common PCI host bridge APIs for finding the capabilities
-> 
-> Since the PCI core is now exposing generic APIs for the host bridges to
-> search for the PCIe capabilities, make use of them in the DWC driver.
-> ```
-
-Hi Mani,
-
-Thank you very much for your advice. Will change.
-
-Best regards,
-Hans
-
-> Patch LGTM!
-> 
-> - Mani
-> 
+diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
+index 8ccd432a0..1e7e75bbc 100644
+--- a/drivers/phy/phy-snps-eusb2.c
++++ b/drivers/phy/phy-snps-eusb2.c
+@@ -410,7 +410,7 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
+ 	if (IS_ERR(phy->base))
+ 		return PTR_ERR(phy->base);
+ 
+-	phy->phy_reset = devm_reset_control_get_exclusive(dev, NULL);
++	phy->phy_reset = devm_reset_control_get_optional_exclusive(dev, NULL);
+ 	if (IS_ERR(phy->phy_reset))
+ 		return PTR_ERR(phy->phy_reset);
+ 
+-- 
+2.43.0
 
