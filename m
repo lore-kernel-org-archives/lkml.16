@@ -1,38 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBA0C13C914;
-	Fri, 21 Mar 2025 19:14:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A17A22DF84;
+	Fri, 21 Mar 2025 19:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742584446; cv=none; b=VgYpNHIW+8ttU4BeFSQgI/b7hAyHg5HlKlqyU0fWB9530ZaZCiEPeUswIfkyEgyJ/9X+IQFMnQdW0TRbCrSTnuCKsUxe3CScVfWClHcHza3tT16u/ZUxnVCqg7hnusAK5v6tTXtAKiCtasuemjUBFdRWIFxqMkOCtg7VVSPpm2k=
+	t=1742584447; cv=none; b=SBilnm57VG2oMVQ12Pf4DOYQQ2dRkToJ37LDrgPSPgcF5E64aHDB3eOKvbHzZ63I6HCwo9vImgdXlvlLBuq6j8LFjtsnKXYYJfyWz03Tojg56GQHm3Gc1lOZ0mEXQnBkWgNeUb/gK5fl4eT+aGAQgC6qxNkXcoKUL39zYGUveuw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742584446; c=relaxed/simple;
-	bh=k/PBgt4a9h5ig/uH/xMlB6D72uDmaauMvOmb7yre5Sg=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lsi5pE1hkN33fxss25OA+MwF4SpCHJnRwBFDGcrzjRARY1VLciQ8sZLKOAXK5A8bPQEzT/hhaSPWcRTRX90TgomMeaUmOxDQuFGcsF+iwqLfEW8OHDt6fnCypJkV4V93xNoPzaQIAPD2OvMhThSpULSbkolOulvgb1yaFta260g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AYdMzyoi; arc=none smtp.client-ip=217.70.183.196
+	s=arc-20240116; t=1742584447; c=relaxed/simple;
+	bh=koQpyf7jRL4k57uMr51F3kKrIfstJz2l0lc6gDN1pqM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=C363kMIB6xa/X+Im3nHOSmLYa71qU+qK1uiXXOK2sb640uuq/JLUCze1ycK/HxxnOEjAjuWGtIeVL71sfTub8NhqfkSfMxqHzAmE22nqzppVRgBpHzr7xBOlP20jwwPim5+5AD3xk97KlhIDe6uoJi52E3a7zK7FH6AVgv47sp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WsPdoAHB; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AYdMzyoi"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E6F2C4454F;
-	Fri, 21 Mar 2025 19:13:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WsPdoAHB"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4B84A44558;
+	Fri, 21 Mar 2025 19:14:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742584435;
+	t=1742584443;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xcBqvduohD6gqiPxLsI52qzDZm7lLSAqNmPHQXXkRpY=;
-	b=AYdMzyoiVaWwgmUgyFKnzDYw3VV+1Z1ETfmA/Jc1sDbVffVb3a68IIos9v9ZoKZEEfFg1y
-	1oW2QtSxBMdBjhoyGg0p4RLJ3cxxMUq/QqcAmxhOYAAzBcsGb7w99o+OSFRzEqpkehBjFV
-	cASIaOo/2KB48KY1claSJKPEmoJVh42BKfySynrQausAa7xni8kFKJDy8juoeGXEanW2Ud
-	SlLqvcZ6ouv9GojEVqYEbRsNxi+zAB/SIcYTHlYYOWkgVqiyqFnqmLWftMrClX/650Fcq0
-	AVuFBRDRLl9GxBudXpfkTQtJX3yM8NAAvlvxNDQ6Oipwyd22/d/u/jLiANRb4g==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=J3cXgGc4bn0Gbvqr0NtDmMZgufHdfFhvshdl+bFHAKw=;
+	b=WsPdoAHBBA4KnQD1BRUJF7V/Ssx0s2JVoZoFjRsTpnAdDSQgCw7J0lMugTITl/Wekvn11Z
+	JIiB6GX+Xi1Nr68Gbr7VvnyU2XEb8/esxhvxIzvFVAzB8V6ugJCRJmwXLoOtnbo8OhWT2k
+	D+A5lZs8Aeuf4TbWFZciYedp/vomad66JpXXnAp/AwVTO28o0BdCZ719fm6nl0PQvXw364
+	PlKJkHS3nCQUsn2iCfEGNN8IkIM5aTF4bzIn8vibU58XqJPlxpv/xlBcIuBSWylEfgkFB6
+	uBMTrPKKzIYSZB/RHyGzJH5sNy7+Fj08vMkXRgc+cSm84hMjaL2yoObGfj1bQg==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: [PATCH net-next 00/13] Support the Cadence MACB/GEM instances on
- Mobileye EyeQ5 SoCs
-Date: Fri, 21 Mar 2025 20:09:31 +0100
-Message-Id: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
+Date: Fri, 21 Mar 2025 20:09:36 +0100
+Subject: [PATCH net-next 05/13] net: macb: add no LSO capability
+ (MACB_CAPS_NO_LSO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,10 +42,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIAGu53WcC/x3MQQqAIBBA0avErBPU0KKrRIvJxppFFhohhHdPW
- j74/BcSRaYEY/NCpIcTn6FCtQ24HcNGgtdq0FIb2SklDnSLsAZ7j4NFr1ao6RXJc/43EwS6RaB
- 8w1zKB0b7cctgAAAA
-X-Change-ID: 20250311-macb-65a7fa86af1d
+Message-Id: <20250321-macb-v1-5-537b7e37971d@bootlin.com>
+References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
+In-Reply-To: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
  Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
@@ -68,95 +68,49 @@ Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhufffkfggtgfgvfevofesthekredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeefgeevheeiveffieegudduieefgfejueegvedtgfelffevgfejheekveffudekueenucfkphepjeejrddufeehrdekuddrieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepjeejrddufeehrdekuddrieehpdhhvghloheplgduledvrdduieekrddurdeftdgnpdhmrghilhhfrhhomhepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdekpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehkuhgsrgeskhgvr
- hhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhitgholhgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelvefhkeeufedvkefghefhgfdukeejlefgtdehtdeivddtteetgedvieelieeuhfenucfkphepjeejrddufeehrdekuddrieehnecuvehluhhsthgvrhfuihiivgepgeenucfrrghrrghmpehinhgvthepjeejrddufeehrdekuddrieehpdhhvghloheplgduledvrdduieekrddurdeftdgnpdhmrghilhhfrhhomhepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdekpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehkuhgsrgesk
+ hgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhitgholhgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Mobileye EyeQ5 SoCs provides two GEM IP blocks. The end result is
-working networking on the EyeQ5 eval board. It isn't just a new
-macb_config & compatible, here are each commit with a brief note:
-
- - Let's get the cleanup patches out of the way first:
-
-   [PATCH net-next 04/13] net: macb: use BIT() macro for capability definitions
-   [PATCH net-next 06/13] net: macb: simplify macb_probe() code touching match data
-   [PATCH net-next 08/13] net: macb: introduce DMA descriptor helpers (is 64bit? is PTP?)
-   [PATCH net-next 09/13] net: macb: sort #includes
-
- - LSO has been observed to be buggy, even though HW reports it is
-   supported. We add a capability to force-disable it:
-
-   [PATCH net-next 05/13] net: macb: add no LSO capability (MACB_CAPS_NO_LSO)
-
- - The MACB driver code has an issue: the HW inserts two dummy bytes at
-   the start of Rx buffers, for IP header alignment (ie skb_reserve is
-   done AFTER writing the addr in DMA descriptors). But the driver
-   assumes that alignment is NET_IP_ALIGN. We appear to be facing the
-   first SoC where that isn't the case.
-
-   Happy to get comments & discuss the approach proposed.
-
-   [PATCH net-next 07/13] net: macb: move HW IP alignment value to macb_config
-
- - We want cache coherent memory through a CM3 IO Coherency Unit (IOCU).
-   To route through that, DMA addresses must have BIT(36) enabled.
-
-   We do that in platform-specific code and hook our dma_map_ops through
-   a notifier block.
-
-   [PATCH net-next 11/13] MIPS: mobileye: add EyeQ5 DMA IOCU support
-
- - dt-bindings improvements:
-
-   [PATCH net-next 02/13] dt-bindings: net: cdns,macb: allow tsu_clk without tx_clk
-   [PATCH net-next 03/13] dt-bindings: net: cdns,macb: allow dma-coherent
-
- - Add the hardware to:
-    - dt-bindings: new compatible, new phandle property,
-    - the driver: macb_config, compatible and a custom init callback
-      (that needs a regmap to the system-controller),
-    - the DTS: both the SoC GEM instances and the eval board PHYs.
-
-   [PATCH net-next 01/13] dt-bindings: net: cdns,macb: add Mobileye EyeQ5 ethernet interface
-   [PATCH net-next 10/13] net: macb: Add "mobileye,eyeq5-gem" compatible
-   [PATCH net-next 12/13] MIPS: mobileye: eyeq5: add two Cadence GEM Ethernet controllers
-   [PATCH net-next 13/13] MIPS: mobileye: eyeq5-epm: add two Cadence GEM Ethernet PHYs
-
-Have a nice day,
-Théo
+LSO is runtime-detected using the PBUF_LSO field inside register
+designcfg_debug6/GEM_DCFG6. Allow disabling that feature if it is
+broken by using struct macb_config->caps.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
-Théo Lebrun (13):
-      dt-bindings: net: cdns,macb: add Mobileye EyeQ5 ethernet interface
-      dt-bindings: net: cdns,macb: allow tsu_clk without tx_clk
-      dt-bindings: net: cdns,macb: allow dma-coherent
-      net: macb: use BIT() macro for capability definitions
-      net: macb: add no LSO capability (MACB_CAPS_NO_LSO)
-      net: macb: simplify macb_probe() code touching match data
-      net: macb: move HW IP alignment value to macb_config
-      net: macb: introduce DMA descriptor helpers (is 64bit? is PTP?)
-      net: macb: sort #includes
-      net: macb: Add "mobileye,eyeq5-gem" compatible
-      MIPS: mobileye: add EyeQ5 DMA IOCU support
-      MIPS: mobileye: eyeq5: add two Cadence GEM Ethernet controllers
-      MIPS: mobileye: eyeq5-epm: add two Cadence GEM Ethernet PHYs
+ drivers/net/ethernet/cadence/macb.h      | 1 +
+ drivers/net/ethernet/cadence/macb_main.c | 5 +++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
- .../devicetree/bindings/net/cdns,macb.yaml         |  25 +-
- MAINTAINERS                                        |   2 +-
- arch/mips/boot/dts/mobileye/eyeq5-epm5.dts         |  26 ++
- arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  34 +++
- arch/mips/mobileye/Kconfig                         |   1 +
- arch/mips/mobileye/Makefile                        |   2 +
- arch/mips/mobileye/eyeq5-iocu-dma.c                | 160 +++++++++++
- drivers/net/ethernet/cadence/macb.h                |  51 ++--
- drivers/net/ethernet/cadence/macb_main.c           | 309 +++++++++++++--------
- 9 files changed, 470 insertions(+), 140 deletions(-)
----
-base-commit: ddf9c6d982ae7472a4da982e0497be2a140a194b
-change-id: 20250311-macb-65a7fa86af1d
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 3b43cb9468e3618754ff2bc6c5f360447bdeeed0..e9da6e3b869fc772613a0d6b86308917c9bff7fe 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -739,6 +739,7 @@
+ #define MACB_CAPS_MIIONRGMII			BIT(9)
+ #define MACB_CAPS_NEED_TSUCLK			BIT(10)
+ #define MACB_CAPS_QUEUE_DISABLE			BIT(11)
++#define MACB_CAPS_NO_LSO			BIT(12)
+ #define MACB_CAPS_PCS				BIT(24)
+ #define MACB_CAPS_HIGH_SPEED			BIT(25)
+ #define MACB_CAPS_CLK_HW_CHG			BIT(26)
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index b5797c1ac0a41e9472883b013c1e44a01092f257..807f7abbd9941bf624f14a5ddead68dad1c8deb2 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -4373,8 +4373,9 @@ static int macb_init(struct platform_device *pdev)
+ 	/* Set features */
+ 	dev->hw_features = NETIF_F_SG;
+ 
+-	/* Check LSO capability */
+-	if (GEM_BFEXT(PBUF_LSO, gem_readl(bp, DCFG6)))
++	/* Check LSO capability; capability is for buggy HW */
++	if (!(bp->caps & MACB_CAPS_NO_LSO) &&
++	    GEM_BFEXT(PBUF_LSO, gem_readl(bp, DCFG6)))
+ 		dev->hw_features |= MACB_NETIF_LSO;
+ 
+ 	/* Checksum offload is only available on gem with packet buffer */
 
-Best regards,
 -- 
-Théo Lebrun <theo.lebrun@bootlin.com>
+2.48.1
 
