@@ -1,146 +1,175 @@
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D34122D7B8;
-	Fri, 21 Mar 2025 18:02:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A79D1DB366
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 18:07:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742580163; cv=none; b=NnwvD9IyRx4Jt7yYLCKKnRs/GHH7tm6kMVVDoiI9Gz4Rz2GDQjvH2d67oDjwbVBPu02Ei/P9gHeWjnxbGVFQ5ueV/GykIsfeOSYgzeezsxnBF6SEwr1LpYKPwh6hAOrOjwJkNvptP82eF5v64zgz31259J80H3vW2q5x3+7PJfA=
+	t=1742580458; cv=none; b=ElvwQk+WaZgdQu/EEgR7Hap3cu9Fxb45W/Jztf8PLh1sRHNBxI3rABaWQZQpPzDTkyPSbUcuwbDg3XP+sX7j5kHR7w+dFMliT12rUTywiFlATLOI0tm1k+QfgeuCqAfmGjwG9Bh+9O57ajKUEjKMyN8moWaqvtoB7HQ9rSrmvM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742580163; c=relaxed/simple;
-	bh=FxQ0I2Czp4ZKwPfKwF9LTTuJpX8v/ojHHMTj16elL3o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=M7mWyjqATCvsbEkNwQ89kzpTmerwPTdbUCkJUpctG4dPEdS/RRbvObpV0ELHTjyeievIsoAWO8q89+yXda1uSDPpO82TQFLgLOpy4IzAqCKjbxl3TgTuUMNmqbu/Fi6b/osdC/QLWPmxGoJF1jfhWm+g6gdZHZGFfT8Cd6lJrH4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pZxSIMzE; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742580458; c=relaxed/simple;
+	bh=47Y8hQip99iCf7c6Dmi/CZyHe8FpzUoY9ZGUEv+WWks=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LMnipr2RRCGuchrNdvgbtPoNyQ2qvDatzhDSWTeAryaq3hh4PTTpAc+pFKmwfQ+Yl8P2yyAQ7Z68bpRJxpQjVL00iHhzv/JNggIun13WspZdHmYzp95deIATyVbFIgFTRtq3tB2UfJ1tWZ55Zu3rztPnglfAPo680rhqD9Fh/5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=Lcm9xCdZ; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pZxSIMzE"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 49D074425E;
-	Fri, 21 Mar 2025 18:02:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742580159;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=2/BjAP6kKUJvzOObt+TypoZPd31KvaGdxLe959lthQI=;
-	b=pZxSIMzE8nviuAAPk9tZnzG/JwPJHcFUGyN62rFerT4nLOzmEHVd3rIEDw+2iXs3k5FEGV
-	aRO4SRo0u1RbovAxC3D0KJTSnFU4DQQN8YSRm8+1r21EMDS9N1ojhzt/CpsqyZYwfy58Uf
-	0dNvjQYh6ARIsGtpE7tPwMxkWwv9lU+yp8s0QOOfyW2mYHccVYGFcCOx601qWB6hewwor2
-	go2Jdwhov5QTGA24rEAQul4dNdW78xSC7IvOiKGplcu+Ox64/sQBFGHUolfUxS4/l1lEU9
-	BTcADGAGFBEERLWxm3r4rVUYOvGUjyBARS3AwHsxit8+xRci2pr0V/CXR8INtQ==
-Date: Fri, 21 Mar 2025 19:02:37 +0100
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
- <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Russell King
- <linux@armlinux.org.uk>, Heiner Kallweit <hkallweit1@gmail.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- thomas.petazzoni@bootlin.com, Florian Fainelli <f.fainelli@gmail.com>,
- =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Simon Horman
- <horms@kernel.org>, Romain Gantois <romain.gantois@bootlin.com>, Antoine
- Tenart <atenart@kernel.org>, Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>,
- Sean Anderson <sean.anderson@linux.dev>, =?UTF-8?B?QmrDuHJu?= Mork
- <bjorn@mork.no>
-Subject: Re: [PATCH net-next v3 2/2] net: mdio: mdio-i2c: Add support for
- single-byte SMBus operations
-Message-ID: <20250321190237.0a98e8b7@fedora.home>
-In-Reply-To: <d86dd4a4-a56a-4d48-ad7d-182f6fed8781@redhat.com>
-References: <20250314162319.516163-1-maxime.chevallier@bootlin.com>
-	<20250314162319.516163-3-maxime.chevallier@bootlin.com>
-	<d86dd4a4-a56a-4d48-ad7d-182f6fed8781@redhat.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="Lcm9xCdZ"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5b8d13f73so172299885a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:07:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gourry.net; s=google; t=1742580454; x=1743185254; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=YLZ7c8PVq08fNJyONQLIT/0eP11NvUsx2TyTerL7XHc=;
+        b=Lcm9xCdZx3SU4zIQeK0307UQBIHvzFmf/PvKMcOr1rwqqwY7dxAsvEhHXgMB8oLDbi
+         W8He2l8z0QUaqpWNKzk4Xzwm4stCtCpfgrNuexEcfdvAPY5Zs0DWHdUW3zaKBjhvF2k4
+         BomHBcCf8EvIwSW8xDthRPI2H/VSnP6h2xgfBYAlsWKDR9N2pM2Qpfrc9USAE/LXmHT6
+         enTLFUcC1Z/8FULl3V+X0w636KSuphDbWiukF3qchEsquaaHFX6NYP4N1WjmRrzFlBAz
+         Ov63OOb6a1sPOUiSNlrY/Bx5dvgIgpKwlSc9Fy9NaKsKSYXRqZa+6sRUorYaKxufK1FA
+         WESw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742580454; x=1743185254;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YLZ7c8PVq08fNJyONQLIT/0eP11NvUsx2TyTerL7XHc=;
+        b=ateDH+AyAzb854748SYP5dOLW8hsajXhBok8K1v+mWLAGJmkivCMpMsFnmYrKJmQfA
+         WR4pdOaTb4xYAa2gK1sQDbYdnIe6P5y+HSgPldrBOKl92JFF693bOyL36gl3Pm5CXpKT
+         rFeYNn3iSugD0eq0HhkRC0rb72Rk41RvOGCC+gaD0JLfinSxY7lZP63+7oF4SWtU34xT
+         PNWllVoflqZ3EuQE8fehAri3z36/1Oxiio5mj7riW92WOdcebqEjKCvhtz3hpwg+ITeE
+         9cOZj+c7ask0xJD+PH07pMMoM14hUfIFnj2tTUpg2KlP6nQHG6/Hol7pXjpefnQars1a
+         HZUg==
+X-Forwarded-Encrypted: i=1; AJvYcCWYXJeL5SD++d+3iFkC1bV4tSiof5b3tt7YWRwFBYj2idjVnSVUiX8xo8ULBUbVlLql8TE6dMysQWzZVeg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk0KC1pxvzjp0VVXvdOBQUfqBJTX9ckGThoX5sMMi977sEs10r
+	Mfdm0/lCz1UVltGSJXWWEoNaWE4Iay8ylq0FJSVKTd4NvhCd27tVJfsPO1iki6g=
+X-Gm-Gg: ASbGnctO2KLYvlpO0KLyTC6+o6vwZIcCc/rSlA1iNdwzJkf10mHZDbxyezTp1oQb9WJ
+	ptPMhRZzcfOjUoQ31bjGyEC0Qf5VwSfQhFH32bs7zXjbeiZrTzC6dTDnLiLNJnt8GIlQD06Xnrs
+	AVwhK7cZXbJCyty525Y+5/oja2IxqqgAbSXGIh70U3ziRGp/PAS0rlEOOyL7JnQrtVyBg9tpy9c
+	TM/CuGNJMmNxciAB/aiiZQvhEtcABB1yjPpb5zy9n7lxVi80xntuv8cgpGQQ66+LNEB2pqZz7ci
+	jY98ebShcmcukYklrhv9l67IR0kFXzukMxJkN0RDH0aGFKyOJwDWoJCBNkwBG/3YaDbthefUBDt
+	QIbpGjNgOmVW2ZGkpsDvejHjEP6QPVyZg
+X-Google-Smtp-Source: AGHT+IFUnfQhtjCQYv7DzHsq6hKskzByzvAs8wuY7quw/aYR00Op6Rp9Y4a5IxpqPKPkNuMTQdbM5g==
+X-Received: by 2002:a05:620a:269a:b0:7c5:3ca5:58fe with SMTP id af79cd13be357-7c5ba15a54emr539420085a.22.1742580454012;
+        Fri, 21 Mar 2025 11:07:34 -0700 (PDT)
+Received: from gourry-fedora-PF4VCD3F.lan (pool-173-79-56-208.washdc.fios.verizon.net. [173.79.56.208])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92b2bb6sm158643885a.11.2025.03.21.11.07.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 11:07:33 -0700 (PDT)
+From: Gregory Price <gourry@gourry.net>
+To: linux-cxl@vger.kernel.org
+Cc: nvdimm@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	kernel-team@meta.com,
+	dan.j.williams@intel.com,
+	vishal.l.verma@intel.com,
+	dave.jiang@intel.com
+Subject: [PATCH] DAX: warn when kmem regions are truncated for memory block alignment.
+Date: Fri, 21 Mar 2025 14:07:31 -0400
+Message-ID: <20250321180731.568460-1-gourry@gourry.net>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedujeeiucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeevledtvdevueehhfevhfelhfekveeftdfgiedufeffieeltddtgfefuefhueeknecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgepudenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepk
- hhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrgh
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On Fri, 21 Mar 2025 18:53:51 +0100
-Paolo Abeni <pabeni@redhat.com> wrote:
+Device capacity intended for use as system ram should be aligned to the
+architecture-defined memory block size or that capacity will be silently
+truncated and capacity stranded.
 
-> On 3/14/25 5:23 PM, Maxime Chevallier wrote:
-> > diff --git a/drivers/net/mdio/mdio-i2c.c b/drivers/net/mdio/mdio-i2c.c
-> > index da2001ea1f99..202f486e71f1 100644
-> > --- a/drivers/net/mdio/mdio-i2c.c
-> > +++ b/drivers/net/mdio/mdio-i2c.c
-> > @@ -106,6 +106,62 @@ static int i2c_mii_write_default_c22(struct mii_bus *bus, int phy_id, int reg,
-> >  	return i2c_mii_write_default_c45(bus, phy_id, -1, reg, val);
-> >  }
-> >  
-> > +static int smbus_byte_mii_read_default_c22(struct mii_bus *bus, int phy_id,
-> > +					   int reg)
-> > +{
-> > +	struct i2c_adapter *i2c = bus->priv;
-> > +	union i2c_smbus_data smbus_data;
-> > +	int val = 0, ret;
-> > +
-> > +	if (!i2c_mii_valid_phy_id(phy_id))
-> > +		return 0;
-> > +
-> > +	ret = i2c_smbus_xfer(i2c, i2c_mii_phy_addr(phy_id), 0,
-> > +			     I2C_SMBUS_READ, reg,
-> > +			     I2C_SMBUS_BYTE_DATA, &smbus_data);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	val = ((smbus_data.byte & 0xff) << 8);  
-> 
-> External brackets not needed.
-> 
-> > +
-> > +	ret = i2c_smbus_xfer(i2c, i2c_mii_phy_addr(phy_id), 0,
-> > +			     I2C_SMBUS_READ, reg,
-> > +			     I2C_SMBUS_BYTE_DATA, &smbus_data);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	val |= (smbus_data.byte & 0xff);  
-> 
-> same here.
-> 
-> > +
-> > +	return val;
-> > +}
-> > +
-> > +static int smbus_byte_mii_write_default_c22(struct mii_bus *bus, int phy_id,
-> > +					    int reg, u16 val)
-> > +{
-> > +	struct i2c_adapter *i2c = bus->priv;
-> > +	union i2c_smbus_data smbus_data;
-> > +	int ret;
-> > +
-> > +	if (!i2c_mii_valid_phy_id(phy_id))
-> > +		return 0;
-> > +
-> > +	smbus_data.byte = ((val & 0xff00) >> 8);  
-> 
-> and here.
-> 
-> > +
-> > +	ret = i2c_smbus_xfer(i2c, i2c_mii_phy_addr(phy_id), 0,
-> > +			     I2C_SMBUS_WRITE, reg,
-> > +			     I2C_SMBUS_BYTE_DATA, &smbus_data);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	smbus_data.byte = val & 0xff;  
-> 
-> I would not have noted the above if even this one carried additional
-> brackets...
+As hotplug dax memory becomes more prevelant, the memory block size
+alignment becomes more important for platform and device vendors to
+pay attention to - so this truncation should not be silent.
 
-:( You're correct, sorry not to have spotted that before... I'll fix
-this for v4.
+This issue is particularly relevant for CXL Dynamic Capacity devices,
+whose capacity may arrive in spec-aligned but block-misaligned chunks.
 
-Maxime
+Example:
+ [...] kmem dax0.0: dax region truncated 2684354560 bytes - alignment
+ [...] kmem dax1.0: dax region truncated 1610612736 bytes - alignment
+
+Signed-off-by: Gregory Price <gourry@gourry.net>
+---
+ drivers/dax/kmem.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+index e97d47f42ee2..15b6807b703d 100644
+--- a/drivers/dax/kmem.c
++++ b/drivers/dax/kmem.c
+@@ -28,7 +28,8 @@ static const char *kmem_name;
+ /* Set if any memory will remain added when the driver will be unloaded. */
+ static bool any_hotremove_failed;
+ 
+-static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
++static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r,
++			  unsigned long *truncated)
+ {
+ 	struct dev_dax_range *dax_range = &dev_dax->ranges[i];
+ 	struct range *range = &dax_range->range;
+@@ -41,6 +42,9 @@ static int dax_kmem_range(struct dev_dax *dev_dax, int i, struct range *r)
+ 		r->end = range->end;
+ 		return -ENOSPC;
+ 	}
++
++	if (truncated && (r->start != range->start || r->end != range->end))
++		*truncated = (r->start - range->start) + (range->end - r->end);
+ 	return 0;
+ }
+ 
+@@ -75,6 +79,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	mhp_t mhp_flags;
+ 	int numa_node;
+ 	int adist = MEMTIER_DEFAULT_DAX_ADISTANCE;
++	unsigned long ttl_trunc = 0;
+ 
+ 	/*
+ 	 * Ensure good NUMA information for the persistent memory.
+@@ -97,7 +102,7 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	for (i = 0; i < dev_dax->nr_range; i++) {
+ 		struct range range;
+ 
+-		rc = dax_kmem_range(dev_dax, i, &range);
++		rc = dax_kmem_range(dev_dax, i, &range, NULL);
+ 		if (rc) {
+ 			dev_info(dev, "mapping%d: %#llx-%#llx too small after alignment\n",
+ 					i, range.start, range.end);
+@@ -130,8 +135,9 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 	for (i = 0; i < dev_dax->nr_range; i++) {
+ 		struct resource *res;
+ 		struct range range;
++		unsigned long truncated = 0;
+ 
+-		rc = dax_kmem_range(dev_dax, i, &range);
++		rc = dax_kmem_range(dev_dax, i, &range, &truncated);
+ 		if (rc)
+ 			continue;
+ 
+@@ -180,8 +186,12 @@ static int dev_dax_kmem_probe(struct dev_dax *dev_dax)
+ 				continue;
+ 			goto err_request_mem;
+ 		}
++
++		ttl_trunc += truncated;
+ 		mapped++;
+ 	}
++	if (ttl_trunc)
++		dev_warn(dev, "dax region truncated %ld bytes - alignment\n", ttl_trunc);
+ 
+ 	dev_set_drvdata(dev, data);
+ 
+@@ -216,7 +226,7 @@ static void dev_dax_kmem_remove(struct dev_dax *dev_dax)
+ 		struct range range;
+ 		int rc;
+ 
+-		rc = dax_kmem_range(dev_dax, i, &range);
++		rc = dax_kmem_range(dev_dax, i, &range, NULL);
+ 		if (rc)
+ 			continue;
+ 
+-- 
+2.48.1
 
