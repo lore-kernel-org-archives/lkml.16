@@ -1,132 +1,158 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08CE1514F6;
-	Fri, 21 Mar 2025 20:34:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F13BD1514F6;
+	Fri, 21 Mar 2025 20:34:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742589275; cv=none; b=hVXjx+Xda19LPSIS3XXNp1PNBSU1BybFjfnTv9PMIyTxMa7BdK9T/RSXYpUkdzOq+jYaCp2lcwxEYTGbBjZS8VUFmqBE3bzGxYn2GFC4vI8mB9iJdZ3HnNBsZAQ1ry3ZrG+eL6eepqMeiD+fZ/HJDDKtaroWQTd/IBOjDcGIfV4=
+	t=1742589282; cv=none; b=uv134ij3bMm3Ea/1fBZA7CdHR5wk5GX8Z0eNHofPRk8HhGvMunPOtF9mfXoZKlRUbFVGJkFbOdhIW/ilHb2VzYA2sDd8EeDfBesoBGrLjPIEEWX6lCxBeZSNtkp2OQEqJUUfKSsehAmf0runC5dQIyNnobPPlWxRm+zNH61YLng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742589275; c=relaxed/simple;
-	bh=iCZM/QPOsaDdQuWoHdp6prHpqwO/Q1AO5B5ynak4sa8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OK4GbqSpWS6IgBjnSmbX0R6pt6HLq6IexIkcOqgNcMACRGyaclY5C+xdDM7HLzvKwJG4WommBhxBtu5dKUKlm2HlXVd361Ku2Mtc/if2taQimkkvJ1/U7sqvuzG0IPK+yhlE22V+PjAblzO3pCBLKeSSgcYMbtKDH+clxvn6wGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zd3H4N/J; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742589282; c=relaxed/simple;
+	bh=ESuQxc1uo2rrbnn2JcOtucq5e7Bg+IxPDoWM/kKHcd0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Pd/byEfQpbl2a1QIqp94mtDFGIZcBtfJq0LqigbXhKyZP6g0mf3ZN1ATvxzP9RiNe35sPsXTOJpzFqiJgBAzxhxS2QXPiV+VMMXwFeJzR2qzNeGFALv4Bf1sl9YI9A2pdB4zDCG1GaUhZA0h/bv1UELYxVHVwD5mlkdYDfhCFus=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rzFWRekB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zd3H4N/J"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac345bd8e13so432420566b.0;
-        Fri, 21 Mar 2025 13:34:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742589272; x=1743194072; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9ulaGf9MEDtrRMzJbsiLum2mRDwlhlX8TSKnkfT/XEQ=;
-        b=Zd3H4N/JXLWkjehMFUYS7ZHBt5IjPsXQU1NjHhKT93MU03VKVzk+km6Zj+F2DVGxHw
-         haCtvMrrZjBTG7obNCykTIJg9JD8HRkqGsYK7K4vN3hoQRbbKxtqIjoUyHx8ryn2Xbs8
-         NYHGMIn0J/EPo+zTTKOQ4jfAeNqou4iCJQHZFYLj1uDBi/fXlIkRoOTZMrB9fxnhxoNd
-         Y5zMcROg8ASBQ66pZ01HGW2YsXK8UsnC40uoEDHJCMlbruF0rBvgumWWw7OqwO/6dp91
-         atmlApnGfFaUlU0E3uNZHCdTbCs3M2ol0hXQmk5Di1oXQ2RrifCiTypAjWuGkkZ2lC6P
-         h8RA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742589272; x=1743194072;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9ulaGf9MEDtrRMzJbsiLum2mRDwlhlX8TSKnkfT/XEQ=;
-        b=tdIohhr7F5AsHddjQbYs4JS6nB5sPpQLonU8ylwcV6ugcCwfVkuYwbN0OJBdYVBIVX
-         1hRrHh/BKIKUUGO2WHuEj+i+i44Q7St/BBRJsMBkx4MziWjAuysqvd3uziopkVwfVqUy
-         67Wn26IICLcXdU6Y5/difeEa5VM9SoZlY/gxxDX3QNsOQtWNTMjikk8V3LCbDw6cIvkE
-         3Yhngrij4NvYHorjlpAdyAB5W18Y8YUZIvauZJ3ujwFd8Alzqu/p8AI1Mp4Tmk9eqW+a
-         91odC3lChIBB2xKZl7NN/GwLtKn9VTfpFagTh9HWinj8DBqGDxX0vwIswrmkqoZbcfq9
-         urTA==
-X-Forwarded-Encrypted: i=1; AJvYcCUo04DLfSzeOINQS9d7U7yhqcZxpP1/vmH7UYd8Z6gkaXc/OmfRjvOIG2bQiQx6Gr2pE5ElcVQlJQ==@vger.kernel.org, AJvYcCX3h6P7eqySgf/1rWjm+ogkJWmY4c1UPYxM/2MBPQucqgdJRih6ZvtdlPH6NYKGDuyr5NzTMlKt//fs+j57@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy06Y/JqJmzZ6gTB6m8o++yaMCZTD+2NjRJqG6hkuWb5itIy2dD
-	6H1jbqQ7lTiut2IhRsadF0yRbGLSkzknJd5o0ukuyLHtkHlT93oe
-X-Gm-Gg: ASbGnctY0/x4h3X8RMqOsu9l2P1a0aTiac8jgd2KI9hdVSpi+ED5sMn6oIlDKitfSMs
-	4eRCPGpzcqneej5i+BlqNM33GD8ORCoazQEXnujODSHHdiYkZJzShMf08XUdS395U2poNUm8M7r
-	YvGZ4ztw2PDJEvaJOkDnzKkfJ0dtT6qlTjXe8gUQKvc/YwNCumsfGSxZruFciKr9MPzmlnpYRbI
-	JACc17vhqdGYmNembx6gE3SHulug5jdtlciOt9jNOQ+gRzFKuy19pt1EZzqRoqDWoIZnvkGrH7W
-	+ZDhKZqNMVId83EmyTMky3yGmcK/guk+sX7NoraQS56RtzBK4OKgjQ==
-X-Google-Smtp-Source: AGHT+IFQFUoFZr+OweqQjp9ANhksXIbIFtn48qnP/QqrNnrWbtvNBVSyJNR6P8eMfXTiAoQVCDhJIw==
-X-Received: by 2002:a17:907:3f10:b0:ac1:fb60:2269 with SMTP id a640c23a62f3a-ac3f22a59a0mr480301566b.27.1742589271626;
-        Fri, 21 Mar 2025 13:34:31 -0700 (PDT)
-Received: from [192.168.8.100] ([85.255.236.254])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb658b4sm208614166b.118.2025.03.21.13.34.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 13:34:30 -0700 (PDT)
-Message-ID: <8338ac70-ed0b-4df5-a052-9ab1dfec9e26@gmail.com>
-Date: Fri, 21 Mar 2025 20:35:24 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rzFWRekB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADECAC4CEEA;
+	Fri, 21 Mar 2025 20:34:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742589280;
+	bh=ESuQxc1uo2rrbnn2JcOtucq5e7Bg+IxPDoWM/kKHcd0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rzFWRekBJPwEGvbHtbrGUGtb8eplO2ree3EZf/OaCNzl5PY0Q/KAtSvAdXH+GtNAm
+	 T5A1Wtw1W2QZV0vBTiWfXF1ggx8kkylGKo7ElOdNQdD/hN1PPkpSR5+atMHpaFWhL5
+	 a6YkRlGyRn4TX/5C/0pNt6GQHiVeaQA/GcRvc9bhPasSSiKuW6pE5DyNBGOaqFeHDK
+	 Mw1W5EgxwAQ2lHU7NU5STndVPhO2nnnhVa0einiOVStpAicC5+F4DxYQM2UNRl3k9s
+	 p+Xssx8WC50e3srHz7eJu3abIHa5RgTOVVZJOydi3Zn83tVZ4+eS9Poo5Wok3hguRb
+	 re9bmBDf/ovaQ==
+Date: Fri, 21 Mar 2025 20:34:35 +0000
+From: sergeh@kernel.org
+To: Nikolay Borisov <nik.borisov@suse.com>
+Cc: linux-security-module@vger.kernel.org, paul@paul-moore.com,
+	serge@hallyn.com, kees@kernel.org, linux-kernel@vger.kernel.org,
+	kirill.shutemov@linux.intel.com, linux-coco@lists.linux.dev
+Subject: Re: [PATCH 1/2] lockdown: Switch implementation to using bitmap
+Message-ID: <Z93NW3za1ilzVxLK@lei>
+References: <20250321102422.640271-1-nik.borisov@suse.com>
+ <20250321102422.640271-2-nik.borisov@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 3/3] io_uring/uring_cmd: import fixed buffer before going
- async
-To: Caleb Sander Mateos <csander@purestorage.com>,
- Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
- Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
- Sagi Grimberg <sagi@grimberg.me>
-Cc: Xinyu Zhang <xizhang@purestorage.com>, io-uring@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
-References: <20250321184819.3847386-1-csander@purestorage.com>
- <20250321184819.3847386-4-csander@purestorage.com>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <20250321184819.3847386-4-csander@purestorage.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321102422.640271-2-nik.borisov@suse.com>
 
-On 3/21/25 18:48, Caleb Sander Mateos wrote:
-> For uring_cmd operations with fixed buffers, the fixed buffer lookup
-> happens in io_uring_cmd_import_fixed(), called from the ->uring_cmd()
-> implementation. A ->uring_cmd() implementation could return -EAGAIN on
-> the initial issue for any reason before io_uring_cmd_import_fixed().
-> For example, nvme_uring_cmd_io() calls nvme_alloc_user_request() first,
-> which can return -EAGAIN if all tags in the tag set are in use.
-
-That's up to command when it resolves the buffer, you can just
-move the call to io_import_reg_buf() earlier in nvme cmd code
-and not working it around at the io_uring side.
-
-In general, it's a step back, it just got cleaned up from the
-mess where node resolution and buffer imports were separate
-steps and duplicate by every single request type that used it.
-
-> This ordering difference is observable when using
-> UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the fixed buffer table.
-> If the uring_cmd is followed by a UBLK_U_IO_UNREGISTER_IO_BUF operation
-> that unregisters the fixed buffer, the uring_cmd going async will cause
-> the fixed buffer lookup to fail because it happens after the unregister.
+On Fri, Mar 21, 2025 at 12:24:20PM +0200, Nikolay Borisov wrote:
+> Tracking the lockdown at the depth granularity rather than at the
+> individual is somewhat inflexible as it provides an "all or nothing"
+> approach. Instead there are use cases where it  will be useful to be
+> able to lockdown individual features - TDX for example wants to disable
+> access to just /dev/mem.
 > 
-> Move the fixed buffer lookup out of io_uring_cmd_import_fixed() and
-> instead perform it in io_uring_cmd() before calling ->uring_cmd().
-> io_uring_cmd_import_fixed() now only initializes an iov_iter from the
-> existing fixed buffer node. This division of responsibilities makes
-> sense as the fixed buffer lookup is an io_uring implementation detail
-> and independent of the ->uring_cmd() implementation. It also cuts down
-> on the need to pass around the io_uring issue_flags.
+> To accommodate this use case switch the internal implementation to using
+> a bitmap so that individual lockdown features can be turned on. At the
+> same time retain the existing semantic where
+> INTEGRITY_MAX/CONFIDENTIALITY_MAX are treated as wildcards meaning "lock
+> everything below me".
 > 
-> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-> Fixes: 27cb27b6d5ea ("io_uring: add support for kernel registered bvecs")
+> Signed-off-by: Nikolay Borisov <nik.borisov@suse.com>
+
+Reviewed-by: Serge Hallyn <sergeh@kernel.org>
+
+but one comment below
+
 > ---
->   drivers/nvme/host/ioctl.c    | 10 ++++------
->   include/linux/io_uring/cmd.h |  6 ++----
->   io_uring/rsrc.c              |  6 ++++++
->   io_uring/rsrc.h              |  2 ++
->   io_uring/uring_cmd.c         | 10 +++++++---
->   5 files changed, 21 insertions(+), 13 deletions(-)
+>  security/lockdown/lockdown.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
 > 
-> diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-> index fe9fb80c6a14..3fad74563b9e 100644
-> --- a/drivers/nvme/host/ioctl.c
-> +++ b/drivers/nvme/host/ioctl.c
-> @@ -112,12 +112,11 @@ static struct request *nvme_alloc_user_request(struct request_queue *q,
--- 
-Pavel Begunkov
+> diff --git a/security/lockdown/lockdown.c b/security/lockdown/lockdown.c
+> index cf83afa1d879..5014d18c423f 100644
+> --- a/security/lockdown/lockdown.c
+> +++ b/security/lockdown/lockdown.c
+> @@ -10,12 +10,13 @@
+>   * 2 of the Licence, or (at your option) any later version.
+>   */
+>  
+> +#include <linux/bitmap.h>
+>  #include <linux/security.h>
+>  #include <linux/export.h>
+>  #include <linux/lsm_hooks.h>
+>  #include <uapi/linux/lsm.h>
+>  
+> -static enum lockdown_reason kernel_locked_down;
+> +static DECLARE_BITMAP(kernel_locked_down, LOCKDOWN_CONFIDENTIALITY_MAX);
+>  
+>  static const enum lockdown_reason lockdown_levels[] = {LOCKDOWN_NONE,
+>  						 LOCKDOWN_INTEGRITY_MAX,
+> @@ -26,10 +27,15 @@ static const enum lockdown_reason lockdown_levels[] = {LOCKDOWN_NONE,
+>   */
+>  static int lock_kernel_down(const char *where, enum lockdown_reason level)
+>  {
+> -	if (kernel_locked_down >= level)
+> -		return -EPERM;
+>  
+> -	kernel_locked_down = level;
+> +	if (level > LOCKDOWN_CONFIDENTIALITY_MAX)
+> +		return -EINVAL;
+> +
+> +	if (level == LOCKDOWN_INTEGRITY_MAX || level == LOCKDOWN_CONFIDENTIALITY_MAX)
+> +		bitmap_set(kernel_locked_down, 1, level);
+> +	else
+> +		bitmap_set(kernel_locked_down, level, 1);
+> +
+>  	pr_notice("Kernel is locked down from %s; see man kernel_lockdown.7\n",
+>  		  where);
+>  	return 0;
+> @@ -62,13 +68,12 @@ static int lockdown_is_locked_down(enum lockdown_reason what)
+>  		 "Invalid lockdown reason"))
+>  		return -EPERM;
+>  
+> -	if (kernel_locked_down >= what) {
+> +	if (test_bit(what, kernel_locked_down)) {
+>  		if (lockdown_reasons[what])
+>  			pr_notice_ratelimited("Lockdown: %s: %s is restricted; see man kernel_lockdown.7\n",
+>  				  current->comm, lockdown_reasons[what]);
+>  		return -EPERM;
+>  	}
+> -
+>  	return 0;
+>  }
+>  
+> @@ -105,7 +110,7 @@ static ssize_t lockdown_read(struct file *filp, char __user *buf, size_t count,
 
+Context here is:
+
+static ssize_t lockdown_read(struct file *filp, char __user *buf, size_t count,
+                             loff_t *ppos)
+{
+        char temp[80] = "";
+        int i, offset = 0;
+
+        for (i = 0; i < ARRAY_SIZE(lockdown_levels); i++) {
+                enum lockdown_reason level = lockdown_levels[i];
+
+...
+
+>  		if (lockdown_reasons[level]) {
+>  			const char *label = lockdown_reasons[level];
+>  
+> -			if (kernel_locked_down == level)
+> +			if (test_bit(level, kernel_locked_down))
+
+Right now this is still just looping over the lockdown_levels, and so
+it can't get longer than "none [integrity] [confidentiality]" which fits
+easily into the 80 chars of temp.  But I'm worried that someone will
+change this loop i a way that violates that.  Could you just switch
+this to a snprintf that checks its result for < 0 and >= n , or some
+other sanity check?
+
+>  				offset += sprintf(temp+offset, "[%s] ", label);
+>  			else
+>  				offset += sprintf(temp+offset, "%s ", label);
+> -- 
+> 2.43.0
+> 
