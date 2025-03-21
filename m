@@ -1,209 +1,134 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AD91F03CA
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:18:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F5121F03CA
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:18:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742555885; cv=none; b=uvi85uxyK5JFTs9q7i9mES3MqtJaXe/SqltmG307NJ2XDyBXhaFlbrDqhbfEMxGYq06BzIMAs5t36lRQhjoX503PNMS83O2FHWC9molupR4fmYnUmCNLIIkUnjKRvX1HRLo1bfMm2VxDurSz+sl69b6lCYW7qyXi4LUhC4eF4m4=
+	t=1742555897; cv=none; b=CGm64fzZIwNBlL8oaxAC6FB50UzjC01JBv2FEeSqFm4zxq+F8K4OEjiUKYoT6uoM68uCALLe9PCaojeNmj9IZ0Sx00SIT63xTXjfexiQDUEuNDo3kZnn7AKlOD+9BHqxBwi7FTgyZgEXQZ2sL9MineGKMhwPe3z+ElbyolHSM9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742555885; c=relaxed/simple;
-	bh=f1rXoMSurkAvAixN8mEIRxqVUGV9fiv0n2OqrybEd6Q=;
+	s=arc-20240116; t=1742555897; c=relaxed/simple;
+	bh=0Re9nYIVG+3b6VsBXMUbI1ZtB6rKosaiajqm/7/xC+A=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DojyyT6vG3DkB/hGFW6YxnP3C809ycFkSgF9rrjL2Z92QIZFcAzuHXeB9nOe12X9IxgF+PCKRbczSh9usqoHtlWBgoEEe7HxHtvzfX0LfObI8F4Qrr33Rmk0MnU7OvSbPulrm+04T7OkF4XbrTDBDpt5Eqyl5tJMUJmMIjBAQL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P8YlAQG1; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 To:Cc:Content-Type; b=k2mu/jrxOff6gp7oCQT3cFf9gg6zcHIzSg9ut7AyaxSaMogS/Cp46qRbIk1uUX5XA98dKC7ifpzjvxhYK94Ut6t7anL6oroqb0t/XziH53rRUa1Yh+VcERyGUQppYxET5dfIW3kaSSQPYSPXwnA9xY85R4jyHBDMqTEyW8pJgv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HclqFgiu; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P8YlAQG1"
-Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATAAd022106
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:18:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=DKUSYoHR6fJ9Gx9eEsTaF2oL
-	MprzdUw0AcuNtKcNv44=; b=P8YlAQG1SDRbzIqC2q4Nfz0GyHgq+0u+Rc0ZNDHJ
-	1ICrxaboFhd5fjVpf9lZzZ6WTjuELXkaX/JUhMlMEAq4+gWgJ61Rrb+GN92V2MRu
-	g9DJ1rDQFs4UmkS8mcpS5ZzZJrUMtNqQH2R2tzs0uAF2gvhSpMPidNRKKINUsObh
-	tM1v+JOAwJp4pn8lNWXwF0PTJoYDxD62nOyQt3ZtVyDMN87OZ7PCyQAEn8GMHZc6
-	su66goVlKESiOHIzaX6T5yyMK0R55ijnjRm/Cux2EzAe6VhKSuodhhT+uKnFibPE
-	wxUZFTSndipA94ZqJVY0WIxJTNMB6yOa8waVxqORqC8tag==
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h4wpge7q-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:18:02 +0000 (GMT)
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so2982011a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:18:02 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HclqFgiu"
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-30bfb6ab47cso17160751fa.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:18:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742555894; x=1743160694; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=aCtKZJvKkPXJJY2Ss4/q9tNkLTXS6Y7jlq2lUla77Co=;
+        b=HclqFgiulinnxF3RXgiZ+VT22RJj+reM+oTv0anHVKETygpACteo83YHXi6qYEz2Xd
+         dsOe4zcnbAab92if5AjYS24bYhx+ngjJ2KFnIACMi5KnMn1lXPda7P3sofwNvDusBuAu
+         cRWNk4IlimrX5t756v+PkV8oTjPNLoalVARxeWIbS2d9sjPjVLOAXXSX6oLZxqijclGm
+         s++BVoG5kXk6w9TZ78cq4en0ctxRQmx3Q9Kmr1EiukIiIYQZdqr1PE7n1iMwWK2PwtGs
+         bBxiFIlW1UNCNwdHHxO9SNdxMFrEKJe23+eA2L4zw7UXcdbgs8l/4I1QqZM3p9nVAIUV
+         gQEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742555881; x=1743160681;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DKUSYoHR6fJ9Gx9eEsTaF2oLMprzdUw0AcuNtKcNv44=;
-        b=jDW5mlU+ObD0knri6IVFKDxpE44qtEatCLsOFq3R2+7mZ2Gsoq0KAvIRKlWp9VsNRZ
-         LAjL0jy9jDnagydIREiknCoT+8awzVmalnOHvGbB4YYGU8YAHX0XofCcEjOsACv5DaUw
-         AnOxAJ1fJI/O/+W2h6bE+OFe3TlgIKCN4Z5R+vF9fXkiSjSI9sjamvfWnO7q8h8/YBMy
-         jOiOlLXI34FFfxrSMvCX1z/CZryTrki1fYpph9GcSK2ITbt9WtDMMmcMbdedPQG9zMbv
-         NEMVTGXZ7sAfsrj3oT5fAm+0dbQwaFPP8YNFNhz5+K/ow8FZti6iylf5V3WiU5TYQzv6
-         cL+w==
-X-Forwarded-Encrypted: i=1; AJvYcCWGlwJlZSDffcaaQSazMXJpbhbh4irV1gdgi24AZIvHmu5jZbPJ0VfDpI/zsppHFe4GWn4UVDTzYCJj1pI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxusLZSS22qaQDj4d/esI2HwZn2/eZtkG/2P6NYNriwwCGj+rEv
-	SOkmgx7JgkiyS702w4FAPCeJoqhFfEmTs9jv370vMrxqV9TI68NJJP3qdqkmaoezVdDIlYeRPiZ
-	NAJUWKttGC9E5IET96nm6DEx5TagRL26uCS6jy8WacOLuK5eTeSKDoZCoUDiiNYgoaP1UGBS/un
-	C+0fOoZE9/kajC1+KnZKymJi83XFqlihZFzbAL/g==
-X-Gm-Gg: ASbGncspmJ6f83IsshsHn6nUVCamXggYqcO888Yxb7AacaZoMCje99QOQUn6xeWg0mV
-	o8hnVQOO+QEPArrzkWxcYbwYzUI5ZzR3MWuB3iMaAyBxryAFyH+nuZ086SEpljPasQtgztqyN8u
-	ErKQm+xx77jYYtX7cLfTSyrimyAXbF
-X-Received: by 2002:a17:90b:53c3:b0:2fe:afbc:cd53 with SMTP id 98e67ed59e1d1-3030ff108camr4495956a91.28.1742555881125;
-        Fri, 21 Mar 2025 04:18:01 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFYUrRBiFxt4TF2dj2f7+rt3svO89e0vefSuFBivuUS0vkcM09QvsSAFZQaqgBo6AsU157kO11HvgGAwjzYsvk=
-X-Received: by 2002:a17:90b:53c3:b0:2fe:afbc:cd53 with SMTP id
- 98e67ed59e1d1-3030ff108camr4495906a91.28.1742555880604; Fri, 21 Mar 2025
- 04:18:00 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742555894; x=1743160694;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=aCtKZJvKkPXJJY2Ss4/q9tNkLTXS6Y7jlq2lUla77Co=;
+        b=Rp9qFsbmIP6sdyq5W+iDglwYZixl26LTfFpLV7XlTi/oBCGU3n0sWTs78D5eFvsSSw
+         fzPBMYkLRD+WUVjCys2SS3AzKe5r251eVuDWSVCJtzwqb/FccpU8d0gIcYtSSHJQQpF+
+         EGDEIQ/F+hFuzn3bd+Tvfy1X1EwWDDW54tGVnJBYUbCv+SXFKTvwy10CQJLQn+8ykY2k
+         iewMsCSQCyOMAlymNHnf994vvpq2mx3gsKIFhCnzGoa4Nrulqk2h2xN9c0j8ecj/Yo+Z
+         pLwMdRazt79kLjI1CT+x5+MPrcrMm9Wuvl90u/L3l1r5TAMoj7ar2uTFQAe79yPxETwz
+         4FCA==
+X-Forwarded-Encrypted: i=1; AJvYcCVTbcPMmrimib4v3AQME+G3zAe9X5WXPK5jiF/JUt4FKjVlL9Pd9NUYfF/H5Hi6NlEZn0bn1fP3AKW6p1k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxtCriFpMkdpO/kT62RsT17bfR6sPIlu58thaqEeruXBjyipS3P
+	EcrRhUDyZrALrF5YJ3UD/fndWwyzarmyT1uUvVgXPTxTJyzL/MS73qa9n7DTfbaBT9y8bAkrFLe
+	I6xvQqOoMgVNoD7V8Jm0wXNdYWLFxeicToloNQA==
+X-Gm-Gg: ASbGncuLjqk+wE+2DfPd6Z/aWpWID5dbczgMC0u2P/AyaHWnw1gRPOqV00iJtX8pgv2
+	JlnSrxZtWuVBHKP+KFP9xjinGTJFowQzilaM5HekdZHtgg4u6RpweMkcnRkFWdMyJA+hQMYe81p
+	lULV0o2SQ76AJkobIdVZMR4KxaPpiSog93WnXhljGN//CHfFVxcnSkq1nEypDAxHLU+JfW
+X-Google-Smtp-Source: AGHT+IERJm75s5rZciBb0RBn6fFVTeQTNfsC0eQdgKqDYyHMqznGKgeQzvEvo63JtZR1Ek4d8tCFdpoVi9klTzrD4OE=
+X-Received: by 2002:a05:6512:1149:b0:549:7145:5d24 with SMTP id
+ 2adb3069b0e04-54ad6500471mr962726e87.46.1742555893632; Fri, 21 Mar 2025
+ 04:18:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250127044239.578540-1-quic_ekangupt@quicinc.com>
- <20250127044239.578540-5-quic_ekangupt@quicinc.com> <hgox77a7e6zzriltwhzzciau6u2pmil4y3rl5o2l6zkp4fmlmp@q2dai5fxcvtq>
- <49295da9-82d4-45a0-a2a4-fdaa6600c70d@quicinc.com> <an4cvztdkqmrt7w2iaziihlxf4tbox65ze362v2lmycjnqg26y@jizjmh2ki34z>
- <939fcff6-fb93-487b-995b-88e3ff020784@oss.qualcomm.com> <2k6573yrw3dyn3rpwqz4asdpx3nlmj4ornm7kmxv3f4jlc6hzg@qkwn7gqduwri>
- <e46be95c-ca8d-48ce-a616-5f068bd28ebc@oss.qualcomm.com> <4ca8776c-3cc7-4266-8248-4a595fa19e7f@oss.qualcomm.com>
-In-Reply-To: <4ca8776c-3cc7-4266-8248-4a595fa19e7f@oss.qualcomm.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Date: Fri, 21 Mar 2025 13:17:49 +0200
-X-Gm-Features: AQ5f1Jqtw8pLC3Jce_RInf4WAkyM5BsJM6J6o4bkxV8dEDbjppN-Wyx9DCzNbwI
-Message-ID: <CAO9ioeXVyN+gn=tHP4HsRTs=4AFrrqiyRJw3byxhrcgu4+Quqw@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] misc: fastrpc: Add polling mode support for
- fastRPC driver
-To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
-        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
-        dri-devel@lists.freedesktop.org, arnd@arndb.de
+References: <20250315164123.1855142-1-koichiro.den@canonical.com>
+ <20250315164123.1855142-5-koichiro.den@canonical.com> <CAMRc=MdOSsakJm4H5=cqVzdKDrrMFO2t-wKVWRCU83saozepxQ@mail.gmail.com>
+ <6mcl34zdx37gjh3a3y4lc5kgb2vv5notvs355oewiwogpgg5g7@jcuukymbifnm>
+In-Reply-To: <6mcl34zdx37gjh3a3y4lc5kgb2vv5notvs355oewiwogpgg5g7@jcuukymbifnm>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Mar 2025 12:18:02 +0100
+X-Gm-Features: AQ5f1JrplLiIs2CXFFDFsH3QT7byGbN_uqzclHZ1yTE_iRMbvq9HpcR-A6D5uNs
+Message-ID: <CAMRc=McpqUsEsMSfwo+WrzWdaW6YnMbptpj3fAoS-JfVhSm9mQ@mail.gmail.com>
+Subject: Re: [PATCH v6 4/9] gpio: aggregator: introduce basic configfs interface
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-X-Proofpoint-ORIG-GUID: w5tEAd4K3_ALkkzJuCOd2SLEJrqQexFH
-X-Proofpoint-GUID: w5tEAd4K3_ALkkzJuCOd2SLEJrqQexFH
-X-Authority-Analysis: v=2.4 cv=ZN3XmW7b c=1 sm=1 tr=0 ts=67dd4aea cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=EdpeIRtKRTEnfPEYN64A:9 a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_04,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 lowpriorityscore=0
- malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210083
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, 21 Mar 2025 at 12:18, Ekansh Gupta
-<ekansh.gupta@oss.qualcomm.com> wrote:
+On Fri, Mar 21, 2025 at 3:35=E2=80=AFAM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
 >
->
->
-> On 3/20/2025 9:27 PM, Ekansh Gupta wrote:
+> On Thu, Mar 20, 2025 at 04:54:26PM GMT, Bartosz Golaszewski wrote:
+> > On Sat, Mar 15, 2025 at 5:41=E2=80=AFPM Koichiro Den <koichiro.den@cano=
+nical.com> wrote:
+> > >
+> > > ---(snip)---
+> > >
+> > > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> > > ---
+> > >
+> > > @@ -90,6 +124,70 @@ static int aggr_add_gpio(struct gpio_aggregator *=
+aggr, const char *key,
+> > >         return 0;
+> > >  }
+> > >
+> > > +static bool aggr_is_active(struct gpio_aggregator *aggr)
 > >
-> > On 3/20/2025 7:45 PM, Dmitry Baryshkov wrote:
-> >> On Thu, Mar 20, 2025 at 07:19:31PM +0530, Ekansh Gupta wrote:
-> >>> On 1/29/2025 4:10 PM, Dmitry Baryshkov wrote:
-> >>>> On Wed, Jan 29, 2025 at 11:12:16AM +0530, Ekansh Gupta wrote:
-> >>>>> On 1/29/2025 4:59 AM, Dmitry Baryshkov wrote:
-> >>>>>> On Mon, Jan 27, 2025 at 10:12:38AM +0530, Ekansh Gupta wrote:
-> >>>>>>> For any remote call to DSP, after sending an invocation message,
-> >>>>>>> fastRPC driver waits for glink response and during this time the
-> >>>>>>> CPU can go into low power modes. Adding a polling mode support
-> >>>>>>> with which fastRPC driver will poll continuously on a memory
-> >>>>>>> after sending a message to remote subsystem which will eliminate
-> >>>>>>> CPU wakeup and scheduling latencies and reduce fastRPC overhead.
-> >>>>>>> With this change, DSP always sends a glink response which will
-> >>>>>>> get ignored if polling mode didn't time out.
-> >>>>>> Is there a chance to implement actual async I/O protocol with the help
-> >>>>>> of the poll() call instead of hiding the polling / wait inside the
-> >>>>>> invoke2?
-> >>>>> This design is based on the implementation on DSP firmware as of today:
-> >>>>> Call flow: https://github.com/quic-ekangupt/fastrpc/blob/invokev2/Docs/invoke_v2.md#5-polling-mode
-> >>>>>
-> >>>>> Can you please give some reference to the async I/O protocol that you've
-> >>>>> suggested? I can check if it can be implemented here.
-> >>>> As with the typical poll() call implementation:
-> >>>> - write some data using ioctl
-> >>>> - call poll() / select() to wait for the data to be processed
-> >>>> - read data using another ioctl
-> >>>>
-> >>>> Getting back to your patch. from you commit message it is not clear,
-> >>>> which SoCs support this feature. Reminding you that we are supporting
-> >>>> all kinds of platforms, including the ones that are EoLed by Qualcomm.
-> >>>>
-> >>>> Next, you wrote that in-driver polling eliminates CPU wakeup and
-> >>>> scheduling. However this should also increase power consumption. Is
-> >>>> there any measurable difference in the latencies, granted that you
-> >>>> already use ioctl() syscall, as such there will be two context switches.
-> >>>> What is the actual impact?
-> >>> Hi Dmitry,
-> >>>
-> >>> Thank you for your feedback.
-> >>>
-> >>> I'm currently reworking this change and adding testing details. Regarding the SoC
-> >>> support, I'll add all the necessary information.
-> >> Please make sure that both the kernel and the userspace can handle the
-> >> 'non-supported' case properly.
-> > Yes, I will include changes to handle in both userspace and kernel.
+> > Series-wide: I would prefer a different prefix: why not
+> > gpio_aggregator or at least gpio_aggr?
 >
-> I am seeking additional suggestions on handling "non-supported" cases before making the
-> changes.
+> Actually, that naming was intentional, but perhaps I could say this is ju=
+st my
+> personal preference. Here is a breakdown of the function name prefixes:
 >
-> Userspace: To enable DSP side polling, a remote call is made as defined in the DSP image.
-> If this call fails, polling mode will not be enabled from userspace.
+>   Before this patch series:
+>   * forwarder:        gpiochip_fwd_* + gpio_fwd_*
+>   * sysfs interface:  new_device/delete_device + aggr_*
+>   * platform device:  gpio_aggregator_*
+>   * module init/exit: gpio_aggregator_*
 
-No. Instead userspace should check with the kernel, which capabilities
-are supported. Don't perform API calls which knowingly can fail.
+Yeah, it could use some more consistency. First: there's ongoing
+work[1] on moving the forwarder code into its own library which is a
+chance to change its prefix to gpio_forwarder_. You could add a patch
+renaming the sysfs interfaces while sending v7.
 
 >
-> Kernel: Since this is a DSP-specific feature, I plan to add a devicetree property, such
-> as "qcom,polling-supported," under the fastrpc node if the DSP supports polling mode.
+>   After this patch series:
+>   * common utils:     aggr_*
 
-This doesn't sound like a logical solution. The kernel already knows
-the hardware that it is running on. As such, there should be no need
-to further describe the hardware in DT. If the DSP firmware can report
-its capabilities, use that. If not, extend the schema to add an
-SoC-specific compatibility string. As a last resort we can use
-of_machine_is_compatible().
+I'd prefer to keep gpio_aggregator_ here...
 
->
-> Does this approach seem appropriate, or is there a better way to handle this?
->
-> Thanks,
-> Ekansh
->
-> >
-> >>> For now, with in-driver
-> >>> polling, we are seeing significant performance improvements for calls
-> >>> with different sized buffers. On polling supporting platform, I've observed an
-> >>> ~80us improvement in latency. You can find more details in the test
-> >>> results here:
-> >>> https://github.com/quic/fastrpc/pull/134/files#diff-7dbc6537cd3ade7fea5766229cf585db585704e02730efd72e7afc9b148e28ed
-> >> Does the improvement come from the CPU not goint to idle or from the
-> >> glink response processing?
-> > Although both are contributing to performance improvement, the major
-> > improvement is coming from CPU not going to idle state.
-> >
-> > Thanks,
-> > Ekansh
-> >
-> >>> Regarding your concerns about power consumption, while in-driver polling
-> >>> eliminates CPU wakeup and scheduling, it does increase power consumption.
-> >>> However, the performance gains seem to outweigh this increase.
-> >>>
-> >>> Do you think the poll implementation that you suggested above could provide similar
-> >>> improvements?
-> >> No, I agree here. I was more concentrated on userspace polling rather
-> >> than hw polling.
-> >>
+>   * forwarder:        gpiochip_fwd_* + gpio_fwd_*  <-- _Unchanged_
+>   * configfs:         gpio_aggr_*
+
+and here.
+
+>   * sysfs interface:  new_device/delete_device     <-- _Unchanged_
+>   * platform device:  gpio_aggregator_*            <-- _Unchanged_
+>   * module init/exit: gpio_aggregator_*            <-- _Unchanged_
 >
 
+Bartosz
 
--- 
-With best wishes
-Dmitry
+[1] https://lore.kernel.org/all/20250317-aaeon-up-board-pinctrl-support-v2-=
+0-36126e30aa62@bootlin.com/
