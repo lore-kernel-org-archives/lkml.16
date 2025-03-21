@@ -1,145 +1,159 @@
-Received: from mail-yw1-f228.google.com (mail-yw1-f228.google.com [209.85.128.228])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F4522F173
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 18:49:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.228
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049B113C914;
+	Fri, 21 Mar 2025 18:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742582953; cv=none; b=YF03vrW5CoptBpFEMhC/RxNIHqCT0USpCh3Yx9yu0QD045MCW+Grgo0gOcv1OwwdyYgDP4bibEFSlFDlUSI4gtpWZoTkmYEO/edmgEY95cy0udpqcXdUBZvDiju50/KBS7yBjzRIZDF0Dkp4H0kKvMxEovTwOgIG+isKZwgJVas=
+	t=1742583012; cv=none; b=NXCsHDRGz0bYYYIWIVA9HJHMc4kBjQAY6TAQUDNZakhULXmP3nGns/4XuPP50PTFlp3cQ5FyvONefgYCrXZRpXmBsb7CGYBUxJYfgq9JMqX/YCAoAR/AeDHxkqzAXkbTlENqfFRk/CtS2Pq23FiJsIdxBwsgDSS2g6kvDeVblJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742582953; c=relaxed/simple;
-	bh=lxmcofva5//2EQ+B85qMF6Mq3NUFCy30aYIO2O9+XFs=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JLHzvUDQW+kPieXjb15t0jZbv9F7NVZCEvRtBs5PoXsdJmgwq4qOHWBty7A5d+mw9bqq3c1WGpOhRsvOnI4W9xumqb/l+ZDG6Nhr+b0OdrBnH/tO3u2sPAkn/qNkuiIvG7S6JUV57OLQ6h7u+Ahwt1UvirF+h92KGCQQPglXR0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=RlyHQmRe; arc=none smtp.client-ip=209.85.128.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1742583012; c=relaxed/simple;
+	bh=PAq4YSXlLH92f6ljS7pmGtSfDM5r2ttCPvDBxri8m18=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UdxnFcKtT5F3lCcknYgkVKKhj4+fWhn8QVmn4/TQeUeFl1C8yyfH7LArQ8yG6Q1FSBpi94I6UgS/1cMa+/SEXGVWoG9VmDAQAMZwPO9pMOMHOg+vgmyxyE98eydzG6qyYrVWAe9lCVUHb4sKPqwEtU2JlYt6wrTdl0Pop3zMSSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rjig29wJ; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="RlyHQmRe"
-Received: by mail-yw1-f228.google.com with SMTP id 00721157ae682-6fda19e90cfso1248247b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:49:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rjig29wJ"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff6b9a7f91so654244a91.3;
+        Fri, 21 Mar 2025 11:50:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1742582951; x=1743187751; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1742583010; x=1743187810; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qRnlnXa062Pt8IsZFpPDsC1SEIO6IbPVYGDPK4L3Ww8=;
-        b=RlyHQmReuWGk7Et8q6m4gZeXuINY97LZMswOROT5UGzKq8zW0s3BlLWvFVjdwos3OL
-         ZSCl0bVacD9koCpoIEBBGHbINPQe5uQae5uGHGs8j5PYTyyZolTOrlUpPRMIFTlYtTT5
-         ZPirtpQu6pn/N1uYw36k9LsoGVzyProEW9Pijwd1rn2gzX8EDXH61auyKPp36qTyP8qU
-         LsVniN3KLQw2btKFk+M4rr8izzLvWWWucgNCBkZtlGPVTvOL16YBQYWJjFiisNipOPQ9
-         OHMyBhfLVBawwfgNcnPpxdKBZK1K7qqfH+QwoMSZrH6LFvCkoZIhcCId8DfH4vDmWk/6
-         /fnA==
+        bh=PAq4YSXlLH92f6ljS7pmGtSfDM5r2ttCPvDBxri8m18=;
+        b=Rjig29wJgCnOfl7BwsgjE3GFaZIQXoMOvMkDFdO/yWOtzw0pt7ZTY+UF+xMisA4+EP
+         ljVJYK8ehG5f0/e7C1xFmp4UAziUPvh+JDP698+4FK92xdxNO43oOjuJOHTbgXkYEDp3
+         36tygtNOcH4l0jUor52BAKtvgHeGtZiciLoYYhqiXfzw5b+mqt+A/cdrsMzz0YGXkbHp
+         51sghcv/wdghlpXvzKBN63+HfsIrvwnOeRNz5KklD44dPkTYtFbSniLgRNUDXzfzlbQO
+         9RzbqL6qOWmylEfJzD5DO5dSee1xFSUUpZ72SrVFekBdoAW6u7xXHq90sLRKAfR4by7h
+         Nyfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742582951; x=1743187751;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742583010; x=1743187810;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qRnlnXa062Pt8IsZFpPDsC1SEIO6IbPVYGDPK4L3Ww8=;
-        b=pT4uNBlSLscdTZ1Vc5l+OI3fDqy2whnjNtwT1wUIa4kFDhjpRoDCPjVMfTYBeYxnAK
-         H9hSNlFOyCmpyDZhtOAr0UvA4/ivlYFAvwHdaYkqCEDW/4kQwkDGUazOKPmkvaxtBOKn
-         3LALMr3CPN4XUS71yRBFgk12POcg7OHYYxHQHusoQKDLiijmEwhGqqQqnQRSmVuPv/dL
-         D/JavzeZLzwgyo5OmrZsaElcfD4EiRtcHHHKNznU+a4w7jZGxhE02yhXFt/xoFcKVkq2
-         oPBgNFDYZ3gGjV2YAZNPGzKnsmTNDG+mC2oC62/DxErqePBbs8ZK4ihlQZlH5OlGMNlY
-         vmug==
-X-Forwarded-Encrypted: i=1; AJvYcCWBcgL1CKXlckC8NnS1fldwQhfef0ny/821Qcu35tooWW6IxzuQhwDqr5fhit9YTI2PX5d7wK2W9aq2xLU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yy1c65Wpat8+9qGeQ7lX0GcZwIgJZcTcfCNiD30+ZTV1TCIosZw
-	4IkQQRybEtPO8wgu6Z427+HZkrhCvPVnLkTy+khgicKSp3JSaczCHjFTohUL2TDJW8BYwhPkSMa
-	UeTj4ph3aZhkxuhQC5l18SdnbbQslFGMp8o5CtURgSbkpR1UH
-X-Gm-Gg: ASbGncsc0BQvEF7sG5/0f7Bb7vek8fje3xOFzOayI1Efpnu2yVZk/NEYjls5wp7cD/+
-	tm6U1NdZAgxBYBDmsmXifDza6YLJ5F2ZLFOR8Xa9l9xFzlaZDF8tfkU/ZB0uyjRx68t7lNvLBiM
-	db9rlBtMWbm1HLwbRsklVcKeznqfZGWG98Y1xMZZK/Zi3+QWISOz6RqAQv3LKjjOrdN9HQYUzy6
-	/zxM/7tHQGLEz/MFwLU7CtwEHQ7z2OeVb4mQQ+WYmkRcK1pcdWrO8kQMqJSYs8ctun2HSevp3nn
-	W6AXbuG20wjsKMmgGiUcfmd95sfWOGIEYQ==
-X-Google-Smtp-Source: AGHT+IHA/F7ZUbUO8zzTMyUKj0OJFpa6I44qHvQ3vYuRPzv9/KJDLKWorZS1G/3i1I2rbpGBvsvGgFxESclq
-X-Received: by 2002:a05:690c:ecf:b0:700:a4e1:630e with SMTP id 00721157ae682-700c73ce4ccmr12634927b3.0.1742582950805;
-        Fri, 21 Mar 2025 11:49:10 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
-        by smtp-relay.gmail.com with ESMTPS id 00721157ae682-700ba739011sm864927b3.39.2025.03.21.11.49.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 11:49:10 -0700 (PDT)
-X-Relaying-Domain: purestorage.com
-Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id B6AA7340245;
-	Fri, 21 Mar 2025 12:49:09 -0600 (MDT)
-Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id A7758E4195A; Fri, 21 Mar 2025 12:48:39 -0600 (MDT)
-From: Caleb Sander Mateos <csander@purestorage.com>
-To: Jens Axboe <axboe@kernel.dk>,
-	Pavel Begunkov <asml.silence@gmail.com>,
-	Ming Lei <ming.lei@redhat.com>,
-	Keith Busch <kbusch@kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>
-Cc: Xinyu Zhang <xizhang@purestorage.com>,
-	io-uring@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-nvme@lists.infradead.org,
-	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 2/3] io_uring/net: import send_zc fixed buffer before going async
-Date: Fri, 21 Mar 2025 12:48:18 -0600
-Message-ID: <20250321184819.3847386-3-csander@purestorage.com>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250321184819.3847386-1-csander@purestorage.com>
-References: <20250321184819.3847386-1-csander@purestorage.com>
+        bh=PAq4YSXlLH92f6ljS7pmGtSfDM5r2ttCPvDBxri8m18=;
+        b=Ak9b+Vf1uvYaRhO7ooyxghY6tcRRRqwnhM6cZxtsZspPcwNbHpiimkCUNVdAqfMHcF
+         N2mebYfVrpKkk/rIpDwF6R5ZgKaw6uWK+ffoXfjDl5hkUN26acS5iR+YDBpWaA7vMtmy
+         I971dswGJgPcuqkw1B6Q7NLgrgLqBAyxsKM7MplpUiJ+byXEbeJpJ+JkgIOBnV/DJHXS
+         PdwQ53V6gQMr6GXg2a4vORnSCr9b3X62eWVU5cuxS6Q831Sqdmv+CVNqZz68Bk6qqhGG
+         FIbnvmmSj6QxnLj9t76g8GJbVUNHNU6ZuVcR6NzI0SLZkG75fvZPQ/xiiOze8z9Qz/Fk
+         1xDw==
+X-Forwarded-Encrypted: i=1; AJvYcCXg6hzfLnMkQFal2SHf99LoiBHKQo7bICgTVwmF7amdVYTKJnu043PcJxuVhog9xC5KGZsphqJ/we0jX1hGBwU=@vger.kernel.org, AJvYcCXstENHr575DdkZtBNarHdAxMeP2sXoJZ9NV73QUnNlsZNIbifmZTAxhHgQD4DGCAKx53Eie2QdBWG5uhU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw13n0xfAgSy1EOpl+l4NejXuswLt+RlIJjbfNM0+qnxXn90mV0
+	6dSnDzoW20FAZ0QMXe5Qq9CzLfa8AzyxEwwjG7ziOQW702P9HLiw937Pmpcg02xRMS806bUOGbA
+	BT9Ijka55RHgDrnLC2koGtJObuoA=
+X-Gm-Gg: ASbGncu6Dxdy6xyDnPyT9Ifs7f2sr/jepKdn2SL1Q7VMzw98S0mz9TqAvmR12TBSLbj
+	1Y4qpPCjVJAh0yzfzrJl/Cp3roXKy+qDZAQb1v2nWjTX58V7f72iiUaxM+SQxzTNKyKUCD3kne9
+	AjtHs+dUBIx1bxy034NYnlYZP/FA==
+X-Google-Smtp-Source: AGHT+IFZTxovkwT+vDiPvlu9XVghR0Bg3UXmwzcuOoaNC/Hfewejjf04kI82WgRv9nDG6XEPA2ggYqyAA2z4UTaw9zo=
+X-Received: by 2002:a17:90b:3a90:b0:2ff:7970:d2b6 with SMTP id
+ 98e67ed59e1d1-3031f4eacacmr874973a91.5.1742583009924; Fri, 21 Mar 2025
+ 11:50:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250321111535.3740332-1-bqe@google.com> <20250321111535.3740332-4-bqe@google.com>
+ <Z92N8dyIE42ROW2t@thinkpad>
+In-Reply-To: <Z92N8dyIE42ROW2t@thinkpad>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 21 Mar 2025 19:49:57 +0100
+X-Gm-Features: AQ5f1JoamPxaZDszfEleFQXyjzGMmWaW9WuNHZ-MmlZmGQBEto1yEIVCBzHA7QA
+Message-ID: <CANiq72kYzx7JTVqrJuP0Wo9=1qtaN7s7fqkD5DDcjA59SgMizQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] rust: add bitmap API.
+To: Yury Norov <yury.norov@gmail.com>, David Gow <davidgow@google.com>
+Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
+	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When IORING_OP_SEND_ZC is used with the IORING_RECVSEND_POLL_FIRST flag,
-the initial issue will return -EAGAIN to force arming the poll handler.
-If the operation is also using fixed buffers, the fixed buffer lookup
-does not happen until the subsequent issue. This ordering difference is
-observable when using UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the
-fixed buffer table. If the IORING_OP_SEND_ZC operation is followed
-immediately by a UBLK_U_IO_UNREGISTER_IO_BUF that unregisters the fixed
-buffer, IORING_RECVSEND_POLL_FIRST will cause the fixed buffer lookup to
-fail because it happens after the buffer is unregistered.
+Hi Yury,
 
-Swap the order of the buffer import and IORING_RECVSEND_POLL_FIRST check
-to ensure the fixed buffer lookup happens on the initial issue even if
-the operation goes async.
+A couple comments in case it helps regarding the docs/comments discussion..=
+.
 
-Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Fixes: 27cb27b6d5ea ("io_uring: add support for kernel registered bvecs")
----
- io_uring/net.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+On Fri, Mar 21, 2025 at 5:04=E2=80=AFPM Yury Norov <yury.norov@gmail.com> w=
+rote:
+>
+> In C we separate declarations from function body with an empty line.
+> Can you do that in rust? Can you point to a rust coding style? Do you
+> guys really use 2-whitespace tabs?
 
-diff --git a/io_uring/net.c b/io_uring/net.c
-index a29893d567b8..5adc7b80138e 100644
---- a/io_uring/net.c
-+++ b/io_uring/net.c
-@@ -1367,21 +1367,21 @@ int io_send_zc(struct io_kiocb *req, unsigned int issue_flags)
- 	if (unlikely(!sock))
- 		return -ENOTSOCK;
- 	if (!test_bit(SOCK_SUPPORT_ZC, &sock->flags))
- 		return -EOPNOTSUPP;
- 
--	if (!(req->flags & REQ_F_POLLED) &&
--	    (zc->flags & IORING_RECVSEND_POLL_FIRST))
--		return -EAGAIN;
--
- 	if (!zc->imported) {
- 		zc->imported = true;
- 		ret = io_send_zc_import(req, issue_flags);
- 		if (unlikely(ret))
- 			return ret;
- 	}
- 
-+	if (!(req->flags & REQ_F_POLLED) &&
-+	    (zc->flags & IORING_RECVSEND_POLL_FIRST))
-+		return -EAGAIN;
-+
- 	msg_flags = zc->msg_flags;
- 	if (issue_flags & IO_URING_F_NONBLOCK)
- 		msg_flags |= MSG_DONTWAIT;
- 	if (msg_flags & MSG_WAITALL)
- 		min_ret = iov_iter_count(&kmsg->msg.msg_iter);
--- 
-2.45.2
+Please see https://docs.kernel.org/rust/coding-guidelines.html.
 
+You are right that the example block you quoted should have the
+formatting fixed.
+
+I am not sure what you mean by separating declarations from body here.
+I guess you mean variable declarations in C vs. the rest of the body
+-- in Rust it is not done, i.e. declaring new bindings in the middle
+as they are needed is expected (and sometimes needed).
+
+> I think I already asked to make the test a separate unit. It's amazing
+> that rust understands scattered commented blocks of code and can turn
+> them into unit tests. Unfortunately, I'm not.
+>
+> Please create a separate unit and test everything there, just like we
+> do with normal C code.
+
+APIs should have examples, ideally good ones etc. The above looks like
+an standard example, but maybe I am missing something.
+
+The examples are meant to be documentation first and foremost, that
+happens to double as a test (so that it does not get out of sync
+etc.). It is how we document everything else in Rust, and in fact we
+are becoming stricter in requesting more examples when people add more
+APIs (otherwise they never get added :)
+
+If actual tests are needed (i.e. on top of what examples provide),
+then we just finally landed in -next `#[test]`-like support, i.e. unit
+tests that can be written separately. We try to have tests as close as
+possible to the code they exercise, too, but in some cases it may be
+best to separate them (e.g. if there are way too many).
+
+> For find_bit functions we have a lib/find_bit_benchmark.c Can you add
+> a similar rust test, so we'll make sure you're not introducing
+> performance regressions with your wrappers?
+>
+> Please don't use KUNITs. It's not ready for benchmarks, and tests built
+> against it don't run on major distros.
+
+Cc'ing David here in case he has more context around this...
+
+I agree having a good "integrated benchmark" system would be nice, and
+being able to mark particular "tests" as benchmarks etc.
+
+Regarding distributions, it sounds an orthogonal issue to me, but I
+may be lacking context...
+
+> Are you sure a public method description should bear implementation
+> details? I'm not. If implementation changes in future, the public API
+> should stay stable (yes, including comments).
+
+To clarify, it is describing the invariants of a type (i.e. it is not
+a method description).
+
+The invariants in some cases refer to private details (e.g. typically
+a field), and whether to allow that or not is something we discussed
+several times in the past.
+
+We went with allowing the `# Invariants` section to refer to the
+fields of a type if needed, as a practical decision. However, if
+something is a "private invariant" that others must not rely on, then
+we should still point it out explicitly etc.
+
+I hope that clarifies.
+
+Cheers,
+Miguel
