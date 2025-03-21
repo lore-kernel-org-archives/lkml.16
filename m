@@ -1,379 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE751E5B67;
-	Fri, 21 Mar 2025 02:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 157346A009;
+	Fri, 21 Mar 2025 02:30:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742524159; cv=none; b=stKF3bbBoE5W/+CIrH81XAmGAhWCOjvPnUpW23Vj7BWl/wuh70Q1Q0gPYRXFbqTJeImUOVBSJiPlphxEG+YbCCwvMwkU/HZKy8XtG+EjKUfhc8IDuSHr/zvEQOdoVJYqWN0oQP7R/ljM5+qIZeskgIRhWOOm2zHmQ4VA0DmyZgo=
+	t=1742524245; cv=none; b=rFhV+JkjHTxxCI5WCiOtVaQ5/dK34eKauPk+malKl7NGtZbapTASh9qLMuhOi4OR5Qxtxn/ZTqlFTB6upIN1PpJ7pK2DueyTM+2xpPRk369JfhEoY6oX57YG/eSbiCaD/+Ord5MNmxWZYgCI4V7XCg4zpurCS0PoxYJMlK8C4qs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742524159; c=relaxed/simple;
-	bh=P8OXtdhixz9O4Onw6ZJom8PL3KA31R0sK4W77D2oad0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mf0MHYEQ2r+lwv5wmlVfbGfQChVYVE884lCjprR6B6ZrG98fBa+nmPIjv+X8Y/OajdCCUwqqFYiXggP4OwArYP3v5o0sMpB7M52veD+uilawA2FiO1CPMd/lO2C+Fu4a6wbPnCKvMXj5d5VVNz43vRDw8+tAgFQ2veVBe4ExcM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3yDpTJB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742524245; c=relaxed/simple;
+	bh=Bdl3LjsTA4541sxA9ALb4rJZsub2w3PPESpVa+kPZuo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ou1y44IliPU0qgiUi9oUpRqjN0p7bDkuI+07pU6mhUnusga4QdU9UsGZNrT9ZwkXReqj4V3HlMV/bXulVhX/DNsPlX+94KQZ4EU/tnh9rH+HOEcUlMvxjKXC9exUeQ24Zmi/dnlA8RL/XNofptKP0oa7oHm7L9gnA1hPGmgtjkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OF3V/3cK; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3yDpTJB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E808CC4CEEC;
-	Fri, 21 Mar 2025 02:29:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742524158;
-	bh=P8OXtdhixz9O4Onw6ZJom8PL3KA31R0sK4W77D2oad0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=E3yDpTJBSSAjLfDTTtTq0i4Fk5n7RDEySPZ61iQqtB7rTZinQmVIVcA/9KfklxLch
-	 XtdzeTXiOsUds1iO0/s8j2/H4rN5YpWApoOPtRb94BtVyj9BVB6+BcooIBNmPfgja5
-	 3j5JmZIWmG/qj9xxwbdSsjYAMsOpr5z3GeuNwCsHPHR/byGhtuPpb5XdBscY+4Hzub
-	 8UROKsscjEHfkXK5QJ++R6rfudLnljQ4jLsH9j5suxdlYT+BPdCc9j7F+TCD37LNfo
-	 mXzI+2j9tCbsVvnTOAq1UvLYjYyTOkD5WA9EWcRSVJoepzBP3qO7I2/Lw5fo8wtNn7
-	 dDA6xZ+Ysyzqg==
-From: Mario Limonciello <superm1@kernel.org>
-To: "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
-	Perry Yuan <perry.yuan@amd.com>
-Cc: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>,
-	linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-	linux-pm@vger.kernel.org (open list:CPU FREQUENCY SCALING FRAMEWORK),
-	Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH v4 3/5] cpufreq/amd-pstate: Add support for platform profile class
-Date: Thu, 20 Mar 2025 21:28:56 -0500
-Message-ID: <20250321022858.1538173-4-superm1@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OF3V/3cK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742524244; x=1774060244;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Bdl3LjsTA4541sxA9ALb4rJZsub2w3PPESpVa+kPZuo=;
+  b=OF3V/3cKoEJTc7NO1Gx1KkEXVi+OyKFVmgk6Qf4aLSdsUTHjM+Ngi25j
+   MpJEhtkJc7LolerlSjgRI22eg6VbpdX9iKDwoX1f21M26qz+fztALxY0k
+   r+KHvkeHNjPAvRp3HGp/sC3Pu3jP4kBH2+d00TCJDWWwKS2yvDQw4VF5C
+   hBTPLbiDJ47eObvzFuXF0jWGsefBaf20LOI/hTNmhIssvQ8lrzBt6vANZ
+   jNxZs6BebPlPZZ9fHeK9dy2JtAj0o5ZtYqtToArxxIHLCzdAaGti2u+EH
+   7Jf6lmkNhL4THxj7P2vKr3PHgW1YJM2Yp0LjpFupJ0BVP7c4hL/RGllNE
+   g==;
+X-CSE-ConnectionGUID: A0n+ebEoTY6XoJxPGQUULQ==
+X-CSE-MsgGUID: 39KBnDTSR9SncjvMV2J1ww==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="47557523"
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="47557523"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 19:30:43 -0700
+X-CSE-ConnectionGUID: NbUJDfzSTsCyineqJ/DSUw==
+X-CSE-MsgGUID: RQHAAdD4QbKfA9F+WiVguw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="123446135"
+Received: from anmitta2-mobl4.gar.corp.intel.com (HELO yungchua-desk.intel.com) ([10.247.118.252])
+  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 19:30:40 -0700
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
+To: linux-sound@vger.kernel.org,
+	vkoul@kernel.org,
+	broonie@kernel.org
+Cc: vinod.koul@linaro.org,
+	linux-kernel@vger.kernel.org,
+	pierre-louis.bossart@linux.dev,
+	bard.liao@intel.com
+Subject: [PATCH 0/1] SoundWire/ASoC: SOF: Intel: Let SND_SOF_SOF_HDA_SDW_BPT select SND_HDA_EXT_CORE
+Date: Fri, 21 Mar 2025 10:30:31 +0800
+Message-ID: <20250321023032.7420-1-yung-chuan.liao@linux.intel.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250321022858.1538173-1-superm1@kernel.org>
-References: <20250321022858.1538173-1-superm1@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
+CONFIG_SND_HDA_EXT_CORE is required for CONFIG_SND_SOF_SOF_HDA_SDW_BPT.
 
-The platform profile core allows multiple drivers and devices to
-register platform profile support.
+Vinod/Mark,
 
-When the legacy platform profile interface is used all drivers will
-adjust the platform profile as well.
+The patch doesn't apply to the ASoC tree as the SoundWire BRA series has
+not been apply to the ASoC tree yet. Could you help to apply this patch
+to the SoundWire tree if it looks good to you?
+Adding "SoundWire" tag to the subjuct to make sure it will not be filtered
+out by Vinod's email filter.
 
-Add support for registering every CPU with the platform profile handler
-when dynamic EPP is enabled.
+Bard Liao (1):
+  ASoC: SOF: Intel: Let SND_SOF_SOF_HDA_SDW_BPT select SND_HDA_EXT_CORE
 
-The end result will be that changing the platform profile will modify
-EPP accordingly.
+ sound/soc/sof/intel/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
- Documentation/admin-guide/pm/amd-pstate.rst |   4 +-
- drivers/cpufreq/Kconfig.x86                 |   1 +
- drivers/cpufreq/amd-pstate.c                | 142 +++++++++++++++++---
- drivers/cpufreq/amd-pstate.h                |  10 ++
- 4 files changed, 140 insertions(+), 17 deletions(-)
-
-diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
-index 8424e7119dd7e..36950fb6568c0 100644
---- a/Documentation/admin-guide/pm/amd-pstate.rst
-+++ b/Documentation/admin-guide/pm/amd-pstate.rst
-@@ -321,7 +321,9 @@ Whether this behavior is enabled by default with the kernel config option
- at runtime by the sysfs file ``/sys/devices/system/cpu/cpufreq/policyX/dynamic_epp``.
- 
- When set to enabled, the driver will select a different energy performance
--profile when the machine is running on battery or AC power.
-+profile when the machine is running on battery or AC power. The driver will
-+also register with the platform profile handler to receive notifications of
-+user desired power state and react to those.
- When set to disabled, the driver will not change the energy performance profile
- based on the power source and will not react to user desired power state.
- 
-diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
-index 3a8bdc35f488a..8fc8319861bdf 100644
---- a/drivers/cpufreq/Kconfig.x86
-+++ b/drivers/cpufreq/Kconfig.x86
-@@ -40,6 +40,7 @@ config X86_AMD_PSTATE
- 	select ACPI_PROCESSOR
- 	select ACPI_CPPC_LIB if X86_64
- 	select CPU_FREQ_GOV_SCHEDUTIL if SMP
-+	select ACPI_PLATFORM_PROFILE
- 	help
- 	  This driver adds a CPUFreq driver which utilizes a fine grain
- 	  processor performance frequency control range instead of legacy
-diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
-index 8172bd4b5952f..2a62b12148544 100644
---- a/drivers/cpufreq/amd-pstate.c
-+++ b/drivers/cpufreq/amd-pstate.c
-@@ -109,6 +109,7 @@ static struct quirk_entry *quirks;
-  *	2		balance_performance
-  *	3		balance_power
-  *	4		power
-+ *	5		custom (for raw EPP values)
-  */
- enum energy_perf_value_index {
- 	EPP_INDEX_DEFAULT = 0,
-@@ -116,6 +117,7 @@ enum energy_perf_value_index {
- 	EPP_INDEX_BALANCE_PERFORMANCE,
- 	EPP_INDEX_BALANCE_POWERSAVE,
- 	EPP_INDEX_POWERSAVE,
-+	EPP_INDEX_CUSTOM,
- };
- 
- static const char * const energy_perf_strings[] = {
-@@ -124,6 +126,7 @@ static const char * const energy_perf_strings[] = {
- 	[EPP_INDEX_BALANCE_PERFORMANCE] = "balance_performance",
- 	[EPP_INDEX_BALANCE_POWERSAVE] = "balance_power",
- 	[EPP_INDEX_POWERSAVE] = "power",
-+	[EPP_INDEX_CUSTOM] = "custom",
- 	NULL
- };
- 
-@@ -1077,6 +1080,10 @@ static int amd_pstate_power_supply_notifier(struct notifier_block *nb,
- 	if (event != PSY_EVENT_PROP_CHANGED)
- 		return NOTIFY_OK;
- 
-+	/* dynamic actions are only applied while platform profile is in balanced */
-+	if (cpudata->current_profile != PLATFORM_PROFILE_BALANCED)
-+		return 0;
-+
- 	epp = amd_pstate_get_balanced_epp(policy);
- 
- 	ret = amd_pstate_set_epp(policy, epp);
-@@ -1085,14 +1092,84 @@ static int amd_pstate_power_supply_notifier(struct notifier_block *nb,
- 
- 	return NOTIFY_OK;
- }
--static void amd_pstate_clear_dynamic_epp(struct cpufreq_policy *policy)
-+
-+static int amd_pstate_profile_probe(void *drvdata, unsigned long *choices)
-+{
-+	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
-+	set_bit(PLATFORM_PROFILE_BALANCED, choices);
-+	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
-+
-+	return 0;
-+}
-+
-+static int amd_pstate_profile_get(struct device *dev,
-+				  enum platform_profile_option *profile)
-+{
-+	struct amd_cpudata *cpudata = dev_get_drvdata(dev);
-+
-+	*profile = cpudata->current_profile;
-+
-+	return 0;
-+}
-+
-+static int amd_pstate_profile_set(struct device *dev,
-+				  enum platform_profile_option profile)
-+{
-+	struct amd_cpudata *cpudata = dev_get_drvdata(dev);
-+	struct cpufreq_policy *policy __free(put_cpufreq_policy) = cpufreq_cpu_get(cpudata->cpu);
-+	int ret;
-+
-+	switch (profile) {
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		if (cpudata->policy != CPUFREQ_POLICY_POWERSAVE)
-+			cpudata->policy = CPUFREQ_POLICY_POWERSAVE;
-+		ret = amd_pstate_set_epp(policy, AMD_CPPC_EPP_POWERSAVE);
-+		if (ret)
-+			return ret;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		if (cpudata->policy != CPUFREQ_POLICY_POWERSAVE)
-+			cpudata->policy = CPUFREQ_POLICY_POWERSAVE;
-+		ret = amd_pstate_set_epp(policy,
-+					 amd_pstate_get_balanced_epp(policy));
-+		if (ret)
-+			return ret;
-+		break;
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		ret = amd_pstate_set_epp(policy, AMD_CPPC_EPP_PERFORMANCE);
-+		if (ret)
-+			return ret;
-+		break;
-+	default:
-+		pr_err("Unknown Platform Profile %d\n", profile);
-+		return -EOPNOTSUPP;
-+	}
-+
-+	cpudata->current_profile = profile;
-+
-+	return 0;
-+}
-+
-+static const struct platform_profile_ops amd_pstate_profile_ops = {
-+	.probe = amd_pstate_profile_probe,
-+	.profile_set = amd_pstate_profile_set,
-+	.profile_get = amd_pstate_profile_get,
-+};
-+
-+void amd_pstate_clear_dynamic_epp(struct cpufreq_policy *policy)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 
- 	if (cpudata->power_nb.notifier_call)
- 		power_supply_unreg_notifier(&cpudata->power_nb);
-+	if (cpudata->ppdev) {
-+		platform_profile_remove(cpudata->ppdev);
-+		cpudata->ppdev = NULL;
-+	}
-+	kfree(cpudata->profile_name);
- 	cpudata->dynamic_epp = false;
- }
-+EXPORT_SYMBOL_GPL(amd_pstate_clear_dynamic_epp);
- 
- static int amd_pstate_set_dynamic_epp(struct cpufreq_policy *policy)
- {
-@@ -1100,11 +1177,35 @@ static int amd_pstate_set_dynamic_epp(struct cpufreq_policy *policy)
- 	int ret;
- 	u8 epp;
- 
--	epp = amd_pstate_get_balanced_epp(policy);
-+	switch (cpudata->current_profile) {
-+	case PLATFORM_PROFILE_PERFORMANCE:
-+		epp = AMD_CPPC_EPP_PERFORMANCE;
-+		break;
-+	case PLATFORM_PROFILE_LOW_POWER:
-+		epp = AMD_CPPC_EPP_POWERSAVE;
-+		break;
-+	case PLATFORM_PROFILE_BALANCED:
-+		epp = amd_pstate_get_balanced_epp(policy);
-+		break;
-+	default:
-+		pr_err("Unknown Platform Profile %d\n", cpudata->current_profile);
-+		return -EOPNOTSUPP;
-+	}
- 	ret = amd_pstate_set_epp(policy, epp);
- 	if (ret)
- 		return ret;
- 
-+	cpudata->profile_name = kasprintf(GFP_KERNEL, "amd-pstate-epp-cpu%d", cpudata->cpu);
-+
-+	cpudata->ppdev = platform_profile_register(get_cpu_device(policy->cpu),
-+						   cpudata->profile_name,
-+						   policy->driver_data,
-+						   &amd_pstate_profile_ops);
-+	if (IS_ERR(cpudata->ppdev)) {
-+		ret = PTR_ERR(cpudata->ppdev);
-+		goto cleanup;
-+	}
-+
- 	/* only enable notifier if things will actually change */
- 	if (cpudata->epp_default_ac != cpudata->epp_default_dc) {
- 		ret = power_supply_reg_notifier(&cpudata->power_nb);
-@@ -1211,8 +1312,8 @@ static ssize_t show_energy_performance_available_preferences(
- 	return offset;
- }
- 
--static ssize_t store_energy_performance_preference(
--		struct cpufreq_policy *policy, const char *buf, size_t count)
-+ssize_t store_energy_performance_preference(struct cpufreq_policy *policy,
-+					    const char *buf, size_t count)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 	char str_preference[21];
-@@ -1228,16 +1329,22 @@ static ssize_t store_energy_performance_preference(
- 	if (ret != 1)
- 		return -EINVAL;
- 
--	ret = match_string(energy_perf_strings, -1, str_preference);
--	if (ret < 0)
--		return -EINVAL;
--
--	if (ret)
--		epp = epp_values[ret];
--	else
--		epp = amd_pstate_get_balanced_epp(policy);
-+	/*
-+	 * if the value matches a number, use that, otherwise see if
-+	 * matches an index in the energy_perf_strings array
-+	 */
-+	ret = kstrtou8(str_preference, 0, &epp);
-+	if (ret) {
-+		ret = match_string(energy_perf_strings, -1, str_preference);
-+		if (ret < 0 || ret == EPP_INDEX_CUSTOM)
-+			return -EINVAL;
-+		if (ret)
-+			epp = epp_values[ret];
-+		else
-+			epp = amd_pstate_get_balanced_epp(policy);
-+	}
- 
--	if (epp > 0 && policy->policy == CPUFREQ_POLICY_PERFORMANCE) {
-+	if (epp > 0 && cpudata->policy == CPUFREQ_POLICY_PERFORMANCE) {
- 		pr_debug("EPP cannot be set under performance policy\n");
- 		return -EBUSY;
- 	}
-@@ -1248,9 +1355,9 @@ static ssize_t store_energy_performance_preference(
- 
- 	return ret ? ret : count;
- }
-+EXPORT_SYMBOL_GPL(store_energy_performance_preference);
- 
--static ssize_t show_energy_performance_preference(
--				struct cpufreq_policy *policy, char *buf)
-+ssize_t show_energy_performance_preference(struct cpufreq_policy *policy, char *buf)
- {
- 	struct amd_cpudata *cpudata = policy->driver_data;
- 	u8 preference, epp;
-@@ -1271,11 +1378,12 @@ static ssize_t show_energy_performance_preference(
- 		preference = EPP_INDEX_POWERSAVE;
- 		break;
- 	default:
--		return -EINVAL;
-+		return sysfs_emit(buf, "%u\n", epp);
- 	}
- 
- 	return sysfs_emit(buf, "%s\n", energy_perf_strings[preference]);
- }
-+EXPORT_SYMBOL_GPL(show_energy_performance_preference);
- 
- static void amd_pstate_driver_cleanup(void)
- {
-@@ -1599,10 +1707,12 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
- 	    amd_pstate_acpi_pm_profile_undefined()) {
- 		policy->policy = CPUFREQ_POLICY_PERFORMANCE;
- 		cpudata->epp_default_ac = cpudata->epp_default_dc = amd_pstate_get_epp(cpudata);
-+		cpudata->current_profile = PLATFORM_PROFILE_PERFORMANCE;
- 	} else {
- 		policy->policy = CPUFREQ_POLICY_POWERSAVE;
- 		cpudata->epp_default_ac = AMD_CPPC_EPP_PERFORMANCE;
- 		cpudata->epp_default_dc = AMD_CPPC_EPP_BALANCE_PERFORMANCE;
-+		cpudata->current_profile = PLATFORM_PROFILE_BALANCED;
- 	}
- 
- 	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
-diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
-index 6882876f895de..b4c5374762110 100644
---- a/drivers/cpufreq/amd-pstate.h
-+++ b/drivers/cpufreq/amd-pstate.h
-@@ -9,6 +9,7 @@
- #define _LINUX_AMD_PSTATE_H
- 
- #include <linux/pm_qos.h>
-+#include <linux/platform_profile.h>
- 
- /*********************************************************************
-  *                        AMD P-state INTERFACE                       *
-@@ -108,6 +109,11 @@ struct amd_cpudata {
- 	u8	epp_default_dc;
- 	bool	dynamic_epp;
- 	struct notifier_block power_nb;
-+
-+	/* platform profile */
-+	enum platform_profile_option current_profile;
-+	struct device *ppdev;
-+	char *profile_name;
- };
- 
- /*
-@@ -123,5 +129,9 @@ enum amd_pstate_mode {
- };
- const char *amd_pstate_get_mode_string(enum amd_pstate_mode mode);
- int amd_pstate_update_status(const char *buf, size_t size);
-+ssize_t store_energy_performance_preference(struct cpufreq_policy *policy,
-+					    const char *buf, size_t count);
-+ssize_t show_energy_performance_preference(struct cpufreq_policy *policy, char *buf);
-+void amd_pstate_clear_dynamic_epp(struct cpufreq_policy *policy);
- 
- #endif /* _LINUX_AMD_PSTATE_H */
 -- 
 2.43.0
 
