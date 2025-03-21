@@ -1,225 +1,484 @@
-Received: from 003.mia.mailroute.net (003.mia.mailroute.net [199.89.3.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD8F91DEFC5;
-	Fri, 21 Mar 2025 16:20:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A7222CBE9;
+	Fri, 21 Mar 2025 16:20:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742574026; cv=none; b=nEspUjzhewhcSd+R6OrCPf/eEJSaVH5OcMzTI2NaZVjwz6zZL8LrCpa85uFjXv4wzCxN6JE8wkkpHMojcUGXqM5AX74QJFb2tD1ZxdH4ZjJoTFdiEGIs2NEQaKd1B4vUgr/NEAk+DSfnYczdfwkCJ1CIa9P96VAv4nIe2PrUC7k=
+	t=1742574030; cv=none; b=sV9E5G/LqTUpYgUYO/WYDDxH+jvn76TueVgvGZ6u0WVpegvHR/TdeVULXmrbep0HTKFMM5AuOJSch5x7u1aGTg31VOZHRlSfS+szanFmyIE0le3feFMONzph71CRclQ4SvE3evCJ0rA0H6Wr1gHx5Ez5JZUFyCD9NYxNXTNkFzg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742574026; c=relaxed/simple;
-	bh=pw+m5se+pQEuMCaFj9AWsSaNGo1mpEzijJ6omJch4sk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pZw8xYc77qLugaTKKbjo0LkF5GzmMjfpHIYLvl+GdbTG+fHw6VcaKgRoOSpkHYG4Q448rBo/9ncAxGR9F5tuBNg+7goZ+BcqYo0pzDpvfdeekMK68sF/R/6R5vfw8q7nWe56eZw/tNnILN5cxKT//4bSuvLZ0hlK95vlLuEUd60=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=OJLKm1cE; arc=none smtp.client-ip=199.89.3.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
+	s=arc-20240116; t=1742574030; c=relaxed/simple;
+	bh=VDB4zIshf/T/lwTivGW1p4hFRSRWCA+FyrB9RNp5Opo=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Ti2AEtFH0fWkpkuu5iVKHY6R9sDP50hQBSXcogRD1wffyCM4spMw+XRkMClkGIH6pnQd4C8DlIpzv5Dq0Z8c6afMv1qlVQC95dorGCG5AzJcxD0NTGjuAQlLVtuh2r47y2ncTJFJ2kByFbka3dudypD1vQAvQMjWhRKKyFA1ZIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MuWeEyUg; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="OJLKm1cE"
-Received: from localhost (localhost [127.0.0.1])
-	by 003.mia.mailroute.net (Postfix) with ESMTP id 4ZK72p0r5hzltM4s;
-	Fri, 21 Mar 2025 16:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1742574016; x=1745166017; bh=9dyI6yv0FfobA2AHnFPAlTAe
-	x+wUcJGo91eWOYIZ7lo=; b=OJLKm1cENVXpFRHwXA6qt/2+2Kb/cQQIz7Lc4ZQD
-	5cvdfGq4C2wei0I7AY3lc2HgvODlhZ6bsMGL1mUpQGseJI46FLpx6nLaHUPH9ojw
-	hJa8OnC+MVaHQyTn1cgmzHHs6QcarLwyPT7dXYC+digMu0+cEvcD8b0Ub3I7Oo13
-	buLUy+NPtASuGkwZlwwKzleSh3I/Y775FuZRGaAM8qBhudSN1chrnmkBH9namIKS
-	4wTYvsX9c0WUpjufKPwLIyHuXnLciCIy24oWGgDjGpob+1yGohVJ6RnfXXP7pQoY
-	upB/iDOvS4R6PfBk+yHR0HBrGEF2Lx4Eeiq039J/lBoe5A==
-X-Virus-Scanned: by MailRoute
-Received: from 003.mia.mailroute.net ([127.0.0.1])
- by localhost (003.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id GnBwmSn9tA2a; Fri, 21 Mar 2025 16:20:16 +0000 (UTC)
-Received: from [100.66.154.22] (unknown [104.135.204.82])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 003.mia.mailroute.net (Postfix) with ESMTPSA id 4ZK72c26gLzlschZ;
-	Fri, 21 Mar 2025 16:20:06 +0000 (UTC)
-Message-ID: <31b46812-72d5-4f9d-b55d-16a6e10afe7d@acm.org>
-Date: Fri, 21 Mar 2025 09:20:05 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MuWeEyUg"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7c5675dec99so248747985a.0;
+        Fri, 21 Mar 2025 09:20:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742574027; x=1743178827; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+RwLK5iQXF+IRc7OqME3cPmsOdwPfPmJm2toTj6Nzyw=;
+        b=MuWeEyUgVpMF2pkkn87ah92epe4LJtjIeSINH5YXOdr0wsYVnvarA+M0ynwKWiB09e
+         nC8a4xOhhGr7NnAU1lbZZj7BjqQtjWiY7J8eotXxKcChyY7z9lWhtQssnavK/nBV46OK
+         YRnyQ4zIFFqtfGZru9cAlAPFPwAczOKWGhHpdsxDZJHmHQyruj0IqRoZGOmgHLNiPkk6
+         2QdN2/3PeXhwQHHeILy7xnd3dqEvibKqdomVhJai+gMxV91pK5HWCEIHdof7kJTHNHv8
+         AB0fEJZuL4e11M0pcXPi+4cZekfoAN6jBKy+65v90LKHC826y5QqdAS+2NOMl7siSlD/
+         +Shw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742574027; x=1743178827;
+        h=in-reply-to:content-disposition:mime-version:references:subject:cc
+         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+RwLK5iQXF+IRc7OqME3cPmsOdwPfPmJm2toTj6Nzyw=;
+        b=EmBsLbATEzNJd/kEG/imLAd8XzA/dNI0B0CxFeQMElaGCNTleIZXbAQKMb6g4p9S/M
+         2zJQYld5quxcqnoYoYMJ/NIx7B2RGCT4IQTNtt6m5gNzfNDB6lt5YW0aB1kAX2Sd5113
+         i6jc1s8nV+EoAv+xtLwilz9Js3dDpGTqa2lrkRH6WnhF0MKdxoWaJL9fMkMPlxw8vxun
+         RkMCTyXFSGPI44S0hGvUlejNPqG5bjsUxUxlWUFNKctywklfAfZkuMSk1qrtjRYhnhdJ
+         a3N/LiN4YpNNvFFODiZwaNBuLYuEK61PAhW67uV9px1rEXTjy5CUWo4Z/iwJJ690ZsTH
+         8a4w==
+X-Forwarded-Encrypted: i=1; AJvYcCU09JJJMVxz+84FYdkZeo4hayeeM5Pm8VcIRPoDx1Na3HZBds3F3nu044qm/oPE5NYAPhk63JOEy2IWoHh6ewA=@vger.kernel.org, AJvYcCWWyEavg+GFy2aGAVMLqIZTRU5cqYogkQ/U/2xPLxbcRcnaxNM+/mRih2HE+i+Ner8mB7bviedi2riazDw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7EFZVU/D5Qc4KM81RPYo67MwOi+kL6Gqed0CA0JrWzFGgsoPE
+	in5PosHPy8AufPWHROLht0dRJjmSvgQHvS1XlpFx8wdhpyjj3W5f
+X-Gm-Gg: ASbGncsr/kCynPW+NDXbX2jPqs3x1XAw2cb0kd+D2SDYH4MmZ2LyD+SVs70DvCinOaX
+	rvMiQFgzXSXcbEBC7ZnpXyjowM1mp6VQmNcRccRhKZFd5dA+ZxOYkAKmv/9wBnrOUA5D/CoUjfs
+	xjFy60d1nYzFB+bDzZpD8yXVeUDzTAa4oX/pI6tIIL3RZ+vV/iCAVrox99msmLOixMwC4GwjkCq
+	Tr/nz2j1sdFFhQrLi/mQVAfBcyOTVdnoFCPR+Qb3qukFcxx0lZHyjEmOwJQC/kBzXrnq0nB2j1j
+	AjyATdeRIpUrUDH2JRDeL3A5bI91IYKZIaerXmJtDCbb7Z1NJViVIET3rYamEM2VFsRrpmGFLq+
+	Vlk2KVLCrgQ/CviwvB80cZp3p12peWPjEAiE=
+X-Google-Smtp-Source: AGHT+IFNWTQlBe0RD+otYXkE2VK+jyUjA6UsznLgPDt5EOPT6xTqgiVMK35DXGrMeG/Y+qkbjXLI6A==
+X-Received: by 2002:a05:620a:4051:b0:7c5:61fc:d325 with SMTP id af79cd13be357-7c5ba17c942mr598322385a.31.1742574027080;
+        Fri, 21 Mar 2025 09:20:27 -0700 (PDT)
+Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b935820asm146708085a.94.2025.03.21.09.20.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 09:20:26 -0700 (PDT)
+Message-ID: <67dd91ca.050a0220.acaf0.79d2@mx.google.com>
+X-Google-Original-Message-ID: <Z92RyFxwF_XQhDF6@winterfell.>
+Received: from phl-compute-09.internal (phl-compute-09.phl.internal [10.202.2.49])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 318491200078;
+	Fri, 21 Mar 2025 12:20:26 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-09.internal (MEProxy); Fri, 21 Mar 2025 12:20:26 -0400
+X-ME-Sender: <xms:ypHdZwSRvH1uy2L12IFYhG_BvGW4JvcUTd-vJFoYuZXMmZtFzTcKnA>
+    <xme:ypHdZ9xyOWPWSKmSyCntfzjCnQKbpGTmzMWuuE2H2PdXguQndx4V_BlB_lgbTm8St
+    pt3UGraLobuGPKvwQ>
+X-ME-Received: <xmr:ypHdZ93n135Uyho_o1gr1cwVa8glwGZGlSc48CQMs5kyoAEYoFL9wKFC3WY>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduheehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeevudeihfelffehiefghfehtdfgieeftdeu
+    tdffkeellefhjeekiefhleejkeehtdenucffohhmrghinheptggrshhtrdgrshdpihhnsh
+    htrghntggvrdhinhenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhl
+    fhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeile
+    dvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgt
+    ohhmsehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmth
+    hpohhuthdprhgtphhtthhopeholhhivhgvrhdrmhgrnhhgohhlugesphhmrdhmvgdprhgt
+    phhtthhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrgh
+    grhihnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhho
+    rdhnvghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtoh
+    hmpdhrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghp
+    thhtoheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlh
+    hitggvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehtmhhgrhhoshhssehu
+    mhhitghhrdgvughu
+X-ME-Proxy: <xmx:ypHdZ0Cz3aaVt8M23Ygzn_HUCm0o-I0inCe69AQF01yfifbRtEUEOQ>
+    <xmx:ypHdZ5iWtDZ9FTUepY9TI1G5wBdad-Wl5d06cVOpJIqIx0ExIbJ6YQ>
+    <xmx:ypHdZwpLN684E69EGwYUvqgoW7Y-onXSfTs6mZfJPjs-yAb7mfuzQQ>
+    <xmx:ypHdZ8iAy5O-CRRp_gI-eGhfuQexnIJvPzSz72He5o-uJmpuV31AbQ>
+    <xmx:ypHdZwRSavSFiVND7Mh0leKSZpOu9DCSBYULo2BUQjspPotvxKOiLGOC>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 21 Mar 2025 12:20:25 -0400 (EDT)
+Date: Fri, 21 Mar 2025 09:20:24 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Oliver Mangold <oliver.mangold@pm.me>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Benno Lossin <benno.lossin@proton.me>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/4] rust: rename AlwaysRefCounted to RefCounted
+References: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
+ <20250313-unique-ref-v8-2-3082ffc67a31@pm.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC] ufs: delegate the interrupt service routine to a
- threaded irq handler
-To: Neil Armstrong <neil.armstrong@linaro.org>,
- Alim Akhtar <alim.akhtar@samsung.com>, Avri Altman <avri.altman@wdc.com>,
- "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
- "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- linux-arm-msm@vger.kernel.org, linux-scsi@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250321-topic-ufs-use-threaded-irq-v1-1-7a55816a4b1d@linaro.org>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <20250321-topic-ufs-use-threaded-irq-v1-1-7a55816a4b1d@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250313-unique-ref-v8-2-3082ffc67a31@pm.me>
 
-On 3/21/25 9:08 AM, Neil Armstrong wrote:
-> On systems with a large number request slots and unavailable MCQ,
-> the current design of the interrupt handler can delay handling of
-> other subsystems interrupts causing display artifacts, GPU stalls
-> or system firmware requests timeouts.
+On Thu, Mar 13, 2025 at 07:00:11AM +0000, Oliver Mangold wrote:
+> AlwaysRefCounted will become a marker trait to indicate that it is allowed
+> to obtain an ARef from a `&`, which cannot be allowed for types which are
+> also Ownable.
 > 
-> Since the interrupt routine can take quite some time, it's
-> preferable to move it to a threaded handler and leave the
-> hard interrupt handler save the status and disable the irq
-> until processing is finished in the thread.
-> 
-> This fixes all encountered issued when running FIO tests
-> on the Qualcomm SM8650 platform.
-> 
-> Example of errors reported on a loaded system:
->   [drm:dpu_encoder_frame_done_timeout:2706] [dpu error]enc32 frame done timeout
->   msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.20.1: hangcheck detected gpu lockup rb 2!
->   msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.20.1:     completed fence: 74285
->   msm_dpu ae01000.display-controller: [drm:hangcheck_handler [msm]] *ERROR* 67.5.20.1:     submitted fence: 74286
->   Error sending AMC RPMH requests (-110)
-> 
-> Reported bandwidth is not affected on various tests.
-> 
-> Signed-off-by: Neil Armstrong <neil.armstrong@linaro.org>
+
+This commit log doesn't explain why we need to do this.
+
+> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+> Suggested-by: Alice Ryhl <aliceryhl@google.com>
 > ---
->   drivers/ufs/core/ufshcd.c | 43 ++++++++++++++++++++++++++++++++++++-------
->   include/ufs/ufshcd.h      |  2 ++
->   2 files changed, 38 insertions(+), 7 deletions(-)
+>  rust/kernel/block/mq/request.rs | 10 ++++++---
+>  rust/kernel/cred.rs             |  8 ++++++--
+>  rust/kernel/device.rs           |  8 ++++++--
+>  rust/kernel/fs/file.rs          | 10 ++++++---
+>  rust/kernel/pid_namespace.rs    |  8 ++++++--
+>  rust/kernel/task.rs             |  6 +++++-
+>  rust/kernel/types.rs            | 45 ++++++++++++++++++++++++-----------------
+>  7 files changed, 64 insertions(+), 31 deletions(-)
 > 
-> diff --git a/drivers/ufs/core/ufshcd.c b/drivers/ufs/core/ufshcd.c
-> index 0534390c2a35d0671156d79a4b1981a257d2fbfa..0fa3cb48ce0e39439afb0f6d334b835d9e496387 100644
-> --- a/drivers/ufs/core/ufshcd.c
-> +++ b/drivers/ufs/core/ufshcd.c
-> @@ -6974,7 +6974,7 @@ static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
->   }
->   
->   /**
-> - * ufshcd_intr - Main interrupt service routine
-> + * ufshcd_intr - Threaded interrupt service routine
->    * @irq: irq number
->    * @__hba: pointer to adapter instance
->    *
-> @@ -6982,7 +6982,7 @@ static irqreturn_t ufshcd_sl_intr(struct ufs_hba *hba, u32 intr_status)
->    *  IRQ_HANDLED - If interrupt is valid
->    *  IRQ_NONE    - If invalid interrupt
->    */
-> -static irqreturn_t ufshcd_intr(int irq, void *__hba)
-> +static irqreturn_t ufshcd_threaded_intr(int irq, void *__hba)
->   {
->   	u32 intr_status, enabled_intr_status = 0;
->   	irqreturn_t retval = IRQ_NONE;
-> @@ -6990,8 +6990,6 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
->   	int retries = hba->nutrs;
->   
->   	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
-> -	hba->ufs_stats.last_intr_status = intr_status;
-> -	hba->ufs_stats.last_intr_ts = local_clock();
->   
->   	/*
->   	 * There could be max of hba->nutrs reqs in flight and in worst case
-> @@ -7000,8 +6998,7 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
->   	 * again in a loop until we process all of the reqs before returning.
->   	 */
->   	while (intr_status && retries--) {
-> -		enabled_intr_status =
-> -			intr_status & ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
-> +		enabled_intr_status = intr_status & hba->intr_en;
->   		ufshcd_writel(hba, intr_status, REG_INTERRUPT_STATUS);
->   		if (enabled_intr_status)
->   			retval |= ufshcd_sl_intr(hba, enabled_intr_status);
-> @@ -7020,9 +7017,40 @@ static irqreturn_t ufshcd_intr(int irq, void *__hba)
->   		ufshcd_dump_regs(hba, 0, UFSHCI_REG_SPACE_SIZE, "host_regs: ");
->   	}
->   
-> +	ufshcd_writel(hba, hba->intr_en, REG_INTERRUPT_ENABLE);
+> diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+> index 2f2bb5a04709cc90ae8971da166fc83bb53fb86b..f6bee0932499e554f88907861997f8b9d1ffd51a 100644
+> --- a/rust/kernel/block/mq/request.rs
+> +++ b/rust/kernel/block/mq/request.rs
+> @@ -9,7 +9,7 @@
+>      block::mq::Operations,
+>      error::Result,
+>      sync::Refcount,
+> -    types::{ARef, AlwaysRefCounted, Opaque},
+> +    types::{ARef, AlwaysRefCounted, Opaque, RefCounted},
+>  };
+>  use core::{
+>      marker::PhantomData,
+> @@ -209,10 +209,10 @@ unsafe impl<T: Operations> Send for Request<T> {}
+>  unsafe impl<T: Operations> Sync for Request<T> {}
+>  
+>  // SAFETY: All instances of `Request<T>` are reference counted. This
+> -// implementation of `AlwaysRefCounted` ensure that increments to the ref count
+> +// implementation of `RefCounted` ensure that increments to the ref count
+>  // keeps the object alive in memory at least until a matching reference count
+>  // decrement is executed.
+> -unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {
+> +unsafe impl<T: Operations> RefCounted for Request<T> {
+>      fn inc_ref(&self) {
+>          self.wrapper_ref().refcount().inc();
+>      }
+> @@ -234,3 +234,7 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Self>) {
+>          }
+>      }
+>  }
 > +
->   	return retval;
->   }
->   
-> +/**
-> + * ufshcd_intr - Main interrupt service routine
-> + * @irq: irq number
-> + * @__hba: pointer to adapter instance
-> + *
-> + * Return:
-> + *  IRQ_WAKE_THREAD - If interrupt is valid
-> + *  IRQ_NONE	    - If invalid interrupt
-> + */
-> +static irqreturn_t ufshcd_intr(int irq, void *__hba)
-> +{
-> +	u32 intr_status, enabled_intr_status = 0;
-> +	irqreturn_t retval = IRQ_NONE;
-> +	struct ufs_hba *hba = __hba;
-> +	int retries = hba->nutrs;
-> +
-> +	intr_status = ufshcd_readl(hba, REG_INTERRUPT_STATUS);
-> +	hba->ufs_stats.last_intr_status = intr_status;
-> +	hba->ufs_stats.last_intr_ts = local_clock();
-> +
-> +	if (unlikely(!intr_status))
-> +		return IRQ_NONE;
-> +
-> +	hba->intr_en = ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
-> +	ufshcd_writel(hba, 0, REG_INTERRUPT_ENABLE);
-> +
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
->   static int ufshcd_clear_tm_cmd(struct ufs_hba *hba, int tag)
->   {
->   	int err = 0;
-> @@ -10581,7 +10609,8 @@ int ufshcd_init(struct ufs_hba *hba, void __iomem *mmio_base, unsigned int irq)
->   	ufshcd_readl(hba, REG_INTERRUPT_ENABLE);
->   
->   	/* IRQ registration */
-> -	err = devm_request_irq(dev, irq, ufshcd_intr, IRQF_SHARED, UFSHCD, hba);
-> +	err = devm_request_threaded_irq(dev, irq, ufshcd_intr, ufshcd_threaded_intr,
-> +					IRQF_SHARED, UFSHCD, hba);
->   	if (err) {
->   		dev_err(hba->dev, "request irq failed\n");
->   		goto out_disable;
-> diff --git a/include/ufs/ufshcd.h b/include/ufs/ufshcd.h
-> index e3909cc691b2a854a270279901edacaa5c5120d6..03a7216b89fd63c297479422d1213e497ce85d8e 100644
-> --- a/include/ufs/ufshcd.h
-> +++ b/include/ufs/ufshcd.h
-> @@ -893,6 +893,7 @@ enum ufshcd_mcq_opr {
->    * @ufshcd_state: UFSHCD state
->    * @eh_flags: Error handling flags
->    * @intr_mask: Interrupt Mask Bits
-> + * @intr_en: Saved Interrupt Enable Bits
->    * @ee_ctrl_mask: Exception event control mask
->    * @ee_drv_mask: Exception event mask for driver
->    * @ee_usr_mask: Exception event mask for user (set via debugfs)
-> @@ -1040,6 +1041,7 @@ struct ufs_hba {
->   	enum ufshcd_state ufshcd_state;
->   	u32 eh_flags;
->   	u32 intr_mask;
-> +	u32 intr_en;
->   	u16 ee_ctrl_mask;
->   	u16 ee_drv_mask;
->   	u16 ee_usr_mask;
+> +// SAFETY: we currently do not implement `Ownable`, thus it is okay to can obtain an `ARef<Request>`
 
-I don't like this patch because:
-- It reduces performance (IOPS) for systems on which MCQ is supported
-   and enabled. Please only use threaded interrupts if MCQ is not used.
-- It introduces race conditions on the REG_INTERRUPT_ENABLE register.
-   There are plenty of ufshcd_(enable|disable)_intr() calls in the UFS
-   driver. Please remove all code that modifies REG_INTERRUPT_ENABLE
-   from this patch.
-- Instead of retaining hba->ufs_stats.last_intr_status and
-   hba->ufs_stats.last_intr_ts, please remove both members and also
-   the debug code that reports the values of these member variables.
-   Please also remove hba->intr_en.
+s/we/We
 
-Thanks,
+> +// from a `&Request` (but this will change in the future).
+> +unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {}
+> diff --git a/rust/kernel/cred.rs b/rust/kernel/cred.rs
+> index 81d67789b16f243e7832ff3b2e5e479a1ab2bf9e..e04d1021130eb1ec46fe48feb088959da7656d66 100644
+> --- a/rust/kernel/cred.rs
+> +++ b/rust/kernel/cred.rs
+> @@ -11,7 +11,7 @@
+>  use crate::{
+>      bindings,
+>      task::Kuid,
+> -    types::{AlwaysRefCounted, Opaque},
+> +    types::{AlwaysRefCounted, Opaque, RefCounted},
+>  };
+>  
+>  /// Wraps the kernel's `struct cred`.
+> @@ -71,7 +71,7 @@ pub fn euid(&self) -> Kuid {
+>  }
+>  
+>  // SAFETY: The type invariants guarantee that `Credential` is always ref-counted.
+> -unsafe impl AlwaysRefCounted for Credential {
+> +unsafe impl RefCounted for Credential {
+>      fn inc_ref(&self) {
+>          // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+>          unsafe { bindings::get_cred(self.0.get()) };
+> @@ -83,3 +83,7 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Credential>) {
+>          unsafe { bindings::put_cred(obj.cast().as_ptr()) };
+>      }
+>  }
+> +
+> +// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an `ARef<Credential>` from a
+> +// `&Credential`.
+> +unsafe impl AlwaysRefCounted for Credential {}
+> diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+> index db2d9658ba47d9c492bc813ce3eb2ff29703ca31..189298518dc184405b1d62404b190d4c0b08b7ad 100644
+> --- a/rust/kernel/device.rs
+> +++ b/rust/kernel/device.rs
+> @@ -7,7 +7,7 @@
+>  use crate::{
+>      bindings,
+>      str::CStr,
+> -    types::{ARef, Opaque},
+> +    types::{ARef, AlwaysRefCounted, Opaque, RefCounted},
+>  };
+>  use core::{fmt, ptr};
+>  
+> @@ -190,7 +190,7 @@ pub fn property_present(&self, name: &CStr) -> bool {
+>  }
+>  
+>  // SAFETY: Instances of `Device` are always reference-counted.
+> -unsafe impl crate::types::AlwaysRefCounted for Device {
+> +unsafe impl RefCounted for Device {
+>      fn inc_ref(&self) {
+>          // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+>          unsafe { bindings::get_device(self.as_raw()) };
+> @@ -202,6 +202,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+>      }
+>  }
+>  
+> +// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an `Device<Task>` from a
+> +// `&Device`.
+> +unsafe impl AlwaysRefCounted for Device {}
+> +
+>  // SAFETY: As by the type invariant `Device` can be sent to any thread.
+>  unsafe impl Send for Device {}
+>  
+> diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
+> index e03dbe14d62a566349c4100f2f78b17d4c79aab5..a7836cc754e7927b6addc3bd06cfe8c8119f1d9f 100644
+> --- a/rust/kernel/fs/file.rs
+> +++ b/rust/kernel/fs/file.rs
+> @@ -11,7 +11,7 @@
+>      bindings,
+>      cred::Credential,
+>      error::{code::*, Error, Result},
+> -    types::{ARef, AlwaysRefCounted, NotThreadSafe, Opaque},
+> +    types::{ARef, AlwaysRefCounted, NotThreadSafe, Opaque, RefCounted},
+>  };
+>  use core::ptr;
+>  
+> @@ -190,7 +190,7 @@ unsafe impl Sync for File {}
+>  
+>  // SAFETY: The type invariants guarantee that `File` is always ref-counted. This implementation
+>  // makes `ARef<File>` own a normal refcount.
+> -unsafe impl AlwaysRefCounted for File {
+> +unsafe impl RefCounted for File {
+>      #[inline]
+>      fn inc_ref(&self) {
+>          // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+> @@ -205,6 +205,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<File>) {
+>      }
+>  }
+>  
+> +// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an `ARef<File>` from a
+> +/// `&File`.
+> +unsafe impl AlwaysRefCounted for File {}
+> +
+>  /// Wraps the kernel's `struct file`. Not thread safe.
+>  ///
+>  /// This type represents a file that is not known to be safe to transfer across thread boundaries.
+> @@ -225,7 +229,7 @@ pub struct LocalFile {
+>  
+>  // SAFETY: The type invariants guarantee that `LocalFile` is always ref-counted. This implementation
+>  // makes `ARef<File>` own a normal refcount.
+> -unsafe impl AlwaysRefCounted for LocalFile {
+> +unsafe impl RefCounted for LocalFile {
+>      #[inline]
+>      fn inc_ref(&self) {
+>          // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+> diff --git a/rust/kernel/pid_namespace.rs b/rust/kernel/pid_namespace.rs
+> index 0e93808e4639b37dd77add5d79f64058dac7cb87..3e45e945b7509b9607266b2e0e6ef130e7a1ed39 100644
+> --- a/rust/kernel/pid_namespace.rs
+> +++ b/rust/kernel/pid_namespace.rs
+> @@ -9,7 +9,7 @@
+>  
+>  use crate::{
+>      bindings,
+> -    types::{AlwaysRefCounted, Opaque},
+> +    types::{AlwaysRefCounted, RefCounted, Opaque},
+>  };
+>  use core::ptr;
+>  
+> @@ -44,7 +44,7 @@ pub unsafe fn from_ptr<'a>(ptr: *const bindings::pid_namespace) -> &'a Self {
+>  }
+>  
+>  // SAFETY: Instances of `PidNamespace` are always reference-counted.
+> -unsafe impl AlwaysRefCounted for PidNamespace {
+> +unsafe impl RefCounted for PidNamespace {
+>      #[inline]
+>      fn inc_ref(&self) {
+>          // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+> @@ -58,6 +58,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<PidNamespace>) {
+>      }
+>  }
+>  
+> +// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an `ARef<PidNamespace>`
+> +// from a `&PidNamespace`.
+> +unsafe impl AlwaysRefCounted for PidNamespace {}
+> +
+>  // SAFETY:
+>  // - `PidNamespace::dec_ref` can be called from any thread.
+>  // - It is okay to send ownership of `PidNamespace` across thread boundaries.
+> diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+> index 07bc22a7645c0c7d792a0a163dd55b8ff0fe5f92..1cc1b02cb7fada6703da8cad77549dee578fc08d 100644
+> --- a/rust/kernel/task.rs
+> +++ b/rust/kernel/task.rs
+> @@ -327,7 +327,7 @@ pub fn wake_up(&self) {
+>  }
+>  
+>  // SAFETY: The type invariants guarantee that `Task` is always refcounted.
+> -unsafe impl crate::types::AlwaysRefCounted for Task {
+> +unsafe impl crate::types::RefCounted for Task {
+>      fn inc_ref(&self) {
+>          // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+>          unsafe { bindings::get_task_struct(self.as_ptr()) };
+> @@ -339,6 +339,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+>      }
+>  }
+>  
+> +// SAFETY: We do not implement `Ownable`, thus it is okay to can obtain an `ARef<Task>` from a
+> +// `&Task`.
+> +unsafe impl crate::types::AlwaysRefCounted for Task {}
+> +
+>  impl Kuid {
+>      /// Get the current euid.
+>      #[inline]
+> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+> index 65f6d0721f5f23c8db79c6735dc7d5e1ac984ea7..5a96da714348cc2369969200e6070972226c00fe 100644
+> --- a/rust/kernel/types.rs
+> +++ b/rust/kernel/types.rs
+> @@ -402,11 +402,9 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+>      }
+>  }
+>  
+> -/// Types that are _always_ reference counted.
+> +/// Types that are internally reference counted.
+>  ///
+>  /// It allows such types to define their own custom ref increment and decrement functions.
+> -/// Additionally, it allows users to convert from a shared reference `&T` to an owned reference
+> -/// [`ARef<T>`].
+>  ///
+>  /// This is usually implemented by wrappers to existing structures on the C side of the code. For
+>  /// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc) to create reference-counted
+> @@ -418,9 +416,9 @@ pub const fn raw_get(this: *const Self) -> *mut T {
+>  /// at least until matching decrements are performed.
+>  ///
+>  /// Implementers must also ensure that all instances are reference-counted. (Otherwise they
+> -/// won't be able to honour the requirement that [`AlwaysRefCounted::inc_ref`] keep the object
+> +/// won't be able to honour the requirement that [`RefCounted::inc_ref`] keep the object
+>  /// alive.)
+> -pub unsafe trait AlwaysRefCounted {
+> +pub unsafe trait RefCounted {
+>      /// Increments the reference count on the object.
+>      fn inc_ref(&self);
+>  
+> @@ -433,11 +431,22 @@ pub unsafe trait AlwaysRefCounted {
+>      /// Callers must ensure that there was a previous matching increment to the reference count,
+>      /// and that the object is no longer used after its reference count is decremented (as it may
+>      /// result in the object being freed), unless the caller owns another increment on the refcount
+> -    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
+> -    /// [`AlwaysRefCounted::dec_ref`] once).
+> +    /// (e.g., it calls [`RefCounted::inc_ref`] twice, then calls
+> +    /// [`RefCounted::dec_ref`] once).
+>      unsafe fn dec_ref(obj: NonNull<Self>);
+>  }
+>  
+> +/// An extension to RefCounted, which declares that it is allowed to convert
+> +/// from a shared reference `&T` to an owned reference [`ARef<T>`].
+> +///
+> +/// # Safety
+> +///
+> +/// Implementers must ensure that no safety invariants are violated by upgrading an `&T`
+> +/// to an [`ARef<T>`]. In particular that implies [`AlwaysRefCounted`] and [`Ownable`]
+> +/// cannot be implemented for the same type, as this would allow to violate the uniqueness
+> +/// guarantee of [`Owned<T>`] by derefencing it into an `&T` and obtaining an [`ARef`] from that.
+> +pub unsafe trait AlwaysRefCounted: RefCounted {}
+> +
+>  /// An owned reference to an always-reference-counted object.
+>  ///
+>  /// The object's reference count is automatically decremented when an instance of [`ARef`] is
+> @@ -448,7 +457,7 @@ pub unsafe trait AlwaysRefCounted {
+>  ///
+>  /// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`ARef`] instance. In
+>  /// particular, the [`ARef`] instance owns an increment on the underlying object's reference count.
+> -pub struct ARef<T: AlwaysRefCounted> {
+> +pub struct ARef<T: RefCounted> {
+>      ptr: NonNull<T>,
+>      _p: PhantomData<T>,
+>  }
+> @@ -457,16 +466,16 @@ pub struct ARef<T: AlwaysRefCounted> {
+>  // it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally, it needs
+>  // `T` to be `Send` because any thread that has an `ARef<T>` may ultimately access `T` using a
+>  // mutable reference, for example, when the reference count reaches zero and `T` is dropped.
+> -unsafe impl<T: AlwaysRefCounted + Sync + Send> Send for ARef<T> {}
+> +unsafe impl<T: RefCounted + Sync + Send> Send for ARef<T> {}
+>  
+>  // SAFETY: It is safe to send `&ARef<T>` to another thread when the underlying `T` is `Sync`
+>  // because it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally,
+>  // it needs `T` to be `Send` because any thread that has a `&ARef<T>` may clone it and get an
+>  // `ARef<T>` on that thread, so the thread may ultimately access `T` using a mutable reference, for
+>  // example, when the reference count reaches zero and `T` is dropped.
+> -unsafe impl<T: AlwaysRefCounted + Sync + Send> Sync for ARef<T> {}
+> +unsafe impl<T: RefCounted + Sync + Send> Sync for ARef<T> {}
+>  
+> -impl<T: AlwaysRefCounted> ARef<T> {
+> +impl<T: RefCounted> ARef<T> {
+>      /// Creates a new instance of [`ARef`].
+>      ///
+>      /// It takes over an increment of the reference count on the underlying object.
+> @@ -495,12 +504,12 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
+>      ///
+>      /// ```
+>      /// use core::ptr::NonNull;
+> -    /// use kernel::types::{ARef, AlwaysRefCounted};
+> +    /// use kernel::types::{ARef, RefCounted};
+>      ///
+>      /// struct Empty {}
+>      ///
+>      /// # // SAFETY: TODO.
 
-Bart.
+While you at it, could you also finish this todo? ;-) Thanks! I believe
+this is just using a ZST to simulate a RefCounted type, therefore it's
+safe to assume `Empty` is ref-counted.
+
+Regards,
+Boqun
+
+> -    /// unsafe impl AlwaysRefCounted for Empty {
+> +    /// unsafe impl RefCounted for Empty {
+>      ///     fn inc_ref(&self) {}
+>      ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
+>      /// }
+> @@ -518,7 +527,7 @@ pub fn into_raw(me: Self) -> NonNull<T> {
+>      }
+>  }
+>  
+> -impl<T: AlwaysRefCounted> Clone for ARef<T> {
+> +impl<T: RefCounted> Clone for ARef<T> {
+>      fn clone(&self) -> Self {
+>          self.inc_ref();
+>          // SAFETY: We just incremented the refcount above.
+> @@ -526,7 +535,7 @@ fn clone(&self) -> Self {
+>      }
+>  }
+>  
+> -impl<T: AlwaysRefCounted> Deref for ARef<T> {
+> +impl<T: RefCounted> Deref for ARef<T> {
+>      type Target = T;
+>  
+>      fn deref(&self) -> &Self::Target {
+> @@ -543,10 +552,10 @@ fn from(b: &T) -> Self {
+>      }
+>  }
+>  
+> -impl<T: AlwaysRefCounted> Drop for ARef<T> {
+> +impl<T: RefCounted> Drop for ARef<T> {
+>      fn drop(&mut self) {
+> -        // SAFETY: The type invariants guarantee that the `ARef` owns the reference we're about to
+> -        // decrement.
+> +        // SAFETY: The type invariants guarantee that the `ARef` owns the reference
+> +        // we're about to decrement.
+>          unsafe { T::dec_ref(self.ptr) };
+>      }
+>  }
+> 
+> -- 
+> 2.48.1
+> 
+> 
