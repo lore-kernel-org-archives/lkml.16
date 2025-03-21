@@ -1,261 +1,323 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D059422AE7B;
-	Fri, 21 Mar 2025 13:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9512A1CAA81
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:15:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742562899; cv=none; b=tkI9B+WKMhIuZdEf7kpcr05kXM/MgfhtbnsdEzomB/IdjwAAwVbJAM/w4hbPbKgbHmAIH5tiPuNnsAeOiJGndePW8/NeWTi1b8tmejZ+nxVq2cv/VtHTEKJRkkDV/lom7IV8oMDRGd5uh6mbCKr25HugZQOOFEHq7cXHCQNNpe8=
+	t=1742562955; cv=none; b=JNZhhDOfOTCiGXH4LMGf/Hi9C6lPa2CRgeDGgKRZUGl3yOa1FmDFja2bCi4j+6HquVhVL0wd6pHNn4qFxOKLduhNCV5o8kAI/u8A/66jFT+vmKWDCcYOHOnls+L+X0xlIlAsfGJaKQlPY/ooBxhIFejfpLFH+zM2NR3P7k+Tk/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742562899; c=relaxed/simple;
-	bh=yQTzME/6PP1TPK2T8WEG3txl4TCZUlsCKhod5W9SwfI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lzVwlc7hMl8a+JC1P2IK+qWMd315KVM79djnf0bMSFr5UndDD7Ymzx2X8pZGCSxLtwBa4Q8lyo14aYZfFSG5Tcpuc52Cgopu0eEISl2WtNyRLpV6nW/y5dLKsrNotQmCRcNXIUa4VsAidw2LqzCa9OWK2D9KBUkGvS35xijsU7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F/KAHkSy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742562955; c=relaxed/simple;
+	bh=XZb4/7ED/yOzxaYKXsmRsh+ALKUE7iBR0oHSgbefUGA=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=cqWSwMnPb5EhKpgUeiaSvdLLH9l17nTFKG654TUxmH0t1/Q6AQ9JVBD9guqBY9NLTrmUGeCJJ6upQDCf948TDYvpj7l8bKC9Ojf+ZkkXa+tS3mdYfOAnAl4YrgCMWv8tW75qUekAbXtYlohTmz42ISo4Jtq7vN6Xb0BCtnpzHyM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=rgiQaPpp; arc=none smtp.client-ip=209.85.128.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F/KAHkSy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DFBDC4CEE7;
-	Fri, 21 Mar 2025 13:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742562898;
-	bh=yQTzME/6PP1TPK2T8WEG3txl4TCZUlsCKhod5W9SwfI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=F/KAHkSyYmfJOv/5FAv2z07LjM0mutjOxjLltd0/jQVYeEVaqUdPAPfK78OKA4Ymr
-	 pLf6gi5C5bxtakc6rutk2Od5FrqPTJEH2Ptbrbcc/qlzcBLHmESzUohhrNhe3RY6a2
-	 xLWK7adhpoEBLDSYMgFqdNPYgWaItn+OMTmFginUrrKOs5KFMaUpEF2El4ciFx+gsH
-	 W6CXmYmNIQVZR3dpJx+5GmlFmpm5GruBqwCBFhhfn5R7A+amiVHIwcDhNHffwZqxmf
-	 mnt67zM9LvEXc/PaTQTiHe3DXmMaMULycJPjbviQlLhRgu832JVpqWpyys8cpNviTM
-	 dUalSjf/sSkxQ==
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5c9662131so2981163a12.3;
-        Fri, 21 Mar 2025 06:14:58 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV8rDJkMIbwnKe2cDFe1Zvrrg5EdclP6oWCMfIoY0xU4BmbVnAOlo8SsZutfcXdk10ma2yhy7SxVmdS@vger.kernel.org, AJvYcCWBpPytw0TlJoyY39tmZGpRPmM6HUbZSLSkz6e0DR7Aios4zpoov6uhBk9a1Om7+pYVUtNz/5XCMCje+ZqFQA==@vger.kernel.org, AJvYcCXVMnNU+zcrBk/bGoIS+t8L90JWOFL6AqZnlgQTnXxB0517IeBgFS8Znx2AwGxj8kcJN3pv33iOE/g4Df1O@vger.kernel.org, AJvYcCXcmJczxpjL/BhDneMHVld7qmOxOinT17h2ScPGtdGx1cxpjoYer3z0yE5+vGN6I1320Yz0M+Jr75WSe/BXodoL9A==@vger.kernel.org
-X-Gm-Message-State: AOJu0YyWHLhJWSn3t+JJWTm5Ll080o98Js7kt50vBbajIbLnV/6XP/B1
-	GSuRSDBm93L2d7Z325MGY2aJ16kjKWbooEBsi2EdswT7FYkJvCfei9GdDSn+AwlKnDYx0Wk+QE0
-	ouoSuzRB8egR0GxIxjETpHcF92A==
-X-Google-Smtp-Source: AGHT+IFKb3vaGpKb9OXSdeAes78/CEmG5k6oY1UfVro8GO1khGigitTlcZdAN7kLobo/GTF9XcNCydapHxU16QMQNfg=
-X-Received: by 2002:a05:6402:440a:b0:5e5:437c:1daf with SMTP id
- 4fb4d7f45d1cf-5ebcd468e6fmr2817130a12.16.1742562896829; Fri, 21 Mar 2025
- 06:14:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="rgiQaPpp"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4394a823036so19480765e9.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:15:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742562952; x=1743167752; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Vd9K/fWiMAnzVZgWbX0wvtztqz4Hm8uA/kr1foq/koQ=;
+        b=rgiQaPppG2pz/Yd077kDMO7ash9l4bOZw52TLn218EugReSkYfezU211Sd1dTrwboy
+         mlRNXKBSNMNllmxOj08R0EHZM67YZ/ehU3fvlnzBFoFeXmDGW7dXscfo6xX/mvVrv6LU
+         kpRIHZ38Ig4NxUltfFvE1o/eaCq+6DrX4TKSplx2RXifgZ+tTifKthGhUerzWkYG3AF+
+         aP8FGhbIyZhjHnfw8W0fgrN8mU17QJQ6S7FSd3jmuOkASge+yzjoAItIQY4ZKi9hT4Xp
+         K0f08bie8q9OdA1xVEiEAirHyJ02fXDaTka2SJgpIy2i+EzWPcreH3R/01ImSJ7s4dRr
+         y0Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742562952; x=1743167752;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Vd9K/fWiMAnzVZgWbX0wvtztqz4Hm8uA/kr1foq/koQ=;
+        b=IfPBOG456tynxTOdFJOXIhC9WCkFQ50pEeGQjYFaTldZU1JlUVEpuWDJwBnRhaBHLs
+         ON8FVYKXGnOGn6XimZqR0ml3lvVIrf/zqW7zxKdn2tOLzELWIV1yM2KG63JP27GwDVE8
+         rNKJc1k5sImX3U5+zv6eWi9AM5ZNG6KQzYIvSnFZm5gSAOcq6Lad4pU/rRn1bxKW4bs7
+         9ZaMgVXNTc9Hsl5IsjPoNQnqjKAr6HiMxIv/KlOeEV9LkUL37BBSFGMMuaxd5co+J0mJ
+         cJ5xIufA4tG2Y7FJKr+XTOo9hKl3pTS7XPxlUB9l1fs1h93HHl5vsJKXVkP3qacf+kpr
+         sksw==
+X-Forwarded-Encrypted: i=1; AJvYcCXClUWgJIt85yoqaejfSulDdpjdkYVU4rsdL1FC625A3EeJAQ+weeOxJRg/ECBKQgBSOEuln/NAjRDfXC8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyxf6xDYCK0Rx5/qnyIlQEGm9XeV08DQ6kKrmdVQ2L72W46xDmG
+	wD4Em7yRrBLrOid5IscTEtxpxa4OauhmotPDoSTFHykW2NNszK7e4h9nf3c3Svo=
+X-Gm-Gg: ASbGnctmtNxloxOl8ro+evzq9/325Qu9/w8XLLVEsUECs8eXv9P2g7aDxCMYqtg8Rpw
+	21ybnkbdiz2FiBtXxQg/iXbUcjFxyNmG+vl0C+59w7h9lP5T8TX8CNhY+Mivvk/9H1tNAoWmb08
+	99rW9HXzZXkvo8doOnmuHE1Xtk7TpdpTthXZluDz6p8RkNE0G/bVF09ObvmnD9b7shdyasbFeMw
+	B3Cvmu/ihRD4TEXNioFND8W5edDAJEY1IxV262c+umXY4k6K3VhuUE/k3uFXB64m6kC04CEJo7h
+	hDlKk09NRn33HiRPiExtyRBlCNxcSfE8Xtgjkb6PZatgpTmfIZSQ1ZfykAG/EonnlGgBHQ==
+X-Google-Smtp-Source: AGHT+IEeSuJJCualMyRGxNrWV663ipohlvvxYL4TpbesKMPlj8TlM2yLM3TCv4QBVXMIE7MjteYhiA==
+X-Received: by 2002:a05:600c:83cf:b0:43c:ec28:d310 with SMTP id 5b1f17b1804b1-43d509ec838mr36046425e9.10.1742562951783;
+        Fri, 21 Mar 2025 06:15:51 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com ([2001:861:3382:ef90:3d12:52fe:c1cc:c94])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdb06b9sm26435515e9.36.2025.03.21.06.15.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 06:15:51 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v5 9/9] mm: Use common huge_ptep_clear_flush() function for riscv/arm64
+Date: Fri, 21 Mar 2025 14:06:35 +0100
+Message-Id: <20250321130635.227011-10-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250321130635.227011-1-alexghiti@rivosinc.com>
+References: <20250321130635.227011-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250317232426.952188-1-robh@kernel.org> <20250317232426.952188-4-robh@kernel.org>
- <26e72cb2-c355-4c40-bb98-fc0ff267bf4f@foss.st.com> <CAL_Jsq+7ZhMWgbFDvPB+3BG7YfiS9PweybOGNY3r=d40RbGHJA@mail.gmail.com>
- <130d61a8-6f03-46dc-94ca-f098bc09babc@foss.st.com> <CAL_JsqJZkEpx26=ro_y8hHA2x1Zm6z_SFOQHjQ-WzUa-gy+s0w@mail.gmail.com>
- <4eddc37b-5164-453a-9b7f-c4331a7d6243@foss.st.com>
-In-Reply-To: <4eddc37b-5164-453a-9b7f-c4331a7d6243@foss.st.com>
-From: Rob Herring <robh@kernel.org>
-Date: Fri, 21 Mar 2025 08:14:44 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+pNGObRJs9tFgHQbC8kCVm=myt+syQSLJVaO8D2GWHCQ@mail.gmail.com>
-X-Gm-Features: AQ5f1JoxWG99z-onx2wJCY2-zhJYXWv3cM0qorkPtzMXdYEUScnMR6DharJJMwg
-Message-ID: <CAL_Jsq+pNGObRJs9tFgHQbC8kCVm=myt+syQSLJVaO8D2GWHCQ@mail.gmail.com>
-Subject: Re: [Linux-stm32] [PATCH 3/3] remoteproc: Use of_reserved_mem_region_*
- functions for "memory-region"
-To: Arnaud POULIQUEN <arnaud.pouliquen@foss.st.com>
-Cc: Saravana Kannan <saravanak@google.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Patrice Chotard <patrice.chotard@foss.st.com>, 
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
-	devicetree@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
-	linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 21, 2025 at 3:25=E2=80=AFAM Arnaud POULIQUEN
-<arnaud.pouliquen@foss.st.com> wrote:
->
->
->
-> On 3/20/25 19:02, Rob Herring wrote:
-> > On Thu, Mar 20, 2025 at 4:23=E2=80=AFAM Arnaud POULIQUEN
-> > <arnaud.pouliquen@foss.st.com> wrote:
-> >>
-> >>
-> >>
-> >> On 3/20/25 00:04, Rob Herring wrote:
-> >>> On Wed, Mar 19, 2025 at 10:26=E2=80=AFAM Arnaud POULIQUEN
-> >>> <arnaud.pouliquen@foss.st.com> wrote:
-> >>>>
-> >>>> Hello Rob,
-> >>>>
-> >>>> On 3/18/25 00:24, Rob Herring (Arm) wrote:
-> >>>>> Use the newly added of_reserved_mem_region_to_resource() and
-> >>>>> of_reserved_mem_region_count() functions to handle "memory-region"
-> >>>>> properties.
-> >>>>>
-> >>>>> The error handling is a bit different in some cases. Often
-> >>>>> "memory-region" is optional, so failed lookup is not an error. But =
-then
-> >>>>> an error in of_reserved_mem_lookup() is treated as an error. Howeve=
-r,
-> >>>>> that distinction is not really important. Either the region is avai=
-lable
-> >>>>> and usable or it is not. So now, it is just
-> >>>>> of_reserved_mem_region_to_resource() which is checked for an error.
-> >>>>>
-> >>>>> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> >>>>> ---
-> >>>>> For v6.16
-> >>>>>
-> >>>
-> >>> [...]
-> >>>
-> >>>>> diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/=
-stm32_rproc.c
-> >>>>> index b02b36a3f515..9d2bd8904c49 100644
-> >>>>> --- a/drivers/remoteproc/stm32_rproc.c
-> >>>>> +++ b/drivers/remoteproc/stm32_rproc.c
-> >>>>> @@ -213,52 +213,46 @@ static int stm32_rproc_prepare(struct rproc *=
-rproc)
-> >>>>>  {
-> >>>>>       struct device *dev =3D rproc->dev.parent;
-> >>>>>       struct device_node *np =3D dev->of_node;
-> >>>>> -     struct of_phandle_iterator it;
-> >>>>>       struct rproc_mem_entry *mem;
-> >>>>> -     struct reserved_mem *rmem;
-> >>>>>       u64 da;
-> >>>>> -     int index =3D 0;
-> >>>>> +     int index =3D 0, mr =3D 0;
-> >>>>>
-> >>>>>       /* Register associated reserved memory regions */
-> >>>>> -     of_phandle_iterator_init(&it, np, "memory-region", NULL, 0);
-> >>>>> -     while (of_phandle_iterator_next(&it) =3D=3D 0) {
-> >>>>> -             rmem =3D of_reserved_mem_lookup(it.node);
-> >>>>> -             if (!rmem) {
-> >>>>> -                     of_node_put(it.node);
-> >>>>> -                     dev_err(dev, "unable to acquire memory-region=
-\n");
-> >>>>> -                     return -EINVAL;
-> >>>>> -             }
-> >>>>> +     while (1) {
-> >>>>> +             struct resource res;
-> >>>>> +             int ret;
-> >>>>> +
-> >>>>> +             ret =3D of_reserved_mem_region_to_resource(np, mr++, =
-&res);
-> >>>>> +             if (ret)
-> >>>>> +                     return 0;
-> >>>>>
-> >>>>> -             if (stm32_rproc_pa_to_da(rproc, rmem->base, &da) < 0)=
+After some adjustments, both architectures have the same implementation
+so move it to the generic code.
+
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/arm64/include/asm/hugetlb.h |  3 --
+ arch/arm64/mm/hugetlbpage.c      | 60 --------------------------------
+ arch/riscv/include/asm/hugetlb.h |  7 +---
+ arch/riscv/mm/hugetlbpage.c      | 54 ----------------------------
+ include/linux/hugetlb_contpte.h  |  4 +++
+ mm/hugetlb_contpte.c             | 14 ++++++++
+ 6 files changed, 19 insertions(+), 123 deletions(-)
+
+diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+index f568467e8ba2..368600764127 100644
+--- a/arch/arm64/include/asm/hugetlb.h
++++ b/arch/arm64/include/asm/hugetlb.h
+@@ -35,9 +35,6 @@ static inline void arch_clear_hugetlb_flags(struct folio *folio)
+ 
+ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags);
+ #define arch_make_huge_pte arch_make_huge_pte
+-#define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
+-extern pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+-				   unsigned long addr, pte_t *ptep);
+ 
+ void __init arm64_hugetlb_cma_reserve(void);
+ 
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 17f1ed34356d..08316cf4b104 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -82,52 +82,6 @@ int find_num_contig(struct mm_struct *mm, unsigned long addr,
+ 	return CONT_PTES;
+ }
+ 
+-/*
+- * Changing some bits of contiguous entries requires us to follow a
+- * Break-Before-Make approach, breaking the whole contiguous set
+- * before we can change any entries. See ARM DDI 0487A.k_iss10775,
+- * "Misprogramming of the Contiguous bit", page D4-1762.
+- *
+- * This helper performs the break step.
+- */
+-static pte_t get_clear_contig(struct mm_struct *mm,
+-			     unsigned long addr,
+-			     pte_t *ptep,
+-			     unsigned long pgsize,
+-			     unsigned long ncontig)
+-{
+-	pte_t pte, tmp_pte;
+-	bool present;
+-
+-	pte = __ptep_get_and_clear(mm, addr, ptep);
+-	present = pte_present(pte);
+-	while (--ncontig) {
+-		ptep++;
+-		addr += pgsize;
+-		tmp_pte = __ptep_get_and_clear(mm, addr, ptep);
+-		if (present) {
+-			if (pte_dirty(tmp_pte))
+-				pte = pte_mkdirty(pte);
+-			if (pte_young(tmp_pte))
+-				pte = pte_mkyoung(pte);
+-		}
+-	}
+-	return pte;
+-}
+-
+-static pte_t get_clear_contig_flush(struct mm_struct *mm,
+-				    unsigned long addr,
+-				    pte_t *ptep,
+-				    unsigned long pgsize,
+-				    unsigned long ncontig)
+-{
+-	pte_t orig_pte = get_clear_contig(mm, addr, ptep, pgsize, ncontig);
+-	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
+-
+-	flush_tlb_range(&vma, addr, addr + (pgsize * ncontig));
+-	return orig_pte;
+-}
+-
+ pte_t *huge_pte_alloc(struct mm_struct *mm, struct vm_area_struct *vma,
+ 		      unsigned long addr, unsigned long sz)
  {
-> >>>>> -                     of_node_put(it.node);
-> >>>>> -                     dev_err(dev, "memory region not valid %pa\n",
-> >>>>> -                             &rmem->base);
-> >>>>> +             if (stm32_rproc_pa_to_da(rproc, res.start, &da) < 0) =
-{
-> >>>>> +                     dev_err(dev, "memory region not valid %pR\n",=
- &res);
-> >>>>>                       return -EINVAL;
-> >>>>>               }
-> >>>>>
-> >>>>>               /*  No need to map vdev buffer */
-> >>>>> -             if (strcmp(it.node->name, "vdev0buffer")) {
-> >>>>> +             if (strcmp(res.name, "vdev0buffer")) {
-> >>>>
-> >>>> I tested your patches
-> >>>
-> >>> Thank you.
-> >>>
-> >>>> The update introduces a regression here. The strcmp function never r=
-eturns 0.
-> >>>> Indeed, it.node->name stores the memory region label "vdev0buffer," =
-while
-> >>>> res.name stores the memory region name "vdev0buffer@10042000."
-> >>>>
-> >>>> Several remoteproc drivers may face the same issue as they embed sim=
-ilar code.
-> >>>
-> >>> Indeed. I confused myself because node 'name' is without the
-> >>> unit-address, but this is using the full name. I've replaced the
-> >>> strcmp's with strstarts() to address this. I've updated my branch wit=
-h
-> >>> the changes.
-> >>
-> >> This is not enough as the remoteproc core function rproc_find_carveout=
-_by_name()
-> >> also compares the memory names. With the following additional fix, it =
-is working
-> >> on my STM32MP15-DK board.
-> >>
-> >> @@ -309,11 +309,11 @@ rproc_find_carveout_by_name(struct rproc *rproc,=
- const
-> >> char *name, ...)
-> >>         vsnprintf(_name, sizeof(_name), name, args);
-> >>         va_end(args);
-> >>
-> >>         list_for_each_entry(carveout, &rproc->carveouts, node) {
-> >>                 /* Compare carveout and requested names */
-> >> -               if (!strcmp(carveout->name, _name)) {
-> >> +               if (strstarts(carveout->name, _name)) {
-> >>                         mem =3D carveout;
-> >>                         break;
-> >>                 }
-> >>         }
-> >>
-> >> I just wonder if would not be more suitable to address this using the
-> >> "memory-region-names" field.
-> >
-> > That would be better as you shouldn't really care what a provider node
-> > name is where-as "memory-region-names" is meaningful to the driver.
-> >
-> >>
-> >> The drawback is that we would break compatibility with legacy boards..=
-.
-> >
-> > So not an option.
->
-> >
-> > I think I'll have to fix this within the reserved mem code storing the
-> > name or do something like the diff below. I'd like to avoid the
-> > former. Using the original device_node.name is also problematic
-> > because I want to get rid of it. We redundantly store the node name
-> > with and without the unit-address. There's a lot of places like this
-> > one where we hand out the pointer with no lifetime.
-> >
-> > diff --git a/drivers/remoteproc/stm32_rproc.c b/drivers/remoteproc/stm3=
-2_rproc.c
-> > index 1e949694d365..cdee87c6ffe0 100644
-> > --- a/drivers/remoteproc/stm32_rproc.c
-> > +++ b/drivers/remoteproc/stm32_rproc.c
-> > @@ -239,7 +239,7 @@ static int stm32_rproc_prepare(struct rproc *rproc)
-> >                                                    resource_size(&res),=
- da,
-> >                                                    stm32_rproc_mem_allo=
-c,
-> >                                                    stm32_rproc_mem_rele=
-ase,
-> > -                                                  res.name);
-> > +                                                  "%.*s",
-> > strchrnul(res.name, '@') - res.name, res.name);
-> >
-> >                         if (mem)
-> >                                 rproc_coredump_add_segment(rproc, da,
-> > @@ -249,7 +249,7 @@ static int stm32_rproc_prepare(struct rproc *rproc)
-> >                         mem =3D rproc_of_resm_mem_entry_init(dev, index=
-,
-> >                                                            resource_siz=
-e(&res),
-> >                                                            res.start,
-> > -                                                          res.name);
-> > +                                                          "vdev0buffer=
-");
-> >                 }
-> >
-> >                 if (!mem) {
->
->
-> That's work on my side.
-> Could we have an OF helper to retrieve the name from the full name?
+@@ -260,20 +214,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ 	return entry;
+ }
+ 
+-pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+-			    unsigned long addr, pte_t *ptep)
+-{
+-	struct mm_struct *mm = vma->vm_mm;
+-	size_t pgsize;
+-	int ncontig;
+-
+-	if (!pte_cont(__ptep_get(ptep)))
+-		return ptep_clear_flush(vma, addr, ptep);
+-
+-	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
+-	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
+-}
+-
+ static int __init hugetlbpage_init(void)
+ {
+ 	/*
+diff --git a/arch/riscv/include/asm/hugetlb.h b/arch/riscv/include/asm/hugetlb.h
+index 4c692dd82779..63c7e4fa342a 100644
+--- a/arch/riscv/include/asm/hugetlb.h
++++ b/arch/riscv/include/asm/hugetlb.h
+@@ -20,14 +20,9 @@ bool arch_hugetlb_migration_supported(struct hstate *h);
+ #endif
+ 
+ #ifdef CONFIG_RISCV_ISA_SVNAPOT
+-#define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
+-pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+-			    unsigned long addr, pte_t *ptep);
+-
+ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags);
+ #define arch_make_huge_pte arch_make_huge_pte
+-
+-#endif /*CONFIG_RISCV_ISA_SVNAPOT*/
++#endif /* CONFIG_RISCV_ISA_SVNAPOT */
+ 
+ #include <asm-generic/hugetlb.h>
+ 
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index db13f7bcdd54..a6176415432a 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -121,45 +121,6 @@ unsigned long hugetlb_mask_last_page(struct hstate *h)
+ 	return 0UL;
+ }
+ 
+-static pte_t get_clear_contig(struct mm_struct *mm,
+-			      unsigned long addr,
+-			      pte_t *ptep,
+-			      unsigned long ncontig)
+-{
+-	pte_t pte, tmp_pte;
+-	bool present;
+-
+-	pte = ptep_get_and_clear(mm, addr, ptep);
+-	present = pte_present(pte);
+-	while (--ncontig) {
+-		ptep++;
+-		addr += PAGE_SIZE;
+-		tmp_pte = ptep_get_and_clear(mm, addr, ptep);
+-		if (present) {
+-			if (pte_dirty(tmp_pte))
+-				pte = pte_mkdirty(pte);
+-			if (pte_young(tmp_pte))
+-				pte = pte_mkyoung(pte);
+-		}
+-	}
+-	return pte;
+-}
+-
+-static pte_t get_clear_contig_flush(struct mm_struct *mm,
+-				    unsigned long addr,
+-				    pte_t *ptep,
+-				    unsigned long pte_num)
+-{
+-	pte_t orig_pte = get_clear_contig(mm, addr, ptep, pte_num);
+-	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
+-	bool valid = !pte_none(orig_pte);
+-
+-	if (valid)
+-		flush_tlb_range(&vma, addr, addr + (PAGE_SIZE * pte_num));
+-
+-	return orig_pte;
+-}
+-
+ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ {
+ 	unsigned long order;
+@@ -176,21 +137,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ 	return entry;
+ }
+ 
+-pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+-			    unsigned long addr,
+-			    pte_t *ptep)
+-{
+-	pte_t pte = ptep_get(ptep);
+-	int pte_num;
+-
+-	if (!pte_napot(pte))
+-		return ptep_clear_flush(vma, addr, ptep);
+-
+-	pte_num = arch_contpte_get_num_contig(vma->vm_mm, addr, ptep, 0, NULL);
+-
+-	return get_clear_contig_flush(vma->vm_mm, addr, ptep, pte_num);
+-}
+-
+ static bool is_napot_size(unsigned long size)
+ {
+ 	unsigned long order;
+diff --git a/include/linux/hugetlb_contpte.h b/include/linux/hugetlb_contpte.h
+index 9ec8792a2f4d..e217a3412b13 100644
+--- a/include/linux/hugetlb_contpte.h
++++ b/include/linux/hugetlb_contpte.h
+@@ -32,4 +32,8 @@ extern int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+ extern void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 				    unsigned long addr, pte_t *ptep);
+ 
++#define __HAVE_ARCH_HUGE_PTEP_CLEAR_FLUSH
++extern pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
++				   unsigned long addr, pte_t *ptep);
++
+ #endif /* _LINUX_HUGETLB_CONTPTE_H */
+diff --git a/mm/hugetlb_contpte.c b/mm/hugetlb_contpte.c
+index 629878765081..1dc211d6fbe1 100644
+--- a/mm/hugetlb_contpte.c
++++ b/mm/hugetlb_contpte.c
+@@ -242,3 +242,17 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 
+ 	set_contptes(mm, addr, ptep, pte, ncontig, pgsize);
+ }
++
++pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
++			    unsigned long addr, pte_t *ptep)
++{
++	struct mm_struct *mm = vma->vm_mm;
++	size_t pgsize;
++	int ncontig;
++
++	if (!pte_cont(__ptep_get(ptep)))
++		return ptep_clear_flush(vma, addr, ptep);
++
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, 0, &pgsize);
++	return get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
++}
+-- 
+2.39.2
 
-That would be: sprintf(buf, "%pOFn", node);
-
-The problem here is we don't have the device_node pointer. The only
-way I see to make the above prettier is perhaps a define.
-
-Rob
