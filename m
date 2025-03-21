@@ -1,149 +1,112 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D07A71E5707;
-	Fri, 21 Mar 2025 09:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99EF48BEE
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:32:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742549472; cv=none; b=KBSo9UN9UWgCpYNB1aQykVyJepJ4Gp/5seSfYOrRg7qv0UQH/o9DRUh6mviXK+RDTC67fXHGTk+WqysLJ/cKS5FJ9bKg41nNFpE7d7ZKAa5a/SwA3eQV5Gg42LmX2pCm66FzSnQin+9ZYIHlCYCbdrCvlRZw8LBy0DepLc/bb5s=
+	t=1742549569; cv=none; b=dGSpppf3w/ptLEqJ8TDueFCuI7GnbN40y9UQN3XaVS8WD/Hd8P/fufl61tnepy6U1x3ArwxaboFqy+88yyXFStIuKSi6zbaFc0jLcsjJxgRBPKTi/5iSM2T9oLgu481Hxp5ZtNAInUtl9pKhvToqzqZlq7r9FR+0rwq/qP2bXVA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742549472; c=relaxed/simple;
-	bh=Y6I/8vVmdfk6sGCvQTPk4i11HKqhHcWpJd91MnYDdOk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=TXHGY79XJCnR8mot8lCY2mkUNNwwjM/ELK/mzijUUV5jtW6SSwQjvHpPMpFVGwiQ4r3Ld8+T4CcHNd8e3PhRMBFMfNi1AxqwTjK18QLzs9ULR6v/ospfSnYcTQfYN0+0JKx8+wme0pMf02KnH8AF6YyUQaDOwrmgsqSjzp1agVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-aaecf50578eso349084866b.2;
-        Fri, 21 Mar 2025 02:31:10 -0700 (PDT)
+	s=arc-20240116; t=1742549569; c=relaxed/simple;
+	bh=8l835NqhtHKDpDCF8TwkawTXg6ZyJjQcteu/6vzckqQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ihjQuNwEfqdXxdnp/x4/89Vy3s1nNbaW35CBFEy9p8hwZHGqsgqFepobgcxyJGNLnQGWASwr3gtfKTDPRDUaVERUEHO+5U0rt+jJyw7AeYOI+oR66QhMSKM/z6OS/g53RxBjfZLbMtbJVuY47cH2vWs4gMNy5HOfj8Cepa5Lwco=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=IjFqRArv; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IjFqRArv"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-5495c1e1b63so2168449e87.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:32:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742549565; x=1743154365; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XERU60U+/917LDlw8Qh1PwVjkqJc5Zc5clGeyplc/uQ=;
+        b=IjFqRArvQCCOyZNnIhbdiOJG9/gQzY6vje4x5AAahlO6piZuqc44yOga+q7gL0GQmw
+         vxVTKWdgRM7vYCrL5FMdHmqoPykBGayyT3ZKqY6zmuthrtq89LXf9kfh+fBuqgcIHR9x
+         oHylLjrQyPdqqaP6cp6Bwm2xdfzmBASBGnv5UrAtwoCQtfDiG23/VMdmRicEQa/yHN7c
+         zJPg55gk1DH3EOrZWJGORI4hpQT4YhDq5ttXIZC9ooTkhR58eOhdIUvbVb9a5kpU0dqv
+         SUJ6Z88zWSnDBe+5Lx5PCmOh1lZSFWvzQ0j3pyc66l1LnriLyQoAHoDc0Bb5rL+8mpsN
+         8pSA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742549469; x=1743154269;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=W/NPUaREURJ6mCKVAccGEeQmvtTeXxq8+4zuow6YaFw=;
-        b=rWHQlOigmqcksMmd1Gbrl0B7d/55p5uwBnHKhy9SV39PV+i5Llax5CuoeuwaHF0QhZ
-         sZj5gzynWzZi8vjaTpP2rH5cZxgi6aPNb6Vrbo6xJo/uzRl5iTUYRktuD77L2e/AQ7IE
-         JFyiLxrhSHrxVXNMTheREcKp0FXUYo2n7s0jeY/oKIxCqU/jHsL1XO6FDsoRmnGIJ3qE
-         HnjyPAs6u574s5ZvxX3GEBmgnxN57GViuqUhRxHkZNVzONpcoaQj5afn5tGzvkhZ6e2J
-         quvqrlvzE8DW3sB7nRysXVkG86jlBzdX8zE1CXSFbQabkYaDWUjoaIvQkVlFJhty3DHB
-         EoaA==
-X-Forwarded-Encrypted: i=1; AJvYcCU5I3icIdbl5MheYRmxDu+l+LIWssVeC6DJwxrtmWV+vG13WQhX4fBo0iipQ6Kr/4z4Ft2nI+8+@vger.kernel.org, AJvYcCV5Nq7CybI/pRQykVZWMTedsPnzJ2onDzcDCMShtMCieedE1LbfsF9uq75OT8t8RqQogjHUrt2PEsxjCXs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztochO7roMXzCMpTtbJ7WDbTzczTwlZPrhJfpuaxpJQ0sJUKWn
-	+zZnxt4Zux+vPCCUnM0g5T+TYvGGm99HoD5PAlAygR8zVtnWXF8q
-X-Gm-Gg: ASbGncsQs/Yo+5jtwtnpjJT3yRr3SoBb+gPC6U8uIdbZPVq5g16CTKOU51OsLKpuhsp
-	d1dZe7G0lOlbHqfpfstMKtnxSmKg8bJklrsMGeFiMgW2Ah1eOBoC1Ek331ITHZ/hlnypF9eHIZx
-	8JmHDNPornsBvKYUsfSTEez1NOkXkTvpmK7VYNkS7EBffCLjR/35dB8XpwB4XJQ2LtRqHsLCh+0
-	oWNr5DHSocWPE/9JHcmDEfy6fMhzI5YyYH1ZS2Lpu2vfex9N5TxdZHCGANFISp95uNTWwyCtg20
-	Eo3QIvuzFwEh2/2rA0iELGfspHnzWrtVmrw=
-X-Google-Smtp-Source: AGHT+IF8f1GC7wbrCO3eXH1B7reEeFIOUHS0zx+PYz/rKNz+5eov4VmNDk0rBsgjC169SJCW/K90hw==
-X-Received: by 2002:a17:907:6e87:b0:ac3:2d47:f6af with SMTP id a640c23a62f3a-ac3f212b833mr201431266b.20.1742549468664;
-        Fri, 21 Mar 2025 02:31:08 -0700 (PDT)
-Received: from localhost ([2a03:2880:30ff:8::])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8676c2sm116468566b.9.2025.03.21.02.31.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 02:31:07 -0700 (PDT)
-From: Breno Leitao <leitao@debian.org>
-Date: Fri, 21 Mar 2025 02:30:49 -0700
-Subject: [PATCH] lockdep: Speed up lockdep_unregister_key() with expedited
- RCU synchronization
+        d=1e100.net; s=20230601; t=1742549565; x=1743154365;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XERU60U+/917LDlw8Qh1PwVjkqJc5Zc5clGeyplc/uQ=;
+        b=Te62kVjTpXMsYSTur8hCc6hOHcwGD87K7iM1iSUaiOaUngWPNSVrznm1n/Hmglf4d+
+         IePmzHzxhASOMVjEnMdyv1gVspCkfReiZqsvWFN/kIsubkrKRSx1ixVINoDTHekHdfX1
+         TfM7t7SL4p3LFVUr+rm+HMWNIfRzLn/+Fd2znIiZrPFbtl1BGKTyWfOg4yb5zE90HSfY
+         f1jhO+/Kr3deFDVoTHDampwM81pgzN4yQ97cdUxgEXK6BTqSA3LNyINuAOo0KD2zqeeV
+         fGAugqsG2uf27EJKKXxSqEF+FS2wo7ceVFs+UQqyyenu2MgpdcLCo3fTKdnkzzaXRfuE
+         igHg==
+X-Forwarded-Encrypted: i=1; AJvYcCXSxLUFOHwJfdj2g5JpsFiQSfEo0Szx5KUpEJVzZBeo08mA4dB1aJxe44M12VHzkRQW7zxTfsuNE823mBs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzx4vbNkUHZXTTdp418z80A7Q34YfJQPyr4YWV8IrmeKnhELuPJ
+	SEe0HoUeW6TAQD8SBsZw6Y6BhRQOH4qWxE8ZcRkDVV2U+WaUVammF9Z9NTiv7Mj2seKjMRN0GGX
+	y6ab8nf5LtRrNBIiRazHYsfwQikT9ICFmEXLPQQ==
+X-Gm-Gg: ASbGnctWzgbop5ikQIIUm+2oVFj5tap0M6omt9Nd/tAaEo12cy6vhJr+0w8aQjLVu6l
+	KeSvIxATXlmIJLZN9S1Z3FlZKjvCoIZ7V+NJbHcURw4z6vGxV2CT9O5fP9eX9gulJWdh6WGZBUg
+	inGHMP3Qpcrf1ku9lpmpkfr5EpWIZZOcC1srTg3sgjwRs250KajiscYve2ZA==
+X-Google-Smtp-Source: AGHT+IEBY/fAkajQuSRVyTlgq4N4SP7Bkx/9OIDkKArz9qXyC4VVwsnCnYIMkFFYjCEYx/lIBp/Z82J5Ve+iwB/DbQQ=
+X-Received: by 2002:a05:6512:3b0f:b0:549:91db:c14b with SMTP id
+ 2adb3069b0e04-54ad6483b20mr867660e87.8.1742549565227; Fri, 21 Mar 2025
+ 02:32:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-lockdep-v1-1-78b732d195fb@debian.org>
-X-B4-Tracking: v=1; b=H4sIAMgx3WcC/x3M4QpAMBQG0Fe5fb+tNmyyV5EfMxc3QltJybsr5
- wHOg8xJOMPTg8SXZDl2eDIFIS5hn1nJCE8odWl1ZVq1HXEd+VSD4Rh03bTOWRSEM/Ek9z91/ft
- +5JbwcFkAAAA=
-X-Change-ID: 20250319-lockdep-b1eca0479665
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
- Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
- Waiman Long <longman@redhat.com>
-Cc: aeh@meta.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- edumazet@google.com, jhs@mojatatu.com, kernel-team@meta.com, 
- Erik Lundgren <elundgren@meta.com>, Breno Leitao <leitao@debian.org>, 
- "Paul E. McKenney" <paulmck@kernel.org>
-X-Mailer: b4 0.15-dev-42535
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2142; i=leitao@debian.org;
- h=from:subject:message-id; bh=Y6I/8vVmdfk6sGCvQTPk4i11HKqhHcWpJd91MnYDdOk=;
- b=owEBbQKS/ZANAwAIATWjk5/8eHdtAcsmYgBn3THacqvxp5klqqqxekE7OYBsb7EMCXA8usIVX
- OhVJnYS046JAjMEAAEIAB0WIQSshTmm6PRnAspKQ5s1o5Of/Hh3bQUCZ90x2gAKCRA1o5Of/Hh3
- bWszEACxTC+Ie5buHGAr7rv5ihfTYSdVtFYTgDBg7vdatWsfs39+6AdMD/p3O4eqUWs/e/TTGRy
- sTIMHuNC6FbfEfqY/2J6+OGybKh0B7GIZhCnos3xAAst7oR1knZ0PsYqEWVZK7dkkWLlTCYycAQ
- J5FIn816Grs4G8L2hEZk/VLuSxSlCDe1XSBOfSF79ltHk7DqUgcIzc0O8y+S/kkgfDVvJFzxgfE
- GEHclgsI/bZv71856R5aSS1Z0tF7IpfJV7I6TShhjquYYjFnuTu/4VgBK16lG8gPfx79cIO4lMg
- pcj74c6Wt/UhSONLbTz267UgUhCmA6uzmaq/mIRwD/z91enQmqJG6T0lPMWrA9m3BVFgA1hDaIo
- vSu9xrMtCkiGRtXwLuaIPbkFRp6U5D+YVHhhRwwzAiPnevFrfs4lye5dfpQtdybiqW6VAByfpfC
- RLemQxsdOrixHpjQen9hWl894MFOJWq2kp+uWSRb8UdYt4rBIc/GAo5r/pFRktxtEtOH5S3d2Gc
- GpvMGss3Y2ELlcj4/6AndV6OwYKEUiLLupkxPC1gTc2eNjaOPokDj6gafjH7fcYtnL+AZ43Yk9G
- k9IvikeSZhkX1uf5QozaaHOxlRf39WYHB8CuuMJ6nmi4mxs7IYs8IxC1ZUHRGmJA9Q54mXxsCW9
- dqp8+dNwrQU7qOA==
-X-Developer-Key: i=leitao@debian.org; a=openpgp;
- fpr=AC8539A6E8F46702CA4A439B35A3939FFC78776D
+References: <20250315164123.1855142-1-koichiro.den@canonical.com>
+ <20250315164123.1855142-4-koichiro.den@canonical.com> <CAMRc=Md8nB1U--qcZxpcKVzxTcON2hi-pmsUKFn+aBEqHuBzcQ@mail.gmail.com>
+ <llbybv6dpkfrtir75dveqnphrj6nuephvkoyywy6tx6vfbunl2@ft5io3thby6v>
+In-Reply-To: <llbybv6dpkfrtir75dveqnphrj6nuephvkoyywy6tx6vfbunl2@ft5io3thby6v>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 21 Mar 2025 10:32:33 +0100
+X-Gm-Features: AQ5f1JoHHL9KDzZ-SWQEW7Y07v2J_ZxYiDw8Jn6eKd_fUK42Cla39In5LPZr_GQ
+Message-ID: <CAMRc=Mcng+jW2WrAREOf-GC1mCbGEyAiMP_Ms9B3BzXnCoFGFQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/9] gpio: aggregator: add aggr_alloc()/aggr_free()
+To: Koichiro Den <koichiro.den@canonical.com>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-lockdep_unregister_key() is called from critical code paths, including
-sections where rtnl_lock() is held. For example, when replacing a qdisc
-in a network device, network egress traffic is disabled while
-__qdisc_destroy() is called for every network queue.
+On Fri, Mar 21, 2025 at 3:37=E2=80=AFAM Koichiro Den <koichiro.den@canonica=
+l.com> wrote:
+>
+> On Thu, Mar 20, 2025 at 04:51:04PM GMT, Bartosz Golaszewski wrote:
+> > On Sat, Mar 15, 2025 at 5:41=E2=80=AFPM Koichiro Den <koichiro.den@cano=
+nical.com> wrote:
+> > >
+> > > Prepare for the upcoming configfs interface. These functions will be
+> > > used by both the existing sysfs interface and the new configfs
+> > > interface, reducing code duplication.
+> > >
+> > > No functional change.
+> > >
+> > > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> > > ---
+> > >
+> > > +static int aggr_alloc(struct gpio_aggregator **aggr, size_t arg_size=
+)
+> > > +{
+> > > +       struct gpio_aggregator *new __free(kfree) =3D NULL;
+> > > +       int ret;
+> > > +
+> > > +       new =3D kzalloc(sizeof(*new) + arg_size, GFP_KERNEL);
+> >
+> > Please prefer declaring the auto variable and initializing it at the
+> > same time. Should be:
+> >
+> > struct gpio_aggregator *new __free(kfree) =3D kzalloc(...);
+>
+> Thanks for the review. Should I send v7 for this change?
+>
 
-If lockdep is enabled, __qdisc_destroy() calls lockdep_unregister_key(),
-which gets blocked waiting for synchronize_rcu() to complete.
+You should send one anyway once v6.15-rc1 is tagged.
 
-For example, a simple tc command to replace a qdisc could take 13
-seconds:
-
-  # time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq
-    real    0m13.195s
-    user    0m0.001s
-    sys     0m2.746s
-
-During this time, network egress is completely frozen while waiting for
-RCU synchronization.
-
-Use synchronize_rcu_expedited() instead to minimize the impact on
-critical operations like network connectivity changes.
-
-This improves 10x the function call to tc, when replacing the qdisc for
-a network card.
-
-   # time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq
-     real     0m1.789s
-     user     0m0.000s
-     sys      0m1.613s
-
-Reported-by: Erik Lundgren <elundgren@meta.com>
-Signed-off-by: Breno Leitao <leitao@debian.org>
-Reviewed-by: "Paul E. McKenney" <paulmck@kernel.org>
----
- kernel/locking/lockdep.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 4470680f02269..a79030ac36dd4 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -6595,8 +6595,10 @@ void lockdep_unregister_key(struct lock_class_key *key)
- 	if (need_callback)
- 		call_rcu(&delayed_free.rcu_head, free_zapped_rcu);
- 
--	/* Wait until is_dynamic_key() has finished accessing k->hash_entry. */
--	synchronize_rcu();
-+	/* Wait until is_dynamic_key() has finished accessing k->hash_entry.
-+	 * This needs to be quick, since it is called in critical sections
-+	 */
-+	synchronize_rcu_expedited();
- }
- EXPORT_SYMBOL_GPL(lockdep_unregister_key);
- 
-
----
-base-commit: 81e4f8d68c66da301bb881862735bd74c6241a19
-change-id: 20250319-lockdep-b1eca0479665
-
-Best regards,
--- 
-Breno Leitao <leitao@debian.org>
-
+Bartosz
