@@ -1,175 +1,150 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00EF1E98ED
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C233622B8D0
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:52:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572370; cv=none; b=J94evMGLyXK2BTFqkE7hF9Ay5jVXPc+e67Kui5YPc4QXIEtCsBBGeIGjgWQ7gBkd5R+QX7Jm1JsoKUXkHnIokh8uMHmOmv21hj0YnlUvLI2vUfR7l2lQ6on5BTa6FUV8uIwVeR56x5FMAsB0ynHybI+kwhO0BPtgVkwqyj1feII=
+	t=1742572373; cv=none; b=bgxg0In0VSMcGZBBZN7dF5k5QOxbhfcHNAlOror7AaV9Ihk2l6beBRcvLG39oxhXsteYpKsvwfcwaEX3TvDjlXoRlaoz31IXwpuIUPtoZIMAoKEg5Bvl9CwXn4erlUjHqkKbpcsZPi5AcoknhA4QK0VWjLvfxynLoFZ0QZPbKnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572370; c=relaxed/simple;
-	bh=GnYJNN30ArioqBq84YCpxjxypr/yQcxXAVwcizPHgMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=S9EGYDSVlr1Surjhq9e51u3u4DtRNOxNsX1D4Lk1r5m4gpVZQ0lo+tVGuEU7Vxo97dfdfGn/UxTZxt0Ved5kslknlJkuci+tIbVH4NYndqAYGN9W1weT2gYgsW0eFd+fY5AaspusE18YJwnaw+JOb8reM+iiVlqJ0NYEIX6WTzQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g1xrA7UX; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g1xrA7UX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742572367;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lw4tIV8t2velBqSGDFXs1U2au71hmJlMHn//DKDjNqU=;
-	b=g1xrA7UXuqXVUL8xVVug2a3HjtBnCL2Fo/gYGPayOkm3msMU1Hxe1BmOmfbe+RWgWhSUuy
-	yZznu3ua2xHfOCReFTGDV9vb82fa5xD4Zx9Vp0n8HgaEJor2G7nib/aI+A8Vw5mVVEJ2sT
-	LWpzGUO6HzLNHjeBwNo1QYMzOqEw4Mc=
-Received: from mail-io1-f72.google.com (mail-io1-f72.google.com
- [209.85.166.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-244-G05V_cbNMtaJK8oCgL8BYA-1; Fri, 21 Mar 2025 11:52:44 -0400
-X-MC-Unique: G05V_cbNMtaJK8oCgL8BYA-1
-X-Mimecast-MFC-AGG-ID: G05V_cbNMtaJK8oCgL8BYA_1742572364
-Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85df453e4c5so35208839f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:52:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742572364; x=1743177164;
-        h=content-transfer-encoding:mime-version:organization:references
-         :in-reply-to:message-id:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=lw4tIV8t2velBqSGDFXs1U2au71hmJlMHn//DKDjNqU=;
-        b=v+o/EAx/TvpoSdeYgSOMteK0mnSKXJa3veGmtokfCs14qCozmhBizOuxv6KEUpBBnN
-         IhhWatysnPUMwpXpfYim9o7LU1zNOUVXjkzn769rYEdMOozLa98NZArM+RIHXrOI0GG8
-         TWMsauraEfviFg+IpU4f9Gxi25Ql/aeEvorM1wVAVV2JLv5R+OhxwYwKY0r1D+wED2g3
-         0P58FV3Znf4gvFpKzG8dL3EPbvRlbZAJkVonWQRlHdr99Aw+8kyK5Yu5iH4ljbZRmeOq
-         J80LGfNAsMXdp5ENYkhuD8q8eUFAH+QgcxRs5bk+rGvmwpWwtDnYrdZjDIaZJWmsiJWS
-         7cQg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMz6OHgAto3EaezFIfZB0TzONIzYPdHOOEfz6Kbok1DoHGb89X+C0939yyAo5GAUvgpWLHE51s7r4NWpg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwONMQW5l3n4gLb1lUCm/O2YyTcKZ+J6VRmxttggO2Q7iSY5MAI
-	OzXb8i0uz6WhMupjwP4694B9ej6DJ2rjwSomRQbdK2VceiYFuIVM6fOpYZvY/sI95lgfGhmYsNz
-	KlOVbIR3V0yCoU2253fRQQ2JioWdPNaED05fgXqCywjeu00X7S15iIcdDRG9Hzg==
-X-Gm-Gg: ASbGncuOJer8/fWHUs8ljbj7XkcXjtCyEDeArey1XDrBZpHs8dG/Kd5844PSRHfGpFb
-	azRV5Xrnqih1lep12y+M0NATRPvhGKL8NzG8wfdX4GHPAPvgx2ul10CdSLaAzODeMW7iCw6cG6w
-	R0fBushRvhwLjiqL/1vuEi7PyKTYmvlhxiQnprRKmui94jpZl5j3SxsCdpplRR97v+KdLTftjuj
-	s1iagCAOfTI9EEbfF8vHLhcxIORvqPDHPK5GEtSzm/kAbuVB1r4b01VDmlu3EcGfwDpmLQC1pzP
-	87tcN/+LUmIRI9QiIW0=
-X-Received: by 2002:a92:cd87:0:b0:3d3:d187:7481 with SMTP id e9e14a558f8ab-3d59c331683mr416335ab.1.1742572363828;
-        Fri, 21 Mar 2025 08:52:43 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGNF0rfCObrqaWNyBO2CmHGiB8P4GBb5NFORtVt9K+hAaNEXXDIxgqmXZW65xMhulGgmm8UVA==
-X-Received: by 2002:a92:cd87:0:b0:3d3:d187:7481 with SMTP id e9e14a558f8ab-3d59c331683mr416305ab.1.1742572363420;
-        Fri, 21 Mar 2025 08:52:43 -0700 (PDT)
-Received: from redhat.com ([38.15.36.11])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdb3befsm493367173.24.2025.03.21.08.52.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 08:52:42 -0700 (PDT)
-Date: Fri, 21 Mar 2025 09:52:40 -0600
-From: Alex Williamson <alex.williamson@redhat.com>
-To: Longfang Liu <liulongfang@huawei.com>
-Cc: <jgg@nvidia.com>, <shameerali.kolothum.thodi@huawei.com>,
- <jonathan.cameron@huawei.com>, <kvm@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linuxarm@openeuler.org>
-Subject: Re: [PATCH v6 5/5] hisi_acc_vfio_pci: bugfix live migration
- function without VF device driver
-Message-ID: <20250321095240.40bf55ec.alex.williamson@redhat.com>
-In-Reply-To: <20250318064548.59043-6-liulongfang@huawei.com>
-References: <20250318064548.59043-1-liulongfang@huawei.com>
-	<20250318064548.59043-6-liulongfang@huawei.com>
-Organization: Red Hat
+	s=arc-20240116; t=1742572373; c=relaxed/simple;
+	bh=S2Lexy7iweDC3nyAxWBUtLbH/6qyyAH3IcFe5+vb0dU=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=L9qn0CLzLXkb9mKBYsCtPGxgXeSFPy4AxI7utU331pQUcjsR5h4oI7ukrVVqNOT1dKdW1unDmWK9Vhc+RdIOrVgth8Ap7CBAp3Gzeq0LbJl1iSTclS6mlljP2sAuu0qfQ0BdbYDLx0pl5N9D2IjgzE1dxA+4legqtM1n/3LWTq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZK6KK5w52z6L55F;
+	Fri, 21 Mar 2025 23:47:49 +0800 (CST)
+Received: from frapeml500008.china.huawei.com (unknown [7.182.85.71])
+	by mail.maildlp.com (Postfix) with ESMTPS id 3CFF414080C;
+	Fri, 21 Mar 2025 23:52:47 +0800 (CST)
+Received: from localhost (10.203.177.66) by frapeml500008.china.huawei.com
+ (7.182.85.71) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.39; Fri, 21 Mar
+ 2025 16:52:45 +0100
+Date: Fri, 21 Mar 2025 15:52:44 +0000
+From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+To: Raghavendra K T <raghavendra.kt@amd.com>
+CC: <AneeshKumar.KizhakeVeetil@arm.com>, <Hasan.Maruf@amd.com>,
+	<Michael.Day@amd.com>, <akpm@linux-foundation.org>, <bharata@amd.com>,
+	<dave.hansen@intel.com>, <david@redhat.com>, <dongjoo.linux.dev@gmail.com>,
+	<feng.tang@intel.com>, <gourry@gourry.net>, <hannes@cmpxchg.org>,
+	<honggyu.kim@sk.com>, <hughd@google.com>, <jhubbard@nvidia.com>,
+	<jon.grimm@amd.com>, <k.shutemov@gmail.com>, <kbusch@meta.com>,
+	<kmanaouil.dev@gmail.com>, <leesuyeon0506@gmail.com>, <leillc@google.com>,
+	<liam.howlett@oracle.com>, <linux-kernel@vger.kernel.org>,
+	<linux-mm@kvack.org>, <mgorman@techsingularity.net>, <mingo@redhat.com>,
+	<nadav.amit@gmail.com>, <nphamcs@gmail.com>, <peterz@infradead.org>,
+	<riel@surriel.com>, <rientjes@google.com>, <rppt@kernel.org>,
+	<santosh.shukla@amd.com>, <shivankg@amd.com>, <shy828301@gmail.com>,
+	<sj@kernel.org>, <vbabka@suse.cz>, <weixugc@google.com>,
+	<willy@infradead.org>, <ying.huang@linux.alibaba.com>, <ziy@nvidia.com>,
+	<dave@stgolabs.net>
+Subject: Re: [RFC PATCH V1 00/13] mm: slowtier page promotion based on PTE A
+ bit
+Message-ID: <20250321155244.00006338@huawei.com>
+In-Reply-To: <20250319193028.29514-1-raghavendra.kt@amd.com>
+References: <20250319193028.29514-1-raghavendra.kt@amd.com>
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.42; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="US-ASCII"
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100006.china.huawei.com (7.191.160.224) To
+ frapeml500008.china.huawei.com (7.182.85.71)
 
-On Tue, 18 Mar 2025 14:45:48 +0800
-Longfang Liu <liulongfang@huawei.com> wrote:
+On Wed, 19 Mar 2025 19:30:15 +0000
+Raghavendra K T <raghavendra.kt@amd.com> wrote:
 
-> If the VF device driver is not loaded in the Guest OS and we attempt to
-> perform device data migration, the address of the migrated data will
-> be NULL.
-> The live migration recovery operation on the destination side will
-> access a null address value, which will cause access errors.
+> Introduction:
+> =============
+> In the current hot page promotion, all the activities including the
+> process address space scanning, NUMA hint fault handling and page
+> migration is performed in the process context. i.e., scanning overhead is
+> borne by applications.
 > 
-> Therefore, live migration of VMs without added VF device drivers
-> does not require device data migration.
-> In addition, when the queue address data obtained by the destination
-> is empty, device queue recovery processing will not be performed.
+> This is RFC V1 patch series to do (slow tier) CXL page promotion.
+> The approach in this patchset assists/addresses the issue by adding PTE
+> Accessed bit scanning.
 > 
-> Fixes: b0eed085903e ("hisi_acc_vfio_pci: Add support for VFIO live migration")
-> Signed-off-by: Longfang Liu <liulongfang@huawei.com>
-> Reviewed-by: Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>
-> ---
->  .../vfio/pci/hisilicon/hisi_acc_vfio_pci.c    | 21 ++++++++++++-------
->  1 file changed, 14 insertions(+), 7 deletions(-)
+> Scanning is done by a global kernel thread which routinely scans all
+> the processes' address spaces and checks for accesses by reading the
+> PTE A bit. 
 > 
-> diff --git a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> index cadc82419dca..68b1c7204cad 100644
-> --- a/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> +++ b/drivers/vfio/pci/hisilicon/hisi_acc_vfio_pci.c
-> @@ -426,13 +426,6 @@ static int vf_qm_check_match(struct hisi_acc_vf_core_device *hisi_acc_vdev,
->  		return -EINVAL;
->  	}
->  
-> -	ret = qm_write_regs(vf_qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
-> -	if (ret) {
-> -		dev_err(dev, "failed to write QM_VF_STATE\n");
-> -		return ret;
-> -	}
-> -
-> -	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
->  	hisi_acc_vdev->match_done = true;
->  	return 0;
->  }
-> @@ -498,6 +491,13 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
->  	if (migf->total_length < sizeof(struct acc_vf_data))
->  		return -EINVAL;
->  
-> +	ret = qm_write_regs(qm, QM_VF_STATE, &vf_data->vf_qm_state, 1);
-> +	if (ret) {
-> +		dev_err(dev, "failed to write QM_VF_STATE\n");
-> +		return -EINVAL;
-> +	}
-> +	hisi_acc_vdev->vf_qm_state = vf_data->vf_qm_state;
-> +
->  	qm->eqe_dma = vf_data->eqe_dma;
->  	qm->aeqe_dma = vf_data->aeqe_dma;
->  	qm->sqc_dma = vf_data->sqc_dma;
-> @@ -506,6 +506,12 @@ static int vf_qm_load_data(struct hisi_acc_vf_core_device *hisi_acc_vdev,
->  	qm->qp_base = vf_data->qp_base;
->  	qm->qp_num = vf_data->qp_num;
->  
-> +	if (!vf_data->eqe_dma || !vf_data->aeqe_dma ||
-> +	    !vf_data->sqc_dma || !vf_data->cqc_dma) {
-> +		dev_err(dev, "resume dma addr is NULL!\n");
-> +		return -EINVAL;
-> +	}
-> +
+> A separate migration thread migrates/promotes the pages to the toptier
+> node based on a simple heuristic that uses toptier scan/access information
+> of the mm.
+> 
+> Additionally based on the feedback for RFC V0 [4], a prctl knob with
+> a scalar value is provided to control per task scanning.
+> 
+> Initial results show promising number on a microbenchmark. Soon
+> will get numbers with real benchmarks and findings (tunings). 
+> 
+> Experiment:
+> ============
+> Abench microbenchmark,
+> - Allocates 8GB/16GB/32GB/64GB of memory on CXL node
+> - 64 threads created, and each thread randomly accesses pages in 4K
+>   granularity.
 
-I'm not sure how this fits in based on the commit log.  IIUC, we're
-actually rejecting the migration data here, which will cause a
-migration failure.  We're also testing the validity of the data *after*
-we've actually applied it to the hisi_qm object, which seems backwards.
+So if I'm reading this right, this is a flat distribution and any
+estimate of what is hot is noise?
 
-Are we just not processing the migration data because there's no driver
-or are we failing the migration?  There shouldn't be a requirement on
-the state of the guest driver for a successful migration.  Thanks,
+That will put a positive spin on costs of migration as we will
+be moving something that isn't really all that hot and so is moderately
+unlikely to be accessed whilst migration is going on.  Or is the point that
+the rest of the memory is also mapped but not being accessed?
 
-Alex
+I'm not entirely sure I follow what this is bound by. Is it bandwidth
+bound?
 
->  	ret = qm_set_regs(qm, vf_data);
->  	if (ret) {
->  		dev_err(dev, "set VF regs failed\n");
-> @@ -1531,6 +1537,7 @@ static int hisi_acc_vfio_pci_migrn_init_dev(struct vfio_device *core_vdev)
->  	hisi_acc_vdev->vf_id = pci_iov_vf_id(pdev) + 1;
->  	hisi_acc_vdev->pf_qm = pf_qm;
->  	hisi_acc_vdev->vf_dev = pdev;
-> +	hisi_acc_vdev->vf_qm_state = QM_NOT_READY;
->  	mutex_init(&hisi_acc_vdev->state_mutex);
->  	mutex_init(&hisi_acc_vdev->open_mutex);
->  
+
+> - 512 iterations with a delay of 1 us between two successive iterations.
+> 
+> SUT: 512 CPU, 2 node 256GB, AMD EPYC.
+> 
+> 3 runs, command:  abench -m 2 -d 1 -i 512 -s <size>
+> 
+> Calculates how much time is taken to complete the task, lower is better.
+> Expectation is CXL node memory is expected to be migrated as fast as
+> possible.
+
+> 
+> Base case: 6.14-rc6    w/ numab mode = 2 (hot page promotion is enabled).
+> patched case: 6.14-rc6 w/ numab mode = 1 (numa balancing is enabled).
+> we expect daemon to do page promotion.
+> 
+> Result:
+> ========
+>          base NUMAB2                    patched NUMAB1
+>          time in sec  (%stdev)   time in sec  (%stdev)     %gain
+>  8GB     134.33       ( 0.19 )        120.52  ( 0.21 )     10.28
+> 16GB     292.24       ( 0.60 )        275.97  ( 0.18 )      5.56
+> 32GB     585.06       ( 0.24 )        546.49  ( 0.35 )      6.59
+> 64GB    1278.98       ( 0.27 )       1205.20  ( 2.29 )      5.76
+> 
+> Base case: 6.14-rc6    w/ numab mode = 1 (numa balancing is enabled).
+> patched case: 6.14-rc6 w/ numab mode = 1 (numa balancing is enabled).
+>          base NUMAB1                    patched NUMAB1
+>          time in sec  (%stdev)   time in sec  (%stdev)     %gain
+>  8GB     186.71       ( 0.99 )        120.52  ( 0.21 )     35.45 
+> 16GB     376.09       ( 0.46 )        275.97  ( 0.18 )     26.62 
+> 32GB     744.37       ( 0.71 )        546.49  ( 0.35 )     26.58 
+> 64GB    1534.49       ( 0.09 )       1205.20  ( 2.29 )     21.45
+
+Nice numbers, but maybe some more details on what they are showing?
+At what point in the workload has all the memory migrated to the
+fast node or does that never happen?
+
+I'm confused :(
+
+Jonathan
+
 
