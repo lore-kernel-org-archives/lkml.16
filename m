@@ -1,145 +1,190 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16468230BDA
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:19:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32B3C1D54D8;
+	Fri, 21 Mar 2025 23:21:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742599149; cv=none; b=gBwUlRcyW7vWGCjS2X51rm003ygzZBtqyLxRvOFGWbYiV7Ofv3ygjVVZyitPKB0oTwnujkX5HNjs7D05YiE+MOD+CFVtYhT8FY6A97WYMOoj6WMQCooMrt7frQg4qOgQcd5f0BAllEea/zZzv9gGDNc2IXjohC9DP7CW9zFOD6A=
+	t=1742599275; cv=none; b=otgLSr+qK7I+oft8XybX1QdbKJFH4HZFgua0vQ+THCdF6krdNTy8U6miaNHDDWtlWy9fQGJxsoVNr87OWTAUpEUB0tNtxSqumFuWb4QUnGfUKa8q9jEBemmZ3uQDLZuiJkRzrqpFWBlIJUnQM1mQdfzbDKbJdfL0YwFDLCngElU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742599149; c=relaxed/simple;
-	bh=7R7aUV+pTd9zyynGBCXb4GYWyEVGu6gupsqBeQ35lLo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cwnniBts3gnmmYsH8cGVoBUvzt0u5QBH0BGTqQT0Ljh+yy3kzyDtZ4uW/gcDF7lUaU3qAku1dmXCOLD2WcO7BpulvEOLmqVyTYggdS+L3zXELFxgrDz4DC4pu3rxLfdm41mcfUd2lm742Wgc1MzVGgiV4x5ftuPkqt3cu2YRrfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ZCAjuQP2; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742599275; c=relaxed/simple;
+	bh=En7UCMOZ/Us8TjDqlFU22i6jKe9CIGnV39ahNfBbLc0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XhxUiKMtvBXGR0qDggdcXwr7CXT5vwLTxkc9J6xiCxEQgPMd/7IJp14mlJGvfJet2/NGcUWwhY7FEkzSF6mM/vmFWXAefIa5WRFnHs7aWrkCsO+Hzw2KFFpDrWli+H8J3of49wHLdoMKMclhiLsJZ1QzteQ23u2KW3uys9UQBoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=KWrCeNVY; arc=none smtp.client-ip=5.135.140.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZCAjuQP2"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2264aefc45dso26791595ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:19:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742599147; x=1743203947; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yLVVtEiYY62MhsiRQ4vP6SNkQCOsvwGGW3jtnlnRhnQ=;
-        b=ZCAjuQP2FAacEUDfJlVLeLg/0KuuKIUUuS9g4/o7Ht+KiGjd/AzTrlxbKxTudSwmLU
-         vooqOqnMpS14fuPWhFV2Yzo+06+J3mPtE7og9gRkYoQLrI3efZZKDR6tyjfmGw9I7VnD
-         w8hU0mlfH4xuh3aW1C+cbN6wj+WcP5aPeF7dd/BwDQV5OkVXt5oozJ8VqAfEB9ZITW2/
-         WPhGSlrzRdJMqmWO1wlptlVAvFgAJu4wGEJwYFj1l4IOu+KSISp50oBv60Khz0eMB56R
-         2Ma204k/ZWRWOPYi17zXgFc9NWzrJhAjTUWX175R9b5dYTuluGoVheRVmoMRdedE6gWH
-         TcyA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742599147; x=1743203947;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yLVVtEiYY62MhsiRQ4vP6SNkQCOsvwGGW3jtnlnRhnQ=;
-        b=oijF+u3bFYZtMk7yat2rY815JVtpANaxfwlpwUUAyWDi8vExfrz2ecOnSRsrbdlihK
-         AF7we3SmnMPEuADhzTtPwx+GRUDjDgIUE8Hhzd8UqO+IkfUYhvJLnyX7yJrGJY8Rcsph
-         czZBLLT1VQw+brIxY116ODeLA5Kf5PX07mOmXGI7rDKzZsGLFZUVQ89TMrmrP6g5NFZC
-         vbOk0WiL5/aJDD/5iOCdE3Dpb3ZfJanA7ZFuRAsGwxMtTpkp04hYOzJmEXoZ8jDa0hfo
-         sKOjCqP0kmNJYlC/738+/a2xqJbRGEr/hY4xHpq+3kjkgiDXZUJwZ/VVzAuFp6oA6UMb
-         sbyA==
-X-Forwarded-Encrypted: i=1; AJvYcCXnDwy11yMjfARJrU1EysOUiKYW4t5t9Z0jT6YFYOItwfgkl33rLI1jg8xCsZ6Nz9ILHciZXSj37X/eZwQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHa/PYetg7YMX47yd31JcnSUALNVe8HDNGttNTKQw/MQhYidN8
-	lp5lcdMDDZrTl3gksXD/irYvFJ4HbTN3/xm9oeRzfspfqEe1f5nVkiqq7gpPcQ==
-X-Gm-Gg: ASbGnctbCWuZpHUQQ1lTMmFzWdCnjD3h6yE90z0SSktIPEokQ250yUpH62PGYMM8q6N
-	dbL5bhkp+FBM19HIcgxtAoImILkbWfmqac+NbhKlo8sm2Ql8K0+HQf40cA0rHIwufNdAhSDHVWj
-	TxfpEovug/aP+TN8lzcACylyo4u+G0EL+BwFXKhv/O5QsafkaL9VtqYjO7BnrcNmx+042LZfP0p
-	mxNjC2GwiqfrpA4CAeyc5/yi3Dj/jJsRbB8+hciWI5Qv85WBaHsY32iN9eNgIg0cgcPslHwebjl
-	RaMIA5CwoFTZEhfj+J5CCFf6/pVrlmwTBTM7pNhXaA8eOGqNFK6MWy8orxKahdTtjMLSoM3C2Vg
-	I1moEzgrAr29d/2tNXQ==
-X-Google-Smtp-Source: AGHT+IF195diPWEKYH6Ae8Xu5+le/VenNZhzDbi1MXz0VeJbXGBB6rQE3KK3GWeNmszmqE1ZmR6hRg==
-X-Received: by 2002:a17:902:ea07:b0:224:179a:3b8f with SMTP id d9443c01a7336-22780d83b53mr70549105ad.23.1742599147135;
-        Fri, 21 Mar 2025 16:19:07 -0700 (PDT)
-Received: from google.com (132.111.125.34.bc.googleusercontent.com. [34.125.111.132])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811c1b8fsm23330555ad.154.2025.03.21.16.19.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 16:19:05 -0700 (PDT)
-Date: Fri, 21 Mar 2025 23:19:01 +0000
-From: Benson Leung <bleung@google.com>
-To: Andrei Kuchynski <akuchynski@chromium.org>
-Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Benson Leung <bleung@chromium.org>,
-	Jameson Thies <jthies@google.com>, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] usb: typec: class: Invalidate USB device pointers on
- partner unregistration
-Message-ID: <Z93z5WqL-u4ZyBhH@google.com>
-References: <20250321143728.4092417-1-akuchynski@chromium.org>
- <20250321143728.4092417-3-akuchynski@chromium.org>
+	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="KWrCeNVY"
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 4CC16297BD3;
+	Sat, 22 Mar 2025 00:21:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
+	t=1742599268; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=T7qf5nCrt4nQBcV2jofoiUmHFXdin3E7pHJVSgDL2NA=;
+	b=KWrCeNVYFLT1VAUwHgj5Tm7pEKIUbYrrIuNl46wUDy1IxYQfL7cDJBSyTMBlw0mFijms+e
+	d0jq4ilMNYEMYjhnQJLDtl/plb07xLmVT4qFOctMMa6PcNKUy7VTNAQHHJZtd5U5VtZpLQ
+	wZy7DWlMNRA+JG11knIrBjXysU+q8vuJymox+swaYYRCJtDaUGTf4U0gb5axowEs9aaYHs
+	AjioF4khd8tQKS/IRXr/1VpRtHBgCiFN41bQCcZlxpUTH7EP7GKhCGv6rqUYY3d8d6BBFh
+	la7dJzfzc5D94h/AeebMmveABSE6vdlU07TnVOc2hXljLa1dSTJ6LE4XiUcaRA==
+Message-ID: <8f095a56-a188-45e9-945a-1d77ef175dc8@cjdns.fr>
+Date: Sat, 22 Mar 2025 00:21:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="cN3cAe1kDpvEvgtB"
-Content-Disposition: inline
-In-Reply-To: <20250321143728.4092417-3-akuchynski@chromium.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH v1 4/8] dt-bindings: timer: Add EcoNet HPT CPU Timer
+To: Krzysztof Kozlowski <krzk@kernel.org>, linux-mips@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, benjamin.larsson@genexis.eu
+References: <20250321134633.2155141-1-cjd@cjdns.fr>
+ <20250321134633.2155141-5-cjd@cjdns.fr>
+ <c1791b2e-bdf6-448c-88d3-c97511af3357@kernel.org>
+Content-Language: en-US
+From: Caleb James DeLisle <cjd@cjdns.fr>
+In-Reply-To: <c1791b2e-bdf6-448c-88d3-c97511af3357@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Last-TLS-Session-Version: TLSv1.3
 
+Thank you for the review.
 
---cN3cAe1kDpvEvgtB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 21/03/2025 21:56, Krzysztof Kozlowski wrote:
+> On 21/03/2025 14:46, Caleb James DeLisle wrote:
+>> Add device tree binding documentation for the high-precision timer (HPT)
+>> in the EcoNet EN751221 SoC.
+>>
+>> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
+> Previous patch was not tested, so was this one tested?
 
-Hi Andrei,
+Yes, all of this has been tested on multiple devices, I believe I was
+unclear in the question I added in patch 3.
 
-On Fri, Mar 21, 2025 at 02:37:27PM +0000, Andrei Kuchynski wrote:
-> To avoid using invalid USB device pointers after a Type-C partner
-> disconnects, this patch clears the pointers upon partner unregistration.
-> This ensures a clean state for future connections.
->=20
-> Cc: stable@vger.kernel.org
-> Fixes: 59de2a56d127 ("usb: typec: Link enumerated USB devices with Type-C=
- partner")
-> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
+>
+>> ---
+>>   .../bindings/timer/econet,timer-hpt.yaml      | 58 +++++++++++++++++++
+>>   1 file changed, 58 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml b/Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml
+>> new file mode 100644
+>> index 000000000000..8b7ff9bce947
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml
+>> @@ -0,0 +1,58 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/timer/econet,timer-hpt.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: EcoNet High Precision Timer (HPT)
+>> +
+>> +maintainers:
+>> +  - Calev James DeLisle <cjd@cjdns.fr>
+>> +
+>> +description: |
+> Do not need '|' unless you need to preserve formatting.
+Ok
+>
+>> +  The EcoNet High Precision Timer (HPT) is a timer peripheral found in various
+>> +  EcoNet SoCs, including the EN751221 and EN751627 families. It provides per-VPE
+>> +  count/compare registers and a per-CPU control register, with a single interrupt
+>> +  line using a percpu-devid interrupt mechanism.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    const: econet,timer-hpt
+> Soc components must have soc-based compatible and then filename matching
+> whatever you use as fallback.
 
-Reviewed-by: Benson Leung <bleung@chromium.org>
+I have so far been unable to find good documentation on writing DT bindings
+specifically for SoC devices. If you have anything to point me to, I will read it.
+If not, even a good example of someone else doing it right is helpful.
 
-> ---
->  drivers/usb/typec/class.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index eadb150223f8..3df3e3736916 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -1086,10 +1086,14 @@ void typec_unregister_partner(struct typec_partne=
-r *partner)
->  	port =3D to_typec_port(partner->dev.parent);
-> =20
->  	mutex_lock(&port->partner_link_lock);
-> -	if (port->usb2_dev)
-> +	if (port->usb2_dev) {
->  		typec_partner_unlink_device(partner, port->usb2_dev);
-> -	if (port->usb3_dev)
-> +		port->usb2_dev =3D NULL;
-> +	}
-> +	if (port->usb3_dev) {
->  		typec_partner_unlink_device(partner, port->usb3_dev);
-> +		port->usb3_dev =3D NULL;
-> +	}
-> =20
->  	device_unregister(&partner->dev);
->  	mutex_unlock(&port->partner_link_lock);
-> --=20
-> 2.49.0.395.g12beb8f557-goog
->=20
+Currently, I see qcom,pdc.yaml appears to do what you say, so I in absence
+of any other advice, I can try to do what they do.
 
---cN3cAe1kDpvEvgtB
-Content-Type: application/pgp-signature; name="signature.asc"
+>
+>> +
+>> +  reg:
+>> +    minItems: 1
+>> +    maxItems: 2
+> No, list items instead.
+I see qcom,pdc.yaml using items: with per-item description so can follow that.
+>
+>> +    description: |
+>> +      Physical base address and size of the timer's register space. On 34Kc
+>> +      processors, a single region is used. On 1004Kc processors, two regions are
+>> +      used, one for each core.
+> So different hardware, different compatible. That's why you need
+> soc-based compatibles. Follow standard SoC upstreaming rules and examples.
+I presume this should ideally be with If: statements to further validate the DT (?)
+>
+>> +
+>> +  interrupts:
+>> +    maxItems: 1
+>> +    description: |
+> Do not need '|' unless you need to preserve formatting.
+Ok
+>
+>> +      The interrupt number for the timer.
+> Drop, redundant.
+Ok
+>
+>
+>> This is a percpu-devid interrupt shared
+>> +      across CPUs.
+>> +
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: |
+>> +      A clock to get the frequency of the timer.
+> Drop description, redundant
+Ok
+>
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +  - interrupts
+>> +  - clocks
+>> +
+>> +additionalProperties: false
+>> +
+>> +examples:
+>> +  - |
+>> +    timer_hpt@1fbf0400 {
+> No underscores
+I knew that, my mistake.
+>
+> Node names should be generic. See also an explanation and list of
+> examples (not exhaustive) in DT specification:
+> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
+Thank you, this is useful.
+>
+> Look how other SoCs are calling this.
+As said, any documentation link or example of someone who does this right
+is much appreciated. In any case, thank you very much for your time and I
+will address these points in v2.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
+Caleb
 
-iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCZ93z5QAKCRBzbaomhzOw
-wuFRAP4tlk6s6adpSCRvWDdtv0FaODRXc1HiADy+70TI9ectMAD/bOW7B2uK9KrQ
-c+EbKHzy8PaWNAxKs4biseORVjHi6gU=
-=CBy0
------END PGP SIGNATURE-----
-
---cN3cAe1kDpvEvgtB--
+>
+>> +        compatible = "econet,timer-hpt";
+>> +        reg = <0x1fbf0400 0x100>;
+>> +        interrupt-parent = <&intc>;
+>> +        interrupts = <30>;
+>> +        clocks = <&hpt_clock>;
+>> +    };
+>> +...
+>
+> Best regards,
+> Krzysztof
