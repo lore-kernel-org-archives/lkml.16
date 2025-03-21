@@ -1,149 +1,163 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67C25433A4
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:48:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BFA726ACB;
+	Fri, 21 Mar 2025 07:50:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742543298; cv=none; b=ocR8S+Kmf6OPYXVYkjQzE5wm5JpgSgDxaF7dJrAeECl+vlAdrMwCaZeHUy8UUVwKpSpqK+Y1fM6WH/QWbxYP8jFg4R1zk9kj7Bj3klmb6V14YNeCq4d8oVsHlfwd7TNy7xU+KEqYZQQY/tmZbqFU6m/663zkM4mULV36vYiBzGc=
+	t=1742543407; cv=none; b=uPtQJxg/sw6WTilRssFVW3iHVsE1WkJxYmLPHrNRZUt7fD70fZ11ey7DUR9fdK/RudHo6NXQGNbMYMOEVY/G5JeMS43p/Ui1i0BEPIeWbM4LjeDVxIEJsN52CJUOyOSAFtXsHs77/610h1HUA6t2vDLQeicZi4exrofWeUU9c2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742543298; c=relaxed/simple;
-	bh=46YpdeKsPmWTrIvWN8WZQtRqKCeBWAjbWlNsZ71Qz1o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=MWkMitWsvtAuuxaG3IGMWu4EjU6CsNnCj0SrOR3wkSX5YiWgl/wkqkwuMluF+xY9NQVVupMdPHOqC5W75AGYNYL+BaggvGp5cOQXQEAmBJFpcX0UADhRrNRInlek47lnWNpdAwR6AyD8zvMI24RCAJi5/1AJA0ljrjuXs3RW/mA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Zgi6IX72; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Zgi6IX72"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1742543294;
-	bh=46YpdeKsPmWTrIvWN8WZQtRqKCeBWAjbWlNsZ71Qz1o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Zgi6IX727uyPcSdRfvA1G6qCvfCttkvhaEJ4zB3U3H7tFMEPnU2oBrfx8hqcL3L3t
-	 pUGeeFolSuc56K2dWrEr1JJaoc+EjSLDIbLWeJv/AbBzWTnp97gHXptvaOxEoQzTrJ
-	 TzALBPXBZwYvgYEHGqq5AO4H22YLt8rP8RQGQsT42cqC6EenqexE533e76PMrNGyln
-	 Z3wiCse5x0VnYpGckEX6oYTSeLVct0h+uAQ2d+s4viIT90k1Kea4ah4Cswkr8R6Csh
-	 i2ctmla5tPwl0M4aOGu6fPe8pqTKjIcMeYuBnOdVwaomi+aiGdF9e/fHiwzk8g42zy
-	 zmBtXVPcEVD7g==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id C19CF17E0C38;
-	Fri, 21 Mar 2025 08:48:13 +0100 (CET)
-Date: Fri, 21 Mar 2025 08:48:09 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Karunika Choo <karunika.choo@arm.com>
-Cc: dri-devel@lists.freedesktop.org, nd@arm.com, Steven Price
- <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/9] drm/panthor: Add 64-bit and poll register
- accessors
-Message-ID: <20250321084809.5f217049@collabora.com>
-In-Reply-To: <20250320111741.1937892-2-karunika.choo@arm.com>
-References: <20250320111741.1937892-1-karunika.choo@arm.com>
-	<20250320111741.1937892-2-karunika.choo@arm.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1742543407; c=relaxed/simple;
+	bh=6hI6HTb0SjrdNqP1YFqTh6hXn9ZSUNy1APKZfKSSCjY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DBoC8pIpZswCPs8stqF06r3JQHt9gNBxu8fQwARvxEqIt5EGQ90G8XiG8/zUzl2uubNRmb/kmrgw0eMUQtii6QJ7SjfSb16dZpZTJm8TsiO3fwnF/lY4O3BBFnPrVUX+ze1ciM1dGFHkvtDFdq7A1ZR5aVF7MX7s1ngVaB3ZYbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZJvVF4Pn7z9sRy;
+	Fri, 21 Mar 2025 08:39:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id F-EBTBk1L9WD; Fri, 21 Mar 2025 08:39:49 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJvVF2zQJz9sRs;
+	Fri, 21 Mar 2025 08:39:49 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 427FB8B79C;
+	Fri, 21 Mar 2025 08:39:49 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id 6L_KAMM1K10W; Fri, 21 Mar 2025 08:39:49 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 491FB8B763;
+	Fri, 21 Mar 2025 08:39:47 +0100 (CET)
+Message-ID: <eff21b9b-0b03-4dbc-aa0a-7d3771df9082@csgroup.eu>
+Date: Fri, 21 Mar 2025 08:39:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/8] cxl: support CXL memory RAS features
+To: shiju.jose@huawei.com, linux-cxl@vger.kernel.org,
+ dan.j.williams@intel.com, dave@stgolabs.net, jonathan.cameron@huawei.com,
+ dave.jiang@intel.com, alison.schofield@intel.com, vishal.l.verma@intel.com,
+ ira.weiny@intel.com, david@redhat.com, Vilas.Sridharan@amd.com
+Cc: linux-edac@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-mm@kvack.org, linux-kernel@vger.kernel.org, bp@alien8.de,
+ tony.luck@intel.com, rafael@kernel.org, lenb@kernel.org, mchehab@kernel.org,
+ leo.duran@amd.com, Yazen.Ghannam@amd.com, rientjes@google.com,
+ jiaqiyan@google.com, Jon.Grimm@amd.com, dave.hansen@linux.intel.com,
+ naoya.horiguchi@nec.com, james.morse@arm.com, jthoughton@google.com,
+ somasundaram.a@hpe.com, erdemaktas@google.com, pgonda@google.com,
+ duenwen@google.com, gthelen@google.com, wschwartz@amperecomputing.com,
+ dferguson@amperecomputing.com, wbs@os.amperecomputing.com,
+ nifan.cxl@gmail.com, tanxiaofei@huawei.com, prime.zeng@hisilicon.com,
+ roberto.sassu@huawei.com, kangkang.shen@futurewei.com,
+ wanghuiqiang@huawei.com, linuxarm@huawei.com
+References: <20250320180450.539-1-shiju.jose@huawei.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20250320180450.539-1-shiju.jose@huawei.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Thu, 20 Mar 2025 11:17:33 +0000
-Karunika Choo <karunika.choo@arm.com> wrote:
 
-> This patch adds 64-bit register accessors to simplify register access in
-> Panthor. It also adds 32-bit and 64-bit variants for read_poll_timeout.
+
+Le 20/03/2025 à 19:04, shiju.jose@huawei.com a écrit :
+> From: Shiju Jose <shiju.jose@huawei.com>
 > 
-> Signed-off-by: Karunika Choo <karunika.choo@arm.com>
-> ---
->  drivers/gpu/drm/panthor/panthor_regs.h | 55 ++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
+> Support for CXL memory RAS features: patrol scrub, ECS, soft-PPR and
+> memory sparing.
 > 
-> diff --git a/drivers/gpu/drm/panthor/panthor_regs.h b/drivers/gpu/drm/panthor/panthor_regs.h
-> index 42dc3fedb0d4..7ec4a1d04e20 100644
-> --- a/drivers/gpu/drm/panthor/panthor_regs.h
-> +++ b/drivers/gpu/drm/panthor/panthor_regs.h
-> @@ -238,4 +238,59 @@
->  #define gpu_read(dev, reg) \
->  	readl((dev)->iomem + (reg))
->  
-> +#define gpu_read_relaxed(dev, reg) readl_relaxed((dev)->iomem + (reg))
-> +
-> +#define gpu_write64(dev, reg, data)                            \
-> +	do {                                                   \
-> +		u64 __val = (u64)(data);                       \
-> +		gpu_write(dev, reg, lower_32_bits(__val));     \
-> +		gpu_write(dev, reg + 4, upper_32_bits(__val)); \
-> +	} while (0)
+> This CXL series was part of the EDAC series [1].
+> 
+> The code is based on cxl.git next branch [2] merged with ras.git edac-cxl
+> branch [3].
+> 
+> 1. https://lore.kernel.org/linux-cxl/20250212143654.1893-1-shiju.jose@huawei.com/
+> 2. https://web.git.kernel.org/pub/scm/linux/kernel/git/cxl/cxl.git/log/?h=next
+> 3. https://web.git.kernel.org/pub/scm/linux/kernel/git/ras/ras.git/log/?h=edac-cxl
+> 
+> Userspace code for CXL memory repair features [4] and
+> sample boot-script for CXL memory repair [5].
+> 
+> [4]: https://lore.kernel.org/lkml/20250207143028.1865-1-shiju.jose@huawei.com/
+> [5]: https://lore.kernel.org/lkml/20250207143028.1865-5-shiju.jose@huawei.com/
 
-We're not doing funky name concatenation in these macros, so I'd rather
-have them defined as static inline funcs in panthor_device.h. We
-probably want to move the gpu_read/write definitions there as well if
-we do that.
+The title for the series is quite confusing, CXL seems to be something 
+else. There is a series here [1] that removes CXL driver, but after 
+looking it seems to be something completely different.
 
-> +
-> +#define gpu_read64(dev, reg) \
-> +	(gpu_read(dev, reg) | ((u64)gpu_read(dev, reg + 4) << 32))
-> +
-> +#define gpu_read64_relaxed(dev, reg)  \
-> +	(gpu_read_relaxed(dev, reg) | \
-> +	 ((u64)gpu_read_relaxed(dev, reg + 4) << 32))
-> +
-> +#define gpu_read64_sync(dev, reg)                     \
-> +	({                                            \
-> +		u32 lo, hi1, hi2;                     \
-> +		do {                                  \
-> +			hi1 = gpu_read(dev, reg + 4); \
-> +			lo = gpu_read(dev, reg);      \
-> +			hi2 = gpu_read(dev, reg + 4); \
-> +		} while (hi1 != hi2);                 \
-> +		lo | ((u64)hi2 << 32);                \
-> +	})
+[1] https://lore.kernel.org/all/20250219070007.177725-1-ajd@linux.ibm.com/
 
-I would name that one gpu_read64_counter and make it a static inline
-function. Note that we already have panthor_gpu_read_64bit_counter()
-which does the same thing, so maybe move it there and rename it along
-the way.
+Christophe
 
-> +
-> +#define gpu_read_poll_timeout(dev, reg, val, cond, delay_us, timeout_us)    \
-> +	read_poll_timeout(gpu_read, val, cond, delay_us, timeout_us, false, \
-> +			  dev, reg)
-> +
-> +#define gpu_read_poll_timeout_atomic(dev, reg, val, cond, delay_us,         \
-> +				     timeout_us)                            \
-> +	read_poll_timeout_atomic(gpu_read, val, cond, delay_us, timeout_us, \
-> +				 false, dev, reg)
-> +
-> +#define gpu_read64_poll_timeout(dev, reg, val, cond, delay_us, timeout_us)    \
-> +	read_poll_timeout(gpu_read64, val, cond, delay_us, timeout_us, false, \
-> +			  dev, reg)
-> +
-> +#define gpu_read64_poll_timeout_atomic(dev, reg, val, cond, delay_us,         \
-> +				       timeout_us)                            \
-> +	read_poll_timeout_atomic(gpu_read64, val, cond, delay_us, timeout_us, \
-> +				 false, dev, reg)
-> +
-> +#define gpu_read_relaxed_poll_timeout_atomic(dev, reg, val, cond, delay_us, \
-> +					     timeout_us)                    \
-> +	read_poll_timeout_atomic(gpu_read_relaxed, val, cond, delay_us,     \
-> +				 timeout_us, false, dev, reg)
-> +
-> +#define gpu_read64_relaxed_poll_timeout(dev, reg, val, cond, delay_us,         \
-> +					timeout_us)                            \
-> +	read_poll_timeout(gpu_read64_relaxed, val, cond, delay_us, timeout_us, \
-> +			  false, dev, reg)
-> +
->  #endif
+
+> 
+> Changes
+> =======
+> v1 -> v2:
+> 1. Feedbacks from Dan Williams on v1,
+>     https://lore.kernel.org/linux-mm/20250307091137.00006a0a@huawei.com/T/
+>    - Fixed lock issues in region scrubbing, added local cxl_acquire()
+>      and cxl_unlock.
+>    - Replaced CXL examples using cat and echo from EDAC .rst docs
+>      with short description and ref to ABI docs. Also corrections
+>      in existing descriptions as suggested by Dan.
+>    - Add policy description for the scrub control feature.
+>      However this may require inputs from CXL experts.
+>    - Replaced CONFIG_CXL_RAS_FEATURES with CONFIG_CXL_EDAC_MEM_FEATURES.
+>    - Few changes to depends part of CONFIG_CXL_EDAC_MEM_FEATURES.
+>    - Rename drivers/cxl/core/memfeatures.c as drivers/cxl/core/edac.c
+>    - snprintf() -> kasprintf() in few places.
+>    
+> 2. Feedbacks from Alison on v1,
+>    - In cxl_get_feature_entry()(patch 1), return NULL on failures and
+>      reintroduced checks in cxl_get_feature_entry().
+>    - Changed logic in for loop in region based scrubbing code.
+>    - Replace cxl_are_decoders_committed() to cxl_is_memdev_memory_online()
+>      and add as a local function to drivers/cxl/core/edac.c
+>    - Changed few multiline comments to single line comments.
+>    - Removed unnecessary comments from the code.
+>    - Reduced line length of few macros in ECS and memory repair code.
+>    - In new files, changed "GPL-2.0-or-later" -> "GPL-2.0-only".
+>    - Ran clang-format for new files and updated.
+> 3. Changes for feedbacks from Jonathan on v1.
+>    - Changed few multiline comments to single line comments.
+> 
+> Shiju Jose (8):
+>    cxl: Add helper function to retrieve a feature entry
+>    EDAC: Update documentation for the CXL memory patrol scrub control
+>      feature
+>    cxl/edac: Add CXL memory device patrol scrub control feature
+>    cxl/edac: Add CXL memory device ECS control feature
+>    cxl/mbox: Add support for PERFORM_MAINTENANCE mailbox command
+>    cxl: Support for finding memory operation attributes from the current
+>      boot
+>    cxl/memfeature: Add CXL memory device soft PPR control feature
+>    cxl/memfeature: Add CXL memory device memory sparing control feature
+> 
+>   Documentation/edac/memory_repair.rst |   31 +
+>   Documentation/edac/scrub.rst         |   47 +
+>   drivers/cxl/Kconfig                  |   27 +
+>   drivers/cxl/core/Makefile            |    1 +
+>   drivers/cxl/core/core.h              |    2 +
+>   drivers/cxl/core/edac.c              | 1730 ++++++++++++++++++++++++++
+>   drivers/cxl/core/features.c          |   23 +
+>   drivers/cxl/core/mbox.c              |   45 +-
+>   drivers/cxl/core/memdev.c            |    9 +
+>   drivers/cxl/core/ras.c               |  145 +++
+>   drivers/cxl/core/region.c            |    5 +
+>   drivers/cxl/cxlmem.h                 |   73 ++
+>   drivers/cxl/mem.c                    |    4 +
+>   drivers/cxl/pci.c                    |    3 +
+>   drivers/edac/mem_repair.c            |    9 +
+>   include/linux/edac.h                 |    7 +
+>   16 files changed, 2159 insertions(+), 2 deletions(-)
+>   create mode 100644 drivers/cxl/core/edac.c
+> 
 
