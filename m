@@ -1,75 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E261B1922F4
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:07:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15196184F;
+	Fri, 21 Mar 2025 02:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742522872; cv=none; b=RhAku2yRNhybNLg9z+aNhad7yVD1dZfQxAm4aeg1jeWI2GNnY+i7ECr4fJUZR4ujPDgiuk8q5HGypBPYJF5vXWwDYomgczJ6J/w/2EihEtMPgP+wXd2vtrJe13cG/TUQivI4uq9Zrf+dMRQR3USKFn1fkmi7UkA2HPo7CzsP3t4=
+	t=1742522913; cv=none; b=uW1nZPl30u9xk5R6wFFSjI9pxSAzldJ09LS6F1Vc168Xathd8Zk8roDvfkbfMQrA0QXMdNNIYRwwCipljg+/M9QVxsYVQfLLQamKYThLgR5WPim47BvZeT37hy8i5XGsulpoByccDzQF79lPw8oWLsx9uMizRLHcc+IS45hBZU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742522872; c=relaxed/simple;
-	bh=8626GOzSKn3oGmjAcfgzeKl8yc5s8nz0JuPUVSCipH4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=izQdnfwOzEvZ0t7ZwC96m4HYi+EkHqgjLVPe0joa/+WU0CbJYbgAqsF0SsqMSBMJkhExjDzXH/bmwox74yauAtijmEoaP90ftuS3VRvtjzUReSJqq3NqM1tP3H60FjQD5JnCITvGuXzWrA+a2tMFlF+FgIlbOmVB2F2PmmqQAug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Rh6CPjai; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742522913; c=relaxed/simple;
+	bh=cinANPtNs9fVr4wBCGXN/SbujqVib64PjtGIptC+28Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bUgK181mP8hOGcnZGA18sLsG4dRrGOtthNjJrF234F3AbM/UTgNqjYraw8Ih//o7CEgUr7PdVO2KNEIorDcYFvVuGkp2ICbtVQjYfF15EQJvmRX/d+t335F0rZ+WR7vsEYYfHocMXsVLpy8Lrb3FmhUrY7H0CXWkdoOFY27cmf8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=Ga3vdZFn; arc=none smtp.client-ip=62.89.141.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Rh6CPjai"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742522870; x=1774058870;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=8626GOzSKn3oGmjAcfgzeKl8yc5s8nz0JuPUVSCipH4=;
-  b=Rh6CPjaidDqC6mNQ1TJAb9HsNUpBPWLWD148q7mC5tWiOKfY/314x5e5
-   KOgN3ch31oqPTYsv70YiuOqHv3aAE88iQxsr14WM/4zxCoLedTDEYRqR+
-   IXbWN55D2OEcWW8BlbiF5oA3vu5k8n8QJmMXBlbkn/b0a25pU7ynoixB2
-   KfpWwsQjbeyu0SAl36sZm8HvCov9ufWBar0ptzKxdL+Unc01btC1qnEn8
-   8dnLP4uLM5cH79thMApAiHsOVO4FQXUom6a2vczTeoo0hH/WAF3vHAu+b
-   wySFAUzIm+8CJgcghXbYaHp0lqg7y8VjZirUNxvTNGIh/dqV+4rC/odpK
-   Q==;
-X-CSE-ConnectionGUID: ebiLjBb9TpOCGx5CCc37Vg==
-X-CSE-MsgGUID: KR0ii2OwSCC/aFKhsQp4HQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="43028923"
-X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
-   d="scan'208";a="43028923"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 19:07:42 -0700
-X-CSE-ConnectionGUID: /tI3jXi4QbemQp7G/MB1uQ==
-X-CSE-MsgGUID: HliStc3nT3OsqbFSFxGubQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
-   d="scan'208";a="154167549"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 19:07:41 -0700
-Message-ID: <9c6840b6-3bff-4c5e-90f9-c0eaf7748225@linux.intel.com>
-Date: Fri, 21 Mar 2025 10:04:09 +0800
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="Ga3vdZFn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
+	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=ahZVPAO/1t0i47rJqQsFMcVSyeqfjk4Xm8JVNgUxIK4=; b=Ga3vdZFnO7UP1csuSkCpoi3TnZ
+	Z2/C0Z1jf0Ac++Nozq01uciJFZ9WmH8SFrfTUhRLHjKiebTP/7yJZpWNupLAvb3XUTESSm7tA09nj
+	/44TZvtqIVeXIxwi+GWi+KjdHPLrFED7x5d/K8T2c8GwFH+FfFn/h1+okZm376u80B3YuscJRzXXA
+	5LnyPzHhAYaGRwWoCaYwM24r+/JO0Wl22xeBLMkU8NuPSzCiDc5ZIpEF5MpNuAPm6nXU8VHMDemJm
+	EUrYFEQyiBgOjgZOCSbrFXeI+TYynHXp2Ljxd+7m7a4ryHZLlVlPnLHpGoMXb/7HoK3HnvftbcK5K
+	H+Jw4ouw==;
+Received: from viro by zeniv.linux.org.uk with local (Exim 4.98.1 #2 (Red Hat Linux))
+	id 1tvRoA-00000007AuC-1BtV;
+	Fri, 21 Mar 2025 02:08:26 +0000
+Date: Fri, 21 Mar 2025 02:08:26 +0000
+From: Al Viro <viro@zeniv.linux.org.uk>
+To: julian.stecklina@cyberus-technology.de
+Cc: Christoph Hellwig <hch@lst.de>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] initrd: support erofs as initrd
+Message-ID: <20250321020826.GB2023217@ZenIV>
+References: <20250320-initrd-erofs-v1-1-35bbb293468a@cyberus-technology.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/6] iommu: make inclusion of intel directory conditional
-To: Rolf Eike Beer <eb@emlix.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Jerry Snitselaar <jsnitsel@redhat.com>
-References: <12652899.O9o76ZdvQC@devpool47.emlix.com>
- <12654723.O9o76ZdvQC@devpool47.emlix.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <12654723.O9o76ZdvQC@devpool47.emlix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250320-initrd-erofs-v1-1-35bbb293468a@cyberus-technology.de>
+Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On 3/20/25 17:07, Rolf Eike Beer wrote:
-> Nothing in there is active if CONFIG_INTEL_IOMMU is not enabled, so the whole
-> directory can depend on that switch as well.
+On Thu, Mar 20, 2025 at 08:28:23PM +0100, Julian Stecklina via B4 Relay wrote:
+> From: Julian Stecklina <julian.stecklina@cyberus-technology.de>
 > 
-> Fixes: ab65ba57e3ac ("iommu/vt-d: Move Kconfig and Makefile bits down into intel directory")
-> Signed-off-by: Rolf Eike Beer<eb@emlix.com>
+> Add erofs detection to the initrd mount code. This allows systems to
+> boot from an erofs-based initrd in the same way as they can boot from
+> a squashfs initrd.
+> 
+> Just as squashfs initrds, erofs images as initrds are a good option
+> for systems that are memory-constrained.
+> 
+> Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+>  #include "do_mounts.h"
+>  #include "../fs/squashfs/squashfs_fs.h"
+> +#include "../fs/erofs/erofs_fs.h"
+
+This is getting really unpleasant...
+
+Folks, could we do something similar to initcalls - add a section
+(.init.text.rd_detect?) with array of pointers to __init functions
+that would be called by that thing in turn?  With filesystems that
+want to add that kind of stuff being about to do something like
+
+static int __init detect_minix(struct file *file, void *buf, loff_t *pos, int start_block)
+{
+	struct minix_super_block *minixsb = buf;
+	initrd_fill_buffer(file, buf, pos, (start_block + 1) * BLOCK_SIZE);
+	if (minixsb->s_magic == MINIX_SUPER_MAGIC ||
+	    minixsb->s_magic == MINIX_SUPER_MAGIC2) {
+		printk(KERN_NOTICE
+			"RAMDISK: Minix filesystem found at block %d\n",
+			start_block);
+		return minixsb->s_nzones << minixsb->s_log_zone_size;
+	}
+	return -1;
+}
+
+initrd_detect(detect_minix);
+
+with the latter emitting a pointer to detect_minix into that new
+section?
+
+initrd_fill_buffer() would be something along the lines of
+
+	if (*pos != wanted) {
+		*pos = wanted;
+		kernel_read(file, buf, 512, pos);
+	}
+
+I mean, we can keep adding those pieces there, but...
