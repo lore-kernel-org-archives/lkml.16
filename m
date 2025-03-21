@@ -1,168 +1,169 @@
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A96551BF33F;
-	Fri, 21 Mar 2025 15:06:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B9142A94
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742569574; cv=none; b=E5/kOqZbrZHmUopoYeOnmZJjLMX38NhMz2i97UA9mWZUp0LtqbWO7IX6jSYW2OtckVYHYqPlXD5rKYYr4sWIqszfdMIwj11oGBP1/DVxb94yIj65PBu0Ep6fEii1VLfjsKPlRp7W4eWW8wSsJG3amrLkBAFOcTJhZRa8RSzhWkc=
+	t=1742569778; cv=none; b=Bf4+caNblPgB+KOyGJ8QZ62QNbRDacejQXqIdgmGmM8LEcP+OO7Pu3INOj9bFLiBmXYV4le76/NGC2P7iiafjOzMnVGsF4rMa6lVXlh29+utD1FxyMeYh7YHlZJ02sIGvOrYD7Y9htE8KvY0/oPtYmZgr+zl41WYofHsfSTMnsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742569574; c=relaxed/simple;
-	bh=XA2Gu50kK0XaU4z9LhCZJkypLoFELm9KQ+TbWjfT2Pc=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=BXWzpCYenfwBQ90LkNjfM2xTLiNK9fzWOOqZadw++2xifeffGCG0npkDtZGZw6v0qGYPqXwPI3jtFqQhbKadz/3SJhzeVoL1ezqF6W2/jqgUd2e/UR3AcoBh7dWh+p2vwutieNQFrEeR/xx4TCWwWO/mGFnu9U8WXgAs3tA2GlQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=kae6lGAS; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=TtaaFLCY; arc=none smtp.client-ip=193.142.43.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
+	s=arc-20240116; t=1742569778; c=relaxed/simple;
+	bh=Vp/jBfkzLwkxCYSWwK6+uoh8+KQDvgpSnVQxUC7RpQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rO6MBOOZ0rcJJ9JSiVI1eBi8g+MmeOZLY/709JmsAiGWXBSCSCIT8AAIzAK9sP99oNTEHh5GoFKlKvnadMQKBUHJ1cBC1sRlqA/8tcdwTFKto/U3TQWbaBJ/6TIWguYN3szSl3ftEJJGApJsTbK8yc8GyiNBcc3wgw4JSQOhw5U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz; spf=pass smtp.mailfrom=suse.cz; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ualdCGVC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rHDuRmzb; dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b=ualdCGVC; dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b=rHDuRmzb; arc=none smtp.client-ip=195.135.223.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=suse.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.cz
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="kae6lGAS";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="TtaaFLCY"
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742569570;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ualdCGVC";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rHDuRmzb";
+	dkim=pass (1024-bit key) header.d=suse.cz header.i=@suse.cz header.b="ualdCGVC";
+	dkim=permerror (0-bit key) header.d=suse.cz header.i=@suse.cz header.b="rHDuRmzb"
+Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-out2.suse.de (Postfix) with ESMTPS id 4A0101FEF7;
+	Fri, 21 Mar 2025 15:09:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742569774; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s3xRMm/rve5tX4RS5krW2FzMj7lxvQwvAFwsA0ucEdk=;
-	b=kae6lGASZtykieaHmifexy4idu0yP4qRtqwsFaZV7yrzaYKiC8V7DG0O9PsunJlTpumG03
-	jgSovk0pzFC/TnJ9fOFKwg5nptoI1YGOpdudZVQUlsD71nZsOdXSj6c9IG63q9gPd4KidV
-	n6YHH/DRHSXmyaAR6epLyAtXOWR1DaeO2eh3zQcLrc/HN08kuQ8R6D7PPfDQsZ0wKcPbGU
-	pQgUGp3Hn8vTR8q8tYRKIB6RWDmgEp58IzDvZasZK/XLhRT3chpdZbyfrYYoSrCI+oEgsx
-	jNU0pgUr+oBmbwWBE+tVhSyijVWCvyd2EfIed7mhwdbMGxipUAgl3LX1pFvCOw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742569570;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	bh=DgznpANGOBOKlm9alAYsgKxcYpu8Q4cgo8ZhvrGmDAo=;
+	b=ualdCGVCjsvY/bXsGDjJbRmm5wO9Q3vwFukMFFZljtNUV6OU8wUryyKdiXfgV3Wh+XnwKw
+	Oi2wfjn/WtcTDqPdhGfb8wA/+TYd7UmE7Bc9ab2vx7N2YzJvbLoOjuDJ1oCo91Scmm/Og+
+	UXcW30xdQ4dGH5lTmbwLkaX6qcxzQMo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742569774;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=s3xRMm/rve5tX4RS5krW2FzMj7lxvQwvAFwsA0ucEdk=;
-	b=TtaaFLCY3ksSp92lAsQ+lVHRJ2FGy4RFaqJ1MOBIByr3IsZcWRULCZ4d9vjP/3ETaZWHhx
-	P3hdmMDZmiA7HKBw==
-To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org
-Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
- Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
- Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
- x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
- pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
- huibo.wang@amd.com, naveen.rao@amd.com
-Subject: Re: [RFC v2 06/17] x86/apic: Add support to send IPI for Secure AVIC
-In-Reply-To: <20250226090525.231882-7-Neeraj.Upadhyay@amd.com>
-References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
- <20250226090525.231882-7-Neeraj.Upadhyay@amd.com>
-Date: Fri, 21 Mar 2025 16:06:09 +0100
-Message-ID: <87h63m2zku.ffs@tglx>
+	bh=DgznpANGOBOKlm9alAYsgKxcYpu8Q4cgo8ZhvrGmDAo=;
+	b=rHDuRmzbVpwKTgAsTemQmOFzj2QTE7ogoUfMdbpUcjSib2o/X3Ia98WRvl/zHeFdEY+j94
+	pvCTzGGSEcZEdICg==
+Authentication-Results: smtp-out2.suse.de;
+	dkim=pass header.d=suse.cz header.s=susede2_rsa header.b=ualdCGVC;
+	dkim=pass header.d=suse.cz header.s=susede2_ed25519 header.b=rHDuRmzb
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.cz; s=susede2_rsa;
+	t=1742569774; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DgznpANGOBOKlm9alAYsgKxcYpu8Q4cgo8ZhvrGmDAo=;
+	b=ualdCGVCjsvY/bXsGDjJbRmm5wO9Q3vwFukMFFZljtNUV6OU8wUryyKdiXfgV3Wh+XnwKw
+	Oi2wfjn/WtcTDqPdhGfb8wA/+TYd7UmE7Bc9ab2vx7N2YzJvbLoOjuDJ1oCo91Scmm/Og+
+	UXcW30xdQ4dGH5lTmbwLkaX6qcxzQMo=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.cz;
+	s=susede2_ed25519; t=1742569774;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=DgznpANGOBOKlm9alAYsgKxcYpu8Q4cgo8ZhvrGmDAo=;
+	b=rHDuRmzbVpwKTgAsTemQmOFzj2QTE7ogoUfMdbpUcjSib2o/X3Ia98WRvl/zHeFdEY+j94
+	pvCTzGGSEcZEdICg==
+Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 332CE139AA;
+	Fri, 21 Mar 2025 15:09:34 +0000 (UTC)
+Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
+	by imap1.dmz-prg2.suse.org with ESMTPSA
+	id urEqDC6B3WemDwAAD6G6ig
+	(envelope-from <vbabka@suse.cz>); Fri, 21 Mar 2025 15:09:34 +0000
+Message-ID: <c3a0e874-7035-4505-812b-60acc5fc2032@suse.cz>
+Date: Fri, 21 Mar 2025 16:09:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] mm: Fix parameter passed to
+ page_mapcount_is_type()
+Content-Language: en-US
+To: Gavin Shan <gshan@redhat.com>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+ willy@infradead.org, david@redhat.com, linmiaohe@huawei.com,
+ gehao@kylinos.cn, shan.gavin@gmail.com
+References: <20250321120222.1456770-1-gshan@redhat.com>
+ <20250321120222.1456770-2-gshan@redhat.com>
+From: Vlastimil Babka <vbabka@suse.cz>
+In-Reply-To: <20250321120222.1456770-2-gshan@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 4A0101FEF7
+X-Spam-Score: -3.01
+X-Rspamd-Action: no action
+X-Spamd-Result: default: False [-3.01 / 50.00];
+	BAYES_HAM(-3.00)[99.99%];
+	SUSPICIOUS_RECIPS(1.50)[];
+	NEURAL_HAM_LONG(-1.00)[-1.000];
+	R_DKIM_ALLOW(-0.20)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	NEURAL_HAM_SHORT(-0.20)[-1.000];
+	MIME_GOOD(-0.10)[text/plain];
+	MX_GOOD(-0.01)[];
+	TO_MATCH_ENVRCPT_ALL(0.00)[];
+	DKIM_SIGNED(0.00)[suse.cz:s=susede2_rsa,suse.cz:s=susede2_ed25519];
+	FUZZY_BLOCKED(0.00)[rspamd.com];
+	ARC_NA(0.00)[];
+	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_ENVRCPT(0.00)[gmail.com];
+	FREEMAIL_CC(0.00)[vger.kernel.org,linux-foundation.org,infradead.org,redhat.com,huawei.com,kylinos.cn,gmail.com];
+	RCVD_TLS_ALL(0.00)[];
+	RCVD_COUNT_TWO(0.00)[2];
+	FROM_EQ_ENVFROM(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	SPAMHAUS_XBL(0.00)[2a07:de40:b281:104:10:150:64:97:from];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[9];
+	DKIM_TRACE(0.00)[suse.cz:+];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:rdns,imap1.dmz-prg2.suse.org:helo]
+X-Rspamd-Server: rspamd1.dmz-prg2.suse.org
+X-Spam-Flag: NO
+X-Spam-Level: 
 
-On Wed, Feb 26 2025 at 14:35, Neeraj Upadhyay wrote:
-> +	/* Self IPIs are accelerated by hardware, use wrmsr */
-> +	case APIC_SELF_IPI:
-> +		cfg = __prepare_ICR(APIC_DEST_SELF, data, 0);
-> +		native_x2apic_icr_write(cfg, 0);
-> +		break;
+On 3/21/25 13:02, Gavin Shan wrote:
+> As the comments of page_mapcount_is_type() indicate, the parameter
+> passed to the function should be one more than page->_mapcount.
+> However, page->_mapcount (equivalent to page->page_type) is passed
+> to the function by commit 4ffca5a96678 ("mm: support only one page_type
+> per page") page_type_has_type() is replaced by page_mapcount_is_type(),
+> but the parameter isn't adjusted.
+> 
+> Fix it by replacing page_mapcount_is_type() with page_type_has_type()
+> in page_has_type(). Note that the issue doesn't cause any visible impacts
+> due to the safety gap introduced by PGTY_mapcount_underflow limit.
+> 
+> Fixes: 4ffca5a96678 ("mm: support only one page_type per page")
+> Signed-off-by: Gavin Shan <gshan@redhat.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
 
-Please move this into a proper inline helper with a understandable
-comment and do not hide it in the maze of this write() wrapper.
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
 
->  	/* ALLOWED_IRR offsets are writable */
->  	case SAVIC_ALLOWED_IRR_OFFSET ... SAVIC_ALLOWED_IRR_OFFSET + 0x70:
->  		if (IS_ALIGNED(reg - SAVIC_ALLOWED_IRR_OFFSET, 16)) {
-> @@ -154,13 +159,100 @@ static void x2apic_savic_write(u32 reg, u32 data)
->  	}
+> ---
+>  include/linux/page-flags.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/page-flags.h b/include/linux/page-flags.h
+> index 36d283552f80..e1a9f84bd5ab 100644
+> --- a/include/linux/page-flags.h
+> +++ b/include/linux/page-flags.h
+> @@ -950,7 +950,7 @@ static inline bool page_mapcount_is_type(unsigned int mapcount)
+>  
+>  static inline bool page_has_type(const struct page *page)
+>  {
+> -	return page_mapcount_is_type(data_race(page->page_type));
+> +	return page_type_has_type(data_race(page->page_type));
 >  }
 >  
-> +static void send_ipi(int cpu, int vector)
+>  #define FOLIO_TYPE_OPS(lname, fname)					\
 
-Both are unsigned
-
-> +{
-> +	void *backing_page;
-> +	int reg_off;
-> +
-> +	backing_page = per_cpu(apic_backing_page, cpu);
-> +	reg_off = APIC_IRR + REG_POS(vector);
-> +	/*
-> +	 * Use test_and_set_bit() to ensure that IRR updates are atomic w.r.t. other
-> +	 * IRR updates such as during VMRUN and during CPU interrupt handling flow.
-> +	 */
-> +	test_and_set_bit(VEC_POS(vector), (unsigned long *)((char *)backing_page + reg_off));
-
-See previous mail.
-
-> +}
-> +
-> +static void send_ipi_dest(u64 icr_data)
-> +{
-> +	int vector, cpu;
-> +
-> +	vector = icr_data & APIC_VECTOR_MASK;
-> +	cpu = icr_data >> 32;
-
-Yes, converting from u64 to int is the proper conversion (NOT)
-
-> +
-> +	send_ipi(cpu, vector);
-> +}
-> +
-> +static void send_ipi_target(u64 icr_data)
-> +{
-> +	if (icr_data & APIC_DEST_LOGICAL) {
-> +		pr_err("IPI target should be of PHYSICAL type\n");
-> +		return;
-> +	}
-> +
-> +	send_ipi_dest(icr_data);
-> +}
-> +
-> +static void send_ipi_allbut(u64 icr_data)
-> +{
-> +	const struct cpumask *self_cpu_mask = get_cpu_mask(smp_processor_id());
-> +	unsigned long flags;
-> +	int vector, cpu;
-> +
-> +	vector = icr_data & APIC_VECTOR_MASK;
-> +	local_irq_save(flags);
-> +	for_each_cpu_andnot(cpu, cpu_present_mask, self_cpu_mask)
-> +		send_ipi(cpu, vector);
-> +	savic_ghcb_msr_write(APIC_ICR, icr_data);
-> +	local_irq_restore(flags);
-> +}
-> +
-> +static void send_ipi_allinc(u64 icr_data)
-> +{
-> +	int vector;
-> +
-> +	send_ipi_allbut(icr_data);
-> +	vector = icr_data & APIC_VECTOR_MASK;
-> +	native_x2apic_icr_write(APIC_DEST_SELF | vector, 0);
-> +}
-> +
-> +static void x2apic_savic_icr_write(u32 icr_low, u32 icr_high)
-> +{
-> +	int dsh, vector;
-> +	u64 icr_data;
-> +
-> +	icr_data = ((u64)icr_high) << 32 | icr_low;
-> +	dsh = icr_low & APIC_DEST_ALLBUT;
-> +
-> +	switch (dsh) {
-> +	case APIC_DEST_SELF:
-> +		vector = icr_data & APIC_VECTOR_MASK;
-
-So you construct icr_data first and then extract the vector from it,
-which is encoded in the low bits of icr_low.
-
-> +		x2apic_savic_write(APIC_SELF_IPI, vector);
-> +		break;
-> +	case APIC_DEST_ALLINC:
-> +		send_ipi_allinc(icr_data);
-
-And you do the same nonsense in all other functions. Oh well...
-
-Thanks,
-
-        tglx
