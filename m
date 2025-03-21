@@ -1,61 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4042922579E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:29:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA79B226CF8
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:30:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742560179; cv=none; b=OGTiWH1dO44qOslaQUU11mR0vIJxbyy51P99A6yzsN5Uj14gpZBVljSuXV2yEfOnBiEFG0qqDk6T4sprrbBXJBoK2QbTouU5H932IHH2K+oLRQztMew/gUxbGTT/YD9lhE13z5xvWoLr1IZyOheT6nTs4mxnGIa67nj8VRu59A8=
+	t=1742560211; cv=none; b=fW9WlV7/Dc1e+opDxFqMYpWjQ4Ehq5b5ljWD8sTbH2MZ/KpxXfLccVD8B7k72xPJbHoXFOGXdu9eIB8Zi2a4smn+La1Ta2xVWtVqhsGkTBRYjc0y275Lil4fySUzwZu4Jl6G/aZaPtae2Kn/Xx5qannzgy+o6q1CvSZcKOWlmWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742560179; c=relaxed/simple;
-	bh=PF0H1yleBcdzKQCUKN2tjThzP3QOfirGFp2mYWdYP2E=;
+	s=arc-20240116; t=1742560211; c=relaxed/simple;
+	bh=z2h8kmcrvjsG0wHPqWEEDMYXLWs3RQptqRtGchizi+M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X2XW84qsAkvC7Xh8PwbSzJGPsw6pEV3wAVdSzIja6iieiPcdN4ZjQUCI0iZotygVCWt1GFeoyZ6bhu+LumL3V7oSvzGijgbl5PdV/pQjZ6q8+kUtxyXdfHmFcFmOYWcZaHpFmf77pawOBxd+cPA0AQvHM5zCO8uGmWUjZKD9fV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Py/SqAmk; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=YbYbFPwvR7iWunXfWueKtZIwfefjuiiDX8ko5AvMZbehWLrgcPopPhF9hWM1IEve05oGs+Sbn7IhDbdKG7volEcvWVhNGzAOUJO+96QE+1S4TZXOUJfiP0y7G92OW4jmp3pfF1bhJsg5cA6tphjy+0/cUJT0+xYongjcl4nEkQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=YIimjCTy; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Py/SqAmk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742560176;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JH1JMEX1U03GwFlhmPqH+QBmMArUZbpV1nyS6EyqGXg=;
-	b=Py/SqAmkC5IZv0Gj2okceuz+O8Gitsk0sFsEjzEf0GL1oE/+cjRXbnkqCAIy16owkmzAZx
-	los4vYC/dRcXvoDysobNN5/rtMyDTXFxvIDDUyuKBxaweoi+jKXYJa74UXvtHARkOwrUPe
-	9byn7dzxXOVDAjUN1LlbTJbf77TC9UI=
-Received: from mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-117-khO1C2dVOFKOcwOL3oRfBg-1; Fri,
- 21 Mar 2025 08:29:33 -0400
-X-MC-Unique: khO1C2dVOFKOcwOL3oRfBg-1
-X-Mimecast-MFC-AGG-ID: khO1C2dVOFKOcwOL3oRfBg_1742560171
-Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0349C190308B;
-	Fri, 21 Mar 2025 12:29:31 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.44.33.60])
-	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with SMTP id 82168195609D;
-	Fri, 21 Mar 2025 12:29:24 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-	oleg@redhat.com; Fri, 21 Mar 2025 13:28:58 +0100 (CET)
-Date: Fri, 21 Mar 2025 13:28:50 +0100
-From: Oleg Nesterov <oleg@redhat.com>
-To: Penglei Jiang <superman.xpt@gmail.com>
-Cc: mhiramat@kernel.org, peterz@infradead.org, mingo@redhat.com,
-	acme@kernel.org, namhyung@kernel.org, mark.rutland@arm.com,
-	alexander.shishkin@linux.intel.com, jolsa@kernel.org,
-	irogers@google.com, adrian.hunter@intel.com,
-	kan.liang@linux.intel.com, linux-kernel@vger.kernel.org,
-	linux-trace-kernel@vger.kernel.org,
-	linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH] uprop: Add new verification condition to verify_opcode
-Message-ID: <20250321122850.GA4776@redhat.com>
-References: <20250321105652.21711-1-superman.xpt@gmail.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="YIimjCTy"
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-38a25d4b9d4so959215f8f.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:30:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1742560208; x=1743165008; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=G65UV4/EPEL+kQ65PV9/uamD/u6L+fEtW/r8PlOFSsA=;
+        b=YIimjCTyLFFAlPTNbZO3VZsh/7j3Kc15NqeVnhXZBUOSddhkUAbprRzb0/3GMpZXk7
+         Yt3GwW/WqwgKlcU50hEPXMGjCpjFqno1EzgV3Hb5vJJrEU93vBWjvdn2abi2loOVwOgQ
+         GXNq9gWOTl3dcXxBKIa8U/zHyclZYfs09lgPw8jE1ldQzTkDKFKEwBuIwqpfLRXlT7MR
+         ZoFKS+Ry368BOm7oxaUEVR+8YG4bcX9YbOivunjJ/jE1lrokjvj4/rbEAcHj7h/k6y52
+         kRjUFB7BDRQzvpI72xL2dTvGrdHvXDnxmzkgvwufKA+n4WQJFLn2JlcR7HiKXtHsHFgA
+         FftQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742560208; x=1743165008;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G65UV4/EPEL+kQ65PV9/uamD/u6L+fEtW/r8PlOFSsA=;
+        b=I172Vz3u/cdvwzEN507t69yXgwfd6H322w4/4Aaun3Zq6hoH3PVAzL7Crdn4dkaRmS
+         msWvBky8Pr0lsDQuwxoaSpcQvYwQMMtRZSZVIN3zC0il6xatIYJxQBtK8kPg/OYPwT7a
+         2oGI7wjXmulepu4dSmgSKsDMchdq4FO9PT+F3gvopKhXMU1i1YCApXy6lYMDo4gsl6YV
+         EHCMJ2WScWyuM+2094ZFZwhedIr8Gk5zVHxU+qcQztRR7/rQe5BjQMe45EEodMjKS7vj
+         9Y55bsqkrultFbv5pZ260xr7qYAep9cuEtkywGSlRYcRQ38Hp8KgjKD2gp+xxlN3Hjj2
+         iExA==
+X-Forwarded-Encrypted: i=1; AJvYcCViX53QvEeNCk5RU38Z0dAvgr9KG45FO6Rw/u+fxcvBXYkdFQr/+1jKo74wJfrsNhk1LSpSxMeX/AccD3s=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzkumevtiKKJuikDuoPvK7rl2iKp/bvSvGWN0HYE3KQLYw48L32
+	ekoPpfUjqZZNdtINj+NzWXof6RrcrRhr+Ct8jE436NXjdpUlt7CIiEa8OKedO4Q=
+X-Gm-Gg: ASbGncvsKLlb7I7zE30lIg4/O2eD6jT+EEw/99TjXhoO0FW/JnEQ5LxQX0nJw8ucoqQ
+	2LlvasTptxSkmUwOGRKZTRV8tw7veWinKHH3udl+khFXGplStR8kVpxUad7jYcpjeKplG5H32Pr
+	CWS6C6yzpKGQa5whrvd6Uu/x1X5lZkY0IyZ7vsCc1H8sA85r+WWshj3A2XHeI38WuWngJsPCa6Z
+	FyjQKAOwotHB/SLFiAjY4PmvZlFU0cMeGWyrWx5MKMUEgfvb1PjwdRXf9Aab9dQkzuBAlMb+IG+
+	ZniD1/cJTaO3ngBi/JMMVizxvwfUYpYLGvkp602yk/QKI4A=
+X-Google-Smtp-Source: AGHT+IExv+tybR5ipnVHMChIozaD9HWg71HI9cTN6Q9laK+gRbql3sVz1wKjQhAcenueVqPKCCAWLw==
+X-Received: by 2002:a5d:598c:0:b0:391:3aaf:1d5f with SMTP id ffacd0b85a97d-3997f9595f6mr2940009f8f.52.1742560207835;
+        Fri, 21 Mar 2025 05:30:07 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3a10sm2231886f8f.28.2025.03.21.05.30.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 05:30:07 -0700 (PDT)
+Date: Fri, 21 Mar 2025 13:30:05 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Hao Jia <jiahao1@lixiang.com>, Hao Jia <jiahao.kernel@gmail.com>, 
+	akpm@linux-foundation.org, tj@kernel.org, corbet@lwn.net, mhocko@kernel.org, 
+	roman.gushchin@linux.dev, shakeel.butt@linux.dev, muchun.song@linux.dev, 
+	cgroups@vger.kernel.org, linux-mm@kvack.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm: vmscan: Split proactive reclaim statistics from
+ direct reclaim statistics
+Message-ID: <isr7mmozkvkj3e4zk55fx2lzkwjxjhl4ac2f45l75qnna3bntp@cfm6v7wkmpyc>
+References: <20250318075833.90615-1-jiahao.kernel@gmail.com>
+ <20250318075833.90615-2-jiahao.kernel@gmail.com>
+ <qt73bnzu5k7ac4hnom7jwhsd3qsr7otwidu3ptalm66mbnw2kb@2uunju6q2ltn>
+ <f62cb0c2-e2a4-e104-e573-97b179e3fd84@gmail.com>
+ <unm54ivbukzxasmab7u5r5uyn7evvmsmfzsd7zytrdfrgbt6r3@vasumbhdlyhm>
+ <b8c1a314-13ad-e610-31e4-fa931531aea9@gmail.com>
+ <hvdw5o6trz5q533lgvqlyjgaskxfc7thc7oicdomovww4pn6fz@esy4zzuvkhf6>
+ <3a7a14fb-2eb7-3580-30f8-9a8f1f62aad4@lixiang.com>
+ <rxgfvctb5a5plo2o54uegyocmofdcxfxfwwjsn2lrgazdxxbnc@b4xdyfsuplwd>
+ <20250319154428.GA1876369@cmpxchg.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,127 +85,37 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250321105652.21711-1-superman.xpt@gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+In-Reply-To: <20250319154428.GA1876369@cmpxchg.org>
 
-Hi Penglei,
+On Wed, Mar 19, 2025 at 11:44:28AM -0400, Johannes Weiner <hannes@cmpxchg.org> wrote:
+> Can you clarify if you're proposing this as an addition or instead of
+> the memory.stat items?
 
-On 03/21, Penglei Jiang wrote:
->
-> If, during probe registration, the instruction at the probe point
-> differs between the file and memory (due to self-modifying code),
-> and the probe registration succeeds, the following errors occur:
+1) more precise info for given reclaim daemon
+2) slight saving in the long list of memory stats (sorry, I must
+   question new entries :-) to balance flushing[*])
 
-Thanks for the patch, but I'd say we do not care.
+I was originally motivated by 2) to propose the alternative but it is
+not strong alone if 1) is unnecessary at the moment (and it seems the
+blurring via aggregation is acceptable for the users), so let's consider
+that idea a (potential) addition.
 
-uprobes.c assumes that user-space should not modify the probed memory.
+Michal
 
-And I don't think your patch can really help. What if user-space
-modifies the probed insn right after verify_opcode() succeeds?
+[*] You'd be right to argue that per-writer collection may not be more
+    efficient in implementation.
 
-Oleg.
 
->   1. When unregistering the probe, it restores the wrong original
->      instruction.
->      - If the instruction crosses a page boundary: it restores only
->        part of the instruction fetched from the file (the part saved
->        in the first page) to the probe point, and does not restore
->        the remaining part that crosses the page boundary, which can
->        lead to unknown instruction.
->      - If the instruction does not cross a page boundary: it restores
->        the instruction fetched from the file to the probe point.
-> 
->   2. The code logic changes because the saved original instruction
->      is fetched from the file.
-> 
-> Fix:
-> 
->   Add an extra check in the registration branch of verify_opcode.
->   If the instruction at the probe point differs between the file
->   and memory, the verification fails.
-> 
-> Signed-off-by: Penglei Jiang <superman.xpt@gmail.com>
-> ---
->  kernel/events/uprobes.c | 47 +++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 45 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-> index b4ca8898fe17..580dd9fe4015 100644
-> --- a/kernel/events/uprobes.c
-> +++ b/kernel/events/uprobes.c
-> @@ -264,10 +264,46 @@ static void copy_to_page(struct page *page, unsigned long vaddr, const void *src
->  	kunmap_atomic(kaddr);
->  }
->  
-> -static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t *new_opcode)
-> +static int copy_insn_from_mem(struct page *p, unsigned long vaddr,
-> +		struct arch_uprobe *dst, struct mm_struct *mm)
-> +{
-> +	pgoff_t offset = offset_in_page(vaddr);
-> +	void *dst_insn = &dst->insn;
-> +	size_t size = sizeof(dst->insn);
-> +	size_t first_size;
-> +	int err;
-> +
-> +	first_size = min_t(size_t, size, PAGE_SIZE - offset);
-> +	copy_from_page(p, offset, dst_insn, first_size);
-> +	vaddr += first_size;
-> +	dst_insn += first_size;
-> +	size -= first_size;
-> +
-> +	/*
-> +	 * If the instruction spans the page boundary, continue copying
-> +	 * the remaining instruction from the second page.
-> +	 */
-> +	if (size) {
-> +		err = get_user_pages_remote(mm, vaddr, 1, FOLL_FORCE, &p, NULL);
-> +		if (err < 0)
-> +			return err;
-> +		if (err == 0)
-> +			return -EBUSY;
-> +
-> +		copy_from_page(p, 0, dst_insn, size);
-> +		put_page(p);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int verify_opcode(struct page *page, unsigned long vaddr,
-> +		uprobe_opcode_t *new_opcode, const struct arch_uprobe *auprobe,
-> +		struct mm_struct *mm)
->  {
->  	uprobe_opcode_t old_opcode;
->  	bool is_swbp;
-> +	struct arch_uprobe current_insn;
->  
->  	/*
->  	 * Note: We only check if the old_opcode is UPROBE_SWBP_INSN here.
-> @@ -284,6 +320,13 @@ static int verify_opcode(struct page *page, unsigned long vaddr, uprobe_opcode_t
->  	if (is_swbp_insn(new_opcode)) {
->  		if (is_swbp)		/* register: already installed? */
->  			return 0;
-> +
-> +		if (copy_insn_from_mem(page, vaddr, &current_insn, mm))
-> +			return 0;
-> +					/* register: was it changed by self-modifying code? */
-> +		if (memcmp(&current_insn.insn, &auprobe->insn,
-> +			sizeof(current_insn.insn)))
-> +			return 0;
->  	} else {
->  		if (!is_swbp)		/* unregister: was it changed by us? */
->  			return 0;
-> @@ -491,7 +534,7 @@ int uprobe_write_opcode(struct arch_uprobe *auprobe, struct mm_struct *mm,
->  	if (IS_ERR(old_page))
->  		return PTR_ERR(old_page);
->  
-> -	ret = verify_opcode(old_page, vaddr, &opcode);
-> +	ret = verify_opcode(old_page, vaddr, &opcode, auprobe, mm);
->  	if (ret <= 0)
->  		goto put_old;
->  
-> -- 
-> 2.17.1
-> 
 
+> The proactive reclaimer data points provide a nice bit of nuance to
+> this. They can easily be aggregated over many machines etc.
+
+That could be collected from memory.reclaim too.
+
+> A usecase for per-fd stats would be interesting to hear about, but I
+> don't think they would be a suitable replacement for memory.stat data.
+
+There could be reclaim daemons running at different levels of hierarchy,
+the higher one would see effects of its operations only. Or differently
+parametrized reclaimers (swappiness), each interested in their own
+impact.
