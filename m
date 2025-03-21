@@ -1,203 +1,170 @@
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 040961D54D8;
-	Fri, 21 Mar 2025 23:17:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=67.231.149.25
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742599061; cv=fail; b=uEChJQgoCeV8ejFUwejxJN9iA1aXYsHiuIPJ23C7rjNxg4pFSlscaaxi8slHyqqsFgQYvhDR1UT/siBNcmhsf+yF8LYgyRR2QnRqNxy1H+l5Tu0xglUbgV9rX68syeYwhCSFIC18NPByJz4xTXvqFXF27k9f9CwmUtj48lRqJtQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742599061; c=relaxed/simple;
-	bh=blgl9gW8MXeyETXe2ED+sDHIT5mTVJ6IkMJqNp12N4I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=KGaWrKb+rFd/xswV5EyaMbeCjJFgVtSeliyVussPoTrQ0sgzw5TBT9/fISfnG6iKHcE7nbTFkNvHc2dEXbozbhVqjQZf32vzgQ956DZOHAdsL48Ti+dDVs3FwWNDXOR2CQH02z13PmPuEgNUvUjN7ER9yOiKffqzJ6k8GgOYs5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=IAde/YHg; dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b=YkkBQkB6; arc=fail smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cirrus.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3979723371C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:17:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742599067; cv=none; b=eK2LMQOPz9qv+cCrESNPcP2GtCLf8z/koCQxwCwlM7pjAL5YfdNE1e99E0vFfP/APLBkl3nKubHWTLwfjLfhNOZziTzmPtQLCP3wMRpIydPqHFcbApLV7LMG6sbG2tNDuZuzXpytDewwJ00FtkeyQhe02tyucJ4AZm+Bqhu0v4Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742599067; c=relaxed/simple;
+	bh=lXrOKtzABjGhWs7Ij/i6BaRO/TDVJITftxkEaZ9HOcs=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=ixEymlOLRCMW+uq6J/1X3oRNNJW5bkvXdvD9acbSYdUIBpvTkpt31S+chZFMEgodK6ueTk5kHa5zG3KaBSYiaH1nc6DvIB0/wWLMn/eV8zVSWTlH6fZQbT9wEyggM4jIFqSV2hHnZB4DBdOt9diD9WVOaOkzrkGxy70cggffzEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=jkr9BvQy; arc=none smtp.client-ip=209.85.216.74
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--seanjc.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="IAde/YHg";
-	dkim=pass (1024-bit key) header.d=cirrus4.onmicrosoft.com header.i=@cirrus4.onmicrosoft.com header.b="YkkBQkB6"
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52L4pugX019814;
-	Fri, 21 Mar 2025 18:17:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=PODMain02222019; bh=Dac2Byf4wZOup+6w
-	omVZ3kvLZST5quJGC0mpGH4hDH0=; b=IAde/YHg9SV5aWoMGp+BI1/DjjIWtb5f
-	yVN6p4NE9yN6HwFiogAq+FvVpEjNUQckzZ5Gt+zWgMKFhtV1xnuzY/niHcJrei3s
-	EoLHTbf5UGEhAqTUrraeFaVqQYRht4pWJsxqJ9gI6UUhKT0oa9DWo4GI4JJPoVOE
-	9bvCKW77iKaNmakKV01miTqfGUhBvEqkPWNLNviz5usRgK9cBomIIqkN2oMfQ0xy
-	ijc4PU1sofs3qXgBxzfqX42BQHC+L7sCqs1ufkunL2vLNjRqVLlzn23IA3iqIUfE
-	OOFaa2/u7cTST4rQCdhm8S7j7lFi7sTDXIeE2SmNNyQYmqJrabGRIw==
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2049.outbound.protection.outlook.com [104.47.57.49])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 45g9p6vxnx-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 18:17:28 -0500 (CDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IEgbUYVWWuIHGRvuCGqguVtEIVr5mWIkVkDE87c2LIBXFcOHIxeY0elp9yYMAx0hRxxifM8u+0xyTCDkIo0odu2X/GZliMJ9WV1fX0UojogiF40gt53HQUfbH3DreBtV5bEiQDVQSSoLF0AbWpEa8oQqabF8Ja7tGb2FC0TS7G1/cMbfRQaz/2uUnUXSrFYLgGX1KQoyGqE0COadOZV9XPgBICqPA+nkFz2E4a0Eikg/Eyx1aTm6voNuPswUKe29QkiMgpim4+PNt7eIkddSOGCd7EzRah48+HwQ5sXwnjMrWDNWXDfBBkDLZutw8PICNGtYMtZCmGLSkF21wr0wSQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Dac2Byf4wZOup+6womVZ3kvLZST5quJGC0mpGH4hDH0=;
- b=WRR5treq4j1hcoYIyP2vPQKK5uP/y1xfnmi54DMnF6hO9QHv/CtckuaP4Y7HcF7eDz/ZDmjl74+XJwTAsnj4jQTH1xm07GVnjXLaaTqCdYTQ+/QfY4CPTO6gDttbUlsfH2oKtcHeUWaoMruNnFoEkL2AsOHv7o1b4ZUv5YImB3UZO9LhYadmAbsSOV1xSmRHilGTO3Ei6R0YBYba13oNhD71oE/O428rZ/usrnHIfS1T4nP6nkKqqgcHzIjsexWHchokXgOT2PrQcozNzMsF53cUgJikIdk8cKsF+EAIzkHU6SayJIo/7u7w/Jhob9yUfrHtdWMDq76iPUMJeOyq6g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 84.19.233.75) smtp.rcpttodomain=cirrus.com smtp.mailfrom=cirrus.com;
- dmarc=fail (p=reject sp=reject pct=100) action=oreject
- header.from=opensource.cirrus.com; dkim=none (message not signed); arc=none
- (0)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jkr9BvQy"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2fec3e38c2dso6251814a91.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:17:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=cirrus4.onmicrosoft.com; s=selector2-cirrus4-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Dac2Byf4wZOup+6womVZ3kvLZST5quJGC0mpGH4hDH0=;
- b=YkkBQkB6HjfcIKfy8HGxhtJKbVJxAvNgdi+mU37OrttQ3ZC/CQERNkR+L92p1AD6BpFJSybAI5ob7x3ud7iUoJZcxyhNPvEqe0Du7vzosKyAo95QqU3Go+cX7q62Mefk1gisSO7hylNChdIEa0lfNgFd/D0WtnkCsrZi+1TYkwY=
-Received: from SJ0PR13CA0007.namprd13.prod.outlook.com (2603:10b6:a03:2c0::12)
- by SA1PR19MB5667.namprd19.prod.outlook.com (2603:10b6:806:23c::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.36; Fri, 21 Mar
- 2025 23:17:23 +0000
-Received: from SJ1PEPF00002323.namprd03.prod.outlook.com
- (2603:10b6:a03:2c0:cafe::3) by SJ0PR13CA0007.outlook.office365.com
- (2603:10b6:a03:2c0::12) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.36 via Frontend Transport; Fri,
- 21 Mar 2025 23:17:23 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 84.19.233.75)
- smtp.mailfrom=cirrus.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=oreject header.from=opensource.cirrus.com;
-Received-SPF: Fail (protection.outlook.com: domain of cirrus.com does not
- designate 84.19.233.75 as permitted sender) receiver=protection.outlook.com;
- client-ip=84.19.233.75; helo=edirelay1.ad.cirrus.com;
-Received: from edirelay1.ad.cirrus.com (84.19.233.75) by
- SJ1PEPF00002323.mail.protection.outlook.com (10.167.242.85) with Microsoft
- SMTP Server (version=TLS1_3, cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.20
- via Frontend Transport; Fri, 21 Mar 2025 23:17:22 +0000
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by edirelay1.ad.cirrus.com (Postfix) with ESMTPS id 72D7F406540;
-	Fri, 21 Mar 2025 23:17:20 +0000 (UTC)
-Received: from lonswws02.ad.cirrus.com (lonswws02.ad.cirrus.com [198.90.188.42])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 2E436820248;
-	Fri, 21 Mar 2025 23:17:20 +0000 (UTC)
-From: Stefan Binding <sbinding@opensource.cirrus.com>
-To: Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org,
-        patches@opensource.cirrus.com,
-        Stefan Binding <sbinding@opensource.cirrus.com>
-Subject: [PATCH v2] ALSA: hda/realtek: Add support for various HP Laptops using CS35L41 HDA
-Date: Fri, 21 Mar 2025 23:16:36 +0000
-Message-ID: <20250321231717.1232792-1-sbinding@opensource.cirrus.com>
-X-Mailer: git-send-email 2.43.0
+        d=google.com; s=20230601; t=1742599065; x=1743203865; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IyLJOzYWzjCIZlosJUfQjcjVnmAe1GOmsaNGK/OHc9M=;
+        b=jkr9BvQykSuOMo+liRLTXlPg4i8eKTGy1JJrdDLPkT4twknuUYqz0ePg/cL/Sx9jav
+         rs7P6QYJwW4vcRIkEfZhRazLyyKKLr7WBpSC9PAVVXDxdTkT1JTXQCQ5e/ZPOCGyo6bg
+         aK2+oDfC+Ycb9qFVlxnorYWyvcvdiNGLW3QXinOtDJvsWtrkrGRupGA0L8352WlHHmyY
+         /LgpHxtzXmSc52BRUzPhZJh81COMqttKTmAi6bKLMJVRLCwWxQ1r8rm7WwRrv1kjMdxD
+         j47LrrWsrpKGvzULlwWglEstUJ7VgaJqGseAviB1gsjyzh726jUiBIsC7pE8einGbvWL
+         cpFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742599065; x=1743203865;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IyLJOzYWzjCIZlosJUfQjcjVnmAe1GOmsaNGK/OHc9M=;
+        b=dNY94wEipSO5rlS24ToWkBa13mNpXlCqGtHl+qE0KBW8erxweoJZF3rN6WN5le7BcD
+         dgHMz9WUuaRuMH3W8UWQF0ytt2mO9klcfdAjyB4vsowi1RquHh9rH1sf+Dt4hD/iPbic
+         AvVskYfkKRRPkLEhCa++VGg0yL7JHeg9Y+njBqBFI6hq3ApeaXtZ5eoSTgCdZBsvt/uX
+         GA5RbO6yIL1HrPnsLule4KwNQIz+kbN4Qi9rtFK/SIrtkPt/61XaU6wTQS31qprpyGcn
+         Lhyg9PIp2aI5kh28T13rILjBJHAX1Z900S6n2a/DU+LIH26NaMg7coUVGVMM2C8kRZyc
+         Yyqw==
+X-Forwarded-Encrypted: i=1; AJvYcCVsHdNZG63VZC0Z4lMfashqZjA09mIhe8hGZ7qRL7c6PXfXmCy7tPqTtVNjeyEoydq0BmQu38ex8MBldYI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyy+q0d4WA+1rRb/JjfJSdW3uWSLXOGytuREHDgpUAyk4nSd5tF
+	hwnyG087lrfwsY8gcfUkEQryfPaDnDWbIRk2x7t7XsxAFgeHoYt0iZCecHp7drXAy12M5tcfDTG
+	zMg==
+X-Google-Smtp-Source: AGHT+IHpmffoheyuElFouvvpNqd6iCMiNPs8uVvwlJYQzQ/8dOEH51DfQjENTXniALDbstnCy+o/Z2aFi8Q=
+X-Received: from pgjh4.prod.google.com ([2002:a63:df44:0:b0:af5:91a1:e217])
+ (user=seanjc job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a20:a10c:b0:1f5:5614:18d3
+ with SMTP id adf61e73a8af0-1fe42f07bb6mr9334872637.8.1742599065381; Fri, 21
+ Mar 2025 16:17:45 -0700 (PDT)
+Date: Fri, 21 Mar 2025 16:17:43 -0700
+In-Reply-To: <aeabbd86-0978-dbd1-a865-328c413aa346@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ1PEPF00002323:EE_|SA1PR19MB5667:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 7dfd6be5-a2fc-4f5b-7d77-08dd68ce88ea
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|61400799027|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?tMO43mKGD7hC6jsZt2Nb7Dhes7D2YaFM6lnMKK5u1V77ZPsISBzw7+/ETU/0?=
- =?us-ascii?Q?WqbUbPOIHwJikZlILBEyHYQJinHGtBLM+W5LZcFyJ95H0hsqdVDQuJ1kuR6f?=
- =?us-ascii?Q?wtt3DLhjHhUzYuYOV2loUuDdgYpHDI2WevpKbidN2rZYT14wbcKe+KAw8+t0?=
- =?us-ascii?Q?YQhAx3iAnSw4sJY8dG1cZ70QjeWB4NlgVQIUIh4HHTiIXIpssAB8kBJTxIJt?=
- =?us-ascii?Q?6VFf384skd9GnliRvtDGt7PFuNcs3a/J6vMlHWM8wH9xZTCqtVO9ZRQMdVKN?=
- =?us-ascii?Q?JqIh0USI5P+01lYFUypq+CmERpPAE+i7+4DDKeShPTpj7WnlbrvL54QEqbu3?=
- =?us-ascii?Q?kIV21MTWFZQ7s3vzZS4HncU3WNgbi3giF/S15xVp4BroQrfGO6p9btq4aCy4?=
- =?us-ascii?Q?bOsNnQcx5jI0McRHWRyj0t97eoL0LJGURunWmGS8FROm8ucZPoaL9w4StTE+?=
- =?us-ascii?Q?QFLKfla+rezGNBDZGIK/Xmjqb3nMHN/6uQktAZi7Z7jCLSC87htsSA4PYA07?=
- =?us-ascii?Q?nj6rUzosfpXAXQNSVqT8Jj8GSXxQxdyNdQjVEpoMi/8q1/g/LJNVzPeZf2UA?=
- =?us-ascii?Q?yb9TspbseSqEF4TPSUNzaIFM5Cf7cPGjGXODguUv29AsYwoM+JhYoUkvzKq3?=
- =?us-ascii?Q?T+qSNUKY1BTZ+7GuNyxtznXcTbZCDmP5PwwSSwuK5ylconjkm1rF7nMjtHv0?=
- =?us-ascii?Q?YTqV2qz+bPbEwqHKGJvhpcVtpPwyNpS5+rCj1QFdkYTwtkW5TeyJnBrox2+u?=
- =?us-ascii?Q?TXA/ZFiC2XPX+RPVuQ+G+LAGdBD0Vk82FCZNRsJ+P/6ijhbFFlazGiWOMUIV?=
- =?us-ascii?Q?otE3uGl06tLCLvnQCsRhh6sZBB9oVVdrGbQKwneHWGZS1w3Q9jy6kgq+jnqQ?=
- =?us-ascii?Q?qV3FiUAjBzaT1pcnNCRFs1/YQUp0KIBghdIrFvsHge1Tlbza8IF3Bc9pMfd+?=
- =?us-ascii?Q?ve1pZY6rBXg/00l85VxJWhIMH0TOraocGyOtgMB+FN/Xq9yq+9Kko1zRZ3BD?=
- =?us-ascii?Q?TasQrRoNkMkxkVDSVNgPWmGjKx1gCM6Fos5qwLlAoomtLw+bCkg6DUp87GS2?=
- =?us-ascii?Q?4zQjh6SphlUD1i/I7IcO+SV6Dxemh6oYH6na6oeAuJsD1CotTU+irhEPeEAB?=
- =?us-ascii?Q?qz27Kkq8FA+zvEBBJi+d+J+n6S9tGtPGFdK+4n4AC2ArcceNu5w4I5RLqTIK?=
- =?us-ascii?Q?j8iah9Bt6SaDwv6ezswb8q1wDHKXfPDZEE07QxeG8RQ+0xNoPXMMESCoTsGV?=
- =?us-ascii?Q?4heh1xze0p0/cfuHnQxtm5B2SGlVhb0K5Y4Eijmz6Jr9fFp1BEwcZfqNEdUp?=
- =?us-ascii?Q?7VDuJyMgLEDYXPV477E8Z90gbhxyes64JdX4iRJq1UQhxO2fJJcywCfR6KKM?=
- =?us-ascii?Q?n+alLJO2KUHvFCAVSYifNlSfo4DYXoXXe7Oy3S6eQpktRrxN05XAznMA9tk3?=
- =?us-ascii?Q?uf5MMQyMu0pQqDBBHtSqoi7vbdb19AadlggdWfRAVTpk0WHTNQ8TUjQt6kOD?=
- =?us-ascii?Q?5Eg+dBvDgeMhQqI=3D?=
-X-Forefront-Antispam-Report:
-	CIP:84.19.233.75;CTRY:GB;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:edirelay1.ad.cirrus.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(61400799027)(36860700013);DIR:OUT;SFP:1102;
-X-OriginatorOrg: opensource.cirrus.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 23:17:22.2661
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7dfd6be5-a2fc-4f5b-7d77-08dd68ce88ea
-X-MS-Exchange-CrossTenant-Id: bec09025-e5bc-40d1-a355-8e955c307de8
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=bec09025-e5bc-40d1-a355-8e955c307de8;Ip=[84.19.233.75];Helo=[edirelay1.ad.cirrus.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SJ1PEPF00002323.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR19MB5667
-X-Authority-Analysis: v=2.4 cv=Vcz3PEp9 c=1 sm=1 tr=0 ts=67ddf388 cx=c_pps a=HKd0dofMVZNDIjQNdCpHRg==:117 a=h1hSm8JtM9GN1ddwPAif2w==:17 a=wKuvFiaSGQ0qltdbU6+NXLB8nM8=:19 a=Ol13hO9ccFRV9qXi2t6ftBPywas=:19 a=Vs1iUdzkB0EA:10 a=s63m1ICgrNkA:10
- a=RWc_ulEos4gA:10 a=w1d2syhTAAAA:8 a=HWLqE-iJ1nUeUiCOBTwA:9 a=BGLuxUZjE2igh1l4FkT-:22
-X-Proofpoint-GUID: aA263bPJVBm-Jn0x29pKnwIaNsgF8Tk6
-X-Proofpoint-ORIG-GUID: aA263bPJVBm-Jn0x29pKnwIaNsgF8Tk6
-X-Proofpoint-Spam-Reason: safe
+Mime-Version: 1.0
+References: <6053e8eba1456e4c1bf667f38cc20a0ea05bc72c.1742232014.git.thomas.lendacky@amd.com>
+ <48899db8-c506-b4d1-06cd-6ba9041437f7@amd.com> <Z9hbwkqwDKlyPsqv@google.com>
+ <8c0ed363-9ecc-19b2-b8d7-5b77538bda50@amd.com> <91b5126e-4b3e-bcbf-eb0d-1670a12b5216@amd.com>
+ <29b0a4fc-530f-29bf-84d4-7912aba7fecb@amd.com> <aeabbd86-0978-dbd1-a865-328c413aa346@amd.com>
+Message-ID: <Z93zl54pdFJ2wtns@google.com>
+Subject: Re: [PATCH] KVM: SVM: Fix SNP AP destroy race with VMRUN
+From: Sean Christopherson <seanjc@google.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org, 
+	Paolo Bonzini <pbonzini@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, 
+	Thomas Gleixner <tglx@linutronix.de>, Michael Roth <michael.roth@amd.com>
+Content-Type: text/plain; charset="us-ascii"
 
-Add support for HP Cadet, Clipper OmniBook, Turbine OmniBook, Trekker,
-Enstrom Onmibook, Piston Omnibook
+On Fri, Mar 21, 2025, Tom Lendacky wrote:
+> On 3/18/25 08:47, Tom Lendacky wrote:
+> > On 3/18/25 07:43, Tom Lendacky wrote:
+> >>>> Very off-the-cuff, but I assume KVM_REQ_UPDATE_PROTECTED_GUEST_STATE just needs
+> >>>> to be annotated with KVM_REQUEST_WAIT.
+> >>>
+> >>> Ok, nice. I wasn't sure if KVM_REQUEST_WAIT would be appropriate here.
+> >>> This is much simpler. Let me test it out and resend if everything goes ok.
+> >>
+> >> So that doesn't work. I can still get an occasional #VMEXIT_INVALID. Let
+> >> me try to track down what is happening with this approach...
+> >
+> > Looks like I need to use kvm_make_vcpus_request_mask() instead of just a
+> > plain kvm_make_request() followed by a kvm_vcpu_kick().
 
-Laptops use 2 CS35L41 Amps with HDA, using Internal boost, with I2C
+Ugh, I was going to say "you don't need to do that", but I forgot that
+kvm_vcpu_kick() subtly doesn't honor KVM_REQUEST_WAIT.
 
-Signed-off-by: Stefan Binding <sbinding@opensource.cirrus.com>
----
- sound/pci/hda/patch_realtek.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Ooof, I'm 99% certain that's causing bugs elsewhere.  E.g. arm64's KVM_REQ_SLEEP
+uses the same "broken" pattern (LOL, which means that of course RISC-V does too).
+In quotes, because kvm_vcpu_kick() is the one that sucks.
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 50e1c947a77c..1acf0783c0f8 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -10700,6 +10700,15 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8d90, "HP EliteBook 16 G12", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8d91, "HP ZBook Firefly 14 G12", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8d92, "HP ZBook Firefly 16 G12", ALC285_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8d9b, "HP 17 Turbine OmniBook 7 UMA", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8d9c, "HP 17 Turbine OmniBook 7 DIS", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8d9d, "HP 17 Turbine OmniBook X UMA", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8d9e, "HP 17 Turbine OmniBook X DIS", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8d9f, "HP 14 Cadet (x360)", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8da0, "HP 16 Clipper OmniBook 7(X360)", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8da1, "HP 16 Clipper OmniBook X", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8da7, "HP 14 Enstrom OmniBook X", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8da8, "HP 16 Piston OmniBook X", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8de8, "HP Gemtree", ALC245_FIXUP_TAS2781_SPI_2),
- 	SND_PCI_QUIRK(0x103c, 0x8de9, "HP Gemtree", ALC245_FIXUP_TAS2781_SPI_2),
- 	SND_PCI_QUIRK(0x103c, 0x8dec, "HP EliteBook 640 G12", ALC236_FIXUP_HP_GPIO_LED),
-@@ -10707,6 +10716,9 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8df0, "HP EliteBook 630 G12", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8dfc, "HP EliteBook 645 G12", ALC236_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8dfe, "HP EliteBook 665 G12", ALC236_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8e11, "HP Trekker", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8e12, "HP Trekker", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8e13, "HP Trekker", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x103c, 0x8e14, "HP ZBook Firefly 14 G12", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8e15, "HP ZBook Firefly 14 G12", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8e16, "HP ZBook Firefly 14 G12", ALC285_FIXUP_HP_GPIO_LED),
-@@ -10717,6 +10729,11 @@ static const struct hda_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x103c, 0x8e1b, "HP EliteBook G12", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8e1c, "HP EliteBook G12", ALC285_FIXUP_HP_GPIO_LED),
- 	SND_PCI_QUIRK(0x103c, 0x8e2c, "HP EliteBook 16 G12", ALC285_FIXUP_HP_GPIO_LED),
-+	SND_PCI_QUIRK(0x103c, 0x8e36, "HP 14 Enstrom OmniBook X", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8e37, "HP 16 Piston OmniBook X", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8e60, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8e61, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
-+	SND_PCI_QUIRK(0x103c, 0x8e62, "HP Trekker ", ALC287_FIXUP_CS35L41_I2C_2),
- 	SND_PCI_QUIRK(0x1043, 0x103e, "ASUS X540SA", ALC256_FIXUP_ASUS_MIC),
- 	SND_PCI_QUIRK(0x1043, 0x103f, "ASUS TX300", ALC282_FIXUP_ASUS_TX300),
- 	SND_PCI_QUIRK(0x1043, 0x1054, "ASUS G614FH/FM/FP", ALC287_FIXUP_CS35L41_I2C_2),
--- 
-2.43.0
+I would rather fix that a bit more directly and obviously.  IMO, converting to
+smp_call_function_single() isntead of bastardizing smp_send_reschedule() is worth
+doing regardless of the WAIT mess.  This will allow cleaning up a bunch of
+make_request+kick pairs, it'll just take a bit of care to make sure we don't
+create a WAIT where one isn't wanted (though those probably should have a big fat
+comment anyways).
+
+Compiled tested only.
+
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 5de20409bcd9..fd9d9a3ee075 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1505,7 +1505,16 @@ bool kvm_vcpu_block(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_blocking(struct kvm_vcpu *vcpu);
+ void kvm_arch_vcpu_unblocking(struct kvm_vcpu *vcpu);
+ bool kvm_vcpu_wake_up(struct kvm_vcpu *vcpu);
+-void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
++
++#ifndef CONFIG_S390
++void __kvm_vcpu_kick(struct kvm_vcpu *vcpu, bool wait);
++
++static inline void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
++{
++       __kvm_vcpu_kick(vcpu, false);
++}
++#endif
++
+ int kvm_vcpu_yield_to(struct kvm_vcpu *target);
+ void kvm_vcpu_on_spin(struct kvm_vcpu *vcpu, bool yield_to_kernel_mode);
+ 
+@@ -2253,6 +2262,14 @@ static __always_inline void kvm_make_request(int req, struct kvm_vcpu *vcpu)
+        __kvm_make_request(req, vcpu);
+ }
+ 
++#ifndef CONFIG_S390
++static inline void kvm_make_request_and_kick(int req, struct kvm_vcpu *vcpu)
++{
++       kvm_make_request(req, vcpu);
++       __kvm_vcpu_kick(vcpu, req & KVM_REQUEST_WAIT);
++}
++#endif
++
+ static inline bool kvm_request_pending(struct kvm_vcpu *vcpu)
+ {
+        return READ_ONCE(vcpu->requests);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 201c14ff476f..2a5120e2e6b4 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -3734,7 +3734,7 @@ EXPORT_SYMBOL_GPL(kvm_vcpu_wake_up);
+ /*
+  * Kick a sleeping VCPU, or a guest VCPU in guest mode, into host kernel mode.
+  */
+-void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
++void __kvm_vcpu_kick(struct kvm_vcpu *vcpu, bool wait)
+ {
+        int me, cpu;
+ 
+@@ -3764,12 +3764,12 @@ void kvm_vcpu_kick(struct kvm_vcpu *vcpu)
+        if (kvm_arch_vcpu_should_kick(vcpu)) {
+                cpu = READ_ONCE(vcpu->cpu);
+                if (cpu != me && (unsigned)cpu < nr_cpu_ids && cpu_online(cpu))
+-                       smp_send_reschedule(cpu);
++                       smp_call_function_single(cpu, ack_kick, NULL, wait);
+        }
+ out:
+        put_cpu();
+ }
+-EXPORT_SYMBOL_GPL(kvm_vcpu_kick);
++EXPORT_SYMBOL_GPL(__kvm_vcpu_kick);
+ #endif /* !CONFIG_S390 */
+ 
+ int kvm_vcpu_yield_to(struct kvm_vcpu *target)
 
