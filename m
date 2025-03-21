@@ -1,191 +1,193 @@
-Received: from DUZPR83CU001.outbound.protection.outlook.com (mail-northeuropeazon11013058.outbound.protection.outlook.com [52.101.67.58])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C486719CC20;
-	Fri, 21 Mar 2025 14:26:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.67.58
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742567186; cv=fail; b=fKYM+eQjvhE47LYU5OQvf22LSUV+Dtnex5ZO2zCUnwY7IXsqNzplzSkDZVSh6Cc1cpZWsn2QGqNTokmgssTEfr0P2/IbUdFWXjkczfW09uao0SBisdpw0j3vmIhC5Gbw9NEiBQY2Wzqrk0NYZ1HlIIJiwHumHquNGaymnEod020=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742567186; c=relaxed/simple;
-	bh=34FKGbtHN+nZmrUTP2Abds4hcBVFhHTKoeh9myNQfFk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=HA88vIUCKTpeT8giXsC4/Kuw1qOXN+EikydGA8uDXwAq1O1Lvf9wnyMldjBYLSqeFKf+HRmBYMun1fVS6dlYvoFCHHyBD4n5eFSurGI1JM8lbLFmuCuw4MUt7X0I8fD8Q043EdwY3Xk8Eg65NMObW20JleA4/1M3hHxtAopNLRY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=Buxz0rvg; arc=fail smtp.client-ip=52.101.67.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4931991CB;
+	Fri, 21 Mar 2025 14:27:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742567233; cv=none; b=RsoVVCigOIVq/38FOHS2PRq+Khx+N3yekt5TjQ//4W4vBPWHkp+JxHiNOUWnMTdB4T7Ur/MgRal1kjiZ62CNXCqaUgRtHEKabOj6mAMwcdYRWMY+87XFNozZN2b8R/SiI6VnqJa0VcQIc9GVCz/cHXCuihDd3em6SpXBIVQbRkw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742567233; c=relaxed/simple;
+	bh=Vvupyb2Sy3uvR9u042VzEw2wiaEuHN4nbQdv1bL9SvA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=m1NsivVNfnJZpblJ5l0DX74e8cnJexrBluZHfnQU1E3FoScGiKCEgCXJ1GRlNCMOeAQBvNfFo1eKspeZHenHvlrVvcVZ8z5xzhjdtq0Gq078r8vX6Ni5QAJpCnEQnPr2eg63QT+DQGX/z1s3Ues/6E6/Bpu8GTuqg9+ujYI+EwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=U3wlo3Jh; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=J6RtMImY; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="Buxz0rvg"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=CF3n2xk4JWktzJrZbVn2Za/eopodvfB0fiv2kkOG6dZ5QLBWoIyT2mXBcaoNc32hcd0VY0nzoB3cWU+F8fT+X/69OGyhaVCtvkBJxzUuSgy8wtqRQyKoKJWKnMYjiIyfrMvIjsFeDFA4/Xtp62CuomTQ8Oo60Ttcx3Mn2sO54GoUyierhQqU1NppOpUBr4Swjrbzv4RT7EjZw8TR1boOSJr2bWp/foiRfgyU7x5eHfGIwKWSW3byZTm/ixaYO0S7Qsrj5+pcS/ISPYl5HYiXCrWVG94FYkR6UL/QBZUN+kpdMhtVHrk+/eOidfJ0qu5dNoX3Qu0jLUARUTZX/7dd6Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vNzWX/IcDeJNyL5VsXyGRekJJgX/6YRIR0yRi8CoWTE=;
- b=prOLD68wrG7/Fm3HXT+ppYYhMI+QPLLX8N+CnwewuTaGNWZihbSqtuNW9yn1Llqu4g/lZtRzNTzNm4xNQBGLJ59mdi121VmG2vPTaDbaI3xqV+XcrAb5yDMjnQ26Y3hAnrrElD9yD30TpTEpc6fRolgXdKSkWnceFTNTejP2IkbIUwLmVwPqhqhazUEzbHKbmf5w/4igcuSTdaZQLU+KYMfY1FnCH0MaYg1uWRWEsc4nwHfYC93DCOE9V2c4XBIqrMwBFT8JuN1jy6SLMIJ5fDfsRtclmbJXChRJpmN1T26lut8cf7ZzOTq3VLxIkQ4bz9l3EmPLYxdn31DKJL50nQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector1-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vNzWX/IcDeJNyL5VsXyGRekJJgX/6YRIR0yRi8CoWTE=;
- b=Buxz0rvgPvXzytlJQKuIMi1ZpK7ey9lBTjYHgSI3EGxzhGl0NCwhyxy7Hdx03JzY6WlMGMDlCupk5mRy5X/VxLp2w/bUNdiGEJSPBMXFk2xyruZJEt5zSTw1uG+Ntva/moTiDI8h+eG7PtbVUC9ej0KZT3VNjYhI9i6y7enbpLhVf6eSm61CeE6lp4aX/6hSCFzzhO15FZm9phLYljnj50d9WB8cg/p0IayGY48W4Hbs/knj9qIP+zYypQaa7C2tpJF7Ff6YhHq1O2CBBQWw+CXGr7WMpzh40I3bPt+orZMfMR8vSXEv4T9ql5jB37crOc+TIKhzVTMcJ6xR07u6wQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU7PR04MB11163.eurprd04.prod.outlook.com (2603:10a6:10:5b3::14)
- by DUZPR04MB10061.eurprd04.prod.outlook.com (2603:10a6:10:4df::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Fri, 21 Mar
- 2025 14:26:18 +0000
-Received: from DU7PR04MB11163.eurprd04.prod.outlook.com
- ([fe80::3a74:80e4:4144:62db]) by DU7PR04MB11163.eurprd04.prod.outlook.com
- ([fe80::3a74:80e4:4144:62db%4]) with mapi id 15.20.8534.031; Fri, 21 Mar 2025
- 14:26:17 +0000
-From: florin.leotescu@oss.nxp.com
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Shych <michaelsh@nvidia.com>,
-	linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: viorel.suman@nxp.com,
-	carlos.song@nxp.com,
-	linux-arm-kernel@lists.infradead.org,
-	imx@lists.linux.dev,
-	festevam@gmail.com,
-	Florin Leotescu <florin.leotescu@nxp.com>,
-	Frank Li <Frank.Li@nxp.com>
-Subject: [PATCH v6 2/3] hwmon: emc2305: Add OF support
-Date: Fri, 21 Mar 2025 16:33:07 +0200
-Message-Id: <20250321143308.4008623-3-florin.leotescu@oss.nxp.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250321143308.4008623-1-florin.leotescu@oss.nxp.com>
-References: <20250321143308.4008623-1-florin.leotescu@oss.nxp.com>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AS4P195CA0005.EURP195.PROD.OUTLOOK.COM
- (2603:10a6:20b:5e2::14) To DU7PR04MB11163.eurprd04.prod.outlook.com
- (2603:10a6:10:5b3::14)
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="U3wlo3Jh";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="J6RtMImY"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742567229;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UmxNltNz39yMIHUoaxtv61lmZ7jvm/jrC728nmOVc2o=;
+	b=U3wlo3Jhx/S2r2nGUnhDmfCQr4QEfCByQzzn1ru+9ZI/knFgKulS12t2z546XVlH3usb+N
+	Ji7Hzd6rJK5JVP6ULi0qLvFv2x3FXDo/p7pR4fcXxbuupfiG0xUVpc7ojBe/Q+o7/DeXua
+	vb3CpqbrBibAcT7XvsCmuFdfLnfsodfrK+L0UxdxXUVcQUGqJNSQmgCt0zaWRxIDjh7nOy
+	5Tx8utFdHGVTT5g2d5ufFMmsimT0NDwF4mvaPljF7YsreeQS1ijvOed6RB0mqTs9lr1k47
+	6BvbROn6UOi1kW6kwJK15RcPr5EmFfPZDxoUZD93uQl+yCYNzXAPPiGHVuqFwg==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742567229;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=UmxNltNz39yMIHUoaxtv61lmZ7jvm/jrC728nmOVc2o=;
+	b=J6RtMImY0QEvcinKM5Jo0YuDQyUXDyCJMAI7u1tZ9zUQdkpsd7bl4Qqs/kqLEbR+7ibCUn
+	cBLogD1bTM3BG8Ag==
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org
+Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
+ Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
+ x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
+ pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
+ huibo.wang@amd.com, naveen.rao@amd.com
+Subject: Re: [RFC v2 05/17] x86/apic: Add update_vector callback for Secure
+ AVIC
+In-Reply-To: <20250226090525.231882-6-Neeraj.Upadhyay@amd.com>
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+ <20250226090525.231882-6-Neeraj.Upadhyay@amd.com>
+Date: Fri, 21 Mar 2025 15:27:08 +0100
+Message-ID: <87jz8i31dv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU7PR04MB11163:EE_|DUZPR04MB10061:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5fd1c23a-20ed-4a4d-8309-08dd688457dc
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|7416014|1800799024|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?iso-8859-1?Q?bUV58rD3UcBmH9ry0zYMZudBAJ0wn3F8s8+r7KOXPZFeP4LCxYwLCYh8ka?=
- =?iso-8859-1?Q?+P2rp9iNEu1a49DcpmCJGzfiJJ0tU1Isa0++TzsrPQd3uCDwU3rIbYYtsu?=
- =?iso-8859-1?Q?oFnonbVAFrl2kd+xmDUhhkouHAVA51Ac2GnmyX8dDM8LLshmaheQsaXof8?=
- =?iso-8859-1?Q?wHRXUQ0Kdkzb5ptP74tqdr4qADeFoiV+DGtlx6Wa3tkORNV/V9wgZ1eexA?=
- =?iso-8859-1?Q?egCj3LEH9Z4dGdyBIzv9oCuacokoXm6kow77uGKqUiyOhVkMY3FvWxzsUD?=
- =?iso-8859-1?Q?5XY96HvQJNFRcDVMfMmA5A3obwKQJWTrc4HnH6sx27wkZX81UDCzBqnyiK?=
- =?iso-8859-1?Q?FTn46ZW9XnAc7hf7Mp8k3ReVDWaI6q95q9DC4P2h0EAGv+7NUcq0ZSIvIA?=
- =?iso-8859-1?Q?HzSSVCODsR3Y5lVpvM/SKuypQbw/CnYd18h/X5eEXXAd+7kO5RRXn0MgR8?=
- =?iso-8859-1?Q?7fapB58aSdjNtE4EeQyY3fAZT4xLVBEc82dlbj50ArqOCqoqI3OpKZMR1g?=
- =?iso-8859-1?Q?pTzGhbCbwVYB9eoCyDZd3kHMn/XFJccR2oFLV2giSfXGxaFn34zRcOHCXu?=
- =?iso-8859-1?Q?UhURz78MZ+0Mlh5eRP9M4Vp2FSP5q7X8DYIdLIvdukHvo3x0d0xlwOf6c1?=
- =?iso-8859-1?Q?um7Hozyx685OSMhOuP1GebeujtSJOFdBWtXpD4fLL9DSyMGlGwJ4JdaQch?=
- =?iso-8859-1?Q?IGFlcfHUYjRMcT97upzLdYjBFfjqp0sb+bpv4czlvBWYOl9Ek1H6jJwRjo?=
- =?iso-8859-1?Q?t3qpL95JcQ3Qxd+4hX3WDmSJLFYIgQTunN/LI9tG0aJQWca10RLFjE0gFS?=
- =?iso-8859-1?Q?92/heSWDgvXKxeZnWaFxtmQjLWp6ZZeIF6tNd5OWII5rmb/Bk3xWdiFmJK?=
- =?iso-8859-1?Q?zWy+U5wNxfYJJfKuzxE8LTQABznhaZ1QTQElFiDG0vtlQq2rVKcPe4dB9N?=
- =?iso-8859-1?Q?XyoMBtn7TSafn9N1Xv2NG8z1lvn7JHR8qj2WcaRM397pJExla83mWbQl1n?=
- =?iso-8859-1?Q?/gqX73cgXaqR5OcxPFTy0jDUxIaYNzdh6vBTTT+x7wVotAm5YeJbJe4WQ4?=
- =?iso-8859-1?Q?HnTXmq+QxGrL7Fml7Aw1LeT/Pw3QiSiUqTZKwsjxDHZuyH7q/Jl72rb0uq?=
- =?iso-8859-1?Q?m5INX5hlDopaczDrgwno5dKfTWDMNPaWCHsP0fr3cM3gIXWwg1OGDZ/FM4?=
- =?iso-8859-1?Q?t/n30KH/q8z5itrUJwK574RFVy/bJPfyLck0mzAW/GQcsIe/fxAgh23rUX?=
- =?iso-8859-1?Q?bBiS7QJDhsFnqd+qSxNU13Dbi+TgxttnvwR3PnIuclGAvNqiYHuUix65rJ?=
- =?iso-8859-1?Q?tNFT0DZ78FjMyxby2vRGJQGe1jFInSElX6cSfWO72pmeR5lvRjpHl2srjJ?=
- =?iso-8859-1?Q?fT/4P4GiK/nL2q1RPZnHOwgxtBwOInOkS/bgYJc9PbJGedxwI8OjY+gJuQ?=
- =?iso-8859-1?Q?/WxHmdNe1Zp83SmN?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU7PR04MB11163.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?iso-8859-1?Q?kct2V0RKDIU1KjE/ZDBym9IvzomMaKflxGbv/08km6muS71mxNkoI7Td2S?=
- =?iso-8859-1?Q?m5kD1AepEe3eUt5o4x8zsMrqIguSgC+px23K3tDMwGANvMyTyjD00IQ/BC?=
- =?iso-8859-1?Q?e2Xen7WODQwxSxWL8QaKzpz9FaS0qSdZvINF765g+6uBNO704nQ/g3awjY?=
- =?iso-8859-1?Q?B0DdV0k/dNIzyiLewXU+HSPLSYPViw3X7IFgiwPUDwRyWamBxHOJ+8xgiP?=
- =?iso-8859-1?Q?ab5rDS/EbnefyUsuc/IKFvLb0AdGTsCFsYGZPcwhUI2UWG+SYiScwa0GYW?=
- =?iso-8859-1?Q?6LTMKfK6RYsvADqeaJFANoaNs0h6PjPxJaJXcZ8HIiFayEmfVKXjI4K3lu?=
- =?iso-8859-1?Q?WRXj4t6XFX+I+PXAyO9uhFedOeyqaFc8vIiFWvB+GTq/d4YiIH0ds2C9z3?=
- =?iso-8859-1?Q?pv52SZ/RS+NHw/L43nEVQHek7YcAcR/likiB29uQRqejO11EtmXVFLZ7JP?=
- =?iso-8859-1?Q?q6DlMwZM5a7tehG2oH4jcF0sfOHf3xl93d5x/HPLx6lfRRKDyNc9pHKxsz?=
- =?iso-8859-1?Q?0vJz+EAeFvtcxp/eFp4GhvtfzIJxWesi23AkjdtfqjVUsvwCrJ1POWSU1x?=
- =?iso-8859-1?Q?e/wX4TnNyOp76smKikaz7qWp47Llubopmmjj/t5+pDn5Oz9ZH9SvSwL60m?=
- =?iso-8859-1?Q?h8TJSBDP0oy/9H3/dW/OOHkp1qxv2p5xHzNMZYdLcdBT2yfaHIWmyPFcHD?=
- =?iso-8859-1?Q?OgzsoHW14tuyrhe0OasWcLTYY/oCStLzeqiKgS99l2JQ3N9I6kN4EvJzYw?=
- =?iso-8859-1?Q?c4mGPtgNfvja0CTjf1xwqH1IjbasA/iN/aOu4P6w+C3CeoFjZLDHexKhk9?=
- =?iso-8859-1?Q?CEE5xFXzdicMW9A2wpVHhQL/kS5UWQC58iMZvZ/QAVuVVJ8i8FmJl15S1Q?=
- =?iso-8859-1?Q?DwzN+ughDt9s1rPg+Ym4Rn9gehFqA8FlNecV1Are3tyb6S6/2U7W83m+qh?=
- =?iso-8859-1?Q?INPeWAMGfA+/7xd3Hip95Rdspoji+1yJjFAhs8WazCIPeEczyOB9OdRBRv?=
- =?iso-8859-1?Q?ZJ0WHe//fbncEMGdBm5z2pjMGIXEkcQbhusyMUbF7LKnecsEx+ZdNBkqDS?=
- =?iso-8859-1?Q?YVkpXL6+1NbDBn4/dD7JcrRMvTdf/mzbApmoaQAFDmqYTTgC9bC6kKW2qN?=
- =?iso-8859-1?Q?RvRG827zlae1iSxHm6S0LDA0Kjvs+Mar9n+jjskh9MtYFS4T5Qpw29h7c9?=
- =?iso-8859-1?Q?QJ3CU0w0BEls+X9jyStIV2rCm5/McmBRoIhdKXb1rAgOk7/iXHO86Mv9vU?=
- =?iso-8859-1?Q?+I/ntyaEGWXeByu9JqxyJJeenRy3rmd+rk6LltLlII3u62uso54O20bh05?=
- =?iso-8859-1?Q?53G25s5z7+3aIgrfP8JMpJb7/DKRY5K8GHI3SSP3lSdu7KBuqpv3WHee59?=
- =?iso-8859-1?Q?Mqk/erChYYxKsymbsKtuWZfe7D7x1bsfXP1WTxAoZoPCy8TvvPnmT81BF7?=
- =?iso-8859-1?Q?KKbvoL3LQWpHjocawGWgV0idSDOwmq8JggkGe3/dFBiN0Wjn9vRUorQY08?=
- =?iso-8859-1?Q?u+ytIVzs4obhAG2mk3xgwxPra9uN80V3a0J2jpKBk3ihUNAdEZEuQrDdWX?=
- =?iso-8859-1?Q?GA2vxcY6FMheZsGYxp54NFX6+FJ69ExWSe+9NQcAmmzTNrnGGWCm2Yujq9?=
- =?iso-8859-1?Q?6k6o60hXchZJx0fxnrAxMPoDG+7KjpZQS3Gp2JpVapdLqKNtfpUtc5fQ?=
- =?iso-8859-1?Q?=3D=3D?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fd1c23a-20ed-4a4d-8309-08dd688457dc
-X-MS-Exchange-CrossTenant-AuthSource: DU7PR04MB11163.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 14:26:17.8323
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: B02uCeANOgqBhwlxY8Xn1oQlDGctWKJq/iZyi4gHfA00KAeh4obdhLdWfsINjrOXmflzCwX+OKi/lEI/Aa4s6Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DUZPR04MB10061
+Content-Type: text/plain
 
-From: Florin Leotescu <florin.leotescu@nxp.com>
+On Wed, Feb 26 2025 at 14:35, Neeraj Upadhyay wrote:
+> Add update_vector callback to set/clear ALLOWED_IRR field in
+> the APIC backing page. The ALLOWED_IRR field indicates the
+> interrupt vectors which the guest allows the hypervisor to
+> send (typically for emulated devices). Interrupt vectors used
+> exclusively by the guest itself (like IPI vectors) should not
+> be allowed to be injected into the guest for security reasons.
+> The update_vector callback is invoked from APIC vector domain
+> whenever a vector is allocated, freed or moved.
 
-Introduce OF support for Microchip emc2305 pwm fan controller.
+Your changelog tells a lot about the WHAT. Please read and follow the
+documentation, which describes how a change log should be structured.
 
-Signed-off-by: Florin Leotescu <florin.leotescu@nxp.com>
-Reviewed-by: Frank Li <Frank.Li@nxp.com>
----
- drivers/hwmon/emc2305.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+https://www.kernel.org/doc/html/latest/process/maintainer-tip.html#changelog
 
-diff --git a/drivers/hwmon/emc2305.c b/drivers/hwmon/emc2305.c
-index 4d39fbd83769..f8a4c76fcadd 100644
---- a/drivers/hwmon/emc2305.c
-+++ b/drivers/hwmon/emc2305.c
-@@ -607,9 +607,16 @@ static void emc2305_remove(struct i2c_client *client)
- 		emc2305_unset_tz(dev);
- }
- 
-+static const struct of_device_id of_emc2305_match_table[] = {
-+	{ .compatible = "microchip,emc2305", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_emc2305_match_table);
-+
- static struct i2c_driver emc2305_driver = {
- 	.driver = {
- 		.name = "emc2305",
-+		.of_match_table = of_emc2305_match_table,
- 	},
- 	.probe = emc2305_probe,
- 	.remove	  = emc2305_remove,
--- 
-2.34.1
+> diff --git a/arch/x86/kernel/apic/vector.c b/arch/x86/kernel/apic/vector.c
+> index 72fa4bb78f0a..e0c9505e05f8 100644
+> --- a/arch/x86/kernel/apic/vector.c
+> +++ b/arch/x86/kernel/apic/vector.c
+> @@ -174,6 +174,8 @@ static void apic_update_vector(struct irq_data *irqd, unsigned int newvec,
+>  		apicd->prev_cpu = apicd->cpu;
+>  		WARN_ON_ONCE(apicd->cpu == newcpu);
+>  	} else {
+> +		if (apic->update_vector)
+> +			apic->update_vector(apicd->cpu, apicd->vector, false);
+>  		irq_matrix_free(vector_matrix, apicd->cpu, apicd->vector,
+>  				managed);
+>  	}
+> @@ -183,6 +185,8 @@ static void apic_update_vector(struct irq_data *irqd, unsigned int newvec,
+>  	apicd->cpu = newcpu;
+>  	BUG_ON(!IS_ERR_OR_NULL(per_cpu(vector_irq, newcpu)[newvec]));
+>  	per_cpu(vector_irq, newcpu)[newvec] = desc;
+> +	if (apic->update_vector)
+> +		apic->update_vector(apicd->cpu, apicd->vector, true);
 
+A trivial
+
+static inline void apic_update_vector(....)
+{
+        if (apic->update_vector)
+           ....
+}
+
+would be too easy to read and add not enough line count, right?
+
+>  static void vector_assign_managed_shutdown(struct irq_data *irqd)
+> @@ -528,11 +532,15 @@ static bool vector_configure_legacy(unsigned int virq, struct irq_data *irqd,
+>  	if (irqd_is_activated(irqd)) {
+>  		trace_vector_setup(virq, true, 0);
+>  		apic_update_irq_cfg(irqd, apicd->vector, apicd->cpu);
+> +		if (apic->update_vector)
+> +			apic->update_vector(apicd->cpu, apicd->vector, true);
+>  	} else {
+>  		/* Release the vector */
+>  		apicd->can_reserve = true;
+>  		irqd_set_can_reserve(irqd);
+>  		clear_irq_vector(irqd);
+> +		if (apic->update_vector)
+> +			apic->update_vector(apicd->cpu, apicd->vector, false);
+>  		realloc = true;
+
+This is as incomplete as it gets. None of the other code paths which
+invoke clear_irq_vector() nor those which invoke free_moved_vector() are
+mopping up the leftovers in the backing page.
+
+And no, you don't sprinkle this nonsense all over the call sites. There
+is only a very limited number of functions which are involed in setting
+up and tearing down a vector. Doing this at the call sites is a
+guarantee for missing out as you demonstrated.
+
+> +#define VEC_POS(v)	((v) & (32 - 1))
+> +#define REG_POS(v)	(((v) >> 5) << 4)
+
+This is unreadable, undocumented and incomprehensible garbage.
+
+>  static DEFINE_PER_CPU(void *, apic_backing_page);
+>  
+>  struct apic_id_node {
+> @@ -192,6 +195,22 @@ static void x2apic_savic_send_IPI_mask_allbutself(const struct cpumask *mask, in
+>  	__send_IPI_mask(mask, vector, APIC_DEST_ALLBUT);
+>  }
+>  
+> +static void x2apic_savic_update_vector(unsigned int cpu, unsigned int vector, bool set)
+> +{
+> +	void *backing_page;
+> +	unsigned long *reg;
+> +	int reg_off;
+> +
+> +	backing_page = per_cpu(apic_backing_page, cpu);
+> +	reg_off = SAVIC_ALLOWED_IRR_OFFSET + REG_POS(vector);
+> +	reg = (unsigned long *)((char *)backing_page + reg_off);
+> +
+> +	if (set)
+> +		test_and_set_bit(VEC_POS(vector), reg);
+> +	else
+> +		test_and_clear_bit(VEC_POS(vector), reg);
+> +}
+
+What's the test_and_ for if you ignore the return value anyway?
+
+Als I have no idea what SAVIC_ALLOWED_IRR_OFFSET means. Whether it's
+something from the datashit or a made up thing does not matter. It's
+patently non-informative.
+
+Again:
+
+struct apic_page {
+	union {
+		u32	regs[NR_APIC_REGS];
+		u8	bytes[PAGE_SIZE];
+	};
+};                
+
+       struct apic_page *ap = this_cpu_ptr(apic_page);
+       unsigned long *sirr;
+
+       /*
+        * apic_page.regs[SAVIC_ALLOWED_IRR_OFFSET...] is an array of
+        * consecutive 32-bit registers, which represents a vector bitmap.
+        */
+        sirr = (unsigned long *) &ap->regs[SAVIC_ALLOWED_IRR_OFFSET];
+        if (set)
+        	set_bit(sirr, vector);
+        else
+        	clear_bit(sirr, vector);
+
+See how code suddenly becomes self explaining, obvious and
+comprehensible?
+
+Thanks,
+
+        tglx
