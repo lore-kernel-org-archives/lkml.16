@@ -1,490 +1,234 @@
-Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2084.outbound.protection.outlook.com [40.107.93.84])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C16232376
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 22:15:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.84
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742595350; cv=fail; b=kDNyANE7LT45Xu4cu+2rNFyukf2fgi4vpI5wKh/fj8ouukXfEjgSEWglu2eb72fUxCg9XAHP403PYBPhb0sB7fQpyes7dNNNPboC3TXURZkk1IwXcQ20atsHxUcZp1k9dOrSt0PZCUvYYKkk6iIeZOzPlxvz8hWCknWZrl9/ymA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742595350; c=relaxed/simple;
-	bh=1Ch/ZoErVs6fOakBfeUYSAYw2IrBb2QlsQ6pKQLGZSw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DFB97Seh1QPHd5jvowFutCcvYZhgYEBhEAB2KJOCgBg9oHaBxIn9WBpB4Ib2l7U/IPK16gdlvxlp7utdbS/welbDAT78yYzemJj/5WVu8yxZKpGDHGx9A07N4FepJG0MeRDC88iDCuxsJfvMvo4RSlr4tWAfrg8ZWqVDdAkY64I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=OFHpTuV+; arc=fail smtp.client-ip=40.107.93.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0793123313E
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 22:16:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742595372; cv=none; b=dWgmhwPKwdgX1d2aqdVpmUZqR6qI1ZKaKYRLUhaei6ujKl12Qes0pafQUMs9N2ymbARSDhMDTyuU+MwkWXj/0e6ocjtawOSc6xeOsediOTRLoLexRZ1Uf0ij/XONYaZqc2Ytdq2ozWDQfHUXBA+j4+ET4JeIUvFhiFLOWNYsqpo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742595372; c=relaxed/simple;
+	bh=xTN8uHl1SeuIX+6Go9vzBRBl5rKlx9/gkpF9UMsFCuE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=UMkmKFCNwsCmosfMwl5uJxsVKHmdPi0O9fY1R+3te92J1+gwQ5YHIJ+EwSR/6WraWjslEf5NPHW7sAdihOmMDooXCptaIKKS7TR+1KEEtofoYyI7p0Tg5FKdwEvbnCh88+hL63VUp+nqpHUjoAKwZSwhWY/YMAsGwutVUylvyQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=k9QaZ2IE; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="OFHpTuV+"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MHsOZHCuyuvUjbAV/Yu4ZiVzJwi5bFEMf0QWDJMqcglQElfXudWdZcBlVFAQ/XFB3ym6d091rjdgpbyhZ3w8fmv9vXst6+xOyXLp0kz25vyoue28CnjOV5dPy4LNNHQkqNjLQHhEzQ0WvKM4EOE8v5PtP/9qkF2WdTJUrrpwJd9K/VaxF7F/BMTpRqyiLS3/CaDReAGIKp4P3Yg9awjkps6lU27P91zNEbxDIlhPRLmMNRGVr7GoozccWTT8spc8lZJszGniDf7EuP6K59HmR9VZX+WPPyHSxbw2OAIvsAyS/ZYIcu+lJqkmQSlq9s1G2O4XmKEcEtBfWDY3Odauyg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=4XEnazbxqVE1UGjyTx6BVvDLYd5whNAOpc7TpFhaA2g=;
- b=q8uFnK+PZg4IOvQ9e4ZHmUyvqKJrd/AkguSeWVb1bkFSxsBpNxJsIVo1Dyrq+pH+58AOEy3LDkgNQtFq3wPXuPCB3xwS4DDFO4nfNgyoaF5kA8KOmW0LyQVGL9ZMQk7Q75bIIocChS9RVCi8aZx2cRWUxx4V+folsc2UuNCUNT4iMQ6sD30OknXM5CQmqrtlS+uy/2WQExFFWwsuCib2HK+O1uIrQUWzlo714mbbO1k8rAy30/W8kVpUx7iYg/ckeihfZB8/hkpJkYXpN14wvHTG+cwFvdh4jK7q9F+ktZZAhnELLPa5hrSCVQxeUDhaPc4RNIftm2VapmF7xThHfg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=4XEnazbxqVE1UGjyTx6BVvDLYd5whNAOpc7TpFhaA2g=;
- b=OFHpTuV+ZaHoWS9VlqzcP2CgLFVWCw0ZfsCwoFKhrWRDsdmR9EsRJlaNcRpW/XhGJW+5V38vw+zG3F8t/rz7iZEhjpDejAX9D41faTp17FKblN8Iz4Zz89qjt/qj1l0LkajuoMCsi5CUbsEdmKhz62aFODIiltM1QcaMx5QgbFviO01mSoJ9wRoWIvGj/IzcbL5H0aiJepin9V6FFF0P/SSDN27wjbLJV+T0abF9sSdwvvp/24WObnaYK2XXEyiBDXVGO7cg7iVyMWmPDtelqgcAnSkUY/Ed66Azf100s6QdSBSm5B8wJr75oR38dAH9Hy25D6DEZBnvlt9cHcfD0A==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
- by DS7PR12MB6143.namprd12.prod.outlook.com (2603:10b6:8:99::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.37; Fri, 21 Mar
- 2025 22:15:45 +0000
-Received: from CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
- ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8534.034; Fri, 21 Mar 2025
- 22:15:45 +0000
-From: Andrea Righi <arighi@nvidia.com>
-To: Tejun Heo <tj@kernel.org>,
-	David Vernet <void@manifault.com>,
-	Changwoo Min <changwoo@igalia.com>
-Cc: Joel Fernandes <joelagnelf@nvidia.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] sched_ext: idle: Deprecate scx_bpf_select_cpu_dfl()
-Date: Fri, 21 Mar 2025 23:10:52 +0100
-Message-ID: <20250321221454.298202-7-arighi@nvidia.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250321221454.298202-1-arighi@nvidia.com>
-References: <20250321221454.298202-1-arighi@nvidia.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: ZR0P278CA0140.CHEP278.PROD.OUTLOOK.COM
- (2603:10a6:910:40::19) To CY5PR12MB6405.namprd12.prod.outlook.com
- (2603:10b6:930:3e::17)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="k9QaZ2IE"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2242ac37caeso27255ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:16:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742595370; x=1743200170; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+KM/OqzMgVHyAstUImFrYrGve1V5xobanjZKdFyJS9w=;
+        b=k9QaZ2IEHPEZY5y/aOSkfFUXsm0QLdx4ngo8Rd2qKM0/vjWIZFwDp3J+bMRNrGnqqQ
+         wYtDm1aPW9NkgxH3Gc/mYv08vEL7Sb/b+qnMdDcjIbhqsNyusfcqeKVZZj3nL2Q4k36/
+         fKntHDbZ6AXjF/t2TK6rSCiXwsGTXkBjUfR+MZ1uUZ9PVNFoJciPgX4iDSwFjHKfz+5g
+         QGLmRR4bPTUQhJdoz1oBNpYbJ50bNNAEYjKOQhTS+d6dppdPZOIXY0j8HTGW2poytBt9
+         Bt7/NL7iwcBZXVoXnx65s1OikkdWCbbFGYmYPXy5atrYI5l/ohbF59EXL595VDcf75Ym
+         KdSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742595370; x=1743200170;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+KM/OqzMgVHyAstUImFrYrGve1V5xobanjZKdFyJS9w=;
+        b=NKrYt90j269FJTsxUKs86h58SV12371KLT7/kwIech2U7vkatYPVf+wgpEWeY7B7QF
+         brQa0+sqiFSWL8nOKok515VTc98lC/oNWKhGVv9jaQ4XZ5qq3CUn6MEA9/62G5RwBGns
+         dgWLNOHOI/Z4gyPvFcgTe2FoD4FwnNNVgVybTT9u7oNMmFw4BPt8F++tMPeUmI0v/0M/
+         74aCr0yN9YOTphjq63nAMEF9SGv5wR+iial5YratE6GbXahOAk57gf03XQzzgTu/e1Je
+         fyrY9FUXb8SiZEA9RmuNKkMR83s3rCLvWkyvtFqWIfKy6Us/BFZzi8gzSSiTja0lGjbh
+         R+nQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUb4fnBPCfa4wmzkf7kVsBpyz0EL+ZkPn1DvI+hH8WrC5H7e1jt/Rld8wE6rkizlqDgb95Qd91Z/6+xzm4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxmNzGcwTSfN1Bcz5xI8xmSg6fnQloJH0awN0sXJNJgtMhoK/XJ
+	p6PQqTWnwsDHWJ6g0ieUQO6Nb79vjmAsZki/b0h2cvGg8bn1Wxoq6c7n3poy/mpAR5XnGuXBEBc
+	oLFUiKvbSviXfJfny6K51P8rEr8MKrLJVWfDX
+X-Gm-Gg: ASbGncsQSWTdg27YeOY5/dxD+Ny4ZtilnKa18HJARa0FssVCq4r3VvXHI024AYhVkFo
+	GTBiHgXy/mpLXIrGtBU9fSlfXMKwFASmoXgJgOz3oVdu1lEaN8CufvDTHYCKiD5Qvy99bT+kJQr
+	+3rmf3fvFp/XeSKarSZs7F2nuAoiO5HA1SBhG27/V2vgx+LXwAeMCEitI=
+X-Google-Smtp-Source: AGHT+IFB6PSWq8585YC3bfe4eP32Yir6EYNkFzXJi8bOkq8iwWtXfNlhA5baw0lPh6UvS7ldsM4iZisORLPef1bKOlA=
+X-Received: by 2002:a17:903:19e4:b0:215:86bf:7e46 with SMTP id
+ d9443c01a7336-22799f6adb8mr317095ad.7.1742595369962; Fri, 21 Mar 2025
+ 15:16:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|DS7PR12MB6143:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5695fd5d-d6dc-476a-cb99-08dd68c5ed29
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?daZOo4NklcnOAEe6L8FZzQt5w3Kl0Nz8OPwDo2fmNrc2YRcJQogng7CI6hST?=
- =?us-ascii?Q?LcNv7CUqs8Jz2EerpCVt3nBUVepL6OcQJ/tikHL+n+6fz8wTcMmzOUTHH43q?=
- =?us-ascii?Q?xLdHuqQd4QPpsr8g20PTrV4FliypNTjiczpg8yaztIUoUs78KYFwJjbfeYJq?=
- =?us-ascii?Q?G25kH6vfCvfg5H4W9x2xa+LMddWM8g3JZHYB/MZpMmttTfL3XRmvXQNvf2+v?=
- =?us-ascii?Q?QomGaYg2VNEXgYX6GACtxd6FrtZsQQnlLZ0upkPIaciHTXVjak0MKfsJ5HhW?=
- =?us-ascii?Q?eYEj7vwr8FVihFEjlW3yWxFhTG+H3DQaXfrBILWZ7LNtxNrIj2KgO6wKL4n6?=
- =?us-ascii?Q?SndwwZfmJeJGaZ5W02ryp0Emk4OYeFGidhOQU/xEY3KPJ7pgUv4ZsFSb2J/F?=
- =?us-ascii?Q?Xob6qCJDUi0W0is89Juqn/62CStiIPhFJRTZkxhNBIAjxRA7/IAC24rzjFoa?=
- =?us-ascii?Q?OeLNfSoJORzNrUkk0/d2Wxvx+/gnyI4p2GisHJUiOH9ZFnTgTou2z0N37E6K?=
- =?us-ascii?Q?eCzFQe8mNaVr3uZkRDCbwPyGjkuQhYNY0oI6lE/g/+xDKvl57fBwy/neZaDs?=
- =?us-ascii?Q?eFgG/Z7u62pMZEZj73b3HIYJRlj+HocMT1SIh5XtNlRWRAwfNgKHIYMPNzeW?=
- =?us-ascii?Q?kJYZki0ERKzUx5pHZ1V7vTKQ1c0CQqCaWbk+n+EEbgkGxIPTyx9y3FMFlKaC?=
- =?us-ascii?Q?tyWBehHiDHF0aWSnyCI6f9B5meRv+3XEQVrwJfxL8IbhcZSWKDygQUvApZnO?=
- =?us-ascii?Q?TbOh2otwpNEl6JnbBjdfy8YYPq8ME9t3GjIMp5V9wG9xhorw7FdohrnT3aba?=
- =?us-ascii?Q?cf9SiTxuPX7H/Fo1GEIRsS+RQukG4j3kvtkozs2TYLSMS59jvJwHZ437Cm25?=
- =?us-ascii?Q?65+I+dl5UNkCFdVW1Ujn/S46aZpOOnVxUBzQ4Ks+aFPk3E7TCY2XvlOymOA+?=
- =?us-ascii?Q?W1hHkamzwe3FZOJFzMFKCHtGf4rjJwjBX8UpTLjZBncsNDhalNAILH0V3s8V?=
- =?us-ascii?Q?I62SUHpq0wHD8DSYPf6CcczRGgtp7r+PYoVcPSMK/y09EW0pFqpmSnOeHvdO?=
- =?us-ascii?Q?zxkWPYuL/Aft+aBsdwYkHrnFTRdRBLTLyfAulMSKaeWmrPFN7ET7x8EIB+0p?=
- =?us-ascii?Q?lJVaITpUwkbCAlKiWf+xRVPNGlWkBWXoCtljFADauTIMtWnWofSUMoLfFgsS?=
- =?us-ascii?Q?rjcO7Bg3q0/MofM5nTcdnH/V1TgKlQ94oGxuquU3f+T39nwEoLnArt8DSdp5?=
- =?us-ascii?Q?mrpYOKYSignMeFGbwdoqOQJ75WjePBZl0pBY3CU80hswsA98bVETYE3XotoW?=
- =?us-ascii?Q?UWCIS/SKmtoE2Nfok5c06mudinlkcGiC9xKO8132z4lU06W8h1vI5SYnXwej?=
- =?us-ascii?Q?ty6J5G5X0hpO/mDx4V1ZGOiFEPjVbptmTDJ8rz/PmUb5x9FYyxeDdlHWss2l?=
- =?us-ascii?Q?zGQcKjbnDcM=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?jFVhaKB8mZRSLNVZCzAe5fP60GkPY70PnQENNeM5N7AC0vLKIIReZhyXVce6?=
- =?us-ascii?Q?KQI4axIZzFgRbUtAn3ZObP1sBsPnCssVx5rHoVQvv7z1Ak5m66vBPkpF9NID?=
- =?us-ascii?Q?q9m8lUDxVBz/rDJJKerm4ipgrBGbwllv7cJ0kG7g/m6DblGHTk2Ce/9syziB?=
- =?us-ascii?Q?QmBpyyhPwT/il/ps5BK46mcUjRfVt71hlMayx5TCAXpcWtDLMDWFVvpH74Sk?=
- =?us-ascii?Q?iNrek5DDl2bUZDha+yg2OrlgydiB5OkVGZPbeWgeaTEkpdZrDPTxVsCvsfCv?=
- =?us-ascii?Q?BkPRDgUxcgIyVrCtLhAms/+XI3SlGzmFxV5v0DBt7AUhJZFcI/8VKtcN6sGu?=
- =?us-ascii?Q?NLL/Qsx6U75iNvp5gcWA9ZGXseQ/6FuGc+tn4fqQsZddBJ4VpO+WA3UY1BwE?=
- =?us-ascii?Q?PvKiS+oUnKVp1QS8V5PmpKDvRs5KGLfHTBzTA72puGu79OfcioJ0eN0h+PMs?=
- =?us-ascii?Q?tUKyLuZgm/YzxXnCxjHbVYANZHiKtxbNj6Q8lH4oZqNp4Yqq1CDS3uhJ59nd?=
- =?us-ascii?Q?Ks1XESnTLZIGeVItYdOuvHPtAWIfZFIpTHdPlH2pa47IRa95hd9SQZz3l0Wb?=
- =?us-ascii?Q?KnTmSVweE3SUsDoeKZOA8Dk9hYrkg0cBzfZIJjnz4pXu0P1cAY9J/meehNGK?=
- =?us-ascii?Q?F0jtrrfJaoBSltClqtwjEs+rAxJztpvl2LQhJSsqVZ3tgKTa3I9YG1AkQJbx?=
- =?us-ascii?Q?G9ra7HJHOPSEty1RqpsUnPdRbslwc2oG4hCiqHal7uBfeD87qsHfMHYypgsk?=
- =?us-ascii?Q?+xlZAFrTpTbVeHHNgMcHANhRC78zOeQOZkYxrZgRM9nSvzlX6t67FsYAO28N?=
- =?us-ascii?Q?9V3Si0+tHuOupFCujArgOONYSZpyNYcLoKdqe1iKR2OC9u5mmMp7Zq/+j6nx?=
- =?us-ascii?Q?jNJxmuasYho3EnoALS/9zwFhDwTdyxGu4T+I1Tkt197wTSklpNWKqa91/OS3?=
- =?us-ascii?Q?Bh4Hc6WJETWQhAt4XtwJF9WxcMELsw20lfwb+nuSbOGtIwV7O7DXbpA/AO+D?=
- =?us-ascii?Q?Y78RUWmrFpFSzK87qcQ2lzwlkDLsDubdaecvBqo+zFuWgkGsZVX3Cjk+hQAh?=
- =?us-ascii?Q?8hNMiyXRvSnNJxfqvUR3JTnNiXUc94OYuKqr2pMN01hyzG3jpCcK39VWaVg1?=
- =?us-ascii?Q?bAqTW20IkshoJ9ivCgf84h0mGFbwNTR4uDETL41+ZAE7WqRBtq7GknfTxTb+?=
- =?us-ascii?Q?uR+2vugDYZVHdIpXNc20KxJrzUkfoqOQRhE6agx9eT4KNcE4ukZbfVd2vrOZ?=
- =?us-ascii?Q?pMJn9dM7YyD89eymgCRQ4cXUl/PeURyVK44kpP1nSY6LVQtS5gCBBrPUyzYA?=
- =?us-ascii?Q?TfvVZDb8kCEg8eniC9GdluDZfKycq9f8x98/34vt1keR2wdZCn/r8Axdic6N?=
- =?us-ascii?Q?KioIt0SD98d+FvFAb82SIFD0Uxkbo9NVzkRXEl3kvA0Ft8qjIg0c861BakTd?=
- =?us-ascii?Q?dM4yrj2z8C02SbgDDNgCFXKLSuR6BTw/11hj6m4HF+2l4T48mgI6miSyRYxb?=
- =?us-ascii?Q?zg3TOv5qLA4HZnL7LTajk8yktHYF5Ex9ylQ7vsjDR22kOfOo9aCxXXuUYoAY?=
- =?us-ascii?Q?aVN/hwfIpwv1gBzfxsqd+NUerYkvd/IlsOgjzVyT?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5695fd5d-d6dc-476a-cb99-08dd68c5ed29
-X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 22:15:45.4393
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: RgSZO7mo5q8eCN8dTaII1KHEfWQvYeOkjTpv1g+FRpAB3UvKYjYfcpKkEN96xNEeLbD3zmyPtEVmyLhct/WQGQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6143
+References: <20250308214045.1160445-1-almasrymina@google.com>
+ <20250308214045.1160445-4-almasrymina@google.com> <8fb48d36-f5ce-40ce-bb05-b4c342da8b4f@redhat.com>
+In-Reply-To: <8fb48d36-f5ce-40ce-bb05-b4c342da8b4f@redhat.com>
+From: Mina Almasry <almasrymina@google.com>
+Date: Fri, 21 Mar 2025 15:15:57 -0700
+X-Gm-Features: AQ5f1JqTqeE1hEQJimNEPqykmM1XOpBm4kOaF6t5YahF7_VNclL_518XjsZaXEs
+Message-ID: <CAHS8izNu6biiVg==pri8PeDVP9unZthGrwSj4fGr84o61sLFgg@mail.gmail.com>
+Subject: Re: [PATCH net-next v7 3/9] net: devmem: TCP tx netlink api
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
+	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
+	Donald Hunter <donald.hunter@gmail.com>, Jakub Kicinski <kuba@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+	Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Andrew Lunn <andrew+netdev@lunn.ch>, 
+	Jeroen de Borst <jeroendb@google.com>, Harshitha Ramamurthy <hramamurthy@google.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn <willemb@google.com>, David Ahern <dsahern@kernel.org>, 
+	Neal Cardwell <ncardwell@google.com>, Stefan Hajnoczi <stefanha@redhat.com>, 
+	Stefano Garzarella <sgarzare@redhat.com>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
+	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
+	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
+	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-With the introduction of scx_bpf_select_cpu_and(), we can deprecate
-scx_bpf_select_cpu_dfl(), as it offers only a subset of features and
-it's also more consistent with other idle-related APIs (returning a
-negative value when no idle CPU is found).
+On Tue, Mar 18, 2025 at 1:39=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
+te:
+>
+> On 3/8/25 10:40 PM, Mina Almasry wrote:
+> > From: Stanislav Fomichev <sdf@fomichev.me>
+> >
+> > Add bind-tx netlink call to attach dmabuf for TX; queue is not
+> > required, only ifindex and dmabuf fd for attachment.
+> >
+> > Signed-off-by: Stanislav Fomichev <sdf@fomichev.me>
+> > Signed-off-by: Mina Almasry <almasrymina@google.com>
+> >
+> > ---
+> >
+> > v3:
+> > - Fix ynl-regen.sh error (Simon).
+> >
+> > ---
+> >  Documentation/netlink/specs/netdev.yaml | 12 ++++++++++++
+> >  include/uapi/linux/netdev.h             |  1 +
+> >  net/core/netdev-genl-gen.c              | 13 +++++++++++++
+> >  net/core/netdev-genl-gen.h              |  1 +
+> >  net/core/netdev-genl.c                  |  6 ++++++
+> >  tools/include/uapi/linux/netdev.h       |  1 +
+> >  6 files changed, 34 insertions(+)
+> >
+> > diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/ne=
+tlink/specs/netdev.yaml
+> > index 36f1152bfac3..e560b05eb528 100644
+> > --- a/Documentation/netlink/specs/netdev.yaml
+> > +++ b/Documentation/netlink/specs/netdev.yaml
+> > @@ -743,6 +743,18 @@ operations:
+> >              - defer-hard-irqs
+> >              - gro-flush-timeout
+> >              - irq-suspend-timeout
+> > +    -
+> > +      name: bind-tx
+> > +      doc: Bind dmabuf to netdev for TX
+> > +      attribute-set: dmabuf
+> > +      do:
+> > +        request:
+> > +          attributes:
+> > +            - ifindex
+> > +            - fd
+> > +        reply:
+> > +          attributes:
+> > +            - id
+> >
+> >  kernel-family:
+> >    headers: [ "linux/list.h"]
+> > diff --git a/include/uapi/linux/netdev.h b/include/uapi/linux/netdev.h
+> > index 7600bf62dbdf..7eb9571786b8 100644
+> > --- a/include/uapi/linux/netdev.h
+> > +++ b/include/uapi/linux/netdev.h
+> > @@ -219,6 +219,7 @@ enum {
+> >       NETDEV_CMD_QSTATS_GET,
+> >       NETDEV_CMD_BIND_RX,
+> >       NETDEV_CMD_NAPI_SET,
+> > +     NETDEV_CMD_BIND_TX,
+> >
+> >       __NETDEV_CMD_MAX,
+> >       NETDEV_CMD_MAX =3D (__NETDEV_CMD_MAX - 1)
+> > diff --git a/net/core/netdev-genl-gen.c b/net/core/netdev-genl-gen.c
+> > index 996ac6a449eb..f27608d6301c 100644
+> > --- a/net/core/netdev-genl-gen.c
+> > +++ b/net/core/netdev-genl-gen.c
+> > @@ -99,6 +99,12 @@ static const struct nla_policy netdev_napi_set_nl_po=
+licy[NETDEV_A_NAPI_IRQ_SUSPE
+> >       [NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT] =3D { .type =3D NLA_UINT, },
+> >  };
+> >
+> > +/* NETDEV_CMD_BIND_TX - do */
+> > +static const struct nla_policy netdev_bind_tx_nl_policy[NETDEV_A_DMABU=
+F_FD + 1] =3D {
+> > +     [NETDEV_A_DMABUF_IFINDEX] =3D NLA_POLICY_MIN(NLA_U32, 1),
+> > +     [NETDEV_A_DMABUF_FD] =3D { .type =3D NLA_U32, },
+> > +};
+> > +
+> >  /* Ops table for netdev */
+> >  static const struct genl_split_ops netdev_nl_ops[] =3D {
+> >       {
+> > @@ -190,6 +196,13 @@ static const struct genl_split_ops netdev_nl_ops[]=
+ =3D {
+> >               .maxattr        =3D NETDEV_A_NAPI_IRQ_SUSPEND_TIMEOUT,
+> >               .flags          =3D GENL_ADMIN_PERM | GENL_CMD_CAP_DO,
+> >       },
+> > +     {
+> > +             .cmd            =3D NETDEV_CMD_BIND_TX,
+> > +             .doit           =3D netdev_nl_bind_tx_doit,
+> > +             .policy         =3D netdev_bind_tx_nl_policy,
+> > +             .maxattr        =3D NETDEV_A_DMABUF_FD,
+> > +             .flags          =3D GENL_CMD_CAP_DO,
+> > +     },
+> >  };
+> >
+> >  static const struct genl_multicast_group netdev_nl_mcgrps[] =3D {
+> > diff --git a/net/core/netdev-genl-gen.h b/net/core/netdev-genl-gen.h
+> > index e09dd7539ff2..c1fed66e92b9 100644
+> > --- a/net/core/netdev-genl-gen.h
+> > +++ b/net/core/netdev-genl-gen.h
+> > @@ -34,6 +34,7 @@ int netdev_nl_qstats_get_dumpit(struct sk_buff *skb,
+> >                               struct netlink_callback *cb);
+> >  int netdev_nl_bind_rx_doit(struct sk_buff *skb, struct genl_info *info=
+);
+> >  int netdev_nl_napi_set_doit(struct sk_buff *skb, struct genl_info *inf=
+o);
+> > +int netdev_nl_bind_tx_doit(struct sk_buff *skb, struct genl_info *info=
+);
+> >
+> >  enum {
+> >       NETDEV_NLGRP_MGMT,
+> > diff --git a/net/core/netdev-genl.c b/net/core/netdev-genl.c
+> > index 2b774183d31c..6e5f2de4d947 100644
+> > --- a/net/core/netdev-genl.c
+> > +++ b/net/core/netdev-genl.c
+> > @@ -931,6 +931,12 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, st=
+ruct genl_info *info)
+> >       return err;
+> >  }
+> >
+> > +/* stub */
+> > +int netdev_nl_bind_tx_doit(struct sk_buff *skb, struct genl_info *info=
+)
+> > +{
+> > +     return 0;
+> > +}
+> > +
+> >  void netdev_nl_sock_priv_init(struct list_head *priv)
+> >  {
+> >       INIT_LIST_HEAD(priv);
+>
+> I'm sorry, but this chunck does not apply cleanly anymore.
+>
+> Please rebase.
+>
+> Disclaimer: unfortunately I must note that due to the long backlog
+> pending and the upcoming merge window, I'm unsure I'll be able to
+> process the next revision before the net-next closing.
+>
 
-Therefore, mark scx_bpf_select_cpu_dfl() as deprecated (printing a
-warning when it's used), update all the scheduler examples and
-kselftests to adopt the new API, and ensure backward (source and binary)
-compatibility by providing the necessary macros and hooks.
+Thanks Paolo. I have also been under the weather the last couple of
+days so I haven't even been able to repost. I guess I'll repost after
+the merge window if netdev closes today.
 
-Support for scx_bpf_select_cpu_dfl() can be maintained until v6.17.
-
-Signed-off-by: Andrea Righi <arighi@nvidia.com>
----
- Documentation/scheduler/sched-ext.rst         | 11 +++---
- kernel/sched/ext.c                            |  3 +-
- kernel/sched/ext_idle.c                       | 18 ++-------
- tools/sched_ext/include/scx/common.bpf.h      |  3 +-
- tools/sched_ext/include/scx/compat.bpf.h      | 37 +++++++++++++++++++
- tools/sched_ext/scx_flatcg.bpf.c              | 12 +++---
- tools/sched_ext/scx_simple.bpf.c              |  9 +++--
- .../sched_ext/enq_select_cpu_fails.bpf.c      | 12 +-----
- .../sched_ext/enq_select_cpu_fails.c          |  2 +-
- tools/testing/selftests/sched_ext/exit.bpf.c  |  6 ++-
- .../sched_ext/select_cpu_dfl_nodispatch.bpf.c | 13 +++----
- .../sched_ext/select_cpu_dfl_nodispatch.c     |  2 +-
- 12 files changed, 73 insertions(+), 55 deletions(-)
-
-diff --git a/Documentation/scheduler/sched-ext.rst b/Documentation/scheduler/sched-ext.rst
-index 0993e41353db7..7f36f4fcf5f31 100644
---- a/Documentation/scheduler/sched-ext.rst
-+++ b/Documentation/scheduler/sched-ext.rst
-@@ -142,15 +142,14 @@ optional. The following modified excerpt is from
-                        s32 prev_cpu, u64 wake_flags)
-     {
-             s32 cpu;
--            /* Need to initialize or the BPF verifier will reject the program */
--            bool direct = false;
- 
--            cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &direct);
--
--            if (direct)
-+            cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
-+            if (cpu >= 0)
-                     scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
-+                    return cpu;
-+            }
- 
--            return cpu;
-+            return prev_cpu;
-     }
- 
-     /*
-diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
-index 343f066c1185d..d82e9d3cbc0dc 100644
---- a/kernel/sched/ext.c
-+++ b/kernel/sched/ext.c
-@@ -464,13 +464,12 @@ struct sched_ext_ops {
- 	 * state. By default, implementing this operation disables the built-in
- 	 * idle CPU tracking and the following helpers become unavailable:
- 	 *
--	 * - scx_bpf_select_cpu_dfl()
- 	 * - scx_bpf_select_cpu_and()
- 	 * - scx_bpf_test_and_clear_cpu_idle()
- 	 * - scx_bpf_pick_idle_cpu()
- 	 *
- 	 * The user also must implement ops.select_cpu() as the default
--	 * implementation relies on scx_bpf_select_cpu_dfl().
-+	 * implementation relies on scx_bpf_select_cpu_and().
- 	 *
- 	 * Specify the %SCX_OPS_KEEP_BUILTIN_IDLE flag to keep the built-in idle
- 	 * tracking.
-diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
-index 220e11cd0ab67..746fd36050045 100644
---- a/kernel/sched/ext_idle.c
-+++ b/kernel/sched/ext_idle.c
-@@ -872,26 +872,16 @@ __bpf_kfunc int scx_bpf_cpu_node(s32 cpu)
- #endif
- }
- 
--/**
-- * scx_bpf_select_cpu_dfl - The default implementation of ops.select_cpu()
-- * @p: task_struct to select a CPU for
-- * @prev_cpu: CPU @p was on previously
-- * @wake_flags: %SCX_WAKE_* flags
-- * @is_idle: out parameter indicating whether the returned CPU is idle
-- *
-- * Can only be called from ops.select_cpu() if the built-in CPU selection is
-- * enabled - ops.update_idle() is missing or %SCX_OPS_KEEP_BUILTIN_IDLE is set.
-- * @p, @prev_cpu and @wake_flags match ops.select_cpu().
-- *
-- * Returns the picked CPU with *@is_idle indicating whether the picked CPU is
-- * currently idle and thus a good candidate for direct dispatching.
-- */
-+/* Provided for backward binary compatibility, will be removed in v6.17. */
- __bpf_kfunc s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu,
- 				       u64 wake_flags, bool *is_idle)
- {
- #ifdef CONFIG_SMP
- 	s32 cpu;
- #endif
-+	printk_deferred_once(KERN_WARNING
-+			"sched_ext: scx_bpf_select_cpu_dfl() deprecated in favor of scx_bpf_select_cpu_and()");
-+
- 	if (!ops_cpu_valid(prev_cpu, NULL))
- 		goto prev_cpu;
- 
-diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
-index 6f1da61cf7f17..1eb790eb90d40 100644
---- a/tools/sched_ext/include/scx/common.bpf.h
-+++ b/tools/sched_ext/include/scx/common.bpf.h
-@@ -47,7 +47,8 @@ static inline void ___vmlinux_h_sanity_check___(void)
- }
- 
- s32 scx_bpf_create_dsq(u64 dsq_id, s32 node) __ksym;
--s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, bool *is_idle) __ksym;
-+s32 scx_bpf_select_cpu_dfl(struct task_struct *p,
-+			   s32 prev_cpu, u64 wake_flags, bool *is_idle) __ksym __weak;
- s32 scx_bpf_select_cpu_and(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
- 			   const struct cpumask *cpus_allowed, u64 flags) __ksym __weak;
- void scx_bpf_dsq_insert(struct task_struct *p, u64 dsq_id, u64 slice, u64 enq_flags) __ksym __weak;
-diff --git a/tools/sched_ext/include/scx/compat.bpf.h b/tools/sched_ext/include/scx/compat.bpf.h
-index 9252e1a00556f..f9caa7baf356c 100644
---- a/tools/sched_ext/include/scx/compat.bpf.h
-+++ b/tools/sched_ext/include/scx/compat.bpf.h
-@@ -225,6 +225,43 @@ static inline bool __COMPAT_is_enq_cpu_selected(u64 enq_flags)
- 	 scx_bpf_pick_any_cpu_node(cpus_allowed, node, flags) :			\
- 	 scx_bpf_pick_any_cpu(cpus_allowed, flags))
- 
-+/**
-+ * scx_bpf_select_cpu_dfl - The default implementation of ops.select_cpu().
-+ * We will preserve this compatible helper until v6.17.
-+ *
-+ * @p: task_struct to select a CPU for
-+ * @prev_cpu: CPU @p was on previously
-+ * @wake_flags: %SCX_WAKE_* flags
-+ * @is_idle: out parameter indicating whether the returned CPU is idle
-+ *
-+ * Can only be called from ops.select_cpu() if the built-in CPU selection is
-+ * enabled - ops.update_idle() is missing or %SCX_OPS_KEEP_BUILTIN_IDLE is set.
-+ * @p, @prev_cpu and @wake_flags match ops.select_cpu().
-+ *
-+ * Returns the picked CPU with *@is_idle indicating whether the picked CPU is
-+ * currently idle and thus a good candidate for direct dispatching.
-+ */
-+#define scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, is_idle)		\
-+({										\
-+	s32 __cpu;								\
-+										\
-+	if (bpf_ksym_exists(scx_bpf_select_cpu_and)) {				\
-+		__cpu = scx_bpf_select_cpu_and((p), (prev_cpu), (wake_flags),	\
-+					       (p)->cpus_ptr, 0);		\
-+		if (__cpu >= 0) {						\
-+			*(is_idle) = true;					\
-+		} else {							\
-+			*(is_idle) = false;					\
-+			__cpu = (prev_cpu);					\
-+		}								\
-+	} else {								\
-+		__cpu = scx_bpf_select_cpu_dfl((p), (prev_cpu),			\
-+					       (wake_flags), (is_idle));	\
-+	}									\
-+										\
-+	__cpu;									\
-+})
-+
- /*
-  * Define sched_ext_ops. This may be expanded to define multiple variants for
-  * backward compatibility. See compat.h::SCX_OPS_LOAD/ATTACH().
-diff --git a/tools/sched_ext/scx_flatcg.bpf.c b/tools/sched_ext/scx_flatcg.bpf.c
-index 2c720e3ecad59..0075bff928893 100644
---- a/tools/sched_ext/scx_flatcg.bpf.c
-+++ b/tools/sched_ext/scx_flatcg.bpf.c
-@@ -317,15 +317,12 @@ static void set_bypassed_at(struct task_struct *p, struct fcg_task_ctx *taskc)
- s32 BPF_STRUCT_OPS(fcg_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)
- {
- 	struct fcg_task_ctx *taskc;
--	bool is_idle = false;
- 	s32 cpu;
- 
--	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &is_idle);
--
- 	taskc = bpf_task_storage_get(&task_ctx, p, 0, 0);
- 	if (!taskc) {
- 		scx_bpf_error("task_ctx lookup failed");
--		return cpu;
-+		return prev_cpu;
- 	}
- 
- 	/*
-@@ -333,13 +330,16 @@ s32 BPF_STRUCT_OPS(fcg_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake
- 	 * idle. Follow it and charge the cgroup later in fcg_stopping() after
- 	 * the fact.
- 	 */
--	if (is_idle) {
-+	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
-+	if (cpu >= 0) {
- 		set_bypassed_at(p, taskc);
- 		stat_inc(FCG_STAT_LOCAL);
- 		scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
-+
-+		return cpu;
- 	}
- 
--	return cpu;
-+	return prev_cpu;
- }
- 
- void BPF_STRUCT_OPS(fcg_enqueue, struct task_struct *p, u64 enq_flags)
-diff --git a/tools/sched_ext/scx_simple.bpf.c b/tools/sched_ext/scx_simple.bpf.c
-index e6de99dba7db6..0e48b2e46a683 100644
---- a/tools/sched_ext/scx_simple.bpf.c
-+++ b/tools/sched_ext/scx_simple.bpf.c
-@@ -54,16 +54,17 @@ static void stat_inc(u32 idx)
- 
- s32 BPF_STRUCT_OPS(simple_select_cpu, struct task_struct *p, s32 prev_cpu, u64 wake_flags)
- {
--	bool is_idle = false;
- 	s32 cpu;
- 
--	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &is_idle);
--	if (is_idle) {
-+	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
-+	if (cpu >= 0) {
- 		stat_inc(0);	/* count local queueing */
- 		scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
-+
-+		return cpu;
- 	}
- 
--	return cpu;
-+	return prev_cpu;
- }
- 
- void BPF_STRUCT_OPS(simple_enqueue, struct task_struct *p, u64 enq_flags)
-diff --git a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c
-index a7cf868d5e311..d3c0716aa79c9 100644
---- a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c
-+++ b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.bpf.c
-@@ -9,10 +9,6 @@
- 
- char _license[] SEC("license") = "GPL";
- 
--/* Manually specify the signature until the kfunc is added to the scx repo. */
--s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
--			   bool *found) __ksym;
--
- s32 BPF_STRUCT_OPS(enq_select_cpu_fails_select_cpu, struct task_struct *p,
- 		   s32 prev_cpu, u64 wake_flags)
- {
-@@ -22,14 +18,8 @@ s32 BPF_STRUCT_OPS(enq_select_cpu_fails_select_cpu, struct task_struct *p,
- void BPF_STRUCT_OPS(enq_select_cpu_fails_enqueue, struct task_struct *p,
- 		    u64 enq_flags)
- {
--	/*
--	 * Need to initialize the variable or the verifier will fail to load.
--	 * Improving these semantics is actively being worked on.
--	 */
--	bool found = false;
--
- 	/* Can only call from ops.select_cpu() */
--	scx_bpf_select_cpu_dfl(p, 0, 0, &found);
-+	scx_bpf_select_cpu_and(p, 0, 0, p->cpus_ptr, 0);
- 
- 	scx_bpf_dsq_insert(p, SCX_DSQ_GLOBAL, SCX_SLICE_DFL, enq_flags);
- }
-diff --git a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-index a80e3a3b3698c..c964444998667 100644
---- a/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-+++ b/tools/testing/selftests/sched_ext/enq_select_cpu_fails.c
-@@ -52,7 +52,7 @@ static void cleanup(void *ctx)
- 
- struct scx_test enq_select_cpu_fails = {
- 	.name = "enq_select_cpu_fails",
--	.description = "Verify we fail to call scx_bpf_select_cpu_dfl() "
-+	.description = "Verify we fail to call scx_bpf_select_cpu_and() "
- 		       "from ops.enqueue()",
- 	.setup = setup,
- 	.run = run,
-diff --git a/tools/testing/selftests/sched_ext/exit.bpf.c b/tools/testing/selftests/sched_ext/exit.bpf.c
-index 4bc36182d3ffc..8122421856c1b 100644
---- a/tools/testing/selftests/sched_ext/exit.bpf.c
-+++ b/tools/testing/selftests/sched_ext/exit.bpf.c
-@@ -20,12 +20,14 @@ UEI_DEFINE(uei);
- s32 BPF_STRUCT_OPS(exit_select_cpu, struct task_struct *p,
- 		   s32 prev_cpu, u64 wake_flags)
- {
--	bool found;
-+	s32 cpu;
- 
- 	if (exit_point == EXIT_SELECT_CPU)
- 		EXIT_CLEANLY();
- 
--	return scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags, &found);
-+	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
-+
-+	return cpu >= 0 ? cpu : prev_cpu;
- }
- 
- void BPF_STRUCT_OPS(exit_enqueue, struct task_struct *p, u64 enq_flags)
-diff --git a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c
-index 815f1d5d61ac4..4e1b698f710e7 100644
---- a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c
-+++ b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.bpf.c
-@@ -27,10 +27,6 @@ struct {
- 	__type(value, struct task_ctx);
- } task_ctx_stor SEC(".maps");
- 
--/* Manually specify the signature until the kfunc is added to the scx repo. */
--s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
--			   bool *found) __ksym;
--
- s32 BPF_STRUCT_OPS(select_cpu_dfl_nodispatch_select_cpu, struct task_struct *p,
- 		   s32 prev_cpu, u64 wake_flags)
- {
-@@ -43,10 +39,13 @@ s32 BPF_STRUCT_OPS(select_cpu_dfl_nodispatch_select_cpu, struct task_struct *p,
- 		return -ESRCH;
- 	}
- 
--	cpu = scx_bpf_select_cpu_dfl(p, prev_cpu, wake_flags,
--				     &tctx->force_local);
-+	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, p->cpus_ptr, 0);
-+	if (cpu >= 0) {
-+		tctx->force_local = true;
-+		return cpu;
-+	}
- 
--	return cpu;
-+	return prev_cpu;
- }
- 
- void BPF_STRUCT_OPS(select_cpu_dfl_nodispatch_enqueue, struct task_struct *p,
-diff --git a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c
-index 9b5d232efb7f6..2f450bb14e8d9 100644
---- a/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c
-+++ b/tools/testing/selftests/sched_ext/select_cpu_dfl_nodispatch.c
-@@ -66,7 +66,7 @@ static void cleanup(void *ctx)
- 
- struct scx_test select_cpu_dfl_nodispatch = {
- 	.name = "select_cpu_dfl_nodispatch",
--	.description = "Verify behavior of scx_bpf_select_cpu_dfl() in "
-+	.description = "Verify behavior of scx_bpf_select_cpu_and() in "
- 		       "ops.select_cpu()",
- 	.setup = setup,
- 	.run = run,
--- 
-2.48.1
-
+--
+Thanks,
+Mina
