@@ -1,64 +1,64 @@
-Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25FF8230981
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 20:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08CE1514F6;
+	Fri, 21 Mar 2025 20:34:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742589201; cv=none; b=kxN+0W5BS99vzXvCGE2BLqvdJQvb59bRroyo/Gzoc9lOkCxGh1Ryr7BSuNEs1hUv+KDtcZ/nNjlTMRQSUjHvIjc7JJoaeiEuhczXHUIE8Y0+en90PTC34jsjW3rVbrX//hvEMMMTyXMXuAPrtLv5SsTcDxioQMNshjNEYcOZMOw=
+	t=1742589275; cv=none; b=hVXjx+Xda19LPSIS3XXNp1PNBSU1BybFjfnTv9PMIyTxMa7BdK9T/RSXYpUkdzOq+jYaCp2lcwxEYTGbBjZS8VUFmqBE3bzGxYn2GFC4vI8mB9iJdZ3HnNBsZAQ1ry3ZrG+eL6eepqMeiD+fZ/HJDDKtaroWQTd/IBOjDcGIfV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742589201; c=relaxed/simple;
-	bh=7lhaM0CG+9tuZnrS9lZcJSlVArtevf4SVBCaDSzqoIg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=QBdaGbBDC//ar6vt7ZuuajBiYHg2bRcJhONelOPEqr5a7NPh1fFMPESvIdxt3JB1T5/HhS1nqEGWWk9NtRBDi8xZAFyidpoLUFT5psJ1oFd96PiizMC+T4wh9dS+QgIpmFEXfyYO5H0HbXEkiv5y0A7Y6aAoYMJZX/KZlmknq+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=SVtixoBt; arc=none smtp.client-ip=209.85.166.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1742589275; c=relaxed/simple;
+	bh=iCZM/QPOsaDdQuWoHdp6prHpqwO/Q1AO5B5ynak4sa8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OK4GbqSpWS6IgBjnSmbX0R6pt6HLq6IexIkcOqgNcMACRGyaclY5C+xdDM7HLzvKwJG4WommBhxBtu5dKUKlm2HlXVd361Ku2Mtc/if2taQimkkvJ1/U7sqvuzG0IPK+yhlE22V+PjAblzO3pCBLKeSSgcYMbtKDH+clxvn6wGI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zd3H4N/J; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="SVtixoBt"
-Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-3d3db3b68a7so26002395ab.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:33:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zd3H4N/J"
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac345bd8e13so432420566b.0;
+        Fri, 21 Mar 2025 13:34:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742589198; x=1743193998; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742589272; x=1743194072; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xuLZuFCKSKg3PxWQwRd8ETXjNuULumylP5s/6/Th/nI=;
-        b=SVtixoBtotTxS6U4OZnzvnwk8oHnpE5tf1GYD3KBq3Cc0Z3z2DvJCO+isPNrKorK8a
-         gjVxI8la7UKqZ74wjvpo88bH6DalQR63upAndrbxyIbIqKlVQWT9inb5LoekVITnO13M
-         YXHxU9qVg1kRPZTG5B0GK1yg10GH1dhKVqrBdkYHPSfyTjnw/aiC5D1NMqYgewsIDmv7
-         YZ21gTmmw4QWdO3nayryvKBK6P7rRCB9orRDJumCpp+Od3acMeBIdn2peLX8yki/z4mZ
-         0BAvCrd+xVGCsC1GxXfOxWch8XxR0YwsZgw0hHYPqiJPNWGaCaIjDK6NsYOgAmrki/Xu
-         tFhg==
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9ulaGf9MEDtrRMzJbsiLum2mRDwlhlX8TSKnkfT/XEQ=;
+        b=Zd3H4N/JXLWkjehMFUYS7ZHBt5IjPsXQU1NjHhKT93MU03VKVzk+km6Zj+F2DVGxHw
+         haCtvMrrZjBTG7obNCykTIJg9JD8HRkqGsYK7K4vN3hoQRbbKxtqIjoUyHx8ryn2Xbs8
+         NYHGMIn0J/EPo+zTTKOQ4jfAeNqou4iCJQHZFYLj1uDBi/fXlIkRoOTZMrB9fxnhxoNd
+         Y5zMcROg8ASBQ66pZ01HGW2YsXK8UsnC40uoEDHJCMlbruF0rBvgumWWw7OqwO/6dp91
+         atmlApnGfFaUlU0E3uNZHCdTbCs3M2ol0hXQmk5Di1oXQ2RrifCiTypAjWuGkkZ2lC6P
+         h8RA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742589198; x=1743193998;
+        d=1e100.net; s=20230601; t=1742589272; x=1743194072;
         h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xuLZuFCKSKg3PxWQwRd8ETXjNuULumylP5s/6/Th/nI=;
-        b=ji2r2JY8ClZRoi1YdwDwePbXxsb+7Bw3ypezQW8Mw2nAeKtn3fSin8J7Y/YNpzdXTB
-         NknjMJ7XDqiFty7qLLsdrIk3qBvYluRJTsU9Te3vhXnUDVZV+bmx36ihEnTyxi9u1Eot
-         zdJJsJ5DHhp6PUN6luqlK6ROd87rvRdOy9jYqVAAAnyb3MJHGgLR9L57Dsu4WTGThu3J
-         3BMMZCmUjAjTa3VrNGpb04IXeEMdNS6pOPdkiAIdj+UIjT3cGFB2RBOolCv8Ci6381U2
-         VjMxyzJ6tlHbn5WPw7BRKxdGZgCJ4LDov+R0cvVoELrpC+Ta0zQNOWwn5IOMZix0tsLU
-         Cxqw==
-X-Forwarded-Encrypted: i=1; AJvYcCUZWJ/GzSWZZzvu/3hqO+hIOIr+XgCnid63BRT/6YEs9Z3f/Km2PRMiEjnOI5sIlAQf0B66DjRACNOul2M=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywe28OJTYgS4YiSNuUv9WS9jKd8frsqmT41/oVuItwChw8Lm31X
-	L3xGBwZXkb15jGxMgL5vt8Sh8UerLHd1Cu7Ikl35SD1b8MXrOaQiyZfAYYh88ws=
-X-Gm-Gg: ASbGncuvlf0owESOj8F1o2HhWcWyRtJI7GxmlqjhGQ1dqAcJpdg7QYBPrmNqdRVbRr0
-	+XBmIRoBxtsjTdTSRY0ChtRR5tEdWytBurBX3RTtuwGCfLe7W1bn1odLYTZeog2z8AA2xYMrRx1
-	rEEoXunNkLfuo2LkE2XWvPlKodyWLtO7f77rK4ysaJtOmWQ8Y2g9uscfPDp+81Nt7cRXSsRiFZM
-	4UjfHdQZrOLCrQ9mFYVvoZogoNhHPJU/PC1McxTuJsFLi98lRNKwZoA+AoJgFAVje02uXhkV56v
-	fUb1t43M3hhkO8Qung8Sq5NDgbPNsjVAYyG7Y+UttA==
-X-Google-Smtp-Source: AGHT+IFI91THLm3qVJtECcXxa5n7V2R1Cftu+sQP4tmofv//BmWK9VIunVWN3AluV2sQCeMt2KYACw==
-X-Received: by 2002:a05:6e02:170d:b0:3d5:8908:92d0 with SMTP id e9e14a558f8ab-3d5960d22fbmr49781055ab.3.1742589198084;
-        Fri, 21 Mar 2025 13:33:18 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdea05dsm582166173.63.2025.03.21.13.33.16
+        bh=9ulaGf9MEDtrRMzJbsiLum2mRDwlhlX8TSKnkfT/XEQ=;
+        b=tdIohhr7F5AsHddjQbYs4JS6nB5sPpQLonU8ylwcV6ugcCwfVkuYwbN0OJBdYVBIVX
+         1hRrHh/BKIKUUGO2WHuEj+i+i44Q7St/BBRJsMBkx4MziWjAuysqvd3uziopkVwfVqUy
+         67Wn26IICLcXdU6Y5/difeEa5VM9SoZlY/gxxDX3QNsOQtWNTMjikk8V3LCbDw6cIvkE
+         3Yhngrij4NvYHorjlpAdyAB5W18Y8YUZIvauZJ3ujwFd8Alzqu/p8AI1Mp4Tmk9eqW+a
+         91odC3lChIBB2xKZl7NN/GwLtKn9VTfpFagTh9HWinj8DBqGDxX0vwIswrmkqoZbcfq9
+         urTA==
+X-Forwarded-Encrypted: i=1; AJvYcCUo04DLfSzeOINQS9d7U7yhqcZxpP1/vmH7UYd8Z6gkaXc/OmfRjvOIG2bQiQx6Gr2pE5ElcVQlJQ==@vger.kernel.org, AJvYcCX3h6P7eqySgf/1rWjm+ogkJWmY4c1UPYxM/2MBPQucqgdJRih6ZvtdlPH6NYKGDuyr5NzTMlKt//fs+j57@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy06Y/JqJmzZ6gTB6m8o++yaMCZTD+2NjRJqG6hkuWb5itIy2dD
+	6H1jbqQ7lTiut2IhRsadF0yRbGLSkzknJd5o0ukuyLHtkHlT93oe
+X-Gm-Gg: ASbGnctY0/x4h3X8RMqOsu9l2P1a0aTiac8jgd2KI9hdVSpi+ED5sMn6oIlDKitfSMs
+	4eRCPGpzcqneej5i+BlqNM33GD8ORCoazQEXnujODSHHdiYkZJzShMf08XUdS395U2poNUm8M7r
+	YvGZ4ztw2PDJEvaJOkDnzKkfJ0dtT6qlTjXe8gUQKvc/YwNCumsfGSxZruFciKr9MPzmlnpYRbI
+	JACc17vhqdGYmNembx6gE3SHulug5jdtlciOt9jNOQ+gRzFKuy19pt1EZzqRoqDWoIZnvkGrH7W
+	+ZDhKZqNMVId83EmyTMky3yGmcK/guk+sX7NoraQS56RtzBK4OKgjQ==
+X-Google-Smtp-Source: AGHT+IFQFUoFZr+OweqQjp9ANhksXIbIFtn48qnP/QqrNnrWbtvNBVSyJNR6P8eMfXTiAoQVCDhJIw==
+X-Received: by 2002:a17:907:3f10:b0:ac1:fb60:2269 with SMTP id a640c23a62f3a-ac3f22a59a0mr480301566b.27.1742589271626;
+        Fri, 21 Mar 2025 13:34:31 -0700 (PDT)
+Received: from [192.168.8.100] ([85.255.236.254])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb658b4sm208614166b.118.2025.03.21.13.34.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 13:33:17 -0700 (PDT)
-Message-ID: <67a82595-0e2a-4218-92d4-a704ccb57125@kernel.dk>
-Date: Fri, 21 Mar 2025 14:33:16 -0600
+        Fri, 21 Mar 2025 13:34:30 -0700 (PDT)
+Message-ID: <8338ac70-ed0b-4df5-a052-9ab1dfec9e26@gmail.com>
+Date: Fri, 21 Mar 2025 20:35:24 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -66,83 +66,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC -next 00/10] Add ZC notifications to splice and sendfile
-To: Joe Damato <jdamato@fastly.com>, Christoph Hellwig <hch@infradead.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- asml.silence@gmail.com, linux-fsdevel@vger.kernel.org, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, linux-api@vger.kernel.org,
- linux-arch@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
- kuba@kernel.org, shuah@kernel.org, sdf@fomichev.me, mingo@redhat.com,
- arnd@arndb.de, brauner@kernel.org, akpm@linux-foundation.org,
- tglx@linutronix.de, jolsa@kernel.org, linux-kselftest@vger.kernel.org
-References: <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
- <2d68bc91-c22c-4b48-a06d-fa9ec06dfb25@kernel.dk>
- <Z9r5JE3AJdnsXy_u@LQ3V64L9R2>
- <19e3056c-2f7b-4f41-9c40-98955c4a9ed3@kernel.dk>
- <Z9sCsooW7OSTgyAk@LQ3V64L9R2> <Z9uuSQ7SrigAsLmt@infradead.org>
- <Z9xdPVQeLBrB-Anu@LQ3V64L9R2> <Z9z_f-kR0lBx8P_9@infradead.org>
- <ca1fbeba-b749-4c34-b4be-c80056eccc3a@kernel.dk>
- <Z92VkgwS1SAaad2Q@LQ3V64L9R2> <Z93Mc27xaz5sAo5m@LQ3V64L9R2>
+Subject: Re: [PATCH 3/3] io_uring/uring_cmd: import fixed buffer before going
+ async
+To: Caleb Sander Mateos <csander@purestorage.com>,
+ Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+ Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>,
+ Sagi Grimberg <sagi@grimberg.me>
+Cc: Xinyu Zhang <xizhang@purestorage.com>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-nvme@lists.infradead.org
+References: <20250321184819.3847386-1-csander@purestorage.com>
+ <20250321184819.3847386-4-csander@purestorage.com>
 Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Z93Mc27xaz5sAo5m@LQ3V64L9R2>
-Content-Type: text/plain; charset=UTF-8
+From: Pavel Begunkov <asml.silence@gmail.com>
+In-Reply-To: <20250321184819.3847386-4-csander@purestorage.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 3/21/25 2:30 PM, Joe Damato wrote:
-> On Fri, Mar 21, 2025 at 09:36:34AM -0700, Joe Damato wrote:
->> On Fri, Mar 21, 2025 at 05:14:59AM -0600, Jens Axboe wrote:
->>> On 3/20/25 11:56 PM, Christoph Hellwig wrote:
->>>>> I don't know the entire historical context, but I presume sendmsg
->>>>> did that because there was no other mechanism at the time.
->>>>
->>>> At least aio had been around for about 15 years at the point, but
->>>> networking folks tend to be pretty insular and reinvent things.
->>>
->>> Yep...
->>>
->>>>> It seems like Jens suggested that plumbing this through for splice
->>>>> was a possibility, but sounds like you disagree.
->>>>
->>>> Yes, very strongly.
->>>
->>> And that is very much not what I suggested, fwiw.
->>
->> Your earlier message said:
->>
->>   If the answer is "because splice", then it would seem saner to
->>   plumb up those bits only. Would be much simpler too...
->>
->> wherein I interpreted "plumb those bits" to mean plumbing the error
->> queue notifications on TX completions.
->>
->> My sincere apologies that I misunderstood your prior message and/or
->> misconstrued what you said -- it was not clear to me what you meant.
-> 
-> I think what added to my confusion here was this bit, Jens:
-> 
->   > > As far as the bit about plumbing only the splice bits, sorry if I'm
->   > > being dense here, do you mean plumbing the error queue through to
->   > > splice only and dropping sendfile2?
->   > >
->   > > That is an option. Then the apps currently using sendfile could use
->   > > splice instead and get completion notifications on the error queue.
->   > > That would probably work and be less work than rewriting to use
->   > > iouring, but probably a bit more work than using a new syscall.
->   > 
->   > Yep
-> 
-> I thought I was explicitly asking if adding SPLICE_F_ZC and plumbing
-> through the error queue notifications was OK and your response here
-> ("Yep") suggested to me that it would be a suitable path to
-> consider.
-> 
-> I take it from your other responses, though, that I was mistaken.
+On 3/21/25 18:48, Caleb Sander Mateos wrote:
+> For uring_cmd operations with fixed buffers, the fixed buffer lookup
+> happens in io_uring_cmd_import_fixed(), called from the ->uring_cmd()
+> implementation. A ->uring_cmd() implementation could return -EAGAIN on
+> the initial issue for any reason before io_uring_cmd_import_fixed().
+> For example, nvme_uring_cmd_io() calls nvme_alloc_user_request() first,
+> which can return -EAGAIN if all tags in the tag set are in use.
 
-I guess I missed your error queue thing here, I was definitely pretty
-clear in other ones that I consider that part a hack and something that
-only exists because networking never looked into doing a proper async
-API for anything.
+That's up to command when it resolves the buffer, you can just
+move the call to io_import_reg_buf() earlier in nvme cmd code
+and not working it around at the io_uring side.
 
+In general, it's a step back, it just got cleaned up from the
+mess where node resolution and buffer imports were separate
+steps and duplicate by every single request type that used it.
+
+> This ordering difference is observable when using
+> UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the fixed buffer table.
+> If the uring_cmd is followed by a UBLK_U_IO_UNREGISTER_IO_BUF operation
+> that unregisters the fixed buffer, the uring_cmd going async will cause
+> the fixed buffer lookup to fail because it happens after the unregister.
+> 
+> Move the fixed buffer lookup out of io_uring_cmd_import_fixed() and
+> instead perform it in io_uring_cmd() before calling ->uring_cmd().
+> io_uring_cmd_import_fixed() now only initializes an iov_iter from the
+> existing fixed buffer node. This division of responsibilities makes
+> sense as the fixed buffer lookup is an io_uring implementation detail
+> and independent of the ->uring_cmd() implementation. It also cuts down
+> on the need to pass around the io_uring issue_flags.
+> 
+> Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+> Fixes: 27cb27b6d5ea ("io_uring: add support for kernel registered bvecs")
+> ---
+>   drivers/nvme/host/ioctl.c    | 10 ++++------
+>   include/linux/io_uring/cmd.h |  6 ++----
+>   io_uring/rsrc.c              |  6 ++++++
+>   io_uring/rsrc.h              |  2 ++
+>   io_uring/uring_cmd.c         | 10 +++++++---
+>   5 files changed, 21 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
+> index fe9fb80c6a14..3fad74563b9e 100644
+> --- a/drivers/nvme/host/ioctl.c
+> +++ b/drivers/nvme/host/ioctl.c
+> @@ -112,12 +112,11 @@ static struct request *nvme_alloc_user_request(struct request_queue *q,
 -- 
-Jens Axboe
+Pavel Begunkov
+
