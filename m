@@ -1,70 +1,87 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C99C82AD0C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC83184F;
+	Fri, 21 Mar 2025 04:52:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742532503; cv=none; b=oGoW3580fE2ah7F8AkU+kK6YMR28NCG5MAtgMa7s9htU8UisztqBAuZjPKrBKFdVhf05+raCspX4NH8MDafX3JngyaZOsSom0Gr0kdY/TRgElR5cHxEALDIqvHG7RTCa/fPJIMVQUEIRaudMSsWsNQI3GVHF206Np4XErG+XIGY=
+	t=1742532727; cv=none; b=Tid/efhBs1gUiTk1hYHFsbVUIaUDko1/PNFQSZ2KACE8rRbeLXiGsE3q5X24XjTZyCbAJap2JYTgVdLM0HBf4dT7s5mxIMtsM9b2GGj3tPBF+M79bM3DvdM+ZbGd1sY36KatQZd8T+dkVi5UBnh6VSTvU0QQQuvXfsEZL+buUcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742532503; c=relaxed/simple;
-	bh=Jt62BR8KQbTzUPS6y6fs1k8t5aTR/V2FQbDlelyhF2g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WT69YFPLlhNGQvbaYUirLDs8BNDUbiDIaQUmHvlIf5oKvA13HohX2xjxrusG9mwjORc7pfa4OD8Jey7NQmnMKCwMpxmv2LzbrqLIxQV+ECKn3hQgMiV3Z2CZUAFG3l2o8rYnQWsM573Sreg28kMRibq6HGCodQLsTxKAZulECZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 94279106F;
-	Thu, 20 Mar 2025 21:48:27 -0700 (PDT)
-Received: from [10.162.16.153] (a077893.blr.arm.com [10.162.16.153])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 68A1A3F673;
-	Thu, 20 Mar 2025 21:48:18 -0700 (PDT)
-Message-ID: <a15b93d8-3b8a-4b3a-a40b-016efe9d12a2@arm.com>
-Date: Fri, 21 Mar 2025 10:18:15 +0530
+	s=arc-20240116; t=1742532727; c=relaxed/simple;
+	bh=VpE+gT0a4UR1Jy94CKOKTOXH1wCUdAcsLY8o3iPt6cE=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=qQvPFn7bCfu9EmkUHfjo8seQ0z8xd7THYcDCsT/5rmnTVZWkAY1XQNftKvhsg0vlgDpPSBhY6FQqy29+d/HH4lVFHAk0cwjDtsminakidWGB6XHvK8SEVLLjUfBVKArYW6g1GNG5JWR1yIQ2scnraw2rRTwxZVmflEe++b3immU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=M2v7/0GJ; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M2v7/0GJ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742532722;
+	bh=6IX4fIC0pg4XhhuZD45G3Tg7HdfjyWWAGnmlZsJZeo0=;
+	h=Date:From:To:Cc:Subject:From;
+	b=M2v7/0GJYcGpIKd0IURG2k5kKYGVad9ZcBK8yh3sG68Wo4PfDASBS3yQvKlkJmHWQ
+	 neOX0Fsf4Lh+Dd4Brv0NzyzyMrrR0YrEAVEGrkHzhUZ5ode3EAI0LKKLMbPhgCrsFA
+	 uTKF+UN9CB3tnn0SpzhZLhaFqE1iIXq99QnBiqw89u1UtV8PWdpSy5D8u570/CvCql
+	 jkCfgTKMixT3hFe9ZZ510xB+/XiCW2kv9EUbArwqrRm0i1EFigFWFeZHmiQOHdu2WE
+	 9xIfWVD1KaBstg3A4sX2rfQuFKrpF4eW9cAMjpo4+tHpRxe7eHkc4NkFtDBwtdphs9
+	 TQM2WG09S/baA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZJqmf26Lxz4wy9;
+	Fri, 21 Mar 2025 15:52:02 +1100 (AEDT)
+Date: Fri, 21 Mar 2025 15:52:01 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Lee Jones <lee@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next
+ Mailing List <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the leds-lj tree
+Message-ID: <20250321155201.633e8aed@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/page_alloc: Replace flag check with PageHWPoison() in
- check_new_page_bad()
-To: Ye Liu <ye.liu@linux.dev>, akpm@linux-foundation.org
-Cc: linux-mm@kvack.org, linux-kernel@vger.kernel.org,
- Ye Liu <liuye@kylinos.cn>
-References: <20250320063346.489030-1-ye.liu@linux.dev>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250320063346.489030-1-ye.liu@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/0C+rp0DRIX/O0lW/75YQvMP";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
+--Sig_/0C+rp0DRIX/O0lW/75YQvMP
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 3/20/25 12:03, Ye Liu wrote:
-> From: Ye Liu <liuye@kylinos.cn>
-> 
-> This patch replaces the direct check for the __PG_HWPOISON flag with
-> the PageHWPoison() macro, improving code readability and maintaining
-> consistency with other parts of the memory management code.
-> 
-> Signed-off-by: Ye Liu <liuye@kylinos.cn>
-> ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index fe76fd237dd0..6ef54abebf51 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1427,7 +1427,7 @@ static __always_inline void page_del_and_expand(struct zone *zone,
->  
->  static void check_new_page_bad(struct page *page)
->  {
-> -	if (unlikely(page->flags & __PG_HWPOISON)) {
-> +	if (unlikely(PageHWPoison(page))) {
->  		/* Don't complain about hwpoisoned pages */
->  		if (PageBuddy(page))
->  			__ClearPageBuddy(page);
+After merging the leds-lj tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+drivers/leds/Kconfig:1027: can't open file "drivers/leds/simple/Kconfig"
+
+Caused by commit
+
+  f33c17919d44 ("leds: Rename simple directory to simatic")
+
+I have used the leds-lj tree from next-20250320 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/0C+rp0DRIX/O0lW/75YQvMP
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfc8HEACgkQAVBC80lX
+0GzNawf+N4oiu6e+myeu6SCKqwKGrQKYU6kvG+bZ9DUtDehALRQZDEVkR2rAEYWT
+1BisICNU6jrlUWNQ7AmeXEWPLpiKYY2/yqWNcdu/jFGvZNlKiuvYI1F8Lzyn7Bp8
+6ktSwRKNiQuV6JEC1MbTFmiLE63fu4k/qi+uoadWdAtvRVbNAwhGPHdD+vghgMnG
+aHueQJepNc2SdM5y++mxfAzgpHsXuIOUCGOIsaQ6OPkyZf3scwTAsXdPCa0alizE
+eDkdwDaOGGxkClfum4nmjL+NWRZPt3ixCaStc6bbBe5PaQ3Z6r0FmKk51k1+1tSw
+Go9JtjWAYOmmzM6jNnBqGo8MuPe5IA==
+=/FzK
+-----END PGP SIGNATURE-----
+
+--Sig_/0C+rp0DRIX/O0lW/75YQvMP--
