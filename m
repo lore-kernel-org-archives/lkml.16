@@ -1,72 +1,39 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5417521CFEC
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 10:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6EE41EA7D3;
+	Fri, 21 Mar 2025 10:50:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742554186; cv=none; b=eKzjER3MXAC6Uk+lVlb2+/FeweSfjuZwZPfCaDDfhqe/o9JbDkBjue9u9sYJwbfHxEdqcJhC7h0eScnfxRYZql5RIvRlbJY+ltNdjOxdWG9Nd/gVhu6QC9Z5xG5SgZfg3LXHGmUOIuH5/NBz7ooPfjM7uPkphDozJZlUeNYEIH0=
+	t=1742554211; cv=none; b=BQZXm42/jFNzIRcr14LDU4/suy4LXj6bMxhJQasOGTh1N882Vv2AlvkRoVTzEEpujRuWzOb5uES93MfAfQb7WRv3A0RSNkMnE7WQZYGXHa4YW4TuY6FrTsODgN8Pgm5E/fRE0xxkkotPkE41aLqp27gxmiwOe4ywnPVjjLeUdc4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742554186; c=relaxed/simple;
-	bh=dwU9hnQ0TJSznAmn203p3pdwF68405zlbUnyH28qE3A=;
+	s=arc-20240116; t=1742554211; c=relaxed/simple;
+	bh=qoDXzTaTrBe0hY9iTwEYkA57TTzzUEN2PdNsGqvsUV0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nQgJZ45yHjKSTHGTusEck5VvmV3JDza0VsOiXfVH1Sl8KHv9Fo4/1O8eLmsuBvT2ATKt/4eWq8wbh6SsRVuCEzdWvtfcZI3wpE/Hr4FqspK/T/GG8KyoTgyENzZIp5AjWPGvC0O+Jm39P2t5D6Hpa638nSAN5Qe6cM2Lv629E04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gOm+/Tq7; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gOm+/Tq7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742554182;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=5HfBpke3YL7+rR7hRniNLyJc0aMTeAEo/zxk+Y3d0Tw=;
-	b=gOm+/Tq7OSnOV3R6KCcHd4uNku/D7vHk3A40M2n5P2lEC31mWxzEubDEdcPFu69UWsN9q4
-	E7vgW+oiPovyMGSL+YbLuRwboBoCGjqlzve+Xh7vCLMo1c9kgIRv+gxKcOvC+rb4QnbWsY
-	JG8UIhpAhRBOIlSGudvfSeybq84hNi8=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-681-glamU45_M-uvVS2d3pqtKg-1; Fri, 21 Mar 2025 06:49:34 -0400
-X-MC-Unique: glamU45_M-uvVS2d3pqtKg-1
-X-Mimecast-MFC-AGG-ID: glamU45_M-uvVS2d3pqtKg_1742554174
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-39979ad285bso1081314f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 03:49:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742554174; x=1743158974;
-        h=content-transfer-encoding:in-reply-to:organization:autocrypt
-         :content-language:from:references:cc:to:subject:user-agent
-         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=5HfBpke3YL7+rR7hRniNLyJc0aMTeAEo/zxk+Y3d0Tw=;
-        b=OtZpcNi0RcdOnOuFG8JDj6vZYKfGG+kgWAU77pt1cxoRK2LegiRUjRRUFR3IuGqpXh
-         4fVS4XKzeC2xq4X0rvQMmpXYz9cNc5AeFD+1TOn9YVqagQC8sQnTYOMWiL1NzWh82hRE
-         RGTBfCIX4q8tXAQoyJEOoXRJJoZD/WPhEFIv406QX5+Ru4mFGGFkTFSOjjh60eFT5p1K
-         yRuL4hMK6sxKvCzAcGl8ajY8nUbVfOddjhlGWtoVbiSll6iBWnBa1agqemX8Dm2gHYGe
-         5IJ9aXofVxey442M5MahXdHwmY/57etH45iYHQU0QUvMOwZlL+kLB3eCFGjiqz/o3PWc
-         Rlpw==
-X-Gm-Message-State: AOJu0YyT939dC7ysc2Yz1ABywy+PdCxWoSl2xIQ1pSISHX2UZaK5UDF5
-	uXhQGHM8smlAYvCBykwxT3MDrb5Aiwd6b1S9ODTJoxNjx7BPh4lQwQsLYth640Mgk0jqQFBNFtZ
-	eJBXEcSXLm/eUGSUd6k5luWeDiy1wobRTU+W2Am91fabHSIMPNcdA3Px30N6jQw==
-X-Gm-Gg: ASbGncsvi+K1eHkHdQauMgxRF7WCAFGiCsmEYyP4+mpuk6esvZhXnh60ZYGzU8/oJsB
-	+WPT+5WN6MqY+5pRgS2O7pSXKeeBjumVPjeBP3O6jHmwJUcJns63Kp/cr4ctQ6dZPFIz5uJmi10
-	I9h2fGcmjWuV0sKgNIzkUimtl4aXI7+VnvCBDmYIk6wMZWG0oHjXwiO1Uj/Ia6vWv6FYw0vC4vP
-	wSF1TRCG3znrOeuY2McEvq+RfjpduqZdBT7Aw7lIOzrgrskX0NywbK+dNqUSfluG07aP7Wf9G+8
-	Os8bENAPQoWe/PIxc0BbTQrpSUS4Br8QyG/bRRDsJwXZSyYtffBAGUrxQGpX14vGoV+bDC9reXd
-	D2W4V8iQAR9QBrjeohuhvjKtDbmWGwYQlVbAHThncBMs=
-X-Received: by 2002:a5d:64ce:0:b0:398:fd9b:b935 with SMTP id ffacd0b85a97d-3997f9407b6mr3202444f8f.53.1742554173619;
-        Fri, 21 Mar 2025 03:49:33 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IE/QIYfFEThKYHfy0m4x52uirzkjphsVpeKs7ht6DTF54VIuM9rWUOyEUHCqESKQ+gfIZJrbA==
-X-Received: by 2002:a5d:64ce:0:b0:398:fd9b:b935 with SMTP id ffacd0b85a97d-3997f9407b6mr3202410f8f.53.1742554173184;
-        Fri, 21 Mar 2025 03:49:33 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c72a:9100:23d2:3800:cdcc:90f0? (p200300cbc72a910023d23800cdcc90f0.dip0.t-ipconnect.de. [2003:cb:c72a:9100:23d2:3800:cdcc:90f0])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9f0107sm2060668f8f.99.2025.03.21.03.49.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 03:49:32 -0700 (PDT)
-Message-ID: <43657a07-617b-43fe-b0b0-689f2392fc63@redhat.com>
-Date: Fri, 21 Mar 2025 11:49:31 +0100
+	 In-Reply-To:Content-Type; b=CSZchc7Jc5DCWmEgjVccdfUK62FIpqhTWRgzWAlMvXwjOp+6MsVrTSfnaDExIrzjU3VGTbqdsoKDCBDOAISeHaCBfDGGpsTDbVA8TRZ3tinFZvk90YriU++MeroM97pMcL9VQK+dJuSAbJPlURuDUuHj2dLISScVEs12OFYYWOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
+Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
+	by localhost (Postfix) with ESMTP id 4ZJzMg6ykhz9sSf;
+	Fri, 21 Mar 2025 11:34:23 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from pegase2.c-s.fr ([172.26.127.65])
+	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id P3GmTi5jJn-m; Fri, 21 Mar 2025 11:34:23 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJzMg5yTxz9sSZ;
+	Fri, 21 Mar 2025 11:34:23 +0100 (CET)
+Received: from localhost (localhost [127.0.0.1])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id B08BC8B79C;
+	Fri, 21 Mar 2025 11:34:23 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+	with ESMTP id m9V4WbKxrQHq; Fri, 21 Mar 2025 11:34:23 +0100 (CET)
+Received: from [192.168.235.99] (unknown [192.168.235.99])
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 747608B763;
+	Fri, 21 Mar 2025 11:34:22 +0100 (CET)
+Message-ID: <7cd87317-4f2a-45af-bd07-6e715406ff55@csgroup.eu>
+Date: Fri, 21 Mar 2025 11:34:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -74,131 +41,156 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] fs/proc: extend the PAGEMAP_SCAN ioctl to report
- guard regions
-To: Andrei Vagin <avagin@google.com>,
- Lorenzo Stoakes <lorenzo.stoakes@oracle.com>,
- Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org,
- linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org,
- Shuah Khan <shuah@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Andrei Vagin <avagin@gmail.com>
-References: <20250320063903.2685882-1-avagin@google.com>
- <20250320063903.2685882-2-avagin@google.com>
-From: David Hildenbrand <david@redhat.com>
-Content-Language: en-US
-Autocrypt: addr=david@redhat.com; keydata=
- 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
- WNyWQQ==
-Organization: Red Hat
-In-Reply-To: <20250320063903.2685882-2-avagin@google.com>
+Subject: Re: [PATCH V2 2/2] tools/perf/powerpc/util: Add support to handle
+ compatible mode PVR for perf json events
+To: Athira Rajeev <atrajeev@linux.vnet.ibm.com>, namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+ linuxppc-dev@lists.ozlabs.org, irogers@google.com, akanksha@linux.ibm.com,
+ maddy@linux.ibm.com, kjain@linux.ibm.com, disgoel@linux.vnet.ibm.com,
+ acme@kernel.org, hbathini@linux.ibm.com, adrian.hunter@intel.com,
+ jolsa@kernel.org
+References: <20241010145107.51211-1-atrajeev@linux.vnet.ibm.com>
+ <20241010145107.51211-2-atrajeev@linux.vnet.ibm.com>
+Content-Language: fr-FR
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+In-Reply-To: <20241010145107.51211-2-atrajeev@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 20.03.25 07:39, Andrei Vagin wrote:
-> From: Andrei Vagin <avagin@gmail.com>
+Hi,
+
+Le 10/10/2024 à 16:51, Athira Rajeev a écrit :
+> perf list picks the events supported for specific platform
+> from pmu-events/arch/powerpc/<platform>. Example power10 events
+> are in pmu-events/arch/powerpc/power10, power9 events are part
+> of pmu-events/arch/powerpc/power9. The decision of which
+> platform to pick is determined based on PVR value in powerpc.
+> The PVR value is matched from pmu-events/arch/powerpc/mapfile.csv
 > 
-> Introduce the PAGE_IS_GUARD flag in the PAGEMAP_SCAN ioctl to expose
-> information about guard regions. This allows userspace tools, such as
-> CRIU, to detect and handle guard regions.
+> Example:
 > 
-> Signed-off-by: Andrei Vagin <avagin@gmail.com>
+> Format:
+> 	PVR,Version,JSON/file/pathname,Type
+> 
+> 0x004[bcd][[:xdigit:]]{4},1,power8,core
+> 0x0066[[:xdigit:]]{4},1,power8,core
+> 0x004e[[:xdigit:]]{4},1,power9,core
+> 0x0080[[:xdigit:]]{4},1,power10,core
+> 0x0082[[:xdigit:]]{4},1,power10,core
+> 
+> The code gets the PVR from system using get_cpuid_str function
+> in arch/powerpc/util/headers.c ( from SPRN_PVR ) and compares
+> with value from mapfile.csv
+> In case of compat mode, say when partition is booted in a power9
+> mode when the system is a power10, this picks incorrectly. Because
+> PVR will point to power10 where as it should pick events from power9
+> folder. To support generic events, add new folder
+> pmu-events/arch/powerpc/compat to contain the ISA architected events
+> which is supported in compat mode. Also return 0x00ffffff as pvr
+> when booted in compat mode. Based on this pvr value, json will
+> pick events from pmu-events/arch/powerpc/compat
+> 
+> Suggested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+
+I see this patch was merged into mainline allthough it had CI failures 
+and still has.
+
+Could you please fix it ?
+
+arch/powerpc/util/header.c: In function 'is_compat_mode':
+Error: arch/powerpc/util/header.c:20:14: error: cast to pointer from 
+integer of different size [-Werror=int-to-pointer-cast]
+    20 |  if (!strcmp((char *)platform, (char *)base_platform))
+       |              ^
+Error: arch/powerpc/util/header.c:20:32: error: cast to pointer from 
+integer of different size [-Werror=int-to-pointer-cast]
+    20 |  if (!strcmp((char *)platform, (char *)base_platform))
+       |                                ^
+cc1: all warnings being treated as errors
+make[6]: *** [/linux/tools/build/Makefile.build:86: 
+/output/arch/powerpc/util/header.o] Error 1
+
+
+The following fix but is maybe not the right one as in reality 
+getauxval() seems to return a long not a u64.
+
+diff --git a/tools/perf/arch/powerpc/util/header.c 
+b/tools/perf/arch/powerpc/util/header.c
+index c7df534dbf8f..1b045d410f31 100644
+--- a/tools/perf/arch/powerpc/util/header.c
++++ b/tools/perf/arch/powerpc/util/header.c
+@@ -17,7 +17,7 @@ static bool is_compat_mode(void)
+  	u64 base_platform = getauxval(AT_BASE_PLATFORM);
+  	u64 platform = getauxval(AT_PLATFORM);
+
+-	if (!strcmp((char *)platform, (char *)base_platform))
++	if (!strcmp((char *)(long)platform, (char *)(long)base_platform))
+  		return false;
+
+  	return true;
+
+
+Thanks
+Christophe
+
 > ---
->   Documentation/admin-guide/mm/pagemap.rst | 1 +
->   fs/proc/task_mmu.c                       | 8 ++++++--
->   include/uapi/linux/fs.h                  | 1 +
->   3 files changed, 8 insertions(+), 2 deletions(-)
+> changelog:
+> V1 -> V2:
+> Corrected commit message and subject line
 > 
-> diff --git a/Documentation/admin-guide/mm/pagemap.rst b/Documentation/admin-guide/mm/pagemap.rst
-> index a297e824f990..7997b67ffc97 100644
-> --- a/Documentation/admin-guide/mm/pagemap.rst
-> +++ b/Documentation/admin-guide/mm/pagemap.rst
-> @@ -234,6 +234,7 @@ Following flags about pages are currently supported:
->   - ``PAGE_IS_PFNZERO`` - Page has zero PFN
->   - ``PAGE_IS_HUGE`` - Page is PMD-mapped THP or Hugetlb backed
->   - ``PAGE_IS_SOFT_DIRTY`` - Page is soft-dirty
-> +- ``PAGE_IS_GUARD`` - Page is a guard region
->   
->   The ``struct pm_scan_arg`` is used as the argument of the IOCTL.
->   
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index c17615e21a5d..698d660bfee4 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -2067,7 +2067,8 @@ static int pagemap_release(struct inode *inode, struct file *file)
->   #define PM_SCAN_CATEGORIES	(PAGE_IS_WPALLOWED | PAGE_IS_WRITTEN |	\
->   				 PAGE_IS_FILE |	PAGE_IS_PRESENT |	\
->   				 PAGE_IS_SWAPPED | PAGE_IS_PFNZERO |	\
-> -				 PAGE_IS_HUGE | PAGE_IS_SOFT_DIRTY)
-> +				 PAGE_IS_HUGE | PAGE_IS_SOFT_DIRTY |	\
-> +				 PAGE_IS_GUARD)
->   #define PM_SCAN_FLAGS		(PM_SCAN_WP_MATCHING | PM_SCAN_CHECK_WPASYNC)
->   
->   struct pagemap_scan_private {
-> @@ -2108,8 +2109,11 @@ static unsigned long pagemap_page_category(struct pagemap_scan_private *p,
->   		if (!pte_swp_uffd_wp_any(pte))
->   			categories |= PAGE_IS_WRITTEN;
->   
-> +		swp = pte_to_swp_entry(pte);
-> +		if (is_guard_swp_entry(swp))
-> +			categories |= PAGE_IS_GUARD;
+>   tools/perf/arch/powerpc/util/header.c | 32 ++++++++++++++++++++++++++-
+>   1 file changed, 31 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+> index 6b00efd53638..adc82c479443 100644
+> --- a/tools/perf/arch/powerpc/util/header.c
+> +++ b/tools/perf/arch/powerpc/util/header.c
+> @@ -10,6 +10,18 @@
+>   #include "utils_header.h"
+>   #include "metricgroup.h"
+>   #include <api/fs/fs.h>
+> +#include <sys/auxv.h>
 > +
->   		if (p->masks_of_interest & PAGE_IS_FILE) {
-
-could be an else if?
-
-if (is_guard_swp_entry(swp)) {
-	categories |= PAGE_IS_GUARD;
-} else if (p->masks_of_interest & PAGE_IS_FILE) {
-...
-
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
-
--- 
-Cheers,
-
-David / dhildenb
+> +static bool is_compat_mode(void)
+> +{
+> +	u64 base_platform = getauxval(AT_BASE_PLATFORM);
+> +	u64 platform = getauxval(AT_PLATFORM);
+> +
+> +	if (!strcmp((char *)platform, (char *)base_platform))
+> +		return false;
+> +
+> +	return true;
+> +}
+>   
+>   int
+>   get_cpuid(char *buffer, size_t sz)
+> @@ -33,8 +45,26 @@ char *
+>   get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+>   {
+>   	char *bufp;
+> +	unsigned long pvr;
+> +
+> +	/*
+> +	 * IBM Power System supports compatible mode. That is
+> +	 * Nth generation platform can support previous generation
+> +	 * OS in a mode called compatibile mode. For ex. LPAR can be
+> +	 * booted in a Power9 mode when the system is a Power10.
+> +	 *
+> +	 * In the compatible mode, care must be taken when generating
+> +	 * PVR value. When read, PVR will be of the AT_BASE_PLATFORM
+> +	 * To support generic events, return 0x00ffffff as pvr when
+> +	 * booted in compat mode. Based on this pvr value, json will
+> +	 * pick events from pmu-events/arch/powerpc/compat
+> +	 */
+> +	if (!is_compat_mode())
+> +		pvr = mfspr(SPRN_PVR);
+> +	else
+> +		pvr = 0x00ffffff;
+>   
+> -	if (asprintf(&bufp, "0x%.8lx", mfspr(SPRN_PVR)) < 0)
+> +	if (asprintf(&bufp, "0x%.8lx", pvr) < 0)
+>   		bufp = NULL;
+>   
+>   	return bufp;
 
