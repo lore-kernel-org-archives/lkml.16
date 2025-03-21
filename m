@@ -1,132 +1,132 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14E001CF8B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E0011CF8B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:24:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742574273; cv=none; b=U5euS2C1oX+nOFxQBM9USYPdZBCqmT/TnjlL9zQ7r1y6cnG5oxno+d9c3AorVubyjIUIoLVc7O7sP76UBUoryl4AvryhG/W94H1XhKBirGL1aicfghq8PTCHvErEryI/visQsP7fYxlo5SK1E7Y+qOR5Q1v/nSFhScAgKd9VUVU=
+	t=1742574277; cv=none; b=MErPk3VPnz5dCbKHS1900zIYF3AZLnILPR2Bql57XpLBj8G+lupD3xkzDDAIGB5cSQCGvP0lMYPceOXPeQbjoO2GjRA4SEx+q0KGkCHxgpmj8//Icy4PmnQ3rYL4onVq1Qd6/DIbHnJ3vE1o192XmBv8DJG4h55H2Cq9MHxMeec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742574273; c=relaxed/simple;
-	bh=H2y2nRWmakGnpy3JeVRWta/rM5SXOOhVIXKcy4ezc8w=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bDVDbaLWm/qiez90Hx9rPEuOoxnG/6gRnRPhp/PjNN3MPnU3a0LUgNBRaDdoryMoc9fgQJ1m8ft53yCd2P8p6yrfvHb7vYY5TpcRwYKEANwS3LGI77ermNGUOhHjgHSSCgGHhwLxhlNhfS27LLd5Dr5cUSJKtwi9UqpjFCQ6Gm8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h/U7QE/S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742574277; c=relaxed/simple;
+	bh=KYbavFq5N0PhM5XuZB+lkOkuCFlDPfZyy++Peu9XsOI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u3yrxbtWV+Tm3k/HjghHlfFwj5uxUw+Jpe153xcDoY01PZaHEOKjv5kjaDf1g0JMLsaB4jbFTGQ+RSVElD+euJ0OvyMOd6XWTByRjVMAWWldrKKz8MzChhmIT2l1ABmASb1m4pmKFEAKCztGxihf6jNYbg7yw2LuVCVBrNmf2Lc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=ZtbrNKnj; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h/U7QE/S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80239C4CEE3;
-	Fri, 21 Mar 2025 16:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742574272;
-	bh=H2y2nRWmakGnpy3JeVRWta/rM5SXOOhVIXKcy4ezc8w=;
-	h=From:To:Cc:Subject:Date:From;
-	b=h/U7QE/SHSeUU5xH58Z1vAVXYlPB+DXTB6uQ5mEVRbnxNEEX/DWGufdSJo6gBfiLy
-	 oqUZy2IItTtA3rmhu38IvyGPnRL1+1sRA/GRrASpdLRGvTTAkV4qoIgFsTZ/9tnzGT
-	 meocn8pzJDQvtb1IS+GeGbI6J8Es8rdM+/dNI2s6D94cBan4PXpt4PGYI9wQDIVTSC
-	 B5+Nzh0Ylf1scEar0Q4ycywHGu6buC1E3LqYXlpctg/NnbudPuZGjS9W5nvGvEGH/4
-	 CyBBJc9s5wfwWDhIQBvHP+oKvEVRQdW9cUGKQK1OtaFWLgCiCMib7180yOVi9X8tji
-	 qGC9CTPigkHSg==
-Received: from johan by xi.lan with local (Exim 4.97.1)
-	(envelope-from <johan+linaro@kernel.org>)
-	id 1tvfAh-00000000562-0835;
-	Fri, 21 Mar 2025 17:24:35 +0100
-From: Johan Hovold <johan+linaro@kernel.org>
-To: Jeff Johnson <jjohnson@kernel.org>
-Cc: Stephan Gerhold <stephan.gerhold@linaro.org>,
-	ath12k@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Johan Hovold <johan+linaro@kernel.org>
-Subject: [PATCH] wifi: ath12k: extend dma mask to 36 bits
-Date: Fri, 21 Mar 2025 17:23:31 +0100
-Message-ID: <20250321162331.19507-1-johan+linaro@kernel.org>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="ZtbrNKnj"
+Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATBlV016546
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:24:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ezUvZQcZtwMrgBYlUmzB77M/ia6WCeZ5frQ98fyadU8=; b=ZtbrNKnjtpjQrL4p
+	ofV1Qu+ShD8CFFWgmB+lu1aU3ZVNz8K9Sn7/Fabi5p5bphNEkQ0rtdMlR7NMoADQ
+	c4fUcprPbP2b2U1uFkOcZQoqMvWgwoFWpCETImYmNMTUQf0OuIijCcaUS6lrO6xC
+	AM1v1jlDboyDc/6ffHPUNg7jZpGDWo9yQsP8AXrfkL7f2TSS55YJqB2C/mhnmjy6
+	d2vL4iIGUqJWukz6SFeZD/3eMI7Cdr59fB1wbPcrya0VJFyYn/Z7WwYxQ4aHj3SC
+	FLYOEkPchfiPNE8nQRLwuHAW/T7lxcrfvXkwD0HLD6W8jtiZckSdbX+4q/IzAdBf
+	mL6KVA==
+Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com [209.85.219.69])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45gcd1dejs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:24:35 +0000 (GMT)
+Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6e8f9450b19so40201736d6.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:24:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742574273; x=1743179073;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ezUvZQcZtwMrgBYlUmzB77M/ia6WCeZ5frQ98fyadU8=;
+        b=nyf6OvtjRsQnNJIGbVEwxiMGKqew+TvNZZDS6IgEe4YtjM+aOIgQyRm4dC/a9EyRBi
+         wYK8FUmg+gaHl7E/RpSRoTvgJzWVa2cVEDYDYPH17YzGi1qtrZdt31VnFJF/L3idHWmk
+         126Lhx/EciHzhqk1S5a4yjv1+411fHX1tpqKbrL8Lnb58Q2MHKQIq4VdFCJNALIt0kSs
+         kxWseCK+H2oeTw0m/PRl5nMe7jTydcP5v7yuzY28ihvyycDF2/JyyXxWYwhwVSPuFsqG
+         IhUDccPnFbPS3XVrE+aoBxvMc+pfSrPBuBwHiHC8wiexMlTUG09Zx97UMr0UF/WAmaN0
+         9o4A==
+X-Forwarded-Encrypted: i=1; AJvYcCXf0g0zkuzfOysYcPTGIbfq0yP0HCvMetlPk9ZkyN3JV6FpnE+0Afz4QjfulS3bXmN0wArVu+sguDxPPSc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVeaaBtttOTfOtqGMm6gn8SiwZJWrrsKXjKquXJqcmTplrFIdN
+	p+dLr4cg982DHONryigyivQR9EcTDfT//4RR6GwHHoknsiFDtjad8+7FWdC+RFOIKDb+iOHXVNm
+	Hcag1kp1r5uysG36PgAYBOpG11zCqqDwICVM9h6HN7m5YakXFGTAgL5pXGypfqH/GYbyh0i8Tjg
+	==
+X-Gm-Gg: ASbGncuabhUEGioNtnyK4Dql8xhI8+tdkqGwlTO84PqPZsf76VgKUxvnuvqwoTGNYZg
+	859e8u0SeBvf1YqUWNa1hSomVgslH/irQfiiNDHv+fcDngNLDdvoCHHntwJipgUp0ME1p9SYW2J
+	0Jt0ev+g0S45JnCGFcmaGJ6DP30aO6HNBgL3KLSYsXabtQX/FttLX2OKw3ur07Dw69CbQdTBceb
+	PHnidkAWGbei9mRLb1O0n64tk8DlVQOe/Y85sqJwak+iD+kB+srdI2pxX8qnEcou8TqD5DzigCq
+	7ilmWKChj1Nkrx8rU9Hz8m5s2Mj3zFYnVZQGuNoe3HGww6dlXSBqXeNDY1yLIczSVBzSQMGYcL/
+	Q1i0R/pxEE5RTKPingUEsCMwYgQtzWh1tY1ivettRaV5XKXe7EnajbgWF9023Mde+lYOE
+X-Received: by 2002:ad4:5caa:0:b0:6ea:d604:9e4f with SMTP id 6a1803df08f44-6eb34a27d9emr122911866d6.19.1742574273443;
+        Fri, 21 Mar 2025 09:24:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFfSGRUC3naAh8M1yxzEOqb0ryoZ43qJS30vtSLWnzr26EwF+jPBOlX+Bn9WciwgRg5g9565g==
+X-Received: by 2002:ad4:5caa:0:b0:6ea:d604:9e4f with SMTP id 6a1803df08f44-6eb34a27d9emr122911386d6.19.1742574273001;
+        Fri, 21 Mar 2025 09:24:33 -0700 (PDT)
+Received: from ?IPV6:2001:14bb:c2:310f:a0b3:1d12:b116:f8e6? (2001-14bb-c2-310f-a0b3-1d12-b116-f8e6.rev.dnainternet.fi. [2001:14bb:c2:310f:a0b3:1d12:b116:f8e6])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad647b423sm214685e87.64.2025.03.21.09.24.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 09:24:30 -0700 (PDT)
+Message-ID: <8eba44d0-1f4d-44df-a13f-994bd766dd31@oss.qualcomm.com>
+Date: Fri, 21 Mar 2025 18:24:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 08/14] phy: rockchip: samsung-hdptx: Avoid Hz<->hHz
+ unit conversion overhead
+To: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I <kishon@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>
+Cc: Algea Cao <algea.cao@rock-chips.com>, Sandor Yu <Sandor.yu@nxp.com>,
+        Maxime Ripard <mripard@kernel.org>, kernel@collabora.com,
+        linux-kernel@vger.kernel.org, linux-phy@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org,
+        Dmitry Baryshkov <lumag@kernel.org>
+References: <20250318-phy-sam-hdptx-bpc-v6-0-8cb1678e7663@collabora.com>
+ <20250318-phy-sam-hdptx-bpc-v6-8-8cb1678e7663@collabora.com>
+Content-Language: en-US
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+In-Reply-To: <20250318-phy-sam-hdptx-bpc-v6-8-8cb1678e7663@collabora.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=bfFrUPPB c=1 sm=1 tr=0 ts=67dd92c3 cx=c_pps a=wEM5vcRIz55oU/E2lInRtA==:117 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=QX4gbG5DAAAA:8 a=EUspDBNiAAAA:8 a=_XDy0L4iob18M6GPC-sA:9 a=QEXdDO2ut3YA:10
+ a=OIgjcC2v60KrkQgK7BGD:22 a=AbAUZ8qAyYyZVLSsDulk:22
+X-Proofpoint-GUID: UXOEznEnzfvXh4aC62Wb_X0805DujI7I
+X-Proofpoint-ORIG-GUID: UXOEznEnzfvXh4aC62Wb_X0805DujI7I
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-21_05,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ clxscore=1015 suspectscore=0 malwarescore=0 bulkscore=0 mlxlogscore=999
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 adultscore=0 phishscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503210120
 
-Extend the DMA mask to 36 bits to avoid using bounce buffers on machines
-without an iommu (under OS control) similar to what was done for ath11k
-in commit dbd73acb22d8 ("wifi: ath11k: enable 36 bit mask for stream
-DMA").
+On 18/03/2025 14:35, Cristian Ciocaltea wrote:
+> The ropll_tmds_cfg table used to identify the configuration params for
+> the supported rates expects the search key, i.e. bit_rate member of
+> struct ropll_config, to be provided in hHz rather than Hz (1 hHz = 100
+> Hz).  This requires multiple conversions between these units being
+> performed at runtime.
+> 
+> Improve implementation clarity and efficiency by consistently using the
+> Hz unit throughout driver's internal data structures and functions.
+> Also rename the rather misleading struct member.
+> 
+> Signed-off-by: Cristian Ciocaltea <cristian.ciocaltea@collabora.com>
+> ---
+>   drivers/phy/rockchip/phy-rockchip-samsung-hdptx.c | 79 +++++++++++------------
+>   1 file changed, 39 insertions(+), 40 deletions(-)
 
-This specifically avoids using bounce buffers on Qualcomm Snapdragon X
-Elite machines like the Lenovo ThinkPad T14s when running at EL1.
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Note that the mask could possibly be extended further but unresolved DMA
-issues with 64 GiB X Elite machines currently prevents that from being
-tested.
-
-Also note that the driver is limited to 32 bits for coherent
-allocations and that there is no need to check for errors when setting
-masks larger than 32 bits.
-
-Tested-on: WCN7850 hw2.0 WLAN.HMT.1.0.c5-00481-QCAHMTSWPL_V1.0_V2.0_SILICONZ-3
-
-Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
----
- drivers/net/wireless/ath/ath12k/mhi.c |  2 +-
- drivers/net/wireless/ath/ath12k/pci.c | 12 ++++--------
- drivers/net/wireless/ath/ath12k/pci.h |  1 +
- 3 files changed, 6 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/net/wireless/ath/ath12k/mhi.c b/drivers/net/wireless/ath/ath12k/mhi.c
-index 2f6d14382ed7..9c929c4ad8a8 100644
---- a/drivers/net/wireless/ath/ath12k/mhi.c
-+++ b/drivers/net/wireless/ath/ath12k/mhi.c
-@@ -379,7 +379,7 @@ int ath12k_mhi_register(struct ath12k_pci *ab_pci)
- 		mhi_ctrl->irq_flags = IRQF_SHARED | IRQF_NOBALANCING;
- 
- 	mhi_ctrl->iova_start = 0;
--	mhi_ctrl->iova_stop = 0xffffffff;
-+	mhi_ctrl->iova_stop = ab_pci->dma_mask;
- 	mhi_ctrl->sbl_size = SZ_512K;
- 	mhi_ctrl->seg_len = SZ_512K;
- 	mhi_ctrl->fbc_download = true;
-diff --git a/drivers/net/wireless/ath/ath12k/pci.c b/drivers/net/wireless/ath/ath12k/pci.c
-index 06cff3849ab8..e77c50fc48ca 100644
---- a/drivers/net/wireless/ath/ath12k/pci.c
-+++ b/drivers/net/wireless/ath/ath12k/pci.c
-@@ -17,7 +17,7 @@
- #include "debug.h"
- 
- #define ATH12K_PCI_BAR_NUM		0
--#define ATH12K_PCI_DMA_MASK		32
-+#define ATH12K_PCI_DMA_MASK		36
- 
- #define ATH12K_PCI_IRQ_CE0_OFFSET		3
- 
-@@ -874,13 +874,9 @@ static int ath12k_pci_claim(struct ath12k_pci *ab_pci, struct pci_dev *pdev)
- 		goto disable_device;
- 	}
- 
--	ret = dma_set_mask_and_coherent(&pdev->dev,
--					DMA_BIT_MASK(ATH12K_PCI_DMA_MASK));
--	if (ret) {
--		ath12k_err(ab, "failed to set pci dma mask to %d: %d\n",
--			   ATH12K_PCI_DMA_MASK, ret);
--		goto release_region;
--	}
-+	ab_pci->dma_mask = DMA_BIT_MASK(ATH12K_PCI_DMA_MASK);
-+	dma_set_mask(&pdev->dev, ab_pci->dma_mask);
-+	dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
- 
- 	pci_set_master(pdev);
- 
-diff --git a/drivers/net/wireless/ath/ath12k/pci.h b/drivers/net/wireless/ath/ath12k/pci.h
-index 31584a7ad80e..9e89b64b3545 100644
---- a/drivers/net/wireless/ath/ath12k/pci.h
-+++ b/drivers/net/wireless/ath/ath12k/pci.h
-@@ -116,6 +116,7 @@ struct ath12k_pci {
- 	unsigned long irq_flags;
- 	const struct ath12k_pci_ops *pci_ops;
- 	u32 qmi_instance;
-+	u64 dma_mask;
- };
- 
- static inline struct ath12k_pci *ath12k_pci_priv(struct ath12k_base *ab)
 -- 
-2.48.1
-
+With best wishes
+Dmitry
