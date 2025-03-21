@@ -1,146 +1,184 @@
 Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53D6A1F4616;
-	Fri, 21 Mar 2025 09:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8552212FB3;
+	Fri, 21 Mar 2025 09:38:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742549889; cv=none; b=cgpzpikn4v83/1g4gcTpygDtvXrQ2r5sdfIW7VRUi7mOKGyKCYEpVIJETyccHRMhRiDg4lCyy7/Ze//rh4olRAmOn1JtQ2mbnbjl7AD7hsh+Mdo8yq41zuABQvrDOs4A7CMnMu44aotNxlG+pPpp9kxpvx3+RJGqksZDNxRoB0o=
+	t=1742549907; cv=none; b=bpL+RamiBV6spDRH8W3BN08/UFiYCUXhQkDaZ7uTTc62o62ndPrw6cpba/+NFGz4Rbe1CbVRB2dgqPV9aVIklralUcO9dA+Ip85Hrj3XdRRlcbrOzhGgbAsZOBVl2xmXeM6cVF5xds50bNMIG5TK2wn04S6aw+gtd9Rw0hNDCxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742549889; c=relaxed/simple;
-	bh=YF+mLtY8hsOcRA7tQ/0JU9ySe8NFQscVPQfA0gMcFMw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=clbWsDZC/+xENNPFpomdA2Rt8IuSm+VlxoLSqZLZd8pjCJKcMXSPoMEglTtV11yduLR4f/ex6n8yw7X9tDMcpfKdvH9XoH/BovikCG92J7RPPe7+evl7YMnBq+j3Poj42i5o/WTPCjryIMDAV49qFAJAmUwhjdC8FwNVUPNv4j0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=P51VhCVV; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742549907; c=relaxed/simple;
+	bh=I+g5uyiO8BthO6kUgy4ZEHhW95DL2yo/6eN6vFueBUc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cMQeVaUwQjq+5wiZpXlB9WK8nbn/LtmJal8hiB9Fl4+rFq6ip/SRTB+CeO1VJz4iCKDs1C8KQw3qeFkX4gqUCRowVxrEztT1yxkkbwfFbNmIkWvl7QvEY68IQMjJWdDlm8KeOJpfvhEcn30pfnw8hAahGCoX2UnYsYHbDUWUOnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EyTJ5Bbc; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="P51VhCVV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EyTJ5Bbc"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742549887; x=1774085887;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=YF+mLtY8hsOcRA7tQ/0JU9ySe8NFQscVPQfA0gMcFMw=;
-  b=P51VhCVVOAm/wySoB9QAA8HdGg68Lnz9Smn3h1E26R+NEEs9+DTyz5tY
-   RpC3fIz/NTkdFndEAZWN0OvBVuptIuYPVnCy3QWH8lN4dlW7/SdV8mUGQ
-   Xu4e8ZmH6Lc8XSyejPHN6KRGT6BtoRw5RfcCP5WfxGm9DaLx0CIXyCgnb
-   ep52nlFOs+0KQWTH3Lmv5qScmkLWXBtaDQC5bZoAK0BQ5McMqyEu5vkR0
-   td67EQAtxi/gK0nHINQHcG9FhqaJxMJHGgIMgLjghqVNIoKBU3WWTUa/8
-   oyjkCvWwY6YQvR/a11vY3blFf0O1suAei8enqfhSd9N1k06hNAa7mNOn2
-   w==;
-X-CSE-ConnectionGUID: SgEcPUwBTH2fBDXbP6XBIQ==
-X-CSE-MsgGUID: c/HXqCduRlyZUqz3LHs4EA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="47692796"
+  t=1742549906; x=1774085906;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=I+g5uyiO8BthO6kUgy4ZEHhW95DL2yo/6eN6vFueBUc=;
+  b=EyTJ5BbcPfOWV4sfyrPT4xypHJxdoiQqH8JGKR1h/IeM+mrC4z8TTolx
+   ZYNFJwztURpk5QCvBBkVrYEi9MOPjLiYZsYxwyL7jOvp7pOD2PVYZjvpX
+   ZSdW7z5tz5xZuuuPLYnZ/meHUwiF5/M07ZrbaAGO552fUOUU0n7R7cR+E
+   gTBAeWcy0z4Kvml5Tr6avv2nJohFfsUrAc8qT6vInGtQ3P3sZ667MU/zm
+   5q4hQsFFuo1EXCowv4aK+HwbKl1LUaPGjrc0HmcoMPvDSKNwUqv7UDk4b
+   NIAohZnP4NdgJL83XlR89v5tKzREOUmrGpRjJJF8ME8HPcq2TQiM3KJkF
+   A==;
+X-CSE-ConnectionGUID: IqXpbv3nQ3aFmsr/5LTl9g==
+X-CSE-MsgGUID: Q6qQAzHLTGy34LG4pzV9OA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="47692857"
 X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="47692796"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 02:38:04 -0700
-X-CSE-ConnectionGUID: Y1dnO9t8QS6pC0ONrEEqFA==
-X-CSE-MsgGUID: t8aobA94RvaPPneaJvsrCw==
+   d="scan'208";a="47692857"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 02:38:25 -0700
+X-CSE-ConnectionGUID: sUS3o+3GS4GAOYCitUd15g==
+X-CSE-MsgGUID: Fs09Uo8ASs6mt6Nt72E0Ew==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="124131267"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa009.fm.intel.com with ESMTP; 21 Mar 2025 02:38:01 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tvYpD-0001ET-1a;
-	Fri, 21 Mar 2025 09:37:59 +0000
-Date: Fri, 21 Mar 2025 17:37:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hans Zhang <18255117159@163.com>
-Subject: Re: [v3 1/4] PCI: Introduce generic capability search functions
-Message-ID: <202503211730.XKhqW2Mw-lkp@intel.com>
-References: <20250321040358.360755-2-18255117159@163.com>
+   d="scan'208";a="123872631"
+Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO mdjait-mobl.intel.com) ([10.245.245.43])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 02:38:22 -0700
+From: Mehdi Djait <mehdi.djait@linux.intel.com>
+To: sakari.ailus@linux.intel.com,
+	laurent.pinchart@ideasonboard.com
+Cc: tomi.valkeinen@ideasonboard.com,
+	jacopo.mondi@ideasonboard.com,
+	hverkuil@xs4all.nl,
+	kieran.bingham@ideasonboard.com,
+	naush@raspberrypi.com,
+	mchehab@kernel.org,
+	hdegoede@redhat.com,
+	dave.stevenson@raspberrypi.com,
+	linux-media@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mehdi Djait <mehdi.djait@linux.intel.com>
+Subject: [RFC PATCH v3] media: v4l2-common: Add a helper for obtaining the clock producer
+Date: Fri, 21 Mar 2025 10:38:14 +0100
+Message-ID: <20250321093814.18159-1-mehdi.djait@linux.intel.com>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321040358.360755-2-18255117159@163.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Hans,
+Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
+platforms to retrieve a reference to the clock producer from firmware.
 
-kernel test robot noticed the following build warnings:
+This helper behaves the same as clk_get_optional() except where there is
+no clock producer like in ACPI-based platforms.
 
-[auto build test WARNING on a1cffe8cc8aef85f1b07c4464f0998b9785b795a]
+For ACPI-based platforms the function will read the "clock-frequency"
+ACPI _DSD property and register a fixed frequency clock with the frequency
+indicated in the property.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-capability-search-functions/20250321-120748
-base:   a1cffe8cc8aef85f1b07c4464f0998b9785b795a
-patch link:    https://lore.kernel.org/r/20250321040358.360755-2-18255117159%40163.com
-patch subject: [v3 1/4] PCI: Introduce generic capability search functions
-config: arm-randconfig-004-20250321 (https://download.01.org/0day-ci/archive/20250321/202503211730.XKhqW2Mw-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project c2692afc0a92cd5da140dfcdfff7818a5b8ce997)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250321/202503211730.XKhqW2Mw-lkp@intel.com/reproduce)
+Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
+---
+Link for discussion (where this patch was proposed): https://lore.kernel.org/linux-media/20250220154909.152538-1-mehdi.djait@linux.intel.com/
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503211730.XKhqW2Mw-lkp@intel.com/
+v1 -> v2:
+Suggested by Sakari:
+    - removed clk_name
+    - removed the IS_ERR() check
+    - improved the kernel-doc comment and commit msg
+Link for v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehdi.djait@linux.intel.com
 
-All warnings (new ones prefixed by >>):
+v2 -> v3:
+- Added #ifdef CONFIG_COMMON_CLK for the ACPI case
 
-   In file included from arch/arm/mm/iomap.c:9:
->> include/linux/pci.h:2021:4: warning: no previous prototype for function 'pci_generic_find_capability' [-Wmissing-prototypes]
-    2021 | u8 pci_generic_find_capability(void *priv, pci_generic_read_cfg read_cfg,
-         |    ^
-   include/linux/pci.h:2021:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-    2021 | u8 pci_generic_find_capability(void *priv, pci_generic_read_cfg read_cfg,
-         | ^
-         | static 
->> include/linux/pci.h:2024:5: warning: no previous prototype for function 'pci_generic_find_ext_capability' [-Wmissing-prototypes]
-    2024 | u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-         |     ^
-   include/linux/pci.h:2024:1: note: declare 'static' if the function is not intended to be used outside of this translation unit
-    2024 | u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-         | ^
-         | static 
-   2 warnings generated.
+ drivers/media/v4l2-core/v4l2-common.c | 39 +++++++++++++++++++++++++++
+ include/media/v4l2-common.h           | 18 +++++++++++++
+ 2 files changed, 57 insertions(+)
 
-
-vim +/pci_generic_find_capability +2021 include/linux/pci.h
-
-  1999	
-  2000	static inline void pci_set_master(struct pci_dev *dev) { }
-  2001	static inline void pci_clear_master(struct pci_dev *dev) { }
-  2002	static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
-  2003	static inline void pci_disable_device(struct pci_dev *dev) { }
-  2004	static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
-  2005	static inline int pci_assign_resource(struct pci_dev *dev, int i)
-  2006	{ return -EBUSY; }
-  2007	static inline int __must_check __pci_register_driver(struct pci_driver *drv,
-  2008							     struct module *owner,
-  2009							     const char *mod_name)
-  2010	{ return 0; }
-  2011	static inline int pci_register_driver(struct pci_driver *drv)
-  2012	{ return 0; }
-  2013	static inline void pci_unregister_driver(struct pci_driver *drv) { }
-  2014	static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
-  2015	{ return 0; }
-  2016	static inline u8 pci_find_next_capability(struct pci_dev *dev, u8 post, int cap)
-  2017	{ return 0; }
-  2018	static inline u16 pci_find_ext_capability(struct pci_dev *dev, int cap)
-  2019	{ return 0; }
-  2020	typedef u32 (*pci_generic_read_cfg)(void *priv, int where, int size);
-> 2021	u8 pci_generic_find_capability(void *priv, pci_generic_read_cfg read_cfg,
-  2022				       u8 cap)
-  2023	{ return 0; }
-> 2024	u16 pci_generic_find_ext_capability(void *priv, pci_generic_read_cfg read_cfg,
-  2025					    u8 cap)
-  2026	{ return 0; }
-  2027	static inline u64 pci_get_dsn(struct pci_dev *dev)
-  2028	{ return 0; }
-  2029	
-
+diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
+index 0a2f4f0d0a07..4e30f8b777b7 100644
+--- a/drivers/media/v4l2-core/v4l2-common.c
++++ b/drivers/media/v4l2-core/v4l2-common.c
+@@ -34,6 +34,9 @@
+  * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
+  */
+ 
++#include <linux/clk.h>
++#include <linux/clkdev.h>
++#include <linux/clk-provider.h>
+ #include <linux/module.h>
+ #include <linux/types.h>
+ #include <linux/kernel.h>
+@@ -636,3 +639,39 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
++
++struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
++{
++	struct clk_hw *clk_hw;
++	struct clk *clk;
++	u32 rate;
++	int ret;
++
++	clk = devm_clk_get_optional(dev, id);
++	if (clk)
++		return clk;
++
++#ifdef CONFIG_COMMON_CLK
++	if (!is_acpi_node(dev_fwnode(dev)))
++		return ERR_PTR(-ENOENT);
++
++	ret = device_property_read_u32(dev, "clock-frequency", &rate);
++	if (ret)
++		return ERR_PTR(ret);
++
++	if (!id) {
++		id = devm_kasprintf(dev, GFP_KERNEL, "clk-%s", dev_name(dev));
++		if (!id)
++			return ERR_PTR(-ENOMEM);
++	}
++
++	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
++	if (IS_ERR(clk_hw))
++		return ERR_CAST(clk_hw);
++
++	return clk_hw->clk;
++#else
++	return ERR_PTR(-ENOENT);
++#endif
++}
++EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
+diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
+index 63ad36f04f72..35b9ac698e8a 100644
+--- a/include/media/v4l2-common.h
++++ b/include/media/v4l2-common.h
+@@ -573,6 +573,24 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
+ 			     unsigned int num_of_driver_link_freqs,
+ 			     unsigned long *bitmap);
+ 
++/**
++ * devm_v4l2_sensor_clk_get - lookup and obtain a reference to an optional clock
++ *			      producer for a camera sensor.
++ *
++ * @dev: device for v4l2 sensor clock "consumer"
++ * @id: clock consumer ID
++ *
++ * This function behaves the same way as clk_get_optional() except where there
++ * is no clock producer like in ACPI-based platforms.
++ * For ACPI-based platforms, the function will read the "clock-frequency"
++ * ACPI _DSD property and register a fixed-clock with the frequency indicated
++ * in the property.
++ *
++ * Return:
++ * * pointer to a struct clk on success or an error code on failure.
++ */
++struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id);
++
+ static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
+ {
+ 	/*
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
