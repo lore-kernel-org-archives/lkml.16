@@ -1,70 +1,77 @@
-Received: from abb.hmeau.com (abb.hmeau.com [144.6.53.87])
+Received: from mx.swemel.ru (mx.swemel.ru [95.143.211.150])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7A821F4199;
-	Fri, 21 Mar 2025 11:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.6.53.87
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94AC1F09A8
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:08:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.143.211.150
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742555241; cv=none; b=QyRJtnhMn+28Q5J41jD1rXcxLhbWWkobhs5yxIomiN1jxjbAzffWI9aVfKxdpzadKmqlXX7sUU0ccZHux1Wl1NADHQPkDc2ZEh4qTaLwmwsnv7O7g5hspn5OK6KeB/+JMVfNXJjZgKUu4lexsW4rje7HmYchT+4fBLbTuNdcpfg=
+	t=1742555302; cv=none; b=HEuGqXJjGGPAe4m65V80z3SvR+74kpKjF5UnqFW3AI/VhUsVHjy9E+SWmoDgmVwYgzJRzlzAHMlds1EasFEZrhdZe5VCI/jKWIgDKctRhcQ0/0903nkZtGuDckpi2JmvxXhDSrKG/Eo90L1lADXeO8eloNGm6DMdVK6Pc0DDzmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742555241; c=relaxed/simple;
-	bh=wxf09k4/rbSKwuSotUTjcngtLja4qk8gevWtD41hXKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pI/ytmnCsMY3IWzy+m3kARign0l6zSepPVS3LO1e1WDvIJB28WyO0TuJS1Ugp/0YrhyXe1HFAOCFmQtwl5VHyEZ8Rw2pFYne2ryf2TEEBPElzkZVbL6Eixx6NGH7qIp6eiqEQURrL4de2wI4LZYqz26aqrlx7yvzQXq/Ujd3wOE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au; spf=pass smtp.mailfrom=gondor.apana.org.au; dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b=rnw9C+d6; arc=none smtp.client-ip=144.6.53.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gondor.apana.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gondor.apana.org.au
+	s=arc-20240116; t=1742555302; c=relaxed/simple;
+	bh=YxheuH5qC+gbNFpr0EE4TkJ0s9iDCQtv8J9bv2AWTPM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Q+qIbvqwVYEtz7wwDa1fMW/krRpPFY7D1RZUchFscEcwKCq3N3sAguA61TbfIS4Gs60krTod19nHmc2Gw54lmkPT1uiTgaRuhTBocy2yzAlgtK5mSF7virRsc7vOb46Lx3TJUnxN321x07vamhV5Y7kUJB54rgUePHB5TQ55Mew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru; spf=pass smtp.mailfrom=swemel.ru; dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b=k70HpNTv; arc=none smtp.client-ip=95.143.211.150
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=swemel.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=swemel.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hmeau.com header.i=@hmeau.com header.b="rnw9C+d6"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=hmeau.com;
-	s=formenos; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-	List-Post:List-Owner:List-Archive;
-	bh=q7tKWh3FUTunCR4d+7oP/9DP5Xky/MKXC4hEZcANuJE=; b=rnw9C+d6fYJ+ORqwZMSRI+i2Ru
-	R6jRDh0KmThQYCqh4wC2QDNOyo6W39MoptwMZlwjcz9W8H2vpQ46hF/pNBdakD2U13Tk6JOjgNcMx
-	JafKSaPWdGX6UqAMe7oIyGZF7m7omCFexC1W+LOzohMnCc8JJ50KnJZ8HKRz53nkblNjZtRW6YFuO
-	jFoHzEnOeHugNyr4td9x7EQgnD22iXTzVVxnM4ROtY10bTbls7HuXl9drI7B+oTYYY4VegjAgs5YN
-	P5I+yjb/Vf4/lCoPOQsW9A8R0mTLiD4olb9e+M+qG2G1JX8JvOzAmoKx/Xx57tVTCyCDxr17Ohw/O
-	th9qcrDg==;
-Received: from loth.rohan.me.apana.org.au ([192.168.167.2])
-	by formenos.hmeau.com with smtp (Exim 4.96 #2 (Debian))
-	id 1tvaDY-0090Gh-2o;
-	Fri, 21 Mar 2025 19:07:13 +0800
-Received: by loth.rohan.me.apana.org.au (sSMTP sendmail emulation); Fri, 21 Mar 2025 19:07:12 +0800
-Date: Fri, 21 Mar 2025 19:07:12 +0800
-From: Herbert Xu <herbert@gondor.apana.org.au>
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: "David S. Miller" <davem@davemloft.net>, linux-crypto@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=swemel.ru header.i=@swemel.ru header.b="k70HpNTv"
+From: Denis Arefev <arefev@swemel.ru>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=swemel.ru; s=mail;
+	t=1742555297;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=gXu86VZaLBNYnHRfrq34BCX66En+zpOOpN6qaFsLboA=;
+	b=k70HpNTvLGIyji0//Mk9SdHtq06g3/dIKNx3dfql7tZVrwd0YfhtdScJ1GXgmZw5bcvpvz
+	cXOUyf93QvvsqlxfRownHK/770PC5ilYC7FWOZDL0iyGi1nYPkt7TGhqcVKNecjY1fXILQ
+	Dg9Y78D+Nyj+UWfP1AD4SNnxI6NWesI=
+To: Kenneth Feng <kenneth.feng@amd.com>
+Cc: Alex Deucher <alexander.deucher@amd.com>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	amd-gfx@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: essiv - Replace memcpy() + NUL-termination with
- strscpy()
-Message-ID: <Z91IYH0gAQutePsE@gondor.apana.org.au>
-References: <20250316211504.39327-2-thorsten.blum@linux.dev>
+Subject: [PATCH 4/5] drm/amd/pm: Prevent division by zero
+Date: Fri, 21 Mar 2025 14:08:15 +0300
+Message-ID: <20250321110817.10274-1-arefev@swemel.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250316211504.39327-2-thorsten.blum@linux.dev>
+Content-Transfer-Encoding: 8bit
 
-On Sun, Mar 16, 2025 at 10:15:04PM +0100, Thorsten Blum wrote:
-> Use strscpy() to copy the NUL-terminated string 'p' to the destination
-> buffer instead of using memcpy() followed by a manual NUL-termination.
-> 
-> No functional changes intended.
-> 
-> Signed-off-by: Thorsten Blum <thorsten.blum@linux.dev>
-> ---
->  crypto/essiv.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+The user can set any speed value.
+If speed is greater than UINT_MAX/8, division by zero is possible.
 
-Patch applied.  Thanks.
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
+
+Fixes: c52dcf49195d ("drm/amd/pp: Avoid divide-by-zero in fan_ctrl_set_fan_speed_rpm")
+Signed-off-by: Denis Arefev <arefev@swemel.ru>
+---
+ drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_thermal.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_thermal.c b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_thermal.c
+index 379012494da5..56423aedf3fa 100644
+--- a/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_thermal.c
++++ b/drivers/gpu/drm/amd/pm/powerplay/hwmgr/vega10_thermal.c
+@@ -307,10 +307,10 @@ int vega10_fan_ctrl_set_fan_speed_rpm(struct pp_hwmgr *hwmgr, uint32_t speed)
+ 	int result = 0;
+ 
+ 	if (hwmgr->thermal_controller.fanInfo.bNoFan ||
+-	    speed == 0 ||
++	    (!speed || speed > UINT_MAX/8) ||
+ 	    (speed < hwmgr->thermal_controller.fanInfo.ulMinRPM) ||
+ 	    (speed > hwmgr->thermal_controller.fanInfo.ulMaxRPM))
+-		return -1;
++		return -EINVAL;
+ 
+ 	if (PP_CAP(PHM_PlatformCaps_MicrocodeFanControl))
+ 		result = vega10_fan_ctrl_stop_smc_fan_control(hwmgr);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.43.0
+
