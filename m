@@ -1,33 +1,68 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90C111F12F4;
-	Fri, 21 Mar 2025 09:37:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF1521F131C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:38:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742549847; cv=none; b=pZFcwgVHe5emuNbk3sY3t6Y9t6+0xxwclBI7BXUfi4HSQp/AzsT7UiiOcR973pVcvBnlKTvSdCByno3Co+FgHhoVR/qHTd9+h1ZP1t0yJoO6FdUkXOSOrTiogLmCNsCdLZcx5BwKvxqtXpSxTN0EP1OVE7oqoLsUhfM6indtTAo=
+	t=1742549882; cv=none; b=JsI1iJvuAbL2m8IeiA+FLzMkkKE8mPMdNb+CDFVHn4fKoG5fMFQcpxyW0WSK6hZ9aN3STZbtRaeiPbAJqVYEYd/K9Lajk0hRm5Xt1O6Xnwj76bcXFzkKgpgCqBGutduVhB3u2vxeqA8m1FK2BgR5cYO5zPvs8lXe9G2qzqd+/2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742549847; c=relaxed/simple;
-	bh=poV5m0XgApGdvCxNPJk25+DH7c6vk1mpZNIXwAz1Hlg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PM8BBOzroNLwya8QcpiXovtET6HlJ1T3Q3KHt8iQVC3NjDRkY/RWxSR2Fx0BGx9UAdEBS7UWGY2eLP4vMgk1HOil53OgjSpZpdShJureAaz+fHWGi2nEbLRQwnrXwdRC6AE0tCdfDfz+HPB41K++S449y2621ojXvW3RAlBErrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CUnhUQO/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742549882; c=relaxed/simple;
+	bh=5aDhAMwW4Kn3UhCM/fvEOcu3+MeIoZzc3lYUrIBh8nQ=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RJT5KV/c42HBIFIiseeNzuiWWoLuhQNjNH2lPVKeXX99DUSltSplPVYa/e8ljU2qnTXya2DmQVyV7Q9pUUPfQCe148qXLVBfyDxKwatvoQb6U5zangIP02ohQsQ3M1wSngq1juaKlenLoT7PGnQv+QTqGc3fpiz7iuLyy+jEbD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=l2tCuFiy; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CUnhUQO/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48D46C4CEE3;
-	Fri, 21 Mar 2025 09:37:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742549847;
-	bh=poV5m0XgApGdvCxNPJk25+DH7c6vk1mpZNIXwAz1Hlg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CUnhUQO/ebvzor3VTHKrObpa6P6l0ILcwrfwZZSJSsgtQgNIhZ/aSJbfY4xkqL59g
-	 hMbFR9QxY71wLfIyAM452l78S7ZGTmIrux7IvRzZYi4O0LgZc0eXJ89tGDqX8qJkYY
-	 V0Wijd2uVX5Z/jlcUWVHZ6AbqqEKFsdYjX44oyZ9KxwTtRsHf/MYMegBqc8AFd+xYy
-	 xsOTeYMrCN/cwaLEEm8Ev/Qzwy44sagVJKfKEvbC41C9kv/MOv5jiWq3ZH8GH9vch3
-	 kQ/cO9c5dPYOhJm3Rnb3e1767IBsXAfmfKuUzACX61gzDKens6A7jNYfMLJfLHhgWR
-	 NcX20zkCl7uDw==
-Message-ID: <f0dd950a-02a7-402b-a08e-015db458b273@kernel.org>
-Date: Fri, 21 Mar 2025 10:37:18 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="l2tCuFiy"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cfecdd8b2so14120495e9.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:38:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742549879; x=1743154679; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9N77P41IwOEtQjyzNQ+1k/cERPt5eLRxJQTUEpJGHQA=;
+        b=l2tCuFiyV0bdwCN8Wf1jqR2WMMLVWVQ7pgfG5CVb05jRZ3RIIiCIKCGa7ELwFuOEhb
+         cIZYcK1OV91JIsr4qqSUxpFfxcLG3ZPr+f/GltHt0Pg2RhCi6WKsrqpkfDJKiy15TIYZ
+         mjTVkBsTxwt925UkyAyAm3AmkaP5jW2DWyQ2jPzwr2Sgx242jiNi53+W6pYb8+/mui3J
+         y5nGBI4PzoDfaMER6Op3LI+Wq0WypQKzkvZjlWHpyy6KMfxSIqxMeyYUCbQOoPoWysgU
+         zBWSAbarn0J4ncpJ32VxOdNGpGfuAjNWay3bSkspRH20SAx7hfZ7OEpHhsZGXLr6scla
+         ujeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742549879; x=1743154679;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt
+         :content-language:references:cc:to:subject:reply-to:from:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=9N77P41IwOEtQjyzNQ+1k/cERPt5eLRxJQTUEpJGHQA=;
+        b=xTnrSsa6bTw7F6eVecYHzgRjBZLddwmafPbPr5xzjUdlyqIwsF9S5llQfOWz916Akh
+         PQuBKOFHJL6ypJEbukrNuFOxnjQT2PJSn/kyXuCCcbLov/IDzsqlRGevPIRmINFbH1xJ
+         aTJK4BBsPq2qTZs6j8QANhZum625DjChpGLLQYe7c6tm+QVDESD9apGcVqIlXzxu7EIX
+         TRczkxiqLX4zETsloasNeLw+61df0WdyDmPTAm89DiIdY8gT3T4X6zgb42Absy2f8evV
+         7slHFWdKElNIxO6qCQN2JML9mDDx3zYo7PSv5YU9JOtjgWWY3driyT7OUktzGK3nMsp5
+         Cicg==
+X-Forwarded-Encrypted: i=1; AJvYcCXakYfHUV94JUmu3iDq755Q5CxPFKC1UFN7Ik22Jug+6eIstVPuHmz83l3a+YLc9V1psXaqf3a6kDVD7oc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyNkGUt9uf7IUuZcDvSuYlojWRKacF9Z+2eyvQeRiUsPeICps5x
+	N/TMOnmHAwel0cX5hq4TaNAHJ2atvzNNGioBpR7V/OimajxnF90mmvvBqiazB/sEBH4wBB9Y6/S
+	9
+X-Gm-Gg: ASbGncuCPsPLe7WG/eEmwYo7ArkP+XLt2aaAgrOfvUVFpDRoQI4TEGOW4GOzaRcFqn5
+	4Cumb3IV3XXKsSRdu/ZPWQ6pQUclrVeSCfbe+Bl5AUrZLH/QuzVGSzw67ssJIvgQ+dBRYQYqT49
+	/4YTuI6heGg9IQginbt7/91aDugIKS+uhZqffrBV7DIVRjvj6ShsU7N3n0obgOwLFlEhjYsf+9Z
+	hksd3FNTB/E8un4AGMN4lrBvVW2ox6NsOP6RPiGgW+X3WYlgeLO8wCpcArk/iaWqmzX+znMGkc5
+	tVRn4/xvzY15yC5q2BT/8ARqXFAAnhxDAvpUpZkkGqamfWgkCmlO6YrMXyZDhAO+RkZb5w3O7io
+	UuRMJBuDYlVMqIrUWt4bAY1iA5ieUNXUj
+X-Google-Smtp-Source: AGHT+IE4AxMnbwGIVq74R+nsPXDkLIHd1kWqc+z8aTF3wWVCvx+LwG9D0+avsooNskmWWMoFCV5riw==
+X-Received: by 2002:a05:600c:3109:b0:43c:e70d:450c with SMTP id 5b1f17b1804b1-43d50a201bemr22157905e9.22.1742549878764;
+        Fri, 21 Mar 2025 02:37:58 -0700 (PDT)
+Received: from ?IPV6:2a01:e0a:3d9:2080:5080:77b0:43f2:5276? ([2a01:e0a:3d9:2080:5080:77b0:43f2:5276])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fd187fasm21568345e9.14.2025.03.21.02.37.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 02:37:58 -0700 (PDT)
+Message-ID: <5caa550a-ffdf-477d-92f4-a3222b7fba29@linaro.org>
+Date: Fri, 21 Mar 2025 10:37:57 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -35,115 +70,229 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 00/10] Basic device tree support for ESWIN EIC7700 RISC-V
- SoC
-To: Conor Dooley <conor@kernel.org>,
- Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Thomas Gleixner <tglx@linutronix.de>,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Samuel Holland <samuel.holland@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- Min Lin <linmin@eswincomputing.com>,
- Pritesh Patel <pritesh.patel@einfochips.com>, Yangyu Chen
- <cyy@cyyself.name>, Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
- Yu Chien Peter Lin <peterlin@andestech.com>,
- Charlie Jenkins <charlie@rivosinc.com>,
- Kanak Shilledar <kanakshilledar@gmail.com>,
- Darshan Prajapati <darshan.prajapati@einfochips.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Heiko Stuebner
- <heiko@sntech.de>, Aradhya Bhatia <a-bhatia1@ti.com>,
- "rafal@milecki.pl" <rafal@milecki.pl>, Anup Patel <anup@brainfault.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20250311073432.4068512-1-pinkesh.vaghela@einfochips.com>
- <20250311-backdrop-porthole-440ae005e8fa@spud>
- <SA3PR04MB893164FCD6C4CB8924FC8DE583D82@SA3PR04MB8931.namprd04.prod.outlook.com>
- <20250320-uprising-couch-0af012a1fee6@spud>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250320-uprising-couch-0af012a1fee6@spud>
-Content-Type: text/plain; charset=UTF-8
+From: Neil Armstrong <neil.armstrong@linaro.org>
+Reply-To: neil.armstrong@linaro.org
+Subject: Re: [PATCH] arm64: dts: amlogic: a4: fix dtb compilation warning
+ issues
+To: xianwei.zhao@amlogic.com, Kevin Hilman <khilman@baylibre.com>,
+ Jerome Brunet <jbrunet@baylibre.com>,
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250321-fix-a4-pinctrl-node-v1-1-5719f9f09932@amlogic.com>
+Content-Language: en-US, fr
+Autocrypt: addr=neil.armstrong@linaro.org; keydata=
+ xsBNBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAHNKk5laWwgQXJtc3Ryb25nIDxuZWlsLmFybXN0cm9uZ0BsaW5hcm8ub3JnPsLAkQQTAQoA
+ OwIbIwULCQgHAwUVCgkICwUWAgMBAAIeAQIXgBYhBInsPQWERiF0UPIoSBaat7Gkz/iuBQJk
+ Q5wSAhkBAAoJEBaat7Gkz/iuyhMIANiD94qDtUTJRfEW6GwXmtKWwl/mvqQtaTtZID2dos04
+ YqBbshiJbejgVJjy+HODcNUIKBB3PSLaln4ltdsV73SBcwUNdzebfKspAQunCM22Mn6FBIxQ
+ GizsMLcP/0FX4en9NaKGfK6ZdKK6kN1GR9YffMJd2P08EO8mHowmSRe/ExAODhAs9W7XXExw
+ UNCY4pVJyRPpEhv373vvff60bHxc1k/FF9WaPscMt7hlkbFLUs85kHtQAmr8pV5Hy9ezsSRa
+ GzJmiVclkPc2BY592IGBXRDQ38urXeM4nfhhvqA50b/nAEXc6FzqgXqDkEIwR66/Gbp0t3+r
+ yQzpKRyQif3OwE0ETVkGzwEIALyKDN/OGURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYp
+ QTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXMcoJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+
+ SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hiSvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY
+ 4yG6xI99NIPEVE9lNBXBKIlewIyVlkOaYvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoM
+ Mtsyw18YoX9BqMFInxqYQQ3j/HpVgTSvmo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUX
+ oUk33HEAEQEAAcLAXwQYAQIACQUCTVkGzwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfn
+ M7IbRuiSZS1unlySUVYu3SD6YBYnNi3G5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa3
+ 3eDIHu/zr1HMKErm+2SD6PO9umRef8V82o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCS
+ KmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy
+ 4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJC3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTT
+ QbM0WUIBIcGmq38+OgUsMYu4NzLu7uZFAcmp6h8g
+Organization: Linaro
+In-Reply-To: <20250321-fix-a4-pinctrl-node-v1-1-5719f9f09932@amlogic.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 
-On 20/03/2025 13:00, Conor Dooley wrote:
-> On Thu, Mar 20, 2025 at 10:39:52AM +0000, Pinkesh Vaghela wrote:
->> Hi Conor,
->>
->> On Tue, Mar 11, 2025 at 11:38 PM, Conor Dooley wrote:
->>> On Tue, Mar 11, 2025 at 01:04:22PM +0530, Pinkesh Vaghela wrote:
->>>> Add support for ESWIN EIC7700 SoC consisting of SiFive Quad-Core
->>>> P550 CPU cluster and the first development board that uses it, the
->>>> SiFive HiFive Premier P550.
->>>>
->>>> This patch series adds initial device tree and also adds ESWIN
->>>> architecture support.
->>>>
->>>> Boot-tested using intiramfs with Linux 6.14.0-rc2 on HiFive Premier
->>>> P550 board using U-Boot 2024.01 and OpenSBI 1.4.
->>>
->>> There's no git tree in your MAINTAINERS entry, nor mention here of what the
->>> story is going to be in terms of sending patches to Arnd. Who is going to be
->>> doing that?
->>
->> We are not currently set up for sending signed pull requests,
->> so for now we plan to send changes to Arnd as separate patches.
+Hi,
+
+On 21/03/2025 03:23, Xianwei Zhao via B4 Relay wrote:
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 > 
-> Undesirable, but sure. You didn't answer the first part of my question
+> When use command 'make ARCH=arm64 dtbs_check W=1' to compile dtb,
+> a warning message appears.
+> "Warning (simple_bus_reg): /soc/bus@fe000000/pinctrl:
+> missing or empty reg/ranges property"
+> 
+> Add the unit address to the pinctrl node to fix it.
 
-Just to clarify - separate patches as separate postings to soc@ after
-the review was done on the lists and then you applied them to the tree
-Conor asked below, right?
+I've delayed the pinctrl to next release so plase rebase
+the commit on top of https://web.git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git/log/?h=for-next
+and fix the warnings here, and make sure DTBS_CHECK still passes.
 
-> though, and there's no git tree listed in your v2 series. That part is
-> not negotiable, you have to have one and get it included in linux-next.
+Neil
 
+> 
+> Fixes: ce78f679e08c ("arm64: dts: amlogic: a4: add pinctrl node")
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>   arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi | 102 +++++++++++++++-------------
+>   1 file changed, 55 insertions(+), 47 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> index fa80fa365f13..582e0043024b 100644
+> --- a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
+> @@ -51,87 +51,52 @@ pwrc: power-controller {
+>   };
+>   
+>   &apb {
+> -	gpio_intc: interrupt-controller@4080 {
+> -		compatible = "amlogic,a4-gpio-intc",
+> -			     "amlogic,meson-gpio-intc";
+> -		reg = <0x0 0x4080 0x0 0x20>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <2>;
+> -		amlogic,channel-interrupts =
+> -			<10 11 12 13 14 15 16 17 18 19 20 21>;
+> -	};
+> -
+> -	gpio_ao_intc: interrupt-controller@8e72c {
+> -		compatible = "amlogic,a4-gpio-ao-intc",
+> -			     "amlogic,meson-gpio-intc";
+> -		reg = <0x0 0x8e72c 0x0 0x0c>;
+> -		interrupt-controller;
+> -		#interrupt-cells = <2>;
+> -		amlogic,channel-interrupts = <140 141>;
+> -	};
+> -
+> -	periphs_pinctrl: pinctrl {
+> +	periphs_pinctrl: pinctrl@4000 {
+>   		compatible = "amlogic,pinctrl-a4";
+>   		#address-cells = <2>;
+>   		#size-cells = <2>;
+> -		ranges;
+> +		ranges = <0x0 0x0 0x0 0x4000 0x0 0x280>;
+>   
+> -		gpiox: gpio@4100 {
+> -			reg = <0 0x4100 0 0x40>, <0 0x400c 0 0xc>;
+> +		gpiox: gpio@100 {
+> +			reg = <0 0x100 0 0x40>, <0 0xc 0 0xc>;
+>   			reg-names = "gpio", "mux";
+>   			gpio-controller;
+>   			#gpio-cells = <2>;
+>   			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 18>;
+>   		};
+>   
+> -		gpiot: gpio@4140 {
+> -			reg = <0 0x4140 0 0x40>, <0 0x402c 0 0xc>;
+> +		gpiot: gpio@140 {
+> +			reg = <0 0x140 0 0x40>, <0 0x2c 0 0xc>;
+>   			reg-names = "gpio", "mux";
+>   			gpio-controller;
+>   			#gpio-cells = <2>;
+>   			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 23>;
+>   		};
+>   
+> -		gpiod: gpio@4180 {
+> -			reg = <0 0x4180 0 0x40>, <0 0x4040 0 0x8>;
+> +		gpiod: gpio@180 {
+> +			reg = <0 0x180 0 0x40>, <0 0x40 0 0x8>;
+>   			reg-names = "gpio", "mux";
+>   			gpio-controller;
+>   			#gpio-cells = <2>;
+>   			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
+>   		};
+>   
+> -		gpioe: gpio@41c0 {
+> -			reg = <0 0x41c0 0 0x40>, <0 0x4048 0 0x4>;
+> +		gpioe: gpio@1c0 {
+> +			reg = <0 0x1c0 0 0x40>, <0 0x48 0 0x4>;
+>   			reg-names = "gpio", "mux";
+>   			gpio-controller;
+>   			#gpio-cells = <2>;
+>   			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
+>   		};
+>   
+> -		gpiob: gpio@4240 {
+> -			reg = <0 0x4240 0 0x40>, <0 0x4000 0 0x8>;
+> +		gpiob: gpio@240 {
+> +			reg = <0 0x240 0 0x40>, <0 0 0 0x8>;
+>   			reg-names = "gpio", "mux";
+>   			gpio-controller;
+>   			#gpio-cells = <2>;
+>   			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
+>   		};
+>   
+> -		gpioao: gpio@8e704 {
+> -			reg = <0 0x8e704 0 0x16>, <0 0x8e700 0 0x4>;
+> -			reg-names = "gpio", "mux";
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_AO<<8) 7>;
+> -		};
+> -
+> -		test_n: gpio@8e744 {
+> -			reg = <0 0x8e744 0 0x20>;
+> -			reg-names = "gpio";
+> -			gpio-controller;
+> -			#gpio-cells = <2>;
+> -			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
+> -		};
+> -
+>   		func-uart-a {
+>   			uart_a_default: group-uart-a-pins1 {
+>   				pinmux = <AML_PINMUX(AMLOGIC_GPIO_X, 11, 1)>,
+> @@ -186,4 +151,47 @@ uart_e_default: group-uart-e-pins {
+>   			};
+>   		};
+>   	};
+> +
+> +	gpio_intc: interrupt-controller@4080 {
+> +		compatible = "amlogic,a4-gpio-intc",
+> +			     "amlogic,meson-gpio-intc";
+> +		reg = <0x0 0x4080 0x0 0x20>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		amlogic,channel-interrupts =
+> +			<10 11 12 13 14 15 16 17 18 19 20 21>;
+> +	};
+> +
+> +	ao_pinctrl: pinctrl@8e700 {
+> +		compatible = "amlogic,pinctrl-a4";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges = <0x0 0x0 0x0 0x8e700 0x0 0x80>;
+> +
+> +		gpioao: gpio@4 {
+> +			reg = <0 0x4 0 0x16>, <0 0 0 0x4>;
+> +			reg-names = "gpio", "mux";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_AO<<8) 7>;
+> +		};
+> +
+> +		test_n: gpio@44 {
+> +			reg = <0 0x44 0 0x20>;
+> +			reg-names = "gpio";
+> +			gpio-controller;
+> +			#gpio-cells = <2>;
+> +			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
+> +		};
+> +	};
+> +
+> +	gpio_ao_intc: interrupt-controller@8e72c {
+> +		compatible = "amlogic,a4-gpio-ao-intc",
+> +			     "amlogic,meson-gpio-intc";
+> +		reg = <0x0 0x8e72c 0x0 0x0c>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +		amlogic,channel-interrupts = <140 141>;
+> +	};
+> +
+>   };
+> 
+> ---
+> base-commit: 73a143e436311183186ab4b365a84c662f2c9651
+> change-id: 20250317-fix-a4-pinctrl-node-9babfd44e085
+> 
+> Best regards,
 
-
-Best regards,
-Krzysztof
