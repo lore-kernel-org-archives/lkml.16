@@ -1,244 +1,116 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB6F71A7264;
-	Fri, 21 Mar 2025 02:23:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E30711A7264;
+	Fri, 21 Mar 2025 02:25:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742523838; cv=none; b=P75AQe3RHakQj42cGA8Wk1d5PnwUVCafQ1MWWawu2aTICv8+adjXopqkkUZbOiL5v4M62X3WfNPMcCzkGQuFwCAvgWh8yfjGAbSDITXXBn5y/v2Za+H4PIowXmB9i8nP9Du5itSLoCyqOJveq8ew0L2G9Nv6g7tH5fzLaUSG3Wc=
+	t=1742523946; cv=none; b=c0/pLZpqvpCHNnJIXxHm29lY2/sMEzKvywYsJ+PmQaPyXQhH7lFfGzK6s+f/WpDPRUA9kymAVDPCKD32UjKxRUSR7lUIyfk96irY3QLVIe6BSrG4ptpNnHzJn1wp7++M4FMIFKjFR2yyp8cTsjAh2queoqZNT+agL277Vqi40n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742523838; c=relaxed/simple;
-	bh=8+YFngRA+RL4itCdSnDqokhyCF25uPzsqjoBvzUhdHI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZnCdaCTdpUFzAFT+rUKjvo3JyozLXxa0QRaMTj4DaI0HNo9N9d6RNwApG/Y0wsZb7N1W7pIuTBLFhHFOJXhgTjV+9QSn6tbuoi+S9WxDXoWQAtihZt7fVsa0VU+u3UzmIQEtVdPsvIUdfZxt9Dts8fNCc8E9y6ME4dwZIh4BINM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzHSf57q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742523946; c=relaxed/simple;
+	bh=f8Q5gFv76Yqzy7eSwBd46q4NtWdgVRvKR4UJwRCum7s=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=JUFm4CRvkwE8YmLZrDICRbi5itXXxiGRQ0UnSMAqKNrPEF6+6v57DKOBPbRIW0wnl+20HH8kE54TWAVZa29pg/k9acOE9lSKc+DbtfOpYCPk3/NbwH1CQGRyDxwzDfcrpz8iJN0ZOk2L4nVOOBa5eZstlhrXI3B1n9TS+CDURII=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tju9ABUA; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzHSf57q"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3BE08C4CEDD;
-	Fri, 21 Mar 2025 02:23:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742523837;
-	bh=8+YFngRA+RL4itCdSnDqokhyCF25uPzsqjoBvzUhdHI=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=PzHSf57qgUf0FB7TATdmiJPPa16kAxxbeQBubmAv6ILpPwJ122YZbqrk1X3sZm0P9
-	 uYTzERiVqmRIg4+ruKUo/315IOkh83+bjOW9WxlSh8ShgcGv86JYxt/sCiGZzffVgB
-	 D86c3m9ZcKJB1PvS91lDdps3G6VYd4TauQqJJs+4w4tF014A79xqGuc57R8YiyFjlW
-	 KY/y0CcrhSUgQDzfcxOXOy0b0nNEh5tyOXMBrAsGfGr0UGsHrC1D57jChsaAvbGssF
-	 kgtxtyGK8941NGmLaxtZ9awMirQ319DxPHgkR9fkgldMd3dfcsPfxVb+VRDzUU8oHR
-	 IZ1ETZ1yHTacg==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24AA7C28B30;
-	Fri, 21 Mar 2025 02:23:57 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Fri, 21 Mar 2025 10:23:55 +0800
-Subject: [PATCH] arm64: dts: amlogic: a4: fix dtb compilation warning
- issues
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tju9ABUA"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-22622ddcc35so37490405ad.2;
+        Thu, 20 Mar 2025 19:25:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742523942; x=1743128742; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=+DxvPmAFs621/zKMJ4zXjt30xecPkzXgHkzi7VvKLgc=;
+        b=Tju9ABUAJoVp8WyG1Q4QN9KCgFxCnezEa1LEcjBsuxy7huPb5x5AGiFZpnJvydEF71
+         XvI2XS6FzX5BzVZbYfHJ3nEUL3Ik0e8n2OxuGAD5uqg85ZH2pZIbjqfPoEduzUjUYItO
+         TiHbhsUwvbscDCuacZCaFbjTPB/sUTUSTendBExDrrz+Yh0osl0hrAymHqyRP2FMKHlM
+         e/1H9OcYIrd98PF02ducluR9tPsCI8As/nuEwHO0/QlJX09N8tYQel2/P6ZJ9pRgKzEi
+         AOhrG7ggOXJ4Wjo40cHgI96kizkTwHBj3OycK69LUNOZQruULax8WxO4XG6WlHFupu4S
+         R2Kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742523942; x=1743128742;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:sender:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=+DxvPmAFs621/zKMJ4zXjt30xecPkzXgHkzi7VvKLgc=;
+        b=AG4IVgiSaN8qWCoztPugQ4tNSsqIS4N+LLXaGqhGT5/NWrfaclyvftSq5vOVsx5bpk
+         h5TUaTI13fqib0WZxy0BRTG/gr+UA53PoaHSiKntSqXjOJ5bqaPP1SX8EM8WQt4Yfvg7
+         5D9BdYeOMczmH9qc9Nb+De9R+/3mQl4KFy3x+fp96Kvp8h1DXhtLrmEzE6i0WZeMkLTS
+         B8ZJhOhd3sJhwd+TBTUxp0T/sYKAjg8NUSpHR0b740oaTOWfr9bewAqyd2tur0Ktfj1d
+         9iQDjUw+rfPrt9JWoRBpk/pziVVgsqJ1YNe5vwa2PyRRl8/vuHvW2UC/2tF9GAMolTNn
+         tjnA==
+X-Forwarded-Encrypted: i=1; AJvYcCW80Xe0HL6Dr1IlQATxsTA72bHBrE1BsW7Pgn04my7oMyf5UguSH0Hxrd0uHhTuzdrBGr9udlIL3AbRrg==@vger.kernel.org, AJvYcCWF2pbP4TIL3RNHHIEaV0FNQY+13UijCHq5I5ev84rk0KyjY8DCoCcXyamt9doPAxrCe1JUXcElJKInwhSy@vger.kernel.org
+X-Gm-Message-State: AOJu0YwggGO+8sDOVJHTrh1H/GQz2YKeyEHaqXX6Gz9h5P9CPUqL7n/x
+	12Cjar5a6DSFq0hFLD9JWIcwofi7XYWLbUvyki9x4SYJR7t6tJXXzkImGaZynX1mcg==
+X-Gm-Gg: ASbGncvbpHsJi8m86z71rQKt9GSJdgMlM70Lh87Ham1QqkDQdGWye1+ya7aDlEjKn4N
+	qJgOfLqJOXQPw0J3CxFwYQjW6YiDbunOANlniTNQRKv/p3LbB53+QVvwD6gsIK26fpbr40ttJ8y
+	c59FvTQwukT5WZDhLktW+ia1Kwo8AeivuM3h1xDGK3ot/SAR4v97Lr/l8vpfZLAoYoCw3AwpCDf
+	UtWHEKnsRYA7r50ejDbrhuO0+tnth5nxQrHNrmP//0xZcyUR9RaWWqUWumC3dU59Kq9MPmrQgQU
+	aWs+DbHsbW1hQqOweMrIIPKclitgiT+7SNPdfIb3GwOeXURIlkL+AX13QF/Uo8/DnYUJN0M=
+X-Google-Smtp-Source: AGHT+IGAYzPXIW3C7GhdeNHZHyfqTAkL6j4RiHaeMPqcvuug3znIOTZLhC6HretCJc3arNYS6OsrSQ==
+X-Received: by 2002:a17:90b:1848:b0:2ea:bf1c:1e3a with SMTP id 98e67ed59e1d1-3030fe9e646mr2875641a91.12.1742523942052;
+        Thu, 20 Mar 2025 19:25:42 -0700 (PDT)
+Received: from localhost (220-135-95-34.hinet-ip.hinet.net. [220.135.95.34])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3030f7ea89esm650725a91.32.2025.03.20.19.25.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 19:25:41 -0700 (PDT)
+Sender: AceLan Kao <acelan@gmail.com>
+From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
+To: Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: quirks: Add quirk for another Chicony Electronics HP 5MP Camera
+Date: Fri, 21 Mar 2025 10:25:40 +0800
+Message-ID: <20250321022540.4016923-1-acelan.kao@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-fix-a4-pinctrl-node-v1-1-5719f9f09932@amlogic.com>
-X-B4-Tracking: v=1; b=H4sIALrN3GcC/x2MSQqAMAwAvyI5G6hacfmKeOgSNSBRWhGh+HeLx
- 4GZSRApMEUYiwSBbo58SIaqLMBtRlZC9pmhVnWrmqrDhR80Gk8Wd4Ud5fCEgzV28VqT6lvI5Rk
- oa/91mt/3A56PuNllAAAA
-To: Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.12.4
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742523835; l=4994;
- i=xianwei.zhao@amlogic.com; s=20231208; h=from:subject:message-id;
- bh=IChqhCiVUHKV/Al5PYyBFG4RW3XtS/W3OF9ZWLm5x5E=;
- b=m1lud64/wUROGiLfKAlu7eDbYTf4Y/RBj9k8nVltMlE3s359FZ3sUFC3hN+43NIu5AYW0uFlA
- lrPSd5xEnI7BMBENznF5Jnx4nBvPjA9G6DiGs92ZaYgeF6zaOd2etNW
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=o4fDH8ZXL6xQg5h17eNzRljf6pwZHWWjqcOSsj3dW24=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20231208 with
- auth_id=107
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
+Content-Transfer-Encoding: 8bit
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+The Chicony Electronics HP 5MP Camera (USB ID 04F2:B824) reports a HID
+sensor interface that is not actually implemented. Attempting to access
+this non-functional sensor via iio_info causes system hangs as runtime PM
+tries to wake up an unresponsive sensor.
 
-When use command 'make ARCH=arm64 dtbs_check W=1' to compile dtb,
-a warning message appears.
-"Warning (simple_bus_reg): /soc/bus@fe000000/pinctrl:
-missing or empty reg/ranges property"
+Add this device to the HID ignore list since the sensor interface is
+non-functional by design and should not be exposed to userspace.
 
-Add the unit address to the pinctrl node to fix it.
-
-Fixes: ce78f679e08c ("arm64: dts: amlogic: a4: add pinctrl node")
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
 ---
- arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi | 102 +++++++++++++++-------------
- 1 file changed, 55 insertions(+), 47 deletions(-)
+ drivers/hid/hid-ids.h    | 1 +
+ drivers/hid/hid-quirks.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
-index fa80fa365f13..582e0043024b 100644
---- a/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/amlogic-a4.dtsi
-@@ -51,87 +51,52 @@ pwrc: power-controller {
- };
+diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+index 5fdea9116a3e..554dbed3f3ed 100644
+--- a/drivers/hid/hid-ids.h
++++ b/drivers/hid/hid-ids.h
+@@ -298,6 +298,7 @@
+ #define USB_DEVICE_ID_CHICONY_TOSHIBA_WT10A	0x1408
+ #define USB_DEVICE_ID_CHICONY_ACER_SWITCH12	0x1421
+ #define USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA	0xb82c
++#define USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA2	0xb824
  
- &apb {
--	gpio_intc: interrupt-controller@4080 {
--		compatible = "amlogic,a4-gpio-intc",
--			     "amlogic,meson-gpio-intc";
--		reg = <0x0 0x4080 0x0 0x20>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		amlogic,channel-interrupts =
--			<10 11 12 13 14 15 16 17 18 19 20 21>;
--	};
--
--	gpio_ao_intc: interrupt-controller@8e72c {
--		compatible = "amlogic,a4-gpio-ao-intc",
--			     "amlogic,meson-gpio-intc";
--		reg = <0x0 0x8e72c 0x0 0x0c>;
--		interrupt-controller;
--		#interrupt-cells = <2>;
--		amlogic,channel-interrupts = <140 141>;
--	};
--
--	periphs_pinctrl: pinctrl {
-+	periphs_pinctrl: pinctrl@4000 {
- 		compatible = "amlogic,pinctrl-a4";
- 		#address-cells = <2>;
- 		#size-cells = <2>;
--		ranges;
-+		ranges = <0x0 0x0 0x0 0x4000 0x0 0x280>;
- 
--		gpiox: gpio@4100 {
--			reg = <0 0x4100 0 0x40>, <0 0x400c 0 0xc>;
-+		gpiox: gpio@100 {
-+			reg = <0 0x100 0 0x40>, <0 0xc 0 0xc>;
- 			reg-names = "gpio", "mux";
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_X<<8) 18>;
- 		};
- 
--		gpiot: gpio@4140 {
--			reg = <0 0x4140 0 0x40>, <0 0x402c 0 0xc>;
-+		gpiot: gpio@140 {
-+			reg = <0 0x140 0 0x40>, <0 0x2c 0 0xc>;
- 			reg-names = "gpio", "mux";
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_T<<8) 23>;
- 		};
- 
--		gpiod: gpio@4180 {
--			reg = <0 0x4180 0 0x40>, <0 0x4040 0 0x8>;
-+		gpiod: gpio@180 {
-+			reg = <0 0x180 0 0x40>, <0 0x40 0 0x8>;
- 			reg-names = "gpio", "mux";
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_D<<8) 16>;
- 		};
- 
--		gpioe: gpio@41c0 {
--			reg = <0 0x41c0 0 0x40>, <0 0x4048 0 0x4>;
-+		gpioe: gpio@1c0 {
-+			reg = <0 0x1c0 0 0x40>, <0 0x48 0 0x4>;
- 			reg-names = "gpio", "mux";
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_E<<8) 2>;
- 		};
- 
--		gpiob: gpio@4240 {
--			reg = <0 0x4240 0 0x40>, <0 0x4000 0 0x8>;
-+		gpiob: gpio@240 {
-+			reg = <0 0x240 0 0x40>, <0 0 0 0x8>;
- 			reg-names = "gpio", "mux";
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_B<<8) 14>;
- 		};
- 
--		gpioao: gpio@8e704 {
--			reg = <0 0x8e704 0 0x16>, <0 0x8e700 0 0x4>;
--			reg-names = "gpio", "mux";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_AO<<8) 7>;
--		};
--
--		test_n: gpio@8e744 {
--			reg = <0 0x8e744 0 0x20>;
--			reg-names = "gpio";
--			gpio-controller;
--			#gpio-cells = <2>;
--			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
--		};
--
- 		func-uart-a {
- 			uart_a_default: group-uart-a-pins1 {
- 				pinmux = <AML_PINMUX(AMLOGIC_GPIO_X, 11, 1)>,
-@@ -186,4 +151,47 @@ uart_e_default: group-uart-e-pins {
- 			};
- 		};
- 	};
-+
-+	gpio_intc: interrupt-controller@4080 {
-+		compatible = "amlogic,a4-gpio-intc",
-+			     "amlogic,meson-gpio-intc";
-+		reg = <0x0 0x4080 0x0 0x20>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		amlogic,channel-interrupts =
-+			<10 11 12 13 14 15 16 17 18 19 20 21>;
-+	};
-+
-+	ao_pinctrl: pinctrl@8e700 {
-+		compatible = "amlogic,pinctrl-a4";
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0x0 0x0 0x0 0x8e700 0x0 0x80>;
-+
-+		gpioao: gpio@4 {
-+			reg = <0 0x4 0 0x16>, <0 0 0 0x4>;
-+			reg-names = "gpio", "mux";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_AO<<8) 7>;
-+		};
-+
-+		test_n: gpio@44 {
-+			reg = <0 0x44 0 0x20>;
-+			reg-names = "gpio";
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&periphs_pinctrl 0 (AMLOGIC_GPIO_TEST_N<<8) 1>;
-+		};
-+	};
-+
-+	gpio_ao_intc: interrupt-controller@8e72c {
-+		compatible = "amlogic,a4-gpio-ao-intc",
-+			     "amlogic,meson-gpio-intc";
-+		reg = <0x0 0x8e72c 0x0 0x0c>;
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		amlogic,channel-interrupts = <140 141>;
-+	};
-+
- };
-
----
-base-commit: 73a143e436311183186ab4b365a84c662f2c9651
-change-id: 20250317-fix-a4-pinctrl-node-9babfd44e085
-
-Best regards,
+ #define USB_VENDOR_ID_CHUNGHWAT		0x2247
+ #define USB_DEVICE_ID_CHUNGHWAT_MULTITOUCH	0x0001
+diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+index 452fac15550b..91b3d121bb1f 100644
+--- a/drivers/hid/hid-quirks.c
++++ b/drivers/hid/hid-quirks.c
+@@ -371,6 +371,7 @@ static const struct hid_device_id hid_have_special_driver[] = {
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_ASUS_AK1D) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_ACER_SWITCH12) },
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA) },
++	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA2) },
+ #endif
+ #if IS_ENABLED(CONFIG_HID_CMEDIA)
+ 	{ HID_USB_DEVICE(USB_VENDOR_ID_CMEDIA, USB_DEVICE_ID_CM6533) },
 -- 
-Xianwei Zhao <xianwei.zhao@amlogic.com>
-
+2.43.0
 
