@@ -1,118 +1,120 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F3E01EFFB7;
-	Fri, 21 Mar 2025 09:03:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4998B1EBA19;
+	Fri, 21 Mar 2025 09:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742547807; cv=none; b=UXunc1fhxLPbVz+CzWzYpJNGZOCoUUKfIzLWIBspVwUstxB33rmHYtKIvPsKTLEu62PY9aWRnB4GUm90eB0Uw0yo3OCQVkrttcoe2SIH+80HOPbuqS0xNODXy0QYNLcyGTtXofqEQ8mkTeu02W/8c7LblTHrDBOtiASoUMeHiRk=
+	t=1742547844; cv=none; b=gsM98J52J9S0vAtxMZWtLexNlp29ogjrrw12xFCy6LmyeKZEAHLRvFEWPbUfCeQJC98K7SR2kGoXjEaitnAmMm+wMy86P0Z4CmPn6ajXOjg8jRLjvsL+jDd0jDISNGnaZ4dF6JxUx+6zOwps4L2G8R1byLJbQKWpX32L0e0vRQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742547807; c=relaxed/simple;
-	bh=yEakNrR6k4To7zC5212PfPE/73eTtqh49DTLIXPESMQ=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=ZqOyAGziFa38qPnVafSgJw8z98LhkqGsZPz9c6q1oUvt4CALpWqMRoxGcWAz2Y+SWVxamIdcO/fQoasYYNrX8t2jZ+Dh4Sivbr/E0EhU4bizX43SZjuifXFxzQQuK9ipISwsXKk2sicmML7EFcJzNwHlLIq+rnjKUo20zGn7cks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=merId6y0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=48cHDPDA; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1742547844; c=relaxed/simple;
+	bh=8fw7paiuFxV9WqkArmDeFOzxQ4fMfuMVsbglLpRjvSo=;
+	h=Date:Message-ID:From:To:Cc:Subject:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=CkHSFphA/jqBZroezoWJJ/BCDeh08+vgAs3z1aD1c2InZY/e6SnJB0A/AzHH5DYz5j30S3W7PZ5qBU/UKMRNpxPeqnYJfpGDEM8vg9ITVWYgm7ZRxYOXOlVqIg2PdTjHtWGgbomVZL57fbNHMKi+kKgVh6ZyMbRWuzZjB2OFTEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uruPfbQ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="merId6y0";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="48cHDPDA"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id AC130114009A;
-	Fri, 21 Mar 2025 05:03:24 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Fri, 21 Mar 2025 05:03:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742547804;
-	 x=1742634204; bh=LEbT5bPhP4WcLW38oXwnbwZDnAF+BgzvO4LRwbs0urQ=; b=
-	merId6y0RnVKyxyTClbhwQo21y2zU3NJxajhrt0fwZPHI+8ZlSZKs1rmPXGGM+1H
-	sCvRMNPcaI1oXd3+O4OHEeQMznRuy2+rcW3sXw9b4RHZC+qkkmticQcS+aP73L6l
-	F9AiD4V9/Vyi9Ar4zjMWzJ8oHciiUBhjm1TeZkR8e/xKaunEaS1MjihdpbAWlPFt
-	Ujd35Beeyye8C0NX02uziSfoRHdmSMAIuw+S6jWFbTWZS6r01Dys3iPz2tKTbgle
-	HBL0TOAGIpOIGkm1Z17dAHyJGwtow8eBZ+xrieySqcmFSO2elOT4Tm0D4yMZVp4X
-	FnphFbMXueWhfoNrIj1zFQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742547804; x=
-	1742634204; bh=LEbT5bPhP4WcLW38oXwnbwZDnAF+BgzvO4LRwbs0urQ=; b=4
-	8cHDPDAZKTxz20VisSEmp78kpWp9L10BOI63t4yyNCLxVjDh6A38ALDDxxVgNOn2
-	HVRk1iudMu4KiXWeZOB9F4ATNoF5esEUHVnI2TON9DCmyp7Dyeb9TOUkFNsKGxaQ
-	53N+G19oC5fHKGWEFHsjp3RAUvfyQSxL+GnD1gkfS0lFTOgQHnqhfG9aeCP6MlAb
-	v0M3BKwDFxd2i/qo8i1eqlKiMafUIWEwFq9ErmojD+yoqG0bvKTSrnoTdJ1z9kCD
-	/UkiUUlFNOsF7VG0U8N93NLambZrE4dfYLhV6CVID/WGkJTetpkzrcyaYq162VJ8
-	fY5Vj24JAiojVL8CXN3Hg==
-X-ME-Sender: <xms:WyvdZ1vUgCVAHBf2-ld5VaanSDcjKBI90axcl0vtE5wRZooozLZVyg>
-    <xme:WyvdZ-dIfqxJVKpJ1wR2iaSkNluIGnsDtEUaMxv9rns2zQZFdT4YSQWHFs8ob2tKS
-    6pLuX5R-xxbutazdYg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedtieekucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegtrghtrghlihhnrdhmrghrih
-    hnrghssegrrhhmrdgtohhmpdhrtghpthhtoheptghigidqkhgvrhhnvghlqdhuphhsthhr
-    vggrmhestghigihtvggthhdrtghomhdprhgtphhtthhopehfuhhgrghnghdrughurghnse
-    gtihigthgvtghhrdgtohhmpdhrtghpthhtohepphgvthgvrhdrtghhvghnsegtihigthgv
-    tghhrdgtohhmpdhrtghpthhtohepmhgrrhgtihhnsehjuhhsiihkihgvfihitgiirdgtoh
-    hmrdhplhdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghp
-    thhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprhhosghhse
-    hkvghrnhgvlhdrohhrghdprhgtphhtthhopeifihhllheskhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:WyvdZ4zsmGXN-tX6IEG1VMG842mhYjzOzA1BtsfWle6yrOArGRhlcg>
-    <xmx:WyvdZ8PrlWRu1LA6oEn060yebTb1Ag-AqebjIH87b3By2Q7dwt6Isg>
-    <xmx:WyvdZ19YrjPNr1rAc-u-ofNIqs40tfCCjaalcyFFnqlMxquFvSXLaA>
-    <xmx:WyvdZ8WWG_8MBf2yt3HQFiv3e7gQRrkVgr-LDOeyBXcjVlOK_s-Wfg>
-    <xmx:XCvdZ8XkCG1VoR2k-iT0qkyzlOA75Au0yJWyl33coS3AcNt7gadovbxl>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 4B6622220072; Fri, 21 Mar 2025 05:03:23 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uruPfbQ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8B21C4CEE3;
+	Fri, 21 Mar 2025 09:04:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742547843;
+	bh=8fw7paiuFxV9WqkArmDeFOzxQ4fMfuMVsbglLpRjvSo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=uruPfbQ6Ibea2mcVkJwvG/qhmgSuVdvzisdlkwMcKGC6hKlt2si1BaTJeTK/6OlVB
+	 m28GTejQo3TqU+reqVJGB7NYZ/HF51FLsC6k8l1eaLdNZ3oPqU2Ji37CXJdLQQrzyf
+	 lREvAcAzWY0o6zRbRD2UlYTM6as5feGd/FZn5G6QGoD1KbbPDikWgEKGOpZ9kgEnjg
+	 t+SPN0fyj9SPehxUYikwQLWJvoCXfpQ0vTlCY/ICEdSZlxUmv/sFLdV+MBwDY12iZi
+	 E2KIvhPfxNikwT8MDC+7KnWnrS74YA7y3Vp+2ubZQh17Ijf2GPZV3qjFmomUbZXnat
+	 pZVhQx2PJ30SQ==
+Received: from sofa.misterjones.org ([185.219.108.64] helo=goblin-girl.misterjones.org)
+	by disco-boy.misterjones.org with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.95)
+	(envelope-from <maz@kernel.org>)
+	id 1tvYIL-00FiXX-DQ;
+	Fri, 21 Mar 2025 09:04:01 +0000
+Date: Fri, 21 Mar 2025 09:04:00 +0000
+Message-ID: <86bjtun4an.wl-maz@kernel.org>
+From: Marc Zyngier <maz@kernel.org>
+To: Peter Chen <peter.chen@cixtech.com>
+Cc: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	catalin.marinas@arm.com,
+	will@kernel.org,
+	arnd@arndb.de,
+	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	cix-kernel-upstream@cixtech.com,
+	marcin@juszkiewicz.com.pl,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Fugang Duan <fugang.duan@cixtech.com>
+Subject: Re: [PATCH v4 5/6] arm64: dts: cix: add initial CIX P1(SKY1) dts support
+In-Reply-To: <Z9vmeTj68LmwinPD@nchen-desktop>
+References: <20250305053823.2048217-1-peter.chen@cixtech.com>
+	<20250305053823.2048217-6-peter.chen@cixtech.com>
+	<86frj8m4be.wl-maz@kernel.org>
+	<Z9vmeTj68LmwinPD@nchen-desktop>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM-LB/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL-LB/10.8 EasyPG/1.0.0 Emacs/29.4
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-ThreadId: T1bdb747f5f593b3d
-Date: Fri, 21 Mar 2025 10:00:59 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Peter Chen" <peter.chen@cixtech.com>, "Rob Herring" <robh@kernel.org>,
- krzk+dt@kernel.org, "Conor Dooley" <conor+dt@kernel.org>,
- "Catalin Marinas" <catalin.marinas@arm.com>, "Will Deacon" <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com,
- marcin@juszkiewicz.com.pl, "Fugang . duan" <fugang.duan@cixtech.com>
-Message-Id: <59619096-bfb2-428c-a4f5-2dfb031d126c@app.fastmail.com>
-In-Reply-To: <20250305053823.2048217-7-peter.chen@cixtech.com>
-References: <20250305053823.2048217-1-peter.chen@cixtech.com>
- <20250305053823.2048217-7-peter.chen@cixtech.com>
-Subject: Re: [PATCH v4 6/6] MAINTAINERS: Add CIX SoC maintainer entry
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
+X-SA-Exim-Connect-IP: 185.219.108.64
+X-SA-Exim-Rcpt-To: peter.chen@cixtech.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, cix-kernel-upstream@cixtech.com, marcin@juszkiewicz.com.pl, krzysztof.kozlowski@linaro.org, fugang.duan@cixtech.com
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 
-On Wed, Mar 5, 2025, at 06:38, Peter Chen wrote:
-> +ARM/CIX SKY ARM ARCHITECTURE
-> +M:     Peter Chen <peter.chen@cixtech.com>
-> +M:     Fugang Duan <fugang.duan@cixtech.com>
-> +R:     CIX Linux Kernel Upstream Group <cix-kernel-upstream@cixtech.com>
-> +L:     linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-> +S:     Maintained
-> +F:     Documentation/devicetree/bindings/arm/cix.yaml
-> +F:     arch/arm64/boot/dts/cix/sky1-orion-o6.dts
-> +F:     arch/arm64/boot/dts/cix/sky1.dtsi
-> +
+On Thu, 20 Mar 2025 09:57:13 +0000,
+Peter Chen <peter.chen@cixtech.com> wrote:
+> 
+> On 25-03-20 09:36:37, Marc Zyngier wrote:
+> > Peter Chen <peter.chen@cixtech.com> wrote:
+> > >
+> > > +     pmu-a520 {
+> > > +             compatible = "arm,cortex-a520-pmu";
+> > > +             interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_partition0>;
+> > > +     };
+> > > +
+> > > +     pmu-a720 {
+> > > +             compatible = "arm,cortex-a720-pmu";
+> > > +             interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_LOW &ppi_partition1>;
+> > > +     };
+> > > +
+> > > +     pmu-spe {
+> > > +             compatible = "arm,statistical-profiling-extension-v1";
+> > > +             interrupts = <GIC_PPI 5 IRQ_TYPE_LEVEL_LOW 0>;
+> > > +     };
+> > 
+> > SPE should follow the same model as the PMU, as each CPU has its own
+> > SPE implementation, exposing different micro-architectural details.
+> > 
+> 
+> Hi Marc,
+> 
+> Thanks for your reply. But there is only one compatible string
+> "statistical-profiling-extension-v1" at drivers/perf/arm_spe_pmu.c,
+> how could differentiate pmu-spe-a720 and pmu-spe-a520, do I need
+> to change arm_spe_pmu.c as well?
 
-Looks good to me. You can also add a regex keyword entry such as
+I don't think there is a need to have different compatible. The driver
+can probe which CPU this is on, and work out the implemented
+subfeatures from the PMSIDR_EL1 register. New compatible strings are
+better avoided when there is a way to probe/discover the HW (and in
+most cases, there is).
 
-K:       \bcix\b
+Note that this equally applies to TRBE, which also explicitly deals
+with interrupt partitioning and yet only has a single compatible.
+Please consider adding TRBE support when you repost this series.
 
-to match any filenames that have 'cix' as a whole word.
+Thanks,
 
-    Arnd
+	M.
+
+-- 
+Without deviation from the norm, progress is not possible.
