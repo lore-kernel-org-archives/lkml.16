@@ -1,48 +1,48 @@
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27197235359
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:16:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00E09236429
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742598989; cv=none; b=cfNzDjwe+32XcGPu0LVbPkj+iVs7hDq4pFjHRbAP+bCEgANkNOqMqCEnJwT6MDPOt9ziNaH4/Did9YUuEzyF9NAtkyXHYPMxEJeEy8qFgfHUAnOd+1reHMZxBPr50Cys493pH17lQFnmaj08diyT1kfZ+3/OP0WnhD/GXyp6lkc=
+	t=1742598991; cv=none; b=qEBunqaBogSsdTTOvAj+DNlm3K2z7mvyaiQ3dIG4Y+9aAfVvYsmL9nJ1QpVjwvCNDPn2OmPVP7xh7wCFnIMp5065KRqAGNVWrBG5mb3FoDHN/UMh4AS1dtsV5hMG5dkwVVw/q2e9nJfF6XLmO68iO3P7TPTnEMZMYuc9ktz1vYs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742598989; c=relaxed/simple;
-	bh=wNOnSyJUZyVtqGVHCJp5/qbvQ2/t2PXiy9nfB0mLrQE=;
+	s=arc-20240116; t=1742598991; c=relaxed/simple;
+	bh=iQ4XRfxumCrPk7mdvf5ER8BlfKFGvFPe6nhxNpLfbL4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hXFisfvconLa+GYRV50NwcH8c7jmz+VX1k7JTjHsah9V/bX7bWAApVuzpwc7LhXxFYoFWCcFGDfvujiBcjMgTrhCB+L6PHJs6WJT+ZJ7ZLyIJig0YamfCMVMGKKbABfTkwAO41CE4CeYgI/iAz+BHi6i0QempvghXgIHHet1zzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=EJVDO9M+; arc=none smtp.client-ip=198.175.65.20
+	 MIME-Version; b=ZSLH1d7sO2SX97iHSCXiBpNR6TxtiSwJmojtKgJ73YQQxeayLEZ1BJ2jAMQ7XQ1GN4oeZOKP4xV7DxqqIJ//CNcmdWHq8c/YSHIcfXiDKirqMN6XQAGY1zGmVhyWIV4kuipnQSebxa+8nbdpewInhozyAbctOgIZxXFk8Yh4z8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hmUkkChe; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="EJVDO9M+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hmUkkChe"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742598988; x=1774134988;
+  t=1742598990; x=1774134990;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version:content-transfer-encoding;
-  bh=wNOnSyJUZyVtqGVHCJp5/qbvQ2/t2PXiy9nfB0mLrQE=;
-  b=EJVDO9M+r9TW+I8P+InLbFDu7xCPm9pw2MK1N5TLnvV7DwoaPw8+VnPP
-   4oDUYZ+/jo23nZQwCmdAc+PTdF/VNPRiUHYJ5AcAA4c1RYH2UMzJ8rwsM
-   L86pMmG6HdBHvGZa4g+TT2AHli/sh1qc7JPaivPIoUtj3DXt+W49s/HM+
-   /Puf7zBH2no3rbs8WRoVednJJ9j4AprJsl7i4qAThtyEOJz3RembyqSkm
-   DxoQqD9bFjLR1b/8Ne7oj/+S3szjjn2dfV2dVyVxkhwxagopiw9yu9B88
-   1r5ERBK4H1hY2KL/+FVJDigsxCboSUBiUCOBI92ux+NGnw8i+L77wdJNg
-   Q==;
-X-CSE-ConnectionGUID: 1uTu1Sm7TUm8FiiX37VEJw==
-X-CSE-MsgGUID: PwJQfiBOSxKwDjntgiJZrg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43604628"
+  bh=iQ4XRfxumCrPk7mdvf5ER8BlfKFGvFPe6nhxNpLfbL4=;
+  b=hmUkkChe9B/o/Cw8DoG9TdLKggW0hOvM3SU0pFBQiHRlBJZ0jc3SMpkE
+   KzmhhHg2Sghi8ycExiHeNdmf38F8NzN6t2YTLlLjYl1Pn9bjCbnZQEZNS
+   OIpsOfM7c96c3v24not/Uh22pWcvl3KOUKt3DWDbq+W1JX6Gq8uWd4Tng
+   91meLFxaGzFtIWrAg7fK7A7vPFsEB0yQn8JVkHz8ICTuyW0vsSmC73T9q
+   mmjRFVRqk7hN3kqEg1Wpu8JBxNcXgtpOi0T2ef4aEdLh61zyZ4i+HXbfu
+   kJoZLrsPtEGQ/ryzOAe/7KywwyOLorRunCvDUsQlGWoo7bvR7jmY2wGZA
+   A==;
+X-CSE-ConnectionGUID: kkIN8noIQw6oNB2a+mehkg==
+X-CSE-MsgGUID: qrg5efFwRMeg3urpgCsBOg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43604648"
 X-IronPort-AV: E=Sophos;i="6.14,266,1736841600"; 
-   d="scan'208";a="43604628"
+   d="scan'208";a="43604648"
 Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 16:16:24 -0700
-X-CSE-ConnectionGUID: BewV8rCOQeuMTEO0qpwK+w==
-X-CSE-MsgGUID: PUbPB3lBSMSUITyGOuN4CA==
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 16:16:25 -0700
+X-CSE-ConnectionGUID: BrTXd7TkSlSdWQOmQPpMvQ==
+X-CSE-MsgGUID: qg9vHMitRYO1/cE0Bsq3Rw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.14,266,1736841600"; 
-   d="scan'208";a="128354324"
+   d="scan'208";a="128354336"
 Received: from agluck-desk3.sc.intel.com ([172.25.222.70])
-  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 16:16:23 -0700
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 16:16:25 -0700
 From: Tony Luck <tony.luck@intel.com>
 To: Fenghua Yu <fenghuay@nvidia.com>,
 	Reinette Chatre <reinette.chatre@intel.com>,
@@ -55,9 +55,9 @@ To: Fenghua Yu <fenghuay@nvidia.com>,
 Cc: linux-kernel@vger.kernel.org,
 	patches@lists.linux.dev,
 	Tony Luck <tony.luck@intel.com>
-Subject: [PATCH v2 12/16] x86/resctrl: Build lookup table for package events
-Date: Fri, 21 Mar 2025 16:16:02 -0700
-Message-ID: <20250321231609.57418-13-tony.luck@intel.com>
+Subject: [PATCH v2 15/16] x86/resctrl: Enable package event monitoring
+Date: Fri, 21 Mar 2025 16:16:05 -0700
+Message-ID: <20250321231609.57418-16-tony.luck@intel.com>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250321231609.57418-1-tony.luck@intel.com>
 References: <20250321231609.57418-1-tony.luck@intel.com>
@@ -69,57 +69,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The resctrl filesystem saves the evt_type in the private data pointer
-of the kernfs_node of each file in the mon_data directories.
+All the code to support this is in place. Unconditionally enable
+the package resource during early initialization so that domain
+lists are built.
 
-To print the values for each file the show() function will need to map
-from this evtid to:
-
-num_rmids - to make sure data for this file exists
-guid - to pick the pmt_event(s) for each package
-stride/offset - to compute MMIO offset for this RMID/event
-
-Build a lookup table for each event to save searching through
-lists and add macros for ease of use.
+Enumeration of the package events happens at first mount, if there
+are no package scoped events, then this resource is disabled.
 
 Signed-off-by: Tony Luck <tony.luck@intel.com>
 ---
- arch/x86/kernel/cpu/resctrl/intel_aet.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+ arch/x86/kernel/cpu/resctrl/intel_aet.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/x86/kernel/cpu/resctrl/intel_aet.c b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-index 9ac912742ef1..bab8e4de26b3 100644
+index 28692c6ec425..593e838fe5b6 100644
 --- a/arch/x86/kernel/cpu/resctrl/intel_aet.c
 +++ b/arch/x86/kernel/cpu/resctrl/intel_aet.c
-@@ -39,6 +39,18 @@ enum pmt_event_id {
- 	PMT_NUM_EVENTS
- };
+@@ -293,6 +293,8 @@ int rdt_get_intel_aet_mon_config(void)
  
-+static struct evtinfo {
-+	struct telem_entry	*telem_entry;
-+	struct pmt_event	*pmt_event;
-+} evtinfo[PMT_NUM_EVENTS];
+ 	INIT_LIST_HEAD(&r->evt_list);
+ 
++	r->mon_capable = true;
 +
-+#define EVT_NUM_RMIDS(evtid)	(evtinfo[evtid].telem_entry->num_rmids)
-+#define EVT_STRIDE(evtid)	(evtinfo[evtid].telem_entry->stride)
-+#define EVT_GUID(evtid)		(evtinfo[evtid].telem_entry->guid)
-+
-+#define EVT_OFFSET(evtid)	(evtinfo[evtid].pmt_event->evt_offset)
-+#define EVT_TYPE(evtid)		(evtinfo[evtid].pmt_event->evt_type)
-+
- /**
-  * enum evt_type - Type for values for each event.
-  * @EVT_U64:	Integer up to 64 bits
-@@ -328,6 +340,9 @@ void rdt_get_intel_aet_mount(void)
- 		for (int i = 0; (*tentry)->evts[i].evt.name; i++) {
- 			evt = &(*tentry)->evts[i].evt;
- 			list_add_tail(&evt->list, &r->evt_list);
-+
-+			evtinfo[evt->evtid].telem_entry = *tentry;
-+			evtinfo[evt->evtid].pmt_event = &(*tentry)->evts[i];
- 			ret = true;
- 		}
- 		if (!r->num_rmid)
+ 	return 1;
+ }
+ 
 -- 
 2.48.1
 
