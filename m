@@ -1,277 +1,175 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9FA51E492D;
-	Fri, 21 Mar 2025 17:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40BA1CAA80;
+	Fri, 21 Mar 2025 17:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742577753; cv=none; b=S3E1bNnORV5Uek+/zfnnZkDa5Dj1Jx41ngabaEAJ5ovSnIp53GudkErVgVJP/ZfFYiR8PWewIINnsBPjXtztz5pB1qrfr5ox59zg5aFK4rfzyButuiECRV35BNcabKsG0QnOT0qlJ1HkVG/pYUCbQk68EXca8fpc5XlhZoCBaCo=
+	t=1742577792; cv=none; b=JFcslEYkp+w3tS8Ays+CptSUcWIkGqL0mWTPt5bJGw783yDOQQX0WEjb5lZho5A6kDzjlSE5QGLa3jeF2oYCQ/JPOyoXnobX1ppReI6o59/BViUgFRhMMccRr8a53P06uhmoVIaV9AubCdY6noBqvIpWeTTTbqtAeWG74YgLc2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742577753; c=relaxed/simple;
-	bh=9yJe3cG2BOMYrflBr3vW78WFW6QZDL9eRuM8AXZ6BHA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R1sdUGkvhrNrQqMGOUb5/GdE2V64/x0gndCDc8TJQF+3sdXoIZVIVO/PYLD++eEvqD977NUC9zh4UHvnFvXplt1CgnxlkRht1S0fpZKeZClv3W6hx9Yi862TA64x1Da1T1FKpvcYMy3RI2NSP5JrC5Jax0OZHeSMU0js35F7m84=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=ZPVq7b25; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1742577792; c=relaxed/simple;
+	bh=ALF8uIdVgunXcUP0TGmP+eJ0CmXSJCrrrJygn06nOiM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gLYK0/6ZaZFKI7F7aMjAREqEOYwDFu2rl3lZM5X2V96FBeuNuTp0D6ucoYa8/M25eQB1USFak2Y3MX0K7qrM/sQdmU21Q06r8flppfcLqtTsRNPGkyY3Mii3n6Ju2/xZuRnakMP+TmVLB+oxxlOGGO6BjANKwWx01bHXghfuATk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eBW8ma+y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ZPVq7b25"
-Received: from Monstersaurus.lan (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id B1A362C5;
-	Fri, 21 Mar 2025 18:20:44 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1742577645;
-	bh=9yJe3cG2BOMYrflBr3vW78WFW6QZDL9eRuM8AXZ6BHA=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eBW8ma+y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E527EC4CEE3;
+	Fri, 21 Mar 2025 17:23:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742577792;
+	bh=ALF8uIdVgunXcUP0TGmP+eJ0CmXSJCrrrJygn06nOiM=;
 	h=From:To:Cc:Subject:Date:From;
-	b=ZPVq7b25iHFHI1bJLl64Df/ufCNyMX+TxYhSjvG+SuxGn8P0p8R7fFKjR404ePuCv
-	 9zf+Rdi1JwerF2cLxjqQJ9xwhJFSE21Ut+BIefwTZHnKWiY4+x3CLkRQTrSrApQHgW
-	 TM77fWs4iCWVGfzXTt4aKzpL0slNZje3rFeSOCVM=
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	linux-renesas-soc@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	dri-devel@lists.freedesktop.org
-Cc: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>
-Subject: [PATCH] drm: renesas: Extend RZ/G2L supported KMS formats
-Date: Fri, 21 Mar 2025 17:22:19 +0000
-Message-ID: <20250321172220.867165-1-kieran.bingham@ideasonboard.com>
-X-Mailer: git-send-email 2.48.1
+	b=eBW8ma+yGXEACHnQAT1uqCIasZxE+WTQAkhXFnS+npwir/3VFXtY26bPunv+XNyie
+	 HXe2TQFw5JeR1PdFheb4r8SzpNDZBViEIuPRWOSUby7cpKPiRYbn0V0/YoKbAhAMLP
+	 bVrKSeVO0XCvKZ1DSdggUHL/cGAmmjLRZII7U/4MfA3ZI4kKXCj6/szJ18VuAjIaA1
+	 nKAGWI+pLSPB3z2Qs8nPyTLdaWS/z4pnzncmOhuj5cKdFycyEYg+Thr+SJfiClyoBr
+	 WwGfXxszZm2EmNC2yod//zm6wXOk45HpDDiCLXxiZdcGjMsfULmzFki42xlCA7G6Bw
+	 teEvcE3LTNWog==
+From: Conor Dooley <conor@kernel.org>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: conor@kernel.org,
+	Conor Dooley <conor.dooley@microchip.com>,
+	Daire McNamara <daire.mcnamara@microchip.com>,
+	pierre-henry.moussay@microchip.com,
+	valentina.fernandezalanis@microchip.com,
+	Michael Turquette <mturquette@baylibre.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Lee Jones <lee@kernel.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-riscv@lists.infradead.org,
+	linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH v2 0/9] Redo PolarFire SoC's mailbox/clock devicestrees and related code
+Date: Fri, 21 Mar 2025 17:22:33 +0000
+Message-ID: <20250321-cuddly-hazily-d0ab1e1747b5@spud>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5347; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=v72IsBW2yUvcvDH5N5nR2Mvll104/cwB1qRKakjs864=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOl3F0TsqLATvPxVRrIrN5V7uvMEKb4CgYjTKz6qJL0Qf x7nlbito5SFQYyDQVZMkSXxdl+L1Po/Ljuce97CzGFlAhnCwMUpABPhXMfwv9Q1fMecYmvxSw6B LDGv47mD0pvm3F3r0Ka2YfPJA1yzmhkZ5gqdytFb+in49i4/N0VRhRkCp+S1DpufCZPjTl/R+u8 lMwA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
 
-From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+From: Conor Dooley <conor.dooley@microchip.com>
 
-The RZ/G2L driver utilises the VSPD to read data from input sources.
+(Back to RFC again, as I'm really just wanting to hear from Stephen on
+what I did with the regmap clocks, and if it was what he was looking
+for)
 
-The rzg2l_du_kms component lists a restricted subset of the capabilities
-of the VSPd which prevents additional formats from being used for
-display planes.
+Yo,
 
-The supported display plane formats are mapped in rzg2l_du_vsp_formats[].
+Here's something that I've been mulling over for a while, since I
+started to understand how devicetree stuff was "meant" to be done.
+There'd been little reason to actually press forward with it, because it
+is fairly disruptive. I've finally opted to do it, because a user has
+come along with a hwmon driver that needs to access the same register
+region as the mailbox and the author is not keen on using the aux bus,
+and because I do not want the new pic64gx SoC that's based on PolarFire
+SoC to use bindings etc that I know to be incorrect.
 
-Extend the rzg2l_du_format_infos[] table with the corresponding mappings
-between the supported DRM formats and the formats exposed by the VSP in
-rzg2l_du_vsp_formats, maintaining the same ordering in both tables.
+Given backwards compatibility needs to be maintained, this patch series
+isn't the prettiest thing I have ever written. The reset driver needs to
+retain support for the auxiliary bus, which looks a bit mess, but not
+much can be done there. The mailbox and clock drivers both have to have
+an "old probe" function to handle the old layout. Thankfully in the
+clock driver, regmap support can be used to identically
+handle both old and new devicetree formats - but using a regmap in the
+mailbox driver was only really possible for the new format, so the code
+there is unfortunately a bit of an if/else mess that I'm both not proud
+of, nor really sure is worth "improving".
 
-Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
----
- drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c | 141 ++++++++++++++++++-
- 1 file changed, 136 insertions(+), 5 deletions(-)
+The series should be pretty splitable per subsystem, only the dts change
+has some sort of dependency, but I'll not be applying that till
+everything else is in Linus' tree, so that's not a big deal.
 
-Prior to this patch, kmstest reports all of these formats as supported
-by the Planes, but using them fails during rzg2l_du_fb_create() as the
-corresponding format isn't found in rzg2l_du_format_info.
+I don't really want this stuff in stable, hence a lack of cc: stable
+anywhere here, since what's currently in the tree works fine for the
+currently supported hardware.
 
-This patch now lets me capture and render pixelformats from the Mali-C55
-direct to an attached DSI panel on the Kakip board.
+AFAIK, the only other project affected here is U-Boot, which I have
+already modified to support the new format.
 
-Patch tested with kms-tests:
+I previously submitted this as an RFC, only to Lee and the dt list, in
+order to get some feedback on the syscon/mfd bindings:
+https://lore.kernel.org/all/20240815-shindig-bunny-fd42792d638a@spud/
+I'm not really going to bother with a proper changelog, since that was
+submitted with lots of WIP code to get answers to some questions. The
+main change was "removing" some of the child nodes of the syscons.
 
-PYTHONPATH=/usr/lib/aarch64-linux-gnu/python3.11/site-packages ./tests/kms-test-formats.py 
-Testing plane formats: SUCCESS
+and as a "real" series where discussion lead to me dropping use of the
+amlogic clk-regmap support:
+https://lore.kernel.org/linux-clk/20241002-private-unequal-33cfa6101338@spud/
+As a result of that, I've implemented what I think Stephen was asking
+for - but I'm not at all sure that it is..
 
-admin@kakip:~/kms-tests$ cat FormatsTest.log 
-U [66.967523] Testing plane formats
-U [66.975763] Testing connector DSI-1, CRTC 36, mode 720x1280
-U [66.978480] Testing format PixelFormat.RGB332
-U [70.143998] Testing format PixelFormat.ARGB4444
-U [73.357056] Testing format PixelFormat.XRGB4444
-U [76.574944] Testing format PixelFormat.ARGB1555
-U [79.805636] Testing format PixelFormat.XRGB1555
-U [83.016599] Testing format PixelFormat.RGB565
-U [86.230362] Testing format PixelFormat.BGR888
-U [89.444673] Testing format PixelFormat.RGB888
-U [92.677093] Testing format PixelFormat.BGRA8888
-U [95.904745] Testing format PixelFormat.BGRX8888
-U [99.119926] Testing format PixelFormat.ARGB8888
-U [102.350298] Testing format PixelFormat.XRGB8888
-U [105.579499] Testing format PixelFormat.UYVY
-U [108.878654] Testing format PixelFormat.YUYV
-U [112.176515] Testing format PixelFormat.YVYU
-U [115.470090] Testing format PixelFormat.NV12
-U [118.767513] Testing format PixelFormat.NV21
-U [122.065851] Testing format PixelFormat.NV16
-U [125.364001] Testing format PixelFormat.NV61
-U [128.662145] Testing format PixelFormat.YUV420
-U [131.978102] Testing format PixelFormat.YVU420
-U [135.292284] Testing format PixelFormat.YUV422
-U [138.623485] Testing format PixelFormat.YVU422
-U [141.955083] Testing format PixelFormat.YUV444
-U [145.336759] Testing format PixelFormat.YVU444
-U [148.761832] Test completed successfully
+Cheers,
+Conor.
 
+CC: Conor Dooley <conor.dooley@microchip.com>
+CC: Daire McNamara <daire.mcnamara@microchip.com>
+CC: pierre-henry.moussay@microchip.com
+CC: valentina.fernandezalanis@microchip.com
+CC: Michael Turquette <mturquette@baylibre.com>
+CC: Stephen Boyd <sboyd@kernel.org>
+CC: Rob Herring <robh@kernel.org>
+CC: Krzysztof Kozlowski <krzk+dt@kernel.org>
+CC: Jassi Brar <jassisinghbrar@gmail.com>
+CC: Lee Jones <lee@kernel.org>
+CC: Paul Walmsley <paul.walmsley@sifive.com>
+CC: Palmer Dabbelt <palmer@dabbelt.com>
+CC: Philipp Zabel <p.zabel@pengutronix.de>
+CC: linux-riscv@lists.infradead.org
+CC: linux-clk@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
 
-diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c b/drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c
-index b1266fbd9598..a5e96f863172 100644
---- a/drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c
-+++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c
-@@ -36,8 +36,61 @@
- 
- static const struct rzg2l_du_format_info rzg2l_du_format_infos[] = {
- 	{
--		.fourcc = DRM_FORMAT_XRGB8888,
--		.v4l2 = V4L2_PIX_FMT_XBGR32,
-+		.fourcc = DRM_FORMAT_RGB332,
-+		.v4l2 = V4L2_PIX_FMT_RGB332,
-+		.bpp = 8,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_ARGB4444,
-+		.v4l2 = V4L2_PIX_FMT_ARGB444,
-+		.bpp = 16,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_XRGB4444,
-+		.v4l2 = V4L2_PIX_FMT_XRGB444,
-+		.bpp = 16,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_ARGB1555,
-+		.v4l2 = V4L2_PIX_FMT_ARGB555,
-+		.bpp = 16,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_XRGB1555,
-+		.v4l2 = V4L2_PIX_FMT_XRGB555,
-+		.bpp = 16,
-+		.planes = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_RGB565,
-+		.v4l2 = V4L2_PIX_FMT_RGB565,
-+		.bpp = 16,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_BGR888,
-+		.v4l2 = V4L2_PIX_FMT_RGB24,
-+		.bpp = 24,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_RGB888,
-+		.v4l2 = V4L2_PIX_FMT_BGR24,
-+		.bpp = 24,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_BGRA8888,
-+		.v4l2 = V4L2_PIX_FMT_ARGB32,
-+		.bpp = 32,
-+		.planes = 1,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_BGRX8888,
-+		.v4l2 = V4L2_PIX_FMT_XRGB32,
- 		.bpp = 32,
- 		.planes = 1,
- 		.hsub = 1,
-@@ -48,11 +101,89 @@ static const struct rzg2l_du_format_info rzg2l_du_format_infos[] = {
- 		.planes = 1,
- 		.hsub = 1,
- 	}, {
--		.fourcc = DRM_FORMAT_RGB888,
--		.v4l2 = V4L2_PIX_FMT_BGR24,
--		.bpp = 24,
-+		.fourcc = DRM_FORMAT_XRGB8888,
-+		.v4l2 = V4L2_PIX_FMT_XBGR32,
-+		.bpp = 32,
- 		.planes = 1,
- 		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_UYVY,
-+		.v4l2 = V4L2_PIX_FMT_UYVY,
-+		.bpp = 16,
-+		.planes = 1,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_YUYV,
-+		.v4l2 = V4L2_PIX_FMT_YUYV,
-+		.bpp = 16,
-+		.planes = 1,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_YVYU,
-+		.v4l2 = V4L2_PIX_FMT_YVYU,
-+		.bpp = 16,
-+		.planes = 1,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_NV12,
-+		.v4l2 = V4L2_PIX_FMT_NV12M,
-+		.bpp = 12,
-+		.planes = 2,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_NV21,
-+		.v4l2 = V4L2_PIX_FMT_NV21M,
-+		.bpp = 12,
-+		.planes = 2,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_NV16,
-+		.v4l2 = V4L2_PIX_FMT_NV16M,
-+		.bpp = 16,
-+		.planes = 2,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_NV61,
-+		.v4l2 = V4L2_PIX_FMT_NV61M,
-+		.bpp = 16,
-+		.planes = 2,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_YUV420,
-+		.v4l2 = V4L2_PIX_FMT_YUV420M,
-+		.bpp = 12,
-+		.planes = 3,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_YVU420,
-+		.v4l2 = V4L2_PIX_FMT_YVU420M,
-+		.bpp = 12,
-+		.planes = 3,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_YUV422,
-+		.v4l2 = V4L2_PIX_FMT_YUV422M,
-+		.bpp = 16,
-+		.planes = 3,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_YVU422,
-+		.v4l2 = V4L2_PIX_FMT_YVU422M,
-+		.bpp = 16,
-+		.planes = 3,
-+		.hsub = 2,
-+	}, {
-+		.fourcc = DRM_FORMAT_YUV444,
-+		.v4l2 = V4L2_PIX_FMT_YUV444M,
-+		.bpp = 24,
-+		.planes = 3,
-+		.hsub = 1,
-+	}, {
-+		.fourcc = DRM_FORMAT_YVU444,
-+		.v4l2 = V4L2_PIX_FMT_YVU444M,
-+		.bpp = 24,
-+		.planes = 3,
-+		.hsub = 1,
- 	}
- };
- 
+Conor Dooley (9):
+  dt-bindings: mfd: syscon document the control-scb syscon on PolarFire
+    SoC
+  dt-bindings: soc: microchip: document the simple-mfd syscon on
+    PolarFire SoC
+  soc: microchip: add mfd drivers for two syscon regions on PolarFire
+    SoC
+  reset: mpfs: add non-auxiliary bus probing
+  dt-bindings: clk: microchip: mpfs: remove first reg region
+  riscv: dts: microchip: fix mailbox description
+  riscv: dts: microchip: convert clock and reset to use syscon
+  clk: divider, gate: create regmap-backed copies of gate and divider
+    clocks
+  clk: microchip: mpfs: use regmap clock types
+
+ .../bindings/clock/microchip,mpfs-clkcfg.yaml |  36 ++-
+ .../devicetree/bindings/mfd/syscon.yaml       |   2 +
+ .../microchip,mpfs-mss-top-sysreg.yaml        |  49 ++++
+ arch/riscv/boot/dts/microchip/mpfs.dtsi       |  34 ++-
+ drivers/clk/Kconfig                           |   8 +
+ drivers/clk/Makefile                          |   2 +
+ drivers/clk/clk-divider-regmap.c              | 270 ++++++++++++++++++
+ drivers/clk/clk-gate-regmap.c                 | 253 ++++++++++++++++
+ drivers/clk/clk-gate.c                        |   5 +-
+ drivers/clk/microchip/Kconfig                 |   4 +
+ drivers/clk/microchip/clk-mpfs.c              | 151 ++++++----
+ drivers/reset/reset-mpfs.c                    |  81 ++++--
+ drivers/soc/microchip/Kconfig                 |  13 +
+ drivers/soc/microchip/Makefile                |   1 +
+ drivers/soc/microchip/mpfs-control-scb.c      |  45 +++
+ drivers/soc/microchip/mpfs-mss-top-sysreg.c   |  48 ++++
+ include/linux/clk-provider.h                  | 120 ++++++++
+ 17 files changed, 1026 insertions(+), 96 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/microchip/microchip,mpfs-mss-top-sysreg.yaml
+ create mode 100644 drivers/clk/clk-divider-regmap.c
+ create mode 100644 drivers/clk/clk-gate-regmap.c
+ create mode 100644 drivers/soc/microchip/mpfs-control-scb.c
+ create mode 100644 drivers/soc/microchip/mpfs-mss-top-sysreg.c
+
 -- 
-2.48.1
+2.45.2
 
