@@ -1,94 +1,64 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2139413635C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA478F6B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:10:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742566217; cv=none; b=kE/S/Z+qrwgeYeS6ZGfnrRIb8p0sKmVrvdqkdpxuhPq5QBVkfH92z80zTQ9QUZf6CKkxRqLKNjzRRvfKaEiHHaWA0Q8L94ZiF+ja0sz2wJRaVSUADkKjkR11YQkAu2M/YbKxGAK4fcgXLQjxd14678p1JIzhxoWEmRrSFT4s0nY=
+	t=1742566254; cv=none; b=E41MJ0ppDzXaslSRPg6QsvVIkiiLO+oxeyUpq6LCx8zjDE86IFNgTnnr1xnsP4CHihQbMpueSA62TmQTIwfFJPefbVgglH+F6NfZxDau6d71SlBtQNF7so5IkDP7E4azlA/izj+n5fpga9Q+TCZp6uALw5l9BGbdKy52LmYHycw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742566217; c=relaxed/simple;
-	bh=ne4NB3gZ6I1uUrWFR8M4TAie5xGzGfHf5c25p2bb9fM=;
+	s=arc-20240116; t=1742566254; c=relaxed/simple;
+	bh=Bn8WmnLE1Xfs2Q5++tSyH6lu/aVCwD+OhBnLFKqtyH4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uhi4//cvkXQt6CtsnaaGqj6XjueSt6Zlc2kddTz3ywBwW0vKDpMuoQoizghAfMg/qns19f9QIuQ3It0A4nErC0aMvrqMOl5WwCyreZWPbw0qNMxh8uocUUe2OINkIEFevhYtYNERP7YGUafxBzcPHRGJDR/q2mg9FUtbgudnQgA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=lO/PJpCl; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=fixGbXYBTqPGoYXmgKKJo3D236IrW4AvwI0EUfLhTHUM+hev34xlw3nvdNi70+ZFCUYjEiLSUxIULOYQHTnRtw493fiHLq4pSkA/7Io1fYEQQsj+Vk7gDzTzEIqtGEvQVXnJJVnbvakjA0jor0vALw/diYwe2ylDX3KZ6TalQ9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Uwh+Xj8K; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="lO/PJpCl"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LCTHvg011389
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:10:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=rABlXrO/d+EA/FemZvTG4T8Y
-	szCxU8QYVwj9/zb8Fxg=; b=lO/PJpClRKjsCCzvlj+u5eNER+cRh1Cj6kCZY9r7
-	X5a3SMYE/apIkt0wf6i1Zoaiuz1RuQYaguqLI/dOTTobkjx7PXdEFNLx8ieJ3XQe
-	4KiMFpgjse3rzo9Rw/pFz3GDhNVwp4C1uybWSC4PmnUFKaS2ZT3d2FrmaFSp2hv5
-	0zacoC8bwVY5mN82bN9Nv/ORT9/PTgnZqcignIQYh05bO5ADTOpB/qv5eZjIDkSm
-	RiRSFJfwAnvJibzTxlY26J26TCyid8kY2HQxlzIynacl36ddqJCfSEVrjxdo3Ptj
-	EserzgTJosPCUxjuR+0K77EE0kdVPyh8Qe+mV13EKkXH5Q==
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h85e08v3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:10:13 +0000 (GMT)
-Received: by mail-qk1-f199.google.com with SMTP id af79cd13be357-7c5b9333642so177338885a.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:10:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742566213; x=1743171013;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rABlXrO/d+EA/FemZvTG4T8YszCxU8QYVwj9/zb8Fxg=;
-        b=omvFgnry3N5VN1Ght4QEtofm6A/WfN35V+z/HWuLVmpwyzpn8kIop2H1ncgGBaWpQV
-         bfjG/xjkJB8n0I0golucgvSYE6IlbZEe36/cVAMWZXMw02K/Obi93CW/4HkFJvSvNdBG
-         6agszKMJEiXrHOoFqcKhgNjlOPfQZIzNWctgzor/8VawNlKPuO/4jiSAD/g97HJupJx/
-         ltZcPoGRYk76fCCLUmgE/jS1T2ltRlWczt6S7eAJ2RFmzNcW5T45aViwOPjHb4GHNGZ8
-         7R9CtUOjbVeia3FIBiU07hzvpa0dcGRagzhhl8KVM7baOODwbMwbmqkWJzmhVZFT8qa5
-         AG9w==
-X-Forwarded-Encrypted: i=1; AJvYcCW3MAYibceMArsH8VcLvZmzJBDcdjDujdOYEZ3fNISlhO9Zvq7lal7snaUKUqdlUA/r4+udF0Et1drdoHA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyF1NdqSanLV22EvQOe+1uNiXOGtfuI2XjHwpyxoGu9MMg9OoJx
-	FRMfJyz4VvVle418LWizGLDA80PKN66oQ3KQFYB4am4a1zRQ/xCgvFPUZw0ai8PvBkPMlJbtp52
-	hZeH1hCUYmW25w7pWXENzadYsKkxMnH49VzNTaOPWJa8WHcQFNE3WuTHGU7RQUKQ=
-X-Gm-Gg: ASbGnctTuKVzhxFlxcBaxrVqqLTZL4KUx0KRgtq/zQglGJx4EUs6sqSOKCvxnkhIl2o
-	r/Oqj/SmC/shFhyb7MeGLjPVE858RSEfeQet2vQmlIdYdYKzHaBHbOEu2z4UL1nftIwAKBVqaMm
-	KvbM7MkFUC0uIfTmx50jKjMdAjqBxFYI/JqXK9aHgyXAc2BoZgyOAMdWEp7vfysG2tDp3Czx6Ph
-	oSkDiSFRgBfZ8KOYNaMsF2FoBczOjiQKKhXd7XfkeaZjM8y1+8BUjvL+KSvms6133d1cPbIGGo1
-	E8Ok9BkGpAtNJPhRRPhjJCvx+FNkFYxF9ycBPdK9U671jJMBNDbz2olGXw/XUD5ONgObuLzuxDL
-	6l8E=
-X-Received: by 2002:a05:620a:d8c:b0:7c5:467f:d131 with SMTP id af79cd13be357-7c5ba20fdcamr622376585a.36.1742566213079;
-        Fri, 21 Mar 2025 07:10:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEawjUzzoOOPdXrB4GX6jW7PuG5YFKtC8HWJqSmrI1KdldomofdQxJXVLISONgTpppCxQmwwQ==
-X-Received: by 2002:a05:620a:d8c:b0:7c5:467f:d131 with SMTP id af79cd13be357-7c5ba20fdcamr622370685a.36.1742566212608;
-        Fri, 21 Mar 2025 07:10:12 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad6510635sm188980e87.211.2025.03.21.07.10.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 07:10:10 -0700 (PDT)
-Date: Fri, 21 Mar 2025 16:10:07 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: george.moussalem@outlook.com
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Nitheesh Sekar <quic_nsekar@quicinc.com>,
-        Varadarajan Narayanan <quic_varada@quicinc.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Lorenzo Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        20250317100029.881286-2-quic_varada@quicinc.com,
-        Sricharan Ramabadhran <quic_srichara@quicinc.com>
-Subject: Re: [PATCH v6 2/6] phy: qualcomm: qcom-uniphy-pcie 28LP add support
- for IPQ5018
-Message-ID: <ch7lwxgenn6hkvkvejns4buignew7k3fzpxx4zjtqcdrmvsahb@pkg53i5mqke7>
-References: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
- <20250321-ipq5018-pcie-v6-2-b7d659a76205@outlook.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Uwh+Xj8K"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742566252; x=1774102252;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Bn8WmnLE1Xfs2Q5++tSyH6lu/aVCwD+OhBnLFKqtyH4=;
+  b=Uwh+Xj8K4JWmsBp8BiRVuPvkWsZXVKVgk52hnT5bcIlr4CYtQEpnaZW6
+   /8te1L6S2GrMc59OmmGjQtHxO2FanhR3pGLjhhFlktuapF0Q4akdFuQ3p
+   P+1s4ibmvVFLLAKYuSRbCnVi22ri+cgju2/O7zVFp7pwcQ0wq2RRp6cMR
+   i63uIcvqMqaCliFB+7SPDYPF6K20qauI9+spHbDmu0RozWVhgtBNFq26Q
+   eTXw2NNTbzXw1ORXAJfVEOCPt3+QQdpg61h0TA82eEH3b097ESa6A2If7
+   ri/gdJsB9LG43IxPJ/EoWMSK0D64aV8hIj9+C8y4qhL7RLMtfdfwjRkcf
+   w==;
+X-CSE-ConnectionGUID: XFYXAUVnT8esjafWQgPxsA==
+X-CSE-MsgGUID: MrpsN40BRda3TKTGVZK0aA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="54828282"
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="54828282"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 07:10:52 -0700
+X-CSE-ConnectionGUID: 4CujWF/QSief0PenwjJhzA==
+X-CSE-MsgGUID: buMhY2yDQneSTS7+VVSABA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="123389783"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 07:10:50 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1tvd5D-00000004XCN-0DCV;
+	Fri, 21 Mar 2025 16:10:47 +0200
+Date: Fri, 21 Mar 2025 16:10:46 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Kees Cook <kees@kernel.org>, "tamird@gmail.com" <tamird@gmail.com>,
+	Petr Mladek <pmladek@suse.com>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Sergey Senozhatsky <senozhatsky@chromium.org>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] printf: add tests for generic FourCCs
+Message-ID: <Z91zZs_mvgR8EDZx@smile.fi.intel.com>
+References: <4378DDFE-3263-497A-8364-433DC1984FEE@live.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -97,37 +67,23 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250321-ipq5018-pcie-v6-2-b7d659a76205@outlook.com>
-X-Proofpoint-GUID: 64Ef91439YiEd_Cb7r5CvI4oPJxxNrLg
-X-Proofpoint-ORIG-GUID: 64Ef91439YiEd_Cb7r5CvI4oPJxxNrLg
-X-Authority-Analysis: v=2.4 cv=LKpmQIW9 c=1 sm=1 tr=0 ts=67dd7345 cx=c_pps a=HLyN3IcIa5EE8TELMZ618Q==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=UqCG9HQmAAAA:8 a=EUspDBNiAAAA:8 a=rOOs_Go3RH9W65nELVkA:9 a=CjuIK1q_8ugA:10
- a=bTQJ7kPSJx9SKPbeHEYW:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0 priorityscore=1501
- spamscore=0 mlxlogscore=793 lowpriorityscore=0 clxscore=1015 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210103
+In-Reply-To: <4378DDFE-3263-497A-8364-433DC1984FEE@live.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Mar 21, 2025 at 04:14:40PM +0400, George Moussalem via B4 Relay wrote:
-> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+On Fri, Mar 14, 2025 at 03:45:01AM +0000, Aditya Garg wrote:
+> From: Aditya Garg <gargaditya08@live.com>
 > 
-> The Qualcomm UNIPHY PCIe PHY 28LP is found on both IPQ5332 and IPQ5018.
-> Adding the PHY init sequence, pipe clock rate, and compatible for IPQ5018.
-> 
-> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
->  drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c | 45 ++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
+> Format specifiers for printing generic 32-bit FourCCs were recently added
+> to vsprintf. They are going through the DRM tree alongwith the appletbdrm
+> driver. Since the printf tests are being converted to kunit, this separate
+> patch for the tests should make it easier to rebase when the merge window
+> opens.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+I am always for the additional test cases!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 -- 
-With best wishes
-Dmitry
+With Best Regards,
+Andy Shevchenko
+
+
