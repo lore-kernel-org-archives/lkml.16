@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DDD1F03D8;
-	Fri, 21 Mar 2025 09:09:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4138486250;
+	Fri, 21 Mar 2025 09:09:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742548196; cv=none; b=h8CI8R4EF0DCMwNZ5e4EuYBy/rWnS83G49Osfbo/Sp6pF42JOtVnSJA27I4NASCVxt/AILr6nFcSPzddfYO7FKrM6qCNl8TNTkWGdnT9oc7uw/fk40Y5V+Rpuri9GykFnYIuuohqasCqaVeuoAFtOOuwhx52vIuQuaVK8L2kFjA=
+	t=1742548196; cv=none; b=lc2SeSttiqKjgkOq5AxQ4kjOKUIpgShC1SnAfeCQTzgMp5PHh/xp4K8pLA1PzBqBCrcFPukr3hi8T5ZMJFy8UMcyzXjHxIQdPyZhPKK1XTEVAPcwqP8VGLmV8iLdoqPzWYNqrdPFxpUCuchCXPuNqPsnG54AKSa97o8nh0UzJ0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742548196; c=relaxed/simple;
-	bh=Vlq0R7cLd+B8V83Bai1T9Yowc+PdKkhwH/55AXdKJTM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Fah7C0liPNGQoPRDotpLNYU028oo9KM6sMJOOvNDwNv5xcAb3mzaJOJYgpJLMhQqM0pEoSGM953lLr1rOLOg1YA/yi8Jt2XochS+YAGELwjxJURYmdgWCQu6TEWKed6lgoF9O9RWq8CyPVMzEWR62IehG9A44Jqo1AECleT8/Jw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNHMk2x9; arc=none smtp.client-ip=10.30.226.201
+	bh=SQrVa5hcvNGbT7b8PFbqplfHsajPW5GpR0t3KiUbwo8=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=njgi3Dq2Mp7OQ2lgSuUZt4TAgMCsdjWb/c2FZjZdBmLESV+zFQGCsP12vTsPJSFPZlN5mUbD71/7L3WdaJGNlMceIBVNHqHPd42wE0uJxXcbdEeU2OMK7/1LClX6snMU1IF1Iaglnbd3qLAYRZdZ5TlWSQAWPvu3lGQXNUg3E8k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r3ne9z+p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNHMk2x9"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id D4907C4CEEA;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r3ne9z+p"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 94790C4CEE8;
 	Fri, 21 Mar 2025 09:09:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742548196;
-	bh=Vlq0R7cLd+B8V83Bai1T9Yowc+PdKkhwH/55AXdKJTM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=FNHMk2x9dyRc0gPGALdSvz6f5pvgQelRlCqpYZINxYaewbbSv/y+S8KF2/JTaP7Aq
-	 ISPk/IJpQUW/lwF95MCF58kuy9EYyo7zjizGNoR+RlciPc/8PbbG1DnIrc0wyulVfh
-	 TTZcxiR6Deyou/DYI4438OE3jRXHkpMW/m5OxGKKvPgydexPa5DiJzkFBIH/TwAiOQ
-	 5/F3SFoA9hST9rqs3yn9SmJIEt5lK2VMrE7WlGLzIOuv0i0iVjF5WUMllRItP8f5/g
-	 +4JLVmMjr65xiCia4AGMjp6rW5sd70PGMrG/iuPtKWl5/Qdobn8hWRCD78LudU4GBo
-	 OTYxGp0sq41bA==
+	s=k20201202; t=1742548195;
+	bh=SQrVa5hcvNGbT7b8PFbqplfHsajPW5GpR0t3KiUbwo8=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=r3ne9z+pmjUoFlKaB/8XwvuCP1U3eYoGOyIdyliMA8cx5lNjBc41LZpE4wjj6hTwI
+	 yps2M5aaM1CVmPq9wZ8SVWFc3JN6Iuemn+eUxdFZ0u83Xfo9bIH1llMnEYhL+r1D33
+	 4maZBcbygHfTBgSpoF7qUblsdixfVhRegh5j+0im3xW5EEoapHPb7aC6gHDERa6aIE
+	 eyd1wpFoUcS+BgJSDtB0h8OBAVcuAO2HW8yNy2aBYsrzw11Oloi1VZtjT37fARc6/9
+	 qldlRHeLRwZmxXaLD77Eg9vBGRWFFNvRkQDb28tZsiq4A7m/nV0r88bPPANo9L07IC
+	 GxiD5RDIHGE3w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CC8C35FFF;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 876F3C35FFF;
 	Fri, 21 Mar 2025 09:09:55 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Fri, 21 Mar 2025 13:09:52 +0400
-Subject: [PATCH v5 3/6] dt-bindings: PCI: qcom: Add IPQ5018 SoC
+Subject: [PATCH v5 0/6] Enable IPQ5018 PCI support
+Date: Fri, 21 Mar 2025 13:09:49 +0400
+Message-Id: <20250321-ipq5018-pcie-v5-0-aae2caa1f418@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -39,10 +39,11 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-ipq5018-pcie-v5-3-aae2caa1f418@outlook.com>
-References: <20250321-ipq5018-pcie-v5-0-aae2caa1f418@outlook.com>
-In-Reply-To: <20250321-ipq5018-pcie-v5-0-aae2caa1f418@outlook.com>
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAN0s3WcC/1WMuw6CMABFf4V0tk0fNBQnQXQzMToaBqRFGoXWF
+ omG8O9WNsdzc8+ZgFdOKw/W0QScGrXXpg/AVxGo26q/KahlYEAx5ZhRArV9ckwEtLVWkMg4rq4
+ NVrThICjWqUa/l9ylDNxqPxj3Weoj+a2gOCfHE0kPuRCC7SlnIsuSAsfJjrAtwTRPi4LSzd8N9
+ VVnnSQpss5IZF7Dw5g7qk0Hynmev42qZl7FAAAA
 To: Vinod Koul <vkoul@kernel.org>, 
  Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -58,13 +59,14 @@ Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
  20250317100029.881286-2-quic_varada@quicinc.com, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
  Sricharan Ramabadhran <quic_srichara@quicinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742548192; l=3072;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742548192; l=5246;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=n1pq98OF6nCyGBtv37e9qjebYlzLP26UOUQF23Nah7k=;
- b=HxPtt29b2Xz941ykzosjFdDL8NuX+ZEK2YcOobB5XMVeU6a5/fRbB1/AoDv3IkRPTvw/kIeFR
- jELXAyxOONsD0mbl6CnC8bWsvuO26Rv2d3HZXzGL3fTI/s43hIxU45F
+ bh=SQrVa5hcvNGbT7b8PFbqplfHsajPW5GpR0t3KiUbwo8=;
+ b=cRcavix89+BN+5gtWvU3+jeOnLSD0aAOOOX8Lkq/7qD9/H5WqUxx7ptJUukvrkeqaFOL0Adpq
+ QboYMBEdN79AFz3m67U/uwyriFL5ccRI+nHIJMP+oBKW0Uuv5wiu0Wk
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -72,102 +74,119 @@ X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
 X-Original-From: George Moussalem <george.moussalem@outlook.com>
 Reply-To: george.moussalem@outlook.com
 
-From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+This patch series adds the relevant phy and controller
+DT configurations for enabling PCI gen2 support
+on IPQ5018. IPQ5018 has two phys and two controllers, 
+one dual-lane and one single-lane.
 
-Add support for the PCIe controller on the Qualcomm
-IPQ5108 SoC to the bindings.
+Last patch series (v3) submitted dates back to August 30, 2024.
+As I've worked to add IPQ5018 platform support in OpenWrt, I'm
+continuing the efforts to add Linux kernel support.
 
-Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
-Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+To: Vinod Koul <vkoul@kernel.org>
+To: Kishon Vijay Abraham I <kishon@kernel.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Nitheesh Sekar <quic_nsekar@quicinc.com>
+To: Varadarajan Narayanan <quic_varada@quicinc.com>
+To: Bjorn Helgaas <bhelgaas@google.com>
+To: Lorenzo Pieralisi <lpieralisi@kernel.org>
+To: Krzysztof Wilczyński <kw@linux.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-phy@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+
+v5:
+  *) Re-ordered reg and reg-names in dt-bindings and dts to align with
+     other IPQ SoCs
+  *) Corrected nr of interrupts in dt-bindings: phy: qcom: Add IPQ5018 SoC
+  *) Corrected ranges property of pcie controller nodes
+  *) Removed newlines between cells properties in pcie phy nodes
+  *) Modified dt bindings to add descriptions and separate conditions for
+     ipq5018 and ipq5332 as they have different nr of clocks and resets
+     As such, also removed Krzysztof's RB tag for validation
+  *) Ran dtbs_check and fixed:
+     interrupt-map property in pcie nodes:
+     /soc@0/pcie@80000000:interrupt-map: Cell 13 is not a phandle(0)
+     /soc@0/pcie@a0000000:interrupt-map: Cell 13 is not a phandle(0)
+  *) Added missing gpio header file to ipq5018-rdp432-c2.dts
+  *) Added MHI register requirement to bindings and to PCIe nodes as per:
+     Depends-on: <20250317100029.881286-2-quic_varada@quicinc.com>
+
+v4:
+  *) removed dependency as the following have been applied:
+	dt-bindings: phy: qcom,uniphy-pcie: Document PCIe uniphy
+	phy: qcom: Introduce PCIe UNIPHY 28LP driver
+	dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller
+     Link: https://lore.kernel.org/all/20250313080600.1719505-1-quic_varada@quicinc.com/
+  *) added Mani's RB tag to: PCI: qcom: Add support for IPQ5018
+  *) Removed power-domains property requirement in dt-bindings for IPQ5018
+     and removed Krzysztof's RB tag from:
+     dt-bindings: PCI: qcom: Add IPQ5018 SoC
+  *) fixed author chain and retained Sricharan Ramabadhran in SoB tags and
+     kept Nitheesh Sekar as the original author
+  *) Removed comments as per Konrad's comment in:
+     arm64: dts: qcom: ipq5018: Add PCIe related nodes
+  *) Link to v3 submitted by Sricharan Ramabadhran:
+     Link: https://lore.kernel.org/all/20240830081132.4016860-1-quic_srichara@quicinc.com/
+  *) Link to v3, incorrectly versioned:
+     Link: https://lore.kernel.org/all/DS7PR19MB8883BC190797BECAA78EC50F9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com/
+
+v3 (incorrectly versioned):
+  *) Depends on
+     Link: https://patchwork.kernel.org/project/linux-arm-msm/cover/20250220094251.230936-1-quic_varada@quicinc.com/
+  *) Added 8 MSI SPI and 1 global interrupts (Thanks Mani for confirming)
+  *) Added hw revision (internal/synopsys) and nr of lanes in patch 4
+     commit msg
+  *) Sorted reg addresses and moved PCIe nodes accordingly
+  *) Moved to GIC based interrupts
+  *) Added rootport node in controller nodes
+  *) Tested on Linksys devices (MX5500/SPNMX56)
+  *) Link to v2:
+     Link: https://lore.kernel.org/all/20240827045757.1101194-1-quic_srichara@quicinc.com/
+
+v3:
+  Added Reviewed-by tag for patch#1.
+  Fixed dev_err_probe usage in patch#3.
+  Added pinctrl/wak pins for pcie1 in patch#6.
+
+v2:
+  Fixed all review comments from Krzysztof, Robert Marko,
+  Dmitry Baryshkov, Manivannan Sadhasivam, Konrad Dybcio.
+  Updated the respective patches for their changes.
+
+v1:
+
+Link: https://lore.kernel.org/lkml/32389b66-48f3-8ee8-e2f1-1613feed3cc7@gmail.com/T/
 ---
- .../devicetree/bindings/pci/qcom,pcie.yaml         | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
+Nitheesh Sekar (6):
+      dt-bindings: phy: qcom: uniphy-pcie: Add ipq5018 compatible
+      phy: qualcomm: qcom-uniphy-pcie 28LP add support for IPQ5018
+      dt-bindings: PCI: qcom: Add IPQ5018 SoC
+      PCI: qcom: Add support for IPQ5018
+      arm64: dts: qcom: ipq5018: Add PCIe related nodes
+      arm64: dts: qcom: ipq5018: Enable PCIe
 
-diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-index 469b99fa0f0e..668ff03f2561 100644
---- a/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-+++ b/Documentation/devicetree/bindings/pci/qcom,pcie.yaml
-@@ -21,6 +21,7 @@ properties:
-           - qcom,pcie-apq8064
-           - qcom,pcie-apq8084
-           - qcom,pcie-ipq4019
-+          - qcom,pcie-ipq5018
-           - qcom,pcie-ipq6018
-           - qcom,pcie-ipq8064
-           - qcom,pcie-ipq8064-v2
-@@ -168,6 +169,7 @@ allOf:
-         compatible:
-           contains:
-             enum:
-+              - qcom,pcie-ipq5018
-               - qcom,pcie-ipq6018
-               - qcom,pcie-ipq8074-gen3
-               - qcom,pcie-ipq9574
-@@ -324,6 +326,53 @@ allOf:
-             - const: ahb # AHB reset
-             - const: phy_ahb # PHY AHB reset
- 
-+  - if:
-+      properties:
-+        compatible:
-+          contains:
-+            enum:
-+              - qcom,pcie-ipq5018
-+    then:
-+      properties:
-+        clocks:
-+          minItems: 6
-+          maxItems: 6
-+        clock-names:
-+          items:
-+            - const: iface # PCIe to SysNOC BIU clock
-+            - const: axi_m # AXI Master clock
-+            - const: axi_s # AXI Slave clock
-+            - const: ahb # AHB clock
-+            - const: aux # Auxiliary clock
-+            - const: axi_bridge # AXI bridge clock
-+        resets:
-+          minItems: 8
-+          maxItems: 8
-+        reset-names:
-+          items:
-+            - const: pipe # PIPE reset
-+            - const: sleep # Sleep reset
-+            - const: sticky # Core sticky reset
-+            - const: axi_m # AXI master reset
-+            - const: axi_s # AXI slave reset
-+            - const: ahb # AHB reset
-+            - const: axi_m_sticky # AXI master sticky reset
-+            - const: axi_s_sticky # AXI slave sticky reset
-+        interrupts:
-+          minItems: 9
-+          maxItems: 9
-+        interrupt-names:
-+          items:
-+            - const: msi0
-+            - const: msi1
-+            - const: msi2
-+            - const: msi3
-+            - const: msi4
-+            - const: msi5
-+            - const: msi6
-+            - const: msi7
-+            - const: global
-+
-   - if:
-       properties:
-         compatible:
-@@ -564,6 +613,7 @@ allOf:
-               enum:
-                 - qcom,pcie-apq8064
-                 - qcom,pcie-ipq4019
-+                - qcom,pcie-ipq5018
-                 - qcom,pcie-ipq8064
-                 - qcom,pcie-ipq8064v2
-                 - qcom,pcie-ipq8074
+ .../devicetree/bindings/pci/qcom,pcie.yaml         |  50 +++++
+ .../bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml |  57 ++++-
+ arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts     |  40 ++++
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi              | 234 ++++++++++++++++++++-
+ drivers/pci/controller/dwc/pcie-qcom.c             |   1 +
+ drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c   |  45 ++++
+ 6 files changed, 417 insertions(+), 10 deletions(-)
+---
+base-commit: 5744a64fddfc33629f3bcc9a06a646f7443077a7
+change-id: 20250321-ipq5018-pcie-1d44abf0e2f5
 
+Best regards,
 -- 
-2.48.1
+George Moussalem <george.moussalem@outlook.com>
 
 
