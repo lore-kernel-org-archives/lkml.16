@@ -1,173 +1,118 @@
-Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
+Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150A63C2F;
-	Fri, 21 Mar 2025 07:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256011E991D;
+	Fri, 21 Mar 2025 07:15:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742541232; cv=none; b=m74CMl6ZaOnJN3HEpG2J9ZDixPjWi4aZP7c+O0XZPwZ91taBVPa31OdTsr2Zug/hfIFeR2isuVqCGTCbnc4R+jQLhfLhz1xJJo0sJmNCa8gYsIN6WlCT9Imh7fV2GQ4ib/SKryxaNqLjixBaVHM6LVY2NhRE4A3zaDB9tbZmtuQ=
+	t=1742541322; cv=none; b=DiuH2A6ksyn1zTJwbNlqSWfLiuueQR/WunV6O87wWP2cpzB/KTpG7IxgiZpC306wlj3jfskm+vyF0IbgxS93RNifTBO4TnnNdfojKMsGgb/PqagLeZDYIevdxhevQIdWHitWfIfzyUD5djZ442rPhQBSmOUtTUHavQYLW7vMG9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742541232; c=relaxed/simple;
-	bh=llWQSaJX461Ac3vxR4eI74crTkiWJpStgDPJxpYRSew=;
+	s=arc-20240116; t=1742541322; c=relaxed/simple;
+	bh=6Hq1R5v42UeX92HRP8x6W4hw97tfd3WgOBXiMFFQPcw=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JVDVvJWdheWIYVKuOdYjZE9PbucwsSVWdjPQ1XlQSMROzx5EF73457HVPjstNfoUskHl6tUzhf1MHLcZk+3pfwC/HbJ4hbympR/rsXw/FfPhamp+nsTnA4iZYf5oHGyUq87pXJ+M+bM0UVH+NOSHLrTIHzribIR1YkVJcr7QwYU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KL8FXkNz; arc=none smtp.client-ip=209.85.167.48
+	 To:Cc:Content-Type; b=rPVI0y2ZdpMxzRUWoFwA6D+MdWaGzQmFp/gA0EeTqOI4fppg6xcQIN40WEcd7nPr75QRWdVWaA2Ok6cyAf0Hcne8+HKxru8oYq0AooekdSfp8rAF1LD7kJK3B20x09pof4rpIemiu00TAfbrHX26Ui8lYkWR4Nno1jv8jR8Voko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OSaNiX2J; arc=none smtp.client-ip=209.85.208.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KL8FXkNz"
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-5499c8fa0f3so1974912e87.2;
-        Fri, 21 Mar 2025 00:13:50 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSaNiX2J"
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-30613802a6bso16607051fa.1;
+        Fri, 21 Mar 2025 00:15:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742541229; x=1743146029; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742541319; x=1743146119; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=heGPoqqPa6u/5qcPg0ol9yM9/AhPatzE6Jm/W/HY1hw=;
-        b=KL8FXkNzFUgLmn59BhGiVXsOja+ylK5K/HculxidAZSKTjbvJFZwsyJF2/UWy0n22m
-         EOwfx6qRQLOa0Hkyxkg/bD5ScbE6vTfAQ1RpJtsYOaszRPl9tkr0WuRxcyvCrez24RRm
-         QguJFXZ+Ugbvf1J0hqOwc7fVqpdc7mPX44d6ngQpi+ywG2V7z1J/c1Y1AAw8n+AeZd1c
-         9Ftqpc1ejOW7VhHnjL6WTH7pWvAZKnbO4dzmNA6+EIGNX6JvcugTkD9Bli2eobaH94AM
-         pSnxO+j3UTCHRBfl919XHzZaxGWhhr9BPVWq5W4tA+jnftsPZhp+KDA29I/DF8jHjZz5
-         tqnw==
+        bh=wj279fORMD9vy3tpRh39rw+SrjrZF1uuE8aC7Joa19s=;
+        b=OSaNiX2JlOl/riRl4GC3i6qCIKSX5g2K3SEtHnamKQV2KZ1m71F3dyVc2NrDPy3rO1
+         hUVQTpIbEi3Yz/Rhv5ygowuLQW7+V7OZ3F4HjQThnq2TiZ7eNRM7fj2ehgzRU7xV8NVJ
+         J0HIQFZusjFQ0J03NIniRgaWq7cNMSubbmpnUY78NFTGWdAEgg4k+nihBsP2PRlwvrGw
+         O4vuchuELeHZ891/OobYNvDelw0PDuaBHWHFqzJzQczlDzgbvZpcknWKENttzVsw7CXl
+         GbABnwFYEHQYcxejOWVJsGWUQE5aSARTLbx/8ru+jRm9yYUOq4OHIEEGGDfb+o+MODEQ
+         CMsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742541229; x=1743146029;
+        d=1e100.net; s=20230601; t=1742541319; x=1743146119;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=heGPoqqPa6u/5qcPg0ol9yM9/AhPatzE6Jm/W/HY1hw=;
-        b=wBNQ6Zmp0yBiG4qbclMW6erTFASckzVD4c9IyagmjuAFNlb6/0frds8yZYUu2J98No
-         SJ39lRAVPJZO8TJYa1WFFpN3uCbK17y1UJqOqB8ZUJIhxjMy6RHQFX4mgQhUBSmw/b2w
-         pKAw9IScnQ5taY2wC+EVkkyH61/NYoT4OA4Q+0+yTF2ktbYB04MPxMsmjghbNjlG7YJs
-         ACHr/JdKvWgneRjN18wyfRomxaJGH4b7+TGWramWQ/Shhy4nKKIpmouxLcvp9UygG0Tc
-         N95QNNGO3t8LKv61m3L5z6Mry8nsQUAqOCd1SxTGVYUuFj1EDsB4o/leHj8AcIMfCl9s
-         OM+A==
-X-Forwarded-Encrypted: i=1; AJvYcCV8SdRLeTatwq0NNwPR/njHNKVEdGjwQPKkjRMGqfNKwiKV1+drBH550g9eSv1EbHN8Ke/lbZJNzA==@vger.kernel.org, AJvYcCVSNzQp4FfF0C37Uw/w21J6y/89GUnXrRsHn2/C4+lZfDJhIKXpWnb17Kb2ghWyUZXQ3v2+6nWPhRKzB4/d@vger.kernel.org, AJvYcCVyLTsa5ZpkoCpLVL+9wLWLeCXUSma1SPdvR5JWSRJ1towanDE0tRPOmivEPaSWrvku8woqKpptdmo7WzCJq0OY@vger.kernel.org, AJvYcCXTEMsNYp6AA2pGboe+I8JhDnj0gXI8kNeAfYj9oxm02tOTrKRyO9q2/UM3IP97NPkUGMQqIMqY5+DaixptCsDUFoWcmylq@vger.kernel.org
-X-Gm-Message-State: AOJu0YwK+9tqBmkXu9KrdFDxJcAoTTyMBQ2mEnrjYvkLdrez4Cnl2v1E
-	7tohDdwWBhyWu/ob8zRAXM/rkn4i+2jxdvjt/EJsfHOzDccmSkLMo4kF6TDd3/LxnYQVA2e9kzA
-	dC+oCKES2M7d0gKmQBhyluXao9SM=
-X-Gm-Gg: ASbGncvAid0OoMQ9g3aU5id1wLxtqW+3j5O1PjjxjKCWG4AyjIFpdJhHMa5lmXnYb6r
-	61NoaT5LnfIX/QjepsSuUlwX7jWoTmMCEFplnf5BaExkwBWpAy+SPaJLcPpSLE7IfH7O+qwQFQP
-	S845CSlByAwVtWRXa3SLUAbXsbNw==
-X-Google-Smtp-Source: AGHT+IGkbTk/3e71jsvn2jwc+kw1qMAotmEnV7AOPjn2CJqOlIkWPJkgfNEZsDIShq/OmrT5K/C8Sx6C1PLfsQPfczo=
-X-Received: by 2002:a05:6512:3d8c:b0:549:7c13:e88f with SMTP id
- 2adb3069b0e04-54ad64a7d9amr760870e87.30.1742541228562; Fri, 21 Mar 2025
- 00:13:48 -0700 (PDT)
+        bh=wj279fORMD9vy3tpRh39rw+SrjrZF1uuE8aC7Joa19s=;
+        b=fCzEkR84CF14F1eWmttYX8z0XX7aypYEJtDIKFDLA7Buh4yIAr2PQF50ueMBGE1v+w
+         Sjyp4wl8frUuIVxuWNIoMwSToGIbBPEKt8BgZytaxG2sK77iSimmj+eIGNDazxmJYK0f
+         GJKal/zyjTbIPpj3s+EQuFb4FiS6Bim1sY+1ZMd8lcfQImj+dDofKrdds2ktb+2HvI20
+         0a05guA4BpLxi4DUjDRXGOspYDfJUGn+8tmaB0y2buGuHhalEdKqW4XwWVn5qhUZ+ze4
+         CfgaxLIz/LOX766oycdeUCC3kpip8S9Dcmy+48uBUCci5QAP3QrJoKrBZFTREZaZ/1mn
+         Y5iw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSGTTNamg+LZ7dYVyPdPXdYrSa/5aojgLwqy+ZYSrIe0FoFOZOctWbLnjyyECCg5IKa1GVLNO68IqGLw==@vger.kernel.org, AJvYcCWkYcUEbgdqStxSCmd5GOttXttRiEDPgLq1Ai72DAQ6OeROOubl7GNl06bUb7UlrBCAoGg4yqkaN3ogADzK@vger.kernel.org, AJvYcCXf7mSpWW3N/y+hmAu5LzVeX/DuegDvBWtSzlhjqez9budr1IsgiQBWG+BlHx8fEagq31c=@vger.kernel.org, AJvYcCXh5k4KIK+dSq6TJnlz5jEemuHXzbGVE6mnNt1aNyZ/fYVNlt472/3qCDJbz8FMMtM1xdmGzTZp@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzb2BK7KLpZc57mupDK7oJjUid8NoqoliP2ljR4NPJPj2eeyDYM
+	Mn3W/nxltIKOBgoUh7X+gmg3oWCyzGft+phtAzoj/DPcejsRsiWxpGzaSTEzA/KrF1m7QXKQVTA
+	IR0c0Xhre5qbxAarOF3pCgre0Ig8=
+X-Gm-Gg: ASbGncur40QR9bxh6NY27JKvOnU225zwpc66NzHdZoFq9E8IHTV6cxpJe2ShQs7N2gO
+	DhzxT3aiR/2VBcHyl1dh5XLgYVPFg8owBmXMgoE3lZ2mvqx2f1a14fUl1KeBFxXg6sLJkrg1O5D
+	Vfe8qzvOH3r8l09NEu/uPHzTljPg==
+X-Google-Smtp-Source: AGHT+IF64cWC9gfTaAH9nbRxd61iq3STl262vSnnGbGAc6a0vV8SEHh3bvNqAboQJ1MxO1wZy49YFNltdpP1jiFlTNQ=
+X-Received: by 2002:a2e:8612:0:b0:30b:e440:dbdb with SMTP id
+ 38308e7fff4ca-30d7e31c966mr6964931fa.37.1742541318821; Fri, 21 Mar 2025
+ 00:15:18 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Z9wDxeRQPhTi1EIS@gardel-login>
-In-Reply-To: <Z9wDxeRQPhTi1EIS@gardel-login>
-From: lee joey <joeyli.kernel@gmail.com>
-Date: Fri, 21 Mar 2025 15:13:36 +0800
-X-Gm-Features: AQ5f1JpcglorSCIQZ3ga4nErVbrW_wUFKUBU3r0b_G8JKAQwueG5DBMB3wiuslw
-Message-ID: <CAGLnvc_eyLEasc4tKYnYp2c1M+YYRxaoXt2BmJ3kgAec6YTmzg@mail.gmail.com>
-Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when secure
- boot be disabled"
-To: Lennart Poettering <mzxreary@0pointer.de>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, 
-	Roberto Sassu <roberto.sassu@huawei.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, 
-	Eric Snowberg <eric.snowberg@oracle.com>, Paul Moore <paul@paul-moore.com>, 
-	James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, linux-integrity@vger.kernel.org, 
-	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, joeyli <jlee@suse.com>
+References: <20250319133309.6fce6404@canb.auug.org.au> <CAADnVQKotSrp8CkVpFw-y800NJ_R7An-iw-twrQZaOdYUeRtqQ@mail.gmail.com>
+ <CAP01T76CqOxzEiMLKJ2y_YD=qDgWq+Fq5Zy-fnKP4AAyS30Dwg@mail.gmail.com>
+ <CAP01T77_qMiMmyeyizud=-sbBH5q1jvY_Jkj-QLZqM1zh0a2hg@mail.gmail.com>
+ <CAP01T77St7cpkvJ7w+5d3Ji-ULdz04QhZDxQWdNSBX9W7vXJCw@mail.gmail.com>
+ <CAADnVQ+8apdQtyvMO=SKXCE_HWpQEo3CaTUwd39ekYEj-D4TQA@mail.gmail.com>
+ <CAFULd4brsMuNX3-jJ44JyyRZqN1PO9FwJX7N3mvMwRzi8XYLag@mail.gmail.com>
+ <CAADnVQ+7GTN0Tn_5XSZKGDwrjW=v3R6MyGrcDnos2QpkNSidAw@mail.gmail.com>
+ <CAFULd4aHiEaJkJANNGwv1ae7T0oLd+r9_4+tozgAq0EZhS16Tw@mail.gmail.com>
+ <CAADnVQJ56-W--rdeRyRSXVjy5beQpt5scuRuTK9nDUPqdjMQ=w@mail.gmail.com>
+ <CAFULd4bv+j8qomULWzcU_SV8zPtvxefFN6NgPu-WQiHaTR8HCg@mail.gmail.com> <CAADnVQ+Aq85fJJGkurLopdAwjyTEnXAb8=u-ni6mjm-swpEYjQ@mail.gmail.com>
+In-Reply-To: <CAADnVQ+Aq85fJJGkurLopdAwjyTEnXAb8=u-ni6mjm-swpEYjQ@mail.gmail.com>
+From: Uros Bizjak <ubizjak@gmail.com>
+Date: Fri, 21 Mar 2025 08:15:07 +0100
+X-Gm-Features: AQ5f1JqN82mhl8vwRIJQ5oI9zEyzrJGVtHtWZd0bQsy5ilCBRV6I9WjA2cH_UVc
+Message-ID: <CAFULd4YCQyYQssE0egTXMTcTX8whT39VTBVYZy6nwxKLiMGZjA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the bpf-next tree
+To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc: Kumar Kartikeya Dwivedi <memxor@gmail.com>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Alexei Starovoitov <ast@kernel.org>, 
+	Andrii Nakryiko <andrii@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, bpf <bpf@vger.kernel.org>, 
+	Networking <netdev@vger.kernel.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, 
+	Linux Next Mailing List <linux-next@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Lennart,
+On Fri, Mar 21, 2025 at 12:18=E2=80=AFAM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
 
-Lennart Poettering <mzxreary@0pointer.de> =E6=96=BC 2025=E5=B9=B43=E6=9C=88=
-20=E6=97=A5 =E9=80=B1=E5=9B=9B =E4=B8=8B=E5=8D=888:02=E5=AF=AB=E9=81=93=EF=
-=BC=9A
+> > BTW: You can use:
+> >
+> > --cut here--
+> > diff --git a/arch/x86/include/asm/percpu.h b/arch/x86/include/asm/percp=
+u.h
+> > index 474d648bca9a..e6a7525c9db9 100644
+> > --- a/arch/x86/include/asm/percpu.h
+> > +++ b/arch/x86/include/asm/percpu.h
+> > @@ -105,6 +105,10 @@
+> >  # define __my_cpu_type(var)    typeof(var) __percpu_seg_override
+> >  # define __my_cpu_ptr(ptr)    (__my_cpu_type(*(ptr))*)(__force uintptr=
+_t)(ptr)
+> >  # define __my_cpu_var(var)    (*__my_cpu_ptr(&(var)))
+> > +
+> > +# if __has_attribute(address_space) && defined(USE_TYPEOF_UNQUAL)
+> > +#  define __percpu_qual        __attribute__((address_space(3)))
 >
-> This reverts commit 92ad19559ea9a8ec6f158480934ae26ebfe2c14f.
->
-> This original commit this reverts creates a strange situation: it
-> ensures more restrictive behaviour if SecureBoot is off then when it
-> is on, which is the opposite of what one would expect.
->
-> Typically, one would expect that if SB is off the validation of
-> resources during the pre-kernel and kernel initialization is less
-> restrictive, not more restrictive. But this check turned the world on
-> its head.
->
+> I see, so for undefined addr spaces clang x86 just ignores it.
+> Weird. But ok.
 
-SB off means that the chain of trust is broken. Which means that all
-mechanisms rely on SB are non-secure. Meanwhile, if the integrity of kernel
-can be guaranteed by other mechanism (e.g. TPM), then mok should not
-be loaded when SB off.
+It ignores undefined addr spaces in the sense that it does nothing
+with it. It has no effect on the access to variables in this addr
+space. OTOH, the compiler still applies address space checks. I plan
+to propose a (RFC?) patch after rc1, once the main part is applied to
+the mainline, that enables percpu checks also for clang. It is in
+effect just the above couple of lines.
 
-> I'd like to ask for this commit to be reverted. If SB is on all bets are
-> off regarding integrity of boot loaders and stuff, hence it makes no
-> sense to be restrictive here: you cannot regain integrity once you gave
-> it up once, hence if all bets are off anyway we might as well import any
-> Mok keys passed to us into the kernel keyring.
->
-> Or to say this differently: if an attacker got control of the pre-kernel
-> boot phase they might as well patch around in the firmware apis to make
-> the kernel believe it is in SB mode even if it is not. Hence the check
-> carries no value. It doesn't protect anything in any effective way.
->
-
-If this is the case, the check of MokListTrustedRT can also be removed.
-All mok can directly be added to machine keyring then link with
-secondary keyring.
-Because attacker can create MokListTrusted/MokListTrusted variables to chea=
-t
-bootloader or kernel. The check of MokListTrustedRT is useless.
-
-> The reason i'd like this check to go is that I'd like a nice way to
-> insert keys from pre-boot into into the kernel keyring for use with
-> signed dm-verity, without requiring recompilation of the kernel, and
-> without SB database games. i.e. i'd like to use a regular, signed
-> distro kernel, and pass to it additional keys to insert into the
-> kernel keyring in a reasonable way. The mok stuff would be great for that=
-,
-> except it all falls apart once SB is off.
->
-> You might wonder what signed dm-verity gives me if I have SB off. If
-> we authenticate the boot phase up to Linux userspace via TPM-based PCR
-> policies (i.e. measured boot) we can be sure of the boot integrity
-> without having to rely on SB. But then we'd still like to use
-> dm-verity based code signing for userspace.
-
-hm... I am a bit confused. So, this patch can help the above scenario?
-
-> ---
->  security/integrity/platform_certs/load_uefi.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/security/integrity/platform_certs/load_uefi.c b/security/int=
-egrity/platform_certs/load_uefi.c
-> index d1fdd113450a..7783bcacd26c 100644
-> --- a/security/integrity/platform_certs/load_uefi.c
-> +++ b/security/integrity/platform_certs/load_uefi.c
-> @@ -7,7 +7,6 @@
->  #include <linux/err.h>
->  #include <linux/efi.h>
->  #include <linux/slab.h>
-> -#include <linux/ima.h>
->  #include <keys/asymmetric-type.h>
->  #include <keys/system_keyring.h>
->  #include "../integrity.h"
-> @@ -211,10 +210,6 @@ static int __init load_uefi_certs(void)
->                 kfree(dbx);
->         }
->
-> -       /* the MOK/MOKx can not be trusted when secure boot is disabled *=
-/
-> -       if (!arch_ima_get_secureboot())
-> -               return 0;
-> -
->         mokx =3D get_cert_list(L"MokListXRT", &mok_var, &mokxsize, &statu=
-s);
->         if (!mokx) {
->                 if (status =3D=3D EFI_NOT_FOUND)
-> --
-> 2.48.1
-
-Thanks
-Joey Lee
+Uros.
