@@ -1,189 +1,80 @@
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (mail-bn8nam12on2054.outbound.protection.outlook.com [40.107.237.54])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10CD01C5F14
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.237.54
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573966; cv=fail; b=YH9ZUl0ZjQ6VzGH2A7brotPEm+YyYZfRvyeAqfp7hThw7o9yAe9Z846FRIRl6yH7gu7dxIU1qObxH4Me0oSkM5jkGBu2Igggdg0D5YmHQhLZ1BTeDuXEPXM4im9r9aQUTYUB4ke31DQIFa+NsQPJc3fVH6m0N36o1FJmJ7NiAtc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573966; c=relaxed/simple;
-	bh=djadI+OCQP95eAHRdLjRYkvrD4OKsRPE9a53Og96F4k=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=RtNH0Qn4yfHr67AcP9y2TskDAyQbLl5uzOrKnWozdSmSRtBvQn4FFsikUkIuHA0vHbvtNkGAeZvTRxN64G63efuLCNbVYlHiW5OiCnUNf/+FQYk0O53LefHGaT+X2kGlfNThnDVXx5yCeMzZ3FPyRrKcKXzD/oMt6TrKYpfipts=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=q9Vi/rGS; arc=fail smtp.client-ip=40.107.237.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F98414601C;
+	Fri, 21 Mar 2025 16:19:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742573996; cv=none; b=XCS1h5ADTBo870vlHoKdO3GQ/jrQTSU+eyN7nznyRynRiC4WBvH9fKmmwLuhcPgKiU2BKip5OFKba21eFrlkeSCCjK11NCbB7WPhke9LhaxfzJ3dEemMKnRjS/gizmkYar07RB9qiHXyb+VPp4Ji+J+8xPFRSLYe9idpH81RTgY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742573996; c=relaxed/simple;
+	bh=XI2f7SgbQyb+AjtyGj/tTNrFlGkFGsaPs29m6a6WOvg=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=h7iFtDZH8RlD/HZR2ICu6BU/TL6LKEoXeg+QQnG3ppQxKSwZVby7vBkHHgb/yK9Lp5PiXCczIJhbfi5WjSLRVR3taMYFDu1ygXu4dLdYaQwg0I+JcqikvHuny4qQOPvqF+1O495NfNP6/wt3+q1P7L0Q70owyatT1I0FtPWCOK4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Liw89G9J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="q9Vi/rGS"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=SpcqigKiMQgsnBSyvTy1/44VPODqkVsVYK8ZBnamWpMUzeQXSs6hBGX6pPPD1KIlhb4UihLyk8PVw/6Ho1Dy5o4yX/fO5uAxjpuLajWXEb98VqEMyPBZNQddqsVklx7AJlH8W+pCZpEjZa9I4n9S2RHMiovnU6CFYqiRHYLqiPlTOI2/ArZ5B8eqO2/DOfvvZ37SS294nb71OwIbBfwj72GXY4vT/RjJFO1zx8St12WtX9wiUR82bI3FqFrWWUuUxNS5JmPbf2V3CXjaRSjafM+G1i6zAmJTHxD97OL4w4G1F/6AThGhCFai3iepfWNJTPu7YPaFdDXOg/M1bph1zA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Zg0S78qAkWKw0NmbrFp9dGd6zj2l94AX5w04u6rLjOI=;
- b=kSBAs+2ah4vKJOwlkVTMoDPMqbQzzdEsQ1zbYRpkIcUKWRLXjnu1b5jgwTO5xkaXb0Rh+rBwNR0sClzErX+4KfzRm/yc+Ch/eB39ZK1vB7q7eZaS/j1pucrSWekKHximFJUq08gLcjZHm3bl4M2/VOw1oL07fPHP6hzJfMnHhFzHqnwRJEw+rTN4Woge7A+Ze1d463mOiQ2LrVOC5CVyb0dpyb2hD8368AlWBXsnM/4QRPZxVdzP+xNMDM+l0h9tatWl+PQAfUOMBI2h5/cIi1ntzOMpV6AZT783sVvCqtlf03S6JBiXwtozTOUqMMHKUSbBbTL707Svj+p+k09sZg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Zg0S78qAkWKw0NmbrFp9dGd6zj2l94AX5w04u6rLjOI=;
- b=q9Vi/rGSI7caNSXEEFbgX9xBBxgHL/6MY5lbyB1kqPqmU4qyLchMEBKjbJv0dgnVkVJG9N2krUiue6DK9sDGYCR4LMpBX1ezo8OBRT1o0tcFuQwOGLtxSO5J5PEfeF87WV+wAeNUslSFIpRF2IQS/+LSjOzfQZ6wM5nKgShTDt4=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
- by DS0PR12MB7727.namprd12.prod.outlook.com (2603:10b6:8:135::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Fri, 21 Mar
- 2025 16:19:22 +0000
-Received: from PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39]) by PH7PR12MB6588.namprd12.prod.outlook.com
- ([fe80::5e9c:4117:b5e0:cf39%6]) with mapi id 15.20.8534.036; Fri, 21 Mar 2025
- 16:19:22 +0000
-Message-ID: <04f0a3b5-6665-40f7-a19f-f3ed36aece52@amd.com>
-Date: Fri, 21 Mar 2025 21:49:13 +0530
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] perf/x86: Check data address for IBS software filter
-To: Ingo Molnar <mingo@kernel.org>, Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
- Kan Liang <kan.liang@linux.intel.com>, Mark Rutland <mark.rutland@arm.com>,
- Alexander Shishkin <alexander.shishkin@linux.intel.com>,
- Arnaldo Carvalho de Melo <acme@kernel.org>,
- LKML <linux-kernel@vger.kernel.org>, Matteo Rizzo <matteorizzo@google.com>,
- Ravi Bangoria <ravi.bangoria@amd.com>
-References: <20250317163755.1842589-1-namhyung@kernel.org>
- <0eb55fa1-3b03-4550-bdd7-c7c50294dcbe@amd.com> <Z9m20YMkMfUDBxgv@google.com>
- <d1dec8b8-10c8-4da0-920a-d1f744543253@amd.com> <Z9spTE_M47M4qpCR@google.com>
- <Z9tCyVkqCzbulODv@gmail.com>
-Content-Language: en-US
-From: Ravi Bangoria <ravi.bangoria@amd.com>
-In-Reply-To: <Z9tCyVkqCzbulODv@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SG2PR04CA0154.apcprd04.prod.outlook.com (2603:1096:4::16)
- To PH7PR12MB6588.namprd12.prod.outlook.com (2603:10b6:510:210::10)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Liw89G9J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3447C4CEE3;
+	Fri, 21 Mar 2025 16:19:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742573995;
+	bh=XI2f7SgbQyb+AjtyGj/tTNrFlGkFGsaPs29m6a6WOvg=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Liw89G9JebAAheTFGPYolng/r/+euxjKQK+sJFI4TrqTrKYLQRHVbvcRQ/cBk+UVz
+	 5nhfYLQHDxA+gubhPIX/1xxcAZ7mt/hNfftQON3JbzzwBeE3g8oGNTS+bKrhNsh8QI
+	 ZHbtZoZ+aMGmkJRNMypGw1p3Gf92SK3ZSEmv4S65j6IY9IQtQTpWa4ZJ/OFUsXhmXH
+	 DFxXrfg96Zi7aDVu/DBm1R3ssg6ut6k52DxOERAQWd2qPMLTXBmAsJQr9eSykde5hY
+	 bp2Rev6o3RCi4m78rkwZAMcMxqxJDPV7/raGRMQfAYLU75KhLqFmmnYpqmfaysku+2
+	 djJW8iK6RmiWQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EBF0A3806659;
+	Fri, 21 Mar 2025 16:20:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR12MB6588:EE_|DS0PR12MB7727:EE_
-X-MS-Office365-Filtering-Correlation-Id: d2fbde20-2b51-4c41-682f-08dd68942379
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|376014|366016|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?UzVrMlNRd0dKaC9IcEFwN2JHSEd6dWJOU1E3VE1LTFQrWTRBdWI2eGtvM01k?=
- =?utf-8?B?cnY4blUxaysvUkF1MzJoR0t5aU5XOExBOUVnU0Y0aHlGOGRqVnlVQy9KLzhn?=
- =?utf-8?B?UmViV3JIV1dZNkd4bXhveWJpdGc0cC9hQkdldXJYZkJISDdrWGZYRFFQV2dY?=
- =?utf-8?B?d0pnVzV0eUs5ZXloa0czak4zazJZdEF2Z3RXWTNqcTBERld3YjdpTkE3ZCtu?=
- =?utf-8?B?THNBNWZXMkRuaHEvT0NXQmsvc1ZqN1lHMXZCYUxhK3Y1Z2E2ckcxYTEzY3pl?=
- =?utf-8?B?YnA5VnNPM1EyUnRFbUNnaTNMZzMyKzdObFl0YmRkd2I4UXgvZXFtMUNYT2Y5?=
- =?utf-8?B?SndpWXRKQ3BibXVaVDlBZm84R0tFVHROcnlUaWlqcDFOcFhkQWx4emEvTzkx?=
- =?utf-8?B?R0J2MGpSRCtKRkUzK3o0eFdGQ25hVllYZk5zRzNRdHYvWGNLM0V2K1BESzMy?=
- =?utf-8?B?MU5XVE5kVHFaNlAyWS9VSlZ3c2ZvMjRLK3huWU9WUjJ5UFZMQm1Sc3ptRmRC?=
- =?utf-8?B?d1F2Z2wySlZIZUl3YTN6OURzcnFiR3M4cVI4TGMxYjNBMDVqeWhmamJUbHph?=
- =?utf-8?B?cTMreVVSS1dxU2h4L2tsS0pyY1diVGdseXphL2wzNzJRbkk0MEYySjc0cWRh?=
- =?utf-8?B?d3VkRHRkS20xNkxLTlJKek01YmhzRElBOU9kakhvZjNiL2tZNHNRTjRDTmgy?=
- =?utf-8?B?SFo4YmUzK3Q2UzJ4bDBOOHBRYkNRd2FYcUQyTVpwT1pVdnNCeTlxWWkybHBW?=
- =?utf-8?B?SW43b2prQTN6N3RLZXhSVU1WYXQwcHF6dmc4NjA4N1pvekEyTXpqSkZ0TGN2?=
- =?utf-8?B?b256SHYyd0J6Z1IzMVVob3dSYVFOdmxhc29sSGlGWnBVMitNVVJBK0JsdXVs?=
- =?utf-8?B?RUJzRFNQaG90UVV0OXl4RVRPZWVWMmNMbzJnR21TQlVndXFFUnRDYUovYU9n?=
- =?utf-8?B?dGRUbDB4cWZ1OTVVZ01lNnVYWWhrQzhnMGtkRlJNbk42dis3UDNWbjJJbkhQ?=
- =?utf-8?B?dUlIWk5hYkZwZ09JTkRQSFFmTFhmNDN3QjFRM0t6UXpISEV6YWU0NUpabUVY?=
- =?utf-8?B?b0QxNDB2bXJ0SW5KYTM0WnNhODR6Vmh2bzVyVWl4c3dBYmxmdStMeGgxb1dR?=
- =?utf-8?B?U1lnUjBTNFNWSGt5U3AxZWxFdDlqN2RxQ1VzSk9UcU1KN2pKWDhLakdESjEr?=
- =?utf-8?B?dlRDSmtTbG5QaTJ0ancxa3RTZVNZWTg5YlZPU3lmYlRNd1JKcE4xOEFTMjFl?=
- =?utf-8?B?M1Ztd1A4eE9nMmt5byswZ09uRzdkbUgzREtlOU9PSWpCRWdpSC9BOWZva3RQ?=
- =?utf-8?B?SkptdVhmNHEyTmRIZ25PaWZZV2VlV0UxbVVvQ2VwMzlMeUJkVnp3d3U2dFhm?=
- =?utf-8?B?MFNGT2o2RThJYm9oa0xhd3lZckVMeE9OZE4rUnF2bXR0ai9mQXVHc2JTM0pB?=
- =?utf-8?B?NWtqeUswTzdENFdYRnBNcmsxRS9rRFhTT3BkZVRYVXdzakxhNlkzdCswN3Ns?=
- =?utf-8?B?clhvclpCbXg1U0FvUzlIODlaUUljejFWKzQvVXVkY0wzWC9wdEhYbis4aDJt?=
- =?utf-8?B?d0dRcXpmMkg0ZFNTK0x0N3FYNG1Cd2xsbkdDVHVsaTBZTTRNTXMwR1JzUXcy?=
- =?utf-8?B?NjM1dktoMCtINnZCZHEySEZPNTY1a2w5bXBIVTgzajZFSE1nRXhudGpMNVB4?=
- =?utf-8?B?REVtNXJQcS9IUitaYXpOSklmWDNib0RrKzhBMVpPNCtUSDA0UGI2eHVuRXJW?=
- =?utf-8?B?dGZKM2Y5VDVGS1E2NU9LZzcwSzRObElia21TTVpyQjZKMUF2WlhIR0pnWE1l?=
- =?utf-8?B?bHdtNGNxZEc0dVA3VUU3R3VBQmxJVXZoZWgxUktqa1kvbkE2SjZCWWtXVkN0?=
- =?utf-8?Q?IW0NsE0tOpRCi?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR12MB6588.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(1800799024);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?a3QrOUIzWG1GdnliRHVTZm5haGxMRzdKcXREZ3Nvc1BNSS9RSWNhNWo2TC9s?=
- =?utf-8?B?b1hwY3dVVmg0aTN4UVk3MUpLSXBwSDJpblg3UEpjRnlUemRST21JdXFiRC8v?=
- =?utf-8?B?blU5dHR5OGEySDNYV0xvd3p1T3NmN1NFZWY1b054d01RQjB3dFNlMTlIZHUr?=
- =?utf-8?B?eERybkVVOW53MEV4cHNaMm1vZ216eHNteWFwRndSZmNiTzVTSVdnVWJvRklQ?=
- =?utf-8?B?YnJGa1dQRmMzL2trblFPdGxKOEI3K3pBamI4TE5VU3JkWURIYklySkNIRVV4?=
- =?utf-8?B?RWhTTVlIR2FIWnpOUk55ZnJmZnVGaTc3V3NKeDRKTTBHYW9SWjdUQ2VLbnlC?=
- =?utf-8?B?QjV5VzBSSGxUZFBYSmFldC9HYW5KN2ZzVGNFZWU1Z2tndVVWM0lqTHNmNkJa?=
- =?utf-8?B?K2FjZXVrMmVjbGdhdEJJUG54bnkxSzhLMWcrNWQ1b2Nzb0dEMjdmTy9Idi94?=
- =?utf-8?B?bXJzL3Z4OXlPOEI1TUFDVFROODZYMlhHZG03RkN1enBSdkVPR2xkSE5KQUpp?=
- =?utf-8?B?c2NZdGpaV2ZzQkpqQzY1NWw1T01wYVZiNEYyRy8xN2dZbWNlQXZOQUkyNlRU?=
- =?utf-8?B?L3FPbHVRRC83bGpGRDMrSFA1S0JMSlRTMFBmbmE1amo4S0ZPeWliQmdPcTZS?=
- =?utf-8?B?bThBV0tTRjNpTGNVbHVjUmRBbllyVnBBb1UzSW9jbU9rK3NYSkpSbkVVbkVw?=
- =?utf-8?B?bENYemVZNU1yZmhDVFZHWSt5UEFMYzY2dkdtLzZFeU50cFNSQStjQ1owdGVF?=
- =?utf-8?B?UzFJZWIwVDdZSWk5c0xab1ZrdXlxNmNVZFp3MDYrRGRCdGRVYmY2UDlzV1Jr?=
- =?utf-8?B?dDYvWGhXSDhHQXg3N1NObnRzcmQyN3c0REhPR0JwOHNiMGJzbllRaG5NTGJj?=
- =?utf-8?B?c2ZqeTdwUFdkWGRrVWZPTEhrSWFPbFNxQWxvbHRWeDAvMm1HekpXczhXbDFY?=
- =?utf-8?B?aitXUkRXRmdQTUNYMmh4WThOcy9haUhpK20yTkV0cm5Ua1hQQlBnZGNMRXlJ?=
- =?utf-8?B?UDBIRUdJQ0o0Z2NacmtNeDFTc3lVUUJEb09WMUdJamdrRE92cW54dXc1SmFy?=
- =?utf-8?B?M3UvU3pGbFlRWWZuNGgxc3Z2bDloanp0YlRoRzhSOHJsekMzN3M1aTVqcjFV?=
- =?utf-8?B?bWxiN1Uyb2VwSDd2aE1tVU43YWVJUjJyQXFSOWV5aDZIZTZYVEJUZzlKV0VF?=
- =?utf-8?B?ZldhQ1QycEZINU80Tlp3cUlZMnZPYjBBR3AwK1NNTDhic01hUTFob3ZjU2VI?=
- =?utf-8?B?bXpRN2NzcjBHWG8zUU5IN2lyRWJnYTU0SlBMY0paOGFTLzdRbjBObkF0RHBE?=
- =?utf-8?B?OUNRRS9HdUhFOHBiS1FnQnl2Q0FoNERRRG1jUGhscGtJMTRaRWJoaTNoVzVO?=
- =?utf-8?B?cmYwMXA0L0IzNlkwbWVXcXdSTkpBK0xITnQ4NmpCT0NmK29kTTdMTkhTV0wy?=
- =?utf-8?B?bmRzTlBMblRrNEtyZzI1VExkQ1pNMUd5WWhOQ3dmTE9uQXAzaXIwcms0ZVBh?=
- =?utf-8?B?RXVIZHJZcDR5TXByL2p1NUh0ZnV5U2xhcEI3c20zaCtlN2tySTNlMWZKajA2?=
- =?utf-8?B?MkNOY0NvVDlqVGVGKzJJY3VYOHVXSnNxQWVQSUtiZDRoTU9vRFdsd1RqWlky?=
- =?utf-8?B?eS9OdVg3bXF1MWg1aWtNNWdkTExIelZvUkNCQXJJWkU5cnZZQkNkQ2tNamhk?=
- =?utf-8?B?L1BGOUw1dFZnTS9sQU1Fc0Nia1Y3STFMOVNRZ2ZSdkxHTlAyMERnRDZEbXBo?=
- =?utf-8?B?SUV5a2k5YStmbzl3QlZzcEMybVZjQ25pSDdsZDdkMkNsN3JiMm92VUVkUjFq?=
- =?utf-8?B?cEg5S0x3STZkZ2ttWFliWHZBOG1GU09sbDhHeko3RVlKVmw0bldBZ29WM0Ji?=
- =?utf-8?B?MXVVNHlENzdUeWFFU3BLRkVDVDh4ZEVza2o2RWFCVW5aQVlSL1BxUUlUeG5s?=
- =?utf-8?B?R3A5WEFxVmFCWjYzM0R1N1ZzLzVxU3BUd05ZTytsYk9SVnhHaXNVNGtKc3ln?=
- =?utf-8?B?TVR2NnhmWklVbmhLTXdxNFJnTXB5VnphZXd3THlSZFRMb3JETm5YV3g2WDB2?=
- =?utf-8?B?Vk9qdWZZNFVQY3YzTlZPMzlodFBYZGZ4di9vcnI4cElQNHJVYWs1Tmw1bnpm?=
- =?utf-8?Q?Jfbq0PjD9fRHVikWItRNw16S6?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d2fbde20-2b51-4c41-682f-08dd68942379
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR12MB6588.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 16:19:21.9805
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4Y60hhYJ8mAvaWROvQN4f6i0RF1Wxrt9Ymr1hAIEbaj1llxI3isdzT79Cx0dj+hUdDixOAKdwHfz5x21nuBemQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB7727
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] net: remove sb1000 cable modem driver
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174257403177.2538209.5678698281791174462.git-patchwork-notify@kernel.org>
+Date: Fri, 21 Mar 2025 16:20:31 +0000
+References: <20250312085236.2531870-1-arnd@kernel.org>
+In-Reply-To: <20250312085236.2531870-1-arnd@kernel.org>
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, arnd@arndb.de, horms@kernel.org,
+ corbet@lwn.net, christophe.leroy@csgroup.eu, rafael@kernel.org,
+ netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+ linux-acpi@vger.kernel.org
 
-Hi Namhyung, Ingo,
+Hello:
 
->>> We have two options:
->>> 1) Restrict IBS + PERF_SAMPLE_RAW to privilege users.
->>> 2) Remove all sensitive information from raw register dump before
->>>    passing it to userspace. (Kernel data addresses and all physical
->>>    addresses are the only sensitive info I suppose?).
->>>
->>> 2 is better IMO since it will allow unprivileged user to use IBS
->>> with full potential. wdyt?
->>
->> I'm slightly inclined to #1 for simplicity and safety, but #2 is fine 
->> to me as well.
+This patch was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
+
+On Wed, 12 Mar 2025 09:51:19 +0100 you wrote:
+> From: Arnd Bergmann <arnd@arndb.de>
 > 
-> I'd prefer #2 for superior usability, if it doesn't get too 
-> complicated.
+> This one is hilariously outdated, it provided a faster downlink over
+> TV cable for users of analog modems in the 1990s, through an ISA card.
+> 
+> The web page for the userspace tools has been broken for 25 years, and
+> the driver has only ever seen mechanical updates.
+> 
+> [...]
 
-Thank you for your opinion.
+Here is the summary with links:
+  - net: remove sb1000 cable modem driver
+    https://git.kernel.org/netdev/net-next/c/3fed9fda150d
 
-I've posted a v3 based on 2nd option:
-https://lore.kernel.org/r/20250321161251.1033-1-ravi.bangoria@amd.com 
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-@Ingo, can you please revert v2 and apply v3? (provided @Namhyung is okay
-with it).
 
-Thanks,
-Ravi
