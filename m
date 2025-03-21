@@ -1,325 +1,121 @@
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75916154426;
-	Fri, 21 Mar 2025 19:06:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90F7F22D4F1;
+	Fri, 21 Mar 2025 19:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742583976; cv=none; b=cgy0/8TSzg2iIjjeR7/eEb/pKWoTwUoJuefdyxL0IrKkzpAhhEAq3vN3HqKIjLFy/2okYlGZ2yD0LtzFeDP/BhdYVup0GcBEOUYpoOvZMRWj+KUBooA8PGg0ObI3x8zDjdLEsjxUYqXaSfJokZ8U0F0yexpsHaowqfNxYQYpEPw=
+	t=1742583995; cv=none; b=Wb5Q5ZREHiPCvjE2Z0Xx8l3PW43fgZ0haQC3uORjCCFzlZLZSMrpmQYe2YvvELJRycYbbFRct/3r1WVYa5nIGz4vPq8fY86VYaYIl3CpSoP4rFlqLSzxXzeLNGYiABtPA6KSABi3CFHwZ/E2Vt2WN2zVXqLFA6GOaw0BqbOr0OY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742583976; c=relaxed/simple;
-	bh=XQhRMao7IIt/6DRLieEod+aEidzzMi98vtZ3vLD3dNk=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=P3VkdoFacRin5sdtxjEsvFCygDL3TJtZ+ktaDAbwoAkDt+EF6igYj2JipM9fGwCZeH3FifC0747Oj+F7h2yewMBjYFGMirXDe+r4imvLMNc4XN7iN/KK9ySifUPSwmzXq8k6Z7lJDxtdbnGhObdPslKKfiABZCq+gBmDh1mOSaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=JA2dCgJo; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+	s=arc-20240116; t=1742583995; c=relaxed/simple;
+	bh=B+aD9dvfpVDv7F9UkKnouTo4wvTO8SyZ4HvL6VdDMqY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CgrvZp1rOEaDDO+rUnhwER08XD2oVDdUnPFljxBF0fNyd63vkq8OfFi/fZWy96E9shDwdA2Tx9gAHs3q1YRxUf6/hxcqpRtSZgG/PqUu+dTfRYBYywC396lqD1jgr+Kk+upO1uoi2ZvV1P4UNzb+1hPqflLO2ZXYb1JtJv683dQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OA5NWrBy; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="JA2dCgJo"
-Received: from pendragon.ideasonboard.com (cpc89244-aztw30-2-0-cust6594.18-1.cable.virginm.net [86.31.185.195])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 53E4D220;
-	Fri, 21 Mar 2025 20:04:27 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1742583867;
-	bh=XQhRMao7IIt/6DRLieEod+aEidzzMi98vtZ3vLD3dNk=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=JA2dCgJoqkADyajnRe40iMA8LOukmRZjsffnOBX1Dciv34ZpFJbkpSj9shLmELQ/M
-	 ECIb5uZ1wkZMzKE+8G5BW5nR421C4dN1hZ/+YSxbgsPZDgf/y3vePiMIGNXCi1ie0G
-	 UpkgMgOmayGxKob+u8E2HislxoylFMI/l+qVHA14=
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OA5NWrBy"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2240b4de12bso17648715ad.2;
+        Fri, 21 Mar 2025 12:06:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742583993; x=1743188793; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=zSQFBrcYGnUp+r+VXHpl/J3fI5NrdgINu2gTCJ+GUK8=;
+        b=OA5NWrByr8EdZq0LnvIMN7Ow+05Ht2O7juPvAgpDuRiziptqHgp1CMSzyg9xF5GvjO
+         8xt0KAyQt+14Ao5XGUTc+YXpjrUkh4WVjEmbqm6X99vQ1MgLnECJX/czujdRK4wBHFSe
+         Vpx749XFQicai2HrIuQvmgZ5SeOf6Lk7XEG/kLqdUaP+ErOXHTKhOUw7N1IyRKzLoFnS
+         KVJWn2EAygQfqChHJqiSk1kHzlggneAo2xkBXcitIuGcIb+HRIUmZvxBqwKoTLJFkQ8M
+         DkEGqWCWS0RUfKTOd7ezQqyCCrT8dzSAZKSbWkIh64WCm4MhB7gZB6/sYcd3PnfK3ZxN
+         Wngg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742583993; x=1743188793;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zSQFBrcYGnUp+r+VXHpl/J3fI5NrdgINu2gTCJ+GUK8=;
+        b=SPWx7/6uDaXqPkJrRXfaavDb//Egf5IBUqorBcfOqUkARGO1O3nr3tgBBwZWLv3jxT
+         LeumDuh0djiDqLcuLoC63ePQ0c+LcbAFC1F4fH226T+GWwBcM6Uy4BDRYY/t/5x0xjBr
+         dBP+sg1HS/VfBzQYzKAqeSON0wngSVpY4Vp5Z/i4urwW2oV7w8PJPgtN9MauT/n92VYn
+         ieHySZmKsufMNP2J+mJGxtRe11Y8KRPOgstE1/6G5lz7j6qWTN508vkUMlbtzMFTmw7n
+         SMujQX7xLJF6EqvA1u21isEe5ukCPZUKNilydnycFPYyBaNHv8273P5aVLrz7GXg6njo
+         xySg==
+X-Forwarded-Encrypted: i=1; AJvYcCUkcLdLNLfZHv5xiUfzJCcTLvZDVcbgxV1moHLyeKyDG/Msv3xd3yBJnOp+Xzy10SCrvAt+uGjhcAo=@vger.kernel.org, AJvYcCVR1JuJVtPRPKckqyZs9JQ90NyaDo2Q7bYJ2HR1o7km1ZyZ/3UeKEgFkzTmpCSbZkYxyuTkRoLIinKG@vger.kernel.org, AJvYcCWlY4AIXOOF5GLD8w4YWGSH8HZGRKqX94HNRBrnc1CPUxQqle0Stbyx4AHMcEN9NKRZ6cqoscLQzDXwsW55@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkML7zy11COlRoHuWzRPEweWhDXfyqovo50SYAaVJnUwrFEQNt
+	zi/EqHxgMc5YU+vX7DK1DOc2DvQTFb5fHFSz05PkHW6Y1bzHifzh
+X-Gm-Gg: ASbGnctD1nRg7AH5/0yHVyA9pgMeWtqSKPMBXVyS/wwC9w2APqlV1LBD70X/sIbVeUg
+	KJ2cb0yt/Ra1D7NuazWr+jaTdMhqhBUQKpMyAL3jlTZdcJB2EeBqF9DxqU+lUI2he7rUKkPVUEj
+	Ng4bc6w5/RxBGjYQ9Gocs+3baazGo+QWlDEgqcJtMTyTgqSMQmY9BKg6ej0cChA33iYTKOW8Pjb
+	3I0Q9S/UpjxShnXEy7x0FY1AxKfBmAQHlveYV6JH7eRw1EvbLz93xifFoSWY2Kpc2EWN2vANntY
+	qWOqQWmn/ERxf2uXZz4HWjVnzJatY1W68Km5bJ8+p/gAAKZTDFRmDg==
+X-Google-Smtp-Source: AGHT+IHhIKo6xXDfS3u4KCV16vBsyMkhHcyd/L8JMgusFH8Rv4KN00NY/E49L7DMWZ0wMIjy/M1cWw==
+X-Received: by 2002:a05:6a21:38c:b0:1f5:8a69:f41b with SMTP id adf61e73a8af0-1fe43435b0bmr8791567637.37.1742583992486;
+        Fri, 21 Mar 2025 12:06:32 -0700 (PDT)
+Received: from localhost ([2804:30c:b31:2d00:277c:5cbe:7f44:752b])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-73905fd57d6sm2458985b3a.58.2025.03.21.12.06.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 12:06:31 -0700 (PDT)
+Date: Fri, 21 Mar 2025 16:07:31 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+	corbet@lwn.net
+Subject: Re: [PATCH v2 1/5] iio: adc: ad400: Set transfer bits_per_word to
+ have data in CPU endianness
+Message-ID: <Z92480lC8WdgyuiT@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1742394806.git.marcelo.schmitt@analog.com>
+ <930560a0d0ca7af597d4ad901422bc9ba3fc6a79.1742394806.git.marcelo.schmitt@analog.com>
+ <4fb5329f-be34-4d98-b34e-2da4e035f44c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <TY3PR01MB11346C6C1EBF9896A47E9807086DB2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20250321172220.867165-1-kieran.bingham@ideasonboard.com> <TY3PR01MB11346C6C1EBF9896A47E9807086DB2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-Subject: RE: [PATCH] drm: renesas: Extend RZ/G2L supported KMS formats
-From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>
-To: Biju Das <biju.das.jz@bp.renesas.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Date: Fri, 21 Mar 2025 19:06:08 +0000
-Message-ID: <174258396885.1099553.5413524831101034269@ping.linuxembedded.co.uk>
-User-Agent: alot/0.10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4fb5329f-be34-4d98-b34e-2da4e035f44c@baylibre.com>
 
-Hi Biju,
-
-Quoting Biju Das (2025-03-21 18:40:50)
-> Hi Kieran,
->=20
-> Thanks for the patch.
->=20
-> > -----Original Message-----
-> > From: Kieran Bingham <kieran.bingham@ideasonboard.com>
-> > Sent: 21 March 2025 17:22
-> > Subject: [PATCH] drm: renesas: Extend RZ/G2L supported KMS formats
-> >=20
-> > From: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> >=20
-> > The RZ/G2L driver utilises the VSPD to read data from input sources.
-> >=20
-> > The rzg2l_du_kms component lists a restricted subset of the capabilitie=
-s of the VSPd which prevents
->=20
-> VSPD
->=20
-> > additional formats from being used for display planes.
-> >=20
-> > The supported display plane formats are mapped in rzg2l_du_vsp_formats[=
-].
-> >=20
-> > Extend the rzg2l_du_format_infos[] table with the corresponding mapping=
-s between the supported DRM
-> > formats and the formats exposed by the VSP in rzg2l_du_vsp_formats, mai=
-ntaining the same ordering in
-> > both tables.
-> >=20
-> > Signed-off-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
+On 03/20, David Lechner wrote:
+> On 3/19/25 9:57 AM, Marcelo Schmitt wrote:
+> > When SPI `bits_per_word` is not set, SPI transfers default 8-bit word size
+> > and ADC data gets stored in big-endian format in memory. Because of that,
+> > the IIO driver requests ADC data to be rearranged from BE to CPU
+> > endianness. However, with `bits_per_word` set to the number of ADC
+> > precision bits, transfers use larger word sizes that get stored in
+> > 'in-memory wordsizes' and can be read in CPU endianness.
+> > 
+> > Use proper `bits_per_word` size for SPI transfers thus saving the driver
+> > from requesting endianness conversions. With that, shifting the buffer
+> > data is also no longer needed. This change has no impact on IIO device
+> > functionality.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 > > ---
-> >  drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c | 141 ++++++++++++++++++-
-> >  1 file changed, 136 insertions(+), 5 deletions(-)
-> >=20
-> > Prior to this patch, kmstest reports all of these formats as supported =
-by the Planes, but using them
-> > fails during rzg2l_du_fb_create() as the corresponding format isn't fou=
-nd in rzg2l_du_format_info.
-> >=20
-> > This patch now lets me capture and render pixelformats from the Mali-C5=
-5 direct to an attached DSI
-> > panel on the Kakip board.
->=20
-> Previously I got a comment to remove all the formats from this table as D=
-SI supports only 3 formats.
+> 
+> This is a breaking change. Some SPI controllers, like RPi can only do 8-bit
+> transfers, so this driver would stop working on those platforms. Also, if
+> anyone made software already that depended on the big-endian ordering without
+> checking the scan_type attribute, it would break that software.
 
-Indeed, I can see that the DSI only supports the three RGB variant
-formats, but the RPF of the VPSD is very capable and does the pixel format
-conversion for us here as I understand it!
+Hmm, if user space software doesn't check
+deviceX/scan_elements/in_<channel_type>_type, nor
+deviceX/bufferY/in_<channel_type>Y_type, then I'd say that's already
+somewhat broken since at least buffer scan_element type attributes are documented
+https://web.git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/tree/Documentation/ABI/testing/sysfs-bus-iio?h=testing#n1470.
 
+Anyway, this patch it indeed broke RPi support so I'll revert buffer endianness
+and SPI transfer bits_per_word configurations the way it was in v1.
 
-> I agree VSPD has two planes(2 rpf-instances) which supports all these for=
-mats.
->=20
-> Mali-C55(n formats)-->LCDC(VSPD n formats)->DSI(3 formats)-->Panel
->=20
-> Am I missing anything w.r.to the comment that I received previously.
-> Otherwise patch LGTM.
->=20
+Adding possible failure due to controller not supporting specific bits_per_word
+size to my list of peculiarities related to that field.
 
-I haven't looked completely, but as long as the VSPD is only configured
-to /output/ the RGB formats to the DSI then I think this is fine,
-
-> Cheers,
-> Biju
-
-Thanks,
-
-Kieran
-
->=20
-> >=20
-> > Patch tested with kms-tests:
-> >=20
-> > PYTHONPATH=3D/usr/lib/aarch64-linux-gnu/python3.11/site-packages ./test=
-s/kms-test-formats.py Testing
-> > plane formats: SUCCESS
-> >=20
-> > admin@kakip:~/kms-tests$ cat FormatsTest.log U [66.967523] Testing plan=
-e formats U [66.975763] Testing
-> > connector DSI-1, CRTC 36, mode 720x1280 U [66.978480] Testing format Pi=
-xelFormat.RGB332 U [70.143998]
-> > Testing format PixelFormat.ARGB4444 U [73.357056] Testing format PixelF=
-ormat.XRGB4444 U [76.574944]
-> > Testing format PixelFormat.ARGB1555 U [79.805636] Testing format PixelF=
-ormat.XRGB1555 U [83.016599]
-> > Testing format PixelFormat.RGB565 U [86.230362] Testing format PixelFor=
-mat.BGR888 U [89.444673]
-> > Testing format PixelFormat.RGB888 U [92.677093] Testing format PixelFor=
-mat.BGRA8888 U [95.904745]
-> > Testing format PixelFormat.BGRX8888 U [99.119926] Testing format PixelF=
-ormat.ARGB8888 U [102.350298]
-> > Testing format PixelFormat.XRGB8888 U [105.579499] Testing format Pixel=
-Format.UYVY U [108.878654]
-> > Testing format PixelFormat.YUYV U [112.176515] Testing format PixelForm=
-at.YVYU U [115.470090] Testing
-> > format PixelFormat.NV12 U [118.767513] Testing format PixelFormat.NV21 =
-U [122.065851] Testing format
-> > PixelFormat.NV16 U [125.364001] Testing format PixelFormat.NV61 U [128.=
-662145] Testing format
-> > PixelFormat.YUV420 U [131.978102] Testing format PixelFormat.YVU420 U [=
-135.292284] Testing format
-> > PixelFormat.YUV422 U [138.623485] Testing format PixelFormat.YVU422 U [=
-141.955083] Testing format
-> > PixelFormat.YUV444 U [145.336759] Testing format PixelFormat.YVU444 U [=
-148.761832] Test completed
-> > successfully
-> >=20
-> >=20
-> > diff --git a/drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c b/drivers/gpu=
-/drm/renesas/rz-
-> > du/rzg2l_du_kms.c
-> > index b1266fbd9598..a5e96f863172 100644
-> > --- a/drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c
-> > +++ b/drivers/gpu/drm/renesas/rz-du/rzg2l_du_kms.c
-> > @@ -36,8 +36,61 @@
-> >=20
-> >  static const struct rzg2l_du_format_info rzg2l_du_format_infos[] =3D {
-> >       {
-> > -             .fourcc =3D DRM_FORMAT_XRGB8888,
-> > -             .v4l2 =3D V4L2_PIX_FMT_XBGR32,
-> > +             .fourcc =3D DRM_FORMAT_RGB332,
-> > +             .v4l2 =3D V4L2_PIX_FMT_RGB332,
-> > +             .bpp =3D 8,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_ARGB4444,
-> > +             .v4l2 =3D V4L2_PIX_FMT_ARGB444,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_XRGB4444,
-> > +             .v4l2 =3D V4L2_PIX_FMT_XRGB444,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_ARGB1555,
-> > +             .v4l2 =3D V4L2_PIX_FMT_ARGB555,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_XRGB1555,
-> > +             .v4l2 =3D V4L2_PIX_FMT_XRGB555,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_RGB565,
-> > +             .v4l2 =3D V4L2_PIX_FMT_RGB565,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_BGR888,
-> > +             .v4l2 =3D V4L2_PIX_FMT_RGB24,
-> > +             .bpp =3D 24,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_RGB888,
-> > +             .v4l2 =3D V4L2_PIX_FMT_BGR24,
-> > +             .bpp =3D 24,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_BGRA8888,
-> > +             .v4l2 =3D V4L2_PIX_FMT_ARGB32,
-> > +             .bpp =3D 32,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_BGRX8888,
-> > +             .v4l2 =3D V4L2_PIX_FMT_XRGB32,
-> >               .bpp =3D 32,
-> >               .planes =3D 1,
-> >               .hsub =3D 1,
-> > @@ -48,11 +101,89 @@ static const struct rzg2l_du_format_info rzg2l_du_=
-format_infos[] =3D {
-> >               .planes =3D 1,
-> >               .hsub =3D 1,
-> >       }, {
-> > -             .fourcc =3D DRM_FORMAT_RGB888,
-> > -             .v4l2 =3D V4L2_PIX_FMT_BGR24,
-> > -             .bpp =3D 24,
-> > +             .fourcc =3D DRM_FORMAT_XRGB8888,
-> > +             .v4l2 =3D V4L2_PIX_FMT_XBGR32,
-> > +             .bpp =3D 32,
-> >               .planes =3D 1,
-> >               .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_UYVY,
-> > +             .v4l2 =3D V4L2_PIX_FMT_UYVY,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YUYV,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YUYV,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YVYU,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YVYU,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 1,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_NV12,
-> > +             .v4l2 =3D V4L2_PIX_FMT_NV12M,
-> > +             .bpp =3D 12,
-> > +             .planes =3D 2,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_NV21,
-> > +             .v4l2 =3D V4L2_PIX_FMT_NV21M,
-> > +             .bpp =3D 12,
-> > +             .planes =3D 2,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_NV16,
-> > +             .v4l2 =3D V4L2_PIX_FMT_NV16M,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 2,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_NV61,
-> > +             .v4l2 =3D V4L2_PIX_FMT_NV61M,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 2,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YUV420,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YUV420M,
-> > +             .bpp =3D 12,
-> > +             .planes =3D 3,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YVU420,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YVU420M,
-> > +             .bpp =3D 12,
-> > +             .planes =3D 3,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YUV422,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YUV422M,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 3,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YVU422,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YVU422M,
-> > +             .bpp =3D 16,
-> > +             .planes =3D 3,
-> > +             .hsub =3D 2,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YUV444,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YUV444M,
-> > +             .bpp =3D 24,
-> > +             .planes =3D 3,
-> > +             .hsub =3D 1,
-> > +     }, {
-> > +             .fourcc =3D DRM_FORMAT_YVU444,
-> > +             .v4l2 =3D V4L2_PIX_FMT_YVU444M,
-> > +             .bpp =3D 24,
-> > +             .planes =3D 3,
-> > +             .hsub =3D 1,
-> >       }
-> >  };
-> >=20
-> > --
-> > 2.48.1
->
+> 
+> I would leave this as-is (drop this patch) and just make it:
+> 
+> 	.endianness = _offl ? IIO_CPU : IIO_BE,
+> 
+> in the next patch.
