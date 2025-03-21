@@ -1,100 +1,188 @@
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BEC1E571A
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:43:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6820C1E7C10;
+	Fri, 21 Mar 2025 08:45:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742546639; cv=none; b=EbGMlIARGkvvR6iL3fRenVOoS3FY0yrG23dCQ04XAUT7F8S4WzIWuMiX+A6TpXbHDJRI4NczlyHnyFdIBgbvfpHCOYwPcfGD4imvc6iE1Tnq+3PPeExmyHdEQaswJkOLOaZZZEZ8AP+0uQpl75uafIZyLjNHqeCMmPD/4Gs0RuQ=
+	t=1742546756; cv=none; b=oVwmqRmoNoUWEPPIvn/OIGZsl4c/En2jLjErohFa5zqk426fXw84ZHPgSaOHuU5SM5LyXNFrxa+02bpZCxQ1KkL+uDZNRFf82CNk5ntiatdENPiinJ8gdk2Bscx8ZUoo9kXgmWVXfYpIPIA8FXK5vB3S4ERFtvKZbRhfhTgwCgc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742546639; c=relaxed/simple;
-	bh=ZdMfirDqSxAiPoPdpxSL5z49ZYOXEt3ILIkDPg+hh20=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fnh7kC3D8XeUhtuVl0ueKiW+yFKfpLS1W9VWE0fUc3tbH5bRVVMRW5fTnyP4RHP/Hfp6f2Sz+cFjozgov2Kkkk1vhHk61nmtxedqhp3VM2GJhHdIYuWMkJ3Z8mYvl/zdJrxQhib7G5DaqHKTT0KGmxvvnRUhMtiWR4C9/wREcdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=as1rQeXY; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1742546756; c=relaxed/simple;
+	bh=0ZJMZv78OUXA4YZqXXMtIlqDz6jl8IDBTlX/dQ5d9/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9pdJ/AOmgjntsqrCjGqOlUrYBk1gKvgUxF9yusMtgdXREKMCR3Sj2LJj5fdIK4Mf8sDhhlk3ScQxpjq+2fF0OoZ+r1ReXPF+V+QuFsVBN1o+ZQlpdwRz4WsX9W1l69XtF3tD4LDDD+VPzO9I92unQIOIJAd8BIwE+7MUtCPIhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ib9fjPVr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="as1rQeXY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1742546635;
-	bh=ZdMfirDqSxAiPoPdpxSL5z49ZYOXEt3ILIkDPg+hh20=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=as1rQeXYhMnRaCsPd82RZzQU24/nZIXzO2nWZ38SWBHexkWFTP7YGf+rzmQ6F5bhk
-	 XzGjRo2wCg7bndfyV2H/qCXP/UH3Z9P/IM+sNDbkNfpTomHk7MDNKvEr+oe22NR2+C
-	 Cm+K/shgkc30CRv+54GeWItwZLYcJdXRXIPdPbCAEw4sq5cdy/Mfmfrti9RLJw3AZ/
-	 ubgjrfISesgmRAxqrfayIYQINo60GkcCZtncqDaz5grVFi+dNTYP6EOM8uvbKACCsd
-	 b2ExAGklSfxooLTk04H+HbjhEPT6bv+qk4k/WBLVmwMNx1VIK5XeQwKqopIUoaAAuG
-	 4D1XNzd+TFqsw==
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id E158717E0EA9;
-	Fri, 21 Mar 2025 09:43:54 +0100 (CET)
-Date: Fri, 21 Mar 2025 09:43:51 +0100
-From: Boris Brezillon <boris.brezillon@collabora.com>
-To: Karunika Choo <karunika.choo@arm.com>
-Cc: dri-devel@lists.freedesktop.org, nd@arm.com, Steven Price
- <steven.price@arm.com>, Liviu Dudau <liviu.dudau@arm.com>, Maarten
- Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
- <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
- <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 4/9] drm/panthor: Move GPU info initialization into
- panthor_hw.c
-Message-ID: <20250321094351.537c768c@collabora.com>
-In-Reply-To: <20250321091645.0edec07a@collabora.com>
-References: <20250320111741.1937892-1-karunika.choo@arm.com>
-	<20250320111741.1937892-5-karunika.choo@arm.com>
-	<20250321091645.0edec07a@collabora.com>
-Organization: Collabora
-X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ib9fjPVr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA967C4CEE3;
+	Fri, 21 Mar 2025 08:45:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742546755;
+	bh=0ZJMZv78OUXA4YZqXXMtIlqDz6jl8IDBTlX/dQ5d9/g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ib9fjPVrIakwcP8a9139b0y2inR+7c4ztUo6gwVQfpYOquLU2p4nChdI0ielEDm8T
+	 Ls9dQAhF7uhV6Px5dk3rc2dqfbVNyxqDmCbzCRoXu6xHgTJRDgEaR9kJB78xg0v26g
+	 eLtz+y6bEcKV4QgG14ISJa9JV0/uR+btCetrnCMB9Pb9TFKTpmJiDjVir9JcTeknl/
+	 5lnVc6D02a5Vu9k8PZ6pf0ea5+jLx0nG9NT9EV8YOu7rC3g1nscF62pHr8CuBBp6IK
+	 5ntJPf9z+UrHKZG3EabBmpsGT0aKVqS9+SbIFQnsrtZemh07zLBI2ldbM5o0UR/zX+
+	 nX6ZSlQwbmCgA==
+Date: Fri, 21 Mar 2025 09:45:39 +0100
+From: Christian Brauner <brauner@kernel.org>
+To: Kees Cook <kees@kernel.org>
+Cc: Oleg Nesterov <oleg@redhat.com>, jack@suse.cz, 
+	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk, 
+	syzbot <syzbot+1c486d0b62032c82a968@syzkaller.appspotmail.com>
+Subject: Re: [syzbot] [fs?] [mm?] KCSAN: data-race in bprm_execve / copy_fs
+ (4)
+Message-ID: <20250321-abdecken-infomaterial-2f373f8e3b3c@brauner>
+References: <67dc67f0.050a0220.25ae54.001f.GAE@google.com>
+ <202503201225.92C5F5FB1@keescook>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202503201225.92C5F5FB1@keescook>
 
-On Fri, 21 Mar 2025 09:16:45 +0100
-Boris Brezillon <boris.brezillon@collabora.com> wrote:
-
-> On Thu, 20 Mar 2025 11:17:36 +0000
-> Karunika Choo <karunika.choo@arm.com> wrote:
+On Thu, Mar 20, 2025 at 01:09:38PM -0700, Kees Cook wrote:
+> Hey look another threaded exec bug. :|
 > 
-> > This patch moves GPU info initialization into panthor_hw.c in
-> > preparation of handling GPU register changes. The GPU register reading
-> > operations to populate gpu_info are separated into an architecture
-> > specific arch_*_gpu_info_init() function and is called via the new
-> > function pointer abstraction under hw.ops.gpu_info_init().
+> On Thu, Mar 20, 2025 at 12:09:36PM -0700, syzbot wrote:
+> > ==================================================================
+> > BUG: KCSAN: data-race in bprm_execve / copy_fs
 > > 
-> > Future GPU support will be performed by implementing a *_gpu_info_init()
-> > function specific to that architecture version. It can call any existing
-> > *_gpu_info_init() and extend it with additional register reads or
-> > provide an entirely different implementation.  
+> > write to 0xffff8881044f8250 of 4 bytes by task 13692 on cpu 0:
+> >  bprm_execve+0x748/0x9c0 fs/exec.c:1884
 > 
-> Could you give us an insight into what the reg layout changes are? So
-> far, they were mostly unchanged between GPU gens, and I'd really
-> prefer we could keep the majority of them unchanged part of the commo 
-> discovery, and only add the missing reads in the ->gpu_info_init()
-> callback.
+> This is:
 > 
-> Note that I'm also working on abstracting mali device operations to add
-> JM support to panthor, and the only things I had to specialize are:
+>         current->fs->in_exec = 0;
 > 
-> - CSF ID for CSF
-> - JS features/present masks for JM
+> And is part of the execve failure path:
 > 
-> The rest is just common. So what I have is a common gpu_init_info()
-> helper that reads all the regs excepts those two, and after that, I
-> have a device ops selection based on the arch major of the GPU ID [1].
-> The device-specific GPU info are then read as part of the
-> panthor_device_ops::init().
+> out:
+> 	...
+>         if (bprm->point_of_no_return && !fatal_signal_pending(current))
+>                 force_fatal_sig(SIGSEGV);
+> 
+>         sched_mm_cid_after_execve(current);
+>         current->fs->in_exec = 0;
+>         current->in_execve = 0;
+> 
+>         return retval;
+> }
+> 
+> >  do_execveat_common+0x769/0x7e0 fs/exec.c:1966
+> >  do_execveat fs/exec.c:2051 [inline]
+> >  __do_sys_execveat fs/exec.c:2125 [inline]
+> >  __se_sys_execveat fs/exec.c:2119 [inline]
+> >  __x64_sys_execveat+0x75/0x90 fs/exec.c:2119
+> >  x64_sys_call+0x291e/0x2dc0 arch/x86/include/generated/asm/syscalls_64.h:323
+> >  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+> >  do_syscall_64+0xc9/0x1c0 arch/x86/entry/common.c:83
+> >  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> > 
+> > read to 0xffff8881044f8250 of 4 bytes by task 13686 on cpu 1:
+> >  copy_fs+0x95/0xf0 kernel/fork.c:1770
+> 
+> This is:
+> 
+>                 if (fs->in_exec) {
+> 
+> Which is under lock:
+> 
+>         struct fs_struct *fs = current->fs;
+>         if (clone_flags & CLONE_FS) {
+>                 /* tsk->fs is already what we want */
+>                 spin_lock(&fs->lock);
+>                 /* "users" and "in_exec" locked for check_unsafe_exec() * */
+>                 if (fs->in_exec) {
+>                         spin_unlock(&fs->lock);
+>                         return -EAGAIN;
+>                 }
+>                 fs->users++;
+>                 spin_unlock(&fs->lock);
+> 
+> 
+> Does execve need to be taking this lock? The other thing touching it is
+> check_unsafe_exec(), which takes the lock. It looks like the bprm_execve()
+> lock was removed in commit 8c652f96d385 ("do_execve() must not clear
+> fs->in_exec if it was set by another thread") which used the return
+> value from check_unsafe_exec():
+> 
+>     When do_execve() succeeds, it is safe to clear ->in_exec unconditionally.
+>     It can be set only if we don't share ->fs with another process, and since
+>     we already killed all sub-threads either ->in_exec == 0 or we are the
+>     only user of this ->fs.
+> 
+>     Also, we do not need fs->lock to clear fs->in_exec.
+> 
+> This logic was updated in commit 9e00cdb091b0 ("exec:check_unsafe_exec:
+> kill the dead -EAGAIN and clear_in_exec logic"), which includes this
+> rationale:
+> 
+>             2. "out_unmark:" in do_execve_common() is either called
+>                under ->cred_guard_mutex, or after de_thread() which
+>                kills other threads, so we can't race with sub-thread
+>                which could set ->in_exec. And if ->fs is shared with
+>                another process ->in_exec should be false anyway.
+> 
+> The de_thread() is part of the "point of no return" in exec_binprm(),
+> called via exec_binprm(). But the bprm_execve() error path is reachable
+> from many paths prior to the point of no return.
+> 
+> What I can imagine here is two failing execs racing a fork:
+> 
+> 	A start execve
+> 	B fork with CLONE_FS
+> 	C start execve, reach check_unsafe_exec(), set fs->in_exec
+> 	A bprm_execve() failure, clear fs->in_exec
+> 	B copy_fs() increment fs->users.
+> 	C bprm_execve() failure, clear fs->in_exec
+> 
+> But I don't think this is a "real" flaw, though, since the locking is to
+> protect a _successful_ execve from a fork (i.e. getting the user count
+> right). A successful execve will de_thread, and I don't see any wrong
+> counting of fs->users with regard to thread lifetime.
+> 
+> Did I miss something in the analysis? Should we perform locking anyway,
+> or add data race annotations, or something else?
 
-With the link this time :-).
+Afaict, the only way this data race can happen is if we jump to the
+cleanup label and then reset current->fs->in_exec. If the execve was
+successful there's no one to race us with CLONE_FS obviously because we
+took down all other threads.
 
-[1]https://gitlab.freedesktop.org/bbrezillon/linux/-/blob/panthor-jm/drivers/gpu/drm/panthor/panthor_device.c?ref_type=heads#L359
+I think the logic in commit 9e00cdb091b0 ("exec:check_unsafe_exec: kill
+the dead -EAGAIN and clear_in_exec logic") is sound.
+
+This is a harmless data race that can only happen if the execve fails.
+The worst that can happen is that a subthread does clone(CLONE_FS) and
+gets a spurious error because it raced with the exec'ing subthread
+resetting fs->in_exec. So I think all we need is:
+
+diff --git a/fs/exec.c b/fs/exec.c
+index 506cd411f4ac..177acaf196a9 100644
+--- a/fs/exec.c
++++ b/fs/exec.c
+@@ -1881,7 +1881,13 @@ static int bprm_execve(struct linux_binprm *bprm)
+                force_fatal_sig(SIGSEGV);
+
+        sched_mm_cid_after_execve(current);
+-       current->fs->in_exec = 0;
++       /*
++        * If this execve failed before de_thread() and another
++        * subthread is concurrently forking with CLONE_FS they race
++        * with us resetting current->fs->in_exec. This is fine,
++        * annotate it.
++        */
++       data_race(current->fs->in_exec = 1);
+        current->in_execve = 0;
+
+        return retval;
+
+
