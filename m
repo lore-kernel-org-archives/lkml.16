@@ -1,167 +1,180 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7D11EE7C6
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:33:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932191EE7C6
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742560405; cv=none; b=jLyGgS2jNc+GaKqasAA40OkMldJbheTTTP78NakhIAt4KqYHnYrJF4uXbKJWTmfWJI38J4OpHmfjGDIHKAtu7iWJpObMgRO6sosbMcK++q1He5ctlmyUSThGa6Q8AgoegOWPngWXRFcuGMta59fE8MaLCJPCmGqUtBNDauL7D1Y=
+	t=1742560542; cv=none; b=WbMwk39d24knZwy06vJ0wB0u9sZU7Zdk8QdgG5iKdiW+kL33iLMt+a5VTqpbNgyhFbMNigs0kBN7LtlBb89kEd/ZdnnHlBsIhbHD4bTHoKuXb/92fJIi63Z2bf3CRmw4+hapu+57VlohzLZh7iYCTn48J3XoLzqPUjqJZU+naWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742560405; c=relaxed/simple;
-	bh=yBmWZmP53UTI8j2igDDHeObdAJwMWLYoN999xGCve9I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CrAfrYB/YaRFVLUVJU8qu+x+soX69CxbdnmSk96BYsT3oUv3Md7tmCUnudmRJN/HNSmO73LC14Ix1GIoNshGwLfG8H8lMvvN8WUwJax/uyKbWAlipJCdz1ZlwGBjV9elqJuJCLRFzZw6MpiLtA2wHbOc23Zmmzo/RDspkH9cSlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=Yk85MFNm; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	s=arc-20240116; t=1742560542; c=relaxed/simple;
+	bh=6PRbJ7TQ5aODdbz0m2PU+5RLlhJgh3PHA4Yj0p5qlTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RCTHjBRjPRYlTthil19hLtAe0Zov45M0X3yVf1uu4i1gybMbHRbZ8WXyw5cexVvNdy626yZ5UqBqvkWOllQ4rnUTMqFWRkyCOUvxHuBcsm1QMyCa1H/KW3EUrzJOlac5gECgELVG9uI7cAs0F/gZ1ZCcgAnPeVlQWsL2QQEjsEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lj4NMOu3; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="Yk85MFNm"
-Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 664633F682
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742560400;
-	bh=b+qYcKK82ubSV6/PFWUwub7oSXzcshnlWJCFkhjQcKs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=Yk85MFNmPuC4d6PXTfiBwCWqeY+bOxhoJTJB4DAbdCxrpOawN57aG51NCtOQt+xdc
-	 2wRkulUHkYB5F7uo5H8yAHqSW1JqBumWUHULs9FF59sa8bnqsMbaHUUvf9Vdqd6K4H
-	 1V2WrnzUPUteYpqUFY67Jh6ChL62DAM5YYY97iWq0xI5RUDToit5jEhnPjjURMYNVd
-	 7g8BuWIr4pJ1es5U/y1ulk9dQphUv+0OuXbn3b49IcixA1AOPpmwxSfDD8Oz/R/lJY
-	 AmNxunVIcUjJgPMbY84UfsUg5wj/05B/iKnshsohZ2jrXU1kpelYOJTIT5tIuV5RYX
-	 ZQ2o2OBo2m2hw==
-Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so3085701a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:33:20 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lj4NMOu3"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso3404414a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:35:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742560538; x=1743165338; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=yv4lZ+YNLUl7ot9RW8qDQsIhZ1LLB6J6i6RU1rh9WlA=;
+        b=lj4NMOu3omf+TEDG3c+kA8Vh7ru45E0TBhNissTlAmVNDHnwS7x2W5VO8KdUj1xv5j
+         Px7PET9GHb04dmviaQMirOp0Gm4aNeSewG2COqhrDJnxAdRrhHcaWUcFK4NHIEImTGfk
+         4oGCuaSzSXvzHL39ELS/YQZjMTxLucQTxI0/nMJ0hcpKy61NayLUktIBPGT4gnN6mIJm
+         q4tRRhOkk6DiFko66uUqbIULKbx51Qx+vFw9nUaU39EQ1EsRQ6QJlJQj2SkdHA0Vrlq2
+         sSGBlMUtsvaT3b/upJ3UInahdE1N2SbMWOknlKzX/4WU60cldwZ8AQ/jEpjfvkR8xXpP
+         ZA0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742560399; x=1743165199;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
+        d=1e100.net; s=20230601; t=1742560538; x=1743165338;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=b+qYcKK82ubSV6/PFWUwub7oSXzcshnlWJCFkhjQcKs=;
-        b=Es+IYxkXEXLq+Xwslj6M6oVOl3oXc6SkzfcQelmQARECeZAITI5rAkzZ68+ACzhfAW
-         sNo6Wx/VjbzGC1uLxzATAnNG2ZEJCcubTPSb38uljGFOaLcs2ZZNSrubbDMF8uk1mqrC
-         Yf7MzUeGUptfkWJ7d/X9AjTX9i+ZTCLyBw8kOlS/UkyEZYdOfb8o2VQMSurArzft2DHz
-         32pafGs7nJy14lEt9Pk2sXkluvX8MdmmnspW9PO49SeEA9gpn6ZMT/piFHFtfM4u3Nqu
-         QM1ryMcYrJTkKidIDifhRqyUQCgoAjZMWpZt8ptr5gLueQgErMHMCn8yYgDCscHCjM3C
-         IBnw==
-X-Forwarded-Encrypted: i=1; AJvYcCUIo92PYiLIChZjXjRTAuw7FS252Go3Pi6GOp5Bs211TRYoeaEo0QQEjGUoBFMt+MLnDCfy0AX1tQyrsMo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyqIEQsTcMt7uD2QG1gj6hXs0ECIs9phd1uYZ8nt1rw8/xFaXWY
-	EPzJ0J6IOBEZ6QwIdD30fTl/hzgN8U3J7kXbdc45slgzGGsyxe+nPflEF6cDw0xmaQTQUSod7JZ
-	7/JK3Ly+1Jz7zv4Df4pF8GZtF5f7sWKP9a+rsfnR+mle+F/3jzpG/B9OEFsbrx4GvZZ2zGysEln
-	z0EQ==
-X-Gm-Gg: ASbGncsA8iiWXIf/0jCO/TGmgbV7EcX1mOJwx/fd5i9rPmCEJgc9dV3cKLYcJkUPT+y
-	F6BA5a2IFBB2rPeJUkXTcYNdM6OxtheyZWyhO/xPWC23xnZMJA2q2fY0K+LoebWw8aJp+LcZiDT
-	cOmBYOOB3U6b7xRcOwjKj3X8h9lsn/vW9s7ai0Td7Ek4Mn8Q/AT57Gzrw48PkeqQDv3RezbqbpH
-	GGylUnR3EmEbQcTtyJ4OrOCHP+brDhuIqDdKEGdBM7FOmQDyZYkRpVJ1iqeLZFx1OR7TxpdEHdb
-	2Ma39RLBS0oTNh609Q==
-X-Received: by 2002:a17:90b:2d0c:b0:2fa:1e3e:9be5 with SMTP id 98e67ed59e1d1-3030fd769d1mr6408000a91.0.1742560398812;
-        Fri, 21 Mar 2025 05:33:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHs5vBj1ckmfc3WDb7h6jw+MxrxntJ6dKT2MUeNkW2OZEUjTKQbq883hHjlPKZDz+zvaOU8Zw==
-X-Received: by 2002:a17:90b:2d0c:b0:2fa:1e3e:9be5 with SMTP id 98e67ed59e1d1-3030fd769d1mr6407969a91.0.1742560398483;
-        Fri, 21 Mar 2025 05:33:18 -0700 (PDT)
-Received: from localhost ([240f:74:7be:1:2dba:1af7:27b6:24fd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61b34dsm5886695a91.30.2025.03.21.05.33.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 05:33:18 -0700 (PDT)
-Date: Fri, 21 Mar 2025 21:33:16 +0900
-From: Koichiro Den <koichiro.den@canonical.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
-	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 4/9] gpio: aggregator: introduce basic configfs
- interface
-Message-ID: <oneoncbyv3iwb54kvjvmerv4xxhixgeqp44ubeikvy4yst3az3@g5c7uxgkonbx>
-References: <20250315164123.1855142-1-koichiro.den@canonical.com>
- <20250315164123.1855142-5-koichiro.den@canonical.com>
- <CAMRc=MdOSsakJm4H5=cqVzdKDrrMFO2t-wKVWRCU83saozepxQ@mail.gmail.com>
- <6mcl34zdx37gjh3a3y4lc5kgb2vv5notvs355oewiwogpgg5g7@jcuukymbifnm>
- <CAMRc=McpqUsEsMSfwo+WrzWdaW6YnMbptpj3fAoS-JfVhSm9mQ@mail.gmail.com>
+        bh=yv4lZ+YNLUl7ot9RW8qDQsIhZ1LLB6J6i6RU1rh9WlA=;
+        b=Lfnr8fO9k/1oQcqbPVfz3ymzRon+bMBR/Wm/bdh5faEvp05zXVcysXUI4Gv3CJX9Vx
+         EgRynCn0XddGflsxXdD3EwAxBY8yFU7hdcYICvwYNoeFshNrs3HHNOQrExKPfviW1RmH
+         ttuYb87DTNt3vM5ru1bOU7Q5OTt5Oz6EFgGrluqtyM4sxEQkQ7VKYCuW1XE2oCKSiLFy
+         4kNkh3frsHo3LWWxm0V8T5LEJSLaVJjIkShEjg0h8IpYq0qjKw0ax4aJc6M+UZUr5F0k
+         BrOrotX1RlsyjVbhcEpfFl20mO5D/+D4xLKnrhiX/noqgupGOHVTOWvcwLTn5+7Vg9gk
+         fmzA==
+X-Forwarded-Encrypted: i=1; AJvYcCV5iYXNor8IcvmtTo2nFZSo011B/tIGVIaVs7ZSnhxCEM1fuu/nUU4mOm+JIqmnxUobH3mNr8ysfqoMqRI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyrVObrBeVUPjWFIZkfZiG5EplAQReFK/klhpsX0aXuh5417h7z
+	JcpaFZJ0t+N+YmCHQLivRcEQ9mQ+70CxXb8do9OyOcwXiF+yoOBKzbPtdq7BrMk=
+X-Gm-Gg: ASbGncsCi+P53LjMJBz0Kv68OkN0mNONaCJser78Piy4yp5T31qdeCZmfLUiC/PBoK8
+	X0i6fPa/vk3UdyMRrDV9RMTo/MLr5PDf8dabDjcV/cOwlihPFURnQK7ZZIkKrg/3SoLumMNSzzF
+	I5kNECw759lCLy0lpACjr3D45KddRoxSCpc3RcbGhi5EEcGB3W6nPfM0rY8gzhybQcJAZ0J+vCl
+	6SZJk2JXtu4NPNKkHk+2lL2rQL/kzthyDGzD26h2347ZNJTgCP2CdlVXrjKARipPnOolzjK+Bts
+	x6R9tWR8wwi0PVW5KP1e/BwkBpxKC4PTTBDvKAWDoKjgypPsIWp3OByuV3gx90u2G/wfSYQXHw=
+	=
+X-Google-Smtp-Source: AGHT+IG2h1yWDQQeNTqSEG97hM0WQIsywT10+rmqmILs3H3/8OMMRH7lWKNJLMtf+dIGR5DUR3nMqA==
+X-Received: by 2002:a05:6402:51d4:b0:5e0:8c55:501 with SMTP id 4fb4d7f45d1cf-5ebcd41677amr2789203a12.7.1742560537711;
+        Fri, 21 Mar 2025 05:35:37 -0700 (PDT)
+Received: from [192.168.68.117] ([5.133.47.210])
+        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0c774esm1257920a12.59.2025.03.21.05.35.36
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 05:35:37 -0700 (PDT)
+Message-ID: <b1aed195-b2e6-4f48-ba10-3049d74085a9@linaro.org>
+Date: Fri, 21 Mar 2025 12:35:36 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McpqUsEsMSfwo+WrzWdaW6YnMbptpj3fAoS-JfVhSm9mQ@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 4/5] ASoC: codecs: wcd938x: add mux control support for
+ hp audio mux
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
+ krzk+dt@kernel.org, ivprusov@salutedevices.com, luca.ceresoli@bootlin.com,
+ zhoubinbin@loongson.cn, paulha@opensource.cirrus.com, lgirdwood@gmail.com,
+ robh@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org,
+ perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, johan+linaro@kernel.org
+References: <20250320115633.4248-1-srinivas.kandagatla@linaro.org>
+ <20250320115633.4248-5-srinivas.kandagatla@linaro.org>
+ <rdvsnxuc6by6sci56sh7thzpxo5cqi7q24fnmc7hi5yrfszwrg@kqjpiilko3xo>
+Content-Language: en-US
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+In-Reply-To: <rdvsnxuc6by6sci56sh7thzpxo5cqi7q24fnmc7hi5yrfszwrg@kqjpiilko3xo>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 21, 2025 at 12:18:02PM GMT, Bartosz Golaszewski wrote:
-> On Fri, Mar 21, 2025 at 3:35 AM Koichiro Den <koichiro.den@canonical.com> wrote:
-> >
-> > On Thu, Mar 20, 2025 at 04:54:26PM GMT, Bartosz Golaszewski wrote:
-> > > On Sat, Mar 15, 2025 at 5:41 PM Koichiro Den <koichiro.den@canonical.com> wrote:
-> > > >
-> > > > ---(snip)---
-> > > >
-> > > > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
-> > > > ---
-> > > >
-> > > > @@ -90,6 +124,70 @@ static int aggr_add_gpio(struct gpio_aggregator *aggr, const char *key,
-> > > >         return 0;
-> > > >  }
-> > > >
-> > > > +static bool aggr_is_active(struct gpio_aggregator *aggr)
-> > >
-> > > Series-wide: I would prefer a different prefix: why not
-> > > gpio_aggregator or at least gpio_aggr?
-> >
-> > Actually, that naming was intentional, but perhaps I could say this is just my
-> > personal preference. Here is a breakdown of the function name prefixes:
-> >
-> >   Before this patch series:
-> >   * forwarder:        gpiochip_fwd_* + gpio_fwd_*
-> >   * sysfs interface:  new_device/delete_device + aggr_*
-> >   * platform device:  gpio_aggregator_*
-> >   * module init/exit: gpio_aggregator_*
-> 
-> Yeah, it could use some more consistency. First: there's ongoing
-> work[1] on moving the forwarder code into its own library which is a
-> chance to change its prefix to gpio_forwarder_. You could add a patch
-> renaming the sysfs interfaces while sending v7.
-> 
-> >
-> >   After this patch series:
-> >   * common utils:     aggr_*
-> 
-> I'd prefer to keep gpio_aggregator_ here...
-> 
-> >   * forwarder:        gpiochip_fwd_* + gpio_fwd_*  <-- _Unchanged_
-> >   * configfs:         gpio_aggr_*
-> 
-> and here.
-> 
-> >   * sysfs interface:  new_device/delete_device     <-- _Unchanged_
-> >   * platform device:  gpio_aggregator_*            <-- _Unchanged_
-> >   * module init/exit: gpio_aggregator_*            <-- _Unchanged_
-> >
 
-Actually I wasn't aware of [1]. So let me summarize: does this match what
-you have in mind?
 
-  Before this patch series:
-  * forwarder:        gpiochip_fwd_* + gpio_fwd_*
-  * sysfs interface:  new_device/delete_device + aggr_*
-  * platform device:  gpio_aggregator_*
-  * module init/exit: gpio_aggregator_*
+On 20/03/2025 14:03, Dmitry Baryshkov wrote:
+> On Thu, Mar 20, 2025 at 11:56:32AM +0000, srinivas.kandagatla@linaro.org wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>
+>> On some platforms to minimise pop and click during switching between
+>> CTIA and OMTP headset an additional HiFi mux is used. Most common
+>> case is that this switch is switched on by default, but on some
+>> platforms this needs a regulator enable.
+>>
+>> move to using mux control to enable both regulator and handle gpios,
+>> deprecate the usage of gpio.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   sound/soc/codecs/Kconfig   |  2 ++
+>>   sound/soc/codecs/wcd938x.c | 38 ++++++++++++++++++++++++++++++--------
+>>   2 files changed, 32 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+>> index ee35f3aa5521..b04076282c8b 100644
+>> --- a/sound/soc/codecs/Kconfig
+>> +++ b/sound/soc/codecs/Kconfig
+>> @@ -2226,6 +2226,8 @@ config SND_SOC_WCD938X
+>>   	tristate
+>>   	depends on SOUNDWIRE || !SOUNDWIRE
+>>   	select SND_SOC_WCD_CLASSH
+>> +	select MULTIPLEXER
+>> +	imply MUX_GPIO
+> 
+> Why? This is true for a particular platform, isn't it?
 
-  After this patch series:
-  * common utils:     gpio_aggregator_*
-  * forwarder:        gpio_forwarder_*
-  * configfs:         gpio_aggregator_*
-  * sysfs interface:  new_device/delete_device     <-- _Unchanged_
-  * platform device:  gpio_aggregator_*            <-- _Unchanged_
-  * module init/exit: gpio_aggregator_*            <-- _Unchanged_
+We want to move the codec to use gpio mux instead of using gpios directly
 
-Thanks,
-
-Koichiro
+So this become codec specific, rather than platform.
 
 > 
-> Bartosz
+>>   
+>>   config SND_SOC_WCD938X_SDW
+>>   	tristate "WCD9380/WCD9385 Codec - SDW"
+>> diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
+>> index f2a4f3262bdb..b7a235eef6ba 100644
+>> --- a/sound/soc/codecs/wcd938x.c
+>> +++ b/sound/soc/codecs/wcd938x.c
+>> @@ -19,6 +19,7 @@
+>>   #include <linux/regmap.h>
+>>   #include <sound/soc.h>
+>>   #include <sound/soc-dapm.h>
+>> +#include <linux/mux/consumer.h>
+>>   #include <linux/regulator/consumer.h>
+>>   
+>>   #include "wcd-clsh-v2.h"
+>> @@ -178,6 +179,8 @@ struct wcd938x_priv {
+>>   	int variant;
+>>   	int reset_gpio;
+>>   	struct gpio_desc *us_euro_gpio;
+>> +	struct mux_control *us_euro_mux;
+>> +	u32 mux_state;
+>>   	u32 micb1_mv;
+>>   	u32 micb2_mv;
+>>   	u32 micb3_mv;
+>> @@ -3243,9 +3246,16 @@ static bool wcd938x_swap_gnd_mic(struct snd_soc_component *component, bool activ
+>>   
+>>   	wcd938x = snd_soc_component_get_drvdata(component);
+>>   
+>> -	value = gpiod_get_value(wcd938x->us_euro_gpio);
+>> +	if (!wcd938x->us_euro_mux) {
+>> +		value = gpiod_get_value(wcd938x->us_euro_gpio);
+>>   
+>> -	gpiod_set_value(wcd938x->us_euro_gpio, !value);
+>> +		gpiod_set_value(wcd938x->us_euro_gpio, !value);
 > 
-> [1] https://lore.kernel.org/all/20250317-aaeon-up-board-pinctrl-support-v2-0-36126e30aa62@bootlin.com/
+> This looks like a separate topic, but why is 'active' being ignored?
+
+We should be able to use it.. will fix it in next version for mux usecase.
+
+--srini
+> 
+>> +	} else {
+>> +		mux_control_deselect(wcd938x->us_euro_mux);
+>> +		wcd938x->mux_state = !wcd938x->mux_state;
+>> +		if (mux_control_select(wcd938x->us_euro_mux, wcd938x->mux_state))
+> 
+> Can't it just be 'mux_control_select(wcd938x->us_euro_mux, active)' ?
+> 
+>> +			dev_err(component->dev, "Unable to select us/euro mux state\n");
+>> +	}
+>>   
+>>   	return true;
+>>   }
+> 
