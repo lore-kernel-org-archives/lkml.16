@@ -1,69 +1,69 @@
-Received: from mail-qt1-f227.google.com (mail-qt1-f227.google.com [209.85.160.227])
+Received: from mail-oo1-f100.google.com (mail-oo1-f100.google.com [209.85.161.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D389A182D7
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 18:48:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.227
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39193182D7
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 18:49:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742582925; cv=none; b=m1dltqAY6DYHruk1DtOqGQXGTI03VfhhhjUDmCPFPtt+fgClmO0eRtOL1mV+kpFZNpx5x18vjcMRuQVOhmGXDkOxKwT3Oqc3r0Iv7jYmtyjUdiTRZLLhWe8gJJMYY6AolvbavVlH1PMMVHDS4BLuAaJrAQVa1+BNzGy6+5cR6DU=
+	t=1742582950; cv=none; b=tq9EOPwHmRUQaqHn0Rx1Xkg96yb4I4eFHzoXGFeUXhN7la039AjRebUXXlSQFi6/hHPXpTViDCczSwnXQJNCP2u6QTcr2Ug9VdT8ZWIvFPi0+8r3CVqGa+fLkRrwmeuPaym+RMs8r0RCzH7g+ln7rSFKb9g81XwB5Q9ib7W2Yog=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742582925; c=relaxed/simple;
-	bh=A3iW60qspZ7EVkOlE+MyGo4VhzreaaD9dkKM9cX8B4I=;
+	s=arc-20240116; t=1742582950; c=relaxed/simple;
+	bh=4ffaNcfXCWGV/yaMUIFe4pBx/L0pwgKtwX1/8+wF6S0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BBsHnZANPW4cAXNMVshmyzs0SfOND2qBeFY4AcvU7RFwZrCMXTwRoYUSaG2yCcHVzF3MRFH8/Dvq8YTAMyEAqqPGtXaMQb51Ck9/5Qp28B6ZjWsOqNaFsLRMCrkkn1eo1YeWZzmUK2i3dLAO/3cyeduQ1OWlz3YgWexIYOMU6JY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=SIbmHa7A; arc=none smtp.client-ip=209.85.160.227
+	 MIME-Version; b=IAxLgQ3ZCCamCRzmmh1O8Q9ORorPC15LObXgApYPceaNBH5tp/NjR7LAaTN/vADhpP6/aB2uziFBVZ8vbMPQnjLRpe0bLMrOZDwKVJjgAiMp7zXIEQ5e3TQ5fA+BNE1svU7KfUoPAbvk6Lm0X11RNMGqEkkkwo+Vv9M25/HL/FI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=EtrMiy+E; arc=none smtp.client-ip=209.85.161.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="SIbmHa7A"
-Received: by mail-qt1-f227.google.com with SMTP id d75a77b69052e-4769a9055e6so929971cf.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:48:43 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="EtrMiy+E"
+Received: by mail-oo1-f100.google.com with SMTP id 006d021491bc7-601a15186f0so192855eaf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:49:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1742582923; x=1743187723; darn=vger.kernel.org;
+        d=purestorage.com; s=google2022; t=1742582948; x=1743187748; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mfjEq8IyL7/x/8c9RdusJ/wqPO/dcQUh+COX5jmkRnk=;
-        b=SIbmHa7APd7hcKIWqHVLzoPIwyvDWshKAp3PKTEv0zhgdTJ7iU1EpKGtOOcQVXThtf
-         XhPrwFNo7jhqiQz6q20HkTkbMYE/2rr3XFy53fEZQrcERpuAyy4f3imOaTFCafMj5g/u
-         AJBPSvbtFDk7bgAP3e4QdNfPL47iTjfVgL0Z/VZOO3oliN/jMHXB9HdOrN6qCtBYu6Gh
-         opE9enTNkY00+iNl8roJhyuU5c+C0fATi1O4c+JfMVvMQMDEb6572tCngyLm5QN+sw+T
-         4PEUJ6LDbBa2ZIogNeHiEWs1GUnsDHISfBGE9tPrfHWSsVIO0PplioqUstYKNmn3U9fq
-         ExMw==
+        bh=JVXOFSIvNRMFYjPBLLvsP0Qii/nfc/7BrZwWwlECW8U=;
+        b=EtrMiy+Ec4kqfz+pRrZO/gYdv5U8airFRGYKMSNlyaATf0u8Fy5kfURXOmb1IOuYnr
+         uELr6/0Lsnoq38SiwMvpmJcLsLf+3nsoVQxyBVa/+1plQkqg5gujLasKGwvexOQFMKOg
+         6N07hS716+KYvr6xTajDPG5WwcA3fi4b+UmScEFVB8xiYdWkVVKECE80tJhZwsjCpZWR
+         8VdxMV6gi0oc0tIIGkkeviA3bFDlUVlzo2A3ns+3Jb/L/uC2guP5gtPA7vxf/Dogv6K8
+         QYlskyeyMSPefLuPfuxOBd6KbJ5Qi7PC4KwvNm9k1q8CEI55GrTkjwWe7ZzgUGTiFRtO
+         +1tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742582923; x=1743187723;
+        d=1e100.net; s=20230601; t=1742582948; x=1743187748;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mfjEq8IyL7/x/8c9RdusJ/wqPO/dcQUh+COX5jmkRnk=;
-        b=QmBhv6owehfl1/cgLNtTP5XYh3qM6a11sDY5tPFig1lC4k9vv55X42zLhhl0ZNPWZr
-         JPXv6WtoX8a97YOjUlwcdBRx2hqyft3awOjkEpTxP7aPkLOPhCJVZNRhGE+AscHm5mvk
-         pGS5YDjf4T6KRFTpJQRik17ty7N7utTmtZeZ3rXnlHPfA66mTb3a7hlQHHcB5S7QRBpf
-         todLZeR9Us6F5gOMuC9/xszMtqH4FzITNwF1gZ2knhspykF2XNxxbsi0i7BrlGnvRCUa
-         vse1byhdH6Tqf4unsp46Zifvz+FQJsI0NYj3pZtizzLibJnBgPA2rFGjl6szU14PPJQt
-         rBsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV/uKu8H5eLXwKfkRt2MFbXC9Z07zBOe+h001fWE3iFmUuH0rIxUVlQk644zvgEHJHz56GPa+HixoMko3A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDImgBaTGJWyAyjQSO8f9BoJGbxY4TN3eMCMA7MrtEE0TUQN5K
-	pKFEXofFWhGQ34IGbCOw6q/zg/8nSSMTrSgJsi9bwJBCrnl8UiKrCXSaZ4e//aLmNcXJT2SJ2J5
-	4EB+uU5wKAH30QVI5fAgk+thlmg9F0WzK
-X-Gm-Gg: ASbGncsHHcphW3LLqweVdEp74fdzqD+zKDqZ/E0Y4mzsiaS8bxQ9iCRC3iij3C5IRy+
-	rl+AsxJsdlb1N6hRSgmLh+wC8MDzJPsv4yL5gf67lPjgSDAjnf9JKwRgfxNaTkYFKTe7PuSh4af
-	qKbjOGjwdBszPfDGf45jZhPBjT702906hWsRsv+jst7nNoXFpNDabJETAAKv1FfL3rQZDxzLjlN
-	gczD/GTwuwMLOSyPHo4lstrUJnmY4c/M3nIOFRPvkUJzjCW1ScfN+I0jCLiAgN7VBnpi0nE5Lh3
-	fSpYpZ1MkMPXlmiUlMGD1DwN+e7FxGGM2c2sqUUWDUU50Sg4
-X-Google-Smtp-Source: AGHT+IGmTdCvB1188jBMmyDMG3MYl9833lk8K/s6kZSo8qwO5x/RMDQKhQyV5LroO0Dqzra7vD1ZM+pBTfVD
-X-Received: by 2002:ad4:5c8c:0:b0:6d8:e6be:50fc with SMTP id 6a1803df08f44-6eb3f2ec191mr22803036d6.6.1742582922650;
-        Fri, 21 Mar 2025 11:48:42 -0700 (PDT)
-Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
-        by smtp-relay.gmail.com with ESMTPS id 6a1803df08f44-6eb3efaa3a3sm1211626d6.35.2025.03.21.11.48.42
+        bh=JVXOFSIvNRMFYjPBLLvsP0Qii/nfc/7BrZwWwlECW8U=;
+        b=btgBjMNl1f5WUDXc6zXwl30j7As0hxUi4qo83PIiJtROBAsil0v01ZZmWjH5TIWwhl
+         1D6xww6ELE4e0pNObFVXfp2ZN1NPnEwfyAvIVm3n272jV3S+WspnFvEn6q9FHy8nxND+
+         FsE1D6/+3l/vpPVWnMl9msI53rC6i5DemDmyUvrBomrYUpPLS8bg+DEIFbk3X5Q0LKeo
+         azXwa4n5yZPqUSBlqw4r3wJ57FKVidDt1/kbeIR5pa0dGy5Cc74dwIzt5t0Hy5mq7ITp
+         BSkYwVg5bo+DKunki+KqOgCIbiCkb0yEf2e3R5sPm3jZiKRR3/wAkQLsZSRJ0OW7OHUp
+         5n4A==
+X-Forwarded-Encrypted: i=1; AJvYcCUnPWtACNNEqhLQK9lCupBfaBSy6aYa6iL0yB6JpafO/V8VDrk1k1u3v5gqgVlIxcWv6B7xfN6jTC1NEJw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRfyFkkIBl1HzVujc7yV54LJaqnkf87++IoMbOn4yLk4TUn5eo
+	jsYDxyeGEws1CgHHlw3ONj7FD3J4GT92wB5Vg6qBzFqPUBwzEwlfZLDwExsA3MiYpxaFYswQjdC
+	4/wO97QdaFQJtvqYtMIssYDsHj+y2lqxmSw7JUjhM/hg6mEUg
+X-Gm-Gg: ASbGncvIch8DcvPRoISNmiSizAO5/rH80J1eXwrkZPRAPcRVROCHWM9bh7DPSCM8KG0
+	WM5cFJ1X2ZMMGIQrLdju9UuB/z5NzpeCoYAKnPw11kzu9A4O3nwqA0QqmhwKDJEp8ozDfI0oRA2
+	mJFwarG/cwmzey8IVw1aIK0r3e3vSgQXdBiyPeDN5msOZMnZ5wfxO+ZVLIOklUBX65SQP+GXvqH
+	TSe3tyeP/FH/Nkt1hO3hma6drq+4mVJK8B509SIhHwKxYaxsvRpKlqNRvuiMEk2IsoGewyrrnV5
+	o2Sf8dQS8k5l/L7XlU+1A0JeqiinMe3H9w==
+X-Google-Smtp-Source: AGHT+IEqvuOOYMmlzyldh84Pi9ajHdpqofupXAF4kcQ30tohmz/xvgicdhHjnstZUDim0CopywzMBqPAovBY
+X-Received: by 2002:a05:6871:153:b0:2c1:d224:bcaf with SMTP id 586e51a60fabf-2c7a3620a44mr159676fac.11.1742582948165;
+        Fri, 21 Mar 2025 11:49:08 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([2620:125:9017:12:36:3:5:0])
+        by smtp-relay.gmail.com with ESMTPS id 586e51a60fabf-2c77ebc0b6csm96315fac.4.2025.03.21.11.49.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 11:48:42 -0700 (PDT)
+        Fri, 21 Mar 2025 11:49:08 -0700 (PDT)
 X-Relaying-Domain: purestorage.com
 Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
-	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 66D26340245;
-	Fri, 21 Mar 2025 12:48:41 -0600 (MDT)
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 5C88E340245;
+	Fri, 21 Mar 2025 12:49:07 -0600 (MDT)
 Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
-	id 628F1E4195E; Fri, 21 Mar 2025 12:48:41 -0600 (MDT)
+	id 52B22E4192A; Fri, 21 Mar 2025 12:48:37 -0600 (MDT)
 From: Caleb Sander Mateos <csander@purestorage.com>
 To: Jens Axboe <axboe@kernel.dk>,
 	Pavel Begunkov <asml.silence@gmail.com>,
@@ -76,9 +76,9 @@ Cc: Xinyu Zhang <xizhang@purestorage.com>,
 	linux-kernel@vger.kernel.org,
 	linux-nvme@lists.infradead.org,
 	Caleb Sander Mateos <csander@purestorage.com>
-Subject: [PATCH 3/3] io_uring/uring_cmd: import fixed buffer before going async
-Date: Fri, 21 Mar 2025 12:48:19 -0600
-Message-ID: <20250321184819.3847386-4-csander@purestorage.com>
+Subject: [PATCH 1/3] io_uring/net: only import send_zc buffer once
+Date: Fri, 21 Mar 2025 12:48:17 -0600
+Message-ID: <20250321184819.3847386-2-csander@purestorage.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20250321184819.3847386-1-csander@purestorage.com>
 References: <20250321184819.3847386-1-csander@purestorage.com>
@@ -90,203 +90,63 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-For uring_cmd operations with fixed buffers, the fixed buffer lookup
-happens in io_uring_cmd_import_fixed(), called from the ->uring_cmd()
-implementation. A ->uring_cmd() implementation could return -EAGAIN on
-the initial issue for any reason before io_uring_cmd_import_fixed().
-For example, nvme_uring_cmd_io() calls nvme_alloc_user_request() first,
-which can return -EAGAIN if all tags in the tag set are in use.
-This ordering difference is observable when using
-UBLK_U_IO_{,UN}REGISTER_IO_BUF SQEs to modify the fixed buffer table.
-If the uring_cmd is followed by a UBLK_U_IO_UNREGISTER_IO_BUF operation
-that unregisters the fixed buffer, the uring_cmd going async will cause
-the fixed buffer lookup to fail because it happens after the unregister.
+io_send_zc() guards its call to io_send_zc_import() with if (!done_io)
+in an attempt to avoid calling it redundantly on the same req. However,
+if the initial non-blocking issue returns -EAGAIN, done_io will stay 0.
+This causes the subsequent issue to unnecessarily re-import the buffer.
 
-Move the fixed buffer lookup out of io_uring_cmd_import_fixed() and
-instead perform it in io_uring_cmd() before calling ->uring_cmd().
-io_uring_cmd_import_fixed() now only initializes an iov_iter from the
-existing fixed buffer node. This division of responsibilities makes
-sense as the fixed buffer lookup is an io_uring implementation detail
-and independent of the ->uring_cmd() implementation. It also cuts down
-on the need to pass around the io_uring issue_flags.
+Add an explicit flag "imported" to io_sr_msg to track if its buffer has
+already been imported. Clear the flag in io_send_zc_prep(). Call
+io_send_zc_import() and set the flag in io_send_zc() if it is unset.
 
 Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
-Fixes: 27cb27b6d5ea ("io_uring: add support for kernel registered bvecs")
+Fixes: 54cdcca05abd ("io_uring/net: switch io_send() and io_send_zc() to using io_async_msghdr")
 ---
- drivers/nvme/host/ioctl.c    | 10 ++++------
- include/linux/io_uring/cmd.h |  6 ++----
- io_uring/rsrc.c              |  6 ++++++
- io_uring/rsrc.h              |  2 ++
- io_uring/uring_cmd.c         | 10 +++++++---
- 5 files changed, 21 insertions(+), 13 deletions(-)
+ io_uring/net.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
-index fe9fb80c6a14..3fad74563b9e 100644
---- a/drivers/nvme/host/ioctl.c
-+++ b/drivers/nvme/host/ioctl.c
-@@ -112,12 +112,11 @@ static struct request *nvme_alloc_user_request(struct request_queue *q,
- 	return req;
- }
+diff --git a/io_uring/net.c b/io_uring/net.c
+index 6d13d378358b..a29893d567b8 100644
+--- a/io_uring/net.c
++++ b/io_uring/net.c
+@@ -74,10 +74,11 @@ struct io_sr_msg {
+ 	unsigned			nr_multishot_loops;
+ 	u16				flags;
+ 	/* initialised and used only by !msg send variants */
+ 	u16				buf_group;
+ 	bool				retry;
++	bool				imported; /* only for io_send_zc */
+ 	void __user			*msg_control;
+ 	/* used only for send zerocopy */
+ 	struct io_kiocb 		*notif;
+ };
  
- static int nvme_map_user_request(struct request *req, u64 ubuffer,
- 		unsigned bufflen, void __user *meta_buffer, unsigned meta_len,
--		struct io_uring_cmd *ioucmd, unsigned int flags,
--		unsigned int iou_issue_flags)
-+		struct io_uring_cmd *ioucmd, unsigned int flags)
- {
- 	struct request_queue *q = req->q;
- 	struct nvme_ns *ns = q->queuedata;
- 	struct block_device *bdev = ns ? ns->disk->part0 : NULL;
- 	bool supports_metadata = bdev && blk_get_integrity(bdev->bd_disk);
-@@ -141,12 +140,11 @@ static int nvme_map_user_request(struct request *req, u64 ubuffer,
+@@ -1222,10 +1223,11 @@ int io_send_zc_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	struct io_ring_ctx *ctx = req->ctx;
+ 	struct io_kiocb *notif;
  
- 		/* fixedbufs is only for non-vectored io */
- 		if (WARN_ON_ONCE(flags & NVME_IOCTL_VEC))
- 			return -EINVAL;
- 		ret = io_uring_cmd_import_fixed(ubuffer, bufflen,
--				rq_data_dir(req), &iter, ioucmd,
--				iou_issue_flags);
-+				rq_data_dir(req), &iter, ioucmd);
- 		if (ret < 0)
- 			goto out;
- 		ret = blk_rq_map_user_iov(q, req, NULL, &iter, GFP_KERNEL);
- 	} else {
- 		ret = blk_rq_map_user_io(req, NULL, nvme_to_user_ptr(ubuffer),
-@@ -194,11 +192,11 @@ static int nvme_submit_user_cmd(struct request_queue *q,
- 		return PTR_ERR(req);
+ 	zc->done_io = 0;
+ 	zc->retry = false;
++	zc->imported = false;
+ 	req->flags |= REQ_F_POLL_NO_LAZY;
  
- 	req->timeout = timeout;
- 	if (ubuffer && bufflen) {
- 		ret = nvme_map_user_request(req, ubuffer, bufflen, meta_buffer,
--				meta_len, NULL, flags, 0);
-+				meta_len, NULL, flags);
- 		if (ret)
+ 	if (unlikely(READ_ONCE(sqe->__pad2[0]) || READ_ONCE(sqe->addr3)))
+ 		return -EINVAL;
+ 	/* we don't support IOSQE_CQE_SKIP_SUCCESS just yet */
+@@ -1369,11 +1371,12 @@ int io_send_zc(struct io_kiocb *req, unsigned int issue_flags)
+ 
+ 	if (!(req->flags & REQ_F_POLLED) &&
+ 	    (zc->flags & IORING_RECVSEND_POLL_FIRST))
+ 		return -EAGAIN;
+ 
+-	if (!zc->done_io) {
++	if (!zc->imported) {
++		zc->imported = true;
+ 		ret = io_send_zc_import(req, issue_flags);
+ 		if (unlikely(ret))
  			return ret;
  	}
  
- 	bio = req->bio;
-@@ -514,11 +512,11 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
- 	req->timeout = d.timeout_ms ? msecs_to_jiffies(d.timeout_ms) : 0;
- 
- 	if (d.data_len) {
- 		ret = nvme_map_user_request(req, d.addr,
- 			d.data_len, nvme_to_user_ptr(d.metadata),
--			d.metadata_len, ioucmd, vec, issue_flags);
-+			d.metadata_len, ioucmd, vec);
- 		if (ret)
- 			return ret;
- 	}
- 
- 	/* to free bio on completion, as req->bio will be null at that time */
-diff --git a/include/linux/io_uring/cmd.h b/include/linux/io_uring/cmd.h
-index 598cacda4aa3..ea243bfab2a8 100644
---- a/include/linux/io_uring/cmd.h
-+++ b/include/linux/io_uring/cmd.h
-@@ -39,12 +39,11 @@ static inline void io_uring_cmd_private_sz_check(size_t cmd_sz)
- )
- 
- #if defined(CONFIG_IO_URING)
- int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
- 			      struct iov_iter *iter,
--			      struct io_uring_cmd *ioucmd,
--			      unsigned int issue_flags);
-+			      struct io_uring_cmd *ioucmd);
- 
- /*
-  * Completes the request, i.e. posts an io_uring CQE and deallocates @ioucmd
-  * and the corresponding io_uring request.
-  *
-@@ -69,12 +68,11 @@ void io_uring_cmd_mark_cancelable(struct io_uring_cmd *cmd,
- void io_uring_cmd_issue_blocking(struct io_uring_cmd *ioucmd);
- 
- #else
- static inline int
- io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
--			  struct iov_iter *iter, struct io_uring_cmd *ioucmd,
--			  unsigned int issue_flags)
-+			  struct iov_iter *iter, struct io_uring_cmd *ioucmd)
- {
- 	return -EOPNOTSUPP;
- }
- static inline void io_uring_cmd_done(struct io_uring_cmd *cmd, ssize_t ret,
- 		u64 ret2, unsigned issue_flags)
-diff --git a/io_uring/rsrc.c b/io_uring/rsrc.c
-index 5fff6ba2b7c0..ad0dfe51acb1 100644
---- a/io_uring/rsrc.c
-+++ b/io_uring/rsrc.c
-@@ -1099,10 +1099,16 @@ int io_import_reg_buf(struct io_kiocb *req, struct iov_iter *iter,
- 	if (!node)
- 		return -EFAULT;
- 	return io_import_fixed(ddir, iter, node->buf, buf_addr, len);
- }
- 
-+int io_import_buf_node(struct io_kiocb *req, struct iov_iter *iter,
-+			u64 buf_addr, size_t len, int ddir)
-+{
-+	return io_import_fixed(ddir, iter, req->buf_node->buf, buf_addr, len);
-+}
-+
- /* Lock two rings at once. The rings must be different! */
- static void lock_two_rings(struct io_ring_ctx *ctx1, struct io_ring_ctx *ctx2)
- {
- 	if (ctx1 > ctx2)
- 		swap(ctx1, ctx2);
-diff --git a/io_uring/rsrc.h b/io_uring/rsrc.h
-index f10a1252b3e9..bc0f8f0a2054 100644
---- a/io_uring/rsrc.h
-+++ b/io_uring/rsrc.h
-@@ -59,10 +59,12 @@ int io_rsrc_data_alloc(struct io_rsrc_data *data, unsigned nr);
- struct io_rsrc_node *io_find_buf_node(struct io_kiocb *req,
- 				      unsigned issue_flags);
- int io_import_reg_buf(struct io_kiocb *req, struct iov_iter *iter,
- 			u64 buf_addr, size_t len, int ddir,
- 			unsigned issue_flags);
-+int io_import_buf_node(struct io_kiocb *req, struct iov_iter *iter,
-+			u64 buf_addr, size_t len, int ddir);
- 
- int io_register_clone_buffers(struct io_ring_ctx *ctx, void __user *arg);
- int io_sqe_buffers_unregister(struct io_ring_ctx *ctx);
- int io_sqe_buffers_register(struct io_ring_ctx *ctx, void __user *arg,
- 			    unsigned int nr_args, u64 __user *tags);
-diff --git a/io_uring/uring_cmd.c b/io_uring/uring_cmd.c
-index de39b602aa82..15a76fe48fe5 100644
---- a/io_uring/uring_cmd.c
-+++ b/io_uring/uring_cmd.c
-@@ -232,10 +232,15 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
- 			return -EOPNOTSUPP;
- 		issue_flags |= IO_URING_F_IOPOLL;
- 		req->iopoll_completed = 0;
- 	}
- 
-+	if (ioucmd->flags & IORING_URING_CMD_FIXED) {
-+		if (!io_find_buf_node(req, issue_flags))
-+			return -EFAULT;
-+	}
-+
- 	ret = file->f_op->uring_cmd(ioucmd, issue_flags);
- 	if (ret == -EAGAIN || ret == -EIOCBQUEUED)
- 		return ret;
- 	if (ret < 0)
- 		req_set_fail(req);
-@@ -244,16 +249,15 @@ int io_uring_cmd(struct io_kiocb *req, unsigned int issue_flags)
- 	return IOU_OK;
- }
- 
- int io_uring_cmd_import_fixed(u64 ubuf, unsigned long len, int rw,
- 			      struct iov_iter *iter,
--			      struct io_uring_cmd *ioucmd,
--			      unsigned int issue_flags)
-+			      struct io_uring_cmd *ioucmd)
- {
- 	struct io_kiocb *req = cmd_to_io_kiocb(ioucmd);
- 
--	return io_import_reg_buf(req, iter, ubuf, len, rw, issue_flags);
-+	return io_import_buf_node(req, iter, ubuf, len, rw);
- }
- EXPORT_SYMBOL_GPL(io_uring_cmd_import_fixed);
- 
- void io_uring_cmd_issue_blocking(struct io_uring_cmd *ioucmd)
- {
 -- 
 2.45.2
 
