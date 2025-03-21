@@ -1,130 +1,111 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B731470810
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:18:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4682178F51;
+	Fri, 21 Mar 2025 14:22:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742566736; cv=none; b=g/ahINPbmf9zDShT0HZyANKSjs43EFDTECUCQkTkR/1+2DJ3wBv/a0u8f3F1oeGccMt9cqMPhrSZCX90T8jSWUC6LegQgybWTfjsSdUIepH7YJKknYB0HHPwJqhdo9qx+EuPntod3rr7ZJU7uXU2yr7SAIpRpghR+ztyYMH8cXs=
+	t=1742566955; cv=none; b=XEQqvlsEGXacZRpwA3BujO5Y7CoJIX4P3jPbAtpn6ocydiK96hv+H9nzKhEo2Q6x4VUMdwM4siU04JRidoP4i6DPy0drgq83U9HeNV1nYaHSc58FtB2BvFenKyw16CIEDql4IPuTJ8NpGK6/73kpHKwPdKhmqMuFpTP1Uf9emmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742566736; c=relaxed/simple;
-	bh=bfFRi4z/7jSJjPvsuOLCgub6ogXLiNJvQoKAD9aoDm4=;
+	s=arc-20240116; t=1742566955; c=relaxed/simple;
+	bh=CQZ8kkNl63C+QjvQ7gFi/96yZTVOu/ee44z80daZagQ=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oTfZOZoCueVVargAEZWSyWNTnoFwHFz8pPKW5/gxrPk7flOrDJUGgr1ou/u4VPkBM6f1Qqn7VhwZmI00SBdY3Bk7KzvlqyhJDm0HhhlDrrhdzuy7YcAXpvwXHkC5QHVhrieDFQdH30SiypioD7bAUrV7kKuI96fHfmKISyvKaew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=rBsrMy6n; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="rBsrMy6n"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3913fdd0120so1222057f8f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:18:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1742566732; x=1743171532; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=uTCuNlHeDEjqfiQIo2HNGd6+ErszhZgpd1Iv8erXCzE=;
-        b=rBsrMy6nrvXBVBwFm1+CIYoJ9DiwwwCJlrGI0cVIePVp6cQP7fWIb1J5WjzAooO9hg
-         9qzrw6QK5pwQuYBKtQFGOV0YGaBziTstS1QJ3Pv782EW7fK7xMDo88r4JJyL+hAbn8mI
-         yzKOErgNvFHBVtXuV5a4y8245DioAupxs2AF9oiHm1m52kQAbRs6goqW+x7BFWAJDvVf
-         10dXpart+oYh42kZtDMOxNwGkGAVYkn/jxiRiWHtb/wjJ55duV0/7JpCBdmKoNaCYdsV
-         elIB224nxy7vimowTNMyJ6ixNIFC5n2s2I0EW6h2CCVPus2uxjS9Q7AwcPC8uF+VwIdx
-         3ANA==
+	 Content-Type:Content-Disposition:In-Reply-To; b=cNllpnTIPSnvoL9euGGIW2stKMOW+Y+HtglRvInJPpbfnLhyBrR0BFtd1oVqYQ+phMOljNQwKT8CSq7XeshFyY/oBINnkKevc9cvJPw6wnrFnLSPlRIVF76UBPfAy7RJkUoZaqHSSe1ieo02TRr4DMrI2crA5RldMcrGDYCeLUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-5e61375c108so2685759a12.1;
+        Fri, 21 Mar 2025 07:22:32 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742566732; x=1743171532;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uTCuNlHeDEjqfiQIo2HNGd6+ErszhZgpd1Iv8erXCzE=;
-        b=iaqE7rCEjEDW71L9U5Id62NXt0EBlZbz8MwRroGaIA9TP1HYPSdACh3gPDXca6HOWW
-         7NUmBmZ+7d9adMwLNoe9DG7JcITuR+onegH6uMcBFQ6grGHDzPADPu7ukAF0JaANF6DK
-         7LeHYsUZZiCLBVKmwFRB1WzJUJcXGyI3jXVB1d/2HykMwMoNnhxRgufRywnJCSNlMjmL
-         a8tD9/+z6CPfG35dCf0F/6UNb1lpxVfy9vhZWkRW6WjukjITqnM7RF7KI0+ub94wG6wJ
-         UbjYXJ0qe78LHpE+4XZxAboM2RfHcbuMxZMCxnYzbCFz/WkzOSb9ppliYAAz22oaMNzT
-         Svtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVU9U22g6WCs7IxRWVyBU09TgSsNi/ta815RxhMP7uq8UZpMUsA1Mb7Bhe3HQAWM+tA7QNEx8Vi3hzAX9U=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQk0Oa2Z8K8esSRzR+Fy76TYJqqZZZXbonaqrMEeVfpFIyIKHS
-	xksvGwO/4WJd/S6cY6bUP8uVNjNWAFrj0Da65rkwAGsIMi419/y12BnMP9ISsro=
-X-Gm-Gg: ASbGncsw3vtHUanH9NSQp7D5W1VaeR6z8idn4WEhwiyA8Hlyte8HfKjLKIi1xnqiGZJ
-	Ily1FZxZehRJv4P3NrIJh/ZY7Ny09vLR4cp+yLkg2Td/49oof2pM9+/nxur5oLBrTN/H97WpV5R
-	OYjawjRkyB5+wEaVay5SMW4+fReENCv0bPXXCUV4pIuWD2zudJEnwk8/DnNNTRyzldu86Z/s7Sv
-	2HGwrlXzqU0f8ysBp3JrLyK/EDJVTGbwulhYVVSjt5ch5XLIB8vn7f5mK2w5X3kFkFEglOgJa2z
-	QUWMKCuf6x5rD95DmHl3r7dPEgz3w1E9blIPbd9DoTXYqn3S7JGFklSJV9e5vVLAOQ2kcTj0bnQ
-	RBZ4=
-X-Google-Smtp-Source: AGHT+IHa7BgLygegVfy/7chkhJMYNIbp+e7r7rdlSTbhjyTD35Fk5o6wqITu97HanApN/HYlGGD+gQ==
-X-Received: by 2002:a5d:64cc:0:b0:390:f0ff:2bf8 with SMTP id ffacd0b85a97d-3997f8f6555mr3776150f8f.10.1742566731818;
-        Fri, 21 Mar 2025 07:18:51 -0700 (PDT)
-Received: from dfj (host-87-8-62-49.retail.telecomitalia.it. [87.8.62.49])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3c90sm2556348f8f.36.2025.03.21.07.18.47
+        d=1e100.net; s=20230601; t=1742566951; x=1743171751;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6zrlrukzDiw4iVxK9TyD29phGrqtRDGCavFyioGRMQs=;
+        b=rVEid82MnirIcLyn2qFt2u8IjUMq1GMBSBMYKVBf918JGeUuMuVvatbFrMwxOwIJWX
+         2qaRCapmjbecr+ekIZoI92g3jsmw4dLrbi7jDDeeiqxuNMmISW1Q81Fow44vwgBqGgJv
+         1n3M8n5147td2XlPsU3pb4tvcTCmEN3OfDkOwkbbqU1n74ELPpb7e83+MEVFMrwt71rS
+         nlWGUwVUE9SqjluxtABmfKZ84wV7boQRFnphlgRlYar4FDIR+9Gr9V87jBa/y+VKCrvS
+         zKAevY9VspjtYQ9SA/tzO+uCAKxflbOWbmha0ig1WT7kPJbtExzoiRmYlEQuRCuNWGBv
+         I8vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUjP43zGJtcz7S576ylxYwVnZU3pJZ55eH+gID1VYS/UyoReuc8tlIrOy1VC/q/RGm6MuCxxnTgNj+LHIc=@vger.kernel.org, AJvYcCXl2owR/NwNQVn39b+2NaKAGhrehj3C1vUbwTUv+wdMdBdqllzTH7HqRokkwF0Oybodyi9nliWT@vger.kernel.org
+X-Gm-Message-State: AOJu0YwphPRRAqL+VTim4nUFWf+Mmlo5NHV6UsT3CJD29eBxN8qDhCcA
+	eiDyKyqZbQk40SEPebzlM1wz772gbSvGQRumTeR/1va+AeIwLMgD
+X-Gm-Gg: ASbGncs7Oe9fWiQCfLoNN/IVD3z7oGbOR8wzSbQvxpbVFsbCKe3Fw2mxYy8Z2sQCuv+
+	0oxSmRmlghwWg6jVgHG/fKstabdysrlLNXpp3O5i77h7XHN5Jt9sCMNtcb9FbASCp2IMhwletcn
+	mRbLvJbLlU6+vrcri97ObBdNrWH8ng5c43oNnAo3DD0JSbnYnH/PU759pSGSbj6NGHxjlzU1lE2
+	pnsvIVsw0YUg2wMeUAucb4YcR8mM5pMUrgw8nW3t7V/6C5/R+nG9PsTGEGDbAt+CQBh2/0VwtLj
+	b4fuOdbM/n46xs0OI71Eh8OpOBZSH6Xkk6M=
+X-Google-Smtp-Source: AGHT+IHxkoIcgQxBbj0ciatdL7H4EBGHVSGfFVFHwRZVnlMCWlyOVBnZV3aq1Br4MZ+u1VewNyVCmQ==
+X-Received: by 2002:a05:6402:234e:b0:5e7:b092:3114 with SMTP id 4fb4d7f45d1cf-5ebcd4337e2mr3314190a12.9.1742566951167;
+        Fri, 21 Mar 2025 07:22:31 -0700 (PDT)
+Received: from gmail.com ([2a03:2880:30ff:2::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0df302sm1468638a12.66.2025.03.21.07.22.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 07:18:51 -0700 (PDT)
-Date: Fri, 21 Mar 2025 15:17:33 +0100
-From: Angelo Dureghello <adureghello@baylibre.com>
-To: David Lechner <dlechner@baylibre.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: adc: ad7380: disable offload before using SPI bus
-Message-ID: <7fcwd33q7ddeiwuga2hhsdc43zse736i6ka5i55lk2qbfdsgwc@gmgan46wcnrh>
-References: <20250320-iio-adc-ad7380-fix-spi-offload-buffer-predisable-v1-1-6912ac8c0ae0@baylibre.com>
+        Fri, 21 Mar 2025 07:22:30 -0700 (PDT)
+Date: Fri, 21 Mar 2025 07:22:28 -0700
+From: Breno Leitao <leitao@debian.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
+	Will Deacon <will@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+	Waiman Long <longman@redhat.com>, aeh@meta.com,
+	linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+	jhs@mojatatu.com, kernel-team@meta.com,
+	Erik Lundgren <elundgren@meta.com>,
+	"Paul E. McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] lockdep: Speed up lockdep_unregister_key() with
+ expedited RCU synchronization
+Message-ID: <20250321-olivine-harrier-of-cubism-f2ad98@leitao>
+References: <20250321-lockdep-v1-1-78b732d195fb@debian.org>
+ <CANn89iLpON7eV9rHvErsoEu+GqDz18uYMv6M_4TLsh+WX9VQeg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250320-iio-adc-ad7380-fix-spi-offload-buffer-predisable-v1-1-6912ac8c0ae0@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANn89iLpON7eV9rHvErsoEu+GqDz18uYMv6M_4TLsh+WX9VQeg@mail.gmail.com>
 
-On 20.03.2025 11:21, David Lechner wrote:
-> Move disabling of the SPI offload before attempting to use the SPI bus
-> to write a register in ad7380_offload_buffer_predisable().
+On Fri, Mar 21, 2025 at 11:37:31AM +0100, Eric Dumazet wrote:
+> On Fri, Mar 21, 2025 at 10:31 AM Breno Leitao <leitao@debian.org> wrote:
+> >
+> > lockdep_unregister_key() is called from critical code paths, including
+> > sections where rtnl_lock() is held. For example, when replacing a qdisc
+> > in a network device, network egress traffic is disabled while
+> > __qdisc_destroy() is called for every network queue.
+> >
+> > If lockdep is enabled, __qdisc_destroy() calls lockdep_unregister_key(),
+> > which gets blocked waiting for synchronize_rcu() to complete.
+> >
+> > For example, a simple tc command to replace a qdisc could take 13
+> > seconds:
+> >
+> >   # time /usr/sbin/tc qdisc replace dev eth0 root handle 0x1: mq
+> >     real    0m13.195s
+> >     user    0m0.001s
+> >     sys     0m2.746s
+> >
+> > During this time, network egress is completely frozen while waiting for
+> > RCU synchronization.
+> >
+> > Use synchronize_rcu_expedited() instead to minimize the impact on
+> > critical operations like network connectivity changes.
 > 
-> This caused a crash in the spi_engine_irq() interrupt handler due to
-> being in an invalid state.
-> 
-> Fixes: bbeaec81a03e ("iio: ad7380: add support for SPI offload")
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> Running 'critical operations' with LOCKDEP enabled kernels seems a bit
+> strange :)
 
-Reviewed-by: Angelo Dureghello <adureghello@baylibre.com>
+Apologies, I meant to say that at Meta, we have certain service tiers
+that can accommodate the performance trade-offs of running a "debug"
+kernel. This kernel provides valuable feedback about its operations.
 
-Thanks.
+The aim is to identify any significant issues early on, rather than
+having to debug "hard issues" (such as deadlocks, out-of-memory access,
+etc) once the kernel is in production.
 
-> ---
->  drivers/iio/adc/ad7380.c | 7 +++----
->  1 file changed, 3 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/ad7380.c b/drivers/iio/adc/ad7380.c
-> index 4fcb49fdf56639784098f0147a9faef8dcb6b0f6..a2b41980c942e4cd1575bfe4f3846e297ad5d01d 100644
-> --- a/drivers/iio/adc/ad7380.c
-> +++ b/drivers/iio/adc/ad7380.c
-> @@ -1211,6 +1211,9 @@ static int ad7380_offload_buffer_predisable(struct iio_dev *indio_dev)
->  	struct ad7380_state *st = iio_priv(indio_dev);
->  	int ret;
->  
-> +	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-> +	spi_unoptimize_message(&st->offload_msg);
-> +
->  	if (st->seq) {
->  		ret = regmap_update_bits(st->regmap,
->  					 AD7380_REG_ADDR_CONFIG1,
-> @@ -1222,10 +1225,6 @@ static int ad7380_offload_buffer_predisable(struct iio_dev *indio_dev)
->  		st->seq = false;
->  	}
->  
-> -	spi_offload_trigger_disable(st->offload, st->offload_trigger);
-> -
-> -	spi_unoptimize_message(&st->offload_msg);
-> -
->  	return 0;
->  }
->  
-> 
-> ---
-> base-commit: 9f36acefb2621d980734a5bb7d74e0e24e0af166
-> change-id: 20250320-iio-adc-ad7380-fix-spi-offload-buffer-predisable-a801dcfb9c00
-> 
-> Best regards,
-> -- 
-> David Lechner <dlechner@baylibre.com>
-> 
+> Reviewed-by: Eric Dumazet <edumazet@google.com>
+
+Thanks for your support during this investigation,
+--breno
