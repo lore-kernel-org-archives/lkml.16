@@ -1,121 +1,134 @@
-Received: from buffalo.birch.relay.mailchannels.net (buffalo.birch.relay.mailchannels.net [23.83.209.24])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B063F1388;
-	Fri, 21 Mar 2025 07:58:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.24
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742543886; cv=pass; b=bBa13RX73Do6KKF4FXjg1uqXqCpIaiExB0FCKla5t0hfoPq9W/ZbOBGATkun1kQt/TYlYFANJ3gH9wgLwUjh5Rsw/XC4mNKm6LuaslBt1sDJ9Cnq7V4kbQFKWclHm22P39RWc3TLjU/ACEFSGw4pcBqozfySOMBJ5qznJBNHcZU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742543886; c=relaxed/simple;
-	bh=UnHOO/0o9icAYmNqnO8vLCcu+VibrNBPds8KJJ7Npxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YvwsGGsH5CPR0MZDAKAZrlmokIGKyKYddtR81IPcv5cP6Y7gvijKbexG7JFNqlmR/Aou8a5l02vOLMwB4aI8v3yOUsyOHDrlVlIwFbXs/kMFBDFFq4n74XNWlAJdoFNRG2SLU8NsBuCE4HVYgdbzAJsXXOP2qi/m024t/w2GYRs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=kuKl/0mo; arc=pass smtp.client-ip=23.83.209.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7CD81388;
+	Fri, 21 Mar 2025 07:59:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742543985; cv=none; b=oyHIuGmT9vJ6SJvODSe/+DAKzsPDRNlmgcqMhb9tmwH4Br+8hAt61VQ6IAp3ryvAs/CjFy+AGHXoynPndcuwWGRaOlscEIFDtyG5+/Xg9ck/XNeGQgZ0My4tCLGCUPd3GgI2Ae26YKZlTR3pgSDLTYBlFdZd6ZCu+EQWoAUKoHc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742543985; c=relaxed/simple;
+	bh=pOn9x6VL60RWSKq8tUSuctOL+F1TrQS8bDL/t0ctgOU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=F7sX6ozOf4iKQLbSa2OXF//pnGXASw4YaYh3JrI3aeeZoubE9aOXtkcIByfxOuJDa9hmNpIFFixGu5OxNSmqurQN2fXLYT4LlvU1SbMBwugpM2wDQQs0ZiAw/RGzsCe4h5HR9DYft5NzRaUckq/4WtwogxHSD4d0ZP/H6uBj8/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HzetHDiP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="kuKl/0mo"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id DB568783891;
-	Fri, 21 Mar 2025 07:41:58 +0000 (UTC)
-Received: from pdx1-sub0-mail-a313.dreamhost.com (100-115-57-189.trex-nlb.outbound.svc.cluster.local [100.115.57.189])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 49CFB783AD4;
-	Fri, 21 Mar 2025 07:41:58 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742542918; a=rsa-sha256;
-	cv=none;
-	b=Hbx8zXOcZyoxUGVupNsX0ffRV7DcEB/I82G3hcrfPWh9ma9Rnng+IYpN5BENlRYapTwiRK
-	dOAdeacR2drQyTG2wfPaS6Q7/4IgWPQaoxEw7XIl/DiRZ4YWaGisygwnGqehT0lZpfGH+J
-	HW5sYk/6iHovETTwtinyuLDcThMhE8WXug7ZjQsu0Dp4UHmew9KphJswdY/2hWt5NgSmpl
-	DVgd98X4bdshBb8hwYzVEdkrLAriTyNEyW2l9JJVM++VDGJ2XcE/Jnp/D85zuZzijCrQ/S
-	chihqY6mtYyhjKb6bqpO4L9V3BMEI+nCwTeA3+hGDMl40m1ub6UDlNBCHnMJNw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1742542918;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=UnHOO/0o9icAYmNqnO8vLCcu+VibrNBPds8KJJ7Npxk=;
-	b=gR8gf6Nl8w7ddJCpRMf/Uobr5PuG0wjI4s6hdy1J0T303a5l/KfEPVV63S8b4vE8/0OQb0
-	ozidmvxEDXJLpHh5E9QhufSrMkbU78K8zlSgIPsrYpQ4EsVvKOuvxAz3GPFuNkjvnY2FY/
-	lbJbfKBmdyFmmhFimlIKpfDEKFrmp/0IL4ObF5AB2soFGHvTm5P96H4ZKTDotRCJ7Uv+Hs
-	YgsWf5Z9yXDQLgA9lS1gN9OkIn+VDUrjnZza+ncPuoQGpRFbRdkSC/10ImVrqo5mx06N9r
-	m5koxqog39iBCPwnQPRfA163lT2w4uVhBUYzzl/0hFjN1QVHQN40RsH84UzSiw==
-ARC-Authentication-Results: i=1;
-	rspamd-74d566c845-79ct4;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Company-Shrill: 57d17fdc02ed3bcc_1742542918638_1087039239
-X-MC-Loop-Signature: 1742542918638:2043952214
-X-MC-Ingress-Time: 1742542918638
-Received: from pdx1-sub0-mail-a313.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.115.57.189 (trex/7.0.2);
-	Fri, 21 Mar 2025 07:41:58 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a313.dreamhost.com (Postfix) with ESMTPSA id 4ZJvXj4RyhzK7;
-	Fri, 21 Mar 2025 00:41:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1742542918;
-	bh=UnHOO/0o9icAYmNqnO8vLCcu+VibrNBPds8KJJ7Npxk=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=kuKl/0moaPMMiu00g+Dwi8N0RpHD7dAoJ557Qdoicv7j6qWqYEc7ozSjUwCX6Rewu
-	 Z7vYm1snSfU0XC38Nu90Cgz5nf4DmLFCnRDkikX6WiM0MvFxTLey9Ipe/93x4EeSMV
-	 gOGwc5Qr8W9ZxBZdtXG7rZahkqOgWqurKxS3NWu9T9/ezCNa6y/FCAeVcYbW9HRFV/
-	 mrZrrWCeNblzPRW4G9H5LLSkWHJbDxYtfpYq6M+GJ/GcmDxlT7ce5VRa2/881wBaM3
-	 1FFYwcCmJw+eQxfI6qF4rtgH0EjtXAjvoATwT6vgOwKpR/AfsEGyK0hQ1ahlXhzR7K
-	 MKEzZzn68OdKg==
-Date: Fri, 21 Mar 2025 00:41:54 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Li Ming <ming.li@zohomail.com>
-Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
-	alison.schofield@intel.com, vishal.l.verma@intel.com,
-	ira.weiny@intel.com, dan.j.williams@intel.com,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC Patch v1 1/3] cxl/core: Fix caching dport GPF DVSEC issue
-Message-ID: <20250321074154.ltenxqprgxizh5kx@offworld>
-References: <20250319035516.222054-1-ming.li@zohomail.com>
- <20250319035516.222054-2-ming.li@zohomail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HzetHDiP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC3AC4CEE3;
+	Fri, 21 Mar 2025 07:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742543985;
+	bh=pOn9x6VL60RWSKq8tUSuctOL+F1TrQS8bDL/t0ctgOU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HzetHDiP1v5WvZgW7SchOuLQEzW6PYuDsemfUwsjvpojaS0Cou9ctohlNmJhR/+eM
+	 vnqIBEHLmv4HivDJ0JQ+cAGzlAYXOdMiFtbrNDuR1mdLRkEHmbOyhQu9gHQcK2invq
+	 jNO6bWbiXpjPfAvICaWaJ0YKh8DyqHgijw0EfME6fRLAD4peQItcdbxrUGbZMaPsYE
+	 LCZttXhS80gXD0d5ru1Wn+gER79PZWmZiyzxyi67NcpKKhV/crmOlUCx8gcPSFa/cL
+	 p8Ot8loK6oZqEFM2HjOFEOoYYkBDzPpYNVog33tdvxKYTrACFpwKeCJ6uXBIG4Fh5y
+	 svQXTR8tRAoHQ==
+Message-ID: <b99eee70-5231-43fe-bff8-db92d78153e7@kernel.org>
+Date: Fri, 21 Mar 2025 08:59:36 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250319035516.222054-2-ming.li@zohomail.com>
-User-Agent: NeoMutt/20220429
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 1/3] dt-bindings: hwmon: Add Microchip emc2305 support
+To: "Florin Leotescu (OSS)" <florin.leotescu@oss.nxp.com>
+Cc: Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Shych <michaelsh@nvidia.com>,
+ "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Viorel Suman <viorel.suman@nxp.com>, Carlos Song <carlos.song@nxp.com>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "imx@lists.linux.dev" <imx@lists.linux.dev>,
+ "festevam@gmail.com" <festevam@gmail.com>,
+ Florin Leotescu <florin.leotescu@nxp.com>, Frank Li <frank.li@nxp.com>
+References: <20250318085444.3459380-1-florin.leotescu@oss.nxp.com>
+ <20250318085444.3459380-2-florin.leotescu@oss.nxp.com>
+ <20250319-optimistic-positive-peacock-cc26b1@krzk-bin>
+ <DU7PR04MB111631E2E5B074A306033D001FFD92@DU7PR04MB11163.eurprd04.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <DU7PR04MB111631E2E5B074A306033D001FFD92@DU7PR04MB11163.eurprd04.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 19 Mar 2025, Li Ming wrote:
+On 19/03/2025 12:54, Florin Leotescu (OSS) wrote:
 
->Per Table 8-2 in CXL r3.2 section 8.1.1 and CXL r3.2 section 8.1.6, only
->CXL Downstream switch ports and CXL root ports have GPF DVSEC for CXL
->Port(DVSEC ID 04h).
->
->CXL subsystem has a gpf_dvsec in struct cxl_port which is used to cache
->the offset of a GPF DVSEC in PCIe configuration space. It will be
->updated during the first EP attaching to the cxl_port, so the gpf_dvsec
->can only cache the GPF DVSEC offset of the dport which the first EP is
->under. Will not have chance to update it during other EPs attaching.
->That means CXL subsystem will use the same GPF DVSEC offset for all
->dports under the port, it will be a problem if the GPF DVSEC offset
->cached in cxl_port is not the right offset for a dport.
->
->Moving gpf_dvsec from struct cxl_port to struct cxl_dport, make every
->cxl dport has their own GPF DVSEC offset caching, and each cxl dport
->uses its own GPF DVSEC offset for GPF DVSEC accessing.
+>> No blank line here. Use existing code as template. If you find such code, share so we can fix it.
+> 
+> Thanks!   I will remove it.
+> 
+> Identified similar blank line on the following dt-binding files:
+> 
+> 1 adi,ad741x.yaml
+> 2 adi,adm1275.yaml
+> 3 adi,ltc2991.yaml
+> 4 maxim,max20730.yaml
+> 5 maxim,max6639.yaml
+> 6 maxim,max6650.yaml
+> 7 nuvoton,nct6775.yaml
+> 8 nuvoton,nct7363.yaml
+> 9 nuvoton,nct7802.yaml
+> 10 ti,adc128d818.yaml
+> 11 ti,ads7828.yaml
+> 12 ti,ina2xx.yaml
+> 13 ti,lm87.yaml
+> 14 ti,tmp513.yaml
+> 15 ti,tps23861.yaml
+> 16 winbond,w83781d.yaml
 
-This conversion looks good if necessary.
+Oh, that's quite a lot. Thanks, I'll fix them.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+
+Best regards,
+Krzysztof
