@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66DB91EA7D3;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDFCA226CF7;
 	Fri, 21 Mar 2025 12:14:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742559286; cv=none; b=bYwhQOI8F7JZ4+wz0lNtACFCBvAGpB+3Avwp8RiCiIIgkNSuvD5wCkcMRXPxrv0aygF2TZZ64SEAWW1oGo7lqHsrWfK40hHMbnwuVemsmAHhlO0/dkWILLZ07siKf9cYezyfolszQPM6cyC5o+/HQLj4pCFu+toefqPI5VNvVSg=
+	t=1742559286; cv=none; b=o5nhnuABEFlWPC4sqXrul/LEBGj2m5erlF2anr28Zjtw7KJvDd5CAJfw9BuD0+VTcoeay0SXud0EH9TvpBH6KFCywix9dk9SPsl7NQpKONgGToHwJtIG8MfhKZZfkq7Ti5i4/JV+E+ufPaY1Auo13y5geQsleA2rOqTOOlFIfmE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742559286; c=relaxed/simple;
-	bh=m1VPIuo5vZSZGVGPIyjDJGkECuuIKNQjt+mSRkRxpoQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=uhH38QP0uUZsJY4NGI0zsmwfATShH4R9hFcmT3OUEsIExgUp/p711JIk0CWuwTLTK2BjhCfVG0WgI5xRJporVuS8CtuQWJHLLF4ljA7gYJb4fTb772n+tlz+703u/TG0TXKki2jjGZ3IXEditSnnzB1VOfrxbdArv1w7VpariIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fo7LJsD6; arc=none smtp.client-ip=10.30.226.201
+	bh=FkOn0IjuH79qFq1TeqcZzJ6FLwLXQqmZ+ZrnVIsRnKw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Pg/IwEsXKbV9HV3+hkAk2S5HsxRFsnV3cH0PF1eiGvZUxfxSLEZn4gvGskgUKifILEHMJUhsZ21wlTFmaMV2nkQCsdWOMA/S0TvdLoW7eTfFkzE94TGwJRxDgNVbmvkPZ6ATG7WmewKjynh6qqLyjkOemJjMJEhvkwLICqUIFmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHZji32L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fo7LJsD6"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C4653C4CEE3;
-	Fri, 21 Mar 2025 12:14:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHZji32L"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 429A4C116C6;
+	Fri, 21 Mar 2025 12:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742559285;
-	bh=m1VPIuo5vZSZGVGPIyjDJGkECuuIKNQjt+mSRkRxpoQ=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=Fo7LJsD65aFXCdaMWiR9wJYJcNAQqRSEOTuFc5M7mDsESsGaj8KzuOIWrPLWZmrEd
-	 8qqO1NMzwYxIh/ilmv78vLmFL6KHZtMTblNq2XvaGicKcnq7pB7U8i3q5i3iB2JunR
-	 jMjq2QiKx4sboOlL2HZSCtFkthXCVoBBVjG0AM5HdFMInZHz+0bNk7F/+bT3SzJUFL
-	 tYoUqlTtsmzKYpqZ+IYHlqjASn5kznabs6RVUoQBb5+UVCN3z8ND8tkOmnr5qlhQ9c
-	 y2L6X25Rj9SxcVJBadXlS/v1SeilCqmN+ivienXZ6U4fafCi8ByUnRT5n7Blb0lKQu
-	 6yRL2coZCMZ6Q==
+	s=k20201202; t=1742559286;
+	bh=FkOn0IjuH79qFq1TeqcZzJ6FLwLXQqmZ+ZrnVIsRnKw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=XHZji32LBz6Rfv9VnfXn8iHOhd+Fj6X9UnKabb5mAya1UjqQLotZp0E9KUzADNXvU
+	 eqebxjFl24Xzy/XtdeXfSeYTNROKzWsggBn/QOEx+4yDltogyHnL4j0OVX2Sg9+u/W
+	 tM6LKpKpyQm52FqGoIKpiYyYDzvy8dVKEFnrzvl+u4Gdmi/veQzJBBZiU93zxuw2Qt
+	 d89rCC3TesTM2ExDNMp+S3sNBwgln0FH7i+LyUU2iQzZp4278ySLcjM5kNEY7KlF9L
+	 WixyuMCme3U/cXpoB2JMlRN5CgWTfSsZWFAjTPvzHpnG/CxBimKoMOWDs6jOyloi5p
+	 h/iJR3PFVpY5w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA5CBC35FFF;
-	Fri, 21 Mar 2025 12:14:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38886C36007;
+	Fri, 21 Mar 2025 12:14:46 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Subject: [PATCH v6 0/6] Enable IPQ5018 PCI support
-Date: Fri, 21 Mar 2025 16:14:38 +0400
-Message-Id: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
+Date: Fri, 21 Mar 2025 16:14:43 +0400
+Subject: [PATCH v6 5/6] arm64: dts: qcom: ipq5018: Add PCIe related nodes
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -40,10 +40,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAC5Y3WcC/22OwQ6CMBBEf8X0bEl3oVI8AaI3E6NH46FCkUalt
- SjREP5d4Gbi8U123mxHGuW0ashy1hGnWt1oUw+wmM9IXsn6oqguBibIkDMfgWr74AwEtblWFIo
- gkOeSKSw5GSrWqVK/J93xNHClm6dxn8newpiS7BDu9hBtUyGEv0HuiyQJMxaEa/BXwDCNsgwx/
- jnzanm3roDIs84Unnk9b8ZcvdzcybjS8sn8/8WWU0alVJhLCWUAIv6p933/BTWaCY4EAQAA
+Message-Id: <20250321-ipq5018-pcie-v6-5-b7d659a76205@outlook.com>
+References: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
+In-Reply-To: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
 To: Vinod Koul <vkoul@kernel.org>, 
  Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
  Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -60,13 +59,13 @@ Cc: linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pci@vger.kernel.org, George Moussalem <george.moussalem@outlook.com>, 
  20250317100029.881286-2-quic_varada@quicinc.com, 
- Sricharan Ramabadhran <quic_srichara@quicinc.com>
+ Sricharan R <quic_srichara@quicinc.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742559282; l=4765;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742559282; l=7376;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=m1VPIuo5vZSZGVGPIyjDJGkECuuIKNQjt+mSRkRxpoQ=;
- b=tFK4Yh9hIxkOVHYsz+sbGqZw75VR3chKQwuSFrMLNjiMt+SM8beXcxTOxA7Gi5lkZliFIIvJ6
- POKuhvr00yTAwodqbTjgnrtpDAnCpsnvwyPO66X67JzNXalJUjWsu/a
+ bh=WAeuLjqK9NUk+ZyBqC1MGZazKF8I8F2kraQ/dHrYTKM=;
+ b=IY6TGNJgxP9BMtehig95sqAbfVWK5nJJYpogmmusqVWNxG/3fWI8ng05g553So6vRA+JoHFHS
+ +IJj9pvKJTODGLiRjph5ncpaoGO3lCPdZAjjWtI/W6x8zH9TSfjqDv5
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -74,104 +73,280 @@ X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
 X-Original-From: George Moussalem <george.moussalem@outlook.com>
 Reply-To: george.moussalem@outlook.com
 
-This patch series adds the relevant phy and controller
-DT configurations for enabling PCI gen2 support
-on IPQ5018. IPQ5018 has two phys and two controllers, 
-one dual-lane and one single-lane.
+From: Nitheesh Sekar <quic_nsekar@quicinc.com>
 
-Last patch series (v3) submitted dates back to August 30, 2024.
-As I've worked to add IPQ5018 platform support in OpenWrt, I'm
-continuing the efforts to add Linux kernel support.
+Add phy and controller nodes for a 2-lane Gen2 and
+a 1-lane Gen2 PCIe bus. IPQ5018 has 8 MSI SPI interrupts and
+one global interrupt.
 
+Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+Signed-off-by: Sricharan R <quic_srichara@quicinc.com>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
-Changes in v6:
-- Fixed issues reported by 'make dt_bindings_check' as per Rob's bot
-- Removed Krzysztof's Ack-tag on  
-- Link to v5: https://lore.kernel.org/r/20250321-ipq5018-pcie-v5-0-aae2caa1f418@outlook.com
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi | 234 +++++++++++++++++++++++++++++++++-
+ 1 file changed, 232 insertions(+), 2 deletions(-)
 
-Changes in v5:
-- Re-ordered reg and reg-names in dt-bindings and dts to align with
-  other IPQ SoCs
-- Corrected nr of interrupts in dt-bindings: phy: qcom: Add IPQ5018 SoC
-- Corrected ranges property of pcie controller nodes
-- Removed newlines between cells properties in pcie phy nodes
-- Modified dt bindings to add descriptions and separate conditions for
-  ipq5018 and ipq5332 as they have different nr of clocks and resets
-  As such, also removed Krzysztof's RB tag for validation
-- Ran dtbs_check and fixed:
-  interrupt-map property in pcie nodes:
-  /soc@0/pcie@80000000:interrupt-map: Cell 13 is not a phandle(0)
-  /soc@0/pcie@a0000000:interrupt-map: Cell 13 is not a phandle(0)
-- Added missing gpio header file to ipq5018-rdp432-c2.dts
-- Added MHI register requirement to bindings and to PCIe nodes as per:
-  Depends-on: <20250317100029.881286-2-quic_varada@quicinc.com>
-- Link to v4: https://lore.kernel.org/all/DS7PR19MB8883F2538AA7D047E13C102B9DD22@DS7PR19MB8883.namprd19.prod.outlook.com/
+diff --git a/arch/arm64/boot/dts/qcom/ipq5018.dtsi b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+index 8914f2ef0bc4..d08034b57e80 100644
+--- a/arch/arm64/boot/dts/qcom/ipq5018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq5018.dtsi
+@@ -147,6 +147,40 @@ usbphy0: phy@5b000 {
+ 			status = "disabled";
+ 		};
+ 
++		pcie1_phy: phy@7e000{
++			compatible = "qcom,ipq5018-uniphy-pcie-phy";
++			reg = <0x0007e000 0x800>;
++
++			clocks = <&gcc GCC_PCIE1_PIPE_CLK>;
++
++			resets = <&gcc GCC_PCIE1_PHY_BCR>,
++				 <&gcc GCC_PCIE1PHY_PHY_BCR>;
++
++			#clock-cells = <0>;
++			#phy-cells = <0>;
++
++			num-lanes = <1>;
++
++			status = "disabled";
++		};
++
++		pcie0_phy: phy@86000{
++			compatible = "qcom,ipq5018-uniphy-pcie-phy";
++			reg = <0x00086000 0x800>;
++
++			clocks = <&gcc GCC_PCIE0_PIPE_CLK>;
++
++			resets = <&gcc GCC_PCIE0_PHY_BCR>,
++				 <&gcc GCC_PCIE0PHY_PHY_BCR>;
++
++			#clock-cells = <0>;
++			#phy-cells = <0>;
++
++			num-lanes = <2>;
++
++			status = "disabled";
++		};
++
+ 		tlmm: pinctrl@1000000 {
+ 			compatible = "qcom,ipq5018-tlmm";
+ 			reg = <0x01000000 0x300000>;
+@@ -170,8 +204,8 @@ gcc: clock-controller@1800000 {
+ 			reg = <0x01800000 0x80000>;
+ 			clocks = <&xo_board_clk>,
+ 				 <&sleep_clk>,
+-				 <0>,
+-				 <0>,
++				 <&pcie0_phy>,
++				 <&pcie1_phy>,
+ 				 <0>,
+ 				 <0>,
+ 				 <0>,
+@@ -387,6 +421,202 @@ frame@b128000 {
+ 				status = "disabled";
+ 			};
+ 		};
++
++		pcie1: pcie@80000000 {
++			compatible = "qcom,pcie-ipq5018";
++			reg = <0x80000000 0xf1d>,
++			      <0x80000f20 0xa8>,
++			      <0x80001000 0x1000>,
++			      <0x00078000 0x3000>,
++			      <0x80100000 0x1000>,
++			      <0x0007b000 0x1000>;
++			reg-names = "dbi",
++				    "elbi",
++				    "atu",
++				    "parf",
++				    "config",
++				    "mhi";
++			device_type = "pci";
++			linux,pci-domain = <0>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <1>;
++			max-link-speed = <2>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			phys = <&pcie1_phy>;
++			phy-names ="pciephy";
++
++			ranges = <0x01000000 0 0x00000000 0x80200000 0 0x00100000>,
++				 <0x02000000 0 0x80300000 0x80300000 0 0x10000000>;
++
++			msi-map = <0x0 &v2m0 0x0 0xff8>;
++
++			interrupts = <GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 118 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi0",
++					  "msi1",
++					  "msi2",
++					  "msi3",
++					  "msi4",
++					  "msi5",
++					  "msi6",
++					  "msi7",
++					  "global";
++
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 0 142 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &intc 0 0 143 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &intc 0 0 144 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &intc 0 0 145 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_SYS_NOC_PCIE1_AXI_CLK>,
++				 <&gcc GCC_PCIE1_AXI_M_CLK>,
++				 <&gcc GCC_PCIE1_AXI_S_CLK>,
++				 <&gcc GCC_PCIE1_AHB_CLK>,
++				 <&gcc GCC_PCIE1_AUX_CLK>,
++				 <&gcc GCC_PCIE1_AXI_S_BRIDGE_CLK>;
++			clock-names = "iface",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "aux",
++				      "axi_bridge";
++
++			resets = <&gcc GCC_PCIE1_PIPE_ARES>,
++				 <&gcc GCC_PCIE1_SLEEP_ARES>,
++				 <&gcc GCC_PCIE1_CORE_STICKY_ARES>,
++				 <&gcc GCC_PCIE1_AXI_MASTER_ARES>,
++				 <&gcc GCC_PCIE1_AXI_SLAVE_ARES>,
++				 <&gcc GCC_PCIE1_AHB_ARES>,
++				 <&gcc GCC_PCIE1_AXI_MASTER_STICKY_ARES>,
++				 <&gcc GCC_PCIE1_AXI_SLAVE_STICKY_ARES>;
++			reset-names = "pipe",
++				      "sleep",
++				      "sticky",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "axi_m_sticky",
++				      "axi_s_sticky";
++
++			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
++		};
++
++		pcie0: pcie@a0000000 {
++			compatible = "qcom,pcie-ipq5018";
++			reg = <0xa0000000 0xf1d>,
++			      <0xa0000f20 0xa8>,
++			      <0xa0001000 0x1000>,
++			      <0x00080000 0x3000>,
++			      <0xa0100000 0x1000>,
++			      <0x00083000 0x1000>;
++			reg-names = "dbi",
++				    "elbi",
++				    "atu",
++				    "parf",
++				    "config",
++				    "mhi";
++			device_type = "pci";
++			linux,pci-domain = <1>;
++			bus-range = <0x00 0xff>;
++			num-lanes = <2>;
++			max-link-speed = <2>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++
++			phys = <&pcie0_phy>;
++			phy-names ="pciephy";
++
++			ranges = <0x01000000 0 0x00000000 0xa0200000 0 0x00100000>,
++				 <0x02000000 0 0xa0300000 0xa0300000 0 0x10000000>;
++
++			msi-map = <0x0 &v2m0 0x0 0xff8>;
++
++			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "msi0",
++					  "msi1",
++					  "msi2",
++					  "msi3",
++					  "msi4",
++					  "msi5",
++					  "msi6",
++					  "msi7",
++					  "global";
++
++			#interrupt-cells = <1>;
++			interrupt-map-mask = <0 0 0 0x7>;
++			interrupt-map = <0 0 0 1 &intc 0 0 75 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 2 &intc 0 0 78 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 3 &intc 0 0 79 IRQ_TYPE_LEVEL_HIGH>,
++					<0 0 0 4 &intc 0 0 83 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_SYS_NOC_PCIE0_AXI_CLK>,
++				 <&gcc GCC_PCIE0_AXI_M_CLK>,
++				 <&gcc GCC_PCIE0_AXI_S_CLK>,
++				 <&gcc GCC_PCIE0_AHB_CLK>,
++				 <&gcc GCC_PCIE0_AUX_CLK>,
++				 <&gcc GCC_PCIE0_AXI_S_BRIDGE_CLK>;
++			clock-names = "iface",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "aux",
++				      "axi_bridge";
++
++			resets = <&gcc GCC_PCIE0_PIPE_ARES>,
++				 <&gcc GCC_PCIE0_SLEEP_ARES>,
++				 <&gcc GCC_PCIE0_CORE_STICKY_ARES>,
++				 <&gcc GCC_PCIE0_AXI_MASTER_ARES>,
++				 <&gcc GCC_PCIE0_AXI_SLAVE_ARES>,
++				 <&gcc GCC_PCIE0_AHB_ARES>,
++				 <&gcc GCC_PCIE0_AXI_MASTER_STICKY_ARES>,
++				 <&gcc GCC_PCIE0_AXI_SLAVE_STICKY_ARES>;
++			reset-names = "pipe",
++				      "sleep",
++				      "sticky",
++				      "axi_m",
++				      "axi_s",
++				      "ahb",
++				      "axi_m_sticky",
++				      "axi_s_sticky";
++
++			status = "disabled";
++
++			pcie@0 {
++				device_type = "pci";
++				reg = <0x0 0x0 0x0 0x0 0x0>;
++
++				#address-cells = <3>;
++				#size-cells = <2>;
++				ranges;
++			};
++		};
+ 	};
+ 
+ 	timer {
 
-Changes in v4:
-- removed dependency as the following have been applied:
-	dt-bindings: phy: qcom,uniphy-pcie: Document PCIe uniphy
-	phy: qcom: Introduce PCIe UNIPHY 28LP driver
-	dt-bindings: PCI: qcom: Document the IPQ5332 PCIe controller
-  Link: https://lore.kernel.org/all/20250313080600.1719505-1-quic_varada@quicinc.com/
-- added Mani's RB tag to: PCI: qcom: Add support for IPQ5018
-- Removed power-domains property requirement in dt-bindings for IPQ5018
-  and removed Krzysztof's RB tag from:
-  dt-bindings: PCI: qcom: Add IPQ5018 SoC
-- fixed author chain and retained Sricharan Ramabadhran in SoB tags and
-  kept Nitheesh Sekar as the original author
-- Removed comments as per Konrad's comment in:
-  arm64: dts: qcom: ipq5018: Add PCIe related nodes
-- Link to v3 submitted by Sricharan Ramabadhran:
-  Link: https://lore.kernel.org/all/20240830081132.4016860-1-quic_srichara@quicinc.com/
-- Link to v3, incorrectly versioned:
-  Link: https://lore.kernel.org/all/DS7PR19MB8883BC190797BECAA78EC50F9DCB2@DS7PR19MB8883.namprd19.prod.outlook.com/
-
-Changes in v3 (incorrectly versioned):
-- Depends on
-  Link: https://patchwork.kernel.org/project/linux-arm-msm/cover/20250220094251.230936-1-quic_varada@quicinc.com/
-- Added 8 MSI SPI and 1 global interrupts (Thanks Mani for confirming)
-- Added hw revision (internal/synopsys) and nr of lanes in patch 4
-  commit msg
-- Sorted reg addresses and moved PCIe nodes accordingly
-- Moved to GIC based interrupts
-- Added rootport node in controller nodes
-- Tested on Linksys devices (MX5500/SPNMX56)
-- Link to v2: https://lore.kernel.org/all/20240827045757.1101194-1-quic_srichara com/
-
-Changes in v3:
- - Added Reviewed-by tag for patch#1.
- - Fixed dev_err_probe usage in patch#3.
- - Added pinctrl/wak pins for pcie1 in patch#6.
-
-Changes in v2:
- - Fixed all review comments from Krzysztof, Robert Marko,
-   Dmitry Baryshkov, Manivannan Sadhasivam, Konrad Dybcio.
- - Updated the respective patches for their changes.
- - Link to v1: https://lore.kernel.org/lkml/32389b66-48f3-8ee8-e2f1-1613feed3cc7@gmail.com/T/
-
----
-Nitheesh Sekar (6):
-      dt-bindings: phy: qcom: uniphy-pcie: Add ipq5018 compatible
-      phy: qualcomm: qcom-uniphy-pcie 28LP add support for IPQ5018
-      dt-bindings: PCI: qcom: Add IPQ5018 SoC
-      PCI: qcom: Add support for IPQ5018
-      arm64: dts: qcom: ipq5018: Add PCIe related nodes
-      arm64: dts: qcom: ipq5018: Enable PCIe
-
- .../devicetree/bindings/pci/qcom,pcie.yaml         |  50 +++++
- .../bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml |  49 ++++-
- arch/arm64/boot/dts/qcom/ipq5018-rdp432-c2.dts     |  40 ++++
- arch/arm64/boot/dts/qcom/ipq5018.dtsi              | 234 ++++++++++++++++++++-
- drivers/pci/controller/dwc/pcie-qcom.c             |   1 +
- drivers/phy/qualcomm/phy-qcom-uniphy-pcie-28lp.c   |  45 ++++
- 6 files changed, 409 insertions(+), 10 deletions(-)
----
-base-commit: 5744a64fddfc33629f3bcc9a06a646f7443077a7
-change-id: 20250321-ipq5018-pcie-1d44abf0e2f5
-
-Best regards,
 -- 
-George Moussalem <george.moussalem@outlook.com>
+2.48.1
 
 
