@@ -1,129 +1,223 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48821191484;
-	Fri, 21 Mar 2025 14:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1449154426
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:38:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742567861; cv=none; b=eK1Ro1urkLb0E09eSeUKVoODXk0+ZTNXiRQbNzmP6cBWA/7HdewiOH140a5RjqxH7c1nneFP0LWZt1mq0Q8YSL42CLDVud8IgtOFdR22agLAtFqfu5145D/dOzMkeNU+GcyK/MJpJyLrEV/mUZTYE2Li5LmjzZ4briqwvJrhlOc=
+	t=1742567906; cv=none; b=IkO7+dQRR8c32dbYbNhOkexlCLHSZkzopxOy90DihRfT3M3O/uOfwlKDkcHc3aRzelO1v+QItTO9veJnI17www5LbpokBDL1rd892pkY5yHS72ggOiCVoTtx9HS4TkvgEzUHyca+m0MiggNrCJo2W4MN/uo73YHVpAkOgbVo9gA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742567861; c=relaxed/simple;
-	bh=JofJA9YIAu8ZNlMBVwcqyxuF4uUm1QL2UdVB33tJMBw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=KdNQRDRY0+jpaYmM24Wvkr6s3RaACpfKMn1cETdi0A6rSUagxtoW+19fpoliXmwMZndXzVJWOxFoQw0qMuHwC9g5Yc1V9E2r4zx4mvkwlOUE5gMdirl8geu+L0DlM5IhW/YXnLukSwJtFBtLKljQpZNfqE2ea/wlIQdUGo8yKwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=cfZoLcI6; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742567906; c=relaxed/simple;
+	bh=gisHJZdHz+JMX9ST5mViBemlbmO1eiaA8Q3RPj+aTA0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rSscM7koCQ1Oriyleiaj60EQnnSISekYjadgOQ4Z7yAJpjpqBmIx/HEQXZkEMcVqWEAtiHo1qm1Tj8lrs3V5W6uau8M8uHxpA3XTsJZ9qLA9vcXVM7PdrJTOZw1g0+ufKOaW2JYtyOuRDXXcxtu4rBEydF5D7rbIC9F5Oz3sbuo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Av5+AzJW; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="cfZoLcI6"
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATEER031803;
-	Fri, 21 Mar 2025 14:37:32 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	lUAuubmhP/bAgXWQaiCREHxXWbMHCn3WKpV9q57SXdk=; b=cfZoLcI6hOuqbkYM
-	RJbQINSNj8Y0/DFE+IguY2WfAbFWf4skwfZTlrciWzr+M6zrVxrpYxHwPtxvxFKz
-	GupoPjJN4R5ggnfO2SO3hMFJKLcCGN236KCEv5r0phMve4WoMgAAkhJ7cB6rBEk1
-	SPk7Rnclqt/e8AcLmtAWFrVvJptrWcjkpO07OszwNdCMmcoCptKU/7KRias5bOGL
-	pAWjSiSCGICQMzJqPXvxgDGjsOT8Sr2pKPg4YnlUCGiodFefl8GlXWUO7dvzRXtG
-	VRSCK2M4ssTHDUNlwnHTK5RZxGyyG8RtfI9qnE+T0Q6A0LkHQ6SV8xlGsc4LdeEs
-	D3r4sA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45gt5kjfc2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 14:37:32 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52LEbVTd032366
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 14:37:31 GMT
-Received: from [10.111.179.44] (10.49.16.6) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Fri, 21 Mar
- 2025 07:37:30 -0700
-Message-ID: <acbe5688-9be4-489b-8a9c-4950dc3b8133@quicinc.com>
-Date: Fri, 21 Mar 2025 07:37:30 -0700
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Av5+AzJW"
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-aaf0f1adef8so379477866b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:38:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1742567903; x=1743172703; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=nfMbEI0Fx5sNu4XSqiwQsHxAfpsAHkFaA/RtV98dhKo=;
+        b=Av5+AzJWFj3jTxVoLR6XQC4zSuXBe6nV6vzznprC0DV2cX2YDH7eU83DHqpLtCrYJx
+         fYLEjKVuUS6Tu8+exPh3jDZl8niFDmc5riH19Al9AH2E6V7rSCbLx00x8TSvIVgIrZP4
+         oQav60sJehQXr2TM/QwgebcJZe4gF6DzCD4+E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742567903; x=1743172703;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=nfMbEI0Fx5sNu4XSqiwQsHxAfpsAHkFaA/RtV98dhKo=;
+        b=IKZuzjil5rg/kb9L+ljhW21iBlmdSmzMkOy6Krm5Sd3jv+y/dMr1DN4add9Pw2MXcG
+         PkW+uqCLWZNRvTRAY8cgOskssuDMwZq7o04NjrqyIiFbvnoNgJnzt4G9t0WPK+3uMapw
+         hvyMSQWk8WMpYHdfoccNaMfIjzUPPZHRxgtCO+3WIII5fM4JAm2jZgtpFUvTvAKrxs/+
+         o7RcDY/MNm9EEzcV0vjByvJpblAp6tRhfAMsy6LzkupjyCVv6m6nlF5FXBKiRyJu0Kag
+         UF5bs6pQHcsYKtKM8ZHYxRHPWX+KjWU326RJMSJyzsvbJapY7tcuXIvvCH5IhodCjnF9
+         d48Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVrvG+VqFnjnD+ezk2Hmp1vItk+0wUZTzK8yyn9S1SYjYatOi6P+Dco1a9WX0vFkF66m05wCIPJH6KeFpo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPylA0B0GlXNF/b4TkknaKms0HUe1u4PvKyjxYDpDCd0WVqkCU
+	0DAq2WfWZlmWWPSBbcbftnMlayHltXs2bz+nJypymZ/O0JNnkvXxnrYKmNaEfw==
+X-Gm-Gg: ASbGncug027cCY23eQ5iGMYx4s2iNKIQyLLgBQ4Qpkz6i8XavZ8Z52Xru2jWdz7Dz4W
+	IxjGixSHEpLkme4In4tbe2SLKpgN/sLtO+c3G4TBW/7A7S0WJF/Jb/GeMjR9qFBq3EsXPn4T84F
+	6nmZ4Q6NcT5PVTiHVza/r/tQ3ebHxBSLjpfBJMz1zbd/GEPNhK4OejyLOdPuxUtXThAtJi64Txc
+	ZwGR5B9wlY9VY1moss3LpKS/tyNSwMEsGG0MbMU9wfMCaij3TpJSL3SNm2FAp4JWXh6EwIVFCA3
+	t4M1hrcgP2lGfj5xITIPn4qgEVi75U34wzwfgKYrXBkJ0ILQZbdcSxxNt4P9o28XscM10nQqWu3
+	3je03VvUY0awIW1IvqiPq+iBEcLdZNW/bpkY=
+X-Google-Smtp-Source: AGHT+IFWADprdJ2vGFGhLSQej39m3rICpxH0t//Y7vxIg3aJUhiyEW/Hz3Z3rwURI57v3s7Rs/uJbw==
+X-Received: by 2002:a17:906:7952:b0:ac2:c424:c316 with SMTP id a640c23a62f3a-ac3f25836b0mr386823066b.57.1742567903031;
+        Fri, 21 Mar 2025 07:38:23 -0700 (PDT)
+Received: from akuchynski.c.googlers.com.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8d3d43sm165303566b.51.2025.03.21.07.38.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 07:38:22 -0700 (PDT)
+From: Andrei Kuchynski <akuchynski@chromium.org>
+To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Benson Leung <bleung@chromium.org>,
+	Jameson Thies <jthies@google.com>,
+	Andrei Kuchynski <akuchynski@chromium.org>
+Subject: [PATCH 0/2] Fix invalid pointer access
+Date: Fri, 21 Mar 2025 14:37:25 +0000
+Message-ID: <20250321143728.4092417-1-akuchynski@chromium.org>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [greybus-dev] [PATCH] staging: greybus: fix line length issue
-To: ErickKaranja <karanja99erick@gmail.com>, <hvaibhav.linux@gmail.com>,
-        <johan@kernel.org>, <elder@kernel.org>, <gregkh@linuxfoundation.org>,
-        <outreachy@lists.linux.dev>
-CC: <greybus-dev@lists.linaro.org>, <linux-staging@lists.linux.dev>,
-        <linux-kernel@vger.kernel.org>
-References: <20250321115545.24468-1-karanja99erick@gmail.com>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-Content-Language: en-US
-In-Reply-To: <20250321115545.24468-1-karanja99erick@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nalasex01a.na.qualcomm.com (10.47.209.196) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: N3pmzDtsjdnERo5NIcyFkfj6JxdhvGaw
-X-Proofpoint-ORIG-GUID: N3pmzDtsjdnERo5NIcyFkfj6JxdhvGaw
-X-Authority-Analysis: v=2.4 cv=PsuTbxM3 c=1 sm=1 tr=0 ts=67dd79ac cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=3H110R4YSZwA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=pGLkceISAAAA:8 a=UII2AE8if6k0RuonElUA:9
- a=QEXdDO2ut3YA:10 a=KpMAsf9diV4A:10 a=ftr0zfsHvHYA:10
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 adultscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 clxscore=1011 malwarescore=0 suspectscore=0 impostorscore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210106
+Content-Transfer-Encoding: 8bit
 
-On 3/21/2025 4:55 AM, ErickKaranja wrote:
-> Fix line length exceeding 100 columns in arche-platform.c. The code now
-> follows Linux kernel coding style guidelines by keeping lines under the
-> maximum allowed length of 100 characters.
-> 
-> Reported by checkpatch:
-> 
-> CHECK: line length of 101 exceeds 100 columns
-> 
-> Signed-off-by: ErickKaranja <karanja99erick@gmail.com>
-> ---
->  drivers/staging/greybus/arche-platform.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/arche-platform.c b/drivers/staging/greybus/arche-platform.c
-> index d48464390f58..1a82a7a3991c 100644
-> --- a/drivers/staging/greybus/arche-platform.c
-> +++ b/drivers/staging/greybus/arche-platform.c
-> @@ -179,8 +179,8 @@ static irqreturn_t arche_platform_wd_irq(int irq, void *devid)
->  				 */
->  				if (arche_pdata->wake_detect_state !=
->  						WD_STATE_COLDBOOT_START) {
-> -					arche_platform_set_wake_detect_state(arche_pdata,
-> -									     WD_STATE_COLDBOOT_TRIG);
-> +					arche_platform_set_wake_detect_state
-> +						(arche_pdata, WD_STATE_COLDBOOT_TRIG);
->  					spin_unlock_irqrestore(&arche_pdata->wake_lock,
->  							       flags);
->  					return IRQ_WAKE_THREAD;
+These patches fix bugs in the USB Type-C class driver, addressing a NULL
+pointer dereference and invalid pointer usage during partner
+registration / unregistration.
 
-I see you already received some good feedback. However I think the most
-important feedback wasn't given, namely that checkpatch performs rigorous
-enforcement of Coding Style guidelines that themselves are not always rigorous.
+1. The first patch resolves NULL pointer dereference resulting from a race
+condition where the port driver and USB hub driver simultaneously invoke
+typec_partner_unlink_device. The crash originated from dev->kdef.name being
+NULL during the second unlinking process.
 
-For line length the Coding Style still says the "preferred limit" is 80
-columns. But whether it is 80 or 100, the Coding Style has this very important
-caveat: Statements longer than [the limit] should be broken into sensible
-chunks, unless exceeding [the limit] significantly increases readability.
+The crash log:
+ BUG: kernel NULL pointer dereference, address: 0000000000000000
+ CPU: 0 PID: 55688 Comm: kworker/0:2 Tainted: G U 6.6.56-05934
+ Hardware name: Google Redrix/Redrix, BIOS Google_Redrix.14505.778.0
+ Workqueue: events cros_typec_port_work [cros_ec_typec]
+ RIP: 0010:strlen+0xb/0x20
+ RSP: 0000:ffffbe400c5b3b90 EFLAGS: 00010202
+ RAX: ffffffffffffffff RBX: 0000000000000000 RCX: 0000000000000000
+ RDX: 0000000000000001 RSI: 0000000000000000 RDI: 0000000000000000
+ RBP: ffffbe400c5b3b90 R08: ffffa2a011187000 R09: ffffffff8d633a4d
+ R10: 0000000000000000 R11: ffffffffc092a6b0 R12: ffffa29ff4d02990
+ R13: ffffa29ff4d02d98 R14: 0000000000000000 R15: 0000000000000000
+ FS:  0000000000000000(0000) GS:ffffa2a6df800000(0000) knlGS:00000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 0000000000000000 CR3: 0000000191cb0000 CR4: 0000000000750ef0
+ Call Trace:
+  <TASK>
+  ? __die_body+0x68/0xb0
+  ? page_fault_oops+0x379/0x3e0
+  ? ep_poll_callback+0x132/0x260
+  ? exc_page_fault+0x4f/0xa0
+  ? asm_exc_page_fault+0x22/0x30
+  ? __pfx_pmc_usb_mux_set+0x10/0x10 [intel_pmc_mux (HASH:1400 30)]
+  ? kobject_uevent_env+0x13d/0x3c0
+  ? strlen+0xb/0x20
+  kernfs_name_hash+0x17/0x90
+  kernfs_find_ns+0x3e/0xe0
+  kernfs_remove_by_name_ns+0x47/0xb0
+  typec_unregister_partner+0x4f/0xd0 [typec (HASH:1400 31)]
+  cros_typec_remove_partner+0x19f/0x200 [cros_ec_typec (HASH:1400 32)]
+  cros_typec_port_update+0x555/0x1690 [cros_ec_typec (HASH:1400 32)]
+  ? snprintf+0xd0/0x640
+  ? cros_ec_typec_event+0x2a/0x40 [cros_ec_typec (HASH:1400 32)]
+  ? blocking_notifier_call_chain+0x73/0xf0
+  cros_typec_port_work+0x34/0x60 [cros_ec_typec (HASH:1400 32)]
+  worker_thread+0x395/0x940
+  kthread+0xed/0x110
+  ? __pfx_worker_thread+0x10/0x10
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x38/0x50
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1b/0x30
+  </TASK>
 
-<https://www.kernel.org/doc/html/latest/process/coding-style.html#breaking-long-lines-and-strings>
+2. The USB HUB driver's failure to notify the Type-C class driver about
+device detachments resulted in typec_partner_detach() not being invoked.
+This omission caused the port driver to retain a reference to a released
+device, triggering a kernel WARNING upon unplug. Furthermore, when a new
+device was connected, typec_register_partner() attempted to use an obsolete
+port->usb3_dev pointer. The crash, occurring in typec_register_partner(),
+is resolved in a second patch.
 
-Obviously this is subjective, but for me the original code is significantly
-more readable than the patched code.
+The WARNING log occurred during device unplug:
+[534629.006366] kernfs: can not remove 'typec', no directory
+ WARNING: CPU: 0 PID: 864020 at fs/kernfs/dir.c:1684
+ kernfs_remove_by_name_ns+0x79/0xb0
+ CPU: 0 PID: 864020 Comm: kworker/0:2 Tainted: G U 6.6.56-05934
+ Hardware name: Google Screebo/Screebo, BIOS Google_Screebo.15709.185.0
+ Workqueue: events cros_typec_port_work [cros_ec_typec]
+ RIP: 0010:kernfs_remove_by_name_ns+0x79/0xb0
+ Call Trace:
+  <TASK>
+  ? __warn+0xca/0x1c0
+  ? kernfs_remove_by_name_ns+0x79/0xb0
+  ? report_bug+0x14e/0x1f0
+  ? handle_bug+0x41/0x70
+  ? exc_invalid_op+0x1b/0x50
+  ? asm_exc_invalid_op+0x16/0x20
+  ? kernfs_remove_by_name_ns+0x79/0xb0
+  typec_unregister_partner+0x5e/0xd0 [typec (HASH:1400 25)]
+  cros_typec_remove_partner+0x19f/0x200 [cros_ec_typec (HASH:1400 26)]
+  cros_typec_port_update+0x4a0/0x12a0 [cros_ec_typec (HASH:1400 26)]
+  ? cros_usbpd_charger_ec_command+0x20/0xd0
+  ? __queue_work+0x3f4/0x520
+  ? queue_work_on+0x6a/0x80
+  ? cros_ec_typec_event+0x2a/0x40 [cros_ec_typec (HASH:1400 26)]
+  ? blocking_notifier_call_chain+0xce/0xf0
+  cros_typec_port_work+0x34/0x60 [cros_ec_typec (HASH:1400 26)]
+  process_scheduled_works+0x299/0x490
+  worker_thread+0x2d7/0x3b0
 
-So the takeaway is that not every checkpatch issue should be "fixed".
+The crash log occurred during the subsequent plug:
+[536103.301256] BUG: kernel NULL pointer dereference,
+ address: 000000000000050b
+ Oops: 0000 [#1] PREEMPT SMP NOPTI
+ CPU: 0 PID: 864020 Comm: kworker/0:2 Tainted: G U 6.6.56-05934
+ Hardware name: Google Screebo/Screebo, BIOS Google_Screebo.15709.185.0
+ Workqueue: events cros_typec_port_work [cros_ec_typec]
+ RIP: 0010:kernfs_new_node+0x1b/0x80
+ RSP: 0018:ffffbd318c433bd8 EFLAGS: 00010246
+ RAX: 0000000000000004 RBX: 0000000000000498 RCX: 000000000000a1ff
+ RDX: ffffffffc0a3b435 RSI: ffffffffc0a3b435 RDI: 0000000000000498
+ RBP: ffffbd318c433be0 R08: 0000000000000000 R09: 0000000000000000
+ R10: 0000000000000000 R11: ffffffffa61156d0 R12: ffff9e573ad2d400
+ R13: ffff9e5653c47e10 R14: 0000000000000498 R15: 0000000000000498
+ FS:  0000000000000000(0000) GS:ffff9e5d5fe00000(0000) knlGS:00000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 000000000000050b CR3: 00000002ea838003 CR4: 0000000000770ef0
+ DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+ DR3: 0000000000000000 DR6: 00000000ffff07f0 DR7: 0000000000000400
+ Call Trace:
+  <TASK>
+  ? __die_body+0x68/0xb0
+  ? page_fault_oops+0x379/0x3e0
+  ? exc_page_fault+0x4f/0xa0
+  ? asm_exc_page_fault+0x22/0x30
+  ? __pfx_klist_class_dev_get+0x10/0x10
+  ? kernfs_new_node+0x1b/0x80
+  kernfs_create_link+0x3d/0xa0
+  sysfs_do_create_link_sd+0x68/0xd0
+  typec_register_partner+0x12f/0x220 [typec (HASH:1400 25)]
+  cros_typec_port_update+0x5dc/0x12a0 [cros_ec_typec (HASH:1400 26)]
+  ? cros_usbpd_charger_ec_command+0x20/0xd0
+  ? __queue_work+0x3f4/0x520
+  ? cros_ec_typec_event+0x2a/0x40 [cros_ec_typec (HASH:1400 26)]
+  ? blocking_notifier_call_chain+0xce/0xf0
+  cros_typec_port_work+0x34/0x60 [cros_ec_typec (HASH:1400 26)]
+  process_scheduled_works+0x299/0x490
+  worker_thread+0x2d7/0x3b0
+  kthread+0xed/0x110
+  ? __pfx_worker_thread+0x10/0x10
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork+0x38/0x50
+  ? __pfx_kthread+0x10/0x10
+  ret_from_fork_asm+0x1b/0x30
+  </TASK>
 
-/jeff
+Andrei Kuchynski (2):
+  usb: typec: class: Fix NULL pointer access
+  usb: typec: class: Invalidate USB device pointers on partner
+    unregistration
+
+ drivers/usb/typec/class.c | 23 +++++++++++++++++++----
+ drivers/usb/typec/class.h |  1 +
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+
+-- 
+2.49.0.395.g12beb8f557-goog
+
