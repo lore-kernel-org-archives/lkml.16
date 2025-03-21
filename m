@@ -1,117 +1,161 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8D622E00A;
-	Fri, 21 Mar 2025 17:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFF122D7B8;
+	Fri, 21 Mar 2025 17:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742578778; cv=none; b=kKEikpnd68eX7EYk8cOE9Ipw2SOwgwciDSHdAbCsbRd2U32tty7UbiwF4BwuSAYmYLV7ynG/NGy0ISY1nBeds6ChtKE0NnGeS3iG8vOmEsL2Uo2aXPz6KYK/fLvjoe4pdETooIakH2zEbhnlcVNFn8m92SoNYv+mA6RoeJH/qnY=
+	t=1742578906; cv=none; b=iGURbq95mTrk3pN+MAL8+NIjHLMDjgEff01ufAZVyZhBWfGJze57I0Z3Bw4XIE7nC83tMgilWln+yq/nWHqdU0CDAv7HmIzaAyNaY0CBFjxksBCoRQd5iAxujqkCswemWzhG9BPlXdpsk/6w7tv0PMTLFOniIkL7/tnRi4BeV5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742578778; c=relaxed/simple;
-	bh=4pyrEb/XLVUm5uXtaQxFVUcsh4jWa/mfOFsdYaHRQA8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=lR2JPiI57dLMg89CpjI0IY8NO1YHQlA9JQ6RlSQ7eqht7LrHwHKi/Us0UWLcVdXJZWJGpY8ozfo/A+Og+Drw6fwJ9X6nv4YLRfcsOFTCKmoggwiNMRcxazVbGX3BkH+jO48QK4VYh2GOFaswmnbDWjdPE+lT28HFy2WYxYWX0zM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=jihGiOBu; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742578906; c=relaxed/simple;
+	bh=NocGHNwr7fbaBa9vD5pCQ2EV241hP5rGhMzIIHbSghg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=VY4RRfOjIwwKq2KxXU7DA3YiY/Df0xtDWsMnal6ux1poiMq3pNRVB862IPEsGVe4kFXJDeWqLn17WNA87UFxRI4SWcGe4Vu1J4xLiO9MX4tOS84zdYwlRelagsWAGwx6MDi5POcVYNT0oYmozmYGwyFKulWj5TdruI8dSgQFTwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=crSaDCX2; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="jihGiOBu"
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id CE39A2E0949A;
-	Fri, 21 Mar 2025 19:39:31 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742578772;
-	bh=wYvGX9/X3/QzzufrTpCUTlUgcmNScKpNgUM9VB7v5cc=;
-	h=Received:From:Subject:To;
-	b=jihGiOBuuTidkpsI6HpImK8ygv1CIoIoOfqbvZI8fm6QOjZjCbr9onB+YM8BUkDcT
-	 5Q//pOE8U+5cckGb7YwLkxeD570H6lKyVIE0V5o89adLSEDDu0DCR82CSX0zfCY5DR
-	 CHWO2KQzBCwOhzb5U6q9OsePsdcNSz6pLsX2cddM=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.179) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f179.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f179.google.com with SMTP id
- 38308e7fff4ca-30bfca745c7so22308911fa.0;
-        Fri, 21 Mar 2025 10:39:31 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVQIEmFFFHMjMftx5AmCxTCg6sdBAuPqbpbSnUKK6ZSPU0kfQITX1UR8rojSk8S9a3atjQPFSai6ExoAg==@vger.kernel.org,
- AJvYcCW+e3nrCS082V1ZFCZJW/yYkvutteOZUYIGWfS9h/ZUJcxvXg5euXKhihTwP+XYnWAiio+rKXEG3VQ+vCwgeAUtN7YXaA==@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxx1C83tsRIYUghIKwvIZbd54PIEllATk7RrBHFjrATUSoCQVFb
-	MRFADHjp7Hx8CLuAg+zt9DeHlTShtzyHlBoMzDCzzCOU+51pScl94XmKbW837mC9ibwIJGiQ+xQ
-	9wW/X7fI8XN42iHhQUupzLwWvdC4=
-X-Google-Smtp-Source: 
- AGHT+IFGhuXw4ghC+6FlGbhlRIyNG9wFoNAo3vJhOd8sZCYIaQGWRRiBtMofTA7F5hphjSFkMtH7dYLzm3b0TJfR3eU=
-X-Received: by 2002:a05:651c:1502:b0:30c:6f3a:dce9 with SMTP id
- 38308e7fff4ca-30d7e21a70cmr18903141fa.10.1742578771100; Fri, 21 Mar 2025
- 10:39:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="crSaDCX2"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 48191442A0;
+	Fri, 21 Mar 2025 17:41:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742578897;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=zgcTJTisVN3vy6/bL+F8k2WTg0zNvDoQ8oR2IntnOkc=;
+	b=crSaDCX2QS/A8fp3+lpQfUl7fQ2tuBed4GX0wjlD9hs0nk0U4UOiKv9Vw9eaOp1e4jaPpl
+	vLAywACT9j/hM4KxHSbOIfiNJ5P3AdQqq+ni1fOlYTRqLYdFCfg38LQT2R6BBMuyVGaJ8k
+	657j3Jmk93EORXSYAWQ8UM+EjiJ+7NCWb6ctfOAAg1XroZokb3J5khrYGG+dKh+hHi168u
+	/org5gOdXv5VkqPrScb3W6f+BHKWTE9sY56ZsSmd05xKa/lqqaH++Kvhl/UXoIBiB5roSs
+	akJLMWzHgRsYK6wjPzoLTWvzmw+o7LhCI4GO8yjxj+oN363e07AoZPOfBDi98g==
+Date: Fri, 21 Mar 2025 18:41:34 +0100
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: davem@davemloft.net, Andrew Lunn <andrew@lunn.ch>, Jakub Kicinski
+ <kuba@kernel.org>, Eric Dumazet <edumazet@google.com>, Heiner Kallweit
+ <hkallweit1@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thomas.petazzoni@bootlin.com,
+ linux-arm-kernel@lists.infradead.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Herve Codina <herve.codina@bootlin.com>,
+ Florian Fainelli <f.fainelli@gmail.com>, Russell King
+ <linux@armlinux.org.uk>, Vladimir Oltean <vladimir.oltean@nxp.com>,
+ =?UTF-8?B?S8O2cnk=?= Maincent <kory.maincent@bootlin.com>, Oleksij Rempel
+ <o.rempel@pengutronix.de>, Simon Horman <horms@kernel.org>, Romain Gantois
+ <romain.gantois@bootlin.com>, Piergiorgio Beruto
+ <piergiorgio.beruto@gmail.com>
+Subject: Re: [PATCH net-next v3 1/7] net: ethtool: netlink: Allow
+ per-netdevice DUMP operations
+Message-ID: <20250321184134.22311370@fedora.home>
+In-Reply-To: <c4e5bd2f-6216-4f74-b677-46c79343eb21@redhat.com>
+References: <20250313182647.250007-1-maxime.chevallier@bootlin.com>
+	<20250313182647.250007-2-maxime.chevallier@bootlin.com>
+	<c4e5bd2f-6216-4f74-b677-46c79343eb21@redhat.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321035106.26752-1-luke@ljones.dev>
-In-Reply-To: <20250321035106.26752-1-luke@ljones.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Fri, 21 Mar 2025 18:39:19 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwEx-g_KCpn2XThF-ZrTxaDB1JOAK7NN10NAJ5i9Jpx_Tg@mail.gmail.com>
-X-Gm-Features: AQ5f1JreSm_CQXoPgZmEmtB8lZHYTJgLeQ7j_dtlDsLE5yqkdoo7zrqrm49xhCo
-Message-ID: 
- <CAGwozwEx-g_KCpn2XThF-ZrTxaDB1JOAK7NN10NAJ5i9Jpx_Tg@mail.gmail.com>
-Subject: Re: [PATCH v3 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
-To: Luke Jones <luke@ljones.dev>
-Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, bentiss@kernel.org, jikos@kernel.org,
-	mario.limonciello@amd.com
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174257877225.31740.11065200156088349926@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedujedvucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeeftdertddvnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepheetveefiedvkeejfeekkefffefgtdduteejheekgeeileehkefgfefgveevfffhnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvddtpdhrtghpthhtohepphgrsggvnhhisehrvgguhhgrthdrtghomhdprhgtphhtthhopegurghvvghmsegurghvvghmlhhofhhtrdhnvghtpdhrtghpthhtoheprghnughrvgifsehluhhnnhdrtghhpdhrtghpthhtohepk
+ hhusggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegvughumhgriigvthesghhoohhglhgvrdgtohhmpdhrtghpthhtohephhhkrghllhifvghithdusehgmhgrihhlrdgtohhmpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhg
+X-GND-Sasl: maxime.chevallier@bootlin.com
 
-On Fri, 21 Mar 2025 at 04:51, Luke Jones <luke@ljones.dev> wrote:
->
-> This short series refactors the Ally suspend/resume functionality in the
-> asus-wmi driver along with adding support for ROG Ally MCU version checking.
->
-> The version checking is then used to toggle the use of older CSEE call hacks
-> that were initially used to combat Ally suspend/wake issues arising from the MCU
-> not clearing a particular flag on resume. ASUS have since corrected this
-> especially for Linux in newer firmware versions.
->
-> - hid-asus requests the MCU version and displays a warning if the version is
->   older than the one that fixes the issue.
-> - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
-> version is high enough.
->
-> - Changelog:
->   + V2:
->     - Adjust warning message to explicitly mention suspend issues
->     - Use switch/case block to set min_version
->       - Set min_version to 0 by default and toggle hacks off
->   + V3:
->     - Fix errors picked up by test bot: incorrect return in the else block
->       of `#if IS_REACHABLE(CONFIG_ASUS_WMI)`:
->       - set_ally_mcu_hack()
->       - set_ally_mcu_powersave()
->
-> Luke D. Jones (2):
->   hid-asus: check ROG Ally MCU version and warn
->   platform/x86: asus-wmi: Refactor Ally suspend/resume
->
->  drivers/hid/hid-asus.c                     | 111 +++++++++++++++++-
->  drivers/platform/x86/asus-wmi.c            | 130 ++++++++++++++-------
->  include/linux/platform_data/x86/asus-wmi.h |  13 +++
->  3 files changed, 213 insertions(+), 41 deletions(-)
->
-> --
-> 2.49.0
->
+On Fri, 21 Mar 2025 17:31:17 +0100
+Paolo Abeni <pabeni@redhat.com> wrote:
 
-Since I have to also test my series on my ally and booted a dev
-environment, I am also giving this a go. I'll post some results in a
-bit
+> On 3/13/25 7:26 PM, Maxime Chevallier wrote:
+> > We have a number of netlink commands in the ethnl family that may have
+> > multiple objects to dump even for a single net_device, including :
+> > 
+> >  - PLCA, PSE-PD, phy: one message per PHY device
+> >  - tsinfo: one message per timestamp source (netdev + phys)
+> >  - rss: One per RSS context
+> > 
+> > To get this behaviour, these netlink commands need to roll a custom  
+> > ->dumpit().  
+> > 
+> > To prepare making per-netdev DUMP more generic in ethnl, introduce a
+> > member in the ethnl ops to indicate if a given command may allow
+> > pernetdev DUMPs (also referred to as filtered DUMPs).
+> > 
+> > Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
+> > ---
+> >  net/ethtool/netlink.c | 45 +++++++++++++++++++++++++++++--------------
+> >  net/ethtool/netlink.h |  2 ++
+> >  2 files changed, 33 insertions(+), 14 deletions(-)
+> > 
+> > diff --git a/net/ethtool/netlink.c b/net/ethtool/netlink.c
+> > index a163d40c6431..7adede5e4ff1 100644
+> > --- a/net/ethtool/netlink.c
+> > +++ b/net/ethtool/netlink.c
+> > @@ -587,21 +587,38 @@ static int ethnl_default_dumpit(struct sk_buff *skb,
+> >  	int ret = 0;
+> >  
+> >  	rcu_read_lock();  
+> 
+> Maintain the RCU read lock here is IMHO confusing...
+> 
+> > -	for_each_netdev_dump(net, dev, ctx->pos_ifindex) {
+> > -		dev_hold(dev);
+> > +	if (ctx->req_info->dev) {
+> > +		dev = ctx->req_info->dev;  
+> 
+> .. as this is refcounted.
+> 
+> I suggest to move the rcu_read_lock inside the if.
 
-Antheas
+Indeed, maybe not the best place indeed. I'll address that, thanks for
+pointing this out
+
+> 
+> >  		rcu_read_unlock();
+> > +		/* Filtered DUMP request targeted to a single netdev. We already
+> > +		 * hold a ref to the netdev from ->start()
+> > +		 */
+> > +		ret = ethnl_default_dump_one(skb, dev, ctx,
+> > +					     genl_info_dump(cb));
+> > +		rcu_read_lock();
+> > +		netdev_put(ctx->req_info->dev, &ctx->req_info->dev_tracker);
+> >  
+> > -		ret = ethnl_default_dump_one(skb, dev, ctx, genl_info_dump(cb));
+> > +		if (ret < 0 && ret != -EOPNOTSUPP && likely(skb->len))
+> > +			ret = skb->len;
+> >  
+> > -		rcu_read_lock();
+> > -		dev_put(dev);
+> > +	} else {
+> > +		for_each_netdev_dump(net, dev, ctx->pos_ifindex) {
+> > +			dev_hold(dev);
+> > +			rcu_read_unlock();
+> > +
+> > +			ret = ethnl_default_dump_one(skb, dev, ctx,
+> > +						     genl_info_dump(cb));
+> > +
+> > +			rcu_read_lock();
+> > +			dev_put(dev);
+> >  
+> > -		if (ret < 0 && ret != -EOPNOTSUPP) {
+> > -			if (likely(skb->len))
+> > -				ret = skb->len;
+> > -			break;
+> > +			if (ret < 0 && ret != -EOPNOTSUPP) {
+> > +				if (likely(skb->len))
+> > +					ret = skb->len;  
+> 
+> IMHO a bit too many levels of indentation. It's possibly better to move
+> this code in a separate helper.
+
+That's true, not the prettiest piece of that patch. I'll refactor this
+better then.
+
+Thanks for the review,
+
+Maxime
