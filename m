@@ -1,193 +1,98 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f193.google.com (mail-yb1-f193.google.com [209.85.219.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2A651E87B;
-	Fri, 21 Mar 2025 13:03:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 406271E87B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:04:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742562222; cv=none; b=GG8vPJVeJYSm7qGY18vFNO4K9+fytqpgQwW9yFvi40aqMC17vD9zVTBaStcdNC2ZIlM5bp6laV0mxYzSH4+I/FObrhXDUjAsNXimaSDQrIATbLWpQcaZcKsTdJysXYmZSk7z4khVKF005D9t5EdjuWDHluAaAhOtyJVZxyltHCM=
+	t=1742562245; cv=none; b=lS6Bn6q6dTxVuuBm3bCELj0K89O0p3XczcqFhcHf5y9wIOrLx4jXqNF9THyxVFfkDKrTq9KWPlxFm8eqijoMCLYHft6cK0VI+ZN55TqWmtNZKWTFiN+WQ6pUC50PqHHAWIoUvSEPYVY4GUAYa4t6RaeZ36vKNkx2iy65uhG9kRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742562222; c=relaxed/simple;
-	bh=RbGSfYMZiSR1R6pyGV7kYXdZSh+jN1eALQiLe7CfXTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uNKwKTEddySSPcF307Hngd6ej19FruWII8AQ6RLkPvk/1dTIrRgPLJDT4gVYlKj7DMGgLJxxdJT0aCtKIL95qEjM1dTlTrNvb+6+ezkYu+GWaf0sUudHFqKDA+a9U4Xub0F1oLQXXZ5RgEf1saZbNhgeC7ll7HO5DQ/rm2eXIw8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O/OnUb6j; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742562245; c=relaxed/simple;
+	bh=0pJdJ1Eyxs+PrwuAINvPMf3NQuW4WJqZKbUbk34P1F4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Content-Type; b=p+1wqwjp7zApsK9gZHhTf6FKacyOHtfHoRflUIxll7/cx4+GIdVjW7qWIE2a0zD53+u/v/3mEfhJj4g1MQjebgUCLXTViDkbIkywt30FXLgTaUBmOxjsL2q+DbiVyBLv8t4IH3idk6xpJWyZnTk/Ca1yFn0WpcjEp4IBJ4/Ecf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HTdwCIob; arc=none smtp.client-ip=209.85.219.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O/OnUb6j"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742562220; x=1774098220;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=RbGSfYMZiSR1R6pyGV7kYXdZSh+jN1eALQiLe7CfXTg=;
-  b=O/OnUb6j1rBiO1TQErCrMimOErOMSXmgZzXbcKptwk9BIkgH5KXTe9v9
-   EIzgihzBSWVHORqMPpv6LLTPu3B8UdaEdPuu8AYQZD6shh17b3SalqP3P
-   IiARk0mA3LHHOmbOuqREpl87OUg5z2kgqxRK7YubLjUX+EU6x1uCBd0i2
-   GxQ0Sc1aFlYQc5xlALUvr5Q1lMp03mWCvLl/xUg1YTAoQ+TldNyjo1g0e
-   AlicuiaBStq9N5xjowGNtpqJvLlHtrVQPWWRdXsHJW3QxZ8hw+CrvnNa8
-   /ymNv5tKNAVZdlisrLSAoemsMtC4DO3CcKlq/QdkU0JZwYyFLSrNgM3o2
-   A==;
-X-CSE-ConnectionGUID: Vx+wKolmT4ODKOUsOOQmwQ==
-X-CSE-MsgGUID: g0ZKNZW5Qq+VSYAcHPfuig==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="47706519"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="47706519"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 06:03:39 -0700
-X-CSE-ConnectionGUID: K14PDU8GSrKUbRSuiyhpuw==
-X-CSE-MsgGUID: qmIVk99gS0KqLgbW9AkF9g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="123911843"
-Received: from mjarzebo-mobl1.ger.corp.intel.com (HELO mdjait-mobl.intel.com) ([10.245.245.43])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 06:03:37 -0700
-From: Mehdi Djait <mehdi.djait@linux.intel.com>
-To: sakari.ailus@linux.intel.com,
-	laurent.pinchart@ideasonboard.com
-Cc: tomi.valkeinen@ideasonboard.com,
-	jacopo.mondi@ideasonboard.com,
-	hverkuil@xs4all.nl,
-	kieran.bingham@ideasonboard.com,
-	naush@raspberrypi.com,
-	mchehab@kernel.org,
-	hdegoede@redhat.com,
-	dave.stevenson@raspberrypi.com,
-	linux-media@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Mehdi Djait <mehdi.djait@linux.intel.com>
-Subject: [RFC PATCH v4] media: v4l2-common: Add a helper for obtaining the clock producer
-Date: Fri, 21 Mar 2025 14:03:29 +0100
-Message-ID: <20250321130329.342236-1-mehdi.djait@linux.intel.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTdwCIob"
+Received: by mail-yb1-f193.google.com with SMTP id 3f1490d57ef6-e637669ef11so1307466276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:04:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742562243; x=1743167043; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0pJdJ1Eyxs+PrwuAINvPMf3NQuW4WJqZKbUbk34P1F4=;
+        b=HTdwCIobeUu3r0WaHjJ+2pCia2Kxk2k8M9IwU3O26b+AWH5EauztA252GzT+38Wy9C
+         mX94LtmtpqzuCKmsyl9tXKKlWJEdH00cD4GUMNeJMvw2HWlI4gFTkWa7BEfUrLF9ywHk
+         5gmBWqK0xjSYq2UVph68E7mKRpUR9d5njcXaIVMajV2W2QjDA3V1g1S/ndD1X/GdOVHf
+         EYlrc8PLQNpRzG8uuqvtOGyq69QTjlkaX4uRMKOgSybb7tudhbGzPr1LtKbeGqDkerwg
+         /Z9H76oyGzNh+QE/ATkdh3ZffLP29wCeZVeI6zMMJJPrEWvWA1gn57TUrVfumsd9ep/G
+         MMSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742562243; x=1743167043;
+        h=to:subject:message-id:date:from:in-reply-to:references:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0pJdJ1Eyxs+PrwuAINvPMf3NQuW4WJqZKbUbk34P1F4=;
+        b=AI6OASLYszmlZBzUQ4AH3GIHceiAWUbK5sePA+e5TS3849sqgg1AifIMJmPvOr0TyS
+         SN1G4kS+ET9/Q/CpIXD73zpBMJXPuspWsozy2/GNJpYyLmppWdqdEt6dRjJXDjKbdO9f
+         gN+Y1RQ8+Nt7OD+9AI/h40aSK7agk7Ud8mZ5Ok3lVHK/xNnQh7n2qS6BxjNWLbLBOMjW
+         xVuwJyVr0olgbu1jYRnPkOtMEk+SpYt2b4hd9crNOUAaL4i1irLD+33ypqqd9koR9/cq
+         7xGzdInUMRIEyaq2Y4om1xtUv1p/HbsP2Dt24tdLf4JJ0N0E/PlJ8KW+N+CB0lftXJuC
+         YXQw==
+X-Gm-Message-State: AOJu0YxBYwrrrGi5y6Yf+3ClZK5wDvxoh1tOwqcgdus50Uf9xWD0hj1I
+	+tRWgjm6Q5LYD1f0SeBUlgLOy5Kl5fuwxGW5d41umRdt/XqdytCKdfj9gK1xxOrvIBVYYx76LJ3
+	vQxDpuwSFS4Ez/3MGnpiZNi5Q0DfMDgcTs/M=
+X-Gm-Gg: ASbGncuGCiux2m4Y1z45OnD3ruz/mn7A3fu0MdGdjYs6cLv4aDlp1hCblADBgAjc4oi
+	2Sc29jQuDmIGouYsiBYVZSYdTr6qzgG9nDK9tepFdHvZxzC95MpcLeg3PT9iA2wNR/FrCtOlKhj
+	PJzSu+N5pWAmGEkmWKfv3OY++GYh5M+Xl4iOxAZJ0MvuwMTUsU66GEPVtF48ED
+X-Google-Smtp-Source: AGHT+IHlAKBYZtfTQEj2okUPDYjXZjOigHyCCWxiTb/sOZWsYvPLRMM4De7i9pMbCxEX5jU8rwnOOKhXGekB24h/kpc=
+X-Received: by 2002:a05:6902:11cf:b0:e61:1b54:2d1 with SMTP id
+ 3f1490d57ef6-e66a4e13fcamr4033767276.27.1742562242904; Fri, 21 Mar 2025
+ 06:04:02 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAFf+5ziUY_gLJGMHKHHB_w8aq2KP+EZRK0VdoxyUtkBH=-EKPw@mail.gmail.com>
+In-Reply-To: <CAFf+5ziUY_gLJGMHKHHB_w8aq2KP+EZRK0VdoxyUtkBH=-EKPw@mail.gmail.com>
+From: Amit <amitchoudhary0523@gmail.com>
+Date: Fri, 21 Mar 2025 18:33:52 +0530
+X-Gm-Features: AQ5f1JqXG47IM-nAatVjt1yp_TZA2ja9fws8vzLVP6QZQskB-fF478wvC3Mw2ZA
+Message-ID: <CAFf+5zgwEJ_Rzv9GM0yPSaRTXw+w15NgGK1CWj5zjDW+DZ03kA@mail.gmail.com>
+Subject: Some concerns about allowing Rust code in linux kernel.
+To: linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Introduce a helper for v4l2 sensor drivers on both DT- and ACPI-based
-platforms to retrieve a reference to the clock producer from firmware.
+Hi,
 
-This helper behaves the same as clk_get_optional() except where there is
-no clock producer like in ACPI-based platforms.
+I have some concerns regarding Rust code in linux kernel.
 
-For ACPI-based platforms the function will read the "clock-frequency"
-ACPI _DSD property and register a fixed frequency clock with the frequency
-indicated in the property.
+Many C programmers who contribute to linux kernel and maintain the
+kernel may not want to learn Rust. I have contributed few patches to
+linux kernel a long time ago and I also don't want to learn Rust.
 
-Signed-off-by: Mehdi Djait <mehdi.djait@linux.intel.com>
----
-v1 -> v2:
-Suggested by Sakari:
-    - removed clk_name
-    - removed the IS_ERR() check
-    - improved the kernel-doc comment and commit msg
-Link v1: https://lore.kernel.org/linux-media/20250227092643.113939-1-mehdi.djait@linux.intel.com
+So, what are the chances that 10 years down the line, we will still
+have Rust contributors/maintainers for linux kernel?
 
-v2 -> v3:
-- Added #ifdef CONFIG_COMMON_CLK for the ACPI case
-Link v2: https://lore.kernel.org/linux-media/20250310122305.209534-1-mehdi.djait@linux.intel.com/
+What if Rust kernel developers abandon linux kernel 5 years down the line?
 
-v3 -> v4:
-Suggested by Laurent:
-	- removed the #ifdef to use IS_REACHABLE(CONFIG_COMMON_CLK)
-	- changed to kasprintf() to allocate the clk name when id is NULL and
-	  used the __free(kfree) scope-based cleanup helper when
-	  defining the variable to hold the allocated name
-Link v3: https://lore.kernel.org/linux-media/20250321093814.18159-1-mehdi.djait@linux.intel.com/
+There are tons of C programmers around and they will be around because
+OS/Networking software is written in C and will keep getting written
+in C.
 
+What is the guarantee that we will have tons of Rust programmers down the line?
 
- drivers/media/v4l2-core/v4l2-common.c | 40 +++++++++++++++++++++++++++
- include/media/v4l2-common.h           | 18 ++++++++++++
- 2 files changed, 58 insertions(+)
+Java developers are not going to learn Rust.
 
-diff --git a/drivers/media/v4l2-core/v4l2-common.c b/drivers/media/v4l2-core/v4l2-common.c
-index 0a2f4f0d0a07..b33152e2c3af 100644
---- a/drivers/media/v4l2-core/v4l2-common.c
-+++ b/drivers/media/v4l2-core/v4l2-common.c
-@@ -34,6 +34,9 @@
-  * Added Gerd Knorrs v4l1 enhancements (Justin Schoeman)
-  */
- 
-+#include <linux/clk.h>
-+#include <linux/clkdev.h>
-+#include <linux/clk-provider.h>
- #include <linux/module.h>
- #include <linux/types.h>
- #include <linux/kernel.h>
-@@ -636,3 +639,40 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(v4l2_link_freq_to_bitmap);
-+
-+struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id)
-+{
-+	const char *clk_id __free(kfree) = NULL;
-+	struct clk_hw *clk_hw;
-+	struct clk *clk;
-+	u32 rate;
-+	int ret;
-+
-+	clk = devm_clk_get_optional(dev, id);
-+	if (clk)
-+		return clk;
-+
-+	if (!IS_REACHABLE(CONFIG_COMMON_CLK))
-+		return ERR_PTR(-ENOENT);
-+
-+	if (!is_acpi_node(dev_fwnode(dev)))
-+		return ERR_PTR(-ENOENT);
-+
-+	ret = device_property_read_u32(dev, "clock-frequency", &rate);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	if (!id) {
-+		clk_id = kasprintf(GFP_KERNEL, "clk-%s", dev_name(dev));
-+		if (!clk_id)
-+			return ERR_PTR(-ENOMEM);
-+		id = clk_id;
-+	}
-+
-+	clk_hw = devm_clk_hw_register_fixed_rate(dev, id, NULL, 0, rate);
-+	if (IS_ERR(clk_hw))
-+		return ERR_CAST(clk_hw);
-+
-+	return clk_hw->clk;
-+}
-+EXPORT_SYMBOL_GPL(devm_v4l2_sensor_clk_get);
-diff --git a/include/media/v4l2-common.h b/include/media/v4l2-common.h
-index 63ad36f04f72..35b9ac698e8a 100644
---- a/include/media/v4l2-common.h
-+++ b/include/media/v4l2-common.h
-@@ -573,6 +573,24 @@ int v4l2_link_freq_to_bitmap(struct device *dev, const u64 *fw_link_freqs,
- 			     unsigned int num_of_driver_link_freqs,
- 			     unsigned long *bitmap);
- 
-+/**
-+ * devm_v4l2_sensor_clk_get - lookup and obtain a reference to an optional clock
-+ *			      producer for a camera sensor.
-+ *
-+ * @dev: device for v4l2 sensor clock "consumer"
-+ * @id: clock consumer ID
-+ *
-+ * This function behaves the same way as clk_get_optional() except where there
-+ * is no clock producer like in ACPI-based platforms.
-+ * For ACPI-based platforms, the function will read the "clock-frequency"
-+ * ACPI _DSD property and register a fixed-clock with the frequency indicated
-+ * in the property.
-+ *
-+ * Return:
-+ * * pointer to a struct clk on success or an error code on failure.
-+ */
-+struct clk *devm_v4l2_sensor_clk_get(struct device *dev, const char *id);
-+
- static inline u64 v4l2_buffer_get_timestamp(const struct v4l2_buffer *buf)
- {
- 	/*
--- 
-2.48.1
+Only C/C++ developers may want to learn Rust but then the question is
+how many C/C++ developers would want to learn and become an expert in
+a new language? And then how many of those will actually contribute to
+linux kernel?
 
+I am not suggesting anything. I just had these concerns, so I wrote them here.
+
+Regards,
+Amit
