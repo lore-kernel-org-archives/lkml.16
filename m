@@ -1,44 +1,65 @@
-Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2852722D78E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E29B133F6;
+	Fri, 21 Mar 2025 16:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742576134; cv=none; b=YMtMH++5NIL7mOASvJ4bFdKGlVWCihcaHc3JQnbMdYAi49OI3BNgNrfmo/dkb4i0Qo5oCWJ9nXKQMDgToc/p3j0Xs0sFX8ks//qiquPmQ6nYRCy0cOCkYrFoGzuQROdaSxl8DvPAPgXOszKGQIAQ/dAIoy/b5tO5w4q9p5JRdFk=
+	t=1742576262; cv=none; b=mIcYBP6E+sJb4ZYumuZ0gXubf/KgUazuy5oyASijgRkKbIyC8bDEn76DA4qnywrJ7lOUJzb7WS85uoB286/sazqvyhBPKaMw2BVJnO3FiwUoIaimHJCc6AZxJTATYOOnWIVE4Og/2pYVeAar21zrXJeb4+56rrkr0PyjCfpfF0M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742576134; c=relaxed/simple;
-	bh=VZuWKWwqx+D4t4EN9rOo44JbxcxMII7+7ELn8GMomqU=;
+	s=arc-20240116; t=1742576262; c=relaxed/simple;
+	bh=TI8QswTMwvsvAErK9ByhmOgqwM19DkY5k0TsQ8B24Uc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ORhNYwx3xZzHJq2gnZpqM3OvHZunpvmmcm8jLdVN6mRwkrcF2YDV1LOCpF32HNaeheud91XhuHKHNy7TG4ZXMKL5PUxw+mGS3dTiyA9O5IIAzMp0UWlP1+XWXnWAvHYre0LgwoYLUDeqZk9bATahcEXfnmjpumqZ4s1S4G47AT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=IG2le371; arc=none smtp.client-ip=95.215.58.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 Content-Type:Content-Disposition:In-Reply-To; b=gz9jkx9DNBvAR54iaz2BVBq2jXX/GxZxpeNRVTH98y2z2Vogej7EN9tBYBfKXDsuUN28mNQ3hG+qXPPqacqySLnqqU4rbw3iBIj50dB5ZMOmU90z4MF/5m+p1pKr1HQtp8u8ZptBWIMRyGCSeEp/0mljS5cgEY1LXtH+v/dfbdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m+rnIrBT; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="IG2le371"
-Date: Fri, 21 Mar 2025 09:55:21 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742576129;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0k4BG0pUG6A1oGGXbZDig3252bONMGhq0TL6wCJItwM=;
-	b=IG2le371hUF+BSyoky5EjdInNnAZOAN3FbWyq17bhJkLgRldYBBGqn6ItUpSnUNkxlj0V2
-	Pr6c4FemD9GcNp/LhOgmvJSI/qZRRseq9C++gaPtSwRPmNPqlEc7X0RYDyi5A8pbb+tMvB
-	WaataOkAKAl+EW6H6Emf4K40DzGbKQg=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Shakeel Butt <shakeel.butt@linux.dev>
-To: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Johannes Weiner <hannes@cmpxchg.org>, Michal Hocko <mhocko@kernel.org>, 
-	Roman Gushchin <roman.gushchin@linux.dev>, Muchun Song <muchun.song@linux.dev>, 
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>, linux-mm@kvack.org, cgroups@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Meta kernel team <kernel-team@meta.com>
-Subject: Re: [PATCH 1/9] memcg: remove root memcg check from refill_stock
-Message-ID: <yldsarkfr3hjf4hyojxguxshyi6lml5tau2fykoj7s4lelxcpo@cdh67zvt5dmk>
-References: <20250315174930.1769599-1-shakeel.butt@linux.dev>
- <20250315174930.1769599-2-shakeel.butt@linux.dev>
- <fcfbb44b-6ab9-4c39-8a00-3e6200dc25b0@suse.cz>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m+rnIrBT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742576260; x=1774112260;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TI8QswTMwvsvAErK9ByhmOgqwM19DkY5k0TsQ8B24Uc=;
+  b=m+rnIrBTLgWMf8plFwRr+3xDP4UJButh7LjzzS40CpxSWxf9rkWDJh5I
+   Z3vLVeFs371H6CtC73ng6eW9tbeuCwYnQoqoPN06Og0rnmznzS/EVWjhc
+   5yBnkPQM5+dRqhbqhtQBsgVoNU4USKkSZXlFxhDwIE+tzIkmjx/y6nG8t
+   g5FL41xam/Vq6RQMYXFphQyLfhZyKifR+YxH8G75sfUys1IsFqn4w6/PC
+   7FUrUBesS6alW9L6IUVl1Xc6f9uG3dp9iFFT7v1oQKixLGC6jBLnQNXKX
+   +BWROXKw23dDKns0PtEQfEKTirvgO0x6LT2Vt9sFO6HLd5XyCq8TT8ExC
+   w==;
+X-CSE-ConnectionGUID: 0i2rznayRgCFGD1EFarIdg==
+X-CSE-MsgGUID: 0Bv7zjvyS6+/vbrGlRXdnA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="31439953"
+X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
+   d="scan'208";a="31439953"
+Received: from fmviesa005.fm.intel.com ([10.60.135.145])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:57:39 -0700
+X-CSE-ConnectionGUID: QLURwVkwRgCf9s9H6tFF6Q==
+X-CSE-MsgGUID: IjjcQovXTG+DsaKdJVeKVg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
+   d="scan'208";a="128130989"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by fmviesa005.fm.intel.com with ESMTP; 21 Mar 2025 09:57:35 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tvfgV-0001WD-0g;
+	Fri, 21 Mar 2025 16:57:29 +0000
+Date: Sat, 22 Mar 2025 00:56:58 +0800
+From: kernel test robot <lkp@intel.com>
+To: Danilo Krummrich <dakr@kernel.org>, bhelgaas@google.com,
+	gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Danilo Krummrich <dakr@kernel.org>
+Subject: Re: [PATCH v2 3/4] rust: pci: impl TryFrom<&Device> for &pci::Device
+Message-ID: <202503220040.TDePlxma-lkp@intel.com>
+References: <20250320222823.16509-4-dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -47,20 +68,49 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fcfbb44b-6ab9-4c39-8a00-3e6200dc25b0@suse.cz>
-X-Migadu-Flow: FLOW_OUT
+In-Reply-To: <20250320222823.16509-4-dakr@kernel.org>
 
-On Tue, Mar 18, 2025 at 08:59:59AM +0100, Vlastimil Babka wrote:
-> On 3/15/25 18:49, Shakeel Butt wrote:
-> > refill_stock can not be called with root memcg, so there is no need to
-> > check it.
-> > 
-> > Signed-off-by: Shakeel Butt <shakeel.butt@linux.dev>
-> 
-> Acked-by: Vlastimil Babka <vbabka@suse.cz>
-> 
-> It's not trivial to verify this so I'd add
-> VM_WARN_ON_ONCE(mem_cgroup_is_root(memcg)); as Roman suggested in patch 4 reply.
-> 
+Hi Danilo,
 
-Ack, will do in the next version.
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on 51d0de7596a458096756c895cfed6bc4a7ecac10]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Danilo-Krummrich/rust-device-implement-Device-parent/20250321-063101
+base:   51d0de7596a458096756c895cfed6bc4a7ecac10
+patch link:    https://lore.kernel.org/r/20250320222823.16509-4-dakr%40kernel.org
+patch subject: [PATCH v2 3/4] rust: pci: impl TryFrom<&Device> for &pci::Device
+config: x86_64-buildonly-randconfig-005-20250321 (https://download.01.org/0day-ci/archive/20250322/202503220040.TDePlxma-lkp@intel.com/config)
+compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250322/202503220040.TDePlxma-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503220040.TDePlxma-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   ***
+   *** Rust bindings generator 'bindgen' < 0.69.5 together with libclang >= 19.1
+   *** may not work due to a bug (https://github.com/rust-lang/rust-bindgen/pull/2824),
+   *** unless patched (like Debian's).
+   ***   Your bindgen version:  0.65.1
+   ***   Your libclang version: 20.1.1
+   ***
+   ***
+   *** Please see Documentation/rust/quick-start.rst for details
+   *** on how to set up the Rust support.
+   ***
+>> error[E0133]: use of extern static is unsafe and requires unsafe block
+   --> rust/kernel/pci.rs:473:43
+   |
+   473 |         if dev.bus_type_raw() != addr_of!(bindings::pci_bus_type) {
+   |                                           ^^^^^^^^^^^^^^^^^^^^^^ use of extern static
+   |
+   = note: extern statics are not controlled by the Rust type system: invalid data, aliasing violations or data races will cause undefined behavior
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
