@@ -1,105 +1,78 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B419BB664
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:21:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out0-220.mail.aliyun.com (out0-220.mail.aliyun.com [140.205.0.220])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B11B664
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:26:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.220
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742530922; cv=none; b=amZq1Gm1vsLGuvEvcGF4By6CNZ2lVp4lUSIEBnNlXXXtyYuJ5HB954IlS/fPZebDsSWo9EmAcrN4wXoYGSWRnOVYHl9hGr0WgCvPOWxM/KL7OUP/4otEp7csLe03vtC7WjStEYNWMihPfBrNhd6sNwMydJkzALU6hLLZxUn8M94=
+	t=1742531172; cv=none; b=RJGtAF3g6toMYgJRB0Sa9d1AKtyORiSO7T43PWAdxr9KMrWgiT3bc6lapmmC7eU3IkoI4z45aHv4WbuTibXVvsc2LYBn7NhhOeT+bobP3Xg5maHVMW6MRUnoYxHtOQX82MIHQIddrN/bbb0eNbxy1dgdbvKQDMNzgHFu/dIMZXU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742530922; c=relaxed/simple;
-	bh=2+btny2MzHlBk/WLxrebfCC8c5LLyxPS+kp5sPwlIHA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R1zP6baMWc0nBYpDIyRX0P3QOoQPtxRMxcpTBX6EaZkL3pUm7kv+ePxfea99frKb6zMrez2o5MSXepysGWRCXvMwsGaJ3CLfCK1df3x8JPZdOIWXmVPwo1+xyFvHNdtJJMTcpIZm+BavAL/TmQsk41/GIwy4jhwZZOywHh1Vcok=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D27A106F;
-	Thu, 20 Mar 2025 21:22:06 -0700 (PDT)
-Received: from [10.162.16.153] (a077893.blr.arm.com [10.162.16.153])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F3A893F673;
-	Thu, 20 Mar 2025 21:21:55 -0700 (PDT)
-Message-ID: <f3868f40-961d-4db5-af2a-7b4b32b3d86e@arm.com>
-Date: Fri, 21 Mar 2025 09:51:52 +0530
+	s=arc-20240116; t=1742531172; c=relaxed/simple;
+	bh=o1ssKcOIg/aDHkWl9VQMhQVIYWwH/7KGmbd90J0EhrM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CcduaFH6/DHST9qTOj65+pxJu+RbMWJ154oFT/+32IkL/qvhC2qaLBHYRYYyJ5QsC1E1sxfB0wUlSL9siCfDlZNsPHFYFoYuS61C47W/D0Tz1fhcJK4irA6deDc8rRNMQ6PKOrZ8hvx6mjv+mi++RVa9Jcl7Ee0UlFqLo4/f5uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=GBYRSSIG; arc=none smtp.client-ip=140.205.0.220
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="GBYRSSIG"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=antgroup.com; s=default;
+	t=1742531166; h=From:To:Subject:Date:Message-Id:MIME-Version;
+	bh=VsJHduJlbjQ/kh8Iq30W8vJNdi20hMIhWmJ47RHEKA0=;
+	b=GBYRSSIGOrJXDomVQyDnU6jJAUsgx8TCtKA3Zf0ZFo0MXP5FgINOy0GJwZaT94T6ibyCn1PygNWF2oG0ent5gxyRu15cSOZgeKfNYnfbtyx4Auyj/6I6tvt5r9FvFrcKwZfn7uCKndyCaCq2f01ij5jYvQV/gNTpeMFK8IxbBEU=
+Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.c-P7dFG_1742529313 cluster:ay29)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Mar 2025 11:55:14 +0800
+From: "Hou Wenlong" <houwenlong.hwl@antgroup.com>
+To: linux-kernel@vger.kernel.org
+Cc: "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
+  "Arnd Bergmann" <arnd@arndb.de>,
+  "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Subject: [PATCH] char: misc: Use __register_chrdev() to register the actual minor counts
+Date: Fri, 21 Mar 2025 11:54:42 +0800
+Message-Id: <b63b7981191777a6d175cfa98379e987281b9e3a.1742528326.git.houwenlong.hwl@antgroup.com>
+X-Mailer: git-send-email 2.31.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mm/arm64: Drop dead code for pud special bit handling
-To: Peter Xu <peterx@redhat.com>, linux-mm@kvack.org,
- linux-kernel@vger.kernel.org
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Alex Williamson <alex.williamson@redhat.com>,
- Donald Dutile <ddutile@redhat.com>, Catalin Marinas
- <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Keith Busch <kbusch@kernel.org>
-References: <20250320183405.12659-1-peterx@redhat.com>
-Content-Language: en-US
-From: Anshuman Khandual <anshuman.khandual@arm.com>
-In-Reply-To: <20250320183405.12659-1-peterx@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/21/25 00:04, Peter Xu wrote:
-> Keith Busch observed some incorrect macros defined in arm64 code [1].
-> 
-> It turns out the two lines should never be needed and won't be exposed to
-> anyone, because aarch64 doesn't select HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD,
-> hence ARCH_SUPPORTS_PUD_PFNMAP is always N.  The only archs that support
-> THP PUDs so far are x86 and powerpc.
+In commit ab760791c0cf ("char: misc: Increase the maximum number of
+dynamic misc devices to 1048448"), the minor number of misc char device
+is increased to MINORMASK + 1. However, it still uses register_chrdev(),
+which defaults to registering the misc char device with only 256 minor
+numbers.  Therefore, when a misc device is given a minor number greater
+than 255, the device file fails to open in kobj_lookup(). As a solution,
+use __register_chrdev() to register the actual minor counts to
+accommodate this increase.
 
-Correct.
+Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
+---
+In our environment, the per-cpu coresight_tmc driver occupies too many
+minor numbers, which ultimately allocates minor number 256 for our misc
+device, resulting in a failure to open the device file in /dev. I'm not
+sure if this is a bug or if userspace can only use fewer than 256 minor
+numbers. Therefore, I didn't add a fix tag here.
+---
+ drivers/char/misc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Instead of fixing the lines (with no way to test it..), remove the two
-> lines that are in reality dead code, to avoid confusing readers.
+diff --git a/drivers/char/misc.c b/drivers/char/misc.c
+index f7dd455dd0dd..dda466f9181a 100644
+--- a/drivers/char/misc.c
++++ b/drivers/char/misc.c
+@@ -315,7 +315,7 @@ static int __init misc_init(void)
+ 		goto fail_remove;
+ 
+ 	err = -EIO;
+-	if (register_chrdev(MISC_MAJOR, "misc", &misc_fops))
++	if (__register_chrdev(MISC_MAJOR, 0, MINORMASK + 1, "misc", &misc_fops))
+ 		goto fail_printk;
+ 	return 0;
+ 
+-- 
+2.31.1
 
-Agreed. Because ARCH_SUPPORTS_PUD_PFNMAP is always N and hence these lines
-are never reachable. So removing these lines will be preferred than fixing.
-
-> 
-> Fixes tag is attached to reflect where the wrong macros were introduced,
-> but explicitly not copying stable, because there's no real issue to be
-> fixed.  So it's only about removing the dead code so far.
-
-Makes sense.
-
-> 
-> [1] https://lore.kernel.org/all/Z9tDjOk-JdV_fCY4@kbusch-mbp.dhcp.thefacebook.com/#t
-> 
-> Cc: Alex Williamson <alex.williamson@redhat.com>
-> Cc: Donald Dutile <ddutile@redhat.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Fixes: 3e509c9b03f9 ("mm/arm64: support large pfn mappings")
-
-The commit ID checks out.
-
-> Reported-by: Keith Busch <kbusch@kernel.org>
-> Signed-off-by: Peter Xu <peterx@redhat.com>
-> ---
->  arch/arm64/include/asm/pgtable.h | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-> index 0b2a2ad1b9e8..15211f74b035 100644
-> --- a/arch/arm64/include/asm/pgtable.h
-> +++ b/arch/arm64/include/asm/pgtable.h
-> @@ -620,11 +620,6 @@ static inline pmd_t pmd_mkspecial(pmd_t pmd)
->  #define pud_pfn(pud)		((__pud_to_phys(pud) & PUD_MASK) >> PAGE_SHIFT)
->  #define pfn_pud(pfn,prot)	__pud(__phys_to_pud_val((phys_addr_t)(pfn) << PAGE_SHIFT) | pgprot_val(prot))
->  
-> -#ifdef CONFIG_ARCH_SUPPORTS_PUD_PFNMAP
-> -#define pud_special(pte)	pte_special(pud_pte(pud))
-> -#define pud_mkspecial(pte)	pte_pud(pte_mkspecial(pud_pte(pud)))
-> -#endif
-> -
->  #define pmd_pgprot pmd_pgprot
->  static inline pgprot_t pmd_pgprot(pmd_t pmd)
->  {
-
-LGTM
-
-Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
