@@ -1,137 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4842D8BEE;
-	Fri, 21 Mar 2025 22:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06101C3F0C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 22:24:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742595696; cv=none; b=e6wBiNj2W5Dj/MJLqsxiRyuHFWJcXTJZ9VNdAQ0ZZYqtQ/W+c3tMkn3msZQC9F8hpsHMlikHcH4qWsPtAJasR6I4Osl98AoJEQDRZIxzay51303jpXT5x9E8PUP6rmP5r4jubc4NOhOEWLZzEiACMZoGkbp5O94RqAGPOYgsSG4=
+	t=1742595846; cv=none; b=u4TiUdsWmeOA99w1luXk8Oj/DtgVl5IN9Y9Kk46f/jbGy0G9f4wCVIMuwAq4sC4TSVGna3Oj8pYCemkFn7eTfdBYXI6s4PQbmlm+URnSGLfLrV+g8sKWD2GFx09eNJWE6ugJ2x/fcRHdHgDBYSAWRqvLLJ/UqXohnYrGB3l7e1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742595696; c=relaxed/simple;
-	bh=HJFvVXl45GjCHB77vkVbfYG2LXCQM1Yu7VkVLSHwgtg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z6rbvUIdAn+BmLlmPGNQMFlCYbOwb1dFgB5H2FE9G+a6zNpNx0Wa+xf+ShmpUKXmvxdPvlDlNrZwugN8RgqJj4E2LCC6kmOvYqgcZU/JqWA1kWgUEls/SgT4YteYk9abdJfQQTKZ4Jl43u3zFgijOMB/OOf7CX36odPLOP62P9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RYgPCnOX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742595846; c=relaxed/simple;
+	bh=Pf80HbUr/DGQjCWPwmII0ZVFPKktGmOvnTdlRbkKMIw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sn6BiIwSQYyXzcmSVB5NOAsskhoMPe3Aagms9tHi0fJKnO0Z4UIpTTYoFaAVP7QArG9skrWnS1OWmFGFK++zqdF7y7oLcrc3pWzRXgzAkkLmP14MXGRiX40hsUKfJgHRNoJDaODJUKU27B+DC80fdoPrv2ylfXvQ6YMSJMP7xS8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EL+IrAaZ; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RYgPCnOX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B2BAC4CEE3;
-	Fri, 21 Mar 2025 22:21:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742595695;
-	bh=HJFvVXl45GjCHB77vkVbfYG2LXCQM1Yu7VkVLSHwgtg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RYgPCnOX2/NYKWyQPW6LLib0j+Q3H9+rHSpNI2L2Cb1laNKAJiZhik9jvwjU0dPQ7
-	 pq/4kAmagE0IORsYyhGLuoooKAOMPPiRu98d2vywU/FmIvED6MeRose+GkaS3LUyJT
-	 to/3Kj1w1J1AHdd5z3FfpyS2/UNXHaw0wT1a8IxP1lqTo3WKHLw1oEo+YUdDbpaXil
-	 5LhjUHwzgEalhhpc1RRNs/TdE9DO5wgFbTdPHT3lcd2WthohavgGfkJXUVOJslwSPw
-	 JnmozSN195VoD86b7eMlo6wgF04gbHq7FvJzu//UP1Pkin43h44fNWJqG//dx/cI7R
-	 iP+PQ5DVxZvWA==
-Date: Fri, 21 Mar 2025 17:21:33 -0500
-From: Bjorn Andersson <andersson@kernel.org>
-To: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, stable <stable@vger.kernel.org>
-Subject: Re: [PATCH v3] remoteproc: Add device awake calls in rproc boot and
- shutdown path
-Message-ID: <6lyuwfypd5sq5fqu2ibgpxiulvq3txe6igxhrpqd4443z4zex4@5bvlrpohwg5c>
-References: <20250317114057.1725151-1-quic_schowdhu@quicinc.com>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EL+IrAaZ"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac29fd22163so445187866b.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:24:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742595843; x=1743200643; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=E8jrJyKxiHJsFpDm0e3XwO0Ld22rjdn+cIHQuSUcYus=;
+        b=EL+IrAaZ0etBEeFqvodr87jH6vKQEFcZutosQURa6y1XId2dG2QegfMEgKiMqJ9mzj
+         GU7NHD2RiR6SPafSBG/b2tPUUYy+mlCZSjk7rGsGaECb1jM5Aku2dp6aPJzquFxWnFYJ
+         TKuPxtNgbm89UiO0LNNQjAnGbkxsa2SUEgk9D4Dya3N1gC5T0r5nw13hTTNNG7OFMlFp
+         moS2uoq9bTb42fRUWFUyK37OmpO0klYjuaNLTQoQiQpV18Ymvev70vw2DZkyzv/ltNtU
+         q6XMLIRy0+CNzmXHTGlLIpifEC7azlSC8KxKzLUsmoRtZN9nF930MuTfpZszk0V4Rw6O
+         wQ9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742595843; x=1743200643;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=E8jrJyKxiHJsFpDm0e3XwO0Ld22rjdn+cIHQuSUcYus=;
+        b=VrRG2dgd/ndedHb50RhmwmOC4Vq2KbKKs+JuhUkBMAa4dC1vkK9153mwZvpGqd8+/X
+         3V8xPVIw02HRbBZM8jZosMfggu8bpISaWqibLI3B/mKjzXsqpqZkcFG50jN2xWb750yU
+         I2dLSGjDNolv8SaTIX/nPjB321uOcAT2xuCUnMev11b0NKIXKET2vXyVxSM0eOU1wdeu
+         BbC+GhzuX1NenL17cKAKzzXkJkU8DIiAIWjlNpYHCTbItAQQ3mCcBuCPfDZ9GKychcvC
+         Pzi7oNXsGZ6HYbwBE4a1Vo+p5GvsR1/nmCrlgt7mtqa/ANPlkNhVM8/gMKWorxnQyyEb
+         6B8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUX0gXzKGUHeUqa3hfQ6qliFtWIuTmUdV25sph4WW6qi6OUnIZsNbP12gIv+38Fd7JPy11Gbh5ppGAR8OY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxQeB+FEUZlFI+bnWuBHS5+Zqw5ddabbVA5p9AgbMXk4KQq3SZm
+	UA9P1m0zvO0gUEXHQJdOw9UpkcKxoN6lanL3hPc1+JwFd9In+YOmBNm5AxvLaMsHe+yfFUtEu6m
+	bAni4u4hXlEwVA9nA+wapFQpPjbikMOhgP9kAB+lV0mO+tiKkYPA=
+X-Gm-Gg: ASbGncsBW7e5pIFku78PSoyADAjtEADoWavmX6lXp6+jsdW3zAsyaSF5JGBJt6rL0ZN
+	9axf++QXMVrOe0Iylvfyc+eKtnz4bBgrAXA3i/HZAueD2b/iSqXuZzr0fiTFYOfzfItH/48w2Lx
+	hEoLbMApxV7bnpsrP/t//fAIU=
+X-Google-Smtp-Source: AGHT+IGiBo0grQRUu2nHJCjMTQZmtRZhraKKNe/LaYS2ganDDjeQhCx9hOUZj3XHWnRGLvT0rflSbrILe4b94nHCEIA=
+X-Received: by 2002:a17:907:c88a:b0:ac3:f35c:755a with SMTP id
+ a640c23a62f3a-ac3f35c78e6mr507778166b.15.1742595843070; Fri, 21 Mar 2025
+ 15:24:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317114057.1725151-1-quic_schowdhu@quicinc.com>
+References: <CAGG=3QUEY_Gmu-6K7rk6-y8AB7HVuV2V9sP5K3h379teAZXyHQ@mail.gmail.com>
+ <20250321220537.507917-1-changyuanl@google.com>
+In-Reply-To: <20250321220537.507917-1-changyuanl@google.com>
+From: Bill Wendling <morbo@google.com>
+Date: Fri, 21 Mar 2025 15:23:46 -0700
+X-Gm-Features: AQ5f1Jq0IhTuozvPpo_OHyjFNWZyGClQgpdIrwKlxghGJJyad_VMwGeLm_dK1fU
+Message-ID: <CAGG=3QUzJ_McPbJWkbcjHn_Uhw9OeBajH8h2u_4Bexc1x4G4zw@mail.gmail.com>
+Subject: Re: [PATCH] clang-format: add for_each macros from libfdt
+To: Changyuan Lyu <changyuanl@google.com>
+Cc: justinstitt@google.com, linux-kernel@vger.kernel.org, llvm@lists.linux.dev, 
+	nathan@kernel.org, nick.desaulniers+lkml@gmail.com, 
+	nishimura@mxp.nes.nec.co.jp, ojeda@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 17, 2025 at 05:10:57PM +0530, Souradeep Chowdhury wrote:
-> Add device awake calls in case of rproc boot and rproc shutdown path.
-> Currently, device awake call is only present in the recovery path
-> of remoteproc. If a user stops and starts rproc by using the sysfs
-> interface, then on pm suspension the firmware loading fails. Keep the
-> device awake in such a case just like it is done for the recovery path.
-> 
+On Fri, Mar 21, 2025 at 3:05=E2=80=AFPM Changyuan Lyu <changyuanl@google.co=
+m> wrote:
+>
+> Hi Bill,
+>
+> On Fri, Mar 21, 2025 at 12:28:44 -0700, Bill Wendling <morbo@google.com> =
+wrote:
+> > On Thu, Mar 20, 2025 at 4:59=3DE2=3D80=3DAFPM Changyuan Lyu <changyuanl=
+@google.co=3D
+> > m> wrote:
+> > >
+> > > Add two for_each macros from scripts/dtc/libfdt/libfdt.h.
+> > >
+> > > Signed-off-by: Changyuan Lyu <changyuanl@google.com>
+> > > ---
+> > >  .clang-format | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > >
+> > > diff --git a/.clang-format b/.clang-format
+> > > index fe1aa1a30d40..4decda7474e1 100644
+> > > --- a/.clang-format
+> > > +++ b/.clang-format
+> > > @@ -210,6 +210,8 @@ ForEachMacros:
+> > >    - 'evlist__for_each_entry_from'
+> > >    - 'evlist__for_each_entry_reverse'
+> > >    - 'evlist__for_each_entry_safe'
+> > > +  - 'fdt_for_each_property_offset'
+> > > +  - 'fdt_for_each_subnode'
+> >
+> > Could you alphabetize these please?
+> >
+> > >    - 'flow_action_for_each'
+> > >    - 'for_each_acpi_consumer_dev'
+> > >    - 'for_each_acpi_dev_match'
+> > > --
+> > > 2.49.0.395.g12beb8f557-goog
+> > >
+>
+> Thanks for taking a look, but I think the list `ForEachMacros`
+> is already sorted alphabetically.
+> Am I missing anything?
+>
+Oh! I'm sorry. I tought that the 'd' (dee) in 'fdt_...' was an 'o' (oh). My=
+ bad.
 
-Please rewrite this in the form expressed in
-https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-
-Clearly describe the problem you're solving - not just the change in
-behavior.
-
-What do you mean that "firmware loading fails" if we hit a suspend
-during stop and start through sysfs? At what point does it fail?
-
-> Fixes: a781e5aa59110 ("remoteproc: core: Prevent system suspend during remoteproc recovery")
-
-That patch clearly states that it intends to keep the system from
-suspending during recovery. As far as I can tell you're changing the
-start and stop sequences.
-
-As such, I don't think the referred to patch was broken and you're not
-fixing it.
-
-> Signed-off-by: Souradeep Chowdhury <quic_schowdhu@quicinc.com>
-> Cc: stable@vger.kernel.org
-
-It's not clear to me from the commit message why this should be
-backported to stable kernel.
-
-> ---
-> Changes in v3
-> 
-> *Add the stability mailing list in commit message
->  
->  drivers/remoteproc/remoteproc_core.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/remoteproc/remoteproc_core.c b/drivers/remoteproc/remoteproc_core.c
-> index c2cf0d277729..908a7b8f6c7e 100644
-> --- a/drivers/remoteproc/remoteproc_core.c
-> +++ b/drivers/remoteproc/remoteproc_core.c
-> @@ -1916,7 +1916,8 @@ int rproc_boot(struct rproc *rproc)
->  		pr_err("invalid rproc handle\n");
->  		return -EINVAL;
->  	}
-> -
-> +	
-
-You're replacing an empty line with a tab...
-
-
-Other than that, the change looks sensible.
-
-Regards,
-Bjorn
-
-> +	pm_stay_awake(rproc->dev.parent);
->  	dev = &rproc->dev;
->  
->  	ret = mutex_lock_interruptible(&rproc->lock);
-> @@ -1961,6 +1962,7 @@ int rproc_boot(struct rproc *rproc)
->  		atomic_dec(&rproc->power);
->  unlock_mutex:
->  	mutex_unlock(&rproc->lock);
-> +	pm_relax(rproc->dev.parent);
->  	return ret;
->  }
->  EXPORT_SYMBOL(rproc_boot);
-> @@ -1991,6 +1993,7 @@ int rproc_shutdown(struct rproc *rproc)
->  	struct device *dev = &rproc->dev;
->  	int ret = 0;
->  
-> +	pm_stay_awake(rproc->dev.parent);
->  	ret = mutex_lock_interruptible(&rproc->lock);
->  	if (ret) {
->  		dev_err(dev, "can't lock rproc %s: %d\n", rproc->name, ret);
-> @@ -2027,6 +2030,7 @@ int rproc_shutdown(struct rproc *rproc)
->  	rproc->table_ptr = NULL;
->  out:
->  	mutex_unlock(&rproc->lock);
-> +	pm_relax(rproc->dev.parent);
->  	return ret;
->  }
->  EXPORT_SYMBOL(rproc_shutdown);
-> -- 
-> 2.34.1
-> 
+-bw
