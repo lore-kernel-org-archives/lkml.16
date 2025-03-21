@@ -1,88 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196431E00B4;
-	Fri, 21 Mar 2025 16:14:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EBE522836C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:14:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573653; cv=none; b=jW9n7mt6JH340VQIJ62XOWR5mLVgoaQpLTlH9m2F4JuH9lkfQZcanyGqHcyBqe6Yk5RaOSbV3RSd31ahjLBM2fsdQqzb4tjgBo+jTKBoXOmwBgrrH6g4nTGe5KHUFJ1v3db99DO/Airter59bTQo+UKHSb/jYCyVlk32xATk9Kc=
+	t=1742573663; cv=none; b=bwn6s80/EjCSMPC5JXd0kZDjxfMJOOmyEMhCp6YnwfXEAdV8Z8RZFhhgfrAhk86yEKToqyj3RIN90JyoLSasKkjgYfiU8YOPDOV/6P+jMTETQaGmFTFxyb4f/QFphOAhGCPvLGMPKft2gNA06P6H9oSu7ESdZJ7BMiymxBlxSHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573653; c=relaxed/simple;
-	bh=D4wmE+1sJieP2ZR8N+4BcCjmZMiOCHIqifIqz4WDGnE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V0/qkLPCyO2KQSzufonCVluoYW6KBVq8t4ortXpdvjN4Y+B+1FozLXmmwaGrhCJK3L82wr8dUjTMHXl/BIdsA8SD8/lWfda8JgOtkYecFs2jzaVyv4vKTDa4Vt1x2LiK5nkNMIsjdKMwD4CFufOOsQ/36K1wbONOxS5KD1MZVDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lHM1CbtZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742573663; c=relaxed/simple;
+	bh=E5flJCcw4QgcMHbG2/ZcWDVulabStm+nbnS5uKJa5d4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g/HTIiLqywbW0mRgqsCJ+fY1o/pquswHctIt12HE6XEgL1y8Cevb1u9pro9xOK9sT7FfwVrlytfOnOZmhz1jitYvNDcwedz+TH5VkOrRFqSkk6prPg30ccl5Tu5ffT9q47FmcSC2DjRznn9LyGMMM3FZT7tAs8Un4myXpUW0GgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=F/ijzHY8; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lHM1CbtZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51373C4CEE3;
-	Fri, 21 Mar 2025 16:14:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742573652;
-	bh=D4wmE+1sJieP2ZR8N+4BcCjmZMiOCHIqifIqz4WDGnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lHM1CbtZoDg6GisJ10dBrzHmYigP/Xc39YTSaXnWn0akMOEbRA2qWSQWAJo5RNWdH
-	 SzAUmIIQfpe2bToTpNNqZKxGvaUsB/yW/z/9p1ImCY/hSLFLcxWSqUZ6kd+T6Jq+68
-	 tkdZUR/0iNv4+KxjclLCBuLCMokOYwiVH9NP8Yu4swUQNyVXPtLjeyBLB05KFCRCfu
-	 yDyQBNQS3ExE3WqrBJp/GsmQMpSx1pqrp4es7w+DRLUpQj+75iYC5E1umlHYPObbmE
-	 cSAEC8uOQVsKLdha6Ga5b0DIgxaPnbFRwQrDv3ZQK9GIOIfrkhICi3r2BRMEKs8OKB
-	 iLRg7iQRe9VqA==
-Date: Fri, 21 Mar 2025 11:14:11 -0500
-From: "Rob Herring (Arm)" <robh@kernel.org>
-To: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-Cc: linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Frank Li <Frank.li@nxp.com>, devicetree@vger.kernel.org,
-	Wesley Cheng <quic_wcheng@quicinc.com>, linux-usb@vger.kernel.org,
-	Bjorn Andersson <andersson@kernel.org>,
-	Saravana Kannan <saravanak@google.com>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	Felipe Balbi <balbi@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Thinh Nguyen <Thinh.Nguyen@synopsys.com>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v5 2/7] dt-bindings: usb: Introduce qcom,snps-dwc3
-Message-ID: <174257365080.3466536.3652323578969133351.robh@kernel.org>
-References: <20250318-dwc3-refactor-v5-0-90ea6e5b3ba4@oss.qualcomm.com>
- <20250318-dwc3-refactor-v5-2-90ea6e5b3ba4@oss.qualcomm.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/ijzHY8"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742573660;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=r/FYjqrm1cAaAJapi0Y0E/iGdoYerOobI/I6FmFCbNM=;
+	b=F/ijzHY8bJ9J/D/M45RYlw+XotVhgsqNeA9Ix0qo2knxTn34Gc4S+sXjVkVvG8bIsPuH5q
+	qiTbprD2QelYLbeZfD+6ZtBtVYAFy79mkQyTuv38ilswbXw1RViP0/M6eXEte8CPNZG4et
+	gyj9GTa9uJR5PBnJnpvHqbH/YUr8/LU=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-583-ZVfXcCV0Pz25ASpylU61oA-1; Fri,
+ 21 Mar 2025 12:14:17 -0400
+X-MC-Unique: ZVfXcCV0Pz25ASpylU61oA-1
+X-Mimecast-MFC-AGG-ID: ZVfXcCV0Pz25ASpylU61oA_1742573655
+Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 2CF751800259;
+	Fri, 21 Mar 2025 16:14:14 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.61])
+	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id A9D7F1801752;
+	Fri, 21 Mar 2025 16:14:10 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Leon Romanovsky <leonro@nvidia.com>
+Cc: David Howells <dhowells@redhat.com>,
+	Christian Brauner <christian@brauner.io>,
+	Matthew Wilcox <willy@infradead.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Steve French <smfrench@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 0/4] iov_iter: Add composite, scatterlist and skbuff iterator types
+Date: Fri, 21 Mar 2025 16:14:00 +0000
+Message-ID: <20250321161407.3333724-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250318-dwc3-refactor-v5-2-90ea6e5b3ba4@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
 
+Hi Leon,
 
-On Tue, 18 Mar 2025 14:05:02 -0500, Bjorn Andersson wrote:
-> The Qualcomm USB glue is not separate of the Synopsys DWC3 core and
-> several of the snps,dwc3 properties (such as clocks and reset) conflicts
-> in expectation with the Qualcomm integration.
-> 
-> Using the newly split out Synopsys DWC3 core properties, describe the
-> Qualcomm USB block in a single block. The new binding is a copy of
-> qcom,dwc3 with the needed modifications.
-> 
-> It would have been convenient to retain the two structures with the same
-> compatibles, but as there exist no way to select a binding based on the
-> absence of a subnode/patternProperty, a new generic compatible is
-> introduced to describe this binding.
-> 
-> To avoid redefining all the platform-specific compatibles, "select" is
-> used to tell the DeviceTree validator which binding to use solely on the
-> generic compatible. (Otherwise if the specific compatible matches during
-> validation, the generic one must match as well)
-> 
-> Mark qcom,dwc3 deprecated, to favor expressing future platforms using
-> the new combined binding.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@oss.qualcomm.com>
-> ---
->  .../devicetree/bindings/usb/qcom,dwc3.yaml         |  13 +-
->  .../devicetree/bindings/usb/qcom,snps-dwc3.yaml    | 620 +++++++++++++++++++++
->  2 files changed, 632 insertions(+), 1 deletion(-)
-> 
+Here are some patches that illustrate some of what I'm thinking of doing to
+iov iterators.  Note that they are incomplete as I won't have time to
+finish or test them before LSF, but I thought I'd post them for use as a
+discussion point.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+So the first thing I want to do is to move certain iterators out of line
+from the main inline iteration multiplexor.  This code gets relentlessly
+duplicated and adding further iterator types expands a whole load of
+places.  So the DISCARD iterator (which is just a simple short circuit) and
+the XARRAY iterator (which is obsolete) move out of line.
+
+Then I want to add three more types, for now:
+
+ (1) ITER_ITERLIST.  A compound iterator that takes an array of iterators
+     of disparate types.  The aim here is to make it possible to fabricate
+     an network message in one go (say an RPC call) and pass it to a socket
+     without the need for corking.
+
+ (2) ITER_SCATTERLIST.  An iterator that takes a scatterlist.  This can be
+     used to act as a bridge in converting interfaces that currently take a
+     scatterlist (e.g. crypto).  It requires extra fields adding to the
+     iov_iter struct because chained scatterlists do not have have a rewind
+     capability and so iov_iter_revert() must go back to the beginning and
+     fast-forward.
+
+ (3) ITER_SKBUFF.  An iterator that takes a network buffer.  The aim here
+     is to render skb_to_sgvec() unnecessary for doing crypto operations.
+
+The patches can also be found here:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=iov-experimental
+
+David
+
+David Howells (4):
+  iov_iter: Move ITER_DISCARD and ITER_XARRAY iteration out-of-line
+  iov_iter: Add an iterator-of-iterators
+  iov_iter: Add a scatterlist iterator type
+  iov_iter: Add a scatterlist iterator type [INCOMPLETE]
+
+ include/linux/iov_iter.h |  77 +----
+ include/linux/uio.h      |  37 +++
+ lib/iov_iter.c           | 675 ++++++++++++++++++++++++++++++++++++++-
+ 3 files changed, 710 insertions(+), 79 deletions(-)
 
