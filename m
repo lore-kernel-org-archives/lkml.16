@@ -1,63 +1,63 @@
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12CD81D5CCC;
-	Fri, 21 Mar 2025 14:56:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0F2B1DEFF3;
+	Fri, 21 Mar 2025 14:56:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742568967; cv=none; b=J1lvnaz8E4P1RgQqR2jvnrLLGAzBAfaCaEoBtcKFs1quKaYCH4XYUp3B9hU2FBTntOPoOsMfSXKWj6zKsc167TFYLiJ/A56mSMlMVsxjtHiM8Vn70mUGnZEXYAa53JQPg6twk4dHfZYUYGGQQRJ3eFrFIYoeYa9gxuwLeP4QA4M=
+	t=1742568971; cv=none; b=fKzG3tjdBAlm4GmILnrVkVvp6YVHnE9SXcpSjgZ/Cdsw4QUDSBoMF7hVB1KDT3qrkcvXGXad6cTyEAwDhIlEdXtxokpPr98xcoMtGGdBRiAGmbnnKKDlqUSYr3WMgg5feqQw2XB6Zqt9Ye8A+1sQoh3Aaj+gsim5P6UE4fPLMes=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742568967; c=relaxed/simple;
-	bh=5Y2rWrPByplM9s/TOvWue3bi1TPuQhufG9cJL4qpa7c=;
+	s=arc-20240116; t=1742568971; c=relaxed/simple;
+	bh=C7fbBFc93J6SbCnqmFoRCxSI2+LhANmijsjoqSXn7js=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XXat24fsma40Cd/+r+PJwFkCEg9/XQVZ6+NVdCgjgb4fwJxLjOi2p2vbVNDLooTEDZE5n6fOEkygA5373kU/BRGQj4dQd3hWoVYRWnSGQzkbISOo2De8S8x6YJy35PU9LLPgNBM5gCtBHn3QgxFVLqiHJv2+46JPKoW8fj1s7Lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=a2/3jb4W; arc=none smtp.client-ip=209.85.128.51
+	 MIME-Version; b=fx8ggh0eYHioFSIYYZgkR0i75/5bhaDm3Y8KuBsv43PQMHwcD1z8SF7BHEttlHVDdHF7g6I9tK/OlhJg54Qct2gbafYx6vc/EOmbg3sxtOtDxmBhW2KWNMBJHbkyr92LqzvLJPDC8DcvuQFnrZWSKwCtMSecC9abzMH5gECWiC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aliz6sLI; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a2/3jb4W"
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso13739915e9.0;
-        Fri, 21 Mar 2025 07:56:05 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aliz6sLI"
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-43cfebc343dso15387235e9.2;
+        Fri, 21 Mar 2025 07:56:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742568964; x=1743173764; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742568968; x=1743173768; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=D7pE5Ysu98qvM8Dtr8qK+BXt3i2KN5R1lxlItWkqUL4=;
-        b=a2/3jb4W0RREoF7GRr6x4HtCHJuazaIcIDSXDMI8c5GBKcHQupg0698lxl+t+LMNAy
-         tFz56HFM/zLVo3kMG5yDS1SkuB1wZnBRwqP7LXLtWMWHYK7hnLdRkNxsgNkZNI2aCniG
-         5Y7syHS3aWGxuQXt8qo/VqvkQOctNoJti8PTOUMrJ6dSJ4Fwh8gQM4S5R/N/SHN/K0QF
-         cTd6KuwMWX/zehggvL7Qw2E6ET19QsNhCBMXPBpkYnTunAcbWwZRWJJiBvQuEGp2j8Xd
-         G/p/tR2xrGP4ChmTTDsgc56hiMT3ewDJ/92jSXcw16bXNMhkiODAer+0Ugf5vEbTS1/g
-         /oEw==
+        bh=HUZ6WT9xaTB6U8uX2ZQ4bJClS2cOzeuW4hOfPq1GbHQ=;
+        b=aliz6sLIhfciDdpvq46feFOAczgRcsWWEI+G5ZkmcMpGres41JgPOe/Cf18iFcXsvq
+         5IxLZztm16U6+8TSldYyX7y5qpUaegai8RRtCtGO9irs8mfNuNYZwQI9Q9GnIzvf5JcI
+         +ffrWgbrvILb/+0wwI77IAbIwp49ORLsXwK/exMPL/h9Snm9WMxBcR8AduYZVzmGBxzY
+         lcB6v4kgYenY0mUw0UDwW4pbRdDIefR4UQxmldPgVHdUO0NRjlONZRJ0Nj1XaadkCnfh
+         YmoR2ProO56hOtKqyc9+fhuH9MrXX2EzoPoVwRcpi88Ns6g6Dxk3NLhZ6Cpzc301pWfh
+         paEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742568964; x=1743173764;
+        d=1e100.net; s=20230601; t=1742568968; x=1743173768;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=D7pE5Ysu98qvM8Dtr8qK+BXt3i2KN5R1lxlItWkqUL4=;
-        b=cUAL2j8e3Me9HDWGIqgEmQ7CtXOxhs/CY3VJJxMb0R8NkU+oXy3DMJ2BL03dSBSQmz
-         t1s9h6VGCHRrLFCNXdxYmn3Gt3lD7f2y4Ugc25494BDVf5Bvm8/b5cG8eeiN/xc06YJH
-         ZULyiQR4tcp3fK42G8YrRVHfyI6fQrVyR7VxAWC1CffZfvcxVXRZtdkUtMWAagAyL/jf
-         XJcaTvXjhZl31xgoAZwUDsOrdmYh0iyAf1SY7i8gBLsOqpNeqSBdi2WI+N8Hcn8wTq0+
-         VwsCtUaqdJCz6RSomcyVDUrtA4t6A3qUt7i2AbqJRScgcZ4sPCcZpUffN+1L6l36o0Eo
-         wAcQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUEaeaLRGodGbGzHOXvwoPeqhGBnjI1RidmoInwuCwYhr5Us0A/doOE3MaNBhCbH7Y0esCRrQRc90d5@vger.kernel.org, AJvYcCVC3viLFNGU6Ngjzd9H5A4cGXfw0/sd5TTCeHT730q8z59mENc1K7Oz40VYydTUb+eW9H3e14nL2X9sdNrH@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQi8VovsHHolulVpfIYRsQwk2/Iv+Ya5sXgDFySoLuzi04opYR
-	sPbIoUP5r85ZQUDSnxWTEuF5GvJQF2xpFSgTlhU+dp8HjDlTqXET
-X-Gm-Gg: ASbGnctLrx1jiuzhyXc5SAKY29aATKxu17Z2mHUxmjjpiRF4QVai9nY685OXAmV69wi
-	AYyZ2s5majhhlf0otWv4R1jocDvUREUUZParzx3Kgu0T7EFJGmwTwk4hblUyg4aGVAW2t6Uz7mt
-	fSLtJeKdyBe/5IoykIsDTB51+FuopWyBS6kZUU+rHhVeygbhwkBREza2RymAGiYNUCZWRL9V9eP
-	otnAujDk3PisHTKvK6DG/txxEGJtDiwZ0/g0oc5F15iFuajThKqIlnyycNjTK94NT6oCVaDjslB
-	1C8GCPY55O1nWvxGKIME7PubxdKXQeE/oR7hJxnemY5Nf4jqCxn/PMxjbq8ypwPWREkmpjtvsRP
-	Yd8LboOXT7+q9iaUmFzZ8
-X-Google-Smtp-Source: AGHT+IFy7V7yS49SBSh4QivpSyiHP2fZRhsx5j7YhDnnawlKq2OGpMgAznt0LvIAwZuK32tG9Lq3pA==
-X-Received: by 2002:a05:600c:cc:b0:43b:c592:7e16 with SMTP id 5b1f17b1804b1-43d4915e6bemr68812115e9.3.1742568964237;
-        Fri, 21 Mar 2025 07:56:04 -0700 (PDT)
+        bh=HUZ6WT9xaTB6U8uX2ZQ4bJClS2cOzeuW4hOfPq1GbHQ=;
+        b=bevv960gGGf4xdoGhLwLnruoPmcK1ewwtnFpqBqGCxL1Qk0j6L9wmfDPnxExkTUaDZ
+         wbvb6UKvbPbj8u6TG2z6o58ZZ2YevcS8sFVaT7B2+tqchiXkeo3AMEIF1pdHw1800rJF
+         e66OTsX+1jcu8DNgNKpOY456umgFWNPxWuP+Mn7IGBa0o86m980BugWWCzW62qtMiSpx
+         oPC3ydwJbx/hCqiNLfRfbYTxX8Kw+F6VkT+9eHwoWfwz7S+Qe36vqxqAF8f7MSWwXI5d
+         bYXNAl1JvemgU06DNYGhc6RpblSpSsFMs/8BrYYqIZIQ1E5IE3vJbG8SAEyN+n+CRlzX
+         zTKw==
+X-Forwarded-Encrypted: i=1; AJvYcCUJktsI9lzNGeeX4C5Rnj35KLf7YNmkVY+KCG2fZvNoTJgARoTksfnIMOcN3o2l4oxpQ/+RMC/UhgISZoqA@vger.kernel.org, AJvYcCWXpoVngQ2fq+WOuAw9SMV4gZtdG/C8CEbLi+nnbTPHdLTKA8VeTEv+QlCjk0rUkv6ZiLkoZxAT5G5N@vger.kernel.org
+X-Gm-Message-State: AOJu0YymbNArltBveWczx6CEcDhwEmbK5HDF+yS+dT7Tu3SC6Aka/8EQ
+	6+LTshutQhLbVsqylOa2d0+57uhzovtE75ItTMRqvlytihdvKkuV
+X-Gm-Gg: ASbGncvaUqjwysXBXSMeKLF3Y6dgjTTrN/h1OBRqjp3FQhkcfsCS7CQOAmFl2XNIVJL
+	b9/mn07rW8iwwjNkC9WH9Ggpy+ROKRof6WqAVSxc3XY3WxPh+sf69bPLpAy/4ybLDRK/aVdy9BU
+	Jy//vJw9kKm6Qh2Jm4ZSEl/bkvu3pVRFqfg+Meh5fQzEdAHB88/e3YduHvrxCwmlKn07FOaLiq1
+	QSO98yRAnp+Q6EaK57VcwQ3LsAuj/VwiO7do+1bdDMzebvwGAz9WQu0CQKkbWIHlSnYcFLLUsva
+	BnqYMlVpBLyjhr/dCFGKQvwWwLyGBPPsHTyFBWVa/jHhBiVLNEMBs8oqp8E2YXgP3z9C/jf8Cbx
+	kJEl8EbIFb1JoptPdt63t
+X-Google-Smtp-Source: AGHT+IE3QMyFT0D9MvVR4njoTTNE4SagQmeQKwO7Dkym3v+KnikA8kDn6rCGTzWMbtXD4HGpHjc9pQ==
+X-Received: by 2002:a05:600c:3b9f:b0:43c:ec4c:25b4 with SMTP id 5b1f17b1804b1-43d509ea8e7mr33219225e9.10.1742568967875;
+        Fri, 21 Mar 2025 07:56:07 -0700 (PDT)
 Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fd28a46sm29217095e9.24.2025.03.21.07.56.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fd28a46sm29217095e9.24.2025.03.21.07.56.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 07:56:03 -0700 (PDT)
+        Fri, 21 Mar 2025 07:56:07 -0700 (PDT)
 From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 To: Krzysztof Kozlowski <krzk@kernel.org>,
 	Alim Akhtar <alim.akhtar@samsung.com>,
@@ -67,9 +67,9 @@ Cc: linux-samsung-soc@vger.kernel.org,
 	devicetree@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v3 1/4] dt-bindings: arm: samsung: document g0s board binding
-Date: Fri, 21 Mar 2025 16:55:53 +0200
-Message-ID: <20250321145556.1436201-2-ivo.ivanov.ivanov1@gmail.com>
+Subject: [PATCH v3 4/4] MAINTAINERS: add entry for Samsung Exynos2200 SoC
+Date: Fri, 21 Mar 2025 16:55:56 +0200
+Message-ID: <20250321145556.1436201-5-ivo.ivanov.ivanov1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250321145556.1436201-1-ivo.ivanov.ivanov1@gmail.com>
 References: <20250321145556.1436201-1-ivo.ivanov.ivanov1@gmail.com>
@@ -81,31 +81,34 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add binding for the Samsung Galaxy S22+ (SM-S906B) board, codenamed G0S,
-which is based on the Samsung Exynos2200 SoC.
+Add maintainers entry for the Samsung Exynos2200 SoC based platforms.
 
 Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 ---
- .../devicetree/bindings/arm/samsung/samsung-boards.yaml     | 6 ++++++
- 1 file changed, 6 insertions(+)
+ MAINTAINERS | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-index fab29f95d..bb3f6a0e1 100644
---- a/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-+++ b/Documentation/devicetree/bindings/arm/samsung/samsung-boards.yaml
-@@ -45,6 +45,12 @@ properties:
-           - const: samsung,aries
-           - const: samsung,s5pv210
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e4f5d8f68..f3ef6f862 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -20937,6 +20937,16 @@ B:	mailto:linux-samsung-soc@vger.kernel.org
+ F:	Documentation/devicetree/bindings/sound/samsung*
+ F:	sound/soc/samsung/
  
-+      - description: Exynos2200 based boards
-+        items:
-+          - enum:
-+              - samsung,g0s                     # Samsung Galaxy S22+ (SM-S906B)
-+          - const: samsung,exynos2200
++SAMSUNG EXYNOS2200 SoC SUPPORT
++M:	Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++L:	linux-samsung-soc@vger.kernel.org
++S:	Maintained
++F:	Documentation/devicetree/bindings/clock/samsung,exynos2200-cmu.yaml
++F:	arch/arm64/boot/dts/exynos/exynos2200*
++F:	drivers/clk/samsung/clk-exynos2200.c
++F:	include/dt-bindings/clock/samsung,exynos2200-cmu.h
 +
-       - description: Exynos3250 based boards
-         items:
-           - enum:
+ SAMSUNG EXYNOS850 SoC SUPPORT
+ M:	Sam Protsenko <semen.protsenko@linaro.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
 2.43.0
 
