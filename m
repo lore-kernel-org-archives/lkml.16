@@ -1,106 +1,130 @@
-Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF441208A7
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:47:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742536080; cv=none; b=RA6H3dCFODDNH0dPtFoBgSr1py4qey2FjuV4RsHwpAkMkZ+9gvFTLXAyad+P9SM9FSjiePGCeTj6a4/ZEtouch35as0gDZpzFGsoq3wgTgj5yfk+xtcTaF7wSsw3oIpWYUyAyfreChsxUZMef0qyMB/JR5YP+rqWKfInofSxmD8=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742536080; c=relaxed/simple;
-	bh=063TSuyFySZQVcxA85BpXxV9BthpOA28nMtuSi3UF64=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wc//hsv18xlYRNPCMkzOxvw3sUHHKbpsTNGsghMHCujcyXAZSjRqvp0ZCm3buPMZnrOuwYrSOgM7P9KLvQyZEat42P8nTMP8x9AXCO8WdZtF7bQw0FX4yCwXgum0QPLJaOK7gJGL4uyAsQLpda1kVbIlkFrT6UwYzFbcT+Ihi0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=NAFIpQZr; arc=none smtp.client-ip=198.137.202.136
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1284A208A7;
+	Fri, 21 Mar 2025 05:48:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=23.83.223.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742536136; cv=fail; b=Nv97+kNAA1vBrHM94RwIoxjmPALRdDQ/6cZA+JUA240gLzy+tnZ9V5BTyNBkcwSM5p4z7QWdLu4dnP5dKP2zmLMA+7ooUG8jnZm2R7DuqdU6ciTRgxBgTBHPChYoOc9upnWpFQJDUsMNrL8BS3pot/YEYaJ0E/RYcWWuvw5Zv7o=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742536136; c=relaxed/simple;
+	bh=53FJt8Nl3aXBuorygGMCbOuRq+BG25RLd2YX5y4RzbE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rhKWRLOLATGllWel3j3rQzKZv/JRiy+Tu03Iv4EGgstztLieLws7YKdYfd1QtlyG+f0H+9C2pR9ujx7rji062WilCvWIMb8hlJnY5tuAEh4pfe45Zeqz/m6QLly8ryw4V6iVtPtxeNkeaRotKmZ6e3uy6gGE4krbFEE/xONUMxg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=RHsqvk/1; arc=fail smtp.client-ip=23.83.223.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NAFIpQZr"
-Received: from [192.168.7.202] ([71.202.166.45])
-	(authenticated bits=0)
-	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52L5lPOS2484071
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
-	Thu, 20 Mar 2025 22:47:26 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52L5lPOS2484071
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-	s=2025021701; t=1742536046;
-	bh=2otJs/TCEZMMgc4khfCzHW146BaO1OkGu0D2RYRafuQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NAFIpQZrT/7ccRwmLxEMs2n3c2lE6Q/TuA6REe5+DFpTtfrNLYMkF+7a1mu9U9Gn5
-	 grXbQ1o0+RCpOeorxssesKuew8zGvshftLgu9MoBYuO1ipM3k5EZVktK8HuiO9nZr1
-	 gJEN2LJ1nGpoz612cUCHEts0GZ281ZYoo3pMIUn9UdDfuwQVTEpxfgiFxSSS7Eq4pS
-	 uZ117ygQUFAySbkk88ZpkgDccaLHCkCCy5XU/gG95GgXg6Kc6gauQY68pcQcT5zfA3
-	 Sm2QzAR7XMBABrqwIpGwFvTIKyzK/Y384pdE/5N4Jy1+a1/ABEH0hGrwX9zTfssxDR
-	 eJJ0EneR+mdAg==
-Message-ID: <8b920da6-0c9a-43b4-bd50-79c057a01932@zytor.com>
-Date: Thu, 20 Mar 2025 22:47:25 -0700
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="RHsqvk/1"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5A99C1A3DC0;
+	Fri, 21 Mar 2025 05:40:11 +0000 (UTC)
+Received: from pdx1-sub0-mail-a223.dreamhost.com (trex-7.trex.outbound.svc.cluster.local [100.97.52.66])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id D06681A4113;
+	Fri, 21 Mar 2025 05:40:10 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742535610; a=rsa-sha256;
+	cv=none;
+	b=KkOOAJK/RAPYuED448YYtciDVpjjGB5NkuOL0nfT5QX/20bjsWfwiwFAWRwKOWfps6XZGI
+	1Bl88lbIzFQBbyHw+SvxY02iugHgeG9axX9JW12q+j6MlP2HiKaSejN/3713pkr4LgfZ26
+	gkRW314A8SdlLcwaBtan4TF7zcN52CeTuaFCBtMj4tu5LQ4lX8UDBZgVK1vMvTo+DthVmr
+	MXlybxob76sYS2IypL/mxBmdB+Xrsh9j93qQYC9wVrqNaefnESeDRBlsI6TMDE3Yt9ymNT
+	U8dGst+XPyi7rJMRlY5I6+7Xmg2506bIzpxY7zppZYXcIvCARO8sOe5tiksgOw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1742535610;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=0PS513F+RSzcE7ufaJ1VV9J2RalenEzSdXL1qjKWnms=;
+	b=OoYV9OvX8osBCWuo1z4lXevDHb7ctaR//ds0EAxfbEBLTOF69FTRHifaubz8qs/N/a3y5q
+	Ka2MUzle+QmjX9Ky6A1sC2IpuwOgcEfFlD+gGGg7DOsBrv7S7k/7USrshax8ItDJwYHYrO
+	WTiHUwerlAddn/YKgEQaFKowbDlWDpdES4YRcrG0hgtYvq6LbA//oA6lA8Dx1GSpJYEEIC
+	8aLLNPqcyfV+c27nftJalilFAk/UqAa/AoyaDlSLzhqjFN+n/C9weQnOguqubUJh5yG4kI
+	X46fnZTOygbig2GOAtRuGNu4q4JLixqCTIwudX1LNz/1ZGvyUyOJUsUsiuRVTA==
+ARC-Authentication-Results: i=1;
+	rspamd-67d8974966-r82qp;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Whistle-Unite: 26a4e5d0610e8f75_1742535611133_93697085
+X-MC-Loop-Signature: 1742535611133:926574431
+X-MC-Ingress-Time: 1742535611133
+Received: from pdx1-sub0-mail-a223.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.97.52.66 (trex/7.0.2);
+	Fri, 21 Mar 2025 05:40:11 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a223.dreamhost.com (Postfix) with ESMTPSA id 4ZJrrB0STTzJt;
+	Thu, 20 Mar 2025 22:40:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1742535610;
+	bh=BA6hsN3yvUC4+OlJ0/XH6ZXiSbYXeRCoV1wEkucA7r0=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=RHsqvk/1568KqhWp9X5bbEj2n24ZOEV1YOO8kcs6xbEmZ1jzhUy+wjOWy4iXFwFB1
+	 7DGjQOe7gVErt6/XvFFTE8lRGU4hUz5a4cWnasX1+qM/yOqY3e0aykzzhtSgeFP22f
+	 wX57AgpIyJqX5J8RNBYaWtKB+TUFgUmlqRdN5aHugGDAxkYskNhM+YT2JQ6y08PVvP
+	 4OCW8J82RCXS203ybMuXuIf6idmlNwtmcclt7kSzlrzSg41CFhuiVKcjEfBHh1bVIF
+	 VeMxFfESwGO6EnL8kLgjZH3s50sWkCsAoPgTcbgBiPVDD+PofVyStbF7l2LtJb2kA8
+	 w0PDCKs3o1hzw==
+Date: Thu, 20 Mar 2025 22:40:07 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Li Ming <ming.li@zohomail.com>
+Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC Patch v1 2/3] cxl/pci: Update Port GPF timeout only when
+ the first EP attaching
+Message-ID: <20250321054007.fidkwiemotwqyui3@offworld>
+References: <20250319035516.222054-1-ming.li@zohomail.com>
+ <20250319035516.222054-3-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] x86: Zap TOP_OF_KERNEL_STACK_PADDING on x86_64
-To: Brian Gerst <brgerst@gmail.com>
-Cc: linux-kernel@vger.kernel.org, luto@kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, bp@alien8.de, dave.hansen@linux.intel.com,
-        x86@kernel.org, hpa@zytor.com, peterz@infradead.org
-References: <20250319071009.1390984-1-xin@zytor.com>
- <20250319071009.1390984-4-xin@zytor.com>
- <CAMzpN2jFv8KE97ymEWAX1setxdgXy0jZGn_7JVp9fFEBfZ2ynA@mail.gmail.com>
-Content-Language: en-US
-From: Xin Li <xin@zytor.com>
-Autocrypt: addr=xin@zytor.com; keydata=
- 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
- l75w1xInsg==
-In-Reply-To: <CAMzpN2jFv8KE97ymEWAX1setxdgXy0jZGn_7JVp9fFEBfZ2ynA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20250319035516.222054-3-ming.li@zohomail.com>
+User-Agent: NeoMutt/20220429
 
-On 3/19/2025 12:17 PM, Brian Gerst wrote:
-> I'm not sure it's worth fully removing TOP_OF_KERNEL_STACK_PADDING for
-> 64-bit if it results in needing separate definitions of
-> task_top_of_stack().  Leaving it at zero is fine.  The other changes
-> are fine though.
+On Wed, 19 Mar 2025, Li Ming wrote:
 
-Let's leave it to x86 maintainers ;-)
+>If a CXL switch is under a CXL root port, The Port GPF Phase timeout
+>will be updated on the CXL root port when each cxl memory device under
+>the CXL switch is attaching. It is possible to be updated more than
+>once. Actually, it is enough to initialize once, other extra
+>initializations are redundant.
 
-But to me, TOP_OF_KERNEL_STACK_PADDING no longer makes sense on 64-bit,
-and it makes it simpler to remove it.  On the other side, 32-bit is to
-be zapped...
+It's actually not updated more than necessary because update_gpf_port_dvsec()
+checks first:
 
-Thanks!
-     Xin
+	if (FIELD_GET(base, ctrl) == GPF_TIMEOUT_BASE_MAX &&
+	    FIELD_GET(scale, ctrl) == GPF_TIMEOUT_SCALE_MAX)
+		return 0;
 
+>When the first EP attaching, it always triggers its ancestor dports to
+>locate their own Port GPF DVSEC. The change is that updating Port GPF
+>Phase timeout on these ancestor dports after ancestor dport locating a
+>Port GPF DVSEC. It guaranttess that Port GPF Phase timeout updating on a
+
+s/guaranttess/guarantees
+
+>dport only happens during the first EP attaching.
+
+... but yeah, I think this is still better, logically.
+
+Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+
+(with the caveat that if patch 1 is not necessary then this would need to
+be redone).
