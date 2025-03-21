@@ -1,158 +1,90 @@
-Received: from mail.nppct.ru (mail.nppct.ru [195.133.245.4])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9226C22FF35
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 18:21:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.133.245.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 480C022B8BD;
+	Fri, 21 Mar 2025 18:24:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742581321; cv=none; b=Lx4PCLL5ThvfGnimbLnn2YTQylahiaoTuB0aKd0CsK37XJuvTsKf96WIc6mvjI5suxy7j8xqxz1Wx9awEEBZnxrJ4j1/oF3EqezngP1NFZGds1Vla3LK34umPm6G1qIS0Em9OjWlNkEvTW1xsdcuObwuOegyCaFtssmyT8Kn3rk=
+	t=1742581500; cv=none; b=QvYnvj8K8KvdwJcK+3dZXSKnPVDwXjDAkgP6l2UWQcUrerhPU9bJXGRVMelxsIq4ZwEzIBtWihpAjzZfQHOCD+ydF7TwPrt9ohKIbxutGHzLQHBsASJzwKTXThWLnMYupXvh5ulES2DOWQ7DqlpEOX5qbyBZvTT2dxjooABqw3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742581321; c=relaxed/simple;
-	bh=Km/lmJT7WXfeyoWCsjE3+40++PbnaxaMlPsWDIjYSO4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kKh4+pKJ+BLQTvI7N+/1o119+PmggIW/jTUZyH8BE5GBxeL7m3MomtkLwIC5ADtl76QMt1aMLPQvMwVLC284LEPo3DI1RxFmE3Fn97SEiFJv8A8JN4Plw0bGb5ouYK162z9xnV3xtN81jKQxqjZVh24zTuthUd77kcLwObJRubg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru; spf=pass smtp.mailfrom=nppct.ru; dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b=Mzb0kVyL; arc=none smtp.client-ip=195.133.245.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nppct.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nppct.ru
+	s=arc-20240116; t=1742581500; c=relaxed/simple;
+	bh=tuPORlnJJGXXGYoBoU7VqjD4PIV9k+XGJ3BUeOaEKM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bcCPw5U42UqYhc6x/VKTDvOglkj+gcG0Runz3qPOs1B6G2zl9i21pCSmRv0EqDQdscaj+QJV1p+7YSwBk2GUPu0xhNqNz7vCVslNklgdr8dSkmbsHGChKl8JUP/U0i6x+GOuxB1LhcA8vxQZP7Mb4uNDf6sHInX49swq8IGgjyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tggeLW+o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nppct.ru header.i=@nppct.ru header.b="Mzb0kVyL"
-Received: from mail.nppct.ru (localhost [127.0.0.1])
-	by mail.nppct.ru (Postfix) with ESMTP id 9A87A1C17A6
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 21:21:50 +0300 (MSK)
-Authentication-Results: mail.nppct.ru (amavisd-new); dkim=pass (1024-bit key)
-	reason="pass (just generated, assumed good)" header.d=nppct.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=nppct.ru; h=
-	content-transfer-encoding:mime-version:references:in-reply-to
-	:x-mailer:message-id:date:date:subject:subject:to:from:from; s=
-	dkim; t=1742581309; x=1743445310; bh=Km/lmJT7WXfeyoWCsjE3+40++Pb
-	naxaMlPsWDIjYSO4=; b=Mzb0kVyLlMdhNBD8shJWDo+K4QEPcYSwgTSqMtQrqXW
-	eV4GnjTZg7OCrqm8uqE2jcMh73hS2fit/zrCu5mf+OECIOhQjMaazThG6R+/UgRl
-	NPd/haUtD0xmmiv4s5n08xvXsd6oFkVHYiYwe3wavqFi+l1yDGXkdpdU60AFfPm0
-	=
-X-Virus-Scanned: Debian amavisd-new at mail.nppct.ru
-Received: from mail.nppct.ru ([127.0.0.1])
-	by mail.nppct.ru (mail.nppct.ru [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id rPJmzMRXk3cx for <linux-kernel@vger.kernel.org>;
-	Fri, 21 Mar 2025 21:21:49 +0300 (MSK)
-Received: from localhost.localdomain (unknown [87.249.24.51])
-	by mail.nppct.ru (Postfix) with ESMTPSA id 2E4521C0628;
-	Fri, 21 Mar 2025 21:21:49 +0300 (MSK)
-From: Alexey Nepomnyashih <sdl@nppct.ru>
-To: Ard Biesheuvel <ardb@kernel.org>
-Cc: Alexey Nepomnyashih <sdl@nppct.ru>,
-	Jeremy Kerr <jk@ozlabs.org>,
-	linux-efi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	lvc-project@linuxtesting.org,
-	syzbot+246ea4feed277471958a@syzkaller.appspotmail.com
-Subject: [PATCH 5.10 2/2] efivarfs: Add efivars_lock to synchronize list operations
-Date: Fri, 21 Mar 2025 18:21:25 +0000
-Message-ID: <20250321182126.1716111-2-sdl@nppct.ru>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250321182126.1716111-1-sdl@nppct.ru>
-References: <20250321182126.1716111-1-sdl@nppct.ru>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tggeLW+o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 732D3C4CEE3;
+	Fri, 21 Mar 2025 18:24:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742581499;
+	bh=tuPORlnJJGXXGYoBoU7VqjD4PIV9k+XGJ3BUeOaEKM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tggeLW+o91EZTace/qoK//L/NIrtdgTkAihRQ3IXmS2e0uw9GBPPkfLmWFYZGmWaQ
+	 d1B0GPoJKftHzFMe8TAr4J/BA7qFKw8yZRNT72pLNlucCIDcMqCL37cJsaAoLBGvfr
+	 ciw579TF+/zD+mXRcVhIMLqkjxVNX2wMNMNkN5eSECl2ttXcO8JMzTeZKWSxJ/9Toi
+	 dROW4O3gPZMABAhWTctDH57jkobAdINnCCuWbRh1v5kalK3FjbzbxvSZeGEZwHBmN7
+	 Ug5/Ir84f56zwvrXxcVdAVo/QviYeczxNWTZW2wxIW3VqrYwwB3DonO9oaQxEZD5cg
+	 USI6swkDhuEyg==
+Date: Fri, 21 Mar 2025 18:24:58 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+Cc: Dan Carpenter <dan.carpenter@linaro.org>,
+	"wei.liu@kernel.org" <wei.liu@kernel.org>,
+	"K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Dexuan Cui <decui@microsoft.com>,
+	Anirudh Rayabharam <anrayabh@linux.microsoft.com>,
+	Praveen K Paladugu <prapal@linux.microsoft.com>,
+	Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH next] Drivers: hv: mshv: Prevent potential NULL
+ dereference
+Message-ID: <Z92u-g59fWeMgwoJ@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <9fee7658-1981-48b1-b909-fb2b78894077@stanley.mountain>
+ <38525f8a-823c-4a79-ac55-68a2ef569a85@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <38525f8a-823c-4a79-ac55-68a2ef569a85@linux.microsoft.com>
 
-No upstream commit exists for this patch.
-    
-The bug was fixed by upstream commit cdb46a8aefbf ("efivarfs: Move
-efivarfs list into superblock s_fs_info") but it depends on major changes
-done in the mainline kernel and 5.10.y needs its own patch.
+On Fri, Mar 21, 2025 at 09:53:45AM -0700, Nuno Das Neves wrote:
+> On 3/21/2025 7:35 AM, Dan Carpenter wrote:
+> > Move the NULL check on "partition" before the dereference.
+> > 
+> > Fixes: f5288d14069b ("Drivers: hv: Introduce mshv_root module to expose /dev/mshv to VMMs")
+> > Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> > ---
+> >  drivers/hv/mshv_synic.c | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/hv/mshv_synic.c b/drivers/hv/mshv_synic.c
+> > index a3daedd680ff..88949beb5e37 100644
+> > --- a/drivers/hv/mshv_synic.c
+> > +++ b/drivers/hv/mshv_synic.c
+> > @@ -151,13 +151,12 @@ static bool mshv_async_call_completion_isr(struct hv_message *msg)
+> >  	rcu_read_lock();
+> >  
+> >  	partition = mshv_partition_find(partition_id);
+> > -	partition->async_hypercall_status = async_msg->status;
+> > -
+> >  	if (unlikely(!partition)) {
+> >  		pr_debug("failed to find partition %llu\n", partition_id);
+> >  		goto unlock_out;
+> >  	}
+> >  
+> > +	partition->async_hypercall_status = async_msg->status;
+> >  	complete(&partition->async_hypercall);
+> >  
+> >  	handled = true;
+> 
+> Thanks for catching this one!
+> Wei could you please apply or squash this into the driver patch?
 
-Add locking around efivarfs_list operations to prevent race conditions
-during processing of multiple filesystem superblock instances.
-
-list_del corruption. prev->next should be ffff0000d86d6828, but was ffff800016216e60. (prev=ffff800016216e60)
-------------[ cut here ]------------
-kernel BUG at lib/list_debug.c:61!
-Internal error: Oops - BUG: 00000000f2000800 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 0 PID: 4299 Comm: syz-executor237 Not tainted 6.1.119-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
-pstate: 60400005 (nZCv daif +PAN -UAO -TCO -DIT -SSBS BTYPE=--)
-pc : __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
-lr : __list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
-Call trace:
-__list_del_entry_valid+0x13c/0x158 lib/list_debug.c:59
-__list_del_entry include/linux/list.h:134 [inline]
-list_del include/linux/list.h:148 [inline]
-efivar_entry_remove+0x38/0x110 fs/efivarfs/vars.c:493
-efivarfs_destroy+0x20/0x3c fs/efivarfs/super.c:184
-efivar_entry_iter+0x94/0xdc fs/efivarfs/vars.c:720
-efivarfs_kill_sb+0x58/0x70 fs/efivarfs/super.c:258
-deactivate_locked_super+0xac/0x124 fs/super.c:332
-deactivate_super+0xf0/0x110 fs/super.c:363
-cleanup_mnt+0x394/0x41c fs/namespace.c:1186
-__cleanup_mnt+0x20/0x30 fs/namespace.c:1193
-
-Reported-by: syzbot+246ea4feed277471958a@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=246ea4feed277471958a
-Fixes: e14ab23dde12 ("efivars: efivar_entry API")
-Signed-off-by: Alexey Nepomnyashih <sdl@nppct.ru>
----
- drivers/firmware/efi/vars.c | 11 +++++++----
- fs/efivarfs/super.c         |  4 ++++
- 2 files changed, 11 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/firmware/efi/vars.c b/drivers/firmware/efi/vars.c
-index 010febd2ab6b..517bf886ba14 100644
---- a/drivers/firmware/efi/vars.c
-+++ b/drivers/firmware/efi/vars.c
-@@ -417,6 +417,7 @@ int efivar_init(int (*func)(efi_char16_t *, efi_guid_t, unsigned long, void *),
- 	const struct efivar_operations *ops;
- 	unsigned long variable_name_size = 512;
- 	efi_char16_t *variable_name;
-+	bool var_present = false;
- 	efi_status_t status;
- 	efi_guid_t vendor_guid;
- 	int err = 0;
-@@ -451,8 +452,12 @@ int efivar_init(int (*func)(efi_char16_t *, efi_guid_t, unsigned long, void *),
- 						&vendor_guid);
- 		switch (status) {
- 		case EFI_SUCCESS:
--			if (duplicates)
-+			if (duplicates) {
-+				var_present = variable_is_present(variable_name,
-+									&vendor_guid,
-+									head);
- 				up(&efivars_lock);
-+			}
- 
- 			variable_name_size = var_name_strnsize(variable_name,
- 							       variable_name_size);
-@@ -465,9 +470,7 @@ int efivar_init(int (*func)(efi_char16_t *, efi_guid_t, unsigned long, void *),
- 			 * we'll ever see a different variable name,
- 			 * and may end up looping here forever.
- 			 */
--			if (duplicates &&
--			    variable_is_present(variable_name, &vendor_guid,
--						head)) {
-+			if (duplicates && var_present) {
- 				dup_variable_bug(variable_name, &vendor_guid,
- 						 variable_name_size);
- 				status = EFI_NOT_FOUND;
-diff --git a/fs/efivarfs/super.c b/fs/efivarfs/super.c
-index 24a0c5ef4169..7a6e2676b312 100644
---- a/fs/efivarfs/super.c
-+++ b/fs/efivarfs/super.c
-@@ -212,7 +212,11 @@ static int efivarfs_fill_super(struct super_block *sb, struct fs_context *fc)
- 	if (!root)
- 		return -ENOMEM;
- 
-+	err = efivar_entry_iter_begin();
-+	if (err)
-+		return err;
- 	INIT_LIST_HEAD(&efivarfs_list);
-+	efivar_entry_iter_end();
- 
- 	err = efivar_init(efivarfs_callback, (void *)sb, true, &efivarfs_list);
- 	if (err)
--- 
-2.43.0
-
+Thank you Dan. I squashed this fix to the original patch.
