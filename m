@@ -1,81 +1,100 @@
-Received: from mail.itouring.de (mail.itouring.de [85.10.202.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33E5D1E98ED;
-	Fri, 21 Mar 2025 08:21:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.10.202.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97C408BEE;
+	Fri, 21 Mar 2025 08:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742545302; cv=none; b=fX5YLeCG8Nj29vj3D9Rr40f4gwYmAYWcewNcKomcBsXlo2PaDQ4mTiPIBBJ4WsmmxnISbDAra1+GSjoYr2EtiVS5tx584bhdnP1KLHPt3JP7XONpwbqfsUkQYa1mY7i/YSTrSK6gyMa99mZSkWeTPB5OJ4A6/hEyWienbHkcDaE=
+	t=1742545374; cv=none; b=mcSr5l4MpOsslFhyBioyabcsowSeibzTQ6MiM4lMWy72/htueO4sXwrxH614+b/XuRIvXmhezCAHrgnHzehKI9/rx/tjIuk5L3XZGkVH5Y+Ps7CMa2wgkm1yUDL+3f7D2WhF+Qd32J4y/55v1164qA4wxCye4qgURMUh44SpyWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742545302; c=relaxed/simple;
-	bh=9cor238+ev5CH9KBLqifaFnVrdxvygrcxfuimxP/sRg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=kd2Rug86VhgzEiXkSUC/6nO+g2mfUPIEqJJAVnkXVWreL1KawtN1yZDyJL0rlZThFtZIkz04gx+osgRNjwDqIeNn+WQaQD8Meaz62hnIjKOtY/qjiiwZnyXPgPhxWza1Uo1ZopZt9A+o8ASCBz/Og8q/FYDklc1IOVaz2iGkgo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com; spf=pass smtp.mailfrom=applied-asynchrony.com; arc=none smtp.client-ip=85.10.202.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=applied-asynchrony.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=applied-asynchrony.com
-Received: from tux.applied-asynchrony.com (p5b07e9b7.dip0.t-ipconnect.de [91.7.233.183])
-	by mail.itouring.de (Postfix) with UTF8SMTPSA id 5B1EC158D;
-	Fri, 21 Mar 2025 09:21:31 +0100 (CET)
-Received: from localhost (ragnarok.applied-asynchrony.com [192.168.100.223])
-	by tux.applied-asynchrony.com (Postfix) with UTF8SMTP id 32FA360187F25;
-	Fri, 21 Mar 2025 09:21:31 +0100 (CET)
-From: =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
-To: Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Namhyung Kim <namhyung@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	linux-perf-users@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Holger=20Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
-Subject: [PATCH v2] perf build: filter all combinations of -flto for libperl
-Date: Fri, 21 Mar 2025 09:20:39 +0100
-Message-ID: <20250321082038.27901-2-holger@applied-asynchrony.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1742545374; c=relaxed/simple;
+	bh=FiR8bNoSbo2/6XqM1Ojy1oJbP3xb2ESxDx0nOMrezt8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fFxrXlLrXp7RZ2bd5kjQIZ9SRYscxNVJZK8M+1HVa/3WF4+z401kCPskD0ArKK0gxImiaQ8uCin0kG3jtBMFbBFGRz16jgtrOq78msRgAc3yv1dINzVYK0MFBCftsBq3zYeZa9ssUV1Cvdr/vo4fGs1f1T9XUGeRKZ8eNXGgNOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lzRxNW1P; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzRxNW1P"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-5e5bc066283so2512292a12.0;
+        Fri, 21 Mar 2025 01:22:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742545371; x=1743150171; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=V5EB1Q/bNPzxlpAWO7o5BWpROZju3sVEZNDvgPYV2Tc=;
+        b=lzRxNW1PsVaZYqzVxu2S+PVvkyRmGOwQpd2uLl0S+Zb7HZljiWgTKSUcb1+LQeU/Ce
+         4wtBoU6yValehH5TVcpcECyPzPLwH86GqEDRPipl1en0kTJh/Uo3Y2mOVweEYs90XI88
+         fr6SbF6dZ23r/OLFrCBpgHhBYdYAsu1AJYwGKx34cNijWFw28Hkr6Kgyuq8UusFMa1qs
+         Tp6aV+0zCGZKtmu9ZvqJD5p9r8aecfa387fMgUKsEpPRwxkJ+xTBVjugQDje905mH2iq
+         aaFr6goNkXitjGEFRGG++o2oeZf84gUW10tIzU+A3Q1vOZ381nTDqKrsXIDs4otX/FrR
+         IFpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742545371; x=1743150171;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=V5EB1Q/bNPzxlpAWO7o5BWpROZju3sVEZNDvgPYV2Tc=;
+        b=i7lIsgOXwFsiTQP2cIDXsG7VF4lJcxGmDBTPVdvgKJ9TOKJYzXGj3n5lKC6wVHslSg
+         Ji3Wx+JwOjpjqNMDubbmcxWaJ2QD7PSa7YzrAnruUddrhejZlIUP+B86K1M/zUoze5Fy
+         dFe9N0+AcPDAcoIdYRxHEABw6/X7QT0fx6lt9f6HkmGTx6bug/u1C4FT9p7FLGs1HpNj
+         F60Ib1zsFcAY1wEEjC2fgCvtFBQaJ+QFu3EF4TUx+3Eb9Zq4xqRPe+nDbdQyL/BzeP4z
+         ApCHONtmY0eLLwAJA/DQAmvF/9XhNy5qqdVBwiMVwTn4aN2uSeyWl5qkVWWPPEQ0W4Yv
+         TjRg==
+X-Forwarded-Encrypted: i=1; AJvYcCWI48fWrxjGLmmQH83hamZzd5gxcVExdWgTfXC748SLuOxtV3rEoEJoE97RFDiLrFgsYUU=@vger.kernel.org, AJvYcCXNa0uLoMWPN74YnmS8dgFSMYiEiuzLfCQi3VTCiqrtm9zVbSnkNcoE8f59MKqHhHvQWVWe+ypN@vger.kernel.org, AJvYcCXxDJ79cC9zI4e4Chs/53sV9+UuRCmC0kltAi65uI0vLcqiJJcGLej5RRGTngEosolaFUOZbJB9+BwKHXGv@vger.kernel.org
+X-Gm-Message-State: AOJu0YyDpiSoOiBpYaN8uA7ChsFzdRdkiZGPSslmSkQwxL3WbVn9UTg4
+	g+yR9sY64/Tmzcu92wBCd8RugPC1Pk9XKi1fW9KZ51g1bGjJU0r62vBwHhEhaqTOYop/p2rwJle
+	e9VndcYUb/hydYCM++pLgA4lWkg==
+X-Gm-Gg: ASbGncvxIKZu3S491x+Ad+PRlj3FTy4XGvhYpAAWnsZfESex7LvFLDctzSUtkOsJ0cS
+	CnR2Lj/fmTaZitcWmfr/eghEBy9M6l6j/wVphpLGf3Tgr3Vi5JFqy9YxBBQ4jGTlhE5gsNUOzr1
+	kCxzBKSghW8NKt2drcrOvJGuzr
+X-Google-Smtp-Source: AGHT+IFEj/clJ4TiD6lGeA9BIgIOoeq6FF3j6z0VANP7q0h73cH/pg3o0wIJqdcZ0fz0/auTBsdCPP+fwMJapTyfpYg=
+X-Received: by 2002:a05:6402:84d:b0:5e7:8503:1a4b with SMTP id
+ 4fb4d7f45d1cf-5ebcd468e7amr2124222a12.18.1742545370560; Fri, 21 Mar 2025
+ 01:22:50 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20250321044852.1086551-1-wangliang74@huawei.com>
+In-Reply-To: <20250321044852.1086551-1-wangliang74@huawei.com>
+From: Jussi Maki <joamaki@gmail.com>
+Date: Fri, 21 Mar 2025 09:22:14 +0100
+X-Gm-Features: AQ5f1Jpv_KM5n370YdSx-cz5z0JMIcFja6d3n9EusYyhjwq8Mqv_ErrLR2MAkSg
+Message-ID: <CAHn8xc=UeFzCybi199grR8To9yQjDyA1dMypFBMe1QCCD5S3vw@mail.gmail.com>
+Subject: Re: [PATCH net v2] bonding: check xdp prog when set bond mode
+To: Wang Liang <wangliang74@huawei.com>
+Cc: jv@jvosburgh.net, andrew+netdev@lunn.ch, davem@davemloft.net, 
+	edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, 
+	ast@kernel.org, daniel@iogearbox.net, hawk@kernel.org, 
+	john.fastabend@gmail.com, yuehaibing@huawei.com, zhangchangzhong@huawei.com, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When enabling the libperl feature the build uses perl's build flags
-(ccopts) but filters out various flags, e.g. for LTO.
-While this is conceptually correct, it is insufficient in practice,
-since only "-flto=auto" is filtered out. When perl itself is built with
-"-flto" this can cause parts of perf being built with LTO and others
-without, giving exciting build errors like e.g.:
+On Fri, Mar 21, 2025 at 5:38=E2=80=AFAM Wang Liang <wangliang74@huawei.com>=
+ wrote:
+>
+> Following operations can trigger a warning[1]:
+>
+>     ip netns add ns1
+>     ip netns exec ns1 ip link add bond0 type bond mode balance-rr
+>     ip netns exec ns1 ip link set dev bond0 xdp obj af_xdp_kern.o sec xdp
+>     ip netns exec ns1 ip link set bond0 type bond mode broadcast
+>     ip netns del ns1
+>
+> When delete the namespace, dev_xdp_uninstall() is called to remove xdp
+> program on bond dev, and bond_xdp_set() will check the bond mode. If bond
+> mode is changed after attaching xdp program, the warning may occur.
+>
+> Some bond modes (broadcast, etc.) do not support native xdp. Set bond mod=
+e
+> with xdp program attached is not good. Add check for xdp program when set
+> bond mode.
 
-   ../tools/perf/pmu-events/pmu-events.c:72851:(.text+0xb79): undefined
-   reference to `strcmp_cpuid_str' collect2: error: ld returned 1 exit status
+Looks reasonable to me. Thanks!
 
-Fix this by filtering all matching flag values of -flto{=n,auto,..}.
-
-Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
----
- tools/perf/Makefile.config | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index a148ca9ef..4f5a40ab8 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -820,7 +820,7 @@ else
-   PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
-   PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
-   PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
--  PERL_EMBED_CCOPTS := $(filter-out -flto=auto -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
-+  PERL_EMBED_CCOPTS := $(filter-out -flto% -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
-   PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
-   FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
- 
--- 
-2.49.0
-
+Acked-by: Jussi Maki <joamaki@gmail.com>
