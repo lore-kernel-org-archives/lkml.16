@@ -1,108 +1,68 @@
-Received: from mail.alien8.de (mail.alien8.de [65.109.113.108])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77AED22FE03;
-	Fri, 21 Mar 2025 22:05:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=65.109.113.108
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5B11E9B34;
+	Fri, 21 Mar 2025 22:10:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742594751; cv=none; b=eR/S9Pq8fbomAF6tcgXuiYVbRiyga548nxW2YMOQH4dJqPqhwm1fD4DhzO96QqSUz2yF7kDeYeQJfXF9M9aud/4J+pUqO6Wh5hXrQXL0xMQXbyc9AP8+QAGJixDLKI9GgX7AhhnUXVtRJiQJgHO9Fj9OL44YPKxZq7KCjatAS2w=
+	t=1742595031; cv=none; b=QhK5//yTqGF1+t3XKjYeCdU/gLCEi2wqjHswvNPLKagluw2mSPhHL6iIlDqujVqS6dzShOYFwpD0trgM6TrnYhQm6Zckw3IDtKeb3Yl1tZhGZtLcsgZI/xGdptUocwNCNoicyttWaN3nuz1qlr7U6slGipfXej3ypdYpN9bIaYQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742594751; c=relaxed/simple;
-	bh=WEX2UAORnGyCNiA5AsfINcksrrjPKnMloADTiuGN7f4=;
+	s=arc-20240116; t=1742595031; c=relaxed/simple;
+	bh=jevJwzBthFWx4chDdHGMD3PxJP0Xgws+nOWK9APKAZ8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mEPIfEO0eliG7SA7bGxiDIrDNiA1Syya7HUIBb82crQ9mOOVZP/GVpetFWUJxNdjMbZO9OzpLbwz8uspWvHFPlTnCNcPIgzvp7Y7SKE3pm7CsWagRbr8wY03y8U8un6CxF7RR3ohELlK87JpTcH1r0HrXCVgOpC8ETN9BykvHRE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de; spf=pass smtp.mailfrom=alien8.de; dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b=Jza1JHb9; arc=none smtp.client-ip=65.109.113.108
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=alien8.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alien8.de
+	 Content-Type:Content-Disposition:In-Reply-To; b=dvvExdm2HXkq6sBHeyLVc09TY9FsM/TIJFdgdPOkeM5S0e5AWW8aCUKh47Rfp6vGhB1scURHtB0MAxhDb3KxYSyiMfUciQyuGjy/ArAUtPiWH4kADgDA003JgOauGJeWA2bjYQIvOOoTWKOcOmEJtAMZv9ET2xoJqWxKHfO/j3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8vFV4Qp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (4096-bit key) header.d=alien8.de header.i=@alien8.de header.b="Jza1JHb9"
-Received: from localhost (localhost.localdomain [127.0.0.1])
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTP id CA69140E0215;
-	Fri, 21 Mar 2025 22:05:46 +0000 (UTC)
-X-Virus-Scanned: Debian amavisd-new at mail.alien8.de
-Authentication-Results: mail.alien8.de (amavisd-new); dkim=pass (4096-bit key)
-	header.d=alien8.de
-Received: from mail.alien8.de ([127.0.0.1])
-	by localhost (mail.alien8.de [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id Y7T3YEG9j5Q1; Fri, 21 Mar 2025 22:05:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=alien8;
-	t=1742594743; bh=C2LY7NQdB5HYRcH/kmFKQKhgmQluG/i4PkyOlfRE1lI=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8vFV4Qp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985A8C4CEE7;
+	Fri, 21 Mar 2025 22:10:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742595031;
+	bh=jevJwzBthFWx4chDdHGMD3PxJP0Xgws+nOWK9APKAZ8=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Jza1JHb9Cjp7zdR8P0j2sa4jQgK5CdQAVRh6fvJIeD3UeR5Fj5AIVRI7+uMrd7+xd
-	 gRO8fzUKbiLrCj0dr13hFaEAWeXlTRB4X9wi6P92iyZzkLQKliJ/f26TAQSImYXZT/
-	 xkcRPhJ6ycPI1m8IWoxzKIFBNWt9oXaBa+frCy6hFZdNDfHUDdcItrUfVFb0ulBfCi
-	 X68h2lhWqZoWLS5qXE3apiy2EBbJ8U021+LfHSezwPfBXGbkZnc6r3fjyxtX6GR6KH
-	 rhzENopKUcWAygzCPkz/treBRHiwfJWXKzEVmOfPv2wvPK/v1fM9gCYXBLRNXliro7
-	 vvB/2RFTTJJvOz/y9utMYAKUw8PnSLx3TZxm4PsaYVjsnpMx6bRC33SGVAwR6phNN2
-	 +u+lJPYj3X12cZwrjw+3UlLiMDpzUaRHBvHQQRvevUUmbybZqBkIoUMkaUqzXijD10
-	 GrD33ZHBO24vhHTHVIgoREJLXae1puSNodcMNJ7UnA2TqFlNFx6F2N64WfjHOr0lKR
-	 bX1MsdsE5mbRVhOZM1pW66vYTiHi9YXjB+/43e9//oUV3fUdWG9M/mRquBEdA9SnmM
-	 cmQnrmOPtCn0+fOcx+WeCJP2Dy1tL6+RIzPK8gd9qdsTnN0gx+hSVch1FRlGQYmGYA
-	 aeWBZsnMF0kqeEOeNHWgrbMg=
-Received: from zn.tnic (pd95303ce.dip0.t-ipconnect.de [217.83.3.206])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature ECDSA (P-256) server-digest SHA256)
-	(No client certificate requested)
-	by mail.alien8.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1140E40E016E;
-	Fri, 21 Mar 2025 22:05:25 +0000 (UTC)
-Date: Fri, 21 Mar 2025 23:05:20 +0100
-From: Borislav Petkov <bp@alien8.de>
-To: Stefano Garzarella <sgarzare@redhat.com>
-Cc: Jarkko Sakkinen <jarkko@kernel.org>,
-	Tom Lendacky <thomas.lendacky@amd.com>,
-	Peter Huewe <peterhuewe@gmx.de>, Jason Gunthorpe <jgg@ziepe.ca>,
-	x86@kernel.org, linux-kernel@vger.kernel.org,
-	linux-integrity@vger.kernel.org, Dov Murik <dovmurik@linux.ibm.com>,
-	Dionna Glaze <dionnaglaze@google.com>, linux-coco@lists.linux.dev,
-	James Bottomley <James.Bottomley@hansenpartnership.com>,
-	Claudio Carvalho <cclaudio@linux.ibm.com>,
-	Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH v3 1/4] x86/sev: add SVSM vTPM probe/send_command
- functions
-Message-ID: <20250321220520.GFZ93ioO0JtfhXCb1n@fat_crate.local>
-References: <20250311094225.35129-1-sgarzare@redhat.com>
- <20250311094225.35129-2-sgarzare@redhat.com>
- <d7e5a1d2-5fcc-bf7f-a67d-7871a1627c98@amd.com>
- <Z9glWp6U6vyEmKQa@kernel.org>
- <7kuhiyy7gj4py323g5n2vy3ddlg666zwhtx3mjcklebgtlstdc@xgdyeecifwei>
- <Z9wuLVeP726Cssqp@kernel.org>
- <20250320171619.GOZ9xNY4W54avW2a-u@fat_crate.local>
- <Z9xQw8QpRKk26G6R@kernel.org>
- <rspkz663fg7i7jomvg5ehv3ldr6ayehttb7vgwwzsfsxafzb5y@uhqcadvsmw6f>
+	b=m8vFV4QpBnq/FOen443UZpP+mR/GUiIyQG398ZXGhi++bF6TEHHtqvgcN1UP9l6gb
+	 PY9RUU1YhHY2byT+nmXPrL+aiLy7K0MOe5ayrP6LXdxFj+ZRmG0kdHhb6AHjPjSGB3
+	 82IfMaDgb8XHrLseatSul61V2N6TtPR5HqjxiuLFwiqeIvxtaG2lCSYFg+JctruNpp
+	 kb09W/Z6z7PIjP38nezAM0AiTmMAonTOVIRR2CCf8j1nITboQlzB3iVVZhsw8w904c
+	 L+UMJTBNj9RPTSV/ypXEXQP7qb5kDyUvNV2hy6Wx34IHFGLn1Zu1u5DLwCE4kQxQqk
+	 HJVtEeR8VJ58Q==
+Date: Fri, 21 Mar 2025 23:10:25 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Benno Lossin <benno.lossin@proton.me>
+Cc: Alice Ryhl <aliceryhl@google.com>, Matthew Maurer <mmaurer@google.com>,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Tamir Duberstein <tamird@gmail.com>
+Subject: Re: [PATCH v2 0/7] Additional methods for Vec
+Message-ID: <Z93j0X_ycSf8E4RA@cassiopeiae>
+References: <20250321-vec-methods-v2-0-6d9c8a4634cb@google.com>
+ <Z91au1h1zhDT9IxQ@pollux>
+ <D8LYWIFUVJOC.ZIPANZF9ONJJ@proton.me>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <rspkz663fg7i7jomvg5ehv3ldr6ayehttb7vgwwzsfsxafzb5y@uhqcadvsmw6f>
+In-Reply-To: <D8LYWIFUVJOC.ZIPANZF9ONJJ@proton.me>
 
-On Fri, Mar 21, 2025 at 10:01:17AM +0100, Stefano Garzarella wrote:
-> Just a note, patch 2 adds `include/linux/svsm_vtpm.h`, that file is
-> basically a translation of the AMD SVSM specification into structures and
-> functions used to communicate with SVSM in the way it is defined by the
-> specification.
+On Fri, Mar 21, 2025 at 01:10:43PM +0000, Benno Lossin wrote:
+> On Fri Mar 21, 2025 at 1:25 PM CET, Danilo Krummrich wrote:
+> > On Fri, Mar 21, 2025 at 12:09:55PM +0000, Alice Ryhl wrote:
+> >> This adds various Vec methods. Some of them are needed by Rust Binder,
+> >> and others are needed in other places. Each commit explains where it is
+> >> needed.
+> >> 
+> >> I'm not sure what we concluded on the set_len / dec_len changes, so I
+> >> don't depend on that series for now.
+> >
+> > So far I see no reason to assume otherwise, so it probably makes sense to
+> > rebase. Unless Tamir is fine to rebase his changes onto this series.
 > 
-> I realized that the file does not fall under any section of MAINTAINERS.
-> How do you suggest we proceed?
-> 
-> Should we create an SVSM section to maintain it, including the TPM driver
-> and future other drivers,etc.?
+> I haven't yet taken a look at the reworked version of dec_len, so I'd
+> wait until we have finished discussion on that.
 
-This all belongs to the TPM drivers, right?
-
-I.e., drivers/char/tpm/
-
-So I guess add that header to the TPM DEVICE DRIVER section if the gents there
-are fine with it...
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+What I mean is, everything looks like I'll pick them up eventually, so it makes
+sense to base a subsequent version of this series onto Tramir's (even if the
+current one of dec_len() is not the final one).
