@@ -1,379 +1,136 @@
-Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D5C733F6;
-	Fri, 21 Mar 2025 19:12:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
+Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0E831DE3A7;
+	Fri, 21 Mar 2025 19:14:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742584363; cv=none; b=PSGQDhKCyN7XtpCDTlRSo90SdZNvwl32dJdQf3qmXlz2ziCeM6s/GAb1hjFC1PbDlo7PG2UxnKHwvQwt6iYLqyi9QI82NHd0fk5+hDdNspxhyr0O0gam+LRUVZxyifdk87BRY8X1dxkjfZ2b/xgmYCcISCAOTvzay+BLSBBgWoQ=
+	t=1742584446; cv=none; b=GJUAGOGbEJv30R+Qxtu1TeZfHzozdCgAKwqO92+Kw43qsXeRccBe2khmo1LA2kYv2wJu+EBe+AXoEfRhcyDYb9P7Aftpk3SMa9Qmnt0bmv6zuW31x/e0WIhaEYX0Pbxdnnb/lTajoulq0ESfl7ccAagBg+g8xv//WzLj4mm4LUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742584363; c=relaxed/simple;
-	bh=jW4BFVW6F6ZHJ0JVY+4D7LdfF5AiBFgZxnhhzjkSkbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HHo5m0cy5kqN+K3jgCAuksf2VH3TDubNAgO/xvRHpRpPsIN+XfEr8Toxrl76PNqi2nS0Gh1cK32Lb4RSF07AvZhA1SWm+cEDERQVkrLXsD3Zj4zJsi1U74sJYtZP7L5nzNfWuocHIJOgvQIDg4yXxaqrCF+sdnZTfkwMn40/t0s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=hkOKtvIi; arc=none smtp.client-ip=13.77.154.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+	s=arc-20240116; t=1742584446; c=relaxed/simple;
+	bh=LsRyZApPf+VKlO6rBlga/U1+K1IZu2R33QZRCEABJAE=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GKyncG3Odpvn5JGPpkbqsYAMssrxycGgtiJqC4q8qtTuN/Drz9JPcnIIo1bK+ibW0/xfUWjIL753wrG68aqqdNAZNvnZWG12HLes8rGRaVtF8YIqr162JQYnIksKN7GmuvNQg06CGZlEpOtdByfujmkbnioczR3saoCPdmES4WE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=e3Eejegi; arc=none smtp.client-ip=217.70.183.196
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="hkOKtvIi"
-Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
-	by linux.microsoft.com (Postfix) with ESMTPSA id CF4992025382;
-	Fri, 21 Mar 2025 12:12:40 -0700 (PDT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com CF4992025382
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-	s=default; t=1742584361;
-	bh=RpBlJrTh2SiAQ7XsqitwZTpLQOS2kEOUFkxFqjobLOc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hkOKtvIis368GA/nBLiPIbVRZnLqR4lZuZfuJK5omjdr4orl62qBol7YKN0jDJT1F
-	 Ej+n9pHTJ20rq+9UpKtUghqYc4p5HqagBt1wmktxPJbXnqz1Q9a0vY9gsg7I+VFmFo
-	 08qTYLhhG9NKHnxoDyfrpqKvTXEcIJWSlmUpelQk=
-Message-ID: <7bc80505-686e-40db-b3bf-dd2f846ea66c@linux.microsoft.com>
-Date: Fri, 21 Mar 2025 12:12:35 -0700
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="e3Eejegi"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id A850544557;
+	Fri, 21 Mar 2025 19:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742584442;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iePdyYSf/+g+pm8h9F0nQI+y9CDPVqPcquQl0nemLzI=;
+	b=e3EejegiFRwW3JpWgNVSn8BAS55pjTPk5K/NuhH0F505gCF3tyQ4vgBJM8G+TirnkZXnLS
+	+sO0Rc+MzLSXYJBRX7Ddq7XX3GqfURZ2r9bpAa7yfHNrYuU3/8iHsFhc8gk+BAwii0zGf7
+	DLRGTk83Xtd9CstN3mRY9rnjhadjSyF++IPd9NzgILHZUq145KFxU/SECWmIYYo/TyHgNj
+	CErQGGLUpiiCBypZRlp9z+mO3yAsVhOouKSIqMGN5FLPWeUC8tsdLwS4Zwpdc/L9OGG2CN
+	CnpQXxiHVfP9v9HwhSxxG5opOEnS1I3VxjkXdpCAnS0sfGPC3J8xu5RaA75Ijg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Date: Fri, 21 Mar 2025 20:09:35 +0100
+Subject: [PATCH net-next 04/13] net: macb: use BIT() macro for capability
+ definitions
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 01/10] hyperv: Log hypercall status codes as strings
-To: Michael Kelley <mhklinux@outlook.com>,
- "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
- "x86@kernel.org" <x86@kernel.org>,
- "linux-arm-kernel@lists.infradead.org"
- <linux-arm-kernel@lists.infradead.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
- "ltykernel@gmail.com" <ltykernel@gmail.com>,
- "stanislav.kinsburskiy@gmail.com" <stanislav.kinsburskiy@gmail.com>,
- "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
- "eahariha@linux.microsoft.com" <eahariha@linux.microsoft.com>,
- "jeff.johnson@oss.qualcomm.com" <jeff.johnson@oss.qualcomm.com>
-Cc: "kys@microsoft.com" <kys@microsoft.com>,
- "haiyangz@microsoft.com" <haiyangz@microsoft.com>,
- "wei.liu@kernel.org" <wei.liu@kernel.org>,
- "decui@microsoft.com" <decui@microsoft.com>,
- "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
- "will@kernel.org" <will@kernel.org>, "tglx@linutronix.de"
- <tglx@linutronix.de>, "mingo@redhat.com" <mingo@redhat.com>,
- "bp@alien8.de" <bp@alien8.de>,
- "dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
- "hpa@zytor.com" <hpa@zytor.com>,
- "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
- "joro@8bytes.org" <joro@8bytes.org>,
- "robin.murphy@arm.com" <robin.murphy@arm.com>, "arnd@arndb.de"
- <arnd@arndb.de>,
- "jinankjain@linux.microsoft.com" <jinankjain@linux.microsoft.com>,
- "muminulrussell@gmail.com" <muminulrussell@gmail.com>,
- "skinsburskii@linux.microsoft.com" <skinsburskii@linux.microsoft.com>,
- "mrathor@linux.microsoft.com" <mrathor@linux.microsoft.com>,
- "ssengar@linux.microsoft.com" <ssengar@linux.microsoft.com>,
- "apais@linux.microsoft.com" <apais@linux.microsoft.com>,
- "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
- "vkuznets@redhat.com" <vkuznets@redhat.com>,
- "prapal@linux.microsoft.com" <prapal@linux.microsoft.com>,
- "anrayabh@linux.microsoft.com" <anrayabh@linux.microsoft.com>,
- "rafael@kernel.org" <rafael@kernel.org>, "lenb@kernel.org"
- <lenb@kernel.org>, "corbet@lwn.net" <corbet@lwn.net>
-References: <1741980536-3865-1-git-send-email-nunodasneves@linux.microsoft.com>
- <1741980536-3865-2-git-send-email-nunodasneves@linux.microsoft.com>
- <SN6PR02MB4157E630EC520DC487139372D4DE2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Language: en-US
-From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
-In-Reply-To: <SN6PR02MB4157E630EC520DC487139372D4DE2@SN6PR02MB4157.namprd02.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250321-macb-v1-4-537b7e37971d@bootlin.com>
+References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
+In-Reply-To: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Nicolas Ferre <nicolas.ferre@microchip.com>, 
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
+ Alexandre Ghiti <alex@ghiti.fr>, Samuel Holland <samuel.holland@sifive.com>, 
+ Richard Cochran <richardcochran@gmail.com>, 
+ Russell King <linux@armlinux.org.uk>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-mips@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.14.2
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelvefhkeeufedvkefghefhgfdukeejlefgtdehtdeivddtteetgedvieelieeuhfenucfkphepjeejrddufeehrdekuddrieehnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepjeejrddufeehrdekuddrieehpdhhvghloheplgduledvrdduieekrddurdeftdgnpdhmrghilhhfrhhomhepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdekpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehkuhgsrgesk
+ hgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhitgholhgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On 3/18/2025 11:01 AM, Michael Kelley wrote:
-> From: Nuno Das Neves <nunodasneves@linux.microsoft.com> Sent: Friday, March 14, 2025 12:29 PM
->>
->> Introduce hv_status_printk() macros as a convenience to log hypercall
->> errors, formatting them with the status code (HV_STATUS_*) as a raw hex
->> value and also as a string, which saves some time while debugging.
->>
->> Create a table of HV_STATUS_ codes with strings and mapped errnos, and
->> use it for hv_result_to_string() and hv_result_to_errno().
->>
->> Use the new hv_status_printk()s in hv_proc.c, hyperv-iommu.c, and
->> irqdomain.c hypercalls to aid debugging in the root partition.
->>
->> Signed-off-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
->> Reviewed-by: Stanislav Kinsburskii <skinsburskii@linux.microsoft.com>
->> ---
->>  arch/x86/hyperv/irqdomain.c    |   6 +-
->>  drivers/hv/hv_common.c         | 129 ++++++++++++++++++++++++---------
->>  drivers/hv/hv_proc.c           |  10 +--
->>  drivers/iommu/hyperv-iommu.c   |   4 +-
->>  include/asm-generic/mshyperv.h |  13 ++++
->>  5 files changed, 118 insertions(+), 44 deletions(-)
->>
-> 
-> [snip]
->  
->> +
->> +struct hv_status_info {
->> +	char *string;
->> +	int errno;
->> +	u16 code;
->> +};
->> +
->> +/*
->> + * Note on the errno mappings:
->> + * A failed hypercall is usually only recoverable (or loggable) near
->> + * the call site where the HV_STATUS_* code is known. So the errno
->> + * it gets converted to is not too useful further up the stack.
->> + * Provide a few mappings that could be useful, and revert to -EIO
->> + * as a fallback.
->> + */
->> +static const struct hv_status_info hv_status_infos[] = {
->> +#define _STATUS_INFO(status, errno) { #status, (errno), (status) }
->> +	_STATUS_INFO(HV_STATUS_SUCCESS,				0),
->> +	_STATUS_INFO(HV_STATUS_INVALID_HYPERCALL_CODE,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_INVALID_HYPERCALL_INPUT,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_INVALID_ALIGNMENT,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_INVALID_PARAMETER,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_ACCESS_DENIED,			-EIO),
->> +	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_STATE,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_OPERATION_DENIED,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_UNKNOWN_PROPERTY,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	-EIO),
->> +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_MEMORY,		-ENOMEM),
->> +	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_ID,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_INVALID_VP_INDEX,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_NOT_FOUND,			-EIO),
->> +	_STATUS_INFO(HV_STATUS_INVALID_PORT_ID,			-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_INVALID_CONNECTION_ID,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_BUFFERS,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_NOT_ACKNOWLEDGED,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_INVALID_VP_STATE,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_NO_RESOURCES,			-EIO),
->> +	_STATUS_INFO(HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED,	-EIO),
->> +	_STATUS_INFO(HV_STATUS_INVALID_LP_INDEX,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_INVALID_REGISTER_VALUE,		-EINVAL),
->> +	_STATUS_INFO(HV_STATUS_INVALID_LP_INDEX,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_INVALID_REGISTER_VALUE,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_OPERATION_FAILED,		-EIO),
->> +	_STATUS_INFO(HV_STATUS_TIME_OUT,			-EIO),
->> +	_STATUS_INFO(HV_STATUS_CALL_PENDING,			-EIO),
->> +	_STATUS_INFO(HV_STATUS_VTL_ALREADY_ENABLED,		-EIO),
->> +#undef _STATUS_INFO
->> +};
->> +
->> +static inline const struct hv_status_info *find_hv_status_info(u64 hv_status)
->> +{
->> +	int i;
->> +	u16 code = hv_result(hv_status);
->> +
->> +	for (i = 0; i < ARRAY_SIZE(hv_status_infos); ++i) {
->> +		const struct hv_status_info *info = &hv_status_infos[i];
->> +
->> +		if (info->code == code)
->> +			return info;
->> +	}
->> +
->> +	return NULL;
->> +}
->> +
->> +/* Convert a hypercall result into a linux-friendly error code. */
->> +int hv_result_to_errno(u64 status)
->> +{
->> +	const struct hv_status_info *info;
->> +
->> +	/* hv_do_hypercall() may return U64_MAX, hypercalls aren't possible */
->> +	if (unlikely(status == U64_MAX))
->> +		return -EOPNOTSUPP;
->> +
->> +	info = find_hv_status_info(status);
->> +	if (info)
->> +		return info->errno;
->> +
->> +	return -EIO;
->> +}
->> +EXPORT_SYMBOL_GPL(hv_result_to_errno);
->> +
->> +const char *hv_result_to_string(u64 status)
->> +{
->> +	const struct hv_status_info *info;
->> +
->> +	if (unlikely(status == U64_MAX))
->> +		return "Hypercall page missing!";
->> +
->> +	info = find_hv_status_info(status);
->> +	if (info)
->> +		return info->string;
->> +
->> +	return "Unknown";
->> +}
->> +EXPORT_SYMBOL_GPL(hv_result_to_string);
-> 
-> I think the table-driven approach worked out pretty well. But here's a version that
-> is even more compact, and avoids the duplicate testing for U64_MAX and having
-> to special case both U64_MAX and not finding a match:
-> 
-> +
-> +struct hv_status_info {
-> +	char *string;
-> +	int errno;
-> +	int code;
-> +};
-> +
-> +/*
-> + * Note on the errno mappings:
-> + * A failed hypercall is usually only recoverable (or loggable) near
-> + * the call site where the HV_STATUS_* code is known. So the errno
-> + * it gets converted to is not too useful further up the stack.
-> + * Provide a few mappings that could be useful, and revert to -EIO
-> + * as a fallback.
-> + */
-> +static const struct hv_status_info hv_status_infos[] = {
-> +#define _STATUS_INFO(status, errno) { #status, (errno), (status) }
-> +	_STATUS_INFO(HV_STATUS_SUCCESS,				0),
-> +	_STATUS_INFO(HV_STATUS_INVALID_HYPERCALL_CODE,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_INVALID_HYPERCALL_INPUT,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_INVALID_ALIGNMENT,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_INVALID_PARAMETER,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_ACCESS_DENIED,			-EIO),
-> +	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_STATE,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_OPERATION_DENIED,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_UNKNOWN_PROPERTY,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_PROPERTY_VALUE_OUT_OF_RANGE,	-EIO),
-> +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_MEMORY,		-ENOMEM),
-> +	_STATUS_INFO(HV_STATUS_INVALID_PARTITION_ID,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_INVALID_VP_INDEX,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_NOT_FOUND,			-EIO),
-> +	_STATUS_INFO(HV_STATUS_INVALID_PORT_ID,			-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_INVALID_CONNECTION_ID,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_INSUFFICIENT_BUFFERS,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_NOT_ACKNOWLEDGED,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_INVALID_VP_STATE,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_NO_RESOURCES,			-EIO),
-> +	_STATUS_INFO(HV_STATUS_PROCESSOR_FEATURE_NOT_SUPPORTED,	-EIO),
-> +	_STATUS_INFO(HV_STATUS_INVALID_LP_INDEX,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_INVALID_REGISTER_VALUE,		-EINVAL),
-> +	_STATUS_INFO(HV_STATUS_INVALID_LP_INDEX,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_INVALID_REGISTER_VALUE,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_OPERATION_FAILED,		-EIO),
-> +	_STATUS_INFO(HV_STATUS_TIME_OUT,			-EIO),
-> +	_STATUS_INFO(HV_STATUS_CALL_PENDING,			-EIO),
-> +	_STATUS_INFO(HV_STATUS_VTL_ALREADY_ENABLED,		-EIO),
-> +	{"Hypercall page missing!", -EOPNOTSUPP, -1}, /* code -1 is "no hypercall page" */
-> +	{"Unknown", -EIO, -2},  /* code -2 is "Not found" entry; must be last */
-> +#undef _STATUS_INFO
-> +};
-> +
-> +static inline const struct hv_status_info *find_hv_status_info(u64 hv_status)
-> +{
-> +	int i, code;
-> +	const struct hv_status_info *info;
-> +
-> +	/* hv_do_hypercall() may return U64_MAX, hypercalls aren't possible */
-> +	if (unlikely(hv_status == U64_MAX))
-> +		code = -1;
-> +	else
-> +		code = hv_result(hv_status);
-> +
-> +	for (i = 0; i < ARRAY_SIZE(hv_status_infos); ++i) {
-> +		info = &hv_status_infos[i];
-> +		if (info->code == code || info->code == -2)
-> +			break;
-> +	}
-> +
-> +	return info;
-> +}
-> +
-> +/* Convert a hypercall result into a linux-friendly error code. */
-> +int hv_result_to_errno(u64 status)
-> +{
-> +	return find_hv_status_info(status)->errno;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_result_to_errno);
-> +
-> +const char *hv_result_to_string(u64 status)
-> +{
-> +	return find_hv_status_info(status)->string;
-> +}
-> +EXPORT_SYMBOL_GPL(hv_result_to_string);
-> 
-> It could be even more compact by exporting find_hv_status_info() and
-> letting  hv_result_to_errno() and hv_result_to_string() be #defines to
-> find_hv_status_info()->errno and find_hv_status_info()->string,
-> respectively.
-> 
-> Note that in struct hv_status_info, the "code" field is defined as "int"
-> instead of "u16" so that it can contain sentinel values -1 and -2 that
-> won't overlap with HV_STATUS_* values.
-> 
-Played around with this some more.
+Replace all capabilities values by calls to the BIT() macro.
 
-I like your idea of making it more compact by dealing with U64_MAX and
-unknown in find_hv_status_info(), however I'm not as keen on putting
-these cases in the array and iterating over the whole array when they
-could just be static constants or inline struct initializers. See below.
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+ drivers/net/ethernet/cadence/macb.h | 40 ++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-I also like the idea of making hv_result_to_*() functions into simple
-macros and exporting find_hv_status_info(). However, if it gets used
-elsewhere it makes more sense if the returned hv_status_info for the
-"Unknown" case contains the actual status code instead of replacing
-that information with -2, so then I'd want to return it by value
-instead of pointer:
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index c9a5c8beb2fa8166195d1d83f187d2d0c62668a8..3b43cb9468e3618754ff2bc6c5f360447bdeeed0 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -727,26 +727,26 @@
+ #define MACB_MAN_C45_CODE			2
+ 
+ /* Capability mask bits */
+-#define MACB_CAPS_ISR_CLEAR_ON_WRITE		0x00000001
+-#define MACB_CAPS_USRIO_HAS_CLKEN		0x00000002
+-#define MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII	0x00000004
+-#define MACB_CAPS_NO_GIGABIT_HALF		0x00000008
+-#define MACB_CAPS_USRIO_DISABLED		0x00000010
+-#define MACB_CAPS_JUMBO				0x00000020
+-#define MACB_CAPS_GEM_HAS_PTP			0x00000040
+-#define MACB_CAPS_BD_RD_PREFETCH		0x00000080
+-#define MACB_CAPS_NEEDS_RSTONUBR		0x00000100
+-#define MACB_CAPS_MIIONRGMII			0x00000200
+-#define MACB_CAPS_NEED_TSUCLK			0x00000400
+-#define MACB_CAPS_QUEUE_DISABLE			0x00000800
+-#define MACB_CAPS_PCS				0x01000000
+-#define MACB_CAPS_HIGH_SPEED			0x02000000
+-#define MACB_CAPS_CLK_HW_CHG			0x04000000
+-#define MACB_CAPS_MACB_IS_EMAC			0x08000000
+-#define MACB_CAPS_FIFO_MODE			0x10000000
+-#define MACB_CAPS_GIGABIT_MODE_AVAILABLE	0x20000000
+-#define MACB_CAPS_SG_DISABLED			0x40000000
+-#define MACB_CAPS_MACB_IS_GEM			0x80000000
++#define MACB_CAPS_ISR_CLEAR_ON_WRITE		BIT(0)
++#define MACB_CAPS_USRIO_HAS_CLKEN		BIT(1)
++#define MACB_CAPS_USRIO_DEFAULT_IS_MII_GMII	BIT(2)
++#define MACB_CAPS_NO_GIGABIT_HALF		BIT(3)
++#define MACB_CAPS_USRIO_DISABLED		BIT(4)
++#define MACB_CAPS_JUMBO				BIT(5)
++#define MACB_CAPS_GEM_HAS_PTP			BIT(6)
++#define MACB_CAPS_BD_RD_PREFETCH		BIT(7)
++#define MACB_CAPS_NEEDS_RSTONUBR		BIT(8)
++#define MACB_CAPS_MIIONRGMII			BIT(9)
++#define MACB_CAPS_NEED_TSUCLK			BIT(10)
++#define MACB_CAPS_QUEUE_DISABLE			BIT(11)
++#define MACB_CAPS_PCS				BIT(24)
++#define MACB_CAPS_HIGH_SPEED			BIT(25)
++#define MACB_CAPS_CLK_HW_CHG			BIT(26)
++#define MACB_CAPS_MACB_IS_EMAC			BIT(27)
++#define MACB_CAPS_FIFO_MODE			BIT(28)
++#define MACB_CAPS_GIGABIT_MODE_AVAILABLE	BIT(29)
++#define MACB_CAPS_SG_DISABLED			BIT(30)
++#define MACB_CAPS_MACB_IS_GEM			BIT(31)
+ 
+ /* LSO settings */
+ #define MACB_LSO_UFO_ENABLE			0x01
 
-+static const struct hv_status_info hv_status_infos[] = {
-+#define _STATUS_INFO(status, errno) { #status, (status), (errno) }
-+       _STATUS_INFO(HV_STATUS_SUCCESS,                         0),
-<snip>
-+       _STATUS_INFO(HV_STATUS_VTL_ALREADY_ENABLED,             -EIO),
-+#undef _STATUS_INFO
-+};
-+
-+struct hv_status_info hv_get_status_info(u64 hv_status)
-+{
-+       int i;
-+       const struct hv_status_info *info;
-+       u16 code = hv_result(hv_status);
-+       struct hv_status_info ret = {"Unknown", code, -EIO};
-+
-+       if (hv_status == U64_MAX)
-+               ret = (struct hv_status_info){"Hypercall page missing!", -1,
-+                                             -EOPNOTSUPP};
-+       else
-+               for (i = 0; i < ARRAY_SIZE(hv_status_infos); ++i) {
-+                       info = &hv_status_infos[i];
-+                       if (info->code == code) {
-+                               ret = *info;
-+                               break;
-+                       }
-+               }
-+
-+       return ret;
-+}
-+EXPORT_SYMBOL_GPL(hv_get_status_info);
-
-and in mshyperv.h:
-
-+#define hv_result_to_string(hv_status) hv_get_status_info(hv_status).string
-+#define hv_result_to_errno(hv_status) hv_get_status_info(hv_status).errno
-+
-+struct hv_status_info {
-+       char *string;
-+       int code;
-+       int errno;
-+};
-+
-+struct hv_status_info hv_get_status_info(u64 hv_status);
-
-Note also I switched the order of code and errno in hv_status_info,
-mainly because I think the struct initializers for "Unknown" and
-"Hypercall page missing!" are more readable with that order:
-{string, code, errno}
-
-Do you see any problems with the above?
-
-> Anyway, just a suggestion. The current code works from what I can
-> see.
-Thanks, it's not a bad idea at all to make it as compact and readable
-as possible on the first try, but not a big loss either way.
-
-Thanks
-Nuno
-
-> 
-> Michael
+-- 
+2.48.1
 
