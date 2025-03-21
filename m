@@ -1,81 +1,66 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C57228CBE;
-	Fri, 21 Mar 2025 12:39:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DA86226D1E;
+	Fri, 21 Mar 2025 12:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742560783; cv=none; b=AvhDtTCFrnVshjrlJxHrNymWH+e/C2DTxPai0hSa0uYjqG05ilVU37vGzNKkcCc0sjAMV74ZVq+H8bzuk6pBg+jR6Q54O2uu+ZE1X8d2wWUcwS72ZNk+Tr/uEKIWOCGn9ak5t7GOMvBKi4NxGjRZXk+PjgWDu76NsLybzOzs+C0=
+	t=1742560809; cv=none; b=VZr8YQHS3GTaPKaifmF/J/LRkpm21/Vsoe9tCrH7TJ4briRePYYKU4a6p1s4lFUtf7ZqbFMiLccuTZhFOGLnhzka+gsLT15hVM0f+gpMwHbkbb8TtaMnAz0P2xtSL0SAKjudsBaMYWGtIBr4WPludorZHA3USn24fKDj0zMBQlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742560783; c=relaxed/simple;
-	bh=em4EuCTpFlT7jMcqX+J6loUrFSzpSMvlouV1cDV8ssU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=D4vlM1wlOF5HworCuLhnKH6Aecmrd7r2SBxoGk0PDshPJBhQoyat4fw7aPhKWhJZ5lo4ippt/RUX/4lw76plZXILG1s6bUNItdOkIMLhRteHngbyz3hv7tUZeLa+ecT29B+2pwXJhIVx7E84LWXFD3w42LAa9IqFfLEghf7rKG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JgfXzf9q; arc=none smtp.client-ip=209.85.214.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742560809; c=relaxed/simple;
+	bh=hcWvFi80BBGrynZntG4NGp0zz+211rv5V7sFIsl5teA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l8LpFc4RwYY0rTHE3MZX0yBKqRZZ5Uuo5bboHGEUpsZfdCda0uAzxmEQs8irRiJ5v4bZHvblF3covRc15H9Tjht7DxlVyKZqN1aJzvKCtzt0zRPSh9Yt8YtKVk878SuQiBZHj8ON31ffOGXeSlT/VSlyCOI+9IEYMqMnnOgkvYw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N2UgelIG; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgfXzf9q"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-224019ad9edso45758845ad.1;
-        Fri, 21 Mar 2025 05:39:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742560781; x=1743165581; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lX+j7ZByvLSkPBbGZ8e37EOuRyaPsfVXExUNogWzc3E=;
-        b=JgfXzf9qi/pIzI8LQkOezhtctiL+ra1khq3q/IeVTuZylV2viS1DrtBMf+XDhTDELc
-         +UxaHA6hP+Mh0GadsFk5AF/k4xfIaG8iHX/sXarJI7FC6Eg4h7x/tMpfYMC/wBTcetoy
-         NvdnMF+i6qVTg7Q8/V0+dqMMwMtLd6ueY7nQFPMokDsiS4qEqMShZZGMqk9qTUpOv8v1
-         8OaYlZ7d2gwW/kAjYWbyqMxlsNyzT+6hAALNu4dsGIf/fXsmpqtzg3v4VThCGzZsNYfY
-         b0vkMLud+W2zFs/Xb1zNF9z3yGj/MZsHvK87nHItS1vZHXN3s++HBC7smtRB+8iY4pgm
-         y+rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742560781; x=1743165581;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lX+j7ZByvLSkPBbGZ8e37EOuRyaPsfVXExUNogWzc3E=;
-        b=h+hG42p50AlpGpcMELI5YJk2HUPdpBziiGfixS/algAM/3O6RFUjR3PltyKd2O/bdi
-         R+qeFY5i2hwEMPYEYHr2lh5g3b7R9lk+otm/WqUi85O9USQSjAFzb0F7AoUn6dcXhTpe
-         GenNYj0g9maKymO4JlOYvVk8TDeRW1TQoEAmAwM5BkGZRFLHa7sOYbnlBAGS7gUEk2oo
-         VYJIPmWzkduVNkIE9ZYsCgJ0dUw245QyQkFB9suQlmWqpiXKCBbRU+Tt3IvS6V2Gu5Eq
-         bcUwnLDehxW+qIoOvgyptehZuTlr1PRmknB3k+J+O7Nh6Muje3oxu9XC4HZ1Q9B8gfAP
-         HJjw==
-X-Forwarded-Encrypted: i=1; AJvYcCVlOLUJ2YZBoPjWa1j8dcsiKcX2yMldp+iqaPuXe4gEUNMsMupsT32aGVN9zjz7vSLiK5q20OZdA2OoI5AA@vger.kernel.org, AJvYcCX0hcYkfQFbVZHoiIZy6X/k6BoQ+BIe6icCfFMhOBTPthy4blIbU/jnxKE+aEGzHfOmgal6rEqN/3E7@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhcyykMauuoO5Bs7WuRluLINGvtElo7xUTHrn9PBAa3JKXn2Jq
-	pr9IFfGNJEL+FO5yRkv22xGg7Ua1es1tti03/KvHnKrOPSXhI7/H
-X-Gm-Gg: ASbGncsS7FMq9l3vbLWCrbx66bVSaIe+IWFfGktjkGsFH6iQVf7tzzltQOFfMiKsIk0
-	Y5Ezr/doedbrH1GNGb99UWbtY6XVp9zu8iDSkokwlSCrT96oD3rD23jjp69d0a+i/8JZgXOCAXP
-	cgNPRqutRVVsJl8GhLdZ6aPz2nNRgy+fEbCpEEykMnc6h8TCS7zYxHDiKj6RKHIBOFyQZw8lXvn
-	KjcF3UxrsXvRidD54Th62qH7qJapifYiA9k3mrdDYfceQUS+OTd3xgMe/Hd3XhUU0aXVy2HOTUe
-	CaG4V61Y1ZU75jRtRRwQoeTSJvfAiC2DGVJ41DVfA454SZ/ZgBHjdyVe7tD0HbjLp0pqH4k3F5z
-	IgUm8fXn23QDXMqfInZwIL0+TNvw3ocITy3s3jdQ1y52WPr7jORbjskJMSe0=
-X-Google-Smtp-Source: AGHT+IHId0CD+P7qvQUeVHlIxcs9d9bWCjTq4tyT+oN5nat9T4lYmUbkwkbTDc4O4exXD2ol31Q6kw==
-X-Received: by 2002:a05:6a21:6e03:b0:1f5:a577:dd10 with SMTP id adf61e73a8af0-1fe43437119mr6748664637.36.1742560780747;
-        Fri, 21 Mar 2025 05:39:40 -0700 (PDT)
-Received: from jason-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73905fd5c90sm1815432b3a.51.2025.03.21.05.39.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 05:39:40 -0700 (PDT)
-From: Jason Hsu <jasonhell19@gmail.com>
-X-Google-Original-From: Jason Hsu <jason-hsu@quantatw.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	joel@jms.id.au,
-	andrew@codeconstruct.com.au,
-	patrick@stwcx.xyz,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Cc: yang.chen@quantatw.com,
-	jerry.lin@quantatw.com,
-	Jason Hsu <jason-hsu@quantatw.com>,
-	Jason-Hsu <jasonhell19@gmail.com>
-Subject: [PATCH v5 0/2] Add Meta(Facebook) Ventura BMC(AST2600)
-Date: Fri, 21 Mar 2025 20:37:29 +0800
-Message-Id: <20250321123731.1373596-1-jason-hsu@quantatw.com>
-X-Mailer: git-send-email 2.34.1
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N2UgelIG"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742560807; x=1774096807;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=hcWvFi80BBGrynZntG4NGp0zz+211rv5V7sFIsl5teA=;
+  b=N2UgelIGJWW3TvgiBod7VASx/pz40X2KnALRRVLrlH3BJae9OnIP+40w
+   Q42ZBa2Xh+k4Yprzh3mxPzLngQTqXEocjVsIMDjJf98zFLNxxbCwLuWoL
+   b8rLOkOvh7bfpahOla9pJsvhyZpxVM9rqbiqr2MXOEpnX4pptvQwbmu/y
+   hU5B/y2QCu8S0Ro/oEsjRb0RQZ8zncoqP6pvujwXR6NQE8OcF84vSBgBm
+   VZwrKs0ZCdJXDYwJjASK2NYfiDF/Ry5V0n+RGBsT7YJ51GOQyrbkbvJAX
+   c7G9DihePJ56AWFzRpjlznCZcBxgLXF9j98PhXACDPRiFzoXR+GnVhuuz
+   Q==;
+X-CSE-ConnectionGUID: M2VJARcxQt2XVdpnHJawxQ==
+X-CSE-MsgGUID: A5WWiM+lRQOIBi8CmjVVIQ==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="54493348"
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="54493348"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 05:40:06 -0700
+X-CSE-ConnectionGUID: nKVePy+AT/iY4z00Ld0faw==
+X-CSE-MsgGUID: hATTo9ZCTtyBori9ECO+tw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="154399873"
+Received: from mwiniars-desk2.ger.corp.intel.com (HELO eresheto-mobl3.ger.corp.intel.com) ([10.245.246.189])
+  by smtpauth.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 05:39:52 -0700
+From: Elena Reshetova <elena.reshetova@intel.com>
+To: dave.hansen@intel.com
+Cc: jarkko@kernel.org,
+	linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	x86@kernel.org,
+	asit.k.mallick@intel.com,
+	vincent.r.scarlata@intel.com,
+	chongc@google.com,
+	erdemaktas@google.com,
+	vannapurve@google.com,
+	dionnaglaze@google.com,
+	bondarn@google.com,
+	scott.raynor@intel.com,
+	Elena Reshetova <elena.reshetova@intel.com>
+Subject: [PATCH 0/4] Enable automatic SVN updates for SGX enclaves
+Date: Fri, 21 Mar 2025 14:34:39 +0200
+Message-ID: <20250321123938.802763-1-elena.reshetova@intel.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -84,49 +69,80 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add Linux device tree entry related to Meta(Facebook) Ventura specific
-devices connected to BMC(AST2600) SoC.
+Background
+----------
 
----
-v1:
-    1. Create ventura dts file.
-    2. Add commit msg.
-    3. Use format-patch to generate patch.
-    4. Add subject prefixes matching the subsystem.
----
-v2:
-    1. Modify email content.
----
-v3:
-    1. Add mail list.
----
-v4:
-    1. Apply git send-email --thread option.
-    2. Sort nodes in the dts alphanumerically.
----
-v5:
-    1. Run scripts/checkpatch.pl and fix reported warnings.
-    2. Remove unnecessary 88E6393X CONFIG FRU.
----
-v6:
-    1. Add a new stage for the DTS change.
-    2. Run scripts/checkpatch.pl and fix reported error.
-    3. Fix the issue in a separate patch.
----
-Signed-off-by: Jason-Hsu <jasonhell19@gmail.com>
-
-Jason Hsu (2):
-  dt-bindings: arm: aspeed: add Meta Ventura board
-  ARM: dts: aspeed: ventura: add Meta Ventura BMC
-
- .../bindings/arm/aspeed/aspeed.yaml           |    1 +
- arch/arm/boot/dts/aspeed/Makefile             |    1 +
- .../aspeed/aspeed-bmc-facebook-ventura.dts    | 1399 +++++++++++++++++
- 3 files changed, 1401 insertions(+)
- create mode 100644 arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-ventura.dts
+In case an SGX vulnerability is discovered and TCB recovery
+for SGX is triggered, Intel specifies a process that must be
+followed for a given vulnerability. Steps to mitigate can vary
+based on vulnerability type, affected components, etc.
+In some cases, a vulnerability can be mitigated via a runtime
+recovery flow by shutting down all running SGX enclaves,
+clearing enclave page cache (EPC), applying a microcode patch
+that does not require a reboot (via late microcode loading) and
+restarting all SGX enclaves.
 
 
-base-commit: b3ee1e4609512dfff642a96b34d7e5dfcdc92d05
+Problem statement
+-------------------------
+Even when the above-described runtime recovery flow to mitigate the
+SGX vulnerability is followed, the SGX attestation evidence will
+still reflect the security SVN version being equal to the previous
+state of security SVN (containing vulnerability) that created
+and managed the enclave until the runtime recovery event. This
+limitation currently can be only overcome via a platform reboot,
+which negates all the benefits from the rebootless late microcode
+loading and not required in this case for functional or security
+purposes.
+
+
+Proposed solution
+-----------------
+
+SGX architecture introduced  a new instruction called EUPDATESVN [1]
+to Ice Lake. It allows updating security SVN version, given that EPC
+is completely empty. The latter is required for security reasons
+in order to reason that enclave security posture is as secure as the
+security SVN version of the TCB that created it.
+
+This series enables opportunistic execution of EUPDATESVN upon first
+EPC page allocation for a first enclave to be run on the platform.
+
+This series is partly based on the previous work done by Cathy Zhang
+[2], which attempted to enable forceful destruction of all SGX
+enclaves and execution of EUPDATESVN upon successful application of
+any microcode patch. This approach is determined as being too
+intrusive for the running SGX enclaves, especially taking into account
+that it would be performed upon *every* microcode patch application
+regardless if it changes the security SVN version or not (change to the
+security SVN version is a rare event).
+
+Testing
+-------
+
+Tested on EMR machine using kernel-6.14.0_rc7 & sgx selftests.
+If Google folks in CC can test on their side, it would be greatly appreciated.
+
+
+References
+----------
+
+[1] https://cdrdv2.intel.com/v1/dl/getContent/648682?explicitVersion=true
+[2] https://lore.kernel.org/all/20220520103904.1216-1-cathy.zhang@intel.com/T/#r2399940e5b10465162529c05e9579b30883849f1
+
+Elena Reshetova (4):
+  x86/sgx: Add total number of EPC pages
+  x86/sgx: Change counter sgx_nr_free_pages -> sgx_nr_used_pages
+  x86/sgx: Define error codes for ENCLS[EUPDATESVN]
+  x86/sgx: Implement ENCLS[EUPDATESVN] and opportunistically call it
+    during first EPC page alloc
+
+ arch/x86/include/asm/sgx.h      | 41 ++++++++++-------
+ arch/x86/kernel/cpu/sgx/encls.h |  6 +++
+ arch/x86/kernel/cpu/sgx/main.c  | 78 ++++++++++++++++++++++++++++++---
+ arch/x86/kernel/cpu/sgx/sgx.h   |  2 +
+ 4 files changed, 107 insertions(+), 20 deletions(-)
+
 -- 
-2.34.1
+2.45.2
 
