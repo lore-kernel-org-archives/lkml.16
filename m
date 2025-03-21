@@ -1,151 +1,299 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2079.outbound.protection.outlook.com [40.107.96.79])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F3C8233722
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 22:15:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742595330; cv=none; b=haqzuFk+SWrsvqjABZh2h7pPzCjnXW9t93Y6NQKRjQRqK2LBgdxPxJTWEj2Cs/Q0mgm+1TDmwgh6yI3jtpXaqgCXDlVuScqk1odWv12FepvWVr08A32p9Zv8VW5rCKrHWerKv34wD30fL6KkiEEavUJkGZ5NMg8an5i/Hkfv8/o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742595330; c=relaxed/simple;
-	bh=BCN5JQqGHPfZWzsKH88CAQez5y3gRKn+dXSiBfdgsw0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f8nWP/pnvLj4fnc0+F0GTWbCYTu2AguMZzX7gi/2rTx9zleavP24X7YJQs7jFBi7DuSqzDo7J5h5jTIiuJvbuMLbP4eaW5gINRyiUnY1WBOyU98d6ZXQ1cX29kpVg9Dr/6BQaCEhjiSfnpUh4o22v3oPoKkRKfecQqP4ecYGyC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=yGwrJnrw; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E08AF2356A0
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 22:15:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.79
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742595335; cv=fail; b=TNC1oRHnJ21fh/N3Fwk52/LD4RgKUYOYRDRwtwKRA/2CcCxO97GO2Jt0OaPZUyoUdXq3G5g7yeG3bDFfHti2ttmccI3tsaee0RILDwXKVZDL4uBLiYB6RogQP3wL6AufjSZaEYaBxCdVJBDwh7SGQqEfuQIrgQFpuKaOwvv2cgI=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742595335; c=relaxed/simple;
+	bh=oL8zJvICipkWzywPC0I4qiDnvaUh2fpG2qX/5sfcwRE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pUJAV3hN0efSqHQDScZNzIUqsDzfH50sG5g7qAEkCLYMx5x2guZKezU6PRrcRFX1stmG9uHTLzRwXL3mg7XDI2NRTrmBZ71mIBZllUTECo3fHdOAiGj5xVOrtCHPraV0nhoN2NzMeIucc3P0W5QyVxsNryGgTkgcu03ACQnPlfg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=C/cBIb7w; arc=fail smtp.client-ip=40.107.96.79
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="yGwrJnrw"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2264c9d0295so67905ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:15:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742595328; x=1743200128; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hz7SI+MRITJdDDcuu+iapQr7TxDqFp3vr+TXoSWWGCE=;
-        b=yGwrJnrws2TIW3WCiFSxSiW6Pn6RwuwNoYEqwQcBBG7kAkt4qFmivjkPzEJH4wleZX
-         ByZdWBJw30nvL0XpIOT0XM7P52U6W286S2YiIQX/PvQcvcu3XcNZIGbQx3Bkb55iTHX3
-         MQbnzR9JR6Shu6TQTJmhoRbby1Z8QLNUQg0tGT2Zz3qIfyIt899AEde6OkJJ1Q081c2B
-         hl1vHRnjZV57Qy9/yQFUdMDKD8/QqJw7+NHfOgI0ly/jeQ9uOs8j2dBqDk64N9Fs/SHe
-         +6Z5NgcgvfZ9Qq4Rbad/h1qAETS9vCDuvE4t8x0kDJu6cnn/Io3SBNFIV/VOBWThm52z
-         1JIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742595328; x=1743200128;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hz7SI+MRITJdDDcuu+iapQr7TxDqFp3vr+TXoSWWGCE=;
-        b=ViTJug0LZrqb5wSPVh+PJFjDoijlG7qWI4iHf8NMzKEGNQDe44Cdm4Zp+O+xGqdXSu
-         lQaLUrRFzLI4WA7R+qlouBEmN07LKfFiiPzlLEuP9D/w2wq5V0RP+Hj/cjWnvziCntUx
-         u440oUg8erLowUy+xMbgydoc9p2rVfYWB0zXHbT0VOn49LqWQ0a1w5xhURacToqvvKmY
-         g56I5fTrgPlQEFe3MKYsx3UAAH2302TEo2f/5WeV0SvLVDdG+WWWZ/Vkj7uSwdG5b3et
-         a5oMaIu7PN6qSy/e0TqEX5ITbssleATJkpIOHKtf2PoqC1G0SGo7mr/hGSn2tdXy3MO5
-         Gh1g==
-X-Forwarded-Encrypted: i=1; AJvYcCW+k+cKcGP9JzjnWukStS8GMwNFI0X91KBcWHDCiPvfw8TBMkNnXIluD6405Czz8TOgWNZPbqA4zlSK46A=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHXfzQFisSOjZ68D+rq2UJ3k5qjuTIn3SNLR+vt9MpXP/OOqq6
-	+pP6T+A9zoPyUJF9l9qReggFx3YFLLHsuLx/u1Pk2QSddeo65ODNAZySVhV3GMSnQYahI92KoQb
-	pqP/YATwEFk1gua5z9miwY1YopPOINmqSPIeG
-X-Gm-Gg: ASbGncvpPen+HWuTDEgLNIVxVjhnOXsMDEl8zeck/84VQt+LmHeiMxR41nf92pIAmwn
-	vzbwMJlw43Dt7H9HvewdUS/7Ld2HJK4gRbMHL9U5bD7cg24Clcz6XlujE4JxAMiyvwWR1vdaEP9
-	U204UBc/O9Q2XbYfKrEn1bf94yC0ptxRIpDaNh2B5RCKf3g9B9ZLwfjeA=
-X-Google-Smtp-Source: AGHT+IGBoa3JmICUjXYWbIuZG1QnxGwt2v2Pxt/ddhpOPWc2le0JOM4R9EEoSgO2H5EsypXp8nLSfXGBeIbvxdvRzAY=
-X-Received: by 2002:a17:902:d4cf:b0:215:f0c6:4dbf with SMTP id
- d9443c01a7336-227982bd0e7mr778235ad.14.1742595327611; Fri, 21 Mar 2025
- 15:15:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="C/cBIb7w"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=kaovNTxDqdAB+b15ovYjYDc2NJIlHS5NBfXda2jGDGUwoA6l3f4G4l9YfBSIs6NcFiVfYEAhhksUncP965OnPY8HhyAb/RjmWGYtmOhII9DMPose0RotbmT+gbo4i271l9zxertTqmbsr3pwrSWADIpsXzFnHC4J4C+ULU7FabLbNa8PP/3jt0bQme1hiXVoNbVixKiPtlZtwiTyyR4rdT/FO4HU3T0aavkBLJB/UBdE5Tq+4tY/NKOZqdF43mMuN7uuIiN96ek+mTOT700nBhBcaQ3lq3nHZ4h7bdr2MUQypBDXiniNuInkeisL1cGGChqb3LyAztsR50xDztN5IQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=OWukKYLx6dxV9P9+y9+WKEyqygay+dBRvMUc0FVjWo8=;
+ b=pNbrfmdZpIKz3LZEXlIGHsTKaE5Di8V3h7w48ZvR4A5j9gKMnZwg8jYMIxdhL+B5yl6BXTlWiLdkSo20u+uWrIBNyPqFO7lNFbc8EaN5nZZCJfuQ2sh+3dT1XO8dYmHVD4BxoTN1Z8mCnerANNE0CrqNSzVguXYR4cRf2FN8xYenJV6sRyVwJxBCoCdwPewyaZO+6H+MSHD3lGh7+fqpfqm4Hvy6z9Vr8rqlGHuWtFgPG6nhCnCgxXZqM3NtnWXp1fCN+G5RQq38lNqG0r1i4yoibE4jZQCqpgiP1Ul3X9DJY5lIoFase/XRSrz0EMVxqG2C2fQI/tRIAqKj+PIl8w==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=OWukKYLx6dxV9P9+y9+WKEyqygay+dBRvMUc0FVjWo8=;
+ b=C/cBIb7wMs+C7LWUW3rYyAZpKeDWPnp1/x5/mPUuEkLJhG06HMOC93qbuU/6OR5rzQpPnE10z+cM19m+8hQkTS0/0vvM+kCYgMLQkZy2qKs+QOG1Mqxz4rnh3QyOD1wdaB6iq2zMozAncydLWxMUL/lXzqVzHEHF/CZFt63ML+E2O+g2NUub9DQgNqwrEIDHdlOHlVQwNUKPF6XYKSOASTn+MDFk/qvmPv8VR7C0Elq4RcN60yr9NvBWBajswUZbZSvqEXuTkFg/AU4VHQS8DoumFpsOpjgpxfivZ4tVEJMrJ4h22pxxC7FzZyVOGvG2o8QHA3EBdyO9fvE5W4iSCA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com (2603:10b6:930:3e::17)
+ by DS7PR12MB6143.namprd12.prod.outlook.com (2603:10b6:8:99::16) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.37; Fri, 21 Mar
+ 2025 22:15:31 +0000
+Received: from CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5]) by CY5PR12MB6405.namprd12.prod.outlook.com
+ ([fe80::2119:c96c:b455:53b5%6]) with mapi id 15.20.8534.034; Fri, 21 Mar 2025
+ 22:15:31 +0000
+From: Andrea Righi <arighi@nvidia.com>
+To: Tejun Heo <tj@kernel.org>,
+	David Vernet <void@manifault.com>,
+	Changwoo Min <changwoo@igalia.com>
+Cc: Joel Fernandes <joelagnelf@nvidia.com>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 4/6] sched_ext: idle: Introduce scx_bpf_select_cpu_and()
+Date: Fri, 21 Mar 2025 23:10:50 +0100
+Message-ID: <20250321221454.298202-5-arighi@nvidia.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250321221454.298202-1-arighi@nvidia.com>
+References: <20250321221454.298202-1-arighi@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ZR0P278CA0107.CHEP278.PROD.OUTLOOK.COM
+ (2603:10a6:910:23::22) To CY5PR12MB6405.namprd12.prod.outlook.com
+ (2603:10b6:930:3e::17)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250308214045.1160445-1-almasrymina@google.com>
- <20250308214045.1160445-5-almasrymina@google.com> <5de5943b-5527-49f6-a454-b3c7358cff56@redhat.com>
-In-Reply-To: <5de5943b-5527-49f6-a454-b3c7358cff56@redhat.com>
-From: Mina Almasry <almasrymina@google.com>
-Date: Fri, 21 Mar 2025 15:15:14 -0700
-X-Gm-Features: AQ5f1Jp_bSaJYceldtfK0dIdQEXx63Idm2vF7CtmSVJ_E1ycJl8iObtXRhrS3vg
-Message-ID: <CAHS8izNfyfVhMj0wBvP0qa=7E4xL+eo9wn_Fi4o2PT8piwACWA@mail.gmail.com>
-Subject: Re: [PATCH net-next v7 4/9] net: devmem: Implement TX path
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-doc@vger.kernel.org, kvm@vger.kernel.org, 
-	virtualization@lists.linux.dev, linux-kselftest@vger.kernel.org, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, Donald Hunter <donald.hunter@gmail.com>, 
-	Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Simon Horman <horms@kernel.org>, Jonathan Corbet <corbet@lwn.net>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, Jeroen de Borst <jeroendb@google.com>, 
-	Harshitha Ramamurthy <hramamurthy@google.com>, Willem de Bruijn <willemb@google.com>, 
-	David Ahern <dsahern@kernel.org>, Neal Cardwell <ncardwell@google.com>, 
-	Stefan Hajnoczi <stefanha@redhat.com>, Stefano Garzarella <sgarzare@redhat.com>, 
-	"Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, =?UTF-8?Q?Eugenio_P=C3=A9rez?= <eperezma@redhat.com>, 
-	Shuah Khan <shuah@kernel.org>, sdf@fomichev.me, asml.silence@gmail.com, dw@davidwei.uk, 
-	Jamal Hadi Salim <jhs@mojatatu.com>, Victor Nogueira <victor@mojatatu.com>, 
-	Pedro Tammela <pctammela@mojatatu.com>, Samiullah Khawaja <skhawaja@google.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR12MB6405:EE_|DS7PR12MB6143:EE_
+X-MS-Office365-Filtering-Correlation-Id: 94558667-d2b5-409d-f983-08dd68c5e4cc
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|376014|366016;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?mMaDU4NABpddhO2U8gcWvrZlthLUBTcmXk1HgE85XYX8pf9nrP7GOUoj4qFF?=
+ =?us-ascii?Q?ncDvoOFToEEBpxDMs/8cfQr88TCt8oD/h+cO/I8rFF1ZQeugIFuXsm/vEAtN?=
+ =?us-ascii?Q?QSAllB2y/StqLPLNpzOwLGNhtDn+AczDjLjbJv98iRiS8F6wcog5KYuMbDPW?=
+ =?us-ascii?Q?wDrshn1Eqs95PN+TD4+DgYmfYQ7TiOtcviRJTluBevZK2LeVx+gqKld3/TVs?=
+ =?us-ascii?Q?Y+POlTV6pxCTfGs5JlX3zDSSHjeC+vM3pQ4CMXyMurQWBl1qiNpYivxi1hhb?=
+ =?us-ascii?Q?GuSSnUf1qDHepxPcjaP2N+ggHVf4bmwIk5T2HaAdusXd4Fuv6Ds3tQBTJa4b?=
+ =?us-ascii?Q?DsKm4QEAEB86pSZgz26kbFRTpBcbWvSgA1JF7LN7v1Hz4CeYaCfDuiAs85/b?=
+ =?us-ascii?Q?L2s8sy5clAgC+KpqnquoaVxXFxrukpDQag/wEcF1ma4NIMf0o2JSxns3ybN2?=
+ =?us-ascii?Q?qBG8Nt37LvX2+35bXy98GYx/DG6sLf8RVAELRJzWpHbn8r+iWAlWUvg1bs7m?=
+ =?us-ascii?Q?MtBiTD3JHX0sCDT1Drx4+/0dVZVDcSCDOFNvzfn5mTS/LjfnVCxmmGeO2C7J?=
+ =?us-ascii?Q?CE21eZxQ53W3VGIl1rgDQf55hBKmk10Kx9fgqM2VtLDpvMBY3tANwRCxZN+2?=
+ =?us-ascii?Q?BvdT7JlP8KSMNV0AFp13LYvLkJXGXoOlnUVBFfF1WDP+gFND5Y4PE1bwXHOI?=
+ =?us-ascii?Q?M2nmAiDxOHxRMQkX5a0a+sh2HXKBI/hESzHBRxw/i57iPR4jV9t9pZH2F/cs?=
+ =?us-ascii?Q?Bm3xgwA+KU4vTKzyIo+80+4DSlgsIvGDBvHmmT5U/twV/M0tesyvj8p4aBRc?=
+ =?us-ascii?Q?0Mh1gQfYxA24c4QYZ9/vvJwwj2+82vEPw6ljgtDSsJHlB5Dl4orixyogpUqL?=
+ =?us-ascii?Q?n4DH7z9G81UO28drudlbhnRvaR9Wc/XA6Q0AgX8CIAJiHE+nt3kFUtg9DlOJ?=
+ =?us-ascii?Q?U9H3E4tx804BoEbIAn9fOTIx3+G9Cu9hwyP7pjMR+PyVLaA7/qWv+P/69e+i?=
+ =?us-ascii?Q?jbgmBlD+xcqqVTug9CfCNQmyXCRDNE3Iqdusd5ParFeqf9wo/50MEoatBalu?=
+ =?us-ascii?Q?mlflz1xrYc5ETVDYeyuxgmGaGkeebaOg2Ib4GXRxLGSp5dGdw6vmFDmRU6Jj?=
+ =?us-ascii?Q?HcFlQWVgS24TpjkPCAM1uGlxldrXIDUj3gSKesIU5vVVEJZDtrXKcH2yYjCj?=
+ =?us-ascii?Q?vJnUXKNbrOq+RUsWncRtFYVfyXGtVOSdxRIxO6IwpqgAW3Cuu0gBL0pvKo50?=
+ =?us-ascii?Q?ON51IPZCHc0gBGR8uOQruZUuLo7GDt3wX4iLj+p/6/xK+Td4Uybww+HUgnsa?=
+ =?us-ascii?Q?oToJn3dI4CLpOczTO/b1m5ZXZfu488RoOcylbPYn9sFBmXR0F2EVA9zKvswI?=
+ =?us-ascii?Q?D5pki59BptyE6ock0pNFvyI/e7vxlmd7CUlnkLx03x+3cNyC2Jk8DyNl8PYC?=
+ =?us-ascii?Q?IhdBEcVxoqc=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR12MB6405.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?zXJMTRCBehYTJzCMhG6DYabfu5vBaRjTJFNxxBBNoGGJFufdp/dxKECT1NoC?=
+ =?us-ascii?Q?YHDEHeiglrJx8kjh0L9abWjDRMA4M81apNQjNzNbhRkcoqP8B1O5DwHYx+8U?=
+ =?us-ascii?Q?ttR9vOexbX6pCCq066cH3r9qpD6rxj+/tT2wkJDh4LwFGT7WICbwGgzpLgdR?=
+ =?us-ascii?Q?oAMMIyCZe7v0dsxnCAD5InFegh1oYzTwaLKIYBzV9+0cOE9ZHaj8uZBXBzM8?=
+ =?us-ascii?Q?yq9INDI+Yu9RUA2/a2YofRk6OJRhzMa32nZjBFBeJ9yflpVd0MKg6LFSz4jb?=
+ =?us-ascii?Q?z4UhNAiJu869pAdesdry8llAkqXhOlMU10uhf00oNhVMgBECDbgQIajTso8P?=
+ =?us-ascii?Q?sM+q72b7jwXlUjyBpafloHOmUHY446WvRnhnX97iDsfk41TEKfCEThwcS5Rn?=
+ =?us-ascii?Q?9489mfGaCdtByovuZL6DznlL8VXLcbMxl99u+MzCy48W/ZgAuZS++UtYGmpv?=
+ =?us-ascii?Q?iOl8DszucTAkSU86gx6FoG9D69YWWMTervxV+i2tFfJnBtpdY8oZcjYWxyrf?=
+ =?us-ascii?Q?HHLkrl3+NftpItzbxFQ26H1hRBrcbZbczBSD3dpm13SmGrsdmI7rrrnUxNsW?=
+ =?us-ascii?Q?espJtdeDOykRLPpfh/MlFdmcLcE6rKuyof524DRN89KshuqPGbafhu8+Kz6i?=
+ =?us-ascii?Q?qR9BXWRXsOzCOyWpQa81H3ELh6GuYRY+Hyj23IqNUIQkAX/uoS6buAqlG4PL?=
+ =?us-ascii?Q?KTatWQWPRLcO1t0M9I/1h3bqSHtRSLyx70UqbyPjom/rfXHqeJzf2zLAPjaF?=
+ =?us-ascii?Q?Sk4rbaiejzvJkumY19OraBMhwV9VGqQaTD0ttbdhk3fU9ZqpA4IjEIH3YpoS?=
+ =?us-ascii?Q?lx1racvsp8UXXJngoeCEe8GfB3h0eg7Tbo7PRDOP4Kh/yQBCdBN/dI2xovZ4?=
+ =?us-ascii?Q?RNlTFcRxIBZXQLyzADTABsfNcUPnQlDCQdoNMtsWrcYHAFqmMp9W/97hs5rI?=
+ =?us-ascii?Q?pCdz2uY1MeklxK7grKvkkz8G+AuUPv8wZtV4znxDeae++faVor5wuYW+HC3j?=
+ =?us-ascii?Q?pS6q+sMDM7QFvq8MO0dxIyUsK4yHKYNYSAKuIdeKuIXp5zMpbpxVHmNl3DSj?=
+ =?us-ascii?Q?dnOEn2/Wvg+UEhmRaFi6OY+Rn12bOqN3KlteGuoU08gwlo9aqdiz7kXMvcjR?=
+ =?us-ascii?Q?D/RzrLmRdRK3ezXvg+BEoNNHDDEJZUnyDuhIPiyxTuqXMhMPKxNzpKLhaxYD?=
+ =?us-ascii?Q?JGY9Htgif74cCrSGO8ryiARrvGjTTah++tO98aediFwwRxyevxD541JpCiGO?=
+ =?us-ascii?Q?8um1cZlm2wS66tidMQ8scE0MRVHcGsQjwHGMcxXvfns6JwVRgqJlJRSVpyvY?=
+ =?us-ascii?Q?VangxH1NY87HEcqDE3sXeSXHZt+wTCABLXOHDvcrWnxI0h0GUW6YAAwnuQ1r?=
+ =?us-ascii?Q?TedE1wHHwyKZEZveO/uCSagandLvNl55hBwxZik3S3TqcgMTvhL9UJw43d+5?=
+ =?us-ascii?Q?BHTaVvvtKT2PJX5x2M3HQgIgrdIGbqPNlsEj2DdPVCAe3Sa6qwW9fe/vOYT6?=
+ =?us-ascii?Q?rZ0GSjRFP/6NAdtYF4CZm0D6ssGgHLCH1zJOMh577XaiG60tycz+qu8fBhh7?=
+ =?us-ascii?Q?cFtTKcKesHYgVg9eb+TotunRLZxrtmhLHIxrnBtF?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 94558667-d2b5-409d-f983-08dd68c5e4cc
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR12MB6405.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 22:15:31.4254
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 3VtnAb+SPPGmWYxQ7Qou6dVUsaJl9e4P/KAhAUk6p4buRl3qsO7HzAa2L3q7L21NLOmE2vyDIy8nVpSyU3a3Gg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR12MB6143
 
-On Tue, Mar 18, 2025 at 1:53=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
-te:
->
-> Adding Kuniyuki.
->
-> On 3/8/25 10:40 PM, Mina Almasry wrote:
-> > @@ -931,10 +932,67 @@ int netdev_nl_bind_rx_doit(struct sk_buff *skb, s=
-truct genl_info *info)
-> >       return err;
-> >  }
-> >
-> > -/* stub */
-> >  int netdev_nl_bind_tx_doit(struct sk_buff *skb, struct genl_info *info=
-)
-> >  {
-> > -     return 0;
-> > +     struct net_devmem_dmabuf_binding *binding;
-> > +     struct list_head *sock_binding_list;
-> > +     struct net_device *netdev;
-> > +     u32 ifindex, dmabuf_fd;
-> > +     struct sk_buff *rsp;
-> > +     int err =3D 0;
-> > +     void *hdr;
-> > +
-> > +     if (GENL_REQ_ATTR_CHECK(info, NETDEV_A_DEV_IFINDEX) ||
-> > +         GENL_REQ_ATTR_CHECK(info, NETDEV_A_DMABUF_FD))
-> > +             return -EINVAL;
-> > +
-> > +     ifindex =3D nla_get_u32(info->attrs[NETDEV_A_DEV_IFINDEX]);
-> > +     dmabuf_fd =3D nla_get_u32(info->attrs[NETDEV_A_DMABUF_FD]);
-> > +
-> > +     sock_binding_list =3D genl_sk_priv_get(&netdev_nl_family,
-> > +                                          NETLINK_CB(skb).sk);
-> > +     if (IS_ERR(sock_binding_list))
-> > +             return PTR_ERR(sock_binding_list);
-> > +
-> > +     rsp =3D genlmsg_new(GENLMSG_DEFAULT_SIZE, GFP_KERNEL);
-> > +     if (!rsp)
-> > +             return -ENOMEM;
-> > +
-> > +     hdr =3D genlmsg_iput(rsp, info);
-> > +     if (!hdr) {
-> > +             err =3D -EMSGSIZE;
-> > +             goto err_genlmsg_free;
-> > +     }
-> > +
-> > +     rtnl_lock();
->
-> The above could possibly be a rtnl_net_lock(), right?
->
-> (not strictily related to this series) The same for the existing
-> rtnl_lock() call in netdev-genl.c, right?
->
+Provide a new kfunc, scx_bpf_select_cpu_and(), that can be used to apply
+the built-in idle CPU selection policy to a subset of allowed CPU.
 
-Actually I think this can follow the example set in commit
-1d22d3060b9b ("net: drop rtnl_lock for queue_mgmt operations") and
-take the netdev_get_by_index_lock().
+This new helper is basically an extension of scx_bpf_select_cpu_dfl().
+However, when an idle CPU can't be found, it returns a negative value
+instead of @prev_cpu, aligning its behavior more closely with
+scx_bpf_pick_idle_cpu().
 
+It also accepts %SCX_PICK_IDLE_* flags, which can be used to enforce
+strict selection to @prev_cpu's node (%SCX_PICK_IDLE_IN_NODE), or to
+request only a full-idle SMT core (%SCX_PICK_IDLE_CORE), while applying
+the built-in selection logic.
 
---=20
-Thanks,
-Mina
+With this helper, BPF schedulers can apply the built-in idle CPU
+selection policy restricted to any arbitrary subset of CPUs.
+
+Example usage
+=============
+
+Possible usage in ops.select_cpu():
+
+s32 BPF_STRUCT_OPS(foo_select_cpu, struct task_struct *p,
+		   s32 prev_cpu, u64 wake_flags)
+{
+	const struct cpumask *cpus = task_allowed_cpus(p) ?: p->cpus_ptr;
+	s32 cpu;
+
+	cpu = scx_bpf_select_cpu_and(p, prev_cpu, wake_flags, cpus, 0);
+	if (cpu >= 0) {
+		scx_bpf_dsq_insert(p, SCX_DSQ_LOCAL, SCX_SLICE_DFL, 0);
+		return cpu;
+	}
+
+	return prev_cpu;
+}
+
+Results
+=======
+
+Load distribution on a 4 sockets, 4 cores per socket system, simulated
+using virtme-ng, running a modified version of scx_bpfland that uses
+scx_bpf_select_cpu_and() with 0xff00 as the allowed subset of CPUs:
+
+ $ vng --cpu 16,sockets=4,cores=4,threads=1
+ ...
+ $ stress-ng -c 16
+ ...
+ $ htop
+ ...
+   0[                         0.0%]   8[||||||||||||||||||||||||100.0%]
+   1[                         0.0%]   9[||||||||||||||||||||||||100.0%]
+   2[                         0.0%]  10[||||||||||||||||||||||||100.0%]
+   3[                         0.0%]  11[||||||||||||||||||||||||100.0%]
+   4[                         0.0%]  12[||||||||||||||||||||||||100.0%]
+   5[                         0.0%]  13[||||||||||||||||||||||||100.0%]
+   6[                         0.0%]  14[||||||||||||||||||||||||100.0%]
+   7[                         0.0%]  15[||||||||||||||||||||||||100.0%]
+
+With scx_bpf_select_cpu_dfl() tasks would be distributed evenly across
+all the available CPUs.
+
+Signed-off-by: Andrea Righi <arighi@nvidia.com>
+---
+ kernel/sched/ext.c                       |  1 +
+ kernel/sched/ext_idle.c                  | 43 ++++++++++++++++++++++++
+ tools/sched_ext/include/scx/common.bpf.h |  2 ++
+ 3 files changed, 46 insertions(+)
+
+diff --git a/kernel/sched/ext.c b/kernel/sched/ext.c
+index f42352e8d889e..343f066c1185d 100644
+--- a/kernel/sched/ext.c
++++ b/kernel/sched/ext.c
+@@ -465,6 +465,7 @@ struct sched_ext_ops {
+ 	 * idle CPU tracking and the following helpers become unavailable:
+ 	 *
+ 	 * - scx_bpf_select_cpu_dfl()
++	 * - scx_bpf_select_cpu_and()
+ 	 * - scx_bpf_test_and_clear_cpu_idle()
+ 	 * - scx_bpf_pick_idle_cpu()
+ 	 *
+diff --git a/kernel/sched/ext_idle.c b/kernel/sched/ext_idle.c
+index faed4f89f95e9..220e11cd0ab67 100644
+--- a/kernel/sched/ext_idle.c
++++ b/kernel/sched/ext_idle.c
+@@ -914,6 +914,48 @@ __bpf_kfunc s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu,
+ 	return prev_cpu;
+ }
+ 
++/**
++ * scx_bpf_select_cpu_and - Pick an idle CPU usable by task @p,
++ *			    prioritizing those in @cpus_allowed
++ * @p: task_struct to select a CPU for
++ * @prev_cpu: CPU @p was on previously
++ * @wake_flags: %SCX_WAKE_* flags
++ * @cpus_allowed: cpumask of allowed CPUs
++ * @flags: %SCX_PICK_IDLE* flags
++ *
++ * Can only be called from ops.select_cpu() or ops.enqueue() if the
++ * built-in CPU selection is enabled: ops.update_idle() is missing or
++ * %SCX_OPS_KEEP_BUILTIN_IDLE is set.
++ *
++ * @p, @prev_cpu and @wake_flags match ops.select_cpu().
++ *
++ * Returns the selected idle CPU, which will be automatically awakened upon
++ * returning from ops.select_cpu() and can be used for direct dispatch, or
++ * a negative value if no idle CPU is available.
++ */
++__bpf_kfunc s32 scx_bpf_select_cpu_and(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
++				       const struct cpumask *cpus_allowed, u64 flags)
++{
++	s32 cpu;
++
++	if (!ops_cpu_valid(prev_cpu, NULL))
++		return -EINVAL;
++
++	if (!check_builtin_idle_enabled())
++		return -EBUSY;
++
++	if (!scx_kf_allowed(SCX_KF_SELECT_CPU | SCX_KF_ENQUEUE))
++		return -EPERM;
++
++#ifdef CONFIG_SMP
++	cpu = scx_select_cpu_dfl(p, prev_cpu, wake_flags, cpus_allowed, flags);
++#else
++	cpu = -EBUSY;
++#endif
++
++	return cpu;
++}
++
+ /**
+  * scx_bpf_get_idle_cpumask_node - Get a referenced kptr to the
+  * idle-tracking per-CPU cpumask of a target NUMA node.
+@@ -1222,6 +1264,7 @@ static const struct btf_kfunc_id_set scx_kfunc_set_idle = {
+ 
+ BTF_KFUNCS_START(scx_kfunc_ids_select_cpu)
+ BTF_ID_FLAGS(func, scx_bpf_select_cpu_dfl, KF_RCU)
++BTF_ID_FLAGS(func, scx_bpf_select_cpu_and, KF_RCU)
+ BTF_KFUNCS_END(scx_kfunc_ids_select_cpu)
+ 
+ static const struct btf_kfunc_id_set scx_kfunc_set_select_cpu = {
+diff --git a/tools/sched_ext/include/scx/common.bpf.h b/tools/sched_ext/include/scx/common.bpf.h
+index dc4333d23189f..6f1da61cf7f17 100644
+--- a/tools/sched_ext/include/scx/common.bpf.h
++++ b/tools/sched_ext/include/scx/common.bpf.h
+@@ -48,6 +48,8 @@ static inline void ___vmlinux_h_sanity_check___(void)
+ 
+ s32 scx_bpf_create_dsq(u64 dsq_id, s32 node) __ksym;
+ s32 scx_bpf_select_cpu_dfl(struct task_struct *p, s32 prev_cpu, u64 wake_flags, bool *is_idle) __ksym;
++s32 scx_bpf_select_cpu_and(struct task_struct *p, s32 prev_cpu, u64 wake_flags,
++			   const struct cpumask *cpus_allowed, u64 flags) __ksym __weak;
+ void scx_bpf_dsq_insert(struct task_struct *p, u64 dsq_id, u64 slice, u64 enq_flags) __ksym __weak;
+ void scx_bpf_dsq_insert_vtime(struct task_struct *p, u64 dsq_id, u64 slice, u64 vtime, u64 enq_flags) __ksym __weak;
+ u32 scx_bpf_dispatch_nr_slots(void) __ksym;
+-- 
+2.48.1
+
