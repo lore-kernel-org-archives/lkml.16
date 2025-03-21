@@ -1,84 +1,53 @@
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-186.mta1.migadu.com (out-186.mta1.migadu.com [95.215.58.186])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0391F03D8
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:02:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 426391EFFAD
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742544140; cv=none; b=l9QZXCQjPY1b1SE01MiwkHRCDK50zpboYvpJ6aaf/XWnK534qo/SYcIzXCG7XFD7Hy5f3h8lwUe5Hbpas4TGhRfjL7Zwu6m622k0KE4xF0kiECOcIwC5sCWpbTOqksdinLi6HI6zp9oa8/iq0/+YzjatynDAlV/2b5USlZdMwt0=
+	t=1742544153; cv=none; b=dDRYX3PB1RGq2Ds29N8SpxmfOGRaQG6N/Z7gVQ/PVbI0PTwjzJ5Soxh/ctutOj/aAu/Mm80uOXp7VjT1mH/T3n6uxi2nGbz1fJar+DJgMDPL2gY5sSC18c4E329021wNipIiF1e1AY8x7Pc1unGRtZV6T7JNbgoMq9ZPG7udgco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742544140; c=relaxed/simple;
-	bh=RrnSN/CN2kZxgvV22FlvT89WAQGZ7oBHakES/ZqzmVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bRnHtMtQvrXSulvnM64kh+M3SvivogMV89WgAzqPQSVQZAd0BaEWCzBv+l+4qbFIf22nXeW5e327ZXq9gtHupuFZKPMpMXtvEtwzGEEm6/xd1cLE4/lWdvfEq5jap39F5EZ1osYlxP88zSQQfCOmmryVMtx4dee6r3VgnhmRUs8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sxSbvNNc; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742544153; c=relaxed/simple;
+	bh=E/3xA5TSRplkqcvUWy2xH8YWhw0I/szCKQFmgqO5W1U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JtoYu3wmOjt+daK9Th2BXPQw2CYatdomK0b8/BbbARXQ+8uBIIjuu3PhtODftg0PoDP71haFqP0SsCFT/EnyREc7CndsTVJKB2usPzS87bq5x6i21hJUuxM79vgdDXSfWEp/9PbGQHVuwwCYd417fImoWVioxfpwCE4Y9qQVeZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=HU3zTDFk; arc=none smtp.client-ip=95.215.58.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sxSbvNNc"
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-43938828d02so2444025e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 01:02:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742544137; x=1743148937; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=/paNAb4b5evHCNjWAz+ZF/7zT+ALWwpQj48R9FGXL6o=;
-        b=sxSbvNNc9jFwWIk8FRxAD+tz/GquRwB0LYjgk+5y9R67Ii1OXHz9hSxsiDcH9NG69f
-         tnDaZlyyavzbNK2WJiaIC8N1evf3PhA0wQLlrm7vYXQjyE8tWj/lX+1YWILdpxvSlBrE
-         5goSlp53pUImzaud5ZAH+aheqfbdW4D9KbmbPdKEPs0rt+rLXsU7Y1J0UAx30vXu+vGd
-         9OvqWEhXtVFVOW9zaKFqO56RrLLZ6Pff/vRzCujDkXFEAJ8y5n0KveCDu7GakHBb73Y0
-         RlvWxcrY/5HtmNeO6dX7I39poRqOZsrXHrKA0V2gg3mn/pqvIk05tiis61fxaA1JEaSC
-         mzSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742544137; x=1743148937;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=/paNAb4b5evHCNjWAz+ZF/7zT+ALWwpQj48R9FGXL6o=;
-        b=rEFVOhoHsdSpwZvBLy7tBVeb6agPtWTu7xAmG1Mj1VKSue1zI/HO6HTzY8VQAQXA38
-         PhATl0pFwKBkD/5ZFOZ+SCAzcxTmXguPn1QAWfooDQF1caBGjQzZs5CnLrwGgKxXsust
-         giL3dBsFW8D/5X4LPiPHzQD061TgciTTr6wBzdIEJWW9ltjAxb7o2jBOcuOM2/d9ikMs
-         z5TPJ+hjp7yLpvWwmZywusHssqSAv8eYrw+lp+i4/ZAYdiLSrSZBxr897JL+IckzBKav
-         6M6p40WbK2umlmkerxWKAwR6Nyyto6aW1rEvmi4kAhU7eVEVgPtH92EWKJSqug6Ols6Q
-         yA4A==
-X-Forwarded-Encrypted: i=1; AJvYcCW1gZg0/YQFSKY0ei5Aoe6WE8t1a2h1BvLYM5jyf1Y3mgGU8edgiB4p+6E9MKDpgRQwnXB9EzZeI/RRMnk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCEOgUaMXnnai21byajywoNXFi3PJr/kbpujj+fUq8jQyw9nlK
-	hTBovqqVoL63zYQC/R20mcoAG0ntb3gBQhnMS7ndR9pjWoBpbptWN2jrOoIlHOM=
-X-Gm-Gg: ASbGnctkrgmTdL39lmKB8L9u3lVDQzDdUVuNff4EFUVfVOdAsrUlKY3WwtdU3Td+gKr
-	17LF1AFop1Ypep3Tsc5jtdzgvWqznY52LhWOIwNLpr/zs7W1cPsdS5MB2lGOwI7rGcmMCLdHbY2
-	otG/NNTARuFSKQEc5qwWaLUVYR5YSz17XDU6gZm0VO+o98v6CdlYxewoQjyElesRrGz0ZLEVNU0
-	gOBBnvzYxL5mRsrHeyCYHBb2hm30gKIJqdHjdZsSDCIVNihSxZZ3xsD8fchoVqC5DgMHFfbj7Xz
-	oeSak4js8NGlNhLzSv8HbXCFo7TN4GFxORJ5xD8AnKqeRu/3TeGGgzo1CQ==
-X-Google-Smtp-Source: AGHT+IF2AHef/qkj99JoiBNbLQIBcqaey9hWmPacciUSVdx3y1EUY5tMwczXWozBM2SM6z3OiVGoQQ==
-X-Received: by 2002:a05:6000:2a4:b0:391:2acc:aadf with SMTP id ffacd0b85a97d-3997f904f52mr755069f8f.6.1742544136598;
-        Fri, 21 Mar 2025 01:02:16 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.198.86])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3f81sm1697775f8f.35.2025.03.21.01.02.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 01:02:15 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Antoniu Miclaus <antoniu.miclaus@analog.com>,
-	Zev Weiss <zev@bewilderbeest.net>,
-	Ban Feng <kcfeng0@nuvoton.com>,
-	Robert Marko <robert.marko@sartura.hr>,
-	Luka Perkov <luka.perkov@sartura.hr>,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Eric Tremblay <etremblay@distech-controls.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-hwmon@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Florin Leotescu <florin.leotescu@oss.nxp.com>
-Subject: [PATCH] dt-bindings: hwmon: Drop stray blank line in the header
-Date: Fri, 21 Mar 2025 09:02:12 +0100
-Message-ID: <20250321080212.18013-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="HU3zTDFk"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742544139;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=M5i/nd2YL8RmqyaRGqU7qQe2+6A4Zpd/zpAtI9MB0u4=;
+	b=HU3zTDFkcJOvYJTXaZJQ7JFJNmvrrrYlYjO5+jHb0byL1Rsq6z90YZH/783BxGh/e+zCBd
+	vYLD/e+w/1DHmaxsn+Xqm05oG4ppONLzJGnOr5DU/gIjCxSvnd887GKG5piCGJX1+Ag4Qd
+	1jeC+BvlUXpW/oGq3zTVbow/MiqDRy4=
+From: Kunwu Chan <kunwu.chan@linux.dev>
+To: ojeda@kernel.org,
+	alex.gaynor@gmail.com,
+	boqun.feng@gmail.com,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	dakr@kernel.org,
+	nathan@kernel.org,
+	nick.desaulniers+lkml@gmail.com,
+	morbo@google.com,
+	justinstitt@google.com
+Cc: rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev,
+	Kunwu Chan <kunwu.chan@hotmail.com>,
+	Grace Deng <Grace.Deng006@Gmail.com>
+Subject: [PATCH v2] rust: page:: optimize rust symbol generation for Page
+Date: Fri, 21 Mar 2025 16:01:24 +0800
+Message-ID: <20250321080124.484647-1-kunwu.chan@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -86,223 +55,59 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-There should be no blank line between the YAML opening header and the
-schema '$id'.
+From: Kunwu Chan <kunwu.chan@hotmail.com>
 
-Reported-by: Florin Leotescu (OSS) <florin.leotescu@oss.nxp.com>
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
+with ARCH=arm64, the following symbols are generated:
+
+$nm vmlinux | grep ' _R'.*Page | rustfilt
+ffff8000805b6f98 T <kernel::page::Page>::alloc_page
+ffff8000805b715c T <kernel::page::Page>::fill_zero_raw
+ffff8000805b720c T <kernel::page::Page>::copy_from_user_slice_raw
+ffff8000805b6fb4 T <kernel::page::Page>::read_raw
+ffff8000805b7088 T <kernel::page::Page>::write_raw
+ffff8000805b72fc T <kernel::page::Page as core::ops::drop::Drop>::drop
+
+These Rust symbols(alloc_page and drop) are trivial wrappers around the C
+functions alloc_pages and __free_pages. It doesn't make sense to go
+through a trivial wrapper for these functions, so mark them inline.
+
+Link: https://github.com/Rust-for-Linux/linux/issues/1145
+Suggested-by: Alice Ryhl <aliceryhl@google.com>
+Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
+Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
+Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
+
 ---
- Documentation/devicetree/bindings/hwmon/adi,ad741x.yaml      | 1 -
- Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml     | 1 -
- Documentation/devicetree/bindings/hwmon/adi,ltc2991.yaml     | 1 -
- Documentation/devicetree/bindings/hwmon/maxim,max20730.yaml  | 1 -
- Documentation/devicetree/bindings/hwmon/maxim,max6639.yaml   | 1 -
- Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml   | 1 -
- Documentation/devicetree/bindings/hwmon/nuvoton,nct6775.yaml | 1 -
- Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml | 1 -
- Documentation/devicetree/bindings/hwmon/nuvoton,nct7802.yaml | 1 -
- Documentation/devicetree/bindings/hwmon/ti,adc128d818.yaml   | 1 -
- Documentation/devicetree/bindings/hwmon/ti,ads7828.yaml      | 1 -
- Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml       | 1 -
- Documentation/devicetree/bindings/hwmon/ti,lm87.yaml         | 1 -
- Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml       | 1 -
- Documentation/devicetree/bindings/hwmon/ti,tps23861.yaml     | 1 -
- Documentation/devicetree/bindings/hwmon/winbond,w83781d.yaml | 1 -
- 16 files changed, 16 deletions(-)
+Changes in v2:
+- mark inline only for 'alloc_page' and 'drop'
+- reword commit msg
+---
+ rust/kernel/page.rs | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,ad741x.yaml b/Documentation/devicetree/bindings/hwmon/adi,ad741x.yaml
-index ce7f8ce9da0a..236d8b52ef85 100644
---- a/Documentation/devicetree/bindings/hwmon/adi,ad741x.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/adi,ad741x.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/adi,ad741x.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
+index f6126aca33a6..7c1b17246ed5 100644
+--- a/rust/kernel/page.rs
++++ b/rust/kernel/page.rs
+@@ -69,6 +69,7 @@ impl Page {
+     /// let page = Page::alloc_page(GFP_KERNEL | __GFP_ZERO)?;
+     /// # Ok::<(), kernel::alloc::AllocError>(())
+     /// ```
++    #[inline]
+     pub fn alloc_page(flags: Flags) -> Result<Self, AllocError> {
+         // SAFETY: Depending on the value of `gfp_flags`, this call may sleep. Other than that, it
+         // is always safe to call this method.
+@@ -251,6 +252,7 @@ pub unsafe fn copy_from_user_slice_raw(
+ }
  
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml b/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml
-index fd79bf2e0d16..ddb72857c846 100644
---- a/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/adi,adm1275.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/adi,adm1275.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/adi,ltc2991.yaml b/Documentation/devicetree/bindings/hwmon/adi,ltc2991.yaml
-index 011e5b65c79c..1ff44cb22ef4 100644
---- a/Documentation/devicetree/bindings/hwmon/adi,ltc2991.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/adi,ltc2991.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/adi,ltc2991.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/maxim,max20730.yaml b/Documentation/devicetree/bindings/hwmon/maxim,max20730.yaml
-index 93e86e3b4602..8af0d7458e62 100644
---- a/Documentation/devicetree/bindings/hwmon/maxim,max20730.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/maxim,max20730.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/maxim,max20730.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/maxim,max6639.yaml b/Documentation/devicetree/bindings/hwmon/maxim,max6639.yaml
-index 4f5837a30773..139a95e00fe5 100644
---- a/Documentation/devicetree/bindings/hwmon/maxim,max6639.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/maxim,max6639.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/maxim,max6639.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml b/Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml
-index 2c26104a5e16..24c7697fdc1a 100644
---- a/Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/maxim,max6650.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/maxim,max6650.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/nuvoton,nct6775.yaml b/Documentation/devicetree/bindings/hwmon/nuvoton,nct6775.yaml
-index e3db642878d4..244470282890 100644
---- a/Documentation/devicetree/bindings/hwmon/nuvoton,nct6775.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/nuvoton,nct6775.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/nuvoton,nct6775.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
-index c1e5dedc2f6a..625fcf5d3b54 100644
---- a/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7363.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/nuvoton,nct7363.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/nuvoton,nct7802.yaml b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7802.yaml
-index cd8dcd797031..c16a33227e94 100644
---- a/Documentation/devicetree/bindings/hwmon/nuvoton,nct7802.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/nuvoton,nct7802.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/nuvoton,nct7802.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,adc128d818.yaml b/Documentation/devicetree/bindings/hwmon/ti,adc128d818.yaml
-index a32035409cee..78e3d97e2ae5 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,adc128d818.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,adc128d818.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/ti,adc128d818.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,ads7828.yaml b/Documentation/devicetree/bindings/hwmon/ti,ads7828.yaml
-index 926be9a29044..fb80456120e1 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,ads7828.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,ads7828.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/ti,ads7828.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
-index 05a9cb36cd82..afcb3dbf90dd 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,ina2xx.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/ti,ina2xx.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,lm87.yaml b/Documentation/devicetree/bindings/hwmon/ti,lm87.yaml
-index f553235a7321..63d8cf467806 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,lm87.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,lm87.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/ti,lm87.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-index 227858e76058..cba5b4a1b81f 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,tmp513.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/ti,tmp513.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/ti,tps23861.yaml b/Documentation/devicetree/bindings/hwmon/ti,tps23861.yaml
-index f58248c29e22..ee7de53e1918 100644
---- a/Documentation/devicetree/bindings/hwmon/ti,tps23861.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/ti,tps23861.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/ti,tps23861.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
-diff --git a/Documentation/devicetree/bindings/hwmon/winbond,w83781d.yaml b/Documentation/devicetree/bindings/hwmon/winbond,w83781d.yaml
-index 31ce77a4b087..6971ecb314eb 100644
---- a/Documentation/devicetree/bindings/hwmon/winbond,w83781d.yaml
-+++ b/Documentation/devicetree/bindings/hwmon/winbond,w83781d.yaml
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
- %YAML 1.2
- ---
--
- $id: http://devicetree.org/schemas/hwmon/winbond,w83781d.yaml#
- $schema: http://devicetree.org/meta-schemas/core.yaml#
- 
+ impl Drop for Page {
++    #[inline]
+     fn drop(&mut self) {
+         // SAFETY: By the type invariants, we have ownership of the page and can free it.
+         unsafe { bindings::__free_pages(self.page.as_ptr(), 0) };
 -- 
 2.43.0
 
