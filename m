@@ -1,142 +1,149 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78B6E1DF27C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F8A112E7F;
+	Fri, 21 Mar 2025 04:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742532183; cv=none; b=coR1L1jsCt4Aep//idG0/MVVw9PjTOzHL2eShRWl6iP88BocEtnDT2dZlKU7YbNppLCDsv+cZ5kSo2e6xM4sZbADLR2RFNwft0BeMRdTpVuR4t/zOO441aN/ed3nXSnsoTegSvvp/0ZglGEnV5pcPUZ3HXh05xphOVfJ5VOc/tY=
+	t=1742532299; cv=none; b=Ecw9HjSttLYDNSQMSe7lncIUvY80ShJmPEBdXhbNfMolZ6u3l2SEDu47wDV5k0oKIJsi0nV0UARDo71ry+vaF43mDyLb4NJRt4soBDrBgk+HTWuQ+yY+RxnWEDtbVXZQJNfNCHVP6OFFZ4QrLj1r63HN9uVSL9U1R499xS+4PlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742532183; c=relaxed/simple;
-	bh=/J/l2xndIYzwBh3TqfFRxLFB3IOJWbXnrMRVsBmO9EQ=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=GB7DOWB49GOE1RAcUtl4XNQZ1qTyVx5YDzGJND2hkA79HdWz37VeMqEraHwKDIdk2IVItlH1qOGcdZaAxQUV/TBlW/RpRezwtaWevqrIkoy5rH05Wjb5CeU/TGeNwVOq7QO0JnKhQCwxpJf0+rG7aOiu5xaAvqxoZFae3afL5E8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=IX+BSGAu; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742532299; c=relaxed/simple;
+	bh=IbP65EIbouZpavoogqTJ0zC+puOuTqdxDlOMKbO3Pw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pjivV0mcRqE3AJjn4o6jv9Z121ObsOwYR0SWwv+xvWfqjUXn5Q24ojbLJdcumjXh/TP6qTjb5s8IzL748fU2cRqlofZmDLgYipQUuMoWIUXHU/7v5/obDEFlXXFOXZe7LUrK0GSXu7f1whFuVhTO7mIkwJkZLHNjiNk5Ixg1j/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q1AbhOLD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IX+BSGAu"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22401f4d35aso32181915ad.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 21:43:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742532180; x=1743136980; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=jaHeJ6qSwJ3u/x/VdsUMlK82s8mbA82yyCP5yyeo3Fc=;
-        b=IX+BSGAuyK0faO/55sbuhOf5a6TMPLuOcU+ylFUZ5MObFrKbh/NGSgkYoGdnyxwJvU
-         LVpSpPw/G4qLGhrSDXcl1sCkjaqGkiasx3V10nryp0ohrgpWKTN2UdwYkbzE6ntLbbfh
-         PU+lRYeIaft0Inp7UFL5Mozo+xuA3LJr9FBvDJpZb63FMi3ac0vb0W7L0g+jqG5ckwyD
-         NMyTnQWaVyXmA2ClNVbqeevl/1TyxKHJKQjLsPBAsvaD9NX1zHK2Qa26Tzw+7g30C0OV
-         0zWH3nrblffaRxQZUP0HKUmFRIc6lJO6GsrmkzayA0p/VUXL7jGniXSeFLNBfJ2+sbhf
-         xyxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742532180; x=1743136980;
-        h=content-transfer-encoding:mime-version:message-id:references
-         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jaHeJ6qSwJ3u/x/VdsUMlK82s8mbA82yyCP5yyeo3Fc=;
-        b=B5ZIvzeyEtA2YIAIRbfVNIQgLsqKZ2o+LXEwXM+2ezwebffu2MMbj/A4WgFuK5vQV+
-         vljwVJwryzfqNXWOWq3FGYyGF98MrOJlbNdKpdafsKdGtEYJU3Vpmo11vuHzibqpozYW
-         cpc8fFLohfL2FFzoL73m6DTFlHKq3A6AJqbbzbJ3uxvkCdS8PpV4sqv6GxsihfpWH9TT
-         0T9YVgF4pBoYzO98MGWF9JAqtZUHhoyWQM+f+4NCnIHNFfWepf6BA9SPdcIRwv0vHKUi
-         Yqqkn+X03xJb3C2bz8C5+Z66xF/sMeNbZJRc5ED+U+hvKclslKKpwY3+dgz2W3T8Be2Y
-         /RYw==
-X-Forwarded-Encrypted: i=1; AJvYcCUS2dlU0yRg315fQIUJBE6HAPPEvl7v21fxTnUbUlZDZKjwU6G1WSTmPuIbADcHOKLUPfN0k/8RgclaT8k=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxvc2Vw3DYmAM4C4j5YYKIPeSyGVrq2AU7wQQ/1FQv9qb4PVZWP
-	Rz+FLIdHQopNGZ2cL1KIdcrsntASdZPfo8TCkG6qeXbJNXESIsOrF1fPxRAMew==
-X-Gm-Gg: ASbGncvmyhPlcq4Ba6i1Uu6EmWfKiTL4KXty12mIiB083yS8V48ZCC0hSSwqti6a4sW
-	fLw6CDDH9BPWANzWhi5HHplfwSLI655ooi/9N47kt5Uj2md+EgyjRqJPMdfiBGnmIPU7gwJCv6/
-	fGYL+GkQAAPdY31izwGpAilHcjRGaSFBpOJ8Ndxy7PbkrjKAfns2N/ACDdAw2lmg5PEirhbVmgP
-	eDg56be7AMRM22HFv+B5wOdE8FHJBuX3B82tiTppEB8fgWap42gV4vAH5duVPUPszkGP9iSrCj0
-	/SjQFLdxwHjDP/5VGwH3Ylz27+IP4k1zpPXROQYJekz2
-X-Google-Smtp-Source: AGHT+IFCZZBsBpT+JgPon/LLEbu72ysiHsPxVJfQnDNrm7RkPGl69Wa7QQ0PvDzg1cJp1vKd8UOSxQ==
-X-Received: by 2002:a17:903:2286:b0:224:249f:9723 with SMTP id d9443c01a7336-22780e38317mr26158175ad.51.1742532180528;
-        Thu, 20 Mar 2025 21:43:00 -0700 (PDT)
-Received: from ?IPv6:::1? ([2409:40f4:3109:f8b2:8000::])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811da38asm6929485ad.186.2025.03.20.21.42.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 20 Mar 2025 21:43:00 -0700 (PDT)
-Date: Fri, 21 Mar 2025 10:12:55 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Wei Fang <wei.fang@nxp.com>,
- devnull+manivannan.sadhasivam.linaro.org@kernel.org
-CC: bartosz.golaszewski@linaro.org, bhelgaas@google.com, brgl@bgdev.pl,
- conor+dt@kernel.org, devicetree@vger.kernel.org, krzk+dt@kernel.org,
- linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, robh@kernel.org,
- netdev@vger.kernel.org
-Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v3_3/5=5D_PCI/pwrctrl=3A_Skip_scanning_fo?=
- =?US-ASCII?Q?r_the_device_further_if_pwrctrl_device_is_created?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20250321025940.2103854-1-wei.fang@nxp.com>
-References: <20250116-pci-pwrctrl-slot-v3-3-827473c8fbf4@linaro.org> <20250321025940.2103854-1-wei.fang@nxp.com>
-Message-ID: <2BFDC577-949F-49EE-A639-A21010FEEE0E@linaro.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q1AbhOLD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38930C4CEE8;
+	Fri, 21 Mar 2025 04:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742532297;
+	bh=IbP65EIbouZpavoogqTJ0zC+puOuTqdxDlOMKbO3Pw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Q1AbhOLDNWE/81pqMX92HPwHIuaro+I+0aXaVBGEyhQ0GlbRWW6vKFZSFmMasuIIl
+	 eseD5alkgbe5oW3KKftAeJvBIkelhpLlkFA1OUIN+OLGKHeQTSBjb/q9tBOuPPGooy
+	 YyPqTNpJW6szjRq/yuUZpQpaDxYFdsmNf4Rj+Kquu8r8g5RQAYTMQTa+IlXeKDTZah
+	 JVhejt7U0MYDWfTufxeDSqcEzJzY2RpGSEi6lmCTmpql/XgAa9r0VOng1Gxo+JAAb1
+	 tE4UMofGJMF71SLnBL7wBVGbcWhLfArN2cShbBRt3eymn0iZYDak1RDQHghrK1HrM3
+	 2T1lfjV7ZKqag==
+Date: Thu, 20 Mar 2025 21:44:55 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+To: ZhangHui <zhanghui31@xiaomi.com>
+Cc: bvanassche@acm.org, alim.akhtar@samsung.com, avri.altman@wdc.com,
+	James.Bottomley@hansenpartnership.com, martin.petersen@oracle.com,
+	peter.griffin@linaro.org, linux-scsi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ufs: crypto: add host_sem lock in ufshcd_program_key
+Message-ID: <20250321044455.GB98513@sol.localdomain>
+References: <20250317110101.347636-1-zhanghui31@xiaomi.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317110101.347636-1-zhanghui31@xiaomi.com>
 
-Hi,
+Hi ZhangHui,
 
-On March 21, 2025 8:29:40 AM GMT+05:30, Wei Fang <wei=2Efang@nxp=2Ecom> wr=
-ote:
->@@ -2487,7 +2487,14 @@ static struct pci_dev *pci_scan_device(struct pci_=
-bus *bus, int devfn)
-> 	struct pci_dev *dev;
-> 	u32 l;
->=20
->-	pci_pwrctrl_create_device(bus, devfn);
->+	/*
->+	 * Create pwrctrl device (if required) for the PCI device to handle the
->+	 * power state=2E If the pwrctrl device is created, then skip scanning
->+	 * further as the pwrctrl core will rescan the bus after powering on
->+	 * the device=2E
->+	 */
->+	if (pci_pwrctrl_create_device(bus, devfn))
->+		return NULL;
+On Mon, Mar 17, 2025 at 07:01:01PM +0800, ZhangHui wrote:
+> From: zhanghui <zhanghui31@xiaomi.com>
+> 
+> On Android devices, we found that there is a probability that
+> the ufs has been shut down but the thread is still deleting the
+> key, which will cause the bus error.
+> 
+> We checked the Android reboot process and found that it is indeed
+> possible that some threads have not been killed before the device
+> shutdown, because the Android reboot process will not wait until
+> all threads are killed before continuing to execute.
+> 
+> The call stack is as follows:
+> 
+> __blk_crypto_evict_key+0x148/0x1c4
+> blk_crypto_evict_key+0x38/0x9c
+> dm_keyslot_evict_callback+0x18/0x2c
+> default_key_iterate_devices+0x40/0x50
+> dm_keyslot_evict+0xac/0xfc
+> __blk_crypto_evict_key+0xf4/0x1c4
+> blk_crypto_evict_key+0x38/0x9c
+> fscrypt_destroy_inline_crypt_key+0xb8/0x10c
+> fscrypt_destroy_prepared_key+0x30/0x48
+> fscrypt_put_master_key_activeref+0xc4/0x308
+> fscrypt_destroy_keyring+0xb0/0xfc
+> generic_shutdown_super+0x60/0x12c
+> kill_block_super+0x1c/0x48
+> kill_f2fs_super+0xc4/0x1a8
+> deactivate_locked_super+0x98/0x144
+> deactivate_super+0x78/0x8c
+> cleanup_mnt+0x110/0x148
+> __cleanup_mnt+0x14/0x20
+> task_work_run+0xc4/0xec
+> get_signal+0x6c/0x8d8
+> do_notify_resume+0x128/0x828
+> el0_svc+0x6c/0x70
+> el0t_64_sync_handler+0x68/0xbc
+> el0t_64_sync+0x1a8/0x1ac
 >
->Hi Manivannan,
->
->The current patch logic is that if the pcie device node is found to have
->the "xxx-supply" property, the scan will be skipped, and then the pwrctrl
->driver will rescan and enable the regulators=2E However, after merging th=
-is
->patch, there is a problem on our platform=2E The =2Eprobe() of our device
->driver will not be called=2E The reason is that CONFIG_PCI_PWRCTL_SLOT is
->not enabled at all in our configuration file, and the compatible string
->of the device is also not added to the pwrctrl driver=2E
+> Let's fixed this issue by adding a lock in program_key flow.
+> 
+> Signed-off-by: zhanghui <zhanghui31@xiaomi.com>
+> ---
+>  drivers/ufs/core/ufshcd-crypto.c | 20 +++++++++++++++-----
+>  1 file changed, 15 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/ufs/core/ufshcd-crypto.c b/drivers/ufs/core/ufshcd-crypto.c
+> index 694ff7578fc1..f3260a072c0c 100644
+> --- a/drivers/ufs/core/ufshcd-crypto.c
+> +++ b/drivers/ufs/core/ufshcd-crypto.c
+> @@ -5,6 +5,7 @@
+>  
+>  #include <ufs/ufshcd.h>
+>  #include "ufshcd-crypto.h"
+> +#include "ufshcd-priv.h"
+>  
+>  /* Blk-crypto modes supported by UFS crypto */
+>  static const struct ufs_crypto_alg_entry {
+> @@ -17,12 +18,18 @@ static const struct ufs_crypto_alg_entry {
+>  	},
+>  };
+>  
+> -static void ufshcd_program_key(struct ufs_hba *hba,
+> +static int ufshcd_program_key(struct ufs_hba *hba,
+>  			       const union ufs_crypto_cfg_entry *cfg, int slot)
+>  {
+>  	int i;
+>  	u32 slot_offset = hba->crypto_cfg_register + slot * sizeof(*cfg);
+>  
+> +	down(&hba->host_sem);
+> +	if (!ufshcd_is_user_access_allowed(hba)) {
+> +		up(&hba->host_sem);
+> +		return -EBUSY;
+> +	}
+> +
 
-Hmm=2E So I guess the controller driver itself is enabling the supplies I =
-believe (which I failed to spot)=2E May I know what platforms are affected?
+It seems broken that the filesystem doesn't get unmounted until after the UFS is
+shut down.  It would be helpful to get a clearer picture of exactly why things
+are happening in that order.
 
-> I think other
->platforms should also have similar problems, which undoubtedly make these
->platforms be unstable=2E This patch has been applied, and I am not famili=
-ar
->with this=2E Can you fix this problem? I mean that those platforms that d=
-o
->not use pwrctrl can avoid skipping the scan=2E
+But disregarding that, it's indeed logical for blk_crypto_evict_key() to return
+an error if it cannot fulfill the request.
 
-Sure=2E It makes sense to add a check to see if the pwrctrl driver is enab=
-led or not=2E If it is not enabled, then the pwrctrl device creation could =
-be skipped=2E I'll send a patch once I'm infront of my computer=2E
+But I'm wondering if this needs to be solved in the UFS driver itself or whether
+the blk-crypto framework should handle this (so that it also gets fixed for
+other drivers that may have the same problem).  In block/blk-crypto-profile.c,
+pm_runtime_get_sync() is already called before ->keyslot_evict.  So
+->keyslot_evict is supposed to be called only when the device is resumed.
 
-But in the long run, we would like to move all platforms to use pwrctrl in=
-stead of fiddling the power supplies in the controller driver (well that wa=
-s the motivation to introduce it in the first place)=2E
+The blk-crypto code (in blk_crypto_hw_enter()) doesn't check the return value of
+pm_runtime_get_sync(), though.  That seems like a bug.  Is it possible this
+issue would be fixed if it checked the return value?
 
-Once you share the platform details, I'll try to migrate it to use pwrctrl=
-=2E Also, please note that we are going to enable pwrctrl in ARM64 defconfi=
-g very soon=2E So I'll try to fix the affected platforms before that happen=
-s=2E
+Or does the UFS driver still need to check ufshcd_is_user_access_allowed() too?
+If that's the case, I'm also wondering whether it's okay to nest host_sem inside
+pm_runtime_get_sync().  Elsewhere in the UFS driver they are called in the
+opposite order.
 
-- Mani
-
-=E0=AE=AE=E0=AE=A3=E0=AE=BF=E0=AE=B5=E0=AE=A3=E0=AF=8D=E0=AE=A3=E0=AE=A9=
-=E0=AF=8D =E0=AE=9A=E0=AE=A4=E0=AE=BE=E0=AE=9A=E0=AE=BF=E0=AE=B5=E0=AE=AE=
-=E0=AF=8D
+- Eric
