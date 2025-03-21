@@ -1,39 +1,39 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91E7B1E5739
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55BEC1E571A
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:43:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742546478; cv=none; b=ka7K+TOjLRBYVlmbu+Bbk5mEF5D4dbu7Hp8ROD7gYNBS7yvHO6boQkenqdBRHeh+v/Waeg6zDFTNAoFrJaoa6M3/YmcVdQnhI/nGWByoZNb1ZcKpPpctuMG1tU15JMyUevEZ20sODJNNsroMetk6fzA7PsoFQK9kmLwocVIh42Y=
+	t=1742546639; cv=none; b=EbGMlIARGkvvR6iL3fRenVOoS3FY0yrG23dCQ04XAUT7F8S4WzIWuMiX+A6TpXbHDJRI4NczlyHnyFdIBgbvfpHCOYwPcfGD4imvc6iE1Tnq+3PPeExmyHdEQaswJkOLOaZZZEZ8AP+0uQpl75uafIZyLjNHqeCMmPD/4Gs0RuQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742546478; c=relaxed/simple;
-	bh=jFD41Ga1a3ERHEQFFB9Ia0CbBpdK6p7SMSxtDffC8Jg=;
+	s=arc-20240116; t=1742546639; c=relaxed/simple;
+	bh=ZdMfirDqSxAiPoPdpxSL5z49ZYOXEt3ILIkDPg+hh20=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=o7/Fim65b7yJCuPLPCf4bfZEyYrwNZ9DmeORFPVTTx1mRB+wybQqeIGWNYjt8uX8L6D05kEs0ZOoWz/z5VifTUioUpx57Y0KI8GgufTcAmT0IURBIBIeHJvxz1vaI6bHf08ijPIE896j2HtYQ0J0WStR64BCo8cCB7kv0VMLp54=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=YcCuxvUe; arc=none smtp.client-ip=148.251.105.195
+	 MIME-Version:Content-Type; b=fnh7kC3D8XeUhtuVl0ueKiW+yFKfpLS1W9VWE0fUc3tbH5bRVVMRW5fTnyP4RHP/Hfp6f2Sz+cFjozgov2Kkkk1vhHk61nmtxedqhp3VM2GJhHdIYuWMkJ3Z8mYvl/zdJrxQhib7G5DaqHKTT0KGmxvvnRUhMtiWR4C9/wREcdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=as1rQeXY; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="YcCuxvUe"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="as1rQeXY"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1742546474;
-	bh=jFD41Ga1a3ERHEQFFB9Ia0CbBpdK6p7SMSxtDffC8Jg=;
+	s=mail; t=1742546635;
+	bh=ZdMfirDqSxAiPoPdpxSL5z49ZYOXEt3ILIkDPg+hh20=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=YcCuxvUeYG37e/WVjVxRefcNzuE7LGgDwuFD3wUfinmTYt9J7wwIWe2G7wZVSg9uk
-	 hOnhtP1A5KE7UsrMd3sbvU0h4/sz1G8hTzkKe5TMhCPOsMO0RusSEM6ydCXSheTrI4
-	 HUVFhuJQkYv2ieQrK4+W0jioGtLvao2Pp5yHxqaCbkZqFIa2N7nkJMnwcJDothjTsa
-	 chpQNguAREeWsQsog5vntf15iK94niPYrv2Bmc3gyPaDn4aYTs6puRsUsIHJPSOapb
-	 QPPwKPrM5c+jaZ9qfD2YxqxwdNNdkUMaw7uNRXY59Xu81AxzfGHKQ0kXTd6cSyCZTr
-	 ybXRzop2xgu+g==
+	b=as1rQeXYhMnRaCsPd82RZzQU24/nZIXzO2nWZ38SWBHexkWFTP7YGf+rzmQ6F5bhk
+	 XzGjRo2wCg7bndfyV2H/qCXP/UH3Z9P/IM+sNDbkNfpTomHk7MDNKvEr+oe22NR2+C
+	 Cm+K/shgkc30CRv+54GeWItwZLYcJdXRXIPdPbCAEw4sq5cdy/Mfmfrti9RLJw3AZ/
+	 ubgjrfISesgmRAxqrfayIYQINo60GkcCZtncqDaz5grVFi+dNTYP6EOM8uvbKACCsd
+	 b2ExAGklSfxooLTk04H+HbjhEPT6bv+qk4k/WBLVmwMNx1VIK5XeQwKqopIUoaAAuG
+	 4D1XNzd+TFqsw==
 Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
 	(Authenticated sender: bbrezillon)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 34CF117E0147;
-	Fri, 21 Mar 2025 09:41:14 +0100 (CET)
-Date: Fri, 21 Mar 2025 09:41:09 +0100
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id E158717E0EA9;
+	Fri, 21 Mar 2025 09:43:54 +0100 (CET)
+Date: Fri, 21 Mar 2025 09:43:51 +0100
 From: Boris Brezillon <boris.brezillon@collabora.com>
 To: Karunika Choo <karunika.choo@arm.com>
 Cc: dri-devel@lists.freedesktop.org, nd@arm.com, Steven Price
@@ -42,12 +42,13 @@ Cc: dri-devel@lists.freedesktop.org, nd@arm.com, Steven Price
  <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
  <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
  linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/9] drm/panthor: Support GPU_CONTROL cache flush
- based on feature bit
-Message-ID: <20250321094109.116a6915@collabora.com>
-In-Reply-To: <20250320111741.1937892-8-karunika.choo@arm.com>
+Subject: Re: [PATCH v2 4/9] drm/panthor: Move GPU info initialization into
+ panthor_hw.c
+Message-ID: <20250321094351.537c768c@collabora.com>
+In-Reply-To: <20250321091645.0edec07a@collabora.com>
 References: <20250320111741.1937892-1-karunika.choo@arm.com>
-	<20250320111741.1937892-8-karunika.choo@arm.com>
+	<20250320111741.1937892-5-karunika.choo@arm.com>
+	<20250321091645.0edec07a@collabora.com>
 Organization: Collabora
 X-Mailer: Claws Mail 4.3.0 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
@@ -59,102 +60,41 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Mar 2025 11:17:39 +0000
-Karunika Choo <karunika.choo@arm.com> wrote:
+On Fri, 21 Mar 2025 09:16:45 +0100
+Boris Brezillon <boris.brezillon@collabora.com> wrote:
 
-> As the FLUSH_MEM and FLUSH_PT commands are deprecated in GPUs from
-> Mali-G720 onwards, this patch adds support for performing cache
-> maintenance via the FLUSH_CACHES command in GPU_CONTROL, in place of
-> FLUSH_MEM and FLUSH_PT based on PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH
-> feature bit.
+> On Thu, 20 Mar 2025 11:17:36 +0000
+> Karunika Choo <karunika.choo@arm.com> wrote:
 > 
-> Signed-off-by: Karunika Choo <karunika.choo@arm.com>
-> ---
->  drivers/gpu/drm/panthor/panthor_hw.h  |  6 +++++
->  drivers/gpu/drm/panthor/panthor_mmu.c | 35 +++++++++++++++++++++++++++
->  2 files changed, 41 insertions(+)
+> > This patch moves GPU info initialization into panthor_hw.c in
+> > preparation of handling GPU register changes. The GPU register reading
+> > operations to populate gpu_info are separated into an architecture
+> > specific arch_*_gpu_info_init() function and is called via the new
+> > function pointer abstraction under hw.ops.gpu_info_init().
+> > 
+> > Future GPU support will be performed by implementing a *_gpu_info_init()
+> > function specific to that architecture version. It can call any existing
+> > *_gpu_info_init() and extend it with additional register reads or
+> > provide an entirely different implementation.  
 > 
-> diff --git a/drivers/gpu/drm/panthor/panthor_hw.h b/drivers/gpu/drm/panthor/panthor_hw.h
-> index dfe0f86c5d76..4d67fdfe86f9 100644
-> --- a/drivers/gpu/drm/panthor/panthor_hw.h
-> +++ b/drivers/gpu/drm/panthor/panthor_hw.h
-> @@ -16,6 +16,12 @@ struct panthor_device;
->   * New feature flags will be added with support for newer GPU architectures.
->   */
->  enum panthor_hw_feature {
-> +	/**
-> +	 * @PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH: Perform cache maintenance
-> +	 * via GPU_CONTROL.
-> +	 */
-> +	PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH,
-> +
->  	/** @PANTHOR_HW_FEATURES_END: Must be last. */
->  	PANTHOR_HW_FEATURES_END
->  };
-> diff --git a/drivers/gpu/drm/panthor/panthor_mmu.c b/drivers/gpu/drm/panthor/panthor_mmu.c
-> index a0a79f19bdea..4ac8bf36177e 100644
-> --- a/drivers/gpu/drm/panthor/panthor_mmu.c
-> +++ b/drivers/gpu/drm/panthor/panthor_mmu.c
-> @@ -29,7 +29,9 @@
->  
->  #include "panthor_device.h"
->  #include "panthor_gem.h"
-> +#include "panthor_gpu.h"
->  #include "panthor_heap.h"
-> +#include "panthor_hw.h"
->  #include "panthor_mmu.h"
->  #include "panthor_regs.h"
->  #include "panthor_sched.h"
-> @@ -568,6 +570,35 @@ static void lock_region(struct panthor_device *ptdev, u32 as_nr,
->  	write_cmd(ptdev, as_nr, AS_COMMAND_LOCK);
->  }
->  
-> +static int mmu_hw_do_flush_on_gpu_ctrl(struct panthor_device *ptdev, int as_nr,
-> +				       u32 op)
-> +{
-> +	const u32 l2_flush_op = CACHE_CLEAN | CACHE_INV;
-> +	u32 lsc_flush_op = 0;
-> +	int ret;
-> +
-> +	if (op == AS_COMMAND_FLUSH_MEM)
-> +		lsc_flush_op = CACHE_CLEAN | CACHE_INV;
-> +
-> +	ret = wait_ready(ptdev, as_nr);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = panthor_gpu_flush_caches(ptdev, l2_flush_op, lsc_flush_op, 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * Explicitly unlock the region as the AS is not unlocked automatically
-> +	 * at the end of the GPU_CONTROL cache flush command, unlike
-> +	 * AS_COMMAND_FLUSH_MEM or AS_COMMAND_FLUSH_PT.
-> +	 */
-> +	write_cmd(ptdev, as_nr, AS_COMMAND_UNLOCK);
-> +
-> +	/* Wait for the unlock command to complete */
-> +	return wait_ready(ptdev, as_nr);
-> +}
-> +
->  static int mmu_hw_do_operation_locked(struct panthor_device *ptdev, int as_nr,
->  				      u64 iova, u64 size, u32 op)
->  {
-> @@ -585,6 +616,10 @@ static int mmu_hw_do_operation_locked(struct panthor_device *ptdev, int as_nr,
->  	if (op != AS_COMMAND_UNLOCK)
->  		lock_region(ptdev, as_nr, iova, size);
->  
-> +	if (panthor_hw_supports(ptdev,PANTHOR_HW_FEATURE_GPU_CTRL_CACHE_FLUSH))
-> +		if (op == AS_COMMAND_FLUSH_MEM || op == AS_COMMAND_FLUSH_PT)
-> +			return mmu_hw_do_flush_on_gpu_ctrl(ptdev, as_nr, op);
+> Could you give us an insight into what the reg layout changes are? So
+> far, they were mostly unchanged between GPU gens, and I'd really
+> prefer we could keep the majority of them unchanged part of the commo 
+> discovery, and only add the missing reads in the ->gpu_info_init()
+> callback.
+> 
+> Note that I'm also working on abstracting mali device operations to add
+> JM support to panthor, and the only things I had to specialize are:
+> 
+> - CSF ID for CSF
+> - JS features/present masks for JM
+> 
+> The rest is just common. So what I have is a common gpu_init_info()
+> helper that reads all the regs excepts those two, and after that, I
+> have a device ops selection based on the arch major of the GPU ID [1].
+> The device-specific GPU info are then read as part of the
+> panthor_device_ops::init().
 
-Can't we use this sequence on v10 as well? The GPU flush_cache command
-exists there, so I'd rather switch all CSF HW to this sequence than
-diverge on v11+.
+With the link this time :-).
 
-> +
->  	/* Run the MMU operation */
->  	write_cmd(ptdev, as_nr, op);
->  
-
+[1]https://gitlab.freedesktop.org/bbrezillon/linux/-/blob/panthor-jm/drivers/gpu/drm/panthor/panthor_device.c?ref_type=heads#L359
