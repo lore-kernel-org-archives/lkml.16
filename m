@@ -1,63 +1,63 @@
-Received: from mail-io1-f52.google.com (mail-io1-f52.google.com [209.85.166.52])
+Received: from mail-io1-f51.google.com (mail-io1-f51.google.com [209.85.166.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C2F91E8350
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E883227EB6
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:18:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742570321; cv=none; b=CysIG0jtfA1dsaD2798Yt+wOHR4DyKhpYBQFdrfvsdYbBSUAWjxV9TkaOICVuOePKfDhbvkPCHh8N4uJGADQETBXKjTrUz0Gke9pwGma4bFotRXz7gLtqKzNPzHfCk3QhYYl+JsbP4vvzIdNrgsXSXGSBTiv6tXit80+X2EgqvI=
+	t=1742570324; cv=none; b=PkYEaf7ZC+hLWT1QIaXOshTM3BWd61bGAhSnv6hcV/cVGDFJdO8xCobcBhMe1QBPKyUEWfuO/Pudf9VDVqF9dbegpAo/uoxfz4VN69KGOB9Hhn6n806dqB5VxUE5YuUVLqKOnd7QKDIcR1oL82CrVHyo50RNq7upFQZKImdE+BQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742570321; c=relaxed/simple;
-	bh=lhzOWVrb/W5aWFiPKapeZ+c2qWJP4p7yGhuyvcKYsOY=;
+	s=arc-20240116; t=1742570324; c=relaxed/simple;
+	bh=Kk9IOSp5FpiJPK6DAw2Z9Z0TfklnPeKukCwW/BwUYxo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bg/gbXFzKa2hSzax50ChlRsEKYo2qCCE9N9vTFTnRoV1zO+aeKbKeTqZ/39EbZCcmVvYL4or1jasP+9g41JmeqPItY11IIT4qpw7d9WzcaApKw059y5+7uvnIO/rzdzX6luDjRrnVeqicTpOuqqxBI4AP+ziJ+5ZZF3Nk0/W/RE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=ljdzM5ov; arc=none smtp.client-ip=209.85.166.52
+	 MIME-Version; b=ch+jBkLqG/qvozJViVd5cz1i1hZIJ7pm9ZXCofIylnEIZQaCKNn+8J76PO+pKGupkJW6p5Vhj4HSLeMecdLJ/T5sB/AZpGlcb8C2d6POJjPrYNC/FMPEPb734c4Dw/+uzkpDid2B1AEcxB4kzF9tqy2ccF28Kb+JrjvAG2eM8g0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=IQOJiJs9; arc=none smtp.client-ip=209.85.166.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="ljdzM5ov"
-Received: by mail-io1-f52.google.com with SMTP id ca18e2360f4ac-85b43b60b6bso72011439f.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:18:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="IQOJiJs9"
+Received: by mail-io1-f51.google.com with SMTP id ca18e2360f4ac-85b5e49615aso174719739f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:18:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1742570319; x=1743175119; darn=vger.kernel.org;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1742570322; x=1743175122; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Dlzkhyp/izF78g6ftxTkpFnLH1O8eZPqCB+owD+Ogvs=;
-        b=ljdzM5ovW8+/yRFi6YRmMNKshkeRlKDkKCYanQgBYJW0au0m3DjXmgfeEZhDAKOG65
-         Nx4e1YZdKCelEslz78JvjlAAQMj3JtuWlMSp0pzVxK2HHpCWBq5KlYSMt3G0n7HeqVAJ
-         jag48xF0rQnWthvXzVTF5JCxm0pgRr+n6LIwxXaen7gpn/kMHfMlOsFJMTujYCohnOlb
-         AWeT0pZ9Iib1Dvq2w0XqbA/nbnTvGMm9Bqa/nG1dRBh/DNgisL6x/9V+Kw+HZN1CcJ8/
-         OyKTBvTWpp3qU9XgtEpU8WwgTXEiz8PkTOj+EsSzTCDa7EjDayoFJt63/5DQrKdkTt24
-         JYcA==
+        bh=s9/aOcBOjeqmg8r4cUHY2uYIdNBiCau+sheqrs82fvw=;
+        b=IQOJiJs93FVQbBhIoyx9Xt4BIBglQuCZ/w2KPgaxb/FdOIiC1+22g5jTWsDIbW5K9a
+         PF0RGmmOHQhW9A2JMjRZ8jQruBcTCtiJgwkVq5vQWdswNsTD0YMBKZywM7XHDoZ14I/6
+         QnbZZl7zmPseNAe10qSSMtGuLkmLCI+pu9oKXy84A6U2haA8dD/aLCT/BZf5sUUVrglB
+         IIqPujU9VqoF/8AG55ILnatISjRO6StsxQEtu85z+wxHW5hp2EcxAImG4JBW60pyv8IV
+         wQV0qtNwQNnfPFSmS6MkDvoWVXfCszQaz4JH5OlmiBn1G3rYBSEcMfmic9fpQKyrYwOf
+         BTnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742570319; x=1743175119;
+        d=1e100.net; s=20230601; t=1742570322; x=1743175122;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Dlzkhyp/izF78g6ftxTkpFnLH1O8eZPqCB+owD+Ogvs=;
-        b=ZF7LRUjbAo9EN8tgch3NXS7zpQZp0qWNLLzBoUbpw+oIBQLmaXCV25Hcb3uhQyUK7D
-         thCqi6GxWJSDuBxjgtNxUGKsRYDxerluUhRFXiXwP6UXpFzSrPJaDw1Ptyh/FtBKd9Fz
-         iZRtGGdtWu0WZD4RF8DyxfzDs/z2dM+e7cNlJM8j58N5s8YlilCW7sWxnXATlj7g74WK
-         Tor1+t75H0TnosFvhX3To9IK21Fz8+p7qxYTboXfI8vnq8e0iAc36kvyFrF42jjBiUJQ
-         9VSAc+Wy7QpJ4TUye0Do6MEZT2w/ddMj2ob3bwMEnxKUPTLfRe7mdke6lOPbUOCHKGLq
-         Xi5w==
-X-Forwarded-Encrypted: i=1; AJvYcCWVsROIYLHTn/kmL0wwlsIM1g7NKxvBMwTyK9Wvhp1kjcxDGaDzvlCpPUk6UNU4vDKXShCe8YtU2oaXi/E=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwHaeWZ8PJq+djso85cOZFmTMvi2cl8WgDw+bUzPAsjrahyExGU
-	DponJm8VBrGrF06Ga2zbOcgB3pUw6JpLYb19/2+HR9W4Jf8O0XCaWVgQEoN5XZA=
-X-Gm-Gg: ASbGnctQNMOADApKt3JtlT2qvC2W91f3jYfznXBKifuekhDjovXASXM79dAGaQYAlIY
-	NIbMZvvAXPG/1tLt9fyIqHR++w+pwKauvYxNyohKfB6ka6hVhUO1I4uxL0SnsYZnJl/VpifAF1+
-	wwB04T3pemiMJsLXhf2DrG1KdvBVAG5+R4r2r5/Eso3QZ7KP0cyCyrYMhuG48dgQbFCzrXKbYXu
-	UAn6vw6onupCMjzaS/TPwZ5srsBTB5AJj2fygH2pWrotpFCtYFyrdaRjEohem+oCGPZLb6tV39s
-	0qfZ5imoQ85u4M/Qm4misHs4053/7hDMqBFYSyDNmmkmadBKslyCbJQZHbbhiWcLcrx6qGp5ENX
-	VrZT+/+Ef6I32qoCaxCSdKK61
-X-Google-Smtp-Source: AGHT+IEUz8WMBAG/xaa2+GBBPyVyyUIOG2h5tJRf01KFeJERuOLi2IrXGmMUndsyBqpsB4JMvQ48PQ==
-X-Received: by 2002:a05:6602:7410:b0:85d:ad56:af88 with SMTP id ca18e2360f4ac-85e1ee299f1mr849828339f.1.1742570319091;
-        Fri, 21 Mar 2025 08:18:39 -0700 (PDT)
+        bh=s9/aOcBOjeqmg8r4cUHY2uYIdNBiCau+sheqrs82fvw=;
+        b=f095E9iRmB119IoMrfPJmAq1ITDQpcph7NK5KzbHrUhhrOQkqmwYorf//urO71kZ/h
+         UtvmIVZeOsoQPs1yi4CML/Ec6Meq2hiWtb4IoSZgEr8RXoIo7kUz46coMd/JK33DW+L9
+         t1D8e2qKLZgsZZQNUSlldHELzHOBhzZc9IcbBDkmZgkAmO5Yvqj1kLODEGbTVQG4Pgw7
+         7l+l2C+jQcbc1UYFsx1vyeABSD2Nn4KtxAEvjgeoyvzdww8faCEgX29eH/vnMLxeFZVc
+         vqeq6rpOI7xxD1CiHhMIM2PRTzZ4vm9zjIFUjOX8KJ+7QHRJq3XlAOXvwxSauzEzGjyx
+         l6Ng==
+X-Forwarded-Encrypted: i=1; AJvYcCU189bQrWhEYCcIfInb2c2QTJGktg1N3VUboiUsS/+72YzcxG/Pxn5SsqCeWkMfae9+V86+AXPrvAzOQ3E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwY8pmVlKOwuwanqS5OyooNpyl/6HkwhRqKJ9P28Y2ejf//gq3S
+	gUBVi+C+WbeTUriJIyRPfBJwyTnsRmXKt7AcglmgEoUwyB+PHp8PRIdEa+aIgFQ=
+X-Gm-Gg: ASbGncv6ouc3ovceJfT2bSYkofiDvn64e+wDexll/S90HuuC9Yz3f4QUko4BtgWEgh8
+	l9vZzBc364IiWWxQotyNDlMp6SPJ37vDPLdjC4Mw1W3SA9A4Wb+jBcGg8p1HYWurXT2tsv8Qmps
+	oYhw8O2OS/J0ERx78fFYnYmNlaoRxwfyh1NO4A8osjLyCyJ5rBtLOI0LE0HbSDVA+ntCuhNyftE
+	q06eN9hFqyvkdZKLP5kWiLVsMpe1k+mmWayFf2SW3G+/0s4saIRusV3ZxrGhDu36M5r8E0bxPGs
+	iYwvi3wem51C4Y/Y/q8UTnvA9J8p4/SnfwWvw78/wIRY73fcCHOC9/HWP1bT2+hn7SmS4UDhupx
+	52Fv1MSys5alMfUtAfRuA1/tA
+X-Google-Smtp-Source: AGHT+IFo/JEVnsqki/6fdgfg3xjuRm3SDdlZLf3knFyzM9tCDQmdiRd3jcBZUEzW8DfADwT94MufXQ==
+X-Received: by 2002:a05:6e02:188a:b0:3d5:8103:1a77 with SMTP id e9e14a558f8ab-3d5960ce9b6mr45841105ab.1.1742570321661;
+        Fri, 21 Mar 2025 08:18:41 -0700 (PDT)
 Received: from zoltan.localdomain (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdd0a21sm475553173.41.2025.03.21.08.18.37
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdd0a21sm475553173.41.2025.03.21.08.18.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 08:18:38 -0700 (PDT)
+        Fri, 21 Mar 2025 08:18:41 -0700 (PDT)
 From: Alex Elder <elder@riscstar.com>
 To: p.zabel@pengutronix.de,
 	mturquette@baylibre.com,
@@ -76,9 +76,9 @@ Cc: robh@kernel.org,
 	linux-clk@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH RESEND 3/7] clk: spacemit: add reset controller support
-Date: Fri, 21 Mar 2025 10:18:26 -0500
-Message-ID: <20250321151831.623575-4-elder@riscstar.com>
+Subject: [PATCH RESEND 5/7] clk: spacemit: make clocks optional
+Date: Fri, 21 Mar 2025 10:18:28 -0500
+Message-ID: <20250321151831.623575-6-elder@riscstar.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250321151831.623575-1-elder@riscstar.com>
 References: <20250321151831.623575-1-elder@riscstar.com>
@@ -90,168 +90,40 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Define ccu_reset_data as a structure that contains the constant
-register offset and bitmasks used to assert and deassert a reset
-control on a SpacemiT K1 CCU. Define ccu_reset_controller_data as
-a structure that contains the address of an array of those structures
-and a count of the number of elements in the array.
-
-Add a pointer to a ccu_reset_controller_data structure to the
-k1_ccu_data structure.  Reset support is optional for SpacemiT CCUs;
-the new pointer field will be null for CCUs without any resets.
-
-Finally, define a new ccu_reset_controller structure, which (for
-a CCU with resets) contains a pointer to the constant reset data,
-the regmap to be used for the controller, and an embedded a reset
-controller structure.
-
-Each reset control is asserted or deasserted by updating bits in
-a register.  The bits used are defined by an assert mask and a
-deassert mask.  In some cases, one (non-zero) mask asserts reset
-and a different (non-zero) mask deasserts it.  Otherwise one mask
-is nonzero, and the other is zero.  Either way, the bits in
-both masks are cleared, then either the assert mask or the deassert
-mask is set in a register to affect the state of a reset control.
+There are some syscon devices that support both clocks and resets,
+but for now only their reset functionality is required.  Make
+defining clocks optional for a SpacemiT CCU, though at least one
+clock or at least one reset controller must be defined.
 
 Signed-off-by: Alex Elder <elder@riscstar.com>
 ---
- drivers/clk/spacemit/ccu-k1.c | 93 +++++++++++++++++++++++++++++++++++
- 1 file changed, 93 insertions(+)
+ drivers/clk/spacemit/ccu-k1.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
-index f7367271396a0..6d879411c6c05 100644
+index be8abd27753cb..17e321c25959a 100644
 --- a/drivers/clk/spacemit/ccu-k1.c
 +++ b/drivers/clk/spacemit/ccu-k1.c
-@@ -10,6 +10,7 @@
- #include <linux/minmax.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
+@@ -1830,6 +1830,10 @@ static int k1_ccu_register(struct device *dev, struct regmap *regmap,
+ 	const struct spacemit_ccu_clk *clk;
+ 	int i, ret, max_id = 0;
  
- #include "ccu_common.h"
- #include "ccu_pll.h"
-@@ -134,8 +135,26 @@ struct spacemit_ccu_clk {
- 	struct clk_hw *hw;
- };
- 
-+struct ccu_reset_data {
-+	u32 offset;
-+	u32 assert_mask;
-+	u32 deassert_mask;
-+};
-+
-+struct ccu_reset_controller_data {
-+	u32 count;
-+	const struct ccu_reset_data *data;	/* array */
-+};
-+
- struct k1_ccu_data {
- 	struct spacemit_ccu_clk *clk;		/* array with sentinel */
-+	const struct ccu_reset_controller_data *rst_data;
-+};
-+
-+struct ccu_reset_controller {
-+	struct regmap *regmap;
-+	const struct ccu_reset_controller_data *data;
-+	struct reset_controller_dev rcdev;
- };
- 
- /*	APBS clocks start	*/
-@@ -1630,6 +1649,48 @@ static const struct k1_ccu_data k1_ccu_apmu_data = {
- 	.clk		= k1_ccu_apmu_clks,
- };
- 
-+static struct ccu_reset_controller *
-+rcdev_to_controller(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct ccu_reset_controller, rcdev);
-+}
-+
-+static int
-+k1_rst_update(struct reset_controller_dev *rcdev, unsigned long id, bool assert)
-+{
-+	struct ccu_reset_controller *controller = rcdev_to_controller(rcdev);
-+	struct regmap *regmap = controller->regmap;
-+	const struct ccu_reset_data *data;
-+	u32 val;
-+	int ret;
-+
-+	data = &controller->data->data[id];
-+
-+	ret = regmap_read(regmap, data->offset, &val);
-+	if (ret)
-+		return ret;
-+
-+	val &= ~(data->assert_mask | data->deassert_mask);
-+	val |= assert ? data->assert_mask : data->deassert_mask;
-+
-+	return regmap_write(regmap, data->offset, val);
-+}
-+
-+static int k1_rst_assert(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	return k1_rst_update(rcdev, id, true);
-+}
-+
-+static int k1_rst_deassert(struct reset_controller_dev *rcdev, unsigned long id)
-+{
-+	return k1_rst_update(rcdev, id, false);
-+}
-+
-+static const struct reset_control_ops k1_reset_control_ops = {
-+	.assert		= k1_rst_assert,
-+	.deassert	= k1_rst_deassert,
-+};
-+
- static int k1_ccu_register(struct device *dev, struct regmap *regmap,
- 			   struct regmap *lock_regmap,
- 			   struct spacemit_ccu_clk *clks)
-@@ -1675,6 +1736,33 @@ static int k1_ccu_register(struct device *dev, struct regmap *regmap,
- 	return ret;
- }
- 
-+static int
-+k1_reset_controller_register(struct device *dev, struct regmap *regmap,
-+			     const struct ccu_reset_controller_data *data)
-+{
-+	struct ccu_reset_controller *controller;
-+	struct reset_controller_dev *rcdev;
-+
-+	/* Resets are optional */
-+	if (!data)
++	/* Clocks are optional */
++	if (!clks)
 +		return 0;
 +
-+	controller = devm_kzalloc(dev, sizeof(*controller), GFP_KERNEL);
-+	if (!controller)
-+		return -ENOMEM;
-+
-+	controller->regmap = regmap;
-+	controller->data = data;
-+
-+	rcdev = &controller->rcdev;
-+	rcdev->owner = THIS_MODULE;
-+	rcdev->nr_resets = data->count;
-+	rcdev->ops = &k1_reset_control_ops;
-+	rcdev->of_node = dev->of_node;
-+
-+	return devm_reset_controller_register(dev, rcdev);
-+}
-+
- static int k1_ccu_probe(struct platform_device *pdev)
- {
- 	struct regmap *base_regmap, *lock_regmap = NULL;
-@@ -1710,6 +1798,11 @@ static int k1_ccu_probe(struct platform_device *pdev)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "failed to register clocks\n");
+ 	for (clk = clks; clk->hw; clk++)
+ 		max_id = max(max_id, clk->id);
  
-+	ret = k1_reset_controller_register(dev, base_regmap, data->rst_data);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to register reset controller\n");
-+
- 	return 0;
- }
+@@ -1903,7 +1907,7 @@ static int k1_ccu_probe(struct platform_device *pdev)
+ 	int ret;
  
+ 	data = of_device_get_match_data(dev);
+-	if (!data)
++	if (!data || !(data->clk || data->rst_data))
+ 		return -EINVAL;
+ 
+ 	base_regmap = device_node_to_regmap(dev->of_node);
 -- 
 2.43.0
 
