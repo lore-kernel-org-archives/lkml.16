@@ -1,122 +1,112 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428A0226D1E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44D0227BA1;
+	Fri, 21 Mar 2025 12:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742560870; cv=none; b=LN/pMEtcq3w1JSL/WJY7Tx9ch5lJJvWuSeCVqYASWUWE7U0WvW0ZjqRZ0F7d7GAjQZBM/5OGkQIkQ60l9WJqXhoOcGdui85pMdQ52U+YOp3lsV7yTM00zw4ccWOg/yV89sKvT5/P6fimbX1xVeagWJbMbaJh9YadBU9pQUEYGdg=
+	t=1742560883; cv=none; b=VWxtmavNRhpd9uMBzJgS1veaGGt2mvVh4UU23G1i6BWpTieBMX5fW5TF4H8x4fSYx2zuscFHDw5cEf/EzBp+w57J04UpWF9498uEpQXifDpu6U09sk6GDk+VATdige6uGEmzxVVb4TAsJC7Ba2uNeDOLoXN3MrU8lvfQtJAwjjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742560870; c=relaxed/simple;
-	bh=Y2846tBuL2mWBVQlc560xA5UiYRZ8PX5caGQUYX3m5o=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Dss1FJEBqVZ88+UNx20h3zJmIwdINO5tIs7EPMMH142qB+zMMtVeGswy+W2M+E4IzO4H5Bl1ZFVfwLIR87CHLoNnwFqjAY0CiV8cWl5tU5SvrMl6VYyE4L9Rpspvym4w81o53rh6M81YwS2pzV52xlHvCKSmWm7WPCWOa2/HjAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Ec7ew6+t; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742560883; c=relaxed/simple;
+	bh=eRwaIXSZeEAbgkIPXI4xktUNSHNDQa/L0wTY3I4/eVY=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ntaIeOBnAB2KvX/2l+d7BbQthqYlvyYnu56o7qyEsBxi9a5hJUmsEnOpE9D6ydRFwxzA9oEiGsQwr4rkI1VHRDA4+DogL3f5Ih0Vgfu4kcF/AR+IvcMiER700UbHl491cRmIoiVGleGqRX3a24EA6y38beZO1Xo3F6YyhE6TkxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ULUrhF1d; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Ec7ew6+t"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742560869; x=1774096869;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=Y2846tBuL2mWBVQlc560xA5UiYRZ8PX5caGQUYX3m5o=;
-  b=Ec7ew6+tIevrsYQPXqDnjx+zMHZXHqiLEmkUXpqb0KvfwqCdRgUuFIkX
-   lUJCiuKCbt0grkxgyzjVHCFppxvffECa2U5Oiy7CruyzEPPo9WLu8L4xu
-   JSa8JjyADZiT8f6HXetnssd6Go7pYBN5IRvIaT2dos0V/kyj0JwdDNnQl
-   jIwSn8FZJU9psg3sHxpjjcxta1zzxzqv4SVv9hKN/teQtr6vziQESY93x
-   ocVCjjdBnXe/2wAc5ZH/A3d6NL7NMfvomMNxKBTDQRsxuo2Rmcoo+FQEb
-   +LvfWvRAQEpJx06dtd6Ybja0MHxya11qMgJVWYCrAKGCFCwt7Wjj621Q6
-   A==;
-X-CSE-ConnectionGUID: LqHwmDczTx+LWJ7IFhfMbQ==
-X-CSE-MsgGUID: JEMrvSLQSkqGmrBP5JAmmw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="31416192"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="31416192"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 05:41:08 -0700
-X-CSE-ConnectionGUID: xnWMy0feS82fNJIl+FCjBw==
-X-CSE-MsgGUID: OaH24dpNSFmCPYM51NjsrA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="128502379"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.201])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 05:41:05 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Thomas Zimmermann <tzimmermann@suse.de>, Yue Haibing
- <yuehaibing@huawei.com>, rodrigo.vivi@intel.com,
- joonas.lahtinen@linux.intel.com, tursulin@ursulin.net, airlied@gmail.com,
- simona@ffwll.ch, dev@lankhorst.se
-Cc: intel-gfx@lists.freedesktop.org, intel-xe@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] drm/i915/display: Fix build error without
- DRM_FBDEV_EMULATION
-In-Reply-To: <12145722-609e-41d0-b02b-059df5b6d17f@suse.de>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250315120143.2344958-1-yuehaibing@huawei.com>
- <12145722-609e-41d0-b02b-059df5b6d17f@suse.de>
-Date: Fri, 21 Mar 2025 14:41:02 +0200
-Message-ID: <87y0wyblpd.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULUrhF1d"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224100e9a5cso35830805ad.2;
+        Fri, 21 Mar 2025 05:41:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742560881; x=1743165681; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q+NiAZ9mdyZTQmFAQQ+DvuQUzdXkQ4ZbSFQA5qFBOIg=;
+        b=ULUrhF1dgTTHK8zsila5yGWBsax7GLT+DCf8AmZIJgf+XNqvOHHtUi026p8wlq06XK
+         XUgoXcKYsjVpY61gTLm41oRKXUiINHI4UfOUi5VG4VaNF2FnVLXx1cgz5QHHeAva7DMg
+         ybs4vQ7tsOLROa1MjoR3WsR3ICBtRLs4iEuatLklKLcq1Zd9PUgVgKlp9ulLPnE4cMgo
+         UreM5NW12tBQ5jwHfRf23WhieI0Vw1cKqFiNq9GLPgRQywgZvRrThuJnnH6k5Suy/nwH
+         c/7Hqz8PARh+ZZ8syAYTI7MvAibyb2whh0DkyhX+gqIAXr1HUXP+Mbq2S9g39uLB0jKT
+         F3wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742560881; x=1743165681;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q+NiAZ9mdyZTQmFAQQ+DvuQUzdXkQ4ZbSFQA5qFBOIg=;
+        b=dPPhSPZojcIbhUFhb2OUa1FRrESRPIjlY81YnMdiS31pe0zPO9gJAcLm348jmACFYh
+         QCCsvA/NSXTU6gG+kzPlWL0zT1HUcCuJQtRu/5k+ll+XHdly3CejWuVw4fU88K6JqbRl
+         mE878ttAUSkxmgFksqPij2dEDdrjGO7joBvMO2TVg2FseqqciAf4EY+Qj6IXUq/vnhs8
+         h3jOgnW4Umad9QGJ2VA4ez7Vdy4duf5PG15SfPHe6CE+Hfr3UGlN/0Y/WwKlmBLPP7vl
+         DUNAAxxchrOhmds4tb/URomUrFAt+ATuLwHQfYotA38tmoyupJGMGX15XrQfJwSxoMN7
+         PYSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEKJpLjiL6MTQN8vCII8aVORrrK1H7WwW4IJYt1fsu+HB4i9CJ4wzQKazOUw57brMkWa2R6AkwjCWRTuZs@vger.kernel.org, AJvYcCWVBs1lL82mvo4Ma5LtEZvKtM6oVpa0vJTrd8/e3E5kAcqL0borf804S9l1Afq1U8+R9OzOtZZLjrPl@vger.kernel.org
+X-Gm-Message-State: AOJu0YyM9bJuZYLbGVHhZokPa4LueA6tcsJ4SMpV2X0HaRDg/s7CeOlU
+	IFV5F2ZiTKyXNzT1Ap9MVOXxiarOr3kSC/EIcemNz+8M2fr7Zm63
+X-Gm-Gg: ASbGnct/yn5l/GThe/twhrdCzGq0LVxgDlLmYVWSmGM98vy5kSeX70DqMmEubLgBmIv
+	N7QGB6F84XPxRqis9/UzpNO+qlYX4CDPPMUgg4T6PjtTtuVYSePmR9MufyjwlKyYM7ZBHhdrZUK
+	DNH3ARrwST6BUKz54zUdDkSnt9rEGRCklkumNe9K/4uFfPfkWoKOLZyuQrnpgfNL2awejZokGgr
+	3AixaegmgTM5ZZ8aT8i7CbOyQRld9s8EV9XmZjMKRCUDvcYeAE6CRwlkwcqAAuNBUGpXD9vQWUY
+	8kMPJxm8O8vO+VnCrU38P8VjcAaowrzcvIbkcOA4PW8SDZYSNkzp47caiyUMiuyDosil4pJ1LN0
+	Jsnls9HeV1ceAFi6GTT93DIHbSydP6U/0+OrwZRjpf0TE4pVRNQ4R+M0EVeM=
+X-Google-Smtp-Source: AGHT+IExgVZ4q/4fohD2pxnSiano84+Gjnet64GgoejlycI2L+z5k6c8k/m9ePdFfCzgOHfdnbckMg==
+X-Received: by 2002:a05:6a20:7285:b0:1f5:6f61:a0c2 with SMTP id adf61e73a8af0-1fe4300fe40mr7650260637.34.1742560880874;
+        Fri, 21 Mar 2025 05:41:20 -0700 (PDT)
+Received: from jason-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73905fd5c90sm1815432b3a.51.2025.03.21.05.41.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 05:41:20 -0700 (PDT)
+From: Jason Hsu <jasonhell19@gmail.com>
+X-Google-Original-From: Jason Hsu <jason-hsu@quantatw.com>
+To: robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	joel@jms.id.au,
+	andrew@codeconstruct.com.au,
+	patrick@stwcx.xyz,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Cc: yang.chen@quantatw.com,
+	jerry.lin@quantatw.com,
+	Jason Hsu <jason-hsu@quantatw.com>
+Subject: [PATCH v6 1/2] dt-bindings: arm: aspeed: add Meta Ventura board
+Date: Fri, 21 Mar 2025 20:37:30 +0800
+Message-Id: <20250321123731.1373596-2-jason-hsu@quantatw.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250321123731.1373596-1-jason-hsu@quantatw.com>
+References: <20250321123731.1373596-1-jason-hsu@quantatw.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, 17 Mar 2025, Thomas Zimmermann <tzimmermann@suse.de> wrote:
-> Am 15.03.25 um 13:01 schrieb Yue Haibing:
->> In file included from <command-line>:
->> ./drivers/gpu/drm/i915/display/intel_fbdev.h: In function =E2=80=98intel=
-_fbdev_framebuffer=E2=80=99:
->> ./drivers/gpu/drm/i915/display/intel_fbdev.h:32:16: error: =E2=80=98NULL=
-=E2=80=99 undeclared (first use in this function)
->>     32 |         return NULL;
->>        |                ^~~~
->> ./drivers/gpu/drm/i915/display/intel_fbdev.h:1:1: note: =E2=80=98NULL=E2=
-=80=99 is defined in header =E2=80=98<stddef.h>=E2=80=99; did you forget to=
- =E2=80=98#include <stddef.h>=E2=80=99?
->>    +++ |+#include <stddef.h>
->>      1 | /* SPDX-License-Identifier: MIT */
->> ./drivers/gpu/drm/i915/display/intel_fbdev.h:32:16: note: each undeclare=
-d identifier is reported only once for each function it appears in
->>     32 |         return NULL;
->>        |                ^~~~
->>
->> Build fails if CONFIG_DRM_FBDEV_EMULATION is n, add missing header file.
->>
->> Fixes: 9fa154f40eb6 ("drm/{i915,xe}: Run DRM default client setup")
->> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
->
-> Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
+Document the new compatibles used on Meta Ventura.
+Add subject prefix for the patch.
 
-Merged to drm-intel-next, thanks for the patch and ack.
+Signed-off-by: Jason Hsu <jason-hsu@quantatw.com>
+---
+ Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-BR,
-Jani.
+diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+index 01333ac111fb..a86b411df9a5 100644
+--- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
++++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
+@@ -87,6 +87,7 @@ properties:
+               - facebook,greatlakes-bmc
+               - facebook,harma-bmc
+               - facebook,minerva-cmc
++              - facebook,ventura-rmc
+               - facebook,yosemite4-bmc
+               - ibm,blueridge-bmc
+               - ibm,everest-bmc
+--
+2.34.1
 
->
->> ---
->>   drivers/gpu/drm/i915/display/intel_fbdev.h | 2 ++
->>   1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/gpu/drm/i915/display/intel_fbdev.h b/drivers/gpu/dr=
-m/i915/display/intel_fbdev.h
->> index ca2c8c438f02..89bad3a2b01a 100644
->> --- a/drivers/gpu/drm/i915/display/intel_fbdev.h
->> +++ b/drivers/gpu/drm/i915/display/intel_fbdev.h
->> @@ -6,6 +6,8 @@
->>   #ifndef __INTEL_FBDEV_H__
->>   #define __INTEL_FBDEV_H__
->>=20=20=20
->> +#include <linux/types.h>
->> +
->>   struct drm_fb_helper;
->>   struct drm_fb_helper_surface_size;
->>   struct drm_i915_private;
-
---=20
-Jani Nikula, Intel
