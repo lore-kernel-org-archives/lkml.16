@@ -1,38 +1,39 @@
 Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D5ED236A7A;
-	Fri, 21 Mar 2025 19:14:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74D042376F4;
+	Fri, 21 Mar 2025 19:14:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742584458; cv=none; b=HDSJOX+FsYWca7gnPxGl1qJVoQYiCGYjz+2CsUxelR5GGefgujlmCBxypTpVeLd4VOKizl3XfBOXtd0VXfu9BpITutzveUP0fdrkrYMzcAIt0rvmmPF6NTvnJYJghXMUi2mxdF/WV8SKnvqikDRltORrFtubK9eUsg/3amQqZ/g=
+	t=1742584460; cv=none; b=P0mLHRQ2HyQqRKiOS2vH8IUD6m78cuKBH9bHGXzP7nOYpovBwU0jmW5Omp7FJLvpGs3lhw1mbio7QAfFj6SnkpfdFzUQiRKBV038QvbWdYy99zd0EVktsz1bjKwDduwNLevEZ1uI+HP53DE1f99bFsduPEogSnn9Mjs7Lc/gCTs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742584458; c=relaxed/simple;
-	bh=KRb5yHIexP1yQtNE06rKYfsPx+JAl2jpfN7N/TpzIrw=;
+	s=arc-20240116; t=1742584460; c=relaxed/simple;
+	bh=E7bIiNOZWrSZNz4nukeMsgV0KF90MCOpuuix6iX2JgI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UjQksu3cmEtjByi74BkyTSZgVDyM5Y8IpTvF74eAWNH/obz8Wj582GsCutHbA1WI6M7mkzYsQZgkT4qUmWGj/1SQU3ZDbZJP9HlEMqakbXAkMYMZ5fN9d73Y/brZPhuka7IE0Z7jPcaMMccZ2W9iCxTI/y3q8dnrHDRu4y8V9N8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lqKhGEh9; arc=none smtp.client-ip=217.70.183.196
+	 In-Reply-To:To:Cc; b=aDMjQzXLfy5JQUtsun4xlZXOAScJddqWEKewoF2KcJsKY97nJUFm5wdunW4xv0SsfQHz2YhzdElzTcd2tvPhvBhN9hy3aK58A0/WjlGMUqYLiUPPEkIJDMHvw4w/2M+s4Y8DvgLSdCyqjf7sbNaSkUQ/arKNexSvNeFsFiYj1lU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WuxxUnIC; arc=none smtp.client-ip=217.70.183.196
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lqKhGEh9"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id EEF1144556;
-	Fri, 21 Mar 2025 19:14:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WuxxUnIC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4C67D443F3;
+	Fri, 21 Mar 2025 19:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742584453;
+	t=1742584456;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ZxMXQ8+TQxJ1/iSCHV+R2mBv/BVVSKHckDX7uY0hwe0=;
-	b=lqKhGEh9fwsVTezNpVpcsMWOr21wObSDgaEKTxugDByXwco09sUs7wkuUf6snZJdNkWxoM
-	Pp+hzcz6MZidPk3+0m7ar1Lnup98wk474Qn5o+ARpHXGOJXZfXAuihbCaMS2kjerdV8kUt
-	x+ps3ofIyqPQT3bkXxhXJOJn4ngb1ZuCKYF7aT1qEvp6aMjOo3ggpHRPoNT7hhJpYCB9pQ
-	9+6PNXhtF4Pcr1P08M7wUDsZmfkaYyBIWK6Dsf5BMjueoQh/krNwKFvj0dZq8z1xiE3+MP
-	aza7F0kT16z6fV+AweepQnOrc8VgUGdR046brxDMOTgAIhzs03nHYQb9uH7xPg==
+	bh=qV/BzZ4NMUb9fMiduuWLEtJE4+30wNUTrCBlJGz+oF0=;
+	b=WuxxUnICXSYDWDNEhubsFgp0e4HvOPccnGNoiLnGr9kRIoIxhvfPzMd6Azpwa6bktYkRzd
+	6eyoGfu7aSmQ5iBAGsbNacbfC4kaRlQ+0H1s6himQcuxwhh82b0VNA+UELdV54HFLpeRYa
+	oO2BSLtDm9wy6ochWMu60mspuWef+eN4MDMNNYQLuGAs/NrJlfoluAW11IqYZLWUmkLYNH
+	a7Oj+RDrg6VA/OPl1lyKijheOEhPA3J2m/ESfV5H1kbPlFHshcoN3X7qUshuiQfGHa4AtV
+	9Klm+Y1fzIvdZ4IjXSNnGwGnEYSRwOqGAdxXDECOQHz4cF5NH1pfwpKLaWsJhQ==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Fri, 21 Mar 2025 20:09:42 +0100
-Subject: [PATCH net-next 11/13] MIPS: mobileye: add EyeQ5 DMA IOCU support
+Date: Fri, 21 Mar 2025 20:09:44 +0100
+Subject: [PATCH net-next 13/13] MIPS: mobileye: eyeq5-epm: add two Cadence
+ GEM Ethernet PHYs
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,7 +42,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250321-macb-v1-11-537b7e37971d@bootlin.com>
+Message-Id: <20250321-macb-v1-13-537b7e37971d@bootlin.com>
 References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
 In-Reply-To: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
 To: Andrew Lunn <andrew+netdev@lunn.ch>, 
@@ -67,224 +68,51 @@ Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.14.2
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelvefhkeeufedvkefghefhgfdukeejlefgtdehtdeivddtteetgedvieelieeuhfenucfkphepjeejrddufeehrdekuddrieehnecuvehluhhsthgvrhfuihiivgepkeenucfrrghrrghmpehinhgvthepjeejrddufeehrdekuddrieehpdhhvghloheplgduledvrdduieekrddurdeftdgnpdhmrghilhhfrhhomhepthhhvghordhlvggsrhhunhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdekpdhrtghpthhtohepghhrvghgohhrhidrtghlvghmvghnthessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhigqdhrihhstghvsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepphgruhhlrdifrghlmhhslhgvhiesshhifhhivhgvrdgtohhmpdhrtghpthhtohepthhssghoghgvnhgusegrlhhphhgrrdhfrhgrnhhkvghnrdguvgdprhgtphhtthhopehkuhgsrgesk
- hgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhgvthguvghvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepnhhitgholhgrshdrfhgvrhhrvgesmhhitghrohgthhhiphdrtghomhdprhgtphhtthhopehthhhomhgrshdrphgvthgriiiiohhnihessghoohhtlhhinhdrtghomh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduledtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhfffugggtgffkfhgjvfevofesthekredtredtjeenucfhrhhomhepvfhhrohoucfnvggsrhhunhcuoehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeelvefhkeeufedvkefghefhgfdukeejlefgtdehtdeivddtteetgedvieelieeuhfenucfkphepjeejrddufeehrdekuddrieehnecuvehluhhsthgvrhfuihiivgepuddunecurfgrrhgrmhepihhnvghtpeejjedrudefhedrkedurdeihedphhgvlhhopegludelvddrudeikedruddrfedtngdpmhgrihhlfhhrohhmpehthhgvohdrlhgvsghruhhnsegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvkedprhgtphhtthhopehgrhgvghhorhihrdgtlhgvmhgvnhhtsegsohhothhlihhnrdgtohhmpdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehprghulhdrfigrlhhmshhlvgihsehsihhfihhvvgdrtghomhdprhgtphhtthhopehtshgsohhgvghnugesrghlphhhrgdrfhhrrghnkhgvnhdruggvpdhrtghpthhtohepkhhusggrs
+ ehkvghrnhgvlhdrohhrghdprhgtphhtthhopehnvghtuggvvhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehnihgtohhlrghsrdhfvghrrhgvsehmihgtrhhotghhihhprdgtohhmpdhrtghpthhtohepthhhohhmrghsrdhpvghtrgiiiihonhhisegsohhothhlihhnrdgtohhm
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-Both Cadence GEM Ethernet controllers on EyeQ5 are hardwired through CM3
-IO Coherency Units (IOCU). For DMA coherent accesses, BIT(36) must be
-set in DMA addresses.
-
-Implement that in platform-specific dma_map_ops which get attached to
-both instances of `cdns,eyeq5-gem` through a notifier block.
+The Mobileye EyeQ5 eval board (EPM) embeds two MDIO PHYs.
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- MAINTAINERS                         |   2 +-
- arch/mips/mobileye/Kconfig          |   1 +
- arch/mips/mobileye/Makefile         |   2 +
- arch/mips/mobileye/eyeq5-iocu-dma.c | 160 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 164 insertions(+), 1 deletion(-)
+ arch/mips/boot/dts/mobileye/eyeq5-epm5.dts | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5959513a7359f46e10d91bafd5a736b8dceeb7c5..a943f88fc8d4ffe502479e3cd5de6d1a2b1e1fc0 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -15975,7 +15975,7 @@ F:	Documentation/devicetree/bindings/mips/mobileye.yaml
- F:	Documentation/devicetree/bindings/soc/mobileye/
- F:	arch/mips/boot/dts/mobileye/
- F:	arch/mips/configs/eyeq5_defconfig
--F:	arch/mips/mobileye/board-epm5.its.S
-+F:	arch/mips/mobileye/
- F:	drivers/clk/clk-eyeq.c
- F:	drivers/pinctrl/pinctrl-eyeq5.c
- F:	drivers/reset/reset-eyeq.c
-diff --git a/arch/mips/mobileye/Kconfig b/arch/mips/mobileye/Kconfig
-index f9abb2d6e1787dbc5a173db48606ed5a02088e41..b9040f3a9b3ddc7f5addcd8e5f110cb9c775b6b1 100644
---- a/arch/mips/mobileye/Kconfig
-+++ b/arch/mips/mobileye/Kconfig
-@@ -9,6 +9,7 @@ choice
- 
- 	config MACH_EYEQ5
- 		bool "Mobileye EyeQ5 SoC"
-+		select ARCH_HAS_DMA_OPS
- 
- 	config MACH_EYEQ6H
- 		bool "Mobileye EyeQ6H SoC"
-diff --git a/arch/mips/mobileye/Makefile b/arch/mips/mobileye/Makefile
-index 315c06b689cfbb83f9f205d1140ecf5058e2aa02..50fc7d0ae167c3fb3dc8585bcd45583c6cc3f2d2 100644
---- a/arch/mips/mobileye/Makefile
-+++ b/arch/mips/mobileye/Makefile
-@@ -1 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0-or-later
+diff --git a/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts b/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
+index 6898b2d8267dfadeea511a84d1df3f70744f17bb..20dfc85681bb03330981ca0f11b2edfff3fa57bc 100644
+--- a/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
++++ b/arch/mips/boot/dts/mobileye/eyeq5-epm5.dts
+@@ -21,3 +21,29 @@ memory@0 {
+ 		      <0x8 0x02000000 0x0 0x7E000000>;
+ 	};
+ };
 +
-+obj-$(CONFIG_MACH_EYEQ5)               += eyeq5-iocu-dma.o
-diff --git a/arch/mips/mobileye/eyeq5-iocu-dma.c b/arch/mips/mobileye/eyeq5-iocu-dma.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..71d1c35f911636db141c4467dccc405af69835ec
---- /dev/null
-+++ b/arch/mips/mobileye/eyeq5-iocu-dma.c
-@@ -0,0 +1,160 @@
-+// SPDX-License-Identifier: GPL-2.0
++&macb0 {
++	phy-mode = "sgmii";
++	phy-handle = <&macb0_phy>;
 +
-+#include <linux/bits.h>
-+#include <linux/device.h>
-+#include <linux/device/bus.h>
-+#include <linux/dma-direct.h>
-+#include <linux/dma-direction.h>
-+#include <linux/dma-map-ops.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/errno.h>
-+#include <linux/export.h>
-+#include <linux/gfp_types.h>
-+#include <linux/init.h>
-+#include <linux/mm.h>
-+#include <linux/mm_types.h>
-+#include <linux/notifier.h>
-+#include <linux/pfn.h>
-+#include <linux/platform_device.h>
-+#include <linux/property.h>
-+#include <linux/scatterlist.h>
-+#include <linux/types.h>
-+
-+static void *eyeq5_iocu_alloc(struct device *dev, size_t size,
-+			      dma_addr_t *dma_handle, gfp_t gfp,
-+			      unsigned long attrs)
-+{
-+	void *p = dma_direct_alloc(dev, size, dma_handle, gfp, attrs);
-+
-+	*dma_handle |= BIT_ULL(36);
-+	return p;
-+}
-+
-+static void eyeq5_iocu_free(struct device *dev, size_t size,
-+			    void *vaddr, dma_addr_t dma_handle,
-+			    unsigned long attrs)
-+{
-+	dma_handle &= ~BIT_ULL(36);
-+	dma_direct_free(dev, size, vaddr, dma_handle, attrs);
-+}
-+
-+static int eyeq5_iocu_mmap(struct device *dev, struct vm_area_struct *vma,
-+			   void *cpu_addr, dma_addr_t dma_addr, size_t size,
-+			   unsigned long attrs)
-+{
-+	unsigned long pfn = PHYS_PFN(dma_to_phys(dev, dma_addr));
-+	unsigned long count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-+	unsigned long user_count = vma_pages(vma);
-+	int ret;
-+
-+	vma->vm_page_prot = dma_pgprot(dev, vma->vm_page_prot, attrs);
-+
-+	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
-+		return ret;
-+
-+	if (vma->vm_pgoff >= count || user_count > count - vma->vm_pgoff)
-+		return -ENXIO;
-+
-+	return remap_pfn_range(vma, vma->vm_start, pfn + vma->vm_pgoff,
-+			       user_count << PAGE_SHIFT, vma->vm_page_prot);
-+}
-+
-+static int eyeq5_iocu_get_sgtable(struct device *dev, struct sg_table *sgt,
-+				  void *cpu_addr, dma_addr_t dma_addr, size_t size,
-+				  unsigned long attrs)
-+{
-+	struct page *page = virt_to_page(cpu_addr);
-+	int ret;
-+
-+	ret = sg_alloc_table(sgt, 1, GFP_KERNEL);
-+	if (!ret)
-+		sg_set_page(sgt->sgl, page, PAGE_ALIGN(size), 0);
-+	return ret;
-+}
-+
-+static dma_addr_t eyeq5_iocu_map_page(struct device *dev, struct page *page,
-+				      unsigned long offset, size_t size,
-+				      enum dma_data_direction dir,
-+				      unsigned long attrs)
-+{
-+	phys_addr_t phys = page_to_phys(page) + offset;
-+
-+	/* BIT(36) toggles routing through IOCU for DMA operations. */
-+	return phys_to_dma(dev, phys) | BIT_ULL(36);
-+}
-+
-+static void eyeq5_iocu_unmap_page(struct device *dev, dma_addr_t dma_handle,
-+				  size_t size, enum dma_data_direction dir,
-+		unsigned long attrs)
-+{
-+}
-+
-+static int eyeq5_iocu_map_sg(struct device *dev, struct scatterlist *sgl,
-+			     int nents, enum dma_data_direction dir,
-+			     unsigned long attrs)
-+{
-+	struct scatterlist *sg;
-+	int i;
-+
-+	for_each_sg(sgl, sg, nents, i) {
-+		sg->dma_address = eyeq5_iocu_map_page(dev, sg_page(sg),
-+						      sg->offset, sg->length,
-+						      dir, attrs);
-+		if (sg->dma_address == DMA_MAPPING_ERROR)
-+			return 0; /* No cleanup because ->unmap_page() is a no-op. */
-+		sg_dma_len(sg) = sg->length;
-+	}
-+
-+	return nents;
-+}
-+
-+static void eyeq5_iocu_unmap_sg(struct device *dev, struct scatterlist *sgl,
-+				int nents, enum dma_data_direction dir,
-+				unsigned long attrs)
-+{
-+	/* We know page ->unmap_page() is a no-op. */
-+}
-+
-+const struct dma_map_ops eyeq5_iocu_ops = {
-+	.alloc			= eyeq5_iocu_alloc,
-+	.free			= eyeq5_iocu_free,
-+	.alloc_pages_op		= dma_direct_alloc_pages,
-+	.free_pages		= dma_direct_free_pages,
-+	.mmap			= eyeq5_iocu_mmap,
-+	.get_sgtable		= eyeq5_iocu_get_sgtable,
-+	.map_page		= eyeq5_iocu_map_page,
-+	.unmap_page		= eyeq5_iocu_unmap_page,
-+	.map_sg			= eyeq5_iocu_map_sg,
-+	.unmap_sg		= eyeq5_iocu_unmap_sg,
-+	.get_required_mask	= dma_direct_get_required_mask,
-+};
-+EXPORT_SYMBOL(eyeq5_iocu_ops);
-+
-+static int eyeq5_iocu_notifier(struct notifier_block *nb,
-+			       unsigned long event,
-+			       void *data)
-+{
-+	struct device *dev = data;
-+
-+	/*
-+	 * IOCU routing is hardwired; we must use our above custom
-+	 * routines for cache-coherent DMA on ethernet interfaces.
-+	 */
-+	if (event == BUS_NOTIFY_ADD_DEVICE &&
-+	    device_is_compatible(dev, "mobileye,eyeq5-gem")) {
-+		set_dma_ops(dev, &eyeq5_iocu_ops);
-+		return NOTIFY_OK;
-+	}
-+
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block eyeq5_iocu_nb = {
-+	.notifier_call = eyeq5_iocu_notifier,
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		macb0_phy: ethernet-phy@e {
++			reg = <0xE>;
++		};
++	};
 +};
 +
-+static int __init eyeq5_iocu_init(void)
-+{
-+	return bus_register_notifier(&platform_bus_type, &eyeq5_iocu_nb);
-+}
-+postcore_initcall(eyeq5_iocu_init);
++&macb1 {
++	phy-mode = "rgmii-id";
++	phy-handle = <&macb1_phy>;
++
++	mdio {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		macb1_phy: ethernet-phy@e {
++			reg = <0xE>;
++		};
++	};
++};
 
 -- 
 2.48.1
