@@ -1,116 +1,351 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B13DC2206BE;
-	Fri, 21 Mar 2025 10:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461E022B5AC;
+	Fri, 21 Mar 2025 10:53:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742554417; cv=none; b=SI/IsXXtfIvX5a2nqKriYj+V5cBZESPXb/vJgaGaVeVdMDSyFOsnnnFu5Sa0rBFIykRvq98/eu9ZvD/KEkliSTcqR6WonQ8gd6eVlDGONF6tcQcD2mEbGGlxrcX4ux0Ur932CVXcHj2BHj4JsR/dekW1EpXx4CAiFYQVoIWDnsI=
+	t=1742554418; cv=none; b=rDz2nmIDTZHeZcmc/cVmaX+obuNyI8pIqnRz4lnBMLPXCWZhDJmvF6gvhix9l8Gd5shsDgks1XMu7+YU0jsJ66zf4MemtmIZG6HalKwZB8JWC8FQwdwrA5bkxXLSdndvHJK2KE4xpEOb19JUBurI4tPe0HEdj+KzyesRdG6TliM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742554417; c=relaxed/simple;
-	bh=AAb0Rqht8NtXcQ8HqvSZghQDhlfn2elQnUndnHkGw8o=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=GWKQJrzLvVQ6PgAytTpasE3tdGHES3jtRZ5R2byahsdAEKzOoTxf51vwVtRHvJ+69QYlfPU7jMBONtwnChrexk5l2t7y5xm+U4jc94b6pORv+ufK4bU+7s3eKhs08+0spX6ncw62SqCeEm2w/n5jg6LgoVVRd/VX4PQkjqEb06Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b=K97B5S5B; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1742554418; c=relaxed/simple;
+	bh=+IrjkGANvDJDtQMz121UIPGRaAQqeRfVazP+4MgEqxs=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
+	 In-Reply-To:To:CC; b=lZKFaAJL1SSF3+paG+49435BQ9Zj1nWvWCs+tPhLi1r0mdM2MU32meSh5jSAJFgIGlROo2GTzvY8PqwOiWYBGDqTap4bxZ+8+uhJhsBCPv4tppvH2Mw+08XlE0UgnPmAx6Et9iYOmmK5pCABLws3wLJvnUCX+SZdGGJR/72yH70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=j0dmn0io; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=frank.scheiner@web.de header.b="K97B5S5B"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742554376; x=1743159176; i=frank.scheiner@web.de;
-	bh=lj+ks7erNgDIgdRVjnC5pt2bxvom2mserscxEkZYLa4=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=K97B5S5BXSv5Ih4r6ioaV3lxtpwB1bu0OQnZaHSWyU+mj/sX6PW8GpDtT0kiG6WC
-	 UksG/EkEfr0/Kxj5i3ewqgYp6F1Kl4NP93QojFUtneDdTHXW4Clm0Aqim7pLfrNKk
-	 dX6o5SQwcYoEh9S1ry/zyFlKKH0zau8ogjaRSNp7zuPIUGOrQCPvbY95tK2Ox5Pmx
-	 ofCiCfwqBaaTVF0AFyREG+07wTak3d6Jye1uZGSsOXHo3M4+gvgeExgfkV16jEBx+
-	 k2o+dR9OvYrcLFnX6Mw8SVucTz0YHpCC0Jev9pj0pqOqaoHEVizhBzArZOFKZNNQh
-	 h7RTUa91Rg2IoNr6gg==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.30] ([79.200.218.204]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MZB01-1ti5Un189h-00XrJt; Fri, 21
- Mar 2025 11:52:56 +0100
-Message-ID: <9cafd34b-60b0-47d8-bfc8-1caa210bb20a@web.de>
-Date: Fri, 21 Mar 2025 11:52:54 +0100
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="j0dmn0io"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATB76022241;
+	Fri, 21 Mar 2025 10:53:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	ikeo7J4pru7bU8Em37v8N6Z1iIaD7pIN97H39+aGLns=; b=j0dmn0iopTIMnM4r
+	VS9G40Tg3qSlP4YcrWFGrYUnQw34gJ4ODmftgK3EJ1R/W7XInLUBxlpDOHAaRftJ
+	N+DQ+3a2IvAH4FJy4cquKEnp/4vVbEt4MvrolrXOKGLUauiWL36EXo7ti41h80ge
+	/JwLa0IfKDzFppersjDJwreJhNwdsN3YJa0SGY4oJhvBPGdSahM0Xj49wxpTLlFW
+	ZhJxOBEqBhPkXfr+/zHmcxkJ18IazwXVS1Va1cmr63a+AKuGeV7AMJ2jrq/KaAK8
+	29qwEED5OhSlQHPf2FvXjjrsupV4RyEJfbI1a4z5dTejIUeTaMIghrxqcXFbJyxj
+	2TdfZw==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h4wpgc08-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Mar 2025 10:53:28 +0000 (GMT)
+Received: from nalasex01b.na.qualcomm.com (nalasex01b.na.qualcomm.com [10.47.209.197])
+	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52LArRBb002486
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Mar 2025 10:53:27 GMT
+Received: from hu-rajkbhag-blr.qualcomm.com (10.80.80.8) by
+ nalasex01b.na.qualcomm.com (10.47.209.197) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.9; Fri, 21 Mar 2025 03:53:23 -0700
+From: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Date: Fri, 21 Mar 2025 16:22:46 +0530
+Subject: [PATCH ath-next v12 09/13] wifi: ath12k: Power up root PD
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: gregkh@linuxfoundation.org
-Cc: akpm@linux-foundation.org, broonie@kernel.org, conor@kernel.org,
- f.fainelli@gmail.com, hargar@microsoft.com, jonathanh@nvidia.com,
- linux-kernel@vger.kernel.org, linux@roeck-us.net,
- lkft-triage@lists.linaro.org, patches@kernelci.org, patches@lists.linux.dev,
- pavel@denx.de, rwarsow@gmx.de, shuah@kernel.org, srw@sladewatkins.net,
- stable@vger.kernel.org, sudipm.mukherjee@gmail.com,
- torvalds@linux-foundation.org, linux-ia64@vger.kernel.org
-References: <20250320165654.807128435@linuxfoundation.org>
-Subject: Re: [PATCH 6.6 000/166] 6.6.84-rc2 review
-Content-Language: en-US
-From: Frank Scheiner <frank.scheiner@web.de>
-In-Reply-To: <20250320165654.807128435@linuxfoundation.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FZOMuxYWfkGNPUx+egv2Is+x3xkGsYHfthlaElf7yQ6ILZTFjll
- m1CR2/m6A79XWR1FkXzoA5BI4UO68rFwQlhL645Q26Ci5NO3/yQMGHdx9YZ6/ZZVb7IfQJt
- CsN0tH8kM7TyBZgKUsZGH2UOXiLfRAL7tZ12AyMWLR4kGXExibRpGiWFcYO8hXrjwaTv81I
- t0yhHpTez1+MzG8r/LFZw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:RBEAxNVhH8M=;GaZqruuE+5pIFIvaV7pKOvz8OFd
- StQ0iwX7b3KewJZOz7s9dJ9bnbXqIdVR1wLo/RKMbEwJSdvTCbBSd6WhlVASxX5IXZqGZFo6r
- 9ivIVUYxaj9juaQw5OJT4NYjuUEnx8xWP8Qnv6PqN2LfjXmsgrzOMOB80GtVUBFLWKj5aXvrK
- CtOD6bWfjc2TKO47mBa5KXqKKeoPyJT0eO4fzDIQe0RDjuh1WkdHDYQej0Fu9m196A10Bo6vI
- yH0g2PNS7IMq0gS32LGHiNfCTD8GkXteRgicH+baYGjCfAh9vYgrkCzZzPNA8FTsrz64v09NC
- H8FSc6VDEvVSXeKhqp/vgb+YaYGVISXF5I7IKKFFhn8wU6uHp1+a6Nq+wQRLGbBcx24uu35Ns
- XsKH5cegroxMaiYx7vSQCGCD0PRGvYv5PFXClnXs3uKArrrA28d1is1DadcN8K3KTNdmOXvMI
- 1JRIJ/Zj+vL2qYVtGfodvWBva67kuspSc9aqOwEiqVhq+jQ78Sy0f4RKzjpIS6BG4rTLMC5IS
- 4DEluZkPAgr7AxvfoYG/fTdon2JE16+iRHC5UbFlS7HSvTVtkZhEt9ksOBSAaxKuPBR8QWUh4
- PHGZG+xwzDnCerFqzIPxYNviaDM9R0iZ2Z984pN/Kth8JIQuIblV/8dmrR4FvX+oxOwHY2xCG
- u4slgJqKUrx460TYK/mCL6jDXUEwVaehbtI/WIG8Qt2hAN7DzplgdDpkA80US4Hx8SlL3QxTi
- CAOoHTRAQn+HFRdT5QBJ4DvzQk1llGn5vMCfTTpM0St2yekuOs4f5MlvR3TfFGhqDrceplazY
- 0/ovx7CNW3pkrji4oTEbUvjX1UpIH2x/DlqsqMYUXKc7nhxHttbwdWjQ1HKf1V+esgEnzTjVM
- LdZ21R4X7Jh9sMsPrhRWHN9z34eKzRTg6IEJz7uvioEAo4m4rpNe1rL27kh6/QQMDWWuthEnY
- G7MDyZ4OxzRhyYUpRxmyVeAGkPsuUUI52v3k/mKz9DEfNy6j2jvtTKLYaDbQue+bEIx7NtPbi
- jnmLimhgQiSxVmGh4wv4paI9pzdqXDXsFyFg/QG6wnD0ZBwg2qMy6VvQl3Jihxh1cnSuAFY0n
- gEx1ZnrHEHMK4bH27C8VycCRyqpgnve9MNvRhBNsoiK17hr/c3lQ+TAUQzGSCRm5PogMdJXhh
- V5g/Bbm1FowUjzIB66k8P1E6k91FYImGE0yl3vdQ7gWtrIBkg2u5wwsAHePkHk18gIf/3gpSy
- q8bL5Uqs3ROdieluuTV2u32cxR09CUtoxEhu0bfFF4sCzBFzBKVsJh2Nr8+HFBJwXtPCfRqVq
- KZj4BKcfAtc5yfpuXY7a/TY7HcHKf9iJUudNpqvjI50POP1fjUNliKzrnylbQkyVos3Pn3veI
- kYW9Bb2lBViNY+QschEUiUP6xd0w7PdtJad6mmyRYYxJz5BHEOp8YIVJ0rNWNNMQXxtUR0TXr
- Rkhu5a08XygD603TbmhpxNR9wwc98HmhSFUbPphU/IKKk26v8
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-ID: <20250321-ath12k-ahb-v12-9-bb389ed76ae5@quicinc.com>
+References: <20250321-ath12k-ahb-v12-0-bb389ed76ae5@quicinc.com>
+In-Reply-To: <20250321-ath12k-ahb-v12-0-bb389ed76ae5@quicinc.com>
+To: Johannes Berg <johannes@sipsolutions.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+CC: <linux-wireless@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <ath12k@lists.infradead.org>,
+        "Sowmiya Sree
+ Elavalagan" <quic_ssreeela@quicinc.com>,
+        Vasanthakumar Thiagarajan
+	<vasanthakumar.thiagarajan@oss.qualcomm.com>,
+        Raj Kumar Bhagat
+	<quic_rajkbhag@quicinc.com>
+X-Mailer: b4 0.14.2
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nalasex01b.na.qualcomm.com (10.47.209.197)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: l64CR7GJDEfDxgQr0uvL_n7tSfVANLt9
+X-Proofpoint-GUID: l64CR7GJDEfDxgQr0uvL_n7tSfVANLt9
+X-Authority-Analysis: v=2.4 cv=ZN3XmW7b c=1 sm=1 tr=0 ts=67dd4528 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=COk6AnOGAAAA:8 a=EUspDBNiAAAA:8 a=ts5QanDNsPI7iOQJwMMA:9
+ a=QEXdDO2ut3YA:10 a=TjNXssC_j7lpFel5tvFf:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-21_04,2025-03-20_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503210080
 
-> This is the start of the stable review cycle for the 6.6.84 release.
-> There are 166 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Sat, 22 Mar 2025 16:56:28 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.84=
--rc2.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.gi=
-t linux-6.6.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+From: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
 
-Cross-builds for ia64/hp-sim and runs fine in Ski ([1]).
+Q6 processor acts as rootPD, other hardware like IPQ5332 which are
+attached to Q6 act as userPDs. WCSS driver handles loading and booting
+of rootPD, while the ath12k driver boots the userPD.
+Get the rproc handle from the DTS entry and boot the rootPD if it
+is not already powered on. Register to the rproc notifier to monitor
+the rproc state, this allows ath12k driver to know power up/down
+sequence of the rootPD. Power up the rootPD and wait for a power-up
+notification from the notifier callback before powering up the userPDs.
 
-[1]: https://github.com/linux-ia64/linux-stable-rc/actions/runs/1398396707=
-8#summary-39154720796
+Tested-on: IPQ5332 hw1.0 AHB WLAN.WBE.1.3.1-00130-QCAHKSWPL_SILICONZ-1
 
-Tested-by: Frank Scheiner <frank.scheiner@web.de>
+Signed-off-by: Sowmiya Sree Elavalagan <quic_ssreeela@quicinc.com>
+Reviewed-by: Vasanthakumar Thiagarajan <vasanthakumar.thiagarajan@oss.qualcomm.com>
+Co-developed-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+Signed-off-by: Raj Kumar Bhagat <quic_rajkbhag@quicinc.com>
+---
+ drivers/net/wireless/ath/ath12k/ahb.c | 146 +++++++++++++++++++++++++++++++++-
+ drivers/net/wireless/ath/ath12k/ahb.h |   7 ++
+ 2 files changed, 151 insertions(+), 2 deletions(-)
 
-Cheers,
-Frank
+diff --git a/drivers/net/wireless/ath/ath12k/ahb.c b/drivers/net/wireless/ath/ath12k/ahb.c
+index 28986500ff7d268fc91d900108d4aeaf8ae4a38e..c08c2e6bc0d4a92b546189b0e5a2cc4738c50ea2 100644
+--- a/drivers/net/wireless/ath/ath12k/ahb.c
++++ b/drivers/net/wireless/ath/ath12k/ahb.c
+@@ -8,6 +8,7 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/remoteproc.h>
+ #include "ahb.h"
+ #include "debug.h"
+ #include "hif.h"
+@@ -546,6 +547,136 @@ static const struct ath12k_hif_ops ath12k_ahb_hif_ops_ipq5332 = {
+ 	.map_service_to_pipe = ath12k_ahb_map_service_to_pipe,
+ };
+ 
++static int ath12k_ahb_root_pd_state_notifier(struct notifier_block *nb,
++					     const unsigned long event, void *data)
++{
++	struct ath12k_ahb *ab_ahb = container_of(nb, struct ath12k_ahb, root_pd_nb);
++	struct ath12k_base *ab = ab_ahb->ab;
++
++	if (event == ATH12K_RPROC_AFTER_POWERUP) {
++		ath12k_dbg(ab, ATH12K_DBG_AHB, "Root PD is UP\n");
++		complete(&ab_ahb->rootpd_ready);
++	}
++
++	return 0;
++}
++
++static int ath12k_ahb_register_rproc_notifier(struct ath12k_base *ab)
++{
++	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
++
++	ab_ahb->root_pd_nb.notifier_call = ath12k_ahb_root_pd_state_notifier;
++	init_completion(&ab_ahb->rootpd_ready);
++
++	ab_ahb->root_pd_notifier = qcom_register_ssr_notifier(ab_ahb->tgt_rproc->name,
++							      &ab_ahb->root_pd_nb);
++	if (IS_ERR(ab_ahb->root_pd_notifier))
++		return PTR_ERR(ab_ahb->root_pd_notifier);
++
++	return 0;
++}
++
++static void ath12k_ahb_unregister_rproc_notifier(struct ath12k_base *ab)
++{
++	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
++
++	if (!ab_ahb->root_pd_notifier) {
++		ath12k_err(ab, "Rproc notifier not registered\n");
++		return;
++	}
++
++	qcom_unregister_ssr_notifier(ab_ahb->root_pd_notifier,
++				     &ab_ahb->root_pd_nb);
++	ab_ahb->root_pd_notifier = NULL;
++}
++
++static int ath12k_ahb_get_rproc(struct ath12k_base *ab)
++{
++	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
++	struct device *dev = ab->dev;
++	struct device_node *np;
++	struct rproc *prproc;
++
++	np = of_parse_phandle(dev->of_node, "qcom,rproc", 0);
++	if (!np) {
++		ath12k_err(ab, "failed to get q6_rproc handle\n");
++		return -ENOENT;
++	}
++
++	prproc = rproc_get_by_phandle(np->phandle);
++	of_node_put(np);
++	if (!prproc)
++		return dev_err_probe(&ab->pdev->dev, -EPROBE_DEFER,
++				     "failed to get rproc\n");
++
++	ab_ahb->tgt_rproc = prproc;
++
++	return 0;
++}
++
++static int ath12k_ahb_boot_root_pd(struct ath12k_base *ab)
++{
++	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
++	unsigned long time_left;
++	int ret;
++
++	ret = rproc_boot(ab_ahb->tgt_rproc);
++	if (ret < 0) {
++		ath12k_err(ab, "RootPD boot failed\n");
++		return ret;
++	}
++
++	time_left = wait_for_completion_timeout(&ab_ahb->rootpd_ready,
++						ATH12K_ROOTPD_READY_TIMEOUT);
++	if (!time_left) {
++		ath12k_err(ab, "RootPD ready wait timed out\n");
++		return -ETIMEDOUT;
++	}
++
++	return 0;
++}
++
++static int ath12k_ahb_configure_rproc(struct ath12k_base *ab)
++{
++	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
++	int ret;
++
++	ret = ath12k_ahb_get_rproc(ab);
++	if (ret < 0)
++		return ret;
++
++	ret = ath12k_ahb_register_rproc_notifier(ab);
++	if (ret < 0) {
++		ret = dev_err_probe(&ab->pdev->dev, ret,
++				    "failed to register rproc notifier\n");
++		goto err_put_rproc;
++	}
++
++	if (ab_ahb->tgt_rproc->state != RPROC_RUNNING) {
++		ret = ath12k_ahb_boot_root_pd(ab);
++		if (ret < 0) {
++			ath12k_err(ab, "failed to boot the remote processor Q6\n");
++			goto err_unreg_notifier;
++		}
++	}
++	return 0;
++
++err_unreg_notifier:
++	ath12k_ahb_unregister_rproc_notifier(ab);
++
++err_put_rproc:
++	rproc_put(ab_ahb->tgt_rproc);
++	return ret;
++}
++
++static void ath12k_ahb_deconfigure_rproc(struct ath12k_base *ab)
++{
++	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
++
++	ath12k_ahb_unregister_rproc_notifier(ab);
++	rproc_put(ab_ahb->tgt_rproc);
++}
++
+ static int ath12k_ahb_resource_init(struct ath12k_base *ab)
+ {
+ 	struct ath12k_ahb *ab_ahb = ath12k_ab_to_ahb(ab);
+@@ -631,6 +762,7 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
+ {
+ 	struct ath12k_base *ab;
+ 	const struct ath12k_hif_ops *hif_ops;
++	struct ath12k_ahb *ab_ahb;
+ 	enum ath12k_hw_rev hw_rev;
+ 	u32 addr;
+ 	int ret;
+@@ -660,6 +792,8 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
+ 	ab->pdev = pdev;
+ 	ab->hw_rev = hw_rev;
+ 	platform_set_drvdata(pdev, ab);
++	ab_ahb = ath12k_ab_to_ahb(ab);
++	ab_ahb->ab = ab;
+ 
+ 	/* Set fixed_mem_region to true for platforms that support fixed memory
+ 	 * reservation from DT. If memory is reserved from DT for FW, ath12k driver
+@@ -688,20 +822,27 @@ static int ath12k_ahb_probe(struct platform_device *pdev)
+ 
+ 	ath12k_ahb_init_qmi_ce_config(ab);
+ 
++	ret = ath12k_ahb_configure_rproc(ab);
++	if (ret)
++		goto err_ce_free;
++
+ 	ret = ath12k_ahb_config_irq(ab);
+ 	if (ret) {
+ 		ath12k_err(ab, "failed to configure irq: %d\n", ret);
+-		goto err_ce_free;
++		goto err_rproc_deconfigure;
+ 	}
+ 
+ 	ret = ath12k_core_init(ab);
+ 	if (ret) {
+ 		ath12k_err(ab, "failed to init core: %d\n", ret);
+-		goto err_ce_free;
++		goto err_rproc_deconfigure;
+ 	}
+ 
+ 	return 0;
+ 
++err_rproc_deconfigure:
++	ath12k_ahb_deconfigure_rproc(ab);
++
+ err_ce_free:
+ 	ath12k_ce_free_pipes(ab);
+ 
+@@ -741,6 +882,7 @@ static void ath12k_ahb_free_resources(struct ath12k_base *ab)
+ 	ath12k_hal_srng_deinit(ab);
+ 	ath12k_ce_free_pipes(ab);
+ 	ath12k_ahb_resource_deinit(ab);
++	ath12k_ahb_deconfigure_rproc(ab);
+ 	ath12k_core_free(ab);
+ 	platform_set_drvdata(pdev, NULL);
+ }
+diff --git a/drivers/net/wireless/ath/ath12k/ahb.h b/drivers/net/wireless/ath/ath12k/ahb.h
+index 64f0696588c05b4036f8ea45eab127cc15dd4226..1105473917ceeda294b5e073fff875331b7b1d8b 100644
+--- a/drivers/net/wireless/ath/ath12k/ahb.h
++++ b/drivers/net/wireless/ath/ath12k/ahb.h
+@@ -7,6 +7,7 @@
+ #define ATH12K_AHB_H
+ 
+ #include <linux/clk.h>
++#include <linux/remoteproc/qcom_rproc.h>
+ #include "core.h"
+ 
+ #define ATH12K_AHB_RECOVERY_TIMEOUT (3 * HZ)
+@@ -16,6 +17,8 @@
+ #define ATH12K_AHB_SMP2P_SMEM_VALUE_MASK	0xFFFFFFFF
+ #define ATH12K_PCI_CE_WAKE_IRQ			2
+ #define ATH12K_PCI_IRQ_CE0_OFFSET		3
++#define ATH12K_ROOTPD_READY_TIMEOUT		(5 * HZ)
++#define ATH12K_RPROC_AFTER_POWERUP		QCOM_SSR_AFTER_POWERUP
+ 
+ enum ath12k_ahb_smp2p_msg_id {
+ 	ATH12K_AHB_POWER_SAVE_ENTER = 1,
+@@ -25,8 +28,12 @@ enum ath12k_ahb_smp2p_msg_id {
+ struct ath12k_base;
+ 
+ struct ath12k_ahb {
++	struct ath12k_base *ab;
+ 	struct rproc *tgt_rproc;
+ 	struct clk *xo_clk;
++	struct completion rootpd_ready;
++	struct notifier_block root_pd_nb;
++	void *root_pd_notifier;
+ };
+ 
+ static inline struct ath12k_ahb *ath12k_ab_to_ahb(struct ath12k_base *ab)
+
+-- 
+2.34.1
+
