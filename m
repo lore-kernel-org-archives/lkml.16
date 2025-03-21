@@ -1,129 +1,102 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A79F91DED49;
-	Fri, 21 Mar 2025 14:50:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605E3154426;
+	Fri, 21 Mar 2025 14:51:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742568649; cv=none; b=ujoSyfqrfWX8Q0r96gwQL86sCg+Sn/+HpBlR+RpSqoJuuU7noYQzi7kx/5z16ao4xKWFOBJEGkeF/zXL6lEGLAoZ4JqRBaIzTniBU6sl1P4vq28gTgzKLM7qQsil9kHJQAYKB+1V+5kbnBuSWHAgOHsbij/F2Pp/OmMydAEo/h4=
+	t=1742568703; cv=none; b=cCO18ga1Hw5DKIT/P9F6B9R4m4yMUCpeBCZdzOrlpylQUusTzjSCt76rfdE5uralL17ZljMwlR5yfQ4XRzukg+HV/5JMLmWbWiypwErF0da/e9kKEQ5SoeaylJum6sldYrNd0MdU2iNAscjy6+4/h8PEyFuWWtOCLap6EeGw0rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742568649; c=relaxed/simple;
-	bh=/fke0FZvpYVr1VpmHVa1ygKLi+Vnc7JrixCJyNiA7Ro=;
-	h=From:Subject:Date:Message-ID:MIME-Version:Content-Type:To:CC; b=dEemYuzaHE2rn0sHGUtRa2rYVltnbvRI5WX7jh2pMN9ZhBKUQfNLOwyJEd0qsXbHjkGvI4Lt1iZ4bR9vWrff9dIq+bWywdNHoDN9Qbwumid3jHxlfu2ezRw673T9p5Eln7tAsg1k5A3W6KokcBrn4O9D0cKEneKCdfqikwRS6z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=tIbopaX6; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1742568703; c=relaxed/simple;
+	bh=PhuVuMchyJ3HJTMtCg1H6MJB1Gn7Kg0keWLQLs0iu9k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q2T9o/AnHtyu+UvNvirJU0HFAjSLxfxEoKu75CsQgjaHqc//ie5HHsnT9DNXj0u/TBBa+hZBnTkdnVSy343BFKP2NcXkr08oD2dp8bMhPcrRgwXdpoelvL2pPWm2zFJh5Ca76Bwq39R8hC7wRhx0lYPv8Q5yJs1pBh5O3BWvQjI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NrkoEdc5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="tIbopaX6"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LBNahF009105;
-	Fri, 21 Mar 2025 10:50:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:message-id
-	:mime-version:subject:to; s=DKIM; bh=oSg1mqldn0GUtZnijpXisy8J008
-	1sPGcJiDUPXyz7ws=; b=tIbopaX6HGC8QCwC+dAD5so+fDyi3W8Txc7Kj3suLGK
-	6xAl/DZhVvzuPTmDs2yPkCdCNOqPirIb2VI6zzAzJOXqdA5yFyTUTf65Dx4YXWof
-	arBFUddYtfCvjV7FHUwPVl/H2crqVht4S3mdQRYj6n7IsdrFhqjyPoq/eAIIjUGr
-	J3553mhvH1vadTVWfGpmEhRcBNjalg+RdS6LKhj70ZbM5KYVI8CYP1naCc+1Rs05
-	eeNjc/9unqNT0KCNTfTnOITeivuJigOrQYJlbdmi5OyGbSesmz11fzo03ov0hStP
-	oWiOMbPy+tT6WI3nMIgRLalZD7EZOT2ubI6QBIdpNdw==
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45h76sgvv9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 10:50:14 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 52LEoD42057363
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 21 Mar 2025 10:50:13 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 21 Mar 2025 10:50:13 -0400
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Fri, 21 Mar 2025 10:50:13 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Fri, 21 Mar 2025 10:50:13 -0400
-Received: from HYB-DlYm71t3hSl.ad.analog.com (HYB-DlYm71t3hSl.ad.analog.com [10.44.3.52] (may be forged))
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 52LEo1ca011710;
-	Fri, 21 Mar 2025 10:50:03 -0400
-From: Jorge Marques <jorge.marques@analog.com>
-Subject: [PATCH 0/2] Add sys-bus-iio ABI frequency options to events and
- oversampling
-Date: Fri, 21 Mar 2025 15:50:00 +0100
-Message-ID: <20250321-abi-oversampling-events-frequency-v1-0-794c1ab2f079@analog.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NrkoEdc5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45722C4CEE3;
+	Fri, 21 Mar 2025 14:51:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742568702;
+	bh=PhuVuMchyJ3HJTMtCg1H6MJB1Gn7Kg0keWLQLs0iu9k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=NrkoEdc5u2lqcHeV05xrtf40mrquBkRW9n/fzn4LZGdFNHSQ8gmOE0cie+9+qOZFb
+	 px/pwhq+h+SQuXUmMJkVUCfO9IXqdLBiSFMCyLg2brK2YdcJF3xKsh3cuFV9IzbMw6
+	 8NNvCtAdpWvucPoPz/2RenkeGryO/Arw460MehktKmJkdDngHzGVo0InxYOfMvGg3A
+	 +ouSKWParfQld/grByeo1gPBIIuO9DUs9ztvOJGhP6jo4R/zNW5Iklk4De5J5JQ6kf
+	 cdZD2b15GbiVlW7px4k7YJ8fsNcQZ+jrFqmB1YX3ydldNZU3SncODZCXCp8WYzU/IT
+	 Gscc5KYbfqdbQ==
+Date: Fri, 21 Mar 2025 14:51:39 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Nico Pache <npache@redhat.com>
+Cc: rf@opensource.cirrus.com, patches@opensource.cirrus.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, simont@opensource.cirrus.com,
+	ckeepax@opensource.cirrus.com, brendan.higgins@linux.dev,
+	davidgow@google.com, rmoar@google.com, johannes.berg@intel.com,
+	sj@kernel.org
+Subject: Re: [PATCH] kunit: cs_dsp: Depend on FW_CS_DSP rather then enabling
+ it
+Message-ID: <Z918-4psPV3j9c-d@finisterre.sirena.org.uk>
+References: <20250319230539.140869-1-npache@redhat.com>
+ <618b8578-1897-45e4-83eb-b725102ab27d@sirena.org.uk>
+ <CAA1CXcD4dOUWOXp0ODSEo4+g9_QQkJe1tmX3bVdcs3N_PPdSHQ@mail.gmail.com>
+ <a0fdd818-a4be-446e-b18e-0c655bc94c9a@sirena.org.uk>
+ <CAA1CXcDPg7Na9biCMOx4i_xwXZ5Y_qq-7SiYEU82v2a6TFpMJA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJh83WcC/x3NQQ6CMBBG4auQWTtJKcjCqxgXtfzFSbTgDDYaw
- t1pXH6b9zYyqMDo0mykKGIy54r21FB8hDyBZawm7/zZdb7lcBeeC9TCa3lKnhgFeTVOivcHOf6
- 474Y49CkiwlHtLIok3//jetv3A0oJp3BzAAAA
-X-Change-ID: 20250321-abi-oversampling-events-frequency-436c64fcece0
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>
-CC: <dlechner@baylibre.com>, <Michael.Hennerich@analog.com>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jorge Marques
-	<jorge.marques@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742568601; l=1384;
- i=jorge.marques@analog.com; s=20250303; h=from:subject:message-id;
- bh=/fke0FZvpYVr1VpmHVa1ygKLi+Vnc7JrixCJyNiA7Ro=;
- b=oGmhiPlKHkAucSXkcrRtxLPvHxede8avNQEhNkVGfpR4Jzj1pj5RUvB6Sawr61bxsgTvBfyt+
- 8Z3gKx5e12BCFN0O6pf/V/39gvLhOqoAPRRFiDy5Q3Xtyn0GjE05Zge
-X-Developer-Key: i=jorge.marques@analog.com; a=ed25519;
- pk=NUR1IZZMH0Da3QbJ2tBSznSPVfRpuoWdhBzKGSpAdbg=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: kDfaLNeq1FtB-ErZ3PxTjZcICSu206o-
-X-Authority-Analysis: v=2.4 cv=BpidwZX5 c=1 sm=1 tr=0 ts=67dd7ca6 cx=c_pps a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=gAnH3GRIAAAA:8 a=sbcHFVb_5Oqvkv0eGmQA:9 a=QEXdDO2ut3YA:10
-X-Proofpoint-ORIG-GUID: kDfaLNeq1FtB-ErZ3PxTjZcICSu206o-
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- suspectscore=0 mlxlogscore=999 bulkscore=0 malwarescore=0 impostorscore=0
- phishscore=0 clxscore=1015 lowpriorityscore=0 adultscore=0 spamscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210108
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="44Vt4as3XnXLhDhy"
+Content-Disposition: inline
+In-Reply-To: <CAA1CXcDPg7Na9biCMOx4i_xwXZ5Y_qq-7SiYEU82v2a6TFpMJA@mail.gmail.com>
+X-Cookie: Well begun is half done.
 
-Some device families such as Analog Device's max1363, ad7606, ad799x, and
-ad4052 contain internal clocks used by monitor modes and oversampling.
-Devices' monitor modes are exposed as IIO events.
-The max1363 driver included the events/sampling_frequency in
-commit 168c9d95a940 ("iio:adc:max1363 move from staging.")
-and ad799x in
-commit ba1d79613df3 ("staging:iio:ad799x: Use event spec for threshold
-hysteresis")
-but went undocumented so far.
 
-The oversampling sampling frequency is a planned feature to be patched
-onto the ad7606 driver.
-In this particular device, it is called oversampling padding.
-The upcoming ad4052 linux driver will utilize both entries,
-it is worth noting, however, there is a single register for both
-options. Since the device is never concurrently in both modes, the
-values will be safely cached on the device state.
+--44Vt4as3XnXLhDhy
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Jorge Marques <jorge.marques@analog.com>
----
-Jorge Marques (2):
-      Documentation: ABI: add events sampling frequency in sysfs-bus-iio
-      Documentation: ABI: add oversampling frequency in sysfs-bus-iio
+On Fri, Mar 21, 2025 at 05:37:50AM -0600, Nico Pache wrote:
+> On Thu, Mar 20, 2025 at 4:49=E2=80=AFPM Mark Brown <broonie@kernel.org> w=
+rote:
 
- Documentation/ABI/testing/sysfs-bus-iio | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
----
-base-commit: 9f36acefb2621d980734a5bb7d74e0e24e0af166
-change-id: 20250321-abi-oversampling-events-frequency-436c64fcece0
+> > Simply adding it to the all_tests.config will just result in it getting
+> > turned off by Kconfig during the build since it's not a visible option
+> > so that's not accomplishing anything.  all_tests.config is not UML
+> > specific, it's for enabling all the KUnit tests that could run in UML no
+> > matter how you're running them.
 
-Best regards,
--- 
-Jorge Marques <jorge.marques@analog.com>
+> So would the correct approach be allowing users to select FW_CS_DSP,
+> then apply these changes?
 
+That user select should only be visible if KUnit is enabled though,
+it really is library code so shouldn't actually be user selectable.  I'm
+not sure if there's some other strategy other KUnit tests for libraries
+use.
+
+> It also looks like FW_CS_DSP_KUNIT_TEST_UTILS and FW_CS_DSP_KUNIT_TEST
+> are redundant.
+
+Possibly there's more tests to come that'll use them?
+
+--44Vt4as3XnXLhDhy
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfdfPoACgkQJNaLcl1U
+h9D9wwgAggSj6DC9vV8bIsmlbXcAIQQ+ae2h9tlW7pLq+3MPqtKUcsHOpNZp0cfR
+EyOVUIOnhovRvqBu/q4PEfqdlNBArIlOZT9rI8YsJspAviayPPSw+XCRtPucpU4/
+11mzcrDAg4LxhIUg2Gj/Pj0iuUDfEHgH4kuNUM0gX/SJzvQfEYxYrwSWylh1907X
+gNq3d1S/4H0FQ8Im81I5bPlhkgLRFcYNNtSTFFHnKE+rmvLT8wn1+ryUlNFwYtSX
+scihIsl9KMz8lWEhuLXM84YD9FUc9vYjZy4Wa7qZYEo0XOqlZslZiBU7G8CQ8S38
+gCJYp7V0if04dtb5Vh6EmGH0G06A1Q==
+=EvbZ
+-----END PGP SIGNATURE-----
+
+--44Vt4as3XnXLhDhy--
