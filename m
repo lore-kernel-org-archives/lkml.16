@@ -1,190 +1,77 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D7C1EDA35
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:19:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E461E98ED;
+	Fri, 21 Mar 2025 08:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742545187; cv=none; b=FMSy2DuL0Aseg9AMaQZvM0hcvYwVRtKnc/JFI9moyxBq9ZSY4DFDkB/2dhYvvAfzRrhZsPpS5KZMQStZ6I7D3nrarHIDrYenxprQgotqY9k0iDpeaiNpqOW7IyXmpIFv1Jb1hck7XhM9hb/75GpqbPn1Zi4yfNUm+yN6wvSfHMw=
+	t=1742545253; cv=none; b=J0DJeGYEgKmaOYGFUZM2Vag3SQAyJemOCw0RjvrDIHwY4BOja3lwXbX5GYiJCrTRoJrX24iQ/17Yarczq4wwe2+eGLQjPzkCGIjix8AyXc/Dyx77u2yBgvh6b4SmopuNZupM0ELIsFaVZ1rgBfm5iW3dqkc8OSIqS1y5eeN7Vfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742545187; c=relaxed/simple;
-	bh=nBV0rhKS0xwWV81nt7VVhHciBFvCdsWmzY+TP+fKKGg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ISjId2zoefmtetlMjeBGZtWR5XrLiovQPUdRcCP3vfFtjiz8FFpnSzY0ibGIQ0TGxOoFRmiyW153wbBH6u3N3fr7ISRvKlBpjGq0LlDchD6FZCiu30v6NM/17yjGw/CbLmxUZYqsbi/+H+nV3RS6WhmUVP+ALnb8+VXuTbl99Oo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org; spf=none smtp.mailfrom=blackwall.org; dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b=aLPVoWd3; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blackwall.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blackwall.org
+	s=arc-20240116; t=1742545253; c=relaxed/simple;
+	bh=EV9CBzjf600nW+rcD5Nj7CVDfSsbZ9nJjWhRPymGwSo=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Ja50ZHyvycO+8L32GLW1HQXIIntRxHpX2/0VHPGP4OBRFp3JJElC3MWVXBfaJ4s6ZG6sHOvt1zwWNbExsyqBUQ69h24rczRJFn7HkXecGsh8Vfp17eq1ojcnerQI+byWILXIuwTGJx8koCaqrT9cvzMEh9cra3JonVUV3BL/548=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ImfLWmO/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=blackwall-org.20230601.gappssmtp.com header.i=@blackwall-org.20230601.gappssmtp.com header.b="aLPVoWd3"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-39149bccb69so1547491f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 01:19:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=blackwall-org.20230601.gappssmtp.com; s=20230601; t=1742545184; x=1743149984; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S1AzRi6eHoS6ZWFDX/LO1TVYvjTJRBljJTiN5ZXvzYc=;
-        b=aLPVoWd3U6p009QWrN5VlVRC40GWsvhuuXrXpFQYPompGgcukrKZHCL90ju7QPLyCe
-         npjoDtE4tczYioJKPoNY2xqbNjnA3P4iGdreET956cU4VTDtiFelLCr4Pjbu7Pl8l/zL
-         jc97tgo9KrniWcj6Ky7hXfabwJRrQ3MKv+ZyfBSJXPzlTLet2o6lxe2E2eYauKixTer4
-         ELHmjqlXFWhfTW2Zu7zLbaJ1oW5JG5mdtwvmOlSw8x4+UxLfJD1nNgxSwvVadLE3c/8X
-         bv/KtCq105pWKivkbWOd87lCYYnkdBBCs5GqO/tPmrJTIro4NT7iM4rPOp39vMuAsgGe
-         +3CQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742545184; x=1743149984;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S1AzRi6eHoS6ZWFDX/LO1TVYvjTJRBljJTiN5ZXvzYc=;
-        b=HB5tQ9BLA85N9Mw7mePavE7ERMcKVpa6C7B5zJW1owN4IyC8z0KY2GORtXfQR4IvxM
-         Cgf66PVmot4xn0nrBikRM8s3Zv4xJMsF+ParnAauS4bdgGXAT9f6yOaIGh2otjf9ij9e
-         baabEP1Z/Yr4KLP9cso5S2DId7zWS9VmfcVzxCT/hLkN+Br+YX0DeZPz4zP1aGCAdu2W
-         7+/qLISnOSjkDYwwJAnUBi0fkQAUns4WC9oXWR3AbJpwclVI0sz1aMvnlJxZ6hVpDggz
-         LgfUBygIiecexGHe2e0tIAqCElFVFsSVnl6OIrpbFL0sl0v7XzaODviuAAc2E7+BIqbC
-         UVhA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxCK+BsMSFhfutuXml7/FtP7ng/5+RIGH+hXT7O3LKhceYJ9QhqDiFQe4CA8LvDvB1e+Bnv4KMOWYhlIM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzOCFWtJ8XEobpFGGUJggUedL1OIm1KyFlbUTNFAYo50udzZ+J5
-	CavxSac0pFyg2RNLWPYgtu2j2r805PXUOjvUQiaCsbmRfgxqGP5Bwy7JoyAcTNQ=
-X-Gm-Gg: ASbGncsTlHAlT1XmjGFw0eSqUmcc3HlJjRN7XdXasu8Wl7oBBunRJsjJZKCYuV2no4u
-	7wGTex79/E87XbbAmwYUtvE+/hLEPCwyG26sfSNzUxEYBp5LJBvtnfb2DxMVE1/xEYAdNnMqt9B
-	tqKEOLTOgbkzINRB6W6XkClKCWyvpuA9eF6mC4swrRjvfKY/r7GJ6qh/6Flk9P4XwcnGfYhVlEs
-	b50bBWcw5xIW07RTFSDZJ7uYEk2OX52zzktmZ54+RCvLz0FJcBs7d1bOcdagAAf9n1FFk/jbw5D
-	lSmSg2Hr96IPV/vmOuwu0iYiRlEd/Qbb96iUnIa14YkOD+/l9jVD6WEcDgRFWQQuklcy2e3oeKH
-	+
-X-Google-Smtp-Source: AGHT+IE0vn5XmRw18AJGFhtJXtjIWLR4HgtKdHsBoT+HKQO/7WMl2yfPtRbZKEhKlsvQrsE1URNu0A==
-X-Received: by 2002:a05:6000:1a87:b0:391:23e6:f08c with SMTP id ffacd0b85a97d-3997f941973mr2350929f8f.47.1742545183874;
-        Fri, 21 Mar 2025 01:19:43 -0700 (PDT)
-Received: from [192.168.0.205] (78-154-15-142.ip.btc-net.bg. [78.154.15.142])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43f43ed6sm70133835e9.13.2025.03.21.01.19.42
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 01:19:43 -0700 (PDT)
-Message-ID: <c90151bc-a529-4f4e-a0b9-5831a6b803f7@blackwall.org>
-Date: Fri, 21 Mar 2025 10:19:42 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ImfLWmO/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05EA2C4CEE3;
+	Fri, 21 Mar 2025 08:20:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742545252;
+	bh=EV9CBzjf600nW+rcD5Nj7CVDfSsbZ9nJjWhRPymGwSo=;
+	h=Date:From:To:Cc:Subject:From;
+	b=ImfLWmO/9Xxg543MM7ZzDe4lXCPXj+0YBv29x/4tYwW7b7G7tKUki/TnZaeeGDk8u
+	 UhVyttA8keQtM8LljgaMeOwl6dKXfRaqkjBXfNVdYwsID9oAmeyrtuUmAN9Hl3Ynj8
+	 /o+ZrVjGBPwsWnkXUl2CqrMAZq2HdpUuwiLu7RbeVzilnD9oaLYkyv4GmV4UPzasI6
+	 e5wmRHLnoy3OGwti45sWOfLexZUsxS7UBcOtHxPsP36Z1R5eay4NQq3D6uaJxnDTsJ
+	 5BqxU8ak0NLbxM7a3fS1E3omhZyvG0rlXtiKieRxCm2VI7q/sAnhExdjmhMCVpXB8M
+	 GHjuw0u5I6kBw==
+Date: Fri, 21 Mar 2025 09:20:48 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: linux-i2c <linux-i2c@vger.kernel.org>, 
+	lkml <linux-kernel@vger.kernel.org>, Andi Shyti <andi.shyti@kernel.org>
+Subject: i2c-host-fixes for v6.14-rc8
+Message-ID: <pe5su4wqtac6oo7deqkuzihrm6oorqsonhksb2lshujaocyimk@ed3kwddo7ci6>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [Patch net-next 1/3] net: bridge: mcast: Add offload failed mdb
- flag
-To: Joseph Huang <Joseph.Huang@garmin.com>, netdev@vger.kernel.org
-Cc: Joseph Huang <joseph.huang.2024@gmail.com>,
- Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Roopa Prabhu <roopa@nvidia.com>, Simon Horman <horms@kernel.org>,
- linux-kernel@vger.kernel.org, bridge@lists.linux.dev
-References: <20250318224255.143683-1-Joseph.Huang@garmin.com>
- <20250318224255.143683-2-Joseph.Huang@garmin.com>
-Content-Language: en-US
-From: Nikolay Aleksandrov <razor@blackwall.org>
-In-Reply-To: <20250318224255.143683-2-Joseph.Huang@garmin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 3/19/25 00:42, Joseph Huang wrote:
-> Add MDB_FLAGS_OFFLOAD_FAILED and MDB_PG_FLAGS_OFFLOAD_FAILED to indicate
-> that an attempt to offload the MDB entry to switchdev has failed.
-> 
-> Signed-off-by: Joseph Huang <Joseph.Huang@garmin.com>
-> ---
->  include/uapi/linux/if_bridge.h |  9 +++++----
->  net/bridge/br_mdb.c            |  2 ++
->  net/bridge/br_private.h        | 11 ++++++-----
->  net/bridge/br_switchdev.c      | 10 +++++-----
->  4 files changed, 18 insertions(+), 14 deletions(-)
-> 
-> diff --git a/include/uapi/linux/if_bridge.h b/include/uapi/linux/if_bridge.h
-> index a5b743a2f775..f2a6de424f3f 100644
-> --- a/include/uapi/linux/if_bridge.h
-> +++ b/include/uapi/linux/if_bridge.h
-> @@ -699,10 +699,11 @@ struct br_mdb_entry {
->  #define MDB_TEMPORARY 0
->  #define MDB_PERMANENT 1
->  	__u8 state;
-> -#define MDB_FLAGS_OFFLOAD	(1 << 0)
-> -#define MDB_FLAGS_FAST_LEAVE	(1 << 1)
-> -#define MDB_FLAGS_STAR_EXCL	(1 << 2)
-> -#define MDB_FLAGS_BLOCKED	(1 << 3)
-> +#define MDB_FLAGS_OFFLOAD		(1 << 0)
-> +#define MDB_FLAGS_FAST_LEAVE		(1 << 1)
-> +#define MDB_FLAGS_STAR_EXCL		(1 << 2)
-> +#define MDB_FLAGS_BLOCKED		(1 << 3)
-> +#define MDB_FLAGS_OFFLOAD_FAILED	(1 << 4)
->  	__u8 flags;
->  	__u16 vid;
->  	struct {
-> diff --git a/net/bridge/br_mdb.c b/net/bridge/br_mdb.c
-> index 1a52a0bca086..0639691cd19b 100644
-> --- a/net/bridge/br_mdb.c
-> +++ b/net/bridge/br_mdb.c
-> @@ -144,6 +144,8 @@ static void __mdb_entry_fill_flags(struct br_mdb_entry *e, unsigned char flags)
->  		e->flags |= MDB_FLAGS_STAR_EXCL;
->  	if (flags & MDB_PG_FLAGS_BLOCKED)
->  		e->flags |= MDB_FLAGS_BLOCKED;
-> +	if (flags & MDB_PG_FLAGS_OFFLOAD_FAILED)
-> +		e->flags |= MDB_FLAGS_OFFLOAD_FAILED;
->  }
->  
->  static void __mdb_entry_to_br_ip(struct br_mdb_entry *entry, struct br_ip *ip,
-> diff --git a/net/bridge/br_private.h b/net/bridge/br_private.h
-> index 1054b8a88edc..cd6b4e91e7d6 100644
-> --- a/net/bridge/br_private.h
-> +++ b/net/bridge/br_private.h
-> @@ -306,11 +306,12 @@ struct net_bridge_fdb_flush_desc {
->  	u16				vlan_id;
->  };
->  
-> -#define MDB_PG_FLAGS_PERMANENT	BIT(0)
-> -#define MDB_PG_FLAGS_OFFLOAD	BIT(1)
-> -#define MDB_PG_FLAGS_FAST_LEAVE	BIT(2)
-> -#define MDB_PG_FLAGS_STAR_EXCL	BIT(3)
-> -#define MDB_PG_FLAGS_BLOCKED	BIT(4)
-> +#define MDB_PG_FLAGS_PERMANENT		BIT(0)
-> +#define MDB_PG_FLAGS_OFFLOAD		BIT(1)
-> +#define MDB_PG_FLAGS_FAST_LEAVE		BIT(2)
-> +#define MDB_PG_FLAGS_STAR_EXCL		BIT(3)
-> +#define MDB_PG_FLAGS_BLOCKED		BIT(4)
-> +#define MDB_PG_FLAGS_OFFLOAD_FAILED	BIT(5)
->  
->  #define PG_SRC_ENT_LIMIT	32
->  
-> diff --git a/net/bridge/br_switchdev.c b/net/bridge/br_switchdev.c
-> index 7b41ee8740cb..68dccc2ff7b1 100644
-> --- a/net/bridge/br_switchdev.c
-> +++ b/net/bridge/br_switchdev.c
-> @@ -505,9 +505,6 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
->  	struct net_bridge_port *port = data->port;
->  	struct net_bridge *br = port->br;
->  
-> -	if (err)
-> -		goto err;
-> -
->  	spin_lock_bh(&br->multicast_lock);
->  	mp = br_mdb_ip_get(br, &data->ip);
->  	if (!mp)
-> @@ -516,11 +513,14 @@ static void br_switchdev_mdb_complete(struct net_device *dev, int err, void *pri
->  	     pp = &p->next) {
->  		if (p->key.port != port)
->  			continue;
-> -		p->flags |= MDB_PG_FLAGS_OFFLOAD;
-> +
-> +		if (err)
-> +			p->flags |= MDB_PG_FLAGS_OFFLOAD_FAILED;
-> +		else
-> +			p->flags |= MDB_PG_FLAGS_OFFLOAD;
+Hi Wolfram,
 
-These two should be mutually exclusive, either it's offloaded or it failed an offload,
-shouldn't be possible to have both set. I'd recommend adding some helper that takes
-care of that.
+No new fixes arrived last week, but I fished out this one from
+a couple of years ago. Thanks to Shyam for acking it!
 
->  	}
->  out:
->  	spin_unlock_bh(&br->multicast_lock);
-> -err:
->  	kfree(priv);
->  }
->  
+See you later with the pull request for the merge window.
 
+Thanks,
+Andi
+
+The following changes since commit 4701f33a10702d5fc577c32434eb62adde0a1ae1:
+
+  Linux 6.14-rc7 (2025-03-16 12:55:17 -1000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/andi.shyti/linux.git tags/i2c-host-fixes-6.14-rc8
+
+for you to fetch changes up to 6ea39cc388899a121b5b19b6968692e9460ee4a3:
+
+  i2c: amd-mp2: drop free_irq() of devm_request_irq() allocated irq (2025-03-20 14:37:47 +0100)
+
+----------------------------------------------------------------
+i2c-host-fixes for v6.14-rc8
+
+amd-mp2: fix double free of irq.
+
+----------------------------------------------------------------
+Yang Yingliang (1):
+      i2c: amd-mp2: drop free_irq() of devm_request_irq() allocated irq
+
+ drivers/i2c/busses/i2c-amd-mp2-pci.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
