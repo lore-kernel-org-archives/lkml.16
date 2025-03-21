@@ -1,318 +1,184 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11on2068.outbound.protection.outlook.com [40.107.236.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 735091D86C3
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:48:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572093; cv=none; b=ReOGAYCoioPWHXRHPj86clU3CRqSAT1lSuQjlp0FnLpESnr3/pGS1hoU3cJfjvhsWPc8J4i7JrC4XzNaqW1Wuf2vqGWijtx34H9br7HyQwZtdwNo/YMkWIh0qHD2bowxcrPoNxR4i6VfkvKruorLuI2dICbhd8A+8NPrAqTpiAc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572093; c=relaxed/simple;
-	bh=kvTFsr7ktgYszQ3wTsviG7c/3AR4BniICQsdxnGuuss=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=vCpsXIPwqXEbc7joFTm9f0DkxkRe6/CLnx95cIVggdl8qU31FRD33d0TuS850omTxLJRPWhOPBbGm5rUX9xbD1eYpO/xMnQS0h3cLgwSMtfDiRyMLGGISbJqjdZkZNnuG7AcC87oINRokUGvlPQA3rCGciEJkZ1vtJ8jngdu09c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=KuVwBnf2; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73ABF1D86C3;
+	Fri, 21 Mar 2025 15:49:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.236.68
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742572158; cv=fail; b=Q6FJV0VFUv+6Eiiu1e+3Fd+Pnoiwzt8IAqR/GUgONFmV/UaYL/ouA3jgNH7SccwRhWEuavjp8k6Ng8iLnvJC89y/U7OLTR606lhQmn3e1K6OCkq+z0Su9+P0k7YnbKCMOQPx/mWh1rOwKZAxD2uES2xjChNfwJC8fEabi5HY2OU=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742572158; c=relaxed/simple;
+	bh=3VaL5qc5a2UKUQNrlxx276ytrqi7/NM8luGI5WH9qbw=;
+	h=From:To:CC:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID:Date; b=TlRDXEYFm3u+K2WzC7AFiWBnH1kntwhvfIjfQY7lKLtQY4GI5ACRefQNS5WryJ+yqTk01AaMKKDRaoD62mlkrmaUg21iqaHQHBhHdTdOo5KzwAJFCeisX9nwOXjg1STH6sWtmSKcKfKF7Is0qx7tJk86p0563dWU3khNAd+PNz4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=qyfwsxgH; arc=fail smtp.client-ip=40.107.236.68
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="KuVwBnf2"
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATCvM011479
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:48:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	Ew2lMrVu7l0SPLG0kCLHLamFRIyU0cvwAG4t3O7Yn4g=; b=KuVwBnf2nE5dgPjG
-	iu0Dt5aTEYsF242ofGUjG/G1tZoUkf5iok4yeVizpJeM03fVEnrkD1BgMm4Qtb6d
-	S3jwK6BuxlDQCxas1P4zGZzLcw8YJpXmqIWPXMSjcyHe0W05XCYVL7lR5TsZna+Y
-	78BcbGqdkT0LTtdDWr0cpuZ9Ubk8oUIutzZVxWdEIPQf+MEb2ZJtOrytLQV4k966
-	8rnadosj7oXO4uKQa4r5Rjxd2qC6lctIPZ5Pl4M/psr9+JNXC1aYxiC6LHCzZq7w
-	PTzSvvfVO4+6CE4LojnPskHDOxVZvStMDqcB76N5HJOcXFD9zeFrs7uA/qN9fMvD
-	FgKxnQ==
-Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45g15y6xef-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:48:10 +0000 (GMT)
-Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22647ff3cf5so28720125ad.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:48:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742572089; x=1743176889;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ew2lMrVu7l0SPLG0kCLHLamFRIyU0cvwAG4t3O7Yn4g=;
-        b=BY7QjiXK9sLN5y+nSD+3GSbVM9VxE1LsFuMblfvS6lm5s63MkP5PVPJNsPcxlWeLTf
-         4slQxvz166AUMJ0UAELvJNMvKPuI65zBC95wB57n5XR382boMoK43xqiQnflD3oJxbCz
-         jYMKIS7NoMBRqpNPVFckVgUmlg+GHNfFg3uAC7X2Uh2cY3ejG37knguhgModcLaTotmZ
-         o6zqZsFJuSJqR41BVz5nSZ8FmZ5RLMsS2fbNhGR7/TWKEpSSw/C0Z6h86VTLB9v39TS8
-         QSk/iL2fX2TVIt8R5o9qZHUEfNqw7PeyEi+CPnLOQFgCOa/c21yOBB3PYpnwR52H8CYy
-         RTVw==
-X-Forwarded-Encrypted: i=1; AJvYcCUbEVi3KtJIVYzfIzdY8Fl4V4mV9uRzShlT31vIWkEp4MMOhq0bbj0XkPfp4VY6+UaVrO3fo525SvNmbVg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwUH74v7r9BUAjZ1JrTtUx3xQVtoXyuyYQZVI1d4Pvu6IQLDB23
-	V6leb8fpDkoTHeuVz4zfeOk3oB1460SThwX3tXe0X1lMkKNq8NfXKP7fN4Oe6W9ylO+6IyXJPcO
-	pE4NzE7yEyr0bPyAmWAXXPTh3XhyjXp7CWgdGhqfk+7gSZ5Lr/7bY+7ec+PCHyEs=
-X-Gm-Gg: ASbGncv7vZMal48Z2JRw3rPEUOb7doBcyaX3nowFcj9Z8O4iqD1OOmmpl8SHak4+1GO
-	3oPWHtrNO+9P0WHCuM4BKPjO7ibanwVTcBhLw5KV7oeQasFoTF5qdMBW+3oA4FyzaJV0U28sDxQ
-	C/Ois8MdP4xsoVu4+HoXsZWmbaC0Ej11q0llxryOQIvSFHYRaIpoaQ9T5D04UInZRqTsxpMrEaY
-	3UXy2gMlv1AHX0wvLHkpo8HV9nq4h16x0FwbWq/lJeV+uoI+Yw7zUYrkCHY1tLA4gPNNzH2tsyK
-	0r/GtQQrQHIYU1umkPPz+S8xoqxtiaJ/y358w9EDz0rFD+rzyHMoD7vRKyUVleKRMA==
-X-Received: by 2002:a17:902:e846:b0:225:abd2:5e39 with SMTP id d9443c01a7336-22780da5fc2mr56334535ad.30.1742572088489;
-        Fri, 21 Mar 2025 08:48:08 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGhXXKtU/apQYCTmprByHUMaLSD4Gh5qMihEs8CapzUY4ItUimuE0Rg0Pf+Wmofij6lJ9+HXg==
-X-Received: by 2002:a17:902:e846:b0:225:abd2:5e39 with SMTP id d9443c01a7336-22780da5fc2mr56333985ad.30.1742572087896;
-        Fri, 21 Mar 2025 08:48:07 -0700 (PDT)
-Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811baee4sm18356385ad.135.2025.03.21.08.48.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 08:48:07 -0700 (PDT)
-Message-ID: <f96b313a-fa0d-45d6-b358-8d2da40a9b95@oss.qualcomm.com>
-Date: Fri, 21 Mar 2025 09:48:04 -0600
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="qyfwsxgH"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=SF5c6/wP02Bhzo8IhY80GvbcEAWrUlTiAnUi9xQbNOGE2uOzHxmrDhsKwkySTzeyLej2FA4xiXsWAuMDSw57nQpYLd6fExdZTFzwiMNWWW/t7Ux11kh6PGbS6/W3dpyue2f9c3hcLKDcq3JLtTWj4wdGrlnJ2SpeonIFYYwxHGUVoJLfdmy8d3MG182iODcT++aoit8GA/XPM9sUl+qkt2riVAPqSEoJwx0IXS00ohY+XGMtoYwgB9emR9RZM3JonJ6ywRB3XMkrNE2wSeNwu70IOUffAYIG2SbKwIS2dxDIiP2kIss7WUVwvn9oYKg5fX7JoAq1BpqAn8gODt9tlA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=x/mGZYbzjvkXzi/Hc/UJytnF9weZ1//wxkbnMP3RiLc=;
+ b=aHQU0tsE5mJwK/bgP/1Om80d53R6yPlGuUvL1qKDyctfbR0JneZQwaNwjbRVHHkFCv469jEoVYMw3cVQnr8bKGe7NLfLH2BMogNXTKVdSqszChf++KQgqe3b6y0xJHIcujOP4gL7WBlmmEzGKaByTjtthAnqlTlGWxdns35U4qjDIliXt1nO/UFc6sj1qz2FKIW6nb0ofL7CwN3JHLefxwbD7GNVmCIToPIv1razopeJkwLcN1FClmWFc4xaAEWd0pb20rQybHB6Ir27ei8ACNblHBJ63SNyjbfXH6ekdKJSrMbHf3ph+S39+c01f4IuEfC69CTwMqKjwb2ZJ1fazg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 216.228.117.161) smtp.rcpttodomain=linuxfoundation.org
+ smtp.mailfrom=nvidia.com; dmarc=pass (p=reject sp=reject pct=100) action=none
+ header.from=nvidia.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=x/mGZYbzjvkXzi/Hc/UJytnF9weZ1//wxkbnMP3RiLc=;
+ b=qyfwsxgHbrkr33OmKtYsrPu0SwuOmiqDzG5+fX+eWv7/PdfvB9WY1W9cX2qx4De0WRMJ+yjAKFQZkiuXJXf+2umCUN+NuuAlwiGjS36NupaLfw2YQRysQluyzOaxV9DmsLUR2n3I/9TH1pXYU/vxwnfXCVernmKPwQ5ZQt4rP0ZHzaOqRw0V0iJnI/MQ08T/eqAQYDs3Xg+/7/JYO05d2xk8D5DobseWRkTaIuu0VQTpNaxe3L2H3IfwksYMwrYRCyi6Ewd/CbL1x5mflNY29z0qjLU5FnapseihDOozZv2v/ToUJozZyPlCEFyTjoPTaBbXAYjRiEUcozsDjw+0jQ==
+Received: from BN9PR03CA0199.namprd03.prod.outlook.com (2603:10b6:408:f9::24)
+ by IA1PR12MB8261.namprd12.prod.outlook.com (2603:10b6:208:3f7::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Fri, 21 Mar
+ 2025 15:49:10 +0000
+Received: from BL6PEPF0001AB57.namprd02.prod.outlook.com
+ (2603:10b6:408:f9:cafe::8) by BN9PR03CA0199.outlook.office365.com
+ (2603:10b6:408:f9::24) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.35 via Frontend Transport; Fri,
+ 21 Mar 2025 15:49:10 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
+ smtp.mailfrom=nvidia.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=nvidia.com;
+Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
+ 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
+ client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
+Received: from mail.nvidia.com (216.228.117.161) by
+ BL6PEPF0001AB57.mail.protection.outlook.com (10.167.241.9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.8534.20 via Frontend Transport; Fri, 21 Mar 2025 15:49:10 +0000
+Received: from rnnvmail202.nvidia.com (10.129.68.7) by mail.nvidia.com
+ (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 21 Mar
+ 2025 08:48:57 -0700
+Received: from rnnvmail201.nvidia.com (10.129.68.8) by rnnvmail202.nvidia.com
+ (10.129.68.7) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14; Fri, 21 Mar
+ 2025 08:48:56 -0700
+Received: from jonathanh-vm-01.nvidia.com (10.127.8.9) by mail.nvidia.com
+ (10.129.68.8) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.14 via Frontend
+ Transport; Fri, 21 Mar 2025 08:48:56 -0700
+From: Jon Hunter <jonathanh@nvidia.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	<patches@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+	<torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+	<linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+	<lkft-triage@lists.linaro.org>, <pavel@denx.de>, <jonathanh@nvidia.com>,
+	<f.fainelli@gmail.com>, <sudipm.mukherjee@gmail.com>, <srw@sladewatkins.net>,
+	<rwarsow@gmx.de>, <conor@kernel.org>, <hargar@microsoft.com>,
+	<broonie@kernel.org>, <linux-tegra@vger.kernel.org>, <stable@vger.kernel.org>
+Subject: Re: [PATCH 6.6 000/166] 6.6.84-rc2 review
+In-Reply-To: <20250320165654.807128435@linuxfoundation.org>
+References: <20250320165654.807128435@linuxfoundation.org>
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/7] accel/rocket: Add a new driver for Rockchip's NPU
-To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
-        Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
-        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
-References: <20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net>
- <20250225-6-10-rocket-v2-4-d4dbcfafc141@tomeuvizoso.net>
-Content-Language: en-US
-From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
-In-Reply-To: <20250225-6-10-rocket-v2-4-d4dbcfafc141@tomeuvizoso.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: STatwxE9i2UZUNEnvRjii6EQLNyvYN19
-X-Proofpoint-ORIG-GUID: STatwxE9i2UZUNEnvRjii6EQLNyvYN19
-X-Authority-Analysis: v=2.4 cv=VaD3PEp9 c=1 sm=1 tr=0 ts=67dd8a3a cx=c_pps a=MTSHoo12Qbhz2p7MsH1ifg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=DISFzqtZAAAA:8 a=4oo6kz2Fa93MN3BI1icA:9 a=QEXdDO2ut3YA:10
- a=GvdueXVYPmCkWapjIL-Q:22 a=aug85vrO5LANNmmtkfAW:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- bulkscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=999 phishscore=0
- spamscore=0 priorityscore=1501 suspectscore=0 mlxscore=0 malwarescore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210116
+Message-ID: <f0eadca6-eeb8-497d-9022-c1bdffbd292a@rnnvmail201.nvidia.com>
+Date: Fri, 21 Mar 2025 08:48:56 -0700
+X-NV-OnPremToCloud: AnonymousSubmission
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB57:EE_|IA1PR12MB8261:EE_
+X-MS-Office365-Filtering-Correlation-Id: aaee270e-3844-46dc-3ec4-08dd688febc3
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|36860700013|82310400026|1800799024|13003099007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?czIzZ0NUYUYwblY3WFdadlI5MEs4MnJXRlp4NnZNTUc1ck5VdzVXOHFZM3Fi?=
+ =?utf-8?B?OHdtVnIrZVJFL05HQkZOVUxwTW1jM0xtTlFqWm50aUxObGR5Mlk3bEpkNlkr?=
+ =?utf-8?B?T1ZiTzU3dFNId2ZLSSsrdXNOREdOdXR1MFJ4RjI4NXc3bDFpbHVNWUYwSG9M?=
+ =?utf-8?B?TUJxeUtTa2s0amt6cDQzTTI5VjFvd1EvcFFoOEM0MHptUERaTmxzUzdCTkY5?=
+ =?utf-8?B?YSsrc3B0dmE0MjhidGl2SVFCajIwdzA3YlYwZUc0Ujl4T2VvdmJ5NXNRY1RB?=
+ =?utf-8?B?VStodVpDd3ZDMldrd3libUk4OFhlSUZTMnpQWm9PM3ZVamlDWTU4OEJUS1po?=
+ =?utf-8?B?cWo3dlNyMm01b2NiMC82UkpyREkzNjlWSnYrcWZ0YWdIZXJYQTQ3cWhxUW4x?=
+ =?utf-8?B?WFYwZk52b0pCTVE5ektKVUpNcndwcE9NckdrNzRmR2RvNmlhWWxEcG50a2dm?=
+ =?utf-8?B?Y0RtMEJ0WjZ1TDY1RTNTeTArbTNGUE1rNW1Ib1U0YjhlQWRnbm5BeWwwUVQx?=
+ =?utf-8?B?S3NETE1UYXhzK3F2YlRBVk9kMzhQeG4zV1A2VGVLZlU2Q3Y4MUkyRFJGWHJC?=
+ =?utf-8?B?SmZlQUwxZVZ3N2czM1NkV0hVUnFvRHVaU2E0dGZ0SGx1WTVmQjJjY0ZaRjRX?=
+ =?utf-8?B?Y21xMFBQNWVnYi9URGcyMnFPbjRoZmhmRnBRSTQ4T2VJdjcvdzF4eFdGVVZM?=
+ =?utf-8?B?Q0JSQTRlMUNEWmN3eGZYRnY0bEkwRjVkOUxMb2luMlhZZGhRVDlpdG1TVk9I?=
+ =?utf-8?B?QjMzNGR0SjFsdUw1WWZuais3Q2tvV3Q2NjZsQ2xQL2U2Wjhpb09zMFlsSFNy?=
+ =?utf-8?B?MjU5bmlIL1JmY0J4MjEzV01tUUNIVm1uUlBMVUIzOHVlckNlVmJvUmU5SmZC?=
+ =?utf-8?B?TjJXUVUxNExiOGxXMnU5REk0aFd6V1RTai9JRmpoaTg5NjNhSVpNQkxmQlpv?=
+ =?utf-8?B?ME0rYVdlMlZrZ3k4SnhOd2lPOTZaUjBpcHBoRCtoVnhrMnFidmJPc3FQaytz?=
+ =?utf-8?B?LzZUa3NlZ01KaWM0MzVGWXV2TWR1d2JmV2drUDR2aTI3R0xDL3VCS09WMXVx?=
+ =?utf-8?B?MG93UVlIei9WZ2dhRTkzZTYzM0pNQlNjRGU5cXJ1eUFmM3hqckZiL1R6MDdt?=
+ =?utf-8?B?Zjd5NUlSKzlVY1ZuL0oxVUMyci95cEQ1OExuWUZQeC9DTmFxVjNIS21UbS93?=
+ =?utf-8?B?YWFxRm1jV1ZSdHZOYVMvY3U2YWRJVFBkS2RRcG9sbmtRYnBHWmJUclEvaEZR?=
+ =?utf-8?B?NVRpcEpYVFBzbTM3VjRPYzhtMncvV09ENnBwczV4a3VBbi9EOURTbzUzbFdF?=
+ =?utf-8?B?SnBkZTBpMGN4S2oydU9oSzR5eENyQlpUSVIzU3Z6MkJJSU1zSlhMekFBV1VE?=
+ =?utf-8?B?ZUxDaGpkWDBOZlhhcUx1djZabEZ1NzNNQjJtRnV6Tld0UXRudTdLaGNwUWJI?=
+ =?utf-8?B?T0dKR2RDMXJSbFFmcktjZ2VKZTc3VjE4SU5sbnZEVE5sS2FmdzU0RjV3ajFE?=
+ =?utf-8?B?OTdkekNZWlhkQm00ajVTRkpjMFpuV0I3emQ3a0VZRm9hQ0xaOFlkTTdDbTBP?=
+ =?utf-8?B?clg0d1lYd3dDK3NPU3ZhMnNWV2hIcXFWa3FKL0NneEhPSSttN1FTVDk1WDNu?=
+ =?utf-8?B?R0dnaHIyS2RNSWhCUGxPZXJKMFdRMEx5eENsRFp5N2NHQmpqNHF4WElMeW1k?=
+ =?utf-8?B?NkNFaUVRMkNKaStEZ1VrWmRNY1o2aHE5U3hVQ0ZZS29IdnZBNGV1N1hZUEwv?=
+ =?utf-8?B?dlJMT1ZrZ0lUK0hhaTZoK0grbGZ5V0pNU0F4UG54aDkzZW9zK3VmUjJRQit2?=
+ =?utf-8?B?SXVwbzYyQlF3WjhQWUlkOUNBSXFsK2RrNm1ObUdDemZGN0FQVCtUbkZXVCtq?=
+ =?utf-8?B?RHNLd0tHaC9XRGZYdkNmNUJtdnhXbnhWNkFVbXlwK2lsWk5XekRNSUJZVTA1?=
+ =?utf-8?B?S3FVMldwSmFNbFJnY2J1d3ByTUd1K3dpQlZienVuR05QODNLd2lUSUpIRlll?=
+ =?utf-8?Q?E1Dl9rlp7r+b+4zNnwr9voWDItbH+Q=3D?=
+X-Forefront-Antispam-Report:
+	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(7416014)(376014)(36860700013)(82310400026)(1800799024)(13003099007);DIR:OUT;SFP:1101;
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 15:49:10.0125
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: aaee270e-3844-46dc-3ec4-08dd688febc3
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	BL6PEPF0001AB57.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8261
 
-On 2/25/2025 12:55 AM, Tomeu Vizoso wrote:
->   
-> diff --git a/Documentation/accel/rocket/index.rst b/Documentation/accel/rocket/index.rst
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ad33194dec0325d0dab362768fd349e8dc286970
-> --- /dev/null
-> +++ b/Documentation/accel/rocket/index.rst
-> @@ -0,0 +1,19 @@
-> +.. SPDX-License-Identifier: GPL-2.0-only
-> +
-> +=====================================
-> + accel/rocket Rockchip NPU driver
-> +=====================================
-> +
-> +The accel/rocket driver supports the Neural Processing Units (NPUs) inside some Rockchip SoCs such as the RK3588. Rockchip calls it RKNN and sometimes RKNPU.
-> +
-> +This NPU is closely based on the NVDLA IP released by NVIDIA as open hardware in 2018, along with open source kernel and userspace drivers.
-> +
-> +The frontend unit in Rockchip's NPU though is completely different from that in the open source IP, so this kernel driver is specific to Rockchip's version.
-> +
-> +The hardware is described in chapter 36 in the RK3588 TRM.
-> +
-> +This driver just powers the hardware on and off, allocates and maps buffers to the device and submits jobs to the frontend unit. Everything else is done in userspace, as a Gallium driver that is part of the Mesa3D project.
+On Thu, 20 Mar 2025 09:57:50 -0700, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 6.6.84 release.
+> There are 166 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat, 22 Mar 2025 16:56:28 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-6.6.84-rc2.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-6.6.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Nit: name the specific Gallium driver here?
+All tests passing for Tegra ...
 
-> diff --git a/drivers/accel/rocket/Kconfig b/drivers/accel/rocket/Kconfig
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..83a401129ab2dc2847ccc30c6364e8802f43648d
-> --- /dev/null
-> +++ b/drivers/accel/rocket/Kconfig
-> @@ -0,0 +1,25 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Test results for stable-v6.6:
+    10 builds:	10 pass, 0 fail
+    28 boots:	28 pass, 0 fail
+    116 tests:	116 pass, 0 fail
 
-I'm curious, is there a specific reason for "GPL-2.0"?  This tag is 
-depreciated and everywhere else in the accel subsystem "GPL-2.0-only" is 
-used.
+Linux version:	6.6.84-rc2-gbddc6e932207
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra186-p3509-0000+p3636-0001, tegra194-p2972-0000,
+                tegra194-p3509-0000+p3668-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra210-p3450-0000,
+                tegra30-cardhu-a04
 
-Same comment for the Makefile and everything else in this patch.
+Tested-by: Jon Hunter <jonathanh@nvidia.com>
 
-> +
-> +config DRM_ACCEL_ROCKET
-> +       tristate "Rocket (support for Rockchip NPUs)"
-> +       depends on DRM
-> +       depends on ARM64 || COMPILE_TEST
-> +       depends on MMU
-> +       select DRM_SCHED
-> +       select IOMMU_SUPPORT
-> +       select IOMMU_IO_PGTABLE_LPAE
-> +       select DRM_GEM_SHMEM_HELPER
-> +       help
-> +	  Choose this option if you have a Rockchip SoC that contains a
-> +	  compatible Neural Processing Unit (NPU), such as the RK3588. Called by
-> +	  Rockchip either RKNN or RKNPU, it accelerates inference of neural
-> +	  networks.
-> +
-> +	  The interface exposed to userspace is described in
-> +	  include/uapi/drm/rocket_accel.h and is used by the userspace driver in
-> +	  Mesa3D.
-
-Nit: name the specific Mesa driver here?
-
-> +
-> +	  If unsure, say N.
-> +
-> +	  To compile this driver as a module, choose M here: the
-> +	  module will be called rocket.
-> diff --git a/drivers/accel/rocket/rocket_core.c b/drivers/accel/rocket/rocket_core.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..09d966c826b5b1090a18cb24b3aa4aba286a12d4
-> --- /dev/null
-> +++ b/drivers/accel/rocket/rocket_core.c
-> @@ -0,0 +1,71 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright 2024 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-
-This list of includes seems insufficient. You use PTR_ERR but don't have 
-the include for it (linux/err.h). Same for dev_err/dev_info. I'm 
-guessing this comment applies elsewhere.
-
-> +#include "rocket_core.h"
-> +#include "rocket_registers.h"
-> +
-> +static int rocket_clk_init(struct rocket_core *core)
-> +{
-> +	struct device *dev = core->dev;
-> +	int err;
-> +
-> +	core->a_clk = devm_clk_get(dev, "aclk");
-> +	if (IS_ERR(core->a_clk)) {
-> +		err = PTR_ERR(core->a_clk);
-> +		dev_err(dev, "devm_clk_get_enabled failed %d for core %d\n", err, core->index);
-
-Do you think it would be useful to mention "aclk" in the message? Seems 
-like if this or the hclk get fails, you won't know just from the kernel log.
-
-> +		return err;
-> +	}
-> +
-> +	core->h_clk = devm_clk_get(dev, "hclk");
-> +	if (IS_ERR(core->h_clk)) {
-> +		err = PTR_ERR(core->h_clk);
-> +		dev_err(dev, "devm_clk_get_enabled failed %d for core %d\n", err, core->index);
-> +		clk_disable_unprepare(core->a_clk);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int rocket_core_init(struct rocket_core *core)
-> +{
-> +	struct device *dev = core->dev;
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	uint32_t version;
-> +	int err = 0;
-> +
-> +	err = rocket_clk_init(core);
-> +	if (err) {
-> +		dev_err(dev, "clk init failed %d\n", err);
-
-This feels redundant since rocket_clk_init() already printed an error 
-message with more details.
-
-> +		return err;
-> +	}
-> +
-> +	core->iomem = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(core->iomem))
-> +		return PTR_ERR(core->iomem);
-> +
-> +	pm_runtime_use_autosuspend(dev);
-> +	pm_runtime_set_autosuspend_delay(dev, 50); /* ~3 frames */
-
-Frames? That feels like a rendering term, but this driver is not doing 
-rendering, right? Is there a better way to describe this?
-
-> +	pm_runtime_enable(dev);
-> +
-> +	err = pm_runtime_get_sync(dev);
-> +
-> +	version = rocket_read(core, REG_PC_VERSION);
-> +	version += rocket_read(core, REG_PC_VERSION_NUM) & 0xffff;
-> +
-> +	pm_runtime_mark_last_busy(dev);
-> +	pm_runtime_put_autosuspend(dev);
-> +
-> +	dev_info(dev, "Rockchip NPU core %d version: %d\n", core->index, version);
-> +
-> +	return 0;
-> +}
-> +
-> diff --git a/drivers/accel/rocket/rocket_device.c b/drivers/accel/rocket/rocket_device.c
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..ce3b533f15c1011d8a7a23dd8132e907cc334c58
-> --- /dev/null
-> +++ b/drivers/accel/rocket/rocket_device.c
-> @@ -0,0 +1,29 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright 2024 Tomeu Vizoso <tomeu@tomeuvizoso.net> */
-> +
-> +#include <linux/clk.h>
-> +
-> +#include "rocket_device.h"
-> +
-> +int rocket_device_init(struct rocket_device *rdev)
-> +{
-> +	struct device *dev = rdev->cores[0].dev;
-> +	int err;
-> +
-> +	rdev->clk_npu = devm_clk_get(dev, "npu");
-> +	rdev->pclk = devm_clk_get(dev, "pclk");
-
-Are these optional? It would appear that error handling is missing.
-
-> +
-> +	/* Initialize core 0 (top) */
-> +	err = rocket_core_init(&rdev->cores[0]);
-> +	if (err) {
-> +		rocket_device_fini(rdev);
-> +		return err;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static void rocket_drm_unbind(struct device *dev)
-> +{
-> +	struct rocket_device *rdev = dev_get_drvdata(dev);
-> +	struct drm_device *ddev = &rdev->ddev;
-> +
-> +	drm_dev_unregister(ddev);
-
-You allocated this with devm, shouldn't that make this unnecessary?
-
-> +
-> +	component_unbind_all(dev, rdev);
-> +
-> +	rocket_device_fini(rdev);
-> +}
+Jon
