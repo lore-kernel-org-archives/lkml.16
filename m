@@ -1,68 +1,117 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5B11E9B34;
-	Fri, 21 Mar 2025 22:10:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 359F422FDE2
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 22:13:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742595031; cv=none; b=QhK5//yTqGF1+t3XKjYeCdU/gLCEi2wqjHswvNPLKagluw2mSPhHL6iIlDqujVqS6dzShOYFwpD0trgM6TrnYhQm6Zckw3IDtKeb3Yl1tZhGZtLcsgZI/xGdptUocwNCNoicyttWaN3nuz1qlr7U6slGipfXej3ypdYpN9bIaYQ=
+	t=1742595227; cv=none; b=tXyQre3R0bwzW37ZIXpMh2J99+OlXe5i3NdgS1SkuxjzDwCkOtBRBhp6+Xm0nnJUsqeIETLFS8zfkCvyqUnmpDXhVYFDWKdm8Jy9Cx9E6iYcbCF0rRte8mmXJMFVso5jKhj7EV573OcyMTUuYp6AxOV442nfVuL7YBxBl23paWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742595031; c=relaxed/simple;
-	bh=jevJwzBthFWx4chDdHGMD3PxJP0Xgws+nOWK9APKAZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dvvExdm2HXkq6sBHeyLVc09TY9FsM/TIJFdgdPOkeM5S0e5AWW8aCUKh47Rfp6vGhB1scURHtB0MAxhDb3KxYSyiMfUciQyuGjy/ArAUtPiWH4kADgDA003JgOauGJeWA2bjYQIvOOoTWKOcOmEJtAMZv9ET2xoJqWxKHfO/j3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m8vFV4Qp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742595227; c=relaxed/simple;
+	bh=GBOEPaOJFDQiXRLYItd1K1GXT+xdrVAZm5t2iMoBUOo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uDrcPruHuRXfVGo1GYQhnLbLnheXrGxxDsG+rzoU6Nxlx9/6WUD8Utoo8mIAbZ2uq5pfIOl1ATQqU+W+DFpFKCApEqYKT0c9zfmMLbNFBL3WL8KTE2qyivswPC97tNJLh4mpa59Ni79Jbz2h4QNqRUdahEM2x3r8ayeTDVi20uI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com; spf=pass smtp.mailfrom=paul-moore.com; dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b=HNrktze1; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=paul-moore.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=paul-moore.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m8vFV4Qp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985A8C4CEE7;
-	Fri, 21 Mar 2025 22:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742595031;
-	bh=jevJwzBthFWx4chDdHGMD3PxJP0Xgws+nOWK9APKAZ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m8vFV4QpBnq/FOen443UZpP+mR/GUiIyQG398ZXGhi++bF6TEHHtqvgcN1UP9l6gb
-	 PY9RUU1YhHY2byT+nmXPrL+aiLy7K0MOe5ayrP6LXdxFj+ZRmG0kdHhb6AHjPjSGB3
-	 82IfMaDgb8XHrLseatSul61V2N6TtPR5HqjxiuLFwiqeIvxtaG2lCSYFg+JctruNpp
-	 kb09W/Z6z7PIjP38nezAM0AiTmMAonTOVIRR2CCf8j1nITboQlzB3iVVZhsw8w904c
-	 L+UMJTBNj9RPTSV/ypXEXQP7qb5kDyUvNV2hy6Wx34IHFGLn1Zu1u5DLwCE4kQxQqk
-	 HJVtEeR8VJ58Q==
-Date: Fri, 21 Mar 2025 23:10:25 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Benno Lossin <benno.lossin@proton.me>
-Cc: Alice Ryhl <aliceryhl@google.com>, Matthew Maurer <mmaurer@google.com>,
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Tamir Duberstein <tamird@gmail.com>
-Subject: Re: [PATCH v2 0/7] Additional methods for Vec
-Message-ID: <Z93j0X_ycSf8E4RA@cassiopeiae>
-References: <20250321-vec-methods-v2-0-6d9c8a4634cb@google.com>
- <Z91au1h1zhDT9IxQ@pollux>
- <D8LYWIFUVJOC.ZIPANZF9ONJJ@proton.me>
+	dkim=pass (2048-bit key) header.d=paul-moore.com header.i=@paul-moore.com header.b="HNrktze1"
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-6ff4faf858cso18010547b3.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:13:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore.com; s=google; t=1742595225; x=1743200025; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GBOEPaOJFDQiXRLYItd1K1GXT+xdrVAZm5t2iMoBUOo=;
+        b=HNrktze1ncxbb62iXNjE9zgqxrgrlWit3RYi2onSfojLBHRcUK3wxQy05QQEA0pQtq
+         X25U9Fc+9qTEBSyZacRmlbtGQda/eDVmwI1G+4KrYSHViaUnRGagdGgmVz6J/HpazzoX
+         yDBZ/1oN1U3lGLPZSVtPFDJeTDaJASbYt11FUZBiGmk1RICnqcjYGMmAoZqwI6kn/E9P
+         btbd/4gxtq25hLTOXsCFqU8BWrkm/C9+CWgmn73JzM+o7fi3YmyAVid2gVkBR4v/3j5q
+         YlBbalrWyyraw/RgiwayjoQT3qt/gypPKW2/7MyuY0QWX6uGLbEFtWvnCHXrB9uVNO4z
+         fe4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742595225; x=1743200025;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=GBOEPaOJFDQiXRLYItd1K1GXT+xdrVAZm5t2iMoBUOo=;
+        b=qI6FSPg8yB6xzgUz+76yM3CrY8fEA3P6V5o+fgaXBBxKVdVLZ+IqfJqhNxbLPWCh1D
+         INXrkH69HSC4/ANM9ot0OTH/+gFjWhs0dbI3QWwwWN1hMTt2gomsiT9zL4U75XoHZep5
+         LKXlXmMcs+KGSiAGApF23CSHFxbI/kn5c7Qbe7+mOUBE7k+KUp5cTfe1ezwwgbiTncDE
+         CokhVyPXXA3phBax3HUAfdmTIC8Y0aANzL5BtGfsb59kbjRr/IRP6T3pcpFCJWVq0I6e
+         81by6OvmyEhrVhI+cGcSiSBR7tEjTLwhfUt+VnQO5uzZozqEbXguFcSlMqZ3CJscr25B
+         XTiQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVpDaRECjV4m4uaOjKTZQ/hchNXIEQRyrbO1sy0ZQnCD+P2ImYFWI1S3ZRBL3j1gLaoyIbsolXnlU7gH2U=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwV1TWkJw6WocGcH+v0RHblzcfTQ15JEoHmSpg/fPDaCAPEH/fZ
+	Nhn03yNQgx3oDRlWKH2VNj0BXIzZgVKok8p6o/NFfvih8pTJ5Di5gksI6NDU6BXV6IFFoHzB1Dh
+	rF22IPjiWWDqN9JEnoJJjPvFsVGy6DM8MJUZ9
+X-Gm-Gg: ASbGncszR174jY7PcLII5t51ywCLoS1Mr1y7tIW+sMA1+4HHwdWg2Rrk651dLkpximB
+	ffI8eKIg2KZTYM3L44fP4oBjLcL1GJMfZfw8NQTZtwpP6Vd4jC6geGVcYNFdSyMd6xsESlMejQc
+	HFM8D7rlKZp5zK6RPyV2fXb0TKIg==
+X-Google-Smtp-Source: AGHT+IHNPLUTnWnVVINienwbN23fI4lbcEBq04OEZSoIjUpzF2VR3DWEtJjTsjMmTP2DQeMvR1Q8d/Tp8Wyud6b0EzU=
+X-Received: by 2002:a05:690c:9001:b0:6f9:8605:ec98 with SMTP id
+ 00721157ae682-700baccc9f8mr42056747b3.28.1742595224935; Fri, 21 Mar 2025
+ 15:13:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <D8LYWIFUVJOC.ZIPANZF9ONJJ@proton.me>
+References: <20241017155516.2582369-1-eric.snowberg@oracle.com>
+ <c490397315c2704e9ef65c8ad3fefedb239f1997.camel@linux.ibm.com>
+ <72F52F71-C7F3-402D-8441-3D636A093FE8@oracle.com> <CAHC9VhRHEw5c+drC=aX4xTqWoQJJZ+qkJ7aHUT5dcu+Q5f7BqA@mail.gmail.com>
+ <CAHC9VhSJpnaAK1efgs1Uk0Tr3CaDNR1LiDU-t_yDKDQG6J-74Q@mail.gmail.com>
+ <E20C617B-EA01-4E69-B5E2-31E9AAD6F7A2@oracle.com> <506e8e58e5236a4525b18d84bafa9aae80b24452.camel@linux.ibm.com>
+ <CAHC9VhTsZntLdGBV7=4suauS+rzSQv1O4UAoGcy2vEB02wRkoA@mail.gmail.com>
+ <c580811716f550ed5d6777db5e143afe4ad06edc.camel@linux.ibm.com>
+ <CAHC9VhTz6U5rRdbJBWq0_U4BSKTsiGCsaX=LTgisNNoZXZokOA@mail.gmail.com>
+ <FD501FB8-72D2-4B10-A03A-F52FC5B67646@oracle.com> <CAHC9VhR961uTFueovLXXaOf-3ZAnvQCWOTfw-wCRuAKOKPAOKw@mail.gmail.com>
+ <73B78CE7-1BB8-4065-9EBA-FB69E327725E@oracle.com> <CAHC9VhRMUkzLVT5GT5c5hgpfaaKubzcPOTWFDpOmhNne0sswPA@mail.gmail.com>
+ <1A222B45-FCC4-4BBD-8E17-D92697FE467D@oracle.com> <CAHC9VhTObTee95SwZ+C4EwPotovE9R3vy0gVXf+kATtP3vfXrg@mail.gmail.com>
+ <EB757F96-E152-4EAB-B3F7-75C1DBE3A03B@oracle.com> <1956e7f9d60.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+ <A3A29FB9-E015-4C87-B5F0-190A4C779CB3@oracle.com> <CAHC9VhQMN6cgWbxdAgBNffpCAo=ogGdm4qBGS_kKdDmiT8b3cw@mail.gmail.com>
+ <B89ED288-1A01-41D2-8ECF-285669139553@oracle.com> <CAHC9VhQb55+SmwmrsVpyw5X2Ys0oo6gJ_dbDf64mS5c008230A@mail.gmail.com>
+ <4F901DC6-51DC-47A1-8D2A-D84DCD9D0C2D@oracle.com>
+In-Reply-To: <4F901DC6-51DC-47A1-8D2A-D84DCD9D0C2D@oracle.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Fri, 21 Mar 2025 18:13:34 -0400
+X-Gm-Features: AQ5f1JqPa2gcEPJOBuLUeSmEtx0Zy7l2iUmHgFLVu8IhxGEfOTtMxiXE9N6-wxo
+Message-ID: <CAHC9VhT0y5AO0Yjy649PbsYnN+Xf3_pTJCegW1kPW7=GM9RypQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v3 00/13] Clavis LSM
+To: Eric Snowberg <eric.snowberg@oracle.com>
+Cc: Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, 
+	Jarkko Sakkinen <jarkko@kernel.org>, 
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>, 
+	David Woodhouse <dwmw2@infradead.org>, 
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>, "davem@davemloft.net" <davem@davemloft.net>, 
+	Ard Biesheuvel <ardb@kernel.org>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, Roberto Sassu <roberto.sassu@huawei.com>, 
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, =?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
+	"casey@schaufler-ca.com" <casey@schaufler-ca.com>, Stefan Berger <stefanb@linux.ibm.com>, 
+	"ebiggers@kernel.org" <ebiggers@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, 
+	open list <linux-kernel@vger.kernel.org>, 
+	"keyrings@vger.kernel.org" <keyrings@vger.kernel.org>, 
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, 
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, 
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 21, 2025 at 01:10:43PM +0000, Benno Lossin wrote:
-> On Fri Mar 21, 2025 at 1:25 PM CET, Danilo Krummrich wrote:
-> > On Fri, Mar 21, 2025 at 12:09:55PM +0000, Alice Ryhl wrote:
-> >> This adds various Vec methods. Some of them are needed by Rust Binder,
-> >> and others are needed in other places. Each commit explains where it is
-> >> needed.
-> >> 
-> >> I'm not sure what we concluded on the set_len / dec_len changes, so I
-> >> don't depend on that series for now.
-> >
-> > So far I see no reason to assume otherwise, so it probably makes sense to
-> > rebase. Unless Tamir is fine to rebase his changes onto this series.
-> 
-> I haven't yet taken a look at the reworked version of dec_len, so I'd
-> wait until we have finished discussion on that.
+On Fri, Mar 21, 2025 at 5:21=E2=80=AFPM Eric Snowberg <eric.snowberg@oracle=
+.com> wrote:
+> > On Mar 21, 2025, at 12:57=E2=80=AFPM, Paul Moore <paul@paul-moore.com> =
+wrote:
+> ...
+> > , but I will note that I don't recall you offering to step
+> > up and maintain Lockdown anywhere in this thread.
+>
+> I didn't realize that trying to contribute a new LSM and being willing to
+> be the maintainer of it also involved stepping up to maintain lockdown.
 
-What I mean is, everything looks like I'll pick them up eventually, so it makes
-sense to base a subsequent version of this series onto Tramir's (even if the
-current one of dec_len() is not the final one).
+It doesn't, but your criticism of how Lockdown is being handled
+definitely falls a bit flat.
+
+--=20
+paul-moore.com
