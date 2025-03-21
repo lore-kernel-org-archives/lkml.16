@@ -1,180 +1,93 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 932191EE7C6
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:35:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F070CA5A;
+	Fri, 21 Mar 2025 12:37:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742560542; cv=none; b=WbMwk39d24knZwy06vJ0wB0u9sZU7Zdk8QdgG5iKdiW+kL33iLMt+a5VTqpbNgyhFbMNigs0kBN7LtlBb89kEd/ZdnnHlBsIhbHD4bTHoKuXb/92fJIi63Z2bf3CRmw4+hapu+57VlohzLZh7iYCTn48J3XoLzqPUjqJZU+naWA=
+	t=1742560644; cv=none; b=VRc8HUS5AQgIaWERgxI3IfMtP+Npzr8QvCczsPuyh28stqT/iKqCsga7YaE84IdhpRMfSQhXzgv2t8RAsVo83szQGIwjXqSI0Q+t5qcT3BEYLgOUBzs2aR2JGImGGyCXL3jV8nsEPphKiI6P0+M/qajBOES607xcs5hvJUd4O6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742560542; c=relaxed/simple;
-	bh=6PRbJ7TQ5aODdbz0m2PU+5RLlhJgh3PHA4Yj0p5qlTQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RCTHjBRjPRYlTthil19hLtAe0Zov45M0X3yVf1uu4i1gybMbHRbZ8WXyw5cexVvNdy626yZ5UqBqvkWOllQ4rnUTMqFWRkyCOUvxHuBcsm1QMyCa1H/KW3EUrzJOlac5gECgELVG9uI7cAs0F/gZ1ZCcgAnPeVlQWsL2QQEjsEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lj4NMOu3; arc=none smtp.client-ip=209.85.208.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742560644; c=relaxed/simple;
+	bh=oQyGiV78LEK+tbLWGXm5etpWS3sUCPu5H0kZTYpo8lU=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=rRL0rAwAYJa0F5cFSzEqmuTI36+st0l5DSPDKidMrP6AvUNbhLgr6S8S4n9lvKTv+hXkvz0Aet1C8RpVX4UmdIyRsVaGWufuIfqemnbIbtX+L27xrIymi4WNVqW5xIjLE5QiaTaUDfOP4ZedC0r6EJhYZMMBQ6W54BX0V+SV+Nk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dCNvmiro; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lj4NMOu3"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e6c18e2c7dso3404414a12.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:35:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742560538; x=1743165338; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yv4lZ+YNLUl7ot9RW8qDQsIhZ1LLB6J6i6RU1rh9WlA=;
-        b=lj4NMOu3omf+TEDG3c+kA8Vh7ru45E0TBhNissTlAmVNDHnwS7x2W5VO8KdUj1xv5j
-         Px7PET9GHb04dmviaQMirOp0Gm4aNeSewG2COqhrDJnxAdRrhHcaWUcFK4NHIEImTGfk
-         4oGCuaSzSXvzHL39ELS/YQZjMTxLucQTxI0/nMJ0hcpKy61NayLUktIBPGT4gnN6mIJm
-         q4tRRhOkk6DiFko66uUqbIULKbx51Qx+vFw9nUaU39EQ1EsRQ6QJlJQj2SkdHA0Vrlq2
-         sSGBlMUtsvaT3b/upJ3UInahdE1N2SbMWOknlKzX/4WU60cldwZ8AQ/jEpjfvkR8xXpP
-         ZA0g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742560538; x=1743165338;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yv4lZ+YNLUl7ot9RW8qDQsIhZ1LLB6J6i6RU1rh9WlA=;
-        b=Lfnr8fO9k/1oQcqbPVfz3ymzRon+bMBR/Wm/bdh5faEvp05zXVcysXUI4Gv3CJX9Vx
-         EgRynCn0XddGflsxXdD3EwAxBY8yFU7hdcYICvwYNoeFshNrs3HHNOQrExKPfviW1RmH
-         ttuYb87DTNt3vM5ru1bOU7Q5OTt5Oz6EFgGrluqtyM4sxEQkQ7VKYCuW1XE2oCKSiLFy
-         4kNkh3frsHo3LWWxm0V8T5LEJSLaVJjIkShEjg0h8IpYq0qjKw0ax4aJc6M+UZUr5F0k
-         BrOrotX1RlsyjVbhcEpfFl20mO5D/+D4xLKnrhiX/noqgupGOHVTOWvcwLTn5+7Vg9gk
-         fmzA==
-X-Forwarded-Encrypted: i=1; AJvYcCV5iYXNor8IcvmtTo2nFZSo011B/tIGVIaVs7ZSnhxCEM1fuu/nUU4mOm+JIqmnxUobH3mNr8ysfqoMqRI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrVObrBeVUPjWFIZkfZiG5EplAQReFK/klhpsX0aXuh5417h7z
-	JcpaFZJ0t+N+YmCHQLivRcEQ9mQ+70CxXb8do9OyOcwXiF+yoOBKzbPtdq7BrMk=
-X-Gm-Gg: ASbGncsCi+P53LjMJBz0Kv68OkN0mNONaCJser78Piy4yp5T31qdeCZmfLUiC/PBoK8
-	X0i6fPa/vk3UdyMRrDV9RMTo/MLr5PDf8dabDjcV/cOwlihPFURnQK7ZZIkKrg/3SoLumMNSzzF
-	I5kNECw759lCLy0lpACjr3D45KddRoxSCpc3RcbGhi5EEcGB3W6nPfM0rY8gzhybQcJAZ0J+vCl
-	6SZJk2JXtu4NPNKkHk+2lL2rQL/kzthyDGzD26h2347ZNJTgCP2CdlVXrjKARipPnOolzjK+Bts
-	x6R9tWR8wwi0PVW5KP1e/BwkBpxKC4PTTBDvKAWDoKjgypPsIWp3OByuV3gx90u2G/wfSYQXHw=
-	=
-X-Google-Smtp-Source: AGHT+IG2h1yWDQQeNTqSEG97hM0WQIsywT10+rmqmILs3H3/8OMMRH7lWKNJLMtf+dIGR5DUR3nMqA==
-X-Received: by 2002:a05:6402:51d4:b0:5e0:8c55:501 with SMTP id 4fb4d7f45d1cf-5ebcd41677amr2789203a12.7.1742560537711;
-        Fri, 21 Mar 2025 05:35:37 -0700 (PDT)
-Received: from [192.168.68.117] ([5.133.47.210])
-        by smtp.googlemail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0c774esm1257920a12.59.2025.03.21.05.35.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 05:35:37 -0700 (PDT)
-Message-ID: <b1aed195-b2e6-4f48-ba10-3049d74085a9@linaro.org>
-Date: Fri, 21 Mar 2025 12:35:36 +0000
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dCNvmiro"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742560642; x=1774096642;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=oQyGiV78LEK+tbLWGXm5etpWS3sUCPu5H0kZTYpo8lU=;
+  b=dCNvmiroThBVGoOb5HAHbwY7cdtXwCg98vfZGyuHs6iCsgk9oeMCC3ia
+   WhmGyA8339Wx3RFhhQByG+6q63S3PBd9Mem2E095UBBHeYMxjDo18d5zt
+   A+YbbODCnA3uOCHG+0XCj3J9wrhz5dY/B/rBwXxSrqfaetIUBW14dPYSw
+   L7MCO/eUpJ0BkjcANuYJf60Hc03e89Yc1mQoPFT3Sj2OdZmpN0SSJ237T
+   ZrQoGxzbDOVa79Muf5+k+oGdQZ7WAvhLLR6S6ri8jh6rYmQN7GT5adqIE
+   o3uic+0WKfHDqF2SL3QEszsswieXVhMDNXsrdmKW/ieEQynN3NmCvGEEC
+   w==;
+X-CSE-ConnectionGUID: szUApg3OTk6hqvKKhRI7lw==
+X-CSE-MsgGUID: b4z1f3PHRg2/70jDYHPYew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="31415835"
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="31415835"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 05:37:21 -0700
+X-CSE-ConnectionGUID: fN2LIwPEQj+XS2avHEyG7g==
+X-CSE-MsgGUID: kaLgaq4RTxebwSNATqk6Qg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="127535785"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.201])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 05:37:19 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: "Jason A. Donenfeld" <Jason@zx2c4.com>, Andi Shyti
+ <andi.shyti@linux.intel.com>
+Cc: Markus Theil <theil.markus@gmail.com>, linux-kernel@vger.kernel.org,
+ intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org, tytso@mit.edu
+Subject: Re: [PATCH v2 1/3] drm/i915/selftests: use prandom in selftest
+In-Reply-To: <Z9r7ORwztMxsNyF4@zx2c4.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <CAHmME9oqvWp_Nd1Gwgyw52qy8wxztMyCpNsjByH=VnRaXqczww@mail.gmail.com>
+ <20250211063332.16542-1-theil.markus@gmail.com>
+ <20250211063332.16542-2-theil.markus@gmail.com>
+ <Z64pkN7eU6yHPifn@ashyti-mobl2.lan> <Z9r7ORwztMxsNyF4@zx2c4.com>
+Date: Fri, 21 Mar 2025 14:37:15 +0200
+Message-ID: <874izmd0g4.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] ASoC: codecs: wcd938x: add mux control support for
- hp audio mux
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
- krzk+dt@kernel.org, ivprusov@salutedevices.com, luca.ceresoli@bootlin.com,
- zhoubinbin@loongson.cn, paulha@opensource.cirrus.com, lgirdwood@gmail.com,
- robh@kernel.org, conor+dt@kernel.org, konradybcio@kernel.org,
- perex@perex.cz, tiwai@suse.com, linux-sound@vger.kernel.org,
- linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, johan+linaro@kernel.org
-References: <20250320115633.4248-1-srinivas.kandagatla@linaro.org>
- <20250320115633.4248-5-srinivas.kandagatla@linaro.org>
- <rdvsnxuc6by6sci56sh7thzpxo5cqi7q24fnmc7hi5yrfszwrg@kqjpiilko3xo>
-Content-Language: en-US
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-In-Reply-To: <rdvsnxuc6by6sci56sh7thzpxo5cqi7q24fnmc7hi5yrfszwrg@kqjpiilko3xo>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
+On Wed, 19 Mar 2025, "Jason A. Donenfeld" <Jason@zx2c4.com> wrote:
+> Hi Andi,
+>
+> On Thu, Feb 13, 2025 at 06:19:12PM +0100, Andi Shyti wrote:
+>> Hi Markus,
+>> 
+>> On Tue, Feb 11, 2025 at 07:33:30AM +0100, Markus Theil wrote:
+>> > This is part of a prandom cleanup, which removes
+>> > next_pseudo_random32 and replaces it with the standard PRNG.
+>> > 
+>> > Signed-off-by: Markus Theil <theil.markus@gmail.com>
+>> 
+>> I merged just this patch in drm-intel-gt-next.
+>
+> This is minorly annoying for me... What am I supposed to do with patches
+> 2 and 3? Take them through my tree for 6.16 in like half a year? Can I
+> just take the v1 into my tree and we can get this done with straight
+> forwardly? Or do you have a different suggestion for me?
 
+Feel free to apply it to your tree too. It's not ideal to have two
+commits for the same thing, but oh well.
 
-On 20/03/2025 14:03, Dmitry Baryshkov wrote:
-> On Thu, Mar 20, 2025 at 11:56:32AM +0000, srinivas.kandagatla@linaro.org wrote:
->> From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>
->> On some platforms to minimise pop and click during switching between
->> CTIA and OMTP headset an additional HiFi mux is used. Most common
->> case is that this switch is switched on by default, but on some
->> platforms this needs a regulator enable.
->>
->> move to using mux control to enable both regulator and handle gpios,
->> deprecate the usage of gpio.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   sound/soc/codecs/Kconfig   |  2 ++
->>   sound/soc/codecs/wcd938x.c | 38 ++++++++++++++++++++++++++++++--------
->>   2 files changed, 32 insertions(+), 8 deletions(-)
->>
->> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
->> index ee35f3aa5521..b04076282c8b 100644
->> --- a/sound/soc/codecs/Kconfig
->> +++ b/sound/soc/codecs/Kconfig
->> @@ -2226,6 +2226,8 @@ config SND_SOC_WCD938X
->>   	tristate
->>   	depends on SOUNDWIRE || !SOUNDWIRE
->>   	select SND_SOC_WCD_CLASSH
->> +	select MULTIPLEXER
->> +	imply MUX_GPIO
-> 
-> Why? This is true for a particular platform, isn't it?
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-We want to move the codec to use gpio mux instead of using gpios directly
-
-So this become codec specific, rather than platform.
-
-> 
->>   
->>   config SND_SOC_WCD938X_SDW
->>   	tristate "WCD9380/WCD9385 Codec - SDW"
->> diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
->> index f2a4f3262bdb..b7a235eef6ba 100644
->> --- a/sound/soc/codecs/wcd938x.c
->> +++ b/sound/soc/codecs/wcd938x.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/regmap.h>
->>   #include <sound/soc.h>
->>   #include <sound/soc-dapm.h>
->> +#include <linux/mux/consumer.h>
->>   #include <linux/regulator/consumer.h>
->>   
->>   #include "wcd-clsh-v2.h"
->> @@ -178,6 +179,8 @@ struct wcd938x_priv {
->>   	int variant;
->>   	int reset_gpio;
->>   	struct gpio_desc *us_euro_gpio;
->> +	struct mux_control *us_euro_mux;
->> +	u32 mux_state;
->>   	u32 micb1_mv;
->>   	u32 micb2_mv;
->>   	u32 micb3_mv;
->> @@ -3243,9 +3246,16 @@ static bool wcd938x_swap_gnd_mic(struct snd_soc_component *component, bool activ
->>   
->>   	wcd938x = snd_soc_component_get_drvdata(component);
->>   
->> -	value = gpiod_get_value(wcd938x->us_euro_gpio);
->> +	if (!wcd938x->us_euro_mux) {
->> +		value = gpiod_get_value(wcd938x->us_euro_gpio);
->>   
->> -	gpiod_set_value(wcd938x->us_euro_gpio, !value);
->> +		gpiod_set_value(wcd938x->us_euro_gpio, !value);
-> 
-> This looks like a separate topic, but why is 'active' being ignored?
-
-We should be able to use it.. will fix it in next version for mux usecase.
-
---srini
-> 
->> +	} else {
->> +		mux_control_deselect(wcd938x->us_euro_mux);
->> +		wcd938x->mux_state = !wcd938x->mux_state;
->> +		if (mux_control_select(wcd938x->us_euro_mux, wcd938x->mux_state))
-> 
-> Can't it just be 'mux_control_select(wcd938x->us_euro_mux, active)' ?
-> 
->> +			dev_err(component->dev, "Unable to select us/euro mux state\n");
->> +	}
->>   
->>   	return true;
->>   }
-> 
+-- 
+Jani Nikula, Intel
