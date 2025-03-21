@@ -1,140 +1,169 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AF419C54B
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE40A13AD38
 	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742566652; cv=none; b=G9YHCcD+bOeLrZ9nVYIF7GhCycjhqwLusNuIbb3bQvTyyWGDDJHOBC0e8M18V/LbZv0hQlJawMGnkea2M6bDi4dRsnwrZmJrYa0FaXLl36fJB4iafbyF23ZUfHKiDE1iliBpCUs/Xe3o0xz4czpl4ByuPd8LfndEl3bVrsrmgLE=
+	t=1742566652; cv=none; b=JO4jHVdexbbL6GWLS8mSXAKV+jc35q6yZx87Dr8ORj26cdcrpdHVHTRuorwScX4YGG8MHfzn/OTNBnpp8b5AW96dBqmzop/t1v40j/TJfP0ylozharoWGRFjshQM5DuR988+WhDMw5TjxnTvJv8RyH7YZWEoZ8Fmz+ckb5AbFOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742566652; c=relaxed/simple;
-	bh=GCY3r8rAAbKxWBoKNPFtSuyFe2XkAq3Gsfr1HfzAxdE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLYtansiz46Y1GOmU2zDV9EukeRiF2iUk1k9GNfhsCeLgZANENrJ9sNWqOhIMMPFecprVsWJDGPuHszbqHt/8zsJCw/upkm2XUvffHUrf+WvvETyhynScwnzAakEUEMd6Vaa/8SVSJcSMu7Fo/1mcrB6gtKtJWfFNU/Y3WGbjmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=mbWFbcVs; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	bh=abcpScdIH+iJ7f/cc/lI1gu9a5umSVkyVm37uzzJmlI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ZpjMCKFj86p2Nu2EICL6axsV1cxNH+qv3Qr/THqSrHgoXIqsD9KFpy3xIye9km4yEcsjyDOfGMP+/rhFUEy6U/N+mpV00XZsAEsWXDS8ZZoPOGILsdiZAnCZ3ST2bBmrwMtT3JYRCavro4noMLUe3ZdPzl17pUKfP7+iS9jJVvk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9bsTZpf; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="mbWFbcVs"
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LCSgcK010551
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:17:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=O8rDG6mc90cpVD8APsXbzuEd
-	d44KuoOwLvpTV3Smtis=; b=mbWFbcVsxJyNDBSxrw4EZss8r0tIgahU/BASCYmS
-	XN7WM4ujs2W1Ev2+dp/h2z8q5FwVs5p51c2TZf2tUp3y+yFtw2BZuCC4Ub97itct
-	p5IZIsAlWbCYLlV0s0N4dIcEjGoca1zWVCrrpCoiYaUFSagwmCB9ZyNWSCH4R03t
-	x0rw78T00jCOW4UQtDHjy6yQHb46rA2mQGXyiRA4sNuut1BckZV9VQIt4iLJeCIN
-	oWz/OHDhp85banjVwEcH5xiYsmffG/vphQqCvqGcmTxT6N0MqwYDvSk7XckD2gGb
-	UXUQyAwBRCkU4gUz8f4JlFZ7tlOB1R+BV42QufwL+UhUAA==
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h85e09n6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:17:29 +0000 (GMT)
-Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c59ac9781fso363823285a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:17:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9bsTZpf"
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bd11bfec6so21335621fa.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:17:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742566649; x=1743171449; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8tesCzyVEDpNzziJBXhLV3rImVo6j7PfN3V4yTfNrlI=;
+        b=Q9bsTZpfrSljlaQ/JUhlIkXh8S1QZTDCZfYA+y4lzLbJWdvjkFZxOUK4eRPK+Fowhr
+         Bss88LbtGNZt8OEgjBlo/0E+xjtObSP2vvscDDGv9yeguG0snK5rrKx4eEV+MQCMlK7t
+         DvW+w8yyATj/RAX7UNKK1BpxydXUbSfNqSdQfxefk545yEFYDJiqMFmnqWSdkm+FAJMo
+         khbqXHMLwAfEt5WJuP3nORMefHCzjSbSpjS2bBm6fmL/7Hzo0sjSpz19lPjgU/W/XzS2
+         LoDflmwt+C8xXksjv6OgRKUA/6vpvf/CUW8izH8Jii10KXk0dSD9zSXCyTXRlLQuOtds
+         kIrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20230601; t=1742566649; x=1743171449;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O8rDG6mc90cpVD8APsXbzuEdd44KuoOwLvpTV3Smtis=;
-        b=Y9o9WHTaAMq1Gwnv+nzjtkaWFwtsvCfCEH9tKxh9oC+Ukb4WVKbHbFdG5nNiraRKrY
-         J62JIRkzxLlDvGabWp2qGXEYxW125VmqcPf+/7Zjhg32MwwicslfchNvl+x2GcU5ctZF
-         PEb2HL9t3xK35pxw3bKEvItcxmPv+10Qv5y6Vjjx/kT8lt/DIu+7elmr7GBPYdP9boPq
-         BrXJpeN1IF+rGwJjwrnsE+gTupTkgDlopmhYNFS98iG28OxlyZpH+GTa2+CC7dKON6rU
-         VQ5GJ/NN6Bu6oyLHvZgROA3lkeOK1G8+DaN5vi4mjWZh9XT2DUvS04gW9w20j3AzYNXG
-         qoaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUPnMxp/Wx5ItDqNHjOchmYNMb53GFu5vJbs5+xsVxaQP0202boi20Peb42cbiGhNBlfDGxOL+jTae8IUM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLH1IDSs7ba0eduNqEvZo/UIapvbXJxptURXnhGVMCfToVqCvz
-	wEaLF4mMPA4lCPV010nKRRaTczGUUZzm30yS9OXc8Z9EZL/8GzlYexN3XzPnyN4iWVquh505lCb
-	kEms2f6zHU4toWO0Q5av7gStBwyMRxEHUQRGekCgULjRNw7QnQaytBwtKPsSnxrY=
-X-Gm-Gg: ASbGncvBZavEfu/yH1Xo/RXym7kwh7jBiDSThV3j4garSsauIfAi1Jty8/ISmT/qLLR
-	6Ra1V3EzEU5hkRbyMHx7Ks917gIJsd1ViCHIQuE1HrIIFliIbpQ4H7uRUoaa+9NlZ4kxlBCDlSK
-	Vrg25XFIn67gI7gB7Qy5cDNcenZ60+aaFVIU7V2BqO8I6dbFThe1bLkZQSOaVbAtAW/VGUxAYHj
-	NjCFJ2dZAI05rADnO8fzOSJHIJsKhp1mQf0Ww6joIXnma21zqxhLGmtu/YFanTN4M56xGOjGChF
-	3ZniOC9LZRmEIAffnbw+jdM4O3pjXBHbjUHIA968mES9771p0r875YYYC4FoEYdlt3w5gv9skwh
-	J0HQ=
-X-Received: by 2002:a05:620a:3948:b0:7c5:6b46:e1f6 with SMTP id af79cd13be357-7c5b04e1a47mr1057150285a.1.1742566648727;
-        Fri, 21 Mar 2025 07:17:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFvRRIcP4NEyB+cyjpZHS6ssbbMaBbZ4WSFsTnEbRxypn2SHDAJVW5qIbAY4WpbAbHbZm7Rbw==
-X-Received: by 2002:a05:620a:3948:b0:7c5:6b46:e1f6 with SMTP id af79cd13be357-7c5b04e1a47mr1057143885a.1.1742566648233;
-        Fri, 21 Mar 2025 07:17:28 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad6468766sm200353e87.35.2025.03.21.07.17.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 07:17:26 -0700 (PDT)
-Date: Fri, 21 Mar 2025 16:17:23 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Abel Vesa <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
-        linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org
-Subject: Re: [PATCH v3 04/10] phy: phy-snps-eusb2: refactor constructs names
-Message-ID: <ftscdayi4uegv4bfzckytfrg44vi6f5wlvlhjqsh5nmgumrjx4@ur6rgxj5ixsj>
-References: <20250321135854.1431375-1-ivo.ivanov.ivanov1@gmail.com>
- <20250321135854.1431375-5-ivo.ivanov.ivanov1@gmail.com>
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8tesCzyVEDpNzziJBXhLV3rImVo6j7PfN3V4yTfNrlI=;
+        b=vsO6VrPJpp63Oz2QN2J+rKaGothf/4Z0unGkKF8wHXtKAmBkB2Xk+DQUHBIRJi8IfO
+         J3fFmTjN8nW5T6LJGHQ//ZNVkAPXDlKhnvDRcM/n2p85d/6f6aJpftyy2f1ABiiWXp2C
+         rou9S66oKIwNblSRySddIpvQVlOynd3jb8zNBWbvcLpHZZNppw3gr/HkZf8A3LzItQqy
+         J0GSQjzqj/ecXlZ3Mv73wXcjj4cuUzb4Ja7PbLNHRummkfkNWA6GBDQ/3mu7BGvsPkRv
+         sZC8kfFNNX/dmJULK/hWYMv4/6g0pEZ/yGTZCVxmEV6GVP7Dxcf2ebH3BKOeCPOsjmYX
+         aynQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW9Wn42X/EqvgGaEtzDOG5Kx2hZpycVgXttTpDFdE/UEn4zulDBXJyag0M1gzLli2COu8I6Gu5C9w/3hOc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwyZqq7RLFmSsc/rHTXMz+okvJHbkjd//bDW5bXsNSfBYazjuK2
+	0t+QC7QdNajSAO9Kxg93hr9HUYMQSmFPSvwYhtW66tW7NrvmJO37mzfkKq5XmSS5C/QCnzfrRsf
+	Mw4VZfG3h5P2xgUviqjWlrveL1KA=
+X-Gm-Gg: ASbGncsfzBc5dEf1wjufoW9y69VcXhamGa5rWuRMESI0+0zh2Cwz8q/qDqSaa6rjedH
+	SZhX9fmE5eB+9bC/nzKavzUq1/XkiZ+Ur6rys7uXB99W1PrFys7XarMCphE0ZCgL+6xSHVZoEhF
+	a0RcrN9Th5gTqu/5weQlDPPyWB+9birj6XesBcgwvxSQ==
+X-Google-Smtp-Source: AGHT+IFg1NU9tVPGMhUUJJbhOHj4P/H/O2y/QyOLYk4b9KFol8sFt8coljmWvl/+Gk70AvqPwMAuWwgU2nvBrDHJ2Ow=
+X-Received: by 2002:a05:651c:50a:b0:30c:2da4:85fb with SMTP id
+ 38308e7fff4ca-30d7e22171cmr14437071fa.12.1742566647005; Fri, 21 Mar 2025
+ 07:17:27 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321135854.1431375-5-ivo.ivanov.ivanov1@gmail.com>
-X-Proofpoint-GUID: K2BYZHGvN7GPVwcZiLNsuS_p14h6tzLN
-X-Proofpoint-ORIG-GUID: K2BYZHGvN7GPVwcZiLNsuS_p14h6tzLN
-X-Authority-Analysis: v=2.4 cv=LKpmQIW9 c=1 sm=1 tr=0 ts=67dd74f9 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=pGLkceISAAAA:8 a=EUspDBNiAAAA:8 a=bmNeyW_Q0om-5_paTGoA:9 a=CjuIK1q_8ugA:10
- a=NFOGd7dJGGMPyQGDc5-O:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- phishscore=0 malwarescore=0 suspectscore=0 mlxscore=0 priorityscore=1501
- spamscore=0 mlxlogscore=888 lowpriorityscore=0 clxscore=1015 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210104
+References: <4378DDFE-3263-497A-8364-433DC1984FEE@live.com>
+In-Reply-To: <4378DDFE-3263-497A-8364-433DC1984FEE@live.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Fri, 21 Mar 2025 10:16:49 -0400
+X-Gm-Features: AQ5f1JqgTcW7uU8hqB5e3_f6-yhSWki5xFpeg3M51SsKfHQM5bdn12gKjCJKdHU
+Message-ID: <CAJ-ks9=zN0pUAt9ELckna+3GcnDfhjF3jgiM1FHXLji9pWc2wQ@mail.gmail.com>
+Subject: Re: [PATCH] printf: add tests for generic FourCCs
+To: Aditya Garg <gargaditya08@live.com>
+Cc: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 21, 2025 at 03:58:48PM +0200, Ivaylo Ivanov wrote:
-> As the driver now resides outside the phy subdirectory under a different
-> name, refactor all definitions, structures and functions to explicitly
-> specify what code is Qualcomm-specific and what is not.
-> 
-> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+On Thu, Mar 13, 2025 at 11:45=E2=80=AFPM Aditya Garg <gargaditya08@live.com=
+> wrote:
+>
+> From: Aditya Garg <gargaditya08@live.com>
+>
+> Format specifiers for printing generic 32-bit FourCCs were recently added
+> to vsprintf. They are going through the DRM tree alongwith the appletbdrm
+> driver. Since the printf tests are being converted to kunit, this separat=
+e
+> patch for the tests should make it easier to rebase when the merge window
+> opens.
+>
+> Link: https://lore.kernel.org/dri-devel/79FA3F41-FD7A-41D9-852B-D32606AF5=
+EB4@live.com/T/#u
+> Signed-off-by: Aditya Garg <gargaditya08@live.com>
 > ---
->  drivers/phy/phy-snps-eusb2.c | 256 +++++++++++++++++------------------
->  1 file changed, 128 insertions(+), 128 deletions(-)
-> 
-
-
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-
-
->  
-> -module_platform_driver(qcom_snps_eusb2_hsphy_driver);
-> -MODULE_DESCRIPTION("Qualcomm SNPS eUSB2 HS PHY driver");
-> +module_platform_driver(snps_eusb2_hsphy_driver);
-> +MODULE_DESCRIPTION("SNPS eUSB2 HS PHY driver");
-
-Nit: Synopsys
-
->  MODULE_LICENSE("GPL");
-> -- 
+>  lib/tests/printf_kunit.c | 39 ++++++++++++++++++++++++++++++++-------
+>  1 file changed, 32 insertions(+), 7 deletions(-)
+>
+> diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
+> index 2c9f6170b..b1fa0dcea 100644
+> --- a/lib/tests/printf_kunit.c
+> +++ b/lib/tests/printf_kunit.c
+> @@ -701,21 +701,46 @@ static void fwnode_pointer(struct kunit *kunittest)
+>         software_node_unregister_node_group(group);
+>  }
+>
+> +struct fourcc_struct {
+> +       u32 code;
+> +       const char *str;
+> +};
+> +
+> +static void fourcc_pointer_test(struct kunit *kunittest, const struct fo=
+urcc_struct *fc,
+> +                               size_t n, const char *fmt)
+> +{
+> +       size_t i;
+> +
+> +       for (i =3D 0; i < n; i++)
+> +               test(fc[i].str, fmt, &fc[i].code);
+> +}
+> +
+>  static void fourcc_pointer(struct kunit *kunittest)
+>  {
+> -       struct {
+> -               u32 code;
+> -               char *str;
+> -       } const try[] =3D {
+> +       static const struct fourcc_struct try_cc[] =3D {
+>                 { 0x3231564e, "NV12 little-endian (0x3231564e)", },
+>                 { 0xb231564e, "NV12 big-endian (0xb231564e)", },
+>                 { 0x10111213, ".... little-endian (0x10111213)", },
+>                 { 0x20303159, "Y10  little-endian (0x20303159)", },
+>         };
+> -       unsigned int i;
+> +       static const struct fourcc_struct try_ch[] =3D {
+> +               { 0x41424344, "ABCD (0x41424344)", },
+> +       };
+> +       static const struct fourcc_struct try_cn[] =3D {
+> +               { 0x41424344, "DCBA (0x44434241)", },
+> +       };
+> +       static const struct fourcc_struct try_cl[] =3D {
+> +               { (__force u32)cpu_to_le32(0x41424344), "ABCD (0x41424344=
+)", },
+> +       };
+> +       static const struct fourcc_struct try_cb[] =3D {
+> +               { (__force u32)cpu_to_be32(0x41424344), "ABCD (0x41424344=
+)", },
+> +       };
+>
+> -       for (i =3D 0; i < ARRAY_SIZE(try); i++)
+> -               test(try[i].str, "%p4cc", &try[i].code);
+> +       fourcc_pointer_test(kunittest, try_cc, ARRAY_SIZE(try_cc), "%p4cc=
+");
+> +       fourcc_pointer_test(kunittest, try_ch, ARRAY_SIZE(try_ch), "%p4ch=
+");
+> +       fourcc_pointer_test(kunittest, try_cn, ARRAY_SIZE(try_cn), "%p4cn=
+");
+> +       fourcc_pointer_test(kunittest, try_cl, ARRAY_SIZE(try_cl), "%p4cl=
+");
+> +       fourcc_pointer_test(kunittest, try_cb, ARRAY_SIZE(try_cb), "%p4cb=
+");
+>  }
+>
+>  static void
+> --
 > 2.43.0
-> 
+>
 
--- 
-With best wishes
-Dmitry
+This code looks fine to me. I would appreciate a preview of the output
+of these tests when they fail; a lot of effort went into making the
+printf tests produce actionable failure messages, and we should
+continue to invest in that IMO.
