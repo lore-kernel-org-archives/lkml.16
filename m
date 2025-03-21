@@ -1,96 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AA891A238C;
-	Fri, 21 Mar 2025 16:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC8A1A238C;
+	Fri, 21 Mar 2025 16:23:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742574196; cv=none; b=KQ2/XLgKx8mt4Y5im1uJJHwtw+tsHYwN0RoptRq1N6hS26TRaAOh2qltwYZq0hqLI2WkLDnE/01MWY0Nd6DE9uluaf/eC8iAGX9kZM3t35FRRq5OQWTF4OXbVD7WoHA+QfWRF4qWb3u4R8HTOlKqyl9RMH6PL1/IlcHlA1bHkts=
+	t=1742574208; cv=none; b=dN2A7csrgd+6J8xY5VIo/PtZHeYTY6WwfWdRMs1a3h+EWi87HKASoL+f9tzg6Sn8mu93UuEFH1aX4jQbVqJcxczYOQOyvddTuA4E91eEuc5Xk8npLK6kECJ5hCQu4Ep8B5p0uME/Vg1h/WdvhhnDrss8WybUBt4btNS4pcnl5Mg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742574196; c=relaxed/simple;
-	bh=uhN6QJh0tP83UgoduWmaigRwPkVaACTLj8V+BUixCws=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ANgGDsV2Cm/3VJh6BVyl9GPF8Jgx8AViEvces2fAHVgX74xv5zRhY/LbHbTzGImttGOHzSDjVr37UxskNzYDHbZuxvLzCo2aW/kuXpzCBlbpwp2HzXe1ZO4AkbxVpTsYpJ/gX2LrIzRxRVEmq/tpukUSCVzZRhHXEfdhlzAy/NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7gPvO3o; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742574208; c=relaxed/simple;
+	bh=xA3OKFh4pwWxu3qLNV/twuwU8eHXbz9A/i7Ap0xbR58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Jdei2mnDUv2DppcnxOyCTyodh8NoesOntc6QDtTAeV5l/PpaRJev4eQKayXlIFpuheRcV6BLSY5LwVfyJXEkT0PK2dfi7Fo1lhMfKFpteCdVAPAsNYEKUFomiPtU26q5rSlGnIBNFKpuBEvH9GBJs+U+xefdA+sdWaoysHaw0V0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=fHwfb+/I; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7gPvO3o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B070BC4CEE3;
-	Fri, 21 Mar 2025 16:23:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742574195;
-	bh=uhN6QJh0tP83UgoduWmaigRwPkVaACTLj8V+BUixCws=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t7gPvO3okxvDMLDqE4vtR0NptCjPnaTAqAqUwY3qA/DfySDChcOVpbmG5vpe/8RVJ
-	 TUcu7fYT1pYBNBo4cVtentnH6ATRwjYhV+cdQ5304hCyc7giVcUGIL1peapF9KXO4X
-	 dCZ3Bw/RstpIWLo8sOLQk1F/lH76+JK5lPWlIHmi45fKc6WWBGieuK3VRGwsi3gFVj
-	 meQnBcSupj12gb67FwJHx/QdKAjjM4T84Xr4JPigVlnzD0sckKH9HG1UiHspr9PTi4
-	 Kgq+CNkVvN9OvmaQ9UF67LRzXC56ukdco3SYjd4lsdz2e8IP5aR0rkm//NdtUwJJD4
-	 1iICj7yAU750g==
-From: Conor Dooley <conor@kernel.org>
-To: Conor Dooley <conor@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Pinkesh Vaghela <pinkesh.vaghela@einfochips.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Samuel Holland <samuel.holland@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Min Lin <linmin@eswincomputing.com>,
-	Pritesh Patel <pritesh.patel@einfochips.com>,
-	Yangyu Chen <cyy@cyyself.name>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Yu Chien Peter Lin <peterlin@andestech.com>,
-	Charlie Jenkins <charlie@rivosinc.com>,
-	Kanak Shilledar <kanakshilledar@gmail.com>,
-	Darshan Prajapati <darshan.prajapati@einfochips.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	Aradhya Bhatia <a-bhatia1@ti.com>,
-	rafal@milecki.pl,
-	Anup Patel <anup@brainfault.org>,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: (subset) [PATCH v2 00/10] Basic device tree support for ESWIN EIC7700 RISC-V SoC
-Date: Fri, 21 Mar 2025 16:21:50 +0000
-Message-ID: <20250321-trimness-unwind-0ffafee4ac8a@spud>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20250320105449.2094192-1-pinkesh.vaghela@einfochips.com>
-References: <20250320105449.2094192-1-pinkesh.vaghela@einfochips.com>
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="fHwfb+/I"
+Received: from [10.17.64.97] (unknown [131.107.174.225])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 0DE9D2025381;
+	Fri, 21 Mar 2025 09:23:26 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0DE9D2025381
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742574206;
+	bh=w60sAgvcLAWgVyv6WquYLLOQicpf5ZRmpFvyjyfnVwE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fHwfb+/I4DJcL3178I7/xgS79wmL4RJO6TCuOPNtrXBsqnt20gS+HlmY70drCXBK9
+	 N55lDPEhKf9tFwz2tFyqK+ir/EQGbFp9Z+CMRku9V4+w7lbUOIdXiFn9daYeQRORsY
+	 bwElckzWHCPbK3gRP/HyJr/E1Irv9GxEIBnXOSW4=
+Message-ID: <3d7b5e06-5166-46bb-89dc-a0b95ca7c767@linux.microsoft.com>
+Date: Fri, 21 Mar 2025 09:23:26 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-X-Developer-Signature: v=1; a=openpgp-sha256; l=646; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=G5nMXPv07/5t5qEEHTEA3VTjgeOZ3saVfKZymta3BuE=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDOl3Jyk6nJ7/OTf/3mtx64Ctwmf+FhRPnFWmpLMvnW2v3 Iz5PoVbO0pZGMQ4GGTFFFkSb/e1SK3/47LDuectzBxWJpAhDFycAjARpxyG/8URCaFT+Q/8UrpX 6lXeUV/3Ty9tTemRRZVB7IevGfmfWcLIcM8o7Hvinq2Jy8V3zirel7PHSO/G6kNHXfkkdrNl/zV dxQAA
-X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 6/8] ima: kexec: move IMA log copy from kexec load to
+ execute
+To: Baoquan He <bhe@redhat.com>
+Cc: zohar@linux.ibm.com, stefanb@linux.ibm.com,
+ roberto.sassu@huaweicloud.com, roberto.sassu@huawei.com,
+ eric.snowberg@oracle.com, ebiederm@xmission.com, paul@paul-moore.com,
+ code@tyhicks.com, bauermann@kolabnow.com, linux-integrity@vger.kernel.org,
+ kexec@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-kernel@vger.kernel.org, madvenka@linux.microsoft.com,
+ nramas@linux.microsoft.com, James.Bottomley@hansenpartnership.com,
+ vgoyal@redhat.com, dyoung@redhat.com
+References: <20250318010448.954-1-chenste@linux.microsoft.com>
+ <20250318010448.954-7-chenste@linux.microsoft.com>
+ <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
+Content-Language: en-US
+From: steven chen <chenste@linux.microsoft.com>
+In-Reply-To: <Z9t4LVpE470DMBYU@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Conor Dooley <conor.dooley@microchip.com>
+On 3/19/2025 7:06 PM, Baoquan He wrote:
+> On 03/17/25 at 06:04pm, steven chen wrote:
+> ...snip...
+>> ---
+>>   kernel/kexec_file.c                | 10 ++++++
+>>   security/integrity/ima/ima_kexec.c | 51 ++++++++++++++++++------------
+>>   2 files changed, 40 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index 606132253c79..ab449b43aaee 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -201,6 +201,13 @@ kimage_validate_signature(struct kimage *image)
+>>   }
+>>   #endif
+>>   
+>> +static void kimage_file_post_load(struct kimage *image)
+>> +{
+>> +#ifdef CONFIG_IMA_KEXEC
+>> +	ima_kexec_post_load(image);
+>> +#endif
+>> +}
+>> +
+>>   /*
+>>    * In file mode list of segments is prepared by kernel. Copy relevant
+>>    * data from user space, do error checking, prepare segment list
+>> @@ -428,6 +435,9 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+>>   
+>>   	kimage_terminate(image);
+>>   
+>> +	if (!(flags & KEXEC_FILE_ON_CRASH))
+>> +		kimage_file_post_load(image);
+> machine_kexec_post_load() is called by both kexec_load and kexec_file_load,
+> we should use it to do things post load, but not introducing another
+> kimage_file_post_load().
 
-On Thu, 20 Mar 2025 16:24:39 +0530, Pinkesh Vaghela wrote:
-> Add support for ESWIN EIC7700 SoC consisting of SiFive Quad-Core
-> P550 CPU cluster and the first development board that uses it, the
-> SiFive HiFive Premier P550.
-> 
-> This patch series adds initial device tree and also adds ESWIN
-> architecture support.
-> 
-> [...]
+Hi Baoquan,
 
-Applied to riscv-cache-for-next, but too late for this merge window.
-They'll be 6.16 material, the commit hashes below will change when I
-rebase on top of 6.15-rc1.
-
-[05/10] dt-bindings: cache: sifive,ccache0: Add ESWIN EIC7700 SoC compatibility
-        https://git.kernel.org/conor/c/a506a819af37
-[06/10] cache: sifive_ccache: Add ESWIN EIC7700 support
-        https://git.kernel.org/conor/c/4a9d4db6ba17
+Could you give me more detail about this?
 
 Thanks,
-Conor.
+
+Steven
+
+>
+>> +
+>>   	ret = machine_kexec_post_load(image);
+>>   	if (ret)
+>>   		goto out;
+> ...snip...
+
+
