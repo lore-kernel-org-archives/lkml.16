@@ -1,316 +1,124 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BAB9202C27
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:25:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122E8202C27
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:25:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742556320; cv=none; b=Q7azP/mEls+9MQnAVXooGQLZfj/kxm/KRvBrUilhSLmtSrJ3teieykbb9MVJc7Er7Fw4/3rVq+0UAMGToITj5Z2GQ1lLWKa89477SZl9uAWEwgeemuRc+L4muJpbEOoFXjkh7/V5kcBzOgMY90RHPde9mfectiarquOIRbPX9XU=
+	t=1742556342; cv=none; b=HEmhQjsKCDviHTP/0P1Lflx+VlXcnHCCAYgJI/CLdS2FWhpWRcdxDiGGWeZSCc5nEOt3SA1LaNDxIwMlY0eab+zdoayi4dICF4QH4Jom0Q+inTpA4V4o7I+z3v05LYVROZ00pPEtKL65hLq/JkduG33VMxBggYHxcQn68hF07fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742556320; c=relaxed/simple;
-	bh=0kXVu/gh0yVTqgoh+txA1QpKxhNEuDj21jcjt7Diojo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e9rNQjAlz6S52znT+z++tcnGgAuT8k5nFeb+hSXzJrMlESifYQPmqcpKrTDpaiKivblvdbNoDkDqNjvIMNPpVTM7M2unDzYiRdEUJRHY+cO7Nkgc7N6B42EItejlceUF935PgeWRPZdUMsLGpNFSBMUNAVn7rllkPWluK9Oconw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ak78XAAo; arc=none smtp.client-ip=170.10.129.124
+	s=arc-20240116; t=1742556342; c=relaxed/simple;
+	bh=KI/2AGL86k52C8btarR3FdUk7s4SlCVth6HPJysL2Sc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eh+Gr/5Ebea5jmDWEgzSX7lNVXe4UmrQ47QMUB2eraeBT8kDIq3+Pdv4BiOkQ/Ada1nFBWLS+gM1lORYO3p7DcD7D9KsNdXIvxUl4jgTxuOgkct9IIhoqIR0ZKRGUcrIyjpunmOdLDMshUB8TbLUTkqktR3sfnyi87IfS1m7qjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=dF7XwAO9; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ak78XAAo"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dF7XwAO9"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742556318;
+	s=mimecast20190719; t=1742556339;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=0yUNpi4b7ZWdWO/bV5OTMGm6CGQRq8VicNn8NgDNq0I=;
-	b=ak78XAAo1n6QSVRg/bPa92D8M12LKj3i8dfD92fhMTr2AC/DaYEmtXBgkBxDUTzc730h3I
-	qdbxOwR4SrZ6zVEm0kYAVK0T0N8prvuqnKAbcU99uPZDJ3V/URlJtHJ5gKeroik3XGUOlv
-	bUntOkTMS5sOiK+Nlb7rr40gFd6Vdts=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-695-EEhYhU6hOJqu7cGncA5SAg-1; Fri,
- 21 Mar 2025 07:25:15 -0400
-X-MC-Unique: EEhYhU6hOJqu7cGncA5SAg-1
-X-Mimecast-MFC-AGG-ID: EEhYhU6hOJqu7cGncA5SAg_1742556313
-Received: from mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.111])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 124B319560B1;
-	Fri, 21 Mar 2025 11:25:13 +0000 (UTC)
-Received: from hydra.redhat.com (unknown [10.44.34.21])
-	by mx-prod-int-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E4B9D180175A;
-	Fri, 21 Mar 2025 11:25:07 +0000 (UTC)
-From: Jocelyn Falempe <jfalempe@redhat.com>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Ryosuke Yasuoka <ryasuoka@redhat.com>,
-	Javier Martinez Canillas <javierm@redhat.com>,
-	Wei Yang <richard.weiyang@gmail.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	David Hildenbrand <david@redhat.com>,
-	John Ogness <john.ogness@linutronix.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	linux-mm@kvack.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Cc: Jocelyn Falempe <jfalempe@redhat.com>
-Subject: [PATCH v2 2/2] drm/panic: Add support to scanout buffer as array of pages
-Date: Fri, 21 Mar 2025 12:16:56 +0100
-Message-ID: <20250321112436.1739876-3-jfalempe@redhat.com>
-In-Reply-To: <20250321112436.1739876-1-jfalempe@redhat.com>
-References: <20250321112436.1739876-1-jfalempe@redhat.com>
+	bh=HcGxSxTbOVpMZyAZ/MNr7iuS33cKQJqIP8PXa1sShoE=;
+	b=dF7XwAO9QIbn+DBO3KvZIs4gnkBZrYV0fEc9fEq3QDrJJjFmLFNj0pLbldVz/qt4bAQQ3j
+	TomZjW/1J7tlTqEbHyKdoyUpdP5DXHBV59uvvOfnS7Q9r/nRsABpRALrM0V9jDIlFJ55HX
+	ORPJiOhCQnPtEynn3KzRxGlTX7rCQIw=
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com
+ [209.85.216.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-556-SmCMqZMNOyiVB4MQ0ziXkw-1; Fri, 21 Mar 2025 07:25:34 -0400
+X-MC-Unique: SmCMqZMNOyiVB4MQ0ziXkw-1
+X-Mimecast-MFC-AGG-ID: SmCMqZMNOyiVB4MQ0ziXkw_1742556334
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff55176edcso3131005a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:25:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742556334; x=1743161134;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=HcGxSxTbOVpMZyAZ/MNr7iuS33cKQJqIP8PXa1sShoE=;
+        b=CS0vn7RdTRrU7qO8gnaAH3hb9fMMv8RQgb3nAf9JDrYCc3E64suJ+FuKWKvbNNuJkR
+         Ij3FWiM78mB4peJppEcVkfCSrXAX55BtPjSZdQ/s9o8I/AafO3RBUxreE3TEQhBY47Ax
+         yVVAKTJ5qgOX+dAJMzZDhj3dnYbulAaON4vLplauYLaRV8CD6wEZgFM7a56cQUrC00xK
+         vrDxFFRG8XMVUGlsIUTE95d6lxng4jbxYoXm1AyvJVVB9QxWRGw1Gg/DKF3ZRtUVXYvd
+         JD3tDKiNnyKrpwkjfhqgffFjEQKPIdImxebylxaPP9/lYjwDgTirGOo+08kHfGsrUOSm
+         KrGg==
+X-Gm-Message-State: AOJu0YyKKmgr5KkTWPQ5EEkSrgfK2asyCQqaw3BHXM5Q76TN8cca9v6I
+	50XBWfnZxN4Nawdaxi2j0uCZJXj66iBLmneqSps2qNby9gBnk/E1Y46WkS0G6hTqI3Lq7hj7FNz
+	/hIkW1CAfAesqFsxlKSSqaOVnlO5HAnN7HkucsfxpFUYtGn3GrJdZB8nZmNeGFA==
+X-Gm-Gg: ASbGnct/GxhLT0rqag5h1JoUXa2wC3bzKwg1ovYsnNfDjTA2/BbClj7HoyxtnLTra3C
+	zpR/4Tvy6tBginUNjRpZEVz/5cGE0kSkxfMUXQYaqkH11ZasxPSMXFzs9ZEEE7IeY1U2qR0cBpM
+	ELA/8WR8UhkuTSwh7JRK9jl19KgHsU4qFijc7T5oDCp5DMI36Pv1D8lp2U8//Tgk7xezoU83eWH
+	mMqdxpR3C4bC835f1bBI/bnqVyk7r7B3NXH0/RDbOOsi1UlEdbnUmrPyZJbVepI7ygONo4jOZ3F
+	rHXlQf65VDg63E+PRw==
+X-Received: by 2002:a17:90b:4d08:b0:2fa:f8d:65de with SMTP id 98e67ed59e1d1-3030fefd8bcmr3349330a91.22.1742556333721;
+        Fri, 21 Mar 2025 04:25:33 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFhnSanbQkjja3u7vjcfqJx/EYbJW2GJpG5lYb8dvzNwA2Xr5Zjdg+wi9FI4uk1RPAbUvu8AQ==
+X-Received: by 2002:a17:90b:4d08:b0:2fa:f8d:65de with SMTP id 98e67ed59e1d1-3030fefd8bcmr3349300a91.22.1742556333271;
+        Fri, 21 Mar 2025 04:25:33 -0700 (PDT)
+Received: from [192.168.68.55] ([180.233.125.167])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf59e2desm5742121a91.23.2025.03.21.04.25.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 04:25:32 -0700 (PDT)
+Message-ID: <5ec97dd6-6561-4687-ac94-41c63ffc82cf@redhat.com>
+Date: Fri, 21 Mar 2025 21:25:27 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.111
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Fix parameter passed to page_mapcount_is_type()
+To: David Hildenbrand <david@redhat.com>, Vlastimil Babka <vbabka@suse.cz>,
+ linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+ willy@infradead.org, osalvador@suse.de, gehao@kylinos.cn,
+ shan.gavin@gmail.com
+References: <20250321053148.1434076-1-gshan@redhat.com>
+ <b9e1269e-e79b-446b-9483-4fdbc1ee42f4@suse.cz>
+ <0d096764-302f-4b80-a867-22f5302b8045@redhat.com>
+Content-Language: en-US
+From: Gavin Shan <gshan@redhat.com>
+In-Reply-To: <0d096764-302f-4b80-a867-22f5302b8045@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Some drivers like virtio-gpu, don't map the scanout buffer in the
-kernel. Calling vmap() in a panic handler is not safe, and writing an
-atomic_vmap() API is more complex than expected [1].
-So instead, pass the array of pages of the scanout buffer to the
-panic handler, and map only one page at a time to draw the pixels.
-This is obviously slow, but acceptable for a panic handler.
+On 3/21/25 8:11 PM, David Hildenbrand wrote:
+> On 21.03.25 10:23, Vlastimil Babka wrote:
+>> On 3/21/25 06:31, Gavin Shan wrote:
+>>> Found by code inspection. There are two places where the parameter
+>>> passed to page_mapcount_is_type() is (page->__mapcount), which is
+>>> correct since it should be one more than the value, as explained in
+>>> the comments to page_mapcount_is_type(): (a) page_has_type() in
+>>> page-flags.h (b) __dump_folio() in mm/debug.c
+>>
+>> IIUC you are right. Luckily thanks to the the PGTY_mapcount_underflow limit,
+>> this off-by-one error doesn't currently cause visible issues i.e.
+>> misclassifications legitimate mapcount as page type and vice versa, right?
+>> We'd have to have a mapcount underflown severely right to the limit to make
+>> that off-by-one error cross it?
+> 
+> Agreed. Likely not stable material because it isn't actually fixing anything (because of the safety gaps).
+> 
 
-[1] https://lore.kernel.org/dri-devel/20250305152555.318159-1-ryasuoka@redhat.com/
+Yes, it shouldn't cause any visible impacts so far due to the gap.
+I just found the issue by code inspection. Lets drop the fix tags
+in v2.
 
-Signed-off-by: Jocelyn Falempe <jfalempe@redhat.com>
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
----
- drivers/gpu/drm/drm_panic.c | 142 ++++++++++++++++++++++++++++++++++--
- include/drm/drm_panic.h     |  12 ++-
- 2 files changed, 147 insertions(+), 7 deletions(-)
+>>
+>> I wonder if a more future-proof solution would be to redefine
+>> page_mapcount_is_type() instead to not subtract. But I'll leave that to willy.
+> 
+> With upcoming changes around that, likely best to leave that alone. I expect page_mapcount_is_type() to completely vanish.
+> 
 
-diff --git a/drivers/gpu/drm/drm_panic.c b/drivers/gpu/drm/drm_panic.c
-index ab42a2b1567d0..3f22ea2f61c73 100644
---- a/drivers/gpu/drm/drm_panic.c
-+++ b/drivers/gpu/drm/drm_panic.c
-@@ -7,6 +7,7 @@
-  */
- 
- #include <linux/font.h>
-+#include <linux/highmem.h>
- #include <linux/init.h>
- #include <linux/iosys-map.h>
- #include <linux/kdebug.h>
-@@ -154,6 +155,90 @@ static void drm_panic_blit_pixel(struct drm_scanout_buffer *sb, struct drm_rect
- 				sb->set_pixel(sb, clip->x1 + x, clip->y1 + y, fg_color);
- }
- 
-+static void drm_panic_write_pixel16(void *vaddr, unsigned int offset, u16 color)
-+{
-+	u16 *p = vaddr + offset;
-+
-+	*p = color;
-+}
-+
-+static void drm_panic_write_pixel24(void *vaddr, unsigned int offset, u32 color)
-+{
-+	u8 *p = vaddr + offset;
-+
-+	*p++ = color & 0xff;
-+	color >>= 8;
-+	*p++ = color & 0xff;
-+	color >>= 8;
-+	*p = color & 0xff;
-+}
-+
-+static void drm_panic_write_pixel32(void *vaddr, unsigned int offset, u32 color)
-+{
-+	u32 *p = vaddr + offset;
-+
-+	*p = color;
-+}
-+
-+static void drm_panic_write_pixel(void *vaddr, unsigned int offset, u32 color, unsigned int cpp)
-+{
-+	switch (cpp) {
-+	case 2:
-+		drm_panic_write_pixel16(vaddr, offset, color);
-+		break;
-+	case 3:
-+		drm_panic_write_pixel24(vaddr, offset, color);
-+		break;
-+	case 4:
-+		drm_panic_write_pixel32(vaddr, offset, color);
-+		break;
-+	default:
-+		DRM_WARN_ONCE("Can't blit with pixel width %d\n", cpp);
-+	}
-+}
-+
-+/*
-+ * The scanout buffer pages are not mapped, so for each pixel,
-+ * use kmap_local_page_try_from_panic() to map the page, and write the pixel.
-+ * Try to keep the map from the previous pixel, to avoid too much map/unmap.
-+ */
-+static void drm_panic_blit_page(struct page **pages, unsigned int dpitch,
-+				unsigned int cpp, const u8 *sbuf8,
-+				unsigned int spitch, struct drm_rect *clip,
-+				unsigned int scale, u32 fg32)
-+{
-+	unsigned int y, x;
-+	unsigned int page = ~0;
-+	unsigned int height = drm_rect_height(clip);
-+	unsigned int width = drm_rect_width(clip);
-+	void *vaddr = NULL;
-+
-+	for (y = 0; y < height; y++) {
-+		for (x = 0; x < width; x++) {
-+			if (drm_draw_is_pixel_fg(sbuf8, spitch, x / scale, y / scale)) {
-+				unsigned int new_page;
-+				unsigned int offset;
-+
-+				offset = (y + clip->y1) * dpitch + (x + clip->x1) * cpp;
-+				new_page = offset >> PAGE_SHIFT;
-+				offset = offset % PAGE_SIZE;
-+				if (new_page != page) {
-+					if (!pages[new_page])
-+						continue;
-+					if (vaddr)
-+						kunmap_local(vaddr);
-+					page = new_page;
-+					vaddr = kmap_local_page_try_from_panic(pages[page]);
-+				}
-+				if (vaddr)
-+					drm_panic_write_pixel(vaddr, offset, fg32, cpp);
-+			}
-+		}
-+	}
-+	if (vaddr)
-+		kunmap_local(vaddr);
-+}
-+
- /*
-  * drm_panic_blit - convert a monochrome image to a linear framebuffer
-  * @sb: destination scanout buffer
-@@ -177,6 +262,10 @@ static void drm_panic_blit(struct drm_scanout_buffer *sb, struct drm_rect *clip,
- 	if (sb->set_pixel)
- 		return drm_panic_blit_pixel(sb, clip, sbuf8, spitch, scale, fg_color);
- 
-+	if (sb->pages)
-+		return drm_panic_blit_page(sb->pages, sb->pitch[0], sb->format->cpp[0],
-+					   sbuf8, spitch, clip, scale, fg_color);
-+
- 	map = sb->map[0];
- 	iosys_map_incr(&map, clip->y1 * sb->pitch[0] + clip->x1 * sb->format->cpp[0]);
- 
-@@ -209,6 +298,35 @@ static void drm_panic_fill_pixel(struct drm_scanout_buffer *sb,
- 			sb->set_pixel(sb, clip->x1 + x, clip->y1 + y, color);
- }
- 
-+static void drm_panic_fill_page(struct page **pages, unsigned int dpitch,
-+				unsigned int cpp, struct drm_rect *clip,
-+				u32 color)
-+{
-+	unsigned int y, x;
-+	unsigned int page = ~0;
-+	void *vaddr = NULL;
-+
-+	for (y = clip->y1; y < clip->y2; y++) {
-+		for (x = clip->x1; x < clip->x2; x++) {
-+			unsigned int new_page;
-+			unsigned int offset;
-+
-+			offset = y * dpitch + x * cpp;
-+			new_page = offset >> PAGE_SHIFT;
-+			offset = offset % PAGE_SIZE;
-+			if (new_page != page) {
-+				if (vaddr)
-+					kunmap_local(vaddr);
-+				page = new_page;
-+				vaddr = kmap_local_page_try_from_panic(pages[page]);
-+			}
-+			drm_panic_write_pixel(vaddr, offset, color, cpp);
-+		}
-+	}
-+	if (vaddr)
-+		kunmap_local(vaddr);
-+}
-+
- /*
-  * drm_panic_fill - Fill a rectangle with a color
-  * @sb: destination scanout buffer
-@@ -225,6 +343,10 @@ static void drm_panic_fill(struct drm_scanout_buffer *sb, struct drm_rect *clip,
- 	if (sb->set_pixel)
- 		return drm_panic_fill_pixel(sb, clip, color);
- 
-+	if (sb->pages)
-+		return drm_panic_fill_page(sb->pages, sb->pitch[0], sb->format->cpp[0],
-+					   clip, color);
-+
- 	map = sb->map[0];
- 	iosys_map_incr(&map, clip->y1 * sb->pitch[0] + clip->x1 * sb->format->cpp[0]);
- 
-@@ -714,16 +836,24 @@ static void draw_panic_plane(struct drm_plane *plane, const char *description)
- 	if (!drm_panic_trylock(plane->dev, flags))
- 		return;
- 
-+	ret = plane->helper_private->get_scanout_buffer(plane, &sb);
-+
-+	if (ret || !drm_panic_is_format_supported(sb.format))
-+		goto unlock;
-+
-+	/* One of these should be set, or it can't draw pixels */
-+	if (!sb.set_pixel && !sb.pages && iosys_map_is_null(&sb.map[0]))
-+		goto unlock;
-+
- 	drm_panic_set_description(description);
- 
--	ret = plane->helper_private->get_scanout_buffer(plane, &sb);
-+	draw_panic_dispatch(&sb);
-+	if (plane->helper_private->panic_flush)
-+		plane->helper_private->panic_flush(plane);
- 
--	if (!ret && drm_panic_is_format_supported(sb.format)) {
--		draw_panic_dispatch(&sb);
--		if (plane->helper_private->panic_flush)
--			plane->helper_private->panic_flush(plane);
--	}
- 	drm_panic_clear_description();
-+
-+unlock:
- 	drm_panic_unlock(plane->dev, flags);
- }
- 
-diff --git a/include/drm/drm_panic.h b/include/drm/drm_panic.h
-index f4e1fa9ae607a..a00bf3cbf62f1 100644
---- a/include/drm/drm_panic.h
-+++ b/include/drm/drm_panic.h
-@@ -39,6 +39,16 @@ struct drm_scanout_buffer {
- 	 */
- 	struct iosys_map map[DRM_FORMAT_MAX_PLANES];
- 
-+	/**
-+	 * @pages: Optional, if the scanout buffer is not mapped, set this field
-+	 * to the array of pages of the scanout buffer. The panic code will use
-+	 * kmap_local_page_try_from_panic() to map one page at a time to write
-+	 * all the pixels. This array shouldn't be allocated from the
-+	 * get_scanoutbuffer() callback.
-+	 * The scanout buffer should be in linear format.
-+	 */
-+	struct page **pages;
-+
- 	/**
- 	 * @width: Width of the scanout buffer, in pixels.
- 	 */
-@@ -57,7 +67,7 @@ struct drm_scanout_buffer {
- 	/**
- 	 * @set_pixel: Optional function, to set a pixel color on the
- 	 * framebuffer. It allows to handle special tiling format inside the
--	 * driver.
-+	 * driver. It takes precedence over the @map and @pages fields.
- 	 */
- 	void (*set_pixel)(struct drm_scanout_buffer *sb, unsigned int x,
- 			  unsigned int y, u32 color);
--- 
-2.47.1
++1 to remove page_mapcount_is_type(). After Willy confirms, I can post
+an extra series to do it if needed.
+
+Thanks,
+Gavin
 
