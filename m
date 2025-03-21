@@ -1,138 +1,116 @@
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 920341EA7FD
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:35:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C735184F;
+	Fri, 21 Mar 2025 06:36:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742538913; cv=none; b=J7RjXxey5/tGWdEQ9SuBe5Su9u0K9oXPqxFrMzTPD3gjhHC9SlUGvh2zHsCyMOHckqPOMGRcuV2AKrGVQTKNbQ7iztJbjKDV8abLgFfvWR458nLFdGgLgY21LXXkofCB9S+ooiMRGAK1iYbmWPqtLjbjM7kSMDobBEeK3sOlf4w=
+	t=1742538972; cv=none; b=o3I3MeGr9YMZ/dSB+2AK5E+sdbODl+7zuPlAsSeES6c5oB/nsOkG5MXyneBrqggWx36E1b5UcinvnInX5dUxg1NnTKUkiXdVcsc2NDfPqoJtA3hKMZybto7/LZOrWxsTM0IN3C1dP6igM+kCDhyPlBE6+SUJp/0KoVzcfs39jtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742538913; c=relaxed/simple;
-	bh=ypno/VfSFoHOwVqheRJVTlW/U5+RXZSu9hpvuqS8ryc=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=GTVx51DPKxRVYc/lF36J+ZIiWIb/1SOOAZ3zchqStUy8G28uqcFKUVAKi3Z5XYXbCS4UAfnI1yHEXy0JgtBX0V+9nuLhdrZoxJfYHrySHnOux712bfTdlomYumUYiN66heiA2KLhUzYv4fkEkTIZr/uiiWfa+W6swxKbRkDzFr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=BIOkUoSN; arc=none smtp.client-ip=203.254.224.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1742538972; c=relaxed/simple;
+	bh=HaWvwtYJ/oU8MJuWlBp9GYIsMVjPAUFk2f+KucFWzzI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=S3ooDmtCYgvWHyAJIPKh4eXz5bIIcyolO01y5lJSfDIeN79Mr+yF88SFx2nxM8S+fVZ5BGkXXbGfrtivARybusfLWAWJtGoL3jao0yc6GcmiKyZ2rrwPbQ1iFm8+8lPADtuZpqjepp0deof9d27ueTsaZEEGD8BcqAjSLERbW1U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TsOwUOPV; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BIOkUoSN"
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20250321063503epoutp02ef7034b960fd69f4ae3f519e83e252c2~uveZ7reUu2102521025epoutp02B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:35:03 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20250321063503epoutp02ef7034b960fd69f4ae3f519e83e252c2~uveZ7reUu2102521025epoutp02B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742538903;
-	bh=rgXBgm2j3OYKUDvQQeIioghWI/eaGLrzGCp2iTJH39Y=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=BIOkUoSNbE5RUDFrsKpm7lWu3VaumgiuSwVytA+lXoJotilQiw7EBqSZ6E+YVQ1ID
-	 qLlDDqBoQo1VFovGwjBPONVpw/gA6aUUKU10daktSs7iJqSb4C2xO3F9g3Ou3ga3tp
-	 qixiYMurHnRr0j+1jFDDOgjJ0R+tSWellSD1S5rM=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-	20250321063503epcas1p3a317c22f6b03526139896c3b9807332e~uveZh7yjM2008420084epcas1p3Q;
-	Fri, 21 Mar 2025 06:35:03 +0000 (GMT)
-Received: from epcpadp1new (unknown [182.195.40.141]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4ZJt3V7317z4x9Pr; Fri, 21 Mar
-	2025 06:35:02 +0000 (GMT)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-	20250321061945epcas1p439de78c05f457d53c2afa962c281636e~uvRDYlDpW0146001460epcas1p4f;
-	Fri, 21 Mar 2025 06:19:45 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250321061945epsmtrp1ba2b6490db22e6883c18d245b5764263~uvRDXvUIe2174821748epsmtrp1N;
-	Fri, 21 Mar 2025 06:19:45 +0000 (GMT)
-X-AuditID: b6c32a2a-38bf570000004a05-d4-67dd05010a26
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	16.5E.18949.1050DD76; Fri, 21 Mar 2025 15:19:45 +0900 (KST)
-Received: from W10PB11329 (unknown [10.253.152.129]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250321061945epsmtip1087de96b0e989478930ecb3355251fd8~uvRDNvC1Y1126911269epsmtip1M;
-	Fri, 21 Mar 2025 06:19:45 +0000 (GMT)
-From: "Sungjong Seo" <sj1557.seo@samsung.com>
-To: <Yuezhang.Mo@sony.com>, <linkinjeon@kernel.org>
-Cc: <sjdev.seo@gmail.com>, <linux-fsdevel@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <cpgs@samsung.com>,
-	<stable@vger.kernel.org>, "'Yeongjin Gil'" <youngjin.gil@samsung.com>
-In-Reply-To: <PUZPR04MB6316CA3B8281D08C2A85435A81D82@PUZPR04MB6316.apcprd04.prod.outlook.com>
-Subject: RE: [PATCH] exfat: fix random stack corruption after get_block
-Date: Fri, 21 Mar 2025 15:19:45 +0900
-Message-ID: <1296674576.21742538902983.JavaMail.epsvc@epcpadp1new>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TsOwUOPV"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742538970; x=1774074970;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HaWvwtYJ/oU8MJuWlBp9GYIsMVjPAUFk2f+KucFWzzI=;
+  b=TsOwUOPVbJm6EL7zw9ZjdVBlo4UDIrrI0/a5OIbfwJyYebBGkfOXx0NQ
+   puB2nsiAwMXrUh7miIX89QTuGv6OobbzH2zYWRpYomQChgaeTf6T6+qxC
+   k2kyEJ4D1OwQ78oGWoj2osi5VVhQkHTlT0wwojGcRLbPZER3SyC197cL/
+   ynThNNfXBV9djq1Q61W5uZFE9A2kdXNXyaLnzwMsmmVzoF3paPTcyNSMU
+   EL9/YosGN1Bd5rgEp8BCLeKFRnPgzMPyUw/Ycp44ANMRicAKFx5JzfX8s
+   TZYeDCoebSChl+egmz4t1UMEfWKRZSS6vo4BI3om/Ts945Gf/EwwOgsQZ
+   A==;
+X-CSE-ConnectionGUID: 8nqMfzwXTha8XWxGp/6l7A==
+X-CSE-MsgGUID: pXGu5vz+SsGfhY6sIFUHew==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="43985016"
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="43985016"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 23:36:09 -0700
+X-CSE-ConnectionGUID: YaSh7HXlQ+OnX5jNfa5gzA==
+X-CSE-MsgGUID: h72+9HCnRUyhlf7lh60ncg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="123830796"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 20 Mar 2025 23:36:05 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tvVz8-00016A-2R;
+	Fri, 21 Mar 2025 06:36:02 +0000
+Date: Fri, 21 Mar 2025 14:35:16 +0800
+From: kernel test robot <lkp@intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Daniel Golle <daniel@makrotopia.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, upstream@airoha.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	netdev@vger.kernel.org
+Subject: Re: [net-next PATCH 5/6] net: pcs: airoha: add PCS driver for Airoha
+ SoC
+Message-ID: <202503211416.eZCW1LF6-lkp@intel.com>
+References: <20250318235850.6411-6-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQGqPMDwLKOI+5AXW2VZtJVBhfOd4ANqS2Y2AmcVG+WzsUpqUA==
-Content-Language: ko
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmpjkeLIzCtJLcpLzFFi42LZdlhJTpeR9W66QdcHQ4uXhzQtJk5bymyx
-	Z+9JFovLu+awWbz4sIHNYsHGR4wWM/Y/Zbe4/uYhqwOHx85Zd9k9Nq3qZPPo27KK0aN9wk5m
-	j8+b5AJYo7hsUlJzMstSi/TtErgy9u76wlKwi7vi5PzVjA2MJ9i6GDk5JARMJJpudAPZXBxC
-	ArsZJa49e8TcxcgBlJCSOLhPE8IUljh8uBii5DmjxI7JPYwgvWwCuhJPbvxkBrFFBEwlvlyG
-	mMkssJ9R4tlcPYiGJ4wS7WeWgSU4BWIlZv4/xwRiCwu4S0xp3ckCYrMIqEpMenwFzOYVsJLo
-	v7CFFcIWlDg58wkLxFA9ifXr5zBC2PIS29/OYYZ4QEFi96ejrBBHOEnsXA9TLyIxu7ONeQKj
-	8Cwko2YhGTULyahZSFoWMLKsYpRMLSjOTc8tNiwwykst1ytOzC0uzUvXS87P3cQIjiotrR2M
-	e1Z90DvEyMTBeIhRgoNZSYRXpON2uhBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeb697U4QE0hNL
-	UrNTUwtSi2CyTBycUg1MmY3+5w9/6O24bzaX5Ywac20Qz/4pdcIMRm557536i+SLEj/r345g
-	i5TKst59PTK6trxVfHvbv2tyVh/S+X82T+Yqf/BavcI4yUamdv55e4MM4b+5KX6nesxjGIRf
-	8/HX5r3OvXH628YzXwVnNySt08/Jva+2ZduzN6zsTxZ3/9xu8Wv2lyMWCRfa1NR9nlZPLki/
-	unr2fzuvmqa9K1MFfs+133pcc2OV6RaNBYmFX7KYfyavCFxs6WKmJufIyjqzrOhfvGu3qtyR
-	QJX5VyuYKuUtXqqfyNzTFPDp9fwYc3Upm8dbFM/bTpU54fmG29p4lYpdVdr682ukF+lKz78V
-	zJq6M1atfctD5qhoRSWW4oxEQy3mouJEAAeoXfYZAwAA
-X-CMS-MailID: 20250321061945epcas1p439de78c05f457d53c2afa962c281636e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-X-CPGSPASS: Y
-X-ArchiveUser: EV
-X-Hop-Count: 3
-X-CMS-RootMailID: 20250320052646epcas1p384845fdc17bf572784c99ca81cd4c9dc
-References: <CGME20250320052646epcas1p384845fdc17bf572784c99ca81cd4c9dc@epcas1p3.samsung.com>
-	<158453976.61742448904639.JavaMail.epsvc@epcpadp1new>
-	<PUZPR04MB6316CA3B8281D08C2A85435A81D82@PUZPR04MB6316.apcprd04.prod.outlook.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318235850.6411-6-ansuelsmth@gmail.com>
 
-Hi Yuezhang,
-> Subject: Re: [PATCH] exfat: fix random stack corruption after get_block
-> 
-> +                       /*
-> +                        * No buffer_head is allocated.
-> +                        * (1) bmap: It's enough to fill bh_result without
-I/O.
-> +                        * (2) read: The unwritten part should be filled
-with 0
-> +                        *           If a folio does not have any buffers,
-> +                        *           let's returns -EAGAIN to fallback to
-> +                        *           per-bh IO like
-block_read_full_folio().
-> +                        */
-> +                       if (!folio_buffers(bh_result->b_folio)) {
-> +                               err = -EAGAIN;
-> +                               goto done;
-> +                       }
-> 
-> bh_result is set as mapped by map_bh(), should we need to clear it if
-> return an error?
-I looked a little deeper into do_mpage_readpage() and
-block_read_full_folio(), and from a security perspective, it seems that
-unmap is necessary in all error situations. Otherwise, unwritten areas
-may be exposed.
+Hi Christian,
 
-> 
-> +
-> +                       BUG_ON(size > sb->s_blocksize);
-> 
-> This check is equivalent to the following condition and is not necessary.
-> 
->                 } else if (iblock == valid_blks &&
->                            (ei->valid_size & (sb->s_blocksize - 1))) {
+kernel test robot noticed the following build errors:
 
-Yes, I think so, I'll remove it with v2.
+[auto build test ERROR on net-next/main]
 
-Thanks
+url:    https://github.com/intel-lab-lkp/linux/commits/Christian-Marangi/net-phylink-reset-PCS-Phylink-double-reference-on-phylink_stop/20250319-080303
+base:   net-next/main
+patch link:    https://lore.kernel.org/r/20250318235850.6411-6-ansuelsmth%40gmail.com
+patch subject: [net-next PATCH 5/6] net: pcs: airoha: add PCS driver for Airoha SoC
+config: i386-randconfig-007-20250321 (https://download.01.org/0day-ci/archive/20250321/202503211416.eZCW1LF6-lkp@intel.com/config)
+compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250321/202503211416.eZCW1LF6-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503211416.eZCW1LF6-lkp@intel.com/
 
+All errors (new ones prefixed by >>):
 
+>> ld.lld: error: undefined symbol: of_pcs_simple_get
+   >>> referenced by pcs-airoha.c:2818 (drivers/net/pcs/pcs-airoha.c:2818)
+   >>>               drivers/net/pcs/pcs-airoha.o:(airoha_pcs_probe) in archive vmlinux.a
+--
+>> ld.lld: error: undefined symbol: of_pcs_add_provider
+   >>> referenced by pcs-airoha.c:2818 (drivers/net/pcs/pcs-airoha.c:2818)
+   >>>               drivers/net/pcs/pcs-airoha.o:(airoha_pcs_probe) in archive vmlinux.a
+--
+>> ld.lld: error: undefined symbol: of_pcs_del_provider
+   >>> referenced by pcs-airoha.c:2828 (drivers/net/pcs/pcs-airoha.c:2828)
+   >>>               drivers/net/pcs/pcs-airoha.o:(airoha_pcs_remove) in archive vmlinux.a
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
