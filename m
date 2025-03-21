@@ -1,42 +1,32 @@
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CECA21E5B6D;
-	Fri, 21 Mar 2025 19:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.74
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F4461D54CF;
+	Fri, 21 Mar 2025 19:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742585593; cv=none; b=E8PJ/3hOZdPFrZlKW/aJaaLNU5hHoQScixhunl2pfC0w2CqGltWjzQQnA4KNRbikHcvD/MkTam8d9cHrZfb/DvQxy9NDN74W9ZEZZoxRg6t/fK9VO5RzkT+rp+g0vVryBJf0FvVA42n3KHvETg2Fo5kNZm9w81mcBrb1IvgnZjQ=
+	t=1742585766; cv=none; b=bYoEroNU1R9hkx1Y/u4M/rjMzF9vI4uvA3SpC85TC/2W1QSDa0WqfD9gIVX4L8w/m2qX775o0afHshUDVFTySS0Go9y7ULVIj7UMaYGEQI3YoIetiFIxvleAPTAXS0OTh8GxOGDiBjeEGFMf5fBOoLzjaxYtE+96Os9Ix6hJIeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742585593; c=relaxed/simple;
-	bh=No278/BwGKzimlmVAXabPdx3Lp9HAwXEy+j7FH5iTWE=;
+	s=arc-20240116; t=1742585766; c=relaxed/simple;
+	bh=C++Y8u3ya02o1vKzmoM0dnDY7A2chUdCqKyyJh4SfA8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N+8SnxlhQUQSbBRm2G5wsYxNTALOhhhWJpvR5Umam7B/YQnn78BVFEtT7U6OmOW4Vm9NY0v5i+9dxBkscZr9G7zA8djRVZ8q8N6ItK3t3zl79GQTxN04qv59Li1T7uqgzGUiDGnT12O6NhESqCEzo/vFQ8FYjWnv6RZR6BCfUZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz; spf=pass smtp.mailfrom=oldschoolsolutions.biz; dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b=ssRnq50W; arc=none smtp.client-ip=217.72.192.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=oldschoolsolutions.biz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oldschoolsolutions.biz
+	 In-Reply-To:Content-Type; b=RtkCq3HF+pKugQTT5vIi/g+ECi8JWS2tckIqJaud+hx8RT20E9sCj48qPPRauRej/tAsNYMFicn+z9s8a8IzytnkSGBt5WFssoO4BFqDCsovdUxHl77GpbYgR7xy/ThscpktrYBASF7yf04+iPpJiAWLvtxgU/spiEtue8HJFWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=c/PbSQNi; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oldschoolsolutions.biz header.i=jens.glathe@oldschoolsolutions.biz header.b="ssRnq50W"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=oldschoolsolutions.biz; s=s1-ionos; t=1742585574; x=1743190374;
-	i=jens.glathe@oldschoolsolutions.biz;
-	bh=o5KuILFsArzDnml8ZNWsQJ8DsMl/xcUsw5dgf52brGo=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:Subject:To:Cc:
-	 References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding:cc:content-transfer-encoding:
-	 content-type:date:from:message-id:mime-version:reply-to:subject:
-	 to;
-	b=ssRnq50Waqu++4rsD1QVb9Hh2w++MwWnBXJCPKxYR/dKX5DJJRwGIOVjb8ffoKXp
-	 9LZwI1WP4F8eM3S5hwdAbS4cueUxQcw9y39HjZiksORrqRO9Cn1tpCmj3oJv+7P6w
-	 7L6PN5jz7ILt2rG5cVTGJR1DHx+LNQ2OaBcpZ7ayI+DKxd3i5mjG8tVG7BJ/uFv3v
-	 aw4agaHO08rjjTQYftU5Z032vILOxD48zSoWu1Nc9hhE2P6cSC1373W7qjILZy2BY
-	 1eS7/qsHrFPPpI4qd/j9GM/aIvMkopEwabj1l97erqrfT2HpgrpjOOWu9S0YUsaLV
-	 lVzsYzq6pXwX0uxEzw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from [192.168.0.174] ([91.64.229.215]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MzhWp-1t09Nw2NdJ-00uqaa; Fri, 21 Mar 2025 20:27:13 +0100
-Message-ID: <a2b2d743-42eb-4eb2-ac41-93d2ab0af939@oldschoolsolutions.biz>
-Date: Fri, 21 Mar 2025 20:27:11 +0100
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="c/PbSQNi"
+Received: from [10.0.0.114] (c-67-182-156-199.hsd1.wa.comcast.net [67.182.156.199])
+	by linux.microsoft.com (Postfix) with ESMTPSA id 9E7672025389;
+	Fri, 21 Mar 2025 12:36:02 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 9E7672025389
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742585763;
+	bh=i3HSKurM5BztT+SIxfmwMikTCwCikJk6+44/qfduWSo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=c/PbSQNi6xW7xt4qq/YZKnryb+JE1EPhc6+zDpfT6yk2I5a8iVpVIWvCazf9pjqjI
+	 qTi/0ZJr06K3vQ+l7bHQ90m7I2zIF+LEXr+wHsFQ3kvpMuVPaUjubkaBXnXnxHNbFc
+	 z5liRIDSpGRGa0jRI78+VxZ292ebAiKWTRi2KogM=
+Message-ID: <96f2c859-790a-4282-9eef-9863ffb42ee1@linux.microsoft.com>
+Date: Fri, 21 Mar 2025 12:35:57 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -44,64 +34,67 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] wifi: ath11k: fix ring-buffer corruption
-To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
-Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
- Steev Klimaszewski <steev@kali.org>, Clayton Craft <clayton@craftyguy.net>,
- ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org
-References: <20250321094916.19098-1-johan+linaro@kernel.org>
+Subject: Re: [PATCH v2 3/6] x86/hyperv: Use hv_hvcall_*() to set up hypercall
+ arguments -- part 2
+To: mhklinux@outlook.com, kys@microsoft.com, haiyangz@microsoft.com,
+ wei.liu@kernel.org, decui@microsoft.com, tglx@linutronix.de,
+ mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com,
+ lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
+ robh@kernel.org, bhelgaas@google.com, arnd@arndb.de
+Cc: x86@kernel.org, linux-hyperv@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+ linux-arch@vger.kernel.org
+References: <20250313061911.2491-1-mhklinux@outlook.com>
+ <20250313061911.2491-4-mhklinux@outlook.com>
 Content-Language: en-US
-From: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-In-Reply-To: <20250321094916.19098-1-johan+linaro@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:4dfKNF8HgT0iUPiS0YLMuHQtP46Vjd5JnvB0drE83CaG3D+6MJ+
- Ity7CaC7MozQZQGLs5J33TTjO/+4CH/npxqtytEHAaXop+U+aoqo2ziHThoj4CmRCfcJnHK
- jkymob2jwwi+dFnWSEI1I8QsE3EX6qb4cdhSPxj+bM0sslfsIrcdXysf0IF4sr8de5x8qNP
- yMiNsDTi7QFMzj6Vfb4+w==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:HAXqntq0MjA=;lAZo7T553Ap6eSU8RLKZIYxgVME
- 5ZvVouoLWqW590S2G/8ChERT6iEBRY36npu4n82K5Td7SUh56z3NbG/yPf9VZmiATluhHLHEp
- L30rPbKsS5+vfxU531X0cM3zaGU0C0uxSUbf9CCN5xpux2tnyyOJrGghjJ/dyBOmQZpO3tOao
- /fLhoeHlGVcQIUfrxk8OsrhQDu/o7PykNNfyAB+oSotl/DwM6oauEUnr5bswOaCXEWa8j3vGt
- Db/YW57zS+Zni9GkVQpcibY89T1IP5Lue7l3vH6nlQGpUFv/QFaTeZ7LVrgHfWOdAyosqSMtX
- uGzt7Ukxw54tYA9hCxvtAeK7nnCpyO+XxGRKkEvCDEkijaYERREvehnP4FaXQi5jGGEo5TtJW
- uI7Wu+p2xOOBriz49m3jK96V2WYZzBP2V1lTZjT090w7P4YFz72m+ox3UZirkfBjV56YPjXqs
- DeqzYrfJMcSuo00KL1TFsFhtB9UOelcrnRX1w3o3iSEPjaWc1HTFE4NNqSriy60C7WGWU3Xj8
- 9Bhs3fqq0E8SEHwb/SqkMRvOq8kLGzYM0k0LT5HAJ72FaWJDVVmX04yzQM0rD7ukyc5zOCBHd
- PbipUFvb43zot9SRzYmfxFqGVf46GbYp6fP8kX1LS7EXmbWWpcKQD+WY9JtS6pGfcTT+oM7HV
- NQhh2VZA2etVjay3BG4+ihuB4xgo2s7fWiVZxjJaAeqX3TknFh6v3yVmZjEMMOtce2UPIXrs6
- FwFFLmuDxa3cp+VeF29Ohirz1WYkoVlVBrqz4KFZEuStlJzGog3AfqniL2cibSsqmmClu7LqI
- r8vf8cWGivV5Urt03pP7diMXl5RIik+e7PLD2rQG53qI/GIGjrWfrh7ajRlaHaH26jaIapdf4
- wOIADVG51qSP/L7jEy9dfA7AySwPAwXX8h5OV5CWLMf0jJduMm025x4LTRTCX+9qIYakxoG06
- jcxsc7eeqDaSCPv6CCjqHRNCswfaIGl6Tabn6v00QSTBax0FeLxXOjFy68fU6rFHU75tyVKe/
- j7DPRlOBPajyOut0zbfBYFQeM+Yaq+XGsfHCXBzngF00picK9f0AGVEHbz+uPldCC6VJRyEuV
- NEJ+uPmKkjaVPBPg/miHNwLT7BX3fYThepRr/GoQWTFD+19Y6pPBkHOSL/9CR3QpNPNwGf89l
- MkrpEBSz+zXxJkJzXKJb/mxSM3XDyeyJXpg+kNU9jCs8DnOrzUAZQtEYHAhsI6BwC0jwGBHq0
- hfJx+ykC1Z+9/kAk48szAsbaEHQlrAjQ9a23pClBNVB4aQA1uQx9GItD9ZIgp453udfjQ1+Mx
- vj8t6PHE/jBtVTvP51NEKnslEdSg0PoeXTNcX6Ha/YabsgrxQ069uKloJook2DaMDi4ONZqW+
- LAarNRk8j8kSF9PPBH/VCeSXWa0pBYLPKKz2o=
+From: Nuno Das Neves <nunodasneves@linux.microsoft.com>
+In-Reply-To: <20250313061911.2491-4-mhklinux@outlook.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 3/21/25 10:49, Johan Hovold wrote:
-> Users of the Lenovo ThinkPad X13s have reported that Wi-Fi sometimes
-> breaks and the log fills up with errors like:
->
->      ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1484, exp=
-ected 1492
->      ath11k_pci 0006:01:00.0: HTC Rx: insufficient length, got 1460, exp=
-ected 1484
->
-> which based on a quick look at the driver seemed to indicate some kind
-> of ring-buffer corruption.
->
-I had this issue on the Windows Dev Kit 2023 and X13s, interestingly
-never on the HP Omnibook X14. With this patch there have been no
-occurrences.
+On 3/12/2025 11:19 PM, mhkelley58@gmail.com wrote:
+> From: Michael Kelley <mhklinux@outlook.com>
+> 
+> Update hypercall call sites to use the new hv_hvcall_*() functions
+> to set up hypercall arguments. Since these functions zero the
+> fixed portion of input memory, remove now redundant calls to memset()
+> and explicit zero'ing of input fields.
+> 
+> For hv_mark_gpa_visibility(), use the computed batch_size instead
+> of HV_MAX_MODIFY_GPA_REP_COUNT. Also update the associated gpa_page_list[]
+> field to have zero size, which is more consistent with other array
+> arguments to hypercalls. Due to the interaction with the calling
+> hv_vtom_set_host_visibility(), HV_MAX_MODIFY_GPA_REP_COUNT cannot be
+> completely eliminated without some further restructuring, but that's
+> for another patch set.
+> 
+> Similarly, for the nested flush functions, update the gpa_list[] to
+> have zero size. Again, separate restructuring would be required to
+> completely eliminate the need for HV_MAX_FLUSH_REP_COUNT.
+> 
+> Finally, hyperv_flush_tlb_others_ex() requires special handling
+> because the input consists of two arrays -- one for the hv_vp_set and
+> another for the gva list. The batch_size computed by hv_hvcall_in_array()
+> is adjusted to account for the number of entries in the hv_vp_set.
+> 
+> Signed-off-by: Michael Kelley <mhklinux@outlook.com>
+> ---
+> 
+> Notes:
+>     Changes in v2:
+>     * In hyperv_flush_tlb_others_ex(), added check of the adjusted
+>       max_gvas to make sure it doesn't go to zero or negative, which would
+>       happen if there is insufficient space to hold the hv_vpset and have
+>       at least one entry in the gva list. Since an hv_vpset currently
+>       represents a maximum of 4096 CPUs, the hv_vpset size does not exceed
+>       512 bytes and there should always be sufficent space. But do the
+>       check just in case something changes. [Nuno Das Neves]
+> 
+>  arch/x86/hyperv/ivm.c       | 18 +++++++++---------
+>  arch/x86/hyperv/mmu.c       | 19 +++++--------------
+>  arch/x86/hyperv/nested.c    | 14 +++++---------
+>  include/hyperv/hvgdk_mini.h |  4 ++--
+>  4 files changed, 21 insertions(+), 34 deletions(-)
+> 
 
-Tested-by: Jens Glathe <jens.glathe@oldschoolsolutions.biz>
-
-with best regards
-
-Jens
-
+Reviewed-by: Nuno Das Neves <nunodasneves@linux.microsoft.com>
