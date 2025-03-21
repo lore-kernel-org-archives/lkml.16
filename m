@@ -1,191 +1,85 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+Received: from mx1.secunet.com (mx1.secunet.com [62.96.220.36])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B4B2C181;
+	Fri, 21 Mar 2025 02:46:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.96.220.36
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742525197; cv=none; b=qmXAt5bx33iCFrrEvGEx0ZcAL89CPGMTiZgBapUKq9nMPBsXYnoqPI7IKCh1oNzCl8YtAl6f0HXTe4nxBBtRRvqPmnvbtE7GIyHQinC6dpP4AqW3RUKsjMgy5IR8afZjTo4ia+FKgv/IkbauTGAz0XbQJtxeXRDipGDyyciZYyQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742525197; c=relaxed/simple;
+	bh=5YFJ4sppFasaMWh5wwmJ+8tCZ1UMVZfTqS2zO2n+C7U=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oHhU5WP3xsx8aEj9p6LZpwPMoTgvkbZ7A4xWfaHtkj69o1v3062aYDnblRJZ5fZT0afNsMXeqEn+qpw/M/5RLQnhV00ziMZbhCZI+NZ4neQlr7ocpbexMtygeRoqegdrFYJSEBlLUWjb5RrGiz5a+9nmymVeeBqwT7T7DPgPNaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com; spf=pass smtp.mailfrom=secunet.com; dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b=e0AOYVyK; arc=none smtp.client-ip=62.96.220.36
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=secunet.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=secunet.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=secunet.com header.i=@secunet.com header.b="e0AOYVyK"
+Received: from localhost (localhost [127.0.0.1])
+	by mx1.secunet.com (Postfix) with ESMTP id 46ABC2080B;
+	Fri, 21 Mar 2025 03:46:26 +0100 (CET)
+X-Virus-Scanned: by secunet
+Received: from mx1.secunet.com ([127.0.0.1])
+ by localhost (mx1.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
+ with ESMTP id s33V_ZTdOBfI; Fri, 21 Mar 2025 03:46:22 +0100 (CET)
+Received: from cas-essen-01.secunet.de (rl1.secunet.de [10.53.40.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17D9D1E32A0
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:42:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742524929; cv=none; b=opaGDTajPSG3VbuboXpcvpS3d8DQnbjhj7KZOCKRq2pPQH5Hgjf6HzFUyDJOxSNGMD+ndqcAGuZa9BDVrDYMVfR6emqY0LbB/0VRiB+vomppUmIQvWf0mAI3Me63BQxIq9/wJmiWlPPPj5zXKcsBP1bYZvmGMFfD2c3CqVcXeQE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742524929; c=relaxed/simple;
-	bh=GqXRT9Mj0QQF8+zoU//BIotvHNU6s/WomEB85g4+M8g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jvedrv9YNi67TaFsCa3drm3zYzIXpC57ecooSw1Sr0RhOxwgpoyasTzUQrwYTZtiXYzhGTGGHO7+0vI5rgu3Y8SQDqFJrkkaJZRx0rQ7pnre0DFMNW5JoGRlyLt28DyjGaA0zAyBvoy2aeI+Wb42+NX46zXUUyXzoJOWPcW+nXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=MNAu3Zw7; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MNAu3Zw7"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5e789411187so3203a12.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:42:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742524923; x=1743129723; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5O8FFjA3hcgQ8XDHydtzreoc5IOsI1FD+LSzQZJbGkI=;
-        b=MNAu3Zw7IncQiRxhNZx1NpYjESDIjcrvCCU6F66d/xbcHM3RYiGD2dr39iD1p7/RJT
-         HiE69v/ZEcsj1yMwUzcTO8HHdUIzpxiUYMrzt0thiaEjSKS9ZMTt+9WAiOuwbhEfQDTL
-         Te0M9CHefiLUQiqVcwej8nQeG+w4XrwWDWBzx+dMTBaHWVHebk7SIV96NP7ks5M3zSyB
-         ZObM2rIKluqOLs8LB6/mKu+ZnOYcg9ya02rHYPfafOZU9zx/ncHAE/VpPcS3gddYHFe4
-         mZQHVH4z+zZ0/jC3/6sHWofPmfRWfR5QLoEIGsAkvkyM0WYMK/e+sH9dFxM6f3XOsOn2
-         Jflg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742524923; x=1743129723;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5O8FFjA3hcgQ8XDHydtzreoc5IOsI1FD+LSzQZJbGkI=;
-        b=DBRrmdhtYlGzzi2nXjaLcpqOAqLaGJEF81rTbfylDzQnHCKzou6Ir5GdZ8DSxh1lfe
-         SEftGRfphnK1fMVi/K2A+KVMCbutZBcOl3pNhgufyhhrqorhRl3sNP7P8DqaPEEIUU4A
-         2DN0V04D1VxgC2vNepZjmx+mKnjQXrQJPcWyZqxdNb0vN++IZS72ysM+JjDnx9qfvGIa
-         DyXSx79AhlWiPjztjml3OIWTTc5CFMnA7t1gA79YOEFo5PkKFSZWKqao1OIYoxfusT+s
-         ffVYMiAnoso4b4WR+tHbST7VVBymyHf2/VxrNPjKcxtRXqOO3DRZ4yKepi2XVgHwhYmz
-         m3TQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWPgWzATKYU+WiousdxoXT2SgCvI1Z1YLavuQYowjl4qzYY3aQYluSoGo6/oI1NYppiUTODVw0AEUu5OF0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxkMX/Q6T7hdUx+TLNp1ATF18nEDa/VoyEM64AVrRpmAMxNAnmX
-	QL2uhkEfKtcXZ8chyFB1+ohTNv7fvZ0W/PLXtlK25jnDsR103W7O1WfSNvOtGb+wwqIt8uHhsic
-	lSi3hh3TWEdqpHcOj0BpUV6Af80Z69ZlFK6dx
-X-Gm-Gg: ASbGnct2rCswn1ajAdUoidpY5vuNhI6zVUXdlFFfhWuu9vwN8AlJe+Kk0AJ7wyVqUc4
-	1P4m5NlJVE6DQJxbBXAXUxChrAEEGltf3HIbPpaVjbybIMnjfQd/rAuB9NQ7VcqntosVzx+fqLK
-	PKBBKXsrvGf9/nrRMEvf8Fh6/g1YpEYFJaGNn+BdEEWJIANxPnfNiwODc=
-X-Google-Smtp-Source: AGHT+IHOXKmMdZDx/zHgype/m05qi/GswNz7l+pOv7uCTCxdggJGQMw2FvJ3qLXemOkS/xcOSlApQYGzrEpAGMI2DMk=
-X-Received: by 2002:a50:d607:0:b0:5e5:be08:c07d with SMTP id
- 4fb4d7f45d1cf-5ebcfee3421mr30310a12.7.1742524923099; Thu, 20 Mar 2025
- 19:42:03 -0700 (PDT)
+	by mx1.secunet.com (Postfix) with ESMTPS id F258A206BC;
+	Fri, 21 Mar 2025 03:46:21 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.secunet.com F258A206BC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=secunet.com;
+	s=202301; t=1742525182;
+	bh=B5J9/6SKPE0aNLeeNrIjy//GiyE0yPhks94Qv1Dw1fI=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To:From;
+	b=e0AOYVyKCVjeFxSit+/Dta/0OqbwtDrLGopMxtLH86E9GsYj2L+4hg15zw5VrNHIx
+	 T7QMhZdLb8IRHbg7XnAuL+Q1jy0PKLVfH/nPEPCw9h9CafWGXzIQtN4KWZvVH4BgVv
+	 0A+41B92txTHi0NeT+fDsU1jabdQM35A22nSixxlpS1TZ6WikJRa3EYzToGiqpUuxf
+	 e0g4vyz3J0RdAFfbP3xdn/WhUiLNexPvDhdJG/94TEd28UUEkw1SDzLfoBuUrKoQi+
+	 nQg7pYJT71/1wSMsM7s9olVB2czTxYlo6r5U0ASD/cDw88YXW/4xmuXPS7OK5g5Oas
+	 7TuQVL+HPi53A==
+Received: from mbx-essen-02.secunet.de (10.53.40.198) by
+ cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.39; Fri, 21 Mar 2025 03:46:21 +0100
+Received: from gauss2.secunet.de (10.182.7.193) by mbx-essen-02.secunet.de
+ (10.53.40.198) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Mar
+ 2025 03:46:21 +0100
+Received: by gauss2.secunet.de (Postfix, from userid 1000)
+	id 99DDD3180202; Fri, 21 Mar 2025 03:46:20 +0100 (CET)
+Date: Fri, 21 Mar 2025 03:46:20 +0100
+From: Steffen Klassert <steffen.klassert@secunet.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+CC: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller"
+	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+	<horms@kernel.org>, <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH net-next] xfrm: Remove unnecessary NULL check in
+ xfrm_lookup_with_ifid()
+Message-ID: <Z9zS/HL/5o+Yd7t3@gauss3.secunet.de>
+References: <2eebea1e-5258-4bcb-9127-ca4d7c59e0e2@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250318214035.481950-1-pcc@google.com> <20250318214035.481950-3-pcc@google.com>
- <CA+fCnZfG79JmGG9rj7KbE=9yX-EM4e8CXDSm5F9=YEmgyX5v3w@mail.gmail.com>
-In-Reply-To: <CA+fCnZfG79JmGG9rj7KbE=9yX-EM4e8CXDSm5F9=YEmgyX5v3w@mail.gmail.com>
-From: Peter Collingbourne <pcc@google.com>
-Date: Thu, 20 Mar 2025 19:41:50 -0700
-X-Gm-Features: AQ5f1Jr2sdg2WCeju5nnmXrNh9jqK16Q_xv8y9FFZD-yPNesP3YY2srT1TECdII
-Message-ID: <CAMn1gO4k-d+8ZwndJhF5Sudr+kWDABe+3Wq=iBhcg3tDwJ60Bg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] kasan: Add strscpy() test to trigger tag fault on arm64
-To: Andrey Konovalov <andreyknvl@gmail.com>
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
-	Andrew Morton <akpm@linux-foundation.org>, Kees Cook <kees@kernel.org>, 
-	Andy Shevchenko <andy@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Mark Rutland <mark.rutland@arm.com>, Vincenzo Frascino <vincenzo.frascino@arm.com>, 
-	linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-hardening@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	Will Deacon <will@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <2eebea1e-5258-4bcb-9127-ca4d7c59e0e2@stanley.mountain>
+X-ClientProxiedBy: cas-essen-01.secunet.de (10.53.40.201) To
+ mbx-essen-02.secunet.de (10.53.40.198)
+X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
 
-On Thu, Mar 20, 2025 at 10:25=E2=80=AFAM Andrey Konovalov <andreyknvl@gmail=
-.com> wrote:
->
-> On Tue, Mar 18, 2025 at 10:41=E2=80=AFPM Peter Collingbourne <pcc@google.=
-com> wrote:
-> >
-> > From: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> >
-> > When we invoke strscpy() with a maximum size of N bytes, it assumes
-> > that:
-> > - It can always read N bytes from the source.
-> > - It always write N bytes (zero-padded) to the destination.
-> >
-> > On aarch64 with Memory Tagging Extension enabled if we pass an N that i=
-s
-> > bigger then the source buffer, it triggers an MTE fault.
-> >
-> > Implement a KASAN KUnit test that triggers the issue with the current
-> > implementation of read_word_at_a_time() on aarch64 with MTE enabled.
-> >
-> > Cc: Will Deacon <will@kernel.org>
-> > Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> > Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> > Co-developed-by: Peter Collingbourne <pcc@google.com>
-> > Signed-off-by: Peter Collingbourne <pcc@google.com>
-> > Link: https://linux-review.googlesource.com/id/If88e396b9e7c058c1a4b5a2=
-52274120e77b1898a
-> > ---
-> > v2:
-> > - rebased
-> > - fixed test failure
-> >
-> >  mm/kasan/kasan_test_c.c | 31 ++++++++++++++++++++++++++++++-
-> >  1 file changed, 30 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/mm/kasan/kasan_test_c.c b/mm/kasan/kasan_test_c.c
-> > index 59d673400085f..c4bb3ee497b54 100644
-> > --- a/mm/kasan/kasan_test_c.c
-> > +++ b/mm/kasan/kasan_test_c.c
-> > @@ -1570,7 +1570,9 @@ static void kasan_memcmp(struct kunit *test)
-> >  static void kasan_strings(struct kunit *test)
-> >  {
-> >         char *ptr;
-> > -       size_t size =3D 24;
-> > +       char *src, *src2;
-> > +       u8 tag;
-> > +       size_t size =3D 2 * KASAN_GRANULE_SIZE;
-> >
-> >         /*
-> >          * str* functions are not instrumented with CONFIG_AMD_MEM_ENCR=
-YPT.
-> > @@ -1581,6 +1583,33 @@ static void kasan_strings(struct kunit *test)
-> >         ptr =3D kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-> >         KUNIT_ASSERT_NOT_ERR_OR_NULL(test, ptr);
-> >
-> > +       src =3D kmalloc(size, GFP_KERNEL | __GFP_ZERO);
-> > +       strscpy(src, "f0cacc1a00000000f0cacc1a00000000", size);
-> > +
-> > +       tag =3D get_tag(src);
-> > +
-> > +       src2 =3D src + KASAN_GRANULE_SIZE;
-> > +
-> > +       /*
-> > +        * Shorten string and poison the granule after it so that the u=
-naligned
-> > +        * read in strscpy() triggers a tag mismatch.
-> > +        */
-> > +       src[KASAN_GRANULE_SIZE - 1] =3D '\0';
-> > +       kasan_poison(src2, KASAN_GRANULE_SIZE, tag + 1, false);
-> > +
-> > +       /*
-> > +        * The expected size does not include the terminator '\0'
-> > +        * so it is (KASAN_GRANULE_SIZE - 2) =3D=3D
-> > +        * KASAN_GRANULE_SIZE - ("initial removed character" + "\0").
-> > +        */
-> > +       KUNIT_EXPECT_EQ(test, KASAN_GRANULE_SIZE - 2,
-> > +                       strscpy(ptr, src + 1, size));
-> > +
-> > +       /* Undo operations above. */
-> > +       src[KASAN_GRANULE_SIZE - 1] =3D '0';
-> > +       kasan_poison(src2, KASAN_GRANULE_SIZE, tag, false);
-> > +
-> > +       kfree(src);
->
-> I have trouble understanding what this code is doing...
->
-> So the goal is to call strcpy with such an address, that the first 8
-> bytes (partially) cover 2 granules, one accessible and the other is
-> not?
+On Wed, Mar 12, 2025 at 08:21:13PM +0300, Dan Carpenter wrote:
+> This NULL check is unnecessary and can be removed.  It confuses
+> Smatch static analysis tool because it makes Smatch think that
+> xfrm_lookup_with_ifid() can return a mix of NULL pointers and errors so
+> it creates a lot of false positives.  Remove it.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-The first 16 bytes, but yes.
-
-> If so, can we not do something like:
->
-> src =3D kmalloc(KASAN_GRANULE_SIZE, GFP_KERNEL | __GFP_ZERO);
-> strscpy(src, "aabbcceeddeeffg\0", size);
-> strscpy(ptr, src + KASAN_GRANULE_SIZE - 2, sizeof(unsigned long));
-
-Yes, something like that should work as well. Let me send a v3.
-
-Peter
-
-> Otherwise, this code needs more explanatory comments and it's probably
-> better to move it out to a helper function.
->
-> >         kfree(ptr);
-> >
-> >         /*
-> > --
-> > 2.49.0.395.g12beb8f557-goog
-> >
+Applied, thanks a lot Dan!
