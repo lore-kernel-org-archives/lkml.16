@@ -1,39 +1,39 @@
 Received: from pegase2.c-s.fr (pegase2.c-s.fr [93.17.235.10])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAE2A1E571A
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:50:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 561441EEA39
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:50:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.17.235.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742547005; cv=none; b=bn6UJ/XYiTtVLLddLouFFKp9P/mdxCN0DKdWZh2aITXEva9wXdGiG5EuglotCDGA3h8XDxDqhAzrN4WqF3gDLsOh/3DSOoBezk4ReQir5DNXmicMxDCkA4fV+Aa881A0tA0Xp+0B8kalrTq4pQ+8bC+0APJ+sA74LF/H0jmNgS8=
+	t=1742547010; cv=none; b=TJvGUWZ9WUgkEXsgTixp7hw+FQQalrd+Gk+YgVMRzZahawFO9ZQ4l/6adpiQSTx8r8osfgP6QItfyK/5JiSZXkq3Vn4YYgTCvvYveUo3tfQby+vEDGXD0wCMJYAJeY5kYNZQh04ZdbWHu9Th8kt8s44Ujc+cgrOOfHtO/vgkD/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742547005; c=relaxed/simple;
-	bh=Yt2xqwz8bT8+3vtDi7huaR6B5ilaTZyiIYjySeGUU+4=;
+	s=arc-20240116; t=1742547010; c=relaxed/simple;
+	bh=4L8xJ1lmML+JvIwv2oSvVSz8VLUZK9LVD5uSzSVp4tE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=APN2MtntMV3dfinKznawhZEBIr9TJc/+kz+bXfC5PeXWqiuNQrTd6CmahLrDbsbUDDcPS/zhW91aT7qlr7AkFUvFV6Zc8cbm8nQbAISxmo6OA7bx6xFNgy2UOsmqWI56hGwtIqkgHTF5lY4uapqH8QaMdy0EdGpzzWvPAwal/sM=
+	 In-Reply-To:Content-Type; b=Cl068R8UhxNtBKQyIiTbBxLT625pq8cjlCqRIJyPAuRKNc7bJ7c3BA/dRRCla9eWPpqAQJk+e0KGIZo3jqYRaM3aWjDjnkimoHZwE/RsfeO7MIaVmBb8vFy8XkqfWq3jUjKqhN4xmf5Z9Jut4V5qVnr1dmnllg9021m46HxqXZI=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu; spf=pass smtp.mailfrom=csgroup.eu; arc=none smtp.client-ip=93.17.235.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=csgroup.eu
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=csgroup.eu
 Received: from localhost (mailhub3.si.c-s.fr [172.26.127.67])
-	by localhost (Postfix) with ESMTP id 4ZJwwr01Hdz9sTL;
-	Fri, 21 Mar 2025 09:44:28 +0100 (CET)
+	by localhost (Postfix) with ESMTP id 4ZJwwB35dZz9sSm;
+	Fri, 21 Mar 2025 09:43:54 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from pegase2.c-s.fr ([172.26.127.65])
 	by localhost (pegase2.c-s.fr [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 3l0nmMf_J-b8; Fri, 21 Mar 2025 09:44:27 +0100 (CET)
+	with ESMTP id lsrjCL7_QqC2; Fri, 21 Mar 2025 09:43:54 +0100 (CET)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJwwq6BCCz9sSg;
-	Fri, 21 Mar 2025 09:44:27 +0100 (CET)
+	by pegase2.c-s.fr (Postfix) with ESMTP id 4ZJww64pwpz9sT1;
+	Fri, 21 Mar 2025 09:43:50 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id BBED18B79C;
-	Fri, 21 Mar 2025 09:44:27 +0100 (CET)
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id 891DA8B79E;
+	Fri, 21 Mar 2025 09:43:50 +0100 (CET)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
 	by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-	with ESMTP id oOgqbaLveOw1; Fri, 21 Mar 2025 09:44:27 +0100 (CET)
+	with ESMTP id b_XEIT8ImElp; Fri, 21 Mar 2025 09:43:50 +0100 (CET)
 Received: from [192.168.235.99] (unknown [192.168.235.99])
-	by messagerie.si.c-s.fr (Postfix) with ESMTP id 08EA08B763;
-	Fri, 21 Mar 2025 09:44:26 +0100 (CET)
-Message-ID: <49ecd313-887d-4839-93b1-027f14c26174@csgroup.eu>
-Date: Fri, 21 Mar 2025 09:44:26 +0100
+	by messagerie.si.c-s.fr (Postfix) with ESMTP id C813F8B763;
+	Fri, 21 Mar 2025 09:43:49 +0100 (CET)
+Message-ID: <b692b9a9-d40f-4f87-b086-51f377b46cd6@csgroup.eu>
+Date: Fri, 21 Mar 2025 09:43:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,20 +41,18 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 34/57] irqdomain: soc: Switch to irq_domain_create_*()
+Subject: Re: [PATCH v2 32/57] irqdomain: ppc: Switch to irq_domain_create_*()
 To: "Jiri Slaby (SUSE)" <jirislaby@kernel.org>, tglx@linutronix.de
-Cc: maz@kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn
- <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
- Gregory Clement <gregory.clement@bootlin.com>,
- Qiang Zhao <qiang.zhao@nxp.com>, Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>
+Cc: maz@kernel.org, linux-kernel@vger.kernel.org,
+ Madhavan Srinivasan <maddy@linux.ibm.com>,
+ Michael Ellerman <mpe@ellerman.id.au>, Nicholas Piggin <npiggin@gmail.com>,
+ Naveen N Rao <naveen@kernel.org>, Anatolij Gustschin <agust@denx.de>,
+ Scott Wood <oss@buserror.net>, linuxppc-dev@lists.ozlabs.org
 References: <20250319092951.37667-1-jirislaby@kernel.org>
- <20250319092951.37667-35-jirislaby@kernel.org>
+ <20250319092951.37667-33-jirislaby@kernel.org>
 Content-Language: fr-FR
 From: Christophe Leroy <christophe.leroy@csgroup.eu>
-In-Reply-To: <20250319092951.37667-35-jirislaby@kernel.org>
+In-Reply-To: <20250319092951.37667-33-jirislaby@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
@@ -73,97 +71,352 @@ Le 19/03/2025 à 10:29, Jiri Slaby (SUSE) a écrit :
 > case basis (by people who can actually test with the HW).
 > 
 > Signed-off-by: Jiri Slaby (SUSE) <jirislaby@kernel.org>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> Cc: Gregory Clement <gregory.clement@bootlin.com>
-> Cc: Qiang Zhao <qiang.zhao@nxp.com>
+> Cc: Madhavan Srinivasan <maddy@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Nicholas Piggin <npiggin@gmail.com>
 > Cc: Christophe Leroy <christophe.leroy@csgroup.eu>
-> Cc: Bjorn Andersson <andersson@kernel.org>
-> Cc: Konrad Dybcio <konradybcio@kernel.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> Cc: Jonathan Hunter <jonathanh@nvidia.com>
+> Cc: Naveen N Rao <naveen@kernel.org>
+> Cc: Anatolij Gustschin <agust@denx.de>
+> Cc: Scott Wood <oss@buserror.net>
+> Cc: linuxppc-dev@lists.ozlabs.org
 
 
-Acked-by: Christophe Leroy <christophe.leroy@csgroup.eu> # For soc/fsl
+Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu> # For 8xx
+
+
 
 > ---
->   drivers/soc/dove/pmu.c     | 4 ++--
->   drivers/soc/fsl/qe/qe_ic.c | 4 ++--
->   drivers/soc/qcom/smp2p.c   | 2 +-
->   drivers/soc/qcom/smsm.c    | 2 +-
->   drivers/soc/tegra/pmc.c    | 5 +++--
->   5 files changed, 9 insertions(+), 8 deletions(-)
+>   arch/powerpc/platforms/44x/uic.c                 | 5 +++--
+>   arch/powerpc/platforms/512x/mpc5121_ads_cpld.c   | 3 ++-
+>   arch/powerpc/platforms/52xx/media5200.c          | 2 +-
+>   arch/powerpc/platforms/52xx/mpc52xx_gpt.c        | 4 ++--
+>   arch/powerpc/platforms/52xx/mpc52xx_pic.c        | 2 +-
+>   arch/powerpc/platforms/85xx/socrates_fpga_pic.c  | 2 +-
+>   arch/powerpc/platforms/8xx/cpm1-ic.c             | 3 ++-
+>   arch/powerpc/platforms/8xx/pic.c                 | 3 ++-
+>   arch/powerpc/platforms/embedded6xx/flipper-pic.c | 5 +++--
+>   arch/powerpc/platforms/embedded6xx/hlwd-pic.c    | 5 +++--
+>   arch/powerpc/platforms/powermac/pic.c            | 5 +++--
+>   arch/powerpc/platforms/powernv/opal-irqchip.c    | 3 ++-
+>   arch/powerpc/sysdev/cpm2_pic.c                   | 3 ++-
+>   arch/powerpc/sysdev/ehv_pic.c                    | 5 +++--
+>   arch/powerpc/sysdev/fsl_msi.c                    | 2 +-
+>   arch/powerpc/sysdev/ge/ge_pic.c                  | 5 +++--
+>   arch/powerpc/sysdev/i8259.c                      | 4 ++--
+>   arch/powerpc/sysdev/ipic.c                       | 5 +++--
+>   arch/powerpc/sysdev/mpic.c                       | 6 +++---
+>   arch/powerpc/sysdev/tsi108_pci.c                 | 4 ++--
+>   arch/powerpc/sysdev/xive/common.c                | 2 +-
+>   21 files changed, 45 insertions(+), 33 deletions(-)
 > 
-> diff --git a/drivers/soc/dove/pmu.c b/drivers/soc/dove/pmu.c
-> index 6202dbcd20a8..cfc0efab27d7 100644
-> --- a/drivers/soc/dove/pmu.c
-> +++ b/drivers/soc/dove/pmu.c
-> @@ -274,8 +274,8 @@ static int __init dove_init_pmu_irq(struct pmu_data *pmu, int irq)
->   	writel(0, pmu->pmc_base + PMC_IRQ_MASK);
->   	writel(0, pmu->pmc_base + PMC_IRQ_CAUSE);
+> diff --git a/arch/powerpc/platforms/44x/uic.c b/arch/powerpc/platforms/44x/uic.c
+> index 31f760c2ec5d..481ec25ce78f 100644
+> --- a/arch/powerpc/platforms/44x/uic.c
+> +++ b/arch/powerpc/platforms/44x/uic.c
+> @@ -254,8 +254,9 @@ static struct uic * __init uic_init_one(struct device_node *node)
+>   	}
+>   	uic->dcrbase = *dcrreg;
 >   
-> -	domain = irq_domain_add_linear(pmu->of_node, NR_PMU_IRQS,
-> -				       &irq_generic_chip_ops, NULL);
-> +	domain = irq_domain_create_linear(of_fwnode_handle(pmu->of_node), NR_PMU_IRQS,
-> +					  &irq_generic_chip_ops, NULL);
->   	if (!domain) {
->   		pr_err("%s: unable to add irq domain\n", name);
->   		return -ENOMEM;
-> diff --git a/drivers/soc/fsl/qe/qe_ic.c b/drivers/soc/fsl/qe/qe_ic.c
-> index bbae3d39c7be..e5831c298ad6 100644
-> --- a/drivers/soc/fsl/qe/qe_ic.c
-> +++ b/drivers/soc/fsl/qe/qe_ic.c
-> @@ -446,8 +446,8 @@ static int qe_ic_init(struct platform_device *pdev)
->   		high_handler = NULL;
+> -	uic->irqhost = irq_domain_add_linear(node, NR_UIC_INTS, &uic_host_ops,
+> -					     uic);
+> +	uic->irqhost = irq_domain_create_linear(of_fwnode_handle(node),
+> +						NR_UIC_INTS, &uic_host_ops,
+> +						uic);
+>   	if (! uic->irqhost)
+>   		return NULL; /* FIXME: panic? */
+>   
+> diff --git a/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c b/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c
+> index e995eb30bf09..2cf3c6237337 100644
+> --- a/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c
+> +++ b/arch/powerpc/platforms/512x/mpc5121_ads_cpld.c
+> @@ -188,7 +188,8 @@ mpc5121_ads_cpld_pic_init(void)
+>   
+>   	cpld_pic_node = of_node_get(np);
+>   
+> -	cpld_pic_host = irq_domain_add_linear(np, 16, &cpld_pic_host_ops, NULL);
+> +	cpld_pic_host = irq_domain_create_linear(of_fwnode_handle(np), 16,
+> +						 &cpld_pic_host_ops, NULL);
+>   	if (!cpld_pic_host) {
+>   		printk(KERN_ERR "CPLD PIC: failed to allocate irq host!\n");
+>   		goto end;
+> diff --git a/arch/powerpc/platforms/52xx/media5200.c b/arch/powerpc/platforms/52xx/media5200.c
+> index 19626cd42406..bc7f83cfec1d 100644
+> --- a/arch/powerpc/platforms/52xx/media5200.c
+> +++ b/arch/powerpc/platforms/52xx/media5200.c
+> @@ -168,7 +168,7 @@ static void __init media5200_init_irq(void)
+>   
+>   	spin_lock_init(&media5200_irq.lock);
+>   
+> -	media5200_irq.irqhost = irq_domain_add_linear(fpga_np,
+> +	media5200_irq.irqhost = irq_domain_create_linear(of_fwnode_handle(fpga_np),
+>   			MEDIA5200_NUM_IRQS, &media5200_irq_ops, &media5200_irq);
+>   	if (!media5200_irq.irqhost)
+>   		goto out;
+> diff --git a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> index 1ea591ec6083..f042b21b2b73 100644
+> --- a/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> +++ b/arch/powerpc/platforms/52xx/mpc52xx_gpt.c
+> @@ -247,9 +247,9 @@ mpc52xx_gpt_irq_setup(struct mpc52xx_gpt_priv *gpt, struct device_node *node)
+>   	if (!cascade_virq)
+>   		return;
+>   
+> -	gpt->irqhost = irq_domain_add_linear(node, 1, &mpc52xx_gpt_irq_ops, gpt);
+> +	gpt->irqhost = irq_domain_create_linear(of_fwnode_handle(node), 1, &mpc52xx_gpt_irq_ops, gpt);
+>   	if (!gpt->irqhost) {
+> -		dev_err(gpt->dev, "irq_domain_add_linear() failed\n");
+> +		dev_err(gpt->dev, "irq_domain_create_linear() failed\n");
+>   		return;
 >   	}
 >   
-> -	qe_ic->irqhost = irq_domain_add_linear(node, NR_QE_IC_INTS,
-> -					       &qe_ic_host_ops, qe_ic);
-> +	qe_ic->irqhost = irq_domain_create_linear(of_fwnode_handle(node), NR_QE_IC_INTS,
-> +						  &qe_ic_host_ops, qe_ic);
->   	if (qe_ic->irqhost == NULL) {
->   		dev_err(dev, "failed to add irq domain\n");
+> diff --git a/arch/powerpc/platforms/52xx/mpc52xx_pic.c b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
+> index 43c881d31ca6..7ec56d3788a9 100644
+> --- a/arch/powerpc/platforms/52xx/mpc52xx_pic.c
+> +++ b/arch/powerpc/platforms/52xx/mpc52xx_pic.c
+> @@ -446,7 +446,7 @@ void __init mpc52xx_init_irq(void)
+>   	 * As last step, add an irq host to translate the real
+>   	 * hw irq information provided by the ofw to linux virq
+>   	 */
+> -	mpc52xx_irqhost = irq_domain_add_linear(picnode,
+> +	mpc52xx_irqhost = irq_domain_create_linear(of_fwnode_handle(picnode),
+>   	                                 MPC52xx_IRQ_HIGHTESTHWIRQ,
+>   	                                 &mpc52xx_irqhost_ops, NULL);
+>   
+> diff --git a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
+> index 60e0b8947ce6..b4f6360830b1 100644
+> --- a/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
+> +++ b/arch/powerpc/platforms/85xx/socrates_fpga_pic.c
+> @@ -278,7 +278,7 @@ void __init socrates_fpga_pic_init(struct device_node *pic)
+>   	int i;
+>   
+>   	/* Setup an irq_domain structure */
+> -	socrates_fpga_pic_irq_host = irq_domain_add_linear(pic,
+> +	socrates_fpga_pic_irq_host = irq_domain_create_linear(of_fwnode_handle(pic),
+>   		    SOCRATES_FPGA_NUM_IRQS, &socrates_fpga_pic_host_ops, NULL);
+>   	if (socrates_fpga_pic_irq_host == NULL) {
+>   		pr_err("FPGA PIC: Unable to allocate host\n");
+> diff --git a/arch/powerpc/platforms/8xx/cpm1-ic.c b/arch/powerpc/platforms/8xx/cpm1-ic.c
+> index a18fc7c99f83..1549f6cd29f4 100644
+> --- a/arch/powerpc/platforms/8xx/cpm1-ic.c
+> +++ b/arch/powerpc/platforms/8xx/cpm1-ic.c
+> @@ -110,7 +110,8 @@ static int cpm_pic_probe(struct platform_device *pdev)
+>   
+>   	out_be32(&data->reg->cpic_cimr, 0);
+>   
+> -	data->host = irq_domain_add_linear(dev->of_node, 64, &cpm_pic_host_ops, data);
+> +	data->host = irq_domain_create_linear(of_fwnode_handle(dev->of_node),
+> +					      64, &cpm_pic_host_ops, data);
+>   	if (!data->host)
 >   		return -ENODEV;
-> diff --git a/drivers/soc/qcom/smp2p.c b/drivers/soc/qcom/smp2p.c
-> index a3e88ced328a..8c8878bc87f5 100644
-> --- a/drivers/soc/qcom/smp2p.c
-> +++ b/drivers/soc/qcom/smp2p.c
-> @@ -399,7 +399,7 @@ static int qcom_smp2p_inbound_entry(struct qcom_smp2p *smp2p,
->   				    struct smp2p_entry *entry,
->   				    struct device_node *node)
->   {
-> -	entry->domain = irq_domain_add_linear(node, 32, &smp2p_irq_ops, entry);
-> +	entry->domain = irq_domain_create_linear(of_fwnode_handle(node), 32, &smp2p_irq_ops, entry);
->   	if (!entry->domain) {
->   		dev_err(smp2p->dev, "failed to add irq_domain\n");
->   		return -ENOMEM;
-> diff --git a/drivers/soc/qcom/smsm.c b/drivers/soc/qcom/smsm.c
-> index e803ea342c97..021e9d1f61dc 100644
-> --- a/drivers/soc/qcom/smsm.c
-> +++ b/drivers/soc/qcom/smsm.c
-> @@ -456,7 +456,7 @@ static int smsm_inbound_entry(struct qcom_smsm *smsm,
->   		return ret;
+>   
+> diff --git a/arch/powerpc/platforms/8xx/pic.c b/arch/powerpc/platforms/8xx/pic.c
+> index ea6b0e523c60..7639f28172be 100644
+> --- a/arch/powerpc/platforms/8xx/pic.c
+> +++ b/arch/powerpc/platforms/8xx/pic.c
+> @@ -146,7 +146,8 @@ void __init mpc8xx_pic_init(void)
+>   	if (!siu_reg)
+>   		goto out;
+>   
+> -	mpc8xx_pic_host = irq_domain_add_linear(np, 64, &mpc8xx_pic_host_ops, NULL);
+> +	mpc8xx_pic_host = irq_domain_create_linear(of_fwnode_handle(np), 64,
+> +						   &mpc8xx_pic_host_ops, NULL);
+>   	if (!mpc8xx_pic_host)
+>   		printk(KERN_ERR "MPC8xx PIC: failed to allocate irq host!\n");
+>   
+> diff --git a/arch/powerpc/platforms/embedded6xx/flipper-pic.c b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
+> index 013d66304c31..a41649bf0cb8 100644
+> --- a/arch/powerpc/platforms/embedded6xx/flipper-pic.c
+> +++ b/arch/powerpc/platforms/embedded6xx/flipper-pic.c
+> @@ -149,8 +149,9 @@ static struct irq_domain * __init flipper_pic_init(struct device_node *np)
+>   
+>   	__flipper_quiesce(io_base);
+>   
+> -	irq_domain = irq_domain_add_linear(np, FLIPPER_NR_IRQS,
+> -				  &flipper_irq_domain_ops, io_base);
+> +	irq_domain = irq_domain_create_linear(of_fwnode_handle(np),
+> +					      FLIPPER_NR_IRQS,
+> +					      &flipper_irq_domain_ops, io_base);
+>   	if (!irq_domain) {
+>   		pr_err("failed to allocate irq_domain\n");
+>   		return NULL;
+> diff --git a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
+> index 4d2d92de30af..9abb3da36ba5 100644
+> --- a/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
+> +++ b/arch/powerpc/platforms/embedded6xx/hlwd-pic.c
+> @@ -175,8 +175,9 @@ static struct irq_domain *__init hlwd_pic_init(struct device_node *np)
+>   
+>   	__hlwd_quiesce(io_base);
+>   
+> -	irq_domain = irq_domain_add_linear(np, HLWD_NR_IRQS,
+> -					   &hlwd_irq_domain_ops, io_base);
+> +	irq_domain = irq_domain_create_linear(of_fwnode_handle(np),
+> +					      HLWD_NR_IRQS,
+> +					      &hlwd_irq_domain_ops, io_base);
+>   	if (!irq_domain) {
+>   		pr_err("failed to allocate irq_domain\n");
+>   		iounmap(io_base);
+> diff --git a/arch/powerpc/platforms/powermac/pic.c b/arch/powerpc/platforms/powermac/pic.c
+> index 03a7c51f2645..2eddc8bff7ab 100644
+> --- a/arch/powerpc/platforms/powermac/pic.c
+> +++ b/arch/powerpc/platforms/powermac/pic.c
+> @@ -327,8 +327,9 @@ static void __init pmac_pic_probe_oldstyle(void)
+>   	/*
+>   	 * Allocate an irq host
+>   	 */
+> -	pmac_pic_host = irq_domain_add_linear(master, max_irqs,
+> -					      &pmac_pic_host_ops, NULL);
+> +	pmac_pic_host = irq_domain_create_linear(of_fwnode_handle(master),
+> +						 max_irqs,
+> +						 &pmac_pic_host_ops, NULL);
+>   	BUG_ON(pmac_pic_host == NULL);
+>   	irq_set_default_domain(pmac_pic_host);
+>   
+> diff --git a/arch/powerpc/platforms/powernv/opal-irqchip.c b/arch/powerpc/platforms/powernv/opal-irqchip.c
+> index d92759c21fae..e180bd8e1400 100644
+> --- a/arch/powerpc/platforms/powernv/opal-irqchip.c
+> +++ b/arch/powerpc/platforms/powernv/opal-irqchip.c
+> @@ -191,7 +191,8 @@ int __init opal_event_init(void)
+>   	 * fall back to the legacy method (opal_event_request(...))
+>   	 * anyway. */
+>   	dn = of_find_compatible_node(NULL, NULL, "ibm,opal-event");
+> -	opal_event_irqchip.domain = irq_domain_add_linear(dn, MAX_NUM_EVENTS,
+> +	opal_event_irqchip.domain = irq_domain_create_linear(of_fwnode_handle(dn),
+> +				MAX_NUM_EVENTS,
+>   				&opal_event_domain_ops, &opal_event_irqchip);
+>   	of_node_put(dn);
+>   	if (!opal_event_irqchip.domain) {
+> diff --git a/arch/powerpc/sysdev/cpm2_pic.c b/arch/powerpc/sysdev/cpm2_pic.c
+> index e14493685fe8..c63d72f17a3e 100644
+> --- a/arch/powerpc/sysdev/cpm2_pic.c
+> +++ b/arch/powerpc/sysdev/cpm2_pic.c
+> @@ -259,7 +259,8 @@ void cpm2_pic_init(struct device_node *node)
+>   	out_be32(&cpm2_intctl->ic_scprrl, 0x05309770);
+>   
+>   	/* create a legacy host */
+> -	cpm2_pic_host = irq_domain_add_linear(node, 64, &cpm2_pic_host_ops, NULL);
+> +	cpm2_pic_host = irq_domain_create_linear(of_fwnode_handle(node), 64,
+> +						 &cpm2_pic_host_ops, NULL);
+>   	if (cpm2_pic_host == NULL) {
+>   		printk(KERN_ERR "CPM2 PIC: failed to allocate irq host!\n");
+>   		return;
+> diff --git a/arch/powerpc/sysdev/ehv_pic.c b/arch/powerpc/sysdev/ehv_pic.c
+> index fb502b72fca1..4ee8d36ca647 100644
+> --- a/arch/powerpc/sysdev/ehv_pic.c
+> +++ b/arch/powerpc/sysdev/ehv_pic.c
+> @@ -269,8 +269,9 @@ void __init ehv_pic_init(void)
+>   		return;
 >   	}
 >   
-> -	entry->domain = irq_domain_add_linear(node, 32, &smsm_irq_ops, entry);
-> +	entry->domain = irq_domain_create_linear(of_fwnode_handle(node), 32, &smsm_irq_ops, entry);
->   	if (!entry->domain) {
->   		dev_err(smsm->dev, "failed to add irq_domain\n");
->   		return -ENOMEM;
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index 51b9d852bb6a..e0d67bfe955c 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -2500,8 +2500,9 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
->   	pmc->irq.irq_set_type = pmc->soc->irq_set_type;
->   	pmc->irq.irq_set_wake = pmc->soc->irq_set_wake;
+> -	ehv_pic->irqhost = irq_domain_add_linear(np, NR_EHV_PIC_INTS,
+> -						 &ehv_pic_host_ops, ehv_pic);
+> +	ehv_pic->irqhost = irq_domain_create_linear(of_fwnode_handle(np),
+> +						    NR_EHV_PIC_INTS,
+> +						    &ehv_pic_host_ops, ehv_pic);
+>   	if (!ehv_pic->irqhost) {
+>   		of_node_put(np);
+>   		kfree(ehv_pic);
+> diff --git a/arch/powerpc/sysdev/fsl_msi.c b/arch/powerpc/sysdev/fsl_msi.c
+> index 7b9a5ea9cad9..4fe8a7b1b288 100644
+> --- a/arch/powerpc/sysdev/fsl_msi.c
+> +++ b/arch/powerpc/sysdev/fsl_msi.c
+> @@ -412,7 +412,7 @@ static int fsl_of_msi_probe(struct platform_device *dev)
+>   	}
+>   	platform_set_drvdata(dev, msi);
 >   
-> -	pmc->domain = irq_domain_add_hierarchy(parent, 0, 96, pmc->dev->of_node,
-> -					       &tegra_pmc_irq_domain_ops, pmc);
-> +	pmc->domain = irq_domain_create_hierarchy(parent, 0, 96,
-> +						  of_fwnode_handle(pmc->dev->of_node),
-> +						  &tegra_pmc_irq_domain_ops, pmc);
->   	if (!pmc->domain) {
->   		dev_err(pmc->dev, "failed to allocate domain\n");
->   		return -ENOMEM;
+> -	msi->irqhost = irq_domain_add_linear(dev->dev.of_node,
+> +	msi->irqhost = irq_domain_create_linear(of_fwnode_handle(dev->dev.of_node),
+>   				      NR_MSI_IRQS_MAX, &fsl_msi_host_ops, msi);
+>   
+>   	if (msi->irqhost == NULL) {
+> diff --git a/arch/powerpc/sysdev/ge/ge_pic.c b/arch/powerpc/sysdev/ge/ge_pic.c
+> index a6c424680c37..5b1f8dc3c960 100644
+> --- a/arch/powerpc/sysdev/ge/ge_pic.c
+> +++ b/arch/powerpc/sysdev/ge/ge_pic.c
+> @@ -214,8 +214,9 @@ void __init gef_pic_init(struct device_node *np)
+>   	}
+>   
+>   	/* Setup an irq_domain structure */
+> -	gef_pic_irq_host = irq_domain_add_linear(np, GEF_PIC_NUM_IRQS,
+> -					  &gef_pic_host_ops, NULL);
+> +	gef_pic_irq_host = irq_domain_create_linear(of_fwnode_handle(np),
+> +						    GEF_PIC_NUM_IRQS,
+> +						    &gef_pic_host_ops, NULL);
+>   	if (gef_pic_irq_host == NULL)
+>   		return;
+>   
+> diff --git a/arch/powerpc/sysdev/i8259.c b/arch/powerpc/sysdev/i8259.c
+> index 06e391485da7..99bb2b916949 100644
+> --- a/arch/powerpc/sysdev/i8259.c
+> +++ b/arch/powerpc/sysdev/i8259.c
+> @@ -260,8 +260,8 @@ void i8259_init(struct device_node *node, unsigned long intack_addr)
+>   	raw_spin_unlock_irqrestore(&i8259_lock, flags);
+>   
+>   	/* create a legacy host */
+> -	i8259_host = irq_domain_add_legacy(node, NR_IRQS_LEGACY, 0, 0,
+> -					   &i8259_host_ops, NULL);
+> +	i8259_host = irq_domain_create_legacy(of_fwnode_handle(node), NR_IRQS_LEGACY, 0, 0,
+> +					      &i8259_host_ops, NULL);
+>   	if (i8259_host == NULL) {
+>   		printk(KERN_ERR "i8259: failed to allocate irq host !\n");
+>   		return;
+> diff --git a/arch/powerpc/sysdev/ipic.c b/arch/powerpc/sysdev/ipic.c
+> index a35be0232978..f7b415ebb71c 100644
+> --- a/arch/powerpc/sysdev/ipic.c
+> +++ b/arch/powerpc/sysdev/ipic.c
+> @@ -711,8 +711,9 @@ struct ipic * __init ipic_init(struct device_node *node, unsigned int flags)
+>   	if (ipic == NULL)
+>   		return NULL;
+>   
+> -	ipic->irqhost = irq_domain_add_linear(node, NR_IPIC_INTS,
+> -					      &ipic_host_ops, ipic);
+> +	ipic->irqhost = irq_domain_create_linear(of_fwnode_handle(node),
+> +						 NR_IPIC_INTS,
+> +						 &ipic_host_ops, ipic);
+>   	if (ipic->irqhost == NULL) {
+>   		kfree(ipic);
+>   		return NULL;
+> diff --git a/arch/powerpc/sysdev/mpic.c b/arch/powerpc/sysdev/mpic.c
+> index 4afbab83a2e2..3de090159a1b 100644
+> --- a/arch/powerpc/sysdev/mpic.c
+> +++ b/arch/powerpc/sysdev/mpic.c
+> @@ -1483,9 +1483,9 @@ struct mpic * __init mpic_alloc(struct device_node *node,
+>   	mpic->isu_shift = 1 + __ilog2(mpic->isu_size - 1);
+>   	mpic->isu_mask = (1 << mpic->isu_shift) - 1;
+>   
+> -	mpic->irqhost = irq_domain_add_linear(mpic->node,
+> -				       intvec_top,
+> -				       &mpic_host_ops, mpic);
+> +	mpic->irqhost = irq_domain_create_linear(of_fwnode_handle(mpic->node),
+> +						 intvec_top,
+> +						 &mpic_host_ops, mpic);
+>   
+>   	/*
+>   	 * FIXME: The code leaks the MPIC object and mappings here; this
+> diff --git a/arch/powerpc/sysdev/tsi108_pci.c b/arch/powerpc/sysdev/tsi108_pci.c
+> index 0e42f7bad7db..07d0f6a83879 100644
+> --- a/arch/powerpc/sysdev/tsi108_pci.c
+> +++ b/arch/powerpc/sysdev/tsi108_pci.c
+> @@ -404,8 +404,8 @@ void __init tsi108_pci_int_init(struct device_node *node)
+>   {
+>   	DBG("Tsi108_pci_int_init: initializing PCI interrupts\n");
+>   
+> -	pci_irq_host = irq_domain_add_legacy(node, NR_IRQS_LEGACY, 0, 0,
+> -					     &pci_irq_domain_ops, NULL);
+> +	pci_irq_host = irq_domain_create_legacy(of_fwnode_handle(node), NR_IRQS_LEGACY, 0, 0,
+> +						&pci_irq_domain_ops, NULL);
+>   	if (pci_irq_host == NULL) {
+>   		printk(KERN_ERR "pci_irq_host: failed to allocate irq domain!\n");
+>   		return;
+> diff --git a/arch/powerpc/sysdev/xive/common.c b/arch/powerpc/sysdev/xive/common.c
+> index dc2e61837396..f10592405024 100644
+> --- a/arch/powerpc/sysdev/xive/common.c
+> +++ b/arch/powerpc/sysdev/xive/common.c
+> @@ -1464,7 +1464,7 @@ static const struct irq_domain_ops xive_irq_domain_ops = {
+>   
+>   static void __init xive_init_host(struct device_node *np)
+>   {
+> -	xive_irq_domain = irq_domain_add_tree(np, &xive_irq_domain_ops, NULL);
+> +	xive_irq_domain = irq_domain_create_tree(of_fwnode_handle(np), &xive_irq_domain_ops, NULL);
+>   	if (WARN_ON(xive_irq_domain == NULL))
+>   		return;
+>   	irq_set_default_domain(xive_irq_domain);
 
