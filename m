@@ -1,137 +1,145 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBEB0200B0;
-	Fri, 21 Mar 2025 10:23:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ADB91EB1AE
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 10:24:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742552621; cv=none; b=e0p8wTkz0aJXA0iI3s5FJy0pVK2afKGrxO1vU7mVZYk0shXjPaQs9HksPRxxrT8F5QbKKU3EgOGjpMEq/RtLOnozLGWdCWhBmQrg6LyzK+3i3TEHWzXAR5noUOjO93m/C+2P4ZyXablwx+mDuX7ifgQk5DNpk/h44rBdRTiHOik=
+	t=1742552665; cv=none; b=H2g5Ue+WvvjUF6uzsKb0AsHBVSZcfnPpeg2x4BeZpXrqPH9Slsd5YuhAvWRal7eJWXe/BoHg1ttA8KCxacyDEcwfWd6WGqwwzApgtBNgA1pUBLqIB74xOXBLzTEVV5U1HD7hLqR28WPYAWuKtAx6kodXm7/TwmYts5O0KHKEIT8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742552621; c=relaxed/simple;
-	bh=RMs/PSp53L6WgsMIE2/Hg0EtwHglh5WtXQO5Wsvdm8s=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=f4ILBwi3GMskM2sj2OarNOWzHUW0jqmCzKayEVZvDzkTYH15la1mWMtBOriPfBoKmYoxyEhMJUvo+p6YeUJd0oC6PkDj8yxEyVeYuWy3UynOXVxrvxeYloh7uLeswsMkF6bUMlNKu6oEkyCZtlKYsj9HnQUdkKVunjE9+eIt2K8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=Aj8WzG1I; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=zly6AD+I; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1742552665; c=relaxed/simple;
+	bh=D24M1M8nS14Me4tboiVm1/oePTkar2wchrnm8pcbf1w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pT7k3o66g2Fs3GBpYr2SbM0AX58BkYfWQ217dhsjuoyilyXenBnGGD0CgOAggZfyZzOUBP0GNVphnPZO751/HfaWcfVZOTaytmrTYgNzqAqoGZlKRFFqVQ4it0TNuikj8VPX6nOifB5kXFcQAePDcK4n11An9F5K6SLRGAT37uY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=USwN9O5c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="Aj8WzG1I";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="zly6AD+I"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id CE17011400EE;
-	Fri, 21 Mar 2025 06:23:38 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Fri, 21 Mar 2025 06:23:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742552618;
-	 x=1742639018; bh=4UJevjEnua/hzuv6hukkiRL584yrJsU8XeWiL1LLMD8=; b=
-	Aj8WzG1IUqT3lWmRHOZ7RrH+yaiNF6O+b1ll6F8XwGji2k6T7Gq+RCxrn5gCNfZN
-	WC+mK6nvClR8BgcNVb8kyg/Gcju+HXbBPySim8hTNGG3rKYDQ1MJS+UKlNghWfbg
-	k0Y87P4xbfAUjqfMPiE2LXI0NI0h1YEUaZonDEUhdh8V69/ZJz5S2/xxceHUufsa
-	wf5WjhD3HJY/ZLbOPhOzozlk3XNA/EYAM8c8yluWzAij1FsHHFmXt5pqFHwbWS4A
-	RWS5G+nrNUmMhu7aczpNVc9VV9axKXtR+6iojehnhmfWzIfseVF3B2WU/mxKihwz
-	8m5c9cFOL79eZy64GPN0IA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742552618; x=
-	1742639018; bh=4UJevjEnua/hzuv6hukkiRL584yrJsU8XeWiL1LLMD8=; b=z
-	ly6AD+Ihs5gg7Xi6hEB+ltIrUd4lsTKMbCGVQ/Q6NwWP9muAIj3pTWDBT62AgYnK
-	RPwqvQ2tdI3D7WdEfWWiMCorOeYPtmJidLWSQqEJKaGVJiv1Du/khrli/hn32Lgo
-	RJsyufpWPdBFeOvlwN0+a02DMm/jJsT5b2XzajNffBnmfDMUMpBezXWXGYnChIbg
-	TRc2BJJ3Kz3N49oMp03R0aiVcSwlq+ylWqYx+5ITeKqQEPpi1vBMDjY5Cbkpu0uC
-	xU9TpPD4yvBoRPGHDZ3xMfnahGpiXp9Wre/LdRe8naQxSVgPskw2mQNtMaXASNLe
-	u3gkuh4YgzV7djzCCHNWg==
-X-ME-Sender: <xms:Kj7dZykJk9SsWjjvP9qQsveFNQdd4dHB9tl78p3Xz08gyY9DGmePzw>
-    <xme:Kj7dZ53Yl-Su9tLE2JAS8RYLxGdcIbp5Wq8PAz9xfaTPBDR21PK-JjLwR_g2VTOcv
-    hlBW3HMGRjGVHjaIcI>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedtkeehucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopehprghlmhgvrhesuggrsggsvg
-    hlthdrtghomhdprhgtphhtthhopegrlhgvgiesghhhihhtihdrfhhrpdhrtghpthhtohep
-    iihhihhhrghnghdrshhhrghordhishgtrghssehgmhgrihhlrdgtohhmpdhrtghpthhtoh
-    epihhgnhgrtghiohesihgvnhgtihhnrghsrdgtohhmpdhrtghpthhtohepsghjohhrnhes
-    khgvrhhnvghlrdhorhhgpdhrtghpthhtohepvggsihhgghgvrhhssehkvghrnhgvlhdroh
-    hrghdprhgtphhtthhopehskhhhrghnsehlihhnuhigfhhouhhnuggrthhiohhnrdhorhhg
-    pdhrtghpthhtoheplhhinhhugidqrhhishgtvheslhhishhtshdrihhnfhhrrgguvggrug
-    drohhrghdprhgtphhtthhopehlihhnuhigqdhkvghrnhgvlhdqmhgvnhhtvggvsheslhhi
-    shhtshdrlhhinhhugidruggvvh
-X-ME-Proxy: <xmx:Kj7dZwqhYI8KVO9p2qwoKMwwDOBjgHGLyOa41iE_lI5pbFguaAmVWQ>
-    <xmx:Kj7dZ2n57kKHcok9q14JayhgRSuMMjUK0w-d3Be7gE0cpoFX4Oyb1Q>
-    <xmx:Kj7dZw1M5GoiRkOoXkgelQZpJdwWb9OnyMKpVsYf06QcTh6Jcus0Sg>
-    <xmx:Kj7dZ9uraoJ3pE9R4GYSmHJpFKQhkeBLbud9ZEDotc4ffIoECPq6sw>
-    <xmx:Kj7dZ1trPzB9iuKKEJApJowMAXKCYdRD4F601K1ruzXd1y-RkwcNDPzg>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id 5311C2220072; Fri, 21 Mar 2025 06:23:38 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="USwN9O5c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89B7AC4CEE3;
+	Fri, 21 Mar 2025 10:24:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742552664;
+	bh=D24M1M8nS14Me4tboiVm1/oePTkar2wchrnm8pcbf1w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=USwN9O5cfKZkLeODD9Fj649FR8pHBXVkQ9GUif6gjWjm7YOodBEL8Ont0MBX2s3cw
+	 hY79l2YkV1/6s0687tUKEj0PkPt3UkMVlzo+QGUqj0yR4Uw0Hcntn+mIi0A8Mw7sTQ
+	 zdIzG74IWaedYjxu4ggOmQ2l7p0CUrICogtmWlXD8qkB2WwiSqc74OO8md145mBYnz
+	 TaLE/eYqnZmU7WMmooxMUBa9HR8fKSyrcsn85ikXutqqkH+GkiMf+TJexvKaw0AlaN
+	 h8FBrhJxTadLSkn3aE6B531Pwq6mnb6gyxQwA5cwYHD5Zx/01KPCCIDAGzbGWQSRV+
+	 aifNE7T4T0Ubw==
+Date: Fri, 21 Mar 2025 11:24:20 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: Bert Karwatzki <spasswolf@web.de>, Alex Deucher <alexdeucher@gmail.com>,
+	Kees Cook <kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org
+Subject: Re: commit 7ffb791423c7 breaks steam game
+Message-ID: <Z90-VOyC5oanCC8z@gmail.com>
+References: <fa8d5e76694918bdaae9faee9648776f298f78ca.camel@web.de>
+ <7866593f-0322-4fb3-9729-82366940fc85@nvidia.com>
+ <a168e78b-ae27-4675-8821-0b1a2499b2b2@nvidia.com>
+ <5d34bfc5109b8d104fd4f8550dd17945344f9d07.camel@web.de>
+ <551b9797-20d6-4bfe-b54c-84dd7aae7794@nvidia.com>
+ <CADnq5_Pvmxa10dJWYjajwxG-0Y_oxhL6wS6NsG2F0dmcJS6o8A@mail.gmail.com>
+ <9be36dfab79b17e108f71d51a6ebf39073e110c6.camel@web.de>
+ <b5d80ef2-fd5a-41cc-9184-6c82226c330a@nvidia.com>
+ <Z9vZYIbXOz2wF59j@gmail.com>
+ <2cafd3e1-9265-403a-9854-7200d84ca397@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: T04d17f90b906d792
-Date: Fri, 21 Mar 2025 11:23:18 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Ignacio Encinas" <ignacio@iencinas.com>,
- "Paul Walmsley" <paul.walmsley@sifive.com>,
- "Palmer Dabbelt" <palmer@dabbelt.com>, "Alexandre Ghiti" <alex@ghiti.fr>
-Cc: "Eric Biggers" <ebiggers@kernel.org>, linux-riscv@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-kernel-mentees@lists.linux.dev,
- "Shuah Khan" <skhan@linuxfoundation.org>,
- "Zhihang Shao" <zhihang.shao.iscas@gmail.com>,
- =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@kernel.org>,
- Linux-Arch <linux-arch@vger.kernel.org>
-Message-Id: <583340a9-411d-406f-aee9-d3e2eb80ca43@app.fastmail.com>
-In-Reply-To: <ac0b1f3e-6abe-4de2-bf5a-a4b3207a22c3@iencinas.com>
-References: <20250319-riscv-swab-v2-0-d53b6d6ab915@iencinas.com>
- <20250319-riscv-swab-v2-1-d53b6d6ab915@iencinas.com>
- <2afab9dc-e39c-4399-ac5a-87ade4da5ab0@app.fastmail.com>
- <4d45df0c-d44e-4bb6-8daa-0dba1b834bc4@iencinas.com>
- <07b8051b-9d5e-440e-b74d-1ca97402fe2a@app.fastmail.com>
- <ac0b1f3e-6abe-4de2-bf5a-a4b3207a22c3@iencinas.com>
-Subject: Re: [PATCH v2 1/2] include/uapi/linux/swab.h: move default implementation for
- swab macros into asm-generic
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2cafd3e1-9265-403a-9854-7200d84ca397@nvidia.com>
 
-On Thu, Mar 20, 2025, at 23:36, Ignacio Encinas Rubio wrote:
-> On 19/3/25 22:49, Arnd Bergmann wrote:
->> On Wed, Mar 19, 2025, at 22:37, Ignacio Encinas Rubio wrote:
->>> On 19/3/25 22:12, Arnd Bergmann wrote:
->> Right, I do remember when we had a discussion about this maybe
->> 15 years ago when gcc didn't have the builtins on all architectures
->> yet, but those versions are long gone, and we never cleaned it up.
->
-> I just had a chance to look at this and it looks a bit more complex than
-> I initially thought. ___constant_swab macros are used in more places
-> than I expected, and {little,big}_endian.h define their own macros that
-> are used elsewhere, ...
->
-> It is not clear to me how to proceed here. I could:
->
->   1) Just remove ___constant_swab macros and replace them with
->   __builtin_swap everywhere
->
->   2) Go a step further and evaluate removing __constant_htonl and
->   relatives
->
-> Let me know what you think is the best option :)
 
-I think we can start enabling CONFIG_ARCH_USE_BUILTIN_BSWAP
-on all architectures and removing the custom versions
-from arch/*/include/uapi/asm/swab.h, which all seem to
-predate the compiler builtins and likely produce worse code.
+* Balbir Singh <balbirs@nvidia.com> wrote:
 
-    Arnd
+> On 3/20/25 20:01, Ingo Molnar wrote:
+> > 
+> > * Balbir Singh <balbirs@nvidia.com> wrote:
+> > 
+> >> On 3/17/25 00:09, Bert Karwatzki wrote:
+> >>> This is related to the admgpu.gttsize. My laptop has the maximum amount 
+> >>> of memory (64G) and usually gttsize is half of main memory size. I just 
+> >>> tested with cmdline="nokaslr amdgpi.gttsize=2048" and the problem does 
+> >>> not occur. So I did some more testing with varying gttsize and got this
+> >>> for the built-in GPU
+> >>>
+> >>> 08:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/ATI]
+> >>> Cezanne [Radeon Vega Series / Radeon Vega Mobile Series] (rev c5)
+> >>>
+> >>> (nokaslr is always enabeld)
+> >>> gttssize   input behaviour
+> >>>  2048		GOOD
+> >>>  2064		GOOD
+> >>>  2080		SEMIBAD (i.e. noticeable input lag but not as bad as below)
+> >>>  3072		BAD
+> >>>  4096		BAD
+> >>>  8192		BAD
+> >>> 16384		BAD
+> >>>
+> >>> As the build-in GPU has ~512 VRAM there seems to be problems when gttsize >
+> >>> 4*VRAM so I tested for the discrete GPU with 8G of VRAM
+> >>> gttsize   input behaviour
+> >>> 49152		GOOD
+> >>> 64000		GOOD
+> >>>
+> >>> So for the discrete GPU increasing gttsize does no reproduce the bug.
+> >>>
+> >>
+> >> Very interesting, I am not a GTT expert, but with these experiments do you
+> >> find anything interesting in
+> >>
+> >> /sys/kernel/debug/x86/pat_memtype_list?
+> >>
+> >> It's weird that you don't see any issues in Xorg (Xfce), just the games.
+> >> May be we should get help from the amd-gfx experts to further diagnose/debug
+> >> the interaction of nokaslr with the game.
+> > 
+> > So basically your commit:
+> > 
+> >   7ffb791423c7 ("x86/kaslr: Reduce KASLR entropy on most x86 systems")
+> > 
+> > inflicts part of the effects of a 'nokaslr' boot command line option, 
+> > and triggers the regression due to that?
+> > 
+> > Or is there some other cause?
+> > 
+> 
+> You are right in your assessment of the root cause. Just to reiterate
+>
+> - nokaslr does not work with the iGPU, specifically for the games 
+>   mentioned
+>
+> - There is a workaround for the problem, which involves reducing the 
+>   amdgpu.gttsize
+>
+> - The patch exposes the system to nokaslr situation (effect) when 
+>   PCI_P2PDMA is enabled
+
+Note that every major x86 distro I checked enables CONFIG_PCI_P2PDMA=y 
+and also keeps KASLR enables, so the above qualifiers are immaterial in 
+terms of user impact: it's a 100% certainty that distro kernels on 
+these systems will regress under these games, right?
+
+What is the importance of the original fix? I should have insisted on a 
+fuller changelog, because it's rather thin on details:
+
+  If the BAR address is beyond this limit, PCI peer to peer DMA
+  mappings fail.
+
+How frequently does this happen and what is the impact to users if this 
+happens?
+
+We might be forced to revert this change if it regresses other systems.
+
+Thanks,
+
+	Ingo
