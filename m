@@ -1,124 +1,106 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890EB78F29;
-	Fri, 21 Mar 2025 13:57:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out30-100.freemail.mail.aliyun.com (out30-100.freemail.mail.aliyun.com [115.124.30.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0893742A94;
+	Fri, 21 Mar 2025 13:58:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=115.124.30.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742565435; cv=none; b=Aqy2JtfWWNmnhHB8a1yhe28nrmsjplZfLdbDuUvhJSSIASaIved8M6xystvFhSpe/SLLCzpyfYaJb0jIabd4ByRscV1iesonvXmDA/lR63o+qpL+JLLbI64SitfukyMZwCSh1jWPrCDfn9vbqzS7+IZy60vlehZMrTOs7HZ3Z5w=
+	t=1742565488; cv=none; b=Ra6DlZ/nU/RW5B5IPXt4M3ExZQpL9WNvZkrm3Wj50+WC+Q3+a3BkJT28Xqq8xe8i+fmlqIlhrk2NR/1dzIrRvir3uortquiNf0x6vcj49xpFC77BAiDy87//Z7JzswvCQv1u4Tg6vVsKmYIVjg923MtN/Tlfl3yjSTawYxjKYSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742565435; c=relaxed/simple;
-	bh=mt5VrjA3cDeDU5iaGmha+OBFVRPyZDe+YhTGWVzJhKI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Xe64v9jsIOIfNUNm/LIzOv+2Ouz1uKGmvAL/y7ctmitR0XGyrJZrATRTHRSAlDVM4bl4S9eDMtoknZT3Pzg3Def0XZP44tU9Uc/zQcB4rRst1JTf9igSjBEPr5fSjoiGMqDDoySUIUBi7ftPXHVq3/YKOt3g8ZMKlOwkemqZFfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13B44106F;
-	Fri, 21 Mar 2025 06:57:20 -0700 (PDT)
-Received: from bogus (e133711.arm.com [10.1.196.55])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7343D3F673;
-	Fri, 21 Mar 2025 06:57:10 -0700 (PDT)
-Date: Fri, 21 Mar 2025 13:57:07 +0000
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Huisong Li <lihuisong@huawei.com>,
-	Adam Young <admiyo@os.amperecomputing.com>,
-	Robbie King <robbiek@xsightlabs.com>,
-	Andi Shyti <andi.shyti@kernel.org>, <linux-i2c@vger.kernel.org>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, <linux-hwmon@vger.kernel.org>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 00/13] mailbox: pcc: Fixes and cleanup/refactoring
-Message-ID: <20250321-elegant-ruby-bull-7d9c50@sudeepholla>
-References: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
+	s=arc-20240116; t=1742565488; c=relaxed/simple;
+	bh=DnU+Ee7KcE58TQf3t2cxWANpuCHzBrr69H7LZKjKk7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ieLg2Ox8xGyDMDdxvr587a2ImbbTunKRnhIYaNABMzkaF0dpVhoch/bwl6com6sPyMYqeioJhyOzrNXgD7+t8HZmSiCd9Xt7P11jqmiXSFng7FHvAopN88ppiEXCucjRzLMDAGmou0Z7irizqqg0shUvYlspLTO/hIc4EQoERs4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com; spf=pass smtp.mailfrom=linux.alibaba.com; dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b=aI8KtvSF; arc=none smtp.client-ip=115.124.30.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.alibaba.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.alibaba.com header.i=@linux.alibaba.com header.b="aI8KtvSF"
+DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
+	d=linux.alibaba.com; s=default;
+	t=1742565481; h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type;
+	bh=srvsovFblQPzignnqMr8Ftv/qEnbQ9WLUcuRCMO/obE=;
+	b=aI8KtvSFDD8pS4VQo6R6dAilMbyc2Gcvh6/vZ/vdpp3jBHxN+JMOmrJV9CMF6vEaxi2p5C2YJf1RRNPzwNx4kRzP1d8JTXsTs2DkI7fD8ug4ayIJPdAfbeSoqp0veEBUJPZeTTTMXMqzd8S6Dt1sCs2LSpwfGuTY8x/g0EQT/Cw=
+Received: from 30.134.66.95(mailfrom:hsiangkao@linux.alibaba.com fp:SMTPD_---0WSIqpiI_1742565479 cluster:ay36)
+          by smtp.aliyun-inc.com;
+          Fri, 21 Mar 2025 21:58:00 +0800
+Message-ID: <934af3e3-3153-40c1-9a25-7a8d08fdb007@linux.alibaba.com>
+Date: Fri, 21 Mar 2025 21:57:59 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] initrd: support erofs as initrd
+To: Julian Stecklina <julian.stecklina@cyberus-technology.de>,
+ "hch@lst.de" <hch@lst.de>
+Cc: "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+ "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+ "rafael@kernel.org" <rafael@kernel.org>,
+ "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+References: <20250320-initrd-erofs-v1-1-35bbb293468a@cyberus-technology.de>
+ <20250321050114.GC1831@lst.de>
+ <582bc002-f0c8-4dbb-8fa5-4c10a479b518@linux.alibaba.com>
+ <933797c385f2e222ade076b3e8fc5810fa47f5bd.camel@cyberus-technology.de>
+From: Gao Xiang <hsiangkao@linux.alibaba.com>
+In-Reply-To: <933797c385f2e222ade076b3e8fc5810fa47f5bd.camel@cyberus-technology.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
 
-On Thu, Mar 13, 2025 at 03:28:46PM +0000, Sudeep Holla wrote:
-> Here is a summary of the changes in this patch series:
-> 
-> 1. Fix for race condition in updating of the chan_in_use flag
-> 
->    Ensures correct updating of the chan_in_use flag to avoid potential race
->    conditions.
-> 
-> 2. Interrupt handling fix
-> 
->    Ensures platform acknowledgment interrupts are always cleared to avoid
->    leaving the interrupt asserted forever.
-> 
-> 3. Endian conversion cleanup
-> 
->    Removes unnecessary endianness conversion in the PCC mailbox driver.
-> 
-> 4. Memory mapping improvements
-> 
->    Uses acpi_os_ioremap() instead of direct mapping methods for better ACPI
->    compatibility.
-> 
-> 5. Return early if the command complete register is absent
-> 
->    Ensures that if no GAS (Generic Address Structure) register is available,
->    the function exits early.
-> 
-> 6. Refactor IRQ handler and move error handling to a separate function
-> 
->    Improves readability of error handling in the PCC mailbox driver’s
->    interrupt handler.
-> 
-> 7. Shared memory mapping refactoring/enhancements
-> 
->    Ensures the shared memory is always mapped and unmapped in the PCC
->    mailbox driver when the PCC channel is requested and release.
-> 
-> 8. Refactored check_and_ack() Function
-> 
->    Simplifies and improves the logic for handling type4 platform notification
->    acknowledgments.
-> 
-> 09-13. Shared memory handling simplifications across multiple drivers
-> 
->     Simplifies shared memory handling in:
->         Kunpeng HCCS driver (soc: hisilicon)
->         Apm X-Gene Slimpro I2C driver
->         X-Gene hardware monitoring driver (hwmon)
->         ACPI PCC driver
->         ACPI CPPC driver
-> 
-> The X-gene related changes now change the mapping attributes to align
-> with ACPI specification. There are possibilities for more cleanups on
-> top of these changes around how the shmem is accessed within these
-> driver.
-> 
-> Also, my main aim is to get 1-8 merged first and target 9-13 for
-> following merge window through respective tree.
-> 
-> Overall, the patch series focuses on improving correctness, efficiency, and
-> maintainability of the PCC mailbox driver and related components by fixing
-> race conditions, optimizing memory handling, simplifying shared memory
-> interactions, and refactoring code for clarity.
-> 
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
-> Jassi,
-> 
-> Please take patch [1-8]/13 through the mailbox tree if and when you are
-> happy with the changes.
+Hi Julian,
 
-Hi Jassi,
+On 2025/3/21 21:17, Julian Stecklina wrote:
+> On Fri, 2025-03-21 at 13:27 +0800, Gao Xiang wrote:
+>> Hi Christoph,
+>>
+>> On 2025/3/21 13:01, Christoph Hellwig wrote:
+>>> We've been trying to kill off initrd in favor of initramfs for about
+>>> two decades.  I don't think adding new file system support to it is
+>>> helpful.
+>>>
+>>
+>> Disclaimer: I don't know the background of this effort so
+>> more background might be helpful.
+> 
+> So erofs came up in an effort to improve the experience for users of NixOS on
+> smaller systems. We use erofs a lot and some people in the community just
+> consider it a "better" cpio at this point. A great property is that the contents
+> stays compressed in memory and there is no need to unpack anything at boot.
+> Others like that the rootfs is read-only by default. In short: erofs is a great
+> fit.
+> 
+> Of course there are some solutions to using erofs images at boot now:
+> https://github.com/containers/initoverlayfs
+> 
+> But this adds yet another step in the already complex boot process and feels
+> like a hack. It would be nice to just use erofs images as initrd. The other
+> building block to this is automatically sizing /dev/ram0:
+> 
+> https://lkml.org/lkml/2025/3/20/1296
+> 
+> I didn't pack both patches into one series, because I thought enabling erofs
+> itself would be less controversial and is already useful on its own. The
+> autosizing of /dev/ram is probably more involved than my RFC patch. I'm hoping
+> for some input on how to do it right. :)
 
-I2C change is also acked now. Let me know if you prefer pull request or
-you prefer to take it via ACPI tree which may need you ACK.
+Ok, my own thought is that cpio format is somewhat inflexible.  It
+seems that the main original reason for introducing initramfs and
+cpio was to avoid double caching, but it can be resolved with FSDAX
+now and initdax totally avoids unnecessary cpio parsing and unpacking.
+cpio format is much like tar which lacks of basic features like
+random access and xattrs which are useful for some use cases as
+I mentioned before.
 
--- 
-Regards,
-Sudeep
+The initrd image can even compressed as a whole and decompress in
+the current initramfs way.  If you really need on-demand
+decompression, you could leave some file compresssed since EROFS
+supports per-inode compression, but those files are still double
+caching since FSDAX mode should be uncompressed to support mmap.
+You could leave rare-used files compressed.
+
+Thanks,
+Gao Xiang
