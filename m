@@ -1,128 +1,81 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB6938FB9;
-	Fri, 21 Mar 2025 13:56:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D86B3D69;
+	Fri, 21 Mar 2025 13:56:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742565396; cv=none; b=AW+ROWMZ35Jjfy5v+fMf0S1ygP7jhv93wcn/QfrEInAmXKiOQMqzUwyOZfW71GOuGGj4zyP70Ylm+bMs3Qxp5X+c9dgRF9oHVCi2G1YVxhFGcP2YLgDRhxMObpSIyZkogdQEQz+BMgodOYfhDYfL3BBYN4Kh4eSGUKeuT0FYrUQ=
+	t=1742565409; cv=none; b=WrnPzdM3CGvcdF/LEny4ql+hDzWf5bjlqyUeX7S43HMsfsveZyRAMkVDYRyo+jbax+9k1B2AlcIwd5qkUl2szBxwTCUMVyScl1QihVbx5jkIRU6grteizfQbTEgadgarRMDlWfa5Q1Hq4h9PheHvNQqeK7tmduZuhLJSMDg+b8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742565396; c=relaxed/simple;
-	bh=/6hOolry5YjNjLNy/ShHrZBxdxC0Ma01QDEqsiQ085w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hWLPZSpFe7sNL6Y4KTdOxmsbE6FAiZF9gIy6YKDcY+xUVFvL5fxSTb9TcRVHHdotwGVIboG0Jd9yi/DihpW1RWXnWVSM4/GyaDJV7Ir+5WyLRbyqsAccurqS96WTkZxKJktkTOzjnMJWVu+v5QWeRXXFwiraSeU3H9j8BCh/rlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ckgdUaLg; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ckgdUaLg"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742565395; x=1774101395;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=/6hOolry5YjNjLNy/ShHrZBxdxC0Ma01QDEqsiQ085w=;
-  b=ckgdUaLgawgkJ0Owxwa1DQQ7oM6x3k/613/3+hDU0/TtGtVpQW0fkxfF
-   Tlf3fQDuxtXkQMi4hHiPWXCWqTTvqScLK3dC9m1CHRQd53xvXipOA61wo
-   hg+Q2r6Vt5lvq309DtmMoyBNghb63hxEmnkYuZHmE9EpOoXaPfE3dTWq/
-   UMsqfXc1TxwzSRRG6RZwTht07RTCN4beXVsFKnvq1iTBvqi3KVR2HdAlY
-   SaFf7xJKVnF+TELbPjqrFFElGLku9XnZUtOnBn4iSkGCbU/QcT+gNJBH1
-   r7RyqFd7C+Rk/QbRm+1LWeY8TLmGRBHiZomJLL2UWYAeyXbMpJGj0srEK
-   Q==;
-X-CSE-ConnectionGUID: 3XJD84D2ReCXDc2GTn6AMg==
-X-CSE-MsgGUID: oSsSBjdvSqqU+Z1uh7leow==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="54825447"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="54825447"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 06:56:35 -0700
-X-CSE-ConnectionGUID: ka4S3z+hT9WJv3VoUMY3Yw==
-X-CSE-MsgGUID: nRylWAXSRxK2srXku9UY/w==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="123386586"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 06:56:30 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1tvcrL-00000004Wyz-0nhD;
-	Fri, 21 Mar 2025 15:56:27 +0200
-Date: Fri, 21 Mar 2025 15:56:26 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Nuno Sa <nuno.sa@analog.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	=?iso-8859-1?Q?Jo=E3o_Paulo_Gon=E7alves?= <joao.goncalves@toradex.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-Subject: Re: [PATCH v9 6/8] iio: adc: Support ROHM BD79124 ADC
-Message-ID: <Z91wCjTb14wCbKmj@smile.fi.intel.com>
-References: <cover.1742457420.git.mazziesaccount@gmail.com>
- <544371135e5ff5647c3cd4bce6d21e1b278ac183.1742457420.git.mazziesaccount@gmail.com>
- <Z9wVQ8vgV8kQylqG@smile.fi.intel.com>
- <ae33de64-1ba1-4bd2-a139-3f0b5986f41e@gmail.com>
- <Z91WS-DoKoIZhRNs@smile.fi.intel.com>
- <1e236993-47fc-45e9-913a-e0615787581a@gmail.com>
- <Z91mnHP9V0yRZ2js@smile.fi.intel.com>
- <ed5bc103-1ce2-46ec-9649-03b11ae591a7@gmail.com>
+	s=arc-20240116; t=1742565409; c=relaxed/simple;
+	bh=7jrq4o9dG8HqnaNFPuUz/jH8kmMku2AxRQ9KtOK4gCo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xnn1dPz3KFvmDeRlg47TcutgAMzql8hih8CCmDCdd225UsINcD1F5krwOOHxzDYoXyhUIwJb3aFzLprRoWDkNFTlesMvcBOaee79n7KecmewTgxP+/juoOB1SpBX3eVTnvDdZ5PZFj+gqNe6bwKNkVfAPhGMaZU9+7kh2VDg/m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZK3pz6NLBz1c0QN;
+	Fri, 21 Mar 2025 21:54:51 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 1A7B11A016C;
+	Fri, 21 Mar 2025 21:56:37 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
+ (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 21 Mar
+ 2025 21:56:36 +0800
+From: Yue Haibing <yuehaibing@huawei.com>
+To: <hverkuil@xs4all.nl>, <mchehab@kernel.org>, <lumag@kernel.org>
+CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yuehaibing@huawei.com>
+Subject: [PATCH -next] media: cec: Add missing I2C dependency
+Date: Fri, 21 Mar 2025 22:07:18 +0800
+Message-ID: <20250321140718.1343784-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ed5bc103-1ce2-46ec-9649-03b11ae591a7@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On Fri, Mar 21, 2025 at 03:41:18PM +0200, Matti Vaittinen wrote:
-> On 21/03/2025 15:16, Andy Shevchenko wrote:
-> > On Fri, Mar 21, 2025 at 02:17:16PM +0200, Matti Vaittinen wrote:
-> > > On 21/03/2025 14:06, Andy Shevchenko wrote:
-> > > > On Fri, Mar 21, 2025 at 10:01:00AM +0200, Matti Vaittinen wrote:
-> > > > > On 20/03/2025 15:16, Andy Shevchenko wrote:
-> > > > > > On Thu, Mar 20, 2025 at 10:22:00AM +0200, Matti Vaittinen wrote:
-> > > > 
-> > > > You can get rid of all of these by simply using __le16. I do not understand why
-> > > > it's not used so far. I thought that bits are mirrored, that may explain the
-> > > > case, but now I do not see any problem to use __le16 directly.
-> > > 
-> > > This discussion is going in circles now. That was discussed in the RFC
-> > > review with Jonathan, which I did also tell to you during the v7 review:
-> > 
-> > Yes, because I think we all were confused by the bits representations,
-> > but now I see it clearly and I do not understand why should we go the way
-> > you suggested as it makes things a bit tangled in my opinion.
-> > 
-> > Jonathan, do you still think the two separate bytes are better than __le16?
-> > If so, what are the pros of this solution?
-> 
-> I don't think Jonathan thought this is better. I'm not sure if you read the
-> RFC conversation.
-> 
-> I told this is easier for me to understand. Jonathan merely told he can live
-> with that. For this particular driver it matters because I'm expecting to be
-> maintaining it. It's easier to maintain code which one can understand, and
-> if subsystem maintainer can live with it, then I suppose it's the pro you
-> are looking for.
+If CONFIG_I2C is not set, build fails:
 
-What if the maintainer will be hit by a bus? The point is we should also think
-for unfamiliar possible maintainers and strange readers.
+drivers/media/cec/i2c/tda9950.c: In function ‘tda9950_probe’:
+drivers/media/cec/i2c/tda9950.c:391:14: error: implicit declaration of function ‘i2c_check_functionality’ [-Werror=implicit-function-declaration]
+	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
+      |              ^~~~~~~~~~~~~~~~~~~~~~~
+  CC      crypto/aes_generic.o
+drivers/media/cec/i2c/tda9950.c: At top level:
+drivers/media/cec/i2c/tda9950.c:503:1: warning: data definition has no type or storage class
+  503 | module_i2c_driver(tda9950_driver);
+      | ^~~~~~~~~~~~~~~~~
+drivers/media/cec/i2c/tda9950.c:503:1: error: type defaults to ‘int’ in declaration of ‘module_i2c_driver’ [-Werror=implicit-int]
+drivers/media/cec/i2c/tda9950.c:503:1: warning: parameter names (without types) in function declaration
 
-But sure, not my call right now.
+Add missing I2C dependency to fix this.
 
+Fixes: caa6f4a75e9f ("media: cec: move driver for TDA9950 from drm/i2c")
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+---
+ drivers/media/cec/i2c/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/media/cec/i2c/Kconfig b/drivers/media/cec/i2c/Kconfig
+index b9d21643eef1..c31abc26f602 100644
+--- a/drivers/media/cec/i2c/Kconfig
++++ b/drivers/media/cec/i2c/Kconfig
+@@ -16,6 +16,7 @@ config CEC_CH7322
+ 
+ config CEC_NXP_TDA9950
+ 	tristate "NXP Semiconductors TDA9950/TDA998X HDMI CEC"
++	depends on I2C
+ 	select CEC_NOTIFIER
+ 	select CEC_CORE
+ 	default DRM_I2C_NXP_TDA998X
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
