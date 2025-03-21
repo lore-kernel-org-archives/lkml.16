@@ -1,109 +1,134 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFDD318B46E;
-	Fri, 21 Mar 2025 01:25:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-il1-f205.google.com (mail-il1-f205.google.com [209.85.166.205])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D1F02F5E
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 01:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.205
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742520348; cv=none; b=i1a/tRtejf3VX7hklJBxdruUqLQ5+J0X+o3hFx9iKBePWV6RV+xuSRbEuNCf9HNZFmpdlbpIksY+u2f4FHIJOF6oJM/4X05SJ1lvsG03GD3SHB2dw7yhitX5dWxKivqreSNcp+4S146THIw0y7YjE7NlT96uAhZcyDpBQsw9i3U=
+	t=1742521045; cv=none; b=E+/VvAr/igXdM4m7Db7Pd9IEdfdQLpgcHd3d1oF8htuoSXTwxJAPxm+RnUSDtWrWQqi0jZbQrXYswWBbnViIeK6JAs1uRbsPRx4tARxhOqj29brM2wriHIP0cn2f4gIQI0chJaorESrXvSKtVNuyaP0FdNysyiAq1DtFY8nkw40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742520348; c=relaxed/simple;
-	bh=6hgxpbkpbDkO08ThuWTkTEfQW6T6S+pBE+Yj1FcHSyM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MziRi7MQh4mYc36evbNdc0y8YIpxCM/abc5LloRxi1Qg7myiyHYrX2ynTUW7k+UzWNFgkOE99IkIdvZ8cIdS9n5CNMmJccKCDtPlQcepGHQUnS6sIjL1A+q+Nk8C9TzrTHq/x1z3Jei/j1m7pO1jYvkmFEDvDzLV4fEwMIbUqZA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=Xdx09bTZ; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Xdx09bTZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Message-ID:Date:MIME-Version:Subject:From:
-	Content-Type; bh=uifaMK3p4YAnBcl9nmuoOP+YgcB1Z+c6e7VzG3GyQBU=;
-	b=Xdx09bTZU0+ogotAFgMkAWY+Q6kdmizf+mBT3DkHwCEm+0ia9CM576pVxDjEx5
-	3gxaDXai82xiJJjMofUPyzIAqDP1A19neDjdAR9sAnWDM6Xt/7w7CorAfZ+QJ7s0
-	TxL+tFDJhyqGj6AKRiuq++v9aXzq40SSk9Wt46FkkdCiU=
-Received: from [192.168.60.52] (unknown [])
-	by gzga-smtp-mtada-g0-4 (Coremail) with SMTP id _____wDXNyZPvNxn7kA7Aw--.59013S2;
-	Fri, 21 Mar 2025 09:09:37 +0800 (CST)
-Message-ID: <0abc7fc9-3370-4f54-a230-ecc044928fcc@163.com>
-Date: Fri, 21 Mar 2025 09:09:35 +0800
+	s=arc-20240116; t=1742521045; c=relaxed/simple;
+	bh=ZqEUfoapnhYuCDQD1EXqUT+qYSYTYNhFIkYMUC/eofM=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=WxGTRzrx8H2griU+tIDNggqkERRfpcLufLFmoxEuH0k31mf7AtC+Ea87jo8pehmEtMSACu74K6V4Ylw4kQqzxpdCOPIpQLAIWAeAWdghqNdI7ohrOac3qV0gA2yYb0Ea46vBUZoIjsU1zKKmGw7uCImP2muoh08qdUwj2se2LIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.205
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f205.google.com with SMTP id e9e14a558f8ab-3ce8dadfb67so15556505ab.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 18:37:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742521041; x=1743125841;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=jszjkOJjwLi/7v5PVoBHAtfeBojk/KDRvfGZp3lZaI0=;
+        b=hhYhpQWQqXxcjSzydCJuy8rv/cST9bCR+k0YFgiJzWmYhNFnGiyw5vHUTDjQFnCdpv
+         PdUNVhBZXQhCfoW0xNFw5pr9aLsGMtUVtX0kcIftkdNFJIUT14rnITOcXHECarD9Yk8s
+         73HQjgb2j2lESHpPdw7qj9NSkDIqQKweRa/q6tNP5lZc7XlBxEadOdipxiJ5gXOwAVg/
+         jVKdT14wo8LXdWs6j8zmFw6S1WD7a78dezqKCjKCVEpE0dTa1WgFVR0c2v0y2w0v7EQj
+         wLEWfTbolWrWEwwKuKl1+A91+w144G/T3tJJH4brP34zFUULS2AHK8LQNdhL75oNrmwh
+         dJIw==
+X-Forwarded-Encrypted: i=1; AJvYcCUwkcC3H/yrc/FU39yWnJF0LRxPKtRyO/Eo3Z0/ndClysdWxdYsbAi6uBi81NEfRGmXxwoVwdmKu275y5k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxnMItmF+MM3FQkDeyk/VVGTVZsCuWZCjdrCHxngRKARLV/gKUX
+	z5RCdnlWpbBbKlK9Ri/0C7OVTcL5Izv5A6ZRHMotqgbssTWA0G1NInlOYc+jzKmKh0NUJ1NSxYP
+	bhupgjZX0MUYekO5HpUwecbohTJAPbLeL1aOcI3V0yhXySzBe6SKIBvU=
+X-Google-Smtp-Source: AGHT+IEmA5c/370Wds6/1PBW62vPq4kqKjtEJ1jSiHef+/wKd4O0x7JlFsZi9O0opxZ+LXcx18cd4bWV3i25hJwcBygNUZHoy4Br
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [v2] PCI: cadence: Add configuration space capability search API
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
- Siddharth Vadapalli <s-vadapalli@ti.com>, lpieralisi@kernel.org,
- kw@linux.com, robh@kernel.org, bhelgaas@google.com, bwawrzyn@cisco.com,
- thomas.richard@bootlin.com, wojciech.jasko-EXT@continental-corporation.com,
- linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250320212853.GA1100504@bhelgaas>
-Content-Language: en-US
-From: Hans Zhang <18255117159@163.com>
-In-Reply-To: <20250320212853.GA1100504@bhelgaas>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CM-TRANSID:_____wDXNyZPvNxn7kA7Aw--.59013S2
-X-Coremail-Antispam: 1Uf129KBjvJXoW7Ar1rtryxGFW8Gw47uF18uFg_yoW8uF4xpr
-	WUXa45KF48JF1fCFn7Ka10qF1fK397XF97Xan8G3yUZws09r93KFWvy34YkasrXr13ZF4j
-	vF45Xas7X34YvaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UgAwsUUUUU=
-X-CM-SenderInfo: rpryjkyvrrlimvzbiqqrwthudrp/1tbiWwoXo2fctcL2XAAAsD
+X-Received: by 2002:a05:6e02:1d8d:b0:3d1:79a1:5b85 with SMTP id
+ e9e14a558f8ab-3d59618603fmr20984395ab.21.1742521041545; Thu, 20 Mar 2025
+ 18:37:21 -0700 (PDT)
+Date: Thu, 20 Mar 2025 18:37:21 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67dcc2d1.050a0220.31a16b.0017.GAE@google.com>
+Subject: [syzbot] [btrfs?] WARNING in add_to_free_space_tree (2)
+From: syzbot <syzbot+a6563a38d2eeb6e42942@syzkaller.appspotmail.com>
+To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
+	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
+
+Hello,
+
+syzbot found the following issue on:
+
+HEAD commit:    d1275e99d1c4 Merge tag 'media/v6.14-3' of git://git.kernel..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17139e54580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=67fb5d057adc2bbe
+dashboard link: https://syzkaller.appspot.com/bug?extid=a6563a38d2eeb6e42942
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+
+Unfortunately, I don't have any reproducer for this issue yet.
+
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d183442a7ac1/disk-d1275e99.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/8c36f255b468/vmlinux-d1275e99.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/f6a9840cb963/bzImage-d1275e99.xz
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+a6563a38d2eeb6e42942@syzkaller.appspotmail.com
+
+------------[ cut here ]------------
+BTRFS: Transaction aborted (error -28)
+WARNING: CPU: 1 PID: 3016 at fs/btrfs/free-space-tree.c:1052 add_to_free_space_tree+0x2e7/0x320 fs/btrfs/free-space-tree.c:1052
+Modules linked in:
+CPU: 1 UID: 0 PID: 3016 Comm: kworker/u8:7 Not tainted 6.14.0-rc6-syzkaller-00263-gd1275e99d1c4 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Workqueue: events_unbound btrfs_async_reclaim_metadata_space
+RIP: 0010:add_to_free_space_tree+0x2e7/0x320 fs/btrfs/free-space-tree.c:1052
+Code: 4e 6e 8c 48 89 dd 89 ea e8 16 02 1f fd e9 33 ff ff ff e8 dc 2b b9 fd 90 48 c7 c7 00 4e 6e 8c 48 89 dd 89 ee e8 2a e7 78 fd 90 <0f> 0b 90 90 e9 12 ff ff ff e8 bb 2b b9 fd 48 c7 c7 80 4d 6e 8c 48
+RSP: 0018:ffffc9000c5b6e50 EFLAGS: 00010246
+RAX: 98d2a73c3254fc00 RBX: 00000000ffffffe4 RCX: ffff8880309dbc00
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: 00000000ffffffe4 R08: ffffffff81819d62 R09: fffffbfff1d3a69c
+R10: dffffc0000000000 R11: fffffbfff1d3a69c R12: 0000000000000000
+R13: ffff88805a6c3060 R14: 1ffff1100b4d860c R15: ffff88805a6c3000
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055bdbb5c3ff0 CR3: 0000000061b4c000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ do_free_extent_accounting fs/btrfs/extent-tree.c:2969 [inline]
+ __btrfs_free_extent+0x1ce9/0x3980 fs/btrfs/extent-tree.c:3338
+ btrfs_run_delayed_refs_for_head fs/btrfs/extent-tree.c:1976 [inline]
+ __btrfs_run_delayed_refs+0xf9f/0x40f0 fs/btrfs/extent-tree.c:2046
+ btrfs_run_delayed_refs+0xe3/0x2f0 fs/btrfs/extent-tree.c:2158
+ commit_cowonly_roots+0x66b/0x860 fs/btrfs/transaction.c:1373
+ btrfs_commit_transaction+0xfe4/0x3760 fs/btrfs/transaction.c:2446
+ flush_space+0x529/0xd30 fs/btrfs/space-info.c:842
+ btrfs_async_reclaim_metadata_space+0x178/0x3b0 fs/btrfs/space-info.c:1120
+ process_one_work kernel/workqueue.c:3238 [inline]
+ process_scheduled_works+0xabe/0x18e0 kernel/workqueue.c:3319
+ worker_thread+0x870/0xd30 kernel/workqueue.c:3400
+ kthread+0x7a9/0x920 kernel/kthread.c:464
+ ret_from_fork+0x4b/0x80 arch/x86/kernel/process.c:148
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-On 2025/3/21 05:28, Bjorn Helgaas wrote:
-> On Sat, Mar 15, 2025 at 08:06:52AM +0800, Hans Zhang wrote:
->> On 2025/3/15 04:31, Bjorn Helgaas wrote:
->>> On Fri, Mar 14, 2025 at 06:35:11PM +0530, Manivannan Sadhasivam wrote:
->>>> ...
->>>
->>>> Even though this patch is mostly for an out of tree controller
->>>> driver which is not going to be upstreamed, the patch itself is
->>>> serving some purpose. I really like to avoid the hardcoded offsets
->>>> wherever possible. So I'm in favor of this patch.
->>>>
->>>> However, these newly introduced functions are a duplicated version
->>>> of DWC functions. So we will end up with duplicated functions in
->>>> multiple places. I'd like them to be moved (both this and DWC) to
->>>> drivers/pci/pci.c if possible. The generic function
->>>> *_find_capability() can accept the controller specific readl/ readw
->>>> APIs and the controller specific private data.
->>>
->>> I agree, it would be really nice to share this code.
->>>
->>> It looks a little messy to deal with passing around pointers to
->>> controller read ops, and we'll still end up with a lot of duplicated
->>> code between __pci_find_next_cap() and __cdns_pcie_find_next_cap(),
->>> etc.
->>>
->>> Maybe someday we'll make a generic way to access non-PCI "config"
->>> space like this host controller space and PCIe RCRBs.
->>>
->>> Or if you add interfaces that accept read/write ops, maybe the
->>> existing pci_find_capability() etc could be refactored on top of them
->>> by passing in pci_bus_read_config_word() as the accessor.
->>
->> I have already replied to an email, please help review whether it is
->> appropriate.
-> 
-> URL to the email on lore.kernel.org?
-> 
-> If you mean this:
-> https://lore.kernel.org/r/3cadf8d5-c4d8-4941-ae2e-8b00ceb83a8f@163.com,
-> just post it as a v3 patch with the usual commit log and motivation
-> for the change, and it will automatically get picked up in patchwork
-> so it doesn't get forgotten.
-> 
-> Right now the urgency seems fairly low since (IIUC) it doesn't fix an
-> existing bug in the upstream code.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Hi Bjorn,
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Thanks your for reply. I will submit v3 patch.
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Best regards,
-Hans
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
+If you want to undo deduplication, reply with:
+#syz undup
