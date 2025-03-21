@@ -1,103 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD8171E3DDE;
-	Fri, 21 Mar 2025 06:14:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEA8F1E0E0D
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:15:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742537698; cv=none; b=osXkjpOHQey6yXhvJkUkaMiD/6BJKhtX2fpPskj87dGsm8tI7ZGXquQ2noNUfe03FDLeFpdpORlf7+OjQYnV8nRvZ32PYwq0GLTxfwle4nHbm7NFbtpXCTd2QtORmgT+uKv2TRmZ3huPtVU6Y6z/gtLoEedzkyKBiZawcD1uaoY=
+	t=1742537727; cv=none; b=qgYL+KEByOoz7WB8kk6xVonxn+gLWoLhR1JtJr/ElR40Xx2VQhI0T4RGTyz0xAbePRD9YGT219AeoyTluPfMFIonleffGxSasPHI/kk2LLKgj+0EEbXCUooWgnbWHlSUVvs7s8NQFfsguUEBVMk8bj/dPhIhHVsx38QAwirgP00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742537698; c=relaxed/simple;
-	bh=GeHxnMpO/kJTQB/m559nonG3wanc6brHcCgWWhiY8v8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mHP6BjCTaJHFkaqFNfgC/+5jAUx1HAIr3I0cDtTMYJLgfAYL18+Nfjdvzx8rB2GXmhealADGZvqM+70g5qAh+HWX4IeZIZ0APo8J2z0zZpiVlQrWCdRFw8Z9xbeOEQOAA0476jcFPISxVByOR63TZZds/taCFTfWB62K/lC7q5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iU5s7Bk6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742537727; c=relaxed/simple;
+	bh=izCCY+JUOv8XIPhPZ529CQx8d2SH7XHgsWIx8qUdB4s=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Yxzlj4Va+synxfoBPivah6HH931QkeTgA/mqvdT4GhrFsbLuToMQUG1pGzH1MARt5cMxh79RHGW+TjFGDbT5TnY4AYqS5DgDShUZ7s6pyYM/8NbCRZdwLUSpfqcbrxWhyr28EWp7u6BHfgyKHr2LAeDR1eX+pOJfe0FJ0GCt89s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=W5vMrqOK; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iU5s7Bk6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF530C4CEE8;
-	Fri, 21 Mar 2025 06:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742537698;
-	bh=GeHxnMpO/kJTQB/m559nonG3wanc6brHcCgWWhiY8v8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=iU5s7Bk6bTvi84fGqNPSpQ1cXhxhWm0sBWVz8CuB1HKRkxQXZzSbKah77wpw0R2GZ
-	 3b2COcFmo/VsoqbcbELAg6fRTGfPA+nDb47ZMBJjR7Pv2F80i9lS0+v8Kyo4YZpfBR
-	 NCtMs6bSz9OimHV8tFrURBZUkh50PSg0+gu+IbpImaKJxvny04041Y6D5bHmHWcXcj
-	 wfYBecXhXEzm3q9H++hgDcwW9RlFYc9SMCK5Buzk9jPlmES8vh6lu2TYkqRHzWH5Fr
-	 cGIonwFentL21UBvuuuze6LCut2OaJlbf/gEilKQs4CbN+xLSBDubfNoWZoVe9s/pD
-	 E+N4uGhd1F5Xg==
-Date: Thu, 20 Mar 2025 23:14:56 -0700
-From: Namhyung Kim <namhyung@kernel.org>
-To: Holger =?utf-8?Q?Hoffst=C3=A4tte?= <holger@applied-asynchrony.com>
-Cc: linux-perf-users@vger.kernel.org,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Arnaldo Carvalho de Melo <acme@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-	Jiri Olsa <jolsa@kernel.org>, Ian Rogers <irogers@google.com>,
-	Adrian Hunter <adrian.hunter@intel.com>,
-	"Liang, Kan" <kan.liang@linux.intel.com>,
-	Guilherme Amadio <amadio@gentoo.org>
-Subject: Re: [PATCH RESEND] perf build: filter all combinations of -flto for
- libperl
-Message-ID: <Z90D4DaG93BfHi8g@google.com>
-References: <fa1c3b38-6a23-af22-0e5e-280fa523d06a@applied-asynchrony.com>
- <c5640c73-944d-5de1-a0bf-7e6769c1542f@applied-asynchrony.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="W5vMrqOK"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742537726; x=1774073726;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=izCCY+JUOv8XIPhPZ529CQx8d2SH7XHgsWIx8qUdB4s=;
+  b=W5vMrqOKlKt8Uq9mS0yTAkhVjzMQE3ZnITPWhClKMzEjOPg73dSjQkV0
+   wyiuHRMGtjs1cfBD8cmU9Pgv7rEBr4Ht+Zu56Y+iJpG51kwshIhAuM75G
+   Wu/Cr4pF6UAJ100qluNVRWjpFjlpozsTgvPNhfCgyvzb/jAIli31KWbdR
+   QRjcTQH/0UB4LFG1IqTEi2ZIJj7CwNENJj0h5fwdpwIh4M5/6slq37lj5
+   zOI0x3xJspxHxwJ/OhjDBECT8oBy07BrA/Y4Q8EKxidf8NopLWwoNqKCl
+   si3UkETExYt1Cf0dH+NILk1aO+hcrjKUl+D4SarxjG5sEe9jDLnKJ1bEG
+   A==;
+X-CSE-ConnectionGUID: x+Htvj9wTjC5sQOmLbZ+DA==
+X-CSE-MsgGUID: mhrzA0jCRBGkTyMQD3yuTw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="43983563"
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="43983563"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 23:15:25 -0700
+X-CSE-ConnectionGUID: ljjPuSgVSD2XdB/i7OYOzw==
+X-CSE-MsgGUID: 7PJOydRKRFSy0djP18Uewg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
+   d="scan'208";a="123824441"
+Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
+  by orviesa007.jf.intel.com with ESMTP; 20 Mar 2025 23:15:23 -0700
+Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tvVf7-00015f-2L;
+	Fri, 21 Mar 2025 06:15:21 +0000
+Date: Fri, 21 Mar 2025 14:12:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Nirmoy Das <nirmoy.das@intel.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org,
+	Matthew Auld <matthew.auld@intel.com>
+Subject: drivers/gpu/drm/xe/xe_gt.h:27:undefined reference to
+ `gt_reset_failure'
+Message-ID: <202503211455.NEkMGJB4-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c5640c73-944d-5de1-a0bf-7e6769c1542f@applied-asynchrony.com>
 
-Hello,
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+head:   a1cffe8cc8aef85f1b07c4464f0998b9785b795a
+commit: 649f533b7aa2bda13d9ef0a6ef4b0a622b226d2b drm/xe: Add caller info to xe_gt_reset_async
+date:   5 months ago
+config: sparc64-randconfig-r053-20250319 (https://download.01.org/0day-ci/archive/20250321/202503211455.NEkMGJB4-lkp@intel.com/config)
+compiler: sparc64-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250321/202503211455.NEkMGJB4-lkp@intel.com/reproduce)
 
-On Wed, Mar 19, 2025 at 12:10:59AM +0100, Holger Hoffstätte wrote:
-> [Not a peep of feedback - if I'm doing something wrong here please let me know;
->  the patch fixes a real bug someone reported in Gentoo.]
-> 
-> When enabling the libperl feature the build uses perl's build flags
-> (ccopts) but filters out various flags, e.g. for LTO.
-> While this is conceptually correct, it is insufficient in practice,
-> since only "-flto=auto" is filtered out. When perl itself is built with
-> "-flto" this can cause parts of perf being built with LTO and others
-> without, giving exciting build errors like e.g.:
-> 
->   ../tools/perf/pmu-events/pmu-events.c:72851:(.text+0xb79): undefined
->   reference to `strcmp_cpuid_str' collect2: error: ld returned 1 exit status
-> 
-> Fix this by filtering all matching flag values of -flto{=n,auto,..}.
-> 
-> Signed-off-by: Holger Hoffstätte <holger@applied-asynchrony.com>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202503211455.NEkMGJB4-lkp@intel.com/
 
-Thanks for the fix but the patch is not applying.  Can you please check
-and resend?
+All errors (new ones prefixed by >>):
 
-Thanks,
-Namhyung
+   sparc64-linux-ld: drivers/gpu/drm/xe/xe_gt.o: in function `xe_gt_reset_async':
+>> drivers/gpu/drm/xe/xe_gt.h:27:(.text+0x24f0): undefined reference to `gt_reset_failure'
+>> sparc64-linux-ld: drivers/gpu/drm/xe/xe_gt.h:27:(.text+0x24fc): undefined reference to `gt_reset_failure'
+   sparc64-linux-ld: drivers/gpu/drm/xe/xe_gt.o: in function `gt_reset.isra.0':
+   drivers/gpu/drm/xe/xe_gt.h:27:(.text+0x2e10): undefined reference to `gt_reset_failure'
+   sparc64-linux-ld: drivers/gpu/drm/xe/xe_gt.h:27:(.text+0x2e1c): undefined reference to `gt_reset_failure'
 
-> ---
->  tools/perf/Makefile.config | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index a148ca9ef..4f5a40ab8 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -820,7 +820,7 @@ else
->    PERL_EMBED_LIBADD = $(call grep-libs,$(PERL_EMBED_LDOPTS))
->    PERL_EMBED_CCOPTS = $(shell perl -MExtUtils::Embed -e ccopts 2>/dev/null)
->    PERL_EMBED_CCOPTS := $(filter-out -specs=%,$(PERL_EMBED_CCOPTS))
-> -  PERL_EMBED_CCOPTS := $(filter-out -flto=auto -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
-> +  PERL_EMBED_CCOPTS := $(filter-out -flto% -ffat-lto-objects, $(PERL_EMBED_CCOPTS))
->    PERL_EMBED_LDOPTS := $(filter-out -specs=%,$(PERL_EMBED_LDOPTS))
->    FLAGS_PERL_EMBED=$(PERL_EMBED_CCOPTS) $(PERL_EMBED_LDOPTS)
-> -- 
-> 2.48.1
-> 
+
+vim +27 drivers/gpu/drm/xe/xe_gt.h
+
+0d97ecce16bd26 Niranjana Vishwanathapura 2023-10-09  23  
+8f3013e0b22206 Himal Prasad Ghimiray     2023-07-27  24  extern struct fault_attr gt_reset_failure;
+8f3013e0b22206 Himal Prasad Ghimiray     2023-07-27  25  static inline bool xe_fault_inject_gt_reset(void)
+8f3013e0b22206 Himal Prasad Ghimiray     2023-07-27  26  {
+8f3013e0b22206 Himal Prasad Ghimiray     2023-07-27 @27  	return should_fail(&gt_reset_failure, 1);
+8f3013e0b22206 Himal Prasad Ghimiray     2023-07-27  28  }
+8f3013e0b22206 Himal Prasad Ghimiray     2023-07-27  29  
+
+:::::: The code at line 27 was first introduced by commit
+:::::: 8f3013e0b22206b27f37dcf1b96ce68df3393040 drm/xe: Introduce fault injection for gt reset
+
+:::::: TO: Himal Prasad Ghimiray <himal.prasad.ghimiray@intel.com>
+:::::: CC: Rodrigo Vivi <rodrigo.vivi@intel.com>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
