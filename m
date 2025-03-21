@@ -1,438 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE21018A6A7;
-	Fri, 21 Mar 2025 00:18:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 581466DCE1;
+	Fri, 21 Mar 2025 00:18:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742516320; cv=none; b=OpD9PUpaRGQu/4ZuWAcf47wase/+kqGGT+O4ucM8K4ZNz42m52umPFGCJZwrIJPT4V96OdWD7qjvpwblhW4TAJtzzZk/UFIoE/3HVjK0cah1sBHR2nbmudHeKVJUq/anB63t29g6LPtLYNwmcqScTzYg/zcdMe1tVcW2r+G2vkw=
+	t=1742516329; cv=none; b=p3YKUCwvn+V7b0uSOfp4JFOUIF2JCkPSatenmnNH0QpWAAdLtr8ZK3Pl8S/fF3lq48nLQWEAEIBNy3WBd9fEhsgKe3MQEq3oBP8pFK85IPUmfSLhYGIfCBCQSnFtBK5AqhspzaR3Tvfk0hrMQq6ziEepGn4/VPX0AkEbLIQ91Uw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742516320; c=relaxed/simple;
-	bh=PnRpM4598mZWrSme/MU6XEBMxzI66FdoajFyiek5haI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mZZhmW3tuz5OL6+OM02vBQrQbtnvuSP1XKhxorAkiMG+Xoz9OproiGrHRsB+kfyqEzjIywt62/iV5QHev1J71eQDs4ij9d6HIjUoDr5QDKfIPJdBpE+nK1GHJKmCPZ+q5iFIoQWowbAP8xz6pzZkHznj4mSadx06r6V+m0yDk+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IJSrEVl7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742516329; c=relaxed/simple;
+	bh=G+KCr6b9iBYvUh+Gs9chBaKMdu9TpyJ7FtKvEVhxKaA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=W3LkPd4G/af6WewLaBYn+p+40+snsWKvSOrtQ1neTp4ubHv/4lzZdyU46GHWvZlElCLZPmRS56UnVax9Q6IpYBwHdHBtl17ONxvFibOlyRpr5PcmkqZzlqJ25TEQ3wHpz6qKf/Qkx1aG1zkgkFHkER4oGVWBuAcqAUTxlXujBp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com; spf=pass smtp.mailfrom=googlemail.com; dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b=ULfE02wD; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=googlemail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=googlemail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IJSrEVl7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4E6C4CEE3;
-	Fri, 21 Mar 2025 00:18:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742516319;
-	bh=PnRpM4598mZWrSme/MU6XEBMxzI66FdoajFyiek5haI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=IJSrEVl7Eadm949SG6lFUOtQc71zNGKHSMMv0xLNwkmJyLVOD+8vcXd+QOSr8zWUV
-	 YRhumlNxdbjay7uCwCfM0AcryYdvruP259ZlaIi+NaNYGNcEEM8MJHMr2gagxulNRE
-	 m3N5Fg7PQAgZzoECgnWM1P5Q2seOVZmFfnZpIsGxZrBSa/Ag1z1rZJ3abNTv3aLv2E
-	 wYLTA88nY2EVEMWigKAw8cMIZnKGnFdpfpQR1gcQIYh4+mz/W8vIQ+JpcYRq8x3z9y
-	 Hloc0J80vcUo+a4yK0bF5XD3HPjLiLBx287nbU6qlhFQDO80lDRZxtXcNKRguXKm+d
-	 joR/X19xwdnxw==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 21 Mar 2025 00:16:08 +0000
-Subject: [PATCH 6.6 8/8] KVM: arm64: Eagerly switch ZCR_EL{1,2}
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="ULfE02wD"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43d04dc73b7so15045935e9.3;
+        Thu, 20 Mar 2025 17:18:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20230601; t=1742516324; x=1743121124; darn=vger.kernel.org;
+        h=in-reply-to:autocrypt:references:cc:to:from:content-language
+         :subject:user-agent:mime-version:date:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=G+KCr6b9iBYvUh+Gs9chBaKMdu9TpyJ7FtKvEVhxKaA=;
+        b=ULfE02wDYdQ2ti2eiIW6OxOsfmM0rgoQyASRWdvyfP9U+Zt+cL1KKU9M7U5r3ueti0
+         BoLgIEWmCIVmaoZI7eDJn9FqxQYX6rE9rJcD7M3x3d87P86RtGG4/hexuB7vV2/y+bTu
+         4psTl17e0xDChN5J8BVof7LonUEaUsdhwP87zh+UUCmeuT+eiLYiQVv2ijyEpSLzvpnd
+         h7696vVo7wftlu0OZbVSgAhrxTykSrv+lTAHaLgVIK0CUyBZLqIcUJksav1l8tvLnNA5
+         XmBa+IF+Onfe48ueCiYQ+yXc2tMzJ4A75I+/6Gsesm7UHO+rDD/T2irgS39tFrfGqMMn
+         GlSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742516324; x=1743121124;
+        h=in-reply-to:autocrypt:references:cc:to:from:content-language
+         :subject:user-agent:mime-version:date:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=G+KCr6b9iBYvUh+Gs9chBaKMdu9TpyJ7FtKvEVhxKaA=;
+        b=Az8zUM6ThI9ow9/zsUca5/gXc0kkx6nOKTIvvVVvVJbYIKikA97Fg1Gv/4r28wcixL
+         m44ds+Da7msmGh3rThkseILfmu6490XGp0FehEGKEL8lXM1Eb75NXR7RRA6mUCTyL6mo
+         NRwA/03quBVnGISW+GkFe14eeppLfHff922HvFTh5xv+8TwLdzsxV5LnUpJWO/JHi7Oj
+         tNFZWDFXaAIR9xOJ4gsT2GBG5MEARq2T7CG4/ZX9zhmzabSlnyg1qLAizkCmHNQVE0m7
+         J7lmik5HK43hwhHh6FJ4eJG/LpG4SF1HZbVLq/HJLmnVyy8jJGhmH/88XnIHSRNkgE8Q
+         z22A==
+X-Forwarded-Encrypted: i=1; AJvYcCU6XBlZm5kU2X0f/ftpD+mwDKSZEwBa8SNlIyFZZo89cZ+O3EvVa/UkREwOstSjcY+ya+4o9qvDtOWMZlM=@vger.kernel.org, AJvYcCXILQGY7OnU38k6tcSWyFBbaCjSaQVXXYpzcXiTpKeXJQN/lNgWBH9zezhgce/pmfRchNxMhFtV@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0Zwx0AESSXQrzZqVv2QRw5KmvmHbb0ZARyknEnai277fG2cLQ
+	jLPFw/XoKqYcFh9xyKktd4o2qjYj4eEJPhYoWngNC2tbbSp5oxw=
+X-Gm-Gg: ASbGncuw9zPg1+xNzJ1XVymj8Q65UUWDp2mNK6BUzwSDJgMBnax9BpVg2bl8jNikcOn
+	XLK5U3T+Hd/Yh43WKnqmEl8nbnEAMQrDQY+6ilbYHQHtUzITgfj/UMqJL4QJLAz+UlrrJQ8V7K6
+	JASc6sh8yjk7H2iKT0UVdZwJ4lBy18MLKcDUhMvhfhYkFU/apVsNOOzaKVLHz1UREqT0znnSTZR
+	0UTFCb8/EvPED1I270plOmYWjdUVw7GUM7cy++Hz3EaV7JDL4NH62CTtLYGTXFalWEoqbgykM0f
+	Y1ieowE5KuaMDIN/1buSmP5xWyvtpvXyphR/P9tg/RGk05mg6xVZbOaUAL0qXU/tIQuVPy5tWiv
+	rk2oh/IWmPmhVSOmgiBoiWQ==
+X-Google-Smtp-Source: AGHT+IGNrgOeZ6prDJ/LUfmohnbZfxxbDYqiCf7c4GSiOpDEYR+DR8SIaEQUs8baleySKzWiGy1Irw==
+X-Received: by 2002:a05:600c:3489:b0:43c:efae:a73 with SMTP id 5b1f17b1804b1-43d509ea0f8mr10195015e9.10.1742516324260;
+        Thu, 20 Mar 2025 17:18:44 -0700 (PDT)
+Received: from [192.168.1.3] (p5b0579be.dip0.t-ipconnect.de. [91.5.121.190])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d43d7c6a5sm62892405e9.0.2025.03.20.17.18.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 17:18:42 -0700 (PDT)
+Message-ID: <a883c829-17c0-446f-8c24-16208f29d878@googlemail.com>
+Date: Fri, 21 Mar 2025 01:18:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-stable-sve-6-6-v1-8-0b3a6a14ea53@kernel.org>
-References: <20250321-stable-sve-6-6-v1-0-0b3a6a14ea53@kernel.org>
-In-Reply-To: <20250321-stable-sve-6-6-v1-0-0b3a6a14ea53@kernel.org>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
- James Morse <james.morse@arm.com>, 
- Suzuki K Poulose <suzuki.poulose@arm.com>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, 
- Fuad Tabba <tabba@google.com>
-X-Mailer: b4 0.15-dev-1b0d6
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13672; i=broonie@kernel.org;
- h=from:subject:message-id; bh=VtC0IuN84WFW7O11FEgk7OJFCF+Z2vAa4/lai70a8gw=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBn3LBA/PgCMZ06kuRd90l7zeGmb9dCKRudEu6HZl/F
- oor/8HKJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZ9ywQAAKCRAk1otyXVSH0JAFB/
- 9jkilsimYJVTOzLt7DE8tseKfozUG0s6vQDFT252oEhZ1pxWNwucPeNY/DhrdWYfCGswm6NI5reN3S
- DVvmMFOsmbBQUxPH6M/UZTeCpArkOVG4kpph24elpftXrKgnXgpdabYnDFlLRHmGBKWi1fVWehSdQx
- 2mn5KglebLGV12KMgtm9exK0A0nVWKOgTqwqXfNkm0oA/nOQcZlHKwTkglPgITsm/U4Q9YhnfUWdcz
- sJx1PvatrQY2AAdY6I25vWV9YuyK4l8C9gJ4+amDQNLr9G0o9pEzaHp+w0ouY16zVSgK5qgxMvIilu
- 0SzcI9fqIhrl18nAiGjTI3Tz4XoJxE
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
+User-Agent: Betterbird (Windows)
+Subject: Re: [PATCH 6.13 000/207] 6.13.7-rc1 review
+Content-Language: de-DE
+From: Peter Schneider <pschneider1968@googlemail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+References: <20250310170447.729440535@linuxfoundation.org>
+ <03cc622d-3a64-4e3d-baaf-8628f1bf9811@googlemail.com>
+Autocrypt: addr=pschneider1968@googlemail.com; keydata=
+ xjMEY58biBYJKwYBBAHaRw8BAQdADPnoGTrfCUCyH7SZVkFtnlzsFpeKANckofR4WVLMtMzN
+ L1BldGVyIFNjaG5laWRlciA8cHNjaG5laWRlcjE5NjhAZ29vZ2xlbWFpbC5jb20+wpwEExYK
+ AEQCGyMFCQW15qgFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQSjgovXlszhGoyt6IZu
+ OpLJLD/yRAUCY58b8AIZAQAKCRBuOpLJLD/yRIeIAQD0+/LMdKHM6AJdPCt+e9Z92BMybfnN
+ RtGqkdZWtvdhDQD9FJkGh/3PFtDinimB8UOB7Gi6AGxt9Nu9ne7PvHa0KQXOOARjnxuIEgor
+ BgEEAZdVAQUBAQdAw2GRwTf5HJlO6CCigzqH6GUKOjqR1xJ+3nR5EbBze0sDAQgHwn4EGBYK
+ ACYWIQSjgovXlszhGoyt6IZuOpLJLD/yRAUCY58biAIbDAUJBbXmqAAKCRBuOpLJLD/yRONS
+ AQCwB9qiEQoSnxHodu8kRuvUxXKIqN7701W+INXtFGtJygEAyPZH3/vSBJ4A7GUG7BZyQRcr
+ ryS0CUq77B7ZkcI1Nwo=
+In-Reply-To: <03cc622d-3a64-4e3d-baaf-8628f1bf9811@googlemail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="------------LmutZqYMPJAdacN31cVTaI9D"
 
-From: Mark Rutland <mark.rutland@arm.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--------------LmutZqYMPJAdacN31cVTaI9D
+Content-Type: multipart/mixed; boundary="------------X0Sk1X9zQ02Juz6hiReCtefK";
+ protected-headers="v1"
+From: Peter Schneider <pschneider1968@googlemail.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org
+Cc: patches@lists.linux.dev, linux-kernel@vger.kernel.org,
+ torvalds@linux-foundation.org, akpm@linux-foundation.org,
+ linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+ lkft-triage@lists.linaro.org, pavel@denx.de, jonathanh@nvidia.com,
+ f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, srw@sladewatkins.net,
+ rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, broonie@kernel.org
+Message-ID: <a883c829-17c0-446f-8c24-16208f29d878@googlemail.com>
+Subject: Re: [PATCH 6.13 000/207] 6.13.7-rc1 review
+References: <20250310170447.729440535@linuxfoundation.org>
+ <03cc622d-3a64-4e3d-baaf-8628f1bf9811@googlemail.com>
+In-Reply-To: <03cc622d-3a64-4e3d-baaf-8628f1bf9811@googlemail.com>
 
-[ Upstream commit 59419f10045bc955d2229819c7cf7a8b0b9c5b59 ]
+--------------X0Sk1X9zQ02Juz6hiReCtefK
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: base64
 
-In non-protected KVM modes, while the guest FPSIMD/SVE/SME state is live on the
-CPU, the host's active SVE VL may differ from the guest's maximum SVE VL:
+U29ycnksIHBsZWFzZSBkaXNyZWdhcmQgbXkgbWFpbC4gSSBhY2NpZGVudGFsbHkgcmVwbGll
+ZCB0byB0aGUgd3JvbmcsIG9sZGVyIHRocmVhZC4gSSANCm1lYW50IHRvIHJlcGx5IHRvIHRo
+ZSA2LjEzLXJjOCByZXZpZXcgdGhyZWFkLiBNeSBiYWQuLi4g8J+ZhA0KDQpCZXN0ZSBHcsO8
+w59lLA0KUGV0ZXIgU2NobmVpZGVyDQoNCi0tIA0KQ2xpbWIgdGhlIG1vdW50YWluIG5vdCB0
+byBwbGFudCB5b3VyIGZsYWcsIGJ1dCB0byBlbWJyYWNlIHRoZSBjaGFsbGVuZ2UsDQplbmpv
+eSB0aGUgYWlyIGFuZCBiZWhvbGQgdGhlIHZpZXcuIENsaW1iIGl0IHNvIHlvdSBjYW4gc2Vl
+IHRoZSB3b3JsZCwNCm5vdCBzbyB0aGUgd29ybGQgY2FuIHNlZSB5b3UuICAgICAgICAgICAg
+ICAgICAgICAtLSBEYXZpZCBNY0N1bGxvdWdoIEpyLg0KDQpQZXRlciBTY2huZWlkZXINClTD
+tmx6ZXIgU3RyLiAxDQpELTgyNTQ5IEvDtm5pZ3Nkb3JmDQoNCk9wZW5QR1A6ICAweEEzODI4
+QkQ3OTZDQ0UxMUE4Q0FERTg4NjZFM0E5MkM5MkMzRkYyNDQNCkRvd25sb2FkOiBodHRwczov
+L3d3dy5wZXRlcnMtbmV0enBsYXR6LmRlL2Rvd25sb2FkL3BzY2huZWlkZXIxOTY4X3B1Yi5h
+c2MNCmh0dHBzOi8va2V5cy5tYWlsdmVsb3BlLmNvbS9wa3MvbG9va3VwP29wPWdldCZzZWFy
+Y2g9cHNjaG5laWRlcjE5NjhAZ29vZ2xlbWFpbC5jb20NCmh0dHBzOi8va2V5cy5tYWlsdmVs
+b3BlLmNvbS9wa3MvbG9va3VwP29wPWdldCZzZWFyY2g9cHNjaG5laWRlcjE5NjhAZ21haWwu
+Y29tDQoNCk06IHBzY2huZWlkZXIxOTY4QGdvb2dsZW1haWwuY29tDQpNOiBwc2NobmVpZGVy
+MTk2OEBnbWFpbC5jb20NClA6ICs0OSA4MTc5IDkyOTE2NA0KUDogKzQ5IDE3MSA0NTY4NjM3
+DQpGOiArNDkgODE3OSA5OTc2ODAwDQoNCkFtIDIxLjAzLjIwMjUgdW0gMDE6MTUgc2Nocmll
+YiBQZXRlciBTY2huZWlkZXI6DQo+IEFtIDEwLjAzLjIwMjUgdW0gMTg6MDMgc2NocmllYiBH
+cmVnIEtyb2FoLUhhcnRtYW46DQo+PiBUaGlzIGlzIHRoZSBzdGFydCBvZiB0aGUgc3RhYmxl
+IHJldmlldyBjeWNsZSBmb3IgdGhlIDYuMTMuNyByZWxlYXNlLg0KPj4gVGhlcmUgYXJlIDIw
+NyBwYXRjaGVzIGluIHRoaXMgc2VyaWVzLCBhbGwgd2lsbCBiZSBwb3N0ZWQgYXMgYSByZXNw
+b25zZQ0KPj4gdG8gdGhpcyBvbmUuwqAgSWYgYW55b25lIGhhcyBhbnkgaXNzdWVzIHdpdGgg
+dGhlc2UgYmVpbmcgYXBwbGllZCwgcGxlYXNlDQo+PiBsZXQgbWUga25vdy4NCj4gDQo+IEJ1
+aWxkcywgYm9vdHMgYW5kIHdvcmtzIG9uIG15IDItc29ja2V0IEl2eSBCcmlkZ2UgWGVvbiBF
+NS0yNjk3IHYyIHNlcnZlci4gTm8gZG1lc2cgDQo+IG9kZGl0aWVzIG9yIHJlZ3Jlc3Npb25z
+IGZvdW5kLg0KPiANCj4gVGVzdGVkLWJ5OiBQZXRlciBTY2huZWlkZXIgPHBzY2huZWlkZXIx
+OTY4QGdvb2dsZW1haWwuY29tPg0KPiANCj4gDQo+IEJlc3RlIEdyw7zDn2UsDQo+IFBldGVy
+IFNjaG5laWRlcg0KPiANCg0K
 
-* For VHE hosts, when a VM uses NV, ZCR_EL2 contains a value constrained
-  by the guest hypervisor, which may be less than or equal to that
-  guest's maximum VL.
+--------------X0Sk1X9zQ02Juz6hiReCtefK--
 
-  Note: in this case the value of ZCR_EL1 is immaterial due to E2H.
+--------------LmutZqYMPJAdacN31cVTaI9D
+Content-Type: application/pgp-signature; name="OpenPGP_signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="OpenPGP_signature.asc"
 
-* For nVHE/hVHE hosts, ZCR_EL1 contains a value written by the guest,
-  which may be less than or greater than the guest's maximum VL.
+-----BEGIN PGP SIGNATURE-----
 
-  Note: in this case hyp code traps host SVE usage and lazily restores
-  ZCR_EL2 to the host's maximum VL, which may be greater than the
-  guest's maximum VL.
+wnsEABYIACMWIQSjgovXlszhGoyt6IZuOpLJLD/yRAUCZ9ywYQUDAAAAAAAKCRBuOpLJLD/yRFuK
+AP475KrkEheOP10STaM2YuBQ6YGorvpuQMoiC46uquApyAD/QB3R08BQbawD0uXFS5zyUg9zlfSz
+4594NDLRvIuJ1w8=
+=RP3s
+-----END PGP SIGNATURE-----
 
-This can be the case between exiting a guest and kvm_arch_vcpu_put_fp().
-If a softirq is taken during this period and the softirq handler tries
-to use kernel-mode NEON, then the kernel will fail to save the guest's
-FPSIMD/SVE state, and will pend a SIGKILL for the current thread.
-
-This happens because kvm_arch_vcpu_ctxsync_fp() binds the guest's live
-FPSIMD/SVE state with the guest's maximum SVE VL, and
-fpsimd_save_user_state() verifies that the live SVE VL is as expected
-before attempting to save the register state:
-
-| if (WARN_ON(sve_get_vl() != vl)) {
-|         force_signal_inject(SIGKILL, SI_KERNEL, 0, 0);
-|         return;
-| }
-
-Fix this and make this a bit easier to reason about by always eagerly
-switching ZCR_EL{1,2} at hyp during guest<->host transitions. With this
-happening, there's no need to trap host SVE usage, and the nVHE/nVHE
-__deactivate_cptr_traps() logic can be simplified to enable host access
-to all present FPSIMD/SVE/SME features.
-
-In protected nVHE/hVHE modes, the host's state is always saved/restored
-by hyp, and the guest's state is saved prior to exit to the host, so
-from the host's PoV the guest never has live FPSIMD/SVE/SME state, and
-the host's ZCR_EL1 is never clobbered by hyp.
-
-Fixes: 8c8010d69c132273 ("KVM: arm64: Save/restore SVE state for nVHE")
-Fixes: 2e3cf82063a00ea0 ("KVM: arm64: nv: Ensure correct VL is loaded before saving SVE state")
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Tested-by: Mark Brown <broonie@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Fuad Tabba <tabba@google.com>
-Cc: Marc Zyngier <maz@kernel.org>
-Cc: Oliver Upton <oliver.upton@linux.dev>
-Cc: Will Deacon <will@kernel.org>
-Reviewed-by: Oliver Upton <oliver.upton@linux.dev>
-Link: https://lore.kernel.org/r/20250210195226.1215254-9-mark.rutland@arm.com
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-[ v6.6 lacks pKVM saving of host SVE state, pull in discovery of maximum
-  host VL separately -- broonie ]
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- arch/arm64/include/asm/kvm_host.h       |  1 +
- arch/arm64/include/asm/kvm_hyp.h        |  1 +
- arch/arm64/kvm/fpsimd.c                 | 19 ++++++------
- arch/arm64/kvm/hyp/entry.S              |  5 +++
- arch/arm64/kvm/hyp/include/hyp/switch.h | 55 +++++++++++++++++++++++++++++++++
- arch/arm64/kvm/hyp/nvhe/hyp-main.c      | 12 ++-----
- arch/arm64/kvm/hyp/nvhe/pkvm.c          |  2 ++
- arch/arm64/kvm/hyp/nvhe/switch.c        | 33 +++++++++++++++++---
- arch/arm64/kvm/hyp/vhe/switch.c         |  4 +++
- arch/arm64/kvm/reset.c                  |  3 ++
- 10 files changed, 113 insertions(+), 22 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-index 27c53b603d693d1cfe8d81f94a59d3afb665be8e..df73e452d2cc0e5fd815d398a932763a5aa7607a 100644
---- a/arch/arm64/include/asm/kvm_host.h
-+++ b/arch/arm64/include/asm/kvm_host.h
-@@ -73,6 +73,7 @@ static inline enum kvm_mode kvm_get_mode(void) { return KVM_MODE_NONE; };
- #endif
- 
- extern unsigned int __ro_after_init kvm_sve_max_vl;
-+extern unsigned int __ro_after_init kvm_host_sve_max_vl;
- int __init kvm_arm_init_sve(void);
- 
- u32 __attribute_const__ kvm_target_cpu(void);
-diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
-index 66efd67ea7e8d6dd98dc6088a6004fdb646df2a3..51cd106cd840a006264d9a316f2dc6332e8327ad 100644
---- a/arch/arm64/include/asm/kvm_hyp.h
-+++ b/arch/arm64/include/asm/kvm_hyp.h
-@@ -145,5 +145,6 @@ extern u64 kvm_nvhe_sym(id_aa64smfr0_el1_sys_val);
- 
- extern unsigned long kvm_nvhe_sym(__icache_flags);
- extern unsigned int kvm_nvhe_sym(kvm_arm_vmid_bits);
-+extern unsigned int kvm_nvhe_sym(kvm_host_sve_max_vl);
- 
- #endif /* __ARM64_KVM_HYP_H__ */
-diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
-index 0492a1fc718130934f8bada836fe42bea6db7abb..e57db49ea468e41e411fd896321c3b1b87a098ec 100644
---- a/arch/arm64/kvm/fpsimd.c
-+++ b/arch/arm64/kvm/fpsimd.c
-@@ -152,15 +152,16 @@ void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu)
- 	local_irq_save(flags);
- 
- 	if (vcpu->arch.fp_state == FP_STATE_GUEST_OWNED) {
--		if (vcpu_has_sve(vcpu)) {
--			__vcpu_sys_reg(vcpu, ZCR_EL1) = read_sysreg_el1(SYS_ZCR);
--
--			/* Restore the VL that was saved when bound to the CPU */
--			if (!has_vhe())
--				sve_cond_update_zcr_vq(vcpu_sve_max_vq(vcpu) - 1,
--						       SYS_ZCR_EL1);
--		}
--
-+		/*
-+		 * Flush (save and invalidate) the fpsimd/sve state so that if
-+		 * the host tries to use fpsimd/sve, it's not using stale data
-+		 * from the guest.
-+		 *
-+		 * Flushing the state sets the TIF_FOREIGN_FPSTATE bit for the
-+		 * context unconditionally, in both nVHE and VHE. This allows
-+		 * the kernel to restore the fpsimd/sve state, including ZCR_EL1
-+		 * when needed.
-+		 */
- 		fpsimd_save_and_flush_cpu_state();
- 	}
- 
-diff --git a/arch/arm64/kvm/hyp/entry.S b/arch/arm64/kvm/hyp/entry.S
-index f3aa7738b477d6a83e41db42cc161fc6f9aa6291..f02d5701fc21c685122aa5ba92309f7f4def3ae3 100644
---- a/arch/arm64/kvm/hyp/entry.S
-+++ b/arch/arm64/kvm/hyp/entry.S
-@@ -44,6 +44,11 @@ alternative_if ARM64_HAS_RAS_EXTN
- alternative_else_nop_endif
- 	mrs	x1, isr_el1
- 	cbz	x1,  1f
-+
-+	// Ensure that __guest_enter() always provides a context
-+	// synchronization event so that callers don't need ISBs for anything
-+	// that would usually be synchonized by the ERET.
-+	isb
- 	mov	x0, #ARM_EXCEPTION_IRQ
- 	ret
- 
-diff --git a/arch/arm64/kvm/hyp/include/hyp/switch.h b/arch/arm64/kvm/hyp/include/hyp/switch.h
-index 77a9f68ca4904a2b39ca59b7ee7cf54b9fe11f66..526085401f66387137a0d78d1d520af8b2306e43 100644
---- a/arch/arm64/kvm/hyp/include/hyp/switch.h
-+++ b/arch/arm64/kvm/hyp/include/hyp/switch.h
-@@ -273,6 +273,61 @@ static inline void __hyp_sve_restore_guest(struct kvm_vcpu *vcpu)
- 	write_sysreg_el1(__vcpu_sys_reg(vcpu, ZCR_EL1), SYS_ZCR);
- }
- 
-+static inline void fpsimd_lazy_switch_to_guest(struct kvm_vcpu *vcpu)
-+{
-+	u64 zcr_el1, zcr_el2;
-+
-+	if (!guest_owns_fp_regs(vcpu))
-+		return;
-+
-+	if (vcpu_has_sve(vcpu)) {
-+		zcr_el2 = vcpu_sve_max_vq(vcpu) - 1;
-+
-+		write_sysreg_el2(zcr_el2, SYS_ZCR);
-+
-+		zcr_el1 = __vcpu_sys_reg(vcpu, ZCR_EL1);
-+		write_sysreg_el1(zcr_el1, SYS_ZCR);
-+	}
-+}
-+
-+static inline void fpsimd_lazy_switch_to_host(struct kvm_vcpu *vcpu)
-+{
-+	u64 zcr_el1, zcr_el2;
-+
-+	if (!guest_owns_fp_regs(vcpu))
-+		return;
-+
-+	/*
-+	 * When the guest owns the FP regs, we know that guest+hyp traps for
-+	 * any FPSIMD/SVE/SME features exposed to the guest have been disabled
-+	 * by either fpsimd_lazy_switch_to_guest() or kvm_hyp_handle_fpsimd()
-+	 * prior to __guest_entry(). As __guest_entry() guarantees a context
-+	 * synchronization event, we don't need an ISB here to avoid taking
-+	 * traps for anything that was exposed to the guest.
-+	 */
-+	if (vcpu_has_sve(vcpu)) {
-+		zcr_el1 = read_sysreg_el1(SYS_ZCR);
-+		__vcpu_sys_reg(vcpu, ZCR_EL1) = zcr_el1;
-+
-+		/*
-+		 * The guest's state is always saved using the guest's max VL.
-+		 * Ensure that the host has the guest's max VL active such that
-+		 * the host can save the guest's state lazily, but don't
-+		 * artificially restrict the host to the guest's max VL.
-+		 */
-+		if (has_vhe()) {
-+			zcr_el2 = vcpu_sve_max_vq(vcpu) - 1;
-+			write_sysreg_el2(zcr_el2, SYS_ZCR);
-+		} else {
-+			zcr_el2 = sve_vq_from_vl(kvm_host_sve_max_vl) - 1;
-+			write_sysreg_el2(zcr_el2, SYS_ZCR);
-+
-+			zcr_el1 = vcpu_sve_max_vq(vcpu) - 1;
-+			write_sysreg_el1(zcr_el1, SYS_ZCR);
-+		}
-+	}
-+}
-+
- /*
-  * We trap the first access to the FP/SIMD to save the host context and
-  * restore the guest context lazily.
-diff --git a/arch/arm64/kvm/hyp/nvhe/hyp-main.c b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-index 8390173f7f5b38e01c04ae6563853df11a1c3df2..350d1775a5ce880ac23bb7adddbed644e45d0e40 100644
---- a/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-+++ b/arch/arm64/kvm/hyp/nvhe/hyp-main.c
-@@ -5,6 +5,7 @@
-  */
- 
- #include <hyp/adjust_pc.h>
-+#include <hyp/switch.h>
- 
- #include <asm/pgtable-types.h>
- #include <asm/kvm_asm.h>
-@@ -95,7 +96,9 @@ static void handle___kvm_vcpu_run(struct kvm_cpu_context *host_ctxt)
- 		pkvm_put_hyp_vcpu(hyp_vcpu);
- 	} else {
- 		/* The host is fully trusted, run its vCPU directly. */
-+		fpsimd_lazy_switch_to_guest(host_vcpu);
- 		ret = __kvm_vcpu_run(host_vcpu);
-+		fpsimd_lazy_switch_to_host(host_vcpu);
- 	}
- 
- out:
-@@ -416,15 +419,6 @@ void handle_trap(struct kvm_cpu_context *host_ctxt)
- 	case ESR_ELx_EC_SMC64:
- 		handle_host_smc(host_ctxt);
- 		break;
--	case ESR_ELx_EC_SVE:
--		if (has_hvhe())
--			sysreg_clear_set(cpacr_el1, 0, (CPACR_EL1_ZEN_EL1EN |
--							CPACR_EL1_ZEN_EL0EN));
--		else
--			sysreg_clear_set(cptr_el2, CPTR_EL2_TZ, 0);
--		isb();
--		sve_cond_update_zcr_vq(ZCR_ELx_LEN_MASK, SYS_ZCR_EL2);
--		break;
- 	case ESR_ELx_EC_IABT_LOW:
- 	case ESR_ELx_EC_DABT_LOW:
- 		handle_host_mem_abort(host_ctxt);
-diff --git a/arch/arm64/kvm/hyp/nvhe/pkvm.c b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-index 9e7612343ad66d3dc13b8ee858a4e61e917901c9..03acc8343c5d1b23ce0ea1fa2fcabaf2a93902c5 100644
---- a/arch/arm64/kvm/hyp/nvhe/pkvm.c
-+++ b/arch/arm64/kvm/hyp/nvhe/pkvm.c
-@@ -18,6 +18,8 @@ unsigned long __icache_flags;
- /* Used by kvm_get_vttbr(). */
- unsigned int kvm_arm_vmid_bits;
- 
-+unsigned int kvm_host_sve_max_vl;
-+
- /*
-  * Set trap register values based on features in ID_AA64PFR0.
-  */
-diff --git a/arch/arm64/kvm/hyp/nvhe/switch.c b/arch/arm64/kvm/hyp/nvhe/switch.c
-index aa827e2a2b1e5b2c67304221706f406b42ceafb2..27ad6933bec003d722d3d66519b6225cd207cad7 100644
---- a/arch/arm64/kvm/hyp/nvhe/switch.c
-+++ b/arch/arm64/kvm/hyp/nvhe/switch.c
-@@ -40,6 +40,9 @@ static void __activate_cptr_traps(struct kvm_vcpu *vcpu)
- {
- 	u64 val = CPTR_EL2_TAM;	/* Same bit irrespective of E2H */
- 
-+	if (!guest_owns_fp_regs(vcpu))
-+		__activate_traps_fpsimd32(vcpu);
-+
- 	if (has_hvhe()) {
- 		val |= CPACR_ELx_TTA;
- 
-@@ -48,6 +51,8 @@ static void __activate_cptr_traps(struct kvm_vcpu *vcpu)
- 			if (vcpu_has_sve(vcpu))
- 				val |= CPACR_ELx_ZEN;
- 		}
-+
-+		write_sysreg(val, cpacr_el1);
- 	} else {
- 		val |= CPTR_EL2_TTA | CPTR_NVHE_EL2_RES1;
- 
-@@ -62,12 +67,32 @@ static void __activate_cptr_traps(struct kvm_vcpu *vcpu)
- 
- 		if (!guest_owns_fp_regs(vcpu))
- 			val |= CPTR_EL2_TFP;
-+
-+		write_sysreg(val, cptr_el2);
- 	}
-+}
- 
--	if (!guest_owns_fp_regs(vcpu))
--		__activate_traps_fpsimd32(vcpu);
-+static void __deactivate_cptr_traps(struct kvm_vcpu *vcpu)
-+{
-+	if (has_hvhe()) {
-+		u64 val = CPACR_ELx_FPEN;
-+
-+		if (cpus_have_final_cap(ARM64_SVE))
-+			val |= CPACR_ELx_ZEN;
-+		if (cpus_have_final_cap(ARM64_SME))
-+			val |= CPACR_ELx_SMEN;
-+
-+		write_sysreg(val, cpacr_el1);
-+	} else {
-+		u64 val = CPTR_NVHE_EL2_RES1;
-+
-+		if (!cpus_have_final_cap(ARM64_SVE))
-+			val |= CPTR_EL2_TZ;
-+		if (!cpus_have_final_cap(ARM64_SME))
-+			val |= CPTR_EL2_TSM;
- 
--	kvm_write_cptr_el2(val);
-+		write_sysreg(val, cptr_el2);
-+	}
- }
- 
- static void __activate_traps(struct kvm_vcpu *vcpu)
-@@ -120,7 +145,7 @@ static void __deactivate_traps(struct kvm_vcpu *vcpu)
- 
- 	write_sysreg(this_cpu_ptr(&kvm_init_params)->hcr_el2, hcr_el2);
- 
--	kvm_reset_cptr_el2(vcpu);
-+	__deactivate_cptr_traps(vcpu);
- 	write_sysreg(__kvm_hyp_host_vector, vbar_el2);
- }
- 
-diff --git a/arch/arm64/kvm/hyp/vhe/switch.c b/arch/arm64/kvm/hyp/vhe/switch.c
-index d0c7725879a7b38cea53f1dfb111933e0ad89845..31304da0d617313244caff582853965a7a206f72 100644
---- a/arch/arm64/kvm/hyp/vhe/switch.c
-+++ b/arch/arm64/kvm/hyp/vhe/switch.c
-@@ -212,6 +212,8 @@ static int __kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
- 
- 	sysreg_save_host_state_vhe(host_ctxt);
- 
-+	fpsimd_lazy_switch_to_guest(vcpu);
-+
- 	/*
- 	 * ARM erratum 1165522 requires us to configure both stage 1 and
- 	 * stage 2 translation for the guest context before we clear
-@@ -247,6 +249,8 @@ static int __kvm_vcpu_run_vhe(struct kvm_vcpu *vcpu)
- 
- 	__deactivate_traps(vcpu);
- 
-+	fpsimd_lazy_switch_to_host(vcpu);
-+
- 	sysreg_restore_host_state_vhe(host_ctxt);
- 
- 	if (vcpu->arch.fp_state == FP_STATE_GUEST_OWNED)
-diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
-index 7a65a35ee4ac4165b4147c724d28b59f8150a0d2..43a53a403f5102c81bba0d928c0f78331f800269 100644
---- a/arch/arm64/kvm/reset.c
-+++ b/arch/arm64/kvm/reset.c
-@@ -46,11 +46,14 @@ static u32 __ro_after_init kvm_ipa_limit;
- 				 PSR_AA32_I_BIT | PSR_AA32_F_BIT)
- 
- unsigned int __ro_after_init kvm_sve_max_vl;
-+unsigned int __ro_after_init kvm_host_sve_max_vl;
- 
- int __init kvm_arm_init_sve(void)
- {
- 	if (system_supports_sve()) {
- 		kvm_sve_max_vl = sve_max_virtualisable_vl();
-+		kvm_host_sve_max_vl = sve_max_vl();
-+		kvm_nvhe_sym(kvm_host_sve_max_vl) = kvm_host_sve_max_vl;
- 
- 		/*
- 		 * The get_sve_reg()/set_sve_reg() ioctl interface will need
-
--- 
-2.39.5
-
+--------------LmutZqYMPJAdacN31cVTaI9D--
