@@ -1,107 +1,203 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDB8514601C;
-	Fri, 21 Mar 2025 16:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F044414601C;
+	Fri, 21 Mar 2025 16:22:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742574085; cv=none; b=YAcGXMoE349Me9Swj7a4hRYDyc9FI1qLspyoKAmPzW8LCZVf+255vcE6B4k2nfPYHiGndEMMfPqlY5UuToeELg2Q7MionEajuNno8XPoa+cP8oQiAcMpOVXcc3miDzwv3rkRo0qLTCf0YYuGm5BrGyDZwDY6asj1sdFcujdilCI=
+	t=1742574148; cv=none; b=lnm+EyNpvuaSqwkdXpLkAhYbEQlK/ndakE9PmJwz8pcSl3djz5ImWTmYvgwDtVFSizh89OBWsxD86vcSrYZ11PKUTHr/RTMbnhoADJKa85cVT/Nn0cY1h+E/V3klDhdt/1KBlGNEbXQdUD0J7FRWyE8HktbdipgYim7NDZ1O0g4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742574085; c=relaxed/simple;
-	bh=e8HyGx+31UnR/GpZxIrV+eNyLSuBm+MWfmWimk8Ut2U=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=YI/dbJUaO4Fg+CJtDCv3ZRZ7iczA/2aAcG19buMlLXdORHczHKvueWETwG4es371Qqnwi2Eovo068eCsHz3Lr9yn8NlB800tIs6DfkbeOoLj4j0PyWIo/HNNjLRdiQs04i/XNbAcQ5Larf1N7EAcMqrVtIvFlyzvArOpWinygRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=L0WuCZSX; arc=none smtp.client-ip=198.175.65.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742574148; c=relaxed/simple;
+	bh=BVHJeIjPOcoptXmVK10MS67GAYq8d6EXNUvf5ugsuhY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ObVdtFvi1U7Y2zOrcYnii2GUIbd5hzd/vc9trYFHG30kSXIDnjuCAKhejbgX6H1+BgillcZaxW9HEdHl8u0NHWPHyXOjsAjD6BZ4hqckpjI0K2QLFfX+pa1JdF8iwzXAhd7UyPwAK3z3w0VKQHMjMvJzIJtkNMvbZbMWUzrgfO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L9hAxhUj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="L0WuCZSX"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742574084; x=1774110084;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=e8HyGx+31UnR/GpZxIrV+eNyLSuBm+MWfmWimk8Ut2U=;
-  b=L0WuCZSX3cbSqSHfkRkdCJ+r2vY23RAvu7RrFv5INIdjtquNj+JgTbDX
-   HQ//VSjRptovklqgpApu+4NSvycvXldBdgSf/PXsTlc6wKYHHXTqvYqZS
-   HiLQwYZC5s/K/J1WUOgttgGjjdJDUqaPBCLmzVeszImSIOVAvhqGHQFHP
-   4kJ6KJks/hUdQb6JMJhEyV04C8GCP1i2VAoel4+tAoGvu+ZSCfq1jkf2q
-   Um4FPfqGZyTBUVEu+n6nJK+/Yh+vGRgtck8UaDtJx9KfZGKCF8RBfJpia
-   WVQc991E2q2HAvfCPFbvXq89Fw8Q8ZkdMUwtZg72XS4c2YvRvgHt+bkyt
-   g==;
-X-CSE-ConnectionGUID: DIrk0o+HQpu186eYAGXWiQ==
-X-CSE-MsgGUID: vCBHv3CaT+CcjTeXxQ0K1w==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="47503046"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="47503046"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:21:23 -0700
-X-CSE-ConnectionGUID: 944zfTjuQ1CMrijVWpKgVA==
-X-CSE-MsgGUID: UjiuwLNOReaImB7My2ak+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="123618978"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:21:20 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-To: Bjorn Helgaas <bhelgaas@google.com>,
-	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
-	Lukas Wunner <lukas@wunner.de>
-Subject: [PATCH v2 1/1] PCI/hotplug: Don't enable HPIE in poll mode
-Date: Fri, 21 Mar 2025 18:21:14 +0200
-Message-Id: <20250321162114.3939-1-ilpo.jarvinen@linux.intel.com>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L9hAxhUj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D31EC4CEE3;
+	Fri, 21 Mar 2025 16:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742574147;
+	bh=BVHJeIjPOcoptXmVK10MS67GAYq8d6EXNUvf5ugsuhY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L9hAxhUjN9aDKSnmf4Un/E/lfR6d/emDNCb3yMIGSlnOyBHUwpYdgEQKZ4JrMkUK7
+	 hY5f1SGmmNYj3N0kFSb9D9Pb/vVNrssUiASF0rxN/lQ35PJVFtOjNfG7H/ktLXNFy/
+	 toJAMTtrh0rTQR9Nvk+uk2VdTq1qAtZ5jSqWL05KHZXG+5xMZsAjuTvnS1FHJrZnEn
+	 K1yZNDvGst8NeuSVD2Xnx+3Nnx3mj+eIWjsnC5bmkG6XWrjK9xKgqbL/CS0jY5dgzp
+	 /Rl1aCqRK0J6AGqa+BGzkoVIB5qinrf8Deg9wVJvrg7DSDvljhdkue9CM4kwZwx3QB
+	 xQLpge/W2cp2w==
+Date: Fri, 21 Mar 2025 11:22:26 -0500
+From: Rob Herring <robh@kernel.org>
+To: Christian Marangi <ansuelsmth@gmail.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Daniel Golle <daniel@makrotopia.org>, netdev@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	upstream@airoha.com
+Subject: Re: [net-next PATCH 6/6] dt-bindings: net: pcs: Document support for
+ Airoha Ethernet PCS
+Message-ID: <20250321162226.GA3472739-robh@kernel.org>
+References: <20250318235850.6411-1-ansuelsmth@gmail.com>
+ <20250318235850.6411-7-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250318235850.6411-7-ansuelsmth@gmail.com>
 
-PCIe hotplug can operate in poll mode without interrupt handlers using
-a polling kthread only. The commit eb34da60edee ("PCI: pciehp: Disable
-hotplug interrupt during suspend") failed to consider that and enables
-HPIE (Hot-Plug Interrupt Enable) unconditionally when resuming the
-Port.
+On Wed, Mar 19, 2025 at 12:58:42AM +0100, Christian Marangi wrote:
+> Document support for Airoha Ethernet PCS for AN7581 SoC.
+> 
+> Airoha AN7581 SoC expose multiple Physical Coding Sublayer (PCS) for
+> the various Serdes port supporting different Media Independent Interface
+> (10BASE-R, USXGMII, 2500BASE-X, 1000BASE-X, SGMII).
+> 
+> This follow the new PCS provider with the use of #pcs-cells property.
+> 
+> Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+> ---
+>  .../bindings/net/pcs/airoha,pcs.yaml          | 112 ++++++++++++++++++
+>  1 file changed, 112 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/pcs/airoha,pcs.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/net/pcs/airoha,pcs.yaml b/Documentation/devicetree/bindings/net/pcs/airoha,pcs.yaml
+> new file mode 100644
+> index 000000000000..8bcf7757c728
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/pcs/airoha,pcs.yaml
+> @@ -0,0 +1,112 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/net/pcs/airoha,pcs.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Airoha Ethernet PCS and Serdes
+> +
+> +maintainers:
+> +  - Christian Marangi <ansuelsmth@gmail.com>
+> +
+> +description:
+> +  Airoha AN7581 SoC expose multiple Physical Coding Sublayer (PCS) for
+> +  the various Serdes port supporting different Media Independent Interface
+> +  (10BASE-R, USXGMII, 2500BASE-X, 1000BASE-X, SGMII).
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - airoha,an7581-pcs-eth
+> +      - airoha,an7581-pcs-pon
+> +
+> +  reg:
+> +    items:
+> +      - description: XFI MAC reg
+> +      - description: HSGMII AN reg
+> +      - description: HSGMII PCS reg
+> +      - description: MULTI SGMII reg
+> +      - description: USXGMII reg
+> +      - description: HSGMII rate adaption reg
+> +      - description: XFI Analog register
 
-Only set HPIE if non-poll mode is in use. This makes
-pcie_enable_interrupt() match how pcie_enable_notification() already
-handles HPIE.
+Is that just 1 register? Or should be 'registers'?
 
-Fixes: eb34da60edee ("PCI: pciehp: Disable hotplug interrupt during suspend")
-Signed-off-by: Ilpo Järvinen <ilpo.jarvinen@linux.intel.com>
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
----
+Please be consistent with reg and register.
 
-v2:
-- Dropped other hotplug fixes/changes (Lukas' approach/fix is better)
-- Fixed typo in shortlog
+> +      - description: XFI PMA (Physical Medium Attachment) register
+> +
+> +  reg-names:
+> +    items:
+> +      - const: xfi_mac
+> +      - const: hsgmii_an
+> +      - const: hsgmii_pcs
+> +      - const: multi_sgmii
+> +      - const: usxgmii
+> +      - const: hsgmii_rate_adp
+> +      - const: xfi_ana
+> +      - const: xfi_pma
+> +
+> +  resets:
+> +    items:
+> +      - description: MAC reset
+> +      - description: PHY reset
+> +
+> +  reset-names:
+> +    items:
+> +      - const: mac
+> +      - const: phy
+> +
+> +  "#pcs-cells":
+> +    const: 0
 
- drivers/pci/hotplug/pciehp_hpc.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+So you did add something. But why if you only need 0 cells? That was 
+what was already supported.
 
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index bb5a8d9f03ad..28ab393af1c0 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -842,7 +842,9 @@ void pcie_enable_interrupt(struct controller *ctrl)
- {
- 	u16 mask;
- 
--	mask = PCI_EXP_SLTCTL_HPIE | PCI_EXP_SLTCTL_DLLSCE;
-+	mask = PCI_EXP_SLTCTL_DLLSCE;
-+	if (!pciehp_poll_mode)
-+		mask |= PCI_EXP_SLTCTL_HPIE;
- 	pcie_write_cmd(ctrl, mask, mask);
- }
- 
-
-base-commit: 2014c95afecee3e76ca4a56956a936e23283f05b
--- 
-2.39.5
-
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - resets
+> +  - reset-names
+> +  - "#pcs-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/reset/airoha,en7581-reset.h>
+> +
+> +    pcs@1fa08000 {
+> +        compatible = "airoha,an7581-pcs-pon";
+> +        reg = <0x1fa08000 0x1000>,
+> +              <0x1fa80000 0x60>,
+> +              <0x1fa80a00 0x164>,
+> +              <0x1fa84000 0x450>,
+> +              <0x1fa85900 0x338>,
+> +              <0x1fa86000 0x300>,
+> +              <0x1fa8a000 0x1000>,
+> +              <0x1fa8b000 0x1000>;
+> +        reg-names = "xfi_mac", "hsgmii_an", "hsgmii_pcs",
+> +                    "multi_sgmii", "usxgmii",
+> +                    "hsgmii_rate_adp", "xfi_ana", "xfi_pma";
+> +
+> +        resets = <&scuclk EN7581_XPON_MAC_RST>,
+> +                 <&scuclk EN7581_XPON_PHY_RST>;
+> +        reset-names = "mac", "phy";
+> +
+> +        #pcs-cells = <0>;
+> +    };
+> +
+> +    pcs@1fa09000 {
+> +        compatible = "airoha,an7581-pcs-eth";
+> +        reg = <0x1fa09000 0x1000>,
+> +              <0x1fa70000 0x60>,
+> +              <0x1fa70a00 0x164>,
+> +              <0x1fa74000 0x450>,
+> +              <0x1fa75900 0x338>,
+> +              <0x1fa76000 0x300>,
+> +              <0x1fa7a000 0x1000>,
+> +              <0x1fa7b000 0x1000>;
+> +        reg-names = "xfi_mac", "hsgmii_an", "hsgmii_pcs",
+> +                    "multi_sgmii", "usxgmii",
+> +                    "hsgmii_rate_adp", "xfi_ana", "xfi_pma";
+> +
+> +        resets = <&scuclk EN7581_XSI_MAC_RST>,
+> +                 <&scuclk EN7581_XSI_PHY_RST>;
+> +        reset-names = "mac", "phy";
+> +
+> +        #pcs-cells = <0>;
+> +    };
+> -- 
+> 2.48.1
+> 
