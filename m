@@ -1,169 +1,133 @@
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE40A13AD38
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8729C189913
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:18:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742566652; cv=none; b=JO4jHVdexbbL6GWLS8mSXAKV+jc35q6yZx87Dr8ORj26cdcrpdHVHTRuorwScX4YGG8MHfzn/OTNBnpp8b5AW96dBqmzop/t1v40j/TJfP0ylozharoWGRFjshQM5DuR988+WhDMw5TjxnTvJv8RyH7YZWEoZ8Fmz+ckb5AbFOY=
+	t=1742566680; cv=none; b=ewH0l3oZaS6XFczJb6Jjz2RjT7umvnNvqM2VWMG8iWvI2gXJDxeAFIU4AV2o3viMESom3rW3vfo0s6FnO6u9gD5jtbZ/0NmMZLQi6aJvgaWrUFvQe9rCoArnBrOohwuRgf5hikY4xZ9CSfFQ080d2/0giX3k8mXkORi//zlmS34=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742566652; c=relaxed/simple;
-	bh=abcpScdIH+iJ7f/cc/lI1gu9a5umSVkyVm37uzzJmlI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZpjMCKFj86p2Nu2EICL6axsV1cxNH+qv3Qr/THqSrHgoXIqsD9KFpy3xIye9km4yEcsjyDOfGMP+/rhFUEy6U/N+mpV00XZsAEsWXDS8ZZoPOGILsdiZAnCZ3ST2bBmrwMtT3JYRCavro4noMLUe3ZdPzl17pUKfP7+iS9jJVvk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q9bsTZpf; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742566680; c=relaxed/simple;
+	bh=0amfkrO3B1zq5t8fnOfrUB4M+QOIpfFLARmwtZZfJw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lJCR7mnAth4ZngPL0+PXDjRyvdm1T1bqoh9+4WJRjop9cEURlJFlnNL61VFpL/AuOpQTKNVvHhhOVxy3ma/EIZMaXFI+mV9qnSTptSOWQX7RLg4+BGe8z3Hs8NPDP9QCfVIwgbBh4sSgcWdaKB/JinCbPgRYEL1I72vZhjSo5CI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h28JaQj+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q9bsTZpf"
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-30bd11bfec6so21335621fa.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:17:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742566649; x=1743171449; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8tesCzyVEDpNzziJBXhLV3rImVo6j7PfN3V4yTfNrlI=;
-        b=Q9bsTZpfrSljlaQ/JUhlIkXh8S1QZTDCZfYA+y4lzLbJWdvjkFZxOUK4eRPK+Fowhr
-         Bss88LbtGNZt8OEgjBlo/0E+xjtObSP2vvscDDGv9yeguG0snK5rrKx4eEV+MQCMlK7t
-         DvW+w8yyATj/RAX7UNKK1BpxydXUbSfNqSdQfxefk545yEFYDJiqMFmnqWSdkm+FAJMo
-         khbqXHMLwAfEt5WJuP3nORMefHCzjSbSpjS2bBm6fmL/7Hzo0sjSpz19lPjgU/W/XzS2
-         LoDflmwt+C8xXksjv6OgRKUA/6vpvf/CUW8izH8Jii10KXk0dSD9zSXCyTXRlLQuOtds
-         kIrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742566649; x=1743171449;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8tesCzyVEDpNzziJBXhLV3rImVo6j7PfN3V4yTfNrlI=;
-        b=vsO6VrPJpp63Oz2QN2J+rKaGothf/4Z0unGkKF8wHXtKAmBkB2Xk+DQUHBIRJi8IfO
-         J3fFmTjN8nW5T6LJGHQ//ZNVkAPXDlKhnvDRcM/n2p85d/6f6aJpftyy2f1ABiiWXp2C
-         rou9S66oKIwNblSRySddIpvQVlOynd3jb8zNBWbvcLpHZZNppw3gr/HkZf8A3LzItQqy
-         J0GSQjzqj/ecXlZ3Mv73wXcjj4cuUzb4Ja7PbLNHRummkfkNWA6GBDQ/3mu7BGvsPkRv
-         sZC8kfFNNX/dmJULK/hWYMv4/6g0pEZ/yGTZCVxmEV6GVP7Dxcf2ebH3BKOeCPOsjmYX
-         aynQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW9Wn42X/EqvgGaEtzDOG5Kx2hZpycVgXttTpDFdE/UEn4zulDBXJyag0M1gzLli2COu8I6Gu5C9w/3hOc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwyZqq7RLFmSsc/rHTXMz+okvJHbkjd//bDW5bXsNSfBYazjuK2
-	0t+QC7QdNajSAO9Kxg93hr9HUYMQSmFPSvwYhtW66tW7NrvmJO37mzfkKq5XmSS5C/QCnzfrRsf
-	Mw4VZfG3h5P2xgUviqjWlrveL1KA=
-X-Gm-Gg: ASbGncsfzBc5dEf1wjufoW9y69VcXhamGa5rWuRMESI0+0zh2Cwz8q/qDqSaa6rjedH
-	SZhX9fmE5eB+9bC/nzKavzUq1/XkiZ+Ur6rys7uXB99W1PrFys7XarMCphE0ZCgL+6xSHVZoEhF
-	a0RcrN9Th5gTqu/5weQlDPPyWB+9birj6XesBcgwvxSQ==
-X-Google-Smtp-Source: AGHT+IFg1NU9tVPGMhUUJJbhOHj4P/H/O2y/QyOLYk4b9KFol8sFt8coljmWvl/+Gk70AvqPwMAuWwgU2nvBrDHJ2Ow=
-X-Received: by 2002:a05:651c:50a:b0:30c:2da4:85fb with SMTP id
- 38308e7fff4ca-30d7e22171cmr14437071fa.12.1742566647005; Fri, 21 Mar 2025
- 07:17:27 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h28JaQj+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77ACFC4CEEC;
+	Fri, 21 Mar 2025 14:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742566680;
+	bh=0amfkrO3B1zq5t8fnOfrUB4M+QOIpfFLARmwtZZfJw4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h28JaQj+Cuj1LkqH51sg7oXGnIp4dVVxPZLz+0RAoJ/cvMEaPF8oIsuaNLxg6oydV
+	 r1yJNsBhghnpG5hehz+YWKOib6wlXmRNYJP7ecTb3km28qnRD6pBOoGxDewxc4Udqp
+	 M3VCQqx7xzCwXw05YFYf0I++tTrBW3LCeKuiIctyDlwgH9flhmRhKbywagZErNUwkl
+	 z+mg2s7FssEr24uOfvVkTLbAuEnEKhf3y/Qzh1gNfpYQYjqJpFejFsahS/CASq8/IB
+	 ZlJyi2L7eqISoLmTCRdL3u9zf1QNz6RraU3518vXPG/QTtwiQLFWd2PA6UUZZMcqLT
+	 qZ8Zkfy0Bycew==
+Date: Fri, 21 Mar 2025 15:17:57 +0100
+From: Maxime Ripard <mripard@kernel.org>
+To: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
+Cc: Jyri Sarha <jyri.sarha@iki.fi>, 
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Andrzej Hajda <andrzej.hajda@intel.com>, 
+	Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>, 
+	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, 
+	linux-phy@lists.infradead.org, Francesco Dolcini <francesco@dolcini.it>, 
+	Aradhya Bhatia <aradhya.bhatia@linux.dev>, Devarsh Thakkar <devarsht@ti.com>
+Subject: Re: [PATCH 03/18] drm/tidss: Add mode_fixup to adjust the clock
+ based on HW
+Message-ID: <20250321-adaptable-astonishing-adder-ceeb6f@houat>
+References: <20250320-cdns-dsi-impro-v1-0-725277c5f43b@ideasonboard.com>
+ <20250320-cdns-dsi-impro-v1-3-725277c5f43b@ideasonboard.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <4378DDFE-3263-497A-8364-433DC1984FEE@live.com>
-In-Reply-To: <4378DDFE-3263-497A-8364-433DC1984FEE@live.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Fri, 21 Mar 2025 10:16:49 -0400
-X-Gm-Features: AQ5f1JqgTcW7uU8hqB5e3_f6-yhSWki5xFpeg3M51SsKfHQM5bdn12gKjCJKdHU
-Message-ID: <CAJ-ks9=zN0pUAt9ELckna+3GcnDfhjF3jgiM1FHXLji9pWc2wQ@mail.gmail.com>
-Subject: Re: [PATCH] printf: add tests for generic FourCCs
-To: Aditya Garg <gargaditya08@live.com>
-Cc: Kees Cook <kees@kernel.org>, Petr Mladek <pmladek@suse.com>, 
-	Steven Rostedt <rostedt@goodmis.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sergey Senozhatsky <senozhatsky@chromium.org>, 
-	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha384;
+	protocol="application/pgp-signature"; boundary="bchtvmz6w2bii2si"
+Content-Disposition: inline
+In-Reply-To: <20250320-cdns-dsi-impro-v1-3-725277c5f43b@ideasonboard.com>
+
+
+--bchtvmz6w2bii2si
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 03/18] drm/tidss: Add mode_fixup to adjust the clock
+ based on HW
+MIME-Version: 1.0
 
-On Thu, Mar 13, 2025 at 11:45=E2=80=AFPM Aditya Garg <gargaditya08@live.com=
-> wrote:
->
-> From: Aditya Garg <gargaditya08@live.com>
->
-> Format specifiers for printing generic 32-bit FourCCs were recently added
-> to vsprintf. They are going through the DRM tree alongwith the appletbdrm
-> driver. Since the printf tests are being converted to kunit, this separat=
-e
-> patch for the tests should make it easier to rebase when the merge window
-> opens.
->
-> Link: https://lore.kernel.org/dri-devel/79FA3F41-FD7A-41D9-852B-D32606AF5=
-EB4@live.com/T/#u
-> Signed-off-by: Aditya Garg <gargaditya08@live.com>
+On Thu, Mar 20, 2025 at 05:59:58PM +0200, Tomi Valkeinen wrote:
+> At the moment the driver just sets the clock rate with clk_set_rate(),
+> and if the resulting rate is not the same as requested, prints a debug
+> print, but nothing else.
+>=20
+> Add mode_fixup(), in which the clk_round_rate() is used to get the
+> "rounded" rate, and set that to the adjusted_mode.
+>=20
+> In practice, with the current K3 SoCs, the display PLL is capable of
+> producing very exact clocks, so most likely the rounded rate is the same
+> as the original one.
+>=20
+> Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>
 > ---
->  lib/tests/printf_kunit.c | 39 ++++++++++++++++++++++++++++++++-------
->  1 file changed, 32 insertions(+), 7 deletions(-)
->
-> diff --git a/lib/tests/printf_kunit.c b/lib/tests/printf_kunit.c
-> index 2c9f6170b..b1fa0dcea 100644
-> --- a/lib/tests/printf_kunit.c
-> +++ b/lib/tests/printf_kunit.c
-> @@ -701,21 +701,46 @@ static void fwnode_pointer(struct kunit *kunittest)
->         software_node_unregister_node_group(group);
+>  drivers/gpu/drm/tidss/tidss_crtc.c  | 22 ++++++++++++++++++++++
+>  drivers/gpu/drm/tidss/tidss_dispc.c |  6 ++++++
+>  drivers/gpu/drm/tidss/tidss_dispc.h |  2 ++
+>  3 files changed, 30 insertions(+)
+>=20
+> diff --git a/drivers/gpu/drm/tidss/tidss_crtc.c b/drivers/gpu/drm/tidss/t=
+idss_crtc.c
+> index 1604eca265ef..b3338dac25bc 100644
+> --- a/drivers/gpu/drm/tidss/tidss_crtc.c
+> +++ b/drivers/gpu/drm/tidss/tidss_crtc.c
+> @@ -309,7 +309,29 @@ enum drm_mode_status tidss_crtc_mode_valid(struct dr=
+m_crtc *crtc,
+>  	return dispc_vp_mode_valid(tidss->dispc, tcrtc->hw_videoport, mode);
 >  }
->
-> +struct fourcc_struct {
-> +       u32 code;
-> +       const char *str;
-> +};
-> +
-> +static void fourcc_pointer_test(struct kunit *kunittest, const struct fo=
-urcc_struct *fc,
-> +                               size_t n, const char *fmt)
+> =20
+> +static bool tidss_crtc_mode_fixup(struct drm_crtc *crtc,
+> +				  const struct drm_display_mode *mode,
+> +				  struct drm_display_mode *adjusted_mode)
 > +{
-> +       size_t i;
+> +	struct tidss_crtc *tcrtc =3D to_tidss_crtc(crtc);
+> +	struct drm_device *ddev =3D crtc->dev;
+> +	struct tidss_device *tidss =3D to_tidss(ddev);
+> +	long rate;
 > +
-> +       for (i =3D 0; i < n; i++)
-> +               test(fc[i].str, fmt, &fc[i].code);
+> +	rate =3D dispc_vp_round_clk_rate(tidss->dispc, tcrtc->hw_videoport,
+> +				       adjusted_mode->clock * 1000);
+> +	if (rate < 0)
+> +		return false;
+> +
+> +	adjusted_mode->clock =3D rate / 1000;
+> +
+> +	drm_mode_set_crtcinfo(adjusted_mode, 0);
+> +
+> +	return true;
 > +}
-> +
->  static void fourcc_pointer(struct kunit *kunittest)
->  {
-> -       struct {
-> -               u32 code;
-> -               char *str;
-> -       } const try[] =3D {
-> +       static const struct fourcc_struct try_cc[] =3D {
->                 { 0x3231564e, "NV12 little-endian (0x3231564e)", },
->                 { 0xb231564e, "NV12 big-endian (0xb231564e)", },
->                 { 0x10111213, ".... little-endian (0x10111213)", },
->                 { 0x20303159, "Y10  little-endian (0x20303159)", },
->         };
-> -       unsigned int i;
-> +       static const struct fourcc_struct try_ch[] =3D {
-> +               { 0x41424344, "ABCD (0x41424344)", },
-> +       };
-> +       static const struct fourcc_struct try_cn[] =3D {
-> +               { 0x41424344, "DCBA (0x44434241)", },
-> +       };
-> +       static const struct fourcc_struct try_cl[] =3D {
-> +               { (__force u32)cpu_to_le32(0x41424344), "ABCD (0x41424344=
-)", },
-> +       };
-> +       static const struct fourcc_struct try_cb[] =3D {
-> +               { (__force u32)cpu_to_be32(0x41424344), "ABCD (0x41424344=
-)", },
-> +       };
->
-> -       for (i =3D 0; i < ARRAY_SIZE(try); i++)
-> -               test(try[i].str, "%p4cc", &try[i].code);
-> +       fourcc_pointer_test(kunittest, try_cc, ARRAY_SIZE(try_cc), "%p4cc=
-");
-> +       fourcc_pointer_test(kunittest, try_ch, ARRAY_SIZE(try_ch), "%p4ch=
-");
-> +       fourcc_pointer_test(kunittest, try_cn, ARRAY_SIZE(try_cn), "%p4cn=
-");
-> +       fourcc_pointer_test(kunittest, try_cl, ARRAY_SIZE(try_cl), "%p4cl=
-");
-> +       fourcc_pointer_test(kunittest, try_cb, ARRAY_SIZE(try_cb), "%p4cb=
-");
->  }
->
->  static void
-> --
-> 2.43.0
->
 
-This code looks fine to me. I would appreciate a preview of the output
-of these tests when they fail; a lot of effort went into making the
-printf tests produce actionable failure messages, and we should
-continue to invest in that IMO.
+mode_fixup is deprecated in favor of atomic_check. If you can't use it
+for some reason, it should be documented one way or another.
+
+Maxime
+
+--bchtvmz6w2bii2si
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCZ911EQAKCRAnX84Zoj2+
+dgndAYCh/YgKmD2eT0IGBSW4oFScUbO0JiE0c6rJgT/fOlLd8ZyEQUmNR3/ihtKv
+L3mLPUwBgN2SlLXG4F2ri8LKeYXjbpOagi9fMufwxwGrEzWDluOQ6RSb6Ak7/Y/H
+uemPVUoFyg==
+=QyZO
+-----END PGP SIGNATURE-----
+
+--bchtvmz6w2bii2si--
