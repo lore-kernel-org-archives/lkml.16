@@ -1,94 +1,110 @@
-Received: from relay.hostedemail.com (smtprelay0017.hostedemail.com [216.40.44.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 601C278F5B
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 03:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.40.44.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5B7B1E571B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 03:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742527457; cv=none; b=F9FBUWiabwx1GwCSceQfPtJ43zpAFPb7E5Sdjoewf7lNP95ttzoVr8Eh5RhD8d3q224jVkDi6aF59Qt+YJGaj0pHhORAw4WfGTS3Mku0uieQklGeMK4fmlez2+2e7ghhxoDOb6RYGdgwt1+v7pvd9n7JUkG/Y6zzQDTmkBxVPj0=
+	t=1742527598; cv=none; b=lZz8xcs4SvQwv4ql0SaJdJHAOE5HJYqM7Ny/+EGgLJMfRkhuqDg+K2eX/TmoyyrhMqiHEts2rXiYTQt0y2H1R/WLEnulbKrdW3kCsImENw8Cu1r/+RGTpd0FT3t5nJ6c4kTMbd3mK97lecJpOX6PrNNStCMyNbdHO2N61d6mfR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742527457; c=relaxed/simple;
-	bh=QYPYqXxSk+m4QHO+riiVcBjWVmqsuhtYKZyKZkIxgLo=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=uErdOVvC2MaEnpIQ4sbZ9kBtHNcUfp1k9UdaCvSvmXPqaIYt+7c1FaMLYbhHNksQu+72K4rH/Da6lNRLrOuxqqUNkhRFQouMQn14lupkwBN5wwaWI0oAh1EUSMP/Eygnyjyq6y9Fv6cxFd0kR2EAk8MgWo1ThiGmrN1SAIQgCQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com; spf=pass smtp.mailfrom=perches.com; arc=none smtp.client-ip=216.40.44.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=perches.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=perches.com
-Received: from omf15.hostedemail.com (a10.router.float.18 [10.200.18.1])
-	by unirelay08.hostedemail.com (Postfix) with ESMTP id B4A64141BC9;
-	Fri, 21 Mar 2025 03:15:02 +0000 (UTC)
-Received: from [HIDDEN] (Authenticated sender: joe@perches.com) by omf15.hostedemail.com (Postfix) with ESMTPA id 5C4CA1B;
-	Fri, 21 Mar 2025 03:14:57 +0000 (UTC)
-Message-ID: <cf0501d3245554150b4a19ced0401228fc58b335.camel@perches.com>
-Subject: Re: [PATCH v2 34/59] checkpatch: dont warn about unused macro arg
- on empty body
-From: Joe Perches <joe@perches.com>
-To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org, 
-	intel-gvt-dev@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-gfx-trybot@lists.freedesktop.org, Andrew Morton
- <akpm@linux-foundation.org>
-Cc: jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org, 
-	louis.chauvet@bootlin.com, daniel.vetter@ffwll.ch, 
-	tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com, 
-	ville.syrjala@linux.intel.com, Andy Whitcroft <apw@canonical.com>,
- Dwaipayan Ray	 <dwaipayanray1@gmail.com>, Lukas Bulwahn
- <lukas.bulwahn@gmail.com>
-Date: Thu, 20 Mar 2025 20:14:54 -0700
-In-Reply-To: <20250320185238.447458-35-jim.cromie@gmail.com>
-References: <20250320185238.447458-1-jim.cromie@gmail.com>
-	 <20250320185238.447458-35-jim.cromie@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.54.3 (3.54.3-1.fc41) 
+	s=arc-20240116; t=1742527598; c=relaxed/simple;
+	bh=eDQh0a02ekUcaBQfvdbuK9jfyLKr14ZSzQwradln/NQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EPraTwMXzXTWgGYcXPa1q5y0gIQp3D/SOESg6kk4fkwxuvroFEAS1lKT7rcjIgAJ/vxioEerGNiN+orGoykNsHTa+sBgliyz0nBcFC2bvhkYt6xsUy6wEycSXCNmGzuRgePUfpKMItNggLtcvfN0z1FpJFgz8UM9B6vI7g4NmQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=aez4GEnK; arc=none smtp.client-ip=209.85.208.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aez4GEnK"
+Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5e835ffcf71so304273a12.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 20:26:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1742527594; x=1743132394; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=I5zHL19slUgh5eKmO5Fy/udQUm9kmXxLzG4bF5IRJCI=;
+        b=aez4GEnKLLbKCLzOYF7r6c3fKtcNBNFiH1GRKupXt0ZGH/jGXFWjE60TRwASPHMTvc
+         T4gwJv+AJZWiOhbCxACPrQJiw28b1aAZvlIrQaV4ylvODNpY8dUO2ooaxm+HI/4ff3Yt
+         uJHg2zEp8zAQjXYIjy27coDzc6ejFqxiBJLK8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742527594; x=1743132394;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=I5zHL19slUgh5eKmO5Fy/udQUm9kmXxLzG4bF5IRJCI=;
+        b=pNxcCbfR8xm7Fc81qFoKad4acfdh1poVdvci+AMmDRzlVgbalnlIJ4w1CfyffqQF3q
+         BDTiiY32Xv5Gspcnbj2e6CGjzNjf0YmR6NBpODBLUZxqj5gOXLI7VqE2bCfHkjG2HUeN
+         CkZp6KL8X3DlLCxQMU8klm4w6zDR+/VJpcVuUcHJDK3uN/b5r7kSxPtTjz6zs0yVSBiH
+         odoLs1iFVI8p99GJBpqe88MR7+zNRgEFAfVsHtqzihttyaDo6kDB4KbkU3qgBlHl7dtt
+         598JSy9Li5BH9FbMSXPrUXHYNwPbZ8lNyjic+I6LkHE2YVJeFUP8V5+GJesa69AgbjHB
+         2UWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWGXR7ZLRym5v2aCmak9d+JCrCknN/xN9L1K/ZIQ2g+WPmD9Mi3DL4Z0mvTZFABz6SDOZ3mv0xbYlmbdZI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwnIv2fgl/U56sRBOJYzucsTt6GMh4v5NKjyUQ/wyKo8k9kVVv6
+	wISaXuHvp/lbTib22wzztC0Xbu2QiRi5yyx9lz8uuq4Tp8z/ApUzY6J0Sy2gfg==
+X-Gm-Gg: ASbGncu3qX5y56+MN9l7/+CYdy94nGppffDx7UT1GMXwqwsOsz3nAlaWIfHXmtmGKoV
+	Cz9wkQWcgwwTf4Sf2Ggl9o1pCVGvKLssWKXgoqA+C7zEQlcRHw1wAxZ5kb1XS2ToWQVGWtlXVTp
+	pkzNh3dCsVrJyzYAMrvAfVHh3NtPShRcCuYPUJiZkuSaXezwuDJQQMDwZbNujNq8SDHtvOIosRL
+	eNVBvxpygM1Dcpjb6pfwNIB/+aMzAKvRg6RpjLlOpwW4GXsCU5cNL1ewMZ7SiXurtPG+k/st0Dz
+	NtMeoOXKLpqhQa3HstUQao5JLYi81E/uH9+qJpmrpS/x0PyizXy8021rBImiR+tFzqTsha5h5lX
+	uWJMOBSsO2Do=
+X-Google-Smtp-Source: AGHT+IHl+mYWvLUnotjGhidy8abObJGBDSJw+ITfNPlfAIWcj0UU6andhioYEzcvbk2yZoi1n9IkvA==
+X-Received: by 2002:a17:907:7f94:b0:ac3:673a:2ab3 with SMTP id a640c23a62f3a-ac3f2297982mr54135866b.7.1742527593850;
+        Thu, 20 Mar 2025 20:26:33 -0700 (PDT)
+Received: from cfish.c.googlers.com.com (40.162.204.35.bc.googleusercontent.com. [35.204.162.40])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8d3f24sm68463366b.57.2025.03.20.20.26.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 20 Mar 2025 20:26:32 -0700 (PDT)
+From: jeffxu@chromium.org
+To: jeffxu@chromium.org
+Cc: Liam.Howlett@oracle.com,
+	agordeev@linux.ibm.com,
+	akpm@linux-foundation.org,
+	borntraeger@linux.ibm.com,
+	edumazet@google.com,
+	geert@linux-m68k.org,
+	gor@linux.ibm.com,
+	guoweikang.kernel@gmail.com,
+	hca@linux.ibm.com,
+	kees@kernel.org,
+	kevin.brodsky@arm.com,
+	linux-hardening@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-mm@kvack.org,
+	lorenzo.stoakes@oracle.com,
+	m-malladi@ti.com,
+	svens@linux.ibm.com,
+	thomas.weissschuh@linutronix.de,
+	zhengqi.arch@bytedance.com
+Subject: [PATCH v2 0/1] mseal sysmap: add arch-support txt
+Date: Fri, 21 Mar 2025 03:26:26 +0000
+Message-ID: <20250321032627.4147562-1-jeffxu@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Stat-Signature: iyw3o7jfnibfiwm8pf6ibncbdu7sr4cj
-X-Rspamd-Server: rspamout04
-X-Rspamd-Queue-Id: 5C4CA1B
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Session-ID: U2FsdGVkX1/d9AFXY+OSiUh0DxEBRYtGbqh22M41r8M=
-X-HE-Tag: 1742526897-40709
-X-HE-Meta: U2FsdGVkX19v9u9NW6oOmjvrpY1bOxIWEW9ri8JTiu4krXIx0x4kkL3s61ycTUBVYqWZAIJ7C/Ffq/K4gn5g+x1GbdOrO8rxiB8vtXETDudv0bhAPVRTw1fTVd5XJOHb/T08AWWA/4+GAzz9gnI5j6EyCey42Mqds9Lh08qsIzFVVyEcE7VHsKRjN8+S78BB3IBAQZFf7JMHDzXKhyH+lKLH5xdY8wExVk1cTEYPnOiKtwrJVMU1Eqkzz5h/loNI06mGRiIU85CSc6y1/HEX6ycoLpVjDOfobMLd1AORzTdbRT7BLQ4pU6iK/RH+RU7sISAfSyV7gS1CHTH3IGEouccv2lGAGUKbzNYhnppxyhHx9lx4ATXEqmEqFJ7l5CDT4NwyArNrcE9vTgCIoAmzJvnzTrB72hFZaDZ5l3THts2SLb00BePyImuDplXttMbBt7RPNwhWyuDOnZqrhSwXMA==
+Content-Transfer-Encoding: 8bit
 
-On Thu, 2025-03-20 at 12:52 -0600, Jim Cromie wrote:
-> we currently get:
->   WARNING: Argument 'name' is not used in function-like macro
-> on:
->   #define DRM_CLASSMAP_USE(name)  /* nothing here */
->=20
-> Following this advice is wrong here, and shouldn't be fixed by
-> ignoring args altogether; the macro should properly fail if invoked
-> with 0 or 2+ args.
->=20
-> cc: Andy Whitcroft <apw@canonical.com>
-> cc: Joe Perches <joe@perches.com>
-> cc: Dwaipayan Ray <dwaipayanray1@gmail.com>
-> cc: Lukas Bulwahn <lukas.bulwahn@gmail.com>
-> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
+From: Jeff Xu <jeffxu@chromium.org>
 
-Completely sensible, thanks Jim.
+Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
 
-> ---
->  scripts/checkpatch.pl | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-> index 7b28ad331742..0c4f578ea6e7 100755
-> --- a/scripts/checkpatch.pl
-> +++ b/scripts/checkpatch.pl
-> @@ -6037,7 +6037,7 @@ sub process {
->  				}
-> =20
->  # check if this is an unused argument
-> -				if ($define_stmt !~ /\b$arg\b/) {
-> +				if ($define_stmt !~ /\b$arg\b/ && $define_stmt) {
->  					WARN("MACRO_ARG_UNUSED",
->  					     "Argument '$arg' is not used in function-like macro\n" . "$her=
-ectx");
->  				}
+History:
+V2:
+ - add hexagon,microblaze,openrisc,sh as N/A (Geert Uytterhoeven)
+
+V1:
+  https://lore.kernel.org/all/20250313000623.3192896-1-jeffxu@google.com/
+
+
+Jeff Xu (1):
+  mseal sysmap: add arch-support txt
+
+ .../core/mseal_sys_mappings/arch-support.txt  | 30 +++++++++++++++++++
+ 1 file changed, 30 insertions(+)
+ create mode 100644 Documentation/features/core/mseal_sys_mappings/arch-support.txt
+
+-- 
+2.49.0.395.g12beb8f557-goog
 
