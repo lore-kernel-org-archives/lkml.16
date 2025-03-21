@@ -1,90 +1,122 @@
-Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7BDD1411EB;
-	Fri, 21 Mar 2025 13:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4C6912B93
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:47:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742564833; cv=none; b=LTI+Dwl4FH9rF5APSRlHlL9lXleBMc+6N7gCR6Ana4RqaMXAKN0D7fb1tjHg7+qR7eVQliaAOhjmOp5grT4ii3wK4AZc6TeGxEbfkTzW9jTjo+zgDNeF4zNS37e3H8g4aDAdPdLVB6r8s0giXMI1SpN/KsQf+50I9WmOxXJYfog=
+	t=1742564867; cv=none; b=MdciHnRB4kg0ycbqjD8kzMSP6JG2BRti3FCm8NRIxztB0E3TGVi525/m8joMEUiirCtR2I5wGZfQcsY38nJrjyI+SzIx+Nri49XmLljaB4wdQt1RSoPpL3JqmwZCYuXPwi517M1Z2SwzUfvvAzCj+drwPj1vF50tQsMCg13AH8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742564833; c=relaxed/simple;
-	bh=osWE5O1iRBWe7qclvdbCFGuXogiHJ5z7z7iF7pq+164=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=HKVtpT1CXu0vrph4b8VXWnhma3n5uU9NTwaYlC8KPElseaRnjW14+nEhE3azwqdbv8f878Xf/aDFfvLEnyZ95ylrey9R49KS3VQl4V31c98CT5Fh+PVvOtC07yE81QAdNmwkJmcnx5h6izLj8LwxWazWWM8WoZ5lfeNcqCvxbBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=bDbDSjid; arc=none smtp.client-ip=5.135.140.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
+	s=arc-20240116; t=1742564867; c=relaxed/simple;
+	bh=zto+hD4T8Rl0wGhIV/0xoa9IwhY4ZDqaQa3d6Xj1HKA=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VGiNdYjoNbuqt4cs1lsmMs9VozcDCdlJbN0BbuZYlgPdG9z0sge0d+vGd9vECb/y23hCCcCH/G3FXSbszk1U/BN/03GBTc/1Tc6BLsCUdVtwoWr7KLlIeku/2kkGbrfnRo0c8yopgv2u90HqM6npMWvuBEDgPE4xdgCeF5aeKjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com; spf=pass smtp.mailfrom=futuring-girl.com; dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b=wOkiygT5; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=futuring-girl.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=futuring-girl.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="bDbDSjid"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 2E4102A46C6;
-	Fri, 21 Mar 2025 14:47:07 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1742564828; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=z5J7Cym/+UR5PPjai7DjLogajBOo4PPQLYr4IkBxyls=;
-	b=bDbDSjidark7vzWvNcXyhJXZVQMoElRVrqgZ9PivQUdxt0eUNVeK/A6iaHDnS7H8OSKxBX
-	z1hXCLIlzeROVJdjKj8oLN3PFjhuy5lfVwoJt80ds5jxX9Xpo6t+0x0V74oTQhgQTmC2dc
-	WIfZ4IgWHnYsrjwMASZZT77fNlnhfhE5y0SwY225B1UDI1GdIwckuVGvavO7YqmbJA8Ft/
-	bnEl0yokZ7TCywI9vQ5fU2wQBYWCnnSfWjXLMfkhfu9LBjFNKb4iwZb0KWEet9dGV9Q9rM
-	FtawgE1r93//SP9bqTdd6GQg+7BeTHfyB0MyI4SMa1YIIuQEM1b+KX+7k+I06g==
-From: Caleb James DeLisle <cjd@cjdns.fr>
-To: linux-mips@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	benjamin.larsson@genexis.eu,
-	Caleb James DeLisle <cjd@cjdns.fr>
-Subject: [PATCH v1 8/8] MAINTAINERS: Add EcoNet MIPS platform entry
-Date: Fri, 21 Mar 2025 13:46:33 +0000
-Message-Id: <20250321134633.2155141-9-cjd@cjdns.fr>
-In-Reply-To: <20250321134633.2155141-1-cjd@cjdns.fr>
-References: <20250321134633.2155141-1-cjd@cjdns.fr>
+	dkim=pass (2048-bit key) header.d=futuring-girl.com header.i=@futuring-girl.com header.b="wOkiygT5"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff69365e1dso2782161a91.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:47:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=futuring-girl.com; s=google; t=1742564864; x=1743169664; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O8nQgLdmlUqdr9aYe+VPc8RjHS/d3j/W4qOBy0BpvdI=;
+        b=wOkiygT5XK5gKLnLsEQp3gFauTepjz0CUsmqpUhuGOX6J1HoAitIm6bVkqJvPYyRDZ
+         d7NmNKOMhXFHp+Z+rIh03cr6VvB5KU06Eho0GISuRUToruQoVUordXQxM/wcDWNXo9Hc
+         XKEPj6kcWHFm6aM5Ojp0gtR5Ys7xZXQ3u1xmtB5xj7Lxsv5LB5HpdA3cEAZTNd2qqfou
+         1nkVoTz9Oq9nPsy78OpjqGSzmDGN0XvK3+ejAxjMco8nJwC73E39Vq2vCYM2+q7qyjQp
+         YYqk/AHZ/C4aAWTwrxXgF5NcdBMdA80IVJEbWEtYaKPjhSZCpUg9K6YG340r/m593ygv
+         KHew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742564864; x=1743169664;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=O8nQgLdmlUqdr9aYe+VPc8RjHS/d3j/W4qOBy0BpvdI=;
+        b=L5XI5rWwKUoAaaY3BS3tdgJZlSqx1l2LypAEoPaL+d/0917BsSIiBH8XBb5EOjOTkr
+         gPoQ5hxneqYjAGT7cbWtR7Si4rrIT+6PdjHw0aYupXnTlwCuHiqm9SCth2io4B0F2E7e
+         27V4y41ELTesIIIu3QIzuaFefU7mfUi/4VgP1RBtVLpz8eLFmRFzWMoRFn5l21nw+Ktr
+         MCV3LI4JQSyIqBXP8+yAOPcDeztY28GpA2EqIPFBpYmc9ksIea/eoUXbpH0GQ/8izLHo
+         8W23xjI6rH/k7HkOofEWbbp73LHla08I55OG4/StovCHKzEX27VRrVJ0nGF0W0jVbh21
+         pskQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXg5XbFqOFVBd6jqADCrsHENqv+cnrUmWI8G5Q2sRhfqBWHZ4JNvI+HhnHqP/Tnr6MKp1QAAZsT1WLvSnI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzbs+2uLZFBtoxTvRAJpT26sH6HbPX49Izad0gXt1B7rwq/f6Hh
+	/+UY/Ke1nPXJp4CLHWs8AtgcuO1nAcR8w7yXjJrSqHXzErGnrMY18H543lL+MkXH14ta9+A53oq
+	J7S5/XmCaP6vmiQQ/w0RVscxYEomDVU05sfVnsg==
+X-Gm-Gg: ASbGncsTe4pIerHHdJk6MQo6UIQBq2/o7f6DqOQCipEVXxSFDPVURTLj7ATvyS7BX5y
+	TpyR9WzyK2T4QPnEBbXcKg274Yl52kefCJIpIucltXN5HY/CGPvk49/xXEU5hoDfOpu41cHiJgc
+	ceKdFdqlOEHbraBwjFWdpJDtb2yGXTUIQkZVuz
+X-Google-Smtp-Source: AGHT+IG9gHzXZS2MDHa4IE9fwTzJ1H0FhHqAo4iMsZRn/mh9NpHgxYoGlNF8O6uvXxiYLj+Zs6L/giMBpxyi7SPgYGU=
+X-Received: by 2002:a17:90b:2dc8:b0:2ee:f80c:6889 with SMTP id
+ 98e67ed59e1d1-3030ff07367mr5795406a91.33.1742564864003; Fri, 21 Mar 2025
+ 06:47:44 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
+References: <20250319143027.685727358@linuxfoundation.org>
+In-Reply-To: <20250319143027.685727358@linuxfoundation.org>
+From: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
+Date: Fri, 21 Mar 2025 22:47:27 +0900
+X-Gm-Features: AQ5f1Jq_-0xkKqLvecUc-RyuF4NKyutsPZK2DjPZzNY6v7pHHsBsKKACW7x7r0o
+Message-ID: <CAKL4bV6JL0A2eqhC3wkppUyJLEXfTZW9qqVOHnY4p4qy8zLjAw@mail.gmail.com>
+Subject: Re: [PATCH 6.13 000/241] 6.13.8-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, hargar@microsoft.com, 
+	broonie@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add a MAINTAINERS entry for the EcoNet EN751221 platform, covering its
-device tree bindings, platform code, interrupt controller, and timer
-drivers.
+Hi Greg
 
-Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
----
- MAINTAINERS | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On Wed, Mar 19, 2025 at 11:35=E2=80=AFPM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 6.13.8 release.
+> There are 241 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Fri, 21 Mar 2025 14:29:55 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.13.8-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.13.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index efee40ea589f..fcb1c49ee54e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8182,6 +8182,18 @@ W:	https://linuxtv.org
- Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- F:	drivers/media/dvb-frontends/ec100*
- 
-+ECONET MIPS PLATFORM
-+M:	Caleb James DeLisle <cjd@cjdns.fr>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/interrupt-controller/econet,en751221-intc.yaml
-+F:	Documentation/devicetree/bindings/mips/econet.yaml
-+F:	Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml
-+F:	Documentation/devicetree/bindings/vendor-prefixes.yaml
-+F:	arch/mips/boot/dts/econet/
-+F:	arch/mips/econet/
-+F:	drivers/clocksource/timer-econet-hpt.c
-+F:	drivers/irqchip/irq-econet-en751221.c
-+
- ECRYPT FILE SYSTEM
- M:	Tyler Hicks <code@tyhicks.com>
- L:	ecryptfs@vger.kernel.org
--- 
-2.30.2
+6.13.8-rc1 tested.
 
+Build successfully completed.
+Boot successfully completed.
+No dmesg regressions.
+Video output normal.
+Sound output normal.
+
+Lenovo ThinkPad X1 Carbon Gen10(Intel i7-1260P(x86_64) arch linux)
+
+[    0.000000] Linux version 6.13.8-rc1rv-g14de9a7d510f
+(takeshi@ThinkPadX1Gen10J0764) (gcc (GCC) 14.2.1 20250207, GNU ld (GNU
+Binutils) 2.44) #1 SMP PREEMPT_DYNAMIC Fri Mar 21 21:51:52 JST 2025
+
+Thanks
+
+Tested-by: Takeshi Ogasawara <takeshi.ogasawara@futuring-girl.com>
