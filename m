@@ -1,62 +1,62 @@
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B0E618DB0A;
-	Fri, 21 Mar 2025 09:56:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BE01F4616;
+	Fri, 21 Mar 2025 09:56:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742550980; cv=none; b=Yjj/xgvsd9Fv5JVLvwINtpI7jrwDl0jNGw76aZf/LKmTzm2WKuwoCtSk+LFdrKDtwRfifjGR4FjkU4yiOtVTT5a/FGWN4FERrrLhNZM0IO2ojbIQiUIZrjn05n/dukoywLFKIiQanCEVlapUz6hS5NVGct5ADUbgajWbp1kS3hE=
+	t=1742550983; cv=none; b=SBqwK1XTS9+BTl2iMo9Tv6kYAhfuPm55seFav7zAD5EfRIUVpVpVUnCM8dxLriP/E0A9pmtc9RKW6RHgOQ4RVI3/UGYbb1kxGdEUQMuN9xrHo2IQisTIUSVUhZwuPhp9dLaj3AN+zp4CQom0D4chGHnlvwdVaLaWJCQmXlOFoH8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742550980; c=relaxed/simple;
-	bh=PFXW3BPWI4tg3WH9tCeZ9sRfoQYxKrwfsg4KfEOyEXo=;
+	s=arc-20240116; t=1742550983; c=relaxed/simple;
+	bh=yenB81RFTTQVZzOuKrtKURDLchhy5hYMxQgAe625KOw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Cg2BfCZpCbp5ne0ketHT9U2PzfVUB2u41T/nQqNktPr3oKYQ6Q1jTFxEetvwOVZFSdDnIKh9RJljnAJDTx2ryxRcF3CFHgUbnvZ2L/Jf65F/xtwi+dOVEY6DSyVEf4yQWmvR7sy9iHiLyLlPGDC0t3tbIR+BiTpCaMXAvft3Djw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=heuTFNsx; arc=none smtp.client-ip=209.85.218.48
+	 MIME-Version; b=PWhuHD2DZfr0pmx+8Zl1/o1Ds4+OabkgmRmnj2+3Hbm2l8R5bouX15TRJFNnWdsEUf4ARwRyUVWfhKQB4qW/zF6Fo2JA38ovqlOLdzZshapUn6eYCR21tcYzicRFOsy1QiBqvN3cqtdtzAWyh1Et5zCASAGRQmwYsDdpXhwYT9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z1s/t4jh; arc=none smtp.client-ip=209.85.218.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="heuTFNsx"
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-ac2963dc379so295179266b.2;
-        Fri, 21 Mar 2025 02:56:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z1s/t4jh"
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-ac2a9a74d9cso366954966b.1;
+        Fri, 21 Mar 2025 02:56:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742550977; x=1743155777; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742550980; x=1743155780; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IcYtJ0zLlagbm1t7aK6kYpcjfzHf0i3DEXlLXLLnBO8=;
-        b=heuTFNsxo5ciZ6ZlKhMHCQMcb1d+fNxrluNtkfXIkP+sZ+mBpP/HNg7db0XdfMQFEV
-         IPAX69i6vJX4hRumstcoNove/HrMd6Ywphi6uq+zgMSOusOgEdRGl9m5iCSfWAlg66FL
-         xAuU2HTRQByIjPjV5Lqazsda/YjQeQUXH7in0OkfM9WElwJrG4GzW7deWIBni17BmDdZ
-         u8rFA6LMioRR9AX4w1TOasnO6XpQRfKgdz6jEjqwGsXQkiTzvTVJHrN+D3LtPB2mStxb
-         Pc7YAw8PJCS2Xv3BMAe2BCvC+RuyVHBxsQBkDwiXq3dcZT5qB50G+5+PoamNHo3xgaYw
-         gwLw==
+        bh=4ROs3p4d9jnnyN4eUO0PMHx9QqYizb1PZN92H3mvS00=;
+        b=Z1s/t4jh3D4TzG0ZK1hbdmsEIJjEYLqllUmuY9h/lBiIMkU20/3VlEwJ6aJJQLKEak
+         13ZSygN3649jPYPr1PYI94jfIGPF8UAo6tmUhWbYjccBv3HT+BRDwE/00P8n6wvACBR0
+         BCi6oZ6TBSZNXuyMzCUhkOtClNRKFvGxhDFUYCh+j9Lg0ogQ3GA9go7oWHsYRuJoFqDo
+         7OoIObByk2q09zInhaH3KNfPpDe6zOXrU0p+tmzGPzbs5Dwku7aCY013NSsTFFQdX+0C
+         XD5GRmNFneGZuKvAqa9gJzIJMI8LcxjAWdbFzSE7hKp3bql0kVO/UtwfgaaTipa9JTno
+         6PKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742550977; x=1743155777;
+        d=1e100.net; s=20230601; t=1742550980; x=1743155780;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IcYtJ0zLlagbm1t7aK6kYpcjfzHf0i3DEXlLXLLnBO8=;
-        b=h/GLAuph5bCiHDPJEzwA+DTNV3qHCYrUt1T1quiWtNG5NwOonHNkS7W011bWBo8Iuk
-         ypL8qE8UJbbM91jTstWFGK2q7iXgUOUXUE8myZIU8PZIiZHQYEw0+hUWJml+CjlA6cQZ
-         zgLYF3Z9rav+MmxmzYXBFpedhFE1CQgn6AJ5v987K0faCmYSiHij+ps4BJ1MlxHwMb5f
-         c/B7aq6/VAICBXnHiG9/3wgkD41gn9tKQojLBSbhvpkHpME6j2B7IMSvEQVlN/dWw/FE
-         O0h4fofBTGYgc7Iijt1DI5565B7gY4CkWtW1Seazq1trDPxHampUk9R3wz4PxI1u/4m5
-         KGew==
-X-Forwarded-Encrypted: i=1; AJvYcCVF5xoF0dcHmhzEy1oQUW3IAy52f4fTMTMTF6yEHAsbZO2oLNJ6OKP5aJHSt3GcFWruPrjdgOW0DVdXkzKB@vger.kernel.org, AJvYcCVv7PHbHhPP6T+/QU3QcSsd9SGeEseEJI5ESGwiTtP/Oo+OQbQUoZvHfk9kJ07ZjtlDeReiG+FxWTg=@vger.kernel.org, AJvYcCX8nyV/KrGbYTWmO50Jcuk85VPN/piG8GOFxSfBZvIkOBX6FvFHIiCSJOKMz3xCw/V7GqHBvtNrCdM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YybRzNHKwiyT9HuOAMjJ0hdEvN9Yl3K6AeW9IQKIclizOvKhDGS
-	55FcKt2GlA543TgEh9CSh6xvRbhRCeq+ZTVy0w/kJJb944cRLYUL
-X-Gm-Gg: ASbGncvfnPYHVFA97DBzGVLBefCt95JGi2ec0MMgt19p6jIcCKOvdFci2TFvVDiO6a0
-	XWZdQTU1QPa9vVvIDn2xN2IOrvmwccHn0RPT9HPM/b6pAWohsW2dbw9cPrh2tWW9O2m8BtVPAfn
-	n/lOPX/kwWlErXfrqU+VDILYJHc/lfSVsC79MgwZrw0rB3bQrghTV/BsBW6bA94ySJfOKS4BH9t
-	7aRzsQT3uHY9I/a3Ihq3vd1llork1tQbC10j7Mm95QZE2iVsRw7nTa8jzLKScxujucAqDtZ38Ag
-	cRFWWYXy8Pvj8QZQUhV9HgpGO3mJtXcv56FD
-X-Google-Smtp-Source: AGHT+IHMeAJeclLeqxwAvo3/Nf8bd8OMefhwPdUDTnMhBHE9rBetuxBamtyOftj0s7csc7f77yi0jw==
-X-Received: by 2002:a17:907:a088:b0:abf:6aa4:924c with SMTP id a640c23a62f3a-ac3f24757b1mr204187966b.17.1742550977072;
-        Fri, 21 Mar 2025 02:56:17 -0700 (PDT)
+        bh=4ROs3p4d9jnnyN4eUO0PMHx9QqYizb1PZN92H3mvS00=;
+        b=GPHtHsK9tpVTQ6TyTELSqvQMHr6L+cJLHi4xxGo5DUwwiYrVPkBvY9sNrQ1nf/0fnV
+         3aghTUV3rb/Iuu+UpM1l3UI/2t6Aka8FoKnjrbswm3/0YPIUCvDnU1RdrBkhC0RrZeAZ
+         VAMBE/AHRd6KErbQFKrLzY4K05zmZiLPMnLMvZ28EgiTMDrrXfKoeT2RjMCv0zhiHktJ
+         ss6nNMztSBfZnN6dyB+2f1MrzaRWvMEIUE8FFKrohXUqP1zAoK7dGEL0fxLfocwxZcCD
+         Pc+pjQzfVt/831uvuwa87PuQWP05OdXwVE7BO1PURQr2lc88q/wzjVLj7PXVr0nK1O4/
+         YvYg==
+X-Forwarded-Encrypted: i=1; AJvYcCVNmq3q5PaP02YjT5TQGFm7sqBoOj2ZPUbqVXR99Kl3zTGAs9H2AStMkV+quQlYK6E+zWwxKxlZ0FY=@vger.kernel.org, AJvYcCWfWOl/7cTM7NWNQaQRFVoxh2xxUC1QrgKC4XHzcxRrSbWfVEark99TUmPncLHFu59hE+Eo6xQUY/k=@vger.kernel.org, AJvYcCXwgy518s+wsbp7BcozE2L0IKvMUcTlsOfoIAMZywOtPNwGf365x9tkxr+2Oyj+FxLlBJ9x1GwQ1Rgsyhbi@vger.kernel.org
+X-Gm-Message-State: AOJu0YxTypfrg9T1i57XJ2u2xCa5EZEy3rfMRng//LOru/5jD2AJYiU7
+	5Iwx3zp6QtPMLSwmZSCWaUjKHLCwKFRV1vPtuZDEkd5f7Q+ijR5m
+X-Gm-Gg: ASbGncubmUoaq97wFv2qCU2aCV7js5v+bClNtaVa15+7P1ztB6EdLnCDk5TwuP69sUI
+	FKdPz+XcBTYfCYfHWIGfkxA/X+HFAGYmk6P9sMs9gMc1C+vEASG6hAQzLyw1egQCaTWq9qC68IA
+	yrr/tWrMhfMGJuxcE8eJTwv6mGc3R3ephHFfv3h2ggyVQvAGOWiEdOnqidfei6OXo9AnJInu+pt
+	Ty9D/5/ab6Yn5mj10u4/PvjyiKQduJfMVEK3s8LTcnpvb00oXArMNyWgEcBtpIrX1QvNWoOB4s4
+	7vnaxY4QCSAwmWHcnn7mgvysYWvsIzFYIADd
+X-Google-Smtp-Source: AGHT+IH+4wAaY50C8bL7aK9Ptp4xkCMlAxpcm/+zXUd2CW2A4362UChdfR33GSZUd9xYi+PVzxtxOg==
+X-Received: by 2002:a17:907:6ea2:b0:ac2:7a3b:31e2 with SMTP id a640c23a62f3a-ac3f251f286mr226334166b.45.1742550979800;
+        Fri, 21 Mar 2025 02:56:19 -0700 (PDT)
 Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef869f19sm122300866b.33.2025.03.21.02.56.15
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef869f19sm122300866b.33.2025.03.21.02.56.18
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 02:56:16 -0700 (PDT)
+        Fri, 21 Mar 2025 02:56:19 -0700 (PDT)
 From: Svyatoslav Ryhel <clamor95@gmail.com>
 To: Thierry Reding <thierry.reding@gmail.com>,
 	Jonathan Hunter <jonathanh@nvidia.com>,
@@ -72,9 +72,9 @@ Cc: linux-tegra@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-clk@vger.kernel.org,
 	linux-pm@vger.kernel.org
-Subject: [PATCH v1 1/3] drivers: cpufreq: add Tegra 4 support
-Date: Fri, 21 Mar 2025 11:55:54 +0200
-Message-ID: <20250321095556.91425-2-clamor95@gmail.com>
+Subject: [PATCH v1 3/3] ARM: tegra: Add DFLL clock support on Tegra 4
+Date: Fri, 21 Mar 2025 11:55:56 +0200
+Message-ID: <20250321095556.91425-4-clamor95@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250321095556.91425-1-clamor95@gmail.com>
 References: <20250321095556.91425-1-clamor95@gmail.com>
@@ -86,42 +86,73 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Tegra 4 is fully compatible with existing Tegra K1 cpufreq driver.
+Add DFLL clock node to common Tegra114 device tree along with clocks
+property to cpu node.
 
 Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
 ---
- drivers/cpufreq/cpufreq-dt-platdev.c | 1 +
- drivers/cpufreq/tegra124-cpufreq.c   | 5 +++--
- 2 files changed, 4 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/nvidia/tegra114.dtsi | 34 ++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/drivers/cpufreq/cpufreq-dt-platdev.c b/drivers/cpufreq/cpufreq-dt-platdev.c
-index 18942bfe9c95..7d15a1224d37 100644
---- a/drivers/cpufreq/cpufreq-dt-platdev.c
-+++ b/drivers/cpufreq/cpufreq-dt-platdev.c
-@@ -140,6 +140,7 @@ static const struct of_device_id blocklist[] __initconst = {
+diff --git a/arch/arm/boot/dts/nvidia/tegra114.dtsi b/arch/arm/boot/dts/nvidia/tegra114.dtsi
+index 341ec0962460..25d063a47ca5 100644
+--- a/arch/arm/boot/dts/nvidia/tegra114.dtsi
++++ b/arch/arm/boot/dts/nvidia/tegra114.dtsi
+@@ -4,6 +4,7 @@
+ #include <dt-bindings/memory/tegra114-mc.h>
+ #include <dt-bindings/pinctrl/pinctrl-tegra.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/reset/tegra114-car.h>
+ #include <dt-bindings/soc/tegra-pmc.h>
  
- 	{ .compatible = "nvidia,tegra20", },
- 	{ .compatible = "nvidia,tegra30", },
-+	{ .compatible = "nvidia,tegra114", },
- 	{ .compatible = "nvidia,tegra124", },
- 	{ .compatible = "nvidia,tegra210", },
- 	{ .compatible = "nvidia,tegra234", },
-diff --git a/drivers/cpufreq/tegra124-cpufreq.c b/drivers/cpufreq/tegra124-cpufreq.c
-index 514146d98bca..6ff2ccc08e5e 100644
---- a/drivers/cpufreq/tegra124-cpufreq.c
-+++ b/drivers/cpufreq/tegra124-cpufreq.c
-@@ -189,8 +189,9 @@ static int __init tegra_cpufreq_init(void)
- 	int ret;
- 	struct platform_device *pdev;
+ #include "tegra114-peripherals-opp.dtsi"
+@@ -710,6 +711,30 @@ mipi: mipi@700e3000 {
+ 		#nvidia,mipi-calibrate-cells = <1>;
+ 	};
  
--	if (!(of_machine_is_compatible("nvidia,tegra124") ||
--		of_machine_is_compatible("nvidia,tegra210")))
-+	if (!(of_machine_is_compatible("nvidia,tegra114") ||
-+	      of_machine_is_compatible("nvidia,tegra124") ||
-+	      of_machine_is_compatible("nvidia,tegra210")))
- 		return -ENODEV;
++	dfll: clock@70110000 {
++		compatible = "nvidia,tegra114-dfll";
++		reg = <0x70110000 0x100>, /* DFLL control */
++		      <0x70110000 0x100>, /* I2C output control */
++		      <0x70110100 0x100>, /* Integrated I2C controller */
++		      <0x70110200 0x100>; /* Look-up table RAM */
++		interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA114_CLK_DFLL_SOC>,
++			 <&tegra_car TEGRA114_CLK_DFLL_REF>,
++			 <&tegra_car TEGRA114_CLK_I2C5>;
++		clock-names = "soc", "ref", "i2c";
++		resets = <&tegra_car TEGRA114_RST_DFLL_DVCO>;
++		reset-names = "dvco";
++		#clock-cells = <0>;
++		clock-output-names = "dfllCPU_out";
++		nvidia,sample-rate = <11500>;
++		nvidia,droop-ctrl = <0x00000f00>;
++		nvidia,force-mode = <1>;
++		nvidia,cf = <10>;
++		nvidia,ci = <0>;
++		nvidia,cg = <2>;
++		status = "disabled";
++	};
++
+ 	mmc@78000000 {
+ 		compatible = "nvidia,tegra114-sdhci";
+ 		reg = <0x78000000 0x200>;
+@@ -841,6 +866,15 @@ cpu@0 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a15";
+ 			reg = <0>;
++
++			clocks = <&tegra_car TEGRA114_CLK_CCLK_G>,
++				 <&tegra_car TEGRA114_CLK_CCLK_LP>,
++				 <&tegra_car TEGRA114_CLK_PLL_X>,
++				 <&tegra_car TEGRA114_CLK_PLL_P>,
++				 <&dfll>;
++			clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
++			/* FIXME: what's the actual transition time? */
++			clock-latency = <300000>;
+ 		};
  
- 	/*
+ 		cpu@1 {
 -- 
 2.43.0
 
