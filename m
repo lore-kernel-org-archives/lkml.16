@@ -1,116 +1,103 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FC0423024C;
-	Fri, 21 Mar 2025 18:21:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AE3F22D7B8
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 18:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742581294; cv=none; b=Kyg3ZTO2lcVk4Jn7KTO/kJpPqLJ2L4IKHP5lATisuYdzA9rp9DVbUD7U25Luj33Yz74CM+hDAUvZLj6NLGNnLu5HwgyZU2Q402tVj+Qnj5aNRmm+jCk5qLyJCKIICnr0ROJRL8AVPJ6K+VGMTuJRtZxB9mOemr8Blb26qUnkMrY=
+	t=1742581307; cv=none; b=PUIxsFUPgmQByGOmD0gsnUIZMfCfdqdyG4EqZjHQH6hzOMao9Wi9g3MipE2WhAurQHkmUW1oF12h5hSBfkiw4gXpn7lmJBZMm4tx8pv+VPfnlA4gALvoGejR86fxWVZN+FaIa/eT02swlgNUQnKYEFH6Q5JcR2qHb/27JBj2eQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742581294; c=relaxed/simple;
-	bh=HfUyjAeNkMQbSIhZ4RNqjqKd/mMVsN76s8xFenDTwr0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kqbGALaoIpWQJxIRHFmoDYYATN547rK8FrzrcXyuF12IMpj5l0VSls/aonTDUe1Icd/4MH9rf0LLN2EQ1rAcXXMDy/yFG7VWHxiP/737zYLvhL4EpQDu2tID/BYSOmpCLsSTY2AHe9XThO/qI8+FtJ4gY55Db/fnbtc6RxOqRdg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UkH5W2Oo; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742581307; c=relaxed/simple;
+	bh=pwPdibPJQed9NnbhGERtZINYpVjrQKL+yWaUc0BWwYk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ct9yjbVffyhpglz5VEkPrqLTQpF5ejWztST//0mw1urvfdbrlEM2ghYzycg5f6gGyY/6eDnMMCmGfCz38sffDrVzQbega5U81tqqzGLFTyaK85yQLSidWC1xD6BVX7oA7jDWfyP27EJeXnjhjd7G1bxxmQzLE08byPkw5bTynRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M2+aLmXC; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UkH5W2Oo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742581292; x=1774117292;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HfUyjAeNkMQbSIhZ4RNqjqKd/mMVsN76s8xFenDTwr0=;
-  b=UkH5W2Oo8J0Yx0jkfsWxBc3zVp27ASxfHhhBZUaqqlDqBHZx2LeNzUcy
-   wBbf8W8qAXHo9BO4tU13BTae0QjsrmLJd3dy/u7CpOgYVUpU5Or29qhcU
-   NvwBXSIa2Zl7D3GKbJ35jq4OFWHv/u4D4eEYn0IS3dYajqLK6ExGENcHG
-   q26wJIDkV+HrRvvxrcFgJxSOh4IctTuUHVfSh/Xp2ERK6pjzRYeOkzRgo
-   WOJ2w1SiPdy+wcxhIhIleu/VTZsn54sFpfxBqBuEXJsU2QNSnXxRmTofb
-   rJTSGW2xob+f6L7BaD67UpECBQ0wSVpOZ3EhFP73nSCek5GVNqv51jcrM
-   g==;
-X-CSE-ConnectionGUID: CKu4JEBVTdy8ashozaivPQ==
-X-CSE-MsgGUID: k6doNIWgSwazlat+k3Iukg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="44046760"
-X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
-   d="scan'208";a="44046760"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 11:21:30 -0700
-X-CSE-ConnectionGUID: +KItHubUSdS0t9v3NeifzQ==
-X-CSE-MsgGUID: Y5zFeKbETmaRpZkww8pfaw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
-   d="scan'208";a="123433917"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by orviesa010.jf.intel.com with ESMTP; 21 Mar 2025 11:21:29 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id E45AA6D4; Fri, 21 Mar 2025 20:21:24 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Chaitanya Vadrevu <chaitanya.vadrevu@emerson.com>,
-	linux-serial@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>
-Subject: [PATCH v1 5/7] serial: 8250_ni: use serial_port_in()/serial_port_out() helpers
-Date: Fri, 21 Mar 2025 20:20:16 +0200
-Message-ID: <20250321182119.454507-6-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.47.2
-In-Reply-To: <20250321182119.454507-1-andriy.shevchenko@linux.intel.com>
-References: <20250321182119.454507-1-andriy.shevchenko@linux.intel.com>
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M2+aLmXC"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 8B82C4439E;
+	Fri, 21 Mar 2025 18:21:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1742581298;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VT3j5ia3YM4BM/xg+Fw4hf8d8cAPlpEijn+7bl03zsE=;
+	b=M2+aLmXCuAkAtEzK22T1y229k0Hx/fEcdMCuVydJ1io66hFVPtiOn7GBAwEYaUnyhjxC94
+	ICATURZtPDmh1DBptvQBie4GII1Pm7bGnMArOcVEhyHMLfO4ZtUjzrVAzlXBmLaMCSQJ2o
+	v0QxoN+dfKbAxbDnacFwsJVtWQlxGKo8R8MnuogRDC52wuk3izUBlzY9ufJLExiD6tlnKM
+	k7rbUwm2fL8rKxFOLoxjROHPAz5M5QHE7vXqivbMecIsaf6TpBAaFZ10mpgP3P7z/SWpQB
+	MHkfpgxw9FAok9ZSgsZYepow4fZBN6nB79LgrwrwqCk9UkR+nfFWiaV9ElT8qw==
+Date: Fri, 21 Mar 2025 19:21:32 +0100
+From: Luca Ceresoli <luca.ceresoli@bootlin.com>
+To: "Maxime Ripard" <mripard@kernel.org>
+Cc: dri-devel@lists.freedesktop.org, imx@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "Andrzej Hajda" <andrzej.hajda@intel.com>, "Anusha Srivatsa"
+ <asrivats@redhat.com>, "David Airlie" <airlied@gmail.com>, "Dmitry
+ Baryshkov" <lumag@kernel.org>, "Fabio Estevam" <festevam@gmail.com>,
+ =?UTF-8?B?SGVydsOp?= Codina <herve.codina@bootlin.com>, "Hui Pu"
+ <Hui.Pu@gehealthcare.com>, "Inki Dae" <inki.dae@samsung.com>, "Jagan Teki"
+ <jagan@amarulasolutions.com>, "Jernej Skrabec" <jernej.skrabec@gmail.com>,
+ "Jonas Karlman" <jonas@kwiboo.se>, "Laurent Pinchart"
+ <Laurent.pinchart@ideasonboard.com>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Marek Szyprowski"
+ <m.szyprowski@samsung.com>, "Marek Vasut" <marex@denx.de>, "Neil Armstrong"
+ <neil.armstrong@linaro.org>, "Paul Kocialkowski" <paulk@sys-base.io>,
+ "Pengutronix Kernel Team" <kernel@pengutronix.de>, "Robert Foss"
+ <rfoss@kernel.org>, "Sascha Hauer" <s.hauer@pengutronix.de>, "Shawn Guo"
+ <shawnguo@kernel.org>, "Simona Vetter" <simona@ffwll.ch>, "Stefan Agner"
+ <stefan@agner.ch>, "Thomas Petazzoni" <thomas.petazzoni@bootlin.com>,
+ "Thomas Zimmermann" <tzimmermann@suse.de>
+Subject: Re: [PATCH v8 2/5] drm/bridge: add support for refcounting
+Message-ID: <20250321192132.211893ec@booty>
+In-Reply-To: <400466cd3c229ea6c6cb25e2a58cee27@kernel.org>
+References: <20250320-drm-bridge-refcount-v8-2-b3ddaa9f1368@bootlin.com>
+	<400466cd3c229ea6c6cb25e2a58cee27@kernel.org>
+Organization: Bootlin
+X-Mailer: Claws Mail 4.3.1 (GTK 3.24.43; x86_64-redhat-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedukedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpeffhffvvefukfgjfhhoofggtgfgsehtjeertdertddvnecuhfhrohhmpefnuhgtrgcuvegvrhgvshholhhiuceolhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepgeelffefgfehhfdtvdefueefieevkefggfelkeeiudetkeektedvhedukefgvddvnecuffhomhgrihhnpegsohhothhlihhnrdgtohhmnecukfhppedvtddtudemsgdtjeemieegieelmegtieguieemgegtudelmeeffeekvgemjegvjegvmegttdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpedvtddtudemsgdtjeemieegieelmegtieguieemgegtudelmeeffeekvgemjegvjegvmegttdejuddphhgvlhhopegsohhothihpdhmrghilhhfrhhomheplhhutggrrdgtvghrvghsohhlihessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepfedtpdhrtghpthhtohepmhhrihhprghrugeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehimhigsehlihhsthhsr
+ dhlihhnuhigrdguvghvpdhrtghpthhtoheplhhinhhugidqrghrmhdqkhgvrhhnvghlsehlihhsthhsrdhinhhfrhgruggvrggurdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghnughriigvjhdrhhgrjhgurgesihhnthgvlhdrtghomhdprhgtphhtthhopegrshhrihhvrghtshesrhgvughhrghtrdgtohhmpdhrtghpthhtoheprghirhhlihgvugesghhmrghilhdrtghomh
+X-GND-Sasl: luca.ceresoli@bootlin.com
 
-There are serial_port_in()/serial_port_out() helpers to be used
-instead of direct p->serial_in()/p->serial_out().
+Hello Maxime,
 
-Use them in various 8250 drivers.
+On Fri, 21 Mar 2025 09:54:55 +0000
+"Maxime Ripard" <mripard@kernel.org> wrote:
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/tty/serial/8250/8250_ni.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> On Thu, 20 Mar 2025 16:42:11 +0100, Luca Ceresoli wrote:
+> > DRM bridges are currently considered as a fixed element of a DRM card, and
+> > thus their lifetime is assumed to extend for as long as the card
+> > exists. New use cases, such as hot-pluggable hardware with video bridges,
+> > require DRM bridges to be added to and removed from a DRM card without
+> > tearing the card down. This is possible for connectors already (used by DP
+> > 
+> > [ ... ]  
+> 
+> Reviewed-by: Maxime Ripard <mripard@kernel.org>
 
-diff --git a/drivers/tty/serial/8250/8250_ni.c b/drivers/tty/serial/8250/8250_ni.c
-index 8bb8bb7bb4f2..15bee1b7dc2a 100644
---- a/drivers/tty/serial/8250/8250_ni.c
-+++ b/drivers/tty/serial/8250/8250_ni.c
-@@ -90,10 +90,10 @@ static int ni16550_disable_transceivers(struct uart_port *port)
- {
- 	u8 pcr;
- 
--	pcr = port->serial_in(port, NI16550_PCR_OFFSET);
-+	pcr = serial_port_in(port, NI16550_PCR_OFFSET);
- 	pcr &= ~NI16550_PCR_TXVR_ENABLE_BIT;
- 	dev_dbg(port->dev, "disable transceivers: write pcr: 0x%02x\n", pcr);
--	port->serial_out(port, NI16550_PCR_OFFSET, pcr);
-+	serial_port_out(port, NI16550_PCR_OFFSET, pcr);
- 
- 	return 0;
- }
-@@ -105,7 +105,7 @@ static int ni16550_rs485_config(struct uart_port *port,
- 	struct uart_8250_port *up = container_of(port, struct uart_8250_port, port);
- 	u8 pcr;
- 
--	pcr = serial_in(up, NI16550_PCR_OFFSET);
-+	pcr = serial_port_in(port, NI16550_PCR_OFFSET);
- 	pcr &= ~NI16550_PCR_WIRE_MODE_MASK;
- 
- 	if ((rs485->flags & SER_RS485_MODE_RS422) ||
-@@ -120,7 +120,7 @@ static int ni16550_rs485_config(struct uart_port *port,
- 	}
- 
- 	dev_dbg(port->dev, "config rs485: write pcr: 0x%02x, acr: %02x\n", pcr, up->acr);
--	serial_out(up, NI16550_PCR_OFFSET, pcr);
-+	serial_port_out(port, NI16550_PCR_OFFSET, pcr);
- 	serial_icr_write(up, UART_ACR, up->acr);
- 
- 	return 0;
+Thanks a lot for reviewing!
+
+I noticed you haven't replied on patch 3. Being a change you had
+suggested, I was wondering whether haven't noticed that. If you are OK
+with that patch, the entire series would have a R-by, which would be
+great to unlock all the work depending on this series.
+
+Luca
+
 -- 
-2.47.2
-
+Luca Ceresoli, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
