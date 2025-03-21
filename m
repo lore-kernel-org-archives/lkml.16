@@ -1,284 +1,173 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A02741DE4C2;
-	Fri, 21 Mar 2025 16:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 638D878F51
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:09:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573311; cv=none; b=Decf8HbZ3VF7y2xiGR8DoS79klnWEng5YohFCTXW+A0LZ4R48uxHBnRHqem2soaPAhnJNGbI4SGZng1IYHhs6rGmPNFYVqrSJqyOP7C5/efNFpnn92gDfma31cZbOmFInzGnxMhgHq2C1etle8fp6SZBtV6euBEv2ZAdCcuZ9o4=
+	t=1742573358; cv=none; b=aJyZeb0WcbQ5VDjJMHrUwluU3Hbb3imk9MvKf6lWArjaBV5rq+lrN+z5Zyup2iTkjj4gG0C8Cvnn9A+66VGgkdyenYgT8bpXbwUwVCg9yKMNjyBRqVTNgZIcvBVNFn/qUMtoGAyLfGAxm1zs98/s9xSZhTbWyOtc/I/QMyfzALs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573311; c=relaxed/simple;
-	bh=qN+LpDUJYEqiy0V6nsKAjCdksehseRBDZ9lr0ggP17o=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JXeS2RDvWZvkduLfcVGZxx0vofQ64NyXGKq4YUgMDxLqBGiP/nLGibwVahISuG3hXjzoztjugiz56JJXJxAlDWUJ6qH0+UGjS5Drm5QUfHCziFHOnrl3PT6pUrErP/zpyg20xw+kjwT2Zv9iRCYuldxdvHqY1InyxoRZt0QRbZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EyQVUF9t; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742573358; c=relaxed/simple;
+	bh=llZWZG8vrikSmiw8ydIW6hs/MJhHomqckp7K5dqW3d0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=KaJoelN2kB/WKR03vguJ7dVutRlPPTGX3yJu3nIhh9OhBcgfgPzT9Vt9vvfoU7k5sFeLPxfJHW4whxsUJxGIjIjeqtnaOPY8BwGpqi53GzGLCg39k8kqfpxPkJPK6r738Wsj1I1M1yHrzlLta/bj8g606XebNLtgxgC+T0P0Xi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=MBt27kD4; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EyQVUF9t"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-47664364628so22991641cf.1;
-        Fri, 21 Mar 2025 09:08:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742573308; x=1743178108; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uvXualmAR3FInNiY6DGDtZdQ6hg4lKs5EWYscjWgiQk=;
-        b=EyQVUF9t1hxox8O82Ee/VavpJmZJaMPvBgCpsH4HPsGTm7JuTtVlXEWukfaubIeSlV
-         sYehzIUDdbETLyR/BWYO+MPtQhwKLHQV2sYLO5sjhobxjNR0CkjgLl9VPmnYbtalq6G6
-         z+4XY3TlHBxBf6mPF1k26UC43r/zb0sdNLFTQ70380uxFxZ3OPzp9K7OD67qVrCTFchJ
-         F8wT8CcMzNlUZX5BvMMhoNJZzE/rUhi8vTxARdmDWBZYV2v1BRvyQiY0CJa7XwWw9XzW
-         KXie4eni3KpM1wBCa+4z42M9rPxWeuL6zwhKkYm85CBtwloU1NutmNbC4K4QlcbwecVf
-         wROg==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="MBt27kD4"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATAcp022097
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:09:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	fdOuElFLpccoJsuXgqKPQO+xF/9Y5vee1gm2/OiO0Gw=; b=MBt27kD4ga1ISE1Y
+	oYW+r5SB7YuIJ+WP2qd2UrnA9bVoMbvLpp5Ag6nBiypSs0xrww2+q4JskgZvPgEh
+	FfXtDFZQSKbkuuGSua1GvghQRGqBh+9M0S6PEv7JSilvs2kl6QO1uM2FN2H7Zjnr
+	LDT7PioLyMjyMH0rl3DqPfPkkWX9cjW4KzssK3WpktwvD0pvXnotcSGd2uKYVkCB
+	JM/Tqlr0ZQUgjKJTcL48w3PJVc/nAGf82cwFwiuHmOegvi9e+AD/uQwQWf5RFnOc
+	sVLDE2CO6twu/klPDlOell0cX7YaIgiWxafKlBrI1ye4lLVmpLJdRKzyD+3HWF3K
+	IrpZ2A==
+Received: from mail-pl1-f200.google.com (mail-pl1-f200.google.com [209.85.214.200])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h4wph7ug-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:09:16 +0000 (GMT)
+Received: by mail-pl1-f200.google.com with SMTP id d9443c01a7336-2254bdd4982so50949085ad.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:09:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742573308; x=1743178108;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uvXualmAR3FInNiY6DGDtZdQ6hg4lKs5EWYscjWgiQk=;
-        b=vIFgKxDHmK+JIqbyE4sWPKQFqa2o3gxE+J6Yj6xACThV5zCqTdUZwcDvp8exUXi501
-         q595ldNszglTMltw37w9sUyew8qPYFm7UDImlC5IR4nV8NyEjOX+At4dq/BQMq8zGys9
-         xvmxqYGLZpEK3Q3BVO+zzp2AuNHOR90NVx+9dK50ZKy2KQPzHTSiUALqsMLlBf8EC1Dq
-         3fvkMEi1DPbukAQX2RYzch8qnvnZ4NU7IPnd60pdV1CPXM4ETbZMmvTvDy6ztaU2448q
-         KkLfXA32o1mLT3bs+Gj98Eq9gNVnfi0l6VO8SfJNBQdvfpFKZ8QxZ+UWv4g0vTkkqvSp
-         qjWw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFUUttMdYKNtbvhPsyNFAnC2ztzB1p5UvmFvE9VkUWYACjD0APeGDIb/Txzz7fGrrWr34quz3CJQQbhAlTFFA=@vger.kernel.org, AJvYcCXIIq4FrwQQ/Grl1yo2OvfTD47VjiaEn8LucocW6DoZlT9TMmGMtOAZHzPATFFV9b7Ra7i9EBreXGYkNqE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLU8+wPcstIymqxPklA2GlzHUukefeptK4XCuy6tbhmOobTeHb
-	G1uc1rGZfAflEOQTAHd1h2X2nq+dR4j2cKHf/DpVu3x3kvc0wFp3
-X-Gm-Gg: ASbGnctbuVhSxNanWorjob8v0mU7eO2+ad2CM6wnCXBHN6YaBqg9miVWjc6doklgMVs
-	yLushJMTxxBMPKm5JjqOyB6z12lG7gdAS3jl8OK/l+G5nH8r5H9hII+fxe8qsMaWZjlBkt9lglN
-	mWmVdMhkr1AeOYuFCcPC8TXXilLNFzWqkhopwUu3FaXqXQTls5iyzLmn9KhVfgsIp4ioTibv8T6
-	Grh6NspQog1AQUNKkGJuixk5dOlPjxM20FokqT346sngH9ncw8F9oQ67k47RM/W9ahLncf+2nbv
-	8VVzxBq9pfmdPOZ/hQZv3Y8nCCTI7S1Dg833sBaLmXKeQCdTs7QOFcJkzBO6swyuU74++j2ceMm
-	HZ80pkn8AgeRC06yzBOgBIJ/gj/PbFZ25kqg=
-X-Google-Smtp-Source: AGHT+IHAhQl0luzGh+/SDl+pY3gD66OmPkHrDFmFVuahgjg6pUgKi4pQNtt5muaHUMwspMgEjknM9g==
-X-Received: by 2002:a05:622a:244c:b0:46e:2d0b:e1bf with SMTP id d75a77b69052e-47710c4011cmr126432401cf.11.1742573308190;
-        Fri, 21 Mar 2025 09:08:28 -0700 (PDT)
-Received: from fauth-a1-smtp.messagingengine.com (fauth-a1-smtp.messagingengine.com. [103.168.172.200])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4771d15a2d9sm13442691cf.2.2025.03.21.09.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 09:08:27 -0700 (PDT)
-Message-ID: <67dd8efb.050a0220.11e64e.7506@mx.google.com>
-X-Google-Original-Message-ID: <Z92O-TBYRQh4kCTf@winterfell.>
-Received: from phl-compute-06.internal (phl-compute-06.phl.internal [10.202.2.46])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 1E35E1200043;
-	Fri, 21 Mar 2025 12:08:27 -0400 (EDT)
-Received: from phl-mailfrontend-02 ([10.202.2.163])
-  by phl-compute-06.internal (MEProxy); Fri, 21 Mar 2025 12:08:27 -0400
-X-ME-Sender: <xms:-47dZzFzTG4l0fZMgQbDuTM6PO2wD2-wrNlLi23eeOz2GG3dcZsG4w>
-    <xme:-47dZwUuLZ2lolOywBMuW7jEyuqj62ljKNyl7lcbL7-RijguCYC9kzqF46jwQn1FJ
-    _yyKEWWnCsQQhRAgA>
-X-ME-Received: <xmr:-47dZ1JukT0Uu9P4iUfgodKRx4Zh_oStEzBAcpQTwCy3VuDPXeWZMiAlTMo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheduheefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeeigedujeffgefgudevkeeuleehvdduvddv
-    udekjeejudefuefhkefguefhgfetgfenucffohhmrghinhepkhgvrhhnvghlrdhorhhgpd
-    hpthhrrdgrshenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrihhlfhhr
-    ohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvge
-    ehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhm
-    sehfihigmhgvrdhnrghmvgdpnhgspghrtghpthhtohepudefpdhmohguvgepshhmthhpoh
-    huthdprhgtphhtthhopeholhhivhgvrhdrmhgrnhhgohhlugesphhmrdhmvgdprhgtphht
-    thhopehojhgvuggrsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhgvgidrghgrhi
-    hnohhrsehgmhgrihhlrdgtohhmpdhrtghpthhtohepghgrrhihsehgrghrhihguhhordhn
-    vghtpdhrtghpthhtohepsghjohhrnhefpghghhesphhrohhtohhnmhgrihhlrdgtohhmpd
-    hrtghpthhtohepsggvnhhnohdrlhhoshhsihhnsehprhhothhonhdrmhgvpdhrtghpthht
-    oheprgdrhhhinhgusghorhhgsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrlhhitg
-    gvrhihhhhlsehgohhoghhlvgdrtghomhdprhgtphhtthhopehtmhhgrhhoshhssehumhhi
-    tghhrdgvughu
-X-ME-Proxy: <xmx:-47dZxERhfTYatd3_MZgOvVbbSND0npVckpuCtETbVaYPR5AkrMNjg>
-    <xmx:-47dZ5VO7V8vJ7pn0Hi4yfIT8PksIYXTG26n6pG-_RTghs-rK8BusQ>
-    <xmx:-47dZ8Pv5jR_X7_txZcosAxK13K39meeNek7qUD4ID1QfJunH45pLw>
-    <xmx:-47dZ43ZHpYV5n7mku46_KT_YrbCZdjykeiofnHAFGGp0nRNATJV5Q>
-    <xmx:-47dZ-UbRH95DJAUdyYd80OFRoqRz7nRArLOcwjo-F8AsrxdV56kr3hH>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 21 Mar 2025 12:08:26 -0400 (EDT)
-Date: Fri, 21 Mar 2025 09:08:25 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Oliver Mangold <oliver.mangold@pm.me>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Asahi Lina <lina@asahilina.net>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 1/4] rust: types: Add Ownable/Owned types
-References: <20250313-unique-ref-v8-0-3082ffc67a31@pm.me>
- <20250313-unique-ref-v8-1-3082ffc67a31@pm.me>
+        d=1e100.net; s=20230601; t=1742573355; x=1743178155;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fdOuElFLpccoJsuXgqKPQO+xF/9Y5vee1gm2/OiO0Gw=;
+        b=KTMXl/fknhuvdT/CdVr6am2Y2A0/Y8uzn4roe5nhkYOVAv4JFgt7tlfJ9wsQJAsa3p
+         CtRVOVFb1aPMtZsKk6B5FkMROkSkwaSpoi83oUk3hvOJPaHWZZs4EapR/YvAv9PQ5hN0
+         uJ5W/gXVnMneLX0IBaaWoY9lBtPZFPnRtXf98RoIys6USKRzdhWuoDah5QhkW/Y1F4qH
+         onTjrGV+rRxwkfs5GEduoNEsD9uoQQBWo9Y5yuuC/u9olFe+KBC/oNEJtGpJ/Ve1QI1L
+         6XbZI1z45bqTWO5+qXY3t9XEdQ6kvq78TENI1l0T8lXVf6vV30M1jnKpkLpeXPHZW8NY
+         bDcA==
+X-Forwarded-Encrypted: i=1; AJvYcCWxlKPAy9N0KCPmjcUKF9hg53qrwvc/bUZFTv5BPgA3WqJU11xyvIBDnElLJEhd8FD/2V26mE/JiBz6QQk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgEvwOac1EY+nXlDVrehXRLdiQ0wWNkmQj3CBhOoj8aV9VHxUd
+	MaYzJa1fCHFz3rQxFZiGBW3Qx6MMZzPuUfSpghpvGzi64r7V2CxqNmjWHcYbRaRGtmJoeLBW/uZ
+	KlChZTb4VKnHAxgJOlxZ04QUrNSRbfytzLdvCiwkKDjFz7rUeZ6LifWYjkTrSDBA=
+X-Gm-Gg: ASbGncsvPspP9ZWRoo+0nUyWEFaTyz5tgJPi3OXKrgJyTfuB0oMdRm9fW/XcNOVmCFD
+	OSofWrv161H/Yp57c+FfpsQZFRqraYcYSLUZsmqOg95tUjVwypr4P+C1izf8OCAvqhWx2ouO8jf
+	5jkz2XqZ818KXjI2+K+QBngd7cLLpNf9baTGTTCtB5fr4N9e1GxgLC+yIuqzdgatRwOlunFudLg
+	q41jQbzanAASE52/3uogy1+hZ0hJf8Jq1O71UY1JrIDq0r/q6E3G7OJc0LBuT88yufNZFn9dlpL
+	RKmAA/TO1AKx2rnJF+nRtIFRyX7cPoguMhG30xck9aTyPq/QQoIqHK79ldopaJZ2SA==
+X-Received: by 2002:a05:6a00:4f81:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-73905a530a9mr6797788b3a.21.1742573354404;
+        Fri, 21 Mar 2025 09:09:14 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGL5fYByHbvsD/gRtsSQfXYP8pBS52gj7BStPaMfEBPmc/gB4ybx9sZflEDEhvH+V7H0dixLA==
+X-Received: by 2002:a05:6a00:4f81:b0:736:5822:74b4 with SMTP id d2e1a72fcca58-73905a530a9mr6797719b3a.21.1742573353797;
+        Fri, 21 Mar 2025 09:09:13 -0700 (PDT)
+Received: from [10.226.59.182] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-af8a27de717sm1957838a12.12.2025.03.21.09.09.11
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 09:09:13 -0700 (PDT)
+Message-ID: <4d617199-191c-47d9-a0f1-5bf9c149d09d@oss.qualcomm.com>
+Date: Fri, 21 Mar 2025 10:09:05 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313-unique-ref-v8-1-3082ffc67a31@pm.me>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 6/7] accel/rocket: Add job submission IOCTL
+To: Tomeu Vizoso <tomeu@tomeuvizoso.net>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+        Oded Gabbay <ogabbay@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Thomas Zimmermann <tzimmermann@suse.de>,
+        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org,
+        linux-media@vger.kernel.org, linaro-mm-sig@lists.linaro.org
+References: <20250225-6-10-rocket-v2-0-d4dbcfafc141@tomeuvizoso.net>
+ <20250225-6-10-rocket-v2-6-d4dbcfafc141@tomeuvizoso.net>
+Content-Language: en-US
+From: Jeff Hugo <jeff.hugo@oss.qualcomm.com>
+In-Reply-To: <20250225-6-10-rocket-v2-6-d4dbcfafc141@tomeuvizoso.net>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-ORIG-GUID: ViG_VhdPHDSmwrHwmXbRDm4TnBYXTuQp
+X-Proofpoint-GUID: ViG_VhdPHDSmwrHwmXbRDm4TnBYXTuQp
+X-Authority-Analysis: v=2.4 cv=ZN3XmW7b c=1 sm=1 tr=0 ts=67dd8f2c cx=c_pps a=IZJwPbhc+fLeJZngyXXI0A==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=otp63fjl-Mw8CRR8ssMA:9 a=QEXdDO2ut3YA:10 a=uG9DUKGECoFWVXl0Dc02:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-21_05,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503210118
 
-On Thu, Mar 13, 2025 at 07:00:04AM +0000, Oliver Mangold wrote:
-> From: Asahi Lina <lina@asahilina.net>
-> 
-> By analogy to AlwaysRefCounted and ARef, an Ownable type is a (typically
-> C FFI) type that *may* be owned by Rust, but need not be. Unlike
-> AlwaysRefCounted, this mechanism expects the reference to be unique
-> within Rust, and does not allow cloning.
-> 
-> Conceptually, this is similar to a KBox<T>, except that it delegates
-> resource management to the T instead of using a generic allocator.
-> 
-> Link: https://lore.kernel.org/all/20250202-rust-page-v1-1-e3170d7fe55e@asahilina.net/
-> Signed-off-by: Asahi Lina <lina@asahilina.net>
-> [ om: make from_raw() and into_raw() public, small fixes to documentation ]
-> Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
-> ---
->  rust/kernel/types.rs | 109 +++++++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 109 insertions(+)
-> 
-> diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-> index 55ddd50e8aaa075ac33d5f1088a7f72df05f74f4..65f6d0721f5f23c8db79c6735dc7d5e1ac984ea7 100644
-> --- a/rust/kernel/types.rs
-> +++ b/rust/kernel/types.rs
-> @@ -551,6 +551,115 @@ fn drop(&mut self) {
->      }
->  }
->  
-> +/// Types that may be owned by Rust code or borrowed, but have a lifetime managed by C code.
-> +///
-> +/// It allows such types to define their own custom destructor function to be called when
-> +/// a Rust-owned reference is dropped.
-> +///
-> +/// This is usually implemented by wrappers to existing structures on the C side of the code.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that any objects borrowed directly as `&T` stay alive for the duration
+On 2/25/2025 12:55 AM, Tomeu Vizoso wrote:
+> +/**
+> + * struct drm_rocket_task - A task to be run on the NPU
+> + *
+> + * A task is the smallest unit of work that can be run on the NPU.
+> + */
+> +struct drm_rocket_task {
+> +	/** DMA address to NPU mapping of register command buffer */
+> +	__u64 regcmd;
+> +
+> +	/** Number of commands in the register command buffer */
+> +	__u32 regcmd_count;
+> +};
+> +
+> +/**
+> + * struct drm_rocket_job - A job to be run on the NPU
+> + *
+> + * The kernel will schedule the execution of this job taking into account its
+> + * dependencies with other jobs. All tasks in the same job will be executed
+> + * sequentially on the same core, to benefit from memory residency in SRAM.
+> + */
+> +struct drm_rocket_job {
+> +	/** Pointer to an array of struct drm_rocket_task. */
+> +	__u64 tasks;
+> +
+> +	/** Pointer to a u32 array of the BOs that are read by the job. */
+> +	__u64 in_bo_handles;
+> +
+> +	/** Pointer to a u32 array of the BOs that are written to by the job. */
+> +	__u64 out_bo_handles;
+> +
+> +	/** Number of tasks passed in. */
+> +	__u32 task_count;
+> +
+> +	/** Number of input BO handles passed in (size is that times 4). */
+> +	__u32 in_bo_handle_count;
+> +
+> +	/** Number of output BO handles passed in (size is that times 4). */
+> +	__u32 out_bo_handle_count;
+> +};
+> +
+> +/**
+> + * struct drm_rocket_submit - ioctl argument for submitting commands to the NPU.
+> + *
+> + * The kernel will schedule the execution of these jobs in dependency order.
+> + */
+> +struct drm_rocket_submit {
+> +	/** Pointer to an array of struct drm_rocket_job. */
+> +	__u64 jobs;
+> +
+> +	/** Number of jobs passed in. */
+> +	__u32 job_count;
+> +};
 
-It may be more clear to use `&Ownable` instead of `&T`, but I will wait
-and see if others have better ideas.
-
-> +/// of the lifetime, and that any objects owned by Rust as [`Owned<T>`] stay alive while that owned
-> +/// reference exists, until the [`Ownable::release()`] trait method is called.
-> +pub unsafe trait Ownable {
-> +    /// Releases the object (frees it or returns it to foreign ownership).
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that the object is no longer referenced after this call.
-> +    unsafe fn release(this: NonNull<Self>);
-> +}
-> +
-> +/// A subtrait of Ownable that asserts that an [`Owned<T>`] Rust reference is not only unique
-> +/// within Rust and keeps the `T` alive, but also guarantees that the C code follows the
-> +/// usual mutable reference requirements. That is, the kernel will never mutate the
-> +/// `T` (excluding internal mutability that follows the usual rules) while Rust owns it.
-> +///
-> +/// When this type is implemented for an [`Ownable`] type, it allows [`Owned<T>`] to be
-> +/// dereferenced into a &mut T.
-> +///
-> +/// # Safety
-> +///
-> +/// Implementers must ensure that the kernel never mutates the underlying type while
-> +/// Rust owns it.
-> +pub unsafe trait OwnableMut: Ownable {}
-> +
-> +/// An owned reference to an ownable kernel object.
-> +///
-> +/// The object is automatically freed or released when an instance of [`Owned`] is
-> +/// dropped.
-> +///
-> +/// # Invariants
-> +///
-> +/// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`Owned`] instance.
-> +pub struct Owned<T: Ownable> {
-
-This can be:
-
-	pub struct Owned<T: Ownable + ?Sized>
-
-right? Hmm.. but `ARef` doesn't support trait objects yet. Maybe it
-makes sense to support for both `Owned` and `ARef` later?
-
-> +    ptr: NonNull<T>,
-> +    _p: PhantomData<T>,
-> +}
-> +
-> +// SAFETY: It is safe to send `Owned<T>` to another thread when the underlying `T` is `Send` because
-> +// it effectively means sending a unique `&mut T` pointer (which is safe because `T` is `Send`).
-> +unsafe impl<T: Ownable + Send> Send for Owned<T> {}
-> +
-> +// SAFETY: It is safe to send `&Owned<T>` to another thread when the underlying `T` is `Sync`
-> +// because it effectively means sharing `&T` (which is safe because `T` is `Sync`).
-> +unsafe impl<T: Ownable + Sync> Sync for Owned<T> {}
-> +
-> +impl<T: Ownable> Owned<T> {
-> +    /// Creates a new instance of [`Owned`].
-> +    ///
-> +    /// It takes over ownership of the underlying object.
-> +    ///
-> +    /// # Safety
-> +    ///
-> +    /// Callers must ensure that the underlying object is acquired and can be considered owned by
-> +    /// Rust.
-> +    pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
-> +        // INVARIANT: The safety requirements guarantee that the new instance now owns the
-> +        // reference.
-> +        Self {
-> +            ptr,
-> +            _p: PhantomData,
-> +        }
-> +    }
-> +
-> +    /// Consumes the [`Owned`], returning a raw pointer.
-> +    ///
-> +    /// This function does not actually relinquish ownership of the object.
-> +    /// After calling this function, the caller is responsible for ownership previously managed
-> +    /// by the [`Owned`].
-> +    pub fn into_raw(me: Self) -> NonNull<T> {
-> +        ManuallyDrop::new(me).ptr
-> +    }
-> +}
-> +
-> +impl<T: Ownable> Deref for Owned<T> {
-> +    type Target = T;
-> +
-> +    fn deref(&self) -> &Self::Target {
-> +        // SAFETY: The type invariants guarantee that the object is valid.
-> +        unsafe { self.ptr.as_ref() }
-> +    }
-> +}
-> +
-> +impl<T: OwnableMut> DerefMut for Owned<T> {
-> +    fn deref_mut(&mut self) -> &mut Self::Target {
-> +        // SAFETY: The type invariants guarantee that the object is valid,
-> +        // and that we can safely return a mutable reference to it.
-> +        unsafe { self.ptr.as_mut() }
-> +    }
-> +}
-> +
-> +impl<T: Ownable> Drop for Owned<T> {
-> +    fn drop(&mut self) {
-> +        // SAFETY: The type invariants guarantee that the `Owned` owns the object we're about to
-> +        // release.
-> +        unsafe { T::release(self.ptr) };
-> +    }
-> +}
-> +
-
-Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
-
-Regards,
-Boqun
-
->  /// A sum type that always holds either a value of type `L` or `R`.
->  ///
->  /// # Examples
-> 
-> -- 
-> 2.48.1
-> 
-> 
+These 3 structs will be different sizes in 32-bit env vs 64-bit env. Yes 
+the driver depends on ARM64, but compat (32-bit userspace with 64-bit 
+kernel) is still possible. They should all be padded out to 64-bit 
+alignment.  When you do that, you should specify that the padding must 
+be zero, and check for that in the driver so that you have the option to 
+use the padding in the future.
