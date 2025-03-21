@@ -1,63 +1,63 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47653169397;
-	Fri, 21 Mar 2025 13:59:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1039B1C863C;
+	Fri, 21 Mar 2025 13:59:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742565546; cv=none; b=dasKJWD4N97tywTqVyQKlaF0DDkgNS7nUt+9NycrBIMfQJJw5zsA9NR0PBQrG/9Zzz9VbOmihgA/HLhgDGSRTCREPxTJQ560vVMDcP7FUXIZVstJAKB/UTxj0SM47VXFLty18u2rP7FjAfNMySrcXoWn4pRP8IZIG0CM4AolMC4=
+	t=1742565548; cv=none; b=lh7N0zPJIRgsnO6tqvd4r3tCZxU7dXwYr9OU3KOSyJGeyDHDD9/W02jfNruJNr/x3T9+9+YIkzXMhHIvV+EQOjMpG8jSFvAcqn0GhmebL+fWWNHnEWppDqzkbR7NanIj8wSkVUtcjdoGxVRvbCAf9OD0nIaEUefEvMdLl9CV7Sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742565546; c=relaxed/simple;
-	bh=ZJC40o810p8ayiR7NIMSKxZSOPhG8klnx2E364F9OX0=;
+	s=arc-20240116; t=1742565548; c=relaxed/simple;
+	bh=m6hZszT1VHbW/jN06s9zsoAvK38ySkDC7EKMfjH0DpY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dme4bBKP08PrMflvSPUMeOyV/VSCKZCu0pdfmgzTRVT6ZDGcoFMOuim2DNH2Q3AOZypIKfi0wb0e2jFIMFS80acZwfXsEJzwov/jtCt8WPNiszPS8pBWDtQqxGhcFzMLdXJdmCkuTRdku6C1NB/Tro66bZV/e1GBR1H0aKmE0TU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=muz2KIDv; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=Ju7SQKIs60VGCDcNcN6QoxeUX1NM+auvRivn0tRZiV3T2ZyPYeen80Sh7wCD1Gf7svC6k49PHqNC3bMQGqkTRsGh4ojusx21O8SR4SUOE5csjWHXcSlLYchw3vo+4NcKgEfjw2jc87RHTGql09NvXaYXXgaiOyXU7rZoCp6vGzE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nVHQzFzE; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="muz2KIDv"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-39141ffa9fcso1802881f8f.0;
-        Fri, 21 Mar 2025 06:59:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nVHQzFzE"
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3912e96c8e8so1236122f8f.2;
+        Fri, 21 Mar 2025 06:59:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742565542; x=1743170342; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1742565545; x=1743170345; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=w5bLkk6uqPyWirFskOF6TYLbFYm64XVe1/MBmiWZndA=;
-        b=muz2KIDvIoSFFZBOrmOSzDD7TV3720ukHzsqbggCFxSSrJ2hlULemXZiDmL5RmE8+z
-         dGbyqEAqGW6n466hq8cRZAFGSigSIyX7xQtlOlyrLvbfBWnpenH4vBTNh293HnyS8lWa
-         Lb3R43EzQk7utdhN1cKB5ep7RfJeZ9GxKbtLvzCeef/T2Lq1uT9B9QTXCjxzrPoZOyAZ
-         F8eZG3e2zto9cH4N3xVzeYdWUNIM2bFCS1Y30XglfdRmr4iAuoX/FTfSoWIHYEdfTTzd
-         VtQm3hBbq/e8fnpS2isD79zJUH3jxTzgPY4NJe3eQHdl98HV5K6NWI6jGYedKDfgrHYr
-         stOw==
+        bh=dL00t3QE4ASPpAeBNPhfJbN60yp6PFJbIaqm4DRKcSA=;
+        b=nVHQzFzEwO3EBSrhlIRFI/XIiPauja+jfpUjEmIPxLa/H8QgcVPDvQmBfq+fn0CoZB
+         pLP+BTgX1CFnfzOzGMTsKGVB3oAsn94kkvsQv6OrzteYGMAxYVvJxbTHlOFus2sqKbFU
+         zUsSnU5VRiGMPLURhVvQuHwJB4AxnLdaf4h4DiHIrmuNFItIdsEH3ejJsivV2gdD2gwt
+         7DA/9lnldx3H2VS1XvWPNlBN3VJHi18BJrQADsJoESMedo7jOeENfgUfLh30wfCgh0sq
+         oJuuGmZiJpnwdJE/UPS0CWeXoZMY9Z+i6TleQc3umV4XdiEKgEb0KX4BVSsNBT3eWfgG
+         /aGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742565542; x=1743170342;
+        d=1e100.net; s=20230601; t=1742565545; x=1743170345;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=w5bLkk6uqPyWirFskOF6TYLbFYm64XVe1/MBmiWZndA=;
-        b=IBGDhZ3xwe02lOIhPKrLexTu9XVkQkn3mbMBJGLKlDTE4NrobpNwwmBx1y7T7L7705
-         mrNYJYup26miOIVN0Rp6fV3IH7yCEB+Zr4qTvVIXzfR31cA1YOU2iKYLv1tf3+CV7QsT
-         VFBm77WLpykFh6K51VTuu+EfFkYYROUI2XvV5XZIZ1X4GivoeFDPHWjiiGJJGOPGGq8L
-         Wduak/uHypKzFK7bDswG5ZsPZ2ZfXVHnQmQbktgpT8z/U4C6n+qB8Eok4JHgmy7R7WML
-         SHMjf4DSA0/Zi8bWrRu3u8Mbzn42Cyx1LBPu8gVmtIhcWS5WJhPXxdDoW/SyNS07uk+d
-         X5Xw==
-X-Forwarded-Encrypted: i=1; AJvYcCVIRukFx8Fy5X7BzPlgldkUgyU94u7xCqG0hGcsL7BNMfGGNbOd1sf0ux+1bvsM1DOozqZg18CwtDjgwu1Q@vger.kernel.org, AJvYcCXZ242u08Qz9Lo0nmf1RfwWKiDOpW3mPMbkuD8sCRb2u4RQkJfBi+C7Dl1UhIOierl5vY+NaQ2XVnUD@vger.kernel.org, AJvYcCXxE0D+g+1ergW/gAZ2tCjAc337eMfdinqnQpDEs+vFHP7vwBDkkuCdmSvyG1thMBbQoUV0m4XaPIs2gRPwpwEksKw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxuXQmCEj0Fs2H/qhvXmW0Rk/+Rb7KfMvQT64xkAZdEykdXZW+0
-	Z/StXpcSnudj0J0jzgui1AhZcWsS8g25aqezrDC/tlM0BC4ygzwJ
-X-Gm-Gg: ASbGncvdIJctE+MvghgTkPrzgMGMCi+ibcWyge2nWJEI6OzbwlfPW8hfc3vLVQ7fMMK
-	jo726scJdrtGttVE2fTIiGQnVmiC9VyZaufHvbiUJPbdqI2ZCqyi0NdcZSu7kpQsJ1I44Xe0l8J
-	TzeSb0UNZurBCQXDmgQt7SkXznjfS9nZmp+Bbx9z6x6zsnA73zCuTo7sX3V/VDnLyiXdMKWqj4L
-	mkHWO/xoiHhoQBjW1jQWp2GGBVlb7mSJJMbHK+UbI9p3KQm/O9BvSoFk9JjQ/erT1ZYFPhEjFjB
-	YOnbI1xazIAHfi1RndxviLNOc8n2bPTLtA0b4eZWjZsB4pt1lvMbQeUTb0dlUSItSY8f98pwrKM
-	9Smt5TeQ/gqvqJsQUdImT
-X-Google-Smtp-Source: AGHT+IHNOmMa9KW3MUdMo1gO9oj/91uP7LkUin/DdC6+LBE4xrKRJwfNY8vmAFeiFQoQQMTRjkFDAQ==
-X-Received: by 2002:a5d:584b:0:b0:390:f9a5:bd79 with SMTP id ffacd0b85a97d-3997f90ab9emr3286675f8f.26.1742565542199;
-        Fri, 21 Mar 2025 06:59:02 -0700 (PDT)
+        bh=dL00t3QE4ASPpAeBNPhfJbN60yp6PFJbIaqm4DRKcSA=;
+        b=A815xKVZ8v3Bj44pZBKUpqa8TbaqgdrV4m/xZVcU+LC+OD/vIO03lqctzwr14BuQCx
+         sJToZjbrTxvLxwEOCymkmvbRq7UrVqWc+CoYIHRH4TEKMtXQohmmz3C80A/T4+2LL0rR
+         vlrnLso7iXpFixtxlMFg2gmvuBqbNp6BoYi7AtZX4vBO2Tlhvsy2wMrJWUyfc8W/rvVX
+         0D1C5d78P/waQ6ww9lGYlGaZo7EEa3oBHvzJuURTKFmaXJe4pMURJeDxoYrOSuvN5IoZ
+         U1vaUUa50s50YVYz/me5qjEAFwdFJAPV+JrhO3k2m/OJl915RIuKt7SrPU4mm9zN6xYb
+         8xRA==
+X-Forwarded-Encrypted: i=1; AJvYcCV/G4EM+ZdIiqCdLTi/RZnT42FxlE25xk8brujMdronq7HmU6Orvj2k+a3TODKsdodfR2sboDQg0lpR@vger.kernel.org, AJvYcCWWmCYvdAJSI1Dfc1cGAvIHyrXWKh6/uETq8v0ihT/meP0CaKENE+r77o0XkJ5JQPhcprR5S1mt6p7CFdmk@vger.kernel.org, AJvYcCX186Nvq9Qu/ghRLbbm2Xjq4YpdgRmhUNjf/l6ddLH+G0SwtkcNrHsHRCHwhw82Hkh+MTD2gJQ9q9eo8eHhROYiKQc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxKKU5EFklHV1iXEMy5E1CmlVQhBqJ9U2sjMRbfwuz4H54nmawe
+	s1PqMXIZiHUNdsndU91w82/vStvjZ5yl84/lhPxsLFrTgzrnSE1F
+X-Gm-Gg: ASbGncvrBLU2wb1YU11DTHH+DQTW8jEXuiStRvfjKrywH85bysWX5z8flX09mwO9ljP
+	zydGUNWlSi5ym/VhXV0BsKz3U6rFNZWGhkZJPw5fom6VcuQrC8YON3aFhwRpVW78FUDSF7ud38V
+	YGkpDgKcH4of/x+on6g00iht5zo7BKzsciDy/f1WIoSapi/du3YTSjKhADJYAxfvOFWifdWLIJ6
+	BxW3C1oge5EvlzRn5HCpWlY0dKvp4QBX5LerUhvi/Ukewp44VpYg/qWmONKoWhws9RIcFEcP/CV
+	1VQ4LT5FoOj1ko3aT58GKyeUO32w+nYhMX+0AkyNtW6Whg3ISrV7l6U62s663UvbW75T6RS+pDF
+	llwBVni+23v/U9A8ShGlB
+X-Google-Smtp-Source: AGHT+IFquZF4hd4nWmTPWqI68wVcBaR6V5d+ZVDKcCwV1vPKm3ReaFGvjX+0+VE46ogmhHCnIcBjWg==
+X-Received: by 2002:a5d:64e4:0:b0:38f:3b9b:6f91 with SMTP id ffacd0b85a97d-3997f8fa8f5mr3266881f8f.12.1742565545103;
+        Fri, 21 Mar 2025 06:59:05 -0700 (PDT)
 Received: from ivaylo-T580.. (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e6651sm2437162f8f.75.2025.03.21.06.59.00
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e6651sm2437162f8f.75.2025.03.21.06.59.03
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 06:59:01 -0700 (PDT)
+        Fri, 21 Mar 2025 06:59:04 -0700 (PDT)
 From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
 To: Vinod Koul <vkoul@kernel.org>,
 	Kishon Vijay Abraham I <kishon@kernel.org>,
@@ -75,9 +75,9 @@ Cc: linux-arm-msm@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-samsung-soc@vger.kernel.org
-Subject: [PATCH v3 03/10] phy: move phy-qcom-snps-eusb2 out of its vendor sub-directory
-Date: Fri, 21 Mar 2025 15:58:47 +0200
-Message-ID: <20250321135854.1431375-4-ivo.ivanov.ivanov1@gmail.com>
+Subject: [PATCH v3 05/10] phy: phy-snps-eusb2: split phy init code
+Date: Fri, 21 Mar 2025 15:58:49 +0200
+Message-ID: <20250321135854.1431375-6-ivo.ivanov.ivanov1@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250321135854.1431375-1-ivo.ivanov.ivanov1@gmail.com>
 References: <20250321135854.1431375-1-ivo.ivanov.ivanov1@gmail.com>
@@ -89,88 +89,168 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-As not only Qualcomm, but also Samsung is using the Synopsys eUSB2 IP
-(albeit with a different register layout) in their newer SoCs, move the
-driver out of its vendor sub-directory and rename it to phy-snps-eusb2.
+The current phy init consists of hardware power-up, as well as
+QCOM-specific eUSB2 init code. Split it into two parts, to make room
+for such non-QCOM init code.
 
 Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
-Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 ---
- drivers/phy/Kconfig                                      | 8 ++++++++
- drivers/phy/Makefile                                     | 1 +
- .../{qualcomm/phy-qcom-snps-eusb2.c => phy-snps-eusb2.c} | 0
- drivers/phy/qualcomm/Kconfig                             | 9 ---------
- drivers/phy/qualcomm/Makefile                            | 1 -
- 5 files changed, 9 insertions(+), 10 deletions(-)
- rename drivers/phy/{qualcomm/phy-qcom-snps-eusb2.c => phy-snps-eusb2.c} (100%)
+ drivers/phy/phy-snps-eusb2.c | 96 +++++++++++++++++++++++-------------
+ 1 file changed, 63 insertions(+), 33 deletions(-)
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 8d58efe99..11c166204 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -43,6 +43,14 @@ config PHY_PISTACHIO_USB
- 	help
- 	  Enable this to support the USB2.0 PHY on the IMG Pistachio SoC.
+diff --git a/drivers/phy/phy-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
+index 405278c18..fa878389f 100644
+--- a/drivers/phy/phy-snps-eusb2.c
++++ b/drivers/phy/phy-snps-eusb2.c
+@@ -121,6 +121,10 @@ static const char * const eusb2_hsphy_vreg_names[] = {
  
-+config PHY_SNPS_EUSB2
-+	tristate "SNPS eUSB2 PHY Driver"
-+	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-+	select GENERIC_PHY
-+	help
-+	  Enable support for the USB high-speed SNPS eUSB2 phy on select
-+	  SoCs. The PHY is usually paired with a Synopsys DWC3 USB controller.
+ #define EUSB2_NUM_VREGS		ARRAY_SIZE(eusb2_hsphy_vreg_names)
+ 
++struct snps_eusb2_phy_drvdata {
++	int (*phy_init)(struct phy *p);
++};
 +
- config PHY_XGENE
- 	tristate "APM X-Gene 15Gbps PHY support"
- 	depends on HAS_IOMEM && OF && (ARCH_XGENE || COMPILE_TEST)
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index e281442ac..c670a8dac 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -9,6 +9,7 @@ obj-$(CONFIG_PHY_CAN_TRANSCEIVER)	+= phy-can-transceiver.o
- obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
- obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
- obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
-+obj-$(CONFIG_PHY_SNPS_EUSB2)		+= phy-snps-eusb2.o
- obj-$(CONFIG_USB_LGM_PHY)		+= phy-lgm-usb.o
- obj-$(CONFIG_PHY_AIROHA_PCIE)		+= phy-airoha-pcie.o
- obj-$(CONFIG_PHY_NXP_PTN3222)		+= phy-nxp-ptn3222.o
-diff --git a/drivers/phy/qualcomm/phy-qcom-snps-eusb2.c b/drivers/phy/phy-snps-eusb2.c
-similarity index 100%
-rename from drivers/phy/qualcomm/phy-qcom-snps-eusb2.c
-rename to drivers/phy/phy-snps-eusb2.c
-diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-index 846f8c995..914547068 100644
---- a/drivers/phy/qualcomm/Kconfig
-+++ b/drivers/phy/qualcomm/Kconfig
-@@ -125,15 +125,6 @@ config PHY_QCOM_QUSB2
- 	  PHY which is usually paired with either the ChipIdea or Synopsys DWC3
- 	  USB IPs on MSM SOCs.
+ struct snps_eusb2_hsphy {
+ 	struct phy *phy;
+ 	void __iomem *base;
+@@ -133,6 +137,8 @@ struct snps_eusb2_hsphy {
+ 	enum phy_mode mode;
  
--config PHY_QCOM_SNPS_EUSB2
--	tristate "Qualcomm SNPS eUSB2 PHY Driver"
--	depends on OF && (ARCH_QCOM || COMPILE_TEST)
--	select GENERIC_PHY
--	help
--	  Enable support for the USB high-speed SNPS eUSB2 phy on Qualcomm
--	  chipsets. The PHY is paired with a Synopsys DWC3 USB controller
--	  on Qualcomm SOCs.
+ 	struct phy *repeater;
++
++	const struct snps_eusb2_phy_drvdata *data;
+ };
+ 
+ static int snps_eusb2_hsphy_set_mode(struct phy *p, enum phy_mode mode, int submode)
+@@ -230,41 +236,11 @@ static int qcom_eusb2_ref_clk_init(struct snps_eusb2_hsphy *phy)
+ 	return 0;
+ }
+ 
+-static int snps_eusb2_hsphy_init(struct phy *p)
++static int qcom_snps_eusb2_hsphy_init(struct phy *p)
+ {
+ 	struct snps_eusb2_hsphy *phy = phy_get_drvdata(p);
+ 	int ret;
+ 
+-	ret = regulator_bulk_enable(ARRAY_SIZE(phy->vregs), phy->vregs);
+-	if (ret)
+-		return ret;
 -
- config PHY_QCOM_EUSB2_REPEATER
- 	tristate "Qualcomm SNPS eUSB2 Repeater Driver"
- 	depends on OF && (ARCH_QCOM || COMPILE_TEST)
-diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
-index eb60e950a..2121e92df 100644
---- a/drivers/phy/qualcomm/Makefile
-+++ b/drivers/phy/qualcomm/Makefile
-@@ -15,7 +15,6 @@ obj-$(CONFIG_PHY_QCOM_QMP_USB)		+= phy-qcom-qmp-usb.o
- obj-$(CONFIG_PHY_QCOM_QMP_USB_LEGACY)	+= phy-qcom-qmp-usb-legacy.o
+-	ret = phy_init(phy->repeater);
+-	if (ret) {
+-		dev_err(&p->dev, "repeater init failed. %d\n", ret);
+-		goto disable_vreg;
+-	}
+-
+-	ret = clk_prepare_enable(phy->ref_clk);
+-	if (ret) {
+-		dev_err(&p->dev, "failed to enable ref clock, %d\n", ret);
+-		goto disable_vreg;
+-	}
+-
+-	ret = reset_control_assert(phy->phy_reset);
+-	if (ret) {
+-		dev_err(&p->dev, "failed to assert phy_reset, %d\n", ret);
+-		goto disable_ref_clk;
+-	}
+-
+-	usleep_range(100, 150);
+-
+-	ret = reset_control_deassert(phy->phy_reset);
+-	if (ret) {
+-		dev_err(&p->dev, "failed to de-assert phy_reset, %d\n", ret);
+-		goto disable_ref_clk;
+-	}
+-
+ 	snps_eusb2_hsphy_write_mask(phy->base, QCOM_USB_PHY_CFG0,
+ 				    CMN_CTRL_OVERRIDE_EN, CMN_CTRL_OVERRIDE_EN);
  
- obj-$(CONFIG_PHY_QCOM_QUSB2)		+= phy-qcom-qusb2.o
--obj-$(CONFIG_PHY_QCOM_SNPS_EUSB2)	+= phy-qcom-snps-eusb2.o
- obj-$(CONFIG_PHY_QCOM_EUSB2_REPEATER)	+= phy-qcom-eusb2-repeater.o
- obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
- obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
+@@ -334,6 +310,52 @@ static int snps_eusb2_hsphy_init(struct phy *p)
+ 				    USB2_SUSPEND_N_SEL, 0);
+ 
+ 	return 0;
++}
++
++static const struct snps_eusb2_phy_drvdata sm8550_snps_eusb2_phy = {
++	.phy_init	= qcom_snps_eusb2_hsphy_init,
++};
++
++static int snps_eusb2_hsphy_init(struct phy *p)
++{
++	struct snps_eusb2_hsphy *phy = phy_get_drvdata(p);
++	int ret;
++
++	ret = regulator_bulk_enable(ARRAY_SIZE(phy->vregs), phy->vregs);
++	if (ret)
++		return ret;
++
++	ret = phy_init(phy->repeater);
++	if (ret) {
++		dev_err(&p->dev, "repeater init failed. %d\n", ret);
++		goto disable_vreg;
++	}
++
++	ret = clk_prepare_enable(phy->ref_clk);
++	if (ret) {
++		dev_err(&p->dev, "failed to enable ref clock, %d\n", ret);
++		goto disable_vreg;
++	}
++
++	ret = reset_control_assert(phy->phy_reset);
++	if (ret) {
++		dev_err(&p->dev, "failed to assert phy_reset, %d\n", ret);
++		goto disable_ref_clk;
++	}
++
++	usleep_range(100, 150);
++
++	ret = reset_control_deassert(phy->phy_reset);
++	if (ret) {
++		dev_err(&p->dev, "failed to de-assert phy_reset, %d\n", ret);
++		goto disable_ref_clk;
++	}
++
++	ret = phy->data->phy_init(p);
++	if (ret)
++		goto disable_ref_clk;
++
++	return 0;
+ 
+ disable_ref_clk:
+ 	clk_disable_unprepare(phy->ref_clk);
+@@ -371,6 +393,7 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
+ 	struct snps_eusb2_hsphy *phy;
+ 	struct phy_provider *phy_provider;
+ 	struct phy *generic_phy;
++	const struct snps_eusb2_phy_drvdata *drv_data;
+ 	int ret, i;
+ 	int num;
+ 
+@@ -378,6 +401,11 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
+ 	if (!phy)
+ 		return -ENOMEM;
+ 
++	drv_data = of_device_get_match_data(dev);
++	if (!drv_data)
++		return -EINVAL;
++	phy->data = drv_data;
++
+ 	phy->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(phy->base))
+ 		return PTR_ERR(phy->base);
+@@ -424,8 +452,10 @@ static int snps_eusb2_hsphy_probe(struct platform_device *pdev)
+ }
+ 
+ static const struct of_device_id snps_eusb2_hsphy_of_match_table[] = {
+-	{ .compatible = "qcom,sm8550-snps-eusb2-phy", },
+-	{ },
++	{
++		.compatible = "qcom,sm8550-snps-eusb2-phy",
++		.data = &sm8550_snps_eusb2_phy,
++	}, { },
+ };
+ MODULE_DEVICE_TABLE(of, snps_eusb2_hsphy_of_match_table);
+ 
 -- 
 2.43.0
 
