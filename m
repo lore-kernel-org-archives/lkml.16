@@ -1,99 +1,96 @@
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D52E23BE;
-	Fri, 21 Mar 2025 00:39:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B41526AE4
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 00:44:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742517584; cv=none; b=MGRXFfJIJLs7McOFQ2tx1ph75hAdgvznZ0JrYvxZBbEjsn5yITjW0LN8BA4yc4Tyyh5npUPa9tGIAKHh748GuezZ+Lbfay9wffjg1/i8ayid4xEl6xkcsJIVEH0H0kP4DbNP73cHiKNriWZytDJPKbO3Qo2aJYF22OI0nJJY930=
+	t=1742517882; cv=none; b=h4kgCqJ98GHi27Krrsf0Zo01iW9P1nOBw7BRFWwC7ep5vbqnIbCG0Gtaj8f5Fl2UA9E1plCd9eytF70420JZq2P7AXlf5E2ypsj/T0DmCSXRP7YBAerbWMT4p8RHcp/Dxu1CfT0TH0BjGD3ID/kZBhw8yW6Wd47JLG4cO0FLYa4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742517584; c=relaxed/simple;
-	bh=81e5U12yQNl/T/++JQb1aWg02Oq1JzXIwoKQeuPOf/Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=IVCrMY+WgWLYIQXCuEwGCY3oi9spEe3r9r5skscvlM4lJZDPWtHaRdmNV0WUQu79G7+Qdwaz11RQvLTNALxrJ0FrWIyZ93AS4ly036FlFnY/A8OJXFVTzWZjPgHkBHQJTeorxJ65b6JddfCvYRWq4U+aHrOiiH0Eofy8Su0e9yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=hNvtqjzo; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="hNvtqjzo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1742517572;
-	bh=81e5U12yQNl/T/++JQb1aWg02Oq1JzXIwoKQeuPOf/Y=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=hNvtqjzoDLk8nMsNRAwLiBQBq+A/jaZLOBJz+AKXu7nVybKAhi3bpWyAN3UwvUAb8
-	 X7W18/K0L0z19l88HAz/Q+IzcU8f5p+yOmbFKNjjC/Vr6SM/ECKFUy1ENppiVPOAp/
-	 ls5fZFHmu4slQdo12PDCxxBwT5rPrsOrlZ17+Ww48dGtZIE59RQ/1bEcHzhclY2HU8
-	 524k15wq+Y3mMZNo+dFMqrzObb2BHGo0BTtsJ1wRv4OL3ScntyzPkIbI6NMg+wO5DT
-	 PuIlnqy0QducLALaoV3cHepsDSaDVxG96w28MCkSn5/NUiqE6ORZLXIuI0PM9Lhd3U
-	 Y+ASm+H464Yfg==
-Received: from [192.168.68.112] (unknown [180.150.112.225])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id B61B17A4E7;
-	Fri, 21 Mar 2025 08:39:30 +0800 (AWST)
-Message-ID: <158f6e8e6c41250d6b88c5f2b5dc6df5d728222b.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v4 1/2] dt-bindings: arm: aspeed: Add AMD Onyx BMC
- compatible
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Rajaganesh Rathinasabapathi <Rajaganesh.Rathinasabapathi@amd.com>
-Cc: "Rob Herring (Arm)" <robh@kernel.org>, joel@jms.id.au,
- robh+dt@kernel.org,  openbmc@lists.ozlabs.org,
- linux-arm-kernel@lists.infradead.org,  linux-kernel@vger.kernel.org,
- jothayot@amd.com, linux-aspeed@lists.ozlabs.org,  krzk+dt@kernel.org,
- conor+dt@kernel.org, devicetree@vger.kernel.org
-Date: Fri, 21 Mar 2025 11:09:29 +1030
-In-Reply-To: <174233663954.4094319.18412685456723022993.robh@kernel.org>
-References: <20250318174730.1921983-1-Rajaganesh.Rathinasabapathi@amd.com>
-	 <174233663954.4094319.18412685456723022993.robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1742517882; c=relaxed/simple;
+	bh=gVrx8JwHkvcVCcTs9bw8eqzimuLsp2e3hep1h4EuT30=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=itiARNn0E0BzWVDJ1+Yrx6154oerxCgpsNjj4Ljunb9DX1nDaKhMgcJ2TjvLs/pqVXmsyPTbnjxhR4kttTwqG3Y/aRA/7akmtJYarYuU5U5H+qMMIGwcXSJX0XiZw9RZ3drSniiKoJRvGjVjjM4T9IJvMM7EU70yxT7xDaMB9is=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3cfb20d74b5so18456425ab.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 17:44:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742517878; x=1743122678;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=XLe3EfXEq7ymtnT+1ejTFU9x1KX0C5ejSjskerXlAxg=;
+        b=GyzRE0rCv0G52QkG2cJabC9fjxEMqe3S1g9kFzelpRzqp9hCM8zNmzcWmq+Ktu1r7C
+         5E5op7cotl308VRi1rcEPom8clITsUfYdCGFbJM2am/f2uJMwHdyhv7sTKzkCLKd1vZh
+         /BrT26xr5zB6msXJP8kaed9JtE4wpbpJ17Nn2BV988evhQj56pBZZR8KfedRJjjX+wBC
+         9ovAL2qHB7v7Sph249ZQwO/wIJllPSiB5OWg6UfmbAFP/UlYpu0vKtiIrkVGJ/wiLYPZ
+         /ErC/r867Wt+3ZdCsr/xrtUPIBchahO6zEpoLE2yvQBfJ8GIU0mP4MEddzQQN+g34Gnv
+         dXMA==
+X-Gm-Message-State: AOJu0YxdHj2QaBxy/OiMrSO1qBjkEO1d7v0+ZZX4LWcf0hf2p0IyA6Dd
+	n0XNJ2dGiQ1ebSy/xoAr2aFJe/jw4uK/vx+Xp3lsxoZofgn5nAUhO+d9oeNoc1OhXzwHOkcJg8u
+	IOr9pOTsHuPzFEZUYUnIwDwN6GLyp+T3l7DmGeMvhW8xlcmM8QpG32sY=
+X-Google-Smtp-Source: AGHT+IHxevJ6n34X7cYaD0ykzZlag17qgnTsXf8laxxIPzy7Zgti7tAsNnVcIMCE0N3ISW7WkjIarSLmswV+Livoq7AQsQRNyib1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:3047:b0:3d2:b154:49dc with SMTP id
+ e9e14a558f8ab-3d5960cd132mr19329485ab.5.1742517878710; Thu, 20 Mar 2025
+ 17:44:38 -0700 (PDT)
+Date: Thu, 20 Mar 2025 17:44:38 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67dcb676.050a0220.31a16b.0016.GAE@google.com>
+Subject: [syzbot] Monthly usb report (Mar 2025)
+From: syzbot <syzbot+listade70b662293f9976322@syzkaller.appspotmail.com>
+To: linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, 2025-03-18 at 17:26 -0500, Rob Herring (Arm) wrote:
->=20
-> On Tue, 18 Mar 2025 12:47:29 -0500, Rajaganesh Rathinasabapathi wrote:
-> > Document new AMD Onyx BMC board compatibles
-> >=20
-> > Signed-off-by: Rajaganesh Rathinasabapathi <Rajaganesh.Rathinasabapathi=
-@amd.com>
-> > ---
-> > =C2=A0Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
-> > =C2=A01 file changed, 1 insertion(+)
-> >=20
->=20
->=20
-> My bot found new DTB warnings on the .dts files added or changed in this
-> series.
->=20
-> Some warnings may be from an existing SoC .dtsi. Or perhaps the warnings
-> are fixed by another series. Ultimately, it is up to the platform
-> maintainer whether these warnings are acceptable or not. No need to reply
-> unless the platform maintainer has comments.
->=20
-> If you already ran DT checks and didn't see these error(s), then
-> make sure dt-schema is up to date:
->=20
-> =C2=A0 pip3 install dtschema --upgrade
->=20
->=20
-> New warnings running 'make CHECK_DTBS=3Dy for arch/arm/boot/dts/aspeed/' =
-for 20250318174730.1921983-1-Rajaganesh.Rathinasabapathi@amd.com:
->=20
-...
->=20
-> arch/arm/boot/dts/aspeed/aspeed-bmc-amd-onyx.dtb: mbeeprom@50: $nodename:=
-0: 'mbeeprom@50' does not match '^eeprom@[0-9a-f]{1,2}$'
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0from schema $id: http://d=
-evicetree.org/schemas/eeprom/at24.yaml#
-> arch/arm/boot/dts/aspeed/aspeed-bmc-amd-onyx.dtb: mbeeprom@50: Unevaluate=
-d properties are not allowed ('$nodename' was unexpected)
-> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0from schema $id: http://d=
-evicetree.org/schemas/eeprom/at24.yaml#
+Hello usb maintainers/developers,
 
-Rajaganesh: Please fix these warnings before you send v5.
+This is a 31-day syzbot report for the usb subsystem.
+All related reports/information can be found at:
+https://syzkaller.appspot.com/upstream/s/usb
 
-Andrew
+During the period, 4 new issues were detected and 2 were fixed.
+In total, 85 issues are still open and 375 have already been fixed.
+
+Some of the still happening issues:
+
+Ref  Crashes Repro Title
+<1>  13032   Yes   KASAN: slab-use-after-free Read in hdm_disconnect
+                   https://syzkaller.appspot.com/bug?extid=916742d5d24f6c254761
+<2>  3328    Yes   KASAN: use-after-free Read in v4l2_fh_init
+                   https://syzkaller.appspot.com/bug?extid=c025d34b8eaa54c571b8
+<3>  1931    Yes   INFO: task hung in jbd2_journal_commit_transaction (5)
+                   https://syzkaller.appspot.com/bug?extid=3071bdd0a9953bc0d177
+<4>  1385    Yes   KASAN: use-after-free Read in em28xx_init_extension (2)
+                   https://syzkaller.appspot.com/bug?extid=99d6c66dbbc484f50e1c
+<5>  1142    Yes   KASAN: use-after-free Read in v4l2_fh_open
+                   https://syzkaller.appspot.com/bug?extid=b2391895514ed9ef4a8e
+<6>  1096    Yes   INFO: task hung in usbdev_open (2)
+                   https://syzkaller.appspot.com/bug?extid=b73659f5bb96fac34820
+<7>  723     Yes   INFO: rcu detected stall in syscall_exit_to_user_mode (2)
+                   https://syzkaller.appspot.com/bug?extid=a68ef3b1f46bc3aced5c
+<8>  674     Yes   INFO: task hung in hub_port_init (3)
+                   https://syzkaller.appspot.com/bug?extid=b6f11035e572f08bc20f
+<9>  667     Yes   WARNING: ODEBUG bug in release_nodes
+                   https://syzkaller.appspot.com/bug?extid=624d9e79ec456915d85d
+<10> 652     Yes   WARNING in enable_work
+                   https://syzkaller.appspot.com/bug?extid=7053fbd8757fecbbe492
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+To disable reminders for individual bugs, reply with the following command:
+#syz set <Ref> no-reminders
+
+To change bug's subsystems, reply with:
+#syz set <Ref> subsystems: new-subsystem
+
+You may send multiple commands in a single email message.
