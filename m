@@ -1,105 +1,110 @@
-Received: from smtp-fw-52003.amazon.com (smtp-fw-52003.amazon.com [52.119.213.152])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6FDE1EFF93;
-	Fri, 21 Mar 2025 11:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B192D1EFF93
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:00:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742554846; cv=none; b=trT785JwcNiivPoTjNEapasQwzfBum+l9uW8jDJgkcVENzeNGriOds6Ni6FEeMdTi+bdKOtlCArdNmswE0Hg1Q8PM8fI7KRH4ZfpqX4txqEGmv9R2aajTZVa5tACsgOWTFQCNaJLdXKavpsiHqP6kaz3wN3jJt22+3Rv5si4c54=
+	t=1742554859; cv=none; b=QybxSxWu7spdnZk3u/LayKIhU85lq48xdft8mQ2Zy0ptPKKJWOrgXu4oD7L9aE/MKPf+9tzo1so6bPIlkthB1X0SWLa/zNehTzGQiOguKWdREhcVzLs6+BkP664Ppty/estSYKml5eMp9YyYfLo073lV/w1wvQOh2JiNFNFrObE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742554846; c=relaxed/simple;
-	bh=6uAh4DyA5uukHlSVeiMOu2AM5c0+OP6b6mRrd4u9TSc=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IwAFuVYzw6yIAcyMw3VfB8mlyidHiWQAPB7pCEJZzL+DkglEsckNw64iVPIl0aQZmOd0jG2pCXKmU1NgIMsfJ/qZldvFHyHc7thQtvqM1iVWjf8EHjI6WcgKxEc1aLqCV90d7C0XRj+k9Hy/jJW/dEZsRWwpIWoej3YPwJOzwWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=OlqUSf95; arc=none smtp.client-ip=52.119.213.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1742554859; c=relaxed/simple;
+	bh=MClhHYdDYbfSs0X8oLGlhpUPZfPqb+p3CJs/tABView=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lJ9VtbpYR+bxSu+CjI3t0evL+rE757czTdLdINqk6F+8JxYJvcofr/8mklry/9724gAi2tKWu+nDOPM+FlOSsdZrcYjBW+Y8XjnyLLbMgxfaEAmS8B9btU8UOr533jbRghBgksjVkV9uzRK4TRqR5VXaeswQpIWSIpt0pLiOUug=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=VnUUuLZY; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="OlqUSf95"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1742554844; x=1774090844;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=CTNB5uKYjZrRcQPF588LU6kSYhvG/6lODUqFhdJSlYA=;
-  b=OlqUSf95qltghDWT8Dnhwyz5jokZpkS5Am0Swa3WK8U7T3edZBqorIjd
-   VXAvZSEtgfa7yyDpTJB/jykYNefaQA/SCvE3OyQ0EppUR4DsUfA6eipCi
-   WYf8AphHhGcp/DeAXQ2JA76Y+GjjvsZ+Dd8ElKAwHVuufsmKlR9tr5v+m
-   M=;
-X-IronPort-AV: E=Sophos;i="6.14,264,1736812800"; 
-   d="scan'208";a="76445985"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52003.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 11:00:35 +0000
-Received: from EX19MTAUWB002.ant.amazon.com [10.0.21.151:21421]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.56.45:2525] with esmtp (Farcaster)
- id fd6e5c18-c6d0-4c15-95d3-d7e47153aa11; Fri, 21 Mar 2025 11:00:33 +0000 (UTC)
-X-Farcaster-Flow-ID: fd6e5c18-c6d0-4c15-95d3-d7e47153aa11
-Received: from EX19D003ANC003.ant.amazon.com (10.37.240.197) by
- EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 21 Mar 2025 11:00:32 +0000
-Received: from b0be8375a521.amazon.com (10.37.244.8) by
- EX19D003ANC003.ant.amazon.com (10.37.240.197) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Fri, 21 Mar 2025 11:00:26 +0000
-From: Kohei Enju <enjuk@amazon.com>
-To: <bpf@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC: Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
-	<daniel@iogearbox.net>, John Fastabend <john.fastabend@gmail.com>, "Andrii
- Nakryiko" <andrii@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>,
-	"Eduard Zingerman" <eddyz87@gmail.com>, Song Liu <song@kernel.org>, Yonghong
- Song <yonghong.song@linux.dev>, KP Singh <kpsingh@kernel.org>, Stanislav
- Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, Jiri Olsa
-	<jolsa@kernel.org>, Peilin Ye <yepeilin@google.com>, Ilya Leoshkevich
-	<iii@linux.ibm.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
-	<kohei.enju@gmail.com>, Kohei Enju <enjuk@amazon.com>,
-	<syzbot+a5964227adc0f904549c@syzkaller.appspotmail.com>
-Subject: [PATCH v2 bpf-next 0/2] bpf: Fix OOB read and add tests for load-acquire/store-release
-Date: Fri, 21 Mar 2025 19:59:00 +0900
-Message-ID: <20250321110010.95217-4-enjuk@amazon.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VnUUuLZY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742554856;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kR92x38MaPIUcSwwuTEs6+JYl/zG4hCrnKTSGKNxEmY=;
+	b=VnUUuLZYWef2vkjUbEAdHaGLDkH2+95egn7TnnIkniJGieVMWGXeQF5xqeYfaway912S/o
+	ewHcahtVkelLVUVVOxblarkBDH7+WqdN6Y6TjNxZUJftA0bEQK4PDAtTb22DqfCzLdPVzF
+	WoUn4c2hrTnQpT2rq77Yc7Ly/4wHA+o=
+Received: from mail-ej1-f69.google.com (mail-ej1-f69.google.com
+ [209.85.218.69]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-286-mee-NGPyOiG5eBzh11t4rw-1; Fri, 21 Mar 2025 07:00:55 -0400
+X-MC-Unique: mee-NGPyOiG5eBzh11t4rw-1
+X-Mimecast-MFC-AGG-ID: mee-NGPyOiG5eBzh11t4rw_1742554853
+Received: by mail-ej1-f69.google.com with SMTP id a640c23a62f3a-ac2bb3ac7edso186400066b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:00:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742554853; x=1743159653;
+        h=mime-version:references:in-reply-to:message-id:date:subject:cc:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=kR92x38MaPIUcSwwuTEs6+JYl/zG4hCrnKTSGKNxEmY=;
+        b=oAY6l0yCFYEwfX9lPZpO9wkdQ7hwEKvhbBKVUX9yX5M0ts8QIaBlV0Lc4tfQ7Hje0t
+         skJcO0k1mJQMdFzYx/2Y0vTcr/IaTN0sHDyEd5OGF+9pIwqHy4nn7OfMdEkhLNhhvZt+
+         j8VMS0nyoxn9f+S3rZsGP2Tn/v2vt2tmG0SbgyB5FLAsUtQts8wcsRG+U7UCVOpdEz9q
+         gX5HOSDlqDrmuKDQoP7j3dB+UGvyuK8TzdRl2wJKIKjd+BWVGVWVKsL9vPf3BOZkU4d3
+         wIxyM+1zCgvVQcXemXSK6oeHLn3oqXXrbtTfpC5UzH04beOTjd/A3WSpWfhFCNCxgrPc
+         rWFA==
+X-Forwarded-Encrypted: i=1; AJvYcCVUd5hcYfDcTUtWHTD/z78yOJ9I+86jt2xTO3doxWYP+VpvbEX69PenkP9EJhLCkW92erWXqaxtBfVQ+5Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyhRzj5vDTUIe4MwalJVl3ZQNA5EEVdEfdMLqNCEXaXVYVMu0Kb
+	9I6+YkiJTlp4BMfGkKiStrFDBeQpRJ+XtTPTXdb+A7JUFTUzA3LDeu23uIDBzCyU9caAHyd1u37
+	zDRecffBIT5/a7YlvNYzMlPp7QPm5j2WpKNmFUch6qksGqbOeGXhThPyXPHR79w==
+X-Gm-Gg: ASbGnct8MHvanXTFRb+wrPK+WZgykogRApN4lLetCsCwjlBFuEsp8GJnyuKMQfLHUQu
+	2FMhhSc18/p5K8BnzNnGJwlfbmDaffjp7F9Qbm0rMdv1TzGUDWOov+oio3PaKe8pKdd7Jic4Puq
+	8DDJ4sUyZyUsUtOz9wJv6YEzry3bn1pgDKV1t7JPieIKo4TNmX9O+/p8o1FW5EpUYZryiD+4U5g
+	V1XqyKD8ezTwE1M1IjFkBTk8wEc8h9FaiXapba34IrOFLhmkHwkiy/kbsY5UZyHm6RR4rDmG6PZ
+	7qjdCEUgOMz+asD1QzK1yMgjZaNVEOevWI55kh/UeagqmIITk6x5vQrjx2o3
+X-Received: by 2002:a17:907:7ba8:b0:abf:6ec7:65e9 with SMTP id a640c23a62f3a-ac3f24d7921mr264856666b.43.1742554852923;
+        Fri, 21 Mar 2025 04:00:52 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IEUELeIFk2iV4bJhmhlsWZybhpWr1ETkAjOnrpXoDFpNR4vvFc6TbQxKArtqciFKT2yl++k2A==
+X-Received: by 2002:a17:907:7ba8:b0:abf:6ec7:65e9 with SMTP id a640c23a62f3a-ac3f24d7921mr264852566b.43.1742554852498;
+        Fri, 21 Mar 2025 04:00:52 -0700 (PDT)
+Received: from [10.44.34.122] (5920ab7b.static.cust.trined.nl. [89.32.171.123])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef93e1bbsm129520966b.81.2025.03.21.04.00.51
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 21 Mar 2025 04:00:52 -0700 (PDT)
+From: Eelco Chaudron <echaudro@redhat.com>
+To: Ilya Maximets <i.maximets@ovn.org>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ dev@openvswitch.org, linux-kernel@vger.kernel.org,
+ Pravin B Shelar <pshelar@ovn.org>, Aaron Conole <aconole@redhat.com>
+Subject: Re: [PATCH net-next] net: openvswitch: fix kernel-doc warnings in
+ internal headers
+Date: Fri, 21 Mar 2025 12:00:51 +0100
+X-Mailer: MailMate (2.0r6239)
+Message-ID: <1FAE19BE-E1F9-4836-9AF5-5EFB7FD291AD@redhat.com>
+In-Reply-To: <20250320224431.252489-1-i.maximets@ovn.org>
+References: <20250320224431.252489-1-i.maximets@ovn.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-ClientProxiedBy: EX19D043UWC003.ant.amazon.com (10.13.139.240) To
- EX19D003ANC003.ant.amazon.com (10.37.240.197)
 
-This patch series addresses an out-of-bounds read issue in 
-check_atomic_load/store() reported by syzkaller when an invalid register 
-number (MAX_BPF_REG or greater) is used.
 
-The first patch fixes the actual bug by changing the order of validity 
-checks, ensuring register validity is checked before atomic_ptr_type_ok() 
-is called.
-It also updates some tests that were assuming the previous order of checks.
 
-The second patch adds new tests specifically for the invalid register 
-number case to prevent regression in the future.
+On 20 Mar 2025, at 23:42, Ilya Maximets wrote:
 
-Changes:
-  v2: 
-    - Just swap atomic_ptr_type_ok() and check_load_mem()/check_store_reg()
-    - Update some tests that were assuming the previous order of checks
-    - Add new tests specifically for the invalid register number
-  v1: https://lore.kernel.org/bpf/20250314195619.23772-2-enjuk@amazon.com/
+> Some field descriptions were missing, some were not very accurate.
+> Not touching the uAPI header or .c files for now.
+>
+> Formatting of those comments isn't great in general, but at least
+> they are not missing anything now.
+>
+> Before:
+>   $ ./scripts/kernel-doc -none -Wall net/openvswitch/*.h 2>&1 | wc -l
+>   16
+>
+> After:
+>   $ ./scripts/kernel-doc -none -Wall net/openvswitch/*.h 2>&1 | wc -l
+>   0
+>
+> Signed-off-by: Ilya Maximets <i.maximets@ovn.org>
 
-Reported-by: syzbot+a5964227adc0f904549c@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=a5964227adc0f904549c
+Thanks for taking the time to fix this. The changes look good to me.
 
-Kohei Enju (2):
-  bpf: Fix out-of-bounds read in check_atomic_load/store()
-  selftests/bpf: Add selftests for load-acquire/store-release when
-    register number is invalid
-
- kernel/bpf/verifier.c                         | 16 +++++++++--
- .../bpf/progs/verifier_load_acquire.c         | 26 +++++++++++++++--
- .../bpf/progs/verifier_store_release.c        | 28 +++++++++++++++++--
- 3 files changed, 63 insertions(+), 7 deletions(-)
-
--- 
-2.49.0
+Acked-by: Eelco Chaudron <echaudro@redhat.com>
 
