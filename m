@@ -1,64 +1,64 @@
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com [209.85.166.50])
+Received: from mail-il1-f174.google.com (mail-il1-f174.google.com [209.85.166.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74164221578
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:11:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 450B522171B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:13:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742555465; cv=none; b=rJC2UCswzsaXp6Ck8f4EtU4ef8fhVT2KwmeY3Cb9zYH7uCl/JUyZDLB9qqmfdB/pvlxuzYXlBAOmnBbC4aTFTHrnRIUXgyms8SmGXEhHQNm0HXoHQTjBKSlc9gnjeSkMOhg7poDiv+fOH2Om2y7neBrhdR8YPydLyvVJTMFJpLQ=
+	t=1742555602; cv=none; b=PLANhaUl5Zex8JsS6cau825IP4qQ2IxK+uzqszpSJvNAUmbnCR0mh4M1gEgxb7aV9v1dDKj2nEAMbqd7mDzv3kvdpOZPqCT8vmcpbbubgFiLInAi6EPnAvFTSbaAzh9C6NBq2NbhVMDZclpcapFzq7yu3wSIccd5tDz6pAvE07w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742555465; c=relaxed/simple;
-	bh=Xl5oeEHOaLoSBAmpxOjl3jAqNjOQaFTyIpVFbbJdV6U=;
+	s=arc-20240116; t=1742555602; c=relaxed/simple;
+	bh=Hmzep4r/qnqv6GW31fSKCsmKzGeRT4wJnCbWjxChcS4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PbkC9Jr8EmRnCD21SYlaK82lIng8yJB2/QfVD2BZksW5adxqxvKHv2XBwcnj9ilmJm08EasLYdXg8Q0HwGiu0dFSjiKwfcrnzdQeoL5uwEumE8YKnexdT/O81T2YO4EN3ob5M/jXolHnbdTMaiu4FfL81IspfYJD7xGplfBcs2Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=iRtkMVFZ; arc=none smtp.client-ip=209.85.166.50
+	 In-Reply-To:Content-Type; b=JDjMwlXl55HGQcqmoPNhwtmZ58R841aGx0JwgeUwS79k1TUyHhLMi+wlgPD1enqhy8wDzD1HcS5IZTD5nvIb4CDW0o1Pbe5j7257cskwcYkjxvSDxYLIo5sHLMeH2hGgltPvpUpgXF3C8i+9uKiopeLTckGe+ShM0FTAj980Tt8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=0kS/I9nq; arc=none smtp.client-ip=209.85.166.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="iRtkMVFZ"
-Received: by mail-io1-f50.google.com with SMTP id ca18e2360f4ac-85b40a5120eso45116439f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:11:03 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="0kS/I9nq"
+Received: by mail-il1-f174.google.com with SMTP id e9e14a558f8ab-3d43c972616so5160925ab.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:13:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742555462; x=1743160262; darn=vger.kernel.org;
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742555599; x=1743160399; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=sA3xfU5eNSi4gl7Hxg/W8KumQ2nnI6nlMXWqCtTodbQ=;
-        b=iRtkMVFZMTRKf+upcfDpu7YAYHNXlaVFWfUbaWIBBZOd+emomPpzL9uic9cU38jgBD
-         3Sc38L8AUe0r4klVumDPED3THsG+gTffRYTV9eLzzdPZeICYdDW4LSljmPnVi1hjxiMk
-         1sijCJ3baGaduYK+6IyEh/6F6bKyrJHrJzGWGVWUNmUoIbnNl8nsH0AH4hiKH2BtmHyp
-         cUI139EiYXUGnTvZkNHjboSbEZwDENzbNQsBzGYHNe6zVZdhDYjECXss1eZmALHTmZe4
-         CY/+uJwVyMw2qKhrUSULbg5KjJe7HC9heND+NVTJPOuBesC3bZBsO3sh5F1eWutnSQwJ
-         a4GA==
+        bh=+GU1mioN3yYu+dqCSLi0JNZys2k6P/lp2jvvl8BCayA=;
+        b=0kS/I9nqO3NAUxktJG2RcocyuYVkyyP7jamU7na1KUS34OFrc8GaSI/szEztga6EAP
+         WUMZRq+BL7VvkN4DFtjC2a9k44yiB6KfYDdxZu8rv33JY1EhN5kA+IhQUCO/Ya6iu5vB
+         Odl3Gp/NE8Chn3uH3C0RAbVZfj1G6hX/E68jtBgyQLu1jiql1JgzugOlrn5GlPfHLZwI
+         AhjMDJkL+nD9XI/7cCFryPdVZmv0SFTHevzArWOkAFLWLwqPuCul9RbE7zIvJDKPJyfq
+         DkTU0KMnmLa8QGJIwqUFsxLcFyG9rG57oLxnY5tNjZIWoGoVTG5qdvp9lqqPyNoU/apq
+         tfYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742555462; x=1743160262;
+        d=1e100.net; s=20230601; t=1742555599; x=1743160399;
         h=content-transfer-encoding:in-reply-to:from:content-language
          :references:to:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sA3xfU5eNSi4gl7Hxg/W8KumQ2nnI6nlMXWqCtTodbQ=;
-        b=SRbPY4aOCgbelfiQn4hPH+R4vtY/0y3MnYY7NpjSwSZBHq5mjGhabwEOYoezOWCvHz
-         F32YrVMK9LJFbpOrYarz85J/6tyrknQLqbqsBvnlGbZ6Idiu7asOAvYJPvHAkuzRP5Ny
-         B6TJ3srhFmiCXDBIQcsOKrCxF/kOqHkrbDa6qh2fX4mCP7jgs4zmjY7LG6OeWQQmLwSl
-         0zyzMJoWgSGq590wyvj9yEEMe9/TXh+MC0cxuuvpayVATYaK5APJ+Xe2i9mDQkJilG3j
-         VX6eCzgs0XzgqUZDweSMdfjjJHPAoLalT20gt99gNZi0qrZTK+14QoBZEWUDpVa002Ze
-         Hi3A==
-X-Forwarded-Encrypted: i=1; AJvYcCW6JqessNGmrYdVhtsF1CQVzT83acVQJ1viWBsQknX0E9ewy5TkQPrMOIycSUX9UsOWIs/lo6QKsa2epBY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwQ48G+8gF1vf5cNflIIMadsJOnaLxBDXnLmmPqe4mAsX0ZgmNU
-	9JSQdE52l2WdU1fjhyzoMz6kddPUSiM418RnYd46ZiY4PgBdIsBrKdkzpNfS5I0=
-X-Gm-Gg: ASbGncsavLPdr6uR/HYsCzrG8NAuczW8IWadFHBLrpsWREoVFrlOD46VivGBu4SbIFd
-	9Mnf+aSptwbpS6d77dVKeepWIRZyQKUg+WWePBuf9EmlKb+sOLu9xSjazDNtNAsiexBXgjgKaZ3
-	xvwmI13kIiJ+ghlqGRyfyVGOgkirxjtYBRORE4O8//mcEjuN4TgXQq/r0m/qwLehnu/kA6QKziI
-	2XAIpgzWRVL+a9JeyBrLTayqUAhyQtsAxdM5Ib/MR8MEDp8Tf7sOVeYKkEDg5AbZSX1CfU3zdIy
-	fVZul7uxkZDJHaEza9gwT04yDGzi0sNK6/Q0ZJfy6w==
-X-Google-Smtp-Source: AGHT+IFSJ3hxrf4+/3xiQwLVqMWpjH/GflgYxZ/+tadwi+N40CzqBAwFYJHfcNgOer76GMlKsVK58Q==
-X-Received: by 2002:a05:6602:368d:b0:85b:6118:db67 with SMTP id ca18e2360f4ac-85e2ca2d202mr297241339f.2.1742555462376;
-        Fri, 21 Mar 2025 04:11:02 -0700 (PDT)
+        bh=+GU1mioN3yYu+dqCSLi0JNZys2k6P/lp2jvvl8BCayA=;
+        b=tghNo2BFD1OSlKlGn+8OIrR1D1uASMrASJOv53qK3CL36egCgFY9WfxibszXTLpA9P
+         4o63GJ+M61KJtX6haKpDwFyfRsic6Tz+Dc1gl0jPsni+426FVSfh4F13PxHUtMWP0N4y
+         mtPeaL1UG5AJSsbJIDXOmT0Fetxe+AisZzmWtdqBm5Wi5zcyeqd/ELmnnY7Gj+wBeOw2
+         Hm3iG/ILBZweQd+QaqDowTrD77nxqqdWmKr3OvRa2r1015gB3WD/kPeVXII4updpXG8S
+         RBNeZARS/MNzc/TnU9iVDs8teagxFYmzj2DbuXYXA+ox/i1aTMfrqsYJUa9/DwScEOxf
+         tBnw==
+X-Forwarded-Encrypted: i=1; AJvYcCV2G2ZehHrqAiyFS2fBcXI83gYrtsHiXCPhCtVF74rn/mko4Fn1W9Hb/kW/DeaQCcsm5QVgxtEqrTtqndU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwQ1gdDDupDYyEK9jGDkj+SGWHImXSw4LY5sPH8K2QKjrsLGZe6
+	JmDJa7YPqhyiGVvRe93VHIcAZEtV0GU/Qfy0t1MvEi2nrAMRClSA16t7DDoIaS8=
+X-Gm-Gg: ASbGncuVoQsU5SHuNpFIhUhOvVQ4l69+as6b/ftno56NUxlF0DtWhyXpU7KIHuhydwa
+	8Ev1jS1OnsJRfsludUdf1XTfds54IRi8IcmbQiDcMS5vGD5dcqVRW5GFPNQMfBccA1ih/An+3tX
+	PWBHjkNLj9rV47y43rs2GmOm1y+Kl0bSrEpPlp9/vsdHRKPdXHO17Tuf+u+pmXVTP2Vn+tC8lZy
+	/b0+6M1EeQw1su3C3CeKoFaV9OpcDYUiK1RKWv2ZvRYBkPrcZh7ouITkEa+usNgzf0Z5BmLdkWy
+	U/gGZsJuZEeS9n+Zqpex6E6Ie7wqIkDo+NnvhGvoLk3NOpve7hcE
+X-Google-Smtp-Source: AGHT+IE4R72AbB+TfxAbg1d+CIr5rwWjI2An/4PBDvRcXhmPZW2MsPHBfXAQqwTzT2tbv7bQgxVxog==
+X-Received: by 2002:a92:c042:0:b0:3d3:d08d:d526 with SMTP id e9e14a558f8ab-3d58e8f551amr57616695ab.11.1742555598985;
+        Fri, 21 Mar 2025 04:13:18 -0700 (PDT)
 Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbe80a54sm372041173.82.2025.03.21.04.11.00
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbdd15fbsm376223173.44.2025.03.21.04.13.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 04:11:01 -0700 (PDT)
-Message-ID: <d458a42e-f9b4-4075-af0d-f715c15e3566@kernel.dk>
-Date: Fri, 21 Mar 2025 05:11:00 -0600
+        Fri, 21 Mar 2025 04:13:18 -0700 (PDT)
+Message-ID: <8e415edb-4d77-4e25-ab12-99f0e291aa60@kernel.dk>
+Date: Fri, 21 Mar 2025 05:13:17 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -78,93 +78,25 @@ To: Joe Damato <jdamato@fastly.com>, Christoph Hellwig <hch@infradead.org>,
 References: <20250319001521.53249-1-jdamato@fastly.com>
  <Z9p6oFlHxkYvUA8N@infradead.org> <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
  <2d68bc91-c22c-4b48-a06d-fa9ec06dfb25@kernel.dk>
- <Z9r5JE3AJdnsXy_u@LQ3V64L9R2>
- <19e3056c-2f7b-4f41-9c40-98955c4a9ed3@kernel.dk>
- <Z9sCsooW7OSTgyAk@LQ3V64L9R2>
- <dc3ebb86-f4b2-443a-9b0d-f5470fd773f1@kernel.dk>
- <Z9sX98Y0Xy9-Vzqf@LQ3V64L9R2>
+ <Z9tRyeJE5uKDJAdo@LQ3V64L9R2>
 Content-Language: en-US
 From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Z9sX98Y0Xy9-Vzqf@LQ3V64L9R2>
+In-Reply-To: <Z9tRyeJE5uKDJAdo@LQ3V64L9R2>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 3/19/25 1:16 PM, Joe Damato wrote:
->>> In general: it does seem a bit odd to me that there isn't a safe
->>> sendfile syscall in Linux that uses existing completion notification
->>> mechanisms.
->>
->> Pretty natural, I think. sendfile(2) predates that by quite a bit, and
->> the last real change to sendfile was using splice underneath. Which I
->> did, and that was probably almost 20 years ago at this point...
->>
->> I do think it makes sense to have a sendfile that's both fast and
->> efficient, and can be used sanely with buffer reuse without relying on
->> odd heuristics.
-> 
-> Just trying to tie this together in my head -- are you saying that
-> you think the kernel internals of sendfile could be changed in a
-> different way or that this a userland problem (and they should use
-> the io_uring wrapper you suggested above) ?
+On 3/19/25 5:22 PM, Joe Damato wrote:
+> Would you be open to the idea that sendfile could be extended to
+> generate error queue completions if the network socket has
+> SO_ZEROCOPY set?
 
-I'm saying that it of course makes sense to have a way to do sendfile
-where you know when reuse is safe, and that we have an API that provides
-that very nicely already without needing to add syscalls. If you used
-io_uring for this, then the "tx is done, reuse is fine" notification is
-just another notification, not anything special that needs new plumbing.
-
->>>>> I would also argue that there are likely user apps out there that
->>>>> use both sendmsg MSG_ZEROCOPY for certain writes (for data in
->>>>> memory) and also use sendfile (for data on disk). One example would
->>>>> be a reverse proxy that might write HTTP headers to clients via
->>>>> sendmsg but transmit the response body with sendfile.
->>>>>
->>>>> For those apps, the code to check the error queue already exists for
->>>>> sendmsg + MSG_ZEROCOPY, so swapping in sendfile2 seems like an easy
->>>>> way to ensure safe sendfile usage.
->>>>
->>>> Sure that is certainly possible. I didn't say that wasn't the case,
->>>> rather that the error queue approach is a work-around in the first place
->>>> for not having some kind of async notification mechanism for when it's
->>>> free to reuse.
->>>
->>> Of course, I certainly agree that the error queue is a work around.
->>> But it works, app use it, and its fairly well known. I don't see any
->>> reason, other than historical context, why sendmsg can use this
->>> mechanism, splice can, but sendfile shouldn't?
->>
->> My argument would be the same as for other features - if you can do it
->> simpler this other way, why not consider that? The end result would be
->> the same, you can do fast sendfile() with sane buffer reuse. But the
->> kernel side would be simpler, which is always a kernel main goal for
->> those of us that have to maintain it.
->>
->> Just adding sendfile2() works in the sense that it's an easier drop in
->> replacement for an app, though the error queue side does mean it needs
->> to change anyway - it's not just replacing one syscall with another. And
->> if we want to be lazy, sure that's fine. I just don't think it's the
->> best way to do it when we literally have a mechanism that's designed for
->> this and works with reuse already with normal send zc (and receive side
->> too, in the next kernel).
-> 
-> It seems like you've answered the question I asked above and that
-> you are suggesting there might be a better and simpler sendfile2
-> kernel-side implementation that doesn't rely on splice internals at
-> all.
-> 
-> Am I following you? If so, I'll drop the sendfile2 stuff from this
-> series and stick with the splice changes only, if you are (at a high
-> level) OK with the idea of adding a flag for this to splice.
-> 
-> In the meantime, I'll take a few more reads through the iouring code
-> to see if I can work out how sendfile2 might be built on top of that
-> instead of splice in the kernel.
-
-Heh I don't know how you jumped to that conclusion based on my feedback,
-and seems like it's solidified through other replies. No I'm not saying
-that the approach makes sense for the kernel, it makes some vague amount
-of sense only on the premise of "oh but this is easy for applications as
-they already know how to use sendfile(2)".
+I thought I was quite clear on my view of SO_ZEROCOPY and its error
+queue usage, I guess I was not. No I don't think this is a good path at
+all, when the whole issue is that pretending to handle two different
+types of completions via two different interfaces is pretty dumb and
+inefficient to begin with, particularly when we have a method of doing
+exactly that where the reuse notifications arrive in the normal
+completion stream.
 
 -- 
 Jens Axboe
