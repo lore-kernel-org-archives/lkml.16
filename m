@@ -1,133 +1,129 @@
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAA9122424E
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:49:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B048A22B8C3
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:49:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572194; cv=none; b=siY0P9ZPqhOPL2ptIn1tGd7npOE7u/j8RBPTUvUTswyeT3PMVca48bFK4SDx+Idcfqr8IIUhiWlLmdL72Js1HDssvqqbHOlO1px1E6dlhATcLfVox+4bRitsdGB1G0Fhmmx93u78aIbcdkIBNb7srlOJ/OVxpXNNvDQByUvl+3Q=
+	t=1742572196; cv=none; b=QTSlhNPusu7GcIC45QQcGnCyMTggkCZrrkjQceeompcAANCJM4NdjcbdV7GRo/EMIhFML7Le4O+dP4iMaEPMHS8KsZVO23w+sDGKyTMb8jmOCZbG6BTnbhXNQKmkx4YFCDV04F7SfDa/ja2XUCpvuWQ823kmv7VJMYO7FP57x70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572194; c=relaxed/simple;
-	bh=NvfXIHhK+VWCUfd/gJ4E9q15zyMoCl0PvormQXQWGJM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=dWttR3R+o9ersTwPmq1HZexMJIh1utGgbDC5Dy8K+zmTkSaEMeYwyWoWSfnEmfgb5aBs2c5njE+/+NwdCrQzii6J87TBvRkmF5xGOQJ4jmDu2d+3j21vhuwiPJSSzxCWI8V3UIgITkdtXn2aXruPfA2qusNJP2j4GgHp4SQn3go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dV5HO0nl; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1742572196; c=relaxed/simple;
+	bh=sHOyDHwMkEneP0INOZI10ERSSowktJ1Kc8KZRERfTRs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gJO/SecTnqGf9IkYad+4XPXBMNu4O6e8m6p0pjp+K9/QbGd+e4Czwfz3WBrSp9lAmNqjhndryBnh6BA4clh8SrhsEkQkmCkdPn8peJT5w0hZunkM3SQCdwEf1qacptgZvRTxtXu8GxCFEfZcp6yX7LLoYo9NOM2zyaQZReJ3NMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pN+Xp5gw; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dV5HO0nl"
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-39727fe912cso829818f8f.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:49:52 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pN+Xp5gw"
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-5e033c2f106so3173526a12.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:49:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572190; x=1743176990; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Oqsju0kZgP02gRC3wohzv8i9I+alYOhK6gEi8p2Wugk=;
-        b=dV5HO0nlMW/HN3v48FYcPinsrxyXOVvSs6J+CtnCIj/PPTLjAzlct2CY0PVLAyPetM
-         uDam4henjaSNRoV0ajHmW7xig6YHB6oeLMhRu/DMblR8zJ9UHtNTK4YctGpZeWKhsc3K
-         WkXpu1C3hS/+4Xm9OABqawDlj4e3wTeMfjP3iEvIUqA5+AGkyEwOqdHDIaJHyiS1o8Rt
-         kF1Ap9LT5MP0iIvFbWa/eaY1OLvhxEqS7dFKhMltX2aXnJ3OuMPmkShCgn461ZJUoYBR
-         YA1jxK6Pn0tRr5vNI3k5fpOmx7gEoBWq/9ejAN/4ZW3yH2sKg+P9casqXZIQOb1T/Hqj
-         LgrQ==
+        d=linaro.org; s=google; t=1742572193; x=1743176993; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vklN2GaacEXLUQOf6jBxkKBFuSQd+uRdj0tkKRVQNtk=;
+        b=pN+Xp5gwvVjsxl0o8+Kfk/CLXkOflJc+zoVx3u40D/3tG0Pc+DRhze/kCpEuhtjyRI
+         2AdSeJzuyuIaYT1OS8HsdK5U7dcNq9iztNgLXo/UkI4d85u7D+2E4A0hTAzd/UkrURJH
+         3VtDTa/58lStRYuI1iBRpa/NXdpOc80diplIybQfhOmiNOTC+xQLiWFtNQtnjZzB0A7+
+         cYOkzeHAV8n08cLjyWmCzpx6rve1YoTaXosIA1WgfFIw16x/SwpCBQlF3h+FJSvzw06A
+         zDoRQ6H79V8IMiORqiPq7fCBDaS7O+mx3i2JqjxDX76AUxeo7jk1zTo0VU+CB9hITkV3
+         t2eQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742572190; x=1743176990;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Oqsju0kZgP02gRC3wohzv8i9I+alYOhK6gEi8p2Wugk=;
-        b=XFsdivbOrc7nC66Xu8XA9PQXR2j4HxJSm9kXmHBud6j9isOAArCVheY+NK12M6vlNH
-         7dDiaurcC/Ig82E35ejCJZAmTCfnHdmbwCN+o/ewlfNKhnt+AOSRFnThDO17z7+08GoT
-         YTmaESWhoQB/PXXIHu2TnnYC7meBdgpG7FApMjhP3o4dWqFG20lSOgRnkbJg4Iz+PyoW
-         Ykbv0NMrlJhnaVGXlCtfPGH1WwPHho0YB56IASZaX9iKIRjupm5mAPoMbzeZeb7+i3Ku
-         HTf1m9YKPaWIf1pws6rKSkpEB4Qkrlf/+5HHyHmuYwAnss83b8MHBZrX1WDYtUxiat44
-         LyFw==
-X-Forwarded-Encrypted: i=1; AJvYcCXyZuD9KYDq/caa0OM/n/rHj1mHp96e5aq7xHeTx/Kk2r0QCHkA22yUvv8fD+JUUt5h9tarT1QLHNGhwYY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxj/D2UD2vnaKPbugZH9aJ3tWADsvgBpQbN+hN/goPMLknFMd9x
-	L7nc9GNsVdE0iktyHxWKeHCqPIugHt7LJKugkhDeXOLcaWIJNuQ+fIjQi1i3VnFjmtufcD5Oxq9
-	V
-X-Gm-Gg: ASbGncvJ1AQG13KGSkwNedCYFLPiis4PdSq38owPslpBkzJPfIEmYaBaKImEeJShwZN
-	y72o8Wk41n2fENRQUpYb2TYCDHcT5UgTwqrp0V6uV+O26UqibECqVwOzR8/MOfc/3njmUT4ZRaf
-	HqkiLqcBr4ao46BDn7U8SmlNOg9vXxb/rNpb1dO8UucmovxqvqjbRowvWPhEijtI5BukkiqFi5f
-	QOBxZNdD7JeEnX4YaIKE5PTe5AAlmrULpbx2kiyG6MSWUlHGY8bWJipmNTJ/S/39LeJ8evqEROt
-	dVPROrfgNNCAaZ9QqxF2H7BQFmeLBl//CGPOUw==
-X-Google-Smtp-Source: AGHT+IE83HvVdPd1F8HJgesyYGFZcZ9aY2a2O588opE0kp1Olyw/PgxB4h079l74xJ6rF4Sv/3urew==
-X-Received: by 2002:a05:6000:184b:b0:391:1806:e23d with SMTP id ffacd0b85a97d-3997f8ed721mr3270655f8f.6.1742572190575;
-        Fri, 21 Mar 2025 08:49:50 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1aa4:f3ec:847a:32d1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.50
+        d=1e100.net; s=20230601; t=1742572193; x=1743176993;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vklN2GaacEXLUQOf6jBxkKBFuSQd+uRdj0tkKRVQNtk=;
+        b=IytxiVeu0KHKZ3iPwkzffuf/MKsIANQ6K7ndkRACj1k8lWvNZS0Px9et+x88agSQAR
+         X/9+ZQjc/f2TkiEfU15P1XO+yYwdjIl5LxZN6iQK2sBRYHQfb32x935MUq1LFLGZQMgt
+         l8lkquXcwdzTCW/tfsXZ4NF9SiMDII/EGQpspq6/do6ZoDDIGWGa/pz774arxz3zFabN
+         +suoZqXbsdq8UfNCzIwxaINNw5wHGjA3flpZldbx3fXR1+CvmsaXJ4XMBnoF5YLjdLCL
+         st3Y7sG6lKwks7aDvOHpZXvZSMK2jnAA4QGvKsm6zW3WJTbsQdjX+cw0Vl+OV520ezmx
+         R3yg==
+X-Forwarded-Encrypted: i=1; AJvYcCUrUX/k3LftR1P1a3e2C7GNzrsk9T2B/RhwORkr9bbWWOBcBPWrxbA7y8kn94QEVchAYYssFc+VQLSk90w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzMY0zEXBORt2rBOpRvvpKFETgxs+VyR4+dN4qLSZ89jCkZYo8/
+	nZiRRa8ymzU/DITXuNijpcoMRXG5OSeA2njIZ4U7xaYw/JOBCs4xGV4tKSgdhXXZjH3/9hdHEZ3
+	pYOQ=
+X-Gm-Gg: ASbGncvCKd54oLR3WwzNDmaU19d8ZxBFGQG5sN7QglsF2VgXL7JumrqfsEXBwYkWkov
+	PlJ8dMe84tHM+N6fHLfZCg3kk5CTSvwE6xs1loKayK2yK/PUrbERzjcqAL9Tn/Y1hJzOjVhxbzX
+	lPP1doXqUQvMceQyJMbCSzvLdDgX/JVoOz58alwdyto2kbqE5JRDCWspdeBTQJaHCYKR/xOMho1
+	g5rvu9AkTCh6oKf3QLK924lvYFfm3ksLa9/9CMlmrKbwYWAuUayXUk9oZGxb6JZsJe/g6o94m2Y
+	8+295iRpzykz7XhVSN92jM4iAHoMOKd3x6uR+4xBVJ5OroU2lg==
+X-Google-Smtp-Source: AGHT+IH64Jd2L5c9Yzb2LgwV3I84SSyGpfTTprm50kscsUSR1fReJIULWFk4FLQWP6bo9iqncrYHrA==
+X-Received: by 2002:a05:6402:510c:b0:5de:dfde:c8b1 with SMTP id 4fb4d7f45d1cf-5ebcd40af26mr3083965a12.4.1742572192819;
+        Fri, 21 Mar 2025 08:49:52 -0700 (PDT)
+Received: from linaro.org ([151.41.27.52])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebccfafc1dsm1535650a12.39.2025.03.21.08.49.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 08:49:50 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 21 Mar 2025 16:49:37 +0100
-Subject: [PATCH 5/6] gpio: TODO: add an item to track the conversion to the
- new value setters
+        Fri, 21 Mar 2025 08:49:52 -0700 (PDT)
+Date: Fri, 21 Mar 2025 16:49:50 +0100
+From: Ettore Chimenti <ettore.chimenti@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Georg Gottleuber <g.gottleuber@tuxedocomputers.com>, 
+	Dmitry Baryshkov <dmitry.baryshkov@linaro.org>, Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+	Georg Gottleuber <ggo@tuxedocomputers.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, wse@tuxedocomputers.com, cs@tuxedocomputers.com
+Subject: Re: [PATCH] arm64: dts: qcom: Add device tree for TUXEDO Elite 14
+ Gen1
+Message-ID: <p5dxsjp2xdl5esmpxseqiy4n2xsici5fvow6wtiquhq7ixmlkt@fty3ez75y5ld>
+References: <57589859-fec1-4875-9127-d1f99e40a827@tuxedocomputers.com>
+ <5e72992c-170c-48b9-8df4-2caf31c4ae44@oss.qualcomm.com>
+ <5hvghahezqms6x4pi3acgaujyhiql6mzl2xhzph5phhki2yiyq@oi3xjatj7r64>
+ <129bf442-2505-41c8-9254-ad7cacefab89@tuxedocomputers.com>
+ <l77iickvroov7crzg6s2i7nq3kakqgdtbqki74stavqkiwyjfs@rv2oegbwogxi>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-gpio-todo-updates-v1-5-7b38f07110ee@linaro.org>
-References: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
-In-Reply-To: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1387;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=zW9vf2MxVVLSQ7/GxmBLmLjVLQ450goC/H07tgUus28=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqZ4OK5TJEOgGOz59u/Shq340T6aLrfj2kak
- o7dYSVxc9OJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KmQAKCRARpy6gFHHX
- ci3pD/wPRQ4FG3V729Ngelf387WaUaKndrOi5Zsq3+R6Ww8/pdW1R/jazX4RvG98Cf0LfHXf/oY
- rdbVLm/SED01DVkYDbsmQ2eWQwh24ZQkIKhPMgGtRXN7onmZGbYkPtt8hetgVWWA0D5ldTLXVe4
- V1MDb9+l5pPVRkeKTZyefOySd02O7CX7ymGUjumYVLUQriaK6l+GpPk50pA+hpE7+MBpxjB8x9X
- U8lIOfTguScY9Bc5ejk/RT5/u6uy50lwPlg6Kd8fk9S4Dm9Zr+fLSuccG/UgZnV0kvaVvX6zzFy
- dQwjnXehJhZahwyr2BzSRXzQK12R30YCpDt1TZ+IHGw5lszuT7sP5S35dhdLEm8Q1BwPtDebGcV
- KsI85t7mohkJy6YzBXF9ebQC0vYzmLkRUGfzwSLKOtUNTWlfeU8VStHn8os9pib/cK1KnULKvBp
- At6d8shY5FIgo5RYHORL1f0Jdl5bnWdZHESaowV45xUHQbx4QX4fW5WPb/rVCPvkWs4yg6oRmf9
- aPtiMzLFJXU95K518XkIROkGJtIq6EWCk9uIaqKSIDoN5Xo/oCmiBZX9nbhJ2qabaN1wFsfuE2P
- OHWstEjK47Ug4KI1cz4Ew8TPgTXC7Qp8oJkG8rfNiIqKXQX7kpW1jryE7q1QNJpGfWgwjJ1N97R
- QavjE88WWQQBJzQ==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <l77iickvroov7crzg6s2i7nq3kakqgdtbqki74stavqkiwyjfs@rv2oegbwogxi>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Dmitry,
 
-Add an item tracking the treewide conversion of GPIO drivers to using
-the new line value setter callbacks in struct gpio_chip instead of the
-old ones that don't allow drivers to signal failures to callers.
+On Tue, Mar 18, 2025 at 11:36:32PM +0200, Dmitry Baryshkov wrote:
+> On Tue, Mar 18, 2025 at 04:24:27PM +0100, Georg Gottleuber wrote:
+> > Am 07.03.25 um 07:45 schrieb Dmitry Baryshkov:
+> > [...]
+> > >>> diff --git a/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
+> > >>> new file mode 100644
+> > >>> index 000000000000..86bdec4a2dd8
+> > >>> --- /dev/null
+> > >>> +++ b/arch/arm64/boot/dts/qcom/x1e80100-tuxedo-elite-14-gen1.dts
+> > >>
+> > >>> +&gpu {
+> > >>> +       status = "okay";
+> > >>> +
+> > >>> +       zap-shader {
+> > >>> +               firmware-name = "qcom/a740_zap.mbn";
+> > >>
+> > >> Are the laptop's OEM key/security fuses not blown?
+> > > 
+> > > Can this laptop use "qcom/x1e80100/gen70500_zap.mbn" which is already a
+> > > part of linux-firmware?
+> > 
+> > It seems so.
+> > 
+> > Because there were no logs about loading zap.mbn, I activated dyndbg
+> > (dyndbg="file drivers/base/firmware_loader/main.c +fmp"). See attachment
+> > for dmesg output. But GUI freezes after sddm login.
+> 
+> Does it happen only with this ZAP or does it happen with the ZAP from
+> WIndows too? Can you run some simple GPU workload, like kmscube from the
+> console?
+> 
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/TODO | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+It seems to work fine changing the `firmware-name` property to
+"qcom/x1e80100/gen70500_zap.mbn" and updating to latest mesa on Debian
+Sid (25.0.1).
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index 052ba70070033..3abf4805335f1 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -161,3 +161,15 @@ A small number of drivers have been converted (pl061, tegra186, msm,
- amd, apple), and can be used as examples of how to proceed with this
- conversion. Note that drivers using the generic irqchip framework
- cannot be converted yet, but watch this space!
-+
-+-------------------------------------------------------------------------------
-+
-+Convert all GPIO chips to using the new, value returning line setters
-+
-+struct gpio_chip's set() and set_multiple() callbacks are now deprecated. They
-+return void and thus do not allow drivers to indicate failure to set the line
-+value back to the caller.
-+
-+We've now added new variants - set_rv() and set_multiple_rv() that return an
-+integer. Let's convert all GPIO drivers treewide to use the new callbacks,
-+remove the old ones and finally rename the new ones back to the old names.
+Also tried with linux-firmware binary blob.
 
--- 
-2.45.2
-
+--
+Best Regards,
+Ettore
