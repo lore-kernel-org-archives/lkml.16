@@ -1,137 +1,101 @@
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30FEB22B590
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:49:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 696FF1E98ED;
+	Fri, 21 Mar 2025 15:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572196; cv=none; b=GkrcIUdsp2KHg35L1IyeXfIhTsJyfqLiggwkAbK1M0iwHoc4tanQCptNKKrFfckExoBJd92MoxB8hgQ29+hycdq4VJnEBALHejLRPHebQNQMLmKcJ6h+wQ5b+KhoCRvzAiwGJtIuBQm9TdKb6zSEhdR6wT7MF21ZzdZLxGzDEjA=
+	t=1742572289; cv=none; b=azycLCNJLa8WxOhi96KwDh8aFtYdG+Ov56KVV/RuXHEZ4m2g9Y2Xy7m4ph8Pchg1muTFTR649nJBmDIJiQwFZ1jOQmO1rg/mMPETjR7NCCZEFR99syrPmcyE4CI/KUFI5E7KrNTGOC+KsHg+NbEHdwGjysUaigVuRr7iGWNCyWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572196; c=relaxed/simple;
-	bh=7OKHQYItsHJqowDVAvvbjLqYjpAIU2xdGIEQwzoW4CU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=kB1yljI/dV7p1WBWD2VUA/IBK33N9TOPjXTiHKK1BDlVRgiqNR9e1w3vmfwMUvt837JHyCe1rWmvrgOmSDi2yQmn0jj+7ok+9SKGjjf1P+Z3vqqt2FcRfB/HJqTKPnkSh1crMnxVUF45aOA9uIt4AEC/h6gdU0WvyEvVmv8wNoE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0HM4ZdUr; arc=none smtp.client-ip=209.85.221.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+	s=arc-20240116; t=1742572289; c=relaxed/simple;
+	bh=7T+weLd2mgUWwCqJQTaTI73IsyO3zKdE4HInBen1i+A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dR8EXjtCo1Z5abBSMQVogczA+vyY6Ha++pfwPHsaZ4w+8XpSuy/Yi+pJAygBt/25MdRGkbuFGnYIknksCfLrWbc5Em0wda3K9fY192nOktQrOQidj1Q3yjVHmt7sitB96kFB8doGdlp5wSY6dFhpzqnOhEyTJx2zJkq/p4HSfvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m3WqwVYP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0HM4ZdUr"
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3914aba1ce4so1757705f8f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:49:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572191; x=1743176991; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LJRuevggM9BCuwKtfZ7IFoWvomRPS19U+6lJSmLRj9k=;
-        b=0HM4ZdUrW7caStmrIICgevWgLmgZDNYlJmuB6tsEn5yWaexDeO1XqdR+3DCkWasgmW
-         SG+q1Wvyn80KJVDUP2l33znW/wkxvoAZAtfp7c13pLL8nf2GF+An4EGvkKy8Kho/td+w
-         dmuD5fdwAyPTIskfteFEDMjdIswf+RUdAKvHXqQcb6H5k/LvZ6s1bi2Ws/jGLDCGMJxZ
-         0BeoCZeDEqpIs3+weU0muM/nHR+hHnyzkc6BsgKCvTej8xkEVUs+3fX5kEVPe0DeBFEr
-         xB4j1um2dotIjTNHXM9olSwBtOeOfYN3edPiLYhfnp92Gv1L+HdLJ+qI0Nd96LEdO0Ei
-         kjbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742572191; x=1743176991;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LJRuevggM9BCuwKtfZ7IFoWvomRPS19U+6lJSmLRj9k=;
-        b=Gf1W9qZH//lGjNmKo3jP23Fe284kXDUYb7tKqRbx9nKi9Q+T7JrMBEEIW8VpKK1+MB
-         XY4HiacqLu3I1fziXkrql0ReRuqZ5ps0g5ICUlXIXDqZkIcF+TdkKljZE3oLPzr02L3G
-         er7NPkOEPWmk0xkbjFDJm1wRhyvM5GnYBOB6jKM3yo+gREkN4GbGa6d0vqCtLnKlaVZU
-         LESPlfUdjfx2N+qW+tCpqMgZijdyxUHEFQHRbeFg7cw2RmvF95hQYk9vmzw4As7K/c2v
-         zjqBiPOV+gsJUdOur4Jyg0MAC3cngIVsYJnW1NIqP862IrgS41OPzEdCkll6uFjtKLcS
-         RleQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVR+M+rkeSaXXICYeRGchE+09yxM+pG9AaPpHKltWC1w/urhhNijQjptO5hgMri3yH4Sq2AdYF2PRrTrr0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzf1B8A3pW4tJnxVUvubhMwhxNRgIE8tOgestqSpRXl9jkcxN0T
-	LE+PzxIn9gIG9i5K/FRP4sYa/GbOoJnZNljZS5hmXJ68ANx+8VN2WCs6AwbDIYiwo288UQp/1g6
-	P
-X-Gm-Gg: ASbGncuY9xNKhkiUC3ynvr4EitwgIxbOGVA/AVXguXfteeFZjczuUXEtmpqmIKLDL5G
-	UCd80lmItij6FZ+k0zUS+9VltM3QxgK9d1K/d4uRFRo6GGk7HT4ZsuBRBnhHdIYwltplPAsvwJE
-	Hf/hC+zUZbHfCXNaplKLeBrrkQTvOZ4d/t66nRBiiiShV0XpV3XgOJtocNJ+KhnaSLQC6D6O80D
-	+daurTHuVR5zV5eC5ohfannkhfD0E5S3ugXJZO6mD4yDFRXkdCPQ/evD3eJVpoMLr9qiRW/9/Zm
-	Eqpn3+xPUTGzB1omQciXdikl4mcYuVQr4Hchfw==
-X-Google-Smtp-Source: AGHT+IGoMK71oHcnm8gGvUy7+eexqEWpSgYvAKRXst7E/Ia5gJhiHUVUXQvYPze1X3KyZ1IImHsKoQ==
-X-Received: by 2002:a05:6000:2cd:b0:391:3406:b4e1 with SMTP id ffacd0b85a97d-3997f900ef6mr4131661f8f.15.1742572191553;
-        Fri, 21 Mar 2025 08:49:51 -0700 (PDT)
-Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1aa4:f3ec:847a:32d1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 08:49:50 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 21 Mar 2025 16:49:38 +0100
-Subject: [PATCH 6/6] gpio: TODO: add an item to track reworking the sysfs
- interface
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m3WqwVYP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88050C4CEEA;
+	Fri, 21 Mar 2025 15:51:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742572288;
+	bh=7T+weLd2mgUWwCqJQTaTI73IsyO3zKdE4HInBen1i+A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m3WqwVYPjdOAoqljEnokpk+GiukFjIe57k4dI04EJumvr6JeCUtyB1X8Zly+WJSmg
+	 bWM0hhDL1aywwL896SgthkMh6II1rsabVveTKP+7LwgMFopKc8Gg3bto8w76TluwdZ
+	 bYY5qSuz2LW64PB7elpttf/zEDROu9xR+AdGSB3pIiJB77mKwOsjNLRzaX9YcrKsZA
+	 PLpQKeVWxQ0wn6p4KDEAbsUntI4U2556dOeosdA9vU95yjcXfmp0hldo3wND5IL2Rf
+	 dQRonQ01AvKX2Sk9aJsQjhJWQOEMH+seTb7JPbXKgNlDL381PeY8Ss4Rl5KRDVN+Mo
+	 G83c95aZtQGJA==
+Date: Fri, 21 Mar 2025 15:51:25 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Nico Pache <npache@redhat.com>
+Cc: rf@opensource.cirrus.com, patches@opensource.cirrus.com,
+	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	kunit-dev@googlegroups.com, simont@opensource.cirrus.com,
+	ckeepax@opensource.cirrus.com, brendan.higgins@linux.dev,
+	davidgow@google.com, rmoar@google.com, johannes.berg@intel.com,
+	sj@kernel.org
+Subject: Re: [PATCH] kunit: cs_dsp: Depend on FW_CS_DSP rather then enabling
+ it
+Message-ID: <Z92K_azA7A7RoQ0T@finisterre.sirena.org.uk>
+References: <20250319230539.140869-1-npache@redhat.com>
+ <618b8578-1897-45e4-83eb-b725102ab27d@sirena.org.uk>
+ <CAA1CXcD4dOUWOXp0ODSEo4+g9_QQkJe1tmX3bVdcs3N_PPdSHQ@mail.gmail.com>
+ <a0fdd818-a4be-446e-b18e-0c655bc94c9a@sirena.org.uk>
+ <CAA1CXcDPg7Na9biCMOx4i_xwXZ5Y_qq-7SiYEU82v2a6TFpMJA@mail.gmail.com>
+ <Z918-4psPV3j9c-d@finisterre.sirena.org.uk>
+ <CAA1CXcD4GRQhUf6BZ+STdKTpvzGKTA-kVidbcGZsKabu=_y6Sw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-gpio-todo-updates-v1-6-7b38f07110ee@linaro.org>
-References: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
-In-Reply-To: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1584;
- i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=oXnm7kFeWpxFuHmJEsF/8vqjoynKGvtwa0r5iOnzF38=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqajgZ7/ioHcsB+lna5BBxd5JgJmhmErvNPc
- xMN3wPkHEKJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KmgAKCRARpy6gFHHX
- cozWD/99YTP37CBb+/F+umsRv41EwDFQ5yT321295LWC80OXMDkfntiLNtu4784iaRX6HgJEaPc
- BDoKB1L//OQHwsJ91n9yvYnYyzwd0XmzDzWCfmuMh4DMjaWkLv32D/+l7k6FqSpoTq/FXu8pdg7
- omxhRx6XQ/b+EaJq7syWKEBCvDAqO8wS9tX3DTh+ELRF4tKzIV1WBV9HuzzCog9TUXP2g7Pp8w0
- 8+ON8sEYBP4O7XtbiV+K1RZQLurqlkZyJPWu5wk1eCtIagsb/1r2Lhd7OW0QEYJKnitsUomUH6B
- i+TSyd2GEoK3jmVER8bnp2KKpOdMo5bLrh+585tplArzwPKGRLsC9W82M7j26ZQr8JIzg37opOH
- um3i2xfNLIHzFZBmx5V6Gj657MX3JgIz+Ox1VOFWeJo1EP8BwGjHuAlvWDV3rIvBvSZWV33Hbny
- niceejOmkhfC7BagUfT/BT3Copi6ns1EiLqnN9itUFB3T16pqf1MtVKFMdkwSPCXRQFPr+x9RNM
- wMMOEt1iqAeAzdUF7fZP7mhTsKDbv9HzkfYim98fmI7QDZVcG6oiDuOp6Sf1s8/GzC73M5z83v5
- bdSQqvNT7lnIASDvDbV7ywfUO/xv6Nv5l8mX0aFkm/So9krzW3gBB6gnHeBtv63FQcaS/I8Zf/9
- elTylKnoeEZtyHw==
-X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
- fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="q5A2uEVY7mg+0cj5"
+Content-Disposition: inline
+In-Reply-To: <CAA1CXcD4GRQhUf6BZ+STdKTpvzGKTA-kVidbcGZsKabu=_y6Sw@mail.gmail.com>
+X-Cookie: Well begun is half done.
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-It seems there really exists the need for a simple sysfs interface that
-can be easily used from minimal initramfs images that don't contain much
-more than busybox. However the current interface poses a challenge to
-the removal of global GPIO numberspace. Add an item that tracks
-extending the existing ABI with a per-chip export/unexport attribute
-pair.
+--q5A2uEVY7mg+0cj5
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/TODO | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+On Fri, Mar 21, 2025 at 09:01:35AM -0600, Nico Pache wrote:
+> On Fri, Mar 21, 2025 at 8:51=E2=80=AFAM Mark Brown <broonie@kernel.org> w=
+rote:
 
-diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index 3abf4805335f1..b5f0a7a2e1bf1 100644
---- a/drivers/gpio/TODO
-+++ b/drivers/gpio/TODO
-@@ -173,3 +173,16 @@ value back to the caller.
- We've now added new variants - set_rv() and set_multiple_rv() that return an
- integer. Let's convert all GPIO drivers treewide to use the new callbacks,
- remove the old ones and finally rename the new ones back to the old names.
-+
-+-------------------------------------------------------------------------------
-+
-+Extend the sysfs ABI to allow exporting lines by their HW offsets
-+
-+The need to support the sysfs GPIO class is one of the main obstacles to
-+removing the global GPIO numberspace from the kernel. In order to wean users
-+off using global numbers from user-space, extend the existing interface with
-+new per-gpiochip export/unexport attributes that allow to refer to GPIOs using
-+their hardware offsets within the chip.
-+
-+Encourage users to switch to using them and eventually remove the existing
-+global export/unexport attribues.
+> > That user select should only be visible if KUnit is enabled though,
+> > it really is library code so shouldn't actually be user selectable.  I'm
+> > not sure if there's some other strategy other KUnit tests for libraries
+> > use.
 
--- 
-2.45.2
+> I'm a little confused how the FW_CS_DSP config which was added in
+> v5.16 is reliant (library code that is only used by KUNIT) on a config
+> that was added in v6.14. Presumably the library is not just for the
+> KUNIT test. What was the purpose of this config before the
+> introduction of the KUNIT test. Im guessing it was not user selectable
+> back then too.
 
+This is support code for DSPs that Cirrus have in some of their devices,
+the drivers for devices that have these DSPs select it - a git grep will
+show the selects.
+
+--q5A2uEVY7mg+0cj5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmfdivoACgkQJNaLcl1U
+h9A4lQf/fjT3TzI4n4lut6GR4oZC2wn4Jk3pzsQnkRRLLgISJT41Xq4m7pahjqFq
++BTmiQtrm8wOjR5AtnebpkavOjbxJcGGKQHCTvh/VRDKTgURv8WgUrbPyF5fztc2
+jYaNQ3EpPp0jJi7TJ0qWnFrZ6xX2rcMe2zPAmxxnJEZSb9s6fJZ+GR8KGM2wsN6Q
+vay/IMNhIPzO61+vImdkXzwEvBTit2qHNFl3DQYrPgE1Uxe54uVm6hJI2upTV8rE
+qtYoLKRgeXdaCnsBEjUU0tA3H0LNzdyIg/1ok34o0BGKSWBwNBiePIqDA3UFwVMm
+yT89QhnGXul4K0TZw29RpwWO7C3EKQ==
+=ZQbP
+-----END PGP SIGNATURE-----
+
+--q5A2uEVY7mg+0cj5--
