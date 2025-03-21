@@ -1,78 +1,81 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FDC21E9B32;
-	Fri, 21 Mar 2025 20:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9BF6221DA2;
+	Fri, 21 Mar 2025 20:50:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742590196; cv=none; b=gQNGkCCGgLCkxpBU+s3bw3B9QVD7SbvxuPvnsxKaNp2ylu9s+C9nQZq0AudIf120bWSsVAjXqVTXjiDeDM6Vc3Xx6SucM0jElpPkJ0wWuz+rHZWRuGZxvEwimE8lvjr83vs5iwabkBp/vtz88SPhNzShFTXvBhTo9YqoKnt8CRM=
+	t=1742590212; cv=none; b=DdhCldJhg3x88lL6s4PHIafYqcw9584S0Hn5ZQEE1zukYWdhBJhI4Xe1bsf41s1Fb9L+cvgTcb5XAgHbtmUSMnDMazQKmRH+uSaEEdYZ8nxGVsrGg42IM/vTXZkUb/MO9hQQL/6jhA61hTugmZw4eweqrUnLUE31qCoBNWJ62bE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742590196; c=relaxed/simple;
-	bh=4pTVcbAbpPt3GwfUz4JicXA/rZSw6JoJnRcoWn9i0os=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ZeTCKhqLgxnXYDa/tgTECZ/WpDiZQJHMl7s5kG1JVXeXRuO/JkI0GTQ2Srnz5ZVGMVQUGyZFIiKTI7WTqYMeR+ObR3xqv2q+7i6Wv+06KbatMKUUeT1B1tEGGoUEF/gWP4OqkP+Fq7AAkTsYLhWS6RdaWJhgoxZ5W+yYRLmycsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uy20kFXo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742590212; c=relaxed/simple;
+	bh=NYDV0AH6VMybj+/Wwpfj6w3HLv/oqsj2RU5ib1yXgO8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RgCFdOv3/FjSXBRCeFRimXq6nzQ1g+PXYrL13JPJL4NYM44ySieUYIUFK8wq40r9qi4y+XYLIDxz1m1JyvKmA7ABgeQJyDhT8+vXIEZlodCxy8cHFxgkNGZ9gTx6Hzw5NSGl4bREFUsfZn3tJkzvJzm1QMNCQGvQ/T7Rxyq1Y+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=TGFtRI8s; arc=none smtp.client-ip=156.67.10.101
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uy20kFXo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 726D3C4CEE3;
-	Fri, 21 Mar 2025 20:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742590195;
-	bh=4pTVcbAbpPt3GwfUz4JicXA/rZSw6JoJnRcoWn9i0os=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=uy20kFXo1yxMM3AN+yHjY/rVmZOYlZB7th/emYhts80bkws7B9d4eeI3hRnuMeks1
-	 ZUh2zPF5DuE0TS5lWaxqhNbJIMeuJ8CzwpiBUWWYO8MMa34uicX3ZfWvqg03tlkfjH
-	 giikA0O3UfuS6CvBmVkXs6TI9m1F7g7i2q6yVAX+STXbxVhzVBlzyX7LhlrNQkhU8w
-	 gTXGbX1iope8ZPXOZbWinj/E6fPjHK9mhdtFM2Ac3qKkS4kZ+70cuTXdx43LhDFICj
-	 3COrXTmyL7wFjpDMutnucbDeFHaYsbKPgHlsnYOKwd1gsmDgjOmv2+3BXDUO4vaev1
-	 8JOgWRQ6Fm4Lw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADE603806659;
-	Fri, 21 Mar 2025 20:50:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="TGFtRI8s"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
+	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
+	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
+	bh=yFzOysCPLuMjK3qzNNnYKx7eqzyb8A3svd4W9fSzPuQ=; b=TGFtRI8spN1abBT9KlSGFueqQh
+	6/YP2EDo6BjswLesT6nGpeMQ9l84PUNmOlDHSQO43O70iL0m5u383PDralyj13qYDcr5D7CjO2NAZ
+	RltzmllqpVOG9toqHbT8+tzjdJcPirCbfOYaqh9GGwj5dM49R26FCx00XWpFfKRnRsoQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
+	(envelope-from <andrew@lunn.ch>)
+	id 1tvjJA-006eT6-Hj; Fri, 21 Mar 2025 21:49:36 +0100
+Date: Fri, 21 Mar 2025 21:49:36 +0100
+From: Andrew Lunn <andrew@lunn.ch>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Nicolas Ferre <nicolas.ferre@microchip.com>,
+	Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Samuel Holland <samuel.holland@sifive.com>,
+	Richard Cochran <richardcochran@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	netdev@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	linux-mips@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Subject: Re: [PATCH net-next 01/13] dt-bindings: net: cdns,macb: add Mobileye
+ EyeQ5 ethernet interface
+Message-ID: <2dbbd6c0-84d0-4846-a48d-31891f395c7c@lunn.ch>
+References: <20250321-macb-v1-0-537b7e37971d@bootlin.com>
+ <20250321-macb-v1-1-537b7e37971d@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] libbpf: Add namespace for errstr making it libbpf_errstr
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174259023153.2618986.486989246746713342.git-patchwork-notify@kernel.org>
-Date: Fri, 21 Mar 2025 20:50:31 +0000
-References: <20250320222439.1350187-1-irogers@google.com>
-In-Reply-To: <20250320222439.1350187-1-irogers@google.com>
-To: Ian Rogers <irogers@google.com>
-Cc: andrii@kernel.org, eddyz87@gmail.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, yatsenko@meta.com,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321-macb-v1-1-537b7e37971d@bootlin.com>
 
-Hello:
+>            - atmel,sama5d2-gem         # GEM IP (10/100) on Atmel sama5d2 SoCs
+>            - atmel,sama5d3-gem         # Gigabit IP on Atmel sama5d3 SoCs
+>            - atmel,sama5d4-gem         # GEM IP (10/100) on Atmel sama5d4 SoCs
+> +          - mobileye,eyeq5-gem        # Mobileye EyeQ5 SoCs
+>            - cdns,np4-macb             # NP4 SoC devices
+>            - microchip,sama7g5-emac    # Microchip SAMA7G5 ethernet interface
+>            - microchip,sama7g5-gem     # Microchip SAMA7G5 gigabit ethernet interface
 
-This patch was applied to bpf/bpf-next.git (master)
-by Andrii Nakryiko <andrii@kernel.org>:
+These are kind of sorted. Maybe put mobileye after microchip?
 
-On Thu, 20 Mar 2025 15:24:39 -0700 you wrote:
-> When statically linking symbols can be replaced with those from other
-> statically linked libraries depending on the link order and the hoped
-> for "multiple definition" error may not appear. To avoid conflicts it
-> is good practice to namespace symbols, this change renames errstr to
-> libbpf_errstr. To avoid churn a #define is used to turn use of
-> errstr(err) to libbpf_errstr(err).
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2] libbpf: Add namespace for errstr making it libbpf_errstr
-    https://git.kernel.org/bpf/bpf-next/c/307ef667e945
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+	Andrew
