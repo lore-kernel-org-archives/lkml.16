@@ -1,120 +1,143 @@
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC4D11E3DFC
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:15:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF831E3DFC
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:15:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573717; cv=none; b=Zvmj4xnlNieef9szBqUwvs2Ywe0jst7dSUq2Prky7tdB8CoogSftYxC4lkiWwlvLpRY+AnR0zRgKKQzMxbtwBRwNXN39gaoBam/8eVtMh0zvNn8m3X5E8I4Z2T7ZyoWFUw6pJXH7oE6Nv2nB3uhwxgzwVCFKfzqH2mntXDO/glk=
+	t=1742573739; cv=none; b=r0E6vduZAdpHnCUiWEZD0ykj2J5SwYAAyCVw51brcG5DhwHhzPzvUsFdsIGWb3yRWYcIdUCv+7RT47oEu6+MRbkhjpYOcoi2x/q7aHjAeO8W5Mms6gVhS8lwFmo8YaeFUJKBHd/s+slm4/8XDjdw3TYONbA9MwK/v/AoYuSxEvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573717; c=relaxed/simple;
-	bh=t0I85wJl6Q02gWZfsGxbdmSAryl/5ThAyE7h6UCvpP0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=m5Tcj4NQW+AcWyqtiGe3mMYbRqGpEr5e+HOyM7H+epn06uUsaLKVt+ihLCx18xBRVdcu/zDtI3BhFLJDtr9QOgwLJrdAfAsO27lDtQJaADxhwuk7TrT8/9e3q9KO5VoXvbmUiFvYCyUnPejh9nfp3nkKGzB0pJpCaOtPL8ZYdnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=A7JGV9oI; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+	s=arc-20240116; t=1742573739; c=relaxed/simple;
+	bh=Yg6z5/0VXsbi8VLXgUTAQHCScWouUuRNuKl4guK66bY=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:Cc:Subject:From:
+	 References:In-Reply-To; b=CISz1sf4W0DlfiMprGqdBNvVjyfmiOnAXXqCQmb6Eb9bOBgX7up2a7VOgN+aqo4FBm3+9KVobVzj685oNItKaiR4IcxhIq5c8JUkUoizcNXZnGk+qyLBQK+2wiUtXq8Il+cNoQn9XidguxQ2m9p4G5YJ2GGMAYQMmj0E6BVwZoE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=5j2g7hnr; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="A7JGV9oI"
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-54acc04516fso1934194e87.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:15:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="5j2g7hnr"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac29af3382dso347822766b.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:15:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1742573714; x=1743178514; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=fairphone.com; s=fair; t=1742573736; x=1743178536; darn=vger.kernel.org;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xxLB0h16iEEcVhCHw+83yfdc4253yuJpjZl1F1gKp+U=;
-        b=A7JGV9oIh6ZmKwqaD71AYdB8LPOezlNH2kf2dHxfonUSKw1QOz6ojZeb8Z2027BhiP
-         P+vDFbddpHbxA3WKgumIYQiE+PodnoVXVmmbEOuiFpBUZOReK9P4GrWFVLCzKzd37j+5
-         xRaFNQQKnYPaL3TrurnBf7l0w0Vx29gAmKxYmS+w1p+/gsTOcIInm9cZE8G5mfrnbKkL
-         3lMFgL0x8z6ycMHPKKqjo+ErAkES9oOgW1P+4ZiJj7AeT9LvSoKwrmbmymk2HkUz2tNp
-         PhwlMjZjRMwx8KTz3WqeSedAiXiXPlxR5W1Woom/BBc4KAzxKu1wtuJtbwD4fCTeR7u2
-         S7TA==
+        bh=rbbmZVCZaVtzsaI8Jyk6RYosHIprj6Z8OLUlilWArmU=;
+        b=5j2g7hnr1rysfKwb3nGoPn07azZwl5SMi1Akgx7I+L2LB1GBm/gAhXswFYTRs02aKW
+         fhYQ8ykju+pOIKuLUGlikCZqvo9Q7TOc6/iGmj095yNw6/8qbR24aXluf0LQTppd9HXH
+         XaAC/5feWCHEe69h2h3nq3eDizRCyQsd2CpucWgEC3f9IUN4pG8JJdtY6DT6HxhCLPtC
+         aGl1O0CoPcrvHvVeXekG0Sic3SfjYKJzviXcXIcbiUoOmVCAFcZ0qI1TmoWwDjN03bF4
+         /rgeVkmLPo3HPEU/WNLiI80yrl/TOT9Fq01KAKZdbOhSLV0OEaXRykIHU2uX5CtugEqo
+         mp4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742573714; x=1743178514;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xxLB0h16iEEcVhCHw+83yfdc4253yuJpjZl1F1gKp+U=;
-        b=Y1wVBF8UOjnjPhgMS10oLXMUMTyijY59By9v5e/jzLiVpKrhNG+NKGcMZhA2FoazhT
-         l7hanhlnlyAgiw9E8iHg8QuQGv0gr26hgPS3uThP62MPX5CNnTrqo/5C6qfdUchkza5V
-         gI+VDlNsVuaiJ3vyM3/vArHDpWU7/dZTR4WfW4GZSbJm7Sx3FCE9oj0E/XcQapqYbP/6
-         1f5sS+s3jBEEpaIx8mnIMINNxG6f6UAtDx55ya5PN25QD+H8upfUjSHEWt+YhBEfSomE
-         V8cSokez1NEPxRw4AoaRU1xBFkItfsxwzZAkx1H6A9YSOxISi1aVlxUUDPFaEqpLW+mw
-         andQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURhB0ys4qha5hPMcWTE6k+iN7zh6FS5Jh4V7SMFc8qv3X/mOwE2OaJ/DaIoUdcogclndlBtJydY3eS2aw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhNMJ02mojo8F8GRKRR1YDMGtTgxpA2TWkY5rD/g83H2P0CQ+O
-	ESD88aI2Fk5n1W4bTghN9ZxjZeNjgKelbhX++v9G9wTWfIzqQSN4WKobYagXYJs480h+XQUNCG6
-	DmWhW0HABVhc6k3w+AUbi5iYphN79tBxfynPO3g==
-X-Gm-Gg: ASbGncsq2hs5SbRkxlpzXTOpAWAhtYJz05vgjN/75zv9mfsvlMmQzOsJf14DPH2+YAL
-	xIIYDzBypUIti/sG6MEi8EDmR42OkIqdiTug4JimVJh+vEAqvGpwZOOIwIHhBwvXG0l8z8ATKbw
-	lL6U7UDRP4JmFJUeExu5j9kiM9Ab+G/ExhI4yfqVXPue8ukqhmCQCxBRboLjU=
-X-Google-Smtp-Source: AGHT+IFpr7tj7lCX7rK9TyEdAX36qI3BUwAIzNojkRB11whvA4tpCS//FWsPqh8dSvOvjgyUXnDZxoxT5uuaNvkOseo=
-X-Received: by 2002:a05:6512:1088:b0:549:8bb2:8575 with SMTP id
- 2adb3069b0e04-54ad6476834mr1559553e87.10.1742573713747; Fri, 21 Mar 2025
- 09:15:13 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742573736; x=1743178536;
+        h=in-reply-to:references:from:subject:cc:to:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rbbmZVCZaVtzsaI8Jyk6RYosHIprj6Z8OLUlilWArmU=;
+        b=Nyl3SXsQWV7kXz1U6X9BW2bp5y1yKQRM5zpQqeuwjl4/JXHthSbidE9ZBjiZkf3sdr
+         ZHptLvsunp7fOIIng/ir0Fy7PAf3l+Bj9ZjXA97JGgHz0DC5nEA5io1KAw36slHUp3PA
+         eSAFQetLOPjxAG8o8RAu+B+b/ccG2d0xD0PAOYp38AwNEdoWUP41/3Gc6SXtEm40dgTm
+         TunYZq0+toO0Wh8qTRCDsX+qNVK+etzWvxTnz5n8Ke/ePCzCXPnrGHKMapSE1s4Druz/
+         1tMbSKDE54ebn2kqLM0yCDC+Yr5T+0Fd1psHnH/pxTLW2PlFMyfnwj6Eu8cK1ye0QrTy
+         5qgw==
+X-Forwarded-Encrypted: i=1; AJvYcCW8WUXV3WU45kO8RsyHOIconOZ6cH8wQk2HBlhUCDvwIuO8p4Kn7dGTKEORVe4mqDcdO5484YSdloW9KZk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyk/1dHV62SNUfug1lsTrhSe5BW2651GWxyorlNAhSu/IOciJ3H
+	box7IvanGJP5cBySe9a7pn0icLJ6LxjlcvZfM6tZ/m+fUHXiKMC34lqJvpeWAf0=
+X-Gm-Gg: ASbGncvv0MFTRwAr6y7hgm2kCo8AncqOG9vbkOHJS01VIGomwKbstaRP3GVJtlX2YuN
+	zx/xPich/XstBd2ZU43+rBxzgbjTPQaGI069QZIeAPCm5RfDIMK40OSu+xZ2BrkV8E0wbJ1KrNS
+	5Cm2WPhogFdNR3FL6RuXFjBiw7UBhGAti3tRgQc/3jqG1ovyflq05+0Mq/n2dTQ8uD6lOM2LQHP
+	1Wvw5fnraVr+Ugtud9aG1wP03pzTfVt0G3uBgWbNIme/bH0esStpNk13VfHXIRY3ktAls+sybZE
+	TTM+YMT7XLlKlPt0dRJHpkqFbNdaNJMZqKmjOEOmm4RhmRL8XHgS6+IEH0cmjVRVxLo5QAzttsg
+	qTaqnhRQ3Yf0AVA==
+X-Google-Smtp-Source: AGHT+IGhVIiK6Neh4GkmDHq08vg4cl5Hpi3z1/z97P4bxQ0QIH0uE9xYAf14+3A3z8pwf8oACU20fw==
+X-Received: by 2002:a17:907:9688:b0:ac3:3e43:f454 with SMTP id a640c23a62f3a-ac3f24b3d55mr325815166b.39.1742573735620;
+        Fri, 21 Mar 2025 09:15:35 -0700 (PDT)
+Received: from localhost (144-178-202-138.static.ef-service.nl. [144.178.202.138])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efb64952sm174608566b.105.2025.03.21.09.15.35
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 09:15:35 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250315194002.13778-1-marco.crivellari@suse.com>
- <20250315194002.13778-2-marco.crivellari@suse.com> <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk>
-In-Reply-To: <alpine.DEB.2.21.2503211146001.35806@angie.orcam.me.uk>
-From: Marco Crivellari <marco.crivellari@suse.com>
-Date: Fri, 21 Mar 2025 17:15:02 +0100
-X-Gm-Features: AQ5f1JowyTWw49XnxSHXBxJuGDwxUK9dmkDqvxpfG5_TtVO4oP_4udCpS9k6fzw
-Message-ID: <CAAofZF4gy6WJKLK4TzF5aV7+ca3gob5jVz3XQZyGrTpfnCsn_Q@mail.gmail.com>
-Subject: Re: [PATCH v6 1/1] MIPS: Fix idle VS timer enqueue
-To: "Maciej W. Rozycki" <macro@orcam.me.uk>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Frederic Weisbecker <frederic@kernel.org>, 
-	Anna-Maria Behnsen <anna-maria@linutronix.de>, Thomas Gleixner <tglx@linutronix.de>, 
-	Peter Zijlstra <peterz@infradead.org>, Huacai Chen <chenhuacai@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 21 Mar 2025 17:15:34 +0100
+Message-Id: <D8M2U2EUF169.MWRPXFYRBXMM@fairphone.com>
+To: "Dmitry Baryshkov" <dmitry.baryshkov@oss.qualcomm.com>
+Cc: "Bjorn Andersson" <andersson@kernel.org>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh@kernel.org>, "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Taniya Das" <quic_tdas@quicinc.com>,
+ "Konrad Dybcio" <konradybcio@kernel.org>,
+ <~postmarketos/upstreaming@lists.sr.ht>, <phone-devel@vger.kernel.org>,
+ <linux-arm-msm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sm6350: Add video clock
+ controller
+From: "Luca Weiss" <luca.weiss@fairphone.com>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250321-sm6350-videocc-v1-0-c5ce1f1483ee@fairphone.com>
+ <20250321-sm6350-videocc-v1-3-c5ce1f1483ee@fairphone.com>
+ <wjq7sxdc5enfu6zhp4d53mpyevzbuwm6qc73kwiu2v3v5p4zkk@mevxbzosjai5>
+In-Reply-To: <wjq7sxdc5enfu6zhp4d53mpyevzbuwm6qc73kwiu2v3v5p4zkk@mevxbzosjai5>
 
-Hi Maciej,
+Hi Dmitry,
 
-On Fri, Mar 21, 2025 at 12:53=E2=80=AFPM Maciej W. Rozycki <macro@orcam.me.=
-uk> wrote:
->  This instruction sequence still suffers from the coprocessor move delay
-> hazard.  How many times do I need to request to get it fixed (counting
-> three so far)?
+On Fri Mar 21, 2025 at 4:56 PM CET, Dmitry Baryshkov wrote:
+> On Fri, Mar 21, 2025 at 03:45:01PM +0100, Luca Weiss wrote:
+>> Add a node for the videocc found on the SM6350 SoC.
+>>=20
+>> Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sm6350.dtsi | 14 ++++++++++++++
+>>  1 file changed, 14 insertions(+)
+>>=20
+>> diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/=
+qcom/sm6350.dtsi
+>> index 00ad1d09a19558d9e2bc61f1a81a36d466adc88e..ab7118b4f8f8cea56a3957e9=
+df67ee1cd74820a6 100644
+>> --- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+>> @@ -1952,6 +1952,20 @@ usb_1_dwc3_ss_out: endpoint {
+>>  			};
+>>  		};
+>> =20
+>> +		videocc: clock-controller@aaf0000 {
+>> +			compatible =3D "qcom,sm6350-videocc";
+>> +			reg =3D <0 0x0aaf0000 0 0x10000>;
+>
+> 0x0, please.
 
-Can I have more details about this?
+There's currently 80 cases of 0 and 20 of 0x0 in this file, is 0x0
+the preferred way nowadays?
 
-I can see it is the same code present also in local_irq_enable()
-(arch_local_irq_enable()),
-and from the manual I've seen:
+If so, shall I also change 0 to 0x0 for reg in a separate patch?
 
-"The Spacing column shown in Table 2.6 and Table 2.7 indicates the
-number of unrelated instructions (such as NOPs or SSNOPs) that,
-prior to the capabilities of Release 2, would need to be placed
-between the producer and consumer of the hazard in order to ensure
-that the effects of the first instruction are seen by the second instructio=
-n."
+Regards
+Luca
 
-The "Spacing column" value is 3, indeed.
+>
+>> +			clocks =3D <&gcc GCC_VIDEO_AHB_CLK>,
+>> +				 <&rpmhcc RPMH_CXO_CLK>,
+>> +				 <&sleep_clk>;
+>> +			clock-names =3D "iface",
+>> +				      "bi_tcxo",
+>> +				      "sleep_clk";
+>> +			#clock-cells =3D <1>;
+>> +			#reset-cells =3D <1>;
+>> +			#power-domain-cells =3D <1>;
+>> +		};
+>> +
+>>  		cci0: cci@ac4a000 {
+>>  			compatible =3D "qcom,sm6350-cci", "qcom,msm8996-cci";
+>>  			reg =3D <0 0x0ac4a000 0 0x1000>;
+>>=20
+>> --=20
+>> 2.49.0
+>>=20
 
-"With the hazard elimination instructions available in Release 2, the
-preferred method to eliminate hazards is to place one of the
-instructions listed in Table 2.8 between the producer and consumer of the
-hazard. Execution hazards can be removed by using the EHB [...]"
-
-What am I missing?
-
-Thanks in advance
-
-
---
-
-Marco Crivellari
-
-L3 Support Engineer, Technology & Product
-
-
-
-
-marco.crivellari@suse.com
