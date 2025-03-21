@@ -1,140 +1,206 @@
-Received: from panther.cherry.relay.mailchannels.net (panther.cherry.relay.mailchannels.net [23.83.223.141])
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2080.outbound.protection.outlook.com [40.107.96.80])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A68233F6;
-	Fri, 21 Mar 2025 03:03:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7C7182B4;
+	Fri, 21 Mar 2025 03:10:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.96.80
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742526191; cv=pass; b=KMb5NJ3Hfhsc8s27G5g5L/OXLHX4BoGxy/FdDRa9cHGZRHqOH/W3mB3VtT2N3B6TQ60V6efW/Ob7vuDBEanE14RRtB2G6rXcC4+tJ9no81I3ajRy0uO8KqWSsPv7Yy8nm+vBF/WTBKsjBsNFLwaHaTwfHq5gbJs3v5K77PbEl/A=
+	t=1742526610; cv=fail; b=RBhIGx5UKa8Ledp47kmMi3L7QXv50MJOupVAMRfHoKMTuY/xDTjJtV1mXR3Jb/Bp3IKmVpgcEX4JMf6PgW23eK4UlcfJE644QxrCHPZUGwYGJkTGXUhC8hkFO5E1GKjWUzGGOc8XIae/empR/rSa7JkkK87TCLvX2gsl+ym5hQg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742526191; c=relaxed/simple;
-	bh=88MU1BHAIXJQ+vvzwGpSpBOkiBwPs9MlckYpqtNKfXU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uad9E1wbXbBb66+mC60lYF0BukN020KAqshMn9UkTJj1iU29PCpKOK/j99VNMVIBdM8zsYcSVLRvTuu5cYcVVU2TQZvTRF4Zp2GfjimyUY8/6nR8VFvup77FNmSZKSa5jpLom1eM4HAq0DpArdG4hicNtSxyXnX+1sjR2UcyaQU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=QEuemAtX; arc=pass smtp.client-ip=23.83.223.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
+	s=arc-20240116; t=1742526610; c=relaxed/simple;
+	bh=bU6zaCZgr/SZdxbJx4pfFq9NMQHmcvsUe6DBlm52t/0=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=OyjDErYQXxMY5wGa8BxgNjhq4NIyjWFVsCzoH+FZnZQjnAux9scQgBN+zZnBm73yaqEd04BBzZmMBI6B+AmaceYFw8AE7VzvQMAObgJx6hfATKiM0S7beuJIaMpdrMLZC4Dk7aalN+2D+6X+OLdGiCvJIQBwpTgjiiUU7wy0Bok=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=mWMOTJBu; arc=fail smtp.client-ip=40.107.96.80
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="QEuemAtX"
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 013992C4302;
-	Fri, 21 Mar 2025 00:41:52 +0000 (UTC)
-Received: from pdx1-sub0-mail-a240.dreamhost.com (trex-4.trex.outbound.svc.cluster.local [100.122.87.77])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 750BC2C315B;
-	Fri, 21 Mar 2025 00:41:51 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742517711; a=rsa-sha256;
-	cv=none;
-	b=EdpyJDI9J6Dnj2zGioWQPjUupJLVhU+bKxHkC+67hpHl8EoFihsHMnBrjqjKopX+uCGg+e
-	/A3iXMkZjjwjwAdblLkMo4G7VAr7Az/kaUu/TFtKoWcuwS9itHY78a6docRud8Y1qBPJcZ
-	C/OQWto6GhOAcJNTIRUi9lPlXhLpxfk5O3R/yRvpYzyzbXWXJWt6Kpb4IHiE80A6aUJ7Z4
-	BBBf8ZImcQe6QNs/awGuMy/lq6wCrFQ9KSTGHkOTNIdiiUcM1xUaniU2O7JJUTyn5Uz0bt
-	H8kPCOZiAIiFa2ZTAtU1z17mnXFqy1hYput9aFHveIBYlm/LEmlcUUzjFPEX4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1742517711;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=GOtDI42ZGjjwvvzuw7glUl+ZjQqc359tKgmb6CyB3dQ=;
-	b=Edu2cpjlY65VTBQTvDMzv4OSfytbxoRLBuG0pe8DvodcxrRrc2C40CZgqlcwmlkTQkRf/v
-	jsGmqvZs2N1NVff4rBskHddpiEx0YMlBbagRgmQcSLVPvdAvrPFeXsaTrK7KC5nRh32W66
-	TUF2u4AwqcStyBOejMqjvgrMSjVmC1wWY49m8GUJuUAwIz12mSdG39QFSqmrkALGMr5ASo
-	7+HkzMI0r4uU+lBWySlAemcadsJ+haBGKxzprvtbCxgQAw7m1txdO1kiUxVAy+fr8uU6LJ
-	MiuoqDXSmrbutFWEH4QisR9ITuflj94FRz0DCU2FQaUx+PfJyU14rQgguwuJKg==
-ARC-Authentication-Results: i=1;
-	rspamd-74d566c845-rqlrf;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
-X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
-X-MailChannels-Auth-Id: dreamhost
-X-Sponge-Absorbed: 087d149e4fcfde5a_1742517711826_894984705
-X-MC-Loop-Signature: 1742517711826:995818340
-X-MC-Ingress-Time: 1742517711826
-Received: from pdx1-sub0-mail-a240.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.122.87.77 (trex/7.0.2);
-	Fri, 21 Mar 2025 00:41:51 +0000
-Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dave@stgolabs.net)
-	by pdx1-sub0-mail-a240.dreamhost.com (Postfix) with ESMTPSA id 4ZJkCy4xkQz9p;
-	Thu, 20 Mar 2025 17:41:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
-	s=dreamhost; t=1742517711;
-	bh=GOtDI42ZGjjwvvzuw7glUl+ZjQqc359tKgmb6CyB3dQ=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=QEuemAtXEM+XNxSv2flluufr/l8Fv5bITczZIE32jf3PeKeeosZr/Tqw9u9OQCvqW
-	 Lgyg/B9JG1fLmhtHY0LmLjWzth8miZ/pCVjHLLjn1lfZ5qJWJiHRK1j34pGW34cfLz
-	 GAAWC7TgCRhvDeUQF6bK72LDInTQkdfA6nQjgG82oZLAl7g0O+ciMVpDHPiNwoR+Ez
-	 jPuiL4ft1L2hnWunPLGEev6di8/1BQhGRbbWmTzZLPVewNPYSF58NKXMJCVWA4obVs
-	 gNUTvX3RhAtry673l/G0BvM2FB36Le769WfNw/4UuSEaVmHemEHz+LvAWqJBkbrpKQ
-	 RHYqZrks70vAg==
-Date: Thu, 20 Mar 2025 17:41:47 -0700
-From: Davidlohr Bueso <dave@stgolabs.net>
-To: Robert Richter <rrichter@amd.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>,
-	Alison Schofield <alison.schofield@intel.com>,
-	Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Gregory Price <gourry@gourry.net>,
-	Terry Bowman <terry.bowman@amd.com>,
-	Pankaj Gupta <pankaj.gupta@amd.com>, nvdimm@lists.linux.dev
-Subject: Re: [PATCH v2] libnvdimm/labels: Fix divide error in
- nd_label_data_init()
-Message-ID: <20250321004147.i55w5i4whrar572x@offworld>
-References: <20250320112223.608320-1-rrichter@amd.com>
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="mWMOTJBu"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=YWu7WrX1zLghaJ2Qq601qce/sRam50C3Eq0/80KfDW+kCTk4iywLbcylf/o/6PJ4OHTc2uiIM1i0N7UjHcbJhHNQxTSFImSqgf8n1kb5sGNrgy0y//dNdBulKsW6qIV8qmHS6I9mWZ6cNHjLt1k1Ug9FNd4IL9QL72WZvIX03PqCSlJ4KTBJ0aUKOrHGP+46K6cTLg1Av6rhoafBfbiKPoa1zrOt5DS3kawPPoY1D9reSsP6RgqjXOz7T5T9sVtweeSi1JV3cpgtiA8D9pwruTxYBKTdVRJPwX0LPdnhqeZ6cfK+as2DA/bj5hj7CetSx7/TrJvmDZIjV7SytLH5fQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9OqnJeRy/fKNqHK4DTRJlSkjsJgK+Gnh6y0bZb1iIBM=;
+ b=ZG1hq2C0FKn0+vlzcC+KLAkG+OcYF04C/bPYypqcGUtbP9VtY6okDAbBmq+w2W3UbMIFxW80eCsif0DwgW8cnYZYQvGYGa3TpVFLTd6B0lGXQW500+9J7vQIuSU4Kz75Dd/kSZjVrYC7Wb7IlWXZdsgp2jNesyZuUWibe/oH+P6WvIv1jnHsC3mIKf7ku4VIqOox3VQCnZxoxiU0OQsh3DCZxsriqWslhmD3BbwQaI4puOCCjlqUN8vQUnC4g5ngUZNrj48rdY8UnLxI3JgCi1ZGrQDvH5nOUF5EApTORJ3bjgyVBfcxCC3mvLHIWekwV4RK3mzqihFATdPyLwpX3Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9OqnJeRy/fKNqHK4DTRJlSkjsJgK+Gnh6y0bZb1iIBM=;
+ b=mWMOTJBubvPpcQvV+WrCSfNQ/vBVRxAaLOaz9OglJedR8dOLX9vb4tMNPIdC++Pj0rhXUKWZy7s7Lb4qMk9dkgfIV6RqOYx/x4gT196eUV6O//6WCVUpUpGe9vwYrum/GFYATnBczUD1KRBwsVsVY37urbTbNYCzxucAb3WlC+/yupYWOuqmb33Mq/6cG3+d2jPY5ksPsfsy+sP0JtUKszoh7Yczw+nRrahW+rM6j28wBAfG+OWVs0SiFqU6lngMbWPUDAVIUL3BV7H+dLKv2khkOOXfQskT3tChc5GKA5Qhyk0kOZyAnk9rIMZWJiQKnTLvM/GEhKDCFJ5ymwIp/Q==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com (2603:10b6:610:28::18)
+ by SJ0PR12MB6831.namprd12.prod.outlook.com (2603:10b6:a03:47d::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8511.29; Fri, 21 Mar
+ 2025 03:10:04 +0000
+Received: from CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99]) by CH2PR12MB3990.namprd12.prod.outlook.com
+ ([fe80::6e37:569f:82ee:3f99%6]) with mapi id 15.20.8534.034; Fri, 21 Mar 2025
+ 03:10:04 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 21 Mar 2025 12:09:59 +0900
+Message-Id: <D8LM4KOZULK7.XUJ0HXIYZH71@nvidia.com>
+Cc: "Danilo Krummrich" <dakr@kernel.org>, "David Airlie"
+ <airlied@gmail.com>, "John Hubbard" <jhubbard@nvidia.com>, "Ben Skeggs"
+ <bskeggs@nvidia.com>, "Miguel Ojeda" <ojeda@kernel.org>, "Alex Gaynor"
+ <alex.gaynor@gmail.com>, "Boqun Feng" <boqun.feng@gmail.com>, "Gary Guo"
+ <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <benno.lossin@proton.me>,
+ "Andreas Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl"
+ <aliceryhl@google.com>, "Trevor Gross" <tmgross@umich.edu>, "Simona Vetter"
+ <simona@ffwll.ch>, <linux-kernel@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>, <nouveau@lists.freedesktop.org>,
+ <dri-devel@lists.freedesktop.org>
+Subject: Re: [PATCH RFC v3 6/7] gpu: nova-core: add basic timer device
+From: "Alexandre Courbot" <acourbot@nvidia.com>
+To: "Daniel Brooks" <db48x@db48x.net>
+X-Mailer: aerc 0.20.1-0-g2ecb8770224a
+References: <20250320-nova_timer-v3-0-79aa2ad25a79@nvidia.com>
+ <20250320-nova_timer-v3-6-79aa2ad25a79@nvidia.com>
+ <87v7s3zoha.fsf@db48x.net>
+In-Reply-To: <87v7s3zoha.fsf@db48x.net>
+X-ClientProxiedBy: TYWP286CA0024.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:400:262::9) To CH2PR12MB3990.namprd12.prod.outlook.com
+ (2603:10b6:610:28::18)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20250320112223.608320-1-rrichter@amd.com>
-User-Agent: NeoMutt/20220429
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CH2PR12MB3990:EE_|SJ0PR12MB6831:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7ca91771-d72e-4e0d-230f-08dd6825e025
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|366016|7416014|376014|1800799024|10070799003;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?WkVKczQrdWxVME4xU1JDQmpmbElaRU9tOHpYaTdoa21uUHFuVW9MY2kxTmNr?=
+ =?utf-8?B?UU9TZjIvRUZrMG1SQ1ZFdDg2TksydnRyUUs0UmRaUlZYeWhKYTRUV3IxdFRY?=
+ =?utf-8?B?WnVFVFFTQ0RGMFFtWmhraEhXUld6WmVjZ3J0bkZkdDhRL0MxNnMrdnRCb0Rh?=
+ =?utf-8?B?RU50RjEvOG83WG01VWkwMG55dEJJRXgwWWxycGgxRmg2Rm9qTHNLYklEaUZ5?=
+ =?utf-8?B?UUJYVElNeUoySDVXUUxkZk5rY0FrYnREYkpZa3lLNHpWcnp1NDZuVExtKzQw?=
+ =?utf-8?B?VnBHMzlGVUE1MWIybTRDYkkybjV6MjRwbTN6bGc0QWEzWjIvWnBHLys5eFMz?=
+ =?utf-8?B?YTRIMk02ck5jdktvUGZGekFrcFZaU1NQZDBBdHhCckU4YmRYMjNiUDZlWFUz?=
+ =?utf-8?B?UXBKdGFseXhPZnByZWFucFU3bEFxbnVLRDhxV2xoT28ySVJwVXo1MTcrUnZi?=
+ =?utf-8?B?R1NveWZseFNjWGRwWlFPZlMzU1BhUzVueGZwVFVsMVBFUjFBbXZTdnpzU1Ex?=
+ =?utf-8?B?SDg3Mzc0bXprUkhZSnVEcFhwTUY0RTY4Z1lKNXVzVEwxQnlqQW9ZcG1ha1NP?=
+ =?utf-8?B?eDdmYTY5SHNnbG41R0JqQkVNZWFMUEdYUEhZaVpYSlJFSlpEMHVxeFA4Y0ZD?=
+ =?utf-8?B?YzlUdEdmb1BkMFRPQWhMRWM1ME5qNmhMY2tCSXh0czhlZHIvMDIwQUtvanFE?=
+ =?utf-8?B?L2kyaEJPM1lzVnR4dCttcDAwT2MwT3JEREkybkVNcWl5TGJiSjRCaXYyK20w?=
+ =?utf-8?B?YWV1OXRJSE1xTzMvSzJ5Uzk3SW15aENUQkFaWWFqVG55YWlhWlRxU1V0MThK?=
+ =?utf-8?B?ekV3L0Ezd28zc3lTS2tPVVlZRWJJNFZFWWorV0xhZFRnY1Fnc2w4a2tzL0ZK?=
+ =?utf-8?B?UVNUdTA0TzVWaHhjdGRnaVNTUG1sZ0N1cjJQYi9IdncwNlpYbUt2UHpyNW5K?=
+ =?utf-8?B?SFJQUmUwQTdxQmJZMCt5NmtOcDdyeEhndGdYWFpPK0QzR0tzRmpqc0NnRytG?=
+ =?utf-8?B?U0dIOGNjTkwxVUwrYjlhZDNYcllSN09iekhwR2lPcFdSM0Z2OG03SWVsa2Ji?=
+ =?utf-8?B?emVnWXV1Mzl5T1hyUzVnZDRSWk5wZldxUGtMV1V3eTJlODUrRE54MTllaFRa?=
+ =?utf-8?B?NjVTNFdxSSswUVgzOE9iNFlXbUN3WmRWeUFUR3lzbm5uMGJES01tL3IwbVlN?=
+ =?utf-8?B?dEVWU1ViL3ZOYzJORGxiVXBwTWtnNWQ5eFJSVllydnYrWVo2aHBKYUI1MU1i?=
+ =?utf-8?B?bTFNNksxcmVDam9mS2p1Ty82TzM5aGtiZWdoZHVQb1lvWHlvNDloTEViNHVS?=
+ =?utf-8?B?SUo5enJKeUdoR0N5WTNMdktDOWRnRmpYYnU1ZnA0QTg4MVdLUWdGSlg0bDRI?=
+ =?utf-8?B?cFlCNENQNy9SUklXSktHd0RNK2JBc1k1cVhNdHNnTjd4MnN3MEpyNUk0MGZm?=
+ =?utf-8?B?anlqd2FqWDRBdEhJUHJyanE2aEFkUjBGV3dyMk9CNnYyUWlQVHltZHRJUGtF?=
+ =?utf-8?B?d09YVHg1Zm1RTFY3UjRJTnRQeW9rMVB2eE0vK3pJcnpHU29HRmI0c0hRLzQr?=
+ =?utf-8?B?MFIydnE3a0c0Q2prWkZvQXNiejd0djl0WVBWZUJOUmlmWUxmOUc2VHdaVllm?=
+ =?utf-8?B?dkNZNFFzUlp5cDBzOW91UjFQb2U5L0hBTGpuRzFDV1J5Y09jRmx3TGRDTGg3?=
+ =?utf-8?B?bXVzcHV6OHJGQjNGR2h5YXhIdGxmRm1IOXNCTW1kNUZUazA3NlduRkpwOGJi?=
+ =?utf-8?B?NkZWTTl5bXhPcFZhYnZqSHp3NXZYVlY2L0huZ0xWN3cvNTBMUU85WFdtTFVH?=
+ =?utf-8?B?bGRDZ0xQSEhJdU0rRjN3UzdFM0VwVjNxTnozbkZNZU5uenVUcDd0RXMwWHRo?=
+ =?utf-8?Q?T4qziQAoS8TpX?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CH2PR12MB3990.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(10070799003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?YmJDU3NMcGJiODZybjlNQmhyNmVJSnU4dVM1ZXFkZm5qMVlRU0w5bG52NkNn?=
+ =?utf-8?B?eEtjWjY4RXYxbjR2KzBvYXVUVXlJS0ZtWU10aHdiRFU5M3psRE9wVVVxTE83?=
+ =?utf-8?B?Z2VqSFpPbnl3bThjanRkblVxUTBDZDJqaVRaSWtweXk3aXg2Zi92NVFHNE1W?=
+ =?utf-8?B?S3VGUHYxTk5PNGIwcGNqN2I2MWRuL1RDOVNQZlkzK0tvajJFSVNGRzNWMFVU?=
+ =?utf-8?B?a3UxWHd3elJvblRZVUQxTm9kSHJrVWxuQkR5VGI3dGp1U1ZvS1crT1ZST1RN?=
+ =?utf-8?B?a29uQStXYnZqQzloY3ZRSzdxRXY1MkZheG9TUENkWmI1KzAxK2hiSGpMVWN2?=
+ =?utf-8?B?VnI1YXk3SFRKeGxoZHJ2aGMxeEtNM2JkTHMydWdYb2pSZVBLR1FLYzVOWXNs?=
+ =?utf-8?B?QXVVck5tcHUzVnZLbzBUbnVIeFpCVjZmWkVCZksxWE5tZlhwdUZ0a2NoSXc3?=
+ =?utf-8?B?S0VrUFc3V1hHc0ttQTc2ZmVlcVJTTXVQSXh0ZXk4U2xHYjdqcTdrM2QyNFRv?=
+ =?utf-8?B?WHBsVEprbk5hQ1hVcHc4NGM0MjVJY1hYVGRLU01jUmVGRElqb1RFN29ybHcz?=
+ =?utf-8?B?Z3pMd1c0cHcvMFZWMFFmdVh5Nnl5TjArcmgyWWpjMEhnSTZ0QlYvbnVRNlBU?=
+ =?utf-8?B?SSt4Y1RQZkk3ZEUxNlRXWEtWdkdqVUdESnV4SE5iQmVhVmhvZ2ZIRmZ4RGcx?=
+ =?utf-8?B?ZDI1blBsNm9BWTdNamlUYUYyN0E1eUVESXUrenZ5WFBiRzFTOG5nSzJTY2dE?=
+ =?utf-8?B?WWhFOFBmeXVXWnJGZzNPdTQrcWsyTmdoMmt0d0JndG95SlZUdFJKYnpRZVph?=
+ =?utf-8?B?L2NEY25FbzgraUY1Y2ZWSEhOTHNad3h5bmVnQ0hJOStQZVJWS01wRDl6TzU1?=
+ =?utf-8?B?elcrN3FQV3JiMWE4WEFXN3h4VVBPMEp5N2hCbVFQOHNoZnJxNjBrSllLbjVx?=
+ =?utf-8?B?MDZORG1ycTdpTFpnNC9aNStlOTY4WXRoWWVLRXBuTWNEaXZJOUx5QVV4cXRt?=
+ =?utf-8?B?VVp3M2tCdG1aQTF0T0JWeVhqLzJoT0FWM0VMdU1ZNG8yalk3Q2xLUnJqOXhp?=
+ =?utf-8?B?NkZkcUF3VWhpYmVyWDJTclVUUmlVVmlPdGQ5ZlYvSmZablZjcTN6cTN5MDVO?=
+ =?utf-8?B?U3JzZDN5Z3N6b0dUQUNuNWZxekgzRXVFZjFkd2NqQ0FTSWovS1h4ZUpFU2NP?=
+ =?utf-8?B?bjQ3dUpDYm5DcW9CeVJ6MmZ1eHR6UWEweGRJSFlLZ2phbmh2OUp6NlV6c3pM?=
+ =?utf-8?B?V09Gc25HM3h2Q0tpNVdoeUpKVmg2S0VXQXNzRkxNWjNaRkY0ZDRKVkVnZWk0?=
+ =?utf-8?B?VGsxZlVDczQxUTVZclVhWHhzcnlreG85UitUZStaaXVvTVFvZmFFQnpLRTRh?=
+ =?utf-8?B?dmFSN1pKZzREWUlKYTdYOHg1bGZ3c1A0NTI0bzhxOU0wMGZwR09YVUdhS01F?=
+ =?utf-8?B?K1dSNFRnSU53WTdJMGo4ZHVGRzNOZmxKMm9KZFA2TElMZzJ2dkpNaFQzSWJY?=
+ =?utf-8?B?bG5BRW9BcVl1Z0cyTUswajJDemVoOUlRQUVZbVFDdkNDMURhQklwbEpWb01B?=
+ =?utf-8?B?WWQ5clhtTW03NnRBVERzazh5UURvcnRTU25CUEhja01hOXIwMFFCME50M2Vn?=
+ =?utf-8?B?VFhLMjNRTloyRG1wV1BKcXAxNExITlBzWXRDZ08vMEVsaklXKy9rWXFBRERI?=
+ =?utf-8?B?R3JmQjVVYSs4UGUxejU1eE9oTXdabVZ2SHUyaFhzVnRtQnMxbjVlOHRLbytW?=
+ =?utf-8?B?ZHlTTkxlbzM1TlF1M3JGYStaVWhSMG9IVnlQME16U2xFcnRqZTc1Qm9vZkhH?=
+ =?utf-8?B?d0xmWlA0K3huZXBPclJQQm5IU2R5cjJuVE1uVlFma1ZBWmc5cVVqQXk0TnJU?=
+ =?utf-8?B?T2MvTEt2SE1hQzF3LytZSWpOQTlWRi9jc3p4dnRIK2dZSVdQelZQT1FDRnkx?=
+ =?utf-8?B?UUQ0WTVQQUJIMHJja1I3aksvam9vb3JUU25iUmdaUU0xYVlDUWtJbXZ2dWoz?=
+ =?utf-8?B?OFB4VS85T2wvSEgrWEtoY1JsSEVLV2ZBczFhNzNpR2pBamROZUJqVXVrZDFu?=
+ =?utf-8?B?eEVHbEs3dVREVzhCdDdidGpTb3R6TkRDSHZNem1yQXdaNFE2Y0NyNjRObmpL?=
+ =?utf-8?B?L3NSSmdQc2JjOE5paXhNS0RGSHJDMExIL1hmOURYaDVpSHE4dWthSSswcUY2?=
+ =?utf-8?Q?YKe36845S/5pojh2FdMzApviSaxB1H3vkZX+RVFsie8m?=
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7ca91771-d72e-4e0d-230f-08dd6825e025
+X-MS-Exchange-CrossTenant-AuthSource: CH2PR12MB3990.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 03:10:04.2985
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: gqPTqgxz3katIyLppS7oE7B1c9gUUjwwjKbiqUcwBxiN64jcrZyKbTLq9kd8Vdjx1ScErH/YxWtngf5lT9t0JA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ0PR12MB6831
 
-On Thu, 20 Mar 2025, Robert Richter wrote:
+On Fri Mar 21, 2025 at 12:54 AM JST, Daniel Brooks wrote:
+> Alexandre Courbot <acourbot@nvidia.com> writes:
+>
+>> +impl Add<Duration> for Timestamp {
+>> +    type Output =3D Self;
+>> +
+>> +    fn add(mut self, rhs: Duration) -> Self::Output {
+>> +        let mut nanos =3D rhs.as_nanos();
+>> +        while nanos > u64::MAX as u128 {
+>> +            self.0 =3D self.0.wrapping_add(nanos as u64);
+>> +            nanos -=3D u64::MAX as u128;
+>> +        }
+>> +
+>> +        Timestamp(self.0.wrapping_add(nanos as u64))
+>> +    }
+>> +}
+>
+> Perhaps I missed something, but couldn=E2=80=99t you simplify this method=
+ like
+> this:
+>
+>     fn add(mut self, rhs: Duration) -> Self::Output {
+>         let stamp =3D self.0 as u128;
+>         Timestamp(stamp.wrapping_add(rhs.as_nanos()) as u64)
+>     }
 
->If a faulty CXL memory device returns a broken zero LSA size in its
->memory device information (Identify Memory Device (Opcode 4000h), CXL
->spec. 3.1, 8.2.9.9.1.1), a divide error occurs in the libnvdimm
->driver:
->
-> Oops: divide error: 0000 [#1] PREEMPT SMP NOPTI
-> RIP: 0010:nd_label_data_init+0x10e/0x800 [libnvdimm]
->
->Code and flow:
->
->1) CXL Command 4000h returns LSA size = 0
->2) config_size is assigned to zero LSA size (CXL pmem driver):
->
->drivers/cxl/pmem.c:             .config_size = mds->lsa_size,
->
->3) max_xfer is set to zero (nvdimm driver):
->
->drivers/nvdimm/label.c: max_xfer = min_t(size_t, ndd->nsarea.max_xfer, config_size);
->
->4) A subsequent DIV_ROUND_UP() causes a division by zero:
->
->drivers/nvdimm/label.c: /* Make our initial read size a multiple of max_xfer size */
->drivers/nvdimm/label.c: read_size = min(DIV_ROUND_UP(read_size, max_xfer) * max_xfer,
->drivers/nvdimm/label.c-                 config_size);
->
->Fix this by checking the config size parameter by extending an
->existing check.
->
->Signed-off-by: Robert Richter <rrichter@amd.com>
->Reviewed-by: Pankaj Gupta <pankaj.gupta@amd.com>
->Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+You are absolutely right, this loop will just wrap self.0 to the same value
+after the initial pass.
 
-Reviewed-by: Davidlohr Bueso <dave@stgolabs.net>
+... or at least it would if there weren't two bugs in it. >_<
+
+- It adds the lower part of nanos while substracting u64::MAX from rhs,
+  which is completely wrong;
+- Substracting u64::MAX is also wrong, it should be u64::MAX as u128 +
+  1.
+
+So thanks a lot for pointing this out!
