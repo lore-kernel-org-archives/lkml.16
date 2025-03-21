@@ -1,146 +1,132 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B87664A00
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 20:47:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 295761D5CFD;
+	Fri, 21 Mar 2025 20:48:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742590049; cv=none; b=IovSuWHqkezDcrNO7D2HiY5h7PwtDsSDfJhkbDfVgbpJguVSs41VFhLPD7WGi4sfxG2kqswlFiRuSA2FDheNCsCYP3BdrcIjoz+B8jLWQitA0bfJEvShchokJGUthseNGZQhFpdbXngo51MrKbha4NYAzE5MPs6YX7YnrN/vv4A=
+	t=1742590129; cv=none; b=CTXBE7jbUDicRhAgI2/u/3/+cRap0v6vZcVyFL585K90ZioKY0364jk6N8nt2Bhv4+pt0clPtv+E9Mk6H0wJ3HlFtljcp8AvvfhYJ4Cp/WtHH2j9ETbG6nZE6/LThB6DNo/ZMjurP8KaTAGdpdudkzA/nqavlPDsN88cK9meghc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742590049; c=relaxed/simple;
-	bh=ehLx4BfcXIkstbQwTrBvBWDcNjLbE3ihDPBz7Pqh1xU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Xr5537DoUbYh5LsBYu5nyFaP3hRGnlxoH1zLd7xE5APvr73m7SjUjJ9uIcnEPw/pFEZmFbZlVjb3y196iIgW9VjoGM9YLJiXOGbDKV42E/FwoSvYkKcnC368zRIAotB5URhIe3KzaL7Us+/zrtV04y681in9+/qQ/f/91fK3SZM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Xc61kHvd; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742590129; c=relaxed/simple;
+	bh=Sa9bRM4riV9NIaLnG6db+zNr9/vUREUEszuIWeMOixA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qlyltpqXsxUFSnOTSRAiXD9qmBZfA8MIc6/Zr5Rpxsu5TtEIiDlMrj9/H6IVk4Fv+GnUgvYkEPCkCJL/iMWe8kp5AE6a0F2YiJmwpNnCmquiyPekpZcrSD5JEtbH6nhMlu7wNEKKqQFV11QN4aPBHFaifkkUBhcoY1tihQIeSsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=olQGewil; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xc61kHvd"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43948021a45so19048285e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:47:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742590046; x=1743194846; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ND0e3RNSWvx5KkHJbkQWkYjoDHtfIfYJu6MphGZCA40=;
-        b=Xc61kHvdBTjIWvgV5KoOT2/Yahx2vzs3L3LjjZ6BHufRl4kBU+PdpXP18yUMH8b1O6
-         RPoSXtNB3IzCiwkvMz8K0BzdB58N/QyyJH4s/Xp+apjJxN/GsGn55h0Pew+hodrllC95
-         my3FXUQ5ERRS+SDg8GICGD7veDCH7ZmV9qRVuk31VzvVd1gGlb1a7K76qBCBGnrkOEfA
-         AIHzWPcsWRJ/avo+d287NlYotfbRAJ3LJBIYkjH030Dy9zG4oklxudwVF3AXhpB0HUHk
-         mjoIbJguN9A2QhoKx4YJeNkU4oMGUEitLSQ9+pKDpr55ltwcTyAYTQOSUB3UnzeWFEur
-         DJtA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742590046; x=1743194846;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ND0e3RNSWvx5KkHJbkQWkYjoDHtfIfYJu6MphGZCA40=;
-        b=b4yM25dR2QRcNrYUh9qRDGOJDQSz0Oc3v+S5TVVSfgkEmLglBaF7Rr9qzuvZzZA+Md
-         ZaXRUer0zI5DLs/LIODVPfL2fEP8egV2VGKUw04oZdbirQ2oS7whtzuWt3bLjNjpCjEl
-         DvyO9EN0UwnOg9npqxK2R/UOIcvQeSvzU+3uKSqdSbBY1DTuasIiJN+R8k3VmZyGtyPH
-         I8vlGMT/6c05z0qJ2N0iI5BHpHiJpMY5VbmdavbHCVryesJPzYr5I1pzR85dMMilzGGw
-         PHp+WLpRURrEBFOAplj0jUGh1cXDlMJzav5q0C1KSICuPph7INqva49GXcDriCuSSFaf
-         7AvA==
-X-Forwarded-Encrypted: i=1; AJvYcCVgJuHpQ8kbU32hM1f/AlssvBJ+gteBgUUQdToYEx/7FaKZFyq/WaW6AkJExwkT5M6J6Km9C0Y4E1UtINA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCFFnhjdbgYzvL7RnDbD2L8xaYuvPxv7pDh+IjShId9v55yFcM
-	y7Fxr7bM5/blyCH3YPI16GZmc4UvWfmV5EuAeT9FzLB2WhOi3HbY
-X-Gm-Gg: ASbGncvzVFc44h50px+PsAs2MIPOd6zicd0rRbOY1HQqjKK0qLmt+PBqHHS4bFGGWpQ
-	5jd7z3apO84CzBNQzDJyCZilOpYbNIGrluisw50wNJ+r0IcH648jxRg57x5ltI3EpEt2k4Bt4Li
-	1hpxeKIegvf26bFXsyVAdFGw6VEVQUU2k/9w4vC2WEKODw+leNkUc+d9kgdZtAYKLYr1z0E2BPN
-	/C/mKZgF7UvPhRGJTB5TUP0bxG/MyAvxyxnTDy4g+AtRvOzivDbkIS8H4PYZ/MIzhu9IWWFVSi4
-	jZZheRFIYP8/R62mrV0Qhww/GmDElM9NSwycGSvGziyzxTNjHv/nkn1YT/a3NJfyngpQqAm1Tra
-	pNV8Szyg=
-X-Google-Smtp-Source: AGHT+IEUY/YMDen58rtgjf2rDWUeHAUIuClJoBQZe1dZO5pGRH2VLewUMSXaKg2yQXYxdDhSMza5yA==
-X-Received: by 2002:a05:600c:1d15:b0:43c:f1cd:3d78 with SMTP id 5b1f17b1804b1-43d509ea2fcmr35004905e9.12.1742590045586;
-        Fri, 21 Mar 2025 13:47:25 -0700 (PDT)
-Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d42b8fcd4sm54024495e9.1.2025.03.21.13.47.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 13:47:24 -0700 (PDT)
-Date: Fri, 21 Mar 2025 20:47:23 +0000
-From: David Laight <david.laight.linux@gmail.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Mateusz Guzik <mjguzik@gmail.com>, x86@kernel.org, hkrzesin@redhat.com,
- tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, olichtne@redhat.com,
- atomasov@redhat.com, aokuliar@redhat.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86: handle the tail in rep_movs_alternative() with an
- overlapping store
-Message-ID: <20250321204723.1e21cb23@pumpkin>
-In-Reply-To: <CAHk-=wjxi0poUzCd666Kx5wCjgOwN5v=-zG8xSAL7Wj_ax8Zvw@mail.gmail.com>
-References: <20250320190514.1961144-1-mjguzik@gmail.com>
-	<CAHk-=whd82fzhEbFRw9d_EMtR1SeefOJabjCHcm4-6jzeqqd3g@mail.gmail.com>
-	<CAGudoHGNFT+LC24842ZKLWBxD3vvvddBqDKa6gkixN4Esor+RQ@mail.gmail.com>
-	<CAHk-=wjo__Bj3JNw_7E8HhTDUF65LVOApvN0D2cofgotJoqpmg@mail.gmail.com>
-	<CAHk-=wjxi0poUzCd666Kx5wCjgOwN5v=-zG8xSAL7Wj_ax8Zvw@mail.gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="olQGewil"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AEDDBC4CEEC;
+	Fri, 21 Mar 2025 20:48:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742590128;
+	bh=Sa9bRM4riV9NIaLnG6db+zNr9/vUREUEszuIWeMOixA=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=olQGewilN6VqYzDzjZNc9IPHee6kd4o+t3L5qvJI/03SdtuTNA+hVYGCIIIlOczDP
+	 mvIzW0I7wMN3rthji9pbNl/y6TEKQ3Clqw+fyQq82Ku0F9R5UHW7/iFQmuMOJifKPj
+	 YDuNZ5pJhpMSWAE8xlqCq9VUJTum+SGu93ac/R2KOtnwu0kScu6Iye8VQeol3z9ri8
+	 ptlRbcnZMcgUZzW6jfUsHYa/vo4jy3YMU5a8eq9PF5iI2NsBDVDLmd3jeGBpjTK0et
+	 ThU+XvVWnHv3fv1NQIeKd1e/NKnjVUAMNty2XICZPkKrMPxjJfmYJRBqTxdaCLY8Ft
+	 t68wkJpAN1b8g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0386C36007;
+	Fri, 21 Mar 2025 20:48:48 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Fri, 21 Mar 2025 21:48:45 +0100
+Subject: [PATCH v3 3/7] x86/Kconfig: Move all X86_EXTENDED_PLATFORM options
+ together
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250321-x86_x2apic-v3-3-b0cbaa6fa338@ixit.cz>
+References: <20250321-x86_x2apic-v3-0-b0cbaa6fa338@ixit.cz>
+In-Reply-To: <20250321-x86_x2apic-v3-0-b0cbaa6fa338@ixit.cz>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, 
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+ Kees Cook <kees@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
+ Lars-Peter Clausen <lars@metafoo.de>
+Cc: linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>, 
+ linux-iio@vger.kernel.org, 
+ =?utf-8?q?Mateusz_Jo=C5=84czyk?= <mat.jonczyk@o2.pl>, 
+ David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1560; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=51c/Gs0I0J1wJoEtVvTIk8/MWpkL2eyjSInCszhj468=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn3dCuwOuK64hfcf7R2QE3YAT0lY+6Oelez7pDf
+ JxQe6F2bFiJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ93QrgAKCRBgAj/E00kg
+ cgO3D/4pWKx9KjeMiaHWROemKqSuG5xlScxmTbFuezCyyc57EgB9x6sxlndj70T4aaYgj9/18xl
+ EnuAb3RPYO7oWEFFza8U3CKko+i9GCEYwZrSnT7NDMr1dFjcTtaOlzHCb9kcPoKjAAYO+shWNXy
+ OcjEuNsG2qBkEpMsb0LrTAzXUxLoMQrcfs14S94qpC2vPirb2rznBk4acrRxWxpM3L2Ce6gVM2s
+ FLAiAjJk+Xgun3Z3mZjHD6m0jGlVrP7+YdBoWbacphK8+fFFtxZLOl4D2Mx+gMVN62g1kp5E2+U
+ mztQDh6bGETmRnNI1zTrX2x69WtWKtxQ7ihSnG4eC9apmKaaTAsNTtjbJb9CwjMWrZX8baLkKiE
+ /3pnNDgS98yMh5tbyFUZXoR37Q2gzaVCdZ92mhXkYneTAFbEMN7DEMVxLsqUXV7dXpZXOLKy/IL
+ iJgtl0OKxBVdzADj3zSvAmNkyA8M0iEdNWLhVkzpOOD2N+wE9M/sswpd3J9jh1ZNiYklPZ507XX
+ FjdLASOl962aBHt4SvoqNYwpQATzUgncx1lTJCNivnH1a0X2ceqjcCQgpodG8+tyPo4sI4veBOL
+ GdGfqzwKcODH49y/Ffqwo3HYcw5ockXmJLM8QgtX79Eu+sVEwSwzETjG3XtyVkx56Fiz3Meri/+
+ aSXl0cDeI1jP83w==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
-On Thu, 20 Mar 2025 16:53:32 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+From: Mateusz Jończyk <mat.jonczyk@o2.pl>
 
-> On Thu, 20 Mar 2025 at 14:17, Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Thu, 20 Mar 2025 at 12:33, Mateusz Guzik <mjguzik@gmail.com> wrote:  
-> > >
-> > > I have a recollection that handling the tail after rep movsq with an
-> > > overlapping store was suffering a penalty big enough to warrant a
-> > > "normal" copy instead, avoiding the just written to area.  
-> >
-> > Ahh. Good point. The rep movsq might indeed end up having odd effects
-> > with subsequent aliasing memory operations.
-> >
-> > Consider myself convinced.  
-> 
-> Actually, I think there's a solution for this.
-> 
-> Do not do the last 0-7 bytes as a word that overlaps with the tail of
-> the 'rep movs'
-> 
-> Do the last 8-15 bytes *non-overlapping* (well, they overlap each
-> other, but not the 'rep movs')
-> 
-> Something UNTESTED like the appended, in other words. The large case
-> then ends up without any conditionals, looking something like this:
-> 
->         mov    %rcx,%rax
->         shr    $0x3,%rcx
->         dec    %rcx
->         and    $0x7,%eax
->         rep movsq %ds:(%rsi),%es:(%rdi)
->         mov    (%rsi),%rcx
->         mov    %rcx,(%rdi)
->         mov    (%rsi,%rax,1),%rcx
->         mov    %rcx,(%rdi,%rax,1)
->         xor    %ecx,%ecx
->         ret
+so that these options will be displayed together in menuconfig etc.
 
-I think you can save the 'tail end' copying the same 8 bytes twice by doing:
-	sub	$9,%rcx
-	mov	%rcx,%rax
-	shr	$3,%rcx
-	and	$7,%rax
-	inc	%rax
-before the 'rep movsq'.
+Signed-off-by: Mateusz Jończyk <mat.jonczyk@o2.pl>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+ arch/x86/Kconfig | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-	David
-	
-> 
-> with some added complexity - but not a lot - in the exception fixup cases.
-> 
-> This is once again intentionally whitespace-damaged, because I don't
-> want people applying this mindlessly. Somebody needs to double-check
-> my logic, and verify that this also avoids the cost from the aliasing
-> with the rep movs.
-> 
->                    Linus
-...
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 38a915f739af45f1b23a197032ce6cff94fdd81d..9e5dea7c9fd7aeceb727f4c372c8880c9182f7f2 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -676,6 +676,17 @@ config X86_INTEL_QUARK
+ 	  Say Y here if you have a Quark based system such as the Arduino
+ 	  compatible Intel Galileo.
+ 
++config X86_RDC321X
++	bool "RDC R-321x SoC"
++	depends on X86_32
++	depends on X86_EXTENDED_PLATFORM
++	select M486
++	select X86_REBOOTFIXUPS
++	help
++	  This option is needed for RDC R-321x system-on-chip, also known
++	  as R-8610-(G).
++	  If you don't have one of these chips, you should say N here.
++
+ config X86_INTEL_LPSS
+ 	bool "Intel Low Power Subsystem Support"
+ 	depends on X86 && ACPI && PCI
+@@ -729,17 +740,6 @@ config IOSF_MBI_DEBUG
+ 
+ 	  If you don't require the option or are in doubt, say N.
+ 
+-config X86_RDC321X
+-	bool "RDC R-321x SoC"
+-	depends on X86_32
+-	depends on X86_EXTENDED_PLATFORM
+-	select M486
+-	select X86_REBOOTFIXUPS
+-	help
+-	  This option is needed for RDC R-321x system-on-chip, also known
+-	  as R-8610-(G).
+-	  If you don't have one of these chips, you should say N here.
+-
+ config X86_SUPPORTS_MEMORY_FAILURE
+ 	def_bool y
+ 	# MCE code calls memory_failure():
+
+-- 
+2.49.0
+
+
