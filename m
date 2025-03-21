@@ -1,78 +1,153 @@
-Received: from out0-220.mail.aliyun.com (out0-220.mail.aliyun.com [140.205.0.220])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from out.smtpout.orange.fr (out-72.smtpout.orange.fr [193.252.22.72])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67B11B664
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:26:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.220
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ABCB664;
+	Fri, 21 Mar 2025 04:27:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742531172; cv=none; b=RJGtAF3g6toMYgJRB0Sa9d1AKtyORiSO7T43PWAdxr9KMrWgiT3bc6lapmmC7eU3IkoI4z45aHv4WbuTibXVvsc2LYBn7NhhOeT+bobP3Xg5maHVMW6MRUnoYxHtOQX82MIHQIddrN/bbb0eNbxy1dgdbvKQDMNzgHFu/dIMZXU=
+	t=1742531270; cv=none; b=HMkS6pLZy1ZSVBTOCj48lgXaQTLjk/JW8+yB1R/5d8S6gbbCBP9F4X8XnLmymCdTxbXY83n8GFlrBrQdpmO+r9CDQ7hmYx34Y5Mh7FjshJLXVRHu7GzCsKKuoFrMPjvt3+aamfN8rzYwyJfF1cObCrKqo0k1SSWPP769MK3e4X8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742531172; c=relaxed/simple;
-	bh=o1ssKcOIg/aDHkWl9VQMhQVIYWwH/7KGmbd90J0EhrM=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CcduaFH6/DHST9qTOj65+pxJu+RbMWJ154oFT/+32IkL/qvhC2qaLBHYRYYyJ5QsC1E1sxfB0wUlSL9siCfDlZNsPHFYFoYuS61C47W/D0Tz1fhcJK4irA6deDc8rRNMQ6PKOrZ8hvx6mjv+mi++RVa9Jcl7Ee0UlFqLo4/f5uY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=GBYRSSIG; arc=none smtp.client-ip=140.205.0.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1742531270; c=relaxed/simple;
+	bh=C7HXbRAAikkBwHspUHiehLT+PSVXQ2/fzwqlCI0p5vc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WkWcEUYOp/z0NXwodu0xB+fIQJrnMERQuZQYJo8t5ja2ZVb0Iur0KHgkbhUk4AuwQx6iyGfKNA99jsZK2ghKAsa6wa4mcOxreKM7xENvQAmcONAgonxh+DjWUXzvGXjLmSLdSvydddHC6ShE5lMLH/LnR3MCxlI+dh48zdbpjrc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=KxUvipl/; arc=none smtp.client-ip=193.252.22.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="GBYRSSIG"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1742531166; h=From:To:Subject:Date:Message-Id:MIME-Version;
-	bh=VsJHduJlbjQ/kh8Iq30W8vJNdi20hMIhWmJ47RHEKA0=;
-	b=GBYRSSIGOrJXDomVQyDnU6jJAUsgx8TCtKA3Zf0ZFo0MXP5FgINOy0GJwZaT94T6ibyCn1PygNWF2oG0ent5gxyRu15cSOZgeKfNYnfbtyx4Auyj/6I6tvt5r9FvFrcKwZfn7uCKndyCaCq2f01ij5jYvQV/gNTpeMFK8IxbBEU=
-Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.c-P7dFG_1742529313 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Mar 2025 11:55:14 +0800
-From: "Hou Wenlong" <houwenlong.hwl@antgroup.com>
-To: linux-kernel@vger.kernel.org
-Cc: "Hou Wenlong" <houwenlong.hwl@antgroup.com>,
-  "Arnd Bergmann" <arnd@arndb.de>,
-  "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Subject: [PATCH] char: misc: Use __register_chrdev() to register the actual minor counts
-Date: Fri, 21 Mar 2025 11:54:42 +0800
-Message-Id: <b63b7981191777a6d175cfa98379e987281b9e3a.1742528326.git.houwenlong.hwl@antgroup.com>
-X-Mailer: git-send-email 2.31.1
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="KxUvipl/"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id vTpqtuCVJpih5vTpvtXDey; Fri, 21 Mar 2025 05:18:29 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1742530710;
+	bh=RfTovQ5pBBPXl/sQntAxGWbDNnwENYAK9Bt2Ch93r58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=KxUvipl/mBH9mc3/+Jxp2x1493gZQeZOd7O1dWUrPtM6thSRht5eemzsz0bAhoVki
+	 UK6CTEtCyIr0B2njVsiL/Rbr4irCB0+2uOw5H+lalCF9jyZTppgCSLooDDJSUxSqiP
+	 KLwOa3oQaBRKfU1w7HcWDEh8qDV9uKdiX8SEa3TJYLNcfQMoUqnv/Y+c4nKoVmstXw
+	 QtOzdhj2FmatopgmqctXNjsEuD+W5CATzJW4ecmjZKK+YxcyTexp8CHwQ510jgHD3x
+	 Q85cTm7l4Tdfae2YGjxEcK0z2m8NKPbDmVd5zGOqFiHSeZzl8e/qDzEFkGwqSLiRK8
+	 h/GCI4MlrBSDQ==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 21 Mar 2025 05:18:30 +0100
+X-ME-IP: 124.33.176.97
+Message-ID: <7805e0db-7c17-438d-9985-f4feec644da6@wanadoo.fr>
+Date: Fri, 21 Mar 2025 13:18:18 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] phy: can-transceiver: Re-instate "mux-states" property
+ presence check
+To: Geert Uytterhoeven <geert+renesas@glider.be>,
+ Rob Herring <robh@kernel.org>
+Cc: linux-can@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Marc Kleine-Budde <mkl@pengutronix.de>, Vinod Koul <vkoul@kernel.org>,
+ Kishon Vijay Abraham I <kishon@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Aswath Govindraju <a-govindraju@ti.com>,
+ Biju Das <biju.das.jz@bp.renesas.com>
+References: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-In commit ab760791c0cf ("char: misc: Increase the maximum number of
-dynamic misc devices to 1048448"), the minor number of misc char device
-is increased to MINORMASK + 1. However, it still uses register_chrdev(),
-which defaults to registering the misc char device with only 256 minor
-numbers.  Therefore, when a misc device is given a minor number greater
-than 255, the device file fails to open in kobj_lookup(). As a solution,
-use __register_chrdev() to register the actual minor counts to
-accommodate this increase.
+On 21/03/2025 at 00:15, Geert Uytterhoeven wrote:
+> On the Renesas Gray Hawk Single development board:
+> 
+>     can-transceiver-phy can-phy0: /can-phy0: failed to get mux-state (0)
+> 
+> "mux-states" is an optional property for CAN transceivers.  However,
+> mux_get() always prints an error message in case of an error, including
+> when the property is not present, confusing the user.
+> 
+> Fix this by re-instating the property presence check (this time using
+> the proper API) in a wrapper around devm_mux_state_get().  When the
+> multiplexer subsystem gains support for optional muxes, the wrapper can
+> just be removed.
+> 
+> In addition, propagate all real errors upstream, instead of ignoring
+> them.
 
-Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
----
-In our environment, the per-cpu coresight_tmc driver occupies too many
-minor numbers, which ultimately allocates minor number 256 for our misc
-device, resulting in a failure to open the device file in /dev. I'm not
-sure if this is a bug or if userspace can only use fewer than 256 minor
-numbers. Therefore, I didn't add a fix tag here.
----
- drivers/char/misc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I would like to hear Rob's opinion on this. In d02dfd4ceb2e9f34 Rob
+purposely changed the function to ignore errors other than EPROBE_DEFER.
 
-diff --git a/drivers/char/misc.c b/drivers/char/misc.c
-index f7dd455dd0dd..dda466f9181a 100644
---- a/drivers/char/misc.c
-+++ b/drivers/char/misc.c
-@@ -315,7 +315,7 @@ static int __init misc_init(void)
- 		goto fail_remove;
- 
- 	err = -EIO;
--	if (register_chrdev(MISC_MAJOR, "misc", &misc_fops))
-+	if (__register_chrdev(MISC_MAJOR, 0, MINORMASK + 1, "misc", &misc_fops))
- 		goto fail_printk;
- 	return 0;
- 
--- 
-2.31.1
+Right now, I do not see a reason not to propagate the other errors, so
+I am in favor of this roll back. But maybe we are missing something?
+
+Otherwise, the patch looks good to me. Nice improvement over the v1. I
+will wait for Rob's comment to give my review tag.
+
+> Fixes: d02dfd4ceb2e9f34 ("phy: can-transceiver: Drop unnecessary "mux-states" property presence check")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Alternatively, the multiplexer subsystem needs to gain support for
+> getting an optional mux...
+> 
+> v2:
+>   - Add and use devm_mux_state_get_optional(),
+>   - No given tags added, as the new solution is different.
+> ---
+>  drivers/phy/phy-can-transceiver.c | 22 +++++++++++++++-------
+>  1 file changed, 15 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/phy/phy-can-transceiver.c b/drivers/phy/phy-can-transceiver.c
+> index 2bec70615449f94d..f59caff4b3d4c267 100644
+> --- a/drivers/phy/phy-can-transceiver.c
+> +++ b/drivers/phy/phy-can-transceiver.c
+> @@ -93,6 +93,16 @@ static const struct of_device_id can_transceiver_phy_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, can_transceiver_phy_ids);
+>  
+> +/* Temporary wrapper until the multiplexer subsystem supports optional muxes */
+> +static inline struct mux_state *
+> +devm_mux_state_get_optional(struct device *dev, const char *mux_name)
+> +{
+> +	if (!of_property_present(dev->of_node, "mux-states"))
+> +		return NULL;
+> +
+> +	return devm_mux_state_get(dev, mux_name);
+> +}
+> +
+>  static int can_transceiver_phy_probe(struct platform_device *pdev)
+>  {
+>  	struct phy_provider *phy_provider;
+> @@ -114,13 +124,11 @@ static int can_transceiver_phy_probe(struct platform_device *pdev)
+>  	match = of_match_node(can_transceiver_phy_ids, pdev->dev.of_node);
+>  	drvdata = match->data;
+>  
+> -	mux_state = devm_mux_state_get(dev, NULL);
+> -	if (IS_ERR(mux_state)) {
+> -		if (PTR_ERR(mux_state) == -EPROBE_DEFER)> -			return PTR_ERR(mux_state);
+> -	} else {
+> -		can_transceiver_phy->mux_state = mux_state;
+> -	}
+> +	mux_state = devm_mux_state_get_optional(dev, NULL);
+> +	if (IS_ERR(mux_state))
+> +		return PTR_ERR(mux_state);
+> +
+> +	can_transceiver_phy->mux_state = mux_state;
+>  
+>  	phy = devm_phy_create(dev, dev->of_node,
+>  			      &can_transceiver_phy_ops);
+
+Yours sincerely,
+Vincent Mailhol
 
