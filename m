@@ -1,96 +1,95 @@
-Received: from out0-213.mail.aliyun.com (out0-213.mail.aliyun.com [140.205.0.213])
+Received: from out-187.mta1.migadu.com (out-187.mta1.migadu.com [95.215.58.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90B57184F
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:39:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=140.205.0.213
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F861E8333
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:40:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742539204; cv=none; b=FlO8nrVNWRElqmN8Wn0owOSTEg+DFD15sjscIbHrXvDp9Pj2ao8b8rXo4//z00dokEUq1sVc79mtClQbNb0B7K9T0B0erE5g51F82ZHGlMMwloJmREMQiEXDgPUhBmPwPavp7cp+862DblNU5OyZQcFCPe+9MKhcjMBOC4TMMc8=
+	t=1742539227; cv=none; b=eUFHCK87gEtMCu0Xo48oCFaHQIxAqt4X3iQE44fBPjLRci4DmyvOAojjvAgU5thfYksCCqO+uDDERj9yfzIo+4ila95iTjI/x6mP47jM6+4NLP7r+XWQ2NnOgZmFNpweXZtnDhkNW3eUGkEnbOwnjAbXSBNrECdE+PFjuuTSQ5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742539204; c=relaxed/simple;
-	bh=CooyqoHO4hUs00h0ReZ12NGWWlOuDGXiYX53uof2eKg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Bdsg/NOl1cYtaY9ZlglDQxm1JZQ0EbmyFPljaRz2MLJxG//fSAUE0O+W0537jEoSxIslzEn3pZUFbKepzeGS7u8eLaYbe0Qx68Jmi6vCmXT4OaE6HO/8G+B7d8YAfYd5grYZDg/k4jGPNmYiZNHiMCyrKkVaC5PgTLyCPhTe0fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com; spf=pass smtp.mailfrom=antgroup.com; dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b=cljChQQM; arc=none smtp.client-ip=140.205.0.213
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=antgroup.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antgroup.com
+	s=arc-20240116; t=1742539227; c=relaxed/simple;
+	bh=54/Yqhxj9S2BmqlXvu6SkT0VOC7bHsoQW5vYsIy9oL0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ElMgeQGAYIRTu/iCL1Wy6F2EbD8A1c0mTtbOJzSQNiB28CX4v8eUsTnjpnO2boFZSts94F2wM6mnSQF1vIqiHQMP09dn8L2MWZw7ID7bb5GTwlXKdxxX3TYZkVzcL/JxPdUD4X0LgBjV8jJQLOD9dtUInVcYvBRuZUITixlf0s0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=bQ0HJL6l; arc=none smtp.client-ip=95.215.58.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antgroup.com header.i=@antgroup.com header.b="cljChQQM"
-DKIM-Signature:v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=antgroup.com; s=default;
-	t=1742539198; h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type;
-	bh=DBQboQbc3WGX1z3cTYc/o2gPUMTWBJ7I22LQVB8O2+A=;
-	b=cljChQQMB34aBrOPpeYpa9wloXfnWAIT1FcEWXTcnHkmWVJbK1LigICISDKSN5/7YdaixhqZjPBM+dOHdYVZklLJQMflYi8SKm8CtmnbAob030yySOpNkoAlcRk5Dyc8lGhBUbqUwJqoAyRy9xfgSGvVaGgNmDjckSSpdia/Om8=
-Received: from localhost(mailfrom:houwenlong.hwl@antgroup.com fp:SMTPD_---.c-P8Uwe_1742538265 cluster:ay29)
-          by smtp.aliyun-inc.com;
-          Fri, 21 Mar 2025 14:24:25 +0800
-Date: Fri, 21 Mar 2025 14:24:25 +0800
-From: "Hou Wenlong" <houwenlong.hwl@antgroup.com>
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] char: misc: Use __register_chrdev() to register the
- actual minor counts
-Message-ID: <20250321062425.GA129980@k08j02272.eu95sqa>
-References: <b63b7981191777a6d175cfa98379e987281b9e3a.1742528326.git.houwenlong.hwl@antgroup.com>
- <2025032054-stylus-chemist-1cd4@gregkh>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="bQ0HJL6l"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1742539221;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wfCxnUDZ4/a0LOQ7Hfhp9OJ19Sm5M7MD6UuIrGvTujE=;
+	b=bQ0HJL6lWhxf0MXlS5Sc2TmSh9daaF0DUMA76BE77ARg2roC+WQEGTAC7x7yYuoyhVSy1s
+	jpjLZwq6AZ9yOV0A5XZOxyZhHoJ/FC44KE8lzZai9RHbw79zSWr8XosyGvmHj+dm6z6BC4
+	g4fngpFJeObDWDcRbin6VTHgpLB8Ps4=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Ye Liu <liuye@kylinos.cn>,
+	Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: [PATCH v2] mm/page_alloc: Simplify free_page_is_bad by removing free_page_is_bad_report
+Date: Fri, 21 Mar 2025 14:40:11 +0800
+Message-Id: <20250321064011.612336-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025032054-stylus-chemist-1cd4@gregkh>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Fri, Mar 21, 2025 at 12:44:54PM +0800, Greg Kroah-Hartman wrote:
-> On Fri, Mar 21, 2025 at 11:54:42AM +0800, Hou Wenlong wrote:
-> > In commit ab760791c0cf ("char: misc: Increase the maximum number of
-> > dynamic misc devices to 1048448"), the minor number of misc char device
-> > is increased to MINORMASK + 1. However, it still uses register_chrdev(),
-> > which defaults to registering the misc char device with only 256 minor
-> > numbers.  Therefore, when a misc device is given a minor number greater
-> > than 255, the device file fails to open in kobj_lookup(). As a solution,
-> > use __register_chrdev() to register the actual minor counts to
-> > accommodate this increase.
-> > 
-> > Signed-off-by: Hou Wenlong <houwenlong.hwl@antgroup.com>
-> > ---
-> > In our environment, the per-cpu coresight_tmc driver occupies too many
-> > minor numbers, which ultimately allocates minor number 256 for our misc
-> > device, resulting in a failure to open the device file in /dev. I'm not
-> > sure if this is a bug or if userspace can only use fewer than 256 minor
-> > numbers. Therefore, I didn't add a fix tag here.
-> > ---
-> >  drivers/char/misc.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/char/misc.c b/drivers/char/misc.c
-> > index f7dd455dd0dd..dda466f9181a 100644
-> > --- a/drivers/char/misc.c
-> > +++ b/drivers/char/misc.c
-> > @@ -315,7 +315,7 @@ static int __init misc_init(void)
-> >  		goto fail_remove;
-> >  
-> >  	err = -EIO;
-> > -	if (register_chrdev(MISC_MAJOR, "misc", &misc_fops))
-> > +	if (__register_chrdev(MISC_MAJOR, 0, MINORMASK + 1, "misc", &misc_fops))
-> >  		goto fail_printk;
-> >  	return 0;
-> >  
-> > -- 
-> > 2.31.1
-> > 
-> 
-> I think this is the same change as this one:
-> 	https://lore.kernel.org/r/20250317-misc-chrdev-v1-1-6cd05da11aef@igalia.com
-> 
-> right?
->
-Yes, it's the same problem. I have replied to that one. Thank you!
+From: Ye Liu <liuye@kylinos.cn>
+
+This patch refactors the free_page_is_bad function by directly calling
+bad_page() instead of using the intermediary function
+free_page_is_bad_report(). The removal of free_page_is_bad_report()
+reduces unnecessary indirection, making the code cleaner and easier to
+read.
+
+The functionality remains the same, as free_page_is_bad_report() was
+merely a wrapper for the bad_page() call. The patch also improves
+maintainability by reducing the function call depth.
+
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
+Reviewed-by: Anshuman Khandual <anshuman.khandual@arm.com>
+
+---
+V2: Simplify the code by removing unnecessary line breaks.
+---
+---
+ mm/page_alloc.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 61d6a3b1b286..60c54ba78a11 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -933,19 +933,13 @@ static const char *page_bad_reason(struct page *page, unsigned long flags)
+ 	return bad_reason;
+ }
  
-> If so, can you provide a reviewed-by or tested-by on that one?  I
-> haven't picked it up yet, sorry.
-> 
-> greg k-h
+-static void free_page_is_bad_report(struct page *page)
+-{
+-	bad_page(page,
+-		 page_bad_reason(page, PAGE_FLAGS_CHECK_AT_FREE));
+-}
+-
+ static inline bool free_page_is_bad(struct page *page)
+ {
+ 	if (likely(page_expected_state(page, PAGE_FLAGS_CHECK_AT_FREE)))
+ 		return false;
+ 
+ 	/* Something has gone sideways, find it */
+-	free_page_is_bad_report(page);
++	bad_page(page, page_bad_reason(page, PAGE_FLAGS_CHECK_AT_FREE));
+ 	return true;
+ }
+ 
+-- 
+2.25.1
+
