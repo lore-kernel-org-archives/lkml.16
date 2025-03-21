@@ -1,101 +1,107 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D511B1EB1AE
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:50:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256B21F03F8;
+	Fri, 21 Mar 2025 08:51:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742547053; cv=none; b=tLita2pIhVSAD1MM9JB/cPAM+tPoob0Y/hTTC0DdmstSYBNNBkZV+D5FtGM3m6skn7/Un8kmzb5KdnauE9BROI0wGctWsXmawJEE2co3VbJvd9yWu6FxJ4DgGDt1WomjiRPuJZUsv7TA8NSo26OaW1XLMe5eCeNDt7NCvahvzvs=
+	t=1742547077; cv=none; b=oUM3UfKNnaod4h/RznTuFmcGOc+Ny5gwmFiqk0D6Y8ez4pBAvoTSKIqOh50WMNp9ij2wgFME8MEvo7rD6nBCkP36jx2tDs933pxa3JIEBhxP9+Z7HuKRJBPkkGUT6QKSjbPb6NqdQyCcSRiATyBhIIb3Br+pwS4/JFa3dm5RWtA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742547053; c=relaxed/simple;
-	bh=48+PYPR2/Of/mJeAc7DVeqDQkO4dzLzfOOVQJmQl3wE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=T+31VGNqE+wUx9IbsfYWK4NucRUe6CJaMKJA0HuhjQ1Bi7g0hSM5TKsBTmGI1H7EFz0IvpMTM2OCQkfeP5osOIwSBSml5cKW9Lvnjm3DiTywCYGpwWI8UT9LfLiUgxip5D6kUFpz2goU0nD8qhO4n6uH1aUKmeTsJVyFUCyyx64=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1tvY51-0001Lp-HD; Fri, 21 Mar 2025 09:50:15 +0100
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1tvY4z-000taQ-2S;
-	Fri, 21 Mar 2025 09:50:14 +0100
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1tvY50-003L3W-0C;
-	Fri, 21 Mar 2025 09:50:14 +0100
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Fri, 21 Mar 2025 09:50:07 +0100
-Subject: [PATCH v4 07/10] wifi: mwifiex: fix indention
+	s=arc-20240116; t=1742547077; c=relaxed/simple;
+	bh=82kHgH7WkqtggF9kAfcgVMtmNcb6HWL4piIgmw5D9s0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=cJ7aEPx2OQa6sQFUarso7FVo2ne2ks/mOdni5ZgC0HBbbJxweeD8PhLr1N1EB93CjXi2eIV7Mmaj52z6/ggO1o50b8StFXFvPNTRW7xjzmj7hm5cBGBrBb3q3WQJXy9mK4UYM1nKyYGgIHzwvVO4CKoIQAGKP48GiRlxrIojUBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4ZJx0r37Ltz2Ccxq;
+	Fri, 21 Mar 2025 16:47:56 +0800 (CST)
+Received: from kwepemg200005.china.huawei.com (unknown [7.202.181.32])
+	by mail.maildlp.com (Postfix) with ESMTPS id 30550180042;
+	Fri, 21 Mar 2025 16:51:11 +0800 (CST)
+Received: from [10.174.176.70] (10.174.176.70) by
+ kwepemg200005.china.huawei.com (7.202.181.32) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Fri, 21 Mar 2025 16:51:10 +0800
+Message-ID: <d824f621-bae1-4b79-a4c6-620aeecc1bb0@huawei.com>
+Date: Fri, 21 Mar 2025 16:51:03 +0800
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-mwifiex-cleanup-1-v4-7-4a32b21e2553@pengutronix.de>
-References: <20250321-mwifiex-cleanup-1-v4-0-4a32b21e2553@pengutronix.de>
-In-Reply-To: <20250321-mwifiex-cleanup-1-v4-0-4a32b21e2553@pengutronix.de>
-To: Brian Norris <briannorris@chromium.org>, 
- Francesco Dolcini <francesco@dolcini.it>
-Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org, 
- linux-kernel@vger.kernel.org, David Lin <yu-hao.lin@nxp.com>, 
- kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, 
- Francesco Dolcini <francesco.dolcini@toradex.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742547013; l=1250;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=48+PYPR2/Of/mJeAc7DVeqDQkO4dzLzfOOVQJmQl3wE=;
- b=Lo/vf0Mv7kBL1HWYdhLZbHTmh+SisJ8mCWDX6RFt0pnOenX7P00q5Z8fIYbQtavI/3vgEBOQS
- aIyjtV+JMXgCVmEvWA2fHj43+vqjWcSllPvs8bGac5u1s9aFgcJm5J+
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net] net: fix NULL pointer dereference in l3mdev_l3_rcv
+To: Simon Horman <horms@kernel.org>
+CC: David Ahern <dsahern@kernel.org>, <davem@davemloft.net>,
+	<edumazet@google.com>, <kuba@kernel.org>, <pabeni@redhat.com>,
+	<fw@strlen.de>, <daniel@iogearbox.net>, <yuehaibing@huawei.com>,
+	<zhangchangzhong@huawei.com>, <netdev@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+References: <20250313012713.748006-1-wangliang74@huawei.com>
+ <20250318143800.GA688833@kernel.org>
+ <e8da7ce4-c76c-488e-80cb-dff95bf00fe0@kernel.org>
+ <94a34aa3-a823-4550-b16a-179e6f6d6292@huawei.com>
+ <20250320133736.GR280585@kernel.org>
+From: Wang Liang <wangliang74@huawei.com>
+In-Reply-To: <20250320133736.GR280585@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ kwepemg200005.china.huawei.com (7.202.181.32)
 
-Align multiline if() under the opening brace.
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- drivers/net/wireless/marvell/mwifiex/wmm.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/net/wireless/marvell/mwifiex/wmm.c b/drivers/net/wireless/marvell/mwifiex/wmm.c
-index bcb61dab7dc86..1b1222c73728f 100644
---- a/drivers/net/wireless/marvell/mwifiex/wmm.c
-+++ b/drivers/net/wireless/marvell/mwifiex/wmm.c
-@@ -1428,13 +1428,13 @@ mwifiex_dequeue_tx_packet(struct mwifiex_adapter *adapter)
- 	}
- 
- 	if (!ptr->is_11n_enabled ||
--		ptr->ba_status ||
--		priv->wps.session_enable) {
-+	    ptr->ba_status ||
-+	    priv->wps.session_enable) {
- 		if (ptr->is_11n_enabled &&
--			ptr->ba_status &&
--			ptr->amsdu_in_ampdu &&
--			mwifiex_is_amsdu_allowed(priv, tid) &&
--			mwifiex_is_11n_aggragation_possible(priv, ptr,
-+		    ptr->ba_status &&
-+		    ptr->amsdu_in_ampdu &&
-+		    mwifiex_is_amsdu_allowed(priv, tid) &&
-+		    mwifiex_is_11n_aggragation_possible(priv, ptr,
- 							adapter->tx_buf_size))
- 			mwifiex_11n_aggregate_pkt(priv, ptr, ptr_index);
- 			/* ra_list_spinlock has been freed in
-
--- 
-2.39.5
-
+在 2025/3/20 21:37, Simon Horman 写道:
+> On Wed, Mar 19, 2025 at 10:07:03AM +0800, Wang Liang wrote:
+>> 在 2025/3/18 23:02, David Ahern 写道:
+>>> On 3/18/25 3:38 PM, Simon Horman wrote:
+>>>> On Thu, Mar 13, 2025 at 09:27:13AM +0800, Wang Liang wrote:
+>>>>> When delete l3s ipvlan:
+>>>>>
+>>>>>       ip link del link eth0 ipvlan1 type ipvlan mode l3s
+>>>>>
+>>>>> This may cause a null pointer dereference:
+>>>>>
+>>>>>       Call trace:
+>>>>>        ip_rcv_finish+0x48/0xd0
+>>>>>        ip_rcv+0x5c/0x100
+>>>>>        __netif_receive_skb_one_core+0x64/0xb0
+>>>>>        __netif_receive_skb+0x20/0x80
+>>>>>        process_backlog+0xb4/0x204
+>>>>>        napi_poll+0xe8/0x294
+>>>>>        net_rx_action+0xd8/0x22c
+>>>>>        __do_softirq+0x12c/0x354
+>>>>>
+>>>>> This is because l3mdev_l3_rcv() visit dev->l3mdev_ops after
+>>>>> ipvlan_l3s_unregister() assign the dev->l3mdev_ops to NULL. The process
+>>>>> like this:
+>>>>>
+>>>>>       (CPU1)                     | (CPU2)
+>>>>>       l3mdev_l3_rcv()            |
+>>>>>         check dev->priv_flags:   |
+>>>>>           master = skb->dev;     |
+>>>>>                                  |
+>>>>>                                  | ipvlan_l3s_unregister()
+>>>>>                                  |   set dev->priv_flags
+>>>>>                                  |   dev->l3mdev_ops = NULL;
+>>>>>                                  |
+>>>>>         visit master->l3mdev_ops |
+>>>>>
+>>>>> Add lock for dev->priv_flags and dev->l3mdev_ops is too expensive. Resolve
+>>>>> this issue by add check for master->l3mdev_ops.
+>>>> Hi Wang Liang,
+>>>>
+>>>> It seems to me that checking master->l3mdev_ops like this is racy.
+>>> vrf device leaves the l3mdev ops set; that is probably the better way to go.
+>> Thanks.
+>>
+>> Only l3s ipvlan set the dev->l3mdev_ops to NULL at present, I will delete
+>> 'dev->l3mdev_ops = NULL' in ipvlan_l3s_unregister(), is that ok?
+> TBH, I am somewhat unclear on the correct tear down behaviour.
+> But I also understood that to be David's suggestion.
+> And I think that implementing that, and posting it as v2 would
+> be a good next step.
+Ok. I will send a patch v2 later, please check it.
+Thanks.
