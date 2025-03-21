@@ -1,81 +1,124 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D86B3D69;
-	Fri, 21 Mar 2025 13:56:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 890EB78F29;
+	Fri, 21 Mar 2025 13:57:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742565409; cv=none; b=WrnPzdM3CGvcdF/LEny4ql+hDzWf5bjlqyUeX7S43HMsfsveZyRAMkVDYRyo+jbax+9k1B2AlcIwd5qkUl2szBxwTCUMVyScl1QihVbx5jkIRU6grteizfQbTEgadgarRMDlWfa5Q1Hq4h9PheHvNQqeK7tmduZuhLJSMDg+b8M=
+	t=1742565435; cv=none; b=Aqy2JtfWWNmnhHB8a1yhe28nrmsjplZfLdbDuUvhJSSIASaIved8M6xystvFhSpe/SLLCzpyfYaJb0jIabd4ByRscV1iesonvXmDA/lR63o+qpL+JLLbI64SitfukyMZwCSh1jWPrCDfn9vbqzS7+IZy60vlehZMrTOs7HZ3Z5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742565409; c=relaxed/simple;
-	bh=7jrq4o9dG8HqnaNFPuUz/jH8kmMku2AxRQ9KtOK4gCo=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Xnn1dPz3KFvmDeRlg47TcutgAMzql8hih8CCmDCdd225UsINcD1F5krwOOHxzDYoXyhUIwJb3aFzLprRoWDkNFTlesMvcBOaee79n7KecmewTgxP+/juoOB1SpBX3eVTnvDdZ5PZFj+gqNe6bwKNkVfAPhGMaZU9+7kh2VDg/m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZK3pz6NLBz1c0QN;
-	Fri, 21 Mar 2025 21:54:51 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1A7B11A016C;
-	Fri, 21 Mar 2025 21:56:37 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
- (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 21 Mar
- 2025 21:56:36 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <hverkuil@xs4all.nl>, <mchehab@kernel.org>, <lumag@kernel.org>
-CC: <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yuehaibing@huawei.com>
-Subject: [PATCH -next] media: cec: Add missing I2C dependency
-Date: Fri, 21 Mar 2025 22:07:18 +0800
-Message-ID: <20250321140718.1343784-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1742565435; c=relaxed/simple;
+	bh=mt5VrjA3cDeDU5iaGmha+OBFVRPyZDe+YhTGWVzJhKI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xe64v9jsIOIfNUNm/LIzOv+2Ouz1uKGmvAL/y7ctmitR0XGyrJZrATRTHRSAlDVM4bl4S9eDMtoknZT3Pzg3Def0XZP44tU9Uc/zQcB4rRst1JTf9igSjBEPr5fSjoiGMqDDoySUIUBi7ftPXHVq3/YKOt3g8ZMKlOwkemqZFfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com; spf=none smtp.mailfrom=foss.arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=foss.arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 13B44106F;
+	Fri, 21 Mar 2025 06:57:20 -0700 (PDT)
+Received: from bogus (e133711.arm.com [10.1.196.55])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7343D3F673;
+	Fri, 21 Mar 2025 06:57:10 -0700 (PDT)
+Date: Fri, 21 Mar 2025 13:57:07 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Huisong Li <lihuisong@huawei.com>,
+	Adam Young <admiyo@os.amperecomputing.com>,
+	Robbie King <robbiek@xsightlabs.com>,
+	Andi Shyti <andi.shyti@kernel.org>, <linux-i2c@vger.kernel.org>,
+	Jean Delvare <jdelvare@suse.com>,
+	Guenter Roeck <linux@roeck-us.net>, <linux-hwmon@vger.kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v3 00/13] mailbox: pcc: Fixes and cleanup/refactoring
+Message-ID: <20250321-elegant-ruby-bull-7d9c50@sudeepholla>
+References: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+In-Reply-To: <20250313-pcc_fixes_updates-v3-0-019a4aa74d0f@arm.com>
 
-If CONFIG_I2C is not set, build fails:
+On Thu, Mar 13, 2025 at 03:28:46PM +0000, Sudeep Holla wrote:
+> Here is a summary of the changes in this patch series:
+> 
+> 1. Fix for race condition in updating of the chan_in_use flag
+> 
+>    Ensures correct updating of the chan_in_use flag to avoid potential race
+>    conditions.
+> 
+> 2. Interrupt handling fix
+> 
+>    Ensures platform acknowledgment interrupts are always cleared to avoid
+>    leaving the interrupt asserted forever.
+> 
+> 3. Endian conversion cleanup
+> 
+>    Removes unnecessary endianness conversion in the PCC mailbox driver.
+> 
+> 4. Memory mapping improvements
+> 
+>    Uses acpi_os_ioremap() instead of direct mapping methods for better ACPI
+>    compatibility.
+> 
+> 5. Return early if the command complete register is absent
+> 
+>    Ensures that if no GAS (Generic Address Structure) register is available,
+>    the function exits early.
+> 
+> 6. Refactor IRQ handler and move error handling to a separate function
+> 
+>    Improves readability of error handling in the PCC mailbox driver’s
+>    interrupt handler.
+> 
+> 7. Shared memory mapping refactoring/enhancements
+> 
+>    Ensures the shared memory is always mapped and unmapped in the PCC
+>    mailbox driver when the PCC channel is requested and release.
+> 
+> 8. Refactored check_and_ack() Function
+> 
+>    Simplifies and improves the logic for handling type4 platform notification
+>    acknowledgments.
+> 
+> 09-13. Shared memory handling simplifications across multiple drivers
+> 
+>     Simplifies shared memory handling in:
+>         Kunpeng HCCS driver (soc: hisilicon)
+>         Apm X-Gene Slimpro I2C driver
+>         X-Gene hardware monitoring driver (hwmon)
+>         ACPI PCC driver
+>         ACPI CPPC driver
+> 
+> The X-gene related changes now change the mapping attributes to align
+> with ACPI specification. There are possibilities for more cleanups on
+> top of these changes around how the shmem is accessed within these
+> driver.
+> 
+> Also, my main aim is to get 1-8 merged first and target 9-13 for
+> following merge window through respective tree.
+> 
+> Overall, the patch series focuses on improving correctness, efficiency, and
+> maintainability of the PCC mailbox driver and related components by fixing
+> race conditions, optimizing memory handling, simplifying shared memory
+> interactions, and refactoring code for clarity.
+> 
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+> Jassi,
+> 
+> Please take patch [1-8]/13 through the mailbox tree if and when you are
+> happy with the changes.
 
-drivers/media/cec/i2c/tda9950.c: In function ‘tda9950_probe’:
-drivers/media/cec/i2c/tda9950.c:391:14: error: implicit declaration of function ‘i2c_check_functionality’ [-Werror=implicit-function-declaration]
-	if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C)) {
-      |              ^~~~~~~~~~~~~~~~~~~~~~~
-  CC      crypto/aes_generic.o
-drivers/media/cec/i2c/tda9950.c: At top level:
-drivers/media/cec/i2c/tda9950.c:503:1: warning: data definition has no type or storage class
-  503 | module_i2c_driver(tda9950_driver);
-      | ^~~~~~~~~~~~~~~~~
-drivers/media/cec/i2c/tda9950.c:503:1: error: type defaults to ‘int’ in declaration of ‘module_i2c_driver’ [-Werror=implicit-int]
-drivers/media/cec/i2c/tda9950.c:503:1: warning: parameter names (without types) in function declaration
+Hi Jassi,
 
-Add missing I2C dependency to fix this.
+I2C change is also acked now. Let me know if you prefer pull request or
+you prefer to take it via ACPI tree which may need you ACK.
 
-Fixes: caa6f4a75e9f ("media: cec: move driver for TDA9950 from drm/i2c")
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- drivers/media/cec/i2c/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/media/cec/i2c/Kconfig b/drivers/media/cec/i2c/Kconfig
-index b9d21643eef1..c31abc26f602 100644
---- a/drivers/media/cec/i2c/Kconfig
-+++ b/drivers/media/cec/i2c/Kconfig
-@@ -16,6 +16,7 @@ config CEC_CH7322
- 
- config CEC_NXP_TDA9950
- 	tristate "NXP Semiconductors TDA9950/TDA998X HDMI CEC"
-+	depends on I2C
- 	select CEC_NOTIFIER
- 	select CEC_CORE
- 	default DRM_I2C_NXP_TDA998X
 -- 
-2.34.1
-
+Regards,
+Sudeep
