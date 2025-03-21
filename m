@@ -1,254 +1,143 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7A561514F6;
-	Fri, 21 Mar 2025 20:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5851EB5FD
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 20:35:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742589318; cv=none; b=Lh9W/6dMM1RO9lCRjFdMg1r9buwomNbgE6Ay8ScjqADRtK1hGZMWsRSMYb3OiOPvqgM7yxMARstoQqssY+EuQ5M2C3fyRNnXCPNA70xWvdc0gRi9WlQrzJG5NRQZFZaBANugaF8Cc0bvFG9B5/kosrs/FNq/lY6MM8V6VxYaJa0=
+	t=1742589357; cv=none; b=R3fOnTbVu1QVMW0/hZ4XoFNQ+yVafCydxrBOZRqPL+wPE9Za/B4nJ7+lPEbwZWASiDV+e41NT/T5VpIlVDxySRGEQG4NF9bbmZQ3PhLalRR1dFyJf3pTQPINsbIPyPbcYD0B310+EGPr9ggN2sfOsgjFlz3viSWu3/ofNHSiPpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742589318; c=relaxed/simple;
-	bh=h4sw0wQtemO1qmX+7Fh6qkhcSpjaUw8b8y2d1XyuhgA=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qvP/CLU4d1/0/MCJBPX7GjQDQii/HN7YTrdJOsCVD99t4Kg/qmlZG59zYbp5/Wl7s7m+7cPIyGpaH+C2c58uhH8nqj1COaNIzFG31tvu23xH/PRV6hN+Hxtz1GVvWWSA1yK/tywzizwM/JApZFGyUPnijEdaP3afANMGWf/Fc3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rx7ivQuk; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742589357; c=relaxed/simple;
+	bh=Q4yJA3jsyp0Q05YHLWgkGPj0BYZnr/626JQJoRaup9Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uexQbz4aAgkA2NV4FV6RTs0nfn2BI2vLRBXVoOG74ARt9rpu/h7CqBd1vR6we+TqwY2BYO/EMPdCfcK8p8CTYmTjIxhHsWTOkS2QLQU78eawPJ1t6aspDWHOmIZ88dGlUNKwQlCYVaB034r55+HO7NC61Rap/JrXhY0K9DHb+nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MZQKcIkO; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rx7ivQuk"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6df83fd01cbso11555216d6.2;
-        Fri, 21 Mar 2025 13:35:16 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MZQKcIkO"
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d439f01698so11375755ab.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:35:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742589316; x=1743194116; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VrBEkpu60bCrmGKM5/a3BWaVmBhrw8nH6PBXojnyxOY=;
-        b=Rx7ivQukrVXVfdCgobfyv1HJ8WwZkieyEVUnJdZPgPd1fcjBpGX/muvZpssXStC6kJ
-         g/O6ZrTIixX4TtFwZmYJX26zS9IRmvFesbVrGJ6HADiCmEe9pd7H2kiVC1sAyXsM8h/X
-         Qcf36gW0a9NothttEK4v9LMSofYsIFK+6OKOEDOZOckNB9pY7tn11tiCSlIdb5lmDl/U
-         Md853kZ7K0Tzm1vhaTcAihMPKwBtncEBqzAsHmIw+8rd2Z5UwC/MLdKOHyOsreWom0Kn
-         3YldyyoQJAtdKuoa+xLj00/zvEtQkUAD1eapF6Vi9Wkg0tDEdfRY5wHngHP2f3vE6d2f
-         gjqQ==
+        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742589355; x=1743194155; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qvMwDu0BMSrh7CaSCaQYm2+c+HftuBgbOun19NXMMCQ=;
+        b=MZQKcIkODtlB8IzsiOOakT6x76IB4Yq1lgJYIKJSTEfoaBWSl+wJL0k7IvBWJnDZ/C
+         sRMiO2aGs0q36yGgrmHcpDsyuol45b/Ixhfn+eePULsLQdR7fznLuGjBvz+rBjB2iTSR
+         WomG4LprAGXddDy2JYJ46fcToSzGFiyeSw/NtomiMHWW9jBES0LQdHRbC+JZLluB5P3a
+         JPQREz4U8K1fJcmFBnSttbB2QZE+/eCdUX48UmYC/uE11GT0ieI9pSOi5alU/a243cmA
+         YJp5ZuKC+PmiS4NXhoLZiPMvz5ysXo3aUc5vqqv8jU8DpqxVGBS0DwctRuIWU/RsVSds
+         9RaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742589316; x=1743194116;
-        h=in-reply-to:content-disposition:mime-version:references:subject:cc
-         :to:from:date:feedback-id:message-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VrBEkpu60bCrmGKM5/a3BWaVmBhrw8nH6PBXojnyxOY=;
-        b=KJ3eFaWBK+2vLjFmnb8C2c8tkL17QIN/YVuh1kxHbKmxhSMcvF0zOiYSnePLqB7fkn
-         aki19Vf7bgrFslVt+Me2tg7hRgLTHfnYkgQz7nP/9adzNY57839L1pB0qZyYL4trhGLX
-         lLLKo6gR3Gj1b2fiZre+BMviwB25OIa7CAVAeF/i42FBD27dTly7TWAmtRoSj7/SEV7w
-         mPmx3YfgkADpEiLWFnd0xqk8/cHMrpMF7w4ZB7bNLswTV/UM4CL5QhQyq7eVQCBevapp
-         2FEn0QwawX4ilOIG9SymEvBOeMFwSValZLwHnc9Du4Hg/tFwjQFG4J5vW3RrbSJkavkQ
-         3YfQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU7o/1JFQjgWv9VGBr/QhQ3uYlkOOVlU6VZBYvafizq4djuLt6Zp2/udZ8UPn4EhhBNVBaUBb72gsTl0SD9heA=@vger.kernel.org, AJvYcCWg4ULFDuPJMLFGoF/c3xiXrDQfYPRAvM6zXc7CLr+1yGiiCAUSGvKSwUobmkmlyIigciTRQZjiXW9bQmk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyHDLpV00X9S3fuITpSR/OQ4SlH+y1tT2RW9+21rikoHWvnRb5q
-	XUBAhvuGnlZaPoUslgupvfegRCGtolr4kJBHkTo//2D6cNdzisDF
-X-Gm-Gg: ASbGncvjoKOVEek/JsB3bIFpYRDo7N0mkg2fAGD2TcEKo+pKMnWLLf+Yzxa5H3XydoY
-	FuTJPV24yp9ubjT4ISl3M2q06uBK/pSGfqYeGD0XXkRk5Vl8xN6bRjlcRdZ5gLBgIk2CRuPcQn9
-	P9+B2bTJ3TqXQTh4bk/KO4uwMyMKIP7LiFtC0v96A5CmT98aoW0+f9A9WFiD6Y3wAcwf/6eMBdZ
-	ZRT7x/xjWioa72ZTp5G4hjxe828X5YKA+zgyFNxDIZz8bDweepzmJr5xrAsJmA10Rkjurz+7mor
-	Ilv4apqCpKHONTqMAzGpbda6woAzTkB4CkS/mpEXhKEKufihG1S5jawCKqzfLwlxm7yQrLVI5zu
-	PSFYrzbgs3d1QxsnCso8sjaR2Zt0iXTYc+A8=
-X-Google-Smtp-Source: AGHT+IFteF0LVW82XPr7Bi8OGspyWiFAmnMcFic+fmEubgaNnMeFcMexlPO0YoI5x1XPcLecagGtQg==
-X-Received: by 2002:ad4:5c82:0:b0:6e8:9e9c:d212 with SMTP id 6a1803df08f44-6eb3f1a40f3mr78258286d6.0.1742589315386;
-        Fri, 21 Mar 2025 13:35:15 -0700 (PDT)
-Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3efdc1b1sm14812276d6.110.2025.03.21.13.35.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 13:35:14 -0700 (PDT)
-Message-ID: <67ddcd82.050a0220.28d3cb.7630@mx.google.com>
-X-Google-Original-Message-ID: <Z93NgKC6Flr_AiqP@winterfell.>
-Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
-	by mailfauth.phl.internal (Postfix) with ESMTP id 3FE561200043;
-	Fri, 21 Mar 2025 16:35:14 -0400 (EDT)
-Received: from phl-mailfrontend-01 ([10.202.2.162])
-  by phl-compute-03.internal (MEProxy); Fri, 21 Mar 2025 16:35:14 -0400
-X-ME-Sender: <xms:gs3dZxr_WutHJLxmKOcGxMkfRkF3VRvjodgQ0tfJs1tTUNcol1qqvw>
-    <xme:gs3dZzoW3vYEcqPS7g_TEKy8k9wg9QQ4DmXedEmCJWJeC2TUc6SIexwgtr4yVnpOu
-    eq0PyYxLBJTbNXzrA>
-X-ME-Received: <xmr:gs3dZ-PqX2UD6oK6m9diyOV53s4O409aSAl7-Rn8lcELBBdbOfXj0ObM1jg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedvtdeiucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
-    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
-    hlrdgtohhmqeenucggtffrrghtthgvrhhnpeeuffffvefhleduvdevuddtudeivdeiiedv
-    ffeigeethffgveffgfeltdfhveekueenucffohhmrghinheptghpuhgprgguughrshdrrg
-    hsnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsgho
-    qhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqd
-    dujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihm
-    vgdrnhgrmhgvpdhnsggprhgtphhtthhopedvuddpmhhouggvpehsmhhtphhouhhtpdhrtg
-    hpthhtohepjhhgghesiihivghpvgdrtggrpdhrtghpthhtoheprggsughivghlrdhjrghn
-    uhhlghhuvgesghhmrghilhdrtghomhdprhgtphhtthhopehruhhsthdqfhhorhdqlhhinh
-    hugiesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegurghnihgvlhdrrghl
-    mhgvihgurgestgholhhlrggsohhrrgdrtghomhdprhgtphhtthhopegurghkrheskhgvrh
-    hnvghlrdhorhhgpdhrtghpthhtoheprhhosghinhdrmhhurhhphhihsegrrhhmrdgtohhm
-    pdhrtghpthhtoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtoh
-    epohhjvggurgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhho
-    rhesghhmrghilhdrtghomh
-X-ME-Proxy: <xmx:gs3dZ85gBv_70Qyz2opHiafrm8KOhFcKR3npaZ0eewRTaAYIT5G3Mg>
-    <xmx:gs3dZw4Q3G5MkzG8E4R3SLd1nbU2pOjBAvZ9UERrUA5kL1Yk0X4BAg>
-    <xmx:gs3dZ0gG7lv4g3f06ZBYIOjPwSZW6qoj5Pvhd7o_Wot3irAQJ3qMKg>
-    <xmx:gs3dZy7u-qqDRu5ujOW0pnbZ6IvQAvuXZWf5JMfUSjhBlXeMp3eHFw>
-    <xmx:gs3dZ3KK7b24sapOURPO6HZMIF0hW30evzUi-q-02twgKBq66BwlMCTN>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
- 21 Mar 2025 16:35:13 -0400 (EDT)
-Date: Fri, 21 Mar 2025 13:35:12 -0700
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Abdiel Janulgue <abdiel.janulgue@gmail.com>,
-	rust-for-linux@vger.kernel.org, daniel.almeida@collabora.com,
-	dakr@kernel.org, robin.murphy@arm.com, aliceryhl@google.com,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Trevor Gross <tmgross@umich.edu>,
-	Valentin Obst <kernel@valentinobst.de>,
-	open list <linux-kernel@vger.kernel.org>,
-	Christoph Hellwig <hch@lst.de>,
-	Marek Szyprowski <m.szyprowski@samsung.com>, airlied@redhat.com,
-	"open list:DMA MAPPING HELPERS" <iommu@lists.linux.dev>
-Subject: Re: [PATCH v14 02/11] rust: add dma coherent allocator abstraction.
-References: <20250311174930.2348813-1-abdiel.janulgue@gmail.com>
- <20250311174930.2348813-3-abdiel.janulgue@gmail.com>
- <20250321182539.GP126678@ziepe.ca>
+        d=1e100.net; s=20230601; t=1742589355; x=1743194155;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qvMwDu0BMSrh7CaSCaQYm2+c+HftuBgbOun19NXMMCQ=;
+        b=fND7pxXTVshfi5JAPenSK2UJE5q2L39feBxiBeLUiD0Lhj4WUg3R6FZ4ds8u4MIoQM
+         5vY1Q/eEJTUqQNqL3tR9DgXl++TRpOgmUNd0TbYqySwfsyhPFMCORytkaeNgnHeKsW6C
+         39VjznXTw0ujnognZ4tmNLVtgtoJafpWdpgolwwyzh2n4VcE3XjVEctfXGTctg0hl5RA
+         hTxwO22eMD0opUpIfBS2q8dN9Vx4aQabXworPaGGn6M0V2zqAO+DKmFol6oLtXToq1qm
+         jaKup0PThJTjRfBORoxJHoEs9tieJncdxdC0YpeJ1rV72Y8Sy8B6AiXiZ4FrHwvgR8NX
+         tFeg==
+X-Forwarded-Encrypted: i=1; AJvYcCWUljnG42Yo2gPnAWkRDKuoU5U2Zdf8l3zk3gxAHx4eJnDwottfqU/UsqZMtKb7h7Qd7Oj4OiKqegk6Ze8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YynGtLMNCZeYfz+rRHra/GFJ//Lzqwdv6wEt6QTAfktikBTcYtg
+	Z65RhSb8FJmiURpAc4LhHg/aM4rPl+K+LJQLvAFrQprgv0TDAvCN+HYozHdOGTc=
+X-Gm-Gg: ASbGncvZCkmB3+3/6RqoV3IIVCNBYLrw+ie5dEdJy8rGaR8ZrW+nHz8rFxNvw5IDTJT
+	FJlxaYY7mn4rTkMXcHbkUmVAZviy6DN2Twdh3G2nu8Awm8fOjdsFOok2e4JLPK3XV8yd0yRUZzP
+	tMcbnh/VzEfEX+GEocZXrdpg8tvEb6WY71pDWh1wUotEOTZkpUVl0/3zgaJZjx8lYorN172vXXc
+	akFzRo1LMKzwCUHvRpYzl6BKNdGtf9LngNAkQZ8fXToJOJHVU/qSZTbDLaa5EJUmC2WqUQbTiHM
+	7uxvWRvLK2DVsZWwa8iPd2btND5uQ9V94h6wotJCaw==
+X-Google-Smtp-Source: AGHT+IEPWzk5ry4zHWNFdi8KTg5KcDVgbTXsCl1DzYqeTt8WkJX5AIeUX7DfgyW/W2CDL0vQ6sVZlg==
+X-Received: by 2002:a05:6e02:1f01:b0:3d3:d1a8:8e82 with SMTP id e9e14a558f8ab-3d595f91c7emr52500135ab.9.1742589354635;
+        Fri, 21 Mar 2025 13:35:54 -0700 (PDT)
+Received: from [192.168.1.150] ([198.8.77.157])
+        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d59607ea6fsm6112915ab.24.2025.03.21.13.35.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 13:35:53 -0700 (PDT)
+Message-ID: <4e582b92-2f4d-4a0d-b479-3cf4f054bb5f@kernel.dk>
+Date: Fri, 21 Mar 2025 14:35:51 -0600
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321182539.GP126678@ziepe.ca>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC -next 00/10] Add ZC notifications to splice and sendfile
+To: Joe Damato <jdamato@fastly.com>, Christoph Hellwig <hch@infradead.org>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ asml.silence@gmail.com, linux-fsdevel@vger.kernel.org, edumazet@google.com,
+ pabeni@redhat.com, horms@kernel.org, linux-api@vger.kernel.org,
+ linux-arch@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
+ kuba@kernel.org, shuah@kernel.org, sdf@fomichev.me, mingo@redhat.com,
+ arnd@arndb.de, brauner@kernel.org, akpm@linux-foundation.org,
+ tglx@linutronix.de, jolsa@kernel.org, linux-kselftest@vger.kernel.org
+References: <Z9p6oFlHxkYvUA8N@infradead.org> <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
+ <2d68bc91-c22c-4b48-a06d-fa9ec06dfb25@kernel.dk>
+ <Z9r5JE3AJdnsXy_u@LQ3V64L9R2>
+ <19e3056c-2f7b-4f41-9c40-98955c4a9ed3@kernel.dk>
+ <Z9sCsooW7OSTgyAk@LQ3V64L9R2> <Z9uuSQ7SrigAsLmt@infradead.org>
+ <Z9xdPVQeLBrB-Anu@LQ3V64L9R2> <Z9z_f-kR0lBx8P_9@infradead.org>
+ <ca1fbeba-b749-4c34-b4be-c80056eccc3a@kernel.dk>
+ <Z92VkgwS1SAaad2Q@LQ3V64L9R2>
+Content-Language: en-US
+From: Jens Axboe <axboe@kernel.dk>
+In-Reply-To: <Z92VkgwS1SAaad2Q@LQ3V64L9R2>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Mar 21, 2025 at 03:25:39PM -0300, Jason Gunthorpe wrote:
-> On Tue, Mar 11, 2025 at 07:47:58PM +0200, Abdiel Janulgue wrote:
-> > +pub struct CoherentAllocation<T: AsBytes + FromBytes> {
-> > +    dev: ARef<Device>,
-> > +    dma_handle: bindings::dma_addr_t,
-> > +    count: usize,
-> > +    cpu_addr: *mut T,
-> > +    dma_attrs: Attrs,
-> > +}
+On 3/21/25 10:36 AM, Joe Damato wrote:
+> On Fri, Mar 21, 2025 at 05:14:59AM -0600, Jens Axboe wrote:
+>> On 3/20/25 11:56 PM, Christoph Hellwig wrote:
+>>>> I don't know the entire historical context, but I presume sendmsg
+>>>> did that because there was no other mechanism at the time.
+>>>
+>>> At least aio had been around for about 15 years at the point, but
+>>> networking folks tend to be pretty insular and reinvent things.
+>>
+>> Yep...
+>>
+>>>> It seems like Jens suggested that plumbing this through for splice
+>>>> was a possibility, but sounds like you disagree.
+>>>
+>>> Yes, very strongly.
+>>
+>> And that is very much not what I suggested, fwiw.
 > 
-> I'd like to point out how memory wasteful this is from what real
-> drivers are doing today when they use the coherent API. Let's compare
-> against SMMUv3's use for the CD table..
+> Your earlier message said:
 > 
-> This would be the code in arm_smmu_alloc_cd_ptr()
+>   If the answer is "because splice", then it would seem saner to
+>   plumb up those bits only. Would be much simpler too...
 > 
-> It is making a 2 level radix tree.
+> wherein I interpreted "plumb those bits" to mean plumbing the error
+> queue notifications on TX completions.
 > 
-> The cpu_addr is stored in a linear array of pointers:
+> My sincere apologies that I misunderstood your prior message and/or
+> misconstrued what you said -- it was not clear to me what you meant.
 > 
-> 			struct arm_smmu_cdtab_l2 **l2ptrs;
+> It is clear to me now, though, that adding a flag to splice as
+> previously proposed and extending sendfile based on the SO_ZEROCOPY
+> sock flag being set are both unacceptable solutions.
 > 
-> The dma_addr is encoded into the HW data structure itself:
-> 
-> 		arm_smmu_write_cd_l1_desc(&cd_table->l2.l1tab[idx],
-> 						  l2ptr_dma);
-> 
-> The size of the allocation is fixed size:
-> 			*l2ptr = dma_alloc_coherent(smmu->dev, sizeof(**l2ptr),
->                                                                 ^^^^^^^^^^^^
-> 						    &l2ptr_dma, GFP_KERNEL);
-> 
-> It doesn't need a struct device pointer or reference because this uses
-> the usual kernel 'fence' reasoning for destruction.
-> 
-> It doesn't even use dma_attrs. (why is this in a long term struct?)
-> 
-> So, smmu manages to do this with a single array of 8 bytes/entry to shadow
-> the CPU pointer, and recovers the dma_addr from the HW data structure:
-> 
-> 			dma_free_coherent(smmu->dev,
-> 					  sizeof(*cd_table->l2.l2ptrs[i]),
-> 					  cd_table->l2.l2ptrs[i],
-> 					  arm_smmu_cd_l1_get_desc(&cd_table->l2.l1tab[i]));
-> 
-> Basically, it was designed to be very memory efficient.
-> 
-> If we imagine driving the same HW in rust the array storing the CPU
-> pointer would have to expand to 40 bytes/entry to hold every
-> CoherentAllocation. This means rust would need a new high order memory
-> allocation to hold the CoherentAllocation memory array!
-> 
+> If you happen to have a suggestion of some piece of code that I
+> should read (other than the iouring implementation) to inform how I
+> might build an RFCv2, I would appreciate the pointer.
 
-Thanks for the example, it seems to me that your case needs a
+I don't know what to point you at - you need an API that can deliver
+notifications, and I'm obviously going to say that io_uring would be one
+way to do that. Nothing else exists on the networking side, as far as
+I'm aware.
 
-    pub struct CoherentAllocationVec<T: AsBytes + FromBytes> {
-        dev: ARef<Device>,
-        cpu_addrs: KVec<(*mut T, bindings::dma_addr_t)>,
-        dma_attrs: Attrs,
-    }
+Like Christoph said, struct kiocb is generally how the kernel passes
+around async or sync IO, which comes with a completion callback for IO
+that initially returns -EIOCBQUEUED, meaning the operation is started
+but not yet complete. Outside of that, yeah need some delivery
+mechanism, as you're generating two events per zero copy send here. You
+could obviously roll your own, good luck with that, or use the existing
+one.
 
-of course, we can get rid of `bindings::dma_addr_t` if there is a
-method:
-
-    impl<T: ...> CoherentAllocationVec<T> {
-        pub fn get_dma_handle(&self, idx: usize) -> bindings::dma_addr_t { 
-	    ...
-	    // probably only availabe for a particular T or Vec.
-	}
-    }
-
-    // and drop of `CoherentAllocationVec` will be:
-
-    impl<T: ...> Drop for CoherentAllocationVec<T> {
-        fn drop(&mut self) {
-            for (i, cpu_addr) in self.cpu_addrs.as_slice().iter().enumerate() {
-	    	dma_free_coherent_attr(self.dev.as_raw(),
-		                       core::mem::size_of::<T>(),
-				       cpu_addr,
-				       self.get_dma_handle(i),
-				       self.attrs);
-	    }
-	    ...
-	}
-    }
-
-Then we have:
-
-    pub struct CoherentAllocationVec<T: AsBytes + FromBytes> {
-        dev: ARef<Device>,
-        cpu_addrs: KVec<*mut T>,
-        dma_attrs: Attrs,
-    }
-
-And we can make `dma_attrs` a const of the type:
-
-    pub struct CoherentAllocationVec<T: AsBytes + FromBytes, const ATTRS: Attrs = Attrs(0)> {
-        dev: ARef<Device>,
-        cpu_addr: KVec<*mut T>,
-    }
-
-As for getting rid of the `dev` pointer, the struct arm_smmu_device has
-a pointer to struct device as well, so it's all about how to organize
-the fields, at very least, you could do:
-
-    pub struct ArmSmmuDevice {
-        // avoid using an ARef<Device> here since we already has it in
-	// cdtable.
-
-        cdtable: CoherentAllocationVec<arm_smmu_cdtab_l2>,
-	...,
-    }
-
-and whenever you need to get a pointer/reference to the device, you can
-get it from:
-
-    .cdtable.dev
-
-it may not be the best organization of the fields, but we will see the
-real Rust use for a better design.
-
-Regards,
-Boqun
-
-> Jason
+-- 
+Jens Axboe
