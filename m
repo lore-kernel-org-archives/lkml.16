@@ -1,67 +1,66 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B903F1DE4CE
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:49:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0018214A98
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:49:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572192; cv=none; b=gDSxTUeh0gWwWFGyOxGwP6hFg4pombiHtRqtPoxSAf6QXs8hdcv/MSdTL9aMJ8pWyVccaDV8LjhiFchLPWGFL6PPf/vz4FcvihORejxdlilT56+Og7emi5JBWxoQh8mH33JCqFzuFSNlK8JGDi9Ihaky0MDWKD37s2m70ypPWY0=
+	t=1742572193; cv=none; b=pATpk9pN03KyFbjVncXzp//zhSIYzXCdJ++dWIUQbOKlhqS6+V+Zl4f8wasYyPMQtokptzYIsTxifPkIxE1NHPRb8vNeCuDC9bxzqeFWP4Ru/lcKyJOlywF9ntAJ1zMN5QT5ZxvtbPqPAc6gf6AhUZ1bqfH9VvgwhIouNK5BshU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572192; c=relaxed/simple;
-	bh=wCryCeTji9z+l3BRY73vuHL8dSisONmzkMMBaMEHPSQ=;
+	s=arc-20240116; t=1742572193; c=relaxed/simple;
+	bh=xfFNU31W60ls5/B0+qZld8bL1H0RP3qxyrF5eUJ3AEc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lAX0leEBGI64ZzpEBC7tnGLI04joxMHvm/dPunkM3M1G6Zji7NG2J4kVAh65BDUDazxraBiP/Mgre3nz/7BSVTLzjjD6O0wJnLh5GPlSVFULcIkku0zbgm+fIE/4DJeu2ThdcylfmsFijZ2smCVx1PY8PAZW1F5xnFcb7De0MRY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=FSRtlb2H; arc=none smtp.client-ip=209.85.221.42
+	 In-Reply-To:To:Cc; b=eanE87n9cuyknDvxLouMjuBFIQkdyQR5daViPN/+Zqzstr4G76V5KQTsJw204ujhtZbdPj5omDGdAi3p0JtJXkVAJAd5loP/kiBMGFJzH2V25idxn3d8C0Bm2HdpdQQ3z80YLlF9wDjAhu3Q6Qz5vlH5aS/1u0i89fhJcioSxjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=oje+pfty; arc=none smtp.client-ip=209.85.128.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="FSRtlb2H"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-3912baafc58so1756111f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:49:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="oje+pfty"
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-43cec5cd73bso14399705e9.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:49:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572187; x=1743176987; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572190; x=1743176990; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=vRFYQEc1/AnB7Qk/B6GtdNGwcPqMS/OESaxUTMbOma4=;
-        b=FSRtlb2H0ij4pmijJ8QTZrvs/JO0it3s7pRAcpDWenkhYiNep+DGeXVStzFwF/rPMJ
-         u4Fgr11rHz4melVZFsaptxo+ov/q8fTVQqgYxg8yo+ISRJOwDWx+GtkYoxbJu69n0c9D
-         IeZ75kA/GIr2YAQBzVg77ly0vOPzjhqOxc+kgYPxiKZzLwEqsBDHmKt016EimlByg0Bj
-         mJ6XZ9qaqBYv73ig4M8ny4Bcw95/mj04saPgJY70D3x6Y2zJhBN8B4ZiDOfkg8AGUl1M
-         2sLQ4GNwURjsX1vf5jPYwxRX4UCkYGSKoRU62mwAg7J1CEcId7yBl7lN/86mrOVx4q59
-         p7IA==
+        bh=HWUyEMW5KQjAKQoUCWTi97VpcXQaHbmA9ju/RhUyagc=;
+        b=oje+pftyFAgF5k9UaDWtv/TAD2ZW0pic0er5NMUutxsfDyKFHKpKiyPCknj6BD3Nh4
+         A/3N+kejgT+qBM1dxDSRLpHSZJcA2MfOqkDVIeMOykGyYmR6yj/685GaPl2Ds0zT/l86
+         rHrZsmDND0U9tpnTIfUmgbhxEwPx073JTWC14lsu5OEXHUQ9J1PP1/oZo2wYjgXNgtJi
+         T5XvwYfrROtHA5Zha5tjqebslMlXG/hrK7o4pk4nr/uYFLh3Ft3MnOEg8mk8xbw+FTqi
+         IcJoUqVL68DUTSR2QOuJRYcJ6rYaXDxf+xDk/Y70XjaCUNic7PfS6YBoOj7pGvaGho/E
+         ImkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742572187; x=1743176987;
+        d=1e100.net; s=20230601; t=1742572190; x=1743176990;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vRFYQEc1/AnB7Qk/B6GtdNGwcPqMS/OESaxUTMbOma4=;
-        b=i6M1bx416NiYT4JyJ68GOkf7YLj4kPcUZ2cBMBDKDU0HSRFfEcoXsBY+QblZRlbDpz
-         6IMIQqPn4Wd2uL5jimS8cAvZEGW6oQWCDCKEVq9VxmOdxFy5Mb+zPnlX1nmJaHKQzQpX
-         twgBhECIKNuxLlF+LPGW9knfG97xOvLwdp14iW0svFQzDeCg8ZQmgbTHrPjSWGAF42GW
-         8996xMC1+0ggR7PWOmQKTh+Sth2CIALgMtlv6Z7O9IZqhkaT0TJ/SbSHQ62kO0TuUwFR
-         M9ytM9GqgaAn7AJHBnRtNCXoG160guYp2/gwtHVidQGv8o5ELc2tLXIuHEPF5744djpD
-         p0nw==
-X-Forwarded-Encrypted: i=1; AJvYcCVw8BDGoOeNa+f8sMP37JPs/fS7MSgUPLBWY++sMgDITPnTqycvJEBHdCZl/mwRttiDqIooJ8UFYbleGtA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyvePsdG/UiAwTbG+sjJohBa+tKVEHolAKhGPVgIHYtmQucBfYq
-	D+kkz271Fua3JvCxfXCQVvNf1jiXYH9F5jz1xx8Kovbw2+07fhMX03uBymRWajqoWmT9DdfFUB9
-	3
-X-Gm-Gg: ASbGncskmD0Avm8uqsBIjKUEinoMIgar/6p2OHDsjMJJmPmdmkgbuKeE7IFa8/fBOCB
-	GmTKlmBw5SXeMfmhjpBZSnnog10OsInI6PUxTnizY9nODPbN3RdhfBvBa4JmBEaxdSkoFDPUMrw
-	Kl/FeZaR+JtjdSg74QvMBcfRo8nmCMjdJBlnGi2TLU+jHOv2wjR8pt3jqIp8v7dL9BO9zDcPbwi
-	C3zamxsGuhgkFKQ9v5T6JQ3PseaSldvqe6GzjmjcfsJrAAQj0R2r3q78UEN7bESMQ39vTgcnP3X
-	5foHx7lVu2SyQML7W309s8oCvq89nsWJ5Hpg/A==
-X-Google-Smtp-Source: AGHT+IETwNIgi94lLdjAdGfdwQRhGw5FZ9fshyAOJpuVuTGfLMNBguhMUR+gJEky4ZZyufE/CE7CuA==
-X-Received: by 2002:a5d:5f96:0:b0:391:fcc:9ee8 with SMTP id ffacd0b85a97d-3997f912529mr3661173f8f.23.1742572187419;
-        Fri, 21 Mar 2025 08:49:47 -0700 (PDT)
+        bh=HWUyEMW5KQjAKQoUCWTi97VpcXQaHbmA9ju/RhUyagc=;
+        b=mbBUZZiKR72Wbm3YoRT8LnvZLnv21nmV4X2jHxuaxeT95oKqFTq0vHDA9fdrpQkwVZ
+         K2k/TDZTYWjHpEgwslnLoo4IMOuH3PAXZ5lOfeqDZnUrCkmhbTb29NrpF+SKVa3KTllk
+         5ZHi0fdwV9mZ4ABgwV35GdHGx7aM6QJ0zjnSjFkfU24dFFvppWKW23ZWzTVVnKohaf3i
+         o/0c8OzB2J/gLu7KyM4OpLeQM0ffXAqkm6NVXorAiIHaelsplPvclrurF7dK2+jtCv1B
+         69pAWIsTDEj2IloKBUv3YgHf5vVONrBNjtJ7UDRqavN+azBhk2a5QbKheV0G1o9P+oIf
+         YH+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWyCxyUW+46nrYRhFFYN6f4W4mEP6mzQcGBRLznTd3g15kr9eDMtbhJ2Ukf4e8MZkrSI8CIciKQD/3I/AI=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxa9m0H1frtFjCF7wErtzSvLcELrlABzjz/7F6OBlhfyjV+x6dD
+	MNr1mm6CnGKz40esdDbfANv5cR9lYA44y6dvgSDZtit1xTJlLQDXTSRbt5T/s25f24z/lcy+Zj2
+	F
+X-Gm-Gg: ASbGnctdSXydfoO873t9otgUfYclQgp0R6K6ixcHrXGqJOvDQ9B34NTkMb5AcX96ZSI
+	hePxdTYJe9n+cAQwVjV8wU/7nPZKxO/aXVbEYz2Bq2tJCWrcibUxAFPyJ4ME742sYa68GYYWnM4
+	bpSx3KNj38co8NLdTUEVvZaoMxmLSPCTrVnNm3oF7w/n6ZpiSzm1lBbHqF3FgdCJ3IdQ5W+guha
+	KXhV3MCTDae9/7d5LaxGeBZwLEPYju9QKvoxQGPsApfi6QMZtddzSlkmU58ldElhoFYsv10HW59
+	CFxveIrvwOGOD34WYWa2R3TYzzrnw33MlrfSPBpDKS5C667C
+X-Google-Smtp-Source: AGHT+IE9lsPNP1ZpJFXQ7VFz7zhG//tQlNCV7FJUrZF3RN9Uf96S8er9qf9JKofSiXbIQXaI/6aa/Q==
+X-Received: by 2002:a05:600c:34cc:b0:43d:24d:bbe2 with SMTP id 5b1f17b1804b1-43d50a3cb58mr36631715e9.28.1742572189203;
+        Fri, 21 Mar 2025 08:49:49 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1aa4:f3ec:847a:32d1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 08:49:47 -0700 (PDT)
+        Fri, 21 Mar 2025 08:49:48 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 21 Mar 2025 16:49:33 +0100
-Subject: [PATCH 1/6] gpio: TODO: remove the item about the new debugfs
- interface
+Date: Fri, 21 Mar 2025 16:49:35 +0100
+Subject: [PATCH 3/6] gpio: TODO: remove the pinctrl integration task
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +69,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250321-gpio-todo-updates-v1-1-7b38f07110ee@linaro.org>
+Message-Id: <20250321-gpio-todo-updates-v1-3-7b38f07110ee@linaro.org>
 References: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
 In-Reply-To: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -78,81 +77,65 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2470;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1896;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=wdL+OKAjw1IH0HSGRarL/B7X1Jbr68CDvNMAAbARso0=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqY+eO7xsW2SOOoNalGMEC3nIE5fQEeyXYNu
- C7+MtmOt6qJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KmAAKCRARpy6gFHHX
- cjjDEACUdUh9u4G6a7nZ38JQTvoUong4yxXKo114w46Cr8MRAEYvrjDEOmces4FI9YkqPYFXVAu
- 34c+p0CBwTn/NB9Z3DQsn6AyT01ubB1O4m40tJrBl95xfWlLowgVoePp/FYgjBxgAlZZmkXNZPw
- IageYREwK/zCI3atdwUuW2l1G94D2WMS6aEAzsroWogQHSIuj/10m4C+aLJxgbl001q8Kgjgli6
- 6+S7h5QLL0g7/UPxOtlSdeG7aBkCSY96ZDphrafT5j2EXrM9SByxO7qR8ZFAgbEL96Yc5RMdGA+
- LlkHHNs3XiMbu97B8ppR/pXpM9llaK2HJaHtYVTZ66ObQ4csCQJMcTG7R0v9DyiFyo5uP5+1PdP
- yy5pI2l0La2JixCrfI+4Iug1odM+oznr1IdjNa++l5MZTE3xjWqUEep9tJkfFCclL0eKZsN9fgz
- CGl8ckKcglney2WyEV25U2KtpkL9D6KQAGg45ts0PTiT17mOhnoK3WFYsgyaXMKflOZuZQV0U6D
- EUrIJjdznImvI6Pwl57Q3zRdtawmDLsKx1r7KV8a3xL40VqfNL4+l664G/vfAY8/LXM+h6KKqrk
- r/hKGjM5jYs0LorwAqMsESFAM35/PBfc1xxmsW7WCGe++9LHBj0ABgxbPs1wK7nVZF1Kq+y84Mt
- hVAHIwwfszHFcKg==
+ bh=VovuR27EPmJKuj6f4avilmOJ1pGh2kyGMd0etNsaBCQ=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqZ1tkYpRWno3Z/Y7xshya85wixSLxYkf9iP
+ ifdoWP+JJuJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KmQAKCRARpy6gFHHX
+ cjfAEADAGfmoFuMkJrBJZEyLGkaBMd/6Cj8ZPvX58vT6O8BaGZkaC+lBSp8InOv2z9XyVJyS10n
+ GNl0DTkFCxVIhrNv5VZWVHEfgwlGD5OH4+vrDAzgYm2Aw/bkFG1d0Emq8972i4eeAHswc2WZN4c
+ EOpQuAgr7dShPxj7rSlnjuxfFbruv/GOfrIhN0slV+RAGLQjpVfwEz1W5+e0eIP8MHFMuMP9j8g
+ nXOYAAF1ieiCBFQ5JQU+9LxE1ZV1QDYvBAJ26ebTY3t4t3bvyAi2LNKs+1k+4l2klCi6uNevlGM
+ AQhTYug1G8IMIotFTA3vkVmqAcPH3NRuyADRFyyarWcNFJ+Wlx6dSrC+ZCzJ1Utgx+WnaBv6IzA
+ 0Z0j5q7DnE6UNW4KXIa9CrREOP0b4StVrDFZZYIl+1YPoDS6MxHNxnnon3vaY7Dn/lSZQ38Lcmh
+ fyvpJxrDFzRqXh9qjHJfT9bwKy7ZF+XS9WJDayximKvpjLY9ykW2mJEpXrV0ZOJd74W08MOJZm7
+ zdnBTgKAz6YYMtM1FG+pOvB23e4U70ONxP5erYWarNlPiLfzzm98gO1ZBoFyc0ikQgdXOeQLoP0
+ ypHEf++QEq8mhnowtadu9hHDEdx/f//Hg+9C77sTIEAIqlHwD4stlkBOGOTBG1O2eQ7UeX48h3F
+ E4lyHVDbMnvAhKg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-The consensus among core GPIO stakeholders seems to be that a new
-debugfs interface will only increase maintenance burden and will fail
-to attract users that care about long-term stability of the ABI[1].
-Let's not go this way and not add a fourth user-facing interface to the
-GPIO subsystem.
+While there are surely some arguments in favor of integrating the GPIO
+and pinctrl subsystems into one, I believe this is not the right
+approach.
 
-[1] https://lore.kernel.org/all/9d3f1ca4-d865-45af-9032-c38cacc7fe93@pengutronix.de/
+The GPIO subsystem uses intricate locking with SRCU to handle the fact
+that both consumers and providers may run in different contexts.
+Pin-controller drivers are always meant to run in process context. This
+alone is a huge obstacle to any attempt at integration as evident by
+many problems we already encountered during the hotplug rework.
+
+The current glue code is pretty minimal and for most part already allows
+GPIO controllers to query pinctrl about the information they need.
+
+I suggest to drop this task and keep the subsystems separate even if
+many pin-controllers implement GPIO functionality in addition to pin
+functions.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/TODO | 36 ------------------------------------
- 1 file changed, 36 deletions(-)
+ drivers/gpio/TODO | 11 -----------
+ 1 file changed, 11 deletions(-)
 
 diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
-index 942d1cd2bd3c9..9cf7b84cdb869 100644
+index ff955befd0ccf..08ff60c65abbb 100644
 --- a/drivers/gpio/TODO
 +++ b/drivers/gpio/TODO
-@@ -156,42 +156,6 @@ multiplexing, pin configuration, GPIO, etc selectable options in one
- and the same pin control and GPIO subsystem.
+@@ -136,17 +136,6 @@ try to cover any generic kind of irqchip cascaded from a GPIO.
+   dry-code conversions to gpiolib irqchip for maintainers to test
  
  
--Debugfs in place of sysfs
+-Increase integration with pin control
 -
--The old sysfs code that enables simple uses of GPIOs from the
--command line is still popular despite the existance of the proper
--character device. The reason is that it is simple to use on
--root filesystems where you only have a minimal set of tools such
--as "cat", "echo" etc.
--
--The old sysfs still need to be strongly deprecated and removed
--as it relies on the global GPIO numberspace that assume a strict
--order of global GPIO numbers that do not change between boots
--and is independent of probe order.
--
--To solve this and provide an ABI that people can use for hacks
--and development, implement a debugfs interface to manipulate
--GPIO lines that can do everything that sysfs can do today: one
--directory per gpiochip and one file entry per line:
--
--/sys/kernel/debug/gpiochip/gpiochip0
--/sys/kernel/debug/gpiochip/gpiochip0/gpio0
--/sys/kernel/debug/gpiochip/gpiochip0/gpio1
--/sys/kernel/debug/gpiochip/gpiochip0/gpio2
--/sys/kernel/debug/gpiochip/gpiochip0/gpio3
--...
--/sys/kernel/debug/gpiochip/gpiochip1
--/sys/kernel/debug/gpiochip/gpiochip1/gpio0
--/sys/kernel/debug/gpiochip/gpiochip1/gpio1
--...
--
--The exact files and design of the debugfs interface can be
--discussed but the idea is to provide a low-level access point
--for debugging and hacking and to expose all lines without the
--need of any exporting. Also provide ample ammunition to shoot
--oneself in the foot, because this is debugfs after all.
+-There are already ways to use pin control as back-end for GPIO and
+-it may make sense to bring these subsystems closer. One reason for
+-creating pin control as its own subsystem was that we could avoid any
+-use of the global GPIO numbers. Once the above is complete, it may
+-make sense to simply join the subsystems into one and make pin
+-multiplexing, pin configuration, GPIO, etc selectable options in one
+-and the same pin control and GPIO subsystem.
 -
 -
  Moving over to immutable irq_chip structures
