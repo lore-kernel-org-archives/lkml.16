@@ -1,143 +1,223 @@
-Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+Received: from mail-io1-f99.google.com (mail-io1-f99.google.com [209.85.166.99])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5851EB5FD
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 20:35:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA3D41D5AD4
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 20:36:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.99
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742589357; cv=none; b=R3fOnTbVu1QVMW0/hZ4XoFNQ+yVafCydxrBOZRqPL+wPE9Za/B4nJ7+lPEbwZWASiDV+e41NT/T5VpIlVDxySRGEQG4NF9bbmZQ3PhLalRR1dFyJf3pTQPINsbIPyPbcYD0B310+EGPr9ggN2sfOsgjFlz3viSWu3/ofNHSiPpI=
+	t=1742589382; cv=none; b=e0tHatOlW4b6pgccu6w1wR6GFyjad/UP8HjAkfgK6akYmisFGy7fIB9ruA0ScI8jpashyoeoH4pB3hrDOND8/rPACqtrpK7s+9Y97H3BSsNTRSewlTaaO9D+NvmfXUuuK9gfDD/4DlNT5jV9pgBGq9Xu9Hsyv490KAEpvsi/+JM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742589357; c=relaxed/simple;
-	bh=Q4yJA3jsyp0Q05YHLWgkGPj0BYZnr/626JQJoRaup9Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uexQbz4aAgkA2NV4FV6RTs0nfn2BI2vLRBXVoOG74ARt9rpu/h7CqBd1vR6we+TqwY2BYO/EMPdCfcK8p8CTYmTjIxhHsWTOkS2QLQU78eawPJ1t6aspDWHOmIZ88dGlUNKwQlCYVaB034r55+HO7NC61Rap/JrXhY0K9DHb+nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk; spf=pass smtp.mailfrom=kernel.dk; dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b=MZQKcIkO; arc=none smtp.client-ip=209.85.166.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kernel.dk
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kernel.dk
+	s=arc-20240116; t=1742589382; c=relaxed/simple;
+	bh=yKL7IczPQuQF3SWeOBm0zCzXPd1dogWlb0noBZzcEIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oWEqlQM3bOLc/eeaLGAsp8a+PkB6w6/9V/ableuWkWrfIyuhIEcYi0v64D2Hv5+L1zx596RJtgm5dZKPB/qcSt5zABqsocAKxMoj3O28kSFjeiatJeScwfVARmiZHpbrVx7RVkubtgGxwEvqvZUzqvFzLjCT6E98QLYuAHSpce0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=SvnPMNI9; arc=none smtp.client-ip=209.85.166.99
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20230601.gappssmtp.com header.i=@kernel-dk.20230601.gappssmtp.com header.b="MZQKcIkO"
-Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-3d439f01698so11375755ab.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:35:55 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="SvnPMNI9"
+Received: by mail-io1-f99.google.com with SMTP id ca18e2360f4ac-85da20b2640so8287039f.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:36:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20230601.gappssmtp.com; s=20230601; t=1742589355; x=1743194155; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qvMwDu0BMSrh7CaSCaQYm2+c+HftuBgbOun19NXMMCQ=;
-        b=MZQKcIkODtlB8IzsiOOakT6x76IB4Yq1lgJYIKJSTEfoaBWSl+wJL0k7IvBWJnDZ/C
-         sRMiO2aGs0q36yGgrmHcpDsyuol45b/Ixhfn+eePULsLQdR7fznLuGjBvz+rBjB2iTSR
-         WomG4LprAGXddDy2JYJ46fcToSzGFiyeSw/NtomiMHWW9jBES0LQdHRbC+JZLluB5P3a
-         JPQREz4U8K1fJcmFBnSttbB2QZE+/eCdUX48UmYC/uE11GT0ieI9pSOi5alU/a243cmA
-         YJp5ZuKC+PmiS4NXhoLZiPMvz5ysXo3aUc5vqqv8jU8DpqxVGBS0DwctRuIWU/RsVSds
-         9RaA==
+        d=purestorage.com; s=google2022; t=1742589380; x=1743194180; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZqACgqSPAGulvpdL72lXsG7CJBHtcdgDXf09Xg+OLKQ=;
+        b=SvnPMNI9Epp1iaYHXAlblHY6Fe12hqndSRgL3OXPf4urDAsr4fNm9QfSm3HL+vaE2N
+         v2I+HVALn4cBr0c0k07w7XJQ8vhWLWSQD0KkyLiFOH50nMdshQ7PaZ2dHGYf412mc6py
+         T4Kiq9Fsm8cD4DVz0R1CwRVBTZNTdGWEkhr1AB3dl6llADs+r7yO60RrcrHrRw3b+U8Y
+         okS24QebzM+/NwMSXLJAr5YlEK+0l1Ouqroi78Z78LaVMHqRz5vY/1RElM/WTFg3m4S6
+         IFmJSDVqSV9VZ/xzPvrOIX9loWrdl46UexpjnaH1GFdIryqkfRVbb1l3JhkVg5eU6Q9z
+         c9bA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742589355; x=1743194155;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qvMwDu0BMSrh7CaSCaQYm2+c+HftuBgbOun19NXMMCQ=;
-        b=fND7pxXTVshfi5JAPenSK2UJE5q2L39feBxiBeLUiD0Lhj4WUg3R6FZ4ds8u4MIoQM
-         5vY1Q/eEJTUqQNqL3tR9DgXl++TRpOgmUNd0TbYqySwfsyhPFMCORytkaeNgnHeKsW6C
-         39VjznXTw0ujnognZ4tmNLVtgtoJafpWdpgolwwyzh2n4VcE3XjVEctfXGTctg0hl5RA
-         hTxwO22eMD0opUpIfBS2q8dN9Vx4aQabXworPaGGn6M0V2zqAO+DKmFol6oLtXToq1qm
-         jaKup0PThJTjRfBORoxJHoEs9tieJncdxdC0YpeJ1rV72Y8Sy8B6AiXiZ4FrHwvgR8NX
-         tFeg==
-X-Forwarded-Encrypted: i=1; AJvYcCWUljnG42Yo2gPnAWkRDKuoU5U2Zdf8l3zk3gxAHx4eJnDwottfqU/UsqZMtKb7h7Qd7Oj4OiKqegk6Ze8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YynGtLMNCZeYfz+rRHra/GFJ//Lzqwdv6wEt6QTAfktikBTcYtg
-	Z65RhSb8FJmiURpAc4LhHg/aM4rPl+K+LJQLvAFrQprgv0TDAvCN+HYozHdOGTc=
-X-Gm-Gg: ASbGncvZCkmB3+3/6RqoV3IIVCNBYLrw+ie5dEdJy8rGaR8ZrW+nHz8rFxNvw5IDTJT
-	FJlxaYY7mn4rTkMXcHbkUmVAZviy6DN2Twdh3G2nu8Awm8fOjdsFOok2e4JLPK3XV8yd0yRUZzP
-	tMcbnh/VzEfEX+GEocZXrdpg8tvEb6WY71pDWh1wUotEOTZkpUVl0/3zgaJZjx8lYorN172vXXc
-	akFzRo1LMKzwCUHvRpYzl6BKNdGtf9LngNAkQZ8fXToJOJHVU/qSZTbDLaa5EJUmC2WqUQbTiHM
-	7uxvWRvLK2DVsZWwa8iPd2btND5uQ9V94h6wotJCaw==
-X-Google-Smtp-Source: AGHT+IEPWzk5ry4zHWNFdi8KTg5KcDVgbTXsCl1DzYqeTt8WkJX5AIeUX7DfgyW/W2CDL0vQ6sVZlg==
-X-Received: by 2002:a05:6e02:1f01:b0:3d3:d1a8:8e82 with SMTP id e9e14a558f8ab-3d595f91c7emr52500135ab.9.1742589354635;
-        Fri, 21 Mar 2025 13:35:54 -0700 (PDT)
-Received: from [192.168.1.150] ([198.8.77.157])
-        by smtp.gmail.com with ESMTPSA id e9e14a558f8ab-3d59607ea6fsm6112915ab.24.2025.03.21.13.35.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 13:35:53 -0700 (PDT)
-Message-ID: <4e582b92-2f4d-4a0d-b479-3cf4f054bb5f@kernel.dk>
-Date: Fri, 21 Mar 2025 14:35:51 -0600
+        d=1e100.net; s=20230601; t=1742589380; x=1743194180;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ZqACgqSPAGulvpdL72lXsG7CJBHtcdgDXf09Xg+OLKQ=;
+        b=UWQPjv4qgqAhsa97gpQ+GT/O8iQSWy6PHHkqwcaE2kAStEzG1o85Gem921rbCp23aA
+         CLWV90ISBBhRCwEyaGMD8Hy7b45sAugrtwHyRlOQrnBvRTSeR9hp7ZAqn9YWX8O5ACYN
+         1C1I05rhA8z/CLDKxSuc2QU9wb3XvasbCf0egAT8kL/ONUvDNeJez2cBkKAoXNN+CePd
+         giiCzFv997D+OpDy2+34hNyOkF3s8cKpo7FZlf3DcPQjxCffQ+Ml3dJ2p/xcnhBxnW2c
+         iJ7Q6RfaVUZF6Lq5MYF6nIK/2+/CPra6qPLwMM4H4/AxRYd3VDMjUvaKERhKxM3HPasy
+         S1rw==
+X-Forwarded-Encrypted: i=1; AJvYcCVkiIbV/jXx+ei5ikQ/e76t3OW6Or2weN/sSyhoaGhCjOudS38XrGdV+L+LyCq65UwrNdWpQjdG8EyHCak=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWP6rjVd4MJNFWfJD8h4ZTf2ArGHvdJi2dLX4qB0kj3hiZqNcd
+	hC1hCi0/Ms85mM0IOFsNr5jQrfORBlpTiDFcJI4lVJD5szqXoLraJbdMo8ueAvgId7u17bo6VqS
+	Hlxe5g8ROtCPqFKryP0vD0MP79dZYY9fe
+X-Gm-Gg: ASbGncvQ4fgjHKwtngUS7plCtO1FlB9+c/25JlmYxKSDj6m5VbIDq21OZMC3Z8fHUU/
+	30j0d4xW3qzPm50BP4+DdLRDbspXaAMl7NB78A1OpI3OZxdNmyUe3SqAeS2ExgeW20soRjkHb2x
+	aTHQAvng0ho6o60zcYTb8u7oUzvAYUf+N8E6y26yEplZhv63aTlIHdNPZIS2SLcSHgpHLT6nkJ9
+	Bkt2wKa7UHQmDGK4BvKqpbHyOCUwg6escVxQWTAAJOkkmlrXtOBD7nJPZMSqpl7EXxjoC7pezoI
+	/x7y2Ux5tlMkeuM4SY02UYcEITW+Ti883vCN+LM5oOKDpzRO
+X-Google-Smtp-Source: AGHT+IFz/L/baFi88SI/B6AQo8HEeKlP34YeQ9tNfbIyl5YFOUJhPLitDbGUFcuADfHCVr0v83V3ri7ENB17
+X-Received: by 2002:a05:6602:2351:b0:85e:26b0:e7ac with SMTP id ca18e2360f4ac-85e2cc60442mr113217139f.3.1742589379924;
+        Fri, 21 Mar 2025 13:36:19 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.129])
+        by smtp-relay.gmail.com with ESMTPS id ca18e2360f4ac-85e2bb0a13csm9932339f.0.2025.03.21.13.36.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 13:36:19 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id C12AA3402DC;
+	Fri, 21 Mar 2025 14:36:18 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id BCA23E4195E; Fri, 21 Mar 2025 14:36:18 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH 2/3] nvme/ioctl: don't call blk_mq_free_request() in nvme_map_user_request()
+Date: Fri, 21 Mar 2025 14:36:03 -0600
+Message-ID: <20250321203604.3911446-3-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <20250321203604.3911446-1-csander@purestorage.com>
+References: <20250321203604.3911446-1-csander@purestorage.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC -next 00/10] Add ZC notifications to splice and sendfile
-To: Joe Damato <jdamato@fastly.com>, Christoph Hellwig <hch@infradead.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- asml.silence@gmail.com, linux-fsdevel@vger.kernel.org, edumazet@google.com,
- pabeni@redhat.com, horms@kernel.org, linux-api@vger.kernel.org,
- linux-arch@vger.kernel.org, viro@zeniv.linux.org.uk, jack@suse.cz,
- kuba@kernel.org, shuah@kernel.org, sdf@fomichev.me, mingo@redhat.com,
- arnd@arndb.de, brauner@kernel.org, akpm@linux-foundation.org,
- tglx@linutronix.de, jolsa@kernel.org, linux-kselftest@vger.kernel.org
-References: <Z9p6oFlHxkYvUA8N@infradead.org> <Z9rjgyl7_61Ddzrq@LQ3V64L9R2>
- <2d68bc91-c22c-4b48-a06d-fa9ec06dfb25@kernel.dk>
- <Z9r5JE3AJdnsXy_u@LQ3V64L9R2>
- <19e3056c-2f7b-4f41-9c40-98955c4a9ed3@kernel.dk>
- <Z9sCsooW7OSTgyAk@LQ3V64L9R2> <Z9uuSQ7SrigAsLmt@infradead.org>
- <Z9xdPVQeLBrB-Anu@LQ3V64L9R2> <Z9z_f-kR0lBx8P_9@infradead.org>
- <ca1fbeba-b749-4c34-b4be-c80056eccc3a@kernel.dk>
- <Z92VkgwS1SAaad2Q@LQ3V64L9R2>
-Content-Language: en-US
-From: Jens Axboe <axboe@kernel.dk>
-In-Reply-To: <Z92VkgwS1SAaad2Q@LQ3V64L9R2>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/21/25 10:36 AM, Joe Damato wrote:
-> On Fri, Mar 21, 2025 at 05:14:59AM -0600, Jens Axboe wrote:
->> On 3/20/25 11:56 PM, Christoph Hellwig wrote:
->>>> I don't know the entire historical context, but I presume sendmsg
->>>> did that because there was no other mechanism at the time.
->>>
->>> At least aio had been around for about 15 years at the point, but
->>> networking folks tend to be pretty insular and reinvent things.
->>
->> Yep...
->>
->>>> It seems like Jens suggested that plumbing this through for splice
->>>> was a possibility, but sounds like you disagree.
->>>
->>> Yes, very strongly.
->>
->> And that is very much not what I suggested, fwiw.
-> 
-> Your earlier message said:
-> 
->   If the answer is "because splice", then it would seem saner to
->   plumb up those bits only. Would be much simpler too...
-> 
-> wherein I interpreted "plumb those bits" to mean plumbing the error
-> queue notifications on TX completions.
-> 
-> My sincere apologies that I misunderstood your prior message and/or
-> misconstrued what you said -- it was not clear to me what you meant.
-> 
-> It is clear to me now, though, that adding a flag to splice as
-> previously proposed and extending sendfile based on the SO_ZEROCOPY
-> sock flag being set are both unacceptable solutions.
-> 
-> If you happen to have a suggestion of some piece of code that I
-> should read (other than the iouring implementation) to inform how I
-> might build an RFCv2, I would appreciate the pointer.
+The callers of nvme_map_user_request() (nvme_submit_user_cmd() and
+nvme_uring_cmd_io()) allocate the request, so have them free it if
+nvme_map_user_request() fails.
 
-I don't know what to point you at - you need an API that can deliver
-notifications, and I'm obviously going to say that io_uring would be one
-way to do that. Nothing else exists on the networking side, as far as
-I'm aware.
+Signed-off-by: Caleb Sander Mateos <csander@purestorage.com>
+---
+ drivers/nvme/host/ioctl.c | 31 ++++++++++++++++---------------
+ 1 file changed, 16 insertions(+), 15 deletions(-)
 
-Like Christoph said, struct kiocb is generally how the kernel passes
-around async or sync IO, which comes with a completion callback for IO
-that initially returns -EIOCBQUEUED, meaning the operation is started
-but not yet complete. Outside of that, yeah need some delivery
-mechanism, as you're generating two events per zero copy send here. You
-could obviously roll your own, good luck with that, or use the existing
-one.
-
+diff --git a/drivers/nvme/host/ioctl.c b/drivers/nvme/host/ioctl.c
+index 6c27d72e8cee..843371e6e1e2 100644
+--- a/drivers/nvme/host/ioctl.c
++++ b/drivers/nvme/host/ioctl.c
+@@ -126,40 +126,38 @@ static int nvme_map_user_request(struct request *req, u64 ubuffer,
+ 	int ret;
+ 
+ 	if (!nvme_ctrl_sgl_supported(ctrl))
+ 		dev_warn_once(ctrl->device, "using unchecked data buffer\n");
+ 	if (has_metadata) {
+-		if (!supports_metadata) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (!supports_metadata)
++			return -EINVAL;
++
+ 		if (!nvme_ctrl_meta_sgl_supported(ctrl))
+ 			dev_warn_once(ctrl->device,
+ 				      "using unchecked metadata buffer\n");
+ 	}
+ 
+ 	if (ioucmd && (ioucmd->flags & IORING_URING_CMD_FIXED)) {
+ 		struct iov_iter iter;
+ 
+ 		/* fixedbufs is only for non-vectored io */
+-		if (flags & NVME_IOCTL_VEC) {
+-			ret = -EINVAL;
+-			goto out;
+-		}
++		if (flags & NVME_IOCTL_VEC)
++			return -EINVAL;
++
+ 		ret = io_uring_cmd_import_fixed(ubuffer, bufflen,
+ 				rq_data_dir(req), &iter, ioucmd);
+ 		if (ret < 0)
+-			goto out;
++			return ret;
+ 		ret = blk_rq_map_user_iov(q, req, NULL, &iter, GFP_KERNEL);
+ 	} else {
+ 		ret = blk_rq_map_user_io(req, NULL, nvme_to_user_ptr(ubuffer),
+ 				bufflen, GFP_KERNEL, flags & NVME_IOCTL_VEC, 0,
+ 				0, rq_data_dir(req));
+ 	}
+ 
+ 	if (ret)
+-		goto out;
++		return ret;
+ 
+ 	bio = req->bio;
+ 	if (bdev)
+ 		bio_set_dev(bio, bdev);
+ 
+@@ -172,12 +170,10 @@ static int nvme_map_user_request(struct request *req, u64 ubuffer,
+ 	return ret;
+ 
+ out_unmap:
+ 	if (bio)
+ 		blk_rq_unmap_user(bio);
+-out:
+-	blk_mq_free_request(req);
+ 	return ret;
+ }
+ 
+ static int nvme_submit_user_cmd(struct request_queue *q,
+ 		struct nvme_command *cmd, u64 ubuffer, unsigned bufflen,
+@@ -198,11 +194,11 @@ static int nvme_submit_user_cmd(struct request_queue *q,
+ 	req->timeout = timeout;
+ 	if (ubuffer && bufflen) {
+ 		ret = nvme_map_user_request(req, ubuffer, bufflen, meta_buffer,
+ 				meta_len, NULL, flags);
+ 		if (ret)
+-			return ret;
++			goto out_free_req;
+ 	}
+ 
+ 	bio = req->bio;
+ 	ctrl = nvme_req(req)->ctrl;
+ 
+@@ -210,15 +206,16 @@ static int nvme_submit_user_cmd(struct request_queue *q,
+ 	ret = nvme_execute_rq(req, false);
+ 	if (result)
+ 		*result = le64_to_cpu(nvme_req(req)->result.u64);
+ 	if (bio)
+ 		blk_rq_unmap_user(bio);
+-	blk_mq_free_request(req);
+ 
+ 	if (effects)
+ 		nvme_passthru_end(ctrl, ns, effects, cmd, ret);
+ 
++out_free_req:
++	blk_mq_free_request(req);
+ 	return ret;
+ }
+ 
+ static int nvme_submit_io(struct nvme_ns *ns, struct nvme_user_io __user *uio)
+ {
+@@ -518,20 +515,24 @@ static int nvme_uring_cmd_io(struct nvme_ctrl *ctrl, struct nvme_ns *ns,
+ 	if (d.addr && d.data_len) {
+ 		ret = nvme_map_user_request(req, d.addr,
+ 			d.data_len, nvme_to_user_ptr(d.metadata),
+ 			d.metadata_len, ioucmd, vec);
+ 		if (ret)
+-			return ret;
++			goto out_free_req;
+ 	}
+ 
+ 	/* to free bio on completion, as req->bio will be null at that time */
+ 	pdu->bio = req->bio;
+ 	pdu->req = req;
+ 	req->end_io_data = ioucmd;
+ 	req->end_io = nvme_uring_cmd_end_io;
+ 	blk_execute_rq_nowait(req, false);
+ 	return -EIOCBQUEUED;
++
++out_free_req:
++	blk_mq_free_request(req);
++	return ret;
+ }
+ 
+ static bool is_ctrl_ioctl(unsigned int cmd)
+ {
+ 	if (cmd == NVME_IOCTL_ADMIN_CMD || cmd == NVME_IOCTL_ADMIN64_CMD)
 -- 
-Jens Axboe
+2.45.2
+
