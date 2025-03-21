@@ -1,115 +1,84 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA861D6DDA
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7CA23BE
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742567917; cv=none; b=aj3zmj8JxpomAz2CnxBfrH8o+4Nbl8bPgzLAdyIsYoJOOmkX3bUJocfBG7qaORbTIaHi6m9isK5ZRSbhl3jx07gtWp2zkIwg3eegnVmpp0Miq+YJHwO9fNfD4cyBAj3eCMPCz2pwLtcazg/+ndj/xlsj6e51scL6luDf0Xv5U9U=
+	t=1742567945; cv=none; b=eW7t2rxXw8CJyxHkTd452FB7xsFgtpChpOCec3XYXQBgxfIWiz8A+xCNT1FPH1gCZiVSqnB8Od3H/rbfD9QgO+RIE4ziDiqJPkJBJT5h9rCaKsg1vNZ6Y5nklhFrQM3aG/meV0uR7MU/KElkFn8AbcceT5G+j6dHrEvSKN/Cnj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742567917; c=relaxed/simple;
-	bh=somCsdwAZwSYpVOFZ7+NaJb7TDarJS/nC+HR7pvWjx0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MLpU7mRwt2sBHgDoljA7cAyl56WosYpoXoP2FoyjXf3w3pImFg3nOenMk9A6CFwwEqqVLKF+AWBB8l8pyLXyXl6Rt3ajUCgvdDVZNhZs3Crey6XvPZlEayNxofiVQmGxKxZic10PYOfHur0UOnIV74sK54r4B7BwtwpRoEBtkLc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=IbNbmAJ5; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1742567945; c=relaxed/simple;
+	bh=NCV1cJxcOeiaI+H+5yG6DqUsHaKoC9Jey0ChdsKpI9k=;
+	h=Message-ID:From:To:Cc:Subject:Date; b=r+3zUq5xrtkI8J3fliFWyp0uYjIiEXCNdNXngw8E1cg/JY6kvqNKOBP/rDkMWoQvJ5dE6L3SdjZiuQRDx8+wSNaYX+U3E1cgSDEXK1dGBdJn6HkIRh7+JwWoxvavg7Hkix76AA5Rs9NLWgVhqYcH4uHVb2aMI5xPqwoKSaAtNNE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUbHDr3D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IbNbmAJ5"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so316682166b.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:38:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1742567914; x=1743172714; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YpYeREYD441841zmxzfOu57tf5+TRBtE3JtUo8WB5k8=;
-        b=IbNbmAJ5ndgMTdBDPQ9/jYKcCSeQM3Ag+E8/WYkzwNjF9eIuUp6dWPZaxaTIss7Dry
-         HcKqx3rc9bGYXEgt76+9PchNyD/BJV5paYUxDZQsjvGlcUoD6wgy0AXcMr2fNHqAtmZU
-         0AajppGLYkfmmIrTttZ6c11pfOIl+YnjDroTU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742567914; x=1743172714;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YpYeREYD441841zmxzfOu57tf5+TRBtE3JtUo8WB5k8=;
-        b=Ha2LjX1KYvlFUP2B7Fxmemjc9EGfSbtO9jC0qylG8wCpzKB8KFUD9sYEHuTYVVAm6c
-         0FS/TjaiqCy8Vbo4akrVD3j31qSY3qxo/tfNMZ3guXvehGG/p6FarT/7qU3eFkWR/ood
-         BmXhYQlejk3l+vuBNRtOg1X/8LC0zIfpnNOhxRV/W6A9WkGSJmsEbPVsnJnCRtcf4I5i
-         56KPb69b+I9MOOVYe8+uA4Pbs1/52YJ9XucuDXqlqH+dtvq9YBmfL+vSXpU33nmxAQoL
-         HJb2n5NF7xcv9YLCPdpLz2slgNyWCEjpkQmZhc7JR8KNaqOPbWkCxIUgMdQDwVb/vig8
-         QIBA==
-X-Forwarded-Encrypted: i=1; AJvYcCV156tzi5ojlX7kH7LEEaruZagawX8WxuCpoojOxSV5u94nADpTXj2dllDeYllZ2EaEfzf0PcMzqq1ppmQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzaJffmebqcYxuEjG/zUHEsh12q4lNPUzcilbnvaBejw6Y1mZqz
-	mGlV6EElGJb6L5jQ3uqPvxRsofor7jcfTJ6ptW7FGaTlxvziTZdVVaE8RNXNTg==
-X-Gm-Gg: ASbGncvtzEQ6k/KhzwOFPYXuV02cWhTl5Peaug0uKPa8mgG7OTGWkq/sTEXjLj8eL5i
-	pgEMJymZ55TH5rUM7qHnQRbR5/Ce+DBRX8bneUqQ6wK05FUp4BiUTlrIuAv33iKF5PxwZxdaexS
-	m5viw9ufzfQ4xUGO2pslEzdQUCFAa1/8J2Hd5LEGqtTbXH7QXg18bcooaNwczC/c6bElWAKzk1D
-	R4Rm+nK43ag9NsN2C0doxqCFn94ZiC4BV91AUfTBJYRSYCwiPAu/mJnQL6UdRhu7FBlFu+NOHJY
-	kImv+y4yHPGdaujfO9f1x/eLqhxmoKGdpPJH4Aeca6RbhiLsjggRR7PUyH6yDSH01K+6n7yt0uK
-	NlbeRCLLF+RIFX74X5bS3OXKq6H4B6dteyIQ=
-X-Google-Smtp-Source: AGHT+IFx6Z5++sXoujB2L8zFX/kIAOeEopfZFF9EvYWaukAV92ezO0xWR/S1jldFyiEhLEo4ae0bLg==
-X-Received: by 2002:a17:907:3fa3:b0:ac3:bf36:80e2 with SMTP id a640c23a62f3a-ac3f211183amr353993066b.20.1742567913806;
-        Fri, 21 Mar 2025 07:38:33 -0700 (PDT)
-Received: from akuchynski.c.googlers.com.com (140.20.91.34.bc.googleusercontent.com. [34.91.20.140])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8d3d43sm165303566b.51.2025.03.21.07.38.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 07:38:33 -0700 (PDT)
-From: Andrei Kuchynski <akuchynski@chromium.org>
-To: Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-usb@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Benson Leung <bleung@chromium.org>,
-	Jameson Thies <jthies@google.com>,
-	Andrei Kuchynski <akuchynski@chromium.org>,
-	stable@vger.kernel.org
-Subject: [PATCH 2/2] usb: typec: class: Invalidate USB device pointers on partner unregistration
-Date: Fri, 21 Mar 2025 14:37:27 +0000
-Message-ID: <20250321143728.4092417-3-akuchynski@chromium.org>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-In-Reply-To: <20250321143728.4092417-1-akuchynski@chromium.org>
-References: <20250321143728.4092417-1-akuchynski@chromium.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUbHDr3D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32630C4CEE3;
+	Fri, 21 Mar 2025 14:39:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742567944;
+	bh=NCV1cJxcOeiaI+H+5yG6DqUsHaKoC9Jey0ChdsKpI9k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RUbHDr3Dujfg4IxQZii3RbgaATvIqvTBUCmLg55V30LI+5Kxpi0fFQ9zZsghWZorl
+	 vBlZ2OjVVRPDEFNuRRKuDenaYxkLqoV11hub/yNY2nUWJvC3cR7UVnaqe1e763cnp+
+	 TUGOheqqOZCZ6dS7dm/HFxKLS94Ni63bgxHGEBL0UJGL2RjIdVxmctMJe9Z5rP1WGh
+	 Y8ZkGAFvYPe9Jx4CoLxy2mrwOVjnusVV0zHeQBNmBQBafyXci/M8Ex/KqElCV+V/FF
+	 yGhh9YX5WOnYGJI4WquW54uNiJV9J0J5Kjj8vInTH1MiW7oOFjRo4bfENzDk7c3PpP
+	 xbmcFJh4Tabjg==
+Message-ID: <50c80a2096aa0f389fffb34dfffc82ba.broonie@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: [GIT PULL] regulator fixes for v6.14-rc7
+Date: Fri, 21 Mar 2025 14:38:53 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-To avoid using invalid USB device pointers after a Type-C partner
-disconnects, this patch clears the pointers upon partner unregistration.
-This ensures a clean state for future connections.
+The following changes since commit 7eb172143d5508b4da468ed59ee857c6e5e01da6:
 
-Cc: stable@vger.kernel.org
-Fixes: 59de2a56d127 ("usb: typec: Link enumerated USB devices with Type-C partner")
-Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
----
- drivers/usb/typec/class.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+  Linux 6.14-rc5 (2025-03-02 11:48:20 -0800)
 
-diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-index eadb150223f8..3df3e3736916 100644
---- a/drivers/usb/typec/class.c
-+++ b/drivers/usb/typec/class.c
-@@ -1086,10 +1086,14 @@ void typec_unregister_partner(struct typec_partner *partner)
- 	port = to_typec_port(partner->dev.parent);
- 
- 	mutex_lock(&port->partner_link_lock);
--	if (port->usb2_dev)
-+	if (port->usb2_dev) {
- 		typec_partner_unlink_device(partner, port->usb2_dev);
--	if (port->usb3_dev)
-+		port->usb2_dev = NULL;
-+	}
-+	if (port->usb3_dev) {
- 		typec_partner_unlink_device(partner, port->usb3_dev);
-+		port->usb3_dev = NULL;
-+	}
- 
- 	device_unregister(&partner->dev);
- 	mutex_unlock(&port->partner_link_lock);
--- 
-2.49.0.395.g12beb8f557-goog
+are available in the Git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.14-rc7
+
+for you to fetch changes up to b65439d9015024c37c6b8a17c0569ec44675a979:
+
+  regulator: rtq2208: Fix the LDO DVS capability (2025-03-17 12:45:37 +0000)
+
+----------------------------------------------------------------
+regulator: Fixes for v6.14
+
+More fixes than I'd like at this point, some of which is due to me
+cooking things in -next for a bit and resetting that cooking time as
+more fixes came in.
+
+ - Christian Eggers fixed some race conditions with the dummy regulator
+   not being available very early in boot due to the use of asynchronous
+   probing, both the provider side (ensuring that it's availalbe) and
+   consumer side (handling things if that goes wrong) are fixed.
+ - Ludvig Pärsson fixed some lockdep issues with the debugfs
+   registration for regulators holding more locks than it really needs
+   causing issues later when looking at the resulting debugfs.boot
+ - Some device specific fixes for incorrect descriptions of the RTQ2208
+   from ChiYuan Huang.
+
+----------------------------------------------------------------
+ChiYuan Huang (2):
+      regulator: rtq2208: Fix incorrect buck converter phase mapping
+      regulator: rtq2208: Fix the LDO DVS capability
+
+Christian Eggers (2):
+      regulator: dummy: force synchronous probing
+      regulator: check that dummy regulator has been probed before using it
+
+Ludvig Pärsson (1):
+      regulator: core: Fix deadlock in create_regulator()
+
+ drivers/regulator/core.c              |  88 ++++++++------
+ drivers/regulator/dummy.c             |   2 +-
+ drivers/regulator/rtq2208-regulator.c | 216 +++++++++++++++++++---------------
+ 3 files changed, 178 insertions(+), 128 deletions(-)
