@@ -1,135 +1,109 @@
-Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+Received: from butterfly.birch.relay.mailchannels.net (butterfly.birch.relay.mailchannels.net [23.83.209.27])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A43531876
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:33:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742524396; cv=none; b=THud+0uhrhCZ45y9Ems7Q33IpYIBg7majk7iTMp9IcTNU0ccWfNhtWiyxduiws8kvJeoji84xJRtsR33XiKNdonGy1T0FXhiCUnM4m+DhJnHJRrFVW1HEjkU0I+wqWZHqQTztbT0i3ijP0sVDoo/snRC4XdLyNJG1CoarzgBW20=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742524396; c=relaxed/simple;
-	bh=fh8/hKnhmAdMmulO3dOA/fUcq3ROAQN7CvfWvXaT2R0=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=C7zohtygyL82h1NqOWOng7ZhuU9DcYJAkHBcn5ZSEdNi+LNSdKA08Wk7Y+9NYcC//Qc/Ubq61F39spBkYSUplyKuDlssekm6S2gPdzhuxP2A05uVJd6H5apDqrmflv4sYuc5klEy8i7K5EPYCgoWpvCEwkkFkpYNUTD9n/FHiQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=G7VBacue; arc=none smtp.client-ip=185.125.188.122
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B312F208A7;
+	Fri, 21 Mar 2025 02:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.209.27
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742524462; cv=pass; b=UgNgbGufOK+nmUvb6/4ywGW5XBc47/3+NCcYbdi5u+z/PHy/AJq+xrOGqhU1QHVM3NiEzS6I/SK96myvTowWGREtPxIJd/y9GSDD3BAD/KVlslN8Ssv0kLos0L4KiqSA4/1wHksnRcE6Ssum+vzGk1bmAqS5ZO/hvSpcT16Hq7g=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742524462; c=relaxed/simple;
+	bh=hZXi0UZd5qs65yJy2Fr/zycLpmzQdjI05wB+uU6qyjE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bX20fM91WnC6eMYm2vKWfgTN9YwTMboeFbjXK7/IoDTTclSa/HbSum6ZxV26M4URAdlw3HUULB49pPwLurvk2GqSeilewnydyIYE8L0UR+ULNTvZZxvCr3x9e1dOt9NwAPgx2/pO4HwpIqrxnK0+D75mWQddtWzWcKZe52PyXbE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net; spf=pass smtp.mailfrom=stgolabs.net; dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b=lW9RqoA8; arc=pass smtp.client-ip=23.83.209.27
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stgolabs.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=stgolabs.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="G7VBacue"
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com [209.85.214.199])
+	dkim=pass (2048-bit key) header.d=stgolabs.net header.i=@stgolabs.net header.b="lW9RqoA8"
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id EF9933222C9;
+	Fri, 21 Mar 2025 02:14:45 +0000 (UTC)
+Received: from pdx1-sub0-mail-a223.dreamhost.com (100-114-54-169.trex-nlb.outbound.svc.cluster.local [100.114.54.169])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 657AD322033;
+	Fri, 21 Mar 2025 02:14:45 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1742523285; a=rsa-sha256;
+	cv=none;
+	b=HujqnApNF73sKMFZX3jMarr0MjXmn9Jh7L5AsqLLBw9D4DDbW2m2a/mJPScR/kH28Vx8mt
+	jN/UY5oAnQoRZS+rmFfydigSyE0pFuK0NBwKdZiEHrEwOinIK6kAivo7cUTPgDkOF5CP3i
+	Oa4IT/WAH0NqaYC5/EAFAgEeI/WjSuaIK4nvtw4GDkkChAJhX8ahJ+5dSMOO0aVVsxSqpN
+	69ung1i0EYprZcR4Uz7jX8cKg36/9NVE5xMWVj66yT2pFd7IUwdxw3jDScuZDQut5LgfAw
+	tgdyIksYgH/c5qZIqGTVA3c2ntpAhIFTFM4DQESForElKfRJxBNffGPh4eQfNQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1742523285;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=hZXi0UZd5qs65yJy2Fr/zycLpmzQdjI05wB+uU6qyjE=;
+	b=HbBCpAuBlZKgmKDSAOxvVO9LEwGdBHJnTqzjLr2Xr9MU0rFDofiIw+74t9dzbGcVa0i64d
+	yBbx1Ns1T7onSti4Aq1NtYxPz3TjKGqQ4mgqkiAJ3TLsdYb2pUJwmntRErQBpLAFbxeS61
+	yJrdsr8rb3n0eWku3ZWN7zy9lbvE1vsmr4s9fv/ALEhTpKixh3k7H93sw+Xe0xoypy913h
+	jraHDP3EVttyo/5jgpNLWyUK6A8bHOB6hP3k50XM04nxyp1pPwHJFr1Uijf6i7Yi6rKST3
+	k9PPNlIopZOlbPnIHMHwG5dRjbeYXqJHtBtpzxGgXXdGEvFKSAzprhSG7JAVqQ==
+ARC-Authentication-Results: i=1;
+	rspamd-74d566c845-rqlrf;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=dave@stgolabs.net
+X-Sender-Id: dreamhost|x-authsender|dave@stgolabs.net
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|dave@stgolabs.net
+X-MailChannels-Auth-Id: dreamhost
+X-Hook-Trade: 400a8b9548a43eda_1742523285763_2357163051
+X-MC-Loop-Signature: 1742523285763:3385229739
+X-MC-Ingress-Time: 1742523285763
+Received: from pdx1-sub0-mail-a223.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.114.54.169 (trex/7.0.2);
+	Fri, 21 Mar 2025 02:14:45 +0000
+Received: from offworld (ip72-199-50-187.sd.sd.cox.net [72.199.50.187])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	 key-exchange ECDHE (P-256) server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 4710C3FCC7
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:33:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1742524384;
-	bh=yGdWxK9JVirSn2lLRI6kllOEuz1GJUXaDgPsY8xB3Nc=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:In-Reply-To;
-	b=G7VBacueHBf7j1V+0EYTbxRmcoJVUOtLDBFxh7oxQUuXALmXATwit/UKk2JCWP28f
-	 2FFDnP/rLydtR+c3GjyelhnD48WAbIUIvtik14Qs5Ptg390ButZ+IM3njY6filITA8
-	 9zjvnGCCaPlnLWDTwMfxhGMAUiZIn2XDrCxj2rEchGKoPHRkjqLs5blM8hzRXX+eaR
-	 2sI2Kcc6lCjOtsNJWgsELyFSUT2o1ggZl/Hss8gcqsRSc/MNySINWf0vd3oF78cBuL
-	 BgyB5Q19bgZ+MW7npzq9MD526XXIJUQ/KgWHBvTB+zdMzIdP1Ps3PEaTz9OPaYF22m
-	 hdS0kPStG1QAw==
-Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-22403329f9eso19311605ad.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 19:33:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742524383; x=1743129183;
-        h=in-reply-to:content-disposition:mime-version:references
-         :mail-followup-to:message-id:subject:to:from:date:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=yGdWxK9JVirSn2lLRI6kllOEuz1GJUXaDgPsY8xB3Nc=;
-        b=iylGNwB8alOlBmxDlhdDGqc8ulbINildwijAFdgpFPw7O+zZzz7VpBi79kaN4rBdhe
-         8X5nKQWoW5/OFTTHJjJ5oRpVrXX36yOjpiZLlboyZY4D3k6SO/dtsU7xTkJustgzLWio
-         39dTbcfRLSxOlxfdZ1RIZSc2KE90Bivaq9xlowSC8tzFplRC7HTDbbYpjMwPB93rR0Ch
-         EZLtDFsBrrezdjNyhjVzDvfqrwKU2rho2Amidft9XHsj9Tu9KxSb7M8EUiGkLPSe9Y1m
-         uYIxpIrtf0PyzeMfGLjOi+pyQ5tHQz6suBxoExhfiwo7bx23ZCsVgQQw6tePWKbJKAgQ
-         vWkQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW6yPsIKjFACtLxckjdLNxSgZXbo+uZB37w0IA9lSrfv+0Svq/xrQ89IQPcVG6BTuAa+wkGlRLTkeyggYU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzbnKR3Ic5I+iVhrxYhUd74gldP7bTqRd2149sFgasRJwToiRSZ
-	W3D4gWtA8tKZRYqpEyizl9TW8FaPPybjsVgkF5e4zmrPg7BDV+uVpq9LO3Lhv5odJD+XBUmIMcO
-	xZhxrGbPyJwtSAV8EGcdq9zRFZmaQ6MI/b/2qn5z2D9TKOrO1HNNzjxNWq95HA2N4iUrybwLIA0
-	psnA==
-X-Gm-Gg: ASbGncvFd/6+TkhGzuIHNTm3msefYpF6ewYTyVKlwaXv2XvIPqHuUn+/frHchUfUFhz
-	sHwyJ9EU8FxEwGrNgpfKtJKpXrMOPrXswqzFId9J6AUIbl1yARCcZeFhXeWZnIG4ZgtCr7B9n9t
-	SCzgpBgql5+Xx2ENvsuYg2Ggru+xmAw41ZA7/xm3sRG2rGihrkbZ/N7qo15k9fCW0+ttsnh7Fzu
-	X9FkHeVT9FRbPQXQ7Ion7uo1mXoLelW1MHueqbsUx+CYadBhLkLS9Ql4KX+ubkHyR6uAVDZG9I3
-	RffO71xaDPw0gRdi+vrynFVOxP3L7eCJUbKSNs+gzw+nG+GfnRy2FXtEBffKGm+FuPM=
-X-Received: by 2002:a17:902:e78f:b0:224:c46:d162 with SMTP id d9443c01a7336-22780c7bfecmr26407565ad.20.1742524382842;
-        Thu, 20 Mar 2025 19:33:02 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEGOUGS7kWShHwzPKCmuY0RVOFosLtvfv77lN3gqgOkwEjIa7sd9qLWWEZv2O+6vYApUGXhmw==
-X-Received: by 2002:a17:902:e78f:b0:224:c46:d162 with SMTP id d9443c01a7336-22780c7bfecmr26407305ad.20.1742524382384;
-        Thu, 20 Mar 2025 19:33:02 -0700 (PDT)
-Received: from acelan-precision5470 (220-135-95-34.hinet-ip.hinet.net. [220.135.95.34])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f39692sm5535345ad.44.2025.03.20.19.33.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Mar 2025 19:33:01 -0700 (PDT)
-Date: Fri, 21 Mar 2025 10:32:57 +0800
-From: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>
-To: Jiri Kosina <jikos@kernel.org>, 
-	Benjamin Tissoires <bentiss@kernel.org>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] HID: quirks: Add quirk for another Chicony Electronics
- HP 5MP Camera
-Message-ID: <sgvhxwvrylxdev77hb4hlfcviopljj3i64vempkxaigioyvcki@2fgjvotmp6d4>
-Mail-Followup-To: "Chia-Lin Kao (AceLan)" <acelan.kao@canonical.com>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, 
-	linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250321022540.4016923-1-acelan.kao@canonical.com>
+	(Authenticated sender: dave@stgolabs.net)
+	by pdx1-sub0-mail-a223.dreamhost.com (Postfix) with ESMTPSA id 4ZJmH85SQ3zcs;
+	Thu, 20 Mar 2025 19:14:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=stgolabs.net;
+	s=dreamhost; t=1742523285;
+	bh=hZXi0UZd5qs65yJy2Fr/zycLpmzQdjI05wB+uU6qyjE=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=lW9RqoA8PJJFhdE+iy/wd5GPM6H2tpcI6J1gVtaxfIzkYLbb29RwrtV9YmRvpfvsJ
+	 evVgXMoFuiRjMj9ofHo+BbgQ2m8G3t9PCIVzoop+p3PKC1xMBQgAOkkTYXzok1i2AU
+	 gMvyjg6cMP0BhlhCAG4G99SxZyLucgKt7lhf9xZAGbkPH0Ix5ngiMKVZ1tcaX1OQ6Q
+	 dWB5yWwhOKkQJSI6Cr6cAupnEN0rqQPx5RRlZKE9rM3z50bH1g8rh4rZqD4gP2goXk
+	 k/QsHRrXJoE14o3onkSs1bc0LUIOd4lpXE+e0ysNkrevqiG7465FXjNWt6cjnJPgJk
+	 DGJFw838tiznA==
+Date: Thu, 20 Mar 2025 19:14:41 -0700
+From: Davidlohr Bueso <dave@stgolabs.net>
+To: Li Ming <ming.li@zohomail.com>
+Cc: jonathan.cameron@huawei.com, dave.jiang@intel.com,
+	alison.schofield@intel.com, vishal.l.verma@intel.com,
+	ira.weiny@intel.com, dan.j.williams@intel.com,
+	linux-cxl@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC Patch v1 0/3] Fix using wrong GPF DVSEC location issue
+Message-ID: <20250321021441.vdmo5txhvb6kya3a@offworld>
+References: <20250319035516.222054-1-ming.li@zohomail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20250321022540.4016923-1-acelan.kao@canonical.com>
+In-Reply-To: <20250319035516.222054-1-ming.li@zohomail.com>
+User-Agent: NeoMutt/20220429
 
-On Fri, Mar 21, 2025 at 10:25:40AM +0800, Chia-Lin Kao (AceLan) wrote:
-> The Chicony Electronics HP 5MP Camera (USB ID 04F2:B824) reports a HID
-> sensor interface that is not actually implemented. Attempting to access
-> this non-functional sensor via iio_info causes system hangs as runtime PM
-> tries to wake up an unresponsive sensor.
-> 
-> Add this device to the HID ignore list since the sensor interface is
-> non-functional by design and should not be exposed to userspace.
-We found another Chicony device with the same issue.
-Please apply this patch after the previous submitted one.
-Thanks.
+On Wed, 19 Mar 2025, Li Ming wrote:
 
-https://lore.kernel.org/lkml/20250312063532.551938-1-acelan.kao@canonical.com/T/
-> 
-> Signed-off-by: Chia-Lin Kao (AceLan) <acelan.kao@canonical.com>
-> ---
->  drivers/hid/hid-ids.h    | 1 +
->  drivers/hid/hid-quirks.c | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
-> index 5fdea9116a3e..554dbed3f3ed 100644
-> --- a/drivers/hid/hid-ids.h
-> +++ b/drivers/hid/hid-ids.h
-> @@ -298,6 +298,7 @@
->  #define USB_DEVICE_ID_CHICONY_TOSHIBA_WT10A	0x1408
->  #define USB_DEVICE_ID_CHICONY_ACER_SWITCH12	0x1421
->  #define USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA	0xb82c
-> +#define USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA2	0xb824
->  
->  #define USB_VENDOR_ID_CHUNGHWAT		0x2247
->  #define USB_DEVICE_ID_CHUNGHWAT_MULTITOUCH	0x0001
-> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
-> index 452fac15550b..91b3d121bb1f 100644
-> --- a/drivers/hid/hid-quirks.c
-> +++ b/drivers/hid/hid-quirks.c
-> @@ -371,6 +371,7 @@ static const struct hid_device_id hid_have_special_driver[] = {
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_ASUS_AK1D) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_ACER_SWITCH12) },
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA) },
-> +	{ HID_USB_DEVICE(USB_VENDOR_ID_CHICONY, USB_DEVICE_ID_CHICONY_HP_5MB_CAMERA2) },
->  #endif
->  #if IS_ENABLED(CONFIG_HID_CMEDIA)
->  	{ HID_USB_DEVICE(USB_VENDOR_ID_CMEDIA, USB_DEVICE_ID_CM6533) },
-> -- 
-> 2.43.0
+>But I am not sure if all dports under a same port will have same
+>configuration space layout, if yes, that will not be a problem. If I am
+>wrong, please let me know, thanks.
+
+Yes, when caching the dvsec was suggested, it was my assumption that the
+config space would be the same.
+
+Thanks,
+Davidlohr
