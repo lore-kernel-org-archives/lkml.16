@@ -1,139 +1,68 @@
-Received: from smtp-out2.suse.de (smtp-out2.suse.de [195.135.223.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F4613AD38
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF0378F30;
+	Fri, 21 Mar 2025 14:17:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742566577; cv=none; b=FUkKZh652dE/MLOJt4+NKlPXcY1XCizzkP79KY0MYrfAnZf9BCMRq2ns1JepTTfwtJwoNLCxBel6eDExMlPsaNv3iIr5kW13TQJ6s/upKFXdRHq+3a7Gg0gxeREgrBDA8SSADh2DPvAqktucZ4i/1Br+87MbuieRWdSb9JGqlKE=
+	t=1742566624; cv=none; b=YXmld0baVNe3/bgOXtULTAvBC5xW3N9jBkGceMkhe1ppd7N+WSVQ1KZKiCZP66WaiEaIYlTKOpaxlLXm0O/vqRERVzLXuGbqqN5CXFUjy0A9JdWGAjr5ydTGkTjuirkd3zBWB3UA/aGb1ZOKvQ2O9E78FbnVp97nnKAIDIlZ8vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742566577; c=relaxed/simple;
-	bh=XhV9HMs0pNleIbsmmnAAfU/ymXlMZd0p/SE1TQewLXI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gwlKUbn47yZemykSl7rhLn0TXetsJSPXmwXwq6zZ1f+n3N5am64Z1aYMCJu9mQvoEmj8z3ZdY8m9Yj7ta+EffQmFzzjkGjk8ZwCt15LzTBR2T75SBiYsgdY4ilcvW/vrm+0DFoKv7B1WRLbVBBfNwzGi1AOb20ut7FSbXqYVbpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Kg4YUDwq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c+lekYuW; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=Kg4YUDwq; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=c+lekYuW; arc=none smtp.client-ip=195.135.223.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1742566624; c=relaxed/simple;
+	bh=PPVA1fNAUhdDaHasRrNPO4YX0KSbv/bRNVmd+tmnrbQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BH//xq6cI9jGaElkD032w2d1yWd2SR7rGDl7OwgpLw+LzrUHCJj4BY2a8hYXgFvnvu79sxhT7ZInko+EAM3K4UA3fxaQivKt4+FemOoeZgL2LOV8tjWaFs34ghdiO0L2XIC5maHdR8bylM+67QJnQ/dgQMA/ra1UnlEzssdrlZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LbpPINaL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Kg4YUDwq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c+lekYuW";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="Kg4YUDwq";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="c+lekYuW"
-Received: from imap1.dmz-prg2.suse.org (unknown [10.150.64.97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out2.suse.de (Postfix) with ESMTPS id 7EAB51FEEF;
-	Fri, 21 Mar 2025 14:16:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742566573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7+jBj4B5vc20HmZfhqTDcfMyY8bZxeLupkiMIpuVn60=;
-	b=Kg4YUDwqBajqcf2HB7uFrBDNPMBZKEbjRoRUaEcBPXqcM9HP+9LXCeF7+YstB784ogSRQo
-	/Z9ypV60U6oF0717GrImHakVPIBvz8nBEbzcGE+mpOQxsDvDTv3+VtF/V8M6dD8f2hfoRf
-	IGcSCUcaMxWW5XYGE6LWoMNsXAfNvU0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742566573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7+jBj4B5vc20HmZfhqTDcfMyY8bZxeLupkiMIpuVn60=;
-	b=c+lekYuW/fH5RmtoidjfFyQRWAp06Pvh71Udey3hIOuB4NDMMH49d4UEcCi1d0q+oS9Vo5
-	obu0Da7JqwU6BsDQ==
-Authentication-Results: smtp-out2.suse.de;
-	none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1742566573; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7+jBj4B5vc20HmZfhqTDcfMyY8bZxeLupkiMIpuVn60=;
-	b=Kg4YUDwqBajqcf2HB7uFrBDNPMBZKEbjRoRUaEcBPXqcM9HP+9LXCeF7+YstB784ogSRQo
-	/Z9ypV60U6oF0717GrImHakVPIBvz8nBEbzcGE+mpOQxsDvDTv3+VtF/V8M6dD8f2hfoRf
-	IGcSCUcaMxWW5XYGE6LWoMNsXAfNvU0=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1742566573;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7+jBj4B5vc20HmZfhqTDcfMyY8bZxeLupkiMIpuVn60=;
-	b=c+lekYuW/fH5RmtoidjfFyQRWAp06Pvh71Udey3hIOuB4NDMMH49d4UEcCi1d0q+oS9Vo5
-	obu0Da7JqwU6BsDQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id 031F913A2C;
-	Fri, 21 Mar 2025 14:16:12 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id 1M5UOax03WdoewAAD6G6ig
-	(envelope-from <hare@suse.de>); Fri, 21 Mar 2025 14:16:12 +0000
-Message-ID: <b3645684-fbb7-4f8c-b702-ccb803cbda9a@suse.de>
-Date: Fri, 21 Mar 2025 15:16:12 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LbpPINaL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9E85C4CEE9;
+	Fri, 21 Mar 2025 14:17:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742566624;
+	bh=PPVA1fNAUhdDaHasRrNPO4YX0KSbv/bRNVmd+tmnrbQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LbpPINaLM2qWYebZ2KO9melSvj5M0Dce+2UJzyhB3rmjUWoYG4LAMBkUQKbTojCtw
+	 IYwbFau76BNx7AAMTEBDtehH5+ChpUJd5kWRQYastI44o2n9W7xnd/8yItb2KS1rN8
+	 goxhqdGQ+8sipzT41KFOc0iIQFZk75KdjkQ4QqS1+ydo7a7ArWNbxtZr5qS9yzbbnJ
+	 FfoQPDvqau9dPNHMrakse3IJn0cv0qyPaqY/rSEhrbKS1eTEsaEwo92r4xrPt1A5zJ
+	 q7ZLTlsM4/1NdR6kmrjpGvihmH8wWtYEQ8QdngRFGzetWJIrYJrciwTtdDfbijTRcV
+	 NMcGRhpFsyvLw==
+Date: Fri, 21 Mar 2025 15:16:58 +0100
+From: Danilo Krummrich <dakr@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org,
+	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
+	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
+	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
+	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] rust: device: implement Device::parent()
+Message-ID: <Z9102vdwS0RTwAP7@pollux>
+References: <20250320222823.16509-1-dakr@kernel.org>
+ <20250320222823.16509-2-dakr@kernel.org>
+ <2025032018-perceive-expectant-5c48@gregkh>
+ <Z90rlKC_S5WQzO8P@pollux>
+ <Z91joggxxBh3e0d8@pollux>
+ <2025032149-erasure-halt-d179@gregkh>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/18] nvmet-fcloop: replace kref with refcount
-To: Daniel Wagner <wagi@kernel.org>, James Smart <james.smart@broadcom.com>,
- Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
- Chaitanya Kulkarni <kch@nvidia.com>
-Cc: Keith Busch <kbusch@kernel.org>, linux-nvme@lists.infradead.org,
- linux-kernel@vger.kernel.org
-References: <20250318-nvmet-fcloop-v3-0-05fec0fc02f6@kernel.org>
- <20250318-nvmet-fcloop-v3-2-05fec0fc02f6@kernel.org>
-Content-Language: en-US
-From: Hannes Reinecke <hare@suse.de>
-In-Reply-To: <20250318-nvmet-fcloop-v3-2-05fec0fc02f6@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Spam-Level: 
-X-Spamd-Result: default: False [-4.30 / 50.00];
-	BAYES_HAM(-3.00)[100.00%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_TLS_ALL(0.00)[];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	RCVD_COUNT_TWO(0.00)[2];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[imap1.dmz-prg2.suse.org:helo,suse.de:email,suse.de:mid]
-X-Spam-Score: -4.30
-X-Spam-Flag: NO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2025032149-erasure-halt-d179@gregkh>
 
-On 3/18/25 11:39, Daniel Wagner wrote:
-> The kref wrapper is not really adding any value ontop of refcount. Thus
-> replace the kref API with the refcount API.
+On Fri, Mar 21, 2025 at 06:09:06AM -0700, Greg KH wrote:
+> On Fri, Mar 21, 2025 at 02:03:30PM +0100, Danilo Krummrich wrote:
+> > So, maybe we should make Device::parent() crate private instead, such that it
+> > can't be accessed by drivers, but only the core abstractions and instead only
+> > provide accessors for the parent device for specific bus devices, where this is
+> > reasonable to be used by drivers, e.g. auxiliary.
+> > 
 > 
-> Signed-off-by: Daniel Wagner <wagi@kernel.org>
-> ---
->   drivers/nvme/target/fcloop.c | 37 +++++++++++++------------------------
->   1 file changed, 13 insertions(+), 24 deletions(-)
-> 
-Reviewed-by: Hannes Reinecke <hare@suse.de>
+> That sounds reasonable, thanks!
 
-Cheers,
-
-Hannes
--- 
-Dr. Hannes Reinecke                  Kernel Storage Architect
-hare@suse.de                                +49 911 74053 688
-SUSE Software Solutions GmbH, Frankenstr. 146, 90461 Nürnberg
-HRB 36809 (AG Nürnberg), GF: I. Totev, A. McDonald, W. Knoblich
+Cool, I will drop the patch from this series then, since when being crate
+private it needs an #[expect(unused)] until actually being used. So, I rather
+add it to the auxbus series.
