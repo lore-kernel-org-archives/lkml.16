@@ -1,106 +1,140 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA46B1FC7D9;
-	Fri, 21 Mar 2025 10:35:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D8778F5B;
+	Fri, 21 Mar 2025 10:35:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742553318; cv=none; b=JAv/f1+k50vZLOjiZM/P+hSUkfgUw6C0DiZ0wU/z6TFn8wJlHj0+ogva/OVdRwGMfQ7nhWVBC6qv7K0eslq9qhkveZpBdnbbmGyy+8YadEEi9NcDy0ZE0CgtXcXqcwGXPtHn/4VsOxZSDCxOD1+Xl8o1IA6FEcNEDaDbP/iUrsE=
+	t=1742553330; cv=none; b=aewxmlJaOq5qZN9uH9r/CDYwH7txYENuIB504a/2Ha2qimVnkW9Ndw+cwQt/ElgQMr9+TacBYK1td0/6UvIm5aA4AEKlzOY2y6tZPqc2YDXl1ydD8i2hP5fylq/qYrKdg/QVSuP+RP8jgmNrD+lFzQU2Re9gNY7Vy2MRmmeCiww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742553318; c=relaxed/simple;
-	bh=MVSVPmZLeZXiQYxzzG8ovcZb+UVA+GGalY06rOu+Kfs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TlRiYDntXyTasRjYlVxyb9WiSXcgqxwP7oyZXOiqj/KT9IYw6OLvmLwgIp3EAUPCh0JYv1nxUeijD1Yb+syAARgaeEhAwJ0pMrJZQgSFb28sy5Ru+AyjZAHYkdWyZq7WJRxNCcJbSmEecglKtY6vAdIbfPryMQnChDVqXDmddU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=CeSI6YTZ; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742553330; c=relaxed/simple;
+	bh=M38TozFdZmDwbMggCWzdf6+Uy65GEd34MS0QwbTZJZc=;
+	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
+	 Message-Id:Subject; b=bjVksbcRj1mhzJ5Si5ZBKG1MOVaZuuCxOKYZuSAp4kIBSXL8BdCy92YSmKfx0WKrXAirk7n6SylaMYJivBITyiGf2s173Va+YwprwDO2XBnG3O35+mw9BAEokBqq/asdHk8o7HI1Gp8n/n2qAyB0lfFg9jOzeU8f4QSsdUuUFyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2E3Xc0i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CeSI6YTZ"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 05FAD432C1;
-	Fri, 21 Mar 2025 10:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742553307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=co8JDmZx4HmArnDvcnRVxtXy60X141/SmNungt+YCYA=;
-	b=CeSI6YTZlyjSoGnwVyaPrxNXGMcD0MVY7JCZqknxbNudjZRVwShUwplGqX/Rc6KTLWyad/
-	PeMmQE67B3ZVIvVmQkFb/eOeRRoCq+GGLkA1CDqgb+O5VYFg7SVQ3HSfFHIIsetfiZnCwS
-	DR0nW7NmN63AbrL/Lc57umqyo4KL4buT+yzTd+/gj5+agAZP66mSZKO6JbN+k83dzse054
-	+5JbjHRIDf8xbmvB5IjrGyBCPK8bKqvyuEl9kp6Qt9Otz6uZl9IBvX3R3yX07HBtTHxnPd
-	4EHidxqS7qsPpAVfmuE4YL7vMk5XKkIZEmANEoyjRWsSiPIS/ejCrC56+RLvjA==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-arm-kernel@lists.infradead.org,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	Simon Horman <horms@kernel.org>,
-	alexis.lothore@bootlin.com,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Subject: [PATCH net-next] net: stmmac: Call xpcs_config_eee_mult_fact() only when xpcs is present
-Date: Fri, 21 Mar 2025 11:35:01 +0100
-Message-ID: <20250321103502.1303539-1-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2E3Xc0i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C97DC4CEE3;
+	Fri, 21 Mar 2025 10:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742553329;
+	bh=M38TozFdZmDwbMggCWzdf6+Uy65GEd34MS0QwbTZJZc=;
+	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
+	b=P2E3Xc0i0Sk5jGWUFUfaZDF8yPFrugsZoR5m5uFXw6JGMB1qT4FrSCUZimP44PjQB
+	 5w/7CM/cM0+OQut8Y1qrXPPeKJhpn9SjLCqsbVezuGmHyR2aBI4LyLAAn6yujp7Z1p
+	 w/MyIX5Q2rKSvoM/d/UNj+0dV0EV/bKQejOfFT+lf5kR+bKSvYmNAKH40kgBg7os4K
+	 5eZQLBH4msUkmXQs502Cou46mS1ZMJVhHftYe71iSiwR/VB3N1xWdJEXka0cIHoNQp
+	 Zx7PBP17DLctq3mFU1oBeTkPAnZ+3SWhiESFDyrG2aZUStBW4CUcR8WCoQqZAVh4l9
+	 jomkRFy0kUHIA==
+Date: Fri, 21 Mar 2025 05:35:28 -0500
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedtkeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffoggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhephedtheeufeeutdekudelfedvfefgieduveetveeuhffgffekkeehueffueehhfeunecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudekpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmrgiiv
- ghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
+From: "Rob Herring (Arm)" <robh@kernel.org>
+Cc: Nitheesh Sekar <quic_nsekar@quicinc.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ 20250317100029.881286-2-quic_varada@quicinc.com, 
+ Varadarajan Narayanan <quic_varada@quicinc.com>, devicetree@vger.kernel.org, 
+ linux-pci@vger.kernel.org, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Bjorn Helgaas <bhelgaas@google.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, linux-phy@lists.infradead.org, 
+ linux-kernel@vger.kernel.org, 
+ Sricharan Ramabadhran <quic_srichara@quicinc.com>, 
+ Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ linux-arm-msm@vger.kernel.org, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>
+To: George Moussalem <george.moussalem@outlook.com>
+In-Reply-To: <20250321-ipq5018-pcie-v5-1-aae2caa1f418@outlook.com>
+References: <20250321-ipq5018-pcie-v5-0-aae2caa1f418@outlook.com>
+ <20250321-ipq5018-pcie-v5-1-aae2caa1f418@outlook.com>
+Message-Id: <174255332861.2810991.11878697286839237760.robh@kernel.org>
+Subject: Re: [PATCH v5 1/6] dt-bindings: phy: qcom: uniphy-pcie: Add
+ ipq5018 compatible
 
-Some dwmac variants such as dwmac_socfpga don't use xpcs but lynx_pcs.
 
-Don't call xpcs_config_eee_mult_fact() in this case, as this causes a
-crash at init :
+On Fri, 21 Mar 2025 13:09:50 +0400, George Moussalem wrote:
+> From: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> 
+> The IPQ5018 SoC contains a Gen2 1 and 2-lane PCIe UNIPHY which is the
+> same as the one found in IPQ5332. As such, add IPQ5018 compatible.
+> 
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Nitheesh Sekar <quic_nsekar@quicinc.com>
+> Signed-off-by: Sricharan Ramabadhran <quic_srichara@quicinc.com>
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
+>  .../bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml | 57 +++++++++++++++++++---
+>  1 file changed, 49 insertions(+), 8 deletions(-)
+> 
 
- Unable to handle kernel NULL pointer dereference at virtual address 00000039 when write
+My bot found errors running 'make dt_binding_check' on your patch:
 
- [...]
+yamllint warnings/errors:
 
- Call trace:
-  xpcs_config_eee_mult_fact from stmmac_pcs_setup+0x40/0x10c
-  stmmac_pcs_setup from stmmac_dvr_probe+0xc0c/0x1244
-  stmmac_dvr_probe from socfpga_dwmac_probe+0x130/0x1bc
-  socfpga_dwmac_probe from platform_probe+0x5c/0xb0
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:0:then:properties:clocks: {'minItems': 1, 'maxItems': 1, 'items': [{'description': 'pcie pipe clock'}]} should not be valid under {'required': ['maxItems']}
+	hint: "maxItems" is not needed with an "items" list
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:0:then:properties:clocks: 'oneOf' conditional failed, one must be fixed:
+	[{'description': 'pcie pipe clock'}] is too short
+	False schema does not allow 1
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:0:then:properties:resets: {'minItems': 2, 'maxItems': 2, 'items': [{'description': 'phy reset'}, {'description': 'cfg reset'}]} should not be valid under {'required': ['maxItems']}
+	hint: "maxItems" is not needed with an "items" list
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:0:then:properties:resets: 'oneOf' conditional failed, one must be fixed:
+	[{'description': 'phy reset'}, {'description': 'cfg reset'}] is too long
+	[{'description': 'phy reset'}, {'description': 'cfg reset'}] is too short
+	False schema does not allow 2
+	1 was expected
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:1:then:properties:clocks: {'minItems': 2, 'maxItems': 2, 'items': [{'description': 'pcie pipe clock'}, {'description': 'pcie ahb clock'}]} should not be valid under {'required': ['maxItems']}
+	hint: "maxItems" is not needed with an "items" list
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:1:then:properties:clocks: 'oneOf' conditional failed, one must be fixed:
+	[{'description': 'pcie pipe clock'}, {'description': 'pcie ahb clock'}] is too long
+	[{'description': 'pcie pipe clock'}, {'description': 'pcie ahb clock'}] is too short
+	False schema does not allow 2
+	1 was expected
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:1:then:properties:resets: {'minItems': 3, 'maxItems': 3, 'items': [{'description': 'phy reset'}, {'description': 'ahb reset'}, {'description': 'cfg reset'}]} should not be valid under {'required': ['maxItems']}
+	hint: "maxItems" is not needed with an "items" list
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/phy/qcom,ipq5332-uniphy-pcie-phy.yaml: allOf:1:then:properties:resets: 'oneOf' conditional failed, one must be fixed:
+	[{'description': 'phy reset'}, {'description': 'ahb reset'}, {'description': 'cfg reset'}] is too long
+	[{'description': 'phy reset'}, {'description': 'ahb reset'}, {'description': 'cfg reset'}] is too short
+	False schema does not allow 3
+	1 was expected
+	3 is greater than the maximum of 2
+	hint: "minItems" is only needed if less than the "items" list length
+	from schema $id: http://devicetree.org/meta-schemas/items.yaml#
 
-Fixes: 060fb27060e8 ("net: stmmac: call xpcs_config_eee_mult_fact()")
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
-This targets net-next as the blamed commit is also still in net-next.
+doc reference errors (make refcheckdocs):
 
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250321-ipq5018-pcie-v5-1-aae2caa1f418@outlook.com
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 7c0a4046bbe3..836f2848dfeb 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -524,7 +524,8 @@ int stmmac_pcs_setup(struct net_device *ndev)
- 	if (ret)
- 		return dev_err_probe(priv->device, ret, "No xPCS found\n");
- 
--	xpcs_config_eee_mult_fact(xpcs, priv->plat->mult_fact_100ns);
-+	if (xpcs)
-+		xpcs_config_eee_mult_fact(xpcs, priv->plat->mult_fact_100ns);
- 
- 	priv->hw->xpcs = xpcs;
- 
--- 
-2.48.1
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
