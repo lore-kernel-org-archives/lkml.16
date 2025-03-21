@@ -1,77 +1,162 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F41C217C210
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:18:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 274521A7264
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 02:19:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742523484; cv=none; b=KUPy6yAdSwiYZq+A02tjujNmRxWkPoqaKacqDgabAOACyP0kU9QL8AZRp4E3MymOZpICtWXVXt2KYCw/XRDowQKbna2cd+Zw9Trb9YGiIcC4Hsk2Qf88/dbSm5ZaMQl90nKrCYmv0mCs+cHG2/Es/658XHaeWIFcNoochsSA6Fs=
+	t=1742523576; cv=none; b=bO9bVOS3RdgPrhVcGBHTscQiRVTezLvuBezlp99lSVcdYzW7UmSWsu6+l3q6VDfCC8ng4CO5QtQiG9BrB7zbGTpW57Yw1UI5d1WvEZXNv7bJ1zCHJeBevtoMt3fvFyQu9V2jluB63aJx715zuIX4e6dlRR5DMkwwKozY5uXlwjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742523484; c=relaxed/simple;
-	bh=yiT0IByiw6hfNbsZ2ycmFtsULRBmPbyQPGomX3XADbA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ldygia2eft0MM9atC6E5SV0LkMTDBQLoZn8oPFadwLnHmsRaE+iORelqzRHk4ZOX2SvBZFMWVbVDK5Av9M/HoNSI4kPaXYWmyYqHPqAs6bvbUQWjwWr83uw/hwtUp0No04e6QVBFeXIB9BgkLzePJrCwVH1pYwP7RTd6bpFgeLE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GsnWUcHY; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742523576; c=relaxed/simple;
+	bh=U38ru4dqR5hQ4gzJyuvQTyJf5yulhnnCi8NT5TSJXIc=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=C5xyqNiAXyXCTTccK8E1QOuqyyhIidJ4RnLmdtdWkef1hVHcUMEE/1hBXwmddYSsRkXIOKeoWXk/oW7rfMUfn3HPaoFRE/5k0niDtGZFU1YbDiBAWcAcxa7zcGWBpMU5bdVxmOgm11GFKcIfoA/ai1UTVzGQYSZxco5/KJ5Qdg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=C/WRMxwJ; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GsnWUcHY"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742523482; x=1774059482;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=yiT0IByiw6hfNbsZ2ycmFtsULRBmPbyQPGomX3XADbA=;
-  b=GsnWUcHYMys2oqgyk406KrKgXnNRn2EfnO97JmtojPTTEmMCkizQPJcf
-   uDcaHgnl7eKCz/x7NPizbCNXBm1YYjhJ5dp2BpbFdxqMEDLjtmoDAvY3H
-   np0ZNe8o6C+cbdxeHGT8THDSQNdq5R/nj9ioE2ScVggjoC28CZnoDrH+w
-   MRAawalZP6G6EjEcRpuWmS2XAMAGYT/z0nI+oYfcCMFrclgZjzVLQq3O4
-   7wO73RPQ8xkm78kagDnUH9pX5T4iMf9guVDnOJ4QbkCVYS+dkIQgaA8Mg
-   wyjQAodh1UkYMP9fgEMkpOxu/2SGZKEtF/Ei10AkX5zmG/k13eBEvCu+u
-   A==;
-X-CSE-ConnectionGUID: nh/tafTeSTChj+6imSLtQA==
-X-CSE-MsgGUID: 3HBuhXgXS1Cxa9IKm5DBIQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11379"; a="66247433"
-X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
-   d="scan'208";a="66247433"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 19:18:01 -0700
-X-CSE-ConnectionGUID: l0xm/TmsR1icDX7kc4ic6A==
-X-CSE-MsgGUID: HN5ZugeWT5GnzJJUsrOWlQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,263,1736841600"; 
-   d="scan'208";a="127425864"
-Received: from allen-sbox.sh.intel.com (HELO [10.239.159.30]) ([10.239.159.30])
-  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2025 19:17:59 -0700
-Message-ID: <0527bf74-f272-47e1-8cf7-1e66167fb560@linux.intel.com>
-Date: Fri, 21 Mar 2025 10:14:28 +0800
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="C/WRMxwJ"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 6/6] iommu: make inclusion of iommufd directory
- conditional
-To: Rolf Eike Beer <eb@emlix.com>, Joerg Roedel <joro@8bytes.org>,
- Will Deacon <will@kernel.org>
-Cc: iommu@lists.linux.dev, linux-kernel@vger.kernel.org,
- Robin Murphy <robin.murphy@arm.com>, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>
-References: <12652899.O9o76ZdvQC@devpool47.emlix.com>
- <2243601.irdbgypaU6@devpool47.emlix.com>
-Content-Language: en-US
-From: Baolu Lu <baolu.lu@linux.intel.com>
-In-Reply-To: <2243601.irdbgypaU6@devpool47.emlix.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1742523570;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=aJ63EbsH7vgI4jedsTSMWBQF77GuUGSswmmue0ryXcM=;
+	b=C/WRMxwJjPXsbmhSBUnFOPBeZ8PR30k6LyphZ584eFPiYvplv4IoRJbBy/hcfZjf4CHOjY
+	6Xxzm6ypTFO1FrCY94FEJ4NZROkJC33DKAF8CB4s469qH2c3b2lsFZJ0owdgVZEuuwdeAM
+	pqDuA6AYIBhquSRROOidRX2CUFAAb05wXwnlY2XrooeX3f3dM+i81U6hmLJTCZKlPDk3PU
+	v7zXLe6QwVGAH6OL2URiG0Veri5jGg/3tBFJg0R1PhkQe+YMD59sSRgK8T1E0ZKz8p5y5q
+	9yoB0JWtyJyXkdqaCwDaXqdkY82/PqBKH2Z765tzcAA1OxYQSZE1QCd0/UDECw==
+Date: Fri, 21 Mar 2025 03:19:30 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Sam Edwards <cfsworks@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-rockchip@lists.infradead.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ =?UTF-8?Q?Daniel_Kukie=C5=82a?= <daniel@kukiela.pl>, Sven Rademakers
+ <sven.rademakers@gmail.com>, Joshua Riek <jjriek@verizon.net>
+Subject: Re: [PATCH] arm64: dts: rockchip: Allow Turing RK1 cooling fan to
+ spin down
+In-Reply-To: <CAH5Ym4hqkMMBsT7XEz_f+TCng+0X2m0nV_Kdr-LAPBqgENgr5A@mail.gmail.com>
+References: <20250315204852.1247992-1-CFSworks@gmail.com>
+ <e1cdc3a39b9201cb115b12b559899aee@manjaro.org>
+ <CAH5Ym4hqkMMBsT7XEz_f+TCng+0X2m0nV_Kdr-LAPBqgENgr5A@mail.gmail.com>
+Message-ID: <57bb477925efc74a0ea11b20321fa661@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On 3/20/25 17:22, Rolf Eike Beer wrote:
-> Nothing in there is active if CONFIG_IOMMUFD is not enabled, so the whole
-> directory can depend on that switch as well.
+Hello Sam,
+
+On 2025-03-21 02:20, Sam Edwards wrote:
+> On Thu, Mar 20, 2025 at 5:38 PM Dragan Simic <dsimic@manjaro.org> 
+> wrote:
+>> On 2025-03-15 21:48, Sam Edwards wrote:
+>> > The RK3588 thermal sensor driver only receives interrupts when a
+>> > higher-temperature threshold is crossed; it cannot notify when the
+>> > sensor cools back off. As a result, the driver must poll for
+>> > temperature
+>> > changes to detect when the conditions for a thermal trip are no longer
+>> > met. However, it only does so if the DT enables polling.
+>> >
+>> > Before this patch, the RK1 DT did not enable polling, causing the fan
+>> > to
+>> > continue running at the speed corresponding to the highest temperature
+>> > reached.
+>> >
+>> > Follow suit with similar RK3588 boards by setting a polling-delay of
+>> > 1000ms, enabling the driver to detect when the sensor cools back off,
+>> > allowing the fan speed to decrease as appropriate.
+>> >
+>> > Fixes: 7c8ec5e6b9d6 ("arm64: dts: rockchip: Enable automatic fan
+>> > control on Turing RK1")
+>> > Signed-off-by: Sam Edwards <CFSworks@gmail.com>
+>> > ---
+>> >  arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi | 2 ++
+>> >  1 file changed, 2 insertions(+)
+>> >
+>> > diff --git a/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
+>> > b/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
+>> > index 6bc46734cc14..0270bffce195 100644
+>> > --- a/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
+>> > +++ b/arch/arm64/boot/dts/rockchip/rk3588-turing-rk1.dtsi
+>> > @@ -214,6 +214,8 @@ rgmii_phy: ethernet-phy@1 {
+>> >  };
+>> >
+>> >  &package_thermal {
+>> > +     polling-delay = <1000>;
+>> > +
+>> >       trips {
+>> >               package_active1: trip-active1 {
+>> >                       temperature = <45000>;
+>> 
+>> Thanks for the patch, it's looking good to me, with some related
+>> thoughts below.  Please, feel free to include:
+>> 
+>> Reviewed-by: Dragan Simic <dsimic@manjaro.org>
+>> 
+>> After a quick look at the RK3588 TRM Part 1, it seems possible
+>> to actually generate additional interrupts when the TSADC channel
+>> temperature readouts reach predefined low thresholds.  Moreover,
 > 
-> Fixes: 2ff4bed7fee7 ("iommufd: File descriptor, context, kconfig and makefiles")
-> Signed-off-by: Rolf Eike Beer<eb@emlix.com>
+> It seems to be as simple as adding a `.set_cooloff_temp = ...` that
+> writes the lower thresholds to TSADC_COMP#_LOW_INT and sets the
+> necessary bits in TSADC_LT_EN+TSADC_LT_INT_EN. Since the driver
+> already rescans all temperatures on any interrupt and acknowledges all
+> interrupt status bits indiscriminately, I don't anticipate any other
+> necessary changes.
 
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
+Hmm, I'm afraid it isn't that simple...  See, the entire thermal
+framework is rather complex and there may be hidden issues, because
+such handling of the cooldown events probably isn't the most common
+variant on all boards supported upstream.
+
+Even if everything is fine there, with the dynamic reassigning of
+the cooldown thresholds and everything else, which hopefully is, :)
+generating and handling the LT_INT interrupts, at the first glance,
+requires rather major changes to the driver because it introduces
+a different class of interrupts, for which the amount of required
+changes isn't exactly small.
+
+> I can easily take care of that this weekend or next if that plan
+> sounds good to you. However, since *this* patch is a Fixes:, I'd
+> rather land it as-is first and handle the above separately. :)
+
+I totally agree that this patch needs to get merged first, perhaps
+even as a v2 that would include "Cc: stable" as well.
+
+Regarding adding support for LT_INT interrupts, frankly, I'd much
+rather leave that do be done as part of my upcoming major rework
+of the OPPs by introducing the SoC binning.  As part of that, I'll
+do a whole lot of testing on different boards with different SoCs
+and their different variants, which should ensure that everything
+works as expected, including the LT_INT stuff.
+
+>> avoiding the polling would actually help the SoC cool down a tiny
+>> bit faster, which makes it worth detailed investigation in my book,
+>> despite not being used by the downstream kernel code.
+> 
+> Do you mean "spin down the fan a tiny bit faster" (since it would
+> detect the cool-off without needing to poll for it), or are you
+> emphasizing saving CPU cycles that would otherwise be spent polling?
+
+Technically both, :) but of course, the primary goal would be to make
+the CPU not do what it doesn't really have to, and spinning down the
+fan faster would be just an additional benefit.  It isn't going to
+make some huge difference in the CPU load (or better said, in the
+"background noise"), but again, every tiny bit counts.
+
+When it comes to the HT_INT interrupts, they're obviously much more
+important, because there must not be any delays when (over)heating
+happens.  That isn't so critical with the LT_INT interrupts, which
+is probably the reason why the downstream kernel code uses HT_INT
+interrupts only.
