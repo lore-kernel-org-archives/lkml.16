@@ -1,76 +1,50 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2420B227EB6
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93BEC225387;
+	Fri, 21 Mar 2025 12:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742561530; cv=none; b=L71o6O61pMowJXnoEZjk2FTaNaQ/m/gKQLNKFsxjeQ95yUpG9PvApxxVGkFmdWR1SvdCVZqm7UTlOlt4l0yoMuhLIucyVhAhL8wSthIRZkE91MNa2iq6/4GzUoYh+xIiA0CYsmhgEiA0DNiiDxofKHXzXTgF0/mP6HFD/1M/XCs=
+	t=1742561544; cv=none; b=MA0goZYBY17/a08BemP/fuIVP8evD7KIz0ExLx7hvMWiA4MTOa9JswODQfyAtmho4bQ0I4+j5jLtSti8xIhbqzufRcdvlQKBS15chPyj7GxarK7kC3q4lVN61Zkam3zY1z+pm0if8nuLKbgqxNj80a6UwZ0PZDTaIe0YESUJZg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742561530; c=relaxed/simple;
-	bh=omo7++uwL5aCKwwOkOgkXq3mk5bdOuv6RRCIHDEgpqA=;
+	s=arc-20240116; t=1742561544; c=relaxed/simple;
+	bh=SUKhHUcxhL0l5xhcTWSK8TZ43wGOHoBGsqPnsArUmlw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oM7BVLUqfMrZm7u4dFD52XQq4gY8Dx9jIIZU12i5NQkXyzlBWh5z+Xlt162ymjWXBt2agRpNseHUxM25RHh5S3+hGJh91xfvQytbf8XC+QNYZGDi0zgwQiAUETTmU+wdnNVqxzKsu5u/OVIiBuZKOFh8lU45Xli3LbDTPAwvxEY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=uY374mxh; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=oNZYxFOfmBFiC+uWFnjWPXeFFkNh97/wxCC1c/sDCaNBC0zdN1Icr0jazRpP5hLv1mkxfiQ/++S/SXmjDju7YrOGAEKaJFLv4X3Xp3O6FHAihrxJbh5yK9ieQ9GGE0Ay1t3M3DYONQnFpIBbaFtG57+aBD1Xg7ak9/2Hrti53Y8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b=SWEnqRYe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uY374mxh"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2241053582dso1841255ad.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742561528; x=1743166328; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=oSMguLk/NY450VoESU9bEhEakSFxqQn+/7jPnZETdtQ=;
-        b=uY374mxhDrUDIgLWQ5UadBLdebV+utlaJSWfKuMydnsBiA+cV1UKAvCDdbznlvJ+Dr
-         XU5uZRIYGBEVifrnW3pLn/fqV9DfUzBpVh/KQQtXuezu3DVE1U96RT11D+7kkNahwJDg
-         dij4jobtUTldX86xjF3dewyZetUGiYU3Gl+v7yH5mEia/eBFVt2gZXeuah/TNLThFX0V
-         vN5eag6sfHdilcMCO8f22bM5u8Ji9V1Acor7DLvTqo7qP6cX9FU8rBRvgA060SyOuTsN
-         Sb90r5JMrPY88shRjp5r90m0qJtLMeNMqmHaO/s3C9kQzb4oj3fBZU8mlxDWhz3vyVyP
-         C1rA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742561528; x=1743166328;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oSMguLk/NY450VoESU9bEhEakSFxqQn+/7jPnZETdtQ=;
-        b=UlT2oiJiqENoRASulj+wvBJUptI5fVPJ8SS5EUpzNKpRSUB/GFA2wkXl1D0gRpHh/Y
-         f4tR5sTCS4X192//6+MuUcY1agCwxbpojyzpIE69LvrzslBQN6Xmtej5IpYrd39Ob1kY
-         RkM46rdWbM3Xgdd4P+HqOOvPC5biJuvyvguywSKQGRl87v2l9kbLC9Ftu7aBONtJteck
-         IbjrpH4c6ml1f58aEqDIYztefxb8DercfVVyAmXSz8VcjY2UETFWbulL0od1XqgRDex7
-         VInEAxW33ccCSuwwjZl+X5Al99mV+dUXeNzL0LIiFQEjLzrrj2Hhjm+NtrCGERJg6+FG
-         XXPQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWjvRtonob8yU9/a2UQ1IziGC5mi8T4zubRB0gI4FVxO/9G4SV0Ybc5ElOsqgf34Njvjl7cTcLkchg5pKs=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxzDC2DeENe0kZTCAZvlMU8VDSP2XTr7Q2JesyzwjeWYx1kQ1RJ
-	nLjZ53wuAqYMEVxIGGzDfhk+1LqTRz+ej5N51L1n5ldLD7aJIqvX/71qMzWppA==
-X-Gm-Gg: ASbGncvjhOb5sqRZDBI6W/2aJLS0uEdMoePWal6z4KQEjm6rz2nGZEHxTV0fQKTTvvc
-	XwCuJ0EwrDSammGSxRs7xqtJDiAy5ha3Ck3HQZqDWzaRW5Y8NrE3U+XqVEgJ1S6bksZVo8Ypf0u
-	LFkZ6shbaE4cWmKdSsy1UL/HyBOd633KESN8Qvy+tkALHbITCOB0UlS52V9oW4iMaSq48l8k//p
-	pH3zo6wYJDMOXzORFGPxIpWWcqtF0mF3lHdk3KR2fAfflHsomrEIXJuhOO74xOedGmvTTWE0e1L
-	ELjY8bkNIdJk2MZ/HWoAgSfI2y+fh0Uy1y9MujuJeAMhd6WHRxoPJXKkhLq5cDHOl/IU
-X-Google-Smtp-Source: AGHT+IF0zPLlYeMl5R+KmmcWKZ5uqrU4n7zgCXtfPnd8npBg8qglifut7iSMwIOZCm1K+7HdX/RMMA==
-X-Received: by 2002:a17:90b:53d0:b0:2ee:df70:1ff3 with SMTP id 98e67ed59e1d1-3030fd36f80mr6475642a91.0.1742561528376;
-        Fri, 21 Mar 2025 05:52:08 -0700 (PDT)
-Received: from thinkpad ([2409:40f4:22:5799:90ea:bfc4:b1d2:dda2])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf6360besm5897432a91.43.2025.03.21.05.52.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 05:52:07 -0700 (PDT)
-Date: Fri, 21 Mar 2025 18:22:01 +0530
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To: Sai Krishna Musham <sai.krishna.musham@amd.com>
-Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com,
-	robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	cassel@kernel.org, linux-pci@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	michal.simek@amd.com, bharat.kumar.gogada@amd.com,
-	thippeswamy.havalige@amd.com
-Subject: Re: [PATCH v4 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST#
- signal
-Message-ID: <20250321125201.2r6zcxwkivt7t6s3@thinkpad>
-References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
- <20250318092648.2298280-3-sai.krishna.musham@amd.com>
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="SWEnqRYe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66E8DC4CEE3;
+	Fri, 21 Mar 2025 12:52:23 +0000 (UTC)
+Authentication-Results: smtp.kernel.org;
+	dkim=pass (1024-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="SWEnqRYe"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zx2c4.com; s=20210105;
+	t=1742561541;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=iBEsa6g1RBoSR0J0Kh1JDeWbWAeUk9HC8KUOCLyfPJc=;
+	b=SWEnqRYezPlf1E+iZomGlmtJq8Gz+rfAumlre6h7c18OJEcuJ4KtkGml//SFMb2XME2nNm
+	HSXdKIdcS9scfPpO1trtdon3a+KYMkSIlGNj04dk46QWfMuxFyMAfKQJTfmoLjvl4vEAjU
+	DRtuBxODEY438a851a6a+dzfHYMp1cI=
+Received: 
+	by mail.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 991796b3 (TLSv1.3:TLS_AES_256_GCM_SHA384:256:NO);
+	Fri, 21 Mar 2025 12:52:21 +0000 (UTC)
+Date: Fri, 21 Mar 2025 13:52:19 +0100
+From: "Jason A. Donenfeld" <Jason@zx2c4.com>
+To: Jani Nikula <jani.nikula@linux.intel.com>
+Cc: Andi Shyti <andi.shyti@linux.intel.com>,
+	Markus Theil <theil.markus@gmail.com>, linux-kernel@vger.kernel.org,
+	intel-gfx@lists.freedesktop.org, netdev@vger.kernel.org,
+	tytso@mit.edu
+Subject: Re: [PATCH v2 1/3] drm/i915/selftests: use prandom in selftest
+Message-ID: <Z91hA0q-uC04asw2@zx2c4.com>
+References: <CAHmME9oqvWp_Nd1Gwgyw52qy8wxztMyCpNsjByH=VnRaXqczww@mail.gmail.com>
+ <20250211063332.16542-1-theil.markus@gmail.com>
+ <20250211063332.16542-2-theil.markus@gmail.com>
+ <Z64pkN7eU6yHPifn@ashyti-mobl2.lan>
+ <Z9r7ORwztMxsNyF4@zx2c4.com>
+ <874izmd0g4.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -79,137 +53,33 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250318092648.2298280-3-sai.krishna.musham@amd.com>
+In-Reply-To: <874izmd0g4.fsf@intel.com>
 
-On Tue, Mar 18, 2025 at 02:56:48PM +0530, Sai Krishna Musham wrote:
-> Add PCIe IP reset along with GPIO-based control for the PCIe Root
-> Port PERST# signal. Synchronizing the PCIe IP reset with the PERST#
-> signal's assertion and deassertion avoids Link Training failures.
+On Fri, Mar 21, 2025 at 02:37:15PM +0200, Jani Nikula wrote:
+> On Wed, 19 Mar 2025, "Jason A. Donenfeld" <Jason@zx2c4.com> wrote:
+> > Hi Andi,
+> >
+> > On Thu, Feb 13, 2025 at 06:19:12PM +0100, Andi Shyti wrote:
+> >> Hi Markus,
+> >> 
+> >> On Tue, Feb 11, 2025 at 07:33:30AM +0100, Markus Theil wrote:
+> >> > This is part of a prandom cleanup, which removes
+> >> > next_pseudo_random32 and replaces it with the standard PRNG.
+> >> > 
+> >> > Signed-off-by: Markus Theil <theil.markus@gmail.com>
+> >> 
+> >> I merged just this patch in drm-intel-gt-next.
+> >
+> > This is minorly annoying for me... What am I supposed to do with patches
+> > 2 and 3? Take them through my tree for 6.16 in like half a year? Can I
+> > just take the v1 into my tree and we can get this done with straight
+> > forwardly? Or do you have a different suggestion for me?
 > 
-> Add clear firewall after Link reset for CPM5NC.
+> Feel free to apply it to your tree too. It's not ideal to have two
+> commits for the same thing, but oh well.
 > 
-> Adapt to use GPIO framework and make reset optional to maintain
-> backward compatibility with existing DTBs.
-> 
-> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
-> ---
-> Changes for v4:
-> - Add PCIe PERST# support for CPM5NC.
-> - Add PCIe IP reset along with PERST# to avoid Link Training Errors.
-> - Remove PCIE_T_PVPERL_MS define and PCIE_T_RRS_READY_MS after
->   PERST# deassert.
-> - Move PCIe PERST# assert and deassert logic to
->   xilinx_cpm_pcie_init_port() before cpm_pcie_link_up(), since
->   Interrupts enable and PCIe RP bridge enable should be done after
->   Link up.
-> - Update commit message.
-> 
-> Changes for v3:
-> - Use PCIE_T_PVPERL_MS define.
-> 
-> Changes for v2:
-> - Make the request GPIO optional.
-> - Correct the reset sequence as per PERST#
-> - Update commit message
-> ---
->  drivers/pci/controller/pcie-xilinx-cpm.c | 66 +++++++++++++++++++++++-
->  1 file changed, 65 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-> index d0ab187d917f..fd1fee2f614b 100644
-> --- a/drivers/pci/controller/pcie-xilinx-cpm.c
-> +++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-> @@ -6,6 +6,8 @@
->   */
->  
->  #include <linux/bitfield.h>
-> +#include <linux/delay.h>
-> +#include <linux/gpio/consumer.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
->  #include <linux/irqchip.h>
-> @@ -21,6 +23,13 @@
->  #include "pcie-xilinx-common.h"
->  
->  /* Register definitions */
-> +#define XILINX_CPM_PCIE0_RST		0x00000308
-> +#define XILINX_CPM5_PCIE0_RST		0x00000318
-> +#define XILINX_CPM5_PCIE1_RST		0x0000031C
-> +#define XILINX_CPM5NC_PCIE0_RST		0x00000324
-> +
-> +#define XILINX_CPM5NC_PCIE0_FW		0x00001140
-> +
->  #define XILINX_CPM_PCIE_REG_IDR		0x00000E10
->  #define XILINX_CPM_PCIE_REG_IMR		0x00000E14
->  #define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
-> @@ -99,6 +108,7 @@ struct xilinx_cpm_variant {
->  	u32 ir_status;
->  	u32 ir_enable;
->  	u32 ir_misc_value;
-> +	u32 cpm_pcie_rst;
->  };
->  
->  /**
-> @@ -106,6 +116,8 @@ struct xilinx_cpm_variant {
->   * @dev: Device pointer
->   * @reg_base: Bridge Register Base
->   * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-> + * @crx_base: CPM Clock and Reset Control Registers Base
-> + * @cpm5nc_base: CPM5NC Control and Status Registers Base
->   * @intx_domain: Legacy IRQ domain pointer
->   * @cpm_domain: CPM IRQ domain pointer
->   * @cfg: Holds mappings of config space window
-> @@ -118,6 +130,8 @@ struct xilinx_cpm_pcie {
->  	struct device			*dev;
->  	void __iomem			*reg_base;
->  	void __iomem			*cpm_base;
-> +	void __iomem			*crx_base;
-> +	void __iomem			*cpm5nc_base;
->  	struct irq_domain		*intx_domain;
->  	struct irq_domain		*cpm_domain;
->  	struct pci_config_window	*cfg;
-> @@ -478,9 +492,42 @@ static int xilinx_cpm_setup_irq(struct xilinx_cpm_pcie *port)
->  static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
->  {
->  	const struct xilinx_cpm_variant *variant = port->variant;
-> +	struct device *dev = port->dev;
-> +	struct gpio_desc *reset_gpio;
-> +
-> +	/* Request the GPIO for PCIe reset signal */
-> +	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-> +	if (IS_ERR(reset_gpio)) {
-> +		dev_err(dev, "Failed to request reset GPIO\n");
-> +		return;
-> +	}
-> +
-> +	/* Assert the reset signal */
-> +	gpiod_set_value(reset_gpio, 1);
->  
-> -	if (variant->version == CPM5NC_HOST)
-> +	/* Assert the PCIe IP reset */
-> +	writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
-> +
-> +	/* Controller specific delay */
-> +	udelay(50);
-> +
-> +	/* Deassert the PCIe IP reset */
-> +	writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
-> +
-> +	/* Deassert the reset signal */
-> +	gpiod_set_value(reset_gpio, 0);
-> +	mdelay(PCIE_T_RRS_READY_MS);
-> +
-> +	if (variant->version == CPM5NC_HOST) {
-> +		/* Clear Firewall */
+> Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-On top of Krzk's review:
+Oh that's a good idea. Thanks!
 
-What does this 'firewall' mean? Clearly, not something defined in the PCIe spec.
-Also, you made it independent of PERST# line. So is it really needed for
-platforms not supporting PERST#?
-
-- Mani
-
--- 
-மணிவண்ணன் சதாசிவம்
+Jason
