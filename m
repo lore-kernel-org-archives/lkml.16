@@ -1,153 +1,258 @@
-Received: from out.smtpout.orange.fr (out-72.smtpout.orange.fr [193.252.22.72])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7ABCB664;
-	Fri, 21 Mar 2025 04:27:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.72
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D74C1B664;
+	Fri, 21 Mar 2025 04:29:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742531270; cv=none; b=HMkS6pLZy1ZSVBTOCj48lgXaQTLjk/JW8+yB1R/5d8S6gbbCBP9F4X8XnLmymCdTxbXY83n8GFlrBrQdpmO+r9CDQ7hmYx34Y5Mh7FjshJLXVRHu7GzCsKKuoFrMPjvt3+aamfN8rzYwyJfF1cObCrKqo0k1SSWPP769MK3e4X8=
+	t=1742531405; cv=none; b=Ue468iubYQA9UPxFSJ4Uu7lxzTIcRYrqWxp9+OCH1jaK9cgEwlj3z+A5WhA8htKnhUNx5vW/qM4LaqqRbIGgy8p/1PddCBBZT8/gBgSPpOnBZId17Zzjiq6hoOA0fvsGr5tvdCBwTx3X17K0XXLbD1CzKEIlPHIR48m2O15IHrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742531270; c=relaxed/simple;
-	bh=C7HXbRAAikkBwHspUHiehLT+PSVXQ2/fzwqlCI0p5vc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WkWcEUYOp/z0NXwodu0xB+fIQJrnMERQuZQYJo8t5ja2ZVb0Iur0KHgkbhUk4AuwQx6iyGfKNA99jsZK2ghKAsa6wa4mcOxreKM7xENvQAmcONAgonxh+DjWUXzvGXjLmSLdSvydddHC6ShE5lMLH/LnR3MCxlI+dh48zdbpjrc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=KxUvipl/; arc=none smtp.client-ip=193.252.22.72
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1742531405; c=relaxed/simple;
+	bh=K3uz40tk8l4FQvHosvvh3hDNWs8nec3XOBvNz8AMz6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=KWJYy6JsWg7t0dkchcM/ncUHkhNtVw78fd0cJoqsNLZglJUD6CST6g2G+cy1kC2Co1Y5KA/B6T+h7s/bcWKK7QoZglepcW7n3NSooK3+4CyGTUYBAh6fxnZdEkl1RwlDcODvdjIcFy/3VfjEFdGvYUcGC9+aOdwFClAlMgdaiO8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=DVEpDhE+; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="KxUvipl/"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id vTpqtuCVJpih5vTpvtXDey; Fri, 21 Mar 2025 05:18:29 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1742530710;
-	bh=RfTovQ5pBBPXl/sQntAxGWbDNnwENYAK9Bt2Ch93r58=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=KxUvipl/mBH9mc3/+Jxp2x1493gZQeZOd7O1dWUrPtM6thSRht5eemzsz0bAhoVki
-	 UK6CTEtCyIr0B2njVsiL/Rbr4irCB0+2uOw5H+lalCF9jyZTppgCSLooDDJSUxSqiP
-	 KLwOa3oQaBRKfU1w7HcWDEh8qDV9uKdiX8SEa3TJYLNcfQMoUqnv/Y+c4nKoVmstXw
-	 QtOzdhj2FmatopgmqctXNjsEuD+W5CATzJW4ecmjZKK+YxcyTexp8CHwQ510jgHD3x
-	 Q85cTm7l4Tdfae2YGjxEcK0z2m8NKPbDmVd5zGOqFiHSeZzl8e/qDzEFkGwqSLiRK8
-	 h/GCI4MlrBSDQ==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 21 Mar 2025 05:18:30 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <7805e0db-7c17-438d-9985-f4feec644da6@wanadoo.fr>
-Date: Fri, 21 Mar 2025 13:18:18 +0900
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DVEpDhE+"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742531397;
+	bh=9LPlOVa7EM6+dhZWS2UYDtcUeCmZ1BJ3Bl4/7DTmRgg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DVEpDhE+fL2UmmQfJw5P5is/GrG4YuxFubvQ0Q0wxwSkYRtQHcHoJiVZJxNjNDtsx
+	 02gaNKl2nL+yb4coNGY6n8Ps/U32T2k/vqUAgI00S6AsHEGy3z43maGl1TWwOJiMRQ
+	 86e2UDR+8W5PW8lxqOOpHe4CRQvvSRVPmq7Y0oJ4DMEcqug0d7PV1G8ouGU7UGdtQ5
+	 v0ifiUN2AfzTDvb1qjcwNVLPfvxqJCGuj/01wEVjzoPSAN3l2BKrdF/C1POsH+rPU3
+	 jhM4yM3AoY7Hc9HX4GTKt7zsZVsk1jq89TwPcTPLfHYYzy+6NOpixCY/SaK5Uk7hsy
+	 ibcgsKxRBKe0w==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZJqH84gNkz4wnp;
+	Fri, 21 Mar 2025 15:29:56 +1100 (AEDT)
+Date: Fri, 21 Mar 2025 15:29:55 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon
+ <will@kernel.org>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Christoffer Dall <cdall@cs.columbia.edu>, Marc Zyngier <maz@kernel.org>,
+ Douglas Anderson <dianders@chromium.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
+ Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>, KVM
+ <kvm@vger.kernel.org>
+Subject: Re: linux-next: manual merge of the kvm-arm tree with the arm64
+ tree
+Message-ID: <20250321152955.18426a1d@canb.auug.org.au>
+In-Reply-To: <20250317171701.71c8677a@canb.auug.org.au>
+References: <20250317171701.71c8677a@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] phy: can-transceiver: Re-instate "mux-states" property
- presence check
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
- Rob Herring <robh@kernel.org>
-Cc: linux-can@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
- Marc Kleine-Budde <mkl@pengutronix.de>, Vinod Koul <vkoul@kernel.org>,
- Kishon Vijay Abraham I <kishon@kernel.org>, Peter Rosin <peda@axentia.se>,
- Aswath Govindraju <a-govindraju@ti.com>,
- Biju Das <biju.das.jz@bp.renesas.com>
-References: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <3d7e0d723908284e8cf06ad1f7950c03173178f3.1742483710.git.geert+renesas@glider.be>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="Sig_/W=n.2.FLSeUV4GP3L4eaeWE";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-On 21/03/2025 at 00:15, Geert Uytterhoeven wrote:
-> On the Renesas Gray Hawk Single development board:
-> 
->     can-transceiver-phy can-phy0: /can-phy0: failed to get mux-state (0)
-> 
-> "mux-states" is an optional property for CAN transceivers.  However,
-> mux_get() always prints an error message in case of an error, including
-> when the property is not present, confusing the user.
-> 
-> Fix this by re-instating the property presence check (this time using
-> the proper API) in a wrapper around devm_mux_state_get().  When the
-> multiplexer subsystem gains support for optional muxes, the wrapper can
-> just be removed.
-> 
-> In addition, propagate all real errors upstream, instead of ignoring
-> them.
+--Sig_/W=n.2.FLSeUV4GP3L4eaeWE
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I would like to hear Rob's opinion on this. In d02dfd4ceb2e9f34 Rob
-purposely changed the function to ignore errors other than EPROBE_DEFER.
+Hi all,
 
-Right now, I do not see a reason not to propagate the other errors, so
-I am in favor of this roll back. But maybe we are missing something?
+On Mon, 17 Mar 2025 17:17:01 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>=20
+> Today's linux-next merge of the kvm-arm tree got a conflict in:
+>=20
+>   arch/arm64/kernel/proton-pack.c
+>=20
+> between commits:
+>=20
+>   e403e8538359 ("arm64: errata: Assume that unknown CPUs _are_ vulnerable=
+ to Spectre BHB")
+>   a5951389e58d ("arm64: errata: Add newer ARM cores to the spectre_bhb_lo=
+op_affected() lists")
+>=20
+> from the arm64 tree and commit:
+>=20
+>   e3121298c7fc ("arm64: Modify _midr_range() functions to read MIDR/REVID=
+R internally")
+>=20
+> from the kvm-arm tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+>=20
+> diff --cc arch/arm64/kernel/proton-pack.c
+> index 0f51fd10b4b0,a573fa40d4b6..000000000000
+> --- a/arch/arm64/kernel/proton-pack.c
+> +++ b/arch/arm64/kernel/proton-pack.c
+> @@@ -845,86 -845,52 +845,86 @@@ static unsigned long system_bhb_mitigat
+>    * This must be called with SCOPE_LOCAL_CPU for each type of CPU, befor=
+e any
+>    * SCOPE_SYSTEM call will give the right answer.
+>    */
+>  -u8 spectre_bhb_loop_affected(int scope)
+>  +static bool is_spectre_bhb_safe(int scope)
+>  +{
+>  +	static const struct midr_range spectre_bhb_safe_list[] =3D {
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A35),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A53),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A55),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A510),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A520),
+>  +		MIDR_ALL_VERSIONS(MIDR_BRAHMA_B53),
+>  +		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_2XX_SILVER),
+>  +		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_3XX_SILVER),
+>  +		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_SILVER),
+>  +		{},
+>  +	};
+>  +	static bool all_safe =3D true;
+>  +
+>  +	if (scope !=3D SCOPE_LOCAL_CPU)
+>  +		return all_safe;
+>  +
+> - 	if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_safe_list))
+> ++	if (is_midr_in_range_list(spectre_bhb_safe_list))
+>  +		return true;
+>  +
+>  +	all_safe =3D false;
+>  +
+>  +	return false;
+>  +}
+>  +
+>  +static u8 spectre_bhb_loop_affected(void)
+>   {
+>   	u8 k =3D 0;
+>  -	static u8 max_bhb_k;
+>  =20
+>  -	if (scope =3D=3D SCOPE_LOCAL_CPU) {
+>  -		static const struct midr_range spectre_bhb_k32_list[] =3D {
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A78),
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A78AE),
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A78C),
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_X1),
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A710),
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_X2),
+>  -			MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+>  -			MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
+>  -			{},
+>  -		};
+>  -		static const struct midr_range spectre_bhb_k24_list[] =3D {
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A76),
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A77),
+>  -			MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+>  -			{},
+>  -		};
+>  -		static const struct midr_range spectre_bhb_k11_list[] =3D {
+>  -			MIDR_ALL_VERSIONS(MIDR_AMPERE1),
+>  -			{},
+>  -		};
+>  -		static const struct midr_range spectre_bhb_k8_list[] =3D {
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
+>  -			MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
+>  -			{},
+>  -		};
+>  +	static const struct midr_range spectre_bhb_k132_list[] =3D {
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_X3),
+>  +		MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V2),
+>  +	};
+>  +	static const struct midr_range spectre_bhb_k38_list[] =3D {
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A715),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A720),
+>  +	};
+>  +	static const struct midr_range spectre_bhb_k32_list[] =3D {
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A78),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A78AE),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A78C),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_X1),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A710),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_X2),
+>  +		MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N2),
+>  +		MIDR_ALL_VERSIONS(MIDR_NEOVERSE_V1),
+>  +		{},
+>  +	};
+>  +	static const struct midr_range spectre_bhb_k24_list[] =3D {
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A76),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A76AE),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A77),
+>  +		MIDR_ALL_VERSIONS(MIDR_NEOVERSE_N1),
+>  +		MIDR_ALL_VERSIONS(MIDR_QCOM_KRYO_4XX_GOLD),
+>  +		{},
+>  +	};
+>  +	static const struct midr_range spectre_bhb_k11_list[] =3D {
+>  +		MIDR_ALL_VERSIONS(MIDR_AMPERE1),
+>  +		{},
+>  +	};
+>  +	static const struct midr_range spectre_bhb_k8_list[] =3D {
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A72),
+>  +		MIDR_ALL_VERSIONS(MIDR_CORTEX_A57),
+>  +		{},
+>  +	};
+>  =20
+> - 	if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k132_list))
+>  -		if (is_midr_in_range_list(spectre_bhb_k32_list))
+>  -			k =3D 32;
+>  -		else if (is_midr_in_range_list(spectre_bhb_k24_list))
+>  -			k =3D 24;
+>  -		else if (is_midr_in_range_list(spectre_bhb_k11_list))
+>  -			k =3D 11;
+>  -		else if (is_midr_in_range_list(spectre_bhb_k8_list))
+>  -			k =3D  8;
+>  -
+>  -		max_bhb_k =3D max(max_bhb_k, k);
+>  -	} else {
+>  -		k =3D max_bhb_k;
+>  -	}
+> ++	if (is_midr_in_range_list(spectre_bhb_k132_list))
+>  +		k =3D 132;
+> - 	else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k38_list))
+> ++	else if (is_midr_in_range_list(spectre_bhb_k38_list))
+>  +		k =3D 38;
+> - 	else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k32_list))
+> ++	else if (is_midr_in_range_list(spectre_bhb_k32_list))
+>  +		k =3D 32;
+> - 	else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k24_list))
+> ++	else if (is_midr_in_range_list(spectre_bhb_k24_list))
+>  +		k =3D 24;
+> - 	else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k11_list))
+> ++	else if (is_midr_in_range_list(spectre_bhb_k11_list))
+>  +		k =3D 11;
+> - 	else if (is_midr_in_range_list(read_cpuid_id(), spectre_bhb_k8_list))
+> ++	else if (is_midr_in_range_list(spectre_bhb_k8_list))
+>  +		k =3D  8;
+>  =20
+>   	return k;
+>   }
 
-Otherwise, the patch looks good to me. Nice improvement over the v1. I
-will wait for Rob's comment to give my review tag.
+This is now a conflict between the kvm tree and the arm64 tree.
 
-> Fixes: d02dfd4ceb2e9f34 ("phy: can-transceiver: Drop unnecessary "mux-states" property presence check")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Alternatively, the multiplexer subsystem needs to gain support for
-> getting an optional mux...
-> 
-> v2:
->   - Add and use devm_mux_state_get_optional(),
->   - No given tags added, as the new solution is different.
-> ---
->  drivers/phy/phy-can-transceiver.c | 22 +++++++++++++++-------
->  1 file changed, 15 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/phy/phy-can-transceiver.c b/drivers/phy/phy-can-transceiver.c
-> index 2bec70615449f94d..f59caff4b3d4c267 100644
-> --- a/drivers/phy/phy-can-transceiver.c
-> +++ b/drivers/phy/phy-can-transceiver.c
-> @@ -93,6 +93,16 @@ static const struct of_device_id can_transceiver_phy_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(of, can_transceiver_phy_ids);
->  
-> +/* Temporary wrapper until the multiplexer subsystem supports optional muxes */
-> +static inline struct mux_state *
-> +devm_mux_state_get_optional(struct device *dev, const char *mux_name)
-> +{
-> +	if (!of_property_present(dev->of_node, "mux-states"))
-> +		return NULL;
-> +
-> +	return devm_mux_state_get(dev, mux_name);
-> +}
-> +
->  static int can_transceiver_phy_probe(struct platform_device *pdev)
->  {
->  	struct phy_provider *phy_provider;
-> @@ -114,13 +124,11 @@ static int can_transceiver_phy_probe(struct platform_device *pdev)
->  	match = of_match_node(can_transceiver_phy_ids, pdev->dev.of_node);
->  	drvdata = match->data;
->  
-> -	mux_state = devm_mux_state_get(dev, NULL);
-> -	if (IS_ERR(mux_state)) {
-> -		if (PTR_ERR(mux_state) == -EPROBE_DEFER)> -			return PTR_ERR(mux_state);
-> -	} else {
-> -		can_transceiver_phy->mux_state = mux_state;
-> -	}
-> +	mux_state = devm_mux_state_get_optional(dev, NULL);
-> +	if (IS_ERR(mux_state))
-> +		return PTR_ERR(mux_state);
-> +
-> +	can_transceiver_phy->mux_state = mux_state;
->  
->  	phy = devm_phy_create(dev, dev->of_node,
->  			      &can_transceiver_phy_ops);
+--=20
+Cheers,
+Stephen Rothwell
 
-Yours sincerely,
-Vincent Mailhol
+--Sig_/W=n.2.FLSeUV4GP3L4eaeWE
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfc60MACgkQAVBC80lX
+0Gx1KQf/QakLQJaI3LaakUKeYthZeFl4BCWmch4uy7UcxqvQTqqmwyFR61rE9cNn
+V9D2H1hW4226U1Ms76XRp8ujypxWHgh7851QfyU36EY24fhrsHUSp3TTJu9vWAur
+q3mpufSvqgDf7uLZQGPiaI28NLnHLyJCsSVcZuy6xUtFEPCGcrTOSZccOQtjXoKt
+TlHk+oBTfBRUw0mLfAr/WXGl9D9Vh0BGZu2ftXIS9hnfhXGl3c+HPUWHlEMCVFnK
+1yGQP4p+wvP1nPUsKn/AMmyaGefS0Fc4dCU0UCC4BUDLeQcNmvfrf7zbdpcSy39i
+Y+2ou91gQSPFLksK4bXItdLFtpB0Sw==
+=QH2I
+-----END PGP SIGNATURE-----
+
+--Sig_/W=n.2.FLSeUV4GP3L4eaeWE--
