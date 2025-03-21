@@ -1,84 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C7CA23BE
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 975C71D515A;
+	Fri, 21 Mar 2025 14:39:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742567945; cv=none; b=eW7t2rxXw8CJyxHkTd452FB7xsFgtpChpOCec3XYXQBgxfIWiz8A+xCNT1FPH1gCZiVSqnB8Od3H/rbfD9QgO+RIE4ziDiqJPkJBJT5h9rCaKsg1vNZ6Y5nklhFrQM3aG/meV0uR7MU/KElkFn8AbcceT5G+j6dHrEvSKN/Cnj8=
+	t=1742567954; cv=none; b=aGE4hTwOF6vLUWO5xdKKmHov1cdXgV8tOdpmBNVpBEs5j8gY6qv/vzTZYshC+jIqPJR684DXwVuzvsHV7kD2YLv/dwE1U3TY61gUlT81f39bLKzdXCGpTAUj9fDHmEjb9goirVNxLnm+QNMbzaukl0Q4MvMao3AVztshCnblgdE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742567945; c=relaxed/simple;
-	bh=NCV1cJxcOeiaI+H+5yG6DqUsHaKoC9Jey0ChdsKpI9k=;
-	h=Message-ID:From:To:Cc:Subject:Date; b=r+3zUq5xrtkI8J3fliFWyp0uYjIiEXCNdNXngw8E1cg/JY6kvqNKOBP/rDkMWoQvJ5dE6L3SdjZiuQRDx8+wSNaYX+U3E1cgSDEXK1dGBdJn6HkIRh7+JwWoxvavg7Hkix76AA5Rs9NLWgVhqYcH4uHVb2aMI5xPqwoKSaAtNNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUbHDr3D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742567954; c=relaxed/simple;
+	bh=9E1pV78/mf6vVtqDaYeDkS74zjzNc4WCPPbdzZoF/JU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LLppatsoZTQH4R3goLomoRgh/402wnTR2YtuCm2uul8kc9pxhO0JND5/iCYld5z58mFqp2SJpkGLbvauttxYJC2EULPd4pQj0S5kH8YB/F3yf1nd0UA4/X7PqKD5ZYPcBpg41PM0mLmNx9ZOx3sn3vf3/aOy7hfG1fk3vc6ROS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eoG/qVWS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUbHDr3D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32630C4CEE3;
-	Fri, 21 Mar 2025 14:39:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eoG/qVWS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E47EDC4CEE3;
+	Fri, 21 Mar 2025 14:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742567944;
-	bh=NCV1cJxcOeiaI+H+5yG6DqUsHaKoC9Jey0ChdsKpI9k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=RUbHDr3Dujfg4IxQZii3RbgaATvIqvTBUCmLg55V30LI+5Kxpi0fFQ9zZsghWZorl
-	 vBlZ2OjVVRPDEFNuRRKuDenaYxkLqoV11hub/yNY2nUWJvC3cR7UVnaqe1e763cnp+
-	 TUGOheqqOZCZ6dS7dm/HFxKLS94Ni63bgxHGEBL0UJGL2RjIdVxmctMJe9Z5rP1WGh
-	 Y8ZkGAFvYPe9Jx4CoLxy2mrwOVjnusVV0zHeQBNmBQBafyXci/M8Ex/KqElCV+V/FF
-	 yGhh9YX5WOnYGJI4WquW54uNiJV9J0J5Kjj8vInTH1MiW7oOFjRo4bfENzDk7c3PpP
-	 xbmcFJh4Tabjg==
-Message-ID: <50c80a2096aa0f389fffb34dfffc82ba.broonie@kernel.org>
-From: Mark Brown <broonie@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: [GIT PULL] regulator fixes for v6.14-rc7
-Date: Fri, 21 Mar 2025 14:38:53 +0000
+	s=k20201202; t=1742567954;
+	bh=9E1pV78/mf6vVtqDaYeDkS74zjzNc4WCPPbdzZoF/JU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eoG/qVWSJdwBWze/jCGblq0SITB3IEuYtzANZoB0pFaayxmIfdtsZkVYKzkeIttq9
+	 WPhGfeREyqrrCmCYhFdEEJ+6bFOq740ekv32mkvExZ1fkmYKVW4EUacCeVcDbeLUUl
+	 NcMx9VYubTzGPlKhOqWANaFLsxTYfIrKmxmgDJ9/cfVa6Qr9gWEcT7AYiY5P9R37oO
+	 njUbKC8LOkiQ2LEaiWnEWMhSyBSiSosx68Clgq12kLg6coTQc6Cp7X0j4JN0wqBe2r
+	 DKiZEYQ5+9OwRaSB7JznYwtUz+BKJQlcQGrd1NPGx3G570esk9V1kQAGxCYoQT8ttW
+	 awYzNjhhcWWww==
+Date: Fri, 21 Mar 2025 09:39:12 -0500
+From: Rob Herring <robh@kernel.org>
+To: Jonathan Santos <jonath4nns@gmail.com>
+Cc: Conor Dooley <conor@kernel.org>,
+	Jonathan Santos <Jonathan.Santos@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, marcelo.schmitt@analog.com,
+	jic23@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+	marcelo.schmitt1@gmail.com, dlechner@baylibre.com
+Subject: Re: [PATCH RESEND v3 03/17] dt-bindings: iio: adc: ad7768-1: add
+ trigger-sources property
+Message-ID: <20250321143912.GA3214761-robh@kernel.org>
+References: <cover.1739368121.git.Jonathan.Santos@analog.com>
+ <4136b5259df75221fc314bcd4a57ecaeeab41a45.1739368121.git.Jonathan.Santos@analog.com>
+ <20250213-sympathy-suspend-2c414b383195@spud>
+ <Z8DZXAivPexoPJkN@JSANTO12-L01.ad.analog.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z8DZXAivPexoPJkN@JSANTO12-L01.ad.analog.com>
 
-The following changes since commit 7eb172143d5508b4da468ed59ee857c6e5e01da6:
+On Thu, Feb 27, 2025 at 06:30:04PM -0300, Jonathan Santos wrote:
+> On 02/13, Conor Dooley wrote:
+> > On Wed, Feb 12, 2025 at 03:16:16PM -0300, Jonathan Santos wrote:
+> > > In addition to GPIO synchronization, The AD7768-1 also supports
+> > > synchronization over SPI, which use is recommended when the GPIO
+> > > cannot provide a pulse synchronous with the base MCLK signal. It
+> > > consists of looping back the SYNC_OUT to the SYNC_IN pin and send
+> > > a command via SPI to trigger the synchronization.
+> > > 
+> > > Add a new trigger-sources property to enable synchronization over SPI
+> > > and future multiple devices support. This property references the
+> > > main device (or trigger provider) responsible for generating the
+> > > SYNC_OUT pulse to drive the SYNC_IN of device.
+> > > 
+> > > While at it, add description to the interrupts property.
+> > > 
+> > > Signed-off-by: Jonathan Santos <Jonathan.Santos@analog.com>
+> > > ---
+> > > v3 Changes:
+> > > * Fixed dt-bindings errors.
+> > > * Trigger-source is set as an alternative to sync-in-gpios, so we
+> > >   don't break the previous ABI.
+> > > * increased maxItems from trigger-sources to 2.
+> > > 
+> > > v2 Changes:
+> > > * Patch added as replacement for adi,sync-in-spi patch.
+> > > * addressed the request for a description to interrupts property.
+> > > ---
+> > >  .../bindings/iio/adc/adi,ad7768-1.yaml        | 28 +++++++++++++++++--
+> > >  1 file changed, 25 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > > index 3ce59d4d065f..4bcc9e20fab9 100644
+> > > --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.yaml
+> > > @@ -26,7 +26,19 @@ properties:
+> > >    clock-names:
+> > >      const: mclk
+> > >  
+> > > +  trigger-sources:
+> > > +    description:
+> > > +      Specifies the device responsible for driving the synchronization pin,
+> > > +      as an alternative to adi,sync-in-gpios. If the own device node is
+> > > +      referenced, The synchronization over SPI is enabled and the SYNC_OUT
+> > > +      output will drive the SYNC_IN pin.
+> > 
+> > Maybe a silly question, but why is self-reference needed here?
+> > sync-in-gpios is a required property at present, so why can't you
+> > operate under the assumption that neither the trigger-sources when
+> > neither are present? Is it because only one of the sources could be
+> > external and one internal, or there could be either one or two internal
+> > sources? Self-referencing properties always feel like a bit of a
+> > mistake.
+> > 
+> We have one internal synchronization source and two external ones.
+> The internal is when /SYNC_OUT drives /SYNC_IN (in this case with self
+> referencing). The external sources include using a GPIO to drive the 
+> /SYNC_IN (sync-in-gpio case) or using an external /SYNC_OUT, the last one
+> is described in the datasheet for multi-devices setup.
+> 
+> The trigger-sources property is inteded to indicate wheter the /SYNC_OUT
+> signal originates from within the device or from another source. currently
+> we are only handling the internal case. We are not sure yet how to handle
+> the external sources.
+> 
+> > > +    maxItems: 2
 
-  Linux 6.14-rc5 (2025-03-02 11:48:20 -0800)
+From the above, I don't follow how you have 2 entries. In any case, you 
+need to define what each entry is in the schema.
 
-are available in the Git repository at:
+I'm also wondering if adi,sync-in-gpios should be instead represented in 
+trigger-sources. This would mean we need a 'gpio-trigger' binding. That 
+would make the handling of trigger sources more uniform. But maybe not 
+worth the complexity.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git tags/regulator-fix-v6.14-rc7
-
-for you to fetch changes up to b65439d9015024c37c6b8a17c0569ec44675a979:
-
-  regulator: rtq2208: Fix the LDO DVS capability (2025-03-17 12:45:37 +0000)
-
-----------------------------------------------------------------
-regulator: Fixes for v6.14
-
-More fixes than I'd like at this point, some of which is due to me
-cooking things in -next for a bit and resetting that cooking time as
-more fixes came in.
-
- - Christian Eggers fixed some race conditions with the dummy regulator
-   not being available very early in boot due to the use of asynchronous
-   probing, both the provider side (ensuring that it's availalbe) and
-   consumer side (handling things if that goes wrong) are fixed.
- - Ludvig Pärsson fixed some lockdep issues with the debugfs
-   registration for regulators holding more locks than it really needs
-   causing issues later when looking at the resulting debugfs.boot
- - Some device specific fixes for incorrect descriptions of the RTQ2208
-   from ChiYuan Huang.
-
-----------------------------------------------------------------
-ChiYuan Huang (2):
-      regulator: rtq2208: Fix incorrect buck converter phase mapping
-      regulator: rtq2208: Fix the LDO DVS capability
-
-Christian Eggers (2):
-      regulator: dummy: force synchronous probing
-      regulator: check that dummy regulator has been probed before using it
-
-Ludvig Pärsson (1):
-      regulator: core: Fix deadlock in create_regulator()
-
- drivers/regulator/core.c              |  88 ++++++++------
- drivers/regulator/dummy.c             |   2 +-
- drivers/regulator/rtq2208-regulator.c | 216 +++++++++++++++++++---------------
- 3 files changed, 178 insertions(+), 128 deletions(-)
+Rob
