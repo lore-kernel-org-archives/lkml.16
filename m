@@ -1,105 +1,108 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F7381E9B2C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:32:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E324112E7F
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:35:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742535151; cv=none; b=T8zd4SwXVNe2Igx5vT7GftNqUyJ9Agsb+KGw9bWbKYCs4Jk35Vy9Jy8LkGClJRfJrJ9V6ty7btDNgUE2yVsYHCM6RI8eYi6zoLappwm9M36DhMibYQv2Z5KwmjICx5U/dUiOBSqw9B0IGf5Y8pmA/63C0ewyBmdhtR1LrKrQNfQ=
+	t=1742535307; cv=none; b=Gl4ASyE1Nh0ZQ+Kji/x6QuubWdErE2ePAxPozZqnURQeFur0K9vem9i+sOqI6I7NUIIyC81/FwEP+Jys+xGfiXvQfIvmha2X4o5v0DiLOqUz0yaMuPexEwLtHP3DH0nBdHqHuJ8aNJYg67FYYnS9Aok/ki/M2ZcoLB0Yy1xNKTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742535151; c=relaxed/simple;
-	bh=60IBVIW/YE5vet3apCFvtyROr9A+TP8l93hDsSzu2n8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CeMI+ykeygsQEzchKS71HhMY7xQ2NFdHQ4SZhQ7sfg1Y3yqFl5Mqdpr3I6gNcucTVThmjPyFEzWk0gPi3+p1wVL5i6kxzJjPx9P7nlz6IbihpuZ0wNRP2/Ro/pEUal4YkMiAZVWsWO2Nl5abH2OwWB+4pDeaxflKi1v4de7Yytw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EJz+BjiH; arc=none smtp.client-ip=170.10.133.124
+	s=arc-20240116; t=1742535307; c=relaxed/simple;
+	bh=0a7b7Wx9t9BfDXpog/fI+iSKPBahd4wY4JXa4z0TCfA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=F20fa6Nh3A2vIkuZYX7uwxvHqfiBc8LD7wFin/xpYumq2CbOB5rV5ERUYtEeVsDP/n4pTvmAWZx4myvuJe5RJsOBDEsPnCBqw3atxHjC3nywNWW+8NJuZXcnWnGu0H/xNiS0P1SwY7EC3FfOJNYxymdfvUt90eqBzPwD6KxXC90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Rozz1upq; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EJz+BjiH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Rozz1upq"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742535148;
+	s=mimecast20190719; t=1742535304;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=/lpSCB8BhAtQd/roFhxiAeh+Ow96uVGCOGIfu1pyhrw=;
-	b=EJz+BjiH7MDxVjCvCMpucyAUTE/zvbzr3/mkRWpYX8nZvChWPBOLQXIuqEstlEMKJAT9Fe
-	w9j1a57QAFez4/XgMO05uQwCC+Yp2fBdNtzMgUyTTSbUBqB2CHEb13xveZrrJjJYzDaJwQ
-	VR6fRO1Mlnn9RmhnwogLPG/6HZU5U0Y=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-212-9WcBLVVEM6WOIlvEUBSJJA-1; Fri,
- 21 Mar 2025 01:32:21 -0400
-X-MC-Unique: 9WcBLVVEM6WOIlvEUBSJJA-1
-X-Mimecast-MFC-AGG-ID: 9WcBLVVEM6WOIlvEUBSJJA_1742535140
-Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id D84821800257;
-	Fri, 21 Mar 2025 05:32:19 +0000 (UTC)
-Received: from gshan-thinkpadx1nanogen2.remote.csb (unknown [10.64.136.79])
-	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C4CF5192ED65;
-	Fri, 21 Mar 2025 05:32:13 +0000 (UTC)
-From: Gavin Shan <gshan@redhat.com>
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org,
-	akpm@linux-foundation.org,
-	willy@infradead.org,
-	david@redhat.com,
-	vbabka@suse.cz,
-	osalvador@suse.de,
-	gehao@kylinos.cn,
-	shan.gavin@gmail.com
-Subject: [PATCH 2/2] mm/debug: Fix parameter passed to page_mapcount_is_type()
-Date: Fri, 21 Mar 2025 15:31:48 +1000
-Message-ID: <20250321053148.1434076-3-gshan@redhat.com>
-In-Reply-To: <20250321053148.1434076-1-gshan@redhat.com>
-References: <20250321053148.1434076-1-gshan@redhat.com>
+	bh=QMjAUNZ4CwTQAOy+D76GwsLMdMyaRCTmvcyaAxjE49I=;
+	b=Rozz1upqIxLiEw7a8GfObmmCnvKtrmsq8lM4TOfqLF6HvM4vGXqtbaqzGWnR/TkdvoUgHp
+	hR+CSyQstBWLhqygq84UG526CYpmdyuoCnAltN7eETXtEYBa6jrBc/hts10VPgBkZSZ4od
+	bTU5UL7bthkXuunaLh2XPzIrYr+2qBg=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-688-zR_RjSglOxWgz_GHt4bxOQ-1; Fri, 21 Mar 2025 01:35:03 -0400
+X-MC-Unique: zR_RjSglOxWgz_GHt4bxOQ-1
+X-Mimecast-MFC-AGG-ID: zR_RjSglOxWgz_GHt4bxOQ_1742535302
+Received: by mail-pl1-f199.google.com with SMTP id d9443c01a7336-2240a7aceeaso24504395ad.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 22:35:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742535302; x=1743140102;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QMjAUNZ4CwTQAOy+D76GwsLMdMyaRCTmvcyaAxjE49I=;
+        b=vW9tGM4lJ2oMjyjaCokMSjE86CLM/968AUodNDfaYqOz7M5rUofFG8QoTuPXkF1RfM
+         BB0PV/CjmeOQO4mQ3nzMp5BLTwMIT5wTfOxF4mX0pxuCRTyUfeuuqCajeK/SD86KXL6o
+         DrbHkAP4b2IhzilNhswAoNI8RShztW9t+SepUc0kx8lpHgkx326WCw+WMEyPk4dxFq3X
+         ClZJ3DFinZLNCYdlRZd61zhZ3kSMoSPPTTbNLKYUTAz99vTzyATKgYqF8p4MEgaFn4bG
+         UYEaiL/3tBwus262yv4zj2+rNAAHDdlRQAnUgc8RvVo5QFsxzkMtw/klLGZ4DrwsmUcL
+         fpqg==
+X-Gm-Message-State: AOJu0YwoeHtOJxZD6Ul36GJjriCMl+BF2WlB9aYH+6N6BtIrpgTBURZ5
+	RBK5UZ22Rkwtsqo+B371E+b8pWpHBmamVhsDW1RvQ3aC2h/tJd1q/+9BidfgkmGdIjc28UnwUn7
+	5lQNKH/buxp+7OUj94y/JHwlp3kyBDdsulEN7Nu/vTc0kNK+5o0cef34Pw5/+cw==
+X-Gm-Gg: ASbGncslPnYcAsi7pAEynSvmUcwgxkDsgz9Ozk7IZ+423L2cYeaPqFlXWmrUWb/gF4w
+	D4hpqpo/HoHr29xn2nuTrL7H54bxiS1PN6IEd1u2y7jTyDkRZ2qNu/puE86vnUzDtLzYifCg9aX
+	uPJWP+W+D+h6UUybUMStCabgS0Vg0Tp7Sh8nNvNwvpsObMurv9qmklLWov5YItFVCjXK3EA5X7n
+	y28V3n1xyyUhcpd0V22fT/xR2Tyi7bLJBUxhe7pffA4cHALzMcBp7a4h13705d9vx1w1htMeJfv
+	3qGaVi0VMM+qC6W4oA==
+X-Received: by 2002:a17:902:9042:b0:220:fe51:1aab with SMTP id d9443c01a7336-22780e3fcdcmr30779845ad.38.1742535302187;
+        Thu, 20 Mar 2025 22:35:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IE+5TFY5QIybOCFPYbufZRYyuUOXtI2NZTA5/SN98eAr4pap9KU24UkSVHZM8SKIV+dQ4A53Q==
+X-Received: by 2002:a17:902:9042:b0:220:fe51:1aab with SMTP id d9443c01a7336-22780e3fcdcmr30779675ad.38.1742535301908;
+        Thu, 20 Mar 2025 22:35:01 -0700 (PDT)
+Received: from [192.168.68.55] ([180.233.125.167])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f3bbf8sm7927415ad.23.2025.03.20.22.34.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 20 Mar 2025 22:35:00 -0700 (PDT)
+Message-ID: <141f7331-43fd-4bf4-88ca-36c18b02b133@redhat.com>
+Date: Fri, 21 Mar 2025 15:34:55 +1000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Fix parameter passed to page_mapcount_is_type()
+From: Gavin Shan <gshan@redhat.com>
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, akpm@linux-foundation.org,
+ willy@infradead.org, david@redhat.com, vbabka@suse.cz, osalvador@suse.de,
+ gehao@kylinos.cn, shan.gavin@gmail.com
+References: <20250321053148.1434076-1-gshan@redhat.com>
+Content-Language: en-US
+In-Reply-To: <20250321053148.1434076-1-gshan@redhat.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-As the comments of page_mapcount_is_type() indicate, the parameter passed
-to the function should be one more than page->__mapcount. However,
-page->__mapcount is passed to the function by commit 4ffca5a96678
-("mm: support only one page_type per page") where page_type_has_type()
-is replaced by page_mapcount_is_type(), but the parameter isn't adjusted.
+On 3/21/25 3:31 PM, Gavin Shan wrote:
+> Found by code inspection. There are two places where the parameter
+> passed to page_mapcount_is_type() is (page->__mapcount), which is
+> correct since it should be one more than the value, as explained in
+   ^^^^^^^
+   s/correct/incorrect
 
-Fix the parameter passed to page_mapcount_is_type() to be (page->__mapcount
-+ 1).
-
-Fixes: 4ffca5a96678 ("mm: support only one page_type per page")
-Cc: stable@vger.kernel.org # v6.12+
-Signed-off-by: Gavin Shan <gshan@redhat.com>
----
- mm/debug.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/mm/debug.c b/mm/debug.c
-index 8d2acf432385..b6bd9555ec7b 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -71,10 +71,10 @@ static void __dump_folio(struct folio *folio, struct page *page,
- 		unsigned long pfn, unsigned long idx)
- {
- 	struct address_space *mapping = folio_mapping(folio);
--	int mapcount = atomic_read(&page->_mapcount);
-+	int mapcount = atomic_read(&page->_mapcount) + 1;
- 	char *type = "";
- 
--	mapcount = page_mapcount_is_type(mapcount) ? 0 : mapcount + 1;
-+	mapcount = page_mapcount_is_type(mapcount) ? 0 : mapcount;
- 	pr_warn("page: refcount:%d mapcount:%d mapping:%p index:%#lx pfn:%#lx\n",
- 			folio_ref_count(folio), mapcount, mapping,
- 			folio->index + idx, pfn);
--- 
-2.48.1
+> the comments to page_mapcount_is_type(): (a) page_has_type() in
+> page-flags.h (b) __dump_folio() in mm/debug.c
+> 
+> PATCH[1] fixes the parameter for (a)
+> PATCH[2] fixes the parameter for (b)
+> 
+> Gavin Shan (2):
+>    mm: Fix parameter passed to page_mapcount_is_type()
+>    mm/debug: Fix parameter passed to page_mapcount_is_type()
+> 
+>   include/linux/page-flags.h | 2 +-
+>   mm/debug.c                 | 4 ++--
+>   2 files changed, 3 insertions(+), 3 deletions(-)
+> 
 
