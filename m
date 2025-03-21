@@ -1,170 +1,177 @@
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2047.outbound.protection.outlook.com [40.107.95.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B6991EFF8F;
-	Fri, 21 Mar 2025 08:01:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742544068; cv=none; b=hOx6/ywTTUUla68Sb7xYOtiQea22EPs2LvqP1kYNJJ2g4f7NdelsDSvzjb3cv9+z+yk+MWHnD5ibQNoC+oOoMiGnkj3Tq7v8EoJ11LPvHkPSuOIg43R3WRyHM//JcWlCx3/K00itsB5xGB0x3Rsm/foAHiGoID27BVcm07+2GVc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742544068; c=relaxed/simple;
-	bh=YEBKqxb5NnXK1B/MWvaok2UKCzrFV38+PsdgI5ax28g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ai2jTcpZm/ZKx1iFDxtNLjNCkPoB0FIb7WQ25MOuRpXTdbijEzhYToQIDIfleO5+WhKCgmfBPvNM8UQam4lM5dPV+GYfOtmdksZBM/1NruD81nR2w8JIpfBwj++nLnDimIAvpT1IwWu2rjgcidRfF3nvQUaXpGoQfZvGGQ4/KFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OOAOCwTg; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA031EF0B1
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:01:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.47
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742544075; cv=fail; b=QQZQc8bo/50xqDop8folfAX1F6e8NodmnzwHpXlbWRQ5c09mR6qXhrydhQOD1Tre2jjWBFQfYQspBd59tKLnN+ngEa50ieLsKOQ4TfOlY9krjy3tjboqs1AvS3188jG4h//HFnB4yVwAef3D9mMtkUst3c1AJ0otuw4FDAnyzo8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742544075; c=relaxed/simple;
+	bh=EW0ZSCU0f8e/m/IaZaIUSCu7PFUOEsmGxJi1Wnsp+84=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=lX0JSRYok73OgAy3WnZGI8POm/6Wo+BhnSW0U6rJe3ktXLDRI3e1E9mIVfJaJZK/+d9FDUrbWBtQsZs8QWinBxp3weUZT98I9IsZoElgTVV/ogLNWoDc4/SoWysu+taJSCVPIBU839IYthzp29xDQlMpr4XdNTU7PasaC4EONAc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=L9UNfCQm; arc=fail smtp.client-ip=40.107.95.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OOAOCwTg"
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-54996d30bfbso1586041e87.2;
-        Fri, 21 Mar 2025 01:01:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742544064; x=1743148864; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ROAy7hkDciZFMoM0hAPRWBq/5MH/tytpN9Ow/SDYmvE=;
-        b=OOAOCwTgTKf5c/VSdfdc34SlaFdqJCV9yX4Tpb5s6Sf7vsYupgVv4JBlctVyUp43E4
-         MmRZMsiZZvW3o+2qqTQhh3DKB16bQd+jM0wbcDrtDp/lHtE3H0cQqGvqo8whndXkZR5w
-         jy6wkCbw8+Fdb2pQyYQNhKGHFLURmhUj/JM9zvboM0cbx0eimqcvFD3mmDSDTr3QEktU
-         qv4kyti4LDHpwbW52JMZl+CGUnfPoXsaTI344zRYS4Fq5m/GdX+ni2xnk6nPPlPBkNgH
-         WnrXH8aeGxIO5Q/goZBSGGPKWCnJ2Jt5qr7Nxye4XHm0GhnLmRAGEoAa+DWjJ/zKdL7P
-         TLug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742544064; x=1743148864;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ROAy7hkDciZFMoM0hAPRWBq/5MH/tytpN9Ow/SDYmvE=;
-        b=cyzZMZekIYRs1eDumIivFiiyfmbN9Cg0ArkVPPrkl0SUSrDOhGWIlAa5I6Fv6EFpAl
-         2ZzaRHg2FCLy8bYeKyjjKryUXLqv0YNoQQM30kiC2ii2dvdOJo8m2KuvqWtzYqztX3aN
-         7WbvsN2naBfZYmWWvTFTGl5+k9b8uXSkud1wzqW3XVAJEiRMNoQKe+pCxaSt0eSAEil5
-         jmPtb76D3QJJNhQ5L0vYPoL1Q0qH5jv5+3Gzqb88E6lt66olumeZDexX7Vl//fq3M4st
-         hw+qhvgzXKr132rB9ztiXkNk6eMmj3FMuSjxIjykON7oAhxWH7IlA6RGQ+GAplaqapdg
-         Lbyg==
-X-Forwarded-Encrypted: i=1; AJvYcCWdI08R8U+et385ZIzS0NDDC3WKI3c+g46v/DCdCmGegf7VSR4WVNaprK+3jo3NYk9JTOCtFj///XU17ROw@vger.kernel.org, AJvYcCWvhzZzN/3iBHU+ZlaN3sRqDKVOp+icnOXZkNJfmZgi0iczI0BttrTjNX1MYVIDD9d/3rmNo1EX3rY=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywxo4v8F/G9BeFQ08R5wlFbgDpR+OtIIcI29pzw6rDj49H6lJI+
-	rbF5DLYIe3pb53dgpqF5wR1NeeyGyKBsdTzrfrkeXlmIcGtWwDdd
-X-Gm-Gg: ASbGncvJIYjyZj+Q7GYqTGXSH5/G5/3Ai40C8BwsBRzs5gX+8i42UwQZTg1gIEJEztC
-	hwR22E7LkjjQ1zfy9o32WyyjapAiocFSVnE6stEMZfPpK7kmTxdp/CGg5vX7bUcRBPXsG0T75zz
-	J2in/6IUogc+yNb3HYzEIEaVgdgQ7E+xSuCpO3FETUhgwyf8IFEtrPBbu3SuqqPOGt0AfTjMe7u
-	c0uCCNds52erGkWjm7qdnGjJCM4GC9YcLlTRiBCOGXhlVm36OYQ3vFNmX4jL4oZhmAMLkCqzexN
-	Z+EN6NT9ExRfyVhhR79NbeB4lA2Q7t6udsIcCmiKZPE4aQxoIXy9fA61vXay9bMQP9te5XVYBJo
-	WUJ81iEjs7Vf08J1J00hf5ppKkg==
-X-Google-Smtp-Source: AGHT+IG8fY7X0v+tdVefuJtzGWEzjXldFnY/WLDbVUoYb6TIjWsI4MlIACYTfj7dSZl8wkyUANlLfw==
-X-Received: by 2002:a05:6512:3401:b0:545:a2f:22ba with SMTP id 2adb3069b0e04-54ad64f58f3mr863335e87.37.1742544063818;
-        Fri, 21 Mar 2025 01:01:03 -0700 (PDT)
-Received: from ?IPV6:2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703? ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad647c9b9sm122400e87.83.2025.03.21.01.01.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 01:01:03 -0700 (PDT)
-Message-ID: <ae33de64-1ba1-4bd2-a139-3f0b5986f41e@gmail.com>
-Date: Fri, 21 Mar 2025 10:01:00 +0200
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="L9UNfCQm"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=C786/xDapWiSRts68D3kttMq1v0Ma1b1GtjHtNAvQH3T+5NHsEgB4wKJBUqty3m/vXi7APCD6iKGqY9TbJYIvxUSRg/8KImLaXGxKGoXSs7Qa/wHBx1LH6vAWaP7B0B9zQjq9lGx5yTO2fc8yLuhzDGy1msn5UT0LvCTmFgO/SSub/co6S4Q7c6XQBrgIcKSXDiHurqATcgjaSTUxQuMxHsFlznkG9hvfQoTGiqvEiQaffBY0w5HGLdtDqX1YxHBhhFs1Et0/TudfjxWCzD2U8vlZ0akGhvyylta9eNXliszF0XiUvjYQQ2sKBvNgLhwv0dj/hGdE5NCh9//bP7icQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=In7fGXr2Og8bAq9giyHtVU28JQS78bosyKHcwiffr6o=;
+ b=R6Rm9uZr077y8ojMsjmHDHG2O+isZMgC9rU5Elbxqtog6OicuS3sWtr7WphvvzaiscaBv+5ItxYKNOpUyWFwrbZOiXwxHuPcdNzqgm7LgKhbOixnEnYwVieuppnCzdW6zEV7XrModnfdTRxA/NmA7QtCIVg2olPayYZoOXWYB9tML4m2Q7n6w8bu0FhopPsOp9FaNOejP2ErBleBtL8hzCV64nrIOZOl3IS3nbflC8vpgH5kHWPY9/bzzf+ZG+DZCbRLtu6DxCTgRE4NyBZQqsSDDkV5twwA21u2DQ6T7f/a23RfeFfkJm2nVzV4hA41cH4IcKB+uBZxyW/iouE8nw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=redhat.com smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=In7fGXr2Og8bAq9giyHtVU28JQS78bosyKHcwiffr6o=;
+ b=L9UNfCQmPeeNTJk2PwhzJVD+vHtWHyjQ1XMbuJ12SMr88XmveKsqmfdj6p4m984nrL5vtFpSwHDk9f5Ny1nXwhSyL1+O5YTQxYjQZ0F6/svDpWq+3L8My/00+IkXZIoIO1EOw4rNnXWT7ES0YXqAigoU1OpFyiBAKUlt2pTL+Z0=
+Received: from CH0PR03CA0292.namprd03.prod.outlook.com (2603:10b6:610:e6::27)
+ by PH0PR12MB7488.namprd12.prod.outlook.com (2603:10b6:510:1e9::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.34; Fri, 21 Mar
+ 2025 08:01:05 +0000
+Received: from DS3PEPF000099DF.namprd04.prod.outlook.com
+ (2603:10b6:610:e6:cafe::af) by CH0PR03CA0292.outlook.office365.com
+ (2603:10b6:610:e6::27) with Microsoft SMTP Server (version=TLS1_3,
+ cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.35 via Frontend Transport; Fri,
+ 21 Mar 2025 08:01:05 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ DS3PEPF000099DF.mail.protection.outlook.com (10.167.17.202) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.8534.20 via Frontend Transport; Fri, 21 Mar 2025 08:01:05 +0000
+Received: from jenkins-honglei.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Mar
+ 2025 03:01:01 -0500
+From: Honglei Huang <honglei1.huang@amd.com>
+To: David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+	<mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Simona Vetter
+	<simona@ffwll.ch>, Rob Clark <robdclark@gmail.com>, Huang Rui
+	<ray.huang@amd.com>
+CC: <dri-devel@lists.freedesktop.org>, <virtualization@lists.linux.dev>,
+	<linux-kernel@vger.kernel.org>, Demi Marie Obenour <demiobenour@gmail.com>,
+	Dmitry Osipenko <dmitry.osipenko@collabora.com>, Honglei Huang
+	<Honglei1.Huang@amd.com>
+Subject: [PATCH v2 2/7] virtio-gpu api: add blob userptr resource
+Date: Fri, 21 Mar 2025 16:00:24 +0800
+Message-ID: <20250321080029.1715078-3-honglei1.huang@amd.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20250321080029.1715078-1-honglei1.huang@amd.com>
+References: <20250321080029.1715078-1-honglei1.huang@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v9 6/8] iio: adc: Support ROHM BD79124 ADC
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
- Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
- Nuno Sa <nuno.sa@analog.com>, David Lechner <dlechner@baylibre.com>,
- Javier Carrasco <javier.carrasco.cruz@gmail.com>,
- Olivier Moysan <olivier.moysan@foss.st.com>,
- Guillaume Stols <gstols@baylibre.com>,
- Dumitru Ceclan <mitrutzceclan@gmail.com>,
- Trevor Gamblin <tgamblin@baylibre.com>,
- Matteo Martelli <matteomartelli3@gmail.com>,
- Alisa-Dariana Roman <alisadariana@gmail.com>,
- =?UTF-8?Q?Jo=C3=A3o_Paulo_Gon=C3=A7alves?= <joao.goncalves@toradex.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
-References: <cover.1742457420.git.mazziesaccount@gmail.com>
- <544371135e5ff5647c3cd4bce6d21e1b278ac183.1742457420.git.mazziesaccount@gmail.com>
- <Z9wVQ8vgV8kQylqG@smile.fi.intel.com>
-Content-Language: en-US, en-AU, en-GB, en-BW
-From: Matti Vaittinen <mazziesaccount@gmail.com>
-In-Reply-To: <Z9wVQ8vgV8kQylqG@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DS3PEPF000099DF:EE_|PH0PR12MB7488:EE_
+X-MS-Office365-Filtering-Correlation-Id: 26be5597-1176-48dc-f635-08dd684e87ea
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|36860700013|1800799024|7416014|82310400026|376014|921020;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?d0c5q0Oa6yXvHwRieQBvjna9Fk18yo2iEt3YKcdg8sJ/FcCFq3NDGTyAZNbQ?=
+ =?us-ascii?Q?sKMxRDu2sa22uUdoh7rs0sPKKGrxdcYZYOp0ncxXQwHR2Z8f9fQODLdF0x+U?=
+ =?us-ascii?Q?6NlQK4oozy8vgjKZa4TnPE+J4K7xG2HJAnX3nXVGJkftsnfB472W6EO8F/tN?=
+ =?us-ascii?Q?eEq4PsIreqmg8VpMJiblctEAAljPLqGYNDasyxduKIx1Oylxxpz0Fwuk728m?=
+ =?us-ascii?Q?rKMqzgctLbg6H7cjrlS3BbKez+858Ahd+AEKlekZgis7Dc9zRFBCyHgMXpfg?=
+ =?us-ascii?Q?gnLcJ+uLPCzUxkJ00sCSM9HO8NLEmnXwe0hmO3dsVzkT6KVAg7mjF4JikWcE?=
+ =?us-ascii?Q?k2INLz24l6SiKcr0pr4oRdaTTTgqeRbWlLT+HDGyrSmXUeJ9helTh58WBBH0?=
+ =?us-ascii?Q?ec6X1FTeh8aRWyY0sODCmKGKjaEXLpRoOaQEvMx6zIkYc7YWV5b4+wyL8pgq?=
+ =?us-ascii?Q?p6gZapGJN47NrtcQ1BQbcNbL9C4z6YZDI3r3nGaO5t3x5twFyNmOeA/SRxIo?=
+ =?us-ascii?Q?tU08HEMjkSqRLb4FcvIfwOhivqiOsBGrkvLtrr58Nt1yciwM2VL6pQyNP2eV?=
+ =?us-ascii?Q?gXK21t67NOmcTLSZyxX1+IW/S4o4zSGT1vVe2VyIa0sgqJYLbEEwz35fj1ee?=
+ =?us-ascii?Q?Sn4dsljbiZlQr6FRrptoh93wm2DxSQ41nGVUpF0vBlXxz5Qxobfg2HdFZpvp?=
+ =?us-ascii?Q?pklgeBsz2HkfRivzWaiiQYsmAAI547vMBn6zQ/l+Lzos/EispVewhOIJ2Yx4?=
+ =?us-ascii?Q?go7NjBVc8QieTo0MiFfW4q9nifLkuNy6Q1nKJ7Y5vfE8c/LH0sD7dhjr1OQl?=
+ =?us-ascii?Q?033arTIv1dPOkEL/ja9hmCxRQXSr70uUSZm351AtjQtU6iuEdz8odqJohSQS?=
+ =?us-ascii?Q?q8a9g8EEofOAKyPPn1iL54Us5ZMYXNAvROTXwzCU8Xf6tymyc476QSTCKLmN?=
+ =?us-ascii?Q?xfk2DjLv76xTx0aN9xCrUab7+qcvw7+a2SUBigbmZqpNwF5d1gLlTqt6IjR6?=
+ =?us-ascii?Q?Uw0HqUcG0nCvwMcpwrE5NJh9fWkba7wnEGbmqIB9iiF87VmUDXC9i3Vm2KO3?=
+ =?us-ascii?Q?hoIa8PHIchnVqD2OghSLnvm3lQqLErl7NmnmrShsV4gE88qnbkWGxmrfRuMH?=
+ =?us-ascii?Q?gtKg9TU3EXZz8QJXNKskDKH/b+sGJ1srTMTJUEfy+x/NoOIi7NENAnCGdGNo?=
+ =?us-ascii?Q?UUCRhCmujN6/A1eUpTyI2X40va5EW8ksgrLkeiF8pQbiUzzOHmeJarjtq29f?=
+ =?us-ascii?Q?fWsua1WfY5j1p/wnl+ETcoOfhRc8LxCJHDlG64Otm+lN/QjzMzZDSiH0sazd?=
+ =?us-ascii?Q?G096v13juqO/Stnn7BW6lB1Ck04ndIxGPjRoz3TvlddBy8GubwnLgoYX38nh?=
+ =?us-ascii?Q?uaLX0dvTvGeQcA5hQqutb6GSsXZB5534+M/Mn9UTj68PonSSukDzKHWhyKv4?=
+ =?us-ascii?Q?EIqxX6vFbT4VwkvsRp3n2xWU/1/JLCtfn6qBX4jZ+se9oawYAtHwMSzVD9k7?=
+ =?us-ascii?Q?Zv3E9iN45r6qNWapK/fL87BZSUZoC9eG6a2h?=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(7416014)(82310400026)(376014)(921020);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 08:01:05.2132
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 26be5597-1176-48dc-f635-08dd684e87ea
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	DS3PEPF000099DF.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7488
 
-On 20/03/2025 15:16, Andy Shevchenko wrote:
-> On Thu, Mar 20, 2025 at 10:22:00AM +0200, Matti Vaittinen wrote:
->> The ROHM BD79124 is a 12-bit, 8-channel, SAR ADC. The ADC supports
->> an automatic measurement mode, with an alarm interrupt for out-of-window
->> measurements. The window is configurable for each channel.
->>
->> The I2C protocol for manual start of the measurement and data reading is
->> somewhat peculiar. It requires the master to do clock stretching after
->> sending the I2C slave-address until the slave has captured the data.
->> Needless to say this is not well suopported by the I2C controllers.
->>
->> Thus do not support the BD79124's manual measurement mode but implement
->> the measurements using automatic measurement mode, relying on the
->> BD79124's ability of storing latest measurements into register.
->>
->> Support also configuring the threshold events for detecting the
->> out-of-window events.
->>
->> The BD79124 keeps asserting IRQ for as long as the measured voltage is
->> out of the configured window. Thus, prevent the user-space from choking
->> on the events and mask the received event for a fixed duration (1 second)
->> when an event is handled.
->>
->> The ADC input pins can be also configured as general purpose outputs.
->> Make those pins which don't have corresponding ADC channel node in the
->> device-tree controllable as GPO.
-> 
-> ...
-> 
->> +struct bd79124_raw {
->> +	u8 val_bit0_3; /* Is set in high bits of the byte */
->> +	u8 val_bit4_11;
->> +};
-> 
-> Again, this is confusing.
-> 
-> Just put a bit order map in the comment as I suggested previously.
-> When I see variable name containing bit range like above I think
-> about the same bit order, i.e. with your comment it makes like this
-> 
-> bit number	7 6 5 4 3 2 1 0
-> data bit	0 1 2 3 x x x x
+From: Honglei Huang <Honglei1.Huang@amd.com>
 
-Gah. I think I now understand what you're after. And, I agree, I haven't 
-been as clear as I could've been.
+Add a new resource for blob resource, called userptr, used for let
+host access guest user space memory, to acquire buffer based userptr
+feature in virtio GPU.
 
-The pit numbers in the struct members:
-	u8 val_bit0_3; and u8 val_bit4_11;
+- New flag VIRTIO_GPU_BLOB_FLAG_USE_USERPTR used in blob create
+to indicate the blob create ioctl is used for create a userptr
+blob resource.
+- New resource type VIRTIO_GPU_F_RESOURCE_USERPTR is for feature
+check and probe.
 
-are _not_ intended to represent the bit ordering - only the bit 
-positions. Like, bits from bit 0 to bit 3 are stored in high bits of 
-this u8 - where the "0 to 3" was just picked as order based on it being 
-from the smaller to greater (which I believe is grammatically typical) - 
-not based on how the bits are ordered in the register. If the order of 
-the bits was indeed reverted, then we should see much more complex 
-conversions than what is presented in these macros.
+Signed-off-by: Honglei Huang <Honglei1.Huang@amd.com>
+---
+ include/uapi/linux/virtio_gpu.h | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I will update the variable names to:
-
-val_bit3_0; and val_bit11_4; I think it should sort out the confusion. I 
-won't go to bit level representation of the full registers:
-
- > bit number	7 6 5 4 3 2 1 0
- > data bit	3 2 1 0 x x x x
-
-and
-
- > bit number	7 6 5 4 3 2 1 0
- > data bit	b a 9 8 7 6 5 4
-
-because it suggests there is something very strange in the registers 
-(which is not the case) - and it is hard to spot if some bits have 
-indeed changed the place.
-
-Yours,
-	-- Matti
+diff --git a/include/uapi/linux/virtio_gpu.h b/include/uapi/linux/virtio_gpu.h
+index 331fae983193..4da36a1e62c4 100644
+--- a/include/uapi/linux/virtio_gpu.h
++++ b/include/uapi/linux/virtio_gpu.h
+@@ -65,6 +65,11 @@
+  */
+ #define VIRTIO_GPU_F_CONTEXT_INIT        4
+ 
++/*
++ * VIRTGPU_BLOB_FLAG_USE_USERPTR
++ */
++#define VIRTIO_GPU_F_RESOURCE_USERPTR    5
++
+ enum virtio_gpu_ctrl_type {
+ 	VIRTIO_GPU_UNDEFINED = 0,
+ 
+@@ -405,6 +410,7 @@ struct virtio_gpu_resource_create_blob {
+ #define VIRTIO_GPU_BLOB_FLAG_USE_MAPPABLE     0x0001
+ #define VIRTIO_GPU_BLOB_FLAG_USE_SHAREABLE    0x0002
+ #define VIRTIO_GPU_BLOB_FLAG_USE_CROSS_DEVICE 0x0004
++#define VIRTIO_GPU_BLOB_FLAG_USE_USERPTR      0x0008
+ 	/* zero is invalid blob mem */
+ 	__le32 blob_mem;
+ 	__le32 blob_flags;
+-- 
+2.34.1
 
