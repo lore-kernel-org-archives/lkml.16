@@ -1,218 +1,498 @@
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A11041EA7D3
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:13:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF4571EA7C1
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:13:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742562816; cv=none; b=IDRi+3nMSF8Dng1V5JvTB5R81+rALJfQRULn98OfQQ0POlmRg4yxTZf/8er4sIQntWHuoEzrXaK+y0olcCf6oSzvve9KRCXC6B5pKuOsSsKyTj5i/yVU9K9eQ2FS3432Ix98sAy483uOGstBmXp21y8ufkG7yzNHUQ7w39ya+3Q=
+	t=1742562833; cv=none; b=mpbuGtuW0pDzJNC6yZk4cLn6+6DRx9OYjsrEjQzIoi35Gul/3vpAMuXg5U6i/ys0rUuBZMz0AYIgGjoV4MYh87YyA73QVBMO2OTdOzkCptbcCGvQo06IsINlfAA9AAAElfPj9/ZqyaClUCtwznBaTpvv79bYgX3POZeyiS9xL7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742562816; c=relaxed/simple;
-	bh=5FNgG9pUF2rJQNgqGFpV33u2ZlZozrMUqHxMPhufv/c=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iA0zJ7aYB1k69Ju+CQzK8vK86rBjwXfAVnedEc9kx23d8gwv/DFVM3DN/MWhtCZdV0aOrdbFJkuQiJpjo833MKCV9Wpkau7JbOKIyx7qwOiOKzogqmlO8vd1+Ba+iMB0npv8picslyt2tQw8ViHqNo5OtpJSbGXyLZ2GufADz8A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=CFRo22zD; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742562833; c=relaxed/simple;
+	bh=43UsiKfmf8robAsEDJqmZ4aOxFSdPN1YR+8iwyD6dTc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=FHtWFWqpG9RNiX3DEWIGod0OD/XkVPZTzIztgkA75HYxbZsoj2OTqoGmyzjakzRZICWaF2K6msNnDBWALYg872f+9vV2HGe8ad0+s/r8F67pLLaFTo9nj0uS3FKKmx7ojJhnNwyvbYr12Tx2vLzWHu68vVJmu5+jahZ7EGzkvqY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com; spf=pass smtp.mailfrom=rivosinc.com; dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b=z28qBbal; arc=none smtp.client-ip=209.85.221.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=rivosinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rivosinc.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="CFRo22zD"
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LCS4EV025320
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:13:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	5FNgG9pUF2rJQNgqGFpV33u2ZlZozrMUqHxMPhufv/c=; b=CFRo22zDxJPNuFsE
-	AmLTIno0sld9+P6caj4dpyJxJjQoB9JP1YDj/fKGkmG4UcipQLEXlJpeMI9aRirJ
-	Ic7COt118HNKBRoM23FjZp4IqABVQe85c26hBm/MejQ7SJFJ/JnXis7J9jfB0Gs6
-	sdhw6Cy61xBhfQAnX+9ASSPmcXSdUiJtg+JRcoYePSGq9uZjpZPs+bPfN14Ze9Tn
-	0pnWShHYYELBRnPXhEJIwr6ds0BXpS1yFDGNwm5f88yaiEAWaW5UQcreTlkVQLJp
-	rAIsUlyeqsKtZ8ILVoW6fU1WCwK3W4t7s3RbdXtrA1PQYGTespq/V9j4mrj1Pbnj
-	wYrfIA==
-Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h854g46u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:13:33 +0000 (GMT)
-Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-224364f2492so28718105ad.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:13:33 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=rivosinc-com.20230601.gappssmtp.com header.i=@rivosinc-com.20230601.gappssmtp.com header.b="z28qBbal"
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3914bc3e01aso1327905f8f.2
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 06:13:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rivosinc-com.20230601.gappssmtp.com; s=20230601; t=1742562829; x=1743167629; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ws5N2/PtP1Eu6ihB8rghsKDx2GXJblSk7INWyBMy7EM=;
+        b=z28qBbal587pBT5QKHo0sU3w6pgkRaND5KXT10UeVCR60JibZfbkfQbIXiHNtSDfmK
+         LCSyqEoNVIgLzvtEp+afPSwQVDaxZy4Ey9RDE8CL/9cAhz9PuoY3IdmH0woZXo06Hlvs
+         Fk62itnbQwwa748+1U93FVFPdE5xlxIc7/8GwD+V+lm/qw9mMOiWt2Li48I5LYyig23G
+         wku5SuMS4SWph21pqAQirWVmm7lkEXvjHso0pmnjmf+F3DKKCW0tkXH9PupUu68TQ3d/
+         UBJ9sZLWdvtIwXdqwowZ6CyJwQ+jMvb064mXMOaAw24vUrEGTVVy10ldS0q4IfwxApTr
+         BhQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742562812; x=1743167612;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=5FNgG9pUF2rJQNgqGFpV33u2ZlZozrMUqHxMPhufv/c=;
-        b=vP2TkkOvovvy0yqyx6YAEmlZe3kUeH2p+b438p7qhAq7IwXCqMhq/5w0eux9uVo3N2
-         gFOYtRHhewO5Da/iJTlaTkNyvF7jbFz6rRNoJoH/ayUToZ1bza5R0xy4x4LA+40SbSUN
-         ScqWvMOlc2fw2on6pAjiVnUlFip9Np5SnA3SnaNBUFjHGtr6HXVL5Ns/NVnK3JhMcvGd
-         BkJoUtnJUltHgRwGiSFVg3OAV14Drufrxt3AxDlH5lBlnxvD6Bl360ZkJ2scHeCEb14V
-         eDRNn+39tv7TzmpPQaxT2rTT5s8miBaihmBNv+mXgZN8w8vmAto49RiO3zRk+O3c3itl
-         3llA==
-X-Forwarded-Encrypted: i=1; AJvYcCUC9NJ2HydemtqsUTrMFOave3/t3bcHWjV1eWrK5UHRkeVmigmbF3i7E9Xgbs25Fh/A54/zMqS1GLYUfEo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzEWA4t13X7prITBzfTAM35AVBY1UJDD+KdokBKuKBh8C4y9CfU
-	+pej8TDppgz5L/oNlAJ1i4qOEjnrYXcTYIkygCnykRdoD1gTljRxog3RYV2OCDQAfiAIx6B//hv
-	r59PrLoz5U8R5rtPbMaz3UkrKuxQR+KPjuPElyvhLaB0NeV7NBoDCkgizhKhAOkY=
-X-Gm-Gg: ASbGncuDtzR+XJzMC/BLQbD7oCs6dfpArIdYyAIbaYOefEnVxYkzNhPRI9bj+Kg/pBN
-	Zy6nWlcXiZxr45uGkTG0f4QXvG7wN3QBw9o9CqJTFzm/sHQexUjjUzm1nmCTJqtTbbPxy2edumJ
-	vVWEz4HRBa5wHAtZ0lXXk5VWdqvqow37LHr+FeWRJ1r5oMYTL7n6D71AC/w0qesgBazoDXAg3lz
-	dA9YCFRCBtTlYU2Bp9KUrILII6jsKpfCouzLJwGTFh5oAs9/KG1i1xObJhz3K60uCqcAUcXosyo
-	rHq/3VwYfNmi52FAxvMEehBy7S1vzzSWVeuvIvhwoA==
-X-Received: by 2002:a17:903:8cc:b0:224:2384:5b40 with SMTP id d9443c01a7336-22780db251amr63016035ad.24.1742562812356;
-        Fri, 21 Mar 2025 06:13:32 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHHoY9UCBt3xwqWxZ22HCF7nakuoPvQXo25F3KT5VaQ4ldYgmaRIf/nOVCn8I6txfPvw5K4/Q==
-X-Received: by 2002:a17:903:8cc:b0:224:2384:5b40 with SMTP id d9443c01a7336-22780db251amr63015405ad.24.1742562811803;
-        Fri, 21 Mar 2025 06:13:31 -0700 (PDT)
-Received: from [192.168.1.5] ([122.164.167.76])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811da3f2sm15736625ad.187.2025.03.21.06.13.28
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 06:13:31 -0700 (PDT)
-Message-ID: <cdafb2b7-8492-44e6-b934-d211cb1139ec@oss.qualcomm.com>
-Date: Fri, 21 Mar 2025 18:43:26 +0530
+        d=1e100.net; s=20230601; t=1742562829; x=1743167629;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ws5N2/PtP1Eu6ihB8rghsKDx2GXJblSk7INWyBMy7EM=;
+        b=DNSFHwVDITPIvRLOeuagtHC5RqRP+B3xvz2XqBy+DtSxdvW+qqAzgF5QGK/qhnlK8a
+         rKkfYiL8te4RFJ4Ajhki8ulBlEaRoBg2NKtmTKfI5fYKsXeHWfgjSvqBviQWiAgNBBgw
+         ZCvfGfpb4O8DFCNficsht9wgrmPrSRZ38BU+TEnXfkWNTb4D8uozlYu/MjDMkYtaGPSP
+         sApVqoUxQ90o24yDe7/qO1owzodSeTV0KoFpHg0WJCPqu6K0MOa7tSxGOyVF4SxrE5Dk
+         clLt6EFlYQk1Qnyaz/KaHA5ktB1hAZp6coiNpdKZLSChHOiDJCf6Z4WIU/U4BpeSy463
+         zscw==
+X-Forwarded-Encrypted: i=1; AJvYcCVx/VjlqWWwov3s1xOHRZig2Z5sA9+7MTBRG64urtb5zKwkIPcggTJv/Yk6gCGkzJ0pI7cYefRmJd3LBOs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxkU7EL5g7LjhHtjn/onKr1M6u+FUy6iXCxYg+d6DqCbzoeC967
+	wqSPM1urWtAlbydiuboacPeTJdwO6UTpjdUeH/yDIRrSzDiyqSO+Y2iuDu/1/y8=
+X-Gm-Gg: ASbGnctbkds7t2m2W9mlSwh6fXDjjpF/QDxBDL8Luqg/ARBbsnlNdFkPiIVzsoC/hVn
+	D9e2Pfe4B2b4636rGLjI/EV0TTfqGZ3BXb6SuOf9sAYAGBswobNNbPwNi0V+ozQNezco9nJ/l/K
+	hwyk9CzNPwjS+bUQoDOmsg0GKolTSWDu4P1aiEwQwo33xkMp4aQ2hL8HQVbzZ5AM0K3+XZN+hEo
+	xIHalo7RutRe2uLh1WOqaPGBfruxxWOBGbT1hRdh8UVbkoHg+Lbxoad7d+CbzNMFf5g7o408wzE
+	cMLaRx6VXKw6GdBKxd/zK9niizrpK96VTUUGdXrd920ZUTKuOL1Kk3If9WKDUaVYuFbVZqZ7Xlg
+	sX9Zf
+X-Google-Smtp-Source: AGHT+IGUJnxhjyGu7ufB6wyGpdYdbKS7+6k2eyHYgFKxVHRlB/Xm7E8vrXAFhp0hvlUzI9R7KED60g==
+X-Received: by 2002:a5d:64af:0:b0:391:2db0:2961 with SMTP id ffacd0b85a97d-3997f932efcmr3397837f8f.38.1742562828869;
+        Fri, 21 Mar 2025 06:13:48 -0700 (PDT)
+Received: from alex-rivos.ba.rivosinc.com ([2001:861:3382:ef90:3d12:52fe:c1cc:c94])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e674fsm2292970f8f.80.2025.03.21.06.13.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 06:13:48 -0700 (PDT)
+From: Alexandre Ghiti <alexghiti@rivosinc.com>
+To: Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>,
+	Ryan Roberts <ryan.roberts@arm.com>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Matthew Wilcox <willy@infradead.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Alexandre Ghiti <alex@ghiti.fr>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	linux-mm@kvack.org
+Cc: Alexandre Ghiti <alexghiti@rivosinc.com>
+Subject: [PATCH v5 7/9] mm: Use common huge_ptep_set_access_flags() function for riscv/arm64
+Date: Fri, 21 Mar 2025 14:06:33 +0100
+Message-Id: <20250321130635.227011-8-alexghiti@rivosinc.com>
+X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20250321130635.227011-1-alexghiti@rivosinc.com>
+References: <20250321130635.227011-1-alexghiti@rivosinc.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 4/5] misc: fastrpc: Add polling mode support for
- fastRPC driver
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
-        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
-        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
-        dri-devel@lists.freedesktop.org, arnd@arndb.de
-References: <20250127044239.578540-1-quic_ekangupt@quicinc.com>
- <20250127044239.578540-5-quic_ekangupt@quicinc.com>
- <hgox77a7e6zzriltwhzzciau6u2pmil4y3rl5o2l6zkp4fmlmp@q2dai5fxcvtq>
- <49295da9-82d4-45a0-a2a4-fdaa6600c70d@quicinc.com>
- <an4cvztdkqmrt7w2iaziihlxf4tbox65ze362v2lmycjnqg26y@jizjmh2ki34z>
- <939fcff6-fb93-487b-995b-88e3ff020784@oss.qualcomm.com>
- <2k6573yrw3dyn3rpwqz4asdpx3nlmj4ornm7kmxv3f4jlc6hzg@qkwn7gqduwri>
- <e46be95c-ca8d-48ce-a616-5f068bd28ebc@oss.qualcomm.com>
- <4ca8776c-3cc7-4266-8248-4a595fa19e7f@oss.qualcomm.com>
- <CAO9ioeXVyN+gn=tHP4HsRTs=4AFrrqiyRJw3byxhrcgu4+Quqw@mail.gmail.com>
-Content-Language: en-US
-From: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
-In-Reply-To: <CAO9ioeXVyN+gn=tHP4HsRTs=4AFrrqiyRJw3byxhrcgu4+Quqw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-ORIG-GUID: JkUXAfmfkCzfXVErvF6L6Jm0GxFNL9RO
-X-Authority-Analysis: v=2.4 cv=ZtHtK87G c=1 sm=1 tr=0 ts=67dd65fd cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=rQ4PyoImJZNyGwpw8nHSHQ==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=LhSCYqp89ykGWDZeNPQA:9 a=QEXdDO2ut3YA:10
- a=1OuFwYUASf3TG4hYMiVC:22
-X-Proofpoint-GUID: JkUXAfmfkCzfXVErvF6L6Jm0GxFNL9RO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 clxscore=1015 malwarescore=0 suspectscore=0
- phishscore=0 priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0
- classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210098
+Content-Transfer-Encoding: 8bit
 
+Both architectures have almost the same implementation:
+__cont_access_flags_changed() is also correct on riscv and brings the
+same benefits (ie don't do anything if the flags are unchanged).
 
+As in the previous commit, get_clear_contig_flush() is duplicated in both
+the arch and the generic codes, it will be removed from the arch code when
+the last reference there gets moved to the generic code.
 
-On 3/21/2025 4:47 PM, Dmitry Baryshkov wrote:
-> On Fri, 21 Mar 2025 at 12:18, Ekansh Gupta
-> <ekansh.gupta@oss.qualcomm.com> wrote:
->>
->>
->> On 3/20/2025 9:27 PM, Ekansh Gupta wrote:
->>> On 3/20/2025 7:45 PM, Dmitry Baryshkov wrote:
->>>> On Thu, Mar 20, 2025 at 07:19:31PM +0530, Ekansh Gupta wrote:
->>>>> On 1/29/2025 4:10 PM, Dmitry Baryshkov wrote:
->>>>>> On Wed, Jan 29, 2025 at 11:12:16AM +0530, Ekansh Gupta wrote:
->>>>>>> On 1/29/2025 4:59 AM, Dmitry Baryshkov wrote:
->>>>>>>> On Mon, Jan 27, 2025 at 10:12:38AM +0530, Ekansh Gupta wrote:
->>>>>>>>> For any remote call to DSP, after sending an invocation message,
->>>>>>>>> fastRPC driver waits for glink response and during this time the
->>>>>>>>> CPU can go into low power modes. Adding a polling mode support
->>>>>>>>> with which fastRPC driver will poll continuously on a memory
->>>>>>>>> after sending a message to remote subsystem which will eliminate
->>>>>>>>> CPU wakeup and scheduling latencies and reduce fastRPC overhead.
->>>>>>>>> With this change, DSP always sends a glink response which will
->>>>>>>>> get ignored if polling mode didn't time out.
->>>>>>>> Is there a chance to implement actual async I/O protocol with the help
->>>>>>>> of the poll() call instead of hiding the polling / wait inside the
->>>>>>>> invoke2?
->>>>>>> This design is based on the implementation on DSP firmware as of today:
->>>>>>> Call flow: https://github.com/quic-ekangupt/fastrpc/blob/invokev2/Docs/invoke_v2.md#5-polling-mode
->>>>>>>
->>>>>>> Can you please give some reference to the async I/O protocol that you've
->>>>>>> suggested? I can check if it can be implemented here.
->>>>>> As with the typical poll() call implementation:
->>>>>> - write some data using ioctl
->>>>>> - call poll() / select() to wait for the data to be processed
->>>>>> - read data using another ioctl
->>>>>>
->>>>>> Getting back to your patch. from you commit message it is not clear,
->>>>>> which SoCs support this feature. Reminding you that we are supporting
->>>>>> all kinds of platforms, including the ones that are EoLed by Qualcomm.
->>>>>>
->>>>>> Next, you wrote that in-driver polling eliminates CPU wakeup and
->>>>>> scheduling. However this should also increase power consumption. Is
->>>>>> there any measurable difference in the latencies, granted that you
->>>>>> already use ioctl() syscall, as such there will be two context switches.
->>>>>> What is the actual impact?
->>>>> Hi Dmitry,
->>>>>
->>>>> Thank you for your feedback.
->>>>>
->>>>> I'm currently reworking this change and adding testing details. Regarding the SoC
->>>>> support, I'll add all the necessary information.
->>>> Please make sure that both the kernel and the userspace can handle the
->>>> 'non-supported' case properly.
->>> Yes, I will include changes to handle in both userspace and kernel.
->> I am seeking additional suggestions on handling "non-supported" cases before making the
->> changes.
->>
->> Userspace: To enable DSP side polling, a remote call is made as defined in the DSP image.
->> If this call fails, polling mode will not be enabled from userspace.
-> No. Instead userspace should check with the kernel, which capabilities
-> are supported. Don't perform API calls which knowingly can fail.
->
->> Kernel: Since this is a DSP-specific feature, I plan to add a devicetree property, such
->> as "qcom,polling-supported," under the fastrpc node if the DSP supports polling mode.
-> This doesn't sound like a logical solution. The kernel already knows
-> the hardware that it is running on. As such, there should be no need
-> to further describe the hardware in DT. If the DSP firmware can report
-> its capabilities, use that. If not, extend the schema to add an
-> SoC-specific compatibility string. As a last resort we can use
-> of_machine_is_compatible().
+Signed-off-by: Alexandre Ghiti <alexghiti@rivosinc.com>
+---
+ arch/arm64/include/asm/hugetlb.h |  4 --
+ arch/arm64/include/asm/pgtable.h | 15 +++++-
+ arch/arm64/mm/hugetlbpage.c      | 69 +--------------------------
+ arch/riscv/include/asm/hugetlb.h |  5 --
+ arch/riscv/include/asm/pgtable.h | 11 +++--
+ arch/riscv/mm/hugetlbpage.c      | 32 ++-----------
+ arch/riscv/mm/pgtable.c          |  6 +--
+ include/linux/hugetlb_contpte.h  |  5 ++
+ mm/hugetlb_contpte.c             | 81 ++++++++++++++++++++++++++++++--
+ 9 files changed, 110 insertions(+), 118 deletions(-)
 
-Thanks for your suggestions. I'll try these out.
-
---Ekansh
-
->
->> Does this approach seem appropriate, or is there a better way to handle this?
->>
->> Thanks,
->> Ekansh
->>
->>>>> For now, with in-driver
->>>>> polling, we are seeing significant performance improvements for calls
->>>>> with different sized buffers. On polling supporting platform, I've observed an
->>>>> ~80us improvement in latency. You can find more details in the test
->>>>> results here:
->>>>> https://github.com/quic/fastrpc/pull/134/files#diff-7dbc6537cd3ade7fea5766229cf585db585704e02730efd72e7afc9b148e28ed
->>>> Does the improvement come from the CPU not goint to idle or from the
->>>> glink response processing?
->>> Although both are contributing to performance improvement, the major
->>> improvement is coming from CPU not going to idle state.
->>>
->>> Thanks,
->>> Ekansh
->>>
->>>>> Regarding your concerns about power consumption, while in-driver polling
->>>>> eliminates CPU wakeup and scheduling, it does increase power consumption.
->>>>> However, the performance gains seem to outweigh this increase.
->>>>>
->>>>> Do you think the poll implementation that you suggested above could provide similar
->>>>> improvements?
->>>> No, I agree here. I was more concentrated on userspace polling rather
->>>> than hw polling.
->>>>
->
+diff --git a/arch/arm64/include/asm/hugetlb.h b/arch/arm64/include/asm/hugetlb.h
+index 9b1c25775bea..29a9dac52cef 100644
+--- a/arch/arm64/include/asm/hugetlb.h
++++ b/arch/arm64/include/asm/hugetlb.h
+@@ -35,10 +35,6 @@ static inline void arch_clear_hugetlb_flags(struct folio *folio)
+ 
+ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags);
+ #define arch_make_huge_pte arch_make_huge_pte
+-#define __HAVE_ARCH_HUGE_PTEP_SET_ACCESS_FLAGS
+-extern int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+-				      unsigned long addr, pte_t *ptep,
+-				      pte_t pte, int dirty);
+ #define __HAVE_ARCH_HUGE_PTEP_SET_WRPROTECT
+ extern void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 				    unsigned long addr, pte_t *ptep);
+diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+index af8156929c1d..9b5c57e56691 100644
+--- a/arch/arm64/include/asm/pgtable.h
++++ b/arch/arm64/include/asm/pgtable.h
+@@ -1847,12 +1847,23 @@ static inline bool __hugetlb_valid_size(unsigned long size)
+ 	return false;
+ }
+ 
+-static inline int arch_contpte_get_num_contig(pte_t *ptep,
+-					      unsigned long size,
++extern int find_num_contig(struct mm_struct *mm, unsigned long addr,
++			   pte_t *ptep, size_t *pgsize);
++
++static inline int arch_contpte_get_num_contig(struct mm_struct *mm,
++					      unsigned long addr,
++					      pte_t *ptep, unsigned long size,
+ 					      size_t *pgsize)
+ {
+ 	int contig_ptes = 1;
+ 
++	/*
++	 * If the size is not passed, we need to go through the page table to
++	 * find out the number of contiguous ptes.
++	 */
++	if (size == 0)
++		return find_num_contig(mm, addr, ptep, pgsize);
++
+ 	if (pgsize)
+ 		*pgsize = size;
+ 
+diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+index 62a66ce2b2fe..03cb757f7935 100644
+--- a/arch/arm64/mm/hugetlbpage.c
++++ b/arch/arm64/mm/hugetlbpage.c
+@@ -63,8 +63,8 @@ bool arch_hugetlb_migration_supported(struct hstate *h)
+ }
+ #endif
+ 
+-static int find_num_contig(struct mm_struct *mm, unsigned long addr,
+-			   pte_t *ptep, size_t *pgsize)
++int find_num_contig(struct mm_struct *mm, unsigned long addr,
++		    pte_t *ptep, size_t *pgsize)
+ {
+ 	pgd_t *pgdp = pgd_offset(mm, addr);
+ 	p4d_t *p4dp;
+@@ -260,71 +260,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ 	return entry;
+ }
+ 
+-/*
+- * huge_ptep_set_access_flags will update access flags (dirty, accesssed)
+- * and write permission.
+- *
+- * For a contiguous huge pte range we need to check whether or not write
+- * permission has to change only on the first pte in the set. Then for
+- * all the contiguous ptes we need to check whether or not there is a
+- * discrepancy between dirty or young.
+- */
+-static int __cont_access_flags_changed(pte_t *ptep, pte_t pte, int ncontig)
+-{
+-	int i;
+-
+-	if (pte_write(pte) != pte_write(__ptep_get(ptep)))
+-		return 1;
+-
+-	for (i = 0; i < ncontig; i++) {
+-		pte_t orig_pte = __ptep_get(ptep + i);
+-
+-		if (pte_dirty(pte) != pte_dirty(orig_pte))
+-			return 1;
+-
+-		if (pte_young(pte) != pte_young(orig_pte))
+-			return 1;
+-	}
+-
+-	return 0;
+-}
+-
+-int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+-			       unsigned long addr, pte_t *ptep,
+-			       pte_t pte, int dirty)
+-{
+-	int ncontig, i;
+-	size_t pgsize = 0;
+-	unsigned long pfn = pte_pfn(pte), dpfn;
+-	struct mm_struct *mm = vma->vm_mm;
+-	pgprot_t hugeprot;
+-	pte_t orig_pte;
+-
+-	if (!pte_cont(pte))
+-		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
+-
+-	ncontig = find_num_contig(mm, addr, ptep, &pgsize);
+-	dpfn = pgsize >> PAGE_SHIFT;
+-
+-	if (!__cont_access_flags_changed(ptep, pte, ncontig))
+-		return 0;
+-
+-	orig_pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
+-
+-	/* Make sure we don't lose the dirty or young state */
+-	if (pte_dirty(orig_pte))
+-		pte = pte_mkdirty(pte);
+-
+-	if (pte_young(orig_pte))
+-		pte = pte_mkyoung(pte);
+-
+-	hugeprot = pte_pgprot(pte);
+-	for (i = 0; i < ncontig; i++, ptep++, addr += pgsize, pfn += dpfn)
+-		__set_ptes(mm, addr, ptep, pfn_pte(pfn, hugeprot), 1);
+-
+-	return 1;
+-}
+-
+ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 			     unsigned long addr, pte_t *ptep)
+ {
+diff --git a/arch/riscv/include/asm/hugetlb.h b/arch/riscv/include/asm/hugetlb.h
+index 0fbb6b19df79..bf533c2cef84 100644
+--- a/arch/riscv/include/asm/hugetlb.h
++++ b/arch/riscv/include/asm/hugetlb.h
+@@ -28,11 +28,6 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 			     unsigned long addr, pte_t *ptep);
+ 
+-#define __HAVE_ARCH_HUGE_PTEP_SET_ACCESS_FLAGS
+-int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+-			       unsigned long addr, pte_t *ptep,
+-			       pte_t pte, int dirty);
+-
+ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags);
+ #define arch_make_huge_pte arch_make_huge_pte
+ 
+diff --git a/arch/riscv/include/asm/pgtable.h b/arch/riscv/include/asm/pgtable.h
+index 72d3592454d3..081385e0d10a 100644
+--- a/arch/riscv/include/asm/pgtable.h
++++ b/arch/riscv/include/asm/pgtable.h
+@@ -613,7 +613,9 @@ static inline void ___set_ptes(struct mm_struct *mm, unsigned long addr,
+  * Some hugetlb functions can be called on !present ptes, so we must use the
+  * size parameter when it is passed.
+  */
+-static inline int arch_contpte_get_num_contig(pte_t *ptep, unsigned long size,
++static inline int arch_contpte_get_num_contig(struct mm_struct *mm,
++					      unsigned long addr,
++					      pte_t *ptep, unsigned long size,
+ 					      size_t *pgsize)
+ {
+ 	unsigned long hugepage_shift;
+@@ -657,9 +659,8 @@ static inline void __pte_clear(struct mm_struct *mm,
+ 	__set_pte_at(mm, ptep, __pte(0));
+ }
+ 
+-#define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS	/* defined in mm/pgtable.c */
+-extern int ptep_set_access_flags(struct vm_area_struct *vma, unsigned long address,
+-				 pte_t *ptep, pte_t entry, int dirty);
++extern int __ptep_set_access_flags(struct vm_area_struct *vma, unsigned long address,
++				   pte_t *ptep, pte_t entry, int dirty);
+ #define __HAVE_ARCH_PTEP_TEST_AND_CLEAR_YOUNG	/* defined in mm/pgtable.c */
+ extern int ptep_test_and_clear_young(struct vm_area_struct *vma, unsigned long address,
+ 				     pte_t *ptep);
+@@ -788,6 +789,8 @@ static inline pte_t __ptep_get_and_clear(struct mm_struct *mm,
+ #define __HAVE_ARCH_PTEP_GET_AND_CLEAR
+ #define ptep_get_and_clear	__ptep_get_and_clear
+ #define pte_clear		__pte_clear
++#define __HAVE_ARCH_PTEP_SET_ACCESS_FLAGS
++#define ptep_set_access_flags	__ptep_set_access_flags
+ 
+ #define pgprot_nx pgprot_nx
+ static inline pgprot_t pgprot_nx(pgprot_t _prot)
+diff --git a/arch/riscv/mm/hugetlbpage.c b/arch/riscv/mm/hugetlbpage.c
+index 87168123d4a2..b2046f4bd445 100644
+--- a/arch/riscv/mm/hugetlbpage.c
++++ b/arch/riscv/mm/hugetlbpage.c
+@@ -176,33 +176,6 @@ pte_t arch_make_huge_pte(pte_t entry, unsigned int shift, vm_flags_t flags)
+ 	return entry;
+ }
+ 
+-int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+-			       unsigned long addr,
+-			       pte_t *ptep,
+-			       pte_t pte,
+-			       int dirty)
+-{
+-	struct mm_struct *mm = vma->vm_mm;
+-	pte_t orig_pte;
+-	int pte_num;
+-
+-	if (!pte_napot(pte))
+-		return ptep_set_access_flags(vma, addr, ptep, pte, dirty);
+-
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, NULL);
+-	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+-
+-	if (pte_dirty(orig_pte))
+-		pte = pte_mkdirty(pte);
+-
+-	if (pte_young(orig_pte))
+-		pte = pte_mkyoung(pte);
+-
+-	set_ptes(mm, addr, ptep, pte, pte_num);
+-
+-	return true;
+-}
+-
+ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 			     unsigned long addr,
+ 			     pte_t *ptep)
+@@ -216,7 +189,8 @@ void huge_ptep_set_wrprotect(struct mm_struct *mm,
+ 		return;
+ 	}
+ 
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, NULL);
++	pte_num = arch_contpte_get_num_contig(mm, addr, ptep, 0, NULL);
++
+ 	orig_pte = get_clear_contig_flush(mm, addr, ptep, pte_num);
+ 
+ 	orig_pte = pte_wrprotect(orig_pte);
+@@ -234,7 +208,7 @@ pte_t huge_ptep_clear_flush(struct vm_area_struct *vma,
+ 	if (!pte_napot(pte))
+ 		return ptep_clear_flush(vma, addr, ptep);
+ 
+-	pte_num = arch_contpte_get_num_contig(ptep, 0, NULL);
++	pte_num = arch_contpte_get_num_contig(vma->vm_mm, addr, ptep, 0, NULL);
+ 
+ 	return get_clear_contig_flush(vma->vm_mm, addr, ptep, pte_num);
+ }
+diff --git a/arch/riscv/mm/pgtable.c b/arch/riscv/mm/pgtable.c
+index 4ae67324f992..af8b3769a349 100644
+--- a/arch/riscv/mm/pgtable.c
++++ b/arch/riscv/mm/pgtable.c
+@@ -5,9 +5,9 @@
+ #include <linux/kernel.h>
+ #include <linux/pgtable.h>
+ 
+-int ptep_set_access_flags(struct vm_area_struct *vma,
+-			  unsigned long address, pte_t *ptep,
+-			  pte_t entry, int dirty)
++int __ptep_set_access_flags(struct vm_area_struct *vma,
++			    unsigned long address, pte_t *ptep,
++			    pte_t entry, int dirty)
+ {
+ 	asm goto(ALTERNATIVE("nop", "j %l[svvptc]", 0, RISCV_ISA_EXT_SVVPTC, 1)
+ 		 : : : : svvptc);
+diff --git a/include/linux/hugetlb_contpte.h b/include/linux/hugetlb_contpte.h
+index 1c8f46ff95ea..e129578f6500 100644
+--- a/include/linux/hugetlb_contpte.h
++++ b/include/linux/hugetlb_contpte.h
+@@ -23,4 +23,9 @@ extern pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 				     unsigned long addr, pte_t *ptep,
+ 				     unsigned long sz);
+ 
++#define __HAVE_ARCH_HUGE_PTEP_SET_ACCESS_FLAGS
++extern int huge_ptep_set_access_flags(struct vm_area_struct *vma,
++				      unsigned long addr, pte_t *ptep,
++				      pte_t pte, int dirty);
++
+ #endif /* _LINUX_HUGETLB_CONTPTE_H */
+diff --git a/mm/hugetlb_contpte.c b/mm/hugetlb_contpte.c
+index 82f49eb79ffb..b4c409d11195 100644
+--- a/mm/hugetlb_contpte.c
++++ b/mm/hugetlb_contpte.c
+@@ -15,7 +15,7 @@ pte_t huge_ptep_get(struct mm_struct *mm, unsigned long addr, pte_t *ptep)
+ 	if (!pte_present(orig_pte) || !pte_cont(orig_pte))
+ 		return orig_pte;
+ 
+-	ncontig = arch_contpte_get_num_contig(ptep,
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep,
+ 					      page_size(pte_page(orig_pte)),
+ 					      NULL);
+ 
+@@ -69,7 +69,7 @@ void set_huge_pte_at(struct mm_struct *mm, unsigned long addr,
+ 	int i;
+ 	int ncontig;
+ 
+-	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, sz, &pgsize);
+ 
+ 	if (!pte_present(pte)) {
+ 		for (i = 0; i < ncontig; i++, ptep++, addr += pgsize)
+@@ -93,7 +93,7 @@ void huge_pte_clear(struct mm_struct *mm, unsigned long addr,
+ 	int i, ncontig;
+ 	size_t pgsize;
+ 
+-	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, sz, &pgsize);
+ 
+ 	for (i = 0; i < ncontig; i++, addr += pgsize, ptep++)
+ 		__pte_clear(mm, addr, ptep);
+@@ -145,7 +145,80 @@ pte_t huge_ptep_get_and_clear(struct mm_struct *mm,
+ 	int ncontig;
+ 	size_t pgsize;
+ 
+-	ncontig = arch_contpte_get_num_contig(ptep, sz, &pgsize);
++	ncontig = arch_contpte_get_num_contig(mm, addr, ptep, sz, &pgsize);
+ 
+ 	return get_clear_contig(mm, addr, ptep, pgsize, ncontig);
+ }
++
++/*
++ * huge_ptep_set_access_flags will update access flags (dirty, accesssed)
++ * and write permission.
++ *
++ * For a contiguous huge pte range we need to check whether or not write
++ * permission has to change only on the first pte in the set. Then for
++ * all the contiguous ptes we need to check whether or not there is a
++ * discrepancy between dirty or young.
++ */
++static int __cont_access_flags_changed(pte_t *ptep, pte_t pte, int ncontig)
++{
++	int i;
++
++	if (pte_write(pte) != pte_write(__ptep_get(ptep)))
++		return 1;
++
++	for (i = 0; i < ncontig; i++) {
++		pte_t orig_pte = __ptep_get(ptep + i);
++
++		if (pte_dirty(pte) != pte_dirty(orig_pte))
++			return 1;
++
++		if (pte_young(pte) != pte_young(orig_pte))
++			return 1;
++	}
++
++	return 0;
++}
++
++static pte_t get_clear_contig_flush(struct mm_struct *mm,
++				    unsigned long addr,
++				    pte_t *ptep,
++				    unsigned long pgsize,
++				    unsigned long ncontig)
++{
++	pte_t orig_pte = get_clear_contig(mm, addr, ptep, pgsize, ncontig);
++	struct vm_area_struct vma = TLB_FLUSH_VMA(mm, 0);
++
++	flush_tlb_range(&vma, addr, addr + (pgsize * ncontig));
++	return orig_pte;
++}
++
++int huge_ptep_set_access_flags(struct vm_area_struct *vma,
++			       unsigned long addr, pte_t *ptep,
++			       pte_t pte, int dirty)
++{
++	int ncontig;
++	size_t pgsize = 0;
++	struct mm_struct *mm = vma->vm_mm;
++	pte_t orig_pte;
++
++	if (!pte_cont(pte))
++		return __ptep_set_access_flags(vma, addr, ptep, pte, dirty);
++
++	ncontig = arch_contpte_get_num_contig(vma->vm_mm, addr, ptep, 0, &pgsize);
++
++	if (!__cont_access_flags_changed(ptep, pte, ncontig))
++		return 0;
++
++	orig_pte = get_clear_contig_flush(mm, addr, ptep, pgsize, ncontig);
++
++	/* Make sure we don't lose the dirty or young state */
++	if (pte_dirty(orig_pte))
++		pte = pte_mkdirty(pte);
++
++	if (pte_young(orig_pte))
++		pte = pte_mkyoung(pte);
++
++	set_contptes(mm, addr, ptep, pte, ncontig, pgsize);
++
++	return 1;
++}
+-- 
+2.39.2
 
