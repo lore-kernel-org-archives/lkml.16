@@ -1,60 +1,100 @@
-Received: from verein.lst.de (verein.lst.de [213.95.11.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21003184F
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:05:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
+Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABD26282F1;
+	Fri, 21 Mar 2025 05:06:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742533546; cv=none; b=oTfz0kENtNAbXOFdjm9Z+3x+UJJyj1D/pc9BRgxxxybnmd9e3TtR/XVfBT25Uozi0Q7oKuFL9A0MWnr9yd+Dus4sOob+Jv6p0Y3Vs9liGlR+GyZnjKJBs9bIxulxrL2dAjozKMaexqu2erlyzbnv2eb83zQ+5CvOiac4hjjC0tM=
+	t=1742533597; cv=none; b=ST0+IRz7EFP+KPap7WKRT9kTYwenEotJzpfcR27PwFHrHjIJBce/cL0P4dg6pzjTtzFBQbb7sBztkqDwPxOGAhGvL9KHw892JSDGWD0aZEenZDad7hxg6FvcBJ5s2tatLCy7QYiBaVnsnwrLPZHGLHPm1NSCGJOeXNckLARCnCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742533546; c=relaxed/simple;
-	bh=hqE0DWR0QvEKKxfmQXgNlpXx/3yw+/ivNNrnEvnsOb8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Ma1Eo3lecqxbt69a8ZCuhsHWteQdv67pGijeFTZgPTeYialdG3uJZ6crWsmTkTKWGAXwoL+hswyri10/QqXYfgs337dq9dZPxN88ZzLdsOhyzPx8B2TscNqyOdQ9omaJk1Q/LuO1J1E/sptS4qqS6e3rJVHZZ/R3LL8FJBT9N4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=lst.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
-Received: by verein.lst.de (Postfix, from userid 2407)
-	id B02B968AA6; Fri, 21 Mar 2025 06:05:38 +0100 (CET)
-Date: Fri, 21 Mar 2025 06:05:38 +0100
-From: Christoph Hellwig <hch@lst.de>
-To: =?utf-8?B?6YK15Z+55p2w?= <shaopeijie@cestc.cn>
-Cc: Christoph Hellwig <hch@lst.de>, kbusch <kbusch@kernel.org>,
-	axboe <axboe@kernel.dk>, sagi <sagi@grimberg.me>,
-	linux-nvme <linux-nvme@lists.infradead.org>,
-	linux-kernel <linux-kernel@vger.kernel.org>,
-	"zhang.guanghui " <zhang.guanghui@cestc.cn>,
-	gechangzhong <gechangzhong@cestc.cn>
-Subject: Re: [PATCH] nvme-tcp: fix selinux denied when calling sock_sendmsg
-Message-ID: <20250321050538.GA2038@lst.de>
-References: <20250320072517.GA14672@lst.de> <1382721899.82743.1742525374789.JavaMail.xmail@wm-2>
+	s=arc-20240116; t=1742533597; c=relaxed/simple;
+	bh=QekAbbPEkoztBFSu1XZeqrSFydw7/wSuY/OyyJBpfwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=nzeGfqeyBRAW/IzdxtavCjF3txJWjaS+xB3gAbIPmsfC1fnabF8df24xaQtMVGanrwAnBb6nZFbrHkzY73nHt8PTfWGCNEFAjTXe+ZnmuMkdycQOhqCIFIaRDfqAjeL3ULi9ZE0BGbxE029ynor/B5VSe5kDMFT+NXznI0B3lUU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
+X-AuditID: a67dfc5b-681ff7000002311f-ac-67dcf3d5454c
+From: Rakie Kim <rakie.kim@sk.com>
+To: Gregory Price <gourry@gourry.net>
+Cc: akpm@linux-foundation.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	linux-cxl@vger.kernel.org,
+	joshua.hahnjy@gmail.com,
+	dan.j.williams@intel.com,
+	ying.huang@linux.alibaba.com,
+	david@redhat.com,
+	Jonathan.Cameron@huawei.com,
+	kernel_team@skhynix.com,
+	honggyu.kim@sk.com,
+	yunjeong.mun@sk.com,
+	Rakie Kim <rakie.kim@sk.com>
+Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
+Date: Fri, 21 Mar 2025 14:06:19 +0900
+Message-ID: <20250321050625.950-1-rakie.kim@sk.com>
+X-Mailer: git-send-email 2.48.1.windows.1
+In-Reply-To: <Z9zww6ClrqH7lFom@gourry-fedora-PF4VCD3F>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1382721899.82743.1742525374789.JavaMail.xmail@wm-2>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXC9ZZnoe7Vz3fSDTbO4rWYs34Nm8X0qRcY
+	Lb6u/8Vs8fPucXaLVQuvsVkc3zqP3eL8rFMsFpd3zWGzuLfmP6vF6jUZDlweO2fdZffobrvM
+	7tFy5C2rx+I9L5k8Nn2axO5xYsZvFo+dDy093u+7yubxeZNcAGcUl01Kak5mWWqRvl0CV8ap
+	NYuZC+5wVtx4eIitgfEkexcjB4eEgInElDbnLkZOMHPhpw4mkDCbgJLEsb0xIKaIgKpE2xX3
+	LkYuDmaBR0wSp9uXsoLEhQXCJVpniIJ0sgCVHLtygBnE5hUwlrj2qIMZYqKmRMOle0wgNqeA
+	mcTrpitsILaQAI/Eqw37GSHqBSVOznzCAmIzC8hLNG+dzQyyS0LgOZvE8V+TWSEGSUocXHGD
+	ZQIj/ywkPbOQ9CxgZFrFKJSZV5abmJljopdRmZdZoZecn7uJERjqy2r/RO9g/HQh+BCjAAej
+	Eg+vxZ/b6UKsiWXFlbmHGCU4mJVEeEU6gEK8KYmVValF+fFFpTmpxYcYpTlYlMR5jb6VpwgJ
+	pCeWpGanphakFsFkmTg4pRoYTRdLzNn3i1OrPqDcLjfeQe99gN/ihGMSF33ObPsgPpv3RENg
+	aNIkhacui7RmLWw/edHzVaHcZtZIq/mlgVwTW1a3tDyUfyn0wnXu/bvyJ15/9DwWZpwpan3s
+	4+Qvn35f4r5c/yyB49UVzU62O6tfN7FMmV55vmDJLPuCclVBJqtXyZObXferKLEUZyQaajEX
+	FScCAPoCQCNxAgAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsXCNUNNS/fq5zvpBicNLeasX8NmMX3qBUaL
+	r+t/MVv8vHuc3eLzs9fMFqsWXmOzOL51HrvF4bknWS3OzzrFYnF51xw2i3tr/rNaHLr2nNVi
+	9ZoMi9/bVrA58HnsnHWX3aO77TK7R8uRt6wei/e8ZPLY9GkSu8eJGb9ZPHY+tPR4v+8qm8e3
+	2x4ei198YPL4vEkugDuKyyYlNSezLLVI3y6BK+PUmsXMBXc4K248PMTWwHiSvYuRk0NCwERi
+	4acOpi5GDg42ASWJY3tjQEwRAVWJtivuXYxcHMwCj5gkTrcvZQWJCwuES7TOEAXpZAEqOXbl
+	ADOIzStgLHHtUQczxERNiYZL95hAbE4BM4nXTVfYQGwhAR6JVxv2M0LUC0qcnPmEBcRmFpCX
+	aN46m3kCI88sJKlZSFILGJlWMYpk5pXlJmbmmOoVZ2dU5mVW6CXn525iBIb3sto/E3cwfrns
+	fohRgINRiYfX4s/tdCHWxLLiytxDjBIczEoivCIdQCHelMTKqtSi/Pii0pzU4kOM0hwsSuK8
+	XuGpCUIC6YklqdmpqQWpRTBZJg5OqQZGrtkLj57dx1Tw4s+C3bNWdrjVnsh+vPvh4WWVHHYt
+	PVv5V6f4LtLg0/Tt+ZotknHBb5nBLY4QBcYqBp6TzjkFWjlma5czrOAyWlylcvGnXKV5hE3t
+	27/Gaf2bu5xMbeUXcz7m/XBT7T/PzVlrX0/y7DVPfGf/TE0nvPP9QoOlXgc+5M6pT5BVYinO
+	SDTUYi4qTgQA66H2DGsCAAA=
+X-CFilter-Loop: Reflected
 
-[note: your mail was mangled html, I'm trying to extract the answer]
+On Fri, 21 Mar 2025 00:53:23 -0400 Gregory Price <gourry@gourry.net> wrote:
+> On Fri, Mar 21, 2025 at 01:36:55PM +0900, Rakie Kim wrote:
+> > 
+> > Patch 1 and Patch 2 are closely related, and I believe that both patches
+> > need to be combined to fully support the functionality.
+> > 
+> > Initially, I thought that Patch 1 was the fix for the original issue and
+> > considered it the candidate for a backport.
+> > However, upon further reflection, I believe that all changes in Patch 1
+> > through Patch 3 are necessary to fully address the underlying problem.
+> > 
+> > Therefore, I now think it makes more sense to merge Patch 1 and Patch 2
+> > into a single patch, then renumber the current Patch 3 as Patch 2,
+> > and treat the entire set as a proper -stable backport candidate.
+> > 
+> > I'd appreciate your thoughts on this suggestion.
+> > 
+> > Rakie
+> > 
+> 
+> All of this is fine, but it doesn't fix the bug in LTS kernels :]
+> 
+> It would be nice to do that too, since you identified it.
+> ~Gregory
 
-On Fri, Mar 21, 2025 at 10:49:34AM +0800, 邵培杰 wrote:
-> Sure. But on the target side, it's a bit different.
-> All socket operations are done in the workqueue with domain kernel_t,
-> the kernel_t can access other labels, so I think there's no issue.
+Following the previously discussed patch restructuring, are there any
+other bugs that remain unresolved?
+If you have any additional insights on these unresolved issues,
+I would appreciate your input.
 
-Indeed.
-
-> By
-> the way, switching to sock_create_kern() could skip selinux avc
-> permission check and might give a very small performance boost.
-
-It also helps to avoid copy and paste bugs..
-
-> I'll send an optimization patch later.
-
-Thanks!
+Rakie.
