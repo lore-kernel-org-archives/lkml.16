@@ -1,135 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E3B1189906;
-	Fri, 21 Mar 2025 14:17:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6ACC78F30;
+	Fri, 21 Mar 2025 14:17:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742566633; cv=none; b=XQy7Pz/EWCCzKd5XItjoYhQptcr4TOkSkdkzfzh0oumCJOawkH4GbfkZeHcCjwLuqQHF/8w6bceGz8kEGQ+7tfetJIs/bgTf6PRbHGw9/a/0pv65JswkM7PI05ISBVMjJsR7FF2npxfu1C/Jq+EpzG6fFChYcYBc55tvgFYW6b8=
+	t=1742566651; cv=none; b=C/vvJQQpZ0X5qi09CLigDo6a7r46yKMldHU6q0veKzM1QREMPCQBnVhlfrSXuomIaImI9zWlDoLKQ1OvptJGut/JtXCsvcVquj3GCYszzlo4+117iyUXvRHwn1EzdamPrT/YBhTeRyvao7fswEbJtJpRrBtsxkfZ7Gxs6ZG6x9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742566633; c=relaxed/simple;
-	bh=K9Y4DhHbfsF2dkYkvlD3D3IR3y9yChvy7gWg7lxoN0A=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AihQlmaTrzOg/q2zFw+QlW3vmH2bKV9ojG6FVQCu+9wYJWuHMiOYkIeNfPABG5nDi5AJAkkdK/eUVncrvZJQNjP1/JklTrn/eUhq4ii2/ndoWffwE9asw/p2OxQR7/lXKWOxndLoOi2rfCiuJFNBVyrYZbgcG1De3hU7wJM2ebs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cUq3IjCk; arc=none smtp.client-ip=192.198.163.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742566651; c=relaxed/simple;
+	bh=tHBXqjx0OUDIfknmMckM4pVAixWNPpvKKHM4XB+vUM0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=AqlhEQ5kLS5XiLmkKQTdug40+/c1PtgOT3YETYFgntA//4XS9i/yiwyFf0LGmStFHrH70gz/0uXyjwBFk+fPKwde+zjKxzuJk4MP+r8OnchJ5ziQCmfzPabESpMDbTOsYgYWo/uAY+CYHbE6fUtGeGy7XeQ+Mvk2G/wjwwPeaQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=IspHMRXE; arc=none smtp.client-ip=209.85.128.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cUq3IjCk"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742566632; x=1774102632;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=K9Y4DhHbfsF2dkYkvlD3D3IR3y9yChvy7gWg7lxoN0A=;
-  b=cUq3IjCkUJUjUpjuhSPsJ4rhwYRX/AMNwYdxdYEzO6D2VupeZBdH17j7
-   3bQTM3pfw5JMBaZXQqNBhw1QFl/FGOoBHUSZZgv8Ux6JN3ci1SAFvEy2m
-   S4oYRfNkk7e0B0lvoj4hAfLJf7Ty7hpmz09rDL83TzydAre1kGfiyAgQm
-   7z4DeO7O2wdFNvu55DInOfqq+m3grKi6NLA5lH3cwKDZCZFCGi57dhXyZ
-   5yRx9NfvznrPDXoeDAeR2+I6GhbEhpFCWMSwc0dRfHTiJQu88zFf1EWFQ
-   UX+J1kzJjApIJ77d2XuUWsfZbTO7gCaNPvX2rhs9ClbFYWbsrwNU8Y/2s
-   g==;
-X-CSE-ConnectionGUID: r11J6rSmQdy3BqA2mM+YXA==
-X-CSE-MsgGUID: OMnD5GkzTKKC92cWQ2JWVA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="43959363"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="43959363"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 07:17:12 -0700
-X-CSE-ConnectionGUID: 9LrzWAQUR+W4n1p/pfql7Q==
-X-CSE-MsgGUID: Egv072G8S9atgrThItC1mA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="128464535"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
-  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 07:17:09 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Fri, 21 Mar 2025 16:17:06 +0200 (EET)
-To: =?ISO-8859-15?Q?Ga=A8per_Nemgar?= <gasper.nemgar@gmail.com>
-cc: ikepanhc@gmail.com, Hans de Goede <hdegoede@redhat.com>, 
-    ilpo.jarvinen@linux.intel.com, LKML <linux-kernel@vger.kernel.org>, 
-    platform-driver-x86@vger.kernel.org
-Subject: Re: [PATCH] Added support for a some new buttons in ideapad-laptop
- driver Added entries to unsuported wmi codes in ideapad_keymap[] and one
- check in wmi_nofify in order to get wmi code 0x13d to trigger
- platform_profile_cycle
-In-Reply-To: <20250321083003.84661-1-gasper.nemgar@gmail.com>
-Message-ID: <ce934c71-2220-c8f9-ff3a-5633360a8935@linux.intel.com>
-References: <20250321083003.84661-1-gasper.nemgar@gmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IspHMRXE"
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-43cebe06e9eso15143635e9.3;
+        Fri, 21 Mar 2025 07:17:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742566648; x=1743171448; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ytG4OhmvAoifvIavHR89GwgHjeqU42K8UC/AJE3bg8s=;
+        b=IspHMRXEiI3fJS7Pr0CSihX+7bLPpF/ulcZoXwGgbPf9bUyvDgxxOVIbryfTweN+nq
+         FOnPaIGoKNqPG3a+HSLAKAmLXQFGvMY1U8aCYFv3hcMVpZSV6IAXQBtZp23EodT2mzsQ
+         MMlUhmNK9RaC7wX24AjcoPqCps0GezPbKOh531RvN5iPBEfREfFg/rqWDRVxTAU2UHda
+         vDl0f5YTbvjTtGGAHnWWk10pGmqO8juKrZHp+/eRWX8OTMIIk6dXLvpnjImhinuXap88
+         qcUlbKFoKMcCtXlULKFiiI/q64zE2PV8vXj+D8KgmndnpblMP1YkOPSjLAu0EWLYVii+
+         e5vQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742566648; x=1743171448;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=ytG4OhmvAoifvIavHR89GwgHjeqU42K8UC/AJE3bg8s=;
+        b=rgAdSlR4wQKjuhjxJB5BNYX1OEQwIhcGaqvCAwQiooLZOwkKVJyCuuUViokWGwUWLG
+         1lDKcRQTd1wmSLsVwnFt4XMjiuYMSB7y211JAZ784l0HBTGzfPhkleDD2zl4Y7YPYZa+
+         uArZQXLqmbl+S8FO9qrvt25F9Txkfukkblk753s1wUpbC0bL6oijR2CPM3/LK77Aw+W1
+         H2U4Ht8zxTjPsnttgxkJEDnVMoZ0RW3amA7me5YNblm+yTwRCt/k8xIP5joOV9Ta3/rA
+         AfDerL4aOyn0w/EfXl/dabE5J/1xXe86V46KMZsGm/qRN+x+xoZt63pkn79meWkp/dmi
+         5HyQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6e5XL5Drg2QdL4WLUv3kzpmAn8dm3DYenWkdV2gc2UYCwyUv3FeIUK6R0FePOam425lym6TM0LQROt2BE71et64E=@vger.kernel.org, AJvYcCULJKJSsZKDEQGWRztqo917y2om8bGW1Lx6Gi5cISrFZnapssYK16jyE75OvKdbtcXLVGgL2q1Ku/YcGe57@vger.kernel.org, AJvYcCV7Ojrul6KuPeR2bLlHT1S5uueY4u/8KqwWC3mi6fFLFdmoZQfoQGjGmGrBGqjekwmQcnE0XtFLURg821XBcQ==@vger.kernel.org, AJvYcCXT80RdO+xz3bWTka2sYjrwXXFe+xunkuLfy5TfqlAZvuEm3RSC2Fw0Z319Cw5L40HdiX0ScKeO6Pk/@vger.kernel.org
+X-Gm-Message-State: AOJu0YyClndt9/1KmuVFeApWKgf4vam3N8bfWAuuZUcuIfz9odkXGtmZ
+	IXpUlRziJXVyhqAg3nM3XBIS6nS7hnzFlZM/vEMrkVze+KvaiPM5
+X-Gm-Gg: ASbGnctMgI8dSjzLDgxgVBiqOdXidlrIlEWHVnxqmLxn8hH+mvJ/oymltKvpuMBAoHj
+	A/hV4UTZFSYA5tl+uo/Q7eZ3lzqEzKLa2mG7nhq3Chx9DJlThS/Y7n6ZtFV/MVVDMGBzvzAFzM7
+	qUaNyWFR+q3uCFGEvPK3RQotGjPQfZCTPO2X511xbx6gIdYaBGDG9edntFP4uMPuO54c4XsJV34
+	0k9pSla6vVEbSGUD9B7k/ihevkvppRL7mt3uDiij93nnmr4rCb0P2c+tyyUmDHVfz0/5fDSYmmS
+	/3I+j3qUQJa0absVgBxd2NEiq4D8iUr8AxtVJbyXc4cI/jAVhsnd7cmoZAK/iAiKxbtZYyOWYJT
+	rEnrGiAcYw4rdvGBPPc0dEF8=
+X-Google-Smtp-Source: AGHT+IHhU4LPTyHnNGvQrOFARSFPEWbuV6vlNsGOFbI3T/MO3rQl7YpluNrCNXFAx8Jyi8/qc5iipw==
+X-Received: by 2002:a05:600c:1d87:b0:43b:ca39:6c7d with SMTP id 5b1f17b1804b1-43d509e6544mr37272295e9.3.1742566647738;
+        Fri, 21 Mar 2025 07:17:27 -0700 (PDT)
+Received: from [192.168.1.105] (91-139-201-119.stz.ddns.bulsat.com. [91.139.201.119])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3428sm2517405f8f.26.2025.03.21.07.17.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 07:17:27 -0700 (PDT)
+Message-ID: <782c2211-aa75-43b1-995a-2c93d75d75e7@gmail.com>
+Date: Fri, 21 Mar 2025 16:17:25 +0200
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323328-733904177-1742566626=:931"
-
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323328-733904177-1742566626=:931
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/10] phy: move phy-qcom-snps-eusb2 out of its vendor
+ sub-directory
+To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I
+ <kishon@kernel.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, Abel Vesa
+ <abel.vesa@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-phy@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org
+References: <20250321135854.1431375-1-ivo.ivanov.ivanov1@gmail.com>
+ <20250321135854.1431375-4-ivo.ivanov.ivanov1@gmail.com>
+ <vzlylhf5r5xy4ip4hkcolt3iye4stiabzxc4jwdzenbhll45ct@hx5gwpzrd33y>
+Content-Language: en-US
+From: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+In-Reply-To: <vzlylhf5r5xy4ip4hkcolt3iye4stiabzxc4jwdzenbhll45ct@hx5gwpzrd33y>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Transfer-Encoding: 7bit
 
-On Fri, 21 Mar 2025, Ga=C5=A1per Nemgar wrote:
+On 3/21/25 16:15, Dmitry Baryshkov wrote:
+> On Fri, Mar 21, 2025 at 03:58:47PM +0200, Ivaylo Ivanov wrote:
+>> As not only Qualcomm, but also Samsung is using the Synopsys eUSB2 IP
+>> (albeit with a different register layout) in their newer SoCs, move the
+>> driver out of its vendor sub-directory and rename it to phy-snps-eusb2.
+>>
+>> Signed-off-by: Ivaylo Ivanov <ivo.ivanov.ivanov1@gmail.com>
+>> Suggested-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Please fix the order of the tags. SoB should come after Suggested-by
+> (and usually it is the last one).
 
-Hi Gasper,
+Hm? I haven't had issues with SoB at the top in the past.
 
-Thanks for the patch. I think the changelog text got messed up during send=
-=20
-as it should here, not in the subject.
+>
+>> ---
+>>  drivers/phy/Kconfig                                      | 8 ++++++++
+>>  drivers/phy/Makefile                                     | 1 +
+>>  .../{qualcomm/phy-qcom-snps-eusb2.c => phy-snps-eusb2.c} | 0
+>>  drivers/phy/qualcomm/Kconfig                             | 9 ---------
+>>  drivers/phy/qualcomm/Makefile                            | 1 -
+>>  5 files changed, 9 insertions(+), 10 deletions(-)
+>>  rename drivers/phy/{qualcomm/phy-qcom-snps-eusb2.c => phy-snps-eusb2.c} (100%)
+> With that fixed:
+>
+>
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-Also please change "Added support" to "Add support", add the correct=20
-prefix into the shortlog (the line in Subject), and add parenthesis after=
-=20
-functions in the description.
+Thanks!
 
---=20
- i.
+Best regards,
+Ivaylo
 
-> Signed-off-by: Ga=C5=A1per Nemgar <gasper.nemgar@gmail.com>"
-> ---
->  drivers/platform/x86/ideapad-laptop.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/drivers/platform/x86/ideapad-laptop.c b/drivers/platform/x86=
-/ideapad-laptop.c
-> index 30bd366d7..a03377d87 100644
-> --- a/drivers/platform/x86/ideapad-laptop.c
-> +++ b/drivers/platform/x86/ideapad-laptop.c
-> @@ -1308,6 +1308,16 @@ static const struct key_entry ideapad_keymap[] =3D=
- {
->  =09/* Specific to some newer models */
->  =09{ KE_KEY,=090x3e | IDEAPAD_WMI_KEY, { KEY_MICMUTE } },
->  =09{ KE_KEY,=090x3f | IDEAPAD_WMI_KEY, { KEY_RFKILL } },
-> +=09/* Star- (User Asignable Key) */
-> +=09{ KE_KEY,=090x44 | IDEAPAD_WMI_KEY, { KEY_PROG1 } },
-> +=09/* Eye */
-> +=09{ KE_KEY,=090x45 | IDEAPAD_WMI_KEY, { KEY_BRIGHTNESS_CYCLE } },
-> +=09/* Performance toggle also Fn+Q */
-> +=09{ KE_KEY,=090x3d | IDEAPAD_WMI_KEY, { KEY_PROG4 } },
-> +=09/* shift + prtsc */
-> +=09{ KE_KEY,   0x2d | IDEAPAD_WMI_KEY, { KEY_CUT } },
-> +=09{ KE_KEY,   0x29 | IDEAPAD_WMI_KEY, { KEY_TOUCHPAD_TOGGLE } },
-> +=09{ KE_KEY,   0x2a | IDEAPAD_WMI_KEY, { KEY_ROOT_MENU } },
-> =20
->  =09{ KE_END },
->  };
-> @@ -2093,6 +2103,12 @@ static void ideapad_wmi_notify(struct wmi_device *=
-wdev, union acpi_object *data)
-> =20
->  =09=09dev_dbg(&wdev->dev, "WMI fn-key event: 0x%llx\n",
->  =09=09=09data->integer.value);
-> +=09=09=09=09
-> +=09=09/* performance button triggered by  ...  */
-> +=09=09if ((data->integer.value | IDEAPAD_WMI_KEY) =3D=3D 0x13d ) {
-> +=09=09=09platform_profile_cycle();
-> +=09=09=09break;
-> +=09=09}
-> =20
->  =09=09/* 0x02 FnLock, 0x03 Esc */
->  =09=09if (data->integer.value =3D=3D 0x02 || data->integer.value =3D=3D =
-0x03)
->=20
+>
+>
 
---8323328-733904177-1742566626=:931--
