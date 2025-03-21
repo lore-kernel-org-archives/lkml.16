@@ -1,77 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B995216E01;
-	Fri, 21 Mar 2025 12:53:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07CDF22A7FD;
+	Fri, 21 Mar 2025 12:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742561614; cv=none; b=rDFHC6b5VNb2Yz0lc/oDBcssuDU2651Z9Qe5jTe72zrhRp8JvHFu4IU+7Zs1FA5on/FOVC4KZh4Z8Ne8uWZLY551thOyKbQwpXZ8oGDL7bEfQIEy8fItUpX0Egpl+Zo1HMRv4WMbsT9H8lfijZnOxqsfV2B7cJH98ZLoJvVWiqs=
+	t=1742561617; cv=none; b=cUMNRbjuX16lZ8BKBNgKzm4qOKtHu76p8iNXFgJ9XZ21K0epi0ZLSd+wtukXaqPxd4QJsaGBrlQXQDl0PVdU8supz2JA0x6/VtoNdSCb0OEI0O8bi/ZdUjZVzRHenGqd5/W7b8swqyGj+Otdr3Do6wlCusHKuVvr8zeiAC+H/Qc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742561614; c=relaxed/simple;
-	bh=s/cUC2OPWQPcceRiqmx99A3AD3Pmhwe/P6u+rDHTNwI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=p+bx2Fq730dqgwn4zORBNa30gNbCTKBL6RS8PdCvyAsM2hL8/2Cw/wem+PwKdE9jjoyx4LHdih7nYIgxLbyGCZnP9Wl5zfX365enzu+TX8omCJPSqlf+A622bh7l3bvy7lYvEVh2uHetMcU1zm9suFh67exQOQxfrhhsW9zjxzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yS3K6222; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742561617; c=relaxed/simple;
+	bh=aBAET/lES4NSQO8sibgQ3bClN8JuLjhCvkLvXNFXUBc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=X+4h2l2Q56eABaMXOW8Apq9lVsVpjHIo1gsY87woXZ95ELsMuQO0extNyKwtE6bqMsSBKrWWcrws61WLPJGGgNHFVJ6Sm9vZ7qKhg1x2Atl/Lad7B3wOBefm2ak/GayhcexLx14JD5SsPTbm7cDtTu/YeoNEulaiiShsbPOrBCU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SnlyvJ34; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=4WI+jTYd; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yS3K6222"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 801F2C4CEE3;
-	Fri, 21 Mar 2025 12:53:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1742561613;
-	bh=s/cUC2OPWQPcceRiqmx99A3AD3Pmhwe/P6u+rDHTNwI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yS3K6222ngRFce9hgjH2AtwZ2HHZZb7jM/2B/lt7q42vRMupty7s+YkHXl4NNnMkP
-	 Lboqlxr9aEtmghcnWGyYtiQqi6cLSCTkCwR0zjLExuTP4b596G8xCmL9quB63YaPOu
-	 O8CEjZ6CGGcXUrYY/OY5j7I1eIs7mbQSCNI4Nmfc=
-Date: Fri, 21 Mar 2025 05:52:13 -0700
-From: Greg KH <gregkh@linuxfoundation.org>
-To: ErickKaranja <karanja99erick@gmail.com>
-Cc: hvaibhav.linux@gmail.com, johan@kernel.org, elder@kernel.org,
-	outreachy@lists.linux.dev, greybus-dev@lists.linaro.org,
-	linux-staging@lists.linux.dev, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: greybus: fix line length issue
-Message-ID: <2025032148-backfield-crux-184d@gregkh>
-References: <20250321115545.24468-1-karanja99erick@gmail.com>
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SnlyvJ34";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="4WI+jTYd"
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742561613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ORnYV+7gu7XamQTgzT1UwvEguLeAv3ZmQ2vwtTbBVRo=;
+	b=SnlyvJ34EDMUWV/JVRrU1MBXx3fMEo1sqb9XdqaRs+/Doim0p3MG1SlFm04PrkFH7crY0V
+	+OvgukD/aung1VL/LTAGw7qGy0X+gnwDYKhcasX4PcjN3hcetm85YisAMAp8ELCOT1Sqzn
+	3dYlngzQRQ9FZiTrcSDydMlu2hsACJNUNGgvwPC0EszWc8J8lMbvmCTklEHcdNnxxvReHq
+	NJ+/nTfEsshtqfcOcD+66xR52lgYyzwNjFa+NXo8SSKNULoRIPoq5NL7Q8kPccn4kv4oFr
+	4qEMKMGmeNtIZDTNHiZA/7N/aYzUs2P/m5fir3ucoNZI17PYEb8f6XiNHB3jDw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742561613;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ORnYV+7gu7XamQTgzT1UwvEguLeAv3ZmQ2vwtTbBVRo=;
+	b=4WI+jTYdzocwVYeI+pFWX6SZyJSSFXgN47ji0RxENrSkV2uiudKNAYEv8yNGYFP+a5LJPX
+	ibPvB7FP7KZSycAw==
+To: Neeraj Upadhyay <Neeraj.Upadhyay@amd.com>, linux-kernel@vger.kernel.org
+Cc: bp@alien8.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+ Thomas.Lendacky@amd.com, nikunj@amd.com, Santosh.Shukla@amd.com,
+ Vasant.Hegde@amd.com, Suravee.Suthikulpanit@amd.com, David.Kaplan@amd.com,
+ x86@kernel.org, hpa@zytor.com, peterz@infradead.org, seanjc@google.com,
+ pbonzini@redhat.com, kvm@vger.kernel.org, kirill.shutemov@linux.intel.com,
+ huibo.wang@amd.com, naveen.rao@amd.com
+Subject: Re: [RFC v2 01/17] x86/apic: Add new driver for Secure AVIC
+In-Reply-To: <20250226090525.231882-2-Neeraj.Upadhyay@amd.com>
+References: <20250226090525.231882-1-Neeraj.Upadhyay@amd.com>
+ <20250226090525.231882-2-Neeraj.Upadhyay@amd.com>
+Date: Fri, 21 Mar 2025 13:53:32 +0100
+Message-ID: <87v7s235pv.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321115545.24468-1-karanja99erick@gmail.com>
+Content-Type: text/plain
 
-On Fri, Mar 21, 2025 at 02:55:45PM +0300, ErickKaranja wrote:
-> Fix line length exceeding 100 columns in arche-platform.c. The code now
-> follows Linux kernel coding style guidelines by keeping lines under the
-> maximum allowed length of 100 characters.
-> 
-> Reported by checkpatch:
-> 
-> CHECK: line length of 101 exceeds 100 columns
-> 
-> Signed-off-by: ErickKaranja <karanja99erick@gmail.com>
-> ---
->  drivers/staging/greybus/arche-platform.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/staging/greybus/arche-platform.c b/drivers/staging/greybus/arche-platform.c
-> index d48464390f58..1a82a7a3991c 100644
-> --- a/drivers/staging/greybus/arche-platform.c
-> +++ b/drivers/staging/greybus/arche-platform.c
-> @@ -179,8 +179,8 @@ static irqreturn_t arche_platform_wd_irq(int irq, void *devid)
->  				 */
->  				if (arche_pdata->wake_detect_state !=
->  						WD_STATE_COLDBOOT_START) {
-> -					arche_platform_set_wake_detect_state(arche_pdata,
-> -									     WD_STATE_COLDBOOT_TRIG);
-> +					arche_platform_set_wake_detect_state
-> +						(arche_pdata, WD_STATE_COLDBOOT_TRIG);
+On Wed, Feb 26 2025 at 14:35, Neeraj Upadhyay wrote:
+> +static void x2apic_savic_send_IPI(int cpu, int vector)
+> +{
+> +	u32 dest = per_cpu(x86_cpu_to_apicid, cpu);
+> +
+> +	/* x2apic MSRs are special and need a special fence: */
+> +	weak_wrmsr_fence();
+> +	__x2apic_send_IPI_dest(dest, vector, APIC_DEST_PHYSICAL);
+> +}
+> +
+> +static void
+> +__send_IPI_mask(const struct cpumask *mask, int vector, int apic_dest)
+> +{
+> +	unsigned long query_cpu;
+> +	unsigned long this_cpu;
+> +	unsigned long flags;
+> +
+> +	/* x2apic MSRs are special and need a special fence: */
+> +	weak_wrmsr_fence();
+> +
+> +	local_irq_save(flags);
+> +
+> +	this_cpu = smp_processor_id();
+> +	for_each_cpu(query_cpu, mask) {
+> +		if (apic_dest == APIC_DEST_ALLBUT && this_cpu == query_cpu)
+> +			continue;
+> +		__x2apic_send_IPI_dest(per_cpu(x86_cpu_to_apicid, query_cpu),
+> +				       vector, APIC_DEST_PHYSICAL);
+> +	}
+> +	local_irq_restore(flags);
+> +}
+> +
+> +static void x2apic_savic_send_IPI_mask(const struct cpumask *mask, int vector)
+> +{
+> +	__send_IPI_mask(mask, vector, APIC_DEST_ALLINC);
+> +}
+> +
+> +static void x2apic_savic_send_IPI_mask_allbutself(const struct cpumask *mask, int vector)
+> +{
+> +	__send_IPI_mask(mask, vector, APIC_DEST_ALLBUT);
+> +}
 
-With this change, you will now have added a different checkpatch
-warning.  So the original should stay as-is, sorry.
+The above are identical copies (aside of the names) of the functions in
+x2apic_phys.c.
 
-thanks,
+Why can't this simply share the code ?
 
-greg k-h
+Thanks,
+
+        tglx
