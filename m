@@ -1,331 +1,209 @@
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464CD22541C
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:15:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08AD91F03CA
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:18:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742555753; cv=none; b=P0Nx88cFYmQdDh+Uxdw/8bwKVGYGelPJGpiv616wpJFU2E+5LbKsPq45yCV2mibjwM+jIk0b7Ucx5+Y1bPan53BQB6XDSCfiNBggoK7nXX0eTHSlGxpZP6fJQ4s8HdSNWpD8/miEwRS5U5QwVdysie8IPt8yj7B5M2EYFZln3DU=
+	t=1742555885; cv=none; b=uvi85uxyK5JFTs9q7i9mES3MqtJaXe/SqltmG307NJ2XDyBXhaFlbrDqhbfEMxGYq06BzIMAs5t36lRQhjoX503PNMS83O2FHWC9molupR4fmYnUmCNLIIkUnjKRvX1HRLo1bfMm2VxDurSz+sl69b6lCYW7qyXi4LUhC4eF4m4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742555753; c=relaxed/simple;
-	bh=52XF71t94HX1b4PtkkHe4zcTM2sOl7sXef04LHQCB+I=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=WBsCgQe3v4O/iGu+lwl1tMjjnYvSCCzgi7U+80sjgnHj1yTziuuIFFZma+JNpZTxULyWB3kEccQfMnmuv/3qvrdDrXtl/z7B43GBePRhJAAkcxn8JsXNoSL/DCzz737HF2CG6AAdkphFG2P5dDdyISss1L1+pZCi8Hl+auAnkDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=UOaPoJJY; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--bqe.bounces.google.com
+	s=arc-20240116; t=1742555885; c=relaxed/simple;
+	bh=f1rXoMSurkAvAixN8mEIRxqVUGV9fiv0n2OqrybEd6Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DojyyT6vG3DkB/hGFW6YxnP3C809ycFkSgF9rrjL2Z92QIZFcAzuHXeB9nOe12X9IxgF+PCKRbczSh9usqoHtlWBgoEEe7HxHtvzfX0LfObI8F4Qrr33Rmk0MnU7OvSbPulrm+04T7OkF4XbrTDBDpt5Eqyl5tJMUJmMIjBAQL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=P8YlAQG1; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UOaPoJJY"
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-43d51bd9b45so3122635e9.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:15:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742555749; x=1743160549; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANVuGu+YPWyyFIkyf4GgjdezK/DY1T5LrEUy7hOvR3s=;
-        b=UOaPoJJYmB9MnWAGCW3f1WQ1LxUpoeBPixb0OtWy9NnU3aVa2mfO23JhYv6AWa12ya
-         X9KHgBGPVL71eiWTI0uZaItkuePtxUnBsFjCPJVmIrNVGfci1zviVe+MflD898YQNdxp
-         Lx8DJJw8myQVPMFDo/7yp4Z5dfBkKDoqpmVT98mrKXGyRAJ+UWot5A4YfZ2Rt/n96aJ7
-         xr/fEG2IFx0KvXdaj+9OHoMKIo2fIHtQPO4tDuJlnAz2wYWKAqiwSYcytNOgT4b9Uneb
-         TjCZxalTPKW80sxb41Mkz+Xk2vDolYJXWFpqRNpZK8uGCRoCEYn0lqvLlQjKg77tBJSp
-         Pz5Q==
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="P8YlAQG1"
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATAAd022106
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:18:03 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=DKUSYoHR6fJ9Gx9eEsTaF2oL
+	MprzdUw0AcuNtKcNv44=; b=P8YlAQG1SDRbzIqC2q4Nfz0GyHgq+0u+Rc0ZNDHJ
+	1ICrxaboFhd5fjVpf9lZzZ6WTjuELXkaX/JUhMlMEAq4+gWgJ61Rrb+GN92V2MRu
+	g9DJ1rDQFs4UmkS8mcpS5ZzZJrUMtNqQH2R2tzs0uAF2gvhSpMPidNRKKINUsObh
+	tM1v+JOAwJp4pn8lNWXwF0PTJoYDxD62nOyQt3ZtVyDMN87OZ7PCyQAEn8GMHZc6
+	su66goVlKESiOHIzaX6T5yyMK0R55ijnjRm/Cux2EzAe6VhKSuodhhT+uKnFibPE
+	wxUZFTSndipA94ZqJVY0WIxJTNMB6yOa8waVxqORqC8tag==
+Received: from mail-pj1-f70.google.com (mail-pj1-f70.google.com [209.85.216.70])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h4wpge7q-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 11:18:02 +0000 (GMT)
+Received: by mail-pj1-f70.google.com with SMTP id 98e67ed59e1d1-2ff798e8c90so2982011a91.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 04:18:02 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742555749; x=1743160549;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ANVuGu+YPWyyFIkyf4GgjdezK/DY1T5LrEUy7hOvR3s=;
-        b=qGTULkNY8ukaZsmc3/SkWqNMZofRTzvm6TTA4+ppGhGr7m86ToM6seht9/zPHwZGyJ
-         G677gLI8M2cWlH/k3RkB1ckrD3Q2uD6I6xZI0fevVh0ziDXwomMpkH3fHKxa9rzxRcDY
-         041+HGUBPwX35Mj/Au9aGm6rOfUOUaXGPXrdtH3OS30nhltvdfHCZ8TCJ3w+FwoRmhQu
-         tR5letJfNaPgKrVw3UVH4gWd8dd/kAuRdHzuu1Zpc2MVFD2K6Tf/s2y6QC7TG+j45ZMg
-         4r14ciYpfBsWnlugY0RL3DMVrYNd2rxN1qWuEBClzN1A3TtrqOHSytXBy3krw2M25qfS
-         1qSg==
-X-Forwarded-Encrypted: i=1; AJvYcCXk2lLzh1QeMx/4SLYITNLowVoa2zohWLEzqkPZE/FfJfpRGVu6eCYVUhd5P2r3qm2YAYyK6RvotuJqQxs=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzw9yxWYj3SvJQEvxoRxh9fG9qcoBp+0HDk8KMRHA31M36/ka7V
-	Lk/XOVEVb4xwp8/a34yktes8OIUBzLl3Dhut+H2DHSMbZZ8RrPGWx1a2SbjXOFUtRA==
-X-Google-Smtp-Source: AGHT+IGHldlDK5V50RIK9rYOqi6rgF/aruNQmIsPMmlAt3jV17hV/sTWPTsW2h4gAykvCAWeBjM/Fp4=
-X-Received: from wmbbd5.prod.google.com ([2002:a05:600c:1f05:b0:43c:f6c0:3375])
- (user=bqe job=prod-delivery.src-stubby-dispatcher) by 2002:a05:600c:1d8f:b0:43b:ca39:6c75
- with SMTP id 5b1f17b1804b1-43d509f44f2mr26979585e9.16.1742555749682; Fri, 21
- Mar 2025 04:15:49 -0700 (PDT)
-Date: Fri, 21 Mar 2025 11:15:32 +0000
-In-Reply-To: <20250321111535.3740332-1-bqe@google.com>
+        d=1e100.net; s=20230601; t=1742555881; x=1743160681;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DKUSYoHR6fJ9Gx9eEsTaF2oLMprzdUw0AcuNtKcNv44=;
+        b=jDW5mlU+ObD0knri6IVFKDxpE44qtEatCLsOFq3R2+7mZ2Gsoq0KAvIRKlWp9VsNRZ
+         LAjL0jy9jDnagydIREiknCoT+8awzVmalnOHvGbB4YYGU8YAHX0XofCcEjOsACv5DaUw
+         AnOxAJ1fJI/O/+W2h6bE+OFe3TlgIKCN4Z5R+vF9fXkiSjSI9sjamvfWnO7q8h8/YBMy
+         jOiOlLXI34FFfxrSMvCX1z/CZryTrki1fYpph9GcSK2ITbt9WtDMMmcMbdedPQG9zMbv
+         NEMVTGXZ7sAfsrj3oT5fAm+0dbQwaFPP8YNFNhz5+K/ow8FZti6iylf5V3WiU5TYQzv6
+         cL+w==
+X-Forwarded-Encrypted: i=1; AJvYcCWGlwJlZSDffcaaQSazMXJpbhbh4irV1gdgi24AZIvHmu5jZbPJ0VfDpI/zsppHFe4GWn4UVDTzYCJj1pI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxusLZSS22qaQDj4d/esI2HwZn2/eZtkG/2P6NYNriwwCGj+rEv
+	SOkmgx7JgkiyS702w4FAPCeJoqhFfEmTs9jv370vMrxqV9TI68NJJP3qdqkmaoezVdDIlYeRPiZ
+	NAJUWKttGC9E5IET96nm6DEx5TagRL26uCS6jy8WacOLuK5eTeSKDoZCoUDiiNYgoaP1UGBS/un
+	C+0fOoZE9/kajC1+KnZKymJi83XFqlihZFzbAL/g==
+X-Gm-Gg: ASbGncspmJ6f83IsshsHn6nUVCamXggYqcO888Yxb7AacaZoMCje99QOQUn6xeWg0mV
+	o8hnVQOO+QEPArrzkWxcYbwYzUI5ZzR3MWuB3iMaAyBxryAFyH+nuZ086SEpljPasQtgztqyN8u
+	ErKQm+xx77jYYtX7cLfTSyrimyAXbF
+X-Received: by 2002:a17:90b:53c3:b0:2fe:afbc:cd53 with SMTP id 98e67ed59e1d1-3030ff108camr4495956a91.28.1742555881125;
+        Fri, 21 Mar 2025 04:18:01 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFYUrRBiFxt4TF2dj2f7+rt3svO89e0vefSuFBivuUS0vkcM09QvsSAFZQaqgBo6AsU157kO11HvgGAwjzYsvk=
+X-Received: by 2002:a17:90b:53c3:b0:2fe:afbc:cd53 with SMTP id
+ 98e67ed59e1d1-3030ff108camr4495906a91.28.1742555880604; Fri, 21 Mar 2025
+ 04:18:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250321111535.3740332-1-bqe@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250321111535.3740332-5-bqe@google.com>
-Subject: [PATCH v5 4/4] rust: add dynamic ID pool abstraction for bitmap
-From: Burak Emir <bqe@google.com>
-To: Yury Norov <yury.norov@gmail.com>
-Cc: Burak Emir <bqe@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?=" <bjorn3_gh@protonmail.com>, Benno Lossin <benno.lossin@proton.me>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+MIME-Version: 1.0
+References: <20250127044239.578540-1-quic_ekangupt@quicinc.com>
+ <20250127044239.578540-5-quic_ekangupt@quicinc.com> <hgox77a7e6zzriltwhzzciau6u2pmil4y3rl5o2l6zkp4fmlmp@q2dai5fxcvtq>
+ <49295da9-82d4-45a0-a2a4-fdaa6600c70d@quicinc.com> <an4cvztdkqmrt7w2iaziihlxf4tbox65ze362v2lmycjnqg26y@jizjmh2ki34z>
+ <939fcff6-fb93-487b-995b-88e3ff020784@oss.qualcomm.com> <2k6573yrw3dyn3rpwqz4asdpx3nlmj4ornm7kmxv3f4jlc6hzg@qkwn7gqduwri>
+ <e46be95c-ca8d-48ce-a616-5f068bd28ebc@oss.qualcomm.com> <4ca8776c-3cc7-4266-8248-4a595fa19e7f@oss.qualcomm.com>
+In-Reply-To: <4ca8776c-3cc7-4266-8248-4a595fa19e7f@oss.qualcomm.com>
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+Date: Fri, 21 Mar 2025 13:17:49 +0200
+X-Gm-Features: AQ5f1Jqtw8pLC3Jce_RInf4WAkyM5BsJM6J6o4bkxV8dEDbjppN-Wyx9DCzNbwI
+Message-ID: <CAO9ioeXVyN+gn=tHP4HsRTs=4AFrrqiyRJw3byxhrcgu4+Quqw@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] misc: fastrpc: Add polling mode support for
+ fastRPC driver
+To: Ekansh Gupta <ekansh.gupta@oss.qualcomm.com>
+Cc: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+        srinivas.kandagatla@linaro.org, linux-arm-msm@vger.kernel.org,
+        gregkh@linuxfoundation.org, quic_bkumar@quicinc.com,
+        linux-kernel@vger.kernel.org, quic_chennak@quicinc.com,
+        dri-devel@lists.freedesktop.org, arnd@arndb.de
 Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-ORIG-GUID: w5tEAd4K3_ALkkzJuCOd2SLEJrqQexFH
+X-Proofpoint-GUID: w5tEAd4K3_ALkkzJuCOd2SLEJrqQexFH
+X-Authority-Analysis: v=2.4 cv=ZN3XmW7b c=1 sm=1 tr=0 ts=67dd4aea cx=c_pps a=0uOsjrqzRL749jD1oC5vDA==:117 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=NEAV23lmAAAA:8 a=EUspDBNiAAAA:8 a=EdpeIRtKRTEnfPEYN64A:9 a=QEXdDO2ut3YA:10 a=mQ_c8vxmzFEMiUWkPHU9:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-21_04,2025-03-20_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ mlxlogscore=999 clxscore=1015 phishscore=0 adultscore=0 lowpriorityscore=0
+ malwarescore=0 impostorscore=0 spamscore=0 mlxscore=0 priorityscore=1501
+ bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503210083
 
-This is a port of the Binder data structure introduced in commit
-15d9da3f818c ("binder: use bitmap for faster descriptor lookup") to
-Rust.
+On Fri, 21 Mar 2025 at 12:18, Ekansh Gupta
+<ekansh.gupta@oss.qualcomm.com> wrote:
+>
+>
+>
+> On 3/20/2025 9:27 PM, Ekansh Gupta wrote:
+> >
+> > On 3/20/2025 7:45 PM, Dmitry Baryshkov wrote:
+> >> On Thu, Mar 20, 2025 at 07:19:31PM +0530, Ekansh Gupta wrote:
+> >>> On 1/29/2025 4:10 PM, Dmitry Baryshkov wrote:
+> >>>> On Wed, Jan 29, 2025 at 11:12:16AM +0530, Ekansh Gupta wrote:
+> >>>>> On 1/29/2025 4:59 AM, Dmitry Baryshkov wrote:
+> >>>>>> On Mon, Jan 27, 2025 at 10:12:38AM +0530, Ekansh Gupta wrote:
+> >>>>>>> For any remote call to DSP, after sending an invocation message,
+> >>>>>>> fastRPC driver waits for glink response and during this time the
+> >>>>>>> CPU can go into low power modes. Adding a polling mode support
+> >>>>>>> with which fastRPC driver will poll continuously on a memory
+> >>>>>>> after sending a message to remote subsystem which will eliminate
+> >>>>>>> CPU wakeup and scheduling latencies and reduce fastRPC overhead.
+> >>>>>>> With this change, DSP always sends a glink response which will
+> >>>>>>> get ignored if polling mode didn't time out.
+> >>>>>> Is there a chance to implement actual async I/O protocol with the help
+> >>>>>> of the poll() call instead of hiding the polling / wait inside the
+> >>>>>> invoke2?
+> >>>>> This design is based on the implementation on DSP firmware as of today:
+> >>>>> Call flow: https://github.com/quic-ekangupt/fastrpc/blob/invokev2/Docs/invoke_v2.md#5-polling-mode
+> >>>>>
+> >>>>> Can you please give some reference to the async I/O protocol that you've
+> >>>>> suggested? I can check if it can be implemented here.
+> >>>> As with the typical poll() call implementation:
+> >>>> - write some data using ioctl
+> >>>> - call poll() / select() to wait for the data to be processed
+> >>>> - read data using another ioctl
+> >>>>
+> >>>> Getting back to your patch. from you commit message it is not clear,
+> >>>> which SoCs support this feature. Reminding you that we are supporting
+> >>>> all kinds of platforms, including the ones that are EoLed by Qualcomm.
+> >>>>
+> >>>> Next, you wrote that in-driver polling eliminates CPU wakeup and
+> >>>> scheduling. However this should also increase power consumption. Is
+> >>>> there any measurable difference in the latencies, granted that you
+> >>>> already use ioctl() syscall, as such there will be two context switches.
+> >>>> What is the actual impact?
+> >>> Hi Dmitry,
+> >>>
+> >>> Thank you for your feedback.
+> >>>
+> >>> I'm currently reworking this change and adding testing details. Regarding the SoC
+> >>> support, I'll add all the necessary information.
+> >> Please make sure that both the kernel and the userspace can handle the
+> >> 'non-supported' case properly.
+> > Yes, I will include changes to handle in both userspace and kernel.
+>
+> I am seeking additional suggestions on handling "non-supported" cases before making the
+> changes.
+>
+> Userspace: To enable DSP side polling, a remote call is made as defined in the DSP image.
+> If this call fails, polling mode will not be enabled from userspace.
 
-Like drivers/android/dbitmap.h, the ID pool abstraction lets
-clients acquire and release IDs. The implementation uses a bitmap to
-know what IDs are in use, and gives clients fine-grained control over
-the time of allocation. This fine-grained control is needed in the
-Android Binder. We provide an example that release a spinlock for
-allocation and unit tests (rustdoc examples).
+No. Instead userspace should check with the kernel, which capabilities
+are supported. Don't perform API calls which knowingly can fail.
 
-The implementation is not aware that the underlying Bitmap abstraction
-handles lengths below BITS_PER_LONG without allocation.
+>
+> Kernel: Since this is a DSP-specific feature, I plan to add a devicetree property, such
+> as "qcom,polling-supported," under the fastrpc node if the DSP supports polling mode.
 
-Suggested-by: Alice Ryhl <aliceryhl@google.com>
-Signed-off-by: Burak Emir <bqe@google.com>
----
- MAINTAINERS            |   1 +
- rust/kernel/id_pool.rs | 201 +++++++++++++++++++++++++++++++++++++++++
- rust/kernel/lib.rs     |   1 +
- 3 files changed, 203 insertions(+)
- create mode 100644 rust/kernel/id_pool.rs
+This doesn't sound like a logical solution. The kernel already knows
+the hardware that it is running on. As such, there should be no need
+to further describe the hardware in DT. If the DSP firmware can report
+its capabilities, use that. If not, extend the schema to add an
+SoC-specific compatibility string. As a last resort we can use
+of_machine_is_compatible().
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index bc8f05431689..61ac5da0dfbf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -4120,6 +4120,7 @@ M:	Burak Emir <bqe@google.com>
- R:	Yury Norov <yury.norov@gmail.com>
- S:	Maintained
- F:	rust/kernel/bitmap.rs
-+F:	rust/kernel/id_pool.rs
- 
- BITOPS API
- M:	Yury Norov <yury.norov@gmail.com>
-diff --git a/rust/kernel/id_pool.rs b/rust/kernel/id_pool.rs
-new file mode 100644
-index 000000000000..8f07526bb580
---- /dev/null
-+++ b/rust/kernel/id_pool.rs
-@@ -0,0 +1,201 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+// Copyright (C) 2025 Google LLC.
-+
-+//! Rust API for an ID pool backed by a `Bitmap`.
-+
-+use crate::alloc::{AllocError, Flags};
-+use crate::bitmap::Bitmap;
-+
-+/// Represents a dynamic ID pool backed by a `Bitmap`.
-+///
-+/// Clients acquire and release IDs from zero bits in a bitmap.
-+///
-+/// The ID pool can grow or shrink as needed. It has been designed
-+/// to support the scenario where users need to control the time
-+/// of allocation of a new backing bitmap, which may require release
-+/// of locks.
-+/// These operations then, are verified to determine if the grow or
-+/// shrink is sill valid.
-+///
-+/// # Examples
-+///
-+/// Basic usage
-+///
-+/// ```
-+/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+/// use kernel::id_pool::IdPool;
-+///
-+/// let mut pool = IdPool::new(64, GFP_KERNEL)?;
-+/// for i in 0..64 {
-+///   assert_eq!(i, pool.acquire_next_id(i).ok_or(ENOSPC)?);
-+/// }
-+///
-+/// pool.release_id(23);
-+/// assert_eq!(23, pool.acquire_next_id(0).ok_or(ENOSPC)?);
-+///
-+/// assert_eq!(None, pool.acquire_next_id(0));  // time to realloc.
-+/// let resizer = pool.grow_alloc().alloc(GFP_KERNEL)?;
-+/// pool.grow(resizer);
-+///
-+/// assert_eq!(pool.acquire_next_id(0), Some(64));
-+/// # Ok::<(), Error>(())
-+/// ```
-+///
-+/// Releasing spinlock to grow the pool
-+///
-+/// ```no_run
-+/// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+/// use kernel::sync::{new_spinlock, SpinLock};
-+/// use kernel::id_pool::IdPool;
-+///
-+/// fn get_id_maybe_alloc(guarded_pool: &SpinLock<IdPool>) -> Result<usize, AllocError> {
-+///   let mut pool = guarded_pool.lock();
-+///   loop {
-+///     match pool.acquire_next_id(0) {
-+///       Some(index) => return Ok(index),
-+///       None => {
-+///         let alloc_request = pool.grow_alloc();
-+///         drop(pool);
-+///         let resizer = alloc_request.alloc(GFP_KERNEL)?;
-+///         pool = guarded_pool.lock();
-+///         pool.grow(resizer)
-+///       }
-+///     }
-+///   }
-+/// }
-+/// ```
-+pub struct IdPool {
-+    map: Bitmap,
-+}
-+
-+/// Returned when the `IdPool` should change size.
-+pub struct AllocRequest {
-+    nbits: usize,
-+}
-+
-+/// Contains an allocated `Bitmap` for resizing `IdPool`.
-+pub struct PoolResizer {
-+    new: Bitmap,
-+}
-+
-+impl AllocRequest {
-+    /// Allocates a new `Bitmap` for `IdPool`.
-+    pub fn alloc(&self, flags: Flags) -> Result<PoolResizer, AllocError> {
-+        let new = Bitmap::new(self.nbits, flags)?;
-+        Ok(PoolResizer { new })
-+    }
-+}
-+
-+impl IdPool {
-+    /// Constructs a new `[IdPool]`.
-+    #[inline]
-+    pub fn new(nbits: usize, flags: Flags) -> Result<Self, AllocError> {
-+        let map = Bitmap::new(nbits, flags)?;
-+        Ok(Self { map })
-+    }
-+
-+    /// Returns how many IDs this pool can currently have.
-+    #[inline]
-+    pub fn len(&self) -> usize {
-+        self.map.len()
-+    }
-+
-+    /// Returns an [`AllocRequest`] if the [`IdPool`] can be shrunk, [`None`] otherwise.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```
-+    /// use kernel::alloc::{AllocError, flags::GFP_KERNEL};
-+    /// use kernel::id_pool::{AllocRequest, IdPool};
-+    ///
-+    /// let mut pool = IdPool::new(1024, GFP_KERNEL)?;
-+    /// let alloc_request = pool.shrink_alloc().ok_or(AllocError)?;
-+    /// let resizer = alloc_request.alloc(GFP_KERNEL)?;
-+    /// pool.shrink(resizer);
-+    /// assert_eq!(pool.len(), kernel::bindings::BITS_PER_LONG as usize);
-+    /// # Ok::<(), AllocError>(())
-+    /// ```
-+    #[inline]
-+    pub fn shrink_alloc(&self) -> Option<AllocRequest> {
-+        let len = self.map.len();
-+        if len <= bindings::BITS_PER_LONG as usize {
-+            return None;
-+        }
-+        /*
-+         * Determine if the bitmap can shrink based on the position of
-+         * its last set bit. If the bit is within the first quarter of
-+         * the bitmap then shrinking is possible. In this case, the
-+         * bitmap should shrink to half its current size.
-+         */
-+        match self.map.last_bit() {
-+            Some(bit) => {
-+                if bit < (len >> 2) {
-+                    Some(AllocRequest { nbits: len >> 1 })
-+                } else {
-+                    None
-+                }
-+            }
-+            None => Some(AllocRequest {
-+                nbits: bindings::BITS_PER_LONG as usize,
-+            }),
-+        }
-+    }
-+
-+    /// Shrinks pool by using a new `Bitmap`, if still possible.
-+    #[inline]
-+    pub fn shrink(&mut self, mut resizer: PoolResizer) {
-+        // Verify that shrinking is still possible. The `resizer`
-+        // bitmap might have been allocated without locks, so this call
-+        // could now be outdated. In this case, drop `resizer` and move on.
-+        if let Some(AllocRequest { nbits }) = self.shrink_alloc() {
-+            if nbits <= resizer.new.len() {
-+                resizer.new.copy_and_extend(&self.map);
-+                self.map = resizer.new;
-+                return;
-+            }
-+        }
-+    }
-+
-+    /// Returns an `AllocRequest` for growing this `IdPool`.
-+    #[inline]
-+    pub fn grow_alloc(&self) -> AllocRequest {
-+        AllocRequest {
-+            nbits: self.map.len() << 1,
-+        }
-+    }
-+
-+    /// Grows pool by using a new `Bitmap`, if still necessary.
-+    #[inline]
-+    pub fn grow(&mut self, mut resizer: PoolResizer) {
-+        // `resizer` bitmap might have been allocated without locks,
-+        // so this call could now be outdated. In this case, drop
-+        // `resizer` and move on.
-+        if resizer.new.len() <= self.map.len() {
-+            return;
-+        }
-+
-+        resizer.new.copy_and_extend(&self.map);
-+        self.map = resizer.new;
-+    }
-+
-+    /// Acquires a new ID by finding and setting the next zero bit in the
-+    /// bitmap. Upon success, returns its index. Otherwise, returns `None`
-+    /// to indicate that a `grow_alloc` is needed.
-+    #[inline]
-+    pub fn acquire_next_id(&mut self, offset: usize) -> Option<usize> {
-+        match self.map.next_zero_bit(offset) {
-+            res @ Some(nr) => {
-+                self.map.set_bit(nr);
-+                res
-+            }
-+            None => None,
-+        }
-+    }
-+
-+    /// Releases an ID.
-+    #[inline]
-+    pub fn release_id(&mut self, id: usize) {
-+        self.map.clear_bit(id);
-+    }
-+}
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 9f675c0841e6..d77a27bee388 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -51,6 +51,7 @@
- #[cfg(CONFIG_RUST_FW_LOADER_ABSTRACTIONS)]
- pub mod firmware;
- pub mod fs;
-+pub mod id_pool;
- pub mod init;
- pub mod io;
- pub mod ioctl;
+>
+> Does this approach seem appropriate, or is there a better way to handle this?
+>
+> Thanks,
+> Ekansh
+>
+> >
+> >>> For now, with in-driver
+> >>> polling, we are seeing significant performance improvements for calls
+> >>> with different sized buffers. On polling supporting platform, I've observed an
+> >>> ~80us improvement in latency. You can find more details in the test
+> >>> results here:
+> >>> https://github.com/quic/fastrpc/pull/134/files#diff-7dbc6537cd3ade7fea5766229cf585db585704e02730efd72e7afc9b148e28ed
+> >> Does the improvement come from the CPU not goint to idle or from the
+> >> glink response processing?
+> > Although both are contributing to performance improvement, the major
+> > improvement is coming from CPU not going to idle state.
+> >
+> > Thanks,
+> > Ekansh
+> >
+> >>> Regarding your concerns about power consumption, while in-driver polling
+> >>> eliminates CPU wakeup and scheduling, it does increase power consumption.
+> >>> However, the performance gains seem to outweigh this increase.
+> >>>
+> >>> Do you think the poll implementation that you suggested above could provide similar
+> >>> improvements?
+> >> No, I agree here. I was more concentrated on userspace polling rather
+> >> than hw polling.
+> >>
+>
+
+
 -- 
-2.49.0.395.g12beb8f557-goog
-
+With best wishes
+Dmitry
