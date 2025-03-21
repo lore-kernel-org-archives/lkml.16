@@ -1,306 +1,160 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 915BA22FF55
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 17:37:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3C422D7A0
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 17:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742578665; cv=none; b=oiM9mSwDwZpEkhM11Yh58BrGnXpo11lAvD74eoQR/hfGAReQB0E9BRW1bI/23e0POKSoGh4Szr02UjZwdJxg6sksncBgy8iKoJZ7ntRUmgyIkK9InMbmzmhL8mhngSdFM1O1SiGQZn2koQuid+SAkbdCuGYaj/7VgECzSeo4Odw=
+	t=1742578714; cv=none; b=qHeI2qkruRSv49XtF784/gmA+MQoOqZkC6GUTXTaFrn/0wD04YYBoTs57VFD2mR0C1wmJQKVusjPiSG2nLXrIpm8+gxMQnOHz1qw6NIqXVFHAdmbQB8B5lKdVQiTMGv+Fkw9hoVmgzpXY/+n0ZjKMD9EG158cq7t9l0tC4lC1JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742578665; c=relaxed/simple;
-	bh=IV5KDKRwIWWBaHx1XZgeNA+fBEOe7w8Yoh7U/uZjyGs=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Content-Type; b=A4XMVBoXpSn81zn0jlYw+f9Lz3ABP+TctUFier458bmIIbvQruCtXuGMzK0qGETRwHtLmznHFhI12qfoOfyICdCGLiyOdNuWDXEFm3b8KjwkIGnQldG+Ivr9TSHv6QxgLx9WfVQ/X0CZ3/2frHcYPSFdf9tuhybosYxDA+O+f8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--souravpanda.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KbQMQx5E; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--souravpanda.bounces.google.com
+	s=arc-20240116; t=1742578714; c=relaxed/simple;
+	bh=xm4xze+Mgry2vsGYzxkYRwCGnwTVwFISNDnWa19prfk=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=TjQ1uhUa70UqGpGTCBc84pPS4NUwIcE/ipV4v5n6tCn9+LnKgCgkPowYpIbwL8JiyPe9JwGAhjYqoIZUoDaGnXbyhYXK2QemlDTUZcqWBvKXWNztF2fRi7ROOLZUlRsOGHXhT0gnmTVrn3GRVHItGauiEJHTW+LpQMDnAK1XigY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=XOFO2P91; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KbQMQx5E"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so3394056a91.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 10:37:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742578663; x=1743183463; darn=vger.kernel.org;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vGIlFeRwp00cBGERgxxLQ4RbBbIFX2vI8pKUuAePCaE=;
-        b=KbQMQx5E4HCCI1O7oiTYw83/0AzF7pwXebfVq/i+dLfdtZm1bTNfcbeTtNQMMQ+Zbf
-         nurfb9JSYjGAYkkfqpqFxX5Upgm+lzAmM+yPfF/iJIhddZnyz9L6ZH+aJuAZLKlFx+KW
-         LIe3wWCp2P3x5AhEcvls4nKez3UQy9PaxIdl943204TtIVPL8/ErUTqgMLTsxe+LY09Q
-         QXMyrVrBFP//OLNXrXNwVzL/T70cSmPIk19q2yXjTNrR0/xAxtRZa359i/HGo6teqpn/
-         5RMlP4RztXeTHr+m8jnDvVPVcpdKamDo7xAbweubzZZ+F/DbZElvr60NddP4oQofBsl2
-         zTlg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742578663; x=1743183463;
-        h=to:from:subject:message-id:references:mime-version:in-reply-to:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vGIlFeRwp00cBGERgxxLQ4RbBbIFX2vI8pKUuAePCaE=;
-        b=WCpvWrypRJJWn3a6M0z3ijkbGKCUBgvzeyFRm3OmICL55+skaXNy0NOKbvxa6H/rK4
-         /mJVRBv83sZuKDKmhkzjWQoou7FnoyTLZAoIoxP3zR78cooCTDZr6nVb1y5yjZDyRAGH
-         0aInQMBOHofjfhilW+9BJa47aNQ+6GHFCvCDxdqX2qWgSMO0/JPwmcD4cOjDeKBtGgc0
-         e5Y301ndjJA/KK3RavLXk5kHkcn3ydEF6vDjm5cncKacu0dyue2B+Ui6C+25CYzbAM87
-         JHXW9yMHrBGIfhj1uBajl2KSpB3H+Va7LQLm0AXXH018zj+Fc3EhA8S8C+IKaJoyeziT
-         8v9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVaZCGTPDzc3vSe2chSgShMdBjvOJM/hOrNj4YlbMmFq9vZHOSwnVqnwCoPRkmdCXEGh/+INAOv4XLwkpc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwIGohQWzIJiXC8Mr+TaiMt7FV1N2NkawcMGoM8Q6zmAtl+SRQm
-	HkeezUIL9ZY97GH0zw7eBniRARrTkhezT6bFHsGQ+Dx0001iNhAtoy5deA1q1CxMyPPh8zVwUPc
-	Estd/iPWhTrucbJvtCK84/Q==
-X-Google-Smtp-Source: AGHT+IEi+XabJeuTZlJOMXJIuxzHgrE4b595XPIHNxfB9i6zloVLdGL4AH5NwI1Pnt5e4UJSRIwRL82NwESkLDRViQ==
-X-Received: from pjg4.prod.google.com ([2002:a17:90b:3f44:b0:301:2679:9aa])
- (user=souravpanda job=prod-delivery.src-stubby-dispatcher) by
- 2002:a17:90b:280b:b0:2ee:d824:b559 with SMTP id 98e67ed59e1d1-3030fef09b9mr6204491a91.28.1742578662931;
- Fri, 21 Mar 2025 10:37:42 -0700 (PDT)
-Date: Fri, 21 Mar 2025 17:37:29 +0000
-In-Reply-To: <20250321173729.3175898-1-souravpanda@google.com>
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XOFO2P91"
+Received: from [127.0.0.1] ([76.133.66.138])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52LHZeiq2773226
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Fri, 21 Mar 2025 10:35:41 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52LHZeiq2773226
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025021701; t=1742578542;
+	bh=9tc2rpnJVbgZT3FicrTz46vHfTy5Cfc580xXSDLi3Ys=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=XOFO2P91m02E/5NSHqYVw7SxkElinMVZoMZVSeHpQIZcQoSJsd+Ys+4Ssf7+JLy2q
+	 z4lEV90GvbX7Madgs+U3LHZLOT+8qF6EsWG28CV+zBUFlKEBl1OM8+qXdmOAQcZoBl
+	 /sAYyTXmrzHmjTdFqytUxKAe5GvwbS7PiLjCV+XT46LbZjsffdvW6d9vp8tOmFhUOK
+	 yyTP96+RGzEKp8efA7BBt3AF7GyeC9A2InfPlxSIxKAd1zBenzHbzfZNOVyufUGwKh
+	 hDpb6NoBKODM8qjPas1yqghQulTn5Vql5gdBSVMwn0LOIiXiOWFYMV11+lGv6V2J2r
+	 RrQuk0rOWWYMg==
+Date: Fri, 21 Mar 2025 10:35:39 -0700
+From: "H. Peter Anvin" <hpa@zytor.com>
+To: Tor Vic <torvic9@mailbox.org>, arnd@kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+CC: bp@alien8.de, tglx@linutronix.de, mingo@redhat.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH=5D_arch/x86=3A_Add_an_option_to_buil?=
+ =?US-ASCII?Q?d_the_kernel_with_=27-march=3Dnative=27_on_x86-64?=
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20250321142859.13889-1-torvic9@mailbox.org>
+References: <20250321142859.13889-1-torvic9@mailbox.org>
+Message-ID: <8FDFA037-06D6-4191-8C31-3D4AC2796EA4@zytor.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250321173729.3175898-1-souravpanda@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250321173729.3175898-7-souravpanda@google.com>
-Subject: [RFC PATCH 6/6] mm: syscall alternative for SELECTIVE_KSM
-From: Sourav Panda <souravpanda@google.com>
-To: mathieu.desnoyers@efficios.com, willy@infradead.org, david@redhat.com, 
-	pasha.tatashin@soleen.com, rientjes@google.com, akpm@linux-foundation.org, 
-	linux-mm@kvack.org, linux-kernel@vger.kernel.org, weixugc@google.com, 
-	gthelen@google.com, souravpanda@google.com, surenb@google.com
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Partition can be created or opened using:
+On March 21, 2025 7:28:58 AM PDT, Tor Vic <torvic9@mailbox=2Eorg> wrote:
+>Add a 'native' option that allows users to build an optimized kernel for
+>their local machine (i=2Ee=2E the machine which is used to build the kern=
+el)
+>by passing '-march=3Dnative' to the CFLAGS=2E
+>
+>The idea comes from Linus' reply to Arnd's initial proposal in [1]=2E
+>
+>This patch is based on Arnd's x86 cleanup series, which is now in -tip [2=
+]=2E
+>
+>[1] https://lore=2Ekernel=2Eorg/all/CAHk-=3Dwji1sV93yKbc=3D=3DZ7OSSHBiDE=
+=3DLAdG_d5Y-zPBrnSs0k2A@mail=2Egmail=2Ecom/
+>[2] https://lore=2Ekernel=2Eorg/all/20250226213714=2E4040853-1-arnd@kerne=
+l=2Eorg/
+>
+>Signed-off-by: Tor Vic <torvic9@mailbox=2Eorg>
+>---
+>Here are some numbers comparing 'generic' to 'native' on a Skylake dual-c=
+ore
+>laptop (generic --> native):
+>
+>  - vmlinux and compressed modules size:
+>      125'907'744 bytes --> 125'595'280 bytes  (-0=2E248 %)
+>      18'810 kilobytes --> 18'770 kilobytes    (-0=2E213 %)
+>
+>  - phoronix, average of 3 runs:
+>      ffmpeg:
+>      130=2E99 --> 131=2E15                        (+0=2E122 %)
+>      nginx:
+>      10'650 --> 10'725                        (+0=2E704 %)
+>      hackbench (lower is better):
+>      102=2E27 --> 99=2E50                         (-2=2E709 %)
+>
+>  - xz compression of firefox tarball (lower is better):
+>      319=2E57 seconds --> 317=2E34 seconds        (-0=2E698 %)
+>
+>  - stress-ng, bogoops, average of 3 15-second runs:
+>      fork:
+>      111'744 --> 115'509                      (+3=2E397 %)
+>      bsearch:
+>      7'211 --> 7'436                          (+3=2E120 %)
+>      memfd:
+>      3'591 --> 3'604                          (+0=2E362 %)
+>      mmapfork:
+>      630 --> 629                              (-0=2E159 %)
+>      schedmix:
+>      42'715 --> 43'251                        (+1=2E255 %)
+>      epoll:
+>      2'443'767 --> 2'454'413                  (+0=2E436 %)
+>      vm:
+>      1'442'256 --> 1'486'615                  (+3=2E076 %)
+>
+>  - schbench (two message threads), 30-second runs:
+>      304 rps --> 305 rps                      (+0=2E329 %)
+>
+>There is little difference both in terms of size and of performance, howe=
+ver
+>the native build comes out on top ever so slightly=2E
+>---
+> arch/x86/Kconfig=2Ecpu | 9 +++++++++
+> arch/x86/Makefile    | 5 +++++
+> 2 files changed, 14 insertions(+)
+>
+>diff --git a/arch/x86/Kconfig=2Ecpu b/arch/x86/Kconfig=2Ecpu
+>index 8fcb8ccee44b=2E=2E057d7c28b794 100644
+>--- a/arch/x86/Kconfig=2Ecpu
+>+++ b/arch/x86/Kconfig=2Ecpu
+>@@ -245,6 +245,15 @@ config MATOM
+>=20
+> endchoice
+>=20
+>+config NATIVE_CPU
+>+	bool "Build for native CPU"
+>+	depends on X86_64
+>+	default n
+>+	help
+>+	  Optimize for the current CPU used to compile the kernel=2E
+>+	  Use this option if you intend to build the kernel for your
+>+	  local machine=2E
+>+
+> config X86_GENERIC
+> 	bool "Generic x86 support"
+> 	depends on X86_32
+>diff --git a/arch/x86/Makefile b/arch/x86/Makefile
+>index 8120085b00a4=2E=2E0075bace3ed9 100644
+>--- a/arch/x86/Makefile
+>+++ b/arch/x86/Makefile
+>@@ -178,8 +178,13 @@ else
+> 	# Use -mskip-rax-setup if supported=2E
+> 	KBUILD_CFLAGS +=3D $(call cc-option,-mskip-rax-setup)
+>=20
+>+ifdef CONFIG_NATIVE_CPU
+>+        KBUILD_CFLAGS +=3D -march=3Dnative
+>+        KBUILD_RUSTFLAGS +=3D -Ctarget-cpu=3Dnative
+>+else
+>         KBUILD_CFLAGS +=3D -march=3Dx86-64 -mtune=3Dgeneric
+>         KBUILD_RUSTFLAGS +=3D -Ctarget-cpu=3Dx86-64 -Ztune-cpu=3Dgeneric
+>+endif
+>=20
+>         KBUILD_CFLAGS +=3D -mno-red-zone
+>         KBUILD_CFLAGS +=3D -mcmodel=3Dkernel
 
-  int ksm_fd = ksm_open(ksm_name, flag);
-    name specifies the ksm partition to be created or opened.
-    flags:
-      O_CREAT
-        Create the ksm partition object if it does not exist.
-      O_EXCL
-        If O_CREAT was also specified, and a ksm partition object
-        with the given name already exists, return an error.
-
-Trigger the merge using:
-  ksm_merge(ksm_fd, pid, start_addr, size);
-
-Limitation: Only supporting x86 syscall_64.
-
-Signed-off-by: Sourav Panda <souravpanda@google.com>
----
- arch/x86/entry/syscalls/syscall_64.tbl |   3 +-
- include/linux/ksm.h                    |   4 +
- mm/ksm.c                               | 156 ++++++++++++++++++++++++-
- 3 files changed, 161 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 5eb708bff1c7..352d747dbe33 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -390,7 +390,8 @@
- 464	common	getxattrat		sys_getxattrat
- 465	common	listxattrat		sys_listxattrat
- 466	common	removexattrat		sys_removexattrat
--
-+467	common	ksm_open		sys_ksm_open
-+468	common	ksm_merge		sys_ksm_merge
- #
- # Due to a historical design error, certain syscalls are numbered differently
- # in x32 as compared to native x86_64.  These syscalls have numbers 512-547.
-diff --git a/include/linux/ksm.h b/include/linux/ksm.h
-index d73095b5cd96..a94c89403c29 100644
---- a/include/linux/ksm.h
-+++ b/include/linux/ksm.h
-@@ -14,6 +14,10 @@
- #include <linux/rmap.h>
- #include <linux/sched.h>
- 
-+#include <linux/anon_inodes.h>
-+#include <linux/syscalls.h>
-+#define MAX_KSM_NAME_LEN 128
-+
- #ifdef CONFIG_KSM
- int ksm_madvise(struct vm_area_struct *vma, unsigned long start,
- 		unsigned long end, int advice, unsigned long *vm_flags);
-diff --git a/mm/ksm.c b/mm/ksm.c
-index fd7626d5d8c9..71558120b034 100644
---- a/mm/ksm.c
-+++ b/mm/ksm.c
-@@ -147,7 +147,8 @@ struct ksm_scan {
- static struct kobject *ksm_base_kobj;
- 
- struct partition_kobj {
--	struct kobject *kobj;
-+	struct kobject *kobj;	/* Not required for the syscall interface */
-+	char name[MAX_KSM_NAME_LEN];
- 	struct list_head list;
- 	struct rb_root *root_stable_tree;
- 	struct rb_root *root_unstable_tree;
-@@ -166,6 +167,106 @@ static struct partition_kobj *find_partition_by_kobj(struct kobject *kobj)
- 	return NULL;
- }
- 
-+static struct partition_kobj *find_ksm_partition(char *partition_name)
-+{
-+	struct partition_kobj *partition;
-+
-+	list_for_each_entry(partition, &partition_list, list) {
-+		if (strcmp(partition->name, partition_name) == 0)
-+			return partition;
-+	}
-+	return NULL;
-+}
-+
-+static DEFINE_MUTEX(ksm_partition_lock);
-+
-+static int ksm_release(struct inode *inode, struct file *file)
-+{
-+	struct partition_kobj *ksm = file->private_data;
-+
-+	mutex_lock(&ksm_partition_lock);
-+	list_del(&ksm->list);
-+	mutex_unlock(&ksm_partition_lock);
-+
-+	kfree(ksm);
-+	return 0;
-+}
-+
-+static const struct file_operations ksm_fops = {
-+	.release = ksm_release,
-+};
-+
-+static struct partition_kobj *ksm_create_partition(char *ksm_name)
-+{
-+	struct partition_kobj *partition;
-+	struct rb_root *tree_root;
-+
-+	partition = kzalloc(sizeof(*partition), GFP_KERNEL);
-+	if (!partition)
-+		return NULL;
-+
-+	tree_root = kcalloc(nr_node_ids + nr_node_ids, sizeof(*tree_root),
-+			    GFP_KERNEL);
-+	if (!tree_root)
-+		return NULL;
-+
-+	partition->root_stable_tree = tree_root;
-+	partition->root_unstable_tree = tree_root + nr_node_ids;
-+	strncpy(partition->name, ksm_name, sizeof(partition->name));
-+
-+	list_add(&partition->list, &partition_list);
-+
-+	return partition;
-+}
-+
-+static int ksm_partition_fd(struct partition_kobj *partition)
-+{
-+	int fd;
-+	struct file *file;
-+	int ret;
-+
-+	file = anon_inode_getfile("ksm_partition", &ksm_fops, partition, O_RDWR);
-+	if (IS_ERR(file)) {
-+		ret = PTR_ERR(file);
-+		return ret;
-+	}
-+
-+	fd = get_unused_fd_flags(O_RDWR);
-+	if (fd < 0) {
-+		fput(file);
-+		return fd;
-+	}
-+	fd_install(fd, file);
-+	return fd;
-+}
-+
-+SYSCALL_DEFINE2(ksm_open, const char __user *, ksm_name, int, flags) {
-+	char name[MAX_KSM_NAME_LEN];
-+	struct partition_kobj *partition;
-+	int ret;
-+
-+	ret = strncpy_from_user(name, ksm_name, sizeof(name));
-+	if (ret < 0)
-+		return -EFAULT;
-+
-+	partition = find_ksm_partition(name);
-+
-+	if (flags & O_EXCL && partition) /* Partition already exists, return error */
-+		return -EEXIST;
-+
-+	if (flags & O_CREAT && !partition) {
-+		/* Partition does not exist, but we are allowed to create one */
-+		mutex_lock(&ksm_partition_lock);
-+		partition = ksm_create_partition(name);
-+		mutex_unlock(&ksm_partition_lock);
-+	}
-+
-+	if (!partition)
-+		return flags & O_CREAT ? -ENOMEM : -ENOENT;
-+
-+	return ksm_partition_fd(partition);
-+}
-+
- /**
-  * struct ksm_stable_node - node of the stable rbtree
-  * @node: rb node of this ksm page in the stable tree
-@@ -4324,6 +4425,59 @@ static int __init ksm_thread_sysfs_init(void)
- }
- #endif /* CONFIG_SELECTIVE_KSM */
- 
-+SYSCALL_DEFINE4(ksm_merge, int, ksm_fd, pid_t, pid, unsigned long, start, size_t, size) {
-+	unsigned long end = start + size;
-+	struct task_struct *task;
-+	struct mm_struct *mm;
-+	struct partition_kobj *partition;
-+	struct file *file;
-+
-+	file = fget(ksm_fd);
-+	if (!file)
-+		return -EBADF;
-+
-+	partition = file->private_data;
-+	if (!partition) {
-+		fput(file);
-+		return -EINVAL;
-+	}
-+
-+	if (start >= end) {
-+		fput(file);
-+		return -EINVAL;
-+	}
-+
-+	/* Find the mm_struct */
-+	rcu_read_lock();
-+	task = find_task_by_vpid(pid);
-+	if (!task) {
-+		fput(file);
-+		rcu_read_unlock();
-+		return -ESRCH;
-+	}
-+
-+	get_task_struct(task);
-+
-+	rcu_read_unlock();
-+	mm = get_task_mm(task);
-+	put_task_struct(task);
-+
-+	if (!mm) {
-+		fput(file);
-+		return -EINVAL;
-+	}
-+
-+	mutex_lock(&ksm_thread_mutex);
-+	wait_while_offlining();
-+	ksm_sync_merge(mm, start, end, partition);
-+	mutex_unlock(&ksm_thread_mutex);
-+
-+	mmput(mm);
-+
-+	fput(file);
-+	return 0;
-+}
-+
- static int __init ksm_init(void)
- {
- 	int err;
--- 
-2.49.0.395.g12beb8f557-goog
-
+You may want to consider this option to also select matching kernel option=
+s (which would require probing cpuid=2E)
