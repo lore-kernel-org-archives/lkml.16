@@ -1,55 +1,55 @@
 Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7505CDF1
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 00:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B65E812FF69
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 00:29:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742516963; cv=none; b=hPxhph5uqG6syIwEkn7UfiSjx9Q0rBsjiaQBC+t+U8YnDlk7qECbxkWEGp4FLYvUbCbBze5nfLrjWHpXgFhKv56BaVu82qS4QHirdR8/lYQ/MoYIbKzCbPnrf73lXeDfnc/v8Z6RNRvfK/Gm9p7+Sdntubc8VI1+z9ji9SPNHOw=
+	t=1742516969; cv=none; b=E+LsHWCR8iIU6Bf3yMlHnCb2XXaH6C1H/DXVh3Hl4N+G5PGyrTTe06ZbITsBXs6/pBKKI6Q/uyADM+8cFnQPSCof3/LnHEoUnxSxQfN3J8KGJsA9VPOxKwL0wpkmFNfSe2funrCGhPab5nNnrHAkDIxCYGxaj8kquHqd9mu8Jao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742516963; c=relaxed/simple;
-	bh=Jbm7GYaJXcjd03+tuScQgxz8fqw00dOQwC1LuGpDchY=;
+	s=arc-20240116; t=1742516969; c=relaxed/simple;
+	bh=QnQjmOUMdu0LaJsPwkMYaV067bT5nlIwdVbWjgqde2o=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=LDN7P+9KlYSRqsWd1CIRMmBtpgs2RnSUI2OQZeoU/TD5oWY8eXtPfFX/xJr8rIKFNquWQCJMfAbIz45h6eelXMr3M+fkKaxdAgLz2sv9pXbs4uD+anHHSRXo9nxxBC8bcIBmLrkFMqz7FC56VBDKy7vs1wHx8XfCHI7BFO3ppF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=geEeMLjT; arc=none smtp.client-ip=209.85.216.74
+	 To:Cc:Content-Type; b=kIASTOIq7iF+BepMEQXi1yzsf90fO1DFMp/HwElzXZdp8tRwPmAkdJidETZRyj14wCzn1VspZTT8bJUTK3HMS6+WKhvBryaVyp3Ye1mFzeP3UHsLuA2SYZfb6AOrNvjcQVyadyW7Y+ep1ZaVfqFTXjXXAxjLSuHKqsD77BDfGTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NqHOlz6t; arc=none smtp.client-ip=209.85.216.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--hramamurthy.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="geEeMLjT"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff6aaa18e8so2029667a91.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 17:29:22 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NqHOlz6t"
+Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff68033070so1949275a91.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Mar 2025 17:29:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742516962; x=1743121762; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742516967; x=1743121767; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=KoTBbWww7JEQC+F5jRMP+bnOpvYvD/+5OAlhy1ULkuk=;
-        b=geEeMLjTSdLTdOKmTL2VSJ6nhZu2vOQdxNxwK934MjNLfhmNL72gdx0YamiIFAduVu
-         0/jNV6T/6traltcsEO2ihRo5TNMFXhvbLNyOWlxE7dS93JntCDH07lCjSgiNMaigo0p7
-         GrXvXcgv65+UarRPSEFu7kN5H2j0klMDkJTNcLsGN5iEh2Vtpdk3aujHYZmXheHFsrzb
-         0td9JZ/4zrBvkSGlTB+/W4MzNkO9iS2y7PkPoIoNUSzI7uxlSGcB/bzpLgyiHDNtdc/J
-         NxhgBprpAaDXhbH16oSqzLhcyqQ2cHsJTh9amDiRbGPxFZtkwWtPa6fXolrt9b66kzQD
-         sDOw==
+        bh=l1LG5VQljoMlrOtBLZUnQ7XLakC4CYuuHpRrE00Qlhw=;
+        b=NqHOlz6ty4pwNBdXNiXKEI7A6Rh4eIcw6/cxKVLPKjKYFpcD7vtacIornRVpQKq12C
+         KQmo2/fl+uNgwNxGYHMEZUu6KiycgRygWlFS43qTzlXyrd7oV99dsP23yOpzlzYEtQpo
+         fVTQBBKskhB3M1wmsJ8ib4v50h0ikd6jq7pCip9uXqrujzdhWsoWgIpbRuWjNdgJA6dE
+         /SVE01DFerm86lrHZ62LrLZHoQdZp2uEwGZKsv8CRWvv11CuTLB8pRt1tmOoUX8bSlcr
+         dN09KZQ4HarXQO9WJOHFiaCxN5ze3SC7fpf7twFQxCAjtU8cAk51Bxz3uL5GxMKDm9lf
+         ZNQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742516962; x=1743121762;
+        d=1e100.net; s=20230601; t=1742516967; x=1743121767;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KoTBbWww7JEQC+F5jRMP+bnOpvYvD/+5OAlhy1ULkuk=;
-        b=lKNhqwMV0AHL7YYES3srAxjvxtO7EqlrqxwCH9qsa8o4Teqc6QOno1pIPyccoubSB1
-         5oM9FTj5AE05JAX5Vfli8Qj9PSOImN8w7cHvA5BdSV2Mx/1DAOliRU/7Ai42hB08Q5vH
-         5x6vxoSOpq5VUTi0ETaWv0WVP1eRo9r9zjpzzXhgf+tlt9E/jMZY/EZPELgeifBhn9ut
-         kkUQmBMP7jmFtRzXB6t2hU+i7J/S0ZSLrdECrwtgZZ3+YOjiKU+K9hGFxIol6D23HxWx
-         Yn0XvzpdWm+PQSmkFDbT21iXq0SgwmHaaZuBp+sQG5mbsUp1IebiPWq+XQOfju1G/02h
-         qsUg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2oyES56NzBp8uTEVFHx4xud6LmCRJ23mlsYtGAJu/nyID5XfqgD7aJRYNVORX9ciqXQP3XDCYbFYCXJE=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywl6Uf6GSgJ4thnlUDalr9NO9sy6d/arIuRbLT33dO1SlfbsSRA
-	gzigUUwoP+XYiHs+cd+2YTST9ZF8DHPvS4qj9V2p39vxXiq+99YVEL9Zl43+ZeM3k1s4NkJw5Fz
-	MpquMpj+gY36+alm0Mz8h2w==
-X-Google-Smtp-Source: AGHT+IF/RKffTkar3eNChq0M93Wm9yCSbeUCKsyAMrO6ynd5mACmphLhb4ZEULjZm1n+Oj8W1m67dSwK7GHZr2a5Lg==
-X-Received: from pgbdo13.prod.google.com ([2002:a05:6a02:e8d:b0:af2:8474:f67e])
+        bh=l1LG5VQljoMlrOtBLZUnQ7XLakC4CYuuHpRrE00Qlhw=;
+        b=eVGQNqmURECZ3kqXeusJ7eRZsnL4LKTRfaQ0EWYAXhyccWUoxYowhW/qk1Wr5pzN/t
+         Qc40ORiMsPsHVtF7JjnTE6gNf1gEk0RcQXmNeBWrtOlg4MeFagDTvUIXwUgGB0JS5Prs
+         qJAA1XSLWENi65486voYZxGNjGzWvespuLlTk2DgfJCj7LFuk1Tr2wLv3z3UKEwf0Qp5
+         oqFBfZ/UtYEMMn6fHa2CfjwpApwL7E33casMc7VIXndd/pEA7wNYJLZm7JfmBA87Wdy4
+         ISndq6M6IlZ75/sR6zbNAe9e2I2ugk7EGkTGRlztrwFGjhuTRVdZswW9523MfWrCqUFE
+         DE7g==
+X-Forwarded-Encrypted: i=1; AJvYcCXUsQf2eOuLuJpkQ/M6Vu7BGwDasydfDLuZTToBvrNlpPH5jkzVElkItWa4GUWTcSBsq+UKZrpRPpdvR+o=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw7ZukObCpfJc7qmgJN3NQjOxZHk81RKQXon0mt5Ce3/IHwkO7o
+	ELOAMq/M76wNlu0MtdQ6IA4rIYbf3OgoUd13eE057Lb8ws/+CprU2ze3v21ppkqKd0XAASDtvGs
+	gim1+1nLR0DvPsxz3IcsD7g==
+X-Google-Smtp-Source: AGHT+IEadiXXjxt2+O81sSe0Uw9K8c8HTLQIJNQsl41h2NtHb9fpJuhccsgilZ6lbCG9EgWhslLn69uR/jdkP0Xg1Q==
+X-Received: from pjbpl11.prod.google.com ([2002:a17:90b:268b:b0:301:1bf5:2efc])
  (user=hramamurthy job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6a20:2448:b0:1f5:8179:4f42 with SMTP id adf61e73a8af0-1fe42f090fdmr2537813637.6.1742516961712;
- Thu, 20 Mar 2025 17:29:21 -0700 (PDT)
-Date: Fri, 21 Mar 2025 00:29:05 +0000
+ 2002:a17:90b:38cb:b0:2fe:b907:3b05 with SMTP id 98e67ed59e1d1-3030ff0d9f3mr1421101a91.29.1742516966814;
+ Thu, 20 Mar 2025 17:29:26 -0700 (PDT)
+Date: Fri, 21 Mar 2025 00:29:07 +0000
 In-Reply-To: <20250321002910.1343422-1-hramamurthy@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250321002910.1343422-1-hramamurthy@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250321002910.1343422-2-hramamurthy@google.com>
-Subject: [PATCH net-next 1/6] gve: remove xdp_xsk_done and xdp_xsk_wakeup statistics
+Message-ID: <20250321002910.1343422-4-hramamurthy@google.com>
+Subject: [PATCH net-next 3/6] gve: update GQ RX to use buf_size
 From: Harshitha Ramamurthy <hramamurthy@google.com>
 To: netdev@vger.kernel.org
 Cc: jeroendb@google.com, hramamurthy@google.com, andrew+netdev@lunn.ch, 
@@ -74,78 +74,124 @@ Content-Type: text/plain; charset="UTF-8"
 
 From: Joshua Washington <joshwash@google.com>
 
-These statistics pollute the hotpath and do not have any real-world use
-or meaning.
+Commit ebdfae0d377b ("gve: adopt page pool for DQ RDA mode") introduced
+a buf_size field to the gve_rx_slot_page_info struct, which can be used
+in the datapath to take the place of the packet_buffer_size field, as it
+will already be hot in the cache due to its extensive use. Using the
+buf_size field in the datapath frees up the packet_buffer_size field in
+the GQ-specific RX cacheline to be generalized for GQ and DQ (in the
+next patch), as there is currently no common packet buffer size field
+between the two queue formats.
 
 Reviewed-by: Willem de Bruijn <willemb@google.com>
 Signed-off-by: Joshua Washington <joshwash@google.com>
 Signed-off-by: Harshitha Ramamurthy <hramamurthy@google.com>
 ---
- drivers/net/ethernet/google/gve/gve.h         | 2 --
- drivers/net/ethernet/google/gve/gve_ethtool.c | 8 +++-----
- drivers/net/ethernet/google/gve/gve_tx.c      | 8 ++------
- 3 files changed, 5 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/google/gve/gve_rx.c | 24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/net/ethernet/google/gve/gve.h b/drivers/net/ethernet/google/gve/gve.h
-index 483c43bab3a9..2064e592dfdd 100644
---- a/drivers/net/ethernet/google/gve/gve.h
-+++ b/drivers/net/ethernet/google/gve/gve.h
-@@ -613,8 +613,6 @@ struct gve_tx_ring {
- 	dma_addr_t complq_bus_dqo; /* dma address of the dqo.compl_ring */
- 	struct u64_stats_sync statss; /* sync stats for 32bit archs */
- 	struct xsk_buff_pool *xsk_pool;
--	u32 xdp_xsk_wakeup;
--	u32 xdp_xsk_done;
- 	u64 xdp_xsk_sent;
- 	u64 xdp_xmit;
- 	u64 xdp_xmit_errors;
-diff --git a/drivers/net/ethernet/google/gve/gve_ethtool.c b/drivers/net/ethernet/google/gve/gve_ethtool.c
-index a572f1e05934..bc59b5b4235a 100644
---- a/drivers/net/ethernet/google/gve/gve_ethtool.c
-+++ b/drivers/net/ethernet/google/gve/gve_ethtool.c
-@@ -63,8 +63,8 @@ static const char gve_gstrings_rx_stats[][ETH_GSTRING_LEN] = {
- static const char gve_gstrings_tx_stats[][ETH_GSTRING_LEN] = {
- 	"tx_posted_desc[%u]", "tx_completed_desc[%u]", "tx_consumed_desc[%u]", "tx_bytes[%u]",
- 	"tx_wake[%u]", "tx_stop[%u]", "tx_event_counter[%u]",
--	"tx_dma_mapping_error[%u]", "tx_xsk_wakeup[%u]",
--	"tx_xsk_done[%u]", "tx_xsk_sent[%u]", "tx_xdp_xmit[%u]", "tx_xdp_xmit_errors[%u]"
-+	"tx_dma_mapping_error[%u]",
-+	"tx_xsk_sent[%u]", "tx_xdp_xmit[%u]", "tx_xdp_xmit_errors[%u]"
- };
+diff --git a/drivers/net/ethernet/google/gve/gve_rx.c b/drivers/net/ethernet/google/gve/gve_rx.c
+index 7b774cc510cc..9d444e723fcd 100644
+--- a/drivers/net/ethernet/google/gve/gve_rx.c
++++ b/drivers/net/ethernet/google/gve/gve_rx.c
+@@ -141,12 +141,15 @@ void gve_rx_free_ring_gqi(struct gve_priv *priv, struct gve_rx_ring *rx,
+ 	netif_dbg(priv, drv, priv->dev, "freed rx ring %d\n", idx);
+ }
  
- static const char gve_gstrings_adminq_stats[][ETH_GSTRING_LEN] = {
-@@ -417,9 +417,7 @@ gve_get_ethtool_stats(struct net_device *netdev,
- 					data[i++] = value;
- 				}
- 			}
--			/* XDP xsk counters */
--			data[i++] = tx->xdp_xsk_wakeup;
--			data[i++] = tx->xdp_xsk_done;
-+			/* XDP counters */
- 			do {
- 				start = u64_stats_fetch_begin(&priv->tx[ring].statss);
- 				data[i] = tx->xdp_xsk_sent;
-diff --git a/drivers/net/ethernet/google/gve/gve_tx.c b/drivers/net/ethernet/google/gve/gve_tx.c
-index 4350ebd9c2bd..c8c067e18059 100644
---- a/drivers/net/ethernet/google/gve/gve_tx.c
-+++ b/drivers/net/ethernet/google/gve/gve_tx.c
-@@ -959,14 +959,10 @@ static int gve_xsk_tx(struct gve_priv *priv, struct gve_tx_ring *tx,
+-static void gve_setup_rx_buffer(struct gve_rx_slot_page_info *page_info,
+-			     dma_addr_t addr, struct page *page, __be64 *slot_addr)
++static void gve_setup_rx_buffer(struct gve_rx_ring *rx,
++				struct gve_rx_slot_page_info *page_info,
++				dma_addr_t addr, struct page *page,
++				__be64 *slot_addr)
+ {
+ 	page_info->page = page;
+ 	page_info->page_offset = 0;
+ 	page_info->page_address = page_address(page);
++	page_info->buf_size = rx->packet_buffer_size;
+ 	*slot_addr = cpu_to_be64(addr);
+ 	/* The page already has 1 ref */
+ 	page_ref_add(page, INT_MAX - 1);
+@@ -171,7 +174,7 @@ static int gve_rx_alloc_buffer(struct gve_priv *priv, struct device *dev,
+ 		return err;
+ 	}
  
- 	spin_lock(&tx->xdp_lock);
- 	while (sent < budget) {
--		if (!gve_can_tx(tx, GVE_TX_START_THRESH))
-+		if (!gve_can_tx(tx, GVE_TX_START_THRESH) ||
-+		    !xsk_tx_peek_desc(tx->xsk_pool, &desc))
- 			goto out;
+-	gve_setup_rx_buffer(page_info, dma, page, &data_slot->addr);
++	gve_setup_rx_buffer(rx, page_info, dma, page, &data_slot->addr);
+ 	return 0;
+ }
  
--		if (!xsk_tx_peek_desc(tx->xsk_pool, &desc)) {
--			tx->xdp_xsk_done = tx->xdp_xsk_wakeup;
--			goto out;
--		}
--
- 		data = xsk_buff_raw_get_data(tx->xsk_pool, desc.addr);
- 		nsegs = gve_tx_fill_xdp(priv, tx, data, desc.len, NULL, true);
- 		tx->req += nsegs;
+@@ -199,7 +202,8 @@ static int gve_rx_prefill_pages(struct gve_rx_ring *rx,
+ 			struct page *page = rx->data.qpl->pages[i];
+ 			dma_addr_t addr = i * PAGE_SIZE;
+ 
+-			gve_setup_rx_buffer(&rx->data.page_info[i], addr, page,
++			gve_setup_rx_buffer(rx, &rx->data.page_info[i], addr,
++					    page,
+ 					    &rx->data.data_ring[i].qpl_offset);
+ 			continue;
+ 		}
+@@ -222,6 +226,7 @@ static int gve_rx_prefill_pages(struct gve_rx_ring *rx,
+ 			rx->qpl_copy_pool[j].page = page;
+ 			rx->qpl_copy_pool[j].page_offset = 0;
+ 			rx->qpl_copy_pool[j].page_address = page_address(page);
++			rx->qpl_copy_pool[j].buf_size = rx->packet_buffer_size;
+ 
+ 			/* The page already has 1 ref. */
+ 			page_ref_add(page, INT_MAX - 1);
+@@ -283,6 +288,7 @@ int gve_rx_alloc_ring_gqi(struct gve_priv *priv,
+ 
+ 	rx->gve = priv;
+ 	rx->q_num = idx;
++	rx->packet_buffer_size = GVE_DEFAULT_RX_BUFFER_SIZE;
+ 
+ 	rx->mask = slots - 1;
+ 	rx->data.raw_addressing = cfg->raw_addressing;
+@@ -351,7 +357,6 @@ int gve_rx_alloc_ring_gqi(struct gve_priv *priv,
+ 	rx->db_threshold = slots / 2;
+ 	gve_rx_init_ring_state_gqi(rx);
+ 
+-	rx->packet_buffer_size = GVE_DEFAULT_RX_BUFFER_SIZE;
+ 	gve_rx_ctx_clear(&rx->ctx);
+ 
+ 	return 0;
+@@ -590,7 +595,7 @@ static struct sk_buff *gve_rx_copy_to_pool(struct gve_rx_ring *rx,
+ 	copy_page_info->pad = page_info->pad;
+ 
+ 	skb = gve_rx_add_frags(napi, copy_page_info,
+-			       rx->packet_buffer_size, len, ctx);
++			       copy_page_info->buf_size, len, ctx);
+ 	if (unlikely(!skb))
+ 		return NULL;
+ 
+@@ -630,7 +635,8 @@ gve_rx_qpl(struct device *dev, struct net_device *netdev,
+ 	 * device.
+ 	 */
+ 	if (page_info->can_flip) {
+-		skb = gve_rx_add_frags(napi, page_info, rx->packet_buffer_size, len, ctx);
++		skb = gve_rx_add_frags(napi, page_info, page_info->buf_size,
++				       len, ctx);
+ 		/* No point in recycling if we didn't get the skb */
+ 		if (skb) {
+ 			/* Make sure that the page isn't freed. */
+@@ -680,7 +686,7 @@ static struct sk_buff *gve_rx_skb(struct gve_priv *priv, struct gve_rx_ring *rx,
+ 			skb = gve_rx_raw_addressing(&priv->pdev->dev, netdev,
+ 						    page_info, len, napi,
+ 						    data_slot,
+-						    rx->packet_buffer_size, ctx);
++						    page_info->buf_size, ctx);
+ 		} else {
+ 			skb = gve_rx_qpl(&priv->pdev->dev, netdev, rx,
+ 					 page_info, len, napi, data_slot);
+@@ -855,7 +861,7 @@ static void gve_rx(struct gve_rx_ring *rx, netdev_features_t feat,
+ 		void *old_data;
+ 		int xdp_act;
+ 
+-		xdp_init_buff(&xdp, rx->packet_buffer_size, &rx->xdp_rxq);
++		xdp_init_buff(&xdp, page_info->buf_size, &rx->xdp_rxq);
+ 		xdp_prepare_buff(&xdp, page_info->page_address +
+ 				 page_info->page_offset, GVE_RX_PAD,
+ 				 len, false);
 -- 
 2.49.0.rc1.451.g8f38331e32-goog
 
