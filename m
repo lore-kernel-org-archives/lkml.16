@@ -1,167 +1,291 @@
-Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF3F22D797
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 421CC22DFA5
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:14:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573679; cv=none; b=hDG/6zqzzFLdEJIM4C0EsJa3gVgZxJg/KaaA7VaMc5CxyDnu4ncOYsyrw3kDMij95jiZ/EVSGgZnlQwQCc6gPvlQhLzlpq6EYfvSFhltKpd35tTBH58d3rA8DZjeZA9oTQQg1qDii+pv35JpTm6y6T3iE8aZsINDfCuGt2GCa0s=
+	t=1742573686; cv=none; b=rA2okusg6LJfvIiJoNJahYzhE8AAtnmxaovZxcDWB+VPYKpbSgsMVz18lcqGxU7PH1UvN/hWCmJKOCBXJO56XOqvdKOjE6rEt7QFydYZS36gMODjKasGYmRBxJa46mCvnG0NMN/E+FFpBii6KjKkczJ4rQYDKoUNgoykBUzIKqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573679; c=relaxed/simple;
-	bh=qXpYjnL6QzDKFF/vEA2avZLphl/BA8jmPIwzNSXeK7Q=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=iv6jrNfEaA/B7q0v9TXyL0tzTNavzb+zGskNwQB0xW3EtjDrlS352ranU6UBwHl56m4Odg0B1Q+5RmoA9q2EzmbE6fX3dKaK3O+elPUAG61bW6sxIjir25WVUxcG8Dp70C8Demr5k6jHa59r1+Ba7p2JjC3QGLj69TfZZzq1BU8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Fv3+y9CY; arc=none smtp.client-ip=209.85.160.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742573686; c=relaxed/simple;
+	bh=QJbi407Gq8VLLgi9E0vdiZ8uX6C0oRfqhu+9aRZPznQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aE1PBbPaaSb6QyzuJBJrCsBhb9ymC0IzDpl2dFfmzVUgdB0HT+B9A3v1k97hav6VTzwfN41sF7g4Jf0ZEzpRCdwy7tu9R3UNC0fKOgGqhMllNUaH77v0tH1UVM60BSJ8b4PcPymw8v4QAWkOSS7abm3WLsCOMA15yOfCzacwzsA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=HabGai7G; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Fv3+y9CY"
-Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-47681dba807so242941cf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:14:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742573677; x=1743178477; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lr1NpamvodEP6MFP3VgS0Dk87IubpsnKUE/+euMf6QU=;
-        b=Fv3+y9CY8f2z8Zy2KI6pqFnQyV7BVUDrSAJNKGpTVdyOpcyNU4/FQUL4zz3+faPkaT
-         oTn39Aqr1rBjdcYFvzwokw8ucOYuOiR6qNpR0xhBxlofxuKBD2A17SWui721887+jErb
-         lueqHOTTfjYujWnpOrnpa5DUarH7F+TBIooG65jTgRsSgylaC3X874jRNb/uAZ/0UtEa
-         RHQJyMwwwLLgnmTfRdf4Mez+HL4viGgBfv77sFS0axbQKPdYfgZ1LoK8v6DYvcKsDWnT
-         5CIGlf3AVywZZKfZkUs3PSXud/k6UbXei63f8v/a3XWoKST+acnFS6g7cKySgNE6PqQF
-         4QKQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742573677; x=1743178477;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lr1NpamvodEP6MFP3VgS0Dk87IubpsnKUE/+euMf6QU=;
-        b=m6ii102XEWqXa5TkVvv1QDDD0Qlw9T1P7DjSvmrnfvVg0Yq5xtr6DTvRqHbrOiUzhR
-         4IuZmExwcynoUBqF3enDA03lipeDqlF0Q2kRZ3Z7gXc6SbC16/Y8OcE9SK3yt9Ol3VDS
-         sz2SpHAdYAs7EOgVwsUl/Nj3+ptyEIFne1WGqfmJojICU2It3LrAkBy1yELpHH+5L7gU
-         59mkb37wUSx9Hovc06yNYbDZoYAie6CI8N4JHNvvjDivJijVauSGRq0gG0cp0q/i+wQy
-         0PfIVPRZx8fJ2e+mr2fmtrLZ8GDTT9lu4zCnYwvU3IIXkKKr9ym7cYmAN6bW/rh7uP2f
-         5gOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkECk3anEBBglsWGnwHht2Xo8/fD3IsfSmoWoVRnutc5eDfx2nioTrmrcpx0qrUf5IoEtnfupLVtrzvGk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztAFJQUh5mpfRS1jJKELyYXCS7W1/eT7jwl8r1x4y+hW0nPw1k
-	LzuW9HtN54gLMhkgLYQMbt9JQLP6AD1N5eOKqZivWRS/F5znCBh2aFnI/EzGqXdY4XjortqXtdw
-	VPsg5yB/uezRJruS9opYxVOV+nhrfkFowA53P
-X-Gm-Gg: ASbGncubJCbwquq0BoCV7i53swRaZg78zUVJJ+Z0dbthqHKy1M8221LOkq4rX+370Yo
-	7yfcFxioFxmLy7+xYQKo4M3RFgHVKhQn/cWO2x1qCC/H78YJi/eLjVigB9l/YGuQa88qjpqDNjZ
-	Ore5aniM+UHH1XUEzgS1AFasjoQQ==
-X-Google-Smtp-Source: AGHT+IFtRdtnxmYqCiNGozdyiDRgbS5XVd2/jJNIMYaa9ildizNYGE8X3N7zH+w9Lm6oeOkoQXAJJ6yRGhxNC/i547Y=
-X-Received: by 2002:a05:622a:1c10:b0:476:77be:9102 with SMTP id
- d75a77b69052e-4771f510a8amr3527931cf.7.1742573676464; Fri, 21 Mar 2025
- 09:14:36 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HabGai7G"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742573682;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZSC5YwicpO03gYExoUotpiHs2EHAFn+TU50pqasUPmU=;
+	b=HabGai7GfQgOh2CFTJWPaOqVh8LOD9JM14mKMs75kiV4u+agWMX+kqHPL2kjNSDHhycAb1
+	pPGgrJ0pprfGB3OjTJCCDNpQi+ExbTQ/PkbA0WLX+yfZKDuQLdBrfeth7/uaMgVG2++NOg
+	Xhl8Gt4nkBGcchq93ROSHuj2VS3y0aE=
+Received: from mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-208-Ev37cor8PDCv9N0Af2ivaQ-1; Fri,
+ 21 Mar 2025 12:14:37 -0400
+X-MC-Unique: Ev37cor8PDCv9N0Af2ivaQ-1
+X-Mimecast-MFC-AGG-ID: Ev37cor8PDCv9N0Af2ivaQ_1742573674
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-08.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3680C1801A07;
+	Fri, 21 Mar 2025 16:14:34 +0000 (UTC)
+Received: from warthog.procyon.org.com (unknown [10.42.28.61])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id ED872180174E;
+	Fri, 21 Mar 2025 16:14:30 +0000 (UTC)
+From: David Howells <dhowells@redhat.com>
+To: Leon Romanovsky <leonro@nvidia.com>
+Cc: David Howells <dhowells@redhat.com>,
+	Christian Brauner <christian@brauner.io>,
+	Matthew Wilcox <willy@infradead.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Steve French <smfrench@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>,
+	netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org,
+	linux-block@vger.kernel.org,
+	linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 4/4] iov_iter: Add a scatterlist iterator type [INCOMPLETE]
+Date: Fri, 21 Mar 2025 16:14:04 +0000
+Message-ID: <20250321161407.3333724-5-dhowells@redhat.com>
+In-Reply-To: <20250321161407.3333724-1-dhowells@redhat.com>
+References: <20250321161407.3333724-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320173931.1583800-1-surenb@google.com> <20250320173931.1583800-4-surenb@google.com>
- <20250321-unhelpful-doze-791895ca5b01@spud>
-In-Reply-To: <20250321-unhelpful-doze-791895ca5b01@spud>
-From: Suren Baghdasaryan <surenb@google.com>
-Date: Fri, 21 Mar 2025 09:14:24 -0700
-X-Gm-Features: AQ5f1Jp8UfxX8WOnw9385d8J0NeQgt0g6OSnoez6cTxiRd2n5Bydr6rryoZB6As
-Message-ID: <CAJuCfpEujbaSrk5+mR=+vWqwSu-t52fVmbPf5msnpduSB6AT2Q@mail.gmail.com>
-Subject: Re: [RFC 3/3] mm: integrate GCMA with CMA using dt-bindings
-To: Conor Dooley <conor@kernel.org>
-Cc: akpm@linux-foundation.org, willy@infradead.org, david@redhat.com, 
-	vbabka@suse.cz, lorenzo.stoakes@oracle.com, liam.howlett@oracle.com, 
-	alexandru.elisei@arm.com, peterx@redhat.com, hannes@cmpxchg.org, 
-	mhocko@kernel.org, m.szyprowski@samsung.com, iamjoonsoo.kim@lge.com, 
-	mina86@mina86.com, axboe@kernel.dk, viro@zeniv.linux.org.uk, 
-	brauner@kernel.org, hch@infradead.org, jack@suse.cz, hbathini@linux.ibm.com, 
-	sourabhjain@linux.ibm.com, ritesh.list@gmail.com, aneesh.kumar@kernel.org, 
-	bhelgaas@google.com, sj@kernel.org, fvdl@google.com, ziy@nvidia.com, 
-	yuzhao@google.com, minchan@kernel.org, linux-mm@kvack.org, 
-	linuxppc-dev@lists.ozlabs.org, linux-block@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, iommu@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, Minchan Kim <minchan@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Fri, Mar 21, 2025 at 7:06=E2=80=AFAM Conor Dooley <conor@kernel.org> wro=
-te:
->
-> On Thu, Mar 20, 2025 at 10:39:31AM -0700, Suren Baghdasaryan wrote:
-> > This patch introduces a new "guarantee" property for shared-dma-pool.
-> > With this property, admin can create specific memory pool as
-> > GCMA-based CMA if they care about allocation success rate and latency.
-> > The downside of GCMA is that it can host only clean file-backed pages
-> > since it's using cleancache as its secondary user.
-> >
-> > Signed-off-by: Minchan Kim <minchan@google.com>
-> > Signed-off-by: Suren Baghdasaryan <surenb@google.com>
-> > ---
-> >  arch/powerpc/kernel/fadump.c |  2 +-
-> >  include/linux/cma.h          |  2 +-
-> >  kernel/dma/contiguous.c      | 11 ++++++++++-
-> >  mm/cma.c                     | 33 ++++++++++++++++++++++++++-------
-> >  mm/cma.h                     |  1 +
-> >  mm/cma_sysfs.c               | 10 ++++++++++
-> >  6 files changed, 49 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.=
-c
-> > index 4b371c738213..4eb7be0cdcdb 100644
-> > --- a/arch/powerpc/kernel/fadump.c
-> > +++ b/arch/powerpc/kernel/fadump.c
-> > @@ -111,7 +111,7 @@ void __init fadump_cma_init(void)
-> >               return;
-> >       }
-> >
-> > -     rc =3D cma_init_reserved_mem(base, size, 0, "fadump_cma", &fadump=
-_cma);
-> > +     rc =3D cma_init_reserved_mem(base, size, 0, "fadump_cma", &fadump=
-_cma, false);
-> >       if (rc) {
-> >               pr_err("Failed to init cma area for firmware-assisted dum=
-p,%d\n", rc);
-> >               /*
-> > diff --git a/include/linux/cma.h b/include/linux/cma.h
-> > index 62d9c1cf6326..3207db979e94 100644
-> > --- a/include/linux/cma.h
-> > +++ b/include/linux/cma.h
-> > @@ -46,7 +46,7 @@ extern int __init cma_declare_contiguous_multi(phys_a=
-ddr_t size,
-> >  extern int cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
-> >                                       unsigned int order_per_bit,
-> >                                       const char *name,
-> > -                                     struct cma **res_cma);
-> > +                                     struct cma **res_cma, bool gcma);
-> >  extern struct page *cma_alloc(struct cma *cma, unsigned long count, un=
-signed int align,
-> >                             bool no_warn);
-> >  extern bool cma_pages_valid(struct cma *cma, const struct page *pages,=
- unsigned long count);
-> > diff --git a/kernel/dma/contiguous.c b/kernel/dma/contiguous.c
-> > index 055da410ac71..a68b3123438c 100644
-> > --- a/kernel/dma/contiguous.c
-> > +++ b/kernel/dma/contiguous.c
-> > @@ -459,6 +459,7 @@ static int __init rmem_cma_setup(struct reserved_me=
-m *rmem)
-> >       unsigned long node =3D rmem->fdt_node;
-> >       bool default_cma =3D of_get_flat_dt_prop(node, "linux,cma-default=
-", NULL);
-> >       struct cma *cma;
-> > +     bool gcma;
-> >       int err;
-> >
-> >       if (size_cmdline !=3D -1 && default_cma) {
-> > @@ -476,7 +477,15 @@ static int __init rmem_cma_setup(struct reserved_m=
-em *rmem)
-> >               return -EINVAL;
-> >       }
-> >
-> > -     err =3D cma_init_reserved_mem(rmem->base, rmem->size, 0, rmem->na=
-me, &cma);
-> > +     gcma =3D !!of_get_flat_dt_prop(node, "guarantee", NULL);
->
-> When this (or if I guess) this goes !RFC, you will need to document this
-> new property that you're adding.
+Add an iterator type that can iterate over a socket buffer.
 
-Definitely. I'll document the cleancache and GCMA as well.
-Thanks!
+[!] Note this is not yet completely implemented and won't compile.
+
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
+ include/linux/uio.h |  10 ++++
+ lib/iov_iter.c      | 121 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 131 insertions(+)
+
+diff --git a/include/linux/uio.h b/include/linux/uio.h
+index 0e50f4af6877..87d6ba660489 100644
+--- a/include/linux/uio.h
++++ b/include/linux/uio.h
+@@ -13,6 +13,7 @@
+ struct page;
+ struct folio_queue;
+ struct scatterlist;
++struct sk_buff;
+ 
+ typedef unsigned int __bitwise iov_iter_extraction_t;
+ 
+@@ -32,6 +33,7 @@ enum iter_type {
+ 	ITER_DISCARD,
+ 	ITER_ITERLIST,
+ 	ITER_SCATTERLIST,
++	ITER_SKBUFF,
+ };
+ 
+ #define ITER_SOURCE	1	// == WRITE
+@@ -77,6 +79,7 @@ struct iov_iter {
+ 				void __user *ubuf;
+ 				struct iov_iterlist *iterlist;
+ 				struct scatterlist *sglist;
++				const struct sk_buff *skb;
+ 			};
+ 			size_t count;
+ 		};
+@@ -171,6 +174,11 @@ static inline bool iov_iter_is_scatterlist(const struct iov_iter *i)
+ 	return iov_iter_type(i) == ITER_SCATTERLIST;
+ }
+ 
++static inline bool iov_iter_is_skbuff(const struct iov_iter *i)
++{
++	return iov_iter_type(i) == ITER_SKBUFF;
++}
++
+ static inline unsigned char iov_iter_rw(const struct iov_iter *i)
+ {
+ 	return i->data_source ? WRITE : READ;
+@@ -329,6 +337,8 @@ void iov_iter_iterlist(struct iov_iter *i, unsigned int direction,
+ 		       size_t count);
+ void iov_iter_scatterlist(struct iov_iter *i, unsigned int direction,
+ 			  struct scatterlist *sglist, size_t count);
++void iov_iter_skbuff(struct iov_iter *i, unsigned int direction,
++		     const struct sk_buff *skb, size_t count);
+ ssize_t iov_iter_get_pages2(struct iov_iter *i, struct page **pages,
+ 			size_t maxsize, unsigned maxpages, size_t *start);
+ ssize_t iov_iter_get_pages_alloc2(struct iov_iter *i, struct page ***pages,
+diff --git a/lib/iov_iter.c b/lib/iov_iter.c
+index ed9859af3c5d..01215316d272 100644
+--- a/lib/iov_iter.c
++++ b/lib/iov_iter.c
+@@ -12,6 +12,7 @@
+ #include <linux/scatterlist.h>
+ #include <linux/instrumented.h>
+ #include <linux/iov_iter.h>
++#include <linux/skbuff.h>
+ 
+ static __always_inline
+ size_t copy_to_user_iter(void __user *iter_to, size_t progress,
+@@ -918,6 +919,29 @@ void iov_iter_scatterlist(struct iov_iter *iter, unsigned int direction,
+ }
+ EXPORT_SYMBOL(iov_iter_scatterlist);
+ 
++/**
++ * iov_iter_skbuff - Initialise an I/O iterator for a socket buffer
++ * @iter: The iterator to initialise.
++ * @direction: The direction of the transfer.
++ * @skb: The socket buffer
++ * @count: The size of the I/O buffer in bytes.
++ *
++ * Set up an I/O iterator that walks over a socket buffer.
++ */
++void iov_iter_skbuff(struct iov_iter *i, unsigned int direction,
++		     const struct sk_buff *skb, size_t count)
++{
++	WARN_ON(direction & ~(READ | WRITE));
++	*iter = (struct iov_iter){
++		.iter_type	= ITER_SKBUFF,
++		.data_source	= direction,
++		.skb		= skb,
++		.iov_offset	= 0,
++		.count		= count,
++	};
++}
++EXPORT_SYMBOL(iov_iter_skbuff);
++
+ static bool iov_iter_aligned_iovec(const struct iov_iter *i, unsigned addr_mask,
+ 				   unsigned len_mask)
+ {
+@@ -2314,6 +2338,10 @@ ssize_t iov_iter_extract_pages(struct iov_iter *i,
+ 		return iov_iter_extract_scatterlist_pages(i, pages, maxsize,
+ 							  maxpages, extraction_flags,
+ 							  offset0);
++	if (iov_iter_is_skbuff(i))
++		return iov_iter_extract_skbuff_pages(i, pages, maxsize,
++						     maxpages, extraction_flags,
++						     offset0);
+ 	return -EFAULT;
+ }
+ EXPORT_SYMBOL_GPL(iov_iter_extract_pages);
+@@ -2449,6 +2477,97 @@ static size_t iterate_scatterlist(struct iov_iter *iter, size_t len, void *priv,
+ 	return progress;
+ }
+ 
++struct skbuff_iter_ctx {
++	iov_step_f	step;
++	size_t		progress;
++	void		*priv;
++	void		*priv2;
++};
++
++static bool iterate_skbuff_frag(const struct sk_buff *skb, struct skbuff_iter_ctx *ctx,
++				int offset, int len, int recursion_level)
++{
++	struct sk_buff *frag_iter;
++	size_t skip = offset, part, remain, consumed;
++
++	if (unlikely(recursion_level >= 24))
++		return false;
++
++	part = skb_headlen(skb);
++	if (skip < part) {
++		part = umin(part - skip, len);
++		remain = ctx->step(skb->data + skip, ctx->progress, part,
++				   ctx->priv, ctx->priv2);
++		consumed = part - remain;
++		ctx->progress += consumed;
++		len -= consumed;
++		if (remain > 0 || len <= 0)
++			return false;
++		skip = 0;
++	} else {
++		skip -= part;
++	}
++
++	for (int i = 0; i < skb_shinfo(skb)->nr_frags; i++) {
++		const skb_frag_t *frag = &skb_shinfo(skb)->frags[i];
++		size_t fsize = skb_frag_size(frag);
++
++		if (skip >= fsize) {
++			skip -= fsize;
++			continue;
++		}
++
++		part = umin(fsize - skip, len);
++		remain = ctx->step(skb_frag_address(frag) + skip,
++				   ctx->progress, part, ctx->priv, ctx->priv2);
++		consumed = part - remain;
++		ctx->progress += consumed;
++		len -= consumed;
++		if (remain > 0 || len <= 0)
++			return false;
++		skip = 0;
++	}
++
++	skb_walk_frags(skb, frag_iter) {
++		size_t fsize = frag_iter->len;
++
++		if (skip >= fsize) {
++			skip -= fsize;
++			continue;
++		}
++
++		part = umin(fsize - skip, len);
++		if (!iterate_skbuff_frag(frag_iter, ctx, skb_headlen(skb) + skip,
++					 part, recursion_level + 1))
++			return false;
++		len -= part;
++		if (len <= 0)
++			return false;
++		skip = 0;
++	}
++	return true;
++}
++
++/*
++ * Handle iteration over ITER_SKBUFF.  Modelled on __skb_to_sgvec().
++ */
++static size_t iterate_skbuff(struct iov_iter *iter, size_t len, void *priv, void *priv2,
++			     iov_step_f step)
++{
++	struct skbuff_iter_ctx ctx = {
++		.step		= step,
++		.progress	= 0,
++		.priv		= priv,
++		.priv2		= priv2,
++	};
++
++	iterate_skbuff_frag(iter->skb, &ctx, iter->iov_offset, len, 0);
++
++	iter->iov_offset += ctx.progress;
++	iter->count -= ctx.progress;
++	return ctx.progress;
++}
++
+ /*
+  * Out of line iteration for iterator types that don't need such fast handling.
+  */
+@@ -2463,6 +2582,8 @@ size_t __iterate_and_advance2(struct iov_iter *iter, size_t len, void *priv,
+ 		return iterate_iterlist(iter, len, priv, priv2, ustep, step);
+ 	if (iov_iter_is_scatterlist(iter))
+ 		return iterate_scatterlist(iter, len, priv, priv2, step);
++	if (iov_iter_is_skbuff(iter))
++		return iterate_skbuff(iter, len, priv, priv2, step);
+ 	WARN_ON(1);
+ 	return 0;
+ }
+
