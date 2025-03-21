@@ -1,144 +1,108 @@
 Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9811EFFAF;
-	Fri, 21 Mar 2025 09:55:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B3133F6;
+	Fri, 21 Mar 2025 09:56:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742550927; cv=none; b=TbeR5k21KdwZwpKlliY+Yk/o1D1NgHsbCXqVkwhCI4Hr6L3TeJn56wLxuzAk7qJA1hg9LlaRfNJNSvLinr+MIMsZmGUWIw8iTd0HfdZ+wgJ/7Q2k+Ss3MdaQuRnDaXfmCgXp3mRmp3WZv0liu/9zIbJlvv4WVgHvAkMK6533kCo=
+	t=1742550979; cv=none; b=ouXFpkPutyhlePNGyjP9uQpS5di+caNzUaArow6muT77TX7VNlJiJGJiXaa/qmOCb6j5WjuF2kglzzqRFr3458yz/k2aOP5m+QEX8ArQDUO6aZd15T8ZJTteD41IlATEgLQ4c7rMQOV41Enj/+ot619WTH9Abdph8F44JuxuugQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742550927; c=relaxed/simple;
-	bh=emY32bq6POxE5dVGpv7GJv8QtE46PSUJBwrKrveZhnU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gDx0mM0NY7PnHWlhIrcXg7t+Iv1nlfERlgV7gclvLaBDMN60Fnyl5t2t5cJvuKVgTO5hNq4OwEo1C1vY3JsvT9vmmTV4K3bQMjAcMDy11LSN+DXhdrJxkf0exn562vEpncqHCNDZfDjtTcJv0JgPBgoZn71XttkBdjmLi7dffWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ix2nqMN1; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1742550979; c=relaxed/simple;
+	bh=vST3+YBnqZ7vgDLq/8DcOcgG26aUWoWL44PgfuNMLDE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=W94X3MihZezK5ePH3Cg931Wn4W0uayzcC00XaAoEohWcDX10BbQRGRuJ4W1W6uvAIeVc3ok8xb5jupsBZXGc7SOGp+5J8FlG275z2Gwu+T10butN2b/2Z/VvFXw4w7/AxcnkMRms/NKWvrrk9D2zAJwpE/tJXfcaebNU0IGv89w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XHUmrh0t; arc=none smtp.client-ip=209.85.218.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ix2nqMN1"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ab771575040so565474466b.1;
-        Fri, 21 Mar 2025 02:55:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XHUmrh0t"
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-ac2af2f15d1so234867666b.1;
+        Fri, 21 Mar 2025 02:56:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742550923; x=1743155723; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=hGxPTZgzQQh40KKZP2p1g5UxF7T4fChcDIcF48afktA=;
-        b=Ix2nqMN1sQ6zAy6kubKaCOvrLPv+CFyouiFaQKi2ONHfJzk35acFdVhIiJeWkKB508
-         ZPcdWPljrREuWuIktCC4gDY5NqLl3/opHqlQslp/84G4XCtnf9SpoOb0sSW+98SJ+ejU
-         a9fn6PDZlgrBxPOMIm6rELdGKA/5xleFhdxSWKeAVHUzlQxKZMjtGJp0AeWjejp6B2nR
-         4UhvvpHtyNsrv42Hw7m5Rlb8EuAjpVY82+byEJyj2EW/iDDDnNmdBAw59phFv4LcUvlo
-         mkBMZa+SLGESuRKVRyaJYIIMr2jhgvHCTHHamf9LTd5vVLBSSu7RpNEV0hRjCjZm+4fl
-         1UXw==
+        d=gmail.com; s=20230601; t=1742550976; x=1743155776; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HsIQgwq+etm/XqjoaMjvezC22//tyBjo4Yc9wEZeyaU=;
+        b=XHUmrh0tgTx5wg2GYr570i1z2dgQHY2mNQMnGevzWwiboJw9anl3kpRcH0WS83RCZ6
+         gOaoAp1KhItpo9V6lAbfCDOghluN5pZKx15svgKVsVtDs/HqjCSUMylEPK+qGAq8iExM
+         Wrjs7XrsyPvcy6h7jzoet7BlpbGARpj0Dbh7s6ImnDqClJYVJqfrIRuVQldBUFC4rJq+
+         lzAYMvl7lSRStpiKU98dp/H4S16dhnVqJspIe/5IkFAD9aSb2cK6djFIoDU106y61nhG
+         cf54yxb+l3rgzo4WXZv8u6nlcV35P5I9nxjhvOnrcE0BVHILxjbvv016Aq3c/EcB37xg
+         h6+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742550923; x=1743155723;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hGxPTZgzQQh40KKZP2p1g5UxF7T4fChcDIcF48afktA=;
-        b=WLp9h/z/JvebEd8URlQgjo/5x+HRxX1+pQig5a+Jg/4W/oYgfYhA1ievOHMpDS5tQQ
-         zTN30O79yfiFSmJyNiTt6QD+BN42oX6aL8vqHM91nX/pT+35MnBrM+VB1VZPbg7yPAe0
-         OeRCkX0aVxAZOuoaZ97peVbcVpQ0J2XCVTIqmULrsFqcMV1Toj6eiLVVfG7FCJetIdbV
-         dVShVjQeSeGa9FiVsyUdRCiyd5SLO/2AYlszT6qE+hLTkeh0DxNwAXz+emPpppkbULUg
-         06LMR3I+grZXvQ45UNwl0mowq/44u+yo9ZSbRbzefbYAsVSX2WHatYrEBwmbKZoSU2hx
-         VYsg==
-X-Forwarded-Encrypted: i=1; AJvYcCU0h9S3vbRQfLstHd+HKtKGhP7YR834nHmYfekmWxo5ZeVHKeqGczudZ6XqSWelXEKULyTHXYq07w==@vger.kernel.org, AJvYcCW1iIqveVwEhUBsMWpVG6p8HSaJgN/jPKlg3I09QlFyRdZQdgQ0xKZQmTFzQ6mYUKCjp1UOV8TiYrSwPf8=@vger.kernel.org, AJvYcCXnk4+LQm1tINo8YHDh0pph36A7rtYJVVD8NOVsfQ6mCjkolW66vRzV8eGmYxNk9mTymew5Er3AivfOnW+w@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyb26rXUbmRBeo+EwanxlN1BI7AjcuqkyJz8bDf0zjD8LdlOCOM
-	EvXxjkfEnt+JtPeui9+7whQ1a0QGt01u//jb63hngUO3sfff0u02
-X-Gm-Gg: ASbGncvZt9uMS/7Vg0kgA3vGQ4xNI8oGKs8Wq5iS0tvUVFl3rv4qjkMjLD8cX8GHn44
-	9jj2YLhNo5YBjyX5OQh0h6veX1kPX7mBua9DDaoquMbULUkK+b5Tnf+QX/GkvMAgyeWzcUPaWWk
-	k7FxLgs/oPzTiRJqddc+0a/kM/8z2J6Il1rR9o9gAgfW+aR/Rc5M1euJl2Ji/N2CPvifchP0xDx
-	86TEbiRsEOd4aO9zzFN8XwuaKLRUTRKUikgWqv6H9IZMi2ALK/SqA6TWIVpuWEmpMyBqN82uaql
-	DrXMDCnjBQeWxybLFsFsAdjCV5Mdv2BJ2i5Y2/u1HJf1X/Px9LR5Bg==
-X-Google-Smtp-Source: AGHT+IGl/EazGASwBGic4cjYROwCQT0URMReSd1nVM1pAcMs8PHtW3kuyvTfa05qhoO4q1P1cMRu7A==
-X-Received: by 2002:a17:907:1b1e:b0:ac3:ed82:77c2 with SMTP id a640c23a62f3a-ac3ed8279a1mr301741066b.5.1742550923100;
-        Fri, 21 Mar 2025 02:55:23 -0700 (PDT)
-Received: from [192.168.8.100] ([85.255.236.254])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd569f3sm121390566b.171.2025.03.21.02.55.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 21 Mar 2025 02:55:22 -0700 (PDT)
-Message-ID: <24ab1cff-2020-4e65-b554-78cb7e8a3c34@gmail.com>
-Date: Fri, 21 Mar 2025 09:56:16 +0000
+        d=1e100.net; s=20230601; t=1742550976; x=1743155776;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HsIQgwq+etm/XqjoaMjvezC22//tyBjo4Yc9wEZeyaU=;
+        b=RdQzDm8dN7nBf8u5KLykf5uOeU0LBXTEfeJtiLvPBN8e8RQ9zG8UQKSl07wF0GZecX
+         qLZL49dx7E1UIvVBEp/bRw5OhdzmT+BiM0NZbES0Z2U6Y5gmkjzctId7MI1VgBGBjJ2p
+         GFXu93IHemwqBBlF3NA5+Zu7sLiGyfRk8HXju3/miMysSgzfqCDOYzOC4pKwU0uqeAGk
+         16QcPOePG2As3Xa9DF7mdJUrq5u5MzrGO1Dw+FMrmWJO4rYwS+T9zW/fsxg8ZQLmGBk+
+         XeTlSggTrusplRu5XFABt0En5mvfJ1lGWid3s4qrbl1zp+QtxMwkTn2Oy01XxjGa4L/R
+         ExVg==
+X-Forwarded-Encrypted: i=1; AJvYcCVUPALBq6+h4XtDpxiiO2trb8CoWeytT3UNDAmo2KXGLfAa03xaOK0z9DxGSjPCstQSU+s1BeuBTNYvDU0z@vger.kernel.org, AJvYcCWAmbWr/aP6OVONqqCG4yIF77Y4iNa+a9Zui5csXHp7kzBcgiOVx7UPBPMXNPP3aRFITsOhV1ki2BA=@vger.kernel.org, AJvYcCWqlj8WZGq/q3Cpuu9vm1Rdp4CcF84A+kyDG+AWECNSofCxYBJGlTbMm3QClm4hlrHw0GUQcEWO5r8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9oAnwZtexrk6S5Oce97gslel8IDgWkrqnG6tWYLdSCuAMy+Xw
+	7CY3vtBGjdfZkghV3tfSXf3owKy8Aj0PKITZ3rjiOI3Dv7vYSsED
+X-Gm-Gg: ASbGncvSnXFMmpAw+tpIXieN9odqi1bhyA2qv6+QHwGhelhKy+Qrh7tjeCvkRTXdYfV
+	vuanH2Ryq8yewLaM55Ie5T8d/b/NQi78ataF35KthCAPATm6a8RTZ0Kblm8zs/pNEgvn5hQItup
+	OYDT4paoMs4Ci6tY9OEeDgVezlxGwfgAOpKk6oOjh+SYpSUbwxF1F2Y7VoZJ/XyVIrsWB4hzHKB
+	Ftmq7WQTkD9zVOqPM3ukYI8UoawAg7KC/ibgCPcQVl1/srpCIkSxzs8+5hAy0tJzTsbwtKMS0mV
+	nk9N4jvo25nBNCWGvzn3OpffMsBB6AwZd9Id
+X-Google-Smtp-Source: AGHT+IEA4cvQlKUh63/bf2w0jpxSzULQ2c58vPVghi9BDntFsgz8IQJcwMuPPubpGpmuAW1XqJX0ww==
+X-Received: by 2002:a17:907:2ce1:b0:ac3:8897:eb75 with SMTP id a640c23a62f3a-ac3f20d8b99mr237058366b.10.1742550975733;
+        Fri, 21 Mar 2025 02:56:15 -0700 (PDT)
+Received: from xeon.. ([188.163.112.51])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef869f19sm122300866b.33.2025.03.21.02.56.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 02:56:15 -0700 (PDT)
+From: Svyatoslav Ryhel <clamor95@gmail.com>
+To: Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Peter De Schrijver <pdeschrijver@nvidia.com>,
+	Prashant Gaikwad <pgaikwad@nvidia.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Svyatoslav Ryhel <clamor95@gmail.com>
+Cc: linux-tegra@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org
+Subject: [PATCH v1 0/3] clk: tegra: add DFLL support for Tegra 4
+Date: Fri, 21 Mar 2025 11:55:53 +0200
+Message-ID: <20250321095556.91425-1-clamor95@gmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [RFC PATCH v5 0/5] introduce
- io_uring_cmd_import_fixed_vec
-To: Sidong Yang <sidong.yang@furiosa.ai>
-Cc: Jens Axboe <axboe@kernel.dk>, dsterba@suse.cz,
- Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
- linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
- io-uring@vger.kernel.org
-References: <20250319061251.21452-1-sidong.yang@furiosa.ai>
- <174239798984.85082.13872425373891225169.b4-ty@kernel.dk>
- <f78c156e-8712-4239-b17f-d917be03226a@kernel.dk>
- <20250319170710.GK32661@suse.cz>
- <4ba22ceb-d910-4d2c-addb-dc8bcb6dfd91@kernel.dk>
- <Z9tzvz_4IDzMUOFb@sidongui-MacBookPro.local>
- <27ae3273-f861-4581-afb9-96064be449a4@gmail.com>
- <Z9w92CmC51cLN3PD@sidongui-MacBookPro.local>
-Content-Language: en-US
-From: Pavel Begunkov <asml.silence@gmail.com>
-In-Reply-To: <Z9w92CmC51cLN3PD@sidongui-MacBookPro.local>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 3/20/25 16:10, Sidong Yang wrote:
-> On Thu, Mar 20, 2025 at 12:04:33PM +0000, Pavel Begunkov wrote:
->> On 3/20/25 01:47, Sidong Yang wrote:
->>> On Wed, Mar 19, 2025 at 11:10:07AM -0600, Jens Axboe wrote:
->>>> On 3/19/25 11:07 AM, David Sterba wrote:
->>>>> On Wed, Mar 19, 2025 at 09:27:37AM -0600, Jens Axboe wrote:
->>>>>> On 3/19/25 9:26 AM, Jens Axboe wrote:
->>>>>>>
->>>>>>> On Wed, 19 Mar 2025 06:12:46 +0000, Sidong Yang wrote:
->>>>>>>> This patche series introduce io_uring_cmd_import_vec. With this function,
->>>>>>>> Multiple fixed buffer could be used in uring cmd. It's vectored version
->>>>>>>> for io_uring_cmd_import_fixed(). Also this patch series includes a usage
->>>>>>>> for new api for encoded read/write in btrfs by using uring cmd.
->>>>>>>>
->>>>>>>> There was approximately 10 percent of performance improvements through benchmark.
->>>>>>>> The benchmark code is in
->>>>>>>> https://github.com/SidongYang/btrfs-encoded-io-test/blob/main/main.c
->>>>>>>>
->>>>>>>> [...]
->>>>>>>
->>>>>>> Applied, thanks!
->>>>>>>
->>>>>>> [1/5] io_uring: rename the data cmd cache
->>>>>>>         commit: 575e7b0629d4bd485517c40ff20676180476f5f9
->>>>>>> [2/5] io_uring/cmd: don't expose entire cmd async data
->>>>>>>         commit: 5f14404bfa245a156915ee44c827edc56655b067
->>>>>>> [3/5] io_uring/cmd: add iovec cache for commands
->>>>>>>         commit: fe549edab6c3b7995b58450e31232566b383a249
->>>>>>> [4/5] io_uring/cmd: introduce io_uring_cmd_import_fixed_vec
->>>>>>>         commit: b24cb04c1e072ecd859a98b2e4258ca8fe8d2d4d
->>>>>>
->>>>>> 1-4 look pretty straight forward to me - I'll be happy to queue the
->>>>>> btrfs one as well if the btrfs people are happy with it, just didn't
->>>>>> want to assume anything here.
->>>>>
->>>>> For 6.15 is too late so it makes more sense to take it through the btrfs
->>>>> patches targetting 6.16.
->>>>
->>>> No problem - Sidong, guessing you probably want to resend patch 5/5 once
->>>> btrfs has a next branch based on 6.15-rc1 or later.
->>>
->>> Thanks, I'll resend only patch 5/5 then.
->>
->> And please do send the fix, that should always be done first,
->> especially if it conflicts with the current patch as they usually
->> go to different trees and the fix might need to be backported.
-> 
-> Sorry to forget to cc you Pavel.
-> https://lore.kernel.org/linux-btrfs/20250319180416.GL32661@twin.jikos.cz/T/#t
+DFLL is a dedicated clock source for the Fast CPU. The DFLL is based on
+a ring oscillator and translates voltage changes into frequency
+compensation changes needed to prevent the CPU from failing and is
+essential for correct CPU frequency scaling.
 
-Ah, you already did, great!
+Svyatoslav Ryhel (3):
+  drivers: cpufreq: add Tegra 4 support
+  drivers: clk: tegra: add DFLL support for Tegra 4
+  ARM: tegra: Add DFLL clock support on Tegra 4
+
+ arch/arm/boot/dts/nvidia/tegra114.dtsi     |  34 +++++++
+ drivers/clk/tegra/Kconfig                  |   2 +-
+ drivers/clk/tegra/clk-tegra114.c           |  30 +++++-
+ drivers/clk/tegra/clk-tegra124-dfll-fcpu.c | 104 +++++++++++++++++++++
+ drivers/clk/tegra/clk.h                    |   2 -
+ drivers/cpufreq/cpufreq-dt-platdev.c       |   1 +
+ drivers/cpufreq/tegra124-cpufreq.c         |   5 +-
+ include/dt-bindings/reset/tegra114-car.h   |  13 +++
+ 8 files changed, 182 insertions(+), 9 deletions(-)
+ create mode 100644 include/dt-bindings/reset/tegra114-car.h
 
 -- 
-Pavel Begunkov
+2.43.0
 
