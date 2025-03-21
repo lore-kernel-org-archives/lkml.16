@@ -1,39 +1,67 @@
-Received: from bmailout1.hostsharing.net (bmailout1.hostsharing.net [83.223.95.100])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E001222D780;
-	Fri, 21 Mar 2025 17:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.223.95.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36332F43;
+	Fri, 21 Mar 2025 17:08:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742576781; cv=none; b=E5E9/QcDuKxjfVGL8cszo9CNnrpIJ/i0/nfFwTutpHbBQZ9KqjzypdZm5Be8ACAzlrT+xxihy5Y8NTAbLn/NXEHnc0PRQMNsQQ9Bc2A8kOBxZtiJsOM2hqq1lan5Fr+cOsC2Wb8b0uQ+bVci26CeUCxBV+VE+EUPNRILTFjZgZw=
+	t=1742576915; cv=none; b=JGihhlkPCitBVKOZdWmIrK6W9fVQwrAfEZRb+VoMqyE6qEF/s/Lf8ke2of91axnRgkhJYf654kIu2FMxihmyH2u7kn8yBrDdlif8vUBA/aTXrqgnDnEbvHjUcoLWOnKPo9xpdsDSILPYfqGEp90BVHGxSRa0mAFb0qFxhicVA1Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742576781; c=relaxed/simple;
-	bh=rB8HreJcBYfpiq7zKNH0GqqCKIth7YokrijCc5SGkVE=;
+	s=arc-20240116; t=1742576915; c=relaxed/simple;
+	bh=1NgC7WYxjVqQXoN0hz/U33WN/j1JXyX9+hiBoc78bd8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=GHGBFpoVM91RMsyPCcO311k4a2s1Z7bR1iVkvHF9SiHJiS2d4fHGi9FuBSzjsuxvUF0lzGL2apjAi0zB6CtKmyfR6PECIqlh4CWn5CN7p3gakGnZQDUY6NRHM+7FgdkGV37+9OoT8HLYM0BBqA6ZnjJwfIiaZR5lWPOgEIBpKLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de; spf=none smtp.mailfrom=h08.hostsharing.net; arc=none smtp.client-ip=83.223.95.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
-	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
-	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
-	by bmailout1.hostsharing.net (Postfix) with ESMTPS id B82F33001F867;
-	Fri, 21 Mar 2025 18:06:09 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-	id 9E000562E9; Fri, 21 Mar 2025 18:06:09 +0100 (CET)
-Date: Fri, 21 Mar 2025 18:06:09 +0100
-From: Lukas Wunner <lukas@wunner.de>
-To: Hans Zhang <18255117159@163.com>
-Cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org,
-	robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com,
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [v5 1/4] PCI: Introduce generic capability search functions
-Message-ID: <Z92cgXEGwgYD2gau@wunner.de>
-References: <20250321163803.391056-1-18255117159@163.com>
- <20250321163803.391056-2-18255117159@163.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=lCr29PxA75xC07ILrPnU1DOrTeRBZqt7wKSaeC0XGsWijBLWeMtPmq/EcTQbM7eYXniGZk0LIgLFo/FMMGkAix3ElxSjsH0Sk1ohzn2aD8668JQgUIvzyKMAIKSs5YSpWiU9tMSymrDZVc2Ou2wWNitQ3HyLRJKOApuDC8Nwlg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kDTu5oS3; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kDTu5oS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 082E6C4CEE3;
+	Fri, 21 Mar 2025 17:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742576914;
+	bh=1NgC7WYxjVqQXoN0hz/U33WN/j1JXyX9+hiBoc78bd8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=kDTu5oS3ogEDl/QCQwW3/iBgnFdqP5u6Q939YLryrfrOrgy2xdjcG2CMeBORC7SSM
+	 8HUgiF6AqPtxFzntp0mYL+YKvDzxftGUNxDR4L88V9YRCv3aV3w1vZU17oY3At5ckA
+	 tZRSrPR4Gm7tWM/h5RQVxhBc+MnYYG5qjPSwLZC3Z3Zwz4+LYB/WxlESwvyIU1OvVz
+	 7YBIEsrXk4UkqOeG9uY5nCREPIUoKUo1npt0UGPa3GmPr8uHnAcG0VS9+0jYZX+5wZ
+	 vUYhsDQkdjfVrGIPcB6hNUeReKDEUbYrzc8S08J7g1Zy0pBvIwOQB6xHA+7aCy1ACP
+	 uUXxU402YUGqQ==
+Date: Fri, 21 Mar 2025 19:08:27 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: James Bottomley <James.Bottomley@hansenpartnership.com>
+Cc: Eric Snowberg <eric.snowberg@oracle.com>,
+	Paul Moore <paul@paul-moore.com>, Mimi Zohar <zohar@linux.ibm.com>,
+	David Howells <dhowells@redhat.com>,
+	"open list:SECURITY SUBSYSTEM" <linux-security-module@vger.kernel.org>,
+	David Woodhouse <dwmw2@infradead.org>,
+	"herbert@gondor.apana.org.au" <herbert@gondor.apana.org.au>,
+	"davem@davemloft.net" <davem@davemloft.net>,
+	Ard Biesheuvel <ardb@kernel.org>, James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	Roberto Sassu <roberto.sassu@huawei.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
+	"casey@schaufler-ca.com" <casey@schaufler-ca.com>,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	"ebiggers@kernel.org" <ebiggers@kernel.org>,
+	Randy Dunlap <rdunlap@infradead.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	"keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+	"linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+	"linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>
+Subject: Re: [RFC PATCH v3 00/13] Clavis LSM
+Message-ID: <Z92dCwEDNmESjPAs@kernel.org>
+References: <FD501FB8-72D2-4B10-A03A-F52FC5B67646@oracle.com>
+ <CAHC9VhR961uTFueovLXXaOf-3ZAnvQCWOTfw-wCRuAKOKPAOKw@mail.gmail.com>
+ <73B78CE7-1BB8-4065-9EBA-FB69E327725E@oracle.com>
+ <CAHC9VhRMUkzLVT5GT5c5hgpfaaKubzcPOTWFDpOmhNne0sswPA@mail.gmail.com>
+ <1A222B45-FCC4-4BBD-8E17-D92697FE467D@oracle.com>
+ <CAHC9VhTObTee95SwZ+C4EwPotovE9R3vy0gVXf+kATtP3vfXrg@mail.gmail.com>
+ <EB757F96-E152-4EAB-B3F7-75C1DBE3A03B@oracle.com>
+ <1956e7f9d60.28a7.85c95baa4474aabc7814e68940a78392@paul-moore.com>
+ <A3A29FB9-E015-4C87-B5F0-190A4C779CB3@oracle.com>
+ <95e7a43a2dd675615a146c56a10abf6921f955f9.camel@HansenPartnership.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,39 +70,30 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250321163803.391056-2-18255117159@163.com>
+In-Reply-To: <95e7a43a2dd675615a146c56a10abf6921f955f9.camel@HansenPartnership.com>
 
-On Sat, Mar 22, 2025 at 12:38:00AM +0800, Hans Zhang wrote:
-> Existing controller drivers (e.g., DWC, custom out-of-tree drivers)
-> duplicate logic for scanning PCI capability lists. This creates
-> maintenance burdens and risks inconsistencies.
+On Thu, Mar 20, 2025 at 06:40:55PM -0400, James Bottomley wrote:
+> On Thu, 2025-03-20 at 16:24 +0000, Eric Snowberg wrote:
+> > Having lockdown enforcement has always been 
+> > a requirement to get a shim signed by Microsoft.
 > 
-> To resolve this:
+> This is factually incorrect.  Microsoft transferred shim signing to an
+> independent process run by a group of open source maintainers a while
+> ago:
 > 
-> Add pci_host_bridge_find_*capability() in drivers/pci/pci.c, accepting
-> controller-specific read functions and device data as parameters.
-[...]
->  drivers/pci/pci.c   | 86 +++++++++++++++++++++++++++++++++++++++++++++
+> https://github.com/rhboot/shim-review/
+> 
+> If you actually look, you'll see even Microsoft has to obey this
+> upstream process for their Linux distro:
+> 
+> https://github.com/rhboot/shim-review/issues/427
 
-Please put this in a .c file which is only compiled and linked if
-one of the controller drivers using those new helpers is enabled
-in .config.
+I did not know this. Thanks for educating!
 
-If you put the helpers in drivers/pci/pci.c, they unnecessarily
-enlarge the kernel's .text section even if it's known already
-at compile time that they're never going to be used (e.g. on x86).
+> 
+> Regards,
+> 
+> James
+> 
 
-You could put them in drivers/pci/controller/pci-host-common.c
-and then select PCI_HOST_COMMON for each driver using them.
-Or put them in a separate completely new file.
-
-
->  include/linux/pci.h | 16 ++++++++-
-
-Helpers that are only used internally in the PCI core should be
-declared in drivers/pci/pci.h.  I'd assume this also applies to
-helpers used by controller drivers.
-
-Thanks,
-
-Lukas
+BR, Jarkko
