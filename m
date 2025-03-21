@@ -1,25 +1,25 @@
 Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DB241EEA3D
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:38:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 708032AF1B
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:38:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742542718; cv=none; b=uZ8hh6aCfLI/M1Mv7X04v7pOpeXuLkkOza7Fl3fku3XJYeVuGKw8mlvSeIVd8hQeeY1T9xICwHQojBKtQQrMkQ0bxHaIZYfOqjETd3Ea/IWCrhXyoACFtOKoPvlvhl2IribJ9fjnaGqF4V71SqIExVLSznGQxtc+KpMfYlw7+FY=
+	t=1742542718; cv=none; b=qQw3Viyu7q5ZNAurbYW215xNoMCTPokrd7ilcFruWHqvqln3Rd1nIIjHQLHFnmf88TKUWyp3Dv67epiOK+URM+9FhWrY+Yj22eh2BBPsjfF0rsGc76EIDAzsayJaIcXvMReAKpIM42HRz7wODJ1KmAJ9MQEW5YNJ0jMIsgYvWh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742542718; c=relaxed/simple;
-	bh=uoLgiES/dfx8er3hrl4HglCoF+f3qY2anNwqB7c8KoA=;
+	bh=dyRpH0nYuNks3GpNno7ihwa0O5nmvtWOu7ZWSkNXlcg=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ImEvMfQAI86X4aVq4l+Y7zYNj1mnCb6pk1y+RBUhqmv5qneLooomirPzpXevmbfimB1lw/cq1fOL2QGgecJYpa4CK9aY0IPU3OoIn53vSWxJjUpsDWcu5VedvYGVjIgBkdAAz9o4h2LWbxHdBbvYzPlyXxMPc2R8Wz7IE6Z955s=
+	 MIME-Version:Content-Type; b=ZEJ36WHk3XiFl1+QrYbbStktykEx6vigmOVCuZRU+uQpXb/CZa5VMDWOX33GH4MR1yXlflLr84zZFZeHiiTcsBHuRzlfQ0Cs18sQDaYp78nlCfX1Bh/qakfGS8soQmcimiOWruFqhbsVdfYxkZXCKDGw9FiiNmXYc6Sqv6e08jM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.105])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZJvST4GKXz13L0s;
-	Fri, 21 Mar 2025 15:38:17 +0800 (CST)
+Received: from mail.maildlp.com (unknown [172.19.163.252])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4ZJvNH6hDqzvWr0;
+	Fri, 21 Mar 2025 15:34:39 +0800 (CST)
 Received: from kwepemd200014.china.huawei.com (unknown [7.221.188.8])
-	by mail.maildlp.com (Postfix) with ESMTPS id ABBD9140159;
-	Fri, 21 Mar 2025 15:38:33 +0800 (CST)
+	by mail.maildlp.com (Postfix) with ESMTPS id 75E561800E4;
+	Fri, 21 Mar 2025 15:38:34 +0800 (CST)
 Received: from localhost.localdomain (10.50.165.33) by
  kwepemd200014.china.huawei.com (7.221.188.8) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -31,9 +31,9 @@ CC: <hejunhao3@huawei.com>, <jonathan.cameron@huawei.com>,
 	<prime.zeng@hisilicon.com>, <linuxarm@huawei.com>,
 	<yangyicong@hisilicon.com>, <wangyushan12@huawei.com>, Jonathan Cameron
 	<Jonathan.Cameron@huawei.com>
-Subject: [PATCH v2 2/8] drivers/perf: hisi: Add support for HiSilicon DDRC v3 PMU driver
-Date: Fri, 21 Mar 2025 15:38:40 +0800
-Message-ID: <20250321073846.23507-3-yangyicong@huawei.com>
+Subject: [PATCH v2 4/8] drivers/perf: hisi: Add support for HiSilicon SLLC v3 PMU driver
+Date: Fri, 21 Mar 2025 15:38:42 +0800
+Message-ID: <20250321073846.23507-5-yangyicong@huawei.com>
 X-Mailer: git-send-email 2.31.0
 In-Reply-To: <20250321073846.23507-1-yangyicong@huawei.com>
 References: <20250321073846.23507-1-yangyicong@huawei.com>
@@ -50,62 +50,94 @@ X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
 
 From: Junhao He <hejunhao3@huawei.com>
 
-HiSilicon DDRC v3 PMU has the different interrupt register offset
-compared to the v2. Add device information of v3 PMU with ACPI
-HID HISI0235.
+SLLC v3 PMU has the following changes compared to previous version:
+a) update the register layout
+b) update the definition of SRCID_CTRL and TGTID_CTRL registers.
+   To be compatible with v2, we use maximum width (11 bits)
+   and mask the extra length for themselves.
+c) remove latency events (driver does not need to be adapted).
+
+SLLC v3 PMU is identified with HID HISI0264.
 
 Signed-off-by: Junhao He <hejunhao3@huawei.com>
 Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Yicong Yang <yangyicong@hisilicon.com>
 ---
- drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/perf/hisilicon/hisi_uncore_sllc_pmu.c | 40 +++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-diff --git a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-index 7e3c2436e96b..26eaa6d20c00 100644
---- a/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-+++ b/drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-@@ -43,6 +43,11 @@
- #define DDRC_V2_EVENT_TYPE	0xe74
- #define DDRC_V2_PERF_CTRL	0xeA0
+diff --git a/drivers/perf/hisilicon/hisi_uncore_sllc_pmu.c b/drivers/perf/hisilicon/hisi_uncore_sllc_pmu.c
+index 79327639ec17..852114cfe3bf 100644
+--- a/drivers/perf/hisilicon/hisi_uncore_sllc_pmu.c
++++ b/drivers/perf/hisilicon/hisi_uncore_sllc_pmu.c
+@@ -28,6 +28,18 @@
+ #define SLLC_VERSION			0x1cf0
+ #define SLLC_EVENT_CNT0_L		0x1d00
  
-+/* DDRC interrupt registers definition in v3 */
-+#define DDRC_V3_INT_MASK	0x534
-+#define DDRC_V3_INT_STATUS	0x538
-+#define DDRC_V3_INT_CLEAR	0x53C
++/* SLLC registers definition in v3 */
++#define SLLC_V3_INT_MASK		0x6834
++#define SLLC_V3_INT_STATUS		0x6838
++#define SLLC_V3_INT_CLEAR		0x683c
++#define SLLC_V3_VERSION			0x6c00
++#define SLLC_V3_PERF_CTRL		0x6d00
++#define SLLC_V3_SRCID_CTRL		0x6d04
++#define SLLC_V3_TGTID_CTRL		0x6d08
++#define SLLC_V3_EVENT_CTRL		0x6d14
++#define SLLC_V3_EVENT_TYPE0		0x6d18
++#define SLLC_V3_EVENT_CNT0_L		0x6e00
 +
- /* DDRC has 8-counters */
- #define DDRC_NR_COUNTERS	0x8
- #define DDRC_V1_PERF_CTRL_EN	0x2
-@@ -460,9 +465,28 @@ static const struct hisi_pmu_dev_info hisi_ddrc_v2 = {
- 	.private = &hisi_ddrc_v2_pmu_regs,
+ #define SLLC_EVTYPE_MASK		0xff
+ #define SLLC_PERF_CTRL_EN		BIT(0)
+ #define SLLC_FILT_EN			BIT(1)
+@@ -40,6 +52,12 @@
+ #define SLLC_TGTID_MAX_SHIFT		12
+ #define SLLC_SRCID_CMD_SHIFT		1
+ #define SLLC_SRCID_MSK_SHIFT		12
++
++#define SLLC_V3_TGTID_MIN_SHIFT		1
++#define SLLC_V3_TGTID_MAX_SHIFT		10
++#define SLLC_V3_SRCID_CMD_SHIFT		1
++#define SLLC_V3_SRCID_MSK_SHIFT		10
++
+ #define SLLC_NR_EVENTS			0x80
+ #define SLLC_EVENT_CNTn(cnt0, n)	((cnt0) + (n) * 8)
+ 
+@@ -404,6 +422,27 @@ static const struct hisi_pmu_dev_info hisi_sllc_v2 = {
+ 	.private = &hisi_sllc_v2_pmu_regs,
  };
  
-+static struct hisi_ddrc_pmu_regs hisi_ddrc_v3_pmu_regs = {
-+	.event_cnt = DDRC_V2_EVENT_CNT,
-+	.event_ctrl = DDRC_V2_EVENT_CTRL,
-+	.event_type = DDRC_V2_EVENT_TYPE,
-+	.perf_ctrl = DDRC_V2_PERF_CTRL,
-+	.perf_ctrl_en = DDRC_V2_PERF_CTRL_EN,
-+	.int_mask = DDRC_V3_INT_MASK,
-+	.int_clear = DDRC_V3_INT_CLEAR,
-+	.int_status = DDRC_V3_INT_STATUS,
++static struct hisi_sllc_pmu_regs hisi_sllc_v3_pmu_regs = {
++	.int_mask = SLLC_V3_INT_MASK,
++	.int_clear = SLLC_V3_INT_CLEAR,
++	.int_status = SLLC_V3_INT_STATUS,
++	.perf_ctrl = SLLC_V3_PERF_CTRL,
++	.srcid_ctrl = SLLC_V3_SRCID_CTRL,
++	.srcid_cmd_shift = SLLC_V3_SRCID_CMD_SHIFT,
++	.srcid_mask_shift = SLLC_V3_SRCID_MSK_SHIFT,
++	.tgtid_ctrl = SLLC_V3_TGTID_CTRL,
++	.tgtid_min_shift = SLLC_V3_TGTID_MIN_SHIFT,
++	.tgtid_max_shift = SLLC_V3_TGTID_MAX_SHIFT,
++	.event_ctrl = SLLC_V3_EVENT_CTRL,
++	.event_type0 = SLLC_V3_EVENT_TYPE0,
++	.version = SLLC_V3_VERSION,
++	.event_cnt0 = SLLC_V3_EVENT_CNT0_L,
 +};
 +
-+static const struct hisi_pmu_dev_info hisi_ddrc_v3 = {
-+	.counter_bits = 48,
-+	.check_event = DDRC_V2_NR_EVENTS,
-+	.attr_groups = hisi_ddrc_pmu_v2_attr_groups,
-+	.private = &hisi_ddrc_v3_pmu_regs,
++static const struct hisi_pmu_dev_info hisi_sllc_v3 = {
++	.private = &hisi_sllc_v3_pmu_regs,
 +};
 +
- static const struct acpi_device_id hisi_ddrc_pmu_acpi_match[] = {
- 	{ "HISI0233", (kernel_ulong_t)&hisi_ddrc_v1 },
- 	{ "HISI0234", (kernel_ulong_t)&hisi_ddrc_v2 },
-+	{ "HISI0235", (kernel_ulong_t)&hisi_ddrc_v3 },
+ static const struct hisi_uncore_ops hisi_uncore_sllc_ops = {
+ 	.write_evtype		= hisi_sllc_pmu_write_evtype,
+ 	.get_event_idx		= hisi_uncore_pmu_get_event_idx,
+@@ -497,6 +536,7 @@ static void hisi_sllc_pmu_remove(struct platform_device *pdev)
+ 
+ static const struct acpi_device_id hisi_sllc_pmu_acpi_match[] = {
+ 	{ "HISI0263", (kernel_ulong_t)&hisi_sllc_v2 },
++	{ "HISI0264", (kernel_ulong_t)&hisi_sllc_v3 },
  	{}
  };
- MODULE_DEVICE_TABLE(acpi, hisi_ddrc_pmu_acpi_match);
+ MODULE_DEVICE_TABLE(acpi, hisi_sllc_pmu_acpi_match);
 -- 
 2.24.0
 
