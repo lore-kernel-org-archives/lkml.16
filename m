@@ -1,122 +1,219 @@
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5075418858A
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:32:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 335F319CC20
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 14:33:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742567579; cv=none; b=rtgj19A8vtLMv0mPPabOIvbL8FWzMAFdDfsbZCguCDidCyyxZPBsgbFQVEEKCVOwB99mEfYRCV03byuxV55R8DTqWxAehtVcb59OqtuwflzyD1jDeAaj4S340HL1RTdsuTzZawFQSMpT1BR0YplNQA/PX5ctFBFYsJERmauAH18=
+	t=1742567609; cv=none; b=TRxaxKbvXgfQQCm2Pt7PPQ5aB5watj9FH46dI/bSAZHeWBMzWXxGW5UQ27DC3exmPLYnINhLmtxRbquqEFUaKXMAbX7pulg5A/0B+UlK3TjjN67vcnJLVkLzL/RZWb4OqUr3z/3vpnMUEGG84Hbm0D5qeg3r87fv/tPYvbgRMuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742567579; c=relaxed/simple;
-	bh=+LDlUo8we7HXs412riW2XVXscOex6Sq1qjsJfiM5m7E=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=a0gHZOk8a+MeWp7xShIlmKMVOVUqtvJO4F4xbj7cT/dyOlvyi4C0Az8pgFqANovhoHJO6229ZgFN/4tk+C22YUzxLJ4/1/Dj5sLcdmKVEIWyKeMnee2SOfZEMmLrIvh8NRigi7EcXgVo4Wg+qfu3IrfpAzAFDrX3RuHfhUseEQE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kFi/D4Yz; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742567609; c=relaxed/simple;
+	bh=2wTKV/U4BoU5bDZ58CDBxB00ghO6JtVFoCtJ0yPHlX4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LLm3/r7Ri2jpdzG3LcYNou5+3KgT2TSyolLhsVrEAzTuciXG18iY8f75wObF9a7q+mIb+6WecINTvUzt9PZXxvBiLQ4Oustvzq5bhThju5CjoTeQpWyliCsvdoONw9wfspk7gX39IXh5KrwRzRAwTG1bUW7de24Yrd5TPMLkv0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ul6HaniY; arc=none smtp.client-ip=209.85.219.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kFi/D4Yz"
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso13539295e9.0
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:32:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ul6HaniY"
+Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e8f43c1fa0so23208706d6.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 07:33:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742567575; x=1743172375; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=MzFQfhx5F8dx0RL9AvvQYwg76iw5NXa4lMy+vsdeqMg=;
-        b=kFi/D4YzOt770w/wvjc7ZyU62UJBn2euObrJKUlP60/QTnDz0WjYNyRKXyenjj3+d+
-         8AZk3BM6HBEhEuboEEWBdaPijot2KJk1R+mOkr/H2hAabQl1NOd8ELA/Kl6wLzjp3oCE
-         IQS4KvAYfhJhHX3vNTbRQ45jI04kVFtmuoFZ4sBeuddZ/kmc1iXJHZwePNhOfdULDkny
-         SkrHecAg8qF0Y1r4LiI6qYbEg7biHopf4dE11IDR31/F71iIP9Wf7vCeaN5gGqCnh9Af
-         KDhGkmBACtb8vNrH4I8mFFoVQUwY5gm059dGJMQT/7vZ7WJhZiJQdq1vWCauE8RtREL1
-         t0Gg==
+        d=gmail.com; s=20230601; t=1742567607; x=1743172407; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=zq/g0IqGpYRLJ2prWs3RnuRl8aHTSbproF6Pc3o+u6Q=;
+        b=Ul6HaniYWx5Ppr7GIeTuenM/xUGzOMbmZxIwc6TvRgUUAxfQJGU8Rqt7VE9G1WhSgj
+         bMwV9MGauc0sMFa5lSD02Cshx4QYraBQY3kSPgLegRad9yLC4YgZU8QVEXxWmliRc4Sr
+         E+ca72MZoFXEav4AK6uQy76mEzWS9V44GwwCCtfCM2Are5WptDKqCE4JaT8tAwMn4Ip7
+         8sudUUongpzXyJ5AZXHklMHNXF8uAIAaWHx7e9rAWJOCEk/9SyH6Y30dOrFjwV/sduA4
+         fs75Ya6EGFJGXtCmrU4zMhcT0Ebg3I+URwqGJuZGQjMb44ELrrmCvPoFODk2RogZL5Sl
+         rpYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742567575; x=1743172375;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=MzFQfhx5F8dx0RL9AvvQYwg76iw5NXa4lMy+vsdeqMg=;
-        b=H4N4tKuj3D6sxrrVhVJ++rIo2tT/pNthEBstSuTYbBBZevpx8Ldhu3eAmhtglm+FGA
-         b0eVJNIbIq1VqqM5vtVYxGUp1qxl9YoPwkR9o9fmBxMf62UbCPW4EUoozdZy1X4h6vO0
-         NSxUDD9Y+Y66D1BAZz9WObnaKzR0CFrx2upFlayBqiunJX3QOikhpZlDUEygi6zyBK7u
-         F++TEypOIZhj2vqLMaUv3dZfBFmNbcMNU144HD3aTKngzGgf28ALBeuo0dIBnT0uWARB
-         MX5GOAUVdd+pVffQM70hG7Mm9Ngn3IM2wdJCDuSU4eOJTvO2otZQLHtZfGAihedd3JS5
-         DEuQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVhFYZ6kFHASvH4WW5KNIeFmh/jrLAOwplxoXi9c2w94QzPMRnT6Q9ABf/EQWZqs8ZvAg3SKZztPfUckhw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDxSu3+LS+ugtA+iIiLvIEum20F8FD3Rn2iRORDGlLDNk6PHMG
-	fZOX9tT19cg+I1u2U534QcGEgLXPKE+9Pr+phH4ckcgxCKwvqMsfsvew5o6nS0Y=
-X-Gm-Gg: ASbGnct6tzhWw/GUGvzkZwFr0If9LHjChclgW1x3uYrNJ5ylX3GAJj5wUejXKcfD6aK
-	Bdn7KGUTpNkVm5+w8MW1o6/LZ55aie0PotBZnboclZaUJwGBr+xTcj5yTj5zuk/X9V3p7rVo4tI
-	/O0z3ne5mo4hGoIYBNwNj4hGIqvWqDPxOjBgz264aa/NsmV40QflhldSI9pTUswng1U6jNaJ0qW
-	GhZFV9ByhK5LJDBka2IL3CeeMxYaEWXtxhORZekwJE054iDCQ35VqUwMrey7KIeEzG7vKxafi31
-	lTk1TYXpBTlQNNWRCCyFWa88BPD99JGfNIBGi/mJeyGzF6OSCg==
-X-Google-Smtp-Source: AGHT+IFdHgCx4C5nFq7a41Rl1TdfpLB7mC6eqzVe1FxFvJX3eQdkfF3U3LPtyEx8bVlfn1VSsrBleA==
-X-Received: by 2002:a05:600c:1c02:b0:43d:5264:3cf0 with SMTP id 5b1f17b1804b1-43d52a08ed8mr22225315e9.11.1742567575525;
-        Fri, 21 Mar 2025 07:32:55 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-43d4fd27980sm28845345e9.21.2025.03.21.07.32.54
+        d=1e100.net; s=20230601; t=1742567607; x=1743172407;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:feedback-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zq/g0IqGpYRLJ2prWs3RnuRl8aHTSbproF6Pc3o+u6Q=;
+        b=qa0ZPO1u03J1O9L/mR9WwM9Ty8Bl4Pzn2bxFU9WQZLoQO2BYbARJbgn4SGeCYkKe+U
+         k7RkQHt6FesDeLVxoUzv6Gmzy4r455XygPpsrZLQrJEnmu5Ll+tbmUUK4vmUgG0E5Tpg
+         rvYbZmbUE2G0h20+qhixdfMtUeygIf+no6ifmYEeKauJ/PtjJM7CwfGd0qmw49E9TKPS
+         mu6ktQjohWtPzAmx2WH7RO6G0OWgO+vGyDOHW43D37tt+trQSfxRtGuyTkV16uVQGWwB
+         nQTSaYzVIAPbOfp+SGlfZN9/z3mQcQqMK9s+JSPrH0qPNDJ4yySfmIXPhCJvJw58P8JK
+         fp1g==
+X-Forwarded-Encrypted: i=1; AJvYcCUEdlkDP+DBDGmZqjcuGQxAWj5bUaKNFxlox4spr8YrTNTagC1k+7a30PrTOaNMRcZ28olvE+AsfdQ60EM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxhJ5UqOLBsfc/jzYssKzzHu/VhzU6lcLXeBMSPuQtKSMj7bAdQ
+	gbBuV62KaCy5rkJ476hDKPluWbxQeh7yP9H6uF6T1wQhr6t+K0+i
+X-Gm-Gg: ASbGnct2nN0neW3hnA4/Ybn2dhRXu7Q5Sq2V6RGwMqx5Embu8UzSwL1tQNHQk7d9EEr
+	n4z8JpbB7K9XHwc+lFInGdJqs6uVelNkVBQ6mLMSDi9ORj/TGyhtiWU4kL+aKv7zNTTl74Uqm6x
+	MMUJowh5UQjPSzDZCu4EKqG01UEFaos5ZBZPhn53Z+saPCRu2+dMPWnvcYmUyNz0YOE1AKRGJTf
+	jtJ4InxVsBKjgcaUwpZ1kcFGqzEsM7nNT0RnKsh4EABBbvZF5LCfXXAMdbbVfxo2hLb8sNf+NFC
+	ygtT8JKCYnxSdluINRXY7EpvdoiKFgjOiiTbQs88nNl7p9Vj6ICiuJyPL50Xpyjc/zZBwzFS2qB
+	sARGWBJ/vCRLXsFSOP1VTqixT8v+hwmeS3EM=
+X-Google-Smtp-Source: AGHT+IGkloBWswAdwzKFDcuLz2onq1qu5s8QqoSyvZvIXW5EfoMJyNCL23TTnMYUSweCV5XWbGphLg==
+X-Received: by 2002:a05:6214:1bc7:b0:6e8:f770:5045 with SMTP id 6a1803df08f44-6eb3f34b479mr53093746d6.28.1742567606895;
+        Fri, 21 Mar 2025 07:33:26 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3efdc1b1sm11667136d6.110.2025.03.21.07.33.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 07:32:55 -0700 (PDT)
-Date: Fri, 21 Mar 2025 17:32:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Ricardo Koller <ricarkol@google.com>
-Cc: Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>,
-	Joey Gouly <joey.gouly@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>, Shuah Khan <shuah@kernel.org>,
-	Andrew Jones <drjones@redhat.com>,
-	linux-arm-kernel@lists.infradead.org, kvmarm@lists.linux.dev,
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] KVM: selftests: Fix a couple "prio" signedness bugs
-Message-ID: <ca579322-dc9d-4300-bd74-7e9240e930c7@stanley.mountain>
+        Fri, 21 Mar 2025 07:33:26 -0700 (PDT)
+Received: from phl-compute-03.internal (phl-compute-03.phl.internal [10.202.2.43])
+	by mailfauth.phl.internal (Postfix) with ESMTP id D403E1200043;
+	Fri, 21 Mar 2025 10:33:25 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-03.internal (MEProxy); Fri, 21 Mar 2025 10:33:25 -0400
+X-ME-Sender: <xms:tXjdZ10WtFGnauFShwRkg40hWqgUWgnmX4q1O9QjxKoRC7oB7pwSgg>
+    <xme:tXjdZ8EvdyGXA6RlvPlRms5KjsCMtDsWLMIjX_nwvvjTfyIy24Ga4xVuzcvcd0cC6
+    wfuZhIDUqbIvFaRpQ>
+X-ME-Received: <xmr:tXjdZ14T86_zIiUuTkl9xTTtYWy6476lPeg2tDaQIRfRMqPqc83nQU07>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduhedufeehucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhephffvvefufffkofgggfestdekredtredttden
+    ucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrd
+    gtohhmqeenucggtffrrghtthgvrhhnpeeggeeukeeghfevudektdevjeehhfekffevueef
+    udeivdelteeltdekheejgfeiveenucffohhmrghinhepkhgvrhhnvghlrdhorhhgnecuve
+    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhunhdo
+    mhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqddujeejke
+    ehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdrnhgr
+    mhgvpdhnsggprhgtphhtthhopeduledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoh
+    epsghighgvrghshieslhhinhhuthhrohhnihigrdguvgdprhgtphhtthhopegtlhhrkhif
+    lhhlmhhssehkvghrnhgvlhdrohhrghdprhgtphhtthhopehrohhsthgvughtsehgohhoug
+    hmihhsrdhorhhgpdhrtghpthhtohepthhglhigsehlihhnuhhtrhhonhhigidruggvpdhr
+    tghpthhtohepphgvthgvrhiisehinhhfrhgruggvrggurdhorhhgpdhrtghpthhtohepph
+    gruhhlmhgtkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheprgigsghovgeskhgvrhhn
+    vghlrdgukhdprhgtphhtthhopehrhihothhkkhhrleeksehgmhgrihhlrdgtohhmpdhrtg
+    hpthhtohepnhgvihhlsgesshhushgvrdguvg
+X-ME-Proxy: <xmx:tXjdZy0fcfHTQwgEHHGsWjP-_uvKZt0XTDV491lFK5JpvDGp0UduDQ>
+    <xmx:tXjdZ4F47G6KOHhRKMBIz05nfVfGRQzlZt9M8CWmihAoDXlDa4uTwA>
+    <xmx:tXjdZz_RxSRPOxTkynsBV7fzeL4hc1sFq3AyPBwHdeHqhNB88cio6A>
+    <xmx:tXjdZ1lD6lx6F86EGk1w0nRe7gGOrctZDPrSgsluUMRs1Ehqv9BOXA>
+    <xmx:tXjdZ8Fv_VQ-PEc4XBfyIFd3YR9b2l4qkzK-17WaQNkuIF9Yyz4obwMH>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Fri,
+ 21 Mar 2025 10:33:25 -0400 (EDT)
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Clark Williams <clrkwllms@kernel.org>,
+	Steven Rostedt <rostedt@goodmis.org>,
+	Thomas Gleixner <tglx@linutronix.de>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+	"Paul E. McKenney" <paulmck@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Ryo Takakura <ryotkkr98@gmail.com>,
+	NeilBrown <neilb@suse.de>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Caleb Sander Mateos <csander@purestorage.com>,
+	Zqiang <qiang.zhang1211@gmail.com>,
+	K Prateek Nayak <kprateek.nayak@amd.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Ingo Molnar <mingo@kernel.org>,
+	Will Deacon <will@kernel.org>,
+	Waiman Long <longman@redhat.com>,
+	linux-kernel@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Subject: [PATCH v4] lockdep: Fix wait context check on softirq for PREEMPT_RT
+Date: Fri, 21 Mar 2025 07:33:22 -0700
+Message-Id: <20250321143322.79651-1-boqun.feng@gmail.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
 
-There is an assert which relies on "prio" to be signed.
+Since commit 0c1d7a2c2d32 ("lockdep: Remove softirq accounting on
+PREEMPT_RT."), the wait context test for mutex usage within
+"in softirq context" fails as it references @softirq_context.
 
-	GUEST_ASSERT(prio >= 0);
+[    0.184549]   | wait context tests |
+[    0.184549]   --------------------------------------------------------------------------
+[    0.184549]                                  | rcu  | raw  | spin |mutex |
+[    0.184549]   --------------------------------------------------------------------------
+[    0.184550]                in hardirq context:  ok  |  ok  |  ok  |  ok  |
+[    0.185083] in hardirq context (not threaded):  ok  |  ok  |  ok  |  ok  |
+[    0.185606]                in softirq context:  ok  |  ok  |  ok  |FAILED|
 
-Change the type from uint32_t to int.
+As a fix, add lockdep map for BH disabled section. This fixes the
+issue by letting us catch cases when local_bh_disable() gets called
+with preemption disabled where local_lock doesn't get acquired.
+In the case of "in softirq context" selftest, local_bh_disable() was
+being called with preemption disable as it's early in the boot.
 
-Fixes: 728fcc46d2c2 ("KVM: selftests: aarch64: Add test for restoring active IRQs")
-Fixes: 0ad3ff4a6adc ("KVM: selftests: aarch64: Add preemption tests in vgic_irq")
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+[boqun: Move the lockdep annotations into __local_bh_*() to avoid false
+positives because of unpaired local_bh_disable() reported by Borislav
+Petkov [1] and Peter Zijlstra [2], and make bh_lock_map only exist for
+PREEMPT_RT]
+
+Signed-off-by: Ryo Takakura <ryotkkr98@gmail.com>
+Signed-off-by: Boqun Feng <boqun.feng@gmail.com>
+Link: https://lore.kernel.org/all/20250306122413.GBZ8mT7Z61Tmgnh5Y9@fat_crate.local/ [1]
+Link: https://lore.kernel.org/lkml/20250307113955.GK16878@noisy.programming.kicks-ass.net/ [2]
+Link: https://lore.kernel.org/r/20250118054900.18639-1-ryotkkr98@gmail.com
 ---
----
- tools/testing/selftests/kvm/arm64/vgic_irq.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+v3 -> v4:
 
-diff --git a/tools/testing/selftests/kvm/arm64/vgic_irq.c b/tools/testing/selftests/kvm/arm64/vgic_irq.c
-index f4ac28d53747..e89c0fc5eef3 100644
---- a/tools/testing/selftests/kvm/arm64/vgic_irq.c
-+++ b/tools/testing/selftests/kvm/arm64/vgic_irq.c
-@@ -294,7 +294,8 @@ static void guest_restore_active(struct test_args *args,
- 		uint32_t first_intid, uint32_t num,
- 		kvm_inject_cmd cmd)
- {
--	uint32_t prio, intid, ap1r;
-+	uint32_t intid, ap1r;
-+	int prio;
- 	int i;
+*	Move the dummy lockdep_map (for detection) to PREEMPT_RT only.
+
+v3: https://lore.kernel.org/r/20250118054900.18639-1-ryotkkr98@gmail.com
+
+I would need a tag from RT to send it for v6.16, please take a look,
+thanks!
+
+ kernel/softirq.c | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index 4dae6ac2e83f..3ce136bdcbfe 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -126,6 +126,18 @@ static DEFINE_PER_CPU(struct softirq_ctrl, softirq_ctrl) = {
+ 	.lock	= INIT_LOCAL_LOCK(softirq_ctrl.lock),
+ };
  
- 	/*
-@@ -362,7 +363,8 @@ static void test_inject_preemption(struct test_args *args,
- 		uint32_t first_intid, int num,
- 		kvm_inject_cmd cmd)
- {
--	uint32_t intid, prio, step = KVM_PRIO_STEPS;
-+	uint32_t intid, step = KVM_PRIO_STEPS;
-+	int prio;
- 	int i;
++#ifdef CONFIG_DEBUG_LOCK_ALLOC
++static struct lock_class_key bh_lock_key;
++struct lockdep_map bh_lock_map = {
++	.name = "local_bh",
++	.key = &bh_lock_key,
++	.wait_type_outer = LD_WAIT_FREE,
++	.wait_type_inner = LD_WAIT_CONFIG, /* PREEMPT_RT makes BH preemptible. */
++	.lock_type = LD_LOCK_PERCPU,
++};
++EXPORT_SYMBOL_GPL(bh_lock_map);
++#endif
++
+ /**
+  * local_bh_blocked() - Check for idle whether BH processing is blocked
+  *
+@@ -148,6 +160,8 @@ void __local_bh_disable_ip(unsigned long ip, unsigned int cnt)
  
- 	/* Set the priorities of the first (KVM_NUM_PRIOS - 1) IRQs
+ 	WARN_ON_ONCE(in_hardirq());
+ 
++	lock_map_acquire_read(&bh_lock_map);
++
+ 	/* First entry of a task into a BH disabled section? */
+ 	if (!current->softirq_disable_cnt) {
+ 		if (preemptible()) {
+@@ -211,6 +225,8 @@ void __local_bh_enable_ip(unsigned long ip, unsigned int cnt)
+ 	WARN_ON_ONCE(in_hardirq());
+ 	lockdep_assert_irqs_enabled();
+ 
++	lock_map_release(&bh_lock_map);
++
+ 	local_irq_save(flags);
+ 	curcnt = __this_cpu_read(softirq_ctrl.cnt);
+ 
+@@ -261,6 +277,8 @@ static inline void ksoftirqd_run_begin(void)
+ /* Counterpart to ksoftirqd_run_begin() */
+ static inline void ksoftirqd_run_end(void)
+ {
++	/* pairs with the lock_map_acquire_read() in ksoftirqd_run_begin() */
++	lock_map_release(&bh_lock_map);
+ 	__local_bh_enable(SOFTIRQ_OFFSET, true);
+ 	WARN_ON_ONCE(in_interrupt());
+ 	local_irq_enable();
 -- 
-2.47.2
+2.39.5 (Apple Git-154)
 
