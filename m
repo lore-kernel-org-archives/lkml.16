@@ -1,65 +1,66 @@
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08A5D78F51
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:49:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86F5E1DF268
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 15:49:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742572190; cv=none; b=OaLXZ+FGEAb4NbF7XuD+BqSakLxslHq9LPfKKRJHOBuGWBo4cH94BOP3FAZY+pCMiou6MKY1JRk6nyiWTtmFVJ40D+yOY3I3n4gEr8nFPIQ4QYsyiqMdc207G/ceBO+ADRwGXtDS/gwbu9wOHxYNltJjzMnoGkxzcY/mG07lC7c=
+	t=1742572192; cv=none; b=vDWisxY7ofrMPSTHHG6gcUxbNR4VSViZSOeWcDaARX+0t6wwI7FJOaEZZZWmkyZFCa0ylG7WWs+gh/uVzqEhZHZKp4by5Ki2Eb7nWvAQLi6+FZpgn7yRZxoMfTCMegImqbjU4fzyo+TwCHnjYG9mYalInJGHVtAgollpdHteNCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742572190; c=relaxed/simple;
-	bh=HR4MOYYeEi4/YtAUlDN+xlXtMWKtoiz1VBuYe7LhgoE=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bwNes2MVePFUzHPAIQlfpE3Ash34wm1ZAeJJXt8XREVzQ/DiERh3yPThTHHGu6aaA8AwxQ/RDH9A4CusAJC5KTodaTeWXw6DUHTjhAGbTUG/n875RwRUMxZY5MiyEUuvT1UK2Rg6AmAaknZw1BVzDPwkjnpkt8+MYJpX8S3gLRg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NF+vJLTI; arc=none smtp.client-ip=209.85.221.45
+	s=arc-20240116; t=1742572192; c=relaxed/simple;
+	bh=wCeSz2KOSGVmdMZOiZU8W8jgejAZEJTjS3rVeVs1xl0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ZtLH/0ftyWlGbMXb2vuhEHMSzFtaV4ryONy+pKSls/Atboy7qz/2YzaCb9jewXZi+KlqCsnz0qH5e75ADCNIz/73qbMQzgakK+NPh/nMZj0tHzRIXcwAu/+jAb+jMwFVupI95YiNVXqs95a0b97baCSAz6EfGD08qqOkxh/QVOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=xtcma/df; arc=none smtp.client-ip=209.85.221.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NF+vJLTI"
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3913cf69784so1756761f8f.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:49:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="xtcma/df"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-399676b7c41so1214286f8f.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 08:49:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572187; x=1743176987; darn=vger.kernel.org;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ecrDTLYDxGgNhNzRTNm3evCjq50/ZrIXNStDXAwPg6M=;
-        b=NF+vJLTIItFdmriITSc1+gi5aVo05aExGTzbuq9485OK4aSlAGL9TnAShH1z9d4hwm
-         lXkFfw37hoSLC+JNfXo/7LwfTK3sWADmZAuRRO2Z7pqZ4pHgsr5BnIXvM4l2dKIDwz72
-         qUJSm6PmheRb2xFY2tjiWkvjW48bFIVIBlYraf37D6+uJVy+U8PMT/WZgnmLKvAsLeNs
-         7Qdyh9plwfnSIVSTlOjBUHgyLoV1LG99rjRNsJi8yRb5Ww9BoFn03a9SBpi9BwnkdfnM
-         Udue9jJkAyeCkibnfOrLASc2jRCpQF7JkkbuhSnZdous/GbuGfNg4TxrnruskhbbMJEm
-         4gyw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742572187; x=1743176987;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1742572188; x=1743176988; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ecrDTLYDxGgNhNzRTNm3evCjq50/ZrIXNStDXAwPg6M=;
-        b=jYR/lb6cHf+3TscAohIQMMiQKKNC1eRC1WzlG2DySBEreHL0n9bm1FV0bWfMIu6T97
-         cXEt7Q8rnLxCLpN+ptCF6S/B9HeYv2h9JjAQuFV7XTbi55qFWDzZO/riKjUYaPzpwHsw
-         w62cSDjmMzRpNZHUAsAgA/nGXxRyYWO+0n+j1w1VhbxtVp+UYsLvG93i7af29/t/kJ4x
-         t3RLxUtPAiOBD7dTxqLFYp7dsbGlh76yONSJ9vPONDRoLymE19bDXcSMVFYmOI/sK4OW
-         urvHUxo5Q0r08KPhZGF81QcQ2zruYZCIyIBg53GQOnP4fSXtHo8FvbYWaZnVwznyl3qM
-         Zv+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVGTHlkFvzyHfp/ir9aQaDUCLfCC8rs15GDFlL2eTT6cRHEXeobljOOXYdNKCm8C084aJYzZKU0ttYM7+w=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwpCy0r7xGa2l0onGgeoV2HFb75759Sn4Ugbe4uyAVXZoZnjYf1
-	aZJcy3xr331JGUl/PgrvdnpgnYsOviDO2tPBeMq79Hqvur8zMcbJmFsUKV0sJ8+WAtJcUpRzUN4
-	X
-X-Gm-Gg: ASbGncsOk2rEWXJKmuciThbijWxiobZaZzKSTnzjTZphDfmAQ5ugKFTLU+glWxe2lSE
-	aaY01I1GlgQ4jZ3qYjVmxhZLJnTOv2cyJz5fcKbVS+jmiMKTHn4El8vng/UhGwrXFp6XnNDD5p6
-	rxNEiJ0emOs5x+EX0KpW4NBzyfWkx8YZDSvIOWlOOJo7OXxda6bb+Wy7av9kzFFbKjFS/ky/0N0
-	a/rJVHNNztpzWUV/ENT7Sw7SrzuGcqSKoz37/mJR1PBNGW8LDCDXEYMCrmsqIB2lvnTw6M/lzi8
-	8vYM7axJlPeiB284hH9+FonSNrVw9hYZcQTlEg==
-X-Google-Smtp-Source: AGHT+IEiBDLKuJPqm3653bNhiZEd8FfHn9OjwciSqLyeyuoAQ239gy/UgKfYCMoxrL2j4dDK2e/q7g==
-X-Received: by 2002:a05:6000:2a6:b0:391:2c67:7999 with SMTP id ffacd0b85a97d-3997f9404aemr4348746f8f.48.1742572186779;
-        Fri, 21 Mar 2025 08:49:46 -0700 (PDT)
+        bh=SWFCHXs1mgub0TbB9Hn2Mniy/vRwxESdKz1h7VjDaWc=;
+        b=xtcma/df3IUcWr/xqv1jO+TTFDN2kw45cPh3pTCgvBB2ZwrEaFgwXmZfobybwtK1Go
+         Z82FGHyjnwXJezDXymgFL0AABkl9oFR5R6ehOCDxXusa9yLxW6NAuFL5yXjjMdhHyPhG
+         DpZxouqJvww5ESeWPCNzqi17z8knE1IQzG3vIav1x1ekwWQa3v7aY+BOG4zHa+ng46Nu
+         +Q98p1Ecf2gOtxy61NmUsvIcC1pY/rlIkuVl6EJRp1iNSuuKKQQdinNdDpuw+7Rj+nqy
+         8QSxylatQPMLEeEjIYBH8FbIEhiQggWfiWu7IkDo/M5kOQeCKxDX4x4yPts4Aa5uuX5P
+         Grlg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742572188; x=1743176988;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=SWFCHXs1mgub0TbB9Hn2Mniy/vRwxESdKz1h7VjDaWc=;
+        b=toHs/rUPDG1hS01CHdPjSvZ0BC22+slOKqp90PdXdn/TaltXKkFC6mD5JB8/UVyU6Q
+         qUeS3Fr5nNywUOBS+5SCvxHPgMBOfkvV7CcBedsRGasLCfy3N0KHj1AiWaLSt5sTW24F
+         3+dUvCopulAJjfV8/pJr1qg3odXe4WpcUcDhLUPK8ij+hrDT23xfncZkxY6wsAsatk1Q
+         12Ff7yyGM0BuYbUd347fvdL19X6lNneul+VCnWb4a42ijl179rcFp2qzGnZnkjNxnvF5
+         yAZ2B9Ag7bA8F7Vc/Civ+HSKVdd2pUoT/xIh2ZPbYWH+1mg4Tg3x+55WID/mJfwtbGp3
+         rsAw==
+X-Forwarded-Encrypted: i=1; AJvYcCWLhJgLofUMEgGDHMj+V7AgYBjqSWhU+RhrbE+/qnE2hS0TGLxD813xp4nTeVWcXOawpITEYqbY7CrdhrE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxp4mBcCRg5Rz0cLOkQ5zMjcaGukXbegSNDYCOMYixNG9zZMFzM
+	VusApAlw9a0itRwK0opbkj17Kw2r0XMt/4cBRSD7ugthmhIdUBxCPPJFOwRfuIH//Zb8es7M36w
+	J
+X-Gm-Gg: ASbGncsBg/1BWZ0hg+E+jLOv+3GOlAwb22br6WfFH/IAQdj80v1XyzJNX6LnFPhMh6x
+	QvLQlwhiaPOZjJ2FBgkDDZPhR83tQz7vywYyBO5S6HyRUHiz4LvwReFpTU/hFAuug+ILVQVMU+w
+	ytH9NTHPaOlRL6vVEucEW3BqZZe/12/BSJsjlKlH1nULPNWK6ZOVGF7ifC17skTtXoCoUTbqdr7
+	pYM2ZqJZREoNs2110JZAOeYCTIHyXP7xIPtJRRS3euCDQdCp0bo6iwody4xARBHzD3nno++g8Ci
+	CyjSa4auF/jDGCG9ftfnjn7yAt5xSNa/K/R02Q==
+X-Google-Smtp-Source: AGHT+IHhtq1BnYFSnAx+hQUldveVt8mQWVWOnxup2iKacPQKCdLxIWbQZ1BsfJD3AfGXvy0PBof5Ig==
+X-Received: by 2002:a05:6000:178d:b0:391:2c0c:126b with SMTP id ffacd0b85a97d-3997f909b3amr3044992f8f.23.1742572188033;
+        Fri, 21 Mar 2025 08:49:48 -0700 (PDT)
 Received: from [127.0.1.1] ([2a01:cb1d:dc:7e00:1aa4:f3ec:847a:32d1])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.46
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9a3b4bsm2664406f8f.25.2025.03.21.08.49.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 08:49:46 -0700 (PDT)
+        Fri, 21 Mar 2025 08:49:47 -0700 (PDT)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 0/6] gpio: update the TODO list
-Date: Fri, 21 Mar 2025 16:49:32 +0100
-Message-Id: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
+Date: Fri, 21 Mar 2025 16:49:34 +0100
+Subject: [PATCH 2/6] gpio: TODO: remove task duplication
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,52 +69,64 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAIyK3WcC/x3MMQqAMAxA0atIZgNt1A5eRRyKiZqlLa2KIN7d4
- viG/x8oklUKjM0DWS4tGkOFbRtYdh82QeVqIEOD6cjiljTiETnimdgfUpB7v7qO2FlyULuUZdX
- 7f07z+35eTlDLYwAAAA==
+Message-Id: <20250321-gpio-todo-updates-v1-2-7b38f07110ee@linaro.org>
+References: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
+In-Reply-To: <20250321-gpio-todo-updates-v1-0-7b38f07110ee@linaro.org>
 To: Linus Walleij <linus.walleij@linaro.org>, 
  Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=889;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1024;
  i=bartosz.golaszewski@linaro.org; h=from:subject:message-id;
- bh=HR4MOYYeEi4/YtAUlDN+xlXtMWKtoiz1VBuYe7LhgoE=;
- b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqV5R1Yax9J6jI06F6hn74zcE+qdNhcjL+6C
- ypmE0EqvRiJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KlQAKCRARpy6gFHHX
- cqQCD/9q70My7TckdtfgVNjjvKeL1DiMvfT1Giq49GvUWwaQL7vM7F45ZMl3mLW8L0Z1LAnDYJT
- 7fNs1lJR0rffZDJwo4fZdoOvblQpUH/BHd7b32UWPi/OcQRfteS2Fx9/kXCZ0v6ooP3bpCvX10x
- 0+vthgfH7yTxYUyW2OrKl1ntrnZilJXBU+b/vclHZYkSKx1FUnEFMumocX8cwoEpqFtcOQAQUax
- r5xHWR6anSsf0qwRWG1axHOg2evxld7Vjv2ZGs+xBwtmszmxBpO3N6faVK1StRTJF3B4DrDItuv
- vqhO+UlpSnjY6pgOTLgDeWAvtdL4EhJb2l/YSXg32g7doxSvIBe3lmajkV7Uh4+rS7ih+p1Z9ex
- p8Rpy20xd0DXt5QssNhd9eCucgMjn69dD8eYQyi4F5xgB4ya/47mAip7dMrvMOUA0hL1ovOgpi9
- Rp8bbe7jQ60ZpV04/o1slP7Rolo9m0rDN62X6c3TPGMiVBSFrdrbQx7R5QMG+HcYqdqpGvlWlNf
- VexUUepSncV1jH5b23xCpbjMLjaCaioMM4ZXQtT7+uMZgxcj/kPr+A+EDMz5EArWHL8r1HgzLYY
- mPpsCCngRS0cj5sKAO9a8mUbSMdEfOrHDDDIqA3ID/VvdV9y33lIfQgQHRP2268w92D6nCwe+7L
- /cIm0GBYJx9vBMA==
+ bh=3OXtQ/TM3u4P6aWQ0VLana8z2BYniuHiDEU4Ow69oxo=;
+ b=owEBbQKS/ZANAwAKARGnLqAUcddyAcsmYgBn3YqZAtbyd4w8ChdhqRb6d9B1Lx25V2PE39afQ
+ GvVFC3Q1oOJAjMEAAEKAB0WIQQWnetsC8PEYBPSx58Rpy6gFHHXcgUCZ92KmQAKCRARpy6gFHHX
+ cibgEADWd2wS0zrLjqLVLT88hL0yhhDlmU6PEog+zjF15b1fZEAaK2DgSRBGGibhLDlCfzKgSXj
+ 07yuSf+zDdWSID976vbSHT/QTqWiFI4EWkToYXzDgcZx5EmH8qXGGgfhx/vvPR1awBUYrQL+2jU
+ 1Yb62BXMMq+SPiNkb7XAtjTcJTif0WYSPKsj+HvFAMXtLvOM47U3MEYVrDAtJ7/C5XCqyK9Nbeb
+ xfUFD43wi7TCMVq5kE6ghFvf/vnNsayItrnW08LKyhL/FEM8vowJD0KpDxjVld/fGtdjBLdg0+F
+ yg5AgfAN16UHPsicmfzDo8wu74L1IZAbB4jYyW+hmVBYuhUxDCwxp6fJmkdwlxYFFRIDmMuIDOs
+ NnjKSx0YDLHOMzZ227DS7ze1otfjChmkbCdU0A4Z7aEQi0o54rT9sFRwcIRa758aaqxeoL/PYdH
+ m5h7UkXDb9JnGlOWijZI5pM6JRGxdsipkYNvoyooOa5DyXQrHGt1LONewNMF/qLTHy8gFNKHyHW
+ gd6tKPVIyjznUc1sOjVtF003zm9V5ruLsRdjQbyb+tTRQyp2dztetRD0Mlk1QMBWriuJIaibZHd
+ C1LddJcPlt7PLzL/lpDofCOuOpFE0j5cdmr+MF57fuv6BpMAhN7XbFPgKdUi0KdU37aHmRxlPb0
+ LSJUxIRbU0s2xgg==
 X-Developer-Key: i=bartosz.golaszewski@linaro.org; a=openpgp;
  fpr=169DEB6C0BC3C46013D2C79F11A72EA01471D772
 
-Here are a couple proposed updates to the TODO file for your
-consideration.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+The removal of linux/gpio.h is already tracked by the item about
+converting drivers to using the descriptor-based API. Remove the
+duplicate.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
-Bartosz Golaszewski (6):
-      gpio: TODO: remove the item about the new debugfs interface
-      gpio: TODO: remove task duplication
-      gpio: TODO: remove the pinctrl integration task
-      gpio: TODO: add delimiters between tasks for better readability
-      gpio: TODO: add an item to track the conversion to the new value setters
-      gpio: TODO: add an item to track reworking the sysfs interface
+ drivers/gpio/TODO | 9 ---------
+ 1 file changed, 9 deletions(-)
 
- drivers/gpio/TODO | 89 +++++++++++++++++++++----------------------------------
- 1 file changed, 33 insertions(+), 56 deletions(-)
----
-base-commit: 9388ec571cb1adba59d1cded2300eeb11827679c
-change-id: 20250321-gpio-todo-updates-d4af632d6126
+diff --git a/drivers/gpio/TODO b/drivers/gpio/TODO
+index 9cf7b84cdb869..ff955befd0ccf 100644
+--- a/drivers/gpio/TODO
++++ b/drivers/gpio/TODO
+@@ -86,15 +86,6 @@ Work items:
+   CONFIG_OF_GPIO_MM_GPIOCHIP from the kernel.
+ 
+ 
+-Get rid of <linux/gpio.h>
+-
+-This legacy header is a one stop shop for anything GPIO is closely tied
+-to the global GPIO numberspace. The endgame of the above refactorings will
+-be the removal of <linux/gpio.h> and from that point only the specialized
+-headers under <linux/gpio/*.h> will be used. This requires all the above to
+-be completed and is expected to take a long time.
+-
+-
+ Collect drivers
+ 
+ Collect GPIO drivers from arch/* and other places that should be placed
 
-Best regards,
 -- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+2.45.2
 
