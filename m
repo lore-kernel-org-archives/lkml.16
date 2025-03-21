@@ -1,44 +1,38 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 749911F949
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 01:07:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43F6B70820
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 01:07:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742519240; cv=none; b=OdxCgCBjwQa3NG1BMdpkTmInUB/EdwLeQYpxLu/jpt963lhLYMZVh0IvuXrSsCa+CKY/kwbLgIsXMUzbDEVNOvLUw5OqO5BRkwuvUNlA6ishmEalubZUz++SO4wQDNMQBoPyIs/a5zr8+plybsFJhzSxSe/3sjpcKvVNgwnAu68=
+	t=1742519257; cv=none; b=Fj7OuEVoQdZ7Gnbh8K7k+EcjTJYN7DIgAxLKOJjtFqBEVfaXSXp49wjiiUlITr7cYWLqX+RjW8Tvl/q5C5GRhShobtHviDik87UlShvYl+ug6zl0v4+mobTnTXEDf5A9J05kIQBhFVFOCgjGihaylQ8kJefX7reHc5Jo8Q0XG0w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742519240; c=relaxed/simple;
-	bh=LzjLWtNm8vIx5m/jeMY8e5F6Ay/oAnGOKZbPpKEEA3E=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dCfA56PRNNLewGi9OW4dsq0ueSGu5hUs9emcV6sNhLh3V/ci23EKFJ67oQeesDwzyDoa+FO+TOZYln3iDOf8QbyFjw0/NtvbosTdYCDlCUvBxkkIYPRN78M6AhXqlE3qhv3BjGA8CCzDd0OOZSdidwGdLQ7rDImBEpVeSuWTEUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=iEZbggtj; arc=none smtp.client-ip=91.218.175.170
+	s=arc-20240116; t=1742519257; c=relaxed/simple;
+	bh=VRRD680Q0kY20yZCwa56JFW69JF1rSXwfZpD+Pr+sQI=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=SxUu9ac7ILxKd9nxKnxDcAessPm0oeywxQBNxqmqtHPs53zmXg7WH2/H/6gGIagCA5oF5vAnXGAo9pSCF0oe9gp7OOIlRAKVIGurLMap53dxCyBLht6hcPd/RwZGykCX0IReNgPVroZrlbOlZASElLpKdgI/QWzwj8W1f1bJSy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=X4NCCT0m; arc=none smtp.client-ip=91.218.175.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="iEZbggtj"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="X4NCCT0m"
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742519223;
+	t=1742519252;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding;
-	bh=WVZwF7aFIAedNImI3f0zkPZlr8EcTIXGZ6tIWmPnltQ=;
-	b=iEZbggtjtl+3K2e42DqCYGW/GyIiFB1eviHiXmcOHdNnHVTGsDtK+ncpP/pFdql+jbPV8j
-	ZsulXdX62DHD/FDquYJyo9HMLNiyTvNmOREV+V9BjTAVFcabrKPveVmxgEo28V9zCZUn2f
-	UCoE9Gfir6xkq2NfyCMnhBJeN4WSEOQ=
-From: sunliming@linux.dev
-To: dpenkler@gmail.com,
-	gregkh@linuxfoundation.org,
-	arnd@arndb.de,
-	dan.carpenter@linaro.org,
-	everestkc@everestkc.com.np,
-	niharchaithanya@gmail.com,
-	linux-staging@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: sunliming <sunliming@kylinos.cn>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] staging: gpib: warning: variable 'nec_priv' set but not used warning
-Date: Fri, 21 Mar 2025 09:06:49 +0800
-Message-Id: <20250321010649.10918-1-sunliming@linux.dev>
+	bh=oKv6kzy1r+Z2q8HbnIAwNuqiBX6WfkJJspdk8MGx/EI=;
+	b=X4NCCT0m8yVvPld4nR2v3PrMAh/pWqGGO2LAre9fM6HvqDvhs10jYFX4g5rYhzo31QE3vo
+	Y0MGnqlrirEqMC0XiBcQmpdT6hRm1LBy2P+jmk/i7fnsP7zXcyUifvAs7LzIBarOsSa17w
+	GRhtc+Aof101ORw++Q4QTnlxZm7RE/E=
+From: Ye Liu <ye.liu@linux.dev>
+To: akpm@linux-foundation.org
+Cc: linux-mm@kvack.org,
+	linux-kernel@vger.kernel.org,
+	Ye Liu <liuye@kylinos.cn>
+Subject: [PATCH] mm/page_alloc: Simplify free_page_is_bad by removing free_page_is_bad_report
+Date: Fri, 21 Mar 2025 09:07:10 +0800
+Message-Id: <20250321010710.548105-1-ye.liu@linux.dev>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -48,32 +42,48 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Migadu-Flow: FLOW_OUT
 
-From: sunliming <sunliming@kylinos.cn>
+From: Ye Liu <liuye@kylinos.cn>
 
-Fix below kernel warning:
-drivers/staging/gpib/eastwood/fluke_gpib.c:196:23: warning: variable 'nec_priv' set but not
-used [-Wunused-but-set-variable]
+This patch refactors the free_page_is_bad function by directly calling
+bad_page() instead of using the intermediary function
+free_page_is_bad_report(). The removal of free_page_is_bad_report()
+reduces unnecessary indirection, making the code cleaner and easier to
+read.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: sunliming <sunliming@kylinos.cn>
+The functionality remains the same, as free_page_is_bad_report() was
+merely a wrapper for the bad_page() call. The patch also improves
+maintainability by reducing the function call depth.
+
+Signed-off-by: Ye Liu <liuye@kylinos.cn>
 ---
- drivers/staging/gpib/eastwood/fluke_gpib.c | 2 --
- 1 file changed, 2 deletions(-)
+ mm/page_alloc.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/staging/gpib/eastwood/fluke_gpib.c b/drivers/staging/gpib/eastwood/fluke_gpib.c
-index 0304c5de4ccd..6854a745ccff 100644
---- a/drivers/staging/gpib/eastwood/fluke_gpib.c
-+++ b/drivers/staging/gpib/eastwood/fluke_gpib.c
-@@ -194,10 +194,8 @@ static int fluke_line_status(const gpib_board_t *board)
- 	int status = ValidALL;
- 	int bsr_bits;
- 	struct fluke_priv *e_priv;
--	struct nec7210_priv *nec_priv;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 61d6a3b1b286..2842da893eea 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -933,19 +933,14 @@ static const char *page_bad_reason(struct page *page, unsigned long flags)
+ 	return bad_reason;
+ }
  
- 	e_priv = board->private_data;
--	nec_priv = &e_priv->nec7210_priv;
+-static void free_page_is_bad_report(struct page *page)
+-{
+-	bad_page(page,
+-		 page_bad_reason(page, PAGE_FLAGS_CHECK_AT_FREE));
+-}
+-
+ static inline bool free_page_is_bad(struct page *page)
+ {
+ 	if (likely(page_expected_state(page, PAGE_FLAGS_CHECK_AT_FREE)))
+ 		return false;
  
- 	bsr_bits = fluke_paged_read_byte(e_priv, BUS_STATUS, BUS_STATUS_PAGE);
+ 	/* Something has gone sideways, find it */
+-	free_page_is_bad_report(page);
++	bad_page(page,
++		 page_bad_reason(page, PAGE_FLAGS_CHECK_AT_FREE));
+ 	return true;
+ }
  
 -- 
 2.25.1
