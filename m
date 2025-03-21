@@ -1,198 +1,329 @@
-Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2046.outbound.protection.outlook.com [40.107.92.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2FF618FC75
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 19:52:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.46
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742586764; cv=fail; b=l5lD+GYcFXpSps7gVKBnRhL91fnqyt8CScqI5phr/4gG+v8gwYUIm98QOjeHTu67FSjdehY9t48SHEdCkIJ7JIy7e7hViYtcIALKK7u7w1JKXKtbTSV3/xQxGFtOnRjr5x5bC9jF896zWgcn8Clyim80yOx7vXRD84pCVsBdaq4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742586764; c=relaxed/simple;
-	bh=PQLOIir9SwJwx0rvuTFCWMkx/Ec/8xwfHwfPqW0/UAA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=t2IdfAnTVR1iL1n9/oXDllBfCyM7CAxgQMW3hCoKRhpZDQGzpbKqzZXFj+qd2cGbQm98rEYOe9vFxusmmX/qHHkqw+FBHYdB2QwiIL6OiG5rO+VMAiF5bR/n9PXZ8N0rICHePQizOnw3kcaL/08sM0IZmvE7+vL41IXh15PZsro=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Ztl8NIuh; arc=fail smtp.client-ip=40.107.92.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3ECE18FC75;
+	Fri, 21 Mar 2025 19:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742586809; cv=none; b=khULmtWyD/mHsB3c6/kmz+Ve+kFu6LTQ3otu1pPw2BX0rYe3GKeUAH5YHn0eqP20M9ILmfHeoC7WcIs9fSO3QKBeIrQLOvnSf6pf87nkYdQnvQw1/pFAiRmbTMcXSLxY73RUP6NsykTsz3bDs6zSiGr3crV1+Yx75r5eQuNTTk0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742586809; c=relaxed/simple;
+	bh=PepEawDlAhfft5Kfof5D4dNZild5PgEwhpRwDzrtsis=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mwsrGIYbQ9yluJ+8iwGjmHsvTzZhdfGuhQFKFxbP5vfz2LOOZbG7jOlxJVu2U65cQK9LsMT6NMzE+d+WBFNQ1vovGkSvNBWwEFDDEj7/HlKM73nprdHVLAk/VBXKMFgTmNwncWgXuS/sgMJgseq/kSIG5M/VAanVYufw4QC0lx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hfB1RpcM; arc=none smtp.client-ip=209.85.214.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Ztl8NIuh"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=e8NXH0WY+V53pIqdgqaRANFJ7hM2tgTdbIRJu5s2i7ns6cyoYLDkvQdXWQXnTtMxALWavXz5NR5MibfP75eA+D/RUOSmwjeG8s8wpm6Mqe3h9K0Otxs8a5DXXimU6yZ2F6W+S8EifkuDCOvHH15zPYuJCY9iIVHiCuAUP/ow3BEAbQx/GKg8i61DnbcHNoG5yMvX+NnrdwR9PYXEvpSkJeo/wPHvJJqDSuL34AZO55YMZ1PqOzmTGdnX1GsKBPHkeNyVHpuNEQmLnniTjlBrvTyLQxUesMcyk9aLXuZlhhS/mAtLt3IbqsA24+fTSZOriKonQxpXwtNUpDAx1wZnnA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=ZkNgJMn3HNJ29bHdgVeue67PwinJHCZsetBAsX8SjIk=;
- b=okRoY1v54/f5uDpddKisEOcMFUhSZmuayXSRrI83Jkg8MSExnMD9+6UE0NDp6k9SM6mwE81hmhEKc6kF4lrdaqxCbxN3nAA1fT8pzN47AG8vP9w5cVdfrm5k5lQh+MobfdkAED+z0FB0ygnez/BoZhWVvp00bT6y7i4LiyUaMiI7Hx5hJtM0Hx0lVks7eegm/wZYaBJXcC4jHLz7/zW7oV47qipngbxkwVtXGLUZz2zjdSv+ypqZl3VuPS0E/DxnZwh60UWFbGGl0KwD4fiEdhZx2BaBST3Gg+QtOo1+XP2qQi3I1Qp6D47SjlnQQ5DbvM/G8IED44p42S0smByh9w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=oss.qualcomm.com smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZkNgJMn3HNJ29bHdgVeue67PwinJHCZsetBAsX8SjIk=;
- b=Ztl8NIuhFL1HYuAQKye0GuVfAtpgu5tkDzvAf9gsWAUoH5PPxz2jRZuNScS8pvafMAHb/McJaPOCHiuOqWOHLqcF0jcUWf0gHCtlYFFGuuFCsO8HJgenHsiIP2vU3LL8ZL7/yO7V2FU0d5gvQOcTDeKTUdICRJraAnm/bRX4m4M=
-Received: from BN9PR03CA0974.namprd03.prod.outlook.com (2603:10b6:408:109::19)
- by CY5PR12MB6105.namprd12.prod.outlook.com (2603:10b6:930:2a::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.36; Fri, 21 Mar
- 2025 19:52:38 +0000
-Received: from MN1PEPF0000F0E5.namprd04.prod.outlook.com
- (2603:10b6:408:109:cafe::57) by BN9PR03CA0974.outlook.office365.com
- (2603:10b6:408:109::19) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.34 via Frontend Transport; Fri,
- 21 Mar 2025 19:52:38 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- MN1PEPF0000F0E5.mail.protection.outlook.com (10.167.242.43) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Fri, 21 Mar 2025 19:52:38 +0000
-Received: from SATLEXMB04.amd.com (10.181.40.145) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Mar
- 2025 14:52:37 -0500
-Received: from [172.19.71.207] (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Fri, 21 Mar 2025 14:52:35 -0500
-Message-ID: <e7358027-6a8b-85b0-3ccd-cb09b3a9ce7d@amd.com>
-Date: Fri, 21 Mar 2025 12:52:35 -0700
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfB1RpcM"
+Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-225fbdfc17dso40350935ad.3;
+        Fri, 21 Mar 2025 12:53:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742586807; x=1743191607; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fdURz2Kaz0+qhRK8StocNSydHxInyqrwDwL12Xdfbr8=;
+        b=hfB1RpcMyAR3c+Oh23L0o17gTfIAKKK3S1LOhmVwXljuiS4jEQmwRD1hejCmDWJBsj
+         ZDoc2a69Q8czJjZsE9ZiK43PY6fnHW6YS7FeRjOJ/BZFatVKE5s/vz26T1oeELB+xG3f
+         LwS2L7Qwd9Sib0f5X6bdbQPDf4YqtteAApotLYGNmxs7dx20NW3wygCB1zPuTRSxbyaG
+         MmdL4gB5zkHB/Qf/+L3Zbo2qnQNY+/pxVPAQJLvKulTs/+0C57xS4KqQNfGie/GpTnjw
+         S0d5ce2NAiZHNRG5eypoLoHyyYC8JEhBMqAo1uaxKuZqVwPDEzNGZekHVi9gzARYlokB
+         LeUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742586807; x=1743191607;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fdURz2Kaz0+qhRK8StocNSydHxInyqrwDwL12Xdfbr8=;
+        b=p/55yG2rqBzZXBh67Um0mJMJAW2YqfJVR8SikhPpxT+i49HPHcNZOJJ0PNv2/pzseL
+         bRiSzsbMDX5OQqK2ivty5ntwASHFcuj/+5HZwgIeTa5X2KKFq/oNGJrZslX7zCqV7Kgt
+         8RnazX3LSORJxN0Tia6plNs6nTrZoozDERyudxfzySpx5/s9Kuwtw1Kcw20gldycPklb
+         Et8eoaTeRQGp81pYxJYaDlUxtIpRZBM8xMXhBawiU39RLSYvApyZCSPwTp9Mo87ysUaZ
+         qpLCyJT+vBoMbpGxR9YtiNMDBSAvjXPCx5lXZtsFhEneN2ExPPj1aDOgcXxDN9Nk90PB
+         RU0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUIHohQYfEsKd2415XfV7cy2JoGBkix7aZBm9T3KPOqDa/HK07NX+cto9dezFhXJUwXoLR0kTDORvM=@vger.kernel.org, AJvYcCUnCZUm/747rXJTeg/mBRXOL3Cu2YJrfzC2ahOLiWlbbGtOWCGqoDfWj5SI6Wc7YbqfikbTSkSXK8sWPpTx@vger.kernel.org, AJvYcCWTn3CwUP1/i6wrxN7gIySxxCEK+ry97ZA6Wgj+7I4DntWkIZzdWkX0pNwYya3VZERide+5sjUTE1M2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwP3l1vrQzf6hH7YhFnOtHP6HJ3XaY+pfuP5eGn/NvU9uzofRXs
+	EH1Y8i2gHj67xiaGaOx64bxdzcvdeqDyxI/xpBGPoK561vMAlluU
+X-Gm-Gg: ASbGncvxdgTmnud3YE81sidVir6pWpnlpYHUnTddsb/EA5v72P0UQv2WWpnaItY13jN
+	o2ppjSBnAqZocGlpWGQQdyQDIA5dDBNP6cx9Bo/ahK9r9lfxhNshwmsn1lXhBtUSNsKHUP3iPTl
+	RjR/vKH7m1e+6BohjyjYg9L18wL/3g8E59nSHhNUyVfTUyLeOgcWk8Ma7yFAWjqQCz/pFLuRU+E
+	CRsD8gXKnoAKYDPsPqmIeGRzR85cLaSUeX6a92K+TsazRFu4PtS0l/JFoe5abdvNc9hGma/EEGT
+	M/Dx38yzgvug0o/1niJukSHnTbIgExWiVkOZOyzswCe04os9dQhESw==
+X-Google-Smtp-Source: AGHT+IEqg4QZll0BAfnRMKMrmYtfWUSyYS56GiG56j8wxsdpir1mb5UrPwN+3AyiY/rxW3evEQvxRg==
+X-Received: by 2002:a05:6a21:6e01:b0:1f3:3804:9740 with SMTP id adf61e73a8af0-1fe42f2ccb6mr7994025637.15.1742586806541;
+        Fri, 21 Mar 2025 12:53:26 -0700 (PDT)
+Received: from localhost ([2804:30c:b31:2d00:277c:5cbe:7f44:752b])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af8a27ff1efsm2235011a12.18.2025.03.21.12.53.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 12:53:25 -0700 (PDT)
+Date: Fri, 21 Mar 2025 16:54:24 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: Marcelo Schmitt <marcelo.schmitt@analog.com>, linux-iio@vger.kernel.org,
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+	jic23@kernel.org, lars@metafoo.de, Michael.Hennerich@analog.com,
+	corbet@lwn.net
+Subject: Re: [PATCH v2 2/5] iio: adc: ad4000: Add support for SPI offload
+Message-ID: <Z93D8CAmgKSO-Ta6@debian-BULLSEYE-live-builder-AMD64>
+References: <cover.1742394806.git.marcelo.schmitt@analog.com>
+ <84843837a2acab58f8853152ecaa67c79b9a9666.1742394806.git.marcelo.schmitt@analog.com>
+ <c449fff5-ef23-4094-8306-0a6b27a22c1c@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.11.0
-Subject: Re: [PATCH V1] accel/amdxdna: Add BO import and export
-Content-Language: en-US
-To: Jeff Hugo <jeff.hugo@oss.qualcomm.com>, <ogabbay@kernel.org>,
-	<jacek.lawrynowicz@linux.intel.com>, <mario.limonciello@amd.com>,
-	<dri-devel@lists.freedesktop.org>
-CC: <linux-kernel@vger.kernel.org>, <min.ma@amd.com>, <max.zhen@amd.com>,
-	<sonal.santan@amd.com>, <king.tam@amd.com>
-References: <20250306180334.3843850-1-lizhi.hou@amd.com>
- <d2d6b84b-7463-483a-a634-396b5099ef56@oss.qualcomm.com>
-From: Lizhi Hou <lizhi.hou@amd.com>
-In-Reply-To: <d2d6b84b-7463-483a-a634-396b5099ef56@oss.qualcomm.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Received-SPF: None (SATLEXMB04.amd.com: lizhi.hou@amd.com does not designate
- permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E5:EE_|CY5PR12MB6105:EE_
-X-MS-Office365-Filtering-Correlation-Id: ecb321f2-6dce-4ad3-39a0-08dd68b1eeda
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|36860700013|1800799024;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?M25YdW9WWmNqTHRKamhWaGkreEpwa0FCNUVIVUc0RGErSHl3UlU0cSs0N0Y1?=
- =?utf-8?B?TEExR3hsQ0FxQWNxYm5ON3NwcmpkdTU3ODNBOSt4NVp5Vi9KUVd3Q2RGLzVv?=
- =?utf-8?B?cVBJQkk4V2MrV1ZySmxMc2hPMTEzT1E0SmJDTVJxU0ZIZE13cE9SRHRES0ZV?=
- =?utf-8?B?eEJRRFJmS094UndkVXVwdy9vR1RVL0kwU0xXZzdQWUtRR1V2L3NiT2ZaZmwv?=
- =?utf-8?B?SG5BZnJZeXc4dkNOTm0wUW5oOXJ2RkZJK2RWNzUrSGJwKy9HcFBhdUEzNU1k?=
- =?utf-8?B?ZHJObytsc2JzTmpleHRqWU9PVzIxL0l4WGZscDlXNEx0Z3dDaVoweGNiYlh5?=
- =?utf-8?B?MjBUeEQ3Y2tTQkZRKzR0Um5Nak1XcG9HN1JPNitMN1ZzNkJXOWpUUGc0UHVD?=
- =?utf-8?B?NEtGOWYrbE9NbTV1V0tjSWNZRGUyRkpmUXBnYWI3SHN3a3AzeGJWaWlHK0xY?=
- =?utf-8?B?QjdOOEpYejgrcGFEdVhtQ2lQMy9JNXJjenZTTy80RlpkYkZWR2FHT2hsRWpP?=
- =?utf-8?B?OVRDeVNqTFBHc2dxZnBKNElTaEg0bmdvWVVCRlZBZko4VWpPaGg1dmdOVVBB?=
- =?utf-8?B?Tk5tUGcxUGUvak8wdldNMlFMbGtHSkNaV0ZTSlMwVko5cmxvcmw3RlFKUnpO?=
- =?utf-8?B?eWl4YzhmMS9OeStWWk9xS1k4SW1yRGdqRnBpVUl5NGhXaGZBUUxIb0pTNUh5?=
- =?utf-8?B?eTZmSG9iQ0VLeE56V1ZocWpEVmtpejVBQ2NWVndxTjh4V29UTEhzK2s0TGhz?=
- =?utf-8?B?cHZieWZaRHlnNlZYaEFjMFFINGhpenJITmZiQklqYVh3RjdqeEZCWnRMRWRS?=
- =?utf-8?B?NHEvZnJXRWVvejdNckNSQzNNNHJYTHk0czdNWXJKVnpRUFpJaTRyQjUxZkkx?=
- =?utf-8?B?bDl5MThCV0I5dHQ0ZW5aVkF5SEQ1akZoWWg3dVN3WHozRW9ucmYwOHB4b2VP?=
- =?utf-8?B?Ym00dzBIWVdWbm0xZldrYUw3Z2N6Ulg3RC9xbkIxbzZwSW5peDNpaFVaTjhB?=
- =?utf-8?B?dU1VMEJLK2N3UDROTUdrUG5zaW1wOTBlU01ObEdYL0Q0aVl1emVjMmhjS3JW?=
- =?utf-8?B?Q2RQQVA5RHRTbEJIVW8ra3BHcjRVYjQ0SjlpQmEza1RWZU8wNENGUGdFWFFl?=
- =?utf-8?B?NjlzVENEZmpkYXZCQ2JpaGJkakhiRFpDb0UzS3NDN2UxR0Zhc25DdGVKQURr?=
- =?utf-8?B?QmU4REJ1SU0vRFcyK0xkamhWMzJvWEZXVU5kLzZBdGhkRmJzaVZSb3Z0ME8r?=
- =?utf-8?B?TUJHdWNHcmRUajc2M1AwR2RhbG9OUCsyYXlIRVFYS2hiU0FKZTViVUppb20y?=
- =?utf-8?B?dmhiZzJpT20zUDJFRmp6MmtocEpobXYyUWNHdkcxSzZrWGd3YVRSdHBNeU4v?=
- =?utf-8?B?dXBaYzZvbGk1SjduaUhDUVF3OFBtbVJJSTVzOWhBeDh4d3lNa28xOEt3MnVU?=
- =?utf-8?B?eFhnNEJNU1NWK3JyRUVySVNtdTg0V0NPRDY2OThxNFFsNU1UbmV0RmZBekY2?=
- =?utf-8?B?NkgrV1Q2Q21rVUhOMDR6VVNtdkM0VUJ6QXFaMFpuUE41M1RZZ3VmQTRCNmd3?=
- =?utf-8?B?TExFY3pPNy9ELzZQUXEzSDVuYURlc080VnhtWXRTajdabTdLMWNsNXRZbTZh?=
- =?utf-8?B?ZXU1alI5cHRlU3krVytWY2RJUCtqanBmbG9CTkZ0UkZPR241ckxSNEtjcStj?=
- =?utf-8?B?SmJjdmEybG56a3piWkZtQW9wc3I0bHAwOG5PYlh1VzdsZUJLRVFCODVGNGFD?=
- =?utf-8?B?QlZsdS8rSG9qOHFWRHlZZEdqMkM1U1FaSjdjbDlaMFhEclJmTjY2ZHJhRjFY?=
- =?utf-8?B?WExSdHlOYWllQWVUMFFFTDNFQXF0T2J6TEQxekV5Vjlnd2dRZEdqREJJNUVL?=
- =?utf-8?B?bXRUbmRER2wvbTFnWDRpNnQxdzZTSUp4bFg2K2xDV2JxT0s3MUZjbDBSUUxy?=
- =?utf-8?B?S2hFeTJqZ25mOUtWaS9sSUFmSzZlMk52Z2lRbHNjWFB0Q1lnQ1E2NVRIS2hp?=
- =?utf-8?Q?uGiwcg+jLRohSr+EteMkZTa8szC2eY=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(36860700013)(1800799024);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 19:52:38.1788
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ecb321f2-6dce-4ad3-39a0-08dd68b1eeda
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	MN1PEPF0000F0E5.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c449fff5-ef23-4094-8306-0a6b27a22c1c@baylibre.com>
 
+On 03/20, David Lechner wrote:
+> On 3/19/25 9:57 AM, Marcelo Schmitt wrote:
+> > FPGA HDL projects can include a PWM generator in addition to SPI-Engine.
+> > The PWM IP is used to trigger SPI-Engine offload modules that in turn set
+> > SPI-Engine to execute transfers to poll data from the ADC. That allows data
+> > to be read at the maximum sample rates. Also, it is possible to set a
+> > specific sample rate by setting the proper PWM duty cycle and related state
+> > parameters, thus allowing an adjustable ADC sample rate when a PWM (offload
+> > trigger) is used in combination with SPI-Engine.
+> > 
+> > Add support for SPI offload.
+> > 
+> > Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
+> > ---
+> 
+> I'm surprised I'm not on the CC for this series. scripts/get_maintainer.pl should
+> have picked me up due to K: spi_offload which matches this patch.
 
-On 3/21/25 08:15, Jeff Hugo wrote:
-> On 3/6/2025 11:03 AM, Lizhi Hou wrote:
->> +struct drm_gem_object *
->> +amdxdna_gem_prime_import(struct drm_device *dev, struct dma_buf 
->> *dma_buf)
->> +{
->> +    struct dma_buf_attachment *attach;
->> +    struct drm_gem_object *gobj;
->> +    struct sg_table *sgt;
->> +    int ret;
->> +
->> +    attach = dma_buf_attach(dma_buf, dev->dev);
->> +    if (IS_ERR(attach))
->> +        return ERR_CAST(attach);
->> +
->> +    get_dma_buf(dma_buf);
->> +
->> +    sgt = dma_buf_map_attachment_unlocked(attach, DMA_BIDIRECTIONAL);
->> +    if (IS_ERR(sgt)) {
->> +        ret = PTR_ERR(sgt);
->> +        goto fail_detach;
->> +    }
->> +
->> +    gobj = drm_gem_shmem_prime_import_sg_table(dev, attach, sgt);
->> +    if (IS_ERR(gobj)) {
->> +        ret = PTR_ERR(gobj);
->> +        goto fail_unmap;
->> +    }
->> +
->> +    gobj->import_attach = attach;
->> +    gobj->resv = dma_buf->resv;
->> +
->> +    return gobj;
->> +
->> +fail_unmap:
->> +    dma_buf_unmap_attachment_unlocked(attach, sgt, DMA_BIDIRECTIONAL);
->> +fail_detach:
->> +    dma_buf_detach(dma_buf, attach);
->> +    dma_buf_put(dma_buf);
->
-> You attach() and then get(), so normal "reverse order" cleanup would 
-> be put(), then detach(). That is not what you do here. Should this be 
-> reordered, or should you get() then attach() first?
+get_maintainers doesn't list you if run over ad4000.c.
+If run over the patch file, get_maintainers lists many developers. Some of them
+don't seem to be related to this series, so I cropped the list to avoid churn.
+Will CC you on the next versions.
 
-I referred drm_gem_prime_import_dev(). And I agree with you. It looks 
-better to get() before attach(). I will respin V2 which will also 
-contain another small update for this patch.
+> 
+> > Instead of changing bits_per_word according to buffer endianness, I set
+> > bits_per_word for other SPI transfers and updated IIO channels to always use CPU
+> > endianness (the first patch in the series). With that, bits_per_word no longer
+> > needs be updated according to buffer endianness or, in other words, buffer
+> > endianness is no longer related to bits_per_word.
+> 
+> As mentioned in my reply to the previous patch, this is a breaking change, so
+> probably not the best choice.
+Ack
 
+> 
+> > 
+> >  drivers/iio/adc/Kconfig  |   7 +-
+> >  drivers/iio/adc/ad4000.c | 491 ++++++++++++++++++++++++++++++++-------
+> >  2 files changed, 419 insertions(+), 79 deletions(-)
+> > 
+> > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > index b7ae6e0ae0df..1cfa3a32f3a7 100644
+> > --- a/drivers/iio/adc/Kconfig
+> > +++ b/drivers/iio/adc/Kconfig
+> > @@ -25,10 +25,15 @@ config AD4000
+> >  	tristate "Analog Devices AD4000 ADC Driver"
+> >  	depends on SPI
+> >  	select IIO_BUFFER
+> > +	select IIO_BUFFER_DMAENGINE
+> >  	select IIO_TRIGGERED_BUFFER
+> > +	select SPI_OFFLOAD
+> >  	help
+> >  	  Say yes here to build support for Analog Devices AD4000 high speed
+> > -	  SPI analog to digital converters (ADC).
+> > +	  SPI analog to digital converters (ADC). If intended to use with
+> > +	  SPI offloading support, it is recommended to enable
+> > +	  CONFIG_SPI_AXI_SPI_ENGINE, CONFIG_PWM_AXI_PWMGEN, and
+> > +	  CONFIG_SPI_OFFLOAD_TRIGGER_PWM.
+> 
+> I guess this is fine here, but people might be more likely to see it on the
+> ADI wiki where the HDL project that has these requirements is described.
 
-Thanks,
+I don't see any word about that at
+https://analogdevicesinc.github.io/hdl/projects/pulsar_adc/index.html
+If no one opposes to that, I'd like to keep the piece of advice.
 
-Lizhi
+> 
+> >  
+> >  	  To compile this driver as a module, choose M here: the module will be
+> >  	  called ad4000.
+> > diff --git a/drivers/iio/adc/ad4000.c b/drivers/iio/adc/ad4000.c
+> > index 19bc021e1b5d..b3f4d215cad4 100644
+> > --- a/drivers/iio/adc/ad4000.c
+> > +++ b/drivers/iio/adc/ad4000.c
+> > @@ -21,9 +21,12 @@
+> >  #include <linux/iio/iio.h>
+> >  
+> >  #include <linux/iio/buffer.h>
+> > +#include <linux/iio/buffer-dmaengine.h>
+> >  #include <linux/iio/triggered_buffer.h>
+> >  #include <linux/iio/trigger_consumer.h>
+> >  
+> > +#include <linux/spi/offload/consumer.h>
+> 
+> Why not before #include <linux/spi/spi.h> ?
 
->
->
+Okay, will put it there.
+
+> 
+...
+> >  
+> > -#define __AD4000_DIFF_CHANNEL(_sign, _real_bits, _storage_bits, _reg_access)	\
+> > +#define AD4000_TQUIET1_NS		190
+> > +#define AD4000_TQUIET2_NS		60
+> > +#define AD4000_TCONV_NS			320
+> 
+> Does this actually work for every single chip? For example, the AD7983 datasheet
+> give the max as 500 ns for this timing parameter. Might need to put this in the
+> chip_info to account for differences.
+> 
+> Also AD7983 doesn't have any quite time in the datasheet, so those might not be
+> needed in some cases?
+
+I've tested the series with AD7687 and ADAQ4003 and got good readings.
+I'll check the timing specifications again and provide a delay long enough
+for AD7983 and any other device with longer TCONV.
+
+> 
+...
+> > -#define AD4000_DIFF_CHANNELS(_sign, _real_bits, _reg_access)			\
+> > +#define AD4000_DIFF_CHANNELS(_sign, _real_bits, _reg_access, _offl)		\
+> 
+> We always pass 0 to _offl here, so we can leave out this parameter and just
+> hard-code the 0 below. We will never have a case with offload + soft timestamp.
+
+Good catch. Will apply the simplification.
+
+> 
+...
+> > -#define __AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _storage_bits, _reg_access)\
+> > +#define __AD4000_PSEUDO_DIFF_CHANNEL(_sign, _real_bits, _storage_bits,		\
+> > +				     _reg_access, _offl)			\
+> >  {										\
+> >  	.type = IIO_VOLTAGE,							\
+> >  	.indexed = 1,								\
+> >  	.channel = 0,								\
+> >  	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |				\
+> >  			      BIT(IIO_CHAN_INFO_SCALE) |			\
+> > -			      BIT(IIO_CHAN_INFO_OFFSET),			\
+> > -	.info_mask_separate_available = _reg_access ? BIT(IIO_CHAN_INFO_SCALE) : 0,\
+> > +			      BIT(IIO_CHAN_INFO_OFFSET) |			\
+> > +			      (_offl ? BIT(IIO_CHAN_INFO_SAMP_FREQ) : 0),	\
+> > +	.info_mask_separate_available = (_reg_access ? BIT(IIO_CHAN_INFO_SCALE) : 0),\
+> 
+> Unrelated change (adding braces)?
+
+Oops, will undo.
+
+> 
+> Also, could be nice to have sampling_frequency_available so that userspace can
+> discover the max sample rate.
+
+I don't think we should have sampling_frequency_available in this case because
+there is no clear list of sample frequency values nor they can always be
+expressed as "[min step max]" triad.
+https://web.git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git/tree/Documentation/ABI/testing/sysfs-bus-iio?h=testing#n121
+
+> 
+...
+> > -#define AD4000_PSEUDO_DIFF_CHANNELS(_sign, _real_bits, _reg_access)		\
+> > +#define AD4000_PSEUDO_DIFF_CHANNELS(_sign, _real_bits, _reg_access, _offl)	\
+> 
+> ditto about hard-coding _offl here
+Ack
+
+> 
+...
+> >  static const struct ad4000_chip_info ad7983_chip_info = {
+> >  	.dev_name = "ad7983",
+> > -	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0),
+> > +	.chan_spec = AD4000_PSEUDO_DIFF_CHANNELS('u', 16, 0, 0),
+> > +	.offload_chan_spec = AD4000_PSEUDO_DIFF_CHANNEL('u', 16, 0, 1),
+> >  	.time_spec = &ad7983_t_spec,
+> > +	.max_rate_hz = 1330 * KILO,
+> 
+> This is actually 752 ns period when 750 is allowed. Could make it 1 * MEGA + 333
+> * KILO + 333 or 1333333.
+Ack
+
+> 
+> >  };
+> >  
+> >  static const struct ad4000_chip_info ad7984_chip_info = {
+> >  	.dev_name = "ad7984",
+> > -	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0),
+> > +	.chan_spec = AD4000_DIFF_CHANNELS('s', 18, 0, 0),
+> > +	.offload_chan_spec = AD4000_DIFF_CHANNEL('s', 18, 0, 1),
+> >  	.time_spec = &ad7983_t_spec,
+> > +	.max_rate_hz = 1330 * KILO,
+> 
+> ditto
+Ack
+
+> 
+...
+> > +static const struct iio_buffer_setup_ops ad4000_offload_buffer_setup_ops = {
+> > +	.postenable = &ad4000_offload_buffer_postenable,
+> > +	.postdisable = &ad4000_offload_buffer_postdisable,
+> 
+> Needs to be predisable to correctly balance postenable.
+Ack
+
+> 
+...
+> > +static int ad4000_prepare_offload_turbo_message(struct ad4000_state *st,
+> > +						const struct iio_chan_spec *chan)
+> > +{
+> > +	struct spi_transfer *xfers = st->offload_xfers;
+> > +
+> > +	/* Have to do a short CS toggle to trigger conversion. */
+> > +	xfers[0].cs_change = 1;
+> > +	xfers[0].cs_change_delay.value = AD4000_TQUIET1_NS;
+> > +	xfers[0].cs_change_delay.unit = SPI_DELAY_UNIT_NSECS;
+> > +	xfers[0].offload_flags = SPI_OFFLOAD_XFER_RX_STREAM;
+> 
+> There is no data transferred in this xfer, so we don't need to set this flag.
+Ack
+
+> 
+...
+> >  	case AD4000_SDI_VIO:
+> > -		indio_dev->info = &ad4000_info;
+> > -		indio_dev->channels = chip->chan_spec;
+> > +		if (st->using_offload) {
+> > +			indio_dev->info = &ad4000_offload_info;
+> > +			indio_dev->channels = &chip->offload_chan_spec;
+> > +			indio_dev->num_channels = 1;
+> > +
+> > +			spi->cs_hold.value = AD4000_TCONV_NS;
+> > +			spi->cs_hold.unit = SPI_DELAY_UNIT_NSECS;
+> 
+> Modifying spi is suspicious. Normally, this would come from the devicetree. And
+> this isn't used by all SPI drivers - notably the AXI SPI Engine ignores it.
+> Better to just handle this in individual spi xfer structs.
+Will try that.
+
+> 
+> > +			ret = ad4000_prepare_offload_message(st, indio_dev->channels);
+> > +			if (ret)
+> > +				return dev_err_probe(dev, ret,
+> > +						     "Failed to optimize SPI msg\n");
+> > +		} else {
+> > +			indio_dev->info = &ad4000_info;
+> > +			indio_dev->channels = chip->chan_spec;
+> > +			indio_dev->num_channels = ARRAY_SIZE(chip->chan_spec);
+> > +		}
+> 
+> nit: add extra blank line here
+Ack
+
+> 
+> >  		ret = ad4000_prepare_3wire_mode_message(st, &indio_dev->channels[0]);
+> >  		if (ret)
+> > -			return ret;
+> > +			return dev_err_probe(dev, ret,
+> > +					     "Failed to optimize SPI msg\n");
+> >  
+> >  		break;
+> 
