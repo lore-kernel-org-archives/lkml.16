@@ -1,212 +1,227 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97ED01D8E07
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 17:16:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E67021D8E07;
+	Fri, 21 Mar 2025 17:16:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742577393; cv=none; b=KYlMO3+rmWHdFnusUL7QusMKLsK0BLeVm+3/+wl4VketR9wG4BHCM3kJSMca6t+up/zU5GJAM5+YsmdcVsTs42zjMtGSNct+I68qtzTp9iudz0UopBqZT58K6RMicXT7O0ayhVeh5udPmYsb1IA/Rl0gxk2MII4zpm1Fr98ZEFw=
+	t=1742577415; cv=none; b=M0PjbBFbFz///KG9imD33Tv3BO/KfQMvry5hpIFqmtp4mKnJ5sL7EACXgKc8mvpyQ2ukgoWx82ZsKei9KvJxFduroklvC5zFsvJ7tgYvMM9+OdzmA+DRBjEgC1HNTBIuudjMS46JqnB1i+RcfkLzSubrkcJ8enbCX0VF6+OIqSg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742577393; c=relaxed/simple;
-	bh=+848UubEfUlVqHIh86yyMuR5GV6U3zPJjpafMFufYKo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CVO/0QDA8Vvgm86yyN5t7k6EImgWxPSc+mc1FdX3B6KdswwbwNys+JpsZyLFMj6Zg1WDKcroJaQeAwoSVGSpWw5Co4TjeGRk2heWyEKlp3Jigu8V+oe6mMxE0Vm/KntuCzIy4R4phFxvCpbV1siUItBzPz5aO8HkUTI3IpnErkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=e/CG7mZx; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
+	s=arc-20240116; t=1742577415; c=relaxed/simple;
+	bh=mhyr1Efzto/6WdPtZi0/MX9Rx1suko3LmuAnegYGxDI=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
+	 MIME-Version:Content-Type; b=NPnM0HEbXhyy7QbOK/JEH9gX3ajuAjphGUGLQYLxQpma6Rp2mMVrpYf3gQJMA+FjggJPf+XgGYyID/kUH1W+COuOEDFk5wsCjsKhyf+7yX6EPULnzesdDFBTOJ0YNALnEU5hnv/B207zkzg1K0JReg31oEyrxmhKSIX/AHbWMw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ArgHnKYI; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="e/CG7mZx"
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATEb1001603
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 17:16:29 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-type:date:from:in-reply-to:message-id:mime-version
-	:references:subject:to; s=qcppdkim1; bh=j1Qca/X2JAHkCd7JshisB8OI
-	A+vM4MvdVceWmdBp5HU=; b=e/CG7mZxpg689yaDCOVgEd5j3ytR4fMwAjUEg5T9
-	BGumteu0p2E0eV10N6qmzm9VKUpPsW3YTfxrevhFZ8t3bmOfaZDlHS3C0o0BSeuH
-	fxfYqyiF08piGWPies+09FNj2BbTZ9G+CMf/RDKMbyCKDFgLnr9xaCwlbPKxHCNg
-	W2yxrcWMMpoLk48b4xM1dcO4bNqUYY+4Pdz1SmitKW3spL5h6bLCMVLlOmljE8wM
-	Ir9OfxR1HmJ2IncJkKCGMJNTSBi4hfFxA74YsEBEBhZ7/jh9xaEDCb8LAy+asDgW
-	x+F76AHW8Noc6jW2KUaNJ/79zXJDaCdAhbo3mD3ySbUlXA==
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com [209.85.222.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45g3sf6pa3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 17:16:29 +0000 (GMT)
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7c59ac9781fso393519385a.1
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 10:16:29 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArgHnKYI"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22409077c06so25560505ad.1;
+        Fri, 21 Mar 2025 10:16:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742577413; x=1743182213; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=8i//BDa5v0dvJDkEA2fd7PHT9jRJc1TXdcY6VlZ8X1s=;
+        b=ArgHnKYIVTeGvwWoWklV2N6unCxiGEUcy6rTQEKVtL3dLUCbKuU+SKWsGH05x56Dfh
+         X4d4ujZybzkgi7Bvf7zJ0BbkfD0hBMBN7EivXotFMA4Wkj6fEMXgvF+1iZImvBtmJc/z
+         gNS+V/rxB4RsfBIHTHrIj0stxkZUqLowD084r4n+7Xsscg9U5tqBoQbNBmQgWN7tBHuh
+         VN0ZcwZw57Fq8+BkNdyaEmdm4RZCvdMiCDvbvlNaZ/R+sn5ft5r23dh6rtvKGnGMdDHJ
+         G2hS1ZjCzAElmjEHYsNTmyHNhLCPsR/uuYKIAXHUfmQdPf/1Y/ehpm4qDrgRlcVOGaP9
+         fgoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742577388; x=1743182188;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j1Qca/X2JAHkCd7JshisB8OIA+vM4MvdVceWmdBp5HU=;
-        b=fG9pwb24MZ5CZamVdTKpwVGB4PbHBDmn3sCYmqSpk2SRk4/INXitrDUkt1GsuqJSNJ
-         efskTP8sFEz63fkxmui7ExwOKhOQcdzLWQBoTMaQH0AKhS8SFq3blSWwE5DLkUFnp+0m
-         HFlBMwAEg0+J/ee1zijNJ+b0tN6YH0Omw6dt00+5r6aWZMVSTsY5gbmF+1/GJliHMzFz
-         c87SUCE2S/mmnD6NIqGH6ntdjMxkxvb0+/PhVB4bIGY2gMgLjocmjEMNj+Tp3uYe1mbF
-         I7Uvp1hgJWKIJDr93uYUcgwGvjnRdPL+B3LLpz39/W5NM/CR2i8mb89mRqbNyg77fcsv
-         kDDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXlRPyV2ZFXzef4umLn5T1LFWeWWkMIAYM2eGmuZAPSpx9JcMGRaxMe6yon1ZVgWHnh6hFrwxJ/MFjabkw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWfU0n/Nl/dyg5dXZUq65ICF6m27MsA6yjAM5SQwK3BxATw3b9
-	5CJ5NTixuwIHZXaPMvnlvlnJH5ggvoRlTHfVwxIOrb7SJZhIPcqshNPcE9LQjpWaibs9OBrwNzN
-	1/H3s4l9DHqEXx3pPRk2RvkY/PuVazqvtieOpu0XHiT6p9tCx+9vIVtEMbsQ4Mwc=
-X-Gm-Gg: ASbGnctz2QaPCpEURsXvTPH6La7pIOFfMWJVLAlXa/GoLW1umTgN2dPzfEUCB1oqow9
-	uv92vGEkfK9nkOehp8b8JeoFdryY+oTXgnBAA5LPNvW9ADbrC3H527UqbXLPpv9ggaOBVz86CVt
-	PzpufLzwFZwaiQC7qB8NGh6zVzOGhBQiH9V9hiRTdk426xUVZzFbqU/W8bbrLDPexwkfdCKd4mz
-	bm4Zd1tjZPiBtO4ql2U51y+uF7ZQAhUlDR7QkUVawhcMKzwHyyNtlurxfzDBYMjeBDIGCsl+2e6
-	EmCSaty+JDL8oC1U5Y5gRGT0abk1rrLG9VO3OMjbTazWT0PHUernsuvITmAxoiZAP04BaC8gJst
-	8o20=
-X-Received: by 2002:a05:620a:390c:b0:7c0:a1c8:1db3 with SMTP id af79cd13be357-7c5b0505f09mr1299544985a.11.1742577388431;
-        Fri, 21 Mar 2025 10:16:28 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGim5Ytd6Ycz4Lr38mIgtm2b1j4Nmu2dHEXnaayvaGs6Xyh2f8fMFf7D3pfIQqOvfw1h9+r5A==
-X-Received: by 2002:a05:620a:390c:b0:7c0:a1c8:1db3 with SMTP id af79cd13be357-7c5b0505f09mr1299538385a.11.1742577387725;
-        Fri, 21 Mar 2025 10:16:27 -0700 (PDT)
-Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad6468c7csm226104e87.5.2025.03.21.10.16.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 10:16:26 -0700 (PDT)
-Date: Fri, 21 Mar 2025 19:16:25 +0200
-From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: peda@axentia.se, broonie@kernel.org, andersson@kernel.org,
-        krzk+dt@kernel.org, ivprusov@salutedevices.com,
-        luca.ceresoli@bootlin.com, zhoubinbin@loongson.cn,
-        paulha@opensource.cirrus.com, lgirdwood@gmail.com, robh@kernel.org,
-        conor+dt@kernel.org, konradybcio@kernel.org, perex@perex.cz,
-        tiwai@suse.com, linux-sound@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, johan+linaro@kernel.org
-Subject: Re: [PATCH v2 4/5] ASoC: codecs: wcd938x: add mux control support
- for hp audio mux
-Message-ID: <3ke2oxgd2dh5wghgatyzivaxspqlezn3x5vtjaxszqad4dhfxd@vpzxmi2nqmrw>
-References: <20250320115633.4248-1-srinivas.kandagatla@linaro.org>
- <20250320115633.4248-5-srinivas.kandagatla@linaro.org>
- <rdvsnxuc6by6sci56sh7thzpxo5cqi7q24fnmc7hi5yrfszwrg@kqjpiilko3xo>
- <adfecf33-6ab2-4c3e-b7d9-3d6481ebd3f8@linaro.org>
+        d=1e100.net; s=20230601; t=1742577413; x=1743182213;
+        h=content-transfer-encoding:mime-version:message-id:references
+         :in-reply-to:user-agent:subject:cc:to:from:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=8i//BDa5v0dvJDkEA2fd7PHT9jRJc1TXdcY6VlZ8X1s=;
+        b=vO6Epo/oVeoPHlFm+MIpxNHYGOemqt51TJNRqYPZhcztJGVdiUXVtjE1cvWVzAUhoi
+         NW3SVGT49axtQzJ0qsm1kD7BXq/gh+z6YrSXR2rhe20VtAXpFdZ/DBtM4MjLDR945STx
+         ujOgBp0SHeT8JzD04bxcRJ29JZixEYa/2qu9xC1cYusC1NosFwZXMuP96LZsZFGWLarC
+         vV+j10LEayyVOwMZeNmW7S69Lm2BGvuKeKrFgLfPhkK8jWY7NQxdMMa8DKwc4jnVYIps
+         DbNqG3xW6wg6EL8WdURxtG1qaQAPoplFvvtjq9PEO5lJ+XF4Ty5VyLuoQVdhBPNB+Qyj
+         xTqg==
+X-Forwarded-Encrypted: i=1; AJvYcCUPxJGaucHqdZylTbKPGoq5vN7DjUJ6rKjVvSdnCfEX42p0xGN0taWoBLKLonuY0kVsqPxEunSA/BU=@vger.kernel.org, AJvYcCV1cBttheE8wXo6ZTKIbq91yKkHSKw0WyyNW0hN7qhau57o2/KQTjbtcGJTgH7S39dXEUKBYdcXAOU=@vger.kernel.org, AJvYcCWQPTMcULDbk2mW035Md0UKFzBNKpb4lermOpxH0F6/WX3sZfoTymdx1UDp1P6KLnIT/7jphGgDC14LDbpELU0wHbgzqA==@vger.kernel.org, AJvYcCWWFx5eXW4lHQtFzOJuqzrs7zldjgRQj58cWkdgQeH53mDVYKm7bt+268nQmc7sGIJycqYNyC37T4CnG995@vger.kernel.org
+X-Gm-Message-State: AOJu0YzQ9dNgYDCJ1fpF/sbMrB85SXmXGseH/NnOESjBwwbIJC2akI+Q
+	hNLavZNV0bsnjlNGKnOiU2eoPb8ZN8n4u2wuYZYCkGFAJujHkq0l
+X-Gm-Gg: ASbGncvSHMA6NbRdkdIe5naQa3VngMvUPbf1qjtftzaWxqoAIJfGhOUiRlteggJBMOv
+	TiZT54gtdvCiS0LYBxayHAv7oNxjebMpvWvdAIj1PeH19Osfz7foG5dztJLlJI05vlfySBH3bV4
+	gjs9hYSYE2Ecox9aEA6BFSMlC6BYpDq2nOKfRbPq+YYtsSC2P2TJVCkNqMm8bJCta+uMwn+Ar/x
+	JPV27pdfDTFwFwSslRtxxMfP5OUO/N9iz0vvUIqvlJCE2S7xkSfpeowbyLi96+GpxmxSc1jJZ1Z
+	K/dlP2loiCL/gTJkq3uOoMjx5HvOWa0SP9ZuMDZniGZHiMIAF0i4oDC3Hok=
+X-Google-Smtp-Source: AGHT+IH+1PKeHYLQOfk2UsR/Gh4n8yHVe1Xpnr1hVL7En1XlYgMolzB55S7fjiy3RV/oTo2BMebukA==
+X-Received: by 2002:a17:902:cec8:b0:223:668d:eba9 with SMTP id d9443c01a7336-22780c5587bmr84105385ad.10.1742577412847;
+        Fri, 21 Mar 2025 10:16:52 -0700 (PDT)
+Received: from [127.0.0.1] ([172.102.8.48])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-227811d9f1bsm19695945ad.166.2025.03.21.10.16.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 21 Mar 2025 10:16:52 -0700 (PDT)
+Date: Fri, 21 Mar 2025 07:16:50 -1000
+From: "Derek J. Clark" <derekjohn.clark@gmail.com>
+To: Antheas Kapenekakis <lkml@antheas.dev>, platform-driver-x86@vger.kernel.org
+CC: linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>,
+ Jean Delvare <jdelvare@suse.com>, Jonathan Corbet <corbet@lwn.net>,
+ Joaquin Ignacio Aramendia <samsagax@gmail.com>,
+ Kevin Greenberg <kdgreenberg234@protonmail.com>,
+ Joshua Tam <csinaction@pm.me>, Parth Menon <parthasarathymenon@gmail.com>,
+ Eileen <eileen@one-netbook.com>, linux-kernel@vger.kernel.org,
+ sre@kernel.org, linux@weissschuh.net, ilpo.jarvinen@linux.intel.com,
+ hdegoede@redhat.com, mario.limonciello@amd.com
+Subject: =?US-ASCII?Q?Re=3A_=5BPATCH_v7_00/14=5D_hwmon=3A_=28oxpsensors=29_Add_dev?=
+ =?US-ASCII?Q?ices=2C_features=2C_fix_ABI_and_move_to_platform/x86?=
+User-Agent: Thunderbird for Android
+In-Reply-To: <20250319181044.392235-1-lkml@antheas.dev>
+References: <20250319181044.392235-1-lkml@antheas.dev>
+Message-ID: <2798B14C-C8A4-4976-AF40-22A1E0FFB0FC@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <adfecf33-6ab2-4c3e-b7d9-3d6481ebd3f8@linaro.org>
-X-Proofpoint-GUID: mCsdHceLwaeQXWQLgxqqzS7NjyVATCwY
-X-Proofpoint-ORIG-GUID: mCsdHceLwaeQXWQLgxqqzS7NjyVATCwY
-X-Authority-Analysis: v=2.4 cv=R9IDGcRX c=1 sm=1 tr=0 ts=67dd9eed cx=c_pps a=50t2pK5VMbmlHzFWWp8p/g==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=9s2PtkJ4WOh6SrYgvskA:9 a=CjuIK1q_8ugA:10 a=IoWCM6iH3mJn3m4BftBB:22
- a=cvBusfyB2V15izCimMoJ:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_05,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- lowpriorityscore=0 bulkscore=0 spamscore=0 phishscore=0 adultscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 priorityscore=1501 malwarescore=0
- mlxlogscore=999 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503210127
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 21, 2025 at 02:14:31PM +0000, Srinivas Kandagatla wrote:
-> 
-> 
-> On 20/03/2025 14:03, Dmitry Baryshkov wrote:
-> > On Thu, Mar 20, 2025 at 11:56:32AM +0000, srinivas.kandagatla@linaro.org wrote:
-> > > From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > 
-> > > On some platforms to minimise pop and click during switching between
-> > > CTIA and OMTP headset an additional HiFi mux is used. Most common
-> > > case is that this switch is switched on by default, but on some
-> > > platforms this needs a regulator enable.
-> > > 
-> > > move to using mux control to enable both regulator and handle gpios,
-> > > deprecate the usage of gpio.
-> > > 
-> > > Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > > ---
-> > >   sound/soc/codecs/Kconfig   |  2 ++
-> > >   sound/soc/codecs/wcd938x.c | 38 ++++++++++++++++++++++++++++++--------
-> > >   2 files changed, 32 insertions(+), 8 deletions(-)
-> > > 
-> > > diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-> > > index ee35f3aa5521..b04076282c8b 100644
-> > > --- a/sound/soc/codecs/Kconfig
-> > > +++ b/sound/soc/codecs/Kconfig
-> > > @@ -2226,6 +2226,8 @@ config SND_SOC_WCD938X
-> > >   	tristate
-> > >   	depends on SOUNDWIRE || !SOUNDWIRE
-> > >   	select SND_SOC_WCD_CLASSH
-> > > +	select MULTIPLEXER
-> > > +	imply MUX_GPIO
-> > 
-> > Why? This is true for a particular platform, isn't it?
-> > 
-> > >   config SND_SOC_WCD938X_SDW
-> > >   	tristate "WCD9380/WCD9385 Codec - SDW"
-> > > diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
-> > > index f2a4f3262bdb..b7a235eef6ba 100644
-> > > --- a/sound/soc/codecs/wcd938x.c
-> > > +++ b/sound/soc/codecs/wcd938x.c
-> > > @@ -19,6 +19,7 @@
-> > >   #include <linux/regmap.h>
-> > >   #include <sound/soc.h>
-> > >   #include <sound/soc-dapm.h>
-> > > +#include <linux/mux/consumer.h>
-> > >   #include <linux/regulator/consumer.h>
-> > >   #include "wcd-clsh-v2.h"
-> > > @@ -178,6 +179,8 @@ struct wcd938x_priv {
-> > >   	int variant;
-> > >   	int reset_gpio;
-> > >   	struct gpio_desc *us_euro_gpio;
-> > > +	struct mux_control *us_euro_mux;
-> > > +	u32 mux_state;
-> > >   	u32 micb1_mv;
-> > >   	u32 micb2_mv;
-> > >   	u32 micb3_mv;
-> > > @@ -3243,9 +3246,16 @@ static bool wcd938x_swap_gnd_mic(struct snd_soc_component *component, bool activ
-> > >   	wcd938x = snd_soc_component_get_drvdata(component);
-> > > -	value = gpiod_get_value(wcd938x->us_euro_gpio);
-> > > +	if (!wcd938x->us_euro_mux) {
-> > > +		value = gpiod_get_value(wcd938x->us_euro_gpio);
-> > > -	gpiod_set_value(wcd938x->us_euro_gpio, !value);
-> > > +		gpiod_set_value(wcd938x->us_euro_gpio, !value);
-> > 
-> > This looks like a separate topic, but why is 'active' being ignored?
-> > 
-> > > +	} else {
-> > > +		mux_control_deselect(wcd938x->us_euro_mux);
-> > > +		wcd938x->mux_state = !wcd938x->mux_state;
-> > > +		if (mux_control_select(wcd938x->us_euro_mux, wcd938x->mux_state))
-> > 
-> > Can't it just be 'mux_control_select(wcd938x->us_euro_mux, active)' ?
-> > 
-> 
-> No, the way this is supposed to work is that if the codec detects cross
-> connection, It will try to switch the mux to other option.
 
-I see. It would be nice then to converge GPIO code and mux code in this
-area. Invert mux_state, then use it in both paths.
-> 
-> So using active will just work if we try to pulg one type of headset all the
-> time. But if we change the headset type the mux will still be configured to
-> use the old headset type and not work.
-> 
-> fyi, active is always set to true
-> 
-> I agree the argument to api is poorly labeled. It should be labeled as flip
-> or something on those lines?
 
-If it is always true, then it should be dropped instead of renaming it.
+On March 19, 2025 8:10:27 AM HST, Antheas Kapenekakis <lkml@antheas=2Edev>=
+ wrote:
+>This four part series updates the oxpsensors module to bring it in line
+>with its Windows OneXPlayer counterpart=2E First, it adds support for all
+>2024, 2025 OneXPlayer handhelds and their special variants=2E Then, it mo=
+ves
+>the module to platform/x86 to allow for including more EC features=2E
+>
+>Then, it adds the new charge limiting and bypass features that were first
+>introduced in the X1 and retrofit to older OneXFly variants and for
+>controlling the turbo led found in the X1 models=2E For Bypass, it adds a=
+ new
+>charge_behaviour variant called inhibit-charge-s0=2E
+>
+>Finally, it performs a minor refactor by moving around switch statements
+>into their own functions, in order to allow for fixing the pwm1_enable AB=
+I
+>in the final patch=2E Currently, pwm1_enable sets the fan to auto with th=
+e
+>value 0 and allows manual control with the value 1=2E This patch makes it
+>so 0 sets the fan to full speed, 1 sets the fan to manual control, and
+>2 sets the fan to auto=2E This requires both setting enable and the fan
+>speed when the enable sysfs is written to as 0, hence the refactor=2E
+>
+>As this is a minor ABI break and there is userspace software relying
+>on this previous behavior, the last patch also changes the /name of the
+>hwmon endpoint to "oxp_ec" from "oxpec" (mirroring WMI module conventions=
+)
+>such that userspace software that relied on the previous behavior can be
+>retrofit to the new kernel while enabling correct functionality on old
+>and new kernels=2E Failing that, software that is not updated will just
+>stop controlling the fans, ensuring no malignant behavior=2E
+>
+>---
+>V6: NA
+>V5: https://lore=2Ekernel=2Eorg/all/20250317155349=2E1236188-1-lkml@anthe=
+as=2Edev/
+>V4: https://lore=2Ekernel=2Eorg/all/20250311165406=2E331046-1-lkml@anthea=
+s=2Edev/
+>V3: https://lore=2Ekernel=2Eorg/all/20250309112114=2E1177361-1-lkml@anthe=
+as=2Edev/
+>
+>Changes since V6:
+>    - Fix compile error due to extra const=2E My bad on that one, did a
+>      double check on a device too=2E
+>
 
-> 
-> 
-> thanks,
-> Srini
-> > > +			dev_err(component->dev, "Unable to select us/euro mux state\n");
-> > > +	}
-> > >   	return true;
-> > >   }
-> > 
+For the remainder of the series without my tag:
+Reviewed-by: Derek J=2E Clark <derekjohn=2Eclark@gmail=2Ecom>
 
--- 
-With best wishes
-Dmitry
+>Changes since V5:
+>    - Separate doc entries with Fixes as by Mario
+>    - Add sysfs file name to subject as per Thomas
+>    - Make tt_led and tt_turbo const as per Thomas
+>    - Align a couple of structs as per Thomas
+>    - Remove excess battery check as per Thomas
+>    - For Thomas: devices without a BIOS update battery control is a NOOP
+>      OXP is a boutique manufacturer for now, so gathering information
+>      about old devices to add BIOS checks is not practical unfortunately
+>
+>Changes since V4:
+>    - Fix nits by Hans
+>    - change inhibit-charge-s0 to inhibit-charge-awake
+>    - use devm_battery_hook_register and power_supply_unregister_extensio=
+n
+>      (based on cros driver)
+>    - move charge behavior patches to the end to make the rest of the ser=
+ies
+>      easier to merge
+>    - CC platform-x86 and power maintainers
+>
+>Changes since V3:
+>    - Fix nits by Derek
+>    - Remove the hwmon documentation as it is not required for platform
+>      drivers (suggested by Guenter)
+>    - Add ACPI_BATTERY and HWMON depends to Kconfig
+>      (reported by kernel robot)
+>    - Homogenize driver into following reverse xmas convention
+>
+>Changes since V2:
+>    - Add ack by Guenter, move platform move patch to be third (not first
+>      to allow for device support backport to lts kernels)
+>    - Rework patch text, especially in the refactor patches as per Derek
+>    - Change bypass to use charge_behaviour instead of charge_type, as th=
+at
+>      ABI supports capability detection and is more appropriate
+>    - Move battery attach to probe instead of init
+>    - Fix bug where reading tt_led would instead use the turbo register
+>
+>Changes since V1:
+>    - Add X1 Pro, F1 Pro variants
+>    - Fix minor typo in initial patches
+>    - Convert oxp-sensors into a platform driver, as it is no longer
+>      considered a hwmon driver=2E
+>    - Add sysfs documentation and myself to the MAINTAINERS file
+>    - Update documentation to state that this is the OneXPlayer/AOKZOE
+>      platform driver, and that support for Ayaneo/OPI is provided until
+>      they gain their own platform driver=2E
+>
+>Antheas Kapenekakis (14):
+>  hwmon: (oxp-sensors) Distinguish the X1 variants
+>  hwmon: (oxp-sensors) Add all OneXFly variants
+>  platform/x86: oxpec: Move hwmon/oxp-sensors to platform/x86
+>  ABI: testing: sysfs-class-oxp: add missing documentation
+>  ABI: testing: sysfs-class-oxp: add tt_led attribute documentation
+>  platform/x86: oxpec: Rename ec group to tt_toggle
+>  platform/x86: oxpec: Add turbo led support to X1 devices
+>  platform/x86: oxpec: Move pwm_enable read to its own function
+>  platform/x86: oxpec: Move pwm value read/write to separate functions
+>  platform/x86: oxpec: Move fan speed read to separate function
+>  platform/x86: oxpec: Adhere to sysfs-class-hwmon and enable pwm on 2
+>  platform/x86: oxpec: Follow reverse xmas convention for tt_toggle
+>  power: supply: add inhibit-charge-awake to charge_behaviour
+>  platform/x86: oxpec: Add charge threshold and behaviour to OneXPlayer
+>
+> Documentation/ABI/testing/sysfs-class-power   |  11 +-
+> Documentation/ABI/testing/sysfs-platform-oxp  |  25 +
+> Documentation/hwmon/index=2Erst                 |   2 +-
+> Documentation/hwmon/oxp-sensors=2Erst           |  89 ---
+> MAINTAINERS                                   |   7 +-
+> drivers/hwmon/Kconfig                         |  11 -
+> drivers/hwmon/Makefile                        |   1 -
+> drivers/platform/x86/Kconfig                  |  13 +
+> drivers/platform/x86/Makefile                 |   3 +
+> =2E=2E=2E/oxp-sensors=2Ec =3D> platform/x86/oxpec=2Ec}    | 624 ++++++++=
+++++++----
+> drivers/power/supply/power_supply_sysfs=2Ec     |   7 +-
+> drivers/power/supply/test_power=2Ec             |   1 +
+> include/linux/power_supply=2Eh                  |   1 +
+> 13 files changed, 540 insertions(+), 255 deletions(-)
+> create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
+> delete mode 100644 Documentation/hwmon/oxp-sensors=2Erst
+> rename drivers/{hwmon/oxp-sensors=2Ec =3D> platform/x86/oxpec=2Ec} (52%)
+>
+>
+>base-commit: 4701f33a10702d5fc577c32434eb62adde0a1ae1
+
+- Derek
