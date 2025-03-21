@@ -1,240 +1,99 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
+Received: from orbyte.nwl.cc (orbyte.nwl.cc [151.80.46.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33706224259;
-	Fri, 21 Mar 2025 11:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EE2D2253EA;
+	Fri, 21 Mar 2025 11:42:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=151.80.46.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742557355; cv=none; b=RXg5aTV+JS3CiQSVYYBeQj0QDQXzGxZLMWI7jfXORmdvvG9wGzfSl/Wz4ZugSomuk1zzpJbyxwYYc/FIl4wVyD6nYXTn24iKVIdh3A1M638WjgPgTKGBbVPmWZkLVMt4NxTIRBkr6bW7q0pEIQvYXjVhFseXZySwHxibG57PSwI=
+	t=1742557370; cv=none; b=CGTx4HbevyH55y0QdxRQ6Saxq5mwGW7vM/9OnnCdXhZnov4pJrYFy4F+HMO3sZxak75uRY6uTsp7/xeeh8OH+wIUovSyX2ICdra/Zr0kKt/WbZvAVgoWUx8NWOPkxBbpb5GQ27hOvfwCxLx1t/21MWg5dKRN1m90Wr8st+UY73k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742557355; c=relaxed/simple;
-	bh=SDCIlfafWBMvWzNiE3MHOiQ22Bn3e+yP/64zuKHxYjA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cmUT+3J/L31hdU2lJf03FrQN/axRvmpoQmT91IHLBGm95DJLy3VmTEbfuCNKxIBkxuUGC92VSLZ2I8mtFcWA2icgOwvdkLqd9L+K3RqVqchS/CHXHyjpluY7Mf0xNsgQm8mw5JAYjmmn0/svTeR1s+n3tBkoIVY2UFXRXQiu+8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y8hrAs+p; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
+	s=arc-20240116; t=1742557370; c=relaxed/simple;
+	bh=FL7z4Ub9L6PGWrEEBQ4gbd4eCJTb6x5v6pCL30EeyoQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CiULCpHWdY0iY6GRcXy5+a5aphAqpcpLVjjUGqXtyaGptT2Dsiy84ylYQeRupdigvFZD8Z4auIHpL4DQh2UGgWfIJn9OzMDFtsdx/e+3ieV5geoa5ZCI3BHcTBHT3n1FND0RlxFPYh4TVKg0zVDPSRHow1N8sDVI5r35EUkfHzM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nwl.cc; spf=pass smtp.mailfrom=nwl.cc; dkim=pass (2048-bit key) header.d=nwl.cc header.i=@nwl.cc header.b=Fp6eyCEn; arc=none smtp.client-ip=151.80.46.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nwl.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nwl.cc
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y8hrAs+p"
-Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATcLe014247;
-	Fri, 21 Mar 2025 11:42:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=HxEUrF
-	SkwvtTHGZsRrcYMHupA72KBahfp9Or61L+rwM=; b=Y8hrAs+pldr03rjzo+WhAy
-	U52ZrtB+IqpzlWD9UpaK9zugv90jFOORN2zkELt6EwBYrXFWIcZS7T1RujhRR0LQ
-	3Nf9j8Yjpxk3xB9bYRq14TwB/gDfnvtsM98c0oASGAYIbK/QB4X9zQZqm+IkjRDE
-	ribkrbF5GRfCwv50NtewtRkh8OhPtU6xy8rSO7LnT8LIX56v3qdxJjHbPqxbZAph
-	BD+5t5VtF45BpBRp3FPz6zlw4+LuZ5Jdm7JFgVBVk7SG8v/GkVL/roGm5XjcQs+L
-	s7rfJ8QPLxW6fTafqX2ZQ1y2WOGXHcm336io/OvsUF3QmYmLAdMZqov2l5nbldnw
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gt80u9xe-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 11:42:15 +0000 (GMT)
-Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52LBY281031415;
-	Fri, 21 Mar 2025 11:42:14 GMT
-Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gt80u9x5-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 11:42:14 +0000 (GMT)
-Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
-	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52LB0iUw019218;
-	Fri, 21 Mar 2025 11:42:14 GMT
-Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
-	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dmvpd2m9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 21 Mar 2025 11:42:14 +0000
-Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
-	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52LBgCoH31654592
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 21 Mar 2025 11:42:13 GMT
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E184158067;
-	Fri, 21 Mar 2025 11:42:12 +0000 (GMT)
-Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id B8DF85805D;
-	Fri, 21 Mar 2025 11:42:04 +0000 (GMT)
-Received: from [9.43.64.160] (unknown [9.43.64.160])
-	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
-	Fri, 21 Mar 2025 11:42:04 +0000 (GMT)
-Message-ID: <31a3d76b-617b-4c97-b83d-2cd47fabbf02@linux.ibm.com>
-Date: Fri, 21 Mar 2025 17:12:01 +0530
+	dkim=pass (2048-bit key) header.d=nwl.cc header.i=@nwl.cc header.b="Fp6eyCEn"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=nwl.cc;
+	s=mail2022; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+	List-Post:List-Owner:List-Archive;
+	bh=SUatzUQOETLhyGOv5BeLJaiThxY9I/fVLvbux0oPWl4=; b=Fp6eyCEn+kDEMEmPcxnB+sYMTk
+	GvmbJdhOOPpfrsHFIDcPJcNOwBj04mwOH13z2F7r06DT+NYoDV+e+2024/qY9cX/XkQzj/oXit1NU
+	8B9LMAd67NghAhQ8AwWojqsRKNXJQLiBE2lJ7lI4oreusm0e+akEp7fh7A6agov+192p051BMckMg
+	kGsnJf5YE8W1Sk2VSs8QmInKyKKXtUcEWZ35CpfswcHdfB4PlbzMoq6IuH/gfZHB5Hg8Jizr1Cli/
+	6m2gY2UEOjjwUWbAo8aIXSrg05K+PgIDspLu8mHU3eks1XvDjk+joBTMzWOO01KF3s0dmRi6E7YAs
+	DafGgLdQ==;
+Received: from n0-1 by orbyte.nwl.cc with local (Exim 4.97.1)
+	(envelope-from <phil@nwl.cc>)
+	id 1tvalu-000000001kr-4BEA;
+	Fri, 21 Mar 2025 12:42:43 +0100
+Date: Fri, 21 Mar 2025 12:42:42 +0100
+From: Phil Sutter <phil@nwl.cc>
+To: Hangbin Liu <liuhangbin@gmail.com>
+Cc: "Jason A. Donenfeld" <Jason@zx2c4.com>, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
+	Petr Mladek <pmladek@suse.com>,
+	Yoann Congal <yoann.congal@smile.fr>, wireguard@lists.zx2c4.com,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv4 RESEND net-next 2/2] selftests: wireguard: update to
+ using nft for qemu test
+Message-ID: <Z91QshzKRlmPdpv7@orbyte.nwl.cc>
+Mail-Followup-To: Phil Sutter <phil@nwl.cc>,
+	Hangbin Liu <liuhangbin@gmail.com>,
+	"Jason A. Donenfeld" <Jason@zx2c4.com>, netdev@vger.kernel.org,
+	Jakub Kicinski <kuba@kernel.org>, Shuah Khan <shuah@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>,
+	Petr Mladek <pmladek@suse.com>,
+	Yoann Congal <yoann.congal@smile.fr>, wireguard@lists.zx2c4.com,
+	bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+References: <20250106081043.2073169-1-liuhangbin@gmail.com>
+ <20250106081043.2073169-3-liuhangbin@gmail.com>
+ <Z9rtrVk-15Ts_BNp@zx2c4.com>
+ <Z91CGRP9QLdZONiZ@fedora>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V2 2/2] tools/perf/powerpc/util: Add support to handle
- compatible mode PVR for perf json events
-To: Christophe Leroy <christophe.leroy@csgroup.eu>,
-        Athira Rajeev <atrajeev@linux.vnet.ibm.com>, namhyung@kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, irogers@google.com,
-        akanksha@linux.ibm.com, kjain@linux.ibm.com,
-        disgoel@linux.vnet.ibm.com, acme@kernel.org, hbathini@linux.ibm.com,
-        adrian.hunter@intel.com, jolsa@kernel.org
-References: <20241010145107.51211-1-atrajeev@linux.vnet.ibm.com>
- <20241010145107.51211-2-atrajeev@linux.vnet.ibm.com>
- <7cd87317-4f2a-45af-bd07-6e715406ff55@csgroup.eu>
-Content-Language: en-US
-From: Madhavan Srinivasan <maddy@linux.ibm.com>
-In-Reply-To: <7cd87317-4f2a-45af-bd07-6e715406ff55@csgroup.eu>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: TxLlLE1cX4Hnb4p2JPivH8_9XWPO13lL
-X-Proofpoint-GUID: 3Jh4cugb2FdlH5bhaW77yb4YKss_41FL
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-21_04,2025-03-20_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- lowpriorityscore=0 spamscore=0 mlxlogscore=999 phishscore=0
- priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0 clxscore=1011
- impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2502280000 definitions=main-2503210085
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z91CGRP9QLdZONiZ@fedora>
 
+Hi Hangbin,
 
+On Fri, Mar 21, 2025 at 10:40:25AM +0000, Hangbin Liu wrote:
+> Hi Jason, Phil,
+> On Wed, Mar 19, 2025 at 05:15:41PM +0100, Jason A. Donenfeld wrote:
+> > On Mon, Jan 06, 2025 at 08:10:43AM +0000, Hangbin Liu wrote:
+> > > +	echo "file /bin/nft $(NFTABLES_PATH)/src/nft 755 0 0" >> $@
+> > > +	echo "file /lib/libmnl.so.0 $(TOOLCHAIN_PATH)/lib/libmnl.so.0 755 0 0" >> $@
+> > > +	echo "file /lib/libnftnl.so.11 $(TOOLCHAIN_PATH)/lib/libnftnl.so.11 755 0 0" >> $@
+> > 
+> > Can't these be statically linked into the nft binary?
+> 
+> If I omit these, I will got error like
+> 
+> mnl_attr_put: symbol not found
+> 
+> Even though I set `--enable-static` in nft build.
+> 
+> Do you know what's the reason?
 
-On 3/21/25 4:04 PM, Christophe Leroy wrote:
-> Hi,
-> 
-> Le 10/10/2024 à 16:51, Athira Rajeev a écrit :
->> perf list picks the events supported for specific platform
->> from pmu-events/arch/powerpc/<platform>. Example power10 events
->> are in pmu-events/arch/powerpc/power10, power9 events are part
->> of pmu-events/arch/powerpc/power9. The decision of which
->> platform to pick is determined based on PVR value in powerpc.
->> The PVR value is matched from pmu-events/arch/powerpc/mapfile.csv
->>
->> Example:
->>
->> Format:
->>     PVR,Version,JSON/file/pathname,Type
->>
->> 0x004[bcd][[:xdigit:]]{4},1,power8,core
->> 0x0066[[:xdigit:]]{4},1,power8,core
->> 0x004e[[:xdigit:]]{4},1,power9,core
->> 0x0080[[:xdigit:]]{4},1,power10,core
->> 0x0082[[:xdigit:]]{4},1,power10,core
->>
->> The code gets the PVR from system using get_cpuid_str function
->> in arch/powerpc/util/headers.c ( from SPRN_PVR ) and compares
->> with value from mapfile.csv
->> In case of compat mode, say when partition is booted in a power9
->> mode when the system is a power10, this picks incorrectly. Because
->> PVR will point to power10 where as it should pick events from power9
->> folder. To support generic events, add new folder
->> pmu-events/arch/powerpc/compat to contain the ISA architected events
->> which is supported in compat mode. Also return 0x00ffffff as pvr
->> when booted in compat mode. Based on this pvr value, json will
->> pick events from pmu-events/arch/powerpc/compat
->>
->> Suggested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
->> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
-> 
-> I see this patch was merged into mainline allthough it had CI failures and still has.
-> 
-> Could you please fix it ?
+I was able to have nft linked statically against built libmnl and
+libnftnl by passing '--disable-shared --enable-static' to configure
+calls of all three build systems. With --enable-shared in library
+configure calls, nftables build preferred to link against the DSOs and I
+did not find a way to change this.
 
-We already have a fix patch posted for this issue 
-
-https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20250321100726.699956-1-likhitha@linux.ibm.com/
-
-Maddy
-
-
-> 
-> arch/powerpc/util/header.c: In function 'is_compat_mode':
-> Error: arch/powerpc/util/header.c:20:14: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->    20 |  if (!strcmp((char *)platform, (char *)base_platform))
->       |              ^
-> Error: arch/powerpc/util/header.c:20:32: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
->    20 |  if (!strcmp((char *)platform, (char *)base_platform))
->       |                                ^
-> cc1: all warnings being treated as errors
-> make[6]: *** [/linux/tools/build/Makefile.build:86: /output/arch/powerpc/util/header.o] Error 1
-> 
-> 
-> The following fix but is maybe not the right one as in reality getauxval() seems to return a long not a u64.
-> 
-> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
-> index c7df534dbf8f..1b045d410f31 100644
-> --- a/tools/perf/arch/powerpc/util/header.c
-> +++ b/tools/perf/arch/powerpc/util/header.c
-> @@ -17,7 +17,7 @@ static bool is_compat_mode(void)
->      u64 base_platform = getauxval(AT_BASE_PLATFORM);
->      u64 platform = getauxval(AT_PLATFORM);
-> 
-> -    if (!strcmp((char *)platform, (char *)base_platform))
-> +    if (!strcmp((char *)(long)platform, (char *)(long)base_platform))
->          return false;
-> 
->      return true;
-> 
-> 
-> Thanks
-> Christophe
-> 
->> ---
->> changelog:
->> V1 -> V2:
->> Corrected commit message and subject line
->>
->>   tools/perf/arch/powerpc/util/header.c | 32 ++++++++++++++++++++++++++-
->>   1 file changed, 31 insertions(+), 1 deletion(-)
->>
->> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
->> index 6b00efd53638..adc82c479443 100644
->> --- a/tools/perf/arch/powerpc/util/header.c
->> +++ b/tools/perf/arch/powerpc/util/header.c
->> @@ -10,6 +10,18 @@
->>   #include "utils_header.h"
->>   #include "metricgroup.h"
->>   #include <api/fs/fs.h>
->> +#include <sys/auxv.h>
->> +
->> +static bool is_compat_mode(void)
->> +{
->> +    u64 base_platform = getauxval(AT_BASE_PLATFORM);
->> +    u64 platform = getauxval(AT_PLATFORM);
->> +
->> +    if (!strcmp((char *)platform, (char *)base_platform))
->> +        return false;
->> +
->> +    return true;
->> +}
->>     int
->>   get_cpuid(char *buffer, size_t sz)
->> @@ -33,8 +45,26 @@ char *
->>   get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
->>   {
->>       char *bufp;
->> +    unsigned long pvr;
->> +
->> +    /*
->> +     * IBM Power System supports compatible mode. That is
->> +     * Nth generation platform can support previous generation
->> +     * OS in a mode called compatibile mode. For ex. LPAR can be
->> +     * booted in a Power9 mode when the system is a Power10.
->> +     *
->> +     * In the compatible mode, care must be taken when generating
->> +     * PVR value. When read, PVR will be of the AT_BASE_PLATFORM
->> +     * To support generic events, return 0x00ffffff as pvr when
->> +     * booted in compat mode. Based on this pvr value, json will
->> +     * pick events from pmu-events/arch/powerpc/compat
->> +     */
->> +    if (!is_compat_mode())
->> +        pvr = mfspr(SPRN_PVR);
->> +    else
->> +        pvr = 0x00ffffff;
->>   -    if (asprintf(&bufp, "0x%.8lx", mfspr(SPRN_PVR)) < 0)
->> +    if (asprintf(&bufp, "0x%.8lx", pvr) < 0)
->>           bufp = NULL;
->>         return bufp;
-> 
-
+Cheers, Phil
