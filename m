@@ -1,112 +1,135 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-0.canonical.com (smtp-relay-internal-0.canonical.com [185.125.188.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C44D0227BA1;
-	Fri, 21 Mar 2025 12:41:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8011822A80F
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:41:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.122
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742560883; cv=none; b=VWxtmavNRhpd9uMBzJgS1veaGGt2mvVh4UU23G1i6BWpTieBMX5fW5TF4H8x4fSYx2zuscFHDw5cEf/EzBp+w57J04UpWF9498uEpQXifDpu6U09sk6GDk+VATdige6uGEmzxVVb4TAsJC7Ba2uNeDOLoXN3MrU8lvfQtJAwjjo=
+	t=1742560893; cv=none; b=upLR7CYpDBN9+CbgJVrJqsoUqzgnf5fPNycrd+DmOGKfhtKFf+taU0T3US0KnGzZgPf9/HBfc1EZBlnAAX2k/1eaA6earRygdffKzruicfF1taFtfXKGd2eFIWTwd8C6MOZqQAnY/rUx34PshorYOj2PWZnGjznOWGxD48q/jvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742560883; c=relaxed/simple;
-	bh=eRwaIXSZeEAbgkIPXI4xktUNSHNDQa/L0wTY3I4/eVY=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ntaIeOBnAB2KvX/2l+d7BbQthqYlvyYnu56o7qyEsBxi9a5hJUmsEnOpE9D6ydRFwxzA9oEiGsQwr4rkI1VHRDA4+DogL3f5Ih0Vgfu4kcF/AR+IvcMiER700UbHl491cRmIoiVGleGqRX3a24EA6y38beZO1Xo3F6YyhE6TkxU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ULUrhF1d; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742560893; c=relaxed/simple;
+	bh=kYV2tU5W6W7PRa7BY6P3Gb2pA6tdcRdBC8mO2lgEAHQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UF8eX0Np5Gtj+4xiVvrL2bwHEBB7JcApUXNzx9JCRYkwXAr2KFjsOBKvQorfeydNv7Xn/iAn+854SZODsfxLHzFc7E9EjK6XoZ075ybrT8aRbkapKtBHa09zKo8IC39HjbBitSKKQ0uZt/r+c2yh0aQd/WT0yYGyNK4OUYqqQzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=coaOL9u/; arc=none smtp.client-ip=185.125.188.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULUrhF1d"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-224100e9a5cso35830805ad.2;
-        Fri, 21 Mar 2025 05:41:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742560881; x=1743165681; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Q+NiAZ9mdyZTQmFAQQ+DvuQUzdXkQ4ZbSFQA5qFBOIg=;
-        b=ULUrhF1dgTTHK8zsila5yGWBsax7GLT+DCf8AmZIJgf+XNqvOHHtUi026p8wlq06XK
-         XUgoXcKYsjVpY61gTLm41oRKXUiINHI4UfOUi5VG4VaNF2FnVLXx1cgz5QHHeAva7DMg
-         ybs4vQ7tsOLROa1MjoR3WsR3ICBtRLs4iEuatLklKLcq1Zd9PUgVgKlp9ulLPnE4cMgo
-         UreM5NW12tBQ5jwHfRf23WhieI0Vw1cKqFiNq9GLPgRQywgZvRrThuJnnH6k5Suy/nwH
-         c/7Hqz8PARh+ZZ8syAYTI7MvAibyb2whh0DkyhX+gqIAXr1HUXP+Mbq2S9g39uLB0jKT
-         F3wA==
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="coaOL9u/"
+Received: from mail-pl1-f198.google.com (mail-pl1-f198.google.com [209.85.214.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 2DD293FCCB
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 12:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1742560888;
+	bh=w5dmGg1Zenb5iMErOVl6vrTRYdAblyeideLHWERDpFM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:In-Reply-To;
+	b=coaOL9u/71t2eFlhch0JwJyJ1GmT0wRmBxLGLHLgWGmuMt03vGVtefgeq6NcpVAMZ
+	 EIC6piqSb12Uta4JbrxJcPRqVHgkW6J95j4fBee1pyNCi6ktDGh5DKj602lD/VBC5d
+	 i02Puap4kjruAjWQD97LTnYwe0YvmRHs/ryOiWEoFUR9II6TwdQMMhbrqZ+i6tS1oD
+	 pEm2bSVhs/0OFjFhoZlrm9ubWVMCvT24T+1Ct5oRKJi/b7faJ366AI26P90o8Y++oL
+	 +QdXHmdPZSf5wAzKHdVzCeoSXvC6A0vcmoHfY9RLq/obRByEFpHsQKZ+gXHcqrrjai
+	 K2if0ChJaQTGg==
+Received: by mail-pl1-f198.google.com with SMTP id d9443c01a7336-22647ff3cf5so26315325ad.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 05:41:28 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742560881; x=1743165681;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Q+NiAZ9mdyZTQmFAQQ+DvuQUzdXkQ4ZbSFQA5qFBOIg=;
-        b=dPPhSPZojcIbhUFhb2OUa1FRrESRPIjlY81YnMdiS31pe0zPO9gJAcLm348jmACFYh
-         QCCsvA/NSXTU6gG+kzPlWL0zT1HUcCuJQtRu/5k+ll+XHdly3CejWuVw4fU88K6JqbRl
-         mE878ttAUSkxmgFksqPij2dEDdrjGO7joBvMO2TVg2FseqqciAf4EY+Qj6IXUq/vnhs8
-         h3jOgnW4Umad9QGJ2VA4ez7Vdy4duf5PG15SfPHe6CE+Hfr3UGlN/0Y/WwKlmBLPP7vl
-         DUNAAxxchrOhmds4tb/URomUrFAt+ATuLwHQfYotA38tmoyupJGMGX15XrQfJwSxoMN7
-         PYSw==
-X-Forwarded-Encrypted: i=1; AJvYcCWEKJpLjiL6MTQN8vCII8aVORrrK1H7WwW4IJYt1fsu+HB4i9CJ4wzQKazOUw57brMkWa2R6AkwjCWRTuZs@vger.kernel.org, AJvYcCWVBs1lL82mvo4Ma5LtEZvKtM6oVpa0vJTrd8/e3E5kAcqL0borf804S9l1Afq1U8+R9OzOtZZLjrPl@vger.kernel.org
-X-Gm-Message-State: AOJu0YyM9bJuZYLbGVHhZokPa4LueA6tcsJ4SMpV2X0HaRDg/s7CeOlU
-	IFV5F2ZiTKyXNzT1Ap9MVOXxiarOr3kSC/EIcemNz+8M2fr7Zm63
-X-Gm-Gg: ASbGnct/yn5l/GThe/twhrdCzGq0LVxgDlLmYVWSmGM98vy5kSeX70DqMmEubLgBmIv
-	N7QGB6F84XPxRqis9/UzpNO+qlYX4CDPPMUgg4T6PjtTtuVYSePmR9MufyjwlKyYM7ZBHhdrZUK
-	DNH3ARrwST6BUKz54zUdDkSnt9rEGRCklkumNe9K/4uFfPfkWoKOLZyuQrnpgfNL2awejZokGgr
-	3AixaegmgTM5ZZ8aT8i7CbOyQRld9s8EV9XmZjMKRCUDvcYeAE6CRwlkwcqAAuNBUGpXD9vQWUY
-	8kMPJxm8O8vO+VnCrU38P8VjcAaowrzcvIbkcOA4PW8SDZYSNkzp47caiyUMiuyDosil4pJ1LN0
-	Jsnls9HeV1ceAFi6GTT93DIHbSydP6U/0+OrwZRjpf0TE4pVRNQ4R+M0EVeM=
-X-Google-Smtp-Source: AGHT+IExgVZ4q/4fohD2pxnSiano84+Gjnet64GgoejlycI2L+z5k6c8k/m9ePdFfCzgOHfdnbckMg==
-X-Received: by 2002:a05:6a20:7285:b0:1f5:6f61:a0c2 with SMTP id adf61e73a8af0-1fe4300fe40mr7650260637.34.1742560880874;
-        Fri, 21 Mar 2025 05:41:20 -0700 (PDT)
-Received: from jason-System-Product-Name.dhcpserver.bu9bmc.local (61-220-246-151.hinet-ip.hinet.net. [61.220.246.151])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73905fd5c90sm1815432b3a.51.2025.03.21.05.41.18
+        d=1e100.net; s=20230601; t=1742560886; x=1743165686;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=w5dmGg1Zenb5iMErOVl6vrTRYdAblyeideLHWERDpFM=;
+        b=R1QNejuFTcHQm57SrQHa8akyk2ZtFUZ3W+dJt+Lsoi1n78fwfnGb/hsHngvUmSRpyT
+         P0ZZHIkkxx4NLBQ8aiethzplGi0iF9DvVNnvGViR34iLpTKH+c+qSGq+T1GSQbfi/Yfw
+         fta01iGirfHvUinAE5zrAJredvjpzXV7akyND2ORbxt4mjXto0uPORc7z7E/1NS8RqNM
+         codKkVPKAKzdw5JiUJPJuddNkmwNtMA3zm/QEqGBcx8YgKLMwDd1PSELsScpbadG3c3W
+         9uGDl6qt2s/lerys4f/BdOk6KjkjpqWE1Zxk5c1ihWrB16bmA97yQSmtLA6oOEtOoxS4
+         /qmQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXBs5R3q6lfvEuRCGfJs1c3PWHIbDi2262cNFt4uB4OyWR2l1QT7j8o/9Gwefsb0Z5fnQzmpHkNjHb+46Y=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxnv+DecezTJE94nc7fki74E2wF2lG/hIJjzzYV+OBvviOLgaIk
+	V4fMuYRpC0qQ5+VOKSvtcoeEqFH6Z5gO3JnTk436VrM14hLb2jtdYKEGrm8v3JqACcMi6Iak7tZ
+	GDwxaaXGdCBbFUBuKhYOBtSEaodOfzwjGG/lHX5Qd3ed4Wc8hGH+L+DDVfvb4fP0xkW9cmRvkSl
+	zs7A==
+X-Gm-Gg: ASbGnct+kFFb/CWLi+NyDd1o4F8dbce0HFuV2Aamqkmze8LYsGneYT2cfYxyO4UPjzg
+	CZAj9fO8MvoL/M9AL5zXhdRXV6GN1OBV7U38UTlYiNihfmvbLzvnWSu1qBFzanqRr1DcQhKJpqz
+	zgsUdvBlbkwTZVnNJQ79dngjzQop6YZc8YYK6ByxcxMy6sY8FpX3z6gplbcE75agRF4FwoIQQ4t
+	dHvez2M9sOA7bWZ/1w7ZgKqjI6DycIttSgg7FR+B4QtA4STtVoFG5s36xpm+NwLDLLYY0EmkfuG
+	yLDxzvHcyKDjVWH9cw==
+X-Received: by 2002:a17:902:ccc3:b0:223:3396:15e8 with SMTP id d9443c01a7336-22780d9b9d4mr56470725ad.22.1742560886563;
+        Fri, 21 Mar 2025 05:41:26 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGptLOm8T0h+3/usNzsqJQv/3kloJ7tcIjHNHv1LCT314QI7cJQSD9ZqqoAAnmCXXt+Kbwy3w==
+X-Received: by 2002:a17:902:ccc3:b0:223:3396:15e8 with SMTP id d9443c01a7336-22780d9b9d4mr56470305ad.22.1742560886100;
+        Fri, 21 Mar 2025 05:41:26 -0700 (PDT)
+Received: from localhost ([240f:74:7be:1:2dba:1af7:27b6:24fd])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f3b520sm15391125ad.6.2025.03.21.05.41.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 05:41:20 -0700 (PDT)
-From: Jason Hsu <jasonhell19@gmail.com>
-X-Google-Original-From: Jason Hsu <jason-hsu@quantatw.com>
-To: robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	joel@jms.id.au,
-	andrew@codeconstruct.com.au,
-	patrick@stwcx.xyz,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org,
-	linux-kernel@vger.kernel.org
-Cc: yang.chen@quantatw.com,
-	jerry.lin@quantatw.com,
-	Jason Hsu <jason-hsu@quantatw.com>
-Subject: [PATCH v6 1/2] dt-bindings: arm: aspeed: add Meta Ventura board
-Date: Fri, 21 Mar 2025 20:37:30 +0800
-Message-Id: <20250321123731.1373596-2-jason-hsu@quantatw.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20250321123731.1373596-1-jason-hsu@quantatw.com>
-References: <20250321123731.1373596-1-jason-hsu@quantatw.com>
+        Fri, 21 Mar 2025 05:41:25 -0700 (PDT)
+Date: Fri, 21 Mar 2025 21:41:24 +0900
+From: Koichiro Den <koichiro.den@canonical.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, geert+renesas@glider.be, 
+	linus.walleij@linaro.org, maciej.borzecki@canonical.com, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 3/9] gpio: aggregator: add aggr_alloc()/aggr_free()
+Message-ID: <t4lng24vhim7pid6c5gafdk3mawnvcit36hqsa64qoe2gozdz3@jcjsh5b7c3bx>
+References: <20250315164123.1855142-1-koichiro.den@canonical.com>
+ <20250315164123.1855142-4-koichiro.den@canonical.com>
+ <CAMRc=Md8nB1U--qcZxpcKVzxTcON2hi-pmsUKFn+aBEqHuBzcQ@mail.gmail.com>
+ <llbybv6dpkfrtir75dveqnphrj6nuephvkoyywy6tx6vfbunl2@ft5io3thby6v>
+ <CAMRc=Mcng+jW2WrAREOf-GC1mCbGEyAiMP_Ms9B3BzXnCoFGFQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Mcng+jW2WrAREOf-GC1mCbGEyAiMP_Ms9B3BzXnCoFGFQ@mail.gmail.com>
 
-Document the new compatibles used on Meta Ventura.
-Add subject prefix for the patch.
+On Fri, Mar 21, 2025 at 10:32:33AM GMT, Bartosz Golaszewski wrote:
+> On Fri, Mar 21, 2025 at 3:37 AM Koichiro Den <koichiro.den@canonical.com> wrote:
+> >
+> > On Thu, Mar 20, 2025 at 04:51:04PM GMT, Bartosz Golaszewski wrote:
+> > > On Sat, Mar 15, 2025 at 5:41 PM Koichiro Den <koichiro.den@canonical.com> wrote:
+> > > >
+> > > > Prepare for the upcoming configfs interface. These functions will be
+> > > > used by both the existing sysfs interface and the new configfs
+> > > > interface, reducing code duplication.
+> > > >
+> > > > No functional change.
+> > > >
+> > > > Signed-off-by: Koichiro Den <koichiro.den@canonical.com>
+> > > > ---
+> > > >
+> > > > +static int aggr_alloc(struct gpio_aggregator **aggr, size_t arg_size)
+> > > > +{
+> > > > +       struct gpio_aggregator *new __free(kfree) = NULL;
+> > > > +       int ret;
+> > > > +
+> > > > +       new = kzalloc(sizeof(*new) + arg_size, GFP_KERNEL);
+> > >
+> > > Please prefer declaring the auto variable and initializing it at the
+> > > same time. Should be:
+> > >
+> > > struct gpio_aggregator *new __free(kfree) = kzalloc(...);
+> >
+> > Thanks for the review. Should I send v7 for this change?
+> >
+> 
+> You should send one anyway once v6.15-rc1 is tagged.
 
-Signed-off-by: Jason Hsu <jason-hsu@quantatw.com>
----
- Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Alright. Please let me confirm:
+- After gpio-updates-for-v6.15-rc1, will something like
+  gpio-updates-for-v6.15-rc2 follow?
+- If yes, after v6.15-rc1 is tagged, I'll _quickly_ send v7 rebased onto
+  gpio-updates-for-v6.15-rc1, right?
 
-diff --git a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-index 01333ac111fb..a86b411df9a5 100644
---- a/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-+++ b/Documentation/devicetree/bindings/arm/aspeed/aspeed.yaml
-@@ -87,6 +87,7 @@ properties:
-               - facebook,greatlakes-bmc
-               - facebook,harma-bmc
-               - facebook,minerva-cmc
-+              - facebook,ventura-rmc
-               - facebook,yosemite4-bmc
-               - ibm,blueridge-bmc
-               - ibm,everest-bmc
---
-2.34.1
+Thanks,
 
+Koichiro
+
+> 
+> Bartosz
