@@ -1,133 +1,116 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB3E1DEFC5
-	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:16:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 414B014601C
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:16:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573783; cv=none; b=EVEny0C7d7IR0TLxwGbs0OMsuQJxPtZWeevKliBDxgixzJs5erauJ0i82eoQ1hx1hoNBm5v0J00JX2iPCXsu1a/kYqCAr73XaflbGhsVWTUoaIltfhjTsZmbF51rpybsPpnSxle+/D8jvuG/rHp8znwv0R5C3y1Cq+zNNc4R+ZM=
+	t=1742573803; cv=none; b=enGKdXCcUqzcq4eAXzdYY3sSMFHvf3z+Xuq3FbOQETVYfoCLCsku2Ca1FXM3/V3+KQdaGVIbMIyvA+tTqo+9egjMChF+JAXx8jcVmCSTrGC1tZVGc2s6uRTaxTo7CudkaifH2O2uSj0AmSpJ/UHEkyIvm58xFDpcjeBz4iXc/QU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573783; c=relaxed/simple;
-	bh=pFeQIM0elSHXudDzaZqSa3sSLY7KBkvo9aowDlPa0tY=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XyLHhKx6c3awzf3C/yvF/+JNDO14vj023TpS8gML7l8epGkurGRUzIH641lkYZ9aT2TqguY6GU+QJx68N4HPab6bSCezF7fYK1uTGSpF4A9I+Nxdp3yPd9TVTQhnLHbwF6lgjQnXG5C2AVsuiCpNbcEOlvsTYE7m1AWspaKIQzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=TRS2Kd/2; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742573803; c=relaxed/simple;
+	bh=sX4muvpyzWlipm3+edEVZE9OiBEpH0DByrdbnIKMYr0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jxZkkHWrpM+i3G1J4MI5YifyUKxDpdxg7h0SbUUxi4+yO9fv3iyZwE8Tjo8dZVjVsJbuUeJ6YjtowNsaiEDju7cv6t1MNJRxg/bRZYTa1yHgx4Ent3xSPQ9yQQcrkFE/GRubyr6KeHjswYvCJBajY3TprcYpyXEiuF2UCany0kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=jtSoBD0t; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TRS2Kd/2"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742573781;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=mC48yAiQls1tllwqU0y43QmgvHaHdh/HKhHrXStRZ/Q=;
-	b=TRS2Kd/2tcXJN1gFVKY79supQq6/2shlYtetOKIGyl+Ydzw8VRHhNy2eQMK8FcMBaW7Obh
-	yNHUuM6N95K90NTkQ/dhW2nibZihtI34Kuq5n5oFSlD+45aEMph5gdEbYz+ZnclDO6pj8t
-	skgRFvVwBNZjAcWkNe+gUeIZxvuvuus=
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com
- [209.85.166.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-651-N9C-eFN8PcyB-SoiNJS0Tw-1; Fri, 21 Mar 2025 12:16:19 -0400
-X-MC-Unique: N9C-eFN8PcyB-SoiNJS0Tw-1
-X-Mimecast-MFC-AGG-ID: N9C-eFN8PcyB-SoiNJS0Tw_1742573779
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85e15e32366so220662539f.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:16:19 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="jtSoBD0t"
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATAbx003019
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:16:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=KC691n78UfcfnBIMAEEZOgix
+	8UerazMGS6DJH8rBSes=; b=jtSoBD0ttl3RR0OcVWAiU/nuCCHpxHsJRs8T718P
+	mPp0eDBxxTQce9+Dar557Zlf9gKMXJGcgJSLUZZjaCzrI59/MGrbjO+ecn6sR5P4
+	/CkzAuySTJIRr7YNmt92bvIlxVqquRB717Kxu5nbZ+5rvED+3XClwt5jMx6jH5rw
+	vDT25pWCuY07CXEUk2jmFMo98CLkWqP99IDOjgamiXKg1GUO8176ikjn/rnPwrOh
+	6wSDPq5uxAB3qEhypBM9JT0wsNGqq2upSh2fSZVEsrCyUiqpels8zshaow4M/B9D
+	d7/iONRXmp4uXex3oCuC3NI9Vvr6lmCqgGrU9Gu59p1Ghg==
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45h4p11as7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 16:16:41 +0000 (GMT)
+Received: by mail-qk1-f198.google.com with SMTP id af79cd13be357-7c579d37eeeso330848785a.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 09:16:41 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742573779; x=1743178579;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mC48yAiQls1tllwqU0y43QmgvHaHdh/HKhHrXStRZ/Q=;
-        b=kjeaAmYTIlJAq2NhJ1kquzKgZztrvZdUl9emmaSyWr4FwhKVlHzBqH9suJt4gCtc3w
-         PwO1/2d3TI3cYW14ryJGttXyjdjCAKtKS+Z5j2we6SOsaxXaBmJD0N+oDeHmYggRwhmR
-         +VF6Jp1bGjRL58UWWosUKve4QHTfYCyPml3ISRQwDzezLc+u7XIXuNKxjvqSQ3O4aa2N
-         GN9+qVYdphTE/okBv/rdlfs+puvH02GkvQFU1BnFVKl//J7x3VCW9uUAR6eoBVDEvTr5
-         z3FvzBOk1SYKy9K/MJfUEAFXHggpwiB0d+XyVGfM7TQDaP2ollgOo7Gm5Ji8yx5w/M4F
-         sRNA==
-X-Forwarded-Encrypted: i=1; AJvYcCV+kNAgBpYg84Q3fEbTPWLJJDLwRW6dM711QKHGzNfvjZbBbDuCQ2BSat8+5Fj18T3gkaKIxBUzzVrKGf8=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyUlP6/9Qa8UWFi0S6+hEtyopPySHNIcNm5oqxbfhnbQHvIy8Pw
-	Kam2dE6I2u3wnA9+g5NXDnE+Czj7+QJGztpTo+qMU9UiVlTCqzHxEXDCdDSB2PYo/Nud/3/n/oG
-	4Zxy1Up1KYRPVZRUJxnw+OD1HFTMBU3zoIkd3gi56gNvth2/snWCWIaKFyKlzWQ==
-X-Gm-Gg: ASbGncu6lkTJsf5sJFq9UOUzquX+5yg+6+hZ6DUXoO5wGauAnOtln+DQPrKG6KLarRt
-	JdqUB6BYlOUMsKYas8rnCoJzdKEdMv9Zfs7tQh6FfMJ7k72CFH8IE+Gj7P98ux8qfs7C0Nhl59W
-	MS4N8iDi6GraqBglWTCJD5y6zC7WMa332Ivlh8v+P0M0fLmhpgSSfio/uomgOgJiVJ34PCK0jZh
-	EBs9b1O6fNkocRagLxFoKD8fmCQg85mhdhbRGJ6Z7AiIjCFcpo4EGywesZj8d7nL5W2Og+6Tb4m
-	nuK02NLEXZdYWvChUpKzuV4iXOkBvg1hVgvN7u63JG0x+d9+Ax+e2c4R8+sX8D8tHE4kpYqOgyQ
-	=
-X-Received: by 2002:a05:6602:4088:b0:85d:b054:6eb9 with SMTP id ca18e2360f4ac-85e2cb417c3mr499149739f.14.1742573778727;
-        Fri, 21 Mar 2025 09:16:18 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGbaQHrqE43XUvLxfY1cyZCTiEOWEjd8FXpM95Z7lNYACE/IjdXtXMvElMRWZlz02YAI2fshQ==
-X-Received: by 2002:a05:6602:4088:b0:85d:b054:6eb9 with SMTP id ca18e2360f4ac-85e2cb417c3mr499145039f.14.1742573778344;
-        Fri, 21 Mar 2025 09:16:18 -0700 (PDT)
-Received: from rhdev.redhat.com (2603-9001-3d00-5353-0000-0000-0000-1422.inf6.spectrum.com. [2603:9001:3d00:5353::1422])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4f2cbeb565csm495653173.131.2025.03.21.09.16.16
+        d=1e100.net; s=20230601; t=1742573800; x=1743178600;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KC691n78UfcfnBIMAEEZOgix8UerazMGS6DJH8rBSes=;
+        b=s6oflSxWpp7vKhyl7nXfG6W9majcMHG2zwKZ3WOHkqycD6W6IxJwl7ZnOnh+peGhwd
+         uNpCPKr77SqpcA88omUq8bj0cMuxYTV7tAn7TfdhEIebrgWuPTpXVgyVNrGnOAKF2UlA
+         dRiTb2Ptk6ZTdFENMryaoGpMpXMhsd8HsE9jVXavDvUQEQT+mt4rk4/6B2WLg0W7GVBP
+         9W/kW+2po62d9mkxkfM7XhU5mEMnS7shLBRkBNhyg81DLuBgaVmqD3dBFiVTv+GaNiVF
+         tlxATKghvFY/Y8qhGKkh4T/CIpOO/vlXXyFb6Q11915ezLPcgx6W0+d3MaZKdME0z8Rq
+         enTA==
+X-Forwarded-Encrypted: i=1; AJvYcCW076ZQ+THv2kTI/sP0pSAlds436++ED10S9dnrgkN0q/61S8W/XsC7OYLtteAM3/hvrOwGWeq7JuSTg6w=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxbHJJ93hzl8nYES2ztwLv/z8JOn0mS5v9QuW2iPrW1N1sSA0o2
+	saL7SHu8jRnltWk7JsPPBumv+2mcwZ+Ze0ev2aHuToSoy5hufrooPyshRHwUPxuJEul59FmdBCD
+	5ckluqFRaLdJ73qbfnFxNcQI6CSIOvuwlSi/kvHBdQeMhEwzYfDRl6zvsaHe5uK8=
+X-Gm-Gg: ASbGncvijb+ywno4Cg6ayW35MIPvHDFCqivlBxmnkYl9fkKQmvW3Wwsty9fJTFsVs0K
+	+Bv1yfGUvG64uf7PYrY9E8G4B3vcRxXlvkL7zIxvwmVRe+DrCbllAFtci8CBVzUu1yyGmyfhryH
+	2/6WSblzRNwgnVirmMKK2DBzMCbMpWrAL1gqb+CoM4xaQ6z1p7wgLSMNOSFdC1HPnWEAj4sS8Xm
+	7/dG3XSXdnwSwpizLDwq++z8K8Gzus3wPNu2cjgqu74wFS0Lri8avY0NXhWrJz+srUgP+zRP+4E
+	Ya6TMvvlp2vo8JxbnGaAbCfZmRAObPyoDxrDKP1h9PpkZt4SuYPBRmbQvV1mSiaE6wrHOJjPpzQ
+	9p7A=
+X-Received: by 2002:a05:620a:394a:b0:7c5:4a6c:eb8d with SMTP id af79cd13be357-7c5ba200eb2mr484939385a.58.1742573799924;
+        Fri, 21 Mar 2025 09:16:39 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGCnw0RuPGGAcRXmxyrZFcq6Uvyn0JUfRhjB0xBqWfhqbZS/bLEaIZ6/ICcRwJQBMDqvBgROA==
+X-Received: by 2002:a05:620a:394a:b0:7c5:4a6c:eb8d with SMTP id af79cd13be357-7c5ba200eb2mr484933985a.58.1742573799445;
+        Fri, 21 Mar 2025 09:16:39 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-54ad647c79dsm212119e87.70.2025.03.21.09.16.38
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Mar 2025 09:16:17 -0700 (PDT)
-From: Jennifer Berringer <jberring@redhat.com>
-To: Sebastian Reichel <sre@kernel.org>
-Cc: linux-pm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Jennifer Berringer <jberring@redhat.com>
-Subject: [PATCH v5] power: reset: nvmem-reboot-mode: support smaller magic
-Date: Fri, 21 Mar 2025 12:14:49 -0400
-Message-ID: <20250321161449.1175473-1-jberring@redhat.com>
-X-Mailer: git-send-email 2.48.1
+        Fri, 21 Mar 2025 09:16:38 -0700 (PDT)
+Date: Fri, 21 Mar 2025 18:16:37 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        linux-arm-msm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] remoteproc: sysmon: Update qcom_add_sysmon_subdev()
+ comment
+Message-ID: <ytbcjcbzwftajmovkun3x44tvmfyljthzcsrml3vbwyvkd7glg@enfp7qfhtzkq>
+References: <77a6b65b-5f3f-4a21-a837-7a4a7e09b099@stanley.mountain>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77a6b65b-5f3f-4a21-a837-7a4a7e09b099@stanley.mountain>
+X-Proofpoint-GUID: 6Xhr9a-mpYJca1-Ku1Gu61aT7vVLZtuy
+X-Proofpoint-ORIG-GUID: 6Xhr9a-mpYJca1-Ku1Gu61aT7vVLZtuy
+X-Authority-Analysis: v=2.4 cv=NZjm13D4 c=1 sm=1 tr=0 ts=67dd90e9 cx=c_pps a=qKBjSQ1v91RyAK45QCPf5w==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=EUspDBNiAAAA:8 a=Oz3NjKvTjiMZACM5Y-cA:9 a=CjuIK1q_8ugA:10
+ a=NFOGd7dJGGMPyQGDc5-O:22 a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-21_05,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxlogscore=717
+ priorityscore=1501 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0 adultscore=0
+ classifier=spam authscore=0 authtc=n/a authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503210119
 
-Some devices, such as Qualcomm sa8775p, have an nvmem reboot mode cell
-that is only 1 byte, which resulted in nvmem_reboot_mode_write() failing
-when it attempts to write a 4-byte magic. Checking the nvmem cell size
-and writing only the lower bits of the reboot mode magic is needed for
-these devices.
+On Fri, Mar 21, 2025 at 05:35:44PM +0300, Dan Carpenter wrote:
+> The comment says the qcom_add_sysmon_subdev() returns NULL on error but
+> it actually returns error pointers.
+> 
+> Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+> ---
+>  drivers/remoteproc/qcom_sysmon.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 
-Signed-off-by: Jennifer Berringer <jberring@redhat.com>
----
-This patch depends on [1].
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
 
-[1] https://lore.kernel.org/all/20250318094716.3053546-5-o.rempel@pengutronix.de/
-
-Changes v5:
-- Switch to using nvmem_cell_get_size() from the above linked patch
-  instead of introducing another function with the same purpose.
----
- drivers/power/reset/nvmem-reboot-mode.c | 14 +++++++++++++-
- 1 file changed, 13 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/power/reset/nvmem-reboot-mode.c b/drivers/power/reset/nvmem-reboot-mode.c
-index 41530b70cfc4..6be178be4a58 100644
---- a/drivers/power/reset/nvmem-reboot-mode.c
-+++ b/drivers/power/reset/nvmem-reboot-mode.c
-@@ -20,11 +20,23 @@ static int nvmem_reboot_mode_write(struct reboot_mode_driver *reboot,
- 				    unsigned int magic)
- {
- 	int ret;
-+	u8 *magic_ptr = (u8 *) &magic;
-+	size_t cell_size;
- 	struct nvmem_reboot_mode *nvmem_rbm;
- 
- 	nvmem_rbm = container_of(reboot, struct nvmem_reboot_mode, reboot);
- 
--	ret = nvmem_cell_write(nvmem_rbm->cell, &magic, sizeof(magic));
-+	ret = nvmem_cell_get_size(nvmem_rbm->cell, &cell_size, NULL);
-+	if (ret < 0) {
-+		dev_err(reboot->dev, "failed to get reboot mode nvmem cell size\n");
-+		return ret;
-+	}
-+
-+	/* Use magic's low-order bytes when writing to a smaller cell. */
-+	if (IS_ENABLED(CONFIG_CPU_BIG_ENDIAN) && cell_size < sizeof(magic))
-+		magic_ptr += sizeof(magic) - cell_size;
-+
-+	ret = nvmem_cell_write(nvmem_rbm->cell, magic_ptr, MIN(cell_size, sizeof(magic)));
- 	if (ret < 0)
- 		dev_err(reboot->dev, "update reboot mode bits failed\n");
- 
 -- 
-2.48.1
-
+With best wishes
+Dmitry
