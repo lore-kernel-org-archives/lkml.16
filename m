@@ -1,354 +1,240 @@
-Received: from NAM11-DM6-obe.outbound.protection.outlook.com (mail-dm6nam11on2073.outbound.protection.outlook.com [40.107.223.73])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7335D224B1E;
-	Fri, 21 Mar 2025 11:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.223.73
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742557352; cv=fail; b=k4/sqTKOS8XYQ6AKZb9T8+Zz4EjpQGd9pdk2Dmdhgrs6S8/6SETIF296Ic7ZE0+ym3bAO3mqqearnC9bsR7LZO0jdYaaLuABUsjX6CTzHNgQn7Byya0rSquLKk83pzhCUQu3Qew7iJBOUQRm2Vkxo1xxG9RzelrWE8hIX0Mcpuc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742557352; c=relaxed/simple;
-	bh=t3WRxSYMKGYYH8jd36CEIM6JMt4IumUmNe4VF3YRo+o=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=lp2z6ZyOxcp5pMPndbqFi4Alydq0FYJZMqTkMfHm/TzQuCmaOyRchut3wILaHAoeOUPvUjqYjgZ5z1wQnaKbal3EAiUriVDwGAMLukpgM4bN2txBGqCf/NNVxVGsD781yyGC5VFQIdzdrPNCt/DwM2YtvBSAgzp53RZMeK//aHs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=HpWC7qoE; arc=fail smtp.client-ip=40.107.223.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33706224259;
+	Fri, 21 Mar 2025 11:42:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742557355; cv=none; b=RXg5aTV+JS3CiQSVYYBeQj0QDQXzGxZLMWI7jfXORmdvvG9wGzfSl/Wz4ZugSomuk1zzpJbyxwYYc/FIl4wVyD6nYXTn24iKVIdh3A1M638WjgPgTKGBbVPmWZkLVMt4NxTIRBkr6bW7q0pEIQvYXjVhFseXZySwHxibG57PSwI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742557355; c=relaxed/simple;
+	bh=SDCIlfafWBMvWzNiE3MHOiQ22Bn3e+yP/64zuKHxYjA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cmUT+3J/L31hdU2lJf03FrQN/axRvmpoQmT91IHLBGm95DJLy3VmTEbfuCNKxIBkxuUGC92VSLZ2I8mtFcWA2icgOwvdkLqd9L+K3RqVqchS/CHXHyjpluY7Mf0xNsgQm8mw5JAYjmmn0/svTeR1s+n3tBkoIVY2UFXRXQiu+8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=Y8hrAs+p; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="HpWC7qoE"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=rki3IE2oANPAeL4A4/sozx9I55MYsGIBgTsVJxQ6vxHiMPQ8RmkjYmsNg0dJ3CNDeyaJ9YnrV2PkQc4bEOtd6UM1rnmX4P55fyCT6u3IlL5Le0D0/yfcTTJEU1uqLIRIUJ+noAsd13p9VtUVxPxTzBVj1NhA7S4j9zfIwvjMJbHg4DET3kxvQCaiLTP9CcFzw6XqurVTtmX26qdRQlCxkBhI0g9G8QDyedCwt8HWU1SQR2+h1LxkgRwWQgaGYPodU+sTV/l+4V3eljMMrb51v0gplMvXA2UDQnL4woL/dsJmqdWAVss+8SuCScF6YRyFgWyfaFTA1jWriBkwMCXiqQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=oPoxDWAdwUW+k6dQkBmU+64RRWLm/eWdV9ducxT4+mg=;
- b=Db2pjWoVa7Qs1UBWadbixBZ06f7nqlLjaqxyevqCB8cIskIszLkvN101wQq8vL83bsp6ZUos6MqnPhCJrGTprsag6YyG5WLGDfGKW3vc7QgoqAyfO7mO6/qEvb/WUxoWTFPizWBHgS84k+zOFi8/mbHorqy2lkS3HfzXZlkwTT5mdWjo5A15LKtXVER9sShOb0/FKNOsf5I2XX6uZ/EWVIecz5cJboh5jCsFbrNEhCLaRoiDojWK5BiKNNoZFDkHtUyqDnpXlbJMRCo9g1ecPhMRJeIM6E0Nn8X8EQ6ethao0J7czwjy2DCGMeJJ3O3xyRl5W9wm8HpF0NkCPBXDYQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com; dmarc=pass
- (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=oPoxDWAdwUW+k6dQkBmU+64RRWLm/eWdV9ducxT4+mg=;
- b=HpWC7qoE8Clphv9/nFOn0rz96cBF9x82NZFr6L+5Vkb2eA6i8RXcjQMHJ1/uEQSaKfxOnTJWT9fFaxEynPDLtSxUrRbwUtNVgU85AzWIL31IAuZX+oBOyduGfXffpjQe4x0m/tKHJI7K9NlXFcIS8w9P1oOLPGuxsKNn5PJ0c9E=
-Received: from BN9PR03CA0930.namprd03.prod.outlook.com (2603:10b6:408:107::35)
- by SN7PR12MB7023.namprd12.prod.outlook.com (2603:10b6:806:260::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.36; Fri, 21 Mar
- 2025 11:42:26 +0000
-Received: from BN1PEPF00006001.namprd05.prod.outlook.com
- (2603:10b6:408:107:cafe::ae) by BN9PR03CA0930.outlook.office365.com
- (2603:10b6:408:107::35) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8534.36 via Frontend Transport; Fri,
- 21 Mar 2025 11:42:26 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB03.amd.com; pr=C
-Received: from SATLEXMB03.amd.com (165.204.84.17) by
- BN1PEPF00006001.mail.protection.outlook.com (10.167.243.233) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.8534.20 via Frontend Transport; Fri, 21 Mar 2025 11:42:26 +0000
-Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Fri, 21 Mar
- 2025 06:42:25 -0500
-Received: from xhdlc200235.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
- (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.39 via Frontend
- Transport; Fri, 21 Mar 2025 06:42:22 -0500
-From: Sai Krishna Musham <sai.krishna.musham@amd.com>
-To: <bhelgaas@google.com>, <lpieralisi@kernel.org>, <kw@linux.com>,
-	<manivannan.sadhasivam@linaro.org>, <robh@kernel.org>, <krzk+dt@kernel.org>,
-	<conor+dt@kernel.org>, <cassel@kernel.org>
-CC: <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <michal.simek@amd.com>,
-	<bharat.kumar.gogada@amd.com>, <thippeswamy.havalige@amd.com>,
-	<sai.krishna.musham@amd.com>
-Subject: [PATCH v5 2/2] PCI: xilinx-cpm: Add support for PCIe RP PERST# signal
-Date: Fri, 21 Mar 2025 17:12:11 +0530
-Message-ID: <20250321114211.2185782-3-sai.krishna.musham@amd.com>
-X-Mailer: git-send-email 2.44.1
-In-Reply-To: <20250321114211.2185782-1-sai.krishna.musham@amd.com>
-References: <20250321114211.2185782-1-sai.krishna.musham@amd.com>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="Y8hrAs+p"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52LATcLe014247;
+	Fri, 21 Mar 2025 11:42:15 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=HxEUrF
+	SkwvtTHGZsRrcYMHupA72KBahfp9Or61L+rwM=; b=Y8hrAs+pldr03rjzo+WhAy
+	U52ZrtB+IqpzlWD9UpaK9zugv90jFOORN2zkELt6EwBYrXFWIcZS7T1RujhRR0LQ
+	3Nf9j8Yjpxk3xB9bYRq14TwB/gDfnvtsM98c0oASGAYIbK/QB4X9zQZqm+IkjRDE
+	ribkrbF5GRfCwv50NtewtRkh8OhPtU6xy8rSO7LnT8LIX56v3qdxJjHbPqxbZAph
+	BD+5t5VtF45BpBRp3FPz6zlw4+LuZ5Jdm7JFgVBVk7SG8v/GkVL/roGm5XjcQs+L
+	s7rfJ8QPLxW6fTafqX2ZQ1y2WOGXHcm336io/OvsUF3QmYmLAdMZqov2l5nbldnw
+	==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gt80u9xe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Mar 2025 11:42:15 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52LBY281031415;
+	Fri, 21 Mar 2025 11:42:14 GMT
+Received: from ppma21.wdc07v.mail.ibm.com (5b.69.3da9.ip4.static.sl-reverse.com [169.61.105.91])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45gt80u9x5-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Mar 2025 11:42:14 +0000 (GMT)
+Received: from pps.filterd (ppma21.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma21.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52LB0iUw019218;
+	Fri, 21 Mar 2025 11:42:14 GMT
+Received: from smtprelay04.dal12v.mail.ibm.com ([172.16.1.6])
+	by ppma21.wdc07v.mail.ibm.com (PPS) with ESMTPS id 45dmvpd2m9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 21 Mar 2025 11:42:14 +0000
+Received: from smtpav05.dal12v.mail.ibm.com (smtpav05.dal12v.mail.ibm.com [10.241.53.104])
+	by smtprelay04.dal12v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52LBgCoH31654592
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 21 Mar 2025 11:42:13 GMT
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id E184158067;
+	Fri, 21 Mar 2025 11:42:12 +0000 (GMT)
+Received: from smtpav05.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id B8DF85805D;
+	Fri, 21 Mar 2025 11:42:04 +0000 (GMT)
+Received: from [9.43.64.160] (unknown [9.43.64.160])
+	by smtpav05.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri, 21 Mar 2025 11:42:04 +0000 (GMT)
+Message-ID: <31a3d76b-617b-4c97-b83d-2cd47fabbf02@linux.ibm.com>
+Date: Fri, 21 Mar 2025 17:12:01 +0530
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V2 2/2] tools/perf/powerpc/util: Add support to handle
+ compatible mode PVR for perf json events
+To: Christophe Leroy <christophe.leroy@csgroup.eu>,
+        Athira Rajeev <atrajeev@linux.vnet.ibm.com>, namhyung@kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, irogers@google.com,
+        akanksha@linux.ibm.com, kjain@linux.ibm.com,
+        disgoel@linux.vnet.ibm.com, acme@kernel.org, hbathini@linux.ibm.com,
+        adrian.hunter@intel.com, jolsa@kernel.org
+References: <20241010145107.51211-1-atrajeev@linux.vnet.ibm.com>
+ <20241010145107.51211-2-atrajeev@linux.vnet.ibm.com>
+ <7cd87317-4f2a-45af-bd07-6e715406ff55@csgroup.eu>
+Content-Language: en-US
+From: Madhavan Srinivasan <maddy@linux.ibm.com>
+In-Reply-To: <7cd87317-4f2a-45af-bd07-6e715406ff55@csgroup.eu>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-Received-SPF: None (SATLEXMB03.amd.com: sai.krishna.musham@amd.com does not
- designate permitted sender hosts)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN1PEPF00006001:EE_|SN7PR12MB7023:EE_
-X-MS-Office365-Filtering-Correlation-Id: 76fb6361-4f76-4789-a230-08dd686d741b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|36860700013|1800799024|7416014|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?7Gdatp+nZAniR6gR0bD+EtAtFTW3NvK5tvq/hZWqboKueU8tCWr0Rr08MENA?=
- =?us-ascii?Q?zVow3fVIv1C6SqjNEx5Sn5T2G2zzgEa/A1L7VJabA0rYoDcPAZxO5Yq0KvLD?=
- =?us-ascii?Q?NBtEuaXfhCAjRHQ0d0taRrAATfe0Yg7/oqinIiLTiEoYo0j9T5icRpU6BQla?=
- =?us-ascii?Q?Dv5U2H2ItcTXn8CP/k+33qzVwxGeGAVoRIIB5IaLhiHO0ToGeiao7yhRaz4U?=
- =?us-ascii?Q?wPUPsfsSUmZale3dd3T3ivex5DGA6lHiFOnRXa8JWyaO4igV/cYJvzxnaZ/D?=
- =?us-ascii?Q?KXLVDD+Jx/6TFcCExXoK2hLlE5SAnbfikHj972q17+mV6XjJ8P/TrccJT/fr?=
- =?us-ascii?Q?B8fNV51JX8IAuQy+B3eEwq5W8GSwqs3n2BxL5+qRkg74SRwcjwsFF3MfYaA5?=
- =?us-ascii?Q?huREPSoEeob+B8RcPFzjwJxcFDV9N1IQuj9KMXzqI3kc+eT3tkdJDVZ7pmf3?=
- =?us-ascii?Q?kmZA34xBa44FT2rS7tTN+mjPSBx0p0xVPeHf6QtQD2VM6vnElFA9iWxz+vNW?=
- =?us-ascii?Q?yjhzoOlpCtklGz6PNYCn2dH2okUpxTjZfAYSWsdDnXIEpIa9WBqIRdZ2kXK4?=
- =?us-ascii?Q?LDAc5+f4/Gyxlun06q7a+ZgUFTPhSlE6LpsEjMBSdkqxSrAjgc7h6AGBs3Rh?=
- =?us-ascii?Q?79rB3EJ8R0zxqu0rUHr9301WbCzdrWZgYrcw8fZqYb6Z2SsDmwqcAji3OQaN?=
- =?us-ascii?Q?GTtOztSlaSZ3a+nrXzarHwKp3lXjVdqD+95t3PwMsyKx/5DjBIknqa5Yl+b0?=
- =?us-ascii?Q?yuG5w+hSE18AxqTM5duKMRhMbIDnwsxFLX71ruEVmwJUHIteQnugt/HO9uae?=
- =?us-ascii?Q?coDNtcJsEZ3pSLbhTXhrGWz+GnClobKHuyc9xjl0ntERS23rVN0ay/GabmI6?=
- =?us-ascii?Q?ExKVNaPE2aqICw7ecZUxqjObIDZ+XoyXi0wsVITkf5GbittuWAVhN9dyQPtd?=
- =?us-ascii?Q?Xk/VQgthzjbl7FhHnEGgjFXICQ9JkB8aulLvxceyrYPp4lXMeBUO9CkKXG/l?=
- =?us-ascii?Q?XWYJNz9lLDRtVcnUFgKfcZFnIU55bQXkSZfyuk9QXkCQvIHgmmH0nZhMgKBG?=
- =?us-ascii?Q?gjjPCilgy0Pu2tjC+Fjb1A4VBX5EP+aYB+0c89wsF+DOcbeOjWBy22CVGaNm?=
- =?us-ascii?Q?S1Oy1xf1/v3uPS9gq2oZMkMQEl2w9o52zGRBDdrkuLq456EI+q5K4Y+jzAlx?=
- =?us-ascii?Q?VOts+1v9lquQgdXnpuOpsXIJ9CHJXTKsnCndMmB0jsPAjZkOSTz/earIBrNb?=
- =?us-ascii?Q?I8gqSAWIZyKQ5/yi9DU8htd05KtiDnlOnAGlYDX6YXTjM1ESxzcZh3NmOfZO?=
- =?us-ascii?Q?1jKFwQCEjqMaAuNN1isrO4xDFzBfmWlrYrqNy0hTFsp2AstKWQJTa+EjT4Qz?=
- =?us-ascii?Q?MGUtJHnyID94qfGKy7xjNdIj7xi3GmXs5S3nUWVS2zFByTHPk4AO4AlRtrew?=
- =?us-ascii?Q?s9/BQenF/TubAPTtqnrvgOMdYHNQOT7j/e1dj7fzGwa8AzpbaYY/YItNIpvi?=
- =?us-ascii?Q?CKs/IHVBD3jLGHU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB03.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(36860700013)(1800799024)(7416014)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Mar 2025 11:42:26.4701
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 76fb6361-4f76-4789-a230-08dd686d741b
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB03.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN1PEPF00006001.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB7023
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: TxLlLE1cX4Hnb4p2JPivH8_9XWPO13lL
+X-Proofpoint-GUID: 3Jh4cugb2FdlH5bhaW77yb4YKss_41FL
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-21_04,2025-03-20_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 spamscore=0 mlxlogscore=999 phishscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 suspectscore=0 clxscore=1011
+ impostorscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2502280000 definitions=main-2503210085
 
-Add PCIe IP reset along with GPIO-based control for the PCIe Root
-Port PERST# signal. Synchronizing the PCIe IP reset with the PERST#
-signal's assertion and deassertion avoids Link Training failures.
 
-Adapt to use GPIO framework and make reset optional to maintain
-backward compatibility with existing DTBs.
 
-Add clear firewall after Link reset for CPM5NC.
+On 3/21/25 4:04 PM, Christophe Leroy wrote:
+> Hi,
+> 
+> Le 10/10/2024 à 16:51, Athira Rajeev a écrit :
+>> perf list picks the events supported for specific platform
+>> from pmu-events/arch/powerpc/<platform>. Example power10 events
+>> are in pmu-events/arch/powerpc/power10, power9 events are part
+>> of pmu-events/arch/powerpc/power9. The decision of which
+>> platform to pick is determined based on PVR value in powerpc.
+>> The PVR value is matched from pmu-events/arch/powerpc/mapfile.csv
+>>
+>> Example:
+>>
+>> Format:
+>>     PVR,Version,JSON/file/pathname,Type
+>>
+>> 0x004[bcd][[:xdigit:]]{4},1,power8,core
+>> 0x0066[[:xdigit:]]{4},1,power8,core
+>> 0x004e[[:xdigit:]]{4},1,power9,core
+>> 0x0080[[:xdigit:]]{4},1,power10,core
+>> 0x0082[[:xdigit:]]{4},1,power10,core
+>>
+>> The code gets the PVR from system using get_cpuid_str function
+>> in arch/powerpc/util/headers.c ( from SPRN_PVR ) and compares
+>> with value from mapfile.csv
+>> In case of compat mode, say when partition is booted in a power9
+>> mode when the system is a power10, this picks incorrectly. Because
+>> PVR will point to power10 where as it should pick events from power9
+>> folder. To support generic events, add new folder
+>> pmu-events/arch/powerpc/compat to contain the ISA architected events
+>> which is supported in compat mode. Also return 0x00ffffff as pvr
+>> when booted in compat mode. Based on this pvr value, json will
+>> pick events from pmu-events/arch/powerpc/compat
+>>
+>> Suggested-by: Madhavan Srinivasan <maddy@linux.ibm.com>
+>> Signed-off-by: Athira Rajeev <atrajeev@linux.vnet.ibm.com>
+> 
+> I see this patch was merged into mainline allthough it had CI failures and still has.
+> 
+> Could you please fix it ?
 
-Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
----
-Changes for v5:
-- Handle defer probe for reset_gpio.
-- Remove multiple assert of reset signal.
-- Resolve ABI break.
-Changes for v4:
-- Add PCIe PERST# support for CPM5NC.
-- Add PCIe IP reset along with PERST# to avoid Link Training Errors.
-- Remove PCIE_T_PVPERL_MS define and PCIE_T_RRS_READY_MS after
-  PERST# deassert.
-- Move PCIe PERST# assert and deassert logic to
-  xilinx_cpm_pcie_init_port() before cpm_pcie_link_up(), since
-  Interrupts enable and PCIe RP bridge enable should be done after
-  Link up.
-- Update commit message.
+We already have a fix patch posted for this issue 
 
-Changes for v3:
-- Use PCIE_T_PVPERL_MS define.
+https://patchwork.ozlabs.org/project/linuxppc-dev/patch/20250321100726.699956-1-likhitha@linux.ibm.com/
 
-Changes for v2:
-- Make the request GPIO optional.
-- Correct the reset sequence as per PERST#
-- Update commit message
----
- drivers/pci/controller/pcie-xilinx-cpm.c | 86 ++++++++++++++++++++++--
- 1 file changed, 82 insertions(+), 4 deletions(-)
+Maddy
 
-diff --git a/drivers/pci/controller/pcie-xilinx-cpm.c b/drivers/pci/controller/pcie-xilinx-cpm.c
-index d0ab187d917f..527bf96e9014 100644
---- a/drivers/pci/controller/pcie-xilinx-cpm.c
-+++ b/drivers/pci/controller/pcie-xilinx-cpm.c
-@@ -6,6 +6,8 @@
-  */
- 
- #include <linux/bitfield.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqchip.h>
-@@ -21,6 +23,13 @@
- #include "pcie-xilinx-common.h"
- 
- /* Register definitions */
-+#define XILINX_CPM_PCIE0_RST		0x00000308
-+#define XILINX_CPM5_PCIE0_RST		0x00000318
-+#define XILINX_CPM5_PCIE1_RST		0x0000031C
-+#define XILINX_CPM5NC_PCIE0_RST		0x00000324
-+
-+#define XILINX_CPM5NC_PCIE0_FRWALL	0x00001140
-+
- #define XILINX_CPM_PCIE_REG_IDR		0x00000E10
- #define XILINX_CPM_PCIE_REG_IMR		0x00000E14
- #define XILINX_CPM_PCIE_REG_PSCR	0x00000E1C
-@@ -99,6 +108,7 @@ struct xilinx_cpm_variant {
- 	u32 ir_status;
- 	u32 ir_enable;
- 	u32 ir_misc_value;
-+	u32 cpm_pcie_rst;
- };
- 
- /**
-@@ -106,6 +116,8 @@ struct xilinx_cpm_variant {
-  * @dev: Device pointer
-  * @reg_base: Bridge Register Base
-  * @cpm_base: CPM System Level Control and Status Register(SLCR) Base
-+ * @crx_base: CPM Clock and Reset Control Registers Base
-+ * @cpm5nc_attr_base: CPM5NC Control and Status Registers Base
-  * @intx_domain: Legacy IRQ domain pointer
-  * @cpm_domain: CPM IRQ domain pointer
-  * @cfg: Holds mappings of config space window
-@@ -118,6 +130,8 @@ struct xilinx_cpm_pcie {
- 	struct device			*dev;
- 	void __iomem			*reg_base;
- 	void __iomem			*cpm_base;
-+	void __iomem			*crx_base;
-+	void __iomem			*cpm5nc_attr_base;
- 	struct irq_domain		*intx_domain;
- 	struct irq_domain		*cpm_domain;
- 	struct pci_config_window	*cfg;
-@@ -475,12 +489,45 @@ static int xilinx_cpm_setup_irq(struct xilinx_cpm_pcie *port)
-  * xilinx_cpm_pcie_init_port - Initialize hardware
-  * @port: PCIe port information
-  */
--static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
-+static int xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
- {
- 	const struct xilinx_cpm_variant *variant = port->variant;
-+	struct device *dev = port->dev;
-+	struct gpio_desc *reset_gpio;
-+
-+	/* Request the GPIO for PCIe reset signal */
-+	reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset_gpio)) {
-+		if (PTR_ERR(reset_gpio) != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to request reset GPIO\n");
-+		return PTR_ERR(reset_gpio);
-+	}
- 
--	if (variant->version == CPM5NC_HOST)
--		return;
-+	if (reset_gpio && port->crx_base) {
-+		/* Assert the PCIe IP reset */
-+		writel_relaxed(0x1, port->crx_base + variant->cpm_pcie_rst);
-+
-+		/* Controller specific delay */
-+		udelay(50);
-+
-+		/* Deassert the PCIe IP reset */
-+		writel_relaxed(0x0, port->crx_base + variant->cpm_pcie_rst);
-+
-+		/* Deassert the reset signal */
-+		gpiod_set_value(reset_gpio, 0);
-+		mdelay(PCIE_T_RRS_READY_MS);
-+
-+		if (port->cpm5nc_attr_base && variant->version == CPM5NC_HOST) {
-+			/* Clear Firewall */
-+			writel_relaxed(0x00, port->cpm5nc_attr_base +
-+					XILINX_CPM5NC_PCIE0_FRWALL);
-+			writel_relaxed(0x01, port->cpm5nc_attr_base +
-+					XILINX_CPM5NC_PCIE0_FRWALL);
-+			writel_relaxed(0x00, port->cpm5nc_attr_base +
-+					XILINX_CPM5NC_PCIE0_FRWALL);
-+			return 0;
-+		}
-+	}
- 
- 	if (cpm_pcie_link_up(port))
- 		dev_info(port->dev, "PCIe Link is UP\n");
-@@ -512,6 +559,8 @@ static void xilinx_cpm_pcie_init_port(struct xilinx_cpm_pcie *port)
- 	pcie_write(port, pcie_read(port, XILINX_CPM_PCIE_REG_RPSC) |
- 		   XILINX_CPM_PCIE_REG_RPSC_BEN,
- 		   XILINX_CPM_PCIE_REG_RPSC);
-+
-+	return 0;
- }
- 
- /**
-@@ -551,6 +600,27 @@ static int xilinx_cpm_pcie_parse_dt(struct xilinx_cpm_pcie *port,
- 		port->reg_base = port->cfg->win;
- 	}
- 
-+	port->crx_base = devm_platform_ioremap_resource_byname(pdev,
-+							       "cpm_crx");
-+	if (IS_ERR(port->crx_base)) {
-+		if (PTR_ERR(port->crx_base) == -EINVAL)
-+			port->crx_base = NULL;
-+		else
-+			return PTR_ERR(port->crx_base);
-+	}
-+
-+	if (port->variant->version == CPM5NC_HOST) {
-+		port->cpm5nc_attr_base =
-+			devm_platform_ioremap_resource_byname(pdev,
-+							      "cpm5nc_attr");
-+		if (IS_ERR(port->cpm5nc_attr_base)) {
-+			if (PTR_ERR(port->cpm5nc_attr_base) == -EINVAL)
-+				port->cpm5nc_attr_base = NULL;
-+			else
-+				return PTR_ERR(port->cpm5nc_attr_base);
-+		}
-+	}
-+
- 	return 0;
- }
- 
-@@ -602,7 +672,11 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
- 		goto err_free_irq_domains;
- 	}
- 
--	xilinx_cpm_pcie_init_port(port);
-+	err = xilinx_cpm_pcie_init_port(port);
-+	if (err) {
-+		dev_err(dev, "Init port failed\n");
-+		goto err_setup_irq;
-+	}
- 
- 	if (port->variant->version != CPM5NC_HOST) {
- 		err = xilinx_cpm_setup_irq(port);
-@@ -635,6 +709,7 @@ static int xilinx_cpm_pcie_probe(struct platform_device *pdev)
- static const struct xilinx_cpm_variant cpm_host = {
- 	.version = CPM,
- 	.ir_misc_value = XILINX_CPM_PCIE0_MISC_IR_LOCAL,
-+	.cpm_pcie_rst = XILINX_CPM_PCIE0_RST,
- };
- 
- static const struct xilinx_cpm_variant cpm5_host = {
-@@ -642,6 +717,7 @@ static const struct xilinx_cpm_variant cpm5_host = {
- 	.ir_misc_value = XILINX_CPM_PCIE0_MISC_IR_LOCAL,
- 	.ir_status = XILINX_CPM_PCIE0_IR_STATUS,
- 	.ir_enable = XILINX_CPM_PCIE0_IR_ENABLE,
-+	.cpm_pcie_rst = XILINX_CPM5_PCIE0_RST,
- };
- 
- static const struct xilinx_cpm_variant cpm5_host1 = {
-@@ -649,10 +725,12 @@ static const struct xilinx_cpm_variant cpm5_host1 = {
- 	.ir_misc_value = XILINX_CPM_PCIE1_MISC_IR_LOCAL,
- 	.ir_status = XILINX_CPM_PCIE1_IR_STATUS,
- 	.ir_enable = XILINX_CPM_PCIE1_IR_ENABLE,
-+	.cpm_pcie_rst = XILINX_CPM5_PCIE1_RST,
- };
- 
- static const struct xilinx_cpm_variant cpm5n_host = {
- 	.version = CPM5NC_HOST,
-+	.cpm_pcie_rst = XILINX_CPM5NC_PCIE0_RST,
- };
- 
- static const struct of_device_id xilinx_cpm_pcie_of_match[] = {
--- 
-2.44.1
+
+> 
+> arch/powerpc/util/header.c: In function 'is_compat_mode':
+> Error: arch/powerpc/util/header.c:20:14: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+>    20 |  if (!strcmp((char *)platform, (char *)base_platform))
+>       |              ^
+> Error: arch/powerpc/util/header.c:20:32: error: cast to pointer from integer of different size [-Werror=int-to-pointer-cast]
+>    20 |  if (!strcmp((char *)platform, (char *)base_platform))
+>       |                                ^
+> cc1: all warnings being treated as errors
+> make[6]: *** [/linux/tools/build/Makefile.build:86: /output/arch/powerpc/util/header.o] Error 1
+> 
+> 
+> The following fix but is maybe not the right one as in reality getauxval() seems to return a long not a u64.
+> 
+> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+> index c7df534dbf8f..1b045d410f31 100644
+> --- a/tools/perf/arch/powerpc/util/header.c
+> +++ b/tools/perf/arch/powerpc/util/header.c
+> @@ -17,7 +17,7 @@ static bool is_compat_mode(void)
+>      u64 base_platform = getauxval(AT_BASE_PLATFORM);
+>      u64 platform = getauxval(AT_PLATFORM);
+> 
+> -    if (!strcmp((char *)platform, (char *)base_platform))
+> +    if (!strcmp((char *)(long)platform, (char *)(long)base_platform))
+>          return false;
+> 
+>      return true;
+> 
+> 
+> Thanks
+> Christophe
+> 
+>> ---
+>> changelog:
+>> V1 -> V2:
+>> Corrected commit message and subject line
+>>
+>>   tools/perf/arch/powerpc/util/header.c | 32 ++++++++++++++++++++++++++-
+>>   1 file changed, 31 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/tools/perf/arch/powerpc/util/header.c b/tools/perf/arch/powerpc/util/header.c
+>> index 6b00efd53638..adc82c479443 100644
+>> --- a/tools/perf/arch/powerpc/util/header.c
+>> +++ b/tools/perf/arch/powerpc/util/header.c
+>> @@ -10,6 +10,18 @@
+>>   #include "utils_header.h"
+>>   #include "metricgroup.h"
+>>   #include <api/fs/fs.h>
+>> +#include <sys/auxv.h>
+>> +
+>> +static bool is_compat_mode(void)
+>> +{
+>> +    u64 base_platform = getauxval(AT_BASE_PLATFORM);
+>> +    u64 platform = getauxval(AT_PLATFORM);
+>> +
+>> +    if (!strcmp((char *)platform, (char *)base_platform))
+>> +        return false;
+>> +
+>> +    return true;
+>> +}
+>>     int
+>>   get_cpuid(char *buffer, size_t sz)
+>> @@ -33,8 +45,26 @@ char *
+>>   get_cpuid_str(struct perf_pmu *pmu __maybe_unused)
+>>   {
+>>       char *bufp;
+>> +    unsigned long pvr;
+>> +
+>> +    /*
+>> +     * IBM Power System supports compatible mode. That is
+>> +     * Nth generation platform can support previous generation
+>> +     * OS in a mode called compatibile mode. For ex. LPAR can be
+>> +     * booted in a Power9 mode when the system is a Power10.
+>> +     *
+>> +     * In the compatible mode, care must be taken when generating
+>> +     * PVR value. When read, PVR will be of the AT_BASE_PLATFORM
+>> +     * To support generic events, return 0x00ffffff as pvr when
+>> +     * booted in compat mode. Based on this pvr value, json will
+>> +     * pick events from pmu-events/arch/powerpc/compat
+>> +     */
+>> +    if (!is_compat_mode())
+>> +        pvr = mfspr(SPRN_PVR);
+>> +    else
+>> +        pvr = 0x00ffffff;
+>>   -    if (asprintf(&bufp, "0x%.8lx", mfspr(SPRN_PVR)) < 0)
+>> +    if (asprintf(&bufp, "0x%.8lx", pvr) < 0)
+>>           bufp = NULL;
+>>         return bufp;
+> 
 
