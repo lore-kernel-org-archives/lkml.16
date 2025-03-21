@@ -1,146 +1,104 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f225.google.com (mail-yb1-f225.google.com [209.85.219.225])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909EE23314B;
-	Fri, 21 Mar 2025 20:57:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B2F0230BEB
+	for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 20:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.225
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742590661; cv=none; b=BjisdjBvMWUKoXNaxZx45Vc3ZbSYjWdDeV5J7jbFQj259LxpJY0udyMiYWPSQe2AIDUMaBFYPX+C9Fbo0y79ia9WA1mTEI57isz2psx/tAA4+mVQdB+mSwlc8LedcVuvTB7YPxINmOY3UlIIcnvCMAF86XiqS4vEWdK87Lgf/YA=
+	t=1742590677; cv=none; b=PVnMShU9ecDC0qkXNyrXJ8ho+kmNMw53MduSpXkxGFpPLdnB2YBwq/8uv8he51PWBgXmZ1elIC0VJpaKlRGRnBZ7Zlutwvgj5vZ6CQN9SdgsgNJ3plGOA7b7Gjl2Osl+R5hUwzd/JZq9S+0Q/NI3i95yLJXL2l/mhRQJsA4H/N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742590661; c=relaxed/simple;
-	bh=qftLK0hY/WZVD7D76hBXKUfNnZ4vTnHp/AThCTwwWlI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ACiYDtse16f+Y/lL24ChiVfOJabwlgtRVL8SfD1ZvnilfEtzrG97kEGaPtbk0Iuqz4DSAS0Mj/mg91i38+ulfvGKXgzQQ0uyq/yUSpdPIA1S1IuiYHWIU+G59s9QH6BCeZe7T6N+NfHi+c1PjtHTEZ4sFL3KY2pMu2f+cpb9ff0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ghe8scCr; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742590677; c=relaxed/simple;
+	bh=eEEzuF7d6T7hcnHB9cj+EdOT28oFZoy+E/XEnhCmXvY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sqs3JNH3luoYtIKxhyREqggqYdHE+uR8n4C49hY1u9W2uH4hr1huzs22ZgV3vTHyhKBZxYp98sg/4OJ8STKYPy057Z6kzo3YmzivItQWlLqEdh+6Gv2QknvriZZk7Dd4xKw5VrgUkBeU9AYgrCUdgxEX44Av02t04e+odbBLPhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=fs2DLMpA; arc=none smtp.client-ip=209.85.219.225
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ghe8scCr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742590660; x=1774126660;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qftLK0hY/WZVD7D76hBXKUfNnZ4vTnHp/AThCTwwWlI=;
-  b=ghe8scCrh7p7jvYJ486CdwQMKI7wxPFt0MjUFF32kDOCpuS0CpxaXego
-   D4u9/8LJo7jNaCLJL8cSjeJhqmDrbzSZMMs41VXJnpuu6c2sjVzy6a2Gr
-   OfsnHbQg1u4lEVHZesJM0N/CrAO5oSN/zcUt4B3BOmKVfuoT4KGNYLsuN
-   /EkDS3UkC8kfiDLHLyfB0KMb3OyeqL7TUimsEQJMJmgYpnVvGuI3U+8Pd
-   /UzBjbjkeNhDuk+pAzaP0j9sH/xS/Ri2yP4xomFy1dJiuzvTmu//QXk6l
-   LmopunDYCU9he7d0N+kcBFgwk4S1j+k8YTyNPX2fQMtPfuRYVgXI93I4c
-   w==;
-X-CSE-ConnectionGUID: +sojVW7xQZmzCJBnya3Asw==
-X-CSE-MsgGUID: zdjVOaH+Svq9znRVgFfWhQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="44057312"
-X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
-   d="scan'208";a="44057312"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 13:57:36 -0700
-X-CSE-ConnectionGUID: Vn+KcVw8SRGcuhdF5Ii7XQ==
-X-CSE-MsgGUID: SR/EuMXvQQyjeRe0yupHVw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,265,1736841600"; 
-   d="scan'208";a="128179653"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 21 Mar 2025 13:57:33 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tvjQo-0001gl-2i;
-	Fri, 21 Mar 2025 20:57:30 +0000
-Date: Sat, 22 Mar 2025 04:57:27 +0800
-From: kernel test robot <lkp@intel.com>
-To: Hans Zhang <18255117159@163.com>, lpieralisi@kernel.org
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev, kw@linux.com,
-	manivannan.sadhasivam@linaro.org, robh@kernel.org,
-	bhelgaas@google.com, jingoohan1@gmail.com,
-	thomas.richard@bootlin.com, linux-pci@vger.kernel.org,
-	linux-kernel@vger.kernel.org, Hans Zhang <18255117159@163.com>
-Subject: Re: [v5 1/4] PCI: Introduce generic capability search functions
-Message-ID: <202503220409.NDrvLkQF-lkp@intel.com>
-References: <20250321163803.391056-2-18255117159@163.com>
+	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="fs2DLMpA"
+Received: by mail-yb1-f225.google.com with SMTP id 3f1490d57ef6-e63a7403c4cso260345276.1
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 13:57:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=purestorage.com; s=google2022; t=1742590674; x=1743195474; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=P+z1St+MaEHLpVnvOhQgv+7CsD+vx1VwfbKyavT0lPs=;
+        b=fs2DLMpAlCBeGkfDLf29zrqSY93QK0uJZGQthQ1yhS1S1ikG0UYC01SLePDQcyXgAm
+         M6DLqm2kGtks4ulCQHNb0YoF7vgHzW7mYr1KD4As1S4f5T81uRlh+/YqCRfPoA/dGa4o
+         Ty4pXD0QhGpFHGouIAiDSKGQLUoa2vp7ack9i1x67LhSlWSSKgIDZrpvLyJ42757Oqn0
+         /Q8EG39r/0lL7elEqvkPGd733uA5Bvg9abTQSwhbZiwy43G0EnxtvVg0m8vmvk5iGC45
+         Jc3ixMIjulZPzoTjtsE7V7hCOLvjL0Db2pTa0kiCKT1Oe2gB4EHsMwmnrvBvZSIgIfnm
+         mVpg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742590674; x=1743195474;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=P+z1St+MaEHLpVnvOhQgv+7CsD+vx1VwfbKyavT0lPs=;
+        b=khrYv14MXLrqhpjqzxPGmxdBSZpzM+cT1ZOaWmvIooRKaJqOK6a6XkbUYgVOWM7W9u
+         Y467i3HcHrYiDfKyme/ZAZq8teUTfzN2cH53iHp/RTvgpPesrD5vPAMf5VNUkvppyyKh
+         JogDevMTDwvLgGxzt3qw7k56UhQtzhCriCY73t44SKxRtnP0KrTBdUz/7hRYdOOzUheD
+         0ceymvSMIiJM8Lfph/QIBqMYRh8Di9iPaMMhbde+R3pY6qJ3MzfOiqAJr9rApq6sv2IF
+         z6yMDf3Qk+FGHQ0FMiiu1LkluA2/fhATURVH6h3Tz24q25Y01bXIaOzndgOBO+gb+u/k
+         y/VQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVkt7o4GcjrHo9nG3QxvTSVQBbBy00jOsxXPooR93zy9SGJJY0klVTlRgsRveew4QFUCwMjbP2wFN7kLqE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Ywb55xaVmBRlVZpv7IwQopZ4nRZmGSrCe6B33sxJb8Wk+fMD/w3
+	uWuTEnRsmdVzDecMh7IS7rlsytRz/tJrEP6Z1d8L45uTEubb3s6C4HiNk4eszxV7uwHRR95vkW0
+	3QgWe9CGyyOCXydG2fR7YysT65k5DokDJ
+X-Gm-Gg: ASbGncuSRa9M1137h9A62pu6V1GuvM8RGTHZlIjRmPLgI4fZjpd2qQb/Qjp/z8SgU5d
+	oBnvm6KSOXEcKSqbpPVR2DdsUtHJxFFuN26e3UMUxsAHm9UEjso7372m8q3bY/C6pelzBit3YWW
+	Lwnj4Mx/0KG7uWIvtJ4AYAMY9RHQP7VKGXrBNflJ31Jd5fdo3uTveuEfYhlqcLgasx0bKX1hMdt
+	BQvb/ExG+/txC4yOH/GpV+5+SeoVdtorQLF0OiMh6wIkLcMrjiNdPvtJ9Hmi1i5pcStbcHAGmM/
+	CCG56WnjSK0xZ+yuQOlz/t54BKcPjQNS4TZOL3Z4XXNOb/hH
+X-Google-Smtp-Source: AGHT+IHMsqT+tAJGNYKBkEfX1KXe23paMLiNTT5TUzRzsaj2BpFKB8j3BMLeHqAIARAiOCl6or/l0Rhj+2TL
+X-Received: by 2002:a05:6902:480d:b0:e60:9821:3c with SMTP id 3f1490d57ef6-e66a4feab02mr2622892276.9.1742590674081;
+        Fri, 21 Mar 2025 13:57:54 -0700 (PDT)
+Received: from c7-smtp-2023.dev.purestorage.com ([208.88.159.128])
+        by smtp-relay.gmail.com with ESMTPS id 3f1490d57ef6-e66a44272b0sm53193276.21.2025.03.21.13.57.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Mar 2025 13:57:54 -0700 (PDT)
+X-Relaying-Domain: purestorage.com
+Received: from dev-csander.dev.purestorage.com (dev-csander.dev.purestorage.com [10.7.70.37])
+	by c7-smtp-2023.dev.purestorage.com (Postfix) with ESMTP id 2562C3400FE;
+	Fri, 21 Mar 2025 14:57:53 -0600 (MDT)
+Received: by dev-csander.dev.purestorage.com (Postfix, from userid 1557716354)
+	id 1831CE41952; Fri, 21 Mar 2025 14:57:23 -0600 (MDT)
+From: Caleb Sander Mateos <csander@purestorage.com>
+To: Keith Busch <kbusch@kernel.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>,
+	Sagi Grimberg <sagi@grimberg.me>
+Cc: linux-nvme@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Caleb Sander Mateos <csander@purestorage.com>
+Subject: [PATCH v2 0/3] nvme_map_user_request() cleanup
+Date: Fri, 21 Mar 2025 14:57:19 -0600
+Message-ID: <20250321205722.3947901-1-csander@purestorage.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321163803.391056-2-18255117159@163.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Hans,
+The first commit removes a WARN_ON_ONCE() checking userspace values.
+The last 2 move code out of nvme_map_user_request() that belongs better
+in its callers.
 
-kernel test robot noticed the following build errors:
+There will likely be conflicts with the parameter cleanup series Keith
+posted last month:
+https://lore.kernel.org/all/20250224182128.2042061-1-kbusch@meta.com/T/#u
 
-[auto build test ERROR on a1cffe8cc8aef85f1b07c4464f0998b9785b795a]
+Caleb Sander Mateos (3):
+  nvme/ioctl: don't warn on vectorized uring_cmd with fixed buffer
+  nvme/ioctl: don't call blk_mq_free_request() in
+    nvme_map_user_request()
+  nvme/ioctl: move fixed buffer lookup to nvme_uring_cmd_io()
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Hans-Zhang/PCI-Introduce-generic-capability-search-functions/20250322-004312
-base:   a1cffe8cc8aef85f1b07c4464f0998b9785b795a
-patch link:    https://lore.kernel.org/r/20250321163803.391056-2-18255117159%40163.com
-patch subject: [v5 1/4] PCI: Introduce generic capability search functions
-config: arm64-randconfig-001-20250322 (https://download.01.org/0day-ci/archive/20250322/202503220409.NDrvLkQF-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project c2692afc0a92cd5da140dfcdfff7818a5b8ce997)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250322/202503220409.NDrvLkQF-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503220409.NDrvLkQF-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   In file included from drivers/hv/vmbus_drv.c:38:
->> include/linux/pci.h:2025:1: error: expected identifier or '('
-    2025 | { return 0; }
-         | ^
-   include/linux/pci.h:2029:1: error: expected identifier or '('
-    2029 | { return 0; }
-         | ^
-   drivers/hv/vmbus_drv.c:1928:42: warning: shift count >= width of type [-Wshift-count-overflow]
-    1928 |         dma_set_mask(&child_device_obj->device, DMA_BIT_MASK(64));
-         |                                                 ^~~~~~~~~~~~~~~~
-   include/linux/dma-mapping.h:73:54: note: expanded from macro 'DMA_BIT_MASK'
-      73 | #define DMA_BIT_MASK(n) (((n) == 64) ? ~0ULL : ((1ULL<<(n))-1))
-         |                                                      ^ ~~~
-   1 warning and 2 errors generated.
-
-
-vim +2025 include/linux/pci.h
-
-  2000	
-  2001	static inline void pci_set_master(struct pci_dev *dev) { }
-  2002	static inline void pci_clear_master(struct pci_dev *dev) { }
-  2003	static inline int pci_enable_device(struct pci_dev *dev) { return -EIO; }
-  2004	static inline void pci_disable_device(struct pci_dev *dev) { }
-  2005	static inline int pcim_enable_device(struct pci_dev *pdev) { return -EIO; }
-  2006	static inline int pci_assign_resource(struct pci_dev *dev, int i)
-  2007	{ return -EBUSY; }
-  2008	static inline int __must_check __pci_register_driver(struct pci_driver *drv,
-  2009							     struct module *owner,
-  2010							     const char *mod_name)
-  2011	{ return 0; }
-  2012	static inline int pci_register_driver(struct pci_driver *drv)
-  2013	{ return 0; }
-  2014	static inline void pci_unregister_driver(struct pci_driver *drv) { }
-  2015	static inline u8 pci_find_capability(struct pci_dev *dev, int cap)
-  2016	{ return 0; }
-  2017	static inline u8 pci_find_next_capability(struct pci_dev *dev, u8 post, int cap)
-  2018	{ return 0; }
-  2019	static inline u16 pci_find_ext_capability(struct pci_dev *dev, int cap)
-  2020	{ return 0; }
-  2021	typedef u32 (*pci_host_bridge_read_cfg)(void *priv, int where, int size);
-  2022	static inline u8
-  2023	pci_host_bridge_find_capability(void *priv, pci_host_bridge_read_cfg read_cfg,
-  2024					u8 cap);
-> 2025	{ return 0; }
-  2026	static inline u16
-  2027	pci_host_bridge_find_ext_capability(void *priv,
-  2028					    pci_host_bridge_read_cfg read_cfg, u8 cap);
-  2029	{ return 0; }
-  2030	static inline u64 pci_get_dsn(struct pci_dev *dev)
-  2031	{ return 0; }
-  2032	
+ drivers/nvme/host/ioctl.c | 63 +++++++++++++++++++++------------------
+ 1 file changed, 34 insertions(+), 29 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.45.2
+
