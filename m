@@ -1,188 +1,144 @@
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C228422AE75;
-	Fri, 21 Mar 2025 16:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E185422A4EA;
+	Fri, 21 Mar 2025 16:09:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742573381; cv=none; b=Ly8HmMKXu90TBVSTw74fobiKMZOl3Ol0bYKTRvddsbqCLj1GpUnUC4q0QZL3ven2IGGKFvS+7/QufJp+pPets6ioVrhHVcM5lgrzO7yauS/eas8/2Gj6DUyCdW7LxXUhixuAalcZK9r3JTwFbPdZx+oAeMo9i2Tq3tXHVrSGXqg=
+	t=1742573390; cv=none; b=I9StbMDukHYd/6DrdUlGnxZwARh3RFDXz2RxzLsCbj/3YfqpZAIkOrkmaku/a7h2fbMLoGk6mcmSSZPttiSXCGBO4ntOmNVnRLa+54r60clDj6oG32UQsuJcABSj5iGllhhChx7fHjrWKL4dETdQ2wOeLDgUCu7j22VcnlRid8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742573381; c=relaxed/simple;
-	bh=1VaOuoOhYijhYTcQw/ZRhfDMSAApKQ3nl4+hvS74df8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=k1umSVo8lLh0rSP6aJqD4lRpelOs85K9UnxDI/LONqgkLQjQfl1wGPslN9jIQRtw8N5PnQo7InC9zuUxGIinDbNYeXYRkaGlO2Ov1CYzfsCIjp3rwtG7I+II8Re1dgyfs/L+8TrDGwYFUHGkdjb+IVnjWhRawg7wAureNu5DYXE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Jijuq1Q7; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742573390; c=relaxed/simple;
+	bh=aDAlamYyZ4jkLWyWBaRa75vEGUzN9zvUrX/xuDuvQhE=;
+	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=W8GSzjFGkTawitgT+C3LIx/prfaouzw2I9HtJAEFRJyYUrydiAVX2KPqMpw614wRo92tIm444HvTqEltO+7sutpTrjx09TjNHUw3jCp6B+2NIxiE0zc8qHyguky0+Oo1UZuVLSvxPWP/jmhrrNfbnvcuhES4QMUis+qMGb9xcRA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KD1uX7gP; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jijuq1Q7"
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-391342fc1f6so1785179f8f.1;
-        Fri, 21 Mar 2025 09:09:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742573378; x=1743178178; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VAtDXuv00FJL6H2z5EyTsQFuP2X8JyjbeBLvJuXRPek=;
-        b=Jijuq1Q7laR5eBP4j28IsKW2J7IBOMw+qVD466/2lzQFmAc50A/Kk6/91aQs2N5owH
-         ZdxPa3bgz6Ru/beNfNgLs9P8piuloixS0Ktw54UZ1KBvZGHJzfHt+Ukqn1jLE0AjA83R
-         CD6ca0OQSF1tDvVi95Wss6+EWIxFQdbJE9KI4JGm6mEdhVWGOpK0D5dHJiXjCWn4eVMU
-         uQDSNak3SPGrSeYKfGxZLWmLl4qvrIMLI9QKEm55lUi21V4v4A7MOu9M8JgvxC3RLIvL
-         mZbSRGNzCjqZY4omsC8n6gY+mIVRp4uQnYY2NmqQye5LsbGsv9xea46mpVxLN6nZirN1
-         2l3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742573378; x=1743178178;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VAtDXuv00FJL6H2z5EyTsQFuP2X8JyjbeBLvJuXRPek=;
-        b=ainUWalF8MQBgHkTFS5tw/fCxdzxVY5BtxxRxDE6113yzsL35tOLmk6nzcZVdd5Gt6
-         uOBIp6MrHghyc6lPIUxY8HCSHPf6EsZGxLgsGJb7G1uwoRtIS89gulvB312Lb6kfEK9V
-         Q7wpvSzS13s72WXC2yWrKeZbwNJdofmI1AQfMGVExKtcxa2ggKCorhKJ6KDI5HA9hJPH
-         47X+leZ3XiVuEFqQCMH3plPK1oBb2WXYJ3Fic/JOFgFj0SGyFnRhbAUTMelzZnnG+ZPn
-         ypwkIH5nzx4UPJ42gOIen8/9WsEigA4caYHseD/u3bIqxUCBcTi6Nb/xlMon16ZzlJtp
-         IDjg==
-X-Forwarded-Encrypted: i=1; AJvYcCV0UTZ7Aj3of8h9x50ZgGQYcQLqi4O4Rd3nZZP2rNlr9rN970PflRfggOIQdCZNAhFEEnSrGbT7FJEmTuTZ@vger.kernel.org, AJvYcCWUPWIW4cJhW2zx3W7sZQJog2JKnJu25PZkN+l513O5HOIIAnjVX3uvCuHiESGqoVnbR9fdVbl2YypuxcU=@vger.kernel.org, AJvYcCXv8Ua9HcmSyMCZj8B5eywbodd/Skv5QB+bOQN1r8RnS/fHnMIfzuglbbk9YhtH8a/3StbugUcHJPso@vger.kernel.org
-X-Gm-Message-State: AOJu0YxOPH0X+nn/yZD7+7PJdPSEO2CceWSvQEu24efIr/FwAOu2L2zG
-	7L6jQgCR+o6bvLe12CQgxvj1RqUa0RWo7t+iV+q9onyxYuL6ET66wqEAp1v/Od5HuZDHLzLbpcz
-	nHZNfba5JHltGFjAR9tqC7/R1aiE=
-X-Gm-Gg: ASbGncve0On4js0wzK4kgo/qBBoWbrv7rv6gKrj4eU7KTyDroJuQR7L5y/tU5l7qEpK
-	2If6kxw3+0UcyYyQZYeCH6UfXGp7xsVJGSqiOyMX9TbbksCByLegMoIMYnLSssotQ/QcKWsews+
-	f2mnOie1Pp8Kcw/2aoNp5s53C6e9c=
-X-Google-Smtp-Source: AGHT+IE7phRxo/1r1s7So72vTf29tFBGnfITiYorTw1lW7wohPzyuKR1ovdP28tj9e33TKhL7EzBbvxG7kRXaUOitvA=
-X-Received: by 2002:a5d:6c64:0:b0:390:f9f9:3e9c with SMTP id
- ffacd0b85a97d-3997f910184mr4224499f8f.25.1742573377733; Fri, 21 Mar 2025
- 09:09:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KD1uX7gP"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742573390; x=1774109390;
+  h=from:date:to:cc:subject:in-reply-to:message-id:
+   references:mime-version;
+  bh=aDAlamYyZ4jkLWyWBaRa75vEGUzN9zvUrX/xuDuvQhE=;
+  b=KD1uX7gP/LojJ727AwyAAyD0Nif/BSbN6jJiNHdeu/UGg7KOcOSrIayc
+   zib/pyedUdNPJ4gkTR8fD+esqiAblSHVsozPQfuaLHTdPbRxCF5v7uaWS
+   yMtSEWBAwysHpJPOtpgiKebJjf20UbffOFIPsV5FpUflgzXTFxqWy7l7r
+   H8ubMuMdMU6XS2ACvFM1Kamh45nczZD2ix4bS85icbG+Xtyz2+MqMEftg
+   nJcEJyaCFejn3YlHhic51frQvzNhQ2fHxP+fIu8ir8UDtRroTGy+VNX6W
+   AkZ8ajr1b+0kxXohXJ2Ncd607RBSDXS2ns4ll1OnKQA/AKzLpYk5Xl3ir
+   g==;
+X-CSE-ConnectionGUID: 1QYfAh+lSPyiBhy4jKntNg==
+X-CSE-MsgGUID: D0Sr5P9LT/CIeSc9ezn13w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="61366675"
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="61366675"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:08:47 -0700
+X-CSE-ConnectionGUID: s+SzOXF7TAiwIAcfG0mbgQ==
+X-CSE-MsgGUID: 6hxEBaxKRL6vcWoyAx4wig==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
+   d="scan'208";a="124388577"
+Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.112])
+  by orviesa008-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 09:08:30 -0700
+From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Date: Fri, 21 Mar 2025 18:08:26 +0200 (EET)
+To: Easwar Hariharan <eahariha@linux.microsoft.com>, 
+    Andrew Morton <akpm@linux-foundation.org>
+cc: Yaron Avizrat <yaron.avizrat@intel.com>, Oded Gabbay <ogabbay@kernel.org>, 
+    Julia Lawall <Julia.Lawall@inria.fr>, 
+    Nicolas Palix <nicolas.palix@imag.fr>, 
+    James Smart <james.smart@broadcom.com>, 
+    Dick Kennedy <dick.kennedy@broadcom.com>, 
+    "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>, 
+    "Martin K. Petersen" <martin.petersen@oracle.com>, 
+    Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+    Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, 
+    David Sterba <dsterba@suse.com>, Ilya Dryomov <idryomov@gmail.com>, 
+    Dongsheng Yang <dongsheng.yang@easystack.cn>, Jens Axboe <axboe@kernel.dk>, 
+    Xiubo Li <xiubli@redhat.com>, Damien Le Moal <dlemoal@kernel.org>, 
+    Niklas Cassel <cassel@kernel.org>, Carlos Maiolino <cem@kernel.org>, 
+    "Darrick J. Wong" <djwong@kernel.org>, Sebastian Reichel <sre@kernel.org>, 
+    Keith Busch <kbusch@kernel.org>, Christoph Hellwig <hch@lst.de>, 
+    Sagi Grimberg <sagi@grimberg.me>, Frank Li <Frank.Li@nxp.com>, 
+    Mark Brown <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, 
+    Sascha Hauer <s.hauer@pengutronix.de>, 
+    Pengutronix Kernel Team <kernel@pengutronix.de>, 
+    Fabio Estevam <festevam@gmail.com>, 
+    Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
+    Hans de Goede <hdegoede@redhat.com>, 
+    =?ISO-8859-15?Q?Ilpo_J=E4rvinen?= <ilpo.jarvinen@linux.intel.com>, 
+    Henrique de Moraes Holschuh <hmh@hmh.eng.br>, 
+    Selvin Xavier <selvin.xavier@broadcom.com>, 
+    Kalesh AP <kalesh-anakkur.purayil@broadcom.com>, 
+    Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>, 
+    cocci@inria.fr, LKML <linux-kernel@vger.kernel.org>, 
+    linux-scsi@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+    linux-sound@vger.kernel.org, linux-btrfs@vger.kernel.org, 
+    ceph-devel@vger.kernel.org, linux-block@vger.kernel.org, 
+    linux-ide@vger.kernel.org, linux-xfs@vger.kernel.org, 
+    linux-pm@vger.kernel.org, linux-nvme@lists.infradead.org, 
+    linux-spi@vger.kernel.org, imx@lists.linux.dev, 
+    linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, 
+    ibm-acpi-devel@lists.sourceforge.net, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v3 14/16] platform/x86/amd/pmf: convert timeouts to
+ secs_to_jiffies()
+In-Reply-To: <20250225-converge-secs-to-jiffies-part-two-v3-14-a43967e36c88@linux.microsoft.com>
+Message-ID: <1252f601-97fd-f199-c339-5bd4ea8060dc@linux.intel.com>
+References: <20250225-converge-secs-to-jiffies-part-two-v3-0-a43967e36c88@linux.microsoft.com> <20250225-converge-secs-to-jiffies-part-two-v3-14-a43967e36c88@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250314074557.16367-1-clamor95@gmail.com> <20250314074557.16367-2-clamor95@gmail.com>
- <20250321160234.GA3372208-robh@kernel.org>
-In-Reply-To: <20250321160234.GA3372208-robh@kernel.org>
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-Date: Fri, 21 Mar 2025 18:09:25 +0200
-X-Gm-Features: AQ5f1JpFIu9BG_I-CucbrXq2ID2HNe5PlDJqGdmun0hBV_tME1fx2r3fb4S-qfk
-Message-ID: <CAPVz0n3tY8sTvWD-QPA+_FJWnwbSeHXLJYTrk1pJzpy1enMexg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] dt-bindings: display: tegra: document EPP, ISP,
- MPE and TSEC for Tegra114 and Tegra124
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <treding@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
 
-=D0=BF=D1=82, 21 =D0=B1=D0=B5=D1=80. 2025=E2=80=AF=D1=80. =D0=BE 18:02 Rob =
-Herring <robh@kernel.org> =D0=BF=D0=B8=D1=88=D0=B5:
->
-> On Fri, Mar 14, 2025 at 09:45:55AM +0200, Svyatoslav Ryhel wrote:
-> > The current EPP, ISP and MPE schemas are largely compatible with Tegra1=
-14
-> > and Tegra124, requiring only minor adjustments. Additionally, the TSEC
-> > schema for the Security engine, which is available from Tegra114 onward=
-s,
-> > is included.
-> >
-> > Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
-> > ---
-> >  .../display/tegra/nvidia,tegra114-tsec.yaml   | 66 +++++++++++++++++++
-> >  .../display/tegra/nvidia,tegra20-epp.yaml     | 14 ++--
-> >  .../display/tegra/nvidia,tegra20-isp.yaml     | 14 ++--
-> >  .../display/tegra/nvidia,tegra20-mpe.yaml     | 18 +++--
-> >  4 files changed, 99 insertions(+), 13 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/display/tegra/nvi=
-dia,tegra114-tsec.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/tegra/nvidia,teg=
-ra114-tsec.yaml b/Documentation/devicetree/bindings/display/tegra/nvidia,te=
-gra114-tsec.yaml
-> > new file mode 100644
-> > index 000000000000..c66ac6a6538e
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/display/tegra/nvidia,tegra114-t=
-sec.yaml
-> > @@ -0,0 +1,66 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/display/tegra/nvidia,tegra114-tsec.=
-yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: NVIDIA Tegra Security co-processor
-> > +
-> > +maintainers:
-> > +  - Svyatoslav Ryhel <clamor95@gmail.com>
-> > +  - Thierry Reding <thierry.reding@gmail.com>
-> > +
-> > +description: Tegra Security co-processor, an embedded security process=
-or used
-> > +  mainly to manage the HDCP encryption and keys on the HDMI link.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    oneOf:
-> > +      - enum:
-> > +          - nvidia,tegra114-tsec
-> > +          - nvidia,tegra124-tsec
-> > +
-> > +      - items:
-> > +          - const: nvidia,tegra132-tsec
-> > +          - const: nvidia,tegra124-tsec
->
-> nvidia,tegra210-tsec appears to be about the same, already in use, and
-> undocumented, so please add it to this binding.
->
+On Tue, 25 Feb 2025, Easwar Hariharan wrote:
 
-Sure
+> Commit b35108a51cf7 ("jiffies: Define secs_to_jiffies()") introduced
+> secs_to_jiffies().  As the value here is a multiple of 1000, use
+> secs_to_jiffies() instead of msecs_to_jiffies() to avoid the multiplication
+> 
+> This is converted using scripts/coccinelle/misc/secs_to_jiffies.cocci with
+> the following Coccinelle rules:
+> 
+> @depends on patch@
+> expression E;
+> @@
+> 
+> -msecs_to_jiffies
+> +secs_to_jiffies
+> (E
+> - * \( 1000 \| MSEC_PER_SEC \)
+> )
+> 
+> Signed-off-by: Easwar Hariharan <eahariha@linux.microsoft.com>
 
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  resets:
-> > +    maxItems: 1
-> > +
-> > +  reset-names:
-> > +    items:
-> > +      - const: tsec
-> > +
-> > +  iommus:
-> > +    maxItems: 1
-> > +
-> > +  operating-points-v2: true
-> > +
-> > +  power-domains:
-> > +    items:
-> > +      - description: phandle to the core power domain
-> > +
-> > +additionalProperties: false
->
-> required properties?
->
+Applied to the review-ilpo-next branch.
 
-I will see what I can do about this.
+> ---
+>  drivers/platform/x86/amd/pmf/acpi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/x86/amd/pmf/acpi.c b/drivers/platform/x86/amd/pmf/acpi.c
+> index dd5780a1d06e1dc979fcff5bafd6729bc4937eab..f75f7ecd8cd91c9d55abc38ce6e46eed7fe69fc0 100644
+> --- a/drivers/platform/x86/amd/pmf/acpi.c
+> +++ b/drivers/platform/x86/amd/pmf/acpi.c
+> @@ -220,7 +220,7 @@ static void apmf_sbios_heartbeat_notify(struct work_struct *work)
+>  	if (!info)
+>  		return;
+>  
+> -	schedule_delayed_work(&dev->heart_beat, msecs_to_jiffies(dev->hb_interval * 1000));
+> +	schedule_delayed_work(&dev->heart_beat, secs_to_jiffies(dev->hb_interval));
+>  	kfree(info);
+>  }
+>  
+> 
+> 
 
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/tegra114-car.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +
-> > +    tsec@54500000 {
-> > +        compatible =3D "nvidia,tegra114-tsec";
-> > +        reg =3D <0x54500000 0x00040000>;
-> > +        interrupts =3D <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>;
-> > +        clocks =3D <&tegra_car TEGRA114_CLK_TSEC>;
-> > +        resets =3D <&tegra_car TEGRA114_CLK_TSEC>;
-> > +        reset-names =3D "tsec";
-> > +    };
+-- 
+ i.
+
