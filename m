@@ -1,88 +1,117 @@
-Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6A6522A;
-	Sat, 22 Mar 2025 21:28:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742678883; cv=none; b=cXRGJgXBR5SbFlyuonb38F0jwJ+zUVNSN/QhWgNBOBM7mbNlvR1FKdchUwiQcpfvdcQeKL51JRM5YLz5ltAHrsghyiF5A/fb1TGVQxaurqXyLehtR+/skmCUxrqA5eGWAeG9qasHX+sdcMMova5pNKpIG9sRpw2nkVi7zLMPvhE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742678883; c=relaxed/simple;
-	bh=20yCmNw+QyfnwkRDsX+TL+ca4UDmjCz3rrUZ4a8soRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SVEXIBSCK6atYWi4lQbQh7Mk8d4EqFOAg3naBvxLjDQWcxJ2Wd7JRMC23DxK2BxSRgI/1rLbj5s1baJiWVHI7qBpSPCoI6zpykSlTdtTrbuqd4Y7W/lYZcb2xwHSt5sJ04S34l6Hx2IkJ9+uUn+pSgRe0d0K0+l9xuxGRkQt41s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=D4BDkLai; arc=none smtp.client-ip=62.210.214.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8184E522A
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 21:29:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742678973; cv=pass; b=tsEdGks3YiRbpjlq8ohwbFfMSFH7729Owg6BNDzoH4KAcAZTqITSmTMh9g9b8U2lu3zdgE9rAQha42IVbIbmLmI9bfmYrhUpEo6/s2M8o29nv1I4uZYexD4lfM72uHU8Gdy/YGyu0aD63FcfRydgp4DUU55mmT68BbCVy+Ko21s=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742678973; c=relaxed/simple;
+	bh=dSI6wdkjoLt/f9xKg8EHVHdORm6ZaoxPx25QSs5vQ6g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qe/5fwEP4DNPWGNb/ferOKDe9YUko9i44nFpZTINUxc2lEmZ2NFjm5g7FpU5Oz9+FYKa5lr12BU66x5VWJP1FSJocivfnGS/cUJXnSm3izAuJBdMeNzFU2B8RLXLnhMToqBsvg7cAM1WUlEnRlUyCp5A2NDmxturvd0Kmy6bU+k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=WAozlYR8; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="D4BDkLai"
-Received: from gaia.codewreck.org (localhost [127.0.0.1])
-	by submarine.notk.org (Postfix) with ESMTPS id 493F614C2DB;
-	Sat, 22 Mar 2025 22:27:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
-	s=2; t=1742678881;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=9u1yOfLqG6Yy5TZ+cq9/fOzYgeoaRmP3HAHZBaFpqhY=;
-	b=D4BDkLaiESkGogJCUHlQYUwOZkVYFzY65sAhqz/GOak63aUtKlYo8XpAR/UhBVQnoavBsr
-	sXF1OGryOPpH+/1zKIsRkSq8XIl0C0u9OYBtU3xSAGBwyjbQUnN09+XT33HLoCR08QbPOH
-	alBFTwCATq8hd4jtCo+eUHR1eIdPLhOTzDC6n0K2RqG2dycBBIiOEGjnab+Fo6TyTmO+rC
-	lvRBTDSV3WxhdY9k8IwD3IbGAHQMEe+hBqNvtoEf3wm09CWD41HCWuRZUn10N6wQUtf2PR
-	UtJNPFsdPEWaA3VSAihcO/W+ZW8oGwZoSD73f55B7tCYqdjbc8YyVHPD1TOXqA==
-Received: from localhost (gaia.codewreck.org [local])
-	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id f7bd787b;
-	Sat, 22 Mar 2025 21:27:57 +0000 (UTC)
-Date: Sun, 23 Mar 2025 06:27:42 +0900
-From: Dominique Martinet <asmadeus@codewreck.org>
-To: Tuomas Ahola <taahol@utu.fi>
-Cc: v9fs@lists.linux.dev, linux-doc@vger.kernel.org,
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="WAozlYR8"
+ARC-Seal: i=1; a=rsa-sha256; t=1742678947; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=ZjqiARckQj8Q5FCCTSOuKI7w7BzUqMYUFoXhUKddxfkaTGbEMlp+Ks7bThcFAjSaksGq7ZSWwNamby9IfaFKARMCyH/p29EQtsUENDp2L9mvb5doo5MR4d35U/gI84kZaO/ue+FF12Aka6q8FbA5gwA+uIehZntR42sbl2tflK8=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742678947; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=e7NaXGdN2bcSEdKF9Rgw4qLX1QH7j7xPDpb1nqrJX0M=; 
+	b=OO/57Nj90J/w5CqT/AWF9yaMTil3E/g2SkdSNODN+oIHgsb7dHFwVzxnqPyE4DH/pwlPZ8wU51IIwwCICA5pucMkdJrFkL4SKxOuGNHVA8ENDspnsq2wqzxwrIQk+ZmLVqXhSHTX3oDVIrEG4L54ACWhAfTdH+qESiASwdEQStQ=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
+	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742678947;
+	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=e7NaXGdN2bcSEdKF9Rgw4qLX1QH7j7xPDpb1nqrJX0M=;
+	b=WAozlYR86G9HOI5EBtdioq0gmeyryiP803EZiYe1bGGl/wflK1uvXR4Sz2zt4T6N
+	iCQX29mQVi5/PN+UFyYvjPxiDeJXWvwo2ydV9T9GgX74mwLhsi4TPwv8EuBL3jNHRRU
+	TuwlCr5a++kiL3rMeiEoqkGtCM3+rH6GRlkEPyDQ=
+Received: by mx.zohomail.com with SMTPS id 1742678945132474.9358248680762;
+	Sat, 22 Mar 2025 14:29:05 -0700 (PDT)
+From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+To: David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Qiang Yu <yuq825@gmail.com>,
+	Steven Price <steven.price@arm.com>,
+	Boris Brezillon <boris.brezillon@collabora.com>,
+	Frank Binns <frank.binns@imgtec.com>,
+	Matt Coster <matt.coster@imgtec.com>
+Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH] Documentation/fs/9p: fix broken link
-Message-ID: <Z98rTkLrIq5wEw1a@codewreck.org>
-References: <20250322153639.4917-1-taahol@utu.fi>
+	kernel@collabora.com
+Subject: [PATCH v20 00/10] Add generic DRM-shmem memory shrinker (part 1)
+Date: Sun, 23 Mar 2025 00:25:58 +0300
+Message-ID: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20250322153639.4917-1-taahol@utu.fi>
-X-Spam: Yes
+Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-Tuomas Ahola wrote on Sat, Mar 22, 2025 at 05:36:39PM +0200:
-> In b529c06f9dc7 (Update the documentation referencing Plan 9 from User
-> Space., 2020-04-26), another instance of the link was left unfixed.
-> Fix that as well.
+Hi,
 
-Thank you, applied to 9p's -next
-(sorry for double reply Tuomas, I had apparently missed the reply-all
-key...)
+This a continuation of a year-old series that adds generic DRM-shmem 
+shrinker [1]. The old series became too big with too many patches, more
+reasonable to split it up into multiple smaller patchsets. Here is
+the firtst part that makes preparatory DRM changes.
 
-> Signed-off-by: Tuomas Ahola <taahol@utu.fi>
-> ---
->  Documentation/filesystems/9p.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/filesystems/9p.rst b/Documentation/filesystems/9p.rst
-> index 2bbf68b56b0d..28871200e87c 100644
-> --- a/Documentation/filesystems/9p.rst
-> +++ b/Documentation/filesystems/9p.rst
-> @@ -40,7 +40,7 @@ For remote file server::
->  
->  	mount -t 9p 10.10.1.2 /mnt/9
->  
-> -For Plan 9 From User Space applications (http://swtch.com/plan9)::
-> +For Plan 9 From User Space applications (https://9fans.github.io/plan9port/)::
->  
->  	mount -t 9p `namespace`/acme /mnt/9 -o trans=unix,uname=$USER
->  
-> 
-> base-commit: 88d324e69ea9f3ae1c1905ea75d717c08bdb8e15
+[1] https://lore.kernel.org/dri-devel/20240105184624.508603-1-dmitry.osipenko@collabora.com/
+
+Changelog:
+
+v20:- Rebased on recent drm-misc. Added r-bs that were given to v19.
+
+Dmitry Osipenko (10):
+  drm/gem: Change locked/unlocked postfix of drm_gem_v/unmap() function
+    names
+  drm/gem: Add _locked postfix to functions that have unlocked
+    counterpart
+  drm/gem: Document locking rule of vmap and evict callbacks
+  drm/shmem-helper: Make all exported symbols GPL
+  drm/shmem-helper: Refactor locked/unlocked functions
+  drm/shmem-helper: Remove obsoleted is_iomem test
+  drm/shmem-helper: Add and use pages_pin_count
+  drm/shmem-helper: Use refcount_t for pages_use_count
+  drm/shmem-helper: Switch drm_gem_shmem_vmap/vunmap to use pin/unpin
+  drm/shmem-helper: Use refcount_t for vmap_use_count
+
+ drivers/gpu/drm/drm_client.c                  |  10 +-
+ drivers/gpu/drm/drm_gem.c                     |  26 ++--
+ drivers/gpu/drm/drm_gem_framebuffer_helper.c  |   6 +-
+ drivers/gpu/drm/drm_gem_shmem_helper.c        | 145 +++++++++---------
+ drivers/gpu/drm/drm_internal.h                |   4 +-
+ drivers/gpu/drm/drm_prime.c                   |   4 +-
+ drivers/gpu/drm/imagination/pvr_gem.c         |   4 +-
+ drivers/gpu/drm/lima/lima_gem.c               |   4 +-
+ drivers/gpu/drm/lima/lima_sched.c             |   4 +-
+ drivers/gpu/drm/panfrost/panfrost_drv.c       |   2 +-
+ drivers/gpu/drm/panfrost/panfrost_dump.c      |   4 +-
+ .../gpu/drm/panfrost/panfrost_gem_shrinker.c  |   2 +-
+ drivers/gpu/drm/panfrost/panfrost_mmu.c       |   2 +-
+ drivers/gpu/drm/panfrost/panfrost_perfcnt.c   |   6 +-
+ drivers/gpu/drm/panthor/panthor_gem.h         |   4 +-
+ drivers/gpu/drm/panthor/panthor_sched.c       |   4 +-
+ drivers/gpu/drm/tests/drm_gem_shmem_test.c    |  28 ++--
+ include/drm/drm_gem.h                         |  15 +-
+ include/drm/drm_gem_shmem_helper.h            |  45 ++++--
+ 19 files changed, 167 insertions(+), 152 deletions(-)
 
 -- 
-Dominique Martinet | Asmadeus
+2.49.0
+
