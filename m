@@ -1,59 +1,59 @@
 Received: from mail-yw1-f201.google.com (mail-yw1-f201.google.com [209.85.128.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96D461C5D4E
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 06:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBB691CBA02
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 06:35:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742625342; cv=none; b=Y67f712FtkQqsTtDVXL+B/xdTOx20/cZdA0WtVz0t98D/uWe33NxgpHIArDjJH8EsNTw7FEWg7Yl7FEvgAZfnm2yCBWD2yRWtYad2nwN8fz9+bFvOyUtr3XSV2gX+mrRdAPFNpKyHNyKupK212XVVt7uEVAzb2Tb/zVcfzoxeTo=
+	t=1742625352; cv=none; b=cyXtPL8yLSJs53iAm2zq9CF8GVH3e7ubHchdd/pglmIqKvfDTqTKz1i0Fkf8OVdlC84kcHttie9YW1UzJs7jWkMRNHoCDDUtw5hrcqk1tV9ZcJq9o9UC9VXsCnI2fQXwCNKuTmHvknADpxs7ioOp1D7fFIXOo5ow4nX4cJH6dKU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742625342; c=relaxed/simple;
-	bh=vUsqIw7sq2MnoeK2keexpdKbPhRbEDYXRLGzphWtfnE=;
+	s=arc-20240116; t=1742625352; c=relaxed/simple;
+	bh=yXsuB7eBiZQnUjcSPmlU08BWoINyiu6kQe45F7dclcY=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=mNCmZ1vANUpW5JPZr0PJA4lR5WJ2dcCSxd+zF5I6XnoGabv04mThj8qw8DnYaYIsUwZs2bINHcxWTbaRyVMMQ87FXAqk3n3ERBUwGc67yVLFng5MjbISaRm/spwMjRuLWipcHbLzSAr9jMir1F0NVygyklkwqFLvYmwqUVazv/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=ztSE7fcU; arc=none smtp.client-ip=209.85.128.201
+	 To:Content-Type; b=StTFeZBur4s9yjhuUSFDW8IX05phmL3RGNDBl+aKaxZq4LSShRLocYeNJcNKyaKwOylpLtjs2jPrrspiyCDIBzB7qWCWl+cSz4IFFX+zGEesYms0oz8QHdvwpuK9Z+t+1rGXnznKsIgmAw4gWJ0CF7bIG5U2SHFXqCo3y1k+fyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=wmNcUO4g; arc=none smtp.client-ip=209.85.128.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ztSE7fcU"
-Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6fef9aaefb9so28967297b3.3
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:35:26 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="wmNcUO4g"
+Received: by mail-yw1-f201.google.com with SMTP id 00721157ae682-6fcfa304ef4so36339157b3.0
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:35:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742625325; x=1743230125; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1742625338; x=1743230138; darn=vger.kernel.org;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=2IP+cCqCUJLVI6CQa7WeJ28k5iF1L55KDmdpsl9mkcQ=;
-        b=ztSE7fcU6C9yDdWZoJlCuZXq+zs19vh2hk0dTnMK0IZZclnqQtbyo96f7gXH8wIMDu
-         oIz5U/CxszB+9gNPeIZNhU4m7PlOMIy1OPpPk5V/3Ib+O0Q4qc+ZPQrQ2PLM5UZY4hgK
-         v5PbfGJ23AaQKin0LKgyCIl/09jvrEQg25YlpGwHynsuiDptgg6niFnAzE22S+Ql8cOB
-         KjPX6k2TBlUnrgQErVpM4anLIxeGzVLxuYoXb/3LZnFLRsKvd+o9gsSUnnDQOvdFyzyt
-         LSMWQnwB5OP4T3HmGzJvWO6byuCtyl7FbD6cCUosMvo0KgAXu69MyHr5noCqTf9Ps64G
-         cPgg==
+        bh=gXuRrw3IxGYFDpF/XF089NtvMxpystzkyGvzqRqcA/0=;
+        b=wmNcUO4gAlC2qzUbpVTCVEZkMEu6SXwblGApDm3B1MIFmbDGbHJMMeZnj0mHwQLudv
+         zLXyVgX0uDfv28Oi/y9+6ncCmMpxQ6GI3tCWO58TbKpX54jiOJ8x8UVq8u2UCRj/IQof
+         Wh7mqIMaHQbYdVGZhRV5TtoiyRru8fdxkSFuNDpMXZI695Z7pt8Ar26hH8ncmiWl7d+6
+         WpqrN5PPVeG/CzBWfmxM5leowKW8HoB8ZeisGkpGlbZEDNs7FUFcexrbJOV9qloslPyB
+         Jb02XjPk8YL07xtkFkh8L6BG6hMsvVZvMla+xRaq+MDgbT3KuGBCkCK2T9s9mb2wCots
+         YrVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742625325; x=1743230125;
+        d=1e100.net; s=20230601; t=1742625338; x=1743230138;
         h=content-transfer-encoding:to:from:subject:references:mime-version
          :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
          :date:message-id:reply-to;
-        bh=2IP+cCqCUJLVI6CQa7WeJ28k5iF1L55KDmdpsl9mkcQ=;
-        b=njqtAmYyRKT4TGbv5aRm+XgNQ3LqZldQ+hI60vT8Q+uUdLCgNAqpH4WA7T3e2GdZ1+
-         LMBZv6tTxJLO5SXpHPIk1RfY4wCaUnBL3M9iATtRSFT/n/Xj5uCP+wU7n/ONdWy/2HnM
-         G1f6NO2VzBVrSkXKXdqSBRZPNnnGEupLFrG8wNug03wb+J7za0FjFUJ0C9bmkdZzb/iA
-         CP0Z/RXWKzCG+uwfVrjSaqzZ7YMQsrR9UW+NSo7RCHZLEMzUM0vXWPIqSkBeUTKMXZEg
-         pN3S2IUruDOlZBnCORt3JTMqRdP9XF1fKr6r4fgqHAJn8nbGVfCUPKPSiJiYCIQDZMh0
-         y9bQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU54kg7FwAynO3xrF1ch+LkeUuocDHvXaNLqQLrFLR/QLqbJPzaTShQ4hjXmBFvazOgrsp+7nNI/DFDOJY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmhKO5R7+kUTlItJjs28b0Dg7fT9SgIIt8/s3nSwqpKSWNdqsh
-	kza2XULxicoLCVTYyUqRGctcXBGBNt0acmDM5z4/e413QBWIXOfpb2t5YghVEX6hf+CLYyx9rW4
-	/ZztvzA==
-X-Google-Smtp-Source: AGHT+IGmiQ/axDfmZhnw8w7Wy//kjvYr/zssaM4/V8POhfH1zV95fY5nqvBXV2H0X9wJGGMa9oxtbKQPFVkD
+        bh=gXuRrw3IxGYFDpF/XF089NtvMxpystzkyGvzqRqcA/0=;
+        b=k2w7oi+Ab+r36QHfqgSH0InSXdZPb4XdPjCNio2OEvG0AkW/mscJ7Hw0OW9o6KsQsl
+         U9M3k+iFWwDDp5OqIkpmQMeyth82jzzXSydurfWaQsJOZGBxlo7lFGIfpQlUnyFQ85jT
+         HHZp9CPSEGSPUSD+KMZHths+Z62GdCTu+dq0YTRiB+UjRYNwYFxZfIkDz4X0IEB5OnOy
+         I99aroFyeeWbsWGiv1uPkiTqvbsPEwoBfaizcU2oYmxSSNMN8r6iipFIbAb6+oz+Iwyo
+         3DtR7a9BVC9LIfxNxrIBzbzhw+H/qk+Iun7l6x/pss/usiXSS3P7u+TXAZeL9kOgGgUX
+         rD8w==
+X-Forwarded-Encrypted: i=1; AJvYcCVuOU5lDVaekO6RtPiZW5zBnMRegHNjf3sVF6T4XbseNCFjW3LcrxlRSQNrJh1PfHu1da5sv6R7It/NJyc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwqZO3uYHvrg9hzl0Zpx0PeBMBTM2TLDBU5oEwz+CP/jPICK4lq
+	0xt9zBhOpCICC9XxWV/0vssbvCunXvEIxl90RCwc6AEc1uRr11I80yA3pDpAcQuviM+cqgR9eFQ
+	E36tIgA==
+X-Google-Smtp-Source: AGHT+IHdT5zyzMgj4OJdN0I9XORJeCz0VndsWxX7jywRl08Bc2369I06gFuP8S0tFPTWF+JAum2OYhket6Ht
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c16d:a1c1:1823:1d0e])
- (user=irogers job=sendgmr) by 2002:a05:690c:dc9:b0:6fe:e77c:7741 with SMTP id
- 00721157ae682-700bad2e1b1mr966727b3.8.1742625325043; Fri, 21 Mar 2025
- 23:35:25 -0700 (PDT)
-Date: Fri, 21 Mar 2025 23:33:53 -0700
+ (user=irogers job=sendgmr) by 2002:a05:690c:86:b0:6f9:d2ce:45e4 with SMTP id
+ 00721157ae682-700ab26accdmr140887b3.1.1742625337621; Fri, 21 Mar 2025
+ 23:35:37 -0700 (PDT)
+Date: Fri, 21 Mar 2025 23:33:57 -0700
 In-Reply-To: <20250322063403.364981-1-irogers@google.com>
-Message-Id: <20250322063403.364981-26-irogers@google.com>
+Message-Id: <20250322063403.364981-30-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250322063403.364981-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v1 25/35] perf vendor events: Update rocketlake events/metrics
+Subject: [PATCH v1 29/35] perf vendor events: Update skylake metrics
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -78,676 +78,20 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Update event topics, metrics to be generated from the TMA spreadsheet
-and other small clean ups.
+Switch to metrics generated from the TMA spreadsheet. Minor threshold
+simplification.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- .../pmu-events/arch/x86/rocketlake/cache.json |  60 +++
- .../arch/x86/rocketlake/memory.json           | 160 ++++++++
- .../pmu-events/arch/x86/rocketlake/other.json | 220 ----------
- .../arch/x86/rocketlake/rkl-metrics.json      | 385 +++++++++---------
- 4 files changed, 412 insertions(+), 413 deletions(-)
+ .../arch/x86/skylake/skl-metrics.json         | 367 +++++++++---------
+ 1 file changed, 183 insertions(+), 184 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/cache.json b/tools/p=
-erf/pmu-events/arch/x86/rocketlake/cache.json
-index 791fa526d192..0f543325ec1a 100644
---- a/tools/perf/pmu-events/arch/x86/rocketlake/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/rocketlake/cache.json
-@@ -445,6 +445,16 @@
-         "SampleAfterValue": "50021",
-         "UMask": "0x20"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that hit a cacheline in the L3 where a snoop was s=
-ent or not.",
-         "Counter": "0,1,2,3",
-@@ -505,6 +515,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that hit a cacheline=
- in the L3 where a snoop was sent or not.",
-         "Counter": "0,1,2,3",
-@@ -565,6 +585,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
-ny type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that hit a =
-cacheline in the L3 where a snoop was sent or not.",
-         "Counter": "0,1,2,3",
-@@ -625,6 +655,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L1D_AND_SWPF.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10400",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that hit a cacheline in the L3 where a=
- snoop was sent or not.",
-         "Counter": "0,1,2,3",
-@@ -655,6 +695,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L2_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10010",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that hit a cacheline in the L3 where a snoop was sent or n=
-ot.",
-         "Counter": "0,1,2,3",
-@@ -715,6 +765,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that have any type of response.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L2_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10020",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that hit a cacheline in the L3 where a snoop was sent or not.",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/memory.json b/tools/=
-perf/pmu-events/arch/x86/rocketlake/memory.json
-index abaf3f4f9d63..1455aaac37b1 100644
---- a/tools/perf/pmu-events/arch/x86/rocketlake/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/rocketlake/memory.json
-@@ -176,6 +176,16 @@
-         "SampleAfterValue": "50021",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that was not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -186,6 +196,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_CODE_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000004",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that DRAM supplied t=
-he request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that was not supplie=
-d by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -196,6 +226,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that DRAM supplied t=
-he request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
-upplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_RFO.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that was no=
-t supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -206,6 +256,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
-upplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.DEMAND_RFO.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L1D_AND_SWPF.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000400",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that was not supplied by the L3 cache.=
-",
-         "Counter": "0,1,2,3",
-@@ -216,6 +286,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L1D_AND_SWPF.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000400",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L2_DATA_RD.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000010",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that was not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -226,6 +316,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L2_DATA_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000010",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L2_RFO.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000020",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that was not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -236,6 +346,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.HWPF_L2_RFO.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000020",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
-d un-cacheable accesses that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.OTHER.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184008000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts miscellaneous requests, such as I/O an=
-d un-cacheable accesses that was not supplied by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -246,6 +376,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
-d un-cacheable accesses that DRAM supplied the request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.OTHER.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184008000",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts streaming stores that DRAM supplied th=
-e request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.STREAMING_WR.DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000800",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts streaming stores that was not supplied=
- by the L3 cache.",
-         "Counter": "0,1,2,3",
-@@ -256,6 +406,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts streaming stores that DRAM supplied th=
-e request.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xB7, 0xBB",
-+        "EventName": "OCR.STREAMING_WR.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000800",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data read requests that miss th=
-e L3 cache.",
-         "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/other.json b/tools/p=
-erf/pmu-events/arch/x86/rocketlake/other.json
-index a96b2a989d3f..141cd30a30af 100644
---- a/tools/perf/pmu-events/arch/x86/rocketlake/other.json
-+++ b/tools/perf/pmu-events/arch/x86/rocketlake/other.json
-@@ -26,186 +26,6 @@
-         "SampleAfterValue": "200003",
-         "UMask": "0x20"
-     },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_CODE_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_CODE_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand instruction fetches and L1 inst=
-ruction cache prefetches that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_CODE_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000004",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand data reads that DRAM supplied t=
-he request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_DATA_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand data reads that DRAM supplied t=
-he request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that have a=
-ny type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
-upplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_RFO.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) reque=
-sts and software prefetches for exclusive ownership (PREFETCHW) that DRAM s=
-upplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.DEMAND_RFO.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L1D_AND_SWPF.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10400",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L1D_AND_SWPF.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000400",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts L1 data cache prefetch requests and so=
-ftware prefetches (except PREFETCHW) that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L1D_AND_SWPF.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000400",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L2_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10010",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L2_DATA_RD.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000010",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts hardware prefetch data reads (which br=
-ing data to L2)  that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L2_DATA_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000010",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that have any type of response.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L2_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10020",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L2_RFO.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000020",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts hardware prefetch RFOs (which bring da=
-ta to L2) that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.HWPF_L2_RFO.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000020",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts miscellaneous requests, such as I/O an=
-d un-cacheable accesses that have any type of response.",
-         "Counter": "0,1,2,3",
-@@ -216,26 +36,6 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
-d un-cacheable accesses that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.OTHER.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184008000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts miscellaneous requests, such as I/O an=
-d un-cacheable accesses that DRAM supplied the request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.OTHER.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184008000",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts streaming stores that have any type of=
- response.",
-         "Counter": "0,1,2,3",
-@@ -245,25 +45,5 @@
-         "MSRValue": "0x10800",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts streaming stores that DRAM supplied th=
-e request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.STREAMING_WR.DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000800",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts streaming stores that DRAM supplied th=
-e request.",
--        "Counter": "0,1,2,3",
--        "EventCode": "0xB7, 0xBB",
--        "EventName": "OCR.STREAMING_WR.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000800",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json b/t=
-ools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
-index cfda8956353e..71737a1a1997 100644
---- a/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
-+++ b/tools/perf/pmu-events/arch/x86/rocketlake/rkl-metrics.json
-@@ -89,12 +89,12 @@
+diff --git a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json b/tool=
+s/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+index 2a76dd01fb52..2d3a037e88b5 100644
+--- a/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
++++ b/tools/perf/pmu-events/arch/x86/skylake/skl-metrics.json
+@@ -74,12 +74,12 @@
          "MetricExpr": "LD_BLOCKS_PARTIAL.ADDRESS_ALIAS / tma_info_thread_c=
 lks",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_l1_bound_group",
@@ -777,14 +121,15 @@ rchy (e.g. to L1_Bound).",
 s CPU dispatched uops on execution ports for ALU operations",
 +        "BriefDescription": "This metric represents Core fraction of cycle=
 s CPU dispatched uops on execution ports for ALU operations.",
-         "MetricExpr": "(UOPS_DISPATCHED.PORT_0 + UOPS_DISPATCHED.PORT_1 + =
-UOPS_DISPATCHED.PORT_5 + UOPS_DISPATCHED.PORT_6) / (4 * tma_info_core_core_=
-clks)",
+         "MetricExpr": "(UOPS_DISPATCHED_PORT.PORT_0 + UOPS_DISPATCHED_PORT=
+.PORT_1 + UOPS_DISPATCHED_PORT.PORT_5 + UOPS_DISPATCHED_PORT.PORT_6) / tma_=
+info_thread_slots",
          "MetricGroup": "TopdownL5;tma_L5_group;tma_ports_utilized_3m_group=
 ",
          "MetricName": "tma_alu_op_utilization",
-@@ -106,7 +106,7 @@
-         "MetricExpr": "34 * ASSISTS.ANY / tma_info_thread_slots",
+@@ -91,7 +91,7 @@
+         "MetricExpr": "34 * (FP_ASSIST.ANY + OTHER_ASSISTS.ANY) / tma_info=
+_thread_slots",
          "MetricGroup": "BvIO;TopdownL4;tma_L4_group;tma_microcode_sequence=
 r_group",
          "MetricName": "tma_assists",
@@ -801,13 +146,39 @@ led Denormals); the FP units are not set up to perform these operations nat=
 ively. Instead; a sequence of instructions to perform the computation on th=
 e Denormals is injected into the pipeline. Since these microcode sequences =
 might be dozens of uops long; Assists can be extremely deleterious to perfo=
-rmance and they can be avoided in many cases. Sample with: ASSISTS.ANY",
+rmance and they can be avoided in many cases. Sample with: OTHER_ASSISTS.AN=
+Y",
          "ScaleUnit": "100%"
      },
-@@ -129,12 +129,12 @@
+@@ -102,7 +102,7 @@
+         "MetricName": "tma_backend_bound",
+         "MetricThreshold": "tma_backend_bound > 0.2",
+         "MetricgroupNoGroup": "TopdownL1",
+-        "PublicDescription": "This category represents fraction of slots w=
+here no uops are being delivered due to a lack of required resources for ac=
+cepting new uops in the Backend. Backend is the portion of the processor co=
+re where the out-of-order scheduler dispatches ready uops into their respec=
+tive execution units; and once completed these uops get retired according t=
+o program order. For example; stalls due to data-cache misses or stalls due=
+ to the divider unit being overloaded are both categorized under Backend Bo=
+und. Backend Bound is further divided into two main categories: Memory Boun=
+d and Core Bound",
++        "PublicDescription": "This category represents fraction of slots w=
+here no uops are being delivered due to a lack of required resources for ac=
+cepting new uops in the Backend. Backend is the portion of the processor co=
+re where the out-of-order scheduler dispatches ready uops into their respec=
+tive execution units; and once completed these uops get retired according t=
+o program order. For example; stalls due to data-cache misses or stalls due=
+ to the divider unit being overloaded are both categorized under Backend Bo=
+und. Backend Bound is further divided into two main categories: Memory Boun=
+d and Core Bound.",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -112,12 +112,12 @@
          "MetricName": "tma_bad_speculation",
          "MetricThreshold": "tma_bad_speculation > 0.15",
-         "MetricgroupNoGroup": "TopdownL1;Default",
+         "MetricgroupNoGroup": "TopdownL1",
 -        "PublicDescription": "This category represents fraction of slots w=
 asted due to incorrect speculations. This include slots used to issue uops =
 that do not eventually get retired and slots for which the issue-pipeline w=
@@ -837,7 +208,7 @@ es + tma_icache_misses + tma_itlb_misses + tma_lcp + tma_ms_switches)",
          "MetricGroup": "BigFootprint;BvBC;Fed;Frontend;IcMiss;MemoryTLB",
          "MetricName": "tma_bottleneck_big_code",
          "MetricThreshold": "tma_bottleneck_big_code > 20"
-@@ -149,7 +149,7 @@
+@@ -132,7 +132,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of external Memory- or Ca=
@@ -865,7 +236,7 @@ tma_store_fwd_blk)))",
          "MetricGroup": "BvMB;Mem;MemoryBW;Offcore;tma_issueBW",
          "MetricName": "tma_bottleneck_cache_memory_bandwidth",
          "MetricThreshold": "tma_bottleneck_cache_memory_bandwidth > 20",
-@@ -157,7 +157,7 @@
+@@ -140,7 +140,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of external Memory- or Ca=
@@ -891,10 +262,10 @@ lk + tma_l1_latency_dependency + tma_lock_latency + tma_split_loads + tma_4=
 k_aliasing + tma_fb_full)) + tma_memory_bound * (tma_store_bound / (tma_l1_=
 bound + tma_l2_bound + tma_l3_bound + tma_dram_bound + tma_store_bound)) * =
 (tma_split_stores / (tma_store_latency + tma_false_sharing + tma_split_stor=
-es + tma_streaming_stores + tma_dtlb_store)) + tma_memory_bound * (tma_stor=
-e_bound / (tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_dram_bound + tm=
-a_store_bound)) * (tma_store_latency / (tma_store_latency + tma_false_shari=
-ng + tma_split_stores + tma_streaming_stores + tma_dtlb_store)))",
+es + tma_dtlb_store)) + tma_memory_bound * (tma_store_bound / (tma_l1_bound=
+ + tma_l2_bound + tma_l3_bound + tma_dram_bound + tma_store_bound)) * (tma_=
+store_latency / (tma_store_latency + tma_false_sharing + tma_split_stores +=
+ tma_dtlb_store)))",
 +        "MetricExpr": "100 * (tma_memory_bound * (tma_dram_bound / (tma_dr=
 am_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound)) *=
  (tma_mem_latency / (tma_mem_bandwidth + tma_mem_latency)) + tma_memory_bou=
@@ -916,14 +287,14 @@ d + tma_store_bound)) * (tma_split_loads / (tma_4k_aliasing + tma_dtlb_load=
 oads + tma_store_fwd_blk)) + tma_memory_bound * (tma_store_bound / (tma_dra=
 m_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound)) * =
 (tma_split_stores / (tma_dtlb_store + tma_false_sharing + tma_split_stores =
-+ tma_store_latency + tma_streaming_stores)) + tma_memory_bound * (tma_stor=
-e_bound / (tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tm=
-a_store_bound)) * (tma_store_latency / (tma_dtlb_store + tma_false_sharing =
-+ tma_split_stores + tma_store_latency + tma_streaming_stores)))",
++ tma_store_latency)) + tma_memory_bound * (tma_store_bound / (tma_dram_bou=
+nd + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound)) * (tma_=
+store_latency / (tma_dtlb_store + tma_false_sharing + tma_split_stores + tm=
+a_store_latency)))",
          "MetricGroup": "BvML;Mem;MemoryLat;Offcore;tma_issueLat",
          "MetricName": "tma_bottleneck_cache_memory_latency",
          "MetricThreshold": "tma_bottleneck_cache_memory_latency > 20",
-@@ -165,22 +165,22 @@
+@@ -148,22 +148,22 @@
      },
      {
          "BriefDescription": "Total pipeline cost when the execution is com=
@@ -957,25 +328,23 @@ _sequencer * tma_other_mispredicts / tma_branch_mispredicts) * tma_fetch_la=
 tency * tma_mispredicts_resteers / (tma_icache_misses + tma_itlb_misses + t=
 ma_branch_resteers + tma_ms_switches + tma_lcp + tma_dsb_switches) - tma_mi=
 crocode_sequencer / (tma_few_uops_instructions + tma_microcode_sequencer) *=
- (tma_assists / tma_microcode_sequencer) * (tma_fetch_latency * (tma_ms_swi=
-tches + tma_branch_resteers * (tma_clears_resteers + 10 * tma_microcode_seq=
-uencer * tma_other_mispredicts / tma_branch_mispredicts * tma_mispredicts_r=
-esteers) / (tma_mispredicts_resteers + tma_clears_resteers + tma_unknown_br=
-anches)) / (tma_icache_misses + tma_itlb_misses + tma_branch_resteers + tma=
-_ms_switches + tma_lcp + tma_dsb_switches) + tma_fetch_bandwidth * tma_ms /=
- (tma_mite + tma_dsb + tma_lsd + tma_ms))) - tma_bottleneck_big_code",
+ (tma_assists / tma_microcode_sequencer) * tma_fetch_latency * (tma_ms_swit=
+ches + tma_branch_resteers * (tma_clears_resteers + tma_mispredicts_resteer=
+s * (10 * tma_microcode_sequencer * tma_other_mispredicts / tma_branch_misp=
+redicts)) / (tma_mispredicts_resteers + tma_clears_resteers + tma_unknown_b=
+ranches)) / (tma_icache_misses + tma_itlb_misses + tma_branch_resteers + tm=
+a_ms_switches + tma_lcp + tma_dsb_switches)) - tma_bottleneck_big_code",
 +        "MetricExpr": "100 * (tma_frontend_bound - (1 - 10 * tma_microcode=
 _sequencer * tma_other_mispredicts / tma_branch_mispredicts) * tma_fetch_la=
 tency * tma_mispredicts_resteers / (tma_branch_resteers + tma_dsb_switches =
 + tma_icache_misses + tma_itlb_misses + tma_lcp + tma_ms_switches) - tma_mi=
 crocode_sequencer / (tma_few_uops_instructions + tma_microcode_sequencer) *=
- (tma_assists / tma_microcode_sequencer) * (tma_fetch_latency * (tma_ms_swi=
-tches + tma_branch_resteers * (tma_clears_resteers + 10 * tma_microcode_seq=
-uencer * tma_other_mispredicts / tma_branch_mispredicts * tma_mispredicts_r=
-esteers) / (tma_clears_resteers + tma_mispredicts_resteers + tma_unknown_br=
-anches)) / (tma_branch_resteers + tma_dsb_switches + tma_icache_misses + tm=
-a_itlb_misses + tma_lcp + tma_ms_switches) + tma_fetch_bandwidth * tma_ms /=
- (tma_dsb + tma_lsd + tma_mite + tma_ms))) - tma_bottleneck_big_code",
+ (tma_assists / tma_microcode_sequencer) * tma_fetch_latency * (tma_ms_swit=
+ches + tma_branch_resteers * (tma_clears_resteers + tma_mispredicts_resteer=
+s * (10 * tma_microcode_sequencer * tma_other_mispredicts / tma_branch_misp=
+redicts)) / (tma_clears_resteers + tma_mispredicts_resteers + tma_unknown_b=
+ranches)) / (tma_branch_resteers + tma_dsb_switches + tma_icache_misses + t=
+ma_itlb_misses + tma_lcp + tma_ms_switches)) - tma_bottleneck_big_code",
          "MetricGroup": "BvFB;Fed;FetchBW;Frontend",
          "MetricName": "tma_bottleneck_instruction_fetch_bw",
          "MetricThreshold": "tma_bottleneck_instruction_fetch_bw > 20"
@@ -985,38 +354,36 @@ a_itlb_misses + tma_lcp + tma_ms_switches) + tma_fetch_bandwidth * tma_ms /=
 .g",
 -        "MetricExpr": "100 * (tma_microcode_sequencer / (tma_few_uops_inst=
 ructions + tma_microcode_sequencer) * (tma_assists / tma_microcode_sequence=
-r) * (tma_fetch_latency * (tma_ms_switches + tma_branch_resteers * (tma_cle=
-ars_resteers + 10 * tma_microcode_sequencer * tma_other_mispredicts / tma_b=
-ranch_mispredicts * tma_mispredicts_resteers) / (tma_mispredicts_resteers +=
- tma_clears_resteers + tma_unknown_branches)) / (tma_icache_misses + tma_it=
-lb_misses + tma_branch_resteers + tma_ms_switches + tma_lcp + tma_dsb_switc=
-hes) + tma_fetch_bandwidth * tma_ms / (tma_mite + tma_dsb + tma_lsd + tma_m=
-s)) + 10 * tma_microcode_sequencer * tma_other_mispredicts / tma_branch_mis=
-predicts * tma_branch_mispredicts + tma_machine_clears * tma_other_nukes / =
-tma_other_nukes + tma_core_bound * (tma_serializing_operation + tma_core_bo=
-und * RS_EVENTS.EMPTY_CYCLES / tma_info_thread_clks * tma_ports_utilized_0)=
- / (tma_divider + tma_serializing_operation + tma_ports_utilization) + tma_=
-microcode_sequencer / (tma_few_uops_instructions + tma_microcode_sequencer)=
- * (tma_assists / tma_microcode_sequencer) * tma_heavy_operations)",
+r) * tma_fetch_latency * (tma_ms_switches + tma_branch_resteers * (tma_clea=
+rs_resteers + tma_mispredicts_resteers * (10 * tma_microcode_sequencer * tm=
+a_other_mispredicts / tma_branch_mispredicts)) / (tma_mispredicts_resteers =
++ tma_clears_resteers + tma_unknown_branches)) / (tma_icache_misses + tma_i=
+tlb_misses + tma_branch_resteers + tma_ms_switches + tma_lcp + tma_dsb_swit=
+ches) + 10 * tma_microcode_sequencer * tma_other_mispredicts / tma_branch_m=
+ispredicts * tma_branch_mispredicts + tma_machine_clears * tma_other_nukes =
+/ tma_other_nukes + tma_core_bound * (tma_serializing_operation + tma_core_=
+bound * RS_EVENTS.EMPTY_CYCLES / tma_info_thread_clks * tma_ports_utilized_=
+0) / (tma_divider + tma_serializing_operation + tma_ports_utilization) + tm=
+a_microcode_sequencer / (tma_few_uops_instructions + tma_microcode_sequence=
+r) * (tma_assists / tma_microcode_sequencer) * tma_heavy_operations)",
 +        "MetricExpr": "100 * (tma_microcode_sequencer / (tma_few_uops_inst=
 ructions + tma_microcode_sequencer) * (tma_assists / tma_microcode_sequence=
-r) * (tma_fetch_latency * (tma_ms_switches + tma_branch_resteers * (tma_cle=
-ars_resteers + 10 * tma_microcode_sequencer * tma_other_mispredicts / tma_b=
-ranch_mispredicts * tma_mispredicts_resteers) / (tma_clears_resteers + tma_=
-mispredicts_resteers + tma_unknown_branches)) / (tma_branch_resteers + tma_=
-dsb_switches + tma_icache_misses + tma_itlb_misses + tma_lcp + tma_ms_switc=
-hes) + tma_fetch_bandwidth * tma_ms / (tma_dsb + tma_lsd + tma_mite + tma_m=
-s)) + 10 * tma_microcode_sequencer * tma_other_mispredicts / tma_branch_mis=
-predicts * tma_branch_mispredicts + tma_machine_clears * tma_other_nukes / =
-tma_other_nukes + tma_core_bound * (tma_serializing_operation + tma_core_bo=
-und * RS_EVENTS.EMPTY_CYCLES / tma_info_thread_clks * tma_ports_utilized_0)=
- / (tma_divider + tma_ports_utilization + tma_serializing_operation) + tma_=
-microcode_sequencer / (tma_few_uops_instructions + tma_microcode_sequencer)=
- * (tma_assists / tma_microcode_sequencer) * tma_heavy_operations)",
+r) * tma_fetch_latency * (tma_ms_switches + tma_branch_resteers * (tma_clea=
+rs_resteers + tma_mispredicts_resteers * (10 * tma_microcode_sequencer * tm=
+a_other_mispredicts / tma_branch_mispredicts)) / (tma_clears_resteers + tma=
+_mispredicts_resteers + tma_unknown_branches)) / (tma_branch_resteers + tma=
+_dsb_switches + tma_icache_misses + tma_itlb_misses + tma_lcp + tma_ms_swit=
+ches) + 10 * tma_microcode_sequencer * tma_other_mispredicts / tma_branch_m=
+ispredicts * tma_branch_mispredicts + tma_machine_clears * tma_other_nukes =
+/ tma_other_nukes + tma_core_bound * (tma_serializing_operation + tma_core_=
+bound * RS_EVENTS.EMPTY_CYCLES / tma_info_thread_clks * tma_ports_utilized_=
+0) / (tma_divider + tma_ports_utilization + tma_serializing_operation) + tm=
+a_microcode_sequencer / (tma_few_uops_instructions + tma_microcode_sequence=
+r) * (tma_assists / tma_microcode_sequencer) * tma_heavy_operations)",
          "MetricGroup": "Bad;BvIO;Cor;Ret;tma_issueMS",
          "MetricName": "tma_bottleneck_irregular_overhead",
          "MetricThreshold": "tma_bottleneck_irregular_overhead > 10",
-@@ -188,7 +188,7 @@
+@@ -171,7 +171,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of Memory Address Transla=
@@ -1028,7 +395,7 @@ store_fwd_blk + tma_l1_latency_dependency + tma_lock_latency + tma_split_lo=
 ads + tma_4k_aliasing + tma_fb_full)) + tma_memory_bound * (tma_store_bound=
  / (tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_dram_bound + tma_store=
 _bound)) * (tma_dtlb_store / (tma_store_latency + tma_false_sharing + tma_s=
-plit_stores + tma_streaming_stores + tma_dtlb_store)))",
+plit_stores + tma_dtlb_store)))",
 +        "MetricExpr": "100 * (tma_memory_bound * (tma_l1_bound / max(tma_m=
 emory_bound, tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + =
 tma_store_bound)) * (tma_dtlb_load / max(tma_l1_bound, tma_4k_aliasing + tm=
@@ -1036,11 +403,11 @@ a_dtlb_load + tma_fb_full + tma_l1_latency_dependency + tma_lock_latency + =
 tma_split_loads + tma_store_fwd_blk)) + tma_memory_bound * (tma_store_bound=
  / (tma_dram_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store=
 _bound)) * (tma_dtlb_store / (tma_dtlb_store + tma_false_sharing + tma_spli=
-t_stores + tma_store_latency + tma_streaming_stores)))",
+t_stores + tma_store_latency)))",
          "MetricGroup": "BvMT;Mem;MemoryTLB;Offcore;tma_issueTLB",
          "MetricName": "tma_bottleneck_memory_data_tlbs",
          "MetricThreshold": "tma_bottleneck_memory_data_tlbs > 20",
-@@ -196,15 +196,15 @@
+@@ -179,15 +179,15 @@
      },
      {
          "BriefDescription": "Total pipeline cost of Memory Synchronization=
@@ -1052,16 +419,16 @@ ma_contested_accesses + tma_data_sharing) / (tma_contested_accesses + tma_d=
 ata_sharing + tma_l3_hit_latency + tma_sq_full) + tma_store_bound / (tma_l1=
 _bound + tma_l2_bound + tma_l3_bound + tma_dram_bound + tma_store_bound) * =
 tma_false_sharing / (tma_store_latency + tma_false_sharing + tma_split_stor=
-es + tma_streaming_stores + tma_dtlb_store - tma_store_latency)) + tma_mach=
-ine_clears * (1 - tma_other_nukes / tma_other_nukes))",
+es + tma_dtlb_store - tma_store_latency)) + tma_machine_clears * (1 - tma_o=
+ther_nukes / tma_other_nukes))",
 +        "MetricExpr": "100 * (tma_memory_bound * (tma_l3_bound / (tma_dram=
 _bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound) * (t=
 ma_contested_accesses + tma_data_sharing) / (tma_contested_accesses + tma_d=
 ata_sharing + tma_l3_hit_latency + tma_sq_full) + tma_store_bound / (tma_dr=
 am_bound + tma_l1_bound + tma_l2_bound + tma_l3_bound + tma_store_bound) * =
 tma_false_sharing / (tma_dtlb_store + tma_false_sharing + tma_split_stores =
-+ tma_store_latency + tma_streaming_stores - tma_store_latency)) + tma_mach=
-ine_clears * (1 - tma_other_nukes / tma_other_nukes))",
++ tma_store_latency - tma_store_latency)) + tma_machine_clears * (1 - tma_o=
+ther_nukes / tma_other_nukes))",
          "MetricGroup": "BvMS;LockCont;Mem;Offcore;tma_issueSyncxn",
          "MetricName": "tma_bottleneck_memory_synchronization",
          "MetricThreshold": "tma_bottleneck_memory_synchronization > 10",
@@ -1088,7 +455,7 @@ hes + tma_icache_misses + tma_itlb_misses + tma_lcp + tma_ms_switches))",
          "MetricGroup": "Bad;BadSpec;BrMispredicts;BvMP;tma_issueBM",
          "MetricName": "tma_bottleneck_mispredictions",
          "MetricThreshold": "tma_bottleneck_mispredictions > 20",
-@@ -216,17 +216,17 @@
+@@ -199,10 +199,10 @@
          "MetricGroup": "BvOB;Cor;Offcore",
          "MetricName": "tma_bottleneck_other_bottlenecks",
          "MetricThreshold": "tma_bottleneck_other_bottlenecks > 20",
@@ -1113,19 +480,7 @@ quencer) * (tma_assists / tma_microcode_sequencer) * tma_heavy_operations)"=
 ,
          "MetricGroup": "BvUW;Ret",
          "MetricName": "tma_bottleneck_useful_work",
-         "MetricThreshold": "tma_bottleneck_useful_work > 20"
-     },
-     {
--        "BriefDescription": "This metric represents fraction of slots wher=
-e the CPU was retiring branch instructions",
-+        "BriefDescription": "This metric represents fraction of slots wher=
-e the CPU was retiring branch instructions.",
-         "MetricExpr": "tma_light_operations * BR_INST_RETIRED.ALL_BRANCHES=
- / (tma_retiring * tma_info_thread_slots)",
-         "MetricGroup": "Branches;BvBO;Pipeline;TopdownL3;tma_L3_group;tma_=
-light_operations_group",
-         "MetricName": "tma_branch_instructions",
-@@ -248,8 +248,8 @@
+@@ -224,8 +224,8 @@
          "MetricExpr": "INT_MISC.CLEAR_RESTEER_CYCLES / tma_info_thread_clk=
 s + tma_unknown_branches",
          "MetricGroup": "FetchLat;TopdownL3;tma_L3_group;tma_fetch_latency_=
@@ -1152,7 +507,7 @@ NCHES",
          "ScaleUnit": "100%"
      },
      {
-@@ -257,8 +257,8 @@
+@@ -233,8 +233,8 @@
          "MetricExpr": "max(0, tma_microcode_sequencer - tma_assists)",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_microcode_sequencer_gro=
 up",
@@ -1176,7 +531,7 @@ ot imply sub-optimal use of machine resources.",
          "ScaleUnit": "100%"
      },
      {
-@@ -266,24 +266,24 @@
+@@ -242,7 +242,7 @@
          "MetricExpr": "(1 - BR_MISP_RETIRED.ALL_BRANCHES / (BR_MISP_RETIRE=
 D.ALL_BRANCHES + MACHINE_CLEARS.COUNT)) * INT_MISC.CLEAR_RESTEER_CYCLES / t=
 ma_info_thread_clks",
@@ -1193,40 +548,7 @@ ple with: INT_MISC.CLEAR_RESTEER_CYCLES. Related metrics: tma_l1_bound, tma=
 _machine_clears, tma_microcode_sequencer, tma_ms_switches",
          "ScaleUnit": "100%"
      },
-     {
--        "BriefDescription": "This metric estimates fraction of cycles the =
-CPU was stalled due to instruction cache misses that hit in the L2 cache",
-+        "BriefDescription": "This metric estimates fraction of cycles the =
-CPU was stalled due to instruction cache misses that hit in the L2 cache.",
-         "MetricExpr": "max(0, tma_icache_misses - tma_code_l2_miss)",
-         "MetricGroup": "FetchLat;IcMiss;Offcore;TopdownL4;tma_L4_group;tma=
-_icache_misses_group",
-         "MetricName": "tma_code_l2_hit",
--        "MetricThreshold": "tma_code_l2_hit > 0.05 & tma_icache_misses > 0=
-.05 & tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15",
-+        "MetricThreshold": "tma_code_l2_hit > 0.05 & (tma_icache_misses > =
-0.05 & (tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15))",
-         "ScaleUnit": "100%"
-     },
-     {
--        "BriefDescription": "This metric estimates fraction of cycles the =
-CPU was stalled due to instruction cache misses that miss in the L2 cache",
-+        "BriefDescription": "This metric estimates fraction of cycles the =
-CPU was stalled due to instruction cache misses that miss in the L2 cache."=
-,
-         "MetricExpr": "OFFCORE_REQUESTS_OUTSTANDING.CYCLES_WITH_DEMAND_COD=
-E_RD / tma_info_thread_clks",
-         "MetricGroup": "FetchLat;IcMiss;Offcore;TopdownL4;tma_L4_group;tma=
-_icache_misses_group",
-         "MetricName": "tma_code_l2_miss",
--        "MetricThreshold": "tma_code_l2_miss > 0.05 & tma_icache_misses > =
-0.05 & tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15",
-+        "MetricThreshold": "tma_code_l2_miss > 0.05 & (tma_icache_misses >=
- 0.05 & (tma_fetch_latency > 0.1 & tma_frontend_bound > 0.15))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -291,7 +291,7 @@
+@@ -251,7 +251,7 @@
          "MetricExpr": "max(0, tma_itlb_misses - tma_code_stlb_miss)",
          "MetricGroup": "FetchLat;MemoryTLB;TopdownL4;tma_L4_group;tma_itlb=
 _misses_group",
@@ -1238,7 +560,7 @@ _misses_group",
          "ScaleUnit": "100%"
      },
      {
-@@ -299,33 +299,33 @@
+@@ -259,33 +259,33 @@
          "MetricExpr": "ITLB_MISSES.WALK_ACTIVE / tma_info_thread_clks",
          "MetricGroup": "FetchLat;MemoryTLB;TopdownL4;tma_L4_group;tma_itlb=
 _misses_group",
@@ -1294,15 +616,15 @@ tend_bound > 0.15)))",
 e the memory subsystem was handling synchronizations due to contested acces=
 ses",
          "MetricConstraint": "NO_GROUP_EVENTS",
--        "MetricExpr": "((32.5 * tma_info_system_core_frequency - 3.5 * tma=
-_info_system_core_frequency) * MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM + (27 * tm=
-a_info_system_core_frequency - 3.5 * tma_info_system_core_frequency) * MEM_=
-LOAD_L3_HIT_RETIRED.XSNP_MISS) * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RE=
-TIRED.L1_MISS / 2) / tma_info_thread_clks",
-+        "MetricExpr": "(29 * tma_info_system_core_frequency * MEM_LOAD_L3_=
-HIT_RETIRED.XSNP_HITM + 23.5 * tma_info_system_core_frequency * MEM_LOAD_L3=
-_HIT_RETIRED.XSNP_MISS) * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RETIRED.L=
-1_MISS / 2) / tma_info_thread_clks",
+-        "MetricExpr": "((22 * tma_info_system_core_frequency - 3.5 * tma_i=
+nfo_system_core_frequency) * MEM_LOAD_L3_HIT_RETIRED.XSNP_HITM + (20 * tma_=
+info_system_core_frequency - 3.5 * tma_info_system_core_frequency) * MEM_LO=
+AD_L3_HIT_RETIRED.XSNP_MISS) * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RETI=
+RED.L1_MISS / 2) / tma_info_thread_clks",
++        "MetricExpr": "(18.5 * tma_info_system_core_frequency * MEM_LOAD_L=
+3_HIT_RETIRED.XSNP_HITM + 16.5 * tma_info_system_core_frequency * MEM_LOAD_=
+L3_HIT_RETIRED.XSNP_MISS) * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RETIRED=
+.L1_MISS / 2) / tma_info_thread_clks",
          "MetricGroup": "BvMS;DataSharing;LockCont;Offcore;Snoop;TopdownL4;=
 tma_L4_group;tma_issueSyncxn;tma_l3_bound_group",
          "MetricName": "tma_contested_accesses",
@@ -1331,7 +653,7 @@ _false_sharing, tma_machine_clears, tma_remote_cache",
          "ScaleUnit": "100%"
      },
      {
-@@ -335,25 +335,25 @@
+@@ -296,25 +296,25 @@
          "MetricName": "tma_core_bound",
          "MetricThreshold": "tma_core_bound > 0.1 & tma_backend_bound > 0.2=
 ",
@@ -1357,10 +679,10 @@ hained long-latency arithmetic operations).",
 e the memory subsystem was handling synchronizations due to data-sharing ac=
 cesses",
          "MetricConstraint": "NO_GROUP_EVENTS",
--        "MetricExpr": "(27 * tma_info_system_core_frequency - 3.5 * tma_in=
+-        "MetricExpr": "(20 * tma_info_system_core_frequency - 3.5 * tma_in=
 fo_system_core_frequency) * MEM_LOAD_L3_HIT_RETIRED.XSNP_HIT * (1 + MEM_LOA=
 D_RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS / 2) / tma_info_thread_clks",
-+        "MetricExpr": "23.5 * tma_info_system_core_frequency * MEM_LOAD_L3=
++        "MetricExpr": "16.5 * tma_info_system_core_frequency * MEM_LOAD_L3=
 _HIT_RETIRED.XSNP_HIT * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_=
 MISS / 2) / tma_info_thread_clks",
          "MetricGroup": "BvMS;Offcore;Snoop;TopdownL4;tma_L4_group;tma_issu=
@@ -1406,7 +728,7 @@ ere decoder-0 was the only active decoder. Related metrics: tma_few_uops_in=
 structions",
          "ScaleUnit": "100%"
      },
-@@ -362,7 +362,7 @@
+@@ -323,7 +323,7 @@
          "MetricExpr": "ARITH.DIVIDER_ACTIVE / tma_info_thread_clks",
          "MetricGroup": "BvCB;TopdownL3;tma_L3_group;tma_core_bound_group",
          "MetricName": "tma_divider",
@@ -1421,7 +743,7 @@ nteger or Floating Point addition; subtraction; or multiplication. Sample w=
 ith: ARITH.DIVIDER_ACTIVE",
          "ScaleUnit": "100%"
      },
-@@ -372,7 +372,7 @@
+@@ -333,7 +333,7 @@
          "MetricExpr": "CYCLE_ACTIVITY.STALLS_L3_MISS / tma_info_thread_clk=
 s + (CYCLE_ACTIVITY.STALLS_L1D_MISS - CYCLE_ACTIVITY.STALLS_L2_MISS) / tma_=
 info_thread_clks - tma_l2_bound",
@@ -1438,7 +760,7 @@ improve the latency and increase performance. Sample with: MEM_LOAD_RETIRED=
 .L3_MISS",
          "ScaleUnit": "100%"
      },
-@@ -382,7 +382,7 @@
+@@ -343,7 +343,7 @@
          "MetricGroup": "DSB;FetchBW;TopdownL3;tma_L3_group;tma_fetch_bandw=
 idth_group",
          "MetricName": "tma_dsb",
@@ -1454,7 +776,7 @@ bank conflict when reading from it; are categorized here.",
          "ScaleUnit": "100%"
      },
      {
-@@ -390,26 +390,26 @@
+@@ -351,27 +351,27 @@
          "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / tma_info_thread_=
 clks",
          "MetricGroup": "DSBmiss;FetchLat;TopdownL3;tma_L3_group;tma_fetch_=
@@ -1489,10 +811,11 @@ info_inst_mix_iptb, tma_lcp",
      {
          "BriefDescription": "This metric roughly estimates the fraction of=
  cycles where the Data TLB (DTLB) was missed by load accesses",
--        "MetricExpr": "min(7 * cpu@DTLB_LOAD_MISSES.STLB_HIT\\,cmask\\=3D0=
+         "MetricConstraint": "NO_GROUP_EVENTS_NMI",
+-        "MetricExpr": "min(9 * cpu@DTLB_LOAD_MISSES.STLB_HIT\\,cmask\\=3D0=
 x1@ + DTLB_LOAD_MISSES.WALK_ACTIVE, max(CYCLE_ACTIVITY.CYCLES_MEM_ANY - CYC=
 LE_ACTIVITY.CYCLES_L1D_MISS, 0)) / tma_info_thread_clks",
-+        "MetricExpr": "min(7 * cpu@DTLB_LOAD_MISSES.STLB_HIT\\,cmask\\=3D1=
++        "MetricExpr": "min(9 * cpu@DTLB_LOAD_MISSES.STLB_HIT\\,cmask\\=3D1=
 @ + DTLB_LOAD_MISSES.WALK_ACTIVE, max(CYCLE_ACTIVITY.CYCLES_MEM_ANY - CYCLE=
 _ACTIVITY.CYCLES_L1D_MISS, 0)) / tma_info_thread_clks",
          "MetricGroup": "BvMT;MemoryTLB;TopdownL4;tma_L4_group;tma_issueTLB=
@@ -1527,9 +850,9 @@ ma_bottleneck_memory_data_tlbs, tma_dtlb_store",
      {
          "BriefDescription": "This metric roughly estimates the fraction of=
  cycles spent handling first-level data TLB store misses",
--        "MetricExpr": "(7 * cpu@DTLB_STORE_MISSES.STLB_HIT\\,cmask\\=3D0x1=
+-        "MetricExpr": "(9 * cpu@DTLB_STORE_MISSES.STLB_HIT\\,cmask\\=3D0x1=
 @ + DTLB_STORE_MISSES.WALK_ACTIVE) / tma_info_core_core_clks",
-+        "MetricExpr": "(7 * cpu@DTLB_STORE_MISSES.STLB_HIT\\,cmask\\=3D1@ =
++        "MetricExpr": "(9 * cpu@DTLB_STORE_MISSES.STLB_HIT\\,cmask\\=3D1@ =
 + DTLB_STORE_MISSES.WALK_ACTIVE) / tma_info_core_core_clks",
          "MetricGroup": "BvMT;MemoryTLB;TopdownL4;tma_L4_group;tma_issueTLB=
 ;tma_store_bound_group",
@@ -1557,9 +880,9 @@ memory_data_tlbs, tma_dtlb_load",
          "ScaleUnit": "100%"
      },
      {
-@@ -417,8 +417,8 @@
-         "MetricExpr": "32.5 * tma_info_system_core_frequency * OCR.DEMAND_=
-RFO.L3_HIT.SNOOP_HITM / tma_info_thread_clks",
+@@ -380,18 +380,18 @@
+         "MetricExpr": "22 * tma_info_system_core_frequency * OFFCORE_RESPO=
+NSE.DEMAND_RFO.L3_HIT.SNOOP_HITM / tma_info_thread_clks",
          "MetricGroup": "BvMS;DataSharing;LockCont;Offcore;Snoop;TopdownL4;=
 tma_L4_group;tma_issueSyncxn;tma_store_bound_group",
          "MetricName": "tma_false_sharing",
@@ -1568,22 +891,54 @@ tma_L4_group;tma_issueSyncxn;tma_store_bound_group",
 -        "PublicDescription": "This metric roughly estimates how often CPU =
 was handling synchronizations due to False Sharing. False Sharing is a mult=
 ithreading hiccup; where multiple Logical Processors contend on different d=
-ata-elements mapped into the same cache line. Sample with: OCR.DEMAND_RFO.L=
-3_HIT.SNOOP_HITM. Related metrics: tma_bottleneck_memory_synchronization, t=
-ma_contested_accesses, tma_data_sharing, tma_machine_clears",
+ata-elements mapped into the same cache line. Sample with: MEM_LOAD_L3_HIT_=
+RETIRED.XSNP_HITM, OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HITM. Related m=
+etrics: tma_bottleneck_memory_synchronization, tma_contested_accesses, tma_=
+data_sharing, tma_machine_clears",
 +        "MetricThreshold": "tma_false_sharing > 0.05 & (tma_store_bound > =
 0.2 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
 +        "PublicDescription": "This metric roughly estimates how often CPU =
 was handling synchronizations due to False Sharing. False Sharing is a mult=
 ithreading hiccup; where multiple Logical Processors contend on different d=
-ata-elements mapped into the same cache line. Sample with: OCR.DEMAND_RFO.L=
-3_HIT.SNOOP_HITM. Related metrics: tma_bottleneck_memory_synchronization, t=
-ma_contested_accesses, tma_data_sharing, tma_machine_clears, tma_remote_cac=
-he",
+ata-elements mapped into the same cache line. Sample with: MEM_LOAD_L3_HIT_=
+RETIRED.XSNP_HITM_PS;OFFCORE_RESPONSE.DEMAND_RFO.L3_HIT.SNOOP_HITM. Related=
+ metrics: tma_bottleneck_memory_synchronization, tma_contested_accesses, tm=
+a_data_sharing, tma_machine_clears, tma_remote_cache",
          "ScaleUnit": "100%"
      },
      {
-@@ -437,7 +437,7 @@
+         "BriefDescription": "This metric does a *rough estimation* of how =
+often L1D Fill Buffer unavailability limited additional L1D miss memory acc=
+ess requests to proceed",
+         "MetricConstraint": "NO_GROUP_EVENTS_NMI",
+-        "MetricExpr": "tma_info_memory_load_miss_real_latency * cpu@L1D_PE=
+ND_MISS.FB_FULL\\,cmask\\=3D0x1@ / tma_info_thread_clks",
++        "MetricExpr": "tma_info_memory_load_miss_real_latency * cpu@L1D_PE=
+ND_MISS.FB_FULL\\,cmask\\=3D1@ / tma_info_thread_clks",
+         "MetricGroup": "BvMB;MemoryBW;TopdownL4;tma_L4_group;tma_issueBW;t=
+ma_issueSL;tma_issueSmSt;tma_l1_bound_group",
+         "MetricName": "tma_fb_full",
+         "MetricThreshold": "tma_fb_full > 0.3",
+-        "PublicDescription": "This metric does a *rough estimation* of how=
+ often L1D Fill Buffer unavailability limited additional L1D miss memory ac=
+cess requests to proceed. The higher the metric value; the deeper the memor=
+y hierarchy level the misses are satisfied from (metric values >1 are valid=
+). Often it hints on approaching bandwidth limits (to L2 cache; L3 cache or=
+ external memory). Related metrics: tma_bottleneck_cache_memory_bandwidth, =
+tma_info_system_dram_bw_use, tma_mem_bandwidth, tma_sq_full, tma_store_late=
+ncy",
++        "PublicDescription": "This metric does a *rough estimation* of how=
+ often L1D Fill Buffer unavailability limited additional L1D miss memory ac=
+cess requests to proceed. The higher the metric value; the deeper the memor=
+y hierarchy level the misses are satisfied from (metric values >1 are valid=
+). Often it hints on approaching bandwidth limits (to L2 cache; L3 cache or=
+ external memory). Related metrics: tma_bottleneck_cache_memory_bandwidth, =
+tma_info_system_dram_bw_use, tma_mem_bandwidth, tma_sq_full, tma_store_late=
+ncy, tma_streaming_stores",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -401,7 +401,7 @@
          "MetricName": "tma_fetch_bandwidth",
          "MetricThreshold": "tma_fetch_bandwidth > 0.2",
          "MetricgroupNoGroup": "TopdownL2",
@@ -1608,7 +963,7 @@ ontend_dsb_coverage, tma_info_inst_mix_iptb, tma_lcp",
          "ScaleUnit": "100%"
      },
      {
-@@ -447,7 +447,7 @@
+@@ -411,7 +411,7 @@
          "MetricName": "tma_fetch_latency",
          "MetricThreshold": "tma_fetch_latency > 0.1 & tma_frontend_bound >=
  0.15",
@@ -1628,7 +983,7 @@ delivers no uops for some period. Sample with: FRONTEND_RETIRED.LATENCY_GE_=
          "ScaleUnit": "100%"
      },
      {
-@@ -465,7 +465,7 @@
+@@ -431,7 +431,7 @@
          "MetricGroup": "HPC;TopdownL3;tma_L3_group;tma_light_operations_gr=
 oup",
          "MetricName": "tma_fp_arith",
@@ -1645,7 +1000,7 @@ n and FMA double-counting.",
          "ScaleUnit": "100%"
      },
      {
-@@ -474,15 +474,15 @@
+@@ -440,7 +440,7 @@
          "MetricGroup": "HPC;TopdownL5;tma_L5_group;tma_assists_group",
          "MetricName": "tma_fp_assists",
          "MetricThreshold": "tma_fp_assists > 0.1",
@@ -1660,112 +1015,102 @@ o-called Denormals).",
          "ScaleUnit": "100%"
      },
      {
--        "BriefDescription": "This metric represents fraction of cycles whe=
-re the Floating-Point Divider unit was active",
-+        "BriefDescription": "This metric represents fraction of cycles whe=
-re the Floating-Point Divider unit was active.",
-         "MetricExpr": "ARITH.FP_DIVIDER_ACTIVE / tma_info_thread_clks",
-         "MetricGroup": "TopdownL4;tma_L4_group;tma_divider_group",
-         "MetricName": "tma_fp_divider",
--        "MetricThreshold": "tma_fp_divider > 0.2 & tma_divider > 0.2 & tma=
-_core_bound > 0.1 & tma_backend_bound > 0.2",
-+        "MetricThreshold": "tma_fp_divider > 0.2 & (tma_divider > 0.2 & (t=
-ma_core_bound > 0.1 & tma_backend_bound > 0.2))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -490,7 +490,7 @@
-         "MetricExpr": "FP_ARITH_INST_RETIRED.SCALAR / (tma_retiring * tma_=
-info_thread_slots)",
+@@ -448,8 +448,8 @@
+         "MetricExpr": "FP_ARITH_INST_RETIRED.SCALAR / UOPS_RETIRED.RETIRE_=
+SLOTS",
          "MetricGroup": "Compute;Flops;TopdownL4;tma_L4_group;tma_fp_arith_=
 group;tma_issue2P",
          "MetricName": "tma_fp_scalar",
 -        "MetricThreshold": "tma_fp_scalar > 0.1 & tma_fp_arith > 0.2 & tma=
 _light_operations > 0.6",
+-        "PublicDescription": "This metric approximates arithmetic floating=
+-point (FP) scalar uops fraction the CPU has retired. May overcount due to =
+FMA double counting. Related metrics: tma_fp_vector, tma_fp_vector_128b, tm=
+a_fp_vector_256b, tma_port_0, tma_port_1, tma_port_5, tma_port_6, tma_ports=
+_utilized_2",
 +        "MetricThreshold": "tma_fp_scalar > 0.1 & (tma_fp_arith > 0.2 & tm=
 a_light_operations > 0.6)",
-         "PublicDescription": "This metric approximates arithmetic floating=
++        "PublicDescription": "This metric approximates arithmetic floating=
 -point (FP) scalar uops fraction the CPU has retired. May overcount due to =
 FMA double counting. Related metrics: tma_fp_vector, tma_fp_vector_128b, tm=
 a_fp_vector_256b, tma_fp_vector_512b, tma_port_0, tma_port_1, tma_port_5, t=
 ma_port_6, tma_ports_utilized_2",
          "ScaleUnit": "100%"
      },
-@@ -499,7 +499,7 @@
-         "MetricExpr": "FP_ARITH_INST_RETIRED.VECTOR / (tma_retiring * tma_=
-info_thread_slots)",
+     {
+@@ -458,8 +458,8 @@
+         "MetricExpr": "FP_ARITH_INST_RETIRED.VECTOR / UOPS_RETIRED.RETIRE_=
+SLOTS",
          "MetricGroup": "Compute;Flops;TopdownL4;tma_L4_group;tma_fp_arith_=
 group;tma_issue2P",
          "MetricName": "tma_fp_vector",
 -        "MetricThreshold": "tma_fp_vector > 0.1 & tma_fp_arith > 0.2 & tma=
 _light_operations > 0.6",
+-        "PublicDescription": "This metric approximates arithmetic floating=
+-point (FP) vector uops fraction the CPU has retired aggregated across all =
+vector widths. May overcount due to FMA double counting. Related metrics: t=
+ma_fp_scalar, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_0, tma_port_=
+1, tma_port_5, tma_port_6, tma_ports_utilized_2",
 +        "MetricThreshold": "tma_fp_vector > 0.1 & (tma_fp_arith > 0.2 & tm=
 a_light_operations > 0.6)",
-         "PublicDescription": "This metric approximates arithmetic floating=
++        "PublicDescription": "This metric approximates arithmetic floating=
 -point (FP) vector uops fraction the CPU has retired aggregated across all =
 vector widths. May overcount due to FMA double counting. Related metrics: t=
 ma_fp_scalar, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vector_512b, t=
 ma_port_0, tma_port_1, tma_port_5, tma_port_6, tma_ports_utilized_2",
          "ScaleUnit": "100%"
      },
-@@ -508,7 +508,7 @@
+     {
+@@ -467,8 +467,8 @@
          "MetricExpr": "(FP_ARITH_INST_RETIRED.128B_PACKED_DOUBLE + FP_ARIT=
-H_INST_RETIRED.128B_PACKED_SINGLE) / (tma_retiring * tma_info_thread_slots)=
-",
+H_INST_RETIRED.128B_PACKED_SINGLE) / UOPS_RETIRED.RETIRE_SLOTS",
          "MetricGroup": "Compute;Flops;TopdownL5;tma_L5_group;tma_fp_vector=
 _group;tma_issue2P",
          "MetricName": "tma_fp_vector_128b",
 -        "MetricThreshold": "tma_fp_vector_128b > 0.1 & tma_fp_vector > 0.1=
  & tma_fp_arith > 0.2 & tma_light_operations > 0.6",
+-        "PublicDescription": "This metric approximates arithmetic FP vecto=
+r uops fraction the CPU has retired for 128-bit wide vectors. May overcount=
+ due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
+ma_fp_vector, tma_fp_vector_256b, tma_port_0, tma_port_1, tma_port_5, tma_p=
+ort_6, tma_ports_utilized_2",
 +        "MetricThreshold": "tma_fp_vector_128b > 0.1 & (tma_fp_vector > 0.=
 1 & (tma_fp_arith > 0.2 & tma_light_operations > 0.6))",
-         "PublicDescription": "This metric approximates arithmetic FP vecto=
++        "PublicDescription": "This metric approximates arithmetic FP vecto=
 r uops fraction the CPU has retired for 128-bit wide vectors. May overcount=
  due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
 ma_fp_vector, tma_fp_vector_256b, tma_fp_vector_512b, tma_port_0, tma_port_=
 1, tma_port_5, tma_port_6, tma_ports_utilized_2",
          "ScaleUnit": "100%"
      },
-@@ -517,7 +517,7 @@
+     {
+@@ -476,8 +476,8 @@
          "MetricExpr": "(FP_ARITH_INST_RETIRED.256B_PACKED_DOUBLE + FP_ARIT=
-H_INST_RETIRED.256B_PACKED_SINGLE) / (tma_retiring * tma_info_thread_slots)=
-",
+H_INST_RETIRED.256B_PACKED_SINGLE) / UOPS_RETIRED.RETIRE_SLOTS",
          "MetricGroup": "Compute;Flops;TopdownL5;tma_L5_group;tma_fp_vector=
 _group;tma_issue2P",
          "MetricName": "tma_fp_vector_256b",
 -        "MetricThreshold": "tma_fp_vector_256b > 0.1 & tma_fp_vector > 0.1=
  & tma_fp_arith > 0.2 & tma_light_operations > 0.6",
+-        "PublicDescription": "This metric approximates arithmetic FP vecto=
+r uops fraction the CPU has retired for 256-bit wide vectors. May overcount=
+ due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
+ma_fp_vector, tma_fp_vector_128b, tma_port_0, tma_port_1, tma_port_5, tma_p=
+ort_6, tma_ports_utilized_2",
 +        "MetricThreshold": "tma_fp_vector_256b > 0.1 & (tma_fp_vector > 0.=
 1 & (tma_fp_arith > 0.2 & tma_light_operations > 0.6))",
-         "PublicDescription": "This metric approximates arithmetic FP vecto=
++        "PublicDescription": "This metric approximates arithmetic FP vecto=
 r uops fraction the CPU has retired for 256-bit wide vectors. May overcount=
  due to FMA double counting prior to LNL. Related metrics: tma_fp_scalar, t=
 ma_fp_vector, tma_fp_vector_128b, tma_fp_vector_512b, tma_port_0, tma_port_=
 1, tma_port_5, tma_port_6, tma_ports_utilized_2",
          "ScaleUnit": "100%"
      },
-@@ -526,7 +526,7 @@
-         "MetricExpr": "(FP_ARITH_INST_RETIRED.512B_PACKED_DOUBLE + FP_ARIT=
-H_INST_RETIRED.512B_PACKED_SINGLE) / (tma_retiring * tma_info_thread_slots)=
-",
-         "MetricGroup": "Compute;Flops;TopdownL5;tma_L5_group;tma_fp_vector=
-_group;tma_issue2P",
-         "MetricName": "tma_fp_vector_512b",
--        "MetricThreshold": "tma_fp_vector_512b > 0.1 & tma_fp_vector > 0.1=
- & tma_fp_arith > 0.2 & tma_light_operations > 0.6",
-+        "MetricThreshold": "tma_fp_vector_512b > 0.1 & (tma_fp_vector > 0.=
-1 & (tma_fp_arith > 0.2 & tma_light_operations > 0.6))",
-         "PublicDescription": "This metric approximates arithmetic FP vecto=
-r uops fraction the CPU has retired for 512-bit wide vectors. May overcount=
- due to FMA double counting. Related metrics: tma_fp_scalar, tma_fp_vector,=
- tma_fp_vector_128b, tma_fp_vector_256b, tma_port_0, tma_port_1, tma_port_5=
-, tma_port_6, tma_ports_utilized_2",
-         "ScaleUnit": "100%"
-     },
-@@ -538,17 +538,17 @@
+     {
+@@ -487,35 +487,35 @@
          "MetricName": "tma_frontend_bound",
          "MetricThreshold": "tma_frontend_bound > 0.15",
-         "MetricgroupNoGroup": "TopdownL1;Default",
+         "MetricgroupNoGroup": "TopdownL1",
 -        "PublicDescription": "This category represents fraction of slots w=
 here the processor's Frontend undersupplies its Backend. Frontend denotes t=
 he first part of the processor core responsible to fetch operations that ar=
@@ -1794,15 +1139,39 @@ ND_RETIRED.LATENCY_GE_4_PS",
      },
      {
 -        "BriefDescription": "This metric represents fraction of slots wher=
+e the CPU was retiring fused instructions , where one uop can represent mul=
+tiple contiguous instructions",
++        "BriefDescription": "This metric represents fraction of slots wher=
+e the CPU was retiring fused instructions -- where one uop can represent mu=
+ltiple contiguous instructions",
+         "MetricExpr": "tma_light_operations * UOPS_RETIRED.MACRO_FUSED / U=
+OPS_RETIRED.RETIRE_SLOTS",
+         "MetricGroup": "Branches;BvBO;Pipeline;TopdownL3;tma_L3_group;tma_=
+light_operations_group",
+         "MetricName": "tma_fused_instructions",
+         "MetricThreshold": "tma_fused_instructions > 0.1 & tma_light_opera=
+tions > 0.6",
+-        "PublicDescription": "This metric represents fraction of slots whe=
+re the CPU was retiring fused instructions , where one uop can represent mu=
+ltiple contiguous instructions. CMP+JCC or DEC+JCC are common examples of l=
+egacy fusions. {([MTL] Note new MOV+OP and Load+OP fusions appear under Oth=
+er_Light_Ops in MTL!)}",
++        "PublicDescription": "This metric represents fraction of slots whe=
+re the CPU was retiring fused instructions -- where one uop can represent m=
+ultiple contiguous instructions. CMP+JCC or DEC+JCC are common examples of =
+legacy fusions. {([MTL] Note new MOV+OP and Load+OP fusions appear under Ot=
+her_Light_Ops in MTL!)}",
+         "ScaleUnit": "100%"
+     },
+     {
+-        "BriefDescription": "This metric represents fraction of slots wher=
 e the CPU was retiring heavy-weight operations , instructions that require =
 two or more uops or micro-coded sequences",
--        "MetricExpr": "tma_microcode_sequencer + tma_retiring * (UOPS_DECO=
-DED.DEC0 - cpu@UOPS_DECODED.DEC0\\,cmask\\=3D0x1@) / IDQ.MITE_UOPS",
 +        "BriefDescription": "This metric represents fraction of slots wher=
 e the CPU was retiring heavy-weight operations -- instructions that require=
  two or more uops or micro-coded sequences",
-+        "MetricExpr": "tma_microcode_sequencer + tma_retiring * (UOPS_DECO=
-DED.DEC0 - cpu@UOPS_DECODED.DEC0\\,cmask\\=3D1@) / IDQ.MITE_UOPS",
+         "MetricExpr": "(UOPS_RETIRED.RETIRE_SLOTS + UOPS_RETIRED.MACRO_FUS=
+ED - INST_RETIRED.ANY) / tma_info_thread_slots",
          "MetricGroup": "Retire;TmaL2;TopdownL2;tma_L2_group;tma_retiring_g=
 roup",
          "MetricName": "tma_heavy_operations",
@@ -1821,8 +1190,12 @@ t due to approximation using indirect events; [ADL+])",
          "ScaleUnit": "100%"
      },
      {
-@@ -556,8 +556,8 @@
-         "MetricExpr": "ICACHE_DATA.STALLS / tma_info_thread_clks",
+         "BriefDescription": "This metric represents fraction of cycles the=
+ CPU was stalled due to instruction cache misses",
+-        "MetricExpr": "(ICACHE_16B.IFDATA_STALL + 2 * cpu@ICACHE_16B.IFDAT=
+A_STALL\\,cmask\\=3D0x1\\,edge\\=3D0x1@) / tma_info_thread_clks",
++        "MetricExpr": "(ICACHE_16B.IFDATA_STALL + 2 * cpu@ICACHE_16B.IFDAT=
+A_STALL\\,cmask\\=3D1\\,edge@) / tma_info_thread_clks",
          "MetricGroup": "BigFootprint;BvBC;FetchLat;IcMiss;TopdownL3;tma_L3=
 _group;tma_fetch_latency_group",
          "MetricName": "tma_icache_misses",
@@ -1839,66 +1212,42 @@ TIRED.L2_MISS_PS;FRONTEND_RETIRED.L1I_MISS_PS",
          "ScaleUnit": "100%"
      },
      {
-@@ -569,28 +569,28 @@
+@@ -526,11 +526,11 @@
          "PublicDescription": "Branch Misprediction Cost: Cycles representi=
 ng fraction of TMA slots wasted per non-speculative branch misprediction (r=
 etired JEClear). Related metrics: tma_bottleneck_mispredictions, tma_branch=
 _mispredicts, tma_mispredicts_resteers"
      },
      {
--        "BriefDescription": "Instructions per retired Mispredicts for cond=
-itional non-taken branches (lower number means higher occurrence rate)",
-+        "BriefDescription": "Instructions per retired Mispredicts for cond=
-itional non-taken branches (lower number means higher occurrence rate).",
-         "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.COND_NTAKEN",
-         "MetricGroup": "Bad;BrMispredicts",
-         "MetricName": "tma_info_bad_spec_ipmisp_cond_ntaken",
-         "MetricThreshold": "tma_info_bad_spec_ipmisp_cond_ntaken < 200"
-     },
-     {
--        "BriefDescription": "Instructions per retired Mispredicts for cond=
-itional taken branches (lower number means higher occurrence rate)",
-+        "BriefDescription": "Instructions per retired Mispredicts for cond=
-itional taken branches (lower number means higher occurrence rate).",
-         "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.COND_TAKEN",
-         "MetricGroup": "Bad;BrMispredicts",
-         "MetricName": "tma_info_bad_spec_ipmisp_cond_taken",
-         "MetricThreshold": "tma_info_bad_spec_ipmisp_cond_taken < 200"
-     },
-     {
 -        "BriefDescription": "Instructions per retired Mispredicts for indi=
 rect CALL or JMP branches (lower number means higher occurrence rate)",
 +        "BriefDescription": "Instructions per retired Mispredicts for indi=
 rect CALL or JMP branches (lower number means higher occurrence rate).",
-         "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.INDIRECT",
+         "MetricExpr": "tma_info_inst_mix_instructions / (UOPS_RETIRED.RETI=
+RE_SLOTS / UOPS_ISSUED.ANY * BR_MISP_EXEC.INDIRECT)",
          "MetricGroup": "Bad;BrMispredicts",
          "MetricName": "tma_info_bad_spec_ipmisp_indirect",
 -        "MetricThreshold": "tma_info_bad_spec_ipmisp_indirect < 1000"
 +        "MetricThreshold": "tma_info_bad_spec_ipmisp_indirect < 1e3"
      },
      {
--        "BriefDescription": "Instructions per retired Mispredicts for retu=
-rn branches (lower number means higher occurrence rate)",
-+        "BriefDescription": "Instructions per retired Mispredicts for retu=
-rn branches (lower number means higher occurrence rate).",
-         "MetricExpr": "INST_RETIRED.ANY / BR_MISP_RETIRED.RET",
-         "MetricGroup": "Bad;BrMispredicts",
-         "MetricName": "tma_info_bad_spec_ipmisp_ret",
-@@ -619,7 +619,7 @@
+         "BriefDescription": "Number of Instructions per non-speculative Br=
+anch Misprediction (JEClear) (lower number means higher occurrence rate)",
+@@ -555,7 +555,7 @@
      },
      {
          "BriefDescription": "Total pipeline cost of DSB (uop cache) hits -=
  subset of the Instruction_Fetch_BW Bottleneck",
 -        "MetricExpr": "100 * (tma_frontend_bound * (tma_fetch_bandwidth / =
 (tma_fetch_latency + tma_fetch_bandwidth)) * (tma_dsb / (tma_mite + tma_dsb=
- + tma_lsd + tma_ms)))",
+)))",
 +        "MetricExpr": "100 * (tma_frontend_bound * (tma_fetch_bandwidth / =
-(tma_fetch_bandwidth + tma_fetch_latency)) * (tma_dsb / (tma_dsb + tma_lsd =
-+ tma_mite + tma_ms)))",
+(tma_fetch_bandwidth + tma_fetch_latency)) * (tma_dsb / (tma_dsb + tma_mite=
+)))",
          "MetricGroup": "DSB;Fed;FetchBW;tma_issueFB",
          "MetricName": "tma_info_botlnk_l2_dsb_bandwidth",
          "MetricThreshold": "tma_info_botlnk_l2_dsb_bandwidth > 10",
-@@ -628,7 +628,7 @@
+@@ -564,7 +564,7 @@
      {
          "BriefDescription": "Total pipeline cost of DSB (uop cache) misses=
  - subset of the Instruction_Fetch_BW Bottleneck",
@@ -1906,19 +1255,19 @@ rn branches (lower number means higher occurrence rate).",
 -        "MetricExpr": "100 * (tma_fetch_latency * tma_dsb_switches / (tma_=
 icache_misses + tma_itlb_misses + tma_branch_resteers + tma_ms_switches + t=
 ma_lcp + tma_dsb_switches) + tma_fetch_bandwidth * tma_mite / (tma_mite + t=
-ma_dsb + tma_lsd + tma_ms))",
+ma_dsb))",
 +        "MetricExpr": "100 * (tma_fetch_latency * tma_dsb_switches / (tma_=
 branch_resteers + tma_dsb_switches + tma_icache_misses + tma_itlb_misses + =
 tma_lcp + tma_ms_switches) + tma_fetch_bandwidth * tma_mite / (tma_dsb + tm=
-a_lsd + tma_mite + tma_ms))",
+a_mite))",
          "MetricGroup": "DSBmiss;Fed;tma_issueFB",
          "MetricName": "tma_info_botlnk_l2_dsb_misses",
          "MetricThreshold": "tma_info_botlnk_l2_dsb_misses > 10",
-@@ -637,10 +637,11 @@
+@@ -572,10 +572,11 @@
+     },
      {
          "BriefDescription": "Total pipeline cost of Instruction Cache miss=
 es - subset of the Big_Code Bottleneck",
-         "MetricConstraint": "NO_GROUP_EVENTS",
 -        "MetricExpr": "100 * (tma_fetch_latency * tma_icache_misses / (tma=
 _icache_misses + tma_itlb_misses + tma_branch_resteers + tma_ms_switches + =
 tma_lcp + tma_dsb_switches))",
@@ -1934,7 +1283,20 @@ ses - subset of the Big_Code Bottleneck. Related metrics: "
      },
      {
          "BriefDescription": "Fraction of branches that are CALL or RET",
-@@ -701,11 +702,11 @@
+@@ -604,7 +605,7 @@
+     },
+     {
+         "BriefDescription": "Core actual clocks when any Logical Processor=
+ is active on the Physical Core",
+-        "MetricExpr": "(CPU_CLK_UNHALTED.THREAD_ANY / 2 if #SMT_on else tm=
+a_info_thread_clks)",
++        "MetricExpr": "(CPU_CLK_UNHALTED.THREAD / 2 * (1 + CPU_CLK_UNHALTE=
+D.ONE_THREAD_ACTIVE / CPU_CLK_UNHALTED.REF_XCLK) if #core_wide < 1 else (CP=
+U_CLK_UNHALTED.THREAD_ANY / 2 if #SMT_on else tma_info_thread_clks))",
+         "MetricGroup": "SMT",
+         "MetricName": "tma_info_core_core_clks"
+     },
+@@ -632,11 +633,11 @@
          "MetricExpr": "(FP_ARITH_INST_RETIRED.SCALAR + FP_ARITH_INST_RETIR=
 ED.VECTOR) / (2 * tma_info_core_core_clks)",
          "MetricGroup": "Cor;Flops;HPC",
@@ -1960,7 +1322,7 @@ mask\\=3D1@",
          "MetricGroup": "Backend;Cor;Pipeline;PortsUtil",
          "MetricName": "tma_info_core_ilp"
      },
-@@ -718,20 +719,20 @@
+@@ -649,20 +650,20 @@
          "PublicDescription": "Fraction of Uops delivered by the DSB (aka D=
 ecoded ICache; or Uop Cache). Related metrics: tma_dsb_switches, tma_fetch_=
 bandwidth, tma_info_botlnk_l2_dsb_bandwidth, tma_info_botlnk_l2_dsb_misses,=
@@ -1970,13 +1332,11 @@ bandwidth, tma_info_botlnk_l2_dsb_bandwidth, tma_info_botlnk_l2_dsb_misses,=
 -        "BriefDescription": "Average number of cycles of a switch from the=
  DSB fetch-unit to MITE fetch unit - see DSB_Switches tree node for details=
 ",
--        "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / cpu@DSB2MITE_SWI=
-TCHES.PENALTY_CYCLES\\,cmask\\=3D0x1\\,edge\\=3D0x1@",
 +        "BriefDescription": "Average number of cycles of a switch from the=
  DSB fetch-unit to MITE fetch unit - see DSB_Switches tree node for details=
 .",
-+        "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / cpu@DSB2MITE_SWI=
-TCHES.PENALTY_CYCLES\\,cmask\\=3D1\\,edge@",
+         "MetricExpr": "DSB2MITE_SWITCHES.PENALTY_CYCLES / DSB2MITE_SWITCHE=
+S.COUNT",
          "MetricGroup": "DSBmiss",
          "MetricName": "tma_info_frontend_dsb_switch_cost"
      },
@@ -1994,13 +1354,13 @@ x1@",
          "BriefDescription": "Average Latency for L1 instruction cache miss=
 es",
 -        "MetricExpr": "ICACHE_16B.IFDATA_STALL / cpu@ICACHE_16B.IFDATA_STA=
-LL\\,cmask\\=3D0x1\\,edge\\=3D0x1@",
+LL\\,cmask\\=3D0x1\\,edge\\=3D0x1@ + 2",
 +        "MetricExpr": "ICACHE_16B.IFDATA_STALL / cpu@ICACHE_16B.IFDATA_STA=
-LL\\,cmask\\=3D1\\,edge@",
+LL\\,cmask\\=3D1\\,edge@ + 2",
          "MetricGroup": "Fed;FetchLat;IcMiss",
          "MetricName": "tma_info_frontend_icache_miss_latency"
      },
-@@ -773,7 +774,7 @@
+@@ -698,7 +699,7 @@
          "MetricName": "tma_info_frontend_tbpc"
      },
      {
@@ -2010,7 +1370,7 @@ LL\\,cmask\\=3D1\\,edge@",
 _TAKEN",
          "MetricGroup": "Branches;Fed;PGO",
          "MetricName": "tma_info_inst_mix_bptkbranch"
-@@ -791,7 +792,7 @@
+@@ -717,7 +718,7 @@
          "MetricGroup": "Flops;InsType",
          "MetricName": "tma_info_inst_mix_iparith",
          "MetricThreshold": "tma_info_inst_mix_iparith < 10",
@@ -2024,7 +1384,7 @@ intentional FMA double counting. Approximated prior to BDW."
      {
          "BriefDescription": "Instructions per FP Arithmetic AVX/SSE 128-bi=
 t instruction (lower number means higher occurrence rate)",
-@@ -799,7 +800,7 @@
+@@ -725,7 +726,7 @@
          "MetricGroup": "Flops;FpVector;InsType",
          "MetricName": "tma_info_inst_mix_iparith_avx128",
          "MetricThreshold": "tma_info_inst_mix_iparith_avx128 < 10",
@@ -2038,7 +1398,7 @@ possible due to intentional FMA double counting."
      {
          "BriefDescription": "Instructions per FP Arithmetic AVX* 256-bit i=
 nstruction (lower number means higher occurrence rate)",
-@@ -807,7 +808,7 @@
+@@ -733,7 +734,7 @@
          "MetricGroup": "Flops;FpVector;InsType",
          "MetricName": "tma_info_inst_mix_iparith_avx256",
          "MetricThreshold": "tma_info_inst_mix_iparith_avx256 < 10",
@@ -2050,23 +1410,9 @@ instruction (lower number means higher occurrence rate). Values < 1 are pos=
 sible due to intentional FMA double counting."
      },
      {
-         "BriefDescription": "Instructions per FP Arithmetic AVX 512-bit in=
-struction (lower number means higher occurrence rate)",
-@@ -815,7 +816,7 @@
-         "MetricGroup": "Flops;FpVector;InsType",
-         "MetricName": "tma_info_inst_mix_iparith_avx512",
-         "MetricThreshold": "tma_info_inst_mix_iparith_avx512 < 10",
--        "PublicDescription": "Instructions per FP Arithmetic AVX 512-bit i=
-nstruction (lower number means higher occurrence rate). Values < 1 are poss=
-ible due to intentional FMA double counting"
-+        "PublicDescription": "Instructions per FP Arithmetic AVX 512-bit i=
-nstruction (lower number means higher occurrence rate). Values < 1 are poss=
-ible due to intentional FMA double counting."
-     },
-     {
          "BriefDescription": "Instructions per FP Arithmetic Scalar Double-=
 Precision instruction (lower number means higher occurrence rate)",
-@@ -823,7 +824,7 @@
+@@ -741,7 +742,7 @@
          "MetricGroup": "Flops;FpScalar;InsType",
          "MetricName": "tma_info_inst_mix_iparith_scalar_dp",
          "MetricThreshold": "tma_info_inst_mix_iparith_scalar_dp < 10",
@@ -2080,7 +1426,7 @@ Precision instruction (lower number means higher occurrence rate)",
      {
          "BriefDescription": "Instructions per FP Arithmetic Scalar Single-=
 Precision instruction (lower number means higher occurrence rate)",
-@@ -831,7 +832,7 @@
+@@ -749,7 +750,7 @@
          "MetricGroup": "Flops;FpScalar;InsType",
          "MetricName": "tma_info_inst_mix_iparith_scalar_sp",
          "MetricThreshold": "tma_info_inst_mix_iparith_scalar_sp < 10",
@@ -2094,29 +1440,18 @@ Precision instruction (lower number means higher occurrence rate)",
      {
          "BriefDescription": "Instructions per Branch (lower number means h=
 igher occurrence rate)",
-@@ -886,7 +887,7 @@
+@@ -799,7 +800,7 @@
          "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.NEAR_TAKEN",
          "MetricGroup": "Branches;Fed;FetchBW;Frontend;PGO;tma_issueFB",
          "MetricName": "tma_info_inst_mix_iptb",
--        "MetricThreshold": "tma_info_inst_mix_iptb < 5 * 2 + 1",
-+        "MetricThreshold": "tma_info_inst_mix_iptb < 11",
+-        "MetricThreshold": "tma_info_inst_mix_iptb < 4 * 2 + 1",
++        "MetricThreshold": "tma_info_inst_mix_iptb < 9",
          "PublicDescription": "Instructions per taken branch. Related metri=
 cs: tma_dsb_switches, tma_fetch_bandwidth, tma_info_botlnk_l2_dsb_bandwidth=
 , tma_info_botlnk_l2_dsb_misses, tma_info_frontend_dsb_coverage, tma_lcp"
      },
      {
-@@ -1011,7 +1012,7 @@
-     },
-     {
-         "BriefDescription": "Average Parallel L2 cache miss demand Loads",
--        "MetricExpr": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD / cpu@O=
-FFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD\\,cmask\\=3D0x1@",
-+        "MetricExpr": "OFFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD / cpu@O=
-FFCORE_REQUESTS_OUTSTANDING.DEMAND_DATA_RD\\,cmask\\=3D1@",
-         "MetricGroup": "Memory_BW;Offcore",
-         "MetricName": "tma_info_memory_latency_load_l2_mlp"
-     },
-@@ -1073,8 +1074,8 @@
+@@ -974,8 +975,8 @@
          "MetricName": "tma_info_memory_tlb_store_stlb_mpki"
      },
      {
@@ -2130,8 +1465,9 @@ E_1 / 2 if #SMT_on else cpu@UOPS_EXECUTED.THREAD\\,cmask\\=3D1@)",
          "MetricGroup": "Cor;Pipeline;PortsUtil;SMT",
          "MetricName": "tma_info_pipeline_execute"
      },
-@@ -1101,12 +1102,12 @@
-         "MetricExpr": "INST_RETIRED.ANY / ASSISTS.ANY",
+@@ -996,12 +997,12 @@
+         "MetricExpr": "INST_RETIRED.ANY / (FP_ASSIST.ANY + OTHER_ASSISTS.A=
+NY)",
          "MetricGroup": "MicroSeq;Pipeline;Ret;Retire",
          "MetricName": "tma_info_pipeline_ipassist",
 -        "MetricThreshold": "tma_info_pipeline_ipassist < 100000",
@@ -2143,16 +1479,16 @@ on. See Assists tree node for details (lower number means higher occurrence=
      {
 -        "BriefDescription": "Average number of Uops retired in cycles wher=
 e at least one uop has retired",
--        "MetricExpr": "tma_retiring * tma_info_thread_slots / cpu@UOPS_RET=
-IRED.SLOTS\\,cmask\\=3D0x1@",
+-        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / cpu@UOPS_RETIRED.RETIRE=
+_SLOTS\\,cmask\\=3D0x1@",
 +        "BriefDescription": "Average number of Uops retired in cycles wher=
 e at least one uop has retired.",
-+        "MetricExpr": "tma_retiring * tma_info_thread_slots / cpu@UOPS_RET=
-IRED.SLOTS\\,cmask\\=3D1@",
++        "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / cpu@UOPS_RETIRED.RETIRE=
+_SLOTS\\,cmask\\=3D1@",
          "MetricGroup": "Pipeline;Ret",
          "MetricName": "tma_info_pipeline_retire"
      },
-@@ -1147,14 +1148,13 @@
+@@ -1043,14 +1044,13 @@
          "MetricExpr": "INST_RETIRED.ANY / BR_INST_RETIRED.FAR_BRANCH:u",
          "MetricGroup": "Branches;OS",
          "MetricName": "tma_info_system_ipfarbranch",
@@ -2172,52 +1508,20 @@ em (OS) Kernel mode",
      {
          "BriefDescription": "Fraction of cycles spent in the Operating Sys=
 tem (OS) Kernel mode",
-@@ -1195,7 +1195,7 @@
-         "MetricExpr": "CORE_POWER.LVL0_TURBO_LICENSE / tma_info_core_core_=
-clks",
-         "MetricGroup": "Power",
-         "MetricName": "tma_info_system_power_license0_utilization",
--        "PublicDescription": "Fraction of Core cycles where the core was r=
-unning with power-delivery for baseline license level 0.  This includes non=
--AVX codes, SSE, AVX 128-bit, and low-current AVX 256-bit codes"
-+        "PublicDescription": "Fraction of Core cycles where the core was r=
-unning with power-delivery for baseline license level 0.  This includes non=
--AVX codes, SSE, AVX 128-bit, and low-current AVX 256-bit codes."
+@@ -1061,7 +1061,7 @@
      },
      {
-         "BriefDescription": "Fraction of Core cycles where the core was ru=
-nning with power-delivery for license level 1",
-@@ -1203,7 +1203,7 @@
-         "MetricGroup": "Power",
-         "MetricName": "tma_info_system_power_license1_utilization",
-         "MetricThreshold": "tma_info_system_power_license1_utilization > 0=
-.5",
--        "PublicDescription": "Fraction of Core cycles where the core was r=
-unning with power-delivery for license level 1.  This includes high current=
- AVX 256-bit instructions as well as low current AVX 512-bit instructions"
-+        "PublicDescription": "Fraction of Core cycles where the core was r=
-unning with power-delivery for license level 1.  This includes high current=
- AVX 256-bit instructions as well as low current AVX 512-bit instructions."
-     },
-     {
-         "BriefDescription": "Fraction of Core cycles where the core was ru=
-nning with power-delivery for license level 2 (introduced in SKX)",
-@@ -1211,7 +1211,7 @@
-         "MetricGroup": "Power",
-         "MetricName": "tma_info_system_power_license2_utilization",
-         "MetricThreshold": "tma_info_system_power_license2_utilization > 0=
-.5",
--        "PublicDescription": "Fraction of Core cycles where the core was r=
-unning with power-delivery for license level 2 (introduced in SKX).  This i=
-ncludes high current AVX 512-bit instructions"
-+        "PublicDescription": "Fraction of Core cycles where the core was r=
-unning with power-delivery for license level 2 (introduced in SKX).  This i=
-ncludes high current AVX 512-bit instructions."
-     },
-     {
-         "BriefDescription": "Fraction of cycles where both hardware Logica=
-l Processors were active",
-@@ -1239,7 +1239,7 @@
+         "BriefDescription": "Average number of parallel data read requests=
+ to external memory",
+-        "MetricExpr": "UNC_ARB_TRK_OCCUPANCY.DATA_READ / UNC_ARB_TRK_OCCUP=
+ANCY.DATA_READ@cmask\\=3D0x1@",
++        "MetricExpr": "UNC_ARB_TRK_OCCUPANCY.DATA_READ / UNC_ARB_TRK_OCCUP=
+ANCY.DATA_READ@cmask\\=3D1@",
+         "MetricGroup": "Mem;MemoryBW;SoC",
+         "MetricName": "tma_info_system_mem_parallel_reads",
+         "PublicDescription": "Average number of parallel data read request=
+s to external memory. Accounts for demand loads and L1/L2 prefetches"
+@@ -1112,7 +1112,7 @@
          "MetricName": "tma_info_system_turbo_utilization"
      },
      {
@@ -2228,7 +1532,7 @@ Logical Processor is active.",
          "MetricExpr": "CPU_CLK_UNHALTED.THREAD",
          "MetricGroup": "Pipeline",
          "MetricName": "tma_info_thread_clks"
-@@ -1248,15 +1248,14 @@
+@@ -1121,15 +1121,14 @@
          "BriefDescription": "Cycles Per Instruction (per Logical Processor=
 )",
          "MetricExpr": "1 / tma_info_thread_ipc",
@@ -2252,50 +1556,17 @@ f \"execute\" at rename stage."
      {
          "BriefDescription": "Instructions Per Cycle (per Logical Processor=
 )",
-@@ -1266,13 +1265,13 @@
-     },
-     {
-         "BriefDescription": "Total issue-pipeline slots (per-Physical Core=
- till ICL; per-Logical Processor ICL onward)",
--        "MetricExpr": "slots",
-+        "MetricExpr": "TOPDOWN.SLOTS",
-         "MetricGroup": "TmaL1;tma_L1_group",
-         "MetricName": "tma_info_thread_slots"
-     },
-     {
-         "BriefDescription": "Fraction of Physical Core issue-slots utilize=
-d by this Logical Processor",
--        "MetricExpr": "(tma_info_thread_slots / (slots / 2) if #SMT_on els=
-e 1)",
-+        "MetricExpr": "(tma_info_thread_slots / (TOPDOWN.SLOTS / 2) if #SM=
-T_on else 1)",
-         "MetricGroup": "SMT;TmaL1;tma_L1_group",
-         "MetricName": "tma_info_thread_slots_utilization"
-     },
-@@ -1288,14 +1287,14 @@
-         "MetricExpr": "tma_retiring * tma_info_thread_slots / BR_INST_RETI=
-RED.NEAR_TAKEN",
+@@ -1155,15 +1154,15 @@
+         "MetricExpr": "UOPS_RETIRED.RETIRE_SLOTS / BR_INST_RETIRED.NEAR_TA=
+KEN",
          "MetricGroup": "Branches;Fed;FetchBW",
          "MetricName": "tma_info_thread_uptb",
--        "MetricThreshold": "tma_info_thread_uptb < 5 * 1.5"
-+        "MetricThreshold": "tma_info_thread_uptb < 7.5"
+-        "MetricThreshold": "tma_info_thread_uptb < 4 * 1.5"
++        "MetricThreshold": "tma_info_thread_uptb < 6"
      },
      {
--        "BriefDescription": "This metric represents fraction of cycles whe=
-re the Integer Divider unit was active",
-+        "BriefDescription": "This metric represents fraction of cycles whe=
-re the Integer Divider unit was active.",
-         "MetricExpr": "tma_divider - tma_fp_divider",
-         "MetricGroup": "TopdownL4;tma_L4_group;tma_divider_group",
-         "MetricName": "tma_int_divider",
--        "MetricThreshold": "tma_int_divider > 0.2 & tma_divider > 0.2 & tm=
-a_core_bound > 0.1 & tma_backend_bound > 0.2",
-+        "MetricThreshold": "tma_int_divider > 0.2 & (tma_divider > 0.2 & (=
-tma_core_bound > 0.1 & tma_backend_bound > 0.2))",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -1303,8 +1302,8 @@
+         "BriefDescription": "This metric represents fraction of cycles the=
+ CPU was stalled due to Instruction TLB (ITLB) misses",
          "MetricExpr": "ICACHE_TAG.STALLS / tma_info_thread_clks",
          "MetricGroup": "BigFootprint;BvBC;FetchLat;MemoryTLB;TopdownL3;tma=
 _L3_group;tma_fetch_latency_group",
@@ -2313,7 +1584,7 @@ ND_RETIRED.STLB_MISS_PS;FRONTEND_RETIRED.ITLB_MISS_PS",
          "ScaleUnit": "100%"
      },
      {
-@@ -1312,7 +1311,7 @@
+@@ -1171,7 +1170,7 @@
          "MetricExpr": "max((CYCLE_ACTIVITY.STALLS_MEM_ANY - CYCLE_ACTIVITY=
 .STALLS_L1D_MISS) / tma_info_thread_clks, 0)",
          "MetricGroup": "CacheHits;MemoryBound;TmaL3mem;TopdownL3;tma_L3_gr=
@@ -2335,7 +1606,7 @@ ma_clears_resteers, tma_machine_clears, tma_microcode_sequencer, tma_ms_swi=
 tches, tma_ports_utilized_1",
          "ScaleUnit": "100%"
      },
-@@ -1321,7 +1320,7 @@
+@@ -1180,17 +1179,17 @@
          "MetricExpr": "min(2 * (MEM_INST_RETIRED.ALL_LOADS - MEM_LOAD_RETI=
 RED.FB_HIT - MEM_LOAD_RETIRED.L1_MISS) * 20 / 100, max(CYCLE_ACTIVITY.CYCLE=
 S_MEM_ANY - CYCLE_ACTIVITY.CYCLES_L1D_MISS, 0)) / tma_info_thread_clks",
@@ -2352,12 +1623,20 @@ hort latency of the L1D cache may be exposed in pointer-chasing memory acce=
 ss patterns as an example. Sample with: MEM_LOAD_RETIRED.L1_HIT",
          "ScaleUnit": "100%"
      },
-@@ -1331,7 +1330,7 @@
-         "MetricExpr": "MEM_LOAD_RETIRED.L2_HIT * (1 + MEM_LOAD_RETIRED.FB_=
+     {
+         "BriefDescription": "This metric estimates how often the CPU was s=
+talled due to L2 cache accesses by loads",
+         "MetricConstraint": "NO_GROUP_EVENTS",
+-        "MetricExpr": "MEM_LOAD_RETIRED.L2_HIT * (1 + MEM_LOAD_RETIRED.FB_=
 HIT / MEM_LOAD_RETIRED.L1_MISS) / (MEM_LOAD_RETIRED.L2_HIT * (1 + MEM_LOAD_=
-RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS) + L1D_PEND_MISS.FB_FULL_PERIODS)=
- * ((CYCLE_ACTIVITY.STALLS_L1D_MISS - CYCLE_ACTIVITY.STALLS_L2_MISS) / tma_=
-info_thread_clks)",
+RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS) + cpu@L1D_PEND_MISS.FB_FULL\\,cm=
+ask\\=3D0x1@) * ((CYCLE_ACTIVITY.STALLS_L1D_MISS - CYCLE_ACTIVITY.STALLS_L2=
+_MISS) / tma_info_thread_clks)",
++        "MetricExpr": "MEM_LOAD_RETIRED.L2_HIT * (1 + MEM_LOAD_RETIRED.FB_=
+HIT / MEM_LOAD_RETIRED.L1_MISS) / (MEM_LOAD_RETIRED.L2_HIT * (1 + MEM_LOAD_=
+RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS) + cpu@L1D_PEND_MISS.FB_FULL\\,cm=
+ask\\=3D1@) * ((CYCLE_ACTIVITY.STALLS_L1D_MISS - CYCLE_ACTIVITY.STALLS_L2_M=
+ISS) / tma_info_thread_clks)",
          "MetricGroup": "BvML;CacheHits;MemoryBound;TmaL3mem;TopdownL3;tma_=
 L3_group;tma_memory_bound_group",
          "MetricName": "tma_l2_bound",
@@ -2371,7 +1650,7 @@ misses/L2 hits) can improve the latency and increase performance. Sample wi=
 th: MEM_LOAD_RETIRED.L2_HIT",
          "ScaleUnit": "100%"
      },
-@@ -1340,7 +1339,7 @@
+@@ -1199,7 +1198,7 @@
          "MetricExpr": "3.5 * tma_info_system_core_frequency * MEM_LOAD_RET=
 IRED.L2_HIT * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS / 2) =
 / tma_info_thread_clks",
@@ -2388,7 +1667,7 @@ sibly L2 latency limited).  Avoiding L1 cache misses (i.e. L1 misses/L2 hit=
 s) will improve the latency. Sample with: MEM_LOAD_RETIRED.L2_HIT",
          "ScaleUnit": "100%"
      },
-@@ -1350,17 +1349,17 @@
+@@ -1208,17 +1207,17 @@
          "MetricExpr": "(CYCLE_ACTIVITY.STALLS_L2_MISS - CYCLE_ACTIVITY.STA=
 LLS_L3_MISS) / tma_info_thread_clks",
          "MetricGroup": "CacheHits;MemoryBound;TmaL3mem;TopdownL3;tma_L3_gr=
@@ -2412,12 +1691,12 @@ d increase performance. Sample with: MEM_LOAD_RETIRED.L3_HIT_PS",
          "BriefDescription": "This metric estimates fraction of cycles with=
  demand load accesses that hit the L3 cache under unloaded scenarios (possi=
 bly L3 latency limited)",
--        "MetricExpr": "(12.5 * tma_info_system_core_frequency - 3.5 * tma_=
-info_system_core_frequency) * (MEM_LOAD_RETIRED.L3_HIT * (1 + MEM_LOAD_RETI=
-RED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS / 2)) / tma_info_thread_clks",
-+        "MetricExpr": "9 * tma_info_system_core_frequency * (MEM_LOAD_RETI=
-RED.L3_HIT * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS / 2)) =
-/ tma_info_thread_clks",
+-        "MetricExpr": "(10 * tma_info_system_core_frequency - 3.5 * tma_in=
+fo_system_core_frequency) * (MEM_LOAD_RETIRED.L3_HIT * (1 + MEM_LOAD_RETIRE=
+D.FB_HIT / MEM_LOAD_RETIRED.L1_MISS / 2)) / tma_info_thread_clks",
++        "MetricExpr": "6.5 * tma_info_system_core_frequency * (MEM_LOAD_RE=
+TIRED.L3_HIT * (1 + MEM_LOAD_RETIRED.FB_HIT / MEM_LOAD_RETIRED.L1_MISS / 2)=
+) / tma_info_thread_clks",
          "MetricGroup": "BvML;MemoryLat;TopdownL4;tma_L4_group;tma_issueLat=
 ;tma_l3_bound_group",
          "MetricName": "tma_l3_hit_latency",
@@ -2443,7 +1722,7 @@ a_bottleneck_cache_memory_latency, tma_mem_latency",
          "ScaleUnit": "100%"
      },
      {
-@@ -1368,18 +1367,18 @@
+@@ -1226,18 +1225,18 @@
          "MetricExpr": "DECODE.LCP / tma_info_thread_clks",
          "MetricGroup": "FetchLat;TopdownL3;tma_L3_group;tma_fetch_latency_=
 group;tma_issueFB",
@@ -2473,7 +1752,7 @@ no more than one uop (micro-operation)",
 +        "BriefDescription": "This metric represents fraction of slots wher=
 e the CPU was retiring light-weight operations -- instructions that require=
  no more than one uop (micro-operation)",
-         "MetricExpr": "max(0, tma_retiring - tma_heavy_operations)",
+         "MetricExpr": "tma_retiring - tma_heavy_operations",
          "MetricGroup": "Retire;TmaL2;TopdownL2;tma_L2_group;tma_retiring_g=
 roup",
          "MetricName": "tma_light_operations",
@@ -2502,7 +1781,7 @@ T",
          "ScaleUnit": "100%"
      },
      {
-@@ -1396,7 +1395,7 @@
+@@ -1255,7 +1254,7 @@
          "MetricExpr": "tma_dtlb_load - tma_load_stlb_miss",
          "MetricGroup": "MemoryTLB;TopdownL5;tma_L5_group;tma_dtlb_load_gro=
 up",
@@ -2515,7 +1794,7 @@ up",
          "ScaleUnit": "100%"
      },
      {
-@@ -1404,31 +1403,31 @@
+@@ -1263,31 +1262,31 @@
          "MetricExpr": "DTLB_LOAD_MISSES.WALK_ACTIVE / tma_info_thread_clks=
 ",
          "MetricGroup": "MemoryTLB;TopdownL5;tma_L5_group;tma_dtlb_load_gro=
@@ -2592,11 +1871,11 @@ d > 0.2 & tma_backend_bound > 0.2))))",
          "ScaleUnit": "100%"
      },
      {
-@@ -1437,7 +1436,7 @@
-         "MetricExpr": "(16 * max(0, MEM_INST_RETIRED.LOCK_LOADS - L2_RQSTS=
-.ALL_RFO) + MEM_INST_RETIRED.LOCK_LOADS / MEM_INST_RETIRED.ALL_STORES * (10=
- * L2_RQSTS.RFO_HIT + min(CPU_CLK_UNHALTED.THREAD, OFFCORE_REQUESTS_OUTSTAN=
-DING.CYCLES_WITH_DEMAND_RFO))) / tma_info_thread_clks",
+@@ -1295,7 +1294,7 @@
+         "MetricExpr": "(12 * max(0, MEM_INST_RETIRED.LOCK_LOADS - L2_RQSTS=
+.ALL_RFO) + MEM_INST_RETIRED.LOCK_LOADS / MEM_INST_RETIRED.ALL_STORES * (9 =
+* L2_RQSTS.RFO_HIT + min(CPU_CLK_UNHALTED.THREAD, OFFCORE_REQUESTS_OUTSTAND=
+ING.CYCLES_WITH_DEMAND_RFO))) / tma_info_thread_clks",
          "MetricGroup": "LockCont;Offcore;TopdownL4;tma_L4_group;tma_issueR=
 FO;tma_l1_bound_group",
          "MetricName": "tma_lock_latency",
@@ -2611,25 +1890,7 @@ f what memory source satisfied them. Sample with: MEM_INST_RETIRED.LOCK_LOA=
 DS. Related metrics: tma_store_latency",
          "ScaleUnit": "100%"
      },
-@@ -1447,7 +1446,7 @@
-         "MetricGroup": "FetchBW;LSD;TopdownL3;tma_L3_group;tma_fetch_bandw=
-idth_group",
-         "MetricName": "tma_lsd",
-         "MetricThreshold": "tma_lsd > 0.15 & tma_fetch_bandwidth > 0.2",
--        "PublicDescription": "This metric represents Core fraction of cycl=
-es in which CPU was likely limited due to LSD (Loop Stream Detector) unit. =
- LSD typically does well sustaining Uop supply. However; in some rare cases=
-; optimal uop-delivery could not be reached for small loops whose size (in =
-terms of number of uops) does not suit well the LSD structure",
-+        "PublicDescription": "This metric represents Core fraction of cycl=
-es in which CPU was likely limited due to LSD (Loop Stream Detector) unit. =
- LSD typically does well sustaining Uop supply. However; in some rare cases=
-; optimal uop-delivery could not be reached for small loops whose size (in =
-terms of number of uops) does not suit well the LSD structure.",
-         "ScaleUnit": "100%"
-     },
-     {
-@@ -1457,15 +1456,15 @@
+@@ -1307,15 +1306,15 @@
          "MetricName": "tma_machine_clears",
          "MetricThreshold": "tma_machine_clears > 0.1 & tma_bad_speculation=
  > 0.15",
@@ -2681,7 +1942,7 @@ counters for that). Related metrics: tma_bottleneck_cache_memory_bandwidth,=
  tma_fb_full, tma_info_system_dram_bw_use, tma_sq_full",
          "ScaleUnit": "100%"
      },
-@@ -1474,7 +1473,7 @@
+@@ -1324,7 +1323,7 @@
          "MetricExpr": "min(CPU_CLK_UNHALTED.THREAD, OFFCORE_REQUESTS_OUTST=
 ANDING.CYCLES_WITH_DATA_RD) / tma_info_thread_clks - tma_mem_bandwidth",
          "MetricGroup": "BvML;MemoryLat;Offcore;TopdownL4;tma_L4_group;tma_=
@@ -2699,7 +1960,7 @@ her Logical Processors/Physical Cores/sockets (see Uncore counters for that=
 ",
          "ScaleUnit": "100%"
      },
-@@ -1485,11 +1484,11 @@
+@@ -1336,11 +1335,11 @@
          "MetricName": "tma_memory_bound",
          "MetricThreshold": "tma_memory_bound > 0.2 & tma_backend_bound > 0=
 .2",
@@ -2729,12 +1990,12 @@ cesses",
 +        "BriefDescription": "This metric represents fraction of slots wher=
 e the CPU was retiring memory operations -- uops for memory load or store a=
 ccesses.",
-         "MetricConstraint": "NO_GROUP_EVENTS",
          "MetricExpr": "tma_light_operations * MEM_INST_RETIRED.ANY / INST_=
 RETIRED.ANY",
          "MetricGroup": "Pipeline;TopdownL3;tma_L3_group;tma_light_operatio=
 ns_group",
-@@ -1511,7 +1510,7 @@
+         "MetricName": "tma_memory_operations",
+@@ -1362,7 +1361,7 @@
          "MetricExpr": "BR_MISP_RETIRED.ALL_BRANCHES / (BR_MISP_RETIRED.ALL=
 _BRANCHES + MACHINE_CLEARS.COUNT) * INT_MISC.CLEAR_RESTEER_CYCLES / tma_inf=
 o_thread_clks",
@@ -2752,22 +2013,7 @@ etrics: tma_bottleneck_mispredictions, tma_branch_mispredicts, tma_info_bad=
 _spec_branch_misprediction_cost",
          "ScaleUnit": "100%"
      },
-@@ -1526,24 +1525,24 @@
-     },
-     {
-         "BriefDescription": "This metric represents fraction of cycles whe=
-re (only) 4 uops were delivered by the MITE pipeline",
--        "MetricExpr": "(cpu@IDQ.MITE_UOPS\\,cmask\\=3D0x4@ - cpu@IDQ.MITE_=
-UOPS\\,cmask\\=3D0x5@) / tma_info_thread_clks",
-+        "MetricExpr": "(cpu@IDQ.MITE_UOPS\\,cmask\\=3D4@ - cpu@IDQ.MITE_UO=
-PS\\,cmask\\=3D5@) / tma_info_thread_clks",
-         "MetricGroup": "DSBmiss;FetchBW;TopdownL4;tma_L4_group;tma_mite_gr=
-oup",
-         "MetricName": "tma_mite_4wide",
--        "MetricThreshold": "tma_mite_4wide > 0.05 & tma_mite > 0.1 & tma_f=
-etch_bandwidth > 0.2",
-+        "MetricThreshold": "tma_mite_4wide > 0.05 & (tma_mite > 0.1 & tma_=
-fetch_bandwidth > 0.2)",
+@@ -1376,12 +1375,12 @@
          "ScaleUnit": "100%"
      },
      {
@@ -2796,22 +2042,8 @@ elated metrics: tma_ms_switches",
          "ScaleUnit": "100%"
      },
      {
--        "BriefDescription": "This metric represents Core fraction of cycle=
-s in which CPU was likely limited due to the Microcode Sequencer (MS) unit =
-- see Microcode_Sequencer node for details",
--        "MetricExpr": "cpu@IDQ.MS_UOPS\\,cmask\\=3D0x1@ / tma_info_core_co=
-re_clks / 2",
-+        "BriefDescription": "This metric represents Core fraction of cycle=
-s in which CPU was likely limited due to the Microcode Sequencer (MS) unit =
-- see Microcode_Sequencer node for details.",
-+        "MetricExpr": "cpu@IDQ.MS_UOPS\\,cmask\\=3D1@ / tma_info_core_core=
-_clks / 2",
-         "MetricGroup": "MicroSeq;TopdownL3;tma_L3_group;tma_fetch_bandwidt=
-h_group",
-         "MetricName": "tma_ms",
-         "MetricThreshold": "tma_ms > 0.05 & tma_fetch_bandwidth > 0.2",
-@@ -1554,7 +1553,7 @@
-         "MetricExpr": "3 * IDQ.MS_SWITCHES / tma_info_thread_clks",
+@@ -1389,7 +1388,7 @@
+         "MetricExpr": "2 * IDQ.MS_SWITCHES / tma_info_thread_clks",
          "MetricGroup": "FetchLat;MicroSeq;TopdownL3;tma_L3_group;tma_fetch=
 _latency_group;tma_issueMC;tma_issueMS;tma_issueMV;tma_issueSO",
          "MetricName": "tma_ms_switches",
@@ -2833,23 +2065,45 @@ ck_irregular_overhead, tma_clears_resteers, tma_l1_bound, tma_machine_clear=
 s, tma_microcode_sequencer, tma_mixing_vectors, tma_serializing_operation",
          "ScaleUnit": "100%"
      },
-@@ -1563,7 +1562,7 @@
-         "MetricExpr": "tma_light_operations * INST_RETIRED.NOP / (tma_reti=
-ring * tma_info_thread_slots)",
+@@ -1399,7 +1398,7 @@
+         "MetricGroup": "Branches;BvBO;Pipeline;TopdownL3;tma_L3_group;tma_=
+light_operations_group",
+         "MetricName": "tma_non_fused_branches",
+         "MetricThreshold": "tma_non_fused_branches > 0.1 & tma_light_opera=
+tions > 0.6",
+-        "PublicDescription": "This metric represents fraction of slots whe=
+re the CPU was retiring branch instructions that were not fused. Non-condit=
+ional branches like direct JMP or CALL would count here. Can be used to exa=
+mine fusible conditional jumps that were not fused",
++        "PublicDescription": "This metric represents fraction of slots whe=
+re the CPU was retiring branch instructions that were not fused. Non-condit=
+ional branches like direct JMP or CALL would count here. Can be used to exa=
+mine fusible conditional jumps that were not fused.",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -1407,8 +1406,8 @@
+         "MetricExpr": "tma_light_operations * INST_RETIRED.NOP / UOPS_RETI=
+RED.RETIRE_SLOTS",
          "MetricGroup": "BvBO;Pipeline;TopdownL4;tma_L4_group;tma_other_lig=
 ht_ops_group",
          "MetricName": "tma_nop_instructions",
 -        "MetricThreshold": "tma_nop_instructions > 0.1 & tma_other_light_o=
 ps > 0.3 & tma_light_operations > 0.6",
-+        "MetricThreshold": "tma_nop_instructions > 0.1 & (tma_other_light_=
-ops > 0.3 & tma_light_operations > 0.6)",
-         "PublicDescription": "This metric represents fraction of slots whe=
+-        "PublicDescription": "This metric represents fraction of slots whe=
 re the CPU was retiring NOP (no op) instructions. Compilers often use NOPs =
 for certain address alignments - e.g. start address of a function or loop b=
 ody. Sample with: INST_RETIRED.NOP",
++        "MetricThreshold": "tma_nop_instructions > 0.1 & (tma_other_light_=
+ops > 0.3 & tma_light_operations > 0.6)",
++        "PublicDescription": "This metric represents fraction of slots whe=
+re the CPU was retiring NOP (no op) instructions. Compilers often use NOPs =
+for certain address alignments - e.g. start address of a function or loop b=
+ody. Sample with: INST_RETIRED.NOP_PS",
          "ScaleUnit": "100%"
      },
-@@ -1578,19 +1577,19 @@
+     {
+@@ -1421,19 +1420,19 @@
          "ScaleUnit": "100%"
      },
      {
@@ -2889,7 +2143,79 @@ hine_clears_group",
          "ScaleUnit": "100%"
      },
      {
-@@ -1634,8 +1633,8 @@
+@@ -1442,7 +1441,7 @@
+         "MetricGroup": "Compute;TopdownL6;tma_L6_group;tma_alu_op_utilizat=
+ion_group;tma_issue2P",
+         "MetricName": "tma_port_0",
+         "MetricThreshold": "tma_port_0 > 0.6",
+-        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 0 ([SNB+] ALU; [HSW+] ALU and 2nd =
+branch). Sample with: UOPS_DISPATCHED_PORT.PORT_0. Related metrics: tma_fp_=
+scalar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_1, =
+tma_port_5, tma_port_6, tma_ports_utilized_2",
++        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 0 ([SNB+] ALU; [HSW+] ALU and 2nd =
+branch). Sample with: UOPS_DISPATCHED.PORT_0. Related metrics: tma_fp_scala=
+r, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vector_512=
+b, tma_port_1, tma_port_5, tma_port_6, tma_ports_utilized_2",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -1451,7 +1450,7 @@
+         "MetricGroup": "TopdownL6;tma_L6_group;tma_alu_op_utilization_grou=
+p;tma_issue2P",
+         "MetricName": "tma_port_1",
+         "MetricThreshold": "tma_port_1 > 0.6",
+-        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 1 (ALU). Sample with: UOPS_DISPATC=
+HED_PORT.PORT_1. Related metrics: tma_fp_scalar, tma_fp_vector, tma_fp_vect=
+or_128b, tma_fp_vector_256b, tma_port_0, tma_port_5, tma_port_6, tma_ports_=
+utilized_2",
++        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 1 (ALU). Sample with: UOPS_DISPATC=
+HED.PORT_1. Related metrics: tma_fp_scalar, tma_fp_vector, tma_fp_vector_12=
+8b, tma_fp_vector_256b, tma_fp_vector_512b, tma_port_0, tma_port_5, tma_por=
+t_6, tma_ports_utilized_2",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -1487,7 +1486,7 @@
+         "MetricGroup": "TopdownL6;tma_L6_group;tma_alu_op_utilization_grou=
+p;tma_issue2P",
+         "MetricName": "tma_port_5",
+         "MetricThreshold": "tma_port_5 > 0.6",
+-        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 5 ([SNB+] Branches and ALU; [HSW+]=
+ ALU). Sample with: UOPS_DISPATCHED_PORT.PORT_5. Related metrics: tma_fp_sc=
+alar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_0, tm=
+a_port_1, tma_port_6, tma_ports_utilized_2",
++        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 5 ([SNB+] Branches and ALU; [HSW+]=
+ ALU). Sample with: UOPS_DISPATCHED.PORT_5. Related metrics: tma_fp_scalar,=
+ tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vector_512b,=
+ tma_port_0, tma_port_1, tma_port_6, tma_ports_utilized_2",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -1496,7 +1495,7 @@
+         "MetricGroup": "TopdownL6;tma_L6_group;tma_alu_op_utilization_grou=
+p;tma_issue2P",
+         "MetricName": "tma_port_6",
+         "MetricThreshold": "tma_port_6 > 0.6",
+-        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 6 ([HSW+] Primary Branch and simpl=
+e ALU). Sample with: UOPS_DISPATCHED_PORT.PORT_1. Related metrics: tma_fp_s=
+calar, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_port_0, t=
+ma_port_1, tma_port_5, tma_ports_utilized_2",
++        "PublicDescription": "This metric represents Core fraction of cycl=
+es CPU dispatched uops on execution port 6 ([HSW+] Primary Branch and simpl=
+e ALU). Sample with: UOPS_DISPATCHED.PORT_1. Related metrics: tma_fp_scalar=
+, tma_fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vector_512b=
+, tma_port_0, tma_port_1, tma_port_5, tma_ports_utilized_2",
+         "ScaleUnit": "100%"
+     },
+     {
+@@ -1513,8 +1512,8 @@
          "MetricExpr": "((tma_ports_utilized_0 * tma_info_thread_clks + (EX=
 E_ACTIVITY.1_PORTS_UTIL + tma_retiring * EXE_ACTIVITY.2_PORTS_UTIL)) / tma_=
 info_thread_clks if ARITH.DIVIDER_ACTIVE < CYCLE_ACTIVITY.STALLS_TOTAL - CY=
@@ -2919,9 +2245,9 @@ han Divider. For example; when there are too many multiply operations.",
          "ScaleUnit": "100%"
      },
      {
-@@ -1643,8 +1642,8 @@
-         "MetricExpr": "cpu@EXE_ACTIVITY.3_PORTS_UTIL\\,umask\\=3D0x80@ / t=
-ma_info_thread_clks",
+@@ -1522,8 +1521,8 @@
+         "MetricExpr": "EXE_ACTIVITY.EXE_BOUND_0_PORTS / tma_info_thread_cl=
+ks",
          "MetricGroup": "PortsUtil;TopdownL4;tma_L4_group;tma_ports_utiliza=
 tion_group",
          "MetricName": "tma_ports_utilized_0",
@@ -2940,8 +2266,10 @@ may contribute to this metric.",
          "ScaleUnit": "100%"
      },
      {
-@@ -1652,7 +1651,7 @@
-         "MetricExpr": "EXE_ACTIVITY.1_PORTS_UTIL / tma_info_thread_clks",
+@@ -1531,7 +1530,7 @@
+         "MetricExpr": "((UOPS_EXECUTED.CORE_CYCLES_GE_1 - UOPS_EXECUTED.CO=
+RE_CYCLES_GE_2) / 2 if #SMT_on else EXE_ACTIVITY.1_PORTS_UTIL) / tma_info_c=
+ore_core_clks",
          "MetricGroup": "PortsUtil;TopdownL4;tma_L4_group;tma_issueL1;tma_p=
 orts_utilization_group",
          "MetricName": "tma_ports_utilized_1",
@@ -2957,31 +2285,46 @@ cribing a particular hardware resource. In some other cases with high 1_Por=
 t_Utilized and L1_Bound; this metric can point to L1 data-cache latency bot=
 tleneck that may not necessarily manifest with complete execution starvatio=
 n (due to the short L1 latency e.g. walking a linked list) - looking at the=
- assembly can be helpful. Sample with: EXE_ACTIVITY.1_PORTS_UTIL. Related m=
-etrics: tma_l1_bound",
+ assembly can be helpful. Related metrics: tma_l1_bound",
          "ScaleUnit": "100%"
      },
-@@ -1661,7 +1660,7 @@
-         "MetricExpr": "EXE_ACTIVITY.2_PORTS_UTIL / tma_info_thread_clks",
+@@ -1540,16 +1539,16 @@
+         "MetricExpr": "((UOPS_EXECUTED.CORE_CYCLES_GE_2 - UOPS_EXECUTED.CO=
+RE_CYCLES_GE_3) / 2 if #SMT_on else EXE_ACTIVITY.2_PORTS_UTIL) / tma_info_c=
+ore_core_clks",
          "MetricGroup": "PortsUtil;TopdownL4;tma_L4_group;tma_issue2P;tma_p=
 orts_utilization_group",
          "MetricName": "tma_ports_utilized_2",
 -        "MetricThreshold": "tma_ports_utilized_2 > 0.15 & tma_ports_utiliz=
 ation > 0.15 & tma_core_bound > 0.1 & tma_backend_bound > 0.2",
-+        "MetricThreshold": "tma_ports_utilized_2 > 0.15 & (tma_ports_utili=
-zation > 0.15 & (tma_core_bound > 0.1 & tma_backend_bound > 0.2))",
-         "PublicDescription": "This metric represents fraction of cycles CP=
+-        "PublicDescription": "This metric represents fraction of cycles CP=
 U executed total of 2 uops per cycle on all execution ports (Logical Proces=
 sor cycles since ICL, Physical Core cycles otherwise).  Loop Vectorization =
 -most compilers feature auto-Vectorization options today- reduces pressure =
-on the execution ports as multiple elements are calculated with same uop. S=
-ample with: EXE_ACTIVITY.2_PORTS_UTIL. Related metrics: tma_fp_scalar, tma_=
-fp_vector, tma_fp_vector_128b, tma_fp_vector_256b, tma_fp_vector_512b, tma_=
-port_0, tma_port_1, tma_port_5, tma_port_6",
+on the execution ports as multiple elements are calculated with same uop. R=
+elated metrics: tma_fp_scalar, tma_fp_vector, tma_fp_vector_128b, tma_fp_ve=
+ctor_256b, tma_port_0, tma_port_1, tma_port_5, tma_port_6",
++        "MetricThreshold": "tma_ports_utilized_2 > 0.15 & (tma_ports_utili=
+zation > 0.15 & (tma_core_bound > 0.1 & tma_backend_bound > 0.2))",
++        "PublicDescription": "This metric represents fraction of cycles CP=
+U executed total of 2 uops per cycle on all execution ports (Logical Proces=
+sor cycles since ICL, Physical Core cycles otherwise).  Loop Vectorization =
+-most compilers feature auto-Vectorization options today- reduces pressure =
+on the execution ports as multiple elements are calculated with same uop. R=
+elated metrics: tma_fp_scalar, tma_fp_vector, tma_fp_vector_128b, tma_fp_ve=
+ctor_256b, tma_fp_vector_512b, tma_port_0, tma_port_1, tma_port_5, tma_port=
+_6",
          "ScaleUnit": "100%"
      },
-@@ -1670,14 +1669,14 @@
-         "MetricExpr": "UOPS_EXECUTED.CYCLES_GE_3 / tma_info_thread_clks",
+     {
+-        "BriefDescription": "This metric represents fraction of cycles CPU=
+ executed total of 3 or more uops per cycle on all execution ports (Logical=
+ Processor cycles since ICL, Physical Core cycles otherwise)",
++        "BriefDescription": "This metric represents fraction of cycles CPU=
+ executed total of 3 or more uops per cycle on all execution ports (Logical=
+ Processor cycles since ICL, Physical Core cycles otherwise).",
+         "MetricExpr": "(UOPS_EXECUTED.CORE_CYCLES_GE_3 / 2 if #SMT_on else=
+ UOPS_EXECUTED.CORE_CYCLES_GE_3) / tma_info_core_core_clks",
          "MetricGroup": "BvCB;PortsUtil;TopdownL4;tma_L4_group;tma_ports_ut=
 ilization_group",
          "MetricName": "tma_ports_utilized_3m",
@@ -2989,27 +2332,12 @@ ilization_group",
 ation > 0.15 & tma_core_bound > 0.1 & tma_backend_bound > 0.2",
 +        "MetricThreshold": "tma_ports_utilized_3m > 0.4 & (tma_ports_utili=
 zation > 0.15 & (tma_core_bound > 0.1 & tma_backend_bound > 0.2))",
-         "PublicDescription": "This metric represents fraction of cycles CP=
-U executed total of 3 or more uops per cycle on all execution ports (Logica=
-l Processor cycles since ICL, Physical Core cycles otherwise). Sample with:=
- UOPS_EXECUTED.CYCLES_GE_3",
          "ScaleUnit": "100%"
      },
      {
-         "BriefDescription": "This category represents fraction of slots ut=
-ilized by useful work i.e. issued uops that eventually get retired",
-         "DefaultMetricgroupName": "TopdownL1",
--        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound + topdow=
-n\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 * slots",
-+        "MetricExpr": "topdown\\-retiring / (topdown\\-fe\\-bound + topdow=
-n\\-bad\\-spec + topdown\\-retiring + topdown\\-be\\-bound) + 0 * tma_info_=
-thread_slots",
-         "MetricGroup": "BvUW;Default;TmaL1;TopdownL1;tma_L1_group",
-         "MetricName": "tma_retiring",
-         "MetricThreshold": "tma_retiring > 0.7 | tma_heavy_operations > 0.=
-1",
-@@ -1690,7 +1689,7 @@
-         "MetricExpr": "RESOURCE_STALLS.SCOREBOARD / tma_info_thread_clks",
+@@ -1567,7 +1566,7 @@
+         "MetricExpr": "PARTIAL_RAT_STALLS.SCOREBOARD / tma_info_thread_clk=
+s",
          "MetricGroup": "BvIO;PortsUtil;TopdownL3;tma_L3_group;tma_core_bou=
 nd_group;tma_issueSO",
          "MetricName": "tma_serializing_operation",
@@ -3020,26 +2348,11 @@ und > 0.1 & tma_backend_bound > 0.2)",
          "PublicDescription": "This metric represents fraction of cycles th=
 e CPU issue-pipeline was stalled due to serializing operations. Instruction=
 s like CPUID; WRMSR or LFENCE serialize the out-of-order execution which ma=
-y limit performance. Sample with: RESOURCE_STALLS.SCOREBOARD. Related metri=
-cs: tma_ms_switches",
+y limit performance. Sample with: PARTIAL_RAT_STALLS.SCOREBOARD. Related me=
+trics: tma_ms_switches",
          "ScaleUnit": "100%"
      },
-@@ -1699,7 +1698,7 @@
-         "MetricExpr": "140 * MISC_RETIRED.PAUSE_INST / tma_info_thread_clk=
-s",
-         "MetricGroup": "TopdownL4;tma_L4_group;tma_serializing_operation_g=
-roup",
-         "MetricName": "tma_slow_pause",
--        "MetricThreshold": "tma_slow_pause > 0.05 & tma_serializing_operat=
-ion > 0.1 & tma_core_bound > 0.1 & tma_backend_bound > 0.2",
-+        "MetricThreshold": "tma_slow_pause > 0.05 & (tma_serializing_opera=
-tion > 0.1 & (tma_core_bound > 0.1 & tma_backend_bound > 0.2))",
-         "PublicDescription": "This metric represents fraction of cycles th=
-e CPU was stalled due to PAUSE Instructions. Sample with: MISC_RETIRED.PAUS=
-E_INST",
-         "ScaleUnit": "100%"
-     },
-@@ -1709,7 +1708,7 @@
+@@ -1578,7 +1577,7 @@
          "MetricGroup": "TopdownL4;tma_L4_group;tma_l1_bound_group",
          "MetricName": "tma_split_loads",
          "MetricThreshold": "tma_split_loads > 0.3",
@@ -3052,7 +2365,7 @@ ary. Sample with: MEM_INST_RETIRED.SPLIT_LOADS_PS",
          "ScaleUnit": "100%"
      },
      {
-@@ -1718,8 +1717,8 @@
+@@ -1586,8 +1585,8 @@
          "MetricExpr": "MEM_INST_RETIRED.SPLIT_STORES / tma_info_core_core_=
 clks",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_issueSpSt;tma_store_bou=
@@ -3062,7 +2375,7 @@ nd_group",
  & tma_memory_bound > 0.2 & tma_backend_bound > 0.2",
 -        "PublicDescription": "This metric represents rate of split store a=
 ccesses.  Consider aligning your data to the 64-byte cache line granularity=
-. Sample with: MEM_INST_RETIRED.SPLIT_STORES",
+. Sample with: MEM_INST_RETIRED.SPLIT_STORES. Related metrics: tma_port_4",
 +        "MetricThreshold": "tma_split_stores > 0.2 & (tma_store_bound > 0.=
 2 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
 +        "PublicDescription": "This metric represents rate of split store a=
@@ -3072,8 +2385,9 @@ ccesses.  Consider aligning your data to the 64-byte cache line granularity=
          "ScaleUnit": "100%"
      },
      {
-@@ -1727,7 +1726,7 @@
-         "MetricExpr": "L1D_PEND_MISS.L2_STALL / tma_info_thread_clks",
+@@ -1595,7 +1594,7 @@
+         "MetricExpr": "(OFFCORE_REQUESTS_BUFFER.SQ_FULL / 2 if #SMT_on els=
+e OFFCORE_REQUESTS_BUFFER.SQ_FULL) / tma_info_core_core_clks",
          "MetricGroup": "BvMB;MemoryBW;Offcore;TopdownL4;tma_L4_group;tma_i=
 ssueBW;tma_l3_bound_group",
          "MetricName": "tma_sq_full",
@@ -3088,7 +2402,7 @@ eck_cache_memory_bandwidth, tma_fb_full, tma_info_system_dram_bw_use, tma_m=
 em_bandwidth",
          "ScaleUnit": "100%"
      },
-@@ -1736,8 +1735,8 @@
+@@ -1604,8 +1603,8 @@
          "MetricExpr": "EXE_ACTIVITY.BOUND_ON_STORES / tma_info_thread_clks=
 ",
          "MetricGroup": "MemoryBound;TmaL3mem;TopdownL3;tma_L3_group;tma_me=
@@ -3113,7 +2427,7 @@ alls. This metric will be flagged should RFO stores be a bottleneck. Sample=
          "ScaleUnit": "100%"
      },
      {
-@@ -1746,8 +1745,8 @@
+@@ -1613,8 +1612,8 @@
          "MetricExpr": "13 * LD_BLOCKS.STORE_FORWARD / tma_info_thread_clks=
 ",
          "MetricGroup": "TopdownL4;tma_L4_group;tma_l1_bound_group",
@@ -3141,11 +2455,11 @@ ore is writing a smaller region than the load is reading.",
          "ScaleUnit": "100%"
      },
      {
-@@ -1755,8 +1754,8 @@
-         "MetricExpr": "(L2_RQSTS.RFO_HIT * 10 * (1 - MEM_INST_RETIRED.LOCK=
-_LOADS / MEM_INST_RETIRED.ALL_STORES) + (1 - MEM_INST_RETIRED.LOCK_LOADS / =
-MEM_INST_RETIRED.ALL_STORES) * min(CPU_CLK_UNHALTED.THREAD, OFFCORE_REQUEST=
-S_OUTSTANDING.CYCLES_WITH_DEMAND_RFO)) / tma_info_thread_clks",
+@@ -1623,8 +1622,8 @@
+         "MetricExpr": "(L2_RQSTS.RFO_HIT * 9 * (1 - MEM_INST_RETIRED.LOCK_=
+LOADS / MEM_INST_RETIRED.ALL_STORES) + (1 - MEM_INST_RETIRED.LOCK_LOADS / M=
+EM_INST_RETIRED.ALL_STORES) * min(CPU_CLK_UNHALTED.THREAD, OFFCORE_REQUESTS=
+_OUTSTANDING.CYCLES_WITH_DEMAND_RFO)) / tma_info_thread_clks",
          "MetricGroup": "BvML;LockCont;MemoryLat;Offcore;TopdownL4;tma_L4_g=
 roup;tma_issueRFO;tma_issueSL;tma_store_bound_group",
          "MetricName": "tma_store_latency",
@@ -3167,7 +2481,7 @@ es - see FB_Full). Related metrics: tma_fb_full, tma_lock_latency",
          "ScaleUnit": "100%"
      },
      {
-@@ -1773,7 +1772,7 @@
+@@ -1640,7 +1639,7 @@
          "MetricExpr": "tma_dtlb_store - tma_store_stlb_miss",
          "MetricGroup": "MemoryTLB;TopdownL5;tma_L5_group;tma_dtlb_store_gr=
 oup",
@@ -3181,7 +2495,7 @@ oup",
          "ScaleUnit": "100%"
      },
      {
-@@ -1781,31 +1780,31 @@
+@@ -1648,31 +1647,31 @@
          "MetricExpr": "DTLB_STORE_MISSES.WALK_ACTIVE / tma_info_core_core_=
 clks",
          "MetricGroup": "MemoryTLB;TopdownL5;tma_L5_group;tma_dtlb_store_gr=
@@ -3259,27 +2573,8 @@ ry_bound > 0.2 & tma_backend_bound > 0.2))))",
          "ScaleUnit": "100%"
      },
      {
-@@ -1813,7 +1812,7 @@
-         "MetricExpr": "9 * OCR.STREAMING_WR.ANY_RESPONSE / tma_info_thread=
-_clks",
-         "MetricGroup": "MemoryBW;Offcore;TopdownL4;tma_L4_group;tma_issueS=
-mSt;tma_store_bound_group",
-         "MetricName": "tma_streaming_stores",
--        "MetricThreshold": "tma_streaming_stores > 0.2 & tma_store_bound >=
- 0.2 & tma_memory_bound > 0.2 & tma_backend_bound > 0.2",
-+        "MetricThreshold": "tma_streaming_stores > 0.2 & (tma_store_bound =
-> 0.2 & (tma_memory_bound > 0.2 & tma_backend_bound > 0.2))",
-         "PublicDescription": "This metric estimates how often CPU was stal=
-led  due to Streaming store memory accesses; Streaming store optimize out a=
- read request required by RFO stores. Even though store accesses do not typ=
-ically stall out-of-order CPUs; there are few cases where stores can lead t=
-o actual stalls. This metric will be flagged should Streaming stores be a b=
-ottleneck. Sample with: OCR.STREAMING_WR.ANY_RESPONSE. Related metrics: tma=
-_fb_full",
-         "ScaleUnit": "100%"
-     },
-@@ -1822,7 +1821,7 @@
-         "MetricExpr": "10 * BACLEARS.ANY / tma_info_thread_clks",
+@@ -1680,7 +1679,7 @@
+         "MetricExpr": "9 * BACLEARS.ANY / tma_info_thread_clks",
          "MetricGroup": "BigFootprint;BvBC;FetchLat;TopdownL4;tma_L4_group;=
 tma_branch_resteers_group",
          "MetricName": "tma_unknown_branches",
@@ -3294,7 +2589,7 @@ hes the Branch Prediction Unit was unable to recognize (e.g. first time the=
 ches. Sample with: BACLEARS.ANY",
          "ScaleUnit": "100%"
      },
-@@ -1831,8 +1830,8 @@
+@@ -1689,8 +1688,8 @@
          "MetricExpr": "tma_retiring * UOPS_EXECUTED.X87 / UOPS_EXECUTED.TH=
 READ",
          "MetricGroup": "Compute;TopdownL4;tma_L4_group;tma_fp_arith_group"=
