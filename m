@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 220F01F1513;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0146D78F32;
 	Sat, 22 Mar 2025 10:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742640369; cv=none; b=Mw8124rkdLIejuzI9gG2nferWId7SrOtx6FV+O966mXNLOqzTDsFTm8/O6OH0hHuLexvabZ/Bh+qsXokfVayksqUlVg5PDmm/67rvRCwWj30F4nRkNXc8ck4N34beuYh9KjZTUwJacjGBP6XvAg6REAcFm9EnJSxcE/JGWLwptM=
+	t=1742640369; cv=none; b=UxuHClYsfd9PcXLB3eWvzNNej21UvflC8j2R+KB1Hh8a8qpWPQfQHGaWD9piXwm0EvsEsAMpGXp+b/cX/e8yWFVT7/8FNFt2D5TZuYHOWYWyl1k65HAdQMPz3fFkBiiVCDnWyoINVEPQ3S99/t0MZjorD9lTg6K2WmBAxveLfIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742640369; c=relaxed/simple;
-	bh=uVlmDwv5wWEDBvC4S2R9sJZkHok3EH5U4Ugh6RJb8xM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P6T40J7rl92IEm7xt0PtrcExy8GwJfHXxNYKmkqgW8t2H9NiTXgAD2JiPJuaP5Z1QklErTfjxCJzJm9nO3Pq3PL6tR/vMejQVzfAp2D17Bfv/6zU8YBarByIYZY+cCQVlJDJNsy6tKFgT+D1+Kf/Bt/qXWk8CLX0uSyf4SkHWew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I2ha+JQY; arc=none smtp.client-ip=10.30.226.201
+	bh=dy7hnpEpmljpvnmL7VUaERJFKqdCMUh00qJI84ZH+hY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XpeQJOAEfrvnfKZWzpGKhfmM4JvA0Rgw4SgfogMigg+cUOYmh1Yhh4xAeF5RO9BAOsXntvza8LedunaDXEX5Azf8vZnVgQuTOAwJiowrFchMsZUAt5l7XA8hY9fUEqlMD5ncgQ7W2JZGCYOVzpK2m9bUMBxsjOjSH+8cJoixzrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQ8tuJcN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I2ha+JQY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 9795EC4CEEE;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQ8tuJcN"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 70EDCC4CEDD;
 	Sat, 22 Mar 2025 10:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742640368;
-	bh=uVlmDwv5wWEDBvC4S2R9sJZkHok3EH5U4Ugh6RJb8xM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=I2ha+JQYe3dzev/q9ktnGVInz4y9JyTH+DDURH4ztWnOf75AO0/poddtzNt/el8Aj
-	 Sbah066bbnzQqWzhVtqntqgfBSC+fNmBKSUToiEsimmR8ah8Peil9EYctbyLcZJmqp
-	 ZN3EJ5Pf8yJBtEyKbtf0dDtUIxbbFhQdOgIRbrSew1PaS2+oY+Peeo3S9Uuk9MCCjj
-	 hr8TG8QF973JLYyHekhHRuyqCR5+YxUHc90qOp63DJ7FyKc9HTDXOtniC/8MNF8GJy
-	 2Cwv/qsvLsaoDigrITmv/rde0UN+hUWa605XUIfnmFpYD1vcKCG3Hlp6ukzzP3ZcEk
-	 s9ZSxZyAhY5/g==
+	bh=dy7hnpEpmljpvnmL7VUaERJFKqdCMUh00qJI84ZH+hY=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=LQ8tuJcNcRoakCH+5YNtfGQ22Wn5A0UfA5vBvDxjJMieBP7sa6UqVY0QwFc1AaVdq
+	 Ow0yE4mic34YRXq8DA6rLgZQCwIINe5fG4rkVNvqokt9bsJzQow3YrrmUs1PzAsj7a
+	 v2zQynJ327MNH+yn/GgcQuqJNHHNd+I/ALKV00V1pRV0UR2H8T8Yd209t5j+kXMjjW
+	 DtPIA/RMIIFSu0zBZPBL5U+6cR9GcnrepUjX1CVjTznp0ubz3mHIMVFKz85JZLhspO
+	 9Od5S2n8mBd/ehx0Ox8izUAkl86VEbL8rMsLkqc8ZQcZISGjbHYqGUDhgKS4xqlanN
+	 NUk9vueWQxfRA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 906BEC35FFC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B836C35FFC;
 	Sat, 22 Mar 2025 10:46:08 +0000 (UTC)
 From: Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>
-Date: Sat, 22 Mar 2025 11:45:54 +0100
-Subject: [PATCH net-next v7 3/7] net: phy: aquantia: search for
- firmware-name in fwnode
+Subject: [PATCH net-next v7 0/7] net: tn40xx: add support for AQR105 based
+ cards
+Date: Sat, 22 Mar 2025 11:45:51 +0100
+Message-Id: <20250322-tn9510-v3a-v7-0-672a9a3d8628@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,9 +41,12 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250322-tn9510-v3a-v7-3-672a9a3d8628@gmx.net>
-References: <20250322-tn9510-v3a-v7-0-672a9a3d8628@gmx.net>
-In-Reply-To: <20250322-tn9510-v3a-v7-0-672a9a3d8628@gmx.net>
+X-B4-Tracking: v=1; b=H4sIAN+U3mcC/1XNTW7DIBCG4atErEs1/ENXvUfVBTZDzCIkAgu5i
+ nz3EqtVwnI0er73TiqWhJV8nO6kYEs1XXM/zNuJzIvPZ6Qp9Jtw4JJxpumanWJAm/CUz3FmVgV
+ tIZIObgVj2o6xL5JxpRm3lXz3z+Qr0qn4PC+PsYtP+QGWVNdr+TniTRzsr2NeO01QoDIojDpqq
+ xE+z5ftvQeO7SZfIGcDlB0GH2O0bvLGmxGqf6iAcz5A1aFzQiuQBgW4EeonFMwOUHdowXoH1gU
+ upyfc9/0XHJhj424BAAA=
+X-Change-ID: 20241216-tn9510-v3a-2cfc185d680f
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -53,11 +56,11 @@ To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Hans-Frieder Vogt <hfdevel@gmx.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742640367; l=1169;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742640367; l=5168;
  i=hfdevel@gmx.net; s=20240915; h=from:subject:message-id;
- bh=0zRi7Vk41IU72s/8DzrXAvCvexTz79in+5DW1aumMeg=;
- b=sSuPYpE50VbUFZaI7BYuD57IHP6bJEcMIOy+tTBQ2MO78IvnFAjXubb9ejGSMd4ugpSBtfY5A
- 3OSA+wRq3s9DnQhxtHyRfXD8sWBdAxpFVEkR4y8pSEAnevNh/vCQfnU
+ bh=dy7hnpEpmljpvnmL7VUaERJFKqdCMUh00qJI84ZH+hY=;
+ b=b2krxJvHp5+OhOArQcSFecb2wM4Tk2k+Uo9UyRO0v0MSxwvczVKs3kSNbk9Ca0NsfM92qR9W9
+ GKlKin1KN6KCkD+DvT0F4xxh7/XCpQt1kg5DOeoRxzh5xqybcUkUiok
 X-Developer-Key: i=hfdevel@gmx.net; a=ed25519;
  pk=s3DJ3DFe6BJDRAcnd7VGvvwPXcLgV8mrfbpt8B9coRc=
 X-Endpoint-Received: by B4 Relay for hfdevel@gmx.net/20240915 with
@@ -65,39 +68,107 @@ X-Endpoint-Received: by B4 Relay for hfdevel@gmx.net/20240915 with
 X-Original-From: Hans-Frieder Vogt <hfdevel@gmx.net>
 Reply-To: hfdevel@gmx.net
 
-From: Hans-Frieder Vogt <hfdevel@gmx.net>
+This patch series adds support to the Tehuti tn40xx driver for TN9510 cards
+which combine a TN4010 MAC with an Aquantia AQR105.
+It is an update of the patch series "net: tn40xx: add support for AQR105
+based cards", addressing review comments and generally cleaning up the series.
 
-Allow the firmware name of an Aquantia PHY alternatively be provided by the
-property "firmware-name" of a swnode. This software node may be provided by
-the MAC or MDIO driver.
+The patch was tested on a Tehuti TN9510 card (1fc9:4025:1fc9:3015).
 
-Signed-off-by: Hans-Frieder Vogt <hfdevel@gmx.net>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
- drivers/net/phy/aquantia/aquantia_firmware.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Changes in v7:
+- change function name aqr105_config_speed to aqr105_setup_forced, in line with
+  naming of generic functions
+  (suggested by Andrew Lunn <andrew@lunn.ch>)
+- replace device id 0x4025 with symbolic name PCI_DEVICE_ID_TEHUTI_TN9510
+  (suggested by Andrew Lunn <andrew@lunn.ch>)
+- because of last change, remove the Reviewed-by: entries for PATCH 7/7
+- Link to v6: https://lore.kernel.org/r/20250318-tn9510-v3a-v6-0-808a9089d24b@gmx.net
 
-diff --git a/drivers/net/phy/aquantia/aquantia_firmware.c b/drivers/net/phy/aquantia/aquantia_firmware.c
-index dab3af80593f51ff6dc670dfb54ae358c2458c40..bbbcc9736b00e1cfa193f4398889a4c172ca27a4 100644
---- a/drivers/net/phy/aquantia/aquantia_firmware.c
-+++ b/drivers/net/phy/aquantia/aquantia_firmware.c
-@@ -328,10 +328,11 @@ static int aqr_firmware_load_fs(struct phy_device *phydev)
- 	const char *fw_name;
- 	int ret;
- 
--	ret = of_property_read_string(dev->of_node, "firmware-name",
--				      &fw_name);
--	if (ret)
-+	ret = device_property_read_string(dev, "firmware-name", &fw_name);
-+	if (ret) {
-+		phydev_err(phydev, "failed to read firmware-name: %d\n", ret);
- 		return ret;
-+	}
- 
- 	ret = request_firmware(&fw, fw_name, dev);
- 	if (ret) {
+Changes in v6:
+- rebaseline to net-next
+- remove unneeded loop timing ability advertisment in aquantia_main.c
+  (highlighted by Maxime Chevallier <maxime.chevallier@bootlin.com>)
+- add failure path in tn40_mdio.c if device_add_software_node fails
+  (suggested by Ratheesh Kannoth <rkannoth@marvell.com>)
+- Link to v5: https://lore.kernel.org/r/20250222-tn9510-v3a-v5-0-99365047e309@gmx.net
 
+Changes in v5:
+- changed version because "b4 send --resend v4" did not succeed
+- used opportunity to rebaseline to net-next
+- only source code change is merging a split string in tn40_mdio.c, removing
+  a warning from b4 prep --check
+- changed format of cover letter in line with b4 (sequence of changes from
+  latest to oldest)
+- Link to v4: https://lore.kernel.org/r/20241221-tn9510-v3a-v4-0-dafff89ba7a7@gmx.net
+
+Changes in v4:
+- use separate aqr105 specific functions instead of adding aqr105 functionality
+  in common functions, with need of "chip generation" parameter
+  (suggested by Andrew Lunn <andrew@lunn.ch>)
+- make generation and cleanup of swnodes more symmetric
+  (suggested by Andrew Lunn <andrew@lunn.ch>)
+- add MDIO/PHY software nodes only for devices that have an aqr105 PHY
+  (suggested by FUJITA Tomonori <fujita.tomonori@gmail.com>)
+- Link to v3: https://lore.kernel.org/r/20241217-tn9510-v3a-v3-0-4d5ef6f686e0@gmx.net
+
+Changes in v3:
+- aquantia_firmware: remove call to of_property_read_string. It should be
+  called from the more generic function device_property_read_string
+- add more AQR105-specific function, to support proper advertising and auto-
+  negotiation
+- re-organize the patches about the mdio speed and TN40_REG_MDIO_CMD_STAT,
+  skipping the 1MHz intermediate speed step
+- re-organized the sequence of the patches:
+    1. changes to the general support functions (net/phy/mdio_bus.c)
+    2. changes to the aquantia PHY driver
+    3. changes to the tn40xx MAC driver, required to support the TN9510 cards
+- Link to v2: https://lore.kernel.org/netdev/trinity-602c050f-bc76-4557-9824-252b0de48659-1726429697171@3c-app-gmx-bap07/
+
+Changes in v2:
+- simplify the check for a firmware-name in a swnode in the aquantia PHY driver
+(comment from Andrew Lunn)
+- changed the software node definition to an mdio node with phy child nodes, to
+be more in line with a typical device tree definition (also comment from
+Andrew Lunn)
+This also solves the problem with several TN4010-based cards that FUJITA
+Tomonori reported
+- clarified the cleanup calls, now calling fwnode_handle_put instead of
+software_node_unregister (comment by FUJITA Tomonori)
+- updated the function mdiobus_scan to support swnodes (following hint of
+Andrew Lunn)
+- remove the small patch to avoid failing after aqr_wait_reset_complete, now
+that a proper patch by Vladimir Oltean is available
+- replace setting of bit 3 in TN40_REG_MDIO_CMD_STAT by calling of
+tn40_mdio_set_speed (suggestion by FUJITA Tomonori)
+- cleaning up the distributed calls to set the MDIO speed in the tn40xx driver
+- define supported PCI-IDs including subvendor IDs to prevent loading on
+unsupported card
+- Link to v1: https://lore.kernel.org/netdev/trinity-33332a4a-1c44-46b7-8526-b53b1a94ffc2-1726082106356@3c-app-gmx-bs04/
+
+---
+Hans-Frieder Vogt (7):
+      net: phy: Add swnode support to mdiobus_scan
+      net: phy: aquantia: add probe function to aqr105 for firmware loading
+      net: phy: aquantia: search for firmware-name in fwnode
+      net: phy: aquantia: add essential functions to aqr105 driver
+      net: tn40xx: create swnode for mdio and aqr105 phy and add to mdiobus
+      net: tn40xx: prepare tn40xx driver to find phy of the TN9510 card
+      net: tn40xx: add pci-id of the aqr105-based Tehuti TN4010 cards
+
+ drivers/net/ethernet/tehuti/tn40.c           |   9 +-
+ drivers/net/ethernet/tehuti/tn40.h           |  33 ++++
+ drivers/net/ethernet/tehuti/tn40_mdio.c      |  84 +++++++++-
+ drivers/net/phy/aquantia/aquantia_firmware.c |   7 +-
+ drivers/net/phy/aquantia/aquantia_main.c     | 240 ++++++++++++++++++++++++++-
+ drivers/net/phy/mdio_bus.c                   |  14 ++
+ 6 files changed, 378 insertions(+), 9 deletions(-)
+---
+base-commit: 23c9ff659140f97d44bf6fb59f89526a168f2b86
+change-id: 20241216-tn9510-v3a-2cfc185d680f
+
+Best regards,
 -- 
-2.47.2
+Hans-Frieder Vogt <hfdevel@gmx.net>
 
 
