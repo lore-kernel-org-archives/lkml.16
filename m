@@ -1,104 +1,168 @@
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7602542AB0;
-	Sat, 22 Mar 2025 19:11:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5314D1AA791
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 19:12:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742670719; cv=none; b=GFsyNL7r4IGh3PgO9hHWbXhLxTrhgwsq4GSku/XdU2/np1FsTOV3uYQ4DdmsUVadGLYAww+lXn8FEGWfA4iXRR/vb7ZtcUWyplk55dyf9ZzIZpCxleyqprnOLOoLpdqZ3+CGyhNWRNau0kX2xwWcA76hR3+aQ2kWdF/hmzlQehI=
+	t=1742670741; cv=none; b=CBWRx13PROLhN2vKQ9H82/EfkBrLZZV+8Wwrx6+Vsz5KZT2Rb3Zw52FQx7aZ8BUWkWNeU69T2XFGB7XQVrd6B8I7t1y+zScEaHDdtoonY1PTdkxphq7ijlbZkvVxNq9a9veHA3nwbYhT6GYPmeQeuhWe+FHruB9F49ZccftFrsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742670719; c=relaxed/simple;
-	bh=rl7XHTSALGkshOTWUCTsRWgHWs7NO3dE7n+XvjAhlzk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NyFbWAjJorLmTeXQ7m8zzSgkJgIL/sgjxibeh+zdZN5teeM0rFYZ6DlSxIDEXgJFxQ/F4JHrMQ6S3gEanQUsFgmA6iQUWyeUmq+JZCgeO2QVFePcougZh7k5aGzxsM0/cNhZvAVB3rDc1r8uwaLTHvaudlu9ELygjQRRaGvv3i8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr; spf=pass smtp.mailfrom=grabatoulnz.fr; dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b=MnzIXJGb; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=grabatoulnz.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=grabatoulnz.fr
+	s=arc-20240116; t=1742670741; c=relaxed/simple;
+	bh=Ms3GzoMd0rlk4O2lv0P7VKB/JXaNBBDottrVBUZkhXc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=aJniLYoj3cKzoMoY4wo19eUPrvyfiQFRjGqWJZmBNa5v7sGQqV7lp2nl6k1OP25k8Z/TITuwDk1NiIcaRGtHqsz72qVk02b6FkkBlbWxdgOrtrGMpyiHoZJc8/t1T/w31SU8OQ913v04Mcane3k+yCx3LRZYUylPwR5E0iLS+JY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com; spf=pass smtp.mailfrom=byte-forge.io; dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b=NKkRKj1k; arc=none smtp.client-ip=209.85.128.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=antoniohickey.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=byte-forge.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=grabatoulnz.fr header.i=@grabatoulnz.fr header.b="MnzIXJGb"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5423D42D43;
-	Sat, 22 Mar 2025 19:11:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=grabatoulnz.fr;
-	s=gm1; t=1742670709;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=rl7XHTSALGkshOTWUCTsRWgHWs7NO3dE7n+XvjAhlzk=;
-	b=MnzIXJGbzH9aBGTWVzWft+nr4lWZuKKQAQIclR6n/qrpJ0bsbiQGO6XARftEd0+fptD9I5
-	dU3zfFp+VFxNVI7rG7884Cttz/kBQIGFWD3AHtS61jDH0E5E7v0vZT/rwCrrxvbnzh6+xn
-	FV19y39qcy/iWr9qJPgFlrTUhCwqPLIqWgoz6aap6ATa8Az/xbbJqKxe9iu7LppFdEBggp
-	FNrTHglsS6F5zVXLaze07yGtNRPUePz/vcDhOWII23/ZIVl7M5dMqx89E3jUb9GxP9sdI2
-	h+zZ1wtSzZO2Pb21qLKZy2QK2B4JoaSfkGwVyw/ckeNngzltr25F74pdixECkg==
-Message-ID: <4c0764e6-586d-42c1-9d6b-5283097f96ec@grabatoulnz.fr>
-Date: Sat, 22 Mar 2025 20:11:29 +0100
+	dkim=pass (2048-bit key) header.d=byte-forge-io.20230601.gappssmtp.com header.i=@byte-forge-io.20230601.gappssmtp.com header.b="NKkRKj1k"
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6feaa0319d8so22733547b3.2
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 12:12:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=byte-forge-io.20230601.gappssmtp.com; s=20230601; t=1742670738; x=1743275538; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=+xc66qLysPvi281ZD9mTakiRweaXqO3hMAEWrZlpzBs=;
+        b=NKkRKj1kiT/HQmu7ibaWo0/LNpusXk8Ar/5FeSLeH+saNcYNMyJWURQX2Iv+IXbltR
+         44TwBxHyYkNmkaiFLCLKFTL3uzOhknmC974TPHuyPHL+8qe83Zpl4TTtKahg/syAyefj
+         G1Exhd3VOx7FFCIa2Honz/z67Tor/gkCr7Q/aTv3ytcWpM/1OvI8KFfP4T3lVWNq82Dt
+         RjyqrarQJskwFIue9SlxnRHQ0JSVL/89g8rzO3tHNMqAWDY9Rc+O3K/i0HAq5XViqBqC
+         keaZ2w9i8MFb6shtt11rKJn3PvvZ+PuGXJehe2N4CSgFCdNxEzTwFAdoTWC6TVWbs+XE
+         L8IA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742670738; x=1743275538;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+xc66qLysPvi281ZD9mTakiRweaXqO3hMAEWrZlpzBs=;
+        b=LFzZOstcQbxnbx34VbmCSxasBY79mUx9GfHS08g7cJWePgq7QiMi1kkYEsa2jdWmMN
+         WX8/4NgE0SmBB71iWnoVVUdXS+/CDVn9qZpuq8Tb5FmV0MatGHl3e9rRVO8dXZFfMwYE
+         lXFEdn9G8bMcPK4xWHlobnk88FDOLhD17a5iBf4mpwtCyxYP2wSu2Syv5saaa4oNaVce
+         tNizHRLMx3m66VGqdN1KyRH7W9YxK7KOTGjS2gVRnneb/3T+qxROBECytK8V1LY/RH34
+         fAs1tseK+v9RXPxMj2vsWl9rQFjpIyKuxO1dPn5vblBv57DH+xMXGa65pvTVj0A4avSX
+         pz5w==
+X-Forwarded-Encrypted: i=1; AJvYcCUa/UU8MiuuGTU1WPdDRYeVn5uV5sfnJvaZLhz54ijdfG59FuwtEeegpKV2dJo4r1iijwzvXirzzcJFgyY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSxgDGsK6zlmBZqJj3aB3F0/J/dZBvZ4dz9b1sbntOL/DRLW2X
+	+pFAc1E2GQlu6S/wQY+yYKzq4Qu19EvbRO/1DGFrMpUEFLiwAVZjQH5n4fs3SnfeaQoZGRs5iVA
+	4gBI=
+X-Gm-Gg: ASbGnctSPav1PrTMKXuXHHn5ScQOChqoJVL6K+lUA4NdrNnbR3poMC2ah2ZBuQ5gVtv
+	rLJkiAP49MN706zkqBOO+fW8QQ6Y40jbdLRAlJ2s+AD2JZDO20qVEHqI64Mb2J8ldI4WHm4uqcW
+	RJgVx5AhL+wZIS22Ni7zByL1aH0u3ClMgfgJC2WIkFME4Q6pgv/RckVANHWxt8xGLTJhTw1kvvF
+	tWa7NiAJRkdHp11j21g8g1tgK/2AP4jKtUSRXX/ZYd13pEc4iyW7RnxCN9oXBGvuAoM13UVsDbG
+	hLn96QxvHFOIUcwhC5frKgjxOaCpWW/zU6MrbVk4zlkivTYXvYDXZFu/KbcAZxhFdn1ZdYopRQ1
+	n42Gh04MJDCzfcoYdExIO6c4sVBYHROBTAC1UPuQd
+X-Google-Smtp-Source: AGHT+IGKshaTgbMcpr9UNssd5GQF9rWZ6akyX1Lym+sKao77CEU4NvOIGlBPRgaIF+zI1BiKem6ung==
+X-Received: by 2002:a05:690c:fca:b0:6fd:2321:567f with SMTP id 00721157ae682-700babed947mr87056967b3.8.1742670737953;
+        Sat, 22 Mar 2025 12:12:17 -0700 (PDT)
+Received: from Machine.lan (107-219-75-226.lightspeed.wepbfl.sbcglobal.net. [107.219.75.226])
+        by smtp.gmail.com with ESMTPSA id 00721157ae682-700ba7938e6sm8572027b3.64.2025.03.22.12.12.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Mar 2025 12:12:17 -0700 (PDT)
+From: Antonio Hickey <contact@antoniohickey.com>
+To: tamird@gmail.com
+Cc: a.hindborg@kernel.org,
+	alex.gaynor@gmail.com,
+	aliceryhl@google.com,
+	benno.lossin@proton.me,
+	bjorn3_gh@protonmail.com,
+	boqun.feng@gmail.com,
+	contact@antoniohickey.com,
+	dakr@kernel.org,
+	gary@garyguo.net,
+	linux-kbuild@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	masahiroy@kernel.org,
+	nathan@kernel.org,
+	nicolas@fjasle.eu,
+	ojeda@kernel.org,
+	rust-for-linux@vger.kernel.org,
+	tmgross@umich.edu
+Subject: Re: [PATCH v5 01/17] rust: enable `raw_ref_op` feature 
+Date: Sat, 22 Mar 2025 15:12:09 -0400
+Message-ID: <20250322191210.1926380-1-contact@antoniohickey.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <CAJ-ks9=GHVfd=iRT73DviOD=6dio3U7wQWLaXAhKr3UG5-ivvw@mail.gmail.com>
+References: <CAJ-ks9=GHVfd=iRT73DviOD=6dio3U7wQWLaXAhKr3UG5-ivvw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: Regression from 7627a0edef54 ("ata: ahci: Drop low power policy
- board type") on reboot (but not cold boot)
-To: Niklas Cassel <cassel@kernel.org>
-Cc: Hans de Goede <hdegoede@redhat.com>,
- Salvatore Bonaccorso <carnil@debian.org>,
- Mario Limonciello <mario.limonciello@amd.com>,
- Christoph Hellwig <hch@infradead.org>,
- Mika Westerberg <mika.westerberg@linux.intel.com>,
- Damien Le Moal <dlemoal@kernel.org>, Jian-Hong Pan <jhp@endlessos.org>,
- regressions@lists.linux.dev, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, linux-ide@vger.kernel.org,
- Dieter Mummenschanz <dmummenschanz@web.de>
-References: <383d5740-7740-4051-b39a-b8c74b035ec2@redhat.com>
- <Z9BFSM059Wj2cYX5@ryzen> <9ac6e1ab-f2af-4bff-9d50-24df68ca1bb9@redhat.com>
- <Z9LUH2IkwoMElSDg@ryzen> <d5470665-4fee-432a-9cb7-fff9813b3e97@redhat.com>
- <Z9L5p6hTp6MATJ80@ryzen> <6d125c69-35b2-45b5-9790-33f3ea06f171@redhat.com>
- <Z9hXRYQw1-fX0_PY@ryzen>
- <06f76ca1-1a07-4df5-ba50-e36046f58d88@grabatoulnz.fr>
- <5fe0557a-b9ec-4600-a10f-20c494aa2339@grabatoulnz.fr>
- <Z9k4ic4nSkbUMAPA@ryzen>
-Content-Language: en-US
-From: Eric <eric.4.debian@grabatoulnz.fr>
-In-Reply-To: <Z9k4ic4nSkbUMAPA@ryzen>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheegjeekucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfuvfevfhfhjggtgfesthekredttddvjeenucfhrhhomhepgfhrihgtuceovghrihgtrdegrdguvggsihgrnhesghhrrggsrghtohhulhhniidrfhhrqeenucggtffrrghtthgvrhhnpeffgfdufeeigedtleelteetvefhgffguedtueejvdelueekieduiefggeejgfeikeenucfkphepvdgrtddumegtsgdtgeemleegudemsgdutddtmeegvdduieemjegvfhhfmehfvgdvheemleehrgdunecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdtgeemleegudemsgdutddtmeegvdduieemjegvfhhfmehfvgdvheemleehrgdupdhhvghloheplgfkrfggieemvdgrtddumegtsgdtgeemleegudemsgdutddtmeegvdduieemjegvfhhfmehfvgdvheemleehrgdungdpmhgrihhlfhhrohhmpegvrhhitgdrgedruggvsghirghnsehgrhgrsggrthhouhhlnhiirdhfrhdpnhgspghrtghpthhtohepudefpdhrtghpthhtoheptggrshhsvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehhuggvghhovgguvgesrhgvughhrghtrdgtohhmpdhrtghpthhtoheptggrrhhnihhls
- eguvggsihgrnhdrohhrghdprhgtphhtthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpthhtohephhgthhesihhnfhhrrgguvggrugdrohhrghdprhgtphhtthhopehmihhkrgdrfigvshhtvghrsggvrhhgsehlihhnuhigrdhinhhtvghlrdgtohhmpdhrtghpthhtohepughlvghmohgrlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhhphesvghnughlvghsshhoshdrohhrgh
-X-GND-Sasl: eric.degenetais@grabatoulnz.fr
 
-Hi Niklas, hi Hans
+On Sat, Mar 22, 2025 at 02:24:30PM -0400, Tamir Duberstein wrote:
+> On Sat, Mar 22, 2025 at 11:08 AM Antonio Hickey
+> <contact@antoniohickey.com> wrote:
+> >
+> > On Sat, Mar 22, 2025 at 10:16:01AM +0000, Benno Lossin wrote:
+> > > On Thu Mar 20, 2025 at 3:07 AM CET, Antonio Hickey wrote:
+> > > > Since Rust 1.82.0 the `raw_ref_op` feature is stable.
+> > > >
+> > > > By enabling this feature we can use `&raw const place` and
+> > > > `&raw mut place` instead of using `addr_of!(place)` and
+> > > > `addr_of_mut!(place)` macros.
+> > > >
+> > > > Allowing us to reduce macro complexity, and improve consistency
+> > > > with existing reference syntax as `&raw const`, `&raw mut` are
+> > > > similar to `&`, `&mut` making it fit more naturally with other
+> > > > existing code.
+> > > >
+> > > > Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> > > > Link: https://github.com/Rust-for-Linux/linux/issues/1148
+> > > > Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
+> > >
+> > > Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+> > >
+> > > > diff --git a/scripts/Makefile.build b/scripts/Makefile.build
+> > > > index 993708d11874..a73aaa028e34 100644
+> > > > --- a/scripts/Makefile.build
+> > > > +++ b/scripts/Makefile.build
+> > > > @@ -224,9 +224,9 @@ $(obj)/%.lst: $(obj)/%.c FORCE
+> > > >     $(call if_changed_dep,cc_lst_c)
+> > > >
+> > > >  # Compile Rust sources (.rs)
+> > > > -# ---------------------------------------------------------------------------
+> > > > +# --------------------------------------------------------------------------------------
+> > >
+> > > Not sure about this change.
+> >
+> > This change is so I could enable the `raw_ref_op` feature for doctests
+> > since the minimum Rust version 1.78 still has `raw_ref_op` as an
+> > expiramental feature, and will throw errors at compile if a doctest uses
+> > it. Is there a better way to do this?
+> 
+> I think Benno is just asking about the extension of the dashed line.
 
-Le 18/03/2025 à 10:10, Niklas Cassel a écrit :
-> Hello Eric,
->
-> On Tue, Mar 18, 2025 at 01:04:48AM +0100, Eric wrote:
->> Hi Niklas, hi Hans,
->>
->> [...]
->> The test is a success as far as I am concerned. With this new patch, DIPM is
->> disabled on the Samsung SSD, but not the Maxtor disk on the same controller:
->>
->>
->> [...]
->>
->>
->> and the SSD is successfully detected at reboot by both the UEFI and the
->> linux kernel.
-> Thank you for all your perseverance!
->
-> Hopefully, your efforts will make sure that others with ATI AHCI do not
-> encounter the same issue that you faced.
-Thank you for your work !
->
-> Kind regards,
-> Niklas
+Ahh ok yea that makes sense, thanks Tamir, sorry Benno I misunderstood.
 
+So the reason I extended the dashed line was because before my change 
+the dashed line perfectly aligned with number of characters in the line
+I changed. I figured it was supposed to match the amount of characters
+of the line.
 
-Kind regards,
+Giving this a deeper look it looks like the all the other dashed lines
+are maxed at 77 characters. 
 
-Eric
+I will update this.
+
+Thanks,
+Antonio
+
+> 
+> > > >
+> > > > -rust_allowed_features := asm_const,asm_goto,arbitrary_self_types,lint_reasons
+> > > > +rust_allowed_features := asm_const,asm_goto,arbitrary_self_types,lint_reasons,raw_ref_op
+> 
+> This looks correct to me.
+> 
+> > > >
+> > > >  # `--out-dir` is required to avoid temporaries being created by `rustc` in the
+> > > >  # current working directory, which may be not accessible in the out-of-tree
+> > >
+> > >
+> 
+> Reviewed-by: Tamir Duberstein <tamird@gmail.com>
 
