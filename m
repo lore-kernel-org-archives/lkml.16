@@ -1,49 +1,44 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA584522A;
-	Sat, 22 Mar 2025 21:25:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from submarine.notk.org (submarine.notk.org [62.210.214.84])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7B5F1DE2DC
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 21:26:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.210.214.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742678702; cv=none; b=gpLUTCZnfyIt6lreaA3ksrXd/n55iY6WhCls8nPRxlZBifAzjVfI1qqEpM4JtoZ5NGOprE1QAVOG0vppp/OH4BaKpC0jK/ug8gNGYjlFCfvMwTdJGRG91u4KQWSC+m7vkoUZPa7MtsgzH73f0DEEFxQ7DjHSfXFJAZTp+YUdzLE=
+	t=1742678802; cv=none; b=ZtP97JIiiGiUKVAng7WUGTgUFFizNzNztX7nYYhfk2GKJh3Fk27UEH0DIVZdT1da84IXZqQYj5kXt78Di6o52kcNEMVdLIXWlGkow114lHbcmArNb/ItfZWOtkg0gp5w3ZzmLvEAw1URDd1axB7TcV5CFe0YoBJfEvzgOF3+FU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742678702; c=relaxed/simple;
-	bh=iXfQco7kSe8vhMA9nzpstt2Zcp6VqukJOUYA5gnQp/0=;
+	s=arc-20240116; t=1742678802; c=relaxed/simple;
+	bh=aJKrk8AhFU5inmvC5FMnFgltEpcRhKTMhWxISXywHho=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=htEAYzqREih1bU+lR/lyoYRVNQLWLaIwyTVppv6XxHFJRAQ6M9birzhh1jsjsrkh8pA0BD1mT6FoX+kn99ph9WavKI82DwoTptxbIq+Mb3NLulpgaylAAkncZBJJxgjsTA3dgWmiX23n2e+v9LF5+3Zufmjon9U5rx1XyWdqTpY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n63KfsxJ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=seJh6332fJj+YbNfNJJTcJUX6uakSlfv2jdTP4+82CDW7iTQl2HiUpSZg4dLKI09Yth4yBwKB49lEmmbB6oK01zmogIFkWuDTKkzYvAkMLnCfUlQs0CH1wupVsfCMCb4Ig2h60D9orndXT2zWVnyhWqsptr+al2nNHbIc8i6OQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org; spf=pass smtp.mailfrom=codewreck.org; dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b=sxlAqcxb; arc=none smtp.client-ip=62.210.214.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codewreck.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codewreck.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n63KfsxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9076C4CEDD;
-	Sat, 22 Mar 2025 21:25:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742678701;
-	bh=iXfQco7kSe8vhMA9nzpstt2Zcp6VqukJOUYA5gnQp/0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=n63KfsxJoK5AsxCVKgpH+MR7lM0aQCdxbL3zoo3tAfiFXXO8yIp6ZrP+Cmka8UzRd
-	 OXX13BuQkA3pp4MwCwe2s0C6T7Bi3FQ708Kb+xc3tuREkvsgbgU0mxfzMZUmLAl/ae
-	 5BJmqCLyFNoeSCpI4tGJldykmCwIFbXtxL7WRuYLPBkqnuvGhwcgtcpaQh5VQP32Kh
-	 h6Sx+kav/D5ZbqpseJc40naSmAh90JfbyWfuTPqgQfbX69jPzTseONEF6buJFqhiOb
-	 +rZ1ljIYrd2OEAdk2RbT+kurrb1lC0rBVEdtvaJ8Aokg9F51g2vUWwA0kX8B37eGR0
-	 /vQWX/JDlArPA==
-Date: Sat, 22 Mar 2025 23:24:57 +0200
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Lennart Poettering <mzxreary@0pointer.de>
-Cc: lee joey <joeyli.kernel@gmail.com>, Mimi Zohar <zohar@linux.ibm.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>,
-	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-	Eric Snowberg <eric.snowberg@oracle.com>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	linux-integrity@vger.kernel.org, keyrings@vger.kernel.org,
-	linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org,
-	joeyli <jlee@suse.com>
-Subject: Re: [PATCH] Revert "integrity: Do not load MOK and MOKx when secure
- boot be disabled"
-Message-ID: <Z98qqSoZ-ZkVa1qv@kernel.org>
-References: <Z9wDxeRQPhTi1EIS@gardel-login>
- <CAGLnvc_eyLEasc4tKYnYp2c1M+YYRxaoXt2BmJ3kgAec6YTmzg@mail.gmail.com>
- <Z90l26ADmS87tu0k@gardel-login>
+	dkim=pass (2048-bit key) header.d=codewreck.org header.i=@codewreck.org header.b="sxlAqcxb"
+Received: from gaia.codewreck.org (localhost [127.0.0.1])
+	by submarine.notk.org (Postfix) with ESMTPS id A920214C2DB;
+	Sat, 22 Mar 2025 22:26:37 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=codewreck.org;
+	s=2; t=1742678799;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=nlQXDT9qjPMuCQRb2y5j+QqB42E7sudAvA1QZKSwl8U=;
+	b=sxlAqcxbFegzN+9/JA3Mq4pLML+DTcOv4PDeAh8rfbDiwM0e6B0ULM3xOyLhY//CwgEVTU
+	8+ph1HJqs5NsACoSbYCA1Ct/oabash214Ghlb6+GO0aARvLAlNm5PGmN452+u6rtQOegHf
+	6CaumImpLCQqgPPP709YExp4o4V5ir/T1rAxHBwJH0wEC16mjW/m/a8WlLrPg35OHJYS7I
+	TPTdx1RlYVEtb6RM+I7eEybFlxD1cnfYG4GZUzcbygFObFB6aB6IqIiVi7+WDUNQgtqOuk
+	mTPzXo3h3/O5Bkp2gK6um0NJN3pcED3f5YUe+n/biVStLKdyi5Zv9vkZDMDBJg==
+Received: from localhost (gaia.codewreck.org [local])
+	by gaia.codewreck.org (OpenSMTPD) with ESMTPA id 00e7e8d0;
+	Sat, 22 Mar 2025 21:26:35 +0000 (UTC)
+Date: Sun, 23 Mar 2025 06:26:20 +0900
+From: asmadeus@codewreck.org
+To: Sasha Levin <sashal@kernel.org>
+Cc: ericvh@kernel.org, lucho@ionkov.net, linux_oss@crudebyte.com,
+	v9fs@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] 9p: Use hashtable.h for hash_errmap
+Message-ID: <Z98q_K71xueitBeB@codewreck.org>
+References: <20250320145200.3124863-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -52,42 +47,95 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <Z90l26ADmS87tu0k@gardel-login>
+In-Reply-To: <20250320145200.3124863-1-sashal@kernel.org>
 
-On Fri, Mar 21, 2025 at 09:39:55AM +0100, Lennart Poettering wrote:
-> On Fr, 21.03.25 15:13, lee joey (joeyli.kernel@gmail.com) wrote:
+Sasha Levin wrote on Thu, Mar 20, 2025 at 10:52:00AM -0400:
+> Convert hash_errmap in error.c to use the generic hashtable
+> implementation from hashtable.h instead of the manual hlist_head array
+> implementation.
 > 
-> > Hi Lennart,
-> >
-> > Lennart Poettering <mzxreary@0pointer.de> 於 2025年3月20日 週四 下午8:02寫道：
-> > >
-> > > This reverts commit 92ad19559ea9a8ec6f158480934ae26ebfe2c14f.
-> > >
-> > > This original commit this reverts creates a strange situation: it
-> > > ensures more restrictive behaviour if SecureBoot is off then when it
-> > > is on, which is the opposite of what one would expect.
-> > >
-> > > Typically, one would expect that if SB is off the validation of
-> > > resources during the pre-kernel and kernel initialization is less
-> > > restrictive, not more restrictive. But this check turned the world on
-> > > its head.
-> > >
-> >
-> > SB off means that the chain of trust is broken. Which means that all
-> > mechanisms rely on SB are non-secure. Meanwhile, if the integrity of kernel
-> > can be guaranteed by other mechanism (e.g. TPM), then mok should not
-> > be loaded when SB off.
+> This simplifies the code and makes it more maintainable by using the
+> standard hashtable API and removes the need for manual hash table
+> management.
+
+I'm not entierly convinced this is simpler from my little island (that's
+one more API to learn about vs code that doesn't look all that
+different), but I guess I can see the point from an overall perspective.
+
+I see no problem with this, I'll pick it up for -next
+Note this code is not used for 9p2000l iirc so I currently don't have
+any test for it :/
+(but it's simple enough that I'm willing to take the risk)
+
+Thanks,
+Dominique
 > 
-> Why not? as you say, chain of trust is broken: the kernel itself is
-> not immediately integrity protected and neither is the firmware. Hence
-> filtering out keys in this case is really pointless.
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> ---
+>  net/9p/error.c | 21 +++++++++------------
+>  1 file changed, 9 insertions(+), 12 deletions(-)
+> 
+> diff --git a/net/9p/error.c b/net/9p/error.c
+> index 8da744494b683..8ba8afc91482d 100644
+> --- a/net/9p/error.c
+> +++ b/net/9p/error.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/list.h>
+>  #include <linux/jhash.h>
+>  #include <linux/errno.h>
+> +#include <linux/hashtable.h>
+>  #include <net/9p/9p.h>
+>  
+>  /**
+> @@ -33,8 +34,8 @@ struct errormap {
+>  	struct hlist_node list;
+>  };
+>  
+> -#define ERRHASHSZ		32
+> -static struct hlist_head hash_errmap[ERRHASHSZ];
+> +#define ERRHASH_BITS 5
+> +static DEFINE_HASHTABLE(hash_errmap, ERRHASH_BITS);
+>  
+>  /* FixMe - reduce to a reasonable size */
+>  static struct errormap errmap[] = {
+> @@ -176,18 +177,14 @@ static struct errormap errmap[] = {
+>  int p9_error_init(void)
+>  {
+>  	struct errormap *c;
+> -	int bucket;
+> -
+> -	/* initialize hash table */
+> -	for (bucket = 0; bucket < ERRHASHSZ; bucket++)
+> -		INIT_HLIST_HEAD(&hash_errmap[bucket]);
+> +	u32 hash;
+>  
+>  	/* load initial error map into hash table */
+>  	for (c = errmap; c->name; c++) {
+>  		c->namelen = strlen(c->name);
+> -		bucket = jhash(c->name, c->namelen, 0) % ERRHASHSZ;
+> +		hash = jhash(c->name, c->namelen, 0);
+>  		INIT_HLIST_NODE(&c->list);
+> -		hlist_add_head(&c->list, &hash_errmap[bucket]);
+> +		hash_add(hash_errmap, &c->list, hash);
+>  	}
+>  
+>  	return 1;
+> @@ -205,12 +202,12 @@ int p9_errstr2errno(char *errstr, int len)
+>  {
+>  	int errno;
+>  	struct errormap *c;
+> -	int bucket;
+> +	u32 hash;
+>  
+>  	errno = 0;
+>  	c = NULL;
+> -	bucket = jhash(errstr, len, 0) % ERRHASHSZ;
+> -	hlist_for_each_entry(c, &hash_errmap[bucket], list) {
+> +	hash = jhash(errstr, len, 0);
+> +	hash_for_each_possible(hash_errmap, c, list, hash) {
+>  		if (c->namelen == len && !memcmp(c->name, errstr, len)) {
+>  			errno = c->val;
+>  			break;
 
-The way I look at this is that unless there is an actual threat scenario
-that we protect against by hiding MOK keys, then we should not hide
-those keys.
-
-Since I don't find any threat scenarios my reviewed-by holds. Pointless
-checks is security by obfuscation, which is not really security.
-
-BR, Jarkko
+-- 
+Dominique Martinet | Asmadeus
