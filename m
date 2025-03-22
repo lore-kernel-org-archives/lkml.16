@@ -1,102 +1,131 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from e2i673.smtp2go.com (e2i673.smtp2go.com [103.2.142.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE05723536B
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 21:29:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742678989; cv=pass; b=Vtg9gfaKQMA8b9ThLfv13V4xxVUjYNxLfX3WvRnpRbUJm4zjUXOcK3LDcyObOZ3CEdtqcraG+F1022I80wuVjnPS1QilPsHBf/sHIc4v9Zsj4LCQqvldrgPWQ9a4hPClDRtCseJVaulqBRUinUZ6e1Nk8JNiBmYe20iJVIad0/o=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742678989; c=relaxed/simple;
-	bh=tNIVmmqvdn0BbSGupXXauZbKEV8m5jRAzxUwA3qwYTg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SH6eq9F0wBZhgP020gNfXG1r5y2JTvR9w7P3Tv0Z3U8Br4Kvj6UGjRWKp5wCFsHe4mFahRciyGuPIPgrRiD9tYDCUnxwykfSpTMKl776ywb384wPWbPEk4oSoHYDcEDBauGR62jqsSA37ZMlDdLESqX/q1AxMPpO5rZjlY+1hyU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=Bzb8p2WH; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D5BA1DE2DC
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 21:29:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.2.142.161
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742678980; cv=none; b=ZByeFq4fvaEriguvUHfGyOjwos7q9IGhmei4okmEIQNupQqqgy7GVX6zDwgBJDumipC6wWPMzkXv33M2VW69VztG64Y5/ESUnJK6h9QijysB6OSuG482bE0tVWh+T6sn3whKPmGWfWkqQlgzJJfKE/l18Ilw/ajMZUsu3mtP6HM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742678980; c=relaxed/simple;
+	bh=Mb79DNtCDH+YprnnK7anYxnTAMJUcCMlahmLdHiruXo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IlgcpwkBLVmQ4KMhQB76ZVogG6pDIwkMrmU330k0CF+VXEUVbE0drL2mIwVl1zC79twq7amVpA7hVZwSGV/EHaZSZjcpq1u3Tpr3vqKK+k06dSmWehH249nMjsQCVYY2gdvlIR+sDrL5MU0psQp1oQIKAjvrgjPMZLs9AJIigJM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu; spf=pass smtp.mailfrom=em1174286.fjasle.eu; dkim=fail (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=Rh7Z7SZc reason="unknown key version"; dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=kkWEfGs8; dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b=i2dRR+8j; arc=none smtp.client-ip=103.2.142.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=fjasle.eu
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em1174286.fjasle.eu
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="Bzb8p2WH"
-ARC-Seal: i=1; a=rsa-sha256; t=1742678969; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=MObpe1hBvD+xE6c61j/lE28XU2aNW9N1v/0/JqDaqcjfWfigMH378voLegXJqNuBtPI2F2ezXa+JuKSTMF6bl6Q9mJ1rx6GHyAa5YSfr8o6B7fzVw2vZjoBv9ZAK2tAFAWdMVawjXZOtDJ6KsD4riUmraHl0/v3bx6TN56OUdK4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742678969; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=q83oIT0cBFEw1AlNTa7hMxOMQ+6roqL+ZBBn36G+JnQ=; 
-	b=g1dF3qzKNjywQ+iM3zPIuCRb+f/RYcGa7lTQFPEs6b6WB7VvgJXAXqM7qgx1l9frZhq+FZbONIj5EKMfJEHqYxAtuBczs0qkpXfJZl34OnTdjlSQJCOIYLFmXboi+34FNS6eyq4YxR1k9/OVunoqHjgt0OBbN7YQXcr4f7zUnbE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742678969;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=q83oIT0cBFEw1AlNTa7hMxOMQ+6roqL+ZBBn36G+JnQ=;
-	b=Bzb8p2WHAc+9CedgTOqFDrYVwzoVr+pRI9CPz1FFyxdDEN7jsqbhgYaqeQLU0QQr
-	A/G+Tk1I2Mr5SD9I1k4sl3Cdncq9VwFeNfhIHCp61qlzRMBkHRTDiLQdA9ICKcYm/Ok
-	lZLpbHvbPjB8NUQe1Yw7jwwk6Q7NIv/n+rnS3EZA=
-Received: by mx.zohomail.com with SMTPS id 1742678968659230.70139866836757;
-	Sat, 22 Mar 2025 14:29:28 -0700 (PDT)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Qiang Yu <yuq825@gmail.com>,
-	Steven Price <steven.price@arm.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH v20 06/10] drm/shmem-helper: Remove obsoleted is_iomem test
-Date: Sun, 23 Mar 2025 00:26:04 +0300
-Message-ID: <20250322212608.40511-7-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+	dkim=fail reason="unknown key version" (0-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="Rh7Z7SZc";
+	dkim=pass (2048-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="kkWEfGs8";
+	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="i2dRR+8j"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=smtpservice.net; s=mp6320.a1-4.dyn; x=1742679870; h=Feedback-ID:
+	X-Smtpcorp-Track:Message-ID:Subject:To:From:Date:Reply-To:Sender:
+	List-Unsubscribe:List-Unsubscribe-Post;
+	bh=ZkOds2VlnsYuYQLmdf8w6Ep7Uph1rKBP3ZEzdDiDdsg=; b=Rh7Z7SZcCdvGCKtdIMzLxg460J
+	4OCVJT3Q+mpYDou1L4xMENfWhiCHNLenhI1xaTUlis0Y4h/qp2rW9dZI247hFMzMv35VxSDCipymP
+	HAIEnxc1CjfMtcTAXUtOVmu2KGXKOKfhvMpb0TsY6xGjDELWfHQFV/zMjm4XiK67PDwlSl6gTIydc
+	iqsLQRMQzTnjVFMgVHS5+EOanC6jZ//3sY///fZyA1//vVTpKUSBOZ9HjKjLmvF8/i+dTfWyZY5cS
+	W0g7cG0HcyS1DW2xcu2BqVZBJ0nV/ISOFBoW53KVD5scLTCBxcCCWjfsX5HPVzacwp89rkzL+pp3P
+	AMC87r3g==;
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fjasle.eu;
+ i=@fjasle.eu; q=dns/txt; s=s1174286; t=1742678970; h=from : subject :
+ to : message-id : date;
+ bh=ZkOds2VlnsYuYQLmdf8w6Ep7Uph1rKBP3ZEzdDiDdsg=;
+ b=kkWEfGs8/BV0V7/2iXCUc1hD2L/cTQF0o053ShCFViRL1ewRDRAHl9DUt1dQ+NDPOPPh8
+ ioKFOsVbsA8YOJdrglPoeIkA1L3h8hym84/CT+ZdBFz6S9/ddE1Y7XWRNQe4TtdR6CUM9qD
+ O4iIoujATgfDQEl8vw7TzWZYYpswqw8giaLw7ud4mC1IcPGi4CcpbPgKkVm8021HBJGIPiY
+ VQPChZmYiQcigV8CUDNXBb4fdlUXiDeQU58sR0ZoKVW41JpFlleDCh8HJpQBOZAASAMUi71
+ c+P40C7LzMhJWgZ1JdbLAzrjeT2uoKwNPOfgJdrN8Q7JMT+N++q2okOQk9Uw==
+Received: from [10.139.162.187] (helo=SmtpCorp) by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.94.2-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1tw6MF-qt4Caj-2k; Sat, 22 Mar 2025 21:26:20 +0000
+Received: from [10.85.249.164] (helo=leknes.fjasle.eu)
+ by smtpcorp.com with esmtpsa
+ (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+ (Exim 4.97.1-S2G) (envelope-from <nicolas@fjasle.eu>)
+ id 1tw6ME-4o5NDgrqv8S-km5i; Sat, 22 Mar 2025 21:26:18 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
+ t=1742678776; bh=Mb79DNtCDH+YprnnK7anYxnTAMJUcCMlahmLdHiruXo=;
+ h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+ b=i2dRR+8j6qpe7Lr05Ew/b/2waRuShb9V6VCoVHZHZQzdHQa0Vu6l0QnxuHdPs9pTD
+ K32Ymx+ZJJZw3kdfQ310kflq/waV3fcLieVrlLXL2kUckhY7IIU75tlWkuxp3bFtfe
+ VKWIFWQcF0HrGMa2a9FiDxgKOe9LZ9D4mTEZbRQM=
+Received: by leknes.fjasle.eu (Postfix, from userid 1000)
+ id 65D913CBC9; Sat, 22 Mar 2025 22:26:16 +0100 (CET)
+Date: Sat, 22 Mar 2025 22:26:16 +0100
+From: Nicolas Schier <nicolas@fjasle.eu>
+To: Khem Raj <raj.khem@gmail.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Masahiro Yamada <masahiroy@kernel.org>, Kees Cook <kees@kernel.org>,
+ linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH] mips: Add '-std=gnu11' to vdso CFLAGS
+Message-ID: <Z98q-CurZoru9Qr3@fjasle.eu>
+References: <20250322000940.778730-1-raj.khem@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250322000940.778730-1-raj.khem@gmail.com>
+X-Smtpcorp-Track: ElQxUPQjLANj.TgeDsMgFKsxW.-d5b1Q_lA4g
+Feedback-ID: 1174286m:1174286a9YXZ7r:1174286smZycWegRd
+X-Report-Abuse: Please forward a copy of this message, including all headers,
+ to <abuse-report@smtp2go.com>
 
-Everything that uses the mapped buffer should be agnostic to is_iomem.
-The only reason for the is_iomem test is that we're setting shmem->vaddr
-to the returned map->vaddr. Now that the shmem->vaddr code is gone, remove
-the obsoleted is_iomem test to clean up the code.
+On Fri, Mar 21, 2025 at 05:09:40PM -0700 Khem Raj wrote:
+> GCC 15 changed the default C standard dialect from gnu17 to gnu23,
+> which should not have impacted the kernel because it explicitly requests
+> the gnu11 standard in the main Makefile. However, mips/vdso code uses
+> its own CFLAGS without a '-std=' value, which break with this dialect
+> change because of the kernel's own definitions of bool, false, and true
+> conflicting with the C23 reserved keywords.
+> 
+>   include/linux/stddef.h:11:9: error: cannot use keyword 'false' as enumeration constant
+>      11 |         false   = 0,
+>         |         ^~~~~
+>   include/linux/stddef.h:11:9: note: 'false' is a keyword with '-std=c23' onwards
+>   include/linux/types.h:35:33: error: 'bool' cannot be defined via 'typedef'
+>      35 | typedef _Bool                   bool;
+>         |                                 ^~~~
+>   include/linux/types.h:35:33: note: 'bool' is a keyword with '-std=c23' onwards
+> 
+> Add '-std=gnu11' to the decompressor and purgatory CFLAGS to eliminate
+> these errors and make the C standard version of these areas match the
+> rest of the kernel.
+> 
+> Signed-off-by: Khem Raj <raj.khem@gmail.com>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/mips/vdso/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/mips/vdso/Makefile b/arch/mips/vdso/Makefile
+> index b289b2c1b294..15521004c563 100644
+> --- a/arch/mips/vdso/Makefile
+> +++ b/arch/mips/vdso/Makefile
+> @@ -30,7 +30,7 @@ cflags-vdso := $(ccflags-vdso) \
+>  	-O3 -g -fPIC -fno-strict-aliasing -fno-common -fno-builtin -G 0 \
+>  	-mrelax-pic-calls $(call cc-option, -mexplicit-relocs) \
+>  	-fno-stack-protector -fno-jump-tables -DDISABLE_BRANCH_PROFILING \
+> -	$(call cc-option, -fno-asynchronous-unwind-tables)
+> +	$(call cc-option, -fno-asynchronous-unwind-tables) -std=gnu11
+>  aflags-vdso := $(ccflags-vdso) \
+>  	-D__ASSEMBLY__ -Wa,-gdwarf-2
+>  
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Suggested-by: Thomas Zimmermann <tzimmermann@suse.de>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
----
- drivers/gpu/drm/drm_gem_shmem_helper.c | 6 ------
- 1 file changed, 6 deletions(-)
+Thanks for the patch.  Did you evaluate adding a line like
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index a9e35a46e72b..277e792a0c5c 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -340,12 +340,6 @@ int drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem,
- 
- 	if (drm_gem_is_imported(obj)) {
- 		ret = dma_buf_vmap(obj->dma_buf, map);
--		if (!ret) {
--			if (drm_WARN_ON(obj->dev, map->is_iomem)) {
--				dma_buf_vunmap(obj->dma_buf, map);
--				return -EIO;
--			}
--		}
- 	} else {
- 		pgprot_t prot = PAGE_KERNEL;
- 
--- 
-2.49.0
+    $(filter -std=%,$(KBUILD_CFLAGS)) \
+
+to the assignment of ccflags-vdso?  Then MIPS VDSO C standard keeps aligned
+with top-level.
+
+Nevertheless,
+Reviewed-by: Nicolas Schier <nicolas@fjasle.eu>
 
