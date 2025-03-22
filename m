@@ -1,217 +1,123 @@
-Received: from NAM02-DM3-obe.outbound.protection.outlook.com (mail-dm3nam02on2119.outbound.protection.outlook.com [40.107.95.119])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C35E800;
-	Sat, 22 Mar 2025 13:36:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.95.119
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742650595; cv=fail; b=ELOQ0cHoqowiubhgS0w9zDzYiAUr/m8OZ9YFzk7akPvgbNBkg1IZZiRTUn2RAApFUojxDRCCzQYylytkywCxsNgqj+geC+zOOus4FhUGox+SBZfyrNAd6k3rN6hr/r4U8sXG1tt8OIygJpHCK5Kr0pu3yjeOci4w4ZahQk+iVaY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742650595; c=relaxed/simple;
-	bh=YsY0pfg6qsUkG9fgOsLnp9It4Sc2PoxSxm5NJKorxDs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=bGUzEc5mBOL6XGCv+rAamMcY1B0cUEMWr1Kr7pcfGsAq/BntflNz5s8+pGtyLJmNZbAPlAvNAzuIzvHwdcPHBmYOOlEQ0DgMkNIGfYDDDVZ/kcAWAKlylSJNu84VcNrCKkOznbfXMRQhAVzr7UqGkImYkwYBxiT07AlpSua48vs=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=in-advantage.com; spf=pass smtp.mailfrom=in-advantage.com; dkim=pass (1024-bit key) header.d=inadvantage.onmicrosoft.com header.i=@inadvantage.onmicrosoft.com header.b=CIHUBRO6; arc=fail smtp.client-ip=40.107.95.119
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=in-advantage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=in-advantage.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5EA1F9F73;
+	Sat, 22 Mar 2025 13:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742650762; cv=none; b=fyAaShkmL8Jlnee15fDycXLdmNYhXyuDrmvVvyW+sfyRb4zYv3ihp4MCQ8884aHO6O0NxrVeRAMEPEq/PJ8qNcrk5TZosPUgRI2cc0TQeCDf0CW3azpuj4Oj8/cHRaGqdc+tOgVDoJYFb+qKrYjzL1rgeG6RL+BOb3/9Td+3u0Y=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742650762; c=relaxed/simple;
+	bh=XKIrgqCUqKzr2rLYyevfJSm1vWGqKfiisyvyw/yc950=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cHghjAI7QTeGg0RHhMTUHwqnoe5GayOrvQyBSiWXm0kub9kLgWZKnYW/UknlKpyKJ8z2Tk0h/QqB+0dwzMWD7b3V3qbWeyz1vqih3yv3Ellf0PmhXPhiSU/At85WeEaBqOL+anBJ5r2VtsSQ8abG4OnEW5RQV4OMASzRQAVxgmI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iXmPJwNg; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=inadvantage.onmicrosoft.com header.i=@inadvantage.onmicrosoft.com header.b="CIHUBRO6"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=nS6x8iRcwycusFIrCFM/HeUKW/OKX5GjqRmD8yHVBRNQ48pK0ZMK4s0YLGxTelIJ34AWQ2/o5hThyWyLwo7Hb89p+lXg2IYYt7YtlAEloSrPqUs8us+AwqhFWPtxJsAPvV4/p35rKgQSkvrs4qPH/MmlHQZKjdV7rhQVdL3oolojKSatDGEalJuKunr47wO1jZJ1r1yDoAFhqzxd1O0555d3AvofXmPZwpmxKdOIm/ZcTyr0Iz07+Wyl10Ug4CAaKaDZyt6Nn48ARQXKNFL455GXwcpElD2o3QA4K+B3MdlilcL1XPKQOkEDH5iVnExzhvt0SGBjwqddcQb2yKhYfA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=I1AFSR34cgO/bxhEIgsrb56I2KLx0o4fTDYBZhbtgQc=;
- b=h5CP3v8gSRmUA0Puquol5uDC0JO26PDzj7bs9yQ/kknNrEwSwA51Mb35dFQ7sc4rCGp1zFUJo1rAasclk3aPpt+Ujs5vXY/OD6eX+aFQqsdu7+8By8IL0wlUrTNYYfysAHQjOzHn0LWEjsu5Gede/WdQtzsicUjs7GBSfOlOoxNB+1DJW0awRZHWgchHxHAlLz5EKe1Q7TCyrqiTfwlSlHkBqUrFYUmv+2csIkm7P8C75pquNxpQftSXLh2IQGAZm6cmGNrjN7SJjtc6+iLoMGyYVV+ZjfSnEZrGaydhW7U/fH3fKtrLcw1esHZZfIjncLCU7fmVP30Dv8VjSLt3Zg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=in-advantage.com; dmarc=pass action=none
- header.from=in-advantage.com; dkim=pass header.d=in-advantage.com; arc=none
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iXmPJwNg"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-301918a4e1bso3839238a91.1;
+        Sat, 22 Mar 2025 06:39:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=inadvantage.onmicrosoft.com; s=selector2-inadvantage-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I1AFSR34cgO/bxhEIgsrb56I2KLx0o4fTDYBZhbtgQc=;
- b=CIHUBRO6tms/HXnLcqOhYH9PMwWMrhNSgb93aASLoyh9Av9UxfMaucsqT2op1aax9d5GlS8eF2E/h0FT1LzqCgrjOizRhBFSovyyxoq3NK8JOTNOq9NKBz9Ao20/52TCn4xmBPySqunY1DpaNpWbev2/7tSVLR0g9o7cjtDpTgs=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=in-advantage.com;
-Received: from DS0PR10MB6974.namprd10.prod.outlook.com (2603:10b6:8:148::12)
- by IA1PR10MB6195.namprd10.prod.outlook.com (2603:10b6:208:3a5::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.33; Sat, 22 Mar
- 2025 13:36:30 +0000
-Received: from DS0PR10MB6974.namprd10.prod.outlook.com
- ([fe80::7603:d234:e4ab:3fea]) by DS0PR10MB6974.namprd10.prod.outlook.com
- ([fe80::7603:d234:e4ab:3fea%6]) with mapi id 15.20.8534.036; Sat, 22 Mar 2025
- 13:36:29 +0000
-Date: Sat, 22 Mar 2025 08:36:27 -0500
-From: Colin Foster <colin.foster@in-advantage.com>
-To: Rasmus Villemoes <ravi@prevas.dk>
-Cc: Lee Jones <lee@kernel.org>, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Felix Blix Everberg <felix.blix@prevas.dk>
-Subject: Re: [PATCH 3/8] mfd: ocelot: rework SPI (re-)initialization after
- chip reset
-Message-ID: <Z9682y2Z_BUUjg2e@colin-ia-desktop>
-References: <20250319123058.452202-1-ravi@prevas.dk>
- <20250319123058.452202-4-ravi@prevas.dk>
- <Z9tASE2-adiEUT-3@colin-ia-desktop>
- <87v7s4rlwu.fsf@prevas.dk>
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87v7s4rlwu.fsf@prevas.dk>
-X-ClientProxiedBy: CH0PR03CA0261.namprd03.prod.outlook.com
- (2603:10b6:610:e5::26) To DS0PR10MB6974.namprd10.prod.outlook.com
- (2603:10b6:8:148::12)
+        d=gmail.com; s=20230601; t=1742650761; x=1743255561; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=P+EUS7u6sE/lUiUTaK0rB8xpgpACxlJdevNW8AvmFBk=;
+        b=iXmPJwNg8E4VqgNGgXyFSDw+I0x1mwSOHY5cu3GJBjhRfUMz4rtKQ3mZZIJZU3mGvV
+         kb1I1/gCj+BH/VNUbAkZEibJE10GQUPDsV/pKqS8yruc+k4auJVLkxWuYc3Adv1D2o4l
+         JzUnYNnh5pCv+s/aksUuIQZFFITz1kPrE37eix8WFL/1JThWuIZXAlgfq4TqCpVOgV78
+         HyVx6Kz3nclDwdIjN0vSUAtJSnBYMDkFWVOTGT2GI08h6upx7iPDEUQX3i9kDTmPAXBI
+         Gb5KDaxngcd+HaVEDW++vAOzG4QZaD38bxN5RbsYT8WZrcoE5zaaIZRiJBirDxBiUBBV
+         OA0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742650761; x=1743255561;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P+EUS7u6sE/lUiUTaK0rB8xpgpACxlJdevNW8AvmFBk=;
+        b=OgNAimGBJavDsLh+NYattrj0a0JuHMy3vsCHPBh9KxnwGyykMmY4bkHH9szlHF+vhe
+         i7Nq3gBr4LbN6q7Mb1pJapZu5w7XgESWnBHliDOrlxhjS28wnbWpu4ClFzaGC43Mb4h6
+         mJ6zwOYYuCBRXrrH2nw/ee6CQAANC4a2rfD93FTdaGuVA0UUl7LtQcmSglSpJripVUcA
+         Yexm7IJ7lPHg8ZDI1PMAovjUc2d0B/PykQOJfvHvT92/yoe9juvLJlCTxlxMVKFiYBy5
+         gTv0zCkvWKcHhB/CmGxPQVsMOU9uwJ8Mb4sOoLEK3rHoCG1yBtKgV3D/MHorHU/7Ax6l
+         OYSw==
+X-Forwarded-Encrypted: i=1; AJvYcCWSYX7wNUgteLoXYNwnkrZFvD0+SgL/W1kVkBEpt1b/gmFdCaq2XNvn5hx8HYztLwad3han2zoJUjfyrMg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxHDtRnlMjEHyqnl3thWhdErBQ4AL9NiIoYWBdaT887nAhjHTbX
+	OuSAwnQ2G49ZlmdBDiGKiP6zqzyFEnTLHxOydVbq/xCsSXDAep+W
+X-Gm-Gg: ASbGncthRM5xKfBGKzfaOGtNudstpUGzXapinWi+rHb9rujm0pZURHXIfXwPXllDqKw
+	vqpLwtjM608jUpVVjRhNzKTxV8aXOFsc/vrOAhuLZsxyYJJiJdsariuxppGJwyEAYqBdrGd30Tm
+	6NZFDJyHC75c2nGz4M3TX31Oea5srUjxQsn91aO4E9icJbNrUBI4M6FLuNoOd8kz9GEFM6rmmSe
+	PDG8YNp3QAMShW4FDgabCz6qN3EHa9Eu5H1gBunm7H6hC41HcGbdefoSAuW7DrL3m4POy5ZnK+v
+	sVi0IXAOatuw6LizT/lnhBF1bFkWDj1ZT3uulMZeR8W7cBIIfXFs7A==
+X-Google-Smtp-Source: AGHT+IGAMRI8qghoQ88hiRYeDKHXI01kQCTBp3E3XmT2HIRI1dnp6VXTaODfyPRS6ZuF/s9XRLJFog==
+X-Received: by 2002:a05:6a20:d81b:b0:1f5:67c2:e3e9 with SMTP id adf61e73a8af0-1fe4342cc6emr12058393637.29.1742650760092;
+        Sat, 22 Mar 2025 06:39:20 -0700 (PDT)
+Received: from localhost ([2804:30c:b31:2d00:277c:5cbe:7f44:752b])
+        by smtp.gmail.com with UTF8SMTPSA id d2e1a72fcca58-7390615874csm4122480b3a.143.2025.03.22.06.39.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Mar 2025 06:39:18 -0700 (PDT)
+Date: Sat, 22 Mar 2025 10:40:17 -0300
+From: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+To: Siddharth Menon <simeddon@gmail.com>
+Cc: linux-iio@vger.kernel.org, lars@metafoo.de,
+	Michael.Hennerich@analog.com, jic23@kernel.org,
+	gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
+	linux-staging@lists.linux.dev
+Subject: Re: [PATCH] iio: frequency: ad9832: devicetree probing support
+Message-ID: <Z969wZRJxMCyVuqy@debian-BULLSEYE-live-builder-AMD64>
+References: <20250322081108.202654-1-simeddon@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS0PR10MB6974:EE_|IA1PR10MB6195:EE_
-X-MS-Office365-Filtering-Correlation-Id: 2ed65f35-61ee-481c-5dde-08dd69468d3f
-X-MS-Exchange-AtpMessageProperties: SA
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|366016|1800799024|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?9Fs9VzIHNpyNYbqp04CMTVgfc9TQuXLlKtGc6BQRcANFDQ6UoKa65+qH3BpU?=
- =?us-ascii?Q?Y5n8xjQoHslsMAbIYEIQzynbDSjwaPXq/HDvoxzj48lAsbFxXu6O2or67aaX?=
- =?us-ascii?Q?7emxYLKcfcsywueOj/QI29yokOmwS+4DvzyYglOw8Gm6G5Oi8mJCc2frngX+?=
- =?us-ascii?Q?MTnFKMmr+C6crHztsGwtKv/prB2wPxXtlF24kMk2U58r70KOx4yipQlOz772?=
- =?us-ascii?Q?KYCQdz+WeprnH73aG1xEwypou+yesUZOjhD9KqnjZAVDwXDR7lrlBAYMMuIy?=
- =?us-ascii?Q?PdpnVcxsE0fjghyIGZ6QKNvk+DZC/SjeaPrm95rBYud0uSRmas/k20CHwJ07?=
- =?us-ascii?Q?ubFDHoTGHJB2F6nguKAazNLuAmzBwpWQF0T4jx9O6DTywTfIeoc1uHeJrkXn?=
- =?us-ascii?Q?kyHQF2CqEQIVuB0MLWo6dHTJpt0jUSsjLKunBvU2YXq8z+2fLQno23Ux53B5?=
- =?us-ascii?Q?npgoJrXvuLfkRBdgV/uf/H7NlK9IF+zVB4BYzsQlrmtGtn3TX+G0J5QYE7gN?=
- =?us-ascii?Q?vfJKPDLNCbHffUYQ0F1VRFxlSfTpoUDGKG2an3PiGwDVLQZ0CO/kv2VAso3c?=
- =?us-ascii?Q?VYO7jrieQp1SkQa5DBXBcHbX9ys7o9jDZ9R4bdrIICPPqMbhqTEqokqFPjWY?=
- =?us-ascii?Q?x+sXw34hdmrzTwbRK+Z9KJUbh6ZyonyC0NScjVTAKw+B+o0Abvpo2GB0H9/B?=
- =?us-ascii?Q?8v32lNcCjA20kdl5VAxZrOu0yvR1V+L7UVSly1fMNbL28P8jP3fLWfkHyzX5?=
- =?us-ascii?Q?ewzL5WerPCoTL2uCwyhTTThRD3DlRBY90u1RHBr3011sRYlKi6S1S67e4ZFS?=
- =?us-ascii?Q?X5G0dzTck3B9VVDMoLo4dim5NbuBhiL8Gadq/+gjbh1M6DSCA6OmtOrtBbMT?=
- =?us-ascii?Q?LXbfcL/BYDuW3zWtZgVA/2ivZG6SDSxl+QxCtZyF5V9Vcqj1OcvkKe13h9z2?=
- =?us-ascii?Q?gvRKDbVc5cNlux8Owy3pHn0Zs6d1B1/2IH+KcQOzD1bg4dE2S44jN8DbdusA?=
- =?us-ascii?Q?20xZPpVyKkiLQvZqDUjgziZ2AJMQmHJ6aPYIPd6mVzjWbUQjAH3OIRaPi4O5?=
- =?us-ascii?Q?icHXvQ9pBm5E29HNQTJH2YSfEHfnj2aR5ZHAgnJMKup9d5MFaW+Ld8uK3UvX?=
- =?us-ascii?Q?hCbGHwfouOP30G4mhWlbUwgcO8ZrC1iu/T8MCu97/kZOfamcWc571eSue+yd?=
- =?us-ascii?Q?c+WbPZhkYtW03clAQ3I7eN51Mo3uXo+pOMYA6fYXmIq2KH7ZdllWQl+0KIp7?=
- =?us-ascii?Q?bxTfYNubVk7CrCb7l2K3xjsDxCm7BhX7wgYutg6yY9T6zPdOdvCPMCM/2+OC?=
- =?us-ascii?Q?WhNfRE6/l6QBia8yyFDNjV8iuLxJz+PjFSf+rx0rR3Hh2Txowfpu/oGwiR2X?=
- =?us-ascii?Q?STNnNjekWQisnRSZheIF4mqCzFiF?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DS0PR10MB6974.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?D2K+jgNSm2vrpggKgoCUOGz7KeaTcGcviBNykd4vHqKqD3q0kYR/kfK3YkZI?=
- =?us-ascii?Q?99WE8gZr5alXMf6EV+d0ZyovYwV7vuAKfOmWHLLMGMcqNP5bk1Kr+aE77RW+?=
- =?us-ascii?Q?e7nV/duOvbuknhjBssRKCxP1LBbxEWOhl9SkKWf4oztspyqgBtd9my6Uej5m?=
- =?us-ascii?Q?O8OiSUUCcXsCjFHie+nR/n9DYEjYO+u+OX0s5i2Ll0RC1TF4mqkLGVOLpJJC?=
- =?us-ascii?Q?d2cQIFRXq6Zh9tzVj1w7K0qbmoM3/6G+pBws72bYhCFcEg5SiGTtkbI3HJm5?=
- =?us-ascii?Q?ba9sqSQZ6XHeGa0+WzCLMAiNIEqnxoJ0HG2zTgW/tWQWZRolYyx6TU/PBhRo?=
- =?us-ascii?Q?3A9Zq4i+F70cs/iKcesVj7WPVsD5mDCbx2Eh9VCIan8kU1ylrHx6WFJuT+2v?=
- =?us-ascii?Q?HL7WxkSLCTjBHmQSvhksT6HU8IWSBAUbhxu5oH7j3oTS4idLaDIqWiD3i1lT?=
- =?us-ascii?Q?ijUmoLsAL62NVKBAj1v+8b56pTi9DxKBIl4piUwxg6p3yi9zBTR3y2vovVel?=
- =?us-ascii?Q?lNM6RE7pbRx+wSGIjxv1WAWqzuNE31AoyqAyBkcyjdlWqAiakbGuFfhLZQf4?=
- =?us-ascii?Q?RyKlwsjDvQgWIzolgrEFmtCepQcznokjg9d3UWtCV9acxsoeMtho5KNUMqJZ?=
- =?us-ascii?Q?ew7lQ52t7FoQXmMGJGW182vE2xRx5ItnlLPOZMK5oUlmivgED0B1wg3dl2xH?=
- =?us-ascii?Q?HOwAZVJZnGEPYrnSlEDLVOy2/hV3yDf/rA53ysGq7WKtZk1gvazHUOR+whJ9?=
- =?us-ascii?Q?KWNaeD5KfelW1Ku899g48QfLxrJdKLVGmnvE04S4VLL18khb8b6zF9mhzz0b?=
- =?us-ascii?Q?1zh8Roft/cL+tOl91FdANvBFlZr6KVRgb6QKSmjD1CKMT+SeTSyEEAJULYMR?=
- =?us-ascii?Q?/pvYlR2/fXW6VPJ4bDmNA4l1wVvb7fGYTsqVKhAjR7cKrx4Xd3GlBRm98GiT?=
- =?us-ascii?Q?hMVDqAtyHV2/iViE/G18GDN40cRSHDmRENLdQZ51FolwdS3azCivw+D4ALJ4?=
- =?us-ascii?Q?q1FmdYgukPsv06QO2MAD3ZzOfYdGEbmpeHhJKpfVpi5Otsh3unk8AVjT+4zo?=
- =?us-ascii?Q?pDeChwdelXo7RT/NDlFsFfWXejwgh+0bX0WLiBUCbmvo150i/vVMJ57bbukQ?=
- =?us-ascii?Q?31W1LQasbbbZI8Ptgn1VXZ+/cjKdBsJQz6MeUS0UovqHOulG/TOzBPEsSyEh?=
- =?us-ascii?Q?h2SV+5AR7D78ceyomqU1+nqU1TEf7LlnzNBXb7P00yxybPG2hS9nNdFN1jfH?=
- =?us-ascii?Q?MsK3QBrO4uWKPgWrFXBnDFstbKegUmFZX1fcEC90mhIcD8bNGxmqbhnhJdjw?=
- =?us-ascii?Q?Qx1fC3SWkIRJPrzzuPSjvOl/bmOnVZQkgV32EQ9QClwzLGK21SQe7FSQVzw6?=
- =?us-ascii?Q?3Fffz2s8sAkftB+G9JvU3HLSr3hzaSWgNu6w+pjQke8ZNNWrJooPaXZfOwVb?=
- =?us-ascii?Q?yXnt9y+8pwt8U22s0NBB1ehx0K77CAiXh9yoJQ3r8vY6onR5oWjy1k4LOmct?=
- =?us-ascii?Q?eqgut9Nruh0BVo4s4hrPrYftsVUdUXxUp+GKCJE6+Q76uejkSvc4B1a68KNm?=
- =?us-ascii?Q?Cz+Y/A96knKEtqQm+N0Hdyv4jiLzihMH/xjDYIECrUKjhdUpWc9m05Lnp62I?=
- =?us-ascii?Q?bfExZojz8znOtSRxKwFI3F4=3D?=
-X-OriginatorOrg: in-advantage.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2ed65f35-61ee-481c-5dde-08dd69468d3f
-X-MS-Exchange-CrossTenant-AuthSource: DS0PR10MB6974.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Mar 2025 13:36:29.6949
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 48e842ca-fbd8-4633-a79d-0c955a7d3aae
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: CH8o+SxApqLeiLBpEVPaAVyIADA69OD+GWvta9H2v+fGjI1fU4/wJ07X4P3OFwvdQ959W+dP5cG0XpQrFPHMVPhJMYgYknqyg/SDJ7zQQeA=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR10MB6195
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250322081108.202654-1-simeddon@gmail.com>
 
-On Thu, Mar 20, 2025 at 12:17:37PM +0100, Rasmus Villemoes wrote:
-> Hi Colin
+LGTM, one minor suggestion inline.
+With that applied,
+Reviewed-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+
+On 03/22, Siddharth Menon wrote:
+> Introduce struct for device match of_device_id
 > 
-> On Wed, Mar 19 2025, Colin Foster <colin.foster@in-advantage.com> wrote:
+> Suggested-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> Signed-off-by: Siddharth Menon <simeddon@gmail.com>
+> ---
+>  drivers/staging/iio/frequency/ad9832.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> > On Wed, Mar 19, 2025 at 01:30:53PM +0100, Rasmus Villemoes wrote:
-> >> As the comments in ocelot-spi.c explain, after a chip reset, the
-> >> CFGSTAT register must be written again setting the appropriate number
-> >> of padding bytes; otherwise reads are not reliable.
-> >> 
-> >> However, the way the code is currently structured violates that: After
-> >> the BIT_SOFT_CHIP_RST is written, ocelot_chip_reset() immediately
-> >> enters a readx_poll_timeout().
-> >
-> > I ran this new version and everything worked - and I've not seen an
-> > issue in previous versions. I'm looking for guidance as to whether this
-> > should include a Fixes tag and be backported.
+> diff --git a/drivers/staging/iio/frequency/ad9832.c b/drivers/staging/iio/frequency/ad9832.c
+> index 9a27acd88926..506478ddede3 100644
+> --- a/drivers/staging/iio/frequency/ad9832.c
+> +++ b/drivers/staging/iio/frequency/ad9832.c
+> @@ -439,6 +439,13 @@ static int ad9832_probe(struct spi_device *spi)
+>  	return devm_iio_device_register(&spi->dev, indio_dev);
+>  }
+>  
+> +static const struct of_device_id ad9832_of_match[] = {
+> +	{ .compatible = "adi,ad9832" },
+> +	{ .compatible = "adi,ad9835" },
+> +	{},
+I think Jonathan prefers to have a space separating the null terminator braces.
+	{ },
+
+> +};
+> +MODULE_DEVICE_TABLE(of, ad9832_of_match);
+> +
+>  static const struct spi_device_id ad9832_id[] = {
+>  	{"ad9832", 0},
+>  	{"ad9835", 0},
+> @@ -449,6 +456,7 @@ MODULE_DEVICE_TABLE(spi, ad9832_id);
+>  static struct spi_driver ad9832_driver = {
+>  	.driver = {
+>  		.name	= "ad9832",
+> +		.of_match_table = ad9832_of_match,
+>  	},
+>  	.probe		= ad9832_probe,
+>  	.id_table	= ad9832_id,
+> -- 
+> 2.48.1
 > 
-> Thanks a lot for testing and reviewing! As for backporting, IDK, I think
-> we'd at least first have to know that it really fixes a bug for somebody.
-> 
-> > Great find, by the way! Is there any information you would like from my
-> > setup?
-> 
-> Certainly I'd like to know if you do in fact use a SPI clock > 500 kHz?
-
-Yep, looks like 2.5MHz
-
-&spi0 {
-        #address-cells = <1>;
-        #size-cells = <0>;
-        status = "okay";
-
-        soc@0 {
-                compatible = "mscc,vsc7512";
-                spi-max-frequency = <2500000>;
-
-> 
-> And if so, could you try inserting a read and printk of e.g. CHIP_REGS.CHIP_ID
-> immediately after the fsleep(), but before the re-initialization, just
-> so we can see if my theory that the values are off-by-8-bits plus 8 bits
-> of MISO "garbage" is correct? Because that register should have a fairly
-> easily recognizable value.
-
-diff --git a/drivers/mfd/ocelot-core.c b/drivers/mfd/ocelot-core.c
-index c00d30dbfca8..5a2762b6ecac 100644
---- a/drivers/mfd/ocelot-core.c
-+++ b/drivers/mfd/ocelot-core.c
-@@ -115,6 +115,8 @@ static int ocelot_chip_reset(struct device *dev)
-
-        if (ddata->init_bus) {
-                fsleep(VSC7512_GCB_RST_SLEEP_US);
-+               regmap_read(ddata->gcb_regmap, 0, &val);
-+               printk("7512 Chip ID after sleep: 0x%08x\n", val);
-                ret = ddata->init_bus(dev);
-                if (ret)
-                        return dev_err_probe(dev, ret,
-
-
-Prints out this:
-
-[    3.360986] 7512 Chip ID after sleep: 0xf0e94051
-
-That doesn't seem right. I added a print after init and it makes more sense.
-
-[    3.351656] 7512 Chip ID after sleep: 0xf0e94051
-[    3.356828] 7512 Chip ID after init: 0x175140e9
-
-That looks better. Good find!
-
-
-Colin Foster
