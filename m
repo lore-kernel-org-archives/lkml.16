@@ -1,232 +1,74 @@
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65A21C54AF;
-	Sat, 22 Mar 2025 07:57:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12202AF04
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 08:04:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742630277; cv=none; b=R5yHpw1EceNyqqrXvomnEPOthC76B733WWqCrzclggi6kZmWqkiMGpCDDOkBzvQcpLNF25eAUJHk7zM4qLR/lvYoFVDq36uYHe9RhOq3tvqrrD8mwPgRb3iFLGHQjba7WyX1Zc3sNh+TgCt1YySzWMbmO1Cs2WPgZQdBl4wqD1M=
+	t=1742630665; cv=none; b=pe0c782EFOLLs3OoAXjGnFwX0zuo3ET4FuooAhZ67Dda7QyLnjKr6HT4phgTTOEgiecok1me/muwnHJyDEA9Hfpy3hwtpD7XaLQvJT4ruTrYYSTL1kY0oVAHPr9ishcmxHgltFNF/bZlfIqmeyHnub+RGD4i2cLIL2aiNyMzU4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742630277; c=relaxed/simple;
-	bh=WaAINkxGs+hK7BTrtlVnaDRGioKtuIbDOQi9l5qMSss=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lmaicKQuFS9vVb2JkCtgJOSq9oI9PayNPvsnj1lDM6vqC2sEtoGtHlJtcQ+pEYBtlhABD0F6oeBGXdBTM/zCBOtO9XoYqoyok3C0oRVPsX4Ca8qpGwVd0EQsWRUNgmSnGqPJWZGrostXI1mXwSGlruRoxR3UeyS2060vPhoGomU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=IL6zRMF/; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	s=arc-20240116; t=1742630665; c=relaxed/simple;
+	bh=VS372D8YXF4lFI5XBSp4Hy/qPdaRBi+3DN7mmyIgP0g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=c6XYkh/FCRLHDCqBF/HWWUQOFqN3mwyRsDegZ/X5b3Dw9FrlvpoElwfZckfZ0hjOeE+hplf6/h/GkCAZcfzwGwk1Y+VgOYur/S0f0mtHpLgwfVNwmc6cLWc9qQ3MIVQWYS+dxSTq3KnOyj1Q4xtVcynNuJYiHD8Vp5SZ5th2QR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DJDWgnOG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="IL6zRMF/"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id CFA7B44396;
-	Sat, 22 Mar 2025 07:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742630270;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=bYPiDYCAtW6I1sCydnEAUQlLqE8GAEFWddESPQ+zOAM=;
-	b=IL6zRMF/0hbrM0zF816LQo9ziNKs+bWOjJHo+m9yFTM8muPivWX76oj7jC5LWh1qc7CRtd
-	bORALR3idd9Z+sSyyP3P+KMgYcAJQdvJxxfUCogsN+k/r4T6SkHkTkC3N0zGHAIOk+ot06
-	d6Jgva1P1UwJKJh/7i8Eo4DWoMYf1MfP/PozpfiIlUCsvRa7h6rdMvyGVd+7PeVBUz+3V0
-	JT4MDAbe1+3NumEF5xQS3M0GiaYOwnSzjyHHoE8y0EfOz7oN1MXoOnRSgikkooOefb+e2O
-	XS8j3NLVvqYzrWq2Mo9aUAMZk1viPntapqzkwc4teW5UKIzeitwIPIwNoy0+ig==
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
-To: davem@davemloft.net,
-	Andrew Lunn <andrew@lunn.ch>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Eric Dumazet <edumazet@google.com>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Heiner Kallweit <hkallweit1@gmail.com>
-Cc: Maxime Chevallier <maxime.chevallier@bootlin.com>,
-	netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	thomas.petazzoni@bootlin.com,
-	Florian Fainelli <f.fainelli@gmail.com>,
-	=?UTF-8?q?K=C3=B6ry=20Maincent?= <kory.maincent@bootlin.com>,
-	Simon Horman <horms@kernel.org>,
-	Romain Gantois <romain.gantois@bootlin.com>,
-	Antoine Tenart <atenart@kernel.org>,
-	=?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>,
-	Sean Anderson <sean.anderson@linux.dev>,
-	=?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>
-Subject: [PATCH net-next v4 1/2] net: phy: sfp: Add support for SMBus module access
-Date: Sat, 22 Mar 2025 08:57:44 +0100
-Message-ID: <20250322075745.120831-2-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250322075745.120831-1-maxime.chevallier@bootlin.com>
-References: <20250322075745.120831-1-maxime.chevallier@bootlin.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DJDWgnOG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6E66C4CEDD;
+	Sat, 22 Mar 2025 08:04:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742630664;
+	bh=VS372D8YXF4lFI5XBSp4Hy/qPdaRBi+3DN7mmyIgP0g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=DJDWgnOG5GeFJ1htESs7PkFg92n66kfjC0mSg6jV1TUXlJu9lcI5p+zBB63mksbNz
+	 iKQZ1MYdfpzmgUIjPWzv8eICHv+iTm/1hHDeMtjOgrEryf/21Uv8OkwanvJv0EqRcC
+	 ERvrUL+mpxcy+grxbuZ7xT0Gh+FbwfI2bDX+D+WDtY+1wyMihhda5nKwPDC8rspl32
+	 Adj0b3v1yIBQJ6JGs6U1yVvRDb1ITFy6868FgQL25DvO1nz2WEBrVW3KVg6weArn5G
+	 AoR7NFWOC/nBXPeuyYkoqXY/+ACxQ4Lg3/dWeQRjwE7G7WwCCWxc1ARHBFJYlO5cSx
+	 gKIq0Q2nUVWhA==
+Date: Sat, 22 Mar 2025 09:04:19 +0100
+From: Ingo Molnar <mingo@kernel.org>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: Bert Karwatzki <spasswolf@web.de>, Alex Deucher <alexdeucher@gmail.com>,
+	Kees Cook <kees@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	Linus Torvalds <torvalds@linux-foundation.org>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org,
+	amd-gfx@lists.freedesktop.org
+Subject: Re: commit 7ffb791423c7 breaks steam game
+Message-ID: <Z95vAzzNOlXvZeJH@gmail.com>
+References: <a168e78b-ae27-4675-8821-0b1a2499b2b2@nvidia.com>
+ <5d34bfc5109b8d104fd4f8550dd17945344f9d07.camel@web.de>
+ <551b9797-20d6-4bfe-b54c-84dd7aae7794@nvidia.com>
+ <CADnq5_Pvmxa10dJWYjajwxG-0Y_oxhL6wS6NsG2F0dmcJS6o8A@mail.gmail.com>
+ <9be36dfab79b17e108f71d51a6ebf39073e110c6.camel@web.de>
+ <b5d80ef2-fd5a-41cc-9184-6c82226c330a@nvidia.com>
+ <Z9vZYIbXOz2wF59j@gmail.com>
+ <2cafd3e1-9265-403a-9854-7200d84ca397@nvidia.com>
+ <Z90-VOyC5oanCC8z@gmail.com>
+ <01414c31-82c8-4de7-920f-87020610580b@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheefgeefucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefhvfevufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeforgigihhmvgcuvehhvghvrghllhhivghruceomhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepveegtdffleffleevueellefgjeefvedvjefhheegfefgffdvfeetgeevudetffdtnecukfhppedvrgdtudemtggsudelmeekugegheemgeeltddtmeeiheeikeemvdelsgdumeelvghfheemvgektgejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgduleemkegugeehmeegledttdemieehieekmedvlegsudemlegvfhehmegvkegtjedphhgvlhhopehfvgguohhrrgdrhhhomhgvpdhmrghilhhfrhhomhepmhgrgihimhgvrdgthhgvvhgrlhhlihgvrhessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudelpdhrtghpthhtohepuggrvhgvmhesuggrvhgvmhhlohhfthdrnhgvthdprhgtphhtthhopegrnhgurhgvfieslhhunhhnrdgthhdprhgtphhtthhopehkuhgsrgeskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepvgguuhhmr
- giivghtsehgohhoghhlvgdrtghomhdprhgtphhtthhopehprggsvghnihesrhgvughhrghtrdgtohhmpdhrtghpthhtoheplhhinhhugiesrghrmhhlihhnuhigrdhorhhgrdhukhdprhgtphhtthhopehhkhgrlhhlfigvihhtudesghhmrghilhdrtghomhdprhgtphhtthhopehmrgigihhmvgdrtghhvghvrghllhhivghrsegsohhothhlihhnrdgtohhm
-X-GND-Sasl: maxime.chevallier@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01414c31-82c8-4de7-920f-87020610580b@nvidia.com>
 
-The SFP module's eeprom and internals are accessible through an i2c bus.
 
-It is possible that the SFP might be connected to an SMBus-only
-controller, such as the one found in some PHY devices in the VSC85xx
-family.
+* Balbir Singh <balbirs@nvidia.com> wrote:
 
-Introduce a set of sfp read/write ops that are going to be used if the
-i2c bus is only capable of doing smbus byte accesses.
+> > How frequently does this happen and what is the impact to users if 
+> > this happens?
+> 
+> It happens a 100% of the time when the BAR space lies beyond the 
+> 10TiB region.
 
-As Single-byte SMBus transaction go against SFF-8472 and breaks the
-atomicity for diagnostics data access, hwmon is disabled in the case
-of SMBus access.
+And how frequently is the BAR space beyond the 10TiB region, on modern 
+systems?
 
-Moreover, as this may cause other instabilities, print a warning at
-probe time to indicate that the setup may be unreliable because of the
-hardware design.
+Thanks,
 
-As hwmon may be disabled for both broken EEPROM and smbus, the warnings
-are udpated accordingly.
-
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
-V4: Fixed xmas tree in read/write functions
-
- drivers/net/phy/sfp.c | 82 ++++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 74 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
-index c88217af44a1..347c1e0e94d9 100644
---- a/drivers/net/phy/sfp.c
-+++ b/drivers/net/phy/sfp.c
-@@ -234,6 +234,7 @@ struct sfp {
- 	enum mdio_i2c_proto mdio_protocol;
- 	struct phy_device *mod_phy;
- 	const struct sff_data *type;
-+	size_t i2c_max_block_size;
- 	size_t i2c_block_size;
- 	u32 max_power_mW;
- 
-@@ -691,14 +692,71 @@ static int sfp_i2c_write(struct sfp *sfp, bool a2, u8 dev_addr, void *buf,
- 	return ret == ARRAY_SIZE(msgs) ? len : 0;
- }
- 
--static int sfp_i2c_configure(struct sfp *sfp, struct i2c_adapter *i2c)
-+static int sfp_smbus_byte_read(struct sfp *sfp, bool a2, u8 dev_addr,
-+			       void *buf, size_t len)
- {
--	if (!i2c_check_functionality(i2c, I2C_FUNC_I2C))
--		return -EINVAL;
-+	union i2c_smbus_data smbus_data;
-+	u8 bus_addr = a2 ? 0x51 : 0x50;
-+	u8 *data = buf;
-+	int ret;
-+
-+	while (len) {
-+		ret = i2c_smbus_xfer(sfp->i2c, bus_addr, 0,
-+				     I2C_SMBUS_READ, dev_addr,
-+				     I2C_SMBUS_BYTE_DATA, &smbus_data);
-+		if (ret < 0)
-+			return ret;
-+
-+		*data = smbus_data.byte;
-+
-+		len--;
-+		data++;
-+		dev_addr++;
-+	}
-+
-+	return data - (u8 *)buf;
-+}
-+
-+static int sfp_smbus_byte_write(struct sfp *sfp, bool a2, u8 dev_addr,
-+				void *buf, size_t len)
-+{
-+	union i2c_smbus_data smbus_data;
-+	u8 bus_addr = a2 ? 0x51 : 0x50;
-+	u8 *data = buf;
-+	int ret;
- 
-+	while (len) {
-+		smbus_data.byte = *data;
-+		ret = i2c_smbus_xfer(sfp->i2c, bus_addr, 0,
-+				     I2C_SMBUS_WRITE, dev_addr,
-+				     I2C_SMBUS_BYTE_DATA, &smbus_data);
-+		if (ret)
-+			return ret;
-+
-+		len--;
-+		data++;
-+		dev_addr++;
-+	}
-+
-+	return 0;
-+}
-+
-+static int sfp_i2c_configure(struct sfp *sfp, struct i2c_adapter *i2c)
-+{
- 	sfp->i2c = i2c;
--	sfp->read = sfp_i2c_read;
--	sfp->write = sfp_i2c_write;
-+
-+	if (i2c_check_functionality(i2c, I2C_FUNC_I2C)) {
-+		sfp->read = sfp_i2c_read;
-+		sfp->write = sfp_i2c_write;
-+		sfp->i2c_max_block_size = SFP_EEPROM_BLOCK_SIZE;
-+	} else if (i2c_check_functionality(i2c, I2C_FUNC_SMBUS_BYTE_DATA)) {
-+		sfp->read = sfp_smbus_byte_read;
-+		sfp->write = sfp_smbus_byte_write;
-+		sfp->i2c_max_block_size = 1;
-+	} else {
-+		sfp->i2c = NULL;
-+		return -EINVAL;
-+	}
- 
- 	return 0;
- }
-@@ -1594,7 +1652,7 @@ static void sfp_hwmon_probe(struct work_struct *work)
- 	 */
- 	if (sfp->i2c_block_size < 2) {
- 		dev_info(sfp->dev,
--			 "skipping hwmon device registration due to broken EEPROM\n");
-+			 "skipping hwmon device registration\n");
- 		dev_info(sfp->dev,
- 			 "diagnostic EEPROM area cannot be read atomically to guarantee data coherency\n");
- 		return;
-@@ -2201,7 +2259,7 @@ static int sfp_sm_mod_probe(struct sfp *sfp, bool report)
- 	u8 check;
- 	int ret;
- 
--	sfp->i2c_block_size = SFP_EEPROM_BLOCK_SIZE;
-+	sfp->i2c_block_size = sfp->i2c_max_block_size;
- 
- 	ret = sfp_read(sfp, false, 0, &id.base, sizeof(id.base));
- 	if (ret < 0) {
-@@ -2941,7 +2999,6 @@ static struct sfp *sfp_alloc(struct device *dev)
- 		return ERR_PTR(-ENOMEM);
- 
- 	sfp->dev = dev;
--	sfp->i2c_block_size = SFP_EEPROM_BLOCK_SIZE;
- 
- 	mutex_init(&sfp->sm_mutex);
- 	mutex_init(&sfp->st_mutex);
-@@ -3115,6 +3172,15 @@ static int sfp_probe(struct platform_device *pdev)
- 	if (!sfp->sfp_bus)
- 		return -ENOMEM;
- 
-+	if (sfp->i2c_max_block_size < 2)
-+		dev_warn(sfp->dev,
-+			 "Please note:\n"
-+			 "This SFP cage is accessed via an SMBus only capable of single byte\n"
-+			 "transactions. Some features are disabled, other may be unreliable or\n"
-+			 "sporadically fail. Use with caution. There is nothing that the kernel\n"
-+			 "or community can do to fix it, the kernel will try best efforts. Please\n"
-+			 "verify any problems on hardware that supports multi-byte I2C transactions.\n");
-+
- 	sfp_debugfs_init(sfp);
- 
- 	return 0;
--- 
-2.48.1
-
+	Ingo
