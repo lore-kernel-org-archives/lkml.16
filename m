@@ -1,103 +1,113 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.zytor.com (terminus.zytor.com [198.137.202.136])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BD371D5CCC;
-	Sat, 22 Mar 2025 19:41:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10AAD14F121;
+	Sat, 22 Mar 2025 19:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.136
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742672486; cv=none; b=YxBZL5uXl3m0AUVWKiOoJMjG2lauWCPOVrWWOs50xi5RGE5LNgbGhp59Nd2LqCuqpBWnRJb/GjvKuPcKiYrRo/PXOOVjgNm8+IObjXlI/fzb9BjZza2H/AsT3g73gpQF/wWqpfM0MfXa5N2qAEdY6yPpM9EnvKUiSDA8UHVNBn8=
+	t=1742673595; cv=none; b=F/mCwkDM4b5d3r94wbWcAm0XVEfbwbNTCRUCqLn3Ftc65IzaCqT4fAsFLs1Ijo/lOUOJVAX7hOLG0xfFrvSKRRlW1IW4kIyXLIGyD5nuuYzpdPJbAjcdkT4I/HtF9UxqUjoe2nRkzTIrUCjSYz/7WDsWQDxaO48r2sQm/aTejqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742672486; c=relaxed/simple;
-	bh=Od4v4VdimPNSlf4DWjDRUdfHj1BtWC+yeW1X9qexnHo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SfP1Da7Ku4l8l7ZJ/YPNAfPl0wPVPfD9eHuo21s7mUW6l+e83N4HZoo+hwY7D1YfGgFkpztA/6gqf/9wQ8SpyN2A6LXE9afPiY44ajM2L/No3MaSpgj0jTPMKPSBPP35/p7xbbt94yC6Qd25IIOvkc2eshkP/deRRFY/xlH/m6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WpD+4uAb; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742673595; c=relaxed/simple;
+	bh=iWmTjagS6rb8ornfLMZFlZm6VWIyGQ6jjKV+APH+qGc=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AX3+AzQ+PYhRyMKwb40d5qWVfkIWLfQwIPL0xF4icEPnGdhXQlXU1dfWik17nR6VJMQw294wjd5y7G9lOsmkLk4OwSJd3ECH1xSEq443tvyjLDULXL9S7pQimZryozUhFq3XSS8rl6TTTAIRpTVbzcIILngQ638QiQnoLt5yEPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com; spf=pass smtp.mailfrom=zytor.com; dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b=ozhhW+FT; arc=none smtp.client-ip=198.137.202.136
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zytor.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zytor.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WpD+4uAb"
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-2ff62f9b6e4so908565a91.0;
-        Sat, 22 Mar 2025 12:41:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742672484; x=1743277284; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Od4v4VdimPNSlf4DWjDRUdfHj1BtWC+yeW1X9qexnHo=;
-        b=WpD+4uAbU6qTaOpyXBPwFu8MJ/g8M/KXg31+XedKZu7OOH8U0weFfzrI06ZHoNv3zS
-         kDgeBv+pOPxFISkq6j91Lw8mZ4cOpHk2EjabkF9yNj5w/mYDcaU3I/xmLf75hgAr9XcN
-         GOIBWRT4+z0zK9lHq29X9J6lQF99uXOBvT2uaIe+5RTQBfhNS8izJhfTpsL7goM/EAA5
-         iv4c6ORxYASP3Bt8orE5tFEyWoTwfIIGS1x08o/h0M4h9fvRCC4C8It9q9r8WymgAhT1
-         qLVxa9IMX+p3mOw+cQGgCTVxVsKLDK+7J7lrfU5lBhTEEbcrUKA8Wo7vnzGr+VeJWyYP
-         t75Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742672484; x=1743277284;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Od4v4VdimPNSlf4DWjDRUdfHj1BtWC+yeW1X9qexnHo=;
-        b=tzyxTMfAkPGrb0NubnHIgskIXvb26hftYZKt2oIql7wKmx+lCilUZLUcKLXbw+TOAx
-         FriMuKUB5H5NB1OAvWN1q7djF/B20yaFearK9RmpHuuFeVjvJPha9A2gjewVcJ7anwRK
-         0sUlbshuCCN9qqRiFCbiTsp1IfFIADt32kZNbzdJY0YJkiy1CqxcrCBPUjUSgt13lSGo
-         0WggCqIOolUMfurBVY5/l28yKe63z8z5aT5nHiTuiTLR6MCCpJZM/mS56zQKa2n6SOM6
-         V2USGwjctjA8X0HGOav3nEl5gUhsZWohZk+sV/qvP499w5QhNqtYg43rzZaetQmn0xhm
-         M+hA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6aFa2NShJRdjs75IMnK2t472SKuD8aVbFUDLn1yguvN1MOFsXDo4nqcA7vMbmZgzmJAJkIOjjEOIs86nB@vger.kernel.org, AJvYcCUUcf9ryMsW1Er7rn2vilrb/cZwPUlaJe65FJf8ARi2ZGh7Cfgj9OoBX+JR/CN7RaXOeyRkgYv1Lfmf4B4=@vger.kernel.org, AJvYcCWp1y0kIh+SenduHyLzNDBVJR7QNBTbOI93ieSrLBPQdd8/e2C/PzqhGV8fVGRisNMsEP8aJuZhVotLQeAI5cQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyMqpx3fDd8H5jE2rMhxYeF/02ggPTpiHCJixwqXWFwkU+LkQT5
-	1Tc4wx40sOFNZd9JORim4Ha7tcZCVSZOSV6z41v+TJOYMWXotLRPGCe9I6R2FKYEuNFCpx1JgG4
-	4Oq0ykYHfCiNlcC1wKkWZyu11n9vv4Mbj
-X-Gm-Gg: ASbGncvyVfzqMwT8NGydMLQCcr6fAXqsjDRWfSU2KiZWJbnc94ARVnxDu/0yGVous93
-	to31yMim/i1yxuyqWY6VW6oeAGKLvmzochOO7Wgvrv82lDRjlBZ1x42b5+Lojf8yik0zYCNPcqF
-	aCpVwXH8Hi+ginq+shE/faUIHuBg==
-X-Google-Smtp-Source: AGHT+IGeYvoNzBBSldPGA6gjhl4C1l31ys+AS9xab4fNp9F3UvQaQB7i3tszGVHnZp7x87VJsB2udyyY4XpkqH2x6cw=
-X-Received: by 2002:a17:90b:1d91:b0:2ff:78dd:2875 with SMTP id
- 98e67ed59e1d1-3030fefb123mr4785589a91.5.1742672484125; Sat, 22 Mar 2025
- 12:41:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ozhhW+FT"
+Received: from [192.168.7.202] ([71.202.166.45])
+	(authenticated bits=0)
+	by mail.zytor.com (8.18.1/8.17.1) with ESMTPSA id 52MJweaq3403909
+	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO);
+	Sat, 22 Mar 2025 12:58:40 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com 52MJweaq3403909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+	s=2025032001; t=1742673522;
+	bh=41Vkxy17+ATRnuFlGE6N81dOYm754apgFjR1aptd/Aw=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=ozhhW+FTBTT4ek51W/eW0iQfkEdNqzEs8KNDLkFzSc8gIYLDI2SsaTeFBGtrdCFAr
+	 VrZIDgOz3tOGvJ9p3ePlEjhUQtdyq7YPUwEqhuanK+w75RJQSR585af4lZdbNhTleC
+	 zFWCOIYEXs7pczWtMML5QcjjuAOOjWv2j+uU+ufre7K7fOK6pvEBy6i8iI7gI5ttk3
+	 lYRq1seALJ6qV6xfy4r/79tHEs/Pfg3BFr71FvMb0RqjfSrQE3u6upfDFRIYB+XjwN
+	 9OKsU4ZnQxurY7jKLFIB18go7QCz+4gVx2lD0s6Nws4pPIkk+37BQUdDhCIcG89V03
+	 obC21AREmVflA==
+Message-ID: <01e7cd11-7a5c-4963-af74-d807fac83d24@zytor.com>
+Date: Sat, 22 Mar 2025 12:58:40 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ-ks9=GHVfd=iRT73DviOD=6dio3U7wQWLaXAhKr3UG5-ivvw@mail.gmail.com>
- <20250322191210.1926380-1-contact@antoniohickey.com>
-In-Reply-To: <20250322191210.1926380-1-contact@antoniohickey.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 22 Mar 2025 20:41:11 +0100
-X-Gm-Features: AQ5f1Jrh3s6Yc-9G0QUD3Vg_tDqV8v1fjEAUv86RJq_ycRiM922tpa6sYZ5gRlU
-Message-ID: <CANiq72=5Q=H1dUD+RQE+Bg579HvB8iE=hyFmtDAJD77JqoUjpg@mail.gmail.com>
-Subject: Re: [PATCH v5 01/17] rust: enable `raw_ref_op` feature
-To: Antonio Hickey <contact@antoniohickey.com>
-Cc: tamird@gmail.com, a.hindborg@kernel.org, alex.gaynor@gmail.com, 
-	aliceryhl@google.com, benno.lossin@proton.me, bjorn3_gh@protonmail.com, 
-	boqun.feng@gmail.com, dakr@kernel.org, gary@garyguo.net, 
-	linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	masahiroy@kernel.org, nathan@kernel.org, nicolas@fjasle.eu, ojeda@kernel.org, 
-	rust-for-linux@vger.kernel.org, tmgross@umich.edu
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Xin Li <xin@zytor.com>
+Subject: Re: [PATCH v6 3/5] x86/cpufeatures: Generate a feature mask header
+ based on build config
+To: Borislav Petkov <bp@alien8.de>, philip.li@intel.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>, "Aithal, Srikanth" <sraithal@amd.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com,
+        x86@kernel.org, will@kernel.org, peterz@infradead.org,
+        yury.norov@gmail.com, akpm@linux-foundation.org, acme@kernel.org,
+        namhyung@kernel.org, brgerst@gmail.com, andrew.cooper3@citrix.com,
+        nik.borisov@suse.com
+References: <20250228082338.73859-1-xin@zytor.com>
+ <20250228082338.73859-4-xin@zytor.com>
+ <7c3b4623-45ea-4340-ac47-334071c1d15f@amd.com>
+ <D03DAFD2-5EC9-4D16-BA66-FDA4B51F45DD@zytor.com>
+ <20250303132505.GEZ8WtsXqFpuMOpDjT@fat_crate.local>
+ <8e4e1723-321a-4e8e-bbac-e2e5d8b08bfc@zytor.com>
+ <20250304102910.GAZ8bV9hXqVb5tA9rs@fat_crate.local>
+ <81677e85-ff7f-4986-8e0a-6bf54a63ba49@zytor.com>
+ <20250305220455.GOZ8jKh4bGqplm2UhF@fat_crate.local>
+Content-Language: en-US
+Autocrypt: addr=xin@zytor.com; keydata=
+ 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
+ l75w1xInsg==
+In-Reply-To: <20250305220455.GOZ8jKh4bGqplm2UhF@fat_crate.local>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Sat, Mar 22, 2025 at 8:12=E2=80=AFPM Antonio Hickey
-<contact@antoniohickey.com> wrote:
->
-> Ahh ok yea that makes sense, thanks Tamir, sorry Benno I misunderstood.
->
-> So the reason I extended the dashed line was because before my change
-> the dashed line perfectly aligned with number of characters in the line
-> I changed. I figured it was supposed to match the amount of characters
-> of the line.
->
-> Giving this a deeper look it looks like the all the other dashed lines
-> are maxed at 77 characters.
+On 3/5/2025 2:04 PM, Borislav Petkov wrote:
+>> Sorry for the build noise.  Ofc they should be zapped.
+>>
+>> BTW, I'm asking if this build check could be added to Intel-LKP.
+> Good idea.
 
-Yeah, it is just following other section "lines".
-
-> I will update this.
-
-Benno is right -- no need to send another version for that, I can
-remove the change on apply. :)
+FYI, Philip has confirmed that the build check is added to Intel-LKP.
 
 Thanks!
+      Xin
 
-Cheers,
-Miguel
