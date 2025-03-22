@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0146D78F32;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 221481F37BC;
 	Sat, 22 Mar 2025 10:46:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742640369; cv=none; b=UxuHClYsfd9PcXLB3eWvzNNej21UvflC8j2R+KB1Hh8a8qpWPQfQHGaWD9piXwm0EvsEsAMpGXp+b/cX/e8yWFVT7/8FNFt2D5TZuYHOWYWyl1k65HAdQMPz3fFkBiiVCDnWyoINVEPQ3S99/t0MZjorD9lTg6K2WmBAxveLfIg=
+	t=1742640369; cv=none; b=UvzrTJN8zNgE+ClC0Pg3s7/8L5DPGH4QWfYaxvXus+thOvwhCAViQiQhpTXl+AjH0JHbP/uQEg92m1ZWai+oNUsmXyJCQq9wNWcvWDrcERVufSNgKsONAaJkRWUvXbQjNighWJWrUFcLK92gb3ER9fQNbaw3OtY9WYj976ev/jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742640369; c=relaxed/simple;
-	bh=dy7hnpEpmljpvnmL7VUaERJFKqdCMUh00qJI84ZH+hY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XpeQJOAEfrvnfKZWzpGKhfmM4JvA0Rgw4SgfogMigg+cUOYmh1Yhh4xAeF5RO9BAOsXntvza8LedunaDXEX5Azf8vZnVgQuTOAwJiowrFchMsZUAt5l7XA8hY9fUEqlMD5ncgQ7W2JZGCYOVzpK2m9bUMBxsjOjSH+8cJoixzrs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQ8tuJcN; arc=none smtp.client-ip=10.30.226.201
+	bh=bGqettNRXZmJL4Cip7mfr4q6DE5gOjEM3LaboWk695c=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=AtYPCVRDu7yw2ejKAjwgBIrDctT9Nf+Aojcvmp9PPyr0OYMk/o10gxU4uhC3RrdUf2jHFaoRdXqv12XI8S2tVbdrb7K5MIy0fNijhI3EL5HBjKCjAvrETyv5U2hu/X6FIIXfFJMOecPzVEZJYaltCnpPJoJAynLIIXU0jyyZwSY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kaMhDkUE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQ8tuJcN"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 70EDCC4CEDD;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kaMhDkUE"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id ADE87C4CEF2;
 	Sat, 22 Mar 2025 10:46:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742640368;
-	bh=dy7hnpEpmljpvnmL7VUaERJFKqdCMUh00qJI84ZH+hY=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=LQ8tuJcNcRoakCH+5YNtfGQ22Wn5A0UfA5vBvDxjJMieBP7sa6UqVY0QwFc1AaVdq
-	 Ow0yE4mic34YRXq8DA6rLgZQCwIINe5fG4rkVNvqokt9bsJzQow3YrrmUs1PzAsj7a
-	 v2zQynJ327MNH+yn/GgcQuqJNHHNd+I/ALKV00V1pRV0UR2H8T8Yd209t5j+kXMjjW
-	 DtPIA/RMIIFSu0zBZPBL5U+6cR9GcnrepUjX1CVjTznp0ubz3mHIMVFKz85JZLhspO
-	 9Od5S2n8mBd/ehx0Ox8izUAkl86VEbL8rMsLkqc8ZQcZISGjbHYqGUDhgKS4xqlanN
-	 NUk9vueWQxfRA==
+	bh=bGqettNRXZmJL4Cip7mfr4q6DE5gOjEM3LaboWk695c=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=kaMhDkUE4QGkx1/gh1iWAYJDxu7kIQB/piPJ0e3hfEjCrlS7e5ZK3mnxoyQOJsUXo
+	 FOPzIljXJLvZ3xZwfx54vYXpTGBORChO/cF61BCA3i37OlE7E2jwNeCdw6CpKPFI/L
+	 LIpcgUBMsN1Y/wsL863NrU+VwVw2z4jVYH1joeDGNpZ7m5rtXvLqp9jkogV/VjfSMh
+	 fgjL8kkrMP8UzJTuVQ6BVaEBkEYimtbEQHqbQ5kQkEGD4PJe+aYPM2uZ+ik4zsK0q9
+	 O7Aosm7QlbsqnMa+ilR6K8tSVOxLxwlITbKwUpe5Ijb0PNpCb0Yz634ZQQ7FmKQWp3
+	 JkIJDJnXYaAuw==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B836C35FFC;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5393C36007;
 	Sat, 22 Mar 2025 10:46:08 +0000 (UTC)
 From: Hans-Frieder Vogt via B4 Relay <devnull+hfdevel.gmx.net@kernel.org>
-Subject: [PATCH net-next v7 0/7] net: tn40xx: add support for AQR105 based
- cards
-Date: Sat, 22 Mar 2025 11:45:51 +0100
-Message-Id: <20250322-tn9510-v3a-v7-0-672a9a3d8628@gmx.net>
+Date: Sat, 22 Mar 2025 11:45:55 +0100
+Subject: [PATCH net-next v7 4/7] net: phy: aquantia: add essential
+ functions to aqr105 driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,12 +41,9 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAN+U3mcC/1XNTW7DIBCG4atErEs1/ENXvUfVBTZDzCIkAgu5i
- nz3EqtVwnI0er73TiqWhJV8nO6kYEs1XXM/zNuJzIvPZ6Qp9Jtw4JJxpumanWJAm/CUz3FmVgV
- tIZIObgVj2o6xL5JxpRm3lXz3z+Qr0qn4PC+PsYtP+QGWVNdr+TniTRzsr2NeO01QoDIojDpqq
- xE+z5ftvQeO7SZfIGcDlB0GH2O0bvLGmxGqf6iAcz5A1aFzQiuQBgW4EeonFMwOUHdowXoH1gU
- upyfc9/0XHJhj424BAAA=
-X-Change-ID: 20241216-tn9510-v3a-2cfc185d680f
+Message-Id: <20250322-tn9510-v3a-v7-4-672a9a3d8628@gmx.net>
+References: <20250322-tn9510-v3a-v7-0-672a9a3d8628@gmx.net>
+In-Reply-To: <20250322-tn9510-v3a-v7-0-672a9a3d8628@gmx.net>
 To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>, 
  Russell King <linux@armlinux.org.uk>, 
  "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
@@ -56,11 +53,11 @@ To: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
  Hans-Frieder Vogt <hfdevel@gmx.net>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742640367; l=5168;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742640367; l=8807;
  i=hfdevel@gmx.net; s=20240915; h=from:subject:message-id;
- bh=dy7hnpEpmljpvnmL7VUaERJFKqdCMUh00qJI84ZH+hY=;
- b=b2krxJvHp5+OhOArQcSFecb2wM4Tk2k+Uo9UyRO0v0MSxwvczVKs3kSNbk9Ca0NsfM92qR9W9
- GKlKin1KN6KCkD+DvT0F4xxh7/XCpQt1kg5DOeoRxzh5xqybcUkUiok
+ bh=KAPiTdO3CDbhlRN/rWkN/yD2ZjIlwnsaWgECxpnc7+w=;
+ b=IfKApVfKlhPsRCIC5lJPRLlqTQG3iqOA5BeEO9iJPP9JFMJ+Is0D7vJxos4zkDuCKaHUTbi3c
+ BNBQngnMvX5Af2hlA5uSSi9uc+xMprl27I58fvYjoyp+pLsX4iaHUkK
 X-Developer-Key: i=hfdevel@gmx.net; a=ed25519;
  pk=s3DJ3DFe6BJDRAcnd7VGvvwPXcLgV8mrfbpt8B9coRc=
 X-Endpoint-Received: by B4 Relay for hfdevel@gmx.net/20240915 with
@@ -68,107 +65,292 @@ X-Endpoint-Received: by B4 Relay for hfdevel@gmx.net/20240915 with
 X-Original-From: Hans-Frieder Vogt <hfdevel@gmx.net>
 Reply-To: hfdevel@gmx.net
 
-This patch series adds support to the Tehuti tn40xx driver for TN9510 cards
-which combine a TN4010 MAC with an Aquantia AQR105.
-It is an update of the patch series "net: tn40xx: add support for AQR105
-based cards", addressing review comments and generally cleaning up the series.
+From: Hans-Frieder Vogt <hfdevel@gmx.net>
 
-The patch was tested on a Tehuti TN9510 card (1fc9:4025:1fc9:3015).
+This patch makes functions that were provided for aqr107 applicable to
+aqr105, or replaces generic functions with specific ones. Since the aqr105
+was introduced before NBASE-T was defined (or 802.3bz), there are a number
+of vendor specific registers involved in the definition of the
+advertisement, in auto-negotiation and in the setting of the speed. The
+functions have been written following the downstream driver for TN4010
+cards with aqr105 PHY, and use code from aqr107 functions wherever it
+seemed to make sense.
 
+Signed-off-by: Hans-Frieder Vogt <hfdevel@gmx.net>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 ---
-Changes in v7:
-- change function name aqr105_config_speed to aqr105_setup_forced, in line with
-  naming of generic functions
-  (suggested by Andrew Lunn <andrew@lunn.ch>)
-- replace device id 0x4025 with symbolic name PCI_DEVICE_ID_TEHUTI_TN9510
-  (suggested by Andrew Lunn <andrew@lunn.ch>)
-- because of last change, remove the Reviewed-by: entries for PATCH 7/7
-- Link to v6: https://lore.kernel.org/r/20250318-tn9510-v3a-v6-0-808a9089d24b@gmx.net
+ drivers/net/phy/aquantia/aquantia_main.c | 239 ++++++++++++++++++++++++++++++-
+ 1 file changed, 237 insertions(+), 2 deletions(-)
 
-Changes in v6:
-- rebaseline to net-next
-- remove unneeded loop timing ability advertisment in aquantia_main.c
-  (highlighted by Maxime Chevallier <maxime.chevallier@bootlin.com>)
-- add failure path in tn40_mdio.c if device_add_software_node fails
-  (suggested by Ratheesh Kannoth <rkannoth@marvell.com>)
-- Link to v5: https://lore.kernel.org/r/20250222-tn9510-v3a-v5-0-99365047e309@gmx.net
+diff --git a/drivers/net/phy/aquantia/aquantia_main.c b/drivers/net/phy/aquantia/aquantia_main.c
+index 86b0e63de5d88fa1050919a8826bdbec4bbcf8ba..08b1c9cc902b82f80be2023423f3257a1ae3aa60 100644
+--- a/drivers/net/phy/aquantia/aquantia_main.c
++++ b/drivers/net/phy/aquantia/aquantia_main.c
+@@ -50,6 +50,7 @@
+ #define MDIO_AN_VEND_PROV_1000BASET_HALF	BIT(14)
+ #define MDIO_AN_VEND_PROV_5000BASET_FULL	BIT(11)
+ #define MDIO_AN_VEND_PROV_2500BASET_FULL	BIT(10)
++#define MDIO_AN_VEND_PROV_EXC_PHYID_INFO	BIT(6)
+ #define MDIO_AN_VEND_PROV_DOWNSHIFT_EN		BIT(4)
+ #define MDIO_AN_VEND_PROV_DOWNSHIFT_MASK	GENMASK(3, 0)
+ #define MDIO_AN_VEND_PROV_DOWNSHIFT_DFLT	4
+@@ -333,6 +334,238 @@ static int aqr_read_status(struct phy_device *phydev)
+ 	return genphy_c45_read_status(phydev);
+ }
+ 
++static int aqr105_get_features(struct phy_device *phydev)
++{
++	int ret;
++
++	/* Normal feature discovery */
++	ret = genphy_c45_pma_read_abilities(phydev);
++	if (ret)
++		return ret;
++
++	/* The AQR105 PHY misses to indicate the 2.5G and 5G modes, so add them
++	 * here
++	 */
++	linkmode_set_bit(ETHTOOL_LINK_MODE_5000baseT_Full_BIT,
++			 phydev->supported);
++	linkmode_set_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
++			 phydev->supported);
++
++	/* The AQR105 PHY suppports both RJ45 and SFP+ interfaces */
++	linkmode_set_bit(ETHTOOL_LINK_MODE_TP_BIT, phydev->supported);
++	linkmode_set_bit(ETHTOOL_LINK_MODE_FIBRE_BIT, phydev->supported);
++
++	return 0;
++}
++
++static int aqr105_setup_forced(struct phy_device *phydev)
++{
++	int vend = MDIO_AN_VEND_PROV_EXC_PHYID_INFO;
++	int ctrl10 = 0;
++	int adv = ADVERTISE_CSMA;
++	int ret;
++
++	switch (phydev->speed) {
++	case SPEED_100:
++		adv |= ADVERTISE_100FULL;
++		break;
++	case SPEED_1000:
++		adv |= ADVERTISE_NPAGE;
++		if (phydev->duplex == DUPLEX_FULL)
++			vend |= MDIO_AN_VEND_PROV_1000BASET_FULL;
++		else
++			vend |= MDIO_AN_VEND_PROV_1000BASET_HALF;
++		break;
++	case SPEED_2500:
++		adv |= (ADVERTISE_NPAGE | ADVERTISE_RESV);
++		vend |= MDIO_AN_VEND_PROV_2500BASET_FULL;
++		break;
++	case SPEED_5000:
++		adv |= (ADVERTISE_NPAGE | ADVERTISE_RESV);
++		vend |= MDIO_AN_VEND_PROV_5000BASET_FULL;
++		break;
++	case SPEED_10000:
++		adv |= (ADVERTISE_NPAGE | ADVERTISE_RESV);
++		ctrl10 |= MDIO_AN_10GBT_CTRL_ADV10G;
++		break;
++	default:
++		return -EINVAL;
++	}
++	ret = phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_ADVERTISE, adv);
++	if (ret < 0)
++		return ret;
++	ret = phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_VEND_PROV, vend);
++	if (ret < 0)
++		return ret;
++	ret = phy_write_mmd(phydev, MDIO_MMD_AN, MDIO_AN_10GBT_CTRL, ctrl10);
++	if (ret < 0)
++		return ret;
++
++	/* set by vendor driver, but should be on by default */
++	ret = phy_set_bits_mmd(phydev, MDIO_MMD_AN, MDIO_CTRL1,
++			       MDIO_AN_CTRL1_XNP);
++	if (ret < 0)
++		return ret;
++
++	return genphy_c45_an_disable_aneg(phydev);
++}
++
++static int aqr105_config_aneg(struct phy_device *phydev)
++{
++	bool changed = false;
++	u16 reg;
++	int ret;
++
++	ret = aqr_set_mdix(phydev, phydev->mdix_ctrl);
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		changed = true;
++
++	if (phydev->autoneg == AUTONEG_DISABLE)
++		return aqr105_setup_forced(phydev);
++
++	ret = genphy_c45_an_config_aneg(phydev);
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		changed = true;
++
++	/* Clause 45 has no standardized support for 1000BaseT, therefore
++	 * use vendor registers for this mode.
++	 */
++	reg = 0;
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
++			      phydev->advertising))
++		reg |= MDIO_AN_VEND_PROV_1000BASET_FULL;
++
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_1000baseT_Half_BIT,
++			      phydev->advertising))
++		reg |= MDIO_AN_VEND_PROV_1000BASET_HALF;
++
++	/* Handle the case when the 2.5G and 5G speeds are not advertised */
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
++			      phydev->advertising))
++		reg |= MDIO_AN_VEND_PROV_2500BASET_FULL;
++
++	if (linkmode_test_bit(ETHTOOL_LINK_MODE_5000baseT_Full_BIT,
++			      phydev->advertising))
++		reg |= MDIO_AN_VEND_PROV_5000BASET_FULL;
++
++	ret = phy_modify_mmd_changed(phydev, MDIO_MMD_AN, MDIO_AN_VEND_PROV,
++				     MDIO_AN_VEND_PROV_1000BASET_HALF |
++				     MDIO_AN_VEND_PROV_1000BASET_FULL |
++				     MDIO_AN_VEND_PROV_2500BASET_FULL |
++				     MDIO_AN_VEND_PROV_5000BASET_FULL, reg);
++	if (ret < 0)
++		return ret;
++	if (ret > 0)
++		changed = true;
++
++	return genphy_c45_check_and_restart_aneg(phydev, changed);
++}
++
++static int aqr105_read_rate(struct phy_device *phydev)
++{
++	int val;
++
++	val = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_AN_TX_VEND_STATUS1);
++	if (val < 0)
++		return val;
++
++	if (val & MDIO_AN_TX_VEND_STATUS1_FULL_DUPLEX)
++		phydev->duplex = DUPLEX_FULL;
++	else
++		phydev->duplex = DUPLEX_HALF;
++
++	switch (FIELD_GET(MDIO_AN_TX_VEND_STATUS1_RATE_MASK, val)) {
++	case MDIO_AN_TX_VEND_STATUS1_10BASET:
++		phydev->speed = SPEED_10;
++		break;
++	case MDIO_AN_TX_VEND_STATUS1_100BASETX:
++		phydev->speed = SPEED_100;
++		break;
++	case MDIO_AN_TX_VEND_STATUS1_1000BASET:
++		phydev->speed = SPEED_1000;
++		break;
++	case MDIO_AN_TX_VEND_STATUS1_2500BASET:
++		phydev->speed = SPEED_2500;
++		break;
++	case MDIO_AN_TX_VEND_STATUS1_5000BASET:
++		phydev->speed = SPEED_5000;
++		break;
++	case MDIO_AN_TX_VEND_STATUS1_10GBASET:
++		phydev->speed = SPEED_10000;
++		break;
++	default:
++		phydev->speed = SPEED_UNKNOWN;
++	}
++
++	return 0;
++}
++
++static int aqr105_read_status(struct phy_device *phydev)
++{
++	int ret;
++	int val;
++
++	ret = aqr_read_status(phydev);
++	if (ret)
++		return ret;
++
++	if (!phydev->link || phydev->autoneg == AUTONEG_DISABLE)
++		return 0;
++
++	/**
++	 * The status register is not immediately correct on line side link up.
++	 * Poll periodically until it reflects the correct ON state.
++	 * Only return fail for read error, timeout defaults to OFF state.
++	 */
++	ret = phy_read_mmd_poll_timeout(phydev, MDIO_MMD_PHYXS,
++					MDIO_PHYXS_VEND_IF_STATUS, val,
++					(FIELD_GET(MDIO_PHYXS_VEND_IF_STATUS_TYPE_MASK, val) !=
++					MDIO_PHYXS_VEND_IF_STATUS_TYPE_OFF),
++					AQR107_OP_IN_PROG_SLEEP,
++					AQR107_OP_IN_PROG_TIMEOUT, false);
++	if (ret && ret != -ETIMEDOUT)
++		return ret;
++
++	switch (FIELD_GET(MDIO_PHYXS_VEND_IF_STATUS_TYPE_MASK, val)) {
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_KR:
++		phydev->interface = PHY_INTERFACE_MODE_10GKR;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_KX:
++		phydev->interface = PHY_INTERFACE_MODE_1000BASEKX;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_XFI:
++		phydev->interface = PHY_INTERFACE_MODE_10GBASER;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_USXGMII:
++		phydev->interface = PHY_INTERFACE_MODE_USXGMII;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_XAUI:
++		phydev->interface = PHY_INTERFACE_MODE_XAUI;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_SGMII:
++		phydev->interface = PHY_INTERFACE_MODE_SGMII;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_RXAUI:
++		phydev->interface = PHY_INTERFACE_MODE_RXAUI;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_OCSGMII:
++		phydev->interface = PHY_INTERFACE_MODE_2500BASEX;
++		break;
++	case MDIO_PHYXS_VEND_IF_STATUS_TYPE_OFF:
++	default:
++		phydev->link = false;
++		phydev->interface = PHY_INTERFACE_MODE_NA;
++		break;
++	}
++
++	/* Read rate from vendor register */
++	return aqr105_read_rate(phydev);
++}
++
+ static int aqr107_read_rate(struct phy_device *phydev)
+ {
+ 	u32 config_reg;
+@@ -911,11 +1144,13 @@ static struct phy_driver aqr_driver[] = {
+ {
+ 	PHY_ID_MATCH_MODEL(PHY_ID_AQR105),
+ 	.name		= "Aquantia AQR105",
+-	.config_aneg    = aqr_config_aneg,
++	.get_features	= aqr105_get_features,
+ 	.probe		= aqr107_probe,
++	.config_init	= aqr107_config_init,
++	.config_aneg    = aqr105_config_aneg,
+ 	.config_intr	= aqr_config_intr,
+ 	.handle_interrupt = aqr_handle_interrupt,
+-	.read_status	= aqr_read_status,
++	.read_status	= aqr105_read_status,
+ 	.suspend	= aqr107_suspend,
+ 	.resume		= aqr107_resume,
+ },
 
-Changes in v5:
-- changed version because "b4 send --resend v4" did not succeed
-- used opportunity to rebaseline to net-next
-- only source code change is merging a split string in tn40_mdio.c, removing
-  a warning from b4 prep --check
-- changed format of cover letter in line with b4 (sequence of changes from
-  latest to oldest)
-- Link to v4: https://lore.kernel.org/r/20241221-tn9510-v3a-v4-0-dafff89ba7a7@gmx.net
-
-Changes in v4:
-- use separate aqr105 specific functions instead of adding aqr105 functionality
-  in common functions, with need of "chip generation" parameter
-  (suggested by Andrew Lunn <andrew@lunn.ch>)
-- make generation and cleanup of swnodes more symmetric
-  (suggested by Andrew Lunn <andrew@lunn.ch>)
-- add MDIO/PHY software nodes only for devices that have an aqr105 PHY
-  (suggested by FUJITA Tomonori <fujita.tomonori@gmail.com>)
-- Link to v3: https://lore.kernel.org/r/20241217-tn9510-v3a-v3-0-4d5ef6f686e0@gmx.net
-
-Changes in v3:
-- aquantia_firmware: remove call to of_property_read_string. It should be
-  called from the more generic function device_property_read_string
-- add more AQR105-specific function, to support proper advertising and auto-
-  negotiation
-- re-organize the patches about the mdio speed and TN40_REG_MDIO_CMD_STAT,
-  skipping the 1MHz intermediate speed step
-- re-organized the sequence of the patches:
-    1. changes to the general support functions (net/phy/mdio_bus.c)
-    2. changes to the aquantia PHY driver
-    3. changes to the tn40xx MAC driver, required to support the TN9510 cards
-- Link to v2: https://lore.kernel.org/netdev/trinity-602c050f-bc76-4557-9824-252b0de48659-1726429697171@3c-app-gmx-bap07/
-
-Changes in v2:
-- simplify the check for a firmware-name in a swnode in the aquantia PHY driver
-(comment from Andrew Lunn)
-- changed the software node definition to an mdio node with phy child nodes, to
-be more in line with a typical device tree definition (also comment from
-Andrew Lunn)
-This also solves the problem with several TN4010-based cards that FUJITA
-Tomonori reported
-- clarified the cleanup calls, now calling fwnode_handle_put instead of
-software_node_unregister (comment by FUJITA Tomonori)
-- updated the function mdiobus_scan to support swnodes (following hint of
-Andrew Lunn)
-- remove the small patch to avoid failing after aqr_wait_reset_complete, now
-that a proper patch by Vladimir Oltean is available
-- replace setting of bit 3 in TN40_REG_MDIO_CMD_STAT by calling of
-tn40_mdio_set_speed (suggestion by FUJITA Tomonori)
-- cleaning up the distributed calls to set the MDIO speed in the tn40xx driver
-- define supported PCI-IDs including subvendor IDs to prevent loading on
-unsupported card
-- Link to v1: https://lore.kernel.org/netdev/trinity-33332a4a-1c44-46b7-8526-b53b1a94ffc2-1726082106356@3c-app-gmx-bs04/
-
----
-Hans-Frieder Vogt (7):
-      net: phy: Add swnode support to mdiobus_scan
-      net: phy: aquantia: add probe function to aqr105 for firmware loading
-      net: phy: aquantia: search for firmware-name in fwnode
-      net: phy: aquantia: add essential functions to aqr105 driver
-      net: tn40xx: create swnode for mdio and aqr105 phy and add to mdiobus
-      net: tn40xx: prepare tn40xx driver to find phy of the TN9510 card
-      net: tn40xx: add pci-id of the aqr105-based Tehuti TN4010 cards
-
- drivers/net/ethernet/tehuti/tn40.c           |   9 +-
- drivers/net/ethernet/tehuti/tn40.h           |  33 ++++
- drivers/net/ethernet/tehuti/tn40_mdio.c      |  84 +++++++++-
- drivers/net/phy/aquantia/aquantia_firmware.c |   7 +-
- drivers/net/phy/aquantia/aquantia_main.c     | 240 ++++++++++++++++++++++++++-
- drivers/net/phy/mdio_bus.c                   |  14 ++
- 6 files changed, 378 insertions(+), 9 deletions(-)
----
-base-commit: 23c9ff659140f97d44bf6fb59f89526a168f2b86
-change-id: 20241216-tn9510-v3a-2cfc185d680f
-
-Best regards,
 -- 
-Hans-Frieder Vogt <hfdevel@gmx.net>
+2.47.2
 
 
