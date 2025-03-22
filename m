@@ -1,30 +1,30 @@
 Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A46D7199FA8;
-	Sat, 22 Mar 2025 10:36:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DD9A200BBC;
+	Sat, 22 Mar 2025 10:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742639780; cv=none; b=JtmSrn/EnNRNW/r/3yY/ljNRryNzzQhJaLLBOwH3B0lZ7xnngwJr+qAyZWyNzHYi482xilZ6xpbVXOEOV0hAjhaih3GVhWr8Z+qLIvQcbKRmyjIV06Hc6PK8e6ISeAYFQR8CtWsu5IAGi93n/+ffjXcAIUd9PyybRkiZ8yugCfI=
+	t=1742639784; cv=none; b=DAA+AbCWGUtAnANqCgPp8KAkM4kiI0jP2f2iI6DUBZ2+DFhPznRP2ZKnfAStzSLaF0rSu8YpAiC9pQc1j6fj9NdwSoXksZZR8LKdB2UQAwveAvYV7/oE4qobtIXZafoyLYSOO+4H/sec/yZIsCb5g4ytEoUsOOE86ogRpugAy/o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742639780; c=relaxed/simple;
-	bh=wu7+J7QBTGtY7zwmcmVaVhnYFIkVK9jvYYdkOGYosqI=;
+	s=arc-20240116; t=1742639784; c=relaxed/simple;
+	bh=hUKOcqhQp/TDrerLgUBgRAyI7jJWLtmRoc/95c//Ul8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Ke/Ul3WJeeVHOWiRuLdCFNBvliAAMw7ZU7AGjhJIbwBSyU4XAhsWvr975eRstsCdYAL8yBx0TOvHPaHOyzUGD1XzYP4ergJYHWz8eM59ZThX2eBLXkq1cTTWBOlWXFY6306FFiGsNO16BSSbK7CHUc9zi+ibezSSTQx47DS5Ias=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=UrKG6hmS; arc=none smtp.client-ip=185.138.42.100
+	 MIME-Version:Content-Type; b=XdRtkoVJpQEg4T1eZUAIrH4AMTDVs8BeWvRf0nQojzyI1mdWGJZQxfPJNli5b1vElrFlDMui1oqerokx0rAt0ivqJBjwNG1+geRiUYcf2cjHOTNYoAqvdoPls4AAXc5qif1XXdQn4J0N77pI28mj/gOM8kT0PFFD/2fzOVqWBd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=G9fSuztd; arc=none smtp.client-ip=185.138.42.100
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="UrKG6hmS"
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="G9fSuztd"
 Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 83B9C2E08B3C;
-	Sat, 22 Mar 2025 12:36:14 +0200 (EET)
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id C9BC82E08C6B;
+	Sat, 22 Mar 2025 12:36:18 +0200 (EET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742639776;
-	bh=OCHzZn2N0mDhtfcOaYi45U8OEbfzcSMhgJfvjdwnZ7Y=; h=From:To:Subject;
-	b=UrKG6hmS7pt3z5apgXt8JOyLOBGnjFxcRO0ZYrRU6uYMFixhI/dryUgwp/vvcj/ao
-	 5X06tEfd751v/BTzRWlwsL0WHrWYacefUab7BdWqanKdzTT/E1uGUGcu5hPhi7XiP+
-	 rO4OhA2QXo5higxOzl0szmuf2fDJ+FgazAp7M6hM=
+	s=default; t=1742639780;
+	bh=ewSfbNvtaLK0jqHvTSiVayJIjeB6chV6mPkIxmFui3w=; h=From:To:Subject;
+	b=G9fSuztdabtWdsAsApNFHFjkdAAEUnwGJBFIt8J5nCHKh7HhuQeDQXvq7OfNi5jkm
+	 O2DMp3uMq/1dJyoIPHdJ3zhso163HKCac3Up6RvlTDt39DeXcRxnZORIVejtNHzIvT
+	 22zSgIl0ZbEJzmqCEdzYfk0OHIksMXcAmTE3ylBI=
 Authentication-Results: linux1587.grserver.gr;
 	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
 Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
@@ -49,9 +49,10 @@ Cc: linux-hwmon@vger.kernel.org,
 	hdegoede@redhat.com,
 	mario.limonciello@amd.com,
 	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v8 02/14] hwmon: (oxp-sensors) Add all OneXFly variants
-Date: Sat, 22 Mar 2025 11:35:54 +0100
-Message-ID: <20250322103606.680401-3-lkml@antheas.dev>
+Subject: [PATCH v8 04/14] ABI: testing: sysfs-class-oxp: add missing
+ documentation
+Date: Sat, 22 Mar 2025 11:35:56 +0100
+Message-ID: <20250322103606.680401-5-lkml@antheas.dev>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <20250322103606.680401-1-lkml@antheas.dev>
 References: <20250322103606.680401-1-lkml@antheas.dev>
@@ -64,83 +65,42 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-PPP-Message-ID: 
- <174263977609.11101.15200141880659721038@linux1587.grserver.gr>
+ <174263978043.11274.15758543961267347337@linux1587.grserver.gr>
 X-PPP-Vhost: antheas.dev
 X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
 X-Virus-Status: Clean
 
-Currently, the driver only has the F1 OneXFly variant, which was based
-on the 7000 AMD platform. Add its special editions: F1 EVA-01, F1 OLED.
-F1 OLED might have been a dev unit, but it is supported by OneXConsole
-with the same features so add it. Then add the F1L variant which is
-based on the 8000 AMD platform and the F1Pro and its special edition
-EVA-02.
+Add missing documentation about the tt_toggle attribute that was
+added in kernel 6.5.
 
-One might ask why not just fuzzy match. Well, EVA-02 is a variant of
-F1Pro which is a Strix Point handheld, but does not have F1Pro in its
-name. This makes it risky to fuzzy match, as special variants in the
-future from different platforms might not have the same feature set
-or registers.
-
-By happenstance, all current devices use the same registers. For the
-charge limitting feature on this series, only F1Pro/X1 (AMD) were
-released with it, but OneXPlayer is providing bios updates for F1, F1L,
-X1 Mini units that use the same register, so treat all of them the same.
-
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+Fixes: be144ee491272 ("hwmon: (oxp-sensors) Add tt_toggle attribute on supported boards")
 Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
 Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
 Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
 ---
- drivers/hwmon/oxp-sensors.c | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+ Documentation/ABI/testing/sysfs-platform-oxp | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-oxp
 
-diff --git a/drivers/hwmon/oxp-sensors.c b/drivers/hwmon/oxp-sensors.c
-index 5a4230ad3757e..f7a64fbc8f33e 100644
---- a/drivers/hwmon/oxp-sensors.c
-+++ b/drivers/hwmon/oxp-sensors.c
-@@ -188,6 +188,41 @@ static const struct dmi_system_id dmi_table[] = {
- 		},
- 		.driver_data = (void *)oxp_fly,
- 	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-01"),
-+		},
-+		.driver_data = (void *)oxp_fly,
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 OLED"),
-+		},
-+		.driver_data = (void *)oxp_fly,
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1L"),
-+		},
-+		.driver_data = (void *)oxp_fly,
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1Pro"),
-+		},
-+		.driver_data = (void *)oxp_fly,
-+	},
-+	{
-+		.matches = {
-+			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
-+			DMI_EXACT_MATCH(DMI_BOARD_NAME, "ONEXPLAYER F1 EVA-02"),
-+		},
-+		.driver_data = (void *)oxp_fly,
-+	},
- 	{
- 		.matches = {
- 			DMI_MATCH(DMI_BOARD_VENDOR, "ONE-NETBOOK"),
+diff --git a/Documentation/ABI/testing/sysfs-platform-oxp b/Documentation/ABI/testing/sysfs-platform-oxp
+new file mode 100644
+index 0000000000000..091269ab2c8c4
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-oxp
+@@ -0,0 +1,13 @@
++What:		/sys/devices/platform/<platform>/tt_toggle
++Date:		Jun 2023
++KernelVersion:	6.5
++Contact:	"Antheas Kapenekakis" <lkml@antheas.dev>
++Description:
++		Takeover TDP controls from the device. OneXPlayer devices have a
++		turbo button that can be used to switch between two TDP modes
++		(usually 15W and 25W). By setting this attribute to 1, this
++		functionality is disabled, handing TDP control over to (Windows)
++		userspace software and the Turbo button turns into a keyboard
++		shortcut over the AT keyboard of the device. In addition,
++		using this setting is a prerequisite for PWM control for most
++		newer models (otherwise it NOOPs).
 -- 
 2.48.1
 
