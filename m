@@ -1,91 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5AC1BC5C;
-	Sat, 22 Mar 2025 21:55:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C128D54654;
+	Sat, 22 Mar 2025 21:58:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742680500; cv=none; b=UXp1gcuZT403vTcKIkQNb9fGQBKB4ikYpMnuRnzhhg1cJbT8iVuWUR5gjYNxc+z9OVjQ5w4KYiSNGtBzY+54EpwxF/qh4Z0TnXsNPwLwxYVRTuIUs2ZxxLdJrh0n1b5XDtjyXfbmbRaooYxOZWmYrEOqbu0ho0B5/tBAF0U2Yaw=
+	t=1742680726; cv=none; b=FB2PIK3vOusemOA/T0W1FfF8c6pdPIeVFjDx4u2I18rqh7clMh2QABWBUHo1Bt1lDAfC7Ow1ppqAcypTPOw7tFSAsezFaDS/6ffj7oElgrlgovC7YvAo6/UaacRLWMPrU3iCye35wnjffbESIOwcVgOBQ2gIebubWG6yZ6qZtRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742680500; c=relaxed/simple;
-	bh=U71RNqUGZ+Lus/4E2mE5hWToUl3/b+yqzqc/fKz+QTE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=Fct8N0b3btOB9v/2kZn0OAiB6g7AXTmOkU761sCEIkphj3+cnCuumEJ4KbGyvg1S2YGxD5RFp5E6I74n/Qw0wOCWHFCz7yWEAXhTaDjRKwXwA0LGSAt8130XUUN9GkGo5ViJ6vDauUcY3oRrd0zDWTpAjCTHIWGfCyZMA/Wt7Zg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hijyaLZf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742680726; c=relaxed/simple;
+	bh=cy9ZWIHTb+rP28jMKm0pKV+/hp1M6pQwsR6b+gLIe+s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JU/Naos7+bc72SxoQ2S9mN0NG5M3afJV0V3PqLrw+5HkFq++hW57oxdJH2o6Zg3wK/4sgyOIkmY72LB96CvfkyiBYB2Mt/07XpnU67kWAhnALABBlkMgDLbxS+f0mKY91Z0cgf/T02pTp4Lod9QyKba14OBPpcLJKQgiZTVAc6w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MuiJFbNF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hijyaLZf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 379E2C4CEE4;
-	Sat, 22 Mar 2025 21:54:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MuiJFbNF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7094C4CEDD;
+	Sat, 22 Mar 2025 21:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742680500;
-	bh=U71RNqUGZ+Lus/4E2mE5hWToUl3/b+yqzqc/fKz+QTE=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-	b=hijyaLZftH9iS/29xIBvicM0ykjnjPGUS3cGeYlej/4P9fD7sJvWkoNswOuyevcjH
-	 XfV540VdPyr/lcT9e9qDCIs3nY4rS2NB599gcThSGTDbhkmuJ5MNLnCEg1u7Sy7vsX
-	 x7dcZdU5C7F4ZWTmtwSHcK/ADglPKCven2v9pNJsV4nxK7Lkb6EQ7aaSeGoP2k9xFD
-	 caMHB9iLEpqacv/TMMBP9Ntpu9QDfFjly0cYXbyFILZCn5t03yxzcVduV3jJkYmp+d
-	 aB91bKfjxF+EKwEsy0+jBPvaPb4ZeN0JSIO7AkrFd0jydtsAnaBw6NmrfZw+CATGr0
-	 Bvv/PFpoxHiJg==
-From: Andreas Hindborg <a.hindborg@kernel.org>
-To: FUJITA Tomonori <fujita.tomonori@gmail.com>
-Cc: linux-kernel@vger.kernel.org,  Daniel Almeida
- <daniel.almeida@collabora.com>,  Gary Guo <gary@garyguo.net>,  Alice Ryhl
- <aliceryhl@google.com>,  Fiona Behrens <me@kloenk.dev>,
-  rust-for-linux@vger.kernel.org,  netdev@vger.kernel.org,  andrew@lunn.ch,
-  hkallweit1@gmail.com,  tmgross@umich.edu,  ojeda@kernel.org,
-  alex.gaynor@gmail.com,  bjorn3_gh@protonmail.com,
-  benno.lossin@proton.me,  a.hindborg@samsung.com,
-  anna-maria@linutronix.de,  frederic@kernel.org,  tglx@linutronix.de,
-  arnd@arndb.de,  jstultz@google.com,  sboyd@kernel.org,  mingo@redhat.com,
-  peterz@infradead.org,  juri.lelli@redhat.com,
-  vincent.guittot@linaro.org,  dietmar.eggemann@arm.com,
-  rostedt@goodmis.org,  bsegall@google.com,  mgorman@suse.de,
-  vschneid@redhat.com,  tgunders@redhat.com,  david.laight.linux@gmail.com
-Subject: Re: [PATCH v11 5/8] rust: time: Add wrapper for fsleep() function
-In-Reply-To: <20250220070611.214262-6-fujita.tomonori@gmail.com> (FUJITA
-	Tomonori's message of "Thu, 20 Feb 2025 16:06:07 +0900")
-References: <20250220070611.214262-1-fujita.tomonori@gmail.com>
-	<20250220070611.214262-6-fujita.tomonori@gmail.com>
-User-Agent: mu4e 1.12.7; emacs 29.4
-Date: Sat, 22 Mar 2025 15:10:17 +0100
-Message-ID: <87a59db1h2.fsf@kernel.org>
+	s=k20201202; t=1742680726;
+	bh=cy9ZWIHTb+rP28jMKm0pKV+/hp1M6pQwsR6b+gLIe+s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=MuiJFbNF5qtDzY8OFSZ9kpOqQ41P08DmLyqaj9JMA5S3BpDHHlbNmGqBOhIScU5lI
+	 sdawXeTIHXRCvVE8YhsPLaNLcdiJpgzMVydKaYTK78/K1gOHaVNS2V00kUZJcEgTK9
+	 mWuZuWhPrz7j7gXw5NnDUt+ZOLEXB95+lD4NCVfY2zoqSdCxFG6mmwlUK6zvwbKPH9
+	 tu9domaxpd6RKsuzjlS++i8LhasAGPoPckTXOWCM4R+lTptmBKsa46dJAKNL1GkAZf
+	 sBqnlEQJtGULN4I6YPA1MKvmFe1yNsK5tzKQG9tvJdXN8AjB+TOechZVNMHVNwuNeW
+	 f17s81iS4nFwA==
+Date: Sat, 22 Mar 2025 23:58:42 +0200
+From: Jarkko Sakkinen <jarkko@kernel.org>
+To: Elena Reshetova <elena.reshetova@intel.com>
+Cc: dave.hansen@intel.com, linux-sgx@vger.kernel.org,
+	linux-kernel@vger.kernel.org, x86@kernel.org,
+	asit.k.mallick@intel.com, vincent.r.scarlata@intel.com,
+	chongc@google.com, erdemaktas@google.com, vannapurve@google.com,
+	dionnaglaze@google.com, bondarn@google.com, scott.raynor@intel.com
+Subject: Re: [PATCH 1/4] x86/sgx: Add total number of EPC pages
+Message-ID: <Z98yki-gH4ewlpbP@kernel.org>
+References: <20250321123938.802763-1-elena.reshetova@intel.com>
+ <20250321123938.802763-2-elena.reshetova@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321123938.802763-2-elena.reshetova@intel.com>
 
-FUJITA Tomonori <fujita.tomonori@gmail.com> writes:
+On Fri, Mar 21, 2025 at 02:34:40PM +0200, Elena Reshetova wrote:
+> In order to successfully execute ENCLS[EUPDATESVN], EPC must be empty.
+> SGX already has a variable sgx_nr_free_pages that tracks free
+> EPC pages. Add a new variable, sgx_nr_total_pages, that will keep
+> track of total number of EPC pages. It will be used in subsequent
+> patch to change the sgx_nr_free_pages into sgx_nr_used_pages and
+> allow an easy check for an empty EPC.
 
-> Add a wrapper for fsleep(), flexible sleep functions in
-> include/linux/delay.h which typically deals with hardware delays.
->
-> The kernel supports several sleep functions to handle various lengths
-> of delay. This adds fsleep(), automatically chooses the best sleep
-> method based on a duration.
->
-> sleep functions including fsleep() belongs to TIMERS, not
-> TIMEKEEPING. They are maintained separately. rust/kernel/time.rs is an
-> abstraction for TIMEKEEPING. To make Rust abstractions match the C
-> side, add rust/kernel/time/delay.rs for this wrapper.
->
-> fsleep() can only be used in a nonatomic context. This requirement is
-> not checked by these abstractions, but it is intended that klint [1]
-> or a similar tool will be used to check it in the future.
->
-> Link: https://rust-for-linux.com/klint [1]
-> Tested-by: Daniel Almeida <daniel.almeida@collabora.com>
-> Reviewed-by: Gary Guo <gary@garyguo.net>
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Reviewed-by: Fiona Behrens <me@kloenk.dev>
-> Signed-off-by: FUJITA Tomonori <fujita.tomonori@gmail.com>
+First off, remove "in subsequent patch".
 
-Reviewed-by: Andreas Hindborg <a.hindborg@kernel.org>
+What does "change sgx_nr_free_pages into sgx_nr_used_pages" mean?
 
+> 
+> Note: The serialization for sgx_nr_total_pages is not needed because
+> the variable is only updated during the initialization and there's no
+> concurrent access.
+> 
+> Signed-off-by: Elena Reshetova <elena.reshetova@intel.com>
+> ---
+>  arch/x86/kernel/cpu/sgx/main.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/sgx/main.c b/arch/x86/kernel/cpu/sgx/main.c
+> index 8ce352fc72ac..d5df67dab247 100644
+> --- a/arch/x86/kernel/cpu/sgx/main.c
+> +++ b/arch/x86/kernel/cpu/sgx/main.c
+> @@ -33,6 +33,7 @@ static LIST_HEAD(sgx_active_page_list);
+>  static DEFINE_SPINLOCK(sgx_reclaimer_lock);
+>  
+>  static atomic_long_t sgx_nr_free_pages = ATOMIC_LONG_INIT(0);
+> +static unsigned long sgx_nr_total_pages;
+>  
+>  /* Nodes with one or more EPC sections. */
+>  static nodemask_t sgx_numa_mask;
+> @@ -648,6 +649,8 @@ static bool __init sgx_setup_epc_section(u64 phys_addr, u64 size,
+>  		list_add_tail(&section->pages[i].list, &sgx_dirty_page_list);
+>  	}
+>  
+> +	sgx_nr_total_pages += nr_pages;
+> +
+>  	return true;
+>  }
+>  
+> -- 
+> 2.45.2
+> 
 
-Best regards,
-Andreas Hindborg
-
-
+BR, Jarkko
