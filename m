@@ -1,59 +1,59 @@
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7A8224236
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 20:36:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E42236437
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 20:36:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742675783; cv=none; b=NVwsh/4hxkO+KJvMga5uxDW1hUc0Ll6iH8OnicsS0dDC2aZwUMNKtkhKgoOJqk5gvtp73AMslw4p8lTe3pM6ZrLpV9YUUnAg7pupcYDmEoSW2CEaEnh1Vw9ZHLZLrR5bh7OrArLjpHB6p3S6J0h8ksnggRoYYqp0s/x4uZggLMk=
+	t=1742675788; cv=none; b=U4kuWR5KvSSXIVcvanUe/LEgQ2p393OkyFZuT6UfQr/ce1Vt99UmlFoVsEVdsu4UGX2/HW51MejrgNednok/EKQHN7TZPx9kRpSOvh4kH1YDuC0fkkh6Hkiu+SD4qs8t31fGJ7Vnb/+seqIZJJTY4I1Cjk28wBVAC4bCwz4G0+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742675783; c=relaxed/simple;
-	bh=i6xeSXKUD7T3dNvSuBVDs/MYVZ+onNQyMhRjHKGsRNE=;
+	s=arc-20240116; t=1742675788; c=relaxed/simple;
+	bh=c3/J2vBhFHgcYU8/R+B3kO6gEpk4hnzkVfVtuyfH1MY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nHy0/W7/ndUb4U3ERZIDfywmonnLfe+O83AiSgTWI0aaVjekWyLXU8vv1l2mpeRpcwXvFjulxhrmm1zdpWarFghruqiKXwgC8SvYE27HcDb+cV4zD8s8a7yu71mTk3dyNINtMoz57oc//gOjSyD9DBZHBv2kvf57Nwc/IClJlDM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=eHtxYJps; arc=none smtp.client-ip=209.85.216.54
+	 MIME-Version; b=L7fzSEX7eHpvl24YISKARa6B7kfKHIxNfSsXDaXjJ9ntoBm6PJL5RhFIVWSZ/c3ZNG9JaBdi5+D+uf4SFvT5h60o4J8CQhHNme3X+jtxJ6+jgeR/zPpjwwbmyYRypO6+CK0O1MoN2XX9cs8yek7W+mBuPgAIiMrVJYYMbGml9Nc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=vYtlnrts; arc=none smtp.client-ip=209.85.214.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="eHtxYJps"
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-3018e2d042bso3864861a91.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 13:36:21 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="vYtlnrts"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-223f4c06e9fso49800155ad.1
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 13:36:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fastly.com; s=google; t=1742675781; x=1743280581; darn=vger.kernel.org;
+        d=fastly.com; s=google; t=1742675786; x=1743280586; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qtu2ODMuJN1daFcUihlu1rzkpuFzY3nQ3BRzwub0CsU=;
-        b=eHtxYJpsDA09nLlviHfRr451dQTZ77wxCpn1+pb3kMF0RMTIrRr1iFYPNkPylWLWsN
-         CzO396L6SPHq/vaoEpd+BS9GjZMcIbnhDIe459RP6Vflqj4KAHYmwDUlaB/4fi8PhTV9
-         kcYw5mXIW8+bRnQAdoFfU2yzTN06Ysi0v/Dzs=
+        bh=dz/LHTTUvobHGyp+oeRaoigsjw3nQSx8Yss6Q7WiTEA=;
+        b=vYtlnrtsa70XvUxSH/BwDpwL7WlkEe4pR4Dqcd+CuXXifqtEe04UCyrmSCgFn2MBiE
+         0xvx0EEJLPsYvBsDDvJ7p2DFfbSC2vsUr0PMxehVIEQbrS0mCf9+ohJ+0kHvjJU/VoKP
+         CSZemS9GPjNvXN1utqyDLFd32AA3/U3MqFj2w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742675781; x=1743280581;
+        d=1e100.net; s=20230601; t=1742675786; x=1743280586;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=qtu2ODMuJN1daFcUihlu1rzkpuFzY3nQ3BRzwub0CsU=;
-        b=SwllAb2bq4ROzFuvEzXiPx95/3GJXbzZySfGYouHlJDpwYmo39nvzuVv4D1VFL8XbU
-         xZz/yxLNN8aTHlfs8Pq0rtZy2LUKQEN2Kz605lXhY2SgGdMQT+RhqZNCVm6Ui887sihm
-         U2nzkbPbyp02Y30VmumDIIuJQ8Yhl9pKksyQdk6HYU87v25mP/aVr653yo4aeT6GtCns
-         fhPi9g+eOQHA502X5JaTO5H/V0gm0nhZa1rmO/MaFqNoe/pFx8cAl2R2agmoMjPAwOgW
-         u8zkJToskjp0QUK+OgpFhRg9z7BmRQkEpB1x5SPE66q1aE6bPQLKisrwx3TgOhf5eIb6
-         JC2A==
-X-Forwarded-Encrypted: i=1; AJvYcCVVa0ecyKGBRN+HmkcK1H5Bp9zWkK4GcmGTEtoiesKo8QRdz9tu7r3KD6deV12VaDUn8rbdfh2RjD9mEgM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzHUpeWQJu2OhRupo4qS2ZHouph+6M9Enr/MhU8VHV6+okIxVU4
-	x7Ylbv+6CXbg0qX4sDj+56pMMmepEOIAs+No3k8mNLn8QBasugKDlUF65QywrDM=
-X-Gm-Gg: ASbGncvgkah5N56HREzJle8yVc+qFtgcWY7+NfU3yMBYa+FGyx5ccQnZJhgeIcXF6r+
-	KqNZ6dwiOnMgXHuJR0hDJGr2f7h1VR5mdNbuJ4UVbzuL0TakUMu+4keqeQPZY9QjelDIezQPTiO
-	s1RQS4QVv98ZymCL2VWxU8RwwAKIbwXow+pKDev+e36Py7vTfxp1awjMFNv3j4dWU084s3sPt+t
-	/qjKqurXJUzaxH49akJBTTEgmpaWIFMxuAOs1rhMURx0HuSeIxKrV6udKkRR3FmJUQSuwU4tfEm
-	VvU5ShiLu122YJL5mYPMEbkMfiwr6JonM/8sBrxM5VAYh2YVe+b3
-X-Google-Smtp-Source: AGHT+IESi0AKU2RsgzC9hdeNWUniwi/w2iinEQxLs5wBA3sRrJswAKj8kq5JE5jmf3oyEm3CD4afpw==
-X-Received: by 2002:a17:90b:4fc6:b0:2fe:8a84:e033 with SMTP id 98e67ed59e1d1-3030fe6a292mr11636714a91.2.1742675781177;
-        Sat, 22 Mar 2025 13:36:21 -0700 (PDT)
+        bh=dz/LHTTUvobHGyp+oeRaoigsjw3nQSx8Yss6Q7WiTEA=;
+        b=vlo8nb7jCrDZ4Dye44CYoRptqOtNZNuUBAS/93kQc8isRO9LFBDk6oIN7NxnNI3bOy
+         erYCu72FFkbO//i5upv267IH97pp0r1J7yiYUKw9a5/Y0oaKiv0bHkmpnCBUwn3HlNun
+         QhjCJ8/esnXgJXfZV0AySGn/EjPmcmlLzaMsN6U/yhYcMzZnHytl6ThqMni7dJKt5q3O
+         NP7ZeCXaLUlk/NdsN/Tmxe3yMY9d5B/06cHUqZLaV+47Kr+zRh+VR2Cdt/W7QExHj0t5
+         l1fTlyPSyyHCqi3eAunaLZFv3MqQwsuPA+fgVadeLiaYPfbNZoLuMyI6fJBA+m9y3u/e
+         Wdmg==
+X-Forwarded-Encrypted: i=1; AJvYcCVz6UoFyeDStHt6GHLeQl14VSbjqdJ7tnfxi9ei0wYiQfYGWftw4lMNq+DzdYew+dq5Xz5xXT+dIxC3v+A=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxD3ltimrUyHgBXkFhosRJMucogLoJi9e4k4EqcfgKtzJxPGl23
+	oJJnPlhfPtXlEdB58XCLjRrlCjOcVjWI8hakw8GcwAff2NbVipP5ftQlaulMlts=
+X-Gm-Gg: ASbGncuq2M1CqukUoZVE5f+/bkM8EuKvruWvjQTrCBqOjioiEEN8OZYAsaUJ2lXuTve
+	mCMi040ujIIAx18PeASnSXGzMGlxpaDFn47N9HNY+J23kdDybFokK+9G5uj35YTd9ncj3IjFTcy
+	4Ie8PTEI/ytX9H49sqRrZBdGs1C6qGU6UJxnziVA6kG1L6BS6tavlQN8RPvB84FOarse+h+fvg9
+	yZYSr7rZuEgU5PDUP5esxPUiijt/JmWe1P222Re07olDtDKCfXUABtTA4YJKMjeQ7O4KDKGNw0u
+	11mT58jnH3RWIEb0lYgj74bikdjhk0rf8BQYNG/y/Yss20UIhKwieHZ516jCsKI=
+X-Google-Smtp-Source: AGHT+IFlOF9+hHiNwkeX6ca8/2vV/UbK7oUM8j14EpRf1krcAZwqEjvIIPVQftAfXDqYfTgS2nWJkA==
+X-Received: by 2002:a17:902:d9d0:b0:21f:6d63:6f4f with SMTP id d9443c01a7336-2265e67fa37mr149203865ad.2.1742675785993;
+        Sat, 22 Mar 2025 13:36:25 -0700 (PDT)
 Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61a579sm8711798a91.32.2025.03.22.13.36.19
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61a579sm8711798a91.32.2025.03.22.13.36.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Mar 2025 13:36:20 -0700 (PDT)
+        Sat, 22 Mar 2025 13:36:25 -0700 (PDT)
 From: Joe Damato <jdamato@fastly.com>
 To: linux-fsdevel@vger.kernel.org
 Cc: netdev@vger.kernel.org,
@@ -66,12 +66,11 @@ Cc: netdev@vger.kernel.org,
 	pabeni@redhat.com,
 	horms@kernel.org,
 	Joe Damato <jdamato@fastly.com>,
-	Alexander Viro <viro@zeniv.linux.org.uk>,
-	Jan Kara <jack@suse.cz>,
+	"David S. Miller" <davem@davemloft.net>,
 	linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH vfs/for-next 1/3] pipe: Move pipe wakeup helpers out of splice
-Date: Sat, 22 Mar 2025 20:35:44 +0000
-Message-ID: <20250322203558.206411-2-jdamato@fastly.com>
+Subject: [PATCH vfs/for-next 3/3] net: splice_to_socket: RCT declaration cleanup
+Date: Sat, 22 Mar 2025 20:35:46 +0000
+Message-ID: <20250322203558.206411-4-jdamato@fastly.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250322203558.206411-1-jdamato@fastly.com>
 References: <20250322203558.206411-1-jdamato@fastly.com>
@@ -83,168 +82,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Splice code has helpers to wakeup pipe readers and writers. Move these
-helpers out of splice, rename them from "wakeup_pipe_*" to
-"pipe_wakeup_*" and update call sites in splice.
+Make declarations reverse x-mas tree style now that splice_to_socket
+lives in net/.
 
 Signed-off-by: Joe Damato <jdamato@fastly.com>
 ---
- fs/pipe.c                 | 16 ++++++++++++++++
- fs/splice.c               | 34 +++++++++-------------------------
- include/linux/pipe_fs_i.h |  4 ++++
- 3 files changed, 29 insertions(+), 25 deletions(-)
+ net/socket.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/pipe.c b/fs/pipe.c
-index 12b22c2723b7..1f496896184b 100644
---- a/fs/pipe.c
-+++ b/fs/pipe.c
-@@ -1070,6 +1070,22 @@ void pipe_wait_writable(struct pipe_inode_info *pipe)
- 	pipe_lock(pipe);
- }
- 
-+void pipe_wakeup_readers(struct pipe_inode_info *pipe)
-+{
-+	smp_mb();
-+	if (waitqueue_active(&pipe->rd_wait))
-+		wake_up_interruptible(&pipe->rd_wait);
-+	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
-+}
-+
-+void pipe_wakeup_writers(struct pipe_inode_info *pipe)
-+{
-+	smp_mb();
-+	if (waitqueue_active(&pipe->wr_wait))
-+		wake_up_interruptible(&pipe->wr_wait);
-+	kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
-+}
-+
- /*
-  * This depends on both the wait (here) and the wakeup (wake_up_partner)
-  * holding the pipe lock, so "*cnt" is stable and we know a wakeup cannot
-diff --git a/fs/splice.c b/fs/splice.c
-index 2898fa1e9e63..dcd594a8fc06 100644
---- a/fs/splice.c
-+++ b/fs/splice.c
-@@ -175,14 +175,6 @@ static const struct pipe_buf_operations user_page_pipe_buf_ops = {
- 	.get		= generic_pipe_buf_get,
- };
- 
--static void wakeup_pipe_readers(struct pipe_inode_info *pipe)
--{
--	smp_mb();
--	if (waitqueue_active(&pipe->rd_wait))
--		wake_up_interruptible(&pipe->rd_wait);
--	kill_fasync(&pipe->fasync_readers, SIGIO, POLL_IN);
--}
--
- /**
-  * splice_to_pipe - fill passed data into a pipe
-  * @pipe:	pipe to fill
-@@ -414,14 +406,6 @@ const struct pipe_buf_operations nosteal_pipe_buf_ops = {
- };
- EXPORT_SYMBOL(nosteal_pipe_buf_ops);
- 
--static void wakeup_pipe_writers(struct pipe_inode_info *pipe)
--{
--	smp_mb();
--	if (waitqueue_active(&pipe->wr_wait))
--		wake_up_interruptible(&pipe->wr_wait);
--	kill_fasync(&pipe->fasync_writers, SIGIO, POLL_OUT);
--}
--
- /**
-  * splice_from_pipe_feed - feed available data from a pipe to a file
-  * @pipe:	pipe to splice from
-@@ -541,7 +525,7 @@ static int splice_from_pipe_next(struct pipe_inode_info *pipe, struct splice_des
- 			return -ERESTARTSYS;
- 
- 		if (sd->need_wakeup) {
--			wakeup_pipe_writers(pipe);
-+			pipe_wakeup_writers(pipe);
- 			sd->need_wakeup = false;
- 		}
- 
-@@ -582,7 +566,7 @@ static void splice_from_pipe_begin(struct splice_desc *sd)
- static void splice_from_pipe_end(struct pipe_inode_info *pipe, struct splice_desc *sd)
+diff --git a/net/socket.c b/net/socket.c
+index 2640b42cf320..b54df75af1a1 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -3739,11 +3739,11 @@ static ssize_t splice_to_socket(struct pipe_inode_info *pipe, struct file *out,
+ 				loff_t *ppos, size_t len, unsigned int flags)
  {
- 	if (sd->need_wakeup)
--		wakeup_pipe_writers(pipe);
-+		pipe_wakeup_writers(pipe);
- }
+ 	struct socket *sock = sock_from_file(out);
++	bool need_wakeup = false;
+ 	struct bio_vec bvec[16];
+ 	struct msghdr msg = {};
+-	ssize_t ret = 0;
+ 	size_t spliced = 0;
+-	bool need_wakeup = false;
++	ssize_t ret = 0;
  
- /**
-@@ -837,7 +821,7 @@ ssize_t splice_to_socket(struct pipe_inode_info *pipe, struct file *out,
- 				goto out;
- 
- 			if (need_wakeup) {
--				wakeup_pipe_writers(pipe);
-+				pipe_wakeup_writers(pipe);
- 				need_wakeup = false;
- 			}
- 
-@@ -917,7 +901,7 @@ ssize_t splice_to_socket(struct pipe_inode_info *pipe, struct file *out,
- out:
- 	pipe_unlock(pipe);
- 	if (need_wakeup)
--		wakeup_pipe_writers(pipe);
-+		pipe_wakeup_writers(pipe);
- 	return spliced ?: ret;
- }
- #endif
-@@ -1295,7 +1279,7 @@ ssize_t splice_file_to_pipe(struct file *in,
- 		ret = do_splice_read(in, offset, opipe, len, flags);
- 	pipe_unlock(opipe);
- 	if (ret > 0)
--		wakeup_pipe_readers(opipe);
-+		pipe_wakeup_readers(opipe);
- 	return ret;
- }
- 
-@@ -1558,7 +1542,7 @@ static ssize_t vmsplice_to_pipe(struct file *file, struct iov_iter *iter,
- 		ret = iter_to_pipe(iter, pipe, buf_flag);
- 	pipe_unlock(pipe);
- 	if (ret > 0) {
--		wakeup_pipe_readers(pipe);
-+		pipe_wakeup_readers(pipe);
- 		fsnotify_modify(file);
- 	}
- 	return ret;
-@@ -1844,10 +1828,10 @@ static int splice_pipe_to_pipe(struct pipe_inode_info *ipipe,
- 	 * If we put data in the output pipe, wakeup any potential readers.
- 	 */
- 	if (ret > 0)
--		wakeup_pipe_readers(opipe);
-+		pipe_wakeup_readers(opipe);
- 
- 	if (input_wakeup)
--		wakeup_pipe_writers(ipipe);
-+		pipe_wakeup_writers(ipipe);
- 
- 	return ret;
- }
-@@ -1935,7 +1919,7 @@ static ssize_t link_pipe(struct pipe_inode_info *ipipe,
- 	 * If we put data in the output pipe, wakeup any potential readers.
- 	 */
- 	if (ret > 0)
--		wakeup_pipe_readers(opipe);
-+		pipe_wakeup_readers(opipe);
- 
- 	return ret;
- }
-diff --git a/include/linux/pipe_fs_i.h b/include/linux/pipe_fs_i.h
-index 8ff23bf5a819..de850ef085cb 100644
---- a/include/linux/pipe_fs_i.h
-+++ b/include/linux/pipe_fs_i.h
-@@ -267,6 +267,10 @@ void pipe_double_lock(struct pipe_inode_info *, struct pipe_inode_info *);
- void pipe_wait_readable(struct pipe_inode_info *);
- void pipe_wait_writable(struct pipe_inode_info *);
- 
-+/* Wake up pipe readers/writers */
-+void pipe_wakeup_readers(struct pipe_inode_info *pipe);
-+void pipe_wakeup_writers(struct pipe_inode_info *pipe);
-+
- struct pipe_inode_info *alloc_pipe_info(void);
- void free_pipe_info(struct pipe_inode_info *);
+ 	pipe_lock(pipe);
  
 -- 
 2.43.0
