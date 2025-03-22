@@ -1,59 +1,57 @@
-Received: from mail-yw1-f202.google.com (mail-yw1-f202.google.com [209.85.128.202])
+Received: from mail-yb1-f201.google.com (mail-yb1-f201.google.com [209.85.219.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2E401F37D1
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 06:35:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.202
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF5981F463D
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 06:35:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742625340; cv=none; b=Zu5MKqVPRKyaiW7jRXA+I4IXyUiPHWCmhDvgeYRSDmC/+VwY91ftzb7pmRMU3iu9HvC+Y/aODqgEz9TD/HN9id3PtKl9/LslvLBiD847cYRs6HKrrxxF+CBQ36zHKTzPiDy3cckDHmTgcXXCCtsE77NBUoFmtFR23iQ17WKAYvk=
+	t=1742625352; cv=none; b=OGn0myYJ5CwHkYzgpCw6jo7BkUynINh5ejHg0AXMzy0ivp/lB/a3kkSvDMQSpJrVI68LOlKsWpnzSkn+orZOkviqrBShXSBPtgWd1jw+UtdGDl3EeltobU8LSYykgx7lQfEROFwo5h2BJVov6MZcIwGKn3PVTUIpG3sQKcQMgW4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742625340; c=relaxed/simple;
-	bh=ctFqUDQckKzVSG33T+IsdXdx8dTadzpOv0SmZRQHLw8=;
+	s=arc-20240116; t=1742625352; c=relaxed/simple;
+	bh=9QtWxO8l2GpcAYbRMHA4inZL25MuZzaCf9TT8yzkl7E=;
 	h=Date:In-Reply-To:Message-Id:Mime-Version:References:Subject:From:
-	 To:Content-Type; b=e1oGI+l+93TgzWMH0Zt7z7Bo/pM4Hv3ic48nELdSTrP9hlyMBYWcnFwvj1R2okNJUvkrPZj+CpAeitPD0PT4+Ho0R9cuTJ0AthhRqV5943O6w4sAbgrWO2F/eEnUqHcqDCOZvn1YTO7FfUv1gGfzixBFhLXSwEUKSEs6XNk9CFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Zj2YUO0C; arc=none smtp.client-ip=209.85.128.202
+	 To:Content-Type; b=D5rLA5Vmcou5oC0edNcgDwUyqxwQ3rUqkCLhixTL/P496RpNy6jLKwi10DjCi5TKGLH2uTCb7gKong1XyuMZ8o3yVDVc/RfSjaq4f2Irfy/00fmMXq3kYnclSW2JLT1PeHMNG7eYCnCG4dJAR3R3aPlNVl7CoJW4PTXhMx3IP7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Q+H5tnYo; arc=none smtp.client-ip=209.85.219.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Zj2YUO0C"
-Received: by mail-yw1-f202.google.com with SMTP id 00721157ae682-6f4348c854eso31734657b3.2
-        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:35:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q+H5tnYo"
+Received: by mail-yb1-f201.google.com with SMTP id 3f1490d57ef6-e6373b4cbcfso3551325276.3
+        for <linux-kernel@vger.kernel.org>; Fri, 21 Mar 2025 23:35:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742625335; x=1743230135; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=hCeVNN7TIWImHS0j62KJ6VLYzh9l1k/vX/z1AR1Qmr4=;
-        b=Zj2YUO0Caa7/O84uX6md2nfLg81iWelapW8RjGfraW0G7tz3ueyLgY1izcoEaEYK0Y
-         I82XpjvX1U0ELzXFH1NKJ64Z8NQ+d5LnKujVr5a9qwzF3lIrT9LPKqh3LfdFP+MVOCP9
-         KQaFH1eN2ayVURQb6wMsR5+I4Z3wwtYzQmgsOQI/1k1tITDluq/yaedmddLyHDVJYObn
-         J9D4wsM6RbSCKokzJb6+gfBH6XhG2mZoL9ycbXwprqLJDKs7AqfwLu78OFDPVCt7eVYv
-         hcyE/jTD/4VrICPBzRTdtAVS1QowI/h2obSyb62JRnpNHnTDfodoEj7e8lO2BIP3Kkd9
-         ZL0Q==
+        d=google.com; s=20230601; t=1742625348; x=1743230148; darn=vger.kernel.org;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=bjcCoWPLeFv7HToZ+VPWd4Z16z9IeZ5E4tfOnaC3rvg=;
+        b=Q+H5tnYoc5ggcLb6jz8i1PS1WaUh5ypJy1XLQEBwBBNtgZ/EDhi1fuAOuFwt4+AdTx
+         9+c9gz0iQin+8wybQtknotC48wGzQABDKLrz/6Ago/1YIwSBHD7nf9sBGyc/Rv8c7OEN
+         oRiEFKU593Re56lGXbnQyjFDEt2nfKpuz40sG4mb/Lo9i90jwkzOUk9urEkYljqbCich
+         G0wqTFu5eo7cp/1JyljZUveP81C91X7LHbXUFUoEPwrJ+sWihSEp224K2y396smBkbiy
+         hbKulqqOdIWEqP5N8iRilxwLmRiOU9kw/hGKcy/r12PUl8HtdFKVxVfDoLq5pU/id65W
+         k77w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742625335; x=1743230135;
-        h=content-transfer-encoding:to:from:subject:references:mime-version
-         :message-id:in-reply-to:date:x-gm-message-state:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=hCeVNN7TIWImHS0j62KJ6VLYzh9l1k/vX/z1AR1Qmr4=;
-        b=RXBhWrxnu82OOqlDzVreZgmP1/TjlKkTIgpqK8fDR9v40bZZ4F3UWCo1PwTJkTt4J0
-         sRUvc7/IyZfkLofIyEkrdKRXD0EO/U3zeoqFwhyqPn/WIvgrv60kxA/hiFa1sG0Q47Q4
-         gIaq8vDUIk1LbGSEja9S8kk69aZq+Dn8oi/YBIGESL1hGrz9ADWnBATXfik5XSKNvt6B
-         maopeQuJx8fRNSCoR6wgvbGddH+k2UUo6BINmINXGs3u6Z9Ny0Bsbc+GMdPwZggP1W8L
-         ei491EFMjrjNsSrUpV+eIXN/zOHH6oBl3KuQ29Kl6Pi1DP7/OAViESQe20/Yxl4ejs6t
-         8J1A==
-X-Forwarded-Encrypted: i=1; AJvYcCUhXB88yxIXI3lpWCIn2hFOWbCzX/dtYsyYdJuPbM2dV3scmqzHdtwWy4PXz3vvGmBah9NQtlm7t2SrKJw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyxCG3jNJflkLsi/634AcP7DGYlbEAy114OL4a1bDb0RTtHgYqe
-	OgooceH1xdt25AvSwXvT8Tb0tzBPWx+1w2XvheISIM8efReOsztIqUJ/uHNLtJ5VQ8crWee56AR
-	x9OEdUA==
-X-Google-Smtp-Source: AGHT+IFGcHJsP7czHiNgTeXXByD8ILYoJ0lIeefL5I0HwRpMqcypTiBwO8HVqFWXFxtUfQmqaT7j7ZkpoVvZ
+        d=1e100.net; s=20230601; t=1742625348; x=1743230148;
+        h=to:from:subject:references:mime-version:message-id:in-reply-to:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=bjcCoWPLeFv7HToZ+VPWd4Z16z9IeZ5E4tfOnaC3rvg=;
+        b=GCETiyXxL2+OOrExsvJIxOJyeqyci6MVe1VOzH0youiJ4m6TZk8GbvPsdJpn0Ar9n7
+         +QpCJKYRk7DGiri3SJU/gOm1CweiAjpixgKc+ro2rPQmI90NW4akk4bkE/MLOv4C5s1q
+         yHif+LKsUFLH4sH9RkORkn+Awd4AHCaZPixbamGJYdl6HGCdYMUNZyCW/LUe24CvKVo6
+         5vzWv4MYmApqlT1MkEibKsJqkG24XDFeJ1IyWwxQt1m6masgu/2th35hVZAG+7OzxtOa
+         XSGATMl1kG6hwItizIHNwVEGuC3TsSgl5kFvTKMZnFRjhsydHZSaur3czCyGQzj/ZPHR
+         Xl3Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXOAI/p1POym/95ai97TqMnU7mQ3Kxfl10zPxTtbTddeb62dW/ptTmoGt4PAW0WAsDFNsf8CMVk65DrueE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwagSsFfWOPx4sUqeFmCmIaZc+ifmufNxQqYwLJHG7+1BhEjZQX
+	dd/JFwnu6s1UyrbIZvaZ9funtUtewDEmiph/OUclRJFcpfNpcOv7+Zu5rL1H2jES4yOsFe0kfHH
+	GZtkC9Q==
+X-Google-Smtp-Source: AGHT+IHlal+F6Vq3p1BPn1wNdGsQ0Opjwsps2JaO4JwoeBUks1WR9j8kYqFa269SIbIlPXdlXWu6LE+81Kk/
 X-Received: from irogers.svl.corp.google.com ([2620:15c:2c5:11:c16d:a1c1:1823:1d0e])
- (user=irogers job=sendgmr) by 2002:a05:690c:3383:b0:6fb:8461:e7f4 with SMTP
- id 00721157ae682-700bacc218dmr325847b3.3.1742625334919; Fri, 21 Mar 2025
- 23:35:34 -0700 (PDT)
-Date: Fri, 21 Mar 2025 23:33:56 -0700
+ (user=irogers job=sendgmr) by 2002:a5b:80c:0:b0:e60:a204:30cd with SMTP id
+ 3f1490d57ef6-e66a4a80683mr6653276.0.1742625347764; Fri, 21 Mar 2025 23:35:47
+ -0700 (PDT)
+Date: Fri, 21 Mar 2025 23:34:01 -0700
 In-Reply-To: <20250322063403.364981-1-irogers@google.com>
-Message-Id: <20250322063403.364981-29-irogers@google.com>
+Message-Id: <20250322063403.364981-34-irogers@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -62,7 +60,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20250322063403.364981-1-irogers@google.com>
 X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Subject: [PATCH v1 28/35] perf vendor events: Update sierraforest events
+Subject: [PATCH v1 33/35] perf vendor events: Update westmereep-dp events
 From: Ian Rogers <irogers@google.com>
 To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
 	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
@@ -76,556 +74,130 @@ To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>,
 	linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, 
 	Perry Taylor <perry.taylor@intel.com>, Thomas Falcon <thomas.falcon@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Update events from v1.08 to v1.09.
-Update event topics.
+Update event topic moving other topic events to cache and virtual
+memory.
 
 Signed-off-by: Ian Rogers <irogers@google.com>
 ---
- tools/perf/pmu-events/arch/x86/mapfile.csv    |   2 +-
- .../arch/x86/sierraforest/cache.json          |  20 ++
- .../arch/x86/sierraforest/memory.json         |  20 ++
- .../arch/x86/sierraforest/other.json          |  48 ----
- .../arch/x86/sierraforest/pipeline.json       |   8 +
- .../arch/x86/sierraforest/uncore-cache.json   |  32 +++
- .../arch/x86/sierraforest/uncore-memory.json  | 240 ++++++++++++++++++
- 7 files changed, 321 insertions(+), 49 deletions(-)
+ .../arch/x86/westmereep-dp/cache.json         | 32 +++++++++++++++
+ .../arch/x86/westmereep-dp/other.json         | 40 -------------------
+ .../x86/westmereep-dp/virtual-memory.json     |  8 ++++
+ 3 files changed, 40 insertions(+), 40 deletions(-)
 
-diff --git a/tools/perf/pmu-events/arch/x86/mapfile.csv b/tools/perf/pmu-ev=
-ents/arch/x86/mapfile.csv
-index 0c16c9b840a5..bde2f32423a1 100644
---- a/tools/perf/pmu-events/arch/x86/mapfile.csv
-+++ b/tools/perf/pmu-events/arch/x86/mapfile.csv
-@@ -29,7 +29,7 @@ GenuineIntel-6-2E,v4,nehalemex,core
- GenuineIntel-6-A7,v1.04,rocketlake,core
- GenuineIntel-6-2A,v19,sandybridge,core
- GenuineIntel-6-8F,v1.25,sapphirerapids,core
--GenuineIntel-6-AF,v1.08,sierraforest,core
-+GenuineIntel-6-AF,v1.09,sierraforest,core
- GenuineIntel-6-(37|4A|4C|4D|5A),v15,silvermont,core
- GenuineIntel-6-(4E|5E|8E|9E|A5|A6),v59,skylake,core
- GenuineIntel-6-55-[01234],v1.36,skylakex,core
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/cache.json b/tools=
-/perf/pmu-events/arch/x86/sierraforest/cache.json
-index 072df00aff92..21671c65d6dd 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/cache.json
-@@ -466,6 +466,16 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x6"
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
+index 30845c7dbf08..f6f95f3ff301 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/cache.json
+@@ -119,6 +119,38 @@
+         "SampleAfterValue": "100000",
+         "UMask": "0x2"
      },
 +    {
-+        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand data reads that were supplied b=
-y the L3 cache where a snoop was sent, the snoop hit, and modified data was=
- forwarded.",
-         "Counter": "0,1,2,3,4,5,6,7",
-@@ -486,6 +496,16 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
-f response.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x10002",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were supplied b=
-y the L3 cache where a snoop was sent, the snoop hit, and modified data was=
- forwarded.",
-         "Counter": "0,1,2,3,4,5,6,7",
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/memory.json b/tool=
-s/perf/pmu-events/arch/x86/sierraforest/memory.json
-index 22d23077618e..3e2d0b565cfa 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/memory.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/memory.json
-@@ -82,6 +82,26 @@
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM attached to this socket.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x184000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-+    {
-+        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM attached to another socket.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0xB7",
-+        "EventName": "OCR.DEMAND_DATA_RD.REMOTE_DRAM",
-+        "MSRIndex": "0x1a6,0x1a7",
-+        "MSRValue": "0x730000001",
-+        "SampleAfterValue": "100003",
-+        "UMask": "0x1"
-+    },
-     {
-         "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that were not suppli=
-ed by the L3 cache.",
-         "Counter": "0,1,2,3,4,5,6,7",
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/other.json b/tools=
-/perf/pmu-events/arch/x86/sierraforest/other.json
-index 4c77dac8ec78..daa16030d493 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/other.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/other.json
-@@ -8,46 +8,6 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
--    {
--        "BriefDescription": "Counts demand data reads that have any type o=
-f response.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_DATA_RD.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM attached to this socket.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_DATA_RD.LOCAL_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x184000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand data reads that were supplied b=
-y DRAM attached to another socket.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_DATA_RD.REMOTE_DRAM",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x730000001",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts demand reads for ownership (RFO) and s=
-oftware prefetches for exclusive ownership (PREFETCHW) that have any type o=
-f response.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0xB7",
--        "EventName": "OCR.DEMAND_RFO.ANY_RESPONSE",
--        "MSRIndex": "0x1a6,0x1a7",
--        "MSRValue": "0x10002",
--        "SampleAfterValue": "100003",
--        "UMask": "0x1"
--    },
-     {
-         "BriefDescription": "Counts streaming stores that have any type of=
- response.",
-         "Counter": "0,1,2,3,4,5,6,7",
-@@ -57,13 +17,5 @@
-         "MSRValue": "0x10800",
-         "SampleAfterValue": "100003",
-         "UMask": "0x1"
--    },
--    {
--        "BriefDescription": "Counts the number of issue slots in a UMWAIT =
-or TPAUSE instruction where no uop issues due to the instruction putting th=
-e CPU into the C0.1 activity state.",
--        "Counter": "0,1,2,3,4,5,6,7",
--        "EventCode": "0x75",
--        "EventName": "SERIALIZATION.C01_MS_SCB",
--        "SampleAfterValue": "200003",
--        "UMask": "0x4"
-     }
- ]
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json b/to=
-ols/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-index df2c7bb474a0..a934b64f66d0 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/pipeline.json
-@@ -300,6 +300,14 @@
-         "SampleAfterValue": "1000003",
-         "UMask": "0x1"
-     },
-+    {
-+        "BriefDescription": "Counts the number of issue slots in a UMWAIT =
-or TPAUSE instruction where no uop issues due to the instruction putting th=
-e CPU into the C0.1 activity state.",
-+        "Counter": "0,1,2,3,4,5,6,7",
-+        "EventCode": "0x75",
-+        "EventName": "SERIALIZATION.C01_MS_SCB",
-+        "SampleAfterValue": "200003",
++        "BriefDescription": "L1I instruction fetch stall cycles",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.CYCLES_STALLED",
++        "SampleAfterValue": "2000000",
 +        "UMask": "0x4"
 +    },
++    {
++        "BriefDescription": "L1I instruction fetch hits",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.HITS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x1"
++    },
++    {
++        "BriefDescription": "L1I instruction fetch misses",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.MISSES",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x2"
++    },
++    {
++        "BriefDescription": "L1I Instruction fetches",
++        "Counter": "0,1,2,3",
++        "EventCode": "0x80",
++        "EventName": "L1I.READS",
++        "SampleAfterValue": "2000000",
++        "UMask": "0x3"
++    },
      {
-         "BriefDescription": "Counts the number of issue slots that were no=
-t consumed by the backend because allocation is stalled due to a mispredict=
-ed jump or a machine clear. [This event is alias to TOPDOWN_BAD_SPECULATION=
-.ALL_P]",
-         "Counter": "0,1,2,3,4,5,6,7",
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json =
-b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json
-index a779a1a73ea5..7182ca00ef8d 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-cache.json
-@@ -873,6 +873,38 @@
-         "UMask": "0x1",
-         "Unit": "CHA"
+         "BriefDescription": "All L2 data requests",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
+index bcf5bcf637c0..c0cf8bae8074 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/other.json
+@@ -15,46 +15,6 @@
+         "SampleAfterValue": "2000000",
+         "UMask": "0x1"
+     },
+-    {
+-        "BriefDescription": "L1I instruction fetch stall cycles",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.CYCLES_STALLED",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x4"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch hits",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.HITS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x1"
+-    },
+-    {
+-        "BriefDescription": "L1I instruction fetch misses",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.MISSES",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x2"
+-    },
+-    {
+-        "BriefDescription": "L1I Instruction fetches",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x80",
+-        "EventName": "L1I.READS",
+-        "SampleAfterValue": "2000000",
+-        "UMask": "0x3"
+-    },
+-    {
+-        "BriefDescription": "Large ITLB hit",
+-        "Counter": "0,1,2,3",
+-        "EventCode": "0x82",
+-        "EventName": "LARGE_ITLB.HIT",
+-        "SampleAfterValue": "200000",
+-        "UMask": "0x1"
+-    },
+     {
+         "BriefDescription": "Loads that partially overlap an earlier store",
+         "Counter": "0,1,2,3",
+diff --git a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
+index 53d7f76325a3..84c920637b12 100644
+--- a/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
++++ b/tools/perf/pmu-events/arch/x86/westmereep-dp/virtual-memory.json
+@@ -152,6 +152,14 @@
+         "SampleAfterValue": "200000",
+         "UMask": "0x20"
      },
 +    {
-+        "BriefDescription": "Counts snoop filter capacity evictions for en=
-tries tracking exclusive lines in the cores? cache.? Snoop filter capacity =
-evictions occur when the snoop filter is full and evicts an existing entry =
-to track a new entry.? Does not count clean evictions such as when a core?s=
- cache replaces a tracked cacheline with a new cacheline.",
++        "BriefDescription": "Large ITLB hit",
 +        "Counter": "0,1,2,3",
-+        "EventCode": "0x3d",
-+        "EventName": "UNC_CHA_SF_EVICTION.E_STATE",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "Snoop Filter Capacity Evictions : E state",
-+        "UMask": "0x2",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "Counts snoop filter capacity evictions for en=
-tries tracking modified lines in the cores? cache.? Snoop filter capacity e=
-victions occur when the snoop filter is full and evicts an existing entry t=
-o track a new entry.? Does not count clean evictions such as when a core?s =
-cache replaces a tracked cacheline with a new cacheline.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x3d",
-+        "EventName": "UNC_CHA_SF_EVICTION.M_STATE",
-+        "PerPkg": "1",
-+        "PublicDescription": "Snoop Filter Capacity Evictions : M state",
-+        "UMask": "0x1",
-+        "Unit": "CHA"
-+    },
-+    {
-+        "BriefDescription": "Counts snoop filter capacity evictions for en=
-tries tracking shared lines in the cores? cache.? Snoop filter capacity evi=
-ctions occur when the snoop filter is full and evicts an existing entry to =
-track a new entry.? Does not count clean evictions such as when a core?s ca=
-che replaces a tracked cacheline with a new cacheline.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x3d",
-+        "EventName": "UNC_CHA_SF_EVICTION.S_STATE",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "Snoop Filter Capacity Evictions : S state",
-+        "UMask": "0x4",
-+        "Unit": "CHA"
++        "EventCode": "0x82",
++        "EventName": "LARGE_ITLB.HIT",
++        "SampleAfterValue": "200000",
++        "UMask": "0x1"
 +    },
      {
-         "BriefDescription": "All TOR Inserts",
+         "BriefDescription": "Retired loads that miss the DTLB (Precise Event)",
          "Counter": "0,1,2,3",
-diff --git a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-memory.json=
- b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-memory.json
-index ae9c62b32e92..c7e9dbe02eb0 100644
---- a/tools/perf/pmu-events/arch/x86/sierraforest/uncore-memory.json
-+++ b/tools/perf/pmu-events/arch/x86/sierraforest/uncore-memory.json
-@@ -188,6 +188,94 @@
-         "PublicDescription": "DRAM Clockticks",
-         "Unit": "IMC"
-     },
-+    {
-+        "BriefDescription": "# of cycles MR4 temp readings forced 2x refre=
-sh",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA7",
-+        "EventName": "UNC_M_MR4_2XREF_CYCLES.SCH0_DIMM0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles MR4 temp readings forced 2x refre=
-sh",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA7",
-+        "EventName": "UNC_M_MR4_2XREF_CYCLES.SCH0_DIMM1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles MR4 temp readings forced 2x refre=
-sh",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA7",
-+        "EventName": "UNC_M_MR4_2XREF_CYCLES.SCH1_DIMM0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x4",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles MR4 temp readings forced 2x refre=
-sh",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA7",
-+        "EventName": "UNC_M_MR4_2XREF_CYCLES.SCH1_DIMM1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x8",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles MR4 MRRs was triggered/running",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA6",
-+        "EventName": "UNC_M_PDC_MR4ACTIVE_CYCLES.SCH0_DIMM0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles MR4 MRRs was triggered/running",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA6",
-+        "EventName": "UNC_M_PDC_MR4ACTIVE_CYCLES.SCH0_DIMM1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles MR4 MRRs was triggered/running",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA6",
-+        "EventName": "UNC_M_PDC_MR4ACTIVE_CYCLES.SCH1_DIMM0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x4",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles MR4 MRRs was triggered/running",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0xA6",
-+        "EventName": "UNC_M_PDC_MR4ACTIVE_CYCLES.SCH1_DIMM1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x8",
-+        "Unit": "IMC"
-+    },
-     {
-         "BriefDescription": "# of cycles a given rank is in Power Down Mod=
-e",
-         "Counter": "0,1,2,3",
-@@ -286,6 +374,70 @@
-         "PublicDescription": "-",
-         "Unit": "IMC"
-     },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Critical level on s=
-pecified DIMM and throttle level is zero.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x89",
-+        "EventName": "UNC_M_POWER_CRITICAL_THROTTLE_CYCLES.SLOT0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Critical level on s=
-pecified DIMM and throttle level is zero.",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x89",
-+        "EventName": "UNC_M_POWER_CRITICAL_THROTTLE_CYCLES.SLOT1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "UNC_M_POWER_THROTTLE_CYCLES.BW_SLOT0",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x46",
-+        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.BW_SLOT0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "UNC_M_POWER_THROTTLE_CYCLES.BW_SLOT1",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x46",
-+        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.BW_SLOT1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "MR4 temp reading is throttling",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x46",
-+        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.MR4BLKEN",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x8",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "RAPL is throttling",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x46",
-+        "EventName": "UNC_M_POWER_THROTTLE_CYCLES.RAPLBLK",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x4",
-+        "Unit": "IMC"
-+    },
-     {
-         "BriefDescription": "DRAM Precharge commands. : Counts the number =
-of DRAM Precharge commands sent on this channel.",
-         "Counter": "0,1,2,3",
-@@ -480,6 +632,94 @@
-         "UMask": "0x1",
-         "Unit": "IMC"
-     },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Critical level on s=
-pecified DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8e",
-+        "EventName": "UNC_M_THROTTLE_CRIT_CYCLES.SLOT0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Critical level on s=
-pecified DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8e",
-+        "EventName": "UNC_M_THROTTLE_CRIT_CYCLES.SLOT1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at High level on speci=
-fied DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8d",
-+        "EventName": "UNC_M_THROTTLE_HIGH_CYCLES.SLOT0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at High level on speci=
-fied DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8d",
-+        "EventName": "UNC_M_THROTTLE_HIGH_CYCLES.SLOT1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Normal level on spe=
-cified DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8b",
-+        "EventName": "UNC_M_THROTTLE_LOW_CYCLES.SLOT0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Normal level on spe=
-cified DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8b",
-+        "EventName": "UNC_M_THROTTLE_LOW_CYCLES.SLOT1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Mid level on specif=
-ied DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8c",
-+        "EventName": "UNC_M_THROTTLE_MID_CYCLES.SLOT0",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x1",
-+        "Unit": "IMC"
-+    },
-+    {
-+        "BriefDescription": "# of cycles Throttling at Mid level on specif=
-ied DIMM",
-+        "Counter": "0,1,2,3",
-+        "EventCode": "0x8c",
-+        "EventName": "UNC_M_THROTTLE_MID_CYCLES.SLOT1",
-+        "Experimental": "1",
-+        "PerPkg": "1",
-+        "PublicDescription": "-",
-+        "UMask": "0x2",
-+        "Unit": "IMC"
-+    },
-     {
-         "BriefDescription": "Write Pending Queue Allocations",
-         "Counter": "0,1,2,3",
---=20
+-- 
 2.49.0.395.g12beb8f557-goog
 
