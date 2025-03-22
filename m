@@ -1,210 +1,172 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-28.smtpout.orange.fr [80.12.242.28])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECD61BDCF
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 21:30:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742679005; cv=pass; b=Jw8RszpgdhpeJ3tpTAh2XLu0yMjIFYi6NHfGawAFrk8oSq0T3nGztuUZcmoOQspYGm9OHd/+nDJSZAsIXxqfzTXB/RLDv8iVZdgscDxd/sFHaeO5rt0O/A3URgcYM2RVptvfIVgwvLfiwOQ+rEtXDhqw3kbezy+/6BC+zgI1HsE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742679005; c=relaxed/simple;
-	bh=5sL5JhRTwA5zkil10rVngMTpdoFtwEQs5zgqi4b6ndk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HtxCO13c6hxByY1hbCobX0l+kO/Aa4ynlxFOXtd8Sc+N/o5KAI4LBvkBTTp+ef9SNFrkp7nfbD1MDjlytlJyQC+uAIPTYPPb7SgRqbYe/j85O8ePy1ZKHggGI8hksx5CdOwNCAckMKVY+jd6m1JjDvsPOHt8okPMS5FzlgtfY4E=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=cKpXo8eB; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06BF8481A3;
+	Sat, 22 Mar 2025 21:39:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.28
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742679556; cv=none; b=keOZOMSqKVgez5eK90F96pjo9fvoxXt99e9FDGMvytiOIymH18iShwkzLorT78ynw8lmEK/tbfYbZMYrQtewhwd1upfDLccaDMEtQcBZhxQ/NDFAWZ1zm8flLKWTf49PeWDW8daJZA8wqWYoz3PYpRt21sKilHJcE17GzmLZB6A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742679556; c=relaxed/simple;
+	bh=ey3g6nGUBCIH6tf4twd1/6puXRbl6nW4ZWV5q1/KhPs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMT7cYr/SlQKfsNQodpZ6cgJrXWMmDOW2FBeh/SUbx2KfS9IpAiCmvs32gMAq5bPopRR3cAsK+qzuqwChFXwqjqW/Qt4v4jFPl2UqrKZgGZE+O8/MbInzOLmNTnvcXDJT0b0mwgldfz0xcWOZOoql3lUVYZaRXlbSrqUorpFvdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=jmU14P3a; arc=none smtp.client-ip=80.12.242.28
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="cKpXo8eB"
-ARC-Seal: i=1; a=rsa-sha256; t=1742678986; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=WaJyEL9xZeU5zR4pgHILJlFQFZmUTtzc4hg6lx/PXbWT4I9jrv7pM40vpdVr+pZgLAeUb/nB62lQLYFm06BYCzmulIxWoEsITQ9BXeRLHrmjN62d9KhroTI6K5WGtANV8rjdxJLd3gSyarEUprS8jJvzOIXmIRtGjoT+sEyC0pU=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742678986; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=jI2A6McB5nUab55GDN4/MJXKSOUMSiNkiu8ByBqPMPM=; 
-	b=eGtiThTAXaS4Rt47A4xIkV/+OVQYNyNC1cPlUQXjV5rsweVi4unRJrNTs4M6jHhTVawtNVJZyxHAVudC4kFFs4ENk29Imx6SqzfeY8byrhCY2yG1X34Y40jLqVl3C1w+tnMV1HvdUc+7oz1EWKC/ufjvo+iEm2IQeAWFhJVYMW8=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
-	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742678986;
-	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=jI2A6McB5nUab55GDN4/MJXKSOUMSiNkiu8ByBqPMPM=;
-	b=cKpXo8eBxoYzi7gEo4QhSot4SporbIAkd8H4e2AB5UtPtPnHLRFt11XciaDf12DI
-	qdT0AZl9NSF1oM+KQutMmO/4V/DptjOAsYd9Nbk8r6SpucaDhT41BO7ylAIVRm8K7Li
-	I7181BxmAsVXSBo/4VeWRjFbKunvKd2E/7znELSU=
-Received: by mx.zohomail.com with SMTPS id 1742678984353357.2761177607125;
-	Sat, 22 Mar 2025 14:29:44 -0700 (PDT)
-From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
-To: David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Qiang Yu <yuq825@gmail.com>,
-	Steven Price <steven.price@arm.com>,
-	Boris Brezillon <boris.brezillon@collabora.com>,
-	Frank Binns <frank.binns@imgtec.com>,
-	Matt Coster <matt.coster@imgtec.com>
-Cc: dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org,
-	kernel@collabora.com
-Subject: [PATCH v20 10/10] drm/shmem-helper: Use refcount_t for vmap_use_count
-Date: Sun, 23 Mar 2025 00:26:08 +0300
-Message-ID: <20250322212608.40511-11-dmitry.osipenko@collabora.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
-References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="jmU14P3a"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id w6XTtGGb67I4cw6XWtwDSM; Sat, 22 Mar 2025 22:38:02 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1742679482;
+	bh=1jP1iD/XB5t52+KeZ1FsE4W0vWyW8Ips9m8Lf+NGpwE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=jmU14P3aY7umyeNggwmyo3m3SSEPB7x7iI9RakbnjWSc7xkOvb1vVF4ih0Mw0PHwJ
+	 jCRI/cSo9UCOV8YFL4MGU01vkq2IA63Vo7PXpMRBlJq3uPNc94NJfhYu9vtSvQeVDS
+	 3bz0TDBvtHn+2m3Di7r/BMKo2lI30qENa+N/v2ST4GUUJ5GVjQ1X0KA2NKiDXdOcfN
+	 A2Q+AjZNvVfPqheMeUWb/Q7z2wQIdUVDPX2us8iLwNRjVfn8Y2SRPExz2Oh1+SfX03
+	 UqufGvWPz4SHYI1PCpPXfAgEPMOHGpf3TN19VQTsNmw8p2C+FqDX1DxbQCnu2ILpmd
+	 y4YU0IykOxLTw==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sat, 22 Mar 2025 22:38:02 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <071b4cf6-df18-4232-b2ae-6b8bee48899d@wanadoo.fr>
+Date: Sat, 22 Mar 2025 22:37:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5] dma-engine: sun4i: Use devm functions in probe()
+To: =?UTF-8?B?QmVuY2UgQ3PDs2vDoXM=?= <csokas.bence@prolan.hu>,
+ dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Cc: Markus Elfring <Markus.Elfring@web.de>, Chen-Yu Tsai <wens@kernel.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>, Chen-Yu Tsai <wens@csie.org>,
+ Vinod Koul <vkoul@kernel.org>, Samuel Holland <samuel@sholland.org>
+References: <20250322193640.246382-2-csokas.bence@prolan.hu>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250322193640.246382-2-csokas.bence@prolan.hu>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ZohoMailClient: External
 
-Use refcount_t helper for vmap_use_count to make refcounting consistent
-with pages_use_count and pages_pin_count that use refcount_t. This also
-makes vmapping to benefit from the refcount_t's overflow checks.
+Le 22/03/2025 à 20:36, Bence Csókás a écrit :
+> Clean up error handling by using devm functions and dev_err_probe(). This
+> should make it easier to add new code, as we can eliminate the "goto
+> ladder" in probe().
+> 
+> Suggested-by: Chen-Yu Tsai <wens@kernel.org>
+> Reviewed-by: Jernej Skrabec <jernej.skrabec@gmail.com>
+> Acked-by: Chen-Yu Tsai <wens@csie.org>
+> Signed-off-by: Bence Csókás <csokas.bence@prolan.hu>
+> ---
+> 
+> Notes:
+>      Changes in v2:
+>      * rebase on current next
+>      Changes in v3:
+>      * rebase on current next
+>      * collect Jernej's tag
+>      Changes in v4:
+>      * rebase on current next
+>      * collect Chen-Yu's tag
+>      Changes in v5:
+>      * reformat msg to 75 cols
+>      * keep `\n`s in error messages
+> 
+>   drivers/dma/sun4i-dma.c | 31 ++++++-------------------------
+>   1 file changed, 6 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+> index 24796aaaddfa..59ecebfc8eed 100644
+> --- a/drivers/dma/sun4i-dma.c
+> +++ b/drivers/dma/sun4i-dma.c
+> @@ -1249,10 +1249,9 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+>   	if (priv->irq < 0)
+>   		return priv->irq;
+>   
+> -	priv->clk = devm_clk_get(&pdev->dev, NULL);
+> +	priv->clk = devm_clk_get_enabled(&pdev->dev, NULL);
+>   	if (IS_ERR(priv->clk)) {
+> -		dev_err(&pdev->dev, "No clock specified\n");
+> -		return PTR_ERR(priv->clk);
+> +		return dev_err_probe(&pdev->dev, PTR_ERR(priv->clk), "Couldn't start the clock\n");
 
-Acked-by: Maxime Ripard <mripard@kernel.org>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
-Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
-Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
----
- drivers/gpu/drm/drm_gem_shmem_helper.c     | 28 ++++++++++------------
- drivers/gpu/drm/tests/drm_gem_shmem_test.c |  6 ++---
- include/drm/drm_gem_shmem_helper.h         |  2 +-
- 3 files changed, 16 insertions(+), 20 deletions(-)
+I think that it would be better to keep the message on another line, to 
+avoid too long lines.
 
-diff --git a/drivers/gpu/drm/drm_gem_shmem_helper.c b/drivers/gpu/drm/drm_gem_shmem_helper.c
-index 84a196bbe44f..2d924d547a51 100644
---- a/drivers/gpu/drm/drm_gem_shmem_helper.c
-+++ b/drivers/gpu/drm/drm_gem_shmem_helper.c
-@@ -165,7 +165,7 @@ void drm_gem_shmem_free(struct drm_gem_shmem_object *shmem)
- 	} else {
- 		dma_resv_lock(shmem->base.resv, NULL);
- 
--		drm_WARN_ON(obj->dev, shmem->vmap_use_count);
-+		drm_WARN_ON(obj->dev, refcount_read(&shmem->vmap_use_count));
- 
- 		if (shmem->sgt) {
- 			dma_unmap_sgtable(obj->dev->dev, shmem->sgt,
-@@ -355,23 +355,25 @@ int drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem,
- 
- 		dma_resv_assert_held(shmem->base.resv);
- 
--		if (shmem->vmap_use_count++ > 0) {
-+		if (refcount_inc_not_zero(&shmem->vmap_use_count)) {
- 			iosys_map_set_vaddr(map, shmem->vaddr);
- 			return 0;
- 		}
- 
- 		ret = drm_gem_shmem_pin_locked(shmem);
- 		if (ret)
--			goto err_zero_use;
-+			return ret;
- 
- 		if (shmem->map_wc)
- 			prot = pgprot_writecombine(prot);
- 		shmem->vaddr = vmap(shmem->pages, obj->size >> PAGE_SHIFT,
- 				    VM_MAP, prot);
--		if (!shmem->vaddr)
-+		if (!shmem->vaddr) {
- 			ret = -ENOMEM;
--		else
-+		} else {
- 			iosys_map_set_vaddr(map, shmem->vaddr);
-+			refcount_set(&shmem->vmap_use_count, 1);
-+		}
- 	}
- 
- 	if (ret) {
-@@ -384,8 +386,6 @@ int drm_gem_shmem_vmap_locked(struct drm_gem_shmem_object *shmem,
- err_put_pages:
- 	if (!drm_gem_is_imported(obj))
- 		drm_gem_shmem_unpin_locked(shmem);
--err_zero_use:
--	shmem->vmap_use_count = 0;
- 
- 	return ret;
- }
-@@ -413,14 +413,10 @@ void drm_gem_shmem_vunmap_locked(struct drm_gem_shmem_object *shmem,
- 	} else {
- 		dma_resv_assert_held(shmem->base.resv);
- 
--		if (drm_WARN_ON_ONCE(obj->dev, !shmem->vmap_use_count))
--			return;
--
--		if (--shmem->vmap_use_count > 0)
--			return;
--
--		vunmap(shmem->vaddr);
--		drm_gem_shmem_unpin_locked(shmem);
-+		if (refcount_dec_and_test(&shmem->vmap_use_count)) {
-+			vunmap(shmem->vaddr);
-+			drm_gem_shmem_unpin_locked(shmem);
-+		}
- 	}
- 
- 	shmem->vaddr = NULL;
-@@ -672,7 +668,7 @@ void drm_gem_shmem_print_info(const struct drm_gem_shmem_object *shmem,
- 
- 	drm_printf_indent(p, indent, "pages_pin_count=%u\n", refcount_read(&shmem->pages_pin_count));
- 	drm_printf_indent(p, indent, "pages_use_count=%u\n", refcount_read(&shmem->pages_use_count));
--	drm_printf_indent(p, indent, "vmap_use_count=%u\n", shmem->vmap_use_count);
-+	drm_printf_indent(p, indent, "vmap_use_count=%u\n", refcount_read(&shmem->vmap_use_count));
- 	drm_printf_indent(p, indent, "vaddr=%p\n", shmem->vaddr);
- }
- EXPORT_SYMBOL_GPL(drm_gem_shmem_print_info);
-diff --git a/drivers/gpu/drm/tests/drm_gem_shmem_test.c b/drivers/gpu/drm/tests/drm_gem_shmem_test.c
-index 1459cdb0c413..81cadaecdd4f 100644
---- a/drivers/gpu/drm/tests/drm_gem_shmem_test.c
-+++ b/drivers/gpu/drm/tests/drm_gem_shmem_test.c
-@@ -168,7 +168,7 @@ static void drm_gem_shmem_test_vmap(struct kunit *test)
- 	shmem = drm_gem_shmem_create(drm_dev, TEST_SIZE);
- 	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, shmem);
- 	KUNIT_EXPECT_NULL(test, shmem->vaddr);
--	KUNIT_EXPECT_EQ(test, shmem->vmap_use_count, 0);
-+	KUNIT_EXPECT_EQ(test, refcount_read(&shmem->vmap_use_count), 0);
- 
- 	ret = kunit_add_action_or_reset(test, drm_gem_shmem_free_wrapper, shmem);
- 	KUNIT_ASSERT_EQ(test, ret, 0);
-@@ -177,7 +177,7 @@ static void drm_gem_shmem_test_vmap(struct kunit *test)
- 	KUNIT_ASSERT_EQ(test, ret, 0);
- 	KUNIT_ASSERT_NOT_NULL(test, shmem->vaddr);
- 	KUNIT_ASSERT_FALSE(test, iosys_map_is_null(&map));
--	KUNIT_EXPECT_EQ(test, shmem->vmap_use_count, 1);
-+	KUNIT_EXPECT_EQ(test, refcount_read(&shmem->vmap_use_count), 1);
- 
- 	iosys_map_memset(&map, 0, TEST_BYTE, TEST_SIZE);
- 	for (i = 0; i < TEST_SIZE; i++)
-@@ -185,7 +185,7 @@ static void drm_gem_shmem_test_vmap(struct kunit *test)
- 
- 	drm_gem_shmem_vunmap_locked(shmem, &map);
- 	KUNIT_EXPECT_NULL(test, shmem->vaddr);
--	KUNIT_EXPECT_EQ(test, shmem->vmap_use_count, 0);
-+	KUNIT_EXPECT_EQ(test, refcount_read(&shmem->vmap_use_count), 0);
- }
- 
- /*
-diff --git a/include/drm/drm_gem_shmem_helper.h b/include/drm/drm_gem_shmem_helper.h
-index 8b9bba87ae63..b4f993da3cae 100644
---- a/include/drm/drm_gem_shmem_helper.h
-+++ b/include/drm/drm_gem_shmem_helper.h
-@@ -82,7 +82,7 @@ struct drm_gem_shmem_object {
- 	 * Reference count on the virtual address.
- 	 * The address are un-mapped when the count reaches zero.
- 	 */
--	unsigned int vmap_use_count;
-+	refcount_t vmap_use_count;
- 
- 	/**
- 	 * @pages_mark_dirty_on_put:
--- 
-2.49.0
+>   	}
+
+In several places, now {} around a single statement looks unneeded.
+
+CJ
+
+>   
+>   	if (priv->cfg->has_reset) {
+> @@ -1328,12 +1327,6 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+>   		vchan_init(&vchan->vc, &priv->slave);
+>   	}
+>   
+> -	ret = clk_prepare_enable(priv->clk);
+> -	if (ret) {
+> -		dev_err(&pdev->dev, "Couldn't enable the clock\n");
+> -		return ret;
+> -	}
+> -
+>   	/*
+>   	 * Make sure the IRQs are all disabled and accounted for. The bootloader
+>   	 * likes to leave these dirty
+> @@ -1344,32 +1337,23 @@ static int sun4i_dma_probe(struct platform_device *pdev)
+>   	ret = devm_request_irq(&pdev->dev, priv->irq, sun4i_dma_interrupt,
+>   			       0, dev_name(&pdev->dev), priv);
+>   	if (ret) {
+> -		dev_err(&pdev->dev, "Cannot request IRQ\n");
+> -		goto err_clk_disable;
+> +		return dev_err_probe(&pdev->dev, ret, "Cannot request IRQ\n");
+>   	}
+>   
+> -	ret = dma_async_device_register(&priv->slave);
+> +	ret = dmaenginem_async_device_register(&priv->slave);
+>   	if (ret) {
+> -		dev_warn(&pdev->dev, "Failed to register DMA engine device\n");
+> -		goto err_clk_disable;
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to register DMA engine device\n");
+>   	}
+>   
+>   	ret = of_dma_controller_register(pdev->dev.of_node, sun4i_dma_of_xlate,
+>   					 priv);
+>   	if (ret) {
+> -		dev_err(&pdev->dev, "of_dma_controller_register failed\n");
+> -		goto err_dma_unregister;
+> +		return dev_err_probe(&pdev->dev, ret, "Failed to register translation function\n");
+>   	}
+>   
+>   	dev_dbg(&pdev->dev, "Successfully probed SUN4I_DMA\n");
+>   
+>   	return 0;
+> -
+> -err_dma_unregister:
+> -	dma_async_device_unregister(&priv->slave);
+> -err_clk_disable:
+> -	clk_disable_unprepare(priv->clk);
+> -	return ret;
+>   }
+>   
+>   static void sun4i_dma_remove(struct platform_device *pdev)
+> @@ -1380,9 +1364,6 @@ static void sun4i_dma_remove(struct platform_device *pdev)
+>   	disable_irq(priv->irq);
+>   
+>   	of_dma_controller_free(pdev->dev.of_node);
+> -	dma_async_device_unregister(&priv->slave);
+> -
+> -	clk_disable_unprepare(priv->clk);
+>   }
+>   
+>   static struct sun4i_dma_config sun4i_a10_dma_cfg = {
 
