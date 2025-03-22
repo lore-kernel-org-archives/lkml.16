@@ -1,218 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC6BF235360;
-	Sat, 22 Mar 2025 20:35:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B39F8145A03
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 20:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742675715; cv=none; b=NWBEj/CtnuQiDvTfwvTDGRMuHlxOoW+a7uLK/5GXSRZTpigKGEVudVueDipoU2edooqPBB0SvQn5tMKvO4dNLr/qtC8MrVn9A3B/He3NYCogZSU4rpOHPJENB0GQ7inVEk8vmYsfmOdTKWdYma39OsNq6jkvMc1GQoamVgzAHaM=
+	t=1742675780; cv=none; b=KBOIIDUMdJFHFeOqLlFI6NaXCfLRGbKfKyraRX7PwqVo5hnAipEU0jmGumAuhrtfGRVpFtMf1n2ZbrMVXENqPJpNk7lDZRoQacHut+hybbB7cMyV/adFP/JRT2fuuku6VL0TYm59pZKp02YXLe++9j5kP0IP9FIqM1WpAT74TUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742675715; c=relaxed/simple;
-	bh=FrtM44ukRwWbBGgAYIVqwpenB+RHshAApE0vzjyKwU0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=CIq/MJY2PKotY7Blg4rrgXQlBBp8QSKtn57e4wOZFYKjcTBQn1Uq/u72U0MxJ1ZPhmq184n4Ic2HEw+OXlf439QV+8BVOZ/zDi4Gi4ZSQXEePBnxkv0S6/cm1C77wUmyS6TCzjNBjVaA0Hcrvji0gz5MrwgN5DjDHYCLthF+kW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k44MrFzW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742675780; c=relaxed/simple;
+	bh=/zm0caTFpa5mQQPIid8qQMt0SVoU13C1ydN1hUjgYNk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=d1yX+V3w4gDVS1oRxRJx+6pj7mUdgXtne3yTUBw7fENi4Ab8dPU7oYvuBLqQcZ5S2u9JzH7T6lg6xsaTytFV9Gq4kZA61yVqQs3ZtS9RYqyWnKeBcex54yi89gxr769sVi6B2ny6pQJ2tT/jVQtpMq7H11sNdtYPuF4x3Yl2O9o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com; spf=pass smtp.mailfrom=fastly.com; dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b=tel4EGsR; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fastly.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fastly.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k44MrFzW"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 56576C4CEFA;
-	Sat, 22 Mar 2025 20:35:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742675715;
-	bh=FrtM44ukRwWbBGgAYIVqwpenB+RHshAApE0vzjyKwU0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=k44MrFzWcFXtPbIIxLbreLAZYvt5ZAmVfavSYKytxqNbHJv3PayQ3FzHfBmp5wlyD
-	 B9KW5JFEyp/ssxR2rwZvXc9qopTGl4JrY9cNdqMCSaAhx1vbWZyF70s8nvmW70Bw6A
-	 WvMpiwAwd9UlpnQa/+JXlsB08i20vr3NL/scxkOm2B8xxfWBwA+foet28o/cH1iKDe
-	 IaqbychWLWlLmKqXD3x0y7IV/rNUaxXUvQ7ppIUif3cnr0zeyQEw6UwkQFQ0fNH5Lf
-	 LLw5WfrUabvo+VdyMszwOEZm2w3ZCJgHJD6qBHgdTuFU5xisv2ff97AcFrP0nq1IZQ
-	 hoADOITOYjmCQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B809C36008;
-	Sat, 22 Mar 2025 20:35:15 +0000 (UTC)
-From: Julian Stecklina via B4 Relay <devnull+julian.stecklina.cyberus-technology.de@kernel.org>
-Date: Sat, 22 Mar 2025 21:34:17 +0100
-Subject: [PATCH v2 5/9] fs: cramfs: register an initrd fs detector
+	dkim=pass (1024-bit key) header.d=fastly.com header.i=@fastly.com header.b="tel4EGsR"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-3012a0c8496so3956418a91.2
+        for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 13:36:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=fastly.com; s=google; t=1742675778; x=1743280578; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RBCRJIfeoI4+hYoyENJ+XtmGOK3o3ECSkLKYl4KE6xM=;
+        b=tel4EGsRZ9i0Mp5lyCT2l7sHMN8qBGw4+M31Xa0xkDQ+MbR0Zq/7ldE15b6VMKOSA9
+         cvxrbjEZD0+3cV8XJwRroptZPoeFkcE2ggo2nEiZI2orL+MyyHj7TZs7D1qfi84bZJIM
+         4Dxen3IrC12Si3RWJw+8bKQ8M4KP1iFajXpEE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742675778; x=1743280578;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RBCRJIfeoI4+hYoyENJ+XtmGOK3o3ECSkLKYl4KE6xM=;
+        b=GA+yKUGmbai40/fsl1OYMezd0O9020c+N06oByn15yIFurhP+kRdvOM/k8SmV405/y
+         0UQNX5G8PgQyf0mPl/JO2KqsM4zeBFMTx9cUxKQY1k8cRdVFW60Upd/kx72ia8amrpTT
+         Zu+Q2NTUv8L3NWQEJQy3rug+AWSaZi7xwYJAVCw/IrgdoPpKCxKgM8hyAGyYUI0unK05
+         fBinYqCoIYOaaj96LeDwIAWN/DHLuqfl3TPT/DvzejLKaNwCCIapC5fO250WeewP9oJW
+         JCJHSxbRhY66Px8a5uC7yObAPl6HabjS3TpPyPKNu1omTrtID/I/e/nQvWDjJdb9GN7T
+         eTew==
+X-Forwarded-Encrypted: i=1; AJvYcCXiVObbUL44J++xqsqGSYV8fHJ17kIUm9RmmJHjwS5lQ2XEV609nkDmezMd+8BIAQ0QNVKoxvAN87ljzsU=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzk6HBAinWmqn33VuP/+SBQ8ZD2TR1vz9qDdEhIdmLLLX401ETb
+	RVUOO5lc54eprvZRdkUei5jti8exkOTYurNbGmQY/2wywZ+FnLLj178XBmloPVk=
+X-Gm-Gg: ASbGncvcZjmA16R9ZhRWYuBV1eFkLT3fW6hpsvIUaMQ+Agg3NAvQW+4k2VfvCH3EoEs
+	vhBmBeezXmEJznSCM7v8iGd1U9/3uI/0VkQuxSXp75D5y45Yz2C5DnaAyXibq3kLKxnCS5xTXEd
+	HM6nnsXADoxTw+ZYjNC758NoOtP71gpHuPmAQ1E96yvtXyjGLcZ9l2muZ8vFjlHaCsFLTlaC74H
+	7FmIRQi7cgTjjOGq8eNBoBsYMA/jwsOfFYvVqJ1XTnSye4DV7tWIRBHyoNOR1qGhzB63tPhF2LO
+	jJ2NkdksKt3dAGI4tVsr2RnkX7vznHxkl3tRJ95mt8q4POUVHQML2sDdAnfucGo=
+X-Google-Smtp-Source: AGHT+IE37OrujyxGFgxAEo8ctQ3AWaU9G2PByR+MB79aOMDqG+16a9oIBZcx1WW8S9MeG/hspBAWTA==
+X-Received: by 2002:a17:90b:4ccf:b0:2ff:64a0:4a57 with SMTP id 98e67ed59e1d1-3030feeb744mr10822043a91.26.1742675777943;
+        Sat, 22 Mar 2025 13:36:17 -0700 (PDT)
+Received: from localhost.localdomain ([2620:11a:c019:0:65e:3115:2f58:c5fd])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf61a579sm8711798a91.32.2025.03.22.13.36.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 22 Mar 2025 13:36:17 -0700 (PDT)
+From: Joe Damato <jdamato@fastly.com>
+To: linux-fsdevel@vger.kernel.org
+Cc: netdev@vger.kernel.org,
+	brauner@kernel.org,
+	asml.silence@gmail.com,
+	hch@infradead.org,
+	axboe@kernel.dk,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	horms@kernel.org,
+	Joe Damato <jdamato@fastly.com>,
+	Alexander Viro <viro@zeniv.linux.org.uk>,
+	"David S. Miller" <davem@davemloft.net>,
+	Jan Kara <jack@suse.cz>,
+	linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH vfs/for-next 0/3] Move splice_to_socket to net/socket.c
+Date: Sat, 22 Mar 2025 20:35:43 +0000
+Message-ID: <20250322203558.206411-1-jdamato@fastly.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250322-initrd-erofs-v2-5-d66ee4a2c756@cyberus-technology.de>
-References: <20250322-initrd-erofs-v2-0-d66ee4a2c756@cyberus-technology.de>
-In-Reply-To: <20250322-initrd-erofs-v2-0-d66ee4a2c756@cyberus-technology.de>
-To: Christoph Hellwig <hch@lst.de>, Al Viro <viro@zeniv.linux.org.uk>, 
- Christian Brauner <brauner@kernel.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Gao Xiang <xiang@kernel.org>, 
- linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-erofs@lists.ozlabs.org, 
- Julian Stecklina <julian.stecklina@cyberus-technology.de>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742675713; l=4205;
- i=julian.stecklina@cyberus-technology.de; s=20250320;
- h=from:subject:message-id;
- bh=T+YHuo2Ev8aOIZof+FXA1HNY64MvcwqvCtTXx1JM/p0=;
- b=RV3KMe/LiD+IsfUYYqELk6OGsa0r5a2gi+Mp3Mt0zAMlzR7vGEW8+fcQxMvwhUxUdHoEwczYQ
- s1kE0Q/P68VBeXE1Z9xP0ClFGrMA10OA9KEhkXMn1ftHbf3Zuk1Tjgg
-X-Developer-Key: i=julian.stecklina@cyberus-technology.de; a=ed25519;
- pk=m051/8gQfs5AmkACfykwRcD6CUr2T7DQ9OA5eBgyy7c=
-X-Endpoint-Received: by B4 Relay for
- julian.stecklina@cyberus-technology.de/20250320 with auth_id=363
-X-Original-From: Julian Stecklina <julian.stecklina@cyberus-technology.de>
-Reply-To: julian.stecklina@cyberus-technology.de
+Content-Transfer-Encoding: 8bit
 
-From: Julian Stecklina <julian.stecklina@cyberus-technology.de>
+Greetings:
 
-Port cramfs to the new initrd_fs_detect API. There are no functional
-changes.
+While reading through the splice and socket code I noticed that some
+splice helpers (like sock_splice_read and sock_splice_eof) live in
+net/socket.c, but splice_to_socket does not.
 
-Signed-off-by: Julian Stecklina <julian.stecklina@cyberus-technology.de>
----
- fs/cramfs/Makefile  |  5 +++++
- fs/cramfs/initrd.c  | 41 +++++++++++++++++++++++++++++++++++++++++
- init/do_mounts_rd.c | 28 ++--------------------------
- 3 files changed, 48 insertions(+), 26 deletions(-)
+I am not sure if there is a reason for this, but it seems like moving
+this code provides some advantages:
+  - Eliminates the #ifdef CONFIG_NET from fs/splice.c
+  - Keeps the socket related splice helpers together in net/socket.c
+    where it seems (IMHO) more logical for them to live
 
-diff --git a/fs/cramfs/Makefile b/fs/cramfs/Makefile
-index 8c3ed298241924b0312fb489b1fb54d274d25c22..d10e2b72aae06bf9ac42690e3967cfd90ac34d4f 100644
---- a/fs/cramfs/Makefile
-+++ b/fs/cramfs/Makefile
-@@ -6,3 +6,8 @@
- obj-$(CONFIG_CRAMFS) += cramfs.o
- 
- cramfs-objs := inode.o uncompress.o
-+
-+# If we are built-in, we provide support for cramfs on initrds.
-+ifeq ($(CONFIG_CRAMFS),y)
-+cramfs-objs += initrd.o
-+endif
-diff --git a/fs/cramfs/initrd.c b/fs/cramfs/initrd.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..c16df09c118226e6350b9f5877863ef31322ab7b
---- /dev/null
-+++ b/fs/cramfs/initrd.c
-@@ -0,0 +1,41 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+
-+#include <linux/fs.h>
-+#include <linux/initrd.h>
-+#include <uapi/linux/cramfs_fs.h>
-+
-+/*
-+ * The filesystem start maybe padded by this many bytes to make space
-+ * for boot loaders.
-+ */
-+#define CRAMFS_PAD_OFFSET 512
-+
-+static size_t __init check_cramfs_sb(struct cramfs_super *cramfsb)
-+{
-+	if (cramfsb->magic != CRAMFS_MAGIC)
-+		return 0;
-+
-+	return cramfsb->size;
-+}
-+
-+static size_t __init detect_cramfs(void *block_data)
-+{
-+	size_t fssize;
-+
-+	BUILD_BUG_ON(sizeof(struct cramfs_super) + CRAMFS_PAD_OFFSET
-+		     > BLOCK_SIZE);
-+
-+	fssize = check_cramfs_sb((struct cramfs_super *)block_data);
-+	if (fssize)
-+		return fssize;
-+
-+	/*
-+	 * The header padding doesn't influence the total length of
-+	 * the filesystem.
-+	 */
-+	block_data = (char *)block_data + CRAMFS_PAD_OFFSET;
-+	fssize = check_cramfs_sb((struct cramfs_super *)block_data);
-+	return fssize;
-+}
-+
-+initrd_fs_detect(detect_cramfs, 0);
-diff --git a/init/do_mounts_rd.c b/init/do_mounts_rd.c
-index f7e5d4ccf029b2707bc8524ecdbe200c8b305b00..cdc39baaf3a1a65daad5fe6571a82faf3fc95b62 100644
---- a/init/do_mounts_rd.c
-+++ b/init/do_mounts_rd.c
-@@ -3,7 +3,7 @@
- #include <linux/fs.h>
- #include <linux/ext2_fs.h>
- #include <linux/romfs_fs.h>
--#include <uapi/linux/cramfs_fs.h>
-+
- #include <linux/initrd.h>
- #include <linux/string.h>
- #include <linux/slab.h>
-@@ -43,7 +43,6 @@ static int __init crd_load(decompress_fn deco);
-  * We currently check for the following magic numbers:
-  *	ext2
-  *	romfs
-- *	cramfs
-  *	squashfs
-  *	gzip
-  *	bzip2
-@@ -58,7 +57,7 @@ identify_ramdisk_image(struct file *file, loff_t pos,
- {
- 	const int size = BLOCK_SIZE;
- 	struct romfs_super_block *romfsb;
--	struct cramfs_super *cramfsb;
-+
- 	struct squashfs_super_block *squashfsb;
- 	int nblocks = -1;
- 	unsigned char *buf;
-@@ -72,7 +71,6 @@ identify_ramdisk_image(struct file *file, loff_t pos,
- 		return -ENOMEM;
- 
- 	romfsb = (struct romfs_super_block *) buf;
--	cramfsb = (struct cramfs_super *) buf;
- 	squashfsb = (struct squashfs_super_block *) buf;
- 	memset(buf, 0xe5, size);
- 
-@@ -104,14 +102,6 @@ identify_ramdisk_image(struct file *file, loff_t pos,
- 		goto done;
- 	}
- 
--	if (cramfsb->magic == CRAMFS_MAGIC) {
--		printk(KERN_NOTICE
--		       "RAMDISK: cramfs filesystem found at block %d\n",
--		       start_block);
--		nblocks = (cramfsb->size + BLOCK_SIZE - 1) >> BLOCK_SIZE_BITS;
--		goto done;
--	}
--
- 	/* squashfs is at block zero too */
- 	if (le32_to_cpu(squashfsb->s_magic) == SQUASHFS_MAGIC) {
- 		printk(KERN_NOTICE
-@@ -122,20 +112,6 @@ identify_ramdisk_image(struct file *file, loff_t pos,
- 		goto done;
- 	}
- 
--	/*
--	 * Read 512 bytes further to check if cramfs is padded
--	 */
--	pos = start_block * BLOCK_SIZE + 0x200;
--	kernel_read(file, buf, size, &pos);
--
--	if (cramfsb->magic == CRAMFS_MAGIC) {
--		printk(KERN_NOTICE
--		       "RAMDISK: cramfs filesystem found at block %d\n",
--		       start_block);
--		nblocks = (cramfsb->size + BLOCK_SIZE - 1) >> BLOCK_SIZE_BITS;
--		goto done;
--	}
--
- 	/*
- 	 * Read block 1 to test for ext2 superblock
- 	 */
+This change is essentially cleanup; no functional changes to splice are
+introduced.
 
+I based this change on vfs/for-next since 2 of the 3 patches are vfs,
+but I am happy to rebase this on another tree if necessary.
+
+Thanks,
+Joe
+
+Joe Damato (3):
+  pipe: Move pipe wakeup helpers out of splice
+  splice: Move splice_to_socket to net/socket.c
+  net: splice_to_socket: RCT declaration cleanup
+
+ fs/pipe.c                 |  16 ++++
+ fs/splice.c               | 170 ++------------------------------------
+ include/linux/pipe_fs_i.h |   4 +
+ include/linux/splice.h    |   3 -
+ net/socket.c              | 140 +++++++++++++++++++++++++++++++
+ 5 files changed, 167 insertions(+), 166 deletions(-)
+
+
+base-commit: 2e72b1e0aac24a12f3bf3eec620efaca7ab7d4de
 -- 
-2.47.0
-
+2.43.0
 
