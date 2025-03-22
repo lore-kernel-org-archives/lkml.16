@@ -1,306 +1,158 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8286223372B;
-	Sat, 22 Mar 2025 10:36:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13E631EE7D9
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 10:41:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742639806; cv=none; b=MvS9Wlb9r2BKzcUkZegZUxAB3N3rWbC/JzO2M9zeg2p1+1DYCJ/0b6flLKtzGNH16JLDIv8I+HQeO42ux2s9OHu1NQi/oXjwaI9LdwgVtGPO/dbk3dYYxSTzX8rLzJIEfQVVyZyswgsUBeapgWMDXqVc+84JViY/Ku7t1KH6evE=
+	t=1742640108; cv=none; b=S7NDJuEx+akpzKMwRnDN0CGskwPhiSSL+UdU9SORSdEFY1Txak99spRCYRIc54Lb+kRMNQwv7eBRxzHfND3Jv89bhDJfIgWnyvsk7cqbimtnPJ6CthOAYyEm4lzH+PFGecnalVHwlvkjj3kn+kkBgfG1QNt+mywp75DYfttU71k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742639806; c=relaxed/simple;
-	bh=b5n6bS+4siPRdo9KA+43Odn5bVLWsZSYK+rcGHvK1cQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=l7+XqX0HUUuoUIu94QqoQnVDu5cLu8yjaZksl2ImDrvCNqoby++CelI1FYU3PTYThqANH2Q4WAMcUsIBSmnYc7ZqmqALc8K4atu6yH/snsErxYKQxVIdsCRnbISh5kDIm9jhVKYOJ/G3+Fwm5co39noTNMpXdyptniLIGecobqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=5O9feQsR; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742640108; c=relaxed/simple;
+	bh=uH/uSKbQo5Ulfbukq6OwZ7LUE3RydYgx6jERrQzGCPI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=GAQtQ4DCv615XzZP1Qhiki7SrWLg7guLBc0mF3J77anKn09NQvKu6t4TmcBYD07DrlScILC4IXbI/lMqgC1ArQ8BxySYvV3hTRtOXdfHIuqGImtjRjQ0McQ7r01JUAbgoZ43huwKIi7wkL/uVay8ws8Xt2HDg1GfCMtBag7TLB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p8Ef38CD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="5O9feQsR"
-Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 9029C2E08CF7;
-	Sat, 22 Mar 2025 12:36:40 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742639802;
-	bh=X0RQHf/2WXaMT91FbjclAXVE4B45/21OLd8HnBlZQfA=; h=From:To:Subject;
-	b=5O9feQsRsiZT+AGYn9P9Lx+WEXMaIo734WaOydisYngK+xqrSMVXxZP+aCnaNhNUE
-	 UFPX1mpOMBp/jP4XxcZo8Wk9ZgSomMyjVkqTpPZvZrMBhPwKp5YuOyoHdpLHURHIRG
-	 gpJXQI9+C4bXFiKMEdw+kXKEEEBqqIIU4k7pospk=
-Authentication-Results: linux1587.grserver.gr;
-	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-From: Antheas Kapenekakis <lkml@antheas.dev>
-To: platform-driver-x86@vger.kernel.org
-Cc: linux-hwmon@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-pm@vger.kernel.org,
-	Guenter Roeck <linux@roeck-us.net>,
-	Jean Delvare <jdelvare@suse.com>,
-	Jonathan Corbet <corbet@lwn.net>,
-	Joaquin Ignacio Aramendia <samsagax@gmail.com>,
-	Derek J Clark <derekjohn.clark@gmail.com>,
-	Kevin Greenberg <kdgreenberg234@protonmail.com>,
-	Joshua Tam <csinaction@pm.me>,
-	Parth Menon <parthasarathymenon@gmail.com>,
-	Eileen <eileen@one-netbook.com>,
-	linux-kernel@vger.kernel.org,
-	sre@kernel.org,
-	linux@weissschuh.net,
-	ilpo.jarvinen@linux.intel.com,
-	hdegoede@redhat.com,
-	mario.limonciello@amd.com,
-	Antheas Kapenekakis <lkml@antheas.dev>
-Subject: [PATCH v8 14/14] platform/x86: oxpec: Add charge threshold and
- behaviour to OneXPlayer
-Date: Sat, 22 Mar 2025 11:36:06 +0100
-Message-ID: <20250322103606.680401-15-lkml@antheas.dev>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250322103606.680401-1-lkml@antheas.dev>
-References: <20250322103606.680401-1-lkml@antheas.dev>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p8Ef38CD"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D245DC4CEEC;
+	Sat, 22 Mar 2025 10:41:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742640107;
+	bh=uH/uSKbQo5Ulfbukq6OwZ7LUE3RydYgx6jERrQzGCPI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=p8Ef38CDIdE+MPcTBcTq/zSMiUA1+au+sZeRqrzrJ+IQGAVSdyabptJx+ED6BHu9p
+	 GfqoTRXiqiuLRUL0z32YohtKPhlmlo7a3YVBo8B2q2MeiE+vrDD1AS4GY3Xd/XUNjS
+	 lwEzmG2bChkiKrxvqO79yUOfzymncJW5T7vys05NXsLRxPJNlcZBMWbQ2z8a2BBj6l
+	 bBtf1DPyO7ENNgavvU41NpfS7GFAya66LaqJ2mSWnIB8J6LD/uEJWWKz8SpqIquQqO
+	 72DXFSJEMN2rdiWY+FFzkftqBRep+AXj5HAeg6FEp8Ar9eRclEcjznPKJwbBl9zZIf
+	 JTgcA6X8jdWew==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B495BC36002;
+	Sat, 22 Mar 2025 10:41:47 +0000 (UTC)
+From: Vincent Mailhol via B4 Relay <devnull+mailhol.vincent.wanadoo.fr@kernel.org>
+Date: Sat, 22 Mar 2025 19:39:36 +0900
+Subject: [PATCH 1/3] bits: split the definition of the asm and non-asm
+ GENMASK*()
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-PPP-Message-ID: 
- <174263980214.12043.13267567023039847846@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250322-consolidate-genmask-v1-1-54bfd36c5643@wanadoo.fr>
+References: <20250322-consolidate-genmask-v1-0-54bfd36c5643@wanadoo.fr>
+In-Reply-To: <20250322-consolidate-genmask-v1-0-54bfd36c5643@wanadoo.fr>
+To: Yury Norov <yury.norov@gmail.com>, 
+ Lucas De Marchi <lucas.demarchi@intel.com>, 
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+ Jani Nikula <jani.nikula@linux.intel.com>, 
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>, 
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, 
+ Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>, 
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org, 
+ dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>, 
+ David Laight <David.Laight@ACULAB.COM>, 
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+ Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2469;
+ i=mailhol.vincent@wanadoo.fr; h=from:subject:message-id;
+ bh=PiGTrL0JYiV7znHV7ko5sq4U1vR9pY0pmQ4QX0K2Tvw=;
+ b=owGbwMvMwCV2McXO4Xp97WbG02pJDOn3Jt/conAk8iNv4onX2b6BbG57S8yLlx6/6D3r815jw
+ dc5u1+GdJSyMIhxMciKKbIsK+fkVugo9A479NcSZg4rE8gQBi5OAZiIwjNGhn9chpPuGJWUl1iu
+ r3h3+1z0UlGJjy1N73ZNUDuzbrfhYUmG/4EZUsc2nFI3ZL54Lbxjn/HJxOLAzJ8ia6IbBV7rf/7
+ 9mwMA
+X-Developer-Key: i=mailhol.vincent@wanadoo.fr; a=openpgp;
+ fpr=ED8F700574E67F20E574E8E2AB5FEB886DBB99C2
+X-Endpoint-Received: by B4 Relay for mailhol.vincent@wanadoo.fr/default
+ with auth_id=291
+X-Original-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Reply-To: mailhol.vincent@wanadoo.fr
 
-With the X1 (AMD), OneXPlayer added a charge limit and charge inhibit
-feature to their devices. Charge limit allows for choosing an arbitrary
-battery charge setpoint in percentages. Charge ihibit allows to instruct
-the device to stop charging either when it is awake or always.
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
 
-This feature was then extended for the F1Pro as well. OneXPlayer also
-released BIOS updates for the X1 Mini, X1 (Intel), and F1 devices that
-add support for this feature. Therefore, enable it for all F1 and
-X1 devices.
+In an upcoming change, the non-asm GENMASK*() will all be unified to
+depend on GENMASK_TYPE() which indirectly depend on sizeof(), something
+not available in asm.
 
-Reviewed-by: Thomas Weißschuh <linux@weissschuh.net>
-Reviewed-by: Derek J. Clark <derekjohn.clark@gmail.com>
-Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+Instead of adding further complexity to GENMASK_TYPE() to make it work
+for both asm and non asm, just split the definition of the two variants.
+
+Signed-off-by: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Reviewed-by: Lucas De Marchi <lucas.demarchi@intel.com>
 ---
- drivers/platform/x86/Kconfig |   1 +
- drivers/platform/x86/oxpec.c | 160 ++++++++++++++++++++++++++++++++++-
- 2 files changed, 157 insertions(+), 4 deletions(-)
+This patch previously belonged to this series:
 
-diff --git a/drivers/platform/x86/Kconfig b/drivers/platform/x86/Kconfig
-index 82cfc76bc5c9f..f4d993658c01f 100644
---- a/drivers/platform/x86/Kconfig
-+++ b/drivers/platform/x86/Kconfig
-@@ -1189,6 +1189,7 @@ config SEL3350_PLATFORM
- config OXP_EC
- 	tristate "OneXPlayer EC platform control"
- 	depends on ACPI_EC
-+	depends on ACPI_BATTERY
- 	depends on HWMON
- 	depends on X86
- 	help
-diff --git a/drivers/platform/x86/oxpec.c b/drivers/platform/x86/oxpec.c
-index 0a5b33a842b24..e6ea702006ec5 100644
---- a/drivers/platform/x86/oxpec.c
-+++ b/drivers/platform/x86/oxpec.c
-@@ -24,6 +24,7 @@
- #include <linux/module.h>
- #include <linux/platform_device.h>
- #include <linux/processor.h>
-+#include <acpi/battery.h>
+  bits: Fixed-type GENMASK_U*() and BIT_U*()
+  Link: https://lore.kernel.org/r/20250308-fixed-type-genmasks-v6-0-f59315e73c29@wanadoo.fr
+
+Below changelog also contains the history from the previous series.
+
+Changelog:
+
+  v6 (previous series) -> v1 (new series):
+
+    - Do not rephrase the comment saying that BUILD_BUG_ON() is not
+      available in asm code. Leave it as it is.
+
+    - Add Lucas reviewed-by tag.
+
+  v5 -> v6:
+
+    - Restore the comment saying that BUILD_BUG_ON() is not available in asm
+      code.
+
+  v4 -> v5:
+
+    - Use tab indentations instead of single space to separate the
+      macro name from its body.
+
+  v3 -> v4:
+
+    - New patch in the series
+---
+ include/linux/bits.h | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/include/linux/bits.h b/include/linux/bits.h
+index 6a942ea9ab380d3bd0e521916caa1d59db8031c0..9dd2d244c1f37fde995ed65c1eed879bb2a994a8 100644
+--- a/include/linux/bits.h
++++ b/include/linux/bits.h
+@@ -35,6 +35,11 @@
  
- /* Handle ACPI lock mechanism */
- static u32 oxp_mutex;
-@@ -60,6 +61,7 @@ enum oxp_board {
- };
+ #define GENMASK_INPUT_CHECK(h, l) BUILD_BUG_ON_ZERO(const_true((l) > (h)))
  
- static enum oxp_board board;
-+static struct device *oxp_dev;
++#define GENMASK(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
++#define GENMASK_ULL(h, l) \
++	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
++
+ /*
+  * Generate a mask for the specified type @t. Additional checks are made to
+  * guarantee the value returned fits in that type, relying on
+@@ -79,15 +84,11 @@
+  * BUILD_BUG_ON_ZERO is not available in h files included from asm files,
+  * disable the input check if that is the case.
+  */
+-#define GENMASK_INPUT_CHECK(h, l) 0
++#define GENMASK(h, l)		__GENMASK(h, l)
++#define GENMASK_ULL(h, l)	__GENMASK_ULL(h, l)
  
- /* Fan reading and PWM */
- #define OXP_SENSOR_FAN_REG             0x76 /* Fan reading is 2 registers long */
-@@ -93,6 +95,23 @@ static enum oxp_board board;
- #define OXP_X1_TURBO_LED_OFF           0x01
- #define OXP_X1_TURBO_LED_ON            0x02
+ #endif /* !defined(__ASSEMBLY__) */
  
-+/* Battery extension settings */
-+#define EC_CHARGE_CONTROL_BEHAVIOURS	(BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO)             | \
-+					 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE)    | \
-+					 BIT(POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE))
-+
-+#define OXP_X1_CHARGE_LIMIT_REG      0xA3 /* X1 charge limit (%) */
-+#define OXP_X1_CHARGE_INHIBIT_REG     0xA4 /* X1 bypass charging */
-+
-+#define OXP_X1_CHARGE_INHIBIT_MASK_AWAKE 0x01
-+/*
-+ * X1 Mask is 0x0A, OneXFly F1Pro is just 0x02
-+ * but the extra bit on the X1 does nothing.
-+ */
-+#define OXP_X1_CHARGE_INHIBIT_MASK_OFF 0x02
-+#define OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS (OXP_X1_CHARGE_INHIBIT_MASK_AWAKE | \
-+	OXP_X1_CHARGE_INHIBIT_MASK_OFF)
-+
- static const struct dmi_system_id dmi_table[] = {
- 	{
- 		.matches = {
-@@ -507,6 +526,129 @@ static ssize_t tt_led_show(struct device *dev,
- 
- static DEVICE_ATTR_RW(tt_led);
- 
-+/* Callbacks for charge behaviour attributes */
-+static bool oxp_psy_ext_supported(void)
-+{
-+	switch (board) {
-+	case oxp_x1:
-+	case oxp_fly:
-+		return true;
-+	default:
-+		break;
-+	}
-+	return false;
-+}
-+
-+static int oxp_psy_ext_get_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *data,
-+				       enum power_supply_property psp,
-+				       union power_supply_propval *val)
-+{
-+	long raw_val;
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		ret = read_from_ec(OXP_X1_CHARGE_LIMIT_REG, 1, &raw_val);
-+		if (ret)
-+			return ret;
-+		if (raw_val >= 0 && raw_val > 100)
-+			return -EINVAL;
-+		val->intval = raw_val;
-+		return 0;
-+	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-+		ret = read_from_ec(OXP_X1_CHARGE_INHIBIT_REG, 1, &raw_val);
-+		if (ret)
-+			return ret;
-+		if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS) ==
-+		    OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS)
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE;
-+		else if ((raw_val & OXP_X1_CHARGE_INHIBIT_MASK_AWAKE) ==
-+			 OXP_X1_CHARGE_INHIBIT_MASK_AWAKE)
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE;
-+		else
-+			val->intval = POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO;
-+		return 0;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int oxp_psy_ext_set_prop(struct power_supply *psy,
-+				       const struct power_supply_ext *ext,
-+				       void *data,
-+				       enum power_supply_property psp,
-+				       const union power_supply_propval *val)
-+{
-+	long raw_val;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD:
-+		if (val->intval > 100)
-+			return -EINVAL;
-+		return write_to_ec(OXP_X1_CHARGE_LIMIT_REG, val->intval);
-+	case POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR:
-+		switch (val->intval) {
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_AUTO:
-+			raw_val = 0;
-+			break;
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE_AWAKE:
-+			raw_val = OXP_X1_CHARGE_INHIBIT_MASK_AWAKE;
-+			break;
-+		case POWER_SUPPLY_CHARGE_BEHAVIOUR_INHIBIT_CHARGE:
-+			raw_val = OXP_X1_CHARGE_INHIBIT_MASK_ALWAYS;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+
-+		return write_to_ec(OXP_X1_CHARGE_INHIBIT_REG, raw_val);
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static int oxp_psy_prop_is_writeable(struct power_supply *psy,
-+					    const struct power_supply_ext *ext,
-+					    void *data,
-+					    enum power_supply_property psp)
-+{
-+	return true;
-+}
-+
-+static const enum power_supply_property oxp_psy_ext_props[] = {
-+	POWER_SUPPLY_PROP_CHARGE_BEHAVIOUR,
-+	POWER_SUPPLY_PROP_CHARGE_CONTROL_END_THRESHOLD,
-+};
-+
-+static const struct power_supply_ext oxp_psy_ext = {
-+	.name			= "oxp-charge-control",
-+	.properties		= oxp_psy_ext_props,
-+	.num_properties		= ARRAY_SIZE(oxp_psy_ext_props),
-+	.charge_behaviours	= EC_CHARGE_CONTROL_BEHAVIOURS,
-+	.get_property		= oxp_psy_ext_get_prop,
-+	.set_property		= oxp_psy_ext_set_prop,
-+	.property_is_writeable	= oxp_psy_prop_is_writeable,
-+};
-+
-+static int oxp_add_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	return power_supply_register_extension(battery, &oxp_psy_ext, oxp_dev, NULL);
-+}
-+
-+static int oxp_remove_battery(struct power_supply *battery, struct acpi_battery_hook *hook)
-+{
-+	power_supply_unregister_extension(battery, &oxp_psy_ext);
-+	return 0;
-+}
-+
-+static struct acpi_battery_hook battery_hook = {
-+	.add_battery	= oxp_add_battery,
-+	.remove_battery	= oxp_remove_battery,
-+	.name		= "OneXPlayer Battery",
-+};
-+
- /* PWM enable/disable functions */
- static int oxp_pwm_enable(void)
- {
-@@ -845,12 +987,22 @@ static const struct hwmon_chip_info oxp_ec_chip_info = {
- static int oxp_platform_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device *hwdev;
-+	int ret;
-+
-+	oxp_dev = dev;
-+	ret = PTR_ERR_OR_ZERO(devm_hwmon_device_register_with_info(
-+		dev, "oxp_ec", NULL, &oxp_ec_chip_info, NULL));
- 
--	hwdev = devm_hwmon_device_register_with_info(dev, "oxp_ec", NULL,
--						     &oxp_ec_chip_info, NULL);
-+	if (ret)
-+		return ret;
- 
--	return PTR_ERR_OR_ZERO(hwdev);
-+	if (oxp_psy_ext_supported()) {
-+		ret = devm_battery_hook_register(dev, &battery_hook);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
- }
- 
- static struct platform_driver oxp_platform_driver = {
+-#define GENMASK(h, l) \
+-	(GENMASK_INPUT_CHECK(h, l) + __GENMASK(h, l))
+-#define GENMASK_ULL(h, l) \
+-	(GENMASK_INPUT_CHECK(h, l) + __GENMASK_ULL(h, l))
+-
+ #if !defined(__ASSEMBLY__)
+ /*
+  * Missing asm support
+
 -- 
 2.48.1
+
 
