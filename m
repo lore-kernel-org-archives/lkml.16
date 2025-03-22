@@ -1,147 +1,148 @@
-Received: from smtp.smtpout.orange.fr (smtp-23.smtpout.orange.fr [80.12.242.23])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAAD242052;
-	Sat, 22 Mar 2025 07:47:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.23
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE95190052;
+	Sat, 22 Mar 2025 07:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742629636; cv=none; b=aRCytsDBQ82h8r6nsE8VspB0rWTYT33wGcq0sqFHXhCrbioja8bq9WCHdGIcsPqsDKvrVBsW5dgcFPYlaDpOkuqDtIJGImsp4Va58e8jCbhvPoB5td1dgc5dPrLyv/rWd8dQdY7zXIzmf+8UpduqU3SY85RJ32y1fJdG3krpNPs=
+	t=1742630199; cv=none; b=d/OTb5R6eFN1kLUs0qO0py7mRygCP199jzVlttho3v8Wg/reBbxlCwn9L65Q6/ZE+NJjaxh5mpf9rxums7PN6i2gt3EHhyerYEMO98Ot66sPNSfbZ8oOrPEwsshD2oQPikVPEDo6dh7DlKkkkAsIDUznXlXdiiU+2ooh0RJQfLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742629636; c=relaxed/simple;
-	bh=UHZUiU7dX/pHyv2rf9ZLUJy55sZsJfVgQiY2q7zHZ4Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pzbRJ9ppgsaQjt/s/l9NyDXw/mwEytuMjYpwvseXaCcQrogLxxtzfVYAtRi1bKIGng5zH2lbN9GchJDMXbmp0LCdRj0sFAQoDd7VxYPiBYPGoTZl+EwUuQUO6LqEAtRG5NPKe1gpApV3RoRSH5vewkIzdi/lMOhvWdTjILnuUcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=lwja6jsP; arc=none smtp.client-ip=80.12.242.23
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1742630199; c=relaxed/simple;
+	bh=Nb/yu4ypdxxN5A53Ij3THPgpM+Dwa5pXzIZtnpM9Ruw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=HvkL8O55w2pUP3fM8S2ra9MlDsIZW0dcnSTLWAURC+HnihqbPBOpHW1PdsluoYZfyGIRHcJ9LwhsazKymSb1I59qXF0Fgt1Kb1pH7F2vvKN0k/7MZp7ugCSliMZzUwa3cMi3PXhrkrHibvil3jubEBxPwydzERnlIDJ/o+jwitQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=JZ0Lgqyh; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="lwja6jsP"
-Received: from fedora.home ([90.11.132.44])
-	by smtp.orange.fr with ESMTPA
-	id vtYItzm9oIuduvtYLtKJNN; Sat, 22 Mar 2025 08:45:58 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1742629558;
-	bh=uUTkOo9pR0pRDuNpO1u/nY/LzT8p5BQ72XTrVx+PzRg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=lwja6jsP0K9ctAIcLIPFCWAzjNXFLhgavOlijF0hQ8QlXi3BYwl529X2dTnmne593
-	 4xt9F1vw2orB8xd1SijYGg7qVb9kd4LkWGwruocfSj/U9ZtwxA6of80IW2tTXjAJQ6
-	 pJH/RFNMiwOGy3aieYGhwWidjSeyZqskcNMZvU2Gu9IahXywx5HouZNoepUSki8Qaw
-	 9zZ0JtfB1UY7Z5//Y4uZnj5s8jpuJKNxxGRE5tbp8OrmkF5URjyYLXgNk2BRvVKk0K
-	 F6BmXZGRIiKA+3YNRjlViUL68QxClyDv8dvc7WYYBH8u+J1LJQF4U9mj4al+ev7AhM
-	 zhU8CkAT3w1NA==
-X-ME-Helo: fedora.home
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sat, 22 Mar 2025 08:45:58 +0100
-X-ME-IP: 90.11.132.44
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Oder Chiou <oder_chiou@realtek.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>,
-	Takashi Iwai <tiwai@suse.com>,
-	Bard Liao <bardliao@realtek.com>
-Cc: linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-	linux-sound@vger.kernel.org
-Subject: [PATCH] ASoC: codecs: rt5665: Fix some error handling paths in rt5665_probe()
-Date: Sat, 22 Mar 2025 08:45:49 +0100
-Message-ID: <e3c2aa1b2fdfa646752d94f4af968630c0d58248.1742629525.git.christophe.jaillet@wanadoo.fr>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="JZ0Lgqyh"
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 5CEFF2E087B7;
+	Sat, 22 Mar 2025 09:56:32 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1742630192;
+	bh=RxDBhqQO5wD4ha5w+8kvrsCmcUbINe+vyAW7lpYJJ/Y=;
+	h=Received:From:Subject:To;
+	b=JZ0Lgqyhzf1wBAlRW+8NjTp2LwUcNXMo9h+Ex3tGLm+oSn7CSxPwCmK0HCbsUNNQK
+	 q/guTriqmaDafZJa1GgmEKUDrKnk1u43KDD/MhWOrQcmF+oNXCmJXmZ8RZuYOmXs+u
+	 RWidmk3gqTXJ6/+MUURpozsooIZYdKB5V1ggpwio=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.171) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f171.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f171.google.com with SMTP id
+ 38308e7fff4ca-30c091b54aaso26357921fa.3;
+        Sat, 22 Mar 2025 00:56:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCW/7Pw7gw0EXCJORKG0hHj/zncbiqQCZVEIJMMn25h0EiAmT0bsnAnimLxUvZfUvJPHNQnbcZqh6mBIW6a1@vger.kernel.org,
+ AJvYcCWPPPXgHsD/H7cAWYpH1DxyBxMMe5ejnLcp9FkZAhViPc/yrY9RbMswzg3HZAjm+w5VIV/Idf/AkamEMw==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwRg4A2ABpmBjmZideHxzMWDiD6w6s9fc3UorN0qpz4F7n2MwkU
+	SH/AoHq9zCcmPc/3PE6VNv+1rzRVJdXVMzwfSH++HP6WU5JZs3sIW1QHrRHTRM5KGsJBX1jSI8x
+	W5BBqbPHAD7A59nILsCbZfofINHg=
+X-Google-Smtp-Source: 
+ AGHT+IHVB+XQcdLBtvU4EbhL/dwkdcvEauCsjljXsgbjiSjriXr4SBaaM3ELQTGtwQn2g+CcOyEoRv7OHpuQ9yeA7Xs=
+X-Received: by 2002:a05:651c:1a0b:b0:30d:694d:173b with SMTP id
+ 38308e7fff4ca-30d7e32dda3mr19378131fa.33.1742630191621; Sat, 22 Mar 2025
+ 00:56:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250320220924.5023-1-lkml@antheas.dev>
+ <20250320220924.5023-12-lkml@antheas.dev>
+ <d2746ddf-92d5-4ac8-b361-60d1ec9aabb5@ljones.dev>
+In-Reply-To: <d2746ddf-92d5-4ac8-b361-60d1ec9aabb5@ljones.dev>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Sat, 22 Mar 2025 08:56:20 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwGMNchNXckSZ=HPyi=sFEjrLDzayqjHDSOwwb8MQ=rJPg@mail.gmail.com>
+X-Gm-Features: AQ5f1JobNXeplc7j7ilKY883wh1vZ5o94P22g_5Vzf2wfA_WL4GCq6Rmfd_gi24
+Message-ID: 
+ <CAGwozwGMNchNXckSZ=HPyi=sFEjrLDzayqjHDSOwwb8MQ=rJPg@mail.gmail.com>
+Subject: Re: [PATCH 11/11] HID: asus: add RGB support to the ROG Ally units
+To: "Luke D. Jones" <luke@ljones.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+	Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174263019272.21144.829851542677459877@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Should an error occur after a successful regulator_bulk_enable() call,
-regulator_bulk_disable() should be called, as already done in the remove
-function.
+On Sat, 22 Mar 2025 at 03:30, Luke D. Jones <luke@ljones.dev> wrote:
+>
+> On 21/03/25 11:09, Antheas Kapenekakis wrote:
+> > Apply the RGB quirk to the QOG Ally units to enable basic RGB support.
+> >
+> > Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> > ---
+> >   drivers/hid/hid-asus.c | 4 ++--
+> >   1 file changed, 2 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> > index 5e87923b35520..589b32b508bbf 100644
+> > --- a/drivers/hid/hid-asus.c
+> > +++ b/drivers/hid/hid-asus.c
+> > @@ -1449,10 +1449,10 @@ static const struct hid_device_id asus_devices[] = {
+> >         QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY),
+> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+> >           USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X),
+> > -       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> > +       QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD | QUIRK_ROG_NKEY_RGB },
+> >       { HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+> >           USB_DEVICE_ID_ASUSTEK_ROG_CLAYMORE_II_KEYBOARD),
+> >         QUIRK_ROG_CLAYMORE_II_KEYBOARD },
+>
+> I need to NACK this one sorry, if only because I added the RGB control
+> in hid-asus-ally as a per-LED control and it works very well. You'll see
+> it once I submit that series upstream again.
 
-Instead of adding an error handling path in the probe, switch from
-devm_regulator_bulk_get() to devm_regulator_bulk_get_enable() and
-simplify the remove function and some other places accordingly.
+Depending on when your driver is ready to merge, it might be
+beneficial for this to merge ahead of time for some basic support.
+Then you can yank it after your driver is in. For your driver, I think
+it would be good to make it separate from hid-asus and yank ally
+completely from here.
 
-Finally, add a missing const when defining rt5665_supply_names to please
-checkpatch and constify a few bytes.
+> The distinction between MCU mode and Software mode for RGB is frankly a
+> pain in the arse. For Ally we will want software mode (per-led) as that
+> allows just one USB write for all LEDs, and no need to do a set/apply to
+> make the LEDs change. The benefit being that the LEDs can change rapidly
+> and there will be no "blink".
 
-Fixes: 33ada14a26c8 ("ASoC: add rt5665 codec driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
----
-Compile tested only
----
- sound/soc/codecs/rt5665.c | 24 ++++--------------------
- 1 file changed, 4 insertions(+), 20 deletions(-)
+The blink happens when the B4(/B5) command is sent. If they are not,
+it is perfectly fine. B4 just needs to be sent initially, as it
+switches the controller to solid mode if it is not there already. Then
+B4/B5 could be sent on shutdown to save the color to memory. I
+purposely did not do it as it would break the driver if userspace
+controls the leds inbetween led switches and it is needlessly
+complicated for what this support is meant for (basic RGB).
 
-diff --git a/sound/soc/codecs/rt5665.c b/sound/soc/codecs/rt5665.c
-index e0d1991cffdb..bcb6d7c6f301 100644
---- a/sound/soc/codecs/rt5665.c
-+++ b/sound/soc/codecs/rt5665.c
-@@ -31,9 +31,7 @@
- #include "rl6231.h"
- #include "rt5665.h"
- 
--#define RT5665_NUM_SUPPLIES 3
--
--static const char *rt5665_supply_names[RT5665_NUM_SUPPLIES] = {
-+static const char * const rt5665_supply_names[] = {
- 	"AVDD",
- 	"MICVDD",
- 	"VBAT",
-@@ -46,7 +44,6 @@ struct rt5665_priv {
- 	struct gpio_desc *gpiod_ldo1_en;
- 	struct gpio_desc *gpiod_reset;
- 	struct snd_soc_jack *hs_jack;
--	struct regulator_bulk_data supplies[RT5665_NUM_SUPPLIES];
- 	struct delayed_work jack_detect_work;
- 	struct delayed_work calibrate_work;
- 	struct delayed_work jd_check_work;
-@@ -4471,8 +4468,6 @@ static void rt5665_remove(struct snd_soc_component *component)
- 	struct rt5665_priv *rt5665 = snd_soc_component_get_drvdata(component);
- 
- 	regmap_write(rt5665->regmap, RT5665_RESET, 0);
--
--	regulator_bulk_disable(ARRAY_SIZE(rt5665->supplies), rt5665->supplies);
- }
- 
- #ifdef CONFIG_PM
-@@ -4758,7 +4753,7 @@ static int rt5665_i2c_probe(struct i2c_client *i2c)
- {
- 	struct rt5665_platform_data *pdata = dev_get_platdata(&i2c->dev);
- 	struct rt5665_priv *rt5665;
--	int i, ret;
-+	int ret;
- 	unsigned int val;
- 
- 	rt5665 = devm_kzalloc(&i2c->dev, sizeof(struct rt5665_priv),
-@@ -4774,24 +4769,13 @@ static int rt5665_i2c_probe(struct i2c_client *i2c)
- 	else
- 		rt5665_parse_dt(rt5665, &i2c->dev);
- 
--	for (i = 0; i < ARRAY_SIZE(rt5665->supplies); i++)
--		rt5665->supplies[i].supply = rt5665_supply_names[i];
--
--	ret = devm_regulator_bulk_get(&i2c->dev, ARRAY_SIZE(rt5665->supplies),
--				      rt5665->supplies);
-+	ret = devm_regulator_bulk_get_enable(&i2c->dev, ARRAY_SIZE(rt5665_supply_names),
-+					     rt5665_supply_names);
- 	if (ret != 0) {
- 		dev_err(&i2c->dev, "Failed to request supplies: %d\n", ret);
- 		return ret;
- 	}
- 
--	ret = regulator_bulk_enable(ARRAY_SIZE(rt5665->supplies),
--				    rt5665->supplies);
--	if (ret != 0) {
--		dev_err(&i2c->dev, "Failed to enable supplies: %d\n", ret);
--		return ret;
--	}
--
--
- 	rt5665->gpiod_ldo1_en = devm_gpiod_get_optional(&i2c->dev,
- 							"realtek,ldo1-en",
- 							GPIOD_OUT_HIGH);
--- 
-2.49.0
+Also, multizone is expected to be of little utility, so it is not
+worth making concessions over. I never found a use for it or anyone
+ask for it. If single zone has performance benefits, it should be used
+instead. A lot of devices do not support multizone, and when they do,
+it is in different forms, so it is not something that can be
+intuitively put into a kernel driver imo.
 
+Aura mode is especially buggy during boot and resume, since the
+controller briefly switches from the MCU mode to that, so it uses a
+stale color which is ugly. Even when you try to match the colors, as
+you did, it is not 1-1. You know this too. In addition, Aura mode will
+break userspace Aura programs running through Wine. Although they are
+already broken due to the hiddevs merging which I had to revert for
+V2. But we could fix that, and I will try to for V3.
+
+> I'll write more on patch 10
+>
+> Cheers,
+> Luke.
