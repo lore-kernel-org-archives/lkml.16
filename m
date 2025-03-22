@@ -1,119 +1,299 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-b1-smtp.messagingengine.com (fhigh-b1-smtp.messagingengine.com [202.12.124.152])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B04D187550
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 09:05:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6338194080;
+	Sat, 22 Mar 2025 09:06:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.152
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742634306; cv=none; b=cV5nsYKr+vtg7iKg/Pp7ZpVKZdsoRGl0+mBZuKESpKyYbbwYe2fAXnvIzCcwYN02uMfr5cuyyJBQlgjaorcSCkr06PRC+XQZzuHOHPVKfJK+AN40pUQh1Lqv4V8kOhcVlm4CtrToJs3ra9CWtzIPV5SkCOxNs7Ehh1eCcyvKaK0=
+	t=1742634367; cv=none; b=WTvPH52HUXw27FuONIyd/iqcDrhMDQ/4oZB7yf1RA4I0mI7VkbCwcdN8oqjqiK9Vj9TW/iK85aVHzGG9TXPcBpYfxiJuxjLRGTdgPgAxLRphPBiZ9/wB7eG+KiKm+TFTzLhNNg14ccvDtC9WJpdgh2UNfaesp1qX43PUU7SYD5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742634306; c=relaxed/simple;
-	bh=fvC87F3YUiEQxEElPGuptnR3EYPtjVSmwI4/ZZKhZdY=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=j8gx6+u9GA3WtAx8srjG3M1ulpLgbqYoQ80w1jpc8d9XMCf1BeyKVTMpE/8XVLcsXyydIu7eA2RNLnrjd0jcl1Ajlmwi0j9OFphCGJu98DHYIFbVmGE36MiMpbmt5QjfLRCGcGv4GY2eBfRwEOx3EhJgfLTr/SeKVc0D6ekgcwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3d443811f04so25297435ab.1
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 02:05:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742634303; x=1743239103;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jGVaarRB/L0i+F7Cnq1M1dqOGn52GYljV2EOw47H1/8=;
-        b=D2NEp921SYZJso71jD6tg7Rhcu7Oyq/zxvl1u8//RHpCL55IC7XtJVDvXXqtykQG1c
-         LaxD4fw4BU85ciQ2WwJTo/CnBd4oZ2803QizIeZme3QRPZqDPX4az4oVBOoedApZuBcO
-         /8c9kBAcS8tDZvRIVwzVLK4y63YwqeLMrPAdNCez0opT8NNKLMozzN0gJeVdL5+NUhVs
-         NXbWLWaSHpOrSWIYwE6DWa2vwkfoMIuWnV+IHM+QmcY0GEJNzYp9dWgQiRaCnUsLwrW2
-         MVCkLSVLRVLFCFKupYKU5O3tzj/xMfivuejuVWJFXR6pqOO0aJYVlN00qSHuRjEY7NW0
-         bzqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUW88ayQaf+U1hU7hqYRZEsCJvSn8wkOwkm6rp7mylTDUHH/hpVFSyrl8PI2y+9XXkDGnsj5l0+oawuM3I=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx3SMB0LJm1vjBgIaDMR4weSguYCeemi0oqixTjWz+XpOAKRPnf
-	GiFuXcJeMCDsotO186u1cKJbEJ04+42TGQjT0OFGFpl5LA1kKa31ENYTY6UhHnor0DcuSd7R+DM
-	Y+d+jYjy+zBD2LNECz9UCiCCn6D2Csw5Cb2faCPOhpkJQL0xampmaIfA=
-X-Google-Smtp-Source: AGHT+IHBpkTVZVpNf/oHAEd5id+2hbFFgAODAUvj+UsUhsqcbfqd+9wwtNefKqJo2ni4u46S72AprUE9Hgqp+1eI4bdcL4GUeWbC
+	s=arc-20240116; t=1742634367; c=relaxed/simple;
+	bh=NBxh7erLOHj43kRoBxjpR5VIPKDR6kkKJ+urt8wILQ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=r/zUjWMXz5GU2eu6imwoStYNsvwItKSwPkBmM4ZZOZW6t11/JRnPnir1O81YDT5btCmZD4DPTxAaY+MDyXI73kKF4uwfGC+daaVVmB4aaLqLAkr6hbheo4jyrkYFQ7GCa0EAd9eIhGmX4IGMnyCzwkR2d+maEr6Oi07m4gh3Tq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=DJt7Fzx0; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=IdZ7WMWk; arc=none smtp.client-ip=202.12.124.152
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="DJt7Fzx0";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="IdZ7WMWk"
+Received: from phl-compute-10.internal (phl-compute-10.phl.internal [10.202.2.50])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id AEB272540198;
+	Sat, 22 Mar 2025 05:06:01 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-10.internal (MEProxy); Sat, 22 Mar 2025 05:06:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1742634361;
+	 x=1742720761; bh=BBlIN0TdZEzAeNH6HtMTPnIU6Wd6a4Hogj/uPDcw+Yg=; b=
+	DJt7Fzx0Y3ImtBK6+9gOI2gOvp09tBBOQQccKlR6WfYA5Fp78KcPih+KFI0LLN/P
+	ZkcBSMH8gtVFyfTnuUGzUNtICHY3SaPH+YCdOzIHUazZKPqYHu19aa+czlnoFyml
+	B1z/9XkTQVAp/L6UtfoebiWbv1EKycsvejIE9Q/598XqtvPe2i9/Sd1jGZGNHuha
+	F3ucJS0rcLOchfcKDzGOa0s5bHBs2Fcjfc2gZjXR10JP7oneBbI1fx+AbOm0O86y
+	ObjnhDsb/eIQiQk8n9ZDQhQeZ/Ie87lHMS6DQO/9oj9L0/jR1IJn7rSSA7Z2P2Lq
+	sa5SCETH6ZihX9y4uoq6oQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742634361; x=
+	1742720761; bh=BBlIN0TdZEzAeNH6HtMTPnIU6Wd6a4Hogj/uPDcw+Yg=; b=I
+	dZ7WMWkACE/Duu0exOmJV+V8e+esUYntX1zv1kFciPLDPDhQ1SGsvcOadxGU7l2J
+	U60zFavtEfLhtYrQ7Jxmx75aMT4/tfEfjdJPmS218FY3r4/Qz9apQ0iViIcws8Hl
+	1LAIlMeu6lw+0XQT1mVXwbbTPblfyjp00n3GIeCTjtYQv/E11CuOXiRJFUT4OdqY
+	cty8mSdnH8q7b5nB4RhbYIHfyVVwweLXJiHzADnhbZy9fQ1rhl0Nhz4jCzbvykT/
+	+OpuLatZqFV26xm8Faz4nek9/w75xXPbnRizhI1br653EoCV9HHp+Wxj9nb6UCZ+
+	39iJ9gqH2ibGfdwHVqKOQ==
+X-ME-Sender: <xms:eX3eZxYNv1QIb3NyyqMclWrB4dZ9ZxA1PcrFsO32Gi3dSzeI4YwRvw>
+    <xme:eX3eZ4ZyWCdAFdTqte6DW4KTFNeiDJixskzIaD6nwKc30J4sa6tkDjXHFs2h1N-Ke
+    scu7J8RSXVfEW_8AIQ>
+X-ME-Received: <xmr:eX3eZz9_dfYxOXtb7t1m8l9SmcMgHeHz6JnKx0aKzCdHuHuL-5ml7lmo2LBmC7CCODRzSW-W>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheefheejucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
+    vdejnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonh
+    gvshdruggvvheqnecuggftrfgrthhtvghrnhepveduueevtdetgfehfeeliedvvdfhtdei
+    hfdtkeejuddvgeeivddtkeffgeekueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghp
+    thhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhkmhhlsegrnhhthh
+    gvrghsrdguvghvpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekiees
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhinhhpuhhtse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghl
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhikhhosheskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    ephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgr
+    rhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:eX3eZ_ozUbUbqGCgDdE5bCTeDdRL6L4YyHwF1PTaB0vaSy_5QA105A>
+    <xmx:eX3eZ8qBARsiheHCJrejtY4_aWJQdCP82b0hSjI1cgcSf7yTQaPPNg>
+    <xmx:eX3eZ1RbXi1QjFLM7Ynh7po8SEFG9d98-Q4X2siPWrqbu_E_QtvS2w>
+    <xmx:eX3eZ0rsR5MU7X4jICmXQByo6n3MTWOE5KZ6Wc9uISM3kmiU3JqToQ>
+    <xmx:eX3eZ4e1Dv_E0jsiFYMhHN4eM-5w7a6DTc8NvU-yrvaMH8huvCMXR5up>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 22 Mar 2025 05:05:57 -0400 (EDT)
+Message-ID: <efe3c271-e7f9-4c11-9391-706a9498d698@ljones.dev>
+Date: Sat, 22 Mar 2025 22:05:55 +1300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1a43:b0:3cf:c7d3:e4b with SMTP id
- e9e14a558f8ab-3d596186625mr74862335ab.21.1742634303618; Sat, 22 Mar 2025
- 02:05:03 -0700 (PDT)
-Date: Sat, 22 Mar 2025 02:05:03 -0700
-In-Reply-To: <tencent_FFC5C6E792E24668C997EEDB6ED34CA52706@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67de7d3f.050a0220.31a16b.002d.GAE@google.com>
-Subject: Re: [syzbot] [ocfs2?] KMSAN: uninit-value in _find_next_bit
-From: syzbot <syzbot+7ea0b96c4ddb49fd1a70@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 08/11] platform/x86: asus-wmi: add keyboard brightness
+ event handler
+To: Antheas Kapenekakis <lkml@antheas.dev>
+Cc: platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250320220924.5023-1-lkml@antheas.dev>
+ <20250320220924.5023-9-lkml@antheas.dev>
+ <9be2c01e-190b-4d55-8ff8-3d89be52fc84@ljones.dev>
+ <CAGwozwFDeneALZ_-kOXQ70kg3OQ5BK8ANJrj+32hLHK_PMqVNQ@mail.gmail.com>
+Content-Language: en-US
+From: "Luke D. Jones" <luke@ljones.dev>
+In-Reply-To: <CAGwozwFDeneALZ_-kOXQ70kg3OQ5BK8ANJrj+32hLHK_PMqVNQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hello,
+On 22/03/25 21:12, Antheas Kapenekakis wrote:
+> On Sat, 22 Mar 2025 at 05:31, Luke D. Jones <luke@ljones.dev> wrote:
+>>
+>> On 21/03/25 11:09, Antheas Kapenekakis wrote:
+>>> Currenlty, the keyboard brightness control of Asus WMI keyboards is
+>>> handled in the kernel, which leads to the shortcut going from
+>>> brightness 0, to 1, to 2, and 3.
+>>>
+>>> However, for HID keyboards it is exposed as a key and handled by the
+>>> user's desktop environment. For the toggle button, this means that
+>>> brightness control becomes on/off. In addition, in the absence of a
+>>> DE, the keyboard brightness does not work.
+>>>
+>>> Therefore, expose an event handler for the keyboard brightness control
+>>> which can then be used by hid-asus.
+>>>
+>>> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+>>> ---
+>>>    drivers/platform/x86/asus-wmi.c            | 38 ++++++++++++++++++++++
+>>>    include/linux/platform_data/x86/asus-wmi.h | 11 +++++++
+>>>    2 files changed, 49 insertions(+)
+>>>
+>>> diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+>>> index 21e034be71b2f..45999dda9e7ed 100644
+>>> --- a/drivers/platform/x86/asus-wmi.c
+>>> +++ b/drivers/platform/x86/asus-wmi.c
+>>> @@ -1529,6 +1529,44 @@ void asus_brt_unregister_listener(struct asus_brt_listener *bdev)
+>>>    }
+>>>    EXPORT_SYMBOL_GPL(asus_brt_unregister_listener);
+>>>
+>>> +static void do_kbd_led_set(struct led_classdev *led_cdev, int value);
+>>> +
+>>> +int asus_brt_event(enum asus_brt_event event)
+>>> +{
+>>> +     int brightness;
+>>> +
+>>> +     mutex_lock(&asus_brt_lock);
+>>> +     if (!asus_brt_ref || !asus_brt_ref->kbd_led_registered) {
+>>> +             mutex_unlock(&asus_brt_lock);
+>>> +             return -EBUSY;
+>>> +     }
+>>> +     brightness = asus_brt_ref->kbd_led_wk;
+>>> +
+>>> +     switch (event) {
+>>> +     case ASUS_BRT_UP:
+>>> +             brightness += 1;
+>>> +             break;
+>>> +     case ASUS_BRT_DOWN:
+>>> +             brightness -= 1;
+>>> +             break;
+>>> +     case ASUS_BRT_TOGGLE:
+>>> +             if (brightness >= 3)
+>>> +                     brightness = 0;
+>>> +             else
+>>> +                     brightness += 1;
+>>> +             break;
+>>> +     }
+>>> +
+>>> +     do_kbd_led_set(&asus_brt_ref->kbd_led, brightness);
+>>> +     led_classdev_notify_brightness_hw_changed(&asus_brt_ref->kbd_led,
+>>> +                                               asus_brt_ref->kbd_led_wk);
+>>> +
+>>> +     mutex_unlock(&asus_brt_lock);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +EXPORT_SYMBOL_GPL(asus_brt_event);
+>>> +
+>>
+>> I quick test on 6.14-rc7 gives me this:
+>>
+>> [  288.039255] BUG: sleeping function called from invalid context at
+>> kernel/locking/mutex.c:258
+>> [  288.039262] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 0,
+>> name: swapper/17
+>> [  288.039263] preempt_count: 101, expected: 0
+>> [  288.039264] RCU nest depth: 0, expected: 0
+>> [  288.039266] CPU: 17 UID: 0 PID: 0 Comm: swapper/17 Tainted: G
+>> W          6.14.0-rc7+ #164
+>> [  288.039268] Tainted: [W]=WARN
+>> [  288.039269] Hardware name: ASUSTeK COMPUTER INC. ROG Zephyrus M16
+>> GU604VY_GU604VY_00130747B/GU604VY, BIOS GU604VY.313 08/13/2024
+>> [  288.039270] Call Trace:
+>> [  288.039272]  <IRQ>
+>> [  288.039273]  dump_stack_lvl+0x5d/0x80
+>> [  288.039277]  __might_resched.cold+0xba/0xc9
+>> [  288.039282]  mutex_lock+0x19/0x40
+>> [  288.039285]  asus_brt_event+0x13/0xb0 [asus_wmi]
+>> [  288.039292]  asus_event+0x91/0xa0 [hid_asus]
+>> [  288.039295]  hid_process_event+0xae/0x120
+>> [  288.039298]  hid_input_array_field+0x132/0x180
+>> [  288.039300]  hid_report_raw_event+0x360/0x4e0
+>> [  288.039302]  __hid_input_report.constprop.0+0xf1/0x180
+>> [  288.039304]  hid_irq_in+0x17f/0x1b0
+>> [  288.039306]  __usb_hcd_giveback_urb+0x98/0x110
+>> [  288.039308]  usb_giveback_urb_bh+0xbd/0x150
+>> [  288.039310]  process_one_work+0x171/0x290
+>> [  288.039312]  bh_worker+0x1ac/0x210
+>> [  288.039314]  tasklet_hi_action+0xe/0x30
+>> [  288.039315]  handle_softirqs+0xdb/0x1f0
+>> [  288.039317]  __irq_exit_rcu+0xc2/0xe0
+>> [  288.039318]  common_interrupt+0x85/0xa0
+>> [  288.039320]  </IRQ>
+>> [  288.039320]  <TASK>
+>> [  288.039321]  asm_common_interrupt+0x26/0x40
+>> [  288.039323] RIP: 0010:cpuidle_enter_state+0xb9/0x2c0
+>> [  288.039325] Code: 40 0f 84 1b 01 00 00 e8 35 e8 13 ff e8 40 f2 ff ff
+>> 31 ff 49 89 c5 e8 c6 f0 12 ff 45 84 f6 0f 85 f2 00 00 00 fb 0f 1f 44 00
+>> 00 <45> 85 ff 0f 88 cf 00 00 00 49 63 f7 48 8d 04 76 48 8d 04 86 49 8d
+>> [  288.039326] RSP: 0018:ffffc90000253e90 EFLAGS: 00000246
+>> [  288.039328] RAX: ffff888890680000 RBX: 0000000000000003 RCX:
+>> 0000000000000000
+>> [  288.039329] RDX: 00000043107862af RSI: fffffffd616e8210 RDI:
+>> 0000000000000000
+>> [  288.039329] RBP: ffff8888906ba370 R08: 0000000000000000 R09:
+>> 0000000000000007
+>> [  288.039330] R10: ffff88888ffa6098 R11: 0000000000000008 R12:
+>> ffffffff82fd4140
+>> [  288.039331] R13: 00000043107862af R14: 0000000000000000 R15:
+>> 0000000000000003
+>> [  288.039332]  cpuidle_enter+0x28/0x40
+>> [  288.039334]  do_idle+0x1a8/0x200
+>> [  288.039336]  cpu_startup_entry+0x24/0x30
+>> [  288.039337]  start_secondary+0x11e/0x140
+>> [  288.039340]  common_startup_64+0x13e/0x141
+>> [  288.039342]  </TASK>
+>>
+>> I think you need to swap the mutex to a spin_lock_irqsave and associated
+>> spin_unlock_irqrestore plus DEFINE_SPINLOCK(asus_brt_lock).
+>>
+>> I'm out of time tonight but I'll apply the above to your patches and
+>> report back tomorrow if you don't get to it before I do.
+>>
+>> It might be worth checking any other mutex uses in the LED path too.
+> 
+> Thank you for catching that, I will replace the mutex with a spinlock.
+> Might have to do with the WMI method being active as I got no such
+> issue in my device.
 
-syzbot has tested the proposed patch but the reproducer is still triggering an issue:
-KMSAN: uninit-value in _find_next_bit
+This might highlight the HID + WMI issue I was talking about in the 
+other replies and why i think the quirk table is still required.. Or 
+perhaps an alternative would be to have HID block the WMI method for the 
+0x19b6 PID? There are approximately 30 laptops I know of with both 
+methods available.
 
-ocfs2: Finishing quota recovery on device (7,0) for slot 0
-ents: 3990, sb: ffff888042873800, chunk: 0, blksize: 512, rcb: ffff88804b966800, offset: -1, ocfs2_recover_local_quota_file
-=====================================================
-BUG: KMSAN: uninit-value in _find_next_bit+0x11c/0x130 lib/find_bit.c:145
- _find_next_bit+0x11c/0x130 lib/find_bit.c:145
- find_next_bit include/linux/find.h:69 [inline]
- ocfs2_recover_local_quota_file fs/ocfs2/quota_local.c:493 [inline]
- ocfs2_finish_quota_recovery+0xcc4/0x3fd0 fs/ocfs2/quota_local.c:646
- ocfs2_complete_recovery+0x229f/0x38a0 fs/ocfs2/journal.c:1357
- process_one_work kernel/workqueue.c:3238 [inline]
- process_scheduled_works+0xc1a/0x1e80 kernel/workqueue.c:3319
- worker_thread+0xea7/0x14f0 kernel/workqueue.c:3400
- kthread+0x6b9/0xef0 kernel/kthread.c:464
- ret_from_fork+0x6d/0x90 arch/x86/kernel/process.c:148
- ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+I just checked the DSDT dump for Ally again and it looks like those are 
+all good too. You might have lucked out and ended up with all devices 
+with no WMI keyboard brightness :D
 
-Uninit was created at:
- slab_post_alloc_hook mm/slub.c:4121 [inline]
- slab_alloc_node mm/slub.c:4164 [inline]
- __do_kmalloc_node mm/slub.c:4293 [inline]
- __kmalloc_noprof+0x923/0x1230 mm/slub.c:4306
- kmalloc_noprof include/linux/slab.h:905 [inline]
- ocfs2_add_recovery_chunk fs/ocfs2/quota_local.c:305 [inline]
- ocfs2_recovery_load_quota+0x415/0x1450 fs/ocfs2/quota_local.c:363
- ocfs2_local_read_info+0x139e/0x2c10 fs/ocfs2/quota_local.c:758
- dquot_load_quota_sb+0xa35/0xdc0 fs/quota/dquot.c:2459
- dquot_load_quota_inode+0x662/0x9f0 fs/quota/dquot.c:2496
- ocfs2_enable_quotas+0x1d4/0x6e0 fs/ocfs2/super.c:930
- ocfs2_fill_super+0xa6b7/0xb550 fs/ocfs2/super.c:1140
- get_tree_bdev_flags+0x6ec/0x910 fs/super.c:1636
- get_tree_bdev+0x37/0x50 fs/super.c:1659
- ocfs2_get_tree+0x34/0x40 fs/ocfs2/super.c:1184
- vfs_get_tree+0xb1/0x5a0 fs/super.c:1814
- do_new_mount+0x71f/0x15e0 fs/namespace.c:3560
- path_mount+0x742/0x1f10 fs/namespace.c:3887
- do_mount fs/namespace.c:3900 [inline]
- __do_sys_mount fs/namespace.c:4111 [inline]
- __se_sys_mount+0x71f/0x800 fs/namespace.c:4088
- __x64_sys_mount+0xe4/0x150 fs/namespace.c:4088
- x64_sys_call+0x39bf/0x3c30 arch/x86/include/generated/asm/syscalls_64.h:166
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xcd/0x1e0 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-
-CPU: 1 UID: 0 PID: 6462 Comm: kworker/u8:0 Not tainted 6.14.0-rc7-syzkaller-g88d324e69ea9-dirty #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
-Workqueue: ocfs2_wq ocfs2_complete_recovery
-=====================================================
-
-
-Tested on:
-
-commit:         88d324e6 Merge tag 'spi-fix-v6.14-rc7' of git://git.ke..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=13b095e4580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=1d4644c4063c5098
-dashboard link: https://syzkaller.appspot.com/bug?extid=7ea0b96c4ddb49fd1a70
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=13d9043f980000
+> 
+>   I guess I will try to do a v3 today as that will hold back our kernel too.
+> 
+>> Cheers,
+>> Luke.
+>>
+>>>    /*
+>>>     * These functions actually update the LED's, and are called from a
+>>>     * workqueue. By doing this as separate work rather than when the LED
+>>> diff --git a/include/linux/platform_data/x86/asus-wmi.h b/include/linux/platform_data/x86/asus-wmi.h
+>>> index add04524031d8..2ac7912d8acd3 100644
+>>> --- a/include/linux/platform_data/x86/asus-wmi.h
+>>> +++ b/include/linux/platform_data/x86/asus-wmi.h
+>>> @@ -162,11 +162,18 @@ struct asus_brt_listener {
+>>>        void (*notify)(struct asus_brt_listener *listener, int brightness);
+>>>    };
+>>>
+>>> +enum asus_brt_event {
+>>> +     ASUS_BRT_UP,
+>>> +     ASUS_BRT_DOWN,
+>>> +     ASUS_BRT_TOGGLE,
+>>> +};
+>>> +
+>>>    #if IS_REACHABLE(CONFIG_ASUS_WMI)
+>>>    int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1, u32 *retval);
+>>>
+>>>    int asus_brt_register_listener(struct asus_brt_listener *cdev);
+>>>    void asus_brt_unregister_listener(struct asus_brt_listener *cdev);
+>>> +int asus_brt_event(enum asus_brt_event event);
+>>>    #else
+>>>    static inline int asus_wmi_evaluate_method(u32 method_id, u32 arg0, u32 arg1,
+>>>                                           u32 *retval)
+>>> @@ -181,6 +188,10 @@ static inline int asus_brt_register_listener(struct asus_brt_listener *bdev)
+>>>    static inline void asus_brt_unregister_listener(struct asus_brt_listener *bdev)
+>>>    {
+>>>    }
+>>> +static inline int asus_brt_event(enum asus_brt_event event)
+>>> +{
+>>> +     return -ENODEV;
+>>> +}
+>>>    #endif
+>>>
+>>>    #endif      /* __PLATFORM_DATA_X86_ASUS_WMI_H */
+>>
 
