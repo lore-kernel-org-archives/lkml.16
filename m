@@ -1,41 +1,41 @@
-Received: from forward103d.mail.yandex.net (forward103d.mail.yandex.net [178.154.239.214])
+Received: from forward102b.mail.yandex.net (forward102b.mail.yandex.net [178.154.239.149])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22B022B8BF;
-	Sat, 22 Mar 2025 14:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.214
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D588122B8BF;
+	Sat, 22 Mar 2025 14:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.149
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742654393; cv=none; b=KuK2uE0enimD0tCJBiBeNJuMwixv2SxQPCeXFiInHvArMLi3rFUrpPVcELoFDwaNe8CjaTQf3W6yXqJ32RZxQpwESyuaKSrEmHwbNyJhxf508U88q/7cOeOqi0JAxBzIczrLjNtwI30ASw2N7HelThInx0a9X9eqIwN0SPzPs+o=
+	t=1742654409; cv=none; b=KnDWljA/aDoiURZRP2GMDQsVQN1I6qzUP1gZCVUgjNpLm5zefee2mAS2qStyZyAnrvrcTWnEudMRnayjNEHTDhsi+LCBDphkd5lThouQknw9uTCHWnY7Wak1h8ZTxcgkFUVG+3QbO/USUE/eTXDPBNJBtfRMW4IL4P6CScI7CUU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742654393; c=relaxed/simple;
-	bh=kkbNleaf+8accSJ5/gJOEJaMgaILbTX/Z7YqA9gDHqI=;
+	s=arc-20240116; t=1742654409; c=relaxed/simple;
+	bh=rcFdBvHQdODI7Ka+aifa+wl76gdgw/jWWQkbK+5Mqms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Fd1dvJ12H9llE0/II2PLKWeyodG4sXIwpidgTNS8dhyXRd96EnjN4irnS6gEYqvF9p133/WbejjJc9zQFDpp28rF34rhVUjNPdKhzh+AgQuG7mzkeZmPm1e3zCWyBpNxTJrL2OoUJ0LHTU6oudUz3Puq48pl8oKswVladKI5z5k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=jQ/j0nwH; arc=none smtp.client-ip=178.154.239.214
+	 MIME-Version:Content-Type; b=Uz8IABZTbbnv43/Tcg1L35mx5W1/58NvVZtpfA2aeV6g/mXnhqZT2ASge0OOf5yL4KxGXsRgW+5oVyC0+rskptpeM51AjKBlf5Gl99iN6QdDC27t4xjgbB569QbqXReiVvt0/NCc0GBIPK9EsJ9frG5nUqWfCMg/ydKx/3prrEc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru; spf=pass smtp.mailfrom=ya.ru; dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b=nmzdLh/J; arc=none smtp.client-ip=178.154.239.149
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ya.ru
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ya.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="jQ/j0nwH"
-Received: from mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net [IPv6:2a02:6b8:c42:c54a:0:640:3e90:0])
-	by forward103d.mail.yandex.net (Yandex) with ESMTPS id 138A660B3C;
-	Sat, 22 Mar 2025 17:39:50 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id ldNdfxULga60-4C8ibM2K;
-	Sat, 22 Mar 2025 17:39:49 +0300
+	dkim=pass (1024-bit key) header.d=ya.ru header.i=@ya.ru header.b="nmzdLh/J"
+Received: from mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net [IPv6:2a02:6b8:c23:2129:0:640:f8ac:0])
+	by forward102b.mail.yandex.net (Yandex) with ESMTPS id EFCAC60D25;
+	Sat, 22 Mar 2025 17:40:04 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id 2eNucmWLi4Y0-0x6YI3od;
+	Sat, 22 Mar 2025 17:40:04 +0300
 X-Yandex-Fwd: 1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ya.ru; s=mail;
-	t=1742654389; bh=7x+176iWrwPuMLakR6WCoQ5vYZD24jjJpjWnuC86ORc=;
+	t=1742654404; bh=S1ADOccywVtKNspOiZLVnA99O6uPxWvy/u60nouYnPw=;
 	h=Cc:Message-ID:References:Date:In-Reply-To:Subject:To:From;
-	b=jQ/j0nwHrz4dZ0xuYRzszu0dmV8s8yx0p/CmcJyJK+pxZPKInqBnwh/HHmE8Va/SW
-	 ulvq2atd9NZAInwUeng10B2Nt+oMiyC8LgoGhR+P8crcgNjccGnpfH9CCNygCiLSp6
-	 ScnnWyqJvTBJK/xOaXRscW57BuvvVabChVo4bmro=
-Authentication-Results: mail-nwsmtp-smtp-production-main-78.klg.yp-c.yandex.net; dkim=pass header.i=@ya.ru
+	b=nmzdLh/J3rcWB8Ca5+dkZajRcor2DYczrlHjFwbAatrqWHQC55yv4a8ISRXXRe0Ly
+	 6iebMsLYmYFpigM0VpDQYYoCabOIAwAEN0AB2RJdZ3FByP4DAfXdhEyoUoTRMynfpd
+	 u2qjA4aLilBVBm/b9j71CLDR0COdBCUj6c0oBtEs=
+Authentication-Results: mail-nwsmtp-smtp-production-main-70.sas.yp-c.yandex.net; dkim=pass header.i=@ya.ru
 From: Kirill Tkhai <tkhai@ya.ru>
 To: netdev@vger.kernel.org,
 	linux-kernel@vger.kernel.org
 Cc: tkhai@ya.ru
-Subject: [PATCH NET-PREV 15/51] iavf: Use __register_netdevice()
-Date: Sat, 22 Mar 2025 17:39:47 +0300
-Message-ID: <174265438746.356712.4413297068942699975.stgit@pro.pro>
+Subject: [PATCH NET-PREV 17/51] netkit: Use __register_netdevice in .newlink
+Date: Sat, 22 Mar 2025 17:40:02 +0300
+Message-ID: <174265440272.356712.1688795357000779096.stgit@pro.pro>
 X-Mailer: git-send-email 2.47.2
 In-Reply-To: <174265415457.356712.10472727127735290090.stgit@pro.pro>
 References: <174265415457.356712.10472727127735290090.stgit@pro.pro>
@@ -49,133 +49,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 
-Attach, detach and take nd_lock in appropriate way:
+The objective is to conform .newlink with its callers,
+which already assign nd_lock (and matches master nd_lock
+if there is one).
 
-nd_lock should be outside driver's locks.
+Also, use __unregister_netdevice() since we know
+there is held lock in that path.
 
 Signed-off-by: Kirill Tkhai <tkhai@ya.ru>
 ---
- drivers/net/ethernet/intel/iavf/iavf_main.c |   59 +++++++++++++++++++--------
- 1 file changed, 41 insertions(+), 18 deletions(-)
+ drivers/net/netkit.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_main.c b/drivers/net/ethernet/intel/iavf/iavf_main.c
-index f782402cd789..77fbe80c04a4 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_main.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_main.c
-@@ -1968,14 +1968,36 @@ static int iavf_reinit_interrupt_scheme(struct iavf_adapter *adapter, bool runni
- static void iavf_finish_config(struct work_struct *work)
- {
- 	struct iavf_adapter *adapter;
--	int pairs, err;
-+	struct nd_lock *nd_lock;
-+	int pairs, err = 0;
+diff --git a/drivers/net/netkit.c b/drivers/net/netkit.c
+index 16789cd446e9..da8d806b8249 100644
+--- a/drivers/net/netkit.c
++++ b/drivers/net/netkit.c
+@@ -408,7 +408,8 @@ static int netkit_new_link(struct net *src_net, struct net_device *dev,
+ 	nk->mode = mode;
+ 	bpf_mprog_bundle_init(&nk->bundle);
  
- 	adapter = container_of(work, struct iavf_adapter, finish_config);
+-	err = register_netdevice(peer);
++	attach_nd_lock(peer, rcu_dereference_protected(dev->nd_lock, true));
++	err = __register_netdevice(peer);
+ 	put_net(net);
+ 	if (err < 0)
+ 		goto err_register_peer;
+@@ -433,7 +434,7 @@ static int netkit_new_link(struct net *src_net, struct net_device *dev,
+ 	nk->mode = mode;
+ 	bpf_mprog_bundle_init(&nk->bundle);
  
- 	/* Always take RTNL first to prevent circular lock dependency */
- 	rtnl_lock();
-+	lock_netdev(adapter->netdev, &nd_lock);
- 	mutex_lock(&adapter->crit_lock);
- 
-+	if (adapter->netdev->reg_state != NETREG_REGISTERED &&
-+	    adapter->state == __IAVF_DOWN) {
-+		err = __register_netdevice(adapter->netdev);
-+	}
-+
-+	unlock_netdev(nd_lock);
-+
-+	if (err) {
-+		dev_err(&adapter->pdev->dev, "Unable to register netdev (%d)\n",
-+			err);
-+
-+		/* go back and try again.*/
-+		iavf_free_rss(adapter);
-+		iavf_free_misc_irq(adapter);
-+		iavf_reset_interrupt_capability(adapter);
-+		iavf_change_state(adapter,
-+				  __IAVF_INIT_CONFIG_ADAPTER);
-+		goto out;
-+	}
-+
- 	if ((adapter->flags & IAVF_FLAG_SETUP_NETDEV_FEATURES) &&
- 	    adapter->netdev->reg_state == NETREG_REGISTERED &&
- 	    !test_bit(__IAVF_IN_REMOVE_TASK, &adapter->crit_section)) {
-@@ -1985,22 +2007,6 @@ static void iavf_finish_config(struct work_struct *work)
- 
- 	switch (adapter->state) {
- 	case __IAVF_DOWN:
--		if (adapter->netdev->reg_state != NETREG_REGISTERED) {
--			err = register_netdevice(adapter->netdev);
--			if (err) {
--				dev_err(&adapter->pdev->dev, "Unable to register netdev (%d)\n",
--					err);
--
--				/* go back and try again.*/
--				iavf_free_rss(adapter);
--				iavf_free_misc_irq(adapter);
--				iavf_reset_interrupt_capability(adapter);
--				iavf_change_state(adapter,
--						  __IAVF_INIT_CONFIG_ADAPTER);
--				goto out;
--			}
--		}
--
- 		/* Set the real number of queues when reset occurs while
- 		 * state == __IAVF_DOWN
- 		 */
-@@ -5054,6 +5060,7 @@ static int iavf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	struct net_device *netdev;
- 	struct iavf_adapter *adapter = NULL;
- 	struct iavf_hw *hw = NULL;
-+	struct nd_lock *nd_lock;
- 	int err;
- 
- 	err = pci_enable_device(pdev);
-@@ -5085,6 +5092,12 @@ static int iavf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 
- 	SET_NETDEV_DEV(netdev, &pdev->dev);
- 
-+	nd_lock = attach_new_nd_lock(netdev);
-+	if (!nd_lock) {
-+		err = -ENOMEM;
-+		goto err_alloc_lock;
-+	}
-+
- 	pci_set_drvdata(pdev, netdev);
- 	adapter = netdev_priv(netdev);
- 
-@@ -5163,6 +5176,10 @@ static int iavf_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- err_ioremap:
- 	destroy_workqueue(adapter->wq);
- err_alloc_wq:
-+	mutex_lock(&nd_lock->mutex);
-+	detach_nd_lock(netdev);
-+	mutex_unlock(&nd_lock->mutex);
-+err_alloc_lock:
- 	free_netdev(netdev);
- err_alloc_etherdev:
- 	pci_release_regions(pdev);
-@@ -5255,6 +5272,7 @@ static void iavf_remove(struct pci_dev *pdev)
- 	struct iavf_mac_filter *f, *ftmp;
- 	struct iavf_adapter *adapter;
- 	struct net_device *netdev;
-+	struct nd_lock *nd_lock;
- 	struct iavf_hw *hw;
- 
- 	/* Don't proceed with remove if netdev is already freed */
-@@ -5291,8 +5309,13 @@ static void iavf_remove(struct pci_dev *pdev)
- 	cancel_delayed_work_sync(&adapter->watchdog_task);
- 	cancel_work_sync(&adapter->finish_config);
- 
--	if (netdev->reg_state == NETREG_REGISTERED)
-+	if (netdev->reg_state == NETREG_REGISTERED) {
- 		unregister_netdev(netdev);
-+	} else {
-+		lock_netdev(netdev, &nd_lock);
-+		detach_nd_lock(netdev);
-+		unlock_netdev(nd_lock);
-+	}
- 
- 	mutex_lock(&adapter->crit_lock);
- 	dev_info(&adapter->pdev->dev, "Removing device\n");
+-	err = register_netdevice(dev);
++	err = __register_netdevice(dev);
+ 	if (err < 0)
+ 		goto err_configure_peer;
+ 	netif_carrier_off(dev);
+@@ -444,9 +445,10 @@ static int netkit_new_link(struct net *src_net, struct net_device *dev,
+ 	rcu_assign_pointer(netkit_priv(peer)->peer, dev);
+ 	return 0;
+ err_configure_peer:
+-	unregister_netdevice(peer);
++	__unregister_netdevice(peer);
+ 	return err;
+ err_register_peer:
++	detach_nd_lock(peer);
+ 	free_netdev(peer);
+ 	return err;
+ }
 
