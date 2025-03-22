@@ -1,94 +1,160 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from fhigh-b2-smtp.messagingengine.com (fhigh-b2-smtp.messagingengine.com [202.12.124.153])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67A471DE3A7
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 23:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBC81BC5C;
+	Sat, 22 Mar 2025 23:30:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.12.124.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742686152; cv=none; b=ct8a4pRBxHoNb/4rT56aNJAi5DnI8pzc8bQSiC010MxMomZV9hlPrpnNPUcLVzSF0u7QpOc95/dzNaJu26g3O1jg8Y9rUaDsjD0KzbymRWoGaFWhInyFaV8fN0w3uDUNCnZFSSV6TtKGLTRw6LvTUy0tyU9fYdkggAMLMcK3ERg=
+	t=1742686258; cv=none; b=toJZWA+YcOtEyk8bRKJfqBvpXtD11tJi3jnTS2VxwCy2ZIWbMZ0qTRj3mGwlfGUYCwntGbrdlMKmvnNOHkIG4M5DaVaJUGQWrt4iRlwcBLSP/KfbyJPCbESDocldgTEk2hsS7ViFkRszXV/lYH3VW7fcBVqRAoYAKLgJ1PVCObY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742686152; c=relaxed/simple;
-	bh=lllit0NMMQY/u2TIPZPEii8FutUN6LEKYoD6+HLrsgU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-type; b=WkDc4YcCYWA91Xk+JwLns7Iqw/Qe3CuenZdFiTADPRgi9VhGDetMeBxRZhleOlhiZmUC2U4tvXom2r81xe+5XvWobqaN07w5Zp2cgv0h4CQ20/p1ItnwTFzsM679E4sO34ilXDcZb49HX/FBMTW1Uj5b22aNWgLeCt4VdpQRhJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=L+7dWk89; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1742686258; c=relaxed/simple;
+	bh=v5mzlptr8jp2jPndKYqlh890HucofGBkZMOypkqch4k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LzlHdb+BfzNZfeZ4s6+/ZJambNRa/eicljk4qJGBEldcV1RADjxNd0AqzYDIH+7IF43XHZDAeEPFTTNq7CcnCZWUZXI9UIdT7EiMb/WE6edg0DDeS64HeEJgoZzNGSsXwhb0yPZN3OsC6jnv9Rn+XmUaUw8prIK74PDFiAETX/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev; spf=none smtp.mailfrom=ljones.dev; dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b=PsYBDCC2; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=0vY4ODdI; arc=none smtp.client-ip=202.12.124.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ljones.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ljones.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="L+7dWk89"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1742686150;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=3dHTI/nP8LMuZ8lpB+l5y9cpis9uyfq0/6jTpKt1DVU=;
-	b=L+7dWk89dtY+BYezouXh7YMbXwnAOeM3SceVPfCI1nreCiKLQv5pqsmU90oEE1HTTxY4S/
-	t3XF/oaje1y7iQ0PNmdq1wahi7RczUpTYkguya0DIE94pRnFqjfNbbBkQzvSShq6P7bHbu
-	Bn2yfWarTnjWzcL4sBVvSkjRt6ZjEQQ=
-Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-467-cPjFTpHhPh6jDJhKOJXHCg-1; Sat,
- 22 Mar 2025 19:29:07 -0400
-X-MC-Unique: cPjFTpHhPh6jDJhKOJXHCg-1
-X-Mimecast-MFC-AGG-ID: cPjFTpHhPh6jDJhKOJXHCg_1742686145
-Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id A1B75180049D;
-	Sat, 22 Mar 2025 23:29:05 +0000 (UTC)
-Received: from jmeneghi-thinkpadp1gen3.rmtusnh.csb (unknown [10.22.80.230])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 30167180B487;
-	Sat, 22 Mar 2025 23:29:03 +0000 (UTC)
-From: John Meneghini <jmeneghi@redhat.com>
-To: kbusch@kernel.org,
-	hch@lst.de,
-	sagi@grimberg.me
-Cc: loberman@redhat.com,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	emilne@redhat.com,
-	jmeneghi@redhat.com,
-	bgurney@redhat.com
-Subject: [PATCH v2 3/3] nvme: update the multipath warning in nvme_init_ns_head
-Date: Sat, 22 Mar 2025 19:28:48 -0400
-Message-ID: <20250322232848.225140-4-jmeneghi@redhat.com>
-In-Reply-To: <20250322232848.225140-1-jmeneghi@redhat.com>
-References: <20250322232848.225140-1-jmeneghi@redhat.com>
+	dkim=pass (2048-bit key) header.d=ljones.dev header.i=@ljones.dev header.b="PsYBDCC2";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="0vY4ODdI"
+Received: from phl-compute-05.internal (phl-compute-05.phl.internal [10.202.2.45])
+	by mailfhigh.stl.internal (Postfix) with ESMTP id BE1A52540123;
+	Sat, 22 Mar 2025 19:30:55 -0400 (EDT)
+Received: from phl-mailfrontend-01 ([10.202.2.162])
+  by phl-compute-05.internal (MEProxy); Sat, 22 Mar 2025 19:30:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ljones.dev; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm3; t=1742686255;
+	 x=1742772655; bh=2HIHF4hYWDttXtVGZPiuF/iuxW0fBb3KbQ3X6mRqFrU=; b=
+	PsYBDCC2NmnacuEA4TtuS5uMTM/EWhnHWEW3ktwfYVA+U3erCy1LduMe5pnZU3wo
+	V+0f5VF88dEt/c2D6aIhgqBSdQ47ZrxRrvYqqL/Tg+/u/MkKYXlusxgFbGvsypDm
+	oaZXZFy2M3aSkiop0B7AyZMI0M9PHxLMXepy2kfIv5HtkDKV53fts7dIyTh7dSJS
+	NtN57H27IFL9EL74xQKS+JeUq0wdwaorrdiZxdt/ZIAO4ZHHIeLSVpK6aZ7Edjuw
+	m9mwPjLkhb39aeyTkLUP/n9qn5fkFpI/+e8QGiF2srCTI9M5hm9h9WJ3x/uj5qzh
+	NbtpEr6Yh8xglpfsZ+EvDA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1742686255; x=
+	1742772655; bh=2HIHF4hYWDttXtVGZPiuF/iuxW0fBb3KbQ3X6mRqFrU=; b=0
+	vY4ODdISTse1Wz2JP0YaIvxv1A03o0GaoeUFMm7E7SrKZfcFI2t5P44FQA3MUZup
+	n7jT1cJ1rZhS6IBiz+bPp/Mx4cj4I3nFZ2QbSr3Xj3CLyeFSopIr6CSMi3BQqxhD
+	rkOfDQZias6S6CaZqe0GBQctiVuwP20HpcZ53heGEJZcr8SeMyjrXPqivOt6uxsq
+	K9XVWrRf08DZUjMaUIEgzWMs86ZnKN/gNCGlUf7Hsc04AUf4M0ddgQvN9PSPz737
+	CSG9ucz7QMW2ri36GIK5rGhEuLSucd/dsqR2Zo3m8Gu6ILMozrpTOMLT4iEyUMHq
+	y6lN7PSElb5Bou1CVKttw==
+X-ME-Sender: <xms:L0jfZ2f-SNcr3kxIzQVia4nCXsLzW-h6eEYObXGvM5cpAeoST2SILw>
+    <xme:L0jfZwP4jl_Ed4cRbW6s_K2TQBDAJ4eFDDcEWSCyIPQ-ECw-oVodjMwYDHAG8txiS
+    QPz9y4j5nWPJ02-VZQ>
+X-ME-Received: <xmr:L0jfZ3ij1laLUoZ2iR_TVTEHfx4kfCFLWslKxRZCCOOF6G1g3mabHTqkylGCSuNmlZsR2noh>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheehfeduucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepkfffgggfuffvvehfhfgjtgfgsehtjeertddt
+    vdejnecuhfhrohhmpedfnfhukhgvucffrdculfhonhgvshdfuceolhhukhgvsehljhhonh
+    gvshdruggvvheqnecuggftrfgrthhtvghrnhepveduueevtdetgfehfeeliedvvdfhtdei
+    hfdtkeejuddvgeeivddtkeffgeekueffnecuvehluhhsthgvrhfuihiivgeptdenucfrrg
+    hrrghmpehmrghilhhfrhhomheplhhukhgvsehljhhonhgvshdruggvvhdpnhgspghrtghp
+    thhtohepledpmhhouggvpehsmhhtphhouhhtpdhrtghpthhtoheplhhkmhhlsegrnhhthh
+    gvrghsrdguvghvpdhrtghpthhtohepphhlrghtfhhorhhmqdgurhhivhgvrhdqgiekiees
+    vhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhinhhpuhhtse
+    hvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghl
+    sehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepjhhikhhosheskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtohepsggvnhhtihhssheskhgvrhhnvghlrdhorhhgpdhrtghp
+    thhtoheptghorhgvnhhtihhnrdgthhgrrhihsehgmhgrihhlrdgtohhmpdhrtghpthhtoh
+    ephhguvghgohgvuggvsehrvgguhhgrthdrtghomhdprhgtphhtthhopehilhhpohdrjhgr
+    rhhvihhnvghnsehlihhnuhigrdhinhhtvghlrdgtohhm
+X-ME-Proxy: <xmx:L0jfZz_WxNeByc_8ll6JHSpTtg-te0bHtdU_0C0rX23INwnd3X38Nw>
+    <xmx:L0jfZyuXoxfdPS_MhjASe2fqqYkB3JJoC6HkoAr-ez-ZjO903vVt_Q>
+    <xmx:L0jfZ6GbAjHKvMWFyXi8TD88iVI2bjSRJwOxw7pVbEQV07Y-HkuqfQ>
+    <xmx:L0jfZxN7-L4A8wxN0cUrO1lfqRcXfx_XKpmLEISTc8LCMmnT_bjEKA>
+    <xmx:L0jfZwBa1QMRHIxDKRLqjX50hw2HDvYWaNTl63BPR9zpPpzd3cRqXeRx>
+Feedback-ID: i5ec1447f:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sat,
+ 22 Mar 2025 19:30:51 -0400 (EDT)
+Message-ID: <7d366439-72be-401f-af5b-01547cbfecd8@ljones.dev>
+Date: Sun, 23 Mar 2025 12:30:49 +1300
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-type: text/plain
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 03/10] HID: Asus: add Z13 folio to generic group for
+ multitouch to work
+To: Antheas Kapenekakis <lkml@antheas.dev>,
+ platform-driver-x86@vger.kernel.org, linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>,
+ Corentin Chary <corentin.chary@gmail.com>,
+ Hans de Goede <hdegoede@redhat.com>,
+ =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
+References: <20250322102804.418000-1-lkml@antheas.dev>
+ <20250322102804.418000-4-lkml@antheas.dev>
+Content-Language: en-US
+From: "Luke D. Jones" <luke@ljones.dev>
+In-Reply-To: <20250322102804.418000-4-lkml@antheas.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-The new NVME_MULTIPATH_PARAM config option requires updates
-to the warning message in nvme_init_ns_head().
+On 22/03/25 23:27, Antheas Kapenekakis wrote:
+> The Asus Z13 folio has a multitouch touchpad that needs to bind
+> to the hid-multitouch driver in order to work properly. So bind
+> it to the HID_GROUP_GENERIC group to release the touchpad and
+> move it to the bottom so that the comment applies to it.
+> 
+> While at it, change the generic KEYBOARD3 name to Z13_FOLIO.
+> 
+> Reviewed-by: Luke D. Jones <luke@ljones.dev>
+> Signed-off-by: Antheas Kapenekakis <lkml@antheas.dev>
+> ---
 
-Signed-off-by: John Meneghini <jmeneghi@redhat.com>
-Tested-by: John Meneghini <jmeneghi@redhat.com>
----
- drivers/nvme/host/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Never been clear on tag order but I've always put authors at top. Just 
+something I noticed as it's different to what i do.
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 870314c52107..b2bd8e1673ac 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3824,7 +3824,7 @@ static int nvme_init_ns_head(struct nvme_ns *ns, struct nvme_ns_info *info)
- 				"Found shared namespace %d, but multipathing not supported.\n",
- 				info->nsid);
- 			dev_warn_once(ctrl->device,
--				"Support for shared namespaces without CONFIG_NVME_MULTIPATH is deprecated and will be removed in Linux 6.0.\n");
-+				"Shared namespace support requires core_nvme.multipath=Y.\n");
- 		}
- 	}
- 
--- 
-2.48.1
+>   drivers/hid/hid-asus.c | 6 +++---
+>   drivers/hid/hid-ids.h  | 2 +-
+>   2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hid/hid-asus.c b/drivers/hid/hid-asus.c
+> index 96461321c191c..e97fb76eda619 100644
+> --- a/drivers/hid/hid-asus.c
+> +++ b/drivers/hid/hid-asus.c
+> @@ -1319,9 +1319,6 @@ static const struct hid_device_id asus_devices[] = {
+>   	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+>   	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD2),
+>   	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> -	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+> -	    USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD3),
+> -	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+>   	{ HID_USB_DEVICE(USB_VENDOR_ID_ASUSTEK,
+>   	    USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR),
+>   	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+> @@ -1351,6 +1348,9 @@ static const struct hid_device_id asus_devices[] = {
+>   	 * Note bind to the HID_GROUP_GENERIC group, so that we only bind to the keyboard
+>   	 * part, while letting hid-multitouch.c handle the touchpad.
+>   	 */
+> +	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+> +		USB_VENDOR_ID_ASUSTEK, USB_DEVICE_ID_ASUSTEK_ROG_Z13_FOLIO),
+> +	  QUIRK_USE_KBD_BACKLIGHT | QUIRK_ROG_NKEY_KEYBOARD },
+>   	{ HID_DEVICE(BUS_USB, HID_GROUP_GENERIC,
+>   		USB_VENDOR_ID_ASUSTEK, USB_DEVICE_ID_ASUSTEK_T101HA_KEYBOARD) },
+>   	{ }
+> diff --git a/drivers/hid/hid-ids.h b/drivers/hid/hid-ids.h
+> index 7e400624908e3..b1fe7582324ff 100644
+> --- a/drivers/hid/hid-ids.h
+> +++ b/drivers/hid/hid-ids.h
+> @@ -209,7 +209,7 @@
+>   #define USB_DEVICE_ID_ASUSTEK_ROG_KEYBOARD3 0x1822
+>   #define USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD	0x1866
+>   #define USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD2	0x19b6
+> -#define USB_DEVICE_ID_ASUSTEK_ROG_NKEY_KEYBOARD3	0x1a30
+> +#define USB_DEVICE_ID_ASUSTEK_ROG_Z13_FOLIO		0x1a30
+>   #define USB_DEVICE_ID_ASUSTEK_ROG_Z13_LIGHTBAR		0x18c6
+>   #define USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY		0x1abe
+>   #define USB_DEVICE_ID_ASUSTEK_ROG_NKEY_ALLY_X		0x1b4c
 
