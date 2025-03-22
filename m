@@ -1,40 +1,41 @@
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8184E522A
-	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 21:29:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD2B23535E
+	for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 21:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742678973; cv=pass; b=tsEdGks3YiRbpjlq8ohwbFfMSFH7729Owg6BNDzoH4KAcAZTqITSmTMh9g9b8U2lu3zdgE9rAQha42IVbIbmLmI9bfmYrhUpEo6/s2M8o29nv1I4uZYexD4lfM72uHU8Gdy/YGyu0aD63FcfRydgp4DUU55mmT68BbCVy+Ko21s=
+	t=1742678976; cv=pass; b=VFHNdNXpZaHVbGan+a89rtxjrbnkOgew2IwGytQ6ku5gT1s8LObYNpQJBKIjydgUvq/PaK8/nz8r9T1KtzaCl0zSVYrNJRgHrKiX4gg44s2XAyM13wIO+yTitskEMV5tTaq60A5W5KaHaGKjmjbk4stCTAERmCZbjJejugt1a0c=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742678973; c=relaxed/simple;
-	bh=dSI6wdkjoLt/f9xKg8EHVHdORm6ZaoxPx25QSs5vQ6g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=qe/5fwEP4DNPWGNb/ferOKDe9YUko9i44nFpZTINUxc2lEmZ2NFjm5g7FpU5Oz9+FYKa5lr12BU66x5VWJP1FSJocivfnGS/cUJXnSm3izAuJBdMeNzFU2B8RLXLnhMToqBsvg7cAM1WUlEnRlUyCp5A2NDmxturvd0Kmy6bU+k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=WAozlYR8; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1742678976; c=relaxed/simple;
+	bh=Uh9RPQ87tYeVB1bi8SmQ5YEdI3HjH7dnQ/k0r4MKxtg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RHAavyqKhpfAQSRGVttddDfmlgj66KaSyWE7qomlfLfpE73/KEdiGNRw8zZjXDSJk8RHeaugtV4qqRpQoXPWt1FJktcZ7L3Kou6CHzSTreXH2Pmh5omuXjPFXxD+S+3ii7AcSOrh+tSJtJ4dg4e6oel23YIuFuScfTedDMjWOrI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b=cJX8QWM2; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="WAozlYR8"
-ARC-Seal: i=1; a=rsa-sha256; t=1742678947; cv=none; 
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=dmitry.osipenko@collabora.com header.b="cJX8QWM2"
+ARC-Seal: i=1; a=rsa-sha256; t=1742678957; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=ZjqiARckQj8Q5FCCTSOuKI7w7BzUqMYUFoXhUKddxfkaTGbEMlp+Ks7bThcFAjSaksGq7ZSWwNamby9IfaFKARMCyH/p29EQtsUENDp2L9mvb5doo5MR4d35U/gI84kZaO/ue+FF12Aka6q8FbA5gwA+uIehZntR42sbl2tflK8=
+	b=PxmBOtoUQ1rdT24uVCjGSSfEHPsdKqi2aGZFFk1fnQgmup2R5/mxjL6vNn7+k76Jbt8pp8o9FfTIaNnzRYWDQ4I+Wbavqy89VryRuy7Nn9d+yD32ovpQ4rOtBzJO6jf4oYMvH/BfKzUpLVTIwBILrnmdTeOcuJHF7WoivAlgmOE=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742678947; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=e7NaXGdN2bcSEdKF9Rgw4qLX1QH7j7xPDpb1nqrJX0M=; 
-	b=OO/57Nj90J/w5CqT/AWF9yaMTil3E/g2SkdSNODN+oIHgsb7dHFwVzxnqPyE4DH/pwlPZ8wU51IIwwCICA5pucMkdJrFkL4SKxOuGNHVA8ENDspnsq2wqzxwrIQk+ZmLVqXhSHTX3oDVIrEG4L54ACWhAfTdH+qESiASwdEQStQ=
+	t=1742678957; h=Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=fdyz8/DZzJvpb8TDk4Fb/UsrzBg8Xohwoz871V+3KR4=; 
+	b=Kk5f9XbQFmuC3CW3fnM9xE0uUf5+J6hG8u3S7S+8PzLxKvWmxpQQJ5/VUDn2e5orJmz1sLYkSoDDxlg2DBLxbsX+jmVe+drLWSp0F2KocFPPIwdP8hIDzKJvWAx7OC5BsbeedEW/gmC0RJEEaXEzP2/nPOqbwkF/rPZEt85vc9E=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=dmitry.osipenko@collabora.com;
 	dmarc=pass header.from=<dmitry.osipenko@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742678947;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742678957;
 	s=zohomail; d=collabora.com; i=dmitry.osipenko@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
-	bh=e7NaXGdN2bcSEdKF9Rgw4qLX1QH7j7xPDpb1nqrJX0M=;
-	b=WAozlYR86G9HOI5EBtdioq0gmeyryiP803EZiYe1bGGl/wflK1uvXR4Sz2zt4T6N
-	iCQX29mQVi5/PN+UFyYvjPxiDeJXWvwo2ydV9T9GgX74mwLhsi4TPwv8EuBL3jNHRRU
-	TuwlCr5a++kiL3rMeiEoqkGtCM3+rH6GRlkEPyDQ=
-Received: by mx.zohomail.com with SMTPS id 1742678945132474.9358248680762;
-	Sat, 22 Mar 2025 14:29:05 -0700 (PDT)
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=fdyz8/DZzJvpb8TDk4Fb/UsrzBg8Xohwoz871V+3KR4=;
+	b=cJX8QWM2khneIW0/ZGr/a4js75Fvi903tqM5LrGDKlxr+MEiVS3y11bGLoBJu6JQ
+	O6PsfQnHges5OnWNeuCpoUwoBu2lUyVYFzjzRgxXBRczC8+MPcXUbE9S45nmpnHhL82
+	DKN1pIORw7EXgp1hFlYVAqKnsMutSwRUM8gvW558=
+Received: by mx.zohomail.com with SMTPS id 1742678957017363.1392509416396;
+	Sat, 22 Mar 2025 14:29:17 -0700 (PDT)
 From: Dmitry Osipenko <dmitry.osipenko@collabora.com>
 To: David Airlie <airlied@gmail.com>,
 	Simona Vetter <simona@ffwll.ch>,
@@ -51,10 +52,12 @@ To: David Airlie <airlied@gmail.com>,
 Cc: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org,
 	kernel@collabora.com
-Subject: [PATCH v20 00/10] Add generic DRM-shmem memory shrinker (part 1)
-Date: Sun, 23 Mar 2025 00:25:58 +0300
-Message-ID: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+Subject: [PATCH v20 03/10] drm/gem: Document locking rule of vmap and evict callbacks
+Date: Sun, 23 Mar 2025 00:26:01 +0300
+Message-ID: <20250322212608.40511-4-dmitry.osipenko@collabora.com>
 X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
+References: <20250322212608.40511-1-dmitry.osipenko@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -64,54 +67,49 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-ZohoMailClient: External
 
-Hi,
+The vmap/vunmap/evict GEM callbacks are always invoked with a held GEM's
+reservation lock. Document this locking rule for clarity.
 
-This a continuation of a year-old series that adds generic DRM-shmem 
-shrinker [1]. The old series became too big with too many patches, more
-reasonable to split it up into multiple smaller patchsets. Here is
-the firtst part that makes preparatory DRM changes.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Dmitry Osipenko <dmitry.osipenko@collabora.com>
+---
+ include/drm/drm_gem.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-[1] https://lore.kernel.org/dri-devel/20240105184624.508603-1-dmitry.osipenko@collabora.com/
-
-Changelog:
-
-v20:- Rebased on recent drm-misc. Added r-bs that were given to v19.
-
-Dmitry Osipenko (10):
-  drm/gem: Change locked/unlocked postfix of drm_gem_v/unmap() function
-    names
-  drm/gem: Add _locked postfix to functions that have unlocked
-    counterpart
-  drm/gem: Document locking rule of vmap and evict callbacks
-  drm/shmem-helper: Make all exported symbols GPL
-  drm/shmem-helper: Refactor locked/unlocked functions
-  drm/shmem-helper: Remove obsoleted is_iomem test
-  drm/shmem-helper: Add and use pages_pin_count
-  drm/shmem-helper: Use refcount_t for pages_use_count
-  drm/shmem-helper: Switch drm_gem_shmem_vmap/vunmap to use pin/unpin
-  drm/shmem-helper: Use refcount_t for vmap_use_count
-
- drivers/gpu/drm/drm_client.c                  |  10 +-
- drivers/gpu/drm/drm_gem.c                     |  26 ++--
- drivers/gpu/drm/drm_gem_framebuffer_helper.c  |   6 +-
- drivers/gpu/drm/drm_gem_shmem_helper.c        | 145 +++++++++---------
- drivers/gpu/drm/drm_internal.h                |   4 +-
- drivers/gpu/drm/drm_prime.c                   |   4 +-
- drivers/gpu/drm/imagination/pvr_gem.c         |   4 +-
- drivers/gpu/drm/lima/lima_gem.c               |   4 +-
- drivers/gpu/drm/lima/lima_sched.c             |   4 +-
- drivers/gpu/drm/panfrost/panfrost_drv.c       |   2 +-
- drivers/gpu/drm/panfrost/panfrost_dump.c      |   4 +-
- .../gpu/drm/panfrost/panfrost_gem_shrinker.c  |   2 +-
- drivers/gpu/drm/panfrost/panfrost_mmu.c       |   2 +-
- drivers/gpu/drm/panfrost/panfrost_perfcnt.c   |   6 +-
- drivers/gpu/drm/panthor/panthor_gem.h         |   4 +-
- drivers/gpu/drm/panthor/panthor_sched.c       |   4 +-
- drivers/gpu/drm/tests/drm_gem_shmem_test.c    |  28 ++--
- include/drm/drm_gem.h                         |  15 +-
- include/drm/drm_gem_shmem_helper.h            |  45 ++++--
- 19 files changed, 167 insertions(+), 152 deletions(-)
-
+diff --git a/include/drm/drm_gem.h b/include/drm/drm_gem.h
+index 43cf3c2c7ca0..9b71f7a9f3f8 100644
+--- a/include/drm/drm_gem.h
++++ b/include/drm/drm_gem.h
+@@ -159,7 +159,8 @@ struct drm_gem_object_funcs {
+ 	 * @vmap:
+ 	 *
+ 	 * Returns a virtual address for the buffer. Used by the
+-	 * drm_gem_dmabuf_vmap() helper.
++	 * drm_gem_dmabuf_vmap() helper. Called with a held GEM reservation
++	 * lock.
+ 	 *
+ 	 * This callback is optional.
+ 	 */
+@@ -169,7 +170,8 @@ struct drm_gem_object_funcs {
+ 	 * @vunmap:
+ 	 *
+ 	 * Releases the address previously returned by @vmap. Used by the
+-	 * drm_gem_dmabuf_vunmap() helper.
++	 * drm_gem_dmabuf_vunmap() helper. Called with a held GEM reservation
++	 * lock.
+ 	 *
+ 	 * This callback is optional.
+ 	 */
+@@ -192,7 +194,8 @@ struct drm_gem_object_funcs {
+ 	 * @evict:
+ 	 *
+ 	 * Evicts gem object out from memory. Used by the drm_gem_object_evict()
+-	 * helper. Returns 0 on success, -errno otherwise.
++	 * helper. Returns 0 on success, -errno otherwise. Called with a held
++	 * GEM reservation lock.
+ 	 *
+ 	 * This callback is optional.
+ 	 */
 -- 
 2.49.0
 
