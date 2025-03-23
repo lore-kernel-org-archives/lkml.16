@@ -1,286 +1,227 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0621B2E3399;
-	Sun, 23 Mar 2025 19:06:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF1413B5AE
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 19:08:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742756812; cv=none; b=O/878XjKEXwd4vI0TCnI1VDqAicIUVoc+YBJePknyDsCXg3KXR+Of5FaC62OIadKlkKwriDxqTate6Sv0LuWH7h9ujLtodbDxpDssVgIDt6u5cDJJAl9R6jxIyJiyEZTFWQdPZBkHcaThB3Tj0+vmpAs5nvrjHjoP46U9kGi7t4=
+	t=1742756885; cv=none; b=eFDrBZExqsdCQ88ldKmLipWQXMyw8v89VVasZnR9KDPn3nMdiP+5iYgtcblVI0rBktxkkmZL4fvKUO4UCKhSCZzgdC8J9fjuciwzkHhyubRMAPGxHdb3klT02cJIR4x5L5k1fzudk8MzF6MI704MwvILMfqAgig8hwikC+uunU8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742756812; c=relaxed/simple;
-	bh=gSiVK54BaFE1wEuUqKWSMj5BQvcJRmD5TNSAbSLcb4g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZaLF8VMBPHB+5lZjzrxQ9T9HWNLxnLCGRDa6SKJHWppE7gh29rCDkgQJ0a4arWECI013xU1ljt6FrnMUnyXr0/cZlHBIgf1eV2vdaisgWIM3fsIlnkrKQ3zI3fjWjHhPMiH9FL67SIjOd3ac3O6jveRRgrnv7fXXhizFv/J522U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jQL7TQcT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742756885; c=relaxed/simple;
+	bh=+Q/fyk76Z1cDSounHVDPFMlvEhnXOKGnub0ZYWoMU+I=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=DtFhIRUj535Id9W/u0L1RoeC+Bh/gtS5cFEHX7G3yNKVjgXQ8xQjluE/o7qBp9WjdqSWdLDsTn+TquVe0ruwT4Mb27SJpwhLR9mYBEZO6Ar0Gvar/Gdw44x3MtBHpg6xJIFmvSutFHdcuUJptD27nFSINEfXZm974pDx6OOvCXA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Az3L8dq+; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--changyuanl.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jQL7TQcT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D155BC4CEE2;
-	Sun, 23 Mar 2025 19:06:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742756811;
-	bh=gSiVK54BaFE1wEuUqKWSMj5BQvcJRmD5TNSAbSLcb4g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=jQL7TQcTZyLVxNaZanp8w7PAPcRH4eXRTp+zwa1fVLvF5RNXfwHOQMan+IZ/480BS
-	 J36iXtpvREPwHVbh+S0noYAmNgCjR0kF1d2InQsgzYc5STtc7o4YXlSsCioVzZrYiz
-	 wIf23ykcDVmXGQyA8PbN3cdvxQtwJ+DhU7qgnWnhod18nN8OQXj5/DlHIDG31v1ix4
-	 qElFiWBy334oaPSIFMcVa3Pz1GsZEnOcU2yqrYgQzBS4cBE5q2FuDJvZK0u+8MITH8
-	 Ebxhb99rOts9V9P2wMGpPU/1elBbVfhSMTDHxVLWiyN+WYJigvM3R1o2xALK9VHvdT
-	 vc0VfAUr5yPag==
-Date: Sun, 23 Mar 2025 14:06:47 -0500
-From: Nathan Chancellor <nathan@kernel.org>
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Jiaxun Yang <jiaxun.yang@flygoat.com>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-	linux-arch@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH v2 11/13] arch, mm: streamline HIGHMEM freeing
-Message-ID: <20250323190647.GA1009914@ax162>
-References: <20250313135003.836600-1-rppt@kernel.org>
- <20250313135003.836600-12-rppt@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Az3L8dq+"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-225107fbdc7so58686415ad.0
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 12:08:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742756883; x=1743361683; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=rzd5n04s6jxEJ+gCSK/dDhucMnvX+2uhB2qdLifXWko=;
+        b=Az3L8dq+SQbeeJ5G4q3dk6p0wFJSbIff45SeENBII3gOMHfuG+L4lXxzK+lvt++H4l
+         qSYVTtmo4J5nrAtNXVKMJuDF+e3VJMJtIO3jkNEIgquOYSYswElpE2y+p6K1G2w3qx9a
+         vHzalNUd4/ce+fNAFM9ew0cUAaYwXdaT7T/4RBpsBetxezbBROW5xSANHjO2yCFfkBlh
+         KFXLN06sOFCjngr/M7tpixJTlgpRTFjmra+UX+H3LOpda2P9Ud62u1YWtasFnZRkH8c0
+         H4dHKiQ82Evx3M5gb0aOJhvNIppom9uWGyj/SdwiRq01d/2iKnhNNKdfWdwPXxaB9bi6
+         3iFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742756883; x=1743361683;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rzd5n04s6jxEJ+gCSK/dDhucMnvX+2uhB2qdLifXWko=;
+        b=uZ0t9kNRezj/+Fp6SQ3Te0p/LDfawdNjeVIXqPVtNlJkaugKWpbf2UwYxk9mA6OsG4
+         ZJUy2DrfcURZ72c9bAAhKqjmc83khrzo7wBi/TTRlYv+bnFM6Md1jz4ZrjRF7W3fT/ZL
+         6y1H0DK+5uyn6zoqZk4VPB02N6tsXVqQgNrE6/u4cj86xt589zioh9UbkifyEFgi0Sl7
+         xKaHU25Y/sJOEXnQtaio/CC8OoDkwfyHXE/hyW9bVdGm44KJFkgwtd3azsLLh8K59M5F
+         klajU54y3dLKDgPsTottiwSuUr5du14FyNrk68nLWL8rVL06s6TzMp3e87i/51zxeII8
+         vq9w==
+X-Forwarded-Encrypted: i=1; AJvYcCVZmPLuoQZz+u3xIbwhcvEJOdUHvfkUpthO8/o1WNdX09AFPGdlPU7wSgDyzX6ZlAAwlLPOXsn0rQk/Nhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyVk9vSE+NQTrfWMaQ1mlZa72y6cCTAUWI5bt/thhseRc7eHVJ6
+	g3AiXoARlrvXdlg4IXqtJ+BcZ4F6ma5aB6IA9PQxqP04QMgYYMfcPuyur8OdbZAFBx/Qm7aytQ3
+	2z+j7QnEO/GF/jdpguQ==
+X-Google-Smtp-Source: AGHT+IGWzYSY0zabXCYcrGJkQenZmyCPMKhLyeRtNYw0Z+Vw+fyMnZoqvv9CAHyz7l26vGknvFW4powxBM9q/JtU
+X-Received: from plri3.prod.google.com ([2002:a17:903:32c3:b0:220:e84e:350c])
+ (user=changyuanl job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a17:902:da82:b0:224:162:a3e0 with SMTP id d9443c01a7336-22780e2a37fmr150656275ad.49.1742756882709;
+ Sun, 23 Mar 2025 12:08:02 -0700 (PDT)
+Date: Sun, 23 Mar 2025 12:07:58 -0700
+In-Reply-To: <20250321134629.GA252045@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250313135003.836600-12-rppt@kernel.org>
+Mime-Version: 1.0
+References: <20250321134629.GA252045@nvidia.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250323190758.743798-1-changyuanl@google.com>
+Subject: Re: [PATCH v5 09/16] kexec: enable KHO support for memory preservation
+From: Changyuan Lyu <changyuanl@google.com>
+To: jgg@nvidia.com
+Cc: akpm@linux-foundation.org, anthony.yznaga@oracle.com, arnd@arndb.de, 
+	ashish.kalra@amd.com, benh@kernel.crashing.org, bp@alien8.de, 
+	catalin.marinas@arm.com, changyuanl@google.com, corbet@lwn.net, 
+	dave.hansen@linux.intel.com, devicetree@vger.kernel.org, dwmw2@infradead.org, 
+	ebiederm@xmission.com, graf@amazon.com, hpa@zytor.com, jgowans@amazon.com, 
+	kexec@lists.infradead.org, krzk@kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, luto@kernel.org, 
+	mark.rutland@arm.com, mingo@redhat.com, pasha.tatashin@soleen.com, 
+	pbonzini@redhat.com, peterz@infradead.org, ptyadav@amazon.de, 
+	robh+dt@kernel.org, robh@kernel.org, rostedt@goodmis.org, rppt@kernel.org, 
+	saravanak@google.com, skinsburskii@linux.microsoft.com, tglx@linutronix.de, 
+	thomas.lendacky@amd.com, will@kernel.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Mike,
+On Fri, Mar 21, 2025 at 10:46:29 -0300, Jason Gunthorpe <jgg@nvidia.com> wrote:
+> On Wed, Mar 19, 2025 at 06:55:44PM -0700, Changyuan Lyu wrote:
+> > +/**
+> > + * kho_preserve_folio - preserve a folio across KHO.
+> > + * @folio: folio to preserve
+> > + *
+> > + * Records that the entire folio is preserved across KHO. The order
+> > + * will be preserved as well.
+> > + *
+> > + * Return: 0 on success, error code on failure
+> > + */
+> > +int kho_preserve_folio(struct folio *folio)
+> > +{
+> > +	unsigned long pfn = folio_pfn(folio);
+> > +	unsigned int order = folio_order(folio);
+> > +	int err;
+> > +
+> > +	if (!kho_enable)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	down_read(&kho_out.tree_lock);
+> > +	if (kho_out.fdt) {
+>
+> What is the lock and fdt test for?
 
-On Thu, Mar 13, 2025 at 03:50:01PM +0200, Mike Rapoport wrote:
-> From: "Mike Rapoport (Microsoft)" <rppt@kernel.org>
-> 
-> All architectures that support HIGHMEM have their code that frees high
-> memory pages to the buddy allocator while __free_memory_core() is limited
-> to freeing only low memory.
-> 
-> There is no actual reason for that. The memory map is completely ready
-> by the time memblock_free_all() is called and high pages can be released to
-> the buddy allocator along with low memory.
-> 
-> Remove low memory limit from __free_memory_core() and drop per-architecture
-> code that frees high memory pages.
-> 
-> Acked-by: Dave Hansen <dave.hansen@linux.intel.com>	# x86
-> Signed-off-by: Mike Rapoport (Microsoft) <rppt@kernel.org>
-...
-> diff --git a/arch/mips/mm/init.c b/arch/mips/mm/init.c
-> index ed9dde6a00f7..075177e817ac 100644
-> --- a/arch/mips/mm/init.c
-> +++ b/arch/mips/mm/init.c
-> @@ -425,25 +425,6 @@ void __init paging_init(void)
->  static struct kcore_list kcore_kseg0;
->  #endif
->  
-> -static inline void __init mem_init_free_highmem(void)
-> -{
-> -#ifdef CONFIG_HIGHMEM
-> -	unsigned long tmp;
-> -
-> -	if (cpu_has_dc_aliases)
-> -		return;
-> -
-> -	for (tmp = highstart_pfn; tmp < highend_pfn; tmp++) {
-> -		struct page *page = pfn_to_page(tmp);
-> -
-> -		if (!memblock_is_memory(PFN_PHYS(tmp)))
-> -			SetPageReserved(page);
-> -		else
-> -			free_highmem_page(page);
-> -	}
-> -#endif
-> -}
-> -
->  void __init mem_init(void)
->  {
->  	/*
-> @@ -454,7 +435,6 @@ void __init mem_init(void)
->  
->  	maar_init();
->  	setup_zero_pages();	/* Setup zeroed pages.  */
-> -	mem_init_free_highmem();
->  	memblock_free_all();
->  
->  #ifdef CONFIG_64BIT
-...
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index fdf20503850e..6fccd3b3248c 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -3172,7 +3172,6 @@ extern void reserve_bootmem_region(phys_addr_t start,
->  
->  /* Free the reserved page into the buddy system, so it gets managed. */
->  void free_reserved_page(struct page *page);
-> -#define free_highmem_page(page) free_reserved_page(page)
->  
->  static inline void mark_page_reserved(struct page *page)
->  {
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 95af35fd1389..64ae678cd1d1 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -2164,8 +2164,7 @@ static unsigned long __init __free_memory_core(phys_addr_t start,
->  				 phys_addr_t end)
->  {
->  	unsigned long start_pfn = PFN_UP(start);
-> -	unsigned long end_pfn = min_t(unsigned long,
-> -				      PFN_DOWN(end), max_low_pfn);
-> +	unsigned long end_pfn = PFN_DOWN(end);
->  
->  	if (start_pfn >= end_pfn)
->  		return 0;
+It is to avoid the competition between the following 2 operations,
+- converting the hashtables and mem traker to FDT,
+- adding new data to hashtable/mem tracker.
+Please also see function kho_finalize() in the previous patch
+"kexec: add Kexec HandOver (KHO) generation helpers" [1].
 
-I bisected a crash that I see to this change as commit 6faea3422e3b
-("arch, mm: streamline HIGHMEM freeing") in -next.
+The function kho_finalize() iterates over all the hashtables and
+the mem tracker. We want to make sure that during the iterations,
+no new data is added to the hashtables and mem tracker.
 
-  $ cat arch/mips/configs/repro.config
-  CONFIG_RELOCATABLE=y
-  CONFIG_RELOCATION_TABLE_SIZE=0x00200000
-  CONFIG_RANDOMIZE_BASE=y
+Also if FDT is generated, the mem tracker then has been serialized
+to linked pages, so we return -EBUSY to prevent more data from
+being added to the mem tracker.
 
-  $ make -skj"$(nproc)" ARCH=mips CROSS_COMPILE=mips-linux- mrproper malta_defconfig repro.config vmlinux
+> I'm getting the feeling that probably kho_preserve_folio() and the
+> like should accept some kind of
+> 'struct kho_serialization *' and then we don't need this to prove we
+> are within a valid serialization window. It could pass the pointer
+> through the notifiers
 
-  $ qemu-system-mipsel \
-      -display none \
-      -nodefaults \
-      -cpu 24Kf \
-      -machine malta \
-      -kernel vmlinux \
-      -initrd rootfs.cpio \
-      -m 512m \
-      -serial mon:stdio
-  Linux version 6.14.0-rc6-00359-g6faea3422e3b (nathan@ax162) (mips-linux-gcc (GCC) 14.2.0, GNU ld (GNU Binutils) 2.42) #1 SMP Fri Mar 21 08:12:02 MST 2025
-  earlycon: uart8250 at I/O port 0x3f8 (options '38400n8')
-  printk: legacy bootconsole [uart8250] enabled
-  Config serial console: console=ttyS0,38400n8r
-  CPU0 revision is: 00019300 (MIPS 24Kc)
-  FPU revision is: 00739300
-  MIPS: machine is mti,malta
-  Software DMA cache coherency enabled
-  Initial ramdisk at: 0x8fad0000 (5360128 bytes)
-  OF: reserved mem: Reserved memory: No reserved-memory node in the DT
-  Primary instruction cache 2kB, VIPT, 2-way, linesize 16 bytes.
-  Primary data cache 2kB, 2-way, VIPT, no aliases, linesize 16 bytes
-  Zone ranges:
-    DMA      [mem 0x0000000000000000-0x0000000000ffffff]
-    Normal   [mem 0x0000000001000000-0x000000001fffffff]
-  Movable zone start for each node
-  Early memory node ranges
-    node   0: [mem 0x0000000000000000-0x000000000fffffff]
-    node   0: [mem 0x0000000090000000-0x000000009fffffff]
-  Initmem setup node 0 [mem 0x0000000000000000-0x000000009fffffff]
-  On node 0, zone Normal: 16384 pages in unavailable ranges
-  random: crng init done
-  percpu: Embedded 3 pages/cpu s18832 r8192 d22128 u49152
-  Kernel command line: rd_start=0xffffffff8fad0000 rd_size=5360128  console=ttyS0,38400n8r
-  printk: log buffer data + meta data: 32768 + 102400 = 135168 bytes
-  Dentry cache hash table entries: 65536 (order: 4, 262144 bytes, linear)
-  Inode-cache hash table entries: 32768 (order: 3, 131072 bytes, linear)
-  Writing ErrCtl register=00000000
-  Readback ErrCtl register=00000000
-  Built 1 zonelists, mobility grouping on.  Total pages: 16384
-  mem auto-init: stack:all(zero), heap alloc:off, heap free:off
-  Unhandled kernel unaligned access[#1]:
-  CPU: 0 UID: 0 PID: 0 Comm: swapper Not tainted 6.14.0-rc6-00359-g6faea3422e3b #1
-  Hardware name: mti,malta
-  $ 0   : 00000000 00000001 81cb0880 00129027
-  $ 4   : 00000001 0000000a 00000002 00129026
-  $ 8   : ffffdfff 80101e00 00000002 00000000
-  $12   : 81c9c224 81c63e68 00000002 00000000
-  $16   : 805b1e00 00025800 81cb0880 00000002
-  $20   : 00000000 81c63e64 0000000a 81f10000
-  $24   : 81c63e64 81c63e60
-  $28   : 81c60000 81c63de0 00000001 81cc9d20
-  Hi    : 00000000
-  Lo    : 00000000
-  epc   : 814a227c __free_pages_ok+0x144/0x3c0
-  ra    : 81cc9d20 memblock_free_all+0x1d4/0x27c
-  Status: 10000002        KERNEL EXL
-  Cause : 00800410 (ExcCode 04)
-  BadVA : 00129026
-  PrId  : 00019300 (MIPS 24Kc)
-  Modules linked in:
-  Process swapper (pid: 0, threadinfo=(ptrval), task=(ptrval), tls=00000000)
-  Stack : 81f10000 805a9e00 81c80000 00000000 00000002 814aa240 000003ff 00000400
-          00000000 81f10000 81c9c224 00003b1f 81c80000 81c63e60 81ca0000 81c63e64
-          81f10000 0000000a 0000001f 81cc9d20 81f10000 81cc96d8 00000000 81c80000
-          81c9c224 81c63e60 81c63e64 00000000 81f10000 00024000 00028000 00025c00
-          90000000 a0000000 00000002 00000017 00000000 00000000 81f10000 81f10000
-          ...
-  Call Trace:
-  [<814a227c>] __free_pages_ok+0x144/0x3c0
-  [<81cc9d20>] memblock_free_all+0x1d4/0x27c
-  [<81cc6764>] mm_core_init+0x100/0x138
-  [<81cb4ba4>] start_kernel+0x4a0/0x6e4
+If we use notifiers, callbacks have to be done serially.
 
-  Code: 1080ffd5  02003825  2467ffff <8ce30000> 7c630500  1060ffd4  00000000  8ce30000  7c630180
+> The global variables in this series are sort of ugly..
+>
+> We want this to be fast, so try hard to avoid a lock..
 
-  ---[ end trace 0000000000000000 ]---
-  Kernel panic - not syncing: Attempted to kill the idle task!
-  ---[ end Kernel panic - not syncing: Attempted to kill the idle task! ]---
+In most cases we only need read lock. Different KHO users can adding
+data into their own subnodes in parallel.
+We only need a write lock if
+- 2 KHO users register subnodes to the KHO root node at the same time
+- KHO root tree is about to be converted to FDT.
 
-At the immediate parent of that change, the boot completes fine.
+> > +void *kho_restore_phys(phys_addr_t phys, size_t size)
+> > +{
+> > +	unsigned long start_pfn, end_pfn, pfn;
+> > +	void *va = __va(phys);
+> > +
+> > +	start_pfn = PFN_DOWN(phys);
+> > +	end_pfn = PFN_UP(phys + size);
+> > +
+> > +	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+> > +		struct page *page = pfn_to_online_page(pfn);
+> > +
+> > +		if (!page)
+> > +			return NULL;
+> > +		kho_restore_page(page);
+> > +	}
+> > +
+> > +	return va;
+> > +}
+> > +EXPORT_SYMBOL_GPL(kho_restore_phys);
+>
+> What do you imagine this is used for? I'm not sure what value there is
+> in returning a void *? How does the caller "free" this?
 
-  Linux version 6.14.0-rc6-00358-ge120d1bc12da (nathan@ax162) (mips-linux-gcc (GCC) 14.2.0, GNU ld (GNU Binutils) 2.42) #1 SMP Sun Mar 23 13:57:15 CDT 2025
-  earlycon: uart8250 at I/O port 0x3f8 (options '38400n8')
-  printk: legacy bootconsole [uart8250] enabled
-  Config serial console: console=ttyS0,38400n8r
-  CPU0 revision is: 00019300 (MIPS 24Kc)
-  FPU revision is: 00739300
-  MIPS: machine is mti,malta
-  Software DMA cache coherency enabled
-  Initial ramdisk at: 0x8fad0000 (5360128 bytes)
-  OF: reserved mem: Reserved memory: No reserved-memory node in the DT
-  Primary instruction cache 2kB, VIPT, 2-way, linesize 16 bytes.
-  Primary data cache 2kB, 2-way, VIPT, no aliases, linesize 16 bytes
-  Zone ranges:
-    DMA      [mem 0x0000000000000000-0x0000000000ffffff]
-    Normal   [mem 0x0000000001000000-0x000000001fffffff]
-  Movable zone start for each node
-  Early memory node ranges
-    node   0: [mem 0x0000000000000000-0x000000000fffffff]
-    node   0: [mem 0x0000000090000000-0x000000009fffffff]
-  Initmem setup node 0 [mem 0x0000000000000000-0x000000009fffffff]
-  On node 0, zone Normal: 16384 pages in unavailable ranges
-  random: crng init done
-  percpu: Embedded 3 pages/cpu s18832 r8192 d22128 u49152
-  Kernel command line: rd_start=0xffffffff8fad0000 rd_size=5360128  console=ttyS0,38400n8r
-  printk: log buffer data + meta data: 32768 + 102400 = 135168 bytes
-  Dentry cache hash table entries: 65536 (order: 4, 262144 bytes, linear)
-  Inode-cache hash table entries: 32768 (order: 3, 131072 bytes, linear)
-  Writing ErrCtl register=00000000
-  Readback ErrCtl register=00000000
-  Built 1 zonelists, mobility grouping on.  Total pages: 16384
-  mem auto-init: stack:all(zero), heap alloc:off, heap free:off
-  SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
-  rcu: Hierarchical RCU implementation.
-  rcu:    RCU event tracing is enabled.
-  rcu:    RCU restricting CPUs from NR_CPUS=8 to nr_cpu_ids=1.
-  rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
-  rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
-  NR_IRQS: 256
-  rcu: srcu_init: Setting srcu_struct sizes based on contention.
-  CPU frequency 320.00 MHz
-  clocksource: MIPS: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 11945390257 ns
-  sched_clock: 32 bits at 160MHz, resolution 6ns, wraps every 13421787132ns
-  Console: colour dummy device 80x25
-  Calibrating delay loop... 1895.62 BogoMIPS (lpj=9478144)
-  pid_max: default: 32768 minimum: 301
-  Mount-cache hash table entries: 4096 (order: 0, 16384 bytes, linear)
-  Mountpoint-cache hash table entries: 4096 (order: 0, 16384 bytes, linear)
-  rcu: Hierarchical SRCU implementation.
-  rcu:    Max phase no-delay instances is 1000.
-  smp: Bringing up secondary CPUs ...
-  smp: Brought up 1 node, 1 CPU
-  Memory: 241200K/262144K available (7844K kernel code, 330K rwdata, 1424K rodata, 2352K init, 224K bss, 19984K reserved, 0K cma-reserved)
-  devtmpfs: initialized
-  ...
+This function is also from Mike :)
 
-If there is any additional information I can provide or patches I can
-test, I am more than happy to do so.
+I suppose some KHO users may still
+preserve memory using memory ranges (instead of folio). In the restoring
+stage they need a helper to setup the pages of reserved memory ranges.
+A void * is returned so the KHO user can access the memory
+contents through the virtual address.
+I guess the caller can free the ranges by free_pages()?
 
-Cheers,
-Nathan
+It makes sense to return nothing and let caller to call `__va`
+if they want. Then the function signature looks more symmetric to
+`kho_preserve_phys`.
+
+> > +#define KHOSER_PTR(type)          \
+> > +	union {                   \
+> > +		phys_addr_t phys; \
+> > +		type ptr;         \
+> > +	}
+> > +#define KHOSER_STORE_PTR(dest, val)                 \
+> > +	({                                          \
+> > +		(dest).phys = virt_to_phys(val);    \
+> > +		typecheck(typeof((dest).ptr), val); \
+> > +	})
+> > +#define KHOSER_LOAD_PTR(src) \
+> > +	((src).phys ? (typeof((src).ptr))(phys_to_virt((src).phys)) : NULL)
+>
+> I had imagined these macros would be in a header and usably by drivers
+> that also want to use structs to carry information.
+>
+
+OK I will move them to the header file in the next version.
+
+> > [...]
+> > @@ -829,6 +1305,10 @@ static __init int kho_init(void)
+> >
+> >  	kho_out.root.name = "";
+>
+> ?
+
+Set the root node name to an empty string since fdt_begin_node
+calls strlen on the node name.
+
+It is equivalent to `err = fdt_begin_node(fdt, "")` in kho_serialize()
+of Mike's V4 patch [2].
+
+> >  	err = kho_add_string_prop(&kho_out.root, "compatible", "kho-v1");
+> > +	err |= kho_add_prop(&kho_out.preserved_memory, "metadata",
+> > +			    &kho_out.first_chunk_phys, sizeof(phys_addr_t));
+>
+> metedata doesn't fee like a great a better name..
+>
+> Please also document all the FDT schema thoroughly!
+>
+> There should be yaml files just like in the normal DT case defining
+> all of this. This level of documentation and stability was one of the
+> selling reasons why FDT is being used here!
+
+YAML files were dropped because we think it may take a while for our
+schema to be near stable. So we start from some simple plain text. We
+can add some prop and node docs (that are considered stable at this point)
+back to YAML in the next version.
+
+[1] https://lore.kernel.org/all/20250320015551.2157511-8-changyuanl@google.com/
+[2] https://lore.kernel.org/all/20250206132754.2596694-6-rppt@kernel.org/
+
+Best,
+Changyuan
