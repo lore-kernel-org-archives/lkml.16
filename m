@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAECE2054E8
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D37205509;
+	Sun, 23 Mar 2025 12:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742732950; cv=none; b=gUs/HxKHbkkzqp5wDUkZUzIWYxfxKdpKklezmNpNYACyWdHyE7Wfu8GXfJbIcLFV3Mv8KMY5w32hZg0DVCnCYU1Z0/f3NJ+bvIs3qqy8M+xezpSv1s3IR+6TmlHjfUQfhMtFimPEaNwV7LlCcUb4MUN1yKtbKfwtaZxvXkR1b+k=
+	t=1742732951; cv=none; b=hHtqyuly7HM/dVMK8Yd3WJrxPYig71QToL3uGf4ZopKiGJPe4/xGvlVI8FIq1JJ/kqTgFcHpQd8TuydJ9Z7bUh5GAGLMbI28OmNikfo6wqJswq4UMo3IrJVHxbZIQUJ1EDrFnXF2IYxDFAs5uAXJ8ofqT4db5yUOYK7WqOA2WaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742732950; c=relaxed/simple;
-	bh=Uwb4Lb9eyabuPAjwq6WajlQAHEed0Uk9bkWZRPTAICg=;
+	s=arc-20240116; t=1742732951; c=relaxed/simple;
+	bh=CkrBHiN5ZuIDl8W7bZl9s8bI76KmJujKfjx/76h1sBc=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=SlSMdFEBAuhiox0f8ow0TDGLta3FrGUbHuakDk6N7tNip/NzPOXjQsgWqrSqK8VMeKbLBh8Z1Y9c2+eEzSSynlBjh5bNgdAEpTn6CigVxqn0LWRwrLbp3jXylG/S0QmptBGS6r1zy0hgjAttcSUDQdghCurdsGRt4vk45DNiL94=
+	 Content-Type; b=dtmaIPq2YGYn2K643dtklUoMWHXYbnn2rHuxpDNUswtdFJEKtJk8dEiXZAW0usmc/qIJfr2uxbnMPEJ+VXX2R9498FLmyQf6SB01pyZB6xWLVZXdouG6kBss2TJGmuCezor+BGIf7fkQ3grMmCBY9i/6Z0q2Nsh3WmGdfPnzfAY=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD53C4CEE8;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB922C4CEF1;
 	Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1twKSb-00000001yek-2wx1;
-	Sun, 23 Mar 2025 08:29:49 -0400
-Message-ID: <20250323122949.551203678@goodmis.org>
+	id 1twKSc-00000001ygh-1Zdt;
+	Sun, 23 Mar 2025 08:29:50 -0400
+Message-ID: <20250323122950.226477423@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sun, 23 Mar 2025 08:29:36 -0400
+Date: Sun, 23 Mar 2025 08:29:40 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Huang Shijie <shijie@os.amperecomputing.com>
-Subject: [for-next][PATCH 03/10] tracepoint: Print the function symbol when tracepoint_debug is set
+ stable@vger.kernel.org,
+ Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Subject: [for-next][PATCH 07/10] tracing/osnoise: Fix possible recursive locking for cpus_read_lock()
 References: <20250323122933.407277911@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -38,35 +39,75 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Huang Shijie <shijie@os.amperecomputing.com>
+From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 
-When tracepoint_debug is set, we may get the output in kernel log:
-     [  380.013843] Probe 0 : 00000000f0d68cda
+Lockdep reports this deadlock log:
 
-It is not readable, so change to print the function symbol.
-After this patch, the output may becomes:
-     [   55.225555] Probe 0 : perf_trace_sched_wakeup_template+0x0/0x20
+osnoise: could not start sampling thread
+============================================
+WARNING: possible recursive locking detected
+--------------------------------------------
+       CPU0
+       ----
+  lock(cpu_hotplug_lock);
+  lock(cpu_hotplug_lock);
 
-Link: https://lore.kernel.org/20250307033858.4134-1-shijie@os.amperecomputing.com
-Signed-off-by: Huang Shijie <shijie@os.amperecomputing.com>
+ Call Trace:
+  <TASK>
+  print_deadlock_bug+0x282/0x3c0
+  __lock_acquire+0x1610/0x29a0
+  lock_acquire+0xcb/0x2d0
+  cpus_read_lock+0x49/0x120
+  stop_per_cpu_kthreads+0x7/0x60
+  start_kthread+0x103/0x120
+  osnoise_hotplug_workfn+0x5e/0x90
+  process_one_work+0x44f/0xb30
+  worker_thread+0x33e/0x5e0
+  kthread+0x206/0x3b0
+  ret_from_fork+0x31/0x50
+  ret_from_fork_asm+0x11/0x20
+  </TASK>
+
+This is the deadlock scenario:
+osnoise_hotplug_workfn()
+  guard(cpus_read_lock)();      // first lock call
+  start_kthread(cpu)
+    if (IS_ERR(kthread)) {
+      stop_per_cpu_kthreads(); {
+        cpus_read_lock();      // second lock call. Cause the AA deadlock
+      }
+    }
+
+It is not necessary to call stop_per_cpu_kthreads() which stops osnoise
+kthread for every other CPUs in the system if a failure occurs during
+hotplug of a certain CPU.
+For start_per_cpu_kthreads(), if the start_kthread() call fails,
+this function calls stop_per_cpu_kthreads() to handle the error.
+Therefore, similarly, there is no need to call stop_per_cpu_kthreads()
+again within start_kthread().
+So just remove stop_per_cpu_kthreads() from start_kthread to solve this issue.
+
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/20250321095249.2739397-1-ranxiaokai627@163.com
+Fixes: c8895e271f79 ("trace/osnoise: Support hotplug operations")
+Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/tracepoint.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_osnoise.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/tracepoint.c b/kernel/tracepoint.c
-index 1848ce7e2976..62719d2941c9 100644
---- a/kernel/tracepoint.c
-+++ b/kernel/tracepoint.c
-@@ -127,7 +127,7 @@ static void debug_print_probes(struct tracepoint_func *funcs)
- 		return;
+diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
+index f3a2722ee4c0..c83a51218ee5 100644
+--- a/kernel/trace/trace_osnoise.c
++++ b/kernel/trace/trace_osnoise.c
+@@ -2032,7 +2032,6 @@ static int start_kthread(unsigned int cpu)
  
- 	for (i = 0; funcs[i].func; i++)
--		printk(KERN_DEBUG "Probe %d : %p\n", i, funcs[i].func);
-+		printk(KERN_DEBUG "Probe %d : %pSb\n", i, funcs[i].func);
- }
+ 	if (IS_ERR(kthread)) {
+ 		pr_err(BANNER "could not start sampling thread\n");
+-		stop_per_cpu_kthreads();
+ 		return -ENOMEM;
+ 	}
  
- static struct tracepoint_func *
 -- 
 2.47.2
 
