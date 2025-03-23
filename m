@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39004205E0A
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E31C20C039
 	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 12:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742732951; cv=none; b=ax7Bzig4+mKDQb+tOJkG0YWTgd7J9wRMVwZNxB1Nv9Anop0lJbevqRotd5qHFHInrgo0UIS0yMwTUzZ2sQJ5wX3JI0Lx6Jq86b5diYchJJtkyx9oPzbZFuCBLsB1/wOtlYHN2Cw5oey2nMGlmy1yy73tuu7MXktjuReJUFKT1JE=
+	t=1742732952; cv=none; b=WMJuqPVOLhwdHFG2fjC//3lx5XI/hDaPSj3vG1e1shV2Plp7C6HdVl6b9spPWZ7Id1KiVoINnJyqOkbpc3tCAxByEJ+bWUlN2IM/m1UjG7i/H71fIQdeusgRuEtw4qkp4BofHqluevemQynCgW90A7d5T6TtCF/pTH1FjRV7aVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742732951; c=relaxed/simple;
-	bh=6b+1hq0u02rQnD+nc7i3nUA1B1IWhtOUZIFiB9pYoB0=;
+	s=arc-20240116; t=1742732952; c=relaxed/simple;
+	bh=kQE7lWjLc5+4FxD4hTC5SbZ6DD1VpQnZCqJXFz/ycLI=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=bMm54yGUxvESAOWGex5CRPAEMVit2+wAN71xOFDdGLf2/fSz0G/UIjDb7kL+9YwL4CZ+k6b9CAzbA0F4iQBON3ro1fpHeIw8tQRWehs/XeMqR1/g192wpXWy5tSG24DJ7zbuLiHETlT+9iKnt0Z/dqw6q/77PFLI3h1az8z8p5o=
+	 Content-Type; b=Zscv6N+nRk1LY8ehRuUwwHYECA4MQ/IAhqDxdYf/aNxzNNlDVI3a8Gi1osJTrAggsGZmFB43BVK9SQY5SyfSuEiwmpYX7AflAQD69CLD5iM5rdezKkoM3gA2u5bhSD+8B4Px61PJGcBHMdFCq5jn7sdTdxxcqkHumyc4nld4Z8U=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC94C4AF0B;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 80DCEC4CEF8;
 	Sun, 23 Mar 2025 12:29:11 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1twKSc-00000001yhC-2Gn5;
+	id 1twKSc-00000001yiC-3eEJ;
 	Sun, 23 Mar 2025 08:29:50 -0400
-Message-ID: <20250323122950.397439862@goodmis.org>
+Message-ID: <20250323122950.727283891@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sun, 23 Mar 2025 08:29:41 -0400
+Date: Sun, 23 Mar 2025 08:29:43 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Gabriele Paoloni <gpaoloni@redhat.com>
-Subject: [for-next][PATCH 08/10] tracing: fix return value in __ftrace_event_enable_disable for
- TRACE_REG_UNREGISTER
+ Douglas Raillard <douglas.raillard@arm.com>
+Subject: [for-next][PATCH 10/10] tracing: Fix synth event printk format for str fields
 References: <20250323122933.407277911@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,40 +38,36 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Gabriele Paoloni <gpaoloni@redhat.com>
+From: Douglas Raillard <douglas.raillard@arm.com>
 
-When __ftrace_event_enable_disable invokes the class callback to
-unregister the event, the return value is not reported up to the
-caller, hence leading to event unregister failures being silently
-ignored.
+The printk format for synth event uses "%.*s" to print string fields,
+but then only passes the pointer part as var arg.
 
-This patch assigns the ret variable to the invocation of the
-event unregister callback, so that its return value is stored
-and reported to the caller, and it raises a warning in case
-of error.
+Add the missing precision var arg.
 
-Link: https://lore.kernel.org/20250321170821.101403-1-gpaoloni@redhat.com
-Signed-off-by: Gabriele Paoloni <gpaoloni@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Link: https://lore.kernel.org/20250318180939.227696-1-douglas.raillard@arm.com
+Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ kernel/trace/trace_events_synth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-index 513de9ceb80e..8e7603acca21 100644
---- a/kernel/trace/trace_events.c
-+++ b/kernel/trace/trace_events.c
-@@ -790,7 +790,9 @@ static int __ftrace_event_enable_disable(struct trace_event_file *file,
- 				clear_bit(EVENT_FILE_FL_RECORDED_TGID_BIT, &file->flags);
- 			}
- 
--			call->class->reg(call, TRACE_REG_UNREGISTER, file);
-+			ret = call->class->reg(call, TRACE_REG_UNREGISTER, file);
-+
-+			WARN_ON_ONCE(ret);
- 		}
- 		/* If in SOFT_MODE, just set the SOFT_DISABLE_BIT, else clear it */
- 		if (file->flags & EVENT_FILE_FL_SOFT_MODE)
+diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
+index 463b0073629a..d91205bc9f61 100644
+--- a/kernel/trace/trace_events_synth.c
++++ b/kernel/trace/trace_events_synth.c
+@@ -620,7 +620,8 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
+ 		if (event->fields[i]->is_string &&
+ 		    event->fields[i]->is_dynamic)
+ 			pos += snprintf(buf + pos, LEN_OR_ZERO,
+-				", __get_str(%s)", event->fields[i]->name);
++				", (int)__get_dynamic_array_len(%s), __get_str(%s)",
++				event->fields[i]->name, event->fields[i]->name);
+ 		else if (event->fields[i]->is_stack)
+ 			pos += snprintf(buf + pos, LEN_OR_ZERO,
+ 				", __get_stacktrace(%s)", event->fields[i]->name);
 -- 
 2.47.2
 
