@@ -1,73 +1,87 @@
-Received: from mail-io1-f71.google.com (mail-io1-f71.google.com [209.85.166.71])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DDCB1FC105
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 06:21:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.71
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AD961FC105;
+	Sun, 23 Mar 2025 06:21:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742710866; cv=none; b=iXptFml9M4dIfelZHn6Wru/ELwUDDhf6/vxuoDd9BenGtKgMEsrko10JKswn2doL2TsPVEprCCu0uUbGgI0eEGe06z/h7LZSLs2Ebh42VfZDm3adxhp114FFtpfuSU92YPYMaK9eYNtVC7rQD7kVbLjtYsWENRosXW8wbkFxuEY=
+	t=1742710896; cv=none; b=TsvjqMcovtvWEu4OQHTNsX3TegtQKpTtsGxk39YYVGiaISzxO5qGsKtBlZ6NhpUgPOVu200rcH7/Nu6rUZfjpryDqoLmRSKTOcZ4TbtWQNYzcUoqiJAC20DsbQXmsggw6qC2f7Snj7xGPnF1+HLDHm7ZhiXhe+mA0nnunJk8NVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742710866; c=relaxed/simple;
-	bh=fIjikgeQnvCF6m4qacBYM0tGQ43qTup+CcAWexWSxJM=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=M3LRkp0KU/sdRrwCOWU9H1pKU5gW5aD/0LKOM/XoBMwr25Uk8aiZiM0svKwmPo+c1L1whHWEUBDwce+njwEmv/n1FlW6ZcyPNtg2xbs3bfORpno/nUp0DJhD+/UIGsUu670CBVaM9BxM21px6w6bRLu5BliU4VpeeIITdJt8VeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f71.google.com with SMTP id ca18e2360f4ac-85dd46b20bfso298690139f.2
-        for <linux-kernel@vger.kernel.org>; Sat, 22 Mar 2025 23:21:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742710863; x=1743315663;
-        h=to:from:subject:message-id:in-reply-to:date:mime-version
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=IKtFTb08bIbYVi1e3b+r4LgWp1VnGb++rIXGH1+LjFc=;
-        b=m3xAagycYiD2cbiwzGlLoWjOCr/ra+mhbbv3oBLPBqF84hxZmcnf1bdAZxn+uCeSWY
-         ddvMARYTGxiAtWQwIUuGERFuwdXm0Jtj7VxOkWO5cvZII4l4aZfz1QPJi4y9cnRw1m82
-         qWYBKKboGbvIjvpbfmcCK9Hse9jn+CRGOEHQGu2CXrWz4YEm7Nn+vVwfpAgIM249w0UF
-         8KHOtva8iJMCjpcYKfR4PYSqalQlPQnX3JiaLSTVxOQPIAFH93rgb2pw12RTLfm5BQry
-         4fY2WR3b80YsofZ7BGFm/E8uKBqG6TCkG+uTZqRzSeNj1YLpMQz5DLry5Qlewz6NQCpg
-         Gr9w==
-X-Forwarded-Encrypted: i=1; AJvYcCXD2CwkyJ3xxfd9BhY+QO4HoLtMGpRVUtovkpmlXb2EdNgE7EacrJxOdTudCK0zIme6OBAPUCccPj+HqD0=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxnXwGbYSxqt//ASi0FNO2PAQHmZ+cRKzXfJEOCzevJ8CMpqSNQ
-	cVtnoZK1j+Uz3IRnSCkjfaHpO7K5DeezMGy+eSHNiN36ENDfXZyHV9dIDeKikyXGQwMUXj+WXml
-	7xLjwK4ZL2cN6cdAjuCFk3BlV2t3ymdW3IinAMuQ3uQkIOkewJGDTWvU=
-X-Google-Smtp-Source: AGHT+IGPA7Fi5m69oP9shUMeLt/YBnyMDyFwY39TXEP9SiQUAtCQ+3ZkNsPsRUb2svjWb5C/HnXnpmmbKx6KHI8s8AYF+bo7faba
+	s=arc-20240116; t=1742710896; c=relaxed/simple;
+	bh=1USActi8BiCcrXYOuZOmFNDAtk1TmeyWlhovpQvjTHs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Wq/5PWthQANfIe/7tHncve2ipWhgfJpOB3T09bN0L+3XcM/pOBWQV9/K8jASLyqb+3gRPv9SHFHDoEtZBqZ64TIC27pvM59KHUD59T9SB85a5TRItNPyDGa7aGdj95cLW6KTo3DLLrDtDbSXi+39vGtWPO+BpDj6CaAxw1lXxTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=3zRY+YvN; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bombadil.srs.infradead.org
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="3zRY+YvN"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=In-Reply-To:Content-Type:MIME-Version
+	:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+	Content-Transfer-Encoding:Content-ID:Content-Description;
+	bh=L1ic8gyVxVIspX+A5ncCA9aQdUq2VzF6Q97RWcvY5wU=; b=3zRY+YvNGQUSC9kOV3Jx4UErEG
+	BG2L8v7UKQkhm6NoDW6WlXMruVLMyVUMjWnIMhIgd8GZ1QZX0ouyX0SfxR5/QXAgpqPWlo8gqaeVz
+	PeoEtDOV58uSXA47JCHXsGbQMIqFrxtHUe6yKOcls61I8vP7y6CdL3EHZRPUrb1vc5P9CxDHhF+xj
+	Q6DGKhTJKQ1cxKDSIX7q+KJbjoqTUM7bOJysVABJzoLMlcNNIyzGuowJOv4RI7PHcUZ0TGoYhuuqb
+	bN5ClG2A7KLuDc+ZdIpUqH1CmOv17eDsPFOQz3gZ3IfJUMpeQ8in9Gf1gdvg3AwGZostRzNyA+o20
+	vQQgnhbg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.98 #2 (Red Hat Linux))
+	id 1twEi8-00000000kzq-0yMV;
+	Sun, 23 Mar 2025 06:21:28 +0000
+Date: Sat, 22 Mar 2025 23:21:28 -0700
+From: Christoph Hellwig <hch@infradead.org>
+To: David Howells <dhowells@redhat.com>
+Cc: Leon Romanovsky <leonro@nvidia.com>,
+	Christian Brauner <christian@brauner.io>,
+	Matthew Wilcox <willy@infradead.org>,
+	Chuck Lever <chuck.lever@oracle.com>,
+	Steve French <smfrench@gmail.com>,
+	Ilya Dryomov <idryomov@gmail.com>, netfs@lists.linux.dev,
+	linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+	linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] iov_iter: Add composite, scatterlist and skbuff
+ iterator types
+Message-ID: <Z9-oaC3lVIMQ4rUF@infradead.org>
+References: <20250321161407.3333724-1-dhowells@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:188b:b0:3d2:b0f1:f5bd with SMTP id
- e9e14a558f8ab-3d5960bf875mr74389585ab.3.1742710863722; Sat, 22 Mar 2025
- 23:21:03 -0700 (PDT)
-Date: Sat, 22 Mar 2025 23:21:03 -0700
-In-Reply-To: <03e95a73-6c8a-47b0-9b72-c1204118be47@gmx.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67dfa84f.050a0220.31a16b.0056.GAE@google.com>
-Subject: Re: [syzbot] [btrfs?] kernel BUG in close_ctree
-From: syzbot <syzbot+2665d678fffcc4608e18@syzkaller.appspotmail.com>
-To: clm@fb.com, dsterba@suse.com, josef@toxicpanda.com, 
-	linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	quwenruo.btrfs@gmx.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321161407.3333724-1-dhowells@redhat.com>
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 
-Hello,
+This is going entirely in the wrong direction.  We don't need more iter
+types but less.  The reason why we have to many is because the underlying
+representation of the ranges is a mess which goes deeper than just the
+iterator, because it also means we have to convert between the
+underlying representations all the time.
 
-syzbot has tested the proposed patch and the reproducer did not trigger any issue:
+E.g. the socket code should have (and either has for a while or at least
+there were patches) been using bio_vecs instead of reinventing them as sk
+fragment.  The crypto code should not be using scatterlists, which are a
+horrible data structure because they mix up the physical memory
+description and the dma mapping information which isn't even used for
+most uses, etc.
 
-Reported-by: syzbot+2665d678fffcc4608e18@syzkaller.appspotmail.com
-Tested-by: syzbot+2665d678fffcc4608e18@syzkaller.appspotmail.com
+So instead of more iters let's convert everyone to a common
+scatter/gather memory definition, which simplifies the iters.  For now
+that is the bio_vec, which really should be converted from storing a
+struct page to a phys_addr_t (and maybe renamed if that helps adoption).
+That allows to trivially kill the kvec for example.
 
-Tested on:
+As for the head/tail - that seems to be a odd NFS/sunrpc fetish.  I've
+actually started a little project to just convert the sunrpc code to
+use bio_vecs, which massively simplifies the code, and allows directly
+passing it to the iters in the socket API.  It doesn't quite work yet
+but shows how all these custom (and in this case rather ad-hoc) memory
+fragment representation cause a huge mess.
 
-commit:         70a1072f btrfs: extract the main loop of btrfs_buffere..
-git tree:       https://github.com/btrfs/linux.git for-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=12875c4c580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=d5d862b4e27dc0b3
-dashboard link: https://syzkaller.appspot.com/bug?extid=2665d678fffcc4608e18
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+I don't think the iterlist can work in practice, but it would be nice
+to have for a few use cases.  If it worked it should hopefully allow
+to kill off the odd xarray iterator.
 
-Note: no patches were applied.
-Note: testing is done by a robot and is best-effort only.
