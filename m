@@ -1,110 +1,161 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7881F14D28C;
-	Sun, 23 Mar 2025 17:31:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0861278F34;
+	Sun, 23 Mar 2025 17:36:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742751108; cv=none; b=K8UD6RQ+ikZexRc/T/ZuMO7O122EwXYrmKSmTd9oOCKC/LIMp1kRmnX5yE2qgXIu2x7y4BEkCbdkJ6Sk7bZBBfodvrB2kGSkjXTEaMsBN+nsxge/48JYBAVQxLtbZqYL6YwFFbYxu/b0Jiu5hifZKKwTDT23IxmstvPl4WyLQ4U=
+	t=1742751393; cv=none; b=uZXX4xnHpemAnyv627YKO/6oR+2QLcTW13oIv7XZpF/ortZyNQOO6RYu4L2D7VSDmZfl78JIO+Tp4pJsI2GOr3YRie2jWbj4ARt7aRpzw/SPlVi3F4vLIUdI7wTV9BUOi8s6jk7DNM/7OOyIJJrftLPIoYcS5e7w8c+81YXUVUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742751108; c=relaxed/simple;
-	bh=KW8HvEyjKl4+3w87G/HKj1aL1Obox2r5omiDDDKvHuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kHWnKWFcyVGpVxW8Dl7Ox7ZiRn61Dwiq9itsKUYQxTafSdZu1NkSqLvIzZs5Wcj6CvO2A7MfKqo3vY7STs+wi+aBDN00Pcy2kAxKAVdCwVdwq7hjnaypIHKVw8Grmlurx+610JP0R4mrxwuLmAJtAj1ONsRVLQezGzcb6lkkhqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I/O7lI8m; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742751393; c=relaxed/simple;
+	bh=tw3/0MDVahV5gYA1D5ZUev1jqNbxH7cuac9JUXXrv2U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VqUIaZzecFtkaJ6EQn4LCng+dMoh1Gw+KnSaQ7UWI3fW2xoHeV43eIp7PflCyYF/xwLO2OZ1GgKIQL03jwRVwdrSbFoMim4o6BcfI830S5abCZCvuykj4jPiNCs7nSyd0uPeB8QrA19XjBMk5tyVhGYVFDMHt5ML8OV1p+ZosZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LxuYs1Gu; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I/O7lI8m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D96A3C4CEED;
-	Sun, 23 Mar 2025 17:31:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742751107;
-	bh=KW8HvEyjKl4+3w87G/HKj1aL1Obox2r5omiDDDKvHuU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=I/O7lI8m0clQf2iH5mum/fc0gVoxT9Qdrf++coZfcVT3ZZd6FzjCevXew8F70UVWx
-	 ZjNMipFaphHO/3w+KwJjq3QVn7fbcjcuXucfy6oirlIOXlcJe2TxqRjgWePFzXTDE5
-	 9L3Jfuqs2Lynq4fUedxPRAz4KZ41znhy8ZAKvUUjyp3QPNT8NH7pimCzJAuwY8TFMk
-	 ZivcA46BB+J+wP/BoO+oZbzjHbt/7JpIG0NJXE2sO6fubNLHm6KiKFhO8tN2h+G5Ss
-	 c7vMhkVjXD2DJAg7yh+lWH86GKE3jhOc21k3+NY8KG4CpnY1fku5fQ8/NZYFueipNp
-	 TNEgDDQI7hGzw==
-Message-ID: <2842b994-6970-4f31-9a9a-ff8dd1e9b212@kernel.org>
-Date: Sun, 23 Mar 2025 18:31:41 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LxuYs1Gu"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7c5ba363f1aso385095085a.0;
+        Sun, 23 Mar 2025 10:36:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742751391; x=1743356191; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qJmxmLHnI0b74eLfgzEkn0Xb7QzO7kjHFPv4KK92C4k=;
+        b=LxuYs1GuVw+9GCI8vWlDAbGUQUZEBz+wkGgaz4Md0262pCRb3BHda9tr/uT/WqVXyV
+         UUb+w9lT8vTcWxRxkikeDfca83w/nfD/8ZrPXIR+if+QdDpLNNffi93FQcszphaaXHnk
+         afnFQwvFVskbpv72no2G/zT9zN46okVgrASP+CHPM8fiY48lkbiQBx0NRK7KMPrUfEUX
+         12vgFYSCJzKiaOO3R14XIicGAhyOw27n8x6ebuUXGisjyUn6l6KRPXQ1sjSTTqSOXEOw
+         70YVVB5OsTEwKSoFKmyItj/BXQSmEPh+8yuZvu5RVAw7bgyVhR02m8R4tztypk7EVvvo
+         wMUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742751391; x=1743356191;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qJmxmLHnI0b74eLfgzEkn0Xb7QzO7kjHFPv4KK92C4k=;
+        b=wLq6M/mMwwYwJyxBt1book28UxWnbZKMo0vJsHaTC92sCMpIGfkvvZ9rzwLPzU4gaX
+         BQXosR3Nw8UbaKD+kSkupqsIBY01uXZvCgv5O3D8Mpwpknj5+F39nxE0V8OmmQrNNPno
+         q2IJMjQJ5mjdnNJsc0s0h+u+jwS1vk/oryjd+21FUqaiPJgITNg6Rnx4/f9JN/AWqkWg
+         fuM91N6kgEzTN3G6F/QbG+0XRbuPbwdieDj8Zi2bQ5WcdXnpTokR2Jf7zQkf73jeyKjg
+         mQZXymVOwlD1y3K48JCb3z7iJs335lksU3nrqnm+Vb6AJwBBNreqPZPhCNvqfsFEbXwI
+         G0mg==
+X-Forwarded-Encrypted: i=1; AJvYcCURzDqhZzqvAkDGMAUNrWJ+ES/q3kobpu1VzG24+FwBBTU4BbtTkybtrfRIu2wjPUMCyyqaNl58+lS8nxs=@vger.kernel.org, AJvYcCW6ewqoUutwL57ukleYiGqLA+l9fmfA2SepYqGrKeBELEgdiL7fpc8fzk+oPi7dwFYZF5aofxupwOSczIBamcY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQcx80xx/VesHU+7jn8bEN9o2q//sqMLBfXAdufSbBZ3IWl6K+
+	fpveMVtH3lGBFX9U6FEBrphKCbEuRfU/EvaRSug+vCcKHntip6UV
+X-Gm-Gg: ASbGnctbuEXQuK8Uim0eOVox5wOflU/92SbqXn3Kxm9dfJw96aNxdwr7YweGmLipwza
+	WUcuqtzp2Ix7h9Qp1kGYPzSi/AGPbaGVWwdjBgVZnIC+jfq/CZxoF6V6d5NMCBHN73f5RfMRjJm
+	uCHVSB5P4OalX4F8hoLo03gIhplh27keOfsOWqmGzoPreRurOxnPcAR04xPrFDGEcNTioqf47A7
+	/Lx+0FNajnfMdRKfazKAkLlJhhTI4nTw526C5g4xDEa4UH5JtKkgNUwwcenF36Qp4saUEUteuty
+	C0iJQPhTIyQKnoZuC2Yhrimatp4ApvTYeq4uAS4O0NzfFL8j3kK8TUjzAMe6MPMCrXDdmIA4Irv
+	Hk3GKNxR+HU4I8GY+IziO34hkMFH4GqHyi5U=
+X-Google-Smtp-Source: AGHT+IFPXx3Q4TX1Xs2Z84TncJkMZsWBNJhJ343KnGGojWAVSXxnbqwjcFG7410Xa+SesHkkJ5NJcg==
+X-Received: by 2002:a05:620a:29c5:b0:7c5:9a10:7824 with SMTP id af79cd13be357-7c5ba15d9famr1184377385a.24.1742751390630;
+        Sun, 23 Mar 2025 10:36:30 -0700 (PDT)
+Received: from fauth-a2-smtp.messagingengine.com (fauth-a2-smtp.messagingengine.com. [103.168.172.201])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5b92cfe65sm384903485a.28.2025.03.23.10.36.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 10:36:29 -0700 (PDT)
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfauth.phl.internal (Postfix) with ESMTP id 42AC81200043;
+	Sun, 23 Mar 2025 13:36:29 -0400 (EDT)
+Received: from phl-mailfrontend-02 ([10.202.2.163])
+  by phl-compute-07.internal (MEProxy); Sun, 23 Mar 2025 13:36:29 -0400
+X-ME-Sender: <xms:nUbgZ8Hy1gTIxowI2y2C-W_Y0z2hfWYovxZgPJevFIS-YQFT0N77Sw>
+    <xme:nUbgZ1XegJ1sibZCAMIvAwQ-Te3mIZohopMiyXckDwexXgF26Rb3LS8Q9-iuoVQjQ
+    G-P_BPQzrHTOKKATQ>
+X-ME-Received: <xmr:nUbgZ2JgW3uB0mTmllBXEif9LeoiRy2jqL6LVvKosEkkBoh0VXWUDIun>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheejgeekucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepfffhvfevuffkfhggtggujgesthdtredttddt
+    vdenucfhrhhomhepuehoqhhunhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrih
+    hlrdgtohhmqeenucggtffrrghtthgvrhhnpefftdeihfeigedtvdeuueffieetvedtgeej
+    uefhhffgudfgfeeggfeftdeigeehvdenucffohhmrghinhepghhithhhuhgsrdgtohhmne
+    cuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepsghoqhhu
+    nhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedtieegqdduje
+    ejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfhhigihmvgdr
+    nhgrmhgvpdhnsggprhgtphhtthhopedvtddpmhhouggvpehsmhhtphhouhhtpdhrtghpth
+    htoheprghlihgtvghrhihhlhesghhoohhglhgvrdgtohhmpdhrtghpthhtohepkhhunhif
+    uhdrtghhrghnsehlihhnuhigrdguvghvpdhrtghpthhtohepohhjvggurgeskhgvrhhnvg
+    hlrdhorhhgpdhrtghpthhtoheprghlvgigrdhgrgihnhhorhesghhmrghilhdrtghomhdp
+    rhgtphhtthhopehgrghrhiesghgrrhihghhuohdrnhgvthdprhgtphhtthhopegsjhhorh
+    hnfegpghhhsehprhhothhonhhmrghilhdrtghomhdprhgtphhtthhopegsvghnnhhordhl
+    ohhsshhinhesphhrohhtohhnrdhmvgdprhgtphhtthhopegrrdhhihhnuggsohhrgheskh
+    gvrhhnvghlrdhorhhgpdhrtghpthhtohepthhmghhrohhsshesuhhmihgthhdrvgguuh
+X-ME-Proxy: <xmx:nUbgZ-GBu7karf7bxbSTuXjOrc3z5CeO4meI733rVw8v5mMfWUfUvg>
+    <xmx:nUbgZyU3NqHbamDSNkk9sbFzZX97-PHhioyTcJrtgVSsYU2WEvyG8g>
+    <xmx:nUbgZxNVo8Yv1hxoYNi0O6FcW81f-526reDkRUSopUsRdjxMLordag>
+    <xmx:nUbgZ53cG6zvlV6vCYO4c6xafq44DB0cDqIhLfz_Yi__rs39bGhEZg>
+    <xmx:nUbgZ7XJft9LcxmzcTaFm4p0v2uNPgplr_2L0IDjMnTQ2o1NyfkzZjGM>
+Feedback-ID: iad51458e:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Sun,
+ 23 Mar 2025 13:36:28 -0400 (EDT)
+Date: Sun, 23 Mar 2025 10:36:27 -0700
+From: Boqun Feng <boqun.feng@gmail.com>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Kunwu Chan <kunwu.chan@linux.dev>, ojeda@kernel.org,
+	alex.gaynor@gmail.com, gary@garyguo.net, bjorn3_gh@protonmail.com,
+	benno.lossin@proton.me, a.hindborg@kernel.org, tmgross@umich.edu,
+	dakr@kernel.org, nathan@kernel.org, nick.desaulniers+lkml@gmail.com,
+	morbo@google.com, justinstitt@google.com,
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org,
+	llvm@lists.linux.dev, Kunwu Chan <kunwu.chan@hotmail.com>,
+	Grace Deng <Grace.Deng006@gmail.com>
+Subject: Re: [PATCH] rust: sync: optimize rust symbol generation for CondVar
+Message-ID: <Z-BGm3zBEGazp5gb@Mac.home>
+References: <20250317081351.2503049-1-kunwu.chan@linux.dev>
+ <Z9f5fehO186xoNAV@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/3] dt-bindings: arm: amlogic: Add TCU Fernsehfee 3.0
- board
-To: j.ne@posteo.net, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Neil Armstrong <neil.armstrong@linaro.org>,
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
- Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
-References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
- <20250323-fernsehfee-v1-2-2621341cd37a@posteo.net>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20250323-fernsehfee-v1-2-2621341cd37a@posteo.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z9f5fehO186xoNAV@google.com>
 
-On 23/03/2025 13:37, J. Neuschäfer via B4 Relay wrote:
-> From: "J. Neuschäfer" <j.ne@posteo.net>
+On Mon, Mar 17, 2025 at 10:29:17AM +0000, Alice Ryhl wrote:
+> On Mon, Mar 17, 2025 at 04:13:50PM +0800, Kunwu Chan wrote:
+> > From: Kunwu Chan <kunwu.chan@hotmail.com>
+> > 
+> > When build the kernel using the llvm-18.1.3-rust-1.85.0-x86_64
+> > with ARCH=arm64, the following symbols are generated:
+> > 
+> > $nm vmlinux | grep ' _R'.*CondVar | rustfilt
+> > ... T <kernel::sync::condvar::CondVar>::notify_all
+> > ... T <kernel::sync::condvar::CondVar>::notify_one
+> > ... T <kernel::sync::condvar::CondVar>::notify_sync
+> > ... T <kernel::sync::condvar::CondVar>::new::{closure#0}::{closure#0}::panic_cold_explicit
+> > ... T <kernel::sync::condvar::CondVar>::new::{closure#0}::{closure#0}::panic_cold_explicit
+> > ... T <kernel::sync::poll::PollCondVar>::new::{closure#0}::{closure#0}::panic_cold_explicit
+> > ... T <kernel::sync::poll::PollCondVar as core::ops::drop::Drop>::drop
+> > 
+> > These notify* symbols are trivial wrappers around the C functions
+> > __wake_up and __wake_up_sync.
+> > It doesn't make sense to go through a trivial wrapper for these
+> > functions, so mark them inline.
 > 
-> Fernsehfee ("TV fairy") 3.0 is a set-top box with HDMI input and output
-> ports. It originally ran Android 4.4 and a Linux 3.10 kernel.
+> You don't need to send a new version just for this, but please format
+> the paragraphs better in the future. For example:
 > 
->   https://fernsehfee.de/  (German)
->   https://telefairy.com/  (English)
+> The notify* symbols are trivial wrappers around the C functions
+> __wake_up and __wake_up_sync. It doesn't make sense to go through a
+> trivial wrapper for these functions, so mark them inline.
+> 
+> > Link: https://github.com/Rust-for-Linux/linux/issues/1145
+> > Suggested-by: Alice Ryhl <aliceryhl@google.com>
+> > Co-developed-by: Grace Deng <Grace.Deng006@Gmail.com>
+> > Signed-off-by: Grace Deng <Grace.Deng006@Gmail.com>
+> > Signed-off-by: Kunwu Chan <kunwu.chan@hotmail.com>
+> 
+> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
+> 
 
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Queued for future tests and reviews, thank you all.
 
-Best regards,
-Krzysztof
+Regards,
+Boqun
