@@ -1,103 +1,124 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE70720110F;
-	Sun, 23 Mar 2025 11:39:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F2661F8EEE;
+	Sun, 23 Mar 2025 11:41:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742729959; cv=none; b=LIdobZS+LoLxvJfO/juVDo1Ssod3YsSggIQlgO1VN7MkWqHtL4WkEVBwfyMhq1Ogi7QuYGbiwuUWWxHyWHZ85cRyKiiY/LmPeVh0MbR/7OvMN+lIAAUyV48D/VZI8e2Mq8fcZIaXfUzkfR1b+13SymDUPZ7YvEHWPzEuVrTupO4=
+	t=1742730106; cv=none; b=j/9jEO/Ca1xI79Zme58FG7500goMPI8bvqvCFgDghInrI6VYzn4zrvxt6fWHiF1HfXIR+EqlO+kIUVCEq5MfvPI3Vz2TRhSBphrBlvKHJ1KTtAgvMw1gdeAiSFnEmHzIsmyKSW5IHtWy4M/vQWt6+/dYya1K8BgQr4RLtRXEoGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742729959; c=relaxed/simple;
-	bh=i62gdZQA88c6TBFXklIhRbPhLAK4Hq535EgiVcnKdyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mlZ5oIt0VDtkVshvHr+IgnUzLSslwLNBa+cLGARmvqWmnq4DiyyGXtpCwWvyp0RAjfAl36WRuXw2ThuIRb6keBL77Iv4aI0oUB+lDNJTa39ia6w+iVY7+oOHQqUwUN8DRu30yoq04Q0D+CY7B692xgg6FfKlWpy6jcS8HhYIdnU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-225df540edcso87153815ad.0;
-        Sun, 23 Mar 2025 04:39:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742729957; x=1743334757;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=umbyZX39Xy601g6OGF8b6eQwLE9V0tDY3oqiE70mc54=;
-        b=GEC63tES0AOeU4Gct8aje5SIsaQFXUidy8yEoTqPRYh+c2FRrk0qLoBrNqMdm+MU8u
-         OgkUztdAkXzPtPuxB5LgFDWQLcWw5VjYGp66wNmUQ4Pyl4AxQsL6EaxrGTsun4kE8ksd
-         JqSgC3RSAL++lgN4uy68OCcBWo3LOohA6zL8HRjDmwAb07hvlhK86F81NXXFFjPUdV3M
-         yPGbBUNUDfEORteknextEYnWhHIgMiSrJ6JQHg0RU0k5hRgkfnlqK7byysZeO+NKLfZP
-         V03YHNWFSPE0ieymKCdcqsDGx3WvBOrWpBqmdkrypxk4HyhvECJ9lLX5HwWXOg9OLqhz
-         xVNw==
-X-Forwarded-Encrypted: i=1; AJvYcCUAK65hIXfkbMFuVbepkrTNI+ihjFB0MFJuKgCfNWuqueCOkj54Yj0CzGVvR5XmhtOlywuQo8qJiKkV@vger.kernel.org, AJvYcCUrXPcUuuB9fpaBvAfeJ/FjR46h4AgpcN9l13gwt9MVcevocgKvEyY+Y7FFyR1MZtqHGuHvEMn1A4NamcEz@vger.kernel.org, AJvYcCV17odd6Ox3ZX0Md43BeCWJvoSUTfWKcyUXL1N2xhlZ1r10XOpz5N0xIokhynrMOEGC/w9z7p8ZHOtpgQ==@vger.kernel.org, AJvYcCVsBpVeHxbmzgumncWBVhrTV02rKRR/klhK0/NiqypUjQQQ9B3lQz0OlcEQ8BsllijqlP2E7JyX3szg@vger.kernel.org, AJvYcCWFmkTu2gT61K2ZA/8+MjHrxyY6I1Azyz9uyRFt2cXlNRQho2w3MaLsSctK7bgAQGPsvEzzNfKqermR@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw2vxas5A/RhsTeIPGMOxZfx4EfzdoKIPVdo3geyU7M37wWSLYb
-	Z87KNnsCt+v850m2rHaoIEh3kywRdfclx/yskTK+gQ5kCDrlh3uW
-X-Gm-Gg: ASbGnct+1gXXOytY/zXWqjUDIYoLk5JB73ZrkHeFcOmRaL+0eAFIMKtW9z0IlYZ8Fwv
-	z7JvlAnqeI3Ua0rDxQDaDJPO0waJSsaJ+TexbHTC3jYNnbfZjrBob/c1LowqlV6DUX5CPrhTCfB
-	Jijo219I6uQd4S6cQLuuohw36D0hZajsrz0FHyIUhkLOhV5ZU6eQzsbWCKR3W7Beix6utXbc7Hn
-	75HNRTZr1F4uHVH5yLDzYt1XgzIfK9aohyEGv4XfK/LuXBKzMN5bQil6BgbL2p1BfQy+G4kceTL
-	cdj/0TTxjw/aVoV2jgbJ9l2wnPeqfLUiaNypbsUKLD25xkLqSNionx88/egXkqb1O2yGI5fkY+B
-	u4kI=
-X-Google-Smtp-Source: AGHT+IFJWx4DQdPuRy8xvpUazrhNKHbR0p3IdS7aCxYy6lnZCOKUux+yr5PQT4J2C1cwwOxmpwbt9w==
-X-Received: by 2002:a05:6a21:1086:b0:1ee:5fae:8f6a with SMTP id adf61e73a8af0-1fd0855643dmr24347539637.1.1742729956766;
-        Sun, 23 Mar 2025 04:39:16 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af8a2a24404sm4999600a12.51.2025.03.23.04.39.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 04:39:16 -0700 (PDT)
-Date: Sun, 23 Mar 2025 20:39:14 +0900
-From: Krzysztof Wilczynski <kw@linux.com>
-To: Andrea della Porta <andrea.porta@suse.com>
-Cc: Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
-	Derek Kiernan <derek.kiernan@amd.com>,
-	Dragan Cvetic <dragan.cvetic@amd.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Saravana Kannan <saravanak@google.com>, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Masahiro Yamada <masahiroy@kernel.org>,
-	Stefan Wahren <wahrenst@gmx.net>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Andrew Lunn <andrew@lunn.ch>, Phil Elwell <phil@raspberrypi.com>,
-	Dave Stevenson <dave.stevenson@raspberrypi.com>,
-	kernel-list@raspberrypi.com
-Subject: Re: [PATCH v8 03/13] dt-bindings: pci: Add common schema for devices
- accessible through PCI BARs
-Message-ID: <20250323113914.GC1902347@rocinante>
-References: <cover.1742418429.git.andrea.porta@suse.com>
- <096ab7addb39e498e28ac2526c07157cc9327c42.1742418429.git.andrea.porta@suse.com>
+	s=arc-20240116; t=1742730106; c=relaxed/simple;
+	bh=hynN0wNgw3xhQmZz9dAHlY94QJJave8fkuuEYmEO3kM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W+oM2Nz18C3mCijoO+RkkT4TSbWiUW9Jv/yM9/Lev4vtPAvFwDTXQt3XF12kq/fAa1ausL/7n/z/bCVAUe4T7RiwjrDdGKc7IsX1EsCuILcdpvP38zD6nNsmcPfIrrnO21uup20EihU2fCqmB5c/jMs/szYTmJXqZsCDAhPAHWw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=A8uzxobq; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="A8uzxobq"
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id 24E782E08E61;
+	Sun, 23 Mar 2025 13:41:41 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1742730102;
+	bh=j8BJJEqej1o+O+yRIHQPQw9NYJ7yZENuE0fwF2Cw3ko=;
+	h=Received:From:Subject:To;
+	b=A8uzxobqsJa4uxt3tAnT8JIgdmYCZysdapGzCgcgn5PwKTMOfsaqcIGDH7JPTR7eD
+	 ByXqdNkK2hOSrNPNYMDsQ1UufweMDRDlhSpiUc+ROMsnRGRQv0PFGgV2kDi2no7mqY
+	 +EOdKUBDJo0whTXTB89uCJI2tLEEPZrEQ3RstnH0=
+Authentication-Results: linux1587.grserver.gr;
+        spf=pass (sender IP is 209.85.208.170) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f170.google.com
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+Received: by mail-lj1-f170.google.com with SMTP id
+ 38308e7fff4ca-30bf1d48843so33397851fa.2;
+        Sun, 23 Mar 2025 04:41:41 -0700 (PDT)
+X-Forwarded-Encrypted: i=1;
+ AJvYcCVMWwRtRak352niqEDNrCanNmcapdk6pMCpyuE1r8UwIUV3iWNRK0iWlg9QW1TNW/c5UU5/2vMXVuHAc4zwHKYcTjqplg==@vger.kernel.org,
+ AJvYcCXPnsPaNF/c0oMwfVFNzteWZCEeBCN/ihDIm/XT0xCWEnpwy1WNAoUmHa0dI4Ch7knY5LdeeJZPgjZaww==@vger.kernel.org
+X-Gm-Message-State: AOJu0YxU7Q7W8cHk2xcQIAtRkshz7MZwci8Y6qYFb2oIi7WQKvsAsjUN
+	N1+qELvTk9kRnKVk1yzJ+8CGzFkJJBfNdwr87Vmhp1Ra8CFX0SwZ16UXnJ8ucBIpuwob5juM8vf
+	+a6S3GapIKDuotw4JNy4aGHq7bQw=
+X-Google-Smtp-Source: 
+ AGHT+IHSLib/LjGTMrHC50Xwd9ZaGGQfdwLLkQrCK0BIPwmNBbHWwYV+UOqYalzSmxx6ELxD7d6sfX01UWdMjMd0gSA=
+X-Received: by 2002:a2e:9916:0:b0:30b:cd41:89c7 with SMTP id
+ 38308e7fff4ca-30d7e242a33mr32755891fa.22.1742730100469; Sun, 23 Mar 2025
+ 04:41:40 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <096ab7addb39e498e28ac2526c07157cc9327c42.1742418429.git.andrea.porta@suse.com>
+References: <20250323023421.78012-1-luke@ljones.dev>
+In-Reply-To: <20250323023421.78012-1-luke@ljones.dev>
+From: Antheas Kapenekakis <lkml@antheas.dev>
+Date: Sun, 23 Mar 2025 12:41:28 +0100
+X-Gmail-Original-Message-ID: 
+ <CAGwozwE4oXmFMRO5jZJC4d11TstTqSC8ZUZ1CCkZMWYZKTKF_w@mail.gmail.com>
+X-Gm-Features: AQ5f1JoF94kWaG8jXbBPjG46-oIumqoywTx7_hHJaCO2qx9_rc6vs1vh0s6fq5Y
+Message-ID: 
+ <CAGwozwE4oXmFMRO5jZJC4d11TstTqSC8ZUZ1CCkZMWYZKTKF_w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
+To: Luke Jones <luke@ljones.dev>
+Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org, bentiss@kernel.org, jikos@kernel.org,
+	mario.limonciello@amd.com
+Content-Type: text/plain; charset="UTF-8"
+X-PPP-Message-ID: 
+ <174273010157.17532.3995022788196924961@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-Hello,
+On Sun, 23 Mar 2025 at 03:34, Luke Jones <luke@ljones.dev> wrote:
+>
+> This short series refactors the Ally suspend/resume functionality in the
+> asus-wmi driver along with adding support for ROG Ally MCU version checking.
+>
+> The version checking is then used to toggle the use of older CSEE call hacks
+> that were initially used to combat Ally suspend/wake issues arising from the MCU
+> not clearing a particular flag on resume. ASUS have since corrected this
+> especially for Linux in newer firmware versions.
+>
+> - hid-asus requests the MCU version and displays a warning if the version is
+>   older than the one that fixes the issue.
+> - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
+> version is high enough.
+>
+> *Note: In review it was requested by Mario that I try strsep() for parsing
+> the version. I did try this and a few variations but the result was much
+> more code due to having to check more edge cases due to the input being
+> raw bytes. In the end the cleaned up while loop proved more robust.
+>
+> - Changelog:
+>   + V2: https://lore.kernel.org/platform-driver-x86/20250226010129.32043-1-luke@ljones.dev/T/#t
+>     - Adjust warning message to explicitly mention suspend issues
 
-> Common YAML schema for devices that exports internal peripherals through
-> PCI BARs. The BARs are exposed as simple-buses through which the
-> peripherals can be accessed.
-> 
-> This is not intended to be used as a standalone binding, but should be
-> included by device specific bindings.
+How did the testing go with this one, especially with mcu_powersave 0?
 
-Applied to dt-bindings, thank you!
-
-	Krzysztof
+>     - Use switch/case block to set min_version
+>       - Set min_version to 0 by default and toggle hacks off
+>   + V3
+>     - Remove noise (excess pr_info)
+>     - Use kstrtoint, not kstrtolong
+>     - Use __free(kfree) for allocated mem and drop goto + logging
+>     - Use print_hex_dump() to show failed data after pr_err in mcu_request_version()
+>     - Use pr_debug in set_ally_mcu_hack() and set_ally_mcu_powersave() plus
+>       correct the message.
+>   + V4
+>     - Change use_ally_mcu_hack var to enum to track init state and
+>       prevent a race condition
+>
+> Luke D. Jones (2):
+>   hid-asus: check ROG Ally MCU version and warn
+>   platform/x86: asus-wmi: Refactor Ally suspend/resume
+>
+>  drivers/hid/hid-asus.c                     | 111 ++++++++++++++++-
+>  drivers/platform/x86/asus-wmi.c            | 133 +++++++++++++++------
+>  include/linux/platform_data/x86/asus-wmi.h |  19 +++
+>  3 files changed, 222 insertions(+), 41 deletions(-)
+>
+> --
+> 2.49.0
+>
