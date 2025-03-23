@@ -1,144 +1,170 @@
-Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DEE759B71
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 16:36:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50BC835893
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 16:49:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742747791; cv=none; b=L2huy5XVaomU7L34VSMiqPZDNpc8kf7+9WdXvhRJQB3I2cfC3dgQmXpQdht45cYJtm/s19rO+FlfpbHCQnIcIOiVPdkjte1JOfR1NxdsF+BRZz5woNpWiX7zrMsVwNqQ3qNI5DM+dvC8yG6HkUdqcb59jduIsrwWmHIZ6L2CveQ=
+	t=1742748567; cv=none; b=l5acAGSKP30umlRf2FjjPdRePJUuaIIAM1kkyK0SaqG3mXPi8+UGpIKmL8aN8ZF1ZvgH/tAH6pdLZZrPGJ69NVKCLgYvb/LuB8allMVdVu7sGzLPuHZ/cPdWRsiBqHJPSJetlITJnAzU8zb6ErqtL7ouO1lwvKrONYtHKYV5K8k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742747791; c=relaxed/simple;
-	bh=yK7FSwYWiwWEUjTJ5bXYkScoChQ2qYb0SNRqOplox+g=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iKlUJyFKot4f/zkMBDbPmmsysr3lNWMrOs0upohBsWYYgJShoMnm1GA0+bKhOLDuhINRY8cv/rUZ1jkYebsnRgNw/wF6GR3I7VQHwF8p7ipoe9JGUhJm1CI2T5GXJKX06LIEVzxl2xgzNLbDsOcWng5zXlWxVzr0Bdiqg3LIaBI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=qwWXMvyf; arc=none smtp.client-ip=148.163.158.5
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="qwWXMvyf"
-Received: from pps.filterd (m0356516.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52NEAG40007193;
-	Sun, 23 Mar 2025 16:36:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=pp1; bh=sM/ybH
-	ruEmdSlSR/k3rexBzIxeb6dE4m6RLkYIDagPQ=; b=qwWXMvyf9wX0cxJIkb6Ztu
-	BA1GfkDev9DjjCl4y1ZqmeK2xrKJvjmaLhNPyt/Ms2CSLcrbt7NgGyPKswG3dLHF
-	YVmoWz4KLghr9djr9DCuZv9zS7Rg5WaW7kGACuW8AXaqrKy42bN6Mw6rGZpwkyM2
-	qM610NNRNFpLQExr648moeZUpYylKMjKnClFQIcsr/8HkG2Owsn4WT+DeyZuqDtv
-	R+8aX/taYfE7mbCxG9nh45hXryp2feN0IIQ/RudVLdYplCS3GNCbgRmp0+bRu/8m
-	f8ArvBeANxIuuGBfvhIJGBUzB3URu4+MCh8V/vM8eCXE2scS00wGXbHC2mvlrkNA
-	==
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45j4cp2u3c-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Mar 2025 16:36:15 +0000 (GMT)
-Received: from m0356516.ppops.net (m0356516.ppops.net [127.0.0.1])
-	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52NGXTfL009795;
-	Sun, 23 Mar 2025 16:36:15 GMT
-Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45j4cp2u3a-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Mar 2025 16:36:14 +0000 (GMT)
-Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
-	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52NDTAnq009694;
-	Sun, 23 Mar 2025 16:36:14 GMT
-Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
-	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j9rka89y-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 23 Mar 2025 16:36:14 +0000
-Received: from smtpav04.fra02v.mail.ibm.com (smtpav04.fra02v.mail.ibm.com [10.20.54.103])
-	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52NGaANF13369850
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 23 Mar 2025 16:36:10 GMT
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A962B20043;
-	Sun, 23 Mar 2025 16:36:10 +0000 (GMT)
-Received: from smtpav04.fra02v.mail.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5E3D220040;
-	Sun, 23 Mar 2025 16:36:09 +0000 (GMT)
-Received: from ltcden6-lp1.aus.stglabs.ibm.com (unknown [9.3.101.155])
-	by smtpav04.fra02v.mail.ibm.com (Postfix) with ESMTP;
-	Sun, 23 Mar 2025 16:36:09 +0000 (GMT)
-From: Misbah Anjum N <misanjum@linux.ibm.com>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: maddy@linux.ibm.com, mpe@ellerman.id.au, npiggin@gmail.com,
-        christophe.leroy@csgroup.eu, naveen@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] arch/powerpc: Remove redundant typedef for bool
-Date: Sun, 23 Mar 2025 11:36:07 -0500
-Message-ID: <20250323163607.537270-2-misanjum@linux.ibm.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250323163607.537270-1-misanjum@linux.ibm.com>
-References: <20250323163607.537270-1-misanjum@linux.ibm.com>
+	s=arc-20240116; t=1742748567; c=relaxed/simple;
+	bh=HS9eJlp/CFEP7vi77KNVQ0mi0+14uVSUP0fxcO5xndQ=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=Ygovr1UiiPxTOBAvapret8w2patFixpH3XSfpPVQ0lYloDhJMOqFzOEdJov2PU6D4jL+0YxuRcNUQ3tLY+2S8Z1Sr+wrpqq28ltUV1cdMnkUKelrleIrpkvwGhF6WfA+OlnFXKUvvphvnWAL4Htq38y0s6e7Ebwptunw3OVXSJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3d5a9e7dd5aso2897565ab.3
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 09:49:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742748564; x=1743353364;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=r1K/68S4OqioDylsGfQbj1ArMhhEArjI36Bsf8QVhEk=;
+        b=LybDtI51uS7L6Mz4W0Nm3EY9Wvzd9zXQez+iODNIwAUt2Z/S63ZZmNiRThFK0LOKLU
+         VdKsjYJ4MF5f5ugsaek2+q9e95oSd5iRC0Ha2XhkxZk3lhDwB9MAjA9wwl94Q8naOqpS
+         qyYbAyWDyr8lEQHw6ekW02I/RGV30Uy+O0ugCAqbtkxGY0pcHPUV4R3dXzh++8+m/e+U
+         WOVtxj5lp+/JO9Ls/nYDQQl5ahcduRUblw5DxWHvnDcFKqCpLHKfgOAwsWCBxJi7P8bF
+         ykK28fvA3iDjYOyRb+a0Lwd88TkZcj6hV2EXNfmOEJWwn1pTb8vrgX5tqQBZG8wXhVKD
+         RURw==
+X-Forwarded-Encrypted: i=1; AJvYcCVvdUqH4OdY1F9B35vG8FUi4SdMtWf4tcWN4dld8o4cYUMLMrNXELbHwOi9vaeil79pmSWEq0LZ7Qs9smw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxloBpH/cj8eNK+fA1uG5F3ichGBx6DJ95su2ju86CVKK0UuT0V
+	/j7Osq20RgsHwfDxtGnJryGB+0/gXux9fmxs19VM9oo+OY9+c5DDLM12vbk69B/MmGR6vju3hnh
+	fqGeAeANvSjp326GoXxS0QT4y+CfKP5PlABVyaUY2/vhBkeO1LGo24OA=
+X-Google-Smtp-Source: AGHT+IEgm/UDkvAHeiJntjWmyHAaiY4bPxTPEsPq5BclJIAfecGG+wxA+hvJ52EYob3UYEBcxZOUKD+4WnWBzPPHFY7BV3GbhdKR
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: 2CiNiKEF0Y0ptND0lguePAc19oiyAy3m
-X-Proofpoint-GUID: 715rgrEjQYfMiu-wbW7z75spDO1Pdkt1
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-23_08,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=614
- impostorscore=0 priorityscore=1501 malwarescore=0 suspectscore=0
- spamscore=0 adultscore=0 clxscore=1015 mlxscore=0 lowpriorityscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2502280000 definitions=main-2503230115
+X-Received: by 2002:a05:6e02:18cf:b0:3d4:2362:98d8 with SMTP id
+ e9e14a558f8ab-3d5960cd0dcmr100813435ab.2.1742748564374; Sun, 23 Mar 2025
+ 09:49:24 -0700 (PDT)
+Date: Sun, 23 Mar 2025 09:49:24 -0700
+In-Reply-To: <67dc67f0.050a0220.25ae54.001e.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e03b94.050a0220.31a16b.0061.GAE@google.com>
+Subject: Re: [syzbot] [mm?] BUG: unable to handle kernel paging request in vma_merge_existing_range
+From: syzbot <syzbot+20ed41006cf9d842c2b5@syzkaller.appspotmail.com>
+To: Liam.Howlett@oracle.com, akpm@linux-foundation.org, jannh@google.com, 
+	liam.howlett@oracle.com, linux-kernel@vger.kernel.org, linux-mm@kvack.org, 
+	lorenzo.stoakes@oracle.com, pfalcato@suse.de, syzkaller-bugs@googlegroups.com, 
+	vbabka@suse.cz
+Content-Type: text/plain; charset="UTF-8"
 
-The custom 'bool' typedef in arch/powerpc/boot/types.h is incompatible with
-the C23 standard, where 'bool', 'true', and 'false' are now reserved keywords.
-With newer GCC versions (such as GCC 15), redefining 'bool' leads to compilation
-errors. For example:
-    error: 'bool' cannot be defined via 'typedef'
+syzbot has found a reproducer for the following issue on:
 
-Since 'stdbool.h' is already included and provides a standard definition for
-'bool', this typedef is redundant and can be removed to avoid conflicts.
+HEAD commit:    586de92313fc Merge tag 'i2c-for-6.14-rc8' of git://git.ker..
+git tree:       upstream
+console+strace: https://syzkaller.appspot.com/x/log.txt?x=162b7e98580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=2e330e9768b5b8ff
+dashboard link: https://syzkaller.appspot.com/bug?extid=20ed41006cf9d842c2b5
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1196f3b0580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d3dc4c580000
 
-Compilation Error:
-    $ make -j$(nproc)
-    ....
-    In file included from arch/powerpc/boot/ops.h:13,
-                     from arch/powerpc/boot/cuboot.c:12:
-    arch/powerpc/boot/types.h:43:13: error: ‘bool’ cannot be defined via ‘typedef’
-    43 | typedef int bool;
-        |             ^~~~
-    arch/powerpc/boot/types.h:43:13: note: ‘bool’ is a keyword with ‘-std=c23’ onwards
-    arch/powerpc/boot/types.h:43:1: warning: useless type name in empty declaration
-    43 | typedef int bool;
-        | ^~~~~~~
-    ....
-    make[2]: *** [arch/powerpc/boot/Makefile:235: arch/powerpc/boot/devtree.o] Error 1
-    make[2]: *** [arch/powerpc/boot/Makefile:235: arch/powerpc/boot/ofconsole.o] Error 1
-    make[2]: *** [arch/powerpc/boot/Makefile:235: arch/powerpc/boot/ns16550.o] Error 1
-    make[2]: *** [arch/powerpc/boot/Makefile:235: arch/powerpc/boot/main.o] Error 1
-    make[1]: *** [arch/powerpc/Makefile:236: zImage] Error 2
-    make: *** [Makefile:251: __sub-make] Error 2
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/3cb302fb058e/disk-586de923.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/6d42da95fefe/vmlinux-586de923.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/5a9e686ee97d/bzImage-586de923.xz
 
-Signed-off-by: Misbah Anjum N <misanjum@linux.ibm.com>
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+20ed41006cf9d842c2b5@syzkaller.appspotmail.com
+
+RSP: 002b:00007fb22df1c208 EFLAGS: 00000246 ORIG_RAX: 0000000000000013
+RAX: 0000000000000020 RBX: 00007fb22dfeb3c8 RCX: 00007fb22df69099
+RDX: 0000000000000006 RSI: 0000200000000240 RDI: 0000000000000003
+RBP: 00007fb22dfeb3c0 R08: 00007fb22df1bfa7 R09: 0000000000000033
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb22dfb8284
+R13: 00007fb22df1c210 R14: 0000000000000001 R15: 0000200000000240
+ </TASK>
+BUG: unable to handle page fault for address: fffffffffffffff4
+#PF: supervisor read access in kernel mode
+#PF: error_code(0x0000) - not-present page
+PGD df84067 P4D df84067 PUD df86067 PMD 0 
+Oops: Oops: 0000 [#1] PREEMPT SMP KASAN NOPTI
+CPU: 0 UID: 0 PID: 5822 Comm: syz-executor515 Not tainted 6.14.0-rc7-syzkaller-00205-g586de92313fc #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:vma_merge_existing_range+0x266/0x2070 mm/vma.c:734
+Code: e8 0f 47 ac ff 48 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 1c 19 00 00 48 8b 04 24 48 8b 74 24 08 <4c> 8b 38 4c 89 ff e8 4f 41 ac ff 48 8b 44 24 08 49 39 c7 0f 83 db
+RSP: 0018:ffffc900034d7950 EFLAGS: 00010246
+RAX: fffffffffffffff4 RBX: ffffc900034d7ab0 RCX: ffffffff820db0e5
+RDX: 1ffffffffffffffe RSI: 0000200000807000 RDI: 0000000000000005
+RBP: 0000200000ce2000 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000001
+R13: ffffc900034d7ad0 R14: ffff8880349961f0 R15: ffff8880122a6e00
+FS:  00007fb22df1c6c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffff4 CR3: 000000007d69e000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ vma_modify.constprop.0+0x87/0x410 mm/vma.c:1517
+ vma_modify_flags_uffd+0x241/0x2e0 mm/vma.c:1598
+ userfaultfd_clear_vma+0x91/0x130 mm/userfaultfd.c:1906
+ userfaultfd_release_all+0x2ae/0x4c0 mm/userfaultfd.c:2024
+ userfaultfd_release+0xf4/0x1c0 fs/userfaultfd.c:865
+ __fput+0x3ff/0xb70 fs/file_table.c:464
+ task_work_run+0x14e/0x250 kernel/task_work.c:227
+ ptrace_notify+0x10e/0x130 kernel/signal.c:2522
+ ptrace_report_syscall include/linux/ptrace.h:415 [inline]
+ ptrace_report_syscall_exit include/linux/ptrace.h:477 [inline]
+ syscall_exit_work kernel/entry/common.c:173 [inline]
+ syscall_exit_to_user_mode_prepare+0x126/0x290 kernel/entry/common.c:200
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:205 [inline]
+ syscall_exit_to_user_mode+0x11/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x250 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb22df69099
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 31 1b 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb22df1c208 EFLAGS: 00000246 ORIG_RAX: 0000000000000013
+RAX: 0000000000000020 RBX: 00007fb22dfeb3c8 RCX: 00007fb22df69099
+RDX: 0000000000000006 RSI: 0000200000000240 RDI: 0000000000000003
+RBP: 00007fb22dfeb3c0 R08: 00007fb22df1bfa7 R09: 0000000000000033
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007fb22dfb8284
+R13: 00007fb22df1c210 R14: 0000000000000001 R15: 0000200000000240
+ </TASK>
+Modules linked in:
+CR2: fffffffffffffff4
+---[ end trace 0000000000000000 ]---
+RIP: 0010:vma_merge_existing_range+0x266/0x2070 mm/vma.c:734
+Code: e8 0f 47 ac ff 48 8b 14 24 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 80 3c 02 00 0f 85 1c 19 00 00 48 8b 04 24 48 8b 74 24 08 <4c> 8b 38 4c 89 ff e8 4f 41 ac ff 48 8b 44 24 08 49 39 c7 0f 83 db
+RSP: 0018:ffffc900034d7950 EFLAGS: 00010246
+RAX: fffffffffffffff4 RBX: ffffc900034d7ab0 RCX: ffffffff820db0e5
+RDX: 1ffffffffffffffe RSI: 0000200000807000 RDI: 0000000000000005
+RBP: 0000200000ce2000 R08: 0000000000000005 R09: 0000000000000000
+R10: 0000000000000001 R11: 0000000000000001 R12: 0000000000000001
+R13: ffffc900034d7ad0 R14: ffff8880349961f0 R15: ffff8880122a6e00
+FS:  00007fb22df1c6c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: fffffffffffffff4 CR3: 000000007d69e000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess):
+   0:	e8 0f 47 ac ff       	call   0xffac4714
+   5:	48 8b 14 24          	mov    (%rsp),%rdx
+   9:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  10:	fc ff df
+  13:	48 c1 ea 03          	shr    $0x3,%rdx
+  17:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1)
+  1b:	0f 85 1c 19 00 00    	jne    0x193d
+  21:	48 8b 04 24          	mov    (%rsp),%rax
+  25:	48 8b 74 24 08       	mov    0x8(%rsp),%rsi
+* 2a:	4c 8b 38             	mov    (%rax),%r15 <-- trapping instruction
+  2d:	4c 89 ff             	mov    %r15,%rdi
+  30:	e8 4f 41 ac ff       	call   0xffac4184
+  35:	48 8b 44 24 08       	mov    0x8(%rsp),%rax
+  3a:	49 39 c7             	cmp    %rax,%r15
+  3d:	0f                   	.byte 0xf
+  3e:	83                   	.byte 0x83
+  3f:	db                   	.byte 0xdb
+
+
 ---
- arch/powerpc/boot/types.h | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/arch/powerpc/boot/types.h b/arch/powerpc/boot/types.h
-index 8a4c418b7..6f34b31b8 100644
---- a/arch/powerpc/boot/types.h
-+++ b/arch/powerpc/boot/types.h
-@@ -40,7 +40,9 @@ typedef s64 int64_t;
- #define min_t(type, a, b) min(((type) a), ((type) b))
- #define max_t(type, a, b) max(((type) a), ((type) b))
- 
-+#if !defined(__STDC_VERSION__) || __STDC_VERSION__ < 202300L
- typedef int bool;
-+#endif
- 
- #ifndef true
- #define true 1
--- 
-2.49.0
-
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
