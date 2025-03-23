@@ -1,1004 +1,307 @@
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2051.outbound.protection.outlook.com [40.107.101.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE35291E;
-	Sun, 23 Mar 2025 22:55:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742770512; cv=none; b=kOyPLAp6p1mndReMbzKShml3AvCNgNhx/y4l1a8FYV8/nXc+aR7ijJ9e8dz158KrE3A9J8ne5IKNQvjVscAPRVe8Btc7CA255XGYUK40S8PrFS9SgzGqKB5KHfl1eYXpdc1rn44NwRRXqwXkx3cNNPEtJzcnsj/fb40/z3O6tG0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742770512; c=relaxed/simple;
-	bh=Ads3rkVvEtA5gnRu3T023v9CP2UWuPnRpfuXZHDxtDQ=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TMaj97OpwDzmimFhq+e6wqeN84cKlnyXTzki0prjM3IFRpMfIYGAZeaQoPQ8UGkR9DTpw2UnbdTXlmayYsVFPUc8B4HCdlVIKOIQD9egX6jfxrgG8F1iCP4GSeWFDhZPxfiv8JIFPoClHU+tumx6DxORDpo7FdHMIvSEm9eGiP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dq5qkKcP; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9306F3D561;
+	Sun, 23 Mar 2025 22:57:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.101.51
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742770664; cv=fail; b=asTOeQvYZTn1yjWdb/DaZ32WhSokT1bQIPWu6CDRvdpaTf4LYhKF9h5SagP0puo1spOyg3SL/JbwrLyxp/0XAT5KpQ/ofOu7H3FIyLLy8M5EAj5ORAaTArGn7zd+Z9e250Sxx1LSfk3Kohs+Yq70RNeD/Ck2lcVbgbzZT7q0ncQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742770664; c=relaxed/simple;
+	bh=nJvw99DPMLyhaWolqWJE5h+FKAYIhb+8ECUmmvqqkgs=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=iYrQfiOBBgYBL3xByV7rv+b5zhF+HfxC+6WAdy/XGHO5XVmy0XloEnKyAwcUOKhf6/nkeVlr5He4+EmVT5N+4epUrabinvuGyw6kZtNjwm8Fy56CzpgfV1nwT55sCeICfPTdrVTeLrV82RMW9QHfoJml2ae0ZAAany9VW0W8Dow=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=brH4wqub; arc=fail smtp.client-ip=40.107.101.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dq5qkKcP"
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3912c09be7dso2401617f8f.1;
-        Sun, 23 Mar 2025 15:55:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742770508; x=1743375308; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=fjSjWHZ6GaiKJ5erpSnC5BH+Omomyx0D+ocbSoLEIYo=;
-        b=dq5qkKcP5t8RZFfDCbbW1aeyMkeCCN9QKHNJRykhZ7tcOgcc83wcEex6Z6OqjSMeQ9
-         7eJ6htJRgGmUS6d/CDcy4r/AJvZPxX/M/Dil+cs89QjPrx+nHkD85Dh+/fesfDFm4Kiq
-         WXqu9v1sg/5rJUAfLXpKafn94356P0wV+Q744YwH7FCclTZZ0FJxT278QNdblccA1AvC
-         lZphULu/8kxEayHDQZVnV9g12uOCCHFt1FD7aECPSV7he5vq3mh+DuJQnVZBMQZXBOFg
-         sKczEQXRZonFZpyGQoAC1nxjVzBpO1caeaIVM+YkJXgrHF5ttlQYrYR15fSTQiKH8EDR
-         N3mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742770508; x=1743375308;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fjSjWHZ6GaiKJ5erpSnC5BH+Omomyx0D+ocbSoLEIYo=;
-        b=csNEWtU0vtfgDzw2x3AXJb6WsRCGwzWsuIDqDOXij+QACWr/mGqK88JeK0cFEgT0dq
-         JR0VL30oOz95K+crDAp7yc4dycHCNehWlEXkMemk/kollpr7ExnuGjquGP67VweFyd0Q
-         zDu3bQ50huQKN3lPHmOPolB7Hj2HO2i8LHQT6mte+g6OgwSHslTetMZ23INSe2lZHvPI
-         UhiuYrxQGYTBZ1FSCzKdQQCbtxyFkyJW3X+7/cYYFyelOp5wLRt5ayZ0x4D6de5/iSEl
-         YQYWMYnZTYmjVLJnCI9rs0Q9BB8C1a1bZ4wxVhXNii8zzj0zpHoXRdMxyl3Rv+TR/HfN
-         9S7w==
-X-Forwarded-Encrypted: i=1; AJvYcCUMUlQ4vjSPbDM+AG14piqF1KpH7Ncxy5HfHCwd71xTdf0rmzbOSOin1yG6Wj1W/XiHSspyobZR@vger.kernel.org, AJvYcCUMryeKGV2aVmPISPE3yG844+PBFYG5gDTYdD288gjFfJcdENpuDiscTvXImxWbLAkd70gEIy5KCYvV5jr6@vger.kernel.org, AJvYcCURNYMfbdFSKY6D5VztEgu+HzgWTqF25X6XYe2j0bQsfuUnPPF0dXyHbzQrE8ixMqFGJp4Flz8btXp8@vger.kernel.org
-X-Gm-Message-State: AOJu0YyfhHBrrS4r8fWEIA+xJIFw6RI674S/p2NO7cR3W/L6mPK9JjFZ
-	7x0nnx5upIJT1zA89uJHbYzm14Py8Mdmi29VWrwt6fughxUxfAIQ
-X-Gm-Gg: ASbGncv2fHUv4pcHmmrLXG1O/csEZuFtNjTht6kWVJrlDEOcd9wweBEVTY7Ah/yYSEI
-	Wu7IrN4boQzo8+hKC/y7BnXgsj9wF4nRNSWC8A4VOsLov49Ksmpx9IwbEOon2X9BNjj9ZhjG0rb
-	ypF0lvlIqyUsj4EyFwkusop3dOEUci0zMjFJe2P+L2qLheqswZNIlfWigfSEAwRYgJ0dUsD5Yvh
-	eHbQZ7QHgFUBc8Yjda1c8LWblU5BKiIee2Sj8czJV+1iopPbZ8eI7fNPgZPbthPaS6/xzMWqV4h
-	cNNOOUO+FGvae63wzo0k6oUUo3nY1MH+308Ocv9x5N+Xr4AMobJoPfOCS+JOAEnEBxEVDq1lqdn
-	QDdN98Wqi8YMyiQ==
-X-Google-Smtp-Source: AGHT+IEex4VdBh+woNYEnyNkS9HTKRV3QW3S/InAM14m/ulWcEsZhy3lQ3lFLbXTdyJtwZ+gg+5/Hw==
-X-Received: by 2002:a5d:64cb:0:b0:391:42f2:5c7b with SMTP id ffacd0b85a97d-3997f8fea8bmr10800160f8f.16.1742770507600;
-        Sun, 23 Mar 2025 15:55:07 -0700 (PDT)
-Received: from localhost.localdomain (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3997f9a3f36sm9171129f8f.32.2025.03.23.15.55.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 15:55:07 -0700 (PDT)
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Christian Marangi <ansuelsmth@gmail.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiner Kallweit <hkallweit1@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	netdev@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [net-next PATCH 1/2] net: phy: Add support for new Aeonsemi PHYs
-Date: Sun, 23 Mar 2025 23:54:26 +0100
-Message-ID: <20250323225439.32400-1-ansuelsmth@gmail.com>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="brH4wqub"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ikFiGcXKsutze/cIt9ZyORSRZPvPBDIlnN70zmh+UkdZRbMNfjXEJ5124PwUJJ7oYurVQkWU/us1jvEUkb+I++xfHjXcHPoZK+mto2OKnz/Tl4ztRnQC7w9ymYLM4i8uh0Ys+BIXIR+r48ayJLLdzCW0S8lnd7dwXsnZiy4rYc5XvXieQGEzr0fbJc2qf+QpfXxSg2BDK2WuA82BQTxMccvjkU6pajyYlNZDMkUa1vqczYEGBmbSG0JTq5JFxKr8Zs1ZERoV7Mxjs7akUg4mXhksKI4Z/2sX03EElkqY1lDbe43fTv+aDBPxtJ4XIqecEwT6OouO0uPSQXK9m9fHuw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=nJvw99DPMLyhaWolqWJE5h+FKAYIhb+8ECUmmvqqkgs=;
+ b=D1svfOlyI9rGTjhnlLiDPC6wqLkLd6kW2pZ88AMcRFdrBfI8X9oAKvJkpqOdPFZzzOBmiJLBVR0sVT7nYlpPN1mxPbTre8g0l4jDGOqt6dhye+PJBITRa9ioDR9uEYGxz+Blj8KVFy0Ccx17zT1qn7GIMdcpY2V5xjUiYtJoVY0OYyFtl8Foe24hKJh3D1lfYxzGsTV61ukYcivNh/yKKRCNFYrpyz/I3Wq+lANLM7sqHlO4iw3etY+gWYZq8jtoAaQF5JzU5paAvrQT1K6CprgcvhkDyow4hkvweZrvYzsUuxAfyQCx/djtyhVrRmBKUc50XCIZp+Y1bX6IQ5IWsQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=nJvw99DPMLyhaWolqWJE5h+FKAYIhb+8ECUmmvqqkgs=;
+ b=brH4wqubsoISGgyCFw7XXYT0MmisqbKX1JhWKiTeJrYp1pWG48x9cHRIbH5lNr5srBJnaPNEohIuB3ocO6QhUZXsDVwbZHrBNAIo4mdskuhsmmtmC+rRNtxhHOqH4Db3U9M6wePenYay/5UrSs9MWzZMk+/xssJswXRzkfnDTi5RCGane3sEQ9jYRDZx7hKQcAyyFXGTyllup7silnHdK6pI9uxDNX8G9iz+haX9sxbv5xIJarXe79axsBIGJg6ds1VxqWRQi/L2XowuOuR1O2C9FiWWn04CXXZwGGbSHncfaU1Qc/O1bwnaprlh8X0Mp1iI9VJaJIsyq5gzWOzQtw==
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com (2603:10b6:806:32b::7)
+ by IA1PR12MB8191.namprd12.prod.outlook.com (2603:10b6:208:3f3::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Sun, 23 Mar
+ 2025 22:57:39 +0000
+Received: from SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91]) by SN7PR12MB8059.namprd12.prod.outlook.com
+ ([fe80::4ee2:654e:1fe8:4b91%4]) with mapi id 15.20.8534.040; Sun, 23 Mar 2025
+ 22:57:39 +0000
+From: Joel Fernandes <joelagnelf@nvidia.com>
+To: Frederic Weisbecker <frederic@kernel.org>
+CC: "Paul E. McKenney" <paulmck@kernel.org>, LKML
+	<linux-kernel@vger.kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Neeraj
+ Upadhyay <neeraj.upadhyay@amd.com>, Uladzislau Rezki <urezki@gmail.com>,
+	Zqiang <qiang.zhang1211@gmail.com>, rcu <rcu@vger.kernel.org>
+Subject: Re: [PATCH 1/2] rcu: Comment on the extraneous delta test on
+ rcu_seq_done_exact()
+Thread-Topic: [PATCH 1/2] rcu: Comment on the extraneous delta test on
+ rcu_seq_done_exact()
+Thread-Index:
+ AQHbmA2PfoS7IZWyfEqV4ThgpclOkrN5OYoAgAGjWICAATgYgIACWN4AgACLYQCAAEHXgIAABaiAgAIOfQCAAA6IAA==
+Date: Sun, 23 Mar 2025 22:57:39 +0000
+Message-ID: <EF52A95D-C68B-4CB7-ADF3-5278FA79DCA5@nvidia.com>
+References: <Z-CFnKELSqFotela@pavilion.home>
+In-Reply-To: <Z-CFnKELSqFotela@pavilion.home>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: SN7PR12MB8059:EE_|IA1PR12MB8191:EE_
+x-ms-office365-filtering-correlation-id: d8f0f717-874f-44de-0c87-08dd6a5e1ca9
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|366016|1800799024|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?utf-8?B?d2dRN3F5ckRaVWVydVJTUEdnTmxVRmcxVWxBdmY4WEZmaUZvQUwyUStxWWZO?=
+ =?utf-8?B?ZXgvWWdGTG9pSmNTVVV4VnZrYkY0WVZQR1U1WVBtTkJCU3AxRUVwdmNxOVAx?=
+ =?utf-8?B?ek1WaUZHV0Ftb1dTWGFWZ21VTldGT3BmdDVUcVBKT0NuU2FXVDVudlNlMzNx?=
+ =?utf-8?B?Rk5WcktQRlRHV200MnJibCtWd01HeTRvSjdyL1lFcVArdUNHUkk1RmRLMnJo?=
+ =?utf-8?B?VFpZTitpd3dDSWVKNjlwQmYzdkYwWHhlNjc1ZDFBbkE2UzJCRWlLT2g4M05w?=
+ =?utf-8?B?RFVJUGwwMmN0QVRNR0RtekJ5NENJVHR1K3BoVjNKNDRrL3R5WmZjSS9LVlE3?=
+ =?utf-8?B?TnRQUk5MQU51QUV3VWljMVFrWERKOEh0THVpdXQvemtiSmxEWGdUVmFjTXU4?=
+ =?utf-8?B?aFlZekhTTTNSQnJ6aVV0ZlZsbldTMTZ0b2tab0I0bFJCV2tlS1pHM2VNb2tP?=
+ =?utf-8?B?K2hqL1h3WDNhWWh6dER6cG55dll0VWxIbXhFNDdpbGRKMFZzK0NOTWd4dWFD?=
+ =?utf-8?B?S1ZUM2NMRlRnTm8xZ2Evc1hiczMwMXhpQTF3ZE04Z2YwM0JzSG1ocVNoUTg2?=
+ =?utf-8?B?dUtpL2NnSFFKMkxaMkNzMC9PZ3NSNHEvWWZZdm5tTERIVEluK0V5YWVqa0pz?=
+ =?utf-8?B?R1VmOG1lSnV3Z3pxT0NIa0JNM2NOYXhQbWowNkhGTGJEbDZHclVlQ2lnVGc0?=
+ =?utf-8?B?OUZoelRCcERlOGswVGJCU1hHc1R0Y0xlL05kcURYYTVxdmdOc09DYkc3YnE3?=
+ =?utf-8?B?eGVxZHZVU3hIMEduZkNjV0Z5eHBLbGdTOUsxdjJPL0Q5M3BudVViL3Mwb2h4?=
+ =?utf-8?B?R2FXY3F6cWFuUUNmVXpWY3gxWm8wbnZHcFV5VkhCRUw0UFlDbk50NTNrM1VO?=
+ =?utf-8?B?VTBuYUtmYWJHWmFUWHRHbU9UR2lxRzJYQUJ1SFNsMnhINDE5NlJjYXlIbWZo?=
+ =?utf-8?B?aFBlcHZaNmlGbUZzRytpbGtySzhndnhDTFhYOG4yRTJLQmM5d0t6RUl1T0li?=
+ =?utf-8?B?SERIMUphVy90R2oxaGJOQVFjS3dmRlFmSko3bWlpalpDY2NiWTl4eVRJQ1lF?=
+ =?utf-8?B?OHB6OG82SUh6M1kxR1hGUDlsRjZPVm9yZFdYdUd5UCt1QXVwdzhXckxmYi94?=
+ =?utf-8?B?TkIzOVVadHhRY3lVYndEalluTnVBUFRkNlRuUHBoZUgzTjJub2lOdkJHVHM0?=
+ =?utf-8?B?SkVsTERrcm5qUTMyS0hzcFpaSmkrRFhuWktPZlZBS2JYbmQ0cTQ3M2FIckRO?=
+ =?utf-8?B?d2pteHZWUklKM1NKUEt0c2wrK0NjZU9YRGlCejQ3TUtnL3JNRFVzR1ZLSkFs?=
+ =?utf-8?B?U0JaWkZSMmY3UWhEalE3UGdLOVQvRjBwM0lOVnora3NUTlFNMUZvUnA0QU5U?=
+ =?utf-8?B?MEVtUlJnOXlwV3VHQzB2OHV6U2d6YW9GKzQ3cTlOaUgzWW9oMW9RTUlLY3p2?=
+ =?utf-8?B?Y2NrTnRmRytXVVRpSjhQRkNyNnBOQ0x3cXdVT0NuMy9EWjRUYzhveW9NeFhl?=
+ =?utf-8?B?cVYxb3h4NnMxeHRFdWhpSGpkNTQ2ZlhLbnVObDZ1WnFsUzhqRUVzOUhaNGtY?=
+ =?utf-8?B?dzVDRFRwMVhRUUw1WUUvdW9OYTU2ZTliNXVLVXhOalVpb1dvaXIvMzZYbzdY?=
+ =?utf-8?B?OHE3VjBSUHhtUmc3WS83aXJrejFEY24rSWNCVktTOXVZVW0raUROTmtFRlZp?=
+ =?utf-8?B?bUk1NDN2SlJyck9qaTBPRkpiVGV5SWVCbHpEb3F4cCt2blh3UHFiMFA2UVcx?=
+ =?utf-8?B?ZndvVGNaMno5MFByMFpacGpKNExISTdybzRXZnR1dFhod0Z5bGtoaHlDMDBH?=
+ =?utf-8?B?RTBJWmtSNFpTaE1vOERtaWhXemRwYk9uWVNSSmxXUnYvQXZkM3hjRURRbFFR?=
+ =?utf-8?B?ZEM0WW5NSitjUDNXMlh3Qm5mUXJqY0pmZXQrdGgySVB0dUF6eE5DbkZvTWFQ?=
+ =?utf-8?Q?581EY3K4knMpv+xbDoB1acfymzdduIrr?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN7PR12MB8059.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?WHRNRFhDNCsxcHlKWktUWUk4a3QxK3c0WS9wa0pkZG1CWi9VRjltNnJNK29L?=
+ =?utf-8?B?dkpjbk9ORm5hczMvcDBETldrODVFemtaVW5tL2FQMk1YTmgrYVNiRVZrcWc0?=
+ =?utf-8?B?MFJRUkRNSzIraVpwUEFoU3hFa3NmbTdJcjNYbUV4ZmdCUUQ2dFFHbmVEczUv?=
+ =?utf-8?B?SWs5S3hVVklxQW11WDdxOHdvM1E0R1ROU3pyaUpoNHBGRE9QSkxtT0RmV25x?=
+ =?utf-8?B?UGJlSnNlaEdhUzdMVktlVjVrZVpkL2dadDd4OWNpZGt0L2dMaHl0S2JuRFlS?=
+ =?utf-8?B?UkR5bzdJSUlHMzRMNm1oQis0bFRBWWpJeG1WbTNFTEJnS0l1MWNBL01TM2VY?=
+ =?utf-8?B?UmZWbytCOEVMaStqSXR2NGRCSEpLTkRYU1cyTUxVTnp5dEFVZ2FrZm9yQUxE?=
+ =?utf-8?B?R0gwTFNxNisvU3NDakdmZThXWVhIenRQc2liUzcwRFI1WldDV1l4alVhY1k2?=
+ =?utf-8?B?c2RSZDhTUG01RkFTenBPb1VFMnZkeXRoMXhpZ1p3bFlmaEdsUzE0Um52S0Zp?=
+ =?utf-8?B?eHNzSWNPVk01b0pDejYvZDQ5dGt6S0lyZmFRczVwNGtwL0hmeE5DTWFEbjZY?=
+ =?utf-8?B?ZVlDLzU0ck5VT0o0ZzZKdU1NeWxNQjVYM2dCYkNqanE0NGJ4OWZMQ1R3bGVa?=
+ =?utf-8?B?VXhKaWw3MS9wcHo1WFNXZ09sU2FHTXF0Nkl3a0I2cnByazNLYmE5SG95Rld0?=
+ =?utf-8?B?L2ZPQmUySDdnTDBOYlFwclFndnowbmdPbkcrMkZLeUxUaDF3MGdtQjI4MTFZ?=
+ =?utf-8?B?UFlUcGJBY2tya2ZiY3B2WmdDY1QvSzdPaVhlYVpSdG9JR01TRXRZNFVIMUxN?=
+ =?utf-8?B?Z3A1c05hL1VqNU05VnRDT2JJU3EvdHdwaE5ydktTMEZBblppZEdlemsvTCtP?=
+ =?utf-8?B?dkYrVEprOS9iejg3d25zY0pkMDFXWlo2d0MzUG5ONVhMYTM3T2lneTd0T0JC?=
+ =?utf-8?B?dWFmZFVIb2YzOTFBVTJieVYrS0VTc0xQbjVGOUozMFd5NzVqQUpMT0hBZ0wr?=
+ =?utf-8?B?aEw4RnVLdFoyaDZubmNObkZnREpEN0l3K3JuZlZZS3NJVU1ZU1QyQU1YWE1Q?=
+ =?utf-8?B?RytVRllwM3hKNWFJSTg5eHNTaVd6U21OblFoZFJDM2tmNWhreWJNTld5MTJn?=
+ =?utf-8?B?Y0tpVGo0S3UzZElnWlBZSVlJVEk4VnhrVDAyWFBnUVNRZTNaam1oRFp4MzFx?=
+ =?utf-8?B?K1VEd1BYV2VhS0RMMWNRYjJHbDhWWGc0U1hWYkxJVGJ1Ykt4STVwbmo3TUk2?=
+ =?utf-8?B?RUFqaEFkVVNGK2EyeWwvUnlVVFc1R2x5aGN2NFhhb0kxeTIybWtDaVlVVExU?=
+ =?utf-8?B?emhUYXY2Uk1vNWN0SUsxWVdmeUFHK2UxRTY3L0Y3TVlHY0ZtMEVtejd6TnJy?=
+ =?utf-8?B?UGN1cWptdStZZVdVcE5kdGhmVEVzRmpJaEtNSENyTWdZcXArWlJmenhVYkND?=
+ =?utf-8?B?ZUdHV05oczBGYlQ0WHhhbUF4QXMvL1Q3dW1PcGZOcEhhSjRjdnVTc01DUUlN?=
+ =?utf-8?B?OCt5azBhaTV1YkdDTXFNdFNpTnEycTRUVTZ2Z1I0UlpWTFZRNVR3QUZ0b1dJ?=
+ =?utf-8?B?cndqWDhINStiaTlWOWc3NEpXRVhnMERWMTFjYlNGRTlSaU5CNk5tZVovVkxX?=
+ =?utf-8?B?T1lwajlhdmI2MlZuQkNpMUx2SFo5NG1EQ0FoV3l5VS9FQW9lQ0pweVZ0dGMy?=
+ =?utf-8?B?NDdRam0vTmxDMTRtVS9rRWp1Z2lpeXc2UnhHemxaVkJSVm5NZTIyVEY2TDlH?=
+ =?utf-8?B?UDhaMnJJRURBMkZvTUZUNGpoT0JrVFlOMlpveURHSjhMSXZ6MGc1L2NDSnV1?=
+ =?utf-8?B?VEtnanpoWnNTMnBwWGlEM1dCN0grZGNra1FKTEdkdVdVMnViQ29iSDQ3Ty93?=
+ =?utf-8?B?dkRvTTE1TDVEVXRnU0wxTW96dW5NKzZIWS8ydUNkTklsZFhvVkl1b1dFbHVL?=
+ =?utf-8?B?a2pGUDZEdG12WkxnR2tlNE5aQXA0MzVWei8ycHFsUGJ2eVBUdDZwZHFIdVpv?=
+ =?utf-8?B?OWtVcUVVeXhHNkJESnc5N096bktZZk5hdm1WblFNQTVEZTZ2VjNZNEdOQ0Zr?=
+ =?utf-8?B?eXV4V3BhZFQvTzRZWXY2bXhBSzA5VjlqWHdqRUtKcm1aRFkyOEJ1YnZqTWNr?=
+ =?utf-8?Q?sa95IgkMYVZ2vrdRrsFwdQGVg?=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <AF1DACDEE38CE04B949DBFA5AB6AF814@NVIDIA.onmicrosoft.com>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SN7PR12MB8059.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d8f0f717-874f-44de-0c87-08dd6a5e1ca9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 23 Mar 2025 22:57:39.6539
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: BGgKuwM0fTL94StbKXEVwN/K+bdEKf3ltoDtc15jRLIY9lEoyIXOx6g1eacQhNHhVQrUg5KoVdjKQE6b2k62LQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR12MB8191
 
-Add support for new Aeonsemi 10G C45 PHYs. These PHYs intergate an IPC
-to setup some configuration and require special handling to sync with
-the parity bit. The parity bit is a way the IPC use to follow correct
-order of command sent.
-
-Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
-AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
-AS21210PB1 that all register with the PHY ID 0x7500 0x7500
-before the firmware is loaded.
-
-They all support up to 5 LEDs with various HW mode supported.
-
-While implementing it was found some strange coincidence with using the
-same logic for implementing C22 in MMD regs in Broadcom PHYs.
-
-Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
----
- MAINTAINERS               |   6 +
- drivers/net/phy/Kconfig   |  12 +
- drivers/net/phy/Makefile  |   1 +
- drivers/net/phy/as21xxx.c | 834 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 853 insertions(+)
- create mode 100644 drivers/net/phy/as21xxx.c
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 873aa2cce4d7..9a2df6d221bd 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -645,6 +645,12 @@ F:	drivers/iio/accel/adxl380.h
- F:	drivers/iio/accel/adxl380_i2c.c
- F:	drivers/iio/accel/adxl380_spi.c
- 
-+AEONSEMI PHY DRIVER
-+M:	Christian Marangi <ansuelsmth@gmail.com>
-+L:	netdev@vger.kernel.org
-+S:	Maintained
-+F:	drivers/net/phy/as21xxx.c
-+
- AF8133J THREE-AXIS MAGNETOMETER DRIVER
- M:	Ondřej Jirman <megi@xff.cz>
- S:	Maintained
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 41c15a2c2037..454715c651d6 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -121,6 +121,18 @@ config AMCC_QT2025_PHY
- 
- source "drivers/net/phy/aquantia/Kconfig"
- 
-+config AS21XXX_PHY
-+	tristate "Aeonsemi AS21xxx PHYs"
-+	help
-+	  Currently supports the Aeonsemi AS21xxx PHY.
-+
-+	  These are C45 PHYs 10G that require all a generic firmware.
-+
-+	  Supported PHYs AS21011JB1, AS21011PB1, AS21010JB1, AS21010PB1,
-+	  AS21511JB1, AS21511PB1, AS21510JB1, AS21510PB1, AS21210JB1,
-+	  AS21210PB1 that all register with the PHY ID 0x7500 0x7500
-+	  before the firmware is loaded.
-+
- config AX88796B_PHY
- 	tristate "Asix PHYs"
- 	help
-diff --git a/drivers/net/phy/Makefile b/drivers/net/phy/Makefile
-index c8dac6e92278..14156bf11267 100644
---- a/drivers/net/phy/Makefile
-+++ b/drivers/net/phy/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_AIR_EN8811H_PHY)   += air_en8811h.o
- obj-$(CONFIG_AMD_PHY)		+= amd.o
- obj-$(CONFIG_AMCC_QT2025_PHY)	+= qt2025.o
- obj-$(CONFIG_AQUANTIA_PHY)	+= aquantia/
-+obj-$(CONFIG_AS21XXX_PHY)	+= as21xxx.o
- ifdef CONFIG_AX88796B_RUST_PHY
-   obj-$(CONFIG_AX88796B_PHY)	+= ax88796b_rust.o
- else
-diff --git a/drivers/net/phy/as21xxx.c b/drivers/net/phy/as21xxx.c
-new file mode 100644
-index 000000000000..7aefe2fcf24f
---- /dev/null
-+++ b/drivers/net/phy/as21xxx.c
-@@ -0,0 +1,834 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Aeonsemi AS21XXxX PHY Driver
-+ *
-+ * Author: Christian Marangi <ansuelsmth@gmail.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/firmware.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy.h>
-+
-+#define VEND1_GLB_REG_CPU_RESET_ADDR_LO_BASEADDR 0x3
-+#define VEND1_GLB_REG_CPU_RESET_ADDR_HI_BASEADDR 0x4
-+
-+#define VEND1_GLB_REG_CPU_CTRL		0xe
-+#define   VEND1_GLB_CPU_CTRL_MASK	GENMASK(4, 0)
-+#define   VEND1_GLB_CPU_CTRL_LED_POLARITY_MASK GENMASK(12, 8)
-+#define   VEND1_GLB_CPU_CTRL_LED_POLARITY(_n) FIELD_PREP(VEND1_GLB_CPU_CTRL_LED_POLARITY_MASK, \
-+							 BIT(_n))
-+
-+#define VEND1_FW_START_ADDR		0x100
-+
-+#define VEND1_GLB_REG_MDIO_INDIRECT_ADDRCMD 0x101
-+#define VEND1_GLB_REG_MDIO_INDIRECT_LOAD 0x102
-+
-+#define VEND1_GLB_REG_MDIO_INDIRECT_STATUS 0x103
-+
-+#define VEND1_PTP_CLK			0x142
-+#define   VEND1_PTP_CLK_EN		BIT(6)
-+
-+/* 5 LED at step of 0x20
-+ * FE: Fast-Ethernet (100)
-+ * GE: Gigabit-Ethernet (1000)
-+ * NG: New-Generation (2500/5000/10000)
-+ * (Lovely ChatGPT managed to translate meaning of NG)
-+ */
-+#define VEND1_LED_REG(_n)		(0x1800 + ((_n) * 0x10))
-+#define   VEND1_LED_REG_A_EVENT		GENMASK(15, 11)
-+#define     VEND1_LED_REG_A_EVENT_ON_10 FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x0)
-+#define     VEND1_LED_REG_A_EVENT_ON_100 FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x1)
-+#define     VEND1_LED_REG_A_EVENT_ON_1000 FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x2)
-+#define     VEND1_LED_REG_A_EVENT_ON_2500 FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x3)
-+#define     VEND1_LED_REG_A_EVENT_ON_5000 FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x4)
-+#define     VEND1_LED_REG_A_EVENT_ON_10000 FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x5)
-+#define     VEND1_LED_REG_A_EVENT_ON_FE_GE FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x6)
-+#define     VEND1_LED_REG_A_EVENT_ON_NG FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x7)
-+#define     VEND1_LED_REG_A_EVENT_ON_FULL_DUPLEX FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x8)
-+#define     VEND1_LED_REG_A_EVENT_ON_COLLISION FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x9)
-+#define     VEND1_LED_REG_A_EVENT_BLINK_TX FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0xa)
-+#define     VEND1_LED_REG_A_EVENT_BLINK_RX FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0xb)
-+#define     VEND1_LED_REG_A_EVENT_BLINK_ACT FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0xc)
-+#define     VEND1_LED_REG_A_EVENT_ON_LINK FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0xd)
-+#define     VEND1_LED_REG_A_EVENT_ON_LINK_BLINK_ACT FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0xe)
-+#define     VEND1_LED_REG_A_EVENT_ON_LINK_BLINK_RX FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0xf)
-+#define     VEND1_LED_REG_A_EVENT_ON_FE_GE_BLINK_ACT FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x10)
-+#define     VEND1_LED_REG_A_EVENT_ON_NG_BLINK_ACT FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x11)
-+#define     VEND1_LED_REG_A_EVENT_ON_NG_BLINK_FE_GE FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x12)
-+#define     VEND1_LED_REG_A_EVENT_ON_FD_BLINK_COLLISION FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x13)
-+#define     VEND1_LED_REG_A_EVENT_ON	FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x14)
-+#define     VEND1_LED_REG_A_EVENT_OFF	FIELD_PREP_CONST(VEND1_LED_REG_A_EVENT, 0x15)
-+#define VEND1_LED_CONF			0x1881
-+#define   VEND1_LED_CONFG_BLINK		GENMASK(7, 0)
-+
-+#define VEND1_SPEED_STATUS		0x4002
-+#define   VEND1_SPEED_MASK		GENMASK(7, 0)
-+#define   VEND1_SPEED_10000		FIELD_PREP_CONST(VEND1_SPEED_MASK, 0x3)
-+#define   VEND1_SPEED_5000		FIELD_PREP_CONST(VEND1_SPEED_MASK, 0x5)
-+#define   VEND1_SPEED_2500		FIELD_PREP_CONST(VEND1_SPEED_MASK, 0x9)
-+#define   VEND1_SPEED_1000		FIELD_PREP_CONST(VEND1_SPEED_MASK, 0x10)
-+#define   VEND1_SPEED_100		FIELD_PREP_CONST(VEND1_SPEED_MASK, 0x20)
-+#define   VEND1_SPEED_10		FIELD_PREP_CONST(VEND1_SPEED_MASK, 0x0)
-+
-+#define VEND1_IPC_CMD			0x5801
-+#define   AEON_IPC_CMD_PARITY		BIT(15)
-+#define   AEON_IPC_CMD_SIZE		GENMASK(10, 6)
-+#define   AEON_IPC_CMD_OPCODE		GENMASK(5, 0)
-+
-+#define IPC_CMD_NOOP			0x0  /* Do nothing */
-+#define IPC_CMD_INFO			0x1  /* Get Firmware Version */
-+#define IPC_CMD_SYS_CPU			0x2  /* SYS_CPU */
-+#define IPC_CMD_BULK_DATA		0xa  /* Pass bulk data in ipc registers. */
-+#define IPC_CMD_BULK_WRITE		0xc  /* Write bulk data to memory */
-+#define IPC_CMD_CFG_PARAM		0x1a /* Write config parameters to memory */
-+#define IPC_CMD_NG_TESTMODE		0x1b /* Set NG test mode and tone */
-+#define IPC_CMD_TEMP_MON		0x15 /* Temperature monitoring function */
-+#define IPC_CMD_SET_LED			0x23 /* Set led */
-+
-+#define VEND1_IPC_STS			0x5802
-+#define   AEON_IPC_STS_PARITY		BIT(15)
-+#define   AEON_IPC_STS_SIZE		GENMASK(14, 10)
-+#define   AEON_IPC_STS_OPCODE		GENMASK(9, 4)
-+#define   AEON_IPC_STS_STATUS		GENMASK(3, 0)
-+#define   AEON_IPC_STS_STATUS_RCVD	FIELD_PREP_CONST(AEON_IPC_STS_STATUS, 0x1)
-+#define   AEON_IPC_STS_STATUS_PROCESS	FIELD_PREP_CONST(AEON_IPC_STS_STATUS, 0x2)
-+#define   AEON_IPC_STS_STATUS_SUCCESS	FIELD_PREP_CONST(AEON_IPC_STS_STATUS, 0x4)
-+#define   AEON_IPC_STS_STATUS_ERROR	FIELD_PREP_CONST(AEON_IPC_STS_STATUS, 0x8)
-+#define   AEON_IPC_STS_STATUS_BUSY	FIELD_PREP_CONST(AEON_IPC_STS_STATUS, 0xe)
-+#define   AEON_IPC_STS_STATUS_READY	FIELD_PREP_CONST(AEON_IPC_STS_STATUS, 0xf)
-+
-+#define VEND1_IPC_DATA0			0x5808
-+#define VEND1_IPC_DATA1			0x5809
-+#define VEND1_IPC_DATA2			0x580a
-+#define VEND1_IPC_DATA3			0x580b
-+#define VEND1_IPC_DATA4			0x580c
-+#define VEND1_IPC_DATA5			0x580d
-+#define VEND1_IPC_DATA6			0x580e
-+#define VEND1_IPC_DATA7			0x580f
-+#define VEND1_IPC_DATA(_n)		(VEND1_IPC_DATA0 + (_n))
-+
-+/* Sub command of CMD_INFO */
-+#define IPC_INFO_VERSION		0x1
-+
-+/* Sub command of CMD_SYS_CPU */
-+#define IPC_SYS_CPU_REBOOT		0x3
-+#define IPC_SYS_CPU_IMAGE_OFST		0x4
-+#define IPC_SYS_CPU_IMAGE_CHECK		0x5
-+#define IPC_SYS_CPU_PHY_ENABLE		0x6
-+
-+/* Sub command of CMD_CFG_PARAM */
-+#define IPC_CFG_PARAM_DIRECT		0x4
-+
-+/* CFG DIRECT sub command */
-+#define IPC_CFG_PARAM_DIRECT_NG_PHYCTRL	0x1
-+#define IPC_CFG_PARAM_DIRECT_CU_AN	0x2
-+#define IPC_CFG_PARAM_DIRECT_SDS_PCS	0x3
-+#define IPC_CFG_PARAM_DIRECT_AUTO_EEE	0x4
-+#define IPC_CFG_PARAM_DIRECT_SDS_PMA	0x5
-+#define IPC_CFG_PARAM_DIRECT_DPC_RA	0x6
-+#define IPC_CFG_PARAM_DIRECT_DPC_PKT_CHK 0x7
-+#define IPC_CFG_PARAM_DIRECT_DPC_SDS_WAIT_ETH 0x8
-+#define IPC_CFG_PARAM_DIRECT_WDT	0x9
-+#define IPC_CFG_PARAM_DIRECT_SDS_RESTART_AN 0x10
-+#define IPC_CFG_PARAM_DIRECT_TEMP_MON	0x11
-+#define IPC_CFG_PARAM_DIRECT_WOL	0x12
-+
-+/* Sub command of CMD_TEMP_MON */
-+#define IPC_CMD_TEMP_MON_GET		0x4
-+
-+#define PHY_ID_AS21010JB1		0x75009422
-+#define PHY_ID_AS21XXX			0x75007500
-+#define PHY_VENDOR_AEONSEMI		0x75009400
-+
-+#define AEON_MAX_LDES			5
-+#define AEON_IPC_DATA_MAX		(8 * sizeof(u16))
-+
-+#define AEON_BOOT_ADDR			0x1000
-+#define AEON_CPU_BOOT_ADDR		0x2000
-+#define AEON_CPU_CTRL_FW_LOAD		(BIT(4) | BIT(2) | BIT(1) | BIT(0))
-+#define AEON_CPU_CTRL_FW_START		BIT(0)
-+
-+enum {
-+	MDIO_AN_C22 = 0xffe0,
-+};
-+
-+struct as21xxx_led_pattern_info {
-+	unsigned int pattern;
-+	u16 val;
-+};
-+
-+struct as21xxx_priv {
-+	bool parity_status;
-+};
-+
-+static struct as21xxx_led_pattern_info as21xxx_led_supported_pattern[] = {
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_10),
-+		.val = VEND1_LED_REG_A_EVENT_ON_10
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_100),
-+		.val = VEND1_LED_REG_A_EVENT_ON_100
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_1000),
-+		.val = VEND1_LED_REG_A_EVENT_ON_1000
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_2500),
-+		.val = VEND1_LED_REG_A_EVENT_ON_2500
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_5000),
-+		.val = VEND1_LED_REG_A_EVENT_ON_5000
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_10000),
-+		.val = VEND1_LED_REG_A_EVENT_ON_10000
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK),
-+		.val = VEND1_LED_REG_A_EVENT_ON_LINK
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_100) |
-+			   BIT(TRIGGER_NETDEV_LINK_1000),
-+		.val = VEND1_LED_REG_A_EVENT_ON_FE_GE
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_2500) |
-+			   BIT(TRIGGER_NETDEV_LINK_5000) |
-+			   BIT(TRIGGER_NETDEV_LINK_10000),
-+		.val = VEND1_LED_REG_A_EVENT_ON_NG
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_FULL_DUPLEX),
-+		.val = VEND1_LED_REG_A_EVENT_ON_FULL_DUPLEX
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_TX),
-+		.val = VEND1_LED_REG_A_EVENT_BLINK_TX
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_RX),
-+		.val = VEND1_LED_REG_A_EVENT_BLINK_RX
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_TX) |
-+			   BIT(TRIGGER_NETDEV_RX),
-+		.val = VEND1_LED_REG_A_EVENT_BLINK_ACT
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_10) |
-+			   BIT(TRIGGER_NETDEV_LINK_100) |
-+			   BIT(TRIGGER_NETDEV_LINK_1000) |
-+			   BIT(TRIGGER_NETDEV_LINK_2500) |
-+			   BIT(TRIGGER_NETDEV_LINK_5000) |
-+			   BIT(TRIGGER_NETDEV_LINK_10000),
-+		.val = VEND1_LED_REG_A_EVENT_ON_LINK
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_10) |
-+			   BIT(TRIGGER_NETDEV_LINK_100) |
-+			   BIT(TRIGGER_NETDEV_LINK_1000) |
-+			   BIT(TRIGGER_NETDEV_LINK_2500) |
-+			   BIT(TRIGGER_NETDEV_LINK_5000) |
-+			   BIT(TRIGGER_NETDEV_LINK_10000) |
-+			   BIT(TRIGGER_NETDEV_TX) |
-+			   BIT(TRIGGER_NETDEV_RX),
-+		.val = VEND1_LED_REG_A_EVENT_ON_LINK_BLINK_ACT
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_10) |
-+			   BIT(TRIGGER_NETDEV_LINK_100) |
-+			   BIT(TRIGGER_NETDEV_LINK_1000) |
-+			   BIT(TRIGGER_NETDEV_LINK_2500) |
-+			   BIT(TRIGGER_NETDEV_LINK_5000) |
-+			   BIT(TRIGGER_NETDEV_LINK_10000) |
-+			   BIT(TRIGGER_NETDEV_RX),
-+		.val = VEND1_LED_REG_A_EVENT_ON_LINK_BLINK_RX
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_100) |
-+			   BIT(TRIGGER_NETDEV_LINK_1000) |
-+			   BIT(TRIGGER_NETDEV_TX) |
-+			   BIT(TRIGGER_NETDEV_RX),
-+		.val = VEND1_LED_REG_A_EVENT_ON_FE_GE_BLINK_ACT
-+	},
-+	{
-+		.pattern = BIT(TRIGGER_NETDEV_LINK_2500) |
-+			   BIT(TRIGGER_NETDEV_LINK_5000) |
-+			   BIT(TRIGGER_NETDEV_LINK_10000) |
-+			   BIT(TRIGGER_NETDEV_TX) |
-+			   BIT(TRIGGER_NETDEV_RX),
-+		.val = VEND1_LED_REG_A_EVENT_ON_NG_BLINK_ACT
-+	}
-+};
-+
-+static int aeon_firmware_boot(struct phy_device *phydev, const u8 *data, size_t size)
-+{
-+	int i, ret;
-+	u16 val;
-+
-+	ret = phy_modify_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLB_REG_CPU_CTRL,
-+			     VEND1_GLB_CPU_CTRL_MASK, AEON_CPU_CTRL_FW_LOAD);
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VEND1_FW_START_ADDR,
-+			    AEON_BOOT_ADDR);
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_modify_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLB_REG_MDIO_INDIRECT_ADDRCMD,
-+			     0x3ffc, 0xc000);
-+	if (ret)
-+		return ret;
-+
-+	val = phy_read_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLB_REG_MDIO_INDIRECT_STATUS);
-+	if (val > 1) {
-+		phydev_err(phydev, "wrong origin mdio_indirect_status: %x\n", val);
-+		return -EINVAL;
-+	}
-+
-+	/* Firmware is always aligned to u16 */
-+	for (i = 0; i < size; i += 2) {
-+		val = data[i + 1] << 8 | data[i];
-+
-+		ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLB_REG_MDIO_INDIRECT_LOAD, val);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLB_REG_CPU_RESET_ADDR_LO_BASEADDR,
-+			    lower_16_bits(AEON_CPU_BOOT_ADDR));
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLB_REG_CPU_RESET_ADDR_HI_BASEADDR,
-+			    upper_16_bits(AEON_CPU_BOOT_ADDR));
-+	if (ret)
-+		return ret;
-+
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND1, VEND1_GLB_REG_CPU_CTRL,
-+			      VEND1_GLB_CPU_CTRL_MASK, AEON_CPU_CTRL_FW_START);
-+}
-+
-+static int aeon_firmware_load(struct phy_device *phydev)
-+{
-+	struct device *dev = &phydev->mdio.dev;
-+	const struct firmware *fw;
-+	const char *fw_name;
-+	int ret;
-+
-+	ret = of_property_read_string(dev->of_node, "firmware-name",
-+				      &fw_name);
-+	if (ret)
-+		return ret;
-+
-+	ret = request_firmware(&fw, fw_name, dev);
-+	if (ret) {
-+		phydev_err(phydev, "failed to find FW file %s (%d)\n",
-+			   fw_name, ret);
-+		return ret;
-+	}
-+
-+	ret = aeon_firmware_boot(phydev, fw->data, fw->size);
-+
-+	release_firmware(fw);
-+
-+	return ret;
-+}
-+
-+static int aeon_ipc_send_cmd(struct phy_device *phydev, u32 cmd,
-+			     u16 *ret_sts)
-+{
-+	struct as21xxx_priv *priv = phydev->priv;
-+	bool curr_parity;
-+	u32 val;
-+	int ret;
-+
-+	/* The IPC sync by using a single parity bit.
-+	 * Each CMD have alternately this bit set or clear
-+	 * to understand correct flow and packet order.
-+	 */
-+	curr_parity = priv->parity_status;
-+	if (priv->parity_status)
-+		cmd |= AEON_IPC_CMD_PARITY;
-+
-+	/* Always update parity for next packet */
-+	priv->parity_status = !priv->parity_status;
-+
-+	ret = phy_write_mmd(phydev, MDIO_MMD_VEND1, VEND1_IPC_CMD, cmd);
-+	if (ret)
-+		return ret;
-+
-+	/* Wait for packet to be processed */
-+	usleep_range(10000, 15000);
-+
-+	/* With no ret_sts, ignore waiting for packet completion
-+	 * (ipc parity bit sync)
-+	 */
-+	if (!ret_sts)
-+		return 0;
-+
-+	/* Exit condition logic:
-+	 * - Wait for parity bit equal
-+	 * - Wait for status success, error OR ready
-+	 */
-+	ret = phy_read_mmd_poll_timeout(phydev, MDIO_MMD_VEND1, VEND1_IPC_STS, val,
-+					FIELD_GET(AEON_IPC_STS_PARITY, val) ==
-+						curr_parity &&
-+					(val & AEON_IPC_STS_STATUS) !=
-+						AEON_IPC_STS_STATUS_RCVD &&
-+					(val & AEON_IPC_STS_STATUS) !=
-+						AEON_IPC_STS_STATUS_PROCESS &&
-+					(val & AEON_IPC_STS_STATUS) !=
-+						AEON_IPC_STS_STATUS_BUSY,
-+					10000, 2000000, false);
-+	if (ret)
-+		return ret;
-+
-+	*ret_sts = val;
-+	if ((val & AEON_IPC_STS_STATUS) != AEON_IPC_STS_STATUS_SUCCESS)
-+		return -EFAULT;
-+
-+	return 0;
-+}
-+
-+static int aeon_ipc_send_msg(struct phy_device *phydev, u16 opcode,
-+			     u16 *data, unsigned int data_len, u16 *ret_sts)
-+{
-+	u32 cmd;
-+	int ret;
-+	int i;
-+
-+	if (data_len > AEON_IPC_DATA_MAX)
-+		return -EINVAL;
-+
-+	for (i = 0; i < data_len / sizeof(u16); i++)
-+		phy_write_mmd(phydev, MDIO_MMD_VEND1, VEND1_IPC_DATA(i),
-+			      data[i]);
-+
-+	cmd = FIELD_PREP(AEON_IPC_CMD_SIZE, data_len) |
-+	      FIELD_PREP(AEON_IPC_CMD_OPCODE, opcode);
-+	ret = aeon_ipc_send_cmd(phydev, cmd, ret_sts);
-+	if (ret)
-+		phydev_err(phydev, "failed to send ipc msg for %x: %d\n", opcode, ret);
-+
-+	return ret;
-+}
-+
-+static int aeon_ipc_rcv_msg(struct phy_device *phydev, u16 ret_sts,
-+			    u16 *data)
-+{
-+	unsigned int size = FIELD_GET(AEON_IPC_STS_SIZE, ret_sts);
-+	int ret;
-+	int i;
-+
-+	if ((ret_sts & AEON_IPC_STS_STATUS) == AEON_IPC_STS_STATUS_ERROR)
-+		return -EINVAL;
-+
-+	for (i = 0; i < DIV_ROUND_UP(size, sizeof(u16)); i++) {
-+		ret = phy_read_mmd(phydev, MDIO_MMD_VEND1, VEND1_IPC_DATA(i));
-+		if (ret < 0)
-+			return ret;
-+
-+		data[i] = ret;
-+	}
-+
-+	return size;
-+}
-+
-+/* Logic to sync parity bit with IPC.
-+ * We send 2 NOP cmd with same partity and we wait for IPC
-+ * to handle the packet only for the second one. This way
-+ * we make sure we are sync for every next cmd.
-+ */
-+static int aeon_ipc_sync_parity(struct phy_device *phydev)
-+{
-+	struct as21xxx_priv *priv = phydev->priv;
-+	u16 ret_sts;
-+	u32 cmd;
-+	int ret;
-+
-+	/* Send NOP with no parity */
-+	cmd = FIELD_PREP(AEON_IPC_CMD_SIZE, 0) |
-+	      FIELD_PREP(AEON_IPC_CMD_OPCODE, IPC_CMD_NOOP);
-+	aeon_ipc_send_cmd(phydev, cmd, NULL);
-+
-+	/* Reset packet parity */
-+	priv->parity_status = false;
-+
-+	/* Send second NOP with no parity */
-+	ret = aeon_ipc_send_cmd(phydev, cmd, &ret_sts);
-+	/* We expect to return -EFAULT */
-+	if (ret != -EFAULT)
-+		return ret;
-+
-+	if ((ret_sts & AEON_IPC_STS_STATUS) != AEON_IPC_STS_STATUS_READY)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int aeon_ipc_get_fw_version(struct phy_device *phydev)
-+{
-+	u16 ret_data[8], data[1];
-+	u16 ret_sts;
-+	int ret;
-+
-+	data[0] = IPC_INFO_VERSION;
-+	ret = aeon_ipc_send_msg(phydev, IPC_CMD_INFO, data, sizeof(data),
-+				&ret_sts);
-+	if (ret)
-+		return ret;
-+
-+	ret = aeon_ipc_rcv_msg(phydev, ret_sts, ret_data);
-+	if (ret < 0)
-+		return ret;
-+
-+	phydev_info(phydev, "Firmware Version: %s\n", (char *)ret_data);
-+
-+	return 0;
-+}
-+
-+static int aeon_dpc_ra_enable(struct phy_device *phydev)
-+{
-+	u16 data[2];
-+	u16 ret_sts;
-+
-+	data[0] = IPC_CFG_PARAM_DIRECT;
-+	data[1] = IPC_CFG_PARAM_DIRECT_DPC_RA;
-+
-+	return aeon_ipc_send_msg(phydev, IPC_CMD_CFG_PARAM, data,
-+				 sizeof(data), &ret_sts);
-+}
-+
-+static int as21xxx_probe(struct phy_device *phydev)
-+{
-+	struct as21xxx_priv *priv;
-+	int ret;
-+
-+	phydev->priv = devm_kzalloc(&phydev->mdio.dev,
-+				    sizeof(*priv), GFP_KERNEL);
-+	if (!phydev->priv)
-+		return -ENOMEM;
-+
-+	ret = aeon_firmware_load(phydev);
-+	if (ret)
-+		return ret;
-+
-+	ret = aeon_ipc_sync_parity(phydev);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable PTP clk if not already Enabled */
-+	ret = phy_set_bits_mmd(phydev, MDIO_MMD_VEND1, VEND1_PTP_CLK,
-+			       VEND1_PTP_CLK_EN);
-+	if (ret)
-+		return ret;
-+
-+	ret = aeon_dpc_ra_enable(phydev);
-+	if (ret)
-+		return ret;
-+
-+	ret = aeon_ipc_get_fw_version(phydev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int as21xxx_get_features(struct phy_device *phydev)
-+{
-+	int ret;
-+
-+	ret = genphy_read_abilities(phydev);
-+	if (ret)
-+		return ret;
-+
-+	/* AS21xxx supports 100M/1G/2.5G/5G/10G speed. */
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_10baseT_Half_BIT,
-+			   phydev->supported);
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_10baseT_Full_BIT,
-+			   phydev->supported);
-+	linkmode_clear_bit(ETHTOOL_LINK_MODE_100baseT_Half_BIT,
-+			   phydev->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_100baseT_Full_BIT,
-+			 phydev->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_1000baseT_Full_BIT,
-+			 phydev->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_2500baseT_Full_BIT,
-+			 phydev->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_5000baseT_Full_BIT,
-+			 phydev->supported);
-+	linkmode_set_bit(ETHTOOL_LINK_MODE_10000baseT_Full_BIT,
-+			 phydev->supported);
-+
-+	return 0;
-+}
-+
-+static int as21xxx_read_link(struct phy_device *phydev, int *bmcr)
-+{
-+	int status;
-+
-+	*bmcr = phy_read_mmd(phydev, MDIO_MMD_AN,
-+			     MDIO_AN_C22 + MII_BMCR);
-+	if (*bmcr < 0)
-+		return *bmcr;
-+
-+	/* Autoneg is being started, therefore disregard current
-+	 * link status and report link as down.
-+	 */
-+	if (*bmcr & BMCR_ANRESTART) {
-+		phydev->link = 0;
-+		return 0;
-+	}
-+
-+	status = phy_read_mmd(phydev, MDIO_MMD_AN, MDIO_STAT1);
-+	if (status < 0)
-+		return status;
-+
-+	phydev->link = !!(status & MDIO_STAT1_LSTATUS);
-+
-+	return 0;
-+}
-+
-+static int as21xxx_read_c22_lpa(struct phy_device *phydev)
-+{
-+	int lpagb;
-+
-+	lpagb = phy_read_mmd(phydev, MDIO_MMD_AN,
-+			     MDIO_AN_C22 + MII_STAT1000);
-+	if (lpagb < 0)
-+		return lpagb;
-+
-+	if (lpagb & LPA_1000MSFAIL) {
-+		int adv = phy_read_mmd(phydev, MDIO_MMD_AN,
-+				       MDIO_AN_C22 + MII_CTRL1000);
-+
-+		if (adv < 0)
-+			return adv;
-+
-+		if (adv & CTL1000_ENABLE_MASTER)
-+			phydev_err(phydev, "Master/Slave resolution failed, maybe conflicting manual settings?\n");
-+		else
-+			phydev_err(phydev, "Master/Slave resolution failed\n");
-+		return -ENOLINK;
-+	}
-+
-+	mii_stat1000_mod_linkmode_lpa_t(phydev->lp_advertising,
-+					lpagb);
-+
-+	return 0;
-+}
-+
-+static int as21xxx_read_status(struct phy_device *phydev)
-+{
-+	int bmcr, old_link = phydev->link;
-+	int ret;
-+
-+	ret = as21xxx_read_link(phydev, &bmcr);
-+	if (ret)
-+		return ret;
-+
-+	/* why bother the PHY if nothing can have changed */
-+	if (phydev->autoneg == AUTONEG_ENABLE && old_link && phydev->link)
-+		return 0;
-+
-+	phydev->speed = SPEED_UNKNOWN;
-+	phydev->duplex = DUPLEX_UNKNOWN;
-+	phydev->pause = 0;
-+	phydev->asym_pause = 0;
-+
-+	if (phydev->autoneg == AUTONEG_ENABLE) {
-+		ret = genphy_c45_read_lpa(phydev);
-+		if (ret)
-+			return ret;
-+
-+		ret = as21xxx_read_c22_lpa(phydev);
-+		if (ret)
-+			return ret;
-+
-+		phy_resolve_aneg_linkmode(phydev);
-+	} else {
-+		int speed;
-+
-+		linkmode_zero(phydev->lp_advertising);
-+
-+		speed = phy_read_mmd(phydev, MDIO_MMD_VEND1,
-+				     VEND1_SPEED_STATUS);
-+		if (speed < 0)
-+			return speed;
-+
-+		switch (speed & VEND1_SPEED_STATUS) {
-+		case VEND1_SPEED_10000:
-+			phydev->speed = SPEED_10000;
-+			phydev->duplex = DUPLEX_FULL;
-+			break;
-+		case VEND1_SPEED_5000:
-+			phydev->speed = SPEED_5000;
-+			phydev->duplex = DUPLEX_FULL;
-+			break;
-+		case VEND1_SPEED_2500:
-+			phydev->speed = SPEED_2500;
-+			phydev->duplex = DUPLEX_FULL;
-+			break;
-+		case VEND1_SPEED_1000:
-+			phydev->speed = SPEED_1000;
-+			if (bmcr & BMCR_FULLDPLX)
-+				phydev->duplex = DUPLEX_FULL;
-+			else
-+				phydev->duplex = DUPLEX_HALF;
-+			break;
-+		case VEND1_SPEED_100:
-+			phydev->speed = SPEED_100;
-+			phydev->duplex = DUPLEX_FULL;
-+			break;
-+		case VEND1_SPEED_10:
-+			phydev->speed = SPEED_10;
-+			phydev->duplex = DUPLEX_FULL;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int as21xxx_led_brightness_set(struct phy_device *phydev,
-+				      u8 index, enum led_brightness value)
-+{
-+	u16 val = VEND1_LED_REG_A_EVENT_OFF;
-+
-+	if (index > AEON_MAX_LDES)
-+		return -EINVAL;
-+
-+	if (value)
-+		val = VEND1_LED_REG_A_EVENT_ON;
-+
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND1,
-+			      VEND1_LED_REG(index),
-+			      VEND1_LED_REG_A_EVENT, val);
-+}
-+
-+static int as21xxx_led_hw_is_supported(struct phy_device *phydev, u8 index,
-+				       unsigned long rules)
-+{
-+	int i;
-+
-+	if (index > AEON_MAX_LDES)
-+		return -EINVAL;
-+
-+	for (i = 0; i < ARRAY_SIZE(as21xxx_led_supported_pattern); i++)
-+		if (rules == as21xxx_led_supported_pattern[i].pattern)
-+			return 0;
-+
-+	return -EOPNOTSUPP;
-+}
-+
-+static int as21xxx_led_hw_control_get(struct phy_device *phydev, u8 index,
-+				      unsigned long *rules)
-+{
-+	u16 val;
-+	int i;
-+
-+	if (index > AEON_MAX_LDES)
-+		return -EINVAL;
-+
-+	val = phy_read_mmd(phydev, MDIO_MMD_VEND1, VEND1_LED_REG(index));
-+	if (val < 0)
-+		return val;
-+
-+	val &= VEND1_LED_REG_A_EVENT;
-+	for (i = 0; i < ARRAY_SIZE(as21xxx_led_supported_pattern); i++)
-+		if (val == as21xxx_led_supported_pattern[i].val) {
-+			*rules = as21xxx_led_supported_pattern[i].pattern;
-+			return 0;
-+		}
-+
-+	/* Should be impossible */
-+	return -EINVAL;
-+}
-+
-+static int as21xxx_led_hw_control_set(struct phy_device *phydev, u8 index,
-+				      unsigned long rules)
-+{
-+	u16 val;
-+	int i;
-+
-+	if (index > AEON_MAX_LDES)
-+		return -EINVAL;
-+
-+	for (i = 0; i < ARRAY_SIZE(as21xxx_led_supported_pattern); i++)
-+		if (rules == as21xxx_led_supported_pattern[i].pattern) {
-+			val = as21xxx_led_supported_pattern[i].val;
-+			break;
-+		}
-+
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND1,
-+			      VEND1_LED_REG(index),
-+			      VEND1_LED_REG_A_EVENT, val);
-+}
-+
-+static int as21xxx_led_polarity_set(struct phy_device *phydev, int index,
-+				    unsigned long modes)
-+{
-+	bool led_active_low;
-+	u16 mask, val = 0;
-+	u32 mode;
-+
-+	if (index > AEON_MAX_LDES)
-+		return -EINVAL;
-+
-+	for_each_set_bit(mode, &modes, __PHY_LED_MODES_NUM) {
-+		switch (mode) {
-+		case PHY_LED_ACTIVE_LOW:
-+			led_active_low = true;
-+			break;
-+		case PHY_LED_ACTIVE_HIGH: /* default mode */
-+			led_active_low = false;
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+	}
-+
-+	mask = VEND1_GLB_CPU_CTRL_LED_POLARITY(index);
-+	if (led_active_low)
-+		val = VEND1_GLB_CPU_CTRL_LED_POLARITY(index);
-+
-+	return phy_modify_mmd(phydev, MDIO_MMD_VEND1,
-+			      VEND1_GLB_REG_CPU_CTRL,
-+			      mask, val);
-+}
-+
-+static struct phy_driver as21xxx_drivers[] = {
-+	{
-+		PHY_ID_MATCH_EXACT(PHY_ID_AS21XXX),
-+		.name		= "Aeonsemi AS21xxx",
-+		.probe		= as21xxx_probe,
-+		.get_features	= as21xxx_get_features,
-+		.read_status	= as21xxx_read_status,
-+		.led_brightness_set = as21xxx_led_brightness_set,
-+		.led_hw_is_supported = as21xxx_led_hw_is_supported,
-+		.led_hw_control_set = as21xxx_led_hw_control_set,
-+		.led_hw_control_get = as21xxx_led_hw_control_get,
-+		.led_polarity_set = as21xxx_led_polarity_set,
-+	},
-+};
-+module_phy_driver(as21xxx_drivers);
-+
-+static struct mdio_device_id __maybe_unused as21xxx_tbl[] = {
-+	{ PHY_ID_MATCH_VENDOR(PHY_VENDOR_AEONSEMI) },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(mdio, as21xxx_tbl);
-+
-+MODULE_DESCRIPTION("Aeonsemi AS21xxx PHY driver");
-+MODULE_AUTHOR("Christian Marangi <ansuelsmth@gmail.com>");
-+MODULE_LICENSE("GPL");
--- 
-2.48.1
-
+DQoNCj4gT24gTWFyIDIzLCAyMDI1LCBhdCAxMTowNeKAr1BNLCBGcmVkZXJpYyBXZWlzYmVja2Vy
+IDxmcmVkZXJpY0BrZXJuZWwub3JnPiB3cm90ZToNCj4gDQo+IO+7v0xlIFNhdCwgTWFyIDIyLCAy
+MDI1IGF0IDAzOjQwOjUzUE0gKzAxMDAsIEpvZWwgRmVybmFuZGVzIGEgw6ljcml0IDoNCj4+IA0K
+Pj4gDQo+Pj4gT24gMy8yMi8yMDI1IDM6MjAgUE0sIEpvZWwgRmVybmFuZGVzIHdyb3RlOg0KPj4+
+IA0KPj4+IE9uIDMvMjIvMjAyNSAxMToyNSBBTSwgRnJlZGVyaWMgV2Vpc2JlY2tlciB3cm90ZToN
+Cj4+Pj4gTGUgU2F0LCBNYXIgMjIsIDIwMjUgYXQgMDM6MDY6MDhBTSArMDEwMCwgSm9lbCBGZXJu
+YW5kZXMgYSDDqWNyaXQgOg0KPj4+Pj4gSW5zb21uaWEga2lja2VkIGluLCBzbyAzIGFtIHJlcGx5
+IGhlcmUgKFp1cmljaCBsb2NhbCB0aW1lKSA7LSk6DQo+Pj4+PiANCj4+Pj4+IE9uIDMvMjAvMjAy
+NSAzOjE1IFBNLCBGcmVkZXJpYyBXZWlzYmVja2VyIHdyb3RlOg0KPj4+Pj4+IExlIFdlZCwgTWFy
+IDE5LCAyMDI1IGF0IDAzOjM4OjMxUE0gLTA0MDAsIEpvZWwgRmVybmFuZGVzIGEgw6ljcml0IDoN
+Cj4+Pj4+Pj4gT24gVHVlLCBNYXIgMTgsIDIwMjUgYXQgMTE6Mzc6MzhBTSAtMDcwMCwgUGF1bCBF
+LiBNY0tlbm5leSB3cm90ZToNCj4+Pj4+Pj4+IE9uIFR1ZSwgTWFyIDE4LCAyMDI1IGF0IDAyOjU2
+OjE4UE0gKzAxMDAsIEZyZWRlcmljIFdlaXNiZWNrZXIgd3JvdGU6DQo+Pj4+Pj4+Pj4gVGhlIG51
+bWJlcnMgdXNlZCBpbiByY3Vfc2VxX2RvbmVfZXhhY3QoKSBsYWNrIHNvbWUgZXhwbGFuYXRpb24g
+YmVoaW5kDQo+Pj4+Pj4+Pj4gdGhlaXIgbWFnaWMuIEVzcGVjaWFsbHkgYWZ0ZXIgdGhlIGNvbW1p
+dDoNCj4+Pj4+Pj4+PiANCj4+Pj4+Pj4+PiAgICA4NWFhZDdjYzQxNzggKCJyY3U6IEZpeCBnZXRf
+c3RhdGVfc3luY2hyb25pemVfcmN1X2Z1bGwoKSBHUC1zdGFydCBkZXRlY3Rpb24iKQ0KPj4+Pj4+
+Pj4+IA0KPj4+Pj4+Pj4+IHdoaWNoIHJlcG9ydGVkIGEgc3VidGxlIGlzc3VlIHdoZXJlIGEgbmV3
+IEdQIHNlcXVlbmNlIHNuYXBzaG90IHdhcyB0YWtlbg0KPj4+Pj4+Pj4+IG9uIHRoZSByb290IG5v
+ZGUgc3RhdGUgd2hpbGUgYSBncmFjZSBwZXJpb2QgaGFkIGFscmVhZHkgYmVlbiBzdGFydGVkIGFu
+ZA0KPj4+Pj4+Pj4+IHJlZmxlY3RlZCBvbiB0aGUgZ2xvYmFsIHN0YXRlIHNlcXVlbmNlIGJ1dCBu
+b3QgeWV0IG9uIHRoZSByb290IG5vZGUNCj4+Pj4+Pj4+PiBzZXF1ZW5jZSwgbWFraW5nIGEgcG9s
+bGluZyB1c2VyIHdhaXRpbmcgb24gYSB3cm9uZyBhbHJlYWR5IHN0YXJ0ZWQgZ3JhY2UNCj4+Pj4+
+Pj4+PiBwZXJpb2QgdGhhdCB3b3VsZCBpZ25vcmUgZnJlc2hseSBvbmxpbmUgQ1BVcy4NCj4+Pj4+
+Pj4+PiANCj4+Pj4+Pj4+PiBUaGUgZml4IGludm9sdmVkIHRha2luZyB0aGUgc25hcGhvdCBvbiB0
+aGUgZ2xvYmFsIHN0YXRlIHNlcXVlbmNlIGFuZA0KPj4+Pj4+Pj4+IHdhaXRpbmcgb24gdGhlIHJv
+b3Qgbm9kZSBzZXF1ZW5jZS4gQW5kIHNpbmNlIGEgZ3JhY2UgcGVyaW9kIGlzIGZpcnN0DQo+Pj4+
+Pj4+Pj4gc3RhcnRlZCBvbiB0aGUgZ2xvYmFsIHN0YXRlIGFuZCBvbmx5IGFmdGVyd2FyZCByZWZs
+ZWN0ZWQgb24gdGhlIHJvb3QNCj4+Pj4+Pj4+PiBub2RlLCBhIHNuYXBzaG90IHRha2VuIG9uIHRo
+ZSBnbG9iYWwgc3RhdGUgc2VxdWVuY2UgbWlnaHQgYmUgdHdvIGZ1bGwNCj4+Pj4+Pj4+PiBncmFj
+ZSBwZXJpb2RzIGFoZWFkIG9mIHRoZSByb290IG5vZGUgYXMgaW4gdGhlIGZvbGxvd2luZyBleGFt
+cGxlOg0KPj4+Pj4+Pj4+IA0KPj4+Pj4+Pj4+IHJucC0+Z3Bfc2VxID0gcmN1X3N0YXRlLmdwX3Nl
+cSA9IDANCj4+Pj4+Pj4+PiANCj4+Pj4+Pj4+PiAgICBDUFUgMCAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBDUFUgMQ0KPj4+Pj4+Pj4+ICAgIC0tLS0tICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tLS0tDQo+Pj4+Pj4+Pj4gICAgLy8g
+cmN1X3N0YXRlLmdwX3NlcSA9IDENCj4+Pj4+Pj4+PiAgICByY3Vfc2VxX3N0YXJ0KCZyY3Vfc3Rh
+dGUuZ3Bfc2VxKQ0KPj4+Pj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIC8vIHNuYXAgPSA4DQo+Pj4+Pj4+Pj4gICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc25hcCA9IHJjdV9zZXFfc25hcCgmcmN1
+X3N0YXRlLmdwX3NlcSkNCj4+Pj4+Pj4+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAvLyBUd28gZnVsbCBHUCBkaWZmZXJlbmNlcw0KPj4+Pj4+Pj4+
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJjdV9z
+ZXFfZG9uZV9leGFjdCgmcm5wLT5ncF9zZXEsIHNuYXApDQo+Pj4+Pj4+Pj4gICAgLy8gcm5wLT5n
+cF9zZXEgPSAxDQo+Pj4+Pj4+Pj4gICAgV1JJVEVfT05DRShybnAtPmdwX3NlcSwgcmN1X3N0YXRl
+LmdwX3NlcSk7DQo+Pj4+Pj4+Pj4gDQo+Pj4+Pj4+Pj4gQWRkIGEgY29tbWVudCBhYm91dCB0aG9z
+ZSBleHBlY3RhdGlvbnMgYW5kIHRvIGNsYXJpZnkgdGhlIG1hZ2ljIHdpdGhpbg0KPj4+Pj4+Pj4+
+IHRoZSByZWxldmFudCBmdW5jdGlvbi4NCj4+Pj4+Pj4+PiANCj4+Pj4+Pj4+PiBTaWduZWQtb2Zm
+LWJ5OiBGcmVkZXJpYyBXZWlzYmVja2VyIDxmcmVkZXJpY0BrZXJuZWwub3JnPg0KPj4+Pj4+Pj4g
+UmV2aWV3ZWQtYnk6IFBhdWwgRS4gTWNLZW5uZXkgPHBhdWxtY2tAa2VybmVsLm9yZz4NCj4+Pj4+
+Pj4+IA0KPj4+Pj4+Pj4gQnV0IGl0IHdvdWxkIG9mIGNvdXJzZSBiZSBnb29kIHRvIGdldCByZXZp
+ZXdzIGZyb20gdGhlIG90aGVycy4NCj4+Pj4+Pj4gSSBhY3R1YWxseSBkb24ndCBhZ3JlZSB0aGF0
+IHRoZSBtYWdpYyBpbiB0aGUgcmN1X3NlcV9kb25lX2V4YWN0KCkgZnVuY3Rpb24gYWJvdXQgdGhl
+DQo+Pj4+Pj4+IH4yIEdQcyBpcyByZWxhdGVkIHRvIHRoZSBsYWcgYmV0d2VlbiByY3Vfc3RhdGUu
+Z3Bfc2VxIGFuZCByb290IHJucC0+Z3Bfc2VxLA0KPj4+Pj4+PiBiZWNhdXNlIHRoZSBzbWFsbCBs
+YWcgY2FuIGp1c3QgYXMgd2VsbCBzdXJ2aXZlIHdpdGggdGhlIHJjdV9zZXFfZG9uZSgpDQo+Pj4+
+Pj4+IGZ1bmN0aW9uIGluIHRoZSBhYm92ZSBzZXF1ZW5jZSByaWdodD8NCj4+Pj4+Pj4gDQo+Pj4+
+Pj4+IFRoZSByY3Vfc2VxX2RvbmVfZXhhY3QoKSBmdW5jdGlvbiBvbiB0aGUgb3RoZXIgaGFuZCBp
+cyBtb3JlIGFib3V0IG5vdCBiZWluZw0KPj4+Pj4+PiBzdHVjayBpbiB0aGUgVUxPTkdfTUFYLzIg
+Z3VhcmQgYmFuZCwgYnV0IHRvIGFjdHVhbGx5IGdldCB0byB0aGF0LCB5b3UgbmVlZCBhDQo+Pj4+
+Pj4+IHdyYXAgYXJvdW5kIHRvIGhhcHBlbiBhbmQgdGhlIGRlbHRhIGJldHdlZW4gInJucC0+Z3Bf
+c2VxIiBhbmQgInNuYXAiIHRvIGJlIGF0DQo+Pj4+Pj4+IGxlYXN0IFVMT05HX01BWC8yIEFGQUlV
+Lg0KPj4+Pj4+PiANCj4+Pj4+Pj4gU28gdGhlIG9ubHkgdGltZSB0aGlzIG1hZ2ljIHdpbGwgbWF0
+dGVyIGlzIGlmIHlvdSBoYXZlIGEgaHVnZSBkZWx0YSBiZXR3ZWVuDQo+Pj4+Pj4+IHdoYXQgaXMg
+YmVpbmcgY29tcGFyZWQsIG5vdCBqdXN0IDIgR1BzLg0KPj4+Pj4+IFlvdSdyZSByaWdodCwgYW5k
+IHBlcmhhcHMgSSBzaG91bGQgaGF2ZSBtYWRlIGl0IG1vcmUgc3BlY2lmaWMgdGhhdCBteSBjb21t
+ZW50DQo+Pj4+Pj4gb25seSBleHBsYWlucyB0aGUgbWFnaWMgIjMiIG51bWJlciBoZXJlLCBpbiB0
+aGF0IGlmIGl0IHdlcmUgIjIiIGluc3RlYWQsIHRoZXJlDQo+Pj4+Pj4gY291bGQgYmUgYWNjaWRl
+bnRzIHdpdGggMiBmdWxsIEdQcyBkaWZmZXJlbmNlICh3aGljaCBpcyBwb3NzaWJsZSkgc3B1cmlv
+dXNseQ0KPj4+Pj4+IGFjY291bnRlZCBhcyBhIHdyYXAgYXJvdW5kLg0KPj4+Pj4gQWhoLCBzbyBJ
+IGd1ZXNzIEkgZ2V0IGl0IG5vdyBhbmQgd2UgYXJlIGJvdGggcmlnaHQuIFRoZSBjb21wbGV0ZSBw
+aWN0dXJlIGlzIC0gV2UNCj4+Pj4+IGFyZSB0cnlpbmcgdG8gaGFuZGxlIHRoZSBjYXNlIG9mICJ2
+ZXJ5IGxhcmdlIHdyYXAiIGFyb3VuZCBidXQgYXMgYSBwYXJ0IG9mIHRoYXQsDQo+Pj4+PiB3ZSBk
+b24ndCB3YW50IHRvIGNyZWF0ZSBmYWxzZS1wb3NpdGl2ZXMgZm9yIHRoaXMgInNuYXAiIGNhc2Uu
+DQo+Pj4+PiANCj4+Pj4+IEEgInNuYXAiIGNhbiBiZSBhdG1vc3QgICgyICogUkNVX1NFUV9TVEFU
+RV9NQVNLICsgMSkgYXdheSBmcm9tIGEgZ3Bfc2VxLg0KPj4+Pj4gDQo+Pj4+PiBUaGF0J3Mgd2l0
+aGluICIyIEdQcyIgd29ydGggb2YgY291bnRzIChhYm91dCA4IGNvdW50cykNCj4+Pj4+IA0KPj4+
+Pj4gVGFraW5nIHNvbWUgbnVtYmVyczoNCj4+Pj4+IA0KPj4+Pj4gY3VyX3MgICAgcyAgICBkZWx0
+YSAocyAtIGN1cl9zKQ0KPj4+Pj4gMCAgICA0ICAgIDQNCj4+Pj4+IDEgICAgOCAgICA3DQo+Pj4+
+PiAyICAgIDggICAgNg0KPj4+Pj4gMyAgICA4ICAgIDUNCj4+Pj4+IDQgICAgOCAgICA0DQo+Pj4+
+PiA1ICAgIDEyICAgIDcNCj4+Pj4+IA0KPj4+Pj4gVGhlIG1heGltdW0gZGVsdGEgb2YgYSBzbmFw
+IGZyb20gYWN0dWFsIGdwX3NlcSBjYW4gYmUgKDIgKiBSQ1VfU0VRX1NUQVRFX01BU0sgKw0KPj4+
+Pj4gMSkgd2hpY2ggaW4gdGhpcyBjYXNlIGlzIDcuDQo+Pj4+PiANCj4+Pj4+IFNvIHdlIGFkanVz
+dCB0aGUgY29tcGFyaXNvbiBieSBhZGRpbmcgdGhlICBVTE9OR19DTVBfTFQoY3VyX3MsIHMgLSAo
+MiAqDQo+Pj4+PiBSQ1VfU0VRX1NUQVRFX01BU0sgKyAxKSkuIGkuZS4NCj4+Pj4gMywgcmlnaHQ/
+DQo+Pj4gSnVzdCB0byBiZSBhYnNvbHV0ZWx5IHN1cmUsIGFyZSB5b3UgdGFsa2luZyBhYm91dCB0
+aGUgdmFsdWUgb2YgUkNVX1NFUV9TVEFURV9NQVNLID8NCj4+PiANCj4+PiBUaGF0IGlzIGluZGVl
+ZCAzIChSQ1VfU0VRX1NUQVRFX01BU0spLg0KPj4+IA0KPj4+IEJ1dCBpZiB3ZSdyZSB0YWxraW5n
+IGFib3V0IG51bWJlciBvZiBHUHMsIG15IHVuZGVyc3RhbmRpbmcgaXMgYSBjb3VudCBvZiA0IGlz
+DQo+Pj4gb25lIEdQIHdvcnRoLiBQZXIgdGhlIGFib3ZlIHRhYmxlLCB0aGUgZGVsdGEgYmV0d2Vl
+biBncF9zZXEgYW5kIGlzIHNuYXAgaXMNCj4+PiBhbHdheXMgYSBjb3VudCBvZiA3IChoZW5jZSBs
+ZXNzIHRoYW4gMiBHUHMpLg0KPj4+IA0KPj4+IEFncmVlZD8NCj4+PiANCj4+PiBJZiBSQ1VfU0VR
+X1NUQVRFX01BU0sgd2FzIDB4MSBpbnN0ZWFkIG9mIDB4MTEsIHRoYXQgaXMgYSBzaW5nbGUgYml0
+IChvciBhIGNvdW50DQo+Pj4gb2YgMiBpbnN0ZWFkIG9mIDQsIGZvciBhIEdQKSwgdGhlbiB0aGUg
+dGFibGUgd291bGQgYmU6DQo+Pj4gDQo+Pj4gY3VyX3MgICAgcyAoc25hcCkgICAgZGVsdGEgKHMg
+LSBjdXJfcykNCj4+PiAwICAgIDIgICAgICAgIDINCj4+PiAxICAgIDQgICAgICAgIDMNCj4+PiAy
+ICAgIDQgICAgICAgIDINCj4+PiAzICAgIDYgICAgICAgIDMNCj4+PiA0ICAgIDYgICAgICAgIDIN
+Cj4+PiA1ICAgIDggICAgICAgIDMNCj4+PiANCj4+PiBTbyBkZWx0YSBpcyBhbHdheXMgPD0gMywg
+IE9yIG1vcmUgZ2VuZXJhbGx5OiA8PSAoUkNVX1NFUV9TVEFURV9NQVNLICogMikgKyAxDQo+PiAN
+Cj4+IE9oIG1hbiwgSSBhbSB3b25kZXJpbmcgaWYgd2UgYXJlIG9uIHRvIGEgYnVnIGhlcmU6DQo+
+PiANCj4+IEZyb20geW91ciBleGFtcGxlOg0KPj4gDQo+PiAgICBDUFUgMCAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDUFUgMQ0KPj4gICAgLS0tLS0gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0NCj4+ICAgIC8vIHJjdV9zdGF0
+ZS5ncF9zZXEgPSAxDQo+PiAgICByY3Vfc2VxX3N0YXJ0KCZyY3Vfc3RhdGUuZ3Bfc2VxKQ0KPj4g
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8vIHNuYXAgPSA4DQo+PiAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc25hcCA9IHJjdV9zZXFfc25hcCgmcmN1
+X3N0YXRlLmdwX3NlcSkNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAv
+LyBUd28gZnVsbCBHUA0KPj4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJj
+dV9zZXFfZG9uZV9leGFjdCgmcm5wLT5ncF9zZXEsIHNuYXApDQo+PiANCj4+IA0KPj4gSGVyZSwg
+dGhlDQo+PiBVTE9OR19DTVBfTFQoY3VyX3MsIHMgLSAoMiAqIFJDVV9TRVFfU1RBVEVfTUFTSyAr
+IDEpKTsNCj4+IA0KPj4gV2lsbCBiZQ0KPj4gVUxPTkdfQ01QX0xUKDAsIDggLSAoMiAqIFJDVV9T
+RVFfU1RBVEVfTUFTSyArIDEpKTsNCj4+IA0KPj4gPSBVTE9OR19DTVBfTFQoMCwgOCAtIDcpDQo+
+PiANCj4+ID0gVFJVRS4NCj4+IA0KPj4gV2hpY2ggbWVhbnMgcmN1X3NlcV9kb25lX2V4YWN0KCkg
+d2lsbCByZXR1cm4gYSBmYWxzZSBwb3NpdGl2ZSBzYXlpbmcgdGhlIEdQIGhhcw0KPj4gY29tcGxl
+dGVkIGV2ZW4gdGhvdWdoIGl0IGhhcyBub3QuDQo+PiANCj4+IEkgdGhpbmsgcmN1X3NlcV9kb25l
+X2V4YWN0KCkgaXMgb2ZmIGJ5IG9uZSBhbmQgc2hvdWxkIGJlIGRvaW5nOg0KPj4gDQo+PiBVTE9O
+R19DTVBfTFQoY3VyX3MsIHMgLSAoMiAqIFJDVV9TRVFfU1RBVEVfTUFTSyArIDIpKTsNCj4+IA0K
+Pj4gPw0KPiANCj4gQnV0IGl0J3MgVUxPTkdfQ01QX0xUKGN1cl9zLCBzIC0gKDMgKiBSQ1VfU0VR
+X1NUQVRFX01BU0sgKyAxKSBub3cgc2luY2U6DQo+IA0KPiAgICA4NWFhZDdjYzQxNzggKCJyY3U6
+IEZpeCBnZXRfc3RhdGVfc3luY2hyb25pemVfcmN1X2Z1bGwoKSBHUC1zdGFydCBkZXRlY3Rpb24i
+KQ0KPiANCj4gVGhhdCdzIDEwIHNvIHdlIGFyZSBnb29kLg0KPiANCj4gSG93ZXZlciB0aGF0IG1h
+Z2ljIHZhbHVlIGlzIGFyYml0cmFyeSBhbmQgZG9lc24ndCBtZWFuIG11Y2guIEl0IHNob3VsZCBi
+ZQ0KPiBsaWtlIHlvdSBzYWlkLiBPciByYXRoZXIgZm9yIGNsYXJpdHk6DQo+IA0KPiBkaWZmIC0t
+Z2l0IGEva2VybmVsL3JjdS9yY3UuaCBiL2tlcm5lbC9yY3UvcmN1LmgNCj4gaW5kZXggN2FjZjFm
+MzZkZDZjLi5lNTNmMGI2ODdhODMgMTAwNjQ0DQo+IC0tLSBhL2tlcm5lbC9yY3UvcmN1LmgNCj4g
+KysrIGIva2VybmVsL3JjdS9yY3UuaA0KPiBAQCAtNTcsNiArNTcsMTAgQEANCj4gLyogTG93LW9y
+ZGVyIGJpdCBkZWZpbml0aW9uIGZvciBwb2xsZWQgZ3JhY2UtcGVyaW9kIEFQSXMuICovDQo+ICNk
+ZWZpbmUgUkNVX0dFVF9TVEFURV9DT01QTEVURUQgICAgMHgxDQo+IA0KPiArLyogQSBjb21wbGV0
+ZSBncmFjZSBwZXJpb2QgY291bnQgKi8NCj4gKyNkZWZpbmUgUkNVX1NFUV9HUCAoUkNVX1NFUV9T
+VEFURV9NQVNLICsgMSkNCj4gKw0KPiArDQo+IGV4dGVybiBpbnQgc3lzY3RsX3NjaGVkX3J0X3J1
+bnRpbWU7DQo+IA0KPiAvKg0KPiBAQCAtMTY5LDcgKzE3Myw3IEBAIHN0YXRpYyBpbmxpbmUgYm9v
+bCByY3Vfc2VxX2RvbmVfZXhhY3QodW5zaWduZWQgbG9uZyAqc3AsIHVuc2lnbmVkIGxvbmcgcykN
+Cj4gew0KPiAgICB1bnNpZ25lZCBsb25nIGN1cl9zID0gUkVBRF9PTkNFKCpzcCk7DQo+IA0KPiAt
+ICAgIHJldHVybiBVTE9OR19DTVBfR0UoY3VyX3MsIHMpIHx8IFVMT05HX0NNUF9MVChjdXJfcywg
+cyAtICgzICogUkNVX1NFUV9TVEFURV9NQVNLICsgMSkpOw0KPiArICAgIHJldHVybiBVTE9OR19D
+TVBfR0UoY3VyX3MsIHMpIHx8IFVMT05HX0NNUF9MVChjdXJfcywgcyAtICgyICogUkNVX1NFUV9H
+UCkpOw0KPiB9DQoNCkFoLCBteSBrZXJuZWwgZGlkIG5vdCBoYXZlIHRoZSBjaGFuZ2UgYXQgdGhl
+IHRpbWUgSSBjb21tZW50ZWQsIHNvcnJ5LiBJIGFncmVlIHRoYXQgdGhpcyBpcyBhIG11Y2ggYmV0
+dGVyIGFuZCBtZWFuaW5nZnVsIGV4cHJlc3Npb24gdGhhbiB0aGUgZXhpc3Rpbmcgb25lLiBJIHNo
+YWxsIGNyZWF0ZSBhIHBhdGNoIHdpdGggaXQgYW5kIHNlbmQgaXQgb3V0IHdpdGggbXkgb3RoZXIg
+c2VyaWVzIG9uIGZvcmNpbmcgdGhlIHdyYXAgZm9yIHRlc3RpbmcgKGFsb25nIHdpdGggdGhlIG1v
+ZGlmaWNhdGlvbiBmb3IgdGhlIG5ldyBjb21tZW50cyB5b3UgYWRkZWQpLg0KDQpUaGFua3MhDQoN
+Cg0KPiANCj4gLyoNCj4gDQo+IA0K
