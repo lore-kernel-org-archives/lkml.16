@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12D37205509;
-	Sun, 23 Mar 2025 12:29:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23FF7205AC7
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742732951; cv=none; b=hHtqyuly7HM/dVMK8Yd3WJrxPYig71QToL3uGf4ZopKiGJPe4/xGvlVI8FIq1JJ/kqTgFcHpQd8TuydJ9Z7bUh5GAGLMbI28OmNikfo6wqJswq4UMo3IrJVHxbZIQUJ1EDrFnXF2IYxDFAs5uAXJ8ofqT4db5yUOYK7WqOA2WaQ=
+	t=1742732951; cv=none; b=m7Fqic18Dr84cx4kXkdw8fnk6a7PUdLgOsIortbAsA35lHl0bhZKEhUTGO08JN1TxNO+GP3UvjSfPFATocBSq83p0hrM8J36OYuCz8w+n5BZh0FNZ08gmLLdOyqr+skSO7LMzatrX0I5wEtiVtZ9yB8kVPJseydKmG0357m2Bbg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742732951; c=relaxed/simple;
-	bh=CkrBHiN5ZuIDl8W7bZl9s8bI76KmJujKfjx/76h1sBc=;
+	bh=i5XarV9KCEDCcdJI/pujoKeQy3eMNiCv9+BoZzU3Qhk=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=dtmaIPq2YGYn2K643dtklUoMWHXYbnn2rHuxpDNUswtdFJEKtJk8dEiXZAW0usmc/qIJfr2uxbnMPEJ+VXX2R9498FLmyQf6SB01pyZB6xWLVZXdouG6kBss2TJGmuCezor+BGIf7fkQ3grMmCBY9i/6Z0q2Nsh3WmGdfPnzfAY=
+	 Content-Type; b=R09GCoN+meW/FaDP425n/nqmO9FmujZWXd/K2W3oLc6Kp40G19kMHP7dh5A0XNtk5L33aoIZ8jEmkbkYN/XzylA5ilSwcNA1jEiQrNsA4GyBpvbtahEMFsu5fnK0dCFxkl1KX+lmDhApduTDXXfUtwABPYD4TQP1/puXU7BePn8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB922C4CEF1;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4161C4CEED;
 	Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1twKSc-00000001ygh-1Zdt;
+	id 1twKSc-00000001yfi-09sb;
 	Sun, 23 Mar 2025 08:29:50 -0400
-Message-ID: <20250323122950.226477423@goodmis.org>
+Message-ID: <20250323122949.894511377@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sun, 23 Mar 2025 08:29:40 -0400
+Date: Sun, 23 Mar 2025 08:29:38 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- stable@vger.kernel.org,
- Ran Xiaokai <ran.xiaokai@zte.com.cn>
-Subject: [for-next][PATCH 07/10] tracing/osnoise: Fix possible recursive locking for cpus_read_lock()
+ Sasha Levin <sashal@kernel.org>
+Subject: [for-next][PATCH 05/10] tracing: Use hashtable.h for event_hash
 References: <20250323122933.407277911@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -39,75 +38,90 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+From: Sasha Levin <sashal@kernel.org>
 
-Lockdep reports this deadlock log:
+Convert the event_hash array in trace_output.c to use the generic
+hashtable implementation from hashtable.h instead of the manually
+implemented hash table.
 
-osnoise: could not start sampling thread
-============================================
-WARNING: possible recursive locking detected
---------------------------------------------
-       CPU0
-       ----
-  lock(cpu_hotplug_lock);
-  lock(cpu_hotplug_lock);
+This simplifies the code and makes it more maintainable by using the
+standard hashtable API defined in hashtable.h.
 
- Call Trace:
-  <TASK>
-  print_deadlock_bug+0x282/0x3c0
-  __lock_acquire+0x1610/0x29a0
-  lock_acquire+0xcb/0x2d0
-  cpus_read_lock+0x49/0x120
-  stop_per_cpu_kthreads+0x7/0x60
-  start_kthread+0x103/0x120
-  osnoise_hotplug_workfn+0x5e/0x90
-  process_one_work+0x44f/0xb30
-  worker_thread+0x33e/0x5e0
-  kthread+0x206/0x3b0
-  ret_from_fork+0x31/0x50
-  ret_from_fork_asm+0x11/0x20
-  </TASK>
+Rename EVENT_HASHSIZE to EVENT_HASH_BITS to properly reflect its new
+meaning as the number of bits for the hashtable size.
 
-This is the deadlock scenario:
-osnoise_hotplug_workfn()
-  guard(cpus_read_lock)();      // first lock call
-  start_kthread(cpu)
-    if (IS_ERR(kthread)) {
-      stop_per_cpu_kthreads(); {
-        cpus_read_lock();      // second lock call. Cause the AA deadlock
-      }
-    }
-
-It is not necessary to call stop_per_cpu_kthreads() which stops osnoise
-kthread for every other CPUs in the system if a failure occurs during
-hotplug of a certain CPU.
-For start_per_cpu_kthreads(), if the start_kthread() call fails,
-this function calls stop_per_cpu_kthreads() to handle the error.
-Therefore, similarly, there is no need to call stop_per_cpu_kthreads()
-again within start_kthread().
-So just remove stop_per_cpu_kthreads() from start_kthread to solve this issue.
-
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/20250321095249.2739397-1-ranxiaokai627@163.com
-Fixes: c8895e271f79 ("trace/osnoise: Support hotplug operations")
-Signed-off-by: Ran Xiaokai <ran.xiaokai@zte.com.cn>
+Link: https://lore.kernel.org/20250319190545.3058319-1-sashal@kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_osnoise.c | 1 -
- 1 file changed, 1 deletion(-)
+ kernel/trace/trace_output.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/trace/trace_osnoise.c b/kernel/trace/trace_osnoise.c
-index f3a2722ee4c0..c83a51218ee5 100644
---- a/kernel/trace/trace_osnoise.c
-+++ b/kernel/trace/trace_osnoise.c
-@@ -2032,7 +2032,6 @@ static int start_kthread(unsigned int cpu)
+diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+index 03d56f711ad1..3144d020e6c6 100644
+--- a/kernel/trace/trace_output.c
++++ b/kernel/trace/trace_output.c
+@@ -12,15 +12,16 @@
+ #include <linux/sched/clock.h>
+ #include <linux/sched/mm.h>
+ #include <linux/idr.h>
++#include <linux/hashtable.h>
  
- 	if (IS_ERR(kthread)) {
- 		pr_err(BANNER "could not start sampling thread\n");
--		stop_per_cpu_kthreads();
- 		return -ENOMEM;
+ #include "trace_output.h"
+ 
+-/* must be a power of 2 */
+-#define EVENT_HASHSIZE	128
++/* 2^7 = 128 */
++#define EVENT_HASH_BITS 7
+ 
+ DECLARE_RWSEM(trace_event_sem);
+ 
+-static struct hlist_head event_hash[EVENT_HASHSIZE] __read_mostly;
++static DEFINE_HASHTABLE(event_hash, EVENT_HASH_BITS);
+ 
+ enum print_line_t trace_print_bputs_msg_only(struct trace_iterator *iter)
+ {
+@@ -694,11 +695,8 @@ int trace_print_lat_context(struct trace_iterator *iter)
+ struct trace_event *ftrace_find_event(int type)
+ {
+ 	struct trace_event *event;
+-	unsigned key;
+ 
+-	key = type & (EVENT_HASHSIZE - 1);
+-
+-	hlist_for_each_entry(event, &event_hash[key], node) {
++	hash_for_each_possible(event_hash, event, node, type) {
+ 		if (event->type == type)
+ 			return event;
  	}
+@@ -753,7 +751,6 @@ void trace_event_read_unlock(void)
+  */
+ int register_trace_event(struct trace_event *event)
+ {
+-	unsigned key;
+ 	int ret = 0;
  
+ 	down_write(&trace_event_sem);
+@@ -786,9 +783,7 @@ int register_trace_event(struct trace_event *event)
+ 	if (event->funcs->binary == NULL)
+ 		event->funcs->binary = trace_nop_print;
+ 
+-	key = event->type & (EVENT_HASHSIZE - 1);
+-
+-	hlist_add_head(&event->node, &event_hash[key]);
++	hash_add(event_hash, &event->node, event->type);
+ 
+ 	ret = event->type;
+  out:
+@@ -803,7 +798,7 @@ EXPORT_SYMBOL_GPL(register_trace_event);
+  */
+ int __unregister_trace_event(struct trace_event *event)
+ {
+-	hlist_del(&event->node);
++	hash_del(&event->node);
+ 	free_trace_event_type(event->type);
+ 	return 0;
+ }
 -- 
 2.47.2
 
