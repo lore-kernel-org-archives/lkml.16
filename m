@@ -1,34 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38ADE205E09
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 942622066E6;
+	Sun, 23 Mar 2025 12:29:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742732951; cv=none; b=OTGtjDKS3A7XeekpjVpL+QGFaNqfnQCs9UVaKePJbaGfi6oeXlOJcmSQaFzKQq/xruFbs5dNTnDtPo7c+PFKjSPO+UWdFsg9tMLZCPWRfSG3udlFIiXgnGw9mj4EHu134Hum4k70suHJK+JJJg05/Y7U4z/cBsOMEc+kC8KRiL8=
+	t=1742732951; cv=none; b=kxWyytlYJtPJY8SL2f2/CtGh77UJ2b4FsKsELd0s4I+uCh3es7VxmU2mmxCLxtpuu+H9SHTzjZcgmwyBM4S9lB5ImYYs1+ehNJhIk+9h40Xp72GGTO5ejpWLkyh4lbrRSOOPBGNiNgw3oStEAmW4CyPSDPy08bGv/TXnBhptLJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742732951; c=relaxed/simple;
-	bh=/yXhofCAGEzzJEbCcqOQZFRFpTHBKM2oi283WB+2IM4=;
+	bh=caJWxZ2qGvBRp3vjbDmGUiLOtxKw98Sfx2PvuoPsUMg=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=rN847L0oW0mafvlh63z6dAWj20wnX0CxdpEqc5IVLbhXdNP2lyl8GqlHIbqnMQCOGFq5yJeW30kOiqgSfWLhpv0OB3ScxfCwYBqUm45HQf5Ll3qMnugQOPQTIDtLNseGlzcAZd5KDBHfk/Sp9eZOHGwPWyr+OHD0/7IeI1Ulg14=
+	 Content-Type; b=cdLPkR3lwFV7P6R9LjsDWySa+COWIuQyVJa7lkeQSVCOCzD08CUAkDPDPwNhc3rX96i20hXL2FuSv9JWFKN1NV7fMtqIIoMXufcoZ5+K1BIXMKGrnrpXezfLqype0T+qWcyqQKl/s0Mbfz1KQJidbAaqEQuwB7mAe79ACsCqvjo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2427C4CEF3;
-	Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4CA1DC4CEE2;
+	Sun, 23 Mar 2025 12:29:11 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1twKSc-00000001ygC-0rMX;
+	id 1twKSc-00000001yhh-2xfT;
 	Sun, 23 Mar 2025 08:29:50 -0400
-Message-ID: <20250323122950.059768296@goodmis.org>
+Message-ID: <20250323122950.561440367@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sun, 23 Mar 2025 08:29:39 -0400
+Date: Sun, 23 Mar 2025 08:29:42 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
+ stable@vger.kernel.org,
  Douglas Raillard <douglas.raillard@arm.com>
-Subject: [for-next][PATCH 06/10] tracing: Align synth event print fmt
+Subject: [for-next][PATCH 09/10] tracing: Ensure module defining synth event cannot be unloaded while
+ tracing
 References: <20250323122933.407277911@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -40,37 +42,74 @@ Content-Type: text/plain; charset=UTF-8
 
 From: Douglas Raillard <douglas.raillard@arm.com>
 
-The vast majority of ftrace event print fmt consist of a space-separated
-field=value pair. Synthetic event currently use a comma-separated
-field=value pair, which sticks out from events created via more
-classical means.
+Currently, using synth_event_delete() will fail if the event is being
+used (tracing in progress), but that is normally done in the module exit
+function. At that stage, failing is problematic as returning a non-zero
+status means the module will become locked (impossible to unload or
+reload again).
 
-Align the format of synth events so they look just like any other event,
-for better consistency and less headache when doing crude text-based
-data processing.
+Instead, ensure the module exit function does not get called in the
+first place by increasing the module refcnt when the event is enabled.
 
-Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: stable@vger.kernel.org
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/20250319215028.1680278-1-douglas.raillard@arm.com
+Fixes: 35ca5207c2d11 ("tracing: Add synthetic event command generation functions")
+Link: https://lore.kernel.org/20250318180906.226841-1-douglas.raillard@arm.com
 Signed-off-by: Douglas Raillard <douglas.raillard@arm.com>
+Acked-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- kernel/trace/trace_events_synth.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace_events_synth.c | 30 +++++++++++++++++++++++++++++-
+ 1 file changed, 29 insertions(+), 1 deletion(-)
 
 diff --git a/kernel/trace/trace_events_synth.c b/kernel/trace/trace_events_synth.c
-index e3f7d09e5512..07ff8be8267e 100644
+index 07ff8be8267e..463b0073629a 100644
 --- a/kernel/trace/trace_events_synth.c
 +++ b/kernel/trace/trace_events_synth.c
-@@ -612,7 +612,7 @@ static int __set_synth_event_print_fmt(struct synth_event *event,
- 		fmt = synth_field_fmt(event->fields[i]->type);
- 		pos += snprintf(buf + pos, LEN_OR_ZERO, "%s=%s%s",
- 				event->fields[i]->name, fmt,
--				i == event->n_fields - 1 ? "" : ", ");
-+				i == event->n_fields - 1 ? "" : " ");
- 	}
- 	pos += snprintf(buf + pos, LEN_OR_ZERO, "\"");
+@@ -852,6 +852,34 @@ static struct trace_event_fields synth_event_fields_array[] = {
+ 	{}
+ };
  
++static int synth_event_reg(struct trace_event_call *call,
++		    enum trace_reg type, void *data)
++{
++	struct synth_event *event = container_of(call, struct synth_event, call);
++
++	switch (type) {
++	case TRACE_REG_REGISTER:
++	case TRACE_REG_PERF_REGISTER:
++		if (!try_module_get(event->mod))
++			return -EBUSY;
++		break;
++	default:
++		break;
++	}
++
++	int ret = trace_event_reg(call, type, data);
++
++	switch (type) {
++	case TRACE_REG_UNREGISTER:
++	case TRACE_REG_PERF_UNREGISTER:
++		module_put(event->mod);
++		break;
++	default:
++		break;
++	}
++	return ret;
++}
++
+ static int register_synth_event(struct synth_event *event)
+ {
+ 	struct trace_event_call *call = &event->call;
+@@ -881,7 +909,7 @@ static int register_synth_event(struct synth_event *event)
+ 		goto out;
+ 	}
+ 	call->flags = TRACE_EVENT_FL_TRACEPOINT;
+-	call->class->reg = trace_event_reg;
++	call->class->reg = synth_event_reg;
+ 	call->class->probe = trace_event_raw_event_synth;
+ 	call->data = event;
+ 	call->tp = event->tp;
 -- 
 2.47.2
 
