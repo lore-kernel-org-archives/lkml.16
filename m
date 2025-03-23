@@ -1,66 +1,35 @@
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5263C1DDA33
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 22:39:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 815791C84A7
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 22:41:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742769579; cv=none; b=H+JB/UEoI/9SlspWmxlSB4oHy/9TZUBBkwz2WnFcAeFgO8hQwIDQqDQFzPpRk3VqildElUIjuYxpHbl8YbYW75C/Y1DrK3GJozhDycFjO2HmChUo7Po24YRPdc+mElzXlDVByUEVKLaOphLq3T6oeJ1UllpfWSE3qEBPzBg2srM=
+	t=1742769718; cv=none; b=UMmizK24sdFlz2IlhMComYMAvbphfIk39BqcWpKoGLk6PQHWcv1/H9kKQavZaTiiota5t50z6aA7R0M5/5NXs1lRS6T82haAKVoJuWQLc3ML+wfKkQ57uiS5c6Srx0yvw9OXqZWHiiNe2HvJy7uuMDJqKLGa/bjACgENuzTGwz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742769579; c=relaxed/simple;
-	bh=G66LYDaLo+JZwbIpkb6K4lcnIZh7zjnkzekQFX97A4g=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=eLrsBD97xxQzlZZP67Lg17zDKz8xm6tadryW2MONE/iNL4kgkFw3eCp+s8OwlsPdyBUEZhxscr2S10mhQuP5A7Ff3Uk3R4398hvF53Sf9Ntnec2QRR9/4gLBr+ueWBs3djHy4tz3YhTEsu8F6q+UW1KifGMoYn9GYlCqjNpd9PQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UpPpl+Ev; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742769718; c=relaxed/simple;
+	bh=8O3BOR2g1ZDNRgIV/TWf9z/qvZQ/ZfTyJPIikM1YNjI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=L9tEVDvHLz9iKdXEPSzn5ESIQ9lPVklef9r1XBBIOqKKcXFOYuEOWTGJCUtDeiz6vjxqkjI5e3DDVHO5V/LupdsnlFUKt+eA3OVW7MQBTwDMajv7z67W8Qh5mV9l9X+JAd6cNgBNeBMKwxvDGmA8ndFplpVHQja4KJBcsBMfX3Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io; spf=pass smtp.mailfrom=rosenzweig.io; dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b=rFTkaoXm; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=rosenzweig.io
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=rosenzweig.io
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UpPpl+Ev"
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac28e66c0e1so567662566b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 15:39:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742769571; x=1743374371; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7f8avKZRw6w317MoHLh8hYaw+o5WK+EwvWuCQDnUpOw=;
-        b=UpPpl+EvJpmCVwLiXJKLjWe0V4FjoGbPvqqjpeIsPGKcp8IpBi+esy7l/OQirs8M0L
-         yFG+X1G4opuy4OA1dItMYzoBJ95aP6Kxa+or5Zd2xBJxDU93UQ4X5mValTxlYxMvUG09
-         g0GZjiRtRveFlIBBsC8dMxKXx2IDQ38JSrQ6D988akHKGKYq2LCT6nLWoyrzqL/zhQ4E
-         3ewqxyEYQy4fZ5oB6GdVHVNZ+nT10VX3JXT7iLivOby2Agq1yF7FpbK50zEzK04yFKaO
-         PebZMO8ngnIi/l9I/PzgjxK3H+xi3sClm66+swhEA/pXn90QXmovYiomAt3soNA42ECF
-         ytVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742769571; x=1743374371;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=7f8avKZRw6w317MoHLh8hYaw+o5WK+EwvWuCQDnUpOw=;
-        b=wEGyJ4IWs2qr75znGLDxWoaGPYcVZbiLqm4ah7Fp5GBqvRWdmKRQM97gBayZujhbfY
-         MHKOGe78Z0pWCYXwrk7k3w6iyTrWGKD0Jr9Yc9KxN9HD+i81X5q+WHneE06q9XEGObGd
-         uMkhfLz7yQpITr03wWRgTEFmhXdbmofhL9J7u2mcTFjWthWjtVKseglmrT16ApRCoNI0
-         uNnjzkWfF4DHTUY3wqK0G/PDue9K/3DRuLkRZqc8/DRMw7fouBqoDEz81YMiMmzfKcxN
-         EQ//0+Ng7/Jv39K7Afpjjd342+W4L9vIJOi1STBPzOStGGWHtgneS/XuXmbe0VeG/Z+y
-         l7GQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXT9fpT0g4/4J9f0cRUcMN+ChKguL93ItvBksapmT5O1X3TBBG+JCDvyeH8CkbS57OKfyEKoUo6fcIzBDU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw4d0dYEtBWTuocooM42Ha/sl6Ny7E4dALcRCiLwyeYfZLaGqzK
-	D3I9ZMlKXDVw/wFc2DLjs4JKQMgpP8UVg6CF+F6tIUoGpm1amuIjgcQSJIn3uHE=
-X-Gm-Gg: ASbGncsg6H2Lvdo9cSEm8VFTf/W4JLgYl6NjQYAHNt27D6BH2gp19GZ1JGULAzKLtN0
-	v4qN5AMY+6DrID/B9HzbUCe6D7ddBn4WffcC2hZj6XTtr2AV7WEwJvPme+4yOTrtO0/HgeSQWXc
-	LQ9ddaUzX2OrdO1c1mK+/DDHO4+5gvZ0UM5jOHhPTedzQu2R5F4smkiPiCuAU8YpTN0C2tcH7hz
-	t1QXWiwH+UaiqD7LEm1zvxxMJZ+8FyC0kOz1QgOMu/kAymVoxlKJoQWkfSwYsaKd75qmFKMI+eE
-	cyDnIXWze8gKPoRvFh0K59ek38iARGVDJSCq+osr+FE+y3gMSx2HuOC9CEBeAnmnQTBc8v0B9Ym
-	lbtouVjXnBqeG8VsIHQOnUayqAQf+
-X-Google-Smtp-Source: AGHT+IFPCVSpCsN9G8gL36i+X2OmHMIEEiVZzrvFJ1orAU5U1fjgiuIiYr+lmn2muaixnVkLGbpoMw==
-X-Received: by 2002:a17:906:6a1c:b0:ac1:ed96:56d9 with SMTP id a640c23a62f3a-ac3f24adc8bmr978099466b.40.1742769570580;
-        Sun, 23 Mar 2025 15:39:30 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef86e44dsm559686666b.31.2025.03.23.15.39.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 15:39:30 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Sun, 23 Mar 2025 22:39:28 +0000
-Subject: [PATCH 12/34] mfd: sec: add support for S2MPG10 PMIC
+	dkim=pass (2048-bit key) header.d=rosenzweig.io header.i=@rosenzweig.io header.b="rFTkaoXm"
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=rosenzweig.io;
+	s=key1; t=1742769702;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=fHrHFpHbkmdJhunB89nvuHy0Poq4s1GH0zR6hpr++MM=;
+	b=rFTkaoXmkhap8z+UVq930EyBbhuibwLv10NVZV/YQ7nQLwkFRPzM4z1P+fUe6WrYXSddFV
+	V9vZIIshzEWtal63a/zaHglxHnLoZpAPdddHW7TsN9C8sR8Z5RBuaTcR2sZJfWRZuoIwzk
+	PJ3XuiqEdvTY26Uc/kfDLaDMsnrNLogtmOyBa/A5Sq9IpiAq6j1oKfuHhZ09kGKhESjNFI
+	3Fiibelo+YUhozV1zynTJn+hms4sPr1xDf3xi7sZ55ZooZ3FsC/GXjx/OjUnvhpHXKAgPG
+	cKJIxnxqPNeyCXatVCt8pbPAYx4yIlHDL49gISd8QnZydUdBUuNaHpYkbhmAdQ==
+From: Alyssa Rosenzweig <alyssa@rosenzweig.io>
+Date: Sun, 23 Mar 2025 18:41:32 -0400
+Subject: [PATCH v4] drm: Add UAPI for the Asahi driver
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -68,1153 +37,1383 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250323-s2mpg10-v1-12-d08943702707@linaro.org>
-References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
-In-Reply-To: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Sylwester Nawrocki <s.nawrocki@samsung.com>, 
- Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>, 
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
- Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250323-agx-uapi-v4-1-12ed2db96737@rosenzweig.io>
+X-B4-Tracking: v=1; b=H4sIABuO4GcC/23MQQ7CIBCF4asY1mIGBqS48h7GBdZpO5vWgGLV9
+ O6iMbExLt9kvv8hEkWmJDaLh4iUOfHQl2GWC1F3oW9J8rFsoUFbQHAytKO8hBNLj2CdN+ga5UV
+ 5P0VqeHyndvuyO07nId7e5axe109EwTeSlVSyWtcVeLAAhrZxSNTfr8TtigfxCmU9xzjDumDr6
+ 9pisJ4C/sM4x2aGsWAMh8aRMxR084unaXoCK3cWyh4BAAA=
+X-Change-ID: 20250307-agx-uapi-930579437f19
+To: David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Faith Ekstrand <faith.ekstrand@collabora.com>, Janne Grunau <j@jannau.net>, 
+ Sven Peter <sven@svenpeter.dev>, Jonathan Corbet <corbet@lwn.net>, 
+ Sergio Lopez Pascual <slp@sinrega.org>, 
+ Ryan Houdek <sonicadvance1@gmail.com>
+Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ rust-for-linux@vger.kernel.org, asahi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, 
+ Asahi Lina <lina@asahilina.net>, Simona Vetter <simona.vetter@ffwll.ch>, 
+ Alyssa Rosenzweig <alyssa@rosenzweig.io>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=44516; i=alyssa@rosenzweig.io;
+ h=from:subject:message-id; bh=8O3BOR2g1ZDNRgIV/TWf9z/qvZQ/ZfTyJPIikM1YNjI=;
+ b=owEBbQKS/ZANAwAIAf7+UFoK9VgNAcsmYgBn4I4hERjZAMK3x0xRUfQ/gQxfF782vO0tgU086
+ sukyzxwaESJAjMEAAEIAB0WIQRDXuCbsK8A0B2q9jj+/lBaCvVYDQUCZ+COIQAKCRD+/lBaCvVY
+ DdxgEACiGCgaL38UHAo+IZIEf0BCvpk+3h4fQnLI4Lmqnpf6O2mvV96+Mm9DuszjUxp+o3qkAzx
+ kxamchgzL1qf7gXmXeWidQEU4TPTMJ2qwBVtJgCvQjjmXBh2cSMS8R8IIg1HgpcqvFF1/i/qYDH
+ K3qR2+rQU3qCIFxc1KoV2au2rpi+Goes6DESGI0qabfCwqnU1PjBSKDkXhbrN2LUkWE5iASuuYj
+ 5MLpnPCLP4hEVVtVzxjFq2xh0xSmDss8ppK2mFRvKMNbLDVZcR9Lb5wtWqyhTwMISbcl9rPCFnk
+ HU8Nw9bnMKE9Y9z6ACImx/ym2bqC9nErIVImPYG/cbcwWaTH+lr2lLFHTlSUezklTRAVtCIj6/S
+ WWNDiNnPF+Jkn8HA1BdDKzEHimJTZCKMTmPZC1EZ69cl1TRNWiZ715aleW+8ZdbNfh5El+Ua01p
+ qn9fzk6L6saEW8pIXX7S+Y0ZLuNJlWJqlzQlieEXZBhDxOb+gciyw+2R1VOcN8IsOsff/PgG0HF
+ uLJ7LHiEDyN0Q+B2cSGrvZUDmxHAoc4eLaPd5ZleL2o6vfoDMuLTDkgJe9N1avFLZc+rkEgPINy
+ 5ytsym/uOPx+2TysB184Nt3vwXsKM+L5B+dWZIeZu0Wy+zWAKF2qxHPK2WqEMGpDv8Knh959Cbr
+ Q+OoEwxQEsVpi4A==
+X-Developer-Key: i=alyssa@rosenzweig.io; a=openpgp;
+ fpr=435EE09BB0AF00D01DAAF638FEFE505A0AF5580D
+X-Migadu-Flow: FLOW_OUT
 
-Add support for Samsung's S2MPG10 PMIC, which is a Power Management IC
-for mobile applications with buck converters, various LDOs, power
-meters, RTC, clock outputs, and additional GPIOs interfaces.
+This adds the UAPI for the Asahi driver targeting the GPU in the Apple
+M1 and M2 series systems on chip. The UAPI design is based on other
+modern Vulkan-capable drivers, including Xe and Panthor. Memory
+management is based on explicit VM management. Synchronization is
+exclusively explicit sync.
 
-Contrary to existing Samsung S2M series PMICs supported, communication
-is not via I2C, but via the Samsung ACPM firmware.
+This UAPI is validated against our open source Mesa stack, which is
+fully conformant to the OpenGL 4.6, OpenGL ES 3.2, OpenCL 3.0, and
+Vulkan 1.4 standards. The Vulkan driver supports sparse, exercising the
+VM_BIND mechanism.
 
-This commit adds the core driver.
+This patch adds the standalone UAPI header. It is implemented by an open
+source DRM driver written in Rust. We fully intend to upstream this
+driver when possible. However, as a production graphics driver, it
+depends on a significant number of Rust abstractions that will take a
+long time to upstream. In the mean time, our userspace is upstream in
+Mesa but is not allowed to probe with upstream Mesa as the UAPI is not
+yet reviewed and merged in the upstream kernel. Although we ship a
+patched Mesa in Fedora Asahi Remix, any containers shipping upstream
+Mesa builds are broken for our users, including upstream Flatpak and
+Waydroid runtimes. Additionally, it forces us to maintain forks of Mesa
+and virglrenderer, which complicates bisects.
 
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
+The intention in sending out this patch is for this UAPI to be
+thoroughly reviewed. Once we as the DRM community are satisfied with the
+UAPI, this header lands signifying that the UAPI is stable and must only
+be evolved in backwards-compatible ways; it will be the UAPI implemented
+in the DRM driver that eventually lands upstream. That promise lets us
+enable upstream Mesa, solving all these issues while the upstream Rust
+abstractions are developed.
 
+https://github.com/alyssarosenzweig/linux/commits/agx-uapi-v4 contains
+the DRM driver implementing this proposed UAPI.
+
+https://gitlab.freedesktop.org/mesa/mesa/-/merge_requests/33984 contains
+the Mesa patches to implement this proposed UAPI.
+
+That Linux and Mesa branch together give a complete graphics/compute
+stack on top of this UAPI.
+
+Co-developed-by: Asahi Lina <lina@asahilina.net>
+Signed-off-by: Asahi Lina <lina@asahilina.net>
+Acked-by: Simona Vetter <simona.vetter@ffwll.ch>
+Signed-off-by: Alyssa Rosenzweig <alyssa@rosenzweig.io>
 ---
-Checkpatch suggests to update MAINTAINERS, but the new file is covered
-already due to using a wildcard.
----
- drivers/mfd/Kconfig                 |  17 ++
- drivers/mfd/Makefile                |   1 +
- drivers/mfd/sec-acpm.c              | 471 ++++++++++++++++++++++++++++++++++++
- drivers/mfd/sec-core.c              |  16 ++
- drivers/mfd/sec-irq.c               |  68 ++++++
- include/linux/mfd/samsung/core.h    |   1 +
- include/linux/mfd/samsung/irq.h     | 103 ++++++++
- include/linux/mfd/samsung/s2mpg10.h | 310 ++++++++++++++++++++++++
- 8 files changed, 987 insertions(+)
+Changes in v4:
+- get_time now returns time in nanoseconds, timer_frequency_hz dropped.
+  This hides an extra time domain from userspace for no real downside.
+- Added lots more comments answering questions Faith raised in v3
+  review.
+- Drop firmware_version per discussion.
+- Drop UNBIND_ALL, it is unused.
+- Switch priority to an enum per discussion.
+- Drop drm_asahi_subqueue and instead make barriers separate fields to
+  make obvious the extensability situation resolving discusison on v3.
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 9cce9a632827a38d6e4396167aa3b0391f273e97..a154be6e2d44e41608e0a297e0915a84ebbb66cc 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -1320,6 +1320,23 @@ config MFD_SEC_CORE
- 	select MFD_CORE
- 	select REGMAP_IRQ
+Changes in v3:
+- Merge load/store/partial fields for depth/stencil as discussed with
+  Faith. This shrinks the submit a lot with little loss of
+  functionality. There's maaaybe a use case for splitting out depth load
+  base (only) later. But it's easier to add uAPI than remove it!
+- Make usc_exec_base per-queue instead of per-command. No use case for
+  doing it finer grained, and this shrinks the submits and simplifies
+  userspace handling.
+- Improve descriptions.
+- Reorder/shrink fields to remove padding.
+- Use full names for vdm/cdm_ctrl_stream_base
+- Link to v2: https://lore.kernel.org/r/20250313-agx-uapi-v2-1-59cc53a59ea3@rosenzweig.io
+
+Changes in v2:
+- Flatten submits. Previously, the submit ioctl pointed to an array of
+  command structures, which each pointed to separate payload structures,
+  which pointed to attachment structures. This is a lot of indirection,
+  which complicates greatly virtgpu. In the new approach, the submit
+  ioctl points to a single contiguous blob of plain-old-data, no CPU
+  pointers, copied from userspace in one go and suitable as virtgpu wire
+  protocol.
+- Remove vm_page_size, userspace has to hardcode it anyway.
+- Turn random #defines into enums for better kernel doc, etc.
+- Improve comments, particularly around barriers[].
+- Rename various flags/fields to better match canonical names when known
+  (a lot of the names are pulled from the drivers/gpu/drm/imagination,
+  naturally).
+- Drop unnecessary encoder_id, cmd_id handles.
+- Fix padding in submit ioctl (thanks Ryan).
+- Link to v1: https://lore.kernel.org/r/20250310-agx-uapi-v1-1-86c80905004e@rosenzweig.io
+---
+ Documentation/gpu/driver-uapi.rst |    5 +
+ MAINTAINERS                       |    1 +
+ include/uapi/drm/asahi_drm.h      | 1205 +++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1211 insertions(+)
+
+diff --git a/Documentation/gpu/driver-uapi.rst b/Documentation/gpu/driver-uapi.rst
+index 971cdb4816fc98d80a64d93637481d10c2e79718..1f15a8ca126516c23bd7374cc4aead0dfbbccf67 100644
+--- a/Documentation/gpu/driver-uapi.rst
++++ b/Documentation/gpu/driver-uapi.rst
+@@ -27,3 +27,8 @@ drm/xe uAPI
+ ===========
  
-+config MFD_SEC_ACPM
-+	tristate "Samsung Electronics S2MPG1x PMICs"
-+	depends on EXYNOS_ACPM_PROTOCOL
-+	depends on OF
-+	select MFD_SEC_CORE
-+	help
-+	  Support for the Samsung Electronics PMICs with ACPM interface.
-+	  This is a Power Management IC for mobile applications with buck
-+	  converters, various LDOs, power meters, RTC, clock outputs, and
-+	  additional GPIOs interfaces.
-+	  This driver provides common support for accessing the device;
-+	  additional drivers must be enabled in order to use the functionality
-+	  of the device.
+ .. kernel-doc:: include/uapi/drm/xe_drm.h
 +
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called sec-acpm.
++drm/asahi uAPI
++================
 +
- config MFD_SEC_I2C
- 	tristate "Samsung Electronics S2MPA/S2MPS1X/S2MPU/S5M series PMICs"
- 	depends on I2C=y
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index ca9efff5780a7c818ca6cfe017c0f897ca70b449..8a8c678134a9721c7f78e432ddd0df33b2b0de69 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -233,6 +233,7 @@ obj-$(CONFIG_MFD_RK8XX_I2C)	+= rk8xx-i2c.o
- obj-$(CONFIG_MFD_RK8XX_SPI)	+= rk8xx-spi.o
- obj-$(CONFIG_MFD_RN5T618)	+= rn5t618.o
- obj-$(CONFIG_MFD_SEC_CORE)	+= sec-core.o sec-irq.o
-+obj-$(CONFIG_MFD_SEC_ACPM)	+= sec-acpm.o
- obj-$(CONFIG_MFD_SEC_I2C)	+= sec-i2c.o
- obj-$(CONFIG_MFD_SYSCON)	+= syscon.o
- obj-$(CONFIG_MFD_LM3533)	+= lm3533-core.o lm3533-ctrlbank.o
-diff --git a/drivers/mfd/sec-acpm.c b/drivers/mfd/sec-acpm.c
++.. kernel-doc:: include/uapi/drm/asahi_drm.h
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d1050702f681fbd0e4e2d0457b2ba569a64070d9..7f692a935808d4ec82ee741324f8043302dae491 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -2256,6 +2256,7 @@ F:	drivers/watchdog/apple_wdt.c
+ F:	include/dt-bindings/interrupt-controller/apple-aic.h
+ F:	include/dt-bindings/pinctrl/apple.h
+ F:	include/linux/soc/apple/*
++F:	include/uapi/drm/asahi_drm.h
+ 
+ ARM/ARTPEC MACHINE SUPPORT
+ M:	Jesper Nilsson <jesper.nilsson@axis.com>
+diff --git a/include/uapi/drm/asahi_drm.h b/include/uapi/drm/asahi_drm.h
 new file mode 100644
-index 0000000000000000000000000000000000000000..4d5b3f412cc22dcf3bc1680a54dcf263a65882c2
+index 0000000000000000000000000000000000000000..d2f07a12430f170f0fb87f2298a4fddea9e075b7
 --- /dev/null
-+++ b/drivers/mfd/sec-acpm.c
-@@ -0,0 +1,471 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+//
-+// Copyright 2020 Google Inc
-+// Copyright 2025 Linaro Ltd.
-+//
-+// Samsung S2MPG1x ACPM driver
-+
-+#include <linux/array_size.h>
-+#include <linux/device.h>
-+#include <linux/firmware/samsung/exynos-acpm-protocol.h>
-+#include <linux/mfd/samsung/core.h>
-+#include <linux/mfd/samsung/s2mpg10.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm.h>
-+#include <linux/property.h>
-+#include <linux/regmap.h>
-+#include "sec-core.h"
-+
-+#define ACPM_MAX_BULK_DATA   8
-+
-+struct sec_pmic_acpm_platform_data {
-+	int device_type;
-+
-+	unsigned int acpm_chan_id;
-+	u8 speedy_channel;
-+
-+	const struct regmap_config *regmap_cfg_common;
-+	const struct regmap_config *regmap_cfg_pmic;
-+	const struct regmap_config *regmap_cfg_rtc;
-+	const struct regmap_config *regmap_cfg_meter;
-+};
-+
-+static const struct regmap_range s2mpg10_common_registers[] = {
-+	regmap_reg_range(0x00, 0x02),
-+	regmap_reg_range(0x0a, 0x0c),
-+	regmap_reg_range(0x1a, 0x2a),
-+	regmap_reg_range(0x33, 0x3f),
-+	regmap_reg_range(0x57, 0x7f),
-+};
-+
-+static const struct regmap_range s2mpg10_common_ro_registers[] = {
-+	regmap_reg_range(0x00, 0x01),
-+	regmap_reg_range(0x28, 0x2a),
-+	regmap_reg_range(0x33, 0x3f),
-+	regmap_reg_range(0x57, 0x7f),
-+};
-+
-+static const struct regmap_range s2mpg10_common_nonvolatile_registers[] = {
-+	regmap_reg_range(0x00, 0x00), /* CHIP_ID_M */
-+	regmap_reg_range(0x02, 0x02), /* INT_MASK */
-+	regmap_reg_range(0x0a, 0x0c), /* speedy control */
-+};
-+
-+static const struct regmap_range s2mpg10_common_precious_registers[] = {
-+	regmap_reg_range(0x01, 0x01), /* INT */
-+};
-+
-+static const struct regmap_access_table s2mpg10_common_wr_table = {
-+	.yes_ranges = s2mpg10_common_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_common_registers),
-+	.no_ranges = s2mpg10_common_ro_registers,
-+	.n_no_ranges = ARRAY_SIZE(s2mpg10_common_ro_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_common_rd_table = {
-+	.yes_ranges = s2mpg10_common_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_common_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_common_volatile_table = {
-+	.no_ranges = s2mpg10_common_nonvolatile_registers,
-+	.n_no_ranges = ARRAY_SIZE(s2mpg10_common_nonvolatile_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_common_precious_table = {
-+	.yes_ranges = s2mpg10_common_precious_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_common_precious_registers),
-+};
-+
-+static const struct regmap_config s2mpg10_regmap_config_common = {
-+	.name = "common",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0x7f,
-+	.wr_table = &s2mpg10_common_wr_table,
-+	.rd_table = &s2mpg10_common_rd_table,
-+	.volatile_table = &s2mpg10_common_volatile_table,
-+	.precious_table = &s2mpg10_common_precious_table,
-+	.num_reg_defaults_raw = 0x7f + 1,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static const struct regmap_range s2mpg10_pmic_registers[] = {
-+	regmap_reg_range(0x00, 0xf6),
-+};
-+
-+static const struct regmap_range s2mpg10_pmic_ro_registers[] = {
-+	regmap_reg_range(0x00, 0x05), /* INTx */
-+	regmap_reg_range(0x0c, 0x0f), /* STATUSx PWRONSRC OFFSRC */
-+	regmap_reg_range(0xc7, 0xc7), /* GPIO input */
-+};
-+
-+static const struct regmap_range s2mpg10_pmic_nonvolatile_registers[] = {
-+	regmap_reg_range(0x06, 0x0b), /* INTxM */
-+};
-+
-+static const struct regmap_range s2mpg10_pmic_precious_registers[] = {
-+	regmap_reg_range(0x00, 0x05), /* INTx */
-+};
-+
-+static const struct regmap_access_table s2mpg10_pmic_wr_table = {
-+	.yes_ranges = s2mpg10_pmic_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_pmic_registers),
-+	.no_ranges = s2mpg10_pmic_ro_registers,
-+	.n_no_ranges = ARRAY_SIZE(s2mpg10_pmic_ro_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_pmic_rd_table = {
-+	.yes_ranges = s2mpg10_pmic_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_pmic_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_pmic_volatile_table = {
-+	.no_ranges = s2mpg10_pmic_nonvolatile_registers,
-+	.n_no_ranges = ARRAY_SIZE(s2mpg10_pmic_nonvolatile_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_pmic_precious_table = {
-+	.yes_ranges = s2mpg10_pmic_precious_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_pmic_precious_registers),
-+};
-+
-+static const struct regmap_config s2mpg10_regmap_config_pmic = {
-+	.name = "pmic",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = 0xf6,
-+	.wr_table = &s2mpg10_pmic_wr_table,
-+	.rd_table = &s2mpg10_pmic_rd_table,
-+	.volatile_table = &s2mpg10_pmic_volatile_table,
-+	.precious_table = &s2mpg10_pmic_precious_table,
-+	.num_reg_defaults_raw = 0xf6 + 1,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static const struct regmap_range s2mpg10_rtc_registers[] = {
-+	regmap_reg_range(0x00, 0x2b),
-+};
-+
-+static const struct regmap_range s2mpg10_volatile_registers[] = {
-+	regmap_reg_range(0x01, 0x01), /* RTC_UPDATE */
-+	regmap_reg_range(0x05, 0x0c), /* time / date */
-+};
-+
-+static const struct regmap_access_table s2mpg10_rtc_wr_table = {
-+	.yes_ranges = s2mpg10_rtc_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_rtc_registers),
-+	/* no r/o registers in RTC block  */
-+};
-+
-+static const struct regmap_access_table s2mpg10_rtc_rd_table = {
-+	.yes_ranges = s2mpg10_rtc_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_rtc_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_rtc_volatile_table = {
-+	.yes_ranges = s2mpg10_volatile_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_volatile_registers),
-+};
-+
-+static const struct regmap_config s2mpg10_regmap_config_rtc = {
-+	.name = "rtc",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.reg_stride = 1,
-+	.max_register = 0x2b,
-+	.wr_table = &s2mpg10_rtc_wr_table,
-+	.rd_table = &s2mpg10_rtc_rd_table,
-+	.volatile_table = &s2mpg10_rtc_volatile_table,
-+	.num_reg_defaults_raw = 0x2b + 1,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+static const struct regmap_range s2mpg10_meter_registers[] = {
-+	regmap_reg_range(0x00, 0x21), /* meter config */
-+	regmap_reg_range(0x40, 0x8a), /* meter data */
-+	regmap_reg_range(0xee, 0xee),
-+	regmap_reg_range(0xf1, 0xf1),
-+};
-+
-+static const struct regmap_range s2mpg10_meter_ro_registers[] = {
-+	regmap_reg_range(0x40, 0x8a),
-+};
-+
-+static const struct regmap_access_table s2mpg10_meter_wr_table = {
-+	.yes_ranges = s2mpg10_meter_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_meter_registers),
-+	.no_ranges = s2mpg10_meter_ro_registers,
-+	.n_no_ranges = ARRAY_SIZE(s2mpg10_meter_ro_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_meter_rd_table = {
-+	.yes_ranges = s2mpg10_meter_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_meter_registers),
-+};
-+
-+static const struct regmap_access_table s2mpg10_meter_volatile_table = {
-+	.yes_ranges = s2mpg10_meter_ro_registers,
-+	.n_yes_ranges = ARRAY_SIZE(s2mpg10_meter_ro_registers),
-+};
-+
-+static const struct regmap_config s2mpg10_regmap_config_meter = {
-+	.name = "meter",
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.reg_stride = 1,
-+	.max_register = 0xf1,
-+	.wr_table = &s2mpg10_meter_wr_table,
-+	.rd_table = &s2mpg10_meter_rd_table,
-+	.volatile_table = &s2mpg10_meter_volatile_table,
-+	.num_reg_defaults_raw = 0xf1 + 1,
-+	.cache_type = REGCACHE_FLAT,
-+};
-+
-+struct sec_acpm_shared_bus_context {
-+	const struct acpm_handle *acpm;
-+	unsigned int acpm_chan_id;
-+	u8 speedy_channel;
-+};
-+
-+struct sec_acpm_bus_context {
-+	struct sec_acpm_shared_bus_context *shared;
-+	u8 type;
-+#define SEC_ACPM_TYPE_COMMON  0x00
-+#define SEC_ACPM_TYPE_PMIC    0x01
-+#define SEC_ACPM_TYPE_RTC     0x02
-+#define SEC_ACPM_TYPE_METER   0x0a
-+#define SEC_ACPM_TYPE_WLWP    0x0b
-+#define SEC_ACPM_TYPE_TRIM    0x0f
-+};
-+
-+static int sec_acpm_bus_write(void *context, const void *data, size_t count)
-+{
-+	struct sec_acpm_bus_context *ctx = context;
-+	const struct acpm_handle *acpm = ctx->shared->acpm;
-+	const struct acpm_pmic_ops *pmic_ops = &acpm->ops.pmic_ops;
-+	u8 reg;
-+
-+	if (count < 2 || count > (ACPM_MAX_BULK_DATA + 1))
-+		return -EINVAL;
-+
-+	reg = *(u8 *)data;
-+	++data;
-+	--count;
-+
-+	return pmic_ops->bulk_write(acpm, ctx->shared->acpm_chan_id,
-+				    ctx->type, reg,
-+				    ctx->shared->speedy_channel, count, data);
-+}
-+
-+static int sec_acpm_bus_read(void *context, const void *reg_buf,
-+			     size_t reg_size, void *val_buf,
-+			     size_t val_size)
-+{
-+	struct sec_acpm_bus_context *ctx = context;
-+	const struct acpm_handle *acpm = ctx->shared->acpm;
-+	const struct acpm_pmic_ops *pmic_ops = &acpm->ops.pmic_ops;
-+	u8 reg;
-+
-+	if (reg_size != 1 || !val_size || val_size > ACPM_MAX_BULK_DATA)
-+		return -EINVAL;
-+
-+	reg = *(u8 *)reg_buf;
-+
-+	return pmic_ops->bulk_read(acpm, ctx->shared->acpm_chan_id,
-+				   ctx->type, reg,
-+				   ctx->shared->speedy_channel,
-+				   val_size, val_buf);
-+}
-+
-+static int sec_acpm_bus_reg_update_bits(void *context, unsigned int reg,
-+					unsigned int mask, unsigned int val)
-+{
-+	struct sec_acpm_bus_context *ctx = context;
-+	const struct acpm_handle *acpm = ctx->shared->acpm;
-+	const struct acpm_pmic_ops *pmic_ops = &acpm->ops.pmic_ops;
-+
-+	return pmic_ops->update_reg(acpm, ctx->shared->acpm_chan_id,
-+				    ctx->type, reg & 0xff,
-+				    ctx->shared->speedy_channel,
-+				    val, mask);
-+}
-+
-+static const struct regmap_bus sec_pmic_acpm_regmap_bus = {
-+	.write = sec_acpm_bus_write,
-+	.read = sec_acpm_bus_read,
-+	.reg_update_bits = sec_acpm_bus_reg_update_bits,
-+	.max_raw_read = ACPM_MAX_BULK_DATA,
-+	.max_raw_write = ACPM_MAX_BULK_DATA,
-+};
-+
-+static struct regmap *
-+sec_pmic_acpm_regmap_init(struct device *dev,
-+			  struct sec_acpm_shared_bus_context *shared_ctx,
-+			  u8 type, const struct regmap_config *cfg,
-+			  bool do_attach)
-+{
-+	struct sec_acpm_bus_context *ctx;
-+	struct regmap *regmap;
-+
-+	ctx = devm_kzalloc(dev, sizeof(*ctx), GFP_KERNEL);
-+	if (!ctx)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ctx->shared = shared_ctx;
-+	ctx->type = type;
-+
-+	regmap = devm_regmap_init(dev, &sec_pmic_acpm_regmap_bus, ctx, cfg);
-+	if (IS_ERR(regmap))
-+		return ERR_PTR(dev_err_probe(dev, PTR_ERR(regmap),
-+					     "regmap init (%s) failed\n",
-+					     cfg->name));
-+
-+	if (do_attach) {
-+		int ret;
-+
-+		ret = regmap_attach_dev(dev, regmap, cfg);
-+		if (ret)
-+			return ERR_PTR(dev_err_probe(dev, ret,
-+						     "regmap attach (%s) failed\n",
-+						     cfg->name));
-+	}
-+
-+	return regmap;
-+}
-+
-+static void sec_acpm_mask_common_irqs(void *regmap_common)
-+{
-+	/* Mask all interrupts from 'common' block on shutdown */
-+	regmap_write(regmap_common, S2MPG10_COMMON_INT_MASK,
-+		     S2MPG10_COMMON_INT_SRC_MASK);
-+}
-+
-+static int sec_pmic_acpm_probe(struct platform_device *pdev)
-+{
-+	const struct sec_pmic_acpm_platform_data *data;
-+	struct sec_acpm_shared_bus_context *shared_ctx;
-+	const struct acpm_handle *acpm;
-+	struct regmap *regmap_common, *regmap_pmic, *regmap;
-+	struct device *dev;
-+	int ret, irq;
-+
-+	dev = &pdev->dev;
-+
-+	data = device_get_match_data(dev);
-+	if (!data)
-+		return dev_err_probe(dev, -ENODEV,
-+				     "Unsupported device type\n");
-+
-+	acpm = devm_acpm_get_by_phandle(dev, "exynos,acpm-ipc");
-+	if (IS_ERR(acpm))
-+		return dev_err_probe(dev, PTR_ERR(acpm),
-+				     "Failed to get acpm\n");
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq < 0)
-+		return irq;
-+
-+	shared_ctx = devm_kzalloc(dev, sizeof(*shared_ctx), GFP_KERNEL);
-+	if (!shared_ctx)
-+		return -ENOMEM;
-+
-+	shared_ctx->acpm = acpm;
-+	shared_ctx->acpm_chan_id = data->acpm_chan_id;
-+	shared_ctx->speedy_channel = data->speedy_channel;
-+
-+	regmap_common = sec_pmic_acpm_regmap_init(dev, shared_ctx,
-+						  SEC_ACPM_TYPE_COMMON,
-+						  data->regmap_cfg_common,
-+						  false);
-+	if (IS_ERR(regmap_common))
-+		return PTR_ERR(regmap_common);
-+
-+	/* Mask all interrupts from 'common' block, until successful init */
-+	ret = regmap_write(regmap_common, S2MPG10_COMMON_INT_MASK,
-+			   S2MPG10_COMMON_INT_SRC_MASK);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to mask common block interrupts\n");
-+
-+	regmap_pmic = sec_pmic_acpm_regmap_init(dev, shared_ctx,
-+						SEC_ACPM_TYPE_PMIC,
-+						data->regmap_cfg_pmic,
-+						false);
-+	if (IS_ERR(regmap_pmic))
-+		return PTR_ERR(regmap_pmic);
-+
-+	regmap = sec_pmic_acpm_regmap_init(dev, shared_ctx, SEC_ACPM_TYPE_RTC,
-+					   data->regmap_cfg_rtc, true);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	regmap = sec_pmic_acpm_regmap_init(dev, shared_ctx, SEC_ACPM_TYPE_METER,
-+					   data->regmap_cfg_meter, true);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	ret = sec_pmic_probe(dev, data->device_type, irq, regmap_pmic,
-+			     NULL, NULL);
-+	if (ret)
-+		return ret;
-+
-+	if (device_property_read_bool(dev, "wakeup-source"))
-+		devm_device_init_wakeup(dev);
-+
-+	/*
-+	 * Unmask PMIC interrupt from 'common' block, now that everything is in
-+	 * place.
-+	 */
-+	ret = regmap_clear_bits(regmap_common, S2MPG10_COMMON_INT_MASK,
-+				S2MPG10_COMMON_INT_SRC_PMIC);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "Failed to unmask PMIC interrupt\n");
-+
-+	ret = devm_add_action_or_reset(dev, sec_acpm_mask_common_irqs,
-+				       regmap_common);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static void sec_pmic_acpm_shutdown(struct platform_device *pdev)
-+{
-+	sec_pmic_shutdown(&pdev->dev);
-+}
-+
-+static const struct sec_pmic_acpm_platform_data s2mpg10_data = {
-+	.device_type = S2MPG10,
-+	.acpm_chan_id = 2,
-+	.speedy_channel = 0,
-+	.regmap_cfg_common = &s2mpg10_regmap_config_common,
-+	.regmap_cfg_pmic = &s2mpg10_regmap_config_pmic,
-+	.regmap_cfg_rtc = &s2mpg10_regmap_config_rtc,
-+	.regmap_cfg_meter = &s2mpg10_regmap_config_meter,
-+};
-+
-+static const struct of_device_id sec_pmic_acpm_of_match[] = {
-+	{ .compatible = "samsung,s2mpg10-pmic", .data = &s2mpg10_data, },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, sec_pmic_acpm_of_match);
-+
-+static struct platform_driver sec_pmic_acpm_driver = {
-+	.driver = {
-+		.name = "sec-pmic-acpm",
-+		.pm = pm_sleep_ptr(&sec_pmic_pm_ops),
-+		.of_match_table = sec_pmic_acpm_of_match,
-+	},
-+	.probe = sec_pmic_acpm_probe,
-+	.shutdown = sec_pmic_acpm_shutdown,
-+};
-+module_platform_driver(sec_pmic_acpm_driver);
-+
-+MODULE_AUTHOR("André Draszik <andre.draszik@linaro.org>");
-+MODULE_DESCRIPTION("ACPM driver for the Samsung S2MPG1x");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
-index e81da34cf6795beca5f660fb46eefa4b5f8957d1..27f5036ffa1009304147755c91d00be333dd206a 100644
---- a/drivers/mfd/sec-core.c
-+++ b/drivers/mfd/sec-core.c
-@@ -35,6 +35,14 @@ static const struct mfd_cell s2dos05_devs[] = {
- 	{ .name = "s2dos05-regulator", },
- };
- 
-+static const struct mfd_cell s2mpg10_devs[] = {
-+	MFD_CELL_NAME("s2mpg10-meter"),
-+	MFD_CELL_NAME("s2mpg10-regulator"),
-+	MFD_CELL_NAME("s2mpg10-rtc"),
-+	MFD_CELL_OF("s2mpg10-clk", NULL, NULL, 0, 0, "samsung,s2mpg10-clk"),
-+	MFD_CELL_OF("s2mpg10-gpio", NULL, NULL, 0, 0, "samsung,s2mpg10-gpio"),
-+};
-+
- static const struct mfd_cell s2mps11_devs[] = {
- 	{ .name = "s2mps11-regulator", },
- 	{ .name = "s2mps14-rtc", },
-@@ -89,6 +97,10 @@ static void sec_pmic_dump_rev(struct sec_pmic_dev *sec_pmic)
- {
- 	unsigned int val;
- 
-+	/* For s2mpg1x, the revision is in a different regmap */
-+	if (sec_pmic->device_type == S2MPG10)
-+		return;
-+
- 	/* For each device type, the REG_ID is always the first register */
- 	if (!regmap_read(sec_pmic->regmap_pmic, S2MPS11_REG_ID, &val))
- 		dev_dbg(sec_pmic->dev, "Revision: 0x%x\n", val);
-@@ -170,6 +182,10 @@ int sec_pmic_probe(struct device *dev, unsigned long device_type,
- 		sec_devs = s2mpa01_devs;
- 		num_sec_devs = ARRAY_SIZE(s2mpa01_devs);
- 		break;
-+	case S2MPG10:
-+		sec_devs = s2mpg10_devs;
-+		num_sec_devs = ARRAY_SIZE(s2mpg10_devs);
-+		break;
- 	case S2MPS11X:
- 		sec_devs = s2mps11_devs;
- 		num_sec_devs = ARRAY_SIZE(s2mps11_devs);
-diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
-index 4d49bb42bd0d109263f485c8b58e88cdd8d598d9..bf86281401ac6ff05c90c2d71c84744709ed79cb 100644
---- a/drivers/mfd/sec-irq.c
-+++ b/drivers/mfd/sec-irq.c
-@@ -11,6 +11,7 @@
- #include <linux/irq.h>
- #include <linux/mfd/samsung/core.h>
- #include <linux/mfd/samsung/irq.h>
-+#include <linux/mfd/samsung/s2mpg10.h>
- #include <linux/mfd/samsung/s2mps11.h>
- #include <linux/mfd/samsung/s2mps14.h>
- #include <linux/mfd/samsung/s2mpu02.h>
-@@ -20,6 +21,60 @@
- #include <linux/regmap.h>
- #include "sec-core.h"
- 
-+static const struct regmap_irq s2mpg10_irqs[] = {
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWRONF, 0, S2MPG10_IRQ_PWRONF_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWRONR, 0, S2MPG10_IRQ_PWRONR_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_JIGONBF, 0, S2MPG10_IRQ_JIGONBF_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_JIGONBR, 0, S2MPG10_IRQ_JIGONBR_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_ACOKBF, 0, S2MPG10_IRQ_ACOKBF_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_ACOKBR, 0, S2MPG10_IRQ_ACOKBR_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWRON1S, 0, S2MPG10_IRQ_PWRON1S_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_MRB, 0, S2MPG10_IRQ_MRB_MASK),
-+
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_RTC60S, 1, S2MPG10_IRQ_RTC60S_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_RTCA1, 1, S2MPG10_IRQ_RTCA1_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_RTCA0, 1, S2MPG10_IRQ_RTCA0_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_RTC1S, 1, S2MPG10_IRQ_RTC1S_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_WTSR_COLDRST, 1, S2MPG10_IRQ_WTSR_COLDRST_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_WTSR, 1, S2MPG10_IRQ_WTSR_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_WRST, 1, S2MPG10_IRQ_WRST_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_SMPL, 1, S2MPG10_IRQ_SMPL_MASK),
-+
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_120C, 2, S2MPG10_IRQ_INT120C_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_140C, 2, S2MPG10_IRQ_INT140C_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_TSD, 2, S2MPG10_IRQ_TSD_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PIF_TIMEOUT1, 2, S2MPG10_IRQ_PIF_TIMEOUT1_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PIF_TIMEOUT2, 2, S2MPG10_IRQ_PIF_TIMEOUT2_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_SPD_PARITY_ERR, 2, S2MPG10_IRQ_SPD_PARITY_ERR_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_SPD_ABNORMAL_STOP, 2, S2MPG10_IRQ_SPD_ABNORMAL_STOP_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PMETER_OVERF, 2, S2MPG10_IRQ_PMETER_OVERF_MASK),
-+
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B1M, 3, S2MPG10_IRQ_OCP_B1M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B2M, 3, S2MPG10_IRQ_OCP_B2M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B3M, 3, S2MPG10_IRQ_OCP_B3M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B4M, 3, S2MPG10_IRQ_OCP_B4M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B5M, 3, S2MPG10_IRQ_OCP_B5M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B6M, 3, S2MPG10_IRQ_OCP_B6M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B7M, 3, S2MPG10_IRQ_OCP_B7M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B8M, 3, S2MPG10_IRQ_OCP_B8M_MASK),
-+
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B9M, 4, S2MPG10_IRQ_OCP_B9M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_OCP_B10M, 4, S2MPG10_IRQ_OCP_B10M_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_WLWP_ACC, 4, S2MPG10_IRQ_WLWP_ACC_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_SMPL_TIMEOUT, 4, S2MPG10_IRQ_SMPL_TIMEOUT_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_WTSR_TIMEOUT, 4, S2MPG10_IRQ_WTSR_TIMEOUT_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_SPD_SRP_PKT_RST, 4, S2MPG10_IRQ_SPD_SRP_PKT_RST_MASK),
-+
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH0, 5, S2MPG10_IRQ_PWR_WARN_CH0_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH1, 5, S2MPG10_IRQ_PWR_WARN_CH1_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH2, 5, S2MPG10_IRQ_PWR_WARN_CH2_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH3, 5, S2MPG10_IRQ_PWR_WARN_CH3_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH4, 5, S2MPG10_IRQ_PWR_WARN_CH4_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH5, 5, S2MPG10_IRQ_PWR_WARN_CH5_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH6, 5, S2MPG10_IRQ_PWR_WARN_CH6_MASK),
-+	REGMAP_IRQ_REG(S2MPG10_IRQ_PWR_WARN_CH7, 5, S2MPG10_IRQ_PWR_WARN_CH7_MASK),
-+};
-+
- static const struct regmap_irq s2mps11_irqs[] = {
- 	[S2MPS11_IRQ_PWRONF] = {
- 		.reg_offset = 0,
-@@ -320,6 +375,16 @@ static const struct regmap_irq s5m8767_irqs[] = {
- 	},
- };
- 
-+static const struct regmap_irq_chip s2mpg10_irq_chip = {
-+	.name = "s2mpg10",
-+	.irqs = s2mpg10_irqs,
-+	.num_irqs = ARRAY_SIZE(s2mpg10_irqs),
-+	.num_regs = 6,
-+	.status_base = S2MPG10_PMIC_INT1,
-+	.mask_base = S2MPG10_PMIC_INT1M,
-+	/* all interrupt sources are read-to-clear */
-+};
-+
- static const struct regmap_irq_chip s2mps11_irq_chip = {
- 	.name = "s2mps11",
- 	.irqs = s2mps11_irqs,
-@@ -402,6 +467,9 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
- 	case S2MPA01:
- 		sec_irq_chip = &s2mps14_irq_chip;
- 		break;
-+	case S2MPG10:
-+		sec_irq_chip = &s2mpg10_irq_chip;
-+		break;
- 	case S2MPS11X:
- 		sec_irq_chip = &s2mps11_irq_chip;
- 		break;
-diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/samsung/core.h
-index 8a4e660854bbc955b812b4d61d4a52a0fc2f2899..c1102324172a9b6bd6072b5929a4866d6c9653fa 100644
---- a/include/linux/mfd/samsung/core.h
-+++ b/include/linux/mfd/samsung/core.h
-@@ -39,6 +39,7 @@ enum sec_device_type {
- 	S5M8767X,
- 	S2DOS05,
- 	S2MPA01,
-+	S2MPG10,
- 	S2MPS11X,
- 	S2MPS13X,
- 	S2MPS14X,
-diff --git a/include/linux/mfd/samsung/irq.h b/include/linux/mfd/samsung/irq.h
-index 978f7af66f74842c4f8dd62c0f58a7a45aba7c34..b4805cbd949bd605004bd88cf361109d1cbbc3bf 100644
---- a/include/linux/mfd/samsung/irq.h
-+++ b/include/linux/mfd/samsung/irq.h
-@@ -57,6 +57,109 @@ enum s2mpa01_irq {
- #define S2MPA01_IRQ_B24_TSD_MASK	(1 << 4)
- #define S2MPA01_IRQ_B35_TSD_MASK	(1 << 5)
- 
-+enum s2mpg10_irq {
-+	/* PMIC */
-+	S2MPG10_IRQ_PWRONF,
-+	S2MPG10_IRQ_PWRONR,
-+	S2MPG10_IRQ_JIGONBF,
-+	S2MPG10_IRQ_JIGONBR,
-+	S2MPG10_IRQ_ACOKBF,
-+	S2MPG10_IRQ_ACOKBR,
-+	S2MPG10_IRQ_PWRON1S,
-+	S2MPG10_IRQ_MRB,
-+#define S2MPG10_IRQ_PWRONF_MASK		BIT(0)
-+#define S2MPG10_IRQ_PWRONR_MASK		BIT(1)
-+#define S2MPG10_IRQ_JIGONBF_MASK	BIT(2)
-+#define S2MPG10_IRQ_JIGONBR_MASK	BIT(3)
-+#define S2MPG10_IRQ_ACOKBF_MASK		BIT(4)
-+#define S2MPG10_IRQ_ACOKBR_MASK		BIT(5)
-+#define S2MPG10_IRQ_PWRON1S_MASK	BIT(6)
-+#define S2MPG10_IRQ_MRB_MASK		BIT(7)
-+
-+	S2MPG10_IRQ_RTC60S,
-+	S2MPG10_IRQ_RTCA1,
-+	S2MPG10_IRQ_RTCA0,
-+	S2MPG10_IRQ_RTC1S,
-+	S2MPG10_IRQ_WTSR_COLDRST,
-+	S2MPG10_IRQ_WTSR,
-+	S2MPG10_IRQ_WRST,
-+	S2MPG10_IRQ_SMPL,
-+#define S2MPG10_IRQ_RTC60S_MASK		BIT(0)
-+#define S2MPG10_IRQ_RTCA1_MASK		BIT(1)
-+#define S2MPG10_IRQ_RTCA0_MASK		BIT(2)
-+#define S2MPG10_IRQ_RTC1S_MASK		BIT(3)
-+#define S2MPG10_IRQ_WTSR_COLDRST_MASK	BIT(4)
-+#define S2MPG10_IRQ_WTSR_MASK		BIT(5)
-+#define S2MPG10_IRQ_WRST_MASK		BIT(6)
-+#define S2MPG10_IRQ_SMPL_MASK		BIT(7)
-+
-+	S2MPG10_IRQ_120C,
-+	S2MPG10_IRQ_140C,
-+	S2MPG10_IRQ_TSD,
-+	S2MPG10_IRQ_PIF_TIMEOUT1,
-+	S2MPG10_IRQ_PIF_TIMEOUT2,
-+	S2MPG10_IRQ_SPD_PARITY_ERR,
-+	S2MPG10_IRQ_SPD_ABNORMAL_STOP,
-+	S2MPG10_IRQ_PMETER_OVERF,
-+#define S2MPG10_IRQ_INT120C_MASK		BIT(0)
-+#define S2MPG10_IRQ_INT140C_MASK		BIT(1)
-+#define S2MPG10_IRQ_TSD_MASK			BIT(2)
-+#define S2MPG10_IRQ_PIF_TIMEOUT1_MASK		BIT(3)
-+#define S2MPG10_IRQ_PIF_TIMEOUT2_MASK		BIT(4)
-+#define S2MPG10_IRQ_SPD_PARITY_ERR_MASK		BIT(5)
-+#define S2MPG10_IRQ_SPD_ABNORMAL_STOP_MASK	BIT(6)
-+#define S2MPG10_IRQ_PMETER_OVERF_MASK		BIT(7)
-+
-+	S2MPG10_IRQ_OCP_B1M,
-+	S2MPG10_IRQ_OCP_B2M,
-+	S2MPG10_IRQ_OCP_B3M,
-+	S2MPG10_IRQ_OCP_B4M,
-+	S2MPG10_IRQ_OCP_B5M,
-+	S2MPG10_IRQ_OCP_B6M,
-+	S2MPG10_IRQ_OCP_B7M,
-+	S2MPG10_IRQ_OCP_B8M,
-+#define S2MPG10_IRQ_OCP_B1M_MASK	BIT(0)
-+#define S2MPG10_IRQ_OCP_B2M_MASK	BIT(1)
-+#define S2MPG10_IRQ_OCP_B3M_MASK	BIT(2)
-+#define S2MPG10_IRQ_OCP_B4M_MASK	BIT(3)
-+#define S2MPG10_IRQ_OCP_B5M_MASK	BIT(4)
-+#define S2MPG10_IRQ_OCP_B6M_MASK	BIT(5)
-+#define S2MPG10_IRQ_OCP_B7M_MASK	BIT(6)
-+#define S2MPG10_IRQ_OCP_B8M_MASK	BIT(7)
-+
-+	S2MPG10_IRQ_OCP_B9M,
-+	S2MPG10_IRQ_OCP_B10M,
-+	S2MPG10_IRQ_WLWP_ACC,
-+	S2MPG10_IRQ_SMPL_TIMEOUT,
-+	S2MPG10_IRQ_WTSR_TIMEOUT,
-+	S2MPG10_IRQ_SPD_SRP_PKT_RST,
-+#define S2MPG10_IRQ_OCP_B9M_MASK		BIT(0)
-+#define S2MPG10_IRQ_OCP_B10M_MASK		BIT(1)
-+#define S2MPG10_IRQ_WLWP_ACC_MASK		BIT(2)
-+#define S2MPG10_IRQ_SMPL_TIMEOUT_MASK		BIT(5)
-+#define S2MPG10_IRQ_WTSR_TIMEOUT_MASK		BIT(6)
-+#define S2MPG10_IRQ_SPD_SRP_PKT_RST_MASK	BIT(7)
-+
-+	S2MPG10_IRQ_PWR_WARN_CH0,
-+	S2MPG10_IRQ_PWR_WARN_CH1,
-+	S2MPG10_IRQ_PWR_WARN_CH2,
-+	S2MPG10_IRQ_PWR_WARN_CH3,
-+	S2MPG10_IRQ_PWR_WARN_CH4,
-+	S2MPG10_IRQ_PWR_WARN_CH5,
-+	S2MPG10_IRQ_PWR_WARN_CH6,
-+	S2MPG10_IRQ_PWR_WARN_CH7,
-+#define S2MPG10_IRQ_PWR_WARN_CH0_MASK	BIT(0)
-+#define S2MPG10_IRQ_PWR_WARN_CH1_MASK	BIT(1)
-+#define S2MPG10_IRQ_PWR_WARN_CH2_MASK	BIT(2)
-+#define S2MPG10_IRQ_PWR_WARN_CH3_MASK	BIT(3)
-+#define S2MPG10_IRQ_PWR_WARN_CH4_MASK	BIT(4)
-+#define S2MPG10_IRQ_PWR_WARN_CH5_MASK	BIT(5)
-+#define S2MPG10_IRQ_PWR_WARN_CH6_MASK	BIT(6)
-+#define S2MPG10_IRQ_PWR_WARN_CH7_MASK	BIT(7)
-+
-+	S2MPG10_IRQ_NR,
-+};
-+
- enum s2mps11_irq {
- 	S2MPS11_IRQ_PWRONF,
- 	S2MPS11_IRQ_PWRONR,
-diff --git a/include/linux/mfd/samsung/s2mpg10.h b/include/linux/mfd/samsung/s2mpg10.h
-new file mode 100644
-index 0000000000000000000000000000000000000000..471def422d00c2592e6875b1eff00a4c1be7b09f
---- /dev/null
-+++ b/include/linux/mfd/samsung/s2mpg10.h
-@@ -0,0 +1,310 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
++++ b/include/uapi/drm/asahi_drm.h
+@@ -0,0 +1,1205 @@
++/* SPDX-License-Identifier: MIT */
 +/*
-+ * Copyright 2015 Samsung Electronics
-+ * Copyright 2020 Google Inc
-+ * Copyright 2025 Linaro Ltd.
++ * Copyright (C) The Asahi Linux Contributors
++ * Copyright (C) 2018-2023 Collabora Ltd.
++ * Copyright (C) 2014-2018 Broadcom
++ */
++#ifndef _ASAHI_DRM_H_
++#define _ASAHI_DRM_H_
++
++#include "drm.h"
++
++#if defined(__cplusplus)
++extern "C" {
++#endif
++
++/**
++ * DOC: Introduction to the Asahi UAPI
++ *
++ * This documentation describes the Asahi IOCTLs.
++ *
++ * Just a few generic rules about the data passed to the Asahi IOCTLs (cribbed
++ * from Panthor):
++ *
++ * - Structures must be aligned on 64-bit/8-byte. If the object is not
++ *   naturally aligned, a padding field must be added.
++ * - Fields must be explicitly aligned to their natural type alignment with
++ *   pad[0..N] fields.
++ * - All padding fields will be checked by the driver to make sure they are
++ *   zeroed.
++ * - Flags can be added, but not removed/replaced.
++ * - New fields can be added to the main structures (the structures
++ *   directly passed to the ioctl). Those fields can be added at the end of
++ *   the structure, or replace existing padding fields. Any new field being
++ *   added must preserve the behavior that existed before those fields were
++ *   added when a value of zero is passed.
++ * - New fields can be added to indirect objects (objects pointed by the
++ *   main structure), iff those objects are passed a size to reflect the
++ *   size known by the userspace driver (see
++ *   drm_asahi_command::cmd_buffer_size).
++ * - If the kernel driver is too old to know some fields, those will be
++ *   ignored if zero, and otherwise rejected (and so will be zero on output).
++ * - If userspace is too old to know some fields, those will be zeroed
++ *   (input) before the structure is parsed by the kernel driver.
++ * - Each new flag/field addition must come with a driver version update so
++ *   the userspace driver doesn't have to trial and error to know which
++ *   flags are supported.
++ * - Structures should not contain unions, as this would defeat the
++ *   extensibility of such structures.
++ * - IOCTLs can't be removed or replaced. New IOCTL IDs should be placed
++ *   at the end of the drm_asahi_ioctl_id enum.
 + */
 +
-+#ifndef __LINUX_MFD_S2MPG10_H
-+#define __LINUX_MFD_S2MPG10_H
++/**
++ * enum drm_asahi_ioctl_id - IOCTL IDs
++ *
++ * Place new ioctls at the end, don't re-order, don't replace or remove entries.
++ *
++ * These IDs are not meant to be used directly. Use the DRM_IOCTL_ASAHI_xxx
++ * definitions instead.
++ */
++enum drm_asahi_ioctl_id {
++	/** @DRM_ASAHI_GET_PARAMS: Query device properties. */
++	DRM_ASAHI_GET_PARAMS = 0,
 +
-+/* Common registers (type 0x000) */
-+enum s2mpg10_common_reg {
-+	S2MPG10_COMMON_CHIPID,
-+	S2MPG10_COMMON_INT,
-+	S2MPG10_COMMON_INT_MASK,
-+#define S2MPG10_COMMON_INT_SRC_MASK   GENMASK(7, 0)
-+#define S2MPG10_COMMON_INT_SRC_PMIC   BIT(0)
++	/** @DRM_ASAHI_VM_CREATE: Create a GPU VM address space. */
++	DRM_ASAHI_VM_CREATE,
++
++	/** @DRM_ASAHI_VM_DESTROY: Destroy a VM. */
++	DRM_ASAHI_VM_DESTROY,
++
++	/** @DRM_ASAHI_GEM_CREATE: Create a buffer object. */
++	DRM_ASAHI_GEM_CREATE,
++
++	/**
++	 * @DRM_ASAHI_GEM_MMAP_OFFSET: Get offset to pass to mmap() to map a
++	 * given GEM handle.
++	 */
++	DRM_ASAHI_GEM_MMAP_OFFSET,
++
++	/** @DRM_ASAHI_GEM_BIND: Bind/unbind memory to a VM. */
++	DRM_ASAHI_GEM_BIND,
++
++	/** @DRM_ASAHI_QUEUE_CREATE: Create a scheduling queue. */
++	DRM_ASAHI_QUEUE_CREATE,
++
++	/** @DRM_ASAHI_QUEUE_DESTROY: Destroy a scheduling queue. */
++	DRM_ASAHI_QUEUE_DESTROY,
++
++	/** @DRM_ASAHI_SUBMIT: Submit commands to a queue. */
++	DRM_ASAHI_SUBMIT,
++
++	/** @DRM_ASAHI_GET_TIME: Query device time. */
++	DRM_ASAHI_GET_TIME,
++
++	/** @DRM_ASAHI_GEM_BIND_OBJECT: Bind memory as a special object */
++	DRM_ASAHI_GEM_BIND_OBJECT,
 +};
 +
-+/* PMIC registers (type 0x100) */
-+enum s2mpg10_pmic_reg {
-+	S2MPG10_PMIC_INT1,
-+	S2MPG10_PMIC_INT2,
-+	S2MPG10_PMIC_INT3,
-+	S2MPG10_PMIC_INT4,
-+	S2MPG10_PMIC_INT5,
-+	S2MPG10_PMIC_INT6,
-+	S2MPG10_PMIC_INT1M,
-+	S2MPG10_PMIC_INT2M,
-+	S2MPG10_PMIC_INT3M,
-+	S2MPG10_PMIC_INT4M,
-+	S2MPG10_PMIC_INT5M,
-+	S2MPG10_PMIC_INT6M,
-+	S2MPG10_PMIC_STATUS1,
-+	S2MPG10_PMIC_STATUS2,
-+	S2MPG10_PMIC_PWRONSRC,
-+	S2MPG10_PMIC_OFFSRC,
-+	S2MPG10_PMIC_BU_CHG,
-+	S2MPG10_PMIC_RTCBUF,
-+	S2MPG10_PMIC_COMMON_CTRL1,
-+	S2MPG10_PMIC_COMMON_CTRL2,
-+	S2MPG10_PMIC_COMMON_CTRL3,
-+	S2MPG10_PMIC_COMMON_CTRL4,
-+	S2MPG10_PMIC_SMPL_WARN_CTRL,
-+	S2MPG10_PMIC_MIMICKING_CTRL,
-+	S2MPG10_PMIC_B1M_CTRL,
-+	S2MPG10_PMIC_B1M_OUT1,
-+	S2MPG10_PMIC_B1M_OUT2,
-+	S2MPG10_PMIC_B2M_CTRL,
-+	S2MPG10_PMIC_B2M_OUT1,
-+	S2MPG10_PMIC_B2M_OUT2,
-+	S2MPG10_PMIC_B3M_CTRL,
-+	S2MPG10_PMIC_B3M_OUT1,
-+	S2MPG10_PMIC_B3M_OUT2,
-+	S2MPG10_PMIC_B4M_CTRL,
-+	S2MPG10_PMIC_B4M_OUT1,
-+	S2MPG10_PMIC_B4M_OUT2,
-+	S2MPG10_PMIC_B5M_CTRL,
-+	S2MPG10_PMIC_B5M_OUT1,
-+	S2MPG10_PMIC_B5M_OUT2,
-+	S2MPG10_PMIC_B6M_CTRL,
-+	S2MPG10_PMIC_B6M_OUT1,
-+	S2MPG10_PMIC_B6M_OUT2,
-+	S2MPG10_PMIC_B7M_CTRL,
-+	S2MPG10_PMIC_B7M_OUT1,
-+	S2MPG10_PMIC_B7M_OUT2,
-+	S2MPG10_PMIC_B8M_CTRL,
-+	S2MPG10_PMIC_B8M_OUT1,
-+	S2MPG10_PMIC_B8M_OUT2,
-+	S2MPG10_PMIC_B9M_CTRL,
-+	S2MPG10_PMIC_B9M_OUT1,
-+	S2MPG10_PMIC_B9M_OUT2,
-+	S2MPG10_PMIC_B10M_CTRL,
-+	S2MPG10_PMIC_B10M_OUT1,
-+	S2MPG10_PMIC_B10M_OUT2,
-+	S2MPG10_PMIC_L1M_CTRL,
-+	S2MPG10_PMIC_L2M_CTRL,
-+	S2MPG10_PMIC_L3M_CTRL,
-+	S2MPG10_PMIC_L4M_CTRL,
-+	S2MPG10_PMIC_L5M_CTRL,
-+	S2MPG10_PMIC_L6M_CTRL,
-+	S2MPG10_PMIC_L7M_CTRL,
-+	S2MPG10_PMIC_L8M_CTRL,
-+	S2MPG10_PMIC_L9M_CTRL,
-+	S2MPG10_PMIC_L10M_CTRL,
-+	S2MPG10_PMIC_L11M_CTRL1,
-+	S2MPG10_PMIC_L11M_CTRL2,
-+	S2MPG10_PMIC_L12M_CTRL1,
-+	S2MPG10_PMIC_L12M_CTRL2,
-+	S2MPG10_PMIC_L13M_CTRL1,
-+	S2MPG10_PMIC_L13M_CTRL2,
-+	S2MPG10_PMIC_L14M_CTRL,
-+	S2MPG10_PMIC_L15M_CTRL1,
-+	S2MPG10_PMIC_L15M_CTRL2,
-+	S2MPG10_PMIC_L16M_CTRL,
-+	S2MPG10_PMIC_L17M_CTRL,
-+	S2MPG10_PMIC_L18M_CTRL,
-+	S2MPG10_PMIC_L19M_CTRL,
-+	S2MPG10_PMIC_L20M_CTRL,
-+	S2MPG10_PMIC_L21M_CTRL,
-+	S2MPG10_PMIC_L22M_CTRL,
-+	S2MPG10_PMIC_L23M_CTRL,
-+	S2MPG10_PMIC_L24M_CTRL,
-+	S2MPG10_PMIC_L25M_CTRL,
-+	S2MPG10_PMIC_L26M_CTRL,
-+	S2MPG10_PMIC_L27M_CTRL,
-+	S2MPG10_PMIC_L28M_CTRL,
-+	S2MPG10_PMIC_L29M_CTRL,
-+	S2MPG10_PMIC_L30M_CTRL,
-+	S2MPG10_PMIC_L31M_CTRL,
-+	S2MPG10_PMIC_LDO_CTRL1,
-+	S2MPG10_PMIC_LDO_CTRL2,
-+	S2MPG10_PMIC_LDO_DSCH1,
-+	S2MPG10_PMIC_LDO_DSCH2,
-+	S2MPG10_PMIC_LDO_DSCH3,
-+	S2MPG10_PMIC_LDO_DSCH4,
-+	S2MPG10_PMIC_LDO_BUCK7M_HLIMIT,
-+	S2MPG10_PMIC_LDO_BUCK7M_LLIMIT,
-+	S2MPG10_PMIC_LDO_LDO21M_HLIMIT,
-+	S2MPG10_PMIC_LDO_LDO21M_LLIMIT,
-+	S2MPG10_PMIC_LDO_LDO11M_HLIMIT,
-+	S2MPG10_PMIC_DVS_RAMP1,
-+	S2MPG10_PMIC_DVS_RAMP2,
-+	S2MPG10_PMIC_DVS_RAMP3,
-+	S2MPG10_PMIC_DVS_RAMP4,
-+	S2MPG10_PMIC_DVS_RAMP5,
-+	S2MPG10_PMIC_DVS_RAMP6,
-+	S2MPG10_PMIC_DCTRLSEL7 = 0xc6,
-+	S2MPG10_PMIC_GPIO_CTRL1,
-+	S2MPG10_PMIC_GPIO_CTRL2,
-+	S2MPG10_PMIC_GPIO_CTRL3,
-+	S2MPG10_PMIC_GPIO_CTRL4,
-+	S2MPG10_PMIC_GPIO_CTRL5,
-+	S2MPG10_PMIC_GPIO_CTRL6,
-+	S2MPG10_PMIC_GPIO_CTRL7,
-+	S2MPG10_PMIC_B2M_OCP_WARN,
-+	S2MPG10_PMIC_B3M_OCP_WARN = 0xd2,
-+	S2MPG10_PMIC_B10M_OCP_WARN = 0xd6,
-+	S2MPG10_PMIC_B2M_SOFT_OCP_WARN = 0xda,
-+	S2MPG10_PMIC_B3M_SOFT_OCP_WARN = 0xde,
-+	S2MPG10_PMIC_B10M_SOFT_OCP_WARN = 0xe2,
-+	S2MPG10_PMIC_BUCK_OCP_CTRL1 = 0xea,
-+	S2MPG10_PMIC_BUCK_OCP_CTRL2,
-+	S2MPG10_PMIC_BUCK_OCP_CTRL3,
-+	S2MPG10_PMIC_BUCK_OCP_CTRL4,
-+	S2MPG10_PMIC_BUCK_OCP_CTRL5,
++#define DRM_ASAHI_MAX_CLUSTERS	64
++
++/**
++ * struct drm_asahi_params_global - Global parameters.
++ *
++ * This struct may be queried by drm_asahi_get_params.
++ */
++struct drm_asahi_params_global {
++	/** @features: Feature bits from drm_asahi_feature */
++	__u64 features;
++
++	/** @gpu_generation: GPU generation, e.g. 13 for G13G */
++	__u32 gpu_generation;
++
++	/** @gpu_variant: GPU variant as a character, e.g. 'G' for G13G */
++	__u32 gpu_variant;
++
++	/**
++	 * @gpu_revision: GPU revision in BCD, e.g. 0x00 for 'A0' or
++	 * 0x21 for 'C1'
++	 */
++	__u32 gpu_revision;
++
++	/** @chip_id: Chip ID in BCD, e.g. 0x8103 for T8103 */
++	__u32 chip_id;
++
++	/** @num_dies: Number of dies in the SoC */
++	__u32 num_dies;
++
++	/** @num_clusters_total: Number of GPU clusters (across all dies) */
++	__u32 num_clusters_total;
++
++	/**
++	 * @num_cores_per_cluster: Number of logical cores per cluster
++	 * (including inactive/nonexistent)
++	 */
++	__u32 num_cores_per_cluster;
++
++	/** @num_frags_per_cluster: Number of frags per cluster */
++	__u32 num_frags_per_cluster;
++
++	/** @num_gps_per_cluster: Number of GPs per cluster */
++	__u32 num_gps_per_cluster;
++
++	/** @max_power_mw: Maximum GPU power consumption */
++	__u32 max_power_mw;
++
++	/** @core_masks: Bitmask of present/enabled cores per cluster */
++	__u64 core_masks[DRM_ASAHI_MAX_CLUSTERS];
++
++	/** @min_frequency_khz: Minimum GPU core clock frequency */
++	__u32 min_frequency_khz;
++
++	/** @max_frequency_khz: Maximum GPU core clock frequency */
++	__u32 max_frequency_khz;
++
++	/**
++	 * @vm_user_start: VM user range start VMA. Together with
++	 * @vm_user_end, this defines the window of valid GPU VAs. Userspace is
++	 * expected to subdivide VAs out of this window.
++	 */
++	__u64 vm_user_start;
++
++	/** @vm_user_end: VM user range end VMA */
++	__u64 vm_user_end;
++
++	/**
++	 * @vm_kernel_min_size: Minimum kernel VMA window size within user
++	 * range.
++	 *
++	 * When creating a VM, userspace is required to carve out a section of
++	 * virtual addresses (within the range given by @vm_user_start and
++	 * @vm_user_end). The kernel will allocate various internal structures
++	 * within the specified VA range.
++	 *
++	 * Allowing userspace to choose the VA range for the kernel, rather than
++	 * the kernel reserving VAs and requiring userspace to cope, can assist
++	 * in implementing SVM.
++	 */
++	__u64 vm_kernel_min_size;
++
++	/**
++	 * @max_commands_per_submission: Maximum number of supported commands
++	 * per submission. This mirrors firmware limits. Userspace must split up
++	 * larger command buffers, which may require inserting additional
++	 * barriers explicitly.
++	 */
++	__u32 max_commands_per_submission;
++
++	/**
++	 * @max_attachments: Maximum number of drm_asahi_attachment's per
++	 * command
++	 */
++	__u32 max_attachments;
++
++	/**
++	 * @command_timestamp_frequency_hz: Timebase frequency for timestamps
++	 * written during command exeuction, specified via drm_asahi_timestamp
++	 * structures. As this rate is controlled by the firmware, it is a
++	 * queryable parameter.
++	 *
++	 * Userspace must divide by this frequency to convert timestamps to
++	 * seconds, rather than hardcoding a particular firmware's rate.
++	 */
++	__u64 command_timestamp_frequency_hz;
 +};
 +
-+/* Meter registers (type 0xa00) */
-+enum s2mpg10_meter_reg {
-+	S2MPG10_METER_CTRL1,
-+	S2MPG10_METER_CTRL2,
-+	S2MPG10_METER_CTRL3,
-+	S2MPG10_METER_CTRL4,
-+	S2MPG10_METER_BUCKEN1,
-+	S2MPG10_METER_BUCKEN2,
-+	S2MPG10_METER_MUXSEL0,
-+	S2MPG10_METER_MUXSEL1,
-+	S2MPG10_METER_MUXSEL2,
-+	S2MPG10_METER_MUXSEL3,
-+	S2MPG10_METER_MUXSEL4,
-+	S2MPG10_METER_MUXSEL5,
-+	S2MPG10_METER_MUXSEL6,
-+	S2MPG10_METER_MUXSEL7,
-+	S2MPG10_METER_LPF_C0_0,
-+	S2MPG10_METER_LPF_C0_1,
-+	S2MPG10_METER_LPF_C0_2,
-+	S2MPG10_METER_LPF_C0_3,
-+	S2MPG10_METER_LPF_C0_4,
-+	S2MPG10_METER_LPF_C0_5,
-+	S2MPG10_METER_LPF_C0_6,
-+	S2MPG10_METER_LPF_C0_7,
-+	S2MPG10_METER_PWR_WARN0,
-+	S2MPG10_METER_PWR_WARN1,
-+	S2MPG10_METER_PWR_WARN2,
-+	S2MPG10_METER_PWR_WARN3,
-+	S2MPG10_METER_PWR_WARN4,
-+	S2MPG10_METER_PWR_WARN5,
-+	S2MPG10_METER_PWR_WARN6,
-+	S2MPG10_METER_PWR_WARN7,
-+	S2MPG10_METER_PWR_HYS1,
-+	S2MPG10_METER_PWR_HYS2,
-+	S2MPG10_METER_PWR_HYS3,
-+	S2MPG10_METER_PWR_HYS4,
-+	S2MPG10_METER_ACC_DATA_CH0_1 = 0x40,
-+	S2MPG10_METER_ACC_DATA_CH0_2,
-+	S2MPG10_METER_ACC_DATA_CH0_3,
-+	S2MPG10_METER_ACC_DATA_CH0_4,
-+	S2MPG10_METER_ACC_DATA_CH0_5,
-+	S2MPG10_METER_ACC_DATA_CH0_6,
-+	S2MPG10_METER_ACC_DATA_CH1_1,
-+	S2MPG10_METER_ACC_DATA_CH1_2,
-+	S2MPG10_METER_ACC_DATA_CH1_3,
-+	S2MPG10_METER_ACC_DATA_CH1_4,
-+	S2MPG10_METER_ACC_DATA_CH1_5,
-+	S2MPG10_METER_ACC_DATA_CH1_6,
-+	S2MPG10_METER_ACC_DATA_CH2_1,
-+	S2MPG10_METER_ACC_DATA_CH2_2,
-+	S2MPG10_METER_ACC_DATA_CH2_3,
-+	S2MPG10_METER_ACC_DATA_CH2_4,
-+	S2MPG10_METER_ACC_DATA_CH2_5,
-+	S2MPG10_METER_ACC_DATA_CH2_6,
-+	S2MPG10_METER_ACC_DATA_CH3_1,
-+	S2MPG10_METER_ACC_DATA_CH3_2,
-+	S2MPG10_METER_ACC_DATA_CH3_3,
-+	S2MPG10_METER_ACC_DATA_CH3_4,
-+	S2MPG10_METER_ACC_DATA_CH3_5,
-+	S2MPG10_METER_ACC_DATA_CH3_6,
-+	S2MPG10_METER_ACC_DATA_CH4_1,
-+	S2MPG10_METER_ACC_DATA_CH4_2,
-+	S2MPG10_METER_ACC_DATA_CH4_3,
-+	S2MPG10_METER_ACC_DATA_CH4_4,
-+	S2MPG10_METER_ACC_DATA_CH4_5,
-+	S2MPG10_METER_ACC_DATA_CH4_6,
-+	S2MPG10_METER_ACC_DATA_CH5_1,
-+	S2MPG10_METER_ACC_DATA_CH5_2,
-+	S2MPG10_METER_ACC_DATA_CH5_3,
-+	S2MPG10_METER_ACC_DATA_CH5_4,
-+	S2MPG10_METER_ACC_DATA_CH5_5,
-+	S2MPG10_METER_ACC_DATA_CH5_6,
-+	S2MPG10_METER_ACC_DATA_CH6_1,
-+	S2MPG10_METER_ACC_DATA_CH6_2,
-+	S2MPG10_METER_ACC_DATA_CH6_3,
-+	S2MPG10_METER_ACC_DATA_CH6_4,
-+	S2MPG10_METER_ACC_DATA_CH6_5,
-+	S2MPG10_METER_ACC_DATA_CH6_6,
-+	S2MPG10_METER_ACC_DATA_CH7_1,
-+	S2MPG10_METER_ACC_DATA_CH7_2,
-+	S2MPG10_METER_ACC_DATA_CH7_3,
-+	S2MPG10_METER_ACC_DATA_CH7_4,
-+	S2MPG10_METER_ACC_DATA_CH7_5,
-+	S2MPG10_METER_ACC_DATA_CH7_6,
-+	S2MPG10_METER_ACC_COUNT_1,
-+	S2MPG10_METER_ACC_COUNT_2,
-+	S2MPG10_METER_ACC_COUNT_3,
-+	S2MPG10_METER_LPF_DATA_CH0_1,
-+	S2MPG10_METER_LPF_DATA_CH0_2,
-+	S2MPG10_METER_LPF_DATA_CH0_3,
-+	S2MPG10_METER_LPF_DATA_CH1_1,
-+	S2MPG10_METER_LPF_DATA_CH1_2,
-+	S2MPG10_METER_LPF_DATA_CH1_3,
-+	S2MPG10_METER_LPF_DATA_CH2_1,
-+	S2MPG10_METER_LPF_DATA_CH2_2,
-+	S2MPG10_METER_LPF_DATA_CH2_3,
-+	S2MPG10_METER_LPF_DATA_CH3_1,
-+	S2MPG10_METER_LPF_DATA_CH3_2,
-+	S2MPG10_METER_LPF_DATA_CH3_3,
-+	S2MPG10_METER_LPF_DATA_CH4_1,
-+	S2MPG10_METER_LPF_DATA_CH4_2,
-+	S2MPG10_METER_LPF_DATA_CH4_3,
-+	S2MPG10_METER_LPF_DATA_CH5_1,
-+	S2MPG10_METER_LPF_DATA_CH5_2,
-+	S2MPG10_METER_LPF_DATA_CH5_3,
-+	S2MPG10_METER_LPF_DATA_CH6_1,
-+	S2MPG10_METER_LPF_DATA_CH6_2,
-+	S2MPG10_METER_LPF_DATA_CH6_3,
-+	S2MPG10_METER_LPF_DATA_CH7_1,
-+	S2MPG10_METER_LPF_DATA_CH7_2,
-+	S2MPG10_METER_LPF_DATA_CH7_3,
-+	S2MPG10_METER_DSM_TRIM_OFFSET = 0xee,
-+	S2MPG10_METER_BUCK_METER_TRIM3 = 0xf1,
++/**
++ * enum drm_asahi_feature - Feature bits
++ *
++ * This covers only features that userspace cannot infer from the architecture
++ * version. Most features don't need to be here.
++ */
++enum drm_asahi_feature {
++	/**
++	 * @DRM_ASAHI_FEATURE_SOFT_FAULTS: GPU has "soft fault" enabled. Shader
++	 * loads of unmapped memory will return zero. Shader stores to unmapped
++	 * memory will be silently discarded. Note that only shader load/store
++	 * is affected. Other hardware units are not affected, notably including
++	 * texture sampling.
++	 *
++	 * Soft fault is set when initializing the GPU and cannot be runtime
++	 * toggled. Therefore, it is exposed as a feature bit and not a
++	 * userspace-settable flag on the VM. When soft fault is enabled,
++	 * userspace can speculate memory accesses more aggressively.
++	 */
++	DRM_ASAHI_FEATURE_SOFT_FAULTS = (1UL) << 0,
 +};
 +
-+/* S2MPG10 regulator IDs */
-+enum s2mpg10_regulators {
-+	S2MPG10_LDO1,
-+	S2MPG10_LDO2,
-+	S2MPG10_LDO3,
-+	S2MPG10_LDO4,
-+	S2MPG10_LDO5,
-+	S2MPG10_LDO6,
-+	S2MPG10_LDO7,
-+	S2MPG10_LDO8,
-+	S2MPG10_LDO9,
-+	S2MPG10_LDO10,
-+	S2MPG10_LDO11,
-+	S2MPG10_LDO12,
-+	S2MPG10_LDO13,
-+	S2MPG10_LDO14,
-+	S2MPG10_LDO15,
-+	S2MPG10_LDO16,
-+	S2MPG10_LDO17,
-+	S2MPG10_LDO18,
-+	S2MPG10_LDO19,
-+	S2MPG10_LDO20,
-+	S2MPG10_LDO21,
-+	S2MPG10_LDO22,
-+	S2MPG10_LDO23,
-+	S2MPG10_LDO24,
-+	S2MPG10_LDO25,
-+	S2MPG10_LDO26,
-+	S2MPG10_LDO27,
-+	S2MPG10_LDO28,
-+	S2MPG10_LDO29,
-+	S2MPG10_LDO30,
-+	S2MPG10_LDO31,
-+	S2MPG10_BUCK1,
-+	S2MPG10_BUCK2,
-+	S2MPG10_BUCK3,
-+	S2MPG10_BUCK4,
-+	S2MPG10_BUCK5,
-+	S2MPG10_BUCK6,
-+	S2MPG10_BUCK7,
-+	S2MPG10_BUCK8,
-+	S2MPG10_BUCK9,
-+	S2MPG10_BUCK10,
-+	S2MPG10_REGULATOR_MAX,
++/**
++ * struct drm_asahi_get_params - Arguments passed to DRM_IOCTL_ASAHI_GET_PARAMS
++ */
++struct drm_asahi_get_params {
++	/** @param_group: Parameter group to fetch (MBZ) */
++	__u32 param_group;
++
++	/** @pad: MBZ */
++	__u32 pad;
++
++	/** @pointer: User pointer to write parameter struct */
++	__u64 pointer;
++
++	/** @size: Size of user buffer, max size supported on return */
++	__u64 size;
 +};
 +
-+#endif /* __LINUX_MFD_S2MPG10_H */
++/**
++ * struct drm_asahi_vm_create - Arguments passed to DRM_IOCTL_ASAHI_VM_CREATE
++ */
++struct drm_asahi_vm_create {
++	/**
++	 * @kernel_start: Start of the kernel-reserved address range. See
++	 * drm_asahi_params_global::vm_kernel_min_size.
++	 *
++	 * Both @kernel_start and @kernel_end must be within the range of
++	 * valid VAs given by drm_asahi_params_global::vm_user_start and
++	 * drm_asahi_params_global::vm_user_end. The size of the kernel range
++	 * (@kernel_end - @kernel_start) must be at least
++	 * drm_asahi_params_global::vm_kernel_min_size.
++	 *
++	 * Userspace must not bind any memory on this VM into this reserved
++	 * range, it is for kernel use only.
++	 */
++	__u64 kernel_start;
++
++	/**
++	 * @kernel_end: End of the kernel-reserved address range. See
++	 * @kernel_start.
++	 */
++	__u64 kernel_end;
++
++	/** @vm_id: Returned VM ID */
++	__u32 vm_id;
++
++	/** @pad: MBZ */
++	__u32 pad;
++};
++
++/**
++ * struct drm_asahi_vm_destroy - Arguments passed to DRM_IOCTL_ASAHI_VM_DESTROY
++ */
++struct drm_asahi_vm_destroy {
++	/** @vm_id: VM ID to be destroyed */
++	__u32 vm_id;
++
++	/** @pad: MBZ */
++	__u32 pad;
++};
++
++/**
++ * enum drm_asahi_gem_flags - Flags for GEM creation
++ */
++enum drm_asahi_gem_flags {
++	/**
++	 * @DRM_ASAHI_GEM_WRITEBACK: BO should be CPU-mapped as writeback.
++	 *
++	 * Map as writeback instead of write-combine. This optimizes for CPU
++	 * reads.
++	 */
++	DRM_ASAHI_GEM_WRITEBACK = (1L << 0),
++
++	/**
++	 * @DRM_ASAHI_GEM_VM_PRIVATE: BO is private to this GPU VM (no exports).
++	 */
++	DRM_ASAHI_GEM_VM_PRIVATE = (1L << 1),
++};
++
++/**
++ * struct drm_asahi_gem_create - Arguments passed to DRM_IOCTL_ASAHI_GEM_CREATE
++ */
++struct drm_asahi_gem_create {
++	/** @size: Size of the BO */
++	__u64 size;
++
++	/** @flags: Combination of drm_asahi_gem_flags flags. */
++	__u32 flags;
++
++	/**
++	 * @vm_id: VM ID to assign to the BO, if DRM_ASAHI_GEM_VM_PRIVATE is set
++	 */
++	__u32 vm_id;
++
++	/** @handle: Returned GEM handle for the BO */
++	__u32 handle;
++
++	/** @pad: MBZ */
++	__u32 pad;
++};
++
++/**
++ * struct drm_asahi_gem_mmap_offset - Arguments passed to
++ * DRM_IOCTL_ASAHI_GEM_MMAP_OFFSET
++ */
++struct drm_asahi_gem_mmap_offset {
++	/** @handle: Handle for the object being mapped. */
++	__u32 handle;
++
++	/** @flags: Must be zero */
++	__u32 flags;
++
++	/** @offset: The fake offset to use for subsequent mmap call */
++	__u64 offset;
++};
++
++/**
++ * enum drm_asahi_bind_op - Bind operation
++ */
++enum drm_asahi_bind_op {
++	/** @DRM_ASAHI_BIND_OP_BIND: Bind a BO to a GPU VMA range */
++	DRM_ASAHI_BIND_OP_BIND = 0,
++
++	/** @DRM_ASAHI_BIND_OP_UNBIND: Unbind a GPU VMA range */
++	DRM_ASAHI_BIND_OP_UNBIND = 1,
++};
++
++/**
++ * enum drm_asahi_bind_flags - Flags for GEM binding
++ */
++enum drm_asahi_bind_flags {
++	/** @DRM_ASAHI_BIND_READ: Map BO with GPU read permission */
++	DRM_ASAHI_BIND_READ = (1L << 0),
++
++	/** @DRM_ASAHI_BIND_WRITE: Map BO with GPU write permission */
++	DRM_ASAHI_BIND_WRITE = (1L << 1),
++
++	/**
++	 * @DRM_ASAHI_BIND_SINGLE_PAGE: Map a single page of the BO repeatedly
++	 * across the VA range.
++	 *
++	 * This is useful to fill a VA range with scratch pages or zero pages.
++	 * It is intended as a mechanism to accelerate sparse.
++	 */
++	DRM_ASAHI_BIND_SINGLE_PAGE = (1L << 2),
++};
++
++/**
++ * struct drm_asahi_gem_bind - Arguments passed to
++ * DRM_IOCTL_ASAHI_GEM_BIND
++ */
++struct drm_asahi_gem_bind {
++	/** @op: Bind operation (enum drm_asahi_bind_op) */
++	__u32 op;
++
++	/** @flags: Combination of drm_asahi_bind_flags flags. */
++	__u32 flags;
++
++	/** @handle: GEM object to bind (BIND only) */
++	__u32 handle;
++
++	/** @vm_id: The ID of the VM to operate on */
++	__u32 vm_id;
++
++	/**
++	 * @offset: Offset into the object (BIND only).
++	 *
++	 * For a regular bind, this is the beginning of the region of the GEM
++	 * object to bind.
++	 *
++	 * For a single-page bind, this is the offset to the single page that
++	 * will be repeatedly bound.
++	 *
++	 * Must be page-size aligned.
++	 */
++	__u64 offset;
++
++	/**
++	 * @range: Number of bytes to bind/unbind to addr.
++	 *
++	 * Must be page-size aligned.
++	 */
++	__u64 range;
++
++	/**
++	 * @addr: Address to bind to.
++	 *
++	 * Must be page-size aligned.
++	 */
++	__u64 addr;
++};
++
++/**
++ * enum drm_asahi_bind_object_op - Special object bind operation
++ */
++enum drm_asahi_bind_object_op {
++	/** @DRM_ASAHI_BIND_OBJECT_OP_BIND: Bind a BO as a special GPU object */
++	DRM_ASAHI_BIND_OBJECT_OP_BIND = 0,
++
++	/** @DRM_ASAHI_BIND_OBJECT_OP_UNBIND: Unbind a special GPU object */
++	DRM_ASAHI_BIND_OBJECT_OP_UNBIND = 1,
++};
++
++/**
++ * enum drm_asahi_bind_object_flags - Special object bind flags
++ */
++enum drm_asahi_bind_object_flags {
++	/**
++	 * @DRM_ASAHI_BIND_OBJECT_USAGE_TIMESTAMPS: Map a BO as a timestamp
++	 * buffer.
++	 */
++	DRM_ASAHI_BIND_OBJECT_USAGE_TIMESTAMPS = (1L << 0),
++};
++
++/**
++ * struct drm_asahi_gem_bind_object - Arguments passed to
++ * DRM_IOCTL_ASAHI_GEM_BIND_OBJECT
++ */
++struct drm_asahi_gem_bind_object {
++	/** @op: Bind operation (enum drm_asahi_bind_object_op) */
++	__u32 op;
++
++	/** @flags: Combination of drm_asahi_bind_object_flags flags. */
++	__u32 flags;
++
++	/** @handle: GEM object to bind/unbind (BIND) */
++	__u32 handle;
++
++	/** @vm_id: The ID of the VM to operate on (MBZ currently) */
++	__u32 vm_id;
++
++	/** @offset: Offset into the object (BIND only) */
++	__u64 offset;
++
++	/** @range: Number of bytes to bind/unbind (BIND only) */
++	__u64 range;
++
++	/** @object_handle: Object handle (out for BIND, in for UNBIND) */
++	__u32 object_handle;
++
++	/** @pad: MBZ */
++	__u32 pad;
++};
++
++/**
++ * enum drm_asahi_cmd_type - Command type
++ */
++enum drm_asahi_cmd_type {
++	/**
++	 * @DRM_ASAHI_CMD_RENDER: Render command, executing on the render
++	 * subqueue. Combined vertex and fragment operation.
++	 *
++	 * Followed by a @drm_asahi_cmd_render payload.
++	 */
++	DRM_ASAHI_CMD_RENDER = 0,
++
++	/**
++	 * @DRM_ASAHI_CMD_COMPUTE: Compute command on the compute subqueue.
++	 *
++	 * Followed by a @drm_asahi_cmd_compute payload.
++	 */
++	DRM_ASAHI_CMD_COMPUTE = 1,
++
++	/**
++	 * @DRM_ASAHI_SET_VERTEX_ATTACHMENTS: Software command to set
++	 * attachments for subsequent vertex shaders in the same submit.
++	 *
++	 * Followed by (possibly multiple) @drm_asahi_attachment payloads.
++	 */
++	DRM_ASAHI_SET_VERTEX_ATTACHMENTS = 2,
++
++	/**
++	 * @DRM_ASAHI_SET_FRAGMENT_ATTACHMENTS: Software command to set
++	 * attachments for subsequent fragment shaders in the same submit.
++	 *
++	 * Followed by (possibly multiple) @drm_asahi_attachment payloads.
++	 */
++	DRM_ASAHI_SET_FRAGMENT_ATTACHMENTS = 3,
++
++	/**
++	 * @DRM_ASAHI_SET_COMPUTE_ATTACHMENTS: Software command to set
++	 * attachments for subsequent compute shaders in the same submit.
++	 *
++	 * Followed by (possibly multiple) @drm_asahi_attachment payloads.
++	 */
++	DRM_ASAHI_SET_COMPUTE_ATTACHMENTS = 4,
++};
++
++/**
++ * enum drm_asahi_queue_cap - Queue capabilities
++ */
++enum drm_asahi_queue_cap {
++	/** @DRM_ASAHI_QUEUE_CAP_RENDER: Supports render commands */
++	DRM_ASAHI_QUEUE_CAP_RENDER	= (1UL << DRM_ASAHI_CMD_RENDER),
++
++	/** @DRM_ASAHI_QUEUE_CAP_COMPUTE: Supports compute commands */
++	DRM_ASAHI_QUEUE_CAP_COMPUTE	= (1UL << DRM_ASAHI_CMD_COMPUTE),
++};
++
++/**
++ * enum drm_asahi_priority - Scheduling queue priority.
++ *
++ * These priorities are forwarded to the firmware to influence firmware
++ * scheduling. The exact policy is ultimately decided by firmware, but
++ * these enums allow userspace to communicate the intentions.
++ */
++enum drm_asahi_priority {
++	/** @DRM_ASAHI_PRIORITY_LOW: Low priority queue. */
++	DRM_ASAHI_PRIORITY_LOW = 0,
++
++	/** @DRM_ASAHI_PRIORITY_MEDIUM: Medium priority queue. */
++	DRM_ASAHI_PRIORITY_MEDIUM = 1,
++
++	/**
++	 * @DRM_ASAHI_PRIORITY_HIGH: High priority queue.
++	 *
++	 * Reserved. Creating a high priority queue already fails currently. In
++	 * the future, this will be supported only with elevated permissions.
++	 */
++	DRM_ASAHI_PRIORITY_HIGH = 2,
++
++	/**
++	 * @DRM_ASAHI_PRIORITY_REALTIME: Realtime priority queue.
++	 *
++	 * Reserved. Creating a high priority queue already fails currently. In
++	 * the future, this will be supported only with elevated permissions.
++	 */
++	DRM_ASAHI_PRIORITY_REALTIME = 3,
++};
++
++/**
++ * struct drm_asahi_queue_create - Arguments passed to
++ * DRM_IOCTL_ASAHI_QUEUE_CREATE
++ */
++struct drm_asahi_queue_create {
++	/** @flags: MBZ */
++	__u32 flags;
++
++	/** @vm_id: The ID of the VM this queue is bound to */
++	__u32 vm_id;
++
++	/** @queue_caps: Bitmask of DRM_ASAHI_QUEUE_CAP_* */
++	__u32 queue_caps;
++
++	/** @priority: One of drm_asahi_priority */
++	__u32 priority;
++
++	/** @queue_id: The returned queue ID */
++	__u32 queue_id;
++
++	/** @pad: MBZ */
++	__u32 pad;
++
++	/**
++	 * @usc_exec_base: GPU base address for all USC binaries (shaders) on
++	 * this queue. USC addresses are 32-bit relative to this 64-bit base.
++	 *
++	 * This sets the following registers on all queue commands:
++	 *
++	 *	USC_EXEC_BASE_TA  (vertex)
++	 *	USC_EXEC_BASE_ISP (fragment)
++	 *	USC_EXEC_BASE_CP  (compute)
++	 *
++	 * While the hardware lets us configure these independently per command,
++	 * we do not have a use case for this. Instead, we expect userspace to
++	 * fix a 4GiB VA carveout for USC memory and pass its base address here.
++	 */
++	__u64 usc_exec_base;
++};
++
++/**
++ * struct drm_asahi_queue_destroy - Arguments passed to
++ * DRM_IOCTL_ASAHI_QUEUE_DESTROY
++ */
++struct drm_asahi_queue_destroy {
++	/** @queue_id: The queue ID to be destroyed */
++	__u32 queue_id;
++
++	/** @pad: MBZ */
++	__u32 pad;
++};
++
++/**
++ * enum drm_asahi_sync_type - Sync item type
++ */
++enum drm_asahi_sync_type {
++	/** @DRM_ASAHI_SYNC_SYNCOBJ: Binary sync object */
++	DRM_ASAHI_SYNC_SYNCOBJ = 0,
++
++	/** @DRM_ASAHI_SYNC_TIMELINE_SYNCOBJ: Timeline sync object */
++	DRM_ASAHI_SYNC_TIMELINE_SYNCOBJ = 1,
++};
++
++/**
++ * struct drm_asahi_sync - Sync item
++ */
++struct drm_asahi_sync {
++	/** @sync_type: One of drm_asahi_sync_type */
++	__u32 sync_type;
++
++	/** @handle: The sync object handle */
++	__u32 handle;
++
++	/** @timeline_value: Timeline value for timeline sync objects */
++	__u64 timeline_value;
++};
++
++/**
++ * define DRM_ASAHI_BARRIER_NONE - Command index for no barrier
++ *
++ * This special value may be passed in to drm_asahi_command::barriers[] to
++ * indicate that the respective subqueue should not wait on any previous work.
++ */
++#define DRM_ASAHI_BARRIER_NONE (0xFFFFu)
++
++/**
++ * struct drm_asahi_cmd_header - Top level command structure
++ *
++ * This struct is core to the command buffer definition and therefore is not
++ * extensible.
++ */
++struct drm_asahi_cmd_header {
++	/** @cmd_type: One of drm_asahi_cmd_type */
++	__u16 cmd_type;
++
++	/**
++	 * @size: Size of this command, not including this header.
++	 *
++	 * For hardware commands, this enables extensibility of commands without
++	 * requiring extra command types.  Passing a command that is shorter
++	 * than expected is explicitly allowed for backwards-compatability.
++	 * Truncated fields will be zeroed.
++	 *
++	 * For the synthetic attachment setting commands, this implicitly
++	 * encodes the number of attachments. These commands take multiple
++	 * fixed-size @drm_asahi_attachment structures as their payload, so size
++	 * equals number of attachments * sizeof(struct drm_asahi_attachment).
++	 */
++	__u16 size;
++
++	/**
++	 * @vdm_barrier: VDM (render) command index to wait on.
++	 *
++	 * Barriers are indices relative to the beginning of a given submit. A
++	 * barrier of 0 waits on commands submitted to the respective subqueue
++	 * in previous submit ioctls. A barrier of N waits on N previous
++	 * commands on the subqueue within the current submit ioctl. As a
++	 * special case, passing @DRM_ASAHI_BARRIER_NONE avoids waiting on any
++	 * commands in the subqueue.
++	 *
++	 * Examples:
++	 *
++	 *   0: This waits on all previous work.
++	 *
++	 *   NONE: This does not wait for anything on this subqueue.
++	 *
++	 *   1: This waits on the first render command in the submit.
++	 *   This only makes sense if there are multiple render commands in the
++	 *   same submit.
++	 *
++	 * Barriers only make sense for hardware commands. Synthetic software
++	 * commands to set attachments must pass NONE here.
++	 */
++	__u16 vdm_barrier;
++
++	/**
++	 * @cdm_barrier: CDM (compute) command index to wait on.
++	 *
++	 * See @vdm_barrier, and substitute VDM/render for CDM/compute.
++	 */
++	__u16 cdm_barrier;
++};
++
++/**
++ * struct drm_asahi_submit - Arguments passed to DRM_IOCTL_ASAHI_SUBMIT
++ */
++struct drm_asahi_submit {
++	/**
++	 * @in_syncs: An optional array of drm_asahi_sync to wait on before
++	 * starting this job.
++	 */
++	__u64 in_syncs;
++
++	/**
++	 * @out_syncs: An optional array of drm_asahi_sync objects to signal
++	 * upon completion.
++	 */
++	__u64 out_syncs;
++
++	/**
++	 * @cmdbuf: Pointer to the command buffer to submit.
++	 *
++	 * This is a flat command buffer. By design, it contains no CPU
++	 * pointers, which makes it suitable for a virtgpu wire protocol without
++	 * requiring any serializing/deserializing step.
++	 *
++	 * It consists of a series of commands. Each command begins with a
++	 * fixed-size @drm_asahi_cmd_header and is followed by a variable-length
++	 * payload according to the type and size in the header.
++	 *
++	 * The combined count of "real" hardware commands must be nonzero and at
++	 * most drm_asahi_params_global::max_commands_per_submission.
++	 */
++	__u64 cmdbuf;
++
++	/** @flags: Flags for command submission (MBZ) */
++	__u32 flags;
++
++	/** @queue_id: The queue ID to be submitted to */
++	__u32 queue_id;
++
++	/**
++	 * @in_sync_count: Number of sync objects to wait on before starting
++	 * this job.
++	 */
++	__u32 in_sync_count;
++
++	/**
++	 * @out_sync_count: Number of sync objects to signal upon completion of
++	 * this job.
++	 */
++	__u32 out_sync_count;
++
++	/** @cmdbuf_size: Command buffer size in bytes */
++	__u32 cmdbuf_size;
++
++	/** @pad: MBZ */
++	__u32 pad;
++};
++
++/**
++ * struct drm_asahi_attachment - Describe an "attachment".
++ *
++ * Attachments are any memory written by shaders, notably including render
++ * target attachments written by the end-of-tile program. This is purely a hint
++ * about the accessed memory regions. It is optional to specify, which is
++ * fortunate as it cannot be specified precisely with bindless access anyway.
++ * But where possible, it's probably a good idea for userspace to include these
++ * hints, forwarded to the firmware.
++ *
++ * This struct is implicitly sized and therefore is not extensible.
++ */
++struct drm_asahi_attachment {
++	/** @pointer: Base address of the attachment */
++	__u64 pointer;
++
++	/** @size: Size of the attachment in bytes */
++	__u64 size;
++
++	/** @pad: MBZ */
++	__u32 pad;
++
++	/** @flags: MBZ */
++	__u32 flags;
++};
++
++enum drm_asahi_render_flags {
++	/**
++	 * @DRM_ASAHI_RENDER_VERTEX_SCRATCH: A vertex stage shader uses scratch
++	 * memory.
++	 */
++	DRM_ASAHI_RENDER_VERTEX_SCRATCH = (1U << 0),
++
++	/**
++	 * @DRM_ASAHI_RENDER_PROCESS_EMPTY_TILES: Process even empty tiles.
++	 * This must be set when clearing render targets.
++	 */
++	DRM_ASAHI_RENDER_PROCESS_EMPTY_TILES = (1U << 1),
++
++	/**
++	 * @DRM_ASAHI_RENDER_NO_VERTEX_CLUSTERING: Run vertex stage on a single
++	 * cluster (on multicluster GPUs)
++	 *
++	 * This harms performance but can workaround certain sync/coherency
++	 * bugs, and therefore is useful for debugging.
++	 */
++	DRM_ASAHI_RENDER_NO_VERTEX_CLUSTERING = (1U << 2),
++
++	/**
++	 * @DRM_ASAHI_RENDER_DBIAS_IS_INT: Use integer depth bias formula.
++	 *
++	 * Graphics specifications contain two alternate formulas for depth
++	 * bias, a float formula used with floating-point depth buffers and an
++	 * integer formula using with unorm depth buffers. This flag specifies
++	 * that the integer formula should be used. If omitted, the float
++	 * formula is used instead.
++	 *
++	 * This corresponds to bit 18 of the relevant hardware control register,
++	 * so we match that here for efficiency.
++	 */
++	DRM_ASAHI_RENDER_DBIAS_IS_INT = (1U << 18),
++};
++
++/**
++ * struct drm_asahi_zls_buffer - Describe a depth or stencil buffer.
++ *
++ * These fields correspond to hardware registers in the ZLS (Z Load/Store) unit.
++ * There are three hardware registers for each field respectively for loads,
++ * stores, and partial renders. In practice, it makes sense to set all to the
++ * same values, except in exceptional cases not yet implemented in userspace, so
++ * we do not duplicate here for simplicity/efficiency.
++ */
++struct drm_asahi_zls_buffer {
++	/** @base: Base address of the buffer */
++	__u64 base;
++
++	/**
++	 * @comp_base: If the load buffer is compressed, address of the
++	 * compression metadata section.
++	 */
++	__u64 comp_base;
++
++	/**
++	 * @stride: If layered rendering is enabled, the number of bytes
++	 * between each layer of the buffer.
++	 */
++	__u32 stride;
++
++	/**
++	 * @comp_stride: If layered rendering is enabled, the number of bytes
++	 * between each layer of the compression metadata.
++	 */
++	__u32 comp_stride;
++};
++
++/**
++ * struct drm_asahi_timestamp - Describe a timestamp write.
++ *
++ * The firmware can optionally write the GPU timestamp at render pass
++ * granularities, but it needs to be mapped specially via
++ * DRM_IOCTL_ASAHI_GEM_BIND_OBJECT. This structure therefore describes where to
++ * write as a handle-offset pair, rather than a GPU address like normal.
++ *
++ * This struct is embedded in other structs and therefore is not extensible.
++ */
++struct drm_asahi_timestamp {
++	/**
++	 * @handle: Handle of the timestamp buffer, or 0 to skip this
++	 * timestamp. If nonzero, this must equal the value returned in
++	 * drm_asahi_gem_bind_object::object_handle.
++	 */
++	__u32 handle;
++
++	/** @offset: Offset to write into the timestamp buffer */
++	__u32 offset;
++};
++
++/**
++ * struct drm_asahi_timestamps - Describe timestamp writes.
++ *
++ * Each operation that can be timestamped, can be timestamped at the start and
++ * end. Therefore, drm_asahi_timestamp structs always come in pairs, bundled
++ * together into drm_asahi_timestamps.
++ *
++ * This struct is embedded in other structs and therefore is not extensible.
++ */
++struct drm_asahi_timestamps {
++	/** @start: Timestamp recorded at the start of the operation */
++	struct drm_asahi_timestamp start;
++
++	/** @end: Timestamp recorded at the end of the operation */
++	struct drm_asahi_timestamp end;
++};
++
++/**
++ * struct drm_asahi_helper_program - Describe helper program configuration.
++ *
++ * The helper program is a compute-like kernel required for various hardware
++ * functionality. Its most important role is dynamically allocating
++ * scratch/stack memory for individual subgroups, by partitioning a static
++ * allocation shared for the whole device. It is supplied by userspace via
++ * drm_asahi_helper_program and internally dispatched by the hardware as needed.
++ *
++ * This struct is embedded in other structs and therefore is not extensible.
++ */
++struct drm_asahi_helper_program {
++	/**
++	 * @binary: USC address to the helper program binary. This is a tagged
++	 * pointer with configuration in the bottom bits.
++	 */
++	__u32 binary;
++
++	/** @cfg: Configuration bits for the helper program. */
++	__u32 cfg;
++
++	/**
++	 * @data: Data passed to the helper program. This value is not
++	 * interpreted by the kernel, firmware, or hardware in any way. It is
++	 * simply a sideband for userspace, set with the submit ioctl and read
++	 * via special registers inside the helper program.
++	 *
++	 * In practice, userspace will pass a 64-bit GPU VA here pointing to the
++	 * actual arguments, which presumably don't fit in 64-bits.
++	 */
++	__u64 data;
++};
++
++/**
++ * struct drm_asahi_bg_eot - Describe a background or end-of-tile program.
++ *
++ * The background and end-of-tile programs are dispatched by the hardware at the
++ * beginning and end of rendering. As the hardware "tilebuffer" is simply local
++ * memory, these programs are necessary to implement API-level render targets.
++ * The fragment-like background program is responsible for loading either the
++ * clear colour or the existing render target contents, while the compute-like
++ * end-of-tile program stores the tilebuffer contents to memory.
++ *
++ * This struct is embedded in other structs and therefore is not extensible.
++ */
++struct drm_asahi_bg_eot {
++	/**
++	 * @usc: USC address of the hardware USC words binding resources
++	 * (including images and uniforms) and the program itself. Note this is
++	 * an additional layer of indirection compared to the helper program,
++	 * avoiding the need for a sideband for data. This is a tagged pointer
++	 * with additional configuration in the bottom bits.
++	 */
++	__u32 usc;
++
++	/**
++	 * @rsrc_spec: Resource specifier for the program. This is a packed
++	 * hardware data structure describing the required number of registers,
++	 * uniforms, bound textures, and bound samplers.
++	 */
++	__u32 rsrc_spec;
++};
++
++/**
++ * struct drm_asahi_cmd_render - Command to submit 3D
++ *
++ * This command submits a single render pass. The hardware control stream may
++ * include many draws and subpasses, but within the command, the framebuffer
++ * dimensions and attachments are fixed.
++ *
++ * The hardware requires the firmware to set a large number of Control Registers
++ * setting up state at render pass granularity before each command rendering 3D.
++ * The firmware bundles this state into data structures. Unfortunately, we
++ * cannot expose either any of that directly to userspace, because the
++ * kernel-firmware ABI is not stable. Although we can guarantee the firmware
++ * updates in tandem with the kernel, we cannot break old userspace when
++ * upgrading the firmware and kernel. Therefore, we need to abstract well the
++ * data structures to avoid tying our hands with future firmwares.
++ *
++ * The bulk of drm_asahi_cmd_render therefore consists of values of hardware
++ * control registers, marshalled via the firmware interface.
++ *
++ * The framebuffer/tilebuffer dimensions are also specified here. In addition to
++ * being passed to the firmware/hardware, the kernel requires these dimensions
++ * to calculate various essential tiling-related data structures. It is
++ * unfortunate that our submits are heavier than on vendors with saner
++ * hardware-software interfaces. The upshot is all of this information is
++ * readily available to userspace with all current APIs.
++ *
++ * It looks odd - but it's not overly burdensome and it ensures we can remain
++ * compatible with old userspace.
++ */
++struct drm_asahi_cmd_render {
++	/** @flags: Combination of drm_asahi_render_flags flags. */
++	__u32 flags;
++
++	/**
++	 * @isp_zls_pixels: ISP_ZLS_PIXELS register value. This contains the
++	 * depth/stencil width/height, which may differ from the framebuffer
++	 * width/height.
++	 */
++	__u32 isp_zls_pixels;
++
++	/**
++	 * @vdm_ctrl_stream_base: VDM_CTRL_STREAM_BASE register value. GPU
++	 * address to the beginning of the VDM control stream.
++	 */
++	__u64 vdm_ctrl_stream_base;
++
++	/** @vertex_helper: Helper program used for the vertex shader */
++	struct drm_asahi_helper_program vertex_helper;
++
++	/** @fragment_helper: Helper program used for the fragment shader */
++	struct drm_asahi_helper_program fragment_helper;
++
++	/**
++	 * @isp_scissor_base: ISP_SCISSOR_BASE register value. GPU address of an
++	 * array of scissor descriptors indexed in the render pass.
++	 */
++	__u64 isp_scissor_base;
++
++	/**
++	 * @isp_dbias_base: ISP_DBIAS_BASE register value. GPU address of an
++	 * array of depth bias values indexed in the render pass.
++	 */
++	__u64 isp_dbias_base;
++
++	/**
++	 * @isp_oclqry_base: ISP_OCLQRY_BASE register value. GPU address of an
++	 * array of occlusion query results written by the render pass.
++	 */
++	__u64 isp_oclqry_base;
++
++	/** @depth: Depth buffer */
++	struct drm_asahi_zls_buffer depth;
++
++	/** @stencil: Stencil buffer */
++	struct drm_asahi_zls_buffer stencil;
++
++	/** @zls_ctrl: ZLS_CTRL register value */
++	__u64 zls_ctrl;
++
++	/** @ppp_multisamplectl: PPP_MULTISAMPLECTL register value */
++	__u64 ppp_multisamplectl;
++
++	/**
++	 * @sampler_heap: Base address of the sampler heap. This heap is used
++	 * for both vertex shaders and fragment shaders. The registers are
++	 * per-stage, but there is no known use case for separate heaps.
++	 */
++	__u64 sampler_heap;
++
++	/** @ppp_ctrl: PPP_CTRL register value */
++	__u32 ppp_ctrl;
++
++	/** @width_px: Framebuffer width in pixels */
++	__u16 width_px;
++
++	/** @height_px: Framebuffer height in pixels */
++	__u16 height_px;
++
++	/** @layers: Number of layers in the framebuffer */
++	__u16 layers;
++
++	/** @sampler_count: Number of samplers in the sampler heap. */
++	__u16 sampler_count;
++
++	/** @utile_width_px: Width of a logical tilebuffer tile in pixels */
++	__u8 utile_width_px;
++
++	/** @utile_height_px: Height of a logical tilebuffer tile in pixels */
++	__u8 utile_height_px;
++
++	/** @samples: # of samples in the framebuffer. Must be 1, 2, or 4. */
++	__u8 samples;
++
++	/** @sample_size_B: # of bytes in the tilebuffer required per sample. */
++	__u8 sample_size_B;
++
++	/**
++	 * @isp_merge_upper_x: 32-bit float used in the hardware triangle
++	 * merging. Calculate as: tan(60 deg) * width.
++	 *
++	 * Making these values UAPI avoids requiring floating-point calculations
++	 * in the kernel in the hot path.
++	 */
++	__u32 isp_merge_upper_x;
++
++	/**
++	 * @isp_merge_upper_y: 32-bit float. Calculate as: tan(60 deg) * height.
++	 * See @isp_merge_upper_x.
++	 */
++	__u32 isp_merge_upper_y;
++
++	/** @bg: Background program run for each tile at the start */
++	struct drm_asahi_bg_eot bg;
++
++	/** @eot: End-of-tile program ran for each tile at the end */
++	struct drm_asahi_bg_eot eot;
++
++	/**
++	 * @partial_bg: Background program ran at the start of each tile when
++	 * resuming the render pass during a partial render.
++	 */
++	struct drm_asahi_bg_eot partial_bg;
++
++	/**
++	 * @partial_eot: End-of-tile program ran at the end of each tile when
++	 * pausing the render pass during a partial render.
++	 */
++	struct drm_asahi_bg_eot partial_eot;
++
++	/**
++	 * @isp_bgobjdepth: ISP_BGOBJDEPTH register value. This is the depth
++	 * buffer clear value, encoded in the depth buffer's format: either a
++	 * 32-bit float or a 16-bit unorm (with upper bits zeroed).
++	 */
++	__u32 isp_bgobjdepth;
++
++	/**
++	 * @isp_bgobjvals: ISP_BGOBJVALS register value. The bottom 8-bits
++	 * contain the stencil buffer clear value.
++	 */
++	__u32 isp_bgobjvals;
++
++	/** @ts_vtx: Timestamps for the vertex portion of the render */
++	struct drm_asahi_timestamps ts_vtx;
++
++	/** @ts_frag: Timestamps for the fragment portion of the render */
++	struct drm_asahi_timestamps ts_frag;
++};
++
++/**
++ * struct drm_asahi_cmd_compute - Command to submit compute
++ *
++ * This command submits a control stream consisting of compute dispatches. There
++ * is essentially no limit on how many compute dispatches may be included in a
++ * single compute command, although timestamps are at command granularity.
++ */
++struct drm_asahi_cmd_compute {
++	/** @flags: MBZ */
++	__u32 flags;
++
++	/** @sampler_count: Number of samplers in the sampler heap. */
++	__u32 sampler_count;
++
++	/**
++	 * @cdm_ctrl_stream_base: CDM_CTRL_STREAM_BASE register value. GPU
++	 * address to the beginning of the CDM control stream.
++	 */
++	__u64 cdm_ctrl_stream_base;
++
++	/**
++	 * @cdm_ctrl_stream_end: GPU base address to the end of the hardware
++	 * control stream. Note this only considers the first contiguous segment
++	 * of the control stream, as the stream might jump elsewhere.
++	 */
++	__u64 cdm_ctrl_stream_end;
++
++	/** @sampler_heap: Base address of the sampler heap. */
++	__u64 sampler_heap;
++
++	/** @helper: Helper program used for this compute command */
++	struct drm_asahi_helper_program helper;
++
++	/** @ts: Timestamps for the compute command */
++	struct drm_asahi_timestamps ts;
++};
++
++/**
++ * struct drm_asahi_get_time - Arguments passed to DRM_IOCTL_ASAHI_GET_TIME
++ */
++struct drm_asahi_get_time {
++	/** @flags: MBZ. */
++	__u64 flags;
++
++	/** @gpu_timestamp: On return, the GPU timestamp in nanoseconds. */
++	__u64 gpu_timestamp;
++};
++
++/**
++ * DRM_IOCTL_ASAHI() - Build an Asahi IOCTL number
++ * @__access: Access type. Must be R, W or RW.
++ * @__id: One of the DRM_ASAHI_xxx id.
++ * @__type: Suffix of the type being passed to the IOCTL.
++ *
++ * Don't use this macro directly, use the DRM_IOCTL_ASAHI_xxx
++ * values instead.
++ *
++ * Return: An IOCTL number to be passed to ioctl() from userspace.
++ */
++#define DRM_IOCTL_ASAHI(__access, __id, __type) \
++	DRM_IO ## __access(DRM_COMMAND_BASE + DRM_ASAHI_ ## __id, \
++			   struct drm_asahi_ ## __type)
++
++/* Note: this is an enum so that it can be resolved by Rust bindgen. */
++enum {
++	DRM_IOCTL_ASAHI_GET_PARAMS       = DRM_IOCTL_ASAHI(WR, GET_PARAMS, get_params),
++	DRM_IOCTL_ASAHI_VM_CREATE        = DRM_IOCTL_ASAHI(WR, VM_CREATE, vm_create),
++	DRM_IOCTL_ASAHI_VM_DESTROY       = DRM_IOCTL_ASAHI(W, VM_DESTROY, vm_destroy),
++	DRM_IOCTL_ASAHI_GEM_CREATE       = DRM_IOCTL_ASAHI(WR, GEM_CREATE, gem_create),
++	DRM_IOCTL_ASAHI_GEM_MMAP_OFFSET  = DRM_IOCTL_ASAHI(WR, GEM_MMAP_OFFSET, gem_mmap_offset),
++	DRM_IOCTL_ASAHI_GEM_BIND         = DRM_IOCTL_ASAHI(W, GEM_BIND, gem_bind),
++	DRM_IOCTL_ASAHI_QUEUE_CREATE     = DRM_IOCTL_ASAHI(WR, QUEUE_CREATE, queue_create),
++	DRM_IOCTL_ASAHI_QUEUE_DESTROY    = DRM_IOCTL_ASAHI(W, QUEUE_DESTROY, queue_destroy),
++	DRM_IOCTL_ASAHI_SUBMIT           = DRM_IOCTL_ASAHI(W, SUBMIT, submit),
++	DRM_IOCTL_ASAHI_GET_TIME         = DRM_IOCTL_ASAHI(WR, GET_TIME, get_time),
++	DRM_IOCTL_ASAHI_GEM_BIND_OBJECT  = DRM_IOCTL_ASAHI(WR, GEM_BIND_OBJECT, gem_bind_object),
++};
++
++#if defined(__cplusplus)
++}
++#endif
++
++#endif /* _ASAHI_DRM_H_ */
 
+---
+base-commit: 0ed1356af8f629ae807963b7db4e501e3b580bc2
+change-id: 20250307-agx-uapi-930579437f19
+
+Best regards,
 -- 
-2.49.0.395.g12beb8f557-goog
+Alyssa Rosenzweig <alyssa@rosenzweig.io>
 
