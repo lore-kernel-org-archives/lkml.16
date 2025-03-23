@@ -1,42 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2286F205AC6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90387204C00
 	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742732951; cv=none; b=s9o+MBWXgngNLRiZCvpaojzJ392rAR154P0lCMTHQCVYHElHdeJSwoizA+C/C1dqKLfkPg5P6CUevA/WOCYg4iXCPdywmJsHpbXBIerWAyQr/IBaOhIGKz/j8rkACxmjPOMBuu8uCXFvx7SkIZj7XJ45PQXGLZFS8pQjLOM+ssk=
+	t=1742732950; cv=none; b=dMhHNKl9iWZFdQcUiSXO4DqGC5uDnbWO8wMs8PSwwvpijdIFM1BeTV71WynVxt7feAhrmz/PL/27bNRugYTdTcWZ7PBtyW5fn0Is1/RAYhcvVfT6WQ9vwTA3sJo14DMIxiEb2j0JdNssTFAcUiJD+Nujk0xtBXGaZ72THvlRr1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742732951; c=relaxed/simple;
-	bh=cd3LNfemcSgCououTTCnVgTcEGfS6qWC5kUBf/M2nhE=;
+	s=arc-20240116; t=1742732950; c=relaxed/simple;
+	bh=7h63btXGzhfMzbY5uYxN9Me1NcMrRXNldjL3B37vY2k=;
 	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=h3ngJblhM3jr8kbrVUhzuO86iSdgYLSNR/gFVeKpjU/fAxZTG8Ix0NjtClXNo1ySZ7VEH/zjrFHJFt9IQv0TZVrxQw71+u4buHf7e2x0ogfGA8Q0XbeDJ5F+iQTW6pr8M+vNUgTWPqjRUYhYO8q5VHqhYAPBZ0SypAyrQfWL5EA=
+	 Content-Type; b=Y42EPJyhmOR/p/4ofTgrIiO1hKgDGRTH/XzuDm3a/mofmH5SywPYXwT3SGbS/g7ylBe4mqpoM7Xtgf1aq3AM/PD1kka/KR/mDxJSpTCNyLK4xgRhT5M0z0Upx69KHz464bHi1OuPcz6kNeI7Q3UtsAAWEqY/dvB0jPixvj517W0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A1F1C4CEEF;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20AA0C4CEED;
 	Sun, 23 Mar 2025 12:29:10 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1twKSb-00000001yfE-3f7f;
+	id 1twKSb-00000001yeG-2DgJ;
 	Sun, 23 Mar 2025 08:29:49 -0400
-Message-ID: <20250323122949.723796800@goodmis.org>
+Message-ID: <20250323122949.379865816@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sun, 23 Mar 2025 08:29:37 -0400
+Date: Sun, 23 Mar 2025 08:29:35 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>,
- Michael Petlan <mpetlan@redhat.com>,
- Veronika Molnarova <vmolnaro@redhat.com>,
- Suren Baghdasaryan <surenb@google.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Tamir Duberstein <tamird@gmail.com>,
- Linus Torvalds <torvalds@linux-foundation.org>,
- Petr Mladek <pmladek@suse.com>
-Subject: [for-next][PATCH 04/10] tracing: gfp: vsprintf: Do not print "none" when using %pGg printf
- format
+ Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [for-next][PATCH 02/10] tracing: Constify struct event_trigger_ops
 References: <20250323122933.407277911@goodmis.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
@@ -46,74 +38,314 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 
-From: Petr Mladek <pmladek@suse.com>
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 
-The commit ca29a0bf122145 ("tracing: gfp: Remove duplication of recording
-GFP flags") caused the following regression in printf_test selftest:
+'event_trigger_ops mwifiex_if_ops' are not modified in these drivers.
 
-[   46.208199] test_printf: kvasprintf(..., "%pGg", ...) returned 'none|0xfc000000', expected '0xfc000000'
-[   46.208209] test_printf: kvasprintf(..., "%pGg", ...) returned '__GFP_HIGH|none|0xfc000000', expected '__GFP_HIGH|0xfc000000'
+Constifying these structures moves some data to a read-only section, so
+increase overall security, especially when the structure holds some
+function pointers.
 
-The problem is the new '{ 0, "none" }' entry in __def_gfpflag_names macro
-and the following code:
+On a x86_64, with allmodconfig, as an example:
+Before:
+======
+   text	   data	    bss	    dec	    hex	filename
+  31368	   9024	   6200	  46592	   b600	kernel/trace/trace_events_trigger.o
 
-char *format_flags(char *buf, char *end, unsigned long flags,
-					const struct trace_print_flags *names)
-{
-[...]
-		if ((flags & mask) != mask)
-			continue;
-[...]
-}
-
-The purpose of the code is to print the name of a mask instead of bits,
-for example, printk "GFP_ZONEMASK", instead of
-"__GFP_DMA|__GFP_HIGHMEM|__GFP_DMA32|__GFP_MOVABLE".
-
-Unfortunately, the mask "0" pass this check and "none" is always
-printed.
-
-A solution would be to move TRACE_GFP_FLAGS up so that it is not
-the last entry. But it breaks the rule that named masks must
-be defined before names of single bytes. Otherwise, it would
-print the names of the bytes instead of the mask.
-
-Instead, replace '{ 0, "none" }' with '{ 0, NULL }'. It works because
-__def_gfpflag_names defines a standalone array and this is the standard
-trailing entry. The code processing these arrays always ends the cycle
-when flag->name == NULL.
+After:
+=====
+   text	   data	    bss	    dec	    hex	filename
+  31752	   8608	   6200	  46560	   b5e0	kernel/trace/trace_events_trigger.o
 
 Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Veronika Molnarova <vmolnaro@redhat.com>
-Cc: Suren Baghdasaryan <surenb@google.com>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Tamir Duberstein <tamird@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Link: https://lore.kernel.org/Z9Q5d11ZbA3CNMZm@pathway.suse.cz
-Fixes: ca29a0bf122145 ("tracing: gfp: Remove duplication of recording GFP flags")
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+Link: https://lore.kernel.org/66e8f990e649678e4be37d4d1a19158ca0dea2f4.1741521295.git.christophe.jaillet@wanadoo.fr
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
 ---
- include/trace/events/mmflags.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.h                |  4 +--
+ kernel/trace/trace_eprobe.c         |  6 ++---
+ kernel/trace/trace_events_hist.c    | 20 +++++++--------
+ kernel/trace/trace_events_trigger.c | 38 ++++++++++++++---------------
+ 4 files changed, 34 insertions(+), 34 deletions(-)
 
-diff --git a/include/trace/events/mmflags.h b/include/trace/events/mmflags.h
-index 82371177ef79..15aae955a10b 100644
---- a/include/trace/events/mmflags.h
-+++ b/include/trace/events/mmflags.h
-@@ -101,7 +101,7 @@ TRACE_DEFINE_ENUM(___GFP_LAST_BIT);
- 	gfpflag_string(GFP_DMA32),		\
- 	gfpflag_string(__GFP_RECLAIM),		\
- 	TRACE_GFP_FLAGS				\
--	{ 0, "none" }
-+	{ 0, NULL }
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 9c21ba45b7af..880cf9abc055 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -1714,7 +1714,7 @@ struct event_trigger_data {
+ 	unsigned long			count;
+ 	int				ref;
+ 	int				flags;
+-	struct event_trigger_ops	*ops;
++	const struct event_trigger_ops	*ops;
+ 	struct event_command		*cmd_ops;
+ 	struct event_filter __rcu	*filter;
+ 	char				*filter_str;
+@@ -1959,7 +1959,7 @@ struct event_command {
+ 	int			(*set_filter)(char *filter_str,
+ 					      struct event_trigger_data *data,
+ 					      struct trace_event_file *file);
+-	struct event_trigger_ops *(*get_trigger_ops)(char *cmd, char *param);
++	const struct event_trigger_ops *(*get_trigger_ops)(char *cmd, char *param);
+ };
  
- #define show_gfp_flags(flags)						\
- 	(flags) ? __print_flags(flags, "|", __def_gfpflag_names		\
+ /**
+diff --git a/kernel/trace/trace_eprobe.c b/kernel/trace/trace_eprobe.c
+index 82fd637cfc19..c1cc2fe54887 100644
+--- a/kernel/trace/trace_eprobe.c
++++ b/kernel/trace/trace_eprobe.c
+@@ -478,7 +478,7 @@ static void eprobe_trigger_func(struct event_trigger_data *data,
+ 	__eprobe_trace_func(edata, rec);
+ }
+ 
+-static struct event_trigger_ops eprobe_trigger_ops = {
++static const struct event_trigger_ops eprobe_trigger_ops = {
+ 	.trigger		= eprobe_trigger_func,
+ 	.print			= eprobe_trigger_print,
+ 	.init			= eprobe_trigger_init,
+@@ -507,8 +507,8 @@ static void eprobe_trigger_unreg_func(char *glob,
+ 
+ }
+ 
+-static struct event_trigger_ops *eprobe_trigger_get_ops(char *cmd,
+-							char *param)
++static const struct event_trigger_ops *eprobe_trigger_get_ops(char *cmd,
++							      char *param)
+ {
+ 	return &eprobe_trigger_ops;
+ }
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index 261163b00137..d3c4880fa8b1 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -6191,7 +6191,7 @@ static void event_hist_trigger_free(struct event_trigger_data *data)
+ 	}
+ }
+ 
+-static struct event_trigger_ops event_hist_trigger_ops = {
++static const struct event_trigger_ops event_hist_trigger_ops = {
+ 	.trigger		= event_hist_trigger,
+ 	.print			= event_hist_trigger_print,
+ 	.init			= event_hist_trigger_init,
+@@ -6223,15 +6223,15 @@ static void event_hist_trigger_named_free(struct event_trigger_data *data)
+ 	}
+ }
+ 
+-static struct event_trigger_ops event_hist_trigger_named_ops = {
++static const struct event_trigger_ops event_hist_trigger_named_ops = {
+ 	.trigger		= event_hist_trigger,
+ 	.print			= event_hist_trigger_print,
+ 	.init			= event_hist_trigger_named_init,
+ 	.free			= event_hist_trigger_named_free,
+ };
+ 
+-static struct event_trigger_ops *event_hist_get_trigger_ops(char *cmd,
+-							    char *param)
++static const struct event_trigger_ops *event_hist_get_trigger_ops(char *cmd,
++								  char *param)
+ {
+ 	return &event_hist_trigger_ops;
+ }
+@@ -6826,38 +6826,38 @@ hist_enable_count_trigger(struct event_trigger_data *data,
+ 	hist_enable_trigger(data, buffer, rec, event);
+ }
+ 
+-static struct event_trigger_ops hist_enable_trigger_ops = {
++static const struct event_trigger_ops hist_enable_trigger_ops = {
+ 	.trigger		= hist_enable_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_enable_trigger_free,
+ };
+ 
+-static struct event_trigger_ops hist_enable_count_trigger_ops = {
++static const struct event_trigger_ops hist_enable_count_trigger_ops = {
+ 	.trigger		= hist_enable_count_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_enable_trigger_free,
+ };
+ 
+-static struct event_trigger_ops hist_disable_trigger_ops = {
++static const struct event_trigger_ops hist_disable_trigger_ops = {
+ 	.trigger		= hist_enable_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_enable_trigger_free,
+ };
+ 
+-static struct event_trigger_ops hist_disable_count_trigger_ops = {
++static const struct event_trigger_ops hist_disable_count_trigger_ops = {
+ 	.trigger		= hist_enable_count_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_enable_trigger_free,
+ };
+ 
+-static struct event_trigger_ops *
++static const struct event_trigger_ops *
+ hist_enable_get_trigger_ops(char *cmd, char *param)
+ {
+-	struct event_trigger_ops *ops;
++	const struct event_trigger_ops *ops;
+ 	bool enable;
+ 
+ 	enable = (strcmp(cmd, ENABLE_HIST_STR) == 0);
+diff --git a/kernel/trace/trace_events_trigger.c b/kernel/trace/trace_events_trigger.c
+index d45448947094..b66b6d235d91 100644
+--- a/kernel/trace/trace_events_trigger.c
++++ b/kernel/trace/trace_events_trigger.c
+@@ -825,7 +825,7 @@ struct event_trigger_data *event_trigger_alloc(struct event_command *cmd_ops,
+ 					       void *private_data)
+ {
+ 	struct event_trigger_data *trigger_data;
+-	struct event_trigger_ops *trigger_ops;
++	const struct event_trigger_ops *trigger_ops;
+ 
+ 	trigger_ops = cmd_ops->get_trigger_ops(cmd, param);
+ 
+@@ -1367,38 +1367,38 @@ traceoff_trigger_print(struct seq_file *m, struct event_trigger_data *data)
+ 				   data->filter_str);
+ }
+ 
+-static struct event_trigger_ops traceon_trigger_ops = {
++static const struct event_trigger_ops traceon_trigger_ops = {
+ 	.trigger		= traceon_trigger,
+ 	.print			= traceon_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops traceon_count_trigger_ops = {
++static const struct event_trigger_ops traceon_count_trigger_ops = {
+ 	.trigger		= traceon_count_trigger,
+ 	.print			= traceon_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops traceoff_trigger_ops = {
++static const struct event_trigger_ops traceoff_trigger_ops = {
+ 	.trigger		= traceoff_trigger,
+ 	.print			= traceoff_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops traceoff_count_trigger_ops = {
++static const struct event_trigger_ops traceoff_count_trigger_ops = {
+ 	.trigger		= traceoff_count_trigger,
+ 	.print			= traceoff_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops *
++static const struct event_trigger_ops *
+ onoff_get_trigger_ops(char *cmd, char *param)
+ {
+-	struct event_trigger_ops *ops;
++	const struct event_trigger_ops *ops;
+ 
+ 	/* we register both traceon and traceoff to this callback */
+ 	if (strcmp(cmd, "traceon") == 0)
+@@ -1491,21 +1491,21 @@ snapshot_trigger_print(struct seq_file *m, struct event_trigger_data *data)
+ 				   data->filter_str);
+ }
+ 
+-static struct event_trigger_ops snapshot_trigger_ops = {
++static const struct event_trigger_ops snapshot_trigger_ops = {
+ 	.trigger		= snapshot_trigger,
+ 	.print			= snapshot_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops snapshot_count_trigger_ops = {
++static const struct event_trigger_ops snapshot_count_trigger_ops = {
+ 	.trigger		= snapshot_count_trigger,
+ 	.print			= snapshot_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops *
++static const struct event_trigger_ops *
+ snapshot_get_trigger_ops(char *cmd, char *param)
+ {
+ 	return param ? &snapshot_count_trigger_ops : &snapshot_trigger_ops;
+@@ -1586,21 +1586,21 @@ stacktrace_trigger_print(struct seq_file *m, struct event_trigger_data *data)
+ 				   data->filter_str);
+ }
+ 
+-static struct event_trigger_ops stacktrace_trigger_ops = {
++static const struct event_trigger_ops stacktrace_trigger_ops = {
+ 	.trigger		= stacktrace_trigger,
+ 	.print			= stacktrace_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops stacktrace_count_trigger_ops = {
++static const struct event_trigger_ops stacktrace_count_trigger_ops = {
+ 	.trigger		= stacktrace_count_trigger,
+ 	.print			= stacktrace_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_trigger_free,
+ };
+ 
+-static struct event_trigger_ops *
++static const struct event_trigger_ops *
+ stacktrace_get_trigger_ops(char *cmd, char *param)
+ {
+ 	return param ? &stacktrace_count_trigger_ops : &stacktrace_trigger_ops;
+@@ -1711,28 +1711,28 @@ void event_enable_trigger_free(struct event_trigger_data *data)
+ 	}
+ }
+ 
+-static struct event_trigger_ops event_enable_trigger_ops = {
++static const struct event_trigger_ops event_enable_trigger_ops = {
+ 	.trigger		= event_enable_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_enable_trigger_free,
+ };
+ 
+-static struct event_trigger_ops event_enable_count_trigger_ops = {
++static const struct event_trigger_ops event_enable_count_trigger_ops = {
+ 	.trigger		= event_enable_count_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_enable_trigger_free,
+ };
+ 
+-static struct event_trigger_ops event_disable_trigger_ops = {
++static const struct event_trigger_ops event_disable_trigger_ops = {
+ 	.trigger		= event_enable_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+ 	.free			= event_enable_trigger_free,
+ };
+ 
+-static struct event_trigger_ops event_disable_count_trigger_ops = {
++static const struct event_trigger_ops event_disable_count_trigger_ops = {
+ 	.trigger		= event_enable_count_trigger,
+ 	.print			= event_enable_trigger_print,
+ 	.init			= event_trigger_init,
+@@ -1916,10 +1916,10 @@ void event_enable_unregister_trigger(char *glob,
+ 		data->ops->free(data);
+ }
+ 
+-static struct event_trigger_ops *
++static const struct event_trigger_ops *
+ event_enable_get_trigger_ops(char *cmd, char *param)
+ {
+-	struct event_trigger_ops *ops;
++	const struct event_trigger_ops *ops;
+ 	bool enable;
+ 
+ #ifdef CONFIG_HIST_TRIGGERS
 -- 
 2.47.2
 
