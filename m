@@ -1,39 +1,40 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from smtp.smtpout.orange.fr (smtp-21.smtpout.orange.fr [80.12.242.21])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B03C4802
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 18:08:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCBA27452;
+	Sun, 23 Mar 2025 18:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742753299; cv=none; b=c8zMRlXyqOAT5WatorUpo3CsZcrF/ko2w9guOpM3g/324kWeGUqQKX0SqclVlg9j6UPriiNqWPksTGI4MV6cYwya6mTnJHCmHgG0/3oziNYVFD95Ijs99DjE+ldnBhHpqx1VXhdftBBlk8qJOfoNG7nKpXaezjVxXfZYC7dT25s=
+	t=1742753432; cv=none; b=adWgIceu8LreT4apeq+q0044eoiRDL1fYBiPt21gwvw8C0+nyDzVFSVYWeVs/GLA25FxOGaA672UX2Iy/TryV1/lHtEWcQ03S9d5N4XQgXzQ5bf288cPFR7uKqFigxG2opQxywB8diMxt93igWPZualPDv2bXvOOzJEwWt6a7MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742753299; c=relaxed/simple;
-	bh=Ogpo3ymYD2U3EI+FubcLXjYZrTNlJSfprYiQ6vgCN4E=;
+	s=arc-20240116; t=1742753432; c=relaxed/simple;
+	bh=0SGq6OSE+vSulCHu5kl1qv4hinnRfdlAm6vhArLGlBo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qkOcylD2PUD8OcuphpKfcACeguuzsYulL7nkgsKdSV0X0NM/fPopRnSrlGZuOqBfLK6bC3yswjDfZI9+/Bikb9O8GeQ3wCt5XzcPlSctJeQYz+DELUNmLGqRNOBcT7U4e12CHnQF1XwMEPpIRMA6JoxvMv6SKlYvi9IlskK5Pj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=kmnVozqf; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	 In-Reply-To:Content-Type; b=sE+Ged5nvTp4SBL48Ay/D8k5pi6aDA3uWDSg2ienfr2HBe5AwZKdsyxRI8LyVMk/gxazXrRl15A8OjBwvk/23MhnUyNdf2qwfU/9p++nQbMoH1jVodlCYnV1H7cQu7Bkq7WabNd6sA17bamcqJK1x/9gm8+TOEH34Sodb4YYKt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=OelJyDht; arc=none smtp.client-ip=80.12.242.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="kmnVozqf"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=D77nPsmMV0/TxqLnhHvNQ9fX2PYMvK9BF/KPlrJlvuM=; b=kmnVozqfsnzzzJnDGNN7L7dXUw
-	tOkdCO7OjaTQsYv35ngVffKY6u08v/vfqhSoVBci/QuGs2X5A0z/yxElqHhtVvc9XtuWWRXihM82f
-	+T9GoJscUeQJhZzi7ctoxfI28+/KSuRcOS+1QY+YV+0SgLv+xR4p5ygWA1ayIUXSH1t6kV8NreBft
-	qpt/SM4aaLK9La/xo9mEGDUDHmtOAb/nfx7Rtg/Gb17fBW2nFJaRrM2q33FcQaB+YLnmHI4p0J2O3
-	EntZigfC+cnKOIlG615hRLbAR1CSsmUkG4sIce5kmPmzeloFGAaADJCYj7JRKf2Crzh53fkjLS12p
-	13OoREkA==;
-Received: from [189.7.87.178] (helo=[192.168.0.224])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1twPjx-005MlC-V0; Sun, 23 Mar 2025 19:08:06 +0100
-Message-ID: <e3517bd6-a9c2-4193-92d8-b6510b967d0a@igalia.com>
-Date: Sun, 23 Mar 2025 15:07:59 -0300
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OelJyDht"
+Received: from [192.168.1.37] ([90.11.132.44])
+	by smtp.orange.fr with ESMTPA
+	id wPdZtqcs4vQV0wPdctbi88; Sun, 23 Mar 2025 19:01:35 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1742752895;
+	bh=zp3UcKJhUjE7ySXeU2dEz0mIKPMzZc8r54esOzKpgeQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=OelJyDhtUiXn/3ZG0LOI5TjhwxvoaXoK9D1LUxe7j9eMo7tyWD+Si2DSO2zHRbynE
+	 8E18tkmJ1GiiQuKPDzLThmDhtE6TTjrdNI1edhccNt6tPcfIN9Xmwr3O3UMyflNSYP
+	 mlxRUzsl5jps9W+KhAyT6AiVmkDkPH7fmeEE3mv/L5EtmPq7C1q84INnpvO6//bpdm
+	 cWI4ORMUWlw2FcMDY9foxevsA6WfP7rCkr7ChmR8+CyaSlqmip9jZr+SLNQTbUc9JN
+	 Pn6urrO6ViumWpAlyYxfRPfY7FIqe+/Kpu9jElZ/ItY2E3MRkICnAK4CjqYJ1h0euN
+	 1y//Erg9ytZVA==
+X-ME-Helo: [192.168.1.37]
+X-ME-Auth: bWFyaW9uLmphaWxsZXRAd2FuYWRvby5mcg==
+X-ME-Date: Sun, 23 Mar 2025 19:01:35 +0100
+X-ME-IP: 90.11.132.44
+Message-ID: <b212955e-eac6-4eff-b666-5a830e9d1537@wanadoo.fr>
+Date: Sun, 23 Mar 2025 19:01:29 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -41,71 +42,55 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 4/4] drm/vc4: tests: Retry pv-muxing tests when EDEADLK
-To: Maxime Ripard <mripard@kernel.org>,
- Dave Stevenson <dave.stevenson@raspberrypi.com>,
- Raspberry Pi Kernel Maintenance <kernel-list@raspberrypi.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>
-Cc: dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20250318-drm-vc4-kunit-failures-v1-0-779864d9ab37@kernel.org>
- <20250318-drm-vc4-kunit-failures-v1-4-779864d9ab37@kernel.org>
-Content-Language: en-US
-From: =?UTF-8?Q?Ma=C3=ADra_Canal?= <mcanal@igalia.com>
-In-Reply-To: <20250318-drm-vc4-kunit-failures-v1-4-779864d9ab37@kernel.org>
+Subject: Re: [PATCH] drm/xe/svm: fix dereferencing error pointer in
+ drm_gpusvm_range_alloc()
+To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ =?UTF-8?Q?Thomas_Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Matthew Brost <matthew.brost@intel.com>,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-kernel@vger.kernel.org
+Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
+ error27@gmail.com
+References: <20250323124907.3946370-1-harshit.m.mogalapalli@oracle.com>
+Content-Language: en-US, fr-FR
+From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+In-Reply-To: <20250323124907.3946370-1-harshit.m.mogalapalli@oracle.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-Hi Maxime,
-
-On 18/03/25 11:17, Maxime Ripard wrote:
-> Some functions used by the HVS->PV muxing tests can return with EDEADLK,
-> meaning the entire sequence should be restarted. It's not a fatal error
-> and we should treat it as a recoverable error, and recover, instead of
-> failing the test like we currently do.
+Le 23/03/2025 à 13:49, Harshit Mogalapalli a écrit :
+> xe_svm_range_alloc() returns ERR_PTR(-ENOMEM) on failure and there is a
+> dereference of "range" after that:
 > 
-> Fixes: 76ec18dc5afa ("drm/vc4: tests: Add unit test suite for the PV muxing")
-> Signed-off-by: Maxime Ripard <mripard@kernel.org>
+> 	-->     range->gpusvm = gpusvm;
+> 
+> In xe_svm_range_alloc(), when memory allocation fails return NULL
+> instead to handle this situation.
+> 
+> Fixes: 99624bdff867 ("drm/gpusvm: Add support for GPU Shared Virtual Memory")
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/all/adaef4dd-5866-48ca-bc22-4a1ddef20381@stanley.mountain/
+> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
 > ---
->   drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c | 44 ++++++++++++++++++++++++++
->   1 file changed, 44 insertions(+)
+> This is based on static analysis and only compile tested.
+> ---
+>   drivers/gpu/drm/xe/xe_svm.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-> index 52c04ef33206bf4f9e21e3c8b7cea932824a67fa..94e05bddb630a79aab189d9bc16f09a9d84ce396 100644
-> --- a/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-> +++ b/drivers/gpu/drm/vc4/tests/vc4_test_pv_muxing.c
-> @@ -685,20 +685,26 @@ static void drm_vc4_test_pv_muxing(struct kunit *test)
+> diff --git a/drivers/gpu/drm/xe/xe_svm.c b/drivers/gpu/drm/xe/xe_svm.c
+> index 52e04e7e343f..a79df8cf1f36 100644
+> --- a/drivers/gpu/drm/xe/xe_svm.c
+> +++ b/drivers/gpu/drm/xe/xe_svm.c
+> @@ -80,7 +80,7 @@ xe_svm_range_alloc(struct drm_gpusvm *gpusvm)
 >   
->   	drm_modeset_acquire_init(&ctx, 0);
+>   	range = kzalloc(sizeof(*range), GFP_KERNEL);
+>   	if (!range)
+> -		return ERR_PTR(-ENOMEM);
+> +		return NULL;
 >   
->   	vc4 = priv->vc4;
->   	drm = &vc4->base;
-> +
-> +retry:
->   	state = drm_kunit_helper_atomic_state_alloc(test, drm, &ctx);
->   	KUNIT_ASSERT_NOT_ERR_OR_NULL(test, state);
->   	for (i = 0; i < params->nencoders; i++) {
->   		enum vc4_encoder_type enc_type = params->encoders[i];
->   
->   		ret = vc4_mock_atomic_add_output(test, state, enc_type);
-> +		if (ret == -EDEADLK)
-> +			goto retry;
->   		KUNIT_ASSERT_EQ(test, ret, 0);
->   	}
->   
->   	ret = drm_atomic_check_only(state);
-> +	if (ret == -EDEADLK)
-> +		goto retry;
+>   	INIT_LIST_HEAD(&range->garbage_collector_link);
+>   	xe_vm_get(gpusvm_to_vm(gpusvm));
 
-Shouldn't we call `drm_modeset_backoff()` before retrying (maybe
-`drm_atomic_state_clear()` as well)?
-
-Best Regards,
-- Maíra
-
->   	KUNIT_EXPECT_EQ(test, ret, 0);
->   
->   	KUNIT_EXPECT_TRUE(test,
->   			  check_fifo_conflict(test, state));
->   
+Reviewed-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
