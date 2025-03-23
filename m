@@ -1,450 +1,259 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-qk1-f201.google.com (mail-qk1-f201.google.com [209.85.222.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0B0202C39;
-	Sun, 23 Mar 2025 07:14:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8F53AD24
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 07:25:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742714098; cv=none; b=fKO21J/3NYpdlJ5ZYV9l7KtB30lHstZOC/x4ArofzxTFxe3NyAyJBvtx7pzcw07LWUwaIFiHeJF+EaUkwG8ZhdGfsmB/XmOkqHruycY7YXBvh7ErZ+Iz2pA6tRVRzrwI9+MchYZZMnbYqMkneQ3p6uys8L1866oM2CVOu2LnJls=
+	t=1742714718; cv=none; b=NsjmVMieUa3KCcLLEv7yLLmr/vOfXXVw9UkSWm88AMs/N+1AiD+1plsLnOaas/o66AZBw3dmCQIrjC25XiF1FOMs1+p04cIJFMvp9IXl6isk3uFNv3MYIatl+4tI/6BjdB2Rah81/Q0rxFGSJiKDVNbtAjxxrN8HZORXQKmmSTg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742714098; c=relaxed/simple;
-	bh=WRrSA50y3u7WzP72Iuo1EO/GfQTRCZVJkp8p0OdO1lQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=urbHf3eu08uIGvAcinSZricVfFdNkwK4wbn+Z/tps+6FRhlV17V9lCmMt5fxMI9SFeXZTptdjPVyAe0sZRnjwxA/Pf9fZec+XeBoe/osUgb2wblSk2oj0FlRY+EDUmGJc2EoyWdFvPA1ztoWHjBH3cw54WcNvGHpxOjRai6aHPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/k7iy2+; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742714718; c=relaxed/simple;
+	bh=pjEHBPzfvEeYJItimRBKQTAk73orwkt8aka59h1vjNs=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Cc:Content-Type; b=ljwp0CwOJ6sDsr9jioYcgSCgAkxPtNaY2ad9KltunjMx87rA237RhAiWNuYibj5x1oNICBJXAb6QcA8x1d3XRW1rISm1vsWYKLgq5rcSd6tTEWBYZVv7kKVGOn93ujm8BdhgrG/dUotnB/FJN+I6UYaE1VFW/aO+Fvs566wbZas=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--edumazet.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=HX2sVng8; arc=none smtp.client-ip=209.85.222.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--edumazet.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/k7iy2+"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5cd420781so5935512a12.2;
-        Sun, 23 Mar 2025 00:14:56 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HX2sVng8"
+Received: by mail-qk1-f201.google.com with SMTP id af79cd13be357-7bb849aa5fbso890486585a.0
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 00:25:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742714094; x=1743318894; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hSg8v2veHrUXZxak/qhrNIhIgEeYWoo3lRbNC7Kvpd4=;
-        b=i/k7iy2+tluknrGB+eB8FoJIxaGPi7glmpgFn2reYrsVSqinhZX0IOIA7BHQAkdKJS
-         oQLB8QBrENJSq3LdtDZwm2jRb58UL7nVhOS7ikSlYGHnWbjgP+bI7Klk86evTU6XbWRS
-         xTVvVFuXp1I3p19NdGGvSnk2acvZD5Gqq3b0Vjak8PLwlFcHngqgyXguUeLW0JmzCmLL
-         RZDtWP76mqIU2pmRVQaf3XRi9fbDKwlyiQilSsGKimqVBBq2QB69xLFMbv7r11mV59xH
-         LP5dKCu4NjkKabpjQgtLuAhQcnLamj1kOBErJrNaCKg1q0F0+99DMdn/Sx2ofBHxvwqh
-         9Dyw==
+        d=google.com; s=20230601; t=1742714715; x=1743319515; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ocoek1h3wHR+5f+ll4cNEMjKwfXiGgCdyPNt9yxsz0c=;
+        b=HX2sVng8oXl2aqg2rbx0PNA7lDuIc47L6wG6gSjRyO8nsjUdj+0iwvhbm/+Ny/umJ0
+         eHvfYsbYT6YV0AGhnOuzeXZDmcE5BY2tq/TZlqfnMm/Rqrr78ly4LgNLYXUQWh2PKQoZ
+         HGT0v+67IoLQUBiOYeQ9dzX6h7jAzVhYP4ProZVQyZ4F7RX0alC3f4M4l4oszPztg6PM
+         I6u/6kyGglQHYnKCXW22LruWXLXqowOAdKVrWO8FhIZKzaslkQUEsNCRzft6zW3Ze+Vi
+         AcB3v0FtKy//FwnniewPOCUyKI7YuMnHdxLDlMcygZ3HNEN5HMjAMizTBUnfJd5aaCg+
+         sivg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742714094; x=1743318894;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=hSg8v2veHrUXZxak/qhrNIhIgEeYWoo3lRbNC7Kvpd4=;
-        b=NuAqlyCjkdTGLdSToBrSmhjjMBF48oVafaMz3hm/57rqIX62NFb17vIVQkJVwwjb5Q
-         7rmNpom0Y0zonpT2WFjMpQq6SQEPBlhRJoqj7G/eimIuJ/lPEBiYvRsTXjf+BwRH4okA
-         qBbp9ksduIoHu3pRJXQ6Lg31ZjMcFFcTuK17A/Ao/+HKSHB50q5tCdxa3oIrdt276gZJ
-         LUBsARyw7tmItM+fkyKC3AONUQpPke+vJRpxdUB/1cdcsGXxT7IhpMj+0GMhraq6qGQ1
-         p4RB7jiKEPLZJmGpM+30VrZCCvljQNfUud6S6Egb54xVJCV1ngrZjiKqAArC48/R6h3B
-         rqXQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU+fVHSTHRCAgK7SHeoxRIZJd/i81+/P0BBOajWIuJMd/Rm3D+4gN7wlTITd6GAZ5HSM+VSFxIwIBYYSI0=@vger.kernel.org, AJvYcCVioyVD3l5526vVVFcZojoKYCJz7ouPTubdzqJ43ZF1KKq3c+9sgUkBmGwfL5wJXkpcOPRJH4QVnKQ=@vger.kernel.org, AJvYcCXrnG7U6gq6Wk+g1T/dK4SdziJzR14gaZ8NtxlZklfXaM4c5TgCvc3RyrFnWhpnhZYhX0cbY3Slgf3ayiY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxADnoH749z4DoBbilhxkCdh2szg6S43AvBWZb0otGywUkfHbrh
-	h1IK5zLJFgZ4AT4COcxYrEtgfB+AXGYFBDhdPrTPQqse/gg7RidF
-X-Gm-Gg: ASbGncsRmtWbgpYWdibZafVQQhd+9x1TCbY7tCDJFCLLutvC7/PbCgGlheqLLB/P/Po
-	bD68BF7/iJp+MrIYeLQCfNHlqsoVeViF7JBPvfXuQyqv8tK4c7g4OaDxgj0eApfmT8i7nQ8iyua
-	vNYc3TwJdTLIZuzQahhM3C9atDxkIolPEfy2dGCuelifXjsv7bBgYfRrlI0AbFg7Fv6RithD6eJ
-	lgOPID6P1YBTkWTdmD33mEVQ/eta5CNSfRNu51Xh9+2Ansq3mXuMLfAr+zwIb26l4dh/h/78Ojk
-	TPfilf0LOZl7sHrVEIwd84VAIsYy2QFFWLEB
-X-Google-Smtp-Source: AGHT+IFApD761jQAXGhTGK/msqA+/A3HLe3e4xYkIn4DzR8q3nCb9rTaSF7rKsiPu2i5ZLE6Nn0ljA==
-X-Received: by 2002:a05:6402:42cb:b0:5e4:c026:2d7a with SMTP id 4fb4d7f45d1cf-5ebcd474182mr6877637a12.16.1742714094241;
-        Sun, 23 Mar 2025 00:14:54 -0700 (PDT)
-Received: from xeon.. ([188.163.112.51])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebccfaecfbsm4218283a12.41.2025.03.23.00.14.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 00:14:53 -0700 (PDT)
-From: Svyatoslav Ryhel <clamor95@gmail.com>
-To: Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Sebastian Reichel <sre@kernel.org>,
-	Svyatoslav Ryhel <clamor95@gmail.com>
-Cc: devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-tegra@vger.kernel.org,
-	linux-pm@vger.kernel.org
-Subject: [PATCH v1 3/4] power/supply: Add driver for Pegatron Chagall battery
-Date: Sun, 23 Mar 2025 09:14:23 +0200
-Message-ID: <20250323071424.48779-4-clamor95@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250323071424.48779-1-clamor95@gmail.com>
-References: <20250323071424.48779-1-clamor95@gmail.com>
+        d=1e100.net; s=20230601; t=1742714715; x=1743319515;
+        h=cc:to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ocoek1h3wHR+5f+ll4cNEMjKwfXiGgCdyPNt9yxsz0c=;
+        b=IW3xlHj7oL/y4lxUjw4u+lO2/oJMy0J3SmZW+GuUpwxZ7TggeiUSItvfQXQffRckdK
+         DvW/Hwk1/OH6eKBGtPM+ZmTEU5gnm53wRgM3F1832DwAyjfEV+vLumfua2xNHW738HaZ
+         T3irCry8twDP8sN/L9z1c6wYEhGvbiPCHpQt1PCTrdxVQdekrLJwIDw1al0P+4MyltVQ
+         VCYqB7f36I3dg4JHp+36Zj91IP7RPpuG8xq/PkbPpOA/KVJlTaNeKMW7YrJw6IyTyhJI
+         fGlwSozEb//g7tglPCm3JdWMoWyqI/KS/K1vHBK3G+PAUXuR13xBeht1Lg+ISdxaren2
+         KTvQ==
+X-Gm-Message-State: AOJu0YxW3GIPRzrJidox9cHwEAXoww49MwCEuRI+N4oj09Zz7HhYeEpU
+	/hQDMxDS1XH4WMEVSp8rJyQtIXpsvJSmr5ELW4Atc+asGuTDQpRxikVjIhauEeBj2Io0D2tBiNR
+	/l8zsm4giGg==
+X-Google-Smtp-Source: AGHT+IEWgWZF6N/oTjsn9wQHDrFwRXFS8i6IktZJ+/0O2oyPVZJ2yRW/Ir7R6ApD3ALqTYnYnIF5efzt6GHTfQ==
+X-Received: from qkbdp6.prod.google.com ([2002:a05:620a:2b46:b0:7c5:3ce0:bd3e])
+ (user=edumazet job=prod-delivery.src-stubby-dispatcher) by
+ 2002:a05:620a:4720:b0:7c5:4c49:76a6 with SMTP id af79cd13be357-7c5ba12d9bemr1402211385a.8.1742714715634;
+ Sun, 23 Mar 2025 00:25:15 -0700 (PDT)
+Date: Sun, 23 Mar 2025 07:25:11 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250323072511.2353342-1-edumazet@google.com>
+Subject: [PATCH] x86/alternatives: remove false sharing in poke_int3_handler()
+From: Eric Dumazet <edumazet@google.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
+	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org, 
+	bpf@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>, 
+	Greg Thelen <gthelen@google.com>, Stephane Eranian <eranian@google.com>, 
+	Eric Dumazet <edumazet@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The Pegatron Chagall is an Android tablet utilizing a customized Cypress
-CG7153AM microcontroller (MCU) as its battery fuel gauge. It supports a
-single-cell battery and features a dual-color charging LED.
+eBPF programs can be run 20,000,000+ times per second on busy servers.
 
-Signed-off-by: Svyatoslav Ryhel <clamor95@gmail.com>
+Whenever /proc/sys/kernel/bpf_stats_enabled is turned off,
+hundreds of calls sites are patched from text_poke_bp_batch()
+and we see a critical loss of performance due to false sharing
+on bp_desc.refs lasting up to three seconds.
+
+   51.30%  server_bin       [kernel.kallsyms]           [k] poke_int3_handler
+            |
+            |--46.45%--poke_int3_handler
+            |          exc_int3
+            |          asm_exc_int3
+            |          |
+            |          |--24.26%--cls_bpf_classify
+            |          |          tcf_classify
+            |          |          __dev_queue_xmit
+            |          |          ip6_finish_output2
+            |          |          ip6_output
+            |          |          ip6_xmit
+            |          |          inet6_csk_xmit
+            |          |          __tcp_transmit_skb
+            |          |          |
+            |          |          |--9.00%--tcp_v6_do_rcv
+            |          |          |          tcp_v6_rcv
+            |          |          |          ip6_protocol_deliver_rcu
+            |          |          |          ip6_rcv_finish
+            |          |          |          ipv6_rcv
+            |          |          |          __netif_receive_skb
+            |          |          |          process_backlog
+            |          |          |          __napi_poll
+            |          |          |          net_rx_action
+            |          |          |          __softirqentry_text_start
+            |          |          |          asm_call_sysvec_on_stack
+            |          |          |          do_softirq_own_stack
+
+Fix this by replacing bp_desc.refs with a per-cpu bp_refs.
+
+Before the patch, on a host with 240 cpus (480 threads):
+
+echo 0 >/proc/sys/kernel/bpf_stats_enabled
+text_poke_bp_batch(nr_entries=2)
+        text_poke_bp_batch+1
+        text_poke_finish+27
+        arch_jump_label_transform_apply+22
+        jump_label_update+98
+        __static_key_slow_dec_cpuslocked+64
+        static_key_slow_dec+31
+        bpf_stats_handler+236
+        proc_sys_call_handler+396
+        vfs_write+761
+        ksys_write+102
+        do_syscall_64+107
+        entry_SYSCALL_64_after_hwframe+103
+Took 324 usec
+
+text_poke_bp_batch(nr_entries=164)
+        text_poke_bp_batch+1
+        text_poke_finish+27
+        arch_jump_label_transform_apply+22
+        jump_label_update+98
+        __static_key_slow_dec_cpuslocked+64
+        static_key_slow_dec+31
+        bpf_stats_handler+236
+        proc_sys_call_handler+396
+        vfs_write+761
+        ksys_write+102
+        do_syscall_64+107
+        entry_SYSCALL_64_after_hwframe+103
+Took 2655300 usec
+
+After this patch:
+
+echo 0 >/proc/sys/kernecho 0 >/proc/sys/kernel/bpf_stats_enabled
+text_poke_bp_batch(nr_entries=2)
+        text_poke_bp_batch+1
+        text_poke_finish+27
+        arch_jump_label_transform_apply+22
+        jump_label_update+98
+        __static_key_slow_dec_cpuslocked+64
+        static_key_slow_dec+31
+        bpf_stats_handler+236
+        proc_sys_call_handler+396
+        vfs_write+761
+        ksys_write+102
+        do_syscall_64+107
+        entry_SYSCALL_64_after_hwframe+103
+Took 519 usec
+
+text_poke_bp_batch(nr_entries=164)
+        text_poke_bp_batch+1
+        text_poke_finish+27
+        arch_jump_label_transform_apply+22
+        jump_label_update+98
+        __static_key_slow_dec_cpuslocked+64
+        static_key_slow_dec+31
+        bpf_stats_handler+236
+        proc_sys_call_handler+396
+        vfs_write+761
+        ksys_write+102
+        do_syscall_64+107
+        entry_SYSCALL_64_after_hwframe+103
+Took 702 usec
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
 ---
- drivers/power/supply/Kconfig           |  12 +
- drivers/power/supply/Makefile          |   1 +
- drivers/power/supply/chagall-battery.c | 308 +++++++++++++++++++++++++
- 3 files changed, 321 insertions(+)
- create mode 100644 drivers/power/supply/chagall-battery.c
+ arch/x86/kernel/alternative.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/power/supply/Kconfig b/drivers/power/supply/Kconfig
-index 9f2eef6787f7..d0fc9db524bd 100644
---- a/drivers/power/supply/Kconfig
-+++ b/drivers/power/supply/Kconfig
-@@ -107,6 +107,18 @@ config BATTERY_ACT8945A
- 	  Say Y here to enable support for power supply provided by
- 	  Active-semi ActivePath ACT8945A charger.
+diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
+index c71b575bf229..d7afbf822c45 100644
+--- a/arch/x86/kernel/alternative.c
++++ b/arch/x86/kernel/alternative.c
+@@ -2137,28 +2137,29 @@ struct text_poke_loc {
+ struct bp_patching_desc {
+ 	struct text_poke_loc *vec;
+ 	int nr_entries;
+-	atomic_t refs;
+ };
  
-+config BATTERY_CHAGALL
-+	tristate "Pegatron Chagall battery driver"
-+	depends on I2C
-+	depends on LEDS_CLASS
-+	help
-+	  Say Y to include support for Cypress CG7153AM IC based battery
-+	  fuel gauge with custom firmware found in Pegatron Chagall based
-+	  tablet line.
++static DEFINE_PER_CPU(atomic_t, bp_refs);
 +
-+	  This driver can also be built as a module. If so, the module will be
-+	  called chagall-battery.
+ static struct bp_patching_desc bp_desc;
+ 
+ static __always_inline
+ struct bp_patching_desc *try_get_desc(void)
+ {
+-	struct bp_patching_desc *desc = &bp_desc;
++	atomic_t *refs = this_cpu_ptr(&bp_refs);
+ 
+-	if (!raw_atomic_inc_not_zero(&desc->refs))
++	if (!raw_atomic_inc_not_zero(refs))
+ 		return NULL;
+ 
+-	return desc;
++	return &bp_desc;
+ }
+ 
+ static __always_inline void put_desc(void)
+ {
+-	struct bp_patching_desc *desc = &bp_desc;
++	atomic_t *refs = this_cpu_ptr(&bp_refs);
+ 
+ 	smp_mb__before_atomic();
+-	raw_atomic_dec(&desc->refs);
++	raw_atomic_dec(refs);
+ }
+ 
+ static __always_inline void *text_poke_addr(struct text_poke_loc *tp)
+@@ -2191,9 +2192,9 @@ noinstr int poke_int3_handler(struct pt_regs *regs)
+ 	 * Having observed our INT3 instruction, we now must observe
+ 	 * bp_desc with non-zero refcount:
+ 	 *
+-	 *	bp_desc.refs = 1		INT3
+-	 *	WMB				RMB
+-	 *	write INT3			if (bp_desc.refs != 0)
++	 *	bp_refs = 1		INT3
++	 *	WMB			RMB
++	 *	write INT3		if (bp_refs != 0)
+ 	 */
+ 	smp_rmb();
+ 
+@@ -2299,7 +2300,8 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 	 * Corresponds to the implicit memory barrier in try_get_desc() to
+ 	 * ensure reading a non-zero refcount provides up to date bp_desc data.
+ 	 */
+-	atomic_set_release(&bp_desc.refs, 1);
++	for_each_possible_cpu(i)
++		atomic_set_release(per_cpu_ptr(&bp_refs, i), 1);
+ 
+ 	/*
+ 	 * Function tracing can enable thousands of places that need to be
+@@ -2413,8 +2415,12 @@ static void text_poke_bp_batch(struct text_poke_loc *tp, unsigned int nr_entries
+ 	/*
+ 	 * Remove and wait for refs to be zero.
+ 	 */
+-	if (!atomic_dec_and_test(&bp_desc.refs))
+-		atomic_cond_read_acquire(&bp_desc.refs, !VAL);
++	for_each_possible_cpu(i) {
++		atomic_t *refs = per_cpu_ptr(&bp_refs, i);
 +
- config BATTERY_CPCAP
- 	tristate "Motorola CPCAP PMIC battery driver"
- 	depends on MFD_CPCAP && IIO
-diff --git a/drivers/power/supply/Makefile b/drivers/power/supply/Makefile
-index 59c4a9f40d28..4ecf48a33fdd 100644
---- a/drivers/power/supply/Makefile
-+++ b/drivers/power/supply/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_CHARGER_ADP5061)	+= adp5061.o
- obj-$(CONFIG_BATTERY_ACT8945A)	+= act8945a_charger.o
- obj-$(CONFIG_BATTERY_AXP20X)	+= axp20x_battery.o
- obj-$(CONFIG_CHARGER_AXP20X)	+= axp20x_ac_power.o
-+obj-$(CONFIG_BATTERY_CHAGALL)	+= chagall-battery.o
- obj-$(CONFIG_BATTERY_CPCAP)	+= cpcap-battery.o
- obj-$(CONFIG_BATTERY_CW2015)	+= cw2015_battery.o
- obj-$(CONFIG_BATTERY_DS2760)	+= ds2760_battery.o
-diff --git a/drivers/power/supply/chagall-battery.c b/drivers/power/supply/chagall-battery.c
-new file mode 100644
-index 000000000000..1a278331efe7
---- /dev/null
-+++ b/drivers/power/supply/chagall-battery.c
-@@ -0,0 +1,308 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+#include <linux/array_size.h>
-+#include <linux/delay.h>
-+#include <linux/devm-helpers.h>
-+#include <linux/err.h>
-+#include <linux/i2c.h>
-+#include <linux/leds.h>
-+#include <linux/mod_devicetable.h>
-+#include <linux/module.h>
-+#include <linux/power_supply.h>
-+#include <linux/regmap.h>
-+
-+#define CHAGALL_REG_LED_AMBER				0x60
-+#define CHAGALL_REG_LED_WHITE				0x70
-+#define CHAGALL_REG_BATTERY_TEMPERATURE			0xa2
-+#define CHAGALL_REG_BATTERY_VOLTAGE			0xa4
-+#define CHAGALL_REG_BATTERY_CURRENT			0xa6
-+#define CHAGALL_REG_BATTERY_CAPACITY			0xa8
-+#define CHAGALL_REG_BATTERY_CHARGING_CURRENT		0xaa
-+#define CHAGALL_REG_BATTERY_CHARGING_VOLTAGE		0xac
-+#define CHAGALL_REG_BATTERY_STATUS			0xae
-+#define   BATTERY_DISCHARGING				BIT(6)
-+#define   BATTERY_FULL_CHARGED				BIT(5)
-+#define   BATTERY_FULL_DISCHARGED			BIT(4)
-+#define CHAGALL_REG_BATTERY_REMAIN_CAPACITY		0xb0
-+#define CHAGALL_REG_BATTERY_FULL_CAPACITY		0xb2
-+#define CHAGALL_REG_MAX_COUNT				0xb4
-+
-+#define CHAGALL_BATTERY_DATA_REFRESH			5000
-+#define TEMP_CELSIUS_OFFSET				2731
-+
-+static const struct regmap_config chagall_battery_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+	.max_register = CHAGALL_REG_MAX_COUNT,
-+	.reg_format_endian = REGMAP_ENDIAN_LITTLE,
-+	.val_format_endian = REGMAP_ENDIAN_LITTLE,
-+};
-+
-+struct chagall_battery_data {
-+	struct regmap *regmap;
-+	struct led_classdev amber_led;
-+	struct led_classdev white_led;
-+	struct power_supply *battery;
-+	struct delayed_work poll_work;
-+	u16 last_state;
-+};
-+
-+static void chagall_led_set_brightness_amber(struct led_classdev *led,
-+					     enum led_brightness brightness)
-+{
-+	struct chagall_battery_data *cg =
-+		container_of(led, struct chagall_battery_data, amber_led);
-+
-+	regmap_write(cg->regmap, CHAGALL_REG_LED_AMBER, brightness);
-+}
-+
-+static void chagall_led_set_brightness_white(struct led_classdev *led,
-+					     enum led_brightness brightness)
-+{
-+	struct chagall_battery_data *cg =
-+		container_of(led, struct chagall_battery_data, white_led);
-+
-+	regmap_write(cg->regmap, CHAGALL_REG_LED_WHITE, brightness);
-+}
-+
-+static void chagall_leds_status_update(struct chagall_battery_data *cg, int state)
-+{
-+	switch (state) {
-+	case POWER_SUPPLY_STATUS_FULL:
-+		led_set_brightness(&cg->amber_led, LED_OFF);
-+		led_set_brightness(&cg->white_led,  LED_ON);
-+		break;
-+
-+	case POWER_SUPPLY_STATUS_CHARGING:
-+		led_set_brightness(&cg->white_led, LED_OFF);
-+		led_set_brightness(&cg->amber_led,  LED_ON);
-+		break;
-+
-+	default:
-+		led_set_brightness(&cg->amber_led, LED_OFF);
-+		led_set_brightness(&cg->white_led, LED_OFF);
-+		break;
++		if (!atomic_dec_and_test(refs))
++			atomic_cond_read_acquire(refs, !VAL);
 +	}
-+}
-+
-+static const enum power_supply_property chagall_battery_properties[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_VOLTAGE_MAX,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_MAX,
-+	POWER_SUPPLY_PROP_CAPACITY,
-+	POWER_SUPPLY_PROP_TEMP,
-+	POWER_SUPPLY_PROP_CHARGE_FULL,
-+	POWER_SUPPLY_PROP_CHARGE_NOW,
-+};
-+
-+static const unsigned int chagall_battery_prop_offs[] = {
-+	[POWER_SUPPLY_PROP_TEMP] = CHAGALL_REG_BATTERY_TEMPERATURE,
-+	[POWER_SUPPLY_PROP_VOLTAGE_NOW] = CHAGALL_REG_BATTERY_VOLTAGE,
-+	[POWER_SUPPLY_PROP_CURRENT_NOW] = CHAGALL_REG_BATTERY_CURRENT,
-+	[POWER_SUPPLY_PROP_CAPACITY] = CHAGALL_REG_BATTERY_CAPACITY,
-+	[POWER_SUPPLY_PROP_CURRENT_MAX] = CHAGALL_REG_BATTERY_CHARGING_CURRENT,
-+	[POWER_SUPPLY_PROP_VOLTAGE_MAX] = CHAGALL_REG_BATTERY_CHARGING_VOLTAGE,
-+	[POWER_SUPPLY_PROP_STATUS] = CHAGALL_REG_BATTERY_STATUS,
-+	[POWER_SUPPLY_PROP_CHARGE_NOW] = CHAGALL_REG_BATTERY_REMAIN_CAPACITY,
-+	[POWER_SUPPLY_PROP_CHARGE_FULL] = CHAGALL_REG_BATTERY_FULL_CAPACITY,
-+};
-+
-+static int chagall_battery_get_value(struct chagall_battery_data *cg,
-+				     enum power_supply_property psp, u32 *val)
-+{
-+	if (psp >= ARRAY_SIZE(chagall_battery_prop_offs))
-+		return -EINVAL;
-+	if (!chagall_battery_prop_offs[psp])
-+		return -EINVAL;
-+
-+	/* Battery data is stored in 2 consecutive registers with little-endian */
-+	return regmap_bulk_read(cg->regmap, chagall_battery_prop_offs[psp], val, 2);
-+}
-+
-+static int chagall_battery_get_property(struct power_supply *psy,
-+					enum power_supply_property psp,
-+					union power_supply_propval *val)
-+{
-+	struct chagall_battery_data *cg = power_supply_get_drvdata(psy);
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_PRESENT:
-+		val->intval = 1;
-+		break;
-+
-+	default:
-+		ret = chagall_battery_get_value(cg, psp, &val->intval);
-+		if (ret)
-+			return ret;
-+
-+		switch (psp) {
-+		case POWER_SUPPLY_PROP_TEMP:
-+			val->intval -= TEMP_CELSIUS_OFFSET;
-+			break;
-+
-+		case POWER_SUPPLY_PROP_VOLTAGE_MAX:
-+		case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-+		case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		case POWER_SUPPLY_PROP_CURRENT_NOW:
-+		case POWER_SUPPLY_PROP_CHARGE_FULL:
-+		case POWER_SUPPLY_PROP_CHARGE_NOW:
-+			val->intval *= 1000;
-+			break;
-+
-+		case POWER_SUPPLY_PROP_STATUS:
-+			if (val->intval & BATTERY_FULL_CHARGED)
-+				val->intval = POWER_SUPPLY_STATUS_FULL;
-+			else if (val->intval & BATTERY_FULL_DISCHARGED)
-+				val->intval = POWER_SUPPLY_STATUS_NOT_CHARGING;
-+			else if (val->intval & BATTERY_DISCHARGING)
-+				val->intval = POWER_SUPPLY_STATUS_DISCHARGING;
-+			else
-+				val->intval = POWER_SUPPLY_STATUS_CHARGING;
-+			break;
-+
-+		default:
-+			break;
-+		}
-+
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
-+static void chagall_battery_poll_work(struct work_struct *work)
-+{
-+	struct chagall_battery_data *cg =
-+		container_of(work, struct chagall_battery_data, poll_work.work);
-+	u32 state;
-+	int ret;
-+
-+	ret = chagall_battery_get_value(cg, POWER_SUPPLY_PROP_STATUS, &state);
-+	if (ret)
-+		return;
-+
-+	if (state & BATTERY_FULL_CHARGED)
-+		state = POWER_SUPPLY_STATUS_FULL;
-+	else if (state & BATTERY_DISCHARGING)
-+		state = POWER_SUPPLY_STATUS_DISCHARGING;
-+	else
-+		state = POWER_SUPPLY_STATUS_CHARGING;
-+
-+	if (cg->last_state != state) {
-+		cg->last_state = state;
-+		power_supply_changed(cg->battery);
-+	}
-+
-+	chagall_leds_status_update(cg, state);
-+
-+	/* continuously send uevent notification */
-+	schedule_delayed_work(&cg->poll_work,
-+			      msecs_to_jiffies(CHAGALL_BATTERY_DATA_REFRESH));
-+}
-+
-+static const struct power_supply_desc chagall_battery_desc = {
-+	.name = "chagall-battery",
-+	.type = POWER_SUPPLY_TYPE_BATTERY,
-+	.properties = chagall_battery_properties,
-+	.num_properties = ARRAY_SIZE(chagall_battery_properties),
-+	.get_property = chagall_battery_get_property,
-+	.external_power_changed = power_supply_changed,
-+};
-+
-+static int chagall_battery_probe(struct i2c_client *client)
-+{
-+	struct chagall_battery_data *cg;
-+	struct device *dev = &client->dev;
-+	struct power_supply_config cfg = { };
-+	int ret;
-+
-+	cg = devm_kzalloc(dev, sizeof(*cg), GFP_KERNEL);
-+	if (!cg)
-+		return -ENOMEM;
-+
-+	cfg.drv_data = cg;
-+	cfg.fwnode = dev_fwnode(dev);
-+
-+	i2c_set_clientdata(client, cg);
-+
-+	cg->regmap = devm_regmap_init_i2c(client, &chagall_battery_regmap_config);
-+	if (IS_ERR(cg->regmap))
-+		return dev_err_probe(dev, PTR_ERR(cg->regmap), "cannot allocate regmap\n");
-+
-+	cg->last_state = POWER_SUPPLY_STATUS_UNKNOWN;
-+	cg->battery = devm_power_supply_register(dev, &chagall_battery_desc, &cfg);
-+	if (IS_ERR(cg->battery))
-+		return dev_err_probe(dev, PTR_ERR(cg->battery), "failed to register power supply\n");
-+
-+	cg->amber_led.name = "power::amber";
-+	cg->amber_led.max_brightness = 1;
-+	cg->amber_led.flags = LED_CORE_SUSPENDRESUME;
-+	cg->amber_led.brightness_set = chagall_led_set_brightness_amber;
-+
-+	ret = devm_led_classdev_register(dev, &cg->amber_led);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to register amber LED\n");
-+
-+	cg->white_led.name = "power::white";
-+	cg->white_led.max_brightness = 1;
-+	cg->white_led.flags = LED_CORE_SUSPENDRESUME;
-+	cg->white_led.brightness_set = chagall_led_set_brightness_white;
-+
-+	ret = devm_led_classdev_register(dev, &cg->white_led);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "failed to register white LED\n");
-+
-+	led_set_brightness(&cg->amber_led, LED_OFF);
-+	led_set_brightness(&cg->white_led, LED_OFF);
-+
-+	ret = devm_delayed_work_autocancel(dev, &cg->poll_work, chagall_battery_poll_work);
-+	if (ret)
-+		return ret;
-+
-+	schedule_delayed_work(&cg->poll_work, msecs_to_jiffies(CHAGALL_BATTERY_DATA_REFRESH));
-+	return 0;
-+}
-+
-+static int __maybe_unused chagall_battery_suspend(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct chagall_battery_data *cg = i2c_get_clientdata(client);
-+
-+	cancel_delayed_work_sync(&cg->poll_work);
-+	return 0;
-+}
-+
-+static int __maybe_unused chagall_battery_resume(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct chagall_battery_data *cg = i2c_get_clientdata(client);
-+
-+	schedule_delayed_work(&cg->poll_work, msecs_to_jiffies(CHAGALL_BATTERY_DATA_REFRESH));
-+	return 0;
-+}
-+
-+static SIMPLE_DEV_PM_OPS(chagall_battery_pm_ops,
-+			 chagall_battery_suspend, chagall_battery_resume);
-+
-+static const struct of_device_id chagall_of_match[] = {
-+	{ .compatible = "pegatron,chagall-ec" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, chagall_of_match);
-+
-+static struct i2c_driver chagall_battery_driver = {
-+	.driver = {
-+		.name = "chagall-battery",
-+		.pm = &chagall_battery_pm_ops,
-+		.of_match_table = chagall_of_match,
-+	},
-+	.probe = chagall_battery_probe,
-+};
-+module_i2c_driver(chagall_battery_driver);
-+
-+MODULE_AUTHOR("Svyatoslav Ryhel <clamor95@gmail.com>");
-+MODULE_DESCRIPTION("Pegatron Chagall fuel gauge driver");
-+MODULE_LICENSE("GPL");
+ }
+ 
+ static void text_poke_loc_init(struct text_poke_loc *tp, void *addr,
 -- 
-2.43.0
+2.49.0.395.g12beb8f557-goog
 
