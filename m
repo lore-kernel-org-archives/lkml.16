@@ -1,111 +1,80 @@
-Received: from mx0a-00069f02.pphosted.com (mx0a-00069f02.pphosted.com [205.220.165.32])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD7555CB8;
-	Sun, 23 Mar 2025 12:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.165.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E8E8D51C;
+	Sun, 23 Mar 2025 12:51:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742734166; cv=none; b=LAs7hxobPv+t091CJwyjP0DUC9M1BhLSAMJ7nz7CDXdIZ+TuimvJzUp2yvdfZZcB3U1RtVgiev7LSx2YfU/Z+M6RvPmbsjVilc379DS5fS6hYxcIyTuVWVznVU1w1g1NrWSdXZbGs/cBv097gVpctFivV6Sgfjz6O6o8C/Dk8rw=
+	t=1742734265; cv=none; b=T9s4KTo4YXq0hMBjp3+50HswF793yWaOP+siNH91RKX/1uD1kR/XvLcXzNC5Z/bz+C+FwMLmoNUrIkRpD0QgcNRhl2ppkon+ijgWDiND8feLKBeIsNZYvpZ228mpAN6RMBowLdw2Ikv11jNxlx1vscK/rgJkuQMKCvHPqbKhMVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742734166; c=relaxed/simple;
-	bh=2QFijmRecsDr/RNljq0t529cnNwNrJ3nfMyjHsviz8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TaJVmInPw6Ev2dd8s0s9i5Qi+dWsVovI+UX21ftdaDWSXY49BHu7+m7ZRIunqoNjm61mzyRQqflvYCAB55a+aITV0a/VzFdGfbHlz6fBokzUYDWN6OVI+zBytz/EIx5CHFciQ4x5HVKOcWOM+hmOyuH10RczuIsVihusexuctBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=aWL/Mcsn; arc=none smtp.client-ip=205.220.165.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="aWL/Mcsn"
-Received: from pps.filterd (m0246627.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52N6wa7x025718;
-	Sun, 23 Mar 2025 12:49:11 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=cc
-	:content-transfer-encoding:date:from:message-id:mime-version
-	:subject:to; s=corp-2023-11-20; bh=y1p8efBTlVkGZuPqovRJRIEED8k9c
-	61FVODzJx6N494=; b=aWL/McsnxrCM9uobUxcWd1nwQJUWHW9CSwuMnZnjj0X3d
-	7JOMuVzDQTzRBPvSIMSvQPN+ly0NNddmuCtqN13fePOO+2Awk+hD42cEDfS6/O+E
-	ISyYgtjL5jzq3ERb6V4aj24yX+IagtugI7VSRodQXY6403kfh5R6kKPtCH/gdFXs
-	pEItFa4MPgqkS+btX6n88PSXCyt0d2i7o4ycTcb2o20cP+FnZZIk5fjwqigHtV0o
-	nYfQQ9QVfNdv8JTxRiVWNOudgyXT//EXgJzD0sWxiIDB2xCWV/nIr1JU2nLoAjOS
-	uld6c9CPpasWb7AP5yLWIg60cYP00qmhYXUMW5+tA==
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.appoci.oracle.com [147.154.114.232])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 45hn7dj3rm-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 23 Mar 2025 12:49:11 +0000 (GMT)
-Received: from pps.filterd (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (8.18.1.2/8.18.1.2) with ESMTP id 52NCU31q029893;
-	Sun, 23 Mar 2025 12:49:10 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTPS id 45jjbx89d1-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sun, 23 Mar 2025 12:49:10 +0000
-Received: from phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 52NCnAqp026147;
-	Sun, 23 Mar 2025 12:49:10 GMT
-Received: from ca-dev112.us.oracle.com (ca-dev112.us.oracle.com [10.129.136.47])
-	by phxpaimrmta02.imrmtpd1.prodappphxaev1.oraclevcn.com (PPS) with ESMTP id 45jjbx89cu-1;
-	Sun, 23 Mar 2025 12:49:10 +0000
-From: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
-        =?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-        Matthew Brost <matthew.brost@intel.com>,
-        intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc: dan.carpenter@linaro.org, kernel-janitors@vger.kernel.org,
-        error27@gmail.com, harshit.m.mogalapalli@oracle.com
-Subject: [PATCH] drm/xe/svm: fix dereferencing error pointer in drm_gpusvm_range_alloc()
-Date: Sun, 23 Mar 2025 05:49:06 -0700
-Message-ID: <20250323124907.3946370-1-harshit.m.mogalapalli@oracle.com>
-X-Mailer: git-send-email 2.46.0
+	s=arc-20240116; t=1742734265; c=relaxed/simple;
+	bh=BhF8gcfapWyM4aGiOj/iWMLe48MJ73X2c6jX8fS/T2c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cb0VjQ2I3BcK8+naWirsQi6zRwoy2e4ZxyL+2sCI8CogJ9pcVi8utRfC2vHBkud/IlBnn011tFDZ7XR5vz1wDh19ono7MZnHnNK8kYeg8ZiuEbfKB7VZxaWqNwVsrj5/URHnTJT+OGngKC79Ka/rEkJjUIshtF+LAZcVaTYFKo4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22548a28d0cso55156075ad.3;
+        Sun, 23 Mar 2025 05:51:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742734263; x=1743339063;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=swiakFE0BnbY2gdpf+4Mq3owvw/sqrogLFaAdc3fltg=;
+        b=gbSfx/ObMkmRqKQGmStIj8jL3kd1tjxgcvbYBeh00Fwpl2UFaMrb4rpxfpnV3p3B8T
+         HJLcADSXWUcKcvUKRT6JfYzlqM6wFq4pj/u8XwjEPpyy77U0opHcXT1MIJJXWrP5IbSf
+         8p97Dah6sfe/6oT7nUayLFvzbc/5BGMiwAjJIwChCs2xBfmhK4Bs4Jp9oB0MyxNhqc29
+         vEyX9MiL7Qd9WCdSWYsCEWgIZ4+HB7b4hqR8ftnx7DitNXpEt5mJyiLsXxsf3OE47obX
+         RGmgYua6k/kJVxzi1ot2Ht0ZscV7Ty0ejxgT6Re/dpUqt4U7Sf50rpFaOVeFQuuelJlb
+         UQLA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzJxF0lqUumBqCnGKrCYWiLuCMxSSNVlGItfHhKhr/uHJ+bErsMD7XAlc08ANaposJBvAmLSAsK8KJ@vger.kernel.org, AJvYcCVPujmCtFbiLnxjowp9wappcpB3U9oVBoEoHLXaWQLAIVLc7TSBK5p+jpl67azNXyDL2OaXEKBm8eLGc/Xv@vger.kernel.org, AJvYcCWv2yYoHytrk4virGYEdZVK0en9/YdyHV3FUfiiyMTLQ62c7EZJHuIob2x0j3EfKfXFz4kcdsrEGuc2@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhSdXhAqavRnivKx3ImeJSiLrmTAr5hQWm5z5YuLT3wcEbr0eY
+	46aX0OUqKKPgA2hIdADJa5fTiZQBrue1CINR9FMkOkfWlZ4R3ETgfZv19nocaSU=
+X-Gm-Gg: ASbGncv0yTkrOAp04Pt5JLniOj47tm+XJ4d8CkLtXXsiBh+hg8CwftAYecZucL6Uv6l
+	xAMADg6tj3E7F7tThWaK1OkiYosiiTVHP3UB0aI0LrOOH0f6bqqpRCs2PAaQB8w0DJ+gWrNXM3T
+	W3Vx346R8vk+foTz9AqIJndTVjNO4TBqqotxm1aTzrR3F2Zwsdk4i2a/iSWIp138kg/33s71pwg
+	+dnJPyY4oToUSf4tq9J2ylH4ITEq4c0SojUyNaUEbH7t7Clt1BCdZNKZgu1jB+yJ3BgdL6RDbxq
+	pADyLp83eGO0oyxaaVh6avGlobTEWXewlEj+pfwNQ+F6LV3V5x1+I914hSh//KLqP/V6wSz/4uP
+	0Z/o=
+X-Google-Smtp-Source: AGHT+IGtYS6hIcWqAZuSsZKMB4lCtvBiGtoQUPK7C7dOnn0+dCiK477pjuBz5dzjBas1XzjyQaQK4A==
+X-Received: by 2002:a17:902:d2d1:b0:224:24d5:f20a with SMTP id d9443c01a7336-22780e231a1mr178479015ad.48.1742734263537;
+        Sun, 23 Mar 2025 05:51:03 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-227811baf19sm51204155ad.149.2025.03.23.05.51.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 05:51:03 -0700 (PDT)
+Date: Sun, 23 Mar 2025 21:51:01 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Thippeswamy Havalige <thippeswamy.havalige@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org,
+	manivannan.sadhasivam@linaro.org, robh@kernel.org,
+	krzk+dt@kernel.org, conor+dt@kernel.org, linux-pci@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	michal.simek@amd.com, bharat.kumar.gogada@amd.com
+Subject: Re: [PATCH] PCI: xilinx-cpm: Add cpm5_csr register mapping for
+ CPM5_HOST1 variant
+Message-ID: <20250323125101.GI1902347@rocinante>
+References: <20250317124136.1317723-1-thippeswamy.havalige@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-23_06,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 spamscore=0 bulkscore=0
- suspectscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2502280000
- definitions=main-2503230093
-X-Proofpoint-GUID: cvCcg96ARbVDUoAZZm1Bw8SDjUXEjOoc
-X-Proofpoint-ORIG-GUID: cvCcg96ARbVDUoAZZm1Bw8SDjUXEjOoc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317124136.1317723-1-thippeswamy.havalige@amd.com>
 
-xe_svm_range_alloc() returns ERR_PTR(-ENOMEM) on failure and there is a
-dereference of "range" after that:
+Hello,
 
-	-->     range->gpusvm = gpusvm;
+> This commit updates the CPM5 variant check to include CPM5_HOST1.
+> Previously, only CPM5 was considered when mapping the "cpm_csr" register.
 
-In xe_svm_range_alloc(), when memory allocation fails return NULL
-instead to handle this situation.
+The subject says "cpm5_csr" but here we say "cpm_csr", I think it's only
+the latter?  Let me know, so I can update the branch correctly.  Maybe both
+things are correct.  I am just double-checking.
 
-Fixes: 99624bdff867 ("drm/gpusvm: Add support for GPU Shared Virtual Memory")
-Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-Closes: https://lore.kernel.org/all/adaef4dd-5866-48ca-bc22-4a1ddef20381@stanley.mountain/
-Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
----
-This is based on static analysis and only compile tested.
----
- drivers/gpu/drm/xe/xe_svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you!
 
-diff --git a/drivers/gpu/drm/xe/xe_svm.c b/drivers/gpu/drm/xe/xe_svm.c
-index 52e04e7e343f..a79df8cf1f36 100644
---- a/drivers/gpu/drm/xe/xe_svm.c
-+++ b/drivers/gpu/drm/xe/xe_svm.c
-@@ -80,7 +80,7 @@ xe_svm_range_alloc(struct drm_gpusvm *gpusvm)
- 
- 	range = kzalloc(sizeof(*range), GFP_KERNEL);
- 	if (!range)
--		return ERR_PTR(-ENOMEM);
-+		return NULL;
- 
- 	INIT_LIST_HEAD(&range->garbage_collector_link);
- 	xe_vm_get(gpusvm_to_vm(gpusvm));
--- 
-2.39.3
-
+	Krzysztof
