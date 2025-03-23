@@ -1,109 +1,184 @@
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5529FBA53;
-	Sun, 23 Mar 2025 22:38:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 002C318FC9D
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 22:39:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742769525; cv=none; b=ujgFDHX7zyGpcVVcfN4PsF2xhXmGoMpHvw732ggEqnWro4mNIg1DHOD4CA7BuMwPS9czRxkEKzZJTOE17OQJnlxtklCGQNROHZhmVCe1flJbOjhb4VY231gnuRYIbHbjxnFiIk//FgWX4rhG26Cb3GQNtKff6qcuaI3DAvGXczE=
+	t=1742769568; cv=none; b=AdGyQi2NkfMOok31cMIpQimJLzVJkrZYq3NF/E077g9I6K1cw+/zswqfdGrnQXSxk22eQx+4Gt9XRgxw5sTrwjJUhVcshRqCHWUZ8RrsZfkYqkmpcmvK3Yl9MWoi9FxaZ5uZQAFhMJjH1VVQjcYnTN/IqzHCY8AGH0kUDqyLxPI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742769525; c=relaxed/simple;
-	bh=8uR5ohFKmJASGtTtM8oHUKbD8u/x1XDPXbv76fmM6P0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aQt0GdwaGccZqkcjEgSv7A1db1cYxCrLCvqXLmwmgbm5SvRlOQiNbOC/6Umum5/jT9hbLy7/4pRb9hzp+Nr+yuFsOHKGsYFTVUHXFgeA1und4owdMwyuU+NfJVDRNYWl+1bHYtxu89x2I8aphKof6dolMEJj+rqKU77AdRy4Bo8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ayKGuSYU; arc=none smtp.client-ip=209.85.216.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742769568; c=relaxed/simple;
+	bh=6BfqEn0+AzamtK4yJsWD0fg9sFcnberX6yxt/ti3b7U=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=qmmk61IsiMH/I7A/WpQADkHI/q7AbXYoV8my8HxKbyyv9yt31L6V5yEHI4OBppwfEHF4BF/Rp4NUKWdCiPQW97JKfhMKPFgjlDmnvCrgKtAyzVn9zTx4kuyGeGXqpgj+ekUuH2D0CyRw30lVz0EUPhzaImz+Uyibx/NrbOBXDEo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AUILnTg5; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ayKGuSYU"
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2ff6b9a7f91so1158675a91.3;
-        Sun, 23 Mar 2025 15:38:44 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AUILnTg5"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5e6167d0536so7231890a12.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 15:39:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742769523; x=1743374323; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HdHrVSYx7MMsayXUAqSR1G/E1xOz51QHeLdrGhdbPXo=;
-        b=ayKGuSYU8ir4uDn5eu/l7lF9ErUYQ3GDFzyYUebLAVhBwi1nC257U+IwRMD+1UnriP
-         kjD20q9kRPdWYijfkYsvkAxjoRMl1eNV2mlgV72GloRzAL2J/bMZtoOhsQYEvTxremq1
-         5hpo8DfrdI1DfffWZGvE7L1WTFJTrH0CrVvLOwOuWqLKPkQVPFcV9LC5YdSiivl4ESHu
-         8HU9uRGjnaonHJ6/Xf5TG3mHpeqo/mCPn2tLQR2JqSq9hY0hubHMChyCzDCSNBMwod8G
-         yR8mAhFldQfnOuOaeb5ugcUbXHaD8nscuo1hxld7jwJVrc+3bDvp55UP6tRzurz41mZ4
-         HbmQ==
+        d=linaro.org; s=google; t=1742769564; x=1743374364; darn=vger.kernel.org;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HXb1pE2B5VZK7eIRvGjCX0bwONX10G0/gh8FJgs0P90=;
+        b=AUILnTg5pDyMjJktcjQAtmP1cN0YWyqEKXXo2XqFLorxlSzzY4rR4Y+GKYRE4L5Qpr
+         YAOgFfFJ8jr/0y3aYyYRjzmlWg1XGmdvjig6nStIcR5K3EEugCpiCrtqpnbYE0xX+VzX
+         cU3oJU3EJQ1l1Exx2tOzCS2IIEj5Uu9WypxXStl0JV2h1KbJ9snD3locDm9NdMXCxe+0
+         PbdQf1Va1iNNfWpUo9pbv5LDd+AZs+zxuXfOmxyY5xR1GyYgq/7xw6fb+uRaQPbIsO/P
+         Ggo4tyrvSmebQcqNHcSyIioe4w0x5AfrbuNtC49MKrZZRu+m5zTeEK+LYZ+baQXqFQRe
+         Hq1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742769523; x=1743374323;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742769564; x=1743374364;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=HdHrVSYx7MMsayXUAqSR1G/E1xOz51QHeLdrGhdbPXo=;
-        b=MM/Vyct8kp6GWcGUUofAKCOlKXYLj0fBmYJUEdLmE0R+PRcWfCjfcDk03gF+lml0GO
-         JbX8srw+kFMkSVyJmpk6FIykhfijCGHZx50D8Kq+uYwsBt394tXRDhPQbLEerFatvcCq
-         +y5aoDVbdHZ1rbgF7BP1ip6+x+FhzYFgWzadSvPe8D0zk999MdqYcXILUkirI2gtV6VX
-         i5FYzqhHCrAaIRyvQofqvx4o5OIvqCvXvDOYwKiBGTrmobOV66ZpjTsCrJgMRaKDp44r
-         h7ssmrwZqJgvBK+YvutplPKASDLYucQQoltUtuVNpUztV7+/zSpLg3y+rVAcRqDvaFsb
-         FKNw==
-X-Forwarded-Encrypted: i=1; AJvYcCV4KF3cdKGI0uXGGz/3McznDcGtwZnyVxDsKomxuUnXkjSREFMGuQ+LAjsE6c/P29s/CQKkte7F7W7MV3k=@vger.kernel.org, AJvYcCW/MgYChRRRVS/Aa+P/+dayJnQvNBBNQcYZeVTD3w/7O/CP+QZXbsWMYxcka4ajVg0ZXe94L4kycVZIm+BAWnA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzIBkn+MNBV+yAYP5RdP3JQ42XvTdpdR950cQ9m4bSfn6+9K7LZ
-	NyD35exGMisuJIhk7587Fk7XlbB+j5HE9VuaC3v3ihNn56R1EF5+Fjic14tnYUoqOSLlujDyi6z
-	TIELw8rGXDiwTC8KpxljD1YK4N6Q=
-X-Gm-Gg: ASbGnctTXP9ufJF8Jz4J5f/Mu8nJcoi4qeXodWPB6jXE7tTL1UEnAKkONzTZoAj1o+l
-	TaYVUzrlTDEVR8QoA9yBSsvY3Vl+6ilhqNEwcF58LbF0+578f8mSJ5i1HiAvCZd6PoJO4cHdMC2
-	AS1tILq25IUNp3u0sybnyJkJfl3g==
-X-Google-Smtp-Source: AGHT+IFwMhhCMPddLf9J8gorwWlQJJZgCCW34Xu9TSuYX2lZ0/HMOAcPNKpgCbj6eONjBKgbJjtbRHZfPw/9Dmcpe+Y=
-X-Received: by 2002:a17:90b:3ec5:b0:2ff:4be6:c5bd with SMTP id
- 98e67ed59e1d1-3031f50ebf3mr4540168a91.8.1742769523614; Sun, 23 Mar 2025
- 15:38:43 -0700 (PDT)
+        bh=HXb1pE2B5VZK7eIRvGjCX0bwONX10G0/gh8FJgs0P90=;
+        b=f2y8F5SGWiaEQFuTlX3AIl4sn6M9yAIy5TcXOzbsFqIb0bKi2yf+eTYxG7Z1JXnpoz
+         ldBxEIX3k/Lhv3l7HjmKy5tR1D/Dsms+TbBl1RWPq/bJF0vg61bxMLFAiWfBpk163Ogx
+         JO1JZpf48gBf6g+/+8+Fr3HEl//QpLajLCaaTcj4znETw0iESghKTlQEaz2aKlE9R3PI
+         smNjv0345JmfaikEt34JKCf8fmB02nIBgAD33uWjNjcxgWDXDb3d9ei7vyFwd2U72PyC
+         pEedbptmGiRMEqguMfY4BbLosh/mIBgN9jG8s0Mh24aPRl2hlVAJHeNNLPmKCe80NQPQ
+         zlAg==
+X-Forwarded-Encrypted: i=1; AJvYcCU02EMBVIPEsL5/AYAsTw0CoiJB7R0tN/0TPEt19KfF5HdcL+raVc85NxOI69Fe4tt2FOso3VPuVuXe5no=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAfgR2W7/Kp9/Y4mWSXghGncnlM56eyvTMxFAbOhe/iMUTpOM/
+	UXqbDXlqXD2WEkIE9PXSQV9NOOUeLv/4bbFBh3E6mPbw8qcXqixFZyFdMR7B6Aw=
+X-Gm-Gg: ASbGncurQSIR7o1cxGLDzs41P22nkH57D+cs7TdCBUl8lqNN7l/5L3CGG48L3SOTdms
+	5ikXUlJ/a0oZMIT0BM+Xkhj0j+iIKoHf3huIQ31QG1WavDfpqn5e6aXONbKf2gB9ZGtpDa2RdhU
+	q6tvIUmDHqE/0VVfydsmAfRGcpJDHQ2PPWaAvmHOB03HGuz73WrhVykJ3/tWM7goFFAL8PXoOC1
+	lZyP52Pd01RrfhY66aKvh8tmJw5OduXWUKnaho4ZNJZSnNrl0WKlSiHfcClmyEeESM1+vFUM8lF
+	zzIaGfAABfGdPoe6FyWlRWcn30K/aYideWoa54oJfgNG23BAi5t6jRVH1FQT58upmhk/L2cpIRj
+	QeeukUENGFm9VVhiqEDq6BAb2bwrE
+X-Google-Smtp-Source: AGHT+IFEmZ9BlAcg5cpLq9P2zpjpd5ecowSIznI/DDr2rcI73G5OWcR4yuBPI4oD1OUtU38fBId+Ng==
+X-Received: by 2002:a17:907:7ba8:b0:ac2:b684:542a with SMTP id a640c23a62f3a-ac3f23df97emr1170613466b.33.1742769564196;
+        Sun, 23 Mar 2025 15:39:24 -0700 (PDT)
+Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef86e44dsm559686666b.31.2025.03.23.15.39.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 15:39:23 -0700 (PDT)
+From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Date: Sun, 23 Mar 2025 22:39:17 +0000
+Subject: [PATCH 01/34] dt-bindings: mfd: samsung,s2mps11: add s2mpg10
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250210-macros-section-v2-1-3bb9ff44b969@gmail.com>
-In-Reply-To: <20250210-macros-section-v2-1-3bb9ff44b969@gmail.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sun, 23 Mar 2025 23:38:31 +0100
-X-Gm-Features: AQ5f1Jobq-bERZURvflG4ZCAS4wB2yrr2zPa2L7KTdhTikTcaRvK2NeGYkSi2W0
-Message-ID: <CANiq72nTiKkL-QC245Te3D-RRQmzVwbFRsc1aacUJXX91REFJg@mail.gmail.com>
-Subject: Re: [PATCH v2] rust: macros: fix `make rusttest` build on macOS
-To: Tamir Duberstein <tamird@gmail.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250323-s2mpg10-v1-1-d08943702707@linaro.org>
+References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
+In-Reply-To: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+ Chanwoo Choi <cw00.choi@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Russell King <linux@armlinux.org.uk>, 
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Peter Griffin <peter.griffin@linaro.org>, 
+ Tudor Ambarus <tudor.ambarus@linaro.org>, 
+ Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
+ linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+X-Mailer: b4 0.14.2
 
-On Mon, Feb 10, 2025 at 3:51=E2=80=AFPM Tamir Duberstein <tamird@gmail.com>=
- wrote:
->
-> Do not emit `#[link_section =3D ".modinfo"]` on macOS (i.e. when building
-> userspace tests); .modinfo is not a legal section specifier in mach-o.
->
-> Before this change tests failed to compile:
->
->   ---- ../rust/macros/lib.rs - module (line 66) stdout ----
->   rustc-LLVM ERROR: Global variable '_ZN8rust_out13__module_init13__modul=
-e_init27__MY_DEVICE_DRIVER_MODULE_017h141f80536770e0d4E' has an invalid sec=
-tion specifier '.modinfo': mach-o section specifier requires a segment and =
-section separated by a comma.
->   Couldn't compile the test.
->   ---- ../rust/macros/lib.rs - module (line 33) stdout ----
->   rustc-LLVM ERROR: Global variable '_ZN8rust_out13__module_init13__modul=
-e_init20__MY_KERNEL_MODULE_017h5d79189564b41e07E' has an invalid section sp=
-ecifier '.modinfo': mach-o section specifier requires a segment and section=
- separated by a comma.
->   Couldn't compile the test.
->
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+The Samsung S2MPG10 PMIC is similar to the existing PMICs supported by
+this binding.
 
-Applied to `rust-next` -- thanks!
+It is a Power Management IC for mobile applications with buck
+converters, various LDOs, power meters, RTC, clock outputs, and
+additional GPIOs interfaces.
 
-Given the `cfg_attr`, I think this should not change/break anything
-non-macOS we have, so I think it should be safe to apply.
+Unlike other Samsung PMICs, communication is not via I2C, but via the
+Samsung ACPM firmware, it therefore doesn't need a 'reg' property but a
+handle to the ACPM firmware node instead.
 
-Cheers,
-Miguel
+S2MPG10 can also act as a system power controller allowing
+implementation of a true cold-reset of the system.
+
+Support for the other components will be added in subsequent future
+patches.
+
+Signed-off-by: André Draszik <andre.draszik@linaro.org>
+---
+ .../devicetree/bindings/mfd/samsung,s2mps11.yaml   | 34 ++++++++++++++++++++--
+ 1 file changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
+index ac5d0c149796b6a4034b5d4245bfa8be0433cfab..ae8adb80b3af7ec3722c2a5718ad8fddf0a5df34 100644
+--- a/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
++++ b/Documentation/devicetree/bindings/mfd/samsung,s2mps11.yaml
+@@ -20,6 +20,7 @@ description: |
+ properties:
+   compatible:
+     enum:
++      - samsung,s2mpg10-pmic
+       - samsung,s2mps11-pmic
+       - samsung,s2mps13-pmic
+       - samsung,s2mps14-pmic
+@@ -43,6 +44,12 @@ properties:
+     description:
+       List of child nodes that specify the regulators.
+ 
++  exynos,acpm-ipc:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: |
++      Phandle to the ACPM node for when ACPM is used to communicate with the
++      PMIC, rather than I2C.
++
+   samsung,s2mps11-acokb-ground:
+     description: |
+       Indicates that ACOKB pin of S2MPS11 PMIC is connected to the ground so
+@@ -58,16 +65,39 @@ properties:
+       reset (setting buck voltages to default values).
+     type: boolean
+ 
++  system-power-controller: true
++
+   wakeup-source: true
+ 
+ required:
+   - compatible
+-  - reg
+-  - regulators
+ 
+ additionalProperties: false
+ 
+ allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: samsung,s2mpg10-pmic
++    then:
++      properties:
++        regulators: false
++        samsung,s2mps11-acokb-ground: false
++        samsung,s2mps11-wrstbi-ground: false
++
++      required:
++        - exynos,acpm-ipc
++
++    else:
++      properties:
++        exynos,acpm-ipc: false
++        system-power-controller: false
++
++      required:
++        - reg
++        - regulators
++
+   - if:
+       properties:
+         compatible:
+
+-- 
+2.49.0.395.g12beb8f557-goog
+
