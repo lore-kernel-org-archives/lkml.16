@@ -1,90 +1,78 @@
-Received: from 004.mia.mailroute.net (004.mia.mailroute.net [199.89.3.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3CDE623;
-	Sun, 23 Mar 2025 12:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.89.3.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15BE8837;
+	Sun, 23 Mar 2025 12:38:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742733376; cv=none; b=K28RyGGbIDv+ZV2f0EgxijTTT1l3zdi5RGBLi40k5aNezyQeHHPMLQqg6+JobfTOZbFQ0NgFyVGNElKZPudgewILWWlVTK+DiabCsQvz/Ge/P5+SoXBvXtSbcWfOWzm0AI44yx6+/EeQG/qqMpsfh6MrMii77IqidDQmMHRvlpc=
+	t=1742733488; cv=none; b=e8kB6EuFG4455dokc/wE5SLnuNzBHoiWJLwRIrngb1FusN8iQ9J1xTMc8ZLoJsNGE/S/AyqqZ+TKVcopaJxdV9iBlV/BnJCDg9Jwa2G+MkCU9c6ASjzm3eLgkLeWKKCZ7IL/t/uzDFtquqVhIaBH1IBema76V6csOW9JwbTza8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742733376; c=relaxed/simple;
-	bh=cKnmb/AvRSbteASF5DT+ty/21aXMVv19VOgr9QzltMs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cP5NurDTI1MoL5dqt7rmnbe3Bf541yaSzqpKVUzPoEpynG1UzgLyXYZLng7p7zvLaH0dzmH1zLBu3hZmS78uD1gr7M4dX5Cz9YVqW/4Dexva5YAZ/DF5IdkSvetHeWoVSoUcNP+dEl9I1WgtGxPfSFH/Va0gkwcDj1/m4NjhGqw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org; spf=pass smtp.mailfrom=acm.org; dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b=A5GWs8ZZ; arc=none smtp.client-ip=199.89.3.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=acm.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=acm.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=acm.org header.i=@acm.org header.b="A5GWs8ZZ"
-Received: from localhost (localhost [127.0.0.1])
-	by 004.mia.mailroute.net (Postfix) with ESMTP id 4ZLFzD1Dqjzm0ytd;
-	Sun, 23 Mar 2025 12:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=acm.org; h=
-	content-transfer-encoding:content-type:content-type:in-reply-to
-	:from:from:content-language:references:subject:subject
-	:user-agent:mime-version:date:date:message-id:received:received;
-	 s=mr01; t=1742733366; x=1745325367; bh=5tj9iO/ST31ro8NtZXZ+WYzO
-	2KM6kAX7w53AjZ7Mg0A=; b=A5GWs8ZZ3fEVqp/IdS6gJ5ndHfUdUWDGXjSVadOm
-	ULUDNHfTeBg63zQOC/FYqWafLEyyAuM3Acaon/qlwAwmofjkUL5leSzGQEXN4bfp
-	WeJcisPT0KAPbeKZdB/55HMrN8u5xr/jwzLKUE+ozDsWc3cCxJOnvCU7Pgx2VhdT
-	5acN3hB2uASO90SyDR+xECFYnU7+e+XAhi/WOOc8UV5nhrk8hNZ7pYayDN7zx8FL
-	ol/sdTCpYOQjem7jkiWyVzuQVGtdBVJkqMjD/+1LXwYaJrpJm28WeIN4ToORgdA4
-	/dIFh62l4lQ0i1AeUXXBP2LnlNa5+p1Aqie5zaD/JRTR1Q==
-X-Virus-Scanned: by MailRoute
-Received: from 004.mia.mailroute.net ([127.0.0.1])
- by localhost (004.mia [127.0.0.1]) (mroute_mailscanner, port 10029) with LMTP
- id dO7ADQ8zc2Rh; Sun, 23 Mar 2025 12:36:06 +0000 (UTC)
-Received: from [10.46.23.145] (unknown [156.39.10.100])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: bvanassche@acm.org)
-	by 004.mia.mailroute.net (Postfix) with ESMTPSA id 4ZLFz56LcHzm0pKT;
-	Sun, 23 Mar 2025 12:36:00 +0000 (UTC)
-Message-ID: <1ae51ccc-66cc-4551-b649-2f5883e2f5a2@acm.org>
-Date: Sun, 23 Mar 2025 05:35:59 -0700
+	s=arc-20240116; t=1742733488; c=relaxed/simple;
+	bh=gA8XX+4Wy9hIS4lNmW/BtZEXbkmSjEyOc1jU+4viVgs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=j3rkgch4/qReyy5j8Vk7snuF5UQ3JjLgJiH2bND1Us/r326LZN7KI9Wfce48hH1ZYTTHB5bBO5Ce4QiVuHu05hjexlArf+ajQyV4dVovWk38rxWLvkiWtoFgR3tORNzWN3Nyb/XcmTYXm1lfMcIfo1COS/oJhjAIDEZrmqRo84k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-301493f461eso4171040a91.3;
+        Sun, 23 Mar 2025 05:38:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742733486; x=1743338286;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1HnWB9RWsVBWnpOBg5WEW3ASvl2XaM92u6YTY3vFQTs=;
+        b=rJS/6JTn9hFhtxbB5Dj571H0qOwVW9pbNmqbYISVOnfWBu7+Nhs5zDrLJ9dUqEJ4IS
+         fShaOsnQiZGBqZEZ/l/A9AIbIoYY5pH9Lap/ER4r6cOaCMRmzxcbns2HYaHvv1S1s/IH
+         qdKN8gpbPsZbsyxakpA2VjeRWgj3z1aassiIJSSM6PMbFwlw4NF46UUjniIxIvfdw7yS
+         /dwn2rpyfbVgIjefxtkn65t7SGg2fu9Uh4St1VJAbIN96QbpTxLNj3JS6ML31MOACzqN
+         gpjSYqBT6+se4A/sJuEITs8i+pG1YCOjuMHS+qKfSy6+ad1NprHof5OMwKXnF0LL3DSL
+         CyUA==
+X-Forwarded-Encrypted: i=1; AJvYcCVGsxH9hyjPhpqg7vHtAuvRao5UC3Qi45zWBF+OgddViCLsPoXRfMpb5zppgZQPHQd6udXPyzfZq3C+JmfDl8M=@vger.kernel.org, AJvYcCW39MoNU0L/z6C1UzwDn1EYKDdSliUu/bCKkI3bCAgazKzSmi7irJ8VVyUPExLqx4o50fuas1/aB2TmxMz6@vger.kernel.org, AJvYcCWm4i60D09tEZDTgGQTS42/zMcLgdVGXGCtegI6EHvG/W3co0K6s4tdjut68GzoHtje6OwKmz5LF6/w@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw/F/ZPiUA5f5HvNaenep1FD/tQw3bJEbp7SvkxOj8zKt68PKtb
+	a9v2X0nPtMcVrGQjOtBX7B5Vz44iQvoRGK6cOpv0i0+olRI18mJK
+X-Gm-Gg: ASbGnct00aQP9Dewsv3QTPyhdhioFA6Sdfoe6Ds5jF58pBENoSxWsBIDTiFnsLwwz+c
+	JLRUwkABTHoEhuP8v4e/rtEN+WWDvSByEN4SDuqhAnZDkJPBCycSNUL8DKZhVROi0r+6qHylnCd
+	GpiNWhqwLbrimR/IsBNjI/51v7Z6Gb/fFE0UxORklolkSG4y9+Ii+rYMUm5L6eRAOewtbPmCAgl
+	h8sQm5VF3ahIDODymxd9lZDBBw0IV/kubag8rvV7m0EQzxLIcdZVec/1DudVzUyGvbPhwTPuqMS
+	gH5TfIpmaqRfdVFFkLwiU3mkdCRpmvGJmwf+mPzQNcXDcaEPspaGUJW6LCPEDzeXq9GjRMXIzH+
+	csmw=
+X-Google-Smtp-Source: AGHT+IHrLv6luYgfmwyuvu1tJl/93WMsciSS4yr4NNbis4gxiGP2i8SnSlB7c290PtylAh3xnlTSFA==
+X-Received: by 2002:a17:90b:3d8e:b0:2ff:5ec1:6c6a with SMTP id 98e67ed59e1d1-3030feaadb4mr17480277a91.18.1742733485859;
+        Sun, 23 Mar 2025 05:38:05 -0700 (PDT)
+Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3030f7e9d86sm5844767a91.37.2025.03.23.05.38.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 05:38:05 -0700 (PDT)
+Date: Sun, 23 Mar 2025 21:38:03 +0900
+From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: Jim Quinlan <jim2101024@gmail.com>,
+	Nicolas Saenz Julienne <nsaenz@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] PCI: brcmstb: make const read-only arrays static
+Message-ID: <20250323123803.GG1902347@rocinante>
+References: <20250317143456.477901-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] cpuidle: psd: add power sleep demotion prevention for
- fast I/O devices
-To: "King, Colin" <colin.king@intel.com>,
- Christian Loehle <christian.loehle@arm.com>, Jens Axboe <axboe@kernel.dk>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Daniel Lezcano <daniel.lezcano@linaro.org>,
- "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
- "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <33882f284ac6e6d1ec766ca4bb2f3b88@intel.com>
- <f18607ca-30dc-43de-be77-fec69968aeec@arm.com>
- <SJ2PR11MB7670F63C7052C88637D305DF8DDF2@SJ2PR11MB7670.namprd11.prod.outlook.com>
-Content-Language: en-US
-From: Bart Van Assche <bvanassche@acm.org>
-In-Reply-To: <SJ2PR11MB7670F63C7052C88637D305DF8DDF2@SJ2PR11MB7670.namprd11.prod.outlook.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250317143456.477901-1-colin.i.king@gmail.com>
 
-On 3/17/25 3:03 AM, King, Colin wrote:
-> This code is optional, one can enable it or disable it via the config option. Also,
-> even when it is built-in one can disable it by writing 0 to the sysfs file
->    /sys/devices/system/cpu/cpuidle/psd_cpu_lat_timeout_ms
+Hello,
 
-I'm not sure we need even more configuration knobs in sysfs. How are
-users expected to find this configuration option? How should they
-decide whether to enable or to disable it?
+> Don't populate the const read-only arrays data and regs on the stack at
+> run time, instead make them static.
 
-Please take a look at this proposal and let me know whether this would
-solve the issue that you are looking into: "[LSF/MM/BPF Topic] Energy-
-Efficient I/O" (https://lore.kernel.org/linux-block/ad1018b6-7c0b-4d70-
-b845-c869287d3cf3@acm.org/). The only disadvantage of this approach
-compared to the cpuidle patch is that it requires RPM (runtime power
-management) to be enabled. Maybe I should look into modifying the
-approach such that it does not rely on RPM.
+Applied to controller/brcmstb, thank you!
 
-Thanks,
-
-Bart.
+	Krzysztof
