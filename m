@@ -1,112 +1,208 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C0DB3D561;
-	Sun, 23 Mar 2025 22:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1936178F52;
+	Sun, 23 Mar 2025 22:55:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742770394; cv=none; b=LDGUVFFSo1krhIJ2JNejgjCOEvH++lvg7obz+Y6x5kcSKvs3WFhoDCGRKzK/M7Cko2NMf7Ff1skdB7RgXWzMg9I293r2usb6XG9eZHs44mRG2iRSmhyo2qBgMvg1BZ+Rz01Vu5jEOXzP2WQgGaNZqPtXVJLw8zMXcM3qD4xDpZ0=
+	t=1742770512; cv=none; b=NfFgmjHhM90eYYBrYhGAck33Ym+3DozoqvaZLuwjajfbzojd+bwUpVQ6t1KVyKj6CrotGb+/tSNx4REPGO1IMpS+Agr0ZfHk3hkNAJ6omtvYGR7aRGGECoIK4ZXXAkWiv6UUbcBhsXDjhX/no+B2RHm7Uu0qh1LtkvkFbyBLLQE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742770394; c=relaxed/simple;
-	bh=KhSk1Wvn41RLE8OuIrS/dgnj4mzOEt2b86JUmA1AdQU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SxpFQgXRNkB80LDZDwO6jJSjlZ+KNHU/iXA3HeB9f4+5vJtipnUkQS65JPk2qUbayrNrYl1YgNCsGBPhzhOYDxumXqIQSF/3EQov9XosVOgkjG68yolHfiHYwJHuRyH2ZY0FK1l+/z958dyXC6KKJWIL+DZHXHamt9G4tTgRCTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cme1o9pR; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742770512; c=relaxed/simple;
+	bh=GQt07esGn+aeKgll8qN0I0EbwlD3oTZ1P43ARrEgJsw=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=dl1Mb6t9nf46fOTAFHfngWz3mg2pgRlpwBrhwGCfEwT8d19O/9JAoTb6Mp1R1r9+D3ILG6EXe0QiP4bRHT0fiV+eWfSAbs+VPASZf4gil/NrqzoLzKwk3Z9+hoVPLbSDlCcsJAtQyX3lhJSgAUiKERbAkS8UrRFwtVhYkAiwDXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mKXBdL3R; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cme1o9pR"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742770392; x=1774306392;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=KhSk1Wvn41RLE8OuIrS/dgnj4mzOEt2b86JUmA1AdQU=;
-  b=Cme1o9pRxFFzpJXb1mPGzHhPCiw2+J4ToV/8X/b/2IL7MAhkzgDrnbal
-   m+B97Hy5XuJZAPZ6eaZZDRO/EKbYUH4Y8vn8cpAfihXaukoQDDfEC+VUX
-   yIineOdj0CLEEBdRpJ7qIsY4P1y49Qo5kS1Qk+xsVOHEk9LiENyVEVcLw
-   gSP0ufhS/ZsE35cox+D/AQpYm0igjOCffI2OIR0vPGax7DgxjDeyasRNM
-   ACKgSdXOLWtgjluLs7NCvNIpss8DWWzL1iMyQ7yezuMg75SDKiMKXUYcE
-   SWIcEcq+Qy9tk9C2Sq/g7yARVa5U50AH6Ybr7T60TyL6I6D8ZHkhdrF+9
-   A==;
-X-CSE-ConnectionGUID: 4Un8atEJR8K8x/LMR4Ajyg==
-X-CSE-MsgGUID: M8eEvCnuRyGHjVduQY5DkQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11382"; a="43126625"
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="43126625"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2025 15:53:11 -0700
-X-CSE-ConnectionGUID: +0cn+hIKQ8iIclIM6QNmXg==
-X-CSE-MsgGUID: Fg+EMCiuSdiFWevV8B18Og==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="154783741"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 23 Mar 2025 15:53:09 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1twUBm-0002zq-0f;
-	Sun, 23 Mar 2025 22:53:06 +0000
-Date: Mon, 24 Mar 2025 06:52:21 +0800
-From: kernel test robot <lkp@intel.com>
-To: Sahil Siddiq <icegambit91@gmail.com>, jonas@southpole.se,
-	stefan.kristiansson@saunalahti.fi, shorne@gmail.com
-Cc: oe-kbuild-all@lists.linux.dev, sahilcdq@proton.me,
-	linux-openrisc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 3/3] openrisc: Add cacheinfo support
-Message-ID: <202503240635.ir63jqTI-lkp@intel.com>
-References: <20250323195544.152948-4-sahilcdq@proton.me>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mKXBdL3R"
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-3913b539aabso1994826f8f.2;
+        Sun, 23 Mar 2025 15:55:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742770509; x=1743375309; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=oOSmuF30hQhsZshA1dM7YsZdIW4f3itq09DSiAmlklo=;
+        b=mKXBdL3RDt56P+GP3felUrlM9mshbpeYjhiL5YXUsBqnMmV4kSpba0i4U31kITYFx3
+         Vq/FUMLqjApkagR/dSotxx4AFmar1WLZJiG4WWqztI3PkVrS0aOpHnp5m2MRDGiiywPO
+         cIOYJEFy5FgGyZnNSpjulgE2gfsrdc8yAR/E3545QNGUuxyRWmTB5Yp5ulB0yV11j165
+         5rXlU2t+pOebJl73OKmsbRJOrM7dTL5h65ibodqorR+htIrKUXHUzNWczHlzWB64RDjC
+         3fz0eIJYVBPXWHsj5jEoCSXxzIA8sRrXK/gfG/t4+01p2oSrxvAB3Z27EwHik1nels5D
+         35gQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742770509; x=1743375309;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oOSmuF30hQhsZshA1dM7YsZdIW4f3itq09DSiAmlklo=;
+        b=vb/vMMwCiZ5ws18TViikauVuQWO+SvE2VRoaSO0FySelArl8JG6j65/r3E5MBCbV3j
+         DhtJqn8Kq+hApL8Vq4c9bXeq32zu35UvKmU0g7JUllRs7LtPcJYfcli+H9wrwD//Dof1
+         K1VQaBJtJkp+czd+UUMDZMi0NOFuxOyVVl1gHZIzjBI8/wHBseI9jjZB3xsPbU9OKzJe
+         um84NJYxKiWEMvje2Ihxx+Q0oNW0teC7CpAv/D4CrnhCUjIjM7pOmyZ/OW+4CyoyVOtF
+         vXxcI0j6g/ew+r3nuj1qjv3rvoAOAy/0odxPRC/KOr8tEbIOBorhQ3k6jvsgdyKytGq5
+         IM6A==
+X-Forwarded-Encrypted: i=1; AJvYcCUDbd4VNqbTx7BdADbDRZtwYTJ1b0i6xji00g72qtxRaz1eSikCd5CLRMe1K/+USmFvR5S67P5g+LDf@vger.kernel.org, AJvYcCUTs27qNzBTLPtCBAL/2t28j9jfXP8NH3XB1ZD/NdH7LhRyY9Cloo95sqBlsNclS3WbUtLWqXjXS/h8gocM@vger.kernel.org, AJvYcCVWunQysriKNb1M8Wc89TBAt9/C0UJwhL3JcpfqBPN8R5tSXKAcOqc/iomBTj6HYH5uZIDZBpPk@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzatFrxicKFLddxbVsTpYf4K2rL6kuulTv7zihHzkJIpbRthP8
+	MIvwPRjUJMvh9ugxLoVdTO3cDgbQLRgapldCfU2iund2Szv3yDzL
+X-Gm-Gg: ASbGncvKhxplvbf7BAuEHRPD+5JwkIvOmexDIZk4zEjrWoZuC4JwinZ8uu5vojRMJBL
+	mfd0Cuj2WjwGHCBeA/C/co3syraIs7HDP3LnKZWC090uM1B/M49FgxllmK0B3nM5NNT0CTRCUvA
+	nBYliv1t1Ysf331fR6Hx0oZJt0VyUPTj0BKR8rttoRbiLUT+oxduI54gysfeA8X9l3csd+tWYcG
+	Ps2QboXqqiyixGJuLfhgpjTvHja/EKgO1aTfPpvGpnpicT11063lrMEgOFWX0JmyeAXxKEP2/GA
+	gfkH/EKCYYsLUMoPmnU4AebFWUd1Z/2A8opGImNMt3JxTe1ZlEHIffGdy+Ryi/E0ZvrcHzujskw
+	C9S/4zYXDG0Tw4w==
+X-Google-Smtp-Source: AGHT+IHdCjK9tgTU4vMf0E2osA83T0jjCCRtAki4Zpd82WfsFJW8/gdQ06Qwo98HTGoDmbmovm1HQw==
+X-Received: by 2002:a05:6000:2c2:b0:391:2df9:772d with SMTP id ffacd0b85a97d-3997f90f731mr11301315f8f.13.1742770509270;
+        Sun, 23 Mar 2025 15:55:09 -0700 (PDT)
+Received: from localhost.localdomain (93-34-90-129.ip49.fastwebnet.it. [93.34.90.129])
+        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3997f9a3f36sm9171129f8f.32.2025.03.23.15.55.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 15:55:08 -0700 (PDT)
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Christian Marangi <ansuelsmth@gmail.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [net-next PATCH 2/2] dt-bindings: net: Document support for Aeonsemi PHYs
+Date: Sun, 23 Mar 2025 23:54:27 +0100
+Message-ID: <20250323225439.32400-2-ansuelsmth@gmail.com>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250323225439.32400-1-ansuelsmth@gmail.com>
+References: <20250323225439.32400-1-ansuelsmth@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250323195544.152948-4-sahilcdq@proton.me>
+Content-Transfer-Encoding: 8bit
 
-Hi Sahil,
+Document support for Aeonsemi PHYs and the requirement of a firmware to
+correctly work. Also document the max number of LEDs supported and what
+PHY ID expose when no firmware is loaded.
 
-kernel test robot noticed the following build warnings:
+Signed-off-by: Christian Marangi <ansuelsmth@gmail.com>
+---
+ .../bindings/net/aeonsemi,as21xxx.yaml        | 87 +++++++++++++++++++
+ MAINTAINERS                                   |  1 +
+ 2 files changed, 88 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
 
-[auto build test WARNING on ea1413e5b53a8dd4fa7675edb23cdf828bbdce1e]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Sahil-Siddiq/openrisc-Refactor-struct-cpuinfo_or1k-to-reduce-duplication/20250324-035738
-base:   ea1413e5b53a8dd4fa7675edb23cdf828bbdce1e
-patch link:    https://lore.kernel.org/r/20250323195544.152948-4-sahilcdq%40proton.me
-patch subject: [PATCH v3 3/3] openrisc: Add cacheinfo support
-config: openrisc-allnoconfig (https://download.01.org/0day-ci/archive/20250324/202503240635.ir63jqTI-lkp@intel.com/config)
-compiler: or1k-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250324/202503240635.ir63jqTI-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503240635.ir63jqTI-lkp@intel.com/
-
-All warnings (new ones prefixed by >>):
-
-   arch/openrisc/kernel/setup.c: In function 'show_cpuinfo':
->> arch/openrisc/kernel/setup.c:266:30: warning: unused variable 'cpuinfo' [-Wunused-variable]
-     266 |         struct cpuinfo_or1k *cpuinfo = v;
-         |                              ^~~~~~~
-
-
-vim +/cpuinfo +266 arch/openrisc/kernel/setup.c
-
-9d02a4283e9ce4 Jonas Bonn          2011-06-04  260  
-9d02a4283e9ce4 Jonas Bonn          2011-06-04  261  static int show_cpuinfo(struct seq_file *m, void *v)
-9d02a4283e9ce4 Jonas Bonn          2011-06-04  262  {
-8e6d08e0a15e7d Stefan Kristiansson 2014-05-11  263  	unsigned int vr, cpucfgr;
-8e6d08e0a15e7d Stefan Kristiansson 2014-05-11  264  	unsigned int avr;
-8e6d08e0a15e7d Stefan Kristiansson 2014-05-11  265  	unsigned int version;
-8e6d08e0a15e7d Stefan Kristiansson 2014-05-11 @266  	struct cpuinfo_or1k *cpuinfo = v;
-9d02a4283e9ce4 Jonas Bonn          2011-06-04  267  
-9d02a4283e9ce4 Jonas Bonn          2011-06-04  268  	vr = mfspr(SPR_VR);
-8e6d08e0a15e7d Stefan Kristiansson 2014-05-11  269  	cpucfgr = mfspr(SPR_CPUCFGR);
-8e6d08e0a15e7d Stefan Kristiansson 2014-05-11  270  
-
+diff --git a/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml b/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+new file mode 100644
+index 000000000000..0549abcd3929
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/aeonsemi,as21xxx.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Aeonsemi AS21XXX Ethernet PHY
++
++maintainers:
++  - Christian Marangi <ansuelsmth@gmail.com>
++
++description: |
++  Aeonsemi AS21xxx Ethernet PHYs requires a firmware to be loaded to actually
++  work. The same firmware is compatible with various PHYs of the same family.
++
++  A PHY with not firmware loaded will be exposed on the MDIO bus with ID
++  0x7500 0x7500
++
++  This can be done and is implemented by OEM in 2 different way:
++    - Attached SPI flash directly to the PHY with the firmware. The PHY
++      will self load the firmware in the presence of this configuration.
++    - Manually provided firmware loaded from a file in the filesystem.
++
++  Each PHY can support up to 5 LEDs.
++
++allOf:
++  - $ref: ethernet-phy.yaml#
++
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - ethernet-phy-id7500.7500
++  required:
++    - compatible
++
++properties:
++  reg:
++    maxItems: 1
++
++  firmware-name:
++    description: specify the name of PHY firmware to load
++
++required:
++  - compatible
++  - reg
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/leds/common.h>
++
++    mdio {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ethernet-phy@1f {
++            compatible = "ethernet-phy-id7500.7500",
++                         "ethernet-phy-ieee802.3-c45";
++
++            reg = <31>;
++            firmware-name = "as21x1x_fw.bin";
++
++            leds {
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                led@0 {
++                    reg = <0>;
++                    color = <LED_COLOR_ID_GREEN>;
++                    function = LED_FUNCTION_LAN;
++                    function-enumerator = <0>;
++                    default-state = "keep";
++                };
++
++                led@1 {
++                    reg = <1>;
++                    color = <LED_COLOR_ID_GREEN>;
++                    function = LED_FUNCTION_LAN;
++                    function-enumerator = <1>;
++                    default-state = "keep";
++                };
++            };
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9a2df6d221bd..59a863dd3b70 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -649,6 +649,7 @@ AEONSEMI PHY DRIVER
+ M:	Christian Marangi <ansuelsmth@gmail.com>
+ L:	netdev@vger.kernel.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/net/aeonsemi,as21xxx.yaml
+ F:	drivers/net/phy/as21xxx.c
+ 
+ AF8133J THREE-AXIS MAGNETOMETER DRIVER
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.48.1
+
