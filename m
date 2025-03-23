@@ -1,78 +1,95 @@
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C15BE8837;
-	Sun, 23 Mar 2025 12:38:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF61A17E;
+	Sun, 23 Mar 2025 12:38:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742733488; cv=none; b=e8kB6EuFG4455dokc/wE5SLnuNzBHoiWJLwRIrngb1FusN8iQ9J1xTMc8ZLoJsNGE/S/AyqqZ+TKVcopaJxdV9iBlV/BnJCDg9Jwa2G+MkCU9c6ASjzm3eLgkLeWKKCZ7IL/t/uzDFtquqVhIaBH1IBema76V6csOW9JwbTza8Q=
+	t=1742733502; cv=none; b=KNq/7uZRstkaxkaLbrrv1Frne8QU0tLkzMsq1Z+u1QsqzXikRoVhGzJW0I78QrUccv+6b6RQTM+fnKbf4/fpZ20qb5fgC73RDNsmmKZm6EIMTHOni6M9xWB0mCpDVYX1aT9yG6WZ/4auQz/CceJclxVyurtLYdwK32Icj1bArRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742733488; c=relaxed/simple;
-	bh=gA8XX+4Wy9hIS4lNmW/BtZEXbkmSjEyOc1jU+4viVgs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=j3rkgch4/qReyy5j8Vk7snuF5UQ3JjLgJiH2bND1Us/r326LZN7KI9Wfce48hH1ZYTTHB5bBO5Ce4QiVuHu05hjexlArf+ajQyV4dVovWk38rxWLvkiWtoFgR3tORNzWN3Nyb/XcmTYXm1lfMcIfo1COS/oJhjAIDEZrmqRo84k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=linux.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-301493f461eso4171040a91.3;
-        Sun, 23 Mar 2025 05:38:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742733486; x=1743338286;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1HnWB9RWsVBWnpOBg5WEW3ASvl2XaM92u6YTY3vFQTs=;
-        b=rJS/6JTn9hFhtxbB5Dj571H0qOwVW9pbNmqbYISVOnfWBu7+Nhs5zDrLJ9dUqEJ4IS
-         fShaOsnQiZGBqZEZ/l/A9AIbIoYY5pH9Lap/ER4r6cOaCMRmzxcbns2HYaHvv1S1s/IH
-         qdKN8gpbPsZbsyxakpA2VjeRWgj3z1aassiIJSSM6PMbFwlw4NF46UUjniIxIvfdw7yS
-         /dwn2rpyfbVgIjefxtkn65t7SGg2fu9Uh4St1VJAbIN96QbpTxLNj3JS6ML31MOACzqN
-         gpjSYqBT6+se4A/sJuEITs8i+pG1YCOjuMHS+qKfSy6+ad1NprHof5OMwKXnF0LL3DSL
-         CyUA==
-X-Forwarded-Encrypted: i=1; AJvYcCVGsxH9hyjPhpqg7vHtAuvRao5UC3Qi45zWBF+OgddViCLsPoXRfMpb5zppgZQPHQd6udXPyzfZq3C+JmfDl8M=@vger.kernel.org, AJvYcCW39MoNU0L/z6C1UzwDn1EYKDdSliUu/bCKkI3bCAgazKzSmi7irJ8VVyUPExLqx4o50fuas1/aB2TmxMz6@vger.kernel.org, AJvYcCWm4i60D09tEZDTgGQTS42/zMcLgdVGXGCtegI6EHvG/W3co0K6s4tdjut68GzoHtje6OwKmz5LF6/w@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw/F/ZPiUA5f5HvNaenep1FD/tQw3bJEbp7SvkxOj8zKt68PKtb
-	a9v2X0nPtMcVrGQjOtBX7B5Vz44iQvoRGK6cOpv0i0+olRI18mJK
-X-Gm-Gg: ASbGnct00aQP9Dewsv3QTPyhdhioFA6Sdfoe6Ds5jF58pBENoSxWsBIDTiFnsLwwz+c
-	JLRUwkABTHoEhuP8v4e/rtEN+WWDvSByEN4SDuqhAnZDkJPBCycSNUL8DKZhVROi0r+6qHylnCd
-	GpiNWhqwLbrimR/IsBNjI/51v7Z6Gb/fFE0UxORklolkSG4y9+Ii+rYMUm5L6eRAOewtbPmCAgl
-	h8sQm5VF3ahIDODymxd9lZDBBw0IV/kubag8rvV7m0EQzxLIcdZVec/1DudVzUyGvbPhwTPuqMS
-	gH5TfIpmaqRfdVFFkLwiU3mkdCRpmvGJmwf+mPzQNcXDcaEPspaGUJW6LCPEDzeXq9GjRMXIzH+
-	csmw=
-X-Google-Smtp-Source: AGHT+IHrLv6luYgfmwyuvu1tJl/93WMsciSS4yr4NNbis4gxiGP2i8SnSlB7c290PtylAh3xnlTSFA==
-X-Received: by 2002:a17:90b:3d8e:b0:2ff:5ec1:6c6a with SMTP id 98e67ed59e1d1-3030feaadb4mr17480277a91.18.1742733485859;
-        Sun, 23 Mar 2025 05:38:05 -0700 (PDT)
-Received: from localhost (fpd11144dd.ap.nuro.jp. [209.17.68.221])
-        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3030f7e9d86sm5844767a91.37.2025.03.23.05.38.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 05:38:05 -0700 (PDT)
-Date: Sun, 23 Mar 2025 21:38:03 +0900
-From: Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>
-To: Colin Ian King <colin.i.king@gmail.com>
-Cc: Jim Quinlan <jim2101024@gmail.com>,
-	Nicolas Saenz Julienne <nsaenz@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-pci@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] PCI: brcmstb: make const read-only arrays static
-Message-ID: <20250323123803.GG1902347@rocinante>
-References: <20250317143456.477901-1-colin.i.king@gmail.com>
+	s=arc-20240116; t=1742733502; c=relaxed/simple;
+	bh=qNL5zaQmZMh2NYS8anqdXQNeU2uo1FCGOXYyuJOoH/s=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=p7CfgcVou4gvO7Wx4afivd5yBRanK8XdtrSC4fwMXl4sxnSHhnqXJZgsTELFbbjOgZuhhqN7H24FZoIRNkPINCMImaimNsS00btRgXzgdCTmdzq/tAuW00k/M9L+ZF2BRAImAwEEdUnaSKS0l8uDx3R9ZW7gTVQ9OwpjHMvGm3o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jwGuvTTt; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jwGuvTTt"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4D3E9C4CEED;
+	Sun, 23 Mar 2025 12:38:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742733502;
+	bh=qNL5zaQmZMh2NYS8anqdXQNeU2uo1FCGOXYyuJOoH/s=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=jwGuvTTtJZ9m0jZO5Ew6Cdmj/L0ze5hTuRyFtU8DX7f/cgPEDVu0w5AwiHV/igIXO
+	 64qKKIjzMPJ0cqrf7HAtHpiPmKkP+ED2VApK6CfTxOSa8U1Ul2X+VYlWSUYwaRt5Sd
+	 WSnZb6thzX0q0JjLXSMAHRXWOmiB3xuPJsWdRhRa2uBLz2tOgf+DDrNWkBXCyTZsTL
+	 ymvcJ0zEczgs9sAE4arjM+BASR0c1OnWG2uAb4KLM7zwCZBxafcqd6rjKzOeyp2Nno
+	 b61pr7on2SiI6fXd74Zxtf/cPlXg1EpLc1aK8QpTfmo7yGvFSeQ/thl2Qd3neUNvah
+	 wBrTHgK7aKpMQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C3CEC36005;
+	Sun, 23 Mar 2025 12:38:22 +0000 (UTC)
+From: =?utf-8?q?J=2E_Neusch=C3=A4fer_via_B4_Relay?= <devnull+j.ne.posteo.net@kernel.org>
+Date: Sun, 23 Mar 2025 13:37:50 +0100
+Subject: [PATCH 1/3] dt-bindings: vendor-prefixes: Add TC
+ Unterhaltungselektronik AG
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250317143456.477901-1-colin.i.king@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20250323-fernsehfee-v1-1-2621341cd37a@posteo.net>
+References: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
+In-Reply-To: <20250323-fernsehfee-v1-0-2621341cd37a@posteo.net>
+To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, 
+ =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742733500; l=959;
+ i=j.ne@posteo.net; s=20240329; h=from:subject:message-id;
+ bh=uaz9m8VjNE4NEygLbUtmBG2+WbjOgy1rPMuQ4WTpnro=;
+ b=XWEvZjys42PmDLa1n4FLTA9f2MmzxWu8uLr8Mzx4Mal4ZylyaFFdxjPKN+Az3yww8cB+aEWHj
+ WpA+cD9U14/B0t2ta3oMhRBIPPX4SlIOX4/8AZbHcQA/4q2fxIr/B45
+X-Developer-Key: i=j.ne@posteo.net; a=ed25519;
+ pk=NIe0bK42wNaX/C4bi6ezm7NJK0IQE+8MKBm7igFMIS4=
+X-Endpoint-Received: by B4 Relay for j.ne@posteo.net/20240329 with
+ auth_id=156
+X-Original-From: =?utf-8?q?J=2E_Neusch=C3=A4fer?= <j.ne@posteo.net>
+Reply-To: j.ne@posteo.net
 
-Hello,
+From: "J. Neuschäfer" <j.ne@posteo.net>
 
-> Don't populate the const read-only arrays data and regs on the stack at
-> run time, instead make them static.
+TC Unterhaltungselektronik is the company behind Fernsehfee branded
+set-top boxes.
 
-Applied to controller/brcmstb, thank you!
+Signed-off-by: J. Neuschäfer <j.ne@posteo.net>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
+ 1 file changed, 2 insertions(+)
 
-	Krzysztof
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.yaml b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+index 5079ca6ce1d1e9e2b52312439e4b1d48b262200c..0019f6131bbfc11ba55f5a15a238825abf665aaf 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.yaml
++++ b/Documentation/devicetree/bindings/vendor-prefixes.yaml
+@@ -1484,6 +1484,8 @@ patternProperties:
+     description: Toby Churchill Ltd.
+   "^tcs,.*":
+     description: Shenzhen City Tang Cheng Technology Co., Ltd.
++  "^tcu,.*":
++    description: TC Unterhaltungselektronik AG
+   "^tdo,.*":
+     description: Shangai Top Display Optoelectronics Co., Ltd
+   "^team-source-display,.*":
+
+-- 
+2.48.0.rc1.219.gb6b6757d772
+
+
