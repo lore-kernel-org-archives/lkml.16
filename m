@@ -1,82 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D875136E3F
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D8292E3380
 	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 05:08:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742706535; cv=none; b=luqKcTYKYjuObxggHGzwdcM1KlNaVUPwTA7BZZSPUVaK0616In1n3mHHypw7RwiaX0a1MMF2JhT23ukqFiVqLPpkkKtCOw7f2fxG5jjU5WJFmTTpjAOZ5qAAqwc5kn5meBaYmZLj1OMzJ8crj0t56ofW1v4EmbYT7/SxJYRKIEc=
+	t=1742706535; cv=none; b=S3zN9K+YgmWbJSDDw7EQ35TEbii6bb676uXAiNH9u07F4ShwS9tQbo57Rnipion4PzAwo3U/pMKU14TYvXIY/HWO5u/D176sorTdfkkezBa67Px8tD6BMVyz4zkgxiQiaKsgmQPu/7IczXiJyL26ARjqLrErMrHIiReUFqKesS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742706535; c=relaxed/simple;
-	bh=P50jUIRYNPDF1+7DYvV/qhb2YN3tv7N1DLLjMTixseI=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type; b=rnJLxZMHhol+TycV5MqNiRjQOVKh7BMgyTmJueMUPe2Tuy87HmiGTzRqS5vJpzhqwvFpQD6c28FpLVet8Ef2KJKTP+6OVLoDzfz2F5FveqWGAdVjnp8dr5prVqBlLm/h6qMGPQqymcPmmz2t0pto6DZRLpw7iNIe4KCmHMc5+qA=
+	bh=enhFoASdbZBLzZOJ1TNInotqkoPm0PXyDsOUmPBFQGY=;
+	h=Message-ID:Date:From:To:Cc:Subject; b=eaJ3biWOTtk1UjaGi4b8m5D0qaObnbx3pwTYsPpAu8cOj+3gVLg9ns5OR3yR3w3kxFEsNUc14KwUrPyxp8P1uxPxjR2gQMUqsTCjSM5tsXOeKhn9w68lkBQ7f4PkO6Q/wgmF6FnoqnReQqvFDgX2u8jCgb13m9tpxVj2BJhlIKs=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED812C4CEE2;
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFBEEC4CEEA;
 	Sun, 23 Mar 2025 05:08:54 +0000 (UTC)
 Received: from rostedt by gandalf with local (Exim 4.98)
 	(envelope-from <rostedt@goodmis.org>)
-	id 1twDaX-00000001wzc-2RMf;
+	id 1twDaX-00000001wz6-1gCO;
 	Sun, 23 Mar 2025 01:09:33 -0400
-Message-ID: <20250323050933.430831510@goodmis.org>
+Message-ID: <20250323050914.459621318@goodmis.org>
 User-Agent: quilt/0.68
-Date: Sun, 23 Mar 2025 01:09:15 -0400
+Date: Sun, 23 Mar 2025 01:09:14 -0400
 From: Steven Rostedt <rostedt@goodmis.org>
 To: linux-kernel@vger.kernel.org
 Cc: Masami Hiramatsu <mhiramat@kernel.org>,
  Mark Rutland <mark.rutland@arm.com>,
  Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
  Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-next][PATCH 1/4] tracing: Fix a compilation error without CONFIG_MODULES
-References: <20250323050914.459621318@goodmis.org>
+Subject: [for-next][PATCH 0/4] ring-buffer: Updates for 6.15
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 
-From: "Masami Hiramatsu (Google)" <mhiramat@kernel.org>
+  git://git.kernel.org/pub/scm/linux/kernel/git/trace/linux-trace.git
+ring-buffer/for-next
 
-There are some code which depends on CONFIG_MODULES. #ifdef
-to enclose it.
-
-Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Link: https://lore.kernel.org/174230515367.2909896.8132122175220657625.stgit@mhiramat.tok.corp.google.com
-Fixes: dca91c1c5468 ("tracing: Have persistent trace instances save module addresses")
-Signed-off-by: Masami Hiramatsu (Google) <mhiramat@kernel.org>
-Signed-off-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- kernel/trace/trace.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index c3c79908766e..68abea81e51a 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -6001,6 +6001,7 @@ struct trace_scratch {
- 
- static DEFINE_MUTEX(scratch_mutex);
- 
-+#ifdef CONFIG_MODULES
- static int save_mod(struct module *mod, void *data)
- {
- 	struct trace_array *tr = data;
-@@ -6025,6 +6026,12 @@ static int save_mod(struct module *mod, void *data)
- 
- 	return 0;
- }
-+#else
-+static int save_mod(struct module *mod, void *data)
-+{
-+	return 0;
-+}
-+#endif
- 
- static void update_last_data(struct trace_array *tr)
- {
--- 
-2.47.2
+Head SHA1: 0e5d1a4b22bca3d9a9a2d2ba79ed67c5e74607d7
 
 
+Jiapeng Chong (1):
+      ring-buffer: Remove the unused variable bmeta
+
+Masami Hiramatsu (Google) (2):
+      tracing: Fix a compilation error without CONFIG_MODULES
+      tracing: Skip update_last_data() if cleared and remove active check for save_mod()
+
+Steven Rostedt (1):
+      tracing: Initialize scratch_size to zero to prevent UB
+
+----
+ kernel/trace/ring_buffer.c |  3 ---
+ kernel/trace/trace.c       | 35 ++++++++++++++++-------------------
+ 2 files changed, 16 insertions(+), 22 deletions(-)
