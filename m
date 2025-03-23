@@ -1,89 +1,92 @@
-Received: from fanzine2.igalia.com (fanzine.igalia.com [178.60.130.6])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F90D17E8E2
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 19:22:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.60.130.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4639EF510;
+	Sun, 23 Mar 2025 19:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742757732; cv=none; b=gRGeMXQzxsJP5EBaBdlCsOYn9Htdg6R7hwsZNcDiuzx5FwM1INIBvTE1p90SSpcDuDKwb2FtQvf2xD9bQJUJr9eawsqU9X/XzdmE0PODFhHSm20NmiUOmUHhut0QfFznagwkNT42DXSR7vJDYUFNt4z2ps18b4+r+I6pQoX2tis=
+	t=1742757848; cv=none; b=UDhKbd2djcwij5vLiEkokXxQa0n3/ycarKhlab6WKbjmJEhR07AXITBg3+izudtrq9GaA6m5ZouKp3fVK2oQPYh8+JMWKoCVrxsYC154R4w4uPb4INiiLra1LsA0JxLjFxLlgHn6Qk/GD8z95rsBU8PvOZc9uDuiPt7A5Xrrr6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742757732; c=relaxed/simple;
-	bh=yCW1WSqIBkpN1Kdf0z0NgS81xun6ufeqlQ4XJkRV73s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=azFdhQULT+ShkDyD8yLNy9/SblyOtGR3KAwwVJsUAnSVayMm2s9okDAXfs2cJ/jJ3ra9i/LkwP8D1QiVT3PgcPdZTgtnmzvS+DjYzHntn+GmSVKJ++OVl82p77Ov+vZkOFrSUkvCJgowJMr2VhTY3z8Bp+ev2//WZkOWHDRVDC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com; spf=pass smtp.mailfrom=igalia.com; dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b=VInR10bh; arc=none smtp.client-ip=178.60.130.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=igalia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=igalia.com
+	s=arc-20240116; t=1742757848; c=relaxed/simple;
+	bh=Dy0hpGo8yWQ5rtG4Jhlvejlc9fuQ+WBwppGj/BD+sf0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MWOxwfh/VOoupRYzEJoxrP1YKdPqqs1xKaz0Pq+RXSNdZpaHWSXzZzpXBTXqeX2xMbsnG9CovHVtbew5FRsAt+eerdu5Hm+bpO2uD8zYv2WUIElznrr0tJmrAsgXBX40O7KsEECIJ9Oq1gQfRy/q0xvpYRZIoOeB9BFf6n9/Nys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lFze4F12; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=igalia.com header.i=@igalia.com header.b="VInR10bh"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=FKK/Gk26NEn/H9dR8QxHNJQIbP5HsuYy1Suou0C5P9w=; b=VInR10bhD6WDtWDN7bG1+GRcsy
-	+ZRRIs9LPrDjXPDEJuJpsVxGzwB+gLJPXvjXC7CdF4/Dc0SXFhB+CgJVO8l9i+m0cq839mrxR/90D
-	NfACE2Amo/lQuL8UJrlM+m5Ho1rAgo51E919IjYySWPkddFmwBDkQFuGU7MuQ4PZ+B+1neU4aCEw7
-	xSn5mUpYnbhqQsj42jy1o2bMsID54rdCTju2nDPVsejZEgXl2xMTO2pfekZKflvc5siSNRJ3itQM8
-	8iVWfaJ46pYs1602+XUO/fX081CtjkQN1Ti5v2KmhzM028XPBAV23y2xjyEN/0uwZaGRZuH+S2S54
-	UP93/MCg==;
-Received: from [187.90.172.172] (helo=[192.168.1.60])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1twQtK-005NjV-9q; Sun, 23 Mar 2025 20:21:50 +0100
-Message-ID: <8247f64e-316d-0eca-9e5d-0c63c7dfc862@igalia.com>
-Date: Sun, 23 Mar 2025 16:21:44 -0300
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lFze4F12"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-224104a9230so7805935ad.1;
+        Sun, 23 Mar 2025 12:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742757846; x=1743362646; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dy0hpGo8yWQ5rtG4Jhlvejlc9fuQ+WBwppGj/BD+sf0=;
+        b=lFze4F12QL60Q52lWhYnGR8tdi8uZ7hB+wSYRKf3XanTzOxZNV9XQ2wB1qITcdl8fj
+         4GNSrakX3Xoi74AFkEhu6OPvotntGGlYqXouijul2HhoYnF63sZUKnQ0oJyIa8NdTQOF
+         BDT19ltEBNYxRcLx1lfcXrPQmNXBXSyHTEj//UzLU7crPY6RHpI4H68OriXNC3ZD4Oi2
+         IerasWLOOdHDSMQwr2LIF0PZUGKIzxU7gZsUwM3TYBUtrHAaBI/i6NPFN5ljmnkKtCAV
+         rAokHh8UuL02aT3qXnZVz3ihlfW8Q2VKs8oSlSXqC0Hp66wWoWbxEOBYzgBHX5GCDH3H
+         G3+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742757846; x=1743362646;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Dy0hpGo8yWQ5rtG4Jhlvejlc9fuQ+WBwppGj/BD+sf0=;
+        b=N7cVVT59mqnCzanB1BTTJ0aUWQO6adXRvY099i05MjCH0BpGjWmE0Mv+PL/Bz3hXOx
+         A7STSzDn04vuanm0ddxFrRzzdRM0xVF0RKG2biLAUvO2XCsz3c8tX++NzqE8Z8UkSl9D
+         Yb++VIV/+fRrbSy/K6YwoiGl52Qkp5RhZGFs4OBFVQTqMffmSHfD6FER3d29CeTxTKDK
+         VBU3f8RQun2VtruPq5e5isz+3usYQPKEaQa7HYiErY1ybhBj0tMcKumKoNJf0S41Z4Xi
+         uCj1b8Gr9olyOAcFvlrNZpMitzo9FvQkxsahb8YEq3eMu2qhOSyUoraMbu9cbkhp3pRx
+         T7Zg==
+X-Forwarded-Encrypted: i=1; AJvYcCV9OHsKRSdV3301tbc+NGbabhOXfGcBGbGXnFntZm1SeMJeM9+pk/qCtQ38Lfo+lBcVOtS7BqKJlvOKYAYzJto=@vger.kernel.org, AJvYcCXTnOjZM2acMkmSgZyD7FDTzbCZhEHs2JVzY3P52U7DSNCgugFSRYv2iONRlJvJuM1T7LMDlUEdp/Um+Aw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyw5E2DM5ZxPOf5RyqlEwLX8Hw0BsQPS1q/jkkKfbbbD/H1LtHk
+	ykAIgXa2C8vwcpBUSyIV5J0Q6etdQW3GDpLqCGWFCDP+/LCtxTRerKgSzBmz+Nk2RcuRxe3G/Mc
+	rauwG+PDCVuGe/ljZ/fcjykB402w=
+X-Gm-Gg: ASbGncuRVcLoNCXC7FDNxcjv4E6ydk+/5o5G39aslqZvq+WZJ60kiMz76gQTGdCH6ns
+	456eVVhBrYmRE+u/5dyR1UptSne3AKsG82dXLpZGWRPZVS9CmJR8LOsZUGXiQFtAxO4eyz9/LdS
+	6UCZAFzX8ADJ+BxAnS3lCcirwZwQ==
+X-Google-Smtp-Source: AGHT+IHC8QLKOnPKCgOf+JWajmyOwdyDtRcfdh4lYiTz+ecifAojfb8ts4i5aO/iCHz9pkPn+34QNCDocIBAGwQugdw=
+X-Received: by 2002:a17:902:ea07:b0:224:1579:b347 with SMTP id
+ d9443c01a7336-22780d82835mr55110405ad.7.1742757846436; Sun, 23 Mar 2025
+ 12:24:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
- Thunderbird/102.15.1
-Subject: Re: [PATCH] x86/tsc: Add debugfs entry to mark TSC as unstable after
- boot
-Content-Language: en-US
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, "H. Peter Anvin" <hpa@zytor.com>,
- x86@kernel.org, linux-kernel@vger.kernel.org, mingo@redhat.com,
- dave.hansen@linux.intel.com, kernel@gpiccoli.net, kernel-dev@igalia.com
-References: <20250226132733.58327-1-gpiccoli@igalia.com>
- <1238b1d0-275c-9117-a2e3-5e7684404980@igalia.com>
- <EA2BAF2F-3F8E-4F81-B71C-7B97677216C9@zytor.com>
- <b43e2353-41ff-f2de-881c-c9a3348552b7@igalia.com> <87iko213qo.ffs@tglx>
- <c9ce2eb1-bf90-3ce4-0adf-3f4e43f4a5bd@igalia.com>
- <20250323181444.GCZ-BPlCAhtO7AIsS7@fat_crate.local>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <20250323181444.GCZ-BPlCAhtO7AIsS7@fat_crate.local>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20250320020740.1631171-1-contact@antoniohickey.com> <20250320020740.1631171-5-contact@antoniohickey.com>
+In-Reply-To: <20250320020740.1631171-5-contact@antoniohickey.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 23 Mar 2025 20:23:52 +0100
+X-Gm-Features: AQ5f1JoXHHwahhVe3ZkJprXZ8Y39wGvnwQDCHA7qtcnvzRh2eol_yxMAY0pLvRY
+Message-ID: <CANiq72mZrLWQ+cCdGZ5aWA_upDFEq00CG9kMLxu_-8g2QSHe-g@mail.gmail.com>
+Subject: Re: [PATCH v5 04/17] rust: task: remove use of `addr_of!` macro
+To: Antonio Hickey <contact@antoniohickey.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 23/03/2025 15:14, Borislav Petkov wrote:
-> On Sun, Mar 23, 2025 at 02:53:05PM -0300, Guilherme G. Piccoli wrote:
->> But what about AMD systems? Even the modern ones apparently lack
->> TSC_ADJUST - or is it changing recently?
-> 
-> Yes, it is.
-
-This is great to hear - is there any starting point model that you know
-AMD introduced/is introducing TSC_ADJUST?
-
-
-> 
-> The only one I know of is a Zen2 laptop where BIOS botches a perfectly fine
-> TSC because those BIOS programmers are soo smart.
-> 
-> If you know of other cases, where are those bug reports?
+On Thu, Mar 20, 2025 at 3:08=E2=80=AFAM Antonio Hickey
+<contact@antoniohickey.com> wrote:
 >
+> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1148
 
-We don't know yet what's going on, some TSC skews reported eventually in
-some machines, in a fleet - but "old" processors, Zen 1st gen.
-Once things are more clear, definitely could provide a more mature
-report of the issue.
+I think I would drop these two lines -- Benno definitely suggested
+what triggered this series, but I think the Link does not apply to
+this particular patch, and Boqun suggested this particular change in a
+review anyway.
 
 Cheers,
-
-
-Guilherme
+Miguel
