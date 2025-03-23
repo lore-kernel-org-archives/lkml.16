@@ -1,67 +1,67 @@
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D768E1C700D
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 22:39:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB821CD1E4
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 22:39:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742769577; cv=none; b=adSBxRGjJU+r/v3V0hoKPAHZBA/3a5uvtaK78ZVTBFxPYXla8ZwE1Psc1QiD2ddYJ697ykyfUYIqfJl4yMP1y8zScMl3sIOOVbBsDzjxoFqKVWUv+OuOBBZ70J/4IGQXL5qpKpaHG5iTryTnKl5pgOA87IVsKN3zmMhzIsRSnnU=
+	t=1742769573; cv=none; b=AjY7/DrkuSpkdYUZ53ereWyBVyfY+RM5VENUT4nvF5G6y6tO12qIGFuIwPploFWMLDkuLra61O+yCAd3tPbblBsmVemBJsTQjA70f8SbsdONkLQFPxpnRw+wnk0QmqHPO/Iu/GJTJK2hv09Og8GryOIs1e+0h81rHT8lcCaxAUY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742769577; c=relaxed/simple;
-	bh=vhmwcNLdq/vAk/57/nIwHgfUXmRE5veIwzqtkTfIDCM=;
+	s=arc-20240116; t=1742769573; c=relaxed/simple;
+	bh=BAdQgtrPovKD1iIkHpNo2/fj9h1pbImjAxhHF9j1z9w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=f0GO8lO4jzUOeGzu/PSAUgJFKzsZFB8x/h/1+OKmSJqUUnnMFgbQUYNBhW6bpO5Ulj2D6YrTlokPCuLI3vOfI2vI38k0dkDaZwt6eIgjC9YTRFH3qGxXok5ckkY61+yuJothqJtt1PND68sPO74crkDoHXFosCmCEGFt8UxOJ4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=evgXH92t; arc=none smtp.client-ip=209.85.218.45
+	 In-Reply-To:To:Cc; b=F8eAx/eVS7WJLK2a5r7+dJzGRqzN10G7TN9O07ps4De7ijWdBsWxkfVRvCCkKiARk+6R7BceV7u5yKPGnm2dqvOD7rj3Gz5XE2JIiKX9LOI4AQyx8+H06bLh+0gPWyuX+dYkN/NHHp2DOvz4UM0rPvh3fwJELNX3/LYc7qNHa6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wektAsnB; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="evgXH92t"
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-ac345bd8e13so673815666b.0
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 15:39:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wektAsnB"
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-ab771575040so944741566b.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 15:39:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742769570; x=1743374370; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1742769567; x=1743374367; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=UPaIY3x3VVrMkB4/G8kk/a/tWB9/OjPG56rBALdlvrQ=;
-        b=evgXH92tqHyJLaExNh4ZZ8xmGgq54s0dUHli9+RWyVVeMQgxKwBPqgNUNz0NTbUKmt
-         X4nhCb8UtjXIROlwBJrVveHFIKsHis4G5uEl1/7Acxh9QIiC6kQX7TJiZgX0p5diHZOV
-         iJL0kLCMz5v5paf4P1xrwduIoXzK5eIpNYZDwQQsG4nCsRR8mZu8XLdMOUbz9SgpNut/
-         sX90rblFd5gfW4jk0iinBQPRvGGsXH3u1AhRjMA331+a8JdABeHlrzOy7Mj+BV69FpGy
-         47Az53jUg/1QoF2F+L0D+n+DDFucYPdV8DShGzY0JJiw203ZlWQQsZ6Z1sXAN6JjEx3r
-         w/EQ==
+        bh=ElO2IZ9G98m5zgbIKm9J2T+DEuKZxhIOZ2O4ti4VZ1Q=;
+        b=wektAsnBPyMEZMxqYx/4ZkVYxXJkd/cRbrZr7cbw2Vl4uX5kwkPdagGjmHAKABKuNS
+         xu/zT1cYWAhXAV0n2TpxFQMS+fTqx040UeHEDSb2Mr7E9hdnDt69PtBVj/IXN6aqiKYv
+         YzK7o8/rUoAzEUC/ai2fYkT9CHGC7K3KJe68jIibInEdL/WprFJb/q5/KrJu0jsFR20p
+         Dy3NyTGFWuYLegvxLwXNQy/4GbSZOUd2EVG+kGDjiapWxNO8NJCBXWbeTPdnT1bRurR7
+         aoU7adxGY5Mu4/tDJOFHZc18mMsUUHlT0E/iWSIkhjpOR90keAJezSdJUWsE2KVRQ8Ig
+         jI1g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742769570; x=1743374370;
+        d=1e100.net; s=20230601; t=1742769567; x=1743374367;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UPaIY3x3VVrMkB4/G8kk/a/tWB9/OjPG56rBALdlvrQ=;
-        b=fenO7MLw3Yf023P1cdaCh9ql5fOmlG120FzYpmT66j5gYPqrnJITsJ7wjP1kTTm42Q
-         QARBmH85c42cd5twocZbaELT85hBZpZUrvpbde+F1oLmUz0aJzm94E/UuDk2mY6BnKbl
-         EMRj1S1CreKTJoh3fjvR9oewlvo3cqZQiGYy0loLq1A9DiZ6UFrj1uRBj607hBLDEvqy
-         zC/t3yZcoXa744HNZT8S4nSwtEBw3V+qEKaPDrO1xMG2Bikf1f+GgluM77AYYLf8Lnok
-         ESnEwk9e+lDHIsB0gpRKCsafZYcOGMzkz9wP/aaCUuKOoAIUi5M0pgatY8TC/rg6MApq
-         hb6g==
-X-Forwarded-Encrypted: i=1; AJvYcCXCUBpejX84ow4I6syrINGths9PzEQqxKbVN/To0PuMt5KXfr87IWIoJvFR6tx6ifVLK29YFUkepVRf5Xc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwfeUg2kyzEhrBch3pknZzyLQjjzoFStWjb0gtD36B/0P7+yzs2
-	nymPGpnxhlZCZHGFHTKw/LhG3CZBU/McF+cqVMseIrqdWfC+yNwDfVGi/6CvUYs=
-X-Gm-Gg: ASbGncuW0x13mirTj2toF7nz4CEzuWgh+atWd6Bcd7wpo4tE8xtd3y2/944oBT4sS/O
-	FE/KlsxdKuC7ePYZ1+TNsMcWoM3ugovxJF8x2p2YPLL6WQ6rJHC6sYoOxAV9udRTSqNp908GerW
-	MKvl0tutO4Q+Tyl4bE5NT3dV+Qpgk/NwBLwcjRPBj0LX0MfV9i8CDwfmL6i6ZrxgSC8LKhgkvcx
-	UhKoWewwll30AABnYVtVX62rmv7b/Vi22bbA5sz/6ZJffwoWp24Y7SCOS2uC0xCz5fTEmbCoh73
-	X6GE6YSKVnSITbH5xo25Pk0CkRoFFQZR+TqSCplNMDLyOCojzDAXMGReITlRpDkfrq75k7S7udr
-	7Kk02DUU3yn8sLlbUue7VaugRPZS0
-X-Google-Smtp-Source: AGHT+IFPXn5kuydsVZ5juxiG+97RkmMKn/3aV6ozY9UpbUvRFJV9i4K4wAS7EARyuWbOU8je237GtQ==
-X-Received: by 2002:a17:907:7293:b0:abf:fb78:673a with SMTP id a640c23a62f3a-ac3f22b0fb0mr895769166b.29.1742769569876;
-        Sun, 23 Mar 2025 15:39:29 -0700 (PDT)
+        bh=ElO2IZ9G98m5zgbIKm9J2T+DEuKZxhIOZ2O4ti4VZ1Q=;
+        b=kQJe9vbm1w2bqx+xNaPupxdiDH2fmRf4S2z7uONJeBnKCmljIIB99yn9uLby2tTB43
+         sHroSvMZtv6qxhKfIEsejWxPtlA9VnFO6IC/4QK2uhy//YOsAyq+XKn2VR1Nb/gtHB82
+         B2qRex+IdVm4CjlSQ8k1nRV60FTsHQ9gCgf6j/XcNj5yzCMdN3+5fhdDV3NkkvDRx3gS
+         Oz1zAhG67ehTM21j//78P/Ao1amlxaoARKWPYa2SObebut6X3qtDUnt/+KiikXHaNknT
+         YxRKt40UdO0d/Wtd1038CEpoQ0v/1if9cEcVJJkDTb4XPwvyG/YgH8wtlKOE0mhxBHgo
+         5mig==
+X-Forwarded-Encrypted: i=1; AJvYcCWkRQWBQX3DtBx4+cwnglHMHd7i/Ml9VHEHbD08w049e52UCxrXVdZYBF6NG9zclKoS+3GPoMDDr+oPOUw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPzpRUluyxmckaiSzoFX+pN5R6Y3+ocGaKVD0H77/tRHhMVK1N
+	nJ0Z7+OfcGbF54KOX0MiZdozolaPWkpOi2FwKQ/9DeJ/5P3RJA91CWFsbaA3Mgo=
+X-Gm-Gg: ASbGncsa5PToUwewy7PVDHmNJaJDyamU+fCfdYdhIqVyNuq6FX2jZi1H4Ctr4X7iXmo
+	6cgtI+JVz60/klKkK+4jZTUD4BDoeVUaPtne7a4qoE7WfKidHi7ZAwfyF7TQTzcqiElkZkx1n3y
+	alkASvviCKJdiH0eWyEDhwTwvoX8ekDcuIOe1XM8tcc/TxxrJ6K903kEdDD8Pll/g1jY6KdyUL3
+	sy7e/J2AYY1qeTXNyfSn4ZnfRM6HoBrIHMajljkdstz2pIvQMnWAn2eQZgeA72Kik3+tcFl7aVp
+	CCM/PzJtau5V1LSEIUOn7hsuwKUE1WmNVkHNiQDD3QHoWpDDmdDOmVbYBXUeqph6hhABLp8EtyF
+	cAaBL25P3ua3TkjYJokflM4Pk9NZi
+X-Google-Smtp-Source: AGHT+IHK84mhAeYJUO60X9G/6jnyMUTEi3qcuoEP39r4Iheks7w5bAT6r9bNJMH9nKdB0JzRhkSGLA==
+X-Received: by 2002:a17:907:d58b:b0:ac3:ef17:f6f0 with SMTP id a640c23a62f3a-ac3f00b5ff7mr1040036766b.5.1742769567137;
+        Sun, 23 Mar 2025 15:39:27 -0700 (PDT)
 Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef86e44dsm559686666b.31.2025.03.23.15.39.29
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef86e44dsm559686666b.31.2025.03.23.15.39.26
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Mar 2025 15:39:29 -0700 (PDT)
+        Sun, 23 Mar 2025 15:39:26 -0700 (PDT)
 From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Sun, 23 Mar 2025 22:39:27 +0000
-Subject: [PATCH 11/34] defconfigs: rename CONFIG_MFD_SEC_CORE to
- CONFIG_MFD_SEC_I2C
+Date: Sun, 23 Mar 2025 22:39:22 +0000
+Subject: [PATCH 06/34] mfd: sec: update includes to add missing and remove
+ superfluous ones
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -70,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20250323-s2mpg10-v1-11-d08943702707@linaro.org>
+Message-Id: <20250323-s2mpg10-v1-6-d08943702707@linaro.org>
 References: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
 In-Reply-To: <20250323-s2mpg10-v1-0-d08943702707@linaro.org>
 To: Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>, 
@@ -90,69 +90,69 @@ Cc: Peter Griffin <peter.griffin@linaro.org>,
  =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
 X-Mailer: b4 0.14.2
 
-We are adding support for Samsung PMICs that aren't using I2C and
-therefore had to rename the Kconfig symbol.
+This driver misses to include some of the respective headers of some of
+the APIs used. It also includes headers that aren't needed (e.g. due to
+previous driver rework where includes weren't updated).
+
+It is good practice to directly include all headers used, which avoids
+implicit dependencies and spurious build breakage if someone rearranged
+headers, as this could cause the implicit includes to be dropped.
+
+Include the relevant headers explicitly and drop superfluous ones.
 
 Signed-off-by: André Draszik <andre.draszik@linaro.org>
 ---
- arch/arm/configs/exynos_defconfig   | 2 +-
- arch/arm/configs/multi_v7_defconfig | 2 +-
- arch/arm/configs/pxa_defconfig      | 2 +-
- arch/arm64/configs/defconfig        | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/mfd/sec-core.c | 7 +++----
+ drivers/mfd/sec-irq.c  | 5 ++++-
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-index 7ad48fdda1dac69a4a9612eabb573729bed7b3a6..251f45be6c14af59263373f21b27b15f42ec7f61 100644
---- a/arch/arm/configs/exynos_defconfig
-+++ b/arch/arm/configs/exynos_defconfig
-@@ -167,7 +167,7 @@ CONFIG_MFD_MAX77686=y
- CONFIG_MFD_MAX77693=y
- CONFIG_MFD_MAX8997=y
- CONFIG_MFD_MAX8998=y
--CONFIG_MFD_SEC_CORE=y
-+CONFIG_MFD_SEC_I2C=y
- CONFIG_MFD_STMPE=y
- CONFIG_STMPE_I2C=y
- CONFIG_MFD_TPS65090=y
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index ad037c175fdb0ec8601c9b3607aca0c0e5f3c145..7d06ac5369b1a2f325462f2cf5b54fe22061ca77 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -612,7 +612,7 @@ CONFIG_MFD_QCOM_RPM=y
- CONFIG_MFD_SPMI_PMIC=y
- CONFIG_MFD_RK8XX_I2C=y
- CONFIG_MFD_RN5T618=y
--CONFIG_MFD_SEC_CORE=y
-+CONFIG_MFD_SEC_I2C=y
- CONFIG_MFD_STMPE=y
- CONFIG_MFD_PALMAS=y
- CONFIG_MFD_TPS65090=y
-diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-index de0ac8f521d7612704ce327e9ac16ab9e999f3d3..064e79baf20da809c9ab1f1fa18282aaba11a41f 100644
---- a/arch/arm/configs/pxa_defconfig
-+++ b/arch/arm/configs/pxa_defconfig
-@@ -335,7 +335,7 @@ CONFIG_MFD_MAX77693=y
- CONFIG_MFD_MAX8907=m
- CONFIG_EZX_PCAP=y
- CONFIG_UCB1400_CORE=m
--CONFIG_MFD_SEC_CORE=y
-+CONFIG_MFD_SEC_I2C=y
- CONFIG_MFD_PALMAS=y
- CONFIG_MFD_TPS65090=y
- CONFIG_MFD_TPS6586X=y
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e8dfbe22db68d9aa24df5af0786a2eeb8f33bf3c..cc4dc330cfe82d11ca0c4c9ba8cac4b14decdeab 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -769,7 +769,7 @@ CONFIG_MFD_MT6397=y
- CONFIG_MFD_SPMI_PMIC=y
- CONFIG_MFD_RK8XX_I2C=y
- CONFIG_MFD_RK8XX_SPI=y
--CONFIG_MFD_SEC_CORE=y
-+CONFIG_MFD_SEC_I2C=y
- CONFIG_MFD_SL28CPLD=y
- CONFIG_RZ_MTU3=y
- CONFIG_MFD_TI_AM335X_TSCADC=m
+diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
+index e31b3a6fbc8922e04a8bfcb78c85b6dbaf395e37..b12020c416aa8bf552f3d3b7829f6a38a773f674 100644
+--- a/drivers/mfd/sec-core.c
++++ b/drivers/mfd/sec-core.c
+@@ -3,9 +3,9 @@
+ // Copyright (c) 2012 Samsung Electronics Co., Ltd
+ //              http://www.samsung.com
+ 
++#include <linux/device.h>
+ #include <linux/err.h>
+ #include <linux/i2c.h>
+-#include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/samsung/core.h>
+@@ -17,13 +17,12 @@
+ #include <linux/mfd/samsung/s2mps15.h>
+ #include <linux/mfd/samsung/s2mpu02.h>
+ #include <linux/mfd/samsung/s5m8767.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/module.h>
+-#include <linux/moduleparam.h>
+-#include <linux/mutex.h>
+ #include <linux/of.h>
++#include <linux/pm.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+-#include <linux/slab.h>
+ 
+ static const struct mfd_cell s5m8767_devs[] = {
+ 	{ .name = "s5m8767-pmic", },
+diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
+index 5c0d949aa1a20f5538d8baf7a8aefc1160ffa14c..3ed2902c3a2634a6ea656d890ecea934053bd192 100644
+--- a/drivers/mfd/sec-irq.c
++++ b/drivers/mfd/sec-irq.c
+@@ -3,7 +3,10 @@
+ // Copyright (c) 2011-2014 Samsung Electronics Co., Ltd
+ //              http://www.samsung.com
+ 
+-#include <linux/device.h>
++#include <linux/array_size.h>
++#include <linux/build_bug.h>
++#include <linux/dev_printk.h>
++#include <linux/export.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/mfd/samsung/core.h>
 
 -- 
 2.49.0.395.g12beb8f557-goog
