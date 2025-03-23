@@ -1,81 +1,72 @@
-Received: from out203-205-221-239.mail.qq.com (out203-205-221-239.mail.qq.com [203.205.221.239])
+Received: from mail-40134.protonmail.ch (mail-40134.protonmail.ch [185.70.40.134])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900E5C13B
-	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 10:31:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.239
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2AEB1A83E4
+	for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 10:31:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.40.134
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742725891; cv=none; b=HxNQFONuDiubKHfdthmiOsVHrvAyYVs4whYK+1pOLb3VRjFEy2izE4tD2BuAl/Guq+cIp+ApJzA0g5RXvFfdsfkmKaqcvWv3+0hcVs4+CyEpfSClWxsL22KKnZ8CtATfd2OZY4zsUsTsp8Fvv42kBgAYzfaL/liocJ9EDt2j/wo=
+	t=1742725915; cv=none; b=PzSwnK6wVxrFzPkqpWDwMasBmoKXFqgN4/4XWs+0fQ/zilddB8RsA/4zjTOmkJtnk+MLqOUj0oiiW6TOaCFvbO0NW5Cw+V/711aaMmii4D5H8bH7tPgoLO4KEHco74zAW6wwH9IEvSRxUW+eas5yP9ntsGUqVhNVBgWZ4YdwDRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742725891; c=relaxed/simple;
-	bh=QF2AoGg4scdjGWHF1iTW3PLjW1x1Qy+EIJuQuxRWCIs=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=oxEIbPc9j51+hSCeZfs117JlZQg2MaBr405JJokqmoLfxOxjIl7JxxOI+uktMpa06VRukvLB54kq93yLNuVDFhMb6MXH5gSOR2nn1x9b6jz5o5m9kBj3uzBqS0M++MU7UFsnvLMokDX4PVxMtJsNIRd7iNvwT9WYgPvtXv5r+4g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=wjp5SYyG; arc=none smtp.client-ip=203.205.221.239
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1742725915; c=relaxed/simple;
+	bh=55nNheuxwighvJJtye1aLs775mgpl+RwATACEKBvtbw=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ZvWzgDaeKGK1UQr3c9lTt8x2X4nnNM8meWOjLvWcPVzsdxDW4uAYZxzqnP8mdeb97qZjoPA0o9OXODYoDxigcSJsiDHNC5nIwlEwJZQV+ZoRnAQDAmKcdf1OHbrb3iAHnkE31Yh+z+Ay/f8EN/320lEpWJWaIUPJafoUdqMPbxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me; spf=pass smtp.mailfrom=proton.me; dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b=gtLjuS0O; arc=none smtp.client-ip=185.70.40.134
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=proton.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=proton.me
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="wjp5SYyG"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1742725883; bh=gPZ7ziPiLzQDZVptNglZpYyCmUeSKA9szXDAGJ1TCZE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=wjp5SYyG+C8LT5N8gdms0L5VCbkNQS7FGZvnt75x53b1bx9tbIOL6E79ktR2W6FyZ
-	 MWnHSswlsGLJ7OTdOXC+ymNbxnrgIUAyG7nl68ws6PWTGDwx4qRes2AKsG6jbOizgz
-	 TqDnsCe6FLvvTk2ZG8rnXoyq4B8t+ZQ8rM/v4kBc=
-Received: from pek-lxu-l1.wrs.com ([114.244.57.157])
-	by newxmesmtplogicsvrsza29-0.qq.com (NewEsmtp) with SMTP
-	id 446B280F; Sun, 23 Mar 2025 18:17:06 +0800
-X-QQ-mid: xmsmtpt1742725026tqxfyiews
-Message-ID: <tencent_2E6078366F502DC96E3897D0EBBAED7ACE0A@qq.com>
-X-QQ-XMAILINFO: M/NR0wiIuy70SJl5l0WEAPRClGy+Um0GYnpsbKKdrAkCdSfmmnt1W5vS21eRor
-	 Q59xaO9UNjQA5rJJVHjAaTyvn3UUXHzudqJSvrOvVt8JSowDx+m5dlVsxVDPEo6/h5XlXB2c6XCI
-	 1xEE9sYQL0AgskNEJev/55vEtWW7rvrjdLFDaggIkLLkyTWb5DYi9IQRNqJW9aBH8/x8XMVWRCdG
-	 p79O7Er/xtByBNHs+UdDlitntVZE2UY25UI4I7nP35SD+qOLpntqaAIQYRrTtRbvEtRLckylTrch
-	 6zxTvJbPUdwlGErckzbxUp+8K1sZxMbAiwzzmhQoeLnPcBuHtSFKMlC5/18v3LYXZT6//6XFEtez
-	 Y23YMt7lCkGy68+kKFHes4eM3DCWwaDjd2mszJKycXoZ9A0a5XOpBbi+bvIAjAtKeUj3jgP4YJjI
-	 OIIWYWDICFs2HMzk5uK+t+k8b2nf/1GNB9pIRNmXWqtRz6j9gnRM7Lj4mUPMaiIqZX+H9ZXi+jdb
-	 FutUs3qM7ZGw8AZNps6MGr8vaHlMps1UGT221Nrz8Mz/d1yUxy171AnlnvGcgiETPwrl1v7qQ51+
-	 Ne/lFpDJQXwmuIFbGKf+j82ioGfbWct9HacWTe09qSj8jSeM9tZ+mgJaV3kHmz2cDDKZNoLVnppl
-	 g5k2Bkspm0XCH5uZnCq6ARKwnKMTJLqfnYSYqyMMohOl7NChd1EaoiqwD5l+FLEad+D3pp4zzsK1
-	 thBFN+V00b+knSFiZIIGHqAMQ04J06Cz914gEPpcOvAi0y3M7LRx7VJ4PDBKQ5G/EXJOg0q0ZKkW
-	 miVhE0JPsh14MShgTN/s+RbIUvsjmIG/UNGIo99IHBX37tHkHXr1QQ/4nXnKMImS111xAsjNzbQx
-	 qR575YJRgPWcg2jtxqWDC55i4Z54Dkie/cmwQsI+chMERRYMN+r6g=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: syzbot+7ea0b96c4ddb49fd1a70@syzkaller.appspotmail.com
-Cc: linux-kernel@vger.kernel.org,
-	syzkaller-bugs@googlegroups.com
-Subject: Re: [syzbot] [ocfs2?] KMSAN: uninit-value in _find_next_bit
-Date: Sun, 23 Mar 2025 18:17:07 +0800
-X-OQ-MSGID: <20250323101706.1245289-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.49.0
-In-Reply-To: <67ddd191.050a0220.25ae54.006a.GAE@google.com>
-References: <67ddd191.050a0220.25ae54.006a.GAE@google.com>
+	dkim=pass (2048-bit key) header.d=proton.me header.i=@proton.me header.b="gtLjuS0O"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=proton.me;
+	s=protonmail; t=1742725911; x=1742985111;
+	bh=3HnCqEYfVz9tGyk/ujqrF4/JHfRLbmYi1i3YjJoCR74=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector:List-Unsubscribe:List-Unsubscribe-Post;
+	b=gtLjuS0OrFvq9Pczol+eCXqqTrbVTG13dPwPf9FFDEUF8P0BTDZB1T0oy/uroaYgM
+	 0NLUBVtJTJ3gftVIvwtwV5oDdxJkX5ZqqNXmoTsaXOYpv154mm/yi/qwCmXsBBQd1t
+	 p6zIMGeJEwHYD12MPiiLkR3PyCfy+oM9hKiodSxXkjZF86rav8jZP3y+6vg6fxIoUK
+	 C34fTp7Yj4AvtnvLAnkucyodU/zx8mFjsu9VnOcU4Clf3vrqYEbm9XtxUm8Ghah4gq
+	 qHuIBTv3BoMRBtQYE7YhgNNJ0w1lO8+iVS7eKJ9G5s6vqmDE0CTiIVijaukPP0lXN/
+	 oT2Noe63Rj2uA==
+Date: Sun, 23 Mar 2025 10:31:44 +0000
+To: Antonio Hickey <contact@antoniohickey.com>, Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>
+From: Benno Lossin <benno.lossin@proton.me>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 03/17] rust: list: refactor to use `&raw [const|mut]`
+Message-ID: <D8NKRTW2HB2H.3PHK4DVWSV2OJ@proton.me>
+In-Reply-To: <20250320020740.1631171-4-contact@antoniohickey.com>
+References: <20250320020740.1631171-1-contact@antoniohickey.com> <20250320020740.1631171-4-contact@antoniohickey.com>
+Feedback-ID: 71780778:user:proton
+X-Pm-Message-ID: b56a39f33cb2af22bcc38dff8d0c9121d28a7d0b
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-#syz test
+On Thu Mar 20, 2025 at 3:07 AM CET, Antonio Hickey wrote:
+> Replacing all occurrences of `addr_of!(place)` and `addr_of_mut!(place)`
+> with `&raw const place` and `&raw mut place` respectively.
+>
+> This will allow us to reduce macro complexity, and improve consistency
+> with existing reference syntax as `&raw const`, `&raw mut` are similar
+> to `&`, `&mut` making it fit more naturally with other existing code.
+>
+> Suggested-by: Benno Lossin <benno.lossin@proton.me>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1148
+> Signed-off-by: Antonio Hickey <contact@antoniohickey.com>
 
-diff --git a/fs/ocfs2/quota_local.c b/fs/ocfs2/quota_local.c
-index 2956d888c131..a6e8376045b5 100644
---- a/fs/ocfs2/quota_local.c
-+++ b/fs/ocfs2/quota_local.c
-@@ -307,6 +307,12 @@ static int ocfs2_add_recovery_chunk(struct super_block *sb,
- 		kfree(rc);
- 		return -ENOMEM;
- 	}
-+	printk("ents: %u, sb: %p, chunk: %d, blksize: %lu, rcb: %p, inited size: %d, %s\n",
-+               ol_chunk_entries(sb), sb, chunk, sb->s_blocksize, rc->rc_bitmap,
-+               (ol_chunk_entries(sb) + 7) >> 3, __func__);
-+	int bit;
-+	for_each_set_bit(bit, (void*)dchunk->dqc_bitmap, ol_chunk_entries(sb));
-+	printk("dqc_bitmap inited all chunk entires. %s\n", __func__);
- 	memcpy(rc->rc_bitmap, dchunk->dqc_bitmap,
- 	       (ol_chunk_entries(sb) + 7) >> 3);
- 	list_add_tail(&rc->rc_list, head);
+Reviewed-by: Benno Lossin <benno.lossin@proton.me>
+
+---
+Cheers,
+Benno
+
+> ---
+>  rust/kernel/list.rs                    | 2 +-
+>  rust/kernel/list/impl_list_item_mod.rs | 6 +++---
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 
