@@ -1,68 +1,67 @@
-Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8768425D214
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:41:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51E4200CB
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742805674; cv=none; b=jIweXRJBzGcXhV9KmNVGcqIO2GKopzTvLcORXjdkHBIZ1mnaE5XQRm3HkGdHZ6v1qaqbglD85HQyeoTH5Hjb6ccNPb94nop3MDN1GLzHu+c4vtWps8tVnfcaHGOhmbl+jF7xbLjIkfyhu4BlKhUivnuQkaRu3cGWHvR7h7ta0IM=
+	t=1742805672; cv=none; b=KavEfZkD81W0gOiedJNNyuJauow+TmG25r4e5PDjS79d08EhL5bWHfTU3jj6XyYCjooiQB74MQLG1p0xGB2txYyvIsMDQU4g6vulOdqwWwWcQechWHRr9CLWrc4D6AlbQpaaMwULhgLmgRMTp5K2Mv/Hh6rqP1pXylvGJG+WOYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742805674; c=relaxed/simple;
-	bh=Z7IxqlTsp9CY6CP1V4lWx7K/ws2KibJ2wskITOyNJAM=;
+	s=arc-20240116; t=1742805672; c=relaxed/simple;
+	bh=KSWp37/3xJv10o3EDk7YnEOgu8qfEW3FThXTG0B1Ke4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=derzcZpo7+cnS6MnESe9k4FuA5Izb5UOhuiU1umSpjURSpxvrwws7pXp+v3iW1lBXX3rIueP46RfUwQDVncw7CnL5XKoNQ926fTOMP+eJKO4v3ZHEvY8WaRpkBS4U9xDpNWPcR51Mob4orn4wLpJ/VprBJu08ricOvxrJcDI+qo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=x1nRvXqQ; arc=none smtp.client-ip=209.85.208.54
+	 In-Reply-To:To:Cc; b=mVLldskY8A+g0G51vwVZBhr7bhXO8n//Fg3+NkUBU2wgMYlhlUgP0TVKXcysN0JC0QiOr6HhdESq+IgRXaU6ojPShLnJEW4zjghuovLrpdqH1BFo/9ViJG3T8Hi3T2O30/YPq2w9dIptXa8I+hQSU1HEAZ00xsevsJ1putF7mcs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=1wV6CbPp; arc=none smtp.client-ip=209.85.208.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="x1nRvXqQ"
-Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-5dccaaca646so7643712a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 01:41:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="1wV6CbPp"
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso5794628a12.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 01:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1742805668; x=1743410468; darn=vger.kernel.org;
+        d=fairphone.com; s=fair; t=1742805667; x=1743410467; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=AkVUmAZx6lVs5OXdh8l+vKRXKduUD/uqBpWi904hWVs=;
-        b=x1nRvXqQGCDOYu2FgRlV0ujsgplhB3ELxfPGxZdt3CMOKWorzPxYAvlDr6b2WRLcmm
-         S+sWAUBnvUkEJrKzP3Z7i9BPvdpE/xDm4vL0sZBh8A0RjE5zDlYKNsSPb8BLc6OLzmPI
-         5byFcLFb3vMtVRx5SagXuVSJB3Pl+cxsbn43+w/3TAcfyDJEqFtPrKeCwDnjE08pxqfm
-         jqjSRyxK2ZI4IhJDIqrLVKWNsVl+s+dXgZapRLfXqn/5umFKH2xg3oSmVtUcFJxVeHxE
-         129PHwZ7y4bbqV7cOqMVLz3fH08+m0R/+ofVpOdov9ffTGM2nuPUz9DEAbto9Ya4MVNS
-         /ZbA==
+        bh=nTf80IeubbyZy4FsO7Ri7gHGg5cGJf6Y2Ngd+8a5bds=;
+        b=1wV6CbPpSMk/6GcB8kJksyMwvckr6vI1RUuZLAhypK4Z8T2VepL0Ah7NQR8DZnggrT
+         533SbMKy/8Olbg2lFYJOiTpEhMKThVwHvYWbPJ0/8O3RWBvc1w1XyiYbA65UUKj8Bjfa
+         xIySeKGjs6LxwAXy688F78QwUqYyranSpsD1J1i/wksRHczUbrU2/HcRbGF99e/0lfB5
+         bNDSWMECt0yJnFqR/ImBSQHCMKZhS8hI43m4knv9fpdiicUUpQZU9UKSbXymzIQ0dJRi
+         hoXrqo18GN+u8qqVVjIQ8njwvIGgZ7R6wy/eYBy9JRUydAu76oqxF9DZrTcml9I3dzQu
+         2yXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742805668; x=1743410468;
+        d=1e100.net; s=20230601; t=1742805667; x=1743410467;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AkVUmAZx6lVs5OXdh8l+vKRXKduUD/uqBpWi904hWVs=;
-        b=bsqRg9FzA6wD/36WuoulZmlPnLfifilheqUPMz/3alrrPdF2j6EHBgqU5SnL1TPkwP
-         zwl5GwxKliT2lHl6pwW2w19XA8MU2qBxB/CP1CHu0vehM425MCFrAWTuiP4XEVzjH1Jz
-         tswDeZZcTEVzCtmwXvyVrxMkXgVrolBOYPwFp8fL/wdHdfvA+/IZrAIm5rinn8Vopmq3
-         YkoYKfxsA74mVZJOb0/0TmTgSb+GBkoerjf/i2LkqHeVSvzZU3a3y4RWCkV0YKP/O3zC
-         r5DuSoAEY28mVGJYbQXrLPiT2+lZK0AmrlIiON7qeT/v+/QHcRMb9vhoP8z/5/Kg1hQR
-         yFAg==
-X-Forwarded-Encrypted: i=1; AJvYcCX6Cs5H/D5LYVKDfe6lA17TDq7YKPfnYwgEBR4m0NeqZor/winBVl3cq0SUW0dAM6/a29d3RkWGsIsSAls=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1tM+ASiUt2crFGMvZoKkHH5SUai40Hot6TYnX+KXsOfLHRFDM
-	ruunZCro2G/hrE8nY+yQt+mVPelMXnabn3iHJJvQRNdLrTqjEQohRiOc72cm+zEEtETLOKDVWar
-	C
-X-Gm-Gg: ASbGncuvRr2dS9yPmcDsJ4CwEgxJCBXCS4CB0huI37eeHsekquX3uH6kfwrmsUZeEOd
-	2kmXPtPSYdx6KS/MPnF9WZRL6wFIoA7lCE1iUk/b/z1t9vOFBbUfaikPpD854PBabiYR3WKFW6E
-	JbEohB2EzmbycEb6H9U722r8bJEvP0GyylHcmunU0Z/dAvtrrVcuJSWUwXEm9MnmtQHbijT4Mur
-	GD8ia6edKB2Cg1EBAPFfy6KY+VShv5snp/+EABkXS3bFKkmdI99YYimWfN6pZqMhjmAb8krGQs3
-	J+lX8RGJr65YNCtw4hkeRA4p86WFaG3ySU1G3W/i1VgU/xTwVEW5+PPaMYS0UK/uhCqf6ZFxUEa
-	FeO+EYKoZrawpAXA50g==
-X-Google-Smtp-Source: AGHT+IGZYnpTAooKGEh2BcI4yBXPcXRUadEOgGc+jDr/nXwaO5/B+mMju37EWSTFJaBhuDJ4Am44SA==
-X-Received: by 2002:a05:6402:4315:b0:5ec:8aeb:812a with SMTP id 4fb4d7f45d1cf-5ec8afac4abmr3732044a12.14.1742805668419;
-        Mon, 24 Mar 2025 01:41:08 -0700 (PDT)
+        bh=nTf80IeubbyZy4FsO7Ri7gHGg5cGJf6Y2Ngd+8a5bds=;
+        b=q0m7G+XETsqv5GL4p/dlcJHxiingyfOqmRYhpXbTnVI5pUCFpXCO5cjCgQwS5JeZVw
+         ucQgtLhNSB+A4j0Qj8QNdV82UVX+rSaGnWRy2/7slXa9xJ19ZNGnA91e2fsxa4hwOTM9
+         MJKANI5Tp/ThoEV74RQq2XH+faGZTgM+MNvbRDhYZJnBSyQF9oIwbo5TkklGjb+Wcljk
+         Vn9hpMx3ZBTsJjgfEu0Xbu4ZbdcU0T9rN/mc9kqsH9ncbxT+3aUSvxAVO4K4eH3fPmEa
+         kD4Cj5soDHsQ39dxHi05rSsPP2Aeo8ZQInSkFvVcU4Xb24pHxyju10LXUEr7OIdjQu2F
+         g4mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUxKwhTfUWtlAdYOo+Ibeub3wuP5h6kZ4CJi2h8E8walNAA/EdJn+RaIxKsGS04df7YFphbA9cLCK0wbDg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzNSGsniF8T6zhso1Dvof+Z6nd23RdzTeVIaZIegqUtwis+s2DH
+	F4vlGOga2wEk2Qo/WVwVbwirr0N9123BFYTLaEVO6VaXRJNirTB92a4jt8l0LTk=
+X-Gm-Gg: ASbGncsAhsxLG1GrU6a5G751YMxZLYt2LW8OQPso31RrXaMPKJYizAGBPBAzNC2Hh9j
+	T9FKUPQCUrduA5U+oAp9VQQRMTZI5PzhVHBTsQdue4z6Z3ktRm7I+GUrRzxrAa2jd9vjuTxMuKk
+	PWHjujKkg4AXyxDx8xQ2lwo2oguZa1LyPG0wYHxX+eoZJmVTTvizRJrWCHodTxr8zkAJGcO5rJ9
+	TqSycX0iGinjg/zqANXMFjrdt0PseLuOi9fhi9w/Ttfb+6Om1sKRdm8xuXCuW32GmZ2uUNJUbY2
+	DgqzP7Es1jrl+YjTfmGAfOoqyKPRsYnAzrlCobIGXSAJyQHEIO4Wi3yQ/kkLew1fC9HV5xSeSg/
+	s4xSd03gImaP2yyLK5g==
+X-Google-Smtp-Source: AGHT+IFI+ZH2iXneGqqmdv18ffHQieyQpfjvA4aVjvSf6dTYNSsZRs7FMsBV7igF7uZjzeOrJuMDfA==
+X-Received: by 2002:a05:6402:500e:b0:5ec:92c3:58c5 with SMTP id 4fb4d7f45d1cf-5ec92c35a94mr3833830a12.29.1742805666879;
+        Mon, 24 Mar 2025 01:41:06 -0700 (PDT)
 Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0dfb33sm5715937a12.68.2025.03.24.01.41.07
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0dfb33sm5715937a12.68.2025.03.24.01.41.05
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 01:41:08 -0700 (PDT)
+        Mon, 24 Mar 2025 01:41:06 -0700 (PDT)
 From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Mon, 24 Mar 2025 09:41:03 +0100
-Subject: [PATCH v2 3/4] clk: qcom: Add video clock controller driver for
- SM6350
+Date: Mon, 24 Mar 2025 09:41:01 +0100
+Subject: [PATCH v2 1/4] arm64: dts: qcom: sm6350: Align reg properties with
+ latest style
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -71,7 +70,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-sm6350-videocc-v2-3-cc22386433f4@fairphone.com>
+Message-Id: <20250324-sm6350-videocc-v2-1-cc22386433f4@fairphone.com>
 References: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
 In-Reply-To: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
 To: Bjorn Andersson <andersson@kernel.org>, 
@@ -83,418 +82,728 @@ To: Bjorn Andersson <andersson@kernel.org>,
 Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
  linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>, 
- Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+ Luca Weiss <luca.weiss@fairphone.com>
 X-Mailer: b4 0.14.2
 
-From: Konrad Dybcio <konradybcio@kernel.org>
+While in the past the 'reg' properties were often written using decimal
+'0' for #address-cells = <2> & #size-cells = <2>, nowadays the style is
+to use hexadecimal '0x0' instead.
 
-Add support for the video clock controller found on SM6350 based
-devices.
+Align this dtsi file to the new style to make it consistent, and don't
+use mixed 0x0 and 0 anymore.
 
-Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-Signed-off-by: Konrad Dybcio <konradybcio@kernel.org>
-Co-developed-by: Luca Weiss <luca.weiss@fairphone.com>
 Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
 ---
- drivers/clk/qcom/Kconfig          |   9 +
- drivers/clk/qcom/Makefile         |   1 +
- drivers/clk/qcom/videocc-sm6350.c | 355 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 365 insertions(+)
+ arch/arm64/boot/dts/qcom/sm6350.dtsi | 204 +++++++++++++++++------------------
+ 1 file changed, 102 insertions(+), 102 deletions(-)
 
-diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-index 7d5dac26b244bfe785370033ad8ba49876d6627d..602e35d3d6c5b3b76947d892bb705fe742daf081 100644
---- a/drivers/clk/qcom/Kconfig
-+++ b/drivers/clk/qcom/Kconfig
-@@ -1329,6 +1329,15 @@ config SA_VIDEOCC_8775P
- 	  Say Y if you want to support video devices and functionality such as
- 	  video encode/decode.
+diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+index 00ad1d09a19558d9e2bc61f1a81a36d466adc88e..42f9d16c2fa6da66a8bb524a33c2687a1e4b40e0 100644
+--- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
++++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
+@@ -566,114 +566,114 @@ reserved_memory: reserved-memory {
+ 		ranges;
  
-+config SM_VIDEOCC_6350
-+	tristate "SM6350 Video Clock Controller"
-+	select SM_GCC_6350
-+	select QCOM_GDSC
-+	help
-+	  Support for the video clock controller on SM6350 devices.
-+	  Say Y if you want to support video devices and functionality such as
-+	  video encode and decode.
-+
- config SM_VIDEOCC_7150
- 	tristate "SM7150 Video Clock Controller"
- 	depends on ARM64 || COMPILE_TEST
-diff --git a/drivers/clk/qcom/Makefile b/drivers/clk/qcom/Makefile
-index 96862e99e5d432bbfba193c961d59ec5e601f10a..70895bc465549b87c7c7a8dc6f8ac84c223a85d6 100644
---- a/drivers/clk/qcom/Makefile
-+++ b/drivers/clk/qcom/Makefile
-@@ -164,6 +164,7 @@ obj-$(CONFIG_SM_LPASSCC_6115) += lpasscc-sm6115.o
- obj-$(CONFIG_SM_TCSRCC_8550) += tcsrcc-sm8550.o
- obj-$(CONFIG_SM_TCSRCC_8650) += tcsrcc-sm8650.o
- obj-$(CONFIG_SM_TCSRCC_8750) += tcsrcc-sm8750.o
-+obj-$(CONFIG_SM_VIDEOCC_6350) += videocc-sm6350.o
- obj-$(CONFIG_SM_VIDEOCC_7150) += videocc-sm7150.o
- obj-$(CONFIG_SM_VIDEOCC_8150) += videocc-sm8150.o
- obj-$(CONFIG_SM_VIDEOCC_8250) += videocc-sm8250.o
-diff --git a/drivers/clk/qcom/videocc-sm6350.c b/drivers/clk/qcom/videocc-sm6350.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..34bdc5aa865ac3e0c23ac1a2f5e471d3cfe64192
---- /dev/null
-+++ b/drivers/clk/qcom/videocc-sm6350.c
-@@ -0,0 +1,355 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (c) 2021, The Linux Foundation. All rights reserved.
-+ * Copyright (c) 2021, Konrad Dybcio <konrad.dybcio@somainline.org>
-+ * Copyright (c) 2025, Luca Weiss <luca.weiss@fairphone.com>
-+ */
-+
-+#include <linux/clk-provider.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+#include <dt-bindings/clock/qcom,sm6350-videocc.h>
-+
-+#include "clk-alpha-pll.h"
-+#include "clk-branch.h"
-+#include "clk-rcg.h"
-+#include "clk-regmap.h"
-+#include "common.h"
-+#include "gdsc.h"
-+
-+enum {
-+	DT_IFACE,
-+	DT_BI_TCXO,
-+	DT_SLEEP_CLK,
-+};
-+
-+enum {
-+	P_BI_TCXO,
-+	P_CHIP_SLEEP_CLK,
-+	P_VIDEO_PLL0_OUT_EVEN,
-+};
-+
-+static const struct pll_vco fabia_vco[] = {
-+	{ 125000000, 1000000000, 1 },
-+};
-+
-+/* 600 MHz */
-+static const struct alpha_pll_config video_pll0_config = {
-+	.l = 0x1f,
-+	.alpha = 0x4000,
-+	.config_ctl_val = 0x20485699,
-+	.config_ctl_hi_val = 0x00002067,
-+	.test_ctl_val = 0x40000000,
-+	.test_ctl_hi_val = 0x00000002,
-+	.user_ctl_val = 0x00000101,
-+	.user_ctl_hi_val = 0x00004005,
-+};
-+
-+static struct clk_alpha_pll video_pll0 = {
-+	.offset = 0x0,
-+	.vco_table = fabia_vco,
-+	.num_vco = ARRAY_SIZE(fabia_vco),
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
-+	.clkr = {
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_pll0",
-+			.parent_data = &(const struct clk_parent_data) {
-+				.index = DT_BI_TCXO,
-+			},
-+			.num_parents = 1,
-+			.ops = &clk_alpha_pll_fabia_ops,
-+		},
-+	},
-+};
-+
-+static const struct clk_div_table post_div_table_video_pll0_out_even[] = {
-+	{ 0x1, 2 },
-+	{ }
-+};
-+
-+static struct clk_alpha_pll_postdiv video_pll0_out_even = {
-+	.offset = 0x0,
-+	.post_div_shift = 8,
-+	.post_div_table = post_div_table_video_pll0_out_even,
-+	.num_post_div = ARRAY_SIZE(post_div_table_video_pll0_out_even),
-+	.width = 4,
-+	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_pll0_out_even",
-+		.parent_hws = (const struct clk_hw*[]) {
-+			&video_pll0.clkr.hw,
-+		},
-+		.num_parents = 1,
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_alpha_pll_postdiv_fabia_ops,
-+	},
-+};
-+
-+static const struct parent_map video_cc_parent_map_0[] = {
-+	{ P_BI_TCXO, 0 },
-+	{ P_VIDEO_PLL0_OUT_EVEN, 3 },
-+};
-+
-+static const struct clk_parent_data video_cc_parent_data_0[] = {
-+	{ .index = DT_BI_TCXO },
-+	{ .hw = &video_pll0_out_even.clkr.hw },
-+};
-+
-+static const struct parent_map video_cc_parent_map_1[] = {
-+	{ P_CHIP_SLEEP_CLK, 0 },
-+};
-+
-+static const struct clk_parent_data video_cc_parent_data_1[] = {
-+	{ .index = DT_SLEEP_CLK },
-+};
-+
-+static const struct freq_tbl ftbl_video_cc_iris_clk_src[] = {
-+	F(133250000, P_VIDEO_PLL0_OUT_EVEN, 2, 0, 0),
-+	F(240000000, P_VIDEO_PLL0_OUT_EVEN, 1.5, 0, 0),
-+	F(300000000, P_VIDEO_PLL0_OUT_EVEN, 1, 0, 0),
-+	F(380000000, P_VIDEO_PLL0_OUT_EVEN, 1, 0, 0),
-+	F(460000000, P_VIDEO_PLL0_OUT_EVEN, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 video_cc_iris_clk_src = {
-+	.cmd_rcgr = 0x1000,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_0,
-+	.freq_tbl = ftbl_video_cc_iris_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_iris_clk_src",
-+		.parent_data = video_cc_parent_data_0,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_0),
-+		.flags = CLK_SET_RATE_PARENT,
-+		.ops = &clk_rcg2_shared_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_video_cc_sleep_clk_src[] = {
-+	F(32764, P_CHIP_SLEEP_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 video_cc_sleep_clk_src = {
-+	.cmd_rcgr = 0x701c,
-+	.mnd_width = 0,
-+	.hid_width = 5,
-+	.parent_map = video_cc_parent_map_1,
-+	.freq_tbl = ftbl_video_cc_sleep_clk_src,
-+	.clkr.hw.init = &(const struct clk_init_data) {
-+		.name = "video_cc_sleep_clk_src",
-+		.parent_data = video_cc_parent_data_1,
-+		.num_parents = ARRAY_SIZE(video_cc_parent_data_1),
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_branch video_cc_iris_ahb_clk = {
-+	.halt_reg = 0x5004,
-+	.halt_check = BRANCH_VOTED,
-+	.clkr = {
-+		.enable_reg = 0x5004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_iris_ahb_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_iris_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_mvs0_axi_clk = {
-+	.halt_reg = 0x800c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x800c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvs0_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_mvs0_core_clk = {
-+	.halt_reg = 0x3010,
-+	.halt_check = BRANCH_VOTED,
-+	.hwcg_reg = 0x3010,
-+	.hwcg_bit = 1,
-+	.clkr = {
-+		.enable_reg = 0x3010,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvs0_core_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_iris_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_mvsc_core_clk = {
-+	.halt_reg = 0x2014,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x2014,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvsc_core_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_iris_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_mvsc_ctl_axi_clk = {
-+	.halt_reg = 0x8004,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x8004,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_mvsc_ctl_axi_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_sleep_clk = {
-+	.halt_reg = 0x7034,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x7034,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_sleep_clk",
-+			.parent_hws = (const struct clk_hw*[]) {
-+				&video_cc_sleep_clk_src.clkr.hw,
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch video_cc_venus_ahb_clk = {
-+	.halt_reg = 0x801c,
-+	.halt_check = BRANCH_HALT,
-+	.clkr = {
-+		.enable_reg = 0x801c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(const struct clk_init_data) {
-+			.name = "video_cc_venus_ahb_clk",
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct gdsc mvsc_gdsc = {
-+	.gdscr = 0x2004,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0x6,
-+	.pd = {
-+		.name = "mvsc_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+};
-+
-+static struct gdsc mvs0_gdsc = {
-+	.gdscr = 0x3004,
-+	.en_rest_wait_val = 0x2,
-+	.en_few_wait_val = 0x2,
-+	.clk_dis_wait_val = 0x6,
-+	.pd = {
-+		.name = "mvs0_gdsc",
-+	},
-+	.pwrsts = PWRSTS_OFF_ON,
-+	.flags = HW_CTRL_TRIGGER,
-+};
-+
-+static struct gdsc *video_cc_sm6350_gdscs[] = {
-+	[MVSC_GDSC] = &mvsc_gdsc,
-+	[MVS0_GDSC] = &mvs0_gdsc,
-+};
-+
-+static struct clk_regmap *video_cc_sm6350_clocks[] = {
-+	[VIDEO_CC_IRIS_AHB_CLK] = &video_cc_iris_ahb_clk.clkr,
-+	[VIDEO_CC_IRIS_CLK_SRC] = &video_cc_iris_clk_src.clkr,
-+	[VIDEO_CC_MVS0_AXI_CLK] = &video_cc_mvs0_axi_clk.clkr,
-+	[VIDEO_CC_MVS0_CORE_CLK] = &video_cc_mvs0_core_clk.clkr,
-+	[VIDEO_CC_MVSC_CORE_CLK] = &video_cc_mvsc_core_clk.clkr,
-+	[VIDEO_CC_MVSC_CTL_AXI_CLK] = &video_cc_mvsc_ctl_axi_clk.clkr,
-+	[VIDEO_CC_SLEEP_CLK] = &video_cc_sleep_clk.clkr,
-+	[VIDEO_CC_SLEEP_CLK_SRC] = &video_cc_sleep_clk_src.clkr,
-+	[VIDEO_CC_VENUS_AHB_CLK] = &video_cc_venus_ahb_clk.clkr,
-+	[VIDEO_PLL0] = &video_pll0.clkr,
-+	[VIDEO_PLL0_OUT_EVEN] = &video_pll0_out_even.clkr,
-+};
-+
-+static const struct regmap_config video_cc_sm6350_regmap_config = {
-+	.reg_bits = 32,
-+	.reg_stride = 4,
-+	.val_bits = 32,
-+	.max_register = 0xb000,
-+	.fast_io = true,
-+};
-+
-+static const struct qcom_cc_desc video_cc_sm6350_desc = {
-+	.config = &video_cc_sm6350_regmap_config,
-+	.clks = video_cc_sm6350_clocks,
-+	.num_clks = ARRAY_SIZE(video_cc_sm6350_clocks),
-+	.gdscs = video_cc_sm6350_gdscs,
-+	.num_gdscs = ARRAY_SIZE(video_cc_sm6350_gdscs),
-+};
-+
-+static const struct of_device_id video_cc_sm6350_match_table[] = {
-+	{ .compatible = "qcom,sm6350-videocc" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, video_cc_sm6350_match_table);
-+
-+static int video_cc_sm6350_probe(struct platform_device *pdev)
-+{
-+	struct regmap *regmap;
-+
-+	regmap = qcom_cc_map(pdev, &video_cc_sm6350_desc);
-+	if (IS_ERR(regmap))
-+		return PTR_ERR(regmap);
-+
-+	clk_fabia_pll_configure(&video_pll0, regmap, &video_pll0_config);
-+
-+	/* Keep some clocks always-on */
-+	qcom_branch_set_clk_en(regmap, 0x7018); /* VIDEO_CC_XO_CLK */
-+
-+	return qcom_cc_really_probe(&pdev->dev, &video_cc_sm6350_desc, regmap);
-+}
-+
-+static struct platform_driver video_cc_sm6350_driver = {
-+	.probe = video_cc_sm6350_probe,
-+	.driver = {
-+		.name = "video_cc-sm6350",
-+		.of_match_table = video_cc_sm6350_match_table,
-+	},
-+};
-+
-+module_platform_driver(video_cc_sm6350_driver);
-+
-+MODULE_DESCRIPTION("QTI VIDEO_CC SM6350 Driver");
-+MODULE_LICENSE("GPL");
+ 		hyp_mem: memory@80000000 {
+-			reg = <0 0x80000000 0 0x600000>;
++			reg = <0x0 0x80000000 0x0 0x600000>;
+ 			no-map;
+ 		};
+ 
+ 		xbl_aop_mem: memory@80700000 {
+-			reg = <0 0x80700000 0 0x160000>;
++			reg = <0x0 0x80700000 0x0 0x160000>;
+ 			no-map;
+ 		};
+ 
+ 		cmd_db: memory@80860000 {
+ 			compatible = "qcom,cmd-db";
+-			reg = <0 0x80860000 0 0x20000>;
++			reg = <0x0 0x80860000 0x0 0x20000>;
+ 			no-map;
+ 		};
+ 
+ 		sec_apps_mem: memory@808ff000 {
+-			reg = <0 0x808ff000 0 0x1000>;
++			reg = <0x0 0x808ff000 0x0 0x1000>;
+ 			no-map;
+ 		};
+ 
+ 		smem_mem: memory@80900000 {
+-			reg = <0 0x80900000 0 0x200000>;
++			reg = <0x0 0x80900000 0x0 0x200000>;
+ 			no-map;
+ 		};
+ 
+ 		cdsp_sec_mem: memory@80b00000 {
+-			reg = <0 0x80b00000 0 0x1e00000>;
++			reg = <0x0 0x80b00000 0x0 0x1e00000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_camera_mem: memory@86000000 {
+-			reg = <0 0x86000000 0 0x500000>;
++			reg = <0x0 0x86000000 0x0 0x500000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_npu_mem: memory@86500000 {
+-			reg = <0 0x86500000 0 0x500000>;
++			reg = <0x0 0x86500000 0x0 0x500000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_video_mem: memory@86a00000 {
+-			reg = <0 0x86a00000 0 0x500000>;
++			reg = <0x0 0x86a00000 0x0 0x500000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_cdsp_mem: memory@86f00000 {
+-			reg = <0 0x86f00000 0 0x1e00000>;
++			reg = <0x0 0x86f00000 0x0 0x1e00000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_adsp_mem: memory@88d00000 {
+-			reg = <0 0x88d00000 0 0x2800000>;
++			reg = <0x0 0x88d00000 0x0 0x2800000>;
+ 			no-map;
+ 		};
+ 
+ 		wlan_fw_mem: memory@8b500000 {
+-			reg = <0 0x8b500000 0 0x200000>;
++			reg = <0x0 0x8b500000 0x0 0x200000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_ipa_fw_mem: memory@8b700000 {
+-			reg = <0 0x8b700000 0 0x10000>;
++			reg = <0x0 0x8b700000 0x0 0x10000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_ipa_gsi_mem: memory@8b710000 {
+-			reg = <0 0x8b710000 0 0x5400>;
++			reg = <0x0 0x8b710000 0x0 0x5400>;
+ 			no-map;
+ 		};
+ 
+ 		pil_modem_mem: memory@8b800000 {
+-			reg = <0 0x8b800000 0 0xf800000>;
++			reg = <0x0 0x8b800000 0x0 0xf800000>;
+ 			no-map;
+ 		};
+ 
+ 		cont_splash_memory: memory@a0000000 {
+-			reg = <0 0xa0000000 0 0x2300000>;
++			reg = <0x0 0xa0000000 0x0 0x2300000>;
+ 			no-map;
+ 		};
+ 
+ 		dfps_data_memory: memory@a2300000 {
+-			reg = <0 0xa2300000 0 0x100000>;
++			reg = <0x0 0xa2300000 0x0 0x100000>;
+ 			no-map;
+ 		};
+ 
+ 		removed_region: memory@c0000000 {
+-			reg = <0 0xc0000000 0 0x3900000>;
++			reg = <0x0 0xc0000000 0x0 0x3900000>;
+ 			no-map;
+ 		};
+ 
+ 		pil_gpu_mem: memory@f0d00000 {
+-			reg = <0 0xf0d00000 0 0x1000>;
++			reg = <0x0 0xf0d00000 0x0 0x1000>;
+ 			no-map;
+ 		};
+ 
+ 		debug_region: memory@ffb00000 {
+-			reg = <0 0xffb00000 0 0xc0000>;
++			reg = <0x0 0xffb00000 0x0 0xc0000>;
+ 			no-map;
+ 		};
+ 
+ 		last_log_region: memory@ffbc0000 {
+-			reg = <0 0xffbc0000 0 0x40000>;
++			reg = <0x0 0xffbc0000 0x0 0x40000>;
+ 			no-map;
+ 		};
+ 
+ 		ramoops: ramoops@ffc00000 {
+ 			compatible = "ramoops";
+-			reg = <0 0xffc00000 0 0x100000>;
++			reg = <0x0 0xffc00000 0x0 0x100000>;
+ 			record-size = <0x1000>;
+ 			console-size = <0x40000>;
+ 			pmsg-size = <0x20000>;
+@@ -682,7 +682,7 @@ ramoops: ramoops@ffc00000 {
+ 		};
+ 
+ 		cmdline_region: memory@ffd00000 {
+-			reg = <0 0xffd00000 0 0x1000>;
++			reg = <0x0 0xffd00000 0x0 0x1000>;
+ 			no-map;
+ 		};
+ 	};
+@@ -786,7 +786,7 @@ soc: soc@0 {
+ 
+ 		gcc: clock-controller@100000 {
+ 			compatible = "qcom,gcc-sm6350";
+-			reg = <0 0x00100000 0 0x1f0000>;
++			reg = <0x0 0x00100000 0x0 0x1f0000>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+ 			#power-domain-cells = <1>;
+@@ -800,7 +800,7 @@ gcc: clock-controller@100000 {
+ 
+ 		ipcc: mailbox@408000 {
+ 			compatible = "qcom,sm6350-ipcc", "qcom,ipcc";
+-			reg = <0 0x00408000 0 0x1000>;
++			reg = <0x0 0x00408000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
+@@ -809,7 +809,7 @@ ipcc: mailbox@408000 {
+ 
+ 		qfprom: qfprom@784000 {
+ 			compatible = "qcom,sm6350-qfprom", "qcom,qfprom";
+-			reg = <0 0x00784000 0 0x3000>;
++			reg = <0x0 0x00784000 0x0 0x3000>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
+ 
+@@ -821,16 +821,16 @@ gpu_speed_bin: gpu-speed-bin@2015 {
+ 
+ 		rng: rng@793000 {
+ 			compatible = "qcom,prng-ee";
+-			reg = <0 0x00793000 0 0x1000>;
++			reg = <0x0 0x00793000 0x0 0x1000>;
+ 			clocks = <&gcc GCC_PRNG_AHB_CLK>;
+ 			clock-names = "core";
+ 		};
+ 
+ 		sdhc_1: mmc@7c4000 {
+ 			compatible = "qcom,sm6350-sdhci", "qcom,sdhci-msm-v5";
+-			reg = <0 0x007c4000 0 0x1000>,
+-				<0 0x007c5000 0 0x1000>,
+-				<0 0x007c8000 0 0x8000>;
++			reg = <0x0 0x007c4000 0x0 0x1000>,
++			      <0x0 0x007c5000 0x0 0x1000>,
++			      <0x0 0x007c8000 0x0 0x8000>;
+ 			reg-names = "hc", "cqhci", "ice";
+ 
+ 			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
+@@ -875,7 +875,7 @@ opp-384000000 {
+ 
+ 		gpi_dma0: dma-controller@800000 {
+ 			compatible = "qcom,sm6350-gpi-dma";
+-			reg = <0 0x00800000 0 0x60000>;
++			reg = <0x0 0x00800000 0x0 0x60000>;
+ 			interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
+@@ -907,7 +907,7 @@ qupv3_id_0: geniqup@8c0000 {
+ 
+ 			i2c0: i2c@880000 {
+ 				compatible = "qcom,geni-i2c";
+-				reg = <0 0x00880000 0 0x4000>;
++				reg = <0x0 0x00880000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
+ 				pinctrl-names = "default";
+@@ -927,7 +927,7 @@ i2c0: i2c@880000 {
+ 
+ 			uart1: serial@884000 {
+ 				compatible = "qcom,geni-uart";
+-				reg = <0 0x00884000 0 0x4000>;
++				reg = <0x0 0x00884000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
+ 				pinctrl-names = "default";
+@@ -943,7 +943,7 @@ uart1: serial@884000 {
+ 
+ 			i2c2: i2c@888000 {
+ 				compatible = "qcom,geni-i2c";
+-				reg = <0 0x00888000 0 0x4000>;
++				reg = <0x0 0x00888000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
+ 				pinctrl-names = "default";
+@@ -964,7 +964,7 @@ i2c2: i2c@888000 {
+ 
+ 		gpi_dma1: dma-controller@900000 {
+ 			compatible = "qcom,sm6350-gpi-dma";
+-			reg = <0 0x00900000 0 0x60000>;
++			reg = <0x0 0x00900000 0x0 0x60000>;
+ 			interrupts = <GIC_SPI 645 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 646 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 647 IRQ_TYPE_LEVEL_HIGH>,
+@@ -996,7 +996,7 @@ qupv3_id_1: geniqup@9c0000 {
+ 
+ 			i2c6: i2c@980000 {
+ 				compatible = "qcom,geni-i2c";
+-				reg = <0 0x00980000 0 0x4000>;
++				reg = <0x0 0x00980000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
+ 				pinctrl-names = "default";
+@@ -1016,7 +1016,7 @@ i2c6: i2c@980000 {
+ 
+ 			i2c7: i2c@984000 {
+ 				compatible = "qcom,geni-i2c";
+-				reg = <0 0x00984000 0 0x4000>;
++				reg = <0x0 0x00984000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
+ 				pinctrl-names = "default";
+@@ -1036,7 +1036,7 @@ i2c7: i2c@984000 {
+ 
+ 			i2c8: i2c@988000 {
+ 				compatible = "qcom,geni-i2c";
+-				reg = <0 0x00988000 0 0x4000>;
++				reg = <0x0 0x00988000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
+ 				pinctrl-names = "default";
+@@ -1056,7 +1056,7 @@ i2c8: i2c@988000 {
+ 
+ 			uart9: serial@98c000 {
+ 				compatible = "qcom,geni-debug-uart";
+-				reg = <0 0x0098c000 0 0x4000>;
++				reg = <0x0 0x0098c000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
+ 				pinctrl-names = "default";
+@@ -1070,7 +1070,7 @@ uart9: serial@98c000 {
+ 
+ 			i2c10: i2c@990000 {
+ 				compatible = "qcom,geni-i2c";
+-				reg = <0 0x00990000 0 0x4000>;
++				reg = <0x0 0x00990000 0x0 0x4000>;
+ 				clock-names = "se";
+ 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
+ 				pinctrl-names = "default";
+@@ -1091,14 +1091,14 @@ i2c10: i2c@990000 {
+ 
+ 		config_noc: interconnect@1500000 {
+ 			compatible = "qcom,sm6350-config-noc";
+-			reg = <0 0x01500000 0 0x28000>;
++			reg = <0x0 0x01500000 0x0 0x28000>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		system_noc: interconnect@1620000 {
+ 			compatible = "qcom,sm6350-system-noc";
+-			reg = <0 0x01620000 0 0x17080>;
++			reg = <0x0 0x01620000 0x0 0x17080>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 
+@@ -1111,14 +1111,14 @@ clk_virt: interconnect-clk-virt {
+ 
+ 		aggre1_noc: interconnect@16e0000 {
+ 			compatible = "qcom,sm6350-aggre1-noc";
+-			reg = <0 0x016e0000 0 0x15080>;
++			reg = <0x0 0x016e0000 0x0 0x15080>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		aggre2_noc: interconnect@1700000 {
+ 			compatible = "qcom,sm6350-aggre2-noc";
+-			reg = <0 0x01700000 0 0x1f880>;
++			reg = <0x0 0x01700000 0x0 0x1f880>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 
+@@ -1131,7 +1131,7 @@ compute_noc: interconnect-compute-noc {
+ 
+ 		mmss_noc: interconnect@1740000 {
+ 			compatible = "qcom,sm6350-mmss-noc";
+-			reg = <0 0x01740000 0 0x1c100>;
++			reg = <0x0 0x01740000 0x0 0x1c100>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+@@ -1139,8 +1139,8 @@ mmss_noc: interconnect@1740000 {
+ 		ufs_mem_hc: ufshc@1d84000 {
+ 			compatible = "qcom,sm6350-ufshc", "qcom,ufshc",
+ 				     "jedec,ufs-2.0";
+-			reg = <0 0x01d84000 0 0x3000>,
+-			      <0 0x01d90000 0 0x8000>;
++			reg = <0x0 0x01d84000 0x0 0x3000>,
++			      <0x0 0x01d90000 0x0 0x8000>;
+ 			reg-names = "std", "ice";
+ 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
+ 			phys = <&ufs_mem_phy>;
+@@ -1188,7 +1188,7 @@ ufs_mem_hc: ufshc@1d84000 {
+ 
+ 		ufs_mem_phy: phy@1d87000 {
+ 			compatible = "qcom,sm6350-qmp-ufs-phy";
+-			reg = <0 0x01d87000 0 0x1000>;
++			reg = <0x0 0x01d87000 0x0 0x1000>;
+ 
+ 			clocks = <&rpmhcc RPMH_CXO_CLK>,
+ 				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>,
+@@ -1209,7 +1209,7 @@ ufs_mem_phy: phy@1d87000 {
+ 
+ 		cryptobam: dma-controller@1dc4000 {
+ 			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
+-			reg = <0 0x01dc4000 0 0x24000>;
++			reg = <0x0 0x01dc4000 0x0 0x24000>;
+ 			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
+ 			#dma-cells = <1>;
+ 			qcom,ee = <0>;
+@@ -1225,7 +1225,7 @@ cryptobam: dma-controller@1dc4000 {
+ 
+ 		crypto: crypto@1dfa000 {
+ 			compatible = "qcom,sm6350-qce", "qcom,sm8150-qce", "qcom,qce";
+-			reg = <0 0x01dfa000 0 0x6000>;
++			reg = <0x0 0x01dfa000 0x0 0x6000>;
+ 			dmas = <&cryptobam 4>, <&cryptobam 5>;
+ 			dma-names = "rx", "tx";
+ 			iommus = <&apps_smmu 0x426 0x11>,
+@@ -1243,9 +1243,9 @@ ipa: ipa@1e40000 {
+ 
+ 			iommus = <&apps_smmu 0x440 0x0>,
+ 				 <&apps_smmu 0x442 0x0>;
+-			reg = <0 0x01e40000 0 0x8000>,
+-			      <0 0x01e50000 0 0x3000>,
+-			      <0 0x01e04000 0 0x23000>;
++			reg = <0x0 0x01e40000 0x0 0x8000>,
++			      <0x0 0x01e50000 0x0 0x3000>,
++			      <0x0 0x01e04000 0x0 0x23000>;
+ 			reg-names = "ipa-reg",
+ 				    "ipa-shared",
+ 				    "gsi";
+@@ -1351,8 +1351,8 @@ compute-cb@5 {
+ 
+ 		gpu: gpu@3d00000 {
+ 			compatible = "qcom,adreno-619.0", "qcom,adreno";
+-			reg = <0 0x03d00000 0 0x40000>,
+-			      <0 0x03d9e000 0 0x1000>;
++			reg = <0x0 0x03d00000 0x0 0x40000>,
++			      <0x0 0x03d9e000 0x0 0x1000>;
+ 			reg-names = "kgsl_3d0_reg_memory",
+ 				    "cx_mem";
+ 			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1419,7 +1419,7 @@ opp-253000000 {
+ 
+ 		adreno_smmu: iommu@3d40000 {
+ 			compatible = "qcom,sm6350-smmu-v2", "qcom,adreno-smmu", "qcom,smmu-v2";
+-			reg = <0 0x03d40000 0 0x10000>;
++			reg = <0x0 0x03d40000 0x0 0x10000>;
+ 			#iommu-cells = <1>;
+ 			#global-interrupts = <2>;
+ 			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
+@@ -1445,9 +1445,9 @@ adreno_smmu: iommu@3d40000 {
+ 
+ 		gmu: gmu@3d6a000 {
+ 			compatible = "qcom,adreno-gmu-619.0", "qcom,adreno-gmu";
+-			reg = <0 0x03d6a000 0 0x31000>,
+-			      <0 0x0b290000 0 0x10000>,
+-			      <0 0x0b490000 0 0x10000>;
++			reg = <0x0 0x03d6a000 0x0 0x31000>,
++			      <0x0 0x0b290000 0x0 0x10000>,
++			      <0x0 0x0b490000 0x0 0x10000>;
+ 			reg-names = "gmu",
+ 				    "gmu_pdc",
+ 				    "gmu_pdc_seq";
+@@ -1489,7 +1489,7 @@ opp-200000000 {
+ 
+ 		gpucc: clock-controller@3d90000 {
+ 			compatible = "qcom,sm6350-gpucc";
+-			reg = <0 0x03d90000 0 0x9000>;
++			reg = <0x0 0x03d90000 0x0 0x9000>;
+ 			clocks = <&rpmhcc RPMH_CXO_CLK>,
+ 				 <&gcc GCC_GPU_GPLL0_CLK>,
+ 				 <&gcc GCC_GPU_GPLL0_DIV_CLK>;
+@@ -1543,7 +1543,7 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
+ 
+ 		cdsp: remoteproc@8300000 {
+ 			compatible = "qcom,sm6350-cdsp-pas";
+-			reg = <0 0x08300000 0 0x10000>;
++			reg = <0x0 0x08300000 0x0 0x10000>;
+ 
+ 			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
+ 					      <&smp2p_cdsp_in 0 IRQ_TYPE_EDGE_RISING>,
+@@ -1642,7 +1642,7 @@ compute-cb@8 {
+ 
+ 		sdhc_2: mmc@8804000 {
+ 			compatible = "qcom,sm6350-sdhci", "qcom,sdhci-msm-v5";
+-			reg = <0 0x08804000 0 0x1000>;
++			reg = <0x0 0x08804000 0x0 0x1000>;
+ 
+ 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+@@ -1691,7 +1691,7 @@ opp-202000000 {
+ 
+ 		usb_1_hsphy: phy@88e3000 {
+ 			compatible = "qcom,sm6350-qusb2-phy", "qcom,qusb2-v2-phy";
+-			reg = <0 0x088e3000 0 0x400>;
++			reg = <0x0 0x088e3000 0x0 0x400>;
+ 			status = "disabled";
+ 			#phy-cells = <0>;
+ 
+@@ -1703,7 +1703,7 @@ usb_1_hsphy: phy@88e3000 {
+ 
+ 		usb_1_qmpphy: phy@88e8000 {
+ 			compatible = "qcom,sm6350-qmp-usb3-dp-phy";
+-			reg = <0 0x088e8000 0 0x3000>;
++			reg = <0x0 0x088e8000 0x0 0x3000>;
+ 
+ 			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
+ 				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
+@@ -1754,27 +1754,27 @@ usb_1_qmpphy_dp_in: endpoint {
+ 
+ 		dc_noc: interconnect@9160000 {
+ 			compatible = "qcom,sm6350-dc-noc";
+-			reg = <0 0x09160000 0 0x3200>;
++			reg = <0x0 0x09160000 0x0 0x3200>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		system-cache-controller@9200000 {
+ 			compatible = "qcom,sm6350-llcc";
+-			reg = <0 0x09200000 0 0x50000>, <0 0x09600000 0 0x50000>;
++			reg = <0x0 0x09200000 0x0 0x50000>, <0x0 0x09600000 0x0 0x50000>;
+ 			reg-names = "llcc0_base", "llcc_broadcast_base";
+ 		};
+ 
+ 		gem_noc: interconnect@9680000 {
+ 			compatible = "qcom,sm6350-gem-noc";
+-			reg = <0 0x09680000 0 0x3e200>;
++			reg = <0x0 0x09680000 0x0 0x3e200>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+ 
+ 		npu_noc: interconnect@9990000 {
+ 			compatible = "qcom,sm6350-npu-noc";
+-			reg = <0 0x09990000 0 0x1600>;
++			reg = <0x0 0x09990000 0x0 0x1600>;
+ 			#interconnect-cells = <2>;
+ 			qcom,bcm-voters = <&apps_bcm_voter>;
+ 		};
+@@ -1878,7 +1878,7 @@ opp-10 {
+ 
+ 		usb_1: usb@a6f8800 {
+ 			compatible = "qcom,sm6350-dwc3", "qcom,dwc3";
+-			reg = <0 0x0a6f8800 0 0x400>;
++			reg = <0x0 0x0a6f8800 0x0 0x400>;
+ 			status = "disabled";
+ 			#address-cells = <2>;
+ 			#size-cells = <2>;
+@@ -1916,7 +1916,7 @@ usb_1: usb@a6f8800 {
+ 
+ 			usb_1_dwc3: usb@a600000 {
+ 				compatible = "snps,dwc3";
+-				reg = <0 0x0a600000 0 0xcd00>;
++				reg = <0x0 0x0a600000 0x0 0xcd00>;
+ 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+ 				iommus = <&apps_smmu 0x540 0x0>;
+ 				snps,dis_u2_susphy_quirk;
+@@ -1954,7 +1954,7 @@ usb_1_dwc3_ss_out: endpoint {
+ 
+ 		cci0: cci@ac4a000 {
+ 			compatible = "qcom,sm6350-cci", "qcom,msm8996-cci";
+-			reg = <0 0x0ac4a000 0 0x1000>;
++			reg = <0x0 0x0ac4a000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 468 IRQ_TYPE_EDGE_RISING>;
+ 			power-domains = <&camcc TITAN_TOP_GDSC>;
+ 
+@@ -2001,7 +2001,7 @@ cci0_i2c1: i2c-bus@1 {
+ 
+ 		cci1: cci@ac4b000 {
+ 			compatible = "qcom,sm6350-cci", "qcom,msm8996-cci";
+-			reg = <0 0x0ac4b000 0 0x1000>;
++			reg = <0x0 0x0ac4b000 0x0 0x1000>;
+ 			interrupts = <GIC_SPI 462 IRQ_TYPE_EDGE_RISING>;
+ 			power-domains = <&camcc TITAN_TOP_GDSC>;
+ 
+@@ -2043,7 +2043,7 @@ cci1_i2c0: i2c-bus@0 {
+ 
+ 		camcc: clock-controller@ad00000 {
+ 			compatible = "qcom,sm6350-camcc";
+-			reg = <0 0x0ad00000 0 0x16000>;
++			reg = <0x0 0x0ad00000 0x0 0x16000>;
+ 			clocks = <&rpmhcc RPMH_CXO_CLK>;
+ 			#clock-cells = <1>;
+ 			#reset-cells = <1>;
+@@ -2052,7 +2052,7 @@ camcc: clock-controller@ad00000 {
+ 
+ 		mdss: display-subsystem@ae00000 {
+ 			compatible = "qcom,sm6350-mdss";
+-			reg = <0 0x0ae00000 0 0x1000>;
++			reg = <0x0 0x0ae00000 0x0 0x1000>;
+ 			reg-names = "mdss";
+ 
+ 			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
+@@ -2084,8 +2084,8 @@ &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ALWAYS>,
+ 
+ 			mdss_mdp: display-controller@ae01000 {
+ 				compatible = "qcom,sm6350-dpu";
+-				reg = <0 0x0ae01000 0 0x8f000>,
+-				      <0 0x0aeb0000 0 0x2008>;
++				reg = <0x0 0x0ae01000 0x0 0x8f000>,
++				      <0x0 0x0aeb0000 0x0 0x2008>;
+ 				reg-names = "mdp", "vbif";
+ 
+ 				interrupt-parent = <&mdss>;
+@@ -2168,11 +2168,11 @@ opp-560000000 {
+ 
+ 			mdss_dp: displayport-controller@ae90000 {
+ 				compatible = "qcom,sm6350-dp", "qcom,sm8350-dp";
+-				reg = <0 0xae90000 0 0x200>,
+-				      <0 0xae90200 0 0x200>,
+-				      <0 0xae90400 0 0x600>,
+-				      <0 0xae91000 0 0x400>,
+-				      <0 0xae91400 0 0x400>;
++				reg = <0x0 0xae90000 0x0 0x200>,
++				      <0x0 0xae90200 0x0 0x200>,
++				      <0x0 0xae90400 0x0 0x600>,
++				      <0x0 0xae91000 0x0 0x400>,
++				      <0x0 0xae91400 0x0 0x400>;
+ 				interrupt-parent = <&mdss>;
+ 				interrupts = <12>;
+ 				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
+@@ -2248,7 +2248,7 @@ opp-810000000 {
+ 
+ 			mdss_dsi0: dsi@ae94000 {
+ 				compatible = "qcom,sm6350-dsi-ctrl", "qcom,mdss-dsi-ctrl";
+-				reg = <0 0x0ae94000 0 0x400>;
++				reg = <0x0 0x0ae94000 0x0 0x400>;
+ 				reg-names = "dsi_ctrl";
+ 
+ 				interrupt-parent = <&mdss>;
+@@ -2324,9 +2324,9 @@ opp-358000000 {
+ 
+ 			mdss_dsi0_phy: phy@ae94400 {
+ 				compatible = "qcom,dsi-phy-10nm";
+-				reg = <0 0x0ae94400 0 0x200>,
+-				      <0 0x0ae94600 0 0x280>,
+-				      <0 0x0ae94a00 0 0x1e0>;
++				reg = <0x0 0x0ae94400 0x0 0x200>,
++				      <0x0 0x0ae94600 0x0 0x280>,
++				      <0x0 0x0ae94a00 0x0 0x1e0>;
+ 				reg-names = "dsi_phy",
+ 					    "dsi_phy_lane",
+ 					    "dsi_pll";
+@@ -2344,7 +2344,7 @@ mdss_dsi0_phy: phy@ae94400 {
+ 
+ 		dispcc: clock-controller@af00000 {
+ 			compatible = "qcom,sm6350-dispcc";
+-			reg = <0 0x0af00000 0 0x20000>;
++			reg = <0x0 0x0af00000 0x0 0x20000>;
+ 			clocks = <&rpmhcc RPMH_CXO_CLK>,
+ 				 <&gcc GCC_DISP_GPLL0_CLK>,
+ 				 <&mdss_dsi0_phy 0>,
+@@ -2364,7 +2364,7 @@ dispcc: clock-controller@af00000 {
+ 
+ 		pdc: interrupt-controller@b220000 {
+ 			compatible = "qcom,sm6350-pdc", "qcom,pdc";
+-			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x64>;
++			reg = <0x0 0x0b220000 0x0 0x30000>, <0x0 0x17c000f0 0x0 0x64>;
+ 			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
+ 					  <125 63 1>, <126 655 12>, <138 139 15>;
+ 			#interrupt-cells = <2>;
+@@ -2374,8 +2374,8 @@ pdc: interrupt-controller@b220000 {
+ 
+ 		tsens0: thermal-sensor@c263000 {
+ 			compatible = "qcom,sm6350-tsens", "qcom,tsens-v2";
+-			reg = <0 0x0c263000 0 0x1ff>, /* TM */
+-			      <0 0x0c222000 0 0x8>; /* SROT */
++			reg = <0x0 0x0c263000 0x0 0x1ff>, /* TM */
++			      <0x0 0x0c222000 0x0 0x8>; /* SROT */
+ 			#qcom,sensors = <16>;
+ 			interrupts-extended = <&pdc 26 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <&pdc 28 IRQ_TYPE_LEVEL_HIGH>;
+@@ -2385,8 +2385,8 @@ tsens0: thermal-sensor@c263000 {
+ 
+ 		tsens1: thermal-sensor@c265000 {
+ 			compatible = "qcom,sm6350-tsens", "qcom,tsens-v2";
+-			reg = <0 0x0c265000 0 0x1ff>, /* TM */
+-			      <0 0x0c223000 0 0x8>; /* SROT */
++			reg = <0x0 0x0c265000 0x0 0x1ff>, /* TM */
++			      <0x0 0x0c223000 0x0 0x8>; /* SROT */
+ 			#qcom,sensors = <16>;
+ 			interrupts-extended = <&pdc 27 IRQ_TYPE_LEVEL_HIGH>,
+ 				     <&pdc 29 IRQ_TYPE_LEVEL_HIGH>;
+@@ -2396,7 +2396,7 @@ tsens1: thermal-sensor@c265000 {
+ 
+ 		aoss_qmp: power-management@c300000 {
+ 			compatible = "qcom,sm6350-aoss-qmp", "qcom,aoss-qmp";
+-			reg = <0 0x0c300000 0 0x1000>;
++			reg = <0x0 0x0c300000 0x0 0x1000>;
+ 			interrupts-extended = <&ipcc IPCC_CLIENT_AOP IPCC_MPROC_SIGNAL_GLINK_QMP
+ 						     IRQ_TYPE_EDGE_RISING>;
+ 			mboxes = <&ipcc IPCC_CLIENT_AOP IPCC_MPROC_SIGNAL_GLINK_QMP>;
+@@ -2406,11 +2406,11 @@ aoss_qmp: power-management@c300000 {
+ 
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+-			reg = <0 0x0c440000 0 0x1100>,
+-			      <0 0x0c600000 0 0x2000000>,
+-			      <0 0x0e600000 0 0x100000>,
+-			      <0 0x0e700000 0 0xa0000>,
+-			      <0 0x0c40a000 0 0x26000>;
++			reg = <0x0 0x0c440000 0x0 0x1100>,
++			      <0x0 0x0c600000 0x0 0x2000000>,
++			      <0x0 0x0e600000 0x0 0x100000>,
++			      <0x0 0x0e700000 0x0 0xa0000>,
++			      <0x0 0x0c40a000 0x0 0x26000>;
+ 			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
+ 			interrupt-names = "periph_irq";
+ 			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
+@@ -2424,7 +2424,7 @@ spmi_bus: spmi@c440000 {
+ 
+ 		tlmm: pinctrl@f100000 {
+ 			compatible = "qcom,sm6350-tlmm";
+-			reg = <0 0x0f100000 0 0x300000>;
++			reg = <0x0 0x0f100000 0x0 0x300000>;
+ 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
+ 					<GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
+ 					<GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
+@@ -2603,7 +2603,7 @@ qup_uart1_tx: qup-uart1-tx-default-state {
+ 
+ 		apps_smmu: iommu@15000000 {
+ 			compatible = "qcom,sm6350-smmu-500", "arm,mmu-500";
+-			reg = <0 0x15000000 0 0x100000>;
++			reg = <0x0 0x15000000 0x0 0x100000>;
+ 			#iommu-cells = <2>;
+ 			#global-interrupts = <1>;
+ 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+@@ -2701,7 +2701,7 @@ intc: interrupt-controller@17a00000 {
+ 
+ 		watchdog@17c10000 {
+ 			compatible = "qcom,apss-wdt-sm6350", "qcom,kpss-wdt";
+-			reg = <0 0x17c10000 0 0x1000>;
++			reg = <0x0 0x17c10000 0x0 0x1000>;
+ 			clocks = <&sleep_clk>;
+ 			interrupts = <GIC_SPI 0 IRQ_TYPE_EDGE_RISING>;
+ 		};
+@@ -2855,7 +2855,7 @@ osm_l3: interconnect@18321000 {
+ 
+ 		cpufreq_hw: cpufreq@18323000 {
+ 			compatible = "qcom,sm6350-cpufreq-hw", "qcom,cpufreq-hw";
+-			reg = <0 0x18323000 0 0x1000>, <0 0x18325800 0 0x1000>;
++			reg = <0x0 0x18323000 0x0 0x1000>, <0x0 0x18325800 0x0 0x1000>;
+ 			reg-names = "freq-domain0", "freq-domain1";
+ 			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+ 			clock-names = "xo", "alternate";
+@@ -2866,7 +2866,7 @@ cpufreq_hw: cpufreq@18323000 {
+ 
+ 		wifi: wifi@18800000 {
+ 			compatible = "qcom,wcn3990-wifi";
+-			reg = <0 0x18800000 0 0x800000>;
++			reg = <0x0 0x18800000 0x0 0x800000>;
+ 			reg-names = "membase";
+ 			memory-region = <&wlan_fw_mem>;
+ 			interrupts = <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
 
 -- 
 2.49.0
