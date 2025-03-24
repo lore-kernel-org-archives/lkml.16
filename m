@@ -1,251 +1,311 @@
-Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F2225E456
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF04A38DE9
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742823426; cv=none; b=pdufRhR6s4NgV7U5h/6OMorPV9dfqGBIjf3ncxc4FZV3W4dW3bhN0/qi/7Pdp6L4TzqQDlRwKpbMCdGS1Bkj9hcJ9u1Zgscm/T9ymbh8EsXBSBOrKiJsQc3nuKaWX13QgIH4Y51YCdD5+0sjm36e42ED/ueWZEO+3gkkUBBDPtU=
+	t=1742823534; cv=none; b=cgN3hUOXC4vagb1HyB8Ihog+fV2+4hEHuEkjCdhfYO5zBv7mmuBIEbRXrZLGQ6y0xaAabdZjaj3UjJjblxA29vo9rTQvKkYMc23hdmLfRx95xG9otTd6jPuw/cvchfrz3RllsM7lWJXYOggJ3dqL3Fmhzl59NLZ/87+dZPGpdSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742823426; c=relaxed/simple;
-	bh=0HD+kvyRqheulEmQt5J2F5hoR/TQxy+o3/6jWlDCrm8=;
-	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
-	 Content-Type; b=uf/w9dYTmiMPttnDd8va34NVwNrsxuAWKIrMXgOVRQkjLQ/T5IvwGH7DGWyklSYPrXK+lM/+25QbHtgdlkieJ4+blWvfcpNcuWAcxmWDieMW5i3dRP86uuGJijUoMfUCpHiW8Cug3L7OVi3QchXUqtEcqpcV2lxYOjJSyGTE+yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3d5a9e7dd5aso9330635ab.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 06:37:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742823424; x=1743428224;
-        h=content-transfer-encoding:to:from:subject:message-id:in-reply-to
-         :date:mime-version:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8y7roFtZCO8wN9pj99Y+xVnY1xS2JX2J702xsawiyBY=;
-        b=oxxKGbwt3kj6axmgr7lazHO2Bva3/UikMWQsew8Y5DUonPrS9PsJoJJBJ5qAQODJXG
-         +E443tC9HhXjnEnWiuyRydAI6jIxsyWi5VXv+Vy/5qg/CJNvaFxipofvauB/3IeL+ysG
-         qmzfH3XRTHsI/c/028j5KAb4/reVfzybbEit6q40GoHbZb4HfXZKOcJ5VL+mewX7LZeI
-         SIuKbmj7bpwn7D+c+gikGDO+VD/W2ruIzCZyD0FGLwZI495BmJj5xD6oXaNXfTUp6MU8
-         ju2O4119z+1HOM31w+vLzw4Fh//xHPfGfwjkA9/ImHNbr0EFRccvW2/CK9uCJvGiFhAi
-         dILQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXBrs6rNOFMzXdaMmezb2x8JdcsngN4kj8LPaNSnKrMKvGMdu80D5Yr2/8iiYRqHD6VKXhiJI0oz2TwqXw=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxHAbs/vXKezUlO8b/E/TXjHfP5HrtrA1RCi/R1jC7IkXpxQ2HN
-	3GY/6z89srDUyI0N7afHI1EGYwAzqQlCXhbWYgxxtunv3Fr++lhepjNR7od20rKU88Ap3XJX0f+
-	F/Z/ZrQVH76ZIcTpJA7SD6VB3Ad64/GIPmupFwFUpytqmn9sNhuSGiJ0=
-X-Google-Smtp-Source: AGHT+IEGjXgLs+2Jt6VBljMbIUYIthTIE5v0VUi5n7Bcf3aMy+rS3X78TVVyRtMW5QAQqO5s+r8UXTnKXPHP9YhhAeWT22/74mwN
+	s=arc-20240116; t=1742823534; c=relaxed/simple;
+	bh=7A84H6I6MEG2JXRxa+f82FT3Pri//DTVDuwsBhx9whY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=N6KRx/G45O1n7fBg9A47huLKGdjy4kpl6sieC++a9qGQPKgc4CkOqVDKPBn4rdyYe7BnkTX8soC6ViOjPuLHaRYjShT1B9QcwQzChLH1nKP8FGTn47QL6jJOJzcEqBL1DhgCF956iG9FV0U0BFAWMW730DDXZQFOcO7HBW7y7xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1twi0u-0006Gm-J0; Mon, 24 Mar 2025 14:38:48 +0100
+Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1twi0t-001Q4y-1S;
+	Mon, 24 Mar 2025 14:38:47 +0100
+Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
+	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
+	(envelope-from <s.hauer@pengutronix.de>)
+	id 1twhml-004Vqr-1M;
+	Mon, 24 Mar 2025 14:24:11 +0100
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Date: Mon, 24 Mar 2025 14:24:11 +0100
+Subject: [PATCH wireless-next v5 10/10] wifi: mwifiex: drop asynchronous
+ init waiting code
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:348b:b0:3d3:dd32:73d5 with SMTP id
- e9e14a558f8ab-3d5960cd11cmr140933865ab.4.1742823423972; Mon, 24 Mar 2025
- 06:37:03 -0700 (PDT)
-Date: Mon, 24 Mar 2025 06:37:03 -0700
-In-Reply-To: <tencent_BE4FFF8D8C259C0DE7126FDD8A5D96992507@qq.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67e15fff.050a0220.a7ebc.0020.GAE@google.com>
-Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
-From: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>
-To: eadavis@qq.com, linux-kernel@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250324-mwifiex-cleanup-1-v5-10-1128a2be02af@pengutronix.de>
+References: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
+In-Reply-To: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
+To: Brian Norris <briannorris@chromium.org>, 
+ Francesco Dolcini <francesco@dolcini.it>
+Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, David Lin <yu-hao.lin@nxp.com>, 
+ kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1742822651; l=9066;
+ i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
+ bh=7A84H6I6MEG2JXRxa+f82FT3Pri//DTVDuwsBhx9whY=;
+ b=DsBHja1M4RqjJf+FUTxqWbNLHoehdKkLv0Iur0nsp997Y4Ct6RZSPC1//8qSgJvTp1PuKiivm
+ +7wDzdTL0WGAVnC8yji6WOYew/qI55eHPo8ov4t1pTX03r+uWHCMTCk
+X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
+ pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: s.hauer@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 
-Hello,
+Historically all commands sent to the mwifiex driver have been
+asynchronous. The different commands sent during driver initialization
+have been queued at once and only the final command has been waited
+for being ready before finally starting the driver.
 
-syzbot tried to test the proposed patch but the build/boot failed:
+This has been changed in 7bff9c974e1a ("mwifiex: send firmware
+initialization commands synchronously"). With this the initialization
+is finished once the last mwifiex_send_cmd_sync() (now
+mwifiex_send_cmd()) has returned. This makes all the code used to
+wait for the last initialization command to be finished unnecessary,
+so it's removed in this patch.
 
-failed to copy syz-execprog to VM: timedout after 1m0s ["scp" "-P" "22" "-F=
-" "/dev/null" "-o" "UserKnownHostsFile=3D/dev/null" "-o" "IdentitiesOnly=3D=
-yes" "-o" "BatchMode=3Dyes" "-o" "StrictHostKeyChecking=3Dno" "-o" "Connect=
-Timeout=3D10" "-v" "/syzkaller/jobs-2/linux/gopath/src/github.com/google/sy=
-zkaller/bin/linux_amd64/syz-execprog" "root@10.128.10.52:./syz-execprog"]
-Executing: program /usr/bin/ssh host 10.128.10.52, user root, command sftp
-OpenSSH_9.2p1 Debian-2+deb12u4, OpenSSL 3.0.15 3 Sep 2024
-debug1: Reading configuration data /dev/null
-debug1: Connecting to 10.128.10.52 [10.128.10.52] port 22.
-debug1: fd 3 clearing O_NONBLOCK
-debug1: Connection established.
-debug1: identity file /root/.ssh/id_rsa type -1
-debug1: identity file /root/.ssh/id_rsa-cert type -1
-debug1: identity file /root/.ssh/id_ecdsa type -1
-debug1: identity file /root/.ssh/id_ecdsa-cert type -1
-debug1: identity file /root/.ssh/id_ecdsa_sk type -1
-debug1: identity file /root/.ssh/id_ecdsa_sk-cert type -1
-debug1: identity file /root/.ssh/id_ed25519 type -1
-debug1: identity file /root/.ssh/id_ed25519-cert type -1
-debug1: identity file /root/.ssh/id_ed25519_sk type -1
-debug1: identity file /root/.ssh/id_ed25519_sk-cert type -1
-debug1: identity file /root/.ssh/id_xmss type -1
-debug1: identity file /root/.ssh/id_xmss-cert type -1
-debug1: identity file /root/.ssh/id_dsa type -1
-debug1: identity file /root/.ssh/id_dsa-cert type -1
-debug1: Local version string SSH-2.0-OpenSSH_9.2p1 Debian-2+deb12u4
-debug1: Remote protocol version 2.0, remote software version OpenSSH_9.1
-debug1: compat_banner: match: OpenSSH_9.1 pat OpenSSH* compat 0x04000000
-debug1: Authenticating to 10.128.10.52:22 as 'root'
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or dire=
-ctory
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or dir=
-ectory
-debug1: SSH2_MSG_KEXINIT sent
-debug1: SSH2_MSG_KEXINIT received
-debug1: kex: algorithm: sntrup761x25519-sha512@openssh.com
-debug1: kex: host key algorithm: ssh-ed25519
-debug1: kex: server->client cipher: chacha20-poly1305@openssh.com MAC: <imp=
-licit> compression: none
-debug1: kex: client->server cipher: chacha20-poly1305@openssh.com MAC: <imp=
-licit> compression: none
-debug1: expecting SSH2_MSG_KEX_ECDH_REPLY
-debug1: SSH2_MSG_KEX_ECDH_REPLY received
-debug1: Server host key: ssh-ed25519 SHA256:g5LT3corcdQiP3+7S3QNYL7lzLWO1gp=
-/6X86Qtf82jk
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts: No such file or dire=
-ctory
-debug1: load_hostkeys: fopen /etc/ssh/ssh_known_hosts2: No such file or dir=
-ectory
-Warning: Permanently added '10.128.10.52' (ED25519) to the list of known ho=
-sts.
-debug1: rekey out after 134217728 blocks
-debug1: SSH2_MSG_NEWKEYS sent
-debug1: expecting SSH2_MSG_NEWKEYS
-debug1: SSH2_MSG_NEWKEYS received
-debug1: rekey in after 134217728 blocks
-debug1: Will attempt key: /root/.ssh/id_rsa=20
-debug1: Will attempt key: /root/.ssh/id_ecdsa=20
-debug1: Will attempt key: /root/.ssh/id_ecdsa_sk=20
-debug1: Will attempt key: /root/.ssh/id_ed25519=20
-debug1: Will attempt key: /root/.ssh/id_ed25519_sk=20
-debug1: Will attempt key: /root/.ssh/id_xmss=20
-debug1: Will attempt key: /root/.ssh/id_dsa=20
-debug1: SSH2_MSG_EXT_INFO received
-debug1: kex_input_ext_info: server-sig-algs=3D<ssh-ed25519,sk-ssh-ed25519@o=
-penssh.com,ssh-rsa,rsa-sha2-256,rsa-sha2-512,ssh-dss,ecdsa-sha2-nistp256,ec=
-dsa-sha2-nistp384,ecdsa-sha2-nistp521,sk-ecdsa-sha2-nistp256@openssh.com,we=
-bauthn-sk-ecdsa-sha2-nistp256@openssh.com>
-debug1: kex_input_ext_info: publickey-hostbound@openssh.com=3D<0>
-debug1: SSH2_MSG_SERVICE_ACCEPT received
-Authenticated to 10.128.10.52 ([10.128.10.52]:22) using "none".
-debug1: channel 0: new session [client-session] (inactive timeout: 0)
-debug1: Requesting no-more-sessions@openssh.com
-debug1: Entering interactive session.
-debug1: pledge: network
-debug1: client_input_global_request: rtype hostkeys-00@openssh.com want_rep=
-ly 0
-debug1: Sending subsystem: sftp
-debug1: pledge: fork
-scp: debug1: stat remote: No such file or directory
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/net/wireless/marvell/mwifiex/cmdevt.c  | 16 ----------------
+ drivers/net/wireless/marvell/mwifiex/init.c    | 18 +++++-------------
+ drivers/net/wireless/marvell/mwifiex/main.c    | 25 +++----------------------
+ drivers/net/wireless/marvell/mwifiex/main.h    |  6 ------
+ drivers/net/wireless/marvell/mwifiex/sta_cmd.c |  6 ------
+ drivers/net/wireless/marvell/mwifiex/util.c    | 18 ------------------
+ 6 files changed, 8 insertions(+), 81 deletions(-)
 
+diff --git a/drivers/net/wireless/marvell/mwifiex/cmdevt.c b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+index 90cb469c897eb..fa7641f09719b 100644
+--- a/drivers/net/wireless/marvell/mwifiex/cmdevt.c
++++ b/drivers/net/wireless/marvell/mwifiex/cmdevt.c
+@@ -892,18 +892,6 @@ int mwifiex_process_cmdresp(struct mwifiex_adapter *adapter)
+ 		ret = mwifiex_process_sta_cmdresp(priv, cmdresp_no, resp);
+ 	}
+ 
+-	/* Check init command response */
+-	if (adapter->hw_status == MWIFIEX_HW_STATUS_INITIALIZING) {
+-		if (ret) {
+-			mwifiex_dbg(adapter, ERROR,
+-				    "%s: cmd %#x failed during\t"
+-				    "initialization\n", __func__, cmdresp_no);
+-			mwifiex_init_fw_complete(adapter);
+-			return -1;
+-		} else if (adapter->last_init_cmd == cmdresp_no)
+-			adapter->hw_status = MWIFIEX_HW_STATUS_INIT_DONE;
+-	}
+-
+ 	if (adapter->curr_cmd) {
+ 		if (adapter->curr_cmd->wait_q_enabled)
+ 			adapter->cmd_wait_q.status = ret;
+@@ -1022,10 +1010,6 @@ mwifiex_cmd_timeout_func(struct timer_list *t)
+ 			mwifiex_cancel_pending_ioctl(adapter);
+ 		}
+ 	}
+-	if (adapter->hw_status == MWIFIEX_HW_STATUS_INITIALIZING) {
+-		mwifiex_init_fw_complete(adapter);
+-		return;
+-	}
+ 
+ 	if (adapter->if_ops.device_dump)
+ 		adapter->if_ops.device_dump(adapter);
+diff --git a/drivers/net/wireless/marvell/mwifiex/init.c b/drivers/net/wireless/marvell/mwifiex/init.c
+index 8b61e45cd6678..fc58ca1a60ca8 100644
+--- a/drivers/net/wireless/marvell/mwifiex/init.c
++++ b/drivers/net/wireless/marvell/mwifiex/init.c
+@@ -487,7 +487,6 @@ int mwifiex_init_fw(struct mwifiex_adapter *adapter)
+ 	int ret;
+ 	struct mwifiex_private *priv;
+ 	u8 i, first_sta = true;
+-	int is_cmd_pend_q_empty;
+ 
+ 	adapter->hw_status = MWIFIEX_HW_STATUS_INITIALIZING;
+ 
+@@ -509,7 +508,6 @@ int mwifiex_init_fw(struct mwifiex_adapter *adapter)
+ 	}
+ 	if (adapter->mfg_mode) {
+ 		adapter->hw_status = MWIFIEX_HW_STATUS_READY;
+-		ret = -EINPROGRESS;
+ 	} else {
+ 		for (i = 0; i < adapter->priv_num; i++) {
+ 			ret = mwifiex_sta_init_cmd(adapter->priv[i],
+@@ -521,18 +519,12 @@ int mwifiex_init_fw(struct mwifiex_adapter *adapter)
+ 		}
+ 	}
+ 
+-	spin_lock_bh(&adapter->cmd_pending_q_lock);
+-	is_cmd_pend_q_empty = list_empty(&adapter->cmd_pending_q);
+-	spin_unlock_bh(&adapter->cmd_pending_q_lock);
+-	if (!is_cmd_pend_q_empty) {
+-		/* Send the first command in queue and return */
+-		if (mwifiex_main_process(adapter) != -1)
+-			ret = -EINPROGRESS;
+-	} else {
+-		adapter->hw_status = MWIFIEX_HW_STATUS_READY;
+-	}
++	adapter->hw_status = MWIFIEX_HW_STATUS_READY;
+ 
+-	return ret;
++	if (adapter->if_ops.init_fw_port)
++		adapter->if_ops.init_fw_port(adapter);
++
++	return 0;
+ }
+ 
+ /*
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.c b/drivers/net/wireless/marvell/mwifiex/main.c
+index 3cb3db7a089b8..8d7384cfe80a1 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.c
++++ b/drivers/net/wireless/marvell/mwifiex/main.c
+@@ -354,13 +354,6 @@ int mwifiex_main_process(struct mwifiex_adapter *adapter)
+ 		if (adapter->cmd_resp_received) {
+ 			adapter->cmd_resp_received = false;
+ 			mwifiex_process_cmdresp(adapter);
+-
+-			/* call mwifiex back when init_fw is done */
+-			if (adapter->hw_status == MWIFIEX_HW_STATUS_INIT_DONE) {
+-				adapter->hw_status = MWIFIEX_HW_STATUS_READY;
+-				mwifiex_init_fw_complete(adapter);
+-				maybe_quirk_fw_disable_ds(adapter);
+-			}
+ 		}
+ 
+ 		/* Check if we need to confirm Sleep Request
+@@ -578,21 +571,11 @@ static int _mwifiex_fw_dpc(const struct firmware *firmware, void *context)
+ 			goto err_dnld_fw;
+ 	}
+ 
+-	adapter->init_wait_q_woken = false;
+ 	ret = mwifiex_init_fw(adapter);
+-	if (ret == -1) {
++	if (ret < 0)
+ 		goto err_init_fw;
+-	} else if (!ret) {
+-		adapter->hw_status = MWIFIEX_HW_STATUS_READY;
+-		goto done;
+-	}
+-	/* Wait for mwifiex_init to complete */
+-	if (!adapter->mfg_mode) {
+-		wait_event_interruptible(adapter->init_wait_q,
+-					 adapter->init_wait_q_woken);
+-		if (adapter->hw_status != MWIFIEX_HW_STATUS_READY)
+-			goto err_init_fw;
+-	}
++
++	maybe_quirk_fw_disable_ds(adapter);
+ 
+ 	if (!adapter->wiphy) {
+ 		if (mwifiex_register_cfg80211(adapter)) {
+@@ -1549,7 +1532,6 @@ mwifiex_reinit_sw(struct mwifiex_adapter *adapter)
+ 
+ 	adapter->hw_status = MWIFIEX_HW_STATUS_INITIALIZING;
+ 	clear_bit(MWIFIEX_SURPRISE_REMOVED, &adapter->work_flags);
+-	init_waitqueue_head(&adapter->init_wait_q);
+ 	clear_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags);
+ 	adapter->hs_activated = false;
+ 	clear_bit(MWIFIEX_IS_CMD_TIMEDOUT, &adapter->work_flags);
+@@ -1717,7 +1699,6 @@ mwifiex_add_card(void *card, struct completion *fw_done,
+ 
+ 	adapter->hw_status = MWIFIEX_HW_STATUS_INITIALIZING;
+ 	clear_bit(MWIFIEX_SURPRISE_REMOVED, &adapter->work_flags);
+-	init_waitqueue_head(&adapter->init_wait_q);
+ 	clear_bit(MWIFIEX_IS_SUSPENDED, &adapter->work_flags);
+ 	adapter->hs_activated = false;
+ 	init_waitqueue_head(&adapter->hs_activate_wait_q);
+diff --git a/drivers/net/wireless/marvell/mwifiex/main.h b/drivers/net/wireless/marvell/mwifiex/main.h
+index e566470226d8f..7fe268761b074 100644
+--- a/drivers/net/wireless/marvell/mwifiex/main.h
++++ b/drivers/net/wireless/marvell/mwifiex/main.h
+@@ -239,7 +239,6 @@ struct mwifiex_dbg {
+ enum MWIFIEX_HARDWARE_STATUS {
+ 	MWIFIEX_HW_STATUS_READY,
+ 	MWIFIEX_HW_STATUS_INITIALIZING,
+-	MWIFIEX_HW_STATUS_INIT_DONE,
+ 	MWIFIEX_HW_STATUS_RESET,
+ 	MWIFIEX_HW_STATUS_NOT_READY
+ };
+@@ -865,8 +864,6 @@ struct mwifiex_adapter {
+ 	unsigned long work_flags;
+ 	u32 fw_release_number;
+ 	u8 intf_hdr_len;
+-	u16 init_wait_q_woken;
+-	wait_queue_head_t init_wait_q;
+ 	void *card;
+ 	struct mwifiex_if_ops if_ops;
+ 	atomic_t bypass_tx_pending;
+@@ -919,7 +916,6 @@ struct mwifiex_adapter {
+ 	struct cmd_ctrl_node *curr_cmd;
+ 	/* spin lock for command */
+ 	spinlock_t mwifiex_cmd_lock;
+-	u16 last_init_cmd;
+ 	struct timer_list cmd_timer;
+ 	struct list_head cmd_free_q;
+ 	/* spin lock for cmd_free_q */
+@@ -1060,8 +1056,6 @@ void mwifiex_free_priv(struct mwifiex_private *priv);
+ 
+ int mwifiex_init_fw(struct mwifiex_adapter *adapter);
+ 
+-int mwifiex_init_fw_complete(struct mwifiex_adapter *adapter);
+-
+ void mwifiex_shutdown_drv(struct mwifiex_adapter *adapter);
+ 
+ int mwifiex_dnld_fw(struct mwifiex_adapter *, struct mwifiex_fw_image *);
+diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+index f2e9f582ae818..199a8e52e5b16 100644
+--- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
+@@ -2418,11 +2418,5 @@ int mwifiex_sta_init_cmd(struct mwifiex_private *priv, u8 first_sta, bool init)
+ 	ret = mwifiex_send_cmd(priv, HostCmd_CMD_11N_CFG,
+ 			       HostCmd_ACT_GEN_SET, 0, &tx_cfg, true);
+ 
+-	if (init) {
+-		/* set last_init_cmd before sending the command */
+-		priv->adapter->last_init_cmd = HostCmd_CMD_11N_CFG;
+-		ret = -EINPROGRESS;
+-	}
+-
+ 	return ret;
+ }
+diff --git a/drivers/net/wireless/marvell/mwifiex/util.c b/drivers/net/wireless/marvell/mwifiex/util.c
+index ea28d604ee69c..4c5b1de0e936c 100644
+--- a/drivers/net/wireless/marvell/mwifiex/util.c
++++ b/drivers/net/wireless/marvell/mwifiex/util.c
+@@ -115,24 +115,6 @@ static struct mwifiex_debug_data items[] = {
+ 
+ static int num_of_items = ARRAY_SIZE(items);
+ 
+-/*
+- * Firmware initialization complete callback handler.
+- *
+- * This function wakes up the function waiting on the init
+- * wait queue for the firmware initialization to complete.
+- */
+-int mwifiex_init_fw_complete(struct mwifiex_adapter *adapter)
+-{
+-
+-	if (adapter->hw_status == MWIFIEX_HW_STATUS_READY)
+-		if (adapter->if_ops.init_fw_port)
+-			adapter->if_ops.init_fw_port(adapter);
+-
+-	adapter->init_wait_q_woken = true;
+-	wake_up_interruptible(&adapter->init_wait_q);
+-	return 0;
+-}
+-
+ /*
+  * This function sends init/shutdown command
+  * to firmware.
 
-
-
-syzkaller build log:
-go env (err=3D<nil>)
-GO111MODULE=3D'auto'
-GOARCH=3D'amd64'
-GOBIN=3D''
-GOCACHE=3D'/syzkaller/.cache/go-build'
-GOENV=3D'/syzkaller/.config/go/env'
-GOEXE=3D''
-GOEXPERIMENT=3D''
-GOFLAGS=3D''
-GOHOSTARCH=3D'amd64'
-GOHOSTOS=3D'linux'
-GOINSECURE=3D''
-GOMODCACHE=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod'
-GONOPROXY=3D''
-GONOSUMDB=3D''
-GOOS=3D'linux'
-GOPATH=3D'/syzkaller/jobs-2/linux/gopath'
-GOPRIVATE=3D''
-GOPROXY=3D'https://proxy.golang.org,direct'
-GOROOT=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod/golang.org/toolchain@v0.0.=
-1-go1.23.6.linux-amd64'
-GOSUMDB=3D'sum.golang.org'
-GOTMPDIR=3D''
-GOTOOLCHAIN=3D'auto'
-GOTOOLDIR=3D'/syzkaller/jobs-2/linux/gopath/pkg/mod/golang.org/toolchain@v0=
-.0.1-go1.23.6.linux-amd64/pkg/tool/linux_amd64'
-GOVCS=3D''
-GOVERSION=3D'go1.23.6'
-GODEBUG=3D''
-GOTELEMETRY=3D'local'
-GOTELEMETRYDIR=3D'/syzkaller/.config/go/telemetry'
-GCCGO=3D'gccgo'
-GOAMD64=3D'v1'
-AR=3D'ar'
-CC=3D'gcc'
-CXX=3D'g++'
-CGO_ENABLED=3D'1'
-GOMOD=3D'/syzkaller/jobs-2/linux/gopath/src/github.com/google/syzkaller/go.=
-mod'
-GOWORK=3D''
-CGO_CFLAGS=3D'-O2 -g'
-CGO_CPPFLAGS=3D''
-CGO_CXXFLAGS=3D'-O2 -g'
-CGO_FFLAGS=3D'-O2 -g'
-CGO_LDFLAGS=3D'-O2 -g'
-PKG_CONFIG=3D'pkg-config'
-GOGCCFLAGS=3D'-fPIC -m64 -pthread -Wl,--no-gc-sections -fmessage-length=3D0=
- -ffile-prefix-map=3D/tmp/go-build2508708583=3D/tmp/go-build -gno-record-gc=
-c-switches'
-
-git status (err=3D<nil>)
-HEAD detached at 22a6c2b175
-nothing to commit, working tree clean
-
-
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-go list -f '{{.Stale}}' ./sys/syz-sysgen | grep -q false || go install ./sy=
-s/syz-sysgen
-make .descriptions
-tput: No value for $TERM and no -T specified
-tput: No value for $TERM and no -T specified
-Makefile:31: run command via tools/syz-env for best compatibility, see:
-Makefile:32: https://github.com/google/syzkaller/blob/master/docs/contribut=
-ing.md#using-syz-env
-bin/syz-sysgen
-touch .descriptions
-GOOS=3Dlinux GOARCH=3Damd64 go build "-ldflags=3D-s -w -X github.com/google=
-/syzkaller/prog.GitRevision=3D22a6c2b1752ef57d8d612e233d35f6be8c3bf7df -X '=
-github.com/google/syzkaller/prog.gitRevisionDate=3D20250318-101307'" -o ./b=
-in/linux_amd64/syz-execprog github.com/google/syzkaller/tools/syz-execprog
-mkdir -p ./bin/linux_amd64
-g++ -o ./bin/linux_amd64/syz-executor executor/executor.cc \
-	-m64 -O2 -pthread -Wall -Werror -Wparentheses -Wunused-const-variable -Wfr=
-ame-larger-than=3D16384 -Wno-stringop-overflow -Wno-array-bounds -Wno-forma=
-t-overflow -Wno-unused-but-set-variable -Wno-unused-command-line-argument -=
-static-pie -std=3Dc++17 -I. -Iexecutor/_include   -DGOOS_linux=3D1 -DGOARCH=
-_amd64=3D1 \
-	-DHOSTGOOS_linux=3D1 -DGIT_REVISION=3D\"22a6c2b1752ef57d8d612e233d35f6be8c=
-3bf7df\"
-/usr/bin/ld: /tmp/ccDKjVDd.o: in function `Connection::Connect(char const*,=
- char const*)':
-executor.cc:(.text._ZN10Connection7ConnectEPKcS1_[_ZN10Connection7ConnectEP=
-KcS1_]+0x104): warning: Using 'gethostbyname' in statically linked applicat=
-ions requires at runtime the shared libraries from the glibc version used f=
-or linking
-
-
-
-Tested on:
-
-commit:         aaec5a95 pipe_read: don't wake up the writer if the pi..
-git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linu=
-x.git
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3D8d5a2956e94d797=
-2
-dashboard link: https://syzkaller.appspot.com/bug?extid=3D62262fdc0e01d9957=
-3fc
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Deb=
-ian) 2.40
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=3D1543243f9800=
-00
+-- 
+2.39.5
 
