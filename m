@@ -1,83 +1,159 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.4])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F60425FA33;
-	Mon, 24 Mar 2025 12:52:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.4
+Received: from mail-io1-f42.google.com (mail-io1-f42.google.com [209.85.166.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F24B2261360
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 12:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742820772; cv=none; b=KckOfAv5L0yk2qj30Szfiv1xQQC/LaufLR2m5wW1bip0QrYe8Gm5PwZIt0QzL3E912fLXeIJHrAYwfN1jTf70AG8fv/unlvvwsH3lBx52BWByWPXho79mbkB55/Q6MfellFJKNQaccv0IfXNPK7wnXJglxD8/Qorf7bj1aKWqbY=
+	t=1742820772; cv=none; b=TqFspnJGU3gyCIO1QfrpKtDBbbQGEzJqw3imR/RQOTFk9/dmImHmbTqRMlHzZlmCYcb32PTpr558ABT6VfVC/0B5h0HD58E/2vuG6XDF7G3GLIiuvpHeGy6lP3YuCybGRIA0lgimA3rSCMUgSzZywRn7aP/6Cf2OxTiCcl4An9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742820772; c=relaxed/simple;
-	bh=DGpU04yKPRoOZy0YVkJWqS/S+9o26k7SQZrWuf3KMcA=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=TskoDnwY2jgI/4+vAIYfCK1AdjP4+w/9dv1Qz2pwaEQXyFepGWzg9lNfQ5UIllHYa+fCqjHKwVwp4c/IQyOrOZQB2XMzEd2CIwkX0YVNK8/4lcrTbnlnjySP6INVnKPw4rIud7VTBcY8fIaxYb5fob7TZo62oENenPdNHzdPJCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XuHjMZ4H; arc=none smtp.client-ip=220.197.31.4
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	bh=tZeyOMnQsNvDDiIiuNWxW+4BJjKY29h3V6qQ1S2MzuU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TbPwF+rj0mrLsU5J5mVwRyepz9MIKxkq+2kepi1c+fcz+s5Igx/X9+27kPBHGfktA2XaK/R9O1xNuz9+nUUCJgoPUfisLVmsTybaIbGbvIzzAgu9EzwSPJ5tgLHnWR4PqnQGs7PLoqByoxPmpxpvZEWS4M+6wWohDNKw2QpHm3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com; spf=pass smtp.mailfrom=riscstar.com; dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b=vjU8xqVm; arc=none smtp.client-ip=209.85.166.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=riscstar.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riscstar.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XuHjMZ4H"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-ID:MIME-Version; bh=PHKuR
-	DmBKYPk3+KtVV7z/lVVayQrARu4WFny395S+VM=; b=XuHjMZ4HXjyo2LiJLFL/6
-	udAg/qCviGk94zLDk1nyK8+NvlfwSEO9Tljhwg4EHfObmZCK0PBf85mPEvnoJTWs
-	xULr6PoEvaxgANf+FluZJGMMDTdkLJ6FZWuhj8v1tCgE7Im3yjS3U1cnMH5tzV7u
-	HO1QUdR8DmhPDnDC5cFarE=
-Received: from ProDesk.. (unknown [])
-	by gzga-smtp-mtada-g1-2 (Coremail) with SMTP id _____wDnL9mAVeFnOfyBBg--.24149S2;
-	Mon, 24 Mar 2025 20:52:19 +0800 (CST)
-From: Andy Yan <andyshrk@163.com>
-To: heiko@sntech.de
-Cc: krzk+dt@kernel.org,
-	robh@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	inux-rockchip@lists.infradead.org,
-	Andy Yan <andy.yan@rock-chips.com>
-Subject: [PATCH] ARM: dts: rockchip: Add aliases for MMC devices
-Date: Mon, 24 Mar 2025 20:52:11 +0800
-Message-ID: <20250324125215.160616-1-andyshrk@163.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=riscstar-com.20230601.gappssmtp.com header.i=@riscstar-com.20230601.gappssmtp.com header.b="vjU8xqVm"
+Received: by mail-io1-f42.google.com with SMTP id ca18e2360f4ac-85b42db7b69so42006339f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 05:52:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=riscstar-com.20230601.gappssmtp.com; s=20230601; t=1742820770; x=1743425570; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6X0oWdoPDnrM5Ggl2vFdtnlylP4PXBXYERzQLRD3cjM=;
+        b=vjU8xqVm7P9aEIttQLH1JZaK9V0to65sg7HxnSxEZKjfdo7ivK3oZp2UmKf3ldhJr7
+         9iQlceHvEOPrGsLOfuhvj8oUmrQIjEvDlVQYIMOBPjE16qiBZx76un5t0EGumIsZbdib
+         m3wygBA0RwENO2UH18JBIIZMNr2/JxszZSKCzKTCQOHwpNeGGiKe8TqGDNxzLktAZPbT
+         KtpDds1J7+XCXVycUUlZvYjHh1RAmcK0susywZzTZGXf6PH6aHGiCsGZ3AWqfGeMOxx1
+         CglPjRj4lRY59hoUS63RQ8l5Tf59Y7LXO1Mpztu07VJj55wOBL/tT26+8qXhO8lltMY0
+         Nx7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742820770; x=1743425570;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6X0oWdoPDnrM5Ggl2vFdtnlylP4PXBXYERzQLRD3cjM=;
+        b=HLatnOzUVSQCYmNDBs8fExJm5qybadz+rh+KdjA9R0mApOcI+cRI67X5UN5NSIaEpC
+         05Fp75vU3Mspf/VLL2VlItHuitMY5K0IU/50GJAFdhFu2ZzHjxkmO3P3/ZA4Vwbqf0bm
+         vjh/kwQ65x+GhSqIm219YoTlwqas5LuikLpyHJCpYNKbSc//BOEo2mn1OdEHqPZR6KbW
+         gKZhl1CMHFTl5+fNrvtP7FKrfPhXIzHMpnkEVC1C3yEzjSNyin1rjame7bsBGBRJiDNO
+         PejtmBDcS3KYDweTL7XH2YEN6Pk5pqGcxF+QBIM2+8smMoK1zJ9r0N4ohlm2WlwUVaTJ
+         2Fig==
+X-Forwarded-Encrypted: i=1; AJvYcCXO6LSfWz/Ck6V85euYhfFylMzUuW50qKA74Qy2IN30bZY9jgXNfP8ReQftZSwKwLxHa3peCBASywcf5pI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwXCYS7cztCyjDv+dPtz/ZIcMuEeim9fLAB0x06ic5Hg7x9ADLI
+	7HzAYXEnZAa//qtNCftVg6ojpPke9XmccfSzNyHEeuXZdFYWkprf6QZzkfgodEA=
+X-Gm-Gg: ASbGncsoD/9/C2iz7/xxnT/qzMek9L/1q35t7WkSg9UCG9L1J4lAzQSwPu8mKTAFTWh
+	Nirhe9GG2l2Cq9w6B2Zyh3cn8krLU4oAoXC82K2qew6o2cBy2LVGi2y5QnNzAbuvbS4wMz2FZiO
+	xnzbvRkax4kVrk++Qs6sLqQtNviVdjbpKUFCoUq+GCObsegdaaTdi533yXGGQ2XCp7UvI08UfEe
+	KASCINUp5e8JtNPLR7dSf0rqaRF/SdZAMJPhPGBhE//KkzvH2NhaxFwLhYlL5ymxOXz4FaqaCDa
+	Ep+rPw+m2Q8SRNqq58hooWw+sO+S4tsN1hgZrYep3frR6D4IvnWFC3BkNfdG1G/qDJIzko4EKus
+	3zN3ShPe0
+X-Google-Smtp-Source: AGHT+IGosqVsP6xD9EOhI7VXXnx9Y+44HitNgUDbYxTirUwdX5Z/bTtbV3lrW2oS8n5r7ikaiZEZ7g==
+X-Received: by 2002:a05:6602:488b:b0:85b:505a:7e01 with SMTP id ca18e2360f4ac-85e2ca364aamr1471217539f.5.1742820769907;
+        Mon, 24 Mar 2025 05:52:49 -0700 (PDT)
+Received: from [172.22.22.28] (c-73-228-159-35.hsd1.mn.comcast.net. [73.228.159.35])
+        by smtp.gmail.com with ESMTPSA id ca18e2360f4ac-85e2bc273b7sm164604339f.19.2025.03.24.05.52.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 05:52:49 -0700 (PDT)
+Message-ID: <b9af5eec-db85-4465-895f-d7781ebe9dd9@riscstar.com>
+Date: Mon, 24 Mar 2025 07:52:47 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnL9mAVeFnOfyBBg--.24149S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtF1DuF47tFW3WFy7uFy8Zrb_yoW3tFg_ta
-	43Cw1rJa18GFy5Xw1Dt3yrW343Awn7Kay3G3WDAF18GF1vqa1kXF4kJas7t3WYyFW29rZ3
-	JFWfXa1Yqa13CjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1LvKUUUUUU==
-X-CM-SenderInfo: 5dqg52xkunqiywtou0bp/xtbB0gYaXmfhTQKPYwADs2
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND 3/7] clk: spacemit: add reset controller support
+To: Haylen Chu <heylenay@4d2.org>, p.zabel@pengutronix.de,
+ mturquette@baylibre.com, sboyd@kernel.org, dlan@gentoo.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
+ guodong@riscstar.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
+ aou@eecs.berkeley.edu, spacemit@lists.linux.dev, devicetree@vger.kernel.org,
+ linux-clk@vger.kernel.org, linux-riscv@lists.infradead.org,
+ linux-kernel@vger.kernel.org
+References: <20250321151831.623575-1-elder@riscstar.com>
+ <20250321151831.623575-4-elder@riscstar.com> <Z-FOJFHOsU_dLkmS@ketchup>
+Content-Language: en-US
+From: Alex Elder <elder@riscstar.com>
+In-Reply-To: <Z-FOJFHOsU_dLkmS@ketchup>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Andy Yan <andy.yan@rock-chips.com>
+On 3/24/25 7:20 AM, Haylen Chu wrote:
+> On Fri, Mar 21, 2025 at 10:18:26AM -0500, Alex Elder wrote:
+>> Define ccu_reset_data as a structure that contains the constant
+>> register offset and bitmasks used to assert and deassert a reset
+>> control on a SpacemiT K1 CCU. Define ccu_reset_controller_data as
+>> a structure that contains the address of an array of those structures
+>> and a count of the number of elements in the array.
+>>
+>> Add a pointer to a ccu_reset_controller_data structure to the
+>> k1_ccu_data structure.  Reset support is optional for SpacemiT CCUs;
+>> the new pointer field will be null for CCUs without any resets.
+>>
+>> Finally, define a new ccu_reset_controller structure, which (for
+>> a CCU with resets) contains a pointer to the constant reset data,
+>> the regmap to be used for the controller, and an embedded a reset
+>> controller structure.
+>>
+>> Each reset control is asserted or deasserted by updating bits in
+>> a register.  The bits used are defined by an assert mask and a
+>> deassert mask.  In some cases, one (non-zero) mask asserts reset
+>> and a different (non-zero) mask deasserts it.  Otherwise one mask
+>> is nonzero, and the other is zero.  Either way, the bits in
+>> both masks are cleared, then either the assert mask or the deassert
+>> mask is set in a register to affect the state of a reset control.
+>>
+>> Signed-off-by: Alex Elder <elder@riscstar.com>
+>> ---
+>>   drivers/clk/spacemit/ccu-k1.c | 93 +++++++++++++++++++++++++++++++++++
+>>   1 file changed, 93 insertions(+)
+>>
+>> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
+>> index f7367271396a0..6d879411c6c05 100644
+>> --- a/drivers/clk/spacemit/ccu-k1.c
+>> +++ b/drivers/clk/spacemit/ccu-k1.c
+> 
+> ...
+> 
+>> +static int
+>> +k1_rst_update(struct reset_controller_dev *rcdev, unsigned long id, bool assert)
+>> +{
+>> +	struct ccu_reset_controller *controller = rcdev_to_controller(rcdev);
+>> +	struct regmap *regmap = controller->regmap;
+>> +	const struct ccu_reset_data *data;
+>> +	u32 val;
+>> +	int ret;
+>> +
+>> +	data = &controller->data->data[id];
+>> +
+>> +	ret = regmap_read(regmap, data->offset, &val);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	val &= ~(data->assert_mask | data->deassert_mask);
+>> +	val |= assert ? data->assert_mask : data->deassert_mask;
+>> +
+>> +	return regmap_write(regmap, data->offset, val);
+>> +}
+> 
+> I don't think it's safe to write the regmap based on a value read
+> earlier without the regmap's inner lock held: it's totally fine for the
+> clock part to issue an update of the register at the same time. Without
+> knowledge on it, reset code may rollback the clock bits written by clock
+> code earlier to the original value. That's why I keep using ccu_update()
+> everywhere and dropped ccu_write().
 
-Add aliases for the MMC devices so that after the system starts up,
-they will all have fixed device numbers.
+That's a great point, thank you.  I'll modify it to use
+regmap_update_bits(), which is better anyway.
 
-Signed-off-by: Andy Yan <andy.yan@rock-chips.com>
----
+					-Alex
 
- arch/arm/boot/dts/rockchip/rk3036-kylin.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/rockchip/rk3036-kylin.dts b/arch/arm/boot/dts/rockchip/rk3036-kylin.dts
-index 15a8860c7ae47..a2d7ec2729116 100644
---- a/arch/arm/boot/dts/rockchip/rk3036-kylin.dts
-+++ b/arch/arm/boot/dts/rockchip/rk3036-kylin.dts
-@@ -8,6 +8,12 @@ / {
- 	model = "Rockchip RK3036 KylinBoard";
- 	compatible = "rockchip,rk3036-kylin", "rockchip,rk3036";
- 
-+	aliases {
-+		mmc0 = &emmc;
-+		mmc1 = &sdmmc;
-+		mmc2 = &sdio;
-+	};
-+
- 	chosen {
- 		stdout-path = "serial2:115200n8";
- 	};
--- 
-2.43.0
+> 
+> Thanks,
+> Haylen Chu
 
