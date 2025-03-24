@@ -1,166 +1,88 @@
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D0A535944
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 03:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E365717C208;
+	Mon, 24 Mar 2025 03:55:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742787667; cv=none; b=kJkugbG6bq+6Bar8h15unMd+aS2tnpSCKEFoY8ZDdQNBUuLc2u+FyleCAhlqSlT4t4F4OUdbvZ3sOtFmfHovms0MhZP4lGm7QGp/Pj4ln7+LqxwoszvXMU34Ee7J1RjAm+grJMD+gQKBKCC/kpCerp6uKV/HXD7mcr61LUToMnA=
+	t=1742788502; cv=none; b=drljG/DSkfxZd7iAjJrOgSJs32Q6/radle8TkFkc+cHHw9ETVSb+U2qJdWxoa/JXFDezUNkUygeXbyUOdtLyrPDf2xyg2Yq2Jqni56ine8DDrfttSlcfEpsT0p8PP74qMzUjHkhK4Y1/KcGjOMrDWZQsDDqsVwW0r7gBv1uhV+M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742787667; c=relaxed/simple;
-	bh=YTOyujB6HV49uiuieNmfjMnZV25DYjCLt8LZ3xZbu44=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a6CFXb/ZXyyMlftNQZ/NSqS3L3I6nkSj1wlGazzTdo4GoI4af9hMFtRBG0q5Di7xJLE7QGNbwYHbW5PqXyeHUKASipTR1NoEZaWE5C7JVnFnkIq2KZhuRi3df2ij0NtrtHNRSTJA0du2jDJoL62giMzXuBw53fQfhm3U1xJ5/AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org; spf=pass smtp.mailfrom=kali.org; dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b=RXVTcCwB; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kali.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kali.org
+	s=arc-20240116; t=1742788502; c=relaxed/simple;
+	bh=I/KauccPAuIUUyygZIwODYR2nJ2wCjMs4XIaCqzCPPU=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=iEni/fvDvugl+YzX7jEl95563EMFoF0/XuSSPmrfSXS9MjTCouMTQ1kopJtxzKYRRbL/TaBNJHaEu4bIk0jepwPVmi91oiPfLO8rhzYmSWGXF/CLGPewycpfY9A9Z3b6/mPMrEGQlV8ZSL2PDBw0+JzzakEf8BgX4NCJNE4rchU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TKUVjTmU; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kali.org header.i=@kali.org header.b="RXVTcCwB"
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5e5b6f3025dso5848886a12.1
-        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 20:41:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TKUVjTmU"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2241053582dso47842545ad.1;
+        Sun, 23 Mar 2025 20:55:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kali.org; s=google; t=1742787663; x=1743392463; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1742788500; x=1743393300; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=vqAdn5drDLdHVQt7mXUZCWV+B5j9LdmitoQylJry1D4=;
-        b=RXVTcCwBTGC7PGGBMPuP8GDVhCGVAqVuRgz5hpEqRVQZVIY7nxxcd6xjXjhqsKlUy/
-         BRFwW/KZqkDsHKszDi7QdXGXNGWRDqUUCMmvtGtT3ANAKjcp9nsva2mBo2j4CbSkjOZs
-         mR7bmwX+hkapREK2a8G+AUW8G47rxeJuHMEvSGrZqjdCHVY4eBUWNoyiPTBbrfX6Hnwk
-         NnflVn6e03a3BtrYU2cKFt+YRGsBIQDH13rpkPx5OwZGxyKd2EmGhNUVdkgL+Odz6Hag
-         Quon4Kwc0uBToN8H8STp0HKPM9lNnaLseQ91POCoqrx4wjtXHrr1Q4q0RUYYuBozMdyt
-         v/CQ==
+        bh=I/KauccPAuIUUyygZIwODYR2nJ2wCjMs4XIaCqzCPPU=;
+        b=TKUVjTmUkuVGnJp9EmWt/VSyEXl1oX4dQwQBxVT5HQa3PAHzX+DkEeoBN0Dp7y7hsP
+         2+34C2wSeSwZhJrvGcPN/HswxKsJ1kF25LQhVTu9atZ2zUVIOhYiXgzae5Lt6CIOxwC3
+         XHkAVrgMMNRHUnp2F3p/v9iOtFzgAPfTCMBNOJgIwZIOt3ugpdiDAV2uyVP5XRswncdF
+         8botMQUXJI7Ka44NZ5pZZc4U9jjs1BYcfvINBQWvW2CYISBkesxk+Oi//2vdTQVqSoyN
+         DWWQMXL6WshmQhbPDUdRayvwG4EFKr/vaQsOaUtQrlzmHEzThcZ+rqFtjy/vcU4iLjrw
+         6hFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742787663; x=1743392463;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742788500; x=1743393300;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=vqAdn5drDLdHVQt7mXUZCWV+B5j9LdmitoQylJry1D4=;
-        b=OogrxtgIYG0g2bpNLK6SkbPu0xSAZ9R4DvaV5zx5vfS5lC9UuJTlr6xFsM/3eqKl8N
-         +wYbmZX6i/I8N27WL+YPEYlanPO05pP/VxzwfBog7P2uxCqKe2pRerP0UBm5G1vzXa8z
-         aNdMqKSiCKDfUduBsCNMkxj+TeTHW0DBWPIqCDUhltZ/f3s8yh0OmCm9GjdEkdqkd9IJ
-         jiPfi6Naja5gH7a81JryDgf3Oh+BvpRPBJGkxLWSzOe6/PGD1HQ7HJPJ8DSK6PUER9M2
-         bR9kgMUWxdLKbrcA7gXTVGEMrqMVGexPp1ze8zsW9uEskPg7eP2MSTLGJUiUz67kPamK
-         7sqQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX8a0dGvRD5Xn3nBc/fggsiGB/XpRo9evmqoAsRujVaxcruNXtTN0X1RW6rHpVGbwBnKi5KBAnjUetIluk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxUeUy4fHdJIrdE6pfjPLemgJvdhGIbkuDifsExjwk1LL6M2as/
-	XD3KoRu8FEjRy+TQwOSlphnI1TJ2XvFOZ1I13Qr8ttXgt04zitOhN0beoMSy5cDFmY96Ppv9vly
-	LS2SCbQnQ0VuDPiU9YREP7ZM3dF2D1rCmE7i75w==
-X-Gm-Gg: ASbGncsbGbbf4AaFX+TdsSzt9ilN6s/qv/HJU4buM03OsGiQAXCTypuCbD99buPyUBR
-	1ljsNJuTMF4tcW/uSKEvdrxr/Ygnl49IIH33Jdpq0g227wqNQiIq69ceDEyeBJU3IUogCFZeDNj
-	4LhB/TZeOgU2OLMZ7w9yH16hWXZQ0=
-X-Google-Smtp-Source: AGHT+IEf4WGbQ3qxvrIMk05GS8LR6ITHlULcjaOKtIwGgAmn7Z7RZxqOJXmb4UVfsxdcask06dK+SKmvNHb4sJYQXxw=
-X-Received: by 2002:a05:6402:90c:b0:5e7:9d01:109d with SMTP id
- 4fb4d7f45d1cf-5ebcd528857mr8535251a12.32.1742787662737; Sun, 23 Mar 2025
- 20:41:02 -0700 (PDT)
+        bh=I/KauccPAuIUUyygZIwODYR2nJ2wCjMs4XIaCqzCPPU=;
+        b=TUgZOPRSNFFU9+hXeZmQSwIUaKokYObSfRsNPVGbBLGw0WKFsouOpPLkTIWTn2ht65
+         TMB9RD57X2pZkqHWumd9ztpuosmltV1u+S7OaPC8sdN/lPmOlSZd/9AfdnPtrLGQtYcU
+         MUJ/A05u1aCLDYoiSr6SQX110eoP7EjDPXgVx2O3Zi9k9BvUr9NEI/7EQP1GMwBy+Svq
+         VGUFtHCrXRaObltmUBcp6Eyjq/ZAZMITucouusFd46zUvIiFqybHJK973Z8cH8el5CqH
+         Gpm/KWXMxSw5/lPZ57FVN2D87SDE/VivENDTsKk9dqPPJs+/hUqZ8doNOA1Imnpwua2v
+         hA1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVzBf6vGSZOBCfVoJgqE5wnAU0hVp4GbAIJZUzfAfpYTFtkn/DWNxGIYrwTDcaSF/MbQZW5zjM4iSOdew==@vger.kernel.org, AJvYcCWvVFVwqCLM83DKxf1zc85C/QtgkJzgMU6xjQt+0zRBktdfQkU0JaWTXjuUe2W97i1GIU01WZ+Hf3W8@vger.kernel.org, AJvYcCX3X3h5yH2RcAmEeSPQj4bEVpo4aaK0UD6hRyzjsrMyPl5sR9b0bnHldJXP6sk4v96KyZudU0awFqhTApwB@vger.kernel.org
+X-Gm-Message-State: AOJu0YxaoQLtWQMpsJXhvNcj3WOBtiwwpVGbuWNzmlPFguQOOJ5tk78y
+	deuBd+VO04RMAlPHghU4AgZHINX4gQDiiJCbvZqnNRK6qFWeo0LOxlFDXmk4
+X-Gm-Gg: ASbGncvoc/eLafPlOijtjrdXcjCgGeAbBVlhhOFs1DW8CJU2etyg3f8rorlkNEfvBnb
+	YYM5C8xk0uQQi9WZ++ONL1709Z1yleLOeOYtqT/x7HDSmSO0WKzzB4uT5D6OjSeqqfBiMKK+dWd
+	Hov1o7eR0O+V5aW9n94Zr/emDGTJSbkKP65ddAegR67crl/Ugo1mgd5cQIUbApPWd/TwWlU6crh
+	mEhEB6tzrJXwlq0E6E3ApKfMetvR2Gin0rR12++r4Zh+ufW9yYX7vPBu8NRgJ6TiwY9zq2f3l64
+	65g2Es3KtSvjtx7Ml8lRoZE79JYsxjKY1tyIYhzUbb05E14eqsnBx7gMHA==
+X-Google-Smtp-Source: AGHT+IFWy74ALLhpZhrC/pz5YWeYoMXbdSt8CkZAKJYT9ZUmmymrOJLKxsJID5oJoZylnj0+k2m53g==
+X-Received: by 2002:a17:902:ce0e:b0:223:fabd:4f76 with SMTP id d9443c01a7336-22780dbff86mr170040045ad.30.1742788499810;
+        Sun, 23 Mar 2025 20:54:59 -0700 (PDT)
+Received: from localhost.localdomain ([27.70.184.106])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f3b242sm60167265ad.41.2025.03.23.20.54.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 20:54:59 -0700 (PDT)
+From: Nam Tran <trannamatk@gmail.com>
+To: lee@kernel.org
+Cc: pavel@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] leds: add new LED driver for TI LP5812
+Date: Mon, 24 Mar 2025 10:54:32 +0700
+Message-Id: <20250324035432.6855-1-trannamatk@gmail.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <0250320155012.GT3890718@google.com>
+References: <0250320155012.GT3890718@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324-wcd-gpiod-v1-0-27afa472e331@nxp.com> <20250324-wcd-gpiod-v1-2-27afa472e331@nxp.com>
-In-Reply-To: <20250324-wcd-gpiod-v1-2-27afa472e331@nxp.com>
-From: Steev Klimaszewski <steev@kali.org>
-Date: Sun, 23 Mar 2025 22:40:51 -0500
-X-Gm-Features: AQ5f1Jrs3YNxuyzEK2PKwShWt84XVzo4wlyPswgCV-soNnQk2eSI4Vg06XK4Sdo
-Message-ID: <CAKXuJqht5ZiFyt2uWXwPSEdszYQWKHm22+mAQCPQXn8b7AbL-w@mail.gmail.com>
-Subject: Re: [PATCH 2/3] ASoC: codec: wcd938x: Convert to GPIO descriptors
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-Hi Peng Fan,
+Thank you for your suggestion. I appreciate your guidance on proper email formatting.
+I will ensure my future responses follow this standard.
+Your feedback is very helpful for me to improve my contributions.
 
-On Sun, Mar 23, 2025 at 9:28=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
->
-> From: Peng Fan <peng.fan@nxp.com>
->
-> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
->  - Use dev_gpiod_get to get GPIO descriptor.
->  - Use gpiod_set_value to configure output value.
->
-> With legacy of_gpio API, the driver set gpio value 0 to assert reset,
-> and 1 to deassert reset. And the reset-gpios use GPIO_ACTIVE_LOW flag in
-> DTS, so set GPIOD_ASIS when get GPIO descriptors, and set value 1 means
-> output low, set value 0 means output high with gpiod API.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->  sound/soc/codecs/wcd938x.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
->
-> diff --git a/sound/soc/codecs/wcd938x.c b/sound/soc/codecs/wcd938x.c
-> index 1ae498c323912ed799dcc033e7777936d90c9284..c70da29406f36883e4926eca4=
-0ab5ba5df02c383 100644
-> --- a/sound/soc/codecs/wcd938x.c
-> +++ b/sound/soc/codecs/wcd938x.c
-> @@ -11,7 +11,6 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/component.h>
->  #include <sound/tlv.h>
-> -#include <linux/of_gpio.h>
->  #include <linux/of.h>
->  #include <sound/jack.h>
->  #include <sound/pcm.h>
-> @@ -171,7 +170,7 @@ struct wcd938x_priv {
->         int flyback_cur_det_disable;
->         int ear_rx_path;
->         int variant;
-> -       int reset_gpio;
-> +       struct gpio_desc *reset_gpio;
->         struct gpio_desc *us_euro_gpio;
->         u32 micb1_mv;
->         u32 micb2_mv;
-> @@ -3251,9 +3250,9 @@ static int wcd938x_populate_dt_data(struct wcd938x_=
-priv *wcd938x, struct device
->         struct wcd_mbhc_config *cfg =3D &wcd938x->mbhc_cfg;
->         int ret;
->
-> -       wcd938x->reset_gpio =3D of_get_named_gpio(dev->of_node, "reset-gp=
-ios", 0);
-> -       if (wcd938x->reset_gpio < 0)
-> -               return dev_err_probe(dev, wcd938x->reset_gpio,
-> +       wcd938x->reset_gpio =3D devm_gpiod_get(dev, "reset", GPIOD_ASIS);
-> +       if (IS_ERR(wcd938x->reset_gpio))
-> +               return dev_err_probe(dev, PTR_ERR(wcd938x->reset_gpio),
->                                      "Failed to get reset gpio\n");
->
->         wcd938x->us_euro_gpio =3D devm_gpiod_get_optional(dev, "us-euro",
-> @@ -3297,10 +3296,10 @@ static int wcd938x_populate_dt_data(struct wcd938=
-x_priv *wcd938x, struct device
->
->  static int wcd938x_reset(struct wcd938x_priv *wcd938x)
->  {
-> -       gpio_direction_output(wcd938x->reset_gpio, 0);
-> +       gpiod_set_value(wcd938x->reset_gpio, 1);
->         /* 20us sleep required after pulling the reset gpio to LOW */
->         usleep_range(20, 30);
-> -       gpio_set_value(wcd938x->reset_gpio, 1);
-> +       gpiod_set_value(wcd938x->reset_gpio, 0);
->         /* 20us sleep required after pulling the reset gpio to HIGH */
->         usleep_range(20, 30);
->
->
-> --
-> 2.37.1
->
->
-
-With this patchset applied, the wcd938x codec used in the Thinkpad
-X13s stops working:
-
-wcd938x_codec audio-codec: soundwire device init timeout
-wcd938x_codec audio-codec: ASoC: error at snd_soc_component_probe on
-audio-codec: -110
-snd-sc8280xp sound: ASoC: failed to instantiate card -110
-snd-sc8280xp sound: probe with driver snd-sc8280xp failed with error -110
-
--- steev
+Best regards,
+Nam Tran
