@@ -1,109 +1,109 @@
-Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C75725DB0D;
-	Mon, 24 Mar 2025 09:43:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEC6A25C6F5;
+	Mon, 24 Mar 2025 09:43:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742809411; cv=none; b=Nk+YhzNU/Ak07I8Lw7/r74ZvPZ8fNuji35yGmwrI7G7S63l3DS2SAxM1xQWE1jWiopd3cweEpY01tUTptCOr33PACfY/NidGbNSRIC0OLCswEC760AYDGKOIbnuLPdviu8E+w4LNzfUOaBTBxS4P04IYSLPd3O/t+76l87KmP90=
+	t=1742809432; cv=none; b=Fe5wy5MQ+sgZn3ldpCLoMNOXgH5ABK7PF2vGzEs8i7Q8gapgnP5hIVjL5yY/2P5SPTIED5/zHZlif/QF7NGkCVjhMRSdBNeqFqLmPiCjmTI99zgrPadX70Xjy5JO2EO5Y0p86Twcl5rEjX78TXmDP5lZEhGV+ytj0Kdadib1Gjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742809411; c=relaxed/simple;
-	bh=xwAXpf2r+v5WIM5PWE9zJkDFTC8uCLULd81muUqM9Ow=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=XVpNTX3HUB/yUF5H40pYbtO5AyHJ9g6GHvxTACtfW04+MQ8JGuqWX8SEp8L1X/R5HMF1MrPY650iFgARVy1szdSu+P37y8FUVKgxq2/YI/JtGnhglDUSdENdbuUwdDWc7TSPoLFK9YQud18BFRe8Yq2UwjuwMQdIXUBsZ7c/Y08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=DNAUbfq6; arc=none smtp.client-ip=185.132.182.106
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
+	s=arc-20240116; t=1742809432; c=relaxed/simple;
+	bh=l0EsM4WPrsP2/dZGbpiEOfdu9H02HYDRq1VyCp+kVqE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dnwI+9vIp7KjGxTTJtDcU/exCHA4HiytlhG4MwXCEjB6sbeYlLpzPTLIiigyFWZqh8VNEWXXdyNbvKtFvqXu9HQ7nyXmXrNLjZhjkyBQY6DSTwQvOVaLHh1LD/iYQtHQ5rzM0xPGX44r/InNbFNef9i/s3fr2QWLgUJZQT+v/no=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=T2sJKe8t; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="DNAUbfq6"
-Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
-	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O9BbeC031035;
-	Mon, 24 Mar 2025 10:42:59 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=selector1; bh=
-	yT8oLnhtXkXINGnaV4SHYt3aHucazcGEQTHZoc9QZSc=; b=DNAUbfq6/Jhr49dY
-	UZilZG/nPpJwxSNbjdOvw8cWhtKG/mHo2Y0ypVErwGGlkSe1cK97HchCEhDqF6BE
-	+1ZkOxPxph/8n7q9NqR0zNKhYFVOpa8pXZZm2W9ITA4na6iyPIzV5A3mt28oojBs
-	VQ73wEQoDPj6GoKshGNVxWD1Fevf6NytbNHGaWCYh3pkRX4PepyD5FYcgXZv7YV3
-	jh8XbguA0IC31l3kDeM8aJCTx4/Qkxozorv4HEL88YKnJCjbvPLqvbCVfI5uLAnT
-	m2YQ72WpAGy6wR3zolGKfe7YdaPQloUzGcYRc0QnJHJrypJ+enO+93ZvO781orGb
-	E9dGgw==
-Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
-	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45hkgr71x2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 10:42:59 +0100 (CET)
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id DFB6A40063;
-	Mon, 24 Mar 2025 10:41:40 +0100 (CET)
-Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
-	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 87D8D7EE783;
-	Mon, 24 Mar 2025 10:40:17 +0100 (CET)
-Received: from localhost (10.48.87.62) by SHFDAG1NODE1.st.com (10.75.129.69)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Mar
- 2025 10:40:17 +0100
-From: Patrice Chotard <patrice.chotard@foss.st.com>
-Date: Mon, 24 Mar 2025 10:40:14 +0100
-Subject: [PATCH v2 2/2] spi: spi-stm32-ospi: Make "resets" a required
- property
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="T2sJKe8t"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742809431; x=1774345431;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=l0EsM4WPrsP2/dZGbpiEOfdu9H02HYDRq1VyCp+kVqE=;
+  b=T2sJKe8t+2Xth1CtHgvTt0oOv2oItSfgvMIpdcBEB0QE80vK2hxbmeTv
+   hSEB9I1RJC46cD/WBVt98otxe6Q7OhwxlfHc/4TXi3UC6u6NUOYNB/fyq
+   za+d2BdV75VkHHSYr3W19t4qzET1jFts63DAsFoPqZ2lnI8stlYNr0gZW
+   KNLCKgmpg0OwOf7/VgAbnvGQGVCwDRHFDyiLK7hO8ZWBarasak1+aYLbz
+   5mQtCHZ2omR4Zfv9guDFG0QEdoadqbBzB9HbKs9cu5shRMUrqfeXj0qvL
+   5/L9Jl/V9Up6DXSeVeUKrq1veW7f50dfmrs8cktDzhBhaI6YJYaRRpP7A
+   w==;
+X-CSE-ConnectionGUID: CThS8P3qSV6Y1KgBp/FvLg==
+X-CSE-MsgGUID: 0lUoxiwJSdiYM7DZ18Ww/w==
+X-IronPort-AV: E=McAfee;i="6700,10204,11382"; a="69360685"
+X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
+   d="scan'208";a="69360685"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 02:43:50 -0700
+X-CSE-ConnectionGUID: Pvmb/+8MRqW99/1pzmVESQ==
+X-CSE-MsgGUID: IFoLYrjuRQOhNS12ivjZTA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
+   d="scan'208";a="161232721"
+Received: from kuha.fi.intel.com ([10.237.72.152])
+  by orviesa001.jf.intel.com with SMTP; 24 Mar 2025 02:43:47 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 24 Mar 2025 11:43:46 +0200
+Date: Mon, 24 Mar 2025 11:43:46 +0200
+From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To: Andrei Kuchynski <akuchynski@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Benson Leung <bleung@chromium.org>,
+	Jameson Thies <jthies@google.com>, stable@vger.kernel.org
+Subject: Re: [PATCH 2/2] usb: typec: class: Invalidate USB device pointers on
+ partner unregistration
+Message-ID: <Z-EpUlA9VOBO9yd4@kuha.fi.intel.com>
+References: <20250321143728.4092417-1-akuchynski@chromium.org>
+ <20250321143728.4092417-3-akuchynski@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-ID: <20250324-upstream_ospi_required_resets-v2-2-85a48afcedec@foss.st.com>
-References: <20250324-upstream_ospi_required_resets-v2-0-85a48afcedec@foss.st.com>
-In-Reply-To: <20250324-upstream_ospi_required_resets-v2-0-85a48afcedec@foss.st.com>
-To: Mark Brown <broonie@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Maxime
- Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue
-	<alexandre.torgue@foss.st.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <christophe.kerello@foss.st.com>, <linux-spi@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        Patrice Chotard <patrice.chotard@foss.st.com>
-X-Mailer: b4 0.14.2
-X-ClientProxiedBy: SAFCAS1NODE1.st.com (10.75.90.11) To SHFDAG1NODE1.st.com
- (10.75.129.69)
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250321143728.4092417-3-akuchynski@chromium.org>
 
-On some STM32MP2 SoCs, an Octo Memory Manager is embedded and
-need to retrieve OSPI's reset to perform its own initialization.
-Make "resets" property mandatory.
+On Fri, Mar 21, 2025 at 02:37:27PM +0000, Andrei Kuchynski wrote:
+> To avoid using invalid USB device pointers after a Type-C partner
+> disconnects, this patch clears the pointers upon partner unregistration.
+> This ensures a clean state for future connections.
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 59de2a56d127 ("usb: typec: Link enumerated USB devices with Type-C partner")
+> Signed-off-by: Andrei Kuchynski <akuchynski@chromium.org>
 
-Fixes: 79b8a705e26c ("spi: stm32: Add OSPI driver")
-Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
----
- drivers/spi/spi-stm32-ospi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 
-diff --git a/drivers/spi/spi-stm32-ospi.c b/drivers/spi/spi-stm32-ospi.c
-index d4f413c8c3ce1a51d2302602d46c7605a8bbc605..d3839a4dacf9f2eb95bafad9f7a8538ce2bb3598 100644
---- a/drivers/spi/spi-stm32-ospi.c
-+++ b/drivers/spi/spi-stm32-ospi.c
-@@ -804,7 +804,7 @@ static int stm32_ospi_get_resources(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	ospi->rstc = devm_reset_control_array_get_optional_exclusive(dev);
-+	ospi->rstc = devm_reset_control_array_get_exclusive(dev);
- 	if (IS_ERR(ospi->rstc))
- 		return dev_err_probe(dev, PTR_ERR(ospi->rstc),
- 				     "Can't get reset\n");
+> ---
+>  drivers/usb/typec/class.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
+> index eadb150223f8..3df3e3736916 100644
+> --- a/drivers/usb/typec/class.c
+> +++ b/drivers/usb/typec/class.c
+> @@ -1086,10 +1086,14 @@ void typec_unregister_partner(struct typec_partner *partner)
+>  	port = to_typec_port(partner->dev.parent);
+>  
+>  	mutex_lock(&port->partner_link_lock);
+> -	if (port->usb2_dev)
+> +	if (port->usb2_dev) {
+>  		typec_partner_unlink_device(partner, port->usb2_dev);
+> -	if (port->usb3_dev)
+> +		port->usb2_dev = NULL;
+> +	}
+> +	if (port->usb3_dev) {
+>  		typec_partner_unlink_device(partner, port->usb3_dev);
+> +		port->usb3_dev = NULL;
+> +	}
+>  
+>  	device_unregister(&partner->dev);
+>  	mutex_unlock(&port->partner_link_lock);
+> -- 
+> 2.49.0.395.g12beb8f557-goog
 
 -- 
-2.25.1
-
+heikki
