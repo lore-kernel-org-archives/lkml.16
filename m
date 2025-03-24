@@ -1,99 +1,214 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6565F1A08AF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:32:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 236C119C569
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742823176; cv=none; b=SA8Ort9ZutM3lsaZD/xqi0LB/4Kiws2yVLjYvrId8EOEBWThBN6wMPwHviQjb+gSgbpEV7D53TM9j8BcpeJDmJyfgbdGcjBee6FqDiGNuRpuRiRwkWraXpn3FO1BryHD9N7tznJ6QDrIiKf0HGkGLGa2uWI7xCIQ/LkAjIbg2Wg=
+	t=1742823203; cv=none; b=nUpx/KaP1urh5zhRwgLBIMWXqIstheqApQv7qW3JyHyq8gHpOTKSUuj2R9waJAQ0SE8jFP4HiZr+nWhGNd1JhexU/oSVCbHOMS0iB6gWn+DM+FpZTy9p+rS50YZXPmZR8SgQVA6sW2ZBFWCDTlJAxXZrYvsyUcAaspwkXAVbDd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742823176; c=relaxed/simple;
-	bh=jyMXTLyNgoR+3Mh43uHX54/Ii8JgrwxoERkKPkXm7H4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eDko4D2edYApp37FQIPqPZQdN+VrHYUpsBMg4N94YRq6yRLMXrgz8Ue7wDXU/0QGOj9qDR+gzuTIWJsDdhYrKSZW/R9FqC1l10KlJoe5SLIwO3XKKvPZVCGg6orkPeZlu1AZXOnzSzoQdtD98FhWL2zeNIlJKttFO/NwkuHKpz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net; spf=pass smtp.mailfrom=gourry.net; dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b=gebCyklj; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gourry.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gourry.net
+	s=arc-20240116; t=1742823203; c=relaxed/simple;
+	bh=672I3/+hGrCRodDTgPKh2B6jZ5R+Fb8/Nlctlz3nabc=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=X+j0HJGne0eCIEZ13/+vRVz09bHK0DTWia0NNeKJ/ddKMF5d5jlYBVSNc7zge5V5/xL5Fto0CRoYc/sGJF3aC83k1BGjfRyP9g9vPZogDceoAYNOFIrEa1ol62AquySo80iG+/uQ8Hnl+SnodqBp59AcFHWAkdDyfxpf/YMfiCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ErbaNGnp; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gourry.net header.i=@gourry.net header.b="gebCyklj"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e8f254b875so39398976d6.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 06:32:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gourry.net; s=google; t=1742823172; x=1743427972; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=iJ3k7yEhYDRnLKFARJZHNQlKgfuegZSgLZhOzT1gU3A=;
-        b=gebCykljom64PRfiMPz5Rb9bwBFSxX4MbQEFO4m0eDTy1ODTtv7k2XjH5dbV+AbV7u
-         zZ3amKMtNneMeV1wkqgiFzzyw8YM4U1W2B0Fy43wDwW1EI77HywLVsNXTdZE7/LV8NF8
-         03sN9uW9TYZei4WYTYk46yqqw9++n/XE7zRLGrWpCrz2VCeOJz76rpnL8UVHukXESsQB
-         eBOk3RwNvLJeOWJ0ggxUageoixKLtNeXFdHptLKL5M1QJc7ELe2A2v0DmrXrJ9N6Soxo
-         HM49bWCVUVcWbXxcEl6d9o/VcMVQfz1gKA4ECGSdDbCpNKwQ5m3dVYsOaT3LtoPFIvDw
-         6d6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742823172; x=1743427972;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJ3k7yEhYDRnLKFARJZHNQlKgfuegZSgLZhOzT1gU3A=;
-        b=RnHLEkaAcUfas9rrLrfMY6OCZ++wV7xKuMDe1JT+K2ek2oI/NxsoMzZxNUcsVPp4sj
-         Y5BN74L9+3xsJ3BTAiO5Ynzk97c3WR49Mskjo8HQ6DW7fwNxAH61uBVLbuEex9e5jVE+
-         zwTHA0nSXaTGLP7ulvlMxzbXwXxtt3sk/vD+hzn/0rNzKGgkQ4ESsnEhrx9B35Yds4g7
-         dmZTIfnE2wY57thAnGproaMuwmZ5TH0Sg1v2sbvgPg9NNrFjgasdDyvYyLa09g1xK5ed
-         BUgkudrcC4u+D1d034CS7WY/mn687S9Whlj6+8uZKGrTkClVoRNZNq3QvVQF7bMvEhFF
-         j6LQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWKcJ37cSMYt1XlIDd5lkgW45rjTK/+ruBWrEhNRnWo5ABhzyHc5DHPFN0P0U0fpKnzEpya6PVVszFEKQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz8yu5fpXYkC6hxH0UksUJZ54wGlKDrwKkzeiezEoUeVQ5oWwIl
-	4nystgHr9YP1f4rOISZUVf5A+k16wlCMekSBmm9m4okYbUTHn8QzaapZ33OQ+zA=
-X-Gm-Gg: ASbGnctYPQ5lxSoz2Cyml6/ex7ySvZN29XPC5Q6xo2OqYZZFcCgVXXF9IgJxEj9wc9B
-	z8wpjvIQibGSC3Sp1QA8dDjXihXgQ8TziN5oms9IHGUp2iz9PKWdk+Ydtn/Y51NQsZhBtrXeNa2
-	TMJPthcFQX/Pf6r6GgqEjwiJV1qmSCgGZp/9YJheOv9lo34q5pl7pwcW+o80kiQUJjt9mxDTWof
-	4rtDaLeH18Qzt4lNKetdGYgM/RIF9PR9Wx87++CB65ZRSJjhxaU9bZCIx7a1Yj0PgPdltKXqym+
-	UnA962wo5Rydn2rZOszriEu/ygc6aKio0AIWYL9cD3YYfel91Ta1ZQ==
-X-Google-Smtp-Source: AGHT+IH6AI2Hu4EvLbPfd+tJ+iT15wj0QMHGeMvnf+rKbGzhr8KsnPvdxaL8QbRANSa5d3GYbYPvMA==
-X-Received: by 2002:ad4:5f4f:0:b0:6e8:fe16:4d45 with SMTP id 6a1803df08f44-6eb3f3446bemr145244976d6.41.1742823171962;
-        Mon, 24 Mar 2025 06:32:51 -0700 (PDT)
-Received: from gourry-fedora-PF4VCD3F ([99.209.85.25])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eb3ef34792sm44450036d6.68.2025.03.24.06.32.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 06:32:51 -0700 (PDT)
-Date: Mon, 24 Mar 2025 09:32:49 -0400
-From: Gregory Price <gourry@gourry.net>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org, linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org, linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com, dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com, david@redhat.com,
-	Jonathan.Cameron@huawei.com, kernel_team@skhynix.com,
-	honggyu.kim@sk.com, yunjeong.mun@sk.com
-Subject: Re: [PATCH v3 3/3] mm/mempolicy: Support memory hotplug in weighted
- interleave
-Message-ID: <Z-FfAUiGePF9mnPS@gourry-fedora-PF4VCD3F>
-References: <20250324084920.987-1-rakie.kim@sk.com>
- <20250324085433.998-1-rakie.kim@sk.com>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ErbaNGnp"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742823203; x=1774359203;
+  h=from:to:cc:subject:in-reply-to:references:date:
+   message-id:mime-version;
+  bh=672I3/+hGrCRodDTgPKh2B6jZ5R+Fb8/Nlctlz3nabc=;
+  b=ErbaNGnpIe7Fvkj3rVGxaDgWCi6PgGMhrwOxT7JDzf0vljG1HHQmm8YK
+   ZYIbNLjDhDNUOMDYbObOSD7ljt9mz6fZZi9hHfN2zZ56UdDY4RVz370tD
+   HZDr06c97uJC7xYFyGqvWYAAM0KahMcjgA2EU48rlQ3ubMlL0U4QCkRTV
+   kxyKmUVJmK/7iPrFO3OSwnKQ6TwrUT/93/VFCFSx6F4HeXyqMPUXEv/PI
+   rFWvcZpoguPgOOLgd+azH+PiHU1Z1tP4Bipg+KVRhtY+TX+xDpkFavxU+
+   M1zrFtsqjRJ3LaFrwBqLXXib/1ixjTbbmb3QHBL4pI4Z9zPXBT59okzgL
+   w==;
+X-CSE-ConnectionGUID: /QxKiwS7Si2KqQ+1CDmicA==
+X-CSE-MsgGUID: 4TicbbUATZaTOkTkMDIRhg==
+X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="44191547"
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="44191547"
+Received: from fmviesa003.fm.intel.com ([10.60.135.143])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 06:33:22 -0700
+X-CSE-ConnectionGUID: HUyPZEDVRdmRhrgXUv8/oA==
+X-CSE-MsgGUID: f0vnuuvITZ6BvwyGfdDnVw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="128227255"
+Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.30])
+  by fmviesa003-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 06:33:16 -0700
+From: Jani Nikula <jani.nikula@linux.intel.com>
+To: Yongbang Shi <shiyongbang@huawei.com>, xinliang.liu@linaro.org,
+ tiantao6@hisilicon.com, maarten.lankhorst@linux.intel.com,
+ mripard@kernel.org, tzimmermann@suse.de, airlied@gmail.com,
+ daniel@ffwll.ch, kong.kongxinwei@hisilicon.com
+Cc: liangjian010@huawei.com, chenjianmin@huawei.com, lidongming5@huawei.com,
+ libaihan@huawei.com, shenjian15@huawei.com, shaojijie@huawei.com,
+ dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+ shiyongbang@huawei.com
+Subject: Re: [PATCH v7 drm-dp 5/9] drm/hisilicon/hibmc: Getting connector
+ info and EDID by using AUX channel
+In-Reply-To: <ff11c8ac-7eb4-42cb-86d3-ad9924c9374b@huawei.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20250319032435.1119469-1-shiyongbang@huawei.com>
+ <20250319032435.1119469-6-shiyongbang@huawei.com>
+ <87frj8c9ol.fsf@intel.com>
+ <ff11c8ac-7eb4-42cb-86d3-ad9924c9374b@huawei.com>
+Date: Mon, 24 Mar 2025 15:33:13 +0200
+Message-ID: <87jz8ea6zq.fsf@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324085433.998-1-rakie.kim@sk.com>
+Content-Type: text/plain
 
-On Mon, Mar 24, 2025 at 05:54:27PM +0900, Rakie Kim wrote:
-> 
-> I'm sorry, the code is missing.
-> I may not fully understand the scenario you described, but I think your concern
-> can be addressed by adding a simple check like the following:
-> 
->     case MEM_OFFLINE:
->         if (!node_state(nid, N_MEMORY)) --> this point
->             sysfs_wi_node_release(nid);
+On Mon, 24 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>> On Wed, 19 Mar 2025, Yongbang Shi <shiyongbang@huawei.com> wrote:
+>>> From: Baihan Li <libaihan@huawei.com>
+>>>
+>>> Add registering drm_aux and use it to get connector edid with drm
+>>> functions. Add ddc channel in connector initialization to put drm_aux
+>>> in drm_connector.
+>>>
+>>> Signed-off-by: Baihan Li <libaihan@huawei.com>
+>>> Signed-off-by: Yongbang Shi <shiyongbang@huawei.com>
+>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+>>> ---
+>>> ChangeLog:
+>>> v6 -> v7:
+>>>    - add if statement about drm aux in hibmc_dp_connector_get_modes(), suggested by Jani Nikula
+>> I don't understand this, and I did not suggest such a thing.
+>>
+>> BR,
+>> Jani.
+>>
+> Hi Jani,
 >
+> Is the modification of v8 correct?
 
-This should work.  I have some questions about whether there might be
-some subtle race conditions with this implementation, but I can take a
-look after LSFMM.  (Example: Two blocks being offlined/onlined at the
-same time, is state(nid, N_MEMORY) a raced value?)
+I never received that for whatever reason.
 
-~Gregory
+>
+>
+>>> v5 -> v6:
+>>>    - move the detect_ctx() to the patch 7/9.
+>>> v2 -> v3:
+>>>    - Capitalized EDID and AUX, suggested by Dmitry Baryshkov.
+>>> v1 -> v2:
+>>>    - deleting type conversion, suggested by Dmitry Baryshkov.
+>>>    - deleting hibmc_dp_connector_get_modes() and using drm_connector_helper_get_modes(), suggested by Dmitry Baryshkov.
+>>> ---
+>>>   drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c   |  3 +-
+>>>   .../gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c    | 35 ++++++++++++++++---
+>>>   .../gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h   |  5 +++
+>>>   3 files changed, 37 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
+>>> index ded9e7ce887a..e0bb9b14d9d8 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/dp/dp_aux.c
+>>> @@ -161,7 +161,8 @@ void hibmc_dp_aux_init(struct hibmc_dp *dp)
+>>>   				 HIBMC_DP_MIN_PULSE_NUM);
+>>>   
+>>>   	dp->aux.transfer = hibmc_dp_aux_xfer;
+>>> -	dp->aux.is_remote = 0;
+>>> +	dp->aux.name = kasprintf(GFP_KERNEL, "HIBMC DRM dp aux");
+>>> +	dp->aux.drm_dev = dp->drm_dev;
+>>>   	drm_dp_aux_init(&dp->aux);
+>>>   	dp->dp_dev->aux = &dp->aux;
+>>>   }
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+>>> index 603d6b198a54..0256724d8b9b 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_dp.c
+>>> @@ -15,11 +15,20 @@
+>>>   
+>>>   static int hibmc_dp_connector_get_modes(struct drm_connector *connector)
+>>>   {
+>>> +	struct hibmc_dp *dp = to_hibmc_dp(connector);
+>>> +	const struct drm_edid *drm_edid;
+>>>   	int count;
+>>>   
+>>> -	count = drm_add_modes_noedid(connector, connector->dev->mode_config.max_width,
+>>> -				     connector->dev->mode_config.max_height);
+>>> -	drm_set_preferred_mode(connector, 1024, 768); // temporary implementation
+>>> +	if (!dp->aux.name)
+>>> +		return 0;
+>>> +
+>>> +	drm_edid = drm_edid_read_ddc(connector, &dp->aux.ddc);
+>>> +
+>>> +	drm_edid_connector_update(connector, drm_edid);
+>>> +
+>>> +	count = drm_edid_connector_add_modes(connector);
+>>> +
+>>> +	drm_edid_free(drm_edid);
+>>>   
+>>>   	return count;
+>>>   }
+>>> @@ -28,12 +37,28 @@ static const struct drm_connector_helper_funcs hibmc_dp_conn_helper_funcs = {
+>>>   	.get_modes = hibmc_dp_connector_get_modes,
+>>>   };
+>>>   
+>>> +static int hibmc_dp_late_register(struct drm_connector *connector)
+>>> +{
+>>> +	struct hibmc_dp *dp = to_hibmc_dp(connector);
+>>> +
+>>> +	return drm_dp_aux_register(&dp->aux);
+>>> +}
+>>> +
+>>> +static void hibmc_dp_early_unregister(struct drm_connector *connector)
+>>> +{
+>>> +	struct hibmc_dp *dp = to_hibmc_dp(connector);
+>>> +
+>>> +	drm_dp_aux_unregister(&dp->aux);
+>>> +}
+>>> +
+>>>   static const struct drm_connector_funcs hibmc_dp_conn_funcs = {
+>>>   	.reset = drm_atomic_helper_connector_reset,
+>>>   	.fill_modes = drm_helper_probe_single_connector_modes,
+>>>   	.destroy = drm_connector_cleanup,
+>>>   	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+>>>   	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+>>> +	.late_register = hibmc_dp_late_register,
+>>> +	.early_unregister = hibmc_dp_early_unregister,
+>>>   };
+>>>   
+>>>   static inline int hibmc_dp_prepare(struct hibmc_dp *dp, struct drm_display_mode *mode)
+>>> @@ -103,8 +128,8 @@ int hibmc_dp_init(struct hibmc_drm_private *priv)
+>>>   
+>>>   	drm_encoder_helper_add(encoder, &hibmc_dp_encoder_helper_funcs);
+>>>   
+>>> -	ret = drm_connector_init(dev, connector, &hibmc_dp_conn_funcs,
+>>> -				 DRM_MODE_CONNECTOR_DisplayPort);
+>>> +	ret = drm_connector_init_with_ddc(dev, connector, &hibmc_dp_conn_funcs,
+>>> +					  DRM_MODE_CONNECTOR_DisplayPort, &dp->aux.ddc);
+>>>   	if (ret) {
+>>>   		drm_err(dev, "init dp connector failed: %d\n", ret);
+>>>   		return ret;
+>>> diff --git a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>>> index d982f1e4b958..3ddd71aada66 100644
+>>> --- a/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>>> +++ b/drivers/gpu/drm/hisilicon/hibmc/hibmc_drm_drv.h
+>>> @@ -47,6 +47,11 @@ static inline struct hibmc_vdac *to_hibmc_vdac(struct drm_connector *connector)
+>>>   	return container_of(connector, struct hibmc_vdac, connector);
+>>>   }
+>>>   
+>>> +static inline struct hibmc_dp *to_hibmc_dp(struct drm_connector *connector)
+>>> +{
+>>> +	return container_of(connector, struct hibmc_dp, connector);
+>>> +}
+>>> +
+>>>   static inline struct hibmc_drm_private *to_hibmc_drm_private(struct drm_device *dev)
+>>>   {
+>>>   	return container_of(dev, struct hibmc_drm_private, dev);
+
+-- 
+Jani Nikula, Intel
