@@ -1,142 +1,160 @@
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BB6825C6FA
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:24:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A326325EF8E;
+	Mon, 24 Mar 2025 13:25:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742822699; cv=none; b=nir2R14xs9Sdp/cQqr61va/it1vdN1ij8YatAlCZt3cd8WYFdHSGzzpfIA3QDJarzIaHBMZJD/4L1368yhuFBT2z8EQ87J3a7vx27ZxCYE1QBELbl2Y07tPhAOQxxc7L0gzKFKfEbnkoY1MqWtD0dDapMBUsdZd3mWjN3hEZ9kw=
+	t=1742822726; cv=none; b=Ipgkcsyop2rQK64+1gayzvqe0IyEl0fT1C2XL1xiP4ES12CTQSa+egCRmMalkR89YyS6fLLZmwqjR/68xMPzuaOhLYbkYGG6RdoDFZbZhtz6PgNxFONqSLDQeFffegg6l+8xh6PbyUPexsLaR0IA5E5B8x/Kt9t/rm7hlUZgWPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742822699; c=relaxed/simple;
-	bh=jTd/BBrlw7rM16GfcXDpmNYITDp03nvPhUU2hxdPZWI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=DzIOf9HnE36tlsqBqynZfYzzfKs6Bjrc3qBR4GjnU2sI3Fd+4OoWvEhvZbqwbqlw9LqhE3BNhhfBuaztME8RvDbXvJxvL94bGRENkN2jrW3ccbTjfOA58XjQ/5nFw7xJ1y9QUg5bM8W3eMKpgmdM1NUkl6f56YHseKbtjcDZjoo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1twhmm-0003sG-72; Mon, 24 Mar 2025 14:24:12 +0100
-Received: from dude02.red.stw.pengutronix.de ([2a0a:edc0:0:1101:1d::28])
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1twhmk-001PyJ-3D;
-	Mon, 24 Mar 2025 14:24:11 +0100
-Received: from localhost ([::1] helo=dude02.red.stw.pengutronix.de)
-	by dude02.red.stw.pengutronix.de with esmtp (Exim 4.96)
-	(envelope-from <s.hauer@pengutronix.de>)
-	id 1twhml-004Vqr-14;
-	Mon, 24 Mar 2025 14:24:11 +0100
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Date: Mon, 24 Mar 2025 14:24:02 +0100
-Subject: [PATCH wireless-next v5 01/10] wifi: mwifiex: deduplicate code in
- mwifiex_cmd_tx_rate_cfg()
+	s=arc-20240116; t=1742822726; c=relaxed/simple;
+	bh=vxSgfp4SAGwj8pW9/pjz9+PbBk6qOxXhxUFHyUJJJfE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nJrdEj9WgL51Ww+lmXf76xXlCKsywKYhHlN5+TZlBMvxHsDYuzyTz11HpnFIE7Hy0XJoaLM+1MDCqG3vGsrLrnfr2JacIrHZD8cqDcJaYD14JB9T4yJjZtegeghnZupNHDZTH/2dVfsgTWBZS1Sh17Y4NzsiCRPcHc734hf+990=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJIlr8IE; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJIlr8IE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25BEFC4CEDD;
+	Mon, 24 Mar 2025 13:25:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742822726;
+	bh=vxSgfp4SAGwj8pW9/pjz9+PbBk6qOxXhxUFHyUJJJfE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=HJIlr8IEDm+quXlfbSjZDKXtzj1xNT+IgttbRQjlcNzZnnUMwAxQIpaand/+BaKTI
+	 ugjVwG88Sa53de4lc+zhVy8Y/ze18J15qf17ASvcAVlukv8Omf+U5TpdJ7J2a/dTf5
+	 8ijNsARi0keigLbTuABcWTq2jS75nV4m5X9DiyeX/BgVq8gFq7wnhZodKsFMtNsD7k
+	 Fx3PCHA2Uowgl+GsmgzmLAFhwxKFajxMTUEz0gJCsvr+oAvip+pLZk2ByiQ+ququJV
+	 VqzEja2RN53JrPbGteG6bXBWD2NrCGhOGsCNVRTXFVahhs4d9xoOCtqnIl6yBvCZ4s
+	 60Ff/ukBwN1hQ==
+Received: from johan by xi.lan with local (Exim 4.97.1)
+	(envelope-from <johan+linaro@kernel.org>)
+	id 1twhnx-000000001bd-3C5m;
+	Mon, 24 Mar 2025 14:25:25 +0100
+From: Johan Hovold <johan+linaro@kernel.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Johan Hovold <johan+linaro@kernel.org>,
+	stable@vger.kernel.org,
+	Clayton Craft <clayton@craftyguy.net>
+Subject: [PATCH] soc: qcom: pmic_glink_altmode: fix spurious DP hotplug events
+Date: Mon, 24 Mar 2025 14:24:48 +0100
+Message-ID: <20250324132448.6134-1-johan+linaro@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-mwifiex-cleanup-1-v5-1-1128a2be02af@pengutronix.de>
-References: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
-In-Reply-To: <20250324-mwifiex-cleanup-1-v5-0-1128a2be02af@pengutronix.de>
-To: Brian Norris <briannorris@chromium.org>, 
- Francesco Dolcini <francesco@dolcini.it>
-Cc: Johannes Berg <johannes.berg@intel.com>, linux-wireless@vger.kernel.org, 
- linux-kernel@vger.kernel.org, David Lin <yu-hao.lin@nxp.com>, 
- kernel@pengutronix.de, Sascha Hauer <s.hauer@pengutronix.de>, 
- Francesco Dolcini <francesco.dolcini@toradex.com>
-X-Mailer: b4 0.12.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742822651; l=3171;
- i=s.hauer@pengutronix.de; s=20230412; h=from:subject:message-id;
- bh=jTd/BBrlw7rM16GfcXDpmNYITDp03nvPhUU2hxdPZWI=;
- b=Aio7kitRi3oIgLg7S6Tgz+GaeBcpQuW7Ib3yzHqaytSPrawy2dIr3WrWaLQDNPqAD8mWFkbFR
- LUUwnuFMqnHC2P8v80+FHw+kB/rUVJMSMPLQaJ4J+2fOBXn1AXGMjfa
-X-Developer-Key: i=s.hauer@pengutronix.de; a=ed25519;
- pk=4kuc9ocmECiBJKWxYgqyhtZOHj5AWi7+d0n/UjhkwTg=
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: s.hauer@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
-The code block inside the if/else is the same with just using
-pbitmap_rates if non NULL or priv->bitmap_rates otherwise. Deduplicate
-the code by picking the correct pointer first and then using it
-unconditionally.
+The PMIC GLINK driver is currently generating DisplayPort hotplug
+notifications whenever something is connected to (or disconnected from)
+a port regardless of the type of notification sent by the firmware.
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+These notifications are forwarded to user space by the DRM subsystem as
+connector "change" uevents:
+
+    KERNEL[1556.223776] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+    ACTION=change
+    DEVPATH=/devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0
+    SUBSYSTEM=drm
+    HOTPLUG=1
+    CONNECTOR=36
+    DEVNAME=/dev/dri/card0
+    DEVTYPE=drm_minor
+    SEQNUM=4176
+    MAJOR=226
+    MINOR=0
+
+On the Lenovo ThinkPad X13s and T14s, the PMIC GLINK firmware sends two
+identical notifications with orientation information when connecting a
+charger, each generating a bogus DRM hotplug event. On the X13s, two
+such notification are also sent every 90 seconds while a charger remains
+connected, which again are forwarded to user space:
+
+    port = 1, svid = ff00, mode = 255, hpd_state = 0
+    payload = 01 00 00 00 00 00 00 ff 00 00 00 00 00 00 00 00
+
+Note that the firmware only sends on of these when connecting an
+ethernet adapter.
+
+Fix the spurious hotplug events by only forwarding hotplug notifications
+for the Type-C DisplayPort service id. This also reduces the number of
+uevents from four to two when an actual DisplayPort altmode device is
+connected:
+
+    port = 0, svid = ff01, mode = 2, hpd_state = 0
+    payload = 00 01 02 00 f2 0c 01 ff 03 00 00 00 00 00 00 00
+    port = 0, svid = ff01, mode = 2, hpd_state = 1
+    payload = 00 01 02 00 f2 0c 01 ff 43 00 00 00 00 00 00 00
+
+Fixes: 080b4e24852b ("soc: qcom: pmic_glink: Introduce altmode support")
+Cc: stable@vger.kernel.org	# 6.3
+Cc: Bjorn Andersson <andersson@kernel.org>
+Reported-by: Clayton Craft <clayton@craftyguy.net>
+Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 ---
- drivers/net/wireless/marvell/mwifiex/sta_cmd.c | 43 +++++++++-----------------
- 1 file changed, 14 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-index c4689f5a1acc8..f2e9f582ae818 100644
---- a/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-+++ b/drivers/net/wireless/marvell/mwifiex/sta_cmd.c
-@@ -157,7 +157,7 @@ mwifiex_cmd_802_11_get_log(struct host_cmd_ds_command *cmd)
-  */
- static int mwifiex_cmd_tx_rate_cfg(struct mwifiex_private *priv,
- 				   struct host_cmd_ds_command *cmd,
--				   u16 cmd_action, u16 *pbitmap_rates)
-+				   u16 cmd_action, const u16 *pbitmap_rates)
+Clayton reported seeing display flickering with recent RC kernels, which
+may possibly be related to these spurious events being generated with
+even greater frequency.
+
+That still remains to be fully understood, but the spurious events, that
+on the X13s are generated every 90 seconds, should be fixed either way.
+
+Johan
+
+
+ drivers/soc/qcom/pmic_glink_altmode.c | 30 +++++++++++++++++----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/soc/qcom/pmic_glink_altmode.c b/drivers/soc/qcom/pmic_glink_altmode.c
+index bd06ce161804..7f11acd33323 100644
+--- a/drivers/soc/qcom/pmic_glink_altmode.c
++++ b/drivers/soc/qcom/pmic_glink_altmode.c
+@@ -218,21 +218,29 @@ static void pmic_glink_altmode_worker(struct work_struct *work)
  {
- 	struct host_cmd_ds_tx_rate_cfg *rate_cfg = &cmd->params.tx_rate_cfg;
- 	struct mwifiex_rate_scope *rate_scope;
-@@ -174,34 +174,19 @@ static int mwifiex_cmd_tx_rate_cfg(struct mwifiex_private *priv,
- 	rate_scope->type = cpu_to_le16(TLV_TYPE_RATE_SCOPE);
- 	rate_scope->length = cpu_to_le16
- 		(sizeof(*rate_scope) - sizeof(struct mwifiex_ie_types_header));
--	if (pbitmap_rates != NULL) {
--		rate_scope->hr_dsss_rate_bitmap = cpu_to_le16(pbitmap_rates[0]);
--		rate_scope->ofdm_rate_bitmap = cpu_to_le16(pbitmap_rates[1]);
--		for (i = 0; i < ARRAY_SIZE(rate_scope->ht_mcs_rate_bitmap); i++)
--			rate_scope->ht_mcs_rate_bitmap[i] =
--				cpu_to_le16(pbitmap_rates[2 + i]);
--		if (priv->adapter->fw_api_ver == MWIFIEX_FW_V15) {
--			for (i = 0;
--			     i < ARRAY_SIZE(rate_scope->vht_mcs_rate_bitmap);
--			     i++)
--				rate_scope->vht_mcs_rate_bitmap[i] =
--					cpu_to_le16(pbitmap_rates[10 + i]);
--		}
--	} else {
--		rate_scope->hr_dsss_rate_bitmap =
--			cpu_to_le16(priv->bitmap_rates[0]);
--		rate_scope->ofdm_rate_bitmap =
--			cpu_to_le16(priv->bitmap_rates[1]);
--		for (i = 0; i < ARRAY_SIZE(rate_scope->ht_mcs_rate_bitmap); i++)
--			rate_scope->ht_mcs_rate_bitmap[i] =
--				cpu_to_le16(priv->bitmap_rates[2 + i]);
--		if (priv->adapter->fw_api_ver == MWIFIEX_FW_V15) {
--			for (i = 0;
--			     i < ARRAY_SIZE(rate_scope->vht_mcs_rate_bitmap);
--			     i++)
--				rate_scope->vht_mcs_rate_bitmap[i] =
--					cpu_to_le16(priv->bitmap_rates[10 + i]);
--		}
-+	if (!pbitmap_rates)
-+		pbitmap_rates = priv->bitmap_rates;
-+
-+	rate_scope->hr_dsss_rate_bitmap = cpu_to_le16(pbitmap_rates[0]);
-+	rate_scope->ofdm_rate_bitmap = cpu_to_le16(pbitmap_rates[1]);
-+
-+	for (i = 0; i < ARRAY_SIZE(rate_scope->ht_mcs_rate_bitmap); i++)
-+		rate_scope->ht_mcs_rate_bitmap[i] = cpu_to_le16(pbitmap_rates[2 + i]);
-+
-+	if (priv->adapter->fw_api_ver == MWIFIEX_FW_V15) {
-+		for (i = 0; i < ARRAY_SIZE(rate_scope->vht_mcs_rate_bitmap); i++)
-+			rate_scope->vht_mcs_rate_bitmap[i] =
-+				cpu_to_le16(pbitmap_rates[10 + i]);
- 	}
+ 	struct pmic_glink_altmode_port *alt_port = work_to_altmode_port(work);
+ 	struct pmic_glink_altmode *altmode = alt_port->altmode;
++	enum drm_connector_status conn_status;
  
- 	rate_drop = (struct mwifiex_rate_drop_pattern *) ((u8 *) rate_scope +
-
+ 	typec_switch_set(alt_port->typec_switch, alt_port->orientation);
+ 
+-	if (alt_port->svid == USB_TYPEC_DP_SID && alt_port->mode == 0xff)
+-		pmic_glink_altmode_safe(altmode, alt_port);
+-	else if (alt_port->svid == USB_TYPEC_DP_SID)
+-		pmic_glink_altmode_enable_dp(altmode, alt_port, alt_port->mode,
+-					     alt_port->hpd_state, alt_port->hpd_irq);
+-	else
+-		pmic_glink_altmode_enable_usb(altmode, alt_port);
++	if (alt_port->svid == USB_TYPEC_DP_SID) {
++		if (alt_port->mode == 0xff) {
++			pmic_glink_altmode_safe(altmode, alt_port);
++		} else {
++			pmic_glink_altmode_enable_dp(altmode, alt_port,
++						     alt_port->mode,
++						     alt_port->hpd_state,
++						     alt_port->hpd_irq);
++		}
+ 
+-	drm_aux_hpd_bridge_notify(&alt_port->bridge->dev,
+-				  alt_port->hpd_state ?
+-				  connector_status_connected :
+-				  connector_status_disconnected);
++		if (alt_port->hpd_state)
++			conn_status = connector_status_connected;
++		else
++			conn_status = connector_status_disconnected;
++
++		drm_aux_hpd_bridge_notify(&alt_port->bridge->dev, conn_status);
++	} else {
++		pmic_glink_altmode_enable_usb(altmode, alt_port);
++	}
+ 
+ 	pmic_glink_altmode_request(altmode, ALTMODE_PAN_ACK, alt_port->index);
+ }
 -- 
-2.39.5
+2.48.1
 
