@@ -1,94 +1,102 @@
-Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1D41A29A;
-	Mon, 24 Mar 2025 08:06:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 345DD2054F9;
+	Mon, 24 Mar 2025 08:06:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742803599; cv=none; b=DL6MYWYcmKeVZTM1p/BRiFHIZzBOZIw45zP05sR3Uh3AqopWMogmePjUcDQvMiK5BRt1sNnfiDhNtH7enAbIXSkgapevqD4ZE+XKCaJ5DWSTpy6C1tl8srRiaeg3DZSnuRsL0VabDXXx7v68HlX3IXV3lkCeuzSI7zj8j55gkrc=
+	t=1742803604; cv=none; b=Jf2Yv7Q5BoIpfrKfeNJ/680aBCjcKu05efcSv3LxPKGxGSc3vBQoJlMZivJZdJ+BHdfK7OIBX7TklKqAvx7t1mDoJRHwiGlpauu908P/t9et3lcXGLfnFuQFnByOzsLObP2Qa6CkzPjyBL7bjysF4X7sYz3u4ln+NnZSYlcM1kc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742803599; c=relaxed/simple;
-	bh=WRwEIFnMFcpnOe7siwvKwKO4oJuyeDQLZhXegJTNvnQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=tXjQzvG5mpNSYOzLMqQ8p5ncf868s0mf+nDSLkDYFog7iNyVdzM8yj9SNproO20xEldJkqWqHT02p1YQ6JCvjflVxlkRV8qTUeGOYezbFewI+QPMk3+vJBQULf21qIR0rEnSBPPflUEXSOxzMsfA/k3/Wg0DZ4LxyqDdh+coiO0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=RMbVjH32; arc=none smtp.client-ip=150.107.74.76
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
+	s=arc-20240116; t=1742803604; c=relaxed/simple;
+	bh=ZK89vsBV5uED0rXLzoj209yPUF+EwAtwLwv58tQL5Kw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bbwlqIV12/edfPe29+VQMyi6mFrn7kH7qnYUfNu4adquTzia1GmdXYWW5JXZLviNtAbdllpeqMyuGMHTwxXU/1/Jh5e7j6ka20yo697fVWgw9S9mHQIpdUZnfXxa3fpUGqQyFdYh99Iw1BT6M8BAe6x+WNYos1lTf89gsoc8m6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eAWJ+i9/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="RMbVjH32"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
-	s=201702; t=1742803591;
-	bh=0BLmab/b6DMzdbpIBb1abNGketzgbGJinHHG4HOv8Gc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=RMbVjH32940LLEvokq7Peb34d/30lVZztiRKdfEJK9w9qkYwZIpTK9ayKu+ZtdvX5
-	 7esqWSfFN9FmGOPpn9Otn5bmf+vdIZtQah0YgrV3FH+SwIKDtWfjQKuFKtEfcDXpo7
-	 KVTP2Nsepw/VPlsx0zAGdy2z9wQ3HMfPkiym3+xSkM36P0Q2pkhAL5yOYqX8I2fw98
-	 VHMm5mxfzSTLZ0JOoZnvPzTUqZGki50o6r4QgSYS8xvOCWKuVJwSzz2mIFgeXPq0mW
-	 3Z1AFpXKW5juF9HiLQu7eNMovfag6VfiXs3MTlVKKwfrQa1jdL2zewqgRNTyTp5Po0
-	 fl0xyzWM1k4Nw==
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZLlxd5tdlz4wcd;
-	Mon, 24 Mar 2025 19:06:29 +1100 (AEDT)
-Date: Mon, 24 Mar 2025 19:06:28 +1100
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-To: Ingo Molnar <mingo@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>,
- Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Tor
- Vic <torvic9@mailbox.org>, Linux Kernel Mailing List
- <linux-kernel@vger.kernel.org>, Linux Next Mailing List
- <linux-next@vger.kernel.org>
-Subject: Re: [PATCH] x86/kbuild/64: Test for the availability of the
- -mtune=native compiler flag
-Message-ID: <20250324190628.3e8802b6@canb.auug.org.au>
-In-Reply-To: <Z-EFSKxiqbGPT9CQ@gmail.com>
-References: <20250324172723.49fb0416@canb.auug.org.au>
-	<6227FBC4-AF53-4992-9E29-C0D1DCAFA136@zytor.com>
-	<20250324174141.7b3c4a70@canb.auug.org.au>
-	<Z-EFSKxiqbGPT9CQ@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eAWJ+i9/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A71C4CEDD;
+	Mon, 24 Mar 2025 08:06:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742803603;
+	bh=ZK89vsBV5uED0rXLzoj209yPUF+EwAtwLwv58tQL5Kw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eAWJ+i9/oEEBn99JCkz5k0VgD53RE/en/8HESNnd52viVQi8EBSgoHb8eR+Vr15N1
+	 DNzIKa58kYmqozeCYq45xLzt11vyrsYOeGQr42Oe0Ju1b4GEJppllreAhN+sUbgj+F
+	 irpcKIOVWJ/LHGJDa3uYitAQLYERFAIsJlKwjRNfIad3VD+GQSmccyhdDqkup6y1va
+	 I0XY4CM83FCBJ9/NHJ0UsX1LYKVP7PzKYBDJEZiyhl6pJbbEdEVTTkc8NHIL9WPtZl
+	 /thdeCChPm0VnR5s6CpuQsc9a4vncbixWA43Q5NUPmb1Ohu5AMD3nRnqYzV414BPg1
+	 gLL+uFtDNgjPw==
+Date: Mon, 24 Mar 2025 09:06:40 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Sai Krishna Musham <sai.krishna.musham@amd.com>
+Cc: bhelgaas@google.com, lpieralisi@kernel.org, kw@linux.com, 
+	manivannan.sadhasivam@linaro.org, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	cassel@kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, michal.simek@amd.com, bharat.kumar.gogada@amd.com, 
+	thippeswamy.havalige@amd.com
+Subject: Re: [PATCH v5 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
+ PCIe RP PERST#
+Message-ID: <20250324-successful-aquatic-pudu-5a3cdb@krzk-bin>
+References: <20250321114211.2185782-1-sai.krishna.musham@amd.com>
+ <20250321114211.2185782-2-sai.krishna.musham@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/8p4QVvkBuZCKZrXtIWvOuVR";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250321114211.2185782-2-sai.krishna.musham@amd.com>
 
---Sig_/8p4QVvkBuZCKZrXtIWvOuVR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Fri, Mar 21, 2025 at 05:12:10PM +0530, Sai Krishna Musham wrote:
+> Introduce `reset-gpios` property to enable GPIO-based control of
+> the PCIe RP PERST# signal, generating assert and deassert signals.
+> 
+> Traditionally, the reset was managed in hardware and enabled during
+> initialization. With this patch set, the reset will be handled by the
+> driver. Consequently, the `reset-gpios` property must be explicitly
+> provided to ensure proper functionality.
+> 
+> Add CPM clock and reset control registers base (`cpm_crx`) to handle
+> PCIe IP reset along with PCIe RP PERST# to avoid Link Training errors.
+> 
+> Add `cpm_crx` property between `cfg` and `cpm_csr` as required. Absence
+> of this property results in an ABI break.
+> 
+> Signed-off-by: Sai Krishna Musham <sai.krishna.musham@amd.com>
+> ---
+> Changes for v5:
+> - Remove `reset-gpios` property from required as it is already present
+>   in pci-bus-common.yaml
+> - Update commit message
+> Changes for v4:
+> - Add CPM clock and reset control registers base to handle PCIe IP
+>   reset.
+> - Update commit message.
+> 
+> Changes for v3:
+> - None
+> 
+> Changes for v2:
+> - Add define from include/dt-bindings/gpio/gpio.h for PERST# polarity
+> - Update commit message
+> ---
+>  .../bindings/pci/xilinx-versal-cpm.yaml         | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> index d674a24c8ccc..293df91d4e74 100644
+> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> @@ -24,15 +24,17 @@ properties:
+>      items:
+>        - description: CPM system level control and status registers.
+>        - description: Configuration space region and bridge registers.
+> +      - description: CPM clock and reset control registers.
 
-Hi Ingo,
+Nothing improved.
 
-On Mon, 24 Mar 2025 08:10:00 +0100 Ingo Molnar <mingo@kernel.org> wrote:
->
-> Does the patch below fix the bug?
+Best regards,
+Krzysztof
 
-Yes, it does.  Thanks.
-
-Tested-by: Stephen Rothwell <sfr@canb.auug.org.au> # build test
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/8p4QVvkBuZCKZrXtIWvOuVR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfhEoUACgkQAVBC80lX
-0GxPQwf9HUE4HsWT2s3jf04xzAAyIiTFiB+2EgJu4ZIo45DKW3CFZ2D01rRe4cfW
-+YtM9JW/3+j4VCfh8r64gUKXqdQPe243NsiVSHZsAfD2FA/OZWGf6QsXiyiyWAys
-HTHeYtuOS5JXEFlLmhWVyRDBhR7y3cc1BSCiC13L2/5FV372UUVLny3jmcWh9/Sj
-t3iQehmbSNDsWlmwYEplR8ZRtOmaLm44AfHcoBvFQalPw8HWjVzxk1GJ5VtJrYYc
-zFkLZlRfxCeRY/utsTDv5PEjO+DRpQF0m4OF64+3VU/A6GOkd+tjzjuGxvYFlzJ3
-j5TU/SkKm2UpZwij13Cgn5mUnCnnFA==
-=njif
------END PGP SIGNATURE-----
-
---Sig_/8p4QVvkBuZCKZrXtIWvOuVR--
