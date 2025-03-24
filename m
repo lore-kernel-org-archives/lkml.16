@@ -1,55 +1,48 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F561DB548
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1272146A6F;
+	Mon, 24 Mar 2025 21:08:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742850510; cv=none; b=TqM0ewjHN7rfUEX6nSj22ZiQrkFrConmQur9UBwn7s/10El4ianD6xynT3GCDP2c+QEE1Zco8KNwiWftFZ+BYPgnfxkX0MC4CQazeICN1ZV1NNOmXMtRDtWIo7DID9Xt7L7/rV7n7q6Hh4WRHy+FrrTg0msgSNk/n8GxzuvqEOU=
+	t=1742850511; cv=none; b=PVmMxYUIORfmFLZpGJw6RXH4Aavbz4urhE7+Mw2DwEdJIU8/do8ult2D7XiEKGXMS2bYiOpbiZBMHkhVFjdZbrUJ9YP8kUYDSlelrWb9xbQZQ6Z8rtbDogljGkSV1v7K2yRTLJ1ghhSb1KdPmAFVgJnHC8H2sMNX4Q+oG2A3LCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742850510; c=relaxed/simple;
-	bh=DoITmuJ3b3WOGd7I+KeumI4DPUboRPzOkttm2Ikla9I=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=fDpyku0AKIgqs8eG/Bw/W48cm3Ajp9BWd9GSnPenjJm+WkVeGlonwTQi/Wb74k5pAe7p5vs5N4HEhGQAKiUR01aQVmkYg6CNJZLiPSQU164hbkaWZtaQGCrogf1j4JdkBgmjWn3zL18MFifqw7oSBx31JPG6TR+kMeRHdYBcWrY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9MdASJA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742850511; c=relaxed/simple;
+	bh=q9o+SyDVjYQqp0yIlgg/0p2vq2TJ0PIOwrk0jUk4k2U=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=msoJQUIQyO0NocxX15UZTgFDLPObJ1UYVc7UuN7gk/c2OIO2ysXLMGGolPeJrB9s4nVX6Z6vwj/v9lRpeHtIC6l5uM83kzmI0eUCzOJml3D+zmNJOw/mbnvM3Y0MedU41df4nH/hLWRiMMwvfzsz4PEAAOuw/8ejOFcNpvHmB8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=YSBiGkaf; arc=none smtp.client-ip=185.138.42.100
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9MdASJA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9F1DC4CEDD;
-	Mon, 24 Mar 2025 21:08:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742850510;
-	bh=DoITmuJ3b3WOGd7I+KeumI4DPUboRPzOkttm2Ikla9I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=R9MdASJAsUM0hFhYVVEzZ3U60/C7i09hn1bmiutfAjfsZhYHb9PhpaOz7Tt3+qLzv
-	 IqETLEYI9oS4F7tN2oH4sKDgZS1t+LpYnCBnsK6aJrgvMQODJkN0azZkksZ3HqgxZ1
-	 pZ+a0nV+3CQze0d9DgIlU+28R2XSeVnGFyW2+AMcnSrs41Nlc6a7c3W/9bhq9pdgbh
-	 kEp6OrHj7Atusr0dTns2/HXL0bDqB7qs/HH6E8+lz1aQUXq89B3xf9Epwh5St9t/55
-	 vQ/7NExMz5pQ4jXCv6PRQ3ObAVy0WZOTfngioztSPI3L2arG0A4AEbZjmkfc+8rum6
-	 lFQ+RKKslc6PQ==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andrzej Hajda <andrzej.hajda@intel.com>,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Robert Foss <rfoss@kernel.org>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Dmitry Baryshkov <lumag@kernel.org>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Liviu Dudau <liviu.dudau@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Jani Nikula <jani.nikula@intel.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Liu Ying <victor.liu@nxp.com>,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/i2c: tda998x: select CONFIG_DRM_KMS_HELPER
-Date: Mon, 24 Mar 2025 22:08:07 +0100
-Message-Id: <20250324210824.3094660-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="YSBiGkaf"
+Received: from localhost.localdomain (unknown [IPv6:2a05:f6c2:511b:0:cbc0:999f:73ad:33bd])
+	by linux1587.grserver.gr (Postfix) with ESMTPSA id AC22E2E09C6B;
+	Mon, 24 Mar 2025 23:01:55 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
+	s=default; t=1742850123;
+	bh=/4qpoqAzdoOJWrSyG9lf33PTHoPxG/dDykifSVsD54E=; h=From:To:Subject;
+	b=YSBiGkafyUwhstBdT24EK1i8Z3uTVsuGSXjAmAnAgJ2992Ap+GFubH2Omv8fo1hVz
+	 8BQNASXGQu1usL5wc5kwNQlGvk4W1QJ9An5BZuGI1iPTcgXNTVVIv+OZ2SPzL1z+oR
+	 3NyoEdhjvWEw7Gr1HvlrQHM/i9gtuZrH2uO+TWrs=
+Authentication-Results: linux1587.grserver.gr;
+	spf=pass (sender IP is 2a05:f6c2:511b:0:cbc0:999f:73ad:33bd) smtp.mailfrom=lkml@antheas.dev smtp.helo=localhost.localdomain
+Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
+From: Antheas Kapenekakis <lkml@antheas.dev>
+To: platform-driver-x86@vger.kernel.org,
+	linux-input@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org,
+	Jiri Kosina <jikos@kernel.org>,
+	Benjamin Tissoires <bentiss@kernel.org>,
+	Corentin Chary <corentin.chary@gmail.com>,
+	"Luke D . Jones" <luke@ljones.dev>,
+	Hans de Goede <hdegoede@redhat.com>,
+	=?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>,
+	Antheas Kapenekakis <lkml@antheas.dev>
+Subject: [PATCH v4 00/11] HID: asus: Add RGB Support to Asus Z13, Ally,
+ unify backlight asus-wmi, and Z13 QOL
+Date: Mon, 24 Mar 2025 22:01:40 +0100
+Message-ID: <20250324210151.6042-1-lkml@antheas.dev>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,52 +50,96 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-PPP-Message-ID: 
+ <174285011712.20256.5718315198261919505@linux1587.grserver.gr>
+X-PPP-Vhost: antheas.dev
+X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
+X-Virus-Status: Clean
 
-From: Arnd Bergmann <arnd@arndb.de>
+This is a three part series which does the following:
+  - Clean init sequence, fix the keyboard of the Z13 (touchpad,fan button)
+  - Unifies backlight handling to happen under asus-wmi so that all Aura
+    devices have synced brightness controls and the backlight button works
+    properly when it is on a USB laptop keyboard instead of one w/ WMI.
+  - Adds RGB support to hid-asus, solid colors only, and for the ROG Ally
+    units and the Asus Z13 2025 first.
 
-This fails to build without the KMS helper functions:
+For more context, see cover letter of V1.
 
-x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o: in function `tda998x_detect_work':
-tda998x_drv.c:(.text+0x4e6): undefined reference to `drm_kms_helper_hotplug_event'
-x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o: in function `tda998x_bind':
-tda998x_drv.c:(.text.unlikely+0x33): undefined reference to `drm_simple_encoder_init'
-x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x584): undefined reference to `drm_atomic_helper_connector_reset'
-x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x590): undefined reference to `drm_helper_probe_single_connector_modes'
-x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x5a4): undefined reference to `drm_atomic_helper_connector_duplicate_state'
-x86_64-linux-ld: drivers/gpu/drm/bridge/tda998x_drv.o:(.rodata+0x5a8): undefined reference to `drm_atomic_helper_connector_destroy_state'
-
-Select the missing symbol and fix up the broken whitespace.
-
-Fixes: 325ba852d148 ("drm/i2c: move TDA998x driver under drivers/gpu/drm/bridge")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/bridge/Kconfig | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+V3: https://lore.kernel.org/lkml/20250322102804.418000-1-lkml@antheas.dev/
+V2: https://lore.kernel.org/all/20250320220924.5023-1-lkml@antheas.dev/
+V1: https://lore.kernel.org/all/20250319191320.10092-1-lkml@antheas.dev/
 
-diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-index d20f1646dac2..09a1be234f71 100644
---- a/drivers/gpu/drm/bridge/Kconfig
-+++ b/drivers/gpu/drm/bridge/Kconfig
-@@ -91,12 +91,13 @@ config DRM_FSL_LDB
- 	  Support for i.MX8MP DPI-to-LVDS on-SoC encoder.
- 
- config DRM_I2C_NXP_TDA998X
--       tristate "NXP Semiconductors TDA998X HDMI encoder"
--       default m if DRM_TILCDC
--       select CEC_CORE if CEC_NOTIFIER
--       select SND_SOC_HDMI_CODEC if SND_SOC
--       help
--         Support for NXP Semiconductors TDA998X HDMI encoders.
-+	tristate "NXP Semiconductors TDA998X HDMI encoder"
-+	default m if DRM_TILCDC
-+	select CEC_CORE if CEC_NOTIFIER
-+	select DRM_KMS_HELPER
-+	select SND_SOC_HDMI_CODEC if SND_SOC
-+	help
-+	  Support for NXP Semiconductors TDA998X HDMI encoders.
- 
- config DRM_ITE_IT6263
- 	tristate "ITE IT6263 LVDS/HDMI bridge"
+Changes since V3:
+  - Add initializer for 0x5d for old NKEY keyboards until it is verified
+    that it is not needed for their media keys to function.
+  - Cover init in asus-wmi with spinlock as per Hans
+  - If asus-wmi registers WMI handler with brightness, init the brightness
+    in USB Asus keyboards, per Hans.
+  - Change hid handler name to asus-UNIQ:rgb:peripheral to match led class
+  - Fix oops when unregistering asus-wmi by moving unregister outside of
+    the spin lock (but after the asus reference is set to null)
+
+Changes since V2:
+  - Check lazy init succeds in asus-wmi before setting register variable
+  - make explicit check in asus_hid_register_listener for listener existing
+    to avoid re-init
+  - rename asus_brt to asus_hid in most places and harmonize everything
+  - switch to a spinlock instead of a mutex to avoid kernel ooops
+  - fixup hid device quirks to avoid multiple RGB devices while still exposing
+    all input vendor devices. This includes moving rgb init to probe
+    instead of the input_configured callbacks.
+  - Remove fan key (during retest it appears to be 0xae that is already
+    supported by hid-asus)
+  - Never unregister asus::kbd_backlight while asus-wmi is active, as that
+  - removes fds from userspace and breaks backlight functionality. All
+  - current mainline drivers do not support backlight hotplugging, so most
+    userspace software (e.g., KDE, UPower) is built with that assumption.
+    For the Ally, since it disconnects its controller during sleep, this
+    caused the backlight slider to not work in KDE.
+
+Changes since V1:
+  - Add basic RGB support on hid-asus, (Z13/Ally) tested in KDE/Z13
+  - Fix ifdef else having an invalid signature (reported by kernel robot)
+  - Restore input arguments to init and keyboard function so they can
+    be re-used for RGB controls.
+  - Remove Z13 delay (it did not work to fix the touchpad) and replace it
+    with a HID_GROUP_GENERIC quirk to allow hid-multitouch to load. Squash
+    keyboard rename into it.
+  - Unregister brightness listener before removing work queue to avoid
+    a race condition causing corruption
+  - Remove spurious mutex unlock in asus_brt_event
+  - Place mutex lock in kbd_led_set after LED_UNREGISTERING check to avoid
+    relocking the mutex and causing a deadlock when unregistering leds
+  - Add extra check during unregistering to avoid calling unregister when
+    no led device is registered.
+  - Temporarily HID_QUIRK_INPUT_PER_APP from the ROG endpoint as it causes
+    the driver to create 4 RGB handlers per device. I also suspect some
+    extra events sneak through (KDE had the @@@@@@).
+
+Antheas Kapenekakis (11):
+  HID: asus: refactor init sequence per spec
+  HID: asus: prevent binding to all HID devices on ROG
+  HID: Asus: add Z13 folio to generic group for multitouch to work
+  platform/x86: asus-wmi: Add support for multiple kbd RGB handlers
+  HID: asus: listen to the asus-wmi brightness device instead of
+    creating one
+  platform/x86: asus-wmi: remove unused keyboard backlight quirk
+  platform/x86: asus-wmi: add keyboard brightness event handler
+  HID: asus: add support for the asus-wmi brightness handler
+  HID: asus: add basic RGB support
+  HID: asus: add RGB support to the ROG Ally units
+  HID: asus: initialize LED endpoint early for old NKEY keyboards
+
+ drivers/hid/hid-asus.c                     | 361 +++++++++++++++------
+ drivers/hid/hid-ids.h                      |   2 +-
+ drivers/platform/x86/asus-wmi.c            | 157 ++++++++-
+ include/linux/platform_data/x86/asus-wmi.h |  67 ++--
+ 4 files changed, 437 insertions(+), 150 deletions(-)
+
+
+base-commit: 38fec10eb60d687e30c8c6b5420d86e8149f7557
 -- 
-2.39.5
+2.49.0
 
