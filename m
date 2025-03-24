@@ -1,100 +1,127 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1B626462B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:41:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF09264617;
+	Mon, 24 Mar 2025 17:41:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742838085; cv=none; b=IB4zFqOWzweTYJ3DTfkh0hHNMPeTLhcF8MVBI92z/oYm0bGa+ot6Sp4cU1+6t3MfGGx9mN6xe1Eyfqd/5yOUn3O3p9p2nSd4eOiK43O08wgCY0kUDTGoVVfzEVqN97kxpNEOlPin8nLSOG2zuOR1O+T7/ZawRq36O5gksktsJ7I=
+	t=1742838102; cv=none; b=eI2YUOpfAokuZ+Vg2O0RkknKnaXi35pqAnHfVP/d0eCul4AvUV9NwWMTPN1GQbKxxfRewVzm82KoIkyrjQCCpadsAW1X92dUwOp2hF9LnjR90aK5vuQOEw3CQPguVpKlTmgx2fDc2q57Z7/WcXGMw5owr0SyPnf7AbWeqLSjZKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742838085; c=relaxed/simple;
-	bh=hy9anLT+yso7HLVYKMgm3lQib/ckrtMmioGEPpx4hus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KcvIzPGCjKarIpgoqjKzP7NpZP5lAodHFeoIM/ltDiycfkFbqQMc+7NbQrB4DerzsWAOv1YZnABCIEWVaVM+W+VHJfa1owirvkiMgzXNUNn3krqdW9UHwwXEhYaj6tI2uvi4LaKBM987JiWLag57sfk0Km4TyF1oINlCtWTK3o8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=m0qrWwBq; arc=none smtp.client-ip=192.198.163.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742838102; c=relaxed/simple;
+	bh=8PFrtxpnJpLFkdaeNeF+Kojf2rI5Gt9WPBc0gGLSfzc=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=u2P701ezt0xcNFd2tSmAkabfEp7A/MzEnq0x1jo36juuNjEVtRPLbxbVL6XqhOwMp6b+dJgQG9JarKcvUDladu4HT4gQpfhsw06uhqgRk7JO88NcCLJC8jLLzhwIGOXyOGZ5u3jFXmoqAXdizGClYBrAaS9MBWJ/60ItTI+bVuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ig2n0jQp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="m0qrWwBq"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742838084; x=1774374084;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hy9anLT+yso7HLVYKMgm3lQib/ckrtMmioGEPpx4hus=;
-  b=m0qrWwBqNu1BcdumapwnA7OwYw6j/eQMYNOfsNAcEWYiPsB9chTS+9Nr
-   Xer7/W0Jk/2cjTie+BKXvQfQ8cWZ/QnWPhaKVxm0KP9r7ck5G75heTVyN
-   TQ/Cz45BMMumzWHXTlonYTlMCUExw46SkghfTe3cnFvmupEgCXN3iCz7m
-   IYgvjhWwebMBExs5rMzXIMhzbSfACnZM1Q82Hm1fUNAZgyInFJXoUEfuf
-   zOBI8/e0tEJZ5tYe1MEtzRT0vhO8iriqWg7DiovuDvAYIvf130K0vuEE7
-   tsBPncIhfwxf6Q7Aq6ETWH76IgEzOfvudbWHioaea0AszEqgBh5/2HXS2
-   g==;
-X-CSE-ConnectionGUID: Kp3tgertRvilWY67IgsZaw==
-X-CSE-MsgGUID: A5rbG2k0QUGzywmcUCYtBw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="61583214"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="61583214"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 10:41:23 -0700
-X-CSE-ConnectionGUID: AWPngOkURvy4A35d0cpDAw==
-X-CSE-MsgGUID: 6teCpmLqTPSutk2e5RuVBA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="124280593"
-Received: from pmsonava-mobl.amr.corp.intel.com (HELO desk) ([10.125.145.197])
-  by fmviesa008-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 10:41:22 -0700
-Date: Mon, 24 Mar 2025 10:41:15 -0700
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-To: Borislav Petkov <bp@alien8.de>
-Cc: David Kaplan <david.kaplan@amd.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Ingo Molnar <mingo@redhat.com>,
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
-	Brendan Jackman <jackmanb@google.com>,
-	Derek Manwaring <derekmn@amazon.com>,
-	Andrew Cooper <andrew.cooper3@citrix.com>
-Subject: Re: [PATCH v4 03/36] x86/bugs: Restructure mmio mitigation
-Message-ID: <20250324174115.ogelbfgdmeoybi3b@desk>
-References: <20250310164023.779191-1-david.kaplan@amd.com>
- <20250310164023.779191-4-david.kaplan@amd.com>
- <20250313093617.GHZ9KnEXpdM4dwLYFz@fat_crate.local>
- <20250313192606.iijythngqtpx4tyy@desk>
- <20250324092915.GAZ-El68JG2BVuMK0K@fat_crate.local>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ig2n0jQp"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 85334C4CEEF;
+	Mon, 24 Mar 2025 17:41:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742838102;
+	bh=8PFrtxpnJpLFkdaeNeF+Kojf2rI5Gt9WPBc0gGLSfzc=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=ig2n0jQp/tRrUP/isobTD5FA47J2zoG/kTryfUGI1GGxLH64kBHF8vlGQedfZVK8w
+	 y+rtw0NPTMF08NCUn8yoth5YfDYXQMM1H3QeQuo50mdDQVH+C2jXZpOhFe0yB4EOtk
+	 3MeKDsa5gkFo0iN2wmG0Nmn6hG1xw0oAC6zEr0f14yXDBnsxpmopxVIJRQ1A+Ze8Yg
+	 sQ6HCc/r8Ha9Ciius+Vjje+6nTdu23qgsxadiSUBRpAckHKHvVM6S77LouYukB62s/
+	 Ydr4APVyW2G2f2AzbMzFqwLaDuyngV7jYoJSac/7LgLcVh0u1bEyKbiU77ruuge/rO
+	 n/7yCrCfGoTlw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B721C36008;
+	Mon, 24 Mar 2025 17:41:42 +0000 (UTC)
+From: David Heidelberg via B4 Relay <devnull+david.ixit.cz@kernel.org>
+Date: Mon, 24 Mar 2025 18:41:39 +0100
+Subject: [PATCH v5 2/5] dt-bindings: net: Add generic wireless controller
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324092915.GAZ-El68JG2BVuMK0K@fat_crate.local>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250324-dt-bindings-network-class-v5-2-f5c3fe00e8f0@ixit.cz>
+References: <20250324-dt-bindings-network-class-v5-0-f5c3fe00e8f0@ixit.cz>
+In-Reply-To: <20250324-dt-bindings-network-class-v5-0-f5c3fe00e8f0@ixit.cz>
+To: Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Mailing List <devicetree-spec-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 
+ Johannes Berg <johannes@sipsolutions.net>, 
+ Lorenzo Bianconi <lorenzo@kernel.org>, van Spriel <arend@broadcom.com>, 
+ =?utf-8?q?J=C3=A9r=C3=B4me_Pouiller?= <jerome.pouiller@silabs.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, Andy Gross <agross@kernel.org>, 
+ Mailing List <devicetree-spec@vger.kernel.org>
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ linux-arm-msm@vger.kernel.org, Janne Grunau <j@jannau.net>, 
+ David Heidelberg <david@ixit.cz>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1188; i=david@ixit.cz;
+ h=from:subject:message-id;
+ bh=s4h8B9gNJQ6JIaRS+FZDFjTYjzD5y6gNzE0ffwMuDco=;
+ b=owEBbQKS/ZANAwAIAWACP8TTSSByAcsmYgBn4ZlUkO2OTp2AzhwK0TqhMqWIaIvFxzYIv7hU4
+ sC1q5W8JXGJAjMEAAEIAB0WIQTXegnP7twrvVOnBHRgAj/E00kgcgUCZ+GZVAAKCRBgAj/E00kg
+ ctX+EACIls3D2cw/sYf6yNpFF7jMddNcznl3sRLq0U1Gq9Qpqn/AgYTzBJXrYWOyGxwhoO3hegV
+ XZIj25cuIt6LQglWdRSdQ+sF0s1ta/419YsW2ACTqCWRfh8YZvXVLeiCGB3JcsgDW9usnOSR1Rq
+ AGAYg0uegeuRC9Sx2XL+ydP3Y8BhmVdRTvy3Axxl0E4WjS++hCsAnukU0Ju3RJo9Q4Qc5iQAu2I
+ hKvmzxRxF22/do9WKRea5LFe8/5P+nc23dvqF253VsOELmU/6v93iE7dYDluB2oyQnxvxWeNWLA
+ s8He4wM7PDJOeysx19z6LJ5WqFfu1XVq66U1KHOsxoJed7Lm2humQSmQdVXccwjoHfy/vpZR0Zg
+ qLCqTJPrsOrfTnzeXzpCp9HCJjQnZQpbJkOdLVuE0cjaSpS6dejVpWDdGZS6GueJAy3wV61jvBQ
+ VYMX3QHRMJCVVN/z3N1NxMLjFzlhzu/+iX9jTlctE6gvB1TUD/0ILv+ainKo6XrHQahwh9hQzoB
+ lQa+apHVJhkaaILysbh3KHnsqjvojDCOqT4UTyJJRJ3JEYXrFlZ+IO9Yieyi45/ZPjnCKALZUUe
+ QSU12CiBMB+QJdBXtETwNFowKfPLsuRti24UbsIjbhFPKd7ljtNqgpdcDATIJJUTGfk6EwwIxye
+ EJtNFGT07HwaRFg==
+X-Developer-Key: i=david@ixit.cz; a=openpgp;
+ fpr=D77A09CFEEDC2BBD53A7047460023FC4D3492072
+X-Endpoint-Received: by B4 Relay for david@ixit.cz/default with auth_id=355
+X-Original-From: David Heidelberg <david@ixit.cz>
+Reply-To: david@ixit.cz
 
-On Mon, Mar 24, 2025 at 10:29:15AM +0100, Borislav Petkov wrote:
-> On Thu, Mar 13, 2025 at 12:26:06PM -0700, Pawan Gupta wrote:
-> > Hmm, that would not be straightforward, specially for sysfs status.
-> 
-> See below:
-> 
-> - the unknown thing is done only for this vuln and not for the others
-> 
-> - it doesn't do anything besides reporting things differently - it doesn't
->   apply any mitigations - it is simply causing unnecessary complications which
->   don't bring anything besides maintenance overhead. Unless I'm missing an
->   angle...
+From: David Heidelberg <david@ixit.cz>
 
-"Unknown" status reporting was requested by Andrew Cooper. I am not able to
-find that conversation though. IIRC, the reason was out-of-service CPUs
-were not tested for the presence of vulnerability. Adding Andrew to Cc.
+Wireless controllers share the common properties.
 
-> - all the currently unaffected CPUs can also be in "unknown" status so why is
->   this special?
+Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
+Signed-off-by: David Heidelberg <david@ixit.cz>
+---
+ .../bindings/net/wireless/wireless-controller.yaml | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Makes sense.
+diff --git a/Documentation/devicetree/bindings/net/wireless/wireless-controller.yaml b/Documentation/devicetree/bindings/net/wireless/wireless-controller.yaml
+new file mode 100644
+index 0000000000000000000000000000000000000000..7379f6c1aa05c15a5bc7b34df6502cc174af9a90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/wireless/wireless-controller.yaml
+@@ -0,0 +1,23 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/wireless/wireless-controller.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Wireless Controller Common Properties
++
++maintainers:
++  - Lorenzo Bianconi <lorenzo@kernel.org>
++
++properties:
++  $nodename:
++    pattern: "^wifi(@.*)?$"
++
++allOf:
++  - $ref: ieee80211.yaml#
++  - $ref: /schemas/net/network-class.yaml#
++
++additionalProperties: true
++
++...
++
 
-> IOW, just whack the thing.
+-- 
+2.49.0
 
-I will let Andrew comment on this.
+
