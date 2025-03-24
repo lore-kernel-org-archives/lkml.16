@@ -1,101 +1,147 @@
-Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C362A2638B2
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A4125EFA6
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742833244; cv=none; b=FxVtlVmt+TTRC+y+XNh2TZqITUbZLjehzTNxB6EcfqkFcFYRcXNs974AaeONulyw0bUGGx5sfXToaLUh34IsrH2lI8UnlzX25uRTUcwaMYEfPUbADJW10jABJbAxko3axIYSMs+Bsb5+RpfCBayjBB40qL/EXm8RJGdbzPUeXUw=
+	t=1742833265; cv=none; b=QWQNa7tSn9m1pOBXJenPubtBUp6hSEIZxjSks41VPdZlW9jO9lRDQrqEyGKAM7WK7ukQmqkoos9JI7V5Kyq0+rJVHAMYubk/M7BuLShOJg9qiaZXg390FlYVU5V1txPgVpFVmcYaMtCDSYvxBsUNdCFs+MdBNmy4nw5v4QEVrOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742833244; c=relaxed/simple;
-	bh=QEMyyGsi6pKVdO1NZX06aqp/5WGNOG/kiMBDZvItNyc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c5Pj61mmeSWU4zVSdyZBiaEe+reaquFaIJiZq+QYOOdgKucufKWz1T/40QmeWksDpqzaBqw/T6NhyyDBxjzsIEqVJwTK752+bC8JYEGyZz+0RaX7InKqj9UWcXPdie+CtH8alZQJjuFZhvXp1Jl85gnsNpFHaNCuvgO85NqA/mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=ZwJ6RZP/; arc=none smtp.client-ip=209.85.218.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	s=arc-20240116; t=1742833265; c=relaxed/simple;
+	bh=mvlXKpOvOxVDPVo8129a6GtRvc+hf+96Q7b9N63RQyk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Sz5wGAvTqmR0r9Kp/MpWlqh2rM3XdcV1PIDSeS5U1zx0kyBn5Kz0qqM2hWAuJQW1+7x2B/vhHdZx0e741pXnFLEe1wRwUH99V/iGsJbwbrcItqWfBgWTkgpao2Mq6jHAUPuyKQQTlnZ8q+XNYLmR4X9/T7U6gZPxhU5x+YBbmaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=AfgGXJRN; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="ZwJ6RZP/"
-Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-ac2aeada833so858488266b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 09:20:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google; t=1742833241; x=1743438041; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=RvYPLpIx/vsSMNptY5I/a8vTPmXkTJh7cHFovrjH+zs=;
-        b=ZwJ6RZP//we7OiBrbt0k6+LxpikEZvO5AMbM6H633EwfirkyajUD2n1q9uhMsD8n7u
-         jRlrjfh9ycqQM0iLHoHK77Wv22egrF2JcjyHXPczozorDR4k5ZxoEZPq3zK7iIWUDT++
-         lVr+xn2GJIHc8Wf2S/Nb/vKHTgJGN7RwnVM5A=
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="AfgGXJRN"
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52OCmi8L025393
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:21:02 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-type:date:from:in-reply-to:message-id:mime-version
+	:references:subject:to; s=qcppdkim1; bh=DESxgT+ffW3/smeI2/35e6vR
+	oFwFfEnGK2BfvTVlQtI=; b=AfgGXJRNZ3385RpCLyN/Y9qgHkl9C3UJlkCS3Ey0
+	lmW3cD2zhIEWsoT3gwLFbqOh1g/8mA7ygYvDPdLlaap7H90tq9XDZrMzsoVhd3Z/
+	v5KN0uduxseS5+d9S7NYy6GNHjvOwBsY44vifwlua0AZIvPf9sCPbis0aD91xU9i
+	QSaImjqimHknZquz0i68u6zAdSGBAGlAMiby/ooWd1aOWpVL3sKId7IAWmmCZoKJ
+	edRncGsu3RP3QRwRXhFHIrwgpJe9NkrCT0U3liMlOyB/T8/3uoYZu8ht0eqcut+W
+	fEIKEjtYz4WB0jCg35ejFMJB6XhUivD/1QHXKpkYG3tcVw==
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com [209.85.219.72])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45k7qj8hde-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:21:01 +0000 (GMT)
+Received: by mail-qv1-f72.google.com with SMTP id 6a1803df08f44-6e913e1cf4aso120173836d6.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 09:21:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742833241; x=1743438041;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RvYPLpIx/vsSMNptY5I/a8vTPmXkTJh7cHFovrjH+zs=;
-        b=m7hYVSu7phBfrtetVm5ruoNCN/etFuv4WavDZv4jBguuxRbBixSPp3g04M0xEEvQ0n
-         UmVcODGHWrGMBnRysGoMzBF9v8vKjPenrV5ox+lPThfRKi5i+oQbPghhI/k2Q7pdKz8S
-         rK1twwFb0oBAUbKYRt39Zh5I17xVSFllwbWZvxyw4YMZdaAsT10jXfB5x7OrI6yhi3kY
-         sF5QlbWzLxYHjbdnqcYxqCyM4Wj3TBhKQ0QS+t75Un4il/j16u+cE47yF2fITUfvoxKy
-         LpmOyoMbbA14X1Z07A7j+s7OjCqCgHsZf17VuMYlEnxo1oXfAHyZaZeFRfdptnX03A37
-         NapA==
-X-Forwarded-Encrypted: i=1; AJvYcCU6AC9kFzChxtPn78BayzgC2DloXP82wkOzhNAuVP528m/L76C5zhx6YBuHMf0Qi9QxnPXlnLOiNW1pJhU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz+PDy5tidnNcsMA0qRrT4OR8z48BBjRgu3oU/Mh1xkBg43VBPV
-	PwxKqQEi2IB2GeitRD5wN/HpXqehu6QXQZ6qXGpAKBQcjMg3Nk8iJPqmWFn20ntSK83dZ4bP27T
-	EJQI=
-X-Gm-Gg: ASbGncsGwX438pVogbFmuszTVwe+5jOv73Qe5R0wCx+ETd3PvEEAlpKZyXGvLSvkwvA
-	ErvT3TR2Qo1pFYQ0SSzOCdXqXdnPOiUC26RgR6r5SdMIkk/E0lDcb6GitwJlaD0Bd6KYBj6De7t
-	LZlZKiJapJXTsNsyv82XmuXfvn5nwgWR+fX8/3R6Vby8EtDMb6cBQdCKVvFtw2eMU1locBHFiSQ
-	Z9j9wJYh/B+uoETVUHY8KvBxI8yqdwr1KzM1V9AYDjgfyvTcOBPa4AkkSHZu3jCGUaRip8rtPCq
-	0CZVD+QBM4bwR4GOhH3kMhGF2Yg8O4d2Xgjug3OF2MimfhMf+IT3axhNkSqCztbAAwBCH2tMgwS
-	4Ts0V/R6I08KVwbD/29k=
-X-Google-Smtp-Source: AGHT+IHJCL3M31Oy4HOUwOK6GI7CCSrUzO+JTxgS96k0g/B7FFZ61CHNZQlNo7G0vBUU81QHuyxgWg==
-X-Received: by 2002:a17:907:9708:b0:abf:24f8:cc1e with SMTP id a640c23a62f3a-ac3cdb2ab88mr1506872666b.2.1742833240887;
-        Mon, 24 Mar 2025 09:20:40 -0700 (PDT)
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com. [209.85.218.50])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef8d39cbsm699989166b.38.2025.03.24.09.20.40
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Mar 2025 09:20:40 -0700 (PDT)
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-ac297cbe017so1010526466b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 09:20:40 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCXTWxndcIL7vZuAXIb7euqfA3X+0TrEaeW+zE58vD+CEEnytpUofCuF2sgorV/VyevIhUWa0oxgrfWHUf8=@vger.kernel.org
-X-Received: by 2002:a17:907:c23:b0:ac1:edc5:d73b with SMTP id
- a640c23a62f3a-ac3cdb96185mr1669224866b.8.1742833239650; Mon, 24 Mar 2025
- 09:20:39 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1742833260; x=1743438060;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DESxgT+ffW3/smeI2/35e6vRoFwFfEnGK2BfvTVlQtI=;
+        b=qi7J+OJc8VIFOF/1mocexK/LpOShLn8K1St4tQseecYeK4wt/Jn66knnf9GQUiGXHc
+         28QKNLM+A1bhR8q3hXWyBz+/tD0+82NH2rxGrB+7zXABbSHWjGFOipHlbjE9qw8Maz2/
+         Rg6pvN+eDCObLMc7a4kymopTcMDS/8iodDZ+o9x04gqicJfdO4FQBONR+8HcauWosebd
+         pS6UHtKRJTaSYCSNPFp6ysYW9Ls84+XmN8oWzBQZunHWS6YzXDw7f3PSKgqpZjvMEWNm
+         aEDOpXRDFOcjJjZ7M6YBSKUunuPpNgillI6wdC5iM3udVCCe/MCohAdI/DHT7fq9T7Hi
+         H9xw==
+X-Forwarded-Encrypted: i=1; AJvYcCVJ0noB5FSzcHUXokTVyx7KU3iFM7ZcXeJx9jrQTexBq3JcOdqZccD7m/sndouwY47f7tYR4ADMCUIqDqo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx5/RmfTqQGr4bk4BNF5yZPGvI9MerfMBd6ffHq1e5geP7iH1D7
+	O7NH8Y6qlyfX2mg4rDt2hvQ7gLtr2joOleyPOE5OE8Sc/zApxAgAf5Gdj1o9gGuPPrAZQW4Dp+W
+	LUlAZq5915mKYpiMZFH7ghxcDpOyvNIppiUGfhww6LMP2LSstSMTlX4k1fGWE0EY=
+X-Gm-Gg: ASbGncv/De09uz9IqnaeUXR1O2VcSUKz7gz9ikGJS0Zi7sm/4VWTgl0TYfjSXX7hD/A
+	E6oEroswen7PvRSknuxis9VQ4YkjafTG2sBBusJyrFFqUuav2czXvsIzQvYnVvdYUGx7kcGkfxD
+	Lkg/dM3fGSq3LmYhsp805issH4/arTnCauZcN4GHszbFNcVscVkeQbljzJl6AYS3dDXwq3WeeeH
+	SMo+6IaWyOyke7Y0+ADkbOIMFU0x9A2eCk0u0lHbxgTdIl8qGEm6Pxmr/MGve3csMsra8LdGgp6
+	miRS76WLLUockd7lBwFDw8YF5kcym4YJb1drefqbnlxYLHA4aP0S9Stk0B/IhLS33ADrV6xT6bi
+	gTW0=
+X-Received: by 2002:a05:6214:1d02:b0:6e8:f3ec:5406 with SMTP id 6a1803df08f44-6eb3f2d741dmr241150746d6.19.1742833260399;
+        Mon, 24 Mar 2025 09:21:00 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IGIXFxLu7wPhGiMxnzDIocDYQf23jOzCwJusDnog6dKiEbH3AA09OyoaeIootoLWDes+CDFxQ==
+X-Received: by 2002:a05:6214:1d02:b0:6e8:f3ec:5406 with SMTP id 6a1803df08f44-6eb3f2d741dmr241150156d6.19.1742833259869;
+        Mon, 24 Mar 2025 09:20:59 -0700 (PDT)
+Received: from eriador.lumag.spb.ru (2001-14ba-a0c3-3a00--7a1.rev.dnainternet.fi. [2001:14ba:a0c3:3a00::7a1])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d7c1d8esm14328251fa.13.2025.03.24.09.20.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 09:20:58 -0700 (PDT)
+Date: Mon, 24 Mar 2025 18:20:57 +0200
+From: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
+To: Abel Vesa <abel.vesa@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+        Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>, Johan Hovold <johan@kernel.org>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: qcom: x1e001de-devkit: Add Wi-Fi and
+ Bluetooth pwrseq
+Message-ID: <5nfpid56okxibr4xzqtd6zf2hjcqo3rsfegq34bccwhetxtv66@f6qweweusn65>
+References: <20250324-x1e001de-devkit-dts-pwrseq-v1-1-530f69b39a16@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250321-vfs-misc-77bd9633b854@brauner>
-In-Reply-To: <20250321-vfs-misc-77bd9633b854@brauner>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 24 Mar 2025 09:20:22 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjNojYGmik93aB5UG1Nd5h2VHcVhKfBoYu9jVv_zh6Zng@mail.gmail.com>
-X-Gm-Features: AQ5f1JowOKwVmnN0rwQkJkZQnbuG77xhgomiTzUPj4v6fu6nQxCSbS6hjKowXAw
-Message-ID: <CAHk-=wjNojYGmik93aB5UG1Nd5h2VHcVhKfBoYu9jVv_zh6Zng@mail.gmail.com>
-Subject: Re: [GIT PULL] vfs misc
-To: Christian Brauner <brauner@kernel.org>, Mateusz Guzik <mjguzik@gmail.com>
-Cc: linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324-x1e001de-devkit-dts-pwrseq-v1-1-530f69b39a16@linaro.org>
+X-Proofpoint-ORIG-GUID: ssVukBt9wI9-wdSbN92vSUDZZgxEOHJg
+X-Proofpoint-GUID: ssVukBt9wI9-wdSbN92vSUDZZgxEOHJg
+X-Authority-Analysis: v=2.4 cv=feOty1QF c=1 sm=1 tr=0 ts=67e1866d cx=c_pps a=7E5Bxpl4vBhpaufnMqZlrw==:117 a=xqWC_Br6kY4A:10 a=kj9zAlcOel0A:10 a=Vs1iUdzkB0EA:10 a=KKAkSRfTAAAA:8 a=B27XUFgWoi0L5bWDT0MA:9 a=CjuIK1q_8ugA:10 a=pJ04lnu7RYOZP9TFuWaZ:22
+ a=cvBusfyB2V15izCimMoJ:22
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 clxscore=1015 phishscore=0 impostorscore=0 bulkscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ mlxlogscore=967 spamscore=0 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240118
 
-On Sat, 22 Mar 2025 at 03:13, Christian Brauner <brauner@kernel.org> wrote:
->
-> Merge conflicts with mainline
-> =============================
->
-> This contains a minor merge conflict for include/linux/fs.h.
+On Mon, Mar 24, 2025 at 04:24:01PM +0200, Abel Vesa wrote:
+> The Qualcomm X Elite Devkit comes with a WCN7850 combo chip which provides
+> Wi-fi and Bluetooth, similar to the CRD and QCP.
+> 
+> Describe the nodes for the Wi-Fi, Bluetooth, the related regulators and
+> the PMU.
+> 
+> Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 144 +++++++++++++++++++++++++++
+>  1 file changed, 144 insertions(+)
+> 
+> @@ -979,6 +1075,23 @@ &pcie4_phy {
+>  	status = "okay";
+>  };
+>  
+> +&pcie4_port0 {
+> +	wifi@0 {
+> +		compatible = "pci17cb,1107";
+> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
+> +
+> +		vddaon-supply = <&vreg_pmu_aon_0p59>;
+> +		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
+> +		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
+> +		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
+> +		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
+> +		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
+> +		vddrfa1p8-supply = <&vreg_pmu_rfa_1p8>;
+> +		vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
+> +		vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
 
-Hmm. My resolution here was to just take the plain VFS_WARN_ON_INODE()
-side, which basically drops commit 37d11cfc6360 ("vfs: sanity check
-the length passed to inode_set_cached_link()") entirely, because that
-one had a "TODO" that implies it's now replaced by the new
-VFS_WARN_ON_INODE() interface.
+Do we need calibration variant here or is it coming from SMI tables /
+DMI data?
 
-This is just a note to make sure that if anybody was expecting
-something else, you can now speak up and say "can you please do X".
+> +	};
+> +};
+> +
+>  &pcie5 {
+>  	perst-gpios = <&tlmm 149 GPIO_ACTIVE_LOW>;
+>  	wake-gpios = <&tlmm 151 GPIO_ACTIVE_LOW>;
 
-Or, better yet, send a patch.
-
-                Linus
+-- 
+With best wishes
+Dmitry
