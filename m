@@ -1,122 +1,266 @@
-Received: from mxhk.zte.com.cn (mxhk.zte.com.cn [63.216.63.35])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f72.google.com (mail-io1-f72.google.com [209.85.166.72])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D00391487D1
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 11:12:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=63.216.63.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92EA625DB1E
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 11:15:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.72
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742814769; cv=none; b=OZY77gM5xG1QTE6iatbmr4bD/r6kXp4Dpl2hvZQ6pL9VaZkZDWqpMiQG1sbQCtyYgw8IWXYMtoV1xCkvavxHI5CFPclxCdBC8TmK9q/J5qRBHMzC98pYpEzZdh3Q+fy2/uwzeiNKjXZj5VFtrWRnEmSUgt3QVnZWO8Y/enI4TZQ=
+	t=1742814906; cv=none; b=UUHaCJd9JN59z2JyUzZiFs6hBK8qgcY4T44fYrrKq2K4V9EAibF4GqvLuMR+8hTBdeetYLUX8ATkn6mtF/tYhcmW8V9B8gDBuAf0TTDMhDi0pZsCwvkx20J20GMoicOOEQfTW0AqeUDGtBt+icDpAETaMIEAc+66d07cCQEOfr8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742814769; c=relaxed/simple;
-	bh=xmzxxesLRb1PznTqO0dyHA+EcSoCm0R8PqLZKb3XSCQ=;
-	h=Date:Message-ID:Mime-Version:From:To:Cc:Subject:Content-Type; b=dnY18h4AH1g6T+gqIx+wwNEritsHtUL0uQG2OawF49KerZUoQKyt/iZu3tB5dwMXFSrLHgIzbsJ6CjH/dAW3Id7DLhfnJ81DuMNhCHt+uKza2tsMOErkD49BM38ld/ia4J5Gag4vqPG3B5Y1v14uQfelozlNgdw0J3bWEpQ1vyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn; spf=pass smtp.mailfrom=zte.com.cn; arc=none smtp.client-ip=63.216.63.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zte.com.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=zte.com.cn
-Received: from mse-fl1.zte.com.cn (unknown [10.5.228.132])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mxhk.zte.com.cn (FangMail) with ESMTPS id 4ZLr4P2pP9z5B1Jt;
-	Mon, 24 Mar 2025 19:12:37 +0800 (CST)
-Received: from xaxapp01.zte.com.cn ([10.88.99.176])
-	by mse-fl1.zte.com.cn with SMTP id 52OBCQes099737;
-	Mon, 24 Mar 2025 19:12:27 +0800 (+08)
-	(envelope-from shao.mingyin@zte.com.cn)
-Received: from mapi (xaxapp04[null])
-	by mapi (Zmail) with MAPI id mid32;
-	Mon, 24 Mar 2025 19:12:30 +0800 (CST)
-Date: Mon, 24 Mar 2025 19:12:30 +0800 (CST)
-X-Zmail-TransId: 2afb67e13e1effffffffd1e-c2365
-X-Mailer: Zmail v1.0
-Message-ID: <20250324191230477zpGtgIRSH4mEHdtxGtgx9@zte.com.cn>
+	s=arc-20240116; t=1742814906; c=relaxed/simple;
+	bh=ag19h64y1x9Esf8f8fl9K0vmeml+C3hyWoG85fkFgcU=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=DzyW8P+THmsnthiVYcV5x8eYgWg9BWFZ9j7AEsnlc9VNv/EalTlElp+q47o74yE/2YCZDEE7hnOTccaEecKkES3zZTNW9w0+bkNms5Ek2e0e5J5nDjYd0teYiW2JvXUnBQMigsFXdlbxnlHdbLw+ig5JJas5HpbUahG56JydgDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.72
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f72.google.com with SMTP id ca18e2360f4ac-85b402f6a1bso1267227239f.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 04:15:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742814903; x=1743419703;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FVRXh8drqMt7jNzBvZOb/gqer1J2lINTc2OP+Ko2me4=;
+        b=pj/TWsgXBFP6LxjSel4erUuRSaWWijF4GosxStZ/bwF1P8ReMSrdkMJuW4lEmAt21+
+         tyZH4TptmTfYCaiO9vEZZmevA5elNFX0RLQA9ui3uiMz2suoS3U4p3ZeLOrjiUpnBP6t
+         vLSmPVbLCeDuq/AGO+/g0CIrZQ+xoUUUVBhsgObTJ+MM/YbpA+7V5SJKINGFka2wIEKH
+         iJnK8xvbN0zPlKlMbgzYuMZ3nME61ofdqS9ESX30p/eu/7J6tDvKZxlcK3MM2d1/2BKD
+         +T4cd0zPomxmGUdu5Sl4vqsmBXRGRwtYKP7igk++U4BrkGd4zTFGYAyAbqmgfhuPnKt0
+         mmtg==
+X-Forwarded-Encrypted: i=1; AJvYcCWEqPkRQJuUzGGs6lxxxzqACqn/p0CGMLJfkNZCpz+R+BoMmjB0cBAGa5UCIBOBTrsD4URyXaLmrLI2WDU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzPPvf11KqyIDljaPqmyaSo5pD1DpPJ0j95BF3Q7TqA2E1/BDPF
+	h18zMFxeHisJNadmfhr4KdLhBQZVslE22RbQiFncSg4BlM4q70hDDLqP8QvKRX1u3Ff080c0cBP
+	Xkf3Ec9LeQHNsgJyIz/TD9OoQyeO1M8RWT0UFqtlfTFeGkeIICCTpw/U=
+X-Google-Smtp-Source: AGHT+IEyNysNWVch14YKZQcav42ifuMoGinGdohw8j1y+TDb4B1ZGPYPdv8gGAXqaPV1B0vRG+JRkTTocFJ8rSOoVuDb/Vh6YEz0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-From: <shao.mingyin@zte.com.cn>
-To: <luto@kernel.org>
-Cc: <tglx@linutronix.de>, <vincenzo.frascino@arm.com>,
-        <linux-kernel@vger.kernel.org>, <yang.yang29@zte.com.cn>,
-        <xu.xin16@zte.com.cn>, <ye.xingchen@zte.com.cn>,
-        <jiang.peng9@zte.com.cn>
-Subject: =?UTF-8?B?W1BBVENIXSByYW5kb206IHZEU086IEZpeCBzaGFkb3cgZGVjbGFyYXRpb25z?=
-Content-Type: text/plain;
-	charset="UTF-8"
-X-MAIL:mse-fl1.zte.com.cn 52OBCQes099737
-X-Fangmail-Anti-Spam-Filtered: true
-X-Fangmail-MID-QID: 67E13E25.005/4ZLr4P2pP9z5B1Jt
+MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:10:b0:3d2:b4ea:5f42 with SMTP id
+ e9e14a558f8ab-3d59613bbf9mr127150455ab.6.1742814903559; Mon, 24 Mar 2025
+ 04:15:03 -0700 (PDT)
+Date: Mon, 24 Mar 2025 04:15:03 -0700
+In-Reply-To: <af0134a7-6f2a-46e1-85aa-c97477bd6ed8@amd.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67e13eb7.050a0220.a7ebc.001d.GAE@google.com>
+Subject: Re: [syzbot] [netfs?] INFO: task hung in netfs_unbuffered_write_iter
+From: syzbot <syzbot+62262fdc0e01d99573fc@syzkaller.appspotmail.com>
+To: brauner@kernel.org, dhowells@redhat.com, jack@suse.cz, jlayton@kernel.org, 
+	kprateek.nayak@amd.com, linux-fsdevel@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, mjguzik@gmail.com, netfs@lists.linux.dev, 
+	oleg@redhat.com, swapnil.sapkal@amd.com, syzkaller-bugs@googlegroups.com, 
+	viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 
-From: Peng Jiang <jiang.peng9@zte.com.cn>
+Hello,
 
-Compiling the kernel with gcc12.3 W=2 produces a warning:
-In file included from linux-next/lib/vdso/getrandom.c:10,
-                 from <command-line>:
-linux-next/lib/vdso/getrandom.c: In function 'memcpy_and_zero_src':
-./include/vdso/unaligned.h:6:44:
-warning: declaration of '__pptr' shadows a previous local [-Wshadow]
-  6 | const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);
-    |                                    ^~~~~~
-./include/vdso/unaligned.h:12:22:
-note: in definition of macro '__put_unaligned_t'
- 12 | __pptr->x = (val);
-    |               ^~~
-linux-next/lib/vdso/getrandom.c:25:41:
-note: in expansion of macro '__get_unaligned_t'
- 25 | __put_unaligned_t(type, __get_unaligned_t(type, src), dst);
-    |                                         ^~~~~~~~~~~~~~~~~
-linux-next/lib/vdso/getrandom.c:37:25:
-note: in expansion of macro 'MEMCPY_AND_ZERO_SRC'
- 37 | MEMCPY_AND_ZERO_SRC(u64, dst, src, len);
+syzbot has tested the proposed patch but the reproducer is still triggering an issue:
+INFO: task hung in netfs_unbuffered_write_iter
 
-To reproduce the issue before applying the patch:
-make defconfig ARCH=arm64 CROSS_COMPILE=aarch64-linux-
-make vmlinux ARCH=arm64 CROSS_COMPILE=aarch64-linux- W=2
+INFO: task syz.0.18:6758 blocked for more than 143 seconds.
+      Not tainted 6.13.0-rc1-syzkaller-00017-gaaec5a95d596-dirty #0
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+task:syz.0.18        state:D stack:26608 pid:6758  tgid:6757  ppid:6540   flags:0x00004004
+Call Trace:
+ <TASK>
+ context_switch kernel/sched/core.c:5369 [inline]
+ __schedule+0xe58/0x5ad0 kernel/sched/core.c:6756
+ __schedule_loop kernel/sched/core.c:6833 [inline]
+ schedule+0xe7/0x350 kernel/sched/core.c:6848
+ bit_wait+0x15/0xe0 kernel/sched/wait_bit.c:237
+ __wait_on_bit+0x62/0x180 kernel/sched/wait_bit.c:49
+ out_of_line_wait_on_bit+0xda/0x110 kernel/sched/wait_bit.c:64
+ wait_on_bit include/linux/wait_bit.h:77 [inline]
+ netfs_unbuffered_write_iter_locked+0xba8/0xe70 fs/netfs/direct_write.c:105
+ netfs_unbuffered_write_iter+0x413/0x6d0 fs/netfs/direct_write.c:193
+ v9fs_file_write_iter+0xbf/0x100 fs/9p/vfs_file.c:404
+ new_sync_write fs/read_write.c:586 [inline]
+ vfs_write+0x5ae/0x1150 fs/read_write.c:679
+ ksys_write+0x12b/0x250 fs/read_write.c:731
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fae42f8d169
+RSP: 002b:00007fae43eb2038 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 00007fae431a5fa0 RCX: 00007fae42f8d169
+RDX: 0000000000007fec RSI: 0000400000000540 RDI: 0000000000000007
+RBP: 00007fae4300e2a0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fae431a5fa0 R15: 00007ffef04451c8
+ </TASK>
 
-The existing implementation of the __get_unaligned_t and __put_unaligned_t
-macros in include/vdso/unaligned.h uses a local variable named '__pptr'
-which can lead to variable shadowing when these macros are used in
-the same scope. This results in a -Wshadow warning during compilation.
+Showing all locks held in the system:
+2 locks held by kworker/u8:1/12:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc90000117d80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+1 lock held by khungtaskd/30:
+ #0: ffffffff8e1bac80 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire include/linux/rcupdate.h:337 [inline]
+ #0: ffffffff8e1bac80 (rcu_read_lock){....}-{1:3}, at: rcu_read_lock include/linux/rcupdate.h:849 [inline]
+ #0: ffffffff8e1bac80 (rcu_read_lock){....}-{1:3}, at: debug_show_all_locks+0x7f/0x390 kernel/locking/lockdep.c:6744
+2 locks held by kworker/u8:3/52:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc90000bd7d80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+2 locks held by kworker/u8:4/63:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc9000214fd80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+2 locks held by kworker/u8:5/1034:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc9000403fd80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+2 locks held by kworker/u8:6/2116:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc90005937d80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+2 locks held by kworker/u8:7/4367:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc9000f717d80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+2 locks held by kworker/u8:8/4487:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc9000fd07d80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+2 locks held by kworker/u8:9/4559:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc9000ffe7d80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+2 locks held by getty/5582:
+ #0: ffff8880313180a0 (&tty->ldisc_sem){++++}-{0:0}, at: tty_ldisc_ref_wait+0x24/0x80 drivers/tty/tty_ldisc.c:243
+ #1: ffffc90002fde2f0 (&ldata->atomic_read_lock){+.+.}-{4:4}, at: n_tty_read+0xfba/0x1480 drivers/tty/n_tty.c:2211
+3 locks held by syz.0.18/6758:
+ #0: ffff888026eba478 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff888024f5a420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff8880755987b8 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+3 locks held by syz.1.23/6787:
+ #0: ffff88803111c9b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff88807d6da420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff888075720148 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+3 locks held by syz.2.25/6807:
+ #0: ffff88803562d438 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff888027a9e420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff88807559a178 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+3 locks held by syz.3.28/6829:
+ #0: ffff888026d3e9b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff888025ffa420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff8880757207b8 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+3 locks held by syz.4.30/6854:
+ #0: ffff888033e600f8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff888036adc420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff888075720e28 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+2 locks held by kworker/u8:10/6856:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc90002ee7d80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+3 locks held by syz.5.32/6881:
+ #0: ffff88803162deb8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff88802aa02420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff88807559a7e8 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+3 locks held by kworker/u8:11/6882:
+3 locks held by syz.6.34/6908:
+ #0: ffff88804f312d38 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff888062c8c420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff888075721498 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+2 locks held by kworker/u8:12/6909:
+ #0: ffff88801b081148 ((wq_completion)events_unbound){+.+.}-{0:0}, at: process_one_work+0x1293/0x1ba0 kernel/workqueue.c:3204
+ #1: ffffc900021dfd80 ((work_completion)(&rreq->work)){+.+.}-{0:0}, at: process_one_work+0x921/0x1ba0 kernel/workqueue.c:3205
+3 locks held by syz.7.36/6935:
+ #0: ffff8880369530b8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff888063c48420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff888075721b08 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+3 locks held by syz.8.38/6968:
+ #0: ffff88801e2adeb8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff88807b25e420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff88807559ae58 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
+3 locks held by syz.9.40/6997:
+ #0: ffff88802a74a7f8 (&f->f_pos_lock){+.+.}-{4:4}, at: fdget_pos+0x267/0x390 fs/file.c:1191
+ #1: ffff888053afa420 (sb_writers#14){.+.+}-{0:0}, at: ksys_write+0x12b/0x250 fs/read_write.c:731
+ #2: ffff888075722178 (&sb->s_type->i_mutex_key#20){++++}-{4:4}, at: netfs_start_io_direct+0x116/0x260 fs/netfs/locking.c:188
 
-To address this issue, we have renamed the local variables within
-the macros to ensure uniqueness:
-- In __get_unaligned_t, '__pptr' has been renamed to '__get_pptr'.
-- In __put_unaligned_t, '__pptr' has been renamed to '__put_pptr'.
+=============================================
 
-These changes prevent variable shadowing and eliminate the
--Wshadow warning, improving code readability and maintainability.
+NMI backtrace for cpu 1
+CPU: 1 UID: 0 PID: 30 Comm: khungtaskd Not tainted 6.13.0-rc1-syzkaller-00017-gaaec5a95d596-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ nmi_cpu_backtrace+0x27b/0x390 lib/nmi_backtrace.c:113
+ nmi_trigger_cpumask_backtrace+0x29c/0x300 lib/nmi_backtrace.c:62
+ trigger_all_cpu_backtrace include/linux/nmi.h:162 [inline]
+ check_hung_uninterruptible_tasks kernel/hung_task.c:234 [inline]
+ watchdog+0xf14/0x1240 kernel/hung_task.c:397
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+ </TASK>
+Sending NMI from CPU 1 to CPUs 0:
+NMI backtrace for cpu 0
+CPU: 0 UID: 0 PID: 5182 Comm: klogd Not tainted 6.13.0-rc1-syzkaller-00017-gaaec5a95d596-dirty #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 02/12/2025
+RIP: 0010:__raw_callee_save___pv_queued_spin_unlock+0x12/0x18
+Code: 0f 1f 84 00 00 00 00 00 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 90 f3 0f 1e fa 52 b8 01 00 00 00 31 d2 f0 0f b0 17 75 06 <5a> c3 cc cc cc cc 56 0f b6 f0 e8 9f ff ff ff 5e 5a c3 cc cc cc cc
+RSP: 0018:ffffc90005667618 EFLAGS: 00000046
+RAX: 0000000000000001 RBX: ffffffff9a9f6bc8 RCX: ffffffff81770803
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: ffffffff9a9f6bc8
+RBP: ffffffff9a9f6bd0 R08: 0000000000000000 R09: fffffbfff353ed79
+R10: ffffffff9a9f6bcb R11: 0000000000000001 R12: ffffffff9a9f6bd8
+R13: 0000000000000012 R14: 0000000000000000 R15: ffff888067f30000
+FS:  00007fb083fb7500(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00005612bebd5240 CR3: 00000000347be000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <NMI>
+ </NMI>
+ <TASK>
+ pv_queued_spin_unlock arch/x86/include/asm/paravirt.h:589 [inline]
+ queued_spin_unlock arch/x86/include/asm/qspinlock.h:57 [inline]
+ do_raw_spin_unlock+0x172/0x230 kernel/locking/spinlock_debug.c:142
+ __raw_spin_unlock_irqrestore include/linux/spinlock_api_smp.h:150 [inline]
+ _raw_spin_unlock_irqrestore+0x22/0x80 kernel/locking/spinlock.c:194
+ __debug_check_no_obj_freed lib/debugobjects.c:1108 [inline]
+ debug_check_no_obj_freed+0x327/0x600 lib/debugobjects.c:1129
+ free_pages_prepare mm/page_alloc.c:1134 [inline]
+ free_unref_page+0x276/0x1080 mm/page_alloc.c:2657
+ __put_partials+0x14c/0x170 mm/slub.c:3142
+ qlink_free mm/kasan/quarantine.c:163 [inline]
+ qlist_free_all+0x4e/0x120 mm/kasan/quarantine.c:179
+ kasan_quarantine_reduce+0x195/0x1e0 mm/kasan/quarantine.c:286
+ __kasan_slab_alloc+0x69/0x90 mm/kasan/common.c:329
+ kasan_slab_alloc include/linux/kasan.h:250 [inline]
+ slab_post_alloc_hook mm/slub.c:4104 [inline]
+ slab_alloc_node mm/slub.c:4153 [inline]
+ kmem_cache_alloc_node_noprof+0x223/0x3c0 mm/slub.c:4205
+ __alloc_skb+0x2b1/0x380 net/core/skbuff.c:668
+ alloc_skb include/linux/skbuff.h:1323 [inline]
+ alloc_skb_with_frags+0xe4/0x850 net/core/skbuff.c:6612
+ sock_alloc_send_pskb+0x7f1/0x980 net/core/sock.c:2881
+ unix_dgram_sendmsg+0x4b8/0x19e0 net/unix/af_unix.c:2027
+ sock_sendmsg_nosec net/socket.c:711 [inline]
+ __sock_sendmsg net/socket.c:726 [inline]
+ __sys_sendto+0x488/0x4f0 net/socket.c:2197
+ __do_sys_sendto net/socket.c:2204 [inline]
+ __se_sys_sendto net/socket.c:2200 [inline]
+ __x64_sys_sendto+0xe0/0x1c0 net/socket.c:2200
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xcd/0x250 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb0841199b5
+Code: 8b 44 24 08 48 83 c4 28 48 98 c3 48 98 c3 41 89 ca 64 8b 04 25 18 00 00 00 85 c0 75 26 45 31 c9 45 31 c0 b8 2c 00 00 00 0f 05 <48> 3d 00 f0 ff ff 76 7a 48 8b 15 44 c4 0c 00 f7 d8 64 89 02 48 83
+RSP: 002b:00007ffd368d15b8 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007fb0841199b5
+RDX: 0000000000000049 RSI: 0000558a1e31e270 RDI: 0000000000000003
+RBP: 0000558a1e3172c0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000004000 R11: 0000000000000246 R12: 0000000000000013
+R13: 00007fb0842a7212 R14: 00007ffd368d16b8 R15: 0000000000000000
+ </TASK>
 
-Signed-off-by: Peng Jiang <jiang.peng9@zte.com.cn>
-Signed-off-by: Shao Mingyin <shao.mingyin@zte.com.cn>
----
- include/vdso/unaligned.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/include/vdso/unaligned.h b/include/vdso/unaligned.h
-index eee3d2a4dbe4..ff0c06b6513e 100644
---- a/include/vdso/unaligned.h
-+++ b/include/vdso/unaligned.h
-@@ -2,14 +2,14 @@
- #ifndef __VDSO_UNALIGNED_H
- #define __VDSO_UNALIGNED_H
+Tested on:
 
--#define __get_unaligned_t(type, ptr) ({						\
--	const struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);	\
--	__pptr->x;								\
-+#define __get_unaligned_t(type, ptr) ({							\
-+	const struct { type x; } __packed * __get_pptr = (typeof(__get_pptr))(ptr);	\
-+	__get_pptr->x;									\
- })
+commit:         aaec5a95 pipe_read: don't wake up the writer if the pi..
+git tree:       git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=12debc4c580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=8d5a2956e94d7972
+dashboard link: https://syzkaller.appspot.com/bug?extid=62262fdc0e01d99573fc
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=10750198580000
 
--#define __put_unaligned_t(type, val, ptr) do {					\
--	struct { type x; } __packed *__pptr = (typeof(__pptr))(ptr);		\
--	__pptr->x = (val);							\
-+#define __put_unaligned_t(type, val, ptr) do {						\
-+	struct { type x; } __packed * __put_pptr = (typeof(__put_pptr))(ptr);		\
-+	__put_pptr->x = (val);								\
- } while (0)
-
- #endif /* __VDSO_UNALIGNED_H */
--- 
-2.25.1
