@@ -1,192 +1,99 @@
-Received: from linux1587.grserver.gr (linux1587.grserver.gr [185.138.42.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4532F2628C;
-	Mon, 24 Mar 2025 14:46:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.138.42.100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C428502B1;
+	Mon, 24 Mar 2025 14:47:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742827579; cv=none; b=tDgq9LvEeU3tWGYi4XydM0T53S/eFAEY3XN18uArcF4soZcHz17bFirflTz4S71g0hjX5Xl/ljsY8KaM4AgBPK/3TD2KLof2t7Yf+hQ+TE+j1OR31+YiS5KzCdk/UKGPfLFscMUYJLP+DX4yu2wtAhvBUXUenK2zxIoiLmdBK1A=
+	t=1742827679; cv=none; b=jB1PqE4J64BdCtpRNnc4nFjLQ63CpaenLi7oibpu9bM3YdPLIcJLE8a8b28u/yByX+kmcExHqslMVoBh8u8s23Pc1c/JSuipDK444OT3xHCArSy9H86LbVbeSJQETKx99HE+5orqTuvl4uUQNnzJBgEovueY2C5B8Ar8uY+Dc54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742827579; c=relaxed/simple;
-	bh=ToTpe1LYw9DyodZumYyKXOyXesV7edGmIPf4l5abzO8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VoMUIIpaPNlxuJVtmykE02M7IZp2BMGsPjXFTAra6u1IV74UJeluP7upbaDA0h6EySHUrLj+D69IkFONxLgS8DU7/k51VHZ7xhYDSnMZGS7vpDBmfAL9Bq5BXqiZI0hbCYORzCCTWnidrGrCNJEBE/GiSSIllvz3Yt/Rasqg/mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev; spf=pass smtp.mailfrom=antheas.dev; dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b=aXDT7Evh; arc=none smtp.client-ip=185.138.42.100
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=antheas.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=antheas.dev
+	s=arc-20240116; t=1742827679; c=relaxed/simple;
+	bh=f5WoR9C6FEyWk59i9LulIupWqmrwbOKvqOYOe7GwAu4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=k/SQU2pGnjh2Q3a3NtS38NIjlPahTaR8ZHWAim8B9wpSOAor/JSZMJgjgR93BJUdKEfBr73wsa3Mc9I8+sXoGQVYeKoO5WCZHCW7Bad1DQwU837d54xqymtI1UGW+/djx0irsTN/D7zNQ59g/qo/uTWPLTWPkgMyFNOjyYiyMk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=h/XXlTPj; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=antheas.dev header.i=@antheas.dev header.b="aXDT7Evh"
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
-	by linux1587.grserver.gr (Postfix) with ESMTPSA id 2C5602E00F59;
-	Mon, 24 Mar 2025 16:46:12 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=antheas.dev;
-	s=default; t=1742827572;
-	bh=u9IU7+meIOr371mEdgZ5pCKYmQvhV+O9kkQwA6cXgqA=;
-	h=Received:From:Subject:To;
-	b=aXDT7EvhoBhi9UTolqPDg5rsjBJ+DZI4EQ5ISBXalkRv8YGsjtaLeIsLG3Xgj4t0y
-	 PW8/4pYPLXvTAkG+DQem9s4JIm7zdUELXrUF1cAvRkifqHQTHJocaxu5daFlWlsuNH
-	 j3i+8TdomIyWts4cxV841AmWxotBzILkwwEJd0ZA=
-Authentication-Results: linux1587.grserver.gr;
-        spf=pass (sender IP is 209.85.208.180) smtp.mailfrom=lkml@antheas.dev smtp.helo=mail-lj1-f180.google.com
-Received-SPF: pass (linux1587.grserver.gr: connection is authenticated)
-Received: by mail-lj1-f180.google.com with SMTP id
- 38308e7fff4ca-30bfed67e08so50912141fa.2;
-        Mon, 24 Mar 2025 07:46:12 -0700 (PDT)
-X-Forwarded-Encrypted: i=1;
- AJvYcCVA0K5oVvecOL+kwZXbriEbUYxObINbZTCHNjlsmx8jfh2hevSj4ac7jzoUKZOE+2pgZq96R+8MZc7XcQ==@vger.kernel.org,
- AJvYcCXIs2Mfpsmv86jBUj2Wl3YpRLOnATl5poH1a/1rKj6fwnOaD/ACUnRCABcQMOWYdBhKZRH0XkXV6rA+JmIp9qN13Y1BVA==@vger.kernel.org
-X-Gm-Message-State: AOJu0YwuNp28w6D5ZpDU+WosvsoQIJuW5Brh0K1dYPDF3TIJzRSBa5uU
-	4UlnY9GkKBbH4hciMVXnPmlS+9ckcTt2fi6kLP6Dh+BlzjA6tSvph+vSLdFdgQ1hahY3ofjvbXG
-	V90nl6xWM7U9HzITRIZWdrJiwK5Y=
-X-Google-Smtp-Source: 
- AGHT+IG1p8/DmYpOK8sy9cB93Dxy5t2DVU+b7G1nWVZeFTjaZ7IkdowFc9dZ5907eE+CcbMg5YGyY6jhIAa8bcUpKrQ=
-X-Received: by 2002:a2e:8612:0:b0:30b:e440:dbdb with SMTP id
- 38308e7fff4ca-30d7e31c966mr46041311fa.37.1742827571490; Mon, 24 Mar 2025
- 07:46:11 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="h/XXlTPj"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742827678; x=1774363678;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=f5WoR9C6FEyWk59i9LulIupWqmrwbOKvqOYOe7GwAu4=;
+  b=h/XXlTPjS+lT4FKh8dhFKc6wS9D6NY9nvFrjDmx/6uANjptxYFVUmTGr
+   4MLdN+B8z1b4S7ybmww4aAsoBl8fHqUUFatuP70JrBKVHMzwHI2oiEE4c
+   WDXUdj62NDhUj1ASF8y+X/qRD7b7kD1QcapWY/1Cou9mx3+Awpei+55nF
+   mLUQK+Bi1DFcS6zZtCzov73+Z/TFgENI4SOdpAIbE40+HudCR3IuN81yR
+   IohVelVBuTSrIqHtWAeUwraHnlWb7DEe2XFy69cejmv/WLh7p42rw5xKu
+   r9gD2fqNMyRN/Ita4MeBit5wYdPix15UwmBxZ97GLPgiFHa75mY6SPjS3
+   Q==;
+X-CSE-ConnectionGUID: IUGEw9AMTIOqG31Bwir05g==
+X-CSE-MsgGUID: FkYqy9krQ6uaG4tVKzdkug==
+X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="43192104"
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="43192104"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 07:47:57 -0700
+X-CSE-ConnectionGUID: mflDKyU8RZSX5K+kLVs3bQ==
+X-CSE-MsgGUID: 9t6lR2ANRYyxLNct16mZEQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="124022002"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orviesa010.jf.intel.com with ESMTP; 24 Mar 2025 07:47:54 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D6B2126F; Mon, 24 Mar 2025 16:47:52 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-usb@vger.kernel.org,
+	netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>,
+	Russell King <linux@armlinux.org.uk>
+Subject: [PATCH net v3 0/2] net: usb: asix: ax88772: Fix potential string cut
+Date: Mon, 24 Mar 2025 16:39:28 +0200
+Message-ID: <20250324144751.1271761-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.47.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250323023421.78012-1-luke@ljones.dev>
- <CAGwozwE4oXmFMRO5jZJC4d11TstTqSC8ZUZ1CCkZMWYZKTKF_w@mail.gmail.com>
- <deeb4946-dd66-4a82-a8f0-5e8b1751899e@ljones.dev>
- <CAGwozwGPVJznyX4Vp5vNfb1JOP7AGoZV3vOkRwT_W=_0g+gkJQ@mail.gmail.com>
- <41bf9d87-be11-4814-bc3e-c6c9297e0cc4@ljones.dev>
-In-Reply-To: <41bf9d87-be11-4814-bc3e-c6c9297e0cc4@ljones.dev>
-From: Antheas Kapenekakis <lkml@antheas.dev>
-Date: Mon, 24 Mar 2025 15:46:00 +0100
-X-Gmail-Original-Message-ID: 
- <CAGwozwGE0vVUEn=1pCakhcMZP8oT=9jzrYMNYM8RvBvE9Wq0WQ@mail.gmail.com>
-X-Gm-Features: AQ5f1Jr4NC78r4qNNNTLJDqqS3v7268tJEAEM67O7hxcO8RLWmmyIYj8P_JJigU
-Message-ID: 
- <CAGwozwGE0vVUEn=1pCakhcMZP8oT=9jzrYMNYM8RvBvE9Wq0WQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/2] hid-asus: asus-wmi: refactor Ally suspend/resume
-To: "Luke D. Jones" <luke@ljones.dev>
-Cc: linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-	ilpo.jarvinen@linux.intel.com, platform-driver-x86@vger.kernel.org,
-	linux-input@vger.kernel.org, bentiss@kernel.org, jikos@kernel.org,
-	mario.limonciello@amd.com
-Content-Type: text/plain; charset="UTF-8"
-X-PPP-Message-ID: 
- <174282757277.17451.1073231361952910226@linux1587.grserver.gr>
-X-PPP-Vhost: antheas.dev
-X-Virus-Scanned: clamav-milter 0.103.11 at linux1587.grserver.gr
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, 24 Mar 2025 at 11:34, Luke D. Jones <luke@ljones.dev> wrote:
->
-> On 24/03/25 21:11, Antheas Kapenekakis wrote:
-> > On Mon, 24 Mar 2025 at 02:41, Luke D. Jones <luke@ljones.dev> wrote:
-> >>
-> >> On 24/03/25 00:41, Antheas Kapenekakis wrote:
-> >>> On Sun, 23 Mar 2025 at 03:34, Luke Jones <luke@ljones.dev> wrote:
-> >>>>
-> >>>> This short series refactors the Ally suspend/resume functionality in the
-> >>>> asus-wmi driver along with adding support for ROG Ally MCU version checking.
-> >>>>
-> >>>> The version checking is then used to toggle the use of older CSEE call hacks
-> >>>> that were initially used to combat Ally suspend/wake issues arising from the MCU
-> >>>> not clearing a particular flag on resume. ASUS have since corrected this
-> >>>> especially for Linux in newer firmware versions.
-> >>>>
-> >>>> - hid-asus requests the MCU version and displays a warning if the version is
-> >>>>     older than the one that fixes the issue.
-> >>>> - hid-asus awill also toggle the CSEE hack off, and mcu_powersave to on if the
-> >>>> version is high enough.
-> >>>>
-> >>>> *Note: In review it was requested by Mario that I try strsep() for parsing
-> >>>> the version. I did try this and a few variations but the result was much
-> >>>> more code due to having to check more edge cases due to the input being
-> >>>> raw bytes. In the end the cleaned up while loop proved more robust.
-> >>>>
-> >>>> - Changelog:
-> >>>>     + V2: https://lore.kernel.org/platform-driver-x86/20250226010129.32043-1-luke@ljones.dev/T/#t
-> >>>>       - Adjust warning message to explicitly mention suspend issues
-> >>>
-> >>> How did the testing go with this one, especially with mcu_powersave 0?
-> >>
-> >> Appears to be good. Checked a few reboots with powersave off - it is
-> >> setting on as I expect every time. Did modules unload/load also. And
-> >> tested with it set off after boot plus suspend resumes.
-> >
-> > Did you test suspends with mcu_powersave to 0 and rgb on? I had a few
-> > issues you can reference the previous version for and I want to see if
-> > you have them.
-> >
-> > Even with powersave set to 1, the RGB does not fade anymore without the quirk
->
-> Yes I tested every scenario I could think of. I don't think the fade is
-> something to worry about
+The agreement and also PHY_MAX_ADDR limit suggest that the PHY address
+can't occupy more than two hex digits. In some cases GCC complains about
+potential string cut. In course of fixing this, introduce the PHY_ID_SIZE
+predefined constant to make it easier for the users to know the bare
+minimum for the buffer that holds PHY ID string (patch 1). With that,
+fix the ASIX driver that triggers GCC accordingly (patch 2).
 
-From my testing, I got it to flash random colors and not disconnect
-properly, so if you really want to remove it, you should make sure to
-test the version that disables the quirk properly first.
+In v3:
+- dropped format specifier changes (Russell, LKP)
+- added predefined constant for a minimum buffer size (Russell)
+- updated error message to refer to the address and not ID string (Russell)
+- changed type of phy_addr to u8, otherwise GCC can't cope with its range
 
-> seems like it happening at all previously was
-> just due to suspend being held up for a bit longer and now that the hack
+In v2:
+- added first patch
+- added a conditional to the ASIX driver (Andrew)
 
-Yes, because Windows does not enter s0i3 instantly, so some devices,
-like the Ally units, like the Go S, rely on that for different
-purposes. 500ms is perfectly fine for both, and since it happens
-during suspend and not resume, provided that the screen has been
-turned off, it is transparent. (The Go S gets an APU hang due to very
-aggressive TDP tuning; a delay after the sleep entry call and
-userspace suspend lets the VRMs cool off a bit)
+Andy Shevchenko (2):
+  net: phy: Introduce PHY_ID_SIZE — minimum size for PHY ID string
+  net: usb: asix: ax88772: Increase phy_name size
 
-> is disabled for new FW, it relies fully on Linux suspend (async?
-> Honestly it's never been fully clear how async it really is).
+ drivers/net/usb/ax88172a.c | 12 ++++++++----
+ include/linux/phy.h        |  1 +
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-The call is at the wrong place unfortunately. That's about it
+-- 
+2.47.2
 
-> I'd rather the faster suspend/resume. And so far I've heard no
-> complaints (although my userbase is smaller than bazzites).
-
-Have you deployed the V4 though? Because the behavior with the quirk
-is fine. WIthout, it is soso.
-
-> Cheers,
-> Luke.
->
-> > Antheas
-> >
-> >> Very much hope this is the end of that particular saga, and with
-> >> bazzites help we can hopefully get everyone on November MCU FW or later,
-> >> then finally remove the hack completely this year.
-> >>
-> >> A small side note - I expect ASUS to fully reuse the X hardware, or at
-> >> least the bios/acpi/mcu-fw for that new windows handheld they've doing,
-> >> so fingers crossed that they actually do, and there will be nomore
-> >> suspend issues with current kernels plus this patch.
-> >>
-> >> Cheers,
-> >> Luke.
-> >>
-> >>>>       - Use switch/case block to set min_version
-> >>>>         - Set min_version to 0 by default and toggle hacks off
-> >>>>     + V3
-> >>>>       - Remove noise (excess pr_info)
-> >>>>       - Use kstrtoint, not kstrtolong
-> >>>>       - Use __free(kfree) for allocated mem and drop goto + logging
-> >>>>       - Use print_hex_dump() to show failed data after pr_err in mcu_request_version()
-> >>>>       - Use pr_debug in set_ally_mcu_hack() and set_ally_mcu_powersave() plus
-> >>>>         correct the message.
-> >>>>     + V4
-> >>>>       - Change use_ally_mcu_hack var to enum to track init state and
-> >>>>         prevent a race condition
-> >>>>
-> >>>> Luke D. Jones (2):
-> >>>>     hid-asus: check ROG Ally MCU version and warn
-> >>>>     platform/x86: asus-wmi: Refactor Ally suspend/resume
-> >>>>
-> >>>>    drivers/hid/hid-asus.c                     | 111 ++++++++++++++++-
-> >>>>    drivers/platform/x86/asus-wmi.c            | 133 +++++++++++++++------
-> >>>>    include/linux/platform_data/x86/asus-wmi.h |  19 +++
-> >>>>    3 files changed, 222 insertions(+), 41 deletions(-)
-> >>>>
-> >>>> --
-> >>>> 2.49.0
-> >>>>
-> >>
->
