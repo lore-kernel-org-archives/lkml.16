@@ -1,230 +1,205 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA7925F970;
-	Mon, 24 Mar 2025 14:29:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 829ADEEC5;
+	Mon, 24 Mar 2025 14:29:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742826564; cv=none; b=kaJj+k3C+atVS9yL66Ff9Yec21U2MvkeAuE5Mtm3gpE1pZfIsXAeBa8FRO5oR9C6kJZ6zPGX5/yCQhTu/3JKaSGKWrXTymtmKL8dHBQ2CapmB2WiaRUsh3nE+cOm1K8e6mSEB2rirU4iehe71TCB52o2ezyyOppM47VRLlRy1wA=
+	t=1742826589; cv=none; b=HJPBgCR49sfcmT5zC3zgnmbmi+nsCoP7uXS7FN3bXy+aoJlUZTrrISjnaRdrEwCwXHzyETy4p+ZfsfFUDgzU2mjfwibzEsCk45XHeRPIXRd4ZYLM06HfbIH3R9gteaAeJv3jqIfy5tiQ8hkFJF3rGKd466+4IAsQHw4Cp7XiorI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742826564; c=relaxed/simple;
-	bh=IrJCE533bpLX0w710o4ZD6QiLFPV4AKCegDXn9WCy2w=;
+	s=arc-20240116; t=1742826589; c=relaxed/simple;
+	bh=YCl0Xb8LGqIfcEjzkA/NTLRkDnLwd92Deb1BZs32/AY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dLpJE5xARA1ISXpanwQAwlA5DswTuF++S0YF/Av3AAtmZTqfwuC/RlwRVCQYTiJqc+VYXwEX/kmAYFBTu3gqk9ItVb4hz+y72zEp75ZIzj2lnKi40I/bJfUXr8yIFOG3rn0JKjVi+UYHVFyrNQ2zb5JrvuxKpO5seA88Rwzpx7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DzZ7Od81; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=bdhCPMMEXixmrrv1Cergej8aeBBaEPzF9noR185DKFONj/t2Pc74/AQQc+RNFTZrsAYbBq3IET5nWbISOBtHmxbcf5bmi7Fe6BbefcapuxkLRUGl+zSyYsAVEZqdoBIvRSh9YCgwrnu+mS5uZBK2kz5Qfi8XA6EJoI8c1nXUwKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qys4fsVH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DzZ7Od81"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742826562; x=1774362562;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=IrJCE533bpLX0w710o4ZD6QiLFPV4AKCegDXn9WCy2w=;
-  b=DzZ7Od81Wa7tqulYy/fVE4iURe9fMTPKOvgV9wCToEuTDn0IRmU4tN7/
-   wwJYz70P/4kizqoTKONUAIhQh9+YRG3MVszNacOP905cGwZp/BEelSdZU
-   A0EFXXQ06ABNIFOkJtXldQ4z/Rn0uAOuucO0ObO+JhxxyE+lhooiGdCcd
-   2yiGBUptHCJIhqc16tgWOlSPEtIpDgrp6GfzttZE/tZk05qnaVQHy1e5N
-   JhUaiPdJ2pf7AU7VtNtiClIu3XwviTP7OkZLsrBxZwZbJ4S4yxD3hJIho
-   euT0mi95Vwsss7T0J+r+RDvO1WSVhBXDd5j4V63lzgefgS2A93DT8y8AP
-   w==;
-X-CSE-ConnectionGUID: 68UDhLPVQK2owMr2NwNUZg==
-X-CSE-MsgGUID: MRb+8PjTSDeiRJKyhhtHEw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="54698028"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="54698028"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 07:29:22 -0700
-X-CSE-ConnectionGUID: xBm2a4uAQY2zH91q2+uYzA==
-X-CSE-MsgGUID: gmRyu11+Ts+9epruHOkTUA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="129256485"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by orviesa005.jf.intel.com with ESMTP; 24 Mar 2025 07:29:19 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1twinj-0003fR-1z;
-	Mon, 24 Mar 2025 14:29:15 +0000
-Date: Mon, 24 Mar 2025 22:28:17 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jai Luthra <jai.luthra@ideasonboard.com>,
-	Jai Luthra <jai.luthra@linux.dev>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Hans Verkuil <hverkuil@xs4all.nl>,
-	Tomi Valkeinen <tomi.valkeinen@ideasonboard.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	linux-media@vger.kernel.org, Devarsh Thakkar <devarsht@ti.com>,
-	Rishikesh Donadkar <r-donadkar@ti.com>,
-	Vaishnav Achath <vaishnav.a@ti.com>,
-	Changhuang Liang <changhuang.liang@starfivetech.com>,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] media: cadence: cdns-csi2rx: Support multiple pixels
- per clock cycle
-Message-ID: <202503242153.Yn1DfnS5-lkp@intel.com>
-References: <20250324-probe_fixes-v1-5-5cd5b9e1cfac@ideasonboard.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qys4fsVH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 83974C4CEDD;
+	Mon, 24 Mar 2025 14:29:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742826589;
+	bh=YCl0Xb8LGqIfcEjzkA/NTLRkDnLwd92Deb1BZs32/AY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Qys4fsVHHw1FlqG0Qz2G7Vw7QrDXZuoQXgZdcRPLI3U9zqp77nl5KORDkQJIuiLfe
+	 Qi7gzUyfWrPhWru22hVqfnUsj+kXy+1BQFE756ixfKuM+trN2YXXQE2pb99NNMwm8x
+	 SWij92hGdCaUPz+36wQThm9zANEfrHMvviGv5wDRMok7QLIStZtujBi/qnX1ItxpvY
+	 pCeaRFTNmuSLbyOgIwSZ3cEQyyYgNL4VrUA2at+OQdtGQJYmqUJMVB4vi2uDn09hYQ
+	 RmcNKopa+W+JoNgRW+CRakpUrOtrqKJjowvGwbIP0GuuWMXlvNwGSdxX++T1hkO3f7
+	 HZ9IfUeyk3Duw==
+Date: Mon, 24 Mar 2025 15:29:46 +0100
+From: Daniel Gomez <da.gomez@kernel.org>
+To: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, 
+	Roger Pau Monne <roger.pau@citrix.com>, linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org, 
+	linux-pci@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
+ domain flag
+Message-ID: <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
+References: <20250320210741.GA1099701@bhelgaas>
+ <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250324-probe_fixes-v1-5-5cd5b9e1cfac@ideasonboard.com>
-
-Hi Jai,
-
-kernel test robot noticed the following build errors:
-
-[auto build test ERROR on 586de92313fcab8ed84ac5f78f4d2aae2db92c59]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Jai-Luthra/media-ti-j721e-csi2rx-Use-devm_of_platform_populate/20250324-200457
-base:   586de92313fcab8ed84ac5f78f4d2aae2db92c59
-patch link:    https://lore.kernel.org/r/20250324-probe_fixes-v1-5-5cd5b9e1cfac%40ideasonboard.com
-patch subject: [PATCH 5/6] media: cadence: cdns-csi2rx: Support multiple pixels per clock cycle
-config: hexagon-randconfig-001-20250324 (https://download.01.org/0day-ci/archive/20250324/202503242153.Yn1DfnS5-lkp@intel.com/config)
-compiler: clang version 21.0.0git (https://github.com/llvm/llvm-project c2692afc0a92cd5da140dfcdfff7818a5b8ce997)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250324/202503242153.Yn1DfnS5-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503242153.Yn1DfnS5-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
->> drivers/media/platform/cadence/cdns-csi2rx.c:286:10: error: call to undeclared function 'FIELD_PREP'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
-     286 |                 reg |= FIELD_PREP(CSI2RX_STREAM_CFG_NUM_PIXELS_MASK,
-         |                        ^
-   1 error generated.
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
 
 
-vim +/FIELD_PREP +286 drivers/media/platform/cadence/cdns-csi2rx.c
+Hi,
 
-   214	
-   215	static int csi2rx_start(struct csi2rx_priv *csi2rx)
-   216	{
-   217		unsigned int i;
-   218		unsigned long lanes_used = 0;
-   219		u32 reg;
-   220		int ret;
-   221	
-   222		ret = clk_prepare_enable(csi2rx->p_clk);
-   223		if (ret)
-   224			return ret;
-   225	
-   226		reset_control_deassert(csi2rx->p_rst);
-   227		csi2rx_reset(csi2rx);
-   228	
-   229		reg = csi2rx->num_lanes << 8;
-   230		for (i = 0; i < csi2rx->num_lanes; i++) {
-   231			reg |= CSI2RX_STATIC_CFG_DLANE_MAP(i, csi2rx->lanes[i]);
-   232			set_bit(csi2rx->lanes[i], &lanes_used);
-   233		}
-   234	
-   235		/*
-   236		 * Even the unused lanes need to be mapped. In order to avoid
-   237		 * to map twice to the same physical lane, keep the lanes used
-   238		 * in the previous loop, and only map unused physical lanes to
-   239		 * the rest of our logical lanes.
-   240		 */
-   241		for (i = csi2rx->num_lanes; i < csi2rx->max_lanes; i++) {
-   242			unsigned int idx = find_first_zero_bit(&lanes_used,
-   243							       csi2rx->max_lanes);
-   244			set_bit(idx, &lanes_used);
-   245			reg |= CSI2RX_STATIC_CFG_DLANE_MAP(i, i + 1);
-   246		}
-   247	
-   248		writel(reg, csi2rx->base + CSI2RX_STATIC_CFG_REG);
-   249	
-   250		/* Enable DPHY clk and data lanes. */
-   251		if (csi2rx->dphy) {
-   252			reg = CSI2RX_DPHY_CL_EN | CSI2RX_DPHY_CL_RST;
-   253			for (i = 0; i < csi2rx->num_lanes; i++) {
-   254				reg |= CSI2RX_DPHY_DL_EN(csi2rx->lanes[i] - 1);
-   255				reg |= CSI2RX_DPHY_DL_RST(csi2rx->lanes[i] - 1);
-   256			}
-   257	
-   258			writel(reg, csi2rx->base + CSI2RX_DPHY_LANE_CTRL_REG);
-   259	
-   260			ret = csi2rx_configure_ext_dphy(csi2rx);
-   261			if (ret) {
-   262				dev_err(csi2rx->dev,
-   263					"Failed to configure external DPHY: %d\n", ret);
-   264				goto err_disable_pclk;
-   265			}
-   266		}
-   267	
-   268		/*
-   269		 * Create a static mapping between the CSI virtual channels
-   270		 * and the output stream.
-   271		 *
-   272		 * This should be enhanced, but v4l2 lacks the support for
-   273		 * changing that mapping dynamically.
-   274		 *
-   275		 * We also cannot enable and disable independent streams here,
-   276		 * hence the reference counting.
-   277		 */
-   278		for (i = 0; i < csi2rx->max_streams; i++) {
-   279			ret = clk_prepare_enable(csi2rx->pixel_clk[i]);
-   280			if (ret)
-   281				goto err_disable_pixclk;
-   282	
-   283			reset_control_deassert(csi2rx->pixel_rst[i]);
-   284	
-   285			reg = CSI2RX_STREAM_CFG_FIFO_MODE_LARGE_BUF;
- > 286			reg |= FIELD_PREP(CSI2RX_STREAM_CFG_NUM_PIXELS_MASK,
-   287					  csi2rx->num_pixels[i]);
-   288			writel(reg, csi2rx->base + CSI2RX_STREAM_CFG_REG(i));
-   289	
-   290			/*
-   291			 * Enable one virtual channel. When multiple virtual channels
-   292			 * are supported this will have to be changed.
-   293			 */
-   294			writel(CSI2RX_STREAM_DATA_CFG_VC_SELECT(0),
-   295			       csi2rx->base + CSI2RX_STREAM_DATA_CFG_REG(i));
-   296	
-   297			writel(CSI2RX_STREAM_CTRL_START,
-   298			       csi2rx->base + CSI2RX_STREAM_CTRL_REG(i));
-   299		}
-   300	
-   301		ret = clk_prepare_enable(csi2rx->sys_clk);
-   302		if (ret)
-   303			goto err_disable_pixclk;
-   304	
-   305		reset_control_deassert(csi2rx->sys_rst);
-   306	
-   307		ret = v4l2_subdev_call(csi2rx->source_subdev, video, s_stream, true);
-   308		if (ret)
-   309			goto err_disable_sysclk;
-   310	
-   311		clk_disable_unprepare(csi2rx->p_clk);
-   312	
-   313		return 0;
-   314	
-   315	err_disable_sysclk:
-   316		clk_disable_unprepare(csi2rx->sys_clk);
-   317	err_disable_pixclk:
-   318		for (; i > 0; i--) {
-   319			reset_control_assert(csi2rx->pixel_rst[i - 1]);
-   320			clk_disable_unprepare(csi2rx->pixel_clk[i - 1]);
-   321		}
-   322	
-   323		if (csi2rx->dphy) {
-   324			writel(0, csi2rx->base + CSI2RX_DPHY_LANE_CTRL_REG);
-   325			phy_power_off(csi2rx->dphy);
-   326		}
-   327	err_disable_pclk:
-   328		clk_disable_unprepare(csi2rx->p_clk);
-   329	
-   330		return ret;
-   331	}
-   332	
+On Fri, Mar 21, 2025 at 09:00:09AM +0100, Jürgen Groß wrote:
+> On 20.03.25 22:07, Bjorn Helgaas wrote:
+> > On Wed, Feb 19, 2025 at 10:20:57AM +0100, Roger Pau Monne wrote:
+> > > Setting pci_msi_ignore_mask inhibits the toggling of the mask bit for both
+> > > MSI and MSI-X entries globally, regardless of the IRQ chip they are using.
+> > > Only Xen sets the pci_msi_ignore_mask when routing physical interrupts over
+> > > event channels, to prevent PCI code from attempting to toggle the maskbit,
+> > > as it's Xen that controls the bit.
+> > > 
+> > > However, the pci_msi_ignore_mask being global will affect devices that use
+> > > MSI interrupts but are not routing those interrupts over event channels
+> > > (not using the Xen pIRQ chip).  One example is devices behind a VMD PCI
+> > > bridge.  In that scenario the VMD bridge configures MSI(-X) using the
+> > > normal IRQ chip (the pIRQ one in the Xen case), and devices behind the
+> > > bridge configure the MSI entries using indexes into the VMD bridge MSI
+> > > table.  The VMD bridge then demultiplexes such interrupts and delivers to
+> > > the destination device(s).  Having pci_msi_ignore_mask set in that scenario
+> > > prevents (un)masking of MSI entries for devices behind the VMD bridge.
+> > > 
+> > > Move the signaling of no entry masking into the MSI domain flags, as that
+> > > allows setting it on a per-domain basis.  Set it for the Xen MSI domain
+> > > that uses the pIRQ chip, while leaving it unset for the rest of the
+> > > cases.
+> > > 
+> > > Remove pci_msi_ignore_mask at once, since it was only used by Xen code, and
+> > > with Xen dropping usage the variable is unneeded.
+> > > 
+> > > This fixes using devices behind a VMD bridge on Xen PV hardware domains.
+> > > 
+> > > Albeit Devices behind a VMD bridge are not known to Xen, that doesn't mean
+> > > Linux cannot use them.  By inhibiting the usage of
+> > > VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
+> > > bodge devices behind a VMD bridge do work fine when use from a Linux Xen
+> > > hardware domain.  That's the whole point of the series.
+> > > 
+> > > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> > > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > > Acked-by: Juergen Gross <jgross@suse.com>
+> > 
+> > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > 
+> > I assume you'll merge this series via the Xen tree.  Let me know if
+> > otherwise.
+> 
+> I've pushed the series to the linux-next branch of the Xen tree.
+> 
+> 
+> Juergen
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This patch landed in latest next-20250324 tag causing this crash:
+
+[    0.753426] BUG: kernel NULL pointer dereference, address: 0000000000000002
+[    0.753921] #PF: supervisor read access in kernel mode
+[    0.754286] #PF: error_code(0x0000) - not-present page
+[    0.754656] PGD 0 P4D 0
+[    0.754842] Oops: Oops: 0000 [#1]
+[    0.755080] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 6.14.0-rc7-next-20250324 #1 NONE
+[    0.755691] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+[    0.756349] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
+[    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
+[    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
+[    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
+[    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
+[    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
+[    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
+[    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
+[    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+[    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
+[    0.756390] Call Trace:
+[    0.756390]  <TASK>
+[    0.756390]  ? __die_body+0x1b/0x60
+[    0.756390]  ? page_fault_oops+0x2d0/0x310
+[    0.756390]  ? exc_page_fault+0x59/0xc0
+[    0.756390]  ? asm_exc_page_fault+0x22/0x30
+[    0.756390]  ? msix_prepare_msi_desc+0x39/0x80
+[    0.756390]  ? msix_capability_init+0x172/0x2c0
+[    0.756390]  ? __pci_enable_msix_range+0x1a8/0x1d0
+[    0.756390]  ? pci_alloc_irq_vectors_affinity+0x7c/0xf0
+[    0.756390]  ? vp_find_vqs_msix+0x187/0x400
+[    0.756390]  ? vp_find_vqs+0x2f/0x250
+[    0.756390]  ? snprintf+0x3e/0x50
+[    0.756390]  ? vp_modern_find_vqs+0x13/0x60
+[    0.756390]  ? init_vq+0x184/0x1e0
+[    0.756390]  ? vp_get_status+0x20/0x20
+[    0.756390]  ? virtblk_probe+0xeb/0x8d0
+[    0.756390]  ? __kernfs_new_node+0x122/0x160
+[    0.756390]  ? vp_get_status+0x20/0x20
+[    0.756390]  ? virtio_dev_probe+0x171/0x1c0
+[    0.756390]  ? really_probe+0xc2/0x240
+[    0.756390]  ? driver_probe_device+0x1d/0x70
+[    0.756390]  ? __driver_attach+0x96/0xe0
+[    0.756390]  ? driver_attach+0x20/0x20
+[    0.756390]  ? bus_for_each_dev+0x7b/0xb0
+[    0.756390]  ? bus_add_driver+0xe6/0x200
+[    0.756390]  ? driver_register+0x5e/0xf0
+[    0.756390]  ? virtio_blk_init+0x4d/0x90
+[    0.756390]  ? add_boot_memory_block+0x90/0x90
+[    0.756390]  ? do_one_initcall+0xe2/0x250
+[    0.756390]  ? xas_store+0x4b/0x4b0
+[    0.756390]  ? number+0x13b/0x260
+[    0.756390]  ? ida_alloc_range+0x36a/0x3b0
+[    0.756390]  ? parameq+0x13/0x90
+[    0.756390]  ? parse_args+0x10f/0x2a0
+[    0.756390]  ? do_initcall_level+0x83/0xb0
+[    0.756390]  ? do_initcalls+0x43/0x70
+[    0.756390]  ? rest_init+0x80/0x80
+[    0.756390]  ? kernel_init_freeable+0x70/0xb0
+[    0.756390]  ? kernel_init+0x16/0x110
+[    0.756390]  ? ret_from_fork+0x30/0x40
+[    0.756390]  ? rest_init+0x80/0x80
+[    0.756390]  ? ret_from_fork_asm+0x11/0x20
+[    0.756390]  </TASK>
+[    0.756390] Modules linked in:
+[    0.756390] CR2: 0000000000000002
+[    0.756390] ---[ end trace 0000000000000000 ]---
+[    0.756390] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
+[    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
+[    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
+[    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
+[    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
+[    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
+[    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
+[    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
+[    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+[    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
+[    0.756390] note: swapper[1] exited with irqs disabled
+[    0.782774] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+[    0.783560] Kernel Offset: disabled
+[    0.783909] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
+
+
+msix_prepare_msi_desc+0x39/0x80:
+msix_prepare_msi_desc at drivers/pci/msi/msi.c:616
+ 611            desc->nvec_used                         = 1;
+ 612            desc->pci.msi_attrib.is_msix            = 1;
+ 613            desc->pci.msi_attrib.is_64              = 1;
+ 614            desc->pci.msi_attrib.default_irq        = dev->irq;
+ 615            desc->pci.mask_base                     = dev->msix_base;
+>616<           desc->pci.msi_attrib.can_mask           = !(info->flags & MSI_FLAG_NO_MASK) &&
+ 617                                                      !desc->pci.msi_attrib.is_virtual;
+ 618
+ 619            if (desc->pci.msi_attrib.can_mask) {
+ 620                    void __iomem *addr = pci_msix_desc_addr(desc);
+ 621
+
+Reverting patch 3 fixes the issue.
+
+Daniel
