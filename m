@@ -1,227 +1,264 @@
-Received: from mx0b-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mout.web.de (mout.web.de [212.227.17.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA1E425E803;
-	Mon, 24 Mar 2025 11:24:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F81D25E821
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 11:24:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742815458; cv=none; b=FvUywe44c0eq41MhqCSY8PTDomlUCjI6UU+nymRuNYCPtQ2So4e3cCJ1R00suwBpUqZOlvtCPVJChhnbQb+cLWqRV2swxhBuR+NNmDimYfvhox7j1s3M3YSJj8g/3jCo0tAo7ntHAbAwb4RLghaJ5emJMPfIWoS47Q9OX5aVXeA=
+	t=1742815462; cv=none; b=rMFoJzdjhaGi6XJCXkNKNC8ZJLd/rI1nZjQw4nJut9lH0v089NpnN21F9kmYTNFH0cOFIDkH7SuQOJYXOnObyRvl0dxJptsJ0AwPfhP9pH3HtaRMtTO87K+GIZSNKES4HdImPYxufTtI+6QLaeeaEGUeFlkngDFUPhbv5JYB6ao=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742815458; c=relaxed/simple;
-	bh=TinZklBMT/iKZQ9uXQx9l/AmDbOXUBblsln/dj7+SC8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-ID:References:
-	 In-Reply-To:To:CC; b=XKDHjoxQcko8udUWwkQSoDup2WLZm5LiqTIUrWKMhZn444qVc3fRLae6z28TOu5Gx9TXV6SeovjkR3aqvQVHnyQjgeWCHA78JBF1KPe/ljmN/VAyBSPwE6uBn8O6ceqmn5W/IilrUiur/6ECw5udtJ6YXY9wIp7GV5Y8wDtrQI0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=PpoH5GVd; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+	s=arc-20240116; t=1742815462; c=relaxed/simple;
+	bh=CJuhWe5ZZQUGcK2thsHhtLd9q0I50vr6PP8HUcW2ctA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kgwYMRqPT47OAIKUDHoFfqmEBx2Dyad20JizkrYS1fqvdFEow+6AVsACkNGvPIdmanWBPX3oRQB2Z12Mk4A3VLmQ+alZM11k0XpuyJgk6OW+SAV05MVcELeoET6+oqdCN5Fr7lhVYMwz8G8mE7dFnu4KwvkJMjHZyPVcKWk1GiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b=KNwC1Hgc; arc=none smtp.client-ip=212.227.17.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="PpoH5GVd"
-Received: from pps.filterd (m0375855.ppops.net [127.0.0.1])
-	by mx0b-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52OBC2VN015832;
-	Mon, 24 Mar 2025 07:24:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=58ewA
-	EIoaGt6Qb3u+lIyl8GC4sC5P9T9kCPdatwaoPE=; b=PpoH5GVd0SI94Pr74oaVv
-	0dgSq5JVP6LwQUUTDMZcClDFo/ZhDeDLs/2AUG4pltsvo1Y2ny3JH6y1z4YIKh3p
-	a4qNGszbT2Z7GwFCFn7QjrfLQ6h2m1RGxU4NKZ7pFEDTWnJDQdXP0onQhntQlST4
-	3+Qi0zmgZISFZ9Mtwqyos7ddB9fGb8mlwX2Wmr6MUnTfmtr407CgLmh0+nCLOpVp
-	qdKrdb3U5tuJ6T1SD0CtTEwsfFaPde/vWWqKkwx0qeerITSVmuXucCTsiO5SaX43
-	cIso3cSk+KsHmK80GBSdNint/lZt7Sq/PAjjIhqhxxmxG6earmagGjG2y+8F3wC9
-	Q==
-Received: from nwd2mta3.analog.com ([137.71.173.56])
-	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 45k6af8252-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 07:24:02 -0400 (EDT)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta3.analog.com (8.14.7/8.14.7) with ESMTP id 52OBO0YY052264
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 24 Mar 2025 07:24:00 -0400
-Received: from ASHBCASHYB4.ad.analog.com (10.64.17.132) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 24 Mar 2025 07:24:00 -0400
-Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by
- ASHBCASHYB4.ad.analog.com (10.64.17.132) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Mon, 24 Mar 2025 07:24:00 -0400
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
- (10.64.17.5) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Mon, 24 Mar 2025 07:24:00 -0400
-Received: from [10.0.2.15] (KPALLER2-L03.ad.analog.com [10.117.223.46])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 52OBNb9j007643;
-	Mon, 24 Mar 2025 07:23:53 -0400
-From: Kim Seer Paller <kimseer.paller@analog.com>
-Date: Mon, 24 Mar 2025 19:22:57 +0800
-Subject: [PATCH v2 3/4] dt-bindings: iio: dac: Add adi,ad3530r.yaml
+	dkim=pass (2048-bit key) header.d=web.de header.i=spasswolf@web.de header.b="KNwC1Hgc"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
+	s=s29768273; t=1742815412; x=1743420212; i=spasswolf@web.de;
+	bh=t4Cpapl3baAmiTt6x14k0Cj3EFlot8neELappOm/z8c=;
+	h=X-UI-Sender-Class:Message-ID:Subject:From:To:Cc:Date:In-Reply-To:
+	 References:Content-Type:MIME-Version:Content-Transfer-Encoding:cc:
+	 content-transfer-encoding:content-type:date:from:message-id:
+	 mime-version:reply-to:subject:to;
+	b=KNwC1HgcuMKyAOyEe329rsDXD3TXLIV09LnmZSnTIgrxl5bin0+66nZWDuGj77GX
+	 Mat2V9+bhSWeV5BMSTHIEYouYt17C8X/yG3FB8Y5NX7lWjVHRieYEIRyalC667XPN
+	 2x+B7kMFV3mIjS9rW1vU9LX/kjMARQlxIwzapx42KrudUCryTlEPug8qe+IC8+/hh
+	 z7jt2s6IlvsQmameb8alTYjsUj8Y4+oIARV1RoiUrpYdmuq0t8RsdUG7qep2/I6I9
+	 vdsW/wdCfhE8jZPu2zplfb1Hu43dGZZc6arwrFapN8oLcrLY/ozOvUbqztKgHPbnr
+	 ya+Xn+6Je1vr07Ha1g==
+X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
+Received: from [192.168.0.101] ([95.223.134.88]) by smtp.web.de (mrweb105
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 1MNwfK-1tldIS2Hfs-00S1h5; Mon, 24
+ Mar 2025 12:23:32 +0100
+Message-ID: <6e8ad3cd27b570aaefd85395810cc90bb3120734.camel@web.de>
+Subject: Re: commit 7ffb791423c7 breaks steam game
+From: Bert Karwatzki <spasswolf@web.de>
+To: Balbir Singh <balbirs@nvidia.com>
+Cc: Ingo Molnar <mingo@kernel.org>, Kees Cook <kees@kernel.org>, Bjorn
+ Helgaas	 <bhelgaas@google.com>, Linus Torvalds
+ <torvalds@linux-foundation.org>, Peter Zijlstra <peterz@infradead.org>,
+ Andy Lutomirski <luto@kernel.org>, Christian =?ISO-8859-1?Q?K=F6nig?=	
+ <christian.koenig@amd.com>, Alex Deucher <alexander.deucher@amd.com>, 
+	linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+ spasswolf@web.de
+Date: Mon, 24 Mar 2025 12:23:31 +0100
+In-Reply-To: <688f2757-e364-45db-ad54-daa6ff1c4f3c@nvidia.com>
+References: <20250322122351.3268-1-spasswolf@web.de>
+	 <688f2757-e364-45db-ad54-daa6ff1c4f3c@nvidia.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-ID: <20250324-togreg-v2-3-f211d781923e@analog.com>
-References: <20250324-togreg-v2-0-f211d781923e@analog.com>
-In-Reply-To: <20250324-togreg-v2-0-f211d781923e@analog.com>
-To: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Rob Herring
-	<robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>
-CC: <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        Kim Seer Paller <kimseer.paller@analog.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742815405; l=4333;
- i=kimseer.paller@analog.com; s=20250213; h=from:subject:message-id;
- bh=TinZklBMT/iKZQ9uXQx9l/AmDbOXUBblsln/dj7+SC8=;
- b=FWsTenPznvgRCHO2IwRXLrZKAGFqlIM+k6S3BhmrTZe6jsDL5Su/WCc2Y6JDGHOe9Ige9hCgm
- kp2aJVWdWstAaei1vBUHiKHfEBgHqGlv1JrSJxAvwM/7vLK9cDZQdmq
-X-Developer-Key: i=kimseer.paller@analog.com; a=ed25519;
- pk=SPXIwGLg4GFKUNfuAavY+YhSDsx+Q+NwGLceiKwm8Ac=
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-ORIG-GUID: bXmr8RsIQ2SAVnh_6R0skhsrwTY1eDE7
-X-Proofpoint-GUID: bXmr8RsIQ2SAVnh_6R0skhsrwTY1eDE7
-X-Authority-Analysis: v=2.4 cv=FPEbx/os c=1 sm=1 tr=0 ts=67e140d2 cx=c_pps a=PpDZqlmH/M8setHirZLBMw==:117 a=PpDZqlmH/M8setHirZLBMw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=gEfo2CItAAAA:8 a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8 a=hZcF0UcvHcGr6ch5Xw0A:9
- a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=sptkURWiP4Gy88Gu7hUp:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- suspectscore=0 mlxlogscore=999 lowpriorityscore=0 phishscore=0
- priorityscore=1501 malwarescore=0 spamscore=0 mlxscore=0 clxscore=1015
- bulkscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
- adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503240082
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:dDemjBujtQn+6tqcgh5+3Dn7V+R82lNECNi2xUYzGYyaT15Xyy4
+ eB2q7XijRtTQiqBJ97bjJV0L9yTvjmB//qk38VzoA9EZTaOQKi6LMfrcoXPXBqluWnhqAcf
+ NBJrW5/tNAguX3rF1iE276i6lQfh0ldtz531PylqfJQrlb8g+/Ja25VwMHjbrHKhHnd/aTx
+ 9qDCMTpwNdyMA11HA29jg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:ZVVzgLEz+V4=;ZDBHC3VnPMdTgCtmwVxGT/xw0D0
+ 8DMWxVSBPAtsF15jovB4oIr4iG27XXoylRfp+oDPWq46JfwwHiMl6ifK35VqLYdWKChhm1C6h
+ +8jQ6yVnd3AvvSklJ2rD0wUfeOevBk47Mm2drDm3w39xecG3NQ9ORaPagJEJjbn5Oz/tWZdeh
+ iJRIPwYAbD0ZF0pDcIBZIa3CsgsTqe7rLse/TX8MjDDwGlsb9OAbpPr8/peO2h9SMytIiNAu0
+ LOt97PjwAJpoFxrx9ANlAm7ONRbx21Slx/KCgUO/MMt5DF1mlIxiEea86trfpcO24HmXp+TkR
+ eR91kly6oHdbgGzYII04Me935jlFg5sk1hnfIAzEOORPKUGZuTBU9XUXORD9/8Sl2Bv5xwOnS
+ YRj9KmTzGDl4b7Ph9FumTPm2hGkO3qBVh/ou64xbkN36a15wOHOkeoenrNUkah8S8KnbUwio5
+ pDcYg+aiPNN5KElj7Ti+J3f9zt7XKFRi+7ZuFwirUF1tpUGKUBiXqVcCO20C7zLzWaUxx6PLO
+ YU4TYQIWnB2eRmsy+tjQbXAOVU7RharHYrVoEy7C/dnkZPb7EdmAQCW3Hw5gSc23z+UMKCdwj
+ UluUBlv2YcFU4gzHjrjE/h8Q8MJErR/ncv1aUKle2SBRm3zeXbVTrryDCQ9nKG660ZzluLES5
+ we6U9N5pVfFQYPNVg3QZutcN6p8v8lNySjg7o3cESoFunYvZSHj6t0IG/OS7fIRSkmagcHrGu
+ sKfJdWDG0RJUkttp9CUGzcuo7Tg1Hu65HPmXw23IjW/L/ijf3h6POLYkMF3Fnnna8bG5TKbMg
+ M3ezyPzlvh7HD+H4KoOeaKvTEiUUKh+xVtZDZsJLw3oJHlybqglEhAHtybuujOdPYc3YWDtT7
+ NYSz/na5IfCwHRuAFVlCMgTME+NHlqteOjJlL1VgPs6JBeq6W5VT54D6OLS5mMk4hfEHliozQ
+ Nfji/naJJFRmyauuO5JBOhKy8ms1F2BInS5vT6FyU7OaqPWkdwoylyCZJnUhWAegturKLxILO
+ 0YQcCmABre3pmF10gg+usWAt3TZM6VS5/GksKVdT7n8nqi57v/A9FpIScfU8qzeYkiikf7s9O
+ Vssz4UZ8Sj1+PTJ8LFl+SiKQMjwpzmjyE93exAWf3WNfnZ5AGAbH6WZDaD/5L5L8HrakJ/Jiu
+ HbD7ql2ASXxbEgaOuT3wBcYeRFOwNEfPxq2Y+vNOkdNOXprWy5mB0qf8/7hFVjAQxwpwyQ+Cj
+ HIOHbHzgM6YU1xe8OPcoBVqEaN+SJQzZ3dHGFnN8i5lNSOXXbwe8tRB1syknDwFSHmyayfovH
+ v7bAGro23OPguPKhEUX3PFuI1IQrSotzW91JOS8JRNLpn5WnvOKyNuydHMAnpni5x5Zmcio+c
+ g9jWCpGJausz6j/+UEKeP7dm1uhWygPtHpDgCP+TmriLgbFO6oIY7zI3/2UlTaqWFLM+hKQdb
+ SVii/rOhIr2N8jKNSv+HJ3eeR5PY=
 
-Document the AD3530R/AD3530, an 8-Channel, 16-bit Voltage Output DAC,
-while the AD3531R/AD3531 is a 4-Channel, 16-Bit Voltage Output DAC.
-These devices include software-programmable gain controls that provide
-full-scale output spans of 2.5V or 5V for reference voltages of 2.5V.
-They operate from a single supply voltage range of 2.7V to 5.5V and are
-guaranteed to be monotonic by design. Additionally, these devices
-features a 2.5V, 5ppm/°C internal reference, which is disabled by default.
+Am Sonntag, dem 23.03.2025 um 17:51 +1100 schrieb Balbir Singh:
+> On 3/22/25 23:23, Bert Karwatzki wrote:
+> > The problem occurs in this part of ttm_tt_populate(), in the nokaslr c=
+ase
+> > the loop is entered and repeatedly run because ttm_dma32_pages allocat=
+ed exceeds
+> > the ttm_dma32_pages_limit which leads to lots of calls to ttm_global_s=
+wapout().
+> >
+> > if (!strcmp(get_current()->comm, "stellaris"))
+> > 	printk(KERN_INFO "%s: ttm_pages_allocated=3D0x%llx ttm_pages_limit=3D=
+0x%lx ttm_dma32_pages_allocated=3D0x%llx ttm_dma32_pages_limit=3D0x%lx\n",
+> > 			__func__, ttm_pages_allocated.counter, ttm_pages_limit, ttm_dma32_p=
+ages_allocated.counter, ttm_dma32_pages_limit);
+> > while (atomic_long_read(&ttm_pages_allocated) > ttm_pages_limit ||
+> >        atomic_long_read(&ttm_dma32_pages_allocated) >
+> >        ttm_dma32_pages_limit) {
+> >
+> > 	if (!strcmp(get_current()->comm, "stellaris"))
+> > 	printk(KERN_INFO "%s: count=3D%d ttm_pages_allocated=3D0x%llx ttm_pag=
+es_limit=3D0x%lx ttm_dma32_pages_allocated=3D0x%llx ttm_dma32_pages_limit=
+=3D0x%lx\n",
+> > 			__func__, count++, ttm_pages_allocated.counter, ttm_pages_limit, tt=
+m_dma32_pages_allocated.counter, ttm_dma32_pages_limit);
+> > 	ret =3D ttm_global_swapout(ctx, GFP_KERNEL);
+> > 	if (ret =3D=3D 0)
+> > 		break;
+> > 	if (ret < 0)
+> > 		goto error;
+> > }
+> >
+> > In the case without nokaslr on the number of ttm_dma32_pages_allocated=
+ is 0 because
+> > use_dma32 =3D=3D false in this case.
+> >
+> > So why is use_dma32 enabled with nokaslr? Some more printk()s give thi=
+s result:
+> >
+> > The GPUs:
+> > built-in:
+> > 08:00.0 VGA compatible controller: Advanced Micro Devices, Inc. [AMD/A=
+TI] Cezanne [Radeon Vega Series / Radeon Vega Mobile Series] (rev c5)
+> > discrete:
+> > 03:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Nav=
+i 23 [Radeon RX 6600/6600 XT/6600M] (rev c3)
+> >
+> > With nokaslr:
+> > [    1.266517] [    T328] dma_addressing_limited: mask =3D 0xfffffffff=
+ff bus_dma_limit =3D 0x0 required_mask =3D 0xfffffffff
+> > [    1.266519] [    T328] dma_addressing_limited: ops =3D 000000000000=
+0000 use_dma_iommu(dev) =3D 0
+> > [    1.266520] [    T328] dma_direct_all_ram_mapped: returning true
+> > [    1.266521] [    T328] dma_addressing_limited: returning ret =3D 0
+> > [    1.266521] [    T328] amdgpu 0000:03:00.0: amdgpu: amdgpu_ttm_init=
+: calling ttm_device_init() with use_dma32 =3D 0
+> > [    1.266525] [    T328] entering ttm_device_init, use_dma32 =3D 0
+> > [    1.267115] [    T328] entering ttm_pool_init, use_dma32 =3D 0
+> >
+> > [    3.965669] [    T328] dma_addressing_limited: mask =3D 0xfffffffff=
+ff bus_dma_limit =3D 0x0 required_mask =3D 0x3fffffffffff
+> > [    3.965671] [    T328] dma_addressing_limited: returning true
+> > [    3.965672] [    T328] amdgpu 0000:08:00.0: amdgpu: amdgpu_ttm_init=
+: calling ttm_device_init() with use_dma32 =3D 1
+> > [    3.965674] [    T328] entering ttm_device_init, use_dma32 =3D 1
+> > [    3.965747] [    T328] entering ttm_pool_init, use_dma32 =3D 1
+> >
+> > Without nokaslr:
+> > [    1.300907] [    T351] dma_addressing_limited: mask =3D 0xfffffffff=
+ff bus_dma_limit =3D 0x0 required_mask =3D 0xfffffffff
+> > [    1.300909] [    T351] dma_addressing_limited: ops =3D 000000000000=
+0000 use_dma_iommu(dev) =3D 0
+> > [    1.300910] [    T351] dma_direct_all_ram_mapped: returning true
+> > [    1.300910] [    T351] dma_addressing_limited: returning ret =3D 0
+> > [    1.300911] [    T351] amdgpu 0000:03:00.0: amdgpu: amdgpu_ttm_init=
+: calling ttm_device_init() with use_dma32 =3D 0
+> > [    1.300915] [    T351] entering ttm_device_init, use_dma32 =3D 0
+> > [    1.301210] [    T351] entering ttm_pool_init, use_dma32 =3D 0
+> >
+> > [    4.000602] [    T351] dma_addressing_limited: mask =3D 0xfffffffff=
+ff bus_dma_limit =3D 0x0 required_mask =3D 0xfffffffffff
+> > [    4.000603] [    T351] dma_addressing_limited: ops =3D 000000000000=
+0000 use_dma_iommu(dev) =3D 0
+> > [    4.000604] [    T351] dma_direct_all_ram_mapped: returning true
+> > [    4.000605] [    T351] dma_addressing_limited: returning ret =3D 0
+> > [    4.000606] [    T351] amdgpu 0000:08:00.0: amdgpu: amdgpu_ttm_init=
+: calling ttm_device_init() with use_dma32 =3D 0
+> > [    4.000610] [    T351] entering ttm_device_init, use_dma32 =3D 0
+> > [    4.000687] [    T351] entering ttm_pool_init, use_dma32 =3D 0
+> >
+> > So with nokaslr the reuqired mask for the built-in GPU changes from 0x=
+fffffffffff
+> > to 0x3fffffffffff which causes dma_addressing_limited to return true w=
+hich causes
+> > the ttm_device init to be called with use_dma32 =3D true.
+>
+> Thanks, this is really the root cause, from what I understand.
+>
+> >  It also show that for the discreate GPU nothing changes so the bug do=
+es not occur
+> > there.
+> >
+> > I also was able to work around the bug by calling ttm_device_init() wi=
+th use_dma32=3Dfalse
+> > from amdgpu_ttm_init()  (drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c) but =
+I'm not sure if this
+> > has unwanted side effects.
+> >
+> > int amdgpu_ttm_init(struct amdgpu_device *adev)
+> > {
+> > 	uint64_t gtt_size;
+> > 	int r;
+> >
+> > 	mutex_init(&adev->mman.gtt_window_lock);
+> >
+> > 	dma_set_max_seg_size(adev->dev, UINT_MAX);
+> > 	/* No others user of address space so set it to 0 */
+> > 	dev_info(adev->dev, "%s: calling ttm_device_init() with use_dma32 =3D=
+ 0 ignoring %d\n", __func__, dma_addressing_limited(adev->dev));
+> > 	r =3D ttm_device_init(&adev->mman.bdev, &amdgpu_bo_driver, adev->dev,
+> > 			       adev_to_drm(adev)->anon_inode->i_mapping,
+> > 			       adev_to_drm(adev)->vma_offset_manager,
+> > 			       adev->need_swiotlb,
+> > 			       false /* use_dma32 */);
+> > 	if (r) {
+> > 		DRM_ERROR("failed initializing buffer object driver(%d).\n", r);
+> > 		return r;
+> > 	}
+> >
+>
+> I think this brings us really close, instead of forcing use_dma32 to fal=
+se, I wonder if we need something like
+>
+> uin64_t dma_bits =3D fls64(dma_get_mask(adev->dev));
+>
+> to ttm_device_init, pass the last argument (use_dma32) as dma_bits < 32?
+>
+>
+> Thanks,
+> Balbir Singh
+>
 
-Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
----
- .../devicetree/bindings/iio/dac/adi,ad3530r.yaml   | 91 ++++++++++++++++++++++
- MAINTAINERS                                        |  1 +
- 2 files changed, 92 insertions(+)
+Do these address bits have to shift when using nokaslr or PCI_P2PDMA, I th=
+ink
+this shift cause the increase of the required_dma_mask to 0x3fffffffffff?
 
-diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad3530r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad3530r.yaml
-new file mode 100644
-index 0000000000000000000000000000000000000000..e581472b50048bedda7422748035423b9b020382
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/adi,ad3530r.yaml
-@@ -0,0 +1,91 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/iio/dac/adi,ad3530r.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD3530R and Similar DACs
-+
-+maintainers:
-+  - Kim Seer Paller <kimseer.paller@analog.com>
-+
-+description: |
-+  The AD3530/AD3530R are low power, 8-channel, 16-bit, buffered voltage output,
-+  digital-to-analog converters (DACs) that include software-programmable gain
-+  controls that result in full-scale output spans of 2.5V or 5V for reference
-+  voltages of 2.5V. The devices operate from single, 2.7V to 5.5V supply ranges
-+  and are guaranteed monotonic by design. The AD3530R also offers a 2.5V,
-+  5ppm/°C internal reference that is disabled by default.
-+  Datasheet can be found here:
-+  https://www.analog.com/media/en/technical-documentation/data-sheets/ad3530_ad530r.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad3530r
-+      - adi,ad3531r
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 50000000
-+
-+  vdd-supply:
-+    description: Power Supply Input.
-+
-+  iovdd-supply:
-+    description: Digital Power Supply Input.
-+
-+  ref-supply:
-+    description:
-+      Reference Input/Output. The voltage at the REF pin sets the full-scale
-+      range of all channels. If not provided the internal reference is used and
-+      also provided on the VREF pin.
-+
-+  reset-gpios:
-+    description:
-+      Active low signal that is falling edge sensitive. When it is deasserted,
-+      the digital core initialization is performed and all DAC registers except
-+      the Interface Configuration A register are reset to their default values.
-+    maxItems: 1
-+
-+  ldac-gpios:
-+    description:
-+      LDAC pin to be used as a hardware trigger to update the DAC channels. If
-+      not present, the DAC channels are updated by Software LDAC.
-+    maxItems: 1
-+
-+  adi,range-double:
-+    description:
-+      Configure the output range for all channels. If the property is present,
-+      the output will range from 0V to 2Vref. If the property is not
-+      present, the output will range from 0V to Vref.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+  - vdd-supply
-+  - iovdd-supply
-+
-+allOf:
-+  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    spi {
-+        #address-cells = <1>;
-+        #size-cells = <0>;
-+        dac@0 {
-+            compatible = "adi,ad3530r";
-+            reg = <0>;
-+            spi-max-frequency = <1000000>;
-+
-+            vdd-supply = <&vdd>;
-+            iovdd-supply = <&iovdd>;
-+        };
-+    };
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2d3c31c74594ca1934c67e7aad0a179feeaa39bf..7862469226f52375adc219115ef68d03662127be 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1295,6 +1295,7 @@ L:	linux-iio@vger.kernel.org
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/ABI/testing/sysfs-bus-iio-dac-ad3530r
-+F:	Documentation/devicetree/bindings/iio/dac/adi,ad3530r.yaml
- 
- ANALOG DEVICES INC AD3552R DRIVER
- M:	Nuno Sá <nuno.sa@analog.com>
+@@ -104,4 +104,4 @@
+       fe30300000-fe303fffff : 0000:04:00.0
+     fe30400000-fe30403fff : 0000:04:00.0
+     fe30404000-fe30404fff : 0000:04:00.0
+-afe00000000-affffffffff : 0000:03:00.0
++3ffe00000000-3fffffffffff : 0000:03:00.0
 
--- 
-2.34.1
+And what memory is this? It's 8G in size so it could be the RAM of the dis=
+crete
+GPU (which is at PCI 0000:03:00.0), but that is already here (part of
+/proc/iomem):
+
+1010000000-ffffffffff : PCI Bus 0000:00
+  fc00000000-fe0fffffff : PCI Bus 0000:01
+    fc00000000-fe0fffffff : PCI Bus 0000:02
+      fc00000000-fe0fffffff : PCI Bus 0000:03
+        fc00000000-fdffffffff : 0000:03:00.0  GPU RAM
+        fe00000000-fe0fffffff : 0000:03:00.0
+
+lspci -v reports 8G of memory at 0xfc00000000 so I assmumed that is the GP=
+U RAM.
+03:00.0 Display controller: Advanced Micro Devices, Inc. [AMD/ATI] Navi 23
+[Radeon RX 6600/6600 XT/6600M] (rev c3)
+	Subsystem: Micro-Star International Co., Ltd. [MSI] Device 1313
+	Flags: bus master, fast devsel, latency 0, IRQ 107, IOMMU group 14
+	Memory at fc00000000 (64-bit, prefetchable) [size=3D8G]
+	Memory at fe00000000 (64-bit, prefetchable) [size=3D256M]
+	Memory at fca00000 (32-bit, non-prefetchable) [size=3D1M]
+	Expansion ROM at fcb00000 [disabled] [size=3D128K]
+
+Bert Karwatzki
 
