@@ -1,105 +1,281 @@
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699F7264A7F
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 18:20:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306341DDE9
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 18:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742840450; cv=none; b=kvVEhmqDJHAJS/SOKV144rHUFFKu2hydf0r0VBUfZZeEG82OKEKzphYWvxXe2GwMNaA6ArkOXwegNjBVUsv46RVKZo+BxiOE/QNphUWKlbSQPGelNkzCc/xPvs/vh2046RgT7fhDDKlIdCXRHcvSSUPVcoDVdmbksX/gQjJvO4Y=
+	t=1742840513; cv=none; b=EhJ5ypwf3GPaVxffUwly/4sV9mpzXM4Clvyp0+1N+G2RZbOnQh/VnOQgag6j/Uk+1167hi6gpZK8ZBBpTzT4l7ETBjn8LaDXPr2yk30HnGGZ+uo/e3S1yUosAHuPVyrj85weD3bCayW+rEk/RdyyTjzb91rLEOEEBs+FZETIH5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742840450; c=relaxed/simple;
-	bh=jcbglrtrzi4TXdy8lI2uD0gTHxJoZBF6WMdLdLn/8bg=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=FHIhyAnoPqLj7uSXr9jhyADtOs6RDX4tBol/ikrhAoLsIIFC+yDG79kq4aMcs1bUHEMdz/yotUKKtq9XRM80aBMXOLMKw3lmvooIlYAD7iR9prJlQzugTjViiu5YkSlVG1qYN9IZ/QgjyNJ3IuCOrcClkCnWu0klp1yZiH/lZRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=yXfS7BXi; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+	s=arc-20240116; t=1742840513; c=relaxed/simple;
+	bh=zrnjllOaaVCrevHwpeSRdGJoKF3yeMBuYeMtGhQbo4A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=iQF9E6XBMTuYK13YfxgMHBkCTom2bpRXipVdQMqVRV+xpXTlfBtJC+WlcQ+V0rE9+5yWaEuIV9AnEf6Eqv/fyl7uebRhwtNvkEVYmTeHNrIVP4N3pQk+vvX/f5sjg5BZFWm/LYyrDMkebfRo0Ffl4ef8ALVPe8itDvUxO1lBCbU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y21IOOzQ; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="yXfS7BXi"
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id C992C2C0526;
-	Tue, 25 Mar 2025 07:14:51 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1742840091;
-	bh=jcbglrtrzi4TXdy8lI2uD0gTHxJoZBF6WMdLdLn/8bg=;
-	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-	b=yXfS7BXiu07gVqrEnPKDJV+tpUA+RP9B1vwsK01Q4o0WkZf9hAh96en0SYgvOiIfu
-	 ELSciUfQjKtrUYrccZ/yB3l83QC9gcaFx8l7o3Z1w2yRe8i+ET+YsKpi5AdXMwBIK2
-	 +rzDrdKS6a2XAblax5dxO24IUA9x51I/l96wWJLEbtZF8kY7pkqJXxlrqDKXzB4Pwm
-	 BiY+TnUA7bMkHPH2Wt6oJAmbMK5nOEQJ0cfWnIC+5O2wKbLr/XLQJQy+oyxDUrcodG
-	 JBI9QbakvKlsWSkyfjRVuIFQv0pQGv2UvLNozXTALGGVj2E6wckkwqeA/8AQYg+AMt
-	 xERsGy3aYPyXg==
-Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B67e1a11b0001>; Tue, 25 Mar 2025 07:14:51 +1300
-Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
- svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Tue, 25 Mar 2025 07:14:51 +1300
-Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
- svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
- 15.02.1544.014; Tue, 25 Mar 2025 07:14:51 +1300
-From: Aryan Srivastava <Aryan.Srivastava@alliedtelesis.co.nz>
-To: "andi.shyti@kernel.org" <andi.shyti@kernel.org>
-CC: "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>,
-	"Markus.Elfring@web.de" <Markus.Elfring@web.de>, "linux-i2c@vger.kernel.org"
-	<linux-i2c@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "rric@kernel.org" <rric@kernel.org>
-Subject: Re: [PATCH v13 3/3] i2c: octeon: add block-mode i2c operations
-Thread-Topic: [PATCH v13 3/3] i2c: octeon: add block-mode i2c operations
-Thread-Index: AQHbl6vJiHEHFgk1+0C1V3/aq92iNLN6MJoAgAA3DQCAAHxqAIAG4+6A
-Date: Mon, 24 Mar 2025 18:14:51 +0000
-Message-ID: <0b562e42889c67e96e9e8a6d1e59b58ca332dff4.camel@alliedtelesis.co.nz>
-References: <20250318021632.2710792-1-aryan.srivastava@alliedtelesis.co.nz>
-	 <20250318021632.2710792-4-aryan.srivastava@alliedtelesis.co.nz>
-	 <thazi6n7jwqp6xoz4p6ce7ohxts7ubhgs5h6chqsnnexbkiy3j@q6xzdrze6a6f>
-	 <d542d00d25e37a922c0fe9d25bba7bbc7220f580.camel@alliedtelesis.co.nz>
-	 <2enq7ixb5m6nn2hlufsgeh6cqt24l5rmbtceflbtwaep64osxy@ej63czorl2tn>
-In-Reply-To: <2enq7ixb5m6nn2hlufsgeh6cqt24l5rmbtceflbtwaep64osxy@ej63czorl2tn>
-Accept-Language: en-US, en-NZ
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <0C2E4E0652FA5A4391B860F124304E22@alliedtelesis.co.nz>
-Content-Transfer-Encoding: base64
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y21IOOzQ"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-227c7e57da2so22046535ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 11:21:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742840511; x=1743445311; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=vYGcI8imqj+MGUqjN29fBqg3Vw5woBztKuaSrXR3vbI=;
+        b=y21IOOzQ7oWFkC5MgERgN3pHOrnckRViW2tubWvvZIMv0dQY3A1X9uK/8bp+AH32vx
+         Y2QMbgI6c/SggVMc9QQ0RNJ1aNw6qbHKyF0SzBzjqJn6ZdeBq0HqYBJltgNcMb+3QYdE
+         5TMUBZUU8wYVYWG1rtSwLZH8ZUjXqtlYSOtlLk84vqWSTUazP4/B0w1+HbqZRzVt7BA8
+         nV1kuDNMTckgfuTKDtC2WDmwfjc+WfPrDwEXmI8pCVN8K/EJtFL+E2lQFoI8z/xNauox
+         FKSpJtxNZLzvvsjXYd2r+TlVLd5HsFHTn4OjykcCnUzSnij8c2vUoN8KXF09KM3htf/h
+         pyGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742840511; x=1743445311;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vYGcI8imqj+MGUqjN29fBqg3Vw5woBztKuaSrXR3vbI=;
+        b=DBSWNvit+tsc1m35OTSLWy+q8LcGAFzLBryjKuAZ/bsAsXc4ZWhXGThaAEC+nrBf0R
+         zKwTl0A3Gk8U7NeCA8pnFO0rE4iDY9KdClrGgRQ/XlYbXZn1tgyhXTXOVfxqfQm3xnd3
+         XyNxQetS3p2AJuFdo7lTz8ZIkGiLM5bPcYiFiCldNExe22GTVbxTswPadKePNUMH56/O
+         hVIPupsct0hxquORaWxded0m+YrbQkLU3LXZfacBIPsoZaAxvqzzpszfm48/HedaXkwV
+         1lpdyez50r1esxMMUqV4dgx8dV0YUlTftJKf24N/lOGwu1ftytqO4tquFA2zDDfkwOKK
+         1ojg==
+X-Forwarded-Encrypted: i=1; AJvYcCUbbOODmypHRkcQFV6+2H8UtYL8yNe6YOuNjsCd4xrKkcjO3IF78l+N62ganzbf4nqN5d7Q07jMHwHXWzY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyoCvbCErema4eDrrBxDFf7NFx+D6aqnYGCVxr8bbxSUjcbtuIL
+	BzsLiUnQETgMPDqeFun3r1WFZbZDiTEDBJBoM0Dy+oRClasRx/xxKetgc+UKfU/ROfJsmLJ/UaB
+	xpnH5Zryt1bo408qt2YNFF6CBJTyLxTR3yL4yKkDcn4zwS6Mb130=
+X-Gm-Gg: ASbGnctGULblk7mt6odcRlyLK0z5QeFJkstwE/+Oov+N64d7UX60YRFR3xSkUF8CcC4
+	18uENDSRnIF6moSrbFIL74zL/iHfjSZxD9Ztqpmlt5AVZ/iiuYbDkopO4rmTC7jyMSFvthoW8S7
+	M+Ibv6IepGWApsVCGn1066yDxfC27L8sHT8plhJHcBxPObExtufHc+Mj8qP0E=
+X-Google-Smtp-Source: AGHT+IFF3EcxhuVze+FBnKUvTSo2ADv/p17nL+WNhX5Rraz4E5NBfUNu9Acb3U1M/4KPXQVXhN5pXD8y6Aad14poHsA=
+X-Received: by 2002:a05:6a00:2384:b0:730:d5ca:aee with SMTP id
+ d2e1a72fcca58-73905a2529fmr23710196b3a.23.1742840511070; Mon, 24 Mar 2025
+ 11:21:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=Ko7u2nWN c=1 sm=1 tr=0 ts=67e1a11b a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=w1vUsAckAk8A:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=1T9zNMSQzU2THpBoscgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
-X-SEG-SpamProfiler-Score: 0
+References: <20250109171956.3535294-1-yeoreum.yun@arm.com> <CAJ9a7ViuVntYL62q=WYPkFR3++cyufPdKUHm0FUAPyGy76pB_A@mail.gmail.com>
+ <GV1PR08MB10521BB7C93822F5124F2D66EFBD22@GV1PR08MB10521.eurprd08.prod.outlook.com>
+ <CAJ9a7Vgz+L+UYf8Yqyu9J5hp3AB3WPSKutA4AvR-OFdu8b-dPA@mail.gmail.com> <Z+FlLDLV9WkGNbj+@e129823.arm.com>
+In-Reply-To: <Z+FlLDLV9WkGNbj+@e129823.arm.com>
+From: Mike Leach <mike.leach@linaro.org>
+Date: Mon, 24 Mar 2025 18:21:39 +0000
+X-Gm-Features: AQ5f1JpBLeuBe2uwu_6LtTYvGXXov15RoxnfseC3LtykXCAnpx1LgBpQDY-jWNc
+Message-ID: <CAJ9a7VgsBZ6MkgwVjDiOm7rvcy9KVPfPc_PbaRNX7ra8NWGb9Q@mail.gmail.com>
+Subject: Re: [PATCH v3 1/1] coresight: prevent deactivate active config while
+ enabling the config
+To: Yeoreum Yun <yeoreum.yun@arm.com>
+Cc: Suzuki Poulose <Suzuki.Poulose@arm.com>, 
+	"james.clark@linaro.org" <james.clark@linaro.org>, 
+	"alexander.shishkin@linux.intel.com" <alexander.shishkin@linux.intel.com>, 
+	"coresight@lists.linaro.org" <coresight@lists.linaro.org>, 
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
-T24gVGh1LCAyMDI1LTAzLTIwIGF0IDEwOjAxICswMTAwLCBBbmRpIFNoeXRpIHdyb3RlOg0KPiBI
-aSBBcnlhbiwNCj4gDQo+IE9uIFRodSwgTWFyIDIwLCAyMDI1IGF0IDAxOjM2OjEyQU0gKzAwMDAs
-IEFyeWFuIFNyaXZhc3RhdmEgd3JvdGU6DQo+ID4gT24gV2VkLCAyMDI1LTAzLTE5IGF0IDIzOjE5
-ICswMTAwLCBBbmRpIFNoeXRpIHdyb3RlOg0KPiA+ID4gPiArc3RhdGljIGludCBvY3Rlb25faTJj
-X2hsY19ibG9ja19jb21wX3JlYWQoc3RydWN0IG9jdGVvbl9pMmMNCj4gPiA+ID4gKmkyYywNCj4g
-PiA+ID4gc3RydWN0IGkyY19tc2cgKm1zZ3MpDQo+ID4gPiA+ICt7DQo+ID4gPiA+ICvCoMKgwqDC
-oMKgwqDCoGludCByZXQ7DQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoHUxNiBsZW47DQo+ID4gPiA+
-ICvCoMKgwqDCoMKgwqDCoHU2NCBjbWQ7DQo+ID4gPiA+ICsNCj4gPiA+ID4gK8KgwqDCoMKgwqDC
-oMKgb2N0ZW9uX2kyY19obGNfZW5hYmxlKGkyYyk7DQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoG9j
-dGVvbl9pMmNfYmxvY2tfZW5hYmxlKGkyYyk7DQo+ID4gPiA+ICsNCj4gPiA+ID4gK8KgwqDCoMKg
-wqDCoMKgLyogV3JpdGUgKHNpemUgLSAxKSBpbnRvIGJsb2NrIGNvbnRyb2wgcmVnaXN0ZXIgKi8N
-Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgbGVuID0gbXNnc1sxXS5sZW4gLSAxOw0KPiA+ID4gPiAr
-wqDCoMKgwqDCoMKgwqBvY3Rlb25faTJjX3dyaXRlcV9mbHVzaCgodTY0KWxlbiwgaTJjLT50d3Np
-X2Jhc2UgKw0KPiA+ID4gPiBPQ1RFT05fUkVHX0JMT0NLX0NUTChpMmMpKTsNCj4gPiA+ID4gKw0K
-PiA+ID4gPiArwqDCoMKgwqDCoMKgwqAvKiBQcmVwYXJlIGNvcmUgY29tbWFuZCAqLw0KPiA+ID4g
-PiArwqDCoMKgwqDCoMKgwqBjbWQgPSBTV19UV1NJX1YgfCBTV19UV1NJX1IgfCBTV19UV1NJX1NP
-VlIgfA0KPiA+ID4gPiBTV19UV1NJX09QXzdfSUE7DQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoGNt
-ZCB8PSAodTY0KShtc2dzWzBdLmFkZHIgJiAweDdmdWxsKSA8PA0KPiA+ID4gPiBTV19UV1NJX0FE
-RFJfU0hJRlQ7DQo+ID4gPiA+ICsNCj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgLyogU2VuZCBjb3Jl
-IGNvbW1hbmQgKi8NCj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgcmV0ID0gb2N0ZW9uX2kyY19obGNf
-cmVhZF9jbWQoaTJjLCBtc2dzWzBdLCBjbWQpOw0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqBpZiAo
-cmV0KQ0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgcmV0dXJuIHJldDsN
-Cj4gPiA+IA0KPiA+ID4gRG8gd2UgbmVlZCB0byBkaXNhYmxlIHRoZSBibG9jayBtb2RlPw0KPiA+
-ID4gDQo+ID4gRG8geW91IG1lYW4sIGRvIHdlIG5lZWQgdG8gZGlzYWJsZSB0aGUgYmxvY2sgbW9k
-ZSBhdCBhbGw/IGkuZS4gaGF2ZQ0KPiA+IGl0DQo+ID4gb24gYWxsIHRoZSB0aW1lPyBPdGhlcndp
-c2UsIGl0IGdldHMgZGlzYWJsZWQgYXQgdGhlIGJvdHRvbSBvZiB0aGlzDQo+ID4gZnVuYy4NCj4g
-DQo+IHllcywgYnV0IHlvdSByZXR1cm4gZWFybGllciwgcmlnaHQ/DQo+IA0KQWggeWVzLCBnb29k
-IGNhdGNoLiBJIHdpbGwgZml4IHRoaXMgdXAsIHRoYW5rIHlvdSA6KQ0KDQpDaGVlcnMsIEFyeWFu
-Lg0KDQo=
+Hi,
+
+On Mon, 24 Mar 2025 at 13:59, Yeoreum Yun <yeoreum.yun@arm.com> wrote:
+>
+> Hi Mike,
+>
+> Please ignore my foremer mail.. and please see my comments for your
+> suggestion.
+>
+> > Hi
+> >
+> > On Fri, 14 Mar 2025 at 15:25, Yeo Reum Yun <YeoReum.Yun@arm.com> wrote:
+> > >
+> > > Hi, Mike.
+> > >
+> > > > >  static void cscfg_remove_owned_csdev_features(struct coresight_device *csdev, void *load_owner)
+> > > > > @@ -867,6 +870,28 @@ void cscfg_csdev_reset_feats(struct coresight_device *csdev)
+> > > > >  }
+> > > > >  EXPORT_SYMBOL_GPL(cscfg_csdev_reset_feats);
+> > > > >
+> > > > > +static bool cscfg_config_desc_get(struct cscfg_config_desc *config_desc, bool enable)
+> > > > > +{
+> > > > > +       if (enable)
+> > > > > +               return atomic_inc_not_zero(&config_desc->active_cnt);
+> > > > > +
+> > > >
+> > > > Not sure why we have an "enable" parameter here - it completely
+> > > > changes the meaning of the function - with no comment at the start.
+> > >
+> > > Sorry. But what I intended is to distinguish
+> > >     - activation of config
+> > >     - enable of activated config.
+> > > Because, current coresight doesn't grab the module reference on enable of activate config,
+> > > But It grabs that reference only in activation.
+> > > That's why I used to "enable" parameter to distinguish this
+> > > while I integrate with module_owner count.
+> > >
+> > > > >         list_for_each_entry(config_desc, &cscfg_mgr->config_desc_list, item) {
+> > > > >                 if ((unsigned long)config_desc->event_ea->var == cfg_hash) {
+> > > > > -                       atomic_dec(&config_desc->active_cnt);
+> > > > >                         atomic_dec(&cscfg_mgr->sys_active_cnt);
+> > > > > -                       cscfg_owner_put(config_desc->load_owner);
+> > > > > +                       cscfg_config_desc_put(config_desc);
+> > > > >                         dev_dbg(cscfg_device(), "Deactivate config %s.\n", config_desc->name);
+> > > > >                         break;
+> > > > >                 }
+> > > > > @@ -1047,7 +1066,7 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+> > > > >                                      unsigned long cfg_hash, int preset)
+> > > > >  {
+> > > > >         struct cscfg_config_csdev *config_csdev_active = NULL, *config_csdev_item;
+> > > > > -       const struct cscfg_config_desc *config_desc;
+> > > > > +       struct cscfg_config_desc *config_desc;
+> > > > >         unsigned long flags;
+> > > > >         int err = 0;
+> > > > >
+> > > > > @@ -1062,8 +1081,8 @@ int cscfg_csdev_enable_active_config(struct coresight_device *csdev,
+> > > > >         raw_spin_lock_irqsave(&csdev->cscfg_csdev_lock, flags);
+> > > > >         list_for_each_entry(config_csdev_item, &csdev->config_csdev_list, node) {
+> > > > >                 config_desc = config_csdev_item->config_desc;
+> > > > > -               if ((atomic_read(&config_desc->active_cnt)) &&
+> > > > > -                   ((unsigned long)config_desc->event_ea->var == cfg_hash)) {
+> > > > > +               if (((unsigned long)config_desc->event_ea->var == cfg_hash) &&
+> > > > > +                               cscfg_config_desc_get(config_desc, true)) {
+> > > > >
+> > > > This obfuscates the logic of the comparisons without good reason. With
+> > > > the true parameter, the function does no "get" operation but just
+> > > > replicates the logic being replaced - checking the active_cnt is
+> > > > non-zero.
+> > > >
+> > > > Restore this to the original logic to make it readable again
+> > >
+> > > It's not a replicates of comparsion logic, but if true,
+> >
+> > sorry - missed that point .
+> >
+> > > It get the reference of active_cnt but not get module reference.
+> > > The fundemental fault in the UAF becase of just "atomic_read()"
+> > > so, it should hold reference in here.
+> > >
+> > > So, If you think the cscfg_config_desc_get()'s parameter makes obfuscation,
+> > > I think there're two way to modfiy.
+> > >
+> > >     1. cscfg_config_desc_get()/put() always grab/drop the module count.
+> > >     2. remove cscfg_config_desc_get()/put() but just use atomic_XXX(&active_cnt) only
+> > >         with cscfg_owner_get()/put()
+> > >
+> > > Any thougt?
+> > >
+> > > Thanks!
+> > >
+> > >
+> >
+> > The get and put functions are asymmetrical w.r.t. owner.
+> >
+> > The put will put owner if active count decrements to 0,
+> > The get if not on enable path will put owner unconditionally.
+> >
+> > This means that the caller has to work out the correct input conditions.
+> >
+> > Might be better if:-
+> >
+> > get_desc()
+> > {
+> >     if (! desc->refcnt) {
+> >        if (!get_owner())
+> >            return false;
+> >    }
+> >    desc->refcnt++;
+> >     return true;
+> > }
+>
+> I think This makes another problem when
+> it races with _cscfg_deactivate_config().
+>
+> CPU0                                          CPU1
+> (sysfs enable)                                load module
+>                                               cscfg_load_config_sets()
+>                                               activate config. // sysfs
+>                                               (sys_active_cnt == 1)
+>
+>                                               // sysfs
+>                                               _cscfg_deactivate_config()
+>                                               (sys_active_cnt == 0)
+>                                               (config->active_cnt = 0)
+> ...
+> cscfg_csdev_enable_active_config()
+>   lock(csdev->cscfg_csdev_lock)
+>   // here get module reference??
+>   // even sys_active_cnt == 0 and
+>   // config->active_cnt == 1.
+>   get_desc()
+>   unlock(csdev->cscfg_csdev_lock)
+>
+>
+>   // access to config_desc which freed
+>   // while unloading module.
+>   cfs_csdev_enable_config
+>
+>
+> Because, the desc->refcnt meaning of zero is different from the context.
+>    - while activate . it should get module reference if zero.
+>    - while enable active configuration, if zero, it should be failed.
+>
+> that means to prevent this race, the core key point is:
+>    when config->active_cnt == 0, it should be failed in cscfg_csdev_enable_active_config()
+>
+
+This is not a failure case, it simple means that this config should
+not be activated for this device.
+It is possible for a configuration to be active on the system, without
+it being active for a particular coresight device.
+
+Having a get/put interface for the config descriptor - which prevents
+the config from being unloaded is fine, the key logic here is that we
+are searching a list of possible enabled configurations for this
+device and taking the necessary action to enable it if we find one -
+and there can only ever be a single configuration enabled for a trace
+session.
+
+Therefore when the list of loaded configs for a device is > 1, then
+all but one is allowed to be active - so the search code will validly
+find instances where config->active_cnt == 0.
+
+My objection to the original interface was not the get/put operations
+to protect the module from unload, but the fact that the logic
+deciding if a config needed to be enabled on the device was hidden
+inside the get() operation.
+My suggestion is to restore the logic that decides if there is a
+config to enable on the device be clear in the enable function itself,
+then use get/put as appropriate to prevent module unload.
+
+Regards
+
+Mike
+
+
+> Because, according to context the handling the zero reference value is
+> different, It seems,to integrate the get_desc() interface to handle
+> above case together without extra arguments (in case of here is
+> "enable").
+>
+> If this interface is really ugly and unhappy to you,
+> I think It should remove get_desc()/put_desc().
+> although we can add new interface for cscfg_config_desc_get() for enable
+> path. but it makes people more confused.
+>
+> So my suggestion is:
+>    - sustain this patch's contents
+>    - or remove get_desc()/put_desc() interface but use
+>      atomic_inc_zero(&config_desc->active_cnt) directly in
+>      cscfg_csdev_enable_active_config()
+>
+> Any thougt?
+>
+> Thanks.
+
+
+
+-- 
+Mike Leach
+Principal Engineer, ARM Ltd.
+Manchester Design Centre. UK
