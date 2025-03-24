@@ -1,237 +1,132 @@
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A49261367
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:14:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742829290; cv=none; b=mjKtTyO9fVXwG+Ctyw7SobxMbjNz8wwaeuzNfjLnW3xX0HKURWGGHbJO5bt9I5AWH0w6hMTq0f3l/loCIskfCkmfbrNb0j5i+QTutScMPN2uO+xvIs8HLHwutoPt18nOFcHosXATiAp4mG8JUNSvn3XjRGrFOcjcxh8Kqm3BrOc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742829290; c=relaxed/simple;
-	bh=j7WD5agwJn5RbucIl+SimdBcPkopv0JXyLkpma4n+Tw=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=hzofuLDMce64MsM9T6E5LOkln4CcIKTiINRr33qisxCX8lB8wr/AgUwoPpMoFf6LUxAqhdJjy0uouBQYcGqyGzdNuMmMU6gxf3lr4ExOGQRf3g5BvvXcGFWvlNUHZ2RnHfDwHZaNNPdicUG5ZULBxqVYIOhxiWqz/pjLuqK2GrU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g0daaQYd; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F0A7261396;
+	Mon, 24 Mar 2025 15:14:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742829297; cv=pass; b=KA+SeResZJgVTtZBYPwWcxipw0By3VNtqC0xRnV49AbRo87WN0DniUdopx/sa5X9f8fg6M/4zhqaTmaQKsWv/Alft+macSRoFj3ybRny/yFmH1czMMhIZ+ZMDrBqw1KVmKSfd/+oBlrj2w7j3tckSdRteDoZI0msqwCuM9+pBY8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742829297; c=relaxed/simple;
+	bh=yyWBoVIdgM9yd55s/XqWCPB+EHlT41sHUz5jV+dNppk=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=Sr24SyvIPzumxiGfDq23COO/mGjYSGKILayWr+wIfiN68h5/E9zHudIf44I7Oe2YOFuE4vC5L2fi0UjKc3BF4fyEgBj/6kSgFBfBTV8jFpMHsVz5PtstaqzDmV9yGjHiqKZNvQWHXBOUb+a/hdqGySYSSSgaYmZLaE9FPd6gKUE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=My3I3Mp9; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g0daaQYd"
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 79AA641C84;
-	Mon, 24 Mar 2025 15:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1742829286;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=6zaM60hzrVOKBGboadVOUeo4rs8w8+hN/T1bSMjRwtE=;
-	b=g0daaQYdVhvmoMMrjPKZ1/Q9ju1cE/JJDEDFLw0qmpYF0fJc00DnUt8SekLIDr7/wH/DTq
-	JFxyXMW8Y0GNG90HmLgL/HKlWm55A1eHzCWVoffgwvyPrdWeyyi6k5LP4InGZjfm/Zq0NR
-	B+GBGJ2MraV1PVTuX+O+0Uv/7Bfd5RG+OMmC7s/P782vB/eQ5F80Y7us06L9bmYw/5l3zc
-	brrMuXt0DzqdtJ7TUIrjnGA73DZEnZE6CP9ZpduVrUbwjA6vzIByIRgcmCvzf5H+c9XSof
-	BJON5CpkLtMja8VBK1MxH1WyNJnExhudF3UUB9Q0dDHUthYD4sPGp4GfVumKBA==
-Message-ID: <bffd185c-6d27-47b8-8388-936da0c0e67f@bootlin.com>
-Date: Mon, 24 Mar 2025 16:14:42 +0100
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="My3I3Mp9"
+ARC-Seal: i=1; a=rsa-sha256; t=1742829273; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=FXPdAeI3f+wrKHfylHGK4lXWlXx1asWt6oTR6MWN+rR5EBKONwlGVzk0Ne6VXnSwW138eA8Uh33Dwwko3lXCJgXNOTRpGw7ihhj/+4FuWDa6OFRuW6CmnuwsOTOugYxPvvNZketVzPaDRlB/EugCvd9tfq0cmyaKWTCX2CQSiP4=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742829273; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=0GC8XAU9kSZizGu7pirgOvAlkT/SjNy72/DTHBMZsj8=; 
+	b=bp+xEitzIzdPSgM7ciQCzhUyVZ4fojqWQGfAqBO3aAOk9eVXLFsbUEFHNkDj+Q0mM8PAVfqRWTmKSy0unQqOAAsBf5Minb0wyy1uehGadw+TOM+cpgDN61Shr1Rn7gH4D3kFKhcNB8nJ8l4VeP398L7B7aXCWgXaEicMo6qrTzE=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742829273;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Date:Date:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Message-Id:References:In-Reply-To:To:To:Cc:Cc:Reply-To;
+	bh=0GC8XAU9kSZizGu7pirgOvAlkT/SjNy72/DTHBMZsj8=;
+	b=My3I3Mp9qHOHIPnuXmVVMRivjE55FPuydbJuD5lBmm9xPwHDIxUiavN+N9SJBROk
+	8aWEuPnmOJ7JZ7dNJK5Qta6C6fRsOCoxWyP5i1kVaVtJkgxwTSEFEtZfCvPEU5y0fnp
+	8xsm/rwbKJZ+AO+OeBYP0r0xBo1gQalPIDN+S6aA=
+Received: by mx.zohomail.com with SMTPS id 1742829270854331.91542821528924;
+	Mon, 24 Mar 2025 08:14:30 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Date: Mon, 24 Mar 2025 12:13:54 -0300
+Subject: [PATCH 1/2] rust: helpers: Add bindings/wrappers for dma_resv
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Louis Chauvet <louis.chauvet@bootlin.com>
-Subject: Re: [PATCH v2 15/59] dyndbg: hoist classmap-filter-by-modname up to
- ddebug_add_module
-To: Jim Cromie <jim.cromie@gmail.com>, linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
- intel-gvt-dev@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
- intel-gfx-trybot@lists.freedesktop.org
-Cc: jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org,
- daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com,
- jani.nikula@intel.com, ville.syrjala@linux.intel.com
-References: <20250320185238.447458-1-jim.cromie@gmail.com>
- <20250320185238.447458-16-jim.cromie@gmail.com>
-Content-Language: en-US
-Autocrypt: addr=louis.chauvet@bootlin.com; keydata=
- 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
-In-Reply-To: <20250320185238.447458-16-jim.cromie@gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedtudduucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpefkffggfgfhuffvvehfjggtgfesthekredttddvjeenucfhrhhomhepnfhouhhishcuvehhrghuvhgvthcuoehlohhuihhsrdgthhgruhhvvghtsegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeetfffhtdeigfehffduuedvkeefgfdvuddugfffteetffdvteffgfejvedugffgffenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepledtrdekledrudeifedruddvjeenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepihhnvghtpeeltddrkeelrdduieefrdduvdejpdhhvghloheplgduledvrdduieekrddtrddvtdgnpdhmrghilhhfrhhomheplhhouhhishdrtghhrghuvhgvthessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepudegpdhrtghpthhtohepjhhimhdrtghrohhmihgvsehgmhgrihhlrdgtohhmpdhrtghpthhtoheplhhinhhugidqkhgvrhhnvghlsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepughrihdquggvvhgvlheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopegrmhguqdhgfhigsehlihhsthhsr
- dhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepihhnthgvlhdqghhvthdquggvvheslhhishhtshdrfhhrvggvuggvshhkthhophdrohhrghdprhgtphhtthhopehinhhtvghlqdhgfhigsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepihhnthgvlhdqghhfgidqthhrhigsohhtsehlihhsthhsrdhfrhgvvgguvghskhhtohhprdhorhhgpdhrtghpthhtohepjhgsrghrohhnsegrkhgrmhgrihdrtghomh
-X-GND-Sasl: louis.chauvet@bootlin.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250324-gpuvm-v1-1-7f8213eebb56@collabora.com>
+References: <20250324-gpuvm-v1-0-7f8213eebb56@collabora.com>
+In-Reply-To: <20250324-gpuvm-v1-0-7f8213eebb56@collabora.com>
+To: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <benno.lossin@proton.me>, 
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+ Trevor Gross <tmgross@umich.edu>, Sumit Semwal <sumit.semwal@linaro.org>, 
+ =?utf-8?q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+ Boris Brezillon <boris.brezillon@collabora.com>
+Cc: linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, Asahi Lina <lina@asahilina.net>
+X-Mailer: b4 0.14.2
+X-ZohoMailClient: External
 
+From: Asahi Lina <lina@asahilina.net>
 
+This is just for basic usage in the DRM shmem abstractions for implied
+locking, not intended as a full DMA Reservation abstraction yet.
 
-Le 20/03/2025 à 19:51, Jim Cromie a écrit :
-> The body of ddebug_attach_module_classes() is dominated by a
-> code-block that finds the contiguous subrange of classmaps matching on
-> modname, and saves it into the ddebug_table's info record.
-> 
-> Implement this block in a macro to accommodate different component
-> vectors in the "box" (as named in the for_subvec macro).
-> 
-> And hoist its invocation out of ddebug_attach_module_classes() up into
-> ddebug_add_module().  This moves the filtering step up closer to
-> dynamic_debug_init(), which effectively does the same for builtin
-> pr_debug descriptors; segmenting them into subranges by modname.
-> 
-> Signed-off-by: Jim Cromie <jim.cromie@gmail.com>
-  >
-> ---
->   lib/dynamic_debug.c | 57 ++++++++++++++++++++++++++++-----------------
->   1 file changed, 35 insertions(+), 22 deletions(-)
-> 
-> diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-> index f7ec2365ab40..192783ff7b98 100644
-> --- a/lib/dynamic_debug.c
-> +++ b/lib/dynamic_debug.c
-> @@ -1242,30 +1242,34 @@ static const struct proc_ops proc_fops = {
->   
->   static void ddebug_attach_module_classes(struct ddebug_table *dt, struct _ddebug_info *di)
->   {
-> -	struct ddebug_class_map *cm;
-> -	int i, nc = 0;
-> -
-> -	/*
-> -	 * Find this module's classmaps in a subrange/wholerange of
-> -	 * the builtin/modular classmap vector/section.  Save the start
-> -	 * and length of the subrange at its edges.
-> -	 */
-> -	for_subvec(i, cm, di, maps) {
-> -		if (!strcmp(cm->mod_name, dt->mod_name)) {
-> -			if (!nc) {
-> -				v2pr_info("start subrange, class[%d]: module:%s base:%d len:%d ty:%d\n",
-> -					  i, cm->mod_name, cm->base, cm->length, cm->map_type);
-> -				dt->info.maps.start = cm;
-> -			}
-> -			nc++;
-> -		}
-> -	}
-> -	if (nc) {
-> -		dt->info.maps.len = nc;
-> -		vpr_info("module:%s attached %d classes\n", dt->mod_name, nc);
-> -	}
-> +	vpr_info("module:%s attached %d classes\n", dt->mod_name, dt->info.maps.len);
->   }
->   
-> +/*
-> + * scan the named array: @_vec, ref'd from inside @_box, for the
-> + * start,len of the sub-array of elements matching on ->mod_name;
-> + * remember them in _dst.  Macro depends upon the fields being in both
-> + * _box and _dst.
-> + * @_i:   caller provided counter var, init'd by macro
-> + * @_sp:  cursor into @_vec.
-> + * @_box: ptr to a struct with @_vec, num__##@_vec, mod_name fields.
-> + * @_vec: name of ref into array[T] of builtin/modular __section data.
-> + * @_dst: ptr to struct with @_vec and num__##@_vec fields, both updated.
+Signed-off-by: Asahi Lina <lina@asahilina.net>
+---
+ rust/bindings/bindings_helper.h |  4 +++-
+ rust/helpers/dma-resv.c         | 13 +++++++++++++
+ rust/helpers/helpers.c          |  1 +
+ 3 files changed, 17 insertions(+), 1 deletion(-)
 
-I think you forgot to update this documentation with the new vector 
-structure (num__##@_vec does not exists anymore)
-
-> + */
-> +#define dd_mark_vector_subrange(_i, _dst, _sp, _box, _vec) ({	\
-> +	int nc = 0;							\
-> +	for_subvec(_i, _sp, _box, _vec) {				\
-> +		if (!strcmp((_sp)->mod_name, (_dst)->mod_name)) {	\
-> +			if (!nc++)					\
-> +				(_dst)->info._vec.start = (_sp);	\
-> +		} else {						\
-> +			if (nc)						\
-> +				break; /* end of consecutive matches */ \
-> +		}							\
-> +	}								\
-> +	(_dst)->info._vec.len = nc;					\
-> +})
-> +
->   /*
->    * Allocate a new ddebug_table for the given module
->    * and add it to the global list.
-> @@ -1273,6 +1277,8 @@ static void ddebug_attach_module_classes(struct ddebug_table *dt, struct _ddebug
->   static int ddebug_add_module(struct _ddebug_info *di, const char *modname)
->   {
->   	struct ddebug_table *dt;
-> +	struct ddebug_class_map *cm;
-> +	int i;
->   
->   	if (!di->descs.len)
->   		return 0;
-> @@ -1294,6 +1300,13 @@ static int ddebug_add_module(struct _ddebug_info *di, const char *modname)
->   	dt->info = *di;
->   
->   	INIT_LIST_HEAD(&dt->link);
-> +	/*
-> +	 * for builtin modules, ddebug_init() insures that the di
-> +	 * cursor marks just the module's descriptors, but it doesn't
-> +	 * do so for the builtin class _maps & _users.  find the
-
-Nitpick, the _users builtin class is only introduced in patch 19/56, 
-maybe update the documentation there.
-
-> +	 * start,len of the vectors by mod_name, save to dt.
-> +	 */
-> +	dd_mark_vector_subrange(i, dt, cm, di, maps);
->   
->   	if (di->maps.len)
->   		ddebug_attach_module_classes(dt, di);
+diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+index e6020ba5b00237a08402fbd609c7fba27b970dd9..53111b5b35588541eca05e574a8d24cdafbf1dd6 100644
+--- a/rust/bindings/bindings_helper.h
++++ b/rust/bindings/bindings_helper.h
+@@ -18,6 +18,7 @@
+ #include <linux/blkdev.h>
+ #include <linux/cred.h>
+ #include <linux/device/faux.h>
++#include <linux/dma-resv.h>
+ #include <linux/errname.h>
+ #include <linux/ethtool.h>
+ #include <linux/file.h>
+@@ -53,5 +54,6 @@ const gfp_t RUST_CONST_HELPER_GFP_NOWAIT = GFP_NOWAIT;
+ const gfp_t RUST_CONST_HELPER___GFP_ZERO = __GFP_ZERO;
+ const gfp_t RUST_CONST_HELPER___GFP_HIGHMEM = ___GFP_HIGHMEM;
+ const gfp_t RUST_CONST_HELPER___GFP_NOWARN = ___GFP_NOWARN;
+-const blk_features_t RUST_CONST_HELPER_BLK_FEAT_ROTATIONAL = BLK_FEAT_ROTATIONAL;
++const blk_features_t RUST_CONST_HELPER_BLK_FEAT_ROTATIONAL =
++	BLK_FEAT_ROTATIONAL;
+ const fop_flags_t RUST_CONST_HELPER_FOP_UNSIGNED_OFFSET = FOP_UNSIGNED_OFFSET;
+diff --git a/rust/helpers/dma-resv.c b/rust/helpers/dma-resv.c
+new file mode 100644
+index 0000000000000000000000000000000000000000..05501cb814513b483afd0b7f220230d867863c2f
+--- /dev/null
++++ b/rust/helpers/dma-resv.c
+@@ -0,0 +1,13 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/dma-resv.h>
++
++int rust_helper_dma_resv_lock(struct dma_resv *obj, struct ww_acquire_ctx *ctx)
++{
++	return dma_resv_lock(obj, ctx);
++}
++
++void rust_helper_dma_resv_unlock(struct dma_resv *obj)
++{
++	dma_resv_unlock(obj);
++}
+diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+index 7a06d6bc48537248c8a3ec4243b37d8fb2b1cb26..c5e536d688bc35c7b348daa61e868c91a7bdbd23 100644
+--- a/rust/helpers/helpers.c
++++ b/rust/helpers/helpers.c
+@@ -14,6 +14,7 @@
+ #include "build_bug.c"
+ #include "cred.c"
+ #include "device.c"
++#include "dma-resv.c"
+ #include "drm.c"
+ #include "err.c"
+ #include "fs.c"
 
 -- 
-Louis Chauvet, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+2.48.1
 
