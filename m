@@ -1,43 +1,44 @@
 Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC473263F40;
-	Mon, 24 Mar 2025 17:04:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92C66264618;
+	Mon, 24 Mar 2025 17:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742835868; cv=none; b=l42lbfnKRgk+ADUHsPVaYM+nn7gYi4qfq66JKx2eu8yPlvxGnln/s6WKoIYQ7RPcXI2EnQi3nkz4hYBCefDramOreyQlLajuyr9nGeMCNcnA/ELZJRo2YKjGeFr7UryFKVg2m8j1mTP2oqo02AVafbu4SoGX7xgm3QAcuzbOBqA=
+	t=1742835870; cv=none; b=QD69oQe1jaqMHNEciDFbQ5OTDkUfbEQTDD/Vb5X9z6h7tL1u65U6HMy6z1/l/vCN0vGmk0A22LKIH4sycrwAURBSdv7+oV3Ecj676tuIYddVfnZA2r/BYzzWRxKgRSArmm4RC+SmhYTTTvU2gVw0zZQpooaQYcVT52evH3HZ97c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742835868; c=relaxed/simple;
-	bh=Z1D9b/aDklkV/w1jDdHJ0QT0NlOJuOAq6fuu6adnAX4=;
+	s=arc-20240116; t=1742835870; c=relaxed/simple;
+	bh=YoQAz5gy7VoClsPSkqwMktmtJTGxobd9i9vU73JymF8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=VjHM6HSYZqXUDUir4Smf939Mv8UEVaC10b3dtTePmvO0tFG3xZKU/g1y90WoCrrwmpLX/yjOHIYwlBmZSwyCUUloBHOxaqoAvB4WCY+pVIh5hVfiw0Pw0V0VQX5qcZlSgEXKEuqRM4QcRXZ1kbiLoHViyOZfCGlxh4CKXFQ27io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=RCTRxrRt; arc=none smtp.client-ip=148.251.105.195
+	 In-Reply-To:To:Cc; b=eJJWhVALNDkMM6NiVcVJ4Fn6XyEDY8zN+boptMULm3CZ791rqsCzaiBNrYGDXfafzH4L2BmWbS4M9e8/9HZDps7YR52dSFbecr251h+N1+O3c7zXPD0VJlhs2bnYir19ARbVyXgbuCUSopFkxDZusYXPjYUwMf41DPzvVGmfR18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=AJsXmJg7; arc=none smtp.client-ip=148.251.105.195
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="RCTRxrRt"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="AJsXmJg7"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
 	s=mail; t=1742835863;
-	bh=Z1D9b/aDklkV/w1jDdHJ0QT0NlOJuOAq6fuu6adnAX4=;
+	bh=YoQAz5gy7VoClsPSkqwMktmtJTGxobd9i9vU73JymF8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RCTRxrRtcqyjnzZbZJxyNPhS3zz0EDcj4dHkNReppdgRJmRS/TkTSpuITq+qifDQZ
-	 21PMGBVLQ0N/yb30qqkzp1SALU5SkUUGr/GYptGL848tRW71dn38mk7sqZ2S1cYpwH
-	 CrxDpa3C2iW+tGku0eESeVxQMiZVfycnPOtbaTYFdOT4+PywpshGOoIS8Y3RoXOhUb
-	 4OrvzVRG3Sl6w/CTqWtPuHt6TGA30GxoxKijZKB/fb2r1swbCuTF4tYHUp9jJEZMZc
-	 0Dg41JeLlk7NDE2Mbak+m+Qw98uMnp0Ikz4skvSCHPu9sna4hOodLeJ8THRK5fDqnu
-	 QQPcFctnVxPSw==
+	b=AJsXmJg7AJZhin7aRMcQRR/B4F9Ec4CHcNlCp6/SVk2A9cHaMRWA6Rf0Fpobw5V0q
+	 cJFiAHn52ew3yF9KOI4xkwv05O0XDAHEsHjun/xvJBQnQcZuo4Ms2uXuEARnxc56mI
+	 3Gz21l86bJErYZyY/Sq9dqwv6/QIl2AzyYce2nhQMFB6BdAgDSyxbuhssdbM74XCFy
+	 Xyy7ZgJCzghPTeZaIVlPYQiQuQ7cxPb/wfibYhPt7FB3e/CarWh1lK1KIsqxnuWKUT
+	 OZv3QtxrhVeY0IzisSJH4lX7KjYPsOnqTjzl3KlZ1R/VZMtutdfLS7AxRrbSewFcbk
+	 u0gH1nJM0Fv8g==
 Received: from jupiter.universe (dyndsl-091-248-188-184.ewe-ip-backbone.de [91.248.188.184])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
 	(No client certificate requested)
 	(Authenticated sender: sre)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 1B8A317E0B9D;
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id 740E717E0CA7;
 	Mon, 24 Mar 2025 18:04:23 +0100 (CET)
 Received: by jupiter.universe (Postfix, from userid 1000)
-	id D779B480037; Mon, 24 Mar 2025 18:04:22 +0100 (CET)
+	id DB1B548003D; Mon, 24 Mar 2025 18:04:22 +0100 (CET)
 From: Sebastian Reichel <sebastian.reichel@collabora.com>
-Date: Mon, 24 Mar 2025 18:04:23 +0100
-Subject: [PATCH 2/5] arm64: dts: rockchip: move rock 5b to include file
+Date: Mon, 24 Mar 2025 18:04:26 +0100
+Subject: [PATCH 5/5] arm64: dts: rockchip: add USB-C support for ROCK 5B
+ and 5B+
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -46,7 +47,7 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-rock5bp-for-upstream-v1-2-6217edf15b19@kernel.org>
+Message-Id: <20250324-rock5bp-for-upstream-v1-5-6217edf15b19@kernel.org>
 References: <20250324-rock5bp-for-upstream-v1-0-6217edf15b19@kernel.org>
 In-Reply-To: <20250324-rock5bp-for-upstream-v1-0-6217edf15b19@kernel.org>
 To: Heiko Stuebner <heiko@sntech.de>
@@ -56,165 +57,264 @@ Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  linux-kernel@vger.kernel.org, 
  Sebastian Reichel <sebastian.reichel@collabora.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3778; i=sre@kernel.org;
- h=from:subject:message-id; bh=Z1D9b/aDklkV/w1jDdHJ0QT0NlOJuOAq6fuu6adnAX4=;
- b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGfhkJZwAq2N9fnfh21CieN/Jfy7/q5h02WRO
- qr7EplupgmG5okCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJn4ZCWAAoJENju1/PI
- O/qaSMoQAJ0Tn5Do38EbDJ08eAFM6r9GiVzR0ma0pIDj7kdnFcgEZDTNWEQfsZn2HVgD7bnKUAZ
- 7U9j3odFs3HMmcc1HYHkx/iEUYvpc5sl+9i3YtivSEa0GK84dAJs1DrFlS+6hTvy3ATvAogGDp2
- gn/tf2cPvLj5ZI/Qx1FT5nY50efyQ6NstPilFeioZLn/rNWAFqCf/udl2rLe1m7ovBvSnFunW3i
- rjqabbRwcKMRy9QLM9qvBSmrKqvxJnwlJP2GiGpvofNvoaxcj3sLe/bqKCL4w76RI4FuF9bVy/U
- Jzj/BFU3OCsWhxQ/qJLLch8JT55nxGkY1J8yBrZhxX7rVG8ftCCHbSjO8v3W2gHWRYRAhCrVZ6q
- O7eejooYeqKr/spWlm6J4UZ7cUbi+2xzLva9eM2jAXnKgdj4ls/rX4IS+SKlguLT/tp8CWGvN1p
- qvwxubRWO+ABDn6Bte1FtfkGJuzTb1K/kV4tHWpRjvL5Vxg1B847OJZBPb9hJDvYeFB4AvLu8jJ
- QdK9fk7YrHgH90sAjh90qoDFTutQjbg/uK6+Fae0i/bckBvWDtx/t2SYDdTRxYPS71pG6QlJ2cV
- 4uFMQ3OzlcYUTsFsAN7HSBh05F5Sc8fXcvZiaRgTnWpPow1xq2Nj9Tx/s87xz71B2g/Y2x0AEJ6
- rGHx379F4nLA26Ndl1PE2VA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6611; i=sre@kernel.org;
+ h=from:subject:message-id; bh=YoQAz5gy7VoClsPSkqwMktmtJTGxobd9i9vU73JymF8=;
+ b=owJ4nAFtApL9kA0DAAoB2O7X88g7+poByyZiAGfhkJa4nVZH5iVIc41MF9PcWcJSSCFZG+XGs
+ EkysRqVS2ii04kCMwQAAQoAHRYhBO9mDQdGP4tyanlUE9ju1/PIO/qaBQJn4ZCWAAoJENju1/PI
+ O/qa7aoP/RzLBqxZBfmAZNUe4mKUi1QIFpWIKLBRss7o/SW4rnU0aIVZB8rKZnhoWjEFcXeutm+
+ ftxyeYWXgIwFtBgseOI43Eox+OboHCQCMk9dwSyk2RQJ6ad1nbDKRzr1anp+44CC6MQrSCrozRP
+ WMDBX6bV/c+NBXNZY0qcY2GR1cl+jr/rWx4Mzf7eULK4QxIT+cny/E8cCIkbO0UsoxshMW9kFEj
+ IHVbKMOIFunFDpbcRm3MWzA026iPUjftd+ysffTAI4qGREUwHpF2JUTzzHYQD6l+i+7u18LMZtt
+ F3llZcbVhhcwf4xf3zQzm76h78ra4l+OSupdD8dUkEe1oFQzJ+pySkhIUXs6DoKqCh+6+Lm+2gi
+ ZZshSeaWXuqdiE1vpZrUDbWi6SOlGmHQVLb41xl0Gw5/X0VUGyAQ6b6WfPqw57L7eFRXmedTrP6
+ 5JudlUB/YD/L96AQHnmJRPwIK9lNn8VA66+U8iNbA65YwdUDlc0l5aN2So33ZuzUcOzYUJ25uza
+ G/moe0hvAD/VxlXaTsh68iNVLcf2tKwi/+nMVBRwnEWeU5gRD6ckJRMN0szbApQZU3kXpB3sCYq
+ xtBrdD2ExO4aeQb0V5LEad/4YsZotXzXeW4W7ANfrCDIiE21khH7HiCtPM4X3MfuzsZA9rEvSL4
+ PdDnz841urI9rKpqIt3koDQ==
 X-Developer-Key: i=sre@kernel.org; a=openpgp;
  fpr=EF660D07463F8B726A795413D8EED7F3C83BFA9A
 
-Radxa released some more boards, which are based on the original
-Rock 5B. Move its board description into an include file to avoid
-unnecessary duplication.
+Add hardware description for the USB-C port in the Radxa ROCK 5 Model
+B and B+. This describes the OHCI, EHCI and XHCI USB parts, but not yet
+the DisplayPort AltMode, since the bindings for that are not yet upstream.
 
-NOTE: this should be merged with the previous commit to ensure
-bisectability. The rename happens in a separete commit during
-development because git does not properly detect the rename when
-the original filename is reused in the same commit. This means
+The fusb302 node is marked with status "fail" on ROCK 5B, since the board
+is usually powered through the USB-C port. Handling of errors can result
+in hard resets, which removed the bus power for some time resulting in
+a board reset.
 
-1. it's a lot harder to review the changes
-2. it's a lot harder to rebase the patch series
+The main problem right now is that devices are supposed to interact with
+the power-supply within 5 seconds after the plug event according to the
+USB PD specification. This is more or less impossible to achieve when
+the kernel is the first software communicating with the power-supply.
+
+Upstream U-Boot with fusb302 support overrides the status for the
+fusb302 node to "okay". That way booting a kernel with the updated DT
+on an old U-Boot avoids a reset loop.
+
+This workaround is not needed for the ROCK 5B+, since fusb302 support
+landed in U-Boot before the board support gets upstreamed. Apart from
+that it also has a dedicated USB-C port with a standalone chip to supply
+the board power.
 
 Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 ---
- arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts  | 52 ++++++++++++++++++++++++
- arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi | 34 ----------------
- 2 files changed, 52 insertions(+), 34 deletions(-)
+ .../boot/dts/rockchip/rk3588-rock-5b-plus.dts      |   4 +
+ arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi   | 137 +++++++++++++++++++++
+ 2 files changed, 141 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-new file mode 100644
-index 0000000000000000000000000000000000000000..9407a7c9910ada1f6c803d2e15785a9cbd9bd655
---- /dev/null
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dts
-@@ -0,0 +1,52 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+
-+/dts-v1/;
-+
-+#include "rk3588-rock-5b.dtsi"
-+
-+/ {
-+	model = "Radxa ROCK 5B";
-+	compatible = "radxa,rock-5b", "rockchip,rk3588";
-+};
-+
-+&sdio {
-+	max-frequency = <200000000>;
-+	no-sd;
-+	no-mmc;
-+	non-removable;
-+	bus-width = <4>;
-+	cap-sdio-irq;
-+	disable-wp;
-+	keep-power-in-suspend;
-+	wakeup-source;
-+	sd-uhs-sdr12;
-+	sd-uhs-sdr25;
-+	sd-uhs-sdr50;
-+	sd-uhs-sdr104;
-+	vmmc-supply = <&vcc3v3_pcie2x1l0>;
-+	vqmmc-supply = <&vcc_1v8_s3>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sdiom0_pins>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts
+index 74c7b6502e4dda4b774f43c704ebaee350703c0d..70339920fd4951dff993a5799ae5db243f07bd6e 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b-plus.dts
+@@ -105,6 +105,10 @@ vcc5v0_host_en: vcc5v0-host-en {
+ 	};
+ };
+ 
++&usbc0 {
 +	status = "okay";
 +};
 +
-+&uart6 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
-+	status = "okay";
-+};
+ &vcc5v0_host {
+ 	enable-active-high;
+ 	gpio = <&gpio1 RK_PA1 GPIO_ACTIVE_HIGH>;
+diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+index dccb8492f9f0632abd96c3dafc723e01491abad5..5e119f167cd8ccbd08ff2a2d4955489730ab85fb 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
+@@ -5,6 +5,7 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include <dt-bindings/leds/common.h>
+ #include <dt-bindings/soc/rockchip,vop2.h>
++#include <dt-bindings/usb/pd.h>
+ #include "rk3588.dtsi"
+ 
+ / {
+@@ -92,6 +93,15 @@ rfkill-bt {
+ 		shutdown-gpios = <&gpio3 RK_PD5 GPIO_ACTIVE_HIGH>;
+ 	};
+ 
++	vcc12v_dcin: regulator-vcc12v-dcin {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc12v_dcin";
++		regulator-always-on;
++		regulator-boot-on;
++		regulator-min-microvolt = <12000000>;
++		regulator-max-microvolt = <12000000>;
++	};
 +
-+&pinctrl {
-+	usb {
-+		vcc5v0_host_en: vcc5v0-host-en {
-+			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 	vcc3v3_pcie2x1l0: regulator-vcc3v3-pcie2x1l0 {
+ 		compatible = "regulator-fixed";
+ 		enable-active-high;
+@@ -146,6 +156,19 @@ vcc5v0_sys: regulator-vcc5v0-sys {
+ 		regulator-boot-on;
+ 		regulator-min-microvolt = <5000000>;
+ 		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc12v_dcin>;
++	};
++
++	vbus5v0_typec: vbus5v0-typec {
++		compatible = "regulator-fixed";
++		enable-active-high;
++		gpio = <&gpio2 RK_PB6 GPIO_ACTIVE_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&vbus5v0_typec_en>;
++		regulator-name = "vbus5v0_typec";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		vin-supply = <&vcc5v0_sys>;
+ 	};
+ 
+ 	vcc_1v1_nldo_s3: regulator-vcc-1v1-nldo-s3 {
+@@ -309,6 +332,67 @@ regulator-state-mem {
+ 	};
+ };
+ 
++&i2c4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c4m1_xfer>;
++	status = "okay";
++
++	usbc0: usb-typec@22 {
++		compatible = "fcs,fusb302";
++		reg = <0x22>;
++		interrupt-parent = <&gpio3>;
++		interrupts = <RK_PB4 IRQ_TYPE_LEVEL_LOW>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&usbc0_int>;
++		vbus-supply = <&vbus5v0_typec>;
++		/*
++		 * When the board is starting to send power-delivery messages
++		 * too late (5 seconds according to the specification), the
++		 * power-supply reacts with a hard-reset. That removes the
++		 * power from VBUS for some time, which resets te whole board.
++		 */
++		status = "fail";
++
++		usb_con: connector {
++			compatible = "usb-c-connector";
++			label = "USB-C";
++			data-role = "dual";
++			power-role = "sink";
++			try-power-role = "sink";
++			op-sink-microwatt = <1000000>;
++			sink-pdos =
++				<PDO_FIXED(5000, 3000, PDO_FIXED_USB_COMM)>,
++				<PDO_VAR(5000, 20000, 5000)>;
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					usbc0_role_sw: endpoint {
++						remote-endpoint = <&dwc3_0_role_switch>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					usbc0_orien_sw: endpoint {
++						remote-endpoint = <&usbdp_phy0_orientation_switch>;
++					};
++				};
++
++				port@2 {
++					reg = <2>;
++					dp_altmode_mux: endpoint {
++						remote-endpoint = <&usbdp_phy0_dp_altmode_mux>;
++					};
++				};
++			};
 +		};
 +	};
 +};
 +
-+&vcc5v0_host {
-+	enable-active-high;
-+	gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&vcc5v0_host_en>;
+ &i2c6 {
+ 	status = "okay";
+ 
+@@ -486,6 +570,14 @@ usb {
+ 		vcc5v0_host_en: vcc5v0-host-en {
+ 			rockchip,pins = <4 RK_PB0 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
++
++		usbc0_int: usbc0-int {
++			rockchip,pins = <3 RK_PB4 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++
++		vbus5v0_typec_en: vbus5v0-typec-en {
++			rockchip,pins = <2 RK_PB6 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
+ 	};
+ };
+ 
+@@ -871,6 +963,14 @@ &uart2 {
+ 	status = "okay";
+ };
+ 
++&u2phy0 {
++	status = "okay";
 +};
-diff --git a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
-index d22068475c5dc6cb885f878f3f527a66edf1ba70..dccb8492f9f0632abd96c3dafc723e01491abad5 100644
---- a/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3588-rock-5b.dtsi
-@@ -8,9 +8,6 @@
- #include "rk3588.dtsi"
- 
- / {
--	model = "Radxa ROCK 5B";
--	compatible = "radxa,rock-5b", "rockchip,rk3588";
--
- 	aliases {
- 		mmc0 = &sdhci;
- 		mmc1 = &sdmmc;
-@@ -139,10 +136,6 @@ vcc5v0_host: regulator-vcc5v0-host {
- 		regulator-always-on;
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
--		enable-active-high;
--		gpio = <&gpio4 RK_PB0 GPIO_ACTIVE_HIGH>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&vcc5v0_host_en>;
- 		vin-supply = <&vcc5v0_sys>;
- 	};
- 
-@@ -530,27 +523,6 @@ &sdmmc {
++
++&u2phy0_otg {
++	status = "okay";
++};
++
+ &u2phy1 {
+ 	status = "okay";
+ };
+@@ -898,6 +998,29 @@ &u2phy3_host {
  	status = "okay";
  };
  
--&sdio {
--	max-frequency = <200000000>;
--	no-sd;
--	no-mmc;
--	non-removable;
--	bus-width = <4>;
--	cap-sdio-irq;
--	disable-wp;
--	keep-power-in-suspend;
--	wakeup-source;
--	sd-uhs-sdr12;
--	sd-uhs-sdr25;
--	sd-uhs-sdr50;
--	sd-uhs-sdr104;
--	vmmc-supply = <&vcc3v3_pcie2x1l0>;
--	vqmmc-supply = <&vcc_1v8_s3>;
--	pinctrl-names = "default";
--	pinctrl-0 = <&sdiom0_pins>;
--	status = "okay";
--};
--
- &sfc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&fspim2_pins>;
-@@ -565,12 +537,6 @@ flash@0 {
- 	};
++&usbdp_phy0 {
++	mode-switch;
++	orientation-switch;
++	sbu1-dc-gpios = <&gpio4 RK_PA6 GPIO_ACTIVE_HIGH>;
++	sbu2-dc-gpios = <&gpio4 RK_PA7 GPIO_ACTIVE_HIGH>;
++	status = "okay";
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		usbdp_phy0_orientation_switch: endpoint@0 {
++			reg = <0>;
++			remote-endpoint = <&usbc0_orien_sw>;
++		};
++
++		usbdp_phy0_dp_altmode_mux: endpoint@1 {
++			reg = <1>;
++			remote-endpoint = <&dp_altmode_mux>;
++		};
++	};
++};
++
+ &usbdp_phy1 {
+ 	status = "okay";
+ };
+@@ -910,6 +1033,20 @@ &usb_host0_ohci {
+ 	status = "okay";
  };
  
--&uart6 {
--	pinctrl-names = "default";
--	pinctrl-0 = <&uart6m1_xfer &uart6m1_ctsn &uart6m1_rtsn>;
--	status = "okay";
--};
--
- &spi2 {
++&usb_host0_xhci {
++	usb-role-switch;
++	status = "okay";
++
++	port {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		dwc3_0_role_switch: endpoint {
++			remote-endpoint = <&usbc0_role_sw>;
++		};
++	};
++};
++
+ &usb_host1_ehci {
  	status = "okay";
- 	assigned-clocks = <&cru CLK_SPI2>;
+ };
 
 -- 
 2.47.2
