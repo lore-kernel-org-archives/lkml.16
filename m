@@ -1,183 +1,136 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D03267395
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 18:59:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742842786; cv=none; b=S1S4D2gefi7yvb98l5qVjpWahlC/G+B349Ro0Flc3YIlHUkAtSxtfh8f2kBUAJhENc+pI4fk0hBwa63nO97L9gS2vbICD9IMkhTe7VniCKsb7c5f/bxGKkHSLM6kNUdIA+s3RyHAxzJktg8BGKyOB5NN9mFpDLORgkDWG8rk+Cc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742842786; c=relaxed/simple;
-	bh=P28JeNDdfIsHs0Yhi2or+iZJOlxhsSMOqlD2e6764qc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UzkKzIfH7uVbO6nb6d0oenj8B0Nn7vJz9PnJzJb4E+Pa8BiRhUQrMGdAOgoPi7/3bjUtDiYUrnyAXg1m+KXRAHH+1ZcpXvYHh2EwHzWQ224+s/LHSw29wlJy9c2+9YLd9uiRj7XZ9xFwumF0yoUEGvWunU0Yoh2QTjWmxC02Nv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hEI+S8ti; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B7BF267709
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 18:59:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742842794; cv=pass; b=GAWpcHRWhK/jflJZSPrwZOBS3fmeOpHL65PBg2nM5WuI3m3Tsm4fYW/cxfi6uxbSOjA1gHlvA6TMcipI5kGz1Y3ncVjgXJTaIUfTP0Hxkf1CvlW2eIy3b2jeIJrS3BRAyxBsi+3iz3bhfhC1XQHNmKpA8OMVzzQRTLztdzSBfd4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742842794; c=relaxed/simple;
+	bh=YkSyPXy0FDhL9kKjmA/CCDkeAo/PQN6nTet3SHPAiko=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FloLWYbHcgQtM7b86vHIlwd4NdiQ/AmAiuRNqbF6NNagAc0ewptln1GbjGJ2EusG/UJxTymwLHPNtXOkuU4TQnImzGbBbdjjAKhct/lSIeWeb4LfPLiNuWekHuigurWfi7TZy9sCpkSg4Qja4gR5uk/ky88N2PVgDCgDxJbat5A=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b=N/hCGrSm; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hEI+S8ti"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E580EC4CEDD;
-	Mon, 24 Mar 2025 18:59:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742842786;
-	bh=P28JeNDdfIsHs0Yhi2or+iZJOlxhsSMOqlD2e6764qc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hEI+S8tiXB6lfLuJVkI0sE26Hhm+jk4CtP8cYz87BVegLJIt0bT9M+kilzBThiz/G
-	 0I2bW94NAHsXkC68F49mB7kWekK5GY7z4ejygaTPUUHReCk5hX33Z/uPhtENnLo4Pe
-	 UEZTPz1jqCC6X/bm06/8sTNQPbr4E6X/ac3uEYdfuS6mAbEaNRquBUCAsSio5ScyKb
-	 tQTCyqCBKWTrDanoXtuqvkYPL4wYUHJEGeRgJV7N8WNieaqmhCyfQl1RbDRWamVu+s
-	 bAozn0aavxXUo503y+LkELMhIjivJ07kptjOrxbJC/qDYBaYc1MSE4vsk4kMUVlf2/
-	 ZxDQbaoiqxj6w==
-From: Philipp Stanner <phasta@kernel.org>
-To: Lyude Paul <lyude@redhat.com>,
-	Danilo Krummrich <dakr@kernel.org>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Matthew Brost <matthew.brost@intel.com>,
-	Philipp Stanner <phasta@kernel.org>,
-	=?UTF-8?q?Christian=20K=C3=B6nig?= <ckoenig.leichtzumerken@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Tvrtko Ursulin <tvrtko.ursulin@igalia.com>
-Cc: dri-devel@lists.freedesktop.org,
-	nouveau@lists.freedesktop.org,
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=ariel.dalessandro@collabora.com header.b="N/hCGrSm"
+ARC-Seal: i=1; a=rsa-sha256; t=1742842768; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=cD3WUrOIAcXNg8o2fxPX4FwP488rTUSmr9Aibn68YIXoATCrVgqjdvKgFp/UoPRmwFVOgyr6Bq9NH8J8PTubSW2hmygoMPPpgvlxvFNOq5Cq7qXDHERc5QTL1Q5bSRH2l9FCJx1iV+CTEYH3eRaj3C0/dpSExAUB23jB9FWjVOk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1742842768; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=+0Qpm6G3dM4dW12QfuflWvN7JYPYS0esNhImh/Wdovw=; 
+	b=ekbSviQbbytGTSDHn80ZVfPLX/vvOGosbGnzcVWAJGt5pGI2i+c8MlL5g4Bnvwj8pTTiVu6QTR6E2aV7q20R6blcz3ML9RSCTVOhkPc+MHrAiDYoOsLg8Mt1d3FLlAQfNa2juR360iRl1ZH8nktMy/t+BVJ6Dr2GV8B2Hz0lRg0=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=ariel.dalessandro@collabora.com;
+	dmarc=pass header.from=<ariel.dalessandro@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742842768;
+	s=zohomail; d=collabora.com; i=ariel.dalessandro@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To;
+	bh=+0Qpm6G3dM4dW12QfuflWvN7JYPYS0esNhImh/Wdovw=;
+	b=N/hCGrSmQ61/H8DLOm5U+0nwLvb3NgJlV2YylG+F8zg2HJysYxJxqSi5xFASS6BY
+	Rl9G2tiq/HCVQz2f2a+IbnOy3B0fY+iBlfnc2cFmNnpRXPUXNolp4POEoSoZmDQIXuO
+	NN9qExbkTdleRagvUI+MFZVzLBzHuaTNuKdcgET4=
+Received: by mx.zohomail.com with SMTPS id 1742842766824425.22107114928986;
+	Mon, 24 Mar 2025 11:59:26 -0700 (PDT)
+From: Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+To: dri-devel@lists.freedesktop.org,
 	linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 5/5] drm/nouveau: Remove waitque for sched teardown
-Date: Mon, 24 Mar 2025 19:57:29 +0100
-Message-ID: <20250324185728.45857-7-phasta@kernel.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250324185728.45857-2-phasta@kernel.org>
-References: <20250324185728.45857-2-phasta@kernel.org>
+Cc: boris.brezillon@collabora.com,
+	robh@kernel.org,
+	steven.price@arm.com,
+	maarten.lankhorst@linux.intel.com,
+	mripard@kernel.org,
+	tzimmermann@suse.de,
+	airlied@gmail.com,
+	simona@ffwll.ch,
+	kernel@collabora.com,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	sjoerd@collabora.com,
+	angelogioacchino.delregno@collabora.com,
+	Ariel D'Alessandro <ariel.dalessandro@collabora.com>
+Subject: [PATCH v5 0/6] drm/panfrost: Add support for AARCH64_4K page table format
+Date: Mon, 24 Mar 2025 15:57:55 -0300
+Message-ID: <20250324185801.168664-1-ariel.dalessandro@collabora.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-ZohoMailClient: External
 
-struct nouveau_sched contains a waitque needed to prevent
-drm_sched_fini() from being called while there are still jobs pending.
-Doing so so far would have caused memory leaks.
+Hi all,
 
-With the new memleak-free mode of operation switched on in
-drm_sched_fini() by providing the callback
-nouveau_sched_fence_context_kill() the waitque is not necessary anymore.
+This is a new iteration on Panfrost support for AARCH64_4K page table
+format. The main reason behind this patchset is that MediaTek MT8188 SoC
+(ARM Mali-G57 MC3 GPU) constantly faults due to the actual Panfrost cache
+configuration.
 
-Remove the waitque.
+Currently, Panfrost only supports MMU configuration in "LEGACY" (as Bifrost
+calls it) mode, a (modified) version of LPAE "Large Physical Address
+Extension", which in Linux we've called "mali_lpae".
 
-Signed-off-by: Philipp Stanner <phasta@kernel.org>
----
- drivers/gpu/drm/nouveau/nouveau_sched.c | 20 +++++++-------------
- drivers/gpu/drm/nouveau/nouveau_sched.h |  9 +++------
- drivers/gpu/drm/nouveau/nouveau_uvmm.c  |  8 ++++----
- 3 files changed, 14 insertions(+), 23 deletions(-)
+This patchset adds support for conditionally enabling AARCH64_4K page table
+format. To achieve that, a "GPU optional quirks" field was added to
+`struct panfrost_features` with the related flag.
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.c b/drivers/gpu/drm/nouveau/nouveau_sched.c
-index 3659ac78bb3e..d9ac76198616 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.c
-@@ -121,11 +121,9 @@ nouveau_job_done(struct nouveau_job *job)
- {
- 	struct nouveau_sched *sched = job->sched;
- 
--	spin_lock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
- 	list_del(&job->entry);
--	spin_unlock(&sched->job.list.lock);
--
--	wake_up(&sched->job.wq);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- void
-@@ -306,9 +304,9 @@ nouveau_job_submit(struct nouveau_job *job)
- 	}
- 
- 	/* Submit was successful; add the job to the schedulers job list. */
--	spin_lock(&sched->job.list.lock);
--	list_add(&job->entry, &sched->job.list.head);
--	spin_unlock(&sched->job.list.lock);
-+	spin_lock(&sched->job_list.lock);
-+	list_add(&job->entry, &sched->job_list.head);
-+	spin_unlock(&sched->job_list.lock);
- 
- 	drm_sched_job_arm(&job->base);
- 	job->done_fence = dma_fence_get(&job->base.s_fence->finished);
-@@ -458,9 +456,8 @@ nouveau_sched_init(struct nouveau_sched *sched, struct nouveau_drm *drm,
- 		goto fail_sched;
- 
- 	mutex_init(&sched->mutex);
--	spin_lock_init(&sched->job.list.lock);
--	INIT_LIST_HEAD(&sched->job.list.head);
--	init_waitqueue_head(&sched->job.wq);
-+	spin_lock_init(&sched->job_list.lock);
-+	INIT_LIST_HEAD(&sched->job_list.head);
- 
- 	return 0;
- 
-@@ -503,9 +500,6 @@ nouveau_sched_fini(struct nouveau_sched *sched)
- 	struct drm_gpu_scheduler *drm_sched = &sched->base;
- 	struct drm_sched_entity *entity = &sched->entity;
- 
--	rmb(); /* for list_empty to work without lock */
--	wait_event(sched->job.wq, list_empty(&sched->job.list.head));
--
- 	drm_sched_entity_fini(entity);
- 	drm_sched_fini(drm_sched);
- 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_sched.h b/drivers/gpu/drm/nouveau/nouveau_sched.h
-index e6e2016a3569..339a14563fbb 100644
---- a/drivers/gpu/drm/nouveau/nouveau_sched.h
-+++ b/drivers/gpu/drm/nouveau/nouveau_sched.h
-@@ -105,12 +105,9 @@ struct nouveau_sched {
- 	struct nouveau_channel *chan;
- 
- 	struct {
--		struct {
--			struct list_head head;
--			spinlock_t lock;
--		} list;
--		struct wait_queue_head wq;
--	} job;
-+		struct list_head head;
-+		spinlock_t lock;
-+	} job_list;
- };
- 
- int nouveau_sched_create(struct nouveau_sched **psched, struct nouveau_drm *drm,
-diff --git a/drivers/gpu/drm/nouveau/nouveau_uvmm.c b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-index 48f105239f42..ddfc46bc1b3e 100644
---- a/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_uvmm.c
-@@ -1019,8 +1019,8 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 	u64 end = addr + range;
- 
- again:
--	spin_lock(&sched->job.list.lock);
--	list_for_each_entry(__job, &sched->job.list.head, entry) {
-+	spin_lock(&sched->job_list.lock);
-+	list_for_each_entry(__job, &sched->job_list.head, entry) {
- 		struct nouveau_uvmm_bind_job *bind_job = to_uvmm_bind_job(__job);
- 
- 		list_for_each_op(op, &bind_job->ops) {
-@@ -1030,7 +1030,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 
- 				if (!(end <= op_addr || addr >= op_end)) {
- 					nouveau_uvmm_bind_job_get(bind_job);
--					spin_unlock(&sched->job.list.lock);
-+					spin_unlock(&sched->job_list.lock);
- 					wait_for_completion(&bind_job->complete);
- 					nouveau_uvmm_bind_job_put(bind_job);
- 					goto again;
-@@ -1038,7 +1038,7 @@ bind_validate_map_sparse(struct nouveau_job *job, u64 addr, u64 range)
- 			}
- 		}
- 	}
--	spin_unlock(&sched->job.list.lock);
-+	spin_unlock(&sched->job_list.lock);
- }
- 
- static int
+Note that, in order to enable AARCH64_4K mode, the GPU variant must have
+the HW_FEATURE_AARCH64_MMU feature flag present.
+
+The patchset only enables the new format on Mediatek MT8188 and MT8192,
+which have been tested on a Mediatek Genio 700 EVK (MT8390) and Mediatek
+Genio 1200 EVK (MT8395) boards respectively.
+
+Thanks!
+
+Changes in v5:
+* Fixed drm_WARN() in panfrost_mmu_cfg_init().
+
+Changes in v4:
+* Fixed panfrost_mmu_cfg_init() return value on warning.
+
+Changes in v3:
+* Fixed error handling in panfrost_mmu_ctx_create().
+
+Changes in v2:
+* Dropped panfrost_mmu_enable/disable unification.
+* Rename gpu_configs as gpu_quirks.
+* Added error handling on page table not properly aligned.
+* Enabled AARCH64_4K format on MediaTek MT8192 as well.
+* Minor fixes.
+
+Changes in v1:
+* Added "Set IOMMU_CACHE flag" patch.
+* Replaced `panfrost_mmu->enable()` function pointer by `cfg` struct
+prepared during init time.
+* Made mali_lpae/aarch64_4k name more clear.
+* Added GPU_CONFIG_AARCH64_4K flag to enable AARCH64_4K page table
+  format.
+* Enabled AARCH64_4K mode only on mediatek-mt8188.
+
+Ariel D'Alessandro (6):
+  drm/panfrost: Set IOMMU_CACHE flag
+  drm/panfrost: Use GPU_MMU_FEATURES_VA_BITS/PA_BITS macros
+  drm/panfrost: Set HW_FEATURE_AARCH64_MMU feature flag on Bifrost
+    models
+  drm/panfrost: Add support for AARCH64_4K page table format
+  drm/panfrost: Force AARCH64_4K page table format on MediaTek MT8188
+  drm/panfrost: Force AARCH64_4K page table format on MediaTek MT8192
+
+ drivers/gpu/drm/panfrost/panfrost_device.h   |  16 ++
+ drivers/gpu/drm/panfrost/panfrost_drv.c      |   2 +
+ drivers/gpu/drm/panfrost/panfrost_features.h |   3 +
+ drivers/gpu/drm/panfrost/panfrost_mmu.c      | 150 +++++++++++++++++--
+ drivers/gpu/drm/panfrost/panfrost_regs.h     |  36 +++++
+ 5 files changed, 196 insertions(+), 11 deletions(-)
+
 -- 
-2.48.1
+2.49.0
 
