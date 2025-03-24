@@ -1,127 +1,185 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BAC1C8613;
-	Mon, 24 Mar 2025 20:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 267051C84A7
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 20:55:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742849696; cv=none; b=Ho7vVGCr/dxIdGMHgUFZZwxE/69by0iOZLL8jXl6ipY7bRWtMdQEzU8AsXFPvNZhbGzy7ycxdHIUU7DB1mqN9AQzV6ocLsc345mTYsV2OafrSu7odIFk21RR01ac8QVX0mZaN+gcV3ef2bvNn/fG8V6MbxoJGa6ydOVWDq3Az8s=
+	t=1742849720; cv=none; b=WSAewxeOotROOpJdnEvBqh6vN88wMRjlP1AwUV3sXD9QquCX8swUx42010rghGygbTNGUhzOFWIC9VWfIy1QHXk+RNokiIY/Buv36hMtmoHTMerKlWHjjH56+Clrxx3fLdEFf2gQewJPfVl2Dkv2B3XskmyYX0THMN+r1eA5D28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742849696; c=relaxed/simple;
-	bh=Ih3dm7Ri0bjLLtlXwUEcgqHbaGBSlGEP0HDK6EZifIc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fymaCqjZm5sZHeuXZHr/gNq11phCZs35JfciXU2D4vQW7pF5H/oCb7GRnYdG6wonxO1R+IzWZ8Xu9YGAdtefxqsbUWsiyFv9gGU7BjS9fbVdqwN4ZGy65SKrh/LTMOJgklIlsrDnIlGhMHG4nUGrTCYIjBEeK4Xpp7hafLdWyhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SAEuEXtJ; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742849720; c=relaxed/simple;
+	bh=aTnt6nWsETFhBBSVKRRXj3/n0KPLXXXZj+A79wXAp+o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pRXmH5cua9w64u4Em7m2hhgWavv4i/tlakeGk/FeepFlbknOARxvFXwnTignaR3rOEMWsLdJJMa7ew+l9BlYjrqbhuTOQn9Wv7VVDwkR5gUuEcM5DwvYfZkZHrxBX6e59OqOUqeVFLRxDBw6WXHGZ/KJ8BhiqAPsnvvBhvwuU2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=hUD+5/k5; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SAEuEXtJ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742849694; x=1774385694;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=Ih3dm7Ri0bjLLtlXwUEcgqHbaGBSlGEP0HDK6EZifIc=;
-  b=SAEuEXtJ+PP4rnaToDDQ5xCzUyy7sK4I1atJCPkxzU4eeYIM75kZD+I5
-   Q3pbW79lWQMFtTuIyzRzb7NxflmLKtNve3rH7fOYzcghdrKSQtIr6MM34
-   gu5zKo74+dmQCJeHo12pluf30PLTGzLDHBGPdDgeK02/joVbQlLy7ag/u
-   PKzQVp6H3tOwS0HMLD/3ZoZZZRrS1iUcA9lEjFxocWM+u0Kp3/Tw69Wbm
-   0reOHhHLzARpu+jySUH90lVH3PIVecFsgn77ljfmZS9Xc/XICD+Qx/5Jc
-   OgMEhd9DShPu1hvh2CCITiXTZTcFJOBV/QgpZfeXaBeFCtdFhmpIyv2SE
-   w==;
-X-CSE-ConnectionGUID: yS8gWklDQgWgKzlxZUFOAw==
-X-CSE-MsgGUID: JY/TDvcXR2yKYBVEyLLRCg==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="43234423"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="43234423"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 13:54:52 -0700
-X-CSE-ConnectionGUID: Zmeu89P2QuSLb8C/HFnKng==
-X-CSE-MsgGUID: UofD0F5QTGu80NmV8o/snw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="124186393"
-Received: from xpardee-mobl.amr.corp.intel.com (HELO [10.124.17.122]) ([10.124.17.122])
-  by orviesa006-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 13:54:52 -0700
-Message-ID: <1405ee5c-de05-4f67-a747-98412e4b0017@linux.intel.com>
-Date: Mon, 24 Mar 2025 13:54:38 -0700
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hUD+5/k5"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2263428c8baso22105ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:55:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742849718; x=1743454518; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=SJZAWyK702yp/+V6xWF6Iyjy9VYZ5Ycm2xG91/mZwmw=;
+        b=hUD+5/k56uIYlpMFUazDKDs39OM0AlWK4lenNMJhfDyneSIQfxp284kMWTxQ2b5MWL
+         rFHVVxGAPbAjkiKWGjqsy1mo2psMxKaOcIMrADLo0WEPVBUtZ2r8mKDttqQyJun5/PpY
+         1g3pJod0s00wt+9Fe2xK4sOVe4RYqBoA9YFfvTCGzY1FaNUeYvEp+AJTSXwUb713RUje
+         1cSZUWyNs4Z6+7jZDEkKhJ3qu+6W8GEkANiaOpuo9VEEEft1rsjOiLdIhyIHp+EAnu8H
+         jxDCNBZIZ3sf4Wa0Q58K8Q0yNpvqRwTdM6XWaF3LDPAvhYcpTG/EkcFyTjMaPKHjNiGz
+         b/7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742849718; x=1743454518;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=SJZAWyK702yp/+V6xWF6Iyjy9VYZ5Ycm2xG91/mZwmw=;
+        b=usPqSnOPHntfUVjJpKJMcrwXhI94KY8HZOolJPht7PFLMHhhV2pnI+7URUIyWkVqr8
+         gkcHGEdtZtm2pX/wmARpqsgg/SRQc8KpxgIq3FgHXk19YJt1RwBpw79euV1zr+uJamKg
+         saG78upPtyyg9dQKk8wrxYnPgRXZ4mchPBK46mj8fEVpnjRN2czFJ3Hc2BKgvnQwNYjX
+         k5Fgq1x1FogyqW5eck2/1n+n5PYdioqO3CpuTSKq/TuPYW3H7ArY6sEqgMeikcrKr3Zo
+         Cd5NV4+i33FinXiAfTefb29Ul3MPqeVfe54iN6pMzClTaju/mJbNuGKXUAdVgwSbpdGP
+         +hJw==
+X-Forwarded-Encrypted: i=1; AJvYcCU7QyRl99rgqIR+iVEfcXytdeDwJIN8hv4QvdQmmZoet3penoEO7ey5nbNgrvJDqF+K3p0W3V3ztDR5ijs=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtuILbfAU7m/zoXxL/Fk6eLbqoBkEPoL3oyClSRAIOlY7+2Qln
+	bXpc2kZZ+C0pZu87IKruWVPghmVHj6a9LBmPOrhrQpX/n/35rddfoQSkrdrleg==
+X-Gm-Gg: ASbGncuuFks1ocGZxH+3ps2MkbPsiNJKDrio1Zv7IcsulwC3jZRO7RaiWIbvOH2FnHJ
+	ww1NYKhnXkZ/77Rrs4VXmqwQnwQopzgpeLUsJEp/P9S1rB3S9NuynqwFE2H7yU/pn8FQdMy6BtU
+	M9N9xbH4Yp0AR6M/Vs6jDnbhuuOurGxw+6xwnBuXqVFqf/jMpNf8LwTTxaTVyPXjXryBniNAgbB
+	BKbVGuEbGlS4UTVNxwY8boyxdfeyyBUKs1q35cZ9K0ShmoBnNG7hMtMKrAJweWACJrgPAq+XCAT
+	xx5gtlsJJd55o57uIDm2ic1Kxu8h2G//NeJ4kmrCSNtgIBiD6UGLjTEoUsDou4rrStMQk/Fz2+c
+	sRKbU
+X-Google-Smtp-Source: AGHT+IG9F5PSLKvrsG/1+/C/YXn/gqK0GsTfyBZXASZovMKJOL7OLRG2t86OvLD2uJ5lbIdwZOrGPw==
+X-Received: by 2002:a17:903:230f:b0:223:4b4f:160c with SMTP id d9443c01a7336-22799f80d15mr4372205ad.27.1742849717826;
+        Mon, 24 Mar 2025 13:55:17 -0700 (PDT)
+Received: from google.com (128.65.83.34.bc.googleusercontent.com. [34.83.65.128])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7390611bd23sm8770464b3a.96.2025.03.24.13.55.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 13:55:17 -0700 (PDT)
+Date: Mon, 24 Mar 2025 20:55:12 +0000
+From: Carlos Llamas <cmllamas@google.com>
+To: Dmitry Antipov <dmantipov@yandex.ru>
+Cc: Arve =?iso-8859-1?B?SGr4bm5lduVn?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joel@joelfernandes.org>,
+	Christian Brauner <brauner@kernel.org>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Colin Ian King <colin.i.king@gmail.com>,
+	linux-kernel@vger.kernel.org, lvc-project@linuxtesting.org,
+	syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com
+Subject: Re: [PATCH] binder: fix use-after-free in binderfs_evict_inode()
+Message-ID: <Z-HGsNgNGS2OwAZV@google.com>
+References: <20250324132427.922495-1-dmantipov@yandex.ru>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] platform/x86: intel/pmc: Fix iounmap call for valid
- addresses
-To: =?UTF-8?Q?Ilpo_J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Cc: irenic.rajneesh@gmail.com, david.e.box@linux.intel.com,
- Hans de Goede <hdegoede@redhat.com>, platform-driver-x86@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
-References: <20250319224410.788273-1-xi.pardee@linux.intel.com>
- <66c1a0f1-7d7a-da07-e80f-027964c503b8@linux.intel.com>
-Content-Language: en-US
-From: Xi Pardee <xi.pardee@linux.intel.com>
-In-Reply-To: <66c1a0f1-7d7a-da07-e80f-027964c503b8@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250324132427.922495-1-dmantipov@yandex.ru>
 
+On Mon, Mar 24, 2025 at 04:24:27PM +0300, Dmitry Antipov wrote:
+> Running 'stress-ng --binderfs 16 --timeout 300' under KASAN-enabled
+> kernel, I've noticed the following:
+> 
+> BUG: KASAN: slab-use-after-free in binderfs_evict_inode+0x1de/0x2d0
+> Write of size 8 at addr ffff88807379bc08 by task stress-ng-binde/1699
+> 
+> CPU: 0 UID: 0 PID: 1699 Comm: stress-ng-binde Not tainted 6.14.0-rc7-g586de92313fc-dirty #13
+> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.3-3.fc41 04/01/2014
+> Call Trace:
+>  <TASK>
+>  dump_stack_lvl+0x1c2/0x2a0
+>  ? __pfx_dump_stack_lvl+0x10/0x10
+>  ? __pfx__printk+0x10/0x10
+>  ? __pfx_lock_release+0x10/0x10
+>  ? __virt_addr_valid+0x18c/0x540
+>  ? __virt_addr_valid+0x469/0x540
+>  print_report+0x155/0x840
+>  ? __virt_addr_valid+0x18c/0x540
+>  ? __virt_addr_valid+0x469/0x540
+>  ? __phys_addr+0xba/0x170
+>  ? binderfs_evict_inode+0x1de/0x2d0
+>  kasan_report+0x147/0x180
+>  ? binderfs_evict_inode+0x1de/0x2d0
+>  binderfs_evict_inode+0x1de/0x2d0
+>  ? __pfx_binderfs_evict_inode+0x10/0x10
+>  evict+0x524/0x9f0
+>  ? __pfx_lock_release+0x10/0x10
+>  ? __pfx_evict+0x10/0x10
+>  ? do_raw_spin_unlock+0x4d/0x210
+>  ? _raw_spin_unlock+0x28/0x50
+>  ? iput+0x697/0x9b0
+>  __dentry_kill+0x209/0x660
+>  ? shrink_kill+0x8d/0x2c0
+>  shrink_kill+0xa9/0x2c0
+>  shrink_dentry_list+0x2e0/0x5e0
+>  shrink_dcache_parent+0xa2/0x2c0
+>  ? __pfx_shrink_dcache_parent+0x10/0x10
+>  ? __pfx_lock_release+0x10/0x10
+>  ? __pfx_do_raw_spin_lock+0x10/0x10
+>  do_one_tree+0x23/0xe0
+>  shrink_dcache_for_umount+0xa0/0x170
+>  generic_shutdown_super+0x67/0x390
+>  kill_litter_super+0x76/0xb0
+>  binderfs_kill_super+0x44/0x90
+>  deactivate_locked_super+0xb9/0x130
+>  cleanup_mnt+0x422/0x4c0
+>  ? lockdep_hardirqs_on+0x9d/0x150
+>  task_work_run+0x1d2/0x260
+>  ? __pfx_task_work_run+0x10/0x10
+>  resume_user_mode_work+0x52/0x60
+>  syscall_exit_to_user_mode+0x9a/0x120
+>  do_syscall_64+0x103/0x210
+>  ? asm_sysvec_apic_timer_interrupt+0x1a/0x20
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0xcac57b
+> Code: c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 f3 0f 1e fa 31 f6 e9 05 00 00 00 0f 1f 44 00 00 f3 0f 1e fa b8
+> RSP: 002b:00007ffecf4226a8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a6
+> RAX: 0000000000000000 RBX: 00007ffecf422720 RCX: 0000000000cac57b
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 00007ffecf422850
+> RBP: 00007ffecf422850 R08: 0000000028d06ab1 R09: 7fffffffffffffff
+> R10: 3fffffffffffffff R11: 0000000000000246 R12: 00007ffecf422718
+> R13: 00007ffecf422710 R14: 00007f478f87b658 R15: 00007ffecf422830
+>  </TASK>
+> 
+> Allocated by task 1705:
+>  kasan_save_track+0x3e/0x80
+>  __kasan_kmalloc+0x8f/0xa0
+>  __kmalloc_cache_noprof+0x213/0x3e0
+>  binderfs_binder_device_create+0x183/0xa80
+>  binder_ctl_ioctl+0x138/0x190
+>  __x64_sys_ioctl+0x120/0x1b0
+>  do_syscall_64+0xf6/0x210
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> Freed by task 1705:
+>  kasan_save_track+0x3e/0x80
+>  kasan_save_free_info+0x46/0x50
+>  __kasan_slab_free+0x62/0x70
+>  kfree+0x194/0x440
+>  evict+0x524/0x9f0
+>  do_unlinkat+0x390/0x5b0
+>  __x64_sys_unlink+0x47/0x50
+>  do_syscall_64+0xf6/0x210
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> 
+> This 'stress-ng' workload causes the concurrent deletions from
+> 'binder_devices' and so requires full-featured synchronization
+> to prevent list corruption.
+> 
+> I've found this issue independently but pretty sure that syzbot did
+> the same, so Reported-by: and Closes: should be applicable here as well.
+> 
+> Reported-by: syzbot+353d7b75658a95aa955a@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=353d7b75658a95aa955a
+> Fixes: e77aff5528a18 ("binderfs: fix use-after-free in binder_devices")
+> Signed-off-by: Dmitry Antipov <dmantipov@yandex.ru>
+> ---
 
-On 3/21/2025 7:49 AM, Ilpo Järvinen wrote:
-> On Wed, 19 Mar 2025, Xi Pardee wrote:
->
->> pmc_core_clean_structure() is called when generic_core_init() fails.
->> generic_core_init() could fail before ioremap() is called to get
->> a valid regbase for pmc structure. The current code does not check
->> regbase before calling iounmap(). Add a check to fix it.
-> Hi,
->
-> The approach that calls the same "full cleanup" function as deinit uses
-> when init function fails midway is very error prone as once again is
-> demonstrated. Is this the only error handling problem? Are you 100% sure?
->
-> Think about it, init is x% (<100%) done when it fails, then it calls a
-> function that tries to undo 100%. One needs to add lots of special logic
-> to handle 0-100% rollback into that cleanup function. The init function,
-> on the other hand, knows exactly where it was so it can rollback just what
-> is needed and not even try to rollback for more.
->
-> It's also very inconsistent to rollback ssram_pcidev in this file as ssram
-> code was moved into core_ssram so I think the ssram deinit should be moved
-> there too.
->
-> I think these init functions should be converted to do proper rollback
-> within the init function(s) to avoid very hard to track error handling.
-> I tried to check the error handling now in the pmc driver and after I
-> would have needed to jump between the files, I gave up.
+Thanks Dmitry, I was just running an almost identical fix. :)
 
-Hi,
-
-Thanks for the comments! Will move the error handing code for init 
-function to init function in next cycle.
-
-I will send out a new version to separate SSRAM device handling code to 
-a new PCI driver and remove ssram_pcidev field from pmcdev in next cycle.
-
-
-Thanks!
-
-Xi
-
->> Fixes: 1b8c7b843c00 ("platform/x86:intel/pmc: Discover PMC devices")
->> Signed-off-by: Xi Pardee <xi.pardee@linux.intel.com>
->> ---
->>   drivers/platform/x86/intel/pmc/core.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/platform/x86/intel/pmc/core.c b/drivers/platform/x86/intel/pmc/core.c
->> index 7a1d11f2914f..de5fc06232e5 100644
->> --- a/drivers/platform/x86/intel/pmc/core.c
->> +++ b/drivers/platform/x86/intel/pmc/core.c
->> @@ -1471,7 +1471,7 @@ static void pmc_core_clean_structure(struct platform_device *pdev)
->>   	for (i = 0; i < ARRAY_SIZE(pmcdev->pmcs); ++i) {
->>   		struct pmc *pmc = pmcdev->pmcs[i];
->>   
->> -		if (pmc)
->> +		if (pmc && pmc->regbase)
->>   			iounmap(pmc->regbase);
+Acked-by: Carlos Llamas <cmllamas@google.com>
