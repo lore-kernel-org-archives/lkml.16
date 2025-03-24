@@ -1,135 +1,105 @@
-Received: from mail-pj1-f74.google.com (mail-pj1-f74.google.com [209.85.216.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D698C267737
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993AD267B11;
+	Mon, 24 Mar 2025 17:33:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837600; cv=none; b=UGjlO7wwmZi6tyYw30rKHXoBQd+ugoO2ew/x4fVLom+Z3dNjA6DoeZF8XkURu1ht2MfonA5tpro5UBFHcqauaj5D0G+o12FtDl95VO5PuLVuRmK1yBg/5an9cnq0yvEwvg1B3uCg19neWrM9rP+uiee7kj8+htAAPVl0PdvUseY=
+	t=1742837600; cv=none; b=REVXqQS5o9LZ4EoyQ4/8bDCbpd266GYNz/QCLI4JM1ugnb0c9zYDc4zRKLisMhZQ54ytifugVzhOFZ7KWjX6DN+zUojkkakiM/93s7hxheFGwxm3rrFDeF+0tvPh8jlBeT+WvAHrW5E3cerrSPU9gWUBFQpr0vRkyhAwS4+enQQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742837600; c=relaxed/simple;
-	bh=b8kfH1giQMSXfOU3H4wI9RK8POw0T6oW++CyqKtBnX4=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=iwYzSCMNVsET5+fw18iYPXGuemwYn2OL3Dci/5aH3j+mtg6/86Rku1CJaK/AnJH9+HN4WesjCTGVYcWvzfqgRUj3vOMV/PNS3rNrX5PZDxnQ6BC9dI2S/xT7yHmcv07SQNLp+tPQlyIOgoKVri8whXHoPe8NgJqM35mG/Tt6obk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=IA7hcS2r; arc=none smtp.client-ip=209.85.216.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
+	bh=5PgJCWrmA1a2uCozek4IhhKjd8jMGQnwBUzXUFNdLdc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=F+Cg+tTQOG8g+wT8QV9vbgXmCd6tw/gsdFB5uGGiLnTySIT2KBe4elZQpNhWlmDYliwomn29yoM8W+kYEJx42Npm1iFGFahFPD8WH2e2SyWXV5ygIL8aeY0Bk1aKzcNqwQrNHP0vEiNgiVKfZ0XkdxU33QlPkUvKpnLRsH+23HA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lmig1M0o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IA7hcS2r"
-Received: by mail-pj1-f74.google.com with SMTP id 98e67ed59e1d1-2ff8340d547so8785118a91.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:33:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742837598; x=1743442398; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=bMvztk4Ls/rO+e5Y79A5cu9f2ky21aF113lmuU+q7KE=;
-        b=IA7hcS2rbox46IneULeeUT7ooW/SC3Kl4OLoLiTfiHgx9EoZScPA8Z2hfrVoTXbE1Z
-         qZ71qmHX7FzbU4vMr03IqxXwwOgP1dAxD4ygoEIgIee6xE8bepwc+oeP61W8O/PK6XgC
-         Wt2iCjdcxQFru3prWrGCMnLbHJwWJrBsnHB8ilCMD/sc7rfC8QkgbUKiRyW6NoKD6056
-         K8sYqQneeUMSa7EpNYby36tTO+5ineU9F6PMqvLqsMhhxChin7PYPRUMHXr7YkJlkfw5
-         Xgv8lFfn0qUAgdsZVa/a/G+uIntikYqD4GVdGQhbx8g8jqsSNu98+cx2alvYmMzx99xs
-         T1pw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837598; x=1743442398;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bMvztk4Ls/rO+e5Y79A5cu9f2ky21aF113lmuU+q7KE=;
-        b=K9pmZzyHv/joMAmL1UTfvE8gb6TpgsseIvod6lJo2JCyCf/VHunLhF2Kz4sugUIpQt
-         kM7DATdqjwYiVMDPQnpxWBMoF6cXIsvdFOg6hwe0H0edLPZSQs1wyM+q+tPbj4TUwl4o
-         OYFUlFArZ2RthUwDYUhbvMiGEPks7e9a6vgMC+MzOhJDyrVfZVSFUHGlIH+/bvssQoRz
-         4BBZCQLK3uc3Yi2opO6muaAd0Mx3lTHU4zEnZ2kaXLNs8iGK/cvG1Wh1yKEpc6gdPkrr
-         mka2CpjuIamzFHq1yOQ5nSU9a7LVel7/atz4BxkI4YIn0b7polWaFGH3m/iyRbheuT1M
-         mx2w==
-X-Forwarded-Encrypted: i=1; AJvYcCUjyZRQIXANPdcveUXSox5BBNbxbrEQNmOQLsW30WaMAVN39rZtP9Rk2+sbSe/M/N3Gd5RR1yy6HpKyl0U=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywex4/ullzg+1l2K22P2QLpO7TAX2LZjAMNSSqyN/gCyktL60fY
-	5xOIDfbYcxWKBLxkVKFUngVsR3+sfGuJ9kPUDW9m5V2r+AZ0K6BHbkeNXa0iS9BVD65G51YMOdX
-	nnjeF1A==
-X-Google-Smtp-Source: AGHT+IFuXYKM2/ft8zmuifG//R7KBXVtO7yRI38c7kXk4CZuqSwM8AkIrVF15vqaI/zOHCFLN1phpoVdAyVd
-X-Received: from pjd6.prod.google.com ([2002:a17:90b:54c6:b0:2e5:5ffc:1c36])
- (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:2b4e:b0:2ef:19d0:2261
- with SMTP id 98e67ed59e1d1-3030fe956damr23161099a91.16.1742837598383; Mon, 24
- Mar 2025 10:33:18 -0700 (PDT)
-Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 24 Mar 2025 17:30:56 +0000
-In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lmig1M0o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B0D7C4CEE4;
+	Mon, 24 Mar 2025 17:33:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742837600;
+	bh=5PgJCWrmA1a2uCozek4IhhKjd8jMGQnwBUzXUFNdLdc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lmig1M0ocMObm4YsaaDsh0k/5azy/Ys46N/oK536aHhWpeuNf/tHfUFRiMEcztSqU
+	 yk3A9AExIdhs6jZw1Jfbzx3u7clE17drz+0vtou+c4GHOgJqPSUV7y+KO6szBRIy26
+	 khN9wuKwlvHv9ZZkG4pOyhHwdQgELSvX4Z1BRJzRe7As5xWgRac7trN6s6INMRe9Gx
+	 aFebhacfWG++vBWqYxX9DScuWmlCJcTxwswfXuh7teBmZbmI22Azrho7h4gvAfca1X
+	 q4/EGf9cmUQaWPuf2vN1FcdBZIIYxV2IHLxTo60ByRvF4H+5Nj8WruvCFml9+Plhd4
+	 A8AnAJQ3VfY8w==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>,
+	Moritz Fischer <mdf@kernel.org>,
+	Wu Hao <hao.wu@intel.com>,
+	Xu Yilun <yilun.xu@intel.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-next@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	Tom Rix <trix@redhat.com>,
+	Marco Pagani <marpagan@redhat.com>,
+	Russ Weight <russ.weight@linux.dev>,
+	linux-fpga@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 04/10] fpga: tests: add module descriptions
+Date: Mon, 24 Mar 2025 18:32:29 +0100
+Message-Id: <20250324173242.1501003-4-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
+References: <20250324173242.1501003-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324173121.1275209-17-mizhang@google.com>
-Subject: [PATCH v4 16/38] KVM: x86: Rename vmx_vmentry/vmexit_ctrl() helpers
-From: Mingwei Zhang <mizhang@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Dapeng Mi <dapeng1.mi@linux.intel.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-Rename the two helpers vmx_vmentry/vmexit_ctrl() to
-vmx_get_initial_vmentry/vmexit_ctrl() to represent their real meaning.
+Modules without a description now cause a warning:
 
-No functional change intended.
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-bridge-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-mgr-test.o
+WARNING: modpost: missing MODULE_DESCRIPTION() in drivers/fpga/tests/fpga-region-test.o
 
-Suggested-by: Sean Christopherson <seanjc@google.com>
-Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/kvm/vmx/vmx.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/fpga/tests/fpga-bridge-test.c | 1 +
+ drivers/fpga/tests/fpga-mgr-test.c    | 1 +
+ drivers/fpga/tests/fpga-region-test.c | 1 +
+ 3 files changed, 3 insertions(+)
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index a4b5b6455c7b..acd3582874b9 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -4424,7 +4424,7 @@ static u32 vmx_pin_based_exec_ctrl(struct vcpu_vmx *vmx)
- 	return pin_based_exec_ctrl;
- }
+diff --git a/drivers/fpga/tests/fpga-bridge-test.c b/drivers/fpga/tests/fpga-bridge-test.c
+index b9ab29809e96..124ba40e32b1 100644
+--- a/drivers/fpga/tests/fpga-bridge-test.c
++++ b/drivers/fpga/tests/fpga-bridge-test.c
+@@ -170,4 +170,5 @@ static struct kunit_suite fpga_bridge_suite = {
  
--static u32 vmx_vmentry_ctrl(void)
-+static u32 vmx_get_initial_vmentry_ctrl(void)
- {
- 	u32 vmentry_ctrl = vmcs_config.vmentry_ctrl;
+ kunit_test_suite(fpga_bridge_suite);
  
-@@ -4441,7 +4441,7 @@ static u32 vmx_vmentry_ctrl(void)
- 	return vmentry_ctrl;
- }
++MODULE_DESCRIPTION("KUnit test for the FPGA Bridge");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/fpga/tests/fpga-mgr-test.c b/drivers/fpga/tests/fpga-mgr-test.c
+index 9cb37aefbac4..8748babb0504 100644
+--- a/drivers/fpga/tests/fpga-mgr-test.c
++++ b/drivers/fpga/tests/fpga-mgr-test.c
+@@ -330,4 +330,5 @@ static struct kunit_suite fpga_mgr_suite = {
  
--static u32 vmx_vmexit_ctrl(void)
-+static u32 vmx_get_initial_vmexit_ctrl(void)
- {
- 	u32 vmexit_ctrl = vmcs_config.vmexit_ctrl;
+ kunit_test_suite(fpga_mgr_suite);
  
-@@ -4806,10 +4806,10 @@ static void init_vmcs(struct vcpu_vmx *vmx)
- 	if (vmcs_config.vmentry_ctrl & VM_ENTRY_LOAD_IA32_PAT)
- 		vmcs_write64(GUEST_IA32_PAT, vmx->vcpu.arch.pat);
++MODULE_DESCRIPTION("KUnit test for the FPGA Manager");
+ MODULE_LICENSE("GPL");
+diff --git a/drivers/fpga/tests/fpga-region-test.c b/drivers/fpga/tests/fpga-region-test.c
+index 6a108cafded8..020ceac48509 100644
+--- a/drivers/fpga/tests/fpga-region-test.c
++++ b/drivers/fpga/tests/fpga-region-test.c
+@@ -214,4 +214,5 @@ static struct kunit_suite fpga_region_suite = {
  
--	vm_exit_controls_set(vmx, vmx_vmexit_ctrl());
-+	vm_exit_controls_set(vmx, vmx_get_initial_vmexit_ctrl());
+ kunit_test_suite(fpga_region_suite);
  
- 	/* 22.2.1, 20.8.1 */
--	vm_entry_controls_set(vmx, vmx_vmentry_ctrl());
-+	vm_entry_controls_set(vmx, vmx_get_initial_vmentry_ctrl());
- 
- 	vmx->vcpu.arch.cr0_guest_owned_bits = vmx_l1_guest_owned_cr0_bits();
- 	vmcs_writel(CR0_GUEST_HOST_MASK, ~vmx->vcpu.arch.cr0_guest_owned_bits);
++MODULE_DESCRIPTION("KUnit test for the FPGA Region");
+ MODULE_LICENSE("GPL");
 -- 
-2.49.0.395.g12beb8f557-goog
+2.39.5
 
