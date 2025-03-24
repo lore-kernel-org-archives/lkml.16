@@ -1,41 +1,47 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCF5725EFB8;
-	Mon, 24 Mar 2025 16:09:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC2226158E;
+	Mon, 24 Mar 2025 16:10:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742832560; cv=none; b=DanO3YXg2Qw5P8EnOeCxeUi0Fce8QC6+mlt2ejQSzuN+/TENtX3VVNYHBfkZ/8EebetYSOm506y9geekHq+qTvbkqlOK10T3xijBdTXruMiLJlHupVUBQ8sy9U1sebHdWj00WY5FeGgiREyOvlGfwvDLTK4FJf6fHedAjl/BktQ=
+	t=1742832618; cv=none; b=secT5tmOoZjyfXb4Ec0s/pSJjTZvGi2BDxSTyqW2ZKnLmH45kMNHjDs5LDz9Gs+ySoAZI8ReBTFKTk9dVR1j63/GNiE58/Vm3essC8hk9MJjzKJ5o2SBolgYw9LO5BU4rDlX3K+vj6kvnIZEMkmZ9yP8ncDHho32fZNC6Nhqv5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742832560; c=relaxed/simple;
-	bh=dW2mHsbafla5tl6HOgIHdUFxukxCuwK2/r4vlOcdr8A=;
+	s=arc-20240116; t=1742832618; c=relaxed/simple;
+	bh=VRNuMZ46YoefRymfk92bpusxS2YiPpYOHdDtSJvUv28=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MO96JkC+PeusYxCNmMdAgVE3032t6u0JtdcXEoM51kf7MKOVPbRivYTuLrJIlmiLoxV/p34vfYXvavx9C0mbovM9yNPqyrersFr+8oYcxdTwenI2zf9M88P901qbkSuaqnxnHytrBc+4gJtf57h7ivEpZBPLOYP8bhyVuPDZSG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UUPp+PgA; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=AC8FXZForh1CfzPUGtoAyvKo6eZmvZnyY7FtpeNWFQyaG7a3P5n0ImVkL7i3Qw6wSLuSgPTlq3keaqx+TNHP/OtDjdkgROfauGsHUK8NDHwC9Z8fJjEKX01yNn+7o6vla9Y8uboBxQp7KAen9OpQHx41HIfRjnDjpAGccWPrNW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihDM1Lzc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UUPp+PgA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF5A2C4CEDD;
-	Mon, 24 Mar 2025 16:09:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihDM1Lzc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42D5C4CEDD;
+	Mon, 24 Mar 2025 16:10:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742832560;
-	bh=dW2mHsbafla5tl6HOgIHdUFxukxCuwK2/r4vlOcdr8A=;
+	s=k20201202; t=1742832615;
+	bh=VRNuMZ46YoefRymfk92bpusxS2YiPpYOHdDtSJvUv28=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UUPp+PgAEdBUUGJc/nn3Elx1H0pmey+Jw8QUF0dnOwRbWrXkVACB8QoZ5MxkMRWBD
-	 fRQPlwZXjLNphZxUCNeKGlCqFzhnJ0P4WMMnqLNxokjxEij+N3iIs5cH69ZgGW09rK
-	 Fk9O0sQlNtVlBlF71VJztkrjx37Wi+E9V1uvaj5J5AEPpWUqFuNm5pXbsuHaVY9nq2
-	 83YvPbnz+Pfz5gFB0CbS6UnYiN38MZHeDdLNYAAfCwc1XxJS2ECf5Jk3neQ+qOh/WO
-	 LP9kJCna2jQw4Ic24uvOVY+PxJtMsyntWVxJNCiHHsVR2tC8IQwnvzx/qjaWaFLivm
-	 3bO2pjEvCLHkg==
-Date: Mon, 24 Mar 2025 11:09:18 -0500
+	b=ihDM1LzcyF7ntp/L6yv553qVXhlfA2d21lvEo2ba33p7z5XZxNhVG6BXieL8rA0rf
+	 hHLHAn1CFEkTehALove7hl1eijCG/cuefvE6IIEkdGJhIyS+RTSk0GYtnrsl6Kct3U
+	 mCNRwfIym40mhLadEy6sXjEUdJAEPY3+bKQSpIx0VHlikBVxrVnguI5PNp5cL54NWi
+	 QzIu9/OYTN3o74c3AxAxILmJ1QhagtOTQKTMVgljsQ6SM4TLwwaztInWEbgS5hL2A1
+	 A2jEUCr3mRkcx6mhlPcKEUuF0FIc8iu1iM4UdFPPPlY6WRM+jJeJfYDg253Jp8JA43
+	 Op41GcNd0aiMQ==
+Date: Mon, 24 Mar 2025 11:10:14 -0500
 From: "Rob Herring (Arm)" <robh@kernel.org>
 To: Goran =?utf-8?B?UmHEkWVub3ZpxIc=?= <goran.radni@gmail.com>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, devicetree@vger.kernel.org,
-	Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
-	Goran =?utf-8?B?UmHEkWVub3ZpxIc=?= <gradenovic@ultratronik.de>
-Subject: Re: [PATCH v2 1/4] dt-bindings: vendor-prefixes: Add Ultratronik
-Message-ID: <174283255844.156394.6968260022481776351.robh@kernel.org>
+Cc: Goran =?utf-8?B?UmHEkWVub3ZpxIc=?= <gradenovic@ultratronik.de>,
+	linux-arm-kernel@lists.infradead.org,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	linux-stm32@st-md-mailman.stormreply.com,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] dt-bindings: arm: stm32: Document Ultratronik's
+ Fly board DT binding
+Message-ID: <174283261429.162935.4991717491782236222.robh@kernel.org>
 References: <20250321111821.361419-1-goran.radni@gmail.com>
- <20250321111821.361419-2-goran.radni@gmail.com>
+ <20250321111821.361419-4-goran.radni@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -45,19 +51,19 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250321111821.361419-2-goran.radni@gmail.com>
+In-Reply-To: <20250321111821.361419-4-goran.radni@gmail.com>
 
 
-On Fri, 21 Mar 2025 12:18:16 +0100, Goran Rađenović wrote:
+On Fri, 21 Mar 2025 12:18:18 +0100, Goran Rađenović wrote:
 > From: Goran Rađenović <gradenovic@ultratronik.de>
 > 
-> Ultratronik GmbH is a German electronics company:
-> https://www.ultratronik-ems.de/
+> This commit documents ultra-fly-sbc devicetree binding based on
+> STM32MP157 SoC.
 > 
 > Signed-off-by: Goran Rađenović <gradenovic@ultratronik.de>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.yaml | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/arm/stm32/stm32.yaml | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Acked-by: Rob Herring (Arm) <robh@kernel.org>
