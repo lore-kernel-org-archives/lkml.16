@@ -1,221 +1,110 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4500325D8E1;
-	Mon, 24 Mar 2025 10:21:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C4091E522;
+	Mon, 24 Mar 2025 10:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.132.182.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742811684; cv=none; b=Oxc9XShpHkzgHxGFdFCpVx+ZxyWzuenqVGo/kiLtIOmDkhduXHj3A3ojB56sxeziAO7mCjHW3v6lIORWfxhNub7YLCMIjOSnTVqfKZP+C4vokDr1PInrRFASc5KV9fQtq/X8WUGxQPAOCzcHoJeOjmX6US3Sepw16E6diQ+lImM=
+	t=1742811686; cv=none; b=MOuQ6ShN24i4AlKjgxBtOejnKl7/+HCCP/40CMKQdEVCWbgtF8h3g0ACBNLG8vRkdkQkmP9rHlWROGvB+l/Y8tT6Y65fepK12baLsBrXLDXZf2qmCzywC3hX1OScJV7/+TbaXu+1hzZOkuJ1C9kLYFycDF1R8L/4JZorkhq6xvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742811684; c=relaxed/simple;
-	bh=PWcff70uYRGeT65DOi87ho91eVgfvmx3lFZ5193ituU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=As/jc9p6JrTcbbRNG5nrqBZiTJnCsVvlnpCteoA3DimTeFtAqkFsbZEwfI5wZgH4x5o5toJHqJXjPyxF5NQEz+aPSlhFackzzw+0fqnZ+QpN3pbsgd8c5SH0CjGOI/XeCIU62WCRedQkeVYZBREmahpzYGlXNjE7YfgLviKISUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=axKC2kFi; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742811686; c=relaxed/simple;
+	bh=ox3nsjplR00PH6bCPDedTPwGXbTcF87dCS2/KJ6ajis=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=MyLoNAZ+b6dh+NSEuPqPjtwP8Vn1acuoaEoEaG39e1thJJCyrt3bM7/NOD/N8apFg0whSy5Uvgr+CmQBFp9LJcyB1ACIxKAMGOuRmpKv9OER+Bvh4n6vINxvdkU0iNf9A9P5ieD7RQbKv1FrNI/ir8mPKdrede25AGtkC0gb34U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com; spf=pass smtp.mailfrom=foss.st.com; dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b=XdTQiGyN; arc=none smtp.client-ip=185.132.182.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foss.st.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foss.st.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="axKC2kFi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742811684; x=1774347684;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=PWcff70uYRGeT65DOi87ho91eVgfvmx3lFZ5193ituU=;
-  b=axKC2kFiCVZzvwUJFbfRdYSCh8zdPLfnKzsNeN15haFh+tVlqGlx0Ic/
-   CeutQN+M+x2QtzXwgoR0ov3BRTpbxX2S+MxNuXifIaGoGtdwVZKDGBA7O
-   lGRLjMcupaTOVtOy2c3Jm7fHyZFhDbmDbF1U8el6ki9rAadTEmOQM8G6S
-   hM3I1ZCkoZ69BAlr4Ggx2s82AerlHU86u6/ctFEndzqchH2lAKOGWgOE0
-   sVqzO2ZGujeMGfEAz9aLHujWDDG4yggdW9UnwfVTuAw3oKaefNnHt8YLJ
-   At0AdAf+H8vBBRGfE2zjSIp25mpFxcXbsW6+M8Du58EFuvvoayvS8RX4j
-   w==;
-X-CSE-ConnectionGUID: 3JTNAvFgTva7CXOTysIGrw==
-X-CSE-MsgGUID: Rm5fp37aTrKkkewD1LcgvQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11382"; a="43895170"
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="43895170"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 03:21:23 -0700
-X-CSE-ConnectionGUID: XNOMQ1H/Q7GZRb74Gm5BHQ==
-X-CSE-MsgGUID: jvHZhpUkTNidwGl+cyC7Ew==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="124169532"
-Received: from smile.fi.intel.com ([10.237.72.58])
-  by fmviesa008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 03:21:17 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1twevi-00000005JJX-01o8;
-	Mon, 24 Mar 2025 12:21:14 +0200
-Date: Mon, 24 Mar 2025 12:21:13 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>,
-	Michael Hennerich <Michael.Hennerich@analog.com>,
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nuno Sa <nuno.sa@analog.com>,
-	Olivier Moysan <olivier.moysan@foss.st.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Javier Carrasco <javier.carrasco.cruz@gmail.com>,
-	Guillaume Stols <gstols@baylibre.com>,
-	Trevor Gamblin <tgamblin@baylibre.com>,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>,
-	Matteo Martelli <matteomartelli3@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Alisa-Dariana Roman <alisadariana@gmail.com>,
-	Michael Walle <michael@walle.cc>,
-	Herve Codina <herve.codina@bootlin.com>,
-	Thomas Bonnefille <thomas.bonnefille@bootlin.com>,
-	Dragos Bogdan <dragos.bogdan@analog.com>, linux-iio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/5] iio: adc: ad7405: add ad7405 driver
-Message-ID: <Z-EyGWpu_hjgEUYO@smile.fi.intel.com>
-References: <20250324090813.2775011-1-pop.ioan-daniel@analog.com>
- <20250324090813.2775011-6-pop.ioan-daniel@analog.com>
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="XdTQiGyN"
+Received: from pps.filterd (m0288072.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O7ilKu011526;
+	Mon, 24 Mar 2025 11:21:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=selector1; bh=
+	VgcK61C1ClW+Bsv+nkLDe43OxgHSNo7fk3rpTcQgFK8=; b=XdTQiGyNpFJcJ7Yz
+	4ms/Nfk+xdVzp//FaxZbXEnnZlCWPLaMUALtg+cNzN1CFTwz5Aad33+EEUWSjJfT
+	i0Bc5Qdo9DQmkk1Y2Z7Xh2CQ2Hj8ePd7NFad5mlw4wc/u6NCeWpOuyicdiPrA/Li
+	6LjfyNBHNrMcpX38nb33bNf0Hs97xU9PbqmfHaSN0iNiGM3zMiJKITo37bGKytwl
+	0sW4leqlqZQF0R57dPQTBPzFAvyn4UDKTczlBiW7HAJ86cf9NJ30AvueWDApCTR/
+	z4tY9Nku9xrIBUiJ3gjyx1t/A3ZA30OkLvCUUyN61k3+wybe8uYsUnPgVVj4NkYc
+	svyLpQ==
+Received: from beta.dmz-ap.st.com (beta.dmz-ap.st.com [138.198.100.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 45hkgr78c4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 11:21:09 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-ap.st.com (STMicroelectronics) with ESMTP id 4E7114004A;
+	Mon, 24 Mar 2025 11:20:00 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 359C580B78C;
+	Mon, 24 Mar 2025 11:19:07 +0100 (CET)
+Received: from [10.48.87.62] (10.48.87.62) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.39; Mon, 24 Mar
+ 2025 11:19:06 +0100
+Message-ID: <b99576c5-cc9f-455a-aa58-ce5a0489a5a9@foss.st.com>
+Date: Mon, 24 Mar 2025 11:19:05 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250324090813.2775011-6-pop.ioan-daniel@analog.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-
-On Mon, Mar 24, 2025 at 11:08:00AM +0200, Pop Ioan Daniel wrote:
-> Add support for the AD7405/ADUM770x, a high performance isolated ADC,
-> 1-channel, 16-bit with a second-order Σ-Δ modulator that converts an
-> analog input signal into a high speed, single-bit data stream.
-
-Datasheet: tag?
-
-> Signed-off-by: Pop Ioan Daniel <pop.ioan-daniel@analog.com>
-
-...
-
-The list of headers is semi-random and unordered. Please, follow IWYU principle
-and fix the ordering as well.
-
-> +#include <linux/module.h>
-> +#include <linux/log2.h>
-> +#include <linux/clk.h>
-> +#include <linux/platform_device.h>
-
-> +#include <linux/of.h>
-
-No of.h in the new code, please.
-
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/backend.h>
-
-Move this group...
-
-> +#include <linux/util_macros.h>
-> +#include <linux/regulator/consumer.h>
-> +
-
-...somewhere here as other (recent) drivers do.
-
-...
-
-> +#define AD7405_DEFAULT_DEC_RATE 1024
-
-What is the units?
-
-...
-
-> +const unsigned int ad7405_dec_rates[] = {
-> +		4096, 2048, 1024, 512, 256, 128, 64, 32,
-
-Too much TABbed.
-
-> +};
-
-...
-
-> +struct ad7405_chip_info {
-> +	const char *name;
-> +	unsigned int num_channels;
-> +	unsigned int max_rate;
-> +	unsigned int min_rate;
-> +	struct iio_chan_spec channel[3];
-> +	const unsigned long *available_mask;
-
-`pahole` has been run and this is the best choice, right?
-
-> +};
-> +
-> +struct ad7405_state {
-
-Ditto.
-
-> +	struct iio_backend *back;
-> +	struct clk *axi_clk_gen;
-> +	/* lock to protect multiple accesses to the device registers */
-> +	struct mutex lock;
-> +	struct regmap *regmap;
-> +	struct iio_info iio_info;
-> +	const struct ad7405_chip_info *info;
-> +	unsigned int sample_frequency_tbl[ARRAY_SIZE(ad7405_dec_rates)];
-> +	unsigned int sample_frequency;
-> +	unsigned int ref_frequency;
-> +};
-
-...
-
-> +static void ad7405_fill_samp_freq_table(struct ad7405_state *st)
-> +{
-> +	int i;
-
-Why signed.
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(ad7405_dec_rates); i++)
-> +		st->sample_frequency_tbl[i] = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, ad7405_dec_rates[i]);
-
-This is too long even for relaxed mode...
-
-> +}
-
-...
-
-> +static int ad7405_set_sampling_rate(struct iio_dev *indio_dev,
-> +				    const struct iio_chan_spec *chan,
-> +				    unsigned int samp_rate)
-> +{
-> +	struct ad7405_state *st = iio_priv(indio_dev);
-> +	unsigned int dec_rate, idx;
-> +	int ret;
-> +
-> +	dec_rate = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, samp_rate);
-> +
-> +	idx = find_closest_descending(dec_rate, ad7405_dec_rates,
-> +				      ARRAY_SIZE(ad7405_dec_rates));
-> +
-> +	    dec_rate = ad7405_dec_rates[idx];
-
-Something happened there...
-
-> +	ret = iio_backend_set_dec_rate(st->back, dec_rate);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->sample_frequency = DIV_ROUND_CLOSEST_ULL(st->ref_frequency, dec_rate);
-> +
-> +	return 0;
-> +}
-
-...
-
-Okay, I'll stop here, this driver is not ready for upstream. Please, consult
-with your colleagues and do round of internal review before sending a new
-version.
-
--- 
-With Best Regards,
-Andy Shevchenko
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] spi: dt-bindings: st,stm32mp25-ospi: Make "resets" a
+ required property
+To: Krzysztof Kozlowski <krzk@kernel.org>, Mark Brown <broonie@kernel.org>,
+        Rob Herring <robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@foss.st.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+        <christophe.kerello@foss.st.com>, <linux-spi@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20250321-upstream_ospi_required_resets-v1-0-9aa4702e3ae2@foss.st.com>
+ <20250321-upstream_ospi_required_resets-v1-1-9aa4702e3ae2@foss.st.com>
+ <688c619d-0e20-496a-ae24-d62ab34f93ab@kernel.org>
+Content-Language: en-US
+From: Patrice CHOTARD <patrice.chotard@foss.st.com>
+In-Reply-To: <688c619d-0e20-496a-ae24-d62ab34f93ab@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: EQNCAS1NODE3.st.com (10.75.129.80) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
 
 
+
+On 3/21/25 11:13, Krzysztof Kozlowski wrote:
+> On 21/03/2025 10:44, Patrice Chotard wrote:
+>> Make "resets" a required property.
+> 
+> Please explain why. This is technically an ABI break, so you please
+> provide explanation what sort of issue is being fixed.
+
+Hi
+
+Right, i will add more details
+
+Thanks
+Patrice
+
+> 
+>>
+>> Fixes: bed97e35786a ("dt-bindings: spi: Add STM32 OSPI controller")
+>> Signed-off-by: Patrice Chotard <patrice.chotard@foss.st.com>
+>> ---
+>>  Documentation/devicetree/bindings/spi/st,stm32mp25-ospi.yaml | 1 +
+>>  1 file changed, 1 insertion(+)
+> 
+> 
+> Best regards,
+> Krzysztof
