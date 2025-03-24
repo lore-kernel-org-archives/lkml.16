@@ -1,75 +1,93 @@
-Received: from out-170.mta1.migadu.com (out-170.mta1.migadu.com [95.215.58.170])
+Received: from out-177.mta1.migadu.com (out-177.mta1.migadu.com [95.215.58.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49AF318EB0
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:23:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 292E61DED49
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:23:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742851417; cv=none; b=o67cv7z8aMKimrts8G1ZkSwxCySPOG7Xu2Qb4d4VcXDGtqTPQ1UyVtYnQZSRp0zU/M0G9zfldNPhW+uYkJnEkr0PqsIhn9aHaNeLrN9+PxzIrs0OaslEkGJCUCB+1yniT9/L7bHsMuqPHjjwIxPiLB5SvGAPFG2xqncM+jVSGzs=
+	t=1742851420; cv=none; b=I1lcX+cYEj3cjrJwTK0mvd1o+Rh+kAYywFD19As32SGe7OWVoHA9yCpPBN1HrFkwr/qOJZaSCcWCWn3w3PdPmxIpdrwOs3KXcEA6MvDYRXqfRCTDnv7UuW4Fd8a04P38wStXOVa5VTfNVuf825S2wdnkkFmoHg34o/x3N4cIa9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742851417; c=relaxed/simple;
-	bh=UTUdJW+tKk3vPZgT3TJ0AeN9SvekcKX07d1L4HTLMJ8=;
+	s=arc-20240116; t=1742851420; c=relaxed/simple;
+	bh=9q0ODkVQidS84KHZzHyv5sB0zr3Ltf0bT65GkznigYs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hdm5VrsY+6P49unM1QoRmggZgqF6KgCjkICVNbzW42Biga3teWmDvLVe8cw5spoGZ+nxYRB348qYl95HLqFgwyCBA61TYgksEXvubVQ7/uOOTTCZkPsqQOtXLbMP5C47fvUMr1TYtMeGDCZktLpiafyyoTHXH2cgP3AYKerMkPc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vsqvG6+r; arc=none smtp.client-ip=95.215.58.170
+	 In-Reply-To:Content-Type; b=YX4pDj7pdY67xeKjdiYF7XqNO+mtlrjNgQuopYX1H4kjwwRjjey+yrMM/cdprABCWfMCaDSErtuetLAvI3jGlXoHyOQJldIB2Qas++uos1Qj7q70SrwlIh7X8bIKW6MSqc37xxv8WDLpHExNNoEuFV4nE78vAB7z8kVChd8lqrI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=wtzVG2so; arc=none smtp.client-ip=95.215.58.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vsqvG6+r"
-Message-ID: <6b946a9c-8c62-44aa-8127-da06d23fbfaa@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="wtzVG2so"
+Message-ID: <2b899796-b9fc-49ef-a4a7-858baa90a36b@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742851412;
+	t=1742851416;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=pkafT/a29tMauOrN+7qyryvVtizh0X2ZoWPRcBdOIhg=;
-	b=vsqvG6+rheqIoX1skLe40fwx1nmLhUIdshosnAdhGgFu4J5pYAv62A8UksQlze7gHOtJy6
-	KXEMTgvRgvZ1bJXE/BV1JqIrQdsDmF1vnG3zu7AacmEFgzUKSYbx43k2yfuOfrxltEGgJw
-	76Z7qNLpD1+bt5Y6+HK5tqyKVPWNZpQ=
-Date: Mon, 24 Mar 2025 15:51:04 -0500
+	bh=W3m1925IKks24wn+QOG/lyq6S2HBNE+NB9T3y5BDpzw=;
+	b=wtzVG2so1rR+/e/i009TM0XljXC88N1i9zynl2njzrQK0THnfeaZJpo1/wihqhaFulTmwZ
+	64bwfZ7qeosmxlxwQpJi4I5kkc8rcP6bNoc70YqvnjiYCRSiC5n2x83F69ogA4KjAkjLO5
+	Hgrz/QhTBNtarfNGjXmxQSqyRHAVE5U=
+Date: Mon, 24 Mar 2025 16:15:24 -0500
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH for-next 0/2] ASoC: Add Intel machine driver support for
- CS35L56 on SSP
-To: Richard Fitzgerald <rf@opensource.cirrus.com>, broonie@kernel.org
-Cc: yung-chuan.liao@linux.intel.com, linux-sound@vger.kernel.org,
+Subject: Re: [PATCH 1/3] ASoC: SDCA: Create DAPM widgets and routes from DisCo
+To: Charles Keepax <ckeepax@opensource.cirrus.com>, broonie@kernel.org
+Cc: lgirdwood@gmail.com, yung-chuan.liao@linux.intel.com,
+ peter.ujfalusi@linux.intel.com, linux-sound@vger.kernel.org,
  linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-References: <20250304145010.288082-1-rf@opensource.cirrus.com>
+References: <20250321163928.793301-1-ckeepax@opensource.cirrus.com>
+ <20250321163928.793301-2-ckeepax@opensource.cirrus.com>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Pierre-Louis Bossart <pierre-louis.bossart@linux.dev>
-In-Reply-To: <20250304145010.288082-1-rf@opensource.cirrus.com>
+In-Reply-To: <20250321163928.793301-2-ckeepax@opensource.cirrus.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
-On 3/4/25 08:50, Richard Fitzgerald wrote:
-> This adds support to the Intel machine drivers for CS35L56 codecs on
-> Intel SSP port using TDM. Also adds the match entries for this on
-> Tigerlake systems.
+Thanks for starting this Charles.
+
+> Use the previously parsed DisCo information from ACPI to create DAPM
+> widgets and routes representing a SDCA Function. For the most part SDCA
+> maps well to the DAPM abstractions.
+
+except when it doesn't, eh?
+
+> The primary point of interest is the SDCA Power Domain Entities
+> (PDEs), which actually control the power status of the device. Whilst
+> these PDEs are the primary widgets the other parts of the SDCA graph
+> are added to maintain a consistency with the hardware abstract, and
+> allow routing to take effect.
 > 
-> Richard Fitzgerald (2):
->   ASoC: Intel: Add sof_cs35l56 driver for CS35L56 on SSP2.
->   ASoC: Intel: tgl-match: Add CS35L56 on SSP2 for CDB35L56-FOUR board
+> Other minor points of slightly complexity include, the Group Entities
+> (GEs) these set the value of several other controls, typically
+> Selector Units (SUs) for enabling a cetain jack configuration. These
+> are easily modelled creating a single control and sharing it among
+> the controlled muxes.
 
-It'd be worth explaining why sof_ssp_amp.c is not good enough?
+It wasn't able to follow the last sentence, what are 'these'?
 
-It's been used for CS35L41, what's different with the L56 that would require a new machine driver?
+I am not sure we can expose and control any SUs since their configuration is set in hardware depending on the GE settings. IIRC the SU values should be considered as read-only.
+ 
+> SDCA also has a slight habit of having fully connected paths, relying
+> more on activating the PDEs to enable functionality. This doesn't map
+> quite so perfectly to DAPM which considers the path a reason to power
+> the PDE. Whilst in the current specification Mixer Units are defined as
+> fixed-function, in DAPM we create a virtual control for each input. This
+> allows paths to be connected/disconnected, providing a more ASoC style
+> approach to managing the power.
 
+Humm, maybe my analysis was too naive but the SDCA PDE seemed like a DAPM power supply to me.
+When a path becomes active, DAPM turns on the power for you, and power is turned off some time after the path becomes inactive.
 
->  MAINTAINERS                                   |   1 +
->  include/sound/soc-acpi-intel-ssp-common.h     |   2 +
->  sound/soc/intel/boards/Kconfig                |  15 ++
->  sound/soc/intel/boards/Makefile               |   2 +
->  sound/soc/intel/boards/sof_cs35l56.c          | 254 ++++++++++++++++++
->  .../intel/common/soc-acpi-intel-ssp-common.c  |   1 +
->  .../intel/common/soc-acpi-intel-tgl-match.c   |   5 +
->  7 files changed, 280 insertions(+)
->  create mode 100644 sound/soc/intel/boards/sof_cs35l56.c
-> 
+Why would we need to have a control to force the power to be turned on? 
+And there are quite a few topologies without any Mixer Units so can we depend on a solution that's not applicable across all topologies?
+And last PDEs are typically related to terminals, while Mixer Units are usually for host-generated streams.
+
+It would also help to define which power levels you wanted to control for PDEs. For me, only PS0 and PS3 can currently be modeled, I have no idea how PS1 with its degraded quality would be used, and PS2 depends on firmware.
+
 
