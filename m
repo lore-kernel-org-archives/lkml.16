@@ -1,92 +1,110 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6B4525EFA3
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:55:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE1A013A41F;
+	Mon, 24 Mar 2025 15:57:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742831757; cv=none; b=hWA0W7XnK6FjZOYGEpC5UxnIyQ2ORA2a/er/FdMBV7u+mZBhRlNl4FmsqFHp1XCHjCdYJ+r5jFPAZdRmUX9kLZ06qRx9jgyVnJPQkJELUtuCcksa4FoTCAYcKQMvqLcQChlo6nkdz3zght8xIv2Tvcqv+0pq/8jorH1I+KLM204=
+	t=1742831830; cv=none; b=vCNk+OwhWb+wyMbIbuP60npqFl1iiZv2r41sycO0V81hpWLQg9azsSPf95EfxMLsnr+IEsiRDSzSRHFydqalWYfllXADXEJGU64XhJPn4hEsre1zUXXUcxTKNKYGU0Yl8RTVgPgtJgl1EOcDZDupU8sKu08BNPergZz0x6ZTVpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742831757; c=relaxed/simple;
-	bh=E7MXANfcSJrvYujKHPC17ZdDs45EXn/081PhwnmONyw=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=X9xamodCZjMMvnD9lN017CionDxROeQ3D/5qYfV7wlLK2TtUyt8IIBmWrHqQkNVtetnwwbR0Lw9msooTm4+j97FPP613IP1J5gdLCeCAmtUpG2pWxo9ER7IB63+NKg8Fvh+JTg6/Vj2KavAbto/7Tt56js3EPI7SzPsq1uAZp/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC70AC4CEDD;
-	Mon, 24 Mar 2025 15:55:55 +0000 (UTC)
-Date: Mon, 24 Mar 2025 11:56:37 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: Pat Cody <patcody@meta.com>
-Cc: <mingo@redhat.com>, <peterz@infradead.org>, <juri.lelli@redhat.com>,
- <vincent.guittot@linaro.org>, <dietmar.eggemann@arm.com>,
- <bsegall@google.com>, <mgorman@suse.de>, <vschneid@redhat.com>,
- <linux-kernel@vger.kernel.org>, <riel@surriel.com>, <kernel-team@meta.com>,
- <stable@kernel.org>
-Subject: Re: [PATCH] sched/fair: Add null pointer check to
- pick_next_entity()
-Message-ID: <20250324115637.26379f8c@gandalf.local.home>
-In-Reply-To: <20250320173438.3562449-2-patcody@meta.com>
-References: <20250320173438.3562449-2-patcody@meta.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1742831830; c=relaxed/simple;
+	bh=jfjnwEkBLi3PfQdxPsqUKhh+jSE868y00jgyIrGrW6A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IS1Zl/tze4Vd6vqeVtLWD5gyn/NM6SBJ836r4s0jm4z0zFQRDWnoyyA19B9UGSnSohzViGkVw+uePLgba5sb4Qrkwx1Q2OfMo7XyKPRNUlUlr/pFigB73BWcDUq705I/FLwNg//Mfg1VsshFcC71EdfSCD5HFz+cInUo3Cyqwyw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XRXdpi2d; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XRXdpi2d"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1742831829; x=1774367829;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jfjnwEkBLi3PfQdxPsqUKhh+jSE868y00jgyIrGrW6A=;
+  b=XRXdpi2d6KjtCDWOVvw7qLO0wfeJg2tZGc5BaDxK3Z6H2WioW2mXPT/S
+   kSk6KlQamm2Yq54tPNwJ/7Z9YC9jxclMaqGTbEY5HppMN2X32K+sb0YA7
+   6ObspecdQC/mxddDuacJpIQVD7WK+E6oTbZx7PtcIGtK20GnKjF2vZA5K
+   oPzB4vDRJHvhMLNfrU22mtk023BBEommmWZPcAHUHomoCTQd3vjP1ELhe
+   cNf8EAoozJJLEnh6EtL1Zr3DZ6QW9gWMyaocB3I95CpLJpT452llR7KJ8
+   dNW37+DwiROg8rQIdkZSn1lAuJhB+qltaCsiqZaN2Es0T/CV9CBj3uZbR
+   w==;
+X-CSE-ConnectionGUID: kFkwW+hzQW+01eJTbO/MXg==
+X-CSE-MsgGUID: t1fS9etJSluzn7tGEQ0SZw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="61570145"
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="61570145"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 08:57:08 -0700
+X-CSE-ConnectionGUID: 84dOsVTaRh+IT2+lIuCNRQ==
+X-CSE-MsgGUID: ila8i/3ATJq9kS8fbM7mkw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
+   d="scan'208";a="124039803"
+Received: from smile.fi.intel.com ([10.237.72.58])
+  by orviesa010.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 08:57:05 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1twkAg-00000005UQO-29nK;
+	Mon, 24 Mar 2025 17:57:02 +0200
+Date: Mon, 24 Mar 2025 17:57:02 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: "Russell King (Oracle)" <linux@armlinux.org.uk>
+Cc: linux-usb@vger.kernel.org, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH net v3 1/2] net: =?utf-8?Q?phy?=
+ =?utf-8?Q?=3A_Introduce_PHY=5FID=5FSIZE_?= =?utf-8?B?4oCU?= minimum size for
+ PHY ID string
+Message-ID: <Z-GAzlPEVR8p5l7-@smile.fi.intel.com>
+References: <20250324144751.1271761-1-andriy.shevchenko@linux.intel.com>
+ <20250324144751.1271761-2-andriy.shevchenko@linux.intel.com>
+ <Z-F07j7tlez_94aK@shell.armlinux.org.uk>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Z-F07j7tlez_94aK@shell.armlinux.org.uk>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, 20 Mar 2025 10:34:39 -0700
-Pat Cody <patcody@meta.com> wrote:
-
-> pick_eevdf() can return null, resulting in a null pointer dereference
-> crash in pick_next_entity()
+On Mon, Mar 24, 2025 at 03:06:22PM +0000, Russell King (Oracle) wrote:
+> On Mon, Mar 24, 2025 at 04:39:29PM +0200, Andy Shevchenko wrote:
+> > The PHY_ID_FMT defines the format specifier "%s:%02x" to form
+> > the PHY ID string, where the maximum of the first part is defined
+> > in MII_BUS_ID_SIZE, including NUL terminator, and the second part
+> > is implied to be 3 as the maximum address is limited to 32, meaning
+> > that 2 hex digits is more than enough, plus ':' (colon) delimiter.
+> > However, some drivers, which are using PHY_ID_FMT, customise buffer
+> > size and do that incorrectly. Introduce a new constant PHY_ID_SIZE
+> > that makes the minimum required size explicit, so drivers are
+> > encouraged to use it.
+> > 
+> > Suggested-by: "Russell King (Oracle)" <linux@armlinux.org.uk>
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> The other call site of pick_eevdf() can already handle a null pointer,
-> and pick_next_entity() can already return null as well. Add an extra
-> check to handle the null return here.
-
-Have you actually triggered this?
-
+> Reviewed-by: Russell King (Oracle) <rmk+kernel@armlinux.org.uk>
 > 
-> Cc: stable@kernel.org
-> Fixes: f12e148892ed ("sched/fair: Prepare pick_next_task() for delayed dequeue")
+> Thanks!
 
+Thank you!
 
-No signed-off-by.
+And just a bit of offtopic, can you look at
+20250312194921.103004-1-andriy.shevchenko@linux.intel.com
+and comment / apply?
 
-> ---
->  kernel/sched/fair.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index a553181dc764..f2157298cbce 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -5560,6 +5560,8 @@ pick_next_entity(struct rq *rq, struct cfs_rq *cfs_rq)
->  	}
->  
->  	struct sched_entity *se = pick_eevdf(cfs_rq);
-> +	if (!se)
-> +		return NULL;
+That is one of the only few obstacles for me (and perhaps others, like CIs)
+to enable CONFIG_WERROR when build with `make W=1` (implying existing defconfigs
+for x86).
 
-So the place that this is called is in pick_task_fair() which has:
+-- 
+With Best Regards,
+Andy Shevchenko
 
-	cfs_rq = &rq->cfs;
-	if (!cfs_rq->nr_queued)
-		return NULL;
-
-Where I believe it's a bug if cfs_rq->nr_queued > 0 and pick_eevdf() returns NULL.
-
-Which means in should never happen. Now, to be more robust, we could add a
-check for NULL, but this is not a fix, nor should it go to stable.
-
--- Steve
-
-
-
->  	if (se->sched_delayed) {
->  		dequeue_entities(rq, se, DEQUEUE_SLEEP | DEQUEUE_DELAYED);
->  		/*
 
