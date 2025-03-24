@@ -1,117 +1,296 @@
-Received: from mx0a-0064b401.pphosted.com (mx0a-0064b401.pphosted.com [205.220.166.238])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F7C2505C3;
-	Mon, 24 Mar 2025 07:14:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.166.238
+Received: from linux.microsoft.com (linux.microsoft.com [13.77.154.182])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 500972505C2;
+	Mon, 24 Mar 2025 07:14:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.77.154.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742800467; cv=none; b=o/jjqLZXEtGfrvoxfb9syQft+rKTCNvxrZf4f0L2prktti9yUXLsrBg3oxjce1MZEe63DlA71kuSecGv8xJdkF/O3lfZjsT/9Fl6lKWsTpP3vRz+nqyKt6u+09uNqyMoHsMVqJseKdDjYLPoxzA6iQs6pGdk50acKAXxQhJ/6AA=
+	t=1742800500; cv=none; b=a4YNmITPiEdY508PH03PufbjpOiPFSjlFnW7DBAQPMF4pWIvaj4+BwttrsDfl1tSIggL5QuYxJPUs2w9MZZrhBM9buqK0D7O3hiHtGLbON333fPA1iX1R77LVCefjL3EYBK1fTvHoXXNS/8WSM++/vR/Pg5kMAX/Yhcfr1rZlQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742800467; c=relaxed/simple;
-	bh=kEBFPGNKRmD867OotAxEjTRBog9XzrLq+S+e6KpyV3U=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=uurmA8ZGcCcqyPGtl+xSQSklkqSoOKAdO4Dnk+m3bPHl7VIknf4zwksUfTtwXzFviHBko+lhYBOUTCLbAUU+dWMMvRVyueWwLplyOiwoQZlK2hqBPxWJ+ugt0eFdDSRh+m7JxPeBtyLbauL6QPfXIEWoT+OuJ7JKQVgVY5nvFpI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; arc=none smtp.client-ip=205.220.166.238
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
-Received: from pps.filterd (m0250810.ppops.net [127.0.0.1])
-	by mx0a-0064b401.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O60OU9018528;
-	Mon, 24 Mar 2025 00:13:32 -0700
-Received: from ala-exchng02.corp.ad.wrs.com (ala-exchng02.wrs.com [147.11.82.254])
-	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 45hrg41m8u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-	Mon, 24 Mar 2025 00:13:32 -0700 (PDT)
-Received: from ala-exchng01.corp.ad.wrs.com (147.11.82.252) by
- ALA-EXCHNG02.corp.ad.wrs.com (147.11.82.254) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.43; Mon, 24 Mar 2025 00:13:31 -0700
-Received: from pek-lpg-core1.wrs.com (147.11.136.210) by
- ala-exchng01.corp.ad.wrs.com (147.11.82.252) with Microsoft SMTP Server id
- 15.1.2507.43 via Frontend Transport; Mon, 24 Mar 2025 00:13:29 -0700
-From: <jianqi.ren.cn@windriver.com>
-To: <stable@vger.kernel.org>
-CC: <patches@lists.linux.dev>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <jianqi.ren.cn@windriver.com>,
-        <sfrench@samba.org>, <linux-cifs@vger.kernel.org>,
-        <samba-technical@lists.samba.org>, <pc@manguebit.com>,
-        <stfrench@microsoft.com>
-Subject: [PATCH 5.10.y] smb: client: fix potential UAF in cifs_debug_files_proc_show()
-Date: Mon, 24 Mar 2025 15:13:28 +0800
-Message-ID: <20250324071328.3796049-1-jianqi.ren.cn@windriver.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742800500; c=relaxed/simple;
+	bh=PKa3zoVaphNmxES1mu8sRdzUr9GoOg0wu/NaPlC6DGI=;
+	h=From:To:Cc:Subject:Date:Message-Id; b=XjaX2UaVa6nsrbhFbvK6sbx2ZNelyzCNIiJXlEHey/E73YLGg610hrREYfXVaZWAQq1d3Diu7A3ZKnAHXqpZHu7LNuMFYTBraEuTfQXQxAONMZGHp7vD4svUllIiJ5ZVStcGgVhHIHovZMFrTCpvgbs8mB9NE50s2nLH3PMPmv8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com; spf=pass smtp.mailfrom=linux.microsoft.com; dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b=GvWUJxd2; arc=none smtp.client-ip=13.77.154.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.microsoft.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="GvWUJxd2"
+Received: by linux.microsoft.com (Postfix, from userid 1134)
+	id BEB182036571; Mon, 24 Mar 2025 00:14:53 -0700 (PDT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com BEB182036571
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+	s=default; t=1742800493;
+	bh=uTGr0WIymJiONKq41/5qrDmVxnOqzeOtFmJlRbTVln4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=GvWUJxd25qxb1PfzpwAI/9XKOEGfTqmMyEdOyfcqDICLxVJcNH53WvbLOUdU3X8w+
+	 aDyldzjVYRbm0sgfCjYM9ylMUn5cJwo71IS4p1onO49hTWveHXK6e2ISLvBCPrbVaQ
+	 p1guu84DpbDtOV/Jrdo3OXTHUMo6CukWBvf5optc=
+From: Shradha Gupta <shradhagupta@linux.microsoft.com>
+To: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>,
+	Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Shradha Gupta <shradhagupta@linux.microsoft.com>,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: [PATCH] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Date: Mon, 24 Mar 2025 00:14:52 -0700
+Message-Id: <1742800492-25911-1-git-send-email-shradhagupta@linux.microsoft.com>
+X-Mailer: git-send-email 1.8.3.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Authority-Analysis: v=2.4 cv=HZwUTjE8 c=1 sm=1 tr=0 ts=67e1061c cx=c_pps a=K4BcnWQioVPsTJd46EJO2w==:117 a=K4BcnWQioVPsTJd46EJO2w==:17 a=Vs1iUdzkB0EA:10 a=Li1AiuEPAAAA:8 a=VwQbUJbxAAAA:8 a=yMhMjlubAAAA:8 a=t7CeM3EgAAAA:8 a=F951-fjzzYaKpzs5SyQA:9
- a=qGKPP_lnpMOaqR3bcYHU:22 a=FdTzh2GWekK77mhwV6Dw:22
-X-Proofpoint-GUID: cr_-suQoDhQQRyiZKq9F-V8BUXZ247Th
-X-Proofpoint-ORIG-GUID: cr_-suQoDhQQRyiZKq9F-V8BUXZ247Th
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_03,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- suspectscore=0 bulkscore=0 phishscore=0 malwarescore=0 adultscore=0
- clxscore=1015 impostorscore=0 spamscore=0 priorityscore=1501
- mlxlogscore=995 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.21.0-2502280000
- definitions=main-2503240051
 
-From: Paulo Alcantara <pc@manguebit.com>
+Allow the KVP daemon to log the KVP updates triggered in the VM
+with a new debug flag(-d).
+When the daemon is started with this flag, it logs updates and debug
+information in /var/log/kvp_debug_file.log. This information comes
+in handy for debugging issues where the key-value pairs for certain
+pools show mismatch/incorrect values.
 
-[ Upstream commit ca545b7f0823f19db0f1148d59bc5e1a56634502 ]
-
-Skip sessions that are being teared down (status == SES_EXITING) to
-avoid UAF.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Paulo Alcantara (Red Hat) <pc@manguebit.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-[This patch removes lock/unlock operation in routine cifs_ses_exiting()
-for ses_lock is not present in v5.10 and not ported yet. ses->status
-is protected by a global lock, cifs_tcp_ses_lock, in v5.10.]
-Signed-off-by: Jianqi Ren <jianqi.ren.cn@windriver.com>
-Signed-off-by: He Zhe <zhe.he@windriver.com>
+Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 ---
-Verified the build test
----
- fs/cifs/cifs_debug.c | 2 ++
- fs/cifs/cifsglob.h   | 8 ++++++++
- 2 files changed, 10 insertions(+)
+ tools/hv/hv_kvp_daemon.c | 120 ++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 112 insertions(+), 8 deletions(-)
 
-diff --git a/fs/cifs/cifs_debug.c b/fs/cifs/cifs_debug.c
-index 53588d7517b4..8b88b0705481 100644
---- a/fs/cifs/cifs_debug.c
-+++ b/fs/cifs/cifs_debug.c
-@@ -183,6 +183,8 @@ static int cifs_debug_files_proc_show(struct seq_file *m, void *v)
- 				    tcp_ses_list);
- 		list_for_each(tmp, &server->smb_ses_list) {
- 			ses = list_entry(tmp, struct cifs_ses, smb_ses_list);
-+			if (cifs_ses_exiting(ses))
-+				continue;
- 			list_for_each(tmp1, &ses->tcon_list) {
- 				tcon = list_entry(tmp1, struct cifs_tcon, tcon_list);
- 				spin_lock(&tcon->open_file_lock);
-diff --git a/fs/cifs/cifsglob.h b/fs/cifs/cifsglob.h
-index 92a7628560cc..b4aa7cd3a914 100644
---- a/fs/cifs/cifsglob.h
-+++ b/fs/cifs/cifsglob.h
-@@ -2115,4 +2115,12 @@ static inline struct scatterlist *cifs_sg_set_buf(struct scatterlist *sg,
- 	return sg;
+diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+index 04ba035d67e9..1f8b02b17356 100644
+--- a/tools/hv/hv_kvp_daemon.c
++++ b/tools/hv/hv_kvp_daemon.c
+@@ -41,6 +41,7 @@
+ #include <net/if.h>
+ #include <limits.h>
+ #include <getopt.h>
++#include <time.h>
+ 
+ /*
+  * KVP protocol: The user mode component first registers with the
+@@ -83,6 +84,7 @@ enum {
+ };
+ 
+ static int in_hand_shake;
++static int debug_enabled;
+ 
+ static char *os_name = "";
+ static char *os_major = "";
+@@ -91,6 +93,7 @@ static char *processor_arch;
+ static char *os_build;
+ static char *os_version;
+ static char *lic_version = "Unknown version";
++static char debug_file[PATH_MAX];
+ static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
+ static struct utsname uts_buf;
+ 
+@@ -99,6 +102,7 @@ static struct utsname uts_buf;
+  */
+ 
+ #define KVP_CONFIG_LOC	"/var/lib/hyperv"
++#define KVP_DEBUG_LOC	"/var/log/"
+ 
+ #ifndef KVP_SCRIPTS_PATH
+ #define KVP_SCRIPTS_PATH "/usr/libexec/hypervkvpd/"
+@@ -153,6 +157,16 @@ static void kvp_release_lock(int pool)
+ 	}
  }
  
-+static inline bool cifs_ses_exiting(struct cifs_ses *ses)
++static void convert_tm_to_string(char *tm_str, size_t tm_str_size)
 +{
-+	bool ret;
++	struct tm tm;
++	time_t t;
 +
-+	ret = ses->status == CifsExiting;
-+	return ret;
++	time(&t);
++	gmtime_r(&t, &tm);
++	strftime(tm_str, tm_str_size, "%Y-%m-%dT%H:%M:%S", &tm);
 +}
 +
- #endif	/* _CIFS_GLOB_H */
+ static void kvp_update_file(int pool)
+ {
+ 	FILE *filep;
+@@ -183,6 +197,45 @@ static void kvp_update_file(int pool)
+ 	kvp_release_lock(pool);
+ }
+ 
++static void kvp_dump_initial_pools(int pool)
++{
++	FILE *debug_filep;
++	char tm_str[50];
++	int i, ret;
++
++	convert_tm_to_string(tm_str, sizeof(tm_str));
++
++	debug_filep = fopen(debug_file, "a");
++	if (!debug_filep) {
++		syslog(LOG_ERR, "Failed to open file: %s, pool: %d; error: %d%s",
++		       debug_file, pool, errno, strerror(errno));
++		return;
++	}
++
++	ret = fprintf(debug_filep, "===Start dumping the contents on pool %d ===\n",
++		      pool);
++	if (ret <= 0) {
++		syslog(LOG_ERR, "Failed to write to kvp debug file: %d", pool);
++		fclose(debug_filep);
++		return;
++	}
++
++	for (i = 0; i < kvp_file_info[pool].num_records; i++) {
++		ret = fprintf(debug_filep, "[%s]: pool: %d, %d/%d key=%s val=%s\n",
++			      tm_str, pool, i, kvp_file_info[pool].num_records,
++			      kvp_file_info[pool].records[i].key,
++			      kvp_file_info[pool].records[i].value);
++
++		if (ret <= 0) {
++			syslog(LOG_ERR, "Failed to write to kvp debug file: pool=%d, i=%u/%u",
++			       pool, i, kvp_file_info[pool].num_records);
++			break;
++		}
++	}
++
++	fclose(debug_filep);
++}
++
+ static void kvp_update_mem_state(int pool)
+ {
+ 	FILE *filep;
+@@ -270,6 +323,8 @@ static int kvp_file_init(void)
+ 			return 1;
+ 		kvp_file_info[i].num_records = 0;
+ 		kvp_update_mem_state(i);
++		if (debug_enabled)
++			kvp_dump_initial_pools(i);
+ 	}
+ 
+ 	return 0;
+@@ -321,14 +376,37 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 				 const __u8 *value, int value_size)
+ {
+-	int i;
+-	int num_records;
+ 	struct kvp_record *record;
++	FILE *filep = NULL;
++	int num_records;
++	char tm_str[50];
+ 	int num_blocks;
++	int i;
++
++	if (debug_enabled) {
++		filep = fopen(debug_file, "a");
++		if (!filep) {
++			syslog(LOG_ERR, "Failed to open file %s; error: %d",
++			       debug_file, errno);
++		} else {
++			convert_tm_to_string(tm_str, sizeof(tm_str));
++			fprintf(filep, "[%s]:%s: got a KVP: pool=%d key=%s val=%s\n",
++				__func__, tm_str, pool, key, value);
++		}
++	}
+ 
+ 	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
+-		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
++		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
++		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
++		       key, value);
++
++		if (filep) {
++			fprintf(filep, "[%s]: Got a too long key or value: pool=%d, key=%s, val=%s\n",
++				tm_str, pool, key, value);
++			fclose(filep);
++		}
+ 		return 1;
++	}
+ 
+ 	/*
+ 	 * First update the in-memory state.
+@@ -348,6 +426,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		 */
+ 		memcpy(record[i].value, value, value_size);
+ 		kvp_update_file(pool);
++		if (filep) {
++			fprintf(filep, "[%s]:%s: updated: pool=%d key=%s val=%s\n",
++				__func__, tm_str, pool, key, value);
++			fclose(filep);
++		}
+ 		return 0;
+ 	}
+ 
+@@ -359,8 +442,12 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 		record = realloc(record, sizeof(struct kvp_record) *
+ 			 ENTRIES_PER_BLOCK * (num_blocks + 1));
+ 
+-		if (record == NULL)
++		if (!record) {
++			if (filep)
++				fclose(filep);
++			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
+ 			return 1;
++		}
+ 		kvp_file_info[pool].num_blocks++;
+ 
+ 	}
+@@ -368,6 +455,12 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+ 	memcpy(record[i].key, key, key_size);
+ 	kvp_file_info[pool].records = record;
+ 	kvp_file_info[pool].num_records++;
++
++	if (filep) {
++		fprintf(filep, "[%s]:%s: added: pool=%d key=%s val=%s\n",
++			__func__, tm_str, pool, key, value);
++		fclose(filep);
++	}
+ 	kvp_update_file(pool);
+ 	return 0;
+ }
+@@ -1662,6 +1755,7 @@ void print_usage(char *argv[])
+ 	fprintf(stderr, "Usage: %s [options]\n"
+ 		"Options are:\n"
+ 		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
++		"  -d, --debug-enabled    Enable debug logs\n"
+ 		"  -h, --help             print this help\n", argv[0]);
+ }
+ 
+@@ -1681,12 +1775,13 @@ int main(int argc, char *argv[])
+ 	int daemonize = 1, long_index = 0, opt;
+ 
+ 	static struct option long_options[] = {
+-		{"help",	no_argument,	   0,  'h' },
+-		{"no-daemon",	no_argument,	   0,  'n' },
+-		{0,		0,		   0,  0   }
++		{"help",		no_argument,	   0,  'h' },
++		{"no-daemon",		no_argument,	   0,  'n' },
++		{"debug-enabled",	no_argument,	   0,  'd' },
++		{0,			0,		   0,  0   }
+ 	};
+ 
+-	while ((opt = getopt_long(argc, argv, "hn", long_options,
++	while ((opt = getopt_long(argc, argv, "hnd", long_options,
+ 				  &long_index)) != -1) {
+ 		switch (opt) {
+ 		case 'n':
+@@ -1695,6 +1790,9 @@ int main(int argc, char *argv[])
+ 		case 'h':
+ 			print_usage(argv);
+ 			exit(0);
++		case 'd':
++			debug_enabled = 1;
++			break;
+ 		default:
+ 			print_usage(argv);
+ 			exit(EXIT_FAILURE);
+@@ -1717,6 +1815,12 @@ int main(int argc, char *argv[])
+ 	 */
+ 	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
+ 
++	if (debug_enabled) {
++		sprintf(debug_file, "%s%s", KVP_DEBUG_LOC, "kvp_debug_file.log");
++		syslog(LOG_INFO, "Logging debug info in kvp_debug_file=%s",
++		       debug_file);
++	}
++
+ 	if (kvp_file_init()) {
+ 		syslog(LOG_ERR, "Failed to initialize the pools");
+ 		exit(EXIT_FAILURE);
 -- 
-2.25.1
+2.34.1
 
