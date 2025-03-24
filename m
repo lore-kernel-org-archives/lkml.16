@@ -1,290 +1,118 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F791C5D59;
-	Mon, 24 Mar 2025 13:29:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5983625DB03;
+	Mon, 24 Mar 2025 13:29:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742822944; cv=none; b=UA7iFWoDBsYxyJVuy4os5HrhP8NE+SHlNZwA/cDSchBERS3g0PYwRViB1JpliUVRPsScDoooGtVWu21nCsQn+AXnctDFmGNvUctEUV2230ixntvsEcDtqsuFRhWKd3qVWnpk4pv/6Uxy3nqS1JPo32V+Myiw5OPyD20vDmuXsQc=
+	t=1742822961; cv=none; b=YECO5ti2HHED4efttfML3xcEHuYyuAuRuKXQ2RZmHAIi9uCI4y7b+buXW5dwKl2OPkBTT0xop/kTFMfY53jOveSlmKT/qCA9+B7USxIhIdVfzq7493e1gU+xHG8hH4J30xIkvidLE2npZuEpE1l4A03L1jCh89yWRPDpoLKEqc8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742822944; c=relaxed/simple;
-	bh=Y46iSW+LggtctaAZhopKw9PxNLiHWQLWxsy0lpN4BA0=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fvYaQP/5U7H8MY8LCMcQUu6uVqh+iUaVfwmMZtA8+MHvt6UgCSyjp4wiv534O9uErPzpgHQWYnfxSjqPo/vSDRK5sy4rjb7nZU0UPI3oN5Al4QJMw6Ssq2DlQkaYD9hyqD1Gw81pYFotjMqFhN48LV0SZvfDA1R+/IkvfUsyGW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mFjUYwnT; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mFjUYwnT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742822942; x=1774358942;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version;
-  bh=Y46iSW+LggtctaAZhopKw9PxNLiHWQLWxsy0lpN4BA0=;
-  b=mFjUYwnTvZfhsnh4U/JUBi3KF3DvV6orhdb9qy0ke/y4tLYkGeAEWWLP
-   +YHv42X/vh2TibCVayGhpQpwavYEqAmPVDKz1KOUrFflSIzo84/y7elKC
-   /i0rk1LV6SuZ8mYi8/2BoRaB5QELh1mr2KBQMylrbhDZmIitDb0xoZq31
-   Z7T1qh6U6xM5OHsO+uXEh+qpcIwAKTP0maNsZoRv4pnHUlo9B3SZbz4bG
-   GSwLp7jo8psJmjVKd9HBMH+bSmjlVh9NEaPzm0tF00QYu/UHOE8BIjbrx
-   Is05H9xun1+O+Vu+Ng8NAUIeQmcfheVkCOY0+4mfQWE3xHj/Ii3EPjbJM
-   w==;
-X-CSE-ConnectionGUID: oscZYqJZSbmGO0Z87ak5kQ==
-X-CSE-MsgGUID: /Mon8GBET3CRBJsEwruFAw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="55024490"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="55024490"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 06:29:01 -0700
-X-CSE-ConnectionGUID: edUV5faiTliZm7AoBf2oBQ==
-X-CSE-MsgGUID: 5UO6frbsRq248I0YRPwwmA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="124033273"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.251])
-  by fmviesa007-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 06:28:58 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 24 Mar 2025 15:28:55 +0200 (EET)
-To: Hans Zhang <18255117159@163.com>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
-    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v6 1/5] PCI: Introduce generic capability search functions
-In-Reply-To: <20250323164852.430546-2-18255117159@163.com>
-Message-ID: <f89f3d00-4423-f65d-293e-8aec3be14418@linux.intel.com>
-References: <20250323164852.430546-1-18255117159@163.com> <20250323164852.430546-2-18255117159@163.com>
+	s=arc-20240116; t=1742822961; c=relaxed/simple;
+	bh=MooAaV+Kvm9Expqrkk8Zya9Xzw3n3iQ2WHNCdwo+e/g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=IW6kK2HWouFm+B1mvCuIYyDkgUuKMR83E51PiJoIcqB3O983FfuXLq9+2N4/H3g6VwZPDUlaoqsMFQBv+E0x6btddVvAtdiJDcHnf/sNsktVP5qhbPiC+E52gzKtZVN3NQu+4ZXYRPSLK+9bZ9AzOahezLuCedsNsXl3AMApKLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA2F0C4CEDD;
+	Mon, 24 Mar 2025 13:29:20 +0000 (UTC)
+Date: Mon, 24 Mar 2025 06:27:59 -0700
+From: Greg KH <greg@kroah.com>
+To: Sherry Sun <sherry.sun@nxp.com>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+	Linux Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the tty tree
+Message-ID: <2025032446-glass-volatile-d77d@gregkh>
+References: <20250324193728.4af92ccc@canb.auug.org.au>
+ <DB9PR04MB8429CD5C790E85AEBD7A7DE292A42@DB9PR04MB8429.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DB9PR04MB8429CD5C790E85AEBD7A7DE292A42@DB9PR04MB8429.eurprd04.prod.outlook.com>
 
-On Mon, 24 Mar 2025, Hans Zhang wrote:
-
-> Existing controller drivers (e.g., DWC, custom out-of-tree drivers)
-> duplicate logic for scanning PCI capability lists. This creates
-> maintenance burdens and risks inconsistencies.
+On Mon, Mar 24, 2025 at 09:10:01AM +0000, Sherry Sun wrote:
 > 
-> To resolve this:
 > 
-> Add pci_host_bridge_find_*capability() in pci-host-helpers.c, accepting
-> controller-specific read functions and device data as parameters.
+> > -----Original Message-----
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Sent: Monday, March 24, 2025 4:37 PM
+> > To: Greg KH <greg@kroah.com>
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Sherry Sun
+> > <sherry.sun@nxp.com>; Linux Kernel Mailing List <linux-
+> > kernel@vger.kernel.org>; Linux Next Mailing List <linux-next@vger.kernel.org>
+> > Subject: linux-next: build failure after merge of the tty tree
+> > 
+> > Hi all,
+> > 
+> > After merging the tty tree, today's linux-next build (x86_64 allmodconfig)
+> > failed like this:
+> > 
+> > drivers/tty/serial/fsl_lpuart.c: In function 'lpuart_poll_init':
+> > drivers/tty/serial/fsl_lpuart.c:642:29: error: unused variable 'sport' [-
+> > Werror=unused-variable]
+> >   642 |         struct lpuart_port *sport = container_of(port,
+> >       |                             ^~~~~
+> > drivers/tty/serial/fsl_lpuart.c: In function 'lpuart32_poll_init':
+> > drivers/tty/serial/fsl_lpuart.c:696:29: error: unused variable 'sport' [-
+> > Werror=unused-variable]
+> >   696 |         struct lpuart_port *sport = container_of(port, struct lpuart_port,
+> > port);
+> >       |                             ^~~~~
+> > cc1: all warnings being treated as errors
+> > 
 > 
-> This approach:
-> - Centralizes critical PCI capability scanning logic
-> - Allows flexible adaptation to varied hardware access methods
-> - Reduces future maintenance overhead
-> - Aligns with kernel code reuse best practices
+> Hi Stephen,
 > 
-> Signed-off-by: Hans Zhang <18255117159@163.com>
-> ---
-> Changes since v5:
-> https://lore.kernel.org/linux-pci/20250321163803.391056-2-18255117159@163.com
+> Thanks for the quick fix, actually I sent the fix patch earlier today, please check
+> https://lore.kernel.org/imx/20250324021051.162676-1-sherry.sun@nxp.com/T/
 > 
-> - If you put the helpers in drivers/pci/pci.c, they unnecessarily enlarge
->   the kernel's .text section even if it's known already at compile time
->   that they're never going to be used (e.g. on x86).
+> Best Regards
+> Sherry
 > 
-> - Move the API for find capabilitys to a new file called
->   pci-host-helpers.c.
-> 
-> Changes since v4:
-> https://lore.kernel.org/linux-pci/20250321101710.371480-2-18255117159@163.com
-> 
-> - Resolved [v4 1/4] compilation warning.
-> - The patch commit message were modified.
-> ---
->  drivers/pci/controller/Kconfig            | 17 ++++
->  drivers/pci/controller/Makefile           |  1 +
->  drivers/pci/controller/pci-host-helpers.c | 98 +++++++++++++++++++++++
->  drivers/pci/pci.h                         |  7 ++
->  4 files changed, 123 insertions(+)
->  create mode 100644 drivers/pci/controller/pci-host-helpers.c
-> 
-> diff --git a/drivers/pci/controller/Kconfig b/drivers/pci/controller/Kconfig
-> index 9800b7681054..0020a892a55b 100644
-> --- a/drivers/pci/controller/Kconfig
-> +++ b/drivers/pci/controller/Kconfig
-> @@ -132,6 +132,23 @@ config PCI_HOST_GENERIC
->  	  Say Y here if you want to support a simple generic PCI host
->  	  controller, such as the one emulated by kvmtool.
->  
-> +config PCI_HOST_HELPERS
-> +	bool
-> +	prompt "PCI Host Controller Helper Functions" if EXPERT
-> + 	help
-> +	  This provides common infrastructure for PCI host controller drivers to
-> +	  handle PCI capability scanning and other shared operations. The helper
-> +	  functions eliminate code duplication across controller drivers.
-> +
-> +	  These functions are used by PCI controller drivers that need to scan
-> +	  PCI capabilities using controller-specific access methods (e.g. when
-> +	  the controller is behind a non-standard configuration space).
-> +
-> +	  If you are using any PCI host controller drivers that require these
-> +	  helpers (such as DesignWare, Cadence, etc), this will be
-> +	  automatically selected. Say N unless you are developing a custom PCI
-> +	  host controller driver.
+> > Caused by commit
+> > 
+> >   3cc16ae096f1 ("tty: serial: fsl_lpuart: use port struct directly to simply code")
+> > 
+> > I have applied the following patch for today:
+> > 
+> > From: Stephen Rothwell <sfr@canb.auug.org.au>
+> > Date: Mon, 24 Mar 2025 19:10:57 +1100
+> > Subject: [PATCH] fix up for "tty: serial: fsl_lpuart: use port struct directly  to
+> > simply code"
+> > 
+> > Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > ---
+> >  drivers/tty/serial/fsl_lpuart.c | 3 ---
+> >  1 file changed, 3 deletions(-)
+> > 
+> > diff --git a/drivers/tty/serial/fsl_lpuart.c b/drivers/tty/serial/fsl_lpuart.c index
+> > 33eeefa6fa8f..4470966b826c 100644
+> > --- a/drivers/tty/serial/fsl_lpuart.c
+> > +++ b/drivers/tty/serial/fsl_lpuart.c
+> > @@ -639,8 +639,6 @@ static void lpuart32_wait_bit_set(struct uart_port
+> > *port, unsigned int offset,
+> > 
+> >  static int lpuart_poll_init(struct uart_port *port)  {
+> > -	struct lpuart_port *sport = container_of(port,
+> > -					struct lpuart_port, port);
+> >  	unsigned long flags;
+> >  	u8 fifo;
+> > 
+> > @@ -693,7 +691,6 @@ static int lpuart_poll_get_char(struct uart_port *port)
+> > static int lpuart32_poll_init(struct uart_port *port)  {
+> >  	unsigned long flags;
+> > -	struct lpuart_port *sport = container_of(port, struct lpuart_port,
+> > port);
+> >  	u32 fifo;
+> > 
+> >  	port->fifosize = 0;
+> > --
+> > 2.45.2
 
-Hi,
+I've applied the fix to my tree now, sorry for the delay.
 
-Does this need to be user selectable at all? What's the benefit? If 
-somebody is developing a driver, they can just as well add the select 
-clause in that driver to get it built.
-
---
- i.
-
-> +
->  config PCIE_HISI_ERR
->  	depends on ACPI_APEI_GHES && (ARM64 || COMPILE_TEST)
->  	bool "HiSilicon HIP PCIe controller error handling driver"
-> diff --git a/drivers/pci/controller/Makefile b/drivers/pci/controller/Makefile
-> index 038ccbd9e3ba..e80091eb7597 100644
-> --- a/drivers/pci/controller/Makefile
-> +++ b/drivers/pci/controller/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_PCIE_RCAR_HOST) += pcie-rcar.o pcie-rcar-host.o
->  obj-$(CONFIG_PCIE_RCAR_EP) += pcie-rcar.o pcie-rcar-ep.o
->  obj-$(CONFIG_PCI_HOST_COMMON) += pci-host-common.o
->  obj-$(CONFIG_PCI_HOST_GENERIC) += pci-host-generic.o
-> +obj-$(CONFIG_PCI_HOST_HELPERS) += pci-host-helpers.o
->  obj-$(CONFIG_PCI_HOST_THUNDER_ECAM) += pci-thunder-ecam.o
->  obj-$(CONFIG_PCI_HOST_THUNDER_PEM) += pci-thunder-pem.o
->  obj-$(CONFIG_PCIE_XILINX) += pcie-xilinx.o
-> diff --git a/drivers/pci/controller/pci-host-helpers.c b/drivers/pci/controller/pci-host-helpers.c
-> new file mode 100644
-> index 000000000000..cd261a281c60
-> --- /dev/null
-> +++ b/drivers/pci/controller/pci-host-helpers.c
-> @@ -0,0 +1,98 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * PCI Host Controller Helper Functions
-> + *
-> + * Copyright (C) 2025 Hans Zhang
-> + *
-> + * Author: Hans Zhang <18255117159@163.com>
-> + */
-> +
-> +#include <linux/pci.h>
-> +
-> +#include "../pci.h"
-> +
-> +/*
-> + * These interfaces resemble the pci_find_*capability() interfaces, but these
-> + * are for configuring host controllers, which are bridges *to* PCI devices but
-> + * are not PCI devices themselves.
-> + */
-> +static u8 __pci_host_bridge_find_next_cap(void *priv,
-> +					  pci_host_bridge_read_cfg read_cfg,
-> +					  u8 cap_ptr, u8 cap)
-> +{
-> +	u8 cap_id, next_cap_ptr;
-> +	u16 reg;
-> +
-> +	if (!cap_ptr)
-> +		return 0;
-> +
-> +	reg = read_cfg(priv, cap_ptr, 2);
-> +	cap_id = (reg & 0x00ff);
-> +
-> +	if (cap_id > PCI_CAP_ID_MAX)
-> +		return 0;
-> +
-> +	if (cap_id == cap)
-> +		return cap_ptr;
-> +
-> +	next_cap_ptr = (reg & 0xff00) >> 8;
-> +	return __pci_host_bridge_find_next_cap(priv, read_cfg, next_cap_ptr,
-> +					       cap);
-
-This is doing (tail) recursion?? Why??
-
-What should be done, IMO, is that code in __pci_find_next_cap_ttl() 
-refactored such that it can be reused instead of duplicating it in a 
-slightly different form here and the functions below.
-
-The capability list parser should be the same?
-
-> +}
-> +
-> +u8 pci_host_bridge_find_capability(void *priv,
-> +				   pci_host_bridge_read_cfg read_cfg, u8 cap)
-> +{
-> +	u8 next_cap_ptr;
-> +	u16 reg;
-> +
-> +	reg = read_cfg(priv, PCI_CAPABILITY_LIST, 2);
-> +	next_cap_ptr = (reg & 0x00ff);
-> +
-> +	return __pci_host_bridge_find_next_cap(priv, read_cfg, next_cap_ptr,
-> +					       cap);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_bridge_find_capability);
-> +
-> +static u16 pci_host_bridge_find_next_ext_capability(
-> +	void *priv, pci_host_bridge_read_cfg read_cfg, u16 start, u8 cap)
-> +{
-> +	u32 header;
-> +	int ttl;
-> +	int pos = PCI_CFG_SPACE_SIZE;
-> +
-> +	/* minimum 8 bytes per capability */
-> +	ttl = (PCI_CFG_SPACE_EXP_SIZE - PCI_CFG_SPACE_SIZE) / 8;
-> +
-> +	if (start)
-> +		pos = start;
-> +
-> +	header = read_cfg(priv, pos, 4);
-> +	/*
-> +	 * If we have no capabilities, this is indicated by cap ID,
-> +	 * cap version and next pointer all being 0.
-> +	 */
-> +	if (header == 0)
-> +		return 0;
-> +
-> +	while (ttl-- > 0) {
-> +		if (PCI_EXT_CAP_ID(header) == cap && pos != start)
-> +			return pos;
-> +
-> +		pos = PCI_EXT_CAP_NEXT(header);
-> +		if (pos < PCI_CFG_SPACE_SIZE)
-> +			break;
-> +
-> +		header = read_cfg(priv, pos, 4);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +u16 pci_host_bridge_find_ext_capability(void *priv,
-> +					pci_host_bridge_read_cfg read_cfg,
-> +					u8 cap)
-> +{
-> +	return pci_host_bridge_find_next_ext_capability(priv, read_cfg, 0, cap);
-> +}
-> +EXPORT_SYMBOL_GPL(pci_host_bridge_find_ext_capability);
-> diff --git a/drivers/pci/pci.h b/drivers/pci/pci.h
-> index 01e51db8d285..8d1c919cbfef 100644
-> --- a/drivers/pci/pci.h
-> +++ b/drivers/pci/pci.h
-> @@ -1034,4 +1034,11 @@ void pcim_release_region(struct pci_dev *pdev, int bar);
->  	(PCI_CONF1_ADDRESS(bus, dev, func, reg) | \
->  	 PCI_CONF1_EXT_REG(reg))
->  
-> +typedef u32 (*pci_host_bridge_read_cfg)(void *priv, int where, int size);
-> +u8 pci_host_bridge_find_capability(void *priv,
-> +				   pci_host_bridge_read_cfg read_cfg, u8 cap);
-> +u16 pci_host_bridge_find_ext_capability(void *priv,
-> +					pci_host_bridge_read_cfg read_cfg,
-> +					u8 cap);
-> +
->  #endif /* DRIVERS_PCI_H */
-> 
-
--- 
- i.
-
+greg k-h
