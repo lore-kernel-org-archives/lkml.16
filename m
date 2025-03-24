@@ -1,259 +1,243 @@
-Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4528119049B
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 22:34:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01C919049B;
+	Mon, 24 Mar 2025 22:34:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742855655; cv=none; b=HJdAHtgcw+EDmmkot1OFaD7CtkQ8Khlx+itz6SRWiPcEoPO1ovoRBVSBkKoV6ErI2r5iS4dA44SZY7MpEcrZVdoWdvSWoJvuyHxPLm4F2BcsOykraO8kiqVOFB0i+JTo7gFAWGh8V4CIJJ2ZrQIyw2TgC+PJDA4Ux1WzOD/mj3g=
+	t=1742855688; cv=none; b=KMDBGwREoiiOf6t2zyL6tMBKhYDZZfIhDzqQ87vqZwZPdlrwFFodB7kF0uTOrg+naxfJzM/fGuM4ID/RE/+XXHTXeg9roQhX7FsQpkxi5PeeCv3HhfIjt5u5lNKGvqJE3DR2tJtJUV3ErOhcmEonELY2GPAtnV7jzP70IXnJ7iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742855655; c=relaxed/simple;
-	bh=MSiI9gbj1+VQ8HHv6o1IiagRsxeKIMVRm3uQp9xMflw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uXnrBxnI3qkHgY/vMHFMTCfIJM2wIAVNBfqLRthSEVbALs/zFCI0bA5C6r6U2bbhnN0bgr/anHX369hYl6kwBTObRPwSlu7mU2D2ScqXyemulFCMlcdzW2/5f9cCXg8QnQpEhditraeV1dZ6GR+Tobel4funGtbTH4NQ/S95MNE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V70CCbKg; arc=none smtp.client-ip=209.85.128.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742855688; c=relaxed/simple;
+	bh=Vi1NzMDRhqogQCW68vwegbAdQ8YER+p1F3Pyameq8ps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e3RZHeCG7QBZmE+jwcBCGHz1Hw6HCGYGG/FU5/eIHa2hdkz88PM7pJHEs4qOWUcUrlfr11CcyXsv4Zby/LukO35thoj/u20JRVRs6vcoIDd/3nWfqJKhbMBIHaUeDC2kSWE7lq/QHa5+GfVbaS9B17S90p2aAaL3dhJIpFOGLJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sA3MJPAX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V70CCbKg"
-Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-6ff1e375a47so43588967b3.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:34:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742855653; x=1743460453; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JXW9Ba0yg/9do6JW2lVD4twSPOAKnKfAxL8vF9iY1Ls=;
-        b=V70CCbKglbvFgS+FIugCyhz+6kynpRsoMcaIEYwwrb5Iz4QVhObt+Z8sHMUnPjMGYO
-         UAAzOwA+heeE1jwOcAE8En2tzOZMnCaufWM2e4WegFuRfVJW4SQYSR5rR81EpP+zJD6g
-         vIdNaoEYFd2SKZSMpSPVERYL8CB6PVJPSWz99StlEJC/5AFIELnlZwNn/ppj3K1pIX7+
-         cvlwnfj+Z2sSC1SYSo6ZEF1jPoOnyBgXUatGxwGE7Nx9Hb2j+SDmRbtdJcHoo5tI4dsh
-         NC568U9yLjriG9vwrzdTB1sVLUTWTdvkRgyZcq1JFmyN1zIbKjqWECO5ouPkacbGkAjd
-         r0oQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742855653; x=1743460453;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JXW9Ba0yg/9do6JW2lVD4twSPOAKnKfAxL8vF9iY1Ls=;
-        b=nlKmODg3hEEmWpKi+rZlPaPGJSgV6lZUn3hetXiaVe7NdoUVM9RqRfY48GWHMRTflB
-         64mwlujBqDp7rMU11CYInXM/SNGWgQvOnxXyXOH2LbGekuKoiSDqmrYppSBWqqQ/e+Bs
-         8Gl1s3RHKZUC24YKU4DRvcvgjhlWXF8pcMlfr6Njqik+dCReksCdqN875AZabCCAz/dJ
-         VptqgQwwqMEPriVWF/jrHwt9bK6Mkhjtv2OjjiylOv44qdcAR/L0/H7DiKjf2H1MS44v
-         D77OhzERFJCMNjnhIlUABzgwLDLG+6YaXdGsXotGbLxsDEW0UXQ96fBOh5H0lSYum/uT
-         fbUQ==
-X-Gm-Message-State: AOJu0Yzt70ET6wXXUmMMw5GOtTkHdQBoCoH0NcZuJecg83cwcI3dD8U6
-	ZP8fRLfL1svvMnmrxHz5/xE2wn20wSiadtFbbzgXAZdksKqnU0z7pwn3PFqo+VslFUISkr8BZHE
-	runDUVGmr9uhCkskmJlZk3ZiJnfA=
-X-Gm-Gg: ASbGncv7LQaUmXehMkYE42LPkB58KyR/3CMu8pVroYqnEK0AZZxdtUcdsSr/TKuHYln
-	3QXOOQViG88vtT+thC+ddw9dhD9cSGx+FH0lGwHdip1mS330QpYXlHlK8Pn7cIvGGVyLNlCk3Zo
-	z6coUhKMV5t4wbYBzmUyPZyzrl
-X-Google-Smtp-Source: AGHT+IEAuhP7vvdOzarCdW0VuBfIcbVdJSz9H/zF3pCHpb16IT3KDy1crvUqwy7lhsLsmzsfQLcR6jkkbkjhhuB8rXs=
-X-Received: by 2002:a05:690c:6d0c:b0:700:a6a0:1e2e with SMTP id
- 00721157ae682-700ba9ba6camr198985667b3.0.1742855652804; Mon, 24 Mar 2025
- 15:34:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sA3MJPAX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07807C4CEDD;
+	Mon, 24 Mar 2025 22:34:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742855688;
+	bh=Vi1NzMDRhqogQCW68vwegbAdQ8YER+p1F3Pyameq8ps=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=sA3MJPAXo8PHThugpPhAUQ/aoelMEhTy0UtW3P+EKpCt96WJSyW32SPp0TRq8Icuk
+	 UeVh5ejO6yxoO2CTLPSF9493z8Bwtz13vyKrMTW7uNr8zLwRW/a07qOUv6+pZUNDJA
+	 k8i7hxaUDjqAKmRnRfrw8jR8dJGIKFoLyHtLvvVFqg3Wj9h2H6rj1T3loAvVObIFLv
+	 O702AmHcWO8yCcI707/6GRSr9nTaDlr4eqIxUGUBK1sbRFoheKSPMOHKsFo9JnrGKN
+	 yg39GG80odtia61Qyk31GQ38OA2KL2f7lQhZOX6JFwHOe/EQB1MLntwo0xaYxtxq7R
+	 AUoQ3IaJx7ZQw==
+Message-ID: <3a086834-9237-42df-a048-e30444c30cf9@kernel.org>
+Date: Mon, 24 Mar 2025 23:34:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250320185238.447458-1-jim.cromie@gmail.com> <20250320185238.447458-11-jim.cromie@gmail.com>
- <b1615fb9-4689-4121-a7d1-7e9c5d10282b@bootlin.com>
-In-Reply-To: <b1615fb9-4689-4121-a7d1-7e9c5d10282b@bootlin.com>
-From: jim.cromie@gmail.com
-Date: Mon, 24 Mar 2025 16:33:46 -0600
-X-Gm-Features: AQ5f1JqVlYB97GtfUO_TrCYVCq0ZeJs8JZLkz_f5qfP4oh5XPxHDfUpsv0ShhA8
-Message-ID: <CAJfuBxxRDpHSBY=AAbyT-gFSiaCkAbFtKap4NQ7MyQZ1CyR7EQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/59] dyndbg: replace classmap list with a vector
-To: Louis Chauvet <louis.chauvet@bootlin.com>
-Cc: linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	amd-gfx@lists.freedesktop.org, intel-gvt-dev@lists.freedesktop.org, 
-	intel-gfx@lists.freedesktop.org, intel-gfx-trybot@lists.freedesktop.org, 
-	jbaron@akamai.com, gregkh@linuxfoundation.org, ukaszb@chromium.org, 
-	daniel.vetter@ffwll.ch, tvrtko.ursulin@linux.intel.com, jani.nikula@intel.com, 
-	ville.syrjala@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Mar 24, 2025 at 9:08=E2=80=AFAM Louis Chauvet <louis.chauvet@bootli=
-n.com> wrote:
->
->
->
-> Le 20/03/2025 =C3=A0 19:51, Jim Cromie a =C3=A9crit :
-
-> Thanks for your explanation of __outvar! It makes sense. I never seen
-> this pattern anywhere in the kernel, maybe a simple doc comment is
-> enough to carry the information:
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC net-next v1] page_pool: import Jesper's page_pool
+ benchmark
+To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+ Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+ Jakub Kicinski <kuba@kernel.org>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgense?=
+ =?UTF-8?Q?n?= <toke@toke.dk>
+References: <20250309084118.3080950-1-almasrymina@google.com>
+Content-Language: en-US
+From: Jesper Dangaard Brouer <hawk@kernel.org>
+In-Reply-To: <20250309084118.3080950-1-almasrymina@google.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
 
-Im gonna pull it - Ive decided its misleading,
-since it looks like it does something that it cant do.
+On 09/03/2025 09.41, Mina Almasry wrote:
+> diff --git a/lib/bench/time_bench.c b/lib/bench/time_bench.c
+> new file mode 100644
+> index 000000000000..4f5314419644
+> --- /dev/null
+> +++ b/lib/bench/time_bench.c
+> @@ -0,0 +1,426 @@
+> +/*
+> + * Benchmarking code execution time inside the kernel
+> + *
+> + * Copyright (C) 2014, Red Hat, Inc., Jesper Dangaard Brouer
+> + *  for licensing details see kernel-base/COPYING
+> + */
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <linux/module.h>
+> +#include <linux/time.h>
+> +#include <linux/time_bench.h>
+> +
+> +#include <linux/perf_event.h> /* perf_event_create_kernel_counter() */
+> +
+> +/* For concurrency testing */
+> +#include <linux/completion.h>
+> +#include <linux/sched.h>
+> +#include <linux/workqueue.h>
+> +#include <linux/kthread.h>
+> +
+> +static int verbose = 1;
+> +
+> +/** TSC (Time-Stamp Counter) based **
+> + * See: linux/time_bench.h
+> + *  tsc_start_clock() and tsc_stop_clock()
+> + */
+> +
+> +/** Wall-clock based **
+> + */
+> +
+> +/** PMU (Performance Monitor Unit) based **
+> + */
+> +#define PERF_FORMAT					    \
+> +	(PERF_FORMAT_GROUP | PERF_FORMAT_ID |		    \
+> +	PERF_FORMAT_TOTAL_TIME_ENABLED |		    \
+> +	PERF_FORMAT_TOTAL_TIME_RUNNING)
+> +
+> +struct raw_perf_event {
+> +	uint64_t  config;  /* event */
+> +	uint64_t  config1; /* umask */
+> +	struct perf_event *save;
+> +	char *desc;
+> +};
+> +
+> +/* if HT is enable a maximum of 4 events (5 if one is instructions
+> + * retired can be specified, if HT is disabled a maximum of 8 (9 if
+> + * one is instructions retired) can be specified.
+> + *
+> + * From Table 19-1. Architectural Performance Events
+> + * Architectures Software Developer’s Manual Volume 3: System Programming Guide
+> + */
+> +struct raw_perf_event perf_events[] = {
+> +	{ 0x3c, 0x00, NULL, "Unhalted CPU Cycles" },
+> +	{ 0xc0, 0x00, NULL, "Instruction Retired" }
+> +};
+> +
+> +#define NUM_EVTS (sizeof(perf_events) / sizeof(struct raw_perf_event))
+> +
+> +/* WARNING: PMU config is currently broken!
+> + */
 
-a plain old comment would be enough, if its needed at all.
-__outvar was at least brief ;-)
+As the comment says PMU usage is in a broken state...
 
-In fact I did, but in a later patch. cleaning now.
+I've not used it for years... below config setup code doesn't enable PMU 
+correctly.
+The way I've activated it (in the past) is by loading (modprobe) the
+module under the `perf stat` commands, which does the correct setup, and
+then benchmark code can read the PMU counters.
+
+IMHO we should just remove all the PMU code (i.e. not upstream it).
+Unless, ACME can fix below setup code in seconds... else let's not bother.
+
+> +bool time_bench_PMU_config(bool enable)
+> +{
+> +	int i;
+> +	struct perf_event_attr perf_conf;
+> +	struct perf_event *perf_event;
+> +	int cpu;
+> +
+> +	preempt_disable();
+> +	cpu = smp_processor_id();
+> +	pr_info("DEBUG: cpu:%d\n", cpu);
+> +	preempt_enable();
+> +
+> +	memset(&perf_conf, 0, sizeof(struct perf_event_attr));
+> +	perf_conf.type           = PERF_TYPE_RAW;
+> +	perf_conf.size           = sizeof(struct perf_event_attr);
+> +	perf_conf.read_format    = PERF_FORMAT;
+> +	perf_conf.pinned         = 1;
+> +	perf_conf.exclude_user   = 1; /* No userspace events */
+> +	perf_conf.exclude_kernel = 0; /* Only kernel events */
+> +
+> +	for (i = 0; i < NUM_EVTS; i++) {
+> +		perf_conf.disabled = enable;
+> +		perf_conf.config = perf_events[i].config;
+> +		perf_conf.config1 = perf_events[i].config1;
+> +		if (verbose)
+> +			pr_info("%s() enable PMU counter: %s\n",
+> +				__func__, perf_events[i].desc);
+> +		perf_event = perf_event_create_kernel_counter(&perf_conf, cpu,
+> +						 NULL /* task */,
+> +						 NULL /* overflow_handler*/,
+> +						 NULL /* context */);
+> +		if (perf_event) {
+> +			perf_events[i].save = perf_event;
+> +			pr_info("%s():DEBUG perf_event success\n", __func__);
+> +
+> +			perf_event_enable(perf_event);
+> +		} else {
+> +			pr_info("%s():DEBUG perf_event is NULL\n", __func__);
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +EXPORT_SYMBOL_GPL(time_bench_PMU_config);
+
+Below code that reads the PMU registers are likely also flawed.
+ACME feel free to yell a me ;-)
+
+[...]
+ > +/** PMU (Performance Monitor Unit) based **
+ > + *
+ > + * Needed for calculating: Instructions Per Cycle (IPC)
+ > + * - The IPC number tell how efficient the CPU pipelining were
+ > + */
+ > +//lookup: perf_event_create_kernel_counter()
+ > +
+ > +bool time_bench_PMU_config(bool enable);
+ > +
+ > +/* Raw reading via rdpmc() using fixed counters
+ > + *
+ > + * From:https://github.com/andikleen/simple-pmu
+ > + */
+ > +enum {
+ > +	FIXED_SELECT = (1U << 30), /* == 0x40000000 */
+ > +	FIXED_INST_RETIRED_ANY      = 0,
+ > +	FIXED_CPU_CLK_UNHALTED_CORE = 1,
+ > +	FIXED_CPU_CLK_UNHALTED_REF  = 2,
+ > +};
+ > +
+ > +static __always_inline unsigned long long p_rdpmc(unsigned in)
+ > +{
+ > +	unsigned d, a;
+ > +
+ > +	asm volatile("rdpmc" : "=d" (d), "=a" (a) : "c" (in) : "memory");
+ > +	return ((unsigned long long)d << 32) | a;
+ > +}
+ > +
+ > +/* These PMU counter needs to be enabled, but I don't have the
+ > + * configure code implemented.  My current hack is running:
+ > + *  sudo perf stat -e cycles:k -e instructions:k insmod 
+lib/ring_queue_test.ko
+ > + */
+
+Here I spell out how I run the `insmod` under `perf stat`.
 
 
+ > +/* Reading all pipelined instruction */
+ > +static __always_inline unsigned long long pmc_inst(void)
+ > +{
+ > +	return p_rdpmc(FIXED_SELECT | FIXED_INST_RETIRED_ANY);
+ > +}
+ > +
+ > +/* Reading CPU clock cycles */
+ > +static __always_inline unsigned long long pmc_clk(void)
+ > +{
+ > +	return p_rdpmc(FIXED_SELECT | FIXED_CPU_CLK_UNHALTED_CORE);
+ > +}
+ > +
+ > +/* Raw reading via MSR rdmsr() is likely wrong
+ > + * FIXME: How can I know which raw MSR registers are conf for what?
+ > + */
+ > +#define MSR_IA32_PCM0 0x400000C1 /* PERFCTR0 */
+ > +#define MSR_IA32_PCM1 0x400000C2 /* PERFCTR1 */
+ > +#define MSR_IA32_PCM2 0x400000C3
+ > +static inline uint64_t msr_inst(unsigned long long *msr_result)
+ > +{
+ > +	return rdmsrl_safe(MSR_IA32_PCM0, msr_result);
+ > +}
 
->         /**
->          * ddebug_find_valid_class - Find a valid class for a
->          * given string
->          * @dt: debug table to inspect
->          * @class_string: string to match on
->          * @class_id: output pointer for the class_id value
->          *
->          * Returns: Pointer to the ddebug_class_map instance, if found.
->          * @class_id will be set to the id of this class. If no class
->          * matching @class_string is found, returns NULL and class_id is
->          * set to -ENOENT.
->          */
->
-> Or at maybe change the documentation of __outvar to be a bit more
-> explicit about how it works (I had difficulties to understand because a
-> lot of "magic macro" exist in the kernel and sometimes carry information
-> to the compiler, but this one is always empty):
->
->         /**
->          * __outvar - Denotes that an argument is used as an output
->          * value
->          * This macro does nothing apart clarify  for the reader that
->          * the parameter will be filled by the callee
->          */
->
-> With any of the modifications (feel free to reword them as you want):
->
-> Reviewed-by: Louis Chauvet <louis.chauvet@bootlin.com>
->
-> >   {
-> >       struct ddebug_class_map *map;
-> > -     int idx;
-> > +     int i, idx;
-> >
-> > -     list_for_each_entry(map, &dt->maps, link) {
-> > +     for (map =3D dt->classes, i =3D 0; i < dt->num_classes; i++, map+=
-+) {
-> >               idx =3D match_string(map->class_names, map->length, class=
-_string);
-> >               if (idx >=3D 0) {
-> >                       *class_id =3D idx + map->base;
-> > @@ -164,7 +167,6 @@ static struct ddebug_class_map *ddebug_find_valid_c=
-lass(struct ddebug_table cons
-> >       return NULL;
-> >   }
-> >
-> > -#define __outvar /* filled by callee */
-> >   /*
-> >    * Search the tables for _ddebug's which match the given `query' and
-> >    * apply the `flags' and `mask' to them.  Returns number of matching
-> > @@ -1122,9 +1124,10 @@ static void *ddebug_proc_next(struct seq_file *m=
-, void *p, loff_t *pos)
-> >
-> >   static const char *ddebug_class_name(struct ddebug_iter *iter, struct=
- _ddebug *dp)
-> >   {
-> > -     struct ddebug_class_map *map;
-> > +     struct ddebug_class_map *map =3D iter->table->classes;
-> > +     int i, nc =3D iter->table->num_classes;
-> >
-> > -     list_for_each_entry(map, &iter->table->maps, link)
-> > +     for (i =3D 0; i < nc; i++, map++)
-> >               if (class_in_range(dp->class_id, map))
-> >                       return map->class_names[dp->class_id - map->base]=
-;
-> >
-> > @@ -1208,30 +1211,31 @@ static const struct proc_ops proc_fops =3D {
-> >       .proc_write =3D ddebug_proc_write
-> >   };
-> >
-> > -static void ddebug_attach_module_classes(struct ddebug_table *dt,
-> > -                                      struct ddebug_class_map *classes=
-,
-> > -                                      int num_classes)
-> > +static void ddebug_attach_module_classes(struct ddebug_table *dt, stru=
-ct _ddebug_info *di)
-> >   {
-> >       struct ddebug_class_map *cm;
-> > -     int i, j, ct =3D 0;
-> > +     int i, nc =3D 0;
-> >
-> > -     for (cm =3D classes, i =3D 0; i < num_classes; i++, cm++) {
-> > +     /*
-> > +      * Find this module's classmaps in a subrange/wholerange of
-> > +      * the builtin/modular classmap vector/section.  Save the start
-> > +      * and length of the subrange at its edges.
-> > +      */
-> > +     for (cm =3D di->classes, i =3D 0; i < di->num_classes; i++, cm++)=
- {
-> >
-> >               if (!strcmp(cm->mod_name, dt->mod_name)) {
-> > -
-> > -                     v2pr_info("class[%d]: module:%s base:%d len:%d ty=
-:%d\n", i,
-> > -                               cm->mod_name, cm->base, cm->length, cm-=
->map_type);
-> > -
-> > -                     for (j =3D 0; j < cm->length; j++)
-> > -                             v3pr_info(" %d: %d %s\n", j + cm->base, j=
-,
-> > -                                       cm->class_names[j]);
-> > -
-> > -                     list_add(&cm->link, &dt->maps);
-> > -                     ct++;
-> > +                     if (!nc) {
-> > +                             v2pr_info("start subrange, class[%d]: mod=
-ule:%s base:%d len:%d ty:%d\n",
-> > +                                       i, cm->mod_name, cm->base, cm->=
-length, cm->map_type);
-> > +                             dt->classes =3D cm;
-> > +                     }
-> > +                     nc++;
-> >               }
-> >       }
-> > -     if (ct)
-> > -             vpr_info("module:%s attached %d classes\n", dt->mod_name,=
- ct);
-> > +     if (nc) {
-> > +             dt->num_classes =3D nc;
-> > +             vpr_info("module:%s attached %d classes\n", dt->mod_name,=
- nc);
-> > +     }
-> >   }
-> >
-> >   /*
-> > @@ -1263,10 +1267,9 @@ static int ddebug_add_module(struct _ddebug_info=
- *di, const char *modname)
-> >       dt->num_ddebugs =3D di->num_descs;
-> >
-> >       INIT_LIST_HEAD(&dt->link);
-> > -     INIT_LIST_HEAD(&dt->maps);
-> >
-> >       if (di->classes && di->num_classes)
-> > -             ddebug_attach_module_classes(dt, di->classes, di->num_cla=
-sses);
-> > +             ddebug_attach_module_classes(dt, di);
-> >
-> >       mutex_lock(&ddebug_lock);
-> >       list_add_tail(&dt->link, &ddebug_tables);
-> > @@ -1379,8 +1382,8 @@ static void ddebug_remove_all_tables(void)
-> >       mutex_lock(&ddebug_lock);
-> >       while (!list_empty(&ddebug_tables)) {
-> >               struct ddebug_table *dt =3D list_entry(ddebug_tables.next=
-,
-> > -                                                   struct ddebug_table=
-,
-> > -                                                   link);
-> > +                                                  struct ddebug_table,
-> > +                                                  link);
-> >               ddebug_table_free(dt);
-> >       }
-> >       mutex_unlock(&ddebug_lock);
->
-> --
-> Louis Chauvet, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
->
+
+--Jesper
