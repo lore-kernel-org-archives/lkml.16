@@ -1,97 +1,84 @@
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6D3C19E98A
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 346DC25A2B0;
+	Mon, 24 Mar 2025 07:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742802460; cv=none; b=K8erFU/mAF5QRj1qenMgF5KAbwXsC3J5ttCvC9X3ElXHdr8l2lQRoIPriY+eQlNtiEQ5nIGrwIKOBP6RuoP9anCmrAvTF5eEMMSEXMBNmFCXI7koap9QL6LPoXdJFxUjzhoT6WGMNy6nrBRbZwjdIa2XT0weREnncWj8l0/YGwo=
+	t=1742802461; cv=none; b=i3GYazYzCdodkkcJ9hgCt8h04+1KsS1skNkz63C5tHc9nAjo9KuExGSCJLheAo8OVLCLtDi19/HGISmsW6rduZf6C/y7IbqyMTKdC73SuSvnY+qOXPATmVBRjNUNB+Z74FGOYkYYMyWYz/fYe0ktcFnxpndq99QLpeTSsP4nPyg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742802460; c=relaxed/simple;
-	bh=LADn1kANv9yfbuyperCIqqOS/gvroECf2fXmlFm+UsU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b4V78GMfJrf8arcBSan8mlU4q8pbP+9x/njBgSDdHq0nWjP6b4tLT649x89iDPBSjplYwaqPNiyWsWiG1t6KN5Vz5go4kPIyLZoqR9NWjGFgjb35rit9aodgA5drnr+Skzeu4sqFmLN59shfIrNUCGZj587o4Aj97vPNxptUxFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=kFubLlqx; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742802461; c=relaxed/simple;
+	bh=6SxKcj4gUIOYK9hOLL2QqT3WFOWrHJL1z+V3xAU4HWY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tIN9u1AqD19Bs5SdamlOdp+wuJB/ZwKF6seMf0zjmlpzCQWpogS8wcXjmspPSaeJA8nSMxgz3NMhR5Lk7IqtS97d1eeD+20jj9It1O0D7BHoLeCuvncUUpRDwzv4I0f5bfzvB+Aqpe0yNWIpKX+m5EjvQwMRfazu+Zve7M582CU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D0tyseSF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kFubLlqx"
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-548409cd2a8so4460700e87.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 00:47:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742802457; x=1743407257; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LADn1kANv9yfbuyperCIqqOS/gvroECf2fXmlFm+UsU=;
-        b=kFubLlqxdANp2SaBSJ2+aCPynJ9e/fXGr5+x5KsTu0KEQ5Z1rx+KrlGUENa/0QMuaH
-         /5/t5mcT6gkVfaR4n3y/X4KhLEw2JF5yP0zVYJ5yn6ld+Be3LJKfWXuQ4TI1URgLrNyu
-         9pt0pjs7qtqpLpGcU23v782REk8MgkyBhtq3q261lfdA+Ru0hNFCI/VLzVSmB3pPHhOZ
-         GXl1S/WBnLQe7fRWeCtipLe48yeN+K+4eJtMm6SHFHLG5+EXn8A6BOwxzv8T1oQujO9E
-         u6crXoeupzIXprAianNGWSNTAU5ckrOsndm5I9CHxAlJWJ+6IFWixJtyZvchiCj8ozXq
-         58JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742802457; x=1743407257;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LADn1kANv9yfbuyperCIqqOS/gvroECf2fXmlFm+UsU=;
-        b=H+q9rbEABhQKRWNzu6tBgNg7UfStf94Qg3N7/K4MJ4c8rYwevoblaA970Nmesl64Dy
-         sc2Rt2spPDyAG/LxI1Yz3GtyYeLdyIluFFPi/pWK7GW/fSaoWjRqvrrB7fJguadpJTu5
-         +TfpJqP2TppYfez9euy3tgxj2cS02vgYIv0nWkiOy2zaPyAV5kylftKBuIcvZPx/v1JM
-         7W7QPiko2uk+Rc3F5y2lWgJTzqmP/77b4fj/ROVmlmqANLca90AArOTwN+rhZcsVXbca
-         TuXlPYcmRYcMZMSiJnGdNoxBzYE4cFMIjs9SLfoAnnhs3bHvXwe2lK6SN/KYvls+SuyT
-         lLZQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWWQ8SKoPLswftrUeIhOGjxUteOoGBwabdYJF1SGYCJyAlR38mNQdoXZmN7Tm9lzE4JzmVEjyf0LoFigt0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0bRF+kclC1YGzoOeJroZyEMmR25qkcAAdpByxPGyEpx+sOmTX
-	mjEx0ddCHNePL+qlZ6TtrnxCyQtCUolLpDe9+NilebF9Aud7FB1ppHcPFH7CRzQ/DJ6ewnPAbpk
-	V2Xn3gAOFFBpGo4EggY427IYOWnILTOuri8UdZQ==
-X-Gm-Gg: ASbGncuN5brZDDAltwfiLaHLOwhI9G/CqTNaOeMhSr82ZcsmmOmYzvZ90snSiFqOEt6
-	HXh0Istm+LdCRSc3bBQxWOh+weAs6cBQF5MnV/TeiUXrE82etut8AYFfj/Kt+uPOSLIh46GumIE
-	BtfhTVaQ6xFOQKKBudrqw6H8U=
-X-Google-Smtp-Source: AGHT+IFoKZEu+cWJ6kUjBS4RpIBDAR0l8rGtHeVCikA1xU6nS5VUl5q1Ld16dkGWapP7A6sIfZYBs2kqSSLj1B5qKIw=
-X-Received: by 2002:a05:6512:3f05:b0:549:4e79:dd5f with SMTP id
- 2adb3069b0e04-54ad64f7da2mr4777907e87.37.1742802457021; Mon, 24 Mar 2025
- 00:47:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D0tyseSF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A27FDC4CEDD;
+	Mon, 24 Mar 2025 07:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742802459;
+	bh=6SxKcj4gUIOYK9hOLL2QqT3WFOWrHJL1z+V3xAU4HWY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=D0tyseSFxU48myJcXGHrQB2TW2AnkXD2C/jDngzz5RL/CNYsjCJnGs57CZNZ34y5q
+	 /I2syGM1xIJ3kXqKyUCe9ITk9r69JaTQZisUvY3nm8tE1mKmjNyy75RDgeHeMAzQoC
+	 DQ416BwJ4gUyFp2J2WKlmjf4kUw3P5K/x8CIgZt1/4cIhamVL4iFzQDA9AKmJIUdJ+
+	 JFuJHbtc/NK0kF3A3nu9bqdRDTD0+qbsd06WEZAAp17AJmUeDsz1XxUwU+s/AMIj24
+	 c10wvpKsyPMQ8y0dBSQvSBqDwMlZUz6DPCGTPB5bMGzPcdAGV/5wAzeB3uVpidCGuH
+	 LsvdFyPrtK/gg==
+Date: Mon, 24 Mar 2025 08:47:35 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: George Moussalem <george.moussalem@outlook.com>
+Cc: Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Nitheesh Sekar <quic_nsekar@quicinc.com>, Varadarajan Narayanan <quic_varada@quicinc.com>, 
+	Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
+	Bjorn Andersson <andersson@kernel.org>, Konrad Dybcio <konradybcio@kernel.org>, 
+	linux-arm-msm@vger.kernel.org, linux-phy@lists.infradead.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, 
+	20250317100029.881286-2-quic_varada@quicinc.com, Sricharan Ramabadhran <quic_srichara@quicinc.com>
+Subject: Re: [PATCH v6 0/6] Enable IPQ5018 PCI support
+Message-ID: <20250324-shrew-of-total-philosophy-4fddc2@krzk-bin>
+References: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250324-wcd-gpiod-v1-0-27afa472e331@nxp.com> <20250324-wcd-gpiod-v1-3-27afa472e331@nxp.com>
-In-Reply-To: <20250324-wcd-gpiod-v1-3-27afa472e331@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 24 Mar 2025 08:47:25 +0100
-X-Gm-Features: AQ5f1JoLqXpK62k6ENcNGiw40yjAMqH6KjKoeHo5l6jpodi-SVCf3FhtdJEoj-w
-Message-ID: <CACRpkdYLMJaC7XREXL4m62B6x8fc6XvmR3FfXYUfh=QKM3whmA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] ASoC: codec: wcd9335: Convert to GPIO descriptors
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-sound@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com>
 
-On Mon, Mar 24, 2025 at 3:28=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
+On Fri, Mar 21, 2025 at 04:14:38PM +0400, George Moussalem wrote:
+> This patch series adds the relevant phy and controller
+> DT configurations for enabling PCI gen2 support
+> on IPQ5018. IPQ5018 has two phys and two controllers, 
+> one dual-lane and one single-lane.
+> 
+> Last patch series (v3) submitted dates back to August 30, 2024.
+> As I've worked to add IPQ5018 platform support in OpenWrt, I'm
+> continuing the efforts to add Linux kernel support.
+> 
+> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+> ---
+> Changes in v6:
+> - Fixed issues reported by 'make dt_bindings_check' as per Rob's bot
+> - Removed Krzysztof's Ack-tag on  
 
-> From: Peng Fan <peng.fan@nxp.com>
->
-> of_gpio.h is deprecated, update the driver to use GPIO descriptors.
-> - Use dev_gpiod_get to get GPIO descriptor.
-> - Use gpiod_set_value to configure output value.
->
-> With legacy of_gpio API, the driver set gpio value 0 to assert reset,
-> and 1 to deassert reset. And the reset-gpios use GPIO_ACTIVE_LOW flag in
-> DTS, so set GPIOD_ASIS when get GPIO descriptors, and set value 1 means
-> output low, set value 0 means output high with gpiod API.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Why?
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Again, I cannot compare this serie:
 
-Yours,
-Linus Walleij
+  b4 diff '20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com'
+  Grabbing thread from lore.kernel.org/all/20250321-ipq5018-pcie-v6-0-b7d659a76205@outlook.com/t.mbox.gz
+  Checking for older revisions
+  Grabbing search results from lore.kernel.org
+  Nothing matching that query.
+  ---
+  Analyzing 12 messages in the thread
+  Could not find lower series to compare against.
+
+
