@@ -1,123 +1,132 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A3332E337F;
-	Mon, 24 Mar 2025 05:11:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 082982E337F;
+	Mon, 24 Mar 2025 05:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742793089; cv=none; b=usmjCr/5xmoMevfvCt7zcqNj8GHHjctiR+CSIWLxip76Hqk2QC7WDFMdCsSznMRwoTzlMMtG7FiLjno2IC5B92iISLZ/WnWpfBmwzPe5/RwGZV5AAWEG6IuAwdK1NkqN2Pba9gPNzG+QYCoze7kMYzswFxu5EjciAcZgqz/OhTw=
+	t=1742794465; cv=none; b=cHD0Wck5wzh7NZqd4clj/C5ATFL+r6PTtidDvYC0FKiqqIOeluJ2/Q8cc161LJMGCPC9/aMjCceYlOHwWXz/j9ThcoTD4yi6s0XPm83Y3qD6gU88VIh9Matyio8LUei3fyrw3Dt2srq67v2dYDDF5vLXy2s9T8TRa1IT60aL/8U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742793089; c=relaxed/simple;
-	bh=OGe21FZmth7HYF72oeDzQkXP1oyokZOoHTNNZQgVbus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FyXOsvxQRvmogc4xsD9KLMQiTlEhXAZT5uHoWcuTXYO/zEbf994qY/yixi8/qoS/zsRXkiiV3O96hXJaVpWvq0Ck43Nbpd7Vf53LtNe4LK9nmLrxE9EoCHR61awkVjlMdUXRnL84Oeb5y6387yRzDmqWmxm3U3+jmvo8CK2pnC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=LamXcB8Y; arc=none smtp.client-ip=198.175.65.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742794465; c=relaxed/simple;
+	bh=0N4c2WZI8x4iQ2jgWASJraby+PyTVlH5TDkjYt1h7o4=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=gmrSXKdDMi5c+hGQRzW3EA7gU+NSfNKft/SWNZoyP/f2y/rseFbRz59z+0+C3P7+rK8M92SSZz+GwDtyDjvpD6HcM7qxH4jwzKYJHua4krwkfQSn3modLjvo8mh9qJhudZDcn5ifgxFfZLatBmTmecGqZp6Ds70yIx0fEJRXyHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=p8vQSKDr; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="LamXcB8Y"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742793087; x=1774329087;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=OGe21FZmth7HYF72oeDzQkXP1oyokZOoHTNNZQgVbus=;
-  b=LamXcB8YW6rmozyzLQPnYXDbBxZpLPX+YWZ0MW392UKD0TXE1shUdUZ1
-   Y8jvlyevU5NZ4k2AtTbu44M9jdSFSR1gdkbuQ2FrzUuadPV2UTtLkkVJI
-   P5mDUH3QbLkIOpv0kdnNZqnal4Z+eH2Y0PVVQMi+k70x5Ct6s+WWQ/6zn
-   EWvw3BXZ6UefhWoRcW696BLSy7P7fCglOoI1q+2oJubKj8Rd4r0E2G8Eg
-   YD0woSycbCG93XxHZhiDtXvunQl8KkQuR0SjzWRcqBSmZamtrSbP07dxA
-   ywoAVElNYPSN6EE+mQE+z5cDZtoCtTyy8fM1XMbPxlizi/76gPqjgX/jz
-   g==;
-X-CSE-ConnectionGUID: T5eLVAc8Tj6mEQoo6mZHtA==
-X-CSE-MsgGUID: aertAvjWRYShfZiuWAOCYw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11382"; a="43707322"
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="43707322"
-Received: from fmviesa010.fm.intel.com ([10.60.135.150])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Mar 2025 22:11:27 -0700
-X-CSE-ConnectionGUID: lvb+ApYzQ2CS7iUwR+4IJg==
-X-CSE-MsgGUID: 6mngPGWLRXuxrTOUlhKXlg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,271,1736841600"; 
-   d="scan'208";a="124388459"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa010.fm.intel.com with ESMTP; 23 Mar 2025 22:11:21 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1twa5W-0003Hk-22;
-	Mon, 24 Mar 2025 05:11:03 +0000
-Date: Mon, 24 Mar 2025 13:09:59 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>, Lee Jones <lee@kernel.org>,
-	Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Chanwoo Choi <cw00.choi@samsung.com>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Russell King <linux@armlinux.org.uk>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: oe-kbuild-all@lists.linux.dev, Peter Griffin <peter.griffin@linaro.org>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Will McVicker <willmcvicker@google.com>, kernel-team@android.com,
-	linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-rtc@vger.kernel.org,
-	=?iso-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-Subject: Re: [PATCH 20/34] mfd: sec: rework platform data and regmap
- instantiating
-Message-ID: <202503241201.amdeUwuc-lkp@intel.com>
-References: <20250323-s2mpg10-v1-20-d08943702707@linaro.org>
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="p8vQSKDr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742794460;
+	bh=B5Ws58J6CVirVIY6lproU4sIVTY4C6GXMtjU5lZ72Cs=;
+	h=Date:From:To:Cc:Subject:From;
+	b=p8vQSKDrUWjVt0ooaRAhAx2WxD3SYxq2mSC43USi6QNO+3X4zBk08TYTwXHuSfXQ7
+	 u9jRFDud3olEXATxyuWEbParUKHfzQiJqYd+Edy2FEOSJKyt9DbEJ/V3lGB01jwtiC
+	 gs1Ix6OOT2iEttGCKySIdtI7qhbQGkH/E7IShDqFewM7q4mE6/I51Ehj0J8VXjjjjV
+	 tDgSdeFNNeYErvYL3Q7/iXpJBOkWRVtodKvW8FzAfYjKResyMaTWU5p59PxfSZFqGE
+	 iw67Djot8Z3Tc858Bfw+tgq9G4fFinwM8hUsfU2rsiqofGoOyiGx2HNcf089dfe7RQ
+	 p98A4okFukiBg==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZLhZ20QQMz4wcZ;
+	Mon, 24 Mar 2025 16:34:17 +1100 (AEDT)
+Date: Mon, 24 Mar 2025 16:34:17 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>,
+ Nick Terrell <terrelln@fb.com>, David Sterba <dsterba@suse.cz>
+Cc: Ingo Molnar <mingo@kernel.org>, Linux Kernel Mailing List
+ <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>, Nick Terrell <terrelln@meta.com>
+Subject: linux-next: manual merge of the tip tree with the btrfs, zstd trees
+Message-ID: <20250324163417.4b9e84d4@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20250323-s2mpg10-v1-20-d08943702707@linaro.org>
+Content-Type: multipart/signed; boundary="Sig_/czFsEbvN6wl_GngY3ZKjha.";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-Hi André,
+--Sig_/czFsEbvN6wl_GngY3ZKjha.
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-kernel test robot noticed the following build warnings:
+Hi all,
 
-[auto build test WARNING on c4d4884b67802c41fd67399747165d65c770621a]
+Today's linux-next merge of the tip tree got a conflict in:
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andr-Draszik/dt-bindings-mfd-samsung-s2mps11-add-s2mpg10/20250324-064418
-base:   c4d4884b67802c41fd67399747165d65c770621a
-patch link:    https://lore.kernel.org/r/20250323-s2mpg10-v1-20-d08943702707%40linaro.org
-patch subject: [PATCH 20/34] mfd: sec: rework platform data and regmap instantiating
-config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20250324/202503241201.amdeUwuc-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250324/202503241201.amdeUwuc-lkp@intel.com/reproduce)
+  lib/zstd/common/portability_macros.h
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503241201.amdeUwuc-lkp@intel.com/
+between commit:
 
-All warnings (new ones prefixed by >>):
+  65d1f5507ed2 ("zstd: Import upstream v1.5.7")
 
->> drivers/mfd/sec-i2c.c:206:48: warning: 's2mps14_data' defined but not used [-Wunused-const-variable=]
-     206 | static const struct sec_pmic_i2c_platform_data s2mps14_data = {
-         |                                                ^~~~~~~~~~~~
+from the btrfs, zstd trees and commit:
 
+  1400c87e6cac ("zstd: Increase DYNAMIC_BMI2 GCC version cutoff from 4.8 to=
+ 11.0 to work around compiler segfault")
 
-vim +/s2mps14_data +206 drivers/mfd/sec-i2c.c
+from the tip tree.
 
-   205	
- > 206	static const struct sec_pmic_i2c_platform_data s2mps14_data = {
-   207		.regmap_cfg = &s2mps14_regmap_config,
-   208		.device_type = S2MPS14X,
-   209	};
-   210	
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc lib/zstd/common/portability_macros.h
+index 05286af72683,0dde8bf56595..000000000000
+--- a/lib/zstd/common/portability_macros.h
++++ b/lib/zstd/common/portability_macros.h
+@@@ -59,15 -53,15 +59,15 @@@
+   * Enabled for clang & gcc >=3D4.8 on x86 when BMI2 isn't enabled by defa=
+ult.
+   */
+  #ifndef DYNAMIC_BMI2
+ -  #if ((defined(__clang__) && __has_attribute(__target__)) \
+ +#  if ((defined(__clang__) && __has_attribute(__target__)) \
+        || (defined(__GNUC__) \
+-           && (__GNUC__ >=3D 5 || (__GNUC__ =3D=3D 4 && __GNUC_MINOR__ >=
+=3D 8)))) \
++           && (__GNUC__ >=3D 11))) \
+ -      && (defined(__x86_64__) || defined(_M_X64)) \
+ +      && (defined(__i386__) || defined(__x86_64__) || defined(_M_IX86) ||=
+ defined(_M_X64)) \
+        && !defined(__BMI2__)
+ -  #  define DYNAMIC_BMI2 1
+ -  #else
+ -  #  define DYNAMIC_BMI2 0
+ -  #endif
+ +#    define DYNAMIC_BMI2 1
+ +#  else
+ +#    define DYNAMIC_BMI2 0
+ +#  endif
+  #endif
+ =20
+  /*
+
+--Sig_/czFsEbvN6wl_GngY3ZKjha.
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfg7tkACgkQAVBC80lX
+0GzDiAf+LsQ+E8/64x9fP1QR67r0pPVc3pnPZtHFlthPeQFifAgoynTjV9tSfk0l
+dbFpywkt4EPCq9bIT5gchrZfjy9rLnvtj41N82c3ycyaiLiMj3iBTq/HJyrzYXH7
+/guCk/GjvbImDyixsOQVo0rd8jYjoExofD+9mHkgu0FkZywIgZylE/C8sl0VEWeb
+cftbhroX1gHy12Gxeu8L+0dofaJ4r3NOynQ290bLbHMUtUB4nLdEpSn9Adc4QQH+
+8/afXxud+wT5YKZBh8HenSh8FYp6lQpiLPG97H5HzI7TFJYuwtkNjmUBu3Gc4wi6
+bTuSb/PeDCbxcDIh4m/d/lp9BB2wRQ==
+=/afS
+-----END PGP SIGNATURE-----
+
+--Sig_/czFsEbvN6wl_GngY3ZKjha.--
