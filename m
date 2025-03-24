@@ -1,229 +1,242 @@
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63B6825E476
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 14:08:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 206FC1AAA1D;
+	Mon, 24 Mar 2025 14:09:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742825317; cv=none; b=ByTyShbK9pHh0Dp2ppkqW3hEQ+3uxiPngQbGRW7WSBvuf30lyyX0LwjPTwdW6/qozWCdIqydBhzdfcJgpbfdm9AryixqXn4lHg7RCzFB6KdJYAjI054TBfNwiEnMqVMXqnAwlhCtMFRmEfnDuBWjqdza2qSl6gPbP9psJdZl6WE=
+	t=1742825369; cv=none; b=EAw/i3Xro/yK9EAx+K6npv2PV1j16YODpWgLXB/bgROasz/J3OR339WA4b+hfhjfZS1iJkoJdWTxuzTgoDt8oQVwk6g8SYb6D56iEqO7OqfPslVAthszo2khO/6j7OvfTqgb5qNz05xuR9Up0LL+mTCKNta0vnfp+rHHDs2r8vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742825317; c=relaxed/simple;
-	bh=k9auSPKt0xDsiEz8cyRI0UCs31hNeF6aYfn1A9QhgOg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=M3bffIfpVGhkVOnpyiaNsydRqMTWMomj+gSR6TcC68qwsMNZg/HGSbfe2mJezLN8ggj6iF2zF67IQQwxBCqoKFD+P+ki845SoPq8SmsZbmW8tIuTMfTkeWqGYZbeCYPspZ1vXWBSury6ITcVs6pbVwyuu+Q/FxrGx5aRWDgUd9g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Id7Qyvyw; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742825369; c=relaxed/simple;
+	bh=zEZSfIN6Fl3MEvV/0zekr5/YFxEumJScw7YduuaZH0w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f7NW9JWyp9t0B8p983jyzsFyg2NtxGibgI+suJitGqjVEZLxCa0fMtE3nZ/jQbmVcOLP4vgnb+uSq9TRH84gEcjyFkOv0d9XLFIi/TZN/BqLuuttTtPpuYgd3sy6P28Mf5r9fntDAsLvdX/lXgsSaIdk0b1f3XK1VwCKCocvFH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=hGbYObwC; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Id7Qyvyw"
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-ac297cbe017so982314666b.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:08:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742825314; x=1743430114; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=LTS81nyVkU32wlX4TnObp+0zngaZswbVsK7/OVV7Vtw=;
-        b=Id7Qyvyw9KnqSa+jTLthIgiUDfC4Ws6i5ZHQ2V0A5dlbx/fHOlcRwKO5OzESlEr1JB
-         0xZ5tAWjBA0eGXcnVlbJkLbQnIMvQCgKcQJYcGQ+s5XqWTLSJABTLTRtc/ARNpuyN1cZ
-         ciNwoqTOUva7wRjeGRHd11wnFX1Yr9OBGsuxGZpoOp2Gjl1uouj38TK0NLrFX9CURDOE
-         39kyAcYv560FpYJwPJl57k4VKjN+yLOGzimAOGpQUfcUZI4yv2M8fAtY8hD/KX/Jnb23
-         XBjEX5mHW1ndtcED0iBIWzUICrb/KcUPfgrxNgOYVHrJE0uU/JbQJYoF+HpmnNvp3S85
-         6Rxg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742825314; x=1743430114;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=LTS81nyVkU32wlX4TnObp+0zngaZswbVsK7/OVV7Vtw=;
-        b=k9Eytjy6GhbVVsDbF9FRrhHm2bqw2MI3PksFmae7VsgqJrc5vThU//P9FvBDjQaLPv
-         gkUEzK/mNeYOFstX6z2h5aqgWCaDQLRFn0i1Bt9Vc+/afs9Dlts1E7TFloJiSWULKF1+
-         KaSm6+wobF9+rtOzFZMlXcOTbES2gzKyijqyMj05yqPagqY1gMjzWJA8ryzsKW2ih1l0
-         lZqEu/u8ERBL+Jw5ZQxfR/kRlmt0TCxU8oayXuLR6sp73/8U1aJrHeFsNE2BA0RFaG0l
-         MNdyjVkMr0xOFUJwmw5BZaACxlhwPw0qGPv77pNs/PUO1WorbZLrWYzPJ+pKzMIOOb2v
-         5PIg==
-X-Forwarded-Encrypted: i=1; AJvYcCUoflG5vqadQAoEjDRO6L82ss46rjL5R1MDgp9DSJ+I29flwAgeithuLERnNr6HW+9OI0r0/mV/MW2KrOQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YznhwR8LbaG2Ts3uCiuhnGNBuaGJYIBPDOljJXMTMIQ1meDpEYk
-	nsMnvwzUecWZqRVkgcwq9nlPHHKf8lWtIKbhdNBzWKOubfnUV1oBHWlmFM4GHos=
-X-Gm-Gg: ASbGncufcg+1pwBDq5J8voXvEQm1UAUEJa4GMHq7CuQKDao9IE4EwNadcEU8Z2BJSSB
-	zwpGfTKgy/czpffE4dYGH6IV8UFh+m79kPZKb/1DjBrPnF1w3h+0FSYb6zK4K+tzxdkKK6X2D9a
-	pXY2z+KKnIF2swcFPwlLZt/IT4sBEiCxYKLR6HpLGeKEOtAPzcRQhXK6i7fPsbXJun1f6Y50fD3
-	2uN4t72NygdlHc0tbN57AQZON1tRSNbVFcMnEnVXW3nBvxHGDJn7umsP9bCJBxRMDG+8UO2vcjS
-	Z3atxemiX3by9Pva67TOdvjotlewuSe2EfqniqrJSdQ=
-X-Google-Smtp-Source: AGHT+IFqz3+P/LzojKK63DKoN5LiDg2sAGczirpJQaykGYju35Pl96ChoHFNJWnrKSlYuL1pdxITnQ==
-X-Received: by 2002:a17:907:958a:b0:ac1:e45f:9c71 with SMTP id a640c23a62f3a-ac3f00b7260mr1203497566b.1.1742825313578;
-        Mon, 24 Mar 2025 07:08:33 -0700 (PDT)
-Received: from [127.0.1.1] ([62.231.96.41])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efda474bsm682381066b.183.2025.03.24.07.08.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 07:08:32 -0700 (PDT)
-From: Abel Vesa <abel.vesa@linaro.org>
-Date: Mon, 24 Mar 2025 16:08:19 +0200
-Subject: [PATCH] arm64: dts: qcom: x1e001de-devkit: Enable support for both
- Type-A USB ports
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="hGbYObwC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1742825365;
+	bh=zEZSfIN6Fl3MEvV/0zekr5/YFxEumJScw7YduuaZH0w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=hGbYObwCSzoMoUuei5KO2c0n1ogWFHwWv6dnJYjUJzp/5l+wPKvHZ2G4z8mlpLgQS
+	 gUfa8uFaVqfwsgcb/DCgmYTCWHMDSCFcsbIoAtycwxOvyRJbtwg6omYK4fjg2dtEWq
+	 mg2drmy/m3aCanjQGo4c4lTRec86x6pf5sQJLrH3PnnwNVErpkCCk/9MVW84K9AID5
+	 W+cNucu8TyZzZv/Suzy1L4icNc+1YxwsNBf1UrfpMmPNnwABHYz3h60UYJ1EYPmtDH
+	 au+C3CMjPvV9tI785lT6f3JWQDE4eOk9FMZ7MXQTpRy6tYDyaa+Q0cZwrVsYGVF2zu
+	 4L/0gkykc2IYg==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AC28F17E088D;
+	Mon, 24 Mar 2025 15:09:24 +0100 (CET)
+Message-ID: <ecd8a46e-0f87-498e-8a12-fdeae6f5791d@collabora.com>
+Date: Mon, 24 Mar 2025 15:09:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RESEND v2] arm64: dts: mediatek: add mmc2 support for
+ mt8365-evk
+To: Alexandre Mergnat <amergnat@baylibre.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ macpaul.Lin@mediatek.com
+Cc: vsatoes@baylibre.com, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250109-mmc2-support-v2-1-5f660c809610@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250109-mmc2-support-v2-1-5f660c809610@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-x1e001de-devkit-dts-enable-usb-a-ports-v1-1-81153b2d1edf@linaro.org>
-X-B4-Tracking: v=1; b=H4sIAFJn4WcC/x2NwQqDMBAFf0X23IUkphb7K6WHxH1tl5YoiRVB/
- HeDx5nDzEYFWVHo3myUsWjRMVWwl4aGT0hvsEplcsZdTes8rxbGWAELlq/OLHNhpBB/4H+JHHg
- ac1WddPB964fY36jGpoyXrufo8dz3A4lU1W14AAAA
-X-Change-ID: 20250324-x1e001de-devkit-dts-enable-usb-a-ports-6d6e4934cb97
-To: Bjorn Andersson <andersson@kernel.org>, 
- Konrad Dybcio <konradybcio@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: Johan Hovold <johan@kernel.org>, linux-arm-msm@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Abel Vesa <abel.vesa@linaro.org>
-X-Mailer: b4 0.15-dev-dedf8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3076; i=abel.vesa@linaro.org;
- h=from:subject:message-id; bh=k9auSPKt0xDsiEz8cyRI0UCs31hNeF6aYfn1A9QhgOg=;
- b=owEBbQKS/ZANAwAKARtfRMkAlRVWAcsmYgBn4Wda/npmRyJzqsiQLvERIxYU+ZFunlFl8/clm
- am7qA1/oNGJAjMEAAEKAB0WIQRO8+4RTnqPKsqn0bgbX0TJAJUVVgUCZ+FnWgAKCRAbX0TJAJUV
- VpQ/EACl6/HG8ZoSuTu/f5fQ9UpouXKp+0BZNsYTrlPiAlfni/n5A3sulz9mZa4JzmmzvR74vOT
- tkpYbvh2JqGZSNvQaGe4zhoRPuAu3Vt+ZEzqiKczPJtM7B3GplN+KMTdQfp/chpibwbc9TponPM
- qcm1P+XjkY3mSirvzOYO53lu4cjKIcxBFEVj+iLMgJLWn65hmHXuBv4jUx+4Epe3fTiwDaLoaqP
- 6hJabslNejFMTEnpQMHik5PUrz/lPKctbcxhVQaOgkVlMYhEo6hmwUp+KIlzG0n8dq+uOZMUpLs
- ea/IICQr0BjESSzEGt6wBp1fYy+UW+/24TT9ewmumQz3nqGH1cud24arriyJc3W06YhvnqBHDwM
- g0Mm7bcsX5sOMsWvhJsTHAVl5LS2bbOVHMVMj8Kdy4pg0WW7UyZ7TICFkKmT78VvS1zZ1moG9j0
- eCuLY3SXfdGRxY/JAdDSZgy6JckPKgV5oESRtUS0Mae1ovFlgijSFhwfwT49BKXKemi8ZjqA1wv
- D7Az4vIKoaqhwZ4XXO5Uaa6dN5wRsgSDS2YFJbCnbGE36OQuxPK29bf3Kwvm8wF1+IfUceqgYwU
- Kfly5+HyrYMjGM7oaaRV6M9oOa9RzmbAv130wpQBum6DLZLAAg8cnTTNHB9NrQ/+vfJHL/OUm/z
- FoQE8qqrqpbo93A==
-X-Developer-Key: i=abel.vesa@linaro.org; a=openpgp;
- fpr=6AFF162D57F4223A8770EF5AF7BF214136F41FAE
 
-The Qualcomm X Elite Devkit has 2 USB-A ports, both connected to the USB
-multiport controller, each one via a separate NXP PTN3222 eUSB2-to-USB2
-redriver to the eUSB2 PHY for High-Speed support, with a dedicated QMP
-PHY for SuperSpeed support.
+Il 24/03/25 14:54, Alexandre Mergnat ha scritto:
+> Adds support for the MMC2 interface on the MT8365 EVK board.
+> It introduces a fixed regulator for the MMC2 VDD33 supply and configures
+> the MMC2 node with a 4-bit bus width, high-speed capabilities, UHS
+> modes, and appropriate power supplies. Enabled SDIO IRQ, wakeup source,
+> and kept power during suspend (to save firmware module) for wireless
+> chip functionality.
+> 
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+> ---
+> Changes in v2:
+> - Apply alphabetical order to pinctrl property items.
+> - Improve commit message
+> - Link to v1: https://lore.kernel.org/r/20250109-mmc2-support-v1-1-9b9d1b1ae35d@baylibre.com
+> ---
+>   arch/arm64/boot/dts/mediatek/mt8365-evk.dts | 103 +++++++++++++++++++++++++---
+>   1 file changed, 94 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> index 7d90112a7e274..a87f1b3ed6500 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> +++ b/arch/arm64/boot/dts/mediatek/mt8365-evk.dts
+> @@ -53,6 +53,15 @@ memory@40000000 {
+>   		reg = <0 0x40000000 0 0xc0000000>;
+>   	};
+>   
+> +	mmc2_vdd33: mmc2_vdd33-regulator {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "mmc2_vdd33";
 
-Describe each redriver and then enable each pair of PHYs and the
-USB controller itself, in order to enable support for the 2 USB-A ports.
+mmc2-vdd33 please
 
-Signed-off-by: Abel Vesa <abel.vesa@linaro.org>
----
- arch/arm64/boot/dts/qcom/x1e001de-devkit.dts | 86 ++++++++++++++++++++++++++++
- 1 file changed, 86 insertions(+)
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&pio 121 0>;
+> +		enable-active-high;
+> +	};
+> +
+>   	usb_otg_vbus: regulator-0 {
+>   		compatible = "regulator-fixed";
+>   		regulator-name = "otg_vbus";
+> @@ -197,6 +206,28 @@ &mmc1 {
+>   	status = "okay";
+>   };
+>   
+> +&mmc2 {
+> +	assigned-clock-parents = <&topckgen CLK_TOP_MSDCPLL>;
+> +	assigned-clocks = <&topckgen CLK_TOP_MSDC50_2_SEL>;
+> +	bus-width = <4>;
+> +	cap-sd-highspeed;
+> +	cap-sdio-irq;
+> +	hs400-ds-delay = <0x12012>;
+> +	keep-power-in-suspend;
+> +	max-frequency = <200000000>;
+> +	non-removable;
+> +	pinctrl-0 = <&mmc2_default_pins>;
+> +	pinctrl-1 = <&mmc2_uhs_pins>;
+> +	pinctrl-names = "default", "state_uhs";
+> +	sd-uhs-sdr104;
+> +	sd-uhs-sdr25;
+> +	sd-uhs-sdr50;
+> +	vmmc-supply = <&mmc2_vdd33>;
+> +	vqmmc-supply = <&mt6357_vcn18_reg>;
+> +	wakeup-source;
+> +	status = "okay";
+> +};
+> +
+>   &mt6357_pmic {
+>   	interrupts-extended = <&pio 145 IRQ_TYPE_LEVEL_HIGH>;
+>   	interrupt-controller;
+> @@ -324,8 +355,8 @@ cmd-dat-pins {
+>   				 <MT8365_PIN_94_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
+>   				 <MT8365_PIN_93_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
+>   				 <MT8365_PIN_98_MSDC0_CMD__FUNC_MSDC0_CMD>;
+> -			input-enable;
+>   			bias-pull-up;
+> +			input-enable;
 
-diff --git a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
-index 74911861a3bf2606add8cf4aaa3816542e837513..643ab2876222b00bfd60b74b20dd79f105a43143 100644
---- a/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
-+++ b/arch/arm64/boot/dts/qcom/x1e001de-devkit.dts
-@@ -877,6 +877,40 @@ retimer_ss0_con_sbu_out: endpoint {
- 	};
- };
- 
-+&i2c5 {
-+	clock-frequency = <400000>;
-+
-+	status = "okay";
-+
-+	eusb3_repeater: redriver@47 {
-+		compatible = "nxp,ptn3222";
-+		reg = <0x47>;
-+		#phy-cells = <0>;
-+
-+		vdd3v3-supply = <&vreg_l13b_3p0>;
-+		vdd1v8-supply = <&vreg_l4b_1p8>;
-+
-+		reset-gpios = <&tlmm 6 GPIO_ACTIVE_LOW>;
-+
-+		pinctrl-0 = <&eusb3_reset_n>;
-+		pinctrl-names = "default";
-+	};
-+
-+	eusb6_repeater: redriver@4f {
-+		compatible = "nxp,ptn3222";
-+		reg = <0x4f>;
-+		#phy-cells = <0>;
-+
-+		vdd3v3-supply = <&vreg_l13b_3p0>;
-+		vdd1v8-supply = <&vreg_l4b_1p8>;
-+
-+		reset-gpios = <&tlmm 184 GPIO_ACTIVE_LOW>;
-+
-+		pinctrl-0 = <&eusb6_reset_n>;
-+		pinctrl-names = "default";
-+	};
-+};
-+
- &i2c7 {
- 	clock-frequency = <400000>;
- 
-@@ -1129,6 +1163,22 @@ wcd_tx: codec@0,3 {
- &tlmm {
- 	gpio-reserved-ranges = <44 4>; /* SPI (TPM) */
- 
-+	eusb3_reset_n: eusb3-reset-n-state {
-+		pins = "gpio6";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-low;
-+	};
-+
-+	eusb6_reset_n: eusb6-reset-n-state {
-+		pins = "gpio184";
-+		function = "gpio";
-+		drive-strength = <2>;
-+		bias-disable;
-+		output-low;
-+	};
-+
- 	nvme_reg_en: nvme-reg-en-state {
- 		pins = "gpio18";
- 		function = "gpio";
-@@ -1371,3 +1421,39 @@ &usb_1_ss2_dwc3_hs {
- &usb_1_ss2_qmpphy_out {
- 	remote-endpoint = <&retimer_ss2_ss_in>;
- };
-+
-+&usb_mp {
-+	status = "okay";
-+};
-+
-+&usb_mp_hsphy0 {
-+	vdd-supply = <&vreg_l2e_0p8>;
-+	vdda12-supply = <&vreg_l3e_1p2>;
-+
-+	phys = <&eusb6_repeater>;
-+
-+	status = "okay";
-+};
-+
-+&usb_mp_hsphy1 {
-+	vdd-supply = <&vreg_l2e_0p8>;
-+	vdda12-supply = <&vreg_l3e_1p2>;
-+
-+	phys = <&eusb3_repeater>;
-+
-+	status = "okay";
-+};
-+
-+&usb_mp_qmpphy0 {
-+	vdda-phy-supply = <&vreg_l3e_1p2>;
-+	vdda-pll-supply = <&vreg_l3c_0p8>;
-+
-+	status = "okay";
-+};
-+
-+&usb_mp_qmpphy1 {
-+	vdda-phy-supply = <&vreg_l3e_1p2>;
-+	vdda-pll-supply = <&vreg_l3c_0p8>;
-+
-+	status = "okay";
-+};
+This is a cleanup and goes to a different commit
 
----
-base-commit: 9388ec571cb1adba59d1cded2300eeb11827679c
-change-id: 20250324-x1e001de-devkit-dts-enable-usb-a-ports-6d6e4934cb97
+>   		};
+>   
+>   		rst-pins {
+> @@ -337,8 +368,8 @@ rst-pins {
+>   	mmc0_uhs_pins: mmc0-uhs-pins {
+>   		clk-pins {
+>   			pinmux = <MT8365_PIN_99_MSDC0_CLK__FUNC_MSDC0_CLK>;
+> -			drive-strength = <MTK_DRIVE_10mA>;
+>   			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+> +			drive-strength = <MTK_DRIVE_10mA>;
 
-Best regards,
--- 
-Abel Vesa <abel.vesa@linaro.org>
+While at it, in a cleanup commit, if you could also remove those MTK_DRIVE_xxx and
+use just the number that'd be great.
+
+>   		};
+>   
+>   		cmd-dat-pins {
+> @@ -351,21 +382,21 @@ cmd-dat-pins {
+>   				 <MT8365_PIN_94_MSDC0_DAT6__FUNC_MSDC0_DAT6>,
+>   				 <MT8365_PIN_93_MSDC0_DAT7__FUNC_MSDC0_DAT7>,
+>   				 <MT8365_PIN_98_MSDC0_CMD__FUNC_MSDC0_CMD>;
+> -			input-enable;
+> -			drive-strength = <MTK_DRIVE_10mA>;
+>   			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+> +			drive-strength = <MTK_DRIVE_10mA>;
+> +			input-enable;
+>   		};
+>   
+>   		ds-pins {
+>   			pinmux = <MT8365_PIN_104_MSDC0_DSL__FUNC_MSDC0_DSL>;
+> -			drive-strength = <MTK_DRIVE_10mA>;
+>   			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+> +			drive-strength = <MTK_DRIVE_10mA>;
+>   		};
+>   
+>   		rst-pins {
+>   			pinmux = <MT8365_PIN_97_MSDC0_RSTB__FUNC_MSDC0_RSTB>;
+> -			drive-strength = <MTK_DRIVE_10mA>;
+>   			bias-pull-up;
+> +			drive-strength = <MTK_DRIVE_10mA>;
+>   		};
+>   	};
+>   
+> @@ -386,16 +417,16 @@ cmd-dat-pins {
+>   				 <MT8365_PIN_91_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
+>   				 <MT8365_PIN_92_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
+>   				 <MT8365_PIN_87_MSDC1_CMD__FUNC_MSDC1_CMD>;
+> -			input-enable;
+>   			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+> +			input-enable;
+>   		};
+>   	};
+>   
+>   	mmc1_uhs_pins: mmc1-uhs-pins {
+>   		clk-pins {
+>   			pinmux = <MT8365_PIN_88_MSDC1_CLK__FUNC_MSDC1_CLK>;
+> -			drive-strength = <8>;
+>   			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+> +			drive-strength = <8>;
+>   		};
+>   
+>   		cmd-dat-pins {
+> @@ -404,9 +435,63 @@ cmd-dat-pins {
+>   				 <MT8365_PIN_91_MSDC1_DAT2__FUNC_MSDC1_DAT2>,
+>   				 <MT8365_PIN_92_MSDC1_DAT3__FUNC_MSDC1_DAT3>,
+>   				 <MT8365_PIN_87_MSDC1_CMD__FUNC_MSDC1_CMD>;
+> -			input-enable;
+> +			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+>   			drive-strength = <6>;
+> +			input-enable;
+> +		};
+> +	};
+> +
+> +	mmc2_default_pins: mmc2-default-pins {
+> +		clk-pins {
+> +			pinmux = <MT8365_PIN_81_MSDC2_CLK__FUNC_MSDC2_CLK>;
+> +			bias-pull-down = <MTK_PUPD_SET_R1R0_10>;
+> +			drive-strength = <4>;
+> +		};
+> +
+> +		cmd-dat-pins {
+> +			pinmux = <MT8365_PIN_82_MSDC2_DAT0__FUNC_MSDC2_DAT0>,
+> +				 <MT8365_PIN_83_MSDC2_DAT1__FUNC_MSDC2_DAT1>,
+> +				 <MT8365_PIN_84_MSDC2_DAT2__FUNC_MSDC2_DAT2>,
+> +				 <MT8365_PIN_85_MSDC2_DAT3__FUNC_MSDC2_DAT3>,
+> +				 <MT8365_PIN_80_MSDC2_CMD__FUNC_MSDC2_CMD>;
+>   			bias-pull-up = <MTK_PUPD_SET_R1R0_01>;
+> +			drive-strength = <4>;
+> +			input-enable;
+> +		};
+> +
+> +		sys-en-pins {
+> +			pinmux = <MT8365_PIN_120_DMIC1_CLK__FUNC_GPIO120>;
+
+My schematics say that the DMIC1_CLK pin is PERST_N, DMIC_DAT0 is PWR_EN: what's
+the intention here?!
+
+In any case, this is not a mmc2 pin, but something else :-)
+
+Cheers,
+Angelo
 
