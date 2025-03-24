@@ -1,120 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC60F25F96B;
-	Mon, 24 Mar 2025 16:39:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C968C25F96B;
+	Mon, 24 Mar 2025 16:39:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742834386; cv=none; b=NCTiEpbeH+3tU/v7DxgexyI0iU3UDG/Hu+yF8vKj0xc4d10OgXF26h6mrAt2Y+5zfmUU1w3PB9D2Sx0Kz87Hi8nvKGIqhaACeJF0TrJ8R4zMWUokGYZY8JqsJ2qk1/eXfmtdCoiOIBdnV3fRb0qGz4LydzV2YCivQR5cW7dI3Yo=
+	t=1742834398; cv=none; b=iOsq3jTbVhILvdpkQmfTCzpXpGTDvlZl1UTqeKifZ90dCvyd5v83EjEi+Q8VMULWGy5hFQYD14uYjplo2q7eskXi/9syG9wRd8SXP74jHNsGgOxKS3G0nlZiUfyhC3r7pjsqb5mgnEMNfws33ZTBZIzmb31yl7mxAgRIC08zUlI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742834386; c=relaxed/simple;
-	bh=PkU41z1npHU361mFlL7uOSF2RgIZLrl2UcM2T4+kpTY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eiCZS3qE1DP3i3Cs+gAM9EAdoX8sM14297RFmmhIQdqhlK1iQ7FrAL4BvDMOL2FCz7rDJd/dS+ZC8dhPH4/Ky8ZjldIg3inyZPsevEicZ28xFhs5MTxC0Qk2Sgi8Pvn+BB3JygVNaFJ86s3qOp251fg27Y7xAgr/Urv4P/SIOzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oEHhlF1+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742834398; c=relaxed/simple;
+	bh=Wl0bTv3Oau2GnncRqVR1+E1gx6HEXnEqXlEbMOUlVkY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=cD+Z/+GKUuE1Jg5QSLoT9FYVG+jU1Bu7TkdrYJSvGVDa7q5MdIxptN2W/J9cvVtWL+rySQ/SEUC1C8JRFBu19+zF0Iabq8oAEg1RoUC3n4EmEyvTI2ugIpUtODZ+WWvJQdadNmVmGYAN6wP+XgnOI1dExHjHtqYemhwwdTbN6k8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kMJaZMFw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oEHhlF1+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E47C4CEEA;
-	Mon, 24 Mar 2025 16:39:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kMJaZMFw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4870FC4CEDD;
+	Mon, 24 Mar 2025 16:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742834386;
-	bh=PkU41z1npHU361mFlL7uOSF2RgIZLrl2UcM2T4+kpTY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oEHhlF1+KjBN6VZ6R3OqvS0W9SotslDejwxbnt+zH6pZ52NTWTnx8QHhx2U3/sSQj
-	 r1L5bzp3hFx/6tas4BM1CRZd4gG8XtLw6FAvI97qvhxxIrAOnm6TBCxoTD72UEhIlI
-	 /MH6y0jOcYGdSfIDefC1dr+lrlZBj4drPIUsSAp01jTMFuMA/ZzqxhWWI8q9A60XhJ
-	 LvK4la4O0nq3ISKlqXpV4OB08co+9tzQgliYleonJWD2tT+ZHCcXxExGJFvt895/zg
-	 nB49fbHtc9TtnR5zrMzOlhjip2lFVTFRPpTw5PVzi8FP2LunktYpBJ+jQrmMX8QSBj
-	 GclopDQUx+69g==
-Date: Mon, 24 Mar 2025 11:39:45 -0500
-From: Rob Herring <robh@kernel.org>
-To: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-Cc: Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konradybcio@kernel.org>,
-	cros-qcom-dts-watchers@chromium.org, linux-arm-msm@vger.kernel.org,
-	linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, quic_vbadigan@quicinc.com,
-	quic_mrana@quicinc.com
-Subject: Re: [PATCH 1/3] dt-bindings: PCI: qcom: Move phy, wake & reset
- gpio's to root port
-Message-ID: <20250324163945.GA304502-robh@kernel.org>
-References: <20250322-perst-v1-0-e5e4da74a204@oss.qualcomm.com>
- <20250322-perst-v1-1-e5e4da74a204@oss.qualcomm.com>
+	s=k20201202; t=1742834398;
+	bh=Wl0bTv3Oau2GnncRqVR1+E1gx6HEXnEqXlEbMOUlVkY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=kMJaZMFw/Oc8CrrUOis3A/R6EDiBWFApx2v+tlVPz18GOfEXL61meHIhfkcHTNA58
+	 yKz0Rmee9rNIQxHsCGrLfg7cHWulSlYlOxbzkP0eZR2s/lLHQboorcuJ6xe8wlx4IZ
+	 /pQ3OL16wVTnjoEJ9Jl3zSUgVI3DlMvsRyP1i6wmvbgIF1hlzv5pJQUupZUnqFfWLN
+	 Cnx0YD0EbRUsv5TTtZ1gmu7mX1KerW8I2bV15xbhqT4EbeffrdKmCV+2CFfMpKQz2X
+	 0ROuvx/o08qs7LQQvHeH+COgI/NZMT1MpDriF+H/9Z2vSAr/yL0pioKahCbyBn9S/X
+	 fUx9jrCxfx00w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE28D380664D;
+	Mon, 24 Mar 2025 16:40:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250322-perst-v1-1-e5e4da74a204@oss.qualcomm.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] net: openvswitch: fix kernel-doc warnings in
+ internal headers
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174283443455.4090423.14500269133462520732.git-patchwork-notify@kernel.org>
+Date: Mon, 24 Mar 2025 16:40:34 +0000
+References: <20250320224431.252489-1-i.maximets@ovn.org>
+In-Reply-To: <20250320224431.252489-1-i.maximets@ovn.org>
+To: Ilya Maximets <i.maximets@ovn.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, dev@openvswitch.org,
+ linux-kernel@vger.kernel.org, pshelar@ovn.org, echaudro@redhat.com,
+ aconole@redhat.com
 
-On Sat, Mar 22, 2025 at 08:30:43AM +0530, Krishna Chaitanya Chundru wrote:
-> Move the phy, phy-names, wake-gpio's to the pcie root port node instead of
-> the bridge node, as agreed upon in multiple places one instance is[1].
+Hello:
 
-You aren't really moving them except in the example. This is an ABI 
-break for sc7280. Is anyone going to care?
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-You need to deprecate the properties in the old location.
-
-> Update the qcom,pcie-common.yaml to include the phy, phy-names, and
-> wake-gpios properties in the root port node. There is already reset-gpio
-> defined for PERST# in pci-bus-common.yaml, start using that property
-> instead of perst-gpio.
+On Thu, 20 Mar 2025 23:42:07 +0100 you wrote:
+> Some field descriptions were missing, some were not very accurate.
+> Not touching the uAPI header or .c files for now.
 > 
-> For backward compatibility, do not remove any existing properties in the
-> bridge node.
+> Formatting of those comments isn't great in general, but at least
+> they are not missing anything now.
 > 
-> [1] https://lore.kernel.org/linux-pci/20241211192014.GA3302752@bhelgaas/
+> Before:
+>   $ ./scripts/kernel-doc -none -Wall net/openvswitch/*.h 2>&1 | wc -l
+>   16
 > 
-> Signed-off-by: Krishna Chaitanya Chundru <krishna.chundru@oss.qualcomm.com>
-> ---
->  .../devicetree/bindings/pci/qcom,pcie-common.yaml  | 22 ++++++++++++++++++++++
->  .../devicetree/bindings/pci/qcom,pcie-sc7280.yaml  | 18 ++++++++++++++----
->  2 files changed, 36 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> index 0480c58f7d99..258c21c01c72 100644
-> --- a/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> +++ b/Documentation/devicetree/bindings/pci/qcom,pcie-common.yaml
-> @@ -85,6 +85,28 @@ properties:
->    opp-table:
->      type: object
->  
-> +patternProperties:
-> +  "^pcie@":
-> +    type: object
-> +    $ref: /schemas/pci/pci-pci-bridge.yaml#
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +      phys:
-> +        maxItems: 1
-> +
-> +      phy-names:
-> +        items:
-> +          - const: pciephy
+> [...]
 
-Just drop phy-names in the new location. It's pointless especially when 
-foo-names is just "${module}foo".
+Here is the summary with links:
+  - [net-next] net: openvswitch: fix kernel-doc warnings in internal headers
+    https://git.kernel.org/netdev/net-next/c/6bb0dcb3d321
 
-> +
-> +      wake-gpios:
-> +        description: GPIO controlled connection to WAKE# signal
-> +        maxItems: 1
-> +
-> +    unevaluatedProperties: false
-> +
->  required:
->    - reg
->    - reg-names
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
