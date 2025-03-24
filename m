@@ -1,74 +1,275 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC03264A7B;
-	Mon, 24 Mar 2025 17:32:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5ECB26462D
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:32:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837577; cv=none; b=MR/zg9bFRGHI4kkkdJyffND6vuo+fW668VXRgFvx/kyi29AWE60igm1eb26/uTLMy78cNUauizM+MvgLn5JHkMMGllm7wNLwiqzMrRow/baiLGqF0gUGng/xeHljhX5UA98BiYmFrxcPvtTIWGTuGkuDL9eklteotvkW+9HdBSI=
+	t=1742837575; cv=none; b=Sou9U+VGLfUr/esJ2N/sWJwRS8VmauZtYt+5AxjtGzfwSvdal+xZd6BkEzkQf72wKlJ7rPBkOoaC147cDqA+kwWZ+oI0nMI8ARfdppv1yEhHlJ2T7q0G4cndQ6eSCnjjYCYSG9Ew6izphi9fUAZp89lJ1AiyBPPKg755IabfE1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837577; c=relaxed/simple;
-	bh=eTTiCtmz60p7z8f27x+J9d7RMqWRVQuPBVMLMwzQSE4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Z/7SiRWAOjMk0yjr++WYL4nLOz0k77MGZRs+FjIqjMjUgLIdGgEVjxyQBRjaewvDCDrOeaZeDwi7fWHU2dhZRlFXUpRFANY63vd59K8d8cnXDbSHdb3A7wiIWjDx+PrNQLvLxbMVgGJ97vx4ag3eG4Mq5oJTlKmlbxD7MzZA9FQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkNomO58; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742837575; c=relaxed/simple;
+	bh=jqeh4Xsv0CfKNigyiQO9yN1pSEojv6cGJrdFDQycpnA=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=VeydidzgaN+0bMrEVHzSpUNNlIoI0JYbtO7zek51o4cmLD/HUrc81kUVNzw7qO1J1LWWEk0lA78DhNPLUuMibYsz8FGtgU7OkkSLM3rlOQiCwOTUFjzj1JVR4LymRJq+l/tM0bc2HZSdVGZ2Zbg2EdbimooyHAfr3tgr7iV1U2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=oPryfCnr; arc=none smtp.client-ip=209.85.216.73
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkNomO58"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C98C7C4CEF7;
-	Mon, 24 Mar 2025 17:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742837576;
-	bh=eTTiCtmz60p7z8f27x+J9d7RMqWRVQuPBVMLMwzQSE4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=VkNomO58J/pnmG41YMSL+ONNvswanTfc5ti3vm/WH5Xi/Lw27hRCRQZ9HxFsMbgQU
-	 EAshZV2S8HZa7+xZvmaxZsYNTYyH6UC+gY+9AGutoToj7ULXxRvU+h5YS/74P8vVWZ
-	 /9gEUbreqYHie7f4rr+EdXftr96hEckP6WXo4V7dy9uRAiInvrrQkyUz7U/lfbIbYu
-	 vNIDATNUMSG+yLAnEIuVl8qGnOnn/Miwgbx7QkXSq19Od6vDha4xSRFSVUSgiYc5Gk
-	 kV1SZKX9PFfaUMT6uyKPGoWGC+XAF8bnuEqhiEYEeBdIZOSdfDJD5lWzTjWpsgqvI+
-	 XOPV9p0VNZxuw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-next@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 02/10] ASN.1: add module description
-Date: Mon, 24 Mar 2025 18:32:27 +0100
-Message-Id: <20250324173242.1501003-2-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
-References: <20250324173242.1501003-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oPryfCnr"
+Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff4b130bb2so7703759a91.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:32:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742837573; x=1743442373; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=1Ya/oFtnNY7+pGYqinZGprl0k84EEnI1q0ZfiObPFs0=;
+        b=oPryfCnrKtpuKA6tboavd6yT+pxkFANrE3KQ+RSArD94HF0q3uM7ie/NBcvt53j8Q9
+         fkVkohFX2K2Z9WFpOJ60GQujjHKkGW6p+OTPcJ1fcS0PPVeI+zpj1r6ibNT+kdoLTjod
+         0Pspe3tjIgPiDwU9iejXo83Lol59q4JeyjbhqP+DwNrqMyUezWVA0R1sZhbnwGqUjomQ
+         +SZGiJGB13x8fMJfsTzf3O3Wu9fnJM3yP9dmUa6SHwe/GD+BPg57GXDQ4D2Q4yP3ZiJ1
+         6GXyVYTBFhtMFkH5BL8VtUdZzL/QAf35TN0kSGvmneNa0EBjdyriceBBvqm9HRTammuP
+         sU5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742837573; x=1743442373;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=1Ya/oFtnNY7+pGYqinZGprl0k84EEnI1q0ZfiObPFs0=;
+        b=e9l9t7oH6fGD0aFhKSOdiQRmz8grDpuWK2kOQj7LG4tXu7z9Fm2auOeuoW/dMu7S8C
+         qoSUWmzEsIH6M+MVtsQNpiPLiYa+9SgyAlM3TacqSy9o6v1caQREIK6Np8kg7Z2yQ8XV
+         Vq7pqkTgxkG3AgZUQGkT6eU3Q8Q3YWzXfReeaxgJoxwWusQspm2Ix5Y5KZ71ltnfuioH
+         P5dcOj3JQERdM4ZaUmLbFLqYMTXXRPGNx8Du/1lSLsF/wFWE6zkzlMKr05Pm6kYjK+BA
+         C0kid172sg2T5BCblY1DXwW51kdHgomiiBPeTsUP8ghQ4mNyCR3hmRg7Bw5Yb5GLL9ov
+         yNZw==
+X-Forwarded-Encrypted: i=1; AJvYcCUVxQ+aR9Ljn+6ohoFZ2lPckIpOgBtJ9BOOIZ1zjCw8Mgr9dZd/+MtsG7axdAfXsJmAa80n89d2LLFR8uo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwWrf5fh9pw1Gk/7n01LySdQOkXRvfc1qFhuNDT7P+hkOcJLeVe
+	LAlmA8Zmx2FPmJf/CJZgpWcfivX+NqNn6IliG+JC9JA22/+MyZxQctwhY9ImDML6VBMgEgRDPzb
+	IZZ7wCg==
+X-Google-Smtp-Source: AGHT+IGpguu4/NyJujzClyWSa0WQRqb1Suj/mOYzqbowa3BrBAeAJiAlTWZpsBT1An9QqH4xJtO2xBiGOtyQ
+X-Received: from pjd6.prod.google.com ([2002:a17:90b:54c6:b0:2e5:5ffc:1c36])
+ (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90a:d008:b0:2fe:a545:4c84
+ with SMTP id 98e67ed59e1d1-3030ff03212mr18790033a91.34.1742837573143; Mon, 24
+ Mar 2025 10:32:53 -0700 (PDT)
+Reply-To: Mingwei Zhang <mizhang@google.com>
+Date: Mon, 24 Mar 2025 17:30:41 +0000
+In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250324173121.1275209-2-mizhang@google.com>
+Subject: [PATCH v4 01/38] perf: Support get/put mediated PMU interfaces
+From: Mingwei Zhang <mizhang@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-This is needed to avoid a build warning:
+Currently, the guest and host share the PMU resources when a guest is
+running. KVM has to create an extra virtual event to simulate the
+guest's event, which brings several issues, e.g., high overhead, not
+accuracy and etc.
 
-WARNING: modpost: missing MODULE_DESCRIPTION() in lib/asn1_decoder.o
+A new mediated PMU method is proposed to address the issue. It requires
+that the PMU resources can be fully occupied by the guest while it's
+running. Two new interfaces are implemented to fulfill the requirement.
+The hypervisor should invoke the interface while creating a guest which
+wants the mediated PMU capability.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+The PMU resources should only be temporarily occupied as a whole when a
+guest is running. When the guest is out, the PMU resources are still
+shared among different users.
+
+The exclude_guest event modifier is used to guarantee the exclusive
+occupation of the PMU resources. When creating a guest, the hypervisor
+should check whether there are !exclude_guest events in the system.
+If yes, the creation should fail. Because some PMU resources have been
+occupied by other users.
+If no, the PMU resources can be safely accessed by the guest directly.
+Perf guarantees that no new !exclude_guest events are created when a
+guest is running.
+
+Only the mediated PMU is affected, but not for other PMU e.g., uncore
+and SW PMU. The behavior of those PMUs are not changed. The guest
+enter/exit interfaces should only impact the supported PMUs.
+Add a new PERF_PMU_CAP_MEDIATED_VPMU flag to indicate the PMUs that
+support the feature.
+
+Add nr_include_guest_events to track the !exclude_guest events of PMU
+with PERF_PMU_CAP_MEDIATED_VPMU.
+
+Suggested-by: Sean Christopherson <seanjc@google.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
 ---
- lib/asn1_decoder.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/perf_event.h | 11 +++++++
+ kernel/events/core.c       | 66 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 77 insertions(+)
 
-diff --git a/lib/asn1_decoder.c b/lib/asn1_decoder.c
-index 13da529e2e72..5738ae286b41 100644
---- a/lib/asn1_decoder.c
-+++ b/lib/asn1_decoder.c
-@@ -518,4 +518,5 @@ int asn1_ber_decoder(const struct asn1_decoder *decoder,
- }
- EXPORT_SYMBOL_GPL(asn1_ber_decoder);
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 8333f132f4a9..54018dd0b2a4 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -301,6 +301,8 @@ struct perf_event_pmu_context;
+ #define PERF_PMU_CAP_AUX_OUTPUT			0x0080
+ #define PERF_PMU_CAP_EXTENDED_HW_TYPE		0x0100
+ #define PERF_PMU_CAP_AUX_PAUSE			0x0200
++/* Support to passthrough whole PMU resoure to guest */
++#define PERF_PMU_CAP_MEDIATED_VPMU		0x0400
  
-+MODULE_DESCRIPTION("Decoder for ASN.1 BER/DER/CER encoded bytestream");
- MODULE_LICENSE("GPL");
+ /**
+  * pmu::scope
+@@ -1811,6 +1813,8 @@ extern void perf_event_task_tick(void);
+ extern int perf_event_account_interrupt(struct perf_event *event);
+ extern int perf_event_period(struct perf_event *event, u64 value);
+ extern u64 perf_event_pause(struct perf_event *event, bool reset);
++int perf_get_mediated_pmu(void);
++void perf_put_mediated_pmu(void);
+ #else /* !CONFIG_PERF_EVENTS: */
+ static inline void *
+ perf_aux_output_begin(struct perf_output_handle *handle,
+@@ -1901,6 +1905,13 @@ static inline int perf_exclude_event(struct perf_event *event, struct pt_regs *r
+ {
+ 	return 0;
+ }
++
++static inline int perf_get_mediated_pmu(void)
++{
++	return 0;
++}
++
++static inline void perf_put_mediated_pmu(void)			{ }
+ #endif
+ 
+ #if defined(CONFIG_PERF_EVENTS) && defined(CONFIG_CPU_SUP_INTEL)
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index bcb09e011e9e..be623701dc48 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -431,6 +431,20 @@ static atomic_t nr_bpf_events __read_mostly;
+ static atomic_t nr_cgroup_events __read_mostly;
+ static atomic_t nr_text_poke_events __read_mostly;
+ static atomic_t nr_build_id_events __read_mostly;
++static atomic_t nr_include_guest_events __read_mostly;
++
++static atomic_t nr_mediated_pmu_vms;
++static DEFINE_MUTEX(perf_mediated_pmu_mutex);
++
++/* !exclude_guest event of PMU with PERF_PMU_CAP_MEDIATED_VPMU */
++static inline bool is_include_guest_event(struct perf_event *event)
++{
++	if ((event->pmu->capabilities & PERF_PMU_CAP_MEDIATED_VPMU) &&
++	    !event->attr.exclude_guest)
++		return true;
++
++	return false;
++}
+ 
+ static LIST_HEAD(pmus);
+ static DEFINE_MUTEX(pmus_lock);
+@@ -5320,6 +5334,9 @@ static void _free_event(struct perf_event *event)
+ 
+ 	unaccount_event(event);
+ 
++	if (is_include_guest_event(event))
++		atomic_dec(&nr_include_guest_events);
++
+ 	security_perf_event_free(event);
+ 
+ 	if (event->rb) {
+@@ -5877,6 +5894,36 @@ u64 perf_event_pause(struct perf_event *event, bool reset)
+ }
+ EXPORT_SYMBOL_GPL(perf_event_pause);
+ 
++/*
++ * Currently invoked at VM creation to
++ * - Check whether there are existing !exclude_guest events of PMU with
++ *   PERF_PMU_CAP_MEDIATED_VPMU
++ * - Set nr_mediated_pmu_vms to prevent !exclude_guest event creation on
++ *   PMUs with PERF_PMU_CAP_MEDIATED_VPMU
++ *
++ * No impact for the PMU without PERF_PMU_CAP_MEDIATED_VPMU. The perf
++ * still owns all the PMU resources.
++ */
++int perf_get_mediated_pmu(void)
++{
++	guard(mutex)(&perf_mediated_pmu_mutex);
++	if (atomic_inc_not_zero(&nr_mediated_pmu_vms))
++		return 0;
++
++	if (atomic_read(&nr_include_guest_events))
++		return -EBUSY;
++
++	atomic_inc(&nr_mediated_pmu_vms);
++	return 0;
++}
++EXPORT_SYMBOL_GPL(perf_get_mediated_pmu);
++
++void perf_put_mediated_pmu(void)
++{
++	atomic_dec(&nr_mediated_pmu_vms);
++}
++EXPORT_SYMBOL_GPL(perf_put_mediated_pmu);
++
+ /*
+  * Holding the top-level event's child_mutex means that any
+  * descendant process that has inherited this event will block
+@@ -12210,6 +12257,17 @@ static void account_event(struct perf_event *event)
+ 	account_pmu_sb_event(event);
+ }
+ 
++static int perf_account_include_guest_event(void)
++{
++	guard(mutex)(&perf_mediated_pmu_mutex);
++
++	if (atomic_read(&nr_mediated_pmu_vms))
++		return -EOPNOTSUPP;
++
++	atomic_inc(&nr_include_guest_events);
++	return 0;
++}
++
+ /*
+  * Allocate and initialize an event structure
+  */
+@@ -12435,11 +12493,19 @@ perf_event_alloc(struct perf_event_attr *attr, int cpu,
+ 	if (err)
+ 		goto err_callchain_buffer;
+ 
++	if (is_include_guest_event(event)) {
++		err = perf_account_include_guest_event();
++		if (err)
++			goto err_security_alloc;
++	}
++
+ 	/* symmetric to unaccount_event() in _free_event() */
+ 	account_event(event);
+ 
+ 	return event;
+ 
++err_security_alloc:
++	security_perf_event_free(event);
+ err_callchain_buffer:
+ 	if (!event->parent) {
+ 		if (event->attr.sample_type & PERF_SAMPLE_CALLCHAIN)
 -- 
-2.39.5
+2.49.0.395.g12beb8f557-goog
 
