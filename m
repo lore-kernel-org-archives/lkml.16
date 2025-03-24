@@ -1,99 +1,92 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38A53B1A4;
-	Mon, 24 Mar 2025 16:40:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD411E531;
+	Mon, 24 Mar 2025 16:41:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742834461; cv=none; b=nwN0ssC7xx2hhH4oEcV2/LG5ICZr6S4rZUsAh14gw1aSzCHeUXGOSaeNPgLyKYzYFI0uu7c6rmGw2pRnwlUCTOhFxR/eL7njc62TgzsjLGlH3UhtVQuI5hZSIak93uhzuLamy/F89T1wBHgOgzWFoZhJiN5+QrvdI2mvqH5CF1s=
+	t=1742834488; cv=none; b=Hozsu+Ff7VB5mrRjW3X7rkvzvE1+b5FfM2mAEN67+qq9DHeVXYntd2/11qJBImzmeynvnZX1IB0kbKh/SeWKTqlTwrHqYva6zbzuGdIpa04NDj6R7F5Xhzhwk67upQ5GzIJavvng5BrntUbgn25WH57Pk+is1iyhVogqysGBAEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742834461; c=relaxed/simple;
-	bh=/rRjucx91ifCHglFRPYOdFhd3kU4du9TzWNb328YWEs=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=OIU/bRWqYvQ9CnXkWEamcp4Lr31cQcIN73uWaLKU+tCgKjSn9Q5qH26N1nmGv7pQafs5OQuNrlvStX7LRpldt8A0MPx6BSII0QhI7nQahgTpGkL5OEWGBPDka2kBT+sSyb9R6vUrdnFjioEsept0VpXtO3niU9XY00MUjb9FY6A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=bIYthxNn; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1742834488; c=relaxed/simple;
+	bh=04kfgYIzADto3t7bsBZLbAym6L+z8rL/NeALURMHoWc=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=qbzyxb0rQJjvJfvzA0LkIrOyH+YFLGVl2cOkDDT8GpQfkVISVerWfFfq9RLCKzpVww8YVE0gvYp0JW0cVsfZqQoooYk3txQbvQBlhVr6sHVdMaggvv9bh0LWddMl0mDbQhriO94umOR7giHYt29veOevJwo0T58HKsOfANZjDOk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SENGSk+b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="bIYthxNn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742834418; x=1743439218; i=markus.elfring@web.de;
-	bh=/rRjucx91ifCHglFRPYOdFhd3kU4du9TzWNb328YWEs=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=bIYthxNni1NNrGMtMBN4yZXVCA+VCmXcIVuEM+FE75hRirrtu5QpGw10SZvfIy3u
-	 PtylrD4161N7xNz4AsWweuL486niZvLl9GtRQj3aGRa0WgvrKFfopAHmvYbtTiLMj
-	 /Af1ncCOTPIFbx9/DPYTXYI5I3MnXUo8itnNRUEOGiGBGEKQl0R/AIbZ5hobp5Xj9
-	 bLm6M0P0MMo8KMc1AIJFyLFtV9lQ6XKWvmS66s6tJtcd0qIWmJmUWiK2+uyiRGJOq
-	 gf5vZsDZy0MxD2bAjv6qdkV1nb6wPsFnG8NkZfKt/HESqrXredfrYQJZmlCdp6W3s
-	 fERaYlKDvH8zdZtHAQ==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MSIJA-1tYeNe0plw-00R0lK; Mon, 24
- Mar 2025 17:40:18 +0100
-Message-ID: <fca457c2-f0af-4fb8-9771-06916737f9db@web.de>
-Date: Mon, 24 Mar 2025 17:40:10 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SENGSk+b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D11A8C4CEEA;
+	Mon, 24 Mar 2025 16:41:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742834488;
+	bh=04kfgYIzADto3t7bsBZLbAym6L+z8rL/NeALURMHoWc=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SENGSk+bE6nHZx+U4geFQTVl9bzNPaXLTy5mnB4G0Y2i+JlB+Ld8KqXEnXsY9Kexa
+	 DbfQg+lwSi3zUDGqVRr6BRSjPKEZggIfLs0860jlWWkiphE9UlMmpkXYpRIk/y5Bpu
+	 CVkQuPzmcwG+WUz77rFQM/yeYTSDCfXh4s2GPmMXnF9zyb4whXfRGJ9rwgU79VlV93
+	 CkNKDHqEpiW0V/wwTURlYgdvdUqmiqHhzVUI3JdDaxdhjQEcB7lxZItgJp+y8689Vj
+	 X89zxKRyF+rtrB+F3dyld/C363PHGUDtSSRo7HoIaVCjcpJCD0XuW/S5EtunwQWeP2
+	 huKhUAQ6ibwUQ==
+Date: Mon, 24 Mar 2025 11:41:26 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>
+Cc: Lukas Wunner <lukas@wunner.de>, Bjorn Helgaas <bhelgaas@google.com>,
+	"Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-pci@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] PCI/hotplug: Don't enable HPIE in poll mode
+Message-ID: <20250324164126.GA1252202@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-To: Rakie Kim <rakie.kim@sk.com>, linux-mm@kvack.org,
- linux-cxl@vger.kernel.org
-Cc: LKML <linux-kernel@vger.kernel.org>, kernel_team@skhynix.com,
- Andrew Morton <akpm@linux-foundation.org>,
- Dan Williams <dan.j.williams@intel.com>, David Hildenbrand
- <david@redhat.com>, Gregory Price <gourry@gourry.net>,
- Honggyu Kim <honggyu.kim@sk.com>,
- Jonathan Cameron <Jonathan.Cameron@huawei.com>,
- Joshua Hahn <joshua.hahnjy@gmail.com>,
- Ying Huang <ying.huang@linux.alibaba.com>, Yunjeong Mun <yunjeong.mun@sk.com>
-References: <20250320041749.881-2-rakie.kim@sk.com>
-Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted
- interleave sysfs
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250320041749.881-2-rakie.kim@sk.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:vxBGvwS+EWZlmP/W7uoetSnf9UKACodThYGYygfRGKVZk+mygbS
- CwF0SCA3f02mHf8S3wRybjPH9CLqmVtfaSIuXSiJ+jzmuKXf0WJCUvUabLrLG6WvgMqAF70
- gRrEifpNTMNgMkmBzve8Itic2FUr8LVFriHQQ40zgkMFGB7bWYXkJEaAVs/AC9l264f5jvU
- 78FKWmQPh6/bu38Hjq8bw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:CS8vjuGqyOY=;Bl6LXBxXiN8N+Uk50ucBm4GLFDZ
- nEQJGuaoAv7iHslz2wf1KzVrid4ay9FW//7ridLaa7XqNRk9e1Wlsl7eUYdgSRgn4E6jdPLqw
- PoTGuGThAK2CS4co8K3MC8NFYCkMRAwBHcA1bC/RFdeXGVZHaDY+8beFbbNz+w8sztCy//w0k
- 1DDLj3KtoxkJboeL+6bIchcsHRDXfB1/TpNjQBrauuiPsPblxwE5MCizlzHyBcWipb8o8sRvF
- r8B/ReOAjlqu6gEaR2FbaopBhP/4S+vmWACkUcnXg0AZhs2w2TykNWNK7RvSs0orwEHFfx4dd
- 4dv222dDMbJuOuEpm13dMhqL2k2ZnLEpu40BgCLGv4VGUwYEp77t2pLtFwI9h4kLIa5jKwLSh
- bIoy9Nbg07o/iT0qkBhXXZTEtcW3JN9t24uS1V+aHCEvnYWpshSmdK8+pSwIs/OhCdpqk6lq8
- uUfxiTKASkx1B0i9Z0dc6zs5UgnEF8BiaaSON8K419G5JiUbZpNWOvM1BMiXIwg+K5OI/vcf1
- o/bGR1d09jQBcQCOrVNdSJ5Tx8Kd001ygGFftQXbgdUHV3n/GVqsUYbcRMWZ84TNrL0neKWjg
- cwALEzRJATiKzLKdcsti8JK/gbKGwDfgz7TyxsZM/Aq8XIOZ5zrvE1cEU4mYRYm0Z5a9+XiB+
- pfRjPyBRWBG3XIyXl8JDY0Vdo17I0OQWqHaYDmhK/CjeNPfjQXCQF80MKhH04IcjN3gje32J6
- qQYZhyscB9dOvm0bim9LXC3krMs2AD5y63VRw3CQ/6U5X1v+Qc1kw47ETIsoLXg2k1l3jjVcH
- 9IUGtR9Zw/+J6pVxeyajthdlnmm3ISPp3QhCVPMpu8s5ysJwLhCZDB5SSHjBOEcI1xhzjd8nQ
- tH29+h+41BWdbQUozPaewEe2c2XoHUXlu9uxW1SYktqehcXM6LBoSoGhVCx6LFz61ESu0f8Sv
- t+CK4e0439vPHD7qPQ2ID8DmplS44Q28B0COzYbn9W+mQF3qYIjlq0pvHdyQCOAsff9BBYAeS
- lnstsWpECJJNsjvPWFxGMCsU89fjv5cdTVRTkIvwug1cJT0L+P3SDbJlzbtm9dJaEUKinT0ne
- UWp27HlM2pLJe5lI0qY8CX6XQfb0AAxX3xuCXn7/UItjAPI1YUNhxmq7xd0uv0GUVRTvDbG16
- 5kzFu/i/DCenoU/dPC2hqjNZxgVwUQw6DWz+JFPLpwNcXUOIAe3PIrbMvXhY4V+OXlCBuGHr5
- u7d9h/i3gWCWdSakCsGN1dKAjMVvAHPAG5p7UdsP5IMJ//DZQ4gaiu/CenmCrLkxwE4qQ2I9E
- th0ZyAO8KkFaVQ0Q1scPXhvui22ElRUcxuRvzRg9/rof1Brut1KVPQVxZhNGZdkHlHr2oYyzd
- 9plwUimYymvOdeKcONMixv2Zp0K6FuIpAj1bmjITdkdbIkPAWINWcntcHaeIs8PGG93wEZYtT
- reCZtZSPncqE/4OFbWTto0TedlyLBwHJKq7D6YLeMEi5FxVEz
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <005837ad-e7dd-85c8-b0d3-ce5aa0257354@linux.intel.com>
 
-=E2=80=A6
-> This patch resolves the issue =E2=80=A6
+On Mon, Mar 24, 2025 at 01:00:33PM +0200, Ilpo Järvinen wrote:
+> On Fri, 21 Mar 2025, Bjorn Helgaas wrote:
+> 
+> > On Fri, Mar 21, 2025 at 07:07:47PM +0100, Lukas Wunner wrote:
+> > > On Fri, Mar 21, 2025 at 12:09:19PM -0500, Bjorn Helgaas wrote:
+> > > ...
 
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
+> > > >   - It's annoying that pcie_enable_interrupt() and
+> > > >     pcie_disable_interrupt() are global symbols, a consequence of
+> > > >     pciehp being split across five files instead of being one, which
+> > > >     is also a nuisance for code browsing.
+> ...
 
-Regards,
-Markus
+> > > The only reason I've refrained from making major adjustments to this
+> > > structure in the past was that it would make "git blame" a little more
+> > > difficult and applying fixes to stable kernels would also become somewhat
+> > > more painful as it would require backporting.
+> > 
+> > Yeah, that's the main reason I haven't tried to do anything either.
+> > On the other hand, the browsing nuisance is an everyday thing forever
+> > if we leave it as-is.
+> 
+> I get half mad every time I need to browse code under hotplug/. I even 
+> started doing:
+> 
+>   cat ./pciehp*.[hc] | less -S 
+> 
+> ...to workaround the constant need to jump between those files. I 
+> certainly would like to see the split gone especially between ctrl and 
+> hpc.
+
+I would definitely take patches to consolidate pciehp and maybe
+acpiphp.
+
+The other drivers are annoying, too, but I'm not sure it's worth the
+trouble since they're rarely used and updated.
+
+> Can't git blame be given -M -C to deal with this? Or are those truly lines 
+> that were introduced by the consolidation commit?
+
+I'm so git-illiterate that I habitually just search "git log -p".  
+"git blame -M -C ..." would probably be much more effective.
+
+Bjorn
