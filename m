@@ -1,53 +1,173 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEA716F06B;
-	Mon, 24 Mar 2025 16:05:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D68A261584
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:06:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742832358; cv=none; b=DasXn/34LAZEqNqZoenD5KZfOFM5tit/+wS2OirgDqn0FOCGWlva/zg9sI/SYlCrl8wDihSVxCxCvXgekfxwDt3qcqw5oOVSEK7nPz/dR26CY3IUymLyF3w81TnIWQSzU66S9ik6AWdOIf4fDk1tH0u1w142nlp8yzn7k+7ajwg=
+	t=1742832377; cv=none; b=fV+rOaZWQekkrqYt9ux8FDZ5dHetZq9rjC7g9aTc1yFS7d+QQr/0f06aM2ohTdC6nIjTL1Db8IfJgetX8kI7cRz9OjvppxLCt4x1tKmu2XkG3K7MmrQPSasRgpTRXYAiy/jzWAV1+iyBwHNXCzW5uCbI1uW01OCJsxrv9l2fjQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742832358; c=relaxed/simple;
-	bh=vL1/tCyN9FMgwjecz6QvgI4hFByZC2lX3OvWrZRKY3Y=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iH0dpWtP9bWj/cKJ09LHw/QSFGCnm74x+3Psc0Wk1TNTV0+csNga8FWpwX2LSgm4zf74rsinVAEMcz/ZdTSNxo+mJGU6ikjMgByKgj4u0IJCmGfNc6+xVuF49RUtEYea99Mi8sKsYk2nVCrggRtMSpdO1+lKW8ieivJRz1G2f7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1F28C4CEDD;
-	Mon, 24 Mar 2025 16:05:56 +0000 (UTC)
-Date: Mon, 24 Mar 2025 12:06:38 -0400
-From: Steven Rostedt <rostedt@goodmis.org>
-To: John Kacur <jkacur@redhat.com>
-Cc: Tomas Glozar <tglozar@redhat.com>, linux-trace-kernel@vger.kernel.org,
- linux-kernel@vger.kernel.org, Luis Goncalves <lgoncalv@redhat.com>
-Subject: Re: [PATCH 1/6] rtla/osnoise: Unify params struct
-Message-ID: <20250324120638.0629d4ee@gandalf.local.home>
-In-Reply-To: <e6a2d061-42bf-72c0-0e40-75bbe5b1e831@redhat.com>
-References: <20250320092500.101385-1-tglozar@redhat.com>
-	<20250320092500.101385-2-tglozar@redhat.com>
-	<e6a2d061-42bf-72c0-0e40-75bbe5b1e831@redhat.com>
-X-Mailer: Claws Mail 3.20.0git84 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1742832377; c=relaxed/simple;
+	bh=WQCIJdCnlZlNFzh0vKMJt+7ek+uPiTZPiLYOTCSdIYk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=M32cgHXNwZ88HWK74EQLD92VDuWktIv35XJyTDVkCHly4tg9WtDWDoxMvMkOPQI/KWIGFwxpPbM0q0D9rEuYJYDBo0rD+5650Xj5mWoKlxt8vIP/TfuxAmXuxzjS4jkP8bcVJjMYpP7dmepBt4/BRQl4YOrx6mYegUefawyxFEU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A104106F;
+	Mon, 24 Mar 2025 09:06:19 -0700 (PDT)
+Received: from [192.168.188.123] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CBC4A3F58B;
+	Mon, 24 Mar 2025 09:06:09 -0700 (PDT)
+Message-ID: <2415346f-f7ae-4bda-a6bc-f20a9628d3a0@arm.com>
+Date: Mon, 24 Mar 2025 16:06:08 +0000
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 6/7 v5] sched/fair: Add misfit case to push task mecanism
+ for EAS
+To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
+ peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
+ rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+ vschneid@redhat.com, lukasz.luba@arm.com, rafael.j.wysocki@intel.com,
+ pierre.gondois@arm.com, linux-kernel@vger.kernel.org
+Cc: qyousef@layalina.io, hongyan.xia2@arm.com, luis.machado@arm.com,
+ qperret@google.com
+References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
+ <20250302210539.1563190-7-vincent.guittot@linaro.org>
+Content-Language: en-US
+From: Christian Loehle <christian.loehle@arm.com>
+In-Reply-To: <20250302210539.1563190-7-vincent.guittot@linaro.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On Thu, 20 Mar 2025 15:00:08 -0400 (EDT)
-John Kacur <jkacur@redhat.com> wrote:
-
-> > -#include "utils.h"
-> >  #include "osnoise.h"
-> >  
-> >  struct timerlat_params {
-> > --   
+On 3/2/25 21:05, Vincent Guittot wrote:
+> Some task misfit cases can be handled directly by the push mecanism
+> instead of triggering an idle load balance to pull the task on a better
+> CPU.
 > 
-> Reviewed-by: John Kacur <jkacur@redhat.com>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
 
-Please trim your replies. I tend to stop scrolling if there's no comment
-after three page downs. But it is very annoying to have to scroll down an
-entire long patch to see a single reviewed-by tag :-/
+So why is one better than the other?
+In my testing most misfit migrations were still handled by load-balance,
+simply because the push mechanism is only triggered when switching from
+the task (but it's still running, often 'uncontended' for a while).
+I can provide some numbers here if desired.
 
--- Steve
+> ---
+>  kernel/sched/fair.c | 38 +++++++++++++++++++++++++-------------
+>  1 file changed, 25 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index c3e383b86808..d21fe0a26633 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -8508,6 +8508,8 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
+>  			target_stat.runnable = cpu_runnable(cpu_rq(cpu));
+>  			target_stat.capa = capacity_of(cpu);
+>  			target_stat.nr_running = cpu_rq(cpu)->cfs.h_nr_runnable;
+> +			if ((p->on_rq) && (!p->se.sched_delayed) && (cpu == prev_cpu))
+> +				target_stat.nr_running--;
+>  
+>  			/* If the target needs a lower OPP, then look up for
+>  			 * the corresponding OPP and its associated cost.
+> @@ -8613,6 +8615,9 @@ static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
+>  	if (p->nr_cpus_allowed == 1)
+>  		return false;
+>  
+> +	if (!task_fits_cpu(p, cpu_of(rq)))
+> +		return true;
+> +
+>  	if (is_rd_overutilized(rq->rd))
+>  		return false;
+>  
+> @@ -8624,33 +8629,33 @@ static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
+>  
+>  static int active_load_balance_cpu_stop(void *data);
+>  
+> -static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
+> +static inline bool check_pushable_task(struct task_struct *p, struct rq *rq)
+>  {
+>  	int new_cpu, cpu = cpu_of(rq);
+>  
+>  	if (!sched_energy_enabled())
+> -		return;
+> +		return false;
+>  
+>  	if (WARN_ON(!p))
+> -		return;
+> +		return false;
+>  
+>  	if (WARN_ON(!task_current(rq, p)))
+> -		return;
+> +		return false;
+>  
+>  	if (is_migration_disabled(p))
+> -		return;
+> +		return false;
+>  
+>  	/* If there are several task, wait for being put back */
+>  	if (rq->nr_running > 1)
+> -		return;
+> +		return false;
+>  
+>  	if (!sched_energy_push_task(p, rq))
+> -		return;
+> +		return false;
+>  
+>  	new_cpu = find_energy_efficient_cpu(p, cpu);
+>  
+>  	if (new_cpu == cpu)
+> -		return;
+> +		return false;
+>  
+>  	/*
+>  	 * ->active_balance synchronizes accesses to
+> @@ -8661,13 +8666,15 @@ static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
+>  		rq->active_balance = 1;
+>  		rq->push_cpu = new_cpu;
+>  	} else
+> -		return;
+> +		return false;
+>  
+>  	raw_spin_rq_unlock(rq);
+>  	stop_one_cpu_nowait(cpu,
+>  		active_load_balance_cpu_stop, rq,
+>  		&rq->active_balance_work);
+>  	raw_spin_rq_lock(rq);
+> +
+> +	return true;
+>  }
+>  
+>  static inline int has_pushable_tasks(struct rq *rq)
+> @@ -8952,7 +8959,11 @@ balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
+>  	return sched_balance_newidle(rq, rf) != 0;
+>  }
+>  #else
+> -static inline void check_pushable_task(struct task_struct *p, struct rq *rq) {}
+> +static inline bool check_pushable_task(struct task_struct *p, struct rq *rq)
+> +{
+> +	return false;
+> +}
+> +
+>  static inline void fair_queue_pushable_tasks(struct rq *rq) {}
+>  static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p) {}
+>  static inline void fair_add_pushable_task(struct rq *rq, struct task_struct *p) {}
+> @@ -13362,9 +13373,10 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+>  	if (static_branch_unlikely(&sched_numa_balancing))
+>  		task_tick_numa(rq, curr);
+>  
+> -	check_pushable_task(curr, rq);
+> -	update_misfit_status(curr, rq);
+> -	check_update_overutilized_status(task_rq(curr));
+> +	if (!check_pushable_task(curr, rq)) {
+> +		update_misfit_status(curr, rq);
+> +		check_update_overutilized_status(task_rq(curr));
+> +	}
+>  
+>  	task_tick_core(rq, curr);
+>  }
+
