@@ -1,54 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12E011F63EA;
-	Mon, 24 Mar 2025 21:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1D31FDD
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:06:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742850294; cv=none; b=JO8dImo6/M/jdY0Vb/HDzAiSqset0Ps44ghf2RIGQyEqAMaYNAfO1inM8Q7zsgs9g/HlQ5zx1Pu6/enWFbcpxOVAA6uGkaxWhxxNJPudlNBiTlrZmW25R5/h1qm/2x+uhMxCqj9HzUGrTnO16Ff7wNZTU6a8rdITQ/kwDs9pRQs=
+	t=1742850377; cv=none; b=NcA296K/7QediAgE7FPWC2qoX3I5jnH/d9pLbDxDuSqmzSQUIv3f/AI7UNWK91IXuhMaRD/OShJpfDwXoEnuM217szu26b6S6+wiP0BqC9HxKk1wwdR5FAniAGD/lUkarWRC2kbt/gZsJo255yT4COp/RY+qgcGQGmQteVPlCSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742850294; c=relaxed/simple;
-	bh=IoWE258jBNh0ra+jL8hEbT1/vCRHyQAdmsEh1LGLEZA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PCznK+hMQNdD0seNT4mDCGXBDJUX5pDp76fwTiAgbJ/OYgzM7MKa9NXGElFcSvFsrAZk690Szr3KUg1x7gQ01kctYyxfPdy34JO1mDvlPJ+tPNfnW1v5R8mS49uPc9SKokDJAQkv+fSptqepPJObp9LUdvTugW+iVQPQayizrjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtatxKBw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742850377; c=relaxed/simple;
+	bh=9/opTEs0d9NV3O3X17FC8CqUB8UV/tH+pUR280IUGH0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dchxdrVZTF/Sm2euyIn7JgZ7SWIwnUzGj2g/8YCDNnfPS3gPRXAX2zcXiWs/3WX/eu/Rc5WTs04eSgt5rXetjr/syDr90yacN391xskXcXkPX4EqqUq47ACfuk8m/3EqQ3nPYhma1CaW67NxU2fdP912bJ4qE0VCWsTfkvBfoqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKBBz/i4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtatxKBw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19F2CC4CEDD;
-	Mon, 24 Mar 2025 21:04:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKBBz/i4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CBDC4CEDD;
+	Mon, 24 Mar 2025 21:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742850293;
-	bh=IoWE258jBNh0ra+jL8hEbT1/vCRHyQAdmsEh1LGLEZA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=AtatxKBwUWEFzs9NFsD5TDKT/oTA8vvrlwxDxjjAe5HH2OYZVu2NlD6SdKVLlPgLE
-	 JP3rBeBRHA+CL9XJZKzKdtMO/yVGmm8lS4yU2T14kTBc/IxbWM1IZ+B5Z4IaZcxb47
-	 MqBRNREidIjBaJZKGgD1sWMLa0RyxVIKYQJhOmfcmCwotJxhf5s4wyxxvHYoN7qS7i
-	 ETfXt7id9HDNhCAhqkaZinlZarQdNG3gu+4gc3n8vQ+x8CEdo//KVCAGu5OTzSWkHj
-	 +XTJpHJj9z3tbWqZB6gL94P254qID2RYsr9DVk5IemZku4cAxKdsjFQ7F58x3nNNEf
-	 yjDS4NIBVCvmQ==
-From: Miguel Ojeda <ojeda@kernel.org>
-To: Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>
-Cc: Boqun Feng <boqun.feng@gmail.com>,
-	Gary Guo <gary@garyguo.net>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Benno Lossin <benno.lossin@proton.me>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nicolas Schier <nicolas@fjasle.eu>,
-	linux-kbuild@vger.kernel.org
-Subject: [RFC PATCH 10/10] rust: kbuild: enable `doc_markdown` Clippy lint
-Date: Mon, 24 Mar 2025 22:03:57 +0100
-Message-ID: <20250324210359.1199574-11-ojeda@kernel.org>
-In-Reply-To: <20250324210359.1199574-1-ojeda@kernel.org>
-References: <20250324210359.1199574-1-ojeda@kernel.org>
+	s=k20201202; t=1742850377;
+	bh=9/opTEs0d9NV3O3X17FC8CqUB8UV/tH+pUR280IUGH0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lKBBz/i4kh7dB0kWHp4zEStEsSfOcmbgMzE7FhrZCs+Ce8xjFZoD6SImnf+GlLpdD
+	 SlglhpBatW04bmZsp4aUB7SYT3N73TaGw6+dJa0a/bJ+FmR15QoA9/MJWhc5q/Shie
+	 0cvba7VqzD9TZWqYaNSNHfgJJbRoWxFZAsTB0zM4UAiumnP0MdhCeoglKgNjzXVWgL
+	 E2huBq31DVRTuVxhm2fN+jdZxOggSWGWROwL0eQGgkoN49jpRgZmhBVWhXuLcrCKsk
+	 7tSqeCdIpf1Smix/BjyN3yRKhsZpmSJv41Nh64ZDdn/IJTmBD6+6zzkrJ3Gl6FB9Nh
+	 mcpABU+VZKNRw==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Lucas De Marchi <lucas.demarchi@intel.com>,
+	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
+	Rodrigo Vivi <rodrigo.vivi@intel.com>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Oak Zeng <oak.zeng@intel.com>,
+	Matthew Brost <matthew.brost@intel.com>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Matthew Auld <matthew.auld@intel.com>,
+	Nirmoy Das <nirmoy.das@intel.com>,
+	Akshata Jahagirdar <akshata.jahagirdar@intel.com>,
+	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
+	intel-xe@lists.freedesktop.org,
+	dri-devel@lists.freedesktop.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/xe: avoid plain 64-bit division
+Date: Mon, 24 Mar 2025 22:06:02 +0100
+Message-Id: <20250324210612.2927194-1-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -57,64 +53,45 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Clippy supports the `doc_markdown` lint [1] since 2016 [2]:
+From: Arnd Bergmann <arnd@arndb.de>
 
-    Checks for the presence of _, :: or camel-case words outside ticks
-    in documentation.
+Building the xe driver for i386 results in a link time warning:
 
-It is a very common note in Linux kernel reviews to mention that
-documentation is missing a Markdown code span, e.g.:
+x86_64-linux-ld: drivers/gpu/drm/xe/xe_migrate.o: in function `xe_migrate_vram':
+xe_migrate.c:(.text+0x1e15): undefined reference to `__udivdi3'
 
-    /// Length of the data must be less than data_size.
+Avoid this by using DIV_U64_ROUND_UP() instead of DIV_ROUND_UP().  The driver
+is unlikely to be used on 32=bit hardware, so the extra cost here is not
+too important.
 
-should have been:
-
-    /// Length of the data must be less than `data_size`.
-
-This lint can identify some of those cases automatically for us.
-
-It also caught for us other typos or mis-documentation, such as a missing
-code block.
-
-Thus enable it, now that the tree is sufficiently clean.
-
-Relatedly, it would be nice to have something similar [3] even for
-comments (not just documentation), as well as for possible intra-doc links
-(which should also have less false positives).
-
-Link: https://rust-lang.github.io/rust-clippy/master/index.html#doc_markdown [1]
-Link: https://github.com/rust-lang/rust-clippy/commit/42bf37f49f49829507be4f2dfd6c5db9b8234b66 [2]
-Link: https://github.com/rust-lang/rust/issues/131510 [3]
-Link: https://lore.kernel.org/rust-for-linux/CANiq72=aVRMvOaU48DBLL=p+VoG3RvHK+K48XQhvHw3ARc0BNg@mail.gmail.com/
-Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+Fixes: 9c44fd5f6e8a ("drm/xe: Add migrate layer functions for SVM support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .clippy.toml | 4 ++++
- Makefile     | 1 +
- 2 files changed, 5 insertions(+)
+ drivers/gpu/drm/xe/xe_migrate.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/.clippy.toml b/.clippy.toml
-index 815c94732ed7..adc32c88176c 100644
---- a/.clippy.toml
-+++ b/.clippy.toml
-@@ -9,3 +9,7 @@ disallowed-macros = [
-     # it here, see: https://github.com/rust-lang/rust-clippy/issues/11303.
-     { path = "kernel::dbg", reason = "the `dbg!` macro is intended as a debugging tool" },
- ]
-+
-+doc-valid-idents = [
-+    "KUnit",
-+]
-diff --git a/Makefile b/Makefile
-index 70bdbf2218fc..5d6baedc097f 100644
---- a/Makefile
-+++ b/Makefile
-@@ -477,6 +477,7 @@ export rust_common_flags := --edition=2021 \
- 			    -Wrust_2018_idioms \
- 			    -Wunreachable_pub \
- 			    -Wclippy::all \
-+			    -Wclippy::doc_markdown \
- 			    -Wclippy::ignored_unit_patterns \
- 			    -Wclippy::mut_mut \
- 			    -Wclippy::needless_bitwise_bool \
---
-2.49.0
+diff --git a/drivers/gpu/drm/xe/xe_migrate.c b/drivers/gpu/drm/xe/xe_migrate.c
+index df4282c71bf0..aafb6209f2d0 100644
+--- a/drivers/gpu/drm/xe/xe_migrate.c
++++ b/drivers/gpu/drm/xe/xe_migrate.c
+@@ -1547,7 +1547,7 @@ void xe_migrate_wait(struct xe_migrate *m)
+ static u32 pte_update_cmd_size(u64 size)
+ {
+ 	u32 num_dword;
+-	u64 entries = DIV_ROUND_UP(size, XE_PAGE_SIZE);
++	u64 entries = DIV_U64_ROUND_UP(size, XE_PAGE_SIZE);
+ 
+ 	XE_WARN_ON(size > MAX_PREEMPTDISABLE_TRANSFER);
+ 	/*
+@@ -1558,7 +1558,7 @@ static u32 pte_update_cmd_size(u64 size)
+ 	 * 2 dword for the page table's physical location
+ 	 * 2*n dword for value of pte to fill (each pte entry is 2 dwords)
+ 	 */
+-	num_dword = (1 + 2) * DIV_ROUND_UP(entries, 0x1ff);
++	num_dword = (1 + 2) * DIV_U64_ROUND_UP(entries, 0x1ff);
+ 	num_dword += entries * 2;
+ 
+ 	return num_dword;
+-- 
+2.39.5
+
