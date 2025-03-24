@@ -1,97 +1,114 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1D31FDD
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:06:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C19A01E3DE0;
+	Mon, 24 Mar 2025 21:07:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742850377; cv=none; b=NcA296K/7QediAgE7FPWC2qoX3I5jnH/d9pLbDxDuSqmzSQUIv3f/AI7UNWK91IXuhMaRD/OShJpfDwXoEnuM217szu26b6S6+wiP0BqC9HxKk1wwdR5FAniAGD/lUkarWRC2kbt/gZsJo255yT4COp/RY+qgcGQGmQteVPlCSw=
+	t=1742850446; cv=none; b=FSxKfTotLtUqfceNBiozAw1rdJ3YDxv4vM/K5m0KA0w/iAaibZCt2VPrvQFAVATYZP3KgbkTjO0bQSxLFVGQ3biQ4RJN0AEhCXAdHGsO63ydZBEwiAvWnDvXKj/O/NxlD5+k7V5sNPQOyM/LW5IMdFKbTXf9jTVtlDwhIqJBtaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742850377; c=relaxed/simple;
-	bh=9/opTEs0d9NV3O3X17FC8CqUB8UV/tH+pUR280IUGH0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dchxdrVZTF/Sm2euyIn7JgZ7SWIwnUzGj2g/8YCDNnfPS3gPRXAX2zcXiWs/3WX/eu/Rc5WTs04eSgt5rXetjr/syDr90yacN391xskXcXkPX4EqqUq47ACfuk8m/3EqQ3nPYhma1CaW67NxU2fdP912bJ4qE0VCWsTfkvBfoqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lKBBz/i4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742850446; c=relaxed/simple;
+	bh=HIM146H+SmGtSNE78iI/F0ZJKaItnpxecxGkKXyUKvY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fhYqtQ3CseV+xZ4qGQsxnebrsN+zZ++Y3+ptuvOEGquz1mUQdgpWyK5OvUbhU5Hk8FoeOwKf9/GEpYjWSmEEglnHmqx6Cc6ywwXa8QeD7Zb2evExtD0vMmV41e85ifjI6gCnaoeYt3UWMRyZRiyMGohV1+xLkseJrnzVL8AyLx8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j3wU6m+d; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKBBz/i4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0CBDC4CEDD;
-	Mon, 24 Mar 2025 21:06:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742850377;
-	bh=9/opTEs0d9NV3O3X17FC8CqUB8UV/tH+pUR280IUGH0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=lKBBz/i4kh7dB0kWHp4zEStEsSfOcmbgMzE7FhrZCs+Ce8xjFZoD6SImnf+GlLpdD
-	 SlglhpBatW04bmZsp4aUB7SYT3N73TaGw6+dJa0a/bJ+FmR15QoA9/MJWhc5q/Shie
-	 0cvba7VqzD9TZWqYaNSNHfgJJbRoWxFZAsTB0zM4UAiumnP0MdhCeoglKgNjzXVWgL
-	 E2huBq31DVRTuVxhm2fN+jdZxOggSWGWROwL0eQGgkoN49jpRgZmhBVWhXuLcrCKsk
-	 7tSqeCdIpf1Smix/BjyN3yRKhsZpmSJv41Nh64ZDdn/IJTmBD6+6zzkrJ3Gl6FB9Nh
-	 mcpABU+VZKNRw==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Lucas De Marchi <lucas.demarchi@intel.com>,
-	=?UTF-8?q?Thomas=20Hellstr=C3=B6m?= <thomas.hellstrom@linux.intel.com>,
-	Rodrigo Vivi <rodrigo.vivi@intel.com>,
-	David Airlie <airlied@gmail.com>,
-	Simona Vetter <simona@ffwll.ch>,
-	Oak Zeng <oak.zeng@intel.com>,
-	Matthew Brost <matthew.brost@intel.com>
-Cc: Arnd Bergmann <arnd@arndb.de>,
-	Matthew Auld <matthew.auld@intel.com>,
-	Nirmoy Das <nirmoy.das@intel.com>,
-	Akshata Jahagirdar <akshata.jahagirdar@intel.com>,
-	=?UTF-8?q?Jos=C3=A9=20Roberto=20de=20Souza?= <jose.souza@intel.com>,
-	intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/xe: avoid plain 64-bit division
-Date: Mon, 24 Mar 2025 22:06:02 +0100
-Message-Id: <20250324210612.2927194-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3wU6m+d"
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-301001bc6a8so1356129a91.1;
+        Mon, 24 Mar 2025 14:07:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742850444; x=1743455244; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0f4oMKaqWF/1RYznP9bKhltlGtX64Ox9tuugsDhbh/I=;
+        b=j3wU6m+dYfAWK7s6DQDCSSWB/wlH8iI8OgIt7mOvZpW+g2jkn0q2uPQBL/3/zrX+nm
+         V/CJ31BA5MxVHk74T1+lc3qxUlhJUtlkXvUoscDvjBZesgNmh/imP6nScIsuRQUh8Tfl
+         ZUwrJC+Dlm6vvVLPJEvU7r4cHHfnkZ3rgYLLyPmqBot7wofYWCbXR+zkSV1YMl5m4laO
+         HwQ9SnRfLtT5z2QOMbXfzmSg8z4G6fkIRSpyu6LeRU3acWVj9/a9g27Uxt1393ci1/Ms
+         Dc/Ys1bTLbU5Hij6LxBD1n1TBVAlrt4mtMt5r6m+pbm69uqRlBbT7CbZ6KdhPQI/KHd8
+         U2Sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742850444; x=1743455244;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=0f4oMKaqWF/1RYznP9bKhltlGtX64Ox9tuugsDhbh/I=;
+        b=xDGw3XMiJc2M8V4P7pS77tyx7t3lG/LjQPZKTOge1R/OAOdCz/tp3odqbsPSgf8vcY
+         oKIYU1FiRf9uNadGu3k/kIksyeK93/9ltGvLSd/u31HUPcD8xb33eRLY5Aj585VD4mi8
+         V1dvkFAdt9ycVrjBr3vqk0hZv71SEb/YTz1bIlVIR41Wfno1UWayQv7VhbKHoG9fbeiq
+         g7Q4S8IroRzsdlpfCCAffjgzWwA0Uu+l4VUolTBbddbvtJqwg7TZypb2I8bmW/OVFf6L
+         VTo0S3zOMAfciHWNp1NCXJYkBtp8bT+iVaLTu2ymdnqlZfQjsKD38dYMdz2F0djk8ok/
+         eEvQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVDDTgC69uZ9wgYP0mDo1Kjs+XOULctPo1XNJSvRRsd/3uKZE2YKuhbn6qdSUi9XAOD+Vo5P62Iu66pCJE=@vger.kernel.org, AJvYcCWauFiy3cQI7S4MpU/xr7O2MGAwHySMYKfLJB3JtU+4yigGI2zORfF1yMqF6f9wIAWi33Rgi4aIy319RUNlqKY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YygfiNhUqz32eqlYoyhodwvBLOrCVhdVvg6dpu7gViHb5gP7VFc
+	2TPtLurK183kq+jHubmG5605QnokA0HcqS7YViWjHtk3E95ifTiJ+hnlDiSX80L0/enNJjLgdSU
+	s+/Sb+loBsJrYrFURdjYqhGucdq4=
+X-Gm-Gg: ASbGncvVUbkoTIeL33jIXvLeamgJ4c55nRGqE9KXYfWCvbEiyGpBESMwV00EBbi2VKo
+	qSn5J5z1Tql4RYPV67reSdJFDBJ1IR+Gtugs8pOwe1Dro+kKSHYauyx0SpG9mloqSrzsNW0wakV
+	+jvOWrWj8YSUnz+k7MX4/fjtNAHw==
+X-Google-Smtp-Source: AGHT+IFFjtafG0wMuZOrq5yJdlInKcUlyDtdZ577YwhsNZ3Yq5ctbw5CS07D7387Hjb2bVPr/RDfiCq2gCBAQwtQGQk=
+X-Received: by 2002:a17:90b:2250:b0:2fe:b972:a2c3 with SMTP id
+ 98e67ed59e1d1-3030fd37008mr8714903a91.0.1742850443707; Mon, 24 Mar 2025
+ 14:07:23 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250324-gpuvm-v1-0-7f8213eebb56@collabora.com>
+ <20250324-gpuvm-v1-2-7f8213eebb56@collabora.com> <CANiq72mQ3zuYmsq1PD-49kKLNji8OJwuvxK5QWkNaBMuC-PHQg@mail.gmail.com>
+ <509EADD7-607B-4DED-ADAC-152D7338EB50@collabora.com> <CANiq72=aVRMvOaU48DBLL=p+VoG3RvHK+K48XQhvHw3ARc0BNg@mail.gmail.com>
+In-Reply-To: <CANiq72=aVRMvOaU48DBLL=p+VoG3RvHK+K48XQhvHw3ARc0BNg@mail.gmail.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 24 Mar 2025 22:07:10 +0100
+X-Gm-Features: AQ5f1JpZ2zvfI8VoAwy2TeonYlCMJU7HVQ7vBEitKnbxHHICGiRlv1x9aYjaYgE
+Message-ID: <CANiq72=4+ubh0F5y2QMobFoyQPs4Aj7bOL8n4y9LzHxrb9Z2sQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] rust: drm: Add GPUVM abstraction
+To: Daniel Almeida <daniel.almeida@collabora.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <benno.lossin@proton.me>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Sumit Semwal <sumit.semwal@linaro.org>, =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, 
+	Boris Brezillon <boris.brezillon@collabora.com>, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+	Asahi Lina <lina@asahilina.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Mon, Mar 24, 2025 at 8:38=E2=80=AFPM Miguel Ojeda
+<miguel.ojeda.sandonis@gmail.com> wrote:
+>
+> Yeah, I asked upstream if we could have something that at least
+> detects what could have been intra-doc links, because that should not
+> have too many false positives since it is a subset:
+>
+>     https://github.com/rust-lang/rust/issues/131510
+>
+> It is still tricky, because e.g. `Some` or `None` would need to be
+> excluded, even if you require the exact same case. So it probably
+> still requires extra heuristics.
+>
+> Then there is:
+>
+>     https://rust-lang.github.io/rust-clippy/master/index.html#doc_markdow=
+n
+>
+> which is closer to your idea. It has a few false positives (e.g.
+> KUnit) from a quick try, so probably we cannot enable it for
+> everything, unless we commit to maintain a list of terms in the
+> config. It spots a handful of things we should fix, though -- I can
+> send a few patches or create good first issues.
 
-Building the xe driver for i386 results in a link time warning:
+I went ahead and sent a quick series for the latter:
 
-x86_64-linux-ld: drivers/gpu/drm/xe/xe_migrate.o: in function `xe_migrate_vram':
-xe_migrate.c:(.text+0x1e15): undefined reference to `__udivdi3'
+    https://lore.kernel.org/rust-for-linux/20250324210359.1199574-1-ojeda@k=
+ernel.org/
 
-Avoid this by using DIV_U64_ROUND_UP() instead of DIV_ROUND_UP().  The driver
-is unlikely to be used on 32=bit hardware, so the extra cost here is not
-too important.
-
-Fixes: 9c44fd5f6e8a ("drm/xe: Add migrate layer functions for SVM support")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/gpu/drm/xe/xe_migrate.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/xe/xe_migrate.c b/drivers/gpu/drm/xe/xe_migrate.c
-index df4282c71bf0..aafb6209f2d0 100644
---- a/drivers/gpu/drm/xe/xe_migrate.c
-+++ b/drivers/gpu/drm/xe/xe_migrate.c
-@@ -1547,7 +1547,7 @@ void xe_migrate_wait(struct xe_migrate *m)
- static u32 pte_update_cmd_size(u64 size)
- {
- 	u32 num_dword;
--	u64 entries = DIV_ROUND_UP(size, XE_PAGE_SIZE);
-+	u64 entries = DIV_U64_ROUND_UP(size, XE_PAGE_SIZE);
- 
- 	XE_WARN_ON(size > MAX_PREEMPTDISABLE_TRANSFER);
- 	/*
-@@ -1558,7 +1558,7 @@ static u32 pte_update_cmd_size(u64 size)
- 	 * 2 dword for the page table's physical location
- 	 * 2*n dword for value of pte to fill (each pte entry is 2 dwords)
- 	 */
--	num_dword = (1 + 2) * DIV_ROUND_UP(entries, 0x1ff);
-+	num_dword = (1 + 2) * DIV_U64_ROUND_UP(entries, 0x1ff);
- 	num_dword += entries * 2;
- 
- 	return num_dword;
--- 
-2.39.5
-
+Cheers,
+Miguel
