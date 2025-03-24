@@ -1,63 +1,63 @@
 Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A68325F782
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDC125F994
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:57:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742824634; cv=none; b=IUPFjlSWbOMqVirY6dsUpnchTNNJZjprYT/hzqLdcWqlY7D9uV9vSE49VAq9EIHJVcOL+gGJ63jQ7o0EHpBNgdPtTz9u/L26ag/hDsEGwphi7As47nuuZLjNhPMoKULdATwk/qB6Li3bnTET2B1R/b6BiqtRGpqpYY54xeKwnvQ=
+	t=1742824638; cv=none; b=PIPSWrYK7Wm/Mws5WE0J3SH8K55RZgL6fBiSZu2pr81BnFzLNib5aGPc3tnUqTEQP7bd6NPkySO0qyzELmTj+sOaW/36OqPMGF7gFac+oTz0Ez/hymr9e99cx8h00fqri5F4PrDQpNe1JZVHGGoVntQxHWsxppPJlAraG3l6yuo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742824634; c=relaxed/simple;
-	bh=UW1lKUt524Tfb01HBDHez5x3MQRpakzQrr2jiWuM+Jg=;
+	s=arc-20240116; t=1742824638; c=relaxed/simple;
+	bh=kNDYGsurRMw1oAlr00fQlVE32k5QZ58+VqZ3UbAvmcQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=IR4LD9GlLSWzEFdGLzdsl26/DZqu4KscEOagRP71+56mM1X0gi9OLcn5GZg2wSMAI7jANfAhTSjfb4XuOKjrLBYhxyEPr2UizrTGjoAQgGl/0MqhLOYp5nzeDT/s/93PM0xPMCC9/Nb4Nyl852+rXV4WAgpzCr679GmqU1O2UJk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=X45dn8fR; arc=none smtp.client-ip=209.85.128.43
+	 MIME-Version; b=XPvt6+EVdwcbrQOKp6ebudb4hSb/+VMOQUnd4rrBTzOKOX39gzPXmQXotzVLZe3hmzP01yh1I0KU8LF47Nt40pHaB8CVAEH2Ux7MVYmVXU5WUZSYHxk2LlDpdy8XLuVxOCqbP7XZ1pWDVyfDDIoe/B7ZOtmk2IWc5IOdmOpJi88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=dMzLGfD3; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="X45dn8fR"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d0359b1fcso27913775e9.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 06:57:12 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="dMzLGfD3"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43d04ea9d9aso19853125e9.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 06:57:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1742824631; x=1743429431; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1742824635; x=1743429435; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=7UNHK0UkXslOXK9Cojg+TA3Q9iNaUiBxGFRZEPfafnE=;
-        b=X45dn8fRB6ECLj0BXlN4ltnBL8HQypUXYfLB6rojFJqmB3nn9P0Uk6jtOYWXbHWCqN
-         L0q+CsiCZKpKCg2KGaZIrvi9y5/8rzj9Htr/MSibd63hQO9fhfXcphtref+1gtKf7E6u
-         8tQRvLeaDcn4rU0bK59gBD8bX04E1Qk9y+c2aNF+WLDs4Eo69kUjSwCDEElFlUadekgC
-         0n867a7PVO4PyfzKHJ4OfWcx9E5IFsQb8LTQu7O6eatjg4CZck/1zgW/kRPo7opJzjVQ
-         zRo1HmGOysdRDsQcLXhSq4eTfZ0ycADd+bBFlIB0I8bkNPNk5UkR61UobF21roxaEQEu
-         rh5A==
+        bh=mMplGUMafRwp7HXFHP8HY84mcYsdyQC2G6ObWF63fwE=;
+        b=dMzLGfD3bv7xA5UI8z+RwWtjbubYG6t3fIEM77ru/yt6mXPin6B1+1jz5vFMeNzzPW
+         7RRUTGqFS8OiMUj6Gz4aUZA8bl7hv4U4JKurKFqov/HsLRGCQar45ipm3jpyKvg/rDAw
+         aNy4yJa2vDLyVttJJyU1CUJZJfVZG0ABZBBvmmgccdzMO7tXv1wN3tLLQks2Got6ZwO6
+         AVh8J9zTXotr83m3j5QHYp5ob2120xPA1Ud/3HbpBMSuZDLMMtBwHrFGpIRBWBZK4S4/
+         gVNZgoScgr4z86V0MwJldpJMwihapriD0c/Mkl2rhIDvKeir3Ckea/moneuX7b3Z1dRG
+         fTVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742824631; x=1743429431;
+        d=1e100.net; s=20230601; t=1742824635; x=1743429435;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=7UNHK0UkXslOXK9Cojg+TA3Q9iNaUiBxGFRZEPfafnE=;
-        b=djPrstJG7kk0pOt9vzHHrdldT6Cbtf1iNchM3jmbXRTy8r/u/b8aP8VXzB5unX8RJo
-         iZgFs7mYR+yTuCj2AJ0UHrX5qL04wBXv+W1RxugEfI9ahh4iDjrUiGob/xbcJTZEXt/6
-         7uRxa/2Ne6YIl2GSzJS0RKZHe9HLbHU6JOGu37IBDYiy6Rxmjf8s2oD6ysXmoX848/CV
-         oEw/vTCYOXI6sxxPneUTq1y2F4UmnychdKj76d+cxljnwVzssnuk6QsyYIeZIYhldOfl
-         TFYCe2erZ5QB6EVjZocCKH8vetgoirO5aFwwHIvNva8Th4m/VLD7t3Zxi9QZArnDxOye
-         EM1A==
-X-Forwarded-Encrypted: i=1; AJvYcCWjsozcSZnJ3rsge3qyGZhsZQNoR/w6sPJXvdoypEIXdLfrHqBngeNm8xI1pUumXEKhf1Gj5OxlbgJzeHg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxDOyLu+qS6cYkzUgA8+i5dxMcpZe0TVyrIO3CzFcE+h4TVVpGa
-	KKhB7+rMPEn8AqOEyaCc/8AInaHFX3ZK27u4sXYT2Lh03CLhsDSTTmlSPqEUQrM=
-X-Gm-Gg: ASbGnctNKJS324+qg870tcsmsJNpVZZK0zpaVkQvVk1FFQEa+/4hTSFSetfNYxpyHDJ
-	mSxgiUwVK+Vqy/GJtSQgLued7IyuJ/cbLIybp7gIAo9JaQxeyG0Jl9lmToHumfYfd6W2yKeSBLg
-	Z6cIUvrI6lzpGfTvO5XukgGUGt0sCdbyqKWSDph0IPCSDDwLjaRrYHhwpS/PuVWcmUlrspcVTRp
-	z3qfSnPwIea6AYaVKS9cf5FsT7KlO1mH7sOWcI0hHIJOzLQnXXHVAya7oT/X07E/kMTwMW0S98S
-	ptnYd0hxplqbnIoGpWEBHK+jrQXuuowEKCyMfTT0nNNPiikqnpAlBt+XeHBL+hoNlQ/TS9GaUQ=
+        bh=mMplGUMafRwp7HXFHP8HY84mcYsdyQC2G6ObWF63fwE=;
+        b=TqimE2++xCvdf9e1zJqz8A4h54L6bLILUhmPvb/n+sttHBJDrCkmnKVgxwALc6RDVT
+         nuaEOatlrajjHQNfNZ6vDO6iYh7gbWrKpc4tJSjS9KArlrvh/CavhcADfscf+yt1hhau
+         PXyhyM1S3H1uZRGQy9uhRr21ccprMp9d4TBOHIrlhCOpody8P/Nq7JLddneC84jJG2LG
+         3xhld/CqnKeFg9NoBszhoNAZy5IGcBY6XYVbqT9ywvwEhF5fxOZjgIRvSRd5TELzlY/M
+         uotmgES8uRdGifPJ2isLKRaabOrXP/pTcehNlvAYjZ218ZBa+1ZHF1rYv4+xwOkwa2pM
+         4LKw==
+X-Forwarded-Encrypted: i=1; AJvYcCVYY6+favZ6MoKe3BXUuDzQNNmLiQ6jj29t6XirdJ2GXZImNn1Hg2FjCNzlwTDpuOeSrIlVl2t9wkhCZOo=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyc22kYQvUO4ZO8AnvK/7TKJkSSHqRXWgRR3uRFiza9qEF7nAuI
+	/dnVamZeyVLbDB8DmeH+jayCcFC/Lf6oqos9213RmRc/ck4+lOKuNFx2LuCAIYY=
+X-Gm-Gg: ASbGnct7+gTZ0glmb5tpFTSEalhROSY0jTndbrCumxiP73O5dmCb9Xq5jMhP9mb1Obg
+	4FD8atnd/VrnWz7rPMKd2pk+w2a6YiYy0FwJFr1xsg6CP9kTNIgYhMUF8QxgzUppEzHgVyyxDnc
+	vKdjCbQDsKiBljZPOxkwdsA1+E4+5ZTb79R/ak8HWzYQ+RYEAke2XuhDfn179NWZpoqeTDsUa8R
+	USpA+VSoMXI+bpUAyTotPryqRewKawBel1hSkx7KHCkyLZi54uQpnzqNDokbmuWDa6LN0v+j8oS
+	xTPvbTlLtYmUaCobAJy8uSYVU18/ov4qNDm+nxMzHS7DjpjeTRVcF3WBxvtNyFc4G6eyYsHgeg=
 	=
-X-Google-Smtp-Source: AGHT+IF+aQ0FEvkhnRt3sxgn6g1Ze8bSrdmghjRhLESAenZp4cAyrmpvI0c8iq1nlVx+oM3A7YzpMg==
-X-Received: by 2002:a05:600c:cc:b0:43b:c592:7e16 with SMTP id 5b1f17b1804b1-43d4915e6bemr141532175e9.3.1742824630850;
-        Mon, 24 Mar 2025 06:57:10 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHobCejWB+ti0E5Uw69+nVxjpEbVDbvYp3oPBiD2PXSMtx/XLxjlfZxbT4NY1k5LpuIjy51Hw==
+X-Received: by 2002:a05:600c:1d15:b0:43c:fe85:e4a0 with SMTP id 5b1f17b1804b1-43d509ec36fmr89567225e9.7.1742824634707;
+        Mon, 24 Mar 2025 06:57:14 -0700 (PDT)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.46])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbcfaasm120146525e9.35.2025.03.24.06.57.09
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fdbcfaasm120146525e9.35.2025.03.24.06.57.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 06:57:10 -0700 (PDT)
+        Mon, 24 Mar 2025 06:57:14 -0700 (PDT)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: rafael@kernel.org,
@@ -77,9 +77,9 @@ Cc: claudiu.beznea@tuxon.dev,
 	linux-renesas-soc@vger.kernel.org,
 	linux-arm-kernel@lists.infradead.org,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v3 1/4] dt-bindings: thermal: r9a08g045-tsu: Document the TSU unit
-Date: Mon, 24 Mar 2025 15:56:58 +0200
-Message-ID: <20250324135701.179827-2-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v3 3/4] arm64: dts: renesas: r9a08g045: Add TSU node
+Date: Mon, 24 Mar 2025 15:57:00 +0200
+Message-ID: <20250324135701.179827-4-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250324135701.179827-1-claudiu.beznea.uj@bp.renesas.com>
 References: <20250324135701.179827-1-claudiu.beznea.uj@bp.renesas.com>
@@ -93,12 +93,10 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-The Renesas RZ/G3S SoC includes a Thermal Sensor Unit (TSU) block designed
-to measure the junction temperature. The temperature is measured using
-the RZ/G3S ADC, with a dedicated ADC channel directly connected to the TSU.
-Add documentation for it.
+Add TSU node along with thermal zones and keep it enabled in the SoC DTSI.
+The temperature reported by the TSU can only be read through channel 8 of
+the ADC. Therefore, enable the ADC by default.
 
-Reviewed-by: Rob Herring (Arm) <robh@kernel.org>
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 ---
@@ -107,111 +105,112 @@ Changes in v3:
 - none
 
 Changes in v2:
-- collected tags
+- collected Geert's tag
+- adjusted the trip points temperature as suggested in the review
+  process
+- added cpu_alert1 passive trip point as suggested in the review
+  process; along with it changed the trip point nodes and label names
 
- .../thermal/renesas,r9a08g045-tsu.yaml        | 93 +++++++++++++++++++
- 1 file changed, 93 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/renesas,r9a08g045-tsu.yaml
+Hi, Geert,
 
-diff --git a/Documentation/devicetree/bindings/thermal/renesas,r9a08g045-tsu.yaml b/Documentation/devicetree/bindings/thermal/renesas,r9a08g045-tsu.yaml
-new file mode 100644
-index 000000000000..573e2b9d3752
---- /dev/null
-+++ b/Documentation/devicetree/bindings/thermal/renesas,r9a08g045-tsu.yaml
-@@ -0,0 +1,93 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/thermal/renesas,r9a08g045-tsu.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+I kept your Rb tag. Please let me know if it should be dropped.
+
+Thank you,
+Claudiu
+
+ arch/arm64/boot/dts/renesas/r9a08g045.dtsi    | 49 ++++++++++++++++++-
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     |  4 --
+ 2 files changed, 48 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+index 0364f89776e6..3f56fff7d9b0 100644
+--- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
++++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+@@ -233,7 +233,6 @@ adc: adc@10058000 {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 			#io-channel-cells = <1>;
+-			status = "disabled";
+ 
+ 			channel@0 {
+ 				reg = <0>;
+@@ -272,6 +271,17 @@ channel@8 {
+ 			};
+ 		};
+ 
++		tsu: thermal@10059000 {
++			compatible = "renesas,r9a08g045-tsu";
++			reg = <0 0x10059000 0 0x1000>;
++			clocks = <&cpg CPG_MOD R9A08G045_TSU_PCLK>;
++			resets = <&cpg R9A08G045_TSU_PRESETN>;
++			power-domains = <&cpg>;
++			#thermal-sensor-cells = <0>;
++			io-channels = <&adc 8>;
++			io-channel-names = "tsu";
++		};
 +
-+title: Renesas RZ/G3S Thermal Sensor Unit
+ 		vbattb: clock-controller@1005c000 {
+ 			compatible = "renesas,r9a08g045-vbattb";
+ 			reg = <0 0x1005c000 0 0x1000>;
+@@ -717,6 +727,43 @@ timer {
+ 				  "hyp-virt";
+ 	};
+ 
++	thermal-zones {
++		cpu_thermal: cpu-thermal {
++			polling-delay-passive = <250>;
++			polling-delay = <1000>;
++			thermal-sensors = <&tsu>;
++			sustainable-power = <423>;
 +
-+description:
-+  The thermal sensor unit (TSU) measures the temperature(Tj) inside
-+  the LSI.
++			cooling-maps {
++				map0 {
++					trip = <&cpu_alert0>;
++					cooling-device = <&cpu0 0 2>;
++					contribution = <1024>;
++				};
++			};
 +
-+maintainers:
-+  - Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
++			trips {
++				cpu_crit: cpu-critical {
++					temperature = <110000>;
++					hysteresis = <1000>;
++					type = "critical";
++				};
 +
-+$ref: thermal-sensor.yaml#
++				cpu_alert1: trip-point1 {
++					temperature = <90000>;
++					hysteresis = <1000>;
++					type = "passive";
++				};
 +
-+properties:
-+  compatible:
-+    const: renesas,r9a08g045-tsu
++				cpu_alert0: trip-point0 {
++					temperature = <85000>;
++					hysteresis = <1000>;
++					type = "passive";
++				};
++			};
++		};
++	};
 +
-+  reg:
-+    maxItems: 1
-+
-+  clocks:
-+    items:
-+      - description: TSU module clock
-+
-+  power-domains:
-+    maxItems: 1
-+
-+  resets:
-+    items:
-+      - description: TSU module reset
-+
-+  io-channels:
-+    items:
-+      - description: ADC channel which reports the TSU temperature
-+
-+  io-channel-names:
-+    items:
-+      - const: tsu
-+
-+  "#thermal-sensor-cells":
-+    const: 0
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - power-domains
-+  - resets
-+  - io-channels
-+  - io-channel-names
-+  - '#thermal-sensor-cells'
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/clock/r9a08g045-cpg.h>
-+
-+    tsu: thermal@10059000 {
-+        compatible = "renesas,r9a08g045-tsu";
-+        reg = <0x10059000 0x1000>;
-+        clocks = <&cpg CPG_MOD R9A08G045_TSU_PCLK>;
-+        resets = <&cpg R9A08G045_TSU_PRESETN>;
-+        power-domains = <&cpg>;
-+        #thermal-sensor-cells = <0>;
-+        io-channels = <&adc 8>;
-+        io-channel-names = "tsu";
-+    };
-+
-+    thermal-zones {
-+        cpu-thermal {
-+            polling-delay-passive = <250>;
-+            polling-delay = <1000>;
-+            thermal-sensors = <&tsu>;
-+
-+            trips {
-+                sensor_crit: sensor-crit {
-+                    temperature = <125000>;
-+                    hysteresis = <1000>;
-+                    type = "critical";
-+                };
-+                target: trip-point {
-+                    temperature = <100000>;
-+                    hysteresis = <1000>;
-+                    type = "passive";
-+                };
-+            };
-+        };
-+    };
+ 	vbattb_xtal: vbattb-xtal {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+diff --git a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+index 39845faec894..6f25ab617982 100644
+--- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
++++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
+@@ -84,10 +84,6 @@ x3_clk: x3-clock {
+ 	};
+ };
+ 
+-&adc {
+-	status = "okay";
+-};
+-
+ #if SW_CONFIG3 == SW_ON
+ &eth0 {
+ 	pinctrl-0 = <&eth0_pins>;
 -- 
 2.43.0
 
