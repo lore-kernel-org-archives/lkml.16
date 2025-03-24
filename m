@@ -1,179 +1,194 @@
-Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from AS8PR04CU009.outbound.protection.outlook.com (mail-westeuropeazon11011046.outbound.protection.outlook.com [52.101.70.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB36314386D;
-	Mon, 24 Mar 2025 03:12:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742785971; cv=none; b=KmA8Jayn2wcZcs9lqD21G13n6Gv0dQuomGHekPl81Uru0A0TjUk9+I5AeMsOjtfF4v5urJV22BrVBHi7xyohM4zj6h5c+5yehuBBsyi8qaF2WEwELONkL66cAsD7+4b8JGZkPjogO6F1u7psftzx950RVxmqxp3qjSdF3P3RIMw=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742785971; c=relaxed/simple;
-	bh=J+hMmHqyIo6zEGpGHB+QTEiRNpKQC9RZPUd7hFpsiV0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
-	 References:In-Reply-To; b=ahstNuGpJhs6DkkqcCPy7/e4kVkhQxkD2J3GkUm/MEHAzC2D5uG8mxhwSqyT7fPIq9RxHUViuY0n7rVc+9IhkYwV76CqlIpJ59p9WVockrzKuQGFWeKjOPeZVIufmniZyvj/gxHobklUKGBWlS4c+57tMFN/n4y3C8VBhCYB9BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cMmt5A+3; arc=none smtp.client-ip=209.85.216.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C9313B2A9;
+	Mon, 24 Mar 2025 03:13:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.70.46
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742786042; cv=fail; b=r+XVL8wZ6YLmu/gD+mpBUGBMXlvuXQkwQZJ7zlAiX/j/wsxCJqIkGMy7db1iKbtO3r4xUxcUqisrqjehcmO+tq7/WRDYc1TD29ujpLWZZ2x6enJB7wbRdwcIlmQDzebAfqtq/aR4Qb8zc0fru6YSy7Vj2r2Tibv2OR/Qk+yGzM8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742786042; c=relaxed/simple;
+	bh=O8EqO1cID5pLuc5YpYgjDVfS5JEyxQBJ74LIkLDBA8I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=itnRcixYeFMXrjkVziAclzKIeH7jv2s+Ow1KDDqt7ptIBdJvbBi54gbPVbOru1KWtnmPQxUtSWYJzmvdPepbIRvuTJpoADaMGUCpeZTL6gpW2zGg+LfufNIZEyHzdeQckgV8DITd4Fz5Edgx2yobqWFDOj2hZt4BT030yfAYKWs=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=r2qW74s4; arc=fail smtp.client-ip=52.101.70.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cMmt5A+3"
-Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ff4a4f901fso6966115a91.2;
-        Sun, 23 Mar 2025 20:12:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742785969; x=1743390769; darn=vger.kernel.org;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tea/ozfNH1Ujz9+Pt/AIl/58j38z2XpiNMnZ79tiKCM=;
-        b=cMmt5A+3g6rNGydQIA1kdKrhnXhi0vfxq7g8x+U11evrPAy0OkyVcF/vElv02BdeaH
-         OV6pMU3zKcEthxxqtpVSshKQ2IlUsjAA3WRuGgBJLNl6/8M0FbfJ8GrY1MaZqKeeJk9A
-         x8UDlAo37pTjy3/XODcION9VN6q06FudPSm9KlGgvNOpkEWUvktfkwQkMyXKGVrM84uS
-         h0PnGQgOOGFOWXoCdc/9QGFvJM6Tg/U1FQ2GroozIZ393T+w3EUfU0LJX3fLteyB07Kk
-         XsZdFLpAmDjv7Ph/dOgYBB0QZwjwv1geX20FLXyA+YtLR01htHxE4A0m2bG03GZNa7+C
-         73/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742785969; x=1743390769;
-        h=in-reply-to:references:to:from:subject:cc:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=Tea/ozfNH1Ujz9+Pt/AIl/58j38z2XpiNMnZ79tiKCM=;
-        b=em5rufelqzY3QZ8+eUGjJ8fxx+kKgzWWdew45rAhbi0MJfyVK2RBX8tPNHnvF80Jnq
-         HkbRZVcTetaSTlaLX920/m9GUCIVbmaQ0izljXQJMcFYWaqqtmvQEaGNJZX2wrAdrQnh
-         NP5ySgzjd5hf7VlWf60oWXwp99glwTL89TNJ7zAWtuPFr3ZmnbOUFCtq9F/RUP7JFK7D
-         caLHq47/bSgDgH7S8U6jhl+dZ1b9FpXnWFNTANZ+mNqNA7J3uGWWJz5l7CtGcICdm3iI
-         5iF1t7PU/92RVbymHxZCT0pY4FsMdSZ1x+noFO/fbrL1/tn+nRC1m1Fkb+MbldvaYSRP
-         4UAQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUCZ+eIpBoKSa11qLQjWav5KiXIwFTM6su5vDZWLHwxziaT/XaE5IRwCirNocW7Z+4L//1z2jHCKCvJxWg=@vger.kernel.org, AJvYcCVZpxphfEWYhIvu3vIsYbZPVydbnLv7KHTPECCfyTTUoAVJpAF0bNO4cqDd96tdaWLF21t334Ek@vger.kernel.org, AJvYcCXnBNMikGzy2rPR7qSgjsY+csMzWmZHAAbuzXInnj16grp16MaUqHZVKncoZjH6xuqG+k7L/eOYmudfy23YCs7+0y2Gow==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxRs1xcTdpqSRk6Kh9rOApGB6w6cFDW536TU12HixkfwVBJALD
-	+8eZxgvm7mZy09GW/VHFYUyCBKwii1CIUr+QZoW1747YzjLJf23A
-X-Gm-Gg: ASbGncuaWQceKv/bzUYJIucOSPtfbidqgQuscRXHR6njzJJPX++nqmXIbAGy5C75+QW
-	krsB7EBf0xcyTkSSFk72wXOn6JehHU8a0uBeqEMFYQ//01JMHVTw0a2/MFLdxUV2D0iOqZJ0bGy
-	MKpnUdmD9BAVz4XZ9rZPmtzbE8FFxDRXMp4XAkO+FdFspSMZK8DHM5eWZX3XlW9d7jKBE0zVx/t
-	HKImT+jyCOMmGbofCj5leay9JwJGhd8TD4SwYRTG5DbcOqi0UPNdUqm9vZ5RjwITlkQ/uP1K2iO
-	9WMS477jDEVWlxpM1FiMYEMCwJ9UqxASmO+ddQ==
-X-Google-Smtp-Source: AGHT+IEn+9qYJQnWY98h1MLFYD024IQB4Y4D/jzquQCHfmfgDvDvH40NQfXJETuT2lCsQp1RzMQlpQ==
-X-Received: by 2002:a17:90b:53d0:b0:2ee:90a1:5d42 with SMTP id 98e67ed59e1d1-3030fd4b078mr22842917a91.0.1742785968650;
-        Sun, 23 Mar 2025 20:12:48 -0700 (PDT)
-Received: from localhost ([181.91.133.137])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf58b343sm10873298a91.15.2025.03.23.20.12.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 23 Mar 2025 20:12:48 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="r2qW74s4"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=s4h0l+5hBdgWpTDlfIafcZ1guO7SL3JZlCxKv91+He6xPWOMNkbQUoyYH8+PK7NGVXe3rSjI8UPigqY5RJ/lELvl7SaQLn6H/5PI6esgd21t2KpyKRDlpWzKj8/3pv2yQXKbkwSTBbu5/SMjnBj8Hk2ToOFb2xlf6JNb7Krx78aLef1uwBLTdV5Pw7aLxh6fg+2gQdvPvUWA+2zkMRDLYxT4lRRcntNUjEztZrQiXNjiDK3ydedVpB4qZkVG8cHvMDghGufEv18j4pAmZGMVLk2/1DEIDHylsVUFJ86jgjkkqvs2rOmsnH8gAZSkhV7ai0VMlKo9gq6YeBlAGaJycQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=UKSP6l58XV+0QW62ZYY7IbfO/ZA8bC/QoDp89Txj/uI=;
+ b=aWuM0+xsplzapeR468JV79fDsYr7bxgJNh9vVSduaGkLYkKGKwdsN/4U66+bsCh+T2L9bsMz0SnxCp1i3y/qUk777mNR+4XVJ9J69ggOHz5GX9at8SC16XXpqI3FAM3PWedl7m2uXFiZRS55jklMK2+fpqUVoaQNW3kpOlwc3UhnAZuC4V/WAkminOuDQ+5vAo+F4dm1k6uLy2zqWqTkTe00EHpIxdk2ZDJChDlIxnuaZndcBvjYfszBILH8rleN3nuzT3DB36hSbdMMgy2T5GLyVuXl1d1h7Lm2aLGS4wsaLC2H2bK8531xve2oZb4OXOq8g1oA+TZ4ZVHpl8CiDw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector1-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=UKSP6l58XV+0QW62ZYY7IbfO/ZA8bC/QoDp89Txj/uI=;
+ b=r2qW74s4DSooSsi4ZBtohz8HODWWuF1u4QauSxc3nYqGu85iRwfNfrrH4RRC+BXqYdsCVXT47EthaIEuJ9PGH4y4w4j+Nl3j8uSDpHpL09HNZ+rSC7qYt3Od4LCSMP2b2/LaqGYqOYwCNYYTOYQmtsedPxpfG9wfGtNW/Y95U1YBkc3Yd6lz118IShaDQ8ecklOgE49vNj9WqbOExmyN3iSeBvzmETjPmdase2FFn1C8i1IVnJgcSo7bW+k5eyQ2uIoeLrhkfQ+B5Hen7ya/j0ms330jB8p3X89GvuzPqBqyf4D7p5Mx7WxJTempcccU1W2fIZdnYUzPEfCgB282TA==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com (2603:10a6:102:1da::15)
+ by AS8PR04MB8865.eurprd04.prod.outlook.com (2603:10a6:20b:42c::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Mon, 24 Mar
+ 2025 03:13:56 +0000
+Received: from PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630]) by PAXPR04MB8459.eurprd04.prod.outlook.com
+ ([fe80::165a:30a2:5835:9630%5]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
+ 03:13:55 +0000
+Date: Mon, 24 Mar 2025 12:21:52 +0800
+From: Peng Fan <peng.fan@oss.nxp.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Peng Fan <peng.fan@nxp.com>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	"lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+	"broonie@kernel.org" <broonie@kernel.org>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH] regulator: s5m8767: Convert to GPIO descriptors
+Message-ID: <20250324033038.GA9886@nxa18884-linux>
+References: <20250318052709.1731747-1-peng.fan@oss.nxp.com>
+ <Z9lJETLh2y27934q@black.fi.intel.com>
+ <PAXPR04MB8459A44864B9213E8265137188DE2@PAXPR04MB8459.eurprd04.prod.outlook.com>
+ <e3abe8cc-357c-471f-b489-e1a8625933e0@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3abe8cc-357c-471f-b489-e1a8625933e0@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-ClientProxiedBy: SG2PR02CA0055.apcprd02.prod.outlook.com
+ (2603:1096:4:54::19) To PAXPR04MB8459.eurprd04.prod.outlook.com
+ (2603:10a6:102:1da::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 24 Mar 2025 00:12:44 -0300
-Message-Id: <D8O62BJFWT7P.23HRFHB8PX7JN@gmail.com>
-Cc: <ibm-acpi-devel@lists.sourceforge.net>,
- <platform-driver-x86@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- "Seyediman Seyedarab" <ImanDevel@gmail.com>, <stable@vger.kernel.org>,
- "Vlastimil Holer" <vlastimil.holer@gmail.com>, "crok" <crok.bic@gmail.com>,
- "Alireza Elikahi" <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>, "Eduard Christian
- Dumitrescu" <eduard.c.dumitrescu@gmail.com>
-Subject: Re: [PATCH v2] platform/x86: thinkpad_acpi: disable ACPI fan access
- for T495* and E560
-From: "Kurt Borja" <kuurtb@gmail.com>
-To: "Seyediman Seyedarab" <imandevel@gmail.com>, <hmh@hmh.eng.br>,
- <hdegoede@redhat.com>, <ilpo.jarvinen@linux.intel.com>
-X-Mailer: aerc 0.20.1-0-g2ecb8770224a
-References: <20250324012911.68343-1-ImanDevel@gmail.com>
-In-Reply-To: <20250324012911.68343-1-ImanDevel@gmail.com>
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: PAXPR04MB8459:EE_|AS8PR04MB8865:EE_
+X-MS-Office365-Filtering-Correlation-Id: f9e5a561-332b-4b03-ffc1-08dd6a81e968
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|366016|52116014|376014|38350700014;
+X-Microsoft-Antispam-Message-Info:
+	=?us-ascii?Q?mJi2G2vp1xPJE6lll3NiSseUMVD8qKqu7muB8KQDdTKQRD1OdzfiPXBohpUk?=
+ =?us-ascii?Q?lUGWHmF8Gq/tyHkTiVvuxoVbM0a0zi+nHpg+eD9iT6pY7egY/9NVi9DKHkZh?=
+ =?us-ascii?Q?rLZgIspVCNR3yX/KD9kODa6Aoc9vOG1RnccXoMfxI8uwRtMWEh+hEJSF/c0z?=
+ =?us-ascii?Q?rcL2+88jqpsUKEGdlqOlRkdfx5FJ8N/UyoEgeegfcHKEuDH+Kjm9u3EwzHGi?=
+ =?us-ascii?Q?FeSADPOPGW5uqXx6i6j4/I20Vpo/XXHVwmx6DHpmBGFMk4Z5MAhT4AXW4k49?=
+ =?us-ascii?Q?y9UJ3iDOs2GbPgxSojkS98vmkiKln05Z1wV51hEWYoC1O9oCa/71pP5V+Ib2?=
+ =?us-ascii?Q?hgBuVq+0f9fb8OwXVvquAWIfEEabacwz7NnSHkvZZ2D/3Umxeob9lOUCcRn3?=
+ =?us-ascii?Q?140na42h8XNqNI6roWhvMuANKNNEYEGG2LwcyiM0X+47DxQNUsusC2WprM8b?=
+ =?us-ascii?Q?zijdPl83QBMdCo+WnhwDjWdRy55LXFvwvsLfEKgT89ApYP49qcwppE7O2dV4?=
+ =?us-ascii?Q?L6bPEb06lrZy7r1UF/QYUYNZJRKkf1BruW69Hc8S8MhbJ4XIbU2VLQOSzZo5?=
+ =?us-ascii?Q?1X0rLL2xFPIkiKDtYOBboCoZ7+BvTMqkRgfrJ3Mm1xmrbkksndlWwkzhHRwo?=
+ =?us-ascii?Q?WyGQN2UT7XgvubDF3BigKytgfx/S+bFkw1y48TilvHT4mG7w3Nz1pjOfLe5T?=
+ =?us-ascii?Q?p3domVkQUiY3xRSghOSnNqOcP1KO7r4YYpktQAM7exS2J51HpCUM0WN/hVf+?=
+ =?us-ascii?Q?yMATZmuPe+qkSPv+WrK2SWFq9cYZwX8ab57TICIAqKb02/2Ttjl47j2VzvEs?=
+ =?us-ascii?Q?PkAnn6df4FZP3Z4avMqL5Aiz6bJdtwi4VIu5cZ2/2DmH0VSNgy1rnjC3+sE2?=
+ =?us-ascii?Q?d+bfgK5rnmIIlwDPTl4hXROxQBJHMgWfD99duf59bNpKTBEckr4s9pLZmvHb?=
+ =?us-ascii?Q?YijnoFBOkVTnAfNLqBDK/LoFwM/K3OTKAqJlt6VgMNXThfzz6nrZ7lf0t9kP?=
+ =?us-ascii?Q?s9R4bS2E3Ii9FIv5IZkR0pCAloOhQfLJ2zN0byfY/JcE6bTOu3FxX3W6NLnj?=
+ =?us-ascii?Q?uCkZF7FEv/y4chBl++NhLHUPmTEhujZ5daxeNiRdqdUaw5qSTlHg1OY1nBZa?=
+ =?us-ascii?Q?WkE2Znve993QjeWVRlrp/YRmm1gSea/MSFgNyeR0CA0/vTg+bAoaNAjEDAp/?=
+ =?us-ascii?Q?+zUt0ZV0uyWFl+h20ekPl2JNx8UEU7TTtEGFOZRUM2CLIZLnQZm8DDvQ3IB1?=
+ =?us-ascii?Q?rP5cDpu1B82Y15dzDn71DMati7lceqW+412usMaDFTw5u2qEXchqkbkN+m7F?=
+ =?us-ascii?Q?8sym46+ut0L/Y53n28pI31ggyeenYx85YAA3KjAXjzHiciSTiwMFOYBCajtc?=
+ =?us-ascii?Q?G7Vle8fnAX79EyUhdmgzAUZMuE+62i7dRnLJZKv7vF4usz/d0AAJAhcYI5Pz?=
+ =?us-ascii?Q?wKBvih2yTczy5L6rluNhTZ6ebxqadeqp?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PAXPR04MB8459.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(52116014)(376014)(38350700014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?xX3MNzbCRcwmURZMpr627mhT0G3IO52Em/tNqhM/7z4TWH+y87K2ebcoKArT?=
+ =?us-ascii?Q?lVWbjXP/3e7r6AH3rt6xDqND+7RPFqQSi9+PzjEmub140h16qC9iqUvY91/f?=
+ =?us-ascii?Q?o4y11V9uRvAR85ruTk/WWPEwz4DW7TnOk/PQpWFmzApowM5XFnU/YNbbSAzc?=
+ =?us-ascii?Q?Ux6UABX3A8YZOFP+2/fvO/kvYSpluXSaLk6IJfzMb8tT9ytq3conHwCNBDPj?=
+ =?us-ascii?Q?oZluSnOrjiKAdExIyRIYNUsWJq83+VxgB8UB5zVK4aw2znzCLSQqFVASV4GT?=
+ =?us-ascii?Q?a0C3sxXUPqYwMqeBLH5eYaFAseX+pgRaIttzqzfq01+tFxMozToel3RbTrG1?=
+ =?us-ascii?Q?RnGsUD+pC2VWogPpx9eQdGLwJBgE2XqkHGfoD4o3Um707uq5wk3LU9xdO8+K?=
+ =?us-ascii?Q?ZF15cNW1+G8zrkIbMod76oGRMgUTg1d4jdiqr2j1gY3BxHXBKN5RW+4ygDUq?=
+ =?us-ascii?Q?pjSEc4hzS5xN6v5VP48geVPkBbVEEFN9M5eR9K4gXfy5E6N+mj+ny/neIRRV?=
+ =?us-ascii?Q?0iuEAFXIaiP6mTPsnDYYcIZfbBlfKSTm3x8xiWnlh4yf9X6iAuSZIEG0EZoL?=
+ =?us-ascii?Q?6wEMtUogadb5lUxrDVh1fyP7Z7UUxOmDZlGsHo1qj0RgIyBVfKxnOlDlcrnE?=
+ =?us-ascii?Q?oegS6STWOQsB0giuwFKISIJ9onsnC6E8640FMc+oj+SbJO+TXcOrnuR5kJpF?=
+ =?us-ascii?Q?yFY2oyIkL/+hrOs4yHX1RfB7To7weG+qT7v6sssV5O31yZcK5XfneSHy3A16?=
+ =?us-ascii?Q?XQf/gq+iqh/M+gDt+JTSeHeJmd5t0n3Vf7shj2HiQjTIpbqOeH9ZjKtR2kBi?=
+ =?us-ascii?Q?84GN2ZYodlGU/wk3DtkzmMhKBbiKPI1ZAiYw9VEYyH/1qyxEQgZWrsJ3XRzF?=
+ =?us-ascii?Q?ycPHKB+PQJoC9mzru7Po5nW/loz2M28ydMsmXghstDJ94NJiCA+ujHk9QT5p?=
+ =?us-ascii?Q?C8JwT2jaxJ25m0Mu+80cffJyl3HcbywGsu9iFoCPjvaO7ApPBvU+UyFK6tP7?=
+ =?us-ascii?Q?PquT43UP2ggKjWuzFUVshI0doKJCMG5LabKtNs7IHUHn4/2Jpv9LEIMz2Itq?=
+ =?us-ascii?Q?BuSpQEu+6N9V85kDqFTS5bahE0xxEx48IjLH7KQ7GZwyp8k9UQfYMiiYO5Dy?=
+ =?us-ascii?Q?gJS9oAONmCR1f8xym8jEvYnvr+GgphobixcBXflm1zeXpvQ8nn3b4NQ4dAqz?=
+ =?us-ascii?Q?v1jn+AGuj+vAJ+dxh60CKl2+xAeWoFkFNKAop0u9csFjnFrHDHzIetSLn8GN?=
+ =?us-ascii?Q?aKHU+WBrkF148/jSmWDIlzc3LynWX7ROETUx6S6Ey/+jbCEtbje6O7x6z1+i?=
+ =?us-ascii?Q?VEIRZ132nrsHUkUkjJ+qv519wRmryGwuKXJk9z0ngD9EqNHPtQuEIkg0xoMz?=
+ =?us-ascii?Q?hMEswu5dYghzmqyZgHmySAbDstbHR6WSYgk18uKDJoMvDPeWc7a+XUi5ZADA?=
+ =?us-ascii?Q?7st28X6/GoYBZWXj9T1SnaRtYyqyfbYqbd1p3+1yBGmnEIfgio1jBNNu01Au?=
+ =?us-ascii?Q?15hslgKlYuGPY8w5+TfD193N2HDSrSKq130mnqcNOdXVkQTQt1wzM4LG4tk4?=
+ =?us-ascii?Q?zX78RhLqe5k0NT6itYnyetA7dWHXYF/t1RkAuI6u?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f9e5a561-332b-4b03-ffc1-08dd6a81e968
+X-MS-Exchange-CrossTenant-AuthSource: PAXPR04MB8459.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2025 03:13:55.8472
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: +kJh1AEPydHIX170NfcC+NsG0UnBsEc3BVmRUXxbekY1HEPCE+hcmh5oNIuQ3WQNiMsLDDOOWtiMvCU+h2pQQA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8865
 
-On Sun Mar 23, 2025 at 10:29 PM -03, Seyediman Seyedarab wrote:
-> From: Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com>
->
-> The bug was introduced in commit 57d0557dfa49 ("platform/x86:
-> thinkpad_acpi: Add Thinkpad Edge E531 fan support") which adds a new
-> fan control method via the FANG and FANW ACPI methods.
->
-> T945, T495s, and E560 laptops have the FANG+FANW ACPI methods (therefore
-> fang_handle and fanw_handle are not NULL) but they do not actually work,
-> which results in the dreaded "No such device or address" error. Fan acces=
-s
-> and control is restored after forcing the legacy non-ACPI fan control
-> method by setting both fang_handle and fanw_handle to NULL.
->
-> The DSDT table code for the FANG+FANW methods doesn't seem to do anything
-> special regarding the fan being secondary.
->
-> This patch adds a quirk for T495, T495s, and E560 to make them avoid the
-> FANG/FANW methods.
+On Tue, Mar 18, 2025 at 02:48:05PM +0100, Krzysztof Kozlowski wrote:
+>On 18/03/2025 13:38, Peng Fan wrote:
+>>> Also the commit message doesn't tell anything about the existing DTS
+>>> files.
+>>> Do we have this device described in any in the kernel? Do we have any
+>>> googled examples? Why I'm asking because often the issue is the
+>>> incorrect setting of the polarity, which needs to be carefully checked,
+>>> esp. for the voltage regulators case.
+>> 
+>> 
+>> Under arch/arm/boot/dts/samsung/, a few dtsi files have the property 
+>> with results from output of
+>> `grep "s5m8767" ./arch/arm/boot/dts/samsung/ -rn | grep gpios`
+>> 
+>> Exynos5250-spring.dts uses GPIO_ACTIVE_LOW.
+>> Others use GPIO_ACTIVE_HIGH.
+>> 
+>These are old devices and not many people are actually providing tests,
+>so you need to preserve existing ABI. IOW, if previously GPIO flags were
+>ignored, meaning "1" is ACTIVE_HIGH, then you must preserve this behavior.
 
-Reviewed-by: Kurt Borja <kuurtb@gmail.com>
+Per google,
+Manual Reset function is for Hardware reset in the Active mode.
+If MR1B and MR2B is kept low during the VLDO3 is active state, the
+system makes all internal presetting registers as default in the
+active mode (automatic power on sequence). If this hardware reset
+function is not required, connect MRB pin to high.
+
+So the reset is ACTIVE LOW if my understanding is correct.
+
+To keep DTS unchanged, we need update polarity in gpiolib to
+force GPIO_ACTIVE_LOW.
+
+please see whether this is ok for you.
+
+Thanks,
+Peng
 
 >
-> Cc: stable@vger.kernel.org
-> Fixes: 57d0557dfa49 ("platform/x86: thinkpad_acpi: Add Thinkpad Edge E531=
- fan support")
-> Reported-by: Vlastimil Holer <vlastimil.holer@gmail.com>
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=3D219643
-> Tested-by: crok <crok.bic@gmail.com>
-> Tested-by: Alireza Elikahi <scr0lll0ck1s4b0v3h0m3k3y@gmail.com>
-> Signed-off-by: Eduard Christian Dumitrescu <eduard.c.dumitrescu@gmail.com=
->
-> Co-developed-by: Seyediman Seyedarab <ImanDevel@gmail.com>
-> Signed-off-by: Seyediman Seyedarab <ImanDevel@gmail.com>
-> ---
-> Changes in v2:
-> - Added the From: tag for the original author
-> - Replaced the Co-authored-by tag with Co-developed-by
-> - Cc'd stable@vger.kernel.org
-> - Removed the extra space inside the comment
-> - Dropped nullification of sfan/gfan_handle, as it's unrelated to
->   the current fix
->
-> Kindest Regards,
-> Seyediman
->
->  drivers/platform/x86/thinkpad_acpi.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/=
-thinkpad_acpi.c
-> index d8df1405edfa..27fd67a2f2d1 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -8793,6 +8793,7 @@ static const struct attribute_group fan_driver_attr=
-_group =3D {
->  #define TPACPI_FAN_NS		0x0010		/* For EC with non-Standard register addr=
-esses */
->  #define TPACPI_FAN_DECRPM	0x0020		/* For ECFW's with RPM in register as =
-decimal */
->  #define TPACPI_FAN_TPR		0x0040		/* Fan speed is in Ticks Per Revolution =
-*/
-> +#define TPACPI_FAN_NOACPI	0x0080		/* Don't use ACPI methods even if dete=
-cted */
-> =20
->  static const struct tpacpi_quirk fan_quirk_table[] __initconst =3D {
->  	TPACPI_QEC_IBM('1', 'Y', TPACPI_FAN_Q1),
-> @@ -8823,6 +8824,9 @@ static const struct tpacpi_quirk fan_quirk_table[] =
-__initconst =3D {
->  	TPACPI_Q_LNV3('N', '1', 'O', TPACPI_FAN_NOFAN),	/* X1 Tablet (2nd gen) =
-*/
->  	TPACPI_Q_LNV3('R', '0', 'Q', TPACPI_FAN_DECRPM),/* L480 */
->  	TPACPI_Q_LNV('8', 'F', TPACPI_FAN_TPR),		/* ThinkPad x120e */
-> +	TPACPI_Q_LNV3('R', '0', '0', TPACPI_FAN_NOACPI),/* E560 */
-> +	TPACPI_Q_LNV3('R', '1', '2', TPACPI_FAN_NOACPI),/* T495 */
-> +	TPACPI_Q_LNV3('R', '1', '3', TPACPI_FAN_NOACPI),/* T495s */
->  };
-> =20
->  static int __init fan_init(struct ibm_init_struct *iibm)
-> @@ -8874,6 +8878,13 @@ static int __init fan_init(struct ibm_init_struct =
-*iibm)
->  		tp_features.fan_ctrl_status_undef =3D 1;
->  	}
-> =20
-> +	if (quirks & TPACPI_FAN_NOACPI) {
-> +		/* E560, T495, T495s */
-> +		pr_info("Ignoring buggy ACPI fan access method\n");
-> +		fang_handle =3D NULL;
-> +		fanw_handle =3D NULL;
-> +	}
-> +
->  	if (gfan_handle) {
->  		/* 570, 600e/x, 770e, 770x */
->  		fan_status_access_mode =3D TPACPI_FAN_RD_ACPI_GFAN;
-
+>Best regards,
+>Krzysztof
