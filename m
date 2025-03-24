@@ -1,44 +1,44 @@
 Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A1762627F0
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:34:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9282B25FA0B
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742823270; cv=none; b=bNnyHL2fQgc9OVgF9YpbCoam4H5JcJzvyzY1qooPh4oh2PZaR4pUsKEGtZWT01rIoPTouSfD1DiNW5wSYnENZjSHlM94Ery/RwoAzIJuSUKqGDYNVyKZxTjdoEWpKsoZpcZY1nuX190+VycxrVilKrejHpDNepIIqwVYB46Hyn4=
+	t=1742823273; cv=none; b=aE41RaBdHCNg9hEbFcX9EtJ7r6tCpJMUFIqwceCgsrWo84zU13Q2lsSGSKQB3SikEWVp7a6CfnWYMWFXUilgXFAWocedkuLLJ+z3akbDYTdmiEyHtN1/5/43eT2ZS9YRyPaIhppfSKZkL9uBFiUJZEmQVcY/AekuHmesABtcbSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742823270; c=relaxed/simple;
-	bh=CCsVGPhMTEHdw0KyIC3xSOxU5ckL+Ig+2aAbm8+B5KQ=;
+	s=arc-20240116; t=1742823273; c=relaxed/simple;
+	bh=oJBlFC8RVHGgl8j5wwdUCD6FwPiik3nx0cWpMgPmt1Y=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e5MytRnGOzEw7fIXN2qIEjIuqI0QBhnl74Ge4LYlWby+piu2Ce9GEIcwsZVwgkop+uhTO6D0cACrcXmgM8ksORC0Ft62aKXbgYtxNWD3AoiQE9JCigcqutROiXsQ9jfGU/yCbt4wuueh+V6wMfQzQ34hN5I+Bb+v9DhMPQLCQgg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=pF1ygvpR; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=GVFkubNr; arc=none smtp.client-ip=193.142.43.55
+	 MIME-Version; b=ZL4yZue7/scst40EPL1r0MQIarPtW/rub6gLOlLajQkrMY0asrafYq5e/FuZCMsIXAgvWtei6g4lAquSWluS4E+D3IyS1t+rqTolTwawNzVn+Aj2Km1oD3qQ0JuYX6KFVn+b+T46ugzGjaO1NauLVi5aAGZG8eiEx2xUbVb1EN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=lpozj9oQ; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=/tse191R; arc=none smtp.client-ip=193.142.43.55
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pF1ygvpR";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="GVFkubNr"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="lpozj9oQ";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="/tse191R"
 From: "Ahmed S. Darwish" <darwi@linutronix.de>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1742823267;
+	s=2020; t=1742823270;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=q1Bssu+qRSO7OksQLyO3GqGguJ7uDaDXjuRfoD8zv3k=;
-	b=pF1ygvpRTOvIlClz2P+35jnin2nDCh42ozkOsd0BN724x6cJespeXbLdhn/BUq6yCX2Ci7
-	sqK90i2+QSDvV40RBgM6TqnMUFbM+uZoNp1xy80Yod2WkPgE8CmBmG3jIzngrIp8LFqsCi
-	emJhgn6RJtXV99CdWys6/hx6VdsltkWwkHo86JHtUa1d0n1V+hvqDa0OnxxzyqsxfD5Q+r
-	c64MGM+RzEVGABftW0ITve0W2CFpGi7orzHxbUrPVFh4WW0m4zOGH0i7Pfb6F3++zK/Iu6
-	LUTQn4FP7gNaEX/BgA+sYchQS0FyB1RbudAVYyqeOQAVuyQsI5TYUISPCRRDLA==
+	bh=T6RSxh+ngXoYWpeKOf12JK5PZIX476LSn57y3yYtrgk=;
+	b=lpozj9oQ2V2n6Nh9jNWEQdmKC697+mIB0e3zuvjXqV1zq8/cktn6LzqxE8F0jAgLtOQC42
+	a/KoFNMnV0PmZpLuMsqBx+tHOQryH1SX7tgA6LF/WrI0HjnlZVef5nsw/Y+NWAMIsHUZ/o
+	kJtXQbqOF3JhZJXE4dpisb13MvknYDeDWqJlw7nTzv9o/BExKx/LdhNP4ygP2u0Rs95I08
+	103QW/aPwQEqXybv2rnxqQivzgGYJKX54+vx8Ikk65D6yFPM9VZSjhNjJfqcFCAU5A0i9Q
+	i5UQmv3PAUW9FKYbRlchHQ2j9WRcZfTs2Or8R/5CaqOWvmi4yTHl+nRIn/e4FA==
 DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1742823267;
+	s=2020e; t=1742823270;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=q1Bssu+qRSO7OksQLyO3GqGguJ7uDaDXjuRfoD8zv3k=;
-	b=GVFkubNrzlnJ7appiqOol899xXEskQ4SKNGckDcDNZXricSO9/uA1UregPOlvSCfrxMyDQ
-	1Qrog8LbAV25jYCw==
+	bh=T6RSxh+ngXoYWpeKOf12JK5PZIX476LSn57y3yYtrgk=;
+	b=/tse191RVktpzQ4sOOuuRz9nvPn74ABPslv4UgkxUivR1OfPjmfP5SudJt1pToyIpehjOu
+	c5I2RChxK5+DszDA==
 To: Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>,
 	Dave Hansen <dave.hansen@linux.intel.com>
@@ -50,9 +50,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86-cpuid@lists.linux.dev,
 	LKML <linux-kernel@vger.kernel.org>,
 	"Ahmed S. Darwish" <darwi@linutronix.de>
-Subject: [PATCH v4 18/29] x86/cacheinfo: Use enums for cache descriptor types
-Date: Mon, 24 Mar 2025 14:33:13 +0100
-Message-ID: <20250324133324.23458-19-darwi@linutronix.de>
+Subject: [PATCH v4 19/29] x86/cpu: Use enums for TLB descriptor types
+Date: Mon, 24 Mar 2025 14:33:14 +0100
+Message-ID: <20250324133324.23458-20-darwi@linutronix.de>
 In-Reply-To: <20250324133324.23458-1-darwi@linutronix.de>
 References: <20250324133324.23458-1-darwi@linutronix.de>
 Precedence: bulk
@@ -63,20 +63,20 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The leaf 0x2 one-byte cache descriptor types:
+The leaf 0x2 one-byte TLB descriptor types:
 
-	CACHE_L1_INST
-	CACHE_L1_DATA
-	CACHE_L2
-	CACHE_L3
+	TLB_INST_4K
+	TLB_INST_4M
+	TLB_INST_2M_4M
+	...
 
-are just discriminators to be used within the cache_table[] mapping.
+are just discriminators to be used within the intel_tlb_table[] mapping.
 Their specific values are irrelevant.
 
 Use enums for such types.
 
 Make the enum packed and static assert that its values remain within a
-single byte so that the cache_table[] array size do not go out of hand.
+single byte so that the intel_tlb_table[] size do not go out of hand.
 
 Use a __CHECKER__ guard for the static_assert(sizeof(enum) == 1) line as
 sparse ignores the __packed annotation on enums.  This is similar to
@@ -86,75 +86,106 @@ core SCSI code.
 Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
 Link: https://lore.kernel.org/r/Z9rsTirs9lLfEPD9@lx-t490
 ---
- arch/x86/include/asm/cpuid/types.h | 15 +++++++++++++++
- arch/x86/kernel/cpu/cacheinfo.c    |  9 ++-------
- 2 files changed, 17 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/cpuid/types.h | 31 ++++++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/intel.c        | 28 +++------------------------
+ 2 files changed, 34 insertions(+), 25 deletions(-)
 
 diff --git a/arch/x86/include/asm/cpuid/types.h b/arch/x86/include/asm/cpuid/types.h
-index 753f6c4514f4..39c3c79c081b 100644
+index 39c3c79c081b..e756327f8e02 100644
 --- a/arch/x86/include/asm/cpuid/types.h
 +++ b/arch/x86/include/asm/cpuid/types.h
-@@ -2,6 +2,7 @@
- #ifndef _ASM_X86_CPUID_TYPES_H
- #define _ASM_X86_CPUID_TYPES_H
- 
-+#include <linux/build_bug.h>
- #include <linux/types.h>
- 
- /*
-@@ -45,4 +46,18 @@ union leaf_0x2_regs {
- 	u8			desc[16];
- };
+@@ -60,4 +60,35 @@ enum _cache_table_type {
+ static_assert(sizeof(enum _cache_table_type) == 1);
+ #endif
  
 +/*
-+ * Leaf 0x2 1-byte descriptors' cache types
-+ * To be used for their mappings at cache_table[]
++ * Leaf 0x2 1-byte descriptors' TLB types
++ * To be used for their mappings at intel_tlb_table[]
++ *
++ * Start at 1 since type 0 is reserved for HW byte descriptors which are
++ * not recognized by the kernel; i.e., those without an explicit mapping.
 + */
-+enum _cache_table_type {
-+	CACHE_L1_INST,
-+	CACHE_L1_DATA,
-+	CACHE_L2,
-+	CACHE_L3,
++enum _tlb_table_type {
++	TLB_INST_4K		= 1,
++	TLB_INST_4M,
++	TLB_INST_2M_4M,
++	TLB_INST_ALL,
++
++	TLB_DATA_4K,
++	TLB_DATA_4M,
++	TLB_DATA_2M_4M,
++	TLB_DATA_4K_4M,
++	TLB_DATA_1G,
++	TLB_DATA_1G_2M_4M,
++
++	TLB_DATA0_4K,
++	TLB_DATA0_4M,
++	TLB_DATA0_2M_4M,
++
++	STLB_4K,
++	STLB_4K_2M,
 +} __packed;
 +#ifndef __CHECKER__
-+static_assert(sizeof(enum _cache_table_type) == 1);
++static_assert(sizeof(enum _tlb_table_type) == 1);
 +#endif
 +
  #endif /* _ASM_X86_CPUID_TYPES_H */
-diff --git a/arch/x86/kernel/cpu/cacheinfo.c b/arch/x86/kernel/cpu/cacheinfo.c
-index 626f55f960dc..09c5aa9af973 100644
---- a/arch/x86/kernel/cpu/cacheinfo.c
-+++ b/arch/x86/kernel/cpu/cacheinfo.c
-@@ -23,11 +23,6 @@
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index aeb7d6d48379..def433e0081f 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -626,28 +626,6 @@ static unsigned int intel_size_cache(struct cpuinfo_x86 *c, unsigned int size)
+ }
+ #endif
  
- #include "cpu.h"
- 
--#define CACHE_L1_INST	1
--#define CACHE_L1_DATA	2
--#define CACHE_L2	3
--#define CACHE_L3	4
+-#define TLB_INST_4K		0x01
+-#define TLB_INST_4M		0x02
+-#define TLB_INST_2M_4M		0x03
 -
- /* Shared last level cache maps */
- DEFINE_PER_CPU_READ_MOSTLY(cpumask_var_t, cpu_llc_shared_map);
+-#define TLB_INST_ALL		0x05
+-#define TLB_INST_1G		0x06
+-
+-#define TLB_DATA_4K		0x11
+-#define TLB_DATA_4M		0x12
+-#define TLB_DATA_2M_4M		0x13
+-#define TLB_DATA_4K_4M		0x14
+-
+-#define TLB_DATA_1G		0x16
+-#define TLB_DATA_1G_2M_4M	0x17
+-
+-#define TLB_DATA0_4K		0x21
+-#define TLB_DATA0_4M		0x22
+-#define TLB_DATA0_2M_4M		0x23
+-
+-#define STLB_4K			0x41
+-#define STLB_4K_2M		0x42
+-
+ /*
+  * All of leaf 0x2's one-byte TLB descriptors implies the same number of
+  * entries for their respective TLB types.  The 0x63 descriptor is an
+@@ -660,7 +638,7 @@ static unsigned int intel_size_cache(struct cpuinfo_x86 *c, unsigned int size)
  
-@@ -41,7 +36,7 @@ unsigned int memory_caching_control __ro_after_init;
- 
- struct _cache_table {
- 	u8 descriptor;
--	char cache_type;
-+	enum _cache_table_type type;
- 	short size;
+ struct _tlb_table {
+ 	unsigned char descriptor;
+-	char tlb_type;
++	enum _tlb_table_type type;
+ 	unsigned int entries;
  };
  
-@@ -520,7 +515,7 @@ void init_intel_cacheinfo(struct cpuinfo_x86 *c)
- 			if (!entry)
- 				continue;
+@@ -718,11 +696,11 @@ static void intel_tlb_lookup(const unsigned char desc)
+ 	     intel_tlb_table[k].descriptor != 0; k++)
+ 		;
  
--			switch (entry->cache_type) {
-+			switch (entry->type) {
- 			case CACHE_L1_INST:	l1i += entry->size; break;
- 			case CACHE_L1_DATA:	l1d += entry->size; break;
- 			case CACHE_L2:		l2  += entry->size; break;
+-	if (intel_tlb_table[k].tlb_type == 0)
++	if (intel_tlb_table[k].type == 0)
+ 		return;
+ 
+ 	entries = intel_tlb_table[k].entries;
+-	switch (intel_tlb_table[k].tlb_type) {
++	switch (intel_tlb_table[k].type) {
+ 	case STLB_4K:
+ 		tlb_lli_4k = max(tlb_lli_4k, entries);
+ 		tlb_lld_4k = max(tlb_lld_4k, entries);
 -- 
 2.48.1
 
