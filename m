@@ -1,131 +1,130 @@
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out.smtpout.orange.fr (out-65.smtpout.orange.fr [193.252.22.65])
+	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7862500DA
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:53:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02AC13B797
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742802825; cv=none; b=jQIvnGvA99XccbTl4U7Y20kzONmD7zVml1W6kgqVRbsjMhjh4s9IwK0dVMEhx4afgagDzZPwU/B8GkMScnydDY8o5OVwboUQ2+pRxdH7W5OhNp+xAl9s2cja0sbG9JGhSMWUScE55TVsia9tNa+A2lgmPzYjUsy0ncMw60UFz3o=
+	t=1742802847; cv=none; b=Ne2Kbl7DsZSQo0AA2lLm4/B2uvVIKtvCbdj65oErp6Xu9vlNOFv9ciSRVw+ADppm/uTHAwtrJmAjvPVj8VJW3ce/xNJPYM6rzbBngMa6Pi1n5fQqbH9SBJGNIAjyJDBe6PxVk4woMmIyPEFl638Gy0Rcb2VN9O8+9IEmdYhWv3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742802825; c=relaxed/simple;
-	bh=+f+zTy+HCdb0nsVnI6YMF9DFCrlapfwDiIEaJAlJXcM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=A8frpg2/vIJFSavqJEVedpXyk5NP9BUhfDx5KBhtp2tuyCICWcuVLBn9LehiGAwhqH8uxsY69DGc8A2ne/r0718s8s0e8y02u3qDQxSXB85y4RO+EfMCNhtm6brTT9DU8iONcgNszTkTUHdp6g97U813VaazpEMAjWtensmVWfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zKcVZgFP; arc=none smtp.client-ip=209.85.160.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1742802847; c=relaxed/simple;
+	bh=tvAIIuR1iPe/70LBC/XK+o9+54IQoWvVHvcnYdC+BSo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eGr/0+NFfbPYw+t9lUdkx9iufbg47YrMvEXpGuuV/8h9LZSmoYSaOTNUZQaOsi62za4n7taYIhMm2URexPY0Cp2sichwL259/exE/BEk8hk2VcHyKcQAkwUtOrC8VQfTkfWEgfb3ktpy+JJigrnDEaFe1xi7tGhnv8vwG2tPfrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=sdI268tj; arc=none smtp.client-ip=193.252.22.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zKcVZgFP"
-Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-476f4e9cf92so26600421cf.3
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 00:53:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742802822; x=1743407622; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IoORNtbY+B2IUJ3dsVJjusx0671z0wqj3fYYp3L4WQk=;
-        b=zKcVZgFPTsVNtdKaPMgj9ynLjkchYceTBXU0MTD9eCP0hP84+ZjuD3rpBz4phcOvHk
-         XiAnSgLZbpysc35eoVtjQ15UlDPAxRaIl0M1XgoWiur+GF6VNOzUtQh2ue0flm1qdnT2
-         ClbvZb/gTJZ8V8I5pMolHSRY6FrZml9DHZ4ol37jtkYegbvuEgX5AMMQQdFSOuv6q/3V
-         XgcRdQ4kKhgJOQerKJnQkflibZnFK3886VYPzHtoe6eDm4+dBS14Xmq+Pi7hY1tXX513
-         Xn9nKHj4mkfji5k21L9wQ1cx8F+UKnmBccV8ZDE2SpXFysoNVsezpD4DSkYiuDHJBVkB
-         tl+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742802822; x=1743407622;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IoORNtbY+B2IUJ3dsVJjusx0671z0wqj3fYYp3L4WQk=;
-        b=VnPtfyR6d8d2A0AgWRY05x8WX82ssXccziRCjqpam7NcmqxOvH7steWnpSFbLudWVl
-         VNq2QBTwdUMrecWbTiXV7YjVKnXLwybEtL5Y2Ox4KqyJU4RboQdDuVhaLkb3So9xwh6m
-         WHmLgx8CPEdfjdLT7woEQzNAZ1wb5GQj0Q5Otv+VAPuU0/nRj1OD6NPaL8l6eBdQ2Fwa
-         4xBG5IXlIAZQZXO0XfK+JmVOfyYo0GvbhF6XYhadKfvjFQbwjMpScR/U3Y2CorxcFOqN
-         0dTnKFRtHjyTGGonWmFHT2OAwf48ChtDZW2jlfNO0vHPa2ffPWG+esG2NOjccDXwlLFY
-         /M2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWpXBAEj6NBNkrdek3Kn4tgl052mi6ye93jC1C93AgzlpN8Awiry0sSWypsg1ULiIdFy1mgKHV6WKH4BSQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzItBWc656YGbjIBx5/dnFoDWxy4kCYxIuOACaHBlda9telaRi3
-	S756LgBPGuc7GP99Xz8imsb9L0v0txhM+77dplwA0559NqEmREeqrcZVtu/xuXLtp7s5bIMIoto
-	WXEIU9VCZ7gAp+8B6ZY1UwL1m9+dGfYXsrE/7S0AbLi7ZPbuTrssu
-X-Gm-Gg: ASbGncsAj2QaLvYmvlfIUQjc3NqD0C0oWLWRxXewrJUKp2evtVyH/zira4AUCEtDHy7
-	tAzERUyXtsD4oROcRGG8Qzl4LAf7teffIdnkgTH9ISDphXtlEP0EdddhKAdi/3wXtVr2iwKUuUK
-	sC1kHibEEh/+Fhf9TAEqpBJSNjACg=
-X-Google-Smtp-Source: AGHT+IGiwsWFuYsLMNRyd+YyNDH5S9vrOYtns1KAlBv0TwB+wIKjZFlUfAJvYJceCxx7xV/sibpXW8eyBJzWnUP1oqA=
-X-Received: by 2002:a05:622a:4009:b0:476:8cad:72d9 with SMTP id
- d75a77b69052e-4771de3f530mr200487331cf.33.1742802822174; Mon, 24 Mar 2025
- 00:53:42 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sdI268tj"
+Received: from [172.16.82.72] ([124.33.176.97])
+	by smtp.orange.fr with ESMTPA
+	id wcU2tGWSCo3Z8wcU6tISto; Mon, 24 Mar 2025 08:44:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
+	s=t20230301; t=1742802281;
+	bh=XsGk3ixhSurfkLIH5o1CSD/Ev7zogu3EYa8+C/nPa0g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From;
+	b=sdI268tj5lyVJtO3fEwynmKPbQg09PuOecq2JJCSdjSp7N1NgJ6fcy6XKYbjGhr/1
+	 2gk2XM/VMpWoxAKiiAcbhewU0pEJZB6nFv5S2ZlayCpKZ18kjNF05DGW9vwRi6bIcz
+	 z3ul2hSwmRTaF10207d/yfQSpK0HTU8rrtuJjS1jHE0+UHG38ESd4ian45uXMWsPxj
+	 KymUZv00SMfq99I4IgfJQJjFAQJ0EUxtmscmuGjmFOjH0YeShHtWdQ/rPkGEvecps8
+	 CUFUtHhORoskiP35auEhZb9UakXJ6ypJq3LVyLDwRigo50w+Z7LRWCyAlaZpmWdz9O
+	 j0TF2QXUwzPnw==
+X-ME-Helo: [172.16.82.72]
+X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
+X-ME-Date: Mon, 24 Mar 2025 08:44:41 +0100
+X-ME-IP: 124.33.176.97
+Message-ID: <202c97b2-e99e-4b88-9ac5-171db244b7d0@wanadoo.fr>
+Date: Mon, 24 Mar 2025 16:44:29 +0900
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250323072511.2353342-1-edumazet@google.com> <Z-B_R737uM31m6_K@gmail.com>
- <CANn89i+fmyJ8p=vBpwBy38yhVMCJv8XjrTkrXSUnSGedboCM_Q@mail.gmail.com>
- <Z-EGvjhkg6llyX24@gmail.com> <CANn89iL8o0UZTpomaT1oaMxRTBv1YdaXZGwXQn3H0dDO81UyGA@mail.gmail.com>
-In-Reply-To: <CANn89iL8o0UZTpomaT1oaMxRTBv1YdaXZGwXQn3H0dDO81UyGA@mail.gmail.com>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 24 Mar 2025 08:53:31 +0100
-X-Gm-Features: AQ5f1JrzgIBhkWXtEZlLxzH8STpfXyvqiZx0ev4PTk9UGx7V7iWN5IFKTjlaI7Y
-Message-ID: <CANn89iKwPpV7v=EnK2ac5KjHSef64eyVwUST=q=+oFaqTB95sQ@mail.gmail.com>
-Subject: Re: [PATCH] x86/alternatives: remove false sharing in poke_int3_handler()
-To: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, "H . Peter Anvin" <hpa@zytor.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Steven Rostedt <rostedt@goodmis.org>, 
-	linux-kernel <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org, 
-	bpf@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>, 
-	Greg Thelen <gthelen@google.com>, Stephane Eranian <eranian@google.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/5] bits: introduce fixed-type GENMASK_U*()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Yury Norov <yury.norov@gmail.com>,
+ Lucas De Marchi <lucas.demarchi@intel.com>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ Jani Nikula <jani.nikula@linux.intel.com>,
+ Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+ Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
+ <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
+ linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
+ David Laight <David.Laight@aculab.com>, Jani Nikula <jani.nikula@intel.com>
+References: <20250322-fixed-type-genmasks-v7-0-da380ff1c5b9@wanadoo.fr>
+ <20250322-fixed-type-genmasks-v7-1-da380ff1c5b9@wanadoo.fr>
+ <Z-EIHBCkUiBh63JE@smile.fi.intel.com>
+Content-Language: en-US
+From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
+Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
+ xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
+ LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
+ GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
+ bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
+ BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
+ 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
+ yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
+ CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
+ ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
+In-Reply-To: <Z-EIHBCkUiBh63JE@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 24, 2025 at 8:47=E2=80=AFAM Eric Dumazet <edumazet@google.com> =
-wrote:
->
-> On Mon, Mar 24, 2025 at 8:16=E2=80=AFAM Ingo Molnar <mingo@kernel.org> wr=
-ote:
-> >
-> >
-> > * Eric Dumazet <edumazet@google.com> wrote:
-> >
-> > > > What's the adversarial workload here? Spamming bpf_stats_enabled on=
- all
-> > > > CPUs in parallel? Or mixing it with some other text_poke_bp_batch()
-> > > > user if bpf_stats_enabled serializes access?
-> >             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >
-> > > > Does anything undesirable happen in that case?
-> > >
-> > > The case of multiple threads trying to flip bpf_stats_enabled is
-> > > handled by bpf_stats_enabled_mutex.
-> >
-> > So my suggested workload wasn't adversarial enough due to
-> > bpf_stats_enabled_mutex: how about some other workload that doesn't
-> > serialize access to text_poke_bp_batch()?
->
-> Do you have a specific case in mind that I can test on these big platform=
-s ?
->
-> text_poke_bp_batch() calls themselves are serialized by text_mutex, it
-> is not clear what you are looking for.
+On 24/03/2025 at 16:22, Andy Shevchenko wrote:
+> On Sat, Mar 22, 2025 at 06:23:12PM +0900, Vincent Mailhol via B4 Relay wrote:
+>>
+>> Add GENMASK_TYPE() which generalizes __GENMASK() to support different
+>> types, and implement fixed-types versions of GENMASK() based on it.
+>> The fixed-type version allows more strict checks to the min/max values
+>> accepted, which is useful for defining registers like implemented by
+>> i915 and xe drivers with their REG_GENMASK*() macros.
+>>
+>> The strict checks rely on shift-count-overflow compiler check to fail
+>> the build if a number outside of the range allowed is passed.
+>> Example:
+>>
+>>   #define FOO_MASK GENMASK_U32(33, 4)
+>>
+>> will generate a warning like:
+>>
+>>   include/linux/bits.h:51:27: error: right shift count >= width of type [-Werror=shift-count-overflow]
+>>      51 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
+>>         |                           ^~
+>>
+>> While GENMASK_TYPE() is crafted to cover all variants, including the
+>> already existing GENMASK(), GENMASK_ULL() and GENMASK_U128(), for the
+>> moment, only use it for the newly introduced GENMASK_U*(). The
+>> consolidation will be done in a separate change.
+> 
+> ...
+> 
+>>  #if !defined(__ASSEMBLY__)
+>> +
+> 
+>> -#else
+> 
+>> +#else /* defined(__ASSEMBLY__) */
+> 
+>> -#endif
+>> +
+>> +#endif /* !defined(__ASSEMBLY__) */
+> 
+> Up to you, but if new version is needed or maintainer require, I would move the
+> above changes either to a separate patch (prerequisite) or dropped them at all.
+> These are not big but unneeded churn,
+
+I do not want to drop this. After all the changes, there is a lot of
+scrolling between the #if, #else and #endif, and the comments helps to
+keep track of which context we are in.
+
+As for putting this into another patch, OK but only if there is a need
+for new version for other reasons.
 
 
-BTW the atomic_cond_read_acquire() part is never called even during my
-stress test.
+Yours sincerely,
+Vincent Mailhol
 
-We could add this eventually:
-
-diff --git a/arch/x86/kernel/alternative.c b/arch/x86/kernel/alternative.c
-index d7afbf822c45..5d364e990055 100644
---- a/arch/x86/kernel/alternative.c
-+++ b/arch/x86/kernel/alternative.c
-@@ -2418,7 +2418,7 @@ static void text_poke_bp_batch(struct
-text_poke_loc *tp, unsigned int nr_entries
-        for_each_possible_cpu(i) {
-                atomic_t *refs =3D per_cpu_ptr(&bp_refs, i);
-
--               if (!atomic_dec_and_test(refs))
-+               if (unlikely(!atomic_dec_and_test(refs)))
-                        atomic_cond_read_acquire(refs, !VAL);
-        }
- }
