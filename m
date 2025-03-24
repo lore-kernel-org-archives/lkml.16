@@ -1,48 +1,33 @@
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72935250C04;
-	Mon, 24 Mar 2025 07:16:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D6718D65E;
+	Mon, 24 Mar 2025 07:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742800583; cv=none; b=S0jZsJmCxnHGp7D7Zy1Jya3baxPQLQ2aqpzUiihJCLUmakg3zCpUn0xjUPR4nlWj6DONY/HBelPi535OseTtv0tRCCENaSkWuXugpy9CCMJq5BsUj4Vemp6KlB4XpdfTUgpQrDdCMlWC/DaW+K6vHlPOU3E8NTgPKmtiJIvfZyw=
+	t=1742800793; cv=none; b=t+2SgEsmWSWg+8wGsAFxt2qpu+PhCk5kg2xyQU0KEhg9NsYlYQ2xu6D9PkwWgx66o4Ff3gx6JD9NWpW7GGwoPkKZXF2Jwu5zolTCpPgi4QbNo0M8tt+1F5A2puw5+KmIXDHqv8r+crc+5KthpzgDoBxl1eMpPFxbGBiKtg23HXk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742800583; c=relaxed/simple;
-	bh=fs8CzO1K9MjTFGnpsaH21J3uneP81UTm6gTR0JK4478=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=skANtmYg44aV07xYVf9VOtu9g8RvYUeHWZvDUla2alVa/2SYhmYVHeCR5prIvdn+uZIUWoT3kuTTiPCkEi6NfCr0uI8npsoeMDKZ/Wh0SiBNrxhLRhfjDLEWc78ImvJra9GixA6S4IzxRmm8cpEBRLMoxuMVsNeAtwqtaMHb6JI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=OFt5tfT+; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+	s=arc-20240116; t=1742800793; c=relaxed/simple;
+	bh=2GetM2IGOY5ME8RVRd+C5jKk3BERunSkKsBZ1Wyayyg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=HSGJ6FAREWZe9UP6MCQe66e6Iwo+m5yJzIsjpletV4aw0vqEDmo89qZ6BzxXOL0fuIvHgi8L8WWf2/wu3bzKkJbHrIbKQ1rFBmG7ve1xfBIcOS7ivP2FE3jdXj8sEQs+v2jGeh+OTsK60bo/YDstswzA15Z//W8Xs5v+MjGuZgo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C8m2jUFN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OFt5tfT+"
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O6cTMe022710;
-	Mon, 24 Mar 2025 07:16:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	L2fUcpJuoMYMYBv2me7UrE3bL9Ib1bHjvNUviqyRdA0=; b=OFt5tfT+GxSP44gn
-	ELaOcUgJ3AuWOAe1aayDiu/BppoFLt90s52Qgq2NhTbSCzHrXnPYpQXBvi8CV+Wm
-	NwzhVEJ1mvf6aD4IgUXdPYvs8a+/tbEIapbZYFMfIWUGHZD42l+eShYmm3BxigGZ
-	RWOr0l9g+PXfJ6+g19aZUcY39lfPK1BG6fTJ9rk8D/8XHXEbWkhzu1GapWrM6gMK
-	4aiqXY1SFHyWTwtNeZKtcSFo0STOaWEeQ6AFZ3vfXLHJbslbUyfOet3+gEjjDL2B
-	CEC/Fqnom3wGOKIX7VXHI16SFrAuFuBJ9Oiye0s/vt0Xolp2BbEKVPSpOySiddHA
-	69jeiw==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hmhk3ecj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 07:16:19 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.18.1.2/8.18.1.2) with ESMTPS id 52O7GIpG022422
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 24 Mar 2025 07:16:18 GMT
-Received: from [10.231.216.225] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 24 Mar
- 2025 00:16:14 -0700
-Message-ID: <e085027f-2ec9-439a-be07-66f2cad1baaf@quicinc.com>
-Date: Mon, 24 Mar 2025 15:16:12 +0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C8m2jUFN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33CD2C4CEDD;
+	Mon, 24 Mar 2025 07:19:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742800793;
+	bh=2GetM2IGOY5ME8RVRd+C5jKk3BERunSkKsBZ1Wyayyg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=C8m2jUFNIoWNw0jTghEyNrcEpqjIt+gCemltQi50mMX3D7tmAThDLas4Lc1ARBhEh
+	 CRfBvNS+bFMYxuQ3z7lBQ/NqcUJV/BZkC2u9F+p2Rj7O6LERb4YluABNZHPkb/hppG
+	 G3iX6GaDufIbU6rlt4SXBMBpSbuH/IHf9tO6ztSrnCwU/TVegX992QMevCL2SvD52z
+	 uZ0KB4s0vWohbmPPS+Vj/CSxcwwfo24sSqiV9784PKJl2AZtL07OFJN5fPF2y8ryMP
+	 kmmPjzmWD/MN6wGR3OgJajhca3TrITTrgr4CzBzdcYZmwtSa9hc0XqgFz+tXfPvkiL
+	 7bYvLUzEYflRA==
+Message-ID: <39968d11-1b7d-4453-8350-26ed31dae02f@kernel.org>
+Date: Mon, 24 Mar 2025 08:19:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -50,91 +35,129 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 2/2] arm64: dts: qcom: qcs8300-ride: enable WLAN on
- qcs8300-ride
-To: Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>
-CC: Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio
-	<konradybcio@kernel.org>, Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski
-	<krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>, <linux-arm-msm@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_miaoqing@quicinc.com>, <quic_zhichen@quicinc.com>,
-        <quic_yuzha@quicinc.com>
-References: <20250318093350.2682132-1-quic_stonez@quicinc.com>
- <20250318093350.2682132-3-quic_stonez@quicinc.com>
- <fhpsphwz65dlsqhyycwabofamacynshz5e5ez4gafkmdain5dp@32dpgc5mrhdr>
+Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for
+ PCIe RP PERST#
+To: "Musham, Sai Krishna" <sai.krishna.musham@amd.com>,
+ "bhelgaas@google.com" <bhelgaas@google.com>,
+ "lpieralisi@kernel.org" <lpieralisi@kernel.org>, "kw@linux.com"
+ <kw@linux.com>,
+ "manivannan.sadhasivam@linaro.org" <manivannan.sadhasivam@linaro.org>,
+ "robh@kernel.org" <robh@kernel.org>, "krzk+dt@kernel.org"
+ <krzk+dt@kernel.org>, "conor+dt@kernel.org" <conor+dt@kernel.org>,
+ "cassel@kernel.org" <cassel@kernel.org>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+ "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ "Simek, Michal" <michal.simek@amd.com>,
+ "Gogada, Bharat Kumar" <bharat.kumar.gogada@amd.com>,
+ "Havalige, Thippeswamy" <thippeswamy.havalige@amd.com>
+References: <20250318092648.2298280-1-sai.krishna.musham@amd.com>
+ <20250318092648.2298280-2-sai.krishna.musham@amd.com>
+ <afe7947b-ed71-40d0-aa2e-b16549fc6b7d@kernel.org>
+ <DM4PR12MB6158F761C80CA82B59FC0634CDDB2@DM4PR12MB6158.namprd12.prod.outlook.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Stone Zhang <quic_stonez@quicinc.com>
-In-Reply-To: <fhpsphwz65dlsqhyycwabofamacynshz5e5ez4gafkmdain5dp@32dpgc5mrhdr>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <DM4PR12MB6158F761C80CA82B59FC0634CDDB2@DM4PR12MB6158.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Authority-Analysis: v=2.4 cv=C4PpyRP+ c=1 sm=1 tr=0 ts=67e106c3 cx=c_pps a=ouPCqIW2jiPt+lZRy3xVPw==:117 a=ouPCqIW2jiPt+lZRy3xVPw==:17 a=GEpy-HfZoHoA:10 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=KKAkSRfTAAAA:8 a=COk6AnOGAAAA:8
- a=d2MxNM1SO2chPncIAK4A:9 a=QEXdDO2ut3YA:10 a=cvBusfyB2V15izCimMoJ:22 a=TjNXssC_j7lpFel5tvFf:22
-X-Proofpoint-GUID: WbAHe_Oht4L-SFvuHzJPq03Q3oRNoYfV
-X-Proofpoint-ORIG-GUID: WbAHe_Oht4L-SFvuHzJPq03Q3oRNoYfV
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
- definitions=2025-03-24_03,2025-03-21_01,2024-11-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- phishscore=0 mlxlogscore=892 priorityscore=1501 impostorscore=0
- bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0 suspectscore=0
- lowpriorityscore=0 classifier=spam authscore=0 authtc=n/a authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
- definitions=main-2503240052
 
-
-
-On 3/19/2025 6:13 PM, Dmitry Baryshkov wrote:
-> On Tue, Mar 18, 2025 at 05:33:50PM +0800, Stone Zhang wrote:
->> Enable WLAN on qcs8300-ride by adding a node for the PMU module
->> of the WCN6855 and assigning its LDO power outputs to the existing
->> WiFi module.
+On 21/03/2025 10:42, Musham, Sai Krishna wrote:
+> [AMD Official Use Only - AMD Internal Distribution Only]
+> 
+> Hi Krzysztof,
+> 
+>> -----Original Message-----
+>> From: Krzysztof Kozlowski <krzk@kernel.org>
+>> Sent: Tuesday, March 18, 2025 3:23 PM
+>> To: Musham, Sai Krishna <sai.krishna.musham@amd.com>;
+>> bhelgaas@google.com; lpieralisi@kernel.org; kw@linux.com;
+>> manivannan.sadhasivam@linaro.org; robh@kernel.org; krzk+dt@kernel.org;
+>> conor+dt@kernel.org; cassel@kernel.org
+>> Cc: linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; Simek, Michal <michal.simek@amd.com>; Gogada, Bharat
+>> Kumar <bharat.kumar.gogada@amd.com>; Havalige, Thippeswamy
+>> <thippeswamy.havalige@amd.com>
+>> Subject: Re: [PATCH v4 1/2] dt-bindings: PCI: xilinx-cpm: Add reset-gpios for PCIe
+>> RP PERST#
 >>
->> Signed-off-by: Stone Zhang <quic_stonez@quicinc.com>
->> ---
->>   arch/arm64/boot/dts/qcom/qcs8300-ride.dts | 108 ++++++++++++++++++++++
->>   1 file changed, 108 insertions(+)
+>> Caution: This message originated from an External Source. Use proper caution
+>> when opening attachments, clicking links, or responding.
 >>
->> @@ -320,6 +402,25 @@ &pcie1_phy {
->>   	status = "okay";
->>   };
->>   
->> +&pcieport0 {
->> +	wifi@0 {
->> +		compatible = "pci17cb,1103";
->> +		reg = <0x10000 0x0 0x0 0x0 0x0>;
->> +
->> +		qcom,ath11k-calibration-variant = "QC_QCS8300_Ride";
-> 
-> Almost missed it. What is your baseline? Krzysztof has sent his
-> qcom,calibration-variant patches [1] in February. Bjorn has picked them
-> up on March 4th.
-> 
-> This needs to be rebased on top of [1].
-Understood.
-> 
-> [1] https://lore.kernel.org/linux-arm-msm/20250225-dts-qcom-wifi-calibration-v1-0-347e9c72dcfc@linaro.org/
-> 
->> +
->> +		vddrfacmn-supply = <&vreg_pmu_rfa_cmn>;
->> +		vddaon-supply = <&vreg_pmu_aon_0p59>;
->> +		vddwlcx-supply = <&vreg_pmu_wlcx_0p8>;
->> +		vddwlmx-supply = <&vreg_pmu_wlmx_0p85>;
->> +		vddrfa0p8-supply = <&vreg_pmu_rfa_0p8>;
->> +		vddrfa1p2-supply = <&vreg_pmu_rfa_1p2>;
->> +		vddrfa1p8-supply = <&vreg_pmu_rfa_1p7>;
->> +		vddpcie0p9-supply = <&vreg_pmu_pcie_0p9>;
->> +		vddpcie1p8-supply = <&vreg_pmu_pcie_1p8>;
->> +	};
->> +};
->> +
->>   &qupv3_id_0 {
->>   	status = "okay";
->>   };
+>>
+>> On 18/03/2025 10:26, Sai Krishna Musham wrote:
+>>> Changes for v2:
+>>> - Add define from include/dt-bindings/gpio/gpio.h for PERST# polarity
+>>> - Update commit message
+>>> ---
+>>>  .../bindings/pci/xilinx-versal-cpm.yaml       | 21 ++++++++++++++-----
+>>>  1 file changed, 16 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+>>> b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+>>> index d674a24c8ccc..904594138af2 100644
+>>> --- a/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+>>> +++ b/Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+>>> @@ -24,15 +24,20 @@ properties:
+>>>      items:
+>>>        - description: CPM system level control and status registers.
+>>>        - description: Configuration space region and bridge registers.
+>>> +      - description: CPM clock and reset control registers.
+>>>        - description: CPM5 control and status registers.
+>>
+>> You cannot add items to the middle, that's an ABI break. Adding required properties
+>> is also an ABI break. Why you cannot add it to the end of the list?
+>>
+>> Or at least explain ABI break impact in commit msg?
+>>
+> When I add property at the end, I'm observing failure during dt_binding_check.
+> $ make DT_CHECKER_FLAGS=-m dt_binding_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/pci/xilinx-versal-cpm.yaml
+> Documentation/devicetree/bindings/pci/xilinx-versal-cpm.example.dtb: pcie@fca10000: reg-names:2: 'cpm_csr' was expected
+>         from schema $id: http://devicetree.org/schemas/pci/xilinx-versal-cpm.yaml#
+Maybe for a good reason.
 
+Best regards,
+Krzysztof
