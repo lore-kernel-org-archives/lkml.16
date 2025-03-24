@@ -1,140 +1,103 @@
-Received: from bayard.4d2.org (bayard.4d2.org [155.254.16.17])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5E9D25C71A;
-	Mon, 24 Mar 2025 12:21:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=155.254.16.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95AE25C71A;
+	Mon, 24 Mar 2025 12:21:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742818879; cv=none; b=N6IOCfX3WFpaNRt2DJrqIM4bYwv1Yvcp6LAvqX3+BwPDwQQyAUfiDGatYv+WzUAcKJkIEkg2yC++rqzFWZQ2aWCuDuLkUFOeialKrU8fGLL6jMVdXXQBpMRpm4ImRkXmdYjMSPcaiK3oCYaH6gFHEnJUoiywx3aMcKmBtLVZ3HU=
+	t=1742818894; cv=none; b=BELr3xQYdQxIfGfj/CMPBr4DWeOLTrigoiHW4QcMmIJBtOGokTRmYW/dOP5a/nvS4Z1rjIeWhYDX0RUxiUuFbZu5fYeDtb2tBmJ/GwEeOqLs+vZ2PaAZYFLkud43KBKt522YWTJ0MR29KAY7N+1G2BO/UbrOIytow5uhtV2FXBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742818879; c=relaxed/simple;
-	bh=9gpFd8EFx60nBxNFMoV0usv+BAC3zxeWfcnDeFxbqxo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sQhubFdBeacUp73R60WjnnBA1v/GRkhizmKOtPiTchOgymwWD8O6YM7Tv5g8vppIbwixN1TS40s5CVYV7kZmv8614RX9bSIL7l72ljJ4vcVNJCPG0iduq5e/vfnYnQZ6FIAiSdVoNv1mpmmrFafy3D7syr1jKT/NwIC213DYZJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org; spf=pass smtp.mailfrom=4d2.org; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=rDbmyv6v; dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b=WKaMpdNi; arc=none smtp.client-ip=155.254.16.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=4d2.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=4d2.org
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="rDbmyv6v";
-	dkim=pass (2048-bit key) header.d=4d2.org header.i=@4d2.org header.b="WKaMpdNi"
-Received: from bayard.4d2.org (bayard.4d2.org [127.0.0.1])
-	by bayard.4d2.org (Postfix) with ESMTP id B3637EC59FA;
-	Mon, 24 Mar 2025 05:21:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1742818874; bh=9gpFd8EFx60nBxNFMoV0usv+BAC3zxeWfcnDeFxbqxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=rDbmyv6vIYVR4mO3RtZFWbK2+WP/H3WVLmsa5FJ9uNKgtGEb+SL3kMQo4Fnv4nVHf
-	 wmOyvW81EIWY2wwa6lRqcnC7SrSFjU8+56R2qa9PNSGBE9GUAGJp7bfUKbsSiuezMM
-	 +HGX90qUPKmNEsaoMroHF+qzA8ksiYt0pfdGVmNyKX9Sm6oDI87CCQsF3cPE7P8Cci
-	 SdMlddqRc9LMcXW76hxh02VTKMw2QtXC7mKPxC1GsGzmmL/yNK77y5a6h8yep5Nvvb
-	 K7+oISqlEPE2XiUFtAo73s/ej8k5uNvtKueS+OraDQK/7XwtAbBk5gC2jQe6jd7KnV
-	 svZwHSRWFsyRQ==
-X-Virus-Scanned: amavisd-new at 4d2.org
-Received: from bayard.4d2.org ([127.0.0.1])
- by bayard.4d2.org (bayard.4d2.org [127.0.0.1]) (amavisd-new, port 10024)
- with ESMTP id GSqTSPtA-cE2; Mon, 24 Mar 2025 05:21:13 -0700 (PDT)
-Received: from ketchup (unknown [183.217.80.115])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange x25519 server-signature ECDSA (prime256v1) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: heylenay@4d2.org)
-	by bayard.4d2.org (Postfix) with ESMTPSA id A56AEEC59F0;
-	Mon, 24 Mar 2025 05:21:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=4d2.org; s=mail;
-	t=1742818865; bh=9gpFd8EFx60nBxNFMoV0usv+BAC3zxeWfcnDeFxbqxo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WKaMpdNisRVneY5YjfL44Z9h1qM+1S/RZ/juY/PjwDLMi8svonxhF8S65hOXoZT4n
-	 Yeh7TYUS5Bgl/2Q6CBHJ09DUIZhAjsfRKEG1jCTNwqzTC+AWoYWmZHOiXdsPzhSEnr
-	 3aAPSl+cZ6eEz8SZoopFeidMCnwhq24C85M9qyy1FT/qt9wEYxJaWzXHB/762GkWkH
-	 OOK4riQLivvaYP+ECV2jv9AT0iiaDPwwTINBtsSCyncm5081eJL+SdciOvReu9hXj9
-	 pvvtu5hQQVQHcKS8GHN7Rlkod1B8eyr4/Anmn3uXRK+nKHivgiYlhn+v4ZOGBMBfvp
-	 wSYqGy8b5Osng==
-Date: Mon, 24 Mar 2025 12:20:52 +0000
-From: Haylen Chu <heylenay@4d2.org>
-To: Alex Elder <elder@riscstar.com>, p.zabel@pengutronix.de,
-	mturquette@baylibre.com, sboyd@kernel.org, dlan@gentoo.org
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	guodong@riscstar.com, paul.walmsley@sifive.com, palmer@dabbelt.com,
-	aou@eecs.berkeley.edu, spacemit@lists.linux.dev,
-	devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RESEND 3/7] clk: spacemit: add reset controller support
-Message-ID: <Z-FOJFHOsU_dLkmS@ketchup>
-References: <20250321151831.623575-1-elder@riscstar.com>
- <20250321151831.623575-4-elder@riscstar.com>
+	s=arc-20240116; t=1742818894; c=relaxed/simple;
+	bh=xcH93BuTXSeThzyCLhWwh/pd26QAyseEOfRU8T9s1V4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=TRrp9HCPDRGcH0MxF0PYlGxH1STR7LaZGjJBftpi98+Cna7bneJpEMtbHlqeFpreuOq3oI481tG+KFq47zhWzKP1YWLlJdRSztPoFEmUA9tngwAY0KphXTWz1BCL+JziouCkvn/pjTcTc0Y9jbcLHEebDj/dUMWWYpZqPH8gFgQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.163])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4ZLsYb5kZPz2PVXn;
+	Mon, 24 Mar 2025 20:19:31 +0800 (CST)
+Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
+	by mail.maildlp.com (Postfix) with ESMTPS id 4AFA8180044;
+	Mon, 24 Mar 2025 20:21:18 +0800 (CST)
+Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
+ (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Mon, 24 Mar
+ 2025 20:21:17 +0800
+From: Yue Haibing <yuehaibing@huawei.com>
+To: <benve@cisco.com>, <neescoba@cisco.com>, <jgg@ziepe.ca>,
+	<leon@kernel.org>, <liyuyu6@huawei.com>, <roland@purestorage.com>,
+	<umalhi@cisco.com>
+CC: <linux-rdma@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<yuehaibing@huawei.com>, <yanjun.zhu@linux.dev>
+Subject: [PATCH v2 -next] RDMA/usnic: Fix passing zero to PTR_ERR in usnic_ib_pci_probe()
+Date: Mon, 24 Mar 2025 20:31:32 +0800
+Message-ID: <20250324123132.2392077-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250321151831.623575-4-elder@riscstar.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemf500002.china.huawei.com (7.185.36.57)
 
-On Fri, Mar 21, 2025 at 10:18:26AM -0500, Alex Elder wrote:
-> Define ccu_reset_data as a structure that contains the constant
-> register offset and bitmasks used to assert and deassert a reset
-> control on a SpacemiT K1 CCU. Define ccu_reset_controller_data as
-> a structure that contains the address of an array of those structures
-> and a count of the number of elements in the array.
-> 
-> Add a pointer to a ccu_reset_controller_data structure to the
-> k1_ccu_data structure.  Reset support is optional for SpacemiT CCUs;
-> the new pointer field will be null for CCUs without any resets.
-> 
-> Finally, define a new ccu_reset_controller structure, which (for
-> a CCU with resets) contains a pointer to the constant reset data,
-> the regmap to be used for the controller, and an embedded a reset
-> controller structure.
-> 
-> Each reset control is asserted or deasserted by updating bits in
-> a register.  The bits used are defined by an assert mask and a
-> deassert mask.  In some cases, one (non-zero) mask asserts reset
-> and a different (non-zero) mask deasserts it.  Otherwise one mask
-> is nonzero, and the other is zero.  Either way, the bits in
-> both masks are cleared, then either the assert mask or the deassert
-> mask is set in a register to affect the state of a reset control.
-> 
-> Signed-off-by: Alex Elder <elder@riscstar.com>
-> ---
->  drivers/clk/spacemit/ccu-k1.c | 93 +++++++++++++++++++++++++++++++++++
->  1 file changed, 93 insertions(+)
-> 
-> diff --git a/drivers/clk/spacemit/ccu-k1.c b/drivers/clk/spacemit/ccu-k1.c
-> index f7367271396a0..6d879411c6c05 100644
-> --- a/drivers/clk/spacemit/ccu-k1.c
-> +++ b/drivers/clk/spacemit/ccu-k1.c
+drivers/infiniband/hw/usnic/usnic_ib_main.c:590
+ usnic_ib_pci_probe() warn: passing zero to 'PTR_ERR'
 
-...
+Make usnic_ib_device_add() return NULL on fail path, also remove
+useless NULL check for usnic_ib_discover_pf()
 
-> +static int
-> +k1_rst_update(struct reset_controller_dev *rcdev, unsigned long id, bool assert)
-> +{
-> +	struct ccu_reset_controller *controller = rcdev_to_controller(rcdev);
-> +	struct regmap *regmap = controller->regmap;
-> +	const struct ccu_reset_data *data;
-> +	u32 val;
-> +	int ret;
-> +
-> +	data = &controller->data->data[id];
-> +
-> +	ret = regmap_read(regmap, data->offset, &val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	val &= ~(data->assert_mask | data->deassert_mask);
-> +	val |= assert ? data->assert_mask : data->deassert_mask;
-> +
-> +	return regmap_write(regmap, data->offset, val);
-> +}
+Fixes: e3cf00d0a87f ("IB/usnic: Add Cisco VIC low-level hardware driver")
+Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+Reviewed-by: Zhu Yanjun <yanjun.zhu@linux.dev>
+---
+v2: remove useless null check for usnic_ib_discover_pf
+---
+ drivers/infiniband/hw/usnic/usnic_ib_main.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-I don't think it's safe to write the regmap based on a value read
-earlier without the regmap's inner lock held: it's totally fine for the
-clock part to issue an update of the register at the same time. Without
-knowledge on it, reset code may rollback the clock bits written by clock
-code earlier to the original value. That's why I keep using ccu_update()
-everywhere and dropped ccu_write().
+diff --git a/drivers/infiniband/hw/usnic/usnic_ib_main.c b/drivers/infiniband/hw/usnic/usnic_ib_main.c
+index 4ddcd5860e0f..11eca39b73a9 100644
+--- a/drivers/infiniband/hw/usnic/usnic_ib_main.c
++++ b/drivers/infiniband/hw/usnic/usnic_ib_main.c
+@@ -397,7 +397,7 @@ static void *usnic_ib_device_add(struct pci_dev *dev)
+ 	if (!us_ibdev) {
+ 		usnic_err("Device %s context alloc failed\n",
+ 				netdev_name(pci_get_drvdata(dev)));
+-		return ERR_PTR(-EFAULT);
++		return NULL;
+ 	}
+ 
+ 	us_ibdev->ufdev = usnic_fwd_dev_alloc(dev);
+@@ -517,8 +517,8 @@ static struct usnic_ib_dev *usnic_ib_discover_pf(struct usnic_vnic *vnic)
+ 	}
+ 
+ 	us_ibdev = usnic_ib_device_add(parent_pci);
+-	if (IS_ERR_OR_NULL(us_ibdev)) {
+-		us_ibdev = us_ibdev ? us_ibdev : ERR_PTR(-EFAULT);
++	if (!us_ibdev) {
++		us_ibdev = ERR_PTR(-EFAULT);
+ 		goto out;
+ 	}
+ 
+@@ -586,10 +586,10 @@ static int usnic_ib_pci_probe(struct pci_dev *pdev,
+ 	}
+ 
+ 	pf = usnic_ib_discover_pf(vf->vnic);
+-	if (IS_ERR_OR_NULL(pf)) {
+-		usnic_err("Failed to discover pf of vnic %s with err%ld\n",
+-				pci_name(pdev), PTR_ERR(pf));
+-		err = pf ? PTR_ERR(pf) : -EFAULT;
++	if (IS_ERR(pf)) {
++		err = PTR_ERR(pf);
++		usnic_err("Failed to discover pf of vnic %s with err%d\n",
++				pci_name(pdev), err);
+ 		goto out_clean_vnic;
+ 	}
+ 
+-- 
+2.34.1
 
-Thanks,
-Haylen Chu
