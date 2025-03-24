@@ -1,110 +1,148 @@
-Received: from invmail4.hynix.com (exvmail4.skhynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C129ABA36;
-	Mon, 24 Mar 2025 09:03:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F512BA36;
+	Mon, 24 Mar 2025 09:03:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742806996; cv=none; b=qiPRPF7+ILMv1H5kOXMaFShOw8HvbicmlLcoaf4XEwyufhtWk6/jUfk9NUHW6wiw5Jh0hdw31p+XPTtuuQB0QJ/C9AogMIFUCAM8+HN9zIC7/dvkcc3EKyDK/CmU27/vfMAiSYK9jYh2yHkDPFD5SMemTJN/lJAr2WmnZD/v8S4=
+	t=1742807016; cv=none; b=pvxBmBz/fFBv8WdW6dnYXoIQuLrfHS2YbT94tmEHH7GDcZAcDcxv4JTwApQZdoGmXOGE7X8GNOfu0OQCHPhzhp+m+1NCFVh1Y8eIhRhTTSVMOwKpdcnXB+f+BsasmbsCz5JNzzxNna0Nv3urMuaiUb71DzMbBJH3jZVGZAAQLOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742806996; c=relaxed/simple;
-	bh=hnvXGF50uBsNkaYmmEw/Gu4b4XAYpCJ1akHPT7SsV5s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=URTDvxNchs5J9xEhlEa41WJxyyQeQl80ErShQ5G9tBbMQ3GGJZu5UoqfcqDvBccKYN0ja57bVAVnoedfYstprcFfumhmBoYUyYXP0mr4ij/AkcQYusHdQXNXU3lOTDGONzbsP0Au794uFptl62nBrTXQ+Jek4E2JDUa1iaKTFb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-85-67e11c41a64b
-From: Rakie Kim <rakie.kim@sk.com>
-To: Gregory Price <gourry@gourry.net>
-Cc: Joshua Hahn <joshua.hahnjy@gmail.com>,
-	akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	Rakie Kim <rakie.kim@sk.com>
-Subject: Re: [PATCH v3 1/3] mm/mempolicy: Fix memory leaks in weighted interleave sysfs
-Date: Mon, 24 Mar 2025 17:47:50 +0900
-Message-ID: <20250324084757.965-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <Z91xsVv98wp7TVrq@gourry-fedora-PF4VCD3F>
-References: 
+	s=arc-20240116; t=1742807016; c=relaxed/simple;
+	bh=KqRUMD2XdQQ9CG7Nb2vZ5/GtFfomSxM64REk2V7g3po=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TLImVVDrdBoBeM1sAkVnw6iTaQUvqufqbmW8ZEqqWLQb5a6agfjiWATPJdxFJca0mtbywCJIQrqgtLA5MyVimzyHI97BizLkY+YujeqztUBgFJN8kcTITnJMOPXH0/7OqEmXZOL4tV/MJZ8jv4SBWUyRJwH8C3fHYLi/xKrVjnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-86ba07fe7a4so3615134241.2;
+        Mon, 24 Mar 2025 02:03:34 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742807014; x=1743411814;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=12C9f7Hkrurs0MZwp3rUXbOHTi8BuaCTTSuYZ39XhRs=;
+        b=Yl5I6vfScXTeIM1ASKwR+MuWpWlvDalT9iree8XN+ifk7V4wTqEL7nELotbfSeMpa/
+         N6vITO3pgNyis8wB+0PaMY0QlRI/gFvhdQByPv8420tRcRLtIUrXgPBgyufJexAd/LPs
+         Y6dWnSj+iePvtMsar12C/hyWCiah8ZrjWMenXEweX6qgb96dxUjpZ0/X/yVvt0o7dT+R
+         EEeqOynl6uvi84cYw5qdA3aYsewwntDeYxWJHE87BAytufPH9avjMphNhWj0t8hegPcF
+         FTDKtqRGz3N/SK1N2nZc2YNiGN+e3BlV/s/0oLJOjStPU6+KPqosbAZg1Hk8W49NRp+l
+         Zu5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVWx3lkPWXJMJ2svFz+HZJqWi8cB/96dHw47CpCOcqblUts3bIm8wr7el/qsXmaYBqt9YKAFEKi33VAhtc6468=@vger.kernel.org, AJvYcCWKi69VaNGM6E+Go0QesUfVMle1gvUSZOp+ggEQfQzSybJu0ZGYvR7QDo8s1IOaRnhKCdJ1PgxDGdvY2GqB@vger.kernel.org
+X-Gm-Message-State: AOJu0YwIg0x2KuaFFU29mDLnWERZbMbwjZodVJmFnv5E9GSxqDLF/rp+
+	RhwTImD/yPpP0mpG0a7gcVVR9OP7J9JJ8jb/pJJBnjsbWBBdpiHCv77apnu2
+X-Gm-Gg: ASbGncsc9WDWLBUsjHLPeaMrzeYcsHyTQst9KURYCV0jRFYGwxPFwYLysz00vBBIumB
+	IvwxSLhFNXeKEG4pv+8B3hIbu1ks/az8Lm1zkNn/m8BBRq4VUgldFqQ1Coo8d+2BOANWB7wsuR/
+	j/w1A5Q0WeUC+mmQwaLSLxy0miYK0VzOEnpg1ktYGif5qDVIBvRb56dFjb0Ocv3IEGgmCgpfk2S
+	T2Mv20LdMk2fFUJApS4C8J278r3FuQDL7EiB54q9Qs9D3PewQaJoJHbSuFfRVh//hh9iCAg7nFm
+	NyJhUzi6etX4C/iUMYMu8fB2SxutLjcaq9p8x3yIXmQte4mcbhnHbKCmSVgZ/qLDj9h+8WcQCTY
+	QSistS9sMA7o=
+X-Google-Smtp-Source: AGHT+IEu/ZrdRQHW5S3aziTM3AcCWGNi0CFd17W1ltj4xgGQjydX+UbH5MIQddYnuJIsxXhhcocH5g==
+X-Received: by 2002:a05:6102:fa1:b0:4c1:9288:906c with SMTP id ada2fe7eead31-4c50d4b49cemr9449136137.9.1742807013477;
+        Mon, 24 Mar 2025 02:03:33 -0700 (PDT)
+Received: from mail-vk1-f174.google.com (mail-vk1-f174.google.com. [209.85.221.174])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-86f9f385523sm1538132241.7.2025.03.24.02.03.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 02:03:32 -0700 (PDT)
+Received: by mail-vk1-f174.google.com with SMTP id 71dfb90a1353d-52410fb2afeso3668455e0c.3;
+        Mon, 24 Mar 2025 02:03:32 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXGGj9x098i7WlDik4uaUfpaKEbTyUlFar5iX3a7/pXPhOii4sR41F9HJBhWBiznpGstJBuUBFZzLMhnO4I@vger.kernel.org, AJvYcCXucWxasXT3vcReadEnrloXZY2Tz7ttvpezILP0n+MAMkZyAOs9byHEJ0z7R1nhCqNesJ2xdrEb/+Es7WmYImM=@vger.kernel.org
+X-Received: by 2002:a05:6102:dca:b0:4c4:e451:6f24 with SMTP id
+ ada2fe7eead31-4c50d623b0amr9079671137.22.1742807012667; Mon, 24 Mar 2025
+ 02:03:32 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHLMWRmVeSWpSXmKPExsXC9ZZnka6jzMN0g83bVC3mrF/DZjF96gVG
-	i6/rfzFb/Lx7nN1i1cJrbBbHt85jtzg/6xSLxeVdc9gs7q35z2qxek2GA5fHzll32T262y6z
-	e7QcecvqsXjPSyaPTZ8msXucmPGbxWPnQ0uP9/uusnl83iQXwBnFZZOSmpNZllqkb5fAlfF7
-	cjdzwS3eij37J7E0MN7i6mLk5JAQMJH4ePo4K4y97v4cxi5GDg42ASWJY3tjQEwRAVWJtivu
-	XYxcHMwCH5gk9m1tYAWJCwuES7TOEAXpZAEqmf/rOiOIzStgLLF06gsWiImaEg2X7jGBlHMK
-	mEmcX+UIEhYS4JF4tWE/VLmgxMmZT8DKmQXkJZq3zmYGWSUh8JxN4u2rl4wQcyQlDq64wTKB
-	kX8Wkp5ZSHoWMDKtYhTKzCvLTczMMdHLqMzLrNBLzs/dxAgM9WW1f6J3MH66EHyIUYCDUYmH
-	d8PL++lCrIllxZW5hxglOJiVRHiPsT5MF+JNSaysSi3Kjy8qzUktPsQozcGiJM5r9K08RUgg
-	PbEkNTs1tSC1CCbLxMEp1cBoomy/k/PK7pl9mbv/BYf/XMncraHx5PLicEflLu6edxM/Lavs
-	iJarq/j4226/lYHJ4rzaPuUfd2J8j7HP4dC7mBTjKe+xrPgDS/2nY9p3tDKXzI2+IVy9X0PE
-	3X9HG1/v1qmsL3hmm79/nZ12weR203IGtYsmMRd2Rr3Pnq9oW332Unra4h1KLMUZiYZazEXF
-	iQBCdcCvcQIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrBLMWRmVeSWpSXmKPExsXCNUNNS9dR5mG6wfOtUhZz1q9hs5g+9QKj
-	xdf1v5gtft49zm7x+dlrZotVC6+xWRzfOo/d4vDck6wW52edYrG4vGsOm8W9Nf9ZLQ5de85q
-	sXpNhsXvbSvYHPg8ds66y+7R3XaZ3aPlyFtWj8V7XjJ5bPo0id3jxIzfLB47H1p6vN93lc3j
-	220Pj8UvPjB5fN4kF8AdxWWTkpqTWZZapG+XwJXxe3I3c8Et3oo9+yexNDDe4upi5OSQEDCR
-	WHd/DmMXIwcHm4CSxLG9MSCmiICqRNsV9y5GLg5mgQ9MEvu2NrCCxIUFwiVaZ4iCdLIAlcz/
-	dZ0RxOYVMJZYOvUFC8RETYmGS/eYQMo5Bcwkzq9yBAkLCfBIvNqwH6pcUOLkzCdg5cwC8hLN
-	W2czT2DkmYUkNQtJagEj0ypGkcy8stzEzBxTveLsjMq8zAq95PzcTYzA8F5W+2fiDsYvl90P
-	MQpwMCrx8G54eT9diDWxrLgy9xCjBAezkgjvMdaH6UK8KYmVValF+fFFpTmpxYcYpTlYlMR5
-	vcJTE4QE0hNLUrNTUwtSi2CyTBycUg2MOUdX2J74/Pivvup9GdOaryqx4kYGtVzrJq177Xmw
-	9szUimtNUraOHoueWN0yqpr9Vnjyr/hVsx8q77fRtTNKNfL88vxvhnwUL8+cSdd8On8WbVz1
-	c9UcV8kjm9zXhJ0X2H3Lnmf7s50Hwuz7y5m61s4+tfVyTem8J7ofVe9xJy+6fO91+eZyNyWW
-	4oxEQy3mouJEAGffsUdrAgAA
-X-CFilter-Loop: Reflected
+References: <20250321032627.4147562-1-jeffxu@google.com> <20250321032627.4147562-2-jeffxu@google.com>
+In-Reply-To: <20250321032627.4147562-2-jeffxu@google.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 24 Mar 2025 10:03:21 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWDrByGrgcTK9dRKRJyQ3ecQwadJjCcW=Nd0SjUeEukpg@mail.gmail.com>
+X-Gm-Features: AQ5f1JptHW9VS-Yelex_Y6M47FPBnm2RiYqpGcgh9ZUdERvWy3D01ssL2b_YVHU
+Message-ID: <CAMuHMdWDrByGrgcTK9dRKRJyQ3ecQwadJjCcW=Nd0SjUeEukpg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/1] mseal sysmap: add arch-support txt
+To: jeffxu@chromium.org
+Cc: Liam.Howlett@oracle.com, agordeev@linux.ibm.com, akpm@linux-foundation.org, 
+	borntraeger@linux.ibm.com, edumazet@google.com, gor@linux.ibm.com, 
+	guoweikang.kernel@gmail.com, hca@linux.ibm.com, kees@kernel.org, 
+	kevin.brodsky@arm.com, linux-hardening@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-mm@kvack.org, lorenzo.stoakes@oracle.com, 
+	m-malladi@ti.com, svens@linux.ibm.com, thomas.weissschuh@linutronix.de, 
+	zhengqi.arch@bytedance.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 21 Mar 2025 10:03:29 -0400 Gregory Price <gourry@gourry.net> wrote:
-> On Fri, Mar 21, 2025 at 01:37:22PM +0900, Rakie Kim wrote:
-> > As you mentioned, I agree that Patch 1 may be a bit unclear.
-> > In fact, Patch 1 and Patch 2 share similar goals, and in my view,
-> > they only provide complete functionality when applied together.
-> > 
-> > Initially, I thought that Patch 1 was the fix for the original issue and
-> > considered it the candidate for a backport.
-> > However, upon further reflection, I believe that all changes in Patch 1
-> > through Patch 3 are necessary to fully address the underlying problem.
-> > 
-> 
-> Patch 1 does address the immediate issue of calling kfree instead of the
-> appropriate put() routine, so it is fine to keep this separate.
+Hi Jeff,
 
-Understood. I will keep this patch as-is for now, as you suggested.
+On Fri, 21 Mar 2025 at 04:26, <jeffxu@chromium.org> wrote:
+> From: Jeff Xu <jeffxu@chromium.org>
+>
+> Add Documentation/features/core/mseal_sys_mappings/arch-support.txt
+>
+> Signed-off-by: Jeff Xu <jeffxu@chromium.org>
 
-> 
-> > Therefore, I now think it makes more sense to merge Patch 1 and Patch 2
-> > into a single patch, then renumber the current Patch 3 as Patch 2,
-> > and treat the entire set as a proper -stable backport candidate.
-> >
-> 
-> The set adds functionality and changes the original behavior of the
-> interface - I'm not clear on the rules on backports in this way.
-> 
-> Would need input from another maintainer on that.
-> 
-> Either way, I would keep it separate for now in case just the first
-> patch is desired for backport.  Maintainers can always pick up the set
-> if that's desired.
-> 
-> (It also makes these changes easier to review)
-> ~Gregory
+Thanks for your patch!
 
-In that case, I agree it's better to treat only Patch 1 as a backport
-candidate for now. As for the remaining patches, it would be more appropriate
-to discuss their inclusion with other maintainers at a later point.
+> --- /dev/null
+> +++ b/Documentation/features/core/mseal_sys_mappings/arch-support.txt
+> @@ -0,0 +1,30 @@
+> +#
+> +# Feature name:          mseal-system-mappings
+> +#         Kconfig:       ARCH_SUPPORTS_MSEAL_SYSTEM_MAPPINGS
+> +#         description:   arch supports mseal system mappings
+> +#
+> +    -----------------------
+> +    |         arch |status|
+> +    -----------------------
+> +    |       alpha: | TODO |
+> +    |         arc: | TODO |
 
-Rakie
+N/A (32-bit only)
 
+> +    |         arm: |  N/A |
+> +    |       arm64: |  ok  |
+> +    |        csky: | TODO |
+
+N/A (32-bit only)
+
+> +    |     hexagon: |  N/A |
+> +    |   loongarch: | TODO |
+> +    |        m68k: | TODO |
+
+N/A (32-bit only)
+
+> +    |  microblaze: |  N/A |
+> +    |        mips: | TODO |
+> +    |       nios2: | TODO |
+
+N/A (32-bit only)
+
+> +    |    openrisc: |  N/A |
+> +    |      parisc: | TODO |
+> +    |     powerpc: | TODO |
+> +    |       riscv: | TODO |
+> +    |        s390: |  ok  |
+> +    |          sh: |  N/A |
+> +    |       sparc: | TODO |
+> +    |          um: | TODO |
+> +    |         x86: |  ok  |
+> +    |      xtensa: | TODO |
+
+N/A (32-bit only)
+
+> +    -----------------------
+> --
+> 2.49.0.395.g12beb8f557-goog
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
