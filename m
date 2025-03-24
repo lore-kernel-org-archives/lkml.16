@@ -1,243 +1,118 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f202.google.com (mail-pl1-f202.google.com [209.85.214.202])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C01C919049B;
-	Mon, 24 Mar 2025 22:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 208981DE4D3
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 22:34:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.202
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742855688; cv=none; b=KMDBGwREoiiOf6t2zyL6tMBKhYDZZfIhDzqQ87vqZwZPdlrwFFodB7kF0uTOrg+naxfJzM/fGuM4ID/RE/+XXHTXeg9roQhX7FsQpkxi5PeeCv3HhfIjt5u5lNKGvqJE3DR2tJtJUV3ErOhcmEonELY2GPAtnV7jzP70IXnJ7iw=
+	t=1742855698; cv=none; b=JtlpX8hUaMpgZsYHuoQR+SE6lsKVnpaIGo1gX85mo1s2GL3xBlVSyYm7FQosDOCa65ZSfMiRZb283Tur4kesHzKEAWNrOiOdfLlaKFga/PcagwS2T4rqxeEz7012dx0sTlV8Uoy4xjHVcOLoscN9b7LVCxeQyE5HRLqWegu0S74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742855688; c=relaxed/simple;
-	bh=Vi1NzMDRhqogQCW68vwegbAdQ8YER+p1F3Pyameq8ps=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e3RZHeCG7QBZmE+jwcBCGHz1Hw6HCGYGG/FU5/eIHa2hdkz88PM7pJHEs4qOWUcUrlfr11CcyXsv4Zby/LukO35thoj/u20JRVRs6vcoIDd/3nWfqJKhbMBIHaUeDC2kSWE7lq/QHa5+GfVbaS9B17S90p2aAaL3dhJIpFOGLJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sA3MJPAX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742855698; c=relaxed/simple;
+	bh=L+RibmeajVhS+b4e0cJYwt8F8K8X3TG8cxS5RrxT5bY=;
+	h=Date:Mime-Version:Message-ID:Subject:From:To:Content-Type; b=BFblOif0TWFMNk1bjTFMfM0mrmuOsSdPLdXKQcBPmKIk3RBOb+pLi555eJrHT/xjpbbZvuUX3U/4qN8lh+M4hy05JTTdaItqll2OZ2hbFdxV1Z6+423DU3nDi5KJmJjwm6hIQta3SnpUgEd+YLU4BN5404DXKgtNw0DpaIQNecM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=OpeP+FZi; arc=none smtp.client-ip=209.85.214.202
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--irogers.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sA3MJPAX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07807C4CEDD;
-	Mon, 24 Mar 2025 22:34:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742855688;
-	bh=Vi1NzMDRhqogQCW68vwegbAdQ8YER+p1F3Pyameq8ps=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sA3MJPAXo8PHThugpPhAUQ/aoelMEhTy0UtW3P+EKpCt96WJSyW32SPp0TRq8Icuk
-	 UeVh5ejO6yxoO2CTLPSF9493z8Bwtz13vyKrMTW7uNr8zLwRW/a07qOUv6+pZUNDJA
-	 k8i7hxaUDjqAKmRnRfrw8jR8dJGIKFoLyHtLvvVFqg3Wj9h2H6rj1T3loAvVObIFLv
-	 O702AmHcWO8yCcI707/6GRSr9nTaDlr4eqIxUGUBK1sbRFoheKSPMOHKsFo9JnrGKN
-	 yg39GG80odtia61Qyk31GQ38OA2KL2f7lQhZOX6JFwHOe/EQB1MLntwo0xaYxtxq7R
-	 AUoQ3IaJx7ZQw==
-Message-ID: <3a086834-9237-42df-a048-e30444c30cf9@kernel.org>
-Date: Mon, 24 Mar 2025 23:34:43 +0100
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OpeP+FZi"
+Received: by mail-pl1-f202.google.com with SMTP id d9443c01a7336-2254e500a73so58920465ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:34:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742855696; x=1743460496; darn=vger.kernel.org;
+        h=to:from:subject:message-id:mime-version:date:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=QxlkY2gDhpAZdJNzCKL1B4UPY7N9UFV3EpWEQYSg7r8=;
+        b=OpeP+FZil0Fm+yZEAjZ/zLEviC7VM7BZ+W6dpMnpC/nZ0eNeRxPsA/SaL2UZ4Gkkya
+         UXZWqjNlCIYAIQH1evtw3TuhLT0EgdH1m5vw5VbB71/pAFNP2+j4uKdbgR9qyHlmHvne
+         /yeFkRhRXb5JDtR89JhT6DZJTyZNfYJFfadKbI+cQT1YBXPrVsAluHFXueH3+C+e8Fut
+         5T08lCARrdyOZ5zljy34xw7bR2YLPSOkI6H2DhKZJhJUh8leI1UDb+s7bCp320kF0pDs
+         TJD2wFuVICxQA9ohuUywYERfzsesIKYwESvsg/2MtZGSWZal4fa7o4Srj9/T7FchhscK
+         65kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742855696; x=1743460496;
+        h=to:from:subject:message-id:mime-version:date:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QxlkY2gDhpAZdJNzCKL1B4UPY7N9UFV3EpWEQYSg7r8=;
+        b=jHcy+RfOeaA+igbnu9GbKsl+FFcs3uD2+Q/6l8NDnoXUJcp+/DIc6Ju0TFE+KHPlim
+         sC21dcT+suJHCDkPRFFI8XpJZCuywEluP5mv2roF/VIfADFhRAXPr7NRWGG3cXyJ7lcH
+         kXiqrSWPA4eAlr7EiNyRW38afG20OXz8lg2lTwVj6mvmNZAwO9bVEedAfGY3hrJd8uUc
+         7hc5Yx8gt6o/TI/ZbyBV0VJbmXmS8eUYvD+qeBcqimIbljanVVIJ6raW3nYp4QpRdCWh
+         /RBJvaBeAuGmgXFGgkUehnaFHX6+XmMVEhPelLhu9hs1X8Y1qRkzSgnee5yDcdzcmIRX
+         DtuQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXAHibkuQHeSe0a87ZXJ2CFvSVCQOk+Q41EfkA2h7TAIKG2G7lQqf4NcbqWVN5W8ravYgIsdXR/P3/RdV0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwEyllgZVr5TTgcOSOcwFdjX8vx1JSHyF+d78tWwzlmNDAXVC73
+	Zf0QSsdMQ5tgHHI2z9au0zo4NMxIoUSWcGtHHi73sBZmiMclyS6rp+9a61RtYRwid8iRQiXvV92
+	VhTF86g==
+X-Google-Smtp-Source: AGHT+IH3069/MwwUYXM1H2i7Bn9Ac37KHz0BYKTX0VzriDzXF6JcEGc/qFoqh9asNK37nqNKauO0S3Bp/KaE
+X-Received: from pfnh19.prod.google.com ([2002:a62:b413:0:b0:730:9951:c9ea])
+ (user=irogers job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:929b:b0:736:a93d:c9ca
+ with SMTP id d2e1a72fcca58-739059763d1mr20709756b3a.10.1742855696362; Mon, 24
+ Mar 2025 15:34:56 -0700 (PDT)
+Date: Mon, 24 Mar 2025 15:34:38 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC net-next v1] page_pool: import Jesper's page_pool
- benchmark
-To: Mina Almasry <almasrymina@google.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
- Ilias Apalodimas <ilias.apalodimas@linaro.org>,
- Jakub Kicinski <kuba@kernel.org>, =?UTF-8?Q?Toke_H=C3=B8iland-J=C3=B8rgense?=
- =?UTF-8?Q?n?= <toke@toke.dk>
-References: <20250309084118.3080950-1-almasrymina@google.com>
-Content-Language: en-US
-From: Jesper Dangaard Brouer <hawk@kernel.org>
-In-Reply-To: <20250309084118.3080950-1-almasrymina@google.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250324223452.208081-1-irogers@google.com>
+Subject: [PATCH v1 00/14] Intel TPEBS min/max/mean/last support
+From: Ian Rogers <irogers@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, 
+	Kan Liang <kan.liang@linux.intel.com>, Weilin Wang <weilin.wang@intel.com>, 
+	James Clark <james.clark@linaro.org>, Xu Yang <xu.yang_2@nxp.com>, 
+	John Garry <john.g.garry@oracle.com>, Howard Chu <howardchu95@gmail.com>, 
+	Levi Yun <yeoreum.yun@arm.com>, Dominique Martinet <asmadeus@codewreck.org>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+The patches add support to computing the min, max, mean or last
+retirement latency and then using that value as the basis for metrics.
+When values aren't available, support is added to use the retirement
+latency as recorded for an event in the perf json.
 
-On 09/03/2025 09.41, Mina Almasry wrote:
-> diff --git a/lib/bench/time_bench.c b/lib/bench/time_bench.c
-> new file mode 100644
-> index 000000000000..4f5314419644
-> --- /dev/null
-> +++ b/lib/bench/time_bench.c
-> @@ -0,0 +1,426 @@
-> +/*
-> + * Benchmarking code execution time inside the kernel
-> + *
-> + * Copyright (C) 2014, Red Hat, Inc., Jesper Dangaard Brouer
-> + *  for licensing details see kernel-base/COPYING
-> + */
-> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> +
-> +#include <linux/module.h>
-> +#include <linux/time.h>
-> +#include <linux/time_bench.h>
-> +
-> +#include <linux/perf_event.h> /* perf_event_create_kernel_counter() */
-> +
-> +/* For concurrency testing */
-> +#include <linux/completion.h>
-> +#include <linux/sched.h>
-> +#include <linux/workqueue.h>
-> +#include <linux/kthread.h>
-> +
-> +static int verbose = 1;
-> +
-> +/** TSC (Time-Stamp Counter) based **
-> + * See: linux/time_bench.h
-> + *  tsc_start_clock() and tsc_stop_clock()
-> + */
-> +
-> +/** Wall-clock based **
-> + */
-> +
-> +/** PMU (Performance Monitor Unit) based **
-> + */
-> +#define PERF_FORMAT					    \
-> +	(PERF_FORMAT_GROUP | PERF_FORMAT_ID |		    \
-> +	PERF_FORMAT_TOTAL_TIME_ENABLED |		    \
-> +	PERF_FORMAT_TOTAL_TIME_RUNNING)
-> +
-> +struct raw_perf_event {
-> +	uint64_t  config;  /* event */
-> +	uint64_t  config1; /* umask */
-> +	struct perf_event *save;
-> +	char *desc;
-> +};
-> +
-> +/* if HT is enable a maximum of 4 events (5 if one is instructions
-> + * retired can be specified, if HT is disabled a maximum of 8 (9 if
-> + * one is instructions retired) can be specified.
-> + *
-> + * From Table 19-1. Architectural Performance Events
-> + * Architectures Software Developer’s Manual Volume 3: System Programming Guide
-> + */
-> +struct raw_perf_event perf_events[] = {
-> +	{ 0x3c, 0x00, NULL, "Unhalted CPU Cycles" },
-> +	{ 0xc0, 0x00, NULL, "Instruction Retired" }
-> +};
-> +
-> +#define NUM_EVTS (sizeof(perf_events) / sizeof(struct raw_perf_event))
-> +
-> +/* WARNING: PMU config is currently broken!
-> + */
+Support is added for reading the retirement latency from the forked
+perf command more than once. To avoid killing the process commands are
+sent through the control fd. Some name handling is changed to make it
+more robust.
 
-As the comment says PMU usage is in a broken state...
+Ian Rogers (14):
+  perf intel-tpebs: Simplify tpebs_cmd
+  perf intel-tpebs: Rename tpebs_start to evsel__tpebs_open
+  perf intel-tpebs: Separate evsel__tpebs_prepare out of
+    evsel__tpebs_open
+  perf intel-tpebs: Move cpumap_buf out of evsel__tpebs_open
+  perf intel-tpebs: Reduce scope of tpebs_events_size
+  perf intel-tpebs: Inline get_perf_record_args
+  perf intel-tpebs: Ensure events are opened, factor out finding
+  perf intel-tpebs: Refactor tpebs_results list
+  perf intel-tpebs: Add support for updating counts in evsel__tpebs_read
+  perf intel-tpebs: Add mutex for tpebs_results
+  perf intel-tpebs: Don't close record on read
+  perf intel-tpebs: Use stats for retirement latency statistics
+  perf stat: Add mean, min, max and last --tpebs-mode options
+  perf pmu-events: Add retirement latency to JSON events inside of perf
 
-I've not used it for years... below config setup code doesn't enable PMU 
-correctly.
-The way I've activated it (in the past) is by loading (modprobe) the
-module under the `perf stat` commands, which does the correct setup, and
-then benchmark code can read the PMU counters.
+ tools/perf/Documentation/perf-stat.txt   |   7 +
+ tools/perf/builtin-stat.c                |  29 +-
+ tools/perf/pmu-events/empty-pmu-events.c | 216 ++++----
+ tools/perf/pmu-events/jevents.py         |   6 +
+ tools/perf/pmu-events/pmu-events.h       |   3 +
+ tools/perf/util/evlist.c                 |   1 -
+ tools/perf/util/evsel.c                  |  17 +-
+ tools/perf/util/evsel.h                  |   6 +
+ tools/perf/util/intel-tpebs.c            | 671 ++++++++++++++---------
+ tools/perf/util/intel-tpebs.h            |  28 +-
+ tools/perf/util/parse-events.c           |   4 +
+ tools/perf/util/pmu.c                    |  52 +-
+ tools/perf/util/pmu.h                    |   3 +
+ 13 files changed, 655 insertions(+), 388 deletions(-)
 
-IMHO we should just remove all the PMU code (i.e. not upstream it).
-Unless, ACME can fix below setup code in seconds... else let's not bother.
+-- 
+2.49.0.395.g12beb8f557-goog
 
-> +bool time_bench_PMU_config(bool enable)
-> +{
-> +	int i;
-> +	struct perf_event_attr perf_conf;
-> +	struct perf_event *perf_event;
-> +	int cpu;
-> +
-> +	preempt_disable();
-> +	cpu = smp_processor_id();
-> +	pr_info("DEBUG: cpu:%d\n", cpu);
-> +	preempt_enable();
-> +
-> +	memset(&perf_conf, 0, sizeof(struct perf_event_attr));
-> +	perf_conf.type           = PERF_TYPE_RAW;
-> +	perf_conf.size           = sizeof(struct perf_event_attr);
-> +	perf_conf.read_format    = PERF_FORMAT;
-> +	perf_conf.pinned         = 1;
-> +	perf_conf.exclude_user   = 1; /* No userspace events */
-> +	perf_conf.exclude_kernel = 0; /* Only kernel events */
-> +
-> +	for (i = 0; i < NUM_EVTS; i++) {
-> +		perf_conf.disabled = enable;
-> +		perf_conf.config = perf_events[i].config;
-> +		perf_conf.config1 = perf_events[i].config1;
-> +		if (verbose)
-> +			pr_info("%s() enable PMU counter: %s\n",
-> +				__func__, perf_events[i].desc);
-> +		perf_event = perf_event_create_kernel_counter(&perf_conf, cpu,
-> +						 NULL /* task */,
-> +						 NULL /* overflow_handler*/,
-> +						 NULL /* context */);
-> +		if (perf_event) {
-> +			perf_events[i].save = perf_event;
-> +			pr_info("%s():DEBUG perf_event success\n", __func__);
-> +
-> +			perf_event_enable(perf_event);
-> +		} else {
-> +			pr_info("%s():DEBUG perf_event is NULL\n", __func__);
-> +		}
-> +	}
-> +
-> +	return true;
-> +}
-> +EXPORT_SYMBOL_GPL(time_bench_PMU_config);
-
-Below code that reads the PMU registers are likely also flawed.
-ACME feel free to yell a me ;-)
-
-[...]
- > +/** PMU (Performance Monitor Unit) based **
- > + *
- > + * Needed for calculating: Instructions Per Cycle (IPC)
- > + * - The IPC number tell how efficient the CPU pipelining were
- > + */
- > +//lookup: perf_event_create_kernel_counter()
- > +
- > +bool time_bench_PMU_config(bool enable);
- > +
- > +/* Raw reading via rdpmc() using fixed counters
- > + *
- > + * From:https://github.com/andikleen/simple-pmu
- > + */
- > +enum {
- > +	FIXED_SELECT = (1U << 30), /* == 0x40000000 */
- > +	FIXED_INST_RETIRED_ANY      = 0,
- > +	FIXED_CPU_CLK_UNHALTED_CORE = 1,
- > +	FIXED_CPU_CLK_UNHALTED_REF  = 2,
- > +};
- > +
- > +static __always_inline unsigned long long p_rdpmc(unsigned in)
- > +{
- > +	unsigned d, a;
- > +
- > +	asm volatile("rdpmc" : "=d" (d), "=a" (a) : "c" (in) : "memory");
- > +	return ((unsigned long long)d << 32) | a;
- > +}
- > +
- > +/* These PMU counter needs to be enabled, but I don't have the
- > + * configure code implemented.  My current hack is running:
- > + *  sudo perf stat -e cycles:k -e instructions:k insmod 
-lib/ring_queue_test.ko
- > + */
-
-Here I spell out how I run the `insmod` under `perf stat`.
-
-
- > +/* Reading all pipelined instruction */
- > +static __always_inline unsigned long long pmc_inst(void)
- > +{
- > +	return p_rdpmc(FIXED_SELECT | FIXED_INST_RETIRED_ANY);
- > +}
- > +
- > +/* Reading CPU clock cycles */
- > +static __always_inline unsigned long long pmc_clk(void)
- > +{
- > +	return p_rdpmc(FIXED_SELECT | FIXED_CPU_CLK_UNHALTED_CORE);
- > +}
- > +
- > +/* Raw reading via MSR rdmsr() is likely wrong
- > + * FIXME: How can I know which raw MSR registers are conf for what?
- > + */
- > +#define MSR_IA32_PCM0 0x400000C1 /* PERFCTR0 */
- > +#define MSR_IA32_PCM1 0x400000C2 /* PERFCTR1 */
- > +#define MSR_IA32_PCM2 0x400000C3
- > +static inline uint64_t msr_inst(unsigned long long *msr_result)
- > +{
- > +	return rdmsrl_safe(MSR_IA32_PCM0, msr_result);
- > +}
-
-
---Jesper
