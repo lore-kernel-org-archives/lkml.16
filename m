@@ -1,40 +1,40 @@
-Received: from mout.web.de (mout.web.de [212.227.15.14])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 773D125EFB8;
-	Mon, 24 Mar 2025 16:10:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B12AC25EFB8;
+	Mon, 24 Mar 2025 16:10:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742832637; cv=none; b=kUrrUf3HiiDnVZ7jP2Brn3XEudz5PHeCZNaQBJuQquYWKsQ9mQlklKQZ1T9dAG2RBwwkjwzDEGVYQv7qqhvj2EeVUPHLw0STHknIW0EFhrzn7Pndh4eS+1Ki5XcOgGv5T+TxYuxVvUzkCg+IKDWyk8uUYtowp2sIsGtd5+G5o9Q=
+	t=1742832648; cv=none; b=e9Bxg8QJqz8ObjOS65mPafgGgqz05I+oJ8ijSYbvYxyMYDFX8FQJrVdhgt+niLO/s0thW/Y/1PSQnJTs5NDPWspoR9ck5DVYcQTW463W3q95NEh+7v+qHtSicAj/lbw9BjyvZRyUMbVGkPEUd9z6T/bQPQNkzNKHe+Jg0qT1yJU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742832637; c=relaxed/simple;
-	bh=1hxG8gdHP890ZH1YLRj5nh5LIlbPKK256d2HS/XMVfw=;
-	h=Message-ID:Date:MIME-Version:To:Cc:References:Subject:From:
-	 In-Reply-To:Content-Type; b=SSyqvSoSWhVBWrjW8qTvJC7zBNjh5h5O2DOF5o49q+Z7SD0TTyJ7H2MMqOrEljIOGmf9pNY5ns8H+elSlqPNlNcEKPDsZOoyWXpF24BGKAJrnyP3aJugPCtNf1JwXzEqeVZQj5HiIEE2oMzs1iHQNeUxtrHA6rFXd1ziiXVG8Lc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de; spf=pass smtp.mailfrom=web.de; dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b=FPKfG0lr; arc=none smtp.client-ip=212.227.15.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=web.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=web.de
+	s=arc-20240116; t=1742832648; c=relaxed/simple;
+	bh=Gu2l2JLxMDCWKF/ck8d4RiqN/9CsaCC/fejEKfEzVwk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=W3s46qwI5dnyD9D/Aee50waFPXf8lg4E7iV2rKn/m/lo+rjSEbRzokEthoU2wdDq6W7Hpo0RoSQYOpmJL3xqid6Ho1+NzAbWit+AeQFzaGnLQX9lJlrhhsiKzGxZeLNqtquTCGKin8yQXgkX3b5mZQvb8Dl9Ip8d+g0qPPtoMgU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=UFTK7VIn; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=web.de header.i=markus.elfring@web.de header.b="FPKfG0lr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=web.de;
-	s=s29768273; t=1742832610; x=1743437410; i=markus.elfring@web.de;
-	bh=1hxG8gdHP890ZH1YLRj5nh5LIlbPKK256d2HS/XMVfw=;
-	h=X-UI-Sender-Class:Message-ID:Date:MIME-Version:To:Cc:References:
-	 Subject:From:In-Reply-To:Content-Type:Content-Transfer-Encoding:
-	 cc:content-transfer-encoding:content-type:date:from:message-id:
-	 mime-version:reply-to:subject:to;
-	b=FPKfG0lr+u82VXO1B0+k2wR6KWaPtuUML2OXujXiqQqSqvZb/OJEb2RR/12HzuHw
-	 XG5tNK/R/wnB6fkRbCn54/ZMCEhQhLifXmWOsnOKkmy/d/iM3IjJ9b59ahBe5gyV9
-	 P77GiKJXmpkxHQul5HRmF9GLz7WTOHVAAgtENn5HMmSTB8YK2o9/U7E2vEX4MsecE
-	 f1GT/0ubUSP2IhN74KIQV73RB8VVYA1NMLfCBuOIP/cCWJemXUCbztnQfH2tvYa63
-	 pxIanO1PF8GPtoDUFcO4/qepGocFje3+rq6mPICGOMV1pIDPtUtJACMGoBbAO0t12
-	 tHsdpvjsMGAL7MwTBA==
-X-UI-Sender-Class: 814a7b36-bfc1-4dae-8640-3722d8ec6cd6
-Received: from [192.168.178.29] ([94.31.93.33]) by smtp.web.de (mrweb006
- [213.165.67.108]) with ESMTPSA (Nemesis) id 1MzkOL-1tA1PX1Mxt-00yMVy; Mon, 24
- Mar 2025 17:10:10 +0100
-Message-ID: <32e08068-164b-4642-aedb-3c7a1658406f@web.de>
-Date: Mon, 24 Mar 2025 17:10:04 +0100
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="UFTK7VIn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1742832644;
+	bh=Gu2l2JLxMDCWKF/ck8d4RiqN/9CsaCC/fejEKfEzVwk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UFTK7VIn1/I5hwkLfw1XtFbanIRysbesCsb7Fc5V2u10bJp47QKQJzMxNFMd5F+YQ
+	 akSezJjNHkk1SM7F6Yg74KtRyeXn1RjJr5dXTsjZavrUokJhiDalxFZs1qUAziHsic
+	 ltV6lzA8gJpa7SZF32lROzTPIL01r4ystflTk419bzbr294SJTQjVxwl3jneu+1hQX
+	 3VW21ug4qlj7uAjAIKJqFir6xaRJPgUdCpLZ8lYDmNSM1YW8HcSjjV+iibRNwiv2i8
+	 ZPwUOohPHhlJp7A4KR/uyhGj4f9R2Jaj3N7QaBl/FVdM04PIxxijVdBOkc0ijYn6MB
+	 U1BpVWajMgaiA==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id D517417E0A50;
+	Mon, 24 Mar 2025 17:10:42 +0100 (CET)
+Message-ID: <d4af318b-1bdf-4abd-842d-461a763b79a4@collabora.com>
+Date: Mon, 24 Mar 2025 17:10:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
@@ -42,52 +42,32 @@ List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-To: Ye Liu <liuye@kylinos.cn>, kernel-janitors@vger.kernel.org,
- Tejun Heo <tj@kernel.org>
-Cc: Ye Liu <ye.liu@linux.dev>, LKML <linux-kernel@vger.kernel.org>,
- Lai Jiangshan <jiangshanlai@gmail.com>
-References: <20250324090748.753195-1-ye.liu@linux.dev>
-Subject: Re: [PATCH] workqueue: Fix incorrect error return value in
- apply_workqueue_attrs_locked
-Content-Language: en-GB
-From: Markus Elfring <Markus.Elfring@web.de>
-In-Reply-To: <20250324090748.753195-1-ye.liu@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:fJ2BLYkJOi9v3DclRbMTKOc5WbAsviL4EC4aOXo23nBL+IuyLGx
- MT8ynO/buZnzoLBFJzAA4VvMwQrr2UlBWUtJdGrzHIlRu35bYE7lY2CmEudOqDV/sHaKzSr
- GhdHNF7j/VnO0gLvJD57blO6vY46wmuvz0gjldl4YIiss27ttX4J8Hl3jQuELhJa4KuBRAi
- M+OPy12nFMqe8jhbz3P8Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:dvge/m4eYpQ=;g1Wt346hFIbpzxmNPCpbVteNw38
- dZbGgqkK9+81ypJurpxnbF4RX9teTOX8rcwzO2d5p5tIWv0RIICWwXvKxuPN/Oqf+CCVwglyO
- YXOaliq/exNLKRk1+tDDzqsnRznwVSLOv4VBinxFdzScmm2QPb5f2vqdVHu/iRfRHyM1iayXb
- tmCIdJztfUC/6q58iSFNDf7qe2/ixsmz7AfG4rETdS8TBAx0hEVckqRoPFKNjDU+IhZyVl59k
- rhGRMgbHFibCmkNBUEux4A/t49oVmGAqXeJycICV5mOYiP0EsvNVfmk3suQFEmq9numqOsIp9
- RrmUq0HgaJv9w2dp9yzAV2bPWwEcufop9/9FXSJjaKm+E40z6ulTg/9HEswE3ZykMH2CGZ3p7
- P+26vpBIjZu3nTOsTgFyQSRUbhdDi8XJawxaBol+vBt4jwDTaNIzBKv+Qb+ekCWZmXlErdeS+
- 5PHkRHMSaP2JTh9yMrKrTGn46oUodWQ9IprkXTqKyogtU1a+YmKbhxfHccMxDAqyUiqF8XXp6
- 8uNd7dZoHlYwl3Jo4rmjhZO7szDXzZ7siRNI1aKJjSfDtdIhqrf3moDXJ3njBTiC28fuMqsWc
- w/edhwHEi20qkYg28pnwrAvOOhLOw8S4g5A5+4zlW4TAGNAdQZBcHLefbBRXnOHjQ5VvfJIsz
- gYWhiyQ54+liTCPsamS6/nW2/l/+68WAeGsfX9cD+4Yi1+MLt4nr5Qn0vESOj/rFNeoOlk1K0
- Hb15BbrlV85oqmdLLAi2fFysv+5X2pmJjsNox0Pha6l0gByh7HUpF9qw3mVLRKjHoaXG0hzRI
- uHQ/yxcM551QRATMvhFZFKCdlUj65gNjV6ir/HQ7uk6NZY3/b6j+p0allv1fXuxS3yCJThqge
- JCQiRsz2m9R0RVWFXXihcWarCc91I8lWODwUkKQVUVFXOQ26hkS1QgSz7XCn4Cq+nkMPlLHhJ
- 8xHBLwKIRgIzeaFIew4mKTL9bDx31tUaLNbTQYjner8PjhWYaKcNnEx2ZOjtogXfPbIpCdQvv
- AR2EpPBUoFIWscmI6a0x/R9e1sbYkYh5D3jozq75V7K/2TrJMnQU1tD70VQiDsZrbTKKUmAhD
- H36SFyST2o5rHnNuKC9RixljBPpdQh6H/RmcLEVvQ332QEZCsz2kj015+MU2QiixDU4N4vKOu
- kCZiqjUDjeiKRpuWvR3uwLDO2jy76af/p2EXkfeAEZi7xKTLGeyydDslZuavd8vouXwKc1Wyi
- zRBaCqczEifTC+45MzG1uGw4vgbp1d2tmm89zPZrKML5yGNGDXJi5TlHY3hXe5KIAOrjF6cTo
- t4esPbb/+vWRr9YkJQe/WAdg7W9IjsvdyrDuT+4y6hDhmpYd4iFpxZouxL0r1S1D44VzzMOwP
- SCMvglN9LnsyxLx15R/A00mcN+RdzFzjNibgyVbIkDc1nVTsCvGz7NF+pVJTVMSgxAISzgP+9
- H71FRYDevBkeqkNM2E9lERVZh0KP1HIEv5JT8nudto4HIMw3/
+Subject: Re: [PATCH v5 3/3] pinctrl: mediatek: Add pinctrl driver on mt8196
+To: Cathy Xu <ot_cathy.xu@mediatek.com>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>,
+ Sean Wang <sean.wang@kernel.org>
+Cc: Lei Xue <lei.xue@mediatek.com>, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
+ yong.mao@mediatek.com, Axe.Yang@mediatek.com, Jimin.Wang@mediatek.com,
+ Wenbin.Mei@mediatek.com, Guodong Liu <guodong.liu@mediatek.com>
+References: <20250321084142.18563-1-ot_cathy.xu@mediatek.com>
+ <20250321084142.18563-4-ot_cathy.xu@mediatek.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250321084142.18563-4-ot_cathy.xu@mediatek.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-=E2=80=A6
-> This patch ensures =E2=80=A6
+Il 21/03/25 09:39, Cathy Xu ha scritto:
+> From: Guodong Liu <guodong.liu@mediatek.com>
+> 
+> Add pinctrl driver support for MediaTek Soc mt8196.
+> 
+> Signed-off-by: Guodong Liu <guodong.liu@mediatek.com>
+> Signed-off-by: Cathy Xu <ot_cathy.xu@mediatek.com>
 
-See also:
-https://web.git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/process/submitting-patches.rst?h=3Dv6.14#n94
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-Regards,
-Markus
