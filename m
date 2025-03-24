@@ -1,139 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f201.google.com (mail-pl1-f201.google.com [209.85.214.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACE82266F01;
-	Mon, 24 Mar 2025 17:33:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94807266EFC
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:33:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837590; cv=none; b=c1vRnO051NTBUxyru4cco7QfQ0vXjerm0ojkPxCg4URZW9nSg1iSyl7vcBTlsmqNaWpNwPfYoGezRkLoqH0C2XA2/SdhRMQu6Jt9zgv5ImAWRltFs3hz9zslVDFo7w3dQ4Qaj7uJaLO+dM87cEd0BfeSalk6KS09eq+veL/ESO8=
+	t=1742837592; cv=none; b=rgh0ByeTc0tr7meoeYFzlfKrFBGLqpwwxxaolb6CIG2jv80RZsfU2oJWUNuSymcZoli9OrpTXma6Mq0D1qvKaDgi5dKPTq2DQvhcHLXfB83Ejx9wDQdIf8akaXqJBUcdlTl40bQY/Lolk+3yI3ak3m+CNfcvxWGFhRJEiFq/k4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837590; c=relaxed/simple;
-	bh=6z1jVV/yKXBtpI1jJEON4mBcVHyI6frM0d76FlbA/Cc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=iPvkWdYZmedSlKljKtscit7VkqrGVns9WDhP/pbTx0R7hZwq4ovl+dannSa95Eat88VI27koedLoClZuf/SUOExkoy3SLPiIjngziPYucGgFQRyJO1lTOXDfrp9kjrYCxJ0/ed1pqyEJf1AnRvCtJrPkFZGHHZubxCsO5Nbh0Jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TTLmt0U0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742837592; c=relaxed/simple;
+	bh=7yohD4OY7oJi3PjKnxCA6LaTJHZ1/TxhZUQgByNjysY=;
+	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
+	 To:Cc:Content-Type; b=a/XkJlFlcWjfx+KXGlNNnv0mIREIffNh0lfdiSToefegBhcrYHX0G1R8LCf5Rj68R/XJsJNi6Nv/P0KVpr5FLsawgjNGwcdJ3XXRIQUd2wBGAOXIy1YXyJCounsI0iVBeLyFXtocW/fFOxfrrS+1+8BYgPUP7vSsnsDm0URKIBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=feSMjzYD; arc=none smtp.client-ip=209.85.214.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TTLmt0U0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3094EC4CEED;
-	Mon, 24 Mar 2025 17:33:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742837590;
-	bh=6z1jVV/yKXBtpI1jJEON4mBcVHyI6frM0d76FlbA/Cc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TTLmt0U0lb/WjNY3npIyMTIsK0uZkYSq5v4j3ttcma+yWik+b8gfSyRnC0SudDq1c
-	 lleOlzWq4F814O3jZPPFKDz9Guw8uzqcYKThypwFesTCb9NX9TJ+gxECoA9JDx6mBn
-	 m57z8frYgyQv0rLXGwagCrbZo4JcPGK5EA9L5hbrpYJ45TX+THcOmoXIIiChrcFF62
-	 /Pr9wXdZbYfZcGliCKARwh4ycVJtUOTz1BPu8E8wI8dMTQm+AVlsLnLasBiC8Diq39
-	 fF4MV1ew7is8TOnR+Yod+WNklpqmS9YWh7lvrch5zKMavSn5YavlOEENonT8End3vs
-	 FdLiawokJYNvg==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Masahiro Yamada <masahiroy@kernel.org>,
-	Josh Poimboeuf <jpoimboe@kernel.org>,
-	Jiri Kosina <jikos@kernel.org>,
-	Miroslav Benes <mbenes@suse.cz>,
-	Petr Mladek <pmladek@suse.com>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
-	linux-next@vger.kernel.org,
-	Arnd Bergmann <arnd@arndb.de>,
-	Joe Lawrence <joe.lawrence@redhat.com>,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Easwar Hariharan <eahariha@linux.microsoft.com>,
-	live-patching@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH 03/10] samples/livepatch: add module descriptions
-Date: Mon, 24 Mar 2025 18:32:28 +0100
-Message-Id: <20250324173242.1501003-3-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
-References: <20250324173242.1501003-1-arnd@kernel.org>
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="feSMjzYD"
+Received: by mail-pl1-f201.google.com with SMTP id d9443c01a7336-2254bdd4982so119712855ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:33:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1742837590; x=1743442390; darn=vger.kernel.org;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
+        bh=dGFuB9mmLp1BQVwj/uNArSbaMRJJW4D9abapz9TbNsk=;
+        b=feSMjzYDYEpiUZ0DlHVbdW7g4WJ91v03gdyDD46ItIoKjGBNT8aFrtNvP/v5/nE7GQ
+         D/kl1Aokvlq9lYwBkB7LDM78H3iSMOLXh5T+5T/iQo13XCzRiKqdn0Bj0eSLdyjoDoRW
+         GXMHUMg/WPnTYPp8gtskXOZPZHgW36V7G2BrP+luEEhY+M1J2f6fD3bW81qBOys5XQVp
+         DuN5fJEauLn6rf4n2i3yXAhk0EqfTqLVspCf4AiJrMrSK0rfTEu47ZqgB34qL3SaUWCa
+         W5Hwx53PCc963XPgrVfYqFV/c27+7rwO24BQSdfzn2lUY1QkcrpjE7pAUwa7O3Ovs+Tg
+         Da5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742837590; x=1743442390;
+        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
+         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=dGFuB9mmLp1BQVwj/uNArSbaMRJJW4D9abapz9TbNsk=;
+        b=asmHugQXy4U3vkVuvVBR6rcA+X9KZVI5cm4mYAChwRaDd0YNL/PpS/KfnkyvRTeWX5
+         HluzShgfrWLRiD64RbUbqVQvPgE/LTnxk1OW6URi8D73ADpa2Zumrbjc/HelbZnwgms8
+         qjKDinCfxs0FAohHCjGmEnbzxkVMPenf9OAoxVGD9Yyt7QRCO/ds0LCkFnJKOV101uEj
+         4wUF7aIpZbBuF3mklEYeG6YbtYNGQHG649if5MZvHXWyYYqjDQsW9nOz/O8Rahmrc5Pf
+         84xmCjPO4WKF4LNKUBdAuD1j7G1WE94jyjbjk60HVewDR3s0KserJGP5q7pu/UECtvoA
+         oTYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXoPpl9PUFvgUzYM62mL+qxNmhudKyztVKlYvXGdNEC38wB4vMhy2IRNXPg5LT8s/7m2wEKn/60nDBG06k=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzX7ae/lwaZQtg5mKCaLnAoRAwDeo/vokv9Bj1MlcxtBmTtoJa4
+	3cYj13oZXSld2T/HcNuJNUbBF7JhEIXzEmenheloGi2Ngh0nw5iABumaEwBRy1UUUqd/Ct5XtRM
+	rIrrpNA==
+X-Google-Smtp-Source: AGHT+IEfRjGoPGy11ZTF+dZtGZ81t1uBtVUdGc31rboe3q80FnaB9lKjiEwv64EnTeLYudK0ci+z5pWqoJgr
+X-Received: from pfld12.prod.google.com ([2002:a05:6a00:198c:b0:736:46a8:452d])
+ (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a05:6a00:4f81:b0:736:5822:74b4
+ with SMTP id d2e1a72fcca58-73905a530a9mr23169375b3a.21.1742837589869; Mon, 24
+ Mar 2025 10:33:09 -0700 (PDT)
+Reply-To: Mingwei Zhang <mizhang@google.com>
+Date: Mon, 24 Mar 2025 17:30:51 +0000
+In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+References: <20250324173121.1275209-1-mizhang@google.com>
+X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
+Message-ID: <20250324173121.1275209-12-mizhang@google.com>
+Subject: [PATCH v4 11/38] perf/x86: Forbid PMI handler when guest own PMU
+From: Mingwei Zhang <mizhang@google.com>
+To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
+	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
+	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, 
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
+	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
+	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
+	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
+	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
+	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
+	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
+	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
+	Nikunj Dadhania <nikunj.dadhania@amd.com>
+Content-Type: text/plain; charset="UTF-8"
 
-From: Arnd Bergmann <arnd@arndb.de>
+If a guest PMI is delivered after VM-exit, the KVM maskable interrupt will
+be held pending until EFLAGS.IF is set. In the meantime, if the logical
+processor receives an NMI for any reason at all, perf_event_nmi_handler()
+will be invoked. If there is any active perf event anywhere on the system,
+x86_pmu_handle_irq() will be invoked, and it will clear
+IA32_PERF_GLOBAL_STATUS. By the time KVM's PMI handler is invoked, it will
+be a mystery which counter(s) overflowed.
 
-Every module should have a description, so add one for each of these modules.
+When LVTPC is using KVM PMI vecotr, PMU is owned by guest, Host NMI let
+x86_pmu_handle_irq() run, x86_pmu_handle_irq() restore PMU vector to NMI
+and clear IA32_PERF_GLOBAL_STATUS, this breaks guest vPMU passthrough
+environment.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+So modify perf_event_nmi_handler() to check perf_in_guest per cpu variable,
+and if so, to simply return without calling x86_pmu_handle_irq().
+
+Suggested-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Dapeng Mi <dapeng1.mi@linux.intel.com>
 ---
- samples/livepatch/livepatch-callbacks-busymod.c | 1 +
- samples/livepatch/livepatch-callbacks-demo.c    | 1 +
- samples/livepatch/livepatch-callbacks-mod.c     | 1 +
- samples/livepatch/livepatch-sample.c            | 1 +
- samples/livepatch/livepatch-shadow-fix1.c       | 1 +
- samples/livepatch/livepatch-shadow-fix2.c       | 1 +
- 6 files changed, 6 insertions(+)
+ arch/x86/events/core.c | 27 +++++++++++++++++++++++++--
+ 1 file changed, 25 insertions(+), 2 deletions(-)
 
-diff --git a/samples/livepatch/livepatch-callbacks-busymod.c b/samples/livepatch/livepatch-callbacks-busymod.c
-index 69105596e72e..4d6030739fcb 100644
---- a/samples/livepatch/livepatch-callbacks-busymod.c
-+++ b/samples/livepatch/livepatch-callbacks-busymod.c
-@@ -56,4 +56,5 @@ static void livepatch_callbacks_mod_exit(void)
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 28161d6ff26d..96a173bbbec2 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -54,6 +54,8 @@ DEFINE_PER_CPU(struct cpu_hw_events, cpu_hw_events) = {
+ 	.pmu = &pmu,
+ };
  
- module_init(livepatch_callbacks_mod_init);
- module_exit(livepatch_callbacks_mod_exit);
-+MODULE_DESCRIPTION("Live patching demo for (un)patching callbacks");
- MODULE_LICENSE("GPL");
-diff --git a/samples/livepatch/livepatch-callbacks-demo.c b/samples/livepatch/livepatch-callbacks-demo.c
-index 11c3f4357812..9e69d9caed25 100644
---- a/samples/livepatch/livepatch-callbacks-demo.c
-+++ b/samples/livepatch/livepatch-callbacks-demo.c
-@@ -192,5 +192,6 @@ static void livepatch_callbacks_demo_exit(void)
++static DEFINE_PER_CPU(bool, pmi_vector_is_nmi) = true;
++
+ DEFINE_STATIC_KEY_FALSE(rdpmc_never_available_key);
+ DEFINE_STATIC_KEY_FALSE(rdpmc_always_available_key);
+ DEFINE_STATIC_KEY_FALSE(perf_is_hybrid);
+@@ -1737,6 +1739,24 @@ perf_event_nmi_handler(unsigned int cmd, struct pt_regs *regs)
+ 	u64 finish_clock;
+ 	int ret;
  
- module_init(livepatch_callbacks_demo_init);
- module_exit(livepatch_callbacks_demo_exit);
-+MODULE_DESCRIPTION("Live patching demo for (un)patching callbacks");
- MODULE_LICENSE("GPL");
- MODULE_INFO(livepatch, "Y");
-diff --git a/samples/livepatch/livepatch-callbacks-mod.c b/samples/livepatch/livepatch-callbacks-mod.c
-index 2a074f422a51..d1851b471ad9 100644
---- a/samples/livepatch/livepatch-callbacks-mod.c
-+++ b/samples/livepatch/livepatch-callbacks-mod.c
-@@ -38,4 +38,5 @@ static void livepatch_callbacks_mod_exit(void)
++	/*
++	 * When guest pmu context is loaded this handler should be forbidden from
++	 * running, the reasons are:
++	 * 1. After perf_guest_enter() is called, and before cpu enter into
++	 *    non-root mode, host non-PMI NMI could happen, but x86_pmu_handle_irq()
++	 *    restore PMU to use NMI vector, which destroy KVM PMI vector setting.
++	 * 2. When VM is running, host non-PMI NMI causes VM exit, KVM will
++	 *    call host NMI handler (vmx_vcpu_enter_exit()) first before KVM save
++	 *    guest PMU context (kvm_pmu_put_guest_context()), as x86_pmu_handle_irq()
++	 *    clear global_status MSR which has guest status now, then this destroy
++	 *    guest PMU status.
++	 * 3. After VM exit, but before KVM save guest PMU context, host non-PMI NMI
++	 *    could happen, x86_pmu_handle_irq() clear global_status MSR which has
++	 *    guest status now, then this destroy guest PMU status.
++	 */
++	if (!this_cpu_read(pmi_vector_is_nmi))
++		return NMI_DONE;
++
+ 	/*
+ 	 * All PMUs/events that share this PMI handler should make sure to
+ 	 * increment active_events for their events.
+@@ -2681,10 +2701,13 @@ static void x86_pmu_switch_guest_ctx(bool enter, void *data)
+ {
+ 	u32 guest_lvtpc = *(u32 *)data;
  
- module_init(livepatch_callbacks_mod_init);
- module_exit(livepatch_callbacks_mod_exit);
-+MODULE_DESCRIPTION("Live patching demo for (un)patching callbacks, support module");
- MODULE_LICENSE("GPL");
-diff --git a/samples/livepatch/livepatch-sample.c b/samples/livepatch/livepatch-sample.c
-index cd76d7ebe598..5263a2f31c48 100644
---- a/samples/livepatch/livepatch-sample.c
-+++ b/samples/livepatch/livepatch-sample.c
-@@ -66,5 +66,6 @@ static void livepatch_exit(void)
+-	if (enter)
++	if (enter) {
+ 		apic_write(APIC_LVTPC, guest_lvtpc);
+-	else
++		this_cpu_write(pmi_vector_is_nmi, false);
++	} else {
+ 		apic_write(APIC_LVTPC, APIC_DM_NMI);
++		this_cpu_write(pmi_vector_is_nmi, true);
++	}
+ }
  
- module_init(livepatch_init);
- module_exit(livepatch_exit);
-+MODULE_DESCRIPTION("Kernel Live Patching Sample Module");
- MODULE_LICENSE("GPL");
- MODULE_INFO(livepatch, "Y");
-diff --git a/samples/livepatch/livepatch-shadow-fix1.c b/samples/livepatch/livepatch-shadow-fix1.c
-index f3f153895d6c..cbf68ca40097 100644
---- a/samples/livepatch/livepatch-shadow-fix1.c
-+++ b/samples/livepatch/livepatch-shadow-fix1.c
-@@ -168,5 +168,6 @@ static void livepatch_shadow_fix1_exit(void)
- 
- module_init(livepatch_shadow_fix1_init);
- module_exit(livepatch_shadow_fix1_exit);
-+MODULE_DESCRIPTION("Live patching demo for shadow variables");
- MODULE_LICENSE("GPL");
- MODULE_INFO(livepatch, "Y");
-diff --git a/samples/livepatch/livepatch-shadow-fix2.c b/samples/livepatch/livepatch-shadow-fix2.c
-index 361046a4f10c..b99122cb221f 100644
---- a/samples/livepatch/livepatch-shadow-fix2.c
-+++ b/samples/livepatch/livepatch-shadow-fix2.c
-@@ -128,5 +128,6 @@ static void livepatch_shadow_fix2_exit(void)
- 
- module_init(livepatch_shadow_fix2_init);
- module_exit(livepatch_shadow_fix2_exit);
-+MODULE_DESCRIPTION("Live patching demo for shadow variables");
- MODULE_LICENSE("GPL");
- MODULE_INFO(livepatch, "Y");
+ static struct pmu pmu = {
 -- 
-2.39.5
+2.49.0.395.g12beb8f557-goog
 
