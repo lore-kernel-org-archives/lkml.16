@@ -1,222 +1,221 @@
-Received: from mail.cjdns.fr (mail.cjdns.fr [5.135.140.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2270E15539A;
-	Sun, 23 Mar 2025 23:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=5.135.140.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756F1367
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 00:09:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742774006; cv=none; b=J5ocTIg9280c0AfQK+mfWmlOSgBtdgjUrUC8OhvoF5han8TWbityHmlUMmpS/mpSHMpXOOcCX2Tgc7fVYzXbxqoOVbEfIEGEBW2AG5ysCy1FMKsVr/16bZzRmHglaOMmwW34+79OoG75TQET3nrvT2t+/j584iJt3E6+N3vM9hY=
+	t=1742774960; cv=none; b=aZhRIi7n9UZSvFurML262VPsRv/PABDWNbM5pHrsopQMqQtqpY8zT1T9pFTroduT1loGIePqT5v2GWxUYwQZZ1WOMiyAfW2qAf/P9C53Jqu2OkSMf6rDwdDuGIcUQ2GHVhQl/s5wkm8B+qlzlCOgTuj3pvWoOJQU2lQDp3/gdOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742774006; c=relaxed/simple;
-	bh=M6OGTvLw7CtrXFJe/5E6TOOm2mnJXkCUt54dENXIYBI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=E1A56NWGPLS1esmKLYskn5zdsJ1tySxeOcKDpQkafgdkbbXc/zn8VVn4vddCnM9sKS9GHRAdp+TvNJCFiNXI9+c5OHJ3rodPPi1fBbvZzhzUYYVJO3Zbkkp0ZZTXlxDwAI1bsIZbdNcjyex0d0XcodcdD6lhN4Z+WP211PFp5Rk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr; spf=none smtp.mailfrom=cjdns.fr; dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b=vXNUa/E1; arc=none smtp.client-ip=5.135.140.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=cjdns.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cjdns.fr
+	s=arc-20240116; t=1742774960; c=relaxed/simple;
+	bh=xG7KMDmzZFEzMN+AkPk2HVIMj7xs9rXBgCDJ/MFJG+c=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=ZQ8VGqLqAZRmHb7i2EsBrdBNwj4jANftOmkF399sKgtXzl6HQjJAwcAAqHV6m/VeiQGsIvZQLeGCG+Myjq7vto2VP+EQkqbphweVMUtrRIfrb8CXfQIIQM2Vk3xoD5yQfIZo1NTNgIDX+cUL6jIs0AzI4R4tLI9JrKeOdyLFjpU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WOU0RtbS; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cjdns.fr header.i=@cjdns.fr header.b="vXNUa/E1"
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 5AE4E2B096F;
-	Mon, 24 Mar 2025 00:53:18 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cjdns.fr; s=dkim;
-	t=1742774001; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=M45i0cNSjLCYGojqbS0h+f9E80WUbVF8rMlj+9W/SQY=;
-	b=vXNUa/E1enNAw74HG10KVbTB688tQfMjeU81OfZWzxid00a7D/DEA+CcLi3DmnorwLbCWv
-	qm5IZxZWFw0iN0pHQdSUlUHKjuCpgOhsGoE50iKtSI21o54vnI3zLeFhbcPGC6wV6FhBRQ
-	2KFvfCFMV6ys9MM5QjkS4W5LgSWxXZMDzqN4/Nb8vVg0wC0lBE9EXKMgoRCAmvr/OeCB2z
-	KKCtg1H/StfuIFIi9tc9bIcPCX4G6I8KRMCC2xQMCtjIl34OBGBO0/qBXUgFE8IISEoeKk
-	8BuQ/BRMo12d/7/nx9Pg7TEkRsf9G/HjzAc22Q2AjN/ioWM4gAIuCOPwlu2S1g==
-Message-ID: <d419bcd2-fa78-4390-88b0-64ed54b87081@cjdns.fr>
-Date: Mon, 24 Mar 2025 00:53:17 +0100
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WOU0RtbS"
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-43bb6b0b898so35381465e9.1
+        for <linux-kernel@vger.kernel.org>; Sun, 23 Mar 2025 17:09:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1742774957; x=1743379757; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=u4Yw/yIFJwPSRIFaWhDguD+3BszBLpL7OesKcw5YFc8=;
+        b=WOU0RtbShGEeZvX4arWxIpH7nywv9kzFESLG2OsdEBgE3VwNxq2Lnll6uE7ws3zGhq
+         tva4WGopmk0rv7bGn98BvC6ev4zIv3zH+BDjTpevl3aWY5CYOajUBrH3+En3DSuSpU47
+         oMA7DbQ7ftD93gWrGuNDFHLweLtWivPZs/Vw2PvKQ37qi0OIUDyiVE9wjURmwr2Kx3jw
+         bL0ZosCoazfCzne0ABNtOD8AIg/qnmFPX2RgKJ0MfDVgXyDPAMsmK8QlTqf4sCE2yVBm
+         28e8Bs6ZB+vGqhpk5lfwKNS+TR6SBMkWzREpPwt9hhSuBEsbTgYZzVirSd+3Z5yzp3vb
+         F0Gw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742774957; x=1743379757;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=u4Yw/yIFJwPSRIFaWhDguD+3BszBLpL7OesKcw5YFc8=;
+        b=Y2KkX4iAf1rQI/cG+bfAwkvnij5vGB5BZSk1qw1MuhLJG3Fk1rG4rAC8bIrgMNEbV6
+         b50INZ1508i/E+PHCzmVx4V1sgcRoqAk+TiQxbl/IYvP4l/JQOItzYPwZ0W3SS6DGZQD
+         t00am2J7x5qkkbV67DLd8OIITPKajPUhthEPCZubjwmYF2dLBj1wa61wbJ1196TBAz7R
+         3i16PiSTwI0Nlax+iJNCa3OpzJMKKybUjvrK5tkbF0ONjg7F6AKN2xyExpGHAk22SVAV
+         X1BdWS75xIa6h7NbfoBMyF6L3j1bsMBOalGmkYYV8xBB3b77EPy3Cs/3gw7PxeRju0r8
+         Hm1g==
+X-Forwarded-Encrypted: i=1; AJvYcCWwWsEt/82L0nki6MBmIwYchofSyIVtuhq04fjBcMjkWdz5YtG3rEbHotW9kqtKIAJDWhSRogfCGG5m8do=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfAYxAiL224v/qewVhCXgb2DEfRq8OBioQ0eqNlkc+n/HeEUHp
+	gUQ7Am5j6K/PwwHmVKhC5pciFGUffTzr/R1iNZ4nzjv2Wt7L2kvTJNwk2O/YBrY=
+X-Gm-Gg: ASbGncujT9BezjSB3pIflnSCZQq7cd1R9QW8ytRMCgTz8JqRqEJTTW+wgBnl5bQFPsN
+	fmJczlDFs7SGUFJr762IhN0Lckyz6WcLQwzpTCMWN02ltIJ6B3podQ+95GKGK3UAYLB4T2yYNOC
+	cEZYkWaNKi2NxemvVSidQseLIUxCZHutCB5q1EKgTR09b7V42eolYceULbac5g3K6oTV6F+smv/
+	xZJ4tbMrIfFqK86ZrJce41lVGnS7Xd9nM+YsdPMGM8Q+HZcsW5NC/EEjlTbGisolUKMUHvEmUPI
+	RqtCrxnK0P4muTxHeAY0nDiA5gsVXBtqN/dRYtODZxrEZKGapgsAvSoejRTA0HFAmPdRwYlq1ad
+	bDTimVgQGQMHbRFv36h6qgYd7
+X-Google-Smtp-Source: AGHT+IGY7VtMpwcOgN7vWpF0VeukoOJo86n8xPqYGzuZ9slPTAXMmzoVR8afEL0XrlDXByZw4H9iNw==
+X-Received: by 2002:a5d:6c63:0:b0:38d:e304:7470 with SMTP id ffacd0b85a97d-3997f90aa79mr10650444f8f.25.1742774956693;
+        Sun, 23 Mar 2025 17:09:16 -0700 (PDT)
+Received: from inspiron14p-linux.ht.home (188-141-3-146.dynamic.upc.ie. [188.141.3.146])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-43d4fcea6ecsm103160875e9.5.2025.03.23.17.09.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Mar 2025 17:09:16 -0700 (PDT)
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To: hdegoede@redhat.com,
+	mchehab@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	sakari.ailus@linux.intel.com,
+	hverkuil@xs4all.nl
+Cc: linux-media@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH 1/1] media: dt-bindings: Add OmniVision OV02C10
+Date: Mon, 24 Mar 2025 00:09:12 +0000
+Message-ID: <20250324000912.105662-2-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250324000912.105662-1-bryan.odonoghue@linaro.org>
+References: <20250319145927.70534-1-hdegoede@redhat.com>
+ <20250324000912.105662-1-bryan.odonoghue@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v1 4/8] dt-bindings: timer: Add EcoNet HPT CPU Timer
-To: Krzysztof Kozlowski <krzk@kernel.org>, linux-mips@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Daniel Lezcano <daniel.lezcano@linaro.org>, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, benjamin.larsson@genexis.eu
-References: <20250321134633.2155141-1-cjd@cjdns.fr>
- <20250321134633.2155141-5-cjd@cjdns.fr>
- <c1791b2e-bdf6-448c-88d3-c97511af3357@kernel.org>
- <8f095a56-a188-45e9-945a-1d77ef175dc8@cjdns.fr>
- <f2738225-564e-479b-a4f0-fac0ba6b6d53@kernel.org>
-Content-Language: en-US
-From: Caleb James DeLisle <cjd@cjdns.fr>
-In-Reply-To: <f2738225-564e-479b-a4f0-fac0ba6b6d53@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Last-TLS-Session-Version: TLSv1.3
+Content-Transfer-Encoding: 8bit
 
+Add bindings for OVO2C10 a two megapixel 1080p RGB sensor.
 
-On 23/03/2025 13:39, Krzysztof Kozlowski wrote:
-> On 22/03/2025 00:21, Caleb James DeLisle wrote:
->> Thank you for the review.
->>
->> On 21/03/2025 21:56, Krzysztof Kozlowski wrote:
->>> On 21/03/2025 14:46, Caleb James DeLisle wrote:
->>>> Add device tree binding documentation for the high-precision timer (HPT)
->>>> in the EcoNet EN751221 SoC.
->>>>
->>>> Signed-off-by: Caleb James DeLisle <cjd@cjdns.fr>
->>> Previous patch was not tested, so was this one tested?
->> Yes, all of this has been tested on multiple devices, I believe I was
->> unclear in the question I added in patch 3.
-> Hm? How can you test a binding on a device? I meant here bindings - they
-> were not tested.
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+ .../bindings/media/i2c/ovti,ov02c10.yaml      | 117 ++++++++++++++++++
+ 1 file changed, 117 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/ovti,ov02c10.yaml
 
+diff --git a/Documentation/devicetree/bindings/media/i2c/ovti,ov02c10.yaml b/Documentation/devicetree/bindings/media/i2c/ovti,ov02c10.yaml
+new file mode 100644
+index 000000000000..6380a17fe65f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/ovti,ov02c10.yaml
+@@ -0,0 +1,117 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright (c) 2025 Linaro Ltd.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/media/i2c/ovti,ov02c10.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Omnivision OV02C10 CMOS Sensor
++
++maintainers:
++  - Bryan O'Donoghue <bryan.odonoghue@linaro.org>
++
++description: |
++  The Omnivision OV02C10 is a 2 megapixel, CMOS image sensor which supports:
++  - Automatic black level calibration (ABLC)
++  - Programmable controls for frame rate, mirror and flip, binning, cropping
++    and windowing
++  - Output formats 10-bit 4C RGB RAW, 10-bit Bayer RAW
++  - 2-lane MIPI D-PHY TX @ 800 Mbps per lane
++  - 1-lane MIPI D-PHY TX @ 1.5 Gbps per lane
++  - Dynamic defect pixel cancellation
++  - Standard SCCB command interface
++
++allOf:
++  - $ref: /schemas/media/video-interface-devices.yaml#
++
++properties:
++  compatible:
++    const: ovti,ov02c10
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  avdd-supply:
++    description: Analogue circuit voltage supply.
++
++  dovdd-supply:
++    description: I/O circuit voltage supply.
++
++  dvdd-supply:
++    description: Digital circuit voltage supply.
++
++  reset-gpios:
++    description: Active low GPIO connected to XSHUTDOWN pad of the sensor.
++
++  port:
++    $ref: /schemas/graph.yaml#/$defs/port-base
++    additionalProperties: false
++
++    properties:
++      endpoint:
++        $ref: /schemas/media/video-interfaces.yaml#
++        additionalProperties: false
++
++        properties:
++          data-lanes:
++            oneOf:
++              - items:
++                  - const: 1
++              - items:
++                  - const: 1
++                  - const: 2
++          link-frequencies: true
++          remote-endpoint: true
++
++        required:
++          - data-lanes
++          - link-frequencies
++          - remote-endpoint
++
++required:
++  - compatible
++  - reg
++  - clocks
++  - port
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        ov02c10: camera@36 {
++            compatible = "ovti,ov02c10";
++            reg = <0x36>;
++
++            reset-gpios = <&tlmm 237 GPIO_ACTIVE_LOW>;
++            pinctrl-names = "default";
++            pinctrl-0 = <&cam_rgb_defaultt>;
++
++            clocks = <&ov02c10_clk>;
++
++            assigned-clocks = <&ov02c10_clk>;
++            assigned-clock-parents = <&ov02c10_clk_parent>;
++            assigned-clock-rates = <19200000>;
++
++            avdd-supply = <&vreg_l7b_2p8>;
++            dvdd-supply = <&vreg_l7b_1p8>;
++            dovdd-supply = <&vreg_l3m_1p8>;
++
++            port {
++                ov02c10_ep: endpoint {
++                    remote-endpoint = <&csiphy4_ep>;
++                    data-lanes = <1 2>;
++                    link-frequencies = /bits/ 64 <400000000>;
++                };
++            };
++        };
++    };
++...
+-- 
+2.49.0
 
-I see. For bindings I ran `make dt_binding_check` and assumed it good because
-it ran to completion. I now know that isn't reliable, but re-checked that it didn't
-log any errors (warnings?) about econet,timer-hpt.yaml
-
-
->
->>>> ---
->>>>    .../bindings/timer/econet,timer-hpt.yaml      | 58 +++++++++++++++++++
->>>>    1 file changed, 58 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml b/Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml
->>>> new file mode 100644
->>>> index 000000000000..8b7ff9bce947
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/timer/econet,timer-hpt.yaml
->>>> @@ -0,0 +1,58 @@
->>>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
->>>> +%YAML 1.2
->>>> +---
->>>> +$id: http://devicetree.org/schemas/timer/econet,timer-hpt.yaml#
->>>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->>>> +
->>>> +title: EcoNet High Precision Timer (HPT)
->>>> +
->>>> +maintainers:
->>>> +  - Calev James DeLisle <cjd@cjdns.fr>
->>>> +
->>>> +description: |
->>> Do not need '|' unless you need to preserve formatting.
->> Ok
->>>> +  The EcoNet High Precision Timer (HPT) is a timer peripheral found in various
->>>> +  EcoNet SoCs, including the EN751221 and EN751627 families. It provides per-VPE
->>>> +  count/compare registers and a per-CPU control register, with a single interrupt
->>>> +  line using a percpu-devid interrupt mechanism.
->>>> +
->>>> +properties:
->>>> +  compatible:
->>>> +    const: econet,timer-hpt
->>> Soc components must have soc-based compatible and then filename matching
->>> whatever you use as fallback.
->> I have so far been unable to find good documentation on writing DT bindings
->> specifically for SoC devices. If you have anything to point me to, I will read it.
->> If not, even a good example of someone else doing it right is helpful.
->>
->> Currently, I see qcom,pdc.yaml appears to do what you say, so I in absence
->> of any other advice, I can try to do what they do.
-> Just don't use generic fallback.
-
-
-Ok I watched your "Accepted in Less Than 10 Iterations" lecture (I'm doing my
-homework). If I understand this correctly, you prefer that I use something specific
-like econet,en751221-timer as the fallback case, so for example on EN751627,
-it would be:
-
-compatible = "econet,en751627-timer", "econet,en751221-timer";
-
-The reason why I didn't do this is because this timer seems to show up in a lot of
-places. Vendor code says that it's older than EN751221, and (if my reading is
-correct) it has found it's way into chips branded TrendChip, MediaTek and Ralink
-as well as EcoNet.
-
-Now that I'll be adding strict checks on the number of register blocks, this way
-also has the advantage of allowing a case for users of the timer in SoCs we don't
-know about:
-
-// Only valid with 2 register blocks
-compatible = "econet,en751627-timer", "econet,timer-hpt";
-
-// Only valid with 1 register block
-compatible = "econet,en751612-timer", "econet,timer-hpt";
-
-// No restriction because we don't know how many timers the SoC has
-compatible = "econet,timer-hpt";
-
-
-That said, I'm fine to do it however you want as long as I'm clear on what you're
-asking for and you have all of the context behind my original decision.
-
-
-Thanks,
-
-Caleb
-
-
->
->>>> +
->>>> +  reg:
->>>> +    minItems: 1
->>>> +    maxItems: 2
->>> No, list items instead.
->> I see qcom,pdc.yaml using items: with per-item description so can follow that.
->>>> +    description: |
->>>> +      Physical base address and size of the timer's register space. On 34Kc
->>>> +      processors, a single region is used. On 1004Kc processors, two regions are
->>>> +      used, one for each core.
->>> So different hardware, different compatible. That's why you need
->>> soc-based compatibles. Follow standard SoC upstreaming rules and examples.
->> I presume this should ideally be with If: statements to further validate the DT (?)
-> Yes
->
->>>> +
->>>> +  interrupts:
->>>> +    maxItems: 1
->>>> +    description: |
->>> Do not need '|' unless you need to preserve formatting.
->> Ok
->>>> +      The interrupt number for the timer.
->>> Drop, redundant.
->> Ok
->>>
->>>> This is a percpu-devid interrupt shared
->>>> +      across CPUs.
->>>> +
->>>> +  clocks:
->>>> +    maxItems: 1
->>>> +    description: |
->>>> +      A clock to get the frequency of the timer.
->>> Drop description, redundant
->> Ok
->>>> +
->>>> +required:
->>>> +  - compatible
->>>> +  - reg
->>>> +  - interrupts
->>>> +  - clocks
->>>> +
->>>> +additionalProperties: false
->>>> +
->>>> +examples:
->>>> +  - |
->>>> +    timer_hpt@1fbf0400 {
->>> No underscores
->> I knew that, my mistake.
->>> Node names should be generic. See also an explanation and list of
->>> examples (not exhaustive) in DT specification:
->>> https://devicetree-specification.readthedocs.io/en/latest/chapter2-devicetree-basics.html#generic-names-recommendation
->> Thank you, this is useful.
->>> Look how other SoCs are calling this.
->> As said, any documentation link or example of someone who does this right
->> is much appreciated. In any case, thank you very much for your time and I
->> will address these points in v2.
-> I gave one link above. Other could be one of my talks... or maybe what
-> elinux.org has, but I did not verify it.
->
-> Best regards,
-> Krzysztof
