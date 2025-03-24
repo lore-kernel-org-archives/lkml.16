@@ -1,214 +1,320 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39B09263F20;
-	Mon, 24 Mar 2025 16:57:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.10
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742835433; cv=fail; b=BbA3/dBhK7Tp7Iy4shZGGFrxOgw01k4JTQaJ20cTZx0KhqIjefsXyNXbC7PxYMBCq0LwfZGcfqefqz7yQ6og4w/dqGG0HG3m+ir8goBJZiSGLw8RPiq/Y3vUpu9PTGdpBMU/3RARuPk9mg4zKRiWslopjq4N1CTZdUx+LnPtCOQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742835433; c=relaxed/simple;
-	bh=68VLjPx3fC0he8ZUvF/2zubAZDr27ZOUsdXhXyG/F+U=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=FCs17/pzRlOGTzdQyE1+7a57P+mGEStH2HhF8IeyDttkStmHfU5Llcs1ni4IYUa1jbO+R2vRTqSuOTPyoHNwjhz2GfqsVkqwevwdRT1CRqgAly7XvplF21lV/hzAT7PX5/dudW4Q1ExNJUEd1qvBSOcPwXDNDQSn0sgNEkXYOo8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KOvWAU7w; arc=fail smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21461263F20;
+	Mon, 24 Mar 2025 16:57:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742835451; cv=none; b=X3IOF5WGSkV39NGJRTy/9YhJ7jfZXIufac5RlHDZX3xA7QMdItNgSNa4zXccO/iRRQu3pNSFADQSZX3/U7KLb/Ni4t1xagdQBMWYBf+hvHHU3C15RWhfcl+x9yXwX035VctGRrN4UZUwavttJMqfbXqJogFn0NWW/Prnslsnn/s=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742835451; c=relaxed/simple;
+	bh=71IipcfFGR1CvfokArR2PET1jNWCSwZkPMSxyuX//dc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mCpR12q9CSpZEnofuH11ho4qfTs+QIaWkexdR3y6v+LwS6goytd3+fwDZbR/A5L1zRtyXuQaYEbZoT0MhnxSAqjFiLZttjW519WcLX3ErTW3OOqZGAI+EmXhR8vJ4yJFog9P31zk4unCxLNUhYtx6yhtyYrUR8ZcbYT9OewuQ50=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cTZcme5K; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KOvWAU7w"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742835432; x=1774371432;
-  h=date:from:to:cc:subject:message-id:references:
-   in-reply-to:mime-version;
-  bh=68VLjPx3fC0he8ZUvF/2zubAZDr27ZOUsdXhXyG/F+U=;
-  b=KOvWAU7wUZzsR9din2Mev3JaUsLUmPQMmWRMFFZf8fUyKnWFHd0S22+c
-   Kae3T2Uk7YJuMLf/rtG3jn4cyJ/bCbDTh4ikbjKWupm5w8RS2kz4LheWb
-   bTdgjy2xE/DRKf2VDvAHIMveWZk5MzGS9F9EEAo9rYoSQNwousWIWatCy
-   CH7fhF7iKox8g5QMmZc0bb81v1scN+1ozPOmlglfdTNvE06Xca+TqNOxU
-   wMHEH0fcnlFXVsJJj2mUwXB0WD64aTDagw9c5ooEI94y9yZrqwKw3TnVT
-   ukCKT/QwrKzTSA+EvGLeaOzH0I516BGkMocmTQH3rigtwZxCThUy3ab7r
-   w==;
-X-CSE-ConnectionGUID: 8k6msC7oTUqPP/yVZZE8Lw==
-X-CSE-MsgGUID: 764Hcf+iT+mJq4sKweBhag==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="61445297"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="61445297"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 09:57:11 -0700
-X-CSE-ConnectionGUID: NwOliQNjS4OkcbSTPF2YYA==
-X-CSE-MsgGUID: N5pUGYLCQOSkVxzJCXM/WQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="124891786"
-Received: from orsmsx901.amr.corp.intel.com ([10.22.229.23])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 09:57:12 -0700
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14; Mon, 24 Mar 2025 09:57:10 -0700
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Mon, 24 Mar 2025 09:57:10 -0700
-Received: from NAM11-BN8-obe.outbound.protection.outlook.com (104.47.58.170)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Mon, 24 Mar 2025 09:57:07 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=Uv74E1BnYsSF7a6JQSopC6kOIBdR+uh1RKI6x0lqdMReUXw8LPOJ0g4PSBFrHjFsbLKlKj0UGm9FH49efr8TBhxugDEE/hnr5EXXuFs5sqJYOT89VEL8o6djUl/w2ICHMGfNqEOrWW3DMgrWDXbNfiCFE+E6SlvZzhYvGI0mENoGg28F1sBWytB4q68Aya9lpUmT91B1sRDalBRZrqPGskQiS3gIlQ71TMWqiiCQSUthE+JBWEbFbDS+od1dBK00sg4AKGB4E/xc8c2v0ykoXn8udCOGbrbmWkMKAMNOBF+T/r6l+pkGelURXSAocwi+eO2LtuKAon/MNrEfr+sDjQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=hhlsImSTItn53Ro4AM+FCdavFa47Ydo2B58B1KFkPGQ=;
- b=l6KGdZCyIKiEdQhQw3DecBP07Gg0ht9jOR4ZVfnw7ov5Yqjiim7BlG8+gqQbN935VW1uV8E9n4U+AvgTm+RZLx+1iWlzDpsvvuuUYWknFkkAsuE1Dby+0qU9C4hnpPZiMcCKWbgOohP3alEu6on907qp+v4UtvH6/LJfGnaLBf+ejkhEtDxlAKwF6GpqHkmeQ6qcCACJ6SomsGM3PWdoCYMPf6PU3Ob4cQd8oIeUOwq7ML8lQCtzHowx/Egv3Cia9xlQ+fHKb+3A0J32HRJ+qOndxR7oM+Dzm1ACbN+avNaSOFXMJQcZLxDUhH2XJax64z5NYTEbf22qRcsSrOV7eA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com (2603:10b6:510:212::12)
- by DS0PR11MB7532.namprd11.prod.outlook.com (2603:10b6:8:147::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Mon, 24 Mar
- 2025 16:56:38 +0000
-Received: from PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332]) by PH7PR11MB6522.namprd11.prod.outlook.com
- ([fe80::9e94:e21f:e11a:332%3]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
- 16:56:38 +0000
-Date: Mon, 24 Mar 2025 09:57:50 -0700
-From: Matthew Brost <matthew.brost@intel.com>
-To: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
-CC: Lucas De Marchi <lucas.demarchi@intel.com>, Thomas
- =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>, Rodrigo Vivi
-	<rodrigo.vivi@intel.com>, David Airlie <airlied@gmail.com>, Simona Vetter
-	<simona@ffwll.ch>, <intel-xe@lists.freedesktop.org>,
-	<dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-	<dan.carpenter@linaro.org>, <kernel-janitors@vger.kernel.org>,
-	<error27@gmail.com>
-Subject: Re: [PATCH] drm/xe/svm: fix dereferencing error pointer in
- drm_gpusvm_range_alloc()
-Message-ID: <Z+GPDvA8PM7DJ9ex@lstrano-desk.jf.intel.com>
-References: <20250323124907.3946370-1-harshit.m.mogalapalli@oracle.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250323124907.3946370-1-harshit.m.mogalapalli@oracle.com>
-X-ClientProxiedBy: MW4PR03CA0333.namprd03.prod.outlook.com
- (2603:10b6:303:dc::8) To PH7PR11MB6522.namprd11.prod.outlook.com
- (2603:10b6:510:212::12)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cTZcme5K"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71434C4CEDD;
+	Mon, 24 Mar 2025 16:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742835450;
+	bh=71IipcfFGR1CvfokArR2PET1jNWCSwZkPMSxyuX//dc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cTZcme5KV03kgFSu2k4BJgscn4uQKHH6t/HVWUjwmrIibt/k36yhl/gq3T+90hp5a
+	 p9hdnLwSF12//bjMem7LcFtov6Guof/7eYq6lL7ZVwqKq9JgOANVD82O7BjwJpJyhZ
+	 kz/YcA4KnDaSfQMgKmDGG9R8cmbDXD3lGii1qJ7RR6jFrePLjzLvTRHkrs7sciyEih
+	 ZLHPs3p7r3sSYwsr/hZY4bbjQ1YlZlQGuE5CKmchNfERAQAaeEURnUK8CICKUfeA2+
+	 hNltcTGvp89od9Q51MJc2EXajql1TOQy7KjMEqHFvmiDjIMGRkZVCrd8kuObMeWeWe
+	 5rD2K83y4xYEQ==
+Date: Mon, 24 Mar 2025 16:57:29 +0000
+From: Wei Liu <wei.liu@kernel.org>
+To: Shradha Gupta <shradhagupta@linux.microsoft.com>
+Cc: "K. Y. Srinivasan" <kys@microsoft.com>,
+	Haiyang Zhang <haiyangz@microsoft.com>,
+	Wei Liu <wei.liu@kernel.org>, Dexuan Cui <decui@microsoft.com>,
+	linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Shradha Gupta <shradhagupta@microsoft.com>
+Subject: Re: [PATCH] hv/hv_kvp_daemon: Enable debug logs for hv_kvp_daemon
+Message-ID: <Z-GO-VGHMFDIAZ7r@liuwe-devbox-ubuntu-v2.lamzopl0uupeniq2etz1fddiyg.xx.internal.cloudapp.net>
+References: <1742800492-25911-1-git-send-email-shradhagupta@linux.microsoft.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH7PR11MB6522:EE_|DS0PR11MB7532:EE_
-X-MS-Office365-Filtering-Correlation-Id: c0f1ce73-48fc-4355-d23a-08dd6af4d7f0
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?gGEWfG62AsDLaLOJTUWGnGvy5ER+Gp691TZIvAWON0+1r7HCt7fLvmF5X1zu?=
- =?us-ascii?Q?5wvTFxcE277FelFzSf0HUwiLPZbNaGafEjj48o6LhO/ZsZ877Qx09WMVoREb?=
- =?us-ascii?Q?A9sMl7qDEpGJ456vvdgZqNGgSW4Uzw6b3URrdJibhy/tfuL8z1AeVrq5pxkL?=
- =?us-ascii?Q?p0/eTMqNAp/7CJz3sm3PJ5Nw51TMqSCx+4sohencjvHkW9NfbD9kaqNeA/ks?=
- =?us-ascii?Q?JbylzYtbZZ3sgZi6Ti9sjjyKqSN+Ys7AhGKPHUZnG0yCw0xKEff8GGMBxV27?=
- =?us-ascii?Q?PaxKEcv/4nzcseS6BFsKWIaTKdL+A+lQJw4Q8c3LwAorxyyIE2yQ70iPfSxy?=
- =?us-ascii?Q?NB3H85d4O6iBwy9PqvQapHgF+1rn/qvBZEgOJ7eG8HR+IbCKetHF2BoMwbd5?=
- =?us-ascii?Q?P9V+SNDfQQI2RYx/jp54NfpOoImdXIZ4GixpdvClFDcR1O/OlDbpOJ5tYxT9?=
- =?us-ascii?Q?StUIRK1hRB6kFQYa4MHb+0hBiora2E4srNWtv+raGZ+o+DbySviGtFalGJ5Y?=
- =?us-ascii?Q?FLbnzrCgW9A1PB3B1L+t141rEUreemJXGjN6e3QkuU8RcmJafXP2t9c3W/0N?=
- =?us-ascii?Q?bQf1w9Rnq5l2KpP7xQlyaCXe3FOdp2naRj1JMolEJcOogWBVYVKjelvpC8TC?=
- =?us-ascii?Q?/nKOysn6Ia6ORqlxbu9L2EM7D9Np4qxnEyRIE7D/nyKURRrmF/ScB12BVGv0?=
- =?us-ascii?Q?8BVtzx79Ut3p7WMGAuaw953g6/edRJXdbWQ4Fz/qPd/bqoFqNF5i9e948pSL?=
- =?us-ascii?Q?03xjdQoBCrfYCnfybC98pwNrAVTadF2RIhT0tVLA3h4GRm5KP4t8G2PrI0IY?=
- =?us-ascii?Q?mOjCbjqP/IncOJ9+4ASgM03aFmcrfmN64ggFMzUdW9kTUR9+6ukVf86Dhe2E?=
- =?us-ascii?Q?LWDgelCZw7SjlEa2wGpU4qd5drrIRHshAFw7fKxhzOI6FjrTXDxUeI65S4Rr?=
- =?us-ascii?Q?Mgv+fJNvQG7cILro7gZptfsmC5FD3gjEGCVbT1UdVqDxWCf0X/nOzSjmR5Yb?=
- =?us-ascii?Q?jPJWj18CH0ToTt73JDYNep+Z2XLCy3d5P6nrYAZA4aswYQ0Hx9tiEAMX2fEc?=
- =?us-ascii?Q?KSLv+Y8oiyxrYE1+XxDT5Y8vfPzSe6m0zRdsSzF2Sn0+FXlFFjMC7XyysVP4?=
- =?us-ascii?Q?9U6DfMrn3WecEDQNEtOo+i3HJyBFVjBOfBFqZfwyyND3swBUdnPw5ULnhtXx?=
- =?us-ascii?Q?a1Q93mwfP07wybn4MGryMtHupf4iI7n3dSvelcPPRmaXevmqKDNNq5+pgfUA?=
- =?us-ascii?Q?Sn7gmgItxMEXrmboT7HEUw2EHz9Zohp3e3O7/Xs2p11c7hybCgzYQhqmqvP2?=
- =?us-ascii?Q?lpAdQpY9nyYccz+Joqbma6Z21/7fHNecfxu3d/VGG0HlF9dvxMzqlgA+uAGc?=
- =?us-ascii?Q?3dA7/E3qUvctDn+pOnrUbY5UibgP?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH7PR11MB6522.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?xbyr8glSHT0ERQur+prfYfWA94a5VclxDQ+iwER1DnGumriIwpMxGgmJ6kcE?=
- =?us-ascii?Q?mlZXIXb5OqgTmuIrLrs4C5qCg7E3HXNO+/jIoQfrTYbAJiQ6Zz8N72I+4C6h?=
- =?us-ascii?Q?ad+vkNDqFXcEFRqDr4/4bof+lksLMWF2v7jsv/k9kSAGIry+/E0nB/8u+aYR?=
- =?us-ascii?Q?bRq/e/bWOQaFF0ercM4tD3SoQn7ohLe2sNJ+xSeXQT0RfN0wM3XTJW9StqOr?=
- =?us-ascii?Q?UX57GHRG7jZF62422XUTDWGCKLZgm/j9J5mSCkIunS28c8ip1DXE5I00r6Kw?=
- =?us-ascii?Q?zaH9OouKQN1MohJhQsSXu8Rra9p5l2VaalT6FcnI3VIzwxSoQi4UB3inkquW?=
- =?us-ascii?Q?6iFgcrgAZfwE7yGnxwOxPGvY8ly3Hpjizz7lwiOdTAnzHBwf3upfoHcLKtxt?=
- =?us-ascii?Q?GJeOPtu8ECAIsZQx0xwhjyVUS3V5uTVlMO+1EgFsHFeUISigyQkvGyCQpgUS?=
- =?us-ascii?Q?XdaLB7qLaf8jYb0/FkJylLrxAAvIgh7m1ohQwC+wLBIfM9gBp0FfixQKKLlq?=
- =?us-ascii?Q?rLL/MYzRPRo38sRjey9Ejt2IwpGzAZqoCxpPXpX1k9loFqIEQDc77afN/+S6?=
- =?us-ascii?Q?QTMbnz7EnPCayWTOgRwKO2JwtR8qGs1LK7GTsSE/+EIGjyhoINhJLCEOU7l2?=
- =?us-ascii?Q?frCHJHYGJO+zU4aaHSH3uHzJD/JZiYxVs96+5i2AFJblMBpI39U4Sc5qIiWQ?=
- =?us-ascii?Q?fip8FQrPPtJWRXsgKRf0PuR9EzhkclWbHKTZcDDxPEhtXDQV0s6kXMdm2oou?=
- =?us-ascii?Q?h/ZO/SJxmFKoURsNYffsmMXQmqVTJrvpwj2U7jytXpJDOw7MVOFStiAMsuKh?=
- =?us-ascii?Q?CViV9KbALzt+8IKU1B8q28TgKT0ICiYh6QR1PZG5N15aEeisYik3fuy5CKD4?=
- =?us-ascii?Q?PNfOD7qmUDg3iUTwULUvSSzv59qCEi/1+mK4k8FxScT//Sv4ospVjvfQWhcp?=
- =?us-ascii?Q?zeJD3t1qdzVLmVujpiVIb6FllmF2Q40poieoaiTmbErgS8Wg6JVIvSJIknT6?=
- =?us-ascii?Q?M3JonnP9SePWMMAOSMv1C91PdfTLc067SdAcR/S14bXqJmVdFvjUpuBpTw6p?=
- =?us-ascii?Q?3RbCD0N91tTY+wAO2/XnoxdiSx+7GIkqqzELbMFyghmdF6JtAMAb2/SvQMqb?=
- =?us-ascii?Q?Jc8rSE+okfIdOWfpeXtBN0tD9oQ01wn//8u4FuAn7ZX+t+YMCamC54TE75zT?=
- =?us-ascii?Q?3HkzvUWGaCwFKP13J9RSiEHmh9zn83b6HwDjNX2VjPj9AINmOqNqq1Q+IE5I?=
- =?us-ascii?Q?K89B/kt8UTzvJDg0tnBruK+I+66FwNdWquDiNz72D/7vY+AmX0uHiwBrOm7p?=
- =?us-ascii?Q?H1ldH5ICcbNay8Tg+xu1qdQJZ1lwAgWRDISQgoKrXa40L4sTdVf09hTJu/xa?=
- =?us-ascii?Q?YJuc/zZ1dlyb8fvNe05lcH2jNNPd1C9zKQ0Q/V4c3zoR+F6lzlXxsIydgmpX?=
- =?us-ascii?Q?KlPU5r8GHy0dRHZAFU5TqoJlTZxOHALm6YsZPSaHnIq67Bn1wBrB0JdN88Yb?=
- =?us-ascii?Q?ELugADMvMvIJ6CTYNRa239zoDg83cIIPPEp9UkIc7NDqh/KQmD0VG7+IHTtv?=
- =?us-ascii?Q?2MPmy/5/jffmq6u1qNs/g6C7pT54chqjgtP24uDxucwOYkGBaokT7/Aukacy?=
- =?us-ascii?Q?1w=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: c0f1ce73-48fc-4355-d23a-08dd6af4d7f0
-X-MS-Exchange-CrossTenant-AuthSource: PH7PR11MB6522.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2025 16:56:38.5667
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: zXfG574qjhMPIEfcbJLc4jvQcMjEsASPMKIZS/lXN5GKxxItKmrUNIvHkMXs+ptJmF4JWMDjUE/rTLbVc0y82w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR11MB7532
-X-OriginatorOrg: intel.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1742800492-25911-1-git-send-email-shradhagupta@linux.microsoft.com>
 
-On Sun, Mar 23, 2025 at 05:49:06AM -0700, Harshit Mogalapalli wrote:
-> xe_svm_range_alloc() returns ERR_PTR(-ENOMEM) on failure and there is a
-> dereference of "range" after that:
+On Mon, Mar 24, 2025 at 12:14:52AM -0700, Shradha Gupta wrote:
+> Allow the KVP daemon to log the KVP updates triggered in the VM
+> with a new debug flag(-d).
+> When the daemon is started with this flag, it logs updates and debug
+> information in /var/log/kvp_debug_file.log. This information comes
+> in handy for debugging issues where the key-value pairs for certain
+> pools show mismatch/incorrect values.
 > 
-> 	-->     range->gpusvm = gpusvm;
-> 
-> In xe_svm_range_alloc(), when memory allocation fails return NULL
-> instead to handle this situation.
-> 
-> Fixes: 99624bdff867 ("drm/gpusvm: Add support for GPU Shared Virtual Memory")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/all/adaef4dd-5866-48ca-bc22-4a1ddef20381@stanley.mountain/
-> Signed-off-by: Harshit Mogalapalli <harshit.m.mogalapalli@oracle.com>
+> Signed-off-by: Shradha Gupta <shradhagupta@linux.microsoft.com>
 
-Reviewed-by: Matthew Brost <matthew.brost@intel.com>
+If debug is enabled, you can just open the file once during
+initialization and close it when the daemon exits.
+
+If you worry whether the log lines are written, you can use fflush(3) to
+flush the buffer to the file every time you write to it, or use
+setvbuf(3) to disable buffering.
 
 > ---
-> This is based on static analysis and only compile tested.
-> ---
->  drivers/gpu/drm/xe/xe_svm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  tools/hv/hv_kvp_daemon.c | 120 ++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 112 insertions(+), 8 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/xe/xe_svm.c b/drivers/gpu/drm/xe/xe_svm.c
-> index 52e04e7e343f..a79df8cf1f36 100644
-> --- a/drivers/gpu/drm/xe/xe_svm.c
-> +++ b/drivers/gpu/drm/xe/xe_svm.c
-> @@ -80,7 +80,7 @@ xe_svm_range_alloc(struct drm_gpusvm *gpusvm)
+> diff --git a/tools/hv/hv_kvp_daemon.c b/tools/hv/hv_kvp_daemon.c
+> index 04ba035d67e9..1f8b02b17356 100644
+> --- a/tools/hv/hv_kvp_daemon.c
+> +++ b/tools/hv/hv_kvp_daemon.c
+> @@ -41,6 +41,7 @@
+>  #include <net/if.h>
+>  #include <limits.h>
+>  #include <getopt.h>
+> +#include <time.h>
 >  
->  	range = kzalloc(sizeof(*range), GFP_KERNEL);
->  	if (!range)
-> -		return ERR_PTR(-ENOMEM);
-> +		return NULL;
+>  /*
+>   * KVP protocol: The user mode component first registers with the
+> @@ -83,6 +84,7 @@ enum {
+>  };
 >  
->  	INIT_LIST_HEAD(&range->garbage_collector_link);
->  	xe_vm_get(gpusvm_to_vm(gpusvm));
+>  static int in_hand_shake;
+> +static int debug_enabled;
+>  
+>  static char *os_name = "";
+>  static char *os_major = "";
+> @@ -91,6 +93,7 @@ static char *processor_arch;
+>  static char *os_build;
+>  static char *os_version;
+>  static char *lic_version = "Unknown version";
+> +static char debug_file[PATH_MAX];
+>  static char full_domain_name[HV_KVP_EXCHANGE_MAX_VALUE_SIZE];
+>  static struct utsname uts_buf;
+>  
+> @@ -99,6 +102,7 @@ static struct utsname uts_buf;
+>   */
+>  
+>  #define KVP_CONFIG_LOC	"/var/lib/hyperv"
+> +#define KVP_DEBUG_LOC	"/var/log/"
+>  
+>  #ifndef KVP_SCRIPTS_PATH
+>  #define KVP_SCRIPTS_PATH "/usr/libexec/hypervkvpd/"
+> @@ -153,6 +157,16 @@ static void kvp_release_lock(int pool)
+>  	}
+>  }
+>  
+> +static void convert_tm_to_string(char *tm_str, size_t tm_str_size)
+> +{
+> +	struct tm tm;
+> +	time_t t;
+> +
+> +	time(&t);
+> +	gmtime_r(&t, &tm);
+> +	strftime(tm_str, tm_str_size, "%Y-%m-%dT%H:%M:%S", &tm);
+> +}
+> +
+>  static void kvp_update_file(int pool)
+>  {
+>  	FILE *filep;
+> @@ -183,6 +197,45 @@ static void kvp_update_file(int pool)
+>  	kvp_release_lock(pool);
+>  }
+>  
+> +static void kvp_dump_initial_pools(int pool)
+> +{
+> +	FILE *debug_filep;
+> +	char tm_str[50];
+> +	int i, ret;
+> +
+> +	convert_tm_to_string(tm_str, sizeof(tm_str));
+> +
+> +	debug_filep = fopen(debug_file, "a");
+> +	if (!debug_filep) {
+> +		syslog(LOG_ERR, "Failed to open file: %s, pool: %d; error: %d%s",
+> +		       debug_file, pool, errno, strerror(errno));
+> +		return;
+> +	}
+> +
+> +	ret = fprintf(debug_filep, "===Start dumping the contents on pool %d ===\n",
+> +		      pool);
+> +	if (ret <= 0) {
+> +		syslog(LOG_ERR, "Failed to write to kvp debug file: %d", pool);
+> +		fclose(debug_filep);
+> +		return;
+> +	}
+> +
+> +	for (i = 0; i < kvp_file_info[pool].num_records; i++) {
+> +		ret = fprintf(debug_filep, "[%s]: pool: %d, %d/%d key=%s val=%s\n",
+> +			      tm_str, pool, i, kvp_file_info[pool].num_records,
+> +			      kvp_file_info[pool].records[i].key,
+> +			      kvp_file_info[pool].records[i].value);
+> +
+> +		if (ret <= 0) {
+> +			syslog(LOG_ERR, "Failed to write to kvp debug file: pool=%d, i=%u/%u",
+> +			       pool, i, kvp_file_info[pool].num_records);
+> +			break;
+> +		}
+> +	}
+> +
+> +	fclose(debug_filep);
+> +}
+> +
+>  static void kvp_update_mem_state(int pool)
+>  {
+>  	FILE *filep;
+> @@ -270,6 +323,8 @@ static int kvp_file_init(void)
+>  			return 1;
+>  		kvp_file_info[i].num_records = 0;
+>  		kvp_update_mem_state(i);
+> +		if (debug_enabled)
+> +			kvp_dump_initial_pools(i);
+>  	}
+>  
+>  	return 0;
+> @@ -321,14 +376,37 @@ static int kvp_key_delete(int pool, const __u8 *key, int key_size)
+>  static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+>  				 const __u8 *value, int value_size)
+>  {
+> -	int i;
+> -	int num_records;
+>  	struct kvp_record *record;
+> +	FILE *filep = NULL;
+> +	int num_records;
+> +	char tm_str[50];
+>  	int num_blocks;
+> +	int i;
+> +
+> +	if (debug_enabled) {
+> +		filep = fopen(debug_file, "a");
+> +		if (!filep) {
+> +			syslog(LOG_ERR, "Failed to open file %s; error: %d",
+> +			       debug_file, errno);
+> +		} else {
+> +			convert_tm_to_string(tm_str, sizeof(tm_str));
+> +			fprintf(filep, "[%s]:%s: got a KVP: pool=%d key=%s val=%s\n",
+> +				__func__, tm_str, pool, key, value);
+> +		}
+> +	}
+>  
+>  	if ((key_size > HV_KVP_EXCHANGE_MAX_KEY_SIZE) ||
+> -		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE))
+> +		(value_size > HV_KVP_EXCHANGE_MAX_VALUE_SIZE)) {
+> +		syslog(LOG_ERR, "Got a too long key or value: key=%s, val=%s",
+> +		       key, value);
+> +
+> +		if (filep) {
+> +			fprintf(filep, "[%s]: Got a too long key or value: pool=%d, key=%s, val=%s\n",
+> +				tm_str, pool, key, value);
+> +			fclose(filep);
+> +		}
+>  		return 1;
+> +	}
+>  
+>  	/*
+>  	 * First update the in-memory state.
+> @@ -348,6 +426,11 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+>  		 */
+>  		memcpy(record[i].value, value, value_size);
+>  		kvp_update_file(pool);
+> +		if (filep) {
+> +			fprintf(filep, "[%s]:%s: updated: pool=%d key=%s val=%s\n",
+> +				__func__, tm_str, pool, key, value);
+> +			fclose(filep);
+> +		}
+>  		return 0;
+>  	}
+>  
+> @@ -359,8 +442,12 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+>  		record = realloc(record, sizeof(struct kvp_record) *
+>  			 ENTRIES_PER_BLOCK * (num_blocks + 1));
+>  
+> -		if (record == NULL)
+> +		if (!record) {
+> +			if (filep)
+> +				fclose(filep);
+> +			syslog(LOG_ERR, "%s: Memory alloc failure", __func__);
+>  			return 1;
+> +		}
+>  		kvp_file_info[pool].num_blocks++;
+>  
+>  	}
+> @@ -368,6 +455,12 @@ static int kvp_key_add_or_modify(int pool, const __u8 *key, int key_size,
+>  	memcpy(record[i].key, key, key_size);
+>  	kvp_file_info[pool].records = record;
+>  	kvp_file_info[pool].num_records++;
+> +
+> +	if (filep) {
+> +		fprintf(filep, "[%s]:%s: added: pool=%d key=%s val=%s\n",
+> +			__func__, tm_str, pool, key, value);
+> +		fclose(filep);
+> +	}
+>  	kvp_update_file(pool);
+>  	return 0;
+>  }
+> @@ -1662,6 +1755,7 @@ void print_usage(char *argv[])
+>  	fprintf(stderr, "Usage: %s [options]\n"
+>  		"Options are:\n"
+>  		"  -n, --no-daemon        stay in foreground, don't daemonize\n"
+> +		"  -d, --debug-enabled    Enable debug logs\n"
+
+You should specify where the log is written to. The only place that
+tells where it is written to is in syslog.
+
+Does systemd has a way to collect logs from a specific daemon? If so,
+we can consider using that facility
+
+Thanks,
+Wei.
+
+>  		"  -h, --help             print this help\n", argv[0]);
+>  }
+>  
+> @@ -1681,12 +1775,13 @@ int main(int argc, char *argv[])
+>  	int daemonize = 1, long_index = 0, opt;
+>  
+>  	static struct option long_options[] = {
+> -		{"help",	no_argument,	   0,  'h' },
+> -		{"no-daemon",	no_argument,	   0,  'n' },
+> -		{0,		0,		   0,  0   }
+> +		{"help",		no_argument,	   0,  'h' },
+> +		{"no-daemon",		no_argument,	   0,  'n' },
+> +		{"debug-enabled",	no_argument,	   0,  'd' },
+> +		{0,			0,		   0,  0   }
+>  	};
+>  
+> -	while ((opt = getopt_long(argc, argv, "hn", long_options,
+> +	while ((opt = getopt_long(argc, argv, "hnd", long_options,
+>  				  &long_index)) != -1) {
+>  		switch (opt) {
+>  		case 'n':
+> @@ -1695,6 +1790,9 @@ int main(int argc, char *argv[])
+>  		case 'h':
+>  			print_usage(argv);
+>  			exit(0);
+> +		case 'd':
+> +			debug_enabled = 1;
+> +			break;
+>  		default:
+>  			print_usage(argv);
+>  			exit(EXIT_FAILURE);
+> @@ -1717,6 +1815,12 @@ int main(int argc, char *argv[])
+>  	 */
+>  	kvp_get_domain_name(full_domain_name, sizeof(full_domain_name));
+>  
+> +	if (debug_enabled) {
+> +		sprintf(debug_file, "%s%s", KVP_DEBUG_LOC, "kvp_debug_file.log");
+> +		syslog(LOG_INFO, "Logging debug info in kvp_debug_file=%s",
+> +		       debug_file);
+> +	}
+> +
+>  	if (kvp_file_init()) {
+>  		syslog(LOG_ERR, "Failed to initialize the pools");
+>  		exit(EXIT_FAILURE);
 > -- 
-> 2.39.3
+> 2.34.1
 > 
