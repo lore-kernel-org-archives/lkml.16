@@ -1,183 +1,243 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3145265CDE
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:49:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67ACC25EFBA
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742838584; cv=none; b=rTlHT+pZV5SjrXx6gDFhrrnWAjON0/Z4Zf9MqYI4MNCVtGRWHMy0MjovZoFTsM20RLNOFOXUxWOF8tnJ94ZH3ahyxaSo5l1u9UndnUk/CbXTDO5Or1NbzmepItsAJ8f8rURV5FbFONGXQqj3+453HucdSwyq9M1PUPbN5w/Ct/o=
+	t=1742838723; cv=none; b=EZH0BvCdPl0C90mAaUz9hLXERYXbGDWd+Wvl85y9i6mHGepbTFDNKeHFRC1GeB3LnWZJBqWTfPEcEdCr0x+7XWb/e71eyjr25mabro1M8LzMfsrQHye0e2FYYmB2Dt+UnrRInr5/SS7zuDmxcMtJsSfd2VUSlNP841q7k1FUizk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742838584; c=relaxed/simple;
-	bh=dVGPX7JGPkIN+0UvwddpfThGx7do2Vbuy+auXYK06L4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Gp+7cbt05ut3oLw+UjeoCqI8icLIJmmCx/MH3v7BuanMzkpp9DSxpJ7R23ExgI7JHQVgqqQVxfHkG/6W/Fuko1FV4K6l/Af3linjjcqZNgNA7modY0xC24w6jX6dW9bfBtG9FZv5MTe4cC6aLwTuVv4fnxm9m2Q+FyX4SB7g96c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com; spf=fail smtp.mailfrom=purestorage.com; dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b=eqdm2IRx; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=purestorage.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=purestorage.com
+	s=arc-20240116; t=1742838723; c=relaxed/simple;
+	bh=SKIi9GQfzmduS4+Ymp6A6OWDijEX6xFabSnFdUY4nH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xscc8tAiBQk16jrz8L66bRtlnqQVnZJ4elKudij+VNjXP+WXJZtNzvIVokxCRd1eIi931i2M/BpBYMYru6gNXnP55EpuGHptWT14N1JyvwM4UYgYGOkCH7YpERfNRuOQUyvWvf52w4ToRcFXuMkjb3V4QfKOUUDGYuiuVJ68n74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com; spf=pass smtp.mailfrom=cloud.com; dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b=OTdVFt5X; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=citrix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=cloud.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=purestorage.com header.i=@purestorage.com header.b="eqdm2IRx"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22438c356c8so93251385ad.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:49:42 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="OTdVFt5X"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2ff6e91cff5so8093238a91.2
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:52:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=purestorage.com; s=google2022; t=1742838582; x=1743443382; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=pOiHfP9p0mlqSIoELkUxcyuZubPUyJkOsyllMOrSXD8=;
-        b=eqdm2IRxN1n58gZiYHjzH8uoX2NpCnis1KxqTK6xLnlUpDdEWbtBxleMraE/ocRI4Z
-         6Va+M+/amSpTukfibyPr5pnz/gC5MGOutTMxB+VYmHl3nZyq2U08yNsT03ax12C2ThqR
-         KeeFIhkzZdypK4bkd4oswkYzv9UWZTcaGZHZTs8FZ1uDF8xKkpzWJVN8PcnhOxFL9Zvs
-         I0KkN0X2rsmDjGYU5Hrs2vbxGQ6QRF0E9bRLBOXt20JWiNxyb+ghcdFxBmNi0ovIh76v
-         w66cY6wGbifALFIUzahjrHhdVoGK0aIqyQsEd2eLBzZRBQClQ6ToqqzGASuQ1VqVf1oC
-         5nQA==
+        d=citrix.com; s=google; t=1742838721; x=1743443521; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=CNWzWAcgP5osgtlC/YKpdqjJe9Mr06cqx1fXZbFGTuc=;
+        b=OTdVFt5XAfjqnR5tmiuRVvRborVj0tITk4wpCAzUrV60yf9St65RprNqIFbJOxCB9v
+         8HJtDbGDQxP3S76NnbadSsgxymSgyJdJKvpYxDZZMGEYKQ+khoyJN+2/YYRS5WRMDUbo
+         1y8fkwDOws+5N3JPD6c/MhkBTSbUKTiXWVF54=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742838582; x=1743443382;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=pOiHfP9p0mlqSIoELkUxcyuZubPUyJkOsyllMOrSXD8=;
-        b=h4oN1a6PnJlQtug8dPfrzOeuqUQqJcydilxigB9w8vxFZDVToOtbiCylreRsfCrRKr
-         EdhasNnFscf7KYN9HNjG9k/M4zKKypuPde7Kdtbwqe+lSpQLab4ZWEMbcfZMwYuaivgi
-         WIW5KLh7zSrDH3lDlZfuw//cmQNwyaCohvAEi7qxnONeqThukD6H4C8KNcpJaZBSKiDi
-         7TgefCbbjlrcUWN3dK2GpJ7I9D2Jng91kCfaLa3rf1QrkWTSO7KfSBprYVRQKcGz5nQ8
-         3+gCOAodBEx5CFqkBdwJT98xoJxQYLw7XCgRWE98CwazeIXXevftoIJYgYZ3PdLiTxhX
-         88FQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWazRUFSPwKonVQt11O2mKzWgD86lf7lHPBpFmI32EtDJoP6gxvd6LVe45ZdndInB/Afc1pHQ+PoYoGbsQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw1oCeHom0crGAhlJzN+rSEuhG40NSx1ZuYwO01ojAauaaGfQt3
-	it5zhreZ5SpKBUTT+ZkjjQn7SB/Ez65jKj4Br9HLOx6qRsW1G9D3nXbqofIYium9/YCZXp96vCg
-	h
-X-Gm-Gg: ASbGncuHuYPUMX6MYF4KnQP47zQaaCm+kUpE8Hi1+hoKBCc3yOvhRGfqUk0xC0XSdwi
-	GRx1Q21KQ68VHQcVaDMRzAsjntEKtphBrmd/bp7YBk3c3ssAZOZB+p4+zC4zYsRQM/6uwoqMQgR
-	hBRArDuvomXUk/I8tYevq39LbF4+cqXepmwSEYYcOLiamX8Sj6JS/4EkEgeaHW9gsQ71RjmRYlN
-	nptcxWQhWpTbBh08BOOM1F116CRf3sGK2KjPmAuch+i3ko88t5MPI0DwRpb34HQP64/oYabo2lv
-	AkAVTfC9EWcSxptGelqgOqtQWgj32DVJlizM0Ma9BdfsrnfeMfM=
-X-Google-Smtp-Source: AGHT+IH0d58rGWHCXEpkj7PaCzoJMt0vqxtCsjEoJi4vb1FwzxgpckX9h31G9WT2Is6kAP/nriGNww==
-X-Received: by 2002:a17:902:f605:b0:224:2207:5130 with SMTP id d9443c01a7336-22780e260d3mr210963105ad.45.1742838581913;
-        Mon, 24 Mar 2025 10:49:41 -0700 (PDT)
-Received: from localhost.localdomain ([2601:640:8900:32c0::e120])
-        by smtp.googlemail.com with ESMTPSA id 98e67ed59e1d1-301bf576c7dsm12505821a91.3.2025.03.24.10.49.40
+        d=1e100.net; s=20230601; t=1742838721; x=1743443521;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=CNWzWAcgP5osgtlC/YKpdqjJe9Mr06cqx1fXZbFGTuc=;
+        b=OKh8CnMmSY+ZVWZhz1Lxjj/P3p1HciaqwkZbH1jX9S8tho797/aju0jURKOxBS6vug
+         73lWjdsdQMmVW2OR26iEDfvGW6rV4xdxu/Hi5fVfmYXfJ8kNoBG0U4A4XXT2T0WndJNH
+         OZI0qrAigpsgCHWlxjwY6HmYIsppC0t4XUvnCLKk1SuXsgH1nd1nbZkMT6ZXXQdRCDJE
+         oLHn0gEysT6RH1gg+GaAjL7+jPQiEOO6iewva6bQJbQ4acqtY/GVZ+PrrifWlq1KAxRw
+         Y5d3UfkTd1t1vek5mNwZyySdVGlwWGRpOR+KfgU53ELB+iRTK/Qb+dzuaGDoJ17dKuhM
+         nXnQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVxf+q7USU0IQhVP5inePJk8vdyxIt6UEMXCNEdBxrS43s7eNNdEkUi0uHtf9Y9u/oaJgZvJOk3AvwXoIE=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy2OA3muMA+JpWJY8zw5D1Gp2KoNbxCh3aIVIbvV+pPvUf69/Of
+	TNhYeOth03LFGELfOV0sTWWtaW3uiOj7D6vumR9DS6n+fg5Nk0xCp9ZHIWJaXwA=
+X-Gm-Gg: ASbGncsvi0EnFgFZzH0dL0RI3J1yf8+5UQ7j4iB+aDGAunu/tPFDpV61WixHMppCmSe
+	CWwVGu4hAZMTwsUczHMR5blYLSY16JszgJeS5Kerpq0eGAqur98X5XW8Y6+aEE8X+QAkBsvwP4R
+	mCrWbiyIERuG8EFQzDa4L9ZuxoUgui5aiiG+Uts73KkA/vCa/iQV57El0R/c6j54vYdlAhoNiXb
+	6PCZefsbdexO6XIQmWSw/O7lZco4lCUGJL6J8y2/jMBbDGKSfsQznHVfpYzzHIaGLG6JmFqWWmx
+	FLNl9Zbr8sER5Nx0quM7r8U1lahlHw/J1QIJTg1gKuIlCvBP6S4nloh5spD/
+X-Google-Smtp-Source: AGHT+IFyWUJjrXu1IsyCVjHhL289CPz98eVvVSsMjLEg+OjduUCs1rADwPTvWVrkRcJWj9d2Uk4q2g==
+X-Received: by 2002:a17:90b:2647:b0:2ee:d7d3:3019 with SMTP id 98e67ed59e1d1-3030fe95343mr26877301a91.12.1742838720394;
+        Mon, 24 Mar 2025 10:52:00 -0700 (PDT)
+Received: from localhost ([84.78.159.3])
+        by smtp.gmail.com with UTF8SMTPSA id 98e67ed59e1d1-3030f806fb9sm8458911a91.45.2025.03.24.10.51.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 10:49:41 -0700 (PDT)
-From: Mohamed Khalfella <mkhalfella@purestorage.com>
-To: Christoph Hellwig <hch@lst.de>,
-	Sagi Grimberg <sagi@grimberg.me>,
-	Keith Busch <kbusch@kernel.org>
-Cc: Hannes Reinecke <hare@suse.de>,
-	Daniel Wagner <wagi@kernel.org>,
-	John Meneghini <jmeneghi@redhat.com>,
-	randyj@purestorage.com,
-	adailey@purestorage.com,
-	jrani@purestorage.com,
-	linux-nvme@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	mkhalfella@purestorage.com
-Subject: [RFC PATCH v1 7/7] nvme-tcp: Do not immediately cancel inflight requests during recovery
-Date: Mon, 24 Mar 2025 10:49:00 -0700
-Message-ID: <20250324174909.3919131-8-mkhalfella@purestorage.com>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <20250324174909.3919131-1-mkhalfella@purestorage.com>
-References: <20250324174909.3919131-1-mkhalfella@purestorage.com>
+        Mon, 24 Mar 2025 10:51:59 -0700 (PDT)
+Date: Mon, 24 Mar 2025 18:51:54 +0100
+From: Roger Pau =?utf-8?B?TW9ubsOp?= <roger.pau@citrix.com>
+To: Daniel Gomez <da.gomez@kernel.org>
+Cc: =?utf-8?B?SsO8cmdlbiBHcm/Dnw==?= <jgross@suse.com>,
+	Bjorn Helgaas <helgaas@kernel.org>, linux-kernel@vger.kernel.org,
+	xen-devel@lists.xenproject.org, linux-pci@vger.kernel.org,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Bjorn Helgaas <bhelgaas@google.com>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+	"H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH v3 3/3] PCI/MSI: Convert pci_msi_ignore_mask to per MSI
+ domain flag
+Message-ID: <Z-GbuiIYEdqVRsHj@macbook.local>
+References: <20250320210741.GA1099701@bhelgaas>
+ <846c80f8-b80f-49fd-8a50-3fe8a473b8ec@suse.com>
+ <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <qn7fzggcj6qe6r6gdbwcz23pzdz2jx64aldccmsuheabhmjgrt@tawf5nfwuvw7>
 
-In case of controller recovery, reset, or deletion it is possible there
-are inflight requests for which no response was received from target
-controller. TP4129 requires such inflight requests to not be canceled
-immediately. Instead these requests should be held until the target
-learns about disconnection and quiesce pending nvme commands. Implement
-this for nvme-tcp.
+On Mon, Mar 24, 2025 at 03:29:46PM +0100, Daniel Gomez wrote:
+> 
+> Hi,
+> 
+> On Fri, Mar 21, 2025 at 09:00:09AM +0100, Jürgen Groß wrote:
+> > On 20.03.25 22:07, Bjorn Helgaas wrote:
+> > > On Wed, Feb 19, 2025 at 10:20:57AM +0100, Roger Pau Monne wrote:
+> > > > Setting pci_msi_ignore_mask inhibits the toggling of the mask bit for both
+> > > > MSI and MSI-X entries globally, regardless of the IRQ chip they are using.
+> > > > Only Xen sets the pci_msi_ignore_mask when routing physical interrupts over
+> > > > event channels, to prevent PCI code from attempting to toggle the maskbit,
+> > > > as it's Xen that controls the bit.
+> > > > 
+> > > > However, the pci_msi_ignore_mask being global will affect devices that use
+> > > > MSI interrupts but are not routing those interrupts over event channels
+> > > > (not using the Xen pIRQ chip).  One example is devices behind a VMD PCI
+> > > > bridge.  In that scenario the VMD bridge configures MSI(-X) using the
+> > > > normal IRQ chip (the pIRQ one in the Xen case), and devices behind the
+> > > > bridge configure the MSI entries using indexes into the VMD bridge MSI
+> > > > table.  The VMD bridge then demultiplexes such interrupts and delivers to
+> > > > the destination device(s).  Having pci_msi_ignore_mask set in that scenario
+> > > > prevents (un)masking of MSI entries for devices behind the VMD bridge.
+> > > > 
+> > > > Move the signaling of no entry masking into the MSI domain flags, as that
+> > > > allows setting it on a per-domain basis.  Set it for the Xen MSI domain
+> > > > that uses the pIRQ chip, while leaving it unset for the rest of the
+> > > > cases.
+> > > > 
+> > > > Remove pci_msi_ignore_mask at once, since it was only used by Xen code, and
+> > > > with Xen dropping usage the variable is unneeded.
+> > > > 
+> > > > This fixes using devices behind a VMD bridge on Xen PV hardware domains.
+> > > > 
+> > > > Albeit Devices behind a VMD bridge are not known to Xen, that doesn't mean
+> > > > Linux cannot use them.  By inhibiting the usage of
+> > > > VMD_FEAT_CAN_BYPASS_MSI_REMAP and the removal of the pci_msi_ignore_mask
+> > > > bodge devices behind a VMD bridge do work fine when use from a Linux Xen
+> > > > hardware domain.  That's the whole point of the series.
+> > > > 
+> > > > Signed-off-by: Roger Pau Monné <roger.pau@citrix.com>
+> > > > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> > > > Acked-by: Juergen Gross <jgross@suse.com>
+> > > 
+> > > Acked-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > 
+> > > I assume you'll merge this series via the Xen tree.  Let me know if
+> > > otherwise.
+> > 
+> > I've pushed the series to the linux-next branch of the Xen tree.
+> > 
+> > 
+> > Juergen
+> 
+> This patch landed in latest next-20250324 tag causing this crash:
+> 
+> [    0.753426] BUG: kernel NULL pointer dereference, address: 0000000000000002
+> [    0.753921] #PF: supervisor read access in kernel mode
+> [    0.754286] #PF: error_code(0x0000) - not-present page
+> [    0.754656] PGD 0 P4D 0
+> [    0.754842] Oops: Oops: 0000 [#1]
+> [    0.755080] CPU: 0 UID: 0 PID: 1 Comm: swapper Not tainted 6.14.0-rc7-next-20250324 #1 NONE
+> [    0.755691] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2 04/01/2014
+> [    0.756349] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
+> [    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
+> [    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
+> [    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
+> [    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
+> [    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
+> [    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
+> [    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
+> [    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> [    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
+> [    0.756390] Call Trace:
+> [    0.756390]  <TASK>
+> [    0.756390]  ? __die_body+0x1b/0x60
+> [    0.756390]  ? page_fault_oops+0x2d0/0x310
+> [    0.756390]  ? exc_page_fault+0x59/0xc0
+> [    0.756390]  ? asm_exc_page_fault+0x22/0x30
+> [    0.756390]  ? msix_prepare_msi_desc+0x39/0x80
+> [    0.756390]  ? msix_capability_init+0x172/0x2c0
+> [    0.756390]  ? __pci_enable_msix_range+0x1a8/0x1d0
+> [    0.756390]  ? pci_alloc_irq_vectors_affinity+0x7c/0xf0
+> [    0.756390]  ? vp_find_vqs_msix+0x187/0x400
+> [    0.756390]  ? vp_find_vqs+0x2f/0x250
+> [    0.756390]  ? snprintf+0x3e/0x50
+> [    0.756390]  ? vp_modern_find_vqs+0x13/0x60
+> [    0.756390]  ? init_vq+0x184/0x1e0
+> [    0.756390]  ? vp_get_status+0x20/0x20
+> [    0.756390]  ? virtblk_probe+0xeb/0x8d0
+> [    0.756390]  ? __kernfs_new_node+0x122/0x160
+> [    0.756390]  ? vp_get_status+0x20/0x20
+> [    0.756390]  ? virtio_dev_probe+0x171/0x1c0
+> [    0.756390]  ? really_probe+0xc2/0x240
+> [    0.756390]  ? driver_probe_device+0x1d/0x70
+> [    0.756390]  ? __driver_attach+0x96/0xe0
+> [    0.756390]  ? driver_attach+0x20/0x20
+> [    0.756390]  ? bus_for_each_dev+0x7b/0xb0
+> [    0.756390]  ? bus_add_driver+0xe6/0x200
+> [    0.756390]  ? driver_register+0x5e/0xf0
+> [    0.756390]  ? virtio_blk_init+0x4d/0x90
+> [    0.756390]  ? add_boot_memory_block+0x90/0x90
+> [    0.756390]  ? do_one_initcall+0xe2/0x250
+> [    0.756390]  ? xas_store+0x4b/0x4b0
+> [    0.756390]  ? number+0x13b/0x260
+> [    0.756390]  ? ida_alloc_range+0x36a/0x3b0
+> [    0.756390]  ? parameq+0x13/0x90
+> [    0.756390]  ? parse_args+0x10f/0x2a0
+> [    0.756390]  ? do_initcall_level+0x83/0xb0
+> [    0.756390]  ? do_initcalls+0x43/0x70
+> [    0.756390]  ? rest_init+0x80/0x80
+> [    0.756390]  ? kernel_init_freeable+0x70/0xb0
+> [    0.756390]  ? kernel_init+0x16/0x110
+> [    0.756390]  ? ret_from_fork+0x30/0x40
+> [    0.756390]  ? rest_init+0x80/0x80
+> [    0.756390]  ? ret_from_fork_asm+0x11/0x20
+> [    0.756390]  </TASK>
+> [    0.756390] Modules linked in:
+> [    0.756390] CR2: 0000000000000002
+> [    0.756390] ---[ end trace 0000000000000000 ]---
+> [    0.756390] RIP: 0010:msix_prepare_msi_desc+0x39/0x80
+> [    0.756390] Code: 20 c7 46 04 01 00 00 00 8b 56 4c 89 d0 0d 01 01 00 00 66 89 46 4c 8b 8f 64 02 00 00 89 4e 50 48 8b 8f 70 06 00 00 48 89 4e 58 <41> f6 40 02 40 75 2a c1 ea 02 bf 80 00 00 00 21 fa 25 7f ff ff ff
+> [    0.756390] RSP: 0000:ffff8881002a76e0 EFLAGS: 00010202
+> [    0.756390] RAX: 0000000000000101 RBX: ffff88810074d000 RCX: ffffc9000002e000
+> [    0.756390] RDX: 0000000000000000 RSI: ffff8881002a7710 RDI: ffff88810074d000
+> [    0.756390] RBP: ffff8881002a7710 R08: 0000000000000000 R09: ffff8881002a76b4
+> [    0.756390] R10: 000000701000c001 R11: ffffffff82a3dc01 R12: 0000000000000000
+> [    0.756390] R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000002
+> [    0.756390] FS:  0000000000000000(0000) GS:0000000000000000(0000) knlGS:0000000000000000
+> [    0.756390] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [    0.756390] CR2: 0000000000000002 CR3: 0000000002a3d001 CR4: 00000000003706b0
+> [    0.756390] note: swapper[1] exited with irqs disabled
+> [    0.782774] Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009
+> [    0.783560] Kernel Offset: disabled
+> [    0.783909] ---[ end Kernel panic - not syncing: Attempted to kill init! exitcode=0x00000009 ]---
+> 
+> 
+> msix_prepare_msi_desc+0x39/0x80:
+> msix_prepare_msi_desc at drivers/pci/msi/msi.c:616
+>  611            desc->nvec_used                         = 1;
+>  612            desc->pci.msi_attrib.is_msix            = 1;
+>  613            desc->pci.msi_attrib.is_64              = 1;
+>  614            desc->pci.msi_attrib.default_irq        = dev->irq;
+>  615            desc->pci.mask_base                     = dev->msix_base;
+> >616<           desc->pci.msi_attrib.can_mask           = !(info->flags & MSI_FLAG_NO_MASK) &&
+>  617                                                      !desc->pci.msi_attrib.is_virtual;
+>  618
+>  619            if (desc->pci.msi_attrib.can_mask) {
+>  620                    void __iomem *addr = pci_msix_desc_addr(desc);
+>  621
+> 
+> Reverting patch 3 fixes the issue.
 
-Signed-off-by: Mohamed Khalfella <mkhalfella@purestorage.com>
----
- drivers/nvme/host/tcp.c | 30 ++++++++++++++++++++----------
- 1 file changed, 20 insertions(+), 10 deletions(-)
+Thanks for the report and sorry for the breakage.  Do you have a QEMU
+command line I can use to try to reproduce this locally?
 
-diff --git a/drivers/nvme/host/tcp.c b/drivers/nvme/host/tcp.c
-index 327e37a25281..822e6329e332 100644
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -2252,12 +2252,14 @@ static int nvme_tcp_configure_admin_queue(struct nvme_ctrl *ctrl, bool new)
- 	return error;
- }
- 
--static void nvme_tcp_teardown_admin_queue(struct nvme_ctrl *ctrl)
-+static void nvme_tcp_teardown_admin_queue(struct nvme_ctrl *ctrl,
-+					  bool hold_reqs)
- {
- 	nvme_quiesce_admin_queue(ctrl);
- 	blk_sync_queue(ctrl->admin_q);
- 	nvme_tcp_stop_queue(ctrl, 0);
--	nvme_cancel_admin_tagset(ctrl);
-+	if (!hold_reqs)
-+		nvme_cancel_admin_tagset(ctrl);
- 	nvme_tcp_free_admin_queue(ctrl);
- 	if (ctrl->tls_pskid) {
- 		dev_dbg(ctrl->device, "Wipe negotiated TLS_PSK %08x\n",
-@@ -2274,12 +2276,14 @@ static void nvme_tcp_suspend_io_queues(struct nvme_ctrl *ctrl)
- 	nvme_sync_io_queues(ctrl);
- }
- 
--static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl)
-+static void nvme_tcp_teardown_io_queues(struct nvme_ctrl *ctrl,
-+					bool hold_reqs)
- {
- 	if (ctrl->queue_count <= 1)
- 		return;
- 	nvme_tcp_stop_io_queues(ctrl);
--	nvme_cancel_tagset(ctrl);
-+	if (!hold_reqs)
-+		nvme_cancel_tagset(ctrl);
- 	nvme_tcp_free_io_queues(ctrl);
- }
- 
-@@ -2375,7 +2379,7 @@ static int nvme_tcp_setup_ctrl(struct nvme_ctrl *ctrl, bool new)
- 	}
- destroy_admin:
- 	nvme_stop_keep_alive(ctrl);
--	nvme_tcp_teardown_admin_queue(ctrl);
-+	nvme_tcp_teardown_admin_queue(ctrl, false);
- 	if (new) {
- 		nvme_unquiesce_admin_queue(ctrl);
- 		nvme_remove_admin_tag_set(ctrl);
-@@ -2418,10 +2422,12 @@ static void nvme_tcp_error_recovery_work(struct work_struct *work)
- 	nvme_stop_keep_alive(ctrl);
- 	flush_work(&ctrl->async_event_work);
- 	nvme_tcp_suspend_io_queues(ctrl);
--	nvme_tcp_teardown_io_queues(ctrl);
-+	nvme_tcp_teardown_io_queues(ctrl, true);
-+	nvme_tcp_teardown_admin_queue(ctrl, true);
-+	if (nvme_queue_held_requests_work(ctrl))
-+		nvme_wait_for_held_requests(ctrl);
- 	/* unquiesce to fail fast pending requests */
- 	nvme_unquiesce_io_queues(ctrl);
--	nvme_tcp_teardown_admin_queue(ctrl);
- 	nvme_unquiesce_admin_queue(ctrl);
- 	nvme_auth_stop(ctrl);
- 
-@@ -2439,11 +2445,15 @@ static void nvme_tcp_error_recovery_work(struct work_struct *work)
- 
- static void nvme_tcp_teardown_ctrl(struct nvme_ctrl *ctrl, bool shutdown)
- {
-+	bool hold_reqs;
-+
- 	nvme_tcp_suspend_io_queues(ctrl);
--	nvme_tcp_teardown_io_queues(ctrl);
- 	nvme_quiesce_admin_queue(ctrl);
--	nvme_disable_ctrl(ctrl, shutdown);
--	nvme_tcp_teardown_admin_queue(ctrl);
-+	hold_reqs = nvme_disable_ctrl(ctrl, shutdown);
-+	nvme_tcp_teardown_io_queues(ctrl, hold_reqs);
-+	nvme_tcp_teardown_admin_queue(ctrl, hold_reqs);
-+	if (hold_reqs && nvme_queue_held_requests_work(ctrl))
-+		nvme_wait_for_held_requests(ctrl);
- }
- 
- static void nvme_tcp_delete_ctrl(struct nvme_ctrl *ctrl)
--- 
-2.48.1
+Will work on a patch ASAP.
 
+Regards, Roger.
