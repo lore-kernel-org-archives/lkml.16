@@ -1,266 +1,435 @@
-Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+Received: from NAM10-BN7-obe.outbound.protection.outlook.com (mail-bn7nam10on2064.outbound.protection.outlook.com [40.107.92.64])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FEEC2E3366
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:22:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.254.224.24
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742811740; cv=none; b=O7W2NOCXpdlyEP0Fw4ZFridSk0iK1mnIM9yanyDXYptb1pcDQYezX00hWioV8wsS9LyX4/1m6TAbNVpZ0p4wxubKAKxGQYxTsn+AxsxJPG1QpPfmcq8ulY6RXI3/pJA9vXqrNnvgpvo4D5C8Al/YNsqIdTdIrTs3vw1uE0kE9As=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742811740; c=relaxed/simple;
-	bh=7EuDp97T6eGN9Uv1l+Ew36X/SFMuxHOZbvKNx3732Fg=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:Message-ID:MIME-Version:
-	 Content-Type:References; b=Ut7p1GWJspcFcOYmHX/XG5gjNe3fu23l2DlD5YDGeGmioTb47jxFFqul9g7uqtEw5Q31Fsy6SWAAq+6DMpKFJX8BKLWEuTXSmjST9OqfvKoikl5MOsbsXxtjcS5uMO7k0mWLsqhG9Zd339/OMriUmBnz4TO+7DcRzkRdutbCxfo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=LzLGXsvO; arc=none smtp.client-ip=203.254.224.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42642F507;
+	Mon, 24 Mar 2025 10:30:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.92.64
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742812262; cv=fail; b=OXRk7lW1Mh62I/SWWEROtOIGgIuhvu4XRvzdV4Wxqcfj410bqNmOhYlnNmF2PGTCqBAoHKITdLh37e911NkS95vOXJz9Q1wIKAUHiliLY6y1CNOV1cr3cLx9o3+AWohFqiCTxejX7PaSXteOyVFjGub0/tUZ7tP55y9nZPLCPjA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742812262; c=relaxed/simple;
+	bh=gzIT6T9RUzerywnWsCI266mVp7zwGrQDDyOKpH55SaE=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=SoXcgc9maUaEP+DKnZCACklxPK1KqnsGoA3pLG4TTOllAwXH1N4wUxU48RP8TbL/HQ3Ts/aMQ+N+/Hy6tsIiZJeACO/xyFI/yOLbdPNPNXwy7DUK3OlHRG+m+vEh9MrkHFMyqCjfZghL7u90fhD/3vMycQnvjCUQJhy1FKCMctY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=JFx96r6w; arc=fail smtp.client-ip=40.107.92.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LzLGXsvO"
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20250324102216epoutp0179b6754a0c2a35bd97076bfdc1e5f745~vtgpSSLpK1343413434epoutp01v
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:22:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20250324102216epoutp0179b6754a0c2a35bd97076bfdc1e5f745~vtgpSSLpK1343413434epoutp01v
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1742811736;
-	bh=ZB3Z0j0VHC9UQuJJRKuwipbhHT0HrtT0tEnIfDyyr18=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=LzLGXsvORc/n7Gx2nufgfeoP3BFJbi5s6AOAdjCkuNhKx7IRVMCIrhiFiIg3zMT/u
-	 T0WHfdtfZZs4Ly95sNgI3yplujTdM1QcMQbZItrNC4wNwLVoRUnWqGxle4PlYoC4ux
-	 4ddIu0NIIIDU1puvUK/4uMNhg4p1aLEr17VRFJN4=
-Received: from epsnrtp03.localdomain (unknown [182.195.42.155]) by
-	epcas5p3.samsung.com (KnoxPortal) with ESMTPS id
-	20250324102215epcas5p3d861070bb6dcbdddd9c6330b7426bd29~vtgomuDGw1918719187epcas5p3B;
-	Mon, 24 Mar 2025 10:22:15 +0000 (GMT)
-Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.176]) by
-	epsnrtp03.localdomain (Postfix) with ESMTP id 4ZLpyG25n9z3hhT7; Mon, 24 Mar
-	2025 10:22:14 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	DC.E3.10173.65231E76; Mon, 24 Mar 2025 19:22:14 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
-	20250324073455epcas5p2fef46449d34e33682625d5edc77bc087~vrOiazsYP1752617526epcas5p2k;
-	Mon, 24 Mar 2025 07:34:55 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20250324073455epsmtrp14571a1529c1de57a17e465d1964bdf00~vrOiZwp9-2690026900epsmtrp1X;
-	Mon, 24 Mar 2025 07:34:55 +0000 (GMT)
-X-AuditID: b6c32a44-8b5fb700000027bd-a6-67e13256e64c
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	CF.4E.08766.F1B01E76; Mon, 24 Mar 2025 16:34:55 +0900 (KST)
-Received: from FDSFTE245 (unknown [107.122.81.20]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20250324073454epsmtip217eaf384a235b4550fc70c7be5b76526~vrOhkIMFq1488814888epsmtip2S;
-	Mon, 24 Mar 2025 07:34:54 +0000 (GMT)
-From: "Aatif Mushtaq/Aatif Mushtaq" <aatif4.m@samsung.com>
-To: "'Vinod Koul'" <vkoul@kernel.org>
-Cc: <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<pankaj.dubey@samsung.com>, <aswani.reddy@samsung.com>
-In-Reply-To: 
-Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-Date: Mon, 24 Mar 2025 13:04:53 +0530
-Message-ID: <000001db9c8f$3ce35770$b6aa0650$@samsung.com>
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="JFx96r6w"
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=Pg3QZPQtAJNB7pWVnbzydUTGpzs3w9q4WURva0lo3TUtoz4Kbfm9oMUtIoWpZFkBt0iXanaFX5FrScuqIv9lh0/8+52YtvGEg3EleYc62MrT5pbnebTjr37ZHxgEkOasMWSmWv5+h3x+novT7nuesfU6VdlJcUEfPSfg9GjRSD+x3LAxSLnH9skrQhuZQtR+kgNxRsgnr/gCBthI2CU/wYVeL7lb+/oZWnhGTAxQjaq0kvOvZJQ20lgxw7Bmq1jm1/3D6x05XtjJUQqsIgE10cwRUlOIF1cf4Iq+BtmtzwtqdbJ8vqGgZM74MnBq2FO5BnjRblPgNmoXu27Bx4V4mg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=vZUtoeic7UV5v/2dtmJz7wLYJ8IDcN0MzfB31Vqht/4=;
+ b=sKwBw9aHqbFK6eSNBchb0btd9KBqZJb5Gy+ttGx2BIqXDvU2akPGJ1ISl9bOIn/K5RTm+ucaocoxSVMgeuFWy4x4gWE4NMq/YjZ2FqNbcLNmhCXVMLAMcByr4yJXgbbx7BddSTHiMATB/aE6VOjPP5H4VBj3tAfKjz4uSDKX8D38/dp7Hyo9BmL0uhOmrdx3/Tbwjlw4sBPaP0Pos16Qzs1+QprujaQ5tdjyiT9Ok3XrC/jXrAag7lPUPuhYMDmxlAQnkjZZl24LTaT6CTWflc3X4PkzBz6oY/WiqOwzuKz5vNiux/jRCDgnkTJExYiT7of8+r3e7b7Q6b5NDM6nNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=vZUtoeic7UV5v/2dtmJz7wLYJ8IDcN0MzfB31Vqht/4=;
+ b=JFx96r6wiIGNFuMF7tkCABE/bWnAf+UVa4bdnv8R0wVXbiy5NxH05wfBZRip/BaGkxQ+dfYB8zqKJazVoxlX5SWsqmqFNSgGgG3DdmXeu6L9zKzTk6DDUvZdR99Jjx5/kA28x9ELqeN+fYIkFNyvnReL54YsOBlkq/+DlFjzfO0=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amd.com;
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com (2603:10b6:408:187::15)
+ by LV8PR12MB9230.namprd12.prod.outlook.com (2603:10b6:408:186::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.42; Mon, 24 Mar
+ 2025 10:30:58 +0000
+Received: from LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9]) by LV8PR12MB9207.namprd12.prod.outlook.com
+ ([fe80::3a37:4bf4:a21:87d9%7]) with mapi id 15.20.8534.040; Mon, 24 Mar 2025
+ 10:30:57 +0000
+Message-ID: <08e3b020-ea5a-4ba1-b817-0746a277669f@amd.com>
+Date: Mon, 24 Mar 2025 16:00:51 +0530
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 3/5] cpufreq/amd-pstate: Add support for platform
+ profile class
+To: Mario Limonciello <superm1@kernel.org>,
+ "Gautham R . Shenoy" <gautham.shenoy@amd.com>,
+ Perry Yuan <perry.yuan@amd.com>
+Cc: "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)"
+ <linux-kernel@vger.kernel.org>,
+ "open list:CPU FREQUENCY SCALING FRAMEWORK" <linux-pm@vger.kernel.org>,
+ Mario Limonciello <mario.limonciello@amd.com>
+References: <20250321022858.1538173-1-superm1@kernel.org>
+ <20250321022858.1538173-4-superm1@kernel.org>
+Content-Language: en-US
+From: Dhananjay Ugwekar <Dhananjay.Ugwekar@amd.com>
+In-Reply-To: <20250321022858.1538173-4-superm1@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PN2PR01CA0247.INDPRD01.PROD.OUTLOOK.COM
+ (2603:1096:c01:21a::14) To LV8PR12MB9207.namprd12.prod.outlook.com
+ (2603:10b6:408:187::15)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQFsIHTrWqAe9Pu9L3iNOvGTrR8WTgG4P+QRAcvczKUCj5EGvbQKqHTggAfgiMCAHbHb4A==
-Content-Language: en-in
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFmphk+LIzCtJLcpLzFFi42LZdlhTUzfM6GG6wZY+fotDm7eyW6ye+pfV
-	4vKuOWwWi7Z+YbfYeecEswOrx6ZVnWwefVtWMXp83iQXwByVbZORmpiSWqSQmpecn5KZl26r
-	5B0c7xxvamZgqGtoaWGupJCXmJtqq+TiE6DrlpkDtFJJoSwxpxQoFJBYXKykb2dTlF9akqqQ
-	kV9cYquUWpCSU2BSoFecmFtcmpeul5daYmVoYGBkClSYkJ3x7/Z79oIJ+hVnN2xnamDsUO1i
-	5OSQEDCRmLdkF0sXIxeHkMBuRolJz7+zgSSEBD4xSiy66Q2R+MYoserfE1aYjo3LZ7JBJPYy
-	Ssx7eoAZwnnOKPFxYhsjSBWbgJXE+V/7wEaJCKhKbHnyAMjm4GAWqJTY8koTxOQU4JWY8M8a
-	pEJYwEXi5Lk/YNUsQNW/z95jB7F5BSwl9r+axwxhC0qcnPmEBcRmFpCX2P52DjPEPQoSP58u
-	Y4XYFCbR/uMYO0SNuMTRnz1QNT/ZJW5tNoKwXSRePD8DFReWeHV8CzuELSXxsr8NyvaR+DHv
-	FdS/GRIT+lqhbHuJA1fmsEB8oimxfpc+RFhWYuqpdUwQa/kken8/YYKI80rsmAdjK0msed/H
-	BmFLSPw7eJJxAqPSLCSfzULy2SwkH8xC2LaAkWUVo2RqQXFuemqyaYFhXmo5PLaT83M3MYKT
-	o5bLDsYb8//pHWJk4mA8xCjBwawkwnuM9WG6EG9KYmVValF+fFFpTmrxIUZTYHBPZJYSTc4H
-	pue8knhDE0sDEzMzMxNLYzNDJXHe5p0t6UIC6YklqdmpqQWpRTB9TBycUg1MkrpSl11uHzl/
-	QoJV7GLu9zPzJ/BOcpz7rHbLsuO1017wSUiJNS47oLuA1XeOd0b2XSkpr4p7SanPnSMWFxdt
-	zXplHXMzl/GVvrZ99fs3eSrO4Ux7XXXLLZb9zuhSz1j27GxhZ2rEqhmnsjP3rZ6fFK7ot0On
-	SpGl7rPRpSkLtj7ufzx7Kdt8h2nuO3LfaF5p+/ZaOI5tpd3zXcpu5RIqk4wrr9g8OH9u6sHX
-	/02MNqoyLb8+oS7XPK/U1t0srnBfvK7t822prebnS6QufV3lWf7yQGU5e+DDD/1eb38XBLvk
-	sAg1Bc0+UrQymJnxz8Vij1k81/+kFZ/ee+dDvIiNzrwPjms3/nu57IjL6707lFiKMxINtZiL
-	ihMBEXI6WxcEAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrLLMWRmVeSWpSXmKPExsWy7bCSvK4898N0gwOL9S0Obd7KbrF66l9W
-	i8u75rBZLNr6hd1i550TzA6sHptWdbJ59G1ZxejxeZNcAHMUl01Kak5mWWqRvl0CV8a/2+/Z
-	CyboV5zdsJ2pgbFDtYuRk0NCwERi4/KZbF2MXBxCArsZJaZtn8kEkZCQaO5shLKFJVb+e84O
-	UfSUUWJh33VmkASbgJXE+V/72EBsEQFViS1PHoDZzAK1Eg8WXWOCaLjCKHG85w1QAwcHpwCv
-	xIR/1iA1wgIuEifP/QGrZwHq/X32HjuIzStgKbH/1TxmCFtQ4uTMJywgrcwCehJtGxkhxstL
-	bH87hxniNgWJn0+XsUKcECbR/uMYO0SNuMTRnz3MExiFZyGZNAth0iwkk2Yh6VjAyLKKUTK1
-	oDg3PbfYsMAwL7Vcrzgxt7g0L10vOT93EyM4RrQ0dzBuX/VB7xAjEwfjIUYJDmYlEd5jrA/T
-	hXhTEiurUovy44tKc1KLDzFKc7AoifOKv+hNERJITyxJzU5NLUgtgskycXBKNTAdfqpq7Hoj
-	sfRG7tOEIA+p8uc1r9NazryKXbtfhV19qsPrydejf1ZsPWy6ubttru+KFVmr9s/uXHxUp7Qz
-	9NfB0NSfgWVOv5cyaz0WuCMX11mfqyE23Yl5u8XUr58PZTH+0cjYaOlxfFmg9zOnApNDS3WY
-	TPs+zmfUljlidLLULXhOi8SM06f2eF8V9xLcYSLz7tieRpewuUwyte2dVxoVf/BOyfZlSyxu
-	z2SofcH+aOobjUzbokjv63r7Ra4+Wzbf8dizgAzx9AUdqfZP438rH10g7fJ+r+KUxGZjm8iT
-	RtodPDOufLfvn1bts4819YPM50+/OXMsbM9zf7hV+9TBYPKRx1GXrU4l19wWPabEUpyRaKjF
-	XFScCACYqGelAAMAAA==
-X-CMS-MailID: 20250324073455epcas5p2fef46449d34e33682625d5edc77bc087
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: REQ_APPROVE
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc
-References: <20250210061915.26218-1-aatif4.m@samsung.com>
-	<CGME20250210062247epcas5p4ce208ba2806454c48a68ef25d0a326cc@epcas5p4.samsung.com>
-	<20250210061915.26218-2-aatif4.m@samsung.com> <Z8Ab3VcAXf5z7UqE@vaman>  
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LV8PR12MB9207:EE_|LV8PR12MB9230:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2a5a84db-f836-4d56-74f9-08dd6abef6f4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|366016|376014;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?VVBiWnUzbCtMcmI1Q2E0dGRETFlHVlFKbmF0ZTB6U1VCclE0dUxzT0oweGto?=
+ =?utf-8?B?K05teU5jajJ1eGFBUUtSeFlObFJlcFpvalZ0N0ZvQzlqZ3BHUjNYN0R4V1hp?=
+ =?utf-8?B?VmhBRUJab2ptTmdwU0hvS2V3S1FRN1Z1dndUQytoNGpXcUE0ZktWMUZQcXl4?=
+ =?utf-8?B?WHNSbkdsSVNoWmRvT2YvNkhGREwvV1IwY1hsUjlrT3BHUzJFUDRoaHpTMWZN?=
+ =?utf-8?B?aFVjdS9CWlp6Ui9oKytFTWlOYW1oRGQvV0k3eVYzZVowOXpSMFM0VXJXN2F3?=
+ =?utf-8?B?c3NJSFBJSVY0anBheXJtYVRXNzZGY3NXdm1ZcGZzY2NLQlkzYThUYmlJN2Ux?=
+ =?utf-8?B?Wm1sWDQ3RjQvR0ZvaE9ZN2RudVJrV1VWUUdSOStEenlLS3M0bDdjRTdXOUlB?=
+ =?utf-8?B?ek1pblVMVDYyNXFMd1dSUmZuYndVUWZVS05oUjFqVlRQamE5bXJBQTlSNE8w?=
+ =?utf-8?B?TGxMclNENmc5T0ZjVlpOVUV3cFBpdnA3dU5rbmRHdFdjWlk4am5jaEVkNXZF?=
+ =?utf-8?B?TEhabmhBaWhseUY5NnJxNFhWTGtEbUxUVWdFMEM4S3JpMWl0cVBDdCtnNGdj?=
+ =?utf-8?B?MFdDRWtTbW5NVGFOM0x4SnpXb2tMVHB1WlVJSkxzampxam1EVm05c0NYS0hG?=
+ =?utf-8?B?WHkvaUNyS29zR2xzaGpkQ0VJZSsrNVJqVm1jWlpHZ2ZwM25GbW4wQncxdFVn?=
+ =?utf-8?B?TmhBWDEyQTVST0FZNXprTHUrRmNCR0J6SmNSbXZHSVdRQ2dzYVJ5NTJCN0xW?=
+ =?utf-8?B?V1ZLRXJMT09jMUE3b0V6cnhzMTZIZzlNU0s5ZkI2MDRBcms2VjNZWmo2WlRH?=
+ =?utf-8?B?NU42WHRxVWhIYStsZXhhMTJsQ1dkWm5NeGkwdUE2MG1TNnFCbmphRDFIT21D?=
+ =?utf-8?B?UzdIR0Q2Ym4raExDcDM4RW5aU0c0d2hudW1mSnlmYWVSaWNQWS9uY01rNDhD?=
+ =?utf-8?B?bjBJNVVWazZKdlFpc2JJWTFGU0hlQ3JkaWFwQlMzUjQxRllJTk1nMis2aHpJ?=
+ =?utf-8?B?N3lBZC9aL2tJdjRaekVPQzBOeVNBSXd5bkFiN2FLVEJqWVlYdURnZCtBRUZr?=
+ =?utf-8?B?NU9KUEQwRG83SVVvUVRXSTRSb1NrbXhEbXBqS0YzckxRZVJ2bmJyRVBNWS90?=
+ =?utf-8?B?Y2FHamlwellRL1NuMkMzTGZHQmpUcFFhZUl6b2VRZDliaG1xRmVCTmFnREs1?=
+ =?utf-8?B?aHVXVDE4bUNlNHpPdDZxU0xwR0p1VmYrMXBqZzBBTlhxbFBCMTdNSDB6WXpx?=
+ =?utf-8?B?VTJSS1QrSFFjalhsOUFtMlA1dUdqOXRtYkNucm8wZzg0cUlQQk9JWndVL3ov?=
+ =?utf-8?B?bjZlUDlkVVljbmMwZDhpREVoZkxwaUJTKzNmUXZReDZiVHkxR0FJWlZsanQ4?=
+ =?utf-8?B?MjlnUnRjQmlyam1TY2FqaEFyUFZvRUJSWk5uVE15a29HV1ZlVnNjSmo5MjBW?=
+ =?utf-8?B?R0ZmOTB1dmsyUnUrSmdhb0NWemRDU3kwMXFpcWVpNWg3TU5aSTZIZnNqRDdV?=
+ =?utf-8?B?cWcxZU0wK1VRNVk4VWxCNDRpME8vT1NlZFN0alBkMUpyKzFLOWFwQjNDdWFn?=
+ =?utf-8?B?bEk0eVY1eVhXd0dFa0tKWFQvODhlZmlGT3pPTTVEdkRHUk80ek1NZGpmZ3Rp?=
+ =?utf-8?B?NFR1LzJnSXFYbjJnWmVsQzZUU2dYeHUvTTN2UnNadzJSMHBwaDVWeENjcE8r?=
+ =?utf-8?B?N3R2bkc4UGJhSXA1R29WemJhWmxVelRYZytOUjJYTUwwMHpXdlMzL3VJUGw3?=
+ =?utf-8?B?TElnVk9VVVRsZDlhTkJ5WXRBRmQwRFMvSzRGMGlQL3R0UFdLR1dLK1NscW5X?=
+ =?utf-8?B?T1V1VHUvZ285T1dFTkprRC8wWjNXczhURzZ0MmQzM29hKzhuczRzVGVVK04x?=
+ =?utf-8?Q?EVK9Py99v2Jn3?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV8PR12MB9207.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?QmdjeHF4TXBvaC8wUEtjd0tDT2VjSk9sR1FUQXNvelVvWDBYa080N0VIdlZR?=
+ =?utf-8?B?QXg5eGRqdFZ3Wk05YjJiRlJmcy9MVE5IN0x6TVNwangwWkhSWnVDN053cWpx?=
+ =?utf-8?B?aFgyVWJMeUJZMlBNaEE2Vzc3YW9qaGtRWXRLeHVCSGVaazROanB5eUhpR3ZL?=
+ =?utf-8?B?NFJwZjA2WnpmVzBsaFVDYTVZbjVCdS95WkJFNENLaEI0LzdKUTQ3dHBTekNZ?=
+ =?utf-8?B?T0psZ25jeHJUL0Y1NDVKY3UzLzhMV2pDcU9zeU9aUi9Xa1BKQ1lHU0JkRy9L?=
+ =?utf-8?B?QktYZXVQRFNPdDlHK0haZjlZZlJZRmEvK25pQkZ2cGNtTFZlZW1TV0tWSWFy?=
+ =?utf-8?B?eml0MnRvNWJJV1RmTFl4WjlxT3FOZkZOdmtaTzdiaWhTOXM4UnE4N25EVVZm?=
+ =?utf-8?B?WDhoQ1dMVyswUmsrNU9ZWlpJcUwyamU5NW1LUUQyN1ptWnE2cUk1N2lQY2tS?=
+ =?utf-8?B?VE9mV05xL29pTCtwNUEvN1ZTak5uYThPSUMvTlJFdkRFOGxVM2RaK01RTDlF?=
+ =?utf-8?B?Tk1jdU1nbEZLdXVBM2I0WWI2TGFmTG5LdWpOQ2JzTVMxbTUwYk8rKzE4QVpB?=
+ =?utf-8?B?bHVrTVFiZVI4eTZ6OVI1Wk9wVFp6d1V2TmF6UU9EQ3VNTjlDY2tFaG5ONENL?=
+ =?utf-8?B?SjJHYzZWV0NiaEFtNXhweHVwbnFNVlBlK3RxdEJIUjYvRWlhQldwbXhtZ3du?=
+ =?utf-8?B?YW9DYUpYcDlEajZLdE9udlE1blFabCtpdHJ2M0RJWDJNQVlBQ2xuVTNXelRm?=
+ =?utf-8?B?QnRVaTRzbk1KNDJsMkpWR1JIUVA0VjVKUlZjdHpwUTRxUmNhOStMZkFMa2px?=
+ =?utf-8?B?bDhPN3JrTEtzUVE5ejhNTktHeFdacTJEVzdrZkpzLzhtVS9Zc0FneFFaM2ZF?=
+ =?utf-8?B?TUwyS0dFcTArSDBTWG9yTnJVUnFkdDFEV2JOd1RRN1BCa2FVM0pOTmMrNDlm?=
+ =?utf-8?B?d2lPeERjb1JzdnVTNlk1dmNCOFJyeG0yLzJHdGF1ME9kaUdqS2tNNTFWRE9U?=
+ =?utf-8?B?RkFDTE9CdnNrSkkwaFZpK0k3QlpoYW00eXBFcGxjSFVHRGJ2QlhHVHRON1J4?=
+ =?utf-8?B?QUxsZy9Wa3l5QlhPcld1djRGOGxRRldzRUVTQXBHa3VzNm9Hdncwak4zRlVX?=
+ =?utf-8?B?aW9MT0JNTGNWRVFYeVhBbFI2dWswZU9nUUJSL3BHOW43TWlzWTdkVkxCQ2dm?=
+ =?utf-8?B?b0Y3VnJuemszNXpsOEVkcDBwcXpWV1pJSDQxMDZ4bEZmdkpib1lPdS9YT1Zk?=
+ =?utf-8?B?Smo3TkxzTHVvdGNyT2JuWXZaa2NOcjRwOHFEbzZ6dHpudGU0WVZYTWdtYmN1?=
+ =?utf-8?B?QmR3ekhZV25IME1SZ3NETTIzemMrRVdnZ3Q3SnB6bUhNTnpwU2IxTy9RU3Qv?=
+ =?utf-8?B?UFFaL2FVSitLb0VMY1pBZTVGYVB2K205ZEhMWnlUTkVlVFdNMk13Nm1GdjB6?=
+ =?utf-8?B?RGRsbEZEVWppOUc5T2dCOUJkQ0o5Q2RYQ3REVFQwYnFCNW9vV3RKM2tlZTBi?=
+ =?utf-8?B?ZndqcmEvblppeEdNY1poSXFuYjd3aWVIZWRPOHJ5UGlCUVlibWlRbTFtSHNr?=
+ =?utf-8?B?ZUo1QzljWWxwbUNCUThiSG5QeDdmVmV6cFEwRlZSVFFrOHJSY2Z5NG5saGh4?=
+ =?utf-8?B?UFNvdXJXL3puMUZNaDk5TWhtakJnMzBiaVZXTi9EY2tVMCtxbnVUUkZZMmFn?=
+ =?utf-8?B?U09kV01QaXVPQlhuTHd5NWZqRkt1K2U0U09GeUt4VW55ZkNVUUpOVmdsY1JV?=
+ =?utf-8?B?RG8xMFdkRzZTTEZUem10UkV0Wm5JVzBGaWxyMWZ3d0dPTm5ZelVkTGtuM3Bv?=
+ =?utf-8?B?NHpTODBBN2lEV0RYMng0bStkU1NFVGdzY3pidnhxNDJYdG1QeDNaVllLUGd4?=
+ =?utf-8?B?QkJpQlRwNTVpTHZwQ1FWNTBKOHdsbHFKVGxzMWFHeFh6YkJ2WlozOUJsMEhy?=
+ =?utf-8?B?NzdYaVV2MDB0MjhCeUpQS1lkcDZPek83M2d0aDU4c3VHSmZ3RWZUdWExZU01?=
+ =?utf-8?B?cDB2eUdyYWRYdDl0VkoyOTZwQkM2VThWSlB3NXFya2JDc1RmR1Y3cWxkT2Fi?=
+ =?utf-8?B?bHVjSkpkc0MwazhDY1dZbHpETlRHSldwL3ZqUUZVYURuaXNKeWFuMHBGZ2xZ?=
+ =?utf-8?Q?AK6FwRCe3QIAGN8PdEB5cIrAa?=
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2a5a84db-f836-4d56-74f9-08dd6abef6f4
+X-MS-Exchange-CrossTenant-AuthSource: LV8PR12MB9207.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2025 10:30:57.8686
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: UOSQrYaFnB01AgKw+2YsizFnbBBbkx5LpZUKD2AdopP+k5FGqTNEFL3Z6bV7AuIdlg7PLExBZp83wksVmMif5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV8PR12MB9230
 
-Hi Vinod,
+On 3/21/2025 7:58 AM, Mario Limonciello wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> The platform profile core allows multiple drivers and devices to
+> register platform profile support.
+> 
+> When the legacy platform profile interface is used all drivers will
+> adjust the platform profile as well.
+> 
+> Add support for registering every CPU with the platform profile handler
+> when dynamic EPP is enabled.
+> 
+> The end result will be that changing the platform profile will modify
+> EPP accordingly.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  Documentation/admin-guide/pm/amd-pstate.rst |   4 +-
+>  drivers/cpufreq/Kconfig.x86                 |   1 +
+>  drivers/cpufreq/amd-pstate.c                | 142 +++++++++++++++++---
+>  drivers/cpufreq/amd-pstate.h                |  10 ++
+>  4 files changed, 140 insertions(+), 17 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/pm/amd-pstate.rst b/Documentation/admin-guide/pm/amd-pstate.rst
+> index 8424e7119dd7e..36950fb6568c0 100644
+> --- a/Documentation/admin-guide/pm/amd-pstate.rst
+> +++ b/Documentation/admin-guide/pm/amd-pstate.rst
+> @@ -321,7 +321,9 @@ Whether this behavior is enabled by default with the kernel config option
+>  at runtime by the sysfs file ``/sys/devices/system/cpu/cpufreq/policyX/dynamic_epp``.
+>  
+>  When set to enabled, the driver will select a different energy performance
+> -profile when the machine is running on battery or AC power.
+> +profile when the machine is running on battery or AC power. The driver will
+> +also register with the platform profile handler to receive notifications of
+> +user desired power state and react to those.
+>  When set to disabled, the driver will not change the energy performance profile
+>  based on the power source and will not react to user desired power state.
+>  
+> diff --git a/drivers/cpufreq/Kconfig.x86 b/drivers/cpufreq/Kconfig.x86
+> index 3a8bdc35f488a..8fc8319861bdf 100644
+> --- a/drivers/cpufreq/Kconfig.x86
+> +++ b/drivers/cpufreq/Kconfig.x86
+> @@ -40,6 +40,7 @@ config X86_AMD_PSTATE
+>  	select ACPI_PROCESSOR
+>  	select ACPI_CPPC_LIB if X86_64
+>  	select CPU_FREQ_GOV_SCHEDUTIL if SMP
+> +	select ACPI_PLATFORM_PROFILE
+>  	help
+>  	  This driver adds a CPUFreq driver which utilizes a fine grain
+>  	  processor performance frequency control range instead of legacy
+> diff --git a/drivers/cpufreq/amd-pstate.c b/drivers/cpufreq/amd-pstate.c
+> index 8172bd4b5952f..2a62b12148544 100644
+> --- a/drivers/cpufreq/amd-pstate.c
+> +++ b/drivers/cpufreq/amd-pstate.c
+> @@ -109,6 +109,7 @@ static struct quirk_entry *quirks;
+>   *	2		balance_performance
+>   *	3		balance_power
+>   *	4		power
+> + *	5		custom (for raw EPP values)
 
-> -----Original Message-----
-> From: Aatif Mushtaq/Aatif Mushtaq <aatif4.m@samsung.com>
-> Sent: 06 March 2025 12:06
-> To: 'Vinod Koul' <vkoul@kernel.org>
-> Cc: 'dmaengine@vger.kernel.org' <dmaengine@vger.kernel.org>; 'linux-
-> kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>;
-> 'pankaj.dubey@samsung.com' <pankaj.dubey@samsung.com>;
-> 'aswani.reddy@samsung.com' <aswani.reddy@samsung.com>
-> Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-> 
-> 
-> 
-> > -----Original Message-----
-> > From: Aatif Mushtaq/Aatif Mushtaq <aatif4.m@samsung.com>
-> > Sent: 28 February 2025 15:03
-> > To: 'Vinod Koul' <vkoul@kernel.org>
-> > Cc: 'dmaengine@vger.kernel.org' <dmaengine@vger.kernel.org>; 'linux-
-> > kernel@vger.kernel.org' <linux-kernel@vger.kernel.org>;
-> > 'pankaj.dubey@samsung.com' <pankaj.dubey@samsung.com>;
-> > 'aswani.reddy@samsung.com' <aswani.reddy@samsung.com>
-> > Subject: RE: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-> >
-> >
-> >
-> > > -----Original Message-----
-> > > From: Vinod Koul <vkoul@kernel.org>
-> > > Sent: 27 February 2025 13:32
-> > > To: Aatif Mushtaq <aatif4.m@samsung.com>
-> > > Cc: dmaengine@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > pankaj.dubey@samsung.com; aswani.reddy@samsung.com
-> > > Subject: Re: [PATCH 1/3] dmaengine: Add support for 2D DMA operation
-> > >
-> > > On 10-02-25, 11:49, Aatif Mushtaq wrote:
-> > > > Add a new dma engine API to support 2D DMA operations.
-> > > > The API will be used to get the descriptor for 2D transfer based on
-> > > > the 16-bit immediate to define the stride length between
-> > > > consecuitive source address or destination address after every DMA
-> > > > load and store instruction is processed.
-> > >
-> > > Why should we define a new API for this...? Why not use the sg or
-> > > interleaved api for this?
-> > >
-> >
-> > Thanks for pointing out, interleaved API can be used for this.
-> > I will make the change
-> >
-> 
-> While trying to make the change I realised that sg and interleaved
-> APIs cannot be used for our use case.
-> Interleaved API is used to transfer data from non-contiguous
-> buffer to non-contiguous buffer and sg API is used to transfer
-> non-contiguous buffer to contiguous buffer but both the APIs work
-> on multiple data chunks where each chunk has its individual attributes
-> and there is a tx descriptor for each data chunk.
-> But in our case we have single tx descriptor to increment the source or
-> destination after every DMA LOAD and STORE operation till the desired
-> length of transfer is achieved, which means we don't have multiple data
-> chunks which is required in case of interleaved and sg.
-> The use case is to do memory to memory copy but not in a linear way,
-> such that we can define a gap between each burst.
-> 
+Should we move these "custom" changes to the raw EPP patch ?
 
-I want to gently remind you to please review my approach.
+>   */
+>  enum energy_perf_value_index {
+>  	EPP_INDEX_DEFAULT = 0,
+> @@ -116,6 +117,7 @@ enum energy_perf_value_index {
+>  	EPP_INDEX_BALANCE_PERFORMANCE,
+>  	EPP_INDEX_BALANCE_POWERSAVE,
+>  	EPP_INDEX_POWERSAVE,
+> +	EPP_INDEX_CUSTOM,
+>  };
+>  
+>  static const char * const energy_perf_strings[] = {
+> @@ -124,6 +126,7 @@ static const char * const energy_perf_strings[] = {
+>  	[EPP_INDEX_BALANCE_PERFORMANCE] = "balance_performance",
+>  	[EPP_INDEX_BALANCE_POWERSAVE] = "balance_power",
+>  	[EPP_INDEX_POWERSAVE] = "power",
+> +	[EPP_INDEX_CUSTOM] = "custom",
+>  	NULL
+>  };
+>  
+> @@ -1077,6 +1080,10 @@ static int amd_pstate_power_supply_notifier(struct notifier_block *nb,
+>  	if (event != PSY_EVENT_PROP_CHANGED)
+>  		return NOTIFY_OK;
+>  
+> +	/* dynamic actions are only applied while platform profile is in balanced */
+> +	if (cpudata->current_profile != PLATFORM_PROFILE_BALANCED)
+> +		return 0;
+> +
+>  	epp = amd_pstate_get_balanced_epp(policy);
+>  
+>  	ret = amd_pstate_set_epp(policy, epp);
+> @@ -1085,14 +1092,84 @@ static int amd_pstate_power_supply_notifier(struct notifier_block *nb,
+>  
+>  	return NOTIFY_OK;
+>  }
+> -static void amd_pstate_clear_dynamic_epp(struct cpufreq_policy *policy)
+> +
+> +static int amd_pstate_profile_probe(void *drvdata, unsigned long *choices)
+> +{
+> +	set_bit(PLATFORM_PROFILE_LOW_POWER, choices);
+> +	set_bit(PLATFORM_PROFILE_BALANCED, choices);
+> +	set_bit(PLATFORM_PROFILE_PERFORMANCE, choices);
+> +
+> +	return 0;
+> +}
+> +
+> +static int amd_pstate_profile_get(struct device *dev,
+> +				  enum platform_profile_option *profile)
+> +{
+> +	struct amd_cpudata *cpudata = dev_get_drvdata(dev);
+> +
+> +	*profile = cpudata->current_profile;
+> +
+> +	return 0;
+> +}
+> +
+> +static int amd_pstate_profile_set(struct device *dev,
+> +				  enum platform_profile_option profile)
+> +{
+> +	struct amd_cpudata *cpudata = dev_get_drvdata(dev);
+> +	struct cpufreq_policy *policy __free(put_cpufreq_policy) = cpufreq_cpu_get(cpudata->cpu);
 
-> > > >
-> > > > Signed-off-by: Aatif Mushtaq <aatif4.m@samsung.com>
-> > > > ---
-> > > >  include/linux/dmaengine.h | 25 +++++++++++++++++++++++++
-> > > >  1 file changed, 25 insertions(+)
-> > > >
-> > > > diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> > > > index b137fdb56093..8a73b2147983 100644
-> > > > --- a/include/linux/dmaengine.h
-> > > > +++ b/include/linux/dmaengine.h
-> > > > @@ -833,6 +833,7 @@ struct dma_filter {
-> > > >   *	be called after period_len bytes have been transferred.
-> > > >   * @device_prep_interleaved_dma: Transfer expression in a generic
-> > way.
-> > > >   * @device_prep_dma_imm_data: DMA's 8 byte immediate data to
-> the
-> > > dst
-> > > > address
-> > > > + * @device_prep_2d_dma_memcpy: prepares a 2D memcpy
-> operation
-> > > >   * @device_caps: May be used to override the generic DMA slave
-> > > capabilities
-> > > >   *	with per-channel specific ones
-> > > >   * @device_config: Pushes a new configuration to a channel, return
-> > > > 0 or an error @@ -938,6 +939,9 @@ struct dma_device {
-> > > >  	struct dma_async_tx_descriptor *(*device_prep_dma_imm_data)(
-> > > >  		struct dma_chan *chan, dma_addr_t dst, u64 data,
-> > > >  		unsigned long flags);
-> > > > +	struct dma_async_tx_descriptor
-> > > *(*device_prep_2d_dma_memcpy)(
-> > > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t
-src,
-> > > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long
-flags);
-> > > >
-> > > >  	void (*device_caps)(struct dma_chan *chan, struct
-dma_slave_caps
-> > > *caps);
-> > > >  	int (*device_config)(struct dma_chan *chan, struct
-> > > dma_slave_config
-> > > > *config); @@ -1087,6 +1091,27 @@ static inline struct
-> > > dma_async_tx_descriptor *dmaengine_prep_dma_memcpy(
-> > > >  						    len, flags);
-> > > >  }
-> > > >
-> > > > +/**
-> > > > + * device_prep_2d_dma_memcpy() - Prepare a DMA 2D memcpy
-> > > descriptor.
-> > > > + * @chan: The channel to be used for this descriptor
-> > > > + * @dest: Address of the destination data for a DMA channel
-> > > > + * @src: Address of the source data for a DMA channel
-> > > > + * @len: The total size of data
-> > > > + * @src_imm: The immediate value to be added to the src address
-> > > > +register
-> > > > + * @dest_imm: The immediate value to be added to the dst address
-> > > > +register
-> > > > + * @flags: DMA engine flags
-> > > > + */
-> > > > +static inline struct dma_async_tx_descriptor
-> > > *device_prep_2d_dma_memcpy(
-> > > > +		struct dma_chan *chan, dma_addr_t dest, dma_addr_t
-src,
-> > > > +		size_t len, u16 src_imm, u16 dest_imm, unsigned long
-flags) {
-> > > > +	if (!chan || !chan->device || !chan->device-
-> > > >device_prep_2d_dma_memcpy)
-> > > > +		return NULL;
-> > > > +
-> > > > +	return chan->device->device_prep_2d_dma_memcpy(chan, dest,
-> > > src, len,
-> > > > +						       src_imm,
-dest_imm,
-> > > flags); }
-> > > > +
-> > > >  static inline bool dmaengine_is_metadata_mode_supported(struct
-> > > dma_chan *chan,
-> > > >  		enum dma_desc_metadata_mode mode)  {
-> > > > --
-> > > > 2.17.1
-> > >
-> > > --
-> > > ~Vinod
+We should add "if (!policy)" check here?
+
+> +	int ret;
+> +
+> +	switch (profile) {
+> +	case PLATFORM_PROFILE_LOW_POWER:
+> +		if (cpudata->policy != CPUFREQ_POLICY_POWERSAVE)
+> +			cpudata->policy = CPUFREQ_POLICY_POWERSAVE;
+> +		ret = amd_pstate_set_epp(policy, AMD_CPPC_EPP_POWERSAVE);
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	case PLATFORM_PROFILE_BALANCED:
+> +		if (cpudata->policy != CPUFREQ_POLICY_POWERSAVE)
+> +			cpudata->policy = CPUFREQ_POLICY_POWERSAVE;
+> +		ret = amd_pstate_set_epp(policy,
+> +					 amd_pstate_get_balanced_epp(policy));
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	case PLATFORM_PROFILE_PERFORMANCE:
+> +		ret = amd_pstate_set_epp(policy, AMD_CPPC_EPP_PERFORMANCE);
+> +		if (ret)
+> +			return ret;
+> +		break;
+> +	default:
+> +		pr_err("Unknown Platform Profile %d\n", profile);
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	cpudata->current_profile = profile;
+> +
+> +	return 0;
+> +}
+> +
+[snip]
+> @@ -1228,16 +1329,22 @@ static ssize_t store_energy_performance_preference(
+>  	if (ret != 1)
+>  		return -EINVAL;
+>  
+> -	ret = match_string(energy_perf_strings, -1, str_preference);
+> -	if (ret < 0)
+> -		return -EINVAL;
+> -
+> -	if (ret)
+> -		epp = epp_values[ret];
+> -	else
+> -		epp = amd_pstate_get_balanced_epp(policy);
+> +	/*
+> +	 * if the value matches a number, use that, otherwise see if
+> +	 * matches an index in the energy_perf_strings array
+> +	 */
+> +	ret = kstrtou8(str_preference, 0, &epp);
+> +	if (ret) {
+> +		ret = match_string(energy_perf_strings, -1, str_preference);
+> +		if (ret < 0 || ret == EPP_INDEX_CUSTOM)
+> +			return -EINVAL;
+> +		if (ret)
+> +			epp = epp_values[ret];
+> +		else
+> +			epp = amd_pstate_get_balanced_epp(policy);
+> +	}
+>  
+> -	if (epp > 0 && policy->policy == CPUFREQ_POLICY_PERFORMANCE) {
+> +	if (epp > 0 && cpudata->policy == CPUFREQ_POLICY_PERFORMANCE) {
+		       ^^^^^^^ this change wont make any difference right?	
+
+>  		pr_debug("EPP cannot be set under performance policy\n");
+>  		return -EBUSY;
+>  	}
+> @@ -1248,9 +1355,9 @@ static ssize_t store_energy_performance_preference(
+>  
+>  	return ret ? ret : count;
+>  }
+> +EXPORT_SYMBOL_GPL(store_energy_performance_preference);
+>  
+> -static ssize_t show_energy_performance_preference(
+> -				struct cpufreq_policy *policy, char *buf)
+> +ssize_t show_energy_performance_preference(struct cpufreq_policy *policy, char *buf)
+>  {
+>  	struct amd_cpudata *cpudata = policy->driver_data;
+>  	u8 preference, epp;
+> @@ -1271,11 +1378,12 @@ static ssize_t show_energy_performance_preference(
+>  		preference = EPP_INDEX_POWERSAVE;
+>  		break;
+>  	default:
+> -		return -EINVAL;
+> +		return sysfs_emit(buf, "%u\n", epp);
+>  	}
+>  
+>  	return sysfs_emit(buf, "%s\n", energy_perf_strings[preference]);
+>  }
+> +EXPORT_SYMBOL_GPL(show_energy_performance_preference);
+>  
+>  static void amd_pstate_driver_cleanup(void)
+>  {
+> @@ -1599,10 +1707,12 @@ static int amd_pstate_epp_cpu_init(struct cpufreq_policy *policy)
+>  	    amd_pstate_acpi_pm_profile_undefined()) {
+>  		policy->policy = CPUFREQ_POLICY_PERFORMANCE;
+>  		cpudata->epp_default_ac = cpudata->epp_default_dc = amd_pstate_get_epp(cpudata);
+
+Why dont we just set the defaults to "AMD_CPPC_EPP_BALANCE_PERFORMANCE" for server systems, so 
+that the governor, profile and the EPP values are aligned at initialization. Any historical 
+context for using amd_pstate_get_epp() to init the default epp value?, do we want to preserve 
+the initial value set by the SMU?
+
+> +		cpudata->current_profile = PLATFORM_PROFILE_PERFORMANCE;
+>  	} else {
+>  		policy->policy = CPUFREQ_POLICY_POWERSAVE;
+>  		cpudata->epp_default_ac = AMD_CPPC_EPP_PERFORMANCE;
+>  		cpudata->epp_default_dc = AMD_CPPC_EPP_BALANCE_PERFORMANCE;
+> +		cpudata->current_profile = PLATFORM_PROFILE_BALANCED;
+>  	}
+>  
+>  	if (cpu_feature_enabled(X86_FEATURE_CPPC)) {
+> diff --git a/drivers/cpufreq/amd-pstate.h b/drivers/cpufreq/amd-pstate.h
+> index 6882876f895de..b4c5374762110 100644
+> --- a/drivers/cpufreq/amd-pstate.h
+> +++ b/drivers/cpufreq/amd-pstate.h
+> @@ -9,6 +9,7 @@
+>  #define _LINUX_AMD_PSTATE_H
+>  
+>  #include <linux/pm_qos.h>
+> +#include <linux/platform_profile.h>
+>  
+>  /*********************************************************************
+>   *                        AMD P-state INTERFACE                       *
+> @@ -108,6 +109,11 @@ struct amd_cpudata {
+>  	u8	epp_default_dc;
+>  	bool	dynamic_epp;
+>  	struct notifier_block power_nb;
+> +
+> +	/* platform profile */
+> +	enum platform_profile_option current_profile;
+> +	struct device *ppdev;
+> +	char *profile_name;
+>  };
+>  
+>  /*
+> @@ -123,5 +129,9 @@ enum amd_pstate_mode {
+>  };
+>  const char *amd_pstate_get_mode_string(enum amd_pstate_mode mode);
+>  int amd_pstate_update_status(const char *buf, size_t size);
+> +ssize_t store_energy_performance_preference(struct cpufreq_policy *policy,
+> +					    const char *buf, size_t count);
+> +ssize_t show_energy_performance_preference(struct cpufreq_policy *policy, char *buf);
+> +void amd_pstate_clear_dynamic_epp(struct cpufreq_policy *policy);
+>  
+>  #endif /* _LINUX_AMD_PSTATE_H */
 
