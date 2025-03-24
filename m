@@ -1,121 +1,74 @@
-Received: from mail-pj1-f73.google.com (mail-pj1-f73.google.com [209.85.216.73])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D68FE26A0AF
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C42C264F82;
+	Mon, 24 Mar 2025 17:33:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742837619; cv=none; b=RIxy8B1DWb1XU2UonnZG4ISdbVuuXPI4fr5k9SUgb2RUGZwWYuFnq8So+0Lk5O0TnJZDvUHE5IYfsmA3IAgo21cfhPxhLSr+e9XejCCanO7TPUGX0758mvbS/owCFeIgev8OvE9A1cabPSHuRdcJXXAXQlwblAhNZLFQEiFHFIs=
+	t=1742837622; cv=none; b=oDHIJFJn2hh6NBAQW2u72KQAlWeZf3mBUrefHc4scO5LpxOVL+/J1cJkxef50YoD/xgiwk4QU8PQQ7qNtBK8vcVgBEk0b0VkPzJI/XG+SmO7LoR3dQVcf719l7TUO39ThB9YVcytmvdOzGCPHNAUxqv0GYQRoNg2eOnKgoU3QFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742837619; c=relaxed/simple;
-	bh=ivxGMo1giylgI8Vx9v7Az7fbPzotpOqbVmQ+M+xadOE=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=USm+FNKfIeLG7XlJ1EvdCIMhrxY7aDWQCjWfHmyQZJ6WqT++sIGYJgcM5djMLkcfba6jnm9CxXMydBpvFON3h3aJhPBgKQgIqgWNRWHVB0elfXMRXYw8xAGwDL+CxJAR7tWze42Evggpacb++VpwIOmKO6SH8Rph5wtMACk5tA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=TrORQrF+; arc=none smtp.client-ip=209.85.216.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--mizhang.bounces.google.com
+	s=arc-20240116; t=1742837622; c=relaxed/simple;
+	bh=7MeuJdMytpkkKD1hPw10bmp+wVpliy/BqC9EreWzUao=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=ELzp/nu7GqLyExTkARGluLGgEAcYErmZPOXwIyApZhOhV45oaSRZnc7gIX4Dlvn+gGrtb2Y+iwkKMgzPzcbe4y9Ko04f7xzqaJejJ+BwmT5MiZzvXrYPaqisjuNTWiq1/if5RygIVP6M8plfw6Ccu2ukpd4lFAyO8tnBRpnYvYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QOzT9yuW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TrORQrF+"
-Received: by mail-pj1-f73.google.com with SMTP id 98e67ed59e1d1-2ff6943febeso6438739a91.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 10:33:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1742837617; x=1743442417; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:from:to:cc:subject:date:message-id:reply-to;
-        bh=7tcfTvJa2x4r0LER3JMCH4ud8u11Uq3+9z/wHx+U/XQ=;
-        b=TrORQrF+eaRefoHZrSYCjtjLO2o/lp0Nei0jMVrixSOtnEW3tIajPCEqCAiJkRWJnT
-         tLVSgnFBMD87H8CnXwM91VC1hces2rXC9/5FO7gXstN7v7pEweeVxumEW9BmN/dOgTXh
-         SkWUsr6Z0GWfFTo4Zjzm2C5AWwJuQqgyxRJkdbvfNxikFxnZuNWiNtwA2bO8yGWBQU9U
-         3qRpJEEMdNVgodWueo6DMUO8KLDM+zPDQN5dFMAHUtMxXBptJLRJ84Wx2zG/JnPq15hI
-         mp+I63E7Wfwd97adcqXIXEVs1TbExi349XqrwepRK1bc7+KsjCoiFSBc153mfDgsrWDU
-         AMPQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742837617; x=1743442417;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:reply-to:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7tcfTvJa2x4r0LER3JMCH4ud8u11Uq3+9z/wHx+U/XQ=;
-        b=i9hP6mlLtwXfrVqJQ4CkMfuo8GmTzrp5ro01EsLAyU1bULLIwvJ/ChYwz1zaJC+Pg8
-         SqTYn+5F5n7C5KKGDbMuSu+z4odsniUhu/C604RyZVzsQbYvD51GQXGOBi1oCA9/gdnS
-         qAyGIg8AB06xpt4vARAjrPNZC0TXXgHbIo9mByh2mGPIAc8r/8XO3/feq8ly888PRiHW
-         LLUfmnSUsFxbmWbxXmKMTlZjgSt886Ib+e46hy0xGKwbbaFv6OblFpDazztufnWYpYnS
-         XdPFX3W0IxERWYmInoeGbQnZPJLwOhZfaQpP3OcTzeYUydMCupNFRZ+w5vD0kwa40864
-         zLdA==
-X-Forwarded-Encrypted: i=1; AJvYcCUj1ipbEC9p1NssZwbX4EP7wd3O/KKA7GwwpuYckbsgEr2jBobkhORZwlRPwjjYgNGDqg4Mlbj8j+5pLU4=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxKdTaOZ9hSw3+ZkKJBmHm4IIEqcn/B4NKfsZwUUiZxUXEJHVzF
-	RLWVRw1MzNivenari76RTBN1x+dN3X3/ib4Mr+YgmvSRHLehJucJvM4XhvMQEQULaoSSZhAWTvt
-	ozKg2aw==
-X-Google-Smtp-Source: AGHT+IG8VOxNV1nd1KcRz6bwFYrN07riyfvl55OXKVLtIrvOisrrUSvNGUFvmnaAyN7tlAD9BenuAvVLWJLD
-X-Received: from pjbnb5.prod.google.com ([2002:a17:90b:35c5:b0:2fa:1481:81f5])
- (user=mizhang job=prod-delivery.src-stubby-dispatcher) by 2002:a17:90b:224d:b0:2fa:3174:e344
- with SMTP id 98e67ed59e1d1-301d43a21f5mr24824003a91.14.1742837617363; Mon, 24
- Mar 2025 10:33:37 -0700 (PDT)
-Reply-To: Mingwei Zhang <mizhang@google.com>
-Date: Mon, 24 Mar 2025 17:31:08 +0000
-In-Reply-To: <20250324173121.1275209-1-mizhang@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QOzT9yuW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03C34C4CEDD;
+	Mon, 24 Mar 2025 17:33:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742837620;
+	bh=7MeuJdMytpkkKD1hPw10bmp+wVpliy/BqC9EreWzUao=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=QOzT9yuWix1+5hPa5gfIdnFAUqVoKywzzi3psMj4esjrgrvA2u6wrFF5oM6R0YxNb
+	 leVUM7UsU4/V4hhj92i+tdRpmhJuPbkBgcBCzrLCswkzogf4rLqm7BJiVWtjYgZgsV
+	 7DdMtc9H2SUloWE5Z5w11vok7ObJFP2Sw6Z6r684QKdsXU/oWnkS4qvvRYp1n8ISEx
+	 CSV7KYjWz8GaOYy+KSEtAa63v8NdPkPrfcOk51arfdO6TVyU/CzcP4oCWg8/tjMH2y
+	 dkRjDeIyeb0YAgcgVrgagRXe8ObLliMvLS8fOg2vtlLEGhWvzntapg3gEawYRhj2fI
+	 xFI71H/neTjlg==
+From: Arnd Bergmann <arnd@kernel.org>
+To: Jeff Johnson <jeff.johnson@oss.qualcomm.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Masahiro Yamada <masahiroy@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>,
+	linux-next@vger.kernel.org,
+	Arnd Bergmann <arnd@arndb.de>,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 07/10] ucs2_string: add module description
+Date: Mon, 24 Mar 2025 18:32:32 +0100
+Message-Id: <20250324173242.1501003-7-arnd@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250324173242.1501003-1-arnd@kernel.org>
+References: <20250324173242.1501003-1-arnd@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20250324173121.1275209-1-mizhang@google.com>
-X-Mailer: git-send-email 2.49.0.395.g12beb8f557-goog
-Message-ID: <20250324173121.1275209-29-mizhang@google.com>
-Subject: [PATCH v4 28/38] KVM: x86/pmu/svm: Set GuestOnly bit and clear
- HostOnly bit when guest writes to event selectors
-From: Mingwei Zhang <mizhang@google.com>
-To: Peter Zijlstra <peterz@infradead.org>, Ingo Molnar <mingo@redhat.com>, 
-	Arnaldo Carvalho de Melo <acme@kernel.org>, Namhyung Kim <namhyung@kernel.org>, 
-	Sean Christopherson <seanjc@google.com>, Paolo Bonzini <pbonzini@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, 
-	Alexander Shishkin <alexander.shishkin@linux.intel.com>, Jiri Olsa <jolsa@kernel.org>, 
-	Ian Rogers <irogers@google.com>, Adrian Hunter <adrian.hunter@intel.com>, Liang@google.com, 
-	Kan <kan.liang@linux.intel.com>, "H. Peter Anvin" <hpa@zytor.com>, 
-	linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	kvm@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	Mingwei Zhang <mizhang@google.com>, Yongwei Ma <yongwei.ma@intel.com>, 
-	Xiong Zhang <xiong.y.zhang@linux.intel.com>, Dapeng Mi <dapeng1.mi@linux.intel.com>, 
-	Jim Mattson <jmattson@google.com>, Sandipan Das <sandipan.das@amd.com>, 
-	Zide Chen <zide.chen@intel.com>, Eranian Stephane <eranian@google.com>, 
-	Das Sandipan <Sandipan.Das@amd.com>, Shukla Manali <Manali.Shukla@amd.com>, 
-	Nikunj Dadhania <nikunj.dadhania@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-From: Sandipan Das <sandipan.das@amd.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-On AMD platforms, there is no way to restore PerfCntrGlobalCtl at
-VM-Entry or clear it at VM-Exit. Since the register states will be
-restored before entering and saved after exiting guest context, the
-counters can keep ticking and even overflow leading to chaos while
-still in host context.
+Modules without a description now cause a warning:
 
-To avoid this, intecept event selectors, which is already done by mediated
-PMU. In addition, always set the GuestOnly bit and clear the HostOnly bit
-for PMU selectors on AMD. Doing so allows the counters run only in guest
-context even if their enable bits are still set after VM exit and before
-host/guest PMU context switch.
+WARNING: modpost: missing MODULE_DESCRIPTION() in lib/ucs2_string.o
 
-Signed-off-by: Sandipan Das <sandipan.das@amd.com>
-Signed-off-by: Mingwei Zhang <mizhang@google.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/x86/kvm/svm/pmu.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ lib/ucs2_string.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/svm/pmu.c b/arch/x86/kvm/svm/pmu.c
-index 9feaca739b96..1a7e3a897fdf 100644
---- a/arch/x86/kvm/svm/pmu.c
-+++ b/arch/x86/kvm/svm/pmu.c
-@@ -165,7 +165,8 @@ static int amd_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		data &= ~pmu->reserved_bits;
- 		if (data != pmc->eventsel) {
- 			pmc->eventsel = data;
--			pmc->eventsel_hw = data;
-+			pmc->eventsel_hw = (data & ~AMD64_EVENTSEL_HOSTONLY) |
-+					   AMD64_EVENTSEL_GUESTONLY;
- 			kvm_pmu_request_counter_reprogram(pmc);
- 		}
- 		return 0;
+diff --git a/lib/ucs2_string.c b/lib/ucs2_string.c
+index 9308bcfb2ad5..dfb4f2358cab 100644
+--- a/lib/ucs2_string.c
++++ b/lib/ucs2_string.c
+@@ -165,4 +165,5 @@ ucs2_as_utf8(u8 *dest, const ucs2_char_t *src, unsigned long maxlength)
+ }
+ EXPORT_SYMBOL(ucs2_as_utf8);
+ 
++MODULE_DESCRIPTION("UCS2 string handling");
+ MODULE_LICENSE("GPL v2");
 -- 
-2.49.0.395.g12beb8f557-goog
+2.39.5
 
