@@ -1,130 +1,170 @@
-Received: from out.smtpout.orange.fr (out-65.smtpout.orange.fr [193.252.22.65])
-	(using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F02AC13B797
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:54:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.22.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01FD11A29A;
+	Mon, 24 Mar 2025 07:55:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742802847; cv=none; b=Ne2Kbl7DsZSQo0AA2lLm4/B2uvVIKtvCbdj65oErp6Xu9vlNOFv9ciSRVw+ADppm/uTHAwtrJmAjvPVj8VJW3ce/xNJPYM6rzbBngMa6Pi1n5fQqbH9SBJGNIAjyJDBe6PxVk4woMmIyPEFl638Gy0Rcb2VN9O8+9IEmdYhWv3g=
+	t=1742802923; cv=none; b=t9EjIzf/ZQ2KTzZ6j1ldVVoCNVpPz3QNMliJrIjfVzH0psbp9bO/J8toixnOPcQL2X3ya4C8ZuQtg418vsnYnejHD8NrxQfSLSIZPqDa0tAW5cNrHPRoSgxlELTrKOuUPXH4aHQOgAwvBEgJU8+SNeVDB7RMWljCqD2M/d1PTWY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742802847; c=relaxed/simple;
-	bh=tvAIIuR1iPe/70LBC/XK+o9+54IQoWvVHvcnYdC+BSo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eGr/0+NFfbPYw+t9lUdkx9iufbg47YrMvEXpGuuV/8h9LZSmoYSaOTNUZQaOsi62za4n7taYIhMm2URexPY0Cp2sichwL259/exE/BEk8hk2VcHyKcQAkwUtOrC8VQfTkfWEgfb3ktpy+JJigrnDEaFe1xi7tGhnv8vwG2tPfrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=sdI268tj; arc=none smtp.client-ip=193.252.22.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
+	s=arc-20240116; t=1742802923; c=relaxed/simple;
+	bh=BtEPrOUA7jH7ej7DW8zxFuc8SNfjlLpTBrBWHKKbiug=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t7rVWpMNHIgQddwIBwTIICunm5/jtUN/ln6bmn7E5BNwjf/6Ci1w+ZGJROE4kzgrkTLT+7DGsoXboNtBtd6dAJfbwTCwF5dZpZhQeyG1BL5tdAaPl6+1EAWIKsrMebiG+GFK4geYJmT3/DP4sRz701Z07/7XQhWp8ZFKszoQZDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZapVrFg+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="sdI268tj"
-Received: from [172.16.82.72] ([124.33.176.97])
-	by smtp.orange.fr with ESMTPA
-	id wcU2tGWSCo3Z8wcU6tISto; Mon, 24 Mar 2025 08:44:41 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1742802281;
-	bh=XsGk3ixhSurfkLIH5o1CSD/Ev7zogu3EYa8+C/nPa0g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=sdI268tj5lyVJtO3fEwynmKPbQg09PuOecq2JJCSdjSp7N1NgJ6fcy6XKYbjGhr/1
-	 2gk2XM/VMpWoxAKiiAcbhewU0pEJZB6nFv5S2ZlayCpKZ18kjNF05DGW9vwRi6bIcz
-	 z3ul2hSwmRTaF10207d/yfQSpK0HTU8rrtuJjS1jHE0+UHG38ESd4ian45uXMWsPxj
-	 KymUZv00SMfq99I4IgfJQJjFAQJ0EUxtmscmuGjmFOjH0YeShHtWdQ/rPkGEvecps8
-	 CUFUtHhORoskiP35auEhZb9UakXJ6ypJq3LVyLDwRigo50w+Z7LRWCyAlaZpmWdz9O
-	 j0TF2QXUwzPnw==
-X-ME-Helo: [172.16.82.72]
-X-ME-Auth: bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 24 Mar 2025 08:44:41 +0100
-X-ME-IP: 124.33.176.97
-Message-ID: <202c97b2-e99e-4b88-9ac5-171db244b7d0@wanadoo.fr>
-Date: Mon, 24 Mar 2025 16:44:29 +0900
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZapVrFg+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF36CC4CEDD;
+	Mon, 24 Mar 2025 07:55:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742802922;
+	bh=BtEPrOUA7jH7ej7DW8zxFuc8SNfjlLpTBrBWHKKbiug=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZapVrFg+M38fXINadcJHtQG46fg8MxNbe8yx/Y/67BY6Qcj45iPZXlBNeyqqTmlyO
+	 NHzGi8puYhNeZcZE/czhuFd700zHpdXqbvFKBpkZcSArskC5bh+MwTGT8F6Xawl61i
+	 2UKvROHBfMHlc9XD3DmfbDvQA0aB42knal+d3VMRTY89tqP7ZzZjn6H+dyjuITV9+K
+	 y0oI/ojyQTfdBAyvkPSv+y9HoE4UzLviffdU4VZ/mGHjxfpOpG7l98BGZ2+pOu7ZFs
+	 w9+JqEs3rpGX07vjwYfkITMQooiK1qIEB03dv3yXVjm8Em1XVIaZcZJwqIOz5wiy5b
+	 SFKfyUy8eyxVw==
+Date: Mon, 24 Mar 2025 08:55:18 +0100
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Nikola Jelic <nikola.jelic83@gmail.com>
+Cc: lgirdwood@gmail.com, broonie@kernel.org, perex@perex.cz, 
+	tiwai@suse.com, robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	linux-sound@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rwalton@cmlmicro.com
+Subject: Re: [PATCH V6 1/2] ASoC: dt-bindings: Add cmx655 codec
+Message-ID: <20250324-diligent-robust-guillemot-23fb1c@krzk-bin>
+References: <cdbb8176-d109-4a31-9393-5e1ae6767170@kernel.org>
+ <20250321222432.8212-1-nikola.jelic83@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/5] bits: introduce fixed-type GENMASK_U*()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Yury Norov <yury.norov@gmail.com>,
- Lucas De Marchi <lucas.demarchi@intel.com>,
- Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Jani Nikula <jani.nikula@linux.intel.com>,
- Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
- Rodrigo Vivi <rodrigo.vivi@intel.com>, Tvrtko Ursulin
- <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, Andrew Morton <akpm@linux-foundation.org>,
- linux-kernel@vger.kernel.org, intel-gfx@lists.freedesktop.org,
- dri-devel@lists.freedesktop.org, Andi Shyti <andi.shyti@linux.intel.com>,
- David Laight <David.Laight@aculab.com>, Jani Nikula <jani.nikula@intel.com>
-References: <20250322-fixed-type-genmasks-v7-0-da380ff1c5b9@wanadoo.fr>
- <20250322-fixed-type-genmasks-v7-1-da380ff1c5b9@wanadoo.fr>
- <Z-EIHBCkUiBh63JE@smile.fi.intel.com>
-Content-Language: en-US
-From: Vincent Mailhol <mailhol.vincent@wanadoo.fr>
-Autocrypt: addr=mailhol.vincent@wanadoo.fr; keydata=
- xjMEZluomRYJKwYBBAHaRw8BAQdAf+/PnQvy9LCWNSJLbhc+AOUsR2cNVonvxhDk/KcW7FvN
- LFZpbmNlbnQgTWFpbGhvbCA8bWFpbGhvbC52aW5jZW50QHdhbmFkb28uZnI+wrIEExYKAFoC
- GwMFCQp/CJcFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQTtj3AFdOZ/IOV06OKrX+uI
- bbuZwgUCZx41XhgYaGtwczovL2tleXMub3BlbnBncC5vcmcACgkQq1/riG27mcIYiwEAkgKK
- BJ+ANKwhTAAvL1XeApQ+2NNNEwFWzipVAGvTRigA+wUeyB3UQwZrwb7jsQuBXxhk3lL45HF5
- 8+y4bQCUCqYGzjgEZx4y8xIKKwYBBAGXVQEFAQEHQJrbYZzu0JG5w8gxE6EtQe6LmxKMqP6E
- yR33sA+BR9pLAwEIB8J+BBgWCgAmFiEE7Y9wBXTmfyDldOjiq1/riG27mcIFAmceMvMCGwwF
- CQPCZwAACgkQq1/riG27mcJU7QEA+LmpFhfQ1aij/L8VzsZwr/S44HCzcz5+jkxnVVQ5LZ4B
- ANOCpYEY+CYrld5XZvM8h2EntNnzxHHuhjfDOQ3MAkEK
-In-Reply-To: <Z-EIHBCkUiBh63JE@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250321222432.8212-1-nikola.jelic83@gmail.com>
 
-On 24/03/2025 at 16:22, Andy Shevchenko wrote:
-> On Sat, Mar 22, 2025 at 06:23:12PM +0900, Vincent Mailhol via B4 Relay wrote:
->>
->> Add GENMASK_TYPE() which generalizes __GENMASK() to support different
->> types, and implement fixed-types versions of GENMASK() based on it.
->> The fixed-type version allows more strict checks to the min/max values
->> accepted, which is useful for defining registers like implemented by
->> i915 and xe drivers with their REG_GENMASK*() macros.
->>
->> The strict checks rely on shift-count-overflow compiler check to fail
->> the build if a number outside of the range allowed is passed.
->> Example:
->>
->>   #define FOO_MASK GENMASK_U32(33, 4)
->>
->> will generate a warning like:
->>
->>   include/linux/bits.h:51:27: error: right shift count >= width of type [-Werror=shift-count-overflow]
->>      51 |               type_max(t) >> (BITS_PER_TYPE(t) - 1 - (h)))))
->>         |                           ^~
->>
->> While GENMASK_TYPE() is crafted to cover all variants, including the
->> already existing GENMASK(), GENMASK_ULL() and GENMASK_U128(), for the
->> moment, only use it for the newly introduced GENMASK_U*(). The
->> consolidation will be done in a separate change.
-> 
-> ...
-> 
->>  #if !defined(__ASSEMBLY__)
->> +
-> 
->> -#else
-> 
->> +#else /* defined(__ASSEMBLY__) */
-> 
->> -#endif
->> +
->> +#endif /* !defined(__ASSEMBLY__) */
-> 
-> Up to you, but if new version is needed or maintainer require, I would move the
-> above changes either to a separate patch (prerequisite) or dropped them at all.
-> These are not big but unneeded churn,
+On Fri, Mar 21, 2025 at 11:22:47PM +0100, Nikola Jelic wrote:
+> The driver is for cmx655d audio codecs from CML Micro. The CMX655D is an
 
-I do not want to drop this. After all the changes, there is a lot of
-scrolling between the #if, #else and #endif, and the comments helps to
-keep track of which context we are in.
+This is not a driver, but binding. Drop the first sentence.
 
-As for putting this into another patch, OK but only if there is a need
-for new version for other reasons.
+> ultra-low power voice codec targeted at digital voice and sensor
+> applications.
+> 
+> Signed-off-by: Nikola Jelic <nikola.jelic83@gmail.com>
+> 
+> ---
+
+Do not attach (thread) your patchsets to some other threads (unrelated
+or older versions). This buries them deep in the mailbox and might
+interfere with applying entire sets.
+
+> 
+> 2025-01-25 Nikola Jelic <nikola.jelic83@gmail.com> V1
+>         * /Documentation/devicetree/bindings/sound/cml,cmx655d.yaml: added the device tree binding
+>         * /Documentation/devicetree/bindings/sound/cmx655.txt: added the device tree description file
+>         * /Documentation/devicetree/bindings/vendor-prefixes.yaml: added CML Micro, Ltd. to the vendor prefixes
 
 
-Yours sincerely,
-Vincent Mailhol
+>         * /sound/soc/codecs/Kconfig: added SND_SOC_CMX655D and its dependencies
+>         * /sound/soc/codecs/Makefile: added snd-soc-cmx655 and its dependencies
+>         * /sound/soc/codecs/cmx655.c: added the main driver file for the codec
+>         * /sound/soc/codecs/cmx655.h: added the main header file for the codec
+>         * /sound/soc/codecs/cmx655_i2c.c: added the i2c adapter for the codec
+>         * /sound/soc/codecs/cmx655_spi.c: added the spi adapter for the codec
+
+How are these related to this patch? Per-patch changelog is supposed to
+have only per-patch changes.
+
+...
+
+>  .../bindings/sound/cml,cmx655d.yaml           | 62 +++++++++++++++++++
+>  .../devicetree/bindings/vendor-prefixes.yaml  |  2 +
+>  MAINTAINERS                                   |  7 +++
+>  3 files changed, 71 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml b/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+> new file mode 100644
+> index 000000000000..577e1d4942c6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/cml,cmx655d.yaml
+> @@ -0,0 +1,62 @@
+> +# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/sound/cml,cmx655d.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: CML Micro CMX655D codec
+> +
+> +maintainers:
+> +  - Richard Walton <rwalton@cmlmicro.com>
+
+Some ack on taking maintainer duties would be useful.
+
+> +  - Nikola Jelic <nikola.jelic83@gmail.com>
+> +
+> +description:
+> +  The CMX655D is an ultra-low power voice codec.
+> +
+> +allOf:
+> +  - $ref: dai-common.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: cml,cmx655d
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  "#sound-dai-cells":
+> +    const: 0
+> +
+> +  reset-gpios:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-names:
+> +    const: cmx-irq
+
+The name equal to device name is not really usefull. Drop
+interrupt-names from binding and DTS.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - '#sound-dai-cells'
+> +
+> +unevaluatedProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    i2c {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +        audio-codec@54 {
+> +            compatible = "cml,cmx655d";
+> +            reg = <0x54>;
+> +            #sound-dai-cells = <0>;
+> +            reset-gpios = <&gpio 24 GPIO_ACTIVE_LOW>;
+> +            interrupt-parent = <&gpio>;
+> +            interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+> +        };
+> +
+
+Drop stray blank line.
+
+
+Best regards,
+Krzysztof
 
