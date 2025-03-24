@@ -1,285 +1,304 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 488FA433A8;
-	Mon, 24 Mar 2025 10:37:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0049325DCE0;
+	Mon, 24 Mar 2025 10:40:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.129.21.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742812640; cv=none; b=RCpgbL+1GHNczGTOOKaBwnzeBb6TVL9VIuMLIzPOw1nJFOVavva+x1cj01DCpHwnXYkhi549tkd1uIFpMp0Ysx7FEZhpKT5yyCw9ERp3vxMB4LktGHACmT9Z7ywJXFpHTqqVoIZTdWO1fTjYTpDqC2UuZORcPhEkgBMt/NmttTE=
+	t=1742812815; cv=none; b=b7jH36No4qRE7xQKQDZEoO67X+48uIWy7WklZCB8uyESIIhaCxAV0PqJe7te/mt2qnJClUq+Kc9ajPZkyeYXqBr7lrISkOCtdXPjam6Tzo+GonPOKK1i9EMqi4m+DMK1YdU9nLGCikQGs/L9vtObvSrhaGBWFHBjh/M9PNJB5P8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742812640; c=relaxed/simple;
-	bh=LnUAMeG9pWRqCjGh/oaX9QtJIz5JX5VGvxwU+xEdGF0=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=XW4FPhUkKj1qZ17ekzecHyiEah98RL/6eNKfB74lPxiQt5f72coIzH2tzrmTnS4eYPKkl1bxoI2uUpM26GpOJnxrkRF0+onEs1MfTmtV7ZyorRIMVqAdpY7kWcsGGGXg1LWWYKN/q4oi+2qHJWYhZ2DibwPBgxQPzq4ze6Uznyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4ZLqHK4jGKz6L540;
-	Mon, 24 Mar 2025 18:37:01 +0800 (CST)
-Received: from frapeml100007.china.huawei.com (unknown [7.182.85.133])
-	by mail.maildlp.com (Postfix) with ESMTPS id 94EAB14050C;
-	Mon, 24 Mar 2025 18:37:08 +0800 (CST)
-Received: from frapeml500007.china.huawei.com (7.182.85.172) by
- frapeml100007.china.huawei.com (7.182.85.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.39; Mon, 24 Mar 2025 11:37:08 +0100
-Received: from frapeml500007.china.huawei.com ([7.182.85.172]) by
- frapeml500007.china.huawei.com ([7.182.85.172]) with mapi id 15.01.2507.039;
- Mon, 24 Mar 2025 11:37:08 +0100
-From: Shiju Jose <shiju.jose@huawei.com>
-To: Jonathan Cameron <jonathan.cameron@huawei.com>
-CC: "linux-cxl@vger.kernel.org" <linux-cxl@vger.kernel.org>,
-	"dan.j.williams@intel.com" <dan.j.williams@intel.com>, "dave@stgolabs.net"
-	<dave@stgolabs.net>, "dave.jiang@intel.com" <dave.jiang@intel.com>,
-	"alison.schofield@intel.com" <alison.schofield@intel.com>,
-	"vishal.l.verma@intel.com" <vishal.l.verma@intel.com>, "ira.weiny@intel.com"
-	<ira.weiny@intel.com>, "david@redhat.com" <david@redhat.com>,
-	"Vilas.Sridharan@amd.com" <Vilas.Sridharan@amd.com>,
-	"linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-	"linux-mm@kvack.org" <linux-mm@kvack.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "bp@alien8.de" <bp@alien8.de>,
-	"tony.luck@intel.com" <tony.luck@intel.com>, "rafael@kernel.org"
-	<rafael@kernel.org>, "lenb@kernel.org" <lenb@kernel.org>,
-	"mchehab@kernel.org" <mchehab@kernel.org>, "leo.duran@amd.com"
-	<leo.duran@amd.com>, "Yazen.Ghannam@amd.com" <Yazen.Ghannam@amd.com>,
-	"rientjes@google.com" <rientjes@google.com>, "jiaqiyan@google.com"
-	<jiaqiyan@google.com>, "Jon.Grimm@amd.com" <Jon.Grimm@amd.com>,
-	"dave.hansen@linux.intel.com" <dave.hansen@linux.intel.com>,
-	"naoya.horiguchi@nec.com" <naoya.horiguchi@nec.com>, "james.morse@arm.com"
-	<james.morse@arm.com>, "jthoughton@google.com" <jthoughton@google.com>,
-	"somasundaram.a@hpe.com" <somasundaram.a@hpe.com>, "erdemaktas@google.com"
-	<erdemaktas@google.com>, "pgonda@google.com" <pgonda@google.com>,
-	"duenwen@google.com" <duenwen@google.com>, "gthelen@google.com"
-	<gthelen@google.com>, "wschwartz@amperecomputing.com"
-	<wschwartz@amperecomputing.com>, "dferguson@amperecomputing.com"
-	<dferguson@amperecomputing.com>, "wbs@os.amperecomputing.com"
-	<wbs@os.amperecomputing.com>, "nifan.cxl@gmail.com" <nifan.cxl@gmail.com>,
-	tanxiaofei <tanxiaofei@huawei.com>, "Zengtao (B)" <prime.zeng@hisilicon.com>,
-	Roberto Sassu <roberto.sassu@huawei.com>, "kangkang.shen@futurewei.com"
-	<kangkang.shen@futurewei.com>, wanghuiqiang <wanghuiqiang@huawei.com>,
-	Linuxarm <linuxarm@huawei.com>
-Subject: RE: [PATCH v2 2/8] EDAC: Update documentation for the CXL memory
- patrol scrub control feature
-Thread-Topic: [PATCH v2 2/8] EDAC: Update documentation for the CXL memory
- patrol scrub control feature
-Thread-Index: AQHbmcKs9aOZDT4yoEmIHT6+0TZ4QbN9TJeAgATOjJA=
-Date: Mon, 24 Mar 2025 10:37:08 +0000
-Message-ID: <f9fa8335c52444398e1736854c887fb7@huawei.com>
-References: <20250320180450.539-1-shiju.jose@huawei.com>
-	<20250320180450.539-3-shiju.jose@huawei.com>
- <20250321100305.000018d2@huawei.com>
-In-Reply-To: <20250321100305.000018d2@huawei.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1742812815; c=relaxed/simple;
+	bh=3zyKTjQs/OB6iAaRE9Ife3b39lro/KTj1mbHsGu+BpE=;
+	h=MIME-Version:Date:From:To:Cc:Subject:Message-ID:Content-Type; b=Gl+qaG4Ch0hMqVBvYl2RhOADEJSPNh1EDJyEWvU1ddH0ZOMS+edUqseLkiUBnsiIdTip5u9KfnNo/TV5bgF6W/ON1tUoCru8ivyr4jH+ugmoqVMdYcRi+w5tyOs0WKEiGwG8ThhYHo7JKEMr1PGb8vKKleW+6k/KBy0q5GA3OIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr; spf=pass smtp.mailfrom=3xo.fr; dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b=t0tM5kh+; arc=none smtp.client-ip=212.129.21.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=3xo.fr
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=3xo.fr header.i=@3xo.fr header.b="t0tM5kh+"
+Received: from localhost (mail.3xo.fr [212.129.21.66])
+	by mail.3xo.fr (Postfix) with ESMTP id 0AA44CB;
+	Mon, 24 Mar 2025 11:40:11 +0100 (CET)
+X-Virus-Scanned: Debian amavis at nxo2.3xo.fr
+Received: from mail.3xo.fr ([212.129.21.66])
+ by localhost (mail.3xo.fr [212.129.21.66]) (amavis, port 10024) with ESMTP
+ id TBIROaVj1m-o; Mon, 24 Mar 2025 11:40:09 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.3xo.fr D5CA58D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=3xo.fr; s=3xo;
+	t=1742812809; bh=jAatwW99hb+aFvtznLhiTkgdJUYkBUYSrPmdAagNwv4=;
+	h=Date:From:To:Cc:Subject:From;
+	b=t0tM5kh+dyxp1nOdT4I36YGQhcvMEji0z1wKVUhoV8ZgT3XY2AefeXQR6w3p4uOuq
+	 FGI9P5WaYWOIXoMAfFPnlSvHnfHW8WuNjDkGzvXQtru+BvUmdGua3sylaUQoJc9nH/
+	 KfNrn7lSqcyufMa/Q7tASGsjzR7uVrplbD3COYW5m28PLoMstMnm7/o9+sQGU9s9T+
+	 Yx1Vxk+Ui7cX3TDv3SJy4jq8UQakoa9OUy1dXaytteJODDaM6hZl5iTc/lwq6Hv4HC
+	 7GA+UXS4t+a+Tpbw6pE1t5NIfa+93Gt4IoEEHtn8ahvNJB0ctu6FaDncQBu+siWe8Q
+	 Q4UYS7wn/xEzA==
+Received: from mail.3xo.fr (mail.3xo.fr [212.129.21.66])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature ECDSA (prime256v1) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3xo.fr (Postfix) with ESMTPSA id D5CA58D;
+	Mon, 24 Mar 2025 11:40:08 +0100 (CET)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Date: Mon, 24 Mar 2025 11:40:08 +0100
+From: Nicolas Baranger <nicolas.baranger@3xo.fr>
+To: Christoph Hellwig <hch@infradead.org>, David Howells
+ <dhowells@redhat.com>, netfs@lists.linux.dev, linux-cifs@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Steve French <smfrench@gmail.com>, Jeff Layton <jlayton@kernel.org>,
+ Christian Brauner <brauner@kernel.org>
+Subject: [netfs/cifs - Linux 6.14] loop on file cat + file copy when files are
+ on CIFS share
+Message-ID: <10bec2430ed4df68bde10ed95295d093@3xo.fr>
+X-Sender: nicolas.baranger@3xo.fr
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+
+Hi Christoph, David
+
+Sorry my last mail didn't arrive at the top of the list so I resend it 
+with a new title
+
+I don't know if it had already been reported but after building Linux 
+6.14-rc1 I constat the following behaviour:
+
+'cat' command is going on a loop when I cat a file which reside on cifs 
+share
+
+And so 'cp' command does the same: it copy the content of a file on cifs 
+share and loop writing it to the destination
+I did test with a file named 'toto' and containing only ascii string 
+'toto'.
+
+When I started copying it from cifs share to local filesystem, I had to 
+CTRL+C the copy of this 5 bytes file after some time because the 
+destination file was using all the filesystem free space and containing 
+billions of 'toto' lines
+
+Here is an example with cat:
+
+CIFS SHARE is mounted as /mnt/fbx/FBX-24T
+
+CIFS mount options:
+grep cifs /proc/mounts
+//10.0.10.100/FBX24T /mnt/fbx/FBX-24T cifs 
+rw,nosuid,nodev,noexec,relatime,vers=3.1.1,cache=none,upcall_target=app,username=fbx,domain=HOMELAN,uid=0,noforceuid,gid=0,noforcegid,addr=10.0.10.100,file_mode=0666,dir_mode=0755,iocharset=utf8,soft,nounix,serverino,mapposix,mfsymlinks,reparse=nfs,nativesocket,symlink=mfsymlinks,rsize=65536,wsize=65536,bsize=16777216,retrans=1,echo_interval=60,actimeo=1,closetimeo=1 
+0 0
+
+KERNEL: uname -a
+Linux 14RV-SERVER.14rv.lan 6.14.0.1-ast-rc2-amd64 #0 SMP PREEMPT_DYNAMIC 
+Wed Feb 12 18:23:00 CET 2025 x86_64 GNU/Linux
 
 
->-----Original Message-----
->From: Jonathan Cameron <jonathan.cameron@huawei.com>
->Sent: 21 March 2025 10:03
->To: Shiju Jose <shiju.jose@huawei.com>
->Cc: linux-cxl@vger.kernel.org; dan.j.williams@intel.com; dave@stgolabs.net=
-;
->dave.jiang@intel.com; alison.schofield@intel.com; vishal.l.verma@intel.com=
-;
->ira.weiny@intel.com; david@redhat.com; Vilas.Sridharan@amd.com; linux-
->edac@vger.kernel.org; linux-acpi@vger.kernel.org; linux-mm@kvack.org; linu=
-x-
->kernel@vger.kernel.org; bp@alien8.de; tony.luck@intel.com; rafael@kernel.o=
-rg;
->lenb@kernel.org; mchehab@kernel.org; leo.duran@amd.com;
->Yazen.Ghannam@amd.com; rientjes@google.com; jiaqiyan@google.com;
->Jon.Grimm@amd.com; dave.hansen@linux.intel.com;
->naoya.horiguchi@nec.com; james.morse@arm.com; jthoughton@google.com;
->somasundaram.a@hpe.com; erdemaktas@google.com; pgonda@google.com;
->duenwen@google.com; gthelen@google.com;
->wschwartz@amperecomputing.com; dferguson@amperecomputing.com;
->wbs@os.amperecomputing.com; nifan.cxl@gmail.com; tanxiaofei
-><tanxiaofei@huawei.com>; Zengtao (B) <prime.zeng@hisilicon.com>; Roberto
->Sassu <roberto.sassu@huawei.com>; kangkang.shen@futurewei.com;
->wanghuiqiang <wanghuiqiang@huawei.com>; Linuxarm
-><linuxarm@huawei.com>
->Subject: Re: [PATCH v2 2/8] EDAC: Update documentation for the CXL memory
->patrol scrub control feature
->
->On Thu, 20 Mar 2025 18:04:39 +0000
-><shiju.jose@huawei.com> wrote:
->
->> From: Shiju Jose <shiju.jose@huawei.com>
->>
->> Update the Documentation/edac/scrub.rst to include descriptions and
->> policies for CXL memory device-based and CXL region-based patrol scrub
->> control.
->>
->> Note: This may require inputs from CXL memory experts regarding
->> region-based scrubbing policies.
->
->So I suggested the region interfaces in the first place.  It's all about u=
-secases and
->'why' we might increase the scrub rate.
->Ultimately the hardware is controlled in a device wide way, so we could ha=
-ve
->made it complex userspace problem to deal with it on a perf device.
->The region interfaces are there as a simplification not because they are s=
-trictly
->necessary.
->
->Anyhow, the use cases:
->
->1) Scrubbing because a device is showing unexpectedly high errors.  That
->   control needs to be at device granularity.  If one device in an interle=
-ave
->   set (backing a region) is dodgy, why make them all do more work?
->
->2) Scrubbing may apply to memory that isn't online at all yet.  Nice to kn=
-ow
->   if we have a problem before we start using it!  Likely this is setting
->   system wide defaults on boot.
->
->3) Scrubbing at higher rate because software has decided that we want
->   more reliability for particular data.  I've been calling this
->   Differentiated Reliability.  That data sits in a region which
->   may cover part of multiple devices. The region interfaces are about
->   supporting this use case.
->
->So now the question is what do we do if both interfaces are poked because
->someone cares simultaneously about 1 and 3?
->
->I'd suggest just laying out a set for rules on how to set the scrub rates =
-for any
->mixture of requirements, rather than making the driver work out the optimu=
-m
->combination.
->
->>
->> Signed-off-by: Shiju Jose <shiju.jose@huawei.com>
->> ---
->>  Documentation/edac/scrub.rst | 47
->> ++++++++++++++++++++++++++++++++++++
->>  1 file changed, 47 insertions(+)
->>
->> diff --git a/Documentation/edac/scrub.rst
->> b/Documentation/edac/scrub.rst index daab929cdba1..d1c02bd90090 100644
->> --- a/Documentation/edac/scrub.rst
->> +++ b/Documentation/edac/scrub.rst
->> @@ -264,3 +264,51 @@ Sysfs files are documented in
->> `Documentation/ABI/testing/sysfs-edac-scrub`
->>
->>  `Documentation/ABI/testing/sysfs-edac-ecs`
->> +
->> +Examples
->> +--------
->> +
->> +The usage takes the form shown in these examples:
->> +
->> +1. CXL memory device patrol scrubber
->> +
->> +1.1 Device based scrubbing
->> +
->> +CXL memory is exposed to memory management subsystem and ultimately
->> +userspace via CXL devices.
->> +
->> +For cases where hardware interleave controls do not directly map to
->> +regions of Physical Address space, perhaps due to interleave the
->> +approach described in
->> +1.2 Region based scrubbing section, which is specific to CXL regions
->> +should be followed.
->
->These sentences end up a bit unwieldy. Perhaps simply a forwards reference=
-.
->
->When combining control via the device interfaces and region interfaces see
->1.2 Region bases scrubbing.
->
->
->
->> In those cases settings on the presented interface may interact with
->> +direct control via a device instance specific interface and care must b=
-e taken.
->> +
->> +Sysfs files for scrubbing are documented in
->> +`Documentation/ABI/testing/sysfs-edac-scrub`
->> +
->> +1.2. Region based scrubbing
->> +
->> +CXL memory is exposed to memory management subsystem and ultimately
->> +userspace via CXL regions. CXL Regions represent mapped memory
->> +capacity in system physical address space. These can incorporate one
->> +or more parts of multiple CXL memory devices with traffic interleaved
->> +across them. The user may want to control the scrub rate via this
->> +more abstract region instead of having to figure out the constituent
->> +devices and program them separately. The scrub rate for each device
->> +covers the whole device. Thus if multiple regions use parts of that
->> +device then requests for scrubbing of other regions may result in a hig=
-her
->scrub rate than requested for this specific region.
->> +
->> +1. When user sets scrub rate for a memory region, the scrub rate for al=
-l the
->CXL
->> +   memory devices interleaved under that region is updated with the sam=
-e
->scrub
->> +   rate.
->
->Note that this may affect multiple regions.
->
->> +
->> +2. When user sets scrub rate for a memory device, only the scrub rate f=
-or
->that
->> +   memory devices is updated though device may be part of a memory regi=
-on
->and
->> +   does not change scrub rate of other memory devices of that memory
->region.
->> +
->> +3. Scrub rate of a CXL memory device may be set via EDAC device or regi=
-on
->scrub
->> +   interface simultaneously. Care must be taken to prevent a race condi=
-tion,
->or
->> +   only region-based setting may be allowed.
->
->So is this saying if you want to mix and match, set region first then devi=
-ce next?
->Can we just lay out the rules to set up a weird mixture.  We could add mor=
-e
->smarts to the driver but do we care as mixing 1 and 3 above is probably
->unusual?
->
->1. Taking each region in turn from lowest desired scrub rate to highest an=
-d set
->   their scrub rates.  Later regions may override the scrub rate on indivi=
-dual
->   devices (and hence potentially whole regions).
->
->2. Take each device for which enhanced scrubbing is required (higher rate)=
- and
->   set those scrub rates.  This will override the scrub rates of individua=
-l devices
->   leaving any that are not specifically set to scrub at the maximum rate =
-required
->   for any of the regions they are involved in backing.
+To be reproduced:
+echo toto >/mnt/fbx/FBX-24T/toto
 
-Thanks. Will incorporate these info and rules in the next version.
->
->
->> +
->> +Sysfs files for scrubbing are documented in
->> +`Documentation/ABI/testing/sysfs-edac-scrub`
+ls -l /mnt/fbx/FBX-24T/toto
+-rw-rw-rw- 1 root root 5 20 mars  09:20 /mnt/fbx/FBX-24T/toto
 
-Shiju
+cat /mnt/fbx/FBX-24T/toto
+toto
+toto
+toto
+toto
+toto
+toto
+toto
+^C
+
+strace cat /mnt/fbx/FBX-24T/toto
+execve("/usr/bin/cat", ["cat", "/mnt/fbx/FBX-24T/toto"], 0x7ffc39b41848 
+/* 19 vars */) = 0
+brk(NULL)                               = 0x55755b1c1000
+mmap(NULL, 8192, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) 
+= 0x7f55f95d6000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (Aucun fichier ou 
+dossier de ce type)
+openat(AT_FDCWD, "glibc-hwcaps/x86-64-v3/libc.so.6", O_RDONLY|O_CLOEXEC) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "glibc-hwcaps/x86-64-v2/libc.so.6", O_RDONLY|O_CLOEXEC) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = 
+-1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 
+ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT 
+(Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "tls/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun 
+fichier ou dossier de ce type)
+openat(AT_FDCWD, "haswell/x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 
+ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "haswell/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT 
+(Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "x86_64/libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT 
+(Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "libc.so.6", O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun 
+fichier ou dossier de ce type)
+openat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v3/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v3", 0x7fff25937800, 0) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v2/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/glibc-hwcaps/x86-64-v2", 0x7fff25937800, 0) 
+= -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, 
+"/usr/local/cuda-12.6/lib64/tls/haswell/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/haswell/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/haswell/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/haswell", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/tls", 0x7fff25937800, 
+0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/haswell", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/x86_64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/x86_64", 
+0x7fff25937800, 0) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+openat(AT_FDCWD, "/usr/local/cuda-12.6/lib64/libc.so.6", 
+O_RDONLY|O_CLOEXEC) = -1 ENOENT (Aucun fichier ou dossier de ce type)
+newfstatat(AT_FDCWD, "/usr/local/cuda-12.6/lib64", 
+{st_mode=S_IFDIR|S_ISGID|0755, st_size=4570, ...}, 0) = 0
+openat(AT_FDCWD, "/etc/ld.so.cache", O_RDONLY|O_CLOEXEC) = 3
+newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=148466, ...}, 
+AT_EMPTY_PATH) = 0
+mmap(NULL, 148466, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f55f95b1000
+close(3)                                = 0
+openat(AT_FDCWD, "/lib/x86_64-linux-gnu/libc.so.6", O_RDONLY|O_CLOEXEC) 
+= 3
+read(3, 
+"\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0\20t\2\0\0\0\0\0"..., 
+832) = 832
+pread64(3, 
+"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 
+64) = 784
+newfstatat(3, "", {st_mode=S_IFREG|0755, st_size=1922136, ...}, 
+AT_EMPTY_PATH) = 0
+pread64(3, 
+"\6\0\0\0\4\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0@\0\0\0\0\0\0\0"..., 784, 
+64) = 784
+mmap(NULL, 1970000, PROT_READ, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 
+0x7f55f93d0000
+mmap(0x7f55f93f6000, 1396736, PROT_READ|PROT_EXEC, 
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x26000) = 0x7f55f93f6000
+mmap(0x7f55f954b000, 339968, PROT_READ, 
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x17b000) = 0x7f55f954b000
+mmap(0x7f55f959e000, 24576, PROT_READ|PROT_WRITE, 
+MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x1ce000) = 0x7f55f959e000
+mmap(0x7f55f95a4000, 53072, PROT_READ|PROT_WRITE, 
+MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x7f55f95a4000
+close(3)                                = 0
+mmap(NULL, 12288, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 
+0) = 0x7f55f93cd000
+arch_prctl(ARCH_SET_FS, 0x7f55f93cd740) = 0
+set_tid_address(0x7f55f93cda10)         = 38427
+set_robust_list(0x7f55f93cda20, 24)     = 0
+rseq(0x7f55f93ce060, 0x20, 0, 0x53053053) = 0
+mprotect(0x7f55f959e000, 16384, PROT_READ) = 0
+mprotect(0x55754475e000, 4096, PROT_READ) = 0
+mprotect(0x7f55f960e000, 8192, PROT_READ) = 0
+prlimit64(0, RLIMIT_STACK, NULL, {rlim_cur=8192*1024, 
+rlim_max=RLIM64_INFINITY}) = 0
+munmap(0x7f55f95b1000, 148466)          = 0
+getrandom("\x19\x6b\x9e\x55\x7e\x09\x74\x5f", 8, GRND_NONBLOCK) = 8
+brk(NULL)                               = 0x55755b1c1000
+brk(0x55755b1e2000)                     = 0x55755b1e2000
+openat(AT_FDCWD, "/usr/lib/locale/locale-archive", O_RDONLY|O_CLOEXEC) = 
+3
+newfstatat(3, "", {st_mode=S_IFREG|0644, st_size=3048928, ...}, 
+AT_EMPTY_PATH) = 0
+mmap(NULL, 3048928, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7f55f9000000
+close(3)                                = 0
+newfstatat(1, "", {st_mode=S_IFCHR|0600, st_rdev=makedev(0x88, 0), ...}, 
+AT_EMPTY_PATH) = 0
+openat(AT_FDCWD, "/mnt/fbx/FBX-24T/toto", O_RDONLY) = 3
+newfstatat(3, "", {st_mode=S_IFREG|0666, st_size=5, ...}, AT_EMPTY_PATH) 
+= 0
+fadvise64(3, 0, 0, POSIX_FADV_SEQUENTIAL) = 0
+mmap(NULL, 16785408, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, 
+-1, 0) = 0x7f55f7ffe000
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+) = 16711680
+read(3, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16777216) = 16711680
+write(1, 
+"toto\n\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0"..., 
+16711680toto
+^Cstrace: Process 38427 detached
+  <detached ...>
+
+
+Please let me know if it had already been fixed or reported and if 
+you're able to reproduce this issue.
+
+Thanks for help
+
+Kind regards
+Nicolas Baranger
 
