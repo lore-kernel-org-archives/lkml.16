@@ -1,87 +1,66 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613BF25D1E1;
-	Mon, 24 Mar 2025 16:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B330E2E3387;
+	Mon, 24 Mar 2025 16:08:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742832382; cv=none; b=FZs/qwA4ibCrl4bnM6Lwk0BYVEBbKokgcEdXJ7H/ZNPY4w+F8mdc6/vEHYqIk/qZqUh/mgRQmc67OolQ68Gojcc+D1z7H4xt28dHfnvpg7iCPP6aaxX0eIJCfSalnIq0qLBKx6j6uMfahB/41NP3cfOVYCdUwJgKu3kVJtFj8QI=
+	t=1742832520; cv=none; b=cyHnQTr+kJVxqZmFp0OAAXkowX94dTBp/MIsmAHumUIP0nxJkfixdSuslK4vBHT1h1m/qast7NBWeTfvxnTMbiVnEfZgXETLWdfHDHeUWZlJqz1bGM7Zu6YUCzsqbGdJILw0mQzpPbqo3HdNYF29dMjmPrjHLkb6i2sAqPBko0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742832382; c=relaxed/simple;
-	bh=NBr9hauWH0hXl44CcQwq1LSrc1ZJnCp50KRC5y+Qgg4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=g5eX4wUFMQakfGxniSK4Z0a/JQ3Ca8jFs/ILjKORuZ0gDoz9zvdGAx3/+it3+txNCsxpPLAcXWkL7INMfdbJlsz4MCHu2BBsibSdf0a7vE2uLQ9YBcvecKRBY4LTT0a3QX8cFGtvV5OzA4Ce7Bpmr+vFK9zNLsPcRtauDCa8pW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=THW8rtgm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742832520; c=relaxed/simple;
+	bh=uFHH2lwI0Hjlf+4iID1Ge3PrHz8y0Zaq/bXqOrfZV/A=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=tw9GtD/P3sm3lrbWd2FR7sqDqPPeNR7iSuBbyVKQPvXUut/ZhNwRcGtoD9YvBpP7hnVsY0kfldMcCGNahbmDqXDoQCIYd2iTV5VOU2JGGm0tcar2zwjttb/NSkumCx6PscMvY7vd0TptZn3EcDKG/1PyamRB241eDfBcK80Y1uE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SPv7bNe4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="THW8rtgm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4131C4CEDD;
-	Mon, 24 Mar 2025 16:06:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SPv7bNe4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18451C4CEE9;
+	Mon, 24 Mar 2025 16:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742832382;
-	bh=NBr9hauWH0hXl44CcQwq1LSrc1ZJnCp50KRC5y+Qgg4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=THW8rtgmTexXtErwlE/Ud8rm2P6b/IxelVZg24TshIRoAlKTxBAvrz+yNMeGO8yi6
-	 0AWNS+7R9ZxPJD2jk0QPJfqNUNXV5ZOnRAV/IU9H8PHsAoU6YFmOsed+SE+F9e5PFD
-	 lAlIWfMRYrIobUw2H3PzlFSdfiW93akUa5P4PCHk7EuFoCLFvHJ3OHRbCkR8Qf136G
-	 i83cgMFTISSUGH8MKkpfRXCwG5DoiU5nAD3Hcic2jia7pocpHSmBHonERCSVU89sk8
-	 3dZLg9W+5jWNb4y2jgdsE6rjRg2P2fV6tSFYbwNdFou2FyzR0/5Xd9aV6YGOOpRj6Z
-	 1CyBu+J6NhTnw==
-From: Borislav Petkov <bp@kernel.org>
-To: Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>
-Cc: X86 ML <x86@kernel.org>,
-	KVM <kvm@vger.kernel.org>,
-	LKML <linux-kernel@vger.kernel.org>,
-	"Borislav Petkov (AMD)" <bp@alien8.de>
-Subject: [PATCH] KVM: x86: Sort CPUID_8000_0021_EAX leaf bits properly
-Date: Mon, 24 Mar 2025 17:06:17 +0100
-Message-ID: <20250324160617.15379-1-bp@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1742832520;
+	bh=uFHH2lwI0Hjlf+4iID1Ge3PrHz8y0Zaq/bXqOrfZV/A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=SPv7bNe4C8BXr7Vq4e/JJp/viQqxELXHZxSNVQ2q7khTuXOcRWNmGMkI3pnhq6MZJ
+	 kBLQTsIEZFUMee42P/Z9B+Gkqg3uGolwRdjXNCUbtc+3t4rw/Oinl4LAEhZ+gjLXiD
+	 av5FN1dcCfv25f5ZOXhX/FnFAqjcO8Vwi0pi/r9SU6QL1Eh4bg/yMJc6vax794fGVi
+	 zG0OWuPDUyi+/2PBpldR+YWIfYGDYUTLLdcmKhwRNacr3yv43GZ5/F1+SzYTNnucxT
+	 6EWjt7HTlGnfQwWehbE2RdMnPHA1WTelBkxjzghp2DEQR+LWWpdH5elPzsdZBfA8JE
+	 4UEdweCfuMokA==
+Date: Mon, 24 Mar 2025 11:08:38 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Mike Looijmans <mike.looijmans@topic.nl>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+	linux-pci@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Michal Simek <michal.simek@amd.com>, Rob Herring <robh@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pcie-xilinx: Support reset GPIO and wait for link-up
+ status
+Message-ID: <20250324160838.GA1251294@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0e7637a0-8b8f-4aa7-be46-1e7b8ac07a45@topic.nl>
 
-From: "Borislav Petkov (AMD)" <bp@alien8.de>
+On Mon, Mar 24, 2025 at 04:46:55PM +0100, Mike Looijmans wrote:
+> On 24-03-2025 08:49, Manivannan Sadhasivam wrote:
+> > On Fri, Mar 14, 2025 at 03:59:02PM +0100, Mike Looijmans wrote:
+> > > Support providing the PERST reset signal through a devicetree binding.
 
-WRMSR_XX_BASE_NS is bit 1 so put it there, add some new bits as
-comments only.
+Use "PERST#" to include the polarity and match the spec usage.
 
-Signed-off-by: Borislav Petkov (AMD) <bp@alien8.de>
----
- arch/x86/kvm/cpuid.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+> > > As the PCIe spec mentions about 120 ms time to establish a link, we'll
+> > > allow up to 200ms before giving up.
+> > > 
+> > This should be a separate change/patch.
+> 
+> Indeed, this is a separate issue, I'll split it in two parts.
 
-diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-index 121edf1f2a79..e98ab18f784b 100644
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -1160,6 +1160,7 @@ void kvm_set_cpu_caps(void)
- 
- 	kvm_cpu_cap_init(CPUID_8000_0021_EAX,
- 		F(NO_NESTED_DATA_BP),
-+		F(WRMSR_XX_BASE_NS),
- 		/*
- 		 * Synthesize "LFENCE is serializing" into the AMD-defined entry
- 		 * in KVM's supported CPUID, i.e. if the feature is reported as
-@@ -1173,10 +1174,14 @@ void kvm_set_cpu_caps(void)
- 		SYNTHESIZED_F(LFENCE_RDTSC),
- 		/* SmmPgCfgLock */
- 		F(NULL_SEL_CLR_BASE),
-+		/* UpperAddressIgnore */
- 		F(AUTOIBRS),
- 		EMULATED_F(NO_SMM_CTL_MSR),
-+		/* FSRS */
-+		/* FSRC */
- 		/* PrefetchCtlMsr */
--		F(WRMSR_XX_BASE_NS),
-+		/* GpOnUserCpuid */
-+		/* EPSF */
- 		SYNTHESIZED_F(SBPB),
- 		SYNTHESIZED_F(IBPB_BRTYPE),
- 		SYNTHESIZED_F(SRSO_NO),
--- 
-2.43.0
-
+And please include a specific spec reference, e.g., "PCIe r6.0, sec
+x.y.z".
