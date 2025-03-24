@@ -1,66 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-186.mta0.migadu.com (out-186.mta0.migadu.com [91.218.175.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5324264607;
-	Mon, 24 Mar 2025 17:05:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E950263C75
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 17:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742835932; cv=none; b=twyGg9tWYKgOE/BkcB2aXG7JUx+pWGvm5SEVlrXFbQobuwdQzC1OUljUeTgHseRN/K3lsfH7DA7eW4eQoiQCiQBdQ6uzi7Z+HCi2IhsiKahRvkXuFf/5CLtxVaek5pMTGqoxoI3mdTlaYkG9wMAz8xmo/vZLFuU5dex2kf00i3c=
+	t=1742835956; cv=none; b=hgB/Rzh9nfQiTZm/Jmt8U+myMATHf6+sNUvVHYl0Cp1J9mWPOnnH+r9gfQFcmBIVDJYrwg6J4ILIEENLmjyAowVJQAYvuBgmhrME9+u8YbesjDnWrx3Nmbr+9C4/IlQHwa3ft4L393DFuO2yGu7u5iovAQziKJWVw/lJdjMXBLQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742835932; c=relaxed/simple;
-	bh=6TuJgDwAnlJf1BXNV9Eh5XON1xFBMYMniID/jcyT6y0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cNmbCN8fQNk3Ru180J9i+fMzO5XdTUjE0ejMTFATT5NxIiRHaMjvq2n+YatCkiBkEGDNnSqpVBz/6JNvTwa2C/dTWhoYK8Q+TGQFtVFLOAd6UmENPQDecoss3j88BE/Ukc9aKpxPttdo/kImdbMzPIDSmnbqICcmiIz0lcG8swM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kg6logt6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742835956; c=relaxed/simple;
+	bh=tmqHuzhAZXTG4eAuu0ZnQgAzD2ivCoMGn/5U74rRFp8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tSN8LlZhmxG1q5aoiK5YsoHJRNpmonLfFWxYmt6SmUB47eHqlG0K4mthsMlzMvRSbGpKFadY8yPzUfxjicfnKa3yubRlIAqg8/83+qgIjeBLg2pL16/AahSI6R8yWhYEtd4Fspr3if7cx+3hDyS7UZzccU3PTOgoYTY5dt7PH+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=craftyguy.net; spf=pass smtp.mailfrom=craftyguy.net; dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b=WfIBASoi; arc=none smtp.client-ip=91.218.175.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=craftyguy.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=craftyguy.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kg6logt6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47620C4CEEA;
-	Mon, 24 Mar 2025 17:05:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742835931;
-	bh=6TuJgDwAnlJf1BXNV9Eh5XON1xFBMYMniID/jcyT6y0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Kg6logt6N7OhzGuFQJb4ClhS0z2TLQSMhKf5jNeiwstWpuJ572kmRUWB23fkkcxTa
-	 UqtzZSHVjxHMur6i99oh0Lb0wgh3JEI8cii2BZ8UcyfZw/D6bw/Jrp3WcKyDDUqVqG
-	 zWfLW2LAEocyJL4uLLRgOvV7//9SSTcU0aB93UKmVhtKlzBDA9ws+Ubdipt+olBgoT
-	 nQJXMuGO26Gpc1tYQfz1WjEfJt3MJ3dD8brgcqFpRMsGLcA3gEofVY5LbLwSylgqB1
-	 +rhpFnOFAe6r3Uwv9l1VdVp6y/vWnUIaIqC/zqjWMMdDQsmKlry1jy2i9RvxynRCqE
-	 ca4La/ngS/hdQ==
-Date: Mon, 24 Mar 2025 18:05:25 +0100
-From: Danilo Krummrich <dakr@kernel.org>
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: bhelgaas@google.com, rafael@kernel.org, ojeda@kernel.org,
-	alex.gaynor@gmail.com, boqun.feng@gmail.com, gary@garyguo.net,
-	bjorn3_gh@protonmail.com, benno.lossin@proton.me,
-	a.hindborg@kernel.org, aliceryhl@google.com, tmgross@umich.edu,
-	linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 2/3] rust: pci: impl TryFrom<&Device> for &pci::Device
-Message-ID: <Z-GQ1fWBQFaT1tEq@cassiopeiae>
-References: <20250321214826.140946-1-dakr@kernel.org>
- <20250321214826.140946-3-dakr@kernel.org>
- <2025032158-embezzle-life-8810@gregkh>
- <Z96MrGQvpVrFqWYJ@pollux>
- <Z-CG01QzSJjp46ad@pollux>
- <2025032455-elk-whoops-3439@gregkh>
+	dkim=pass (2048-bit key) header.d=craftyguy.net header.i=@craftyguy.net header.b="WfIBASoi"
+Message-ID: <dd1bc01c-75f4-4071-a2ac-534a12dd3029@craftyguy.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=craftyguy.net;
+	s=key1; t=1742835951;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=y0MUSaxC+hQA+rUwUSVWGGTFbI21s/8Et44mf+YXe3o=;
+	b=WfIBASoiCff/K2GUmPuwz0CoE4OwEWKBKn3IQq+nmjO+FBltsURxhaGA4Vl/fjgP+DY+IJ
+	eEY+5l6QH8RwNHHD0sJYmdvftHUB765X+GWF3OdpXYV+wRyOW27SDL4+me6h+nn5ixVq12
+	hbZU0RxRulGKzcSH3gy4cXzzygj9Q5sEIviMkDivvFOuV2p/JRVMxoOvDTkAJEqjD6cBXH
+	8xxTDARNCpIjG2UhXGpPqSmNX04DjWEh5f6z+W4DbHfzyLSW42oYghSM8sECjYcOCk84so
+	IfaPIQUfDIbk7Nj33LJ0Cxvs/D5kRSMoiOvWSvg0yNeDj1EOnuJG9kgpm3Fg7A==
+Date: Mon, 24 Mar 2025 10:05:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2025032455-elk-whoops-3439@gregkh>
+Subject: Re: [PATCH] soc: qcom: pmic_glink_altmode: fix spurious DP hotplug
+ events
+To: Johan Hovold <johan+linaro@kernel.org>,
+ Bjorn Andersson <andersson@kernel.org>,
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
+References: <20250324132448.6134-1-johan+linaro@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Clayton Craft <clayton@craftyguy.net>
+In-Reply-To: <20250324132448.6134-1-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, Mar 24, 2025 at 06:54:47AM -0700, Greg KH wrote:
+On 3/24/25 06:24, Johan Hovold wrote:
+> The PMIC GLINK driver is currently generating DisplayPort hotplug
+> notifications whenever something is connected to (or disconnected from)
+> a port regardless of the type of notification sent by the firmware.
 > 
-> Thanks for the long writeup, that makes more sense.
+> These notifications are forwarded to user space by the DRM subsystem as
+> connector "change" uevents:
 > 
-> Ok, I'll not object to this change at all, so if you need them to go
-> through a different tree, feel free to take them.  But as I think it's
-> the merge window now, it will have to wait till -rc1 is out.
+>      KERNEL[1556.223776] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+>      ACTION=change
+>      DEVPATH=/devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0
+>      SUBSYSTEM=drm
+>      HOTPLUG=1
+>      CONNECTOR=36
+>      DEVNAME=/dev/dri/card0
+>      DEVTYPE=drm_minor
+>      SEQNUM=4176
+>      MAJOR=226
+>      MINOR=0
+> 
+> On the Lenovo ThinkPad X13s and T14s, the PMIC GLINK firmware sends two
+> identical notifications with orientation information when connecting a
+> charger, each generating a bogus DRM hotplug event. On the X13s, two
+> such notification are also sent every 90 seconds while a charger remains
+> connected, which again are forwarded to user space:
+> 
+>      port = 1, svid = ff00, mode = 255, hpd_state = 0
+>      payload = 01 00 00 00 00 00 00 ff 00 00 00 00 00 00 00 00
+> 
+> Note that the firmware only sends on of these when connecting an
+> ethernet adapter.
+> 
+> Fix the spurious hotplug events by only forwarding hotplug notifications
+> for the Type-C DisplayPort service id. This also reduces the number of
+> uevents from four to two when an actual DisplayPort altmode device is
+> connected:
+> 
+>      port = 0, svid = ff01, mode = 2, hpd_state = 0
+>      payload = 00 01 02 00 f2 0c 01 ff 03 00 00 00 00 00 00 00
+>      port = 0, svid = ff01, mode = 2, hpd_state = 1
+>      payload = 00 01 02 00 f2 0c 01 ff 43 00 00 00 00 00 00 00
+> 
+> Fixes: 080b4e24852b ("soc: qcom: pmic_glink: Introduce altmode support")
+> Cc: stable@vger.kernel.org	# 6.3
+> Cc: Bjorn Andersson <andersson@kernel.org>
+> Reported-by: Clayton Craft <clayton@craftyguy.net>
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> ---
+> 
+> Clayton reported seeing display flickering with recent RC kernels, which
+> may possibly be related to these spurious events being generated with
+> even greater frequency.
+> 
+> That still remains to be fully understood, but the spurious events, that
+> on the X13s are generated every 90 seconds, should be fixed either way.
 
-Yes, I'll have to figure out what's the best approach of merging things.
-Considering subsequent work, I want to make sure to create as few merge
-conflicts as possible.
+When a display/dock (which has ethernet) is connected, I see this 
+hotplug change event 2 times (every 30 seconds) which I think you said 
+this is expected now?
+
+> UDEV  [236.150574] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+> UDEV  [236.588696] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+> UDEV  [266.208175] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+> UDEV  [266.644710] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+> UDEV  [296.243187] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+> UDEV  [296.678177] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+> UDEV  [326.276256] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+> UDEV  [326.712248] change   /devices/platform/soc@0/ae00000.display-subsystem/ae01000.display-controller/drm/card0 (drm)
+
+Not sure about you seeing it every 90s vs my 30s... anyways, I no longer 
+see these events when a PD charger is connected though, so this patch 
+seems to help with that!
+
+Tested-by: Clayton Craft <clayton@craftyguy.net>
