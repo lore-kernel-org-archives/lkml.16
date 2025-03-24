@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E7E41F1518
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70AD11F2BB8
 	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 21:56:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742853386; cv=none; b=nG3q/fIs4oMNscKTgQs+5gDmJr7LTcnzJIgWqxOFqj2ZDQwR2X0Vpj3y58HjSLxlZHYbxcB+i69OSYSUqTEdFDhm4vlIs1S1bL0D/vtPQAqiehfNft9nswQ9PrxrO2vpoV3sRwfvu6Xe04c/9wF8UWML1sJVYkLvPrInwm0jp7Q=
+	t=1742853387; cv=none; b=YnPUerxmXzp3zRSqgDDH09tCfgN/HMtCuvRv+gl+n+M5ZRlkpjagKfIEYw9bz5fjVOo9o6JLfRZymmJX/nvE4vQqeV66TB9X1gq47UzSqhhVc7NIsTOkU+LF5Bh/ChRY3hPjfMF04q/+L1Vu2MlSMduQ+MjDYsa6zpKaV6/H9BY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742853386; c=relaxed/simple;
-	bh=vX8fmL90uhis5ZiSpKhMTL7v+LsPpwSsXhWLzlVfMuk=;
+	s=arc-20240116; t=1742853387; c=relaxed/simple;
+	bh=yo6sJXtvHZ+k/r0fmuhOzf3cJa4+JAvS2CiqyT/PhfY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=fQWzcN7hd1PbUVfjONJ69EuUVoyN8eRXn5Ja7zRUjRaIMQa3d6fzXo/CBwhv5Z/NvIij8ouBq17o0Rr5sW3d53f4Jaw2a5cbfBjP5lQ1BgU6Dc4ue5dsTCj8ey6F4d35nKxDLGKaQzXp9+RFm7wjQ71C4aRYDEaivnWTT8499dI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XbyfRpV7; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=hq4wFebeFmo4C2SGtU8vnkSagV4Ks3wyHcjvFSGLT94P14BoUFSY1cs3XU6GA31j6iaOMVNCPkeXcRhfc+g7/ZJ91zc4hBUQVTlnrGpbi/MtplgOhY1SM7R6WwaYzViR5PuS4qZPFUBhZwECmK8AkArFIHEWkluJM1JlvRY0z0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cvPo1+Al; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XbyfRpV7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1CE0C4CEEE;
-	Mon, 24 Mar 2025 21:56:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cvPo1+Al"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 872FFC4CEDD;
+	Mon, 24 Mar 2025 21:56:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1742853386;
-	bh=vX8fmL90uhis5ZiSpKhMTL7v+LsPpwSsXhWLzlVfMuk=;
+	bh=yo6sJXtvHZ+k/r0fmuhOzf3cJa4+JAvS2CiqyT/PhfY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XbyfRpV78sLeFgsWrYWxVBxxoPB0MKLPFQPePh7S7EpaeWVP1tf1tHhErH87JFfw7
-	 E7UQj4f8J3Er9Mx3Kjg44C2pgeyLoCScBlDrCDsG5p5PwQkG43Mw1/uPYkJBxg+9Ml
-	 bEeOZA6nHNNchmqoVN1o6bee7oO3rA1ZC+O89YREk2sn9WbLjtlDJM6SRSZKBc0/v6
-	 e3qAi1QY/TTC3hz3XuC13+g3RtOHlbZnkH1ts3vUBjVa57OsUn/bZJNLHpFvEgahx2
-	 bseeaJ4lbARDyPpA3pR9Psk6W4yo+aDG1lPd8hI0WCddvpTxSp1W4RQjZMf/qvKQ8y
-	 pKLCJcb4RPwKw==
+	b=cvPo1+AldjWeMVEGkGQmnEIxKS8WdWad6kjTCpfePpNzN90sl1EF56sg1bDsIV6qW
+	 TNU0Hnz/6MFpWUI19sAcjYsTaa1TyMecxelaaHBww4tZnOEgf8GjOKBRIjSnkEht81
+	 AK0Z1Gfl0i+pDWWgpk4QBOGUZ2VaHOsLTvm/+D/IKvJCL+BTF9pJ4ME/8OgidvYJGb
+	 9IjSoKhbc4SdgDbiCwXZOhDKcuC1w5mtKqjZIEW9GwROmDh6m2NScUMPYmDf4AtTgz
+	 +NLXy5SIgYrMp/Gnmv1agOPY1jfEKq/E09rcJrWm2pUym/9jxfvUJL5+wT+NO/duPR
+	 g3vdS8rMEYduQ==
 From: Josh Poimboeuf <jpoimboe@kernel.org>
 To: x86@kernel.org
 Cc: linux-kernel@vger.kernel.org,
@@ -34,9 +34,9 @@ Cc: linux-kernel@vger.kernel.org,
 	Miroslav Benes <mbenes@suse.cz>,
 	Brendan Jackman <jackmanb@google.com>,
 	Nathan Chancellor <nathan@kernel.org>
-Subject: [PATCH 10/22] objtool: Reduce CONFIG_OBJTOOL_WERROR verbosity
-Date: Mon, 24 Mar 2025 14:56:00 -0700
-Message-ID: <d61df69f64b396fa6b2a1335588aad7a34ea9e71.1742852846.git.jpoimboe@kernel.org>
+Subject: [PATCH 12/22] objtool: Remove --no-unreachable for noinstr-only vmlinux.o runs
+Date: Mon, 24 Mar 2025 14:56:02 -0700
+Message-ID: <05414246a0124db2f21b0d071b652aa9043d039d.1742852847.git.jpoimboe@kernel.org>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1742852846.git.jpoimboe@kernel.org>
 References: <cover.1742852846.git.jpoimboe@kernel.org>
@@ -48,273 +48,31 @@ List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove the following from CONFIG_OBJTOOL_WERROR:
+For (!X86_KERNEL_IBT && !LTO_CLANG && NOINSTR_VALIDATION), objtool runs
+on both translation units and vmlinux.o.  The vmlinux.o run only does
+noinstr/noret validation.  In that case --no-unreachable has no effect.
+Remove it.
 
-  * backtrace
-
-  * "upgraded warnings to errors" message
-
-  * cmdline args
-
-This makes the default output less cluttered and makes it easier to spot
-the actual warnings.  Note the above options are still are available
-with --verbose or OBJTOOL_VERBOSE=1.
-
-Also, do the cmdline arg printing on all warnings, regardless of werror.
+Note that for ((X86_KERNEL_IBT || LTO_CLANG) && KCOV), --no-unreachable
+still gets set in objtool-args-y by scripts/Makefile.lib.
 
 Signed-off-by: Josh Poimboeuf <jpoimboe@kernel.org>
 ---
- scripts/Makefile.lib                    |   2 +-
- tools/objtool/builtin-check.c           | 113 ++++++++++++------------
- tools/objtool/check.c                   |  23 ++---
- tools/objtool/include/objtool/builtin.h |   6 +-
- 4 files changed, 73 insertions(+), 71 deletions(-)
+ scripts/Makefile.vmlinux_o | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 99e281966ba3..cdf45722626c 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -277,7 +277,7 @@ objtool-args-$(CONFIG_HAVE_STATIC_CALL_INLINE)		+= --static-call
- objtool-args-$(CONFIG_HAVE_UACCESS_VALIDATION)		+= --uaccess
- objtool-args-$(CONFIG_GCOV_KERNEL)			+= --no-unreachable
- objtool-args-$(CONFIG_PREFIX_SYMBOLS)			+= --prefix=$(CONFIG_FUNCTION_PADDING_BYTES)
--objtool-args-$(CONFIG_OBJTOOL_WERROR)			+= --Werror --backtrace
-+objtool-args-$(CONFIG_OBJTOOL_WERROR)			+= --Werror
+diff --git a/scripts/Makefile.vmlinux_o b/scripts/Makefile.vmlinux_o
+index f476f5605029..938c7457717e 100644
+--- a/scripts/Makefile.vmlinux_o
++++ b/scripts/Makefile.vmlinux_o
+@@ -44,7 +44,6 @@ else
+ vmlinux-objtool-args-$(CONFIG_OBJTOOL_WERROR)		+= --Werror
+ endif
  
- objtool-args = $(objtool-args-y)					\
- 	$(if $(delay-objtool), --link)					\
-diff --git a/tools/objtool/builtin-check.c b/tools/objtool/builtin-check.c
-index c973a751fb7d..2bdff910430e 100644
---- a/tools/objtool/builtin-check.c
-+++ b/tools/objtool/builtin-check.c
-@@ -15,8 +15,11 @@
- #include <objtool/objtool.h>
- #include <objtool/warn.h>
+-vmlinux-objtool-args-$(CONFIG_GCOV_KERNEL)		+= --no-unreachable
+ vmlinux-objtool-args-$(CONFIG_NOINSTR_VALIDATION)	+= --noinstr \
+ 							   $(if $(or $(CONFIG_MITIGATION_UNRET_ENTRY),$(CONFIG_MITIGATION_SRSO)), --unret)
  
--const char *objname;
-+#define ORIG_SUFFIX ".orig"
- 
-+int orig_argc;
-+static char **orig_argv;
-+const char *objname;
- struct opts opts;
- 
- static const char * const check_usage[] = {
-@@ -224,39 +227,73 @@ static int copy_file(const char *src, const char *dst)
- 	return 0;
- }
- 
--static char **save_argv(int argc, const char **argv)
-+static void save_argv(int argc, const char **argv)
- {
--	char **orig_argv;
--
- 	orig_argv = calloc(argc, sizeof(char *));
- 	if (!orig_argv) {
- 		WARN_GLIBC("calloc");
--		return NULL;
-+		exit(1);
- 	}
- 
- 	for (int i = 0; i < argc; i++) {
- 		orig_argv[i] = strdup(argv[i]);
- 		if (!orig_argv[i]) {
- 			WARN_GLIBC("strdup(%s)", orig_argv[i]);
--			return NULL;
-+			exit(1);
- 		}
- 	};
--
--	return orig_argv;
- }
- 
--#define ORIG_SUFFIX ".orig"
-+void print_args(void)
-+{
-+	char *backup = NULL;
-+
-+	if (opts.output || opts.dryrun)
-+		goto print;
-+
-+	/*
-+	 * Make a backup before kbuild deletes the file so the error
-+	 * can be recreated without recompiling or relinking.
-+	 */
-+	backup = malloc(strlen(objname) + strlen(ORIG_SUFFIX) + 1);
-+	if (!backup) {
-+		WARN_GLIBC("malloc");
-+		goto print;
-+	}
-+
-+	strcpy(backup, objname);
-+	strcat(backup, ORIG_SUFFIX);
-+	if (copy_file(objname, backup)) {
-+		backup = NULL;
-+		goto print;
-+	}
-+
-+print:
-+	/*
-+	 * Print the cmdline args to make it easier to recreate.  If '--output'
-+	 * wasn't used, add it to the printed args with the backup as input.
-+	 */
-+	fprintf(stderr, "%s", orig_argv[0]);
-+
-+	for (int i = 1; i < orig_argc; i++) {
-+		char *arg = orig_argv[i];
-+
-+		if (backup && !strcmp(arg, objname))
-+			fprintf(stderr, " %s -o %s", backup, objname);
-+		else
-+			fprintf(stderr, " %s", arg);
-+	}
-+
-+	fprintf(stderr, "\n");
-+}
- 
- int objtool_run(int argc, const char **argv)
- {
- 	struct objtool_file *file;
--	char *backup = NULL;
--	char **orig_argv;
- 	int ret = 0;
- 
--	orig_argv = save_argv(argc, argv);
--	if (!orig_argv)
--		return 1;
-+	orig_argc = argc;
-+	save_argv(argc, argv);
- 
- 	cmd_parse_options(argc, argv, check_usage);
- 
-@@ -279,59 +316,19 @@ int objtool_run(int argc, const char **argv)
- 
- 	file = objtool_open_read(objname);
- 	if (!file)
--		goto err;
-+		return 1;
- 
- 	if (!opts.link && has_multiple_files(file->elf)) {
- 		WARN("Linked object requires --link");
--		goto err;
-+		return 1;
- 	}
- 
- 	ret = check(file);
- 	if (ret)
--		goto err;
-+		return ret;
- 
- 	if (!opts.dryrun && file->elf->changed && elf_write(file->elf))
--		goto err;
-+		return 1;
- 
- 	return 0;
--
--err:
--	if (opts.dryrun)
--		goto err_msg;
--
--	if (opts.output) {
--		unlink(opts.output);
--		goto err_msg;
--	}
--
--	/*
--	 * Make a backup before kbuild deletes the file so the error
--	 * can be recreated without recompiling or relinking.
--	 */
--	backup = malloc(strlen(objname) + strlen(ORIG_SUFFIX) + 1);
--	if (!backup) {
--		WARN_GLIBC("malloc");
--		return 1;
--	}
--
--	strcpy(backup, objname);
--	strcat(backup, ORIG_SUFFIX);
--	if (copy_file(objname, backup))
--		return 1;
--
--err_msg:
--	fprintf(stderr, "%s", orig_argv[0]);
--
--	for (int i = 1; i < argc; i++) {
--		char *arg = orig_argv[i];
--
--		if (backup && !strcmp(arg, objname))
--			fprintf(stderr, " %s -o %s", backup, objname);
--		else
--			fprintf(stderr, " %s", arg);
--	}
--
--	fprintf(stderr, "\n");
--
--	return 1;
- }
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index fbe2a5ef2c40..03ec485a376a 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -4740,9 +4740,6 @@ int check(struct objtool_file *file)
- 
- 	free_insns(file);
- 
--	if (opts.verbose)
--		disas_warned_funcs(file);
--
- 	if (opts.stats) {
- 		printf("nr_insns_visited: %ld\n", nr_insns_visited);
- 		printf("nr_cfi: %ld\n", nr_cfi);
-@@ -4751,19 +4748,25 @@ int check(struct objtool_file *file)
- 	}
- 
- out:
-+	if (!ret && !warnings)
-+		return 0;
-+
-+	if (opts.verbose) {
-+		if (opts.werror && warnings)
-+			WARN("%d warning(s) upgraded to errors", warnings);
-+		print_args();
-+		disas_warned_funcs(file);
-+	}
-+
- 	/*
- 	 * CONFIG_OBJTOOL_WERROR upgrades all warnings (and errors) to actual
- 	 * errors.
- 	 *
--	 * Note that even "fatal" type errors don't actually return an error
--	 * without CONFIG_OBJTOOL_WERROR.  That probably needs improved at some
--	 * point.
-+	 * Note that even fatal errors don't yet actually return an error
-+	 * without CONFIG_OBJTOOL_WERROR.  That will be fixed soon-ish.
- 	 */
--	if (opts.werror && (ret || warnings)) {
--		if (warnings)
--			WARN("%d warning(s) upgraded to errors", warnings);
-+	if (opts.werror)
- 		return 1;
--	}
- 
- 	return 0;
- }
-diff --git a/tools/objtool/include/objtool/builtin.h b/tools/objtool/include/objtool/builtin.h
-index 0fafd0f7a209..6b08666fa69d 100644
---- a/tools/objtool/include/objtool/builtin.h
-+++ b/tools/objtool/include/objtool/builtin.h
-@@ -43,8 +43,10 @@ struct opts {
- 
- extern struct opts opts;
- 
--extern int cmd_parse_options(int argc, const char **argv, const char * const usage[]);
-+int cmd_parse_options(int argc, const char **argv, const char * const usage[]);
- 
--extern int objtool_run(int argc, const char **argv);
-+int objtool_run(int argc, const char **argv);
-+
-+void print_args(void);
- 
- #endif /* _BUILTIN_H */
 -- 
 2.48.1
 
