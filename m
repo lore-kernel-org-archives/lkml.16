@@ -1,91 +1,107 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E1121E3DC9;
-	Mon, 24 Mar 2025 22:15:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B573143895;
+	Mon, 24 Mar 2025 22:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742854559; cv=none; b=e3U+Ek9sU8iLWNVkfJU1IRh9MYombDfusLp1mBP3U5CliRU6jIMXFJSatoDB01rSlOcKWSu5irmtH3bN0gZE+H0essZMcwa0sqaaCNFyUh70I/PzRHYgN6OMNhrnCaWYJxaMSs/MLBeeDEtNx4OZD9DAE7dBJy1EmFobIA5TUG0=
+	t=1742854941; cv=none; b=XPP7Y1aFGDmUy0l8IYDIpxT73/53Mi/VmxckfHFOlbZ3wm+vk0FTMqUesqb1XJBJdNniL+qTVP2mi17VShKCSBjmqqJT1taeo1Pe1csVwrE3LjYlNAopQXTnGKdhcOZc+JlN9OAQK5wWF5XXi/paeeKZrLHw8eS3SMZkiw3w+8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742854559; c=relaxed/simple;
-	bh=7hssLqXra0EtdFlVqqKTDr+8oGTjg6jkdSrUMz3mwCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FuRgEz2M8sJvxzdjWpnahItw57zy/rZ9ZQRs20oYNI38QdPJqOjzgEJvDxhlUoGCc24TbAQ8DPoQyx8ir6XWz6jHQIZjsXEkEJ9oCH9F0FDIPdiDYwtsl4QkiMdCA8aVBDIknq5BDvD266ncfnpbT0LVRZWNYj+08SqZIE5IDww=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QwRc6W8X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742854941; c=relaxed/simple;
+	bh=36O/04zHoF+wQxX2Ckb3NLz0Ilkpuh+YIk10NNNkv2M=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=q2GnMu58Tes+WErwLYGmG2qd3JCan3iRo5nXjnA+yt9+knViG/iMCMeeZUriI2OCdDHL7X6zRxH0MPE1T7JnMk9el1EgcjrkSrVh9TitbGkw4JFT0I/Ie0IMt9h9uiKix29L4Lz7CcEAt3tK3I5y6KjjW3Gdr+Zhnv7I5oV3+y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZhbQFx1; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QwRc6W8X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62F4BC4CEDD;
-	Mon, 24 Mar 2025 22:15:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742854558;
-	bh=7hssLqXra0EtdFlVqqKTDr+8oGTjg6jkdSrUMz3mwCg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QwRc6W8Xl+JhPwMgvjkDRnSQo1DNMTM4pHLJBaT9E2QQDNi5aBSdiPQwxLuZvHDSE
-	 jkPBpHAMlZqFLyjG2E8hv065Z+MXU/2lGMGEFIFmRli7ULpd2fbpKhouW+nrpOxUQ8
-	 CKIExxe3RlBvnoHT8XHszGoGpVwa2muHMBkSK7BW8Ob5Sv5c9TChhg3yoyys8wGE6c
-	 BlFMWixD6/Cl6BHn6u0i2u91HyNTMKqU44RuxxE19MXWiorxMgCjb4Z32sf/ZPzjpj
-	 TffG8NbexdoNmuj061PpDJoHbdtfbWPcl28OfZ+5Rj3AQAr3cy0VS214pVtmS746HN
-	 Y+YJU2jE2IEHw==
-Date: Mon, 24 Mar 2025 15:15:51 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Michael Klein <michael@fossekall.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Heiner Kallweit <hkallweit1@gmail.com>,
- Russell King <linux@armlinux.org.uk>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [net-next v4 1/3] net: phy: realtek: Clean up RTL8211E ExtPage
- access
-Message-ID: <20250324151551.76869d80@kernel.org>
-In-Reply-To: <20250317200532.93620-2-michael@fossekall.de>
-References: <20250317200532.93620-1-michael@fossekall.de>
-	<20250317200532.93620-2-michael@fossekall.de>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZhbQFx1"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2264aefc45dso82651035ad.0;
+        Mon, 24 Mar 2025 15:22:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742854939; x=1743459739; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=eS3RjMaLCNqgiJaSVm2ywS8sGzGuV/kwQoAzrZ5qh+E=;
+        b=CZhbQFx1EFWk97XxXJLA31hxyl091uzzigdSXJBAUMv4FunyA0OJIjSqIRUjSeqM4u
+         sgX5MbyDphX9EXZCiR/8swNNrkE1NlLK1LvfByE+MfjigtVf3VlLefi1e4CJIt441hL/
+         TJ4wqmm5G4CG6HQcjhsJBg95qtG+NCKyS9odoL8f87KlKHOtME2aWAWczdMlbdH+8yUg
+         pWUm9umNGDpEMhNUmkspyvyTLiqEFQuGfuIzzWu92RhOSi1Bi+2ouhYuKJYYAIErpazN
+         bmmqTJTeQgwcCJEEztCFmUfO1e+AYg2eApBw2+WBRdN0bQ1HbPeh/iAQzZcORG3XmsgY
+         3yrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742854939; x=1743459739;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eS3RjMaLCNqgiJaSVm2ywS8sGzGuV/kwQoAzrZ5qh+E=;
+        b=ct4w+Wy3cKz931nwp1Uit5LlyZjysm4kJih3H+C3ZmCUb6W1HQgzzTorXTmfoEggi3
+         DQBorX9tZz2pJ2SHnN7rSPNeVUXbEHufodYDokvv8YH9pUNyMFNLsZiFjJFbUc75Ia1b
+         OcdY7mB+zpb4Q1jvQwr0FRT3xWTGARtYZbCmgaco+pFOoJzseRylrfkjELRe47PWFAsK
+         qYqzhFtsqkuHqbwvSOMgYYq4lE26yhVVqZHKQR00/1XfIKIjB6DKfAd1EmwyLe44i72g
+         fHqelqDfSbQ1UuTUc0YpVAaFf86gm6w/PTvL4fYmswtK2t48+F6fE/nsVoqBL6eAaY1s
+         5HgA==
+X-Forwarded-Encrypted: i=1; AJvYcCUnYpSwjObtupz3XyLVe5YYG892Y3BeGm1Sj+hjfkmUGrgIbpQtnrbuqENhQNRlUxffsIvCdcrd@vger.kernel.org, AJvYcCWNTxDCDX+3jJPTymqAHX9BabH+f4seJCGMZCuvnikpI9GZrPF2Y+2o+7pWhHM7fLMCw6J3ST/iLfTuYzk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyo78to8dXgZkMpGaVSdf0/qUFodHBgC3/fRffXL1+Xy3r/7pt3
+	f8N5b7NSF3+I/G34e/T9ZoDT/kSTn9rYr41Ied4lBBvL94NCDcQ=
+X-Gm-Gg: ASbGncsxQm8TqaW+UY+EBJJ0sZHD+xFJYMvEaV5bnbZWnYWzt+xSpBgd4KpydI1ekHF
+	3ZbZ6Ip2wCmne0Y6CDjBTgEo6Ph8GpPk8E0O43VsWU0UJcFD9+yxK3t8SuczPXYpTLf9MskaBbv
+	uVV766EscOa8oGtGWgqGsxIYEVxKxVapJW0sxPsdfYYWotiChbT5I5cendvnRKeynBGYrs/iaoM
+	g9bzzttL50yX/j3CUsEZ/irrbGOky5F9WVbLTWkE1r+r2LH8IrZaWmTh00BZSQZRTwGrlI01uZa
+	GEBkGLTo4hsv4r5LkK7og9aEYa2iATlnV8SehuQfOCrA
+X-Google-Smtp-Source: AGHT+IECCXC+ptBi040j35MfNJo5JtUv9wBBHlu+wU953vEwOW2eurI9K3olTMdLbIb/AUlddVbpZA==
+X-Received: by 2002:a17:902:cec8:b0:223:668d:eba9 with SMTP id d9443c01a7336-22780c5587bmr295483215ad.10.1742854939234;
+        Mon, 24 Mar 2025 15:22:19 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id d9443c01a7336-22780f3b493sm76522685ad.34.2025.03.24.15.22.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 15:22:18 -0700 (PDT)
+Date: Mon, 24 Mar 2025 15:22:17 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: Stanislav Fomichev <sdf@fomichev.me>, netdev@vger.kernel.org,
+	davem@davemloft.net, edumazet@google.com, pabeni@redhat.com,
+	linux-kernel@vger.kernel.org, jhs@mojatatu.com,
+	xiyou.wangcong@gmail.com, jiri@resnulli.us, horms@kernel.org
+Subject: Re: [PATCH net-next v2] net: hold netdev reference during
+ qdisc_create request_module
+Message-ID: <Z-HbGR1V9-1Fwf0H@mini-arch>
+References: <20250320165103.3926946-1-sdf@fomichev.me>
+ <20250324150425.32b3ec10@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20250324150425.32b3ec10@kernel.org>
 
-Sorry for the delay, unfortunately this no longer applies:
+On 03/24, Jakub Kicinski wrote:
+> On Thu, 20 Mar 2025 09:51:03 -0700 Stanislav Fomichev wrote:
+> >  			rtnl_lock();
+> >  			netdev_lock_ops(dev);
+> > +			dev_put(dev);
+> >  			ops = qdisc_lookup_ops(kind);
+> 
+> I'm not sure if this is a correct sequence. Do we guarantee that locks
+> will be taken before device is freed? I mean we do:
+> 
+> 	dev = netdev_wait_allrefs_any()
+> 	free_netdev(dev)
+> 		mutex_destroy(dev->lock)
+> 
+> without explicitly taking rtnl_lock() or netdev_lock(), so the moment
+> that dev_put() is called the device may get freed from another thread
+> - while its locked here.
+> 
+> My mental model is that taking the instance lock on a dev for which we
+> only have a ref requires a dance implemented in __netdev_put_lock().
 
-Applying: net: phy: realtek: Clean up RTL8211E ExtPage access
-error: patch failed: drivers/net/phy/realtek/realtek_main.c:28
-error: drivers/net/phy/realtek/realtek_main.c: patch does not apply
-Patch failed at 0001 net: phy: realtek: Clean up RTL8211E ExtPage access
-hint: Use 'git am --show-current-patch=diff' to see the failed patch
-hint: When you have resolved this problem, run "git am --continue".
-hint: If you prefer to skip this patch, run "git am --skip" instead.
-hint: To restore the original branch and stop patching, run "git am --abort".
-hint: Disable this message with "git config set advice.mergeConflict false"
-
-Given that some nits before you send v5 below..
-
-On Mon, 17 Mar 2025 21:05:30 +0100 Michael Klein wrote:
-> - Factor out RTL8211E extension page access code to
->   rtl8211e_modify_ext_page()/rtl8211e_read_ext_page() and add some
->   related #define:s
-> - Group RTL8211E_* and RTL8211F_* #define:s
-> - Clean up rtl8211e_config_init()
-
-Sounds like this should be split into at least 2 patches.
-
->  static int rtl821x_probe(struct phy_device *phydev)
->  {
->  	struct device *dev = &phydev->mdio.dev;
-> @@ -600,7 +617,8 @@ static int rtl8211f_led_hw_control_set(struct phy_device *phydev, u8 index,
->  
->  static int rtl8211e_config_init(struct phy_device *phydev)
->  {
-> -	int ret = 0, oldpage;
-> +	const u16 delay_mask = RTL8211E_CTRL_DELAY |
-> +		RTL8211E_TX_DELAY | RTL8211E_RX_DELAY;
-
-This would probably be easier to read if alinged.
-
-	const u16 delay_mask = RTL8211E_CTRL_DELAY |
-			       RTL8211E_TX_DELAY | 
-			       RTL8211E_RX_DELAY;
--- 
-pw-bot: cr
+Good point, didn't think about it. In this case, I think I need to
+get back to exposing locked/unlocked signal back to the callers.
+Even with __netdev_put_lock, there is a case where the netdev is
+dead and can't be relocked. Will add some new 'bool *locked' argument
+and reset it here; the caller will skip unlock when 'locked == false'.
+LMK if you have better ideas, otherwise will post something tomorrow.
