@@ -1,185 +1,184 @@
-Received: from invmail4.hynix.com (exvmail4.hynix.com [166.125.252.92])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5B321DFF0;
-	Mon, 24 Mar 2025 08:54:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=166.125.252.92
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A5811DFF0;
+	Mon, 24 Mar 2025 08:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742806486; cv=none; b=ufOD9yYwxWdRlmhLli8jf2PoOipEwSuTx9Y6jSoPXwiRFUSYNB4vE1akxh7YuEkNCt1CnCJT+4AmpNqa2v5O5pKvjJYyASCIgsCfVBruaaciGvv3fW4DH2Og6CkqKsjtf6YxLxcjTyZ3bAMmgYZB/+JAMdTMuuxq1wcKqsboJAE=
+	t=1742806493; cv=none; b=K/rg6RJs4X7fuQzJhKrFs4k8i6u0amF7WGo1LMI4x51NyG0ol3VYSeynXvXGqXrKx0otUooLtFkufro8EOcHUcDhmtLdh0tGVaZvJm6SRxS46OYcgu1gJZqkw4iLBB1bmnTa8jN9txIQpX24/iC5d9xCx4g5kUxnddDMS519vGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742806486; c=relaxed/simple;
-	bh=lPZJAVjk+k6NzxVm1RrEPaKg6s3Q5Bek4ZO02BSnrQk=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AVtShVaWegk3eYqGTv8XRmxrgJLQugPfkbsmFWai1cFVq1CE0ADc6VMycpxL+5jkM1mHJ8I+43P6he0SasScrm2Lpc68DUCP8y4xgZY2lVDXqm6Lt4iu04osDvTQGlN4XJPOJOCAKWuNiiBu1zadKaxRQv4l5k0nd87auDkrzmM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com; spf=pass smtp.mailfrom=sk.com; arc=none smtp.client-ip=166.125.252.92
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sk.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sk.com
-X-AuditID: a67dfc5b-669ff7000002311f-34-67e11dce7ec2
-From: Rakie Kim <rakie.kim@sk.com>
-To: Rakie Kim <rakie.kim@sk.com>
-Cc: akpm@linux-foundation.org,
-	linux-mm@kvack.org,
-	linux-kernel@vger.kernel.org,
-	linux-cxl@vger.kernel.org,
-	joshua.hahnjy@gmail.com,
-	dan.j.williams@intel.com,
-	ying.huang@linux.alibaba.com,
-	david@redhat.com,
-	Jonathan.Cameron@huawei.com,
-	kernel_team@skhynix.com,
-	honggyu.kim@sk.com,
-	yunjeong.mun@sk.com,
-	Gregory Price <gourry@gourry.net>
-Subject: Re: [PATCH v3 3/3] mm/mempolicy: Support memory hotplug in weighted interleave
-Date: Mon, 24 Mar 2025 17:54:27 +0900
-Message-ID: <20250324085433.998-1-rakie.kim@sk.com>
-X-Mailer: git-send-email 2.48.1.windows.1
-In-Reply-To: <20250324084920.987-1-rakie.kim@sk.com>
-References: 
+	s=arc-20240116; t=1742806493; c=relaxed/simple;
+	bh=hycr9IxrcTalcitmbI4tg6J/1h4hJBWfw7bzysWl4N4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEo+ZpDaLG7OPWany8nNmce6OJTFZTJQc0FEeYDsge/0+n3MgJuYoxq0HGcUcQouDqfAmOSe9lQFOyCB7Q/qOtxFfpkHS9O/AaqizUtA6oF0JUc/EGh0DCgf8A/spWIsnVEJAX/T4Yo1I17EijeMIWGP/GoC1mJAQMY9ipgCAcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H3M4gZSY; arc=none smtp.client-ip=209.85.208.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H3M4gZSY"
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-30613802a6bso43633401fa.1;
+        Mon, 24 Mar 2025 01:54:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742806490; x=1743411290; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=C4PgdBjfMvh+LwZmBpgNjLd4N5iJTfwXMdQvoKH4gKw=;
+        b=H3M4gZSYyK1INgPyZEnB9L5m54IHlZZ6AUSXzKCViQK0LMbmkVVzJ3jBQ2/U22zN49
+         4ArcUsypw5PzgcUPaOTFPIsaWC2E1ZKL+t6xq9s0hEfY9eLZ+6TOBVQTw1YKKdAXIMzc
+         E32dZPgtEp0ccIDmMe83NYaMXoQm8I9JbMfxzlAbBzoN+Gx/SkoBxzXEmpjElm3vquXF
+         ViN2GcRievaUrpD5wC6MmrE30kwOBNMfzEvlzdZHohHI5tSUZEyeZGRDNAt3EhWObDDW
+         juA0VP/GMVsotQDZ89r4DVk/pdekxTswpQTbFj5XdmSNVNipf9iNZJ/XLdG3K1UGxPfg
+         K6/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742806490; x=1743411290;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=C4PgdBjfMvh+LwZmBpgNjLd4N5iJTfwXMdQvoKH4gKw=;
+        b=RRtv8RUJ5NoonFslxRmbz3Z31+9f6qKF+r4j8tO5P7yRBcBeE1XgfqDs2K2x06Wu0N
+         XxnZyda1JYEGkstklpyqkhG5A0DebQC48s2mSR4uraqSru3kV6pUEuuXYsaN3uipSfC2
+         fwv2+t6Cnpd35dwyT4fJLZOMN2Pb242jRKDcmYSjfLqHlgeWBAV+a0e3b1xzjjN4QD5e
+         T5YlujCli5Y1ENFo1ZycwdhrxPl/6m6nvL4E33c1vbyPZmOH1Th20/9FSUmqvwLX/g1M
+         o82Vj2iD+Uzei93oCYffh0Y2FFdutAbeK1q+jEG/dpDc71xjZaSf0dJ713eMnKrVDnsM
+         rDXA==
+X-Forwarded-Encrypted: i=1; AJvYcCVoZZUm0JmezZh6/ab0G5KO0Xtkha7BCwkrAYsOIIk7G3CyW58jbvq26vXlgp1LtjVTMTTKjKvRmczr@vger.kernel.org, AJvYcCWOaC4mK47N4s3BvO4A92LWIVQ0qpSwLtqviMWPw7grpMnO8L0iiMH1qmWeGA497Je27EeKMm1Hw9+7VOIW@vger.kernel.org
+X-Gm-Message-State: AOJu0YxojpjXWYqQiI5NQH+hJsWyRBlGkKiy5SxbTdQQfGEgi2CYYC/S
+	Q8dsV4uFLHwff6PEyLAhRwBNDBhWIPN25vfcncY0ch6nORXRXhHk
+X-Gm-Gg: ASbGnctb8KqaNohkfHyTW5GYlfZjdvJnKlN5Yn918ARH9an25y7tnRtNSXo6bqAL1t4
+	7UAJRsAMo1cM3dD3SMNTD9RYEVqYE8hh6zGjIgWHBbDdjE2G1z+hWjjPgkWstTdzeFISGs10Rk/
+	3FFuwrYAIpRK+JwVWdgvJWrdAhQseLxAcV0UAmBqoAqOmox/SZxN2LQ/DYrMJCV9p9ouppstt4F
+	eR4r3zyccG7CEUsbtyVBE4d120kKLBS81kUEuZyYw9ytR21JkdaHIiM2byhejlJLb6rdVhIpV1l
+	AenerUc47KCI840BxvwAdVZtBu9Lt1hoAap57rjx45HD5zi1Gbo=
+X-Google-Smtp-Source: AGHT+IFEHwB92fLiQgD2GWu2hJd4lLDZemSsPqGx9ThponiOAhjCP3/zLshZsbkBdSHEk7Qex/1tHQ==
+X-Received: by 2002:a2e:8558:0:b0:30b:c22d:83b3 with SMTP id 38308e7fff4ca-30d7e242af5mr34299991fa.15.1742806489349;
+        Mon, 24 Mar 2025 01:54:49 -0700 (PDT)
+Received: from mva-rohm ([2a10:a5c0:800d:dd00:8fdf:935a:2c85:d703])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-30d7d557b9fsm13627961fa.0.2025.03.24.01.54.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 01:54:48 -0700 (PDT)
+Date: Mon, 24 Mar 2025 10:54:44 +0200
+From: Matti Vaittinen <mazziesaccount@gmail.com>
+To: Matti Vaittinen <mazziesaccount@gmail.com>,
+	Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Matti Vaittinen <mazziesaccount@gmail.com>,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v2 01/14] dt-bindings: regulator: Add ROHM BD96802 PMIC
+Message-ID: <2cb4d103d011f0d4293f6ef9307cef57709263d9.1742802856.git.mazziesaccount@gmail.com>
+References: <cover.1742802856.git.mazziesaccount@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrPLMWRmVeSWpSXmKPExsXC9ZZnoe452YfpBpOf8VjMWb+GzWL61AuM
-	Fl/X/2K2+Hn3OLvFqoXX2CyOb53HbnF+1ikWi8u75rBZ3Fvzn9Vi9ZoMBy6PnbPusnt0t11m
-	92g58pbVY/Gel0wemz5NYvc4MeM3i8fOh5Ye7/ddZfP4vEkugDOKyyYlNSezLLVI3y6BK6Nl
-	7QWWgm7FiqnnPrI1MG6X7GLk5JAQMJH4/fsRWxcjB5j9Y2ImiMkmoCRxbG8MiCkioCBx6F90
-	FyMXB7PAcyaJt8d+sYN0CguES3QffMgCYrMIqErc+XuFGcTmFTCWOH7/ERPEdE2Jhkv3wGxO
-	oOmfbjwF6xUS4JF4tWE/I0S9oMTJmU/A5jALyEs0b53NDLJMQuA5m8S9cy2sEIMkJQ6uuMEy
-	gZF/FpKeWUh6FjAyrWIUyswry03MzDHRy6jMy6zQS87P3cQIDPZltX+idzB+uhB8iFGAg1GJ
-	h3fDy/vpQqyJZcWVuYcYJTiYlUR4j7E+TBfiTUmsrEotyo8vKs1JLT7EKM3BoiTOa/StPEVI
-	ID2xJDU7NbUgtQgmy8TBKdXA2KPG5al0/ccbH9tXS4L2aR0+k5CUdbaGvXLGp1qPBstd8scl
-	phi+K6lqP+KTcdXlS5W9hcgGpjkxJ7j7l/hanD/QuVZVu1z3QX5Rpk1J6KTwzRaeineXJa3l
-	ULRp2+/48U/ig6BNnBP6myw4f9dXXN1rvaSYo0Vgp3hb6/3pst2RjTO6Bb2VWIozEg21mIuK
-	EwH49+MkcgIAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrJLMWRmVeSWpSXmKPExsXCNUNNS/ec7MN0g5ZfzBZz1q9hs5g+9QKj
-	xdf1QO7Pu8fZLT4/e81ssWrhNTaL41vnsVscnnuS1eL8rFMsFpd3zWGzuLfmP6vFoWvPWS1W
-	r8mw+L1tBZsDn8fOWXfZPbrbLrN7tBx5y+qxeM9LJo9Nnyaxe5yY8ZvFY+dDS4/3+66yeXy7
-	7eGx+MUHJo/Pm+QCuKO4bFJSczLLUov07RK4MlrWXmAp6FasmHruI1sD43bJLkYODgkBE4kf
-	EzNBTDYBJYlje2NATBEBBYlD/6K7GLk4mAWeM0m8PfaLvYuRk0NYIFyi++BDFhCbRUBV4s7f
-	K8wgNq+AscTx+4+YQGwJAU2Jhkv3wGxOoOmfbjwF6xUS4JF4tWE/I0S9oMTJmU/A5jALyEs0
-	b53NPIGRZxaS1CwkqQWMTKsYRTLzynITM3NM9YqzMyrzMiv0kvNzNzECA3xZ7Z+JOxi/XHY/
-	xCjAwajEw7vh5f10IdbEsuLK3EOMEhzMSiK8x1gfpgvxpiRWVqUW5ccXleakFh9ilOZgURLn
-	9QpPTRASSE8sSc1OTS1ILYLJMnFwSjUwtpn3nHd9ee9NlfX5bnNFk72zzsefmv76w+lVsy/c
-	cZTINgtT4dVIl/Ji+DI1NXBubEhIBcOKlfosqZWGblvuzax7zHJHSCy3NJl7VX/afBO3ZfVb
-	I9Ov2FhPkjiRkcL72zd62tKqu5GWB9+o5P9IF30au1JPd9mcCHPv2fuZd4n4bkp6xCyqxFKc
-	kWioxVxUnAgAayADR2wCAAA=
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tX24Qyg5RxLJMHne"
+Content-Disposition: inline
+In-Reply-To: <cover.1742802856.git.mazziesaccount@gmail.com>
 
-On Mon, 24 Mar 2025 17:48:39 +0900 Rakie Kim <rakie.kim@sk.com> wrote:
-> On Fri, 21 Mar 2025 10:24:46 -0400 Gregory Price <gourry@gourry.net> wrote:
-> > On Thu, Mar 20, 2025 at 01:17:48PM +0900, Rakie Kim wrote:
-> > ... snip ...
-> > > +	mutex_lock(&sgrp->kobj_lock);
-> > > +	if (sgrp->nattrs[nid]) {
-> > > +		mutex_unlock(&sgrp->kobj_lock);
-> > > +		pr_info("Node [%d] already exists\n", nid);
-> > > +		kfree(new_attr);
-> > > +		kfree(name);
-> > > +		return 0;
-> > > +	}
-> > >  
-> > > -	if (sysfs_create_file(&sgrp->wi_kobj, &node_attr->kobj_attr.attr)) {
-> > > -		kfree(node_attr->kobj_attr.attr.name);
-> > > -		kfree(node_attr);
-> > > -		pr_err("failed to add attribute to weighted_interleave\n");
-> > > -		return -ENOMEM;
-> > > +	sgrp->nattrs[nid] = new_attr;
-> > > +	mutex_unlock(&sgrp->kobj_lock);
-> > > +
-> > > +	sysfs_attr_init(&sgrp->nattrs[nid]->kobj_attr.attr);
-> > > +	sgrp->nattrs[nid]->kobj_attr.attr.name = name;
-> > > +	sgrp->nattrs[nid]->kobj_attr.attr.mode = 0644;
-> > > +	sgrp->nattrs[nid]->kobj_attr.show = node_show;
-> > > +	sgrp->nattrs[nid]->kobj_attr.store = node_store;
-> > > +	sgrp->nattrs[nid]->nid = nid;
-> > 
-> > These accesses need to be inside the lock as well.  Probably we can't
-> > get here concurrently, but I can't so so definitively that I'm
-> > comfortable blind-accessing it outside the lock.
-> 
-> You're right, and I appreciate your point. It's not difficult to apply your
-> suggestion, so I plan to update the code as follows:
-> 
->     sgrp->nattrs[nid] = new_attr;
-> 
->     sysfs_attr_init(&sgrp->nattrs[nid]->kobj_attr.attr);
->     sgrp->nattrs[nid]->kobj_attr.attr.name = name;
->     sgrp->nattrs[nid]->kobj_attr.attr.mode = 0644;
->     sgrp->nattrs[nid]->kobj_attr.show = node_show;
->     sgrp->nattrs[nid]->kobj_attr.store = node_store;
->     sgrp->nattrs[nid]->nid = nid;
-> 
->     ret = sysfs_create_file(&sgrp->wi_kobj,
->            &sgrp->nattrs[nid]->kobj_attr.attr);
->     if (ret) {
->         mutex_unlock(&sgrp->kobj_lock);
->         ...
->     }
->     mutex_unlock(&sgrp->kobj_lock);
-> 
-> > 
-> > > +static int wi_node_notifier(struct notifier_block *nb,
-> > > +			       unsigned long action, void *data)
-> > > +{
-> > ... snip ...
-> > > +	case MEM_OFFLINE:
-> > > +		sysfs_wi_node_release(nid);
-> > 
-> > I'm still not convinced this is correct.  `offline_pages()` says this:
-> > 
-> > /*
-> >  * {on,off}lining is constrained to full memory sections (or more
-> >  * precisely to memory blocks from the user space POV).
-> >  */
-> > 
-> > And that is the function calling:
-> > 	memory_notify(MEM_OFFLINE, &arg);
-> > 
-> > David pointed out that this should be called when offlining each memory
-> > block.  This is not the same as simply doing `echo 0 > online`, you need
-> > to remove the dax device associated with the memory.
-> > 
-> > For example:
-> > 
-> >       node1
-> >     /       \
-> >  dax0.0    dax1.0
-> >    |          |
-> >   mb1        mb2
-> > 
-> > 
-> > With this code, if I `daxctl reconfigure-device devmem dax0.0` it will
-> > remove the first memory block, causing MEM_OFFLINE event to fire and
-> > removing the node - despite the fact that dax1.0 is still present.
-> > 
-> > This matters for systems with memory holes in CXL hotplug memory and
-> > also for systems with Dynamic Capacity Devices surfacing capacity as
-> > separate dax devices.
-> > 
-> > ~Gregory
-> 
-> If all memory blocks belonging to a node are offlined, the node will lose its
-> `N_MEMORY` state before the notifier callback is invoked. This should help avoid
-> the issue you mentioned.
-> Please let me know your thoughts on this approach.
-> 
-> Rakie
-> 
 
-I'm sorry, the code is missing.
-I may not fully understand the scenario you described, but I think your concern
-can be addressed by adding a simple check like the following:
+--tX24Qyg5RxLJMHne
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-    case MEM_OFFLINE:
-        if (!node_state(nid, N_MEMORY)) --> this point
-            sysfs_wi_node_release(nid);
+BD96802Qxx-C is an automotive grade configurable Power Management
+Integrated Circuit supporting Functional Safety features for application
+processors, SoCs and FPGAs. BD96802 is controlled via I2C, provides two
+interrupt lines and has two controllable buck regulators.
 
-If all memory blocks belonging to a node are offlined, the node will lose its
-`N_MEMORY` state before the notifier callback is invoked. This should help avoid
-the issue you mentioned.
-Please let me know your thoughts on this approach.
+The BD96802 belongs to the family of ROHM Scalable PMICs and is intended
+to be used as a companion PMIC for the BD96801.
 
-Rakie.
+Signed-off-by: Matti Vaittinen <mazziesaccount@gmail.com>
 
+---
+Revision history:
+ v1 =3D> :
+  - No changes
+---
+ .../regulator/rohm,bd96802-regulator.yaml     | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd9680=
+2-regulator.yaml
+
+diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd96802-regul=
+ator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd96802-regula=
+tor.yaml
+new file mode 100644
+index 000000000000..671eaf1096d3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/rohm,bd96802-regulator.ya=
+ml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/regulator/rohm,bd96802-regulator.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD96802 Power Management Integrated Circuit regulators
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++
++description:
++  This module is part of the ROHM BD96802 MFD device. For more details
++  see Documentation/devicetree/bindings/mfd/rohm,bd96802-pmic.yaml.
++
++  The regulator controller is represented as a sub-node of the PMIC node
++  on the device tree.
++
++  Regulator nodes should be named to buck1 and buck2.
++
++patternProperties:
++  "^buck[1-2]$":
++    type: object
++    description:
++      Properties for single BUCK regulator.
++    $ref: regulator.yaml#
++
++    properties:
++      rohm,initial-voltage-microvolt:
++        description:
++          Initial voltage for regulator. Voltage can be tuned +/-150 mV fr=
+om
++          this value. NOTE, This can be modified via I2C only when PMIC is=
+ in
++          STBY state.
++        minimum: 500000
++        maximum: 3300000
++
++      rohm,keep-on-stby:
++        description:
++          Keep the regulator powered when PMIC transitions to STBY state.
++        type: boolean
++
++    unevaluatedProperties: false
++
++additionalProperties: false
+--=20
+2.49.0
+
+
+--tX24Qyg5RxLJMHne
+Content-Type: application/pgp-signature; name=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEIx+f8wZb28fLKEhTeFA3/03aocUFAmfhHdQACgkQeFA3/03a
+ocUuVQf/SiPv4nnggbW9j+fXlAvsQIRmfKJB+W3T6we60BrxRJ2iNJEGIp+5SE4e
+WDA2q8tQPfXatUNTpcIZ/LBiqxXHiByEtQ2KMtFZu8aHzbhNa/JDw1AGeYmmuoBs
+7STG6b+YIbNCGQGQDZoHHk0o4qTzWZBhMfuJAdAScLhbzyOxDGGJ1kIQv7CvRzk6
+NoOlXeGidj1jmeO3/r2qnNG3N0cxcYHW8jwJL6NPfokytYsgh+Ww0YVnUIIuj0Jd
+2rAtGqGWVXmkD77mvTf4q0ai6AsAfrLlK+r9X8PyZLopOhcqWAXe052xWH+UgFyR
+WP0ysynuemqMZSQV3DV3nh4lTkysuA==
+=mVBS
+-----END PGP SIGNATURE-----
+
+--tX24Qyg5RxLJMHne--
