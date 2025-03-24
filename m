@@ -1,250 +1,125 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 791BCB667;
-	Mon, 24 Mar 2025 15:02:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1A34B667
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:03:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742828558; cv=none; b=eljGKpKeQIL0ubPcNwaGaHgnsvit5rHKkT+cKd32q4r+5q+05oBARrLnR/sH3eIIujNjSewy8TLIFccdbN0tTjhwDda4nPUtPSYhCEMqE1QQ5cIcMZDctPhM9AWI0pykr6NwycjU+EbhCXYzfhSUKDKJYFHnGgvCh+JrrCzIJuk=
+	t=1742828601; cv=none; b=RvibIXrQ8tOg+efGVbXb0J2YwSN42mjrkTZLCC/eHWi6P5gjbzDe/taFarHS8YKUln57zZ98vU4V2OKAuT3ghcgtQu6qMASIXNzxal1OrEbgqqKrZHR/Xq+HaS0d0TkRPvrkkKiaA1yeI0TRNbnEaaeDkbWXfWeiL8OsSrP6HBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742828558; c=relaxed/simple;
-	bh=8cXfyPbWxAr/jWnMcJDQrocLjVs+q5zx4VVdCdCy9kM=;
-	h=From:Date:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fRZMphNCwBCJl6LaAG2jBGe310npGWzpSht8Fi25XydrCVZftKq2x1f5Uf0XcjI+v88bCGGpBK8fzMo9enriHlFEQwBQFOhkKsWgxYY3fAxs7p77jrhLSWJQNLyJRpJ5QOycXyTjimrFQnz3IKkZCPSHragpNiWdaWVCeYYlXFc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UtkbcPW7; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1742828601; c=relaxed/simple;
+	bh=65mc09JnOzcVvzzTPHmhpq+II+Xcs2gKiHWnDOta5Xc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Xza5ELF4D5QRA7gShPaT+DKoWNVsJ9CC5Md8cHMY9W3RujdfyjUyNzJrNN7Wyxz61pwo0VeYY9GdWDRjJmxok0hNpyV3ylkpJQtMLLxVudieIf5l7UiGbyehauIC9Wseqk1nfdHMCdN89IhN6no1N+bJb90aZPTj2VKoXjAKiME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=N7Q4LOYX; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UtkbcPW7"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742828556; x=1774364556;
-  h=from:date:to:cc:subject:in-reply-to:message-id:
-   references:mime-version:content-id;
-  bh=8cXfyPbWxAr/jWnMcJDQrocLjVs+q5zx4VVdCdCy9kM=;
-  b=UtkbcPW7LGJCR3/yOiAnfvOL8yXhQTBPAKiTgfokKONxMolw1mtfPlNo
-   boiC+TZDiQ1RjE/DqEWoGlJ5/5bWL/3Tv4PWYuHTiv5LP0bFCT6C4sBSU
-   3wryJcT2IfySFtXXZZE3QqEpMTt1r1JK4BGIeMlHQU/cIODHECh6GrgOs
-   3A2TQ++/uaVR8eiuoFgIHDk0bTOPRZTn8hv77U1n4Y7HdnwMkd6hljSEJ
-   vIMPhfdBezSCRgheO44QFQd+fm804msCY53rVqk/nUs3yGrgPJdb8DKiZ
-   GIQi+71tPu7vhC/9vq4jHJQZ3PZsOBnc3GTOI3H1fl+1HqLpZWY4GZAu2
-   A==;
-X-CSE-ConnectionGUID: i702SIYEQACFVJJn+sjX/g==
-X-CSE-MsgGUID: cXFIolXSRdGx8O7+bWm/+Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="55409908"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="55409908"
-Received: from fmviesa004.fm.intel.com ([10.60.135.144])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 08:02:35 -0700
-X-CSE-ConnectionGUID: gMnauPJeRRK4fryKzAjBIw==
-X-CSE-MsgGUID: RgZUcThoSyyQCA7D+PG4Ow==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="129183127"
-Received: from ijarvine-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.245.251])
-  by fmviesa004-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 08:02:31 -0700
-From: =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@linux.intel.com>
-Date: Mon, 24 Mar 2025 17:02:28 +0200 (EET)
-To: Hans Zhang <18255117159@163.com>
-cc: lpieralisi@kernel.org, kw@linux.com, manivannan.sadhasivam@linaro.org, 
-    robh@kernel.org, bhelgaas@google.com, jingoohan1@gmail.com, 
-    thomas.richard@bootlin.com, linux-pci@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [v6 3/5] PCI: cadence: Use common PCI host bridge APIs for
- finding the capabilities
-In-Reply-To: <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
-Message-ID: <a3462c68-ec1b-0b1a-fee7-612bd1109819@linux.intel.com>
-References: <20250323164852.430546-1-18255117159@163.com> <20250323164852.430546-4-18255117159@163.com> <f467056d-8d4a-9dab-2f0a-ca589adfde53@linux.intel.com> <d370b69a-3b70-4e3b-94a3-43e0bc1305cd@163.com>
+	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="N7Q4LOYX"
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O9Pijj007713
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:03:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
+	cc:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
+	nH4aeoaJ2bY3RhjpBvj4Vxj6NTdJ/AFDG5izM2nQcDw=; b=N7Q4LOYXUuaaVvgi
+	l1okrk8+L6tEVc8sAsxHzYetGgDplc1MWqBxjnTEowSOjZEgv8QGguRmkZ05WtYb
+	R1mm2WLw0wdrJHTatytur6YWKvL1r2QAFCQhDzhcev9gxk/kEd3tzr63UXa8EMdZ
+	ieYH0z7dYOy8CBc/TfrD+N57+pzYyDkYUmiQ6SiBYZP9a0nii/cg/HraHMLU/RqH
+	ok3LtIVzOKEwDW1mTNoGn8hBQnnvZQ5QBZHdDWf7pxY8IiDk6l2tgA17k64vtKKg
+	dG7c6ezC3oFrXpD+BkUx4C45w6OPZxg38wmz574mWg9ts3f5N1BIrRL0iD+NVklw
+	x7Uw5Q==
+Received: from mail-pl1-f197.google.com (mail-pl1-f197.google.com [209.85.214.197])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 45hnyjcm9h-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:03:18 +0000 (GMT)
+Received: by mail-pl1-f197.google.com with SMTP id d9443c01a7336-2240c997059so101758085ad.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:03:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742828598; x=1743433398;
+        h=content-transfer-encoding:in-reply-to:content-language:from
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nH4aeoaJ2bY3RhjpBvj4Vxj6NTdJ/AFDG5izM2nQcDw=;
+        b=hQs35qG4SXGRZy1Wd0ePW9tYl5zpWXNWJGL3yFKRcAuFeF4zwvC2y+064Hcf0eabKU
+         bxpsUaNC6GcOfkUu77ADz4u0KdLkqRMosCeep8SblufX0q6o75e8kXay5xr7qu5Fpdh3
+         ZG2dA3O+O+QWTpS3uE3ooP7ymrO1BEsMShM5UzRgP3PC8U1yaYkxe7VPwaZL75JkKPEs
+         VkwUx6XIU2NhzjBPhHtlCVKmQIMQ6QqSO/V05ryF0PNrX8KOnQIpHUKZ/knkHMvwSU8q
+         QojWCanVny6cxCssTAtA4iGtDNjdq42hAvUs6QjRWW/X2rOou+Be8jM2QHd+DhOzbGhe
+         ygKQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWDwlXb+kC0emitdW1THSD/Zou/oUtm17vl/QIpTCncm+DvI8Uhjjs1oAUTHBwX1zTs9d+9QiWL2TbBCvc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyMmSM46EwmXl5G8myJHmQxTQuXVyrsFluBju3IZdBumyEttePO
+	hyNw8IuBenu465m9BJI3BARh2FdyErMXAZoHXqXg8uWiBGUGoaOmIBtyTdpMtY9pxzJiOzFsUAn
+	tZnqx7tOnyhdQ2S+pwNO0GUEZ+VpPFtieRBs3lnTt/l2urHHCGkbRt3ndUyFf2vk=
+X-Gm-Gg: ASbGncuUbQKgGGUjt4W1IG6FOFC3o1ttg7o2ZI4QgrWsig/RC4SWo3zuSro6afR7Uzr
+	rnKtZvD2ra9YVaiahq0/XBPlan+1rh7wXFXjHeZb5JbfNZy79sgWCrXR/uWmU6JpoV6oVw/IxH4
+	/xl4FAD2My5blF10KIbq9Oanu0hC1Cq3SHJzTIc/HqQPXsomAQHzV/yrNOIvfoT3jCcXVezDTx1
+	eLFdJoTv9DxW9OW+fHO6ifFPyNUVWxl5LqeHkK/htvRJIouTcJ+FHebwCvZH9Xza5UWgh7iDSqJ
+	XqmIPTFPQvq7xLFF21X7Jpdy6hWE/M8eY9MLcivdZJXL8FOnwexrXkFOMLMqUVth89rFXKY=
+X-Received: by 2002:a17:902:f70c:b0:224:c76:5e57 with SMTP id d9443c01a7336-22780e02a4emr237465385ad.39.1742828597677;
+        Mon, 24 Mar 2025 08:03:17 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IH828wzul6klWb3XsCB3+zMsH7vOJ7XnnAtFTDduSHSdwmPgp6DaMF6OMFiOhDbgCT/iquEMg==
+X-Received: by 2002:a17:902:f70c:b0:224:c76:5e57 with SMTP id d9443c01a7336-22780e02a4emr237464745ad.39.1742828597066;
+        Mon, 24 Mar 2025 08:03:17 -0700 (PDT)
+Received: from [10.227.110.203] (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22780f459fbsm72138365ad.78.2025.03.24.08.03.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 08:03:16 -0700 (PDT)
+Message-ID: <5d872cf0-ca57-4017-b06e-fce9c11813dc@oss.qualcomm.com>
+Date: Mon, 24 Mar 2025 08:03:15 -0700
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; BOUNDARY="8323328-920175786-1742826920=:1100"
-Content-ID: <318e995d-f786-7902-a077-e902a2ba123b@linux.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] wifi: ath11k: fix rx completion meta data corruption
+To: Johan Hovold <johan+linaro@kernel.org>, Jeff Johnson <jjohnson@kernel.org>
+Cc: Miaoqing Pan <quic_miaoqing@quicinc.com>,
+        Steev Klimaszewski <steev@kali.org>,
+        Clayton Craft <clayton@craftyguy.net>,
+        Jens Glathe <jens.glathe@oldschoolsolutions.biz>,
+        ath11k@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20250321145302.4775-1-johan+linaro@kernel.org>
+From: Jeff Johnson <jeff.johnson@oss.qualcomm.com>
+Content-Language: en-US
+In-Reply-To: <20250321145302.4775-1-johan+linaro@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Authority-Analysis: v=2.4 cv=Ybu95xRf c=1 sm=1 tr=0 ts=67e17436 cx=c_pps a=cmESyDAEBpBGqyK7t0alAg==:117 a=JYp8KDb2vCoCEuGobkYCKw==:17 a=IkcTkHD0fZMA:10 a=Vs1iUdzkB0EA:10 a=VwQbUJbxAAAA:8 a=GSe8ykzKO7dVpNIIvtwA:9 a=QEXdDO2ut3YA:10 a=zZCYzV9kfG8A:10
+ a=1OuFwYUASf3TG4hYMiVC:22
+X-Proofpoint-GUID: 5XG3r9ONJlSog9GLmyZ4GuM-B45JPuIr
+X-Proofpoint-ORIG-GUID: 5XG3r9ONJlSog9GLmyZ4GuM-B45JPuIr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 spamscore=0
+ lowpriorityscore=0 mlxscore=0 malwarescore=0 bulkscore=0 clxscore=1015
+ adultscore=0 classifier=spam authscore=0 authtc=n/a authcc= route=outbound
+ adjust=0 reason=mlx scancount=1 engine=8.19.0-2502280000
+ definitions=main-2503240109
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 3/21/2025 7:53 AM, Johan Hovold wrote:
+> Add the missing memory barrier to make sure that the REO dest ring
+> descriptor is read after the head pointer to avoid using stale data on
+> weakly ordered architectures like aarch64.
+> 
+> This may fix the ring-buffer corruption worked around by commit
+> f9fff67d2d7c ("wifi: ath11k: Fix SKB corruption in REO destination
+> ring") by silently discarding data, and may possibly also address user
+> reported errors like:
+> 
+> 	ath11k_pci 0006:01:00.0: msdu_done bit in attention is not set
+> 
+> Tested-on: WCN6855 hw2.1 WLAN.HSP.1.1-03125-QCAHSPSWPL_V1_V2_SILICONZ_LITE-3.6510.41
+> 
+> Fixes: d5c65159f289 ("ath11k: driver for Qualcomm IEEE 802.11ax devices")
+> Cc: stable@vger.kernel.org	# 5.6
+> Link: https://bugzilla.kernel.org/show_bug.cgi?id=218005
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
---8323328-920175786-1742826920=:1100
-Content-Type: text/plain; CHARSET=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Content-ID: <d310fa7e-10d5-290b-4aff-454e1f31a150@linux.intel.com>
-
-On Mon, 24 Mar 2025, Hans Zhang wrote:
-> On 2025/3/24 21:44, Ilpo J=E4rvinen wrote:
-> > On Mon, 24 Mar 2025, Hans Zhang wrote:
-> >=20
-> > > Since the PCI core is now exposing generic APIs for the host bridges =
-to
-> >=20
-> > No need to say "since ... is now exposing". Just say "Use ..." as if th=
-e
-> > API has always existed even if you just added it.
-> >=20
->=20
-> Hi Ilpo,
->=20
-> Thanks your for reply. Will change.
->=20
->=20
-> > > search for the PCIe capabilities, make use of them in the CDNS driver=
-=2E
-> > >=20
-> > > Signed-off-by: Hans Zhang <18255117159@163.com>
-> > > ---
-> > > Changes since v5:
-> > > https://lore.kernel.org/linux-pci/20250321163803.391056-4-18255117159=
-@163.com
-> > >=20
-> > > - Kconfig add "select PCI_HOST_HELPERS"
-> > > ---
-> > >   drivers/pci/controller/cadence/Kconfig        |  1 +
-> > >   drivers/pci/controller/cadence/pcie-cadence.c | 25 ++++++++++++++++=
-+++
-> > >   drivers/pci/controller/cadence/pcie-cadence.h |  3 +++
-> > >   3 files changed, 29 insertions(+)
-> > >=20
-> > > diff --git a/drivers/pci/controller/cadence/Kconfig
-> > > b/drivers/pci/controller/cadence/Kconfig
-> > > index 8a0044bb3989..0a4f245bbeb0 100644
-> > > --- a/drivers/pci/controller/cadence/Kconfig
-> > > +++ b/drivers/pci/controller/cadence/Kconfig
-> > > @@ -5,6 +5,7 @@ menu "Cadence-based PCIe controllers"
-> > >     config PCIE_CADENCE
-> > >   =09bool
-> > > +=09select PCI_HOST_HELPERS
-> > >     config PCIE_CADENCE_HOST
-> > >   =09bool
-> > > diff --git a/drivers/pci/controller/cadence/pcie-cadence.c
-> > > b/drivers/pci/controller/cadence/pcie-cadence.c
-> > > index 204e045aed8c..329dab4ff813 100644
-> > > --- a/drivers/pci/controller/cadence/pcie-cadence.c
-> > > +++ b/drivers/pci/controller/cadence/pcie-cadence.c
-> > > @@ -8,6 +8,31 @@
-> > >     #include "pcie-cadence.h"
-> > >   +static u32 cdns_pcie_read_cfg(void *priv, int where, int size)
-> > > +{
-> > > +=09struct cdns_pcie *pcie =3D priv;
-> > > +=09u32 val;
-> > > +
-> > > +=09if (size =3D=3D 4)
-> > > +=09=09val =3D readl(pcie->reg_base + where);
-> >=20
-> > Should this use cdns_pcie_readl() ?
->=20
-> pci_host_bridge_find_*capability required to read two or four bytes.
->=20
-> reg =3D read_cfg(priv, cap_ptr, 2);
-> or
-> header =3D read_cfg(priv, pos, 4);
->=20
-> Here I mainly want to write it the same way as size =3D=3D 2 and size =3D=
-=3D 1.
-> Or size =3D=3D 4 should I write it as cdns_pcie_readl() ?
-
-As is, it seems two functions are added for the same thing for the case=20
-with size =3D=3D 4 with different names which feels duplication. One could =
-add=20
-cdns_pcie_readw() and cdns_pcie_readb() too but perhaps cdns_pcie_readl()=
-=20
-should just call this new function instead?
-
-> > > +=09else if (size =3D=3D 2)
-> > > +=09=09val =3D readw(pcie->reg_base + where);
-> > > +=09else if (size =3D=3D 1)
-> > > +=09=09val =3D readb(pcie->reg_base + where);
-> > > +
-> > > +=09return val;
-> > > +}
-> > > +
-> > > +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap)
-> > > +{
-> > > +=09return pci_host_bridge_find_capability(pcie, cdns_pcie_read_cfg, =
-cap);
-> > > +}
-> > > +
-> > > +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap)
-> > > +{
-> > > +=09return pci_host_bridge_find_ext_capability(pcie, cdns_pcie_read_c=
-fg,
-> > > cap);
-> > > +}
-> >=20
-> > I'm really wondering why the read config function is provided directly =
-as
-> > an argument. Shouldn't struct pci_host_bridge have some ops that can re=
-ad
-> > config so wouldn't it make much more sense to pass it and use the func
-> > from there? There seems to ops in pci_host_bridge that has read(), does
-> > that work? If not, why?
-> >=20
->=20
-> No effect.=20
-
-I'm not sure what you meant?
-
-> Because we need to get the offset of the capability before PCIe
-> enumerates the device.=20
-
-Is this to say it is needed before the struct pci_host_bridge is created?
-
-> I originally added a separate find capability related
-> function for CDNS in the following patch. It's also copied directly from =
-DWC.
-> Mani felt there was too much duplicate code and also suggested passing a
-> callback function that could manipulate the registers of the root port of=
- DWC
-> or CDNS.
-
-I very much like the direction this patchset is moving (moving shared=20
-part of controllers code to core), I just feel this doesn't go far enough=
-=20
-when it's passing function pointer to the read function.
-
-I admit I've never written a controller driver so perhaps there's=20
-something detail I lack knowledge of but I'd want to understand why
-struct pci_ops (which exists both in pci_host_bridge and pci_bus) cannot=20
-be used?
-
-> https://patchwork.kernel.org/project/linux-pci/patch/20250308133903.32221=
-6-1-18255117159@163.com/
->=20
-> The original function is in the following file:
-> drivers/pci/controller/dwc/pcie-designware.c
-> u8 dw_pcie_find_capability(struct dw_pcie *pci, u8 cap)
-> u16 dw_pcie_find_ext_capability(struct dw_pcie *pci, u8 cap)
->=20
-> CDNS has the same need to find the offset of the capability.
->=20
-> > > +
-> > >   void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie)
-> > >   {
-> > >   =09u32 delay =3D 0x3;
-> > > diff --git a/drivers/pci/controller/cadence/pcie-cadence.h
-> > > b/drivers/pci/controller/cadence/pcie-cadence.h
-> > > index f5eeff834ec1..6f4981fccb94 100644
-> > > --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> > > +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> > > @@ -557,6 +557,9 @@ static inline int cdns_pcie_ep_setup(struct
-> > > cdns_pcie_ep *ep)
-> > >   }
-> > >   #endif
-> > >   +u8 cdns_pcie_find_capability(struct cdns_pcie *pcie, u8 cap);
-> > > +u16 cdns_pcie_find_ext_capability(struct cdns_pcie *pcie, u8 cap);
-> > > +
-> > >   void cdns_pcie_detect_quiet_min_delay_set(struct cdns_pcie *pcie);
-> > >     void cdns_pcie_set_outbound_region(struct cdns_pcie *pcie, u8 bus=
-nr,
-> > > u8 fn,
-> > >=20
-> >=20
->=20
-> Best regards,
-> Hans
->=20
-
---=20
- i.
---8323328-920175786-1742826920=:1100--
+Does this supersede:
+[PATCH] wifi: ath11k: fix ring-buffer corruption
