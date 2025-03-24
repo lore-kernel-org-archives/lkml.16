@@ -1,810 +1,252 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fhigh-a2-smtp.messagingengine.com (fhigh-a2-smtp.messagingengine.com [103.168.172.153])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D51E4200CB
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:41:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16B5200CB
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:43:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.153
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742805672; cv=none; b=KavEfZkD81W0gOiedJNNyuJauow+TmG25r4e5PDjS79d08EhL5bWHfTU3jj6XyYCjooiQB74MQLG1p0xGB2txYyvIsMDQU4g6vulOdqwWwWcQechWHRr9CLWrc4D6AlbQpaaMwULhgLmgRMTp5K2Mv/Hh6rqP1pXylvGJG+WOYo=
+	t=1742805782; cv=none; b=Wl9SedIHfqNgZvsU/Rm6C97W3bJv+yGN9upagjuRxj8N3h0jf154RU6E1dqlIPKsznWBVLaGTwoLhi9U9YEK/lv/VCfH153EAgXveuiVdhviPCTBfDu703MLTh5zoH5y6PrXelxmmoe/mSqlT9d+B+o6jClY2r4R8lW+wvFhWyo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742805672; c=relaxed/simple;
-	bh=KSWp37/3xJv10o3EDk7YnEOgu8qfEW3FThXTG0B1Ke4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mVLldskY8A+g0G51vwVZBhr7bhXO8n//Fg3+NkUBU2wgMYlhlUgP0TVKXcysN0JC0QiOr6HhdESq+IgRXaU6ojPShLnJEW4zjghuovLrpdqH1BFo/9ViJG3T8Hi3T2O30/YPq2w9dIptXa8I+hQSU1HEAZ00xsevsJ1putF7mcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com; spf=pass smtp.mailfrom=fairphone.com; dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b=1wV6CbPp; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=fairphone.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fairphone.com
+	s=arc-20240116; t=1742805782; c=relaxed/simple;
+	bh=ycOg5IKMHPKpgJbedMyST9/3B0t5g8eFieS6PBgUfn8=;
+	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
+	 Subject:Content-Type; b=uKM7SaznO7kRJe53pglWZ3rbcmV8FuvaXVYYoBXuFLkZQ5XmNhFIoznw1SVLcL+L0a7mbW41g+7v6syoRMEFnzC4PMNRDKnizggqmRcCy09TU/x4THjR+Tfe4BjB/QCLYmr/XtZhb62aA9rKLitRKol0dGIfAhxSLaxLvYeSHtg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=eMJ3g99Y; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=BSfO6oxA; arc=none smtp.client-ip=103.168.172.153
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fairphone.com header.i=@fairphone.com header.b="1wV6CbPp"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-5e5cded3e2eso5794628a12.0
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 01:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=fairphone.com; s=fair; t=1742805667; x=1743410467; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=nTf80IeubbyZy4FsO7Ri7gHGg5cGJf6Y2Ngd+8a5bds=;
-        b=1wV6CbPpSMk/6GcB8kJksyMwvckr6vI1RUuZLAhypK4Z8T2VepL0Ah7NQR8DZnggrT
-         533SbMKy/8Olbg2lFYJOiTpEhMKThVwHvYWbPJ0/8O3RWBvc1w1XyiYbA65UUKj8Bjfa
-         xIySeKGjs6LxwAXy688F78QwUqYyranSpsD1J1i/wksRHczUbrU2/HcRbGF99e/0lfB5
-         bNDSWMECt0yJnFqR/ImBSQHCMKZhS8hI43m4knv9fpdiicUUpQZU9UKSbXymzIQ0dJRi
-         hoXrqo18GN+u8qqVVjIQ8njwvIGgZ7R6wy/eYBy9JRUydAu76oqxF9DZrTcml9I3dzQu
-         2yXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742805667; x=1743410467;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=nTf80IeubbyZy4FsO7Ri7gHGg5cGJf6Y2Ngd+8a5bds=;
-        b=q0m7G+XETsqv5GL4p/dlcJHxiingyfOqmRYhpXbTnVI5pUCFpXCO5cjCgQwS5JeZVw
-         ucQgtLhNSB+A4j0Qj8QNdV82UVX+rSaGnWRy2/7slXa9xJ19ZNGnA91e2fsxa4hwOTM9
-         MJKANI5Tp/ThoEV74RQq2XH+faGZTgM+MNvbRDhYZJnBSyQF9oIwbo5TkklGjb+Wcljk
-         Vn9hpMx3ZBTsJjgfEu0Xbu4ZbdcU0T9rN/mc9kqsH9ncbxT+3aUSvxAVO4K4eH3fPmEa
-         kD4Cj5soDHsQ39dxHi05rSsPP2Aeo8ZQInSkFvVcU4Xb24pHxyju10LXUEr7OIdjQu2F
-         g4mQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUxKwhTfUWtlAdYOo+Ibeub3wuP5h6kZ4CJi2h8E8walNAA/EdJn+RaIxKsGS04df7YFphbA9cLCK0wbDg=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzNSGsniF8T6zhso1Dvof+Z6nd23RdzTeVIaZIegqUtwis+s2DH
-	F4vlGOga2wEk2Qo/WVwVbwirr0N9123BFYTLaEVO6VaXRJNirTB92a4jt8l0LTk=
-X-Gm-Gg: ASbGncsAhsxLG1GrU6a5G751YMxZLYt2LW8OQPso31RrXaMPKJYizAGBPBAzNC2Hh9j
-	T9FKUPQCUrduA5U+oAp9VQQRMTZI5PzhVHBTsQdue4z6Z3ktRm7I+GUrRzxrAa2jd9vjuTxMuKk
-	PWHjujKkg4AXyxDx8xQ2lwo2oguZa1LyPG0wYHxX+eoZJmVTTvizRJrWCHodTxr8zkAJGcO5rJ9
-	TqSycX0iGinjg/zqANXMFjrdt0PseLuOi9fhi9w/Ttfb+6Om1sKRdm8xuXCuW32GmZ2uUNJUbY2
-	DgqzP7Es1jrl+YjTfmGAfOoqyKPRsYnAzrlCobIGXSAJyQHEIO4Wi3yQ/kkLew1fC9HV5xSeSg/
-	s4xSd03gImaP2yyLK5g==
-X-Google-Smtp-Source: AGHT+IFI+ZH2iXneGqqmdv18ffHQieyQpfjvA4aVjvSf6dTYNSsZRs7FMsBV7igF7uZjzeOrJuMDfA==
-X-Received: by 2002:a05:6402:500e:b0:5ec:92c3:58c5 with SMTP id 4fb4d7f45d1cf-5ec92c35a94mr3833830a12.29.1742805666879;
-        Mon, 24 Mar 2025 01:41:06 -0700 (PDT)
-Received: from [100.64.0.4] (144-178-202-138.static.ef-service.nl. [144.178.202.138])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5ebcd0dfb33sm5715937a12.68.2025.03.24.01.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 01:41:06 -0700 (PDT)
-From: Luca Weiss <luca.weiss@fairphone.com>
-Date: Mon, 24 Mar 2025 09:41:01 +0100
-Subject: [PATCH v2 1/4] arm64: dts: qcom: sm6350: Align reg properties with
- latest style
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="eMJ3g99Y";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="BSfO6oxA"
+Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id BC9A211400C4;
+	Mon, 24 Mar 2025 04:42:59 -0400 (EDT)
+Received: from phl-imap-11 ([10.202.2.101])
+  by phl-compute-07.internal (MEProxy); Mon, 24 Mar 2025 04:42:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=fm1; t=1742805779;
+	 x=1742892179; bh=ooYuA0uM53YxnENt+atSUcEUD65s+aUhDXD6jeflgG8=; b=
+	eMJ3g99Yzd9c4BoOVLfrKG/FuaQnaGtQaOKsWzqgQUJYektzgB4mNYbHM5hPL/Y2
+	yMNIGARDPEK9gtWnk6b/1Wd6GUQvcLhbjcRedyCLpBXz+M3pkgKZtg3fW2/N26Oq
+	CwTHAZ5Q2Oe5XRtx6pzRFDidKQJvHMrx+nddzru9/VO6CoaPXkenn4fCSMav3ZYf
+	ZkE6qtAFGaEgQkNFfi+8XWBYEC+5zYFGhllX/tpsBXw9LCOgoMCFWJKgAKWu1SVC
+	orisL8qdIkyuYGbrg+Gk/10yQgnyNaQrn/Zn2gzG8xtwAm3KT0CQn2eAhlCtMwO9
+	Uvr+jg4KF79afpCOv3oGaQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to:x-me-proxy
+	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1742805779; x=
+	1742892179; bh=ooYuA0uM53YxnENt+atSUcEUD65s+aUhDXD6jeflgG8=; b=B
+	SfO6oxApSVgj0TrkS6W3wVKULQ6hAQa3lp77kCWvQ8e/xZOtuIQyRAmW3rpe4QVQ
+	yLUsoZiaB1QXnBg7VkR4iYL8cFoFdDKVoXBjZ0RPeE7UBRBcfdW8olZfRhKxXu6Q
+	LsxvF/tDPh+EfCewAc8TdJoaX7MabBNBxPsouqJS/UhzggXgeSdY+BU1wx13Dn88
+	am7JAV0bi3HFpu9cGjb2QkCdC9ZTOw00XEWoGYBFjRtRd0sO5wnhPyemBaG9N2i2
+	msdFnm6cxxzBl2uTtZCBwKD4ScxlF7LyjWLRa45Q9erytJiTNhwArL9qA51j6nwa
+	anon86oFjBrId9t5uGP8A==
+X-ME-Sender: <xms:ERvhZzZ10boHAWOzwyKM9cHp7Pv8Iys7qWERv-ZxbBkOfsGRkFO0jQ>
+    <xme:ERvhZyaIO-SaWeBPZqS9e6M8VUE9ltw3IPtpQZeuiJzxoG08GXGTSDQv3Eg01_3e1
+    1lyRVjRbuyU4cW_uPc>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduheelfedvucetufdoteggodetrf
+    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
+    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
+    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtqhertder
+    tdejnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
+    gsrdguvgeqnecuggftrfgrthhtvghrnhepvdfhvdekueduveffffetgfdvveefvdelhedv
+    vdegjedvfeehtdeggeevheefleejnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
+    vddvpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrnhhshhhumhgrnhdrkhhhrg
+    hnughurghlsegrrhhmrdgtohhmpdhrtghpthhtoheptggrthgrlhhinhdrmhgrrhhinhgr
+    shesrghrmhdrtghomhdprhgtphhtthhopehrhigrnhdrrhhosggvrhhtshesrghrmhdrtg
+    homhdprhgtphhtthhopehvihhntggvnhiiohdrfhhrrghstghinhhosegrrhhmrdgtohhm
+    pdhrtghpthhtoheptghuihihuhhnhhhuihessgihthgvuggrnhgtvgdrtghomhdprhgtph
+    htthhopehluhiguhdrkhgvrhhnvghlsegshihtvggurghntggvrdgtohhmpdhrtghpthht
+    ohepshhtuhgrrhhtrdhmvghnvghfhiestghouggrshhiphdrtghomhdprhgtphhtthhope
+    gthhhrihhsthhophhhvgdrlhgvrhhohiestghsghhrohhuphdrvghupdhrtghpthhtohep
+    phgrlhhmvghrsegurggssggvlhhtrdgtohhm
+X-ME-Proxy: <xmx:ERvhZ190Exg3K6_kLgWu7WsydNwRgDQP1BvGS38EtAEVS10qTc9izQ>
+    <xmx:ERvhZ5pSTaln_bffxxqCHJkhz9AKpKOOKmQO4Eq5HKf-Gho2VJ5U-g>
+    <xmx:ERvhZ-pLXnyHzEuv7tjWWqvRr2xVVCSXFg9BY-tBBUxlIVlxpfmlxg>
+    <xmx:ERvhZ_Qq-RQ9a5tD09RpSMN7-QpOUqXaXxZO_wMviqQRD4uPdkCddw>
+    <xmx:ExvhZ2B_JHKg4uJh_z1M_1tIcDc8LNRBkE3AjwEBbfVsDk8PWVd86Ji_>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.phl.internal (Postfix, from userid 501)
+	id 1BD7F2220072; Mon, 24 Mar 2025 04:42:57 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-sm6350-videocc-v2-1-cc22386433f4@fairphone.com>
-References: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
-In-Reply-To: <20250324-sm6350-videocc-v2-0-cc22386433f4@fairphone.com>
-To: Bjorn Andersson <andersson@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Taniya Das <quic_tdas@quicinc.com>, 
- Konrad Dybcio <konradybcio@kernel.org>
-Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca.weiss@fairphone.com>
-X-Mailer: b4 0.14.2
+X-ThreadId: T4d23c9949082f1fa
+Date: Mon, 24 Mar 2025 09:42:35 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Yunhui Cui" <cuiyunhui@bytedance.com>
+Cc: "Paul Walmsley" <paul.walmsley@sifive.com>,
+ "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert Ou" <aou@eecs.berkeley.edu>,
+ "Alexandre Ghiti" <alex@ghiti.fr>,
+ "Anshuman Khandual" <anshuman.khandual@arm.com>,
+ "Andrew Morton" <akpm@linux-foundation.org>,
+ "Ingo Molnar" <mingo@kernel.org>,
+ "Catalin Marinas" <catalin.marinas@arm.com>,
+ "Ryan Roberts" <ryan.roberts@arm.com>,
+ "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+ "Nam Cao" <namcao@linutronix.de>,
+ =?UTF-8?Q?Bj=C3=B6rn_T=C3=B6pel?= <bjorn@rivosinc.com>,
+ "Stuart Menefy" <stuart.menefy@codasip.com>,
+ "Xu Lu" <luxu.kernel@bytedance.com>,
+ "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
+ "Samuel Holland" <samuel.holland@sifive.com>,
+ "Christophe Leroy" <christophe.leroy@csgroup.eu>,
+ "Dawei Li" <dawei.li@shingroup.cn>, "Mike Rapoport" <rppt@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Message-Id: <68644786-ed4b-49b1-9a4c-3318a8fc0c7d@app.fastmail.com>
+In-Reply-To: 
+ <CAEEQ3wk95SMxbKQqD08ACaErG9bvUNQ9QOK6KsZSc5xGHRj+pQ@mail.gmail.com>
+References: <20250320084428.51151-1-cuiyunhui@bytedance.com>
+ <9256ca10-323d-41b4-b935-5281f925d50c@app.fastmail.com>
+ <CAEEQ3wk95SMxbKQqD08ACaErG9bvUNQ9QOK6KsZSc5xGHRj+pQ@mail.gmail.com>
+Subject: Re: [External] Re: [PATCH] riscv: introduce the ioremap_prot() function
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-While in the past the 'reg' properties were often written using decimal
-'0' for #address-cells = <2> & #size-cells = <2>, nowadays the style is
-to use hexadecimal '0x0' instead.
+On Mon, Mar 24, 2025, at 02:30, yunhui cui wrote:
+> On Thu, Mar 20, 2025 at 5:22=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> =
+wrote:
 
-Align this dtsi file to the new style to make it consistent, and don't
-use mixed 0x0 and 0 anymore.
+>> > diff --git a/arch/riscv/include/asm/io.h b/arch/riscv/include/asm/i=
+o.h
+>> > index a0e51840b9db..736c5557bd06 100644
+>> > --- a/arch/riscv/include/asm/io.h
+>> > +++ b/arch/riscv/include/asm/io.h
+>> > @@ -133,6 +133,8 @@ __io_writes_outs(outs, u64, q, __io_pbr(), __io=
+_paw())
+>> >  #define outsq(addr, buffer, count) __outsq(PCI_IOBASE + (addr), bu=
+ffer, count)
+>> >  #endif
+>> >
+>> > +#define ioremap_prot ioremap_prot
+>> > +
+>> >  #include <asm-generic/io.h>
+>> >
+>> >  #ifdef CONFIG_MMU
+>>
+>> This feels slightly wrong to me, the "#define foo foo" method
+>> is normally used to override a declaration or inline function with
+>> another one, but this one only overrides the implementation, not
+>> the declaration.
+>>
+>> I see the same is done on arc, arm64, parisc, powerpc, s390,
+>> sh and xtensa, so we can keep this one as well, but it would be
+>> nice to change all of these to a less surprising approach.
+>>
+>> Maybe we should just remove these macros from asm/io.h and
+>> the trivial wrapper from mm/ioremap.c, and instead change the
+>> other architectures that have GENERIC_IOREMAP to use
+>>
+>> #define ioremap_prot generic_ioremap_prot
+>>
+>> It seems this would be only csky, hexagon, (some) loongarch
+>> and openrisc.
+>
+> It seems that we can't simply use #define ioremap_prot
+> generic_ioremap_prot because some architectures have certain special
+> behaviors before calling generic_ioremap_prot(). For example, there's
+> the ioremap_prot_hook() logic on ARM64 and the CONFIG_EISA logic on
+> PA-RISC, among others.
 
-Signed-off-by: Luca Weiss <luca.weiss@fairphone.com>
----
- arch/arm64/boot/dts/qcom/sm6350.dtsi | 204 +++++++++++++++++------------------
- 1 file changed, 102 insertions(+), 102 deletions(-)
+I meant only the four that I have listed above should do
+the "#define ioremap_prot generic_ioremap_prot", while the
+ones that have some special case would continue to provide
+their own implementation.
 
-diff --git a/arch/arm64/boot/dts/qcom/sm6350.dtsi b/arch/arm64/boot/dts/qcom/sm6350.dtsi
-index 00ad1d09a19558d9e2bc61f1a81a36d466adc88e..42f9d16c2fa6da66a8bb524a33c2687a1e4b40e0 100644
---- a/arch/arm64/boot/dts/qcom/sm6350.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sm6350.dtsi
-@@ -566,114 +566,114 @@ reserved_memory: reserved-memory {
- 		ranges;
- 
- 		hyp_mem: memory@80000000 {
--			reg = <0 0x80000000 0 0x600000>;
-+			reg = <0x0 0x80000000 0x0 0x600000>;
- 			no-map;
- 		};
- 
- 		xbl_aop_mem: memory@80700000 {
--			reg = <0 0x80700000 0 0x160000>;
-+			reg = <0x0 0x80700000 0x0 0x160000>;
- 			no-map;
- 		};
- 
- 		cmd_db: memory@80860000 {
- 			compatible = "qcom,cmd-db";
--			reg = <0 0x80860000 0 0x20000>;
-+			reg = <0x0 0x80860000 0x0 0x20000>;
- 			no-map;
- 		};
- 
- 		sec_apps_mem: memory@808ff000 {
--			reg = <0 0x808ff000 0 0x1000>;
-+			reg = <0x0 0x808ff000 0x0 0x1000>;
- 			no-map;
- 		};
- 
- 		smem_mem: memory@80900000 {
--			reg = <0 0x80900000 0 0x200000>;
-+			reg = <0x0 0x80900000 0x0 0x200000>;
- 			no-map;
- 		};
- 
- 		cdsp_sec_mem: memory@80b00000 {
--			reg = <0 0x80b00000 0 0x1e00000>;
-+			reg = <0x0 0x80b00000 0x0 0x1e00000>;
- 			no-map;
- 		};
- 
- 		pil_camera_mem: memory@86000000 {
--			reg = <0 0x86000000 0 0x500000>;
-+			reg = <0x0 0x86000000 0x0 0x500000>;
- 			no-map;
- 		};
- 
- 		pil_npu_mem: memory@86500000 {
--			reg = <0 0x86500000 0 0x500000>;
-+			reg = <0x0 0x86500000 0x0 0x500000>;
- 			no-map;
- 		};
- 
- 		pil_video_mem: memory@86a00000 {
--			reg = <0 0x86a00000 0 0x500000>;
-+			reg = <0x0 0x86a00000 0x0 0x500000>;
- 			no-map;
- 		};
- 
- 		pil_cdsp_mem: memory@86f00000 {
--			reg = <0 0x86f00000 0 0x1e00000>;
-+			reg = <0x0 0x86f00000 0x0 0x1e00000>;
- 			no-map;
- 		};
- 
- 		pil_adsp_mem: memory@88d00000 {
--			reg = <0 0x88d00000 0 0x2800000>;
-+			reg = <0x0 0x88d00000 0x0 0x2800000>;
- 			no-map;
- 		};
- 
- 		wlan_fw_mem: memory@8b500000 {
--			reg = <0 0x8b500000 0 0x200000>;
-+			reg = <0x0 0x8b500000 0x0 0x200000>;
- 			no-map;
- 		};
- 
- 		pil_ipa_fw_mem: memory@8b700000 {
--			reg = <0 0x8b700000 0 0x10000>;
-+			reg = <0x0 0x8b700000 0x0 0x10000>;
- 			no-map;
- 		};
- 
- 		pil_ipa_gsi_mem: memory@8b710000 {
--			reg = <0 0x8b710000 0 0x5400>;
-+			reg = <0x0 0x8b710000 0x0 0x5400>;
- 			no-map;
- 		};
- 
- 		pil_modem_mem: memory@8b800000 {
--			reg = <0 0x8b800000 0 0xf800000>;
-+			reg = <0x0 0x8b800000 0x0 0xf800000>;
- 			no-map;
- 		};
- 
- 		cont_splash_memory: memory@a0000000 {
--			reg = <0 0xa0000000 0 0x2300000>;
-+			reg = <0x0 0xa0000000 0x0 0x2300000>;
- 			no-map;
- 		};
- 
- 		dfps_data_memory: memory@a2300000 {
--			reg = <0 0xa2300000 0 0x100000>;
-+			reg = <0x0 0xa2300000 0x0 0x100000>;
- 			no-map;
- 		};
- 
- 		removed_region: memory@c0000000 {
--			reg = <0 0xc0000000 0 0x3900000>;
-+			reg = <0x0 0xc0000000 0x0 0x3900000>;
- 			no-map;
- 		};
- 
- 		pil_gpu_mem: memory@f0d00000 {
--			reg = <0 0xf0d00000 0 0x1000>;
-+			reg = <0x0 0xf0d00000 0x0 0x1000>;
- 			no-map;
- 		};
- 
- 		debug_region: memory@ffb00000 {
--			reg = <0 0xffb00000 0 0xc0000>;
-+			reg = <0x0 0xffb00000 0x0 0xc0000>;
- 			no-map;
- 		};
- 
- 		last_log_region: memory@ffbc0000 {
--			reg = <0 0xffbc0000 0 0x40000>;
-+			reg = <0x0 0xffbc0000 0x0 0x40000>;
- 			no-map;
- 		};
- 
- 		ramoops: ramoops@ffc00000 {
- 			compatible = "ramoops";
--			reg = <0 0xffc00000 0 0x100000>;
-+			reg = <0x0 0xffc00000 0x0 0x100000>;
- 			record-size = <0x1000>;
- 			console-size = <0x40000>;
- 			pmsg-size = <0x20000>;
-@@ -682,7 +682,7 @@ ramoops: ramoops@ffc00000 {
- 		};
- 
- 		cmdline_region: memory@ffd00000 {
--			reg = <0 0xffd00000 0 0x1000>;
-+			reg = <0x0 0xffd00000 0x0 0x1000>;
- 			no-map;
- 		};
- 	};
-@@ -786,7 +786,7 @@ soc: soc@0 {
- 
- 		gcc: clock-controller@100000 {
- 			compatible = "qcom,gcc-sm6350";
--			reg = <0 0x00100000 0 0x1f0000>;
-+			reg = <0x0 0x00100000 0x0 0x1f0000>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-@@ -800,7 +800,7 @@ gcc: clock-controller@100000 {
- 
- 		ipcc: mailbox@408000 {
- 			compatible = "qcom,sm6350-ipcc", "qcom,ipcc";
--			reg = <0 0x00408000 0 0x1000>;
-+			reg = <0x0 0x00408000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
-@@ -809,7 +809,7 @@ ipcc: mailbox@408000 {
- 
- 		qfprom: qfprom@784000 {
- 			compatible = "qcom,sm6350-qfprom", "qcom,qfprom";
--			reg = <0 0x00784000 0 0x3000>;
-+			reg = <0x0 0x00784000 0x0 0x3000>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
-@@ -821,16 +821,16 @@ gpu_speed_bin: gpu-speed-bin@2015 {
- 
- 		rng: rng@793000 {
- 			compatible = "qcom,prng-ee";
--			reg = <0 0x00793000 0 0x1000>;
-+			reg = <0x0 0x00793000 0x0 0x1000>;
- 			clocks = <&gcc GCC_PRNG_AHB_CLK>;
- 			clock-names = "core";
- 		};
- 
- 		sdhc_1: mmc@7c4000 {
- 			compatible = "qcom,sm6350-sdhci", "qcom,sdhci-msm-v5";
--			reg = <0 0x007c4000 0 0x1000>,
--				<0 0x007c5000 0 0x1000>,
--				<0 0x007c8000 0 0x8000>;
-+			reg = <0x0 0x007c4000 0x0 0x1000>,
-+			      <0x0 0x007c5000 0x0 0x1000>,
-+			      <0x0 0x007c8000 0x0 0x8000>;
- 			reg-names = "hc", "cqhci", "ice";
- 
- 			interrupts = <GIC_SPI 641 IRQ_TYPE_LEVEL_HIGH>,
-@@ -875,7 +875,7 @@ opp-384000000 {
- 
- 		gpi_dma0: dma-controller@800000 {
- 			compatible = "qcom,sm6350-gpi-dma";
--			reg = <0 0x00800000 0 0x60000>;
-+			reg = <0x0 0x00800000 0x0 0x60000>;
- 			interrupts = <GIC_SPI 244 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 245 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 246 IRQ_TYPE_LEVEL_HIGH>,
-@@ -907,7 +907,7 @@ qupv3_id_0: geniqup@8c0000 {
- 
- 			i2c0: i2c@880000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0 0x00880000 0 0x4000>;
-+				reg = <0x0 0x00880000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -927,7 +927,7 @@ i2c0: i2c@880000 {
- 
- 			uart1: serial@884000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0 0x00884000 0 0x4000>;
-+				reg = <0x0 0x00884000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -943,7 +943,7 @@ uart1: serial@884000 {
- 
- 			i2c2: i2c@888000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0 0x00888000 0 0x4000>;
-+				reg = <0x0 0x00888000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -964,7 +964,7 @@ i2c2: i2c@888000 {
- 
- 		gpi_dma1: dma-controller@900000 {
- 			compatible = "qcom,sm6350-gpi-dma";
--			reg = <0 0x00900000 0 0x60000>;
-+			reg = <0x0 0x00900000 0x0 0x60000>;
- 			interrupts = <GIC_SPI 645 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 646 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 647 IRQ_TYPE_LEVEL_HIGH>,
-@@ -996,7 +996,7 @@ qupv3_id_1: geniqup@9c0000 {
- 
- 			i2c6: i2c@980000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0 0x00980000 0 0x4000>;
-+				reg = <0x0 0x00980000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -1016,7 +1016,7 @@ i2c6: i2c@980000 {
- 
- 			i2c7: i2c@984000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0 0x00984000 0 0x4000>;
-+				reg = <0x0 0x00984000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -1036,7 +1036,7 @@ i2c7: i2c@984000 {
- 
- 			i2c8: i2c@988000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0 0x00988000 0 0x4000>;
-+				reg = <0x0 0x00988000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -1056,7 +1056,7 @@ i2c8: i2c@988000 {
- 
- 			uart9: serial@98c000 {
- 				compatible = "qcom,geni-debug-uart";
--				reg = <0 0x0098c000 0 0x4000>;
-+				reg = <0x0 0x0098c000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
- 				pinctrl-names = "default";
-@@ -1070,7 +1070,7 @@ uart9: serial@98c000 {
- 
- 			i2c10: i2c@990000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0 0x00990000 0 0x4000>;
-+				reg = <0x0 0x00990000 0x0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
- 				pinctrl-names = "default";
-@@ -1091,14 +1091,14 @@ i2c10: i2c@990000 {
- 
- 		config_noc: interconnect@1500000 {
- 			compatible = "qcom,sm6350-config-noc";
--			reg = <0 0x01500000 0 0x28000>;
-+			reg = <0x0 0x01500000 0x0 0x28000>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 		};
- 
- 		system_noc: interconnect@1620000 {
- 			compatible = "qcom,sm6350-system-noc";
--			reg = <0 0x01620000 0 0x17080>;
-+			reg = <0x0 0x01620000 0x0 0x17080>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 
-@@ -1111,14 +1111,14 @@ clk_virt: interconnect-clk-virt {
- 
- 		aggre1_noc: interconnect@16e0000 {
- 			compatible = "qcom,sm6350-aggre1-noc";
--			reg = <0 0x016e0000 0 0x15080>;
-+			reg = <0x0 0x016e0000 0x0 0x15080>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 		};
- 
- 		aggre2_noc: interconnect@1700000 {
- 			compatible = "qcom,sm6350-aggre2-noc";
--			reg = <0 0x01700000 0 0x1f880>;
-+			reg = <0x0 0x01700000 0x0 0x1f880>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 
-@@ -1131,7 +1131,7 @@ compute_noc: interconnect-compute-noc {
- 
- 		mmss_noc: interconnect@1740000 {
- 			compatible = "qcom,sm6350-mmss-noc";
--			reg = <0 0x01740000 0 0x1c100>;
-+			reg = <0x0 0x01740000 0x0 0x1c100>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 		};
-@@ -1139,8 +1139,8 @@ mmss_noc: interconnect@1740000 {
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sm6350-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
--			reg = <0 0x01d84000 0 0x3000>,
--			      <0 0x01d90000 0 0x8000>;
-+			reg = <0x0 0x01d84000 0x0 0x3000>,
-+			      <0x0 0x01d90000 0x0 0x8000>;
- 			reg-names = "std", "ice";
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&ufs_mem_phy>;
-@@ -1188,7 +1188,7 @@ ufs_mem_hc: ufshc@1d84000 {
- 
- 		ufs_mem_phy: phy@1d87000 {
- 			compatible = "qcom,sm6350-qmp-ufs-phy";
--			reg = <0 0x01d87000 0 0x1000>;
-+			reg = <0x0 0x01d87000 0x0 0x1000>;
- 
- 			clocks = <&rpmhcc RPMH_CXO_CLK>,
- 				 <&gcc GCC_UFS_PHY_PHY_AUX_CLK>,
-@@ -1209,7 +1209,7 @@ ufs_mem_phy: phy@1d87000 {
- 
- 		cryptobam: dma-controller@1dc4000 {
- 			compatible = "qcom,bam-v1.7.4", "qcom,bam-v1.7.0";
--			reg = <0 0x01dc4000 0 0x24000>;
-+			reg = <0x0 0x01dc4000 0x0 0x24000>;
- 			interrupts = <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
- 			qcom,ee = <0>;
-@@ -1225,7 +1225,7 @@ cryptobam: dma-controller@1dc4000 {
- 
- 		crypto: crypto@1dfa000 {
- 			compatible = "qcom,sm6350-qce", "qcom,sm8150-qce", "qcom,qce";
--			reg = <0 0x01dfa000 0 0x6000>;
-+			reg = <0x0 0x01dfa000 0x0 0x6000>;
- 			dmas = <&cryptobam 4>, <&cryptobam 5>;
- 			dma-names = "rx", "tx";
- 			iommus = <&apps_smmu 0x426 0x11>,
-@@ -1243,9 +1243,9 @@ ipa: ipa@1e40000 {
- 
- 			iommus = <&apps_smmu 0x440 0x0>,
- 				 <&apps_smmu 0x442 0x0>;
--			reg = <0 0x01e40000 0 0x8000>,
--			      <0 0x01e50000 0 0x3000>,
--			      <0 0x01e04000 0 0x23000>;
-+			reg = <0x0 0x01e40000 0x0 0x8000>,
-+			      <0x0 0x01e50000 0x0 0x3000>,
-+			      <0x0 0x01e04000 0x0 0x23000>;
- 			reg-names = "ipa-reg",
- 				    "ipa-shared",
- 				    "gsi";
-@@ -1351,8 +1351,8 @@ compute-cb@5 {
- 
- 		gpu: gpu@3d00000 {
- 			compatible = "qcom,adreno-619.0", "qcom,adreno";
--			reg = <0 0x03d00000 0 0x40000>,
--			      <0 0x03d9e000 0 0x1000>;
-+			reg = <0x0 0x03d00000 0x0 0x40000>,
-+			      <0x0 0x03d9e000 0x0 0x1000>;
- 			reg-names = "kgsl_3d0_reg_memory",
- 				    "cx_mem";
- 			interrupts = <GIC_SPI 300 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1419,7 +1419,7 @@ opp-253000000 {
- 
- 		adreno_smmu: iommu@3d40000 {
- 			compatible = "qcom,sm6350-smmu-v2", "qcom,adreno-smmu", "qcom,smmu-v2";
--			reg = <0 0x03d40000 0 0x10000>;
-+			reg = <0x0 0x03d40000 0x0 0x10000>;
- 			#iommu-cells = <1>;
- 			#global-interrupts = <2>;
- 			interrupts = <GIC_SPI 229 IRQ_TYPE_LEVEL_HIGH>,
-@@ -1445,9 +1445,9 @@ adreno_smmu: iommu@3d40000 {
- 
- 		gmu: gmu@3d6a000 {
- 			compatible = "qcom,adreno-gmu-619.0", "qcom,adreno-gmu";
--			reg = <0 0x03d6a000 0 0x31000>,
--			      <0 0x0b290000 0 0x10000>,
--			      <0 0x0b490000 0 0x10000>;
-+			reg = <0x0 0x03d6a000 0x0 0x31000>,
-+			      <0x0 0x0b290000 0x0 0x10000>,
-+			      <0x0 0x0b490000 0x0 0x10000>;
- 			reg-names = "gmu",
- 				    "gmu_pdc",
- 				    "gmu_pdc_seq";
-@@ -1489,7 +1489,7 @@ opp-200000000 {
- 
- 		gpucc: clock-controller@3d90000 {
- 			compatible = "qcom,sm6350-gpucc";
--			reg = <0 0x03d90000 0 0x9000>;
-+			reg = <0x0 0x03d90000 0x0 0x9000>;
- 			clocks = <&rpmhcc RPMH_CXO_CLK>,
- 				 <&gcc GCC_GPU_GPLL0_CLK>,
- 				 <&gcc GCC_GPU_GPLL0_DIV_CLK>;
-@@ -1543,7 +1543,7 @@ IPCC_MPROC_SIGNAL_GLINK_QMP
- 
- 		cdsp: remoteproc@8300000 {
- 			compatible = "qcom,sm6350-cdsp-pas";
--			reg = <0 0x08300000 0 0x10000>;
-+			reg = <0x0 0x08300000 0x0 0x10000>;
- 
- 			interrupts-extended = <&intc GIC_SPI 578 IRQ_TYPE_EDGE_RISING>,
- 					      <&smp2p_cdsp_in 0 IRQ_TYPE_EDGE_RISING>,
-@@ -1642,7 +1642,7 @@ compute-cb@8 {
- 
- 		sdhc_2: mmc@8804000 {
- 			compatible = "qcom,sm6350-sdhci", "qcom,sdhci-msm-v5";
--			reg = <0 0x08804000 0 0x1000>;
-+			reg = <0x0 0x08804000 0x0 0x1000>;
- 
- 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1691,7 +1691,7 @@ opp-202000000 {
- 
- 		usb_1_hsphy: phy@88e3000 {
- 			compatible = "qcom,sm6350-qusb2-phy", "qcom,qusb2-v2-phy";
--			reg = <0 0x088e3000 0 0x400>;
-+			reg = <0x0 0x088e3000 0x0 0x400>;
- 			status = "disabled";
- 			#phy-cells = <0>;
- 
-@@ -1703,7 +1703,7 @@ usb_1_hsphy: phy@88e3000 {
- 
- 		usb_1_qmpphy: phy@88e8000 {
- 			compatible = "qcom,sm6350-qmp-usb3-dp-phy";
--			reg = <0 0x088e8000 0 0x3000>;
-+			reg = <0x0 0x088e8000 0x0 0x3000>;
- 
- 			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
- 				 <&gcc GCC_USB3_PRIM_CLKREF_CLK>,
-@@ -1754,27 +1754,27 @@ usb_1_qmpphy_dp_in: endpoint {
- 
- 		dc_noc: interconnect@9160000 {
- 			compatible = "qcom,sm6350-dc-noc";
--			reg = <0 0x09160000 0 0x3200>;
-+			reg = <0x0 0x09160000 0x0 0x3200>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 		};
- 
- 		system-cache-controller@9200000 {
- 			compatible = "qcom,sm6350-llcc";
--			reg = <0 0x09200000 0 0x50000>, <0 0x09600000 0 0x50000>;
-+			reg = <0x0 0x09200000 0x0 0x50000>, <0x0 0x09600000 0x0 0x50000>;
- 			reg-names = "llcc0_base", "llcc_broadcast_base";
- 		};
- 
- 		gem_noc: interconnect@9680000 {
- 			compatible = "qcom,sm6350-gem-noc";
--			reg = <0 0x09680000 0 0x3e200>;
-+			reg = <0x0 0x09680000 0x0 0x3e200>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 		};
- 
- 		npu_noc: interconnect@9990000 {
- 			compatible = "qcom,sm6350-npu-noc";
--			reg = <0 0x09990000 0 0x1600>;
-+			reg = <0x0 0x09990000 0x0 0x1600>;
- 			#interconnect-cells = <2>;
- 			qcom,bcm-voters = <&apps_bcm_voter>;
- 		};
-@@ -1878,7 +1878,7 @@ opp-10 {
- 
- 		usb_1: usb@a6f8800 {
- 			compatible = "qcom,sm6350-dwc3", "qcom,dwc3";
--			reg = <0 0x0a6f8800 0 0x400>;
-+			reg = <0x0 0x0a6f8800 0x0 0x400>;
- 			status = "disabled";
- 			#address-cells = <2>;
- 			#size-cells = <2>;
-@@ -1916,7 +1916,7 @@ usb_1: usb@a6f8800 {
- 
- 			usb_1_dwc3: usb@a600000 {
- 				compatible = "snps,dwc3";
--				reg = <0 0x0a600000 0 0xcd00>;
-+				reg = <0x0 0x0a600000 0x0 0xcd00>;
- 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
- 				iommus = <&apps_smmu 0x540 0x0>;
- 				snps,dis_u2_susphy_quirk;
-@@ -1954,7 +1954,7 @@ usb_1_dwc3_ss_out: endpoint {
- 
- 		cci0: cci@ac4a000 {
- 			compatible = "qcom,sm6350-cci", "qcom,msm8996-cci";
--			reg = <0 0x0ac4a000 0 0x1000>;
-+			reg = <0x0 0x0ac4a000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 468 IRQ_TYPE_EDGE_RISING>;
- 			power-domains = <&camcc TITAN_TOP_GDSC>;
- 
-@@ -2001,7 +2001,7 @@ cci0_i2c1: i2c-bus@1 {
- 
- 		cci1: cci@ac4b000 {
- 			compatible = "qcom,sm6350-cci", "qcom,msm8996-cci";
--			reg = <0 0x0ac4b000 0 0x1000>;
-+			reg = <0x0 0x0ac4b000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 462 IRQ_TYPE_EDGE_RISING>;
- 			power-domains = <&camcc TITAN_TOP_GDSC>;
- 
-@@ -2043,7 +2043,7 @@ cci1_i2c0: i2c-bus@0 {
- 
- 		camcc: clock-controller@ad00000 {
- 			compatible = "qcom,sm6350-camcc";
--			reg = <0 0x0ad00000 0 0x16000>;
-+			reg = <0x0 0x0ad00000 0x0 0x16000>;
- 			clocks = <&rpmhcc RPMH_CXO_CLK>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
-@@ -2052,7 +2052,7 @@ camcc: clock-controller@ad00000 {
- 
- 		mdss: display-subsystem@ae00000 {
- 			compatible = "qcom,sm6350-mdss";
--			reg = <0 0x0ae00000 0 0x1000>;
-+			reg = <0x0 0x0ae00000 0x0 0x1000>;
- 			reg-names = "mdss";
- 
- 			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-@@ -2084,8 +2084,8 @@ &clk_virt SLAVE_EBI_CH0 QCOM_ICC_TAG_ALWAYS>,
- 
- 			mdss_mdp: display-controller@ae01000 {
- 				compatible = "qcom,sm6350-dpu";
--				reg = <0 0x0ae01000 0 0x8f000>,
--				      <0 0x0aeb0000 0 0x2008>;
-+				reg = <0x0 0x0ae01000 0x0 0x8f000>,
-+				      <0x0 0x0aeb0000 0x0 0x2008>;
- 				reg-names = "mdp", "vbif";
- 
- 				interrupt-parent = <&mdss>;
-@@ -2168,11 +2168,11 @@ opp-560000000 {
- 
- 			mdss_dp: displayport-controller@ae90000 {
- 				compatible = "qcom,sm6350-dp", "qcom,sm8350-dp";
--				reg = <0 0xae90000 0 0x200>,
--				      <0 0xae90200 0 0x200>,
--				      <0 0xae90400 0 0x600>,
--				      <0 0xae91000 0 0x400>,
--				      <0 0xae91400 0 0x400>;
-+				reg = <0x0 0xae90000 0x0 0x200>,
-+				      <0x0 0xae90200 0x0 0x200>,
-+				      <0x0 0xae90400 0x0 0x600>,
-+				      <0x0 0xae91000 0x0 0x400>,
-+				      <0x0 0xae91400 0x0 0x400>;
- 				interrupt-parent = <&mdss>;
- 				interrupts = <12>;
- 				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-@@ -2248,7 +2248,7 @@ opp-810000000 {
- 
- 			mdss_dsi0: dsi@ae94000 {
- 				compatible = "qcom,sm6350-dsi-ctrl", "qcom,mdss-dsi-ctrl";
--				reg = <0 0x0ae94000 0 0x400>;
-+				reg = <0x0 0x0ae94000 0x0 0x400>;
- 				reg-names = "dsi_ctrl";
- 
- 				interrupt-parent = <&mdss>;
-@@ -2324,9 +2324,9 @@ opp-358000000 {
- 
- 			mdss_dsi0_phy: phy@ae94400 {
- 				compatible = "qcom,dsi-phy-10nm";
--				reg = <0 0x0ae94400 0 0x200>,
--				      <0 0x0ae94600 0 0x280>,
--				      <0 0x0ae94a00 0 0x1e0>;
-+				reg = <0x0 0x0ae94400 0x0 0x200>,
-+				      <0x0 0x0ae94600 0x0 0x280>,
-+				      <0x0 0x0ae94a00 0x0 0x1e0>;
- 				reg-names = "dsi_phy",
- 					    "dsi_phy_lane",
- 					    "dsi_pll";
-@@ -2344,7 +2344,7 @@ mdss_dsi0_phy: phy@ae94400 {
- 
- 		dispcc: clock-controller@af00000 {
- 			compatible = "qcom,sm6350-dispcc";
--			reg = <0 0x0af00000 0 0x20000>;
-+			reg = <0x0 0x0af00000 0x0 0x20000>;
- 			clocks = <&rpmhcc RPMH_CXO_CLK>,
- 				 <&gcc GCC_DISP_GPLL0_CLK>,
- 				 <&mdss_dsi0_phy 0>,
-@@ -2364,7 +2364,7 @@ dispcc: clock-controller@af00000 {
- 
- 		pdc: interrupt-controller@b220000 {
- 			compatible = "qcom,sm6350-pdc", "qcom,pdc";
--			reg = <0 0x0b220000 0 0x30000>, <0 0x17c000f0 0 0x64>;
-+			reg = <0x0 0x0b220000 0x0 0x30000>, <0x0 0x17c000f0 0x0 0x64>;
- 			qcom,pdc-ranges = <0 480 94>, <94 609 31>,
- 					  <125 63 1>, <126 655 12>, <138 139 15>;
- 			#interrupt-cells = <2>;
-@@ -2374,8 +2374,8 @@ pdc: interrupt-controller@b220000 {
- 
- 		tsens0: thermal-sensor@c263000 {
- 			compatible = "qcom,sm6350-tsens", "qcom,tsens-v2";
--			reg = <0 0x0c263000 0 0x1ff>, /* TM */
--			      <0 0x0c222000 0 0x8>; /* SROT */
-+			reg = <0x0 0x0c263000 0x0 0x1ff>, /* TM */
-+			      <0x0 0x0c222000 0x0 0x8>; /* SROT */
- 			#qcom,sensors = <16>;
- 			interrupts-extended = <&pdc 26 IRQ_TYPE_LEVEL_HIGH>,
- 				     <&pdc 28 IRQ_TYPE_LEVEL_HIGH>;
-@@ -2385,8 +2385,8 @@ tsens0: thermal-sensor@c263000 {
- 
- 		tsens1: thermal-sensor@c265000 {
- 			compatible = "qcom,sm6350-tsens", "qcom,tsens-v2";
--			reg = <0 0x0c265000 0 0x1ff>, /* TM */
--			      <0 0x0c223000 0 0x8>; /* SROT */
-+			reg = <0x0 0x0c265000 0x0 0x1ff>, /* TM */
-+			      <0x0 0x0c223000 0x0 0x8>; /* SROT */
- 			#qcom,sensors = <16>;
- 			interrupts-extended = <&pdc 27 IRQ_TYPE_LEVEL_HIGH>,
- 				     <&pdc 29 IRQ_TYPE_LEVEL_HIGH>;
-@@ -2396,7 +2396,7 @@ tsens1: thermal-sensor@c265000 {
- 
- 		aoss_qmp: power-management@c300000 {
- 			compatible = "qcom,sm6350-aoss-qmp", "qcom,aoss-qmp";
--			reg = <0 0x0c300000 0 0x1000>;
-+			reg = <0x0 0x0c300000 0x0 0x1000>;
- 			interrupts-extended = <&ipcc IPCC_CLIENT_AOP IPCC_MPROC_SIGNAL_GLINK_QMP
- 						     IRQ_TYPE_EDGE_RISING>;
- 			mboxes = <&ipcc IPCC_CLIENT_AOP IPCC_MPROC_SIGNAL_GLINK_QMP>;
-@@ -2406,11 +2406,11 @@ aoss_qmp: power-management@c300000 {
- 
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
--			reg = <0 0x0c440000 0 0x1100>,
--			      <0 0x0c600000 0 0x2000000>,
--			      <0 0x0e600000 0 0x100000>,
--			      <0 0x0e700000 0 0xa0000>,
--			      <0 0x0c40a000 0 0x26000>;
-+			reg = <0x0 0x0c440000 0x0 0x1100>,
-+			      <0x0 0x0c600000 0x0 0x2000000>,
-+			      <0x0 0x0e600000 0x0 0x100000>,
-+			      <0x0 0x0e700000 0x0 0xa0000>,
-+			      <0x0 0x0c40a000 0x0 0x26000>;
- 			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
- 			interrupt-names = "periph_irq";
- 			interrupts-extended = <&pdc 1 IRQ_TYPE_LEVEL_HIGH>;
-@@ -2424,7 +2424,7 @@ spmi_bus: spmi@c440000 {
- 
- 		tlmm: pinctrl@f100000 {
- 			compatible = "qcom,sm6350-tlmm";
--			reg = <0 0x0f100000 0 0x300000>;
-+			reg = <0x0 0x0f100000 0x0 0x300000>;
- 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
- 					<GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>,
- 					<GIC_SPI 210 IRQ_TYPE_LEVEL_HIGH>,
-@@ -2603,7 +2603,7 @@ qup_uart1_tx: qup-uart1-tx-default-state {
- 
- 		apps_smmu: iommu@15000000 {
- 			compatible = "qcom,sm6350-smmu-500", "arm,mmu-500";
--			reg = <0 0x15000000 0 0x100000>;
-+			reg = <0x0 0x15000000 0x0 0x100000>;
- 			#iommu-cells = <2>;
- 			#global-interrupts = <1>;
- 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-@@ -2701,7 +2701,7 @@ intc: interrupt-controller@17a00000 {
- 
- 		watchdog@17c10000 {
- 			compatible = "qcom,apss-wdt-sm6350", "qcom,kpss-wdt";
--			reg = <0 0x17c10000 0 0x1000>;
-+			reg = <0x0 0x17c10000 0x0 0x1000>;
- 			clocks = <&sleep_clk>;
- 			interrupts = <GIC_SPI 0 IRQ_TYPE_EDGE_RISING>;
- 		};
-@@ -2855,7 +2855,7 @@ osm_l3: interconnect@18321000 {
- 
- 		cpufreq_hw: cpufreq@18323000 {
- 			compatible = "qcom,sm6350-cpufreq-hw", "qcom,cpufreq-hw";
--			reg = <0 0x18323000 0 0x1000>, <0 0x18325800 0 0x1000>;
-+			reg = <0x0 0x18323000 0x0 0x1000>, <0x0 0x18325800 0x0 0x1000>;
- 			reg-names = "freq-domain0", "freq-domain1";
- 			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
- 			clock-names = "xo", "alternate";
-@@ -2866,7 +2866,7 @@ cpufreq_hw: cpufreq@18323000 {
- 
- 		wifi: wifi@18800000 {
- 			compatible = "qcom,wcn3990-wifi";
--			reg = <0 0x18800000 0 0x800000>;
-+			reg = <0x0 0x18800000 0x0 0x800000>;
- 			reg-names = "membase";
- 			memory-region = <&wlan_fw_mem>;
- 			interrupts = <GIC_SPI 414 IRQ_TYPE_LEVEL_HIGH>,
+> Regarding the check of whether the address is a memory address, I
+> think we can directly incorporate pfn_valid() into
+> generic_ioremap_prot. This probably won't affect architectures that
+> directly use generic_ioremap_prot(), such as C-SKY, Hexagon, and
+> LoongArch.
+>
+> So, my next plan is to add pfn_valid() to generic_ioremap_prot().
 
--- 
-2.49.0
+Ah right, I see now that x86 does not use CONFIG_GENERIC_IOREMAP,
+so it would still be able to have its memremap() fall back to
+ioremap_cache().
 
+You should probably still go through the list of drivers
+calling ioremap_cache() or ioremap_wt() to see if any of them
+might be used on an architecture that defines those two functions
+through ioremap_prot(), as that would be broken when they
+get called on normal memory:
+
+arch/loongarch/kernel/acpi.c:           return ioremap_cache(phys, size);
+arch/mips/include/asm/dmi.h:#define dmi_remap(x, l)                     =
+ioremap_cache(x, l)
+arch/powerpc/kernel/crash_dump.c:               vaddr =3D ioremap_cache(=
+paddr, PAGE_SIZE);
+arch/powerpc/platforms/pasemi/dma_lib.c:        dma_status =3D ioremap_c=
+ache(res.start, resource_size(&res));
+arch/powerpc/platforms/powernv/vas-window.c:    map =3D ioremap_cache(st=
+art, len);
+arch/x86/hyperv/hv_init.c:      ghcb_va =3D (void *)ioremap_cache(ghcb_g=
+pa, HV_HYP_PAGE_SIZE);
+arch/x86/kernel/acpi/boot.c:    return ioremap_cache(phys, size);
+arch/x86/platform/efi/efi_32.c:         va =3D ioremap_cache(md->phys_ad=
+dr, size);
+drivers/acpi/apei/bert.c:       boot_error_region =3D ioremap_cache(bert=
+_tab->address, region_len);
+drivers/acpi/apei/einj-core.c:  trigger_tab =3D ioremap_cache(trigger_pa=
+ddr, sizeof(*trigger_tab));
+drivers/acpi/apei/einj-core.c:  trigger_tab =3D ioremap_cache(trigger_pa=
+ddr, table_size);
+drivers/acpi/apei/erst.c:       erst_erange.vaddr =3D ioremap_cache(erst=
+_erange.base,
+drivers/firmware/meson/meson_sm.c:      return ioremap_cache(sm_phy_base=
+, size);
+drivers/gpu/drm/amd/amdgpu/amdgpu_ttm.c:                adev->mman.aper_=
+base_kaddr =3D ioremap_cache(adev->gmc.aper_base,
+drivers/gpu/drm/hyperv/hyperv_drm_drv.c:        hv->vram =3D ioremap_cac=
+he(hv->mem->start, hv->fb_size);
+drivers/gpu/drm/ttm/ttm_bo_util.c:                      map->virtual =3D=
+ ioremap_cache(res, size);
+drivers/gpu/drm/ttm/ttm_bo_util.c:                      vaddr_iomem =3D =
+ioremap_cache(mem->bus.offset,
+drivers/hv/hv.c:                /* Mask out vTOM bit. ioremap_cache() ma=
+ps decrypted */
+drivers/hv/hv.c:                        (void *)ioremap_cache(base, HV_H=
+YP_PAGE_SIZE);
+drivers/hv/hv.c:                /* Mask out vTOM bit. ioremap_cache() ma=
+ps decrypted */
+drivers/hv/hv.c:                        (void *)ioremap_cache(base, HV_H=
+YP_PAGE_SIZE);
+drivers/mtd/devices/bcm47xxsflash.c:            b47s->window =3D ioremap=
+_cache(res->start, resource_size(res));
+drivers/mtd/maps/pxa2xx-flash.c:        info->map.cached =3D ioremap_cac=
+he(info->map.phys, info->map.size);
+drivers/soc/fsl/qbman/qman_ccsr.c:      void __iomem *tmpp =3D ioremap_c=
+ache(addr, sz);
+drivers/video/fbdev/hyperv_fb.c:        fb_virt =3D ioremap_cache(par->m=
+em->start, screen_fb_size);
+include/acpi/acpi_io.h:       return ioremap_cache(phys, size);
+drivers/block/z2ram.c:                  vaddr =3D (unsigned long)ioremap=
+_wt(paddr, size);
+drivers/video/fbdev/amifb.c:    videomemory =3D (u_long)ioremap_wt(info-=
+>fix.smem_start,
+drivers/video/fbdev/atafb.c:            external_screen_base =3D ioremap=
+_wt(external_addr, external_len);
+drivers/video/fbdev/controlfb.c:        p->frame_buffer =3D ioremap_wt(p=
+->frame_buffer_phys, 0x800000);
+drivers/video/fbdev/hpfb.c:     fb_start =3D (unsigned long)ioremap_wt(f=
+b_info.fix.smem_start,
+drivers/video/fbdev/platinumfb.c:       pinfo->frame_buffer =3D ioremap_=
+wt(pinfo->rsrc_fb.start, 0x400000);
+drivers/video/fbdev/valkyriefb.c:       p->frame_buffer =3D ioremap_wt(f=
+rame_buffer_phys, p->total_vram);
+
+Similar, any architecture that doesn't have arch_memremap_wb()
+falls back to ioremap_cache() or ioremap(), which then have that
+check.
+
+      Arnd
