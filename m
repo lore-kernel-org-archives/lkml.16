@@ -1,97 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3A8126281E;
-	Mon, 24 Mar 2025 14:21:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B131262812
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 14:21:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742826087; cv=none; b=Yjc0Flvhd9h1oPIQSC06L6Xs0An3lPOPZkH5TQgzOufYC7mH1h53ur6ZWdtnlXKU6AgaKvPSI/mOV9ygFb4qt8Qrjs9JBkVoPDwO2fj2E3J+ay6HN/Gkq4ao4f21WnK73K84kMiy1zHORu8PBJyuRmHO53VAkTjnaz6fcs+wXM0=
+	t=1742826087; cv=none; b=NuAN764CaT7C2/RZC9YnBKIuCtXK7vKvefixqKuNjSD3FGqZ4y6HkNW06HH03pCgCx2MtJszpSv5oL8JVj6Az25WMiN1GCCbNd+UWk6IRChn2lYMad+ol8PDp44M+kNFjZ7q57VSunO+RdVqbUHVDxh+VKHpagHxZPV7XwN2XOg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1742826087; c=relaxed/simple;
-	bh=dCI8OSKIxwwr1ihOWrRWoMsJjtQccnPBuJUUErjyEUU=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=SLvton0Rn2PeytFMMs7JgI4ahSmBfYUy9UtRcEYuPG3BL4zfMoAOnwc5tJ+McoWOSEEsD4VjDpiuBVQirWfe/uhMS/yvRRSq9KSGMn8TcOoxq+cBPIilSX7/zSTudZhU0PJ68KtAFU0Ves12f04tBPmRphxHFw7z8LpGEol97WI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LIYa30e5; arc=none smtp.client-ip=10.30.226.201
+	bh=Adf+zN0jZwi1RYzCLoCEtx2M+jktmNOuFEJOe/QrH74=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=LAuiCr6MjBNK9Zm5xr4hPw3rTGEhy0lErnfXyyTprTFSD4BIm9hC4yIPCH5nRbvANfuqlUv3+UKcpdb0hEWzW56ygV/sY7TGqZBFTS6rNEVL+YcHIM0dwJh9R6fIP4kVGsWlZasbyMK4MI4eJU7Seopm5zq7lYMNlh9EAe5i8o4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=LN6inNs3; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=EhCLgIez; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LIYa30e5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D4FCC4CEE9;
-	Mon, 24 Mar 2025 14:21:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742826086;
-	bh=dCI8OSKIxwwr1ihOWrRWoMsJjtQccnPBuJUUErjyEUU=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=LIYa30e5tYKCYgBaox0Rz26b4cPeJNI16cmoMT7/nDSBYc9y5Vvoob+acSoPqD+3y
-	 6bT3fiitpOSgWL4USFBcHjxFKmFB+7Nq/WSdEC9hf1ICUh9M5Izu8GMAc2+clWPtGs
-	 7pNxjCC7Xruz5Kwj/pbIEQx0oTfKo7AhquWkfckW7iRSSKVSpbjuELDl0a3vN8aPJ6
-	 AEZf0zKIYKYnbI0o4BCdkTQWT4fCYCb877ho5YN7Kb82aUhgoMbNNY9nB3K/pJbLfG
-	 hXIYmS+i8mzPY5/gLb8wVMzeO0mOawp7K2xIPbKs70pyc9loWEYmsmJBR7OnlSw4Lr
-	 i7+Dhe4gwOHvw==
-Date: Mon, 24 Mar 2025 09:21:24 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="LN6inNs3";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="EhCLgIez"
+From: "Ahmed S. Darwish" <darwi@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1742826084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NLdZ2DXpJDx8yhYu4D1b1KQ/w9DYKov9AN7jy9kVAKA=;
+	b=LN6inNs3J2PmOc3/Pf1fY/GcDUC+pTwxbx9U+OzN+nXcmUUq/abOIhf1e0pbLFEOxvR7IF
+	uPHXdc2JC2GiEN5QghLjh6qWzrAA0yHh2ksXw1KOxCHyN2wuXtSIuYvv63ekPf/66EPdC0
+	VNvpfShdMvtj+aL+h0t20nLPg0mo2SYgICUNHRff8jHF1F292hApOtpkYrNWC5uJmNYtxk
+	WjRrzP6WrWoMESPTprTalVFzNHVcWoWtuHDXSG1O4assooRyQAbn2k7ssQZ5ju414taeav
+	JlHaSQO3TctlWHa2b1LiOOwyGYjw/77Tk2pyovLby99pjEjmFIXUEa9OB9KFAw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1742826084;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=NLdZ2DXpJDx8yhYu4D1b1KQ/w9DYKov9AN7jy9kVAKA=;
+	b=EhCLgIezvblPLYzFiGfNkKpy4d7d7XD8pJzBXHqZ1HN7DAlING1OnqMjiH3AuLZ6oWmB9R
+	d8Fn13nF/LNiskAA==
+To: Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>,
+	Andrew Cooper <andrew.cooper3@citrix.com>,
+	"H. Peter Anvin" <hpa@zytor.com>,
+	John Ogness <john.ogness@linutronix.de>,
+	x86@kernel.org,
+	x86-cpuid@lists.linux.dev,
+	LKML <linux-kernel@vger.kernel.org>,
+	"Ahmed S. Darwish" <darwi@linutronix.de>
+Subject: [PATCH v3 12/20] tools/x86/kcpuid: Extend CPUID index mask macro
+Date: Mon, 24 Mar 2025 15:20:33 +0100
+Message-ID: <20250324142042.29010-13-darwi@linutronix.de>
+In-Reply-To: <20250324142042.29010-1-darwi@linutronix.de>
+References: <20250324142042.29010-1-darwi@linutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-iio@vger.kernel.org, 
- Lars-Peter Clausen <lars@metafoo.de>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Jonathan Cameron <jic23@kernel.org>
-To: Kim Seer Paller <kimseer.paller@analog.com>
-In-Reply-To: <20250324-togreg-v2-3-f211d781923e@analog.com>
-References: <20250324-togreg-v2-0-f211d781923e@analog.com>
- <20250324-togreg-v2-3-f211d781923e@analog.com>
-Message-Id: <174282608144.6314.4370780992261179576.robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] dt-bindings: iio: dac: Add adi,ad3530r.yaml
+Content-Transfer-Encoding: 8bit
 
+Extend the CPUID index mask macro from 0x80000000 to 0xffff0000.  This
+accommodates the Transmeta (0x80860000) and Centaur (0xc0000000) index
+ranges which will be later added.
 
-On Mon, 24 Mar 2025 19:22:57 +0800, Kim Seer Paller wrote:
-> Document the AD3530R/AD3530, an 8-Channel, 16-bit Voltage Output DAC,
-> while the AD3531R/AD3531 is a 4-Channel, 16-Bit Voltage Output DAC.
-> These devices include software-programmable gain controls that provide
-> full-scale output spans of 2.5V or 5V for reference voltages of 2.5V.
-> They operate from a single supply voltage range of 2.7V to 5.5V and are
-> guaranteed to be monotonic by design. Additionally, these devices
-> features a 2.5V, 5ppm/°C internal reference, which is disabled by default.
-> 
-> Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
-> ---
->  .../devicetree/bindings/iio/dac/adi,ad3530r.yaml   | 91 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 92 insertions(+)
-> 
+This also automatically sets CPUID_FUNCTION_MASK to 0x0000ffff, which is
+the actual correct value.  Use that macro, instead of the 0xffff literal
+where appropriate.
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Signed-off-by: Ahmed S. Darwish <darwi@linutronix.de>
+---
+ tools/arch/x86/kcpuid/kcpuid.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-yamllint warnings/errors:
-
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,axi-adc.example.dtb: adc@0: pwm-names: ['convst1'] is too short
-	from schema $id: http://devicetree.org/schemas/iio/adc/adi,ad7606.yaml#
-
-doc reference errors (make refcheckdocs):
-Warning: Documentation/arch/powerpc/cxl.rst references a file that doesn't exist: Documentation/ABI/testing/sysfs-class-cxl
-Warning: lib/Kconfig.debug references a file that doesn't exist: Documentation/dev-tools/fault-injection/fault-injection.rst
-Documentation/arch/powerpc/cxl.rst: Documentation/ABI/testing/sysfs-class-cxl
-lib/Kconfig.debug: Documentation/dev-tools/fault-injection/fault-injection.rst
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20250324-togreg-v2-3-f211d781923e@analog.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+diff --git a/tools/arch/x86/kcpuid/kcpuid.c b/tools/arch/x86/kcpuid/kcpuid.c
+index 00a3b7a8953c..0ba0d440482c 100644
+--- a/tools/arch/x86/kcpuid/kcpuid.c
++++ b/tools/arch/x86/kcpuid/kcpuid.c
+@@ -71,7 +71,7 @@ enum range_index {
+ 	RANGE_EXT = 0x80000000,		/* Extended */
+ };
+ 
+-#define CPUID_INDEX_MASK		0x80000000
++#define CPUID_INDEX_MASK		0xffff0000
+ #define CPUID_FUNCTION_MASK		(~CPUID_INDEX_MASK)
+ 
+ struct cpuid_range {
+@@ -173,7 +173,7 @@ static bool cpuid_store(struct cpuid_range *range, u32 f, int subleaf,
+ 	 * Cut off vendor-prefix from CPUID function as we're using it as an
+ 	 * index into ->funcs.
+ 	 */
+-	func = &range->funcs[f & 0xffff];
++	func = &range->funcs[f & CPUID_FUNCTION_MASK];
+ 
+ 	if (!func->leafs) {
+ 		func->leafs = malloc(sizeof(struct subleaf));
+@@ -228,7 +228,7 @@ void setup_cpuid_range(struct cpuid_range *range)
+ 
+ 	cpuid(range->index, max_func, ebx, ecx, edx);
+ 
+-	idx_func = (max_func & 0xffff) + 1;
++	idx_func = (max_func & CPUID_FUNCTION_MASK) + 1;
+ 	range->funcs = malloc(sizeof(struct cpuid_func) * idx_func);
+ 	if (!range->funcs)
+ 		err(EXIT_FAILURE, NULL);
+@@ -512,7 +512,7 @@ static inline struct cpuid_func *index_to_func(u32 index)
+ 	if (!range)
+ 		return NULL;
+ 
+-	func_idx = index & 0xffff;
++	func_idx = index & CPUID_FUNCTION_MASK;
+ 	if ((func_idx + 1) > (u32)range->nr)
+ 		return NULL;
+ 
+-- 
+2.48.1
 
