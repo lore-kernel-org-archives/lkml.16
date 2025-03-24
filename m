@@ -1,158 +1,108 @@
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from smtpdh17-1.aruba.it (smtpdh17-1.aruba.it [62.149.155.116])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DCB8EEC5
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BECB238DE9
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:18:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.149.155.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742822311; cv=none; b=jRdxh0K9otAsxGsZBQ5AJOUbSxyQ7jZAk31cFegIj8Em8mzKfnqk1reKk310Ayt4+D4clqTPtqJb/wwtxfY34+SoAJrY4J6C7CFAqXtAlQdybiua51O5uWmY9+HZ1k8VA/Mg+y3a3JFeh4B9CiP4vSH+y2a+ky2YKIv1I1DzA0Q=
+	t=1742822331; cv=none; b=X/Lz4esHrwBgT7AuoOUmLjowQIiqNAIL7wwL6433wAOtpW3mVKuAQriDhsqg+ChSXHN7yBjaScaTHVJujY6dsNvO3E4em2GCRbPJZcD9RlkBNdkEfRYwd60zF4ARK9f/AnWFRkbhk3rXeLPnuxuGIuumYZXxl68A9Q3o1rszf58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742822311; c=relaxed/simple;
-	bh=faIuof2bnzW67oXVuBrYIpaMR6d/9J3/MBt7/pgmqUc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=NfRUPI4SVysN5BWpzGcGHKkxMk9L26E3vwBwD4g0h5i+rIkSQyZA1iPrcEsdafgx2LExrrzuKjdlvkIm0U0o8cwhXK/kMreiSnqc+yPTQWvTniQluuSliLRO5CRdp060neYx9sC3kkLsN5XpuskRfHErX5zdHvG8G5HHdWwZzmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=R3W4Emdm; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1742822331; c=relaxed/simple;
+	bh=SDiqh0ysPGzyCfjrTu72lDTTTS2qXy/UjlB5vc/Sayk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CCtXj3P+1KxYexpqF1qxRdtry3qWcTl3QHfFkUwnq/G64y/21IIRceJbEep8vUHR5FDY2q2RibAUaCSSgtDx+i09IuiPVm3nuILyYKJLijy6Zyr0HIVOLjRof+WjHDbbBPOi9bg+TLIKjIHGJVOjj7wKVYNWMVqNHvTFTDlWFNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com; spf=pass smtp.mailfrom=enneenne.com; dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b=lU3l+Ig2; arc=none smtp.client-ip=62.149.155.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=enneenne.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=enneenne.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="R3W4Emdm"
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1742822305;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=arVVZeeqZTaqIGfn9u6dowfrXYyiC4MWEKz0N9ovA/8=;
-	b=R3W4Emdmc9Sid1dh2oAh9Ifw1p9FDGceIqGUczTsswwsFTYpBgK2yjpCjMWXGQTVM1aWSO
-	5Oa2zAoGW1LdhqqmVuyDQYgcOutADGJTzLhsHMVgqkHE1PZEW4cr42HntikXmkU4iLX65+
-	tjDyEuOhJDo6TYBHG1kbRvJtoWLJX+s=
-From: Jiayuan Chen <jiayuan.chen@linux.dev>
-To: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org,
-	edumazet@google.com,
-	kuniyu@amazon.com,
-	davem@davemloft.net,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org,
-	dsahern@kernel.org,
-	ncardwell@google.com,
-	mrpre@163.com,
-	Jiayuan Chen <jiayuan.chen@linux.dev>
-Subject: [PATCH net-next v1] tcp: Support skb PAWS drop reason when TIME-WAIT
-Date: Mon, 24 Mar 2025 21:18:05 +0800
-Message-ID: <20250324131805.23103-1-jiayuan.chen@linux.dev>
+	dkim=temperror (0-bit key) header.d=aruba.it header.i=@aruba.it header.b="lU3l+Ig2"
+Received: from [192.168.1.58] ([79.0.204.227])
+	by Aruba SMTP with ESMTPSA
+	id wheVtfUP6tfOnwheVt0Wdr; Mon, 24 Mar 2025 14:15:40 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=aruba.it; s=a1;
+	t=1742822140; bh=SDiqh0ysPGzyCfjrTu72lDTTTS2qXy/UjlB5vc/Sayk=;
+	h=Date:MIME-Version:Subject:To:From:Content-Type;
+	b=lU3l+Ig2sse+tbumA0SVjxNyqRwt9VRCOOK7vGvNnqxheuInnrGE+QSg23Ao9b2zv
+	 F+gzTcNL9kHUF8Wek40TcLmB9lhU9hrsA6gxq2zeDXHj+R8AtXvILnCyo8gQuIrBdy
+	 GTdGYyPq0T62lQ9EOfpafCYqsZxzeZ3VAexJDFFpa0bq2rulX/sq7RstsWDF0x5evZ
+	 tkGAcE7Yr4cem0lQBl+HoXKD7LhBqTNSpDGIhgBT2joes5ybu+ihPjawpjacM3CzDn
+	 20sce6NvZrER8TRUVKvjkiXILbjgfkgujPhkurMV/iZ/Byol0pQcstyJ0ds+hZaOtH
+	 9Qq1bQCHwklJQ==
+Message-ID: <8bd8ca96-1334-42c7-8dc4-2db1785301b9@enneenne.com>
+Date: Mon, 24 Mar 2025 14:15:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: pps: gpio: Correct indentation and style in
+ DTS example
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Fabio Estevam <festevam@gmail.com>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20250324125122.81810-1-krzysztof.kozlowski@linaro.org>
+From: Rodolfo Giometti <giometti@enneenne.com>
+In-Reply-To: <20250324125122.81810-1-krzysztof.kozlowski@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4xfFwkio3Nsm9t/3K+JUXUTLnymPuZfWkyLodVABraDib2lMMuehDO7OtHqyP9/f5bCkqq7xu5U1aZzkLd4sCZJ75twsEE1HlWKJgOHZd01GBHLG1dn+pd
+ lfApRn4G9tJo+YDpH0BHxaXqA45z4zxogwbXE6yaKt9ibi3KgubXMa0pFGtLV8DQ8QQ8iYyQJDWaWlbP7bNwArK/KAYa9onPHWAQV58ZbAYplOqBBey/mi/y
+ 9ZZZTwwCsVxY47LKhI7e1uN8Jb6rQchYz5PJ659q76uxscWOYFsaxPibqqDWYrBTA4vbwzhOiPZsE0rIEFRL5SjgtAXeoiCkSQpe3BECk0pioaPqnFLLMuhb
+ /lSRwkRl1ncZ/uYMneDWju17ujzOrV40SnQyV0IQrTamhDMUqTs=
 
-When the server actively closes a connection and enters the TIME_WAIT
-state, if PAWS validation fails, the discarded skb previously lacked a
-corresponding reason identifier. This commit assigns the existing
-SKB_DROP_REASON_TCP_RFC7323_PAWS as the reason for such drops.
+On 24/03/25 13:51, Krzysztof Kozlowski wrote:
+> DTS example in the bindings should be indented with 2- or 4-spaces and
+> aligned with opening '- |', so correct any differences like 3-spaces or
+> mixtures 2- and 4-spaces in one binding.
+> 
+> No functional changes here, but saves some comments during reviews of
+> new patches built on existing code.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-We use 'pwru' to capture drop reason.
+Acked-by: Rodolfo Giometti <giometti@enneenne.com>
 
-Before this commit:
-''''
-./pwru 'port 9999'
-2025/03/24 13:46:03 Listening for events..
-TUPLE                                        FUNC
-172.31.75.115:12345->172.31.75.114:9999(tcp) sk_skb_reason_drop(SKB_DROP_REASON_NOT_SPECIFIED)
-'''
+> ---
+>   .../devicetree/bindings/pps/pps-gpio.yaml     | 20 +++++++++----------
+>   1 file changed, 10 insertions(+), 10 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pps/pps-gpio.yaml b/Documentation/devicetree/bindings/pps/pps-gpio.yaml
+> index fd4adfa8d2d4..383a838744eb 100644
+> --- a/Documentation/devicetree/bindings/pps/pps-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/pps/pps-gpio.yaml
+> @@ -36,14 +36,14 @@ additionalProperties: false
+>   
+>   examples:
+>     - |
+> -      #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/gpio/gpio.h>
+>   
+> -      pps {
+> -          compatible = "pps-gpio";
+> -          pinctrl-names = "default";
+> -          pinctrl-0 = <&pinctrl_pps>;
+> -          gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+> -          assert-falling-edge;
+> -          echo-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
+> -          echo-active-ms = <100>;
+> -      };
+> +    pps {
+> +        compatible = "pps-gpio";
+> +        pinctrl-names = "default";
+> +        pinctrl-0 = <&pinctrl_pps>;
+> +        gpios = <&gpio1 26 GPIO_ACTIVE_HIGH>;
+> +        assert-falling-edge;
+> +        echo-gpios = <&gpio1 27 GPIO_ACTIVE_HIGH>;
+> +        echo-active-ms = <100>;
+> +    };
 
-After this commit:
-'''
-./pwru 'port 9999'
-2025/03/24 16:06:59 Listening for events..
-TUPLE                                        FUNC
-172.31.75.115:12345->172.31.75.114:9999(tcp) sk_skb_reason_drop(SKB_DROP_REASON_TCP_RFC7323_PAWS)
-'''
-
-Signed-off-by: Jiayuan Chen <jiayuan.chen@linux.dev>
-
----
-My apologize.
-I struggled for a long time to get packetdrill to fix the client port, but
-ultimately failed to do so, which is why I couldn't provide a packetdrill
-script.
-Instead, I wrote my own program to trigger PAWS, which can be found at
-https://github.com/mrpre/nettrigger/tree/main
----
- include/net/tcp.h        | 2 +-
- net/ipv4/tcp_ipv4.c      | 2 +-
- net/ipv4/tcp_minisocks.c | 6 ++++--
- net/ipv6/tcp_ipv6.c      | 2 +-
- 4 files changed, 7 insertions(+), 5 deletions(-)
-
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 2d08473a6dc0..16e6efef939a 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -388,7 +388,7 @@ enum tcp_tw_status {
- enum tcp_tw_status tcp_timewait_state_process(struct inet_timewait_sock *tw,
- 					      struct sk_buff *skb,
- 					      const struct tcphdr *th,
--					      u32 *tw_isn);
-+					      u32 *tw_isn, enum skb_drop_reason *drop_reason);
- struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
- 			   struct request_sock *req, bool fastopen,
- 			   bool *lost_race);
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 2632844d2c35..ad168a3a73bb 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -2406,7 +2406,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 		inet_twsk_put(inet_twsk(sk));
- 		goto csum_error;
- 	}
--	switch (tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn)) {
-+	switch (tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn, &drop_reason)) {
- 	case TCP_TW_SYN: {
- 		struct sock *sk2 = inet_lookup_listener(net,
- 							net->ipv4.tcp_death_row.hashinfo,
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index b089b08e9617..39e5b55041f1 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -97,7 +97,7 @@ static void twsk_rcv_nxt_update(struct tcp_timewait_sock *tcptw, u32 seq,
-  */
- enum tcp_tw_status
- tcp_timewait_state_process(struct inet_timewait_sock *tw, struct sk_buff *skb,
--			   const struct tcphdr *th, u32 *tw_isn)
-+			   const struct tcphdr *th, u32 *tw_isn, enum skb_drop_reason *drop_reason)
- {
- 	struct tcp_timewait_sock *tcptw = tcp_twsk((struct sock *)tw);
- 	u32 rcv_nxt = READ_ONCE(tcptw->tw_rcv_nxt);
-@@ -245,8 +245,10 @@ tcp_timewait_state_process(struct inet_timewait_sock *tw, struct sk_buff *skb,
- 		return TCP_TW_SYN;
- 	}
- 
--	if (paws_reject)
-+	if (paws_reject) {
-+		*drop_reason = SKB_DROP_REASON_TCP_RFC7323_PAWS;
- 		__NET_INC_STATS(twsk_net(tw), LINUX_MIB_PAWSESTABREJECTED);
-+	}
- 
- 	if (!th->rst) {
- 		/* In this case we must reset the TIMEWAIT timer.
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 2debdf085a3b..66d30df95f7a 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1965,7 +1965,7 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 		goto csum_error;
- 	}
- 
--	switch (tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn)) {
-+	switch (tcp_timewait_state_process(inet_twsk(sk), skb, th, &isn, &drop_reason)) {
- 	case TCP_TW_SYN:
- 	{
- 		struct sock *sk2;
 -- 
-2.47.1
+GNU/Linux Solutions                  e-mail: giometti@enneenne.com
+Linux Device Driver                          giometti@linux.it
+Embedded Systems                     phone:  +39 349 2432127
+UNIX programming
 
