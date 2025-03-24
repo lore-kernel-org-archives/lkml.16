@@ -1,239 +1,146 @@
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp-190f.mail.infomaniak.ch (smtp-190f.mail.infomaniak.ch [185.125.25.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42992E3381;
-	Mon, 24 Mar 2025 19:25:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742844354; cv=pass; b=d5h/jI6YxZMV0nlV14udVnfPcMZoRjAetungbKbiqv4m8pJ4S5F3mjdPdqnkCXLZfZubwpq1S7LzZCRF7QbS/9Y9onBN7R1vSlejyA1U4lNeRyfRa3hOp9blVnn8zsYXGJh9HnDIbeHmgVA2v77Sxp5KrrA6sLIvoANstq/TRu4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742844354; c=relaxed/simple;
-	bh=+kFk9rhdiDAm/oCDyLKl9B/OAxtodeYjS1Mr/hB+Q/4=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=TmOETr2oq+mwPY8XGrHTspZHxRMZ6CFBh4gPxKtWjQh4e2YGKl7oL6kiVPIEIu8qE11HrKPUnH6wDNZxf9xrqifJhrrN5Dlb+zjxKjYf0RN6+BLHnHYolKVtcdVzcrIoMUaVGb5vkQlt5c1I/yD3fO33aTEWr5Sbf7Xn8gPyd5A=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=TPl1nyZU; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B831319539F;
+	Mon, 24 Mar 2025 19:27:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.15
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1742844435; cv=none; b=i0NQGgO6Zl+mKD1YdZHGAccQiSNaQIW5iDcAym36PpW/+FMWhXvEXxi3Dp+XbOm/gEw5cD676WlKXF1vpMDyWEMd8VKO1hUmF5Yr63Z9EriX4Z4DbfVBZnZfElLbDCiw1IrMEeie1guUZbNlC4R4AI8BjnrfEGDa+ihV4KDy4ME=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1742844435; c=relaxed/simple;
+	bh=P4P2z1eF/YNnOfLW8fBoOKbdAwyqWpJFO/rcNQNfqQo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=schmMIm1RyUKcYYh1jd5Nj+QbAA9/H74aPgQc9BP+O/BBP5G1Xd6Sq0AQpFykCwGFIxxuh8pVOQPEDeSevq697y+Cqck/seQsOPOF5OP6dwQwvKfoKIHySiPSEe+mXbRAkY6Kbf6oO4nlOwnXuWv1IdKNK4+551V6RRb7bqe0JA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=ZHOurTVq; arc=none smtp.client-ip=185.125.25.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="TPl1nyZU"
-ARC-Seal: i=1; a=rsa-sha256; t=1742844327; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=Swya0szKRZ74K4uMDR5Q2HYkhrNTsV98nQASLIUdYSTu0pX1TV0ufTqnyUXOt0MDBjoAxvZnQhMHjH295lK7G1/YMt9AJp3kpK6uBOb+pzUB7ww2xNCGkIDpRmmlvK9RlmXZyzbI9CUL9x13mAdQWKfj8nBu/okltIxW2hj9bTI=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1742844327; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=k8Y7CFUOAycS3oTxDxslZk149LNwr8JZUVw30eo4R5Y=; 
-	b=lsL0Xg7e8xAwEY5wdiYLM3H9Refz4PUSVk/9M7q+udDrxI/XIpXxDaT1843eVvGuJUCas9U6EaB0N+iP1Llavs8lpTZwMt7ziSTEa9GQhINekKXO7EJdJsZijKpeRXTos79kOENjSbJLVroQEpJEJG0ga6pbXWpbUDvN+Fckz1c=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1742844327;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=k8Y7CFUOAycS3oTxDxslZk149LNwr8JZUVw30eo4R5Y=;
-	b=TPl1nyZUbi2yI//ivducmbo9Tst2FtnT0BPYqZbm2M8BZZO/mOxK4JdGZIWxbyUh
-	fTPnkm0YRH+q9aoRBvSiEbNoqXoSWdH2xoYe4ol+/GxlFGlsQKTvgju/qSKw/Nq2A7p
-	4FQcdhsx8x88ulnveQ7pAbX4FUBamkeVksTLeca4=
-Received: by mx.zohomail.com with SMTPS id 1742844324407222.7563228461404;
-	Mon, 24 Mar 2025 12:25:24 -0700 (PDT)
-Content-Type: text/plain;
-	charset=utf-8
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="ZHOurTVq"
+Received: from smtp-4-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:0])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4ZM32x2YZ7zdsP;
+	Mon, 24 Mar 2025 20:27:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1742844425;
+	bh=QBR/kecod01J1h193BKpllSnIdD5DJtmTOWxdGopk5I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ZHOurTVqBYQHfSi3F6pdPowbpieWYs2igBgvPmtLeNtKh6bOX6LndXdRYsKY6jh9C
+	 KH3Sauy/1pIzJ/oIq5tcqOK2Grf+Vopzl7YTCM6Ps/dI4TzMQV42PBtmh1lSd4a4Ot
+	 uxKt6oeGXt0Fw5OGk8If/a4DunNXPqyIjb/UWnHQ=
+Received: from unknown by smtp-4-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4ZM32v3B5vz9hp;
+	Mon, 24 Mar 2025 20:27:03 +0100 (CET)
+Date: Mon, 24 Mar 2025 20:27:02 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Paul Moore <paul@paul-moore.com>
+Cc: Andrey Albershteyn <aalbersh@redhat.com>, 
+	Richard Henderson <richard.henderson@linaro.org>, Matt Turner <mattst88@gmail.com>, 
+	Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, 
+	Will Deacon <will@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, 
+	Michal Simek <monstr@monstr.eu>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	"James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>, Helge Deller <deller@gmx.de>, 
+	Madhavan Srinivasan <maddy@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, 
+	Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, 
+	Naveen N Rao <naveen@kernel.org>, Heiko Carstens <hca@linux.ibm.com>, 
+	Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, 
+	Christian Borntraeger <borntraeger@linux.ibm.com>, Sven Schnelle <svens@linux.ibm.com>, 
+	Yoshinori Sato <ysato@users.sourceforge.jp>, Rich Felker <dalias@libc.org>, 
+	John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>, "David S. Miller" <davem@davemloft.net>, 
+	Andreas Larsson <andreas@gaisler.com>, Andy Lutomirski <luto@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
+	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
+	Chris Zankel <chris@zankel.net>, Max Filippov <jcmvbkbc@gmail.com>, 
+	Alexander Viro <viro@zeniv.linux.org.uk>, Christian Brauner <brauner@kernel.org>, Jan Kara <jack@suse.cz>, 
+	=?utf-8?Q?G=C3=BCnther?= Noack <gnoack@google.com>, Arnd Bergmann <arnd@arndb.de>, 
+	Pali =?utf-8?B?Um9ow6Fy?= <pali@kernel.org>, James Morris <jmorris@namei.org>, 
+	"Serge E. Hallyn" <serge@hallyn.com>, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, 
+	linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, 
+	linux-sh@vger.kernel.org, sparclinux@vger.kernel.org, linux-fsdevel@vger.kernel.org, 
+	linux-security-module@vger.kernel.org, linux-api@vger.kernel.org, linux-arch@vger.kernel.org, 
+	selinux@vger.kernel.org, Andrey Albershteyn <aalbersh@kernel.org>
+Subject: Re: [PATCH v4 1/3] lsm: introduce new hooks for setting/getting
+ inode  fsxattr
+Message-ID: <20250324.aThi9ioghiex@digikod.net>
+References: <20250321-xattrat-syscall-v4-1-3e82e6fb3264@kernel.org>
+ <e2d5b27847fde03e0b4b9fc7a464fd87@paul-moore.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.400.131.1.6\))
-Subject: Re: [PATCH 2/2] rust: drm: Add GPUVM abstraction
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <CANiq72mQ3zuYmsq1PD-49kKLNji8OJwuvxK5QWkNaBMuC-PHQg@mail.gmail.com>
-Date: Mon, 24 Mar 2025 16:25:07 -0300
-Cc: Miguel Ojeda <ojeda@kernel.org>,
- Alex Gaynor <alex.gaynor@gmail.com>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <benno.lossin@proton.me>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Sumit Semwal <sumit.semwal@linaro.org>,
- =?utf-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
- Boris Brezillon <boris.brezillon@collabora.com>,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- Asahi Lina <lina@asahilina.net>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <509EADD7-607B-4DED-ADAC-152D7338EB50@collabora.com>
-References: <20250324-gpuvm-v1-0-7f8213eebb56@collabora.com>
- <20250324-gpuvm-v1-2-7f8213eebb56@collabora.com>
- <CANiq72mQ3zuYmsq1PD-49kKLNji8OJwuvxK5QWkNaBMuC-PHQg@mail.gmail.com>
-To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-X-Mailer: Apple Mail (2.3826.400.131.1.6)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e2d5b27847fde03e0b4b9fc7a464fd87@paul-moore.com>
+X-Infomaniak-Routing: alpha
 
-Hi Miguel, thanks for having a look at this:
+On Fri, Mar 21, 2025 at 05:32:25PM -0400, Paul Moore wrote:
+> On Mar 21, 2025 Andrey Albershteyn <aalbersh@redhat.com> wrote:
+> > 
+> > Introduce new hooks for setting and getting filesystem extended
+> > attributes on inode (FS_IOC_FSGETXATTR).
+> > 
+> > Cc: selinux@vger.kernel.org
+> > Cc: Paul Moore <paul@paul-moore.com>
+> > 
+> > Signed-off-by: Andrey Albershteyn <aalbersh@kernel.org>
+> > ---
+> >  fs/ioctl.c                    |  7 ++++++-
+> >  include/linux/lsm_hook_defs.h |  4 ++++
+> >  include/linux/security.h      | 16 ++++++++++++++++
+> >  security/security.c           | 32 ++++++++++++++++++++++++++++++++
+> >  4 files changed, 58 insertions(+), 1 deletion(-)
+> 
+> Thanks Andrey, one small change below, but otherwise this looks pretty
+> good.  If you feel like trying to work up the SELinux implementation but
+> need some assitance please let me know, I'll be happy to help :)
+> 
+> > diff --git a/fs/ioctl.c b/fs/ioctl.c
+> > index 638a36be31c14afc66a7fd6eb237d9545e8ad997..4434c97bc5dff5a3e8635e28745cd99404ff353e 100644
+> > --- a/fs/ioctl.c
+> > +++ b/fs/ioctl.c
+> > @@ -525,10 +525,15 @@ EXPORT_SYMBOL(fileattr_fill_flags);
+> >  int vfs_fileattr_get(struct dentry *dentry, struct fileattr *fa)
+> >  {
+> >  	struct inode *inode = d_inode(dentry);
+> > +	int error;
+> >  
+> >  	if (!inode->i_op->fileattr_get)
+> >  		return -ENOIOCTLCMD;
+> >  
+> > +	error = security_inode_getfsxattr(inode, fa);
+> > +	if (error)
+> > +		return error;
+> > +
+> >  	return inode->i_op->fileattr_get(dentry, fa);
+> >  }
+> >  EXPORT_SYMBOL(vfs_fileattr_get);
+> > @@ -692,7 +697,7 @@ int vfs_fileattr_set(struct mnt_idmap *idmap, struct dentry *dentry,
+> >  			fa->flags |= old_ma.flags & ~FS_COMMON_FL;
+> >  		}
+> >  		err = fileattr_set_prepare(inode, &old_ma, fa);
+> > -		if (!err)
+> > +		if (!err && !security_inode_setfsxattr(inode, fa))
+> >  			err = inode->i_op->fileattr_set(idmap, dentry, fa);
+> >  	}
+> >  	inode_unlock(inode);
+> 
+> I don't believe we want to hide or otherwise drop the LSM return code as
+> that could lead to odd behavior, e.g. returning 0/success despite not
+> having executed the fileattr_set operation.
 
-> On 24 Mar 2025, at 14:36, Miguel Ojeda =
-<miguel.ojeda.sandonis@gmail.com> wrote:
->=20
-> Hi Daniel,
->=20
-> A few quick notes for future versions on style/docs to try to keep
-> things consistent upstream -- not an actual review.
->=20
-> On Mon, Mar 24, 2025 at 4:14=E2=80=AFPM Daniel Almeida
-> <daniel.almeida@collabora.com> wrote:
->>=20
->> +#[allow(type_alias_bounds)]
->=20
-> The documentation says this is highly discouraged -- it may be good to
-> mention why it is OK in this instance in a comment or similar.
+Yes, this should look something like this:
 
-Someone correct me here, but I see no issue with this warning. That=E2=80=99=
-s
-because we need the bound to make `<T::Driver as drv::Driver>` work in =
-the
-first place. Otherwise, we=E2=80=99d get a compiler error saying that =
-there=E2=80=99s
-no `Driver` associated type (assuming the case where a random T gets
-passed in)
+ 		err = fileattr_set_prepare(inode, &old_ma, fa);
+ 		if (err)
+ 			goto out;
+ 		err = security_inode_setfsxattr(dentry, fa);
+ 		if (err)
+ 			goto out;
+ 		err = inode->i_op->fileattr_set(idmap, dentry, fa);
+ 		if (err)
+ 			goto out;
 
-So, for this to be a problem, we would need to mix this up with =
-something that
-also has a `Driver` associated type, and this associated type would also =
-need a
-drv::Driver bound.
-
-In other words, we would need a lot of things to align for this to =
-actually
-have a chance of being misused. When you consider that this is then only =
-used
-in a few places, the balance tips heavily in favor of the convenience of =
-having
-the type alias IMHO.
-
-In fact, the docs point to the exact thing I am trying to do, i.e.:
-
->  these bounds may have secondary effects such as enabling the use of =
-=E2=80=9Cshorthand=E2=80=9D associated type paths
-
->  I.e., paths of the form T::Assoc where T is a type parameter bounded =
-by trait Trait which defines an associated type called Assoc as opposed =
-to a fully qualified path of the form <T as Trait>::Assoc.=20
-
->=20
-> Also, could this be `expect`? (e.g. if it triggers in all compiler
-> versions we support)
->=20
->> +// A convenience type for the driver's GEM object.
->=20
-> Should this be a `///` comment, i.e. docs?
->=20
->> +/// Trait that must be implemented by DRM drivers to represent a DRM =
-GpuVm (a GPU address space).
->=20
-> (Throughout the file) Markdown in documentation, e.g. `GpuVm`.
-
-By the way, maybe we should have a lint for CamelCase in docs? I tried =
-my best to
-cover all of these, but some slip through :/
-
-i.e.: if you write something in CamelCase somewhere in the docs, there's =
-a high
-chance that you should actually use Markdown and link as appropriate.
-
-I have no idea whether this would actually work in practice, to be =
-honest. It=E2=80=99s just
-a random suggestion (that I'd be willing to help with).
-
-
->=20
-> (Throughout the file) Intra-doc links where they work, e.g. [`GpuVm`]
-> (assuming it works this one).
->=20
->> +        // - Ok(()) is always returned.
->=20
-> (Throughout the file) Markdown in normal comments too.
->=20
->> +/// A transparent wrapper over `drm_gpuva_op_map`.
->=20
-> (Throughout the file) A link to C definitions is always nice if there
-> is a good one, e.g.
->=20
->    [`drm_gpuva_op_map`]:
-> https://docs.kernel.org/gpu/drm-mm.html#c.drm_gpuva_op_map
->=20
-> Ideally we will eventually have a better way to link these
-> automatically, but for the time being, this helps (and later we can do
-> a replace easier).
->=20
->> +/// `None`.
->> +
->> +/// Note: the reason for a dedicated remap operation, rather than =
-arbitrary
->=20
-> Missing `///` (?).
->=20
->> +#[repr(C)]
->> +#[pin_data]
->> +/// A GPU VA range.
->> +///
->> +/// Drivers can use `inner` to store additional data.
->=20
-> (Throughout the file) We typically place attributes go below the
-> documentation -- or is there a reason to do it like this?
-
-I will be honest with you here: I never remember the right order for =
-docs and attributes.
-
-I=E2=80=99ll fix this.
-
->=20
-> We had cases with e.g. Clippy bugs regarding safety comments that
-> could be workarounded with "attribute movement", but it does not seem
-> to be the case here.
->=20
->> +        if p.is_null() {
->> +            Err(ENOMEM)
->=20
-> For error cases, we typically try to do early returns instead.
->=20
->> +    /// Iterates the given range of the GPU VA space. It utilizes
->> +    /// [`DriverGpuVm`] to call back into the driver providing the =
-split and
->> +    /// merge steps.
->=20
-> This title (and the next one) may be a bit too long (or not -- please
-> check in the rendered docs), i.e. the first paragraph is the "title",
-> which is used differently in the rendered docs. If there is a way to
-> have a shorter title that still differentiates between the two
-> methods, that would be nice.
->=20
->> +    /// # Arguments
->> +    ///
->> +    /// - `ctx`: A driver-specific context.
->> +    /// - `req_obj`: The GEM object to map.
->> +    /// - `req_addr`: The start address of the new mapping.
->> +    /// - `req_range`: The range of the mapping.
->> +    /// - `req_offset`: The offset into the GEM object.
->=20
-> Normally we try to avoid this kind of sections and instead reference
-> the arguments from the text (e.g. "...the range of the mapping
-> (`req_range`)...") -- but if there is no good way to do it, then it is
-> OK.
-
-Ack.
-
->=20
->> +// SAFETY: All our trait methods take locks
->=20
-> (Throughout the file) Period at the end.
->=20
-> Thanks!
->=20
-> Cheers,
-> Miguel
-
-=E2=80=94 Daniel=
+> 
+> --
+> paul-moore.com
+> 
