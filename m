@@ -1,115 +1,145 @@
-Received: from fhigh-a6-smtp.messagingengine.com (fhigh-a6-smtp.messagingengine.com [103.168.172.157])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 605141CD1E4;
-	Mon, 24 Mar 2025 15:27:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AED257448;
+	Mon, 24 Mar 2025 15:28:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742830070; cv=none; b=s6wAsKUZCMACvVWhA0A1iI/MfQWj8NWcdBDukq2km8uehOrjSTemmOYyr67hRYwqam+68ReS8H0+C13NfxMPq4r2PJO+J13hJdJRqNblApkZ9LdBOfQj2SXtR8RaHk6PRpdylGacR4RdHFDlK5UPpnU11aPifj63PWL5Ko/zM+w=
+	t=1742830094; cv=none; b=PmK+h8hV4NpnV4eYQcGmm3p7Rn+9+lB+ncnrTDANqeNQ4FXoLPDfpemXJUL88qtzMcMXenqedzaJpgEqcqsHRVbCuNw+FUKnIUSlA60k/+mmOoZX5jmZPwMYFFfSfOV6oBwS4Bf6KqqKb3yzLOfngyhnjKSaLdXm7C1OtQWbznA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742830070; c=relaxed/simple;
-	bh=jMK51qpqp2ziCZmYizfEEJEUTX2M9Hw3x+1Sg9tbZbY=;
-	h=MIME-Version:Date:From:To:Cc:Message-Id:In-Reply-To:References:
-	 Subject:Content-Type; b=V/ZreuS13sFJpB1w6YqkDRi+Q8HxSl0+RZ0VVVbAHWZ1dNRt7etREz07h9CO8g6FOgiFiiNPtUPY9AMhn3IeNA4CXOs5e0PkxCviDaQDHiaB0eMFz/lJip8nDhPuiNbjMx3rIgpc2W3gOf1IXDjFYFNFXje7hJUkg6AkSJCy3/M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=caidp4SU; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=l6+oLaNG; arc=none smtp.client-ip=103.168.172.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+	s=arc-20240116; t=1742830094; c=relaxed/simple;
+	bh=cqMO73am4Bc9cZMTcysm5XHve1x61DpjXMsSPTeDOXs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=kcCM6sBldGyeKP3H6ciNlroZJnQQFqN/Yu3Rsd/hZbG52pjtzMT9K09doWLQVakeET3j/LiZJnLK10UxqXUnZ8BWYlKvE8ZA42i6hIyaw0X6sXQouUhbi1f/HtfogcB9hNCfLjnGL4XgQpSPX3DpqQkS+y98ifxPlpYagNwSUfI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=F7oC7x30; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="caidp4SU";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="l6+oLaNG"
-Received: from phl-compute-07.internal (phl-compute-07.phl.internal [10.202.2.47])
-	by mailfhigh.phl.internal (Postfix) with ESMTP id 5268E1140198;
-	Mon, 24 Mar 2025 11:27:47 -0400 (EDT)
-Received: from phl-imap-11 ([10.202.2.101])
-  by phl-compute-07.internal (MEProxy); Mon, 24 Mar 2025 11:27:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm1; t=1742830067;
-	 x=1742916467; bh=niaWtuJR+RDMZS1SxQP8TZHcP0Y57WpvpM/jrkXeYis=; b=
-	caidp4SUY2DKMEFzU143PBGw/xsFXzCpVo1V5m82OHSptxTG8bPRqcLWzB5+r9As
-	6NRSvb0WBOxt7lbfr/DxpopyzmwFQfZWt6jJHyfOCk5gFQO75Bl5h+Wjbteek2cR
-	H02327yrz3fyjS4PduOSY01S50j9b4VDZtdJ/E5SrYAJF5cnDm3DxLXNpIt+jq9b
-	C1v6E5PqygvJM+9e5jRf1PPmiNQFOsgA6rsLtuMfOMtybpRNUMCMeRP5SAViJgEs
-	Ds670IOMjyQa2o9rHLaLg8P2HC0rCLHAoRTKCqZC4U0ihFPEvvxRZ//vq1UwNPAy
-	UKN7cO73zdEth+lLtYsn7g==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; t=1742830067; x=
-	1742916467; bh=niaWtuJR+RDMZS1SxQP8TZHcP0Y57WpvpM/jrkXeYis=; b=l
-	6+oLaNGYeSvWoyBv/HCelbuChe3G6NwCghvbGBLpMJ9C3pMY82iUsVYVCMjIlbRZ
-	Ca8RT9+sIm7nR2LhYQHSDw+J/+ntq7DR3K/zCbl5kJEGyNfWvK3zJ4e71Aa2k938
-	hDKPkyvV89AssEXvmKC8sZtTbe3oYd7Lvw6wpTL8PHTS05Jw5Ge1j+PsmcGD8AU/
-	ZfxKAsCi5mvUHtsLkntwFYlLV89joTwJra6ooiSFJ6+AdQgqb6XtR9mZlFiBv/5o
-	tSDGCxmCh6Q0w+qQF94GQ/in/sBB/c5EnmMZ0IlxZpNhJWFy8wmFKLGvxbuCcX6S
-	1OPJndcbU6QjFyCLgFOLQ==
-X-ME-Sender: <xms:83nhZ7y1ge7GXexBZtjGC5Uk9dYN9U7GvZr3hHiJciX1Uq2qu-pvsA>
-    <xme:83nhZzRlx-_1rEhcDeG9FXXAOymEqBBh23ztWNU7c9OVp8Mt479AEeieHshJDM4gR
-    ihTZLwSIruEdpfvO7s>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeefvddrtddtgdduiedtudefucetufdoteggodetrf
-    dotffvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdggtfgfnhhsuhgsshgtrhhisggv
-    pdfurfetoffkrfgpnffqhgenuceurghilhhouhhtmecufedttdenucesvcftvggtihhpih
-    gvnhhtshculddquddttddmnecujfgurhepofggfffhvfevkfgjfhfutgfgsehtjeertder
-    tddtnecuhfhrohhmpedftehrnhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnug
-    gsrdguvgeqnecuggftrfgrthhtvghrnhephfdthfdvtdefhedukeetgefggffhjeeggeet
-    fefggfevudegudevledvkefhvdeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghrnhgusegrrhhnuggsrdguvgdpnhgspghrtghpthhtohep
-    uddtpdhmohguvgepshhmthhpohhuthdprhgtphhtthhopegrkhhshhgrhidrghhuphhtrg
-    esrghmugdrtghomhdprhgtphhtthhopegrnhgrnhgurdhumhgrrhhjihesrghmugdrtgho
-    mhdprhgtphhtthhopehgrghuthhhrghmrdhshhgvnhhohiesrghmugdrtghomhdprhgtph
-    htthhopehmrghrihhordhlihhmohhntghivghllhhosegrmhgurdgtohhmpdhrtghpthht
-    ohepnhgrvhgvvghnkhhrihhshhhnrgdrtghhrghtrhgrughhihesrghmugdrtghomhdprh
-    gtphhtthhopehshhihrghmqdhsuhhnuggrrhdrshdqkhesrghmugdrtghomhdprhgtphht
-    thhopehgrhgvghhkhheslhhinhhugihfohhunhgurghtihhonhdrohhrghdprhgtphhtth
-    hopehlihhnuhigsehrohgvtghkqdhushdrnhgvthdprhgtphhtthhopehlihhnuhigqdhh
-    fihmohhnsehvghgvrhdrkhgvrhhnvghlrdhorhhg
-X-ME-Proxy: <xmx:83nhZ1UnI5gl297tHfzM0dN64H-xtSRbA7getDwXeH4jpYSJerSh5Q>
-    <xmx:83nhZ1iJjZkJqdmowTEIa4N5iwev55ZqfGKq9BHtfTTZR_5EFOcUvg>
-    <xmx:83nhZ9BODLSxzouc_NTFduUQ62ENB6Dy2mJRNJVyyPo7lb7DCHGufA>
-    <xmx:83nhZ-IKs0DaZZ0sb82xJvo-esppLHEDWiV3ecsXJAGjq8cpWIOABA>
-    <xmx:83nhZxuw93Ds37NR2bVvdRHvYkPEnHqpLZhcDTV_CsRtsWUrwyUqKpBI>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.phl.internal (Postfix, from userid 501)
-	id ED1DB2220072; Mon, 24 Mar 2025 11:27:46 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="F7oC7x30"
+Received: from pps.filterd (m0353725.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 52O9qBGA011754;
+	Mon, 24 Mar 2025 15:28:09 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:date:from:message-id:mime-version
+	:subject:to; s=pp1; bh=6KBh66XSYbfoHzXoObK9YPJS8KJVf8KWJEG4ORUaa
+	v4=; b=F7oC7x306wEqvSZ6SJJ+CcaM6HPJ7r3NqP1FCliTF0iyXHA8w/lqDZI5P
+	N2ri/vfml9OHeEdtbCQh8HoWLL+jwEK9MRaPK1tNM6zQYNXGGj13tlncGm+g601t
+	JzeR9/ZG5RbLLlb2zvbG0PgNwGijn2MRRySMTlczFTXF8vGWNIocPF2OZzgJP4AG
+	2+f9T9mZkh1AwAc0JOUxvVxntgV5d86PgZzCFxFQG7ofAQ4yuQDbWkhXfUBEeH4o
+	vZrGPeVn0SNRLO8eoF0A8AHodxuZJzCEom+QjxJcjJ3iAJX/UMtbBrKMv/X32f9a
+	gWuVEkwS9f+/PUqCaEEnzeeBE6Khg==
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jsh04cc6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 15:28:08 +0000 (GMT)
+Received: from m0353725.ppops.net (m0353725.ppops.net [127.0.0.1])
+	by pps.reinject (8.18.0.8/8.18.0.8) with ESMTP id 52OF4j3f011715;
+	Mon, 24 Mar 2025 15:28:08 GMT
+Received: from ppma13.dal12v.mail.ibm.com (dd.9e.1632.ip4.static.sl-reverse.com [50.22.158.221])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 45jsh04cc3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 15:28:08 +0000 (GMT)
+Received: from pps.filterd (ppma13.dal12v.mail.ibm.com [127.0.0.1])
+	by ppma13.dal12v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 52ODEI7W009737;
+	Mon, 24 Mar 2025 15:28:07 GMT
+Received: from smtprelay04.fra02v.mail.ibm.com ([9.218.2.228])
+	by ppma13.dal12v.mail.ibm.com (PPS) with ESMTPS id 45j9rkemgy-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 24 Mar 2025 15:28:07 +0000
+Received: from smtpav06.fra02v.mail.ibm.com (smtpav06.fra02v.mail.ibm.com [10.20.54.105])
+	by smtprelay04.fra02v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 52OFS4YW9175464
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 24 Mar 2025 15:28:04 GMT
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 3D3DD20049;
+	Mon, 24 Mar 2025 15:28:04 +0000 (GMT)
+Received: from smtpav06.fra02v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 0569620040;
+	Mon, 24 Mar 2025 15:28:04 +0000 (GMT)
+Received: from tuxmaker.lnxne.boe (unknown [9.152.85.9])
+	by smtpav06.fra02v.mail.ibm.com (Postfix) with ESMTP;
+	Mon, 24 Mar 2025 15:28:03 +0000 (GMT)
+From: Thomas Richter <tmricht@linux.ibm.com>
+To: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org,
+        irogers@google.com, james.clark@linaro.org
+Cc: agordeev@linux.ibm.com, gor@linux.ibm.com, sumanthk@linux.ibm.com,
+        hca@linux.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
+Subject: [PATCH] perf trace: Fix wrong size to bpf_map__update_elem call
+Date: Mon, 24 Mar 2025 16:27:56 +0100
+Message-ID: <20250324152756.3879571-1-tmricht@linux.ibm.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-ThreadId: Tdf915bd5cef52fc2
-Date: Mon, 24 Mar 2025 16:26:40 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Akshay Gupta" <akshay.gupta@amd.com>, linux-hwmon@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Cc: "Guenter Roeck" <linux@roeck-us.net>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, shyam-sundar.s-k@amd.com,
- gautham.shenoy@amd.com, "Mario Limonciello" <mario.limonciello@amd.com>,
- naveenkrishna.chatradhi@amd.com, anand.umarji@amd.com
-Message-Id: <d05242e6-4706-4abd-973f-230d143137e8@app.fastmail.com>
-In-Reply-To: <20250324145815.1026314-8-akshay.gupta@amd.com>
-References: <20250324145815.1026314-1-akshay.gupta@amd.com>
- <20250324145815.1026314-8-akshay.gupta@amd.com>
-Subject: Re: [PATCH v6 07/11] misc: amd-sbi: Add support for mailbox error codes
-Content-Type: text/plain
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: tVYJXf0O80kRZA_uEUXg36habZPJSido
+X-Proofpoint-GUID: UgLw_rgWeC3n3kF4SmRo3CF77DFCAdyX
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1093,Hydra:6.0.680,FMLib:17.12.68.34
+ definitions=2025-03-24_04,2025-03-21_01,2024-11-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ mlxlogscore=979 suspectscore=0 lowpriorityscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 clxscore=1015 malwarescore=0
+ impostorscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2502280000 definitions=main-2503240112
 
-On Mon, Mar 24, 2025, at 15:58, Akshay Gupta wrote:
-> APML mailbox protocol returns additional error codes written by
-> SMU firmware in the out-bound register 0x37. These errors include,
-> invalid core, message not supported over platform and
-> others. This additional error codes can be used to provide more
-> details to user space.
->
-> Reviewed-by: Naveen Krishna Chatradhi <naveenkrishna.chatradhi@amd.com>
-> Signed-off-by: Akshay Gupta <akshay.gupta@amd.com>
+In linux-next
+commit c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
+causes the perf tests 100 126 to fail on s390:
 
-This is an incompatible change to the uapi definition, which you
-should never do. Just merge it into the previous patch that
-adds the api in the first place.
+Output before:
+ # ./perf test 100
+ 100: perf trace BTF general tests         : FAILED!
+ #
 
-      Arnd
+The root cause is the change from int to int16_t for the
+cpu maps. The size of the CPU key value pair changes from
+four bytes to two bytes. However a two byte key size is
+not supported for bpf_map__update_elem().
+Note: validate_map_op() in libbpf.c emits warning
+ libbpf: map '__augmented_syscalls__': \
+	 unexpected key size 2 provided, expected 4
+when key size is set to int16_t.
+
+Therefore change to variable size back to 4 bytes for
+invocation of bpf_map__update_elem().
+
+Output after:
+ # ./perf test 100
+ 100: perf trace BTF general tests         : Ok
+ #
+
+Fixes: c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Cc: Ian Rogers <irogers@google.com>
+Cc: James Clark <james.clark@linaro.org>
+---
+ tools/perf/builtin-trace.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+index 092c5f6404ba..464c97a11852 100644
+--- a/tools/perf/builtin-trace.c
++++ b/tools/perf/builtin-trace.c
+@@ -4375,10 +4375,12 @@ static int trace__run(struct trace *trace, int argc, const char **argv)
+ 		 * CPU the bpf-output event's file descriptor.
+ 		 */
+ 		perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events.bpf_output->core.cpus) {
++			int mycpu = cpu.cpu;
++
+ 			bpf_map__update_elem(trace->skel->maps.__augmented_syscalls__,
+-					&cpu.cpu, sizeof(int),
++					&mycpu, sizeof(int),
+ 					xyarray__entry(trace->syscalls.events.bpf_output->core.fd,
+-						       cpu.cpu, 0),
++						       mycpu, 0),
+ 					sizeof(__u32), BPF_ANY);
+ 		}
+ 	}
+-- 
+2.48.1
+
