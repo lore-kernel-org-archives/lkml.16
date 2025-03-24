@@ -1,393 +1,153 @@
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4895261577
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:34:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from e3i165.smtp2go.com (e3i165.smtp2go.com [158.120.84.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E2CA2641E7
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 16:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=158.120.84.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742834058; cv=none; b=azslDUrV8OxmzQOSByPWc+xcXH2LQj2TqB1MmryfK+ijVgeVOyW7hNO26whuWvE+/3KuEgFKnEKgbNdiIWBb/gLNFCNeHbpjDMtCWkjtBxpuEW8WVaDEBC8eTR5Zbp2PiSBIUPZm2PIi7OxyOsmcSZoQ/wRVd6gx/qULDueit6c=
+	t=1742834066; cv=none; b=S2jsz1F66EADdfH6voo90Xgj76hZFbney/N+o3FrhNMoISbBsvnkryRu4not96IAooPmMF+F9YpOEI9dOnykzVgSe/YuF/n6M9XALYNFWywkO4oHANquKYk4+nWN0F6Qe6VG2KWp26gw4CnC743SEKyi9aDYJgkcH2sMGvj2DVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742834058; c=relaxed/simple;
-	bh=bcw/hb++a9qIJ+07FSSoYRi2RitNhYjgys+PeUOzrmg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=S6ut57fQx802chL9Vgr1PVGSmraeEvmWlEt1f/iM47cGGI5DvtZeasqNbLNNFS8YlCB/Kv7+2iYoL2bqVUIc7Hen0sbiT1timn+jmauNLui5Z44h2GlYqoUHjW4x34zh1k4e3zFdgV6rY/LNx7dB91zXIKKPxq6RO0QDTgxdNyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C70F16F3;
-	Mon, 24 Mar 2025 09:34:22 -0700 (PDT)
-Received: from [192.168.188.123] (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5FE7F3F58B;
-	Mon, 24 Mar 2025 09:34:13 -0700 (PDT)
-Message-ID: <eb91803c-04ca-4100-aae3-5385bf71f618@arm.com>
-Date: Mon, 24 Mar 2025 16:34:12 +0000
+	s=arc-20240116; t=1742834066; c=relaxed/simple;
+	bh=rzhCWchD87I7ztxWtfLe2qG+z3B3I2xgab4DuMfQauE=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Ue47OekHwKeJUyrPcLDi4A4tDEdddXXzQCYO5uojLz37L7g7/YmbF3n4LLwgNUdxrZbUkD+KTk4PtlI6p25hms8Y+FW3UJ9F4qUaf1wz71wEWmeVjv35cUug4TGPW16sB/zfqywZ7FKF3a/CygObPJ+k/d5cky8pUlhVa5o5owE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt; spf=pass smtp.mailfrom=em510616.triplefau.lt; dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b=lIC8IwDg; dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b=W7WQ3apY; arc=none smtp.client-ip=158.120.84.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=triplefau.lt
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=em510616.triplefau.lt
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=smtpservice.net header.i=@smtpservice.net header.b="lIC8IwDg";
+	dkim=pass (2048-bit key) header.d=triplefau.lt header.i=@triplefau.lt header.b="W7WQ3apY"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=smtpservice.net;
+ i=@smtpservice.net; q=dns/txt; s=a1-4; t=1742834060; h=feedback-id :
+ x-smtpcorp-track : date : message-id : to : subject : from : reply-to
+ : sender : list-unsubscribe : list-unsubscribe-post;
+ bh=1NTS6jCiyypS+X7Y3GlJTmuu6rQHp2cIDev00qbGtlg=;
+ b=lIC8IwDgIatTmYLDNSJRhuunWRwjvNjTHSleEKsgKgVI6aUs0wuAYuQiJClXJ0a6mg6UW
+ 6BvE1C//CADAJOcSI/yca2+VhfpPyTOBu/FHdbw69S6D24LCfoZkUFzFacAkTc3nwfEyWED
+ nu4VfoHknASdFyFji92qrSNOq3C5XFBjHGzbwIObXb1soLEry4NgScFed0z9SCuJ6i3BRcg
+ ddC7m7iVYlarC6U29EHXsoui2BtrYFKXqJS8vSNDD2IdZ6xBfTr3konLnuTIKTJ2o3Ep9j+
+ co/cMBCSB3bMK3WtqOI4VRkC0AlKtomKWo+gWrMKNvT833Y4n79J7HUlk4Kw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=triplefau.lt;
+ i=@triplefau.lt; q=dns/txt; s=s510616; t=1742834060; h=from : subject
+ : to : message-id : date;
+ bh=1NTS6jCiyypS+X7Y3GlJTmuu6rQHp2cIDev00qbGtlg=;
+ b=W7WQ3apYDxLOK3aRczQHLfqVJpEH9cuv8TsoAedKugDkYZk5FZtQcIxMfxL7XhjVUV7gB
+ I094cGcEe43dZHOPYdR868wQWU+Ozi1o4bbqLHyR6eFowGQ1Po2JlSNiXErHm+jOiqvdcZc
+ 8TFYrGBoKqIDVu33HGkSFkccYZzAlhiF3VfuD4lBQOSrueSyxEw6itwk/pkkIYHmhTon+P5
+ 3aoJ33XRg3NJPjcs8NsFjaBP9e8k8i5eMwxJfm8XnakFpYgfxIHZbK+34GiewKDW1uWHkXK
+ HUHzIzvz/jpurW2aEIGN30TFm5Qoey4e6pinAznSI+4WLEstHxvfYFLqP3Pw==
+Received: from [10.12.239.196] (helo=localhost)
+	by smtpcorp.com with esmtpsa (TLS1.3:ECDHE_SECP256R1__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
+	(Exim 4.97.1-S2G)
+	(envelope-from <repk@triplefau.lt>)
+	id 1twkkk-4o5NDgrs07b-lUJC;
+	Mon, 24 Mar 2025 16:34:18 +0000
+From: Remi Pommarel <repk@triplefau.lt>
+To: linux-wireless@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Johannes Berg <johannes@sipsolutions.net>,
+	Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH wireless v2 1/2] wifi: mac80211: Update skb's control block key in ieee80211_tx_dequeue()
+Date: Mon, 24 Mar 2025 17:28:20 +0100
+Message-Id: <06aa507b853ca385ceded81c18b0a6dd0f081bc8.1742833382.git.repk@triplefau.lt>
+X-Mailer: git-send-email 2.40.0
+In-Reply-To: <cover.1742833382.git.repk@triplefau.lt>
+References: <cover.1742833382.git.repk@triplefau.lt>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/7 v5] sched/fair: Add push task mechanism for EAS
-To: Vincent Guittot <vincent.guittot@linaro.org>, mingo@redhat.com,
- peterz@infradead.org, juri.lelli@redhat.com, dietmar.eggemann@arm.com,
- rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
- vschneid@redhat.com, lukasz.luba@arm.com, rafael.j.wysocki@intel.com,
- pierre.gondois@arm.com, linux-kernel@vger.kernel.org
-Cc: qyousef@layalina.io, hongyan.xia2@arm.com, luis.machado@arm.com,
- qperret@google.com
-References: <20250302210539.1563190-1-vincent.guittot@linaro.org>
- <20250302210539.1563190-6-vincent.guittot@linaro.org>
-Content-Language: en-US
-From: Christian Loehle <christian.loehle@arm.com>
-In-Reply-To: <20250302210539.1563190-6-vincent.guittot@linaro.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Report-Abuse: Please forward a copy of this message, including all headers, to <abuse-report@smtp2go.com>
+Feedback-ID: 510616m:510616apGKSTK:510616s6QhpvA6O8
+X-smtpcorp-track: J0t4W7nzYQrH.UZ9JwPCaodN0.NKJCVQyhE2j
 
-On 3/2/25 21:05, Vincent Guittot wrote:
-> EAS is based on wakeup events to efficiently place tasks on the system, but
-> there are cases where a task doesn't have wakeup events anymore or at a far
-> too low pace. For such situation, we can take advantage of the task being
-> put back in the enqueued list to check if it should be pushed on another
-> CPU. When the task is alone on the CPU, it's never put back in the enqueued
-> list; In this special case, we use the tick to run the check.
-> 
-> Wake up events remain the main way to migrate tasks but we now detect
-> situation where a task is stuck on a CPU by checking that its utilization
-> is larger than the max available compute capacity (max cpu capacity or
-> uclamp max setting)
-> 
-> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+The ieee80211 skb control block key (set when skb was queued) could have
+been removed before ieee80211_tx_dequeue() call. ieee80211_tx_dequeue()
+already called ieee80211_tx_h_select_key() to get the current key, but
+the latter do not update the key in skb control block in case it is
+NULL. Because some drivers actually use this key in their TX callbacks
+(e.g. ath1{1,2}k_mac_op_tx()) this could lead to the use after free
+below:
 
-So during OSPM25 there was a discussion around this saving energy (even for
-!UCLAMP_MAX tasks) because currently when a task has an increased compute
-demand all of a sudden, we let it trigger the inefficient OPPs on little and
-mid CPUs until they are misfit or the system is overutilized and CAS kicks in.
-In particular I've presented a workload (internal VideoScroller which loads a
-new video every 3s) which performs worse on power with EAS than CAS. Ignoring
-overutilized while attempting feec does help a bit. (-5% energy with CAS, -2%
-energy with feec() during OU). This push mechanism was also mentioned to
-mitigate such situations.
-In theory I agree, but I'm afraid it doesn't help in my testing.
-Throughout various workloads where the described issue would appear the push
-mechanism is only triggered around once every 2 minutes (i.e. absolutely
-negligible).
-In particular within 1 hour of testing I've only seen 5 pushed tasks that
-fit the described scenarios ("Going from inefficient OPPs on little/mid to
-more efficient OPPs on the more capable CPUs"). The described scenario is
-very common (triggering at least every few seconds during many workloads).
-The vast majority of pushed tasks were pushed within a cluster.
-This was on Pixel 6.
+  BUG: KASAN: slab-use-after-free in ath11k_mac_op_tx+0x590/0x61c
+  Read of size 4 at addr ffffff803083c248 by task kworker/u16:4/1440
 
-> ---
->  kernel/sched/fair.c  | 220 +++++++++++++++++++++++++++++++++++++++++++
->  kernel/sched/sched.h |   2 +
->  2 files changed, 222 insertions(+)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index a9b97bbc085f..c3e383b86808 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -7051,6 +7051,7 @@ enqueue_task_fair(struct rq *rq, struct task_struct *p, int flags)
->  	hrtick_update(rq);
->  }
->  
-> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p);
->  static void set_next_buddy(struct sched_entity *se);
->  
->  /*
-> @@ -7081,6 +7082,8 @@ static int dequeue_entities(struct rq *rq, struct sched_entity *se, int flags)
->  		h_nr_idle = task_has_idle_policy(p);
->  		if (task_sleep || task_delayed || !se->sched_delayed)
->  			h_nr_runnable = 1;
-> +
-> +		fair_remove_pushable_task(rq, p);
->  	} else {
->  		cfs_rq = group_cfs_rq(se);
->  		slice = cfs_rq_min_slice(cfs_rq);
-> @@ -8589,6 +8592,197 @@ static int find_energy_efficient_cpu(struct task_struct *p, int prev_cpu)
->  	return target;
->  }
->  
-> +static inline bool task_stuck_on_cpu(struct task_struct *p, int cpu)
-> +{
-> +	unsigned long max_capa, util;
-> +
-> +	max_capa = min(get_actual_cpu_capacity(cpu),
-> +		       uclamp_eff_value(p, UCLAMP_MAX));
-> +	util = max(task_util_est(p), task_runnable(p));
-> +
-> +	/*
-> +	 * Return true only if the task might not sleep/wakeup because of a low
-> +	 * compute capacity. Tasks, which wake up regularly, will be handled by
-> +	 * feec().
-> +	 */
-> +	return (util > max_capa);
-> +}
-> +
-> +static inline bool sched_energy_push_task(struct task_struct *p, struct rq *rq)
-> +{
-> +	if (p->nr_cpus_allowed == 1)
-> +		return false;
-> +
-> +	if (is_rd_overutilized(rq->rd))
-> +		return false;
-> +
-> +	if (task_stuck_on_cpu(p, cpu_of(rq)))
-> +		return true;
-> +
-> +	return false;
-> +}
-> +
-> +static int active_load_balance_cpu_stop(void *data);
-> +
-> +static inline void check_pushable_task(struct task_struct *p, struct rq *rq)
-> +{
-> +	int new_cpu, cpu = cpu_of(rq);
-> +
-> +	if (!sched_energy_enabled())
-> +		return;
-> +
-> +	if (WARN_ON(!p))
-> +		return;
-> +
-> +	if (WARN_ON(!task_current(rq, p)))
-> +		return;
-> +
-> +	if (is_migration_disabled(p))
-> +		return;
-> +
-> +	/* If there are several task, wait for being put back */
-> +	if (rq->nr_running > 1)
-> +		return;
-> +
-> +	if (!sched_energy_push_task(p, rq))
-> +		return;
-> +
-> +	new_cpu = find_energy_efficient_cpu(p, cpu);
-> +
-> +	if (new_cpu == cpu)
-> +		return;
-> +
-> +	/*
-> +	 * ->active_balance synchronizes accesses to
-> +	 * ->active_balance_work.  Once set, it's cleared
-> +	 * only after active load balance is finished.
-> +	 */
-> +	if (!rq->active_balance) {
-> +		rq->active_balance = 1;
-> +		rq->push_cpu = new_cpu;
-> +	} else
-> +		return;
-> +
-> +	raw_spin_rq_unlock(rq);
-> +	stop_one_cpu_nowait(cpu,
-> +		active_load_balance_cpu_stop, rq,
-> +		&rq->active_balance_work);
-> +	raw_spin_rq_lock(rq);
-> +}
-> +
-> +static inline int has_pushable_tasks(struct rq *rq)
-> +{
-> +	return !plist_head_empty(&rq->cfs.pushable_tasks);
-> +}
-> +
-> +static struct task_struct *pick_next_pushable_fair_task(struct rq *rq)
-> +{
-> +	struct task_struct *p;
-> +
-> +	if (!has_pushable_tasks(rq))
-> +		return NULL;
-> +
-> +	p = plist_first_entry(&rq->cfs.pushable_tasks,
-> +			      struct task_struct, pushable_tasks);
-> +
-> +	WARN_ON_ONCE(rq->cpu != task_cpu(p));
-> +	WARN_ON_ONCE(task_current(rq, p));
-> +	WARN_ON_ONCE(p->nr_cpus_allowed <= 1);
-> +	WARN_ON_ONCE(!task_on_rq_queued(p));
-> +
-> +	/*
-> +	 * Remove task from the pushable list as we try only once after that
-> +	 * the task has been put back in enqueued list.
-> +	 */
-> +	plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +
-> +	return p;
-> +}
-> +
-> +/*
-> + * See if the non running fair tasks on this rq can be sent on other CPUs
-> + * that fits better with their profile.
-> + */
-> +static bool push_fair_task(struct rq *rq)
-> +{
-> +	struct task_struct *next_task;
-> +	int prev_cpu, new_cpu;
-> +	struct rq *new_rq;
-> +
-> +	next_task = pick_next_pushable_fair_task(rq);
-> +	if (!next_task)
-> +		return false;
-> +
-> +	if (is_migration_disabled(next_task))
-> +		return true;
-> +
-> +	/* We might release rq lock */
-> +	get_task_struct(next_task);
-> +
-> +	prev_cpu = rq->cpu;
-> +
-> +	new_cpu = find_energy_efficient_cpu(next_task, prev_cpu);
-> +
-> +	if (new_cpu == prev_cpu)
-> +		goto out;
-> +
-> +	new_rq = cpu_rq(new_cpu);
-> +
-> +	if (double_lock_balance(rq, new_rq)) {
-> +		/* The task has already migrated in between */
-> +		if (task_cpu(next_task) != rq->cpu) {
-> +			double_unlock_balance(rq, new_rq);
-> +			goto out;
-> +		}
-> +
-> +		deactivate_task(rq, next_task, 0);
-> +		set_task_cpu(next_task, new_cpu);
-> +		activate_task(new_rq, next_task, 0);
-> +
-> +		resched_curr(new_rq);
-> +
-> +		double_unlock_balance(rq, new_rq);
-> +	}
-> +
-> +out:
-> +	put_task_struct(next_task);
-> +
-> +	return true;
-> +}
-> +
-> +static void push_fair_tasks(struct rq *rq)
-> +{
-> +	/* push_fair_task() will return true if it moved a fair task */
-> +	while (push_fair_task(rq))
-> +		;
-> +}
-> +
-> +static DEFINE_PER_CPU(struct balance_callback, fair_push_head);
-> +
-> +static inline void fair_queue_pushable_tasks(struct rq *rq)
-> +{
-> +	if (!sched_energy_enabled() || !has_pushable_tasks(rq))
-> +		return;
-> +
-> +	queue_balance_callback(rq, &per_cpu(fair_push_head, rq->cpu), push_fair_tasks);
-> +}
-> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p)
-> +{
-> +	if (sched_energy_enabled())
-> +		plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +}
-> +
-> +static void fair_add_pushable_task(struct rq *rq, struct task_struct *p)
-> +{
-> +	if (sched_energy_enabled() && task_on_rq_queued(p) && !p->se.sched_delayed) {
-> +		if (sched_energy_push_task(p, rq)) {
-> +			plist_del(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +			plist_node_init(&p->pushable_tasks, p->prio);
-> +			plist_add(&p->pushable_tasks, &rq->cfs.pushable_tasks);
-> +		}
-> +	}
-> +}
-> +
->  /*
->   * select_task_rq_fair: Select target runqueue for the waking task in domains
->   * that have the relevant SD flag set. In practice, this is SD_BALANCE_WAKE,
-> @@ -8758,6 +8952,10 @@ balance_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf)
->  	return sched_balance_newidle(rq, rf) != 0;
->  }
->  #else
-> +static inline void check_pushable_task(struct task_struct *p, struct rq *rq) {}
-> +static inline void fair_queue_pushable_tasks(struct rq *rq) {}
-> +static void fair_remove_pushable_task(struct rq *rq, struct task_struct *p) {}
-> +static inline void fair_add_pushable_task(struct rq *rq, struct task_struct *p) {}
->  static inline void set_task_max_allowed_capacity(struct task_struct *p) {}
->  #endif /* CONFIG_SMP */
->  
-> @@ -8947,6 +9145,12 @@ pick_next_task_fair(struct rq *rq, struct task_struct *prev, struct rq_flags *rf
->  		put_prev_entity(cfs_rq, pse);
->  		set_next_entity(cfs_rq, se);
->  
-> +		/*
-> +		 * The previous task might be eligible for being pushed on
-> +		 * another cpu if it is still active.
-> +		 */
-> +		fair_add_pushable_task(rq, prev);
-> +
->  		__set_next_task_fair(rq, p, true);
->  	}
->  
-> @@ -9019,6 +9223,13 @@ static void put_prev_task_fair(struct rq *rq, struct task_struct *prev, struct t
->  		cfs_rq = cfs_rq_of(se);
->  		put_prev_entity(cfs_rq, se);
->  	}
-> +
-> +	/*
-> +	 * The previous task might be eligible for being pushed on another cpu
-> +	 * if it is still active.
-> +	 */
-> +	fair_add_pushable_task(rq, prev);
-> +
->  }
->  
->  /*
-> @@ -13151,6 +13362,7 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->  	if (static_branch_unlikely(&sched_numa_balancing))
->  		task_tick_numa(rq, curr);
->  
-> +	check_pushable_task(curr, rq);
->  	update_misfit_status(curr, rq);
->  	check_update_overutilized_status(task_rq(curr));
->  
-> @@ -13303,6 +13515,8 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
->  {
->  	struct sched_entity *se = &p->se;
->  
-> +	fair_remove_pushable_task(rq, p);
-> +
->  #ifdef CONFIG_SMP
->  	if (task_on_rq_queued(p)) {
->  		/*
-> @@ -13320,6 +13534,11 @@ static void __set_next_task_fair(struct rq *rq, struct task_struct *p, bool firs
->  	if (hrtick_enabled_fair(rq))
->  		hrtick_start_fair(rq, p);
->  
-> +	/*
-> +	 * Try to push prev task before checking misfit for next task as
-> +	 * the migration of prev can make next fitting the CPU
-> +	 */
-> +	fair_queue_pushable_tasks(rq);
->  	update_misfit_status(p, rq);
->  	sched_fair_update_stop_tick(rq, p);
->  }
-> @@ -13350,6 +13569,7 @@ void init_cfs_rq(struct cfs_rq *cfs_rq)
->  	cfs_rq->tasks_timeline = RB_ROOT_CACHED;
->  	cfs_rq->min_vruntime = (u64)(-(1LL << 20));
->  #ifdef CONFIG_SMP
-> +	plist_head_init(&cfs_rq->pushable_tasks);
->  	raw_spin_lock_init(&cfs_rq->removed.lock);
->  #endif
->  }
-> diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
-> index ab16d3d0e51c..2db198dccf21 100644
-> --- a/kernel/sched/sched.h
-> +++ b/kernel/sched/sched.h
-> @@ -722,6 +722,8 @@ struct cfs_rq {
->  	struct list_head	leaf_cfs_rq_list;
->  	struct task_group	*tg;	/* group that "owns" this runqueue */
->  
-> +	struct plist_head	pushable_tasks;
-> +
->  	/* Locally cached copy of our task_group's idle value */
->  	int			idle;
->  
+  CPU: 3 UID: 0 PID: 1440 Comm: kworker/u16:4 Not tainted 6.13.0-ge128f627f404 #2
+  Hardware name: HW (DT)
+  Workqueue: bat_events batadv_send_outstanding_bcast_packet
+  Call trace:
+   show_stack+0x14/0x1c (C)
+   dump_stack_lvl+0x58/0x74
+   print_report+0x164/0x4c0
+   kasan_report+0xac/0xe8
+   __asan_report_load4_noabort+0x1c/0x24
+   ath11k_mac_op_tx+0x590/0x61c
+   ieee80211_handle_wake_tx_queue+0x12c/0x1c8
+   ieee80211_queue_skb+0xdcc/0x1b4c
+   ieee80211_tx+0x1ec/0x2bc
+   ieee80211_xmit+0x224/0x324
+   __ieee80211_subif_start_xmit+0x85c/0xcf8
+   ieee80211_subif_start_xmit+0xc0/0xec4
+   dev_hard_start_xmit+0xf4/0x28c
+   __dev_queue_xmit+0x6ac/0x318c
+   batadv_send_skb_packet+0x38c/0x4b0
+   batadv_send_outstanding_bcast_packet+0x110/0x328
+   process_one_work+0x578/0xc10
+   worker_thread+0x4bc/0xc7c
+   kthread+0x2f8/0x380
+   ret_from_fork+0x10/0x20
+
+  Allocated by task 1906:
+   kasan_save_stack+0x28/0x4c
+   kasan_save_track+0x1c/0x40
+   kasan_save_alloc_info+0x3c/0x4c
+   __kasan_kmalloc+0xac/0xb0
+   __kmalloc_noprof+0x1b4/0x380
+   ieee80211_key_alloc+0x3c/0xb64
+   ieee80211_add_key+0x1b4/0x71c
+   nl80211_new_key+0x2b4/0x5d8
+   genl_family_rcv_msg_doit+0x198/0x240
+  <...>
+
+  Freed by task 1494:
+   kasan_save_stack+0x28/0x4c
+   kasan_save_track+0x1c/0x40
+   kasan_save_free_info+0x48/0x94
+   __kasan_slab_free+0x48/0x60
+   kfree+0xc8/0x31c
+   kfree_sensitive+0x70/0x80
+   ieee80211_key_free_common+0x10c/0x174
+   ieee80211_free_keys+0x188/0x46c
+   ieee80211_stop_mesh+0x70/0x2cc
+   ieee80211_leave_mesh+0x1c/0x60
+   cfg80211_leave_mesh+0xe0/0x280
+   cfg80211_leave+0x1e0/0x244
+  <...>
+
+Reset SKB control block key before calling ieee80211_tx_h_select_key()
+to avoid that.
+
+Fixes: bb42f2d13ffc ("mac80211: Move reorder-sensitive TX handlers to after TXQ dequeue")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+ net/mac80211/tx.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/mac80211/tx.c b/net/mac80211/tx.c
+index a24636bda679..0c6214f12ea3 100644
+--- a/net/mac80211/tx.c
++++ b/net/mac80211/tx.c
+@@ -3893,6 +3893,7 @@ struct sk_buff *ieee80211_tx_dequeue(struct ieee80211_hw *hw,
+ 	 * The key can be removed while the packet was queued, so need to call
+ 	 * this here to get the current key.
+ 	 */
++	info->control.hw_key = NULL;
+ 	r = ieee80211_tx_h_select_key(&tx);
+ 	if (r != TX_CONTINUE) {
+ 		ieee80211_free_txskb(&local->hw, skb);
+-- 
+2.40.0
 
