@@ -1,148 +1,188 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABEC125F999;
-	Mon, 24 Mar 2025 14:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33D43B7A8
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 14:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742827485; cv=none; b=Cw19fMKroZzK9tRYNgs6si2NtTsoUE03QuQMZS4EGdFG23tS+li8ra6Y+RzOLx3VQjvyB8xjidHax+kefmbAzD6qyNO6FVvYh2wXXxkiXwtNAcCPAag4d5gVG2WRflqjUnuipWjZLPoQLqzSgSJuEuFUFZWqdOE7naLqhGurzHs=
+	t=1742827541; cv=none; b=Hk0lEf1GRUSIU82KzZ1HOSDdQol5eruTJSh7OLhq1cf4D81lx4/ihg2tIMa3c17oCf4GTb4L1j1JdFpHTq8t1v8Pr69Q6gROcIvHYfR8j0880RD1WNWDh6cUvwo/xGUdzkl2e0fwFoHJuDvdln6y4OFSI46ct+F0416nz6L43Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742827485; c=relaxed/simple;
-	bh=aFlNGtyRy9oVmVjrSqn43hcqtvgmECgCXHyXQI+/7CA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n787KEPO/DBtKvMuI4zi4IrUscV7+0aiEXv1DJV6eLWfLJ8qgWtu0wcy1zXLSxQxOZZbeP7slr86yOjeZNPt6qbZ/XPfd3uXUd5chwWZfT8aOZP1G649VFbILplLoQPO4l3C6YfPT3a+8mOmeCtg0ICkc1Q2NXpFAi7A1Jxv+U8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q8sKAZ2+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742827541; c=relaxed/simple;
+	bh=M1hWD/oSou+r5X9ScN+rHnKhewbykMu1plQom+IBOPI=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eKyq5osu67faVfnk07f83WniCf8t8mepA9JxLuHHpHQB70B8M21KdoIVT3pgi4ZbeKDz3qnrEfC45QPaYl2UfHGt37b5XzzARJxQzHrAAqZ/A4/OUBe0lrsTVEvwx+Q28X8QMjAHK/PjYLImy2IM6PkgofDeg7l2oJGYp/T7X9U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PQ5YVIIS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q8sKAZ2+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B6FC4CEDD;
-	Mon, 24 Mar 2025 14:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742827485;
-	bh=aFlNGtyRy9oVmVjrSqn43hcqtvgmECgCXHyXQI+/7CA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=q8sKAZ2+lhd8maxG/iv8jyZ89kySEjKbcQAe99pgprGn+u9AfKdb7808l67lJeaGF
-	 Gjjc18B1BmUBZTHiuk1t8mbG/La2dNDlIzNDsaaXCRUOYgZ/Kv5lpd2Z9ISGAq7pm1
-	 eii8h3re+b8WUU/h0EVRY9Z7E+LhMANHqIEed6c68mAzKQawRweqa/o90LEEs1gMc4
-	 uVafHwBKMoVbzhNRRAGQHyLaoacx+cRydC9JjSPffc/csDUSjd548JJaInj2YBmKs8
-	 5xPRVxfL3EoAKNzeTFtRW4LltVmhp9kHiExZPz1zw//DzYWz3JZq3yKYDVzzCJMOYU
-	 dUryZbbH63Dsg==
-Date: Mon, 24 Mar 2025 09:44:43 -0500
-From: Rob Herring <robh@kernel.org>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: tglx@linutronix.de, linux-kernel@vger.kernel.org,
-	Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Thomas Fossati <thomas.fossati@linaro.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-stm32@st-md-mailman.stormreply.com>,
-	"moderated list:ARM/STM32 ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 1/2] dt-bindings: NXP System Timer Module
-Message-ID: <20250324144443.GA17721-robh@kernel.org>
-References: <20250324100008.346009-1-daniel.lezcano@linaro.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PQ5YVIIS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1742827538;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=ECA6zhUqnyZiEyBYCMUo+zUIFQyB0/m7K5nNM3gOBd8=;
+	b=PQ5YVIISV7GTa8IHJlvbbds7oCD5btkyP+6ALsH78mbSxdA0ww2OPtVLQIJHwgdxhHd25/
+	lKg76ew9ppRZxqDKayfd3n2FnvUOgLJBsr/xh7nVpqw25gy22xh6EkCbcfVnjIQN/AuLkT
+	kDvqpcWeaoMnFE5kuZT8WwbEAXRoMtc=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-634-BAnIxituMdOFwTuiTKpHiA-1; Mon,
+ 24 Mar 2025 10:45:33 -0400
+X-MC-Unique: BAnIxituMdOFwTuiTKpHiA-1
+X-Mimecast-MFC-AGG-ID: BAnIxituMdOFwTuiTKpHiA_1742827531
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0BF5618001FC;
+	Mon, 24 Mar 2025 14:45:31 +0000 (UTC)
+Received: from jbrnak-thinkpadx1carbongen9.tpbc.com (unknown [10.43.17.192])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 35794180A802;
+	Mon, 24 Mar 2025 14:45:25 +0000 (UTC)
+From: Jakub Brnak <jbrnak@redhat.com>
+To: Peter Zijlstra <peterz@infradead.org>,
+	Ingo Molnar <mingo@redhat.com>,
+	Arnaldo Carvalho de Melo <acme@kernel.org>,
+	Namhyung Kim <namhyung@kernel.org>,
+	linux-perf-users@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>,
+	Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Ian Rogers <irogers@google.com>,
+	Adrian Hunter <adrian.hunter@intel.com>,
+	kan.liang@linux.intel.com,
+	mpetlan@redhat.com,
+	tglozar@redhat.com,
+	jbrnak@redhat.com,
+	Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [PATCH v3] perf test probe_vfs_getname: Skip if no suitable line detected
+Date: Mon, 24 Mar 2025 15:45:23 +0100
+Message-ID: <20250324144523.597557-1-jbrnak@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324100008.346009-1-daniel.lezcano@linaro.org>
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 
-On Mon, Mar 24, 2025 at 11:00:05AM +0100, Daniel Lezcano wrote:
-> Add the System Timer Module description found on the NXP s32 platform
-> and the compatible for the s32g2 variant.
-> 
-> Cc: Ghennadi Procopciuc <ghennadi.procopciuc@oss.nxp.com>
-> Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Cc: Thomas Fossati <thomas.fossati@linaro.org>
-> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> ---
->  .../bindings/timer/nxp,stm-timer.yaml         | 59 +++++++++++++++++++
->  1 file changed, 59 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
-> new file mode 100644
-> index 000000000000..41093892c617
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/nxp,stm-timer.yaml
-> @@ -0,0 +1,59 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/timer/nxp,stm-timer.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: NXP System Timer Module (STM)
-> +
-> +maintainers:
-> +  - Daniel Lezcano <daniel.lezcano@kernel.org>
-> +
-> +description: |
+In some cases when calling function add_probe_vfs_getname, line number
+can't be detected by perf probe -L getname_flags:
 
-Don't need '|' and wrap at 80 char.
+  78         atomic_set(&result->refcnt, 1);
 
-> +  The System Timer Module supports commonly required system and
-> +  application software timing functions. STM includes a 32-bit
-> +  count-up timer and four 32-bit compare channels with a separate
-> +  interrupt source for each channel. The timer is driven by the STM
-> +  module clock divided by an 8-bit prescale value.
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - const: nxp,s32g2-stm
-> +      - items:
-> +          - const: nxp,s32g2-stm
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    items:
-> +      - description: System Timer Module clock
+	     // one of the following lines should have line number
+	     // but sometimes it does not because of optimization
+	     result->uptr = filename;
+             result->aname = NULL;
 
-Just 'maxItems: 1'. The description is rather obvious.
+  81         audit_getname(result);
 
-> +
-> +  clock-names:
-> +    items:
-> +      - const: stm
+To prevent false failures, skip the affected tests
+if no suitable line numbers can be detected.
 
-No need for *-names when there is only 1 entry.
+Signed-off-by: Jakub Brnak <jbrnak@redhat.com>
+---
+v3:
+- ensure POSIX compliance
 
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - clocks
-> +  - clock-names
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    stm@4011c000 {
+v2: 
+https://lore.kernel.org/linux-perf-users/Z9tKat6vvC1XUj0U@google.com/
+- check if return from add_vfs_getname equals to 1
+sice it is only option in case of fail 
 
-timer@...
+v1:
+ https://lore.kernel.org/linux-perf-users/Z8pAep0GJsMFTyEi@google.com/T/#t
+---
+ tools/perf/tests/shell/lib/probe_vfs_getname.sh          | 8 +++++++-
+ tools/perf/tests/shell/probe_vfs_getname.sh              | 8 +++++++-
+ .../perf/tests/shell/record+script_probe_vfs_getname.sh  | 8 +++++++-
+ tools/perf/tests/shell/trace+probe_vfs_getname.sh        | 9 +++++++--
+ 4 files changed, 28 insertions(+), 5 deletions(-)
 
-> +        compatible = "nxp,s32g2-stm";
-> +        reg = <0x4011c000 0x3000>;
-> +        interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
-> +        clocks = <&clks 0x3b>;
-> +        clock-names = "stm";
-> +    };
-> -- 
-> 2.43.0
-> 
+diff --git a/tools/perf/tests/shell/lib/probe_vfs_getname.sh b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+index 5c33ec7a5a63..89f72a4c818c 100644
+--- a/tools/perf/tests/shell/lib/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/lib/probe_vfs_getname.sh
+@@ -19,8 +19,14 @@ add_probe_vfs_getname() {
+ 			result_aname_re="[[:space:]]+([[:digit:]]+)[[:space:]]+result->aname = NULL;"
+ 			line=$(perf probe -L getname_flags 2>&1 | grep -E "$result_aname_re" | sed -r "s/$result_aname_re/\1/")
+ 		fi
++
++		if [ -z "$line" ] ; then
++			echo "Could not find probeable line"
++			return 2
++		fi
++
+ 		perf probe -q       "vfs_getname=getname_flags:${line} pathname=result->name:string" || \
+-		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring"
++		perf probe $add_probe_verbose "vfs_getname=getname_flags:${line} pathname=filename:ustring" || return 1
+ 	fi
+ }
+ 
+diff --git a/tools/perf/tests/shell/probe_vfs_getname.sh b/tools/perf/tests/shell/probe_vfs_getname.sh
+index c51a32931af6..0f52654c914a 100755
+--- a/tools/perf/tests/shell/probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/probe_vfs_getname.sh
+@@ -13,7 +13,13 @@ skip_if_no_perf_probe || exit 2
+ # shellcheck source=lib/probe_vfs_getname.sh
+ . "$(dirname $0)"/lib/probe_vfs_getname.sh
+ 
+-add_probe_vfs_getname || skip_if_no_debuginfo
++add_probe_vfs_getname
+ err=$?
++
++if [ $err -eq 1 ] ; then
++	skip_if_no_debuginfo
++	err=$?
++fi
++
+ cleanup_probe_vfs_getname
+ exit $err
+diff --git a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+index fd5b10d46915..1ad252f0d36e 100755
+--- a/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/record+script_probe_vfs_getname.sh
+@@ -35,8 +35,14 @@ perf_script_filenames() {
+ 	grep -E " +touch +[0-9]+ +\[[0-9]+\] +[0-9]+\.[0-9]+: +probe:vfs_getname[_0-9]*: +\([[:xdigit:]]+\) +pathname=\"${file}\""
+ }
+ 
+-add_probe_vfs_getname || skip_if_no_debuginfo
++add_probe_vfs_getname
+ err=$?
++
++if [ $err -eq 1 ] ; then
++        skip_if_no_debuginfo
++        err=$?
++fi
++
+ if [ $err -ne 0 ] ; then
+ 	exit $err
+ fi
+diff --git a/tools/perf/tests/shell/trace+probe_vfs_getname.sh b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+index 60fccb62c540..5d5019988d61 100755
+--- a/tools/perf/tests/shell/trace+probe_vfs_getname.sh
++++ b/tools/perf/tests/shell/trace+probe_vfs_getname.sh
+@@ -25,9 +25,14 @@ trace_open_vfs_getname() {
+ 	grep -E " +[0-9]+\.[0-9]+ +\( +[0-9]+\.[0-9]+ ms\): +touch/[0-9]+ open(at)?\((dfd: +CWD, +)?filename: +\"?${file}\"?, +flags: CREAT\|NOCTTY\|NONBLOCK\|WRONLY, +mode: +IRUGO\|IWUGO\) += +[0-9]+$"
+ }
+ 
+-
+-add_probe_vfs_getname || skip_if_no_debuginfo
++add_probe_vfs_getname
+ err=$?
++
++if [ $err -eq 1 ] ; then
++        skip_if_no_debuginfo
++        err=$?
++fi
++
+ if [ $err -ne 0 ] ; then
+ 	exit $err
+ fi
+-- 
+2.48.1
+
