@@ -1,111 +1,148 @@
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20C4D19ADBA
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:43:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19C412AD25
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 07:46:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742802217; cv=none; b=KugXEUvJeqqeN+R5+lv2AuBAKq3ft4c2oIeO+sw9i7eSl9IIr76ncAupLlrjg235/C9aMOQqsNLQTi3sW2aCOBphmbZZ2kyltajj1WTCeLJJutqD0rOTV8wcI1hw/T9g/Aq6bE6wN/vkcfssdtEvmyGhwbNIUV6GRWoSEt/Iuyw=
+	t=1742802383; cv=none; b=ayUEAC0oSmoFwLagwnigTWOOS0aaOTXr2KX5utAqGO3GDxT0WrPqu4r/cVqyrUlVunYmch2MJFL6m9AKEYk5RLP7meFfIUaR0QgIF5odZDrhWubRGwP2zmj7BTlbaTz2PiVGEQtSwMrSjQE+EAcYq7EP3m7vDy4ihFIO1+F4JoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742802217; c=relaxed/simple;
-	bh=Wja2HIkcCc/qn+fhg7yuV0A96iCH9nSXOnTIZdyzsNU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VyfaqQb2cbWh+gz4zrOxERnoonCkuJjWa0sxWrDCTln5m9IYVYu4vdzzWermp128lBs12p+nVdHrysNpKwxSc4N4Q4K+547murt8QR/XIM9vlOENfs4AL1zb2MixMjYA2oMWs57QNLb79ERpLjXiwTs93icf0NIPtUJTiSCgF4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=TNjgYoIo; arc=none smtp.client-ip=209.85.128.43
+	s=arc-20240116; t=1742802383; c=relaxed/simple;
+	bh=TfODWm1M0ZXJmeY4LnW3qCr7DVndKYh/sG0G7/aLfkc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XglBzZmInf55SsELiNtTAZZqkj0bPWPFb3Tq7sHzMPYYz5gBPGLf45D6NFqq5YW2+apYRPhM7MNL/2ItHPzLu6yOMV26vftTBe9lc73uQDMI6P1SdNuvYc6CVLUNESQhqlvJaq+ryVB0lu5dRC+YQuNWw1SXMDgqOz6bU8Gg6qY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UZOKWWML; arc=none smtp.client-ip=209.85.167.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TNjgYoIo"
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-43cfe574976so22103985e9.1
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 00:43:35 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UZOKWWML"
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-54957f0c657so4375320e87.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 00:46:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742802214; x=1743407014; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ENeTUflag0l1WgJ9MraeaFTIx2U/M6/MceOO9Gs6H40=;
-        b=TNjgYoIoyymn/4+AglCvAOvp4FaS/0FG8fA9O9PbdR/7fN9vrgyJjmc/SPY3lV8xlr
-         8/joueCTVzHixOvZN6frHL4ivVU/SsOsdNrawpEFsfFJX8Ye8aa8whkthKUs7mLen5w7
-         /mdFYAc64y6rOx7U4HGM27lvHLIqdGhs1KN61LnUwG7/Iil9yo7MSDHqhru4CPTbSyxm
-         RpZs9KA1TUh9A4GU1yGOuOJpeW7Myd7x4gsr/5+lo1M29K44IQgunwSBxZL1x3ZTX9wX
-         Qv7ykq1CMHn/DbwsVw006bHR3pW2kLj131sRb06ODHwzJRUyO15uRXw3eHQFKCLX66Fe
-         mOYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742802214; x=1743407014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1742802379; x=1743407179; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ENeTUflag0l1WgJ9MraeaFTIx2U/M6/MceOO9Gs6H40=;
-        b=l53dlOxjcOB0mOBuFHUw+SO0Vwnl0cBeEFQQL+F3X4PPXtgcG7/BPyV8m5BsQr/E/m
-         mJnwAVDJKqeA47IDdP20kRjKaV1h1AytNME0c2GIoescGe09dZFRUTA/ziwfIxX5lMLm
-         IqL/99SvgdRUjF2Db3zSL7nLyqJn9TIbfEnWt7BiqeoMDA6vK9NVw6+zpNEDxdiVi4UM
-         rE8p+g+onm+2hGEV/fiJVa8QwK6WX1IQgGmKCLlFQh0uQIKIexs6SoJqooB/BbuiP9Uz
-         BOxFKDWrGnDoHb2ZJfIzWWoRrgVsFJZJsfh256JojHuhzZtgTgZyiKJA6T+FW5Ngesw+
-         AfDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGWaHQiRagr5KDqCBVMO4wz/sHKJRPdPB6DCvKIPzyQW19cpNOK08AtEpHr2o8gn1KFimzsVo2uPe7kCY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyEAqlrjYoAmvP0htbxCirzJ9G11IrL/zCM9OfY/ezPVVemxke6
-	UjsNU7OAQgWpzxYSm2vbtrINfgdMbOP3qpyKl1c3fjdViWwlTkJjuo98e3mkrbM=
-X-Gm-Gg: ASbGncu0hxFO6R6sGkg9tafT+kUHuXTIuxi9vWHEClsugYSsZlwTxPXsr1i9zPk161y
-	bhWcvKNs7Hbr76aiZiVimi+UV7TClzpahAKXs6ShbM5e3ky5kk7K0qoIbkh0p3ffZG/oIXGpRdK
-	QdjaucvDqvvurLg3p3gCLJ1UGSJvDnEvnwKAOsOHOjvfj4SxRsnSehuMVIIhMNhh2C+OpHPaG8W
-	nsl3QJLHR8UBAUR3BdKF0HFgUp9ZGuJtslTNK6xkHTVYkR0zggYHxLUXP8k7CkUsv4b9Lgqn/LO
-	/jfZoO4FSw53N94WaLQNM+K2Q+IxuVZY5KxWW8oukMPShai7hg==
-X-Google-Smtp-Source: AGHT+IGmGmS5ufUfMSrgfk7DIRjiH+iIQAHj6POw/bNjEYZrqwMBfch1zIjXMn5LOd+CGNnKdNiELw==
-X-Received: by 2002:a05:6000:2a2:b0:390:f400:2083 with SMTP id ffacd0b85a97d-3997f89a039mr9195803f8f.0.1742802214396;
-        Mon, 24 Mar 2025 00:43:34 -0700 (PDT)
-Received: from localhost ([196.207.164.177])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3997f9eff9asm10311692f8f.92.2025.03.24.00.43.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 00:43:33 -0700 (PDT)
-Date: Mon, 24 Mar 2025 10:43:31 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Markus Elfring <Markus.Elfring@web.de>
-Cc: Qasim Ijaz <qasdev00@gmail.com>, linux-wireless@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	Angelo Gioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Bo Jiao <bo.jiao@mediatek.com>, Felix Fietkau <nbd@nbd.name>,
-	James Dutton <james.dutton@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Jonas Gorski <jonas.gorski@gmail.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	Peter Chiu <chui-hao.chiu@mediatek.com>,
-	Ryder Lee <ryder.lee@mediatek.com>,
-	Sean Wang <sean.wang@mediatek.com>,
-	Shayne Chen <shayne.chen@mediatek.com>
-Subject: Re: wifi: mt76: mt7996: avoid potential null deref in
- mt7996_get_et_stats()
-Message-ID: <d723d5c1-ed17-41b8-9bc4-274fd8e2b615@stanley.mountain>
-References: <20250322141910.4461-1-qasdev00@gmail.com>
- <d1df5d97-4691-40d4-a6cc-416505f35164@web.de>
- <92d1a410788c54facedec033474046dda6a1a2cc.camel@sipsolutions.net>
- <CAAMvbhGrJ9b3Aab9+2a5zmvEgf0GZFmHLCC7Hud+egUE28voHQ@mail.gmail.com>
- <223c7280-443d-49b4-96b2-90472339dcd4@stanley.mountain>
- <46a53498-6c20-48fd-b090-02163baefddd@web.de>
+        bh=hMUWST69DWBxdXQICnizeifSpfvf4a4EPHYJz2w7L2o=;
+        b=UZOKWWMLbFESlQNxJVDLDc8jAvBy+ZFkkMuLV7bfl8MRWOYIaV8vO1eiPPZfT/am8x
+         SFkeSeC9WehpbjP+3tlFe6XOdYi/sJOZ/RPn8HUzVaKlxin3SIIPcxGwR8BGktVLkadP
+         1CQ3U/Jf4k7DMTV53wB6pFIlutR456nexuCp9AVggaiYjOfBbPVMdHLKeZwQY8VKZCow
+         O6ghBKCOZBIKRgNWF2F6R2b/aTHhdF/vih884BPfPpkR+HJ+9/BsFLei8vDaUKIMrxNF
+         IFUiZcRVh3SeqNH24Mqj3N3A1wRYIb8MTDfmPqtwqhifeCkU8P4NKx3K1k0Tto9lR88P
+         H8Zw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742802379; x=1743407179;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hMUWST69DWBxdXQICnizeifSpfvf4a4EPHYJz2w7L2o=;
+        b=K5oVF2hswkZRHGkF+m5F+LxZL1Z8XH933Xrb32MwLETkZBbyGFiORW0RtlZNlmacnc
+         g/VsExIeLmcFpX16BQPQ+xSCKagLSEKf5yVerLmvCuBHCVGMkpKqTqMy78hXr3EcIoeK
+         0S72ZnApCWP80ot80AEv1UVGI0xGVVBbPc9q+f9BvlR96/DIsWyNxMFN8MncJVXL0euU
+         EjaqF6SCWXQBD3sZmAQu82ePrNTCC78WcNITraWKNC8ICzqln25I0xMcPl9f6lxVyQQb
+         xZeuUmUs7HoD+VgdB2hkkdHMabS4zYxMpO2HDT/Og5bIuRMrUk/IF/dJxxiZhxMdkPZV
+         WB2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWx12nOgfjZcn+Ve4017OeLnggm0R1yluAA6wOWEDc/mFCu8zigzzlB0Hm4/Bb10WxYHNCUodW+qmubvnc=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyPrjhSzpe1/ig59ZN9Qhh4yNt3JlJcBAWPqHCT6EkvT8gEBS74
+	K5e2WsMEOXSVd+sF8Kpu2QcwtLb7TXnP8uOynPMAuNqpM3sM0WUgEeUgRdO+gfs6Zc6ZtID3HfL
+	w6e6PUU6mugZa0E+ylADTxigKy/1uzoG2qFsizw==
+X-Gm-Gg: ASbGncsRvaHTXbsrYkLKTn0BU2izWvJkChG9w7WexvaTBF/kUqY02kCYU8bi5yfJap1
+	yQD/mNRPLbo8PmMXF7nJALYjF1vprnjeviAf/m7O3DbBGYzSjH/9s/5NOxJDHN8P6+W6waaKrCW
+	8LsTKrE9nmLhY9GLb83tbUUAWqyKuIYsaing==
+X-Google-Smtp-Source: AGHT+IHWv/VboFhXNK2XpXps/bxwKIcYKOMez6LLCx8aPGa5SQF6NbUgEgHeVW4eBz5VO9FuBCLn09W/ZghHhKDVfRE=
+X-Received: by 2002:a05:6512:b83:b0:549:744c:fffb with SMTP id
+ 2adb3069b0e04-54ad609d72dmr3944521e87.23.1742802379177; Mon, 24 Mar 2025
+ 00:46:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <46a53498-6c20-48fd-b090-02163baefddd@web.de>
+References: <20250324-wcd-gpiod-v1-0-27afa472e331@nxp.com> <20250324-wcd-gpiod-v1-2-27afa472e331@nxp.com>
+ <CAKXuJqht5ZiFyt2uWXwPSEdszYQWKHm22+mAQCPQXn8b7AbL-w@mail.gmail.com> <PAXPR04MB8459D61091A8BF9ABD94DA7E88A42@PAXPR04MB8459.eurprd04.prod.outlook.com>
+In-Reply-To: <PAXPR04MB8459D61091A8BF9ABD94DA7E88A42@PAXPR04MB8459.eurprd04.prod.outlook.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 24 Mar 2025 08:46:07 +0100
+X-Gm-Features: AQ5f1JrbrVSW1XDO8yz8UbRJofr062hFHRQi78f3pNkQKYxPx9YmO_59Oy_iH1I
+Message-ID: <CACRpkdZXG0JC7_-Mg6Dpq08Y=Kr3M+fRWQF_bPG8c-WH8pA9Mg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] ASoC: codec: wcd938x: Convert to GPIO descriptors
+To: Peng Fan <peng.fan@nxp.com>
+Cc: Steev Klimaszewski <steev@kali.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, 
+	"linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 24, 2025 at 08:33:39AM +0100, Markus Elfring wrote:
-> > Also the "phy" point will never be NULL so the check should be removed.
-> How many tools can help to determine such a software aspect with
-> inter-procedural analyses?
-> 
+On Mon, Mar 24, 2025 at 8:33=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
 
-You can just review the code.  There is only one caller.
+> > With this patchset applied, the wcd938x codec used in the Thinkpad
+> > X13s stops working:
+> >
+> > wcd938x_codec audio-codec: soundwire device init timeout
+> > wcd938x_codec audio-codec: ASoC: error at
+> > snd_soc_component_probe on
+> > audio-codec: -110
+> > snd-sc8280xp sound: ASoC: failed to instantiate card -110 snd-
+> > sc8280xp sound: probe with driver snd-sc8280xp failed with error -110
+>
+> Thanks for help testing. But per current in-tree DTS, the reset is using
+> GPIO_ACTIVE_LOW, so it should work.
+>
+> I am not sure whether you are using firmware published DTS,
+> if yes, could you please help check the codec node to dump
+> the reset-gpios property under /sys/firmware/devicetree/xx ?
 
-Btw, it's fine to have unnecessary NULL checks so long as they're done
-consistently.  Generally, we prefer people not add unnecessary code,
-but if it makes you feel safer, most maintainers aren't going to nit-pick
-you about it.  If you are doing the work then you get some say your own
-code.
+I'm also a bit puzzled.
 
-regards,
-dan carpenter
+I think maybe this device has some DTB that comes from the vendor
+with the wrong polarity :/
+
+If this is the case we need to add a quirk to gpiolib to force this
+GPIO into active low,  something like this:
+
+From dfe3d2a12a63135e917abacd0d3a29ce347a6cf9 Mon Sep 17 00:00:00 2001
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 24 Mar 2025 08:44:45 +0100
+Subject: [PATCH] Fix WCD938x polarity
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/gpio/gpiolib-of.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/drivers/gpio/gpiolib-of.c b/drivers/gpio/gpiolib-of.c
+index 2e537ee979f3..3baaddedb7b6 100644
+--- a/drivers/gpio/gpiolib-of.c
++++ b/drivers/gpio/gpiolib-of.c
+@@ -220,6 +220,15 @@ static void of_gpio_try_fixup_polarity(const
+struct device_node *np,
+                 * treats it as "active low".
+                 */
+                { "ti,tsc2005",         "reset-gpios",  false },
++#endif
++#if IS_ENABLED(SND_SOC_WCD938X)
++               /*
++                * This codec is used in laptops with deployed devicetrees
++                * that fail to specify the correct active low property for
++                * the reset line.
++                */
++               { "qcom,wcd9380-codec", "reset-gpios",  false },
++               { "qcom,wcd9385-codec", "reset-gpios",  false },
+ #endif
+        };
+        unsigned int i;
+--=20
+2.48.1
+
+Maybe you can fold this into your patch if it helps. And if there are more
+of the codecs with this problem, we need a similar patch in each one
+of them.
+
+Yours,
+Linus Walleij
