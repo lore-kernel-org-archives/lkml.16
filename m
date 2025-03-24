@@ -1,164 +1,154 @@
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CC75261369
-	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6B3517E8E2
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 15:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742830458; cv=none; b=mTutkfuIyGZ4WJ1DjpU8fZ5lOdSDFpvFo8PxifHn8YIQtsLITp0SRVlBAEoLjUqrN4p2RJXaEKWrNnySdLX7pDBRtgftl4fMWordB23gMooan4NRG/a+py2t7QIwv5clsofx5wNZutmbyyFh8LcYU6kRyhhO+1husCozSkokJlo=
+	t=1742830713; cv=none; b=qF2Sl+WfPXJBZ+zZVn1Jly/imXLwPmEtibZLkMnUTJWWzp8eIJ0FJMVD8pS+GEmiJxTkk9ex17KEihKyHSrK2KSt/UfMR3xz+oi5C+EcLCxgPICliUnl7TkGw8DZaQD+MfBWl828AB0AEP32kmyXrJGQh3iYqSoy7rsz3FrgDnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742830458; c=relaxed/simple;
-	bh=p+IEHY6sIvNuhaTNsK9FWIQI5zgZXUPtd8JCLrJBLgE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=HowOr2VvrLUzz3sjML2zHxbdn+b8309cubCBaL4v3EkBxQQ7IIgtTZbu32+NJtBYGv1lr/3Y3WwTGDKzeY9m8EJm3XfJfOV/RMNbVnEyKQX5+cPzBaFe2smR+dc3Up+7LGsBLonssHBqfMf/vkhltdnR4dONUJmcLUP6Pclxm5w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JPDDtA3X; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1742830713; c=relaxed/simple;
+	bh=7tFPKr5B28kVVnB/cruAoC3a2L3PVQkAdc77QpKuC8A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=EyySWwqzhfvO4Jy6cTFah+/RZ5zG9U3VnmRfB4J82f4ZrI4SRamc6adxOhJCiwJ3YXpSaqkPyCCqkRWSekyIlfS8TqNiiC5GkxquIJd+/aMYeQq4q7NgmkhXOIpNFIUXcgCaj8kEfhs9wBylnEWt8pugPKylM5nSqoCSRT5QBAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PW6GnF/9; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPDDtA3X"
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-ac41514a734so267377166b.2
-        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:34:15 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PW6GnF/9"
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-2263428c8baso415295ad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 08:38:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1742830453; x=1743435253; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xKFz6eLJyqKb87mD6Fpb+y2pLdxHOWnaVFUS6QOxr3U=;
-        b=JPDDtA3X8G312iY7/8My6dM/WbxOZMIAZ5BWxjFabqZfBAX9sDnHDH2YVjhgRMYadr
-         09OD6CbDAcsXi+E/rjxPo72QMerMB+aNeHDnaiZyJjC8kkmmVp5jvGFdwsnU3UJL1m0O
-         7WFyG5mbxI2boYo0Sehoxgwyj9QrS2HDTq907+EsotJYeVnF8ZVNxXQb0wLjG9B0tD9a
-         JY/gKyVTtVm/NwhIPmgVTEEjsNjmE9GNP9zjxgN8pGULG/oWXhe7M9pFJtZU0jtGillR
-         nPCvCVSAfBX8bdQXu8x9njD6xno1n5icoKwu9mK9mO68nUZ0wguGhoWqtkS9TTPMG5Oo
-         1RBw==
+        d=google.com; s=20230601; t=1742830711; x=1743435511; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=COkzJxkZqJhvzNHBGE3D9fP9/TE+wWSTDgVE4d1zPOc=;
+        b=PW6GnF/9JHS+fPzLvw8tXKTUATOwRF5vOzd+BUXCA0Sw7b6WNE7RJM/xxv5U0K7y22
+         4akE++r0y+kO7FpbrqauoaNLHK/TUkxeiEvjwiyM0Sj0q8plGRJDLcHcimOC91voaZUl
+         WGaqj4puHEtr9xCgf4hgWeJaFvUWwM9MfQdQQCMw96engae+fusVvzFmb9t0CZ2PN2uB
+         6KkoSgfgjAFeMi0Oe8zQ6nXNoDZ2JCRVNeIL2Ql94DEwDEOHe5+k1rLwdUQLdQePsnSc
+         VnOJg/5O105T8+9qTzXpcsGEaPCAChXCaMaIBHy5jj7gfBb+iIZybRmzxs7vZKovzEzw
+         tg8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742830453; x=1743435253;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1742830711; x=1743435511;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xKFz6eLJyqKb87mD6Fpb+y2pLdxHOWnaVFUS6QOxr3U=;
-        b=lCXquu+y65SqTOWSAZ70K8gbN/lL4ENUoGfatA93x7mFmAkDDyYdxLNIz0gUcoc04H
-         meSqMh5BNUchE6ZsBc9uam6OgbjzXK8EtQxRJ7AMQs7DITzMt1DcfXFKZNn1mV+E9r6x
-         /MsaecS10pM2B/8Enk1nW5yKWvRaq30lEhcgjw6fnRwplUJdFT5x7EF8kZ/fwT4RxUFd
-         e7taC6vxFyBtW0WDPifYwi1G9xhsxoueFm7cLpb0N8+E3ZMC5jkKr9lfSAdhXiOXW86a
-         +SqsoZd5Qi/X4C74orHSnUPodJ3xGkM2iOeVlPeABPrNOXJkNserEtB9ULoB7t4CjV+G
-         7k4g==
-X-Forwarded-Encrypted: i=1; AJvYcCXxv5dqnTpCjkGGNWA6Z/TBTYm9m0wKbPMAb0grDLDXd4qhGN7KpfjCRptgxHGZRHYlaaisP/KpgtpEU8M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzUqSfzpiaX7A5fOMAeTHZLfkp4MJOMLOZBu2Vrw6CaKM96T9d9
-	gxohmQsWhMpEnj+kprkJ51gWfoDhh+rI7plypXHuuIlrcYdFWopJ1+i4kcCaO54=
-X-Gm-Gg: ASbGncsXD5grf2eusfz8rYI3wd2pH0mCHIj/t8g6p4hS57UlZtgSkQNfvABZ4btm9f7
-	sB/WQVCbTako6Y7KkTZtks8WWQ5UbDcepptswpM4CeZXOuYTPVBV9cLmDEIFi3vpzwJea+vCglT
-	nmExfRG83NSUVTugJj6yew5CgU1+7u3wSFiiL//fkpi5NnsXetHc8REh5U7R3oTRLqr1OWCzeQW
-	p6Whbzn5n7Nqd9FHlaXdDJR9C7rNSjR+6Bn+mBOtjCWaH00GQ7xVq8RiC4c0v0rt52nBRrdZ1Dg
-	WJRMZhURUsAPswhIoIRdu2WYHC0/6bZcRhpLrDAc3nn3bvPASOfN1cqCrLDSAHr09wCFV9f1OQ3
-	HA1XrxSpRYkP9JYchwxYYSKmAO4Zk
-X-Google-Smtp-Source: AGHT+IErQhBX/WXUMuS2xd0b7MNJeantSHZ2LsehWbVB+frQPoLUYxwOawSJkU4fE0OO3vdYCY7DoQ==
-X-Received: by 2002:a17:907:3e03:b0:ab7:d87f:665b with SMTP id a640c23a62f3a-ac3f25593b7mr1313444066b.48.1742830453430;
-        Mon, 24 Mar 2025 08:34:13 -0700 (PDT)
-Received: from puffmais.c.googlers.com (8.239.204.35.bc.googleusercontent.com. [35.204.239.8])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3ef86e44dsm690219466b.31.2025.03.24.08.34.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Mar 2025 08:34:13 -0700 (PDT)
-From: =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Date: Mon, 24 Mar 2025 15:34:09 +0000
-Subject: [PATCH v2 1/2] firmware: exynos-acpm: use ktime APIs for timeout
- detection
+        bh=COkzJxkZqJhvzNHBGE3D9fP9/TE+wWSTDgVE4d1zPOc=;
+        b=aCMvCG7/jwK43+kDQOw3dACaKzns1DaHhGc8jFKs0WYsJ5eFYNful/KzuVOSRLOxv4
+         Qv5V8Tbxjw4Su5v8oq6NhEueMvvH0t4EX2RVrEIc4Y8eJzDFXw/NsJmG1FA3z/h3DOr/
+         kIo5hZQpBTt0kf7SsuYLdDEJ7lXuT9J8tfNUTkesNa2CabyALg91ZLZ7Qv4Hw5CAifJ7
+         VgCrSl7o0Q/ya++NQQD71WhzW7HAbifxrjboNGoZPH8NY3zpru7RJIH9N53XUO4vYvSa
+         FvJyfWkQvYPHbSCFtHucXSQ6pc6jsMH9iE5m6O2aW34ecf1rFMipIqFIMO1dkmi0kfUL
+         TUBw==
+X-Gm-Message-State: AOJu0YyDQLyFNRZgW6FgsbKjBda65ABT8JeywLL1JL2EzmhMU7x6SUwS
+	Srt0ogn3ePd17aL6/FFC9KzxGPdG9TnMr8AjDUfjucoMASW9FDhVS9eJh6P3BxILhL/gKVWPqRP
+	vulWVg1niQeNbA2jhm6ttfns28YpwFtA5oDL7
+X-Gm-Gg: ASbGnctwNv3GDI1G5vG9TQLIPfiHnExKmLrZE3p1rHmyq1IKikQvCNxLT/xKBKAGb9z
+	kaTPFHas5rKMycxXPLWz2rnNiClPNIcAKtg0vmIMYHX/xpu+xoXRFcmjg0fL0dl9U0/g9KxAVdU
+	MlNX1okXrc98cP0A2Nj1lXqp+5vX+cdViP1VRBmSm7qMYWQafSMdfaEiU=
+X-Google-Smtp-Source: AGHT+IGC6OhQhLhblQDXlW7T4oZnxNtKmyg52BRRYG7Eecnu7rJEDTmRZl6hO4pMB5TJ2eza8MtiCvnCoiAvt74Vtu0=
+X-Received: by 2002:a17:902:d50b:b0:223:7f8f:439b with SMTP id
+ d9443c01a7336-22799f85804mr3222075ad.29.1742830710575; Mon, 24 Mar 2025
+ 08:38:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20250324-acpm-atomic-v2-1-7d87746e1765@linaro.org>
-References: <20250324-acpm-atomic-v2-0-7d87746e1765@linaro.org>
-In-Reply-To: <20250324-acpm-atomic-v2-0-7d87746e1765@linaro.org>
-To: Tudor Ambarus <tudor.ambarus@linaro.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>, 
- Alim Akhtar <alim.akhtar@samsung.com>
-Cc: Peter Griffin <peter.griffin@linaro.org>, 
- Will McVicker <willmcvicker@google.com>, kernel-team@android.com, 
- linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- =?utf-8?q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-X-Mailer: b4 0.14.2
+References: <20250324152756.3879571-1-tmricht@linux.ibm.com>
+In-Reply-To: <20250324152756.3879571-1-tmricht@linux.ibm.com>
+From: Ian Rogers <irogers@google.com>
+Date: Mon, 24 Mar 2025 08:38:19 -0700
+X-Gm-Features: AQ5f1JoRuG3A3vNzieof0Dx0hE6xP7IbfvSZ9Sgmli56VVBGPS-QMQOikuNcZEc
+Message-ID: <CAP-5=fXPgoocDSRxzYpkzcLsPwKsp9b80b1KPDWv-obkmiX-fA@mail.gmail.com>
+Subject: Re: [PATCH] perf trace: Fix wrong size to bpf_map__update_elem call
+To: Thomas Richter <tmricht@linux.ibm.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, 
+	linux-perf-users@vger.kernel.org, acme@kernel.org, namhyung@kernel.org, 
+	james.clark@linaro.org, agordeev@linux.ibm.com, gor@linux.ibm.com, 
+	sumanthk@linux.ibm.com, hca@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-acpm_dequeue_by_polling() uses a loop counter and assumes that each
-iteration of the loop takes 20us. It may take longer, though, because
-usleep_range() may sleep a different amount.
+On Mon, Mar 24, 2025 at 8:28=E2=80=AFAM Thomas Richter <tmricht@linux.ibm.c=
+om> wrote:
+>
+> In linux-next
+> commit c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
+> causes the perf tests 100 126 to fail on s390:
+>
+> Output before:
+>  # ./perf test 100
+>  100: perf trace BTF general tests         : FAILED!
+>  #
+>
+> The root cause is the change from int to int16_t for the
+> cpu maps. The size of the CPU key value pair changes from
+> four bytes to two bytes. However a two byte key size is
+> not supported for bpf_map__update_elem().
 
-Switch to using ktime_get() / ktime_before() to detect the timeout
-condition more reliably.
+Nice catch!
 
-This change also makes the code easier to follow and it allows us to
-adjust the sleep without having to adjust the loop counter exit
-condition. This will come in useful in a follow-up patch that changes
-the delays.
+> Note: validate_map_op() in libbpf.c emits warning
+>  libbpf: map '__augmented_syscalls__': \
+>          unexpected key size 2 provided, expected 4
+> when key size is set to int16_t.
 
-Reviewed-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-Signed-off-by: André Draszik <andre.draszik@linaro.org>
+Wow, weird.
 
----
-v2:
-* add missing ktime.h
-* ktime_before() instead of !ktime_after() (Tudor)
----
- drivers/firmware/samsung/exynos-acpm.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+> Therefore change to variable size back to 4 bytes for
+> invocation of bpf_map__update_elem().
+>
+> Output after:
+>  # ./perf test 100
+>  100: perf trace BTF general tests         : Ok
+>  #
+>
+> Fixes: c760174401f6 ("perf cpumap: Reduce cpu size from int to int16_t")
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Cc: Ian Rogers <irogers@google.com>
+> Cc: James Clark <james.clark@linaro.org>
+> ---
+>  tools/perf/builtin-trace.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index 092c5f6404ba..464c97a11852 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -4375,10 +4375,12 @@ static int trace__run(struct trace *trace, int ar=
+gc, const char **argv)
+>                  * CPU the bpf-output event's file descriptor.
+>                  */
+>                 perf_cpu_map__for_each_cpu(cpu, i, trace->syscalls.events=
+.bpf_output->core.cpus) {
+> +                       int mycpu =3D cpu.cpu;
+> +
+>                         bpf_map__update_elem(trace->skel->maps.__augmente=
+d_syscalls__,
+> -                                       &cpu.cpu, sizeof(int),
+> +                                       &mycpu, sizeof(int),
 
-diff --git a/drivers/firmware/samsung/exynos-acpm.c b/drivers/firmware/samsung/exynos-acpm.c
-index a85b2dbdd9f0d7b1f327f54a0a283e4f32587a98..542eaff03f9e39422a8c5345ca75e05c1710a9ee 100644
---- a/drivers/firmware/samsung/exynos-acpm.c
-+++ b/drivers/firmware/samsung/exynos-acpm.c
-@@ -15,6 +15,7 @@
- #include <linux/firmware/samsung/exynos-acpm-protocol.h>
- #include <linux/io.h>
- #include <linux/iopoll.h>
-+#include <linux/ktime.h>
- #include <linux/mailbox/exynos-message.h>
- #include <linux/mailbox_client.h>
- #include <linux/module.h>
-@@ -32,8 +33,7 @@
- 
- #define ACPM_PROTOCOL_SEQNUM		GENMASK(21, 16)
- 
--/* The unit of counter is 20 us. 5000 * 20 = 100 ms */
--#define ACPM_POLL_TIMEOUT		5000
-+#define ACPM_POLL_TIMEOUT_US		(100 * USEC_PER_MSEC)
- #define ACPM_TX_TIMEOUT_US		500000
- 
- #define ACPM_GS101_INITDATA_BASE	0xa000
-@@ -284,12 +284,13 @@ static int acpm_dequeue_by_polling(struct acpm_chan *achan,
- 				   const struct acpm_xfer *xfer)
- {
- 	struct device *dev = achan->acpm->dev;
--	unsigned int cnt_20us = 0;
-+	ktime_t timeout;
- 	u32 seqnum;
- 	int ret;
- 
- 	seqnum = FIELD_GET(ACPM_PROTOCOL_SEQNUM, xfer->txd[0]);
- 
-+	timeout = ktime_add_us(ktime_get(), ACPM_POLL_TIMEOUT_US);
- 	do {
- 		ret = acpm_get_rx(achan, xfer);
- 		if (ret)
-@@ -300,11 +301,10 @@ static int acpm_dequeue_by_polling(struct acpm_chan *achan,
- 
- 		/* Determined experimentally. */
- 		usleep_range(20, 30);
--		cnt_20us++;
--	} while (cnt_20us < ACPM_POLL_TIMEOUT);
-+	} while (ktime_before(ktime_get(), timeout));
- 
--	dev_err(dev, "Timeout! ch:%u s:%u bitmap:%lx, cnt_20us = %d.\n",
--		achan->id, seqnum, achan->bitmap_seqnum[0], cnt_20us);
-+	dev_err(dev, "Timeout! ch:%u s:%u bitmap:%lx.\n",
-+		achan->id, seqnum, achan->bitmap_seqnum[0]);
- 
- 	return -ETIME;
- }
+nit: It is usually preferred to do "sizeof(mycpu)" to avoid the
+problems like the one this fix is fixing. And I'm blamed for the bad
+code in:
+5e6da6be3082 perf trace: Migrate BPF augmentation to use a skeleton
 
--- 
-2.49.0.395.g12beb8f557-goog
+Reviewed-by: Ian Rogers <irogers@google.com>
 
+Thanks for the fixes!
+Ian
+
+>                                         xyarray__entry(trace->syscalls.ev=
+ents.bpf_output->core.fd,
+> -                                                      cpu.cpu, 0),
+> +                                                      mycpu, 0),
+>                                         sizeof(__u32), BPF_ANY);
+>                 }
+>         }
+> --
+> 2.48.1
+>
