@@ -1,192 +1,146 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3732625E445;
-	Mon, 24 Mar 2025 12:54:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F8925DB07
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 12:56:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742820887; cv=none; b=r/T/IAfWTHvayZgw2rtP/4fK1yc59ZYWh2wie7LtKM5XXt0saib7Q28c3w0KI0xTZ3zTVYA9wMfEyxLB0T/K2WGlmpjYGHFtHWodHXSX+LATglguqoaCCYW4FgPgNUVcgEcXJeD1pdc/YVllJ66Fz00PwK2kazbuw5RHKQ6Spzc=
+	t=1742820973; cv=none; b=vAtczj4yJ3Vn2H+HU2yHuV2DuU/qKNbJbsKViDzHfEkhct1lWc5nyctUalDcU5iT+k1rJUAFjWa4YUtCwKD5y/s7vZ8aphXJMYtUh2XnBfXLIA8HjwJQaWYej2jKLK0OumIHpw50/Q1iRxnw63zm3NN0QEN+1484DvLhlNk00eY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742820887; c=relaxed/simple;
-	bh=5Yofkm1dNa6vGniR8xlKP/z1QwhPxmHysFr4OgO1Qtk=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=KvOdr5FCeoveD/RgdMJ+hFBWRQ1Qh9sJC0lHSzfNWFi2F+U7I1OSTY0e7ZZrG8aShzRiOBUZnSvbJziItm6e/8zVSmCrdMppJfbfQhHitXrdTPBSgdXgdiaMy03FjaYZM59hnAJJrH8hyMU87lz6AK2lT5kqJ5LwTop0Bj0CBhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=cjqGr3+m; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742820973; c=relaxed/simple;
+	bh=Bb5ashzNWlu6TPRKb3SZq8oM68pwtoH9f4wtwRqtYQc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TIREFCPX2U3B0zzrR3TThkjZJpzqs2r5L3klMrdQdkNIzhCrr5Uagoy7uNT5+hNZtEM3dsqkRAZy+BOzUi4BTfo65TINNR3QpW7dLB+T71Be8e+UxUGeASP3GEjyxAWrfKMH/dfJ/Y9R+9/tQ3JXhMpTxCYYUig080CXQolK9KQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=doxrXvdx; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cjqGr3+m"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742820885; x=1774356885;
-  h=from:to:cc:subject:in-reply-to:references:date:
-   message-id:mime-version:content-transfer-encoding;
-  bh=5Yofkm1dNa6vGniR8xlKP/z1QwhPxmHysFr4OgO1Qtk=;
-  b=cjqGr3+m94657UAMQLtc5dieGJiIS9TGNrVmcPeWCHxonAzFoWvgzKC7
-   oSA1NoGK3s4tb8MfTVtFk7tnFn91Ehd/+tfihgLuk/NEspALOADXCQHQO
-   iw5rUlIOMX7wfIs9SXxcrKpteJNuibdYOFTjK4s0f/oTpB4Oz6/b6rkUf
-   KWNHXCqv4hbDYd9hBe6QkpnT+5sJSVC47yvgsgeJl9tOdPglfBN+gKtjM
-   36IFyU9Pv3BBednbov7TmpTHc5vXm2Yj7HUvbMWa0A6s8yViGHrkMWQ7H
-   UqMzx3qGzM1tv9OjAaJHp2W/i18PkAtxRp+OUPyMyR2/jp7P9TY/kadl5
-   Q==;
-X-CSE-ConnectionGUID: 4sMa5BH5R4KQpoGGRdBzxQ==
-X-CSE-MsgGUID: 4ANoNXOOQvi3w988TJ2ABw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11383"; a="43178727"
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="43178727"
-Received: from fmviesa002.fm.intel.com ([10.60.135.142])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 05:54:44 -0700
-X-CSE-ConnectionGUID: YsdPNGcISjGrFVNme+iMeg==
-X-CSE-MsgGUID: IBn7zjQUQz60GGLw/GwisQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,272,1736841600"; 
-   d="scan'208";a="147243419"
-Received: from kniemiec-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.246.30])
-  by fmviesa002-auth.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 24 Mar 2025 05:54:39 -0700
-From: Jani Nikula <jani.nikula@linux.intel.com>
-To: Damian Tometzki <damian@riscv-rocks.de>, Kees Cook <kees@kernel.org>
-Cc: Zhenyu Wang <zhenyuw@linux.intel.com>, Zhi Wang
- <zhi.wang.linux@gmail.com>, Joonas Lahtinen
- <joonas.lahtinen@linux.intel.com>, Rodrigo Vivi <rodrigo.vivi@intel.com>,
- Tvrtko Ursulin <tursulin@ursulin.net>, David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>, intel-gvt-dev@lists.freedesktop.org,
- intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
- linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH] drm/i915/gvt: Add __nonstring annotations for
- unterminated strings
-In-Reply-To: <01070195c306db7f-9f28efdd-9456-4db3-b6c6-343298bd571b-000000@eu-central-1.amazonses.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20250310222355.work.417-kees@kernel.org>
- <01070195c306db7f-9f28efdd-9456-4db3-b6c6-343298bd571b-000000@eu-central-1.amazonses.com>
-Date: Mon, 24 Mar 2025 14:54:36 +0200
-Message-ID: <87r02ma8s3.fsf@intel.com>
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="doxrXvdx"
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3913d129c1aso3072803f8f.0
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 05:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1742820970; x=1743425770; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Bb5ashzNWlu6TPRKb3SZq8oM68pwtoH9f4wtwRqtYQc=;
+        b=doxrXvdxyYtGGTFF7JEWuCuWVtoQ0ZD/FKlMJu0BlMlhNPZ+t2jGrdj3lh3LGcy1Nm
+         TkLRba8CUr24B9iq689xezt/BFmnrEMdce5/y+LpXyCjOO4E6xJfPNlC22s4uHf3xX0N
+         boycByc/0lXny9nwjTXnAgxz7aj0EczA/Kwr0M33OUWr9SY2tjs5lwX9LSMoUwblKTRE
+         jzW++xaud7iyE0+EW9YDVQ8lhvlPdeatWTpqdluLeptwiWKOM41rjH7nYk9ChcTjUDCr
+         wdq0/ZN1iKGOCUfa65d3mCnAlkq4c/9I++ooSdTOPBZrMz4XKcli8nbPBgaewIlIBdJi
+         ZQJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742820970; x=1743425770;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bb5ashzNWlu6TPRKb3SZq8oM68pwtoH9f4wtwRqtYQc=;
+        b=Z7MztzT5vKCme5hVuNzrtUbZV8XuYoYN17mb1Gt73xyiavxd5gtjhNVkLmF0UWcjfe
+         dDrLLAGMb8x7IDe3wmiVaiB7EyAsUNB4qLi3E+rwyJpSSvZdAATuASE5TOXJYGkgqVoT
+         SbC6O0G+FQAJwnloWjUmGMTiyRY7cl0JQhjkmVwJxlVEbLIMHzSi3nLnOekdql7OJXzp
+         VRMEiYpSF9nUWU2qQO/i0mMfOgql7yeVicYuocqLnkQtDGiWsHEUJs1PhsHoHqgPNxsL
+         TJAriMAFs5tiSPhhr+oBM7V4eW/ZXEYMqPPH98yLEXlcywznAq1EON5k6gbY7BTOlebZ
+         xm5A==
+X-Forwarded-Encrypted: i=1; AJvYcCUoj2HCWa9mpJsz0HefkvheK0OvKkFyNNRoJ/53rASaH0y5vcAMfBuQOx6SIQCo3w3qPiFe8HMfxMR/46E=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzYjNGF7HrqkpcJcvAlGAlQHH6rtSZZDSAf5EotTqTzmDSJgzgv
+	4ca/lLMFUnIVPNJR9S1m6xkxCgiU11ykBpwMWIGJMn3L3NtjDSnsTerLuc9v+QQ=
+X-Gm-Gg: ASbGncsz9ICziJhX5sBaZOfaV/0cR5GoZ4ceNLO9I//GCBnSFrF+lPhDfK1E7s+Uz1t
+	i9Xw45AHDrVo/goddqgVHqGcF8bLo0fRZ6K7Drkto05xTrqwduPaydH0OU1rCmL5fUDaJWL+F3+
+	710NgSpMLFgEPqa1DKQ+7SP8cQOPWeLCd9wf7eDjGIHuazBeY2p5DFK3n+dt9ad5M1PUkGnNy73
+	InlWLtPJ+PTjW57/9LsZlrUdsxm3laxqbLa/Ryy23nOn2A099rx79Ttaq5iIdgfLan5tYTTY8Qo
+	nnTy70K8IFkTjre6FrIQNuaiq2ToSQsvV/WHBcj7P6qQG9w=
+X-Google-Smtp-Source: AGHT+IEh+2cx2NjeBYko3qeni7OqGRsZaVwIGE91RRbMpXS3hmSeZB73isRPNemQZA8pSphOxB2XdQ==
+X-Received: by 2002:a05:6000:1565:b0:38d:b028:d906 with SMTP id ffacd0b85a97d-3997f933816mr11122788f8f.21.1742820969725;
+        Mon, 24 Mar 2025 05:56:09 -0700 (PDT)
+Received: from blackdock.suse.cz ([193.86.92.181])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3997f9e65besm11013603f8f.65.2025.03.24.05.56.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Mar 2025 05:56:09 -0700 (PDT)
+Date: Mon, 24 Mar 2025 13:56:07 +0100
+From: Michal =?utf-8?Q?Koutn=C3=BD?= <mkoutny@suse.com>
+To: Pablo Neira Ayuso <pablo@netfilter.org>
+Cc: netfilter-devel@vger.kernel.org, coreteam@netfilter.org, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Jozsef Kadlecsik <kadlec@netfilter.org>, "David S . Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, cgroups@vger.kernel.org, 
+	Jan Engelhardt <ej@inai.de>, Florian Westphal <fw@strlen.de>
+Subject: Re: [PATCH v2] netfilter: Make xt_cgroup independent from net_cls
+Message-ID: <rpu5hl3jyvwhbvamjykjpxdxdvfmqllj4zyh7vygwdxhkpblbz@5i2abljyp2ts>
+References: <20250305170935.80558-1-mkoutny@suse.com>
+ <Z9_SSuPu2TXeN2TD@calendula>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="6dgz5r7q7tf2aomx"
+Content-Disposition: inline
+In-Reply-To: <Z9_SSuPu2TXeN2TD@calendula>
+
+
+--6dgz5r7q7tf2aomx
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] netfilter: Make xt_cgroup independent from net_cls
+MIME-Version: 1.0
 
-On Sun, 23 Mar 2025, Damian Tometzki <damian@riscv-rocks.de> wrote:
-> On Mon, 10. Mar 15:23, Kees Cook wrote:
->> When a character array without a terminating NUL character has a static
->> initializer, GCC 15's -Wunterminated-string-initialization will only
->> warn if the array lacks the "nonstring" attribute[1]. Mark the arrays
->> with __nonstring to and correctly identify the char array as "not a C
->> string" and thereby eliminate the warning.
->>=20
->> Link: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=3D117178 [1]
->> Cc: Zhenyu Wang <zhenyuw@linux.intel.com>
->> Cc: Zhi Wang <zhi.wang.linux@gmail.com>
->> Cc: Jani Nikula <jani.nikula@linux.intel.com>
->> Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
->> Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
->> Cc: Tvrtko Ursulin <tursulin@ursulin.net>
->> Cc: David Airlie <airlied@gmail.com>
->> Cc: Simona Vetter <simona@ffwll.ch>
->> Cc: intel-gvt-dev@lists.freedesktop.org
->> Cc: intel-gfx@lists.freedesktop.org
->> Cc: dri-devel@lists.freedesktop.org
->> Signed-off-by: Kees Cook <kees@kernel.org>
->> ---
->>  drivers/gpu/drm/i915/gvt/opregion.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/gpu/drm/i915/gvt/opregion.c b/drivers/gpu/drm/i915/=
-gvt/opregion.c
->> index 509f9ccae3a9..f701638d3145 100644
->> --- a/drivers/gpu/drm/i915/gvt/opregion.c
->> +++ b/drivers/gpu/drm/i915/gvt/opregion.c
->> @@ -43,7 +43,7 @@
->>  #define DEVICE_TYPE_EFP4   0x10
->>=20=20
->>  struct opregion_header {
->> -	u8 signature[16];
->> +	u8 signature[16] __nonstring;
+Hello Pablo.
 
-Why would this annotation be needed? It's not treated as a string
-anywhere, and it's u8 not char.
+On Sun, Mar 23, 2025 at 10:20:10AM +0100, Pablo Neira Ayuso <pablo@netfilte=
+r.org> wrote:
+> why classid !=3D 0 is accepted for cgroup_mt_check_v0()?
 
->>  	u32 size;
->>  	u32 opregion_ver;
->>  	u8 bios_ver[32];
->> @@ -222,7 +222,7 @@ int intel_vgpu_init_opregion(struct intel_vgpu *vgpu)
->>  	u8 *buf;
->>  	struct opregion_header *header;
->>  	struct vbt v;
->> -	const char opregion_signature[16] =3D OPREGION_SIGNATURE;
->> +	const char opregion_signature[16] __nonstring =3D OPREGION_SIGNATURE;
->>=20=20
->>  	gvt_dbg_core("init vgpu%d opregion\n", vgpu->id);
->>  	vgpu_opregion(vgpu)->va =3D (void *)__get_free_pages(GFP_KERNEL |
->> --=20
->> 2.34.1
->>=20
-> Hello together,
->
-> it doesnt resolve the build issue with gcc15 gcc (GCC) 15.0.1 20250228
->
-> CC [M]  drivers/gpu/drm/i915/gvt/scheduler.o
-> /home/damian/kernel/linux/drivers/gpu/drm/i915/gvt/opregion.c: In functio=
-n =E2=80=98intel_vgpu_init_opregion=E2=80=99:
-> /home/damian/kernel/linux/drivers/gpu/drm/i915/gvt/opregion.c:35:28: erro=
-r: initializer-string for array of =E2=80=98char=E2=80=99 is too long [-Wer=
-ror=3Dunterminated-string-initialization]
->    35 | #define OPREGION_SIGNATURE "IntelGraphicsMem"
->       |                            ^~~~~~~~~~~~~~~~~~
-> /home/damian/kernel/linux/drivers/gpu/drm/i915/gvt/opregion.c:225:57: not=
-e: in expansion of macro =E2=80=98OPREGION_SIGNATURE=E2=80=99
->   225 |         const char opregion_signature[16] __nonstring =3D OPREGIO=
-N_SIGNATURE;
->       |                                                         ^~~~~~~~~=
-~~~~~~~~~
->   CC [M]  drivers/gpu/drm/i915/gvt/trace_points.o
-> cc1: all warnings being treated as errors
-> make[7]: *** [/home/damian/kernel/linux/scripts/Makefile.build:207: drive=
-rs/gpu/drm/i915/gvt/opregion.o] Error 1
-> make[7]: *** Waiting for unfinished jobs....
->   CC [M]  drivers/gpu/drm/i915/gvt/vgpu.o
-> make[6]: *** [/home/damian/kernel/linux/scripts/Makefile.build:465: drive=
-rs/gpu/drm/i915] Error 2
-> make[5]: *** [/home/damian/kernel/linux/s
+It is opposite, only classid =3D=3D 0 is accepted (that should be same for
+all of v0..v2). (OTOH, there should be no change in validation with
+CONFIG_CGROUP_NET_CLASSID.)
 
-What about this?
-
-IMO it's anyway good practice to use sizeof(dest) rather than
-sizeof(src) for memcpy.
-
-
-diff --git a/drivers/gpu/drm/i915/gvt/opregion.c b/drivers/gpu/drm/i915/gvt=
-/opregion.c
-index 509f9ccae3a9..dbad4d853d3a 100644
---- a/drivers/gpu/drm/i915/gvt/opregion.c
-+++ b/drivers/gpu/drm/i915/gvt/opregion.c
-@@ -222,7 +222,6 @@ int intel_vgpu_init_opregion(struct intel_vgpu *vgpu)
- 	u8 *buf;
- 	struct opregion_header *header;
- 	struct vbt v;
--	const char opregion_signature[16] =3D OPREGION_SIGNATURE;
+> cgroup_mt_check_v0 represents revision 0 of this match, and this match
+> only supports for clsid (groupsv1).
+>=20
+> History of revisions of cgroupsv2:
+>=20
+> - cgroup_mt_check_v0 added to match on clsid (initial version of this mat=
+ch)
+> - cgroup_mt_check_v1 is added to support cgroupsv2 matching=20
+> - cgroup_mt_check_v2 is added to make cgroupsv2 matching more flexible
 =20
- 	gvt_dbg_core("init vgpu%d opregion\n", vgpu->id);
- 	vgpu_opregion(vgpu)->va =3D (void *)__get_free_pages(GFP_KERNEL |
-@@ -236,8 +235,10 @@ int intel_vgpu_init_opregion(struct intel_vgpu *vgpu)
- 	/* emulated opregion with VBT mailbox only */
- 	buf =3D (u8 *)vgpu_opregion(vgpu)->va;
- 	header =3D (struct opregion_header *)buf;
--	memcpy(header->signature, opregion_signature,
--	       sizeof(opregion_signature));
-+
-+	static_assert(sizeof(header->signature) =3D=3D sizeof(OPREGION_SIGNATURE)=
- - 1);
-+	memcpy(header->signature, OPREGION_SIGNATURE, sizeof(header->signature));
-+
- 	header->size =3D 0x8;
- 	header->opregion_ver =3D 0x02000000;
- 	header->mboxes =3D MBOX_VBT;
+> I mean, if !IS_ENABLED(CONFIG_CGROUP_NET_CLASSID) then xt_cgroup
+> should fail for cgroup_mt_check_v0.
 
 
+I considered classid =3D=3D 0 valid (regardless of CONFIG_*) as counterpart
+to implementation of sock_cgroup_classid() that collapses to 0 when
+!CONFIG_CGROUP_NET_CLASSID (thus at least rules with classid=3D0 remain
+acceptable).
 
---=20
-Jani Nikula, Intel
+> But a more general question: why this check for classid =3D=3D 0 in
+> cgroup_mt_check_v1 and cgroup_mt_check_v2?
+
+cgroup_mt_check_v1 is for cgroupv2 OR classid matching. Similar with
+cgroup_mt_check_v2.
+
+IOW, all three versions accept classid=3D0 with !CONFIG_CGROUP_NET_CLASSID
+equally because that is the value that sockets reported classid falls
+back to.
+
+But please correct me if I misunderstood the logic.
+
+Thanks,
+Michal
+
+--6dgz5r7q7tf2aomx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQTd6mfF2PbEZnpdoAkt3Wney77BSQUCZ+FWZAAKCRAt3Wney77B
+SRC+AP9sgXg3/nlHJXqWYQNOLruM+2kuDLj+lHSd6Lank2sSnAEAlIfDtD+FKSEZ
+igeXXdA6fXYy92Cwb3N2vY8ZfDd2SQg=
+=IEko
+-----END PGP SIGNATURE-----
+
+--6dgz5r7q7tf2aomx--
