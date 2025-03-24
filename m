@@ -1,68 +1,170 @@
-Received: from vps0.lunn.ch (vps0.lunn.ch [156.67.10.101])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9B581C7015;
-	Mon, 24 Mar 2025 20:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=156.67.10.101
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A80CB2E3378
+	for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 20:53:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742849446; cv=none; b=o1c1KE6FpuagTcMiW5hHmIzaxXHJeeUYFyoPUnOz4xiOMGSWhsRFl7o6TWS7Xd7XPu11JOQhdMwGykF8FKa1a6wl0VgBmkucdqjNYaFcnvhpnHlUR1eX2nIdbFG5eGNfFUiNwT/4txgC2KwiKrUhFHZJmAehj9zR75cPJWqmFcw=
+	t=1742849587; cv=none; b=FpB8xnN/l8YEZ+rTeZEdkjod5mMxDy7oEW79aTlUM8Rj2Fm83EMQmrTw5dthTSK1hZClQqpU3tpQgMg1TLBCkUGn16BYVefEqTEeFr+CKyWJI5f6yX5KtRE24osxiEUAaIsR9hlc2z8HAOSHOAlcHOIJGnKNn6Vc+fz1FlHxlEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742849446; c=relaxed/simple;
-	bh=MchipAU5sBxM6kqrzJJM5frG3EbJ8KvRCbLn29uzQWo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=POPak3eD8KPbyLUgFEuUNBO7XdwIqRXk32azaEn5uxgs+alkxXVNDhmXxH28MJSsQrqriBjwPEiDdfCKMH9slMhhTXJytebNRiaJkmgjPigBhacfkdAJY2P3xfgOYZaUdzXaqEGHCxi8Hsgs3WZfP5heMa7US3SsTLj097Iswkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch; spf=pass smtp.mailfrom=lunn.ch; dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b=mueHOBzl; arc=none smtp.client-ip=156.67.10.101
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lunn.ch
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lunn.ch
+	s=arc-20240116; t=1742849587; c=relaxed/simple;
+	bh=i8aZYde1B3RChKKVLyzjLczhEobtRPovvSD01gK4Tbc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bBhKRN1Y8+HHhh8JeDHgsiofKJZrKejTeyblxmG0HfYzcvXk3NMWyYb6GQLFHFdF3DoyCSHlCLv7RnP1+6wq7JUdv43ec4vC9LFZG+lx4lfiBOjCZ8jkooeXbgnjzJiMzgnfLXfSZoHcIf8BZdQZrr2PUlgOlinbql8AsttLXLA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net; spf=pass smtp.mailfrom=openvpn.com; dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b=HGQYR5in; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=openvpn.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=openvpn.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="mueHOBzl"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-	s=20171124; h=In-Reply-To:Content-Disposition:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:From:Sender:Reply-To:Subject:
-	Date:Message-ID:To:Cc:MIME-Version:Content-Type:Content-Transfer-Encoding:
-	Content-ID:Content-Description:Content-Disposition:In-Reply-To:References;
-	bh=HAcr7heHKfjYqqnB0DRD0tmxyXkvWOjnx1sWFmHXfG0=; b=mueHOBzl+J4JC5t+d0W9a3FfE4
-	KwhcgSL+St4ME6gir5KTdD6LAANvQKFBrlli1ptD1OPxqk9L+mHl3pwnOnBw/oSWayovllrVFs25a
-	hOHy/YknptRyIovlS5eQmOo/8KUoW/YTI3l//NfqKPrH/08mjFf5cDOoCv9kYp67la6s=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.94.2)
-	(envelope-from <andrew@lunn.ch>)
-	id 1twokm-006yql-DQ; Mon, 24 Mar 2025 21:50:36 +0100
-Date: Mon, 24 Mar 2025 21:50:36 +0100
-From: Andrew Lunn <andrew@lunn.ch>
-To: Jeff Layton <jlayton@kernel.org>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] net: add a debugfs files for showing netns refcount
- tracking info
-Message-ID: <59446182-8d60-40a0-975f-30069b0afe86@lunn.ch>
-References: <20250324-netns-debugfs-v1-1-c75e9d5a6266@kernel.org>
+	dkim=pass (2048-bit key) header.d=openvpn.net header.i=@openvpn.net header.b="HGQYR5in"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-abf3d64849dso802097266b.3
+        for <linux-kernel@vger.kernel.org>; Mon, 24 Mar 2025 13:53:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=openvpn.net; s=google; t=1742849584; x=1743454384; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=I38U0FrU7lXZPgGiiC6xH++pECXJ1njDUw5kOS4q8JU=;
+        b=HGQYR5inf2Plw68ViKAxuDQZZoQiC6rCKf2opcf+B1LCjUujDSG/XGQU2H21epneqA
+         QRIG94oanorKWwh32ppV0BGRYdWhDPDyVaV6CmSe+rxoaal7tzbold7iamDO0aMFwnlA
+         l5tgkzpwV1GIHx8+5wpvUvj6ivZlCH4oKc+Z7zz6qxlmzffi6WB1kyFp/UC1uGMduxvr
+         /1HWnrJiDSWHWpGA45QpDltoD0hRk3xIJwl3MMd4oqRbc9xhWWQitsM5YdHO9MKDnnYw
+         xRq3RxaPxHka788hotCFht1wHmKV4VJYJHDK67BFu7FvM/Pmb/ZsPIrsjyeRV9TEzb0F
+         7XVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742849584; x=1743454384;
+        h=content-transfer-encoding:in-reply-to:organization:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=I38U0FrU7lXZPgGiiC6xH++pECXJ1njDUw5kOS4q8JU=;
+        b=gGHP+SwxOkbo2kiBr+dYBJqUty+b4zsEz7uMVx5L1/cyQer+SgJV7InipYqnlFppPL
+         p90bxi6iJHrIX+CHbP1K6sS9B+FbOJI27tQzTCeUOsNL9+/NJQAh3KgoKQ2XPOwyMO5e
+         Ux0Vjp4q6rYu5oMBJsrg5QYzh1I7IGqOIZ69XmzoEmYIUnkKkBXlKebXRWn+11gyDO5a
+         pE5p+gVl3p8LEXWuALRtja1SW2SCcRF5DBo2CPFHmdzLQWW7G6+zCi9lH7A5LT2GYKFQ
+         PTwEJGcU77CXjIzuoH0ZrxjG+vJf6bqJli/6rp2/7jKI/9J6MkOaSTqD2Mkvi8zVV88w
+         5Zrg==
+X-Forwarded-Encrypted: i=1; AJvYcCWoq8+Cr9XFVS+aD2td8bdsWhhzenv10F2VAv8xUXlIKo/Cr5ewpHgt9wDij//HmlH4HHb5sGYBx3TTMUs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy+kjMYUwotLZ3GmHacYK03F3N2mYmDFyCeXKv4XxQLGHkjassg
+	n6sWSkBscJk/ZH7wRRgwpCUTsw0MsvKaDydnvsI00/MaIazz2FgR9Wd0wcK07ksLq1+ARI7QZlA
+	IgXfF85JebDUY+lwo+hr8vAcCwC+g2yt5yf2SEO3xlsKzALQvnR5WPFU=
+X-Gm-Gg: ASbGncv0ONgRSQSYMTFeKgPqgq00h+b2qvlCxwFDhVkkGCMLtTTAfvIYyAfcxXY0Jdu
+	LbxYnoFuFbv0/O5Pe6UpP1ZbILxSjXhUiNWlZxDcIDmVGeDkIWMCmTJHEPHxrpMn4SMH3sLI81D
+	2OB/0Td8+dtole72TCooV71zR8OY2L3IcAn01WJJP174IcM6Pqg2GAbIT96FHkSbKz5AALYGNZd
+	11aPLaU5Y6Rq3k8Ocpzh6lsOm5yBaExwajvPYmCt5uOVakctaZpH5++cLHTZsDcxRra/LA0Z2+c
+	KIRkJxp5rcRiN/NyYq+42mfUd6PzoX07KiG/hkjC5hkOr7FI0wZg9km7T4Xh365dgftvg9i0STw
+	IDqyJQPylMy5GoH6W1Q==
+X-Google-Smtp-Source: AGHT+IFstL4cl4J1iYAxXwRy6hoDu2dOycCyl006ObbtprBV0TprEgXJ2rIAwgqdRUKc9/q3kDAang==
+X-Received: by 2002:a17:907:8686:b0:abe:f48c:bcd with SMTP id a640c23a62f3a-ac3f27fd5fbmr1662647866b.50.1742849583835;
+        Mon, 24 Mar 2025 13:53:03 -0700 (PDT)
+Received: from ?IPV6:2001:67c:2fbc:1:4ced:7dc0:1dc5:471a? ([2001:67c:2fbc:1:4ced:7dc0:1dc5:471a])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-ac3efd3b34fsm733226466b.157.2025.03.24.13.53.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Mar 2025 13:53:03 -0700 (PDT)
+Message-ID: <ae9f3c18-7b03-4a49-83a4-a3e7d8c52a3e@openvpn.net>
+Date: Mon, 24 Mar 2025 21:53:02 +0100
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250324-netns-debugfs-v1-1-c75e9d5a6266@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v24 09/23] ovpn: implement packet processing
+To: Sabrina Dubroca <sd@queasysnail.net>
+Cc: netdev@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Donald Hunter <donald.hunter@gmail.com>, Shuah Khan <shuah@kernel.org>,
+ ryazanov.s.a@gmail.com, Andrew Lunn <andrew+netdev@lunn.ch>,
+ Simon Horman <horms@kernel.org>, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Xiao Liang <shaw.leon@gmail.com>
+References: <20250318-b4-ovpn-v24-0-3ec4ab5c4a77@openvpn.net>
+ <20250318-b4-ovpn-v24-9-3ec4ab5c4a77@openvpn.net> <Z-E70n1tkzKdepTo@krikkit>
+Content-Language: en-US
+From: Antonio Quartulli <antonio@openvpn.net>
+Autocrypt: addr=antonio@openvpn.net; keydata=
+ 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
+Organization: OpenVPN Inc.
+In-Reply-To: <Z-E70n1tkzKdepTo@krikkit>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, Mar 24, 2025 at 04:24:47PM -0400, Jeff Layton wrote:
-> CONFIG_NET_NS_REFCNT_TRACKER currently has no convenient way to display
-> its tracking info. Add a new net_ns directory in debugfs. Have a
-> directory in there for every net, with refcnt and notrefcnt files that
-> show the currently tracked active and passive references.
+On 24/03/2025 12:02, Sabrina Dubroca wrote:
+> 2025-03-18, 02:40:44 +0100, Antonio Quartulli wrote:
+>> +int ovpn_crypto_state_reset(struct ovpn_crypto_state *cs,
+>> +			    const struct ovpn_peer_key_reset *pkr)
+>> +{
+>> +	struct ovpn_crypto_key_slot *old = NULL, *new;
+>> +	u8 idx;
+>> +
+>> +	if (pkr->slot != OVPN_KEY_SLOT_PRIMARY &&
+>> +	    pkr->slot != OVPN_KEY_SLOT_SECONDARY)
+>> +		return -EINVAL;
+>> +
+>> +	new = ovpn_aead_crypto_key_slot_new(&pkr->key);
+>> +	if (IS_ERR(new))
+>> +		return PTR_ERR(new);
+>> +
+>> +	spin_lock_bh(&cs->lock);
+> 
+> At this point, should there be a check that we're not installing 2
+> keys with the same key_id at the same time? I expect a well-behaved
+> userspace never does that, but it would confuse
+> ovpn_crypto_key_id_to_slot if it ever happened.
+> 
+> ["well, then the tunnel is broken. if userspace sets up a broken
+> config that's not the kernel's problem." is an acceptable answer]
+> 
 
-Hi Jeff
+The behaviour of ovpn_crypto_key_id_to_slot() is still "deterministic" 
+as we will first lookup the primary key.
 
-CONFIG_NET_NS_REFCNT_TRACKER is just an instance of
-CONFIG_REF_TRACKER.
+Therefore we will simply always use the primary key and never the other, 
+which is what we should expect in this situation from the code.
 
-It would be good to explain why you are doing it at the netdev level,
-rather than part of the generic CONFIG_REF_TRACKER level. Why would
-other subsystems not benefit from having their reference trackers in
-debugfs?
+I'd say this is just an ill-formed configuration, yet not invalid.
+As per your statement, I'd say it's userspace's problem.
 
-	Andrew
+Cheers,
+
+
+-- 
+Antonio Quartulli
+OpenVPN Inc.
+
