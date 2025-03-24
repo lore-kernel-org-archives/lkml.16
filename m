@@ -1,111 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.ozlabs.org (gandalf.ozlabs.org [150.107.74.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C061D1B4F0E;
-	Mon, 24 Mar 2025 06:25:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332F81519A6;
+	Mon, 24 Mar 2025 06:27:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=150.107.74.76
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742797502; cv=none; b=W57Xo+veWI8ReWslqAnCpVsphY3lrk1kKL7lvbNOphjQvWmwLPGuXqZ13dpKZUDncvXr04EFswWeAbg2FPec4XlmAGMIo3vTt/vyg2jjY0qtwxvLdarsgHaxrmENasqCgYO8jSpj3KtqU61kprt8RDKBSxbfONXNfywDqk6IxTA=
+	t=1742797651; cv=none; b=f2rjxK5JvsqJJxgqRKuHyXDP5flFXE5VOBMTg0UYRKfnoZUf/27L4AmjVIHFyPBETPIXfkAf4NwnBtIxyE1HHbobeAEJdDlqS1W2jd8MTrR93maMS9BhG7ifJDeZbVWVQKzniWxKaJJLnpdyWVpPWM6ttlRBnPBfP6+t9m/Z5A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742797502; c=relaxed/simple;
-	bh=9XXXo3EWZtEobiajEK/dAZklZgfyP4VnNuDdDAvYcz4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=P9HSaVhwrXHbtBQ2LKQDTHv6MVOBEbgoieT473XjnUAZiGBIC1uLkDalUYY+gAZwFaHYtpDcdMKOOz0CBYbD9ERaAUgsH5OrAVtOIyTt3pxK7zxeiL8aC253uxLNLkqC7nXayeUplNm7kOIJMavTcn1OJIbAzsEoej0Mh/sMIHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1VApnjZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742797651; c=relaxed/simple;
+	bh=5LCDNKJVduMeEMQ2kdAJwP6hSvW6btv4Op8rJnF8HaI=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type; b=a6sDsOkfr0lzogTGebkWO1Q3tuX7syTwPWoQ2TNElIsdq0wu9eUcllUdE1rF4mgHZ6VKtnrKcH+Z6V1BmafzCyFzHUZgsBSAln/f2/KvHdSR8Cmh6WrVveEhag/7vk+8WKKMTBzV2hNzB3+gXcvZyRS7oUCK0r33StCM6z+VePY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au; spf=pass smtp.mailfrom=canb.auug.org.au; dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b=c49SFrZz; arc=none smtp.client-ip=150.107.74.76
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canb.auug.org.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canb.auug.org.au
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1VApnjZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 33183C4CEEA;
-	Mon, 24 Mar 2025 06:25:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742797502;
-	bh=9XXXo3EWZtEobiajEK/dAZklZgfyP4VnNuDdDAvYcz4=;
-	h=From:Date:Subject:To:Cc:Reply-To:From;
-	b=o1VApnjZqBgmj6Mn6l0B+/7J8UV/5HCarFDwFRGPWpNB2lMe4LWw8HdZ/up7oF1Ii
-	 xFwYrE97kSNtVwi1a1t51GoX7q/xejRw4/j9yTmUNMhbQlkSXyxYwygNv4bgsiM4Hs
-	 hq6efF+UQ40WBYdj1OgBGtUMn77ee5ozDYGN6h8JWDx7I7pViVf37tbZ/sRWrilJ/h
-	 MpDDhh7Tyi5dWbQtWzXWhmtSOqLbt5Gc9ta1G0ELHIDlBhRSucmcXmbdFFOnuMpnwr
-	 bpRolNp7kGQcVvPULcoZrvgZC1HKuYtIKtohUdsgASlV5fE8Bd5dHMuBDmwJ+SX4RK
-	 qjgunBCTF/mHw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A65FC36008;
-	Mon, 24 Mar 2025 06:25:02 +0000 (UTC)
-From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Mon, 24 Mar 2025 10:24:59 +0400
-Subject: [PATCH] wifi: ath11k: support fetching mac address from nvmem
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="c49SFrZz"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canb.auug.org.au;
+	s=201702; t=1742797645;
+	bh=qGBBdhX+2wGtwq3M8HLEUVs969DlLYojx8GEmPLWXQE=;
+	h=Date:From:To:Cc:Subject:From;
+	b=c49SFrZziahg9T59MNGN01yeKECFtO3MoDfd+58MU9OzdAN7L4VUPllYX7/42PqLM
+	 sCQ5x7Dug3E7VNw74FY1IC/uh4NpQ4hXOqFZ/lwPSQGBJav3UbxHotNEFilGRfhpDR
+	 GUWTnKj2PmG67bFPXcmp/I/EQ2hzkmoYkck16C6fCpREjb83IGjs0COi59wSztKe2B
+	 pW1TSUC55YYO/N6uDXWsr4erqMrV0BXGubKWBclSGYW2ca5QeNgrZJrfsPUlUz1Yr9
+	 O+Qi9GwlJHXrdREi1i0WHiM6ADHIGsLN8f80beNMwDReJOA7Qay6YvcSLwxvJ5PAKq
+	 pTbnYHYpjcAxA==
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by mail.ozlabs.org (Postfix) with ESMTPSA id 4ZLjlJ0JXgz4wcZ;
+	Mon, 24 Mar 2025 17:27:24 +1100 (AEDT)
+Date: Mon, 24 Mar 2025 17:27:23 +1100
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ "H. Peter Anvin" <hpa@zytor.com>, Peter Zijlstra <peterz@infradead.org>
+Cc: Ingo Molnar <mingo@kernel.org>, Tor Vic <torvic9@mailbox.org>, Linux
+ Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Next Mailing List
+ <linux-next@vger.kernel.org>
+Subject: linux-next: build failure after merge of the tip tree
+Message-ID: <20250324172723.49fb0416@canb.auug.org.au>
 Precedence: bulk
 X-Mailing-List: linux-kernel@vger.kernel.org
 List-Id: <linux-kernel.vger.kernel.org>
 List-Subscribe: <mailto:linux-kernel+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-kernel+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250324-ath11k-nvmem-v1-1-d82bdf72820e@outlook.com>
-X-B4-Tracking: v=1; b=H4sIALv64GcC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDI1MDYyMT3cSSDEPDbN28stzUXF3LJJM0U5M0ExNDCwsloJaCotS0zAqwcdG
- xtbUAm2N0AF4AAAA=
-To: Jeff Johnson <jjohnson@kernel.org>
-Cc: ath11k@lists.infradead.org, linux-wireless@vger.kernel.org, 
- linux-kernel@vger.kernel.org, 
- George Moussalem <george.moussalem@outlook.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1742797500; l=1623;
- i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=KFf/U6jpX3DLdf5cfXG9vG8Hbqcu1hFbIGhlckUUI7s=;
- b=PoKhNSfsaNEQZQFXjHirGqsZeV20EcazdhX8I5TzQPa2R5lvPNK6z6IzkvT152fkvWA0wqYRc
- pYhUAbz+GmRA9jGIGq7rRxXYScv+jjqoQr0WP0xU9nY4HQw+aRbHwa9
-X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
- pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
-X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
- with auth_id=364
-X-Original-From: George Moussalem <george.moussalem@outlook.com>
-Reply-To: george.moussalem@outlook.com
+Content-Type: multipart/signed; boundary="Sig_/h5S51LWkeYOcxU1CuX8dJ1Q";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 
-From: George Moussalem <george.moussalem@outlook.com>
+--Sig_/h5S51LWkeYOcxU1CuX8dJ1Q
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Many embedded devices with ath11k wifi chips store their mac address in
-nvmem partitions. Currently, the ath11k driver supports getting the
-mac address from the 'mac-address', 'local-mac-address', and 'address'
-device tree properties only. As such, add support for obtaining the mac
-address from nvmem if defined in a 'mac-address' cell by replacing the
-call to device_get_mac_address by of_get_mac_address which does exactly
-the same as the former but tries to get it from nvmem if it is not set
-by above mentioned DT properties,
+Hi all,
 
-Tested-on: IPQ5018, QCN6122, and QCN9074
+After merging the tip tree, today's linux-next build (x86_64 allmodconfig)
+failed like this:
 
-Signed-off-by: George Moussalem <george.moussalem@outlook.com>
----
- drivers/net/wireless/ath/ath11k/mac.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+cc1: error: bad value 'native' for '-march=3D' switch
+cc1: note: valid arguments to '-march=3D' switch are: nocona core2 nehalem =
+corei7 westmere sandybridge corei7-avx ivybridge core-avx-i haswell core-av=
+x2 broadwell skylake skylake-avx512 cannonlake icelake-client rocketlake ic=
+elake-server cascadelake tigerlake cooperlake sapphirerapids emeraldrapids =
+alderlake raptorlake meteorlake graniterapids graniterapids-d arrowlake arr=
+owlake-s lunarlake pantherlake bonnell atom silvermont slm goldmont goldmon=
+t-plus tremont gracemont sierraforest grandridge clearwaterforest knl knm x=
+86-64 x86-64-v2 x86-64-v3 x86-64-v4 eden-x2 nano nano-1000 nano-2000 nano-3=
+000 nano-x2 eden-x4 nano-x4 lujiazui yongfeng k8 k8-sse3 opteron opteron-ss=
+e3 athlon64 athlon64-sse3 athlon-fx amdfam10 barcelona bdver1 bdver2 bdver3=
+ bdver4 znver1 znver2 znver3 znver4 znver5 btver1 btver2
+make[3]: *** [scripts/Makefile.build:203: scripts/mod/empty.o] Error 1
+cc1: error: bad value 'native' for '-march=3D' switch
+cc1: note: valid arguments to '-march=3D' switch are: nocona core2 nehalem =
+corei7 westmere sandybridge corei7-avx ivybridge core-avx-i haswell core-av=
+x2 broadwell skylake skylake-avx512 cannonlake icelake-client rocketlake ic=
+elake-server cascadelake tigerlake cooperlake sapphirerapids emeraldrapids =
+alderlake raptorlake meteorlake graniterapids graniterapids-d arrowlake arr=
+owlake-s lunarlake pantherlake bonnell atom silvermont slm goldmont goldmon=
+t-plus tremont gracemont sierraforest grandridge clearwaterforest knl knm x=
+86-64 x86-64-v2 x86-64-v3 x86-64-v4 eden-x2 nano nano-1000 nano-2000 nano-3=
+000 nano-x2 eden-x4 nano-x4 lujiazui yongfeng k8 k8-sse3 opteron opteron-ss=
+e3 athlon64 athlon64-sse3 athlon-fx amdfam10 barcelona bdver1 bdver2 bdver3=
+ bdver4 znver1 znver2 znver3 znver4 znver5 btver1 btver2
+make[3]: *** [scripts/Makefile.build:98: scripts/mod/devicetable-offsets.s]=
+ Error 1
+make[2]: *** [Makefile:1276: prepare0] Error 2
 
-diff --git a/drivers/net/wireless/ath/ath11k/mac.c b/drivers/net/wireless/ath/ath11k/mac.c
-index 97816916abac..49af6b9fc867 100644
---- a/drivers/net/wireless/ath/ath11k/mac.c
-+++ b/drivers/net/wireless/ath/ath11k/mac.c
-@@ -9,6 +9,7 @@
- #include <linux/etherdevice.h>
- #include <linux/bitfield.h>
- #include <linux/inetdevice.h>
-+#include <linux/of_net.h>
- #include <net/if_inet6.h>
- #include <net/ipv6.h>
- 
-@@ -10379,7 +10380,7 @@ int ath11k_mac_register(struct ath11k_base *ab)
- 	if (ret)
- 		return ret;
- 
--	device_get_mac_address(ab->dev, mac_addr);
-+	of_get_mac_address(ab->dev->of_node, mac_addr);
- 
- 	for (i = 0; i < ab->num_radios; i++) {
- 		pdev = &ab->pdevs[i];
+Caused by commit
 
----
-base-commit: 9388ec571cb1adba59d1cded2300eeb11827679c
-change-id: 20250324-ath11k-nvmem-9b4f54f44188
+  0480bc7e65dc ("x86/kbuild/64: Add the CONFIG_X86_NATIVE_CPU option to loc=
+ally optimize the kernel with '-march=3Dnative'")
 
-Best regards,
--- 
-George Moussalem <george.moussalem@outlook.com>
+I have reverted that commit for today.
 
+$ x86_64-linux-gnu-gcc --version
+x86_64-linux-gnu-gcc (Debian 14.2.0-12) 14.2.0
 
+cross build - ppc hosted
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/h5S51LWkeYOcxU1CuX8dJ1Q
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAmfg+0sACgkQAVBC80lX
+0GwqeQf9GJ0x4z2NBMfB000kpS4GFXJ6OkOjTp1e2mhIo/RTNaYOIx5lW3PaxFGd
+2IcESQ5mMREmKGXmm5XD0EvpfA+dISCGcNPMCpyJVBrmL195B5hUk9+E7aLnlFn3
+qYzm8gqe7knlQ7K9Nd+7QxRUPxud857Cv46IQzRfePoEyO5vcwrvZ7ZZK573Y6cu
+HMyHBOPtcSW1Baa7rcrALDTKVN4iKEHNiZilUhlE0vB8zw2EaJbW1NiD/roe4slY
+qdjXW4Gz91LXTqM8/aLwtNwx4a4qdLgLuzOISuukcnPd/S7j7XOB76yiY0Ie9On6
+OmwHi6V1x/F3YI5ZNrFrvrokOnkSZg==
+=7Seu
+-----END PGP SIGNATURE-----
+
+--Sig_/h5S51LWkeYOcxU1CuX8dJ1Q--
